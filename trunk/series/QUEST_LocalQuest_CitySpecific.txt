@@ -1,0 +1,106 @@
+%%
+%%  *:LocalQuest Content
+%%
+%% This content is tied to a city rather than any specific character within it.
+%% Unlike the regular LocalQuests, these quests are tied to specific cities.
+
+Content
+	name <The Cayley Instrumentality Project>
+	desc <Hoeller industries is building a new factory here; The PC may need to help.>
+	requires <*:LocalQuest "CAYLE">
+
+	% E1 is the hoeller executive
+	% E2 is the construction site
+	% E3 is the entry to the construction site
+	% E4 is the corporate office that opens after this quest is completed
+	%  Initially E4 has no faction assigned; once its faction gets assigned, it's
+	%  open for business.
+	element1 <Prefab>
+	Scene1 <Building Public>
+
+	Scene2 <New *ConstructionSite>
+
+	element3 <Prefab>
+	Scene3 <Environs>
+
+	Scene4 <New *Office>
+
+	Quest1 <*:ConstructionProblem 1 2>
+	Quest2 <*Success1.FinishMission 1>
+
+	sub
+		Persona 1
+		rumor0 <%name1% is in charge of building the new Hoeller factory.>
+		greeting <if= QuestStatus %qid% %id% else GoFirstTime NewChat Say 3 AddChat 3 AddChat 4 AddChat 5>
+		*GoFirstTime <*ENEMY_CHECK GoGreeting ChatNPCFac GoMakeEnemy>
+		GoMakeEnemy <PCEnemy %1% SetQuestStatus %qid% -2>
+		*GoGreeting <*NiceToMeetYou GoCheckFaction>
+		GoCheckFaction <if= QuestStatus %qid% 0 else GoChat  if= PCFac ChatNPCFac else GoCheckReact  Goto GoOfferMission>
+		GoCheckReact <ifG React %threat% else GoChat  Goto GoOfferMission>
+		*GoChat <*MISC_CHATTER>
+		GoOfferMission <NewChat Say 1 AddChat 1 AddChat 2 AddChat 6>
+		result1 <NewChat Say 2 SetQuestStatus %qid% %id%  SetQuestStatus %qid1% %id1%  QMemo %qid% 5>
+		result2 <NewCHat Say 4 SetQuestStatus %qid% -2 ifNPCVillainous PCEnemy %1%>
+		result3 <FacXP+ 7 5   SetSceneFaction %4% 7   ActivateMeme 1 %s1%   Goto .%id2%_GoInit>
+		result4 <NewChat Say 6>
+		result5 <NewChat Say 7 SetQuestStatus %qid% -2 AddReact -10>
+		result6 <NewChat Say 8 AddChat 7 AddChat 8>
+		result7 <Goto result1>
+		result8 <Goto result2>
+		Msg1 <Hoeller Industries is building a new factory complex here at Cayley Rock. Unfortunately, our progress has been slower than anticipated. What I need is a spy at the job site, who can tell me why things aren't going as planned.>
+		Msg2 <Fantastic. You can find the construction site on the surface of the asteroid. Come back and let me know when you have anything to report.>
+		Msg3 <What have you discovered about the factory project?>
+		Msg4 <Aha. Well, don't worry about it, then.>
+		Msg5 <%name1% in \SCENE %s1% asked you to find out why the new Hoeller building hasn't been completed yet.>
+		Msg6 <I see. Well, keep up the good work... and come back when you do have something to tell.>
+		Msg7 <Hmm. The board of directors is not going to like this...>
+		Msg8 <We already have a smelter here. Since the mine closed there are lots of skilled workers available, and labor costs are lower than anywhere but Theles Spinner. Cayley Rock is also close to several major trade points. So, can you help me?>
+		Prompt1 <I could do that for you.>
+		Prompt2 <That doesn't sound like my kind of job.>
+		CPrompt2 <if# PCFac ChatNPCFac Accept>
+		Prompt3 <Construction will be completed shortly.>
+		CPrompt3 <if= QuestStatus %qid1% -1 Accept>
+		Prompt4 <I haven't found anything yet.>
+		Prompt5 <The building project cannot be completed.>
+		CPrompt5 <if= QuestStatus %qid1% -2 Accept>
+		Prompt6 <Why build a factory here?>
+		Prompt7 <Let me see what I can find out.>
+		Prompt8 <Sorry, I don't think I can.>
+		CPrompt8 <if# PCFac ChatNPCFac Accept>
+		sub
+			Meme 1
+			%% After the corporate office is opened, this meme will let the player know.
+			MaxMemeViews 2
+			Msg <The new Hoeller corporate office has opened for business. They have some shops there, too.>
+
+		end
+
+		Metascene 2
+		sub
+			room
+			minimap <......###..&2&...........>
+			special <SHAREDPALETTE>
+			sub
+				Elevator
+				name <Business Level>
+				desig <Entrance %s4%>
+				MiniMapComponent 2
+				use <if# SceneFac %4% 0 else GoLocked Print 1 Exit Destination>
+				GoLocked <Print 2>
+				Msg1 <You board the elevator.>
+				Msg2 <They haven't finished work on this level yet.>
+			end
+
+		end
+
+
+	end
+	inv
+		NPC Corporate Executive
+		SetFaction 7
+
+		STC Building
+		name <Hoeller Construction Site>
+		desig <ENTRANCE %s2%>
+	end
+

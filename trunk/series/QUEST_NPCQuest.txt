@@ -1,0 +1,213 @@
+%%
+%% *:NPCQuest Content
+%%
+%% The Key NPC is up to something. The PC may be able to help out or oppose. Or something.
+
+Content
+	name <Where's My Battleship?>
+	desc <The NPC has ordered a battleship, but there are problems at the construction yard.>
+	requires <*:NPCQuest C:MILIT Spinner>
+
+	% E1 is the key character
+	% E2 is the construction site
+	% E3 is the entry to the construction site
+	element1 <Key>
+
+	Scene2 <New *ConstructionSite>
+
+	element3 <Prefab>
+	Scene3 <Space Environs>
+
+	Quest1 <*:ConstructionProblem 1 2>
+	Quest2 <*Success1.FinishMission 1>
+
+	sub
+		Persona 1
+		greeting <if= QuestStatus %qid% %id% else GoFirstTime NewChat Say 3 AddChat 3 AddChat 4 AddChat 5>
+		*GoFirstTime <*ENEMY_CHECK GoGreeting ChatNPCFac GoMakeEnemy>
+		GoMakeEnemy <PCEnemy %1% SetQuestStatus %qid% -2>
+		*GoGreeting <*NiceToMeetYou GoCheckFaction>
+		GoCheckFaction <if= QuestStatus %qid% 0 else GoChat  if= PCFac ChatNPCFac else GoCheckReact  Goto GoOfferMission>
+		GoCheckReact <ifG React %threat% else GoChat  Goto GoOfferMission>
+		*GoChat <*MISC_CHATTER>
+		GoOfferMission <NewChat Say 1 AddChat 1 AddChat 2>
+		result1 <NewChat Say 2 SetQuestStatus %qid% %id%  SetQuestStatus %qid1% %id1%  QMemo %qid% 5>
+		result2 <NewCHat Say 4 SetQuestStatus %qid% -2>
+		result3 <Goto .%id2%_GoInit>
+		result4 <NewChat Say 6>
+		result5 <NewChat Say 7 SetQuestStatus %qid% -2 AddReact -10>
+		Msg1 <As you may know, we are constructing a new battleship for the fleet. Unfortunately progess has been slower than expected. I could use someone to infiltrate the shipyard and find out what the problem is.>
+		Msg2 <Very good. The ship is being constructed at an orbital platform outside the station. Report back here when you've learned what's going on.>
+		Msg3 <Have you found out anything about the battleship yet?>
+		Msg4 <I see.>
+		Msg5 <%name1% in \SCENE %s1% asked you to find out why the battleship \SPR %1% ordered hasn't been completed yet.>
+		Msg6 <Well come back here when you have something to report, then.>
+		Msg7 <This is a black day for us all...>
+		Prompt1 <I could do that for you.>
+		Prompt2 <That doesn't sound like my kind of job.>
+		CPrompt2 <if# PCFac ChatNPCFac Accept>
+		Prompt3 <Your ship will be completed shortly.>
+		CPrompt3 <if= QuestStatus %qid1% -1 Accept>
+		Prompt4 <I'm still working on it.>
+		Prompt5 <I don't think you'll be getting a battleship...>
+		CPrompt5 <if= QuestStatus %qid1% -2 Accept>
+	end
+	inv
+		STC QUEST-MAPMARKER-AUTO-STATIONARY
+		name <%name1%'s Shipyard>
+		desig <ENTRANCE %s2%>
+	end
+
+Content
+	name <Rat Killing in Government>
+	desc <The PC has to kill a rat for the NPC.>
+	requires <*:NPCQuest C:POLIT ~"Capitol" -!Hi -!Ex>
+
+	% Quest1 is the continuation after the PC has cleared the basement.
+	Quest1 <*SUCCESS1.Extermination 1>
+
+	% E1 is the key character
+	% E2 is the basement that has to be cleared
+	element1 <Key>
+
+	Scene2 <NEW *ExterminationBasement>
+	Team2 <Monsters>
+	TeamData2 <SD Enemy>
+
+	sub
+		Persona 1
+		rumor0 <%name1% has an embarassing problem.>
+		greeting <if= QuestStatus %qid% %id% else GoFirstTime NewChat Say 1 AddChat 1 AddChat 2>
+		*GoFirstTime <*ENEMY_CHECK GoGreeting ChatNPCFac GoMakeEnemy>
+		GoMakeEnemy <PCEnemy %1% SetQuestStatus %qid% -2>
+		*GoGreeting <*NiceToMeetYou GoCheckRenown>
+		GoCheckRenown <if= QuestStatus %qid% 0 else GoChat  ifG PCRenown d%threat% else GoCheckWangtta   Goto GoOfferMission>
+		GoCheckWangtta <ifG React d10 else GoChat ifG -d10 PCRenown else GoChat   Goto GoOfferMission>
+		*GoOfferMission <*AreYouHereAboutJob GoMissionDesc>
+		GoMissionDesc <NewChat Say 2 AddChat 3>
+		*GoChat <*MISC_CHATTER>
+		Result1 <NewChat Say 6>
+		Result2 <Goto .%id1%_GoInit>
+		Result3 <NewChat Say 3  AddChat 4 AddChat 5>
+		result4 <NewChat Say 4  SetQuestStatus %qid% -2>
+		result5 <NewChat Say 5  SetQuestStatus %qid% %id% UpdateProps QMemo %qid% 7>
+		Msg1 <Any progress to report about the basement? It's very important that the documents be protected...>
+		Msg2 <As you know, there are many very important documents stored in this building. In the basement we have decades worth of records on optical tape.>
+		Msg3 <Well, the basement has become infested with... vermin. I hate to say it, but our seat of government has rats living in the basement. Your job, if you accept it, will be to rid us of these creatures.>
+		Msg4 <I understand. We'll find someone more suitable for the job.>
+		Msg5 <You will find the stairs down to the basement in the supply closet. Come back here when you're finished.>
+		Msg6 <Let me know when you do have something to report, then.>
+		Msg7 <%name1% in \SCENE %s1% asked you to clear the basement of vermin.>
+		Prompt1 <Nothing to report yet.>
+		Prompt2 <The basement has been cleared.>
+		CPrompt2 <if= SceneVar %2% 1 1 Accept>
+		Prompt3 <Okay. Following you so far.>
+		Prompt3_1 <So, you want me to do something about these tapes?>
+		CPrompt3_1 <ifPCSociable Accept>
+		Prompt3_2 <Go on.>
+		CPrompt3_2 <ifPCShy Accept>
+		Prompt3_3 <Uh-huh. How do I figure into this?>
+		CPrompt3_3 <ifPCEasygoing Accept>
+		Prompt3_4 <Boring. Get to the good stuff.>
+		CPrompt3_4 <ifPCPassionate Accept>
+		Prompt3_5 <Sounds good.>
+		CPrompt3_5 <ifPCCheerful Accept>
+		Prompt3_6 <Does this history lesson have a point?>
+		CPrompt3_6 <ifPCMelancholy Accept>
+		Prompt4 <No way. I'm not interested.>
+		Prompt4_1 <Rats? No way, find someone else.>
+		Prompt5 <Alright, I'll do it.>
+		Prompt5_1 <So you want me to be... a rat-killer?>
+
+		MetaScene 1
+		sub
+			room
+			minimap <######.2.##..3###+###...#>
+			special <SHAREDPALETTE>
+			sub
+				Door
+				update <if= V1 0 else GoCheckQuest V= 1 1 SetStat STAT_Lock %sktar_hard%>
+				GoCheckQuest <ifG QuestStatus %qid% 0 SetStat STAT_Lock 0>
+			end
+			inv
+				TrapDoor
+				MiniMapComponent 2
+				desig <ENTRANCE %s2%>
+
+				Monster Cleanbot
+				MiniMapComponent 3
+				teamdata <Pass>
+			end
+		end
+	end
+
+Content
+	name <Pirate Attack>
+	requires <*:NPCQuest "Spinner" C:POLIT>
+
+	% E1 is the NPC offering the quest.
+	% E2 is the encounter that the PC must destroy.
+	element1 <KEY>
+	element2 <Prefab>
+	Scene2 <SPACE ENVIRONS>
+
+	% Quest1 is the continuation after the PC has defeated the pirates so many times.
+	Quest1 <*SUCCESS1.AgainstPirates 1>
+
+	sub
+		Persona 1
+		% V1 = Number of times PC has been rewarded.
+		rumor0 <%name1% is looking to hire some mecha pilots.>
+		greeting <if= QuestStatus %qid% %id% else GoCheckQuest Goto GoQuestInProgress>
+		*GoQuestInProgress <*ENEMY_CHECK GoCheckSuccess ChatNPCFac GoMakeEnemy>
+		GoCheckSuccess <NewChat Say 2 AddChat 1>
+
+		GoCheckQuest <if= QuestStatus %qid% 0 else GoBasicChat Goto GoStartQuest>
+		*GoStartQuest <*ENEMY_CHECK GoFirstGreeting ChatNPCFac GoMakeEnemy>
+		*GoFirstGreeting <*NiceToMeetYou GoOfferMission>
+		GoOfferMission <NewChat Say 1 SetQuestStatus %qid% %id% ItemVar= %2% 1 ComTime ItemVar= %2% 2 d10 QMemo %qid% 4>
+
+		GoBasicChat <NewChat SayAnything>
+		GoMakeEnemy <PCEnemy %1% SetQuestStatus %qid% -2>
+
+		%% If the PC has defeated the pirates enough times, branch to the next
+		%% part of this story. This happens when the encounter difficulcy rating
+		%% exceeds the fragment difficulcy rating.
+		Result1 <ifG ItemVar %2% 2  %threat%  else GoR1NoBranch Goto .%id1%_GoInit>
+		%% Upon revealing a win against the pirates, give a reward, then set the local victory
+		%% counter, reset the pirate reappearance counter, and up its difficulcy rating.
+		GoR1NoBranch <NewChat Say 3 AddReact d5 CashPrize Reward Threat ItemVar %2% 2 100 100  V= 1 ItemVar %2% 3 ItemVar= %2% 1 ComTime ItemVar+ %2% 1 d86400 ItemVar+ %2% 1 d86400 ItemVar+ %2% 2 d10  QMemo %qid% 4>
+
+		Msg1 <Recently our colony has been attacked by pirates. There's been a bounty set for bringing them to justice.>
+		Msg2 <Have you encountered any pirates?>
+		Msg3 <Good job. Here's a reward... Let me know if you encounter any more of them.>
+		Msg4 <%name1% in \SCENE %s1% told you that there's a reward for fighting pirates outside of the colony.>
+
+		Prompt1 <I have, and defeated them...>
+		CPrompt1 <ifG ItemVar %2% 3 V1 Accept>
+
+	end
+	inv
+		Encounter
+		name <Pirates>
+		Special <NoMSID>
+		% V1 = Visibility Clock. If ComTime > V1 and V1 <> 0, encounter is active
+		% V2 = Difficulcy Rating.
+		% V3 = Victory Counter. Increases by one each time the PC defeats the pirates.
+		update <if# V1 0 else GoHide ifG ComTime V1 else GoHide  SetStat STAT_MetaVisibility 0  Goto GoSetOrders>
+		% Sets this encounter's orders to Passive
+		GoSetOrders <GrabSource GSetNAtt NAG_EpisodeData NAS_Orders 3>
+		use <ifG StatVal STAT_MetaVisibility -1  Print -1  Goto GoStartCombat>
+		ATTACK <ifG StatVal STAT_MetaVisibility -1    ifUStealth 15 else GoAutoAttack ifYesNo -3 -4 -5 else GoAvoidAttack Goto GoAutoAttack>
+		GoAutoAttack <Alert -2 Goto GoStartCombat>
+		GoAvoidAttack <Print -6 AddSociable -1>
+
+		GoStartCombat <V= 1 0  SavePos Dynamic 2 Threat V2 100 .nu1 .nu2 ComposeD Msg1 .Msg1>
+		.nu1 <if= T1 0  Return   if= L1 0  L= 1 1  AddRenown -5  ItemVar= %2% 1 ComTime ItemVar+ %2% 1 d86400 ItemVar+ %2% 1 43200>
+		.nu2 <if= T2 0           if= L1 0  L= 1 1  XPV 100  AddRenown 1   ItemVar+ %2% 3 1  QMemo %qid% 1>
+		EncounterMove 50
+		Msg-1 <You attack the pirates!>
+		Msg-2 <You are attacked by pirates!>
+		.Msg1 <You defeated some pirates, and should return to %name1% in \SCENE %s1% for a reward.>
+	end
+

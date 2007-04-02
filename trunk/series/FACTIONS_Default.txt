@@ -1,0 +1,214 @@
+Faction 1
+	name <the L5 Council>
+	desig <MAQUI>
+	desc <The governing body of Maquise Spinner, organized along meritocratic principles.>
+	Context <gov>
+	type <Government>
+	jobs <CRAFT POLIT>
+	SetAlly 3 6 9 10
+	SetEnemy 4 11
+	mecha_colors <75 200 212  49 91 141  200 000 0>
+	chara_colors <75 200 212>
+
+Faction 2
+	name <Comet Metalworks>
+	desig <COMET>
+	desc <>
+	Context <cor>
+	type <Corporate ArenaOK L5PAT>
+	jobs <CRAFT CORPO TRADE>
+	SetEnemy 7 8
+	mecha_colors <75 200 212  234 180 88  200 000 100>
+	chara_colors <234 180 88>
+
+	FACRANK_0 <Wage Slave>
+	FACRANK_1 <Employee of the Month>
+	FACRANK_2 <Committee Head>
+	FACRANK_3 <Assistant Junior Manager>
+	FACRANK_4 <Junior Manager>
+	FACRANK_5 <Manager>
+	FACRANK_6 <Senior Manager>
+	FACRANK_7 <Branch Director>
+	FACRANK_8 <Vice President>
+
+
+Faction 3
+	name <the Silver Knights>
+	% V1 = Number of faction rewards pending
+	desig <SILKN>
+	desc <The elite mecha forces of Maquise Spinner.>
+	Context <mil>
+	type <Military ArenaOK L5PAT>
+	jobs <MILIT>
+	SetAlly 1
+	SetEnemy 4
+	Controller 1
+	mecha_colors <75 200 212 201 205 229 200 100 0>
+	chara_colors <150 205 229>
+
+	% Every 6 hours, check to load a new story.
+	quarter <ifFaction 3  ifStoryless if# d3 1 StartStory .facstory>
+	.facstory <FSTORY_MIL_*_MAIN.txt>
+
+	% Every start, check to see if the PC has advanced in this faction.
+	start <if= PCFac SelfS else GoNoMember   ifFactionEnemy SelfS else GoPro1 StartStory .fired>
+	.fired <SPECIAL_PLOT_Fired.txt>
+	GoPro1 <ifG PCFacXP FacXPNeeded else GoCheckPromotion PCFacLevel+ 1 PCFacXP= 0 V+ 1 1>
+	GoCheckPromotion <ifG V1 0 StartStory .promostory V+ 1 -1>
+	.promostory <SPECIAL_PLOT_Promotion.txt>
+	GoNoMember <FacXP= SelfS 0>
+
+	% Faction Rank Names
+	FACRANK_0 <Hopeful>
+	FACRANK_1 <Squire>
+	FACRANK_2 <Apprentice>
+	FACRANK_3 <Seeker>
+	FACRANK_4 <Questor>
+	FACRANK_5 <Knight>
+	FACRANK_6 <Lord>
+	FACRANK_7 <Master>
+	FACRANK_8 <Grand Master>
+
+
+Faction 4
+	name <Aegis Overlord>
+	desig <AEGIS>
+	desc <The totalitarian government of Luna.>
+	CONTEXT <mil gov>
+	type <Military Government>
+	SetEnemy 1 3 8
+	mecha_colors <122 130 130 230 20 130 200 200 0>
+
+Faction 5
+	name <the Pro Duelist Association>
+	desig <PDASS>
+	desc <The association of professional arena pilots.>
+	CONTEXT <spo>
+	jobs <ADVEN>
+	mecha_colors <201 205 229 208 34 51 0 200 0>
+
+Faction 6
+	name <the Privateer Guild>
+	% V1 = Number of faction rewards pending
+	desig <PRIVA>
+	desc <The mercenary mecha forces of the L5 Alliance.>
+	Context <mil>
+	mecha <MAQUI COMET>
+	type <Military Mercenary ArenaOK L5PAT>
+	jobs <ADVEN MILIT THIEF>
+	SetAlly 1
+	SetEnemy 4 8
+	Controller 1
+	mecha_colors <75 200 212 201 205 229 200 100 0>
+	chara_colors <20 90 130>
+
+	% Every 6 hours, check to load a new story.
+	quarter <ifFaction 3  ifStoryless if# d3 1 StartStory .facstory>
+	.facstory <FSTORY_MERC_*_MAIN.txt>
+
+	% Every start, check to see if the PC has advanced in this faction.
+	start <if= PCFac SelfS else GoNoMember   ifFactionEnemy SelfS else GoPro1 StartStory .fired>
+	.fired <SPECIAL_PLOT_Fired.txt>
+	GoPro1 <ifG PCFacXP FacXPNeeded else GoCheckPromotion PCFacLevel+ 1 PCFacXP= 0 V+ 1 1>
+	GoCheckPromotion <ifG V1 0 StartStory .promostory V+ 1 -1>
+	.promostory <SPECIAL_PLOT_Promotion.txt>
+	GoNoMember <FacXP= SelfS 0>
+
+	% Faction Rank Names
+	FACRANK_1 <>
+	FACRANK_2 <>
+	FACRANK_3 <>
+	FACRANK_4 <>
+	FACRANK_5 <>
+	FACRANK_6 <>
+	FACRANK_7 <Captain>
+	FACRANK_8 <Pirate Lord>
+
+Faction 7
+	name <Hoeller Industries>
+	desig <HOELL>
+	desc <>
+	Context <cor>
+	type <Corporate ArenaOK L5PAT>
+	jobs <CRAFT CORPO TRADE>
+	SetEnemy 2 8
+	mecha_colors <75 200 212  170 150 230   200 100 0>
+	chara_colors <170 100 240>
+
+	FACRANK_0 <Wage Slave>
+	FACRANK_1 <Employee of the Month>
+	FACRANK_2 <Committee Head>
+	FACRANK_3 <Assistant Junior Manager>
+	FACRANK_4 <Junior Manager>
+	FACRANK_5 <Manager>
+	FACRANK_6 <Senior Manager>
+	FACRANK_7 <Branch Director>
+	FACRANK_8 <Vice President>
+
+Faction 8
+	name <the Blades of Crihna>
+	desig <CRIHN>
+	desc <>
+	Context <crm>
+	type <Crime ArenaOK L5PAT EARTH>
+	jobs <ADVEN THIEF>
+	SetEnemy 2 4 6 7 9
+	mecha_colors <168 153 230 78 150 137 200 0 0>
+
+Faction 9
+	name <L5Law>
+	% V1 = Number of faction rewards pending
+	desig <L5LAW>
+	desc <>
+	context <pol>
+	type <police ArenaOK L5PAT>
+	jobs <POLIC>
+	Controller 1
+	SetAlly 1 10 11
+	SetEnemy 8
+	mecha_colors <70 70 85  75 200 212  200 200 0>
+	chara_colors <30 30 120>
+
+	FACRANK_1 <Officer>
+	FACRANK_2 <Investigator>
+	FACRANK_3 <Detective>
+	FACRANK_4 <Sergeant>
+	FACRANK_5 <Junior Inspector>
+	FACRANK_6 <Inspector>
+	FACRANK_7 <Superintendent>
+	FACRANK_8 <Commissioner>
+
+	% Every 6 hours, check to load a new story.
+	quarter <ifFaction 3  ifStoryless if# d3 1 StartStory .facstory>
+	.facstory <FSTORY_POLICE_*_MAIN.txt>
+
+	% Every start, check to see if the PC has advanced in this faction.
+	start <if= PCFac SelfS else GoNoMember   ifFactionEnemy SelfS else GoPro1 StartStory .fired>
+	.fired <SPECIAL_PLOT_Fired.txt>
+	GoPro1 <ifG PCFacXP FacXPNeeded else GoCheckPromotion PCFacLevel+ 1 PCFacXP= 0 V+ 1 1>
+	GoCheckPromotion <ifG V1 0 StartStory .promostory V+ 1 -1>
+	.promostory <SPECIAL_PLOT_Promotion.txt>
+	GoNoMember <FacXP= SelfS 0>
+
+Faction 10
+	name <the Free Commerce States>
+	desig <FCOMS>
+	desc <>
+	Context <gov mil>
+	type <Government Military>
+	jobs <POLIT CORPO MEDIA MILIT>
+	SetAlly 1 9
+	SetEnemy 8
+	mecha_colors <244 216 28 116 100 13 152 61 97>
+	chara_colors <239 198 58>
+
+Faction 11
+	name <the Rishiri Dominion>
+	desig <RISHI>
+	desc <>
+	Context <gov>
+	type <Government>
+	jobs <POLIT>
+	SetAlly 9 10 4
+	SetEnemy 1 8
+

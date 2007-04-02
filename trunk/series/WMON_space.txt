@@ -1,0 +1,320 @@
+%  ******************************
+%  ***  SPACE  MONSTER  LIST  ***
+%  ******************************
+
+% Space monsters all have the "SPACE" terrain type and the SEALED intrinsic.
+
+%  STATS  REF BOD SPD PER CFT EGO KNO CHA
+
+ARCH Exorg Floater
+MonsterTV 10
+Sealed
+roguechar <H>
+sdl_sprite <monster_exorg_flyer.png>
+sdl_colors <255 230 210 255 157 123 200 0 100>
+type <Space Exorg Asteroid>
+habitat <SPACE>
+statline 15 7 15 16 5 19 10 7
+skill 8 7
+skill 9 4
+skill 10 8
+skill 11 5
+skill 18 5
+sub
+torso
+	sub
+		BeamGun 3
+		range 5
+		name <Eye Laser>
+		type <ArmorPiercing>
+
+		PowerSource 3
+		name <Energy Gland>
+
+		Melee 1
+		name <Laser Burn>
+	end
+wing
+	sub
+		HoverJet 3
+	end
+wing
+	sub
+		HoverJet 3
+	end
+wing
+	sub
+		HoverJet 3
+	end
+wing
+	sub
+		HoverJet 3
+	end
+end
+
+ARCH Silver Shil
+SDL_SPRITE <monster_shil.png>
+SDL_COLORS <199 188 162 0 0 0 244 216 28>
+roguechar <S>
+type <fungus ruin derelict>
+habitat <SPACE>
+statline 13 2 13 2 1 1 1 1
+MonsterTV 3
+skill 8 3
+skill 10 3
+skill 43 3
+sealed
+sub
+torso
+	sub
+		Melee 2
+		name <Touch>
+		type <SICKNESS>
+
+		HoverJet 7
+	end
+end
+
+ARCH Fungal Sphere
+SDL_SPRITE <monster_fungus3.png>
+SDL_COLORS <199 188 162 135 141 101 234 180 0>
+roguechar <'>
+type <fungus mine asteroid>
+habitat <SPACE>
+statline 10 8 10 1 1 1 1 1
+MonsterTV 5
+skill 6 2
+skill 8 4
+skill 10 5
+skill 13 4
+skill 43 3
+sealed
+sub
+torso
+	sub
+		Melee 4
+		name <Maw>
+		type <BRUTAL>
+
+		Gun 3
+		name <Toxic Dart>
+		caliber <FUNGUS TOXIC DART>
+		range 4
+		BV 3
+		sub
+			Ammo 3
+			type <POISON SWARM>
+			caliber <FUNGUS TOXIC DART>
+			Magazine 80
+		end
+
+		HoverJet 8
+	end
+end
+
+ARCH Armored Fungus
+SDL_SPRITE <monster_fungus2.png>
+SDL_COLORS <49 91 159 170 153 230 244 210 30>
+roguechar <f>
+type <fungus mine asteroid>
+habitat <SPACE>
+statline 7 20 7 8 1 1 1 1
+MonsterTV 6
+skill 8 4
+skill 10 4
+skill 12 7
+skill 13 5
+sealed
+sub
+torso
+	armor 4
+leg
+	armor 3
+	sub
+		melee 5
+		name <Claw>
+		type <ARMORPIERCING>
+	end
+leg
+	armor 3
+	sub
+		melee 5
+		name <Claw>
+		type <ARMORPIERCING>
+	end
+leg
+	armor 3
+	sub
+		melee 5
+		name <Claw>
+		type <ARMORPIERCING>
+	end
+leg
+	armor 3
+	sub
+		melee 5
+		name <Claw>
+		type <ARMORPIERCING>
+	end
+leg
+	armor 3
+	sub
+		melee 5
+		name <Claw>
+		type <ARMORPIERCING>
+	end
+leg
+	armor 3
+	sub
+		melee 5
+		name <Claw>
+		type <ARMORPIERCING>
+	end
+end
+
+ARCH Fungal Scavenger
+SDL_SPRITE <monster_fungus2.png>
+SDL_COLORS <135 141 101 199 188 162 244 210 30>
+roguechar <f>
+type <fungus mine asteroid>
+habitat <SPACE>
+statline 7 5 8 5 1 1 1 1
+MonsterTV 2
+skill 8 3
+skill 10 5
+sealed
+sub
+torso
+leg
+	sub
+		melee 2
+		name <Tendril>
+	end
+leg
+	sub
+		melee 2
+		name <Tendril>
+	end
+leg
+	sub
+		melee 2
+		name <Tendril>
+	end
+leg
+	sub
+		melee 2
+		name <Tendril>
+	end
+leg
+	sub
+		melee 2
+		name <Tendril>
+	end
+leg
+	sub
+		melee 2
+		name <Tendril>
+	end
+end
+
+
+ARCH Fungal Hunter
+SDL_SPRITE <monster_fungus1.png>
+SDL_COLORS <199 188 162 135 141 101 250 50 150>
+roguechar <f>
+type <fungus mine asteroid>
+habitat <SPACE>
+statline 9 13 13 10 1 1 1 1
+MonsterTV 8
+skill 8 7
+skill 10 5
+skill 12 5
+skill 18 5
+sealed
+sub
+torso
+	armor 4
+arm
+	armor 3
+	sub
+		melee 5
+		name <Claw>
+		type <Brutal>
+	end
+arm
+	armor 3
+	sub
+		melee 5
+		name <Claw>
+		type <Brutal>
+	end
+leg
+	armor 3
+	sub
+		melee 2
+		name <Tendril>
+	end
+leg
+	armor 3
+	sub
+		melee 2
+		name <Tendril>
+	end
+leg
+	armor 3
+	sub
+		melee 2
+		name <Tendril>
+	end
+leg
+	armor 3
+	sub
+		melee 2
+		name <Tendril>
+	end
+end
+
+CombatProp 1
+name <SPIKE MUSHROOM>
+roguechar <m>
+SDL_SPRITE <prop_turret1.png>
+SDL_COLORS <>
+type <fungus vermin mine asteroid>
+habitat <ASTER>
+MonsterTV 1
+sealed
+meat
+skill 8 4
+skill 12 12
+sub
+	turret
+	sub
+		Melee 8
+		name <Spikes>
+		Speed 5
+	end
+end
+
+arch spaceworm
+roguechar <w>
+SDL_SPRITE <monster_larva.png>
+SDL_COLORS <245 213 160 245 213 160 255 230 195>
+type <mutant vermin mine asteroid>
+habitat <SPACE>
+statline 7 3 6 5 4 5 1 1
+MonsterTV 1
+sealed
+skill 8 3
+skill 13 1
+sub
+head
+	armor 2
+	sub
+		Melee 4
+		name <Jaws>
+	end
+torso
+tail
+end
+
+

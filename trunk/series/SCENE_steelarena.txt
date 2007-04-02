@@ -1,0 +1,34 @@
+% STEEL ARENA/CAYLEY ROCK
+
+scene 0 2
+	MapWidth 30
+	MapHeight 30
+	AsteroidMap
+
+	% Remember- dynamically loaded scenes shouldn't have names.
+	% L1 = Finalization Counter
+	% L4 = Difficulcy Rating
+	% L5 = Identity of NPC Arena Manager
+
+	special <SOLO>
+
+	NU1 <if= T1 0  Return  if= L1 0 L= 1 1 Reputation 6 -5>
+	NU2 <if= T2 0  Return  if= L1 0 L= 1 1 NPCVar+ L5 2 1  Reputation 6 1>
+
+
+sub
+	Team 1
+	setenemy 2
+	ParaX 5
+	ParaY 5
+
+	Team 2
+	setenemy 1
+	Deploy <WMecha 2 Threat L2 100>
+	SetFaction 5
+	ParaX 25
+	ParaY 25
+end
+
+
+

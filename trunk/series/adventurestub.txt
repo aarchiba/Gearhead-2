@@ -1,0 +1,13 @@
+% Adventure Stub
+Adventure
+
+UPDATE <UPDATEPROPS>
+
+% Load the standard plots
+5min <BatchLoadPlot .standard 1>
+start <BatchLoadPlot .standard 5>
+.standard <PLOT_*.txt>
+
+% Factions will be responsible for their own stories and plots
+
+

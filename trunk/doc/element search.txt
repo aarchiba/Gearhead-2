@@ -1,0 +1,52 @@
+.: CURRENT SCENE
+	The current scene will be inserted as this element.
+
+A: ARTIFACT
+	Select one of the artifacts from the adventure list.
+
+C: CHARACTER
+
+F: FACTION
+
+G: Grab
+	The element will be grabbed from the story into which this plot or scene content
+	is being inserted. Using G will result in an error if the plot/content isn't being
+	inserted into a story.
+
+M: METASCENE
+
+P: PREFAB
+
+S: SCENE
+
+
+Criteria
+
+ArchAlly,ArchEnemy: Character, Faction
+
+Special Criteria
+
+  If the plot has a SPECIAL string attribute defined, the element search
+  will be directed in certain ways.
+
+  LOCAL: Only characters and scenes in the current world will be considered.
+
+
+Relative Search Criteria
+
+!L		Lancemate
+!G		Global Gear
+!N [E1]		Near. E1 and E2 must be in same root scene.
+!F [E1]		Far. E1 and E2 must have different root scenes.
+!M [FacID]	Member. E2 must be member of listed faction.
+!C [E1]		Comrade. E1 and E2 must belong to exactly the same faction.
+!X [E1]		Excluding. E1 and E2 must not be allies.
+!O [E1]		Okay. E1 and E2 must not be enemies.
+!E [E1]		Enemies. E1 and E2 must be enemies.
+!A [E1]		Allies. E1 and E2 must be allies.
+
+Positive element indicies refer to elements of the plot/content.
+Negative element indicies refer to the elements of the story into which the
+	plot/content is being inserted.
+
+

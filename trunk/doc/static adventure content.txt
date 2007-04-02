@@ -1,0 +1,163 @@
+For convenience an instance of static adventure content will be referred
+to as a Quest, even though most will not follow the standard quest format
+seen in most games (do foo, receive bar).
+
+A Quest is a collection of adventure components combined with each other
+and then embedded into the adventure.
+
+
+QUEST FRAGMENT NAMES
+
+A quest fragment type name must begin with an asterix, as in "*SUCCESS".
+
+A quest fragment that begins a new subquest must begin with an asterix
+and a colon, as in "*:PROVESELF".
+
+A quest fragment name may include optional descriptors separated from
+the main name by periods, as in "*:FINDMONEY.CHARITY" or "*:FINDMONEY.INVESTMENT".
+
+If a quest fragment creates new scenes or subquests, it must have the tag
+"BRANCHES" in its requires string.
+
+
+BRANCH POINTS, SUCCESSORS AND COMPLICATIONS
+
+The size of a quest is limited by how many branch points it's given.
+
+A complication subquest gets a number of branch points equal to its parent - 1.
+
+A successor subquest gets a number of branch points equal to its parent - highest subquest
+branch score.
+
+
+ELEMENT HANDLING
+
+Elements are handled mostly as in plots, but with two changes: 1) every element should have a
+scene associated with it, and 2) you shouldn't use a character search; insert characters as
+prefabs instead.
+
+Also remember that the elements are not stored after the quest is assembled, so you should use
+the substitution strings instead of E1...E10 etc.
+
+Do not insert a persona fragment in the greeting of a persona! This will be megalisted
+in, and mess up loads of stuff.
+
+A NPC used in a quest can't be selected for plots until the quest is resolved, i.e. its
+QuestStatus has a negative value.
+
+Rumors attached to a persona have the format "RUMOR%id% <>". When the quest status equals
+ID this rumor will be used.
+
+If a scene is defined which has no associated element, the scene itself will become the
+element.
+
+If "KEY" is requested as an element, it will be the key character. If no key character
+exists then insertion of this component will fail. The key character automatically has
+the key scene as its scene.
+
+Master gears may have a team set explicitly instead of using the team[n],teamdata[n]
+string attributes. Use this with caution.
+
+
+SCENE HANDLING
+
+A scene entrance may be defined as follows: it must have a DESIG string attribute reading
+"Entrance [SceneID]".
+
+Any child gears of a metascene will be moved to the corresponding scene during assembly.
+
+A map feature can be defined and placed in the metascene's subcoms.
+If it has the DESIG "HOME", then its associated element will be placed in the
+feature and given the minimap index "1".
+
+If the scene request begins with "NEW" then a new scene will be created.
+When a new scene is requested, the associated element's context will be passed with prefix "1:".
+
+If the scene request is "KEY" then the quest's key scene will be used.
+
+If the scene request is "GRAB n" then the scene already assigned to element "n" will
+be used. If "n" is greater than the current element number or cannot be found, then
+the content insertion fails.
+
+QUEST REQUEST
+
+   [Quest Type] [Quest Complexity]
+
+A character can request one quest. A scene can request as many as wanted.
+Contained in a "QUEST" string attribute of a scene.
+
+Must contain a content type preceded by a *.
+
+The context for the content request includes the following:
+- SceneContext for the city, in quotes
+  - Context string, desig, type, terrain, static/dynamic, personatype, faction, world
+- XXRan context for the key scene, prefixed by "S:"
+  - Existence, faction, context SAtt
+- XXRan context for the key character, prefixed by "C:"
+  - Existence, relation to PC, faction, job context
+- XXRan context for params, prefixed as "1:" through "9:"
+
+
+QUEST REQUEST FROM A QUEST
+
+Starts with the content type.
+
+Next, a list of element IDs to be passed from the current fragment to the next.
+Note that only 9 parameters can be passed, despite the fact that a plot may have
+(as of now, anyway) up to 10 elements.
+
+
+REPLACEMENT STRINGS
+
+%id%	The layer ID of this component.
+%qid%	The quest ID associated with this component.
+%prev_id%	The layer ID of the parent fragment
+%prev_qid%	The quest ID of the parent fragment
+%scenesq_id%	The layer ID of this scene's subquest (NewScene only)
+%scenesq_qid%	The quest ID of this scene's subquest (NewScene only)
+%scenechar% 	The CID of the scene's key character (NewScene only)
+%scenefac% 	The ID of the scene's faction (NewScene only)
+%threat%	The difficulcy level of the fragment, expressed as renown.
+%sktar%		An appropriate skill roll target, based on the difficulcy.
+%sktar_hard%	A hard skill roll based on the difficulcy.
+%1%..%10%	The element IDs
+%name1%..%name10%	The element names
+%s1%..%s10%	The element scenes
+%id1%..%id8%	Layer IDs of subquests
+%qid1%..%qid8%	Quest IDs of subquests
+
+
+VALUES ASSOCIATED WITH A QUEST
+
+Quest ID:       Every quest has a globally unique ID number.
+                This number is used to determine the "plot state" of
+                a given quest.
+Layer ID:       Every layer in a quest has an ID number which is
+                unique within the scope of the quest.
+
+A component can set the Quest Status to either its own ID (which it should do when
+initializing) or to a negative number (which means that the quest is over).
+
+If a subquest relies on information from the parent quest, it should have a check to
+make sure the parent quest is at the right state before doing anything.
+
+
+REUSABLE FRAGMENTS
+
+Most fragments are unique- once added to the adventure, they are removed from the list
+and will not be used again. If a fragment has a "REUSABLE" tag in its SPECIAL string
+attribute, it will be reusable over and over again.
+
+Reusable fragments should not include any new characters.
+
+
+QUEST FRAGMENT
+	Sub
+		PERSONAS
+		METASCENES contain scene scripts
+	Inv
+		Prefab Elements
+
+
+
+

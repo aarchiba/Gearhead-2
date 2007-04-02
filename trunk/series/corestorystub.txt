@@ -1,0 +1,48 @@
+% Core Story Stub
+	XRanStory
+	name <Core Story>
+	CONTEXT <+P-- +T01 +F-->
+
+	XXRAN_PATTERN <COMP_*.txt>
+
+	% Starting difficulcy level is 5...
+	NAtt -7 1 5
+	% Starting episode completion goal is 6...
+	NAtt -7 2 6
+
+	start <if= V1 0 V= 1 1 goto update>
+	update <CheckComponents>
+	reset_core_story <GrabSource GSetNAtt -7 0 0 Goto update>
+
+	&SetEnemyChar <N= 1 ?>
+	&EnemyChar <N1>
+	&SetEnemyFac <N= 2 ?>
+	&EnemyFac <N2>
+	&SetAllyFac <N= 3 ?>
+	&AllyFac <N3>
+	&SetPlotChar <N= 4 ?>
+	&SetTargetChar <N= 5 ?>
+	&SetCompScene <N= 6 ?>
+	%% Note that "SetNextScene" is not normally called, since it's done
+	%% already by NextComp.
+	&CompScene <N6>
+	&SetTargetItem <N= 8 ?>
+
+	element1 <C>
+	palette_entry_code1 <E>
+	element2 <F>
+	palette_entry_code2 <F>
+	element3 <F>
+	palette_entry_code3 <P>
+	element4 <C>
+	palette_entry_code4 <N>
+	element5 <C>
+	palette_entry_code5 <T>
+	element6 <S>
+	palette_entry_code6 <S>
+	element7 <S>
+	palette_entry_code7 <L>
+	element8 <I>
+	palette_entry_code8 <I>
+
+

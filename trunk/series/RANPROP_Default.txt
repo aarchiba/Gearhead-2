@@ -1,0 +1,75 @@
+%% Contains prop collections.
+
+% To include a superprop in a scene, you need to include a SuperProp request gear.
+% Attach a request to this gear telling what kind of superprop you want to add. For
+% instance, to add an enemy fortress, add the following to the scene:
+%
+%  SuperProp
+%  requires <*Fortress>
+%
+
+%% *FORTRESS Props
+%%  Team 1 = Support Buildings; at least one
+%%  Team 2 = Defense Buildings; maybe none
+%% No fortress should be larger than 6x6.
+
+SuperProp
+requires <*Fortress -!Ex -!Hi -!Md>
+Width 1
+Height 1
+inv
+	STC Bunker-1
+	SetTeam 1
+end
+
+SuperProp
+requires <*Fortress -!Ne -!Hi -!Ex>
+Width 3
+Height 1
+inv
+	STC TURRET-2
+	SetTeam 2
+
+	STC Bunker-1
+	SetTeam 1
+	XPos 1
+
+	STC TURRET-2
+	SetTeam 2
+	XPos 2
+	Dir 4
+end
+
+SuperProp
+requires <*Fortress -!Ne -!Lo>
+Width 3
+Height 3
+inv
+	STC TURRET-2
+	SetTeam 2
+	YPos 1
+
+	STC TURRET-2
+	SetTeam 2
+	XPos 1
+	Dir 6
+
+	STC Bunker-1
+	SetTeam 1
+	XPos 1
+	YPos 1
+
+	STC TURRET-2
+	SetTeam 2
+	XPos 2
+	YPos 1
+	Dir 4
+
+	STC TURRET-2
+	SetTeam 2
+	XPos 1
+	YPos 2
+	Dir 2
+end
+
+

@@ -1,0 +1,777 @@
+%
+% MECHA THEMES
+%
+% Each theme needs a unique ID number.
+%
+% In the theme's InvCom, store all the equipment that this theme might install in
+% other mecha.
+
+% Context of the specialist skill is indicated by "[skill number]". For instance,
+% a Mecha Artillery specialist would be indicated by "[3]".
+
+% All themes must have:
+%   CUSTOMIZATION_ADJECTIVE_0 .. CUSTOMIZATION_ADJECTIVE_4
+%   CUSTOMIZATION_NOUN_0 .. CUSTOMIZATION_NOUN_4
+
+Theme 1
+	name <Pyromaniac>
+	% Some people just love playing with fire... The pyromaniac's weapons are mostly
+	% fire based. Many of them have the BURN or BRUTAL tags as well. These weapons are
+	% not subtle, nor are they effective at long range, but they get the job done.
+	% Pyromania is favored by those who specialize in Artillery and Electronic Warfare
+	requires <GENERAL ~[3] ~[17]>
+
+	CUSTOMIZATION_ADJECTIVE_0 <Flash>
+	CUSTOMIZATION_ADJECTIVE_1 <Fire>
+	CUSTOMIZATION_ADJECTIVE_2 <Blazing>
+	CUSTOMIZATION_ADJECTIVE_3 <Hot>
+	CUSTOMIZATION_ADJECTIVE_4 <Burning>
+	CUSTOMIZATION_NOUN_0 <Pyromaniac>
+	CUSTOMIZATION_NOUN_1 <Firestarter>
+	CUSTOMIZATION_NOUN_2 <Volcano>
+	CUSTOMIZATION_NOUN_3 <Salamander>
+	CUSTOMIZATION_NOUN_4 <Burninator>
+
+	inv
+		Gun 15
+		name <Heavy Flamethrower>
+		caliber <Chemical>
+		type <Line>
+		range 6
+		Acc 1
+		Speed 2
+		scale 2
+		sub
+			Ammo 10
+			Magazine 60
+			caliber <Chemical>
+			type <BURN>
+		end
+
+		Gun 14
+		name <Volcano Cannon>
+		caliber <70mm self-propelled>
+		range 8
+		scale 2
+		sub
+			Ammo 14
+			Magazine 12
+			caliber <70mm self-propelled>
+			type <BLAST 3 BURN BRUTAL>
+		end
+
+		Gun 11
+		name <Flare Storm>
+		type <Swarm>
+		caliber <35mm caseless>
+		Range 8
+		BV 4
+		Acc 1
+		scale 2
+		sub
+			Ammo 11
+			Magazine 100
+			caliber <35mm caseless>
+			type <BURN>
+		end
+
+		Gun 14
+		name <Meteor Cannon>
+		caliber <70mm self-propelled>
+		range 8
+		scale 2
+		type <SWARM>
+		BV 2
+		Speed 1
+		sub
+			Ammo 14
+			Magazine 24
+			caliber <70mm self-propelled>
+			type <BLAST 3 BURN BRUTAL>
+		end
+
+
+		Gun 4
+		name <Flare Gun>
+		caliber <20mm caseless>
+		Range 5
+		scale 2
+		sub
+			Ammo 4
+			Magazine 60
+			caliber <20mm caseless>
+			type <BURN>
+		end
+
+		BeamGun 2
+		Scale 2
+		name <Light Plasma Cannon>
+		type <BRUTAL>
+		Range 2
+		BV 1
+
+		Gun 4
+		name <Flare Cannon>
+		type <Swarm>
+		caliber <20mm caseless>
+		Range 6
+		BV 2
+		Acc 1
+		scale 2
+		sub
+			Ammo 4
+			Magazine 60
+			caliber <20mm caseless>
+			type <BURN>
+		end
+
+		Gun 8
+		name <Volcano Rifle>
+		caliber <50mm self-propelled>
+		range 7
+		scale 2
+		sub
+			Ammo 8
+			Magazine 12
+			caliber <50mm self-propelled>
+			type <BLAST 2 BURN BRUTAL>
+		end
+
+		Gun 10
+		name <Flamethrower>
+		caliber <Chemical>
+		type <Line>
+		range 6
+		Acc 1
+		Speed 3
+		scale 2
+		sub
+			Ammo 10
+			Magazine 60
+			caliber <Chemical>
+			type <BURN>
+		end
+
+		BeamGun 5
+		Scale 2
+		name <Plasma Cannon>
+		type <BRUTAL>
+		Range 4
+		BV 2
+
+		Gun 8
+		name <Heavy Flare Cannon>
+		type <Swarm>
+		caliber <28mm caseless>
+		Range 8
+		BV 4
+		Acc 1
+		scale 2
+		sub
+			Ammo 8
+			Magazine 100
+			caliber <28mm caseless>
+			type <BURN>
+		end
+
+		Gun 5
+		name <Immolation Cannon>
+		caliber <50mm self-propelled>
+		Range 6
+		Speed 3
+		scale 2
+		sub
+			Ammo 5
+			Magazine 35
+			caliber <50mm self-propelled>
+			type <BURN HYPER>
+		end
+
+		BeamGun 8
+		Scale 2
+		name <Nova Beam>
+		type <BRUTAL LINE>
+		Range 8
+
+		BeamGun 7
+		Scale 2
+		name <Heavy Plasma Cannon>
+		type <BRUTAL>
+		Range 6
+		BV 3
+
+		Melee 14
+		Scale 2
+		name <Heat Axe>
+		type <BRUTAL>
+		Acc -1
+		Speed 1
+		mass -7
+
+		EMelee 7
+		Scale 2
+		name <Prometheus Torch>
+		type <BURN>
+
+		Melee 13
+		Scale 2
+		name <Fire Chain>
+		type <FLAIL EXTEND BURN BRUTAL>
+		desc <A powerful flail which dispenses Napalm-X when it hits.>
+		Speed 1
+		Mass -6
+
+		EMelee 16
+		Scale 2
+		name <Prometheus Sword>
+		type <BURN>
+		Acc 1
+		Speed 3
+
+		EMelee 18
+		Scale 2
+		name <Inferno Lance>
+		type <EXTEND BURN BRUTAL>
+		Acc 0
+
+		Melee 10
+		Scale 2
+		name <Fire Star>
+		type <THROWN RETURN BURN ARMORPIERCING>
+		desc <A flaming ring which may be thrown at opponents.>
+		Speed 3
+		mass -8
+
+
+		MLauncher 1
+		Scale 2
+		sub
+			STC ICM-5
+			magazine 2
+		end
+
+		MLauncher 2
+		Scale 2
+		sub
+			STC ICM-5
+			magazine 4
+		end
+
+		MLauncher 3
+		Scale 2
+		sub
+			STC ICM-5
+			magazine 6
+		end
+
+		MLauncher 4
+		Scale 2
+		sub
+			STC ICM-5
+			magazine 8
+		end
+
+		MLauncher 1
+		Scale 2
+		sub
+			STC FBM-8
+			magazine 1
+		end
+
+		MLauncher 6
+		Scale 2
+		sub
+			STC ICM-5
+			magazine 12
+		end
+
+		MLauncher 12
+		Scale 2
+		sub
+			STC ICM-5
+			magazine 24
+		end
+
+		MLauncher 3
+		Scale 2
+		sub
+			STC FBM-8
+			magazine 3
+		end
+
+		MLauncher 4
+		Scale 2
+		sub
+			STC FBM-8
+			magazine 5
+		end
+
+		MLauncher 18
+		Scale 2
+		sub
+			STC ICM-5
+			magazine 36
+		end
+
+		MLauncher 8
+		Scale 2
+		sub
+			STC FBM-8
+			magazine 10
+		end
+
+		MLauncher 12
+		Scale 2
+		sub
+			STC FBM-8
+			magazine 15
+		end
+
+
+	% End PYROMANIAC
+	end
+
+Theme 2
+	name <Soldier>
+	requires <MILIT>
+	%% A career warrior, the soldier's weapons are tough and versatile.
+	%% Most of these weapons should be inspired by contemporary military equipment.
+
+	CUSTOMIZATION_ADJECTIVE_0 <Assault>
+	CUSTOMIZATION_ADJECTIVE_1 <War>
+	CUSTOMIZATION_ADJECTIVE_2 <Battle>
+	CUSTOMIZATION_ADJECTIVE_3 <Blitz>
+	CUSTOMIZATION_ADJECTIVE_4 <Strike>
+	CUSTOMIZATION_NOUN_0 <Soldier>
+	CUSTOMIZATION_NOUN_1 <Jaeger>
+	CUSTOMIZATION_NOUN_2 <Fighter>
+	CUSTOMIZATION_NOUN_3 <Trooper>
+	CUSTOMIZATION_NOUN_4 <Marine>
+
+	inv
+		%% Melee Weapons
+		Melee 7
+		name <Sabre>
+		Scale 2
+		Acc 1
+		mass -2
+
+		Melee 9
+		name <Longsword>
+		Scale 2
+		Acc 1
+		mass -3
+
+		Melee 16
+		name <Halbard>
+		Scale 2
+		type <Extend>
+		mass -5
+
+		EMelee 10
+		name <Plasma Sword>
+		Scale 2
+		Acc 1
+
+		%% Small Guns
+		STC MAC-2
+
+		STC MAC-4
+
+		STC PAR-2
+
+		STC RG-8
+
+		Gun 9
+		name <Grenade Launcher>
+		caliber <50mm explosive cannister>
+		range 6
+		scale 2
+		sub
+			Ammo 9
+			Magazine 30
+			caliber <50mm explosive cannister>
+			type <BLAST 3 BRUTAL>
+		end
+
+		STC VC-5
+		name <Super Vulcan>
+		range 5
+
+		gun 8
+		name <Sweeper Cannon>
+		range 7
+		Acc 1
+		BV 5
+		type <SWARM>
+		caliber <30mm ferrous>
+		scale 2
+		mass -5
+		sub
+			Ammo 8
+			Magazine 120
+			caliber <30mm ferrous>
+		end
+
+		gun 10
+		name <Heavy Autocannon>
+		range 8
+		Scale 2
+		type <Armorpiercing>
+		BV 2
+		Speed 4
+		caliber <30mm caseless>
+		mass -2
+		sub
+			Ammo 10
+			Magazine 90
+			caliber <30mm caseless>
+		end
+
+		%% Big Guns
+		STC GR-12
+
+		STC GR-12
+		mass -7
+
+		STC GR-24
+
+		STC GR-24
+		mass -9
+
+		Gun 17
+		name <Mecha Bazooka>
+		caliber <70mm self-propelled>
+		range 8
+		scale 2
+		Speed 1
+		mass -4
+		sub
+			Ammo 17
+			Magazine 12
+			caliber <70mm self-propelled>
+			type <BLAST 3 BRUTAL>
+		end
+
+		STC RG-16
+
+		Gun 22
+		name <Howitzer>
+		Scale 2
+		caliber <120mm ferrous>
+		Acc 1
+		Range 9
+		mass -11
+		sub
+			Ammo 22
+			Magazine 50
+			caliber <120mm ferrous>
+			type <Armorpiercing>
+		end
+
+		Gun 17
+		name <Mega-Launcher>
+		caliber <70mm self-propelled>
+		range 8
+		scale 2
+		Speed 3
+		mass -4
+		sub
+			Ammo 17
+			Magazine 24
+			caliber <70mm self-propelled>
+			type <BLAST 3 BRUTAL>
+		end
+
+
+		%% Missiles
+		MLauncher 3
+		Scale 2
+		sub
+			STC HR-10
+			Magazine 3
+		end
+
+		MLauncher 2
+		Scale 2
+		sub
+			STC SWM-2
+			Magazine 10
+		end
+
+		MLauncher 4
+		Scale 2
+		sub
+			STC SWM-2
+			Magazine 20
+		end
+
+		MLauncher 15
+		Scale 2
+		sub
+			STC HR-10
+			Magazine 15
+		end
+
+		MLauncher 8
+		Scale 2
+		sub
+			STC SWM-2
+			Magazine 40
+		end
+
+		MLauncher 8
+		Scale 2
+		sub
+			STC AAM-8
+			Magazine 10
+		end
+
+		MLauncher 12
+		Scale 2
+		sub
+			STC SWM-2
+			Magazine 60
+		end
+
+		MLauncher 16
+		Scale 2
+		sub
+			STC SWM-2
+			Magazine 80
+		end
+
+		MLauncher 2
+		Scale 2
+		sub
+			STC DCM-15
+			Magazine 1
+		end
+
+		MLauncher 16
+		Scale 2
+		sub
+			STC AAM-8
+			Magazine 20
+		end
+
+		MLauncher 10
+		Scale 2
+		sub
+			STC FRM-6
+			Magazine 16
+		end
+
+		MLauncher 15
+		Scale 2
+		sub
+			STC ICM-5
+			Magazine 30
+		end
+
+		MLauncher 24
+		Scale 2
+		sub
+			STC AAM-8
+			Magazine 30
+		end
+
+		MLauncher 3
+		Scale 2
+		sub
+			STC DCM-15
+			Magazine 2
+		end
+
+		MLauncher 4
+		Scale 2
+		sub
+			STC FBM-8
+			Magazine 5
+		end
+
+		MLauncher 20
+		Scale 2
+		sub
+			STC FRM-6
+			Magazine 32
+		end
+
+		MLauncher 5
+		Scale 2
+		sub
+			STC DCM-15
+			Magazine 3
+		end
+
+	% End SOLDIER
+	end
+
+Theme 3
+	name <Sophisticated>
+	requires <GENERAL>
+	%% A sophisticated pilot takes great pride in his skill. Excessive displays
+	%% of force are seen as vulgar; it is by the pilot's superior skill that
+	%% enemies are defeated. None of these weapons use rapid fire or area effects;
+	%% most of them will benefit greatly from the skills Spot Weakness and Electronic
+	%% warfare.
+
+	CUSTOMIZATION_ADJECTIVE_0 <Advanced>
+	CUSTOMIZATION_ADJECTIVE_1 <Clever>
+	CUSTOMIZATION_ADJECTIVE_2 <Rapier>
+	CUSTOMIZATION_ADJECTIVE_3 <Sharp>
+	CUSTOMIZATION_ADJECTIVE_4 <Royal>
+	CUSTOMIZATION_NOUN_0 <Duelist>
+	CUSTOMIZATION_NOUN_1 <Blade>
+	CUSTOMIZATION_NOUN_2 <Baron>
+	CUSTOMIZATION_NOUN_3 <Pride>
+	CUSTOMIZATION_NOUN_4 <Skill>
+
+	inv
+		%% Melee Weapons
+		Melee 6
+		name <Foil>
+		Scale 2
+		Speed 3
+		Mass -2
+
+		Melee 5
+		name <Ion Blade>
+		Scale 2
+		Speed 3
+		type <OVERLOAD>
+		Mass -3
+
+		Melee 7
+		name <Rapier>
+		Scale 2
+		Speed 3
+		type <ARMORPIERCING>
+		mass -3
+
+		Melee 8
+		name <Dynamo Rapier>
+		Scale 2
+		Speed 3
+		type <HAYWIRE ARMORPIERCING>
+		mass -4
+
+		Melee 12
+		name <Double Sword>
+		Scale 2
+		Speed 4
+		Acc 1
+		type <ArmorPiercing>
+		mass -6
+
+		EMelee 14
+		name <Beam Rapier>
+		Scale 2
+		Speed 3
+		Acc 2
+
+		Melee 8
+		name <Javelin>
+		Scale 2
+		Acc 1
+		type <ArmorPiercing Thrown Return>
+		mass -7
+
+		Melee 11
+		name <Electro-Whip>
+		Scale 2
+		Acc 1
+		type <Extend Flail Haywire Overload>
+		mass -9
+
+		Emelee 21
+		name <Nova Rapier>
+		Scale 2
+		Speed 4
+		Acc 2
+
+		%% Big Guns
+		STC GR-12
+
+		STC GR-12
+		mass -7
+
+		STC GR-24
+
+		STC GR-24
+		mass -9
+
+		STC GR-12
+		name <EV Gauss Rifle>
+		mass -7
+		type <Armorpiercing>
+
+		STC GR-24
+		name <EV Heavy Gauss Rifle>
+		mass -7
+		type <Armorpiercing>
+
+		BeamGun 20
+		name <Heavy Laser Cannon>
+		mass -10
+		Scale 2
+
+		%% Small Guns
+		STC LAS-3
+		mass -1
+
+		STC LAS-5
+		mass -1
+
+		Gun 8
+		Scale 2
+		name <Gauss Sniper Rifle>
+		caliber <50mm ferrous>
+		type <ARMORPIERCING>
+		Range 10
+		mass -2
+		Acc 1
+		sub
+			Ammo 8
+			Magazine 24
+			caliber <50mm ferrous>
+		end
+
+		STC PAR-6
+
+		STC LAS-10
+		name <Long Range Laser Cannon>
+		range 6
+		mass -4
+
+		STC PHS-8
+
+		BeamGun 7
+		name <N-Pulse Cannon>
+		scale 2
+		range 5
+		Speed 3
+		mass -1
+		type <ARMORPIERCING HAYWIRE>
+
+		Gun 9
+		Scale 2
+		name <Master Cannon>
+		caliber <45mm self-propelled>
+		type <ARMORPIERCING ANTIAIR>
+		Range 14
+		mass -4
+		Acc 2
+		Speed 4
+		sub
+			Ammo 9
+			Magazine 50
+			caliber <45mm self-propelled>
+			type <OVERLOAD>
+			mass -2
+		end
+
+	% End Sophisticated
+	end
+
+

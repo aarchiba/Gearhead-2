@@ -1,0 +1,13 @@
+Arena Mode missions are stored in series\ARENAMISSION_*.txt
+
+They are written as scenes, but may also request elements like plots.
+
+A mission must have a "requires" SATt which describes what factions can
+take it. This string can include:
+
+- Faction type, designation
+- Difficulcy rating: !Ex, !Hi, !Md, !Lo, !Ne
+
+As with plots, the first invcoms of the mission will be taken as the
+prefab elements. To assign a faction to a prefab NPC, use a negative
+value to assign one of the elements (E1..E10 = -1..-10).

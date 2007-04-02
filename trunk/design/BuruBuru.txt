@@ -1,0 +1,184 @@
+Battroid 5
+Name <Buru Buru>
+Desig <SAN-X9>
+type <GROUND SPACE>
+factions <GENERAL>
+SDL_Sprite <btr_buruburu.png>
+SDL_PORTRAIT <item_buruburu.png>
+desc <One of the oldest designs still in common use, the BuruBuru is the dependable workhorse of the mecha world.>
+Legality -15
+
+sub
+Head
+	Armor 4
+	mass 2
+	sub
+		Sensor 4
+
+		STC LAS-3
+		type <INTERCEPT>
+		Integral
+	end
+
+Torso
+	Armor 4
+	mass 3
+	sub
+		CPit
+		Armor 2
+
+		Mount
+		name <Collar Mount>
+		inv
+			MLauncher 4
+			sub
+				STC SWM-2
+				Magazine 20
+			end
+		end
+	end
+
+Arm
+	Name <Right Arm>
+	mass 3
+	Armor 4
+	sub
+		Hand
+		inv
+			Gun 9
+			Name <Shaka Cannon>
+			Caliber <150mm Shells>
+			sub
+				Ammo 10
+				Caliber <150mm Shells>
+				Magazine 15
+			end
+		end
+	end
+
+Arm
+	Name <Left Arm>
+	mass 3
+	Armor 4
+	sub
+		Hand
+		inv
+			Melee 5
+			Name <Axe>
+			Acc 1
+		end
+
+	end
+
+Leg
+	Name <Right Leg>
+	mass 3
+	Armor 4
+	sub
+		HoverJet 4
+	end
+
+Leg
+	Name <Left Leg>
+	mass 3
+	Armor 4
+	sub
+		HoverJet 4
+	end
+end
+
+Battroid 5
+Name <Buru Buru>
+Desig <SAN-X9sk StarWarrior>
+type <GROUND SPACE>
+factions <MAQUI SILKN>
+SDL_Sprite <btr_buruburu.png>
+SDL_PORTRAIT <item_buruburu.png>
+desc <This variant is used by the Silver Knights. It features a particle cannon and improved defenses.>
+Legality -5
+
+sub
+Head
+	Armor 4
+	Mass 1
+	sub
+		Sensor 4
+
+		STC LAS-3
+		type <INTERCEPT>
+	end
+
+Torso
+	Armor 4
+	sub
+		CPit
+		Armor 2
+
+		Mount
+		name <Collar Mount>
+		inv
+			MLauncher 4
+			sub
+				STC HR-10
+				Magazine 4
+			end
+		end
+		ECM 2
+		PowerSource 4
+		mass -4
+	end
+
+Arm
+	Name <Right Arm>
+	Armor 4
+	Mass 1
+	sub
+		Hand
+		inv
+			STC PAR-6
+		end
+
+		Mount
+		name <Right Arm Mount>
+		inv
+			STC SML-5
+		end
+
+		PowerSource 1
+		Mass -1
+	end
+
+Arm
+	Name <Left Arm>
+	Armor 4
+	Mass 1
+	sub
+		Hand
+		Mount
+		name <Left Arm Mount>
+
+		PowerSource 1
+		Mass -1
+	end
+	inv
+		Shield 3
+		DefBonus 1
+	end
+
+Leg
+	Name <Right Leg>
+	mass 1
+	Armor 4
+	sub
+		HoverJet 4
+	end
+
+Leg
+	Name <Left Leg>
+	mass 1
+	Armor 4
+	sub
+		HoverJet 4
+	end
+end
+
