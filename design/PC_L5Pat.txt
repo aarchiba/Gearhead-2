@@ -1,0 +1,660 @@
+%% L5 Pattern Equipment File
+%%
+%%   Contains equipment normally found in the L5 region, including gear
+%%   used by the L5 Alliance, Comet Metalworks, and the other factions
+%%   operating in the region.
+
+%  ************************
+%  ***  MELEE  WEAPONS  ***
+%  ************************
+
+Melee 20
+Name <Monomolecular Whip>
+desig <Comet MJ1>
+Speed 6
+Acc -2
+Type <ARMORPIERCING EXTEND FLAIL>
+Mass -14
+desc <An extremely thin cord of incredibly strong polymer, the monomolecular whip can cut through anything it comes in contact with.>
+category <WEAPON MELEE>
+factions <COMET>
+legality 5
+
+Melee 2
+Name <Nerve Whip>
+Acc -2
+Speed 5
+Type <EXTEND FLAIL STONE>
+desc <This whip transmits an electric pulse which can temporarily disrupt the nervous system of its target.>
+category <WEAPON MELEE>
+factions <MAQUI>
+legality 10
+
+Melee 10
+Name <MonoSword>
+Desig <Hoeller>
+Type <ARMORPIERCING>
+Acc 2
+Speed 5
+Mass -8
+desc <A intricately detailed ceram sword with a monomolecularly serrated edge.>
+sdl_portrait <item_cutlass.png>
+category <WEAPON MELEE>
+factions <HOELL PRIVA>
+
+Melee 14
+Name <Double Lance>
+Desig <Hoeller>
+Type <ARMORPIERCING>
+Acc 1
+Speed 8
+Mass -10
+desc <A pole arm with a large ornate blade at each end.>
+category <WEAPON MELEE>
+factions <HOELL PRIVA>
+
+Melee 10
+Name <Silver Longsword>
+Type <ARMORPIERCING>
+Acc 1
+Speed 5
+Mass -8
+desc <A ceremonial weapon of the Silver Knights.>
+sdl_portrait <item_cutlass.png>
+category <WEAPON MELEE>
+factions <SILKN>
+
+Melee 16
+Name <Silver Greatsword>
+Type <ARMORPIERCING>
+Acc 1
+Speed 5
+Mass -8
+desc <A ceremonial weapon of the Silver Knights.>
+category <WEAPON MELEE>
+factions <SILKN>
+
+
+%  ****************************
+%  ***  BALLISTIC  WEAPONS  ***
+%  ****************************
+
+Ammo 8
+name <5mm Automatic Clip>
+caliber <5mm auto>
+magazine 40
+category <AMMO>
+factions <COMET>
+legality -10
+SDL_PORTRAIT <item_ammoclip.png>
+
+Ammo 8
+name <6mm Pistol Clip>
+caliber <6mm pistol>
+magazine 15
+category <AMMO>
+factions <MAQUI>
+legality -10
+SDL_PORTRAIT <item_ammoclip.png>
+
+Ammo 4
+name <2mm Ferrous Clip>
+caliber <2mm ferrous>
+magazine 450
+category <AMMO>
+factions <MAQUI>
+mass -4
+SDL_PORTRAIT <item_ammoclip.png>
+
+Gun 4
+name <Pin Magnum>
+desig <VT2-X>
+category <WEAPON MISSILE>
+Factions <MAQUI>
+desc <A light magnetic rifle often used by security forces.>
+caliber <2mm ferrous>
+Acc 1
+Range 5
+BV 2
+Speed 4
+Legality 0
+Mass -2
+sub
+	Ammo 4
+	name <2mm Ferrous Clip>
+	caliber <2mm ferrous>
+	magazine 90
+	mass -1
+	SDL_PORTRAIT <item_ammoclip.png>
+end
+
+Gun 4
+Name <Pin Rifle>
+desig <VT4>
+Type <SWARM>
+category <WEAPON MISSILE>
+factions <MAQUI>
+desc <A magnetic cannon that fires tiny slivers of metal at extreme velocity.>
+caliber <2mm ferrous>
+Mass -8
+Acc 1
+Range 8
+BV 8
+Speed 3
+legality 5
+sub
+	Ammo 4
+	name <2mm Ferrous Clip>
+	caliber <2mm ferrous>
+	magazine 450
+	mass -4
+	SDL_PORTRAIT <item_ammoclip.png>
+end
+
+Gun 5
+Name <Slug Pistol>
+desig <Hounder>
+desc <A low velocity single firing pistol. Fires solid metal slugs.>
+category <WEAPON MISSILE>
+factions <MAQUI>
+caliber <6mm pistol>
+Mass -2
+Range 3
+Acc 2
+Speed 4
+legality 5
+sub
+	Ammo 8
+	name <6mm Pistol Clip>
+	caliber <6mm pistol>
+	magazine 12
+	SDL_PORTRAIT <item_ammoclip.png>
+end
+
+Gun 2
+name <Autopistol>
+desc <A small caliber low velocity automatic pistol.>
+desig <Comet AK14>
+caliber <5mm auto>
+category <WEAPON MISSILE>
+factions <COMET MAQUI>
+Mass -3
+Range 3
+Acc 1
+Speed 5
+BV 3
+sub
+	Ammo 2
+	name <5mm Automatic Clip>
+	caliber <5mm auto>
+	magazine 40
+	SDL_PORTRAIT <item_ammoclip.png>
+end
+
+Gun 2
+name <Autogun>
+desc <A small caliber low velocity automatic rifle.>
+desig <Comet AK19>
+caliber <5mm auto>
+category <WEAPON MISSILE>
+factions <COMET MAQUI>
+Mass -3
+Range 5
+Acc 1
+Speed 5
+BV 5
+sub
+	Ammo 2
+	name <5mm Automatic Clip>
+	caliber <5mm auto>
+	magazine 90
+	SDL_PORTRAIT <item_ammoclip.png>
+end
+
+%  ********************
+%  ***  BEAM  GUNS  ***
+%  ********************
+
+
+%  ***************************
+%  ***  MISSILE LAUNCHERS  ***
+%  ***************************
+
+
+
+%  ************************
+%  ***  WEAPON ADD-ONS  ***
+%  ************************
+
+
+
+%  ******************
+%  ***  GRENADES  ***
+%  ******************
+
+
+%  ***************
+%  ***  ARMOR  ***
+%  ***************
+
+HeadArmor 2
+name <Light Space Helm>
+desc <A light spacesuit helm with integrated rebreather.>
+Category <CLOTHING SPACE>
+Factions <MAQUI COMET HOELL>
+SDL_PORTRAIT <item_lightspacehelm.png>
+Mass -2
+Legality -25
+Sealed
+Hardened
+
+HeadArmor 4
+name <Heavy Space Helm>
+desc <An armored spacesuit helm with integrated rebreather.>
+Category <CLOTHING ARMOR SPACE>
+Factions <MAQUI>
+SDL_PORTRAIT <item_spacehelm.png>
+Mass -6
+Legality -15
+Sealed
+Hardened
+
+Set
+name <Flight Suit [set]>
+desc <A light spacesuit.>
+Category <CLOTHING SPACE>
+Factions <MAQUI COMET HOELL>
+Legality -25
+inv
+	HeadArmor 2
+	name <Light Space Helm>
+	desc <A light spacesuit helm with integrated rebreather.>
+	Category <CLOTHING SPACE>
+	Factions <MAQUI COMET HOELL>
+	SDL_PORTRAIT <item_lightspacehelm.png>
+	Mass -2
+	Legality -25
+	Sealed
+	Hardened
+
+	BodyArmor 2
+	name <Flight Suit>
+	desc <A light spacesuit.>
+	Category <CLOTHING SPACE>
+	Factions <MAQUI COMET HOELL>
+	Mass -3
+	Legality -25
+	Sealed
+	sub
+		SpaceFlight 2
+	end
+
+	ArmArmor 2
+	name <Flight Suit Sleeve>
+	desc <A light spacesuit.>
+	Category <CLOTHING SPACE>
+	Factions <MAQUI COMET HOELL>
+	Mass -3
+	Legality -25
+	Sealed
+
+	LegArmor 2
+	name <Flight Suit Legging>
+	desc <A light spacesuit.>
+	Category <CLOTHING SPACE>
+	Factions <MAQUI COMET HOELL>
+	Mass -3
+	Legality -25
+	Sealed
+
+	ArmArmor 2
+	name <Flight Suit Sleeve>
+	desc <A light spacesuit.>
+	Category <CLOTHING SPACE>
+	Factions <MAQUI COMET HOELL>
+	Mass -3
+	Legality -25
+	Sealed
+
+	LegArmor 2
+	name <Flight Suit Legging>
+	desc <A light spacesuit.>
+	Category <CLOTHING SPACE>
+	Factions <MAQUI COMET HOELL>
+	Mass -3
+	Legality -25
+	Sealed
+end
+
+Set
+name <SkinSuit [set]>
+desc <A skintight spacesuit.>
+Category <CLOTHING SPACE>
+Factions <MAQUI COMET HOELL>
+Legality -25
+inv
+	HeadArmor 2
+	name <Light Space Helm>
+	desc <A light spacesuit helm with integrated rebreather.>
+	Category <CLOTHING SPACE>
+	Factions <MAQUI COMET HOELL>
+	SDL_PORTRAIT <item_lightspacehelm.png>
+	Mass -2
+	Legality -25
+	Sealed
+	Hardened
+
+	BodyArmor 2
+	name <SkinSuit Suit>
+	desc <A skintight spacesuit.>
+	Category <CLOTHING SPACE>
+	Factions <MAQUI COMET HOELL>
+	Mass -3
+	Legality -25
+	Sealed
+	Hardened
+	sub
+		SpaceFlight 3
+	end
+
+	ArmArmor 2
+	name <SkinSuit Sleeve>
+	desc <A skintight spacesuit.>
+	Category <CLOTHING SPACE>
+	Factions <MAQUI COMET HOELL>
+	Mass -3
+	Legality -25
+	Sealed
+	Hardened
+
+	LegArmor 2
+	name <SkinSuit Legging>
+	desc <A skintight spacesuit.>
+	Category <CLOTHING SPACE>
+	Factions <MAQUI COMET HOELL>
+	Mass -3
+	Legality -25
+	Sealed
+	Hardened
+
+	ArmArmor 2
+	name <SkinSuit Sleeve>
+	desc <A skintight spacesuit.>
+	Category <CLOTHING SPACE>
+	Factions <MAQUI COMET HOELL>
+	Mass -3
+	Legality -25
+	Sealed
+	Hardened
+
+	LegArmor 2
+	name <SkinSuit Legging>
+	desc <A skintight spacesuit.>
+	Category <CLOTHING SPACE>
+	Factions <MAQUI COMET HOELL>
+	Mass -3
+	Legality -25
+	Sealed
+	Hardened
+end
+
+Set
+name <Encounter Suit [set]>
+desc <A bulky spacesuit.>
+Category <ARMOR SPACE>
+Factions <MAQUI>
+Legality -15
+inv
+	BodyArmor 4
+	name <Encounter Suit>
+	desc <A bulky spacesuit.>
+	Category <ARMOR SPACE>
+	Factions <MAQUI>
+	Mass -4
+	Legality -15
+	Sealed
+	sub
+		SpaceFlight 3
+	end
+
+	ArmArmor 4
+	name <Encounter Sleeve>
+	desc <A bulky spacesuit.>
+	Category <ARMOR SPACE>
+	Factions <MAQUI>
+	Mass -4
+	Legality -15
+	Sealed
+
+	LegArmor 4
+	name <Encounter Legging>
+	desc <A bulky spacesuit.>
+	Category <ARMOR SPACE>
+	Factions <MAQUI>
+	Mass -4
+	Legality -15
+	Sealed
+
+	ArmArmor 4
+	name <Encounter Sleeve>
+	desc <A bulky spacesuit.>
+	Category <ARMOR SPACE>
+	Factions <MAQUI>
+	Mass -4
+	Legality -15
+	Sealed
+
+	LegArmor 4
+	name <Encounter Legging>
+	desc <A bulky spacesuit.>
+	Category <ARMOR SPACE>
+	Factions <MAQUI>
+	Mass -4
+	Legality -15
+	Sealed
+
+	HeadArmor 4
+	name <Heavy Space Helm>
+	desc <An armored spacesuit helm with integrated rebreather.>
+	Category <CLOTHING ARMOR SPACE>
+	Factions <MAQUI>
+	SDL_PORTRAIT <item_spacehelm.png>
+	Mass -6
+	Legality -15
+	Sealed
+	Hardened
+end
+
+Set
+name <Ceram Armor [set]>
+desc <A strong armor plate made from the light ceram material.>
+Category <ARMOR>
+Factions <MAQUI>
+legality -5
+inv
+	BodyArmor 6
+	Name <Ceram Breastplate>
+	desc <A strong armor plate made from the light ceram material.>
+	Category <ARMOR>
+	Factions <MAQUI>
+	Mass -10
+	legality -5
+	Hardened
+
+	HeadArmor 4
+	Name <Ceram Helmet>
+	desc <A strong helmet made from the light ceram material.>
+	Category <ARMOR>
+	Factions <MAQUI>
+	Mass -6
+	legality -5
+	Hardened
+
+	ArmArmor 4
+	Name <Ceram Plate Sleeve>
+	desc <A strong sleeve made from the light ceram material.>
+	Category <ARMOR>
+	Factions <MAQUI>
+	Mass -7
+	legality -5
+	Hardened
+
+	LegArmor 4
+	Name <Ceram Plate Legging>
+	desc <Strong legging made from the light ceram material.>
+	Category <ARMOR>
+	Factions <MAQUI>
+	Mass -7
+	legality -5
+	Hardened
+
+	ArmArmor 4
+	Name <Ceram Plate Sleeve>
+	desc <A strong sleeve made from the light ceram material.>
+	Category <ARMOR>
+	Factions <MAQUI>
+	Mass -7
+	legality -5
+	Hardened
+
+	LegArmor 4
+	Name <Ceram Plate Legging>
+	desc <Strong legging made from the light ceram material.>
+	Category <ARMOR>
+	Factions <MAQUI>
+	Mass -7
+	legality -5
+	Hardened
+end
+
+BodyArmor 6
+Name <Ceram Breastplate>
+desc <A strong armor plate made from the light ceram material.>
+Category <ARMOR>
+Factions <MAQUI>
+Mass -10
+legality -5
+Hardened
+
+HeadArmor 4
+Name <Ceram Helmet>
+desc <A strong helmet made from the light ceram material.>
+Category <ARMOR>
+Factions <MAQUI>
+Mass -6
+legality -5
+Hardened
+
+ArmArmor 4
+Name <Ceram Plate Sleeve>
+desc <A strong sleeve made from the light ceram material.>
+Category <ARMOR>
+Factions <MAQUI>
+Mass -7
+legality -5
+Hardened
+
+LegArmor 4
+Name <Ceram Plate Legging>
+desc <Strong legging made from the light ceram material.>
+Category <ARMOR>
+Factions <MAQUI>
+Mass -7
+legality -5
+Hardened
+
+ArmArmor 7
+Name <Boarding Claw>
+desc <This armor features a sharp claw specifically designed for ripping through spaceship bulkheads.>
+Category <WEAPON MELEE>
+Factions <PRIVA HOELL>
+Mass -10
+legality 0
+Sealed
+sub
+	Melee 18
+	Name <Claw>
+	desc <A sharp claw.>
+	Acc 1
+	Speed 4
+	Mass -12
+end
+
+%  *****************
+%  ***  SHIELDS  ***
+%  *****************
+
+Shield 6
+Name <Ceram Shield>
+desc <A large shield made from ceram polymer.>
+Category <SHIELD>
+Factions <MAQUI>
+DefBonus 1
+mass -5
+legality -5
+Hardened
+
+Shield 4
+Name <Ceram Buckler>
+desc <A small shield made from ceram polymer.>
+Category <SHIELD>
+Factions <MAQUI>
+DefBonus -2
+mass -1
+legality -5
+Hardened
+
+
+%  *********************
+%  ***  ELECTRONICS  ***
+%  *********************
+
+
+%  *****************************
+%  ***  MUSICAL INSTRUMENTS  ***
+%  *****************************
+
+
+
+%  *********************
+%  ***  REPAIR FUEL  ***
+%  *********************
+
+
+
+%  *********************
+%  ***  CONSUMABLES  ***
+%  *********************
+
+Food 45
+Mass -4
+Name <Beef Tubesteak>
+desc <Cloned beef grown in zero gravity for superior texture and flavor.>
+Category <FOOD>
+Factions <MAQUI>
+legality -50
+
+Food 45
+Mass -4
+Name <Turkey Tubesteak>
+desc <Cloned turkey meat grown in zero gravity for superior texture and flavor.>
+Category <FOOD>
+Factions <MAQUI>
+legality -50
+
+Food 45
+Mass -4
+Name <Bacon Tubesteak>
+desc <Cloned bacon loaf grown in zero gravity for superior texture and flavor.>
+Category <FOOD>
+Factions <MAQUI>
+legality -50
+
+
+%  *******************
+%  ***  CYBERWARE  ***
+%  *******************
+
+
+
+

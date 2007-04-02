@@ -1,0 +1,77 @@
+%%
+%% START-OF-GAME RANDOM CONTENT
+%%
+%% The cavalier club or wherever the PC starts should have several things
+%% to help the PC out.
+
+%% *INTRO_SHOP Content
+%%	This will be a shop selling things a starting PC might need.
+
+Content
+	requires <*INTRO_SHOP>
+	content <Required *DECOR_FOR_SHOP %1% Local>
+	element1 <Prefab>
+	team1 <Citizens>
+	teamdata1 <ally pass>
+	sub
+		Persona 1
+		*greeting <*NiceToMeetYou GoShop>
+		*GoShop <*SHOP_INTRO GoBye>
+		*GoBye <*GOODBYE>
+	end
+	inv
+		NPC Shopkeeper
+		skill 21 5
+	end
+
+
+%% *MENTOR Content
+%%	This is a character who will provide some advice and a long-term
+%%	starting quest for the PC.
+
+Content
+	requires <*MENTOR>
+	element1 <Prefab>
+	team1 <citizens>
+	teamdata1 <pass>
+	sub
+		Persona 1
+		% V1 = Have heard quest speech at least once
+		*greeting <*NiceToMeetYou GoMainMenu>
+		GoMainMenu <NewChat Say 1 AddChat 1 AddChat 2 AddChat 3 AddChat 4>
+		*GoMission <*MENTOR_ExQuest 3 4>
+		result1 <V= 1 1 Goto GoMission>
+		result2 <Goto GoMission>
+		*result3 <*MENTOR_WhatDoFirst 1 2 4>
+		*result4 <*MENTOR_WhatEquipment 1 2 3>
+
+		Msg1 <I've been a mecha pilot for a long time. If you've got any questions about being a cavalier, I'll do my best to answer.>
+		Msg1_1 <>
+		CMsg1_1 <ifNPCSociable Accept>
+		Msg1_2 <>
+		CMsg1_2 <ifNPCShy Accept>
+		Msg1_3 <>
+		CMsg1_3 <ifNPCEasygoing Accept>
+		Msg1_4 <>
+		CMsg1_4 <ifNPCPassionate Accept>
+		Msg1_5 <>
+		CMsg1_5 <ifNPCCheerful Accept>
+		Msg1_6 <>
+		CMsg1_6 <ifNPCMelancholy Accept>
+
+		Prompt1 <What's the most important part of being a pilot?>
+		CPrompt1 <if= V1 0 Accept>
+		Prompt2 <What do you think about my progress?>
+		CPrompt2 <if# V1 0 Accept>
+		Prompt3 <What should I do first?>
+		Prompt4 <What do I need?>
+
+	end
+	inv
+		NPC Mecha Pilot
+		Age 20
+		EquipChar 100000
+	end
+
+
+

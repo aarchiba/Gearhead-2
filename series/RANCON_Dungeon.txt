@@ -1,0 +1,289 @@
+%% *DUNGEON_X CONTENT
+%%   Dungeon Extras. Little bits of personality for dungeon levels.
+Content
+	name <Computer Map>
+	requires <*DUNGEON_X Ruin>
+	minimap < ... .###..#1+..###. ... >
+	element1 <Prefab>
+	start <if= V%id%01 0 else %pop% V= %id%01 1 ifAwareness 10 else %pop% Print %id%01 Goto %pop%>
+	msg%id%01 <This level seems to be in good condition.>
+	inv
+		STC COMPUTER-1
+		use <Print 1>
+		clue32 <if= V1 0 else GoBeenBefore V= 1 1 Mental ifCodeBreaking 10 else GoFail Print 4 MagicMap>
+		GoBeenBefore <Print 2>
+		GoFail <Print 3>
+		msg1 <This old computer still seems to be working.>
+		Msg2 <There's nothing useful on this computer.>
+		Msg3 <You don't find anything useful on this computer.>
+		Msg4 <Searching the computer, you find a map of the current level.>
+	end
+
+Content
+	name <Emergency Spacesuit>
+	requires <*DUNGEON_X Mine Space ~!Md>
+	minimap <......###..#1+..###......>
+	element1 <Prefab>
+	inv
+		STC CHEST-1
+		Lock 10
+		inv
+			BodyArmor 2
+			name <SkinSuit Suit>
+			desc <A skintight spacesuit.>
+			Mass -3
+			Sealed
+
+			ArmArmor 2
+			name <SkinSuit Sleeve>
+			desc <A skintight spacesuit.>
+			Mass -3
+			Sealed
+
+			LegArmor 2
+			name <SkinSuit Legging>
+			desc <A skintight spacesuit.>
+			Mass -3
+			Sealed
+
+			ArmArmor 2
+			name <SkinSuit Sleeve>
+			desc <A skintight spacesuit.>
+			Mass -3
+			Sealed
+
+			LegArmor 2
+			name <SkinSuit Legging>
+			desc <A skintight spacesuit.>
+			Mass -3
+			Sealed
+
+			HeadArmor 2
+			name <Mining Helmet>
+			desc <A light spacesuit helm with integrated rebreather and a communicator.>
+			Mass -1
+			Sealed
+			Phone
+
+			PowerSource 8
+			name <Power Cell 200>
+		end
+	end
+
+
+Content
+	name <Mine Treasure>
+	requires <*DUNGEON_X Mine !Ex ~Asteroid>
+	element1 <Prefab>
+	element2 <Prefab>
+	teamdata2 <sd enemy>
+	start <if= V%id%01 0 else %pop% V= %id%01 1 ifAwareness 5 else %pop% Print %id%01 Goto %pop%>
+	msg%id%01 <The walls of this level have been sliced erratically.>
+	inv
+		BigTreasure 500
+		mass 2
+		name <Ruby>
+		desc <An enormous red jewel.>
+		Clue29 <Print 1 if= V1 0 V= 1 1 SkillXP 29 100>
+		Clue37 <Print 2 if= V2 0 V= 2 1 SkillXP 37 100>
+		Msg1 <Jewels like this are often formed on asteroids, but this one is exceptionally large.>
+		Msg2 <This jewel is both large and flawless. It must be worth a lot of money.>
+
+		monster murder machine
+		% This is a worse than usual murder machine, in that it has a
+		% dodge skill of 10 and an attack skill of 15. Killer.
+		skill  8 15
+		skill 10 10
+	end
+
+Content
+	name <Mining Equipment 2>
+	requires <*DUNGEON_X Mine ~!Md ~!Hi>
+	element1 <Prefab>
+	inv
+		EMelee 20
+		Name <Rock Drill>
+		Type <BRUTAL>
+		Mass -5
+		Acc -1
+		Speed 1
+		desc <A plasma drill used in mining. It would also make a decent weapon.>
+		inv
+			PowerSource 4
+			mass -1
+			name <Power Cell 100>
+		end
+	end
+
+Content
+	name <Mining Equipment>
+	requires <*DUNGEON_X Mine ~!Ne ~!Lo>
+	element1 <Prefab>
+	inv
+		Melee 5
+		Name <Pick>
+		desc <A tool for digging. Also a passable weapon.>
+		Mass 2
+		Speed 1
+	end
+
+Content
+	name <Just Decor>
+	requires <*DUNGEON_X ~!Ne>
+	minimap <.......#...###...#.......>
+
+Content
+	name <Dungeon Shrine>
+	requires <*DUNGEON_X ~!Md>
+	element1 <Prefab>
+	start <if= V%id%01 0 else %pop% V= %id%01 1 ifPCSpiritual else %pop% ifAwareness 5 else %pop% Print %id%01 Goto %pop%>
+	msg%id%01 <You feel a spiritual aura in this place.>
+	inv
+		STC SHRINE-1
+	end
+
+Content
+	name <Fungus Bomb>
+	requires <*DUNGEON_X !Lo SPACE>
+	element1 <Prefab>
+	teamdata1 <sd enemy>
+	element2 <Prefab>
+	teamdata2 <sd enemy>
+	element3 <Prefab>
+	teamdata3 <sd enemy>
+	start <if= V%id%01 0 else %pop% V= %id%01 1 ifAwareness 10 else %pop% Print %id%01 Goto %pop%>
+	msg%id%01 <You notice some organic filaments drifting through space.>
+	inv
+		Monster Fungal Sphere
+		Monster Fungal Sphere
+		Monster Fungal Sphere
+	end
+
+
+Content
+	name <Mouse Nest>
+	requires <*DUNGEON_X !Lo GROUND>
+	element1 <Prefab>
+	teamdata1 <sd enemy>
+	element2 <Prefab>
+	teamdata2 <sd enemy>
+	element3 <Prefab>
+	teamdata3 <sd enemy>
+	element4 <Prefab>
+	teamdata4 <sd enemy>
+	element5 <Prefab>
+	teamdata5 <sd enemy>
+	element6 <Prefab>
+	start <if= V%id%01 0 else %pop% V= %id%01 1 ifAwareness 5 else %pop% Print %id%01 Goto %pop%>
+	msg%id%01 <You hear squeaks in the distance.>
+	msg%id%01_1 <You hear the pitter-patter of little feet. Lots of little feet.>
+	inv
+		monster Rat
+		monster Rat
+		monster Rat
+		monster Rat
+		monster Death Rat
+		Food 60
+		name <Big Cheese>
+		mass -10
+		FoodMorale 2
+		FoodXValue 300
+		desc <A very large hunk of cheese. It hasn't been chewed on too badly.>
+	end
+
+Content
+	name <Hunter-Killer>
+	requires <*DUNGEON_X !Md ~EARTH>
+	element1 <Prefab>
+	teamdata1 <sd enemy>
+	start <if= V%id%01 0 else %pop% V= %id%01 1 ifAwareness 5 else %pop% Print %id%01 Goto %pop%>
+	msg%id%01 <You sense something unnatural...>
+	inv
+		monster Hunter-Killer
+	end
+
+Content
+	name <Sentinel>
+	requires <*DUNGEON_X !Hi ~EARTH>
+	element1 <Prefab>
+	teamdata1 <sd enemy>
+	start <if= V%id%01 0 else %pop% V= %id%01 1 ifAwareness 5 else %pop% Print %id%01 Goto %pop%>
+	msg%id%01 <You hear the sounds of heavy machinery in the distance.>
+	inv
+		monster Sentinel
+	end
+
+Content
+	name <Dungeon Medic>
+	requires <*DUNGEON_X GROUND>
+	element1 <Prefab>
+	team1 <Citizen>
+	teamdata1 <pass>
+	sub
+		Persona 1
+		*greeting <*NiceToMeetYou GoMain>
+		GoMain <NewChat Say 1 AddChat 1 AddChat 2>
+		result1 <EndChat Say 2 shop .nowares Say 3>
+		result2 <NewChat Say 4>
+		Msg1 <This is a pretty dangerous place. If you've been injured, I could give you some help.>
+		Msg2 <I'm not equipped to deal with everything, but I should be able to patch things up until you get back to the surface.>
+		Msg3 <Happy exploring!>
+		Msg4 <If ever you do need help you know where you can find me.>
+		Prompt1 <I could use a bit of that, yeah.>
+		Prompt2 <No thanks, I'm doing fine.>
+	end
+	inv
+		NPC Nurse
+	end
+
+
+%% *DUNGEON_GOAL CONTENT
+
+Content
+	name <Treasure>
+	requires <*DUNGEON_GOAL !Ne ~Mine>
+	element1 <Prefab>
+	inv
+		Treasure 10
+		name <Aquamarine>
+	end
+
+Content
+	name <Treasure>
+	requires <*DUNGEON_GOAL !Lo ~Mine>
+	element1 <Prefab>
+	inv
+		Treasure 100
+		name <Topaz>
+	end
+
+Content
+	name <Treasure>
+	requires <*DUNGEON_GOAL !Md ~Mine>
+	element1 <Prefab>
+	inv
+		Treasure 1000
+		name <Emerald>
+	end
+
+Content
+	name <Treasure>
+	requires <*DUNGEON_GOAL !Hi ~Mine>
+	element1 <Prefab>
+	inv
+		BigTreasure 10
+		name <Ruby>
+	end
+
+Content
+	name <Treasure>
+	requires <*DUNGEON_GOAL !Ex ~Mine>
+	element1 <Prefab>
+	inv
+		BigTreasure 100
+		name <Diamond>
+	end
+
+
+
+

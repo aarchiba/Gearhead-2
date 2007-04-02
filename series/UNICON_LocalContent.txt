@@ -1,0 +1,214 @@
+%% Contains things that only show up at one place in the ATLAS, but
+%% are included as content fragments so as to make organization cleaner
+%% and to take advantage of the content formatting junk. So here they
+%% are.
+%%
+%% In most cases, this content can be added as a VARIETY.
+%%
+%% NAME: *[city designation]_[building name abbreviated]_[content type]
+
+
+%% *CSNSP_SilSan_Content
+%%	The content of the silver fortress private level.
+
+Content
+	%% Weaponmaster
+	requires <*CSNSP_SilSan_Content>
+	element1 <Prefab>
+	team1 <Citizens>
+	teamdata1 <Pass>
+	minimap <..1.................#---#>
+	sub
+		Persona 1
+		*greeting <*NiceToMeetYou GoCheckFac>
+		GoCheckFac <if= PCFac 3 else GoChat NewChat Say 1 AddChat 1 AddChat 2 AddChat 3>
+		*GoChat <*MISC_CHATTER>
+		*GoBye <*GOODBYE>
+		result1 <EndChat Say 2 Shop .wares Goto GoBye>
+		.wares <WEAPON AMMO GRENADE ACCESSORY ARMOR SHIELD>
+		result2 <EndChat Say 3 School .skills Goto GoBye>
+		.skills <1 2 3 4 5 6 7 8 9 10 17 24>
+		result3 <Goto GoBye>
+		Msg1 <Having the right equipment can make the difference between life and death. Of course, knowing how to use it is also important.>
+		Msg2 <>
+		Msg3 <>
+		Prompt1 <I need some new equipment.>
+		Prompt2 <I need to train my skills.>
+		Prompt3 <Right now I have everything I need.>
+	end
+	inv
+		NPC Knight
+		name <Arleus>
+		mecha <>
+		Age 19
+		SetFaction 3
+		chardesc Passionate Shy Cheerful Lawful Heroic Female
+		EquipChar 25000
+		skill 21 10
+		job <Weaponmaster>
+	end
+
+Content
+	%% Cybersurgeon
+	requires <*CSNSP_SilSan_Content>
+
+	element1 <Prefab>
+	team1 <Citizens>
+	teamdata1 <Pass>
+
+	minimap <..1.................#---#>
+
+	sub
+		Persona 1
+		*Greeting <*NiceToMeetYou GoCheckFac>
+		GoCheckFac <if= PCFac 3 else GoChat NewChat Say 1 AddChat 1 AddChat 2>
+		*GoChat <*MISC_CHATTER>
+		*GoGoodbye <*GOODBYE>
+		result1 <EndChat Say 3 Shop .wares Goto GoGoodbye>
+		.wares <CYBERWARE MEDICINE>
+		result2 <ifG d40 React else GoChat EndChat Say 2>
+		Msg1_1 <We have neither the men nor the resources to field large numbers of mecha, so our pilots must be the best. It may be nessecary to overcome your human limitations.>
+		CMsg1_1 <ifChatNPCUnknown Accept>
+		Msg1_2 <Hello again \RANK \PC . Is there anything I can do for you?>
+		CMsg1_2 <ifChatNPCKnown Accept>
+		Msg2 <Chatting is a waste of valuable time. The survival of our colony depends on constant vigilence... Now, if you'll excuse me, I have work to do.>
+		Msg3 <Come in, then. I'll try to be of assistance.>
+		Prompt1 <I need your services.>
+		Prompt2 <Sorry, I'm just stopping by to chat.>
+	end
+	inv
+		NPC Cyberdoc
+		name <Gamaliel>
+		Age 16
+		skill 21 10
+		SetFaction 3
+		chardesc Pragmatic Melancholy Lawful Heroic Male
+		EquipChar 15000
+	end
+
+Content
+	%% Chaplain
+	requires <*CSNSP_SilSan_Content>
+
+	element1 <Prefab>
+	team1 <Citizens>
+	teamdata1 <Pass>
+
+	element2 <Prefab>
+
+	minimap <..1....2............#---#>
+
+	sub
+		Persona 1
+		*Greeting <*NiceToMeetYou GoChat>
+		*GoChat <*MISC_CHATTER>
+	end
+	inv
+		NPC Knight
+		name <Marlowe>
+		mecha <>
+		Age 22
+		SetFaction 3
+		chardesc Spiritual Easygoing Lawful Heroic Male
+		EquipChar 25000
+		Skill 34 10
+		job <Chaplain>
+		job_desig <FAITH>
+
+		STC SHRINE-1
+	end
+
+
+%% *CSNSP_SilFor_Content
+%%	The content of the silver fortress public level.
+
+Content
+	%% Museum
+	requires <*CSNSP_SilFor_Content>
+	element1 <Prefab>
+	element2 <Artifact>
+	place2 <1>
+	element3 <Prefab>
+	element4 <Prefab>
+
+	minimap <3...4.......1.......&---&>
+	Get%2% <ifNotAccessArmory SetItemStolen %2% AddLawful -10 ifTeamCanSeePC 3 ifStealth 20 else .%id%_GoAttack>
+	.%id%_GoAttack <TeamAttack 3 PCFEnemy 3 AddRenown -10>
+
+	inv
+		STC DISPLAYCASE-1
+		name <%name2% Display>
+		% V1 = Lock Picked
+		% V2 = Code Breaking Counter
+		use <ifAccessArmory else GoNotAllowed OpenInv>
+		GoNotAllowed <if# V1 0 else GoLocked OpenInv>
+		GoLocked <Print 1>
+		Clue32 <if= V1 0 else GoUnlocked Mental ifCodeBreaking 20 else GoCheckStealth Print 3 V= 1 1 XPV 100>
+		GoCheckStealth <ifStealth 10 else GoAlarm Goto GoCBFail>
+		GoAlarm <Print 5 TeamAttack 3 PCFEnemy 3 AddRenown -10 AddLawful -5>
+		GoUnlocked <Print 4>
+		GoCBFail <Print 2>
+		Msg1 <This display case contains the %name2%. It's locked.>
+		Msg2 <You can't disarm this lock at your current skill level.>
+		Msg3 <You disably the display case security measures.>
+		Msg4 <You've already unlocked this.>
+		Msg5 <An alarm sounds! You've been discovered!>
+
+		STC COMPUTER-1
+		USE <Print 1>
+		Msg1 <This display tells about famous battles of the Silver Knights.>
+
+		STC COMPUTER-1
+		USE <Print 1>
+		Msg1 <This display tells about famous pilots of the Silver Knights.>
+	end
+
+Content
+	%% Keefa's Garage
+	requires <*CSNSP_SilFor_Content>
+	content <Required *DECOR_FOR_SHOP %1% Local>
+	element1 <Prefab>
+	team1 <Citizens>
+	teamdata1 <ally pass>
+	sub
+		Persona 1
+		*greeting <*NiceToMeetYou GoCheckEnemy>
+		*GoCheckEnemy <*ENEMY_CHECK GoShop 3 GoIsEnemy>
+		GoIsEnemy <PCEnemy SelfCID>
+		GoShop <if= PCFac 3 else GoMinorShop NewChat Say 4 AddChat 5 AddChat 2>
+		GoMinorShop <NewChat Say 1 AddChat 1 AddChat 2 AddChat 3>
+		*GoBye <*GOODBYE>
+
+		result1 <EndChat Say 2 Shop .nowares Goto GoBye>
+		result2 <Goto GoBye>
+		result3 <NewChat Say 3 AddChat 4>
+		result4 <Goto result1>
+		result5 <EndChat Say 5 Shop .wares Goto GoBye>
+		.wares <MECHA>
+
+		Msg1 <This is the repair bay for the Silver Knights. I can also do work on civilian mecha, if you need repairs.>
+		Msg2 <Rest assured that your mecha will be in good hands. Most of these knights wouldn't let just anyone touch their machines, you know.>
+		Msg3 <I don't actually know a lot about that, I'm just a junior technician. You can probably find someone around here who knows more.>
+		Msg3_1 <I'm not really in any position to say definitely, but you do seem like an ideal candidate... You should probably talk to one of the commanders about joining.>
+		CMsg3_1 <ifG PCLaw 0 ifG React 5 ifG PCRenown 15 Accept>
+		Msg3_2 <I don't know... You don't seem like the type that would fit in. Maybe you should apply with the privateers instead?>
+		CMsg3_2 <ifG 0 PCLaw  Accept>
+		Msg4 <Hello, \RANK \PC . Back for repairs, or are you looking to requisition a new steed?>
+		Msg5 <Let me see what kind of damage you've gotten this time.>
+
+		Prompt1 <I need repairs.>
+		Prompt2 <There's nothing I need right now.>
+		Prompt3 <So, how do I become a knight?>
+		Prompt4 <I see. Well, I need some repairs.>
+		Prompt5 <I need your services.>
+
+	end
+	inv
+		NPC Mechanic
+		name <Keefa>
+		SetFaction 3
+		skill 21 10
+		CharDesc Female Lawful Shy Easygoing Pragmatic
+		Age 5
+	end
+

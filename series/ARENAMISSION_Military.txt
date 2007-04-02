@@ -1,0 +1,186 @@
+ArenaMission
+	name <Oribital Weapon>
+	requires <Military -!Ne -!Lo>
+	desc <%name1% has deployed an orbital laser satellite. It must be destroyed before it can be used against us.>
+
+	MapWidth 50
+	MapHeight 50
+
+	PayRate 500
+
+	SpaceMap
+	SpaceScroll
+	Microgravity
+	Vacuum
+
+	Element1 <Faction Enemy>
+
+	% L1 = Initialization Counter
+	% L2 = Victory Counter
+	% L3 = Destroy Base Counter
+	Start <if= L1 0 Alert 1 L= 1 1>
+	nu1 <if= T1 0 Return if= L2 0 L= 2 1 if= L3 1 else GoLoseMission Goto GoWinMission>
+	nu2 <if= T2 0 if= L3 1 if= L2 0 L= 2 1 Return Goto GoWinMission>
+	nu3 <if= T3 0 if= L3 0 L= 3 1 Print 4 XPV 100 if= T2 0 Return L= 2 1 Goto GoWinMission>
+
+	GoWinMission <Salvage Alert 3 WinArenaMission Print 3>
+	GoLoseMission <Alert 2 LoseArenaMission Print 2>
+
+	5Min <if= d2 1  WMecha 2 Threat ArenaRenown 100>
+
+	Msg1 <Locate and destroy the orbital weapon.>
+	Msg2 <The mission is a failure.>
+	Msg3 <The mission is a success.>
+	Msg4 <The base has been destroyed.>
+
+
+	sub
+		Team 1
+		SetEnemy 2 3 4
+		ParaX 5
+		ParaY 5
+
+		Team 2
+		SetEnemy 1
+		SetAlly 3 4
+		Deploy <SetSelfFaction M1 WMecha 2 Threat ArenaRenown 450>
+		ParaX 40
+		ParaY 40
+
+		Team 3
+		SetEnemy 1
+		SetAlly 2 4
+		ParaX 45
+		ParaY 45
+	end
+	inv
+		CombatProp 30
+		SetTeam 3
+		name <Orbital Laser Platform>
+		sdl_sprite <prop_turret1.png>
+		roguechar <&>
+		Scale 2
+		Skill 1 8
+		Skill 5 8
+		Skill 12 2
+		sub
+			Turret
+			size 8
+			armor 8
+			sub
+				BeamGun 8
+				name <Defense Laser>
+				Range 12
+				type <HYPER>
+
+				PowerSource 10
+			end
+			PowerSource 10
+		end
+
+	end
+
+ArenaMission
+	name <Space Duel>
+	requires <Military -!Ne L5PAT>
+	desc <%name1% pilot %name2% has been encountered in space.>
+
+	SpaceMap
+	SpaceScroll
+	Microgravity
+	Vacuum
+
+	MapWidth 50
+	MapHeight 50
+
+	PayRate 450
+
+	Element1 <Faction Enemy>
+	Element2 <Prefab>
+
+	% L1 = Initialization Counter
+	% L2 = Victory Counter
+	Start <if= L1 0 ForceChat M2 L= 1 1>
+	nu1 <if= T1 0 if= L2 0 L= 2 1 Alert 2 LoseArenaMission Print 2>
+	nu2 <if= T2 0 if= L2 0 Salvage Return XPV 100 L= 2 1 Alert 3 WinArenaMission Print 3>
+
+	Msg2 <The mission is a failure.>
+	Msg3 <The mission is a success.>
+
+	sub
+		Team 1
+		SetEnemy 2
+		ParaX 5
+		ParaY 15
+
+		Team 2
+		SetEnemy 1
+		Deploy <SetSelfFaction M1   WMecha 2 Threat ArenaRenown 300>
+		ParaX 45
+		ParaY 35
+
+		Persona 2
+		Greeting <if= V1 1 else GoGreet EndChat Say 1>
+		*GoGreet <*BattleChallenge GoThemeInfo GoThemeInfo>
+		*GoThemeInfo <*THEME_EXPO&Enemy GoStartCombat>
+		GoStartCombat <V= 1 1>
+		Msg1 <Less talking! More killing!>
+	end
+	inv
+		NPC Mecha Pilot
+		SetFaction -1
+		SetTeam 2
+	end
+
+ArenaMission
+	name <Enemy Ace>
+	requires <Military -!Ne>
+	desc <An asteroid base belonging to %name1% pilot %name2% has been found.>
+
+	AsteroidMap
+	RockyTiles
+	Vacuum
+
+	MapWidth 50
+	MapHeight 50
+
+	PayRate 400
+
+	Element1 <Faction Enemy>
+	Element2 <Prefab>
+
+	% L1 = Initialization Counter
+	% L2 = Victory Counter
+	Start <if= L1 0 ForceChat M2 L= 1 1>
+	nu1 <if= T1 0 if= L2 0 L= 2 1 Alert 2 LoseArenaMission Print 2>
+	nu2 <if= T2 0 if= L2 0 Salvage Return XPV 100 L= 2 1 Alert 3 WinArenaMission Print 3>
+
+	Msg1 <Enemy mecha have been spotted. Eliminate them all.>
+	Msg2 <The mission is a failure.>
+	Msg3 <The mission is a success.>
+
+	sub
+		Team 1
+		SetEnemy 2
+		ParaX 5
+		ParaY 15
+
+		Team 2
+		SetEnemy 1
+		Deploy <SetSelfFaction M1   WMecha 2 Threat ArenaRenown 200>
+		ParaX 45
+		ParaY 35
+
+		Persona 2
+		Greeting <if= V1 1 else GoGreet EndChat Say 1>
+		*GoGreet <*BattleChallenge GoThemeInfo GoThemeInfo>
+		*GoThemeInfo <*THEME_EXPO&Enemy GoStartCombat>
+		GoStartCombat <V= 1 1>
+		Msg1 <Less talking! More killing!>
+	end
+	inv
+		NPC Mecha Pilot
+		SetFaction -1
+		SetTeam 2
+	end
+

@@ -1,0 +1,924 @@
+% *********************************************
+% ***   STC  Standard  Item  Descriptions   ***
+% *********************************************
+
+	Gun 5
+	name <Smoke Launcher>
+	desig <SML-5>
+	type <SMOKE BLAST 3>
+	caliber <50mm cannister>
+	Range 5
+	Scale 2
+	sub
+		Ammo 5
+		Magazine 5
+		caliber <50mm cannister>
+	end
+
+	Gun 2
+	name <Light Machine Gun>
+	desig <MAC-2>
+	caliber <20mm caseless>
+	Range 3
+	BV 3
+	scale 2
+	sub
+		Ammo 2
+		Magazine 40
+		caliber <20mm caseless>
+	end
+
+	Gun 4
+	name <Machine Cannon>
+	desig <MAC-4>
+	caliber <20mm caseless>
+	Range 6
+	BV 3
+	scale 2
+	sub
+		Ammo 4
+		Magazine 60
+		caliber <20mm caseless>
+	end
+
+
+	Gun 5
+	name <Vulcan Cannon>
+	desig <VC-5>
+	caliber <25mm caseless>
+	type <INTERCEPT>
+	mass -7
+	scale 2
+	range 3
+	acc -2
+	BV 7
+	sub
+		ammo 5
+		caliber <25mm caseless>
+		magazine 80
+	end
+
+	Gun 8
+	Scale 2
+	name <Railgun>
+	desig <RG-8>
+	caliber <30mm ferrous>
+	Range 6
+	BV 4
+	sub
+		Ammo 8
+		caliber <30mm ferrous>
+		Magazine 100
+		mass -8
+	end
+
+	Gun 16
+	Scale 2
+	name <Heavy Railgun>
+	desig <RG-16>
+	caliber <50mm ferrous>
+	Range 7
+	BV 3
+	sub
+		Ammo 16
+		caliber <50mm ferrous>
+		mass -10
+		Magazine 60
+	end
+
+	Gun 12
+	Scale 2
+	name <Gauss Rifle>
+	desig <GR-12>
+	caliber <70mm ferrous>
+	Range 10
+	Recharge 1
+	sub
+		Ammo 12
+		Magazine 16
+		caliber <70mm ferrous>
+	end
+
+	Gun 24
+	Scale 2
+	name <Heavy Gauss Rifle>
+	desig <GR-24>
+	caliber <120mm ferrous>
+	Range 12
+	Recharge 1
+	sub
+		Ammo 24
+		Magazine 10
+		caliber <120mm ferrous>
+	end
+
+BeamGun 3
+Scale 2
+name <Light Laser>
+DESIG <LAS-3>
+Range 2
+Recharge 3
+Acc 1
+
+BeamGun 5
+Scale 2
+name <Combat Laser>
+DESIG <LAS-5>
+Range 3
+Recharge 3
+ACC 1
+
+BeamGun 10
+Scale 2
+name <Laser Cannon>
+DESIG <LAS-10>
+Range 5
+Recharge 3
+ACC 1
+
+BeamGun 2
+Scale 2
+name <Particle Cannon>
+desig <PAR-2>
+type <OVERLOAD ANTIAIR>
+Range 7
+ACC 1
+Recharge 3
+
+BeamGun 6
+Scale 2
+name <Heavy Particle Cannon>
+desig <PAR-6>
+type <OVERLOAD ANTIAIR>
+Range 8
+ACC 1
+
+BeamGun 13
+Scale 2
+name <Superheavy Particle Cannon>
+desig <PAR-13>
+type <OVERLOAD ANTIAIR>
+Range 9
+Recharge 1
+
+BeamGun 8
+name <Phase Cannon>
+desig <PHS-8>
+type <ArmorPiercing>
+scale 2
+Range 12
+
+BeamGun 25
+name <Heavy Phase Cannon>
+desig <PHS-25>
+type <ArmorPiercing>
+Scale 2
+Range 8
+Recharge 1
+
+	rockets 5
+	name <Incendiary Missiles>
+	SCALE 2
+	desig <ICM-5>
+	type <SWARM BURN>
+	Range 8
+	Magazine 1
+
+	Rockets 4
+	name <Haywire Missiles>
+	desig <HWM-4>
+	Scale 2
+	type <HAYWIRE ANTIAIR>
+	range 10
+	acc 2
+	Magazine 1
+
+	Rockets 1
+	name <Light Rockets>
+	desig <LR-1>
+	Scale 2
+	Range 6
+	ACC -2
+	Magazine 1
+
+	Rockets 8
+	name <Anti-Armor Missiles>
+	desig <AAM-8>
+	type <ARMORPIERCING>
+	Scale 2
+	Range 7
+	Magazine 1
+
+	Rockets 10
+	name <Heavy Rockets>
+	desig <HR-10>
+	Scale 2
+	Range 9
+	ACC -2
+	Magazine 1
+
+	Rockets 20
+	name <Light Nuclear Missile>
+	type <Blast 3 Hyper Haywire>
+	desig <NUKE-20>
+	Scale 2
+	Range 15
+	Magazine 1
+
+	Rockets 2
+	scale 2
+	name <Swarm Missiles>
+	desig <SWM-2>
+	Range 8
+	Magazine 1
+	type <SWARM>
+
+	Rockets 6
+	scale 2
+	name <Frag Missiles>
+	desig <FRM-6>
+	Range 8
+	Magazine 1
+	type <SWARM BLAST 1>
+
+	Rockets 8
+	scale 2
+	name <Fire Bee Missiles>
+	desig <FBM-8>
+	Range 8
+	Magazine 1
+	type <BURN BLAST 3>
+
+	Rockets 15
+	scale 2
+	name <Decimator Missiles>
+	desig <DCM-15>
+	Range 9
+	Acc -1
+	Magazine 1
+	type <BRUTAL BLAST 4>
+
+
+%  ********************
+%  ***   TREASURE   ***
+%  ********************
+
+	Grenade 15
+	name <Flame Gland>
+	desig <FLAMEGLAND>
+	meat
+	Scale 0
+	type <Blast 2 BURN>
+
+	gear 10 0 6
+	name <Lobster Shield>
+	desig <LOBSTERSHIELD>
+	scale 0
+	stat 1 2
+	sub
+		gear 4 0 12
+		name <Spikes>
+		type <BRUTAL MYSTERY STUN>
+		scale 0
+		Recharge 3
+	end
+
+	GenRepairFuel 45
+	name <Spare Parts>
+	scale 0
+	desig <SPAREPARTS-1>
+	mass 1
+
+	MechaRepairFuel 250
+	name <Mecha Parts>
+	scale 0
+	desig <SPAREPARTS-2>
+	mass 1
+
+	SkillModifier 0
+	name <Sentinel FCS>
+	desig <SENTINELFCS>
+	CyberSlot <ARTILLERY>
+	type <CYBER MECHA>
+	Stat 1 2
+	Stat 2 3
+
+	SkillModifier 0
+	name <Self Defense Matrix>
+	desig <SELFDEFENSEMATRIX>
+	CyberSlot <FIGHTING>
+	type <CYBER MECHA>
+	Stat 1 4
+	Stat 2 1
+
+	Food 30
+	name <Red Bear Liver>
+	desig <REDBEARLIVER>
+	% Step 12 , Status Effect, Regen(3), Skill25 but can't resist anyways
+	effect <12 STATUS 3 25>
+	FoodXValue 1500
+	FoodMorale -5
+
+	Food 20
+	name <Dragon Heart>
+	desig <DRAGONHEART>
+	% Step 9 , Healing, restore Step9 damage using skill 20 (First Aid)
+	effect <9 Healing 20>
+	FoodXValue 2000
+	FoodMorale -2
+
+%  ***************
+%  ***  PROPS  ***
+%  ***************
+
+Elevator
+% V1 = First time menu check
+name <Airlock>
+desig <AIRLOCK-1>
+use <ifG PCMeks 0 else GoNoMeks if= V1 1 else GoFirstTime Goto GoExit>
+GoFirstTime <ifYesNo 2 3 4 Goto GoExit>
+GoExit <V= 1 1 Print 5 Exit Destination>
+GoNoMeks <Print 1>
+Msg1 <This is the elevator to the airlocks.>
+Msg2 <This is the elevator to the airlocks. Would you like to launch into space?>
+Msg3 <Yes please.>
+Msg4 <No thanks.>
+Msg5 <You launch into space.>
+
+Elevator
+% V1 = First time menu check
+name <Orbital Catapult>
+desig <AIRLOCK-2>
+use <ifG PCMeks 0 else GoNoMeks if= V1 1 else GoFirstTime Goto GoExit>
+GoFirstTime <ifYesNo 2 3 4 Goto GoExit>
+GoExit <V= 1 1 Print 5 Exit Destination>
+GoNoMeks <Print 1>
+Msg1 <This is the elevator to the orbital catapult.>
+Msg2 <This is the elevator to the orbital catapult. Would you like to launch into space?>
+Msg3 <Yes please.>
+Msg4 <No thanks.>
+Msg5 <You board the catapult.>
+
+Prop 10
+name <Mannekin>
+desig <MANNEKIN-M>
+roguechar <M>
+SDL_Sprite <cha_m_bounty hunter.png>
+SDL_Colors <244 216 28  201 205 229  181 185 207>
+
+Prop 10
+name <Mannekin>
+desig <MANNEKIN-F>
+roguechar <M>
+SDL_Sprite <cha_f_bounty hunter.png>
+SDL_Colors <244 216 28  201 205 229  181 185 207>
+
+Prop 10
+name <Mecha Model>
+desig <MECHAMODEL-1>
+roguechar <M>
+SDL_Sprite <btr_savin.png>
+SDL_Colors <135 141 101  155 161 121  50 90 170>
+
+Prop 4
+name <Box>
+desig <BOX-1>
+roguechar <=>
+SDL_Sprite <prop_box_low.png>
+
+Prop 5
+name <Display Case>
+desig <DISPLAYCASE-1>
+roguechar <=>
+SDL_SPRITE <prop_displaycase.png>
+
+Metaterrain 0 0
+desig <HIDDEN_ENTRANCE>
+Stat 5 -1
+
+Building
+name <Building>
+desig <BUILDING>
+stat 1 2
+
+MetaTerrain 0 0
+desig <COLONY-1>
+roguechar <*>
+SDL_SPRITE <prop_colony.png>
+use <Print 1 Exit StatVal 4>
+Altitude 1
+Pass -100
+Msg1 <You enter the station.>
+
+MetaTerrain 0 0
+desig <DERELICT-1>
+roguechar <*>
+SDL_SPRITE <prop_derelict.png>
+use <Print 1 Exit StatVal 4>
+Altitude 1
+Pass -100
+Msg1 <You enter the spaceship.>
+
+
+Prop 15
+name <Space Station>
+desig <MICROSTATION>
+roguechar <&>
+SDL_SPRITE <prop_colony.png>
+
+
+Prop 10
+name <Shrine>
+desig <SHRINE-1>
+SDL_SPRITE <prop_shrine.png>
+roguechar <+>
+use <Print 1>
+clue34 <ifG ComTime V1 else GoBeenBefore V= 1 NextDay Reputation 7 -d4 MENTAL ifUMysticism 10 else GoNoDice ifG d100 PCRep 7 else GoNoDice Print 2 XPV 150>
+GoNoDice <Print 3>
+GoBeenBefore <Print 4>
+Msg1 <It's a small shrine.>
+Msg2 <You meditate at the shrine. You feel enlightened.>
+Msg3 <You meditate at the shrine.>
+Msg4 <You've already meditated at this shrine today.>
+
+Prop 5
+name <Video Terminal>
+Desig <TV>
+roguechar <&>
+use <ifYesNo 1 2 3 MoreMemo News>
+Msg1 <This is a video info terminal. Would you like to check the news to see what's happening in the world?>
+Msg2 <Yes I would.>
+Msg3 <No, not really.>
+SDL_SPRITE <prop_computer1.png>
+
+Prop 5
+name <COMPUTER>
+Desig <COMPUTER-1>
+roguechar <!>
+SDL_SPRITE <prop_computer1.png>
+
+Prop 15
+name <Bio-Tank>
+desig <BIOTANK>
+roguechar <~>
+SDL_SPRITE <prop_biotank.png>
+
+Prop 5
+name <Vending Machine>
+Desig <VENDING-1>
+rogueChar <&>
+use <ifYesNo 1 2 3 ifG PC$ 49 Cash+ -50 GiveSTC .desc Print 4>
+.desc <FOOD-1>
+Msg1 <This vending machine sells boxed lunches for $50. Want to buy one?>
+Msg2 <Yes I do.>
+Msg3 <No, I don't.>
+Msg4 <You buy a boxed lunch.>
+SDL_SPRITE <prop_vending.png>
+
+Food 30
+name <Boxed Lunch>
+desig <FOOD-1>
+
+Food 20
+name <Hot Dog>
+desig <FOOD-2>
+
+Food 25
+name <Meat>
+desig <FOOD-3>
+FoodMorale -1
+
+Food 20
+name <Sashimi>
+desig <FOOD-4>
+FoodMorale 1
+
+Cloud
+name <Smoke>
+desig <SMOKE-1>
+roguechar <*>
+stat 1 5
+stat 2 2
+stat 7 50
+
+Cloud
+name <Steam>
+desig <SMOKE-2>
+roguechar <*>
+stat 1 5
+stat 2 2
+stat 7 -1
+
+Cloud
+name <Toxic Gas>
+desig <GAS-1>
+roguechar <*>
+stat 1 5
+stat 2 1
+effect <10 DAMAGE 15 0 ARMORIGNORE NOMETAL CANRESIST POISON GASATTACK>
+fx_desc <# chokes for # damage!>
+
+Flame
+name <Fire>
+desig <FIRE-1>
+roguechar <#>
+stat 1 3
+stat 2 3
+effect <13 DAMAGE 10 0 BRUTAL CANRESIST>
+fx_desc <# is burnt by the fire for # damage!>
+
+MetaTerrain 0 5
+name <Box>
+desig <CHEST-1>
+roguechar <=>
+roguechar1 <->
+roguechar2 <=>
+stat 6 -1
+SDL_Sprite <prop_chests.png>
+frame 0
+AltFrame 1 1
+AltFrame 2 0
+USE <if# 0 StatVal STAT_Lock else GoCloseDoor  if= StatVal STAT_Lock -1 else GoDoorLocked Print 1  SetStat STAT_Lock 0  Transform 1>
+GoDoorLocked <Print 6>
+GoCloseDoor <Print 2 SetStat STAT_Lock -1  Transform 2>
+CLUE32 <ifG StatVal STAT_Lock 0 else GoNotLocked Mental ifCodeBreaking StatVal STAT_Lock else GoNoUnlock Print 3 XPV 50 SetStat STAT_Lock 0 Transform 1>
+GoNoUnlock <Print 4>
+GoNotLocked <Print 5>
+REVEAL <Print 7>
+Msg1 <You open the box.>
+Msg2 <You close the box.>
+Msg3 <You unlock the box.>
+Msg4 <You do not manage to unlock the box.>
+Msg5 <The box does not appear to be locked.>
+Msg6 <The box is locked.>
+Msg7 <You find a hidden box!>
+
+ARCH Drone
+desig <DRONE-1>
+SDL_SPRITE <aer_drone.png>
+statline 10 10 10 10 10 5 2 2
+roguechar <d>
+metal
+sub
+torso
+	armor 2
+	sub
+		BeamGun 3
+		name <Combat Laser>
+		ArcJet 8
+	end
+end
+
+% **********************
+% ***   METASCENES   ***
+% **********************
+
+MetaScene
+desig <MS_SOCIAL>
+%% This metascene is used in core story components based on task +Tsh.
+%% It included opportunities for the PC to earn "party points".
+ClubMap
+MapWidth 25
+MapHeight 25
+type <BUILDING PUBLIC>
+special <AddExit>
+nu1 <if= T1 0 Return>
+sub
+	Team 1
+
+	Team 2
+	name <Civilian>
+	setally 1
+	Passive
+
+	room
+	name <Foyer>
+	desig <EntranceGrid>
+	Content <Some 8 45 Here *URBAN_X>
+end
+
+MetaScene
+desig <MS_OFFICE>
+%% This is a generic place of business. If the calling plot sets its faction,
+%% its content types will be improved.
+ClubMap
+MapWidth 20
+MapHeight 20
+type <BUILDING LEGIT PUBLIC>
+special <AddExit>
+nu1 <if= T1 0 Return>
+sub
+	Team 1
+
+	Team 2
+	name <Civilian>
+	setally 1
+	Passive
+
+	room
+	name <Foyer>
+	desig <EntranceGrid>
+	Content <Some 8 45 Here *URBAN_X>
+end
+
+MetaScene
+ClubMap
+desig <MS_CAFE>
+%% A generic cafe for meeting friends and talking.
+MapWidth 25
+MapHeight 25
+type <LEGIT PUBLIC MEETING>
+special <AddExit>
+nu1 <if= T1 0 Return>
+sub
+	Team 1
+
+	Team 2
+	name <Civilian>
+	setally 1
+	Passive
+
+	room
+	name <Dance Floor>
+	desig <EntranceGrid>
+	Content <Some 8 45 Here *URBAN_X>
+end
+
+MetaScene
+ClubMap
+desig <MS_CLUB>
+%% A generic club for meeting friends and dancing.
+MapWidth 25
+MapHeight 25
+type <CLUB LEGIT PUBLIC MEETING>
+special <AddExit>
+Content <Some 5 25 Sub *CLUB_X>
+nu1 <if= T1 0 Return>
+sub
+	Team 1
+
+	Team 2
+	name <Civilian>
+	setally 1
+	Passive
+
+	room
+	name <Dance Floor>
+	desig <EntranceGrid>
+	Content <Some 8 45 Here *URBAN_X>
+end
+
+MetaScene
+ClubMap
+desig <MS_SCHOOL>
+%% A generic school for consulting with students and professors.
+MapWidth 25
+MapHeight 25
+type <SCHOOL LEGIT PUBLIC>
+special <AddExit>
+nu1 <if= T1 0 Return>
+sub
+	Team 1
+
+	Team 2
+	name <Civilian>
+	setally 1
+	Passive
+
+	room
+	name <Dance Floor>
+	desig <EntranceGrid>
+	Content <Some 8 45 Here *URBAN_X>
+end
+
+
+
+% **********************
+% ***   ENCOUNTERS   ***
+% **********************
+
+Encounter
+desig <ENCOUNTER-DUEL>
+% Sets this encounter's orders to Seek & Destroy... very slowly.
+GoSetOrders <GrabSource GSetNAtt NAG_EpisodeData NAS_Orders 0>
+EncounterMove 2
+update <if# Destination 0 else GoSetOrders  ifSceneExists Destination else GoHide ShowEncounter SetStat STAT_MetaVisibility 0  Goto GoSetOrders>
+ATTACK <  >
+
+Encounter
+desig <ENCOUNTER-WANDER>
+% Sets this encounter's orders to Passive
+GoSetOrders <GrabSource GSetNAtt NAG_EpisodeData NAS_Orders 3>
+EncounterMove 50
+
+Encounter
+desig <ENCOUNTER-SEEKPC>
+% Sets this encounter's orders to Seek & Destroy
+GoSetOrders <GrabSource GSetNAtt NAG_EpisodeData NAS_Orders 0>
+EncounterMove 50
+
+Encounter
+desig <ENCOUNTER-GOTOSPOT>
+% This encounter will try to go to the spot specified.
+GoSetOrders <GrabSource GSetNAtt NAG_EpisodeData NAS_Orders 1>
+EncounterMove 50
+
+Encounter
+desig <QUEST-ENCOUNTER-WANDER>
+% A Quest Encounter doesn't have a MetaScene ID.
+% It becomes active when its NAG_QuestInfo/NAS_QEncActive attribute is nonzero.
+Special <NoMSID>
+update <ifThisQEncActive else GoHide  SetStat STAT_MetaVisibility 0  Goto GoSetOrders>
+% Sets this encounter's orders to Passive
+GoSetOrders <GrabSource GSetNAtt NAG_EpisodeData NAS_Orders 3>
+EncounterMove 50
+
+Encounter
+desig <QUEST-ENCOUNTER-AUTO-WANDER>
+% A Quest Encounter doesn't have a MetaScene ID.
+% It becomes active when QuestStatus %qid% = %id% and remains visible
+% forever after that.
+%  V-1 = Have become visible counter
+Special <NoMSID>
+update <if= V-1 0 else GoSetVisible if= QuestStatus %qid% %id% else GoHide  Goto GoSetVisible>
+GoSetVisible <V= -1 1 SetStat STAT_MetaVisibility 0  Goto GoSetOrders>
+% Sets this encounter's orders to Passive
+GoSetOrders <GrabSource GSetNAtt NAG_EpisodeData NAS_Orders 3>
+EncounterMove 50
+
+Encounter
+desig <QUEST-ENCOUNTER-STATIONARY>
+% A Quest Encounter doesn't have a MetaScene ID.
+% It becomes active when its NAG_QuestInfo/NAS_QEncActive attribute is nonzero.
+Special <NoMSID>
+update <ifThisQEncActive else GoHide  SetStat STAT_MetaVisibility 0  Goto GoSetOrders>
+% Sets this encounter's orders to Passive
+GoSetOrders <GrabSource GSetNAtt NAG_EpisodeData NAS_Orders 3>
+Attack <  >
+EncounterMove 0
+ENCOUNTER_NonCombat
+
+Encounter
+desig <QUEST-ENCOUNTER-AUTO-STATIONARY>
+% A Quest Encounter doesn't have a MetaScene ID.
+% It becomes active when QuestStatus %qid% = %id% and remains
+% active forever after.
+%  V-1 = Have become visible counter
+Special <NoMSID>
+update <if= V-1 0 else GoSetVisible if= QuestStatus %qid% %id% else GoHide  Goto GoSetVisible>
+GoSetVisible <V= -1 1 SetStat STAT_MetaVisibility 0  Goto GoSetOrders>
+% Sets this encounter's orders to Passive
+GoSetOrders <GrabSource GSetNAtt NAG_EpisodeData NAS_Orders 3>
+Attack <  >
+EncounterMove 0
+ENCOUNTER_NonCombat
+
+Encounter
+desig <QUEST-MAPMARKER-STATIONARY>
+% A Quest Encounter doesn't have a MetaScene ID.
+% It becomes active when its NAG_QuestInfo/NAS_QEncActive attribute is nonzero.
+Special <NoMSID>
+update <ifThisQEncActive else GoHide  SetStat STAT_MetaVisibility 0  ShowEncounter  Goto GoSetOrders>
+% Sets this encounter's orders to Passive
+GoSetOrders <GrabSource GSetNAtt NAG_EpisodeData NAS_Orders 3>
+Attack <  >
+EncounterMove 0
+ENCOUNTER_NonCombat
+
+Encounter
+desig <QUEST-MAPMARKER-AUTO-STATIONARY>
+% A Quest MapMarker doesn't have a MetaScene ID.
+% It becomes active when QuestStatus %qid% = %id% and remains
+% active forever after.
+%  V-1 = Have become visible counter
+Special <NoMSID>
+update <if= V-1 0 else GoSetVisible if= QuestStatus %qid% %id% else GoHide  Goto GoSetVisible>
+GoSetVisible <V= -1 1 SetStat STAT_MetaVisibility 0  ShowEncounter  Goto GoSetOrders>
+% Sets this encounter's orders to Passive
+GoSetOrders <GrabSource GSetNAtt NAG_EpisodeData NAS_Orders 3>
+Attack <  >
+EncounterMove 0
+ENCOUNTER_NonCombat
+
+Encounter
+desig <QUEST-ENCOUNTER-AUTOENTRANCE-STATIONARY>
+% A Quest Encounter doesn't have a MetaScene ID.
+% It becomes active when QuestStatus %qid% = %prev_id% and remains
+% active forever after.
+%  V-1 = Have become visible counter
+Special <NoMSID>
+update <if= V-1 0 else GoSetVisible if= QuestStatus %qid% %prev_id% else GoHide  Goto GoSetVisible>
+GoSetVisible <V= -1 1 SetStat STAT_MetaVisibility 0  Goto GoSetOrders>
+% Sets this encounter's orders to Passive
+GoSetOrders <GrabSource GSetNAtt NAG_EpisodeData NAS_Orders 3>
+Attack <  >
+EncounterMove 0
+ENCOUNTER_NonCombat
+
+Encounter
+desig <QUEST-ENCOUNTER-ACTIVE-STATIONARY>
+% A Quest Encounter doesn't have a MetaScene ID.
+% This one is always active.
+Special <NoMSID>
+update < >
+% Sets this encounter's orders to Passive
+GoSetOrders <GrabSource GSetNAtt NAG_EpisodeData NAS_Orders 3>
+Attack <  >
+EncounterMove 0
+ENCOUNTER_NonCombat
+
+Encounter
+desig <QUEST-MAPMARKER-ACTIVE-STATIONARY>
+% A Quest Encounter doesn't have a MetaScene ID.
+% This one is always active.
+Special <NoMSID>
+update <ShowEncounter>
+% Sets this encounter's orders to Passive
+GoSetOrders <GrabSource GSetNAtt NAG_EpisodeData NAS_Orders 3>
+Attack <  >
+EncounterMove 0
+ENCOUNTER_NonCombat
+
+% **********************
+% ***  COMBAT PROPS  ***
+% **********************
+
+CombatProp 10
+name <Light Defense Turret>
+Desig <TURRET-1>
+sdl_sprite <prop_turret1.png>
+roguechar <&>
+Scale 2
+Skill 1 8
+Skill 12 6
+sub
+	Turret
+	size 3
+	armor 3
+	sub
+		Gun 4
+		name <Machine Cannon>
+		desig <MAC-4>
+		caliber <20mm caseless>
+		Range 6
+		BV 3
+		scale 2
+		sub
+			Ammo 4
+			Magazine 60
+			caliber <20mm caseless>
+		end
+	end
+end
+
+CombatProp 10
+name <Pillbox>
+Desig <TURRET-2>
+roguechar <&>
+Scale 2
+Skill 1 8
+Skill 12 6
+Mesh 2
+sdl_sprite <tex_building_pillbox.png>
+sub
+	Turret
+	size 3
+	armor 3
+	sub
+		Gun 4
+		name <Machine Cannon>
+		desig <MAC-4>
+		caliber <20mm caseless>
+		Range 6
+		BV 3
+		scale 2
+		sub
+			Ammo 4
+			Magazine 60
+			caliber <20mm caseless>
+		end
+	end
+end
+
+Prop 30
+name <Bunker>
+Desig <Bunker-1>
+roguechar <&>
+Scale 2
+Mesh 1
+sdl_sprite <tex_building_pillbox.png>
+Frame 1
+
+
+% ******************
+% ***  PERSONAS  ***
+% ******************
+
+Persona
+%% A blank persona.
+desig <PERSONA_BLANK>
+greeting <NewChat SayAnything>
+
+
+
+

@@ -1,0 +1,443 @@
+% DEFAULT ARCHETYPES FILE
+%    This file defines the character archetypes that can be used to
+%    populate a campaign world.
+%  STATS  REF BOD SPD PER CFT EGO KNO CHA
+
+Arch Miner
+statline 11 14 9 9 12 10 9 9
+job_desig <LABOR>
+Sealed
+skill 3 5
+skill 5 5
+skill 6 5
+skill 8 5
+skill 10 5
+skill 13 5
+skill 33 5
+skill 36 5
+
+Arch Explorer
+statline 11 12 11 16 14 13 12 12
+mecha <Ultari.txt>
+job_desig <ADVEN>
+CharDesc Shy
+skill 1 5
+skill 2 5
+skill 3 5
+skill 4 5
+skill 5 5
+skill 6 10
+skill 7 10
+skill 8 10
+skill 9 10
+skill 10 10
+skill 11 10
+skill 14 15
+skill 20 5
+
+Arch Ticket Agent
+statline 8 8 10 10 11 10 12 13
+job_desig <TRADE>
+skill 21 7
+skill 23 5
+
+Arch THIEF
+statline 14 8 17 16 17 12 10 10
+chardesc criminal Shy
+job_desig <THIEF>
+Talent 23
+skill 6 5
+skill 7 5
+skill 8 5
+skill 10 10
+skill 12 10
+skill 25 5
+skill 26 5
+skill 32 5
+skill 41 5
+skill 43 10
+
+Arch Cook
+statline 9 7 8 10 12 9 9 10
+job_desig <CRAFT>
+skill 19 5
+skill 27 5
+
+Arch Journalist
+statline 8 7 11 16 13 14 12 14
+chardesc Sociable Renowned
+job_desig <MEDIA>
+skill 11 10
+skill 19 8
+skill 25 5
+skill 30 5
+skill 37 10
+
+Arch Bartender
+statline 9 13 8 12 11 9 13 13
+chardesc Sociable
+job_desig <TRADE>
+skill 19 5
+skill 21 5
+skill 27 5
+skill 28 3
+
+Arch Priest
+statline 8 10 9 15 12 12 15 14
+chardesc Spiritual Spiritual Spiritual Spiritual Spiritual Sociable
+job_desig <FAITH>
+skill 19 5
+skill 20 3
+skill 30 5
+skill 34 12
+
+Arch Warrior Monk
+statline 12 17 16 13 14 13 12 8
+chardesc Spiritual Spiritual Spiritual Passionate
+mecha <BuruBuru.txt>
+job_desig <FAITH>
+skill 1 3
+skill 2 3
+skill 3 5
+skill 4 8
+skill 5 5
+skill 8 10
+skill 9 15
+skill 10 10
+skill 11 5
+skill 12 12
+skill 13 10
+skill 14 12
+skill 18 5
+skill 26 10
+skill 30 5
+skill 33 5
+skill 34 5
+
+Arch Monk
+statline 12 15 15 13 14 13 16 10
+chardesc Spiritual Spiritual Spiritual Shy Heroic
+job_desig <FAITH>
+skill 8 5
+skill 9 10
+skill 10 8
+skill 11 3
+skill 12 10
+skill 13 5
+skill 14 10
+skill 26 5
+skill 30 10
+skill 34 10
+
+Arch Construction Worker
+statline 9 14 9 8 14 8 9 10
+job_desig <LABOR>
+skill 8 5
+skill 10 3
+skill 15 5
+skill 19 5
+skill 23 5
+skill 33 10
+
+Arch Trucker
+statline 9 14 10 8 13 9 8 10
+mecha <BuruBuru.txt>
+job_desig <LABOR>
+skill 1 3
+skill 4 3
+skill 5 5
+skill 8 5
+skill 10 3
+skill 15 5
+skill 19 5
+skill 23 5
+skill 33 10
+
+Arch Bounty Hunter
+statline 14 13 15 15 12 15 13 12
+chardesc Melancholy Pragmatic Shy
+mecha <Vadel.txt>
+job_desig <ADVEN>
+skill 1 5
+skill 2 8
+skill 3 3
+skill 4 3
+skill 5 8
+skill 6 10
+skill 7 3
+skill 8 3
+skill 9 10
+skill 10 9
+skill 11 8
+skill 14 8
+skill 26 7
+skill 28 6
+skill 33 10
+
+Arch Cyberdoc
+statline 10 7 8 12 17 14 18 10
+chardesc Pragmatic
+job_desig <MEDIC>
+skill 16 5
+skill 20 10
+skill 21 5
+skill 24 10
+
+ARCH Corporate Executive
+statline 8 9 8 10 13 12 12 8
+job_desig <CORPO>
+skill 19 5
+skill 21 5
+
+ARCH Celebrity
+statline 11 12 10 9 11 17 10 18
+chardesc Renowned
+job_desig <MEDIA>
+skill 19 11
+skill 21 8
+skill 26 3
+skill 27 11
+skill 28 6
+skill 35 10
+
+ARCH Singer
+statline 11 12 10 9 11 17 10 18
+chardesc Renowned
+job_desig <MEDIA>
+skill 19 11
+skill 21 8
+skill 26 3
+skill 27 11
+skill 28 6
+skill 35 10
+
+Arch Politician
+statline 12 10 13 14 13 16 15 16
+chardesc Renowned
+job_desig <POLIT>
+skill 10 5
+skill 11 8
+skill 12 5
+skill 13 5
+skill 19 10
+skill 28 5
+skill 39 10
+
+Arch Mechanic
+statline 9 10 7 8 14 12 9 8
+job_desig <CRAFT>
+skill 5 3
+skill 15 8
+skill 21 4
+skill 23 7
+
+Arch Professor
+statline 8 7 9 13 12 14 19 8
+job_desig <ACADE>
+skill 11 3
+skill 15 5
+skill 17 5
+skill 22 10
+skill 29 10
+skill 31 5
+
+Arch Scientist
+statline 8 8 9 13 16 11 18 8
+job_desig <ACADE>
+skill 11 3
+skill 15 5
+skill 17 5
+skill 22 10
+skill 29 10
+skill 31 5
+
+Arch Nurse
+statline 9 10 9 10 15 9 13 14
+chardesc Heroic Cheerful
+job_desig <MEDIC>
+skill 19 5
+skill 20 5
+
+Arch Doctor
+statline 12 6 8 13 17 15 17 9
+chardesc Heroic
+job_desig <MEDIC>
+skill 16 10
+skill 20 10
+skill 21 5
+
+Arch Citizen
+statline 9 9 9 9 10 9 9 10
+skill 19 5
+skill 27 1
+
+Arch Student
+statline 9 9 9 9 10 9 9 10
+skill 19 5
+skill 27 1
+
+Arch Shopkeeper
+statline 7 9 8 12 13 11 12 10
+% Shopkeepers generally have a great distrust of thieves...
+chardesc Lawful Lawful Lawful Lawful Lawful Lawful Lawful Lawful
+job_desig <TRADE>
+skill 21 10
+skill 23 5
+
+Arch Mercenary
+statline 13 12 16 12 9 7 8 10
+mecha <BuruBuru.txt>
+job_desig <ADVEN>
+skill 1 7
+skill 2 7
+skill 3 5
+skill 4 2
+skill 5 4
+skill 6 12
+skill 7 12
+skill 8 9
+skill 9 9
+skill 10 8
+Skill 13 2
+skill 26 5
+skill 33 9
+
+Arch Soldier
+statline 13 17 14 12 9 10 10 9
+mecha <Ultari.txt>
+job_desig <MILIT>
+skill 1 5
+skill 2 5
+skill 3 5
+skill 4 5
+skill 5 5
+skill 6 10
+skill 7 10
+skill 8 10
+skill 9 10
+skill 10 10
+skill 12 5
+skill 26 10
+skill 33 9
+
+Arch Pirate
+statline 13 15 15 12 13 14 9 9
+chardesc Criminal
+mecha <BuruBuru.txt>
+job_desig <ADVEN>
+skill 1 8
+skill 2 8
+skill 3 8
+skill 4 8
+skill 5 5
+skill 6 9
+skill 7 8
+skill 8 8
+skill 9 8
+skill 10 5
+skill 13 5
+skill 17 5
+skill 26 5
+skill 42 10
+
+Arch Privateer
+statline 13 15 15 12 13 14 9 9
+chardesc Criminal Heroic
+mecha <BuruBuru.txt>
+job_desig <MILIT>
+skill 1 8
+skill 2 8
+skill 3 8
+skill 4 8
+skill 5 5
+skill 6 9
+skill 7 8
+skill 8 8
+skill 9 8
+skill 10 5
+skill 13 5
+skill 17 5
+skill 26 5
+skill 42 10
+
+Arch Knight
+%% One of the defenders of the L5 Alliance
+statline 16 13 15 14 10 10 10 11
+chardesc lawful heroic
+mecha <Vadel.txt>
+job_desig <MILIT>
+skill 1 10
+skill 2 10
+skill 3 10
+skill 4 10
+skill 5 10
+skill 6 5
+skill 7 5
+skill 8 5
+skill 9 5
+skill 10 5
+skill 17 10
+skill 24 10
+skill 26 5
+skill 30 5
+
+Arch Mecha Pilot
+statline 16 10 14 13 9 10 9 14
+mecha <Vadel.txt>
+job_desig <MILIT>
+skill 1 10
+skill 2 10
+skill 3 10
+skill 4 10
+skill 5 10
+skill 6 5
+skill 7 5
+skill 8 5
+skill 9 5
+skill 10 5
+skill 18 10
+skill 26 5
+skill 33 5
+
+Arch Police Officer
+% This is the city defense NPC. Really really tough.
+statline 13 15 15 14 10 13 10 13
+chardesc Lawful Heroic
+mecha <BuruBuru.txt>
+job_desig <POLIC>
+skill 1 10
+skill 2 10
+skill 3 10
+skill 4 10
+skill 5 10
+skill 6 12
+skill 7 12
+skill 8 12
+skill 9 12
+skill 10 10
+skill 11 3
+skill 12 5
+skill 13 10
+skill 18 10
+skill 26 10
+skill 33 5
+
+Arch Bandit
+statline 13 13 14 12 8 8 8 8
+chardesc Villainous criminal
+mecha <BuruBuru.txt>
+job_desig <THIEF>
+skill 1 1
+skill 2 1
+skill 3 1
+skill 4 1
+skill 5 1
+skill 6 7
+skill 7 5
+skill 8 7
+skill 9 5
+skill 10 5
+skill 13 5
+skill 26 5
+skill 33 5
+

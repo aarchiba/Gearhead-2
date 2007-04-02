@@ -1,0 +1,756 @@
+%%
+%%  *:LocalQuest Content
+%%
+%% This content is tied to a city rather than any specific character within it.
+
+Content
+	name <Mine Hideout>
+	desc <A gang of thieves has left behind a base in the mine.>
+	requires <*:LocalQuest (!Ne|!Lo)>
+
+	% E1 is the police officer.
+	% E2 is the thief.
+	% E3 is the item they both want.
+	% E4 is the mine level where the entrance to the thives den is.
+	% E5 is the entrance to the thieves den itself.
+	element1 <Prefab>
+	Scene1 <Building Public>
+	team2 <Citizens>
+	teamdata2 <Pass>
+	element2 <Prefab>
+	Scene2 <Building Sleazy>
+	team2 <Citizens>
+	teamdata2 <Pass>
+	element3 <Prefab>
+	Scene3 <New *BLANK.Basement>
+	Scene4 <Dungeon Mine "!Lo">
+	Element5 <Prefab>
+	Scene5 <Grab 4>
+
+	% SubQuest 1 is the success call when the PC gives the computer to the police
+	% SubQuest 2 is the success call when the PC gives the computer to the thief
+	Quest1 <*SuccessGetItem.giveitem 1 3>
+	Quest2 <*SuccessGetItem.giveitem 2 3>
+
+	sub
+		Persona 1
+		% V1 = Have given mission
+		rumor0 <%name1% is looking for evidence about a criminal gang that used to operate here.>
+		greeting <if= QUestStatus %qid% %id% else GoGreet if= V1 1 else GoCounteroffer NewChat Say 9 AddChat 5 AddChat 6 AddChat 7>
+		GoCounterOffer <NewChat Say 5 QMemo %qid% 8 V= 1 1 AddChat 3 AddChat 4>
+		*GoGreet <*NiceToMeetYou GoCheckFirst>
+		GoCheckFirst <if= QuestStatus %qid% 0 else GoChat ifG React d10 else GoChat Goto GoOfferJob>
+		*GoOfferJob <*AreYouHereAboutJob&Investigation GoStartMission>
+		GoStartMission <V= 1 1 SetQuestStatus %qid% %id% NewChat Say 1 QMemo %qid% 2 AddChat 1 AddChat 2>
+		*GoChat <*MISC_CHATTER>
+		result1 <NewChat Say 3>
+		result2 <NewChat Say 4>
+		result3 <NewChat Say 6 AddSociable -d10>
+		result4 <NewChat Say 7>
+		result5 <DeleteItem %3% AddLawful 1 AddRenown 1 PCEnemy %2% Goto .%id1%_GoInit>
+		result6 <NewChat Say 10>
+		result7 <SetQuestStatus %qid% -2  AddRenown -3  Goto .GoR7Final>
+		*GoR7Final <*YouLostItem>
+		Msg1 <Recently we busted a smuggling ring whose hideout was in the abandoned mine. Unfortunately, we never recovered their data core. If we could find this computer it would surely lead us to their business partners and clients.>
+		Msg2 <%name1% in \SCENE %s1% wants you to locate a criminal database hidden somewhere in the mines.>
+		Msg3 <Yes, exactly. Search the mines for their hideout. If you recover the data core, bring it here and I'll make sure you're adequetly rewarded.>
+		Msg4 <Not even if there's a reward involved? If you find the database while exploring bring it here. I'll give you a better price for it than anyone else.>
+		Msg5 <I hear that %name2%'s asked you to retrieve something from the mines... You realize that dealing in stolen merchandise is a crime, right? Deal with me and you'll earn way more than %name2% can afford to pay.>
+		Msg6 <You better not be lying about that. If you find an old abandoned computer while exploring the mines, bring it here...>
+		Msg7 <You do that.>
+		Msg8 <%name1% in \SCENE %s1% and %name2% in \SCENE %s2% have both asked you to bring them the smuggling database from the mines.>
+		Msg9 <Have you located the smuggler's computer yet?>
+		Prompt1 <So you want me to find it for you?>
+		Prompt2 <I don't work for the law.>
+		Prompt3 <I don't know what you're talking about.>
+		Prompt4 <I'll think about it.>
+		Prompt5 <I have it right here.>
+		CPrompt5 <ifKeyItem %3% ifChatNPCInPlay Accept>
+		Prompt6 <I'm still looking for it.>
+		Prompt7 <I think I lost the %name3%...>
+		CPrompt7 <ifItemDestroyed %3% Accept>
+
+		Persona 2
+		% V1 = Have given mission
+		rumor0 <%name2% once belonged to a criminal gang.>
+		greeting <if= QUestStatus %qid% %id% else GoGreet if= V1 1 else GoCounteroffer NewChat Say 9 AddCHat 5 AddChat 6 AddCHat 7>
+		GoCounterOffer <NewChat Say 5 QMemo %qid% 6 V= 1 1 AddChat 3 AddChat 4>
+		*GoGreet <*NiceToMeetYou GoCheckFirst>
+		GoCheckFirst <if= QuestStatus %qid% 0 else GoChat ifG React d10 else GoChat Goto GoOfferJob>
+		*GoOfferJob <*DoYouWantAJob GoStartMission>
+		GoStartMission <V= 1 1 SetQuestStatus %qid% %id% NewChat Say 1 QMemo %qid% 2 AddChat 1 AddChat 2>
+		*GoChat <*MISC_CHATTER>
+		result1 <NewChat Say 3>
+		result2 <NewChat Say 4>
+		result3 <NewChat Say 7>
+		result4 <NewChat Say 8>
+		result5 <DeleteItem %3% PCFriend %2% PCEnemy %1% AddLawful -2 Goto .%id2%_GoInit>
+		result6 <NewChat Say 10>
+		result7 <SetQuestStatus %qid% -2  AddRenown -3  Goto .GoR7Final>
+		*GoR7Final <*YouLostItem>
+		Msg1 <There used to be a smuggler's den hidden in the abandoned mine. They were careless and got caught, but the police never found their data core. If I could get my hands on that computer I could really move up in the world, if you catch my drift.>
+		Msg2 <%name2% in \SCENE %s2% wants you to locate a criminal database hidden somewhere in the mines.>
+		Msg3 <You do that. Bring it back here and I'll reward you properly. Until then, don't talk about this to anyone... We don't need outsiders moving in on our turf.>
+		Msg4 <So that's how it is, is it? Fine. Still, if you happen to find the data core while exploring, remember my offer.>
+		Msg5 <I hear that %name1%'s made you an offer for some broken down old computer in the mines... Well, whatever it is, I'll double it. Really.>
+		Msg6 <%name2% in \SCENE %s2% and %name1% in \SCENE %s1% have both asked you to bring them the smuggling database from the mines.>
+		Msg7 <You say you don't, but we both know where the real money is. Keep my offer in mind, okay?>
+		Msg8 <You do that.>
+		Msg9 <Any luck finding the you-know-what yet?>
+		Msg10 <Let me know when your luck improves, then. Recovering that computer is going to be lucky for the two of us.>
+		Prompt1 <I'll see if I can find it.>
+		Prompt2 <No way, I'm not interested.>
+		Prompt3 <I don't work for thieves.>
+		Prompt4 <I'll think about it.>
+		Prompt5 <I have it right here.>
+		CPrompt5 <ifKeyItem %3% ifChatNPCInPlay Accept>
+		Prompt6 <I'm still looking for it.>
+		Prompt7 <I think I lost the %name3%...>
+		CPrompt7 <ifItemDestroyed %3% Accept>
+
+		MetaScene 3
+		%% Content for the blank thieves den.
+		sub
+			room
+			minimap <......###..?1#..###......>
+			special <SHAREDPALETTE>
+			desig <HOME>
+
+			Team 1
+			SetEnemy 2
+
+			Team 2
+			name <Monsters>
+			type <Robot Vermin Mine>
+			SetEnemy 1
+			Stat 2 12
+		end
+	end
+	inv
+		NPC Bounty Hunter
+		CharDesc Lawful
+		EquipChar 10000
+
+		NPC Thief
+		CharDesc Young Criminal
+		EquipChar 10000
+
+		Computer 4
+		name <Crimedex>
+
+		Trapdoor
+		rumor%id% <a gang of smugglers once had a hideout in %name4% .>
+		desig <ENTRANCE %s3%>
+		update <if= QuestStatus %qid% %id% if= V1 0 SetStat 5 3 V= 1 1>
+	end
+
+Content
+	name <Molybdenum Chef>
+	desc <A chef seeks rare mushrooms that grow in the vacuum of space.>
+	requires <*:LocalQuest "ASTEROID">
+
+	% E1 is the chef
+	% E2 is the mine
+	% E3 is an entrance to the mine
+	% E4 is the mushroom
+
+	Element1 <Prefab>
+	scene1 <Building Public>
+	team1 <Citizens>
+	teamdata1 <Pass>
+	Element2 <Prefab>
+	Scene2 <New *Dungeon.Asteroid>
+	Element3 <Prefab>
+	Scene3 <Environs>
+
+
+	%% Q1 is the success branch for locating the item
+	Quest1 <*SuccessGetItem.giveitem 1 2>
+
+	sub
+		Persona 1
+		rumor0 <%name1% is always trying to get rare ingredients to cook with.>
+		greeting <if= QuestStatus %qid% %id% else GoGreet ifKeyItem %2% else GoOpenShop ifChatNPCInPlay else GoOpenShop NewChat Say 6 AddChat 6 AddChat 7>
+		*GoGreet <*NiceToMeetYou GoGiveQuest>
+		GoGiveQuest <if= QuestStatus %qid% 0 else GoOpenShop ifG React 0 else GoOpenShop NewChat Say 1 AddChat 1 AddChat 2 AddChat 3>
+		*GoOpenShop <*SERVICE_RESTAURANT GoBye>
+		*GoBye <*GOODBYE>
+		result1 <Goto GoOpenShop>
+		result2 <NewChat Say 2 QMemo %qid% 3 SetQuestSTatus %qid% %id% AddChat 4 AddChat 5>
+		result3 <NewChat Say 5 AddChat 6 AddChat 7>
+		result4 <NewChat Say 4 AddChat 5>
+		result5 <NewChat Say 7>
+		result6 <DeleteItem %2% PCFriend %1% Goto .%id1%_GoInit>
+		result7 <NewChat Say 8 AddEasygoing -d10  SetQuestStatus %qid% -2>
+		Msg1 <Living on this barren rock, it's tough getting fresh produce to cook with.>
+		Msg2 <There might be. I've heard tell that edible fungus grows in Geozian Mine. I'd go try to gather some myself, but the non-edible fungus that lives there makes things dangerous.>
+		Msg3 <%name1% in \SCENE %s1% wants you to bring \OPR %1% some wild space mushrooms from Geozian Mine.>
+		Msg4 <Why not? It's perfectly natural... or as natural as anything living in space can be. They're safe enough to eat so long as you wash them thoroughly and deionize them first.>
+		Msg5 <That's a geozian mushroom! Why, where did you find one? May I have it?>
+		Msg6 <Ah, I see that you've returned with the mushroom! May I have it, please?>
+		Msg7 <Thank you very much.>
+		Msg8 <I understand. It just looks so delicious, doesn't it? If you had given it to me I would have been tempted to eat it myself right away...>
+		Prompt1 <Do you have any food for sale, then?>
+		Prompt2 <Is there anything I can do to help?>
+		Prompt3 <Maybe these mushrooms would help.>
+		CPrompt3 <ifKeyItem %2% Accept>
+		Prompt4 <Ewww, that can't possibly be healthy.>
+		Prompt5 <I'll see if I can get some for you.>
+		Prompt5_1 <If I find any, I'll let you know.>
+		Prompt6 <Here you go. [Give Mushroom]>
+		Prompt7 <No, I want to keep it.>
+
+		MetaScene 1
+		start <ifItemDestroyed %2% else %pop% ifG QuestStatus %qid% -1 else %pop% SetQuestStatus %qid% -2 Goto %pop%>
+		sub
+			room
+			minimap <..............1.....#---#>
+			special <SHAREDPALETTE>
+			desig <HOME>
+		end
+	end
+	inv
+		NPC Cook
+		Chardesc Passionate
+
+		food 30
+		name <Geozian Mushroom>
+		desc <This rare mushroom grows only in the vacuum of space.>
+
+		Building
+		name <Geozian Mine>
+		desig <ENTRANCE %s2%>
+	end
+
+Content
+	name <The Collector of Stuff>
+	desc <A collector of rare things will hire the PC to recover an item.>
+	requires <*:LocalQuest>
+
+	%% E1 is the collector.
+	%% E2 is the artifact to be sought
+	%% E3 is the city this quest is located in
+	%%  S2 is the scene where it is hidden
+	Element1 <Prefab>
+	scene1 <Building Public>
+	team1 <Citizens>
+	teamdata1 <Pass>
+	Element2 <ARTIFACT ITEM PREZERO>
+	Scene2 <New *ItemCrypt>
+	Element3 <Scene town>
+
+	%% Q1 is the success branch for locating the item
+	Quest1 <*SuccessGetItem.giveitem 1 2>
+
+	sub
+		Persona 1
+		rumor0 <%name1% is a collector of rare items.>
+		greeting <if= QuestSTatus %qid% %id% else GoCheckFirst NewChat Say 10 AddChat 8 AddChat 9 AddChat 10>
+		GoCheckFirst <if= QuestStatus %qid% 0 else GoChat ifG React 0 else GoBlowOff NewChat Say 2 AddChat 1 AddChat 2>
+		GoBlowOff <NewChat Say 1>
+		*GoChat <*MISC_CHATTER>
+		result1 <NewChat Say 3 QMemo %qid% 11    SetQuestStatus %qid% %id% AddChat 3 AddChat 4>
+		result2 <NewChat Say 4 AddSociable -d8   SetQuestStatus %qid% -2>
+		result3 <NewChat Say 5 AddCheerful -d6   AddChat 5 AddChat 6 AddChat 7>
+		result4 <NewChat Say 6                   AddChat 5 AddChat 6 AddChat 7>
+		result5 <NewChat Say 7 AddChat 6 AddCHat 7 AddChat 11>
+		result6 <NewChat Say 8 AddChat 5 AddCHat 7 AddChat 11>
+		result7 <NewChat Say 9 AddChat 5 AddCHat 6 AddChat 11>
+		result8 <DeleteItem %2% Goto .%id1%_GoInit>
+		result9 <NewChat Say 12 AddChat 5 AddChat 6 AddChat 7>
+		result10 <SetQuestStatus %qid% -2  Goto .GoR10Final>
+		*GoR10Final <*YouLostItem>
+		result11 <NewChat Say 13>
+		Msg1 <I'm here on business, but why must everyone in this town be so unpleasant?>
+		Msg2 <You there, you're a cavalier, aren't you? I am in %name3% to locate a very valuable item. To do this, I will require the services of an adventurer.>
+		Msg3 <Fantastic. I need you to find the %name2%... Now realize, I have no idea where it is, just that it's somewhere in %name3%. At least it was at one point, maybe recently.>
+		Msg4 <Aha, quite alright, that. Go on with you then. I should get back to my novel.>
+		Msg5 <No, I suppose it isn't, but I can tell you all kinds of things about the %name2% other than its location. What do you want to know?>
+		Msg6 <That depends. What exactly do you want to know about it?>
+		Msg7 <Let me see if I can give you a short answer... \ITEM_DESC %2%>
+		Msg8 <The %name2% has a long and interesting history. \ITEM_HISTORY %2%>
+		Msg9 <I just want it for my collection, but that's not the only use of the %name2%. \ITEM_USAGE %2%>
+		Msg10 <Oh, it's you again. Any word on that object I wanted you to find?>
+		Msg11 <%name1% in %name3% asked you to find the %name2% for \OPR %1% .>
+		Msg12 <Certainly. What is it that you need to know about the %name2%?>
+		Msg13 <Come back here once you've found it. I'm eager to see if it's still in mint condition.>
+		Prompt1 <Okay, I can help you.>
+		Prompt2 <Sorry, I'm not interested.>
+		Prompt3 <That's not very helpful.>
+		Prompt4 <What can you tell me about it?>
+		Prompt5 <What is it, exactly?>
+		Prompt6 <Where did it come from?>
+		Prompt7 <Why do you want it?>
+		Prompt8 <I've returned with the %name2%.>
+		CPrompt8 <ifKeyItem %2% ifChatNPCInPlay Accept>
+		Prompt9 <I need some more info about it.>
+		Prompt10 <I think I lost the %name2%...>
+		CPrompt10 <ifItemDestroyed %2% Accept>
+		Prompt11 <I'll get to work now.>
+
+	end
+	inv
+		NPC Professor
+		job <Collector>
+	end
+
+Content
+	name <Asteroid Mine>
+	desc <There's an asteroid mine in space nearby.>
+	requires <*:LocalQuest "Spinner">
+
+	% E1 is the owner of the mine.
+	% E2 is the entrance of the mine.
+	% E3 is the missing worker in the mine dungeon.
+	element1 <Prefab>
+	scene1 <New *MicroStation>
+	team1 <Citizens>
+	teamdata1 <Pass Ally>
+
+	element2 <Prefab>
+	scene2 <SPACE ENVIRONS>
+
+	element3 <Prefab>
+	scene3 <New *Dungeon.Asteroid>
+	team3 <Citizens>
+	teamdata3 <Pass>
+
+	Quest1 <*Success1.Rescue 1>
+
+	sub
+		Persona 1
+		rumor0 <%name1% has an asteroid mine near the station.>
+		greeting <if= QuestStatus %qid% %id% else GoIntroduction if= SceneVar %s1% 1 1 else GoStillLooking NewChat Say 1 AddChat 1>
+		GoStillLooking <NewChat Say 2 AddCHat 2 AddChat 3>
+		*GoIntroduction <*NiceToMeetYou GoInfo>
+		GoInfo <if= QuestStatus %qid% 0 else GoNoQuest NewChat Say 3 SetQuestStatus %qid% %id%  QMemo %qid% 4>
+		*GoNoQuest <*MiscChatter>
+		result1 <Goto .%id1%_GoInit>
+		result2 <NewChat Say 4>
+		result3 <NewChat Say 5 SetQuestStatus %qid% -2>
+		Msg1 <Looks like you rescued %name3%.>
+		Msg2 <Any luck searching for %name3%?>
+		Msg3 <%name3% hasn't come back up from the mine... I hope everything is okay.>
+		Msg4 <%name1% said that %name3% hadn't come back from the asteroid mine in \SCENE %2% .>
+		Prompt1 <I did it!>
+		Prompt2 <I'm still looking.>
+		Prompt3 <%name3% has died.>
+		CPrompt3 <ifNPCDead %3% Accept>
+
+		MetaScene 1
+		start <if= L1 0 else %pop% ifNPCInPlay %3% else %pop% L= 1 1 RemoveTempLancemate %3% XPV 200 ForceChat %3% Goto %pop%>
+		sub
+			room
+			special <SharedPalette>
+			sub
+				Trapdoor
+				name <Mine Entrance>
+				desig <Entrance %s3%>
+			end
+		end
+
+		Persona 3
+		% V1 = Have returned to station
+		special <UNLISTED>
+		greeting <if= QuestStatus %qid% %id% else GoNoQuest if= V1 1 else GoCheckStation NewChat Say 5>
+		GoCheckStation <if= SceneID %s1% else GoInMine NewChat Say 4  AddReact d10  V= 1 1>
+		GoInMine <ifNPCLancemate else GoAskHelp NewChat Say 3>
+		GoAskHelp <NewChat Say 2 AddTempLancemate %3%>
+		GoNoQuest <NewChat Say 1>
+		Msg1 <Always a lot of work to do...>
+		Msg2 <Let's get out of here!>
+		Msg3 <Come on, let's get back to the station!>
+		Msg4 <We're back! Thank you so much.>
+		Msg5 <Thanks again!>
+	end
+	inv
+		NPC Miner
+		job <Mine Boss>
+		chardesc Old
+
+		STC QUEST-MAPMARKER-ACTIVE-STATIONARY
+		name <%name1%'s Station>
+		desig <Entrance %s1%>
+
+		NPC Miner
+		LMFollow
+	end
+
+Content
+	name <Fight Over Something>
+	desc <The PC will encounter a NPC in space, who will try to drive him away.>
+	%% Upon defeating E1, he will be sent to a nearby building. If the PC speaks with
+	%% him again, he'll find out what E1 was guarding.
+	requires <*:LocalQuest "Spinner" "L5PAT">
+
+	% E1 is the character the PC will be fighting
+	% E2 is the entrance to the space scene
+	% E3 is the scene where E1 will go after the fight
+	% E4 is a copy of E1's scene; needed for the SubQuest parameter
+	element1 <Prefab>
+	scene1 <New *BLANK.Space.Mecha>
+	team1 <ENEMIES>
+	teamdata1 <SD Enemy>
+
+	element2 <Prefab>
+	scene2 <SPACE ENVIRONS>
+
+	Scene3 <Building Public>
+
+	Scene4 <Grab 1>
+
+	Quest1 <*SpaceSalvage 1 4>
+
+	sub
+		Persona 1
+		special <UNLISTED>
+		rumor0 <there's a lot of old junk floating outside the station.>
+		rumor%id% <%name1% has been recovering from your battle at %name3%.>
+		greeting <if= QuestStatus %qid% %id% else GoCheckVictory  NewChat Say 3 AddChat 1>
+		GoCheckVictory <if= QuestStatus %qid% 0 else GoChat   if= SceneVar %s1% 2 1 else GoCheckLoss SetQuestStatus %qid% %id% QMemo %qid% 4 Goto GoPCWon>
+		*GoPCWon <*YouWonFair&MeetAgain>
+		GoCheckLoss <if= T1 0 else GoGreet Goto GoPCLost>
+		*GoPCLost <*YouLose&DontComeBack>
+		GoGreet <ifChatNPCKnown else GoFirstTime EndChat Say 1>
+		GoFirstTime <EndChat Say 2 AddChat 2>
+		*GoChat <*MISC_CHATTER>
+		result1 <Goto .%id1%_GoInit>
+		*result2 <*THEME_EXPO&ENEMY na>
+		Msg1 <Back again? Want some more punishment? Good enough, bring it on!>
+		Msg2 <What are you doing out here? Moving in on my claim, that's what!!! No way am I giving it up that easy...>
+		Msg3 <\PC ! You beat me fair and square. If you want, you can claim my salvage for yourself.>
+		Msg4 <You defeated %name1% in a space battle, but you don't really know why \SPR %1% attacked you.>
+		Prompt1 <What is it that you found?>
+		Prompt2 <I don't know what you're talking about!>
+
+		MetaScene 1
+		%% Because scene 1 is a blank, this metascene holds all the important stuff.
+		% L1 = Conversation Initializer; reset to 0 when PC leaves the scene.
+		% L2 = Victory Counter
+		start <if= L1 0 Print 1 ForceChat %1% L= 1 1>
+		nu1 <if= T1 0 Return if= L1 1 if= L2 0 ifNPCOK %1% Print 1 ForceChat %1% L= 1 0>
+		nu2 <if= T2 0 if= L1 1 if= L2 0   XPV 100   L= 2 1   ifNPCOK %1% Print 1 ForceChat %1% MoveAndPacifyNPC %1% %s3%>
+		Msg1 <%name1% contacts you.>
+
+		sub
+			Team 1
+			name <Player Team>
+			ParaX 5
+			ParaY 5
+			SetEnemy 2
+
+			Team 2
+			name <Enemies>
+			Deploy <if= L2 0  SetSelfFaction NPCFac %1%   WMecha 2 Threat %threat% 80>
+			ParaX 25
+			ParaY 25
+			SetEnemy 1
+		end
+	end
+	inv
+		NPC Explorer
+		SetFaction 10
+		CharDesc passionate lawful
+
+		STC QUEST-ENCOUNTER-ACTIVE-STATIONARY
+		name <Strange Object>
+		desig <ENTRANCE %s1%>
+	end
+
+Content
+	name <Trucker's Luck>
+	desc <The PC will encounter a space trucker being attacked, and may help.>
+	%% Upon saving E1, he will be sent to a nearby building. If the PC speaks with
+	%% him again, he'll find out what E1 found.
+	requires <*:LocalQuest "Spinner">
+
+	% E1 is the character the PC will be helping
+	% E2 is the entrance to the space scene
+	% E3 is the scene where E1 will go after the fight
+	% E4 is a copy of E1's scene; needed for the SubQuest parameter
+	element1 <Prefab>
+	scene1 <New *BLANK.Space.Mecha>
+	team1 <Truckers>
+	teamdata1 <SD Ally>
+
+	element2 <Prefab>
+	scene2 <SPACE ENVIRONS>
+
+	Scene3 <Building Garage>
+
+	Scene4 <Grab 1>
+
+	Quest1 <*SpaceSalvage 1 4>
+
+	sub
+		Persona 1
+		special <UNLISTED>
+		rumor0 <raiders frequently hide in the dust clouds outside the station.>
+		rumor%id% <%name1% has been getting repairs at %name3%.>
+		greeting <if= QuestStatus %qid% %id% else GoCheckVictory  NewChat Say 3 AddChat 1>
+		GoCheckVictory <if= QuestStatus %qid% 0 else GoChat if= SceneVar %s1% 2 1 else GoKeepFighting SetQuestStatus %qid% %id% QMemo %qid% 4 Goto GoPCWon>
+		*GoPCWon <*WeWon 0 8>
+		GoKeepFighting <ifChatNPCKnown else GoFirstTime EndChat Say 1>
+		*GoFirstTime <*HelpMeVsMecha GoWillHelp GoWontHelp>
+		*GoWillHelp <*LetsDefeatThem 8>
+		GoWontHelp <EndChat Say 2 SetNPCTeam %1% 2 L= 3 1>
+		*GoChat <*MISC_CHATTER>
+		result1 <Goto .%id1%_GoInit>
+		Msg1 <The pirates aren't defeated yet! Let's keep fighting!>
+		Msg2 <If you're not going to help, just stay out of the way!!!>
+		Msg3 <Good to see you again. I never got a chance to thank you... Those pirates, I don't think they were after me just for the cargo. I think it's because of what I found in the dust cloud.>
+		Msg4 <You rescued %name1% from space pirates.>
+		Prompt1 <What did you find?>
+
+		MetaScene 1
+		%% Because scene 1 is a blank, this metascene holds all the important stuff.
+		% L1 = Conversation Initializer
+		% L2 = Victory Counter
+		% L3 = If nonzero, PC has attacked E1
+		% L4 = Value of E1's cargo
+		start <if= L1 0  Print 2 ForceChat %1% L= 1 1>
+		% If the PC leaves the scene before defeating all enemies, there's no second chance.
+		nu1 <if= T1 0 Return  if= L2 0   L= 2 -1  DeleteNPC %1%  SetQuestStatus %qid% -2>
+		nu2 <if= T2 0         if= L2 0   XPV 100   L= 2 1   if= L3 0 else GoFightE1  ifNPCOK %1%  Print 2 ForceChat %1% MoveAndPacifyNPC %1% %s3%>
+		GoFightE1 <L= 2 -1 L= 4 Reward Threat %threat% 100 500  Alert 1 AddLawful -5 SetQuestStatus %qid% -2  CashPrize L4 ifNPCOK %1% FreezeNPC %1% PCEnemy %1%>
+		Faint%1% <SetQuestStatus %qid% -2>
+
+		Msg1 <You recover $ \VAL L4 from %name1%'s cargo.>
+		Msg2 <%name1% contacts you.>
+
+		sub
+			Team 1
+			name <Player Team>
+			ParaX 5
+			ParaY 5
+			SetEnemy 2
+
+			Team 2
+			name <Enemies>
+			SetFaction 8
+			Deploy <if= L2 0   WMecha 2 Threat %threat% 150>
+			ParaX 25
+			ParaY 25
+			SetEnemy 1 3
+
+			Team 3
+			name <Truckers>
+			SetEnemy 2
+			ParaX 35
+			ParaY 10
+		end
+	end
+	inv
+		NPC Trucker
+		SetTeam 3
+
+		STC QUEST-ENCOUNTER-ACTIVE-STATIONARY
+		name <Dust Cloud>
+		desig <ENTRANCE %s1%>
+	end
+
+
+Content
+	name <Rishtan: Mechanical Genius>
+	desc <The local mechanic wants to start a customization shop, but lacks money.>
+	requires <*:LocalQuest L5PAT>
+
+	quest1 <*:FindMoney.Investor 2>
+	quest2 <*Success1.BusinessDeal 1>
+
+	Element1 <Prefab>	% The manager of the shop
+	Scene1 <Building Public Garage>
+	Team1 <Citizens>
+	TeamData1 <Pass>
+
+	Element2 <Prefab>
+	Scene2 <New *Workshop>
+	Team2 <Citizens>
+	TeamData2 <Pass>
+
+	sub
+		Persona 1
+		Greeting <if= QuestStatus %qid% %id% else GoGreet if= NPCVar %2% 1 1 else GoCheckQuest NewChat Say 1 AddChat 1>
+		GoCheckQuest <if= QuestStatus %qid1% -1 else GoGreet ifNPCOK %2% else GoKillQuest NewChat Say 2>
+		GoKillQuest <SetQuestStatus %qid% -2 Goto GoGreet>
+		*GoGreet <*NiceToMeetYou GoOpenShop>
+		*GoOpenShop <*SHOP_GENERAL GoGoodbye>
+		*GoGoodbye <*GOODBYE>
+		Result1 <Goto .%id2%_GoInit>
+		Msg1 <You did a really good thing for %name2%, for both of us really. I just wanted the chance to thank you.>
+		Msg2 <You found an investor? Then you better get downstairs and let %name2% know about it, before he blows a diode or something.>
+		Prompt1 <It was the least I could do.>
+
+		Persona 2
+		% V1 = Conversation skill roll counter
+		Greeting <if= NPCVar %2% 1 1 else GoCheckQuest NewChat Say 18 AddChat 16 AddChat 17>
+		GoCheckQuest <if= QuestStatus %qid% %id% else GoIntro NewChat Say 16 AddCHat 14 AddChat 15>
+		GoIntro <if= QuestStatus %qid% 0 else GoChat  ifG PCRenown %threat% else GoLowIntro ifG React d6 else GoLowIntro NewChat Say 9  AddChat 7 AddChat 8 AddChat 9>
+		GoLowIntro <ifChatNPCUnknown else GoSecondTime NewChat Say 1 AddChat 1 AddChat 2 AddChat 3>
+		GoSecondTime <NewChat Say 2  AddChat 1 AddChat 2 AddChat 3>
+		GoBeginQuest <SetQuestStatus %qid% %id%  QMemo %qid% 20  SetQuestStatus %qid1% %id1%>
+		*GoChat <*MISC_CHATTER>
+		*GoGoodbye <*GOODBYE>
+		result1 <NewChat Say 3 AddChat 4 AddCHat 5 AddChat 3>
+		result2 <EndChat Say 4>
+		result3 <NewChat Say 5 AddChat 4 AddChat 1 AddChat 6>
+		result4 <Goto result2>
+		result5 <if= V1 0 else GoR5Fail V= 1 1  ifConversation %sktar% else GoR5Fail NewChat Say 6  AddChat 10 AddChat 11  Goto GoBeginQuest>
+		GoR5Fail <EndChat Say 7>
+		result6 <EndChat Say 8>
+		result7 <NewChat Say 10 AddChat 10 AddChat 11  Goto GoBeginQuest>
+		result8 <NewChat Say 11 AddReact -d30  AddNPCReact %1% -15   AddSociable -d8   SetQuestStatus %qid% -2>
+		result9 <NewChat Say 12 AddChat 12 AddChat 13>
+		result10 <NewChat Say 13 AddChat 11 AddChat 14>
+		result11 <NewChat Say 14>
+		result12 <AddCheerful d10 Goto result7>
+		result13 <AddCheerful d10 Goto result8>
+		result14 <NewChat Say 15 AddReact 15  NPCVar= %2% 1 1 Cash+ -5000000 XPV 100 AddRenown 1>
+		result15 <NewChat Say 17 AddReact d8  NPCVar= %2% 1 1                XPV 100>
+		result16 <EndChat Say 19 shop .wares Goto GoGoodbye>
+		.wares <MECHA MEXTRA>
+		result17 <Goto GoChat>
+		Msg1 <What are you doing down here? This is a place of business, not a social club.>
+		Msg2 <So you're back again. I hope you've got a good reason for bothering me this time.>
+		Msg3 <I fix things for %name1%... Mecha, mostly, but occasionally robots and office equipment. Of course what I'd really like to do is open up a conversion shop and become a famous mecha designer, but that's never going to happen.>
+		Msg4 <Look, I've got to get these repairs done, I don't have time to chat. Maybe if you come back later I'll have more time but right now I'm swamped.>
+		Msg5 <Then you need to speak with %name1%, upstairs. I handle the labor, \SPR %1% handles the business. The exit is just over there.>
+		Msg6 <First of all because we don't have the tools I need here for making custom parts. Unfortunately we don't have enough money to upgrade the workshop, so until this shop starts doing better I'm out of luck.>
+		Msg7 <Because... look, you wouldn't be interested in my life story, and I don't have time to tell it. I have to get back to work.>
+		Msg8 <I don't need any help, I just need to get back to work. You can talk with %name1% if you'd like a job here but I honestly don't think we can afford another mechanic.>
+		Msg9 <Look who it is... the famous \PC . If you're not too busy on your fantastic adventures I have a business offer for you.>
+		Msg10 <Well, I'd like to expand the garage, start doing mecha customizations... Unfortunately, I don't have the equipment we'd need. If you would invest some money now then maybe in a few years there'll be a huge amount of profit.>
+		Msg11 <I see... and this without even hearing my idea. That's just great. Fine, I don't need you... I can do this all on my own...>
+		Msg12 <Yes, I remember that very well... Though my counselor says I'll be learning to live with the trauma soon. Now do you want to hear about my business idea or not?>
+		Msg13 <I figure we'll need around five million for the basic equipment. After that I just need to build a reputation as a designer, then soon we might even make a profit.>
+		Msg14 <If you can, that would be great. I just know that I can make it as a mecha designer, all I need is one chance to prove it!>
+		Msg15 <Wow, this is great! Thank you so much! I promise that when this shop starts making profit, I'll pay you back with interest...>
+		Msg16 <In order to start my customization business, I'll need at least five million credits for new equipment.>
+		Msg17 <That's fantastic news! I'll order the new equipment right away... Come back here later and I'll show you what I can do!>
+		Msg18 <Welcome to %name2%'s custom mecha shop. Thank you again for helping this dream to come true!>
+		Msg19 <I have a number of mecha for sale, some of which I've customized myself. I also have some replacement parts in case you'd like to try your hand at mecha engineering.>
+		Msg20 <%name2% in \SCENE %1% wants to open a mecha customization shop, but needs money to buy the equipment.>
+		Prompt1 <What is it that you do down here?>
+		Prompt2 <I just wanted to chat.>
+		Prompt3 <I need to get my mecha repaired.>
+		Prompt4 <Uh-huh. So do you know any rumors?>
+		Prompt5 <Why do you think it can't happen?>
+		Prompt6 <Maybe I could help you out.>
+		Prompt7 <Alright, what kind of offer?>
+		Prompt8 <I'm not interested.>
+		Prompt9 <I was in here bothering you before! Remember?>
+		CPrompt9 <ifChatNPCKnown Accept>
+		Prompt10 <How much money do you need?>
+		Prompt11 <Maybe I can find someone else to invest.>
+		Prompt12 <Okay. Tell me about it.>
+		Prompt13 <Sorry, it doesn't sound interesting.>
+		Prompt14 <I can do that. [Give $5M]>
+		CPrompt14 <ifG PC$ 4999999 Accept>
+		Prompt15 <I've found an investor for you.>
+		CPrompt15 <if= QuestStatus %qid1% -1 Accept>
+		Prompt16 <I'd like to see what you have.>
+		Prompt17 <Just stopped by to chat, thanks.>
+
+		MetaScene 1
+		sub
+			room
+			minimap <.......2......1.....&---&>
+			special <SHAREDPALETTE>
+			desig <HOME>
+			inv
+				TrapDoor
+				MiniMapComponent 2
+				desig <ENTRANCE %s2%>
+			end
+		end
+
+		MetaScene 2
+		sub
+			room
+			minimap <......##...#2.....1......>
+			special <SHAREDPALETTE>
+			desig <HOME>
+			inv
+				STC COMPUTER-1
+				name <Design Console>
+				MiniMapComponent 2
+			end
+		end
+
+	end
+	inv
+		NPC Mechanic
+
+		NPC Mechanic
+		name <Rishtan>
+		CharDesc Male Pragmatic Shy
+		% Actual game age = 24
+		Age 4
+		% V1 = Have arranged funding, thereby unlocking store
+		Skill 21 8
+		Skill 31 10
+	end
+
+Content
+	name <Rat Killing>
+	desc <The PC has to kill a rat for the NPC.>
+	requires <*:LocalQuest>
+
+	% Quest1 is the continuation after the PC has cleared the basement.
+	Quest1 <*SUCCESS1.Extermination 1>
+
+	element1 <Prefab>
+	Scene1 <Mall Public>
+	Team1 <Citizens>
+	TeamData1 <Pass Ally>
+
+	Scene2 <NEW *ExterminationBasement>
+	Team2 <Monsters>
+	TeamData2 <SD Enemy>
+
+	sub
+		Persona 1
+		greeting <if= QuestStatus %qid% %id% else GoFirstTime NewChat Say 1 AddChat 1 AddChat 2>
+		*GoFirstTime <*NiceToMeetYou GoCheckRenown>
+		GoCheckRenown <if= QuestStatus %qid% 0 else GoOpenShop  ifG PCRenown d%threat% else GoCheckWangtta   Goto GoOfferMission>
+		GoCheckWangtta <ifG React d10 else GoOpenShop ifG -d10 PCRenown else GoOpenShop   Goto GoOfferMission>
+		GoOfferMission <NewChat Say 2 AddChat 3 AddChat 4>
+		*GoOpenShop <*SHOP_GENERAL GoGoodbye>
+		*GoGoodbye <*GOODBYE>
+		Result1 <Goto GoOpenShop>
+		Result2 <Goto .%id1%_GoInit>
+		Result3 <NewChat Say 3  SetQuestStatus %qid% %id% QMemo %qid% 5 UpdateProps>
+		result4 <NewChat Say 4  SetQuestStatus %qid% -2>
+		Msg1 <So, how goes the rat killing?>
+		Msg2 <Hey, I was wondering if you could help me with a little problem.>
+		Msg3 <There are some rats or something infesting the basement. One of my workers got bit just recently... I need you to exterminate them. This door will take you down there.>
+		Msg4 <I understand. I won't bother you about it again.>
+		Msg5 <%name1% in \SCENE %s1% asked you to clear some vermin out of \PPR %1% basement.>
+		Prompt1 <I'm still working on it.>
+		Prompt2 <Your basement has been cleared.>
+		CPrompt2 <if= SceneVar %2% 1 1 Accept>
+		Prompt3 <What kind of problem?>
+		Prompt4 <Sorry, I'm not interested.>
+
+		MetaScene 1
+		sub
+			room
+			minimap <2#...+#.......1.....&---&>
+			special <SHAREDPALETTE>
+			desig <HOME>
+			sub
+				Door
+				update <if= V1 0 else GoCheckQuest V= 1 1 SetStat STAT_Lock %sktar_hard%>
+				GoCheckQuest <ifG QuestStatus %qid% 0 SetStat STAT_Lock 0>
+			end
+			inv
+				TrapDoor
+				MiniMapComponent 2
+				desig <ENTRANCE %s2%>
+			end
+		end
+	end
+	inv
+		NPC Shopkeeper
+	end
+

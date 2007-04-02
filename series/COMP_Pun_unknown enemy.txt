@@ -1,0 +1,361 @@
+%% COMP_Pun
+%%	+Pun	An unknown enemy attacks
+
+Plot
+	name <City in Trouble>
+	desc <PC asked to help defend against an unknown enemy.>
+	requires <#A +Tre (+F--|+Fmi|+Fmo) +Pun P:-- -F:COR -L:ENEMY>
+
+	% E1 is the target NPC.
+	% E2 is the place to stick him if he's not on the map.
+	% E3 is the next NPC to meet about a mission
+	% E4 is the scene for the next mission
+	element1 <Grab 5>
+	element2 <Scene Public !Near -7>
+	element3 <Character !Near -7 !Ally -7>
+	element4 <MetaScene !Near -7 *Building NeverFail>
+
+	% V1 = Initialization Counter
+
+	start <ifNPCOK E1 else GoLose ifNPCOK E3 else GoLose>
+	GoLose <LoseComp 0 .loss>
+	.loss <+T-->
+
+	update <if= V1 0 V= 1 1  &SetTargetChar 0  if# ERootScene 1 N7 else  MoveNPC E1 E2>
+
+	5Min <if= V1 1 if= d5 1 ifNPCOK E1  V= 1 2  Email 1>
+
+	Msg1 <\ELEMENT 1 @ \SCENE EScene 1 :// Come see me regarding your recent mission.>
+
+	sub
+		Persona 1
+		rumor <!1 wants to talk with you.>
+		greeting <if= V1 0 else GoNewMission CashPrize Reward Threat StoryDL 100 100 V= 1 1 Goto GoGetReward>
+		*GoGetReward <*MissionWasSuccess&Reward GoRewardOp N3 N2>
+		GoRewardOp <AddChat 3>
+		GoNewMission <NewChat Say 1 AddChat 1 AddChat 2>
+
+		result1 <NewChat Say 3 Goto GoR1Exit >
+		GoR1Exit <&SetTargetChar E3 StoryNote 2 WinComp E4 .changes>
+		.changes <+Tgt +Fmi>
+
+		*result2 <*RejectMission GoR2Exit>
+		GoR2Exit <WinComp 0 .changes2>
+		.changes2 <+T-->
+
+		result3 <Goto GoNewMission>
+
+		Msg1 <We still don't know where these invaders are coming from, nor what they want. You know, \FACTION RootSceneFac could use a good pilot like you to help face this threat.>
+		Msg1_1 <>
+		CMsg1_1 <ifNPCSociable Accept>
+		Msg1_2 <>
+		CMsg1_2 <ifNPCShy Accept>
+		Msg1_3 <>
+		CMsg1_3 <ifNPCEasygoing Accept>
+		Msg1_4 <>
+		CMsg1_4 <ifNPCPassionate Accept>
+		Msg1_5 <>
+		CMsg1_5 <ifNPCCheerful Accept>
+		Msg1_6 <>
+		CMsg1_6 <ifNPCMelancholy Accept>
+		Msg2 <\ELEMENT 1 sent you to speak with \ELEMENT 3 in \SCENE E4 .>
+
+		Msg3 <In that case you should go to \SCENE E4 and speak with \ELEMENT 3 . I believe \SPR E3 has something you could help with.>
+
+		Prompt1 <It would be an honor to help.>
+		Prompt2 <Sorry, I'm not signing up for anyone's war.>
+		Prompt3 <Thank you.>
+	end
+
+
+Plot
+	name <Shrine Destroyed>
+	desc <A shrine is destroyed; the caretaker demands action!>
+	requires <#A +T-- +Pun C:FAITH I:-->
+
+	% E1 is a metascene
+	% E2 is a public scene; the "natural home" of the monk
+	% E3 is the monk who will tell the PC about the situation
+	% E4 is the artifact the attackers may have been looking for
+	% E5 is a location for a combat mission
+	% E6 is an encounter
+	% E7 is the other researcher
+	element1 <Metascene  !Near -7 *Building NeverFail>
+	element2 <Scene Public Legit !Near -7>
+	element3 <Character "FAITH" !Near 2 NeverFail>
+	neverfail3 <Monk>
+	element4 <Artifact PreZero>
+	element5 <Scene Environs !Near -7>
+	element6 <Prefab>
+	place6 <5>
+	element7 <Prefab>
+
+	% P1 = Initialization Counter
+	% P2 = Initial Victory Count
+
+	start <ifNPCOK E3 else GoLose>
+	GoLose <LoseComp 0 .loss>
+	.loss <+T-- +F-->
+
+	update <if=  P1 0  P= 1 1    MoveNPC E3 E1   News 1   V= 2 CurrentPPScore   FreezeItem E4>
+
+	return <ifNPCOK E3 &SetTargetChar E3  ifG CurrentPPScore V2 else GoNoWin AlterContext .loadreward>
+	GoNoWin <AlterContext .loadnoreward>
+	.loadreward <+Tre>
+	.loadnoreward <+T-->
+
+	Msg1 <The Ecumenical Temple of \NARRATIVE 7 was heavily damaged today when a force of unidentified mecha attacked \ELEMENT 1 .>
+
+	sub
+		MetaScene 1
+		% The Ecumenical Temple
+		ClubMap
+		MapWidth 20
+		MapHeight 25
+		type <TEMPLE LEGIT BUILDING PUBLIC>
+		special <AddExit>
+		nu1 <if= T1 0 Return>
+		inv
+			STC SHRINE-1
+		end
+		sub
+			Team 1
+
+			Team 2
+			name <Civilian>
+			setally 1
+			Passive
+
+			room
+			name <Foyer>
+			desig <EntranceGrid>
+			Content <Some 4 45 Here *URBAN_X>
+		end
+
+		Persona 3
+		% The persona of the monk to give the mission...
+		*greeting <*DestructionGreeting GoTellStory N2>
+		GoTellStory <NewChat ifNPCPassionate else GoEasyStory Say 1 AddChat 1 AddChat 2>
+		GoEasyStory <Say 2 AddChat 3 AddChat 4>
+		result1 <NewChat Say 3 History 10 StoryNote 4  AddEasygoing -10 Goto GoPassionateWin>
+		GoPassionateWin <&SetTargetItem E4  WinComp E6 .passion>
+		.passion <+Tin +Ffi>
+		result2 <NewChat Say 5 AddChat 1 AddChat 3>
+		result3 <NewChat Say 6 AddChat 4 AddChat 5>
+		result4 <NewChat Say 7 AddChat 7 AddChat 6>
+		result5 <NewChat Say 8 History 10 StoryNote 9  AddEasygoing 10  Goto GoEasyWin>
+		GoEasyWin <FreezeNPC E7 &SetTargetChar E7 &SetTargetItem E4  WinComp 0 .easygoing>
+		.easygoing <+Pla +Tlt +Fin>
+		result6 <Goto result5>
+		result7 <Goto result1>
+		Msg1 <The animals who destroyed this temple must be punished.>
+		Msg2 <They must have attacked this place because they were looking for the \ELEMENT 4 ... It's not here any longer, but I fear what dark purpose they have planned for it.>
+		Msg3 <They can't have gotten far... You should be able to find them somewhere in \ELEMENT 5 .>
+		Msg4 <\ELEMENT 3 asked you to find the mecha in \ELEMENT 5 who attacked \PPR E3 temple.>
+		Msg5 <They must have been searching for the \ELEMENT 4 . It was here once, a long time ago, but was moved years ago.>
+		Msg6 <It's an artifact from PreZero times; a relic from the past... and perhaps something more. Professor \ELEMENT 7 was researching it but I don't know where it is now.>
+		Msg7 <There will be time for that later. Right now, I'm concerned about \ELEMENT 7 ... \SPR E7 has been researching the \ELEMENT 4 and the same thugs who attacked this temple may go after \OPR E7 .>
+		Msg8 <Go find Professor \ELEMENT 7 , then, before the people who attacked the temple find \OPR E7 .>
+		Msg9 <\ELEMENT 3 asked you to find \ELEMENT 7 , who knows about the \ELEMENT 4 .>
+		Msg10 <Unknown mecha destroyed the Ecumenical Temple in \NARRATIVE 7 .>
+		Prompt1 <I could bring them to justice.>
+		Prompt1_1 <I could bring make them pay for it.>
+		Prompt2 <Why did they attack this temple?>
+		Prompt2_1 <Why was this place attacked?>
+		Prompt3 <What is the \ELEMENT 4 ?>
+		Prompt4 <The people responsible for this must be punished.>
+		Prompt5 <I could find it for you.>
+		Prompt6 <I'll find \ELEMENT 7 and protect \OPR E7 .>
+		Prompt7 <It'd be better if I found those mecha.>
+
+	end
+	inv
+		STC Encounter-WANDER
+		name <Unknown Mecha>
+		EncounterMove 5
+
+		NPC Professor
+		chardesc Old Heroic Spiritual
+	end
+
+
+Plot
+	name <There's Mecha Out There>
+	desc <Some unknown mecha are outside the city.>
+	requires <#A +Pun +T-->
+
+	%% E1 is the environs scene
+	%% E2 is the encounter
+	element1 <Scene Environs !Near -7>
+	element2 <Prefab>
+	place2 <1>
+
+	update <GrabEntrance E2 GSetSAtt rumor Msg1 WinComp E2 .next>
+	.next <+Tin +F-->
+
+	Msg1 <a group of mysterious mecha has been spotted in \ELEMENT 1 .>
+	Msg1_1 <some mecha have been looking for fights in \ELEMENT 1 .>
+	Msg1_2 <there's a group of hostile mecha hiding in \ELEMENT 1 .>
+	Msg1_10 <\NARRATIVE 2 sent a lance of mecha to \ELEMENT 1 .>
+	CMsg1_10 <ifFactionExists N2 Accept>
+	Msg1_20 <\NARRATIVE 1 has been hiding in \ELEMENT 1 .>
+	CMsg1_20 <ifNPCOK N1 Accept>
+
+	inv
+		STC Encounter-WANDER
+		name <Unknown Mecha>
+		EncounterMove 5
+	end
+
+Plot
+	name <Warning Of Attack>
+	size 1
+	desc <The PC finds his target, who reveals enemies plan strike against city.>
+	requires <#A +Pun +Ttt (+Fin|+Frt) T:++ -T:Enemy S:++>
+
+	%% E1 is the scene where this will take place
+	%% E2 is the NPC that the PC is looking for
+	element1 <Grab 6>
+	element2 <Grab 5>
+	element3 <Metascene *BUILDING !Near -7 NeverFail>
+
+	start <ifNPCOK E2 else GoLose>
+	GoLose <LoseComp 0 .loss>
+	.loss <+T-- +F-->
+
+	update <if=  P1 0  P= 1 1  &SetTargetChar 0  MoveNPC E2 E1>
+
+	sub
+		Persona 2
+		special <UNLISTED>
+		rumor <!2 has been seen in !1.>
+		*Greeting <*GreetThenDiscuss GoReveal>
+		GoReveal <NewChat Say 1 AddChat 1 AddChat 2>
+		GoWin <StoryNote 3  WinComp E3 .next>
+		.next <+Tgs +Ffi>
+		GoLose <AddRenown -5   AddHeroic -1   LoseComp 0 .lose>
+		.lose <+T-- +F-->
+		result1 <NewChat Say 2 Goto GoWin>
+		RESULT2 <NewChat Say 4 AddChat 3 AddChat 4>
+		result3 <Goto result1>
+		result4 <NewChat Say 5 Goto GoLose>
+		Msg1 <I've discovered that these invaders, the ones attacking \NARRATIVE 7 , intend to strike a target within the city. There's not much time...>
+		Msg2 <Go to \SCENE E3 , then. There may not be much time.>
+		Msg3 <\ELEMENT 2 told you the invaders were planning to strike \SCENE E3 .>
+		Msg4 <If we don't act quickly, lots of people are going to die. Do you really want their blood on your hands?>
+		Msg5 <That attitude's going to catch up with you someday.>
+		Prompt1 <Quickly, tell me where it is!>
+		Prompt1_1 <I'd better get there and defend it!>
+		Prompt2 <That's not my problem.>
+		CPrompt2 <if= N3 0 Accept>
+		Prompt2_1 <Why should I care about that?>
+		Prompt3 <Alright, I'll do it.>
+		Prompt4 <Forget it. I'm out of here.>
+
+		STC MS_CLUB
+	end
+
+
+Plot
+	name <Meet Arch-Enemy>
+	% V1 = Initialization
+	size 8
+	desc <Fight your new arch-enemy for the first time.>
+	requires <#A +Tin ~+Ffi +Pun ~!Lo ~!Md -F:Ally>
+	changes <+T-- +Pen E:++>
+
+	update <if= V1 0 V= 1 1 ifNPCOK N1 else GoSetReplacement DeleteNPC E2 E= 2 N1 Goto GoPlaceEnemy>
+	GoSetReplacement <&SetEnemyChar E2 SetNPCFaction E2 N2 Goto GoPlaceEnemy>
+	GoPlaceEnemy <MoveNPC E2 E1 SetNPCTeam E2 2 NPCLevel E2 StoryDL>
+
+	element1 <Grab 6>
+	element2 <Prefab>
+
+	sub
+		MetaScene 1 2
+		% L1 = Encounter Over Counter
+		% L2 = Initialization Counter
+		% L3 = Script Immunity Counter
+		% L4 = Identity of enemy NPC
+		MapWidth 30
+		MapHeight 30
+
+		Start <if= L2 0 L= 2 1   ForceChat E2   L= 4 E2   Compose FAINT E2 .E2Faint>
+		.E2Faint <if= L1 0  Goto GoDie>
+		GoDie <L= 1 2  L= 3 1   FreezeNPC E2   StoryNote 4     WinComp 0 .next>
+		nu1 <if= T1 0  Return   if= L1 0 L= 1 1   StoryNote 2      ForceChat L4>
+		nu2 <if= T2 0           if= L1 0 L= 1 2   StoryNote 3   AddRenown 1  Salvage   ifNPCOK L4 else GoDie  XPV 100    ForceChat L4>
+		End <if# L3 0 Print 1>
+
+		.next <+T-- +F-- +Pen>
+
+		Msg1 <\PERSONA L4 's cockpit is empty. Could \SPR E2 have escaped?>
+		Msg2 <You met \ELEMENT 2 in battle, and lost.>
+		Msg3 <You met \ELEMENT 2 in battle, and won.>
+		Msg4 <You appeared to kill \ELEMENT 2 in battle, but \PPR E2 body wasn't found...>
+
+		sub
+			team 1
+			SetEnemy 2
+			ParaX 5
+			ParaY 5
+
+			team 2
+			SetEnemy 1
+			Deploy <SetSelfFaction N2   WMecha 2 Threat StoryDL 75>
+			ParaX 25
+			ParaY 25
+		end
+
+		Persona 2
+		special <UNLISTED>
+		greeting <PCFEnemy N2   if= L1 2 else GoCheckLoss WinComp 0 .next Goto GoWinSpeech>
+		*GoWinSpeech <*GetYouNextTime>
+		GoCheckLoss <if= L1 1 else GoThreat LoseComp 0 .next Goto GoLoseSpeech>
+		.next <+T-- +F-- +Pen>
+		*GoLoseSpeech <*YouLose>
+		*GoThreat <*COMP_Pun_MAE_Greeting GoFight>
+		*GoFight <*THEME_EXPO&ENEMY na>
+	end
+	inv
+		NPC Mecha Pilot
+	end
+
+Plot
+	name <Fight Some Enemies>
+	size 5
+	desc <Fight a group of mecha presumably allied with the unknown enemies revealed earlier.>
+	requires <#A +Tin +Pun ~+Ffi !Ne>
+
+	element1 <Grab 6>
+
+	sub
+		MetaScene 1 2
+		% L1 = Encounter Over Counter
+		% L2 = Initialization Counter
+		MapWidth 30
+		MapHeight 30
+
+		Start <if= L2 0 L= 2 1 StoryNote 2>
+		nu1 <if= T1 0   Return   if= V1 0 V= 1 1   LoseComp 0 .next>
+		nu2 <if= T2 0   if= V1 0 V= 1 1            XPV 100   AddRenown 1  Salvage   WinComp  0 .next>
+
+		Msg2 <You fought a group of mysterious mecha.>
+		.next <+T-->
+
+		sub
+			team 1
+			SetEnemy 2
+			ParaX 5
+			ParaY 5
+
+			team 2
+			SetEnemy 1
+			Deploy <SetSelfFaction N2   WMecha 2 Threat StoryDL 100>
+			ParaX 25
+			ParaY 25
+		end
+	end
+
+
+

@@ -1,0 +1,125 @@
+%%   *SpaceSalvage Contents
+%%	E1 has found something in space, and will tell the PC about it, thereby revealing
+%%	it on the map.
+%%	Param1: The character who found the thing.
+%%	Param2: The scene where the entrance/whatever will be placed.
+
+Content
+	name <Treasure Coordinates>
+	desc <The NPC will tell the PC about a secret treasure... for a price.>
+	requires <*SpaceSalvage (1:ADVEN|1:CORPO|1:LABOR|1:THIEF)>
+	special <REUSABLE>
+
+	% E1 is the character to tell the PC about it.
+	% E2 is the location to insert the derelict.
+	% E3 is the dungeon of the ship
+	% E4 is the derelict space ship
+	% E5 is the item you can find in the ship
+
+	Scene3 <New *Dungeon.Derelict>
+	Element4 <Prefab>
+	Scene4 <Grab 2>
+	Element5 <Artifact Item>
+	Scene5 <Grab 3>
+
+	sub
+		Persona 1
+		% V%id%01 = Cost of the info.
+		greeting <if= QuestStatus %qid% %id% else %pop%   NewChat Say %id%01    AddChat %id%02 AddChat %id%03 AddChat %id%04>
+		.%id%_GoInit <SetQuestStatus %qid% %id% V= %id%01 Threat %threat% 5  QMemo %qid% %id%07 NewChat Say %id%02  AddChat %id%01>
+		Result%id%01 <NewCHat Say %id%03  AddChat %id%02 AddChat %id%03 AddChat %id%04>
+		Result%id%02 <NewChat Say %id%04  SetQuestStatus %qid% -1  ItemStat= %4% STAT_MetaVisibility 0 Cash+ -V%id%01>
+		Result%id%03 <NewChat Say %id%05>
+		Result%id%04 <NewChat Say %id%06  SetQuestStatus %qid% -2  ItemStat= %4% STAT_MetaVisibility %sktar_hard%>
+		Msg%id%01 <Have you thought about my offer? Just $ \VAL V%id%01 and I'll tell you where to find incredible treasure.>
+		Msg%id%02 <I've discovered the location of a derelict warship, most likely dating from the Age of Superpowers. There must be fantastic treasure inside, but unfortunately I can't explore the wreckage myself.>
+		Msg%id%03 <If you were interested, I could tell you where to find this ship. The information is yours for just $ \VAL V%id%01 .>
+		Msg%id%04 <Very good... Check back outside the station, through the areas you've explored recently. I'll upload the navigation data to your mech.>
+		Msg%id%05 <Fine. If you happen to change your mind, come on back.>
+		Msg%id%06 <I understand. I'll find someone else to sell this information to, then.>
+		Msg%id%07 <%name1% in \SCENE NPCScene %1% offered to sell you the coordinates of a derelict warship for $ \VAL V%id%01 .>
+		Prompt%id%01 <Go on.>
+		Prompt%id%02 <It's a deal. [Give Money]>
+		CPrompt%id%02 <ifG PC$ V%id%01 Accept>
+		Prompt%id%03 <I'll come back later.>
+		Prompt%id%04 <No way, I'm not interested.>
+
+		MetaScene 5
+		get%5% <if= L1 0 XPV 100 L= 1 1>
+		sub
+			room
+			special <SharedPalette>
+			desig <Home>
+			minimap <......#+#..#1#..###......>
+		end
+	end
+	inv
+		STC DERELICT-1
+		name <Derelict Warship>
+		desig <ENTRANCE %s3%>
+		Hide
+		Reveal <Print 1>
+		Msg1 <You spot an old, derelict spacecraft. There could be something valuable inside.>
+	end
+
+Content
+	name <PreZero Freighter>
+	desc <The wreckage of a ship from the Age of Superpowers is found drifting nearby.>
+	requires <*SpaceSalvage BRANCHES>
+	special <REUSABLE>
+
+	% E1 is the character to tell the PC about it.
+	% E2 is the location to insert the thing.
+	% E3 is the dungeon of the ship
+	% E4 is the item that E1 wants recovered from the ship
+
+	Scene3 <New *Dungeon.Derelict>
+	Element4 <Artifact Item Prezero>
+	Scene4 <Grab 3>
+
+	%% Q1 is the success branch for returning the club
+	Quest1 <*SuccessGetItem.giveitem 1 4>
+
+	sub
+		Persona 1
+		greeting <if= QuestSTatus %qid% %id% else %pop% NewChat Say %id%01  AddChat %id%01 AddChat %id%02 AddChat %id%03 AddChat %id%04>
+		.%id%_GoInit <SetQuestStatus %qid% %id% QMemo %qid% %id%04 NewChat Say %id%02>
+		result%id%01 <NewChat Say %id%03>
+		result%id%02 <DeleteItem %4% Goto .%id1%_GoInit>
+		result%id%03 <SetQuestStatus %qid% -2  Goto .%id%_GoR3Final>
+		*.%id%_GoR3Final <*PCWillKeepItem %4%>
+		result%id%04 <SetQuestStatus %qid% -2  Goto .%id%_GoR4Final>
+		*.%id%_GoR4Final <*YouLostItem>
+		Msg%id%01 <Any luck on finding the %name4%?>
+		Msg%id%02 <I've been searching for the %name4%, and now I think I've found the wreckage of the freighter that was carrying it. If you could search that derelict and bring me the %name4% you'll be generously rewarded.>
+		Msg%id%03 <Well, come back here when you've got it and I'll give you that reward I mentioned.>
+		Msg%id%04 <%name1% in \SCENE NPCScene %1% asked you to retrieve the %name4% from a derelict spacecraft outside of \SCENE RootSceneID .>
+		Prompt%id%01 <Still working on it.>
+		CPrompt%id%01 <ifItemOK %4% Accept>
+		Prompt%id%02 <I've found it. Here you go.>
+		CPrompt%id%02 <ifKeyItem %4% Accept>
+		Prompt%id%03 <I think I'm going to keep it myself.>
+		CPrompt%id%03 <ifKeyItem %4% Accept>
+		Prompt%id%04 <I seem to have misplaced it...>
+		CPrompt%id%04 <ifItemDestroyed %4% Accept>
+
+		MetaScene 2
+		inv
+			STC DERELICT-1
+			name <%name3%>
+			%% V1 = Have been revealed
+			desig <ENTRANCE %s3%>
+			update <if= QuestStatus %qid% %id% else GoMaybeHide V= 1 1 SetStat STAT_MetaVisibility 0>
+			GoMaybeHide <if= V1 0 SetSTat STAT_MetaVisibility -1>
+		end
+
+		MetaScene 4
+		get%4% <if= L1 0 XPV 100 L= 1 1>
+		sub
+			room
+			special <SharedPalette>
+			desig <Home>
+			minimap <......#+#..#1#..###......>
+		end
+	end
+

@@ -1,0 +1,173 @@
+Plot 0
+	name <Patrol Job #1>
+
+	%% This is a generic mecha pilot job. The PC will be hired to go eliminate
+	%% an enemy patrol spotted near town.
+
+	%% E1 is the scene
+	%% E2 is the character offering the mission
+	%% E3 is where to place the encounter
+	%% E4 is the encounter itself
+	%% E5 is the identity of the enemy faction
+	element1 <Scene Town>
+	element2 <Character HasMecha !Ally 1 !Near 1>
+	element3 <Scene Environs !Near 1>
+	element4 <Prefab>
+	place4 <3>
+	element5 <Faction !Enemy 2>
+
+
+	%% P1 = Timer/Initialization Counter
+	%% P2 = Mission Indicator
+	%%      1 = Mission Accepted
+	%%	2 = Combat Entered
+	%%	3 = Mission Success
+	%%	4 = Mission Failure
+	%% P3 = Difficulcy Rating
+	%% P4 = Email Indicator
+
+
+	start <ifNPCOK E2 else GoDelete ifG V1 0 Goto GoCheckTime>
+	update <ifNPCOK E2 else GoDelete if= V1 0 else GoCheckTime  V= 1 ComTime  V+ 1 86400   P= 3 PCRenown  P+ 3 d4   P+ 3 -d4   ifG 2 P3 P= 3 d4>
+	GoDelete <AdvancePlot 0>
+	GoCheckTime <ifG ComTime V1  if= P2 0 else GoSetEnd  AdvancePlot 0>
+	CleanUp <if= P2 0 else GoSetEnd  AdvancePlot 0>
+	%% If the time expires, but the PC is working on the plot, send him a message
+	%% to say that everything's over.
+	GoSetEnd <if= P2 1  P= 2 4 email 2>
+
+
+	% Insert email here
+	5min <if= P4 0  if= PCFac NPCFac E2  if= P2 0  if= d20 1  ifG PCCharm d40  Email 1 P= 4 1>
+
+	Msg1 <\ELEMENT 2 @ \ELEMENT 1 :// Hey \RANK , I've got a mission for you in \SCENE E1 .>
+	Msg1_1 <\ELEMENT 2 @ \ELEMENT 1 :// Report to \SCENE EScene 2 for a mission at once.>
+	Msg1_2 <\ELEMENT 2 @ \ELEMENT 1 :// Your services are required by \FACTION NPCFac E2 . Come see me for mission briefing.>
+	Msg1_3 <\ELEMENT 2 @ \ELEMENT 1 :// I've got a mission for you. Come to \SCENE ESCene 2 for the briefing.>
+
+	Msg2 <\ELEMENT 2 @ \ELEMENT 1 :// There's been no further contact with the enemy patrol. Return to base for debriefing.>
+	Msg2_1 <\ELEMENT 2 @ \ELEMENT 1 :// The enemy has left the area. Come back here for debriefing.>
+
+	&AllyFac <NPCFac E2>
+
+
+sub
+	Persona 2
+	rumor <!2 needs a mecha pilot to intercept an enemy patrol.>
+	% V1 = Cash reward offered
+	greeting <if= P2 4 else GoCheckWin AddReact -1 Goto GoLostMission>
+	*GoLostMission <*MissionWasFailure&Mecha GoEnd &AllyFac E5>
+	GoCheckWin <if= P2 3 else GoCheckMission  AddReact d2  CashPrize V1 Goto GoWonMission>
+	*GoWonMission <*MissionWasSuccess&Reward&Mecha GoEnd &AllyFac E5>
+	GoCheckMission <if# P2 0 else GoCheckRecruit NewChat Say 3 AddChat 2 AddChat 4>
+	*GoCheckRecruit <*ENEMY_CHECK GoCheckEmail &AllyFac GoEnd>
+	GoCheckEmail <if= P4 1 else GoCheckMember Goto GoGotEmail>
+	*GoGotEmail <*DidYouGetEmail GoMissionBriefing>
+	GoCheckMember <if= PCFac &AllyFac else GoCheckAuto  Goto GoMissionBriefing>
+	*GoCheckAuto <*AutoMissionTest&Mecha GoMissionBriefing GoRejectMission GoCheckSkill &AllyFac E5>
+	*GoCheckSkill <*GenericMissionTest&Mecha  GoMissionBriefing GoEnd GoRejectMission &AllyFac E5>
+	*GoRejectMission <*RejectMission GoEnd>
+	GoEnd <AdvancePlot 0>
+	GoMissionBriefing <V= 1 Reward Threat P3 100 100   NewChat Say 1  AddChat 1 AddChat 2 AddChat 3>
+	result1 <NewChat Say 2 Memo 4 P= 2 1>
+	result2 <NewChat Say 6 AddChat 1 if= P2 0 AddChat 3>
+	result3 <Goto GoRejectMission>
+	result4 <NewChat Say 5 AddChat 2>
+	Msg1 <A patrol group from \ELEMENT 5 has been spotted outside the city. Track them down and you'll get $ \VAL V1 plus salvage.>
+	Msg1_1 <>
+	CMsg1_1 <ifNPCSociable Accept>
+	Msg1_2 <>
+	CMsg1_2 <ifNPCShy Accept>
+	Msg1_3 <>
+	CMsg1_3 <ifNPCEasygoing Accept>
+	Msg1_4 <>
+	CMsg1_4 <ifNPCPassionate Accept>
+	Msg1_5 <>
+	CMsg1_5 <ifNPCCheerful Accept>
+	Msg1_6 <>
+	CMsg1_6 <ifNPCMelancholy Accept>
+
+	Msg2 <The patrol should be found in \ELEMENT 3 . I'll contact you if there's any change in the operation.>
+	Msg2_1 <>
+	CMsg2_1 <ifNPCSociable Accept>
+	Msg2_2 <>
+	CMsg2_2 <ifNPCShy Accept>
+	Msg2_3 <>
+	CMsg2_3 <ifNPCEasygoing Accept>
+	Msg2_4 <>
+	CMsg2_4 <ifNPCPassionate Accept>
+	Msg2_5 <>
+	CMsg2_5 <ifNPCCheerful Accept>
+	Msg2_6 <>
+	CMsg2_6 <ifNPCMelancholy Accept>
+
+	Msg3 <Have you started work on that mission I gave you yet?>
+	Msg3_1 <Any luck in finding those bandits yet?>
+
+	Msg4 <\ELEMENT 2 in \SCENE E1 hired you to fight a patrol from \ELEMENT 5 .>
+
+	Msg5 <You have to search \ELEMENT 3 for an enemy patrol. Once you've eliminated it come back here and I'll give you $ \VAL V1 .>
+	Msg5_1 <>
+
+	Msg6 <They have around \VAL Threat P3 100 threat points worth of mecha. You'll have to take down all of that yourself.>
+	Msg6_1 <>
+
+	Prompt1 <Sounds good. I'll do it.>
+	Prompt1_1 <Alright, I'll do it.>
+	Prompt1_2 <I'll get to work immediately.>
+
+	Prompt2 <What am I going to face out there?>
+	Prompt2_1 <Do you know what kind of mecha they have?>
+	Prompt2_2 <How much firepower am I up against?>
+
+	Prompt3 <Sorry, I don't want this job.>
+	CPrompt3 <if# PCFac &AllyFac Accept>
+	Prompt3_1 <On second thought, I don't want this job.>
+	Prompt3_2 <Really, I don't want to do this.>
+
+	Prompt4 <What am I supposed to be doing again?>
+	Prompt4_1 <Could you go over the mission details one more time?>
+
+
+	MetaScene 4 2
+	%% This is the scene where the battle will take place.
+	MapWidth 30
+	MapHeight 30
+	content <Some 1 5 Sub *BATTLE_X ->
+	% L1 = Initialization
+	% L2 = Victory Counter
+	start <if= L1 0 L= 1 1   P= 2 2   PCFEnemy E5>
+	nu1 <if= T1 0 Return if= L2 0 L= 2 1  AddRenown -8                    Goto GoLoss>
+	nu2 <if= T2 0        if= L2 0 L= 2 1  XPV 100  Salvage AddRenown 1    Goto GoVictory>
+
+	% The PC has won this encounter...
+	GoVictory <FacXP+ &AllyFac 1   P= 2 3>
+
+	% The PC has lost this encounter...
+	GoLoss <P= 2 4>
+
+	sub
+		Team 1
+		SetAlly 3
+		SetEnemy 2
+		ParaX 5
+		ParaY 5
+
+		Team 2
+		SetEnemy 1 3
+		Deploy <SetSelfFaction E5  WMecha 2 Threat P3 100>
+		ParaX 25
+		ParaY 25
+	end
+
+end
+inv
+	STC ENCOUNTER-WANDER
+	name <Enemy Patrol>
+	update <if= P2 1 else GoHide  SetStat STAT_MetaVisibility 0  Goto GoSetOrders>
+	ENCOUNTER_Hostile
+end
+
+
+
+

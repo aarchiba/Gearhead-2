@@ -1,0 +1,212 @@
+%% COMP_Pme
+%%	+Pme	PC meets an enemy pilot under somewhat peaceful circumstances
+
+
+Plot
+	name <Meet Friend's Henchmen>
+	% V1 = Initialization
+	size 5
+	desc <Meet your friend in a compromising situation...>
+	requires <#A +T-- +Pme E:++ E:Friend -F:ALLY ~+Glo ~+Gpe>
+	changes <+T-- +Pun>
+
+	update <if= V1 0 V= 1 1 FreezeNPC E3  NPCLevel E3 StoryDL>
+
+	% E1 is where the encounter takes place
+	% E2 is the encounter itself
+	% E3 is the NPC character
+	element1 <Scene Urban !Near -7>
+	element2 <Prefab>
+	Place2 <1>
+	element3 <Grab 1>
+
+	sub
+		MetaScene 2 2
+		rumor <a group of dangerous looking mecha has been seen in !1.>
+		% L1 = Encounter Over Counter
+		% L2 = Initialization Counter
+		MapWidth 30
+		MapHeight 30
+
+		Start <if= L2 0 L= 2 1   ForceChat E3   PCFEnemy N2>
+		nu1 <if= T1 0  Return   if= L1 0 L= 1 1   StoryNote 1            LoseComp 0 .next>
+		nu2 <if= T2 0           if= L1 0 L= 1 2   StoryNote 2  Alert 3   AddRenown 1   XPV 100   Salvage   WinComp  0 .next>
+
+		.next <+T-- +Pun>
+
+		Msg1 <You fought some mecha possibly allied with \ELEMENT 3 , and lost.>
+		Msg2 <You fought some mecha possibly allied with \ELEMENT 3 , and won.>
+		Msg3 <Who sent these mecha, and what is their connection to \ELEMENT 3 ?>
+
+		sub
+			team 1
+			SetEnemy 2
+			ParaX 5
+			ParaY 5
+
+			team 2
+			SetEnemy 1
+			Deploy <SetSelfFaction N2   WMecha 2 Threat StoryDL 75>
+			ParaX 25
+			ParaY 25
+		end
+
+		Persona 3
+		special <UNLISTED>
+		*greeting <*COMP_Pme_MFH_Greeting GoFinal>
+		GoFinal <EndChat Say 1 Print 2>
+		Msg1 <If you get involved in this, I won't be able to protect you. Goodbye \PC . I have to leave.>
+		Msg1_1 <You've seen too much... I really wish you hadn't gotten involved in this. I won't be able to protect you. Goodbye, old friend. I have to leave now.>
+		CMsg1_1 <ifNPCSociable Accept>
+		Msg1_2 <I have to go... Please, don't come looking for me...>
+		CMsg1_2 <ifNPCShy Accept>
+		Msg1_3 <You really don't want to get involved in this, \PC . I have to go...>
+		CMsg1_3 <ifNPCEasygoing Accept>
+		Msg1_4 <I won't fight you... but I won't betray my cause either. Goodbye \PC .>
+		CMsg1_4 <ifNPCPassionate Accept>
+		Msg1_5 <Since you're my friend I can't fight you myself, but I can't protect you either. Goodbye \PC .>
+		CMsg1_5 <ifNPCCheerful Accept>
+		Msg1_6 <I'm afraid this may be the last time we speak to one another. Goodbye, \PC .>
+		CMsg1_6 <ifNPCMelancholy Accept>
+		Msg2 <\ELEMENT 3 leaves the area.>
+
+	end
+	inv
+		STC ENCOUNTER-WANDER
+		name <Mysterious Mecha>
+		EncounterMove 5
+	end
+
+
+Plot
+	name <Loyalty Check>
+	size 1
+	desc <PC questioned by authorities; revealed there have been attacks lately.>
+	requires <#A +T-- +Pme E:++ -F:ENEMY ~+Gre>
+
+	% V1 = Email Counter
+	% V2 = Initialization counter
+
+	element1 <Scene Government !Near -7 !Enemy -1>
+	element2 <Character police !near 1 !Ally -7 NeverFail>
+	neverfail2 <police officer>
+
+	update <if= V2 0 V= 2 1 movenpc E2 E1>
+
+	5Min <if= V1 0 if= d10 1 email 1 V= 1 1>
+	Msg1 <\ELEMENT 2 @ \ELEMENT 1 :// You are wanted for questioning. Please report to \ELEMENT 1 as soon as possible.>
+
+	start <ifNPCOK E2 else GoLose>
+	GoLose <LoseComp 0 .loss>
+	.loss <+T-->
+
+	sub
+		Persona 2
+		% V1 = Enemy Faction ID
+		rumor <!2 has been asking a lot of questions about you.>
+		greeting <V= 1 N2  NewChat Say 1 AddChat 1 AddChat 2 AddChat 3>
+		GoWin <StoryNote 3  WinComp 0 .changes>
+		.changes <+Pun>
+		result1 <NewChat Say 2                                     AddChat 4 AddChat 5  Goto GoWin>
+		result2 <NewChat Say 4  AddReact -d6  AddNPCReact N1 5     AddChat 4 AddChat 5  Goto GoWin>
+		result3 <NewChat Say 5  AddReact d8                        AddChat 4 AddChat 5  Goto GoWin>
+		result4 <                                       Goto GoBigQuestion>
+		result5 <AddNPCReact N1 10  AddSociable -d10    Goto GoBigQuestion>
+		GoBigQuestion <NewChat ifFactionAlly RootSceneFac else GoAskQuestion Say 6>
+		GoAskQuestion <Say 7  AddChat 6 AddChat 7 AddChat 8>
+		result6 <NewChat Say 8   AddEasygoing -d10   AddReact -d10>
+		result7 <NewChat Say 9   PCFEnemy V1  AddReact d10  AddLawful 1>
+		result8 <NewChat Say 10  AddEasygoing d10   AddReact -d10>
+		Msg1 <Hello \PC , I've been waiting for you. I'll get straight to the point: You were recently seen in the company of a known enemy agent. How do you plead?>
+		Msg1_2 <I've been looking for you. You should know that you're under investigation. We have surveillance video of you meeting with a known enemy agent, possibly collaborating with \OPR N1 , and I need to know why.>
+		CMsg1_2 <ifG -10 PCRep 2 Accept>
+		Msg1_3 <\PC , I was hoping to speak with you. It seems that you were recently in the company of someone who may be an enemy agent. Would you care to respond?>
+		CMsg1_3 <ifG PCRep 2 10 Accept>
+		Msg2 <You met with \NARRATIVE 1 , who may be here on a subversive mission. Recently unauthorized mecha have been spotted. We may be looking at an invasion, or worse.>
+		Msg3 <You were investigated by \ELEMENT 2 for meeting with an enemy.>
+		Msg4 <\NARRATIVE 1 is collaborating with the enemy. Recently unauthorized mecha have been spotted nearby. We may be looking at an invasion, or worse.>
+		Msg5 <I'm not saying that you did, but \NARRATIVE 1 is an enemy agent, and we need all the information we can get. Recently unauthorized mecha have been spotted nearby. We may be looking at an invasion, or worse.>
+		Msg6 <I know your loyalty lies with \FACTION RootSceneFac , but even speaking with an enemy agent is dangerous. You could give away vital information without knowing it... Be careful.>
+		Msg7 <The main thing I need to know is, where do your loyalties lie? Will you stand with \FACTION RootSceneFac or are you going to betray us?>
+		Msg8  <I see. Well, I'll be keeping my eye on you. If you have any further contact with the enemy we'll know about it.>
+		Msg9  <That's good to hear. Stay vigilant... The enemies of our city are everywhere.>
+		Msg10 <Then I suggest you think about it. Do you really want to betray \SCENE RootSceneID and everyone who lives here?>
+		prompt1 <I don't know what you're talking about.>
+		prompt1_1 <Enemy agent? What are you talking about?>
+		Prompt2 <Maybe I was. So what?>
+		Prompt2_1 <Is it illegal to talk with people now?>
+		Prompt3 <Whatever I did, I broke no laws.>
+		Prompt3_1 <You know I'd never break any laws.>
+		CPrompt3 <ifG PCRep 2 0 Accept>
+		Prompt4 <I promise it won't happen again.>
+		Prompt5 <Just stay out of my business from now on, okay?>
+		Prompt6 <I'm loyal to no-one but myself.>
+		Prompt7 <I won't betray \FACTION RootSceneFac .>
+		Prompt8 <I don't know...>
+
+	end
+
+Plot
+	name <Meet Enemy in Battle>
+	% V1 = Initialization
+	size 8
+	desc <Meet the enemy you met earlier in battle.>
+	requires <#A +Tin ~+Ffi +Pme E:++>
+
+	update <if= V1 0 V= 1 1 MoveNPC E2 E1 SetNPCTeam E2 2 NPCLevel E2 StoryDL>
+
+	element1 <Grab 6>
+	element2 <Grab 1>
+
+	sub
+		MetaScene 1 2
+		% L1 = Encounter Over Counter
+		% L2 = Initialization Counter
+		% L3 = Script Immunity Counter
+		% L4 = Identity of enemy NPC
+		MapWidth 30
+		MapHeight 30
+
+		Start <if= L2 0 L= 2 1   ForceChat E2   L= 4 E2   Compose FAINT E2 .E2Faint>
+		.E2Faint <if= L1 0 
+		GoDie <L= 1 2  L= 3 1   FreezeNPC E2   StoryNote 4    WinComp 0 .next>
+		nu1 <if= T1 0  Return   if= L1 0 L= 1 1   StoryNote 2     ForceChat L4>
+		nu2 <if= T2 0           if= L1 0 L= 1 2   StoryNote 3   AddRenown 1   XPV 100   SALVAGE     ifNPCOK L4 else GoDie ForceChat L4>
+		End <if# L3 0 Print 1>
+
+		.next <+T-- +Pen>
+
+		Msg1 <\PERSONA L4 's cockpit is empty. Could \SPR E2 have escaped?>
+		Msg2 <You met \ELEMENT 2 in battle, and lost.>
+		Msg3 <You met \ELEMENT 2 in battle, and won.>
+		Msg4 <You appeared to kill \ELEMENT 2 in battle, but \PPR E2 body wasn't found...>
+
+		sub
+			team 1
+			SetEnemy 2
+			ParaX 5
+			ParaY 5
+
+			team 2
+			SetEnemy 1
+			Deploy <SetSelfFaction N2   WMecha 2 Threat StoryDL 75>
+			ParaX 25
+			ParaY 25
+		end
+
+		Persona 2
+		special <UNLISTED>
+		greeting <if= L1 2 else GoCheckLoss WinComp 0 .next   Goto GoWinSpeech>
+		.next <+T-- +Pen>
+		*GoWinSpeech <*GetYouNextTime>
+		GoCheckLoss <if= L1 1 else GoThreat LoseComp 0 .next  Goto GoLoseSpeech>
+		*GoLoseSpeech <*YouLose>
+		*GoThreat <*CORE_Pme_MEIB_Greeting GoInfo>
+		*GoInfo <*THEME_EXPO&ENEMY na>
+
+	end
+
+
+
+
+
