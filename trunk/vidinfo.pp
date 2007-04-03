@@ -1,25 +1,5 @@
 unit vidinfo;
 	{ This unit holds the information display stuff. }
-{
-	GearHead2, a roguelike mecha CRPG
-	Copyright (C) 2005 Joseph Hewitt
-
-	This library is free software; you can redistribute it and/or modify it
-	under the terms of the GNU Lesser General Public License as published by
-	the Free Software Foundation; either version 2.1 of the License, or (at
-	your option) any later version.
-
-	The full text of the LGPL can be found in license.txt.
-
-	This library is distributed in the hope that it will be useful, but
-	WITHOUT ANY WARRANTY; without even the implied warranty of
-	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU Lesser
-	General Public License for more details. 
-
-	You should have received a copy of the GNU Lesser General Public License
-	along with this library; if not, write to the Free Software Foundation,
-	Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA 
-}
 
 
 interface
@@ -770,6 +750,21 @@ begin
 		TextOut( MyDest.X + MyDest.W - Length( msg ) , MyDest.Y + 1 , msg );
 	end;
 
+	{ Display the cost. }
+	if ( GearValue( Part ) > 0 ) then begin
+		msg := '$' + BStr(GearValue( Part ));
+		TextOut( MyDest.X  , MyDest.Y + 2 , msg );
+	end;
+	{ Display the spaces. }
+	if not IsMasterGear( Part ) then begin
+		if ( Part^.G = GG_Module ) or ( Part^.G = GG_ExArmor ) or ( Part^.G = GG_Shield ) or ( Part^.G = GG_Harness ) then begin
+			msg := BStr( SubComComplexity( Part ) ) + '/' + BStr( ComponentComplexity( Part ) ) + ' slots used';
+			TextOut( MyDest.X + MyDest.W - Length( msg )  , MyDest.Y + 2 , msg );
+		end else begin
+			msg := BStr( ComponentComplexity( Part ) ) + ' slots';
+			TextOut( MyDest.X + MyDest.W - Length( msg )  , MyDest.Y + 2 , msg );
+		end;
+	end;
 	{ Next, the extended description and the regular description. }
 	{ Create the zone for this text. }
 	MyDest.Y := MyDest.Y + 3;
