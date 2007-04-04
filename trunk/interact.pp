@@ -437,6 +437,10 @@ var
 			Rumor := SAttValue( P^.SA , 'RUMOR' );
 			if Rumor <> '' then StoreSAtt( InfoList , MadLibString( RLI_List ) + ' ' + Rumor );
 
+			{ Any gear associated with a quest may have a quest-specific memo }
+			{ attached to it. The label for this rumor will be "RUMOR" + QuestStatus. }
+			{ So, at the beginning of a quest (Status=0), "RUMOR0" will be added }
+			{ to the rumor list. }
 			Level := NAttValue( P^.NA , NAG_QuestInfo , NAS_QuestID );
 			if ( GB <> Nil ) and ( GB^.Scene <> Nil ) and ( Level <> 0 ) then begin
 				Rumor := SAttValue( P^.SA , 'RUMOR' + BStr( NAttValue( FindRoot( GB^.Scene )^.NA , NAG_QuestStatus , Level ) ) );

@@ -1364,7 +1364,7 @@ var
 	DP: SAttPtr;	{ Destroyed Part }
 begin
 	{ The two parameters for this command are the attack skill to be used and the }
-	{ defense skill to be used. If the CritSkill is 0, then this attack will not use }
+	{ critical hit skill to be used. If the CritSkill is 0, then this attack will not use }
 	{ critical hits. }
 	AtSkill := ExtractValue( AtDesc );
 	CritSkill := ExtractValue( AtDesc );
@@ -2211,7 +2211,7 @@ var
 			ER.FXMod := ER.FXMod + ( trait + 10 ) div 15;
 		end else if N = FT_Passion then begin
 			{ A passionate attack increases damage, decreases accuracy. }
-			ER.FXDice := ER.FXDice + ( NAttValue( ER.Originator^.NA , NAG_CharDescription , NAS_Easygoing ) div 5 ) + 3;
+			ER.FXDice := ER.FXDice + ( Abs( NAttValue( ER.Originator^.NA , NAG_CharDescription , NAS_Easygoing ) ) div 5 ) + 3;
 			ER.FXMod := ER.FXMod - 5;
 		end else if N = FT_Accurate then begin
 			ER.FXMod := ER.FXMod + 1

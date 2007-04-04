@@ -1851,7 +1851,7 @@ begin
 		end;
 
 	end else if Attacker^.G = GG_Module then begin
-		D := ModuleBaseDamage( Attacker ) div 2;
+		D := Attacker^.S div 2;
 		if D < 1 then D := 1;
 		ApplyCCBonus;
 

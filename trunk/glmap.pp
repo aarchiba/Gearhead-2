@@ -28,7 +28,6 @@ const
 	Num_Terrain_Textures = 100;
 	Num_Bitz_Textures = 25;
 	Num_Building_Textures = 50;
-	Num_Ship_Textures = 50;
 
 	Num_Rotation_Angles = 40;
 {	Num_Rotation_Angles = 8;}
@@ -48,7 +47,6 @@ var
 	TerrTex: Array [1..Num_Terrain_Textures] of GLUInt;
 	BitzTex: Array [1..Num_Bitz_Textures] of GLUInt;
 	BuildingTex: Array [1..Num_Building_Textures] of GLUInt;
-	ShipTex: Array [1..Num_Ship_Textures] of GLUInt;
 
 	Overlays,Underlays: Array [1..MaxMapWidth,1..MaxMapWidth,LoAlt..HiAlt] of GLUInt;
 
@@ -1753,22 +1751,6 @@ begin
 	glFinish;
 	RemoveSprite( t2 );
 
-	{ Also the spaceship textures. }
-	glGenTextures( Num_Ship_Textures, @ShipTex );
-	T2 := LocateSprite( 'spaceship_default.png' , 32 , 32 );
-
-	{ Transfer the images one by one to gl textures. }
-	for t := 1 to Num_Ship_Textures do begin
-		SDL_FillRect( tmp , Nil , SDL_MapRGBA( tmp^.Format , 0 , 0 , 255 , 0 ) );
-		DrawSprite( t2 , tmp , MySource , T-1 );
-		glBindTexture( GL_TEXTURE_2D, ShipTex[T] );
-		glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_LINEAR);
-		glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_LINEAR);
-		glPixelStorei (GL_UNPACK_ALIGNMENT, 1);
-		glTexImage2D(GL_TEXTURE_2D,0,4,tmp^.w,tmp^.h,0,GL_RGBA,GL_UNSIGNED_BYTE,tmp^.pixels);
-	end;
-	glFinish;
-	RemoveSprite( t2 );
 
 	SDL_FreeSurface(tmp);
 end;

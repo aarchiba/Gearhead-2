@@ -57,6 +57,7 @@ Type <ARMORPIERCING>
 desc <An extremely sharp curved blade.>
 category <WEAPON MELEE TOOL ODDITIES>
 factions <GENERAL>
+SDL_PORTRAIT <item_sickle.png>
 legality -10
 Acc 1
 Speed 4
@@ -88,6 +89,7 @@ Name <Pick>
 desc <A tool for digging. Also a passable weapon.>
 category <MELEE TOOL>
 factions <GENERAL>
+SDL_PORTRAIT <item_pick.png>
 legality -10
 Mass 2
 Speed 1
@@ -97,6 +99,7 @@ Name <Cricket Bat>
 desc <An archaic sporting bat. Also a passable weapon.>
 category <SPORTS>
 factions <GENERAL>
+SDL_PORTRAIT <item_cricketbat.png>
 legality -15
 
 Melee 10
@@ -104,6 +107,7 @@ Name <Battle Axe>
 desc <A large axe, balanced for combat.>
 category <WEAPON MELEE>
 factions <GENERAL>
+SDL_PORTRAIT <item_battleaxe.png>
 legality 5
 % Battle-axes aren't illegal, but you'll be more likely to find one in a rowdy area...
 Mass -2
@@ -113,6 +117,7 @@ Name <Mace>
 desc <A steel club.>
 category <WEAPON MELEE>
 factions <GENERAL>
+SDL_PORTRAIT <item_mace.png>
 legality 5
 Speed 3
 Mass 2
@@ -120,9 +125,9 @@ Mass 2
 Melee 8
 Name <Katana>
 desc <A long sword emphasising sharpness, based on the ancient PreZero Japanese design.>
-sdl_portrait <item_cutlass.png>
 category <WEAPON MELEE>
 factions <GENERAL>
+SDL_PORTRAIT <item_katana.png>
 legality 0
 Acc 2
 Speed 4
@@ -131,9 +136,9 @@ Mass -5
 Melee 7
 Name <Longsword>
 desc <A long-bladed sword capable of causing large amounts of damage through its swing velocity.>
-sdl_portrait <item_cutlass.png>
 category <WEAPON MELEE>
 factions <GENERAL>
+SDL_PORTRAIT <item_longsword.png>
 legality 0
 Acc 1
 Speed 4
@@ -144,6 +149,7 @@ Name <Rapier>
 desc <A light dueling sword with a thin blade. Designed for stabbing and lunging.>
 category <WEAPON MELEE>
 factions <GENERAL>
+SDL_PORTRAIT <item_rapier.png>
 legality -5
 Acc 3
 Speed 5
@@ -154,6 +160,7 @@ Name <Steel Pipe>
 desc <A simple but effective weapon.>
 category <>
 factions <GENERAL>
+SDL_PORTRAIT <item_steelpipe.png>
 legality -15
 Mass 2
 Acc -2
@@ -164,15 +171,18 @@ Name <War Hammer>
 desc <A big hammer weighted for combat.>
 category <WEAPON MELEE>
 factions <GENERAL>
+SDL_PORTRAIT <item_warhammer.png>
 legality 0
 
 Melee 8
 Name <Javelin>
 Type <THROWN>
 Mass -3
+speed 3
 desc <A primitive melee weapon, composed of a long shaft tipped with a metal piercing blade.>
 category <SPORTS THROWN>
 factions <GENERAL>
+SDL_PORTRAIT <item_javelin.png>
 
 Melee 10
 Name <Spear>
@@ -181,6 +191,7 @@ Mass -3
 desc <A primitive melee weapon, composed of a long shaft tipped with a metal piercing blade.>
 category <WEAPON MELEE THROWN>
 factions <GENERAL>
+SDL_PORTRAIT <item_spear.png>
 legality 5
 
 Melee 9
@@ -191,6 +202,7 @@ Mass -3
 desc <A primitive melee weapon, consisting of a long handle and a pronged head.>
 category <WEAPON MELEE THROWN EXOTIC>
 factions <GENERAL>
+SDL_PORTRAIT <item_trident.png>
 legality 5
 
 Melee 2
@@ -200,7 +212,8 @@ Mass -1
 Speed 1
 desc <A throwing club that should return to its user, if thrown correctly.>
 category <WEAPON THROWN ODDITIES>
-factions <GENERAL>
+factions <GENERAL SPORTS>
+SDL_PORTRAIT <item_boomerang.png>
 legality 0
 
 Melee 15
@@ -210,6 +223,7 @@ Mass -7
 desc <A primitive melee weapon. It features a wide cutting blade at the end.>
 category <WEAPON MELEE>
 factions <GENERAL>
+SDL_PORTRAIT <item_poleaxe.png>
 legality 10
 
 Melee 17
@@ -220,6 +234,7 @@ Acc -1
 desc <A primitive melee weapon. Originally used to harvest crops, but these models are created with lighter and sturdier materials.>
 category <WEAPON MELEE>
 factions <GENERAL>
+SDL_PORTRAIT <item_scythe.png>
 legality 5
 
 EMelee 19
@@ -263,6 +278,7 @@ Speed 3
 desc <A combat mace with counterspinning contact heads for maximum damage potential.>
 category <WEAPON MELEE>
 factions <GENERAL>
+SDL_PORTRAIT <item_mace.png>
 
 Melee 9
 Name <Night Blade>
@@ -284,7 +300,7 @@ legality 5
 Speed 6
 Mass -8
 desc <A ceram sword with a monomolecularly sharp edge.>
-sdl_portrait <item_cutlass.png>
+sdl_portrait <item_longsword.png>
 category <WEAPON MELEE>
 factions <GENERAL>
 
@@ -296,6 +312,7 @@ Mass -15
 desc <A ceram scythe with a monomolecularly sharp edge.>
 category <WEAPON MELEE>
 factions <GENERAL>
+SDL_PORTRAIT <item_scythe.png>
 
 Melee 2
 Name <Whip>
@@ -306,6 +323,7 @@ desc <A long flexible lash used for hitting people.>
 category <WEAPON MELEE>
 factions <GENERAL>
 legality 0
+SDL_PORTRAIT <item_whip.png>
 
 EMelee 3
 Name <Beam Knife>
@@ -397,6 +415,7 @@ desc <>
 caliber <18mm shell>
 category <>
 factions <>
+SDL_PORTRAIT <item_shotgun.png>
 mass -4
 Range 5
 Acc 1
@@ -766,6 +785,7 @@ Name <Shuriken>
 desc <A PreZero ancient Japanese weapon, literally "thrown blade." The four-bladed shuriken was considered the best in that era, despite the existence of others.>
 Category <WEAPON MELEE EXOTIC>
 Factions <GENERAL>
+SDL_PORTRAIT <item_shurikens.png>
 GrenadeSkill 3
 Mass -1
 BV 4
@@ -777,6 +797,7 @@ Name <MonoShuriken>
 desc <A redesign of the shuriken, this is manufactured with a monomolecularly sharp edge.>
 Category <WEAPON MELEE EXOTIC>
 Factions <GENERAL>
+SDL_PORTRAIT <item_shurikens.png>
 GrenadeSkill 3
 Mass -1
 BV 9
@@ -1028,6 +1049,7 @@ Name <Field Cap>
 desc <A lightweight cap.>
 Category <CLOTHING>
 Factions <GENERAL>
+SDL_PORTRAIT <item_fieldcap.png>
 Mass -1
 legality -20
 
@@ -1217,6 +1239,7 @@ name <Databook>
 desc <A basic data storage and retrieval system. Also sports email retrieval.>
 Category <ELECTRONICS COMPUTER COMMUNICATIONS>
 Factions <GENERAL>
+SDL_PORTRAIT <item_databook.png>
 Memo
 Email
 Mass -1
@@ -1227,6 +1250,7 @@ name <Mediabook>
 desc <This databook also features media streaming technology, so you can stay on top of the latest news.>
 Category <ELECTRONICS COMPUTER COMMUNICATIONS>
 Factions <GENERAL>
+SDL_PORTRAIT <item_databook.png>
 Memo
 Email
 News
@@ -2103,6 +2127,7 @@ FoodMorale -1
 desc <Seems rather ordinary, even for noodles.>
 Category <FOOD>
 Factions <GENERAL>
+SDL_PORTRAIT <item_noodlecup.png>
 legality -50
 
 Food 20
@@ -2112,6 +2137,7 @@ FoodMorale 1
 desc <Contains an exciting combination of flavors and spices.>
 Category <FOOD>
 Factions <GENERAL>
+SDL_PORTRAIT <item_noodlecup.png>
 legality -50
 
 Food 15
@@ -2140,6 +2166,7 @@ FoodQuantity 10
 desc <Complete nutrition in pill form.>
 Category <MEDICINE>
 Factions <GENERAL>
+SDL_PORTRAIT <item_pills.png>
 legality -15
 
 Food 0
@@ -2151,6 +2178,7 @@ FoodXValue 1750
 desc <This medicine promotes rapid cellular regeneration, and can instantly heal many injuries.>
 Category <MEDICINE>
 Factions <GENERAL>
+SDL_PORTRAIT <item_pills.png>
 legality -10
 
 Food 0
@@ -2162,6 +2190,7 @@ FoodXValue 1750
 desc <This medicine promotes rapid cellular regeneration, and can instantly heal many injuries.>
 Category <MEDICINE>
 Factions <GENERAL>
+SDL_PORTRAIT <item_pills.png>
 legality -10
 
 Food 0
@@ -2173,6 +2202,7 @@ FoodXValue 2500
 desc <This medicine increases the body's ability to repair itself. While it is in effect injuries will be healed much faster than normal.>
 Category <MEDICINE>
 Factions <GENERAL>
+SDL_PORTRAIT <item_pills.png>
 legality -10
 
 Food 0
@@ -2184,6 +2214,7 @@ FoodXValue 2500
 desc <This medicine increases the body's ability to repair itself. While it is in effect injuries will be healed much faster than normal.>
 Category <MEDICINE>
 Factions <GENERAL>
+SDL_PORTRAIT <item_pills.png>
 legality -10
 
 Food 0
@@ -2195,6 +2226,7 @@ FoodXValue 3000
 desc <A broad spectrum antivenom effective against most organic and synthetic poisons.>
 Category <MEDICINE>
 Factions <GENERAL>
+SDL_PORTRAIT <item_pills.png>
 legality -10
 
 Food 0
@@ -2206,6 +2238,7 @@ FoodXValue 2000
 desc <A fast acting antiviral, antibacterial drug coupled with an immune system booster.>
 Category <MEDICINE>
 Factions <GENERAL>
+SDL_PORTRAIT <item_pills.png>
 legality -10
 
 Food 5

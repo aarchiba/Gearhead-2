@@ -91,6 +91,7 @@ ITEM_HISTORY <This pistol was owned by a succession of police officers, each of 
 ITEM_USAGE <Supposedly it was a very powerful weapon in its day.>
 caliber <.45 Archaic>
 requires <ITEM PREZERO !Ne>
+SDL_PORTRAIT <item_peacemakerrevolver.png>
 Context <Ne>
 Mass -7
 Range 3
@@ -115,6 +116,7 @@ ITEM_USAGE <We could learn a lot about power generation by examining it.>
 type <Blast 7 Brutal ArmorPiercing Burn Mystery>
 requires <ITEM PREZERO !Lo>
 Context <Lo>
+SDL_PORTRAIT <item_mace.png>
 Acc -1
 mass -7
 

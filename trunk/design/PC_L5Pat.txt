@@ -18,6 +18,7 @@ Mass -14
 desc <An extremely thin cord of incredibly strong polymer, the monomolecular whip can cut through anything it comes in contact with.>
 category <WEAPON MELEE>
 factions <COMET>
+SDL_PORTRAIT <item_whip.png>
 legality 5
 
 Melee 2
@@ -28,6 +29,7 @@ Type <EXTEND FLAIL STONE>
 desc <This whip transmits an electric pulse which can temporarily disrupt the nervous system of its target.>
 category <WEAPON MELEE>
 factions <MAQUI>
+SDL_PORTRAIT <item_whip.png>
 legality 10
 
 Melee 10
@@ -38,7 +40,7 @@ Acc 2
 Speed 5
 Mass -8
 desc <A intricately detailed ceram sword with a monomolecularly serrated edge.>
-sdl_portrait <item_cutlass.png>
+sdl_portrait <item_longsword.png>
 category <WEAPON MELEE>
 factions <HOELL PRIVA>
 
@@ -60,7 +62,7 @@ Acc 1
 Speed 5
 Mass -8
 desc <A ceremonial weapon of the Silver Knights.>
-sdl_portrait <item_cutlass.png>
+sdl_portrait <item_longsword.png>
 category <WEAPON MELEE>
 factions <SILKN>
 
