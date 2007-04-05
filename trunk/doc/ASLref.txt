@@ -264,8 +264,9 @@
 	GMORALEDMG [Morale]	Adds morale damage to the grabbed gear
 	GNEWPART [label]	Adds new item, monster, NPC to game board
 	GOPENINV		Allows PC to trade items with grabbed gear
-	GRUNAWAY		If easily found on map, GG runs away
+	GQSUBMEMO [QuestStatus] [Msg]	Stores a Quest Submemo in the grabbed gear
 	GQUITLANCE		The grabbed gear quits the lance
+	GRUNAWAY		If easily found on map, GG runs away
 	GSETNATT [G] [S] [V]
 	GSETSATT [key] [info label]
 	GSETSTAT [Slot] [Value]

@@ -57,7 +57,7 @@ Content
 		*GoChat <*MISC_CHATTER>
 		result1 <NewChat Say 2 AddChat 3>
 		result2 <NewChat Say 3 AddChat 3>
-		result3 <NewChat Say 4 QMemo %qid% 5 SetQEncActive %2%>
+		result3 <NewChat Say 4 ItemQSubMemo %2% %prev_id% 5 SetQEncActive %2%>
 		result4 <NewChat Say 4>
 		result5 <NewChat V= 2 Reward Threat %threat% 100 150 Say 7 AddChat 6 AddChat 7>
 		result6 <ifG React 25 else GoR6Fail NewChat Say 10 V= 1 2 DeleteItem %1% CashPrize V2 AddLawful -1 PCFriend %3%>
@@ -137,7 +137,7 @@ Content
 		*GoChat <*MISC_CHATTER>
 		result1 <NewChat Say 2 AddChat 3>
 		result2 <NewChat Say 3 AddChat 3>
-		result3 <NewChat Say 4 QMemo %qid% 5>
+		result3 <NewChat Say 4 ItemQSubMemo %2% %prev_id% 5>
 		result4 <NewChat Say 4>
 		Msg1 <So, you are interested in the \ITEM %1% , are you? I know something about that. It was once in the posession of famed architect Sam Pham, but when he died it was buried with him.>
 		Msg2 <Not nessecarily. Pham intended for his tomb to serve as a lasting tribute to his architectural genius, and it was for a while open to the public. It has since fallen into disrepair, sadly.>
@@ -285,9 +285,10 @@ Content
 		greeting <if= QuestStatus %qid% %prev_id% else GoIntroduce if= V1 0 else GoChat NewChat Say 1 AddChat 1>
 		*GoIntroduce <*NiceToMeetYou GoChat>
 		*GoChat <*Misc_Chatter>
-		result1 <NewChat Say 2 V= 1 1 SetQEncActive %3%>
+		result1 <NewChat Say 2 V= 1 1 ItemQSubMemo %2% %prev_id% 3 SetQEncActive %3%>
 		Msg1 <What do you want?>
 		Msg2 <That I do... There's a pirate base in \SCENE %s2% . Normally I wouldn't be giving that info out for free, but the bastards cheated me out of a trailerload of Joytek Pornbots, so to hell with them!>
+		Msg3 <You learned from %name3% that there's a secret pirate base in \SCENE %s2% .>
 		Prompt1 <I hear you know a thing or two about pirates.>
 	end
 	inv
@@ -328,7 +329,7 @@ Content
 		rumor%prev_id% <%name4% knows where %name1% is.>
 		Greeting <if= QuestStatus %qid% %prev_id% else GoFirst  if= V1 0 else GoFind  Goto GoLookFor>
 		*GoLookFor <*LookingForNPC %1% GoFind GoReject>
-		GoFind <NewChat   Say 1   SetQEncActive %3%   V= 1 1>
+		GoFind <NewChat   Say 1   SetQEncActive %3%   ItemQSubMemo %3% %prev_id% 6 V= 1 1>
 		GoReject <NewChat V= 2 Threat %threat% 10  Say 2 AddReact -d3  AddChat 1 AddChat 2 AddChat 3>
 		*GoFirst <*NiceToMeetYou GoChat>
 		*GoChat <*Misc_Chatter>
@@ -343,6 +344,7 @@ Content
 		Msg3 <It's your choice.>
 		Msg4 <Alright, I'll tell you...>
 		Msg5 <You hurt me and you'll never get this info.>
+		Msg6 <You learned from %name4% that %name1% is hiding in \SCENE %s3% .>
 		Prompt1 <No way, that's too much money!>
 		Prompt2 <How about I just beat the info from you instead?>
 		CPrompt2 <if= V3 0 Accept>

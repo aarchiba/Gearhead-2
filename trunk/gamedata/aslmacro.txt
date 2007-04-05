@@ -187,6 +187,8 @@ Alarm <Trigger0 ALARM>
 IfTeamCanSeePC <GrabPC ifTeamCanSeeGG ?>
 IfNPCCanSeePC <GrabPC ifTeamCanSeeGG NPCTeam ?>
 StoryNote <SMemo ? History !>
+GateQSubMemo <GrabEntrance ? GQSubMemo ? ?>
+ItemQSubMemo <GrabItem ? GQSubMemo ? ?>
 IfIntimidation <ifSkillTest 28 ?>
 IfConversation <ifSkillTest 19 ?>
 IfCodeBreaking <ifSkillTest 32 ?>

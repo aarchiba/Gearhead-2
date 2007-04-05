@@ -151,6 +151,18 @@ attribute, it will be reusable over and over again.
 Reusable fragments should not include any new characters.
 
 
+QUEST MEMOS AND QUEST SUBMEMOS
+
+Quest memos are stored in the adventure itself. Each quest can have one memo.
+The key for a quest's memo is "MEMO_" + QuestID. After a quest is completed the
+memo no longer appears.
+
+Quests may have any number of submemos. These are located in gears associated with
+the quest. The key for a submemo is "MEMO_" + QuestStatus. The QuestID is known
+from the value stored in the gear. This memo only appears when QuestStatus holds
+the specified value. These should be used when a subquest needs to add a memo but
+shouldn't overwrite the main memo; most of these are used in entrance quests.
+
 QUEST FRAGMENT
 	Sub
 		PERSONAS

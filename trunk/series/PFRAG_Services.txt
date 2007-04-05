@@ -100,6 +100,39 @@
 	Prompt%id%01 <Let me see what you have.>
 	Prompt%id%02 <Maybe I'll take a look later.>
 
+% TYPE: *SHOP_HEALTHCLUB
+
+	Persona
+	requires <*SHOP_HEALTHCLUB>
+	START <NewChat Say %id%01 AddChat %id%01 AddChat %id%02>
+	result%id%01 <EndChat Say %id%02 School .%id%_Skills Goto %1%>
+	.%id%_Skills <13 26 33>
+	result%id%02 <Goto %1%>
+	Msg%id%01 <This is a health club. We have all sorts of equipment for endurance, cardiovascular, and weight training.>
+	Msg%id%02 <Remember: no pain, no gain.>
+	Msg%id%02_1 <Give it everything you've got!>
+	Prompt%id%01 <I'd like to work out.>
+	Prompt%id%02 <Maybe I'll come back later.>
+
+	Persona
+	requires <*SHOP_HEALTHCLUB Passionate>
+	% V%id%01 = Have visited before
+	START <NewChat Say %id%01 AddChat %id%01 AddChat %id%02 AddChat %id%03>
+	result%id%01 <EndChat Say %id%02 V= %id%01 1 School .%id%_Skills Goto %1%>
+	.%id%_Skills <13 26 33 36 43>
+	result%id%02 <Goto %1%>
+	result%id%03 <V= %id%01 -1   AddCheerful -d10   Goto %1%>
+	Msg%id%01_1 <Say, you're looking a bit out of shape. Have you been gaining weight? What you need is some honest exercise.>
+	CMsg%id%01_1 <if# v%id%01 1 Accept>
+	Msg%id%01_2 <So you're back for more punishment, hey? I'm here to help you anytime you're ready.>
+	CMsg%id%01_2 <if= v%id%01 1 Accept>
+	Msg%id%02 <Good health is it's own reward.>
+	Prompt%id%01 <Let's work out.>
+	Prompt%id%02 <Maybe some other time.>
+	Prompt%id%03 <Mind your own business..>
+	CPrompt%id%03 <if= V%id%01 0 Accept>
+	Prompt%id%03_1 <Buzz off, you ape.>
+	CPrompt%id%03_1 <ifPCMelancholy Accept>
 
 % TYPE: *SHOP_ELECTRONICS
 

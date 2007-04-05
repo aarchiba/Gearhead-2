@@ -197,16 +197,27 @@ Procedure BrowseMemoType( GB: GameBoardPtr; Tag: String );
 	{ TAG type. Possible options are MEMO, NEWS, and EMAIL. }
 var
 	MemoList,M: SAttPtr;
+	Adv: GearPtr;
 
 	Procedure CreateMemoList( Part: GearPtr; Tag: String );
 		{ Look through all gears in the structure recursively, }
 		{ looking for MEMO string attributes to store in our list. }
 	var
 		msg: String;
+		QID: LongInt;
 	begin
 		while Part <> Nil do begin
 			msg := SAttValue( Part^.SA , Tag );
 			if msg <> '' then StoreSAtt( MemoList , msg );
+
+			{ This part may also have a quest-related message attached }
+			{ to it. See if that's so. }
+			QID := NAttValue( Part^.NA , NAG_QuestInfo , NAS_QuestID );
+			if ( QID <> 0 ) then begin
+				msg := SAttValue( Part^.SA , Tag + '_' + BStr( NAttValue( Adv^.NA , NAG_QuestStatus , Qid ) ) );
+				if msg <> '' then StoreSAtt( MemoList , msg );
+			end;
+
 			CreateMemoList( Part^.SubCom , Tag );
 			CreateMemoList( Part^.InvCom , Tag );
 			Part := Part^.Next;
@@ -217,13 +228,10 @@ var
 		{ they only appear so long as the quest they're assigned to is }
 		{ active (i.e. it has a nonnegative QID). }
 	var
-		Adv: gearPtr;
 		SA,SA2: SAttPtr;
 		msg_head: String;
 		qid: LongInt;
 	begin
-		{ Locate the adventure. }
-		Adv := FindRoot( GB^.Scene );
 		SA := Adv^.SA;
 		while SA <> Nil do begin
 			SA2 := SA^.next;
@@ -289,7 +297,8 @@ begin
 	{ Error check first - we need the GB and the scene for this. }
 	if ( GB = Nil ) or ( GB^.Scene = Nil ) then Exit;
 	MemoList := Nil;
-	CreateMemoList( FindRoot( GB^.Scene ) , Tag );
+	Adv := FindRoot( GB^.Scene );
+	CreateMemoList( Adv , Tag );
 	if UpCase( Tag ) = 'MEMO' then AddQuestMemos;
 
 	if MemoList = Nil then StoreSAtt( MemoList , ReplaceHash( MsgString( 'MEMO_None' ) , LowerCase( Tag ) ) );
@@ -1468,6 +1477,23 @@ begin
 	{ Quest memos look like regular memos but their tag is followed by an underscore }
 	{ and the Quest ID. }
 	if ( Source <> Nil ) then SetSAtt( Source^.SA , 'MEMO_' + BStr( qid ) + ' <' + msg + '>' );
+end;
+
+Procedure ProcessGQSubMemo( var Event: String; GB: GameBoardPtr; Source: GearPtr );
+	{ Locate and then store the specified message as a Quest SubMemo in the }
+	{ grabbed gear. }
+var
+	qstat,mid: LongInt;
+	msg: String;
+begin
+	{ Determine the relevant Quest Status and the Message ID. }
+	qstat := ScriptValue( Event , GB , Source );
+	mid := ScriptValue( Event , GB , Source );
+	msg := getTheMessage( 'msg', mid , GB , Source );
+
+	{ Quest Submemos look like regular memos but their tag is followed by an underscore }
+	{ and the Quest Status. }
+	if ( Grabbed_Gear <> Nil ) then SetSAtt( Grabbed_Gear^.SA , 'MEMO_' + BStr( qstat ) + ' <' + msg + '>' );
 end;
 
 Procedure ProcessEMail( var Event: String; GB: GameBoardPtr; Scene: GearPtr );
@@ -4009,6 +4035,7 @@ begin
 		else if cmd = 'MEMO' then ProcessMemo( Event , GB , Source )
 		else if cmd = 'SMEMO' then ProcessSMemo( Event , GB , Source )
 		else if cmd = 'QMEMO' then ProcessQMemo( Event , GB , Source )
+		else if cmd = 'GQSUBMEMO' then ProcessGQSubMemo( Event , GB , Source )
 		else if cmd = 'NEWS' then ProcessNews( Event , GB , Source )
 		else if cmd = 'EMAIL' then ProcessEMail( Event , GB , Source )
 		else if cmd = 'HISTORY' then ProcessHistory( Event , GB , Source )
