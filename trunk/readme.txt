@@ -8,6 +8,10 @@ For help with the game you can visit either the GearHead wiki, or the forum:
   Wiki:   http://gearhead.chaosforge.org/wiki/
   Forum:  http://gearhead.chaosforge.org/forum/
 
+To run the SDL version you need to have SDL, SDL_Image, SDL_ttf, and
+OpenGL installed. The precompiled Windows releases come with all needed
+dlls.
+
 To compile the game you need FreePascal, available from www.freepascal.org.
 To compile with graphics you also need the Jedi-SDL package, available from
 here: http://sourceforge.net/projects/jedi-sdl/
