@@ -2,6 +2,28 @@
 %% Mecha Arena Quest Components
 %%
 
+Component
+	name <Basic Compeditor>
+
+	% E1 is the arena manager
+	% E2 is the arena scene
+	% E3 is the coompeditor
+
+	Element3 <Prefab>
+	Scene3 <Public Building>
+	Team3 <Citizens>
+	TeamData3 <Pass Ally>
+
+	sub
+		Persona 1
+		% V%id%01 
+		greeting <>
+
+	end
+	inv
+		NPC Mecha Pilot
+	end
+
 Quest
 	Mullins base
 
