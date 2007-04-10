@@ -1,0 +1,23 @@
+%%
+%%	Mecha Arena Scenes
+%%
+
+%% All the arenas follow basic rules. If you want a championship fight to take place
+%% under different rules, you must make it a custom arena scene.
+
+%% Arena State = Tells what should happen on START, and what checks should be made
+%%	for nu1 and nu2.
+%%  AS_Vacant = Nothing is currently happening in the arena
+%%  AS_Ready  = When the PC enters the arena, start combat, set to AS_Battle
+%%  AS_Battle = Check T1 and T2; if either hit 0, set AS_Win or AS_Loss
+%%  AS_Win    = PC has won the battle; manager can reset the arena
+%%  AS_Lose   = PC has lost the battle; manager can reset the arena
+
+%% Arena Wins = How many times the PC has won at this arena
+%% Arena Rewards = How many times the PC has collected rewards at this arena
+
+%% Arena Threat = Difficulcy rating of the arena, usually set by manager during first chat
+%% Arena Forces = A value describing how many mecha to add; set when activating ArenaState
+
+%% Challenger ID = A single NPC who has been moved here to fight the PC
+%% Challenger Home = Where to move the challenger after the fight is over
