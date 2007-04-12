@@ -21,3 +21,19 @@
 
 %% Challenger ID = A single NPC who has been moved here to fight the PC
 %% Challenger Home = Where to move the challenger after the fight is over
+
+
+Scene
+	name <# Arena>
+
+	type <Arena>
+	special <SOLO ARENA>
+	terrain <GROUND>
+
+	start <if= SelfArenaState NAG_AS_Ready else GoCheckBattle >
+	GoCheckBattle <if= SelfArenaState NAG_AS_Battle else GoBoringStart >
+	GoBoringStart <>
+
+	nu1 <if= T1 0 Return >
+
+	nu2 <>

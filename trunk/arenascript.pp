@@ -46,6 +46,20 @@ const
 	NAG_SkillCounter = -16;	{ Counter for skill tests. }
 	Max_Plots_Per_Story = 5;
 
+	NAG_ArenaData = -18;	{ Used to store information about mecha arena combat }
+		NAS_ArenaState = 1;	{ Determines what exactly is happening at the arena now. }
+			NAV_AS_Vacant = 0;	{ No fight now, no fight scheduled }
+			NAV_AS_Ready = 1;	{ Start fight next time PC enters scene }
+			NAV_AS_Battle = 2;	{ Battle in progress }
+			NAV_AS_Win = 3;		{ PC has won the battle }
+			NAV_AS_Loss = 4;	{ PC hass lost the battle }
+		NAS_ArenaWins = 2;	{ # of times PC has won match }
+		NAS_ArenaRewards = 3;	{ # of times PC has been rewarded }
+		NAS_ArenaThreat = 4;	{ Threat value of enemy mecha }
+		NAS_ArenaForces = 5;	{ % of generic enemies to fight }
+		NAS_ChallengerID = 6;	{ NPC challenger present during battle }
+		NAS_ChallengerHome = 7;	{ Where to return champion after fight }
+
 var
 	{ This gear pointer will be created if a dynamic scene is requested. }
 	SCRIPT_DynamicEncounter: GearPtr;

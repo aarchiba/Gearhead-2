@@ -167,3 +167,18 @@ NAG_QuestStatus <-14>
 NAG_QuestInfo <-12>
 NAS_QEncActive <5>
 TERRAIN_THRESHOLD <15>
+SelfArenaState <GrabLocal GNAtt NAG_ArenaData NAS_ArenaState>
+NAG_ArenaData <-18>
+NAS_ArenaState <1>
+NAV_AS_Vacant <0>
+NAV_AS_Ready <1>
+NAV_AS_Battle <2>
+NAV_AS_Win <3>
+NAV_AS_Loss <4>
+NAS_ArenaWins <2>
+NAS_ArenaRewards <3>
+NAS_ArenaThreat <4>
+NAS_ArenaForces <5>
+NAS_ChallengerID <6>
+NAS_ChallengerHome <7>
+
