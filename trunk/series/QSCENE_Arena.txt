@@ -30,10 +30,32 @@ Scene
 	special <SOLO ARENA>
 	terrain <GROUND>
 
-	start <if= SelfArenaState NAG_AS_Ready else GoCheckBattle >
-	GoCheckBattle <if= SelfArenaState NAG_AS_Battle else GoBoringStart >
-	GoBoringStart <>
+	start <if= SelfArenaState NAG_AS_Ready else GoCheckBattle          Print 1  SetSelfArenaState NAG_AS_Battle if# SelfChallengerID 0 Print 4 ForceChat SelfChallengerID>
+	GoCheckBattle <if= SelfArenaState NAG_AS_Battle else GoBoringStart Print 2>
+	GoBoringStart <Print 3 Return>
 
-	nu1 <if= T1 0 Return >
+	nu1 <if= T1 0 Return   if= SelfArenaState NAG_AS_Battle SetSelfArenaState NAG_AS_Loss  Print 5  AddRenown -5 Goto GoEndBattle>
 
-	nu2 <>
+	nu2 <if= T2 0 Return   if= SelfArenaState NAG_AS_Battle SetSelfArenaState NAG_AS_Win   Print 6  AddSelfArenaWin  AddSelfArenaThreat d10  XPV 100 FacXP+ 5 1 AddRenown 1 Goto GoEndBattle>
+
+	GoEndBattle <ifNPCOK SelfChallengerID ForceChat SelfChallengerID MoveNPC SelfChallengerID SelfChallengerHome ClearSelfChallengerID>
+
+	Msg1 <You enter the arena. Prepare to battle.>
+	Msg2 <The arena battle rages on.>
+	Msg3 <You enter the arena. There's no fight going on here now.>
+	Msg4 <\PERSONA SelfChallengerID contacts you.>
+	Msg5 <You have lost the battle.>
+	Msg6 <You have won the battle.>
+
+sub
+	Team 1
+	name <Player Team>
+	SetEnemy 2
+
+	Team 2
+	name <Enemies>
+	SetFaction 5
+	SetEnemy 1
+	Deploy <if= SelfArenaState NAG_AS_Ready ifG SelfArenaForces 0 WMecha 2 Threat SelfArenaThreat SelfArenaForces>
+
+end

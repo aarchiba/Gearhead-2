@@ -168,6 +168,10 @@ NAG_QuestInfo <-12>
 NAS_QEncActive <5>
 TERRAIN_THRESHOLD <15>
 SelfArenaState <GrabLocal GNAtt NAG_ArenaData NAS_ArenaState>
+SelfArenaThreat <GrabLocal GNAtt NAG_ArenaData NAS_ArenaThreat>
+SelfArenaForces <GrabLocal GNAtt NAG_ArenaData NAS_ArenaForces>
+SelfChallengerID <GrabLocal GNAtt NAG_ArenaData NAS_ChallengerID>
+SelfChallengerHome <GrabLocal GNAtt NAG_ArenaData NAS_ChallengerHome>
 NAG_ArenaData <-18>
 NAS_ArenaState <1>
 NAV_AS_Vacant <0>
