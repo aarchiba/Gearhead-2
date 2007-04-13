@@ -46,6 +46,7 @@ Scene 0 3
 	context <spc>
 
 	Quest1 <*:LocalQuest 5>
+	Quest2 <*:MECHA_ARENA_BASE>
 
 	start <if= V1 0 else GoSecondTime V= 1 1 Alert 1 Print 2>
 	GoSecondTime <Print 2>
@@ -286,105 +287,6 @@ sub
 		Content <Some 7 45 Here *URBAN_X>
 		Content2 <Some 1 100 Here *ANTI_ATTACK_SECURITY 2>
 
-		Persona
-		% Mullins runs the arena here. Since arena combat isn't exactly
-		% legal in the L5 Alliance, it has to be done on the sly...
-		name <MULLINS PERSONA>
-		&ArenaID <GrabSubScene 1 GS>
-		rumor <Mullins used to be one of the greatest privateers, but had to retire when she was crippled in battle.>
-		%% V1 = Number of matches fought
-		%% V2 = Number of rewards processed
-		%% V3 = Recharge Time
-		%% V4 = Recharge for asking about arena...
-		%% V5 = Recieved big prize from this arena
-		greeting <NewChat ifG V1 V2 else GoCheckFirst if# SceneVar &ArenaID 1 else GoLoseBattle if= V1 10 else GoNormalWin if= V5 0 else GoNormalWin Say 12 History 13 MechaPrize .mek FacXP 5 5 CashPrize Reward Threat SceneVar &ArenaID 2 200 500 V= 2 V1 V= 5 1>
-		.mek <Vadel.txt>
-		GoNormalWin <Say 3 CashPrize Reward Threat SceneVar &ArenaID 2 100 100 V= 2 V1>
-		GoLoseBattle <Say 2 V= 1 V2>
-		GoCheckFirst <ifG PCMeks 0 else GoNoMeks if= SceneVar &ArenaID 2 0 else GoCheckMatch ifG React d20 else GoNoLike ifG ComTime V4 else GoNoLike Say 4 AddChat 3 AddChat 4 AddChat 5>
-		GoNoLike <SayAnything>
-		GoNoMeks <Say 7>
-		GoCheckMatch <ifG ComTime V3 else GoNeedRecharge Say 6 AddChat 1 AddChat 2>
-		GoNeedRecharge <Say 1>
-		%% If Mullins doesn't like the PC, the number of enemies in the arena increases...
-		result1 <EndChat Say 5 V+ 1 1  V= 3 ComTime V+ 3 80000 SavePos Exit &ArenaID ifG d20 React SceneVar+ &ArenaID 2 d6>
-		result2 <NewChat Say 11>
-		result3 <NewChat Say 8 AddChat 1 AddChat 2 SceneVar= &ArenaID 2 10 AddLawful -1>
-		result4 <NewChat Say 9 V= 4 ComTime V+ 4 50000 V+ 4 d50000>
-		result5 <NewChat Say 10 AddChat 6 AddChat 7>
-		result6 <Goto result3>
-		result7 <Goto result4>
-		Msg1 <There won't be another fight until tomorrow. Come back then if you want to see some action.>
-		Msg2 <You lost that one. As long as you've survived, it can't be all that bad, eh?>
-		Msg3 <You won! Here's the prize money you earned. Come back tomorrow for another try.>
-		Msg3_1 <You kicked ass! Here's the prize money you earned. Come back tomorrow for another try.>
-		Msg4 <Hey, would you like to test your mettle in real combat? Some of the pirates around here run dueling matches just outside the spinner, in the shadow of the solar arrays. If you'd like to take part there's a cash prize for whoever wins.>
-		Msg5 <May the best pilot win!>
-		Msg5_1 <Good luck out there. May the best pilot win!>
-		CMsg5_1 <ifG React 35 Accept>
-		Msg5_2 <Give them hell!>
-		CMsg5_2 <ifG React 55 Accept>
-		Msg5_3 <Try not to get your ass kicked too quickly. It's a better show if you hang on for a while.>
-		CMsg5_3 <ifG 20 React Accept>
-		Msg6 <Good to see you again. Are you ready to take part in today's fight?>
-		Msg7 <It's too bad you don't have a mecha...>
-		Msg8 <There's a match ready to go right now. Would you like to take part, or will you be back later?>
-		Msg9 <Well, that's too bad.>
-		Msg10 <It's technically illegal, but the police have better things to worry about than a few pilots having a bit of fun. Sure people get hurt sometimes but they all knew what they were getting into. How about it?>
-		Msg11 <Come on back when you're feeling braver.>
-		Msg12 <You've won ten matches! That makes you arena champion... Not that it's worth much, other than bragging rights. To celebrate this milestone, I present you with this new Vadel mecha. Hopefully it'll be better than the pile of junk you use now.>
-		Msg13 <You were named arena champion at the Maquise Privateer Arena.>
-		Prompt1 <I'm ready to battle.>
-		Prompt2 <Maybe some other time.>
-		Prompt3 <I'd like that very much.>
-		Prompt4 <No thanks, I'd rather live.>
-		Prompt5 <Isn't that illegal?>
-		CPrompt5 <ifG PCRep 2 0 Accept>
-		Prompt6 <Alright, I could give it a try.>
-		Prompt7 <Sorry, that's not my thing.>
-
-		Scene 0 2
-		name <Maquise Arena>
-		%% L1 = Current Battle was Success
-		%% L2 = Difficulcy Level
-		%% L3 = Battle Over counter, to prevent xp from being awarded multiple times
-		SpaceMap
-		MapWidth 50
-		MapHeight 50
-		terrain <SPACE>
-		special <ShowAll>
-		start <L= 1 0 L= 3 0>
-		nu1 <if= T1 0 if= L3 0 L= 3 1   AddRenown -5   L= 1 0                  Return>
-		nu2 <if= T2 0 if= L3 0 L= 3 1   AddRenown  1   L= 1 1 L+ 2 d10 XPV 100  FacXP+ 5 d4  Return>
-		sub
-			Team 1
-			setenemy 2
-
-			Team 2
-			setenemy 1
-			Deploy <WMecha 2 Threat L2 100>
-			SetFaction 5
-		end
-
-	end
-	inv
-		NPC Mercenary
-		name <Mullins>
-		% Mullins is Miaga's mother. She was a hero in the privateer fleet
-		% until being horribly injured in the line of duty. The left half
-		% of Mullins's body is mostly cybernetic.
-		mecha <>
-		statline 13 10 14 16 8 17 10 13
-		CharDesc Female Heroic Criminal Passionate Sociable Cheerful Renowned
-		% Age 45; since basic char age is 20, add +25.
-		Age 25
-		SetTeam 2
-		%% Mullins is a member of the Pro Duelist Association
-		SetFaction 5
-		EquipChar 25000
-		SDL_PORTRAIT <por_f_mullins(O-Y).png>
-		SDL_SPRITE <cha_f_bandit.png>
-		SDL_COLORS <200 200 0 142 62 39 1 75 67>
 	end
 
 	Scene

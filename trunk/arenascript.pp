@@ -59,6 +59,7 @@ const
 		NAS_ArenaForces = 5;	{ % of generic enemies to fight }
 		NAS_ChallengerID = 6;	{ NPC challenger present during battle }
 		NAS_ChallengerHome = 7;	{ Where to return champion after fight }
+		NAS_ArenaRecharge = 8;	{ Time when next fight can take place }
 
 var
 	{ This gear pointer will be created if a dynamic scene is requested. }

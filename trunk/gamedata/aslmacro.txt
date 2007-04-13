@@ -226,8 +226,10 @@ WinArenaMission <GiveArenaPay Return ArenaRep 1>
 LoseArenaMission <Return ArenaRep -5>
 IfPCHasSkill <GrabPCPilot ifGHasSkill ?>
 IfPCHasPerformance <GrabPCPilot ifGHasSkill 35>
-SetSelfArenaState <GrabLocal GSetNAtt NAG_ArenaData NAS_ArenaState ?>
-AddSelfArenaWin <GrabLocal GSetNAtt NAG_ArenaData NAS_ArenaWins 1>
-AddSelfArenaThreat <GrabLocal GSetNAtt NAG_ArenaData NAS_ArenaThreat ?>
-ClearSelfChallengerID <GrabLocal GSetNAtt NAG_ArenaData NAS_ChallengerID 0>
+SetSelfArenaState <GrabCurrentScene GSetNAtt NAG_ArenaData NAS_ArenaState ?>
+AddSelfArenaWin <GrabCurrentScene GSetNAtt NAG_ArenaData NAS_ArenaWins 1>
+AddSelfArenaThreat <GrabCurrentScene GSetNAtt NAG_ArenaData NAS_ArenaThreat ?>
+SetArenaThreat <GrabScene ? GSetNAtt NAG_ArenaData NAS_ArenaThreat ?>
+ClearSelfChallengerID <GrabCurrentScene GSetNAtt NAG_ArenaData NAS_ChallengerID 0>
+SetSelfArenaRecharge <GrabCurrentScene GSetNAtt NAG_ArenaData NAS_ArenaRecharge ComTime GAddNAtt NAG_ArenaData NAS_ArenaRecharge 85000>
 

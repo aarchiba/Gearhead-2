@@ -2,45 +2,68 @@
 %% Mecha Arena Quest Components
 %%
 
-Component
-	name <Basic Compeditor>
+%%
+%% *:MECHA_ARENA_BASE
+%%	Contains the arena manager
+%%
+%%	Set QuestStatus when manager admits PC to arena; end the quest after the PC has
+%%	completed the championship.
+%%
 
-	% E1 is the arena manager
-	% E2 is the arena scene
-	% E3 is the coompeditor
+Content
+	name <Mullins Arena>
+	requires <*:MECHA_ARENA_BASE>
+
+	% E1 is Mullins
+	% E2 is the arena
+	% E3 is the entrance to the arena
+	Element1 <Prefab>
+	Scene1 <Building Public Sleazy>
+	Team1 <Citizens>
+	TeamData1 <Pass Ally>
+
+	Scene2 <New *Arena>
 
 	Element3 <Prefab>
-	Scene3 <Public Building>
-	Team3 <Citizens>
-	TeamData3 <Pass Ally>
+	Scene3 <Environs>
 
 	sub
 		Persona 1
-		% V%id%01 = Mission has begun; normal operations suspended
-		greeting <>
+		rumor0 <Mullins used to be one of the greatest privateers, but had to retire when she was crippled in battle.>
+		greeting <if# QuestStatus %qid% 0 else GoPreQuest if= ArenaState %2% NAV_AS_Win else GoCheckLoss Goto GoArenaWin>
+		GoCheckLoss <if= ArenaState %2% NAV_AS_Loss else GoCheckReady Goto GoArenaLoss>
+		GoCheckReady <if= ArenaState %2% NAV_AS_Vacant else GoArenaBusy ifG ComTime ArenaRecharge %2% else GoArenaBusy Goto GoOfferFight>
+
+		GoArenaWin <>
+		GoArenaLoss <>
+		GoArenaBusy <>
+		GoOfferFight <>
+
+		GoPreQuest <NewChat Say 1 Goto GoStartQuest>
+		GoStartQuest <SetQuestStatus %qid% %id% SetArenaThreat %2% 10>
+
+		Msg1 <This is a test. Come talk to me again to check the mainline arena code.>
 
 	end
 	inv
-		NPC Mecha Pilot
+		NPC Mercenary
+		name <Mullins>
+		% Mullins is Miaga's mother. She was a hero in the privateer fleet
+		% until being horribly injured in the line of duty. The left half
+		% of Mullins's body is mostly cybernetic.
+		mecha <>
+		statline 13 10 14 16 8 17 10 13
+		CharDesc Female Heroic Criminal Sociable Melancholy Renowned
+		% Age 45; since basic char age is 20, add +25.
+		Age 25
+		%% Mullins is a member of the Pro Duelist Association
+		SetFaction 5
+		EquipChar 25000
+		SDL_PORTRAIT <por_f_mullins(O-Y).png>
+		SDL_SPRITE <cha_f_bandit.png>
+		SDL_COLORS <200 200 0 142 62 39 1 75 67>
+
+		STC QUEST-MAPMARKER-AUTO-STATIONARY
+		name <Privateer's Arena>
+		desig <ENTRANCE %s2%>
 	end
-
-Quest
-	Mullins base
-
-	%% To qualify for this arena, the PC must persuade Mullins to give
-	%% him a chance. Or he musst be an arena pilot.
-
-greeting
-prove self- start quest.
-Activate arena scene and send PC there.
-Next day- Must challenge E1. Actually, E1 should activate without speaking to Mullins.
-Defeat E1. E1 tells about E2. Mullins also tells about E2.
-Must fight one more "regular" fight before E2.
-
-Challenge Format
-
-Controller Persona
-
-
-Challenge Content
-
