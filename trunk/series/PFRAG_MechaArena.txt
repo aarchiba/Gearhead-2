@@ -1,0 +1,28 @@
+%%
+%% Arena Persona Fragments
+%%
+%%	This file contains persona fragments needed by the mecha arenas.
+%%	Mostly this is for the managers.
+
+
+%% TYPE: *BasicArenaWin
+%%	The PC has won a non-championship match. Give some money
+
+%% TYPE: *OfferArenaBattle
+%%	The NPC will offer the PC a chance to fight at the arena.
+%%  PARAM1: Accept battle exit label (no message printed)
+%%  PARAM2: Refuse battle exit label (no message printed)
+
+Persona
+requires <*OfferArenaBattle>
+START <NewChat Say %id%01 AddChat %id%01 AddChat %id%02>
+Result%id%01 <Goto %1%>
+Result%id%02 <Goto %2%>
+Msg%id%01 <>
+Prompt%id%01 <>
+Prompt%id%02 <>
+
+
+
+
+

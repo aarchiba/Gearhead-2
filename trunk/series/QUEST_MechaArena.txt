@@ -38,6 +38,8 @@ Content
 		GoArenaLoss <>
 		GoArenaBusy <>
 		GoOfferFight <>
+		GoStartBattle <>
+		GoRefuseBattle <>
 
 		GoPreQuest <NewChat Say 1 Goto GoStartQuest>
 		GoStartQuest <SetQuestStatus %qid% %id% SetArenaThreat %2% 10>
