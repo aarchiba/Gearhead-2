@@ -49,6 +49,7 @@ Const
 		{ gear in question was originally taken, and to which }
 		{ it will be returned once the current scene is over. }
 
+
 	NAG_Location = -1;	{ Numeric Attribute : Map Location }
 	NAS_X = 0;
 	NAS_Y = 1;

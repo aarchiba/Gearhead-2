@@ -32,17 +32,27 @@ Content
 		rumor0 <Mullins used to be one of the greatest privateers, but had to retire when she was crippled in battle.>
 		greeting <if# QuestStatus %qid% 0 else GoPreQuest if= ArenaState %2% NAV_AS_Win else GoCheckLoss Goto GoArenaWin>
 		GoCheckLoss <if= ArenaState %2% NAV_AS_Loss else GoCheckReady Goto GoArenaLoss>
-		GoCheckReady <if= ArenaState %2% NAV_AS_Vacant else GoArenaBusy ifG ComTime ArenaRecharge %2% else GoArenaBusy Goto GoOfferFight>
+		GoCheckReady <if= ArenaState %2% NAV_AS_Vacant else GoArenaFull ifG ComTime ArenaRecharge %2% else GoArenaBusy Goto GoOfferFight>
 
-		GoArenaWin <>
-		GoArenaLoss <>
-		GoArenaBusy <>
-		GoOfferFight <>
-		GoStartBattle <>
-		GoRefuseBattle <>
+		GoArenaWin <if= ArenaWins %2% 10 else GoMinorWin Goto GoBigWin>
+		*GoMinorWin <*BasicArenaWin %2% GoResetArena>
+		*GoArenaLoss <*BasicArenaLoss %2% GoResetArena>
+		GoResetArena <ResetArena %2%>
+
+		*GoArenaFull <*ArenaIsFull %2%>
+		*GoArenaBusy <*ArenaIsBusy %2%>
+
+		*GoChooseBattle <*StartArenaBattle %2% GoStartFight>
+		GoStartFight <SavePos PrepArena %2% 100 >
+		*GoRefuseBattle <*RefuseArenaFight %2%>
 
 		GoPreQuest <NewChat Say 1 Goto GoStartQuest>
 		GoStartQuest <SetQuestStatus %qid% %id% SetArenaThreat %2% 10>
+
+		GoOfferFight <>
+		GoBigWin <>
+
+
 
 		Msg1 <This is a test. Come talk to me again to check the mainline arena code.>
 

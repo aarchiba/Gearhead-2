@@ -135,6 +135,11 @@ Const
 
 	NAS_PartyPoints = 17;		{ A counter used in the party scenarios. }
 
+	NAS_ReturnToScene = 18;	{ If a RETURN command is encountered, if this }
+		{ value is nonzero, do not simply exit to the parent scene. Instead, }
+		{ exit to whatever scene is stored here. This functionality exists to }
+		{ make GH1-style "teleporting" battles possible. }
+
 	{ The following are used by the randmaps unit... }
 	NAS_LockedDoorChance = 101;
 	NAS_SecretDoorChance = 102;

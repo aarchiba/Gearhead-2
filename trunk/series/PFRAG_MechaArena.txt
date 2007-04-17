@@ -7,6 +7,74 @@
 
 %% TYPE: *BasicArenaWin
 %%	The PC has won a non-championship match. Give some money
+%%  PARAM1: ID of the arena, needed for calculating the cash prize
+%%  PARAM2: Arena reset exit label; called when the prize is given
+
+Persona
+requires <*BasicArenaWin>
+START <NewChat Say %id%01 CashPrize Reward Threat ArenaThreat %1% 100 100 Goto %2%>
+Msg%id%01 <Good job. Come back tomorrow for another fight.>
+
+
+
+%% TYPE: *BasicArenaLoss
+%%	The PC has lost a match. Basically do nothing.
+%%  PARAM1: ID of the arena; might be needed, better include it anyway
+%%  PARAM2: Arena reset exit label
+
+Persona
+requires <*BasicArenaLoss>
+START <NewChat Say %id%01  Goto %2%>
+Msg%id%01 <You lost the match. Come back here tomorrow and try your luck again.>
+
+
+
+%% TYPE: *ArenaIsBusy
+%%	There's no fight right now, but later there will be.
+%%  PARAM1: ID of the arena; might be needed, better include it anyway
+
+Persona
+requires <*ArenaIsBusy>
+START <NewChat Say %id%01>
+Msg%id%01 <There's no battle taking place right now. Come back tomorrow and there should be another match.>
+
+
+
+%% TYPE: *ArenaIsFull
+%%	The PC should be in the arena fighting right now.
+%%  PARAM1: ID of the arena; might be needed, better include it anyway
+
+Persona
+requires <*ArenaIsFull>
+START <NewChat Say %id%01>
+Msg%id%01 <What are you doing talking to me? Shouldn't you be fighting now?>
+
+
+
+%% TYPE: *RefuseArenaFight
+%%	The PC doesn't want to fight right now.
+%%  PARAM1: ID of the arena; might be needed, better include it anyway
+
+Persona
+requires <*RefuseArenaFight>
+START <NewChat Say %id%01>
+Msg%id%01 <That's too bad. Come back later if you change your mind.>
+
+
+
+%% TYPE: *StartArenaBattle
+%%	The PC has agreed to fight. Do something.
+%%  PARAM1: ID of the arena; might be needed, better include it anyway
+%%  PARAM2: Arena fight prep exit label
+
+Persona
+requires <*StartArenaBattle>
+START <NewChat Say %id%01  Goto %2%>
+Msg%id%01 <Good luck out there. Come back here if you win and I'll give you a prize.>
+
+
+
+
 
 %% TYPE: *OfferArenaBattle
 %%	The NPC will offer the PC a chance to fight at the arena.

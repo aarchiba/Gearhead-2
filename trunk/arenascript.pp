@@ -1054,6 +1054,8 @@ begin
 
 			{ Set the return value for metascenes. }
 			if ( Dest = Nil ) and ( SCRIPT_DynamicEncounter = Nil ) then begin
+				{ If we've been asked to exit to a nonexistant scene, }
+				{ try to re-enter the current scene again. }
 				GB^.ReturnCode := FindGearScene( GB^.Scene , GB );
 
 			end else if ( RC < 0 ) and ( Dest <> Nil ) then begin
@@ -1117,30 +1119,41 @@ end;
 
 Procedure ProcessReturn( GB: GameBoardPtr );
 	{ An exit command has been received. }
+	Procedure ReturnToScene( DefaultSID: Integer );
+		{ Return from the current scene to some place appropriate. If a }
+		{ "ReturnTo" value has been stored, go there. Otherwise, return to }
+		{ the default scene given as a parameter. }
+	var
+		RtS: Integer;	{ Return To Scene }
+	begin
+		if ( GB <> Nil ) and ( GB^.Scene <> Nil ) then begin
+			RtS := NAttValue( GB^.Scene^.NA , NAG_Narrative , NAS_ReturnToScene );
+		end else RtS := 0;
+		if RtS <> 0 then begin
+			SetNAtt( GB^.Scene^.NA , NAG_Narrative , NAS_ReturnToScene , 0 );
+			AS_SetExit( GB , RtS );
+		end else begin
+			AS_SetExit( GB , DefaultSID );
+		end;
+	end;
 begin
-	{ RETURN should only function if called from a dynamic scene or }
-	{ a metascene. Anything else could be disasterous. }
-	if ( GB <> Nil ) and ( GB^.Scene <> Nil ) and ( GB^.Scene^.G = GG_MetaScene ) then begin
-		AS_SetExit( GB , NAttValue( GB^.Scene^.NA , NAG_Narrative , NAS_EntranceScene ) );
-	end else if ( GB <> Nil ) and ( GB^.Scene <> Nil ) and ( FindROot( GB^.Scene )^.G = GG_Adventure ) and ( FindROot( GB^.Scene )^.S = GS_ArenaCampaign ) then begin
+	if ( GB <> Nil ) and ( GB^.Scene <> Nil ) and ( FindROot( GB^.Scene )^.G = GG_Adventure ) and ( FindROot( GB^.Scene )^.S = GS_ArenaCampaign ) then begin
 		{ In an arena campaign, return always returns with an exit value of 1. }
 		GB^.QuitTheGame := True;
 		GB^.ReturnCode := 1;
+	end else if ( GB <> Nil ) and ( GB^.Scene <> Nil ) and ( GB^.Scene^.G = GG_MetaScene ) then begin
+		ReturnToScene( NAttValue( GB^.Scene^.NA , NAG_Narrative , NAS_EntranceScene ) );
 
 	end else if ( GB <> Nil ) and ( GB^.Scene <> Nil ) and IsInvCom( GB^.Scene ) then begin
 		if GB^.Scene^.S <> 0 then begin
 			AS_SetExit( GB , GB^.Scene^.S );
 			GB^.Scene^.S := 0;
-		end else if not GB^.QuitTheGame then begin
-			{ If the current scene = 0, and we received }
-			{ a QuitTheGame order, chances are that this }
-			{ is an erronious "bounced" request. }
-			AS_SetExit( GB , 0 );
+			{ Eliminated old error check that doesn't appear to do anything anymore. In case of error, roll back to v0.420 or so. }
 		end;
 	end else if ( GB <> Nil ) and ( GB^.Scene <> Nil ) and ( GB^.Scene^.Parent <> Nil ) and ( GB^.Scene^.Parent^.G = GG_Scene ) then begin
-		AS_SetExit( GB , GB^.Scene^.Parent^.S );
+		ReturnToScene( GB^.Scene^.Parent^.S );
 	end else begin
-		AS_SetExit( GB , 0 );
+		ReturnToScene( 0 );
 	end;
 end;
 
