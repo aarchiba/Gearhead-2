@@ -151,6 +151,7 @@ NAG_Narrative <7>
 NAS_HomeTownID <11>
 NAS_NID <0>
 NAS_VictimsRecovered <201>
+NAS_ReturnTo <18>
 NAG_Condition <9>
 NAS_StaminaDown <0>
 NAS_Hunger <2>
@@ -175,6 +176,7 @@ SelfArenaForces <GrabCurrentScene GNAtt NAG_ArenaData NAS_ArenaForces>
 SelfChallengerID <GrabCurrentScene GNAtt NAG_ArenaData NAS_ChallengerID>
 SelfChallengerHome <GrabCurrentScene GNAtt NAG_ArenaData NAS_ChallengerHome>
 ArenaWins <GrabScene ? GNAtt NAG_ArenaData NAS_ArenaWins>
+ArenaThreat <GrabScene ? GNAtt NAG_ArenaData NAS_ArenaThreat>
 NAG_ArenaData <-18>
 NAS_ArenaState <1>
 NAV_AS_Vacant <0>
@@ -183,7 +185,6 @@ NAV_AS_Battle <2>
 NAV_AS_Win <3>
 NAV_AS_Loss <4>
 NAS_ArenaWins <2>
-NAS_ArenaRewards <3>
 NAS_ArenaThreat <4>
 NAS_ArenaForces <5>
 NAS_ChallengerID <6>

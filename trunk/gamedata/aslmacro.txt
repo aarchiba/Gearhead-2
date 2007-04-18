@@ -234,4 +234,4 @@ ClearSelfChallengerID <GrabCurrentScene GSetNAtt NAG_ArenaData NAS_ChallengerID 
 SetSelfArenaRecharge <GrabCurrentScene GSetNAtt NAG_ArenaData NAS_ArenaRecharge ComTime GAddNAtt NAG_ArenaData NAS_ArenaRecharge 85000>
 ResetArena <GrabScene ? GSetNAtt NAG_ArenaData NAS_ArenaState NAV_AS_Vacant>
 PrepArena <GrabScene ? GSetNAtt NAG_ArenaData NAS_ArenaState NAV_AS_Ready GSetNAtt NAG_ArenaData NAS_ArenaForces ?>
-
+Jump <Exit ? GrabScene ! GSetNAtt NAG_Narrative NAS_ReturnTo SceneID>

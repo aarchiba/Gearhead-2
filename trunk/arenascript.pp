@@ -54,7 +54,6 @@ const
 			NAV_AS_Win = 3;		{ PC has won the battle }
 			NAV_AS_Loss = 4;	{ PC hass lost the battle }
 		NAS_ArenaWins = 2;	{ # of times PC has won match }
-		NAS_ArenaRewards = 3;	{ # of times PC has been rewarded }
 		NAS_ArenaThreat = 4;	{ Threat value of enemy mecha }
 		NAS_ArenaForces = 5;	{ % of generic enemies to fight }
 		NAS_ChallengerID = 6;	{ NPC challenger present during battle }

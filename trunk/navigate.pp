@@ -478,7 +478,7 @@ var
 	HomeTownID,WorldID,HTFacID: Integer;	{ Needed to calculate the difficulcy ratings. }
 
 	{ Forward declaration }
-	Function AddQuestComponent( Scene,Prev: GearPtr; ConReq: String; BranchPoints: Integer; KeyScene,KeyGear: GearPtr ): GearPtr; forward;
+	Function AddQuestComponent( Scene,Prev: GearPtr; ConReq: String; Threat,BranchPoints: Integer; KeyScene,KeyGear: GearPtr ): GearPtr; forward;
 
 	Function NewQID(): Integer;
 		{ Return a new unique Quest ID. }
@@ -571,7 +571,7 @@ var
 		NewSceneID := NAttValue( Adv^.NA , NAG_Narrative , NAS_MaxSceneID );
 	end;
 
-	Function AddNewScene( RootScene,Frag,KeyGear: GearPtr; SceneReq: String; AddEntrance: Boolean; BranchPoints,Faction: Integer ): GearPtr;
+	Function AddNewScene( RootScene,Frag,KeyGear: GearPtr; SceneReq: String; AddEntrance: Boolean; BranchPoints,Faction,Threat: Integer ): GearPtr;
 		{ Attempt to add a new scene to the adventure. }
 		{ If this scene has a subquest associated with it, add that too. }
 		{ If ADDENTRANCE is TRUE, we need to add an entrance subquest as well. }
@@ -615,7 +615,7 @@ var
 			{ subquests can be initialized. }
 			SQType := SAttValue( NewScene^.SA , 'QUEST' );
 			if SQType <> '' then begin
-				SQList := AddQuestComponent( RootScene , Frag , SQType , BranchPoints - 1 , NewScene , KeyGear );
+				SQList := AddQuestComponent( RootScene , Frag , SQType , Threat , BranchPoints - 1 , NewScene , KeyGear );
 				if SQList = Nil then InitOK := False
 				else begin
 					SetNAtt( NewScene^.NA , NAG_QuestInfo , NAS_QuestBranches , NumSiblingGears( SQList ) );
@@ -630,7 +630,7 @@ var
 			if AddEntrance and ( NewScene <> Nil ) then begin
 				SQType := SAttValue( NewScene^.SA , 'QUEST_ENTRANCE' );
 				if SQType <> '' then begin
-					Entrance := AddQuestComponent( RootScene , Frag , SQType , BranchPoints - 1 , NewScene , KeyGear );
+					Entrance := AddQuestComponent( RootScene , Frag , SQType , Threat , BranchPoints - 1 , NewScene , KeyGear );
 					if Entrance = Nil then InitOK := False
 					else begin
 						AddNAtt( NewScene^.NA , NAG_QuestInfo , NAS_QuestBranches , NumSiblingGears( Entrance ) );
@@ -667,7 +667,7 @@ var
 		AddNewScene := NewScene;
 	end;
 
-	Function AddQuestComponent( Scene,Prev: GearPtr; ConReq: String; BranchPoints: Integer; KeyScene,KeyGear: GearPtr ): GearPtr;
+	Function AddQuestComponent( Scene,Prev: GearPtr; ConReq: String; Threat,BranchPoints: Integer; KeyScene,KeyGear: GearPtr ): GearPtr;
 		{ Attempt to add a new component to the tree based on the provided }
 		{ information. If installation succeeded, this function will return }
 		{ the component added (along with all of its sub-quests appended }
@@ -691,7 +691,7 @@ var
 		SQBranches: Integer;	{ The highest branch points of a subquest/newscene }
 					{ not including successors. }
 		SQTotal: Integer;	{ As above, but including successors. }
-		QID,LID,T,N,Threat,SFaction: Integer;
+		QID,LID,T,N,SFaction: Integer;
 		Elem_ID,Elem_Scene: Array [1..Num_Plot_Elements] of LongInt;
 		Elem_Code: Array [1..Num_Plot_Elements] of Char;
 		InitOK,DoDebug: Boolean;
@@ -710,27 +710,13 @@ var
 		end;
 		LID := NewLID();
 
-		{ Determine the threat rating, and add the context. }
-		if Prev = Nil then begin
-			{ T = World ID }
-			T := FindWorld( Nil , Scene )^.S;
-			if Scene^.S = HomeTownID then begin
-				{ This is the PC's home town. All quests are easy. }
-				Threat := 5 + Random( 11 );
-			end else if ( T = WorldID ) and ( NAttValue( Scene^.NA , NAG_Personal , NAS_FactionID ) = HTFacID ) then begin
-				{ This is nearly the PC's home... slightly harder. }
-				Threat := 10 + Random( 31 );
-			end else if T = WorldID then begin
-				{ This is the same world as the PC started on. A bit harder still. }
-				Threat := 20 + Random( 41 );
-			end else begin
-				{ This is a different planet. Quests get hard here. }
-				Threat := 30 + Random( 61 );
-			end;
-		end else if ComType[2] = ':' then begin
-			Threat := NAttValue( Prev^.NA , NAG_QuestInfo , NAS_DifficulcyLevel );
-		end else begin
-			Threat := NAttValue( Prev^.NA , NAG_QuestInfo , NAS_DifficulcyLevel ) + Random( 5 ) + 1;
+		{ Maybe increase the threat level. }
+		if ( ConReq <> '' ) and ( ConReq[1] = '#' ) then begin
+			DeleteFirstChar( ConReq );
+			T := ExtractValue( ConReq );
+			if T > 0 then Threat := T;
+		end else if ( Prev <> Nil ) and ( ComType[2] <> ':' ) then begin
+			Threat := Threat + Random( 5 ) + 1;
 		end;
 		ComType := ComType + ' ' + DifficulcyContext( Threat );
 
@@ -854,7 +840,7 @@ var
 						{ the desig "ENTRANCE %s[t]%". If no such gear can }
 						{ be found in C, we need a new entrance. }
 						C2 := SeekGearByDesig( C , 'ENTRANCE %s' + BStr( T ) + '%' );
-						NewScene := AddNewScene( Scene , C , Elem , msg + ' ' + SContext , C2 = Nil , BranchPoints - 1 , SFaction );
+						NewScene := AddNewScene( Scene , C , Elem , msg + ' ' + SContext , C2 = Nil , BranchPoints - 1 , SFaction , Threat );
 						if NewScene = Nil then begin
 							InitOK := False;
 							DialogMsg( GearName( C ) + ' DEBUG Quest error: NewScene ' + BStr( T ) + ' failed.' );
@@ -905,11 +891,11 @@ var
 					if msg <> '' then begin
 						{ Is this subquest a successor or complication? }
 						if ( Length( msg ) > 1 ) and ( msg[2] = ':' ) then begin
-							C2 := AddQuestComponent( Scene , C , msg , BranchPoints - 1 , KeyScene , KeyGear );
+							C2 := AddQuestComponent( Scene , C , msg , Threat , BranchPoints - 1 , KeyScene , KeyGear );
 							CompBranchPoints( SQBranches , C2 );
 						end else begin
 							{ This is a successor. It will not affect the branch points of this component. }
-							C2 := AddQuestComponent( Scene , C , msg , BranchPoints - SQBranches , KeyScene , KeyGear );
+							C2 := AddQuestComponent( Scene , C , msg , Threat , BranchPoints - SQBranches , KeyScene , KeyGear );
 							CompBranchPoints( SQTotal , C2 );
 						end;
 
@@ -1398,14 +1384,13 @@ var
 		FindParentScene := Source;
 	end;
 
-	Procedure AddQuest( Source: GearPtr; ConReq: String );
+	Procedure AddQuest( Source: GearPtr; QuestType: String; QuestThreat: Integer );
 		{ Attempt to add some new content to the adventure. }
 		{ Source is the gear requesting the quest- it may be either a scene }
 		{ or a character. }
 	var
 		KeyScene,RootScene,KeyGear: GearPtr;
 		LList: GearPtr;
-		QuestType: String;
 		QuestComplexity: Integer;
 	begin
 		{ Initialize the layer IDs. }
@@ -1415,9 +1400,7 @@ var
 		KeyScene := FindParentScene( Source );
 		RootScene := FindRootScene( Nil , KeyScene );
 
-		{ Retrieve the QuestType and QuestComplexity from the content request. }
-		QuestType := ExtractWord( ConReq );
-		QuestComplexity := ExtractValue( ConReq );
+		QuestComplexity := 10;
 
 		{ Determine the key gear, if one exists. }
 		if Source^.G <> GG_Scene then begin
@@ -1426,14 +1409,50 @@ var
 		end else KeyGear := Nil;
 
 		{ First, generate the list of components. }
-		LList := AddQuestComponent( RootScene , Nil , QuestType , QuestComplexity , KeyScene , KeyGear );
+		LList := AddQuestComponent( RootScene , Nil , QuestType , QuestThreat , QuestComplexity , KeyScene , KeyGear );
 
 		{ Next, assemble these components into actual adventure content. }
 		AssembleQuest( LList );
 	end;
+
+	Function InitialThreat( Part: GearPtr ): Integer;
+		{ Return a good default threat rating for a quest based off of PART. }
+	var
+		Scene: GearPtr;
+		T,Threat: Integer;
+	begin
+		Scene := FindParentScene( Part );
+		T := FindWorld( Nil , Scene )^.S;
+		if Scene^.S = HomeTownID then begin
+			{ This is the PC's home town. All quests are easy. }
+			Threat := 5 + Random( 11 );
+		end else if ( T = WorldID ) and ( NAttValue( Scene^.NA , NAG_Personal , NAS_FactionID ) = HTFacID ) then begin
+			{ This is nearly the PC's home... slightly harder. }
+			Threat := 10 + Random( 31 );
+		end else if T = WorldID then begin
+			{ This is the same world as the PC started on. A bit harder still. }
+			Threat := 20 + Random( 41 );
+		end else begin
+			{ This is a different planet. Quests get hard here. }
+			Threat := 30 + Random( 61 );
+		end;
+		InitialThreat := Threat;
+	end;
+
 	Procedure CheckAlongPath( LList: GearPtr );
 		{ Check along this list of scenes for content requests, }
 		{ also checking the sub- and inv-coms. }
+		Procedure AddQuestHere( Part: GearPtr; ConReq: String );
+			{ Do the grunge work of adding the quest, based on the request we've been given. }
+		var
+			QuestType: String;
+			QuestThreat: Integer;
+		begin
+			QuestType := ExtractWord( ConReq );
+			QuestThreat := ExtractValue( ConReq );
+			if QuestThreat = 0 then QuestThreat := InitialThreat( Part );
+			AddQuest( LList , QuestType , QuestThreat );
+		end;
 	var
 		ConReq: String;
 		SA: SAttPtr;
@@ -1444,7 +1463,10 @@ var
 				{ A scene can have multiple quests defined. }
 				SA := LList^.SA;
 				while SA <> Nil do begin
-					if HeadMatchesString( 'QUEST' , SA^.Info ) then AddQuest( LList , RetrieveAString( SA^.Info ) );
+					if HeadMatchesString( 'QUEST' , SA^.Info ) then begin
+						ConReq := RetrieveAString( SA^.Info );
+						AddQuestHere( LList , ConReq );
+					end;
 					SA := SA^.Next;
 				end;
 			end else begin
@@ -1457,7 +1479,7 @@ var
 						ID := NewNID( Nil , Adv );
 						SetNAtt( LList^.NA , NAG_Narrative , NAS_NID , ID );
 					end;
-					AddQuest( LList , ConReq );
+					AddQuestHere( LList , ConReq );
 				end;
 			end;
 			CheckAlongPath( LList^.SubCom );

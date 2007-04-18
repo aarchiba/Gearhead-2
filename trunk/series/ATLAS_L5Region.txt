@@ -45,7 +45,7 @@ Scene 0 3
 	desig <MAQSP>
 	context <spc>
 
-	Quest1 <*:LocalQuest 5>
+	Quest1 <*:LocalQuest>
 	Quest2 <*:MECHA_ARENA_BASE>
 
 	start <if= V1 0 else GoSecondTime V= 1 1 Alert 1 Print 2>
@@ -417,7 +417,7 @@ sub
 			chardesc Female Sociable Cheerful Passionate Pragmatic Renowned
 			MiniMapComponent 1
 			%% Adrianna will have a fairly extensive quest.
-			quest <*:NPCQuest 10>
+			quest <*:NPCQuest>
 
 			NPC Knight
 			SetTeam 3
@@ -528,7 +528,7 @@ Scene 0 3
 	SetFaction 1
 	factions <MAQUI COMET SILKN PRIVA HOELL L5LAW>
 
-	Quest1 <*:LocalQuest 5>
+	Quest1 <*:LocalQuest>
 
 	desig <ATHSP>
 	context <spc>
@@ -784,7 +784,7 @@ sub
 				SetTeam 2
 				SetFaction 1
 				CharDesc Sociable Passionate Male
-				quest <*:NPCQuest 10>
+				quest <*:NPCQuest>
 			end
 
 			room
@@ -1023,7 +1023,7 @@ Scene
 	personatype <asteroid village mine>
 	habitat <SPACE.ASTER>
 
-	Quest1 <*:LocalQuest 5>
+	Quest1 <*:LocalQuest>
 
 	ClubMap
 
@@ -1817,7 +1817,7 @@ Scene 0 3
 	desig <CSNSP>
 	context <spc>
 
-	Quest1 <*:LocalQuest 5>
+	Quest1 <*:LocalQuest>
 
 	start <if= V1 0 else GoSecondTime V= 1 1 Alert 1 Print 2>
 	GoSecondTime <Print 2>
@@ -2168,7 +2168,7 @@ sub
 			NPC Knight
 			name <Gordon Valeus>
 			job <Lord Master>
-			quest <*:NPCQuest 10>
+			quest <*:NPCQuest>
 			SetTeam 3
 			SetFaction 3
 			EquipChar 50000

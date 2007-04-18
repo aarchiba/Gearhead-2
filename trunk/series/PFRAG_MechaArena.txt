@@ -69,7 +69,7 @@ Msg%id%01 <That's too bad. Come back later if you change your mind.>
 
 Persona
 requires <*StartArenaBattle>
-START <NewChat Say %id%01  Goto %2%>
+START <EndChat Say %id%01  Goto %2%>
 Msg%id%01 <Good luck out there. Come back here if you win and I'll give you a prize.>
 
 

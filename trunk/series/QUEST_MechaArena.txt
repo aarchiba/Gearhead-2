@@ -22,10 +22,12 @@ Content
 	Team1 <Citizens>
 	TeamData1 <Pass Ally>
 
-	Scene2 <New *Arena>
+	Scene2 <New *Arena_PrivateersArena>
 
 	Element3 <Prefab>
 	Scene3 <Environs>
+
+	Quest1 <*:MECHA_ARENA_CHALLENGE #22 1 2>
 
 	sub
 		Persona 1
@@ -40,21 +42,56 @@ Content
 		GoResetArena <ResetArena %2%>
 
 		*GoArenaFull <*ArenaIsFull %2%>
-		*GoArenaBusy <*ArenaIsBusy %2%>
+		GoArenaBusy <if= QuestStatus %qid% -1 else GoReallyBusy Goto GoSkillTraining>
+		*GoReallyBusy <*ArenaIsBusy %2%>
 
 		*GoChooseBattle <*StartArenaBattle %2% GoStartFight>
-		GoStartFight <SavePos PrepArena %2% 100 >
+		GoStartFight <SavePos PrepArena %2% 100 Jump %2%>
 		*GoRefuseBattle <*RefuseArenaFight %2%>
 
-		GoPreQuest <NewChat Say 1 Goto GoStartQuest>
 		GoStartQuest <SetQuestStatus %qid% %id% SetArenaThreat %2% 10>
 
-		GoOfferFight <>
-		GoBigWin <>
+		GoOfferFight <NewChat Say 1 AddChat 1 AddChat 2 AddChat 3>
+		GoBigWin <NewChat Say 4 History 5 XPV 500 SetQuestStatus %qid% -1 AddChat 4  CashPrize Reward Threat ArenaThreat %1% 100 100 Goto GoResetArena>
+		GoSkillTraining <NewChat Say 6 AddChat 5>
+		*GoPreQuest <*NiceToMeetYou Goto GoArenaIntro>
+		GoArenaIntro <NewChat Say 7 AddChat 6 AddChat 7 AddCHat 8>
 
+		result1 <Goto GoChooseBattle>
+		result2 <Goto GoRefuseBattle>
+		result3 <EndChat Say 2 School .skills Say 3>
+		.skills <1 2 3 4 5 6 7 8 9 10 12 17 18 42>
+		result4 <Goto result3>
+		result5 <Goto result3>
+		result6 <NewChat Say 8 AddChat 1 AddChat 2 Goto GoStartQuest>
+		result7 <NewChat Say 9 AddCheerful -1 Goto GoStartQuest>
+		result8 <NewChat Say 10 AddChat 9 AddChat 10 AddLawful 1 AddEasygoing d4 AddRenown -1 Goto GoStartQuest>
+		result9 <Goto result6>
+		result10 <Goto GoRefuseBattle>
 
+		Msg1 <Good to see you again. Are you ready to take part in today's fight?>
+		Msg2 <There's more than one path to success in the arena. Choose a strategy and train accordingly.>
+		Msg3 <The real test will come on the battlefield.>
+		Msg4 <You did it! Congratulations, you are now the champion of the Privateer Arena! In recognition of this feat, I'll give you something more valuable than a prize: the chance to learn from my years of combat experience.>
+		Msg5 <You were crowned champion at the Privateer Arena.>
+		Msg6 <There's no battle going on right now, but I can teach you about combat if you'd like.>
+		Msg7 <Hey, would you like to test your mettle in real combat? Some of the pirates around here run dueling matches just outside the spinner, in the shadow of the solar arrays. If you'd like to take part there's a cash prize for whoever wins.>
+		Msg8 <There's a match ready to go right now. Would you like to take part, or will you be back later?>
+		Msg9 <Come on back when you're feeling braver.>
+		Msg10 <It's technically illegal, but the police have better things to worry about than a few pilots having a bit of fun. Sure people get hurt sometimes but everyone knew what they were getting into. What do you say?>
 
-		Msg1 <This is a test. Come talk to me again to check the mainline arena code.>
+		Prompt1 <I'm ready to battle.>
+		CPrompt1 <ifChatNPCInPlay Accept>
+		Prompt2 <Maybe some other time.>
+		Prompt3 <I'd like to train my skills.>
+		CPrompt3 <if= QuestStatus %qid% -1 Accept>
+		Prompt4 <Let's start training right now.>
+		Prompt5 <Let's do that.>
+		Prompt6 <I'd like that very much.>
+		Prompt7 <No thanks, I'd rather live.>
+		Prompt8 <Isn't that illegal?>
+		Prompt9 <Alright, I could give it a try.>
+		Prompt10 <Sorry, that's not my thing.>
 
 	end
 	inv
@@ -79,3 +116,20 @@ Content
 		name <Privateer's Arena>
 		desig <ENTRANCE %s2%>
 	end
+
+%%
+%% *:MECHA_ARENA_CHALLENGE
+%%	Contains a rival arena pilot
+%%
+%%  PARAM1: The Arena Manager
+%%  PARAM2: The Arena Itself
+%%
+%% The persona for the arena manager must contain a .%id%_Init script, to be called
+%% when the PC reaches this particular rung of the arena ladder.
+
+Content
+
+
+
+
+

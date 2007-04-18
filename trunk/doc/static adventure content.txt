@@ -81,10 +81,14 @@ the content insertion fails.
 
 QUEST REQUEST
 
-   [Quest Type] [Quest Complexity]
+   [Quest Type] [Quest Threat Rating]
 
 A character can request one quest. A scene can request as many as wanted.
 Contained in a "QUEST" string attribute of a scene.
+
+If the Quest Threat Rating is omitted or 0, a default difficulcy rating will
+be calculated based on the location of the quest relative to the PC's starting
+point.
 
 Must contain a content type preceded by a *.
 
@@ -100,7 +104,12 @@ The context for the content request includes the following:
 
 QUEST REQUEST FROM A QUEST
 
+[ Content Type ] [#threat] [E1] [E2] ...
+
 Starts with the content type.
+
+Next is an optional threat value override. If a number preceded by a hash is included,
+this overrides the current difficulcy rating of this quest thread.
 
 Next, a list of element IDs to be passed from the current fragment to the next.
 Note that only 9 parameters can be passed, despite the fact that a plot may have
