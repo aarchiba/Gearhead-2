@@ -1,5 +1,21 @@
 % Persona Fragment File
 
+% TYPE: *IConcedeDefeat
+%                      &Battle	The victory was in battle
+%	The PC has defeated the NPC somehow, in battle or otherwise. The NPC
+%	will now concede.
+
+Persona
+requires <*IConcedeDefeat>
+START <NewChat Say %id%01>
+Msg%id%01 <You win. I concede defeat.>
+
+Persona
+requires <*IConcedeDefeat &Battle>
+START <NewChat Say %id%01>
+Msg%id%01 <You won that fight. I concede defeat.>
+
+
 
 % TYPE: *InsultContest
 %	The NPC will insult the PC. The PC then gets a chance to respond.

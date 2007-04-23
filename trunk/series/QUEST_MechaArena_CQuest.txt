@@ -1,0 +1,28 @@
+%%
+%% *CHALLENGER_SUBQUEST
+%%	Contains a subquest activated after defeating a mecha arena challenger.
+%%	This can be an extravagant new adventure, or a pithy closing sequence.
+%%
+%%	The ID for this subquest must be set by the parent quest.
+%%
+%%  PARAM1: The Challenger
+%%
+
+Content
+	name <Friendship>
+	% The challenger will likely become friends with the PC.
+	requires <*CHALLENGER_SUBQUEST>
+	special <REUSABLE>
+
+	% E1 is the challenger
+sub
+	Persona 1
+	greeting <if= QuestID %qid% %id% else %pop% SetQuestStatus %qid% -1 ifG React d20 else .%id%_GoFail PCFriend ChatNPCID NewChat Say %id%01>
+	*.%id%_GoFail <*IConcedeDefeat&Battle>
+	Msg%id%01 <That was a great battle. Maybe we'll see each other again, next time away from the battlefield.>
+end
+
+
+
+
+

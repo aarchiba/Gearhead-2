@@ -4,6 +4,18 @@
 %%	This file contains persona fragments needed by the mecha arenas.
 %%	Mostly this is for the managers.
 
+%% TYPE: *YourChallengerDied
+%%	The challenger the PC was supposed to fight has died, making that fight impossible.
+%%	This pfrag will instead set up a generic encounter at the arena, and cancel the
+%%	challenger quest. The PC will be jumped directly to the arena.
+%%  PARAM1: ID of the arena
+%%  PARAM2: QID of subquest
+
+Persona
+requires <*YourChallengerDied>
+START <NewChat Say %id%01 SavePos PrepArena %1% 150 Jump %1% SetQuestStatus %2% -2>
+Msg%id%01 <You were supposed to face a special opponent, but that's not going to happen. Instead you'll just have a regular fight... Come talk to me when you're done.>
+
 %% TYPE: *MeetMeAtArena
 %%	The NPC will meet the PC at the arena for a big fight.
 %%  PARAM1: ID of the arena

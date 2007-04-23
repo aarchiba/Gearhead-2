@@ -34,13 +34,10 @@ Scene 0 2
 	MapWidth 50
 	MapHeight 50
 	terrain <SPACE>
-	special <ShowAll>
+	type <Arena>
+	special <SHOWALL SOLO ARENA>
 	MapWidth 50
 	MapHeight 50
-
-	type <Arena>
-	special <SOLO ARENA>
-	terrain <GROUND>
 
 	start <if= SelfArenaState NAV_AS_Ready else GoCheckBattle          Alert 1 Print 1  SetSelfArenaState NAV_AS_Battle SetSelfArenaRecharge if# SelfChallengerID 0 Print 4 ForceChat SelfChallengerID>
 	GoCheckBattle <if= SelfArenaState NAV_AS_Battle else GoBoringStart Print 2>
@@ -85,7 +82,7 @@ Scene 0 2
 	MapHeight 50
 
 	type <Arena>
-	special <SOLO ARENA>
+	special <SHOWALL SOLO ARENA>
 	terrain <GROUND>
 
 	start <if= SelfArenaState NAV_AS_Ready else GoCheckBattle          Alert 1 Print 1  SetSelfArenaState NAV_AS_Battle SetSelfArenaRecharge if# SelfChallengerID 0 Print 4 ForceChat SelfChallengerID>
