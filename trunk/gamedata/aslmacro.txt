@@ -228,11 +228,13 @@ LoseArenaMission <Return ArenaRep -5>
 IfPCHasSkill <GrabPCPilot ifGHasSkill ?>
 IfPCHasPerformance <GrabPCPilot ifGHasSkill 35>
 SetSelfArenaState <GrabCurrentScene GSetNAtt NAG_ArenaData NAS_ArenaState ?>
-AddSelfArenaWin <GrabCurrentScene GSetNAtt NAG_ArenaData NAS_ArenaWins 1>
-AddSelfArenaThreat <GrabCurrentScene GSetNAtt NAG_ArenaData NAS_ArenaThreat ?>
+AddSelfArenaWin <GrabCurrentScene GAddNAtt NAG_ArenaData NAS_ArenaWins 1>
+AddSelfArenaThreat <GrabCurrentScene GAddNAtt NAG_ArenaData NAS_ArenaThreat ?>
 SetArenaThreat <GrabScene ? GSetNAtt NAG_ArenaData NAS_ArenaThreat ?>
 ClearSelfChallengerID <GrabCurrentScene GSetNAtt NAG_ArenaData NAS_ChallengerID 0>
 SetSelfArenaRecharge <GrabCurrentScene GSetNAtt NAG_ArenaData NAS_ArenaRecharge ComTime GAddNAtt NAG_ArenaData NAS_ArenaRecharge 85000>
 ResetArena <GrabScene ? GSetNAtt NAG_ArenaData NAS_ArenaState NAV_AS_Vacant>
 PrepArena <GrabScene ? GSetNAtt NAG_ArenaData NAS_ArenaState NAV_AS_Ready GSetNAtt NAG_ArenaData NAS_ArenaForces ?>
+SetChallengerID <GrabScene ? GSetNAtt NAG_ArenaData NAS_ChallengerID ?>
+SetChallengerHome <GrabScene ? GSetNAtt NAG_ArenaData NAS_ChallengerHome ?>
 Jump <Exit ? GrabScene ! GSetNAtt NAG_Narrative NAS_ReturnTo SceneID>

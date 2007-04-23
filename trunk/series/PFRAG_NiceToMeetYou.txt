@@ -296,6 +296,30 @@
 	Prompt%id%03_1 <Er... yeah.>
 	Prompt%id%03_2 <Um... whatever.>
 
+	Persona
+	requires <*NiceToMeetYou "PDASS">
+	Start <ifCHatNPCUnknown else %1% NewChat Say %id%01 AddChat %id%01 AddChat %id%02>
+	result%id%01 <NewChat Say %id%02 AddChat %id%03 AddEasygoing -d4 FacXP+ 5 1>
+	result%id%02 <NewChat Say %id%03 AddChat %id%03 AddEasygoing d10>
+	result%id%03 <Goto %1%>
+	Msg%id%01 <You look like a cavalier. Are you here to challenge me?>
+	Msg%id%01_1 <>
+	CMsg%id%01_1 <ifNPCSociable Accept>
+	Msg%id%01_2 <Did you come here to challenge me?>
+	CMsg%id%01_2 <ifNPCShy Accept>
+	Msg%id%01_3 <>
+	CMsg%id%01_3 <ifNPCEasygoing Accept>
+	Msg%id%01_4 <>
+	CMsg%id%01_4 <ifNPCPassionate Accept>
+	Msg%id%01_5 <>
+	CMsg%id%01_5 <ifNPCCheerful Accept>
+	Msg%id%01_6 <>
+	CMsg%id%01_6 <ifNPCMelancholy Accept>
+	Msg%id%02 <That's too bad, my mecha's in the shop. Maybe we can try that later, though.>
+	Msg%id%03 <That's too bad, I could use some target practice. Maybe later.>
+	Prompt%id%01 <Yes, I am.>
+	Prompt%id%02 <Uh, no, I'm not...>
+	Prompt%id%03 <Uh-huh.>
 
 	Persona
 	requires <*NiceToMeetYou "PDASS" ~Ego>

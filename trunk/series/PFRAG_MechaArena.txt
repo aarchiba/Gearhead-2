@@ -4,6 +4,40 @@
 %%	This file contains persona fragments needed by the mecha arenas.
 %%	Mostly this is for the managers.
 
+%% TYPE: *MeetMeAtArena
+%%	The NPC will meet the PC at the arena for a big fight.
+%%  PARAM1: ID of the arena
+%%  PARAM2: Exit label
+
+Persona
+requires <*MeetMeAtArena>
+START <EndChat Say %id%01 Goto %2%>
+Msg%id%01 <Meet me at the arena. We'll find out who the superior pilot is.>
+
+
+%% TYPE: *ChallengeMeLater
+%%	The PC can't challenge this NPC again so soon; maybe in 24 hours.
+
+Persona
+requires <*ChallengeMeLater>
+START <NewChat Say %id%01>
+Msg%id%01 <Come back tomorrow and you can challenge me again.>
+
+
+%% TYPE: *ChallengeArenaWin
+%%	The PC has won against a NPC challenger. Give some money
+%%  PARAM1: CID of the challenger. Be careful, he may be dead.
+%%  PARAM2: ID of the arena, needed for calculating the cash prize
+%%  PARAM3: Arena reset exit label; called when the prize is given
+
+Persona
+requires <*ChallengeArenaWin>
+START <NewChat Say %id%01 CashPrize Reward Threat ArenaThreat %2% 100 150 Goto %3%>
+Msg%id%01_10 <Good job. Come back tomorrow for another fight.>
+CMsg%id%01_10 <ifNPCDead %1% Accept>
+Msg%id%01_20 <Good job against \PERSONA %1% . Come back tomorrow for another fight.>
+CMsg%id%01_20 <ifNPCOK %1% Accept>
+
 
 %% TYPE: *BasicArenaWin
 %%	The PC has won a non-championship match. Give some money

@@ -711,6 +711,7 @@ var
 		LID := NewLID();
 
 		{ Maybe increase the threat level. }
+		DeleteWhiteSpace( ConReq );
 		if ( ConReq <> '' ) and ( ConReq[1] = '#' ) then begin
 			DeleteFirstChar( ConReq );
 			T := ExtractValue( ConReq );
