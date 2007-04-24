@@ -29,9 +29,7 @@ Content
 sub
 	Persona 1
 	Greeting <if= QuestStatus %qid% %id% else %pop%  if= ArenaState %2% NAV_AS_Win else .%id%_GoCheckLoss Goto .%id%_GoArenaWin>
-	.%id%_GoCheckLoss <if= ArenaState %2% NAV_AS_Loss else .%id%_GoCheckAnything NewChat Say %id%06 ResetArena %2%>
-	.%id%_GoCheckAnything <if# ArenaState %2% NAV_AS_Vacant else .%id%_GoCheckEligibility NewChat Say %id%04>
-	.%id%_GoCheckEligibility <ifNPCOK %3% else .%id%_GoNPCDied NewChat Say %id%05>
+	*.%id%_GoCheckLoss <*ChallengerStatusReport %3% %2% .%id%_GoNPCDied>
 	.%id%_GoInit <ifNPCOK %3% else .%id%_GoNPCDied NewChat Say %id%01 SetQuestStatus %qid% %id%  NPCSubQMemo %3% %id% %id%02>
 	%% Just in case the NPC who we're supposed to fight has died somehow, just set up a normal fight.
 	*.%id%_GoNPCDied <*YourChallengerDied %2% %qid%>
@@ -39,9 +37,6 @@ sub
 	.%id%_GoConclude <ResetArena %2% SetQuestStatus %qid% %id1%>
 	Msg%id%01 <For the next battle, you'll be facing %name3%. You can find \OPR %3% in \SCENE %s3% .>
 	Msg%id%02 <%name1% sent you to battle %name3% in arena combat; \SPR %3% can be found in \SCENE %s3% .>
-	Msg%id%04 <You're supposed to fight %name3% in the arena. Get over there and do something!>
-	Msg%id%05 <You can't advance in the competition until after you defeat %name3%.>
-	Msg%id%06 <%name3% defeated you in the arena. Try challenging \OPR %3% again later; you can't advance in the competition until you defeat \OPR %3% .>
 
 	Persona 3
 	Greeting <if= QuestStatus %qid% %id% else GoNoMatch  if= ArenaState %2% NAV_AS_Battle else GoCheckStatus Goto GoTrashTalk>
@@ -56,12 +51,11 @@ sub
 	*GoChat <*MISC_CHATTER>
 	GoStartCombat <SetChallengerID %2% %3% SetChallengerHome %2% %s3% MoveNPC %3% %2% PrepArena %2% 0 SetNPCTeam %3% 2>
 	*result1 <*MeetMeAtArena %2% GoStartCombat>
-	result2 <NewChat Say 5>
+	*result2 <*RejectChallenge>
 	Msg1 <I'm waiting for you at the arena. Hurry up and get over here.>
 	Msg2 <You beat me. You better go talk with %name1% about the reward.>
 	Msg3 <Too bad about what happened to %name1%... I guess there's not going to be any more fights until we get a new arena manager.>
 	Msg4 <Are you here to challenge me?>
-	Msg5 <Come back when you're ready, then.>
 	Prompt1 <That's right.>
 	Prompt2 <Not right now; we can fight later.>
 end
@@ -75,65 +69,94 @@ end
 
 
 Content
-	name <vs. Hammel>
+	name <PC vs. Hammel>
 	requires <*:MECHA_ARENA_CHALLENGE (!Ne|!Lo)>
 
 	% E1 is the arena manager
 	% E2 is the arena proper
 	% E3 is the challenger
+	% E4 is his sister
 	Element3 <Prefab>
 	Scene3 <Building Public>
 	Team3 <Citizens>
 	TeamData3 <Ally Pass>
 
-	Quest1 <*CHALLENGER_SUBQUEST 3>
+	Element4 <Prefab>
+	Scene4 <Grab 3>
+	Team4 <Citizens>
+	TeamData4 <Ally Pass>
+
+	Quest1 <*ProveMyself 3>
 
 sub
 	Persona 1
 	Greeting <if= QuestStatus %qid% %id% else %pop%  if= ArenaState %2% NAV_AS_Win else .%id%_GoCheckLoss Goto .%id%_GoArenaWin>
-	.%id%_GoCheckLoss <if= ArenaState %2% NAV_AS_Loss else .%id%_GoCheckAnything NewChat Say %id%06 ResetArena %2%>
-	.%id%_GoCheckAnything <if# ArenaState %2% NAV_AS_Vacant else .%id%_GoCheckEligibility NewChat Say %id%04>
-	.%id%_GoCheckEligibility <ifNPCOK %3% else .%id%_GoNPCDied NewChat Say %id%05>
-	.%id%_GoInit <ifNPCOK %3% else .%id%_GoNPCDied NewChat Say %id%01 SetQuestStatus %qid% %id%  NPCSubQMemo %3% %id% %id%02>
+	*.%id%_GoCheckLoss <*ChallengerStatusReport %3% %2% .%id%_GoNPCDied>
+	.%id%_GoInit <ifNPCOK %3% else .%id%_GoNPCDied NewChat Say %id%01 SetQuestStatus %qid% %id%  NPCSubQMemo %3% %id% %id%02 AddChat %id%01>
 	%% Just in case the NPC who we're supposed to fight has died somehow, just set up a normal fight.
 	*.%id%_GoNPCDied <*YourChallengerDied %2% %qid%>
 	*.%id%_GoArenaWin <*ChallengeArenaWin %3% %2% .%id%_GoConclude>
 	.%id%_GoConclude <ResetArena %2% SetQuestStatus %qid% %id1%>
-	Msg%id%01 <For the next battle, you'll be facing %name3%. You can find \OPR %3% in \SCENE %s3% .>
-	Msg%id%02 <%name1% sent you to battle %name3% in arena combat; \SPR %3% can be found in \SCENE %s3% .>
-	Msg%id%04 <You're supposed to fight %name3% in the arena. Get over there and do something!>
-	Msg%id%05 <You can't advance in the competition until after you defeat %name3%.>
-	Msg%id%06 <%name3% defeated you in the arena. Try challenging \OPR %3% again later; you can't advance in the competition until you defeat \OPR %3% .>
+	result%id%01 <NewChat Say %id%03>
+	Msg%id%01 <For the next battle, you'll be facing a young pilot named %name3%. You can find him in \SCENE %s3% .>
+	Msg%id%02 <%name1% sent you to battle Hammel in arena combat; \SPR %3% can be found in \SCENE %s3% .>
+	Msg%id%03 <Not much. Hammel is a new pilot, just starting out. He has a lot of promise but not very much experience yet.>
+	Prompt%id%01 <What can you tell me about him?>
 
 	Persona 3
+	% V1 = Have spoken about challenge once already
 	Greeting <if= QuestStatus %qid% %id% else GoNoMatch  if= ArenaState %2% NAV_AS_Battle else GoCheckStatus Goto GoTrashTalk>
 	*GoTrashTalk <*ArenaChallenge GoThemeInfo>
 	*GoThemeInfo <*THEME_EXPO&Enemy NA>
 	GoCheckStatus <if= ArenaState %2% NAV_AS_Ready else GoCheckWin EndChat Say 1>
 	GoCheckWin <if= ArenaState %2% NAV_AS_Win else GoCheckChallenge ifNPCOK %1% else GoManagerDied NewChat Say 2>
 	GoManagerDied <NewChat Say %3% SetQuestStatus %qid% -1 ResetArena %2%>
-	GoCheckChallenge <ResetArena %2% ifG ComTime ArenaRecharge %2% else GoLater NewChat Say 4 AddChat 1 AddChat 2>
+	GoCheckChallenge <ResetArena %2% ifG ComTime ArenaRecharge %2% else GoLater NewChat if= V1 1 else GoFirstTime Say 4 AddChat 1 AddChat 2>
 	*GoLater <*ChallengeMeLater>
 	*GoNoMatch <*NiceToMeetYou GoChat>
 	*GoChat <*MISC_CHATTER>
 	GoStartCombat <SetChallengerID %2% %3% SetChallengerHome %2% %s3% MoveNPC %3% %2% PrepArena %2% 0 SetNPCTeam %3% 2>
+	GoFirstTime <NewChat Say 5 V= 1 1 AddChat 3 AddChat 4 AddChat 5>
 	*result1 <*MeetMeAtArena %2% GoStartCombat>
-	result2 <NewChat Say 5>
+	*result2 <*RejectChallenge>
+	result3 <NewChat Say 6 AddChat 1 AddChat 2>
+	result4 <AddEasygoing -d10 AddReact -d10 Goto result3>
+	result5 <AddCheerful d10  Goto result3>
 	Msg1 <I'm waiting for you at the arena. Hurry up and get over here.>
 	Msg2 <You beat me. You better go talk with %name1% about the reward.>
 	Msg3 <Too bad about what happened to %name1%... I guess there's not going to be any more fights until we get a new arena manager.>
-	Msg4 <Are you here to challenge me?>
-	Msg5 <Come back when you're ready, then.>
-	Prompt1 <That's right.>
-	Prompt2 <Not right now; we can fight later.>
+	Msg4 <Are you ready to fight me now?>
+	Msg5_1 <Are you the guy they sent to challenge me? Wow, I mean, I've heard of you before. It's an honor to be paired against such an accomplished mecha pilot.>
+	CMsg5_1 <ifG PCRenown 20 Accept>
+	Msg5_2 <So, you're the one they sent to challenge me, huh? That's cool.>
+	CMsg5_2 <ifG 21 PCRenown Accept>
+	Msg6 <Great. Um... do you have to get your gear ready, or should we go to the arena right now?>
+	Prompt1 <Let's do it.>
+	Prompt2 <No, not right now.>
+	Prompt3 <Shall we get started?>
+	Prompt4 <It will be my pleasure to defeat you.>
+	Prompt5 <I've heard good things about you.>
+
+	Persona 4
+	rumor%id1% <Lehya is worried about her brother Hammel.>
+	greeting <>
 end
-inv	NPC Mecha Pilot
+inv
+	NPC Mecha Pilot
 	name <Hammel>
 	SetFaction 5
 	EquipChar 10000
-	Chardesc Cheerful Sociable Passionate Heroic
+	Chardesc Male Cheerful Passionate Heroic
 	Age -3
 	SDL_PORTRAIT <por_m_lightjacket(Y--).png>
 	SDL_COLORS <136 141 101 245 213 160 77 35 101>
+
+	NPC Citizen
+	name <Lehya>
+	CharDesc Female Cheerful Easygoing Heroic
+	Age -1
+	SDL_PORTRAIT <por_f_smart(-P-).png>
+	SDL_COLORS <136 141 101 245 213 160 60 25 81>
+
 end
 

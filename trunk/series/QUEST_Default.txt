@@ -7,6 +7,21 @@
 %%
 
 %%
+%% *ProveMyself Content
+%%
+%% The key NPC needs to prove himself, somehow. This may be to make up for
+%% some past deed, as a rite of passage, or whatever. In any case the deed
+%% done will be risky.
+%%
+%% To start this subquest, the calling quest should set the QuestID.
+%%
+%% PARAM1: The NPC who will be doing the proving.
+
+Content
+	name <Prove Myself Vs Pirates>
+	requires <*ProveMyself>
+
+%%
 %% *:StolenMaterials Content
 %%		&ConstructionSite = The materials stolen from a construction site
 %%

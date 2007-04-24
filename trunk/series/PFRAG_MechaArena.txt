@@ -4,6 +4,32 @@
 %%	This file contains persona fragments needed by the mecha arenas.
 %%	Mostly this is for the managers.
 
+%% TYPE: *RejectChallenge
+%%	The PC has told the NPC that he isn't ready to fight yet. The NPC will reply.
+
+	Persona
+	requires <*RejectChallenge>
+	START <NewChat Say %id%01>
+	Msg%id%01 <Come back when you're ready, then.>
+
+%% TYPE: *ChallengerStatusReport
+%%	The PC is supposed to fight NPC1; the arena manager will tell him the current status
+%%	of things. This procedure checks for lost battles, proceeding battles, and the death
+%%	of the NPC.
+%%  PARAM1: CID of the challenger
+%%  PARAM2: ID of the arena
+%%  PARAM3: Challenger died exit label
+
+	Persona
+	requires <*ChallengerStatusReport>
+	START <if= ArenaState %2% NAV_AS_Loss else .%id%_GoCheckAnything NewChat Say %id%01 ResetArena %2%>
+	.%id%_GoCheckAnything <if# ArenaState %2% NAV_AS_Vacant else .%id%_GoCheckEligibility NewChat Say %id%02>
+	.%id%_GoCheckEligibility <ifNPCOK %1% else %3% NewChat Say %id%03>
+	Msg%id%01 <\PERSONA %1% defeated you in the arena. Try challenging \OPR %1% again later; you can't advance in the competition until you defeat \OPR %1% .>
+	Msg%id%02 <You're supposed to fight \PERSONA %1% in the arena. Get over there and do something!>
+	Msg%id%03 <You can't advance in the competition until after you defeat \PERSONA %1% .>
+
+
 %% TYPE: *YourChallengerDied
 %%	The challenger the PC was supposed to fight has died, making that fight impossible.
 %%	This pfrag will instead set up a generic encounter at the arena, and cancel the
@@ -11,29 +37,29 @@
 %%  PARAM1: ID of the arena
 %%  PARAM2: QID of subquest
 
-Persona
-requires <*YourChallengerDied>
-START <NewChat Say %id%01 SavePos PrepArena %1% 150 Jump %1% SetQuestStatus %2% -2>
-Msg%id%01 <You were supposed to face a special opponent, but that's not going to happen. Instead you'll just have a regular fight... Come talk to me when you're done.>
+	Persona
+	requires <*YourChallengerDied>
+	START <NewChat Say %id%01 SavePos PrepArena %1% 150 Jump %1% SetQuestStatus %2% -2>
+	Msg%id%01 <You were supposed to face a special opponent, but that's not going to happen. Instead you'll just have a regular fight... Come talk to me when you're done.>
 
 %% TYPE: *MeetMeAtArena
 %%	The NPC will meet the PC at the arena for a big fight.
 %%  PARAM1: ID of the arena
 %%  PARAM2: Exit label
 
-Persona
-requires <*MeetMeAtArena>
-START <EndChat Say %id%01 Goto %2%>
-Msg%id%01 <Meet me at the arena. We'll find out who the superior pilot is.>
+	Persona
+	requires <*MeetMeAtArena>
+	START <EndChat Say %id%01 Goto %2%>
+	Msg%id%01 <Meet me at the arena. We'll find out who the superior pilot is.>
 
 
 %% TYPE: *ChallengeMeLater
 %%	The PC can't challenge this NPC again so soon; maybe in 24 hours.
 
-Persona
-requires <*ChallengeMeLater>
-START <NewChat Say %id%01>
-Msg%id%01 <Come back tomorrow and you can challenge me again.>
+	Persona
+	requires <*ChallengeMeLater>
+	START <NewChat Say %id%01>
+	Msg%id%01 <Come back tomorrow and you can challenge me again.>
 
 
 %% TYPE: *ChallengeArenaWin
@@ -42,13 +68,13 @@ Msg%id%01 <Come back tomorrow and you can challenge me again.>
 %%  PARAM2: ID of the arena, needed for calculating the cash prize
 %%  PARAM3: Arena reset exit label; called when the prize is given
 
-Persona
-requires <*ChallengeArenaWin>
-START <NewChat Say %id%01 CashPrize Reward Threat ArenaThreat %2% 100 150 Goto %3%>
-Msg%id%01_10 <Good job. Come back tomorrow for another fight.>
-CMsg%id%01_10 <ifNPCDead %1% Accept>
-Msg%id%01_20 <Good job against \PERSONA %1% . Come back tomorrow for another fight.>
-CMsg%id%01_20 <ifNPCOK %1% Accept>
+	Persona
+	requires <*ChallengeArenaWin>
+	START <NewChat Say %id%01 CashPrize Reward Threat ArenaThreat %2% 100 150 Goto %3%>
+	Msg%id%01_10 <Good job. Come back tomorrow for another fight.>
+	CMsg%id%01_10 <ifNPCDead %1% Accept>
+	Msg%id%01_20 <Good job against \PERSONA %1% . Come back tomorrow for another fight.>
+	CMsg%id%01_20 <ifNPCOK %1% Accept>
 
 
 %% TYPE: *BasicArenaWin
@@ -56,10 +82,10 @@ CMsg%id%01_20 <ifNPCOK %1% Accept>
 %%  PARAM1: ID of the arena, needed for calculating the cash prize
 %%  PARAM2: Arena reset exit label; called when the prize is given
 
-Persona
-requires <*BasicArenaWin>
-START <NewChat Say %id%01 CashPrize Reward Threat ArenaThreat %1% 100 100 Goto %2%>
-Msg%id%01 <Good job. Come back tomorrow for another fight.>
+	Persona
+	requires <*BasicArenaWin>
+	START <NewChat Say %id%01 CashPrize Reward Threat ArenaThreat %1% 100 100 Goto %2%>
+	Msg%id%01 <Good job. Come back tomorrow for another fight.>
 
 
 
@@ -68,10 +94,10 @@ Msg%id%01 <Good job. Come back tomorrow for another fight.>
 %%  PARAM1: ID of the arena; might be needed, better include it anyway
 %%  PARAM2: Arena reset exit label
 
-Persona
-requires <*BasicArenaLoss>
-START <NewChat Say %id%01  Goto %2%>
-Msg%id%01 <You lost the match. Come back here tomorrow and try your luck again.>
+	Persona
+	requires <*BasicArenaLoss>
+	START <NewChat Say %id%01  Goto %2%>
+	Msg%id%01 <You lost the match. Come back here tomorrow and try your luck again.>
 
 
 
@@ -79,10 +105,10 @@ Msg%id%01 <You lost the match. Come back here tomorrow and try your luck again.>
 %%	There's no fight right now, but later there will be.
 %%  PARAM1: ID of the arena; might be needed, better include it anyway
 
-Persona
-requires <*ArenaIsBusy>
-START <NewChat Say %id%01>
-Msg%id%01 <There's no battle taking place right now. Come back tomorrow and there should be another match.>
+	Persona
+	requires <*ArenaIsBusy>
+	START <NewChat Say %id%01>
+	Msg%id%01 <There's no battle taking place right now. Come back tomorrow and there should be another match.>
 
 
 
@@ -90,10 +116,10 @@ Msg%id%01 <There's no battle taking place right now. Come back tomorrow and ther
 %%	The PC should be in the arena fighting right now.
 %%  PARAM1: ID of the arena; might be needed, better include it anyway
 
-Persona
-requires <*ArenaIsFull>
-START <NewChat Say %id%01>
-Msg%id%01 <What are you doing talking to me? Shouldn't you be fighting now?>
+	Persona
+	requires <*ArenaIsFull>
+	START <NewChat Say %id%01>
+	Msg%id%01 <What are you doing talking to me? Shouldn't you be fighting now?>
 
 
 
@@ -101,10 +127,10 @@ Msg%id%01 <What are you doing talking to me? Shouldn't you be fighting now?>
 %%	The PC doesn't want to fight right now.
 %%  PARAM1: ID of the arena; might be needed, better include it anyway
 
-Persona
-requires <*RefuseArenaFight>
-START <NewChat Say %id%01>
-Msg%id%01 <That's too bad. Come back later if you change your mind.>
+	Persona
+	requires <*RefuseArenaFight>
+	START <NewChat Say %id%01>
+	Msg%id%01 <That's too bad. Come back later if you change your mind.>
 
 
 
@@ -113,29 +139,10 @@ Msg%id%01 <That's too bad. Come back later if you change your mind.>
 %%  PARAM1: ID of the arena; might be needed, better include it anyway
 %%  PARAM2: Arena fight prep exit label
 
-Persona
-requires <*StartArenaBattle>
-START <EndChat Say %id%01  Goto %2%>
-Msg%id%01 <Good luck out there. Come back here if you win and I'll give you a prize.>
-
-
-
-
-
-%% TYPE: *OfferArenaBattle
-%%	The NPC will offer the PC a chance to fight at the arena.
-%%  PARAM1: Accept battle exit label (no message printed)
-%%  PARAM2: Refuse battle exit label (no message printed)
-
-Persona
-requires <*OfferArenaBattle>
-START <NewChat Say %id%01 AddChat %id%01 AddChat %id%02>
-Result%id%01 <Goto %1%>
-Result%id%02 <Goto %2%>
-Msg%id%01 <>
-Prompt%id%01 <>
-Prompt%id%02 <>
-
+	Persona
+	requires <*StartArenaBattle>
+	START <EndChat Say %id%01  Goto %2%>
+	Msg%id%01 <Good luck out there. Come back here if you win and I'll give you a prize.>
 
 
 
