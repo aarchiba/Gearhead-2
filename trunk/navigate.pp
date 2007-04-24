@@ -667,6 +667,12 @@ var
 		AddNewScene := NewScene;
 	end;
 
+	Function QuestIsReusable( Q: GearPtr ): Boolean;
+		{ Return TRUE if this quest is reusable, or FALSE otherwise. }
+	begin
+		QuestIsReusable := AStringHasBString( SAttValue( Q^.SA , 'SPECIAL' ) , 'REUSABLE' );
+	end;
+
 	Function AddQuestComponent( Scene,Prev: GearPtr; ConReq: String; Threat,BranchPoints: Integer; KeyScene,KeyGear: GearPtr ): GearPtr;
 		{ Attempt to add a new component to the tree based on the provided }
 		{ information. If installation succeeded, this function will return }
@@ -687,14 +693,14 @@ var
 	var
 		SContext,ComType,msg: String;
 		ShoppingList: NAttPtr;
-		C,C2,NewCom,SubQ,NewScene,Elem: GearPtr;
+		CPro,C,C2,NewCom,SubQ,NewScene,Elem: GearPtr;
 		SQBranches: Integer;	{ The highest branch points of a subquest/newscene }
 					{ not including successors. }
 		SQTotal: Integer;	{ As above, but including successors. }
 		QID,LID,T,N,SFaction: Integer;
 		Elem_ID,Elem_Scene: Array [1..Num_Plot_Elements] of LongInt;
 		Elem_Code: Array [1..Num_Plot_Elements] of Char;
-		InitOK,DoDebug: Boolean;
+		QInUse,InitOK,DoDebug: Boolean;
 	begin
 		{ Remove the ComType from the Content Request }
 		{ and combine it with the scene context. }
@@ -764,8 +770,8 @@ var
 		while ( NewCom = Nil ) and ( ShoppingList <> Nil ) do begin
 			{ Search through the list of components for one that }
 			{ matches our criteria. }
-			C2 := SelectComponentFromList( MasterList , ShoppingList );
-			C := CloneGear( C2 );
+			CPro := SelectComponentFromList( MasterList , ShoppingList );
+			C := CloneGear( CPro );
 
 			{ Right away, determine whether or not to use the debugging messages. }
 			DoDebug := GearName( C ) = 'DEBUG';
@@ -811,12 +817,19 @@ var
 			{ If the attempt to prepare this fragment fails it will be }
 			{ automatically deleted. Otherwise it will be installed as an InvCom }
 			{ of the adventure. }
-			InitOK := PrepareQuestFragment( Scene , C , DoDebug );
+			QInUse := NAttValue( C^.NA , NAG_QuestInfo , NAS_QuestUsed ) <> 0;
+			InitOK := ( not QInUse ) and PrepareQuestFragment( Scene , C , DoDebug );
 			if InitOK then begin
 				{ Set the QuestID and LayerID since these will be needed }
 				{ by subquests. }
 				SetNAtt( C^.NA , NAG_QuestInfo , NAS_QuestID , QID );
 				SetNAtt( C^.NA , NAG_QuestInfo , NAS_LayerID , LID );
+
+				{ Set this component as used, so we don't get any recursive }
+				{ looping of components. }
+				if not QuestIsReusable( C ) then begin
+					SetNAtt( CPro^.NA , NAG_QuestInfo , NAS_QuestUsed , 1 );
+				end;
 
 				{ Continue with the initialization. This component will only be }
 				{ successfully initialized if its sub-quests and complications }
@@ -831,8 +844,6 @@ var
 
 						{ Add the context for the associated element. }
 						Elem := SeekPlotElement( Adv , C , T , Nil );
-						if ( Elem <> Nil ) and ( Elem^.G = GG_Character ) then N := NAttValue( C2^.NA , NAG_Personal , NAS_CID )
-						else N := 0;
 						AddGearXRContext( Nil , Adv , Elem , msg , Bstr( T )[1] );
 						SFaction := GetFactionID( Elem );
 
@@ -930,7 +941,11 @@ var
 
 			if DoDebug and not InitOk then DialogMsg( 'Insertion of DEBUG fragment failed.' );
 
-			if InitOK then NewCom := C;
+			if InitOK then begin
+				NewCom := C;
+			end else if not QInUse then begin
+				SetNAtt( CPro^.NA , NAG_QuestInfo , NAS_QuestUsed , 0 );
+			end;
 		end;
 
 		{ Dispose of the list. }
@@ -1000,7 +1015,7 @@ var
 	begin
 		{ Unless this fragment is reusable, remove its prototype }
 		{ from the master list now. }
-		if not AStringHasBString( SAttValue( Frag^.SA , 'SPECIAL' ) , 'REUSABLE' ) then begin
+		if not QuestIsReusable( Frag ) then begin
 			E := SeekCurrentLevelGear( MasterList , Frag^.G , Frag^.S );
 			if E <> Nil then RemoveGear( MasterList , E )
 			else dialogmsg( 'WARNING: Quest fragment ' + GearName( Frag ) + ' used multiple times.' );
@@ -1374,6 +1389,14 @@ var
 
 			InsertComponent( Frag );
 			RemoveGear( LList , Frag );
+		end;
+
+		{ Finally, clear any "in use" components that didn't actually }
+		{ get used. }
+		Frag := MasterList;
+		while Frag <> Nil do begin
+			SetNAtt( Frag^.NA , NAG_QuestInfo , NAS_QuestUsed , 0 );
+			Frag := Frag^.Next;
 		end;
 	end;
 

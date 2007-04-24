@@ -55,6 +55,8 @@ Const
 	NAS_QEncActive = 5;
 	NAS_SceneKeyChara = 6;	{ Key character for this scene. }
 	NAS_GoalLevel = 7;	{ SceneID for the goal level of a dungeon. }
+	NAS_QuestUsed = 8;	{ If nonzero, this quest component is in use }
+				{ elsewhere in the quest construction tree. }
 
 	NAG_SubQuestQID = -10;
 	NAG_SubQuestLID = -11;
