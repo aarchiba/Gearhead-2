@@ -1,5 +1,14 @@
 % Persona Fragment File
 
+% TYPE: *IMustProveMyself
+%	The NPC feels that he/she must prove him/herself.
+%	This frament does not exit.
+
+	Persona
+	requires <*IMustProveMyself>
+	START <NewChat Say %id%01>
+	Msg%id%01 <I really need to prove myself. I can't stand the thought of being a loser for the rest of my life.>
+
 % TYPE: *IConcedeDefeat
 %                      &Battle	The victory was in battle
 %	The PC has defeated the NPC somehow, in battle or otherwise. The NPC

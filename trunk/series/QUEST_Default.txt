@@ -7,6 +7,35 @@
 %%
 
 %%
+%% *ThankYou Content
+%%
+%% The PC helped the NPC with something. Now the NPC will say thanks. This
+%% quest must end with a -1 result, though it can throw a subquest if you
+%% really want.
+%%
+%% The NPC's persona must have a .%id%_GoInit script, which sets the QuestStatus
+%% and maybe activates the subquest.
+%%
+%%  PARAM1: The NPC
+%%
+
+Content
+	name <Let's Be Friends>
+	% The NPC will become friends with the PC.
+	requires <*ThankYou>
+	special <REUSABLE>
+
+	% E1 is the NPC
+sub
+	Persona 1
+	.%id%_GoInit <NewChat Say %id%01 SetQuestStatus %qid% -1>
+	Msg%id%01 <Thanks for your help. I won't forget what you've done.>
+end
+
+
+
+
+%%
 %% *ProveMyself Content
 %%
 %% The key NPC needs to prove himself, somehow. This may be to make up for
@@ -14,12 +43,139 @@
 %% done will be risky.
 %%
 %% To start this subquest, the calling quest should set the QuestID.
+%% This quest should end with -1 if the NPC was successful, or -2 if not.
+%% It can farm out the QID-setting to a "topper" subquest, if needed.
 %%
 %% PARAM1: The NPC who will be doing the proving.
 
 Content
 	name <Prove Myself Vs Pirates>
-	requires <*ProveMyself>
+	requires <*ProveMyself Spinner -1:CRIHN>
+
+requires <*:DEBUG>
+element1 <Prefab>
+Scene1 <CavClub>
+Team1 <Citizens>
+
+	% E1 is the character who must prove himself.
+	% E2 is the character offering a bounty on pirates
+	% E3 is the pirate combat zone
+	% E4 is the entrance to the combat zone
+	% E5 is the black market unlocked by this quest
+	Element2 <Prefab>
+	Scene2 <Building Public>
+	Team2 <Citizens>
+	TeamData2 <Ally Pass>
+
+	Scene3 <New *BLANK.Space.Mecha>
+
+	Element4 <Prefab>
+	Scene4 <Space Environs>
+
+	Scene5 <New *BlackMarket>
+
+	Quest1 <*ThankYou 1>
+
+	sub
+		Persona 1
+		greeting <if= QuestStatus %qid% %id% else %pop% if= SceneVar %3% 1 2 else .%id%_GoCheckBattle NewChat Say %id%01 AddChat %id%01>
+greeting <if= QuestStatus %qid% %id% else GoStart if= SceneVar %3% 1 2 else .%id%_GoCheckBattle NewChat Say %id%01 AddChat %id%01>
+GoStart <SetQuestStatus %qid% %id% NewChat Say 1>
+Msg1 <Speak to me again to begin the quest.>
+		.%id%_GoCheckBattle <if= SceneVar %3% 1 1 else .%id%_GoCheckBusy EndChat Say %id%03 AddChat %id%02 AddChat %id%03>
+		.%id%_GoCheckBusy <if# SceneVar %3% 2 0 else .%id%_GoFirst NewChat Say %id%02>
+		*.%id%_GoFirst <*IMustProveMyself>
+		Result%id%01 <Goto .%id1%_GoInit>
+		*Result%id%02 <*LetsDefeatThem>
+		Result%id%03 <EndChat Say %id%04>
+		Msg%id%01 <We did it! I've survived a real mecha fight. I feel like I could take on the world!>
+		Msg%id%02 <I'm busy right now.>
+		Msg%id%03 <\PC ! Look, I've found the pirates that %name2% was looking for!>
+		Msg%id%04 <No way. I have to prove myself... if I leave now, will I be running forever?>
+		Prompt%id%01 <Don't get too excited.>
+		Prompt%id%02 <I'll help you out.>
+		Prompt%id%02_1 <I'll back you up.>
+		Prompt%id%03 <Get out of here; it's too dangerous.>
+
+		Persona 2
+		rumor%id% <%name2% needs a mecha pilot to fight some pirates.>
+		% This bounty hunter will give the PC a regular mission test, but it
+		% doesn't matter whether the PC passes or not: Merely talking to this
+		% character will set the plot into motion.
+		% V1 = Initialization Counter
+		% V2 = Have offered mission
+		greeting <if= V1 0 else GoGreet2 V= 1 1 MoveNPC %1% %3% SetNPCTeam %1% 3 SceneVar= %3% 2 1 SetQEncActive %4% Goto GoGreet2>
+		GoGreet2 <if= V2 1 else GoCheckOffer if= SceneVar %3% 1 2 else GoCheckLoss NewChat Say %id%01 CashPrize Reward Threat %threat% 100 100 V= 2 2>
+		GoCheckLoss <if= SceneVar %3% 1 3 else GoMissionReminder NewChat Say %id%02 V= 2 2>
+		GoMissionReminder <NewChat Say %id%03>
+		GoCheckOffer <if= SceneVar %3% 1 0 else GoAlreadyFought if= QuestStatus %qid% %id% else GoNoQuest Goto GoCheckAuto>
+		GoAlreadyFought <V= 2 2 Goto GoNoQuest>
+		*GoCheckAuto <*AutoMissionTest&Mecha GoMissionBriefing GoRejectMission GoCheckSkill na 8>
+		*GoCheckSkill <*GenericMissionTest&Mecha  GoMissionBriefing na GoRejectMission na 8>
+		*GoRejectMission <*RejectMission na>
+		GoMissionBriefing <NewChat Say %id%04 QMemo %qid% %id%05>
+		*GoNoQuest <*NiceToMeetYou GoChat>
+		*GoChat <*MISC_CHATTER>
+		Msg%id%01 <The pirates have been defeated. Here's the reward you earned.>
+		Msg%id%02 <You failed to defeat the pirates... now that they've moved camp, it's going to take ages to find them again.>
+		Msg%id%03 <There are pirates on the loose in \SCENE %s4% . I'm still waiting for someone to take me up on the reward.>
+		Msg%id%04 <There's a group of pirates hiding in \SCENE %s4% . If you could defeat them, there'd be a reward in it for you.>
+		Msg%id%05 <%name2% asked you to defeat some pirates in \SCENE %s4% .>
+
+		MetaScene 3
+		% V1 = Initialization Counter
+		% The first time the PC enters this scene, it should be for the battle.
+		% Otherwise nothing will happen.
+		%  1: Battle in progress
+		%  2: PC has won against pirates
+		%  3: PC has lost against pirates
+		% V2 = Trigger Set
+		% The NPC has been moved, everything should be ready for combat.
+		start <if= V1 0 else GoBeenBefore V= 1 1 ifNPCInPlay %1% ForceChat %1%>
+		GoBeenBefore <>
+		nu1 <if= t1 0 Return if= L1 1 L= 1 3 SetQuestStatus %qid% -2 Goto GoMoveNPC>
+		nu2 <if= t2 0 if= L1 1 L= 1 2 ifNPCInPlay %1% else GoNotInPlay  ForceChat %1% Goto GoMoveNPC>
+		GoNotInPlay <SetQuestStatus %qid% -2 Goto GoMoveNPC>
+		GoMoveNPC <ifNPCOK %1% MoveNPC %1% %s1%>
+		sub
+			Team 1
+			name <Player Team>
+			SetEnemy 2
+			SetAlly 3
+
+			Team 2
+			name <Enemy Team>
+			SetEnemy 1 3
+			SetFaction 8
+			Deploy <if= L1 0 WMecha 2 Threat %threat% 220>
+
+			Team 3
+			name <E3 Team>
+			SetAlly 1
+			SetEnemy 2
+		end
+		inv
+			stc DERELICT-1
+			name <Shady Microstation>
+			desig <Entrance %s5%>
+		end
+	end
+	inv
+NPC Bounty Hunter
+name <Marvin>
+
+		NPC Bounty Hunter
+		EquipChar 35000
+		CharDesc Lawful
+
+		STC QUEST-ENCOUNTER-WANDER
+		name <Red Rover Pirates>
+		desig <entrance %s3%>
+		% After fighting the pirates, this encounter becomes perminantly visible.
+		update <ifThisQEncActive else GoHide  SetStat STAT_MetaVisibility 0  if# SceneVar %3% 1 0 else GoSetOrders ShowEncounter Goto GoSetOrders>
+		%% This encounter will only attack before the PC fights the pirates
+		ATTACK <ifG StatVal STAT_MetaVisibility -1    ifG 1 SceneVar %3% 1   ifUStealth 15 else GoAutoAttack ifYesNo -3 -4 -5 else GoAvoidAttack Goto GoAutoAttack>
+	end
 
 %%
 %% *:StolenMaterials Content
