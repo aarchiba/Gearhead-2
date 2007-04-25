@@ -70,7 +70,7 @@ end
 
 Content
 	name <PC vs. Hammel>
-	requires <*:MECHA_ARENA_CHALLENGE (!Ne|!Lo)>
+	requires <*:MECHA_ARENA_CHALLENGE (!Ne|!Lo) L5PAT>
 
 	% E1 is the arena manager
 	% E2 is the arena proper
@@ -130,7 +130,7 @@ sub
 	CMsg5_1 <ifG PCRenown 20 Accept>
 	Msg5_2 <So, you're the one they sent to challenge me, huh? That's cool.>
 	CMsg5_2 <ifG 21 PCRenown Accept>
-	Msg6 <Great. Um... do you have to get your gear ready, or should we go to the arena right now?>
+	Msg6 <Great. Um... do you have to get your gear ready, or should we go to the arena right away?>
 	Prompt1 <Let's do it.>
 	Prompt2 <No, not right now.>
 	Prompt3 <Shall we get started?>
@@ -139,7 +139,37 @@ sub
 
 	Persona 4
 	rumor%id1% <Lehya is worried about her brother Hammel.>
-	greeting <>
+	% V1 = Have concluded the quest
+	% V2 = Have spoken about loss of confidence
+	greeting <if= V1 1 else GoCheckSuccess Goto GoMiscChat>
+	*GoMiscChat <*MISC_CHATTER>
+	GoCheckSuccess <if= QuestStatus %qid% -1 else GoCheckProof ifNPCOK %3% else GoCheckDeath NewChat Say 1 V= 1 1 PCFriend %4% XPV 50>
+	GoCheckProof <if= QuestStatus %qid% %id1% else GoCheckDeath if= V2 0 else GoRepeat NewChat Say 2 AddChat 1 AddChat 2 AddChat 3>
+	GoRepeat <NewChat Say 3>
+	GoCheckDeath <ifNPCDead %3% else GoGreet NewChat Say 9 V= 1 1>
+	*GoGreet <*NiceToMeetYou GoChat>
+	GoChat <NewChat Say 10>
+	result1 <NewChat V= 2 1 Say 4 AddChat 4 AddChat 5>
+	result2 <NewChat V= 2 1 Say 5 AddSociable -d4 AddReact -d4>
+	result3 <NewChat V= 2 1 Say 6 AddCheerful -d6 AddChat 4 AddChat 5>
+	result4 <NewChat Say 7>
+	result5 <NewChat Say 8 AddSociable -d10>
+	Msg1 <Thank you for helping my brother to find his spirit. I, too, feel like I don't have to worry any more.>
+	Msg2 <I'm worried about my brother, Hammel. Ever since you defeated him at the arena, he's lost his confidence. I know that he looks up to you as a fellow pilot... Could you help him regain his fighting spirit?>
+	Msg3 <I'm worried about my brother, Hammel. Ever since you defeated him at the arena, he's lost his confidence.>
+	Msg4 <I don't, but... It's what he feels he has to do. This feeling is killing him on the inside. I'd rather see him back in the arena than see him like this.>
+	Msg5 <I know, it's not your problem. I wasn't trying to blame you for it. Hammel has to learn how to accept the risks of what he does... he has to see that one setback doesn't make him a failure.>
+	Msg6 <I think that's true. Still, it would be easier if he had someone to talk with. He has to learn that one setback doesn't make him a failure.>
+	Msg7 <Thank you.>
+	Msg8 <You may be right...>
+	Msg9 <If only Hammel had listened to me, he could still be alive...>
+	Msg10 <My brother Hammel wants to be an arena champion. I want him to succeed, but I worry that he's going to get hurt.>
+	Prompt1 <I thought you didn't want him fighting...>
+	Prompt2 <I don't care about his problems.>
+	Prompt3 <Your brother just needs to grow up.>
+	Prompt4 <Alright, I'll speak with him.>
+	Prompt5 <He can work this out by himself.>
+
 end
 inv
 	NPC Mecha Pilot
@@ -147,16 +177,21 @@ inv
 	SetFaction 5
 	EquipChar 10000
 	Chardesc Male Cheerful Passionate Heroic
+	Statline 17 12 16 14  11 13 12 12
 	Age -3
 	SDL_PORTRAIT <por_m_lightjacket(Y--).png>
 	SDL_COLORS <136 141 101 245 213 160 77 35 101>
+	Skill 42 3
 
 	NPC Citizen
 	name <Lehya>
 	CharDesc Female Cheerful Easygoing Heroic
+	Statline 14 13 14 12  13 10 16 13
 	Age -1
 	SDL_PORTRAIT <por_f_smart(-P-).png>
 	SDL_COLORS <136 141 101 245 213 160 60 25 81>
-
+	Skill 11 7
+	Skill 29 1
+	Skill 37 1
 end
 

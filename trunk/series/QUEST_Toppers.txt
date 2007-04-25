@@ -1,0 +1,33 @@
+%%
+%% This file contains "toppers"- quests which exist only to conclude preceding quests.
+%% A topper must immediately (or pretty close to immediately) set the QuestStatus to
+%% a negative number, without invoking any successors. It may, however, trigger a
+%% complication subquest.
+%%
+
+%%
+%% *ThankYou Content
+%%
+%% The PC helped the NPC with something. Now the NPC will say thanks. This
+%% quest must end with a -1 result, though it can throw a subquest if you
+%% really want.
+%%
+%% The NPC's persona must have a .%id%_GoInit script, which sets the QuestStatus
+%% and maybe activates the subquest.
+%%
+%%  PARAM1: The NPC
+%%
+
+Content
+	name <Let's Be Friends>
+	% The NPC will become friends with the PC.
+	requires <*ThankYou>
+	special <REUSABLE>
+
+	% E1 is the NPC
+sub
+	Persona 1
+	.%id%_GoInit <NewChat Say %id%01 SetQuestStatus %qid% -1>
+	Msg%id%01 <Thanks for your help. I won't forget what you've done.>
+end
+

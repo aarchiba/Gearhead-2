@@ -6,33 +6,6 @@
 %% instead of being housed in a plot or story.
 %%
 
-%%
-%% *ThankYou Content
-%%
-%% The PC helped the NPC with something. Now the NPC will say thanks. This
-%% quest must end with a -1 result, though it can throw a subquest if you
-%% really want.
-%%
-%% The NPC's persona must have a .%id%_GoInit script, which sets the QuestStatus
-%% and maybe activates the subquest.
-%%
-%%  PARAM1: The NPC
-%%
-
-Content
-	name <Let's Be Friends>
-	% The NPC will become friends with the PC.
-	requires <*ThankYou>
-	special <REUSABLE>
-
-	% E1 is the NPC
-sub
-	Persona 1
-	.%id%_GoInit <NewChat Say %id%01 SetQuestStatus %qid% -1>
-	Msg%id%01 <Thanks for your help. I won't forget what you've done.>
-end
-
-
 
 
 %%
@@ -48,14 +21,11 @@ end
 %%
 %% PARAM1: The NPC who will be doing the proving.
 
+
+
 Content
 	name <Prove Myself Vs Pirates>
 	requires <*ProveMyself Spinner -1:CRIHN>
-
-requires <*:DEBUG>
-element1 <Prefab>
-Scene1 <CavClub>
-Team1 <Citizens>
 
 	% E1 is the character who must prove himself.
 	% E2 is the character offering a bounty on pirates
@@ -72,16 +42,16 @@ Team1 <Citizens>
 	Element4 <Prefab>
 	Scene4 <Space Environs>
 
+	Element5 <Prefab>
 	Scene5 <New *BlackMarket>
+	Team5 <Citizens>
+	TeamData5 <Ally Pass>
 
 	Quest1 <*ThankYou 1>
 
 	sub
 		Persona 1
 		greeting <if= QuestStatus %qid% %id% else %pop% if= SceneVar %3% 1 2 else .%id%_GoCheckBattle NewChat Say %id%01 AddChat %id%01>
-greeting <if= QuestStatus %qid% %id% else GoStart if= SceneVar %3% 1 2 else .%id%_GoCheckBattle NewChat Say %id%01 AddChat %id%01>
-GoStart <SetQuestStatus %qid% %id% NewChat Say 1>
-Msg1 <Speak to me again to begin the quest.>
 		.%id%_GoCheckBattle <if= SceneVar %3% 1 1 else .%id%_GoCheckBusy EndChat Say %id%03 AddChat %id%02 AddChat %id%03>
 		.%id%_GoCheckBusy <if# SceneVar %3% 2 0 else .%id%_GoFirst NewChat Say %id%02>
 		*.%id%_GoFirst <*IMustProveMyself>
@@ -159,11 +129,12 @@ Msg1 <Speak to me again to begin the quest.>
 			name <Shady Microstation>
 			desig <Entrance %s5%>
 		end
+
+		Persona 5
+		*greeting <*NiceToMeetYou GoChat>
+		*GoChat <*MISC_CHATTER>
 	end
 	inv
-NPC Bounty Hunter
-name <Marvin>
-
 		NPC Bounty Hunter
 		EquipChar 35000
 		CharDesc Lawful
@@ -175,6 +146,10 @@ name <Marvin>
 		update <ifThisQEncActive else GoHide  SetStat STAT_MetaVisibility 0  if# SceneVar %3% 1 0 else GoSetOrders ShowEncounter Goto GoSetOrders>
 		%% This encounter will only attack before the PC fights the pirates
 		ATTACK <ifG StatVal STAT_MetaVisibility -1    ifG 1 SceneVar %3% 1   ifUStealth 15 else GoAutoAttack ifYesNo -3 -4 -5 else GoAvoidAttack Goto GoAutoAttack>
+
+		NPC Pirate
+		SetFaction 8
+		EquipChar 25000
 	end
 
 %%
