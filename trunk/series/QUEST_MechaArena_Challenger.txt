@@ -12,6 +12,69 @@
 %% ASSERT: If .%id%_Init is called, the PC is in the same scene as the arena manager and
 %%  the next fight is ready to go.
 
+
+Content
+	name <PC vs Carter>
+	requires <*:MECHA_ARENA_CHALLENGE !Md>
+
+	% E1 is the arena manager
+	% E2 is the arena proper
+	% E3 is the challenger
+	Element3 <Prefab>
+	Scene3 <Building Public>
+	Team3 <Citizens>
+	TeamData3 <Ally Pass>
+
+	Quest1 <*CHALLENGER_SUBQUEST 3>
+
+sub
+	Persona 1
+	Greeting <if= QuestStatus %qid% %id% else %pop%  if= ArenaState %2% NAV_AS_Win else .%id%_GoCheckLoss Goto .%id%_GoArenaWin>
+	*.%id%_GoCheckLoss <*ChallengerStatusReport %3% %2% .%id%_GoNPCDied>
+	.%id%_GoInit <ifNPCOK %3% else .%id%_GoNPCDied NewChat Say %id%01 SetQuestStatus %qid% %id%  NPCSubQMemo %3% %id% %id%02>
+	%% Just in case the NPC who we're supposed to fight has died somehow, just set up a normal fight.
+	*.%id%_GoNPCDied <*YourChallengerDied %2% %qid%>
+	*.%id%_GoArenaWin <*ChallengeArenaWin %3% %2% .%id%_GoConclude>
+	.%id%_GoConclude <ResetArena %2% SetQuestStatus %qid% %id1%>
+	Msg%id%01 <For the next battle, you'll be facing %name3%. You can find \OPR %3% in \SCENE %s3% .>
+	Msg%id%02 <%name1% sent you to battle %name3% in arena combat; \SPR %3% can be found in \SCENE %s3% .>
+
+	Persona 3
+	Greeting <if= QuestStatus %qid% %id% else GoNoMatch  if= ArenaState %2% NAV_AS_Battle else GoCheckStatus Goto GoTrashTalk>
+	*GoTrashTalk <*ArenaChallenge GoThemeInfo>
+	*GoThemeInfo <*THEME_EXPO&Enemy NA>
+	GoCheckStatus <if= ArenaState %2% NAV_AS_Ready else GoCheckWin EndChat Say 1>
+	GoCheckWin <if= ArenaState %2% NAV_AS_Win else GoCheckChallenge ifNPCOK %1% else GoManagerDied NewChat Say 2>
+	GoManagerDied <NewChat Say %3% SetQuestStatus %qid% -1 ResetArena %2%>
+	GoCheckChallenge <ResetArena %2% ifG ComTime ArenaRecharge %2% else GoLater NewChat Say 4 AddChat 1 AddChat 2>
+	*GoLater <*ChallengeMeLater>
+	*GoNoMatch <*NiceToMeetYou GoChat>
+	*GoChat <*MISC_CHATTER>
+	GoStartCombat <SetChallengerID %2% %3% SetChallengerHome %2% %s3% MoveNPC %3% %2% PrepArena %2% 0 SetNPCTeam %3% 2>
+	*result1 <*MeetMeAtArena %2% GoStartCombat>
+	*result2 <*RejectChallenge>
+	Msg1 <I'm waiting for you at the arena. Hurry up and get over here.>
+	Msg2 <You beat me. You better go talk with %name1% about the reward.>
+	Msg3 <Too bad about what happened to %name1%... I guess there's not going to be any more fights until we get a new arena manager.>
+	Msg4 <Are you here to challenge me?>
+	Prompt1 <That's right.>
+	Prompt2 <Not right now; we can fight later.>
+end
+inv
+	NPC Trucker
+	name <Carter>
+	CharDesc Male Shy Easygoing Lawful
+	Age 22
+	EquipChar 10000
+	StatLine 14 16 12 15 14 11 13 9
+	SDL_Portrait <por_m_comiccarter(OUY).png>
+	SDL_Colors <25 80 100 255 212 195 122 82 65>
+	SetTheme 2
+	SetSpecSkill 2
+	SetFaction 5
+end
+
+
 Content
 	name <Generic Challenger>
 	requires <*:MECHA_ARENA_CHALLENGE>
@@ -60,8 +123,7 @@ sub
 	Prompt2 <Not right now; we can fight later.>
 end
 inv
-	NPC Mecha Pilot
-	SetFaction 5
+	NPC Arena Pilot
 	EquipChar 10000
 
 end
@@ -172,9 +234,8 @@ sub
 
 end
 inv
-	NPC Mecha Pilot
+	NPC Arena Pilot
 	name <Hammel>
-	SetFaction 5
 	EquipChar 10000
 	Chardesc Male Cheerful Passionate Heroic
 	Statline 17 12 16 14  11 13 12 12
