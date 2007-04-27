@@ -20,6 +20,19 @@ sub
 	greeting <if= QuestID %qid% %id% else %pop% SetQuestStatus %qid% -1 ifG React d20 else .%id%_GoFail PCFriend ChatNPCID NewChat Say %id%01>
 	*.%id%_GoFail <*IConcedeDefeat&Battle>
 	Msg%id%01 <That was a great battle. Maybe we'll see each other again, next time away from the battlefield.>
+	Msg%id%01_1 <I have to admit, you're a formidible warrior. Maybe some time later we can get together again and swap stories. I'd like to do that very much.>
+	CMsg%id%01_1 <ifNPCSociable Accept>
+	Msg%id%01_2 <I like you. Let's get together again someday.>
+	CMsg%id%01_2 <ifNPCShy Accept>
+	Msg%id%01_3 <I admit it, you're way better than me. Let's get together again later and swap stories.>
+	CMsg%id%01_3 <ifNPCEasygoing Accept>
+	Msg%id%01_4 <It's very rare for me to meet someone I can call an equal. I feel that there's a bond between the two of us.>
+	CMsg%id%01_4 <ifNPCPassionate Accept>
+	Msg%id%01_5 <Wow, you are an excellent pilot. I want to invite you and your team out for dinner sometime.>
+	CMsg%id%01_5 <ifNPCCheerful Accept>
+	Msg%id%01_6 <As much as I hate to admit it, you beat me... but let's not have any hard feelings over any of that. I'd like to meet with you again.>
+	CMsg%id%01_6 <ifNPCMelancholy Accept>
+
 end
 
 

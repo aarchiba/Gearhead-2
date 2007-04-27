@@ -14,6 +14,97 @@
 
 
 Content
+	name <PC vs Vanda>
+	requires <*:MECHA_ARENA_CHALLENGE (!Hi|!Ex)>
+
+	% E1 is the arena manager
+	% E2 is the arena proper
+	% E3 is the challenger
+	Element3 <Prefab>
+	Scene3 <Building Public>
+	Team3 <Citizens>
+	TeamData3 <Ally Pass>
+
+	Quest1 <*CHALLENGER_SUBQUEST 3>
+
+sub
+	Persona 1
+	Greeting <if= QuestStatus %qid% %id% else %pop%  if= ArenaState %2% NAV_AS_Win else .%id%_GoCheckLoss Goto .%id%_GoArenaWin>
+	*.%id%_GoCheckLoss <*ChallengerStatusReport %3% %2% .%id%_GoNPCDied>
+	.%id%_GoInit <ifNPCOK %3% else .%id%_GoNPCDied NewChat Say %id%01 SetQuestStatus %qid% %id%  NPCSubQMemo %3% %id% %id%02 AddChat %id%01>
+	%% Just in case the NPC who we're supposed to fight has died somehow, just set up a normal fight.
+	*.%id%_GoNPCDied <*YourChallengerDied %2% %qid%>
+	*.%id%_GoArenaWin <*ChallengeArenaWin %3% %2% .%id%_GoConclude>
+	.%id%_GoConclude <ResetArena %2% SetQuestStatus %qid% %id1%>
+	Result%id%01 <NewChat Say %id%02>
+	Msg%id%01 <You have a special challenger for the next battle. Her name is Vanda; you can find her at \SCENE %s3% .>
+	Msg%id%02 <%name1% sent you to battle %name3% in arena combat; \SPR %3% can be found in \SCENE %s3% .>
+	Msg%id%02 <She's an extremely talented fighter. Her specialty is flame weapons. Although she's good at just about everything, she's particularly deadly in close combat. Watch out.>
+	Prompt%id%01 <What can you tell me about this Vanda?>
+
+	Persona 3
+	% V1 = Have challenged already
+	Greeting <if= QuestStatus %qid% %id% else GoNoMatch  if= ArenaState %2% NAV_AS_Battle else GoCheckStatus Goto GoTrashTalk>
+	*GoTrashTalk <*ArenaChallenge GoThemeInfo>
+	GoThemeInfo <EndChat Say 12>
+	GoCheckStatus <if= ArenaState %2% NAV_AS_Ready else GoCheckWin EndChat Say 1>
+	GoCheckWin <if= ArenaState %2% NAV_AS_Win else GoCheckChallenge ifNPCOK %1% else GoManagerDied NewChat Say 2>
+	GoManagerDied <NewChat Say %3% SetQuestStatus %qid% -1 ResetArena %2%>
+	GoCheckChallenge <ResetArena %2% ifG ComTime ArenaRecharge %2% else GoLater NewChat if= V1 1 else GoFirstTime Say 4 AddChat 1 AddChat 2>
+	GoFirstTime <NewChat Say 5 V= 1 1 AddChat 3 AddChat 4 AddChat 5>
+	*GoLater <*ChallengeMeLater>
+	*GoNoMatch <*NiceToMeetYou GoChat>
+	*GoChat <*MISC_CHATTER>
+	GoStartCombat <SetChallengerID %2% %3% SetChallengerHome %2% %s3% MoveNPC %3% %2% PrepArena %2% 0 SetNPCTeam %3% 2>
+	*result1 <*MeetMeAtArena %2% GoStartCombat>
+	*result2 <*RejectChallenge>
+	result3 <NewChat Say 6 AddReact 5  AddChat 6 AddChat 7>
+	result4 <NewChat Say 7 AddEasygoing d8   AddChat 6 AddChat 7>
+	result5 <NewChat Say 8 AddEasygoing -d10   AddChat 6 AddChat 7>
+	result6 <NewChat Say 9 AddChat 1 AddChat 2 AddSociable -d10>
+	result7 <NewChat Say 10 AddChat 8>
+	result8 <NewChat Say 11 AddChat 1 AddChat 2>
+	Msg1 <I'm waiting for you at the arena. Hurry up and get over here.>
+	Msg2 <Woah, I've been burned. Go see %name1% about the prize.>
+	Msg3 <The arena's been shut down. Apparently %name1% died.>
+	Msg4 <You took your sweet time. Are you ready to fight?>
+	Msg5 <So, this is what passes for competition in today's arena. I'm Vanda, the Pyromaniac Queen. Do you really think you're ready to face me?>
+	Msg6 <Good... You don't sound intimidated by my rank, nor are you overly arrogant. That's the correct attitude to have when meeting a new pilot. Say, let's chat for a while before the match starts.>
+	Msg7 <Is that a bit of uncertainty I hear in your voice? It's important to believe in yourself. A skilled opponent can turn your doubts against you. Say, how about we chat for a while before the match starts?>
+	Msg8 <Hah! I used to talk like that, back when I started dueling. It's important to be confident, but if you keep underestimating your opponents someday you'll get an awful surprise. Let's chat a bit more before the match starts.>
+	Msg9 <Sure thing. Do you want to fight now, or do you need to freshen up?>
+	Msg10 <I'm originally from Namok. Dueling's really big there, you probably know. Early on I decided to go with a flame motif because it matches my hair color.>
+	Msg11 <Know yourself well. Capitalize on your strengths, and minimize your weaknesses. So, shall we get to work? Are you ready to fight?>
+	Msg12 <You're going to see the full power of the Pyromaniac Queen! Don't worry, I'll show you a real hot time!>
+	Prompt1 <Let's go to the arena.>
+	Prompt2 <Not right now; I'll be back later.>
+	Prompt3 <I know I'm ready to face you.>
+	Prompt4 <I don't know, but I'll try.>
+	Prompt5 <Lady, you don't even stand a chance.>
+	Prompt6 <I'm not interested in talking.>
+	Prompt7 <Sure. Why don't you tell me about yourself?>
+	Prompt8 <Do you have any advice for me?>
+end
+inv
+	NPC Arena Pilot
+	name <Vanda>
+	CharDesc Female Sociable Passionate
+	Age 7
+	EquipChar 10000
+	StatLine 17 10 16 13 14 12 10 15
+	SDL_Portrait <por_f_mechpilot(--Y).png>
+	SDL_Colors <152 61 97 255 212 195 220 80 10>
+	SetTheme 1
+	SetSpecSkill 3
+	Skill 12 1
+	Skill 17 1
+	Skill 26 5
+	Skill 43 10
+	Talent 9
+end
+
+
+Content
 	name <PC vs Carter>
 	requires <*:MECHA_ARENA_CHALLENGE !Md>
 
@@ -31,34 +122,45 @@ sub
 	Persona 1
 	Greeting <if= QuestStatus %qid% %id% else %pop%  if= ArenaState %2% NAV_AS_Win else .%id%_GoCheckLoss Goto .%id%_GoArenaWin>
 	*.%id%_GoCheckLoss <*ChallengerStatusReport %3% %2% .%id%_GoNPCDied>
-	.%id%_GoInit <ifNPCOK %3% else .%id%_GoNPCDied NewChat Say %id%01 SetQuestStatus %qid% %id%  NPCSubQMemo %3% %id% %id%02>
+	.%id%_GoInit <ifNPCOK %3% else .%id%_GoNPCDied NewChat Say %id%01 SetQuestStatus %qid% %id%  NPCSubQMemo %3% %id% %id%02  AddChat %id%01>
 	%% Just in case the NPC who we're supposed to fight has died somehow, just set up a normal fight.
 	*.%id%_GoNPCDied <*YourChallengerDied %2% %qid%>
 	*.%id%_GoArenaWin <*ChallengeArenaWin %3% %2% .%id%_GoConclude>
 	.%id%_GoConclude <ResetArena %2% SetQuestStatus %qid% %id1%>
-	Msg%id%01 <For the next battle, you'll be facing %name3%. You can find \OPR %3% in \SCENE %s3% .>
-	Msg%id%02 <%name1% sent you to battle %name3% in arena combat; \SPR %3% can be found in \SCENE %s3% .>
+	Result%id%01 <NewChat Say %id%03>
+	Msg%id%01 <You'll be going up against Carter for the next battle. He's one of the old regulars. You should be able to find him at \SCENE %s3% .>
+	Msg%id%02 <%name1% sent you to battle %name3% in arena combat; \SPR %3% can be found in \SENE %s3% .>
+	Msg%id%03 <Carter's been an arena fighter since before some of our challengers were even born. He doesn't take the game too seriously, but don't let that fool you- he's a skilled pilot with a few tricks up his sleeve.>
+	Prompt%id%01 <What should I know about him?>
 
 	Persona 3
+	% V1 = Have challenged before.
 	Greeting <if= QuestStatus %qid% %id% else GoNoMatch  if= ArenaState %2% NAV_AS_Battle else GoCheckStatus Goto GoTrashTalk>
 	*GoTrashTalk <*ArenaChallenge GoThemeInfo>
-	*GoThemeInfo <*THEME_EXPO&Enemy NA>
+	GoThemeInfo <EndChat Say 6>
 	GoCheckStatus <if= ArenaState %2% NAV_AS_Ready else GoCheckWin EndChat Say 1>
 	GoCheckWin <if= ArenaState %2% NAV_AS_Win else GoCheckChallenge ifNPCOK %1% else GoManagerDied NewChat Say 2>
 	GoManagerDied <NewChat Say %3% SetQuestStatus %qid% -1 ResetArena %2%>
-	GoCheckChallenge <ResetArena %2% ifG ComTime ArenaRecharge %2% else GoLater NewChat Say 4 AddChat 1 AddChat 2>
+	GoCheckChallenge <ResetArena %2% ifG ComTime ArenaRecharge %2% else GoLater if= V1 1 else GoFirstTime NewChat Say 4 AddChat 1 AddChat 2>
+	GoFirstTime <NewChat Say 5 V= 1 1  AddChat 1 AddChat 2>
 	*GoLater <*ChallengeMeLater>
 	*GoNoMatch <*NiceToMeetYou GoChat>
 	*GoChat <*MISC_CHATTER>
 	GoStartCombat <SetChallengerID %2% %3% SetChallengerHome %2% %s3% MoveNPC %3% %2% PrepArena %2% 0 SetNPCTeam %3% 2>
 	*result1 <*MeetMeAtArena %2% GoStartCombat>
 	*result2 <*RejectChallenge>
-	Msg1 <I'm waiting for you at the arena. Hurry up and get over here.>
-	Msg2 <You beat me. You better go talk with %name1% about the reward.>
-	Msg3 <Too bad about what happened to %name1%... I guess there's not going to be any more fights until we get a new arena manager.>
-	Msg4 <Are you here to challenge me?>
-	Prompt1 <That's right.>
-	Prompt2 <Not right now; we can fight later.>
+	Msg1 <You're wasting valuable time. Get your arse over to the arena and fight me!>
+	Msg2 <Good match. %name1% should have a reward waiting for you.>
+	Msg3 <Did you hear about %name1%? That's a real shame.>
+	Msg4 <So, you ready to fight?>
+	Msg5_1 <Good to meet yeh. You must be the young pilot they sent to challenge me... The name's Carter. Are you ready to go right now?>
+	CMsg5_1 <ifChatNPCUnknown Accept>
+	Msg5_2 <Good to see you again, \PC . This should be a good fight. Are you all ready for the match?>
+	CMsg5_2 <ifChatNPCKnown Accept>
+	Msg6 <This probably isn't gonna take too long.>
+	Msg6_1 <Let's see if this old dog can teach you something.>
+	Prompt1 <As ready as I'll ever be.>
+	Prompt2 <Give me some time to get ready first.>
 end
 inv
 	NPC Trucker
@@ -72,63 +174,11 @@ inv
 	SetTheme 2
 	SetSpecSkill 2
 	SetFaction 5
+	Skill 11 10
+	Skill 18 1
+	Talent 24
+	Talent 15
 end
-
-
-Content
-	name <Generic Challenger>
-	requires <*:MECHA_ARENA_CHALLENGE>
-
-	% E1 is the arena manager
-	% E2 is the arena proper
-	% E3 is the challenger
-	Element3 <Prefab>
-	Scene3 <Building Public>
-	Team3 <Citizens>
-	TeamData3 <Ally Pass>
-
-	Quest1 <*CHALLENGER_SUBQUEST 3>
-
-sub
-	Persona 1
-	Greeting <if= QuestStatus %qid% %id% else %pop%  if= ArenaState %2% NAV_AS_Win else .%id%_GoCheckLoss Goto .%id%_GoArenaWin>
-	*.%id%_GoCheckLoss <*ChallengerStatusReport %3% %2% .%id%_GoNPCDied>
-	.%id%_GoInit <ifNPCOK %3% else .%id%_GoNPCDied NewChat Say %id%01 SetQuestStatus %qid% %id%  NPCSubQMemo %3% %id% %id%02>
-	%% Just in case the NPC who we're supposed to fight has died somehow, just set up a normal fight.
-	*.%id%_GoNPCDied <*YourChallengerDied %2% %qid%>
-	*.%id%_GoArenaWin <*ChallengeArenaWin %3% %2% .%id%_GoConclude>
-	.%id%_GoConclude <ResetArena %2% SetQuestStatus %qid% %id1%>
-	Msg%id%01 <For the next battle, you'll be facing %name3%. You can find \OPR %3% in \SCENE %s3% .>
-	Msg%id%02 <%name1% sent you to battle %name3% in arena combat; \SPR %3% can be found in \SCENE %s3% .>
-
-	Persona 3
-	Greeting <if= QuestStatus %qid% %id% else GoNoMatch  if= ArenaState %2% NAV_AS_Battle else GoCheckStatus Goto GoTrashTalk>
-	*GoTrashTalk <*ArenaChallenge GoThemeInfo>
-	*GoThemeInfo <*THEME_EXPO&Enemy NA>
-	GoCheckStatus <if= ArenaState %2% NAV_AS_Ready else GoCheckWin EndChat Say 1>
-	GoCheckWin <if= ArenaState %2% NAV_AS_Win else GoCheckChallenge ifNPCOK %1% else GoManagerDied NewChat Say 2>
-	GoManagerDied <NewChat Say %3% SetQuestStatus %qid% -1 ResetArena %2%>
-	GoCheckChallenge <ResetArena %2% ifG ComTime ArenaRecharge %2% else GoLater NewChat Say 4 AddChat 1 AddChat 2>
-	*GoLater <*ChallengeMeLater>
-	*GoNoMatch <*NiceToMeetYou GoChat>
-	*GoChat <*MISC_CHATTER>
-	GoStartCombat <SetChallengerID %2% %3% SetChallengerHome %2% %s3% MoveNPC %3% %2% PrepArena %2% 0 SetNPCTeam %3% 2>
-	*result1 <*MeetMeAtArena %2% GoStartCombat>
-	*result2 <*RejectChallenge>
-	Msg1 <I'm waiting for you at the arena. Hurry up and get over here.>
-	Msg2 <You beat me. You better go talk with %name1% about the reward.>
-	Msg3 <Too bad about what happened to %name1%... I guess there's not going to be any more fights until we get a new arena manager.>
-	Msg4 <Are you here to challenge me?>
-	Prompt1 <That's right.>
-	Prompt2 <Not right now; we can fight later.>
-end
-inv
-	NPC Arena Pilot
-	EquipChar 10000
-
-end
-
-
 
 Content
 	name <PC vs. Hammel>
@@ -255,4 +305,176 @@ inv
 	Skill 29 1
 	Skill 37 1
 end
+
+
+Content
+	name <Generic Challenger>
+	requires <*:MECHA_ARENA_CHALLENGE>
+
+	% E1 is the arena manager
+	% E2 is the arena proper
+	% E3 is the challenger
+	Element3 <Prefab>
+	Scene3 <Building Public>
+	Team3 <Citizens>
+	TeamData3 <Ally Pass>
+
+	Quest1 <*CHALLENGER_SUBQUEST 3>
+
+sub
+	Persona 1
+	Greeting <if= QuestStatus %qid% %id% else %pop%  if= ArenaState %2% NAV_AS_Win else .%id%_GoCheckLoss Goto .%id%_GoArenaWin>
+	*.%id%_GoCheckLoss <*ChallengerStatusReport %3% %2% .%id%_GoNPCDied>
+	.%id%_GoInit <ifNPCOK %3% else .%id%_GoNPCDied NewChat Say %id%01 SetQuestStatus %qid% %id%  NPCSubQMemo %3% %id% %id%02>
+	%% Just in case the NPC who we're supposed to fight has died somehow, just set up a normal fight.
+	*.%id%_GoNPCDied <*YourChallengerDied %2% %qid%>
+	*.%id%_GoArenaWin <*ChallengeArenaWin %3% %2% .%id%_GoConclude>
+	.%id%_GoConclude <ResetArena %2% SetQuestStatus %qid% %id1%>
+	Msg%id%01 <For the next battle, you'll be facing %name3%. You can find \OPR %3% in \SCENE %s3% .>
+	Msg%id%02 <%name1% sent you to battle %name3% in arena combat; \SPR %3% can be found in \SCENE %s3% .>
+
+	Persona 3
+	Greeting <if= QuestStatus %qid% %id% else GoNoMatch  if= ArenaState %2% NAV_AS_Battle else GoCheckStatus Goto GoTrashTalk>
+	*GoTrashTalk <*ArenaChallenge GoThemeInfo>
+	*GoThemeInfo <*THEME_EXPO&Enemy NA>
+	GoCheckStatus <if= ArenaState %2% NAV_AS_Ready else GoCheckWin EndChat Say 1>
+	GoCheckWin <if= ArenaState %2% NAV_AS_Win else GoCheckChallenge ifNPCOK %1% else GoManagerDied NewChat Say 2>
+	GoManagerDied <NewChat Say %3% SetQuestStatus %qid% -1 ResetArena %2%>
+	GoCheckChallenge <ResetArena %2% ifG ComTime ArenaRecharge %2% else GoLater NewChat Say 4 AddChat 1 AddChat 2>
+	*GoLater <*ChallengeMeLater>
+	*GoNoMatch <*NiceToMeetYou GoChat>
+	*GoChat <*MISC_CHATTER>
+	GoStartCombat <SetChallengerID %2% %3% SetChallengerHome %2% %s3% MoveNPC %3% %2% PrepArena %2% 0 SetNPCTeam %3% 2>
+	*result1 <*MeetMeAtArena %2% GoStartCombat>
+	*result2 <*RejectChallenge>
+	Msg1 <I'm waiting for you at the arena. Hurry up and get over here.>
+	Msg2 <You beat me. You better go talk with %name1% about the reward.>
+	Msg3 <Too bad about what happened to %name1%... I guess there's not going to be any more fights until we get a new arena manager.>
+	Msg4 <Are you here to challenge me?>
+	Prompt1 <That's right.>
+	Prompt2 <Not right now; we can fight later.>
+end
+inv
+	NPC Arena Pilot
+	EquipChar 10000
+
+end
+
+Content
+	name <Generic Challenger 2>
+	% As above, but you can ask the arena manager about challenger
+	requires <*:MECHA_ARENA_CHALLENGE>
+
+	% E1 is the arena manager
+	% E2 is the arena proper
+	% E3 is the challenger
+	Element3 <Prefab>
+	Scene3 <Building Public>
+	Team3 <Citizens>
+	TeamData3 <Ally Pass>
+
+	Quest1 <*CHALLENGER_SUBQUEST 3>
+
+sub
+	Persona 1
+	Greeting <if= QuestStatus %qid% %id% else %pop%  if= ArenaState %2% NAV_AS_Win else .%id%_GoCheckLoss Goto .%id%_GoArenaWin>
+	*.%id%_GoCheckLoss <*ChallengerStatusReport %3% %2% .%id%_GoNPCDied>
+	.%id%_GoInit <ifNPCOK %3% else .%id%_GoNPCDied NewChat Say %id%01 SetQuestStatus %qid% %id%  NPCSubQMemo %3% %id% %id%02  AddChat %id%01>
+	%% Just in case the NPC who we're supposed to fight has died somehow, just set up a normal fight.
+	*.%id%_GoNPCDied <*YourChallengerDied %2% %qid%>
+	*.%id%_GoArenaWin <*ChallengeArenaWin %3% %2% .%id%_GoConclude>
+	.%id%_GoConclude <ResetArena %2% SetQuestStatus %qid% %id1%>
+	Result%id%01 <NewChat Say %id%03>
+	Msg%id%01 <The next match is a one-on-one challenge. You'll be facing %name3%; \SPR %3% can be found at \SCENE %s3% .>
+	Msg%id%02 <%name1% sent you to battle %name3% in arena combat; \SPR %3% can be found in \SCENE %s3% .>
+	Msg%id%03 <I guess you're going to have to find that out on your own...>
+	Prompt%id%01 <Is \SPR %3% very strong?>
+
+	Persona 3
+	Greeting <if= QuestStatus %qid% %id% else GoNoMatch  if= ArenaState %2% NAV_AS_Battle else GoCheckStatus Goto GoTrashTalk>
+	*GoTrashTalk <*ArenaChallenge GoThemeInfo>
+	*GoThemeInfo <*THEME_EXPO&Enemy NA>
+	GoCheckStatus <if= ArenaState %2% NAV_AS_Ready else GoCheckWin EndChat Say 1>
+	GoCheckWin <if= ArenaState %2% NAV_AS_Win else GoCheckChallenge ifNPCOK %1% else GoManagerDied NewChat Say 2>
+	GoManagerDied <NewChat Say %3% SetQuestStatus %qid% -1 ResetArena %2%>
+	GoCheckChallenge <ResetArena %2% ifG ComTime ArenaRecharge %2% else GoLater NewChat Say 4 AddChat 1 AddChat 2>
+	*GoLater <*ChallengeMeLater>
+	*GoNoMatch <*NiceToMeetYou GoChat>
+	*GoChat <*MISC_CHATTER>
+	GoStartCombat <SetChallengerID %2% %3% SetChallengerHome %2% %s3% MoveNPC %3% %2% PrepArena %2% 0 SetNPCTeam %3% 2>
+	*result1 <*MeetMeAtArena %2% GoStartCombat>
+	*result2 <*RejectChallenge>
+	Msg1 <I'm waiting...>
+	Msg2 <I can't believe I lost... %name1% will want to speak with you.>
+	Msg3 <Too bad about what happened to %name1%... I guess there's not going to be any more fights until we get a new arena manager.>
+	Msg4 <%name1% said you're the next challenger I have to fight. Are you ready to battle right now?>
+	Prompt1 <Let's go to the arena.>
+	Prompt2 <I'll be back after repairing my mecha.>
+end
+inv
+	NPC Arena Pilot
+	EquipChar 10000
+
+end
+
+Content
+	name <Generic Challenger 3>
+	% As above, but the challenger reacts differently the first and second times you meet
+	requires <*:MECHA_ARENA_CHALLENGE>
+
+	% E1 is the arena manager
+	% E2 is the arena proper
+	% E3 is the challenger
+	Element3 <Prefab>
+	Scene3 <Building Public>
+	Team3 <Citizens>
+	TeamData3 <Ally Pass>
+
+	Quest1 <*CHALLENGER_SUBQUEST 3>
+
+sub
+	Persona 1
+	Greeting <if= QuestStatus %qid% %id% else %pop%  if= ArenaState %2% NAV_AS_Win else .%id%_GoCheckLoss Goto .%id%_GoArenaWin>
+	*.%id%_GoCheckLoss <*ChallengerStatusReport %3% %2% .%id%_GoNPCDied>
+	.%id%_GoInit <ifNPCOK %3% else .%id%_GoNPCDied NewChat Say %id%01 SetQuestStatus %qid% %id%  NPCSubQMemo %3% %id% %id%02  AddChat %id%01>
+	%% Just in case the NPC who we're supposed to fight has died somehow, just set up a normal fight.
+	*.%id%_GoNPCDied <*YourChallengerDied %2% %qid%>
+	*.%id%_GoArenaWin <*ChallengeArenaWin %3% %2% .%id%_GoConclude>
+	.%id%_GoConclude <ResetArena %2% SetQuestStatus %qid% %id1%>
+	Result%id%01 <NewChat Say %id%03>
+	Msg%id%01 <For this match, you'll be going up against %name3% in single combat. You can find \OPR %3% at \SCENE %s3% .>
+	Msg%id%02 <%name1% sent you to battle %name3% in arena combat; \SPR %3% can be found in \SCENE %s3% .>
+	Msg%id%03 <Do your best and you'll have no regrets. Now get over there and find your opponent!>
+	Prompt%id%01 <Do you have any advice?>
+
+	Persona 3
+	% V1 = First time chat counter
+	Greeting <if= QuestStatus %qid% %id% else GoNoMatch  if= ArenaState %2% NAV_AS_Battle else GoCheckStatus Goto GoTrashTalk>
+	*GoTrashTalk <*ArenaChallenge GoThemeInfo>
+	*GoThemeInfo <*THEME_EXPO&Enemy NA>
+	GoCheckStatus <if= ArenaState %2% NAV_AS_Ready else GoCheckWin EndChat Say 1>
+	GoCheckWin <if= ArenaState %2% NAV_AS_Win else GoCheckChallenge ifNPCOK %1% else GoManagerDied NewChat Say 2>
+	GoManagerDied <NewChat Say %3% SetQuestStatus %qid% -1 ResetArena %2%>
+	GoCheckChallenge <ResetArena %2% ifG ComTime ArenaRecharge %2% else GoLater if= V1 1 else GoFirstTime NewChat Say 4 AddChat 1 AddChat 2>
+	GoFirstTime <NewChat Say 5 V= 1 1>
+	*GoLater <*ChallengeMeLater>
+	*GoNoMatch <*NiceToMeetYou GoChat>
+	*GoChat <*MISC_CHATTER>
+	GoStartCombat <SetChallengerID %2% %3% SetChallengerHome %2% %s3% MoveNPC %3% %2% PrepArena %2% 0 SetNPCTeam %3% 2>
+	*result1 <*MeetMeAtArena %2% GoStartCombat>
+	*result2 <*RejectChallenge>
+	Msg1 <Did you forget that we have an arena fight scheduled? I'm getting bored.>
+	Msg2 <Victory is yours... Go find %name1% to get your prize money.>
+	Msg3 <Too bad about what happened to %name1%... I guess there's not going to be any more fights until we get a new arena manager.>
+	Msg4 <Are you ready to fight?>
+	Msg5 <So you're my next challenger. You should know that I won't make this easy for you. Shall we get started?>
+	Prompt1 <I'm ready.>
+	Prompt2 <Maybe I'll come back later.>
+end
+inv
+	NPC Arena Pilot
+	EquipChar 10000
+
+end
+
 

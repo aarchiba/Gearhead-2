@@ -1024,6 +1024,7 @@ Scene
 	habitat <SPACE.ASTER>
 
 	Quest1 <*:LocalQuest>
+	Quest2 <*:MECHA_ARENA_BASE>
 
 	ClubMap
 
@@ -1368,7 +1369,7 @@ sub
 
 		Scene
 		name <Steelworks Lounge>
-		type <building factory private sleazy meeting>
+		type <building factory private sleazy meeting arenasite>
 		mapwidth 24
 		mapheight 24
 		ClubMap
@@ -1402,13 +1403,6 @@ sub
 			desig <NPC_Kodie>
 			chardesc Male Passionate Sociable
 			SetTeam 3
-
-			NPC Citizen
-			name <Peters>
-			job <Arena Manager>
-			home <The Steel Arena>
-			chardesc Young Passionate Sociable Cheerful
-			SetTeam 2
 		end
 		sub
 			team 1
@@ -1424,54 +1418,6 @@ sub
 			team 4
 			name <Bouncer's Bit>
 			SetEnemy 1
-
-			Persona
-			% This time, I'll try storing the information in the NPC.
-			% &PVar 1 = Enemy PV; initialization counter
-			% &PVar 2 = Arena rank
-			% V2 = Arena recharge
-			% V3 = Max rank awarded
-			&PVar <NPCVar ChatNPCID ?>
-			&PVar+ <NPCVar+ ChatNPCID ? ?>
-			&PVar= <NPCVar= ChatNPCID ? ?>
-			name <Peters PERSONA>
-			greeting <NewChat ifG &PVar 2 V3 else GoCheckRecharge V= 3 &PVar 2  &PVar+ 1 d4  CashPrize Reward Threat &PVar 1 100 100 FacXP+ 5 1  if= V3 10 else GoSayReward PVar+ 2 1 V+ 3 1 Goto GoBigPrize>
-			GoBigPrize <Say 2 FacXP+ 5 5>
-			GoSayReward <Say 1>
-			GoCheckRecharge <ifG V2 ComTime else GoCheckFirst Say 3>
-			GoCheckFirst <ifG &PVar 1 0 else GoFirstTime Say 4        AddChat 5 AddChat 6>
-			GoFirstTime <Say 5 &PVar= 1 10  AddChat 1 AddChat 2>
-			result1 <NewChat Say 7 AddChat 3 AddChat 4>
-			result2 <NewChat Say 8>
-			result3 <NewChat Say 9  AddChat 5 AddChat 6>
-			result4 <NewChat Say 10 AddCheerful -d10  AddChat 5 AddChat 6>
-			result5 <EndChat Say 12 Goto GoStartCombat>
-			result6 <NewChat Say 11>
-			GoStartCombat <SavePos LoadD .scene PassVar 4 &PVar 1 V= 2 ComTime V+ 2 50000 PassVar 5 ChatNPCID>
-			.scene <SCENE_steelarena.txt>
-			% Scene: L1 -> Finalization counter
-			% Scene: L5 -> NPCID
-			Msg1 <You won! Here's your earning.>
-			Msg2 <You won our big prize!>
-			Msg3 <There'll be another fight tomorrow. Come back then.>
-			Msg4 <Welcome back to the Steel Arena. Are you ready to fight?>
-			Msg5 <Welcome to the Steel Arena. Are you here to fight, or just to watch?>
-			Msg6 <You were crowned champion of the Steel Arena.>
-			Msg7 <Our arena is on the far side of the rock. It's probably the best arena in all the colonies! We buried a ton of simgravs down there, so it feels just like you're fighting on Earth!>
-			Msg8 <Alright, then. You should be able to see the fight on one of the monitors, somewhere...>
-			Msg9 <It really is! We've got a battle coming up soon. Do you want to take part?>
-			Msg10 <Er... no, no I haven't, but I watch all the mecha tournament shows... Earth pilots rock. So, do you want to fight now?>
-			Msg11 <We've got fights going all the time. Come back whenever you're ready.>
-			Msg12 <Let the games begin!>
-			Prompt1 <I'm here to fight!>
-			Prompt2 <I think I'll just watch, for now.>
-			Prompt3 <Sounds like fun!>
-			Prompt4 <You've never been to Earth, have you?>
-			Prompt5 <I'm ready to go.>
-			CPrompt5 <ifG PCMeks 0 Accept>
-			Prompt6 <Wait a minute, okay?>
-
-
 
 			Persona
 			name <Kodie PERSONA>
@@ -1542,10 +1488,6 @@ sub
 			name <Foyer>
 			desig <EntranceGrid>
 			Content <Some 2 65 Here *URBAN_X>
-
-			room
-			name <The Steel Arena>
-			minimap <#...#...............#---#>
 
 			room
 			name <Entry Point>
