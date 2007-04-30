@@ -14,6 +14,85 @@
 
 
 Content
+	name <PC vs Keight>
+	requires <*:MECHA_ARENA_CHALLENGE (!Ne|!Lo) L5PAT>
+
+	% E1 is the arena manager
+	% E2 is the arena proper
+	% E3 is the challenger
+	Element3 <Prefab>
+	Scene3 <Building Public>
+	Team3 <Citizens>
+	TeamData3 <Ally Pass>
+
+	Quest1 <*CHALLENGER_SUBQUEST 3>
+
+sub
+	Persona 1
+	Greeting <if= QuestStatus %qid% %id% else %pop%  if= ArenaState %2% NAV_AS_Win else .%id%_GoCheckLoss Goto .%id%_GoArenaWin>
+	*.%id%_GoCheckLoss <*ChallengerStatusReport %3% %2% .%id%_GoNPCDied>
+	.%id%_GoInit <ifNPCOK %3% else .%id%_GoNPCDied NewChat Say %id%01 SetQuestStatus %qid% %id%  NPCSubQMemo %3% %id% %id%02  AddChat %id%01>
+	%% Just in case the NPC who we're supposed to fight has died somehow, just set up a normal fight.
+	*.%id%_GoNPCDied <*YourChallengerDied %2% %qid%>
+	*.%id%_GoArenaWin <*ChallengeArenaWin %3% %2% .%id%_GoConclude>
+	.%id%_GoConclude <ResetArena %2% SetQuestStatus %qid% %id1%>
+	Result%id%01 <NewChat Say %id%03>
+	Msg%id%01 <We have a special match lined up next. You'll be fighting a young privateer named Keight.>
+	Msg%id%02 <%name1% sent you to battle %name3% in arena combat; \SPR %3% can be found in \SCENE %s3% .>
+	Msg%id%03 <You'll be able to find her at \SCENE %s3% . Keight was born into the AMX program; she's trained to be a mecha pilot all her life. She has a lot of talent, but hasn't been tested in real combat yet.>
+	Prompt%id%01 <Where can I find this Keight?>
+
+	Persona 3
+	% V1 = First time chat counter
+	% V2 = First time match counter
+	Greeting <if= QuestStatus %qid% %id% else GoNoMatch  if= ArenaState %2% NAV_AS_Battle else GoCheckStatus Goto GoTrashTalk>
+	*GoTrashTalk <*ArenaChallenge GoThemeInfo>
+	GoThemeInfo <EndChat Say 6>
+	GoCheckStatus <if= ArenaState %2% NAV_AS_Ready else GoCheckWin EndChat Say 1>
+	GoCheckWin <if= ArenaState %2% NAV_AS_Win else GoCheckChallenge ifNPCOK %1% else GoManagerDied NewChat Say 2>
+	GoManagerDied <NewChat Say %3% SetQuestStatus %qid% -1 ResetArena %2%>
+	GoCheckChallenge <ResetArena %2% ifG ComTime ArenaRecharge %2% else GoLater if= V1 1 else GoFirstTime NewChat Say 4 AddChat 1 AddChat 2>
+	GoFirstTime <NewChat Say 5 V= 1 1 AddChat 1 AddChat 2 AddChat 3>
+	*GoLater <*ChallengeMeLater>
+	*GoNoMatch <*NiceToMeetYou GoChat>
+	*GoChat <*MISC_CHATTER>
+	GoStartCombat <V+ 2 1 SetChallengerID %2% %3% SetChallengerHome %2% %s3% MoveNPC %3% %2% PrepArena %2% 0 SetNPCTeam %3% 2>
+	*result1 <*MeetMeAtArena %2% GoStartCombat>
+	*result2 <*RejectChallenge>
+	result3 <NewChat Say 7 Goto GoStartCombat>
+	Msg1 <Did you forget that we have an arena fight scheduled? I'm getting bored.>
+	Msg2_1 <You beat me. I see now that real battle isn't like a simulator. Go find %name1%... \SPR %1% 'll have your prize money.>
+	CMsg2_1 <if= V2 1 Accept>
+	Msg2_2 <One for you, and one for me... Looks like I need to practice more. Go talk with %name1% about your prize money.>
+	CMsg2_2 <ifG V2 1 Accept>
+	Msg3 <I can't believe that %name1% died... This is the end of \SCENE %s2% .>
+	Msg4 <Are you ready to fight?>
+	Msg5 <Ah, you must be my challenger. I've wasted enough time with pointless talk; are you ready to fight me?>
+	Msg6_1 <I've trained since birth for this moment... my first taste of real combat!>
+	CMsg6_1 <if= V2 1 Accept>
+	Msg6_2 <Have you improved since the last time we met? Well, maybe I have too!>
+	CMsg6_2 <ifG V2 1 Accept>
+	Msg7 <%name1% must have told you that my name is Keight. Stop wasting time; meet me at the arena and we'll start this.>
+	Prompt1 <I'm ready.>
+	Prompt2 <Not now. I'll be back later.>
+	Prompt3 <Wait, my name's \PC , and you are...?>
+end
+inv
+	NPC Mecha Pilot
+	name <Keight>
+	chardesc Female Shy Passionate Pragmatic Heroic
+	SDL_Portrait <por_f_keight(J--).png>
+	SDL_Colors <112 28 28  255 230 210  56 25 81>
+	StatLine 16 13 14 16 14 12 13 8
+	Age -2
+	EquipChar 10000
+	SetTheme 2
+	SetSpecSkill 1
+	SetFaction 6
+end
+
+
+Content
 	name <PC vs Vanda>
 	requires <*:MECHA_ARENA_CHALLENGE (!Hi|!Ex)>
 
@@ -456,7 +535,7 @@ sub
 	GoCheckWin <if= ArenaState %2% NAV_AS_Win else GoCheckChallenge ifNPCOK %1% else GoManagerDied NewChat Say 2>
 	GoManagerDied <NewChat Say %3% SetQuestStatus %qid% -1 ResetArena %2%>
 	GoCheckChallenge <ResetArena %2% ifG ComTime ArenaRecharge %2% else GoLater if= V1 1 else GoFirstTime NewChat Say 4 AddChat 1 AddChat 2>
-	GoFirstTime <NewChat Say 5 V= 1 1>
+	GoFirstTime <NewChat Say 5 V= 1 1 AddCHat 1 AddChat 2>
 	*GoLater <*ChallengeMeLater>
 	*GoNoMatch <*NiceToMeetYou GoChat>
 	*GoChat <*MISC_CHATTER>
