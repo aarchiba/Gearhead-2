@@ -4,6 +4,39 @@
 %% This content is tied to a city rather than any specific character within it.
 
 Content
+	name <Aspiring Pilot>
+	desc <A young pilot has lots of problems.>
+	requires <*:LocalQuest (!Ne|!Lo|!Md)>
+
+	% E1 is the pilot.
+	Element1 <Prefab>
+	Scene1 <Building Public>
+	Team1 <Citizens>
+	TeamData1 <Pass Ally>
+
+requires <*:DEBUG>
+Scene1 <CavClub>
+
+	Quest1 <*:MechaHeld 1>
+
+	sub
+		Persona 1
+		rumor0 <%name1% dreams of becoming a famous mecha pilot.>
+		greeting <if= QuestStatus %qid% %id% else GoCheckFirst if= QuestStatus %qid1% -1 else GoCheckLoss >
+		GoCheckLoss <if= QuestStatus %qid1% -2 else GoQuestInProgress >
+		GoQuestInProgress <>
+		GoCheckFirst <if= QuestStatus %qid% 0 else GoNoQuest NewChat Say 1 QMemo %qid% 2 SetQuestStatus %qid% %id% SetQuestStatus %qid1% %id1%>
+		*GoNoQuest <*MISC_Chatter>
+		Msg1 <I'd like to become a famous pilot some day, but in order to do that I'm going to need my mecha back...>
+		Msg2 <%name1% told you that \SPR %1% needs to get \PPR %1% mecha back from somewhere.>
+
+	end
+	inv
+		NPC Mecha Pilot
+		Chardesc Young
+	end
+
+Content
 	name <Mine Hideout>
 	desc <A gang of thieves has left behind a base in the mine.>
 	requires <*:LocalQuest (!Ne|!Lo)>

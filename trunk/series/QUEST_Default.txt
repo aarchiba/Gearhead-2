@@ -6,6 +6,125 @@
 %% instead of being housed in a plot or story.
 %%
 
+%%
+%% *:MechaHeld Content
+%%
+%% E1's mecha is currently being held by someone else. In this subquest,
+%% the PC will be able to find that someone and release the mecha... Or
+%% maybe have it locked up perminantly. The NPC has a semi-legitimate
+%% claim to holding the mecha... it may be in hock due to debts, or maybe
+%% its ownership is disputed.
+%%
+%% To start this subquest, the calling quest should set the QuestID.
+%% This quest should end with -1 if the mecha was released, or -2 if not.
+%% The rumor should explain the situation.
+%%
+%% PARAM1: The NPC who lost his mecha.
+
+Content
+	name <Meks in Hock>
+	requires <*:MechaHeld>
+
+	% E1 is the character who owns the mecha.
+	% E2 is the storekeeper holding the mecha.
+	Element2 <Prefab>
+	Scene2 <Building Garage>
+	Team2 <Citizens>
+	TeamData2 <Pass Ally>
+
+	sub
+		Persona 1
+		% This conversation thread will activate after the PC asks E2 about the mecha.
+		greeting <if= QuestStatus %qid% %id% else %pop% ifNPCOK %2% else GoE2Died if= NPCVar %2% 1 1 else %pop%  NewChat Say %id%02 AddChat %id%01 AddChat %id%02>
+		GoE2Died <NewChat Say %id%01 SetQuestStatus %qid% -2>
+		result%id%01 <NewChat Say %id%03 AddChat %id%03 AddCHat %id%04 AddChat %id%05>
+		result%id%02 <NewChat Say %id%04>
+		result%id%03 <NewChat Say %id%05 NPCVar= %2% 1 2>
+		result%id%04 <NewChat Say %id%06>
+		result%id%05 <NewChat Say %id%07 NPCVar= %2% 1 2>
+		Msg%id%01 <I'll never get my mecha back from %name2% now...>
+		Msg%id%02 <I wish there was some way to get my mecha back from %name2%...>
+		Msg%id%03 <I can't afford to pay back everything I owe, and with my mecha gone I don't have any way to make more money. It's a tough situation.>
+		Msg%id%04 <Please do that. Any help would be greatly appreciated.>
+		Msg%id%05 <I could do that, if %name2% would agree to return my mecha. That way \SPR %2% gets paid and I still get to eat.>
+		Msg%id%06 <That's so true.>
+		Msg%id%07 <You're right... the only way to get past this is to bite the bullet and pay up. It's going to be painful in the short term, but really there's nothing else I can do. Tell %name2% I'll pay as much as I can now and the rest later.>
+		Prompt%id%01 <Why don't you just pay the money you owe?>
+		Prompt%id%02 <I'll talk with \OPR %2% , see if I can help.>
+		Prompt%id%03 <Maybe you can work out an installment plan.>
+		CPrompt%id%03 <ifConversation %sktar% Accept>
+		Prompt%id%04 <That's a real problem.>
+		Prompt%id%05 <Face responsibility and pay what you owe.>
+		CPrompt%id%05 <ifIntimidation %sktar% accept>
+
+		Persona 2
+		% V1 = Amount owed
+		% NPCVar %2% 1 = Communication variable. When =1, PC has talked to E2. WHen =2, E1 agreed to pay installments.
+		rumor%id% <%name2% is holding %name1%'s mecha until all debts are paid.>
+		greeting <if= QuestStatus %qid% %id% else GoNoQuest NewChat Say 1 AddChat 1 AddChat 2>
+		GoE1Dead <NewChat Say 2 SetQuestStatus %qid% -2>
+		result1 <ifNPCOK %1% else GoE1Dead NewChat Say 3 AddChat 3 AddChat 4 AddChat 5 AddCHat 6 if= NPCVar %2% 1 0 NPCVar= %2% 1 1 V= 1 Threat %threat% 2 QuestMemo %qid% 4>
+		result2 <Goto GoShop>
+		result3 <NewChat Say 6 AddChat 7 AddChat 8 AddChat 4>
+		result4 <ifConversation %sktar_hard% else GoR4Fail NewChat Say 7 SetQuestStatus %qid% -1>
+		GoR4Fail <NewChat Say 8>
+		result5 <NewChat Say 5 SetQuestStatus %qid% -1>
+		result6 <NewChat Say 9 AddChat 9 AddChat 8 AddCHat 7>
+		result7 <ifConversation %sktar% else GoR7Fail NewChat Say 11 AddChat 10 AddChat 11>
+		GoR7Fail <NewChat Say 10>
+		result8 <NewChat Say 12>
+		result9 <ifFlirtation %sktar_hard% else GoR9Fail NewChat Say 13 SetQuestSTatus %qid% -1 AddReact d12 AddHeroic -1>
+		GoR9Fail <NewChat Say 14>
+		result10 <NewChat Say 15 Cash+ - V1 SetQuestStatus %qid% -1>
+		result11 <NewChat Say 16>
+		*GoNoQuest <*NiceToMeetYou GoShop>
+		*GoShop <*SHOP_Mecha GoBye>
+		*GoBye <*GoodBye>
+		Msg1 <Yes, may I help you?>
+		Msg2 <I don't think %name1% is going to be needing a mecha any time soon... It's a shame that I'll never get the money I'm owed.>
+		Msg3 <%name1% owes me money, quite a bit of it in fact... I'll be holding onto \PPR %1% mecha until that money is repaid in full.>
+		Msg4 <%name2% is holding %name1%'s mecha until \SPR %1% can pay off \PPR %1% debt.>
+		Msg5 <Is that so? As soon as I've recieved the first installment, I will return \PPR %1% mecha.>
+		Msg6 <I'm owed $ \VAR V1 in total. If only %name1% would pay some installments, I wouldn't have needed to impound \ppr %1% mecha.>
+		Msg7 <Hmm. You're right, I know. %name1% won't be able to pay me back so long as \SPR %1% doesn't have the money. Alright, you can go tell %name1% that \SPR %1% can have \PPR %1% money back.>
+		Msg8 <That's hardly my problem, is it? Either I get that money or %name1%'s mecha stays where it is.>
+		Msg9 <Look, I'm running a business here. I can't just give it back until I've been paid.>
+		Msg10 <No way. This is %name1%'s debt, and \SPR %1% 's going to pay it off.>
+		Msg11 <Sure, you could do that... I mean, you really want to?>
+		Msg12 <You do that.>
+		Msg13 <For you? Well, it's a lot of money, but... yeah, I could do that for you.>
+		Msg14 <No. Definitely not.>
+		Msg15 <Ah, it's been a pleasure doing business with you. You can go tell %name1% that \SPR %1% can pick up \PPR %1% mecha anytime \SPR %1% wants.>
+		Msg16 <I didn't think so. Now, if you'll excuse me, I have other customer to attend to.>
+		Prompt1 <I'd like to talk about %name1%'s mecha.>
+		Prompt2 <I'd like to see what you have for sale.>
+		Prompt3 <How much does \SPR %1% owe you?>
+		Prompt4 <%name1% can't earn money without a mecha.>
+		Prompt5 <%name1% has agreed to pay the money.>
+		CPrompt5 <if= NPCVar %2% 1 2 Accept>
+		Prompt6 <Why can't you just give the mecha back?>
+		CPrompt6 <ifChatNPCSexy ifFlirtation %sktar_hard% Accept>
+		Prompt7 <How about I pay off the debt myself?>
+		CPrompt7 <ifG PC$ V1 Accept>
+		Prompt8 <I'll go talk with %name1% about that.>
+		Prompt9 <Couldn't you do it for me?>
+		Prompt10 <Yes, I do. [pay $ \VAL V1 ]>
+		Prompt11 <No, not really.>
+
+		Metascene 2
+		% If the key NPC dies, resolve the quest as a failure.
+		start <if= QuestStatus %qid% %id% else %pop% ifNPCDead %2% else %pop% SetQuestStatus %qid% -2 Goto %pop%>
+		sub
+			room
+			minimap <.#...+#.......1.....&---&>
+			special <SHAREDPALETTE>
+			desig <HOME>
+		end
+
+	end
+	inv
+		NPC Shopkeeper
+	end
 
 
 %%
