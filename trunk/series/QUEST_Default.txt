@@ -22,7 +22,100 @@
 %% PARAM1: The NPC who lost his mecha.
 
 Content
+	name <Mecha Impounded by L5Law>
+	desc <E1 broke some traffic rules; must pass a test to get mecha back>
+	requires <*:MechaHeld L5PAT>
+
+name <DEBUG>
+requires <*:MechaHeld  Common>
+Start <xpv 100>
+
+	% E1 is the character who owns the mecha.
+	% E2 is the police officer holding the mecha.
+	Element2 <Prefab>
+	Scene2 <Building Legit>
+	Team2 <Citizens>
+	TeamData2 <SD Ally>
+
+	sub
+		Persona 1
+		greeting <if= QuestStatus %qid% %id% else %pop%  if= NPCVar %2% 1 1 else %pop%  NewChat Say %id%01 AddChat %id%01>
+		result%id%01 <NewChat Say %id%02 AddCHat %id%02 AddCHat %id%03>
+		result%id%02 <NewChat Say %id%03 NPCVar= %2% 1 2>
+		result%id%03 <NewChat Say %id%04>
+		Msg%id%01 <All these traffic rules... What do they really have to do with how well I can pilot a mecha? %name2% says I have to pass a test before I can get my machine back.>
+		Msg%id%02 <Really, you'd do that? So, you know the answers to all of these questions, then?>
+		Msg%id%03 <Thanks. With your help, I'm sure I'll do fine on the test.>
+		Msg%id%04 <Be careful... if %name2% finds out, your mecha will be confiscated next.>
+		Prompt%id%01 <I could help you to study, if you want.>
+		Prompt%id%02 <No problem. Let me show you.>
+		CPrompt%id%02 <ifMechaPiloting %sktar% Accept>
+		Prompt%id%03 <Um... Actually I don't know either.>
+
+		Persona 2
+		% NPCVar %2% 1 = State Counter, if =1 have learned of test, if =2 have taught E1
+		% V2 = Intimidation counter
+		&Bribe <Threat %threat% 3>
+		rumor%id% <%name2% impounded %name1%'s mecha due to multiple parking tickets.>
+		greeting <if= QuestStatus %qid% %id% else GoNoQuest ifNPCDead %1% else GoCheckWin SetQuestStatus %qid% -2 Goto GoChat>
+		GoCheckWin <if= NPCVar %2% 1 2 else GoMainQuest NewChat Say 14 SetQuestStatus %qid% -1>
+		GoMainQuest <if= NPCVar %2% 1 1 else GoFirstTime NewChat Say 3 AddChat 3 AddChat 4>
+		GoFirstTime <NewChat Say 1 AddChat 1 AddChat 2>
+		*GoNoQuest <*NiceToMeetYou GoChat>
+		*GoChat <*MISC_CHATTER>
+		result1 <NewChat Say 2 AddChat 3 AddChat 4 NPCVar= %2% 1 1 QMemo %qid% 4>
+		*result2 <*MISC_CHATTER>
+		result3 <NewChat Say 5>
+		result4 <NewChat Say 6 AddCHat 5 AddChat 6 AddCHat 7>
+		result5 <ifChatNPCLawful else GoR5NoLaw NewChat Say 7 AddCHat 6 AddChat 3>
+		GoR5NoLaw <NewChat Say 8 AddChat 8 AddChat 9 AddChat 10>
+		result6 <AddLawful -5 AddHeroic -1 ifIntimidation %sktar_hard% else GoR6Fail NewChat Say 9 SetQuestStatus %qid% -1>
+		GoR6Fail <NewChat Say 10 PCEnemy %2% V= 2 1>
+		result7 <NewChat Say 11>
+		result8 <NewChat Say 12 Cash+ - &Bribe SetQuestStatus %qid% -1 AddLawful -5>
+		result9 <NewChat Say 13 AddReact d10 SetQuestStatus %qid% -1 AddLawful -3 AddEasygoing -d8>
+		result10 <NewChat Say 11>
+		Msg1 <Yes, may I help you?>
+		Msg2 <I caught %name1% piloting in an improper manner. I confiscated \PPR %1% mecha, and will not return it until \SPR %1% completes a mecha safety course.>
+		Msg3 <I'm still waiting for %name1% to complete \PPR %1% safety course.>
+		Msg4 <%name2% confiscated %name1%'s mecha, and won't return it until \SPR %1% completes a safety course.>
+		Msg5 <Please try. I've talked to \OPR %1% over and over but it never seems to sink in.>
+		Msg6 <What exactly do you mean by that?>
+		Msg7 <I'm not about to be bribed. You can tell %name1% that \SPR %1% can't get out of the test that easily.>
+		Msg8 <That sounds alright... what can you offer me?>
+		Msg9 <Yikes... Alright, you can tell %name1% that \PPR %1% mecha is being released. There's no need to make a big deal over this.>
+		Msg10 <It's not a smart idea to try intimidating a law officer. You can tell %name1% that \SPR %1% can't get out of the test that easily.>
+		Msg11 <That's too bad.>
+		Msg12 <It's been a pleasure doing business with you. You can tell %name1% that \PPR %1% mecha is being released.>
+		Msg13 <Yes, I do believe that would be a worthwhile trade. You can tell %name1% that \PPR %1% mecha is being released.>
+		Msg14 <You can tell %name1% that \SPR %1% passed the exam. I'll release \PPR %1% mecha shortly.>
+		Prompt1 <I'm here to talk about %name1%'s mecha.>
+		Prompt2 <I'm just here to chat.>
+		Prompt3 <I'll talk with \OPR %1% about that.>
+		Prompt4 <I want you to return \PPR %1% mecha now.>
+		Prompt5 <I can make it worth your while.>
+		Prompt6 <It wouldn't be healthy to refuse me.>
+		CPrompt6 <if= V2 0 Accept>
+		Prompt7 <Nothing, I'm just saying...>
+		Prompt8 <I can offer cash. [give $ \VAL &Bribe ]>
+		CPrompt8 <ifG PC$ &Bribe Accept>
+		Prompt9 <I can show you a good time.>
+		CPrompt9 <ifChatNPCSexy ifFlirtation %sktar_hard% Accept>
+		Prompt10 <I've got nothing...>
+
+		Metascene 2
+		% If the key NPC dies, resolve the quest as a failure.
+		start <if= QuestStatus %qid% %id% else %pop% ifNPCDead %2% else %pop% SetQuestStatus %qid% -2 Goto %pop%>
+	end
+	inv
+		NPC Police Officer
+		SetFaction 9
+	end
+
+
+Content
 	name <Meks in Hock>
+	desc <E1 is in debt to E2; the mecha is in hock>
 	requires <*:MechaHeld>
 
 	% E1 is the character who owns the mecha.
@@ -35,8 +128,8 @@ Content
 	sub
 		Persona 1
 		% This conversation thread will activate after the PC asks E2 about the mecha.
-		greeting <if= QuestStatus %qid% %id% else %pop% ifNPCOK %2% else GoE2Died if= NPCVar %2% 1 1 else %pop%  NewChat Say %id%02 AddChat %id%01 AddChat %id%02>
-		GoE2Died <NewChat Say %id%01 SetQuestStatus %qid% -2>
+		greeting <if= QuestStatus %qid% %id% else %pop% ifNPCOK %2% else .%id%_GoE2Died if= NPCVar %2% 1 1 else %pop%  NewChat Say %id%02 AddChat %id%01 AddChat %id%02>
+		.%id%_GoE2Died <NewChat Say %id%01 SetQuestStatus %qid% -2>
 		result%id%01 <NewChat Say %id%03 AddChat %id%03 AddCHat %id%04 AddChat %id%05>
 		result%id%02 <NewChat Say %id%04>
 		result%id%03 <NewChat Say %id%05 NPCVar= %2% 1 2>
@@ -86,7 +179,7 @@ Content
 		Msg4 <%name2% is holding %name1%'s mecha until \SPR %1% can pay off \PPR %1% debt.>
 		Msg5 <Is that so? As soon as I've recieved the first installment, I will return \PPR %1% mecha.>
 		Msg6 <I'm owed $ \VAR V1 in total. If only %name1% would pay some installments, I wouldn't have needed to impound \ppr %1% mecha.>
-		Msg7 <Hmm. You're right, I know. %name1% won't be able to pay me back so long as \SPR %1% doesn't have the money. Alright, you can go tell %name1% that \SPR %1% can have \PPR %1% money back.>
+		Msg7 <Hmm. You're right, I know. %name1% won't be able to pay me back so long as \SPR %1% doesn't have the money. Alright, you can go tell %name1% that \SPR %1% can have \PPR %1% mecha back.>
 		Msg8 <That's hardly my problem, is it? Either I get that money or %name1%'s mecha stays where it is.>
 		Msg9 <Look, I'm running a business here. I can't just give it back until I've been paid.>
 		Msg10 <No way. This is %name1%'s debt, and \SPR %1% 's going to pay it off.>

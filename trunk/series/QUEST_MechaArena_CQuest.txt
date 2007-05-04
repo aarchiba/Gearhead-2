@@ -17,7 +17,7 @@ Content
 	% E1 is the challenger
 sub
 	Persona 1
-	greeting <if= QuestID %qid% %id% else %pop% SetQuestStatus %qid% -1 ifG React d20 else .%id%_GoFail PCFriend ChatNPCID NewChat Say %id%01>
+	greeting <if= QuestStatus %qid% %id% else %pop% SetQuestStatus %qid% -1 ifG React d20 else .%id%_GoFail PCFriend ChatNPCID NewChat Say %id%01>
 	*.%id%_GoFail <*IConcedeDefeat&Battle>
 	Msg%id%01 <That was a great battle. Maybe we'll see each other again, next time away from the battlefield.>
 	Msg%id%01_1 <I have to admit, you're a formidible warrior. Maybe some time later we can get together again and swap stories. I'd like to do that very much.>
