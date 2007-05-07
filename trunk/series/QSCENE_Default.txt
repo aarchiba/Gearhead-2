@@ -1,7 +1,45 @@
 %% Scene prototypes for set adventure content.
 
-%% These scenes can use variables 1 through 10- vars 11 through 99 are reserved for
+%% These scenes can use variables + messages 1 through 10-
+%% vars/msgs 11 through 99 are reserved for
 %% use by the quest that generated them.
+
+%%
+%% *CargoHold Content
+%%
+
+Scene
+	name <# Hold>
+	requires <*CargoHold>
+	type <Private>
+	special <NOEXIT>
+	BoxMap
+	IndustrialTiles
+
+	MapWidth 22
+	MapHeight 32
+
+	NeededCells 2
+	content <Fill Sub *STORAGE_X na>
+
+	Start <Print 1>
+	Msg1 <You enter the cargo hold.>
+
+	sub
+		Team 1
+
+		Team 2
+		name <Citizens>
+
+		Room
+		minimap <......###..#1#...........>
+		sub
+			Elevator
+			Destination -1
+			MiniMapComponent 1
+		end
+	end
+
 
 %%
 %%  *ItemCrypt Content

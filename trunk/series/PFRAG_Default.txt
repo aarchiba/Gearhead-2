@@ -1,5 +1,52 @@
 % Persona Fragment File
 
+% TYPE: *PCChallengeNPC
+% 	The PC has a chance to challenge the NPC to combat... if he doesn't wuss out.
+%   PARAM1: Issue challenge exit label
+%   PARAM2: Wuss out exit label
+
+	Persona
+	requires <*PCChallengeNPC>
+	START <NewChat Say %id%01 AddChat %id%01 AddChat %id%02>
+	result%id%01 <Goto %1%>
+	result%id%02 <Goto %2%>
+	Msg%id%01 <Yes, may I help you? What do you want?>
+	Prompt%id%01 <I'm here to challenge you to combat!>
+	Prompt%id%02 <Uh, I'd just like to chat for a bit.>
+
+	Persona
+	requires <*PCChallengeNPC Shy>
+	START <NewChat Say %id%01 AddChat %id%01 AddChat %id%02>
+	result%id%01 <Goto %1%>
+	result%id%02 <Goto %2%>
+	Msg%id%01 <Why are you looking at me?>
+	Prompt%id%01 <I want to challenge you to a duel.>
+	Prompt%id%02 <Sorry, I... er... nothing.>
+
+	Persona
+	requires <*PCChallengeNPC "PDASS">
+	START <NewChat Say %id%01 AddChat %id%01 AddChat %id%02>
+	result%id%01 <Goto %1%>
+	result%id%02 <Goto %2%>
+	Msg%id%01 <Ah, \PC . I suppose you're here to challenge me to a duel.>
+	Prompt%id%01 <That's right.>
+	Prompt%id%02 <No, nothing like that...>
+
+
+% TYPE: *IAmBusy
+%               &OnPhone     This conversation is definitely via telephone
+%	The NPC is too busy to talk.
+
+	Persona
+	requires <*IAmBusy &OnPhone>
+	START <EndChat Say %id%01>
+	Msg%id%01 <I'm too busy to use the phone right now.>
+
+	Persona
+	requires <*IAmBusy>
+	START <EndChat Say %id%01>
+	Msg%id%01 <I'm too busy to talk right now.>
+
 % TYPE: *IMustProveMyself
 %	The NPC feels that he/she must prove him/herself.
 %	This frament does not exit.

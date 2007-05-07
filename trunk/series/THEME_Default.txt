@@ -152,6 +152,21 @@ Theme 1
 			type <BURN>
 		end
 
+		Gun 8
+		name <Dragon Cannon>
+		caliber <Chemical>
+		type <Line>
+		range 8
+		Acc 1
+		Speed 3
+		scale 2
+		sub
+			Ammo 8
+			Magazine 60
+			caliber <Chemical>
+			type <BURN BRUTAL>
+		end
+
 		BeamGun 5
 		Scale 2
 		name <Plasma Cannon>
@@ -257,13 +272,6 @@ Theme 1
 			magazine 4
 		end
 
-		MLauncher 3
-		Scale 2
-		sub
-			STC ICM-5
-			magazine 6
-		end
-
 		MLauncher 4
 		Scale 2
 		sub
@@ -283,6 +291,13 @@ Theme 1
 		sub
 			STC ICM-5
 			magazine 12
+		end
+
+		MLauncher 2
+		Scale 2
+		sub
+			STC FBM-8
+			magazine 2
 		end
 
 		MLauncher 12
@@ -356,7 +371,7 @@ Theme 2
 		Acc 1
 		mass -2
 
-		Melee 9
+		Melee 10
 		name <Longsword>
 		Scale 2
 		Acc 1
@@ -485,18 +500,11 @@ Theme 2
 
 
 		%% Missiles
-		MLauncher 3
+		MLauncher 4
 		Scale 2
 		sub
 			STC HR-10
-			Magazine 3
-		end
-
-		MLauncher 2
-		Scale 2
-		sub
-			STC SWM-2
-			Magazine 10
+			Magazine 4
 		end
 
 		MLauncher 4
@@ -504,13 +512,6 @@ Theme 2
 		sub
 			STC SWM-2
 			Magazine 20
-		end
-
-		MLauncher 15
-		Scale 2
-		sub
-			STC HR-10
-			Magazine 15
 		end
 
 		MLauncher 8
@@ -532,13 +533,6 @@ Theme 2
 		sub
 			STC SWM-2
 			Magazine 60
-		end
-
-		MLauncher 16
-		Scale 2
-		sub
-			STC SWM-2
-			Magazine 80
 		end
 
 		MLauncher 2
@@ -635,7 +629,7 @@ Theme 3
 		Speed 3
 		Mass -2
 
-		Melee 5
+		Melee 6
 		name <Ion Blade>
 		Scale 2
 		Speed 3
@@ -664,12 +658,6 @@ Theme 3
 		type <ArmorPiercing>
 		mass -6
 
-		EMelee 14
-		name <Beam Rapier>
-		Scale 2
-		Speed 3
-		Acc 2
-
 		Melee 8
 		name <Javelin>
 		Scale 2
@@ -685,7 +673,7 @@ Theme 3
 		mass -9
 
 		Emelee 21
-		name <Nova Rapier>
+		name <Beam Rapier>
 		Scale 2
 		Speed 4
 		Acc 2
@@ -697,9 +685,7 @@ Theme 3
 		mass -7
 
 		STC GR-24
-
-		STC GR-24
-		mass -9
+		mass -7
 
 		STC GR-12
 		name <EV Gauss Rifle>
@@ -773,5 +759,539 @@ Theme 3
 
 	% End Sophisticated
 	end
+
+Theme 4
+	name <Industrial>
+	%% Just done using refurbished industial material
+	%% Awful range.. mostly melee.
+	%% Chains and huge tools plus yellow and black stripes.
+	%% Requires Craft and maybe Mecha repair.
+	requires <(LABOR|CRAFT) ~[15]>	
+
+	CUSTOMIZATION_ADJECTIVE_0 <Iron>
+	CUSTOMIZATION_ADJECTIVE_1 <Steel>
+	CUSTOMIZATION_ADJECTIVE_2 <Heavy Duty>
+	CUSTOMIZATION_ADJECTIVE_3 <Mechanic>
+	CUSTOMIZATION_ADJECTIVE_4 <Industrial>
+	CUSTOMIZATION_NOUN_0 <Foreman>
+	CUSTOMIZATION_NOUN_1 <Mechanism>
+	CUSTOMIZATION_NOUN_2 <Machinery>
+	CUSTOMIZATION_NOUN_3 <Scrap>
+	CUSTOMIZATION_NOUN_4 <Device>
+
+	inv
+
+	%% Melee Weapons
+
+	melee 5
+	name <Metal Bar>
+	desc <Like the ones used as support in heavy duty construction.>
+	Hardened
+	Scale 2
+
+	Melee 7
+	Name <Hammer>
+	Scale 2
+
+	melee 8
+	name <Pick>
+	acc -1
+	mass -1
+	Scale 2
+
+	melee 14
+	name <Mecha Drill>
+	Scale 2
+	acc 1
+
+	melee 8
+	name <Tow Chain>
+	Scale 2
+	acc 1
+	type <FLAIL EXTEND>
+
+	melee 16
+	name <Buzzsaw>
+	Scale 2
+	acc 1
+	speed 3
+	mass -4
+	type <BRUTAL>
+	
+	melee 12
+	name <Demolition Ball>
+	Scale 2
+	acc 1
+	type <FLAIL EXTEND BRUTAL>  
+
+	Emelee 16
+	name <Electro Welder>
+	Scale 2
+	acc 1
+	speed 1
+	mass 3
+	type <HAYWIRE OVERLOAD>
+	
+	EMelee 19
+	Name <Energy Chainsaw>
+	Scale 2
+	Type <BRUTAL>
+	Acc -1
+	inv
+		PowerSource 4
+		mass -1
+		name <Extra Battery>
+	end
+	
+	%% Small Guns
+
+	Gun 1
+	Name <Industrial Nail Gun>
+	Scale 2
+	Range 3
+	caliber <Construction Nails>
+	Speed 4
+	BV 4
+	Acc -1
+	mass -2
+	sub
+		Ammo 1
+		caliber <Construction Nails>
+		Magazine 280
+	end
+
+	BeamGun 7
+	Name <Mining Laser>
+	Scale 2
+	Range 4
+	Acc -1
+	Speed 1
+	
+	STC LAS-3
+	name <Small Utility Laser>
+	range 3
+	
+	Gun 3
+	Name <Industrial Bolt Gun>
+	Scale 2
+	Range 3
+	caliber <Construction Bolts>
+	Speed 4
+	BV 4
+	Acc -1
+	sub
+		Ammo 3
+		caliber <Construction Bolts>
+		Magazine 120
+	end
+
+	STC LAS-5
+	name <Utility Laser>
+	range 4
+
+	
+	Gun 8
+	name <Solvent Squirter>
+	caliber <Chemical Solvent>
+	type <Line>
+	range 4
+	Acc 1
+	Speed 1
+	scale 2
+	sub
+		Ammo 8
+		Magazine 20
+		caliber <Chemical Solvent>
+		type <RUST>
+	end
+	
+	Gun 10
+	name <Industrial Burner>
+	caliber <Chemical>
+	type <Line>
+	range 4
+	Acc 1
+	Speed 3
+	scale 2
+	sub
+		Ammo 10
+		Magazine 20
+		caliber <Chemical>
+		type <BURN>
+	end
+	
+	STC LAS-10
+	name <Heavy Utility Laser>
+	range 6
+
+	%Big guns
+
+
+	BeamGun 14
+	Name <Heavy Mining Laser>
+	Scale 2
+	Range 4
+	Acc -1
+	Speed 1
+	mass -4
+
+	Gun 17
+	name <Digging Launcher>
+	caliber <70mm self-propelled>
+	range 8
+	scale 2
+	Speed 1
+	mass -4
+	sub
+		Ammo 17
+		Magazine 20
+		mass -1
+		caliber <70mm self-propelled>
+		type <BLAST 1 BRUTAL>
+	end
+
+
+	BeamGun 20
+	name <Demolition Laser>
+	acc -1
+	mass -6
+	scale 2
+
+	% End Industrial
+	end
+  
+
+Theme 5
+	name <Pirate>
+	%% Jhon Silver & Parrot look
+	%% Cutlass & Pistol! Arrr!
+	requires <Criminal ~THIEF ~CRIHN>
+	
+	CUSTOMIZATION_ADJECTIVE_0 <Jolly>
+	CUSTOMIZATION_ADJECTIVE_1 <Dread>
+	CUSTOMIZATION_ADJECTIVE_2 <Scurvy>
+	CUSTOMIZATION_ADJECTIVE_3 <Bloody>
+	CUSTOMIZATION_ADJECTIVE_4 <Black>
+	CUSTOMIZATION_NOUN_0 <Scourge>
+	CUSTOMIZATION_NOUN_1 <Roger>
+	CUSTOMIZATION_NOUN_2 <Plunder>
+	CUSTOMIZATION_NOUN_3 <Cutlass>
+	CUSTOMIZATION_NOUN_4 <Buccaneer>
+
+	inv
+
+	%% Melee Weapons
+	Melee 5
+	name <Mecha Cutlass>
+	Scale 2
+	Speed 3
+	Mass -3
+
+	Melee 7
+	name <Sabre>
+	Scale 2
+	Acc 1
+	mass -2
+
+	Melee 9
+	Name <Falchion>
+	mass -2
+	Scale 2
+	Speed 2
+
+	
+	Melee 7
+	name <Rapier>
+	Scale 2
+	Speed 3
+	type <ARMORPIERCING>
+	mass -3
+
+	EMelee 5
+	name <Plasma Cutlass>
+	Scale 2
+	Speed 3
+
+	EMelee 4
+	name <Mecha Energy Dagger>
+	Scale 2
+	Speed 4
+	Mass -3
+	
+	EMelee 5
+	Name <Pulse Cutlass>
+	type <HAYWIRE>
+	Scale 2
+
+	EMelee 10
+	name <Beam Cutlass>
+	Scale 2
+	Speed 3
+
+	melee 10
+	name <Boarding Hook>
+	Scale 2
+	acc 1
+	mass -4
+	type <FLAIL EXTEND BRUTAL>
+
+	EMelee 14
+	name <Ion Cutlass>
+	type <OVERLOAD>
+	Scale 2
+	Speed 3
+	
+	Emelee 10
+	name <Electro Boarding Hook>
+	Scale 2
+	acc 1
+	mass 1
+	type <FLAIL EXTEND HAYWIRE>
+
+	STC LAS-3
+	name <Laser Pistol>
+	range 3
+	speed 2
+	inv
+		PowerSource 1
+		mass -1
+		name <Pistol Battery>
+	end
+
+	Gun 4
+	name <Tri Pistol>
+	caliber <20mm caseless>
+	Range 6
+	BV 2
+	acc 1
+	scale 2
+	mass -4
+	sub
+		Ammo 4
+		Magazine 15
+		caliber <20mm caseless>
+	end
+
+	Gun 8
+	name <Destroyer Musket>
+	caliber <50mm self-propelled>
+	range 7
+	scale 2
+	sub
+		Ammo 8
+		Magazine 12
+		caliber <50mm self-propelled>
+		type <BRUTAL>
+	end
+	
+	Gun 8
+	Scale 2
+	name <Railgun Musket>
+	caliber <30mm ferrous>
+	Range 8
+	acc 2
+	speed 4
+	mass -2
+	sub
+		Ammo 8
+		caliber <30mm ferrous>
+		Magazine 50
+		mass -8
+	end
+	
+	BeamGun 8
+	name <Ion Musket>
+	type <OVERLOAD>
+	range 7
+	scale 2
+	
+	STC GR-12
+	name <Gauss Musket>
+	mass -2
+	Range 9
+
+	Gun 17
+	name <Mecha Boading Cannon>
+	caliber <70mm self-propelled>
+	range 8
+	scale 2
+	Speed 1
+	mass -4
+	sub
+		Ammo 17
+		Magazine 10
+		mass -1
+		caliber <70mm self-propelled>
+		type <BLAST 2 HAYWIRE>
+	end
+	
+	MLauncher 2
+	Scale 2
+	sub
+		STC HWM-4
+		name <Disabler Rockets>
+		type <HAYWIRE OVERLOAD>
+		Magazine 5
+	end
+	
+	MLauncher 4
+	Scale 2
+	sub
+		STC HWM-4
+		name <Disabler Rockets>
+		type <HAYWIRE OVERLOAD>
+		Magazine 10
+	end
+
+	MLauncher 8
+	Scale 2
+	sub
+		STC HWM-4
+		name <Disabler Rockets>
+		type <HAYWIRE OVERLOAD>
+		Magazine 20
+	end
+	
+	% End Pirate
+	end
+  
+  
+  
+  
+
+Theme 6
+	name <Mad Scientist>
+	requires <ACADE>	
+	
+	CUSTOMIZATION_ADJECTIVE_0 <Atomic>
+	CUSTOMIZATION_ADJECTIVE_1 <Quantic>
+	CUSTOMIZATION_ADJECTIVE_2 <Neutronic>
+	CUSTOMIZATION_ADJECTIVE_3 <Molecular>
+	CUSTOMIZATION_ADJECTIVE_4 <Analytical>
+	CUSTOMIZATION_NOUN_0 <Hypothesis>
+	CUSTOMIZATION_NOUN_1 <Apparatus>
+	CUSTOMIZATION_NOUN_2 <Knowledge>
+	CUSTOMIZATION_NOUN_3 <Proof>
+	CUSTOMIZATION_NOUN_4 <Theory>
+
+	inv
+
+	Melee 5
+	scale 2
+	name <Quantum Scalpel>
+	type <ARMORPIERCING>
+	Speed 6
+	Acc 1
+	mass -3
+	desc <An experimental mecha weapon.>
+
+	EMelee 12
+	Scale 2
+	name <Magnetic Disintegrator>
+	type <BRUTAL OVERLOAD>
+	acc 1
+	Speed 2
+
+	EMelee 9
+	scale 2
+	name <Neutron Lash>
+	type <Extend Overload Flail>
+	Speed 6
+	Acc 1
+	desc <An experimental mecha weapon.>
+	
+	Gun 7
+	scale 2
+	name <Glass Cannon>
+	Speed 4
+	range 5
+	desc <An experimental mecha weapon.>
+	caliber <Glass Cannon Capsules>
+	sub
+		Ammo 7
+		caliber <Glass Cannon Capsules>
+		type <RUST>
+		magazine 20
+	end
+
+	BeamGun 7
+	name <Impact Wave Cannon>
+	scale 2
+	range 4
+	Speed 3
+	mass -1
+	type <SWARM SCATTER>
+
+	BeamGun 6
+	Scale 2
+	name <Heavy Particle Cannon>
+	type <OVERLOAD ANTIAIR>
+	Range 8
+	ACC 1
+	
+	BeamGun 13
+	Scale 2
+	name <Superheavy Particle Cannon>
+	desig <PAR-13>
+	type <OVERLOAD ANTIAIR>
+	Range 9
+	Recharge 1
+
+	STC PHS-8
+
+	Gun 12
+	name <Anti Matter Gauss Rifle>
+	scale 2
+	Range 10
+	Recharge 1
+	caliber <70mm AM ferrous>
+	sub
+		Ammo 12
+		caliber <70mm AM ferrous>
+		type <HYPER>
+		magazine 16
+	end
+	
+	%% Missiles
+	MLauncher 4
+	Scale 2
+	sub
+		STC SWM-2
+		acc 3
+		name <A.I. guided missiles>
+		Magazine 20
+	end
+	
+	MLauncher 8
+	Scale 2
+	sub
+		STC SWM-2
+		acc 3
+		name <A.I. guided missiles>
+		Magazine 40
+	end	
+	
+	MLauncher 4
+	Scale 2
+	sub
+		STC HR-10
+		name <Glass Rockets>
+		type <RUST>
+		Magazine 4
+	end
+
+	MLauncher 2
+	Scale 2
+	sub
+		STC HR-10
+		name <Neutronic Rockets>
+		type <HYPER>
+		Magazine 2
+	end
+	
+	% End Science
+	end
+  
+  
 
 

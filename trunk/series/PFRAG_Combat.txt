@@ -228,6 +228,12 @@ Persona
 	Msg%id%01 <Are you ready to fight?>
 	Prompt%id%01 <More ready than you.>
 
+	Persona
+	requires <*ArenaChallenge "PDASS">
+	start <EndChat Say %id%01 AddChat %id%01>
+	result%id%01 <Goto %1%>
+	Msg%id%01 <It's time for another match... Only one of us can make it to the next rank.>
+	Prompt%id%01 <That's gonna be me.>
 
 % TYPE: *BattleChallenge
 %                     &Avoid	Combat can be avoided
@@ -248,7 +254,7 @@ Persona
 	CPrompt%id%01_1 <ifPCCheerful Accept>
 	Prompt%id%01_2 <I don't want to hurt you, but I will...>
 	CPrompt%id%01_2 <ifPCMelancholy Accept>
-	Prompt%id%01_3 <>
+	Prompt%id%01_3 <That's not likely to happen.>
 	CPrompt%id%01_3 <ifPCEasygoing Accept>
 	Prompt%id%01_4 <If that happens, then so be it!>
 	CPrompt%id%01_4 <ifPCPassionate Accept>

@@ -25,11 +25,20 @@ interface
 
 uses gears;
 
+Const
+	WT_SmallGun = 1;
+	WT_BigGun = 2;
+	WT_MissileLauncher = 3;
+	WT_MeleeWeapon = 4;
+
 Function MechaModPoints( NPC: GearPtr ): Integer;
+Function WeaponThemeClass( W: GearPtr ): Integer;
 
 Procedure MechaMakeover( Mek: GearPtr; Skill,Theme,MP: Integer );
 
 Procedure ShopkeeperModifyMek( NPC,Mek: GearPtr );
+
+Procedure CheckTheme( Theme: GearPtr );
 
 
 implementation
@@ -54,31 +63,26 @@ begin
 	MechaModPoints := MP;
 end;
 
+Function WeaponThemeClass( W: GearPtr ): Integer;
+	{ Return the weapon type of this gear. }
+begin
+	if ( W^.S = GS_Melee ) or ( W^.S = GS_EMelee ) then begin
+		WeaponThemeClass := WT_MeleeWeapon;
+	end else if W^.S = GS_Missile then begin
+		WeaponThemeClass := WT_MissileLauncher;
+	end else if AttackSkillNeeded( W ) = 2 then begin
+		WeaponThemeClass := WT_BigGun;
+	end else begin
+		WeaponThemeClass := WT_SmallGun;
+	end;
+end;
+
 Procedure MechaMakeover( Mek: GearPtr; Skill,Theme,MP: Integer );
 	{ Original title of this procedure was going to be "PimpMyMecha", }
 	{ but the word "pimp" is awfully overused these days, isn't it? }
-Const
-	WT_SmallGun = 1;
-	WT_BigGun = 2;
-	WT_MissileLauncher = 3;
-	WT_MeleeWeapon = 4;
 var
 	PartsBox: GearPtr;
 	OriginalMV,NumMassAdjusts: Integer;
-
-	Function WeaponType( W: GearPtr ): Integer;
-		{ Return the weapon type of this gear. }
-	begin
-		if ( W^.S = GS_Melee ) or ( W^.S = GS_EMelee ) then begin
-			WeaponType := WT_MeleeWeapon;
-		end else if W^.S = GS_Missile then begin
-			WeaponType := WT_MissileLauncher;
-		end else if AttackSkillNeeded( W ) = 2 then begin
-			WeaponType := WT_BigGun;
-		end else begin
-			WeaponType := WT_SmallGun;
-		end;
-	end;
 
 	Function SwapParts( OldPart, NewPart: GearPtr ): Boolean;
 		{ Attempt to swap OldPart with NewPart. If the exchange is impossible }
@@ -236,7 +240,7 @@ var
 			while ( it = Nil ) and ( Tries < 4 ) do begin
 				Part := PartsBox^.InvCom;
 				while Part <> Nil do begin
-					if ( Part^.G = GG_Weapon ) and ( WeaponType( Part ) = WT ) then begin
+					if ( Part^.G = GG_Weapon ) and ( WeaponThemeClass( Part ) = WT ) then begin
 						{ We've found a weapon of the appropriate type. Compare }
 						{ it against IT to see whether or not to choose it. }
 						PartValue := GearValue( Part );
@@ -371,13 +375,13 @@ var
 			Part,It: GearPtr;
 			MinValue,PartValue,ItValue: LongInt;
 		begin
-			WT := WeaponType( WeaponToReplace );
+			WT := WeaponThemeClass( WeaponToReplace );
 			MinValue := GearValue( WeaponToReplace );
 			It := Nil;
 			ItValue := 0;
 			Part := PartsBox^.InvCom;
 			while Part <> Nil do begin
-				if ( Part^.G = GG_Weapon ) and ( WeaponType( Part ) = WT ) then begin
+				if ( Part^.G = GG_Weapon ) and ( WeaponThemeClass( Part ) = WT ) then begin
 					{ We've found a weapon of the appropriate type. Compare }
 					{ it against IT to see whether or not to choose it. }
 					PartValue := GearValue( Part );
@@ -501,5 +505,70 @@ begin
 		MechaMakeover( Mek , 0 , Theme^.S , MP );
 	end;
 end;
+
+Procedure CheckTheme( Theme: GearPtr );
+	{ Check this theme. See if it has all the required weapons. }
+	{ There are four weapon types and about 10 cost classes. }
+const
+	Cost_Max: Array [ 1..4 , 0..10 ] of LongInt = (
+	( 0 , 30000 , 45000 , 65000 , 90000 , 120000  ,  160000 , 210000 , 270000 , 340000 , 420000 ),	{ Small Guns }
+	( 0 , 30000 , 45000 , 65000 , 90000 , 120000  ,  160000 , 210000 , 270000 , 340000 , 420000 ),	{ Big Guns }
+	( 0 , 30000 , 45000 , 65000 , 90000 , 120000  ,  160000 , 210000 , 270000 , 340000 , 420000 ),	{ Missile Launchers }
+	( 0 , 10000 , 15000 , 25000 , 40000 , 60000  ,  90000 , 130000 , 180000 , 240000 , 310000 )	{ Melee Weapons }
+	);
+var
+	Memo: SAttPtr;	{ List of comments. }
+	Procedure CheckTypeRank( WP_Type,WP_Rank: Integer );
+		{ Check this weapon type/rank to make sure one appropriate weapon is present. }
+		{ If more than one is present, that's an error. If less than one is present, that's }
+		{ an error too. }
+	var
+		W: GearPtr;
+		N: Integer;
+		Cost: LongInt;
+	begin
+		W := Theme^.InvCom;
+		N := 0;
+		while W <> Nil do begin
+			if WeaponThemeClass( W ) = WP_Type then begin
+				Cost := GearValue( W );
+				if ( Cost >= Cost_Max[ WP_Type , WP_Rank - 1 ] ) and ( Cost <= Cost_Max[ WP_Type , WP_Rank ] ) then Inc( N );
+			end;
+			W := W^.Next;
+		end;
+
+		{ Store any errors in MEMO. }
+		if N = 0 then begin
+			StoreSAtt( Memo , 'ERROR: Type ' + BStr( WP_Type ) + ' Rank ' + BStr( WP_Rank ) + ' has no weapon.' );
+		end else if N > 1 then begin
+			StoreSAtt( Memo , 'ERROR: Type ' + BStr( WP_Type ) + ' Rank ' + BStr( WP_Rank ) + ' has ' + BStr( N ) + ' weapons.' );
+			W := Theme^.InvCom;
+			while W <> Nil do begin
+				if WeaponThemeClass( W ) = WP_Type then begin
+					Cost := GearValue( W );
+					if ( Cost >= Cost_Max[ WP_Type , WP_Rank - 1 ] ) and ( Cost <= Cost_Max[ WP_Type , WP_Rank ] ) then begin
+						if ( WP_Type = WT_MissileLauncher ) and ( W^.SubCom <> Nil ) then StoreSAtt( Memo , '     ->' + FullGearName( W^.SubCom ) + ' [' + BStr( W^.SubCom^.Stat[ STAT_AmmoPresent ] ) + ']' )
+						else StoreSAtt( Memo , '     ->' + GearName( W ) );
+					end;
+				end;
+				W := W^.Next;
+			end;
+		end;
+	end;
+var
+	C,R: Integer;
+begin
+	Memo := Nil;
+	for C := 1 to 4 do begin
+		for R := 1 to 10 do begin
+			CheckTypeRank( C , R );
+		end;
+	end;
+	if Memo <> Nil then begin
+		MoreText( Memo , 1 );
+		DisposeSAtt( Memo );
+	end;
+end;
+
 
 end.

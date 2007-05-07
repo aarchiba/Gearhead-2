@@ -222,4 +222,96 @@ Content
 		desig <ENTRANCE %s2%>
 	end
 
+Content
+	name <Debug Arena>
+	requires <*:DEBUGARENA>
+	%% This is a copy of the Cayley Arena used for debugging purposes. It should only load if
+	%% an arena challenger is marked as *:DEBUG_MECHA_ARENA_CHALLENGE
+
+	% E1 is Peters
+	% E2 is the arena
+	% E3 is the entrance to the arena
+	Element1 <Prefab>
+	Scene1 <cavclub>
+	Team1 <Citizens>
+	TeamData1 <Pass Ally>
+
+	Scene2 <New *Arena_Default>
+
+	Element3 <Prefab>
+	Scene3 <Environs>
+
+	Quest1 <*:DEBUG_MECHA_ARENA_CHALLENGE #5 1 2>
+
+	sub
+		Persona 1
+		greeting <if# QuestStatus %qid% 0 else GoPreQuest if= ArenaState %2% NAV_AS_Win else GoCheckLoss Goto GoArenaWin>
+		GoCheckLoss <if= ArenaState %2% NAV_AS_Loss else GoCheckReady Goto GoArenaLoss>
+		GoCheckReady <if= ArenaState %2% NAV_AS_Vacant else GoArenaFull ifG ComTime ArenaRecharge %2% else GoArenaBusy Goto GoOfferFight>
+
+		GoArenaWin <if= ArenaWins %2% 10 else GoMinorWin Goto GoBigWin>
+		*GoMinorWin <*BasicArenaWin %2% GoResetArena>
+		*GoArenaLoss <*BasicArenaLoss %2% GoResetArena>
+		GoResetArena <ResetArena %2%>
+
+		*GoArenaFull <*ArenaIsFull %2%>
+		*GoArenaBusy <*ArenaIsBusy %2%>
+
+		GoChooseBattle <if= ArenaWins %2% 0 else GoNormalBattle Goto .%id1%_GoInit>
+		*GoNormalBattle <*StartArenaBattle %2% GoStartFight>
+		GoStartFight <SavePos PrepArena %2% 100 Jump %2%>
+		*GoRefuseBattle <*RefuseArenaFight %2%>
+
+		GoStartQuest <SetQuestStatus %qid% %id% SetArenaThreat %2% 5>
+
+		GoOfferFight <NewChat Say 1 AddChat 1 AddChat 2>
+		% Remember, there's a lot of fiddly bits for the big win.
+		GoBigWin <NewChat Say 7 History 8 XPV 100 SetQuestStatus %qid% -1 RandomMecha .mektype 75 Goto GoResetArena>
+		.mektype <PDASS REGEX KETTE BIOCO FEDDE>
+		*GoPreQuest <*NiceToMeetYou GoArenaIntro>
+		GoArenaIntro <NewChat Say 2 AddChat 3 AddChat 4>
+
+		result1 <Goto GoChooseBattle>
+		result2 <Goto GoRefuseBattle>
+		result3 <NewChat Say 3 AddChat 5 AddChat 6 Goto GoStartQuest>
+		result4 <NewChat Say 4>
+		result5 <NewChat Say 5 AddChat 1 AddChat 2>
+		result6 <NewChat Say 6 AddChat 1 AddChat 2 AddCheerful -d10>
+
+		Msg1 <Welcome back to the Steel Arena. Are you ready to fight?>
+		Msg2 <Welcome to the Steel Arena. Are you here to fight, or just to watch?>
+		Msg3 <Our arena is on the far side of the rock. It's probably the best arena in all the colonies! We buried a ton of simgravs down there, so it feels just like you're fighting on Earth!>
+		Msg4 <Alright, then. You should be able to see the fight on one of the monitors, somewhere...>
+		Msg5 <It really is! We've got a battle coming up soon. Do you want to take part?>
+		Msg6 <Er... no, no I haven't, but I watch all the mecha tournament shows... Earth pilots rock. So, do you want to fight now?>
+		Msg7 <Since that was your tenth win, you've officially won our big prize! Here's a brand new dueling mecha, straight from Earth!>
+		Msg8 <You were crowned champion of the Steel Arena.>
+
+		Prompt1 <I'm ready to go.>
+		CPrompt1 <ifChatNPCInPlay ifG PCMeks 0 Accept>
+		Prompt2 <Wait a minute, okay?>
+		Prompt3 <I'm here to fight!>
+		Prompt4 <I think I'll just watch, for now.>
+		Prompt5 <Sounds like fun!>
+		Prompt6 <You've never been to Earth, have you?>
+
+		MetaScene 1
+		sub
+			room
+			name <The Debug Arena>
+			special <SHAREDPALETTE>
+			desig <HOME>
+			minimap <#...#........1......#---#>
+		end
+	end
+	inv
+		NPC Citizen
+		job <Arena Manager>
+		SDL_COLORS <49 91 161  255 212 195  244 216 28>
+		SetFaction 5
+
+		STC QUEST-MAPMARKER-AUTO-STATIONARY
+		name <Steel Arena>
+		desig <ENTRANCE %s2%>
+	end
 

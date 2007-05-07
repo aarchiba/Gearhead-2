@@ -2698,7 +2698,7 @@ end;
 Procedure ProcessRandomMecha( var Event: String; GB: GameBoardPtr; Source: GearPtr );
 	{ The player has just won a mecha. Cool! }
 var
-	Factions,FName: String;
+	Factions,FName,msg: String;
 	Renown: Integer;
 	MList,Mek,PC: GearPtr;
 begin
@@ -2733,6 +2733,11 @@ begin
 
 		SetNAtt( Mek^.NA , NAG_Location , NAS_Team , NAV_DefPlayerTeam );
 		DeployMek( GB , Mek , False );
+
+		msg := ReplaceHash( MsgString( 'MechaPrize_Announce' ) , FullGearName( Mek ) );
+		AToAn( msg );
+		DialogMsg( msg );
+
 		PC := GG_LocatePC( GB );
 		if FindPilotsMecha( GB^.Meks , PC ) = Nil then AssociatePilotMek( GB^.Meks , PC , Mek );
 	end;

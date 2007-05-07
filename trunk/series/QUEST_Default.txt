@@ -13,7 +13,9 @@
 %% the PC will be able to find that someone and release the mecha... Or
 %% maybe have it locked up perminantly. The NPC has a semi-legitimate
 %% claim to holding the mecha... it may be in hock due to debts, or maybe
-%% its ownership is disputed.
+%% its ownership is disputed. The presence of this subquests implies a
+%% certain amount of inexperience or irresponsibility on the part of the
+%% pilot.
 %%
 %% To start this subquest, the calling quest should set the QuestID.
 %% This quest should end with -1 if the mecha was released, or -2 if not.
@@ -22,13 +24,35 @@
 %% PARAM1: The NPC who lost his mecha.
 
 Content
+	name <Mecha Drifting in Space>
+	desc <E1 ejected while in space; now his mecha is floating aimlessly outside.>
+	requires <*:MechaHeld Spinner (!Ne|!Lo)>
+
+	% E1 is the character that owns the mecha
+	% E2 is the encounter representing the mecha
+	Element2 <Prefab>
+	Scene2 <Space Environs>
+
+	inv
+		STC QUEST-ENCOUNTER-AUTO-WANDER
+		name <Abandoned Mecha>
+		rumor%id% <%name1% was forced to eject outside the station.>
+		EncounterMove 20
+		ENCOUNTER_NonCombat
+		ATTACK <ifG StatVal STAT_MetaVisibility -1    ifEncounterVisible Goto Use>
+		USE <ifYesNo 1 2 3 else GoTakeMecha   Print 4   XPV 50  SetQuestStatus %qid% -1  DeleteItem %2%>
+		GoTakeMecha <RandomMecha .mekdesc %threat% SetQuestStatus %qid% -2  DeleteItem %2%>
+		.mekdesc <GENERAL>
+		Msg1 <You spot a mecha floating in space. It's most likely the one lost by %name1%.>
+		Msg2 <Mark its location for %name1%.>
+		Msg3 <Take the mecha as your own.>
+		Msg4 <You send the mecha coordinates to %name1%.>
+	end
+
+Content
 	name <Mecha Impounded by L5Law>
 	desc <E1 broke some traffic rules; must pass a test to get mecha back>
 	requires <*:MechaHeld L5PAT>
-
-name <DEBUG>
-requires <*:MechaHeld  Common>
-Start <xpv 100>
 
 	% E1 is the character who owns the mecha.
 	% E2 is the police officer holding the mecha.
@@ -67,7 +91,7 @@ Start <xpv 100>
 		*result2 <*MISC_CHATTER>
 		result3 <NewChat Say 5>
 		result4 <NewChat Say 6 AddCHat 5 AddChat 6 AddCHat 7>
-		result5 <ifChatNPCLawful else GoR5NoLaw NewChat Say 7 AddCHat 6 AddChat 3>
+		result5 <ifNPCLawful else GoR5NoLaw NewChat Say 7 AddCHat 6 AddChat 3>
 		GoR5NoLaw <NewChat Say 8 AddChat 8 AddChat 9 AddChat 10>
 		result6 <AddLawful -5 AddHeroic -1 ifIntimidation %sktar_hard% else GoR6Fail NewChat Say 9 SetQuestStatus %qid% -1>
 		GoR6Fail <NewChat Say 10 PCEnemy %2% V= 2 1>
@@ -233,7 +257,129 @@ Content
 %%
 %% PARAM1: The NPC who will be doing the proving.
 
+Content
+	name <Prove Myself vs Derelict Spaceship>
+	% A derelict spaceship has been found. A local professor has offered a reward
+	% for the first person to locate its cargo hold. The PC can take part in the mission,
+	% but will be beaten there by E1... at which point in time the PC can allow him to
+	% claim the prize, or fight him and take the prize himself.
+	requires <*ProveMyself L5PAT>
 
+	% E1 is the character who must prove himself
+	% E2 is the professor offering the quest
+	% E3 is the derelect spaceship entrance
+	% E4 is the spaceship dungeon
+	% E5 is the final goal room
+	Element2 <Prefab>
+	Scene2 <Building Public>
+	Team2 <Citizens>
+	TeamData2 <Pass Ally>
+
+	Element3 <Prefab>
+	Scene3 <Environs>
+
+	Scene4 <New *Dungeon.Derelict>
+
+	Scene5 <New *CargoHold>
+
+	sub
+		Persona 1
+		% v%id%01 = Have gotten win speech already
+		greeting <if# QuestStatus %qid% -1 else .%id%_GoWinQuest if= QuestStatus %qid% %id% else %pop%  if= SceneVar %s5% 12 1 else .%id%_GoPreDungeon Goto .%id%_GoInDungeon>
+		.%id%_GoWinQuest <if= v%id%01 0 else .%id%_GoChat NewChat Say %id%01 v= %id%01 1>
+		.%id%_GoPreDungeon <NewChat Say %id%02>
+		.%id%_GoInDungeon <if= SceneID %s5% else .%id%_GoBusy IfChatNPCSurrendered else .%id%_GoFirstDungeon AddHeroic 2 Goto .%id%_GoSurrender>
+		.%id%_GoFirstDungeon <NewChat Say %id%03 AddChat %id%01 AddChat %id%02>
+		*.%id%_GoBusy <*IAmBusy&OnPhone>
+		*.%id%_GoChat <*MISC_CHATTER>
+		result%id%01 <NewChat Say %id%04   Print %id%07  AddLawful 1 AddRenown -1 SetQuestStatus %qid% -1  MoveAndPacifyNPC %1% %s1%  PCAlly %1%>
+		result%id%02 <AddLawful -5 ifIntimidation %sktar_hard% else .%id%_GoStartFight Goto .%id%_GoSurrender>
+		.%id%_GoSurrender <EndChat Say %id%05   Print %id%07  SetQuestStatus %qid% -2  MoveAndPacifyNPC %1% %s1%  PCEnemy %1%  L= 13 1  UnSurrender %1%>
+		.%id%_GoStartFight <AddHeroic -3 TeamAttack 2 EndChat  Say %id%06  SetQuestStatus %qid% -2  PCEnemy %1%>
+		Msg%id%01 <Now that I've completed my first real mission, I feel that I'm ready to be a cavalier!>
+		Msg%id%02 <What I really need to prove myself is a real mission. The trouble is, until I've completed a real mission, nobody's willing to hire me...>
+		Msg%id%03 <I did it! I found the cargo hold of this spaceship for Professor %name2%, and it seems like I'm the first person here! I can't wait to get back to town and collect my reward.>
+		Msg%id%04 <Thanks, \PC . I'll see you back in town.>
+		Msg%id%05 <Alright, I see how this is going... I'll let you claim you were here first. The reward's not worth dying over.>
+		Msg%id%06 <Do you expect me to give up on this without a fight? I think I can take you...>
+		Msg%id%07 <%name1% leaves the area.>
+		Prompt%id%01 <Congratulations, I concede victory to you.>
+		Prompt%id%01_1 <Congratulations, you earned it.>
+		Prompt%id%02 <Too bad you aren't getting out alive.>
+
+		Persona 2
+		rumor%id% <%name2% has discovered an old wrecked spaceship, and is offering a reward to whoever explores it.>
+		% V1 = Have collected reward
+		% V2 = Have initialized quest
+		% V3 = E1 dead at start of mission
+		greeting <if# SceneVar %s5% 13 0 else GoCheckQuest if= V1 0 else GoChat NewChat Say 1 AddChat 1 AddChat 2>
+		GoCheckQuest <if= QuestStatus %qid% -1 else GoCheckBegin if= V1 0 else GoChat NewChat Say 4 v= 1 1>
+		GoCheckBegin <if= QuestStatus %qid% %id% else GoNoQuest if= V2 0 else GoRemindQuest NewChat Say 5 QMemo %qid% 6  V= 2 1 Goto GoStartQuest>
+		GoRemindQuest <NewChat say 7>
+		GoStartQuest <SceneVar= %s5% 12 1  MoveNPC %1% %5%  SetNPCTeam %1% 2  SetQEncActive %3% ifNPCDead %1% V= 3 1>
+		*GoNoQuest <*NiceToMeetYou GoChat>
+		*GoChat <*MISC_CHATTER>
+		result1 <NewChat Say 2 CashPrize Reward Threat %threat% 100 100 V= 1 1>
+		result2 <NewChat Say 3  AddHeroic 1 AddRenown -5   V= 1 1>
+		Msg1 <Welcome back. Have you discovered anything of interest?>
+		Msg2 <Ah, that's good to hear. Now I have a good place to begin my expedition. Here's a small reward for your trouble.>
+		Msg3 <Is that so? In that case, I'll have to prepare a reward.>
+		Msg4 <Did you hear? A young adventurer named %name1% has located the cargo hold. My expedition can start soon.>
+		Msg5 <I've discovered an old space wreck not far from here. To find out about it, I really need to have a look at its cargo hold. I'm offering a reward for the first person to explore this spaceship and tell me exactly where it is.>
+		Msg6 <Professor %name2% is offering a prize for the first person to locate the cargo hold of an old wreck \SPR %2% discovered.>
+		Msg7 <I'm still waiting for someone to locate the cargo hold of that derelict spaceship I discovered.>
+		Prompt1 <I've located the cargo hold.>
+		Prompt2 <%name1% found the cargo hold.>
+		CPrompt2 <if= V3 0 Accept>
+
+		MetaScene 4
+		sub
+			room
+			minimap <............2............>
+			special <SHAREDPALETTE>
+			sub
+				Trapdoor
+				desig <ENTRANCE %s5%>
+				MiniMapComponent 2
+			end
+		end
+
+		MetaScene 5
+		% V11 = Quest initialization counter
+		% V12 = SubQuest Status; if V12=1, quest has been initialized.
+		% V13 = If nonzero, PC counts as first to cargo hold
+		start <if= v11 0 else %pop%  V= 11 1  ifNPCOK %1% else GoStartNPCDead ForceChat %1% Goto %pop%>
+		GoStartNPCDead <Print 11  V= 13 1  SetQuestStatus %qid% -2>
+		SURRENDER%1% <if= V11 1 SetQuestStatus %qid% %id% Forcechat %1%>
+		FAINT%1% <if= V11 1 V= 13 1 SetQuestStatus %qid% -2>
+		% If the quest status hasn't been set by the time the scene is exited, do it then.
+		End <if= V11 1   V= 11 2   ifNPCOK %1% else GoNPCDead  ifTeamHostile 2 else GoNoHostile  MoveAndPacifyNPC %1% %s1%  SetQuestStatus %qid% -2>
+		GoNoHostile <if= QuestStatus %qid% %id%  MoveAndPacifyNPC %1% %s1%  SetQuestStatus %qid% -1>
+		GoNPCDead <if= QuestStatus %qid% %id%  SetQuestStatus %qid% -2 V= 13 1>
+		Msg11 <You enter the cargo hold. This must be the place that %name2% was searching for.>
+		sub
+			room
+			minimap <......###..#2#...........>
+			special <SHAREDPALETTE>
+			sub
+				Elevator
+				name <Airlock>
+				MiniMapComponent 2
+				use <ifYesNo 1 2 3 Print 4 Exit %s3%>
+				Msg1 <This airlock opens to the outside of the spaceship.>
+				Msg2 <Leave the derelict.>
+				Msg3 <Stay here for now.>
+				Msg4 <You leave the derelict.>
+			end
+		end
+	end
+	inv
+		NPC Professor
+
+		STC QUEST-MAPMARKER-STATIONARY
+		name <Derelict Spaceship>
+		desig <Entrance %s4%>
+	end
 
 Content
 	name <Prove Myself Vs Pirates>

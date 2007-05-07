@@ -1338,6 +1338,7 @@ var
 				if PScene <> Nil then begin
 					{ As long as we've found our parent scene, insert the }
 					{ fragment into it. }
+					ParentSceneID := PScene^.S;
 					InsertSubCom( PScene , Frag );
 				end else begin
 					{ No scene to be found. Bummer. }

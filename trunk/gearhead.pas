@@ -28,10 +28,10 @@ program gearhead;
 
 {$IFDEF ASCII}
 uses 	gears,vidgfx,navigate,vidmap,randmaps,locale,arenaplay,ghchars,gearutil,gearparser,
-	ability,chargen,vidmenus,backpack,ui4gh,gh2arena,menugear;
+	ability,chargen,vidmenus,backpack,ui4gh,gh2arena,menugear,customization;
 {$ELSE}
 uses 	gears,glgfx,navigate,glmap,randmaps,locale,arenaplay,ghchars,gearutil,gearparser,
-	ability,chargen,glmenus,backpack,gh2arena,menugear;
+	ability,chargen,glmenus,backpack,gh2arena,menugear,customization;
 {$ENDIF}
 
 const
@@ -129,6 +129,7 @@ begin
 		if N > -1 then begin
 			Part := RetrieveGearSib( List , N );
 			MechaPartBrowser( Part , @RedrawOpening );
+			if Part^.G = GG_Theme then CheckTheme( Part );
 		end;
 	until N = -1;
 
@@ -170,6 +171,7 @@ begin
 	until fname = '';
 	DisposeRPGMenu( MekMenu );
 end;
+
 
 Procedure SeriesDirBrowser;
 	{ Browse the series files on disk. }

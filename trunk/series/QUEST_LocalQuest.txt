@@ -14,9 +14,6 @@ Content
 	Team1 <Citizens>
 	TeamData1 <Pass Ally>
 
-requires <*:DEBUG>
-Scene1 <CavClub>
-
 	Quest1 <*:MechaHeld 1>
 	Quest2 <*ProveMyself 1>
 
@@ -30,12 +27,13 @@ Scene1 <CavClub>
 		*GoNoQuest <*MISC_Chatter>
 		Msg1 <I'd like to become a famous pilot some day, but in order to do that I'm going to need my mecha back...>
 		Msg2 <%name1% told you that \SPR %1% needs to get \PPR %1% mecha back from somewhere.>
-		Msg3 <Thanks for helping to get my mecha back!>
+		Msg3 <Thanks for helping to get my mecha back! Now all I need is a chance to prove what a good pilot I could be...>
 		Msg4 <Without a mecha, I guess I'm just nothing...>
 	end
 	inv
 		NPC Mecha Pilot
 		Chardesc Young
+		EquipChar 15000
 	end
 
 Content

@@ -34,6 +34,7 @@ Const
 	{ In general, negative G scores denote abstract things. }
 	{ Vitual gears are not subject to most game rules, range }
 	{ checking, and whatnot. }
+	GG_Theme = -19;
 	GG_Meme = -18;		{ A collection of things the PC will be told, until timeout or all messages delivered. }
 	GG_SuperProp = -17;	{ Adds a bunch of props to the map in a pattern. }
 	GG_Remnant = -16;	{ A plot remnant for xxran stories. }
