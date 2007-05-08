@@ -824,6 +824,76 @@ Theme 3
 	CUSTOMIZATION_NOUN_4 <Skill>
 
 	inv
+		MLauncher 4
+		Scale 2
+		sub
+			STC ICM-5
+			magazine 8
+		end
+
+		MLauncher 1
+		Scale 2
+		sub
+			STC HWM-4
+			magazine 2
+		end
+
+		MLauncher 4
+		Scale 2
+		sub
+			STC HWM-4
+			magazine 10
+		end
+
+		MLauncher 4
+		Scale 2
+		sub
+			STC AAM-8
+			magazine 5
+		end
+
+		MLauncher 12
+		Scale 2
+		sub
+			STC AAM-8
+			magazine 15
+		end
+
+		MLauncher 24
+		Scale 2
+		sub
+			STC AAM-8
+			magazine 30
+		end
+
+		MLauncher 10
+		Scale 2
+		sub
+			STC HWM-4
+			magazine 25
+		end
+
+		MLauncher 10
+		Scale 2
+		sub
+			STC GM-10
+			magazine 10
+		end
+
+		MLauncher 20
+		Scale 2
+		sub
+			STC GM-10
+			magazine 20
+		end
+
+		MLauncher 25
+		Scale 2
+		sub
+			STC GM-10
+			magazine 25
+		end
+
 		%% Big Guns
 		Gun 14
 		Scale 2
@@ -1053,196 +1123,242 @@ Theme 4
 	%% Awful range.. mostly melee.
 	%% Chains and huge tools plus yellow and black stripes.
 	%% Requires Craft and maybe Mecha repair.
-	requires <(LABOR|CRAFT) ~[15]>	
+	requires <(LABOR|CRAFT|CORPO) ~[3] ~[15]>	
 
 	CUSTOMIZATION_ADJECTIVE_0 <Iron>
 	CUSTOMIZATION_ADJECTIVE_1 <Steel>
 	CUSTOMIZATION_ADJECTIVE_2 <Heavy Duty>
-	CUSTOMIZATION_ADJECTIVE_3 <Mechanic>
+	CUSTOMIZATION_ADJECTIVE_3 <Rusty>
 	CUSTOMIZATION_ADJECTIVE_4 <Industrial>
 	CUSTOMIZATION_NOUN_0 <Foreman>
 	CUSTOMIZATION_NOUN_1 <Mechanism>
-	CUSTOMIZATION_NOUN_2 <Machinery>
+	CUSTOMIZATION_NOUN_2 <Engine>
 	CUSTOMIZATION_NOUN_3 <Scrap>
-	CUSTOMIZATION_NOUN_4 <Device>
+	CUSTOMIZATION_NOUN_4 <Tool>
 
 	inv
-
-	%% Melee Weapons
-
-	melee 5
-	name <Metal Bar>
-	desc <Like the ones used as support in heavy duty construction.>
-	Hardened
-	Scale 2
-
-	Melee 7
-	Name <Hammer>
-	Scale 2
-
-	melee 8
-	name <Pick>
-	acc -1
-	mass -1
-	Scale 2
-
-	melee 14
-	name <Mecha Drill>
-	Scale 2
-	acc 1
-
-	melee 8
-	name <Tow Chain>
-	Scale 2
-	acc 1
-	type <FLAIL EXTEND>
-
-	melee 16
-	name <Buzzsaw>
-	Scale 2
-	acc 1
-	speed 3
-	mass -4
-	type <BRUTAL>
-	
-	melee 12
-	name <Demolition Ball>
-	Scale 2
-	acc 1
-	type <FLAIL EXTEND BRUTAL>  
-
-	Emelee 16
-	name <Electro Welder>
-	Scale 2
-	acc 1
-	speed 1
-	mass 3
-	type <HAYWIRE OVERLOAD>
-	
-	EMelee 19
-	Name <Energy Chainsaw>
-	Scale 2
-	Type <BRUTAL>
-	Acc -1
-	inv
-		PowerSource 4
-		mass -1
-		name <Extra Battery>
-	end
-	
-	%% Small Guns
-
-	Gun 1
-	Name <Industrial Nail Gun>
-	Scale 2
-	Range 3
-	caliber <Construction Nails>
-	Speed 4
-	BV 4
-	Acc -1
-	mass -2
-	sub
-		Ammo 1
+		%% Small Guns
+		Gun 1
+		Name <Nail Gun>
+		Scale 2
+		Range 3
 		caliber <Construction Nails>
-		Magazine 280
-	end
+		Speed 4
+		BV 4
+		Acc -1
+		mass -2
+		sub
+			Ammo 1
+			caliber <Construction Nails>
+			Magazine 280
+		end
 
-	BeamGun 7
-	Name <Mining Laser>
-	Scale 2
-	Range 4
-	Acc -1
-	Speed 1
-	
-	STC LAS-3
-	name <Small Utility Laser>
-	range 3
-	
-	Gun 3
-	Name <Industrial Bolt Gun>
-	Scale 2
-	Range 3
-	caliber <Construction Bolts>
-	Speed 4
-	BV 4
-	Acc -1
-	sub
-		Ammo 3
+		Gun 3
+		Name <Industrial Bolt Gun>
+		Scale 2
+		Range 3
 		caliber <Construction Bolts>
-		Magazine 120
-	end
+		Speed 4
+		BV 4
+		Acc -1
+		sub
+			Ammo 3
+			caliber <Construction Bolts>
+			Magazine 120
+		end
 
-	STC LAS-5
-	name <Utility Laser>
-	range 4
+		BeamGun 7
+		Name <Mining Laser>
+		Scale 2
+		Range 5
 
-	
-	Gun 8
-	name <Solvent Squirter>
-	caliber <Chemical Solvent>
-	type <Line>
-	range 4
-	Acc 1
-	Speed 1
-	scale 2
-	sub
-		Ammo 8
-		Magazine 20
+		Gun 8
+		name <Solvent Squirter>
 		caliber <Chemical Solvent>
-		type <RUST>
-	end
-	
-	Gun 10
-	name <Industrial Burner>
-	caliber <Chemical>
-	type <Line>
-	range 4
-	Acc 1
-	Speed 3
-	scale 2
-	sub
-		Ammo 10
-		Magazine 20
+		range 4
+		scale 2
+		Acc 1
+		mass -3
+		sub
+			Ammo 8
+			Magazine 20
+			caliber <Chemical Solvent>
+			type <RUST>
+		end
+
+		Gun 10
+		name <Industrial Burner>
 		caliber <Chemical>
-		type <BURN>
-	end
+		type <LINE>
+		range 5
+		Acc 1
+		Speed 3
+		scale 2
+		sub
+			Ammo 10
+			Magazine 20
+			caliber <Chemical>
+			type <BURN>
+		end
+
+		STC LAS-10
+		name <Heavy Utility Laser>
+		range 6
+
+		Gun 8
+		name <Acid Sprayer>
+		caliber <Chemical Solvent>
+		type <Line Brutal>
+		range 6
+		Acc 1
+		Speed 3
+		scale 2
+		Mass -1
+		sub
+			Ammo 8
+			Magazine 20
+			caliber <Chemical Solvent>
+			type <RUST>
+		end
+
+		Gun 7
+		Name <Industrial Spike Gun>
+		Scale 2
+		Range 6
+		caliber <Construction Spikes>
+		Speed 4
+		BV 4
+		Acc -1
+		mass -5
+		sub
+			Ammo 7
+			caliber <Construction Spikes>
+			Magazine 120
+			type <ARMORPIERCING>
+			mass -2
+		end
+
+		Gun 5
+		name <Slag Cannon>
+		caliber <ferrous fragments>
+		Scale 2
+		type <BRUTAL>
+		range 5
+		Acc 2
+		Speed 3
+		BV 7
+		sub
+			Ammo 5
+			Magazine 240
+			caliber <ferrous fragments>
+		end
+
+
+
+		%% Melee Weapons
+
+		melee 5
+		name <Metal Bar>
+		desc <Like the ones used as support in heavy duty construction.>
+		Scale 2
+
+		Melee 14
+		Name <Hammer>
+		Scale 2
+		Acc -1
+		mass -6
+
+		melee 14
+		name <Mecha Drill>
+		type <ARMORPIERCING>
+		Scale 2
+		acc 1
+
+		melee 12
+		name <Tow Chain>
+		Scale 2
+		acc 1
+		type <FLAIL EXTEND>
+
+		melee 16
+		name <Buzzsaw>
+		Scale 2
+		acc 1
+		speed 3
+		mass -4
+		type <BRUTAL>
 	
-	STC LAS-10
-	name <Heavy Utility Laser>
-	range 6
+		melee 18
+		name <Wrecking Ball>
+		Scale 2
+		type <FLAIL EXTEND BRUTAL>  
 
-	%Big guns
+		Melee 24
+		name <Rock Drill>
+		Scale 2
+		acc 2
+		type <BRUTAL ARMORPIERCING>
+
+		EMelee 23
+		Name <Energy Chainsaw>
+		Scale 2
+		Type <BRUTAL>
+		Mass 3
+		inv
+			PowerSource 5
+			mass -4
+			name <Extra Battery>
+		end
+
+		Melee 25
+		name <Impervium Pickaxe>
+		desc <A nigh-indestructable long-hafted pickaxe made of impervium.>
+		Mass -21
+		Scale 2
+		type <BRUTAL ARMORPIERCING EXTEND>
+
+		Melee 24
+		name <Mega Cutter>
+		desc <An enormous powered cutting tool. The multiple blades and grinding surfaces can rip through anything.>
+		mass -12
+		Acc 2
+		Speed 3
+		Scale 2
+		type <BRUTAL ARMORPIERCING EXTEND>
 
 
-	BeamGun 14
-	Name <Heavy Mining Laser>
-	Scale 2
-	Range 4
-	Acc -1
-	Speed 1
-	mass -4
+		%Big guns
 
-	Gun 17
-	name <Digging Launcher>
-	caliber <70mm self-propelled>
-	range 8
-	scale 2
-	Speed 1
-	mass -4
-	sub
-		Ammo 17
-		Magazine 20
-		mass -1
+
+		BeamGun 14
+		Name <Heavy Mining Laser>
+		Scale 2
+		Range 4
+		Acc -1
+		Speed 1
+		mass -4
+
+		Gun 17
+		name <Digging Launcher>
 		caliber <70mm self-propelled>
-		type <BLAST 1 BRUTAL>
-	end
+		range 8
+		scale 2
+		Speed 1
+		mass -4
+		sub
+			Ammo 17
+			Magazine 20
+			mass -1
+			caliber <70mm self-propelled>
+			type <BLAST 1 BRUTAL>
+		end
 
 
-	BeamGun 20
-	name <Demolition Laser>
-	acc -1
-	mass -6
-	scale 2
+		BeamGun 20
+		name <Demolition Laser>
+		acc -1
+		mass -6
+		scale 2
 
 	% End Industrial
 	end

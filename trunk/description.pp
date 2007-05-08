@@ -105,17 +105,9 @@ begin
 		end;
 
 		if Weapon^.S <> GS_Missile then begin
-			if Weapon^.Stat[STAT_Accuracy] > -1 then begin
-				desc := desc + ' ACC:+' + BStr( Weapon^.Stat[STAT_Accuracy] );
-			end else begin
-				desc := desc + ' ACC:' + BStr( Weapon^.Stat[STAT_Accuracy] );
-			end;
+			desc := desc + ' ACC:' + SgnStr( Weapon^.Stat[STAT_Accuracy] );
 		end else if Ammo <> Nil then begin
-			if Ammo^.Stat[STAT_Accuracy] > -1 then begin
-				desc := desc + ' ACC:+' + BStr( Weapon^.Stat[STAT_Accuracy] );
-			end else begin
-				desc := desc + ' ACC:' + BStr( Weapon^.Stat[STAT_Accuracy] );
-			end;
+			desc := desc + ' ACC:' + SgnStr( Ammo^.Stat[STAT_Accuracy] );
 		end;
 
 		desc := desc + ' SPD:' + BStr( Weapon^.Stat[STAT_Recharge] );
