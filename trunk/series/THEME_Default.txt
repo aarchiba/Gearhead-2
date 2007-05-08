@@ -33,6 +33,138 @@ Theme 1
 	CUSTOMIZATION_NOUN_4 <Burninator>
 
 	inv
+		EMelee 2
+		Scale 2
+		name <Plasma Torch>
+		type <BRUTAL>
+		Acc -1
+
+		Melee 8
+		Scale 2
+		name <Flamberge>
+		Acc 1
+		type <BURN>
+
+		Melee 13
+		Scale 2
+		name <Heat Axe>
+		type <BRUTAL>
+		Acc -1
+		mass -7
+
+		EMelee 7
+		Scale 2
+		name <Prometheus Torch>
+		type <BURN>
+
+		Melee 9
+		Scale 2
+		name <Fire Staff>
+		desc <A large staff with plasma flames at each end.>
+		type <BURN BRUTAL>
+		Speed 3
+		Acc 1
+		mass -4
+
+		Melee 13
+		Scale 2
+		name <Fire Chain>
+		type <FLAIL EXTEND BURN BRUTAL>
+		desc <A powerful flail which dispenses Napalm-X when it hits.>
+		Speed 1
+		Mass -6
+
+		EMelee 16
+		Scale 2
+		name <Prometheus Sword>
+		type <BURN>
+		Acc 1
+		Speed 3
+
+		EMelee 18
+		Scale 2
+		name <Inferno Lance>
+		type <EXTEND BURN BRUTAL>
+		Acc 0
+
+		Melee 20
+		Scale 2
+		name <Vulcan's Hammer>
+		type <BURN BRUTAL ARMORPIERCING>
+		Speed 3
+		Mass -7
+
+		Melee 10
+		Scale 2
+		name <Fire Star>
+		type <THROWN RETURN BURN ARMORPIERCING>
+		desc <A flaming ring which may be thrown at opponents.>
+		Acc 1
+		Speed 3
+		mass -8
+
+
+		Gun 11
+		Scale 2
+		name <Fire Bomber>
+		caliber <50mm self-propelled>
+		Range 6
+		Recharge 1
+		sub
+			Ammo 11
+			Magazine 12
+			caliber <50mm self-propelled>
+			type <BLAST 1>
+		end
+
+		Gun 12
+		Scale 2
+		name <Firestarter Rifle>
+		caliber <70mm ferrous>
+		Range 10
+		Recharge 1
+		sub
+			Ammo 12
+			name <Firestarter Shells>
+			Magazine 16
+			caliber <70mm ferrous>
+			type <BURN>
+		end
+
+		Gun 15
+		name <Firespitter>
+		caliber <Chemical>
+		range 3
+		Acc 1
+		Speed 2
+		scale 2
+		sub
+			Ammo 15
+			Magazine 30
+			caliber <Chemical>
+			type <BURN>
+		end
+
+		Gun 13
+		name <Fire Mortar>
+		caliber <Chemical>
+		range 6
+		Speed 1
+		scale 2
+		type <BLAST 2>
+		sub
+			Ammo 13
+			Magazine 30
+			caliber <Chemical>
+			type <BURN>
+		end
+
+		BeamGun 12
+		name <Thermal Cannon>
+		Scale 2
+		Speed 2
+		range 6
+
 		Gun 15
 		name <Heavy Flamethrower>
 		caliber <Chemical>
@@ -42,10 +174,25 @@ Theme 1
 		Speed 2
 		scale 2
 		sub
-			Ammo 10
+			Ammo 15
 			Magazine 60
 			caliber <Chemical>
 			type <BURN>
+		end
+
+		Gun 13
+		name <Heavy Dragon Cannon>
+		caliber <Chemical>
+		type <Line>
+		range 8
+		Acc 1
+		Speed 2
+		scale 2
+		sub
+			Ammo 13
+			Magazine 60
+			caliber <Chemical>
+			type <BURN BRUTAL>
 		end
 
 		Gun 14
@@ -90,6 +237,20 @@ Theme 1
 			type <BLAST 3 BURN BRUTAL>
 		end
 
+		Gun 25
+		name <Ultimate Incinerator>
+		caliber <Chemical>
+		type <Line>
+		range 10
+		Acc 1
+		Speed 2
+		scale 2
+		sub
+			Ammo 25
+			Magazine 60
+			caliber <Chemical>
+			type <BURN BRUTAL>
+		end
 
 		Gun 4
 		name <Flare Gun>
@@ -191,14 +352,14 @@ Theme 1
 
 		Gun 5
 		name <Immolation Cannon>
-		caliber <50mm self-propelled>
+		caliber <150mm self-propelled>
 		Range 6
 		Speed 3
 		scale 2
 		sub
 			Ammo 5
 			Magazine 35
-			caliber <50mm self-propelled>
+			caliber <150mm self-propelled>
 			type <BURN HYPER>
 		end
 
@@ -214,49 +375,6 @@ Theme 1
 		type <BRUTAL>
 		Range 6
 		BV 3
-
-		Melee 14
-		Scale 2
-		name <Heat Axe>
-		type <BRUTAL>
-		Acc -1
-		Speed 1
-		mass -7
-
-		EMelee 7
-		Scale 2
-		name <Prometheus Torch>
-		type <BURN>
-
-		Melee 13
-		Scale 2
-		name <Fire Chain>
-		type <FLAIL EXTEND BURN BRUTAL>
-		desc <A powerful flail which dispenses Napalm-X when it hits.>
-		Speed 1
-		Mass -6
-
-		EMelee 16
-		Scale 2
-		name <Prometheus Sword>
-		type <BURN>
-		Acc 1
-		Speed 3
-
-		EMelee 18
-		Scale 2
-		name <Inferno Lance>
-		type <EXTEND BURN BRUTAL>
-		Acc 0
-
-		Melee 10
-		Scale 2
-		name <Fire Star>
-		type <THROWN RETURN BURN ARMORPIERCING>
-		desc <A flaming ring which may be thrown at opponents.>
-		Speed 3
-		mass -8
-
 
 		MLauncher 1
 		Scale 2
@@ -388,6 +506,49 @@ Theme 2
 		Scale 2
 		Acc 1
 
+		Melee 18
+		name <Mecha Claymore>
+		Scale 2
+		Type <Armorpiercing>
+		mass -9
+		Acc 1
+
+		Melee 12
+		name <Pilum>
+		Scale 2
+		type <ARMORPIERCING THROWN RETURN>
+		mass -4
+		Acc 1
+		Speed 1
+
+		EMelee 20
+		name <Plasma Claymore>
+		Scale 2
+		Type <BRUTAL>
+		Acc 1
+
+		Melee 16
+		name <Moon Sabre>
+		Scale 2
+		type <ARMORPIERCING THROWN RETURN>
+		mass -4
+		Acc 1
+
+		Melee 16
+		name <Command Sabre>
+		Scale 2
+		Type <ARMORPIERCING OVERLOAD HAYWIRE>
+		Acc 2
+		mass -10
+		Speed 3
+
+		Melee 21
+		Scale 2
+		name <Hyper Chain>
+		type <EXTEND FLAIL BRUTAL>
+		Speed 4
+		Mass -16
+
 		%% Small Guns
 		STC MAC-2
 
@@ -395,7 +556,37 @@ Theme 2
 
 		STC PAR-2
 
+		Gun 9
+		Scale 2
+		name <Long Cannon>
+		caliber <30mm caseless>
+		Acc 1
+		Speed 3
+		Range 9
+		mass -4
+		sub
+			Ammo 9
+			caliber <30mm caseless>
+			Magazine 120
+			mass -8
+		end
+
 		STC RG-8
+
+		Gun 10
+		Scale 2
+		name <Mech Assault Rifle>
+		caliber <30mm caseless>
+		Range 6
+		BV 2
+		Speed 3
+		mass -5
+		sub
+			Ammo 10
+			caliber <30mm caseless>
+			Magazine 60
+			mass -6
+		end
 
 		Gun 9
 		name <Grenade Launcher>
@@ -444,6 +635,18 @@ Theme 2
 		end
 
 		%% Big Guns
+		Gun 14
+		Scale 2
+		name <Heavy Cannon>
+		caliber <50mm shell>
+		Range 6
+		Recharge 1
+		sub
+			Ammo 14
+			Magazine 20
+			caliber <50mm shell>
+		end
+
 		STC GR-12
 
 		STC GR-12
@@ -484,20 +687,33 @@ Theme 2
 			type <Armorpiercing>
 		end
 
-		Gun 17
-		name <Mega-Launcher>
-		caliber <70mm self-propelled>
-		range 8
-		scale 2
-		Speed 3
-		mass -4
+		Gun 24
+		Scale 2
+		name <Superheavy Railgun>
+		caliber <120mm ferrous>
+		Range 8
+		BV 3
 		sub
-			Ammo 17
-			Magazine 24
-			caliber <70mm self-propelled>
-			type <BLAST 3 BRUTAL>
+			Ammo 24
+			caliber <120mm ferrous>
+			mass -15
+			Magazine 60
 		end
 
+		Gun 25
+		name <Ultra Bazooka>
+		caliber <150mm self-propelled>
+		range 15
+		scale 2
+		Speed 1
+		Acc 1
+		mass -11
+		sub
+			Ammo 25
+			Magazine 10
+			caliber <150mm self-propelled>
+			type <BLAST 5 BRUTAL>
+		end
 
 		%% Missiles
 		MLauncher 4
@@ -549,18 +765,11 @@ Theme 2
 			Magazine 20
 		end
 
-		MLauncher 10
-		Scale 2
-		sub
-			STC FRM-6
-			Magazine 16
-		end
-
 		MLauncher 15
 		Scale 2
 		sub
-			STC ICM-5
-			Magazine 30
+			STC FRM-6
+			Magazine 24
 		end
 
 		MLauncher 24
@@ -575,13 +784,6 @@ Theme 2
 		sub
 			STC DCM-15
 			Magazine 2
-		end
-
-		MLauncher 4
-		Scale 2
-		sub
-			STC FBM-8
-			Magazine 5
 		end
 
 		MLauncher 20
@@ -622,6 +824,154 @@ Theme 3
 	CUSTOMIZATION_NOUN_4 <Skill>
 
 	inv
+		%% Big Guns
+		Gun 14
+		Scale 2
+		name <Heavy Cannon>
+		caliber <50mm shell>
+		Range 6
+		Recharge 1
+		sub
+			Ammo 14
+			Magazine 20
+			caliber <50mm shell>
+		end
+
+		STC GR-12
+
+		STC GR-12
+		mass -7
+
+		STC GR-24
+		mass -7
+
+		STC GR-12
+		name <EV Gauss Rifle>
+		mass -7
+		type <Armorpiercing>
+
+		BeamGun 12
+		Scale 2
+		name <Emerald Laser Cannon>
+		range 6
+		Speed 1
+		type <ARMORPIERCING>
+
+		STC GR-24
+		name <EV Heavy Gauss Rifle>
+		mass -7
+		type <Armorpiercing>
+
+		Gun 16
+		Scale 2
+		name <Master Gauss Rifle>
+		caliber <70mm ferrous>
+		Range 12
+		Recharge 3
+		Acc 1
+		type <Armorpiercing>
+		sub
+			Ammo 16
+			Magazine 20
+			caliber <70mm ferrous>
+		end
+
+		STC PHS-25
+
+		BeamGun 20
+		name <Heavy Laser Cannon>
+		mass -10
+		Scale 2
+		Range 8
+
+		%% Small Guns
+		STC LAS-3
+		mass -1
+
+		Gun 5
+		Scale 2
+		name <Skybolt Rifle>
+		caliber <15mm ferrous needle>
+		desc <This light railgun fires electrically charged needles, potentially disabling the target's control system.>
+		range 6
+		Acc 2
+		Speed 3
+		Mass -1
+		sub
+			Ammo 5
+			Magazine 20
+			caliber <15mm ferrous needle>
+			type <HAYWIRE>
+		end
+
+		STC LAS-5
+		mass -1
+
+		Gun 9
+		Scale 2
+		name <Apollo Rifle>
+		caliber <50mm self-propelled>
+		desc <This rifle fires guided rockets.>
+		range 6
+		Acc 3
+		Speed 3
+		Mass -1
+		sub
+			Ammo 9
+			Magazine 30
+			caliber <50mm self-propelled>
+			type <ARMORPIERCING>
+		end
+
+		Gun 8
+		Scale 2
+		name <Gauss Sniper Rifle>
+		caliber <50mm ferrous>
+		type <ARMORPIERCING>
+		Range 10
+		mass -2
+		Acc 1
+		sub
+			Ammo 8
+			Magazine 24
+			caliber <50mm ferrous>
+		end
+
+		STC PAR-6
+
+		STC LAS-10
+		name <Long Range Laser Cannon>
+		range 6
+		mass -4
+
+		STC PHS-8
+
+		BeamGun 7
+		name <Jove Rifle>
+		desc <This cannon fires a stream of charged particles, hopefully disrupting the electrical systems of its target.>
+		scale 2
+		range 5
+		Speed 3
+		mass -1
+		type <ARMORPIERCING HAYWIRE>
+
+		Gun 9
+		Scale 2
+		name <Master Cannon>
+		caliber <45mm self-propelled>
+		type <ARMORPIERCING ANTIAIR>
+		Range 14
+		mass -4
+		Acc 2
+		Speed 4
+		sub
+			Ammo 9
+			Magazine 50
+			caliber <45mm self-propelled>
+			type <OVERLOAD>
+			mass -2
+		end
+
 		%% Melee Weapons
 		Melee 6
 		name <Foil>
@@ -678,84 +1028,21 @@ Theme 3
 		Speed 4
 		Acc 2
 
-		%% Big Guns
-		STC GR-12
-
-		STC GR-12
-		mass -7
-
-		STC GR-24
-		mass -7
-
-		STC GR-12
-		name <EV Gauss Rifle>
-		mass -7
-		type <Armorpiercing>
-
-		STC GR-24
-		name <EV Heavy Gauss Rifle>
-		mass -7
-		type <Armorpiercing>
-
-		BeamGun 20
-		name <Heavy Laser Cannon>
-		mass -10
-		Scale 2
-
-		%% Small Guns
-		STC LAS-3
-		mass -1
-
-		STC LAS-5
-		mass -1
-
-		Gun 8
-		Scale 2
-		name <Gauss Sniper Rifle>
-		caliber <50mm ferrous>
+		Melee 16
+		name <Master Rapier>
 		type <ARMORPIERCING>
-		Range 10
-		mass -2
-		Acc 1
-		sub
-			Ammo 8
-			Magazine 24
-			caliber <50mm ferrous>
-		end
-
-		STC PAR-6
-
-		STC LAS-10
-		name <Long Range Laser Cannon>
-		range 6
-		mass -4
-
-		STC PHS-8
-
-		BeamGun 7
-		name <N-Pulse Cannon>
-		scale 2
-		range 5
-		Speed 3
-		mass -1
-		type <ARMORPIERCING HAYWIRE>
-
-		Gun 9
 		Scale 2
-		name <Master Cannon>
-		caliber <45mm self-propelled>
-		type <ARMORPIERCING ANTIAIR>
-		Range 14
-		mass -4
-		Acc 2
-		Speed 4
-		sub
-			Ammo 9
-			Magazine 50
-			caliber <45mm self-propelled>
-			type <OVERLOAD>
-			mass -2
-		end
+		Speed 5
+		Acc 5
+		Mass -13
+
+		Melee 14
+		name <Steel Halo>
+		type <ARMORPIERCING THROWN RETURN>
+		Scale 2
+		Speed 3
+		Acc 1
+		Mass -10
 
 	% End Sophisticated
 	end

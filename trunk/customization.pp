@@ -532,7 +532,7 @@ var
 		while W <> Nil do begin
 			if WeaponThemeClass( W ) = WP_Type then begin
 				Cost := GearValue( W );
-				if ( Cost >= Cost_Max[ WP_Type , WP_Rank - 1 ] ) and ( Cost <= Cost_Max[ WP_Type , WP_Rank ] ) then Inc( N );
+				if ( Cost > Cost_Max[ WP_Type , WP_Rank - 1 ] ) and ( Cost <= Cost_Max[ WP_Type , WP_Rank ] ) then Inc( N );
 			end;
 			W := W^.Next;
 		end;
@@ -546,7 +546,7 @@ var
 			while W <> Nil do begin
 				if WeaponThemeClass( W ) = WP_Type then begin
 					Cost := GearValue( W );
-					if ( Cost >= Cost_Max[ WP_Type , WP_Rank - 1 ] ) and ( Cost <= Cost_Max[ WP_Type , WP_Rank ] ) then begin
+					if ( Cost > Cost_Max[ WP_Type , WP_Rank - 1 ] ) and ( Cost <= Cost_Max[ WP_Type , WP_Rank ] ) then begin
 						if ( WP_Type = WT_MissileLauncher ) and ( W^.SubCom <> Nil ) then StoreSAtt( Memo , '     ->' + FullGearName( W^.SubCom ) + ' [' + BStr( W^.SubCom^.Stat[ STAT_AmmoPresent ] ) + ']' )
 						else StoreSAtt( Memo , '     ->' + GearName( W ) );
 					end;
