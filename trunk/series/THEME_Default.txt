@@ -1137,6 +1137,101 @@ Theme 4
 	CUSTOMIZATION_NOUN_4 <Tool>
 
 	inv
+		%Big guns
+
+
+		BeamGun 14
+		Name <Heavy Mining Laser>
+		Scale 2
+		Range 4
+		Acc -1
+		Speed 1
+		mass -4
+
+		Gun 18
+		Scale 2
+		name <Buzzsaw Catapult>
+		desc <An improvised weapon firing large circular buzzsaws.>
+		caliber <ferrous sawblade>
+		Range 6
+		Speed 1
+		type <ARMORPIERCING>
+		mass -4
+		sub
+			Ammo 18
+			caliber <ferrous sawblade>
+			Magazine 36
+		end
+
+		Gun 12
+		Name <Nail Cannon>
+		Scale 2
+		Range 5
+		caliber <heavy duty nails>
+		Speed 2
+		BV 2
+		Acc -1
+		mass -2
+		type <BRUTAL SCATTER>
+		sub
+			Ammo 12
+			caliber <heavy duty nails>
+			Magazine 280
+		end
+
+		Gun 17
+		name <Digging Launcher>
+		caliber <70mm self-propelled>
+		range 8
+		scale 2
+		Speed 1
+		mass -4
+		sub
+			Ammo 17
+			Magazine 20
+			mass -1
+			caliber <70mm self-propelled>
+			type <BLAST 1 BRUTAL>
+		end
+
+		Gun 18
+		Scale 2
+		name <Magnetic Catapult>
+		caliber <construction girder>
+		Range 7
+		BV 2
+		mass -4
+		sub
+			Ammo 18
+			caliber <construction girder>
+			mass -10
+			Magazine 60
+		end
+
+		Gun 11
+		name <Heavy Slag Cannon>
+		caliber <ferrous fragments>
+		Scale 2
+		type <BRUTAL>
+		range 6
+		Acc 1
+		Speed 2
+		BV 4
+		sub
+			Ammo 11
+			Magazine 150
+			caliber <ferrous fragments>
+		end
+
+		BeamGun 20
+		name <Demolition Laser>
+		acc -1
+		range 6
+		scale 2
+		type <BRUTAL>
+		mass -4
+
+
 		%% Small Guns
 		Gun 1
 		Name <Nail Gun>
@@ -1253,7 +1348,13 @@ Theme 4
 			caliber <ferrous fragments>
 		end
 
-
+		BeamGun 10
+		name <Welding Gun>
+		desc <A tool for welding the large plates used in spaceship construction.>
+		Range 5
+		Scale 2
+		type <BRUTAL SCATTER>
+		BV 2
 
 		%% Melee Weapons
 
@@ -1325,40 +1426,6 @@ Theme 4
 		Speed 3
 		Scale 2
 		type <BRUTAL ARMORPIERCING EXTEND>
-
-
-		%Big guns
-
-
-		BeamGun 14
-		Name <Heavy Mining Laser>
-		Scale 2
-		Range 4
-		Acc -1
-		Speed 1
-		mass -4
-
-		Gun 17
-		name <Digging Launcher>
-		caliber <70mm self-propelled>
-		range 8
-		scale 2
-		Speed 1
-		mass -4
-		sub
-			Ammo 17
-			Magazine 20
-			mass -1
-			caliber <70mm self-propelled>
-			type <BLAST 1 BRUTAL>
-		end
-
-
-		BeamGun 20
-		name <Demolition Laser>
-		acc -1
-		mass -6
-		scale 2
 
 	% End Industrial
 	end
