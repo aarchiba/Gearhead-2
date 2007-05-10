@@ -1137,7 +1137,122 @@ Theme 4
 	CUSTOMIZATION_NOUN_4 <Tool>
 
 	inv
+		%Missile Launchers
+		MLauncher 10
+		Scale 2
+		sub
+			STC LR-1
+			magazine 100
+		end
+
+		MLauncher 12
+		Scale 2
+		sub
+			STC HR-10
+			magazine 12
+		end
+
+		MLauncher 24
+		Scale 2
+		sub
+			STC HR-10
+			magazine 24
+		end
+
+		MLauncher 2
+		Scale 2
+		sub
+			Rockets 7
+			scale 2
+			name <Slag Missiles>
+			Range 7
+			Magazine 2
+			Acc -1
+			type <BLAST 3 BRUTAL>
+		end
+
+		MLauncher 3
+		Scale 2
+		sub
+			STC FRM-6
+			magazine 5
+		end
+
+		MLauncher 9
+		Scale 2
+		sub
+			STC FRM-6
+			magazine 15
+		end
+
+		MLauncher 2
+		Scale 2
+		sub
+			STC HR-10
+			name <Demolition Missiles>
+			type <BLAST 2 BRUTAL>
+			Acc -1
+			magazine 2
+		end
+
+		MLauncher 4
+		Scale 2
+		sub
+			STC HR-10
+			name <Demolition Missiles>
+			type <BLAST 2 BRUTAL>
+			Acc -1
+			magazine 4
+		end
+
+		MLauncher 5
+		Scale 2
+		sub
+			STC HR-10
+			name <Demolition Missiles>
+			type <BLAST 2 BRUTAL>
+			Acc -1
+			magazine 5
+		end
+
+		MLauncher 6
+		Scale 2
+		sub
+			STC HR-10
+			name <Demolition Missiles>
+			type <BLAST 2 BRUTAL>
+			Acc -1
+			magazine 6
+		end
+
 		%Big guns
+		Gun 11
+		Name <Shred Cannon>
+		Scale 2
+		Range 4
+		caliber <ferrous fragments>
+		type <SCATTER>
+		Speed 1
+		Acc -2
+		sub
+			Ammo 11
+			caliber <ferrous fragments>
+			Magazine 20
+		end
+
+		Gun 12
+		Name <Heavy Loader>
+		Scale 2
+		Range 6
+		caliber <construction girder>
+		Speed 2
+		Acc -1
+		mass -2
+		sub
+			Ammo 12
+			caliber <construction girder>
+			Magazine 20
+		end
 
 
 		BeamGun 14
@@ -1192,6 +1307,21 @@ Theme 4
 			mass -1
 			caliber <70mm self-propelled>
 			type <BLAST 1 BRUTAL>
+		end
+
+		Gun 15
+		name <Heavy Burner>
+		caliber <Chemical>
+		type <Line BRUTAL>
+		range 6
+		Acc 1
+		Speed 2
+		scale 2
+		sub
+			Ammo 15
+			Magazine 60
+			caliber <Chemical>
+			type <BURN>
 		end
 
 		Gun 18
@@ -1435,6 +1565,7 @@ Theme 5
 	name <Pirate>
 	%% Jhon Silver & Parrot look
 	%% Cutlass & Pistol! Arrr!
+	%% Lots of haywire and overload status effects, to cripple the opposition
 	requires <Criminal ~THIEF ~CRIHN>
 	
 	CUSTOMIZATION_ADJECTIVE_0 <Jolly>
@@ -1449,179 +1580,417 @@ Theme 5
 	CUSTOMIZATION_NOUN_4 <Buccaneer>
 
 	inv
+		%% Missile Launchers
+		MLauncher 3
+		Scale 2
+		sub
+			Rockets 15
+			name <Hurricane Missiles>
+			Scale 2
+			Range 10
+			type <BLAST 3 HAYWIRE>
+			Magazine 2
+		end
 
-	%% Melee Weapons
-	Melee 5
-	name <Mecha Cutlass>
-	Scale 2
-	Speed 3
-	Mass -3
+		MLauncher 2
+		Scale 2
+		sub
+			Rockets 15
+			name <Hurricane Missiles>
+			Scale 2
+			Range 10
+			type <BLAST 3 HAYWIRE>
+			Magazine 1
+		end
 
-	Melee 7
-	name <Sabre>
-	Scale 2
-	Acc 1
-	mass -2
 
-	Melee 9
-	Name <Falchion>
-	mass -2
-	Scale 2
-	Speed 2
+		MLauncher 1
+		Scale 2
+		sub
+			STC GM-10
+			Magazine 1
+			name <Clever Parrot Missiles>
+		end
 
+		MLauncher 5
+		Scale 2
+		sub
+			STC GM-10
+			Magazine 5
+			name <Clever Parrot Missiles>
+		end
+
+		MLauncher 10
+		Scale 2
+		sub
+			STC GM-10
+			Magazine 10
+			name <Clever Parrot Missiles>
+		end
+
+
+		MLauncher 4
+		Scale 2
+		sub
+			STC AAM-8
+			Magazine 5
+		end
+
+		MLauncher 2
+		Scale 2
+		sub
+			STC HWM-4
+			name <Disabler Rockets>
+			type <HAYWIRE OVERLOAD>
+			Magazine 5
+		end
 	
-	Melee 7
-	name <Rapier>
-	Scale 2
-	Speed 3
-	type <ARMORPIERCING>
-	mass -3
+		MLauncher 4
+		Scale 2
+		sub
+			STC HWM-4
+			name <Disabler Rockets>
+			type <HAYWIRE OVERLOAD>
+			Magazine 10
+		end
 
-	EMelee 5
-	name <Plasma Cutlass>
-	Scale 2
-	Speed 3
+		MLauncher 8
+		Scale 2
+		sub
+			STC HWM-4
+			name <Disabler Rockets>
+			type <HAYWIRE OVERLOAD>
+			Magazine 20
+		end
 
-	EMelee 4
-	name <Mecha Energy Dagger>
-	Scale 2
-	Speed 4
-	Mass -3
-	
-	EMelee 5
-	Name <Pulse Cutlass>
-	type <HAYWIRE>
-	Scale 2
+		MLauncher 12
+		Scale 2
+		sub
+			STC HWM-4
+			name <Disabler Rockets>
+			type <HAYWIRE OVERLOAD>
+			Magazine 30
+		end
 
-	EMelee 10
-	name <Beam Cutlass>
-	Scale 2
-	Speed 3
 
-	melee 10
-	name <Boarding Hook>
-	Scale 2
-	acc 1
-	mass -4
-	type <FLAIL EXTEND BRUTAL>
-
-	EMelee 14
-	name <Ion Cutlass>
-	type <OVERLOAD>
-	Scale 2
-	Speed 3
-	
-	Emelee 10
-	name <Electro Boarding Hook>
-	Scale 2
-	acc 1
-	mass 1
-	type <FLAIL EXTEND HAYWIRE>
-
-	STC LAS-3
-	name <Laser Pistol>
-	range 3
-	speed 2
-	inv
-		PowerSource 1
-		mass -1
-		name <Pistol Battery>
-	end
-
-	Gun 4
-	name <Tri Pistol>
-	caliber <20mm caseless>
-	Range 6
-	BV 2
-	acc 1
-	scale 2
-	mass -4
-	sub
-		Ammo 4
-		Magazine 15
-		caliber <20mm caseless>
-	end
-
-	Gun 8
-	name <Destroyer Musket>
-	caliber <50mm self-propelled>
-	range 7
-	scale 2
-	sub
-		Ammo 8
-		Magazine 12
-		caliber <50mm self-propelled>
-		type <BRUTAL>
-	end
-	
-	Gun 8
-	Scale 2
-	name <Railgun Musket>
-	caliber <30mm ferrous>
-	Range 8
-	acc 2
-	speed 4
-	mass -2
-	sub
-		Ammo 8
+		% Big Guns
+		Gun 15
+		Scale 2
+		name <Swivel Gun>
 		caliber <30mm ferrous>
-		Magazine 50
-		mass -8
-	end
-	
-	BeamGun 8
-	name <Ion Musket>
-	type <OVERLOAD>
-	range 7
-	scale 2
-	
-	STC GR-12
-	name <Gauss Musket>
-	mass -2
-	Range 9
+		Range 6
+		Recharge 1
+		Acc -2
+		sub
+			Ammo 15
+			name <Iron Grapeshot>
+			Magazine 15
+			caliber <30mm ferrous>
+			type <SCATTER>
+		end
 
-	Gun 17
-	name <Mecha Boading Cannon>
-	caliber <70mm self-propelled>
-	range 8
-	scale 2
-	Speed 1
-	mass -4
-	sub
-		Ammo 17
-		Magazine 10
-		mass -1
+		STC GR-12
+		name <Gauss Musket>
+		mass -2
+		Range 9
+
+		Gun 14
+		Scale 2
+		name <Carronade>
+		caliber <100mm ferrous ball>
+		Range 4
+		type <BRUTAL>
+		sub
+			Ammo 14
+			Magazine 25
+			caliber <100mm ferrous ball>
+		end
+
+		Gun 16
+		Scale 2
+		name <Chase Gun>
+		caliber <50mm self-propelled>
+		Range 6
+		Recharge 3
+		Acc 1
+		sub
+			Ammo 16
+			Magazine 25
+			caliber <50mm self-propelled>
+			type <OVERLOAD>
+		end
+
+		Gun 17
+		name <Boarding Cannon>
 		caliber <70mm self-propelled>
-		type <BLAST 2 HAYWIRE>
-	end
-	
-	MLauncher 2
-	Scale 2
-	sub
-		STC HWM-4
-		name <Disabler Rockets>
-		type <HAYWIRE OVERLOAD>
-		Magazine 5
-	end
-	
-	MLauncher 4
-	Scale 2
-	sub
-		STC HWM-4
-		name <Disabler Rockets>
-		type <HAYWIRE OVERLOAD>
-		Magazine 10
-	end
+		range 8
+		scale 2
+		Speed 1
+		mass -4
+		sub
+			Ammo 17
+			Magazine 10
+			mass -1
+			caliber <70mm self-propelled>
+			type <BLAST 2 HAYWIRE>
+		end
 
-	MLauncher 8
-	Scale 2
-	sub
-		STC HWM-4
-		name <Disabler Rockets>
-		type <HAYWIRE OVERLOAD>
-		Magazine 20
-	end
-	
+		Gun 25
+		Scale 2
+		name <Roundshot Cannon>
+		caliber <500mm ferrous ball>
+		Range 10
+		Recharge 1
+		type <BRUTAL>
+		Mass -2
+		sub
+			Ammo 25
+			Magazine 15
+			caliber <500mm ferrous ball>
+		end
+
+		STC PAR-13
+		name <Particle Bombard>
+
+		STC RG-16
+		name <Broadsides Cannon>
+		Speed 3
+
+		Gun 19
+		name <Dynamite Gun>
+		%% Looking for naval weapons to use here I came across the Dynamite Gun.
+		%% It wasn't invented until well after the golden age of piracy, but with
+		%% a name like "Dynamite Gun" I had to include it.
+		caliber <100mm explosive cannister>
+		range 10
+		scale 2
+		sub
+			Ammo 19
+			Magazine 20
+			caliber <100mm explosive cannister>
+			type <BLAST 3 BRUTAL>
+		end
+
+		Gun 25
+		Scale 2
+		name <Triple Cannon>
+		caliber <500mm ferrous ball>
+		Range 10
+		Recharge 1
+		BV 2
+		type <BRUTAL>
+		Mass -2
+		sub
+			Ammo 25
+			Magazine 30
+			caliber <500mm ferrous ball>
+		end
+
+
+		% Small Guns
+		STC LAS-3
+		name <Laser Pistol>
+		range 3
+		speed 2
+		inv
+			PowerSource 1
+			mass -1
+			name <Pistol Battery>
+		end
+
+		Gun 4
+		name <Tri Pistol>
+		caliber <65mm caseless>
+		Range 6
+		BV 2
+		acc 1
+		scale 2
+		mass -4
+		sub
+			Ammo 4
+			Magazine 15
+			caliber <65mm caseless>
+		end
+
+		Gun 8
+		Scale 2
+		name <Rail Musket>
+		caliber <30mm ferrous>
+		Range 8
+		acc 2
+		speed 4
+		mass -2
+		sub
+			Ammo 8
+			caliber <30mm ferrous>
+			Magazine 50
+			mass -8
+		end
+
+		Gun 8
+		name <Destroyer Musket>
+		caliber <50mm self-propelled>
+		range 7
+		Speed 3
+		scale 2
+		sub
+			Ammo 8
+			Magazine 12
+			caliber <50mm self-propelled>
+			type <ARMORPIERCING BRUTAL>
+		end
+
+		Gun 10
+		name <Mecha Blunderbuss>
+		caliber <ferrous fragments>
+		Scale 2
+		type <SCATTER BRUTAL>
+		range 6
+		Acc 1
+		Speed 2
+		BV 1
+		sub
+			Ammo 10
+			Magazine 50
+			caliber <ferrous fragments>
+		end
+
+		BeamGun 8
+		name <Ion Musket>
+		type <OVERLOAD>
+		range 7
+		scale 2
+
+		Gun 8
+		Scale 2
+		name <Keelhauler>
+		caliber <30mm ferrous>
+		Range 6
+		BV 5
+		mass -5
+		sub
+			Ammo 8
+			name <Keelhauler Rounds>
+			desc <Iron shells which are electrically charged at the time of launch.>
+			caliber <30mm ferrous>
+			Magazine 120
+			type <OVERLOAD>
+			mass -8
+		end
+
+		Gun 6
+		Scale 2
+		name <Blackbeard Special>
+		caliber <25mm casseless>
+		desc <A mecha scale handgun decorated in a pirate motif.>
+		Range 5
+		BV 3
+		Acc 2
+		Speed 3
+		mass -1
+		type <Armorpiercing>
+		sub
+			Ammo 6
+			caliber <25mm casseless>
+			Magazine 100
+			mass -2
+		end
+
+		BeamGun 10
+		Scale 2
+		name <Phase Musket>
+		type <ARMORPIERCING>
+		Range 11
+
+		Gun 7
+		Scale 2
+		name <Revenge Cannon>
+		caliber <30mm caseless>
+		Range 7
+		type <ARMORPIERCING>
+		BV 4
+		Speed 3
+		mass -5
+		sub
+			Ammo 7
+			caliber <30mm caseless>
+			Magazine 150
+			type <OVERLOAD>
+			mass -8
+		end
+
+		%% Melee Weapons
+		Melee 7
+		name <Mecha Cutlass>
+		Scale 2
+		Speed 3
+		Mass -3
+		Acc 1
+
+		Melee 7
+		name <Dueling Sabre>
+		Scale 2
+		Acc 1
+		type <ARMORPIERCING>
+		mass -3
+
+		Melee 8
+		Name <Pulse Cutlass>
+		type <HAYWIRE>
+		Scale 2
+		Speed 3
+		Mass -4
+		Acc 1
+
+		EMelee 10
+		name <Beam Cutlass>
+		Scale 2
+		Speed 3
+
+		melee 10
+		name <Boarding Hook>
+		Scale 2
+		acc 1
+		mass -4
+		type <FLAIL EXTEND BRUTAL>
+
+		Melee 14
+		name <Ion Sabre>
+		type <OVERLOAD ARMORPIERCING>
+		Scale 2
+		Speed 3
+		Acc 1
+		mass -8
+
+		Melee 12
+		name <Mug of Grog>
+		desc <This mug does not actually contain grog, but instead a highly corrosive acid. It is favored by the more theatrical pirates.>
+		Scale 2
+		Acc -1
+		Mass -8
+		type <RUST>
+
+		Emelee 10
+		name <Electro Boarding Hook>
+		Scale 2
+		acc 1
+		mass 1
+		type <FLAIL EXTEND HAYWIRE>
+
+		Melee 16
+		name <Kaizoku Blade>
+		type <ARMORPIERCING HAYWIRE>
+		Scale 2
+		Speed 4
+		Acc 3
+		mass -10
+
+		Emelee 15
+		name <Poseidon's Trident>
+		Scale 2
+		acc 0
+		mass 1
+		type <THROWN RETURN EXTEND OVERLOAD>	
 	% End Pirate
 	end
   
