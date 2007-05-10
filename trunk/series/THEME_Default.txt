@@ -2014,120 +2014,227 @@ Theme 6
 	CUSTOMIZATION_NOUN_4 <Theory>
 
 	inv
+		% Big Guns
+		STC PAR-13
+		%% #7
 
-	Melee 5
-	scale 2
-	name <Quantum Scalpel>
-	type <ARMORPIERCING>
-	Speed 6
-	Acc 1
-	mass -3
-	desc <An experimental mecha weapon.>
+		Gun 12
+		%% #8
+		name <AntiMatter Gauss Rifle>
+		scale 2
+		Range 10
+		Recharge 2
+		caliber <70mm antiferrous>
+		sub
+			Ammo 12
+			caliber <70mm antiferrous>
+			type <HYPER>
+			magazine 16
+		end
 
-	EMelee 12
-	Scale 2
-	name <Magnetic Disintegrator>
-	type <BRUTAL OVERLOAD>
-	acc 1
-	Speed 2
+		%% Missiles
+		MLauncher 3
+		Scale 2
+		sub
+			Rockets 15
+			name <Implosion Bomb>
+			type <Armorpiercing>
+			Range 4
+			Magazine 2
+		end
 
-	EMelee 9
-	scale 2
-	name <Neutron Lash>
-	type <Extend Overload Flail>
-	Speed 6
-	Acc 1
-	desc <An experimental mecha weapon.>
+		MLauncher 6
+		Scale 2
+		sub
+			Rockets 15
+			name <Implosion Bomb>
+			type <Armorpiercing>
+			Range 4
+			Magazine 4
+		end
+
+		MLauncher 12
+		Scale 2
+		sub
+			Rockets 15
+			name <Implosion Bomb>
+			type <Armorpiercing>
+			Range 4
+			Magazine 8
+		end
+
+		MLauncher 4
+		Scale 2
+		sub
+			STC SWM-2
+			acc 3
+			name <A.I. Guided Missiles>
+			Magazine 20
+		end
 	
-	Gun 7
-	scale 2
-	name <Glass Cannon>
-	Speed 4
-	range 5
-	desc <An experimental mecha weapon.>
-	caliber <Glass Cannon Capsules>
-	sub
-		Ammo 7
+		MLauncher 8
+		Scale 2
+		sub
+			STC SWM-2
+			acc 3
+			name <A.I. Guided Missiles>
+			Magazine 40
+		end	
+
+		MLauncher 12
+		Scale 2
+		sub
+			STC SWM-2
+			acc 3
+			name <A.I. Guided Missiles>
+			Magazine 60
+		end	
+
+		MLauncher 20
+		Scale 2
+		sub
+			STC SWM-2
+			acc 3
+			name <A.I. guided missiles>
+			Magazine 100
+		end	
+
+		MLauncher 4
+		Scale 2
+		sub
+			STC HR-10
+			name <Glass Rockets>
+			type <RUST>
+			Magazine 4
+		end
+
+		MLauncher 2
+		Scale 2
+		sub
+			STC HR-10
+			name <Neutronic Rockets>
+			type <HYPER>
+			Magazine 2
+		end
+
+		MLauncher 2
+		Scale 2
+		sub
+			STC NUKE-20
+			name <Quantum Missile>
+			type <Blast 4 Brutal Mystery>
+			Magazine 1
+		end
+
+		%% Melee Weapons
+		EMelee 4
+		Scale 2
+		name <Shock Sphere>
+		type <OVERLOAD>
+		Speed 1
+		Mass 1
+		desc <A powerful electric generator, also usable as a weapon.>
+
+		Melee 3
+		Scale 2
+		name <Mecha Syringe>
+		type <RUST>
+		Speed 1
+		Mass -2
+		desc <A mecha-sized syringe loaded with acid.>
+
+		Melee 5
+		scale 2
+		name <Quantum Scalpel>
+		type <ARMORPIERCING>
+		Speed 4
+		Acc 1
+		mass -3
+		desc <An experimental mecha weapon.>
+
+		Melee 16
+		Scale 2
+		name <Phase Rod>
+		type <ARMORPIERCING>
+		Mass -10
+		desc <The tip of this rod generates a time/space distortion, capable of inflicting great damage.>
+
+		EMelee 8
+		Scale 2
+		name <Laser Probe>
+		type <HAYWIRE>
+		Speed 3
+		Acc -1
+
+		Melee 8
+		Scale 2
+		name <Cosmic Key>
+		type <DISINTEGRATE>
+		desc <A special tuning fork which can match the resonant frequency of opposing mecha.>
+		Speed 3
+		Acc -1
+		mass -6
+
+		Melee 14
+		Scale 2
+		Biotech
+		name <Triumvirate Blade>
+		type <ARMORPIERCING>
+		Speed 3
+		Acc 2
+		mass -9
+		desc <A living weapon cloned from the wreckage of Typhon.>
+
+		EMelee 6
+		Scale 2
+		name <Nuclear Scepter>
+		type <HYPER>
+		desc <This club releases incredible energy upon contact.>
+
+		Melee 18
+		Scale 2
+		name <Aurora Staff>
+		type <EXTEND OVERLOAD HAYWIRE>
+		Acc 2
+		Speed 4
+		Mass -12
+		desc <This staff releases a powerful electromagnetic pulse upon contact with its target.>
+
+		EMelee 9
+		scale 2
+		name <Neutron Lash>
+		type <Extend Overload Flail>
+		Speed 6
+		Acc 1
+		desc <An experimental mecha weapon.>
+
+		%% Small Guns
+		Gun 7
+		scale 2
+		name <Glass Cannon>
+		Speed 4
+		range 5
+		desc <An experimental mecha weapon.>
 		caliber <Glass Cannon Capsules>
-		type <RUST>
-		magazine 20
-	end
+		sub
+			Ammo 7
+			caliber <Glass Cannon Capsules>
+			type <RUST>
+			magazine 20
+		end
 
-	BeamGun 7
-	name <Impact Wave Cannon>
-	scale 2
-	range 4
-	Speed 3
-	mass -1
-	type <SWARM SCATTER>
+		BeamGun 7
+		name <Impact Wave Cannon>
+		scale 2
+		range 4
+		Speed 3
+		mass -1
+		type <SWARM SCATTER>
 
-	BeamGun 6
-	Scale 2
-	name <Heavy Particle Cannon>
-	type <OVERLOAD ANTIAIR>
-	Range 8
-	ACC 1
-	
-	BeamGun 13
-	Scale 2
-	name <Superheavy Particle Cannon>
-	desig <PAR-13>
-	type <OVERLOAD ANTIAIR>
-	Range 9
-	Recharge 1
+		STC PAR-6
 
-	STC PHS-8
+		STC PHS-8
 
-	Gun 12
-	name <Anti Matter Gauss Rifle>
-	scale 2
-	Range 10
-	Recharge 1
-	caliber <70mm AM ferrous>
-	sub
-		Ammo 12
-		caliber <70mm AM ferrous>
-		type <HYPER>
-		magazine 16
-	end
-	
-	%% Missiles
-	MLauncher 4
-	Scale 2
-	sub
-		STC SWM-2
-		acc 3
-		name <A.I. guided missiles>
-		Magazine 20
-	end
-	
-	MLauncher 8
-	Scale 2
-	sub
-		STC SWM-2
-		acc 3
-		name <A.I. guided missiles>
-		Magazine 40
-	end	
-	
-	MLauncher 4
-	Scale 2
-	sub
-		STC HR-10
-		name <Glass Rockets>
-		type <RUST>
-		Magazine 4
-	end
-
-	MLauncher 2
-	Scale 2
-	sub
-		STC HR-10
-		name <Neutronic Rockets>
-		type <HYPER>
-		Magazine 2
-	end
-	
 	% End Science
 	end
   

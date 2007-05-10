@@ -39,7 +39,7 @@ const
 		'A','G','L','N','Z',
 		'X','S','R','S','I',
 		'@','@','@','@','@',
-		'!','?'
+		'!','?','D'
 	);
 	SX_Color: Array [1..Num_Status_FX] of Byte = (
 		Magenta, LightRed, LightGreen, Magenta, Yellow,
@@ -47,7 +47,7 @@ const
 		Cyan, Cyan, Cyan, Cyan, Cyan,
 		Cyan, Cyan, Red, Yellow, Magenta,
 		Red, Red, Red, Red, Red,
-		Red, Magenta
+		Red, Magenta, LightRed
 	);
 
 
