@@ -2000,7 +2000,8 @@ Theme 5
 
 Theme 6
 	name <Mad Scientist>
-	requires <ACADE>	
+	requires <ACADE ~KNOWLEDGE ~PRAGMATIC>
+	%% Mostly beamguns. An odd grab bag of weird effects.
 	
 	CUSTOMIZATION_ADJECTIVE_0 <Atomic>
 	CUSTOMIZATION_ADJECTIVE_1 <Quantic>
@@ -2014,7 +2015,140 @@ Theme 6
 	CUSTOMIZATION_NOUN_4 <Theory>
 
 	inv
+		%% Small Guns
+		STC LAS-3
+		name <X-Ray Laser>
+		type <ARMORPIERCING>
+		Speed 1
+
+		BeamGun 3
+		Scale 2
+		name <Neutrino Beam>
+		desc <Neutrinos are supposed to be harmless, aren't they?>
+		range 8
+		Acc 1
+
+		Gun 7
+		scale 2
+		name <Glass Cannon>
+		Speed 4
+		range 5
+		desc <An experimental mecha weapon.>
+		caliber <Glass Cannon Capsules>
+		sub
+			Ammo 7
+			caliber <Glass Cannon Capsules>
+			type <RUST>
+			magazine 20
+		end
+
+		BeamGun 7
+		name <Impact Wave Cannon>
+		scale 2
+		range 4
+		Speed 3
+		mass -1
+		type <SWARM SCATTER>
+
+		STC PAR-2
+
+		STC PAR-6
+
+		STC PHS-8
+
+		Gun 8
+		name <Gastric Cannon>
+		caliber <Chemical Solvent>
+		desc <A living weapon cloned from the wreckage of Typhon.>
+		range 6
+		scale 2
+		Biotech
+		mass -8
+		sub
+			Ammo 8
+			Magazine 20
+			caliber <Chemical Solvent>
+			type <BRUTAL RUST>
+		end
+
+		BeamGun 7
+		name <Meson Field Inducer>
+		desc <No-one's really sure what this is or how it works...>
+		scale 2
+		Range 8
+		type <HAYWIRE BRUTAL>
+
+		BeamGun 7
+		name <Disintegration Ray>
+		Scale 2
+		Range 5
+		type <DISINTEGRATE>
+
 		% Big Guns
+		Gun 12
+		%% #1
+		Scale 2
+		name <Rocket Cannon>
+		caliber <60mm self-propelled>
+		Range 8
+		Recharge 1
+		sub
+			Ammo 12
+			Magazine 24
+			caliber <60mm self-propelled>
+		end
+
+		Gun 14
+		Scale 2
+		name <Ballistic Thagomizer>
+		caliber <50mm shell>
+		Range 6
+		Recharge 2
+		sub
+			Ammo 14
+			Magazine 30
+			caliber <50mm shell>
+		end
+
+		BeamGun 12
+		Scale 2
+		name <Optical Thermobeam>
+		Range 6
+		Speed 1
+
+		BeamGun 11
+		%% #4
+		Scale 2
+		name <Irradiator>
+		Range 4
+		Speed 1
+		Acc -1
+		type <SCATTER HAYWIRE>
+
+		Gun 14
+		%% #5
+		name <Glop Launcher>
+		caliber <Chemical>
+		range 6
+		Speed 1
+		scale 2
+		type <BLAST 2>
+		sub
+			Ammo 14
+			name <Glop>
+			Magazine 30
+			caliber <Chemical>
+			type <BURN OVERLOAD>
+		end
+
+		BeamGun 12
+		%% #6
+		Scale 2
+		name <Kinetic Pulse Generator>
+		range 5
+		Acc -2
+		type <BRUTAL>
+
 		STC PAR-13
 		%% #7
 
@@ -2030,6 +2164,24 @@ Theme 6
 			caliber <70mm antiferrous>
 			type <HYPER>
 			magazine 16
+		end
+
+		STC PHS-25
+		%% #9
+		name <Quantum Destabilizer>
+
+		Gun 16
+		%% #10
+		name <Singularity Cannon>
+		scale 2
+		Range 8
+		Acc -3
+		caliber <gravitic negation shell>
+		sub
+			Ammo 16
+			caliber <gravitic negation shell>
+			type <BLAST 1 HYPER MYSTERY>
+			magazine 8
 		end
 
 		%% Missiles
@@ -2193,7 +2345,7 @@ Theme 6
 
 		Melee 18
 		Scale 2
-		name <Aurora Staff>
+		name <Quasar Staff>
 		type <EXTEND OVERLOAD HAYWIRE>
 		Acc 2
 		Speed 4
@@ -2208,36 +2360,100 @@ Theme 6
 		Acc 1
 		desc <An experimental mecha weapon.>
 
-		%% Small Guns
-		Gun 7
-		scale 2
-		name <Glass Cannon>
-		Speed 4
-		range 5
-		desc <An experimental mecha weapon.>
-		caliber <Glass Cannon Capsules>
-		sub
-			Ammo 7
-			caliber <Glass Cannon Capsules>
-			type <RUST>
-			magazine 20
-		end
-
-		BeamGun 7
-		name <Impact Wave Cannon>
-		scale 2
-		range 4
-		Speed 3
-		mass -1
-		type <SWARM SCATTER>
-
-		STC PAR-6
-
-		STC PHS-8
-
 	% End Science
 	end
   
+Theme 7
+	name <Beauty>
+	requires <(CHARM|MEDIA) Sociable ~[3]>
+	%% A collection of beautiful attacks- think the kind of thing Sailor Moon
+	%% would approve of.
+	
+	CUSTOMIZATION_ADJECTIVE_0 <Beautiful>
+	CUSTOMIZATION_ADJECTIVE_1 <Lovely>
+	CUSTOMIZATION_ADJECTIVE_2 <Charming>
+	CUSTOMIZATION_ADJECTIVE_3 <Graceful>
+	CUSTOMIZATION_ADJECTIVE_4 <Pretty>
+	CUSTOMIZATION_NOUN_0 <Heart>
+	CUSTOMIZATION_NOUN_1 <Flower>
+	CUSTOMIZATION_NOUN_2 <Rose>
+	CUSTOMIZATION_NOUN_3 <Lady>
+	CUSTOMIZATION_NOUN_4 <Dancer>
   
+	inv
+		%% Melee Weapons
+		Melee 8
+		%% One
+		name <Baton>
+		Scale 2
+		Speed 3
 
+		Melee 10
+		%% Two
+		name <Diamond Chain>
+		mass -5
+		Scale 2
+		Speed 1
+		type <ARMORPIERCING>
+
+		Melee 6
+		%% Three
+		name <Pretty Ribbon>
+		mass -5
+		Scale 2
+		type <EXTEND FLAIL>
+
+		Melee 15
+		%% Four
+		name <Jeweled Scepter>
+		scale 2
+		mass -10
+		type <HAYWIRE>
+
+		Melee 8
+		%% Five
+		name <Lovely Ribbon>
+		mass -7
+		Scale 2
+		type <EXTEND FLAIL ARMORPIERCING>
+
+		Melee 9
+		%% Six
+		name <Butterfly Kite>
+		desc <Not actually a kite, but a rocket-assisted throwing weapon.>
+		mass -7
+		Scale 2
+		type <ARMORPIERCING THROWN RETURN>
+
+		Melee 10
+		%% Seven
+		name <Sparkling Ribbon>
+		mass -9
+		Scale 2
+		type <EXTEND FLAIL HAYWIRE ARMORPIERCING>
+
+		Melee 12
+		%% Eight
+		name <Angel's Wing>
+		desc <A beautifully designed mecha-scale boomerang.>
+		mass -7
+		Scale 2
+		Speed 3
+		type <ARMORPIERCING THROWN RETURN>
+
+		EMelee 10
+		%% Nine
+		name <Ephemeral Ribbon>
+		Scale 2
+		type <EXTEND FLAIL HAYWIRE OVERLOAD>
+
+		Melee 18
+		%% Ten
+		name <Cupid's Lyre>
+		desc <It is shaped like a harp, but is actually a throwing weapon. Its monofilament strings can easily slice through armor.>
+		mass -10
+		Scale 2
+		Speed 3
+		type <ARMORPIERCING THROWN RETURN>
+	end
 
