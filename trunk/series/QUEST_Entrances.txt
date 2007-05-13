@@ -203,11 +203,11 @@ Content
 			room
 			special <SHAREDPALETTE>
 			desig <HOME>
-			minimap <.......##...1#...##......>
+			minimap <.1.....##...2#...##......>
 			inv
 				Elevator
 				desig <ENTRANCE %s1%>
-				MiniMapComponent 1
+				MiniMapComponent 2
 				% This is the elevator to the main hall of the yacht. In order
 				% to use it, the guard E2 must authorize things.
 				Use <if= L1 1 else GoCantUse Print 1 Exit Destination>

@@ -193,6 +193,14 @@ Recharge 1
 	acc 2
 	Magazine 1
 
+	Rockets 2
+	name <Sparkle Missiles>
+	Scale 2
+	desig <SPKM-2>
+	type <BLAST 2 OVERLOAD>
+	Range 8
+	Magazine 1
+
 	Rockets 1
 	name <Light Rockets>
 	desig <LR-1>
@@ -239,6 +247,14 @@ Recharge 1
 	name <Swarm Missiles>
 	desig <SWM-2>
 	Range 8
+	Magazine 1
+	type <SWARM>
+
+	Rockets 5
+	scale 2
+	name <Heavy Swarm Missiles>
+	desig <SWM-5>
+	Range 7
 	Magazine 1
 	type <SWARM>
 

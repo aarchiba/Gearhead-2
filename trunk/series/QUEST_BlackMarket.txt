@@ -1,0 +1,75 @@
+%%
+%% This unit is set to contain two types of quest: The black market header, which is used
+%% when you want a black market in town with no attached quest; and the black market entrance,
+%% which is used to add an entrance for the black market.
+%%
+%% Typically, black markets start out hidden and are only exposed through the actions of the PC.
+%%
+
+%%
+%%  *:BlackMarket Content
+%%
+%% An empty black market will be added to the city. If you want, you can add an associated
+%% extra quest.
+
+Content
+	%% This is the basic one. Just add a black market and nothing else.
+	requires <*:BlackMarket>
+	Scene1 <New *BlackMarket>
+
+%%
+%% *:ENT_BlackMarket
+%%
+%% Black markets aren't open to the general public. The PC will need to find a way in.
+%% These normal black market entrances are active from the get-go; the PC doesn't need
+%% to complete any previous quest to find them.
+%%
+
+Content
+	name <Shopkeeper Referral>
+	requires <*:ENT_BlackMarket>
+
+	% E1 is the black market
+	% E2 is the shopkeeper
+
+	Scene1 <Key>
+	Element2 <Prefab>
+	Scene2 <Building Mall Sleazy>
+	Team2 <Citizens>
+	TeamData2 <Pass>
+
+	sub
+		Persona 2
+		% NPCVar %2% 1 = Have opened the store
+		% V1 = PC Cash at start of store
+		% V2 = Transaction counter
+		rumor0 <%name2% has some extra service for regular customers.>
+
+		MetaScene 1
+		start <if= QuestStatus %qid% 0 else %pop% SetQuestStatus %qid% -1 Goto %pop%>
+
+		MetaScene 2
+		sub
+			room
+			special <SHAREDPALETTE>
+			desig <HOME>
+			minimap <2#...+#.......1.....&---&>
+			sub
+				Door
+				% V1 = Initialization Counter
+				update <if= V1 0 else GoCheckQuest V= 1 1 SetStat STAT_Lock %sktar_hard%>
+				GoCheckQuest <if# NPCVar %2% 1 0 SetStat STAT_Lock 0>
+			end
+			inv
+				Trapdoor
+				desig <Entrance %s1%>
+				MiniMapComponent 2
+				update <if= V1 0 else GoCheckQuest V= 1 1 SetStat STAT_MetaVisibility %sktar_hard%>
+				GoCheckQuest <if# NPCVar %2% 1 0 SetStat STAT_MetaVisibility 0>
+			end
+		end
+	end
+	inv
+		NPC Shopkeeper
+		Chardesc Criminal
+	end

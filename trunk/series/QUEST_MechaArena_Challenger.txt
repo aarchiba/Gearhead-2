@@ -209,7 +209,8 @@ sub
 	GoCheckShop <if= V1 1 else GoCheckWin   Goto GoOpenShop>
 	*GoOpenShop <*SHOP_MECHA GoBye>
 	*GoBye <*GoodBye>
-	GoCheckWin <if= QuestStatus %qid% -1 else GoCheckQuest ifNPCArchEnemy %3% else GoReallyWin V= 1 -1 Goto GoChat>
+	GoCheckWin <if= QuestStatus %qid% -1 else GoCheckQuest ifNPCOK %3% else GoCaherDied ifNPCArchEnemy %3% else GoReallyWin V= 1 -1 Goto GoChat>
+	GoCaherDied <V= 1 -1 Goto GoChat>
 	GoReallyWin <V= 1 1 PCFriend %4%   NewChat Say 1 AddChat 1>
 	GoCheckQuest <if= QuestStatus %qid% %id% else GoChat   ifNPCOK %3% else GoChat  if= QuestStatus %qid2% 0 else GoCheckQ2WIn NewChat Say 2 AddChat 2 AddChat 3>
 	GoCheckQ2Win <if= QuestStatus %qid2% -1 else GoCheckQ2Loss   NewChat Say 5 AddChat 5>

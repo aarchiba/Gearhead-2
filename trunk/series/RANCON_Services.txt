@@ -236,6 +236,23 @@ Content
 	end
 
 Content
+	requires <*SPECIAL_SHOP City>
+	content <Required *DECOR_FOR_SHOP %1% Local>
+	element1 <Prefab>
+	team1 <Citizens>
+	teamdata1 <ally pass>
+	sub
+		Persona 1
+		*greeting <*NiceToMeetYou GoShop>
+		*GoShop <*SERVICE_DOCTOR GoBye>
+		*GoBye <*GOODBYE>
+	end
+	inv
+		NPC Cyberdoc
+		Skill 21 10
+	end
+
+Content
 	requires <*SPECIAL_SHOP Common>
 	content <Required *DECOR_FOR_SHOP %1% Local>
 	element1 <Prefab>
@@ -263,6 +280,42 @@ Content
 	end
 	inv
 		NPC Shopkeeper
+	end
+
+Content
+	requires <*SPECIAL_SHOP Common>
+	content <Required *DECOR_FOR_SHOP %1% Local>
+	element1 <Prefab>
+	team1 <Citizens>
+	teamdata1 <ally pass>
+	sub
+		Persona 1
+		*greeting <*NiceToMeetYou GoShop>
+		*GoShop <*SHOP_SPECIALIST GoBye>
+		*GoBye <*GOODBYE>
+	end
+	inv
+		NPC Shopkeeper
+		skill 21 5
+		chardesc wangtta
+	end
+
+Content
+	requires <*SPECIAL_SHOP Common>
+	content <Required *DECOR_FOR_SHOP %1% Local>
+	element1 <Prefab>
+	team1 <Citizens>
+	teamdata1 <ally pass>
+	sub
+		Persona 1
+		*greeting <*NiceToMeetYou GoShop>
+		*GoShop <*SHOP_SPECIALIST GoBye>
+		*GoBye <*GOODBYE>
+	end
+	inv
+		NPC Shopkeeper
+		skill 21 15
+		chardesc renowned
 	end
 
 Content

@@ -222,42 +222,6 @@ Scene
 		Content2 <Some 1 100 Here *ANTI_ATTACK_SECURITY 2>
 	end
 
-%%
-%% *BlackMarket Content
-%%
-%% A place of shady business.
-
-Scene
-	name <#'s Black Market>
-	requires <*BlackMarket>
-	type <building Sleazy>
-	mapwidth 22
-	mapheight 22
-	MallMap
-
-	special <ADDEXIT>
-	NeededCells 3
-	Content1 <Some 1 100 Sub *SPECIAL_SHOP na>
-	Content2 <Fill Sub *SHOP na>
-
-	sub
-		team 1
-
-		team 2
-		name <Citizens>
-		SetAlly 1
-		Passive
-
-		team 3
-		name <Guards>
-		SetAlly 2
-
-		room
-		name <Foyer>
-		desig <EntranceGrid>
-		Content <Some 3 50 Here *URBAN_X>
-		Content2 <Some 1 100 Here *ANTI_ATTACK_SECURITY 2>
-	end
 
 
 %%

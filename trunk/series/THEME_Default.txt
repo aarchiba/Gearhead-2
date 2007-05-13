@@ -207,21 +207,6 @@ Theme 1
 			type <BLAST 3 BURN BRUTAL>
 		end
 
-		Gun 11
-		name <Flare Storm>
-		type <Swarm>
-		caliber <35mm caseless>
-		Range 8
-		BV 4
-		Acc 1
-		scale 2
-		sub
-			Ammo 11
-			Magazine 100
-			caliber <35mm caseless>
-			type <BURN>
-		end
-
 		Gun 14
 		name <Meteor Cannon>
 		caliber <70mm self-propelled>
@@ -234,7 +219,7 @@ Theme 1
 			Ammo 14
 			Magazine 24
 			caliber <70mm self-propelled>
-			type <BLAST 3 BURN BRUTAL>
+			type <BLAST 2 BURN BRUTAL>
 		end
 
 		Gun 25
@@ -466,7 +451,7 @@ Theme 1
 
 Theme 2
 	name <Soldier>
-	requires <MILIT>
+	requires <(MILIT|BODY)>
 	%% A career warrior, the soldier's weapons are tough and versatile.
 	%% Most of these weapons should be inspired by contemporary military equipment.
 
@@ -2365,9 +2350,10 @@ Theme 6
   
 Theme 7
 	name <Beauty>
-	requires <(CHARM|MEDIA) Sociable ~[3]>
+	requires <(CHARM|MEDIA) Sociable ~[3] -[2]>
 	%% A collection of beautiful attacks- think the kind of thing Sailor Moon
-	%% would approve of.
+	%% would approve of. The Beauty warrior is mostly just concerned with
+	%% looking good.
 	
 	CUSTOMIZATION_ADJECTIVE_0 <Beautiful>
 	CUSTOMIZATION_ADJECTIVE_1 <Lovely>
@@ -2381,6 +2367,331 @@ Theme 7
 	CUSTOMIZATION_NOUN_4 <Dancer>
   
 	inv
+		%% Small Guns
+		BeamGun 2
+		%% One
+		Scale 2
+		Range 3
+		name <Sexy Kiss>
+		type <HAYWIRE>
+
+		Gun 3
+		%% Two
+		name <Bubble Gun>
+		caliber <30mm gel canister>
+		Range 3
+		BV 3
+		scale 2
+		Recharge 4
+		sub
+			Ammo 3
+			Magazine 60
+			caliber <30mm gel canister>
+			type <OVERLOAD>
+		end 
+
+		STC PAR-2
+		range 5
+		name <Sparkle Pistol>
+		Speed 4
+
+		Gun 7
+		%% Four
+		Scale 2
+		name <Deadly Bouquet>
+		desc <The metallic petals of this bouquet are razor sharp. They can be fired as weapons.>
+		caliber <ferrous foil>
+		Range 4
+		BV 4
+		Acc 1
+		sub
+			Ammo 7
+			caliber <ferrous foil>
+			Magazine 120
+			mass -5
+			special <ARMORPIERCING>
+		end
+
+		BeamGun 4
+		%% Five
+		Scale 2
+		name <Prismatic Laser>
+		desc <A laser cannon which fires multicolored beams.>
+		BV 6
+		Range 5
+		Acc -1
+		Recharge 1
+
+		Gun 9
+		%% Six
+		Scale 2
+		name <Hummingbird Rifle>
+		caliber <humminbird drone>
+		desc <This rifle fires explosive drones that home in on its target.>
+		Range 8
+		Recharge 4
+		Acc 4
+		mass -3
+		sub
+			Ammo 9
+			Magazine 30
+			caliber <humminbird drone>
+			type <ARMORPIERCING OVERLOAD>
+		end
+
+		Gun 7
+		%% Seven
+		Scale 2
+		name <Floral Cascade>
+		desc <This weapon fires metallic rose petals at enemy mecha.>
+		caliber <ferrous foil>
+		Range 7
+		BV 5
+		Acc 1
+		type <SWARM>
+		sub
+			Ammo 7
+			caliber <ferrous foil>
+			Magazine 120
+			mass -5
+			special <ARMORPIERCING>
+		end
+
+		STC PAR-6
+		%% Eight
+		name <Sparkle Rifle>
+		Recharge 3
+		Acc 2
+
+		BeamGun 6
+		%% Nine
+		name <Brilliant Scepter>
+		desc <This scepter can fire energy bolts which strike nearby targets.>
+		Scale 2
+		Range 5
+		Acc -1
+		BV 2
+		type <SWARM ARMORPIERCING>
+
+		Gun 10
+		%% Ten
+		Scale 2
+		name <Thorn Rifle>
+		caliber <25mm caseless>
+		Range 6
+		Recharge 3
+		Acc 2
+		BV 3
+		type <ARMORPIERCING>
+		sub
+			Ammo 10
+			Magazine 80
+			caliber <25mm caseless>
+			mass -4
+		end
+
+
+		%% Big Guns
+		Gun 15
+		%% One
+		Scale 2
+		name <Elegance Cannon>
+		caliber <50mm caseless>
+		Range 6
+		Recharge 1
+		sub
+			Ammo 15
+			Magazine 25
+			caliber <50mm caseless>
+		end
+
+		Gun 12
+		%% Two
+		Scale 2
+		name <Flash Cannon>
+		caliber <80mm cannister>
+		Range 7
+		sub
+			Ammo 12
+			Magazine 10
+			caliber <80mm cannister>
+			type <Blast 1>
+		end
+
+		BeamGun 14
+		%% Three
+		name <Shining Ray>
+		Scale 2
+		Range 5
+		Acc -1
+		Recharge 1
+
+		BeamGun 11
+		%% Four
+		name <Spiral Beam>
+		Scale 2
+		Range 6
+		Acc -2
+		Mass -2
+
+		Gun 20
+		%% Five
+		Scale 2
+		name <Stardust Cannon>
+		caliber <120mm ferrous>
+		Range 12
+		sub
+			Ammo 20
+			name <Stardust Ammo>
+			Magazine 15
+			caliber <120mm ferrous>
+			type <SCATTER BRUTAL Mystery>
+		end
+
+		Gun 14
+		%% Six
+		name <Fireworks Launcher>
+		caliber <70mm self-propelled>
+		range 8
+		scale 2
+		Speed 1
+		sub
+			Ammo 14
+			Magazine 16
+			caliber <70mm self-propelled>
+			type <BLAST 3 BURN>
+		end
+
+		BeamGun 15
+		%% Seven
+		name <Brilliant Bolt>
+		Scale 2
+		Range 6
+		Mass -7
+
+		STC PAR-13
+		%% Eight
+		name <Sparkle Cannon>
+		Speed 2
+		Acc -2
+
+		Gun 14
+		%% Nine
+		name <Fireworks Spectacular>
+		caliber <70mm self-propelled>
+		range 10
+		scale 2
+		type <SWARM>
+		BV 2
+		Speed 1
+		sub
+			Ammo 14
+			Magazine 36
+			caliber <70mm self-propelled>
+			type <BLAST 2 BURN>
+		end
+
+		BeamGun 11
+		%% Ten
+		Scale 2
+		name <Prismatic Cannon>
+		desc <A laser cannon which fires multicolored beams.>
+		BV 6
+		Range 7
+		Acc -1
+		Recharge 1
+
+		%% Missile Launchers
+		MLauncher 1
+		Scale 2
+		sub
+			STC ICM-5
+			name <Star Flares>
+			Magazine 2
+		end
+
+		MLauncher 5
+		Scale 2
+		sub
+			STC ICM-5
+			name <Star Flares>
+			Magazine 10
+		end
+
+		MLauncher 2
+		Scale 2
+		sub
+			STC ICM-5
+			name <Star Flares>
+			Magazine 4
+		end
+
+		MLauncher 1
+		%% Three
+		Scale 2
+		sub
+			STC SPKM-2
+			Magazine 5
+		end
+
+		MLauncher 2
+		%% Five
+		Scale 2
+		sub
+			STC SPKM-2
+			Magazine 10
+		end
+
+		MLauncher 3
+		%% Six
+		Scale 2
+		sub
+			STC SPKM-2
+			Magazine 15
+		end
+
+		MLauncher 5
+		%% Eight
+		Scale 2
+		sub
+			STC SPKM-2
+			Magazine 25
+		end
+
+		MLauncher 16
+		Scale 2
+		sub
+			STC SWM-5
+			Magazine 32
+			name <Rose Missiles>
+			type <SWARM ARMORPIERCING>
+			Acc 1
+			range 10
+		end
+
+		MLauncher 8
+		Scale 2
+		sub
+			STC SWM-5
+			Magazine 16
+			name <Rose Missiles>
+			type <SWARM ARMORPIERCING>
+			Acc 1
+			range 10
+		end
+
+		MLauncher 12
+		Scale 2
+		sub
+			STC SWM-5
+			Magazine 24
+			name <Rose Missiles>
+			type <SWARM ARMORPIERCING>
+			Acc 1
+			range 10
+		end
+
+
 		%% Melee Weapons
 		Melee 8
 		%% One
@@ -2390,7 +2701,8 @@ Theme 7
 
 		Melee 10
 		%% Two
-		name <Diamond Chain>
+		name <Razor Fan>
+		desc <An elegant fan with a sharpened edge.>
 		mass -5
 		Scale 2
 		Speed 1
@@ -2434,8 +2746,8 @@ Theme 7
 
 		Melee 12
 		%% Eight
-		name <Angel's Wing>
-		desc <A beautifully designed mecha-scale boomerang.>
+		name <Peacock Fan>
+		desc <An elegant fan with a sharpened edge. When thrown it opens into a disc.>
 		mass -7
 		Scale 2
 		Speed 3
@@ -2449,9 +2761,9 @@ Theme 7
 
 		Melee 18
 		%% Ten
-		name <Cupid's Lyre>
-		desc <It is shaped like a harp, but is actually a throwing weapon. Its monofilament strings can easily slice through armor.>
-		mass -10
+		name <Master Fan>
+		desc <An elegant fan with a sharpened edge. When thrown it opens into a disc.>
+		mass -14
 		Scale 2
 		Speed 3
 		type <ARMORPIERCING THROWN RETURN>

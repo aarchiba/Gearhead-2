@@ -15,6 +15,25 @@ Content
 	content <Optional *URBAN_X na Local>
 
 Content
+	%% Office
+	requires <*GOV_MISC>
+	minimap <.....1..............##+##>
+	content <Optional *URBAN_X na Local>
+
+	Element1 <Prefab>
+	team1 <citizens>
+	teamdata1 <pass>
+
+	sub
+		Persona 1
+		*greeting <*NiceToMeetYou GoMiscTalk>
+		*GoMiscTalk <*MISC_CHATTER>
+	end
+	inv
+		NPC Beuracrat
+	end
+
+Content
 	%% Press Club
 	requires <*GOV_MISC ~Capital>
 	minimap <.....1..............##+##>
@@ -109,7 +128,7 @@ Content
 
 Content
 	% Privateers detachment
-	requires <*GOV_MILITARY MAQUI ~Sleazy>
+	requires <*GOV_MILITARY (MAQUI|FCOMS) ~Sleazy>
 	minimap <.....1..............#...#>
 
 	Element1 <Prefab>
@@ -153,14 +172,12 @@ Content
 %%	Add a police garrison to this location.
 
 Content
-	requires <*GOV_POLICE MAQUI>
-	minimap <.....1...2..........#...#>
+	requires <*GOV_POLICE (MAQUI|FCOMS|RISHI)>
+	minimap <.....1..............#...#>
 
 	Element1 <Prefab>
 	team1 <Guards>
 	teamdesc1 <SD>
-
-	Content <Optional *NPC_GUARD - Local>
 
 	sub
 		Persona 1
