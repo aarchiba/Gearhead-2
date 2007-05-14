@@ -6,9 +6,9 @@
 Scene
 	name <#'s Black Market>
 	requires <*BlackMarket>
-	type <building Sleazy>
-	mapwidth 22
-	mapheight 22
+	type <building Sleazy Dangerous BlackMarket>
+	mapwidth 15
+	mapheight 15
 	MallMap
 
 	quest_entrance <*:ENT_BlackMarket>
@@ -17,6 +17,9 @@ Scene
 	NeededCells 3
 	Content1 <Some 1 100 Sub *SPECIAL_SHOP na>
 	Content2 <Fill Sub *SHOP na>
+
+	Start <Print 1>
+	Msg1 <You enter \SCENE SceneID .>
 
 	sub
 		team 1

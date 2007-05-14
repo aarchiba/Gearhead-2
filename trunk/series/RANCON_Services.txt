@@ -353,6 +353,21 @@ Content
 		STC SHRINE-1
 	end
 
+Content
+	%% Video Arcade
+	requires <*SPECIAL_SHOP>
+	minimap <####################1...2>
+	element1 <Prefab>
+	Element2 <Prefab>
+	inv
+		STC VENDING-1
+		PDir 0
+
+		STC VENDING-1
+		PDir 4
+	end
+
+
 %% *ELECTRONICS_SHOP CONTENT
 %%   Contains an electronics store.
 

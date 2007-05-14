@@ -15,7 +15,40 @@
 Content
 	%% This is the basic one. Just add a black market and nothing else.
 	requires <*:BlackMarket>
+	Special <Reusable>
 	Scene1 <New *BlackMarket>
+
+Content
+	%% A bit more than above- adds a black marketeer boss.
+	requires <*:BlackMarket>
+	Element1 <Prefab>
+	Scene1 <New *BlackMarket>
+	Team1 <Citizens>
+	TeamData1 <Pass Ally>
+
+	sub
+		Persona 1
+		*Greeting <*NiceToMeetYou GoChat>
+		GoChat <NewChat Say 1 if= QuestStatus %qid% 0 SetQuestStatus %qid% -1>
+		Msg1 <How are you enjoying my store? Be sure to buy lots.>
+		Msg1_1 <It would be nice if my store could operate in the open... but then, I'd probably have to pay taxes.>
+		CMsg1_1 <ifNPCSociable Accept>
+		Msg1_2 <I'm busy, taking care of business...>
+		CMsg1_2 <ifNPCShy Accept>
+		Msg1_3 <Things are going well with this store. Who knew that hard work would pay off like this?>
+		CMsg1_3 <ifNPCEasygoing Accept>
+		Msg1_4 <My market has everything you need! If you want something we don't have, you're looking for the wrong stuff!>
+		CMsg1_4 <ifNPCPassionate Accept>
+		Msg1_5 <Building this store was a great investment- if it keeps making money, I could be forced to go legit.>
+		CMsg1_5 <ifNPCCheerful Accept>
+		Msg1_6 <I don't know why I started this business... I thought one of the perks of a life of crime was that you didn't have to do any paperwork.>
+		CMsg1_6 <ifNPCMelancholy Accept>
+	end
+	inv
+		NPC Thief
+		Chardesc Renowned
+	end
+
 
 %%
 %% *:ENT_BlackMarket
@@ -24,6 +57,127 @@ Content
 %% These normal black market entrances are active from the get-go; the PC doesn't need
 %% to complete any previous quest to find them.
 %%
+
+Content
+	name <Space Market>
+	requires <*:ENT_BlackMarket Spinner>
+
+	%% The black market is located in space; the PC will have to fight
+	%% some pirates in order to get in.
+
+	% E1 is the black market.
+	% E2 is the space encounter scene.
+	% E3 is the entrance to that scene.
+	Scene1 <Key>
+
+	Scene2 <New *BLANK.Space.Mecha>
+
+	Element3 <Prefab>
+	Scene3 <Space Environs>
+
+	sub
+		MetaScene 1
+		start <if= QuestStatus %qid% 0 else %pop% SetQuestStatus %qid% -1 Goto %pop%>
+
+		MetaScene 2
+		% L2 = Reward counter
+		start <if= V2 0 else GoWonBefore  Alert 2 Print 2>
+		GoWonBefore <>
+		nu1 <if= t1 0 Return>
+		nu2 <if= t2 0 if= L2 0 L= 2 1 Print 1 XPV 100>
+		Msg1 <That was the last of the pirates.>
+		Msg2 <As you approach the spaceship, you are attacked by pirates!>
+		sub
+			Team 1
+			name <Player Team>
+			SetEnemy 2
+
+			Team 2
+			name <Enemy Team>
+			SetEnemy 1
+			SetFaction 8
+			Deploy <if= L2 0 WMecha 2 Threat %threat% 100>
+		end
+		inv
+			stc DERELICT-1
+			name <Shady Microstation>
+			desig <Entrance %s1%>
+			use <if= L2 0 else GoReallyUse Print 2>
+			GoReallyUse <Print 1 Exit StatVal 4>
+			Msg2 <You can't enter the station while there are pirates trying to kill you!>
+		end
+
+	end
+	inv
+		STC QUEST-ENCOUNTER-STATIONARY
+		name <Suspicious Vessel>
+		rumor0 <there's a pirate meeting point outside the station.>
+		desig <entrance %s2%>
+		% After entering the store, this encounter will be perminantly visible.
+		update <SetStat STAT_MetaVisibility 0  if# QuestStatus %qid% 0 else GoSetOrders ShowEncounter Goto GoSetOrders>
+	end
+
+Content
+	name <Criminal Mechanic>
+	requires <*:ENT_BlackMarket>
+
+	% E1 is the black market
+	% E2 is the shopkeeper
+
+	Scene1 <Key>
+	Element2 <Prefab>
+	Scene2 <Building Garage>
+	Team2 <Citizens>
+	TeamData2 <Pass>
+
+	sub
+		Persona 2
+		% NPCVar %2% 1 = Have opened the store
+		% V1 = Offer Calculator
+		rumor0 <%name2% has some illegal business going on in the back room of the garage.>
+		Greeting <if= QuestStatus %qid% 0 else GoGreet V= 1 -PCLaw V+ 1 React ifG V1 %threat% else GoGreet NewChat Say 1 AddChat 1 AddChat 2 AddChat 3>
+		*GoGreet <*NiceToMeetYou GoOpenStore>
+		*GoOpenStore <*SERVICE_MECHANIC GoBye>
+		*GoBye <*GoodBye>
+		GoOpenMarket <NPCVar= %2% 1 1 SetQuestStatus %qid% -1 UpdateProps>
+		result1 <NewChat Say 2  AddLawful 1  SetQuestStatus %qid% -1>
+		result2 <NewChat Say 3 Goto GoOpenMarket>
+		result3 <Goto GoOpenStore>
+		Msg1 <I like you, so I'm gonna let you in on a secret. There's a black market operating nearby. If you want, I can let you know where it is.>
+		Msg2 <I suppose you're too good to be breaking the law? Only idiots pay retail price...>
+		Msg3 <Just go through the back door here and down the stairs. Tell them %name2% sent you.>
+		Prompt1 <Sorry, I'm not interested.>
+		Prompt2 <Tell me more.>
+		Prompt3 <Right now I just need repairs.>
+
+		MetaScene 1
+		start <if= QuestStatus %qid% 0 else %pop% SetQuestStatus %qid% -1 Goto %pop%>
+
+		MetaScene 2
+		sub
+			room
+			special <SHAREDPALETTE>
+			desig <HOME>
+			minimap <2#...+#.......1.....&---&>
+			sub
+				Door
+				% V1 = Initialization Counter
+				update <if= V1 0 else GoCheckQuest V= 1 1 SetStat STAT_Lock %sktar_hard%>
+				GoCheckQuest <if# NPCVar %2% 1 0 SetStat STAT_Lock 0>
+			end
+			inv
+				Trapdoor
+				desig <Entrance %s1%>
+				MiniMapComponent 2
+				update <if= V1 0 else GoCheckQuest V= 1 1 SetStat STAT_MetaVisibility %sktar_hard%>
+				GoCheckQuest <if# NPCVar %2% 1 0 SetStat STAT_MetaVisibility 0>
+			end
+		end
+	end
+	inv
+		NPC Mechanic
+		Chardesc Criminal
+	end
 
 Content
 	name <Shopkeeper Referral>
@@ -44,6 +198,28 @@ Content
 		% V1 = PC Cash at start of store
 		% V2 = Transaction counter
 		rumor0 <%name2% has some extra service for regular customers.>
+		Greeting <if= QuestStatus %qid% 0 else GoGreet ifG V2 1 else GoGreet NewChat Say 1 AddChat 1 AddChat 2 AddChat 3>
+		*GoGreet <*NiceToMeetYou GoPreStore>
+		GoPreStore <V= 1 PC$ Goto GoOpenStore>
+		*GoOpenStore <*SHOP_WEAPON GoPostStore>
+		GoPostStore <ifG V1 PC$ else GoBye V+ 2 1 Goto GoBye>
+		*GoBye <*GoodBye>
+		GoOpenMarket <NPCVar= %2% 1 1 SetQuestStatus %qid% -1 UpdateProps>
+		result1 <NewChat Say 2  AddLawful 1  SetQuestStatus %qid% -1>
+		result2 <NewChat Say 3 Goto GoOpenMarket>
+		result3 <NewChat Say 4 AddChat 4 AddChat 5>
+		result4 <NewChat Say 5  AddEasygoing d8  SetQuestStatus %qid% -1>
+		result5 <Goto result2>
+		Msg1 <Hey, you've been a pretty good customer... How'd you like to see the back room?>
+		Msg2 <In that case, you wouldn't be interested in the back room...>
+		Msg3 <Just go through the back door in the shop, and the stairs will take you right to it.>
+		Msg4 <There are a couple more stores, with very exclusive clientele if you catch my drift. I'm not responsible for anything that happens back there... So, you want to see or not?>
+		Msg5 <That's probably a wise choice.>
+		Prompt1 <I'm not interested in anything illegal.>
+		Prompt2 <Alright, I'd like that.>
+		Prompt3 <What kind of things do you have there?>
+		Prompt4 <I think I'll pass.>
+		Prompt5 <I'd like to see, yes.>
 
 		MetaScene 1
 		start <if= QuestStatus %qid% 0 else %pop% SetQuestStatus %qid% -1 Goto %pop%>
@@ -73,3 +249,4 @@ Content
 		NPC Shopkeeper
 		Chardesc Criminal
 	end
+

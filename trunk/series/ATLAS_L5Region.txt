@@ -2433,9 +2433,9 @@ sub
 	start <Print 1>
 	Msg1 <You enter Xianzai Market.>
 
-	NeededCells 9
+	NeededCells 6
 
-	Content1 <Some 2 100 Sub *GENERAL_SHOP      na>
+	Content1 <Some 1 100 Sub *GENERAL_SHOP      na>
 	Content2 <Some 1 100 Sub *RESTAURANT        na>
 	Content5 <Some 1 100 Sub *ELECTRONICS_SHOP  na>
 	Content7 <Some 3 100 Sub *SPECIAL_SHOP      na>
@@ -2508,7 +2508,7 @@ sub
 	start <Print 1>
 	Msg1 <You enter the Xianzai Trade Authority.>
 
-	NeededCells 3
+	NeededCells 1
 	Content <Some 1 65 Sub *GOV_MILITARY na>
 	Content2 <Fill Sub *GOV_POLICE na>
 
@@ -2517,7 +2517,6 @@ sub
 
 		team 2
 		name <Citizens>
-		rumor <there's an illegal mecha arena somewhere in the colony.>
 		SetAlly 1
 		Passive
 
@@ -2612,7 +2611,7 @@ sub
 	start <Print 1>
 	Msg1 <You enter Administration Hall.>
 
-	NeededCells 5
+	NeededCells 2
 	Content1 <Some 2 90 Sub *GOV_MILITARY  na>
 	Content2 <Fill       Sub *GOV_MISC      na>
 

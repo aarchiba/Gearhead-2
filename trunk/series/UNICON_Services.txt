@@ -1,0 +1,47 @@
+%% *SPECIAL_SHOP CONTENT
+%%   Contains an unusual or otherwise uncategorizable shop.
+
+Content
+	name <The Ninja Store>
+	requires <*SPECIAL_SHOP ~Sleazy ~Dangerous>
+	minimap <.......1.......##?##2...3>
+	element1 <Prefab>
+	team1 <Citizens>
+	teamdata1 <ally pass>
+	element2 <Prefab>
+	Element3 <Prefab>
+	sub
+		Persona 1
+		rumor <ninjas are tricky.>
+		special <UNLISTED>
+		Greeting <ifChatNPCUnknown else GoShop NewChat Say 3 AddChat 3>
+		GoShop <NewChat Say 1 AddChat 1 AddChat 2>
+		*GoBye <*GOODBYE>
+		result1 <EndChat Say 2 Shop .wares Goto GoBye>
+		.wares <MELEE THROWN EXOTIC CONTRABAND NINJA>
+		result2 <Goto GoBye>
+		result3 <Goto GoShop>
+		Msg1 <This is the Ninja Shop. Only cavaliers who have proven themselves worthy may shop here.>
+		Msg2 <Take a good look. There's no telling when any of these great deals could just disappear.>
+		Msg3 <So, you have penetrated the inner sanctum. I am Kent.>
+		Prompt1 <I'll take a look at what you have.>
+		Prompt2 <There's nothing here that I want.>
+		Prompt3 <What is this place?>
+	end
+	inv
+		NPC Thief
+		name <Kent>
+		SDL_Portrait <por_m_ninja(Y-Y).png>
+		SDL_Colors <10 25 80 112 28 28 210 35 41>
+		skill 21 15
+		job <Ninja>
+		EquipChar 25000
+		chardesc Male Shy Spiritual Cheerful
+
+		STC VENDING-1
+		PDir 0
+
+		STC VENDING-1
+		PDir 4
+	end
+
