@@ -152,6 +152,7 @@ Faction 8
 	Context <crm>
 	type <Crime ArenaOK L5PAT EARTH>
 	jobs <ADVEN THIEF>
+	SetAlly 12
 	SetEnemy 2 4 6 7 9
 	mecha_colors <168 153 230 78 150 137 200 0 0>
 
@@ -210,5 +211,15 @@ Faction 11
 	type <Government>
 	jobs <POLIT>
 	SetAlly 9 10 4
-	SetEnemy 1 8
+	SetEnemy 1 8 12
+
+Faction 12
+	name <the Bohemian Collective>
+	desig <BOHEM>
+	desc <>
+	Context <gov>
+	type <Government>
+	jobs <POLIT ADVEN FAITH MEDIA>
+	SetAlly 8
+	SetEnemy 11
 

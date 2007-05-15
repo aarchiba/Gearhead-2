@@ -75,7 +75,7 @@ sub
 	Content4 <Some 2 100 Sub *ARMOR_SHOP        na>
 	Content5 <Some 1 100 Sub *ELECTRONICS_SHOP  na>
 	Content6 <Some 1 100 Sub *MECHA_SHOP        na>
-	Content9 <Fill Sub *SHOP na>
+	Content9 <Fill Sub *SHOP_RANDOM             na>
 
 	sub
 		team 1
@@ -899,7 +899,7 @@ sub
 	Content1 <Some 1 100 Sub *SHUTTLESERVICE  na>
 	Content2 <Some 1  90 Sub *RESTAURANT      na>
 	Content3 <Some 1  55 Sub *GARAGE_X        na>
-	Content4 <Fill       Sub *SHOP            na>
+	Content4 <Fill       Sub *SHOP_RANDOM     na>
 
 	sub
 		team 1
@@ -1176,7 +1176,7 @@ sub
 	ClubMap
 	
 	NeededCells 5
-	Content1 <Some 1  70 Sub *SHOP            na>
+	Content1 <Some 1  70 Sub *SHOP_RANDOM     na>
 	Content2 <Some 1  90 Sub *GENERAL_SHOP    na>
 	Content3 <Some 1 100 Sub *RESTAURANT      na>
 	Content4 <Some 1  90 Sub *ARMOR_SHOP      na>
@@ -1389,7 +1389,7 @@ sub
 
 		NeededCells 4
 		content1 <Some 1  65 Sub *WEAPON_SHOP   na>
-		content2 <Some 1  35 Sub *SHOP          na>
+		content2 <Some 1  35 Sub *SHOP_RANDOM   na>
 		content3 <Some 1 100 Sub *BAR_SERVICE   na>
 		content9 <Fill Sub *CLUB_X na>
 
@@ -1784,7 +1784,7 @@ sub
 	Content3 <Some 2 100 Sub *WEAPON_SHOP     na>
 	Content4 <Some 2 100 Sub *ARMOR_SHOP      na>
 	Content6 <Some 2 100 Sub *MECHA_SHOP      na>
-	Content9 <Fill Sub *SHOP na>
+	Content9 <Fill Sub *SHOP_RANDOM           na>
 	sub
 		team 1
 
@@ -2135,7 +2135,7 @@ sub
 	NeededCells 6
 	Content1 <Some 1 100 Sub *SHUTTLESERVICE  na>
 	Content2 <Some 1 100 Sub *RESTAURANT      na>
-	Content3 <Some 1  55 Sub *SHOP            na>
+	Content3 <Some 1  55 Sub *SHOP_RANDOM     na>
 	Content4 <Some 1  25 Sub *GOV_POLICE      na>
 	Content5 <Some 1 100 Sub *MECHANIC_SHOP   na>
 	Content5 <Fill Sub *GARAGE_X>
@@ -2345,7 +2345,7 @@ sub
 	Content4 <Some 2 100 Sub *ARMOR_SHOP        na>
 	Content5 <Some 1 100 Sub *ELECTRONICS_SHOP  na>
 	Content7 <Some 1 100 Sub *SPECIAL_SHOP      na>
-	Content9 <Fill Sub *SHOP na>
+	Content9 <Fill Sub *SHOP_RANDOM             na>
 
 	sub
 		team 1
@@ -2391,7 +2391,7 @@ sub
 		Content4 <Some 1 100 Sub *ARMOR_SHOP        na>
 		Content6 <Some 2 100 Sub *MECHA_SHOP        na>
 		Content7 <Some 1 100 Sub *SPECIAL_SHOP      na>
-		Content9 <Fill Sub *SHOP na>
+		Content9 <Fill Sub *SHOP_RANDOM             na>
 
 		sub
 			team 1
@@ -2439,7 +2439,7 @@ sub
 	Content2 <Some 1 100 Sub *RESTAURANT        na>
 	Content5 <Some 1 100 Sub *ELECTRONICS_SHOP  na>
 	Content7 <Some 3 100 Sub *SPECIAL_SHOP      na>
-	Content9 <Fill Sub *SHOP na>
+	Content9 <Fill Sub *SHOP_RANDOM             na>
 
 	sub
 		team 1
@@ -2701,7 +2701,7 @@ sub
 	NeededCells 5
 	Content1 <Some 1 100 Sub *SHUTTLESERVICE  na>
 	Content2 <Some 1 100 Sub *RESTAURANT      na>
-	Content3 <Some 1  55 Sub *SHOP            na>
+	Content3 <Some 1  55 Sub *SHOP_RANDOM     na>
 	Content4 <Some 1  25 Sub *GOV_POLICE      na>
 	Content5 <Some 1  90 Sub *MECHANIC_SHOP   na>
 	Content6 <Fill Sub *GARAGE_X>

@@ -474,7 +474,9 @@ use <ifYesNo 1 2 3 MoreMemo News>
 Msg1 <This is a video info terminal. Would you like to check the news to see what's happening in the world?>
 Msg2 <Yes I would.>
 Msg3 <No, not really.>
-SDL_SPRITE <prop_computer1.png>
+Mesh 4
+Frame 2
+sdl_sprite <tex_electronics.png>
 
 Prop 5
 name <COMPUTER>
@@ -498,7 +500,9 @@ Msg1 <This vending machine sells boxed lunches for $50. Want to buy one?>
 Msg2 <Yes I do.>
 Msg3 <No, I don't.>
 Msg4 <You buy a boxed lunch.>
-SDL_SPRITE <prop_vending.png>
+Mesh 4
+Frame 3
+sdl_sprite <tex_electronics.png>
 
 Food 30
 name <Boxed Lunch>

@@ -922,6 +922,12 @@ begin
 	MyDest.X := Z.X + Z.W - 5;
 	if N > 0 then QuickTextRJ( '$' + BStr( GearValue( Part ) ) , MyDest , NeutralGrey , game_font );
 
+	if Part^.G < 0 then begin
+		MyDest.Y := MyDest.Y + TTF_FontLineSkip( Game_Font );
+		MyDest.X := Z.X + Z.W - 5;
+		QuickTextRJ( 'G:' + BStr( Part^.G ) + '/' + BStr( Part^.S ) + '/' + BStr( Part^.V ) , MyDest , NeutralGrey , game_font );
+	end;
+
 	{ Display the spaces. }
 	if not IsMasterGear( Part ) then begin
 		MyDest.Y := MyDest.Y + TTF_FontLineSkip( Game_Font );

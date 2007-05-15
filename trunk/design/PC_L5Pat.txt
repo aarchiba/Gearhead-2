@@ -28,7 +28,7 @@ Speed 5
 Type <EXTEND FLAIL STONE>
 desc <This whip transmits an electric pulse which can temporarily disrupt the nervous system of its target.>
 category <WEAPON MELEE>
-factions <MAQUI>
+factions <MAQUI FCOMS RISHI CRIHN>
 SDL_PORTRAIT <item_whip.png>
 legality 10
 
@@ -43,6 +43,7 @@ desc <A intricately detailed ceram sword with a monomolecularly serrated edge.>
 sdl_portrait <item_longsword.png>
 category <WEAPON MELEE>
 factions <HOELL PRIVA>
+Legality 5
 
 Melee 14
 Name <Double Lance>
@@ -54,6 +55,7 @@ Mass -10
 desc <A pole arm with a large ornate blade at each end.>
 category <WEAPON MELEE>
 factions <HOELL PRIVA>
+Legality 5
 
 Melee 10
 Name <Silver Longsword>
@@ -213,6 +215,43 @@ sub
 	SDL_PORTRAIT <item_ammoclip.png>
 end
 
+Gun 15
+name <Cone Rifle>
+desc <A high caliber gyrojet rifle.>
+desig <IG-28>
+caliber <22mm cone>
+category <WEAPON MISSILE CONTRABAND>
+factions <MAQUI FCOMS RISHI CRIHN>
+Range 8
+Legality 10
+sub
+	Ammo 15
+	name <Cone Rifle Clip>
+	caliber <22mm cone>
+	type <ARMORPIERCING>
+	Magazine 9
+end
+
+Ammo 15
+name <Cone Rifle Clip [HE]>
+caliber <22mm cone>
+type <Blast 2 BRUTAL>
+category <AMMO CONTRABAND>
+factions <MAQUI FCOMS RISHI CRIHN>
+Magazine 9
+Legality 15
+
+Ammo 15
+name <Cone Rifle Clip [Miasma]>
+caliber <22mm cone>
+type <BLAST 2 GAS>
+category <AMMO CONTRABAND>
+factions <MAQUI FCOMS RISHI CRIHN>
+Magazine 9
+Legality 25
+
+
+
 %  ********************
 %  ***  BEAM  GUNS  ***
 %  ********************
@@ -243,7 +282,7 @@ HeadArmor 2
 name <Light Space Helm>
 desc <A light spacesuit helm with integrated rebreather.>
 Category <CLOTHING SPACE>
-Factions <MAQUI COMET HOELL>
+Factions <MAQUI FCOMS RISHI CRIHN>
 SDL_PORTRAIT <item_lightspacehelm.png>
 Mass -2
 Legality -25
@@ -254,7 +293,7 @@ HeadArmor 4
 name <Heavy Space Helm>
 desc <An armored spacesuit helm with integrated rebreather.>
 Category <CLOTHING ARMOR SPACE>
-Factions <MAQUI>
+Factions <MAQUI FCOMS RISHI CRIHN>
 SDL_PORTRAIT <item_spacehelm.png>
 Mass -6
 Legality -15
@@ -265,14 +304,13 @@ Set
 name <Flight Suit [set]>
 desc <A light spacesuit.>
 Category <CLOTHING SPACE>
-Factions <MAQUI COMET HOELL>
+Factions <MAQUI FCOMS RISHI CRIHN>
 Legality -25
 inv
 	HeadArmor 2
 	name <Light Space Helm>
 	desc <A light spacesuit helm with integrated rebreather.>
 	Category <CLOTHING SPACE>
-	Factions <MAQUI COMET HOELL>
 	SDL_PORTRAIT <item_lightspacehelm.png>
 	Mass -2
 	Legality -25
@@ -283,7 +321,6 @@ inv
 	name <Flight Suit>
 	desc <A light spacesuit.>
 	Category <CLOTHING SPACE>
-	Factions <MAQUI COMET HOELL>
 	Mass -3
 	Legality -25
 	Sealed
@@ -295,7 +332,6 @@ inv
 	name <Flight Suit Sleeve>
 	desc <A light spacesuit.>
 	Category <CLOTHING SPACE>
-	Factions <MAQUI COMET HOELL>
 	Mass -3
 	Legality -25
 	Sealed
@@ -304,7 +340,6 @@ inv
 	name <Flight Suit Legging>
 	desc <A light spacesuit.>
 	Category <CLOTHING SPACE>
-	Factions <MAQUI COMET HOELL>
 	Mass -3
 	Legality -25
 	Sealed
@@ -313,7 +348,6 @@ inv
 	name <Flight Suit Sleeve>
 	desc <A light spacesuit.>
 	Category <CLOTHING SPACE>
-	Factions <MAQUI COMET HOELL>
 	Mass -3
 	Legality -25
 	Sealed
@@ -322,7 +356,6 @@ inv
 	name <Flight Suit Legging>
 	desc <A light spacesuit.>
 	Category <CLOTHING SPACE>
-	Factions <MAQUI COMET HOELL>
 	Mass -3
 	Legality -25
 	Sealed
@@ -332,7 +365,7 @@ Set
 name <SkinSuit [set]>
 desc <A skintight spacesuit.>
 Category <CLOTHING SPACE>
-Factions <MAQUI COMET HOELL>
+Factions <MAQUI FCOMS RISHI CRIHN>
 Legality -25
 inv
 	HeadArmor 2
@@ -398,6 +431,72 @@ inv
 	Legality -25
 	Sealed
 	Hardened
+end
+
+Set
+name <Combat Spacesuit [set]>
+desc <An armored spacesuit.>
+Category <ARMOR SPACE>
+Factions <MAQUI FCOMS RISHI>
+Legality 10
+inv
+	HeadArmor 5
+	name <Combat Space Helm>
+	desc <A light spacesuit helm with integrated rebreather.>
+	SDL_PORTRAIT <item_lightspacehelm.png>
+	Mass -6
+	Legality 10
+	Sealed
+	Hardened
+
+	BodyArmor 5
+	name <Combat Spacesuit>
+	desc <An armored spacesuit.>
+	Mass -7
+	Legality 10
+	Sealed
+	Hardened
+	sub
+		SpaceFlight 3
+	end
+
+	ArmArmor 5
+	name <Combat Spacesuit Sleeve>
+	desc <An armored spacesuit.>
+	Mass -7
+	Legality 10
+	Sealed
+	Hardened
+
+	LegArmor 5
+	name <Combat Spacesuit Legging>
+	desc <An armored spacesuit.>
+	Mass -7
+	Legality 10
+	Sealed
+	Hardened
+
+	ArmArmor 5
+	name <Combat Spacesuit Sleeve>
+	desc <An armored spacesuit.>
+	Mass -7
+	Legality 10
+	Sealed
+	Hardened
+	sub
+		SpaceFlight 3
+	end
+
+	LegArmor 5
+	name <SkinSuit Legging>
+	desc <An armored spacesuit.>
+	Mass -7
+	Legality 10
+	Sealed
+	Hardened
+	sub
+		SpaceFlight 3
+	end
 end
 
 Set

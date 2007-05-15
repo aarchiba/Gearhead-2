@@ -35,7 +35,7 @@ const
 	LoAlt = -3;
 	HiAlt = 5;
 
-	Num_Prop_Meshes = 2;
+	Num_Prop_Meshes = 4;
 
 var
 	tile_x,tile_y,tile_z: LongInt;	{ Tile where the mouse pointer is pointing. }

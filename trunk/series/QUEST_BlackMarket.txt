@@ -13,12 +13,14 @@
 %% extra quest.
 
 Content
+	name <Basic Black Market>
 	%% This is the basic one. Just add a black market and nothing else.
 	requires <*:BlackMarket>
 	Special <Reusable>
 	Scene1 <New *BlackMarket>
 
 Content
+	name <Black Market Plus Thief>
 	%% A bit more than above- adds a black marketeer boss.
 	requires <*:BlackMarket>
 	Element1 <Prefab>
@@ -57,6 +59,91 @@ Content
 %% These normal black market entrances are active from the get-go; the PC doesn't need
 %% to complete any previous quest to find them.
 %%
+
+Content
+	name <The Condemned Building>
+	requires <*:ENT_BlackMarket City>
+	% The black market is at the top of a condemned building.
+
+	% E1 is the black market
+	% E2 is the dungeon leading to it
+	% E3 is the scene where the entrance will be placed
+	Scene1 <Key>
+	Scene2 <New *Dungeon.UrbanHellhole>
+	Element3 <Prefab>
+	Scene3 <outdoors urban>
+
+	sub
+		MetaScene 1
+		start <if= QuestStatus %qid% 0 else %pop% SetQuestStatus %qid% -1 Goto %pop%>
+
+		MetaScene 2
+		sub
+			room
+			minimap <............2............>
+			special <SHAREDPALETTE>
+			sub
+				StairsUp
+				desig <ENTRANCE %s1%>
+				MiniMapComponent 2
+			end
+		end
+	end
+	inv
+		STC Building
+		name <Condemned Building>
+		desig <ENTRANCE %s2%>
+	end
+
+Content
+	name <Rat's Bottom>
+	requires <*:ENT_BlackMarket>
+	% The black market is at the bottom of a rat-infested basement.
+
+	% E1 is the black market
+	% E2 is the dungeon leading to it
+	% E3 is the scene where the entrance will be placed
+	Scene1 <Key>
+	Scene2 <New *Dungeon.InfestedBasement>
+	Scene3 <Building Public Sleazy>
+
+	sub
+		MetaScene 1
+		start <if= QuestStatus %qid% 0 else %pop% SetQuestStatus %qid% -1 Goto %pop%>
+
+		MetaScene 2
+		sub
+			room
+			minimap <............2............>
+			special <SHAREDPALETTE>
+			sub
+				Trapdoor
+				desig <ENTRANCE %s1%>
+				MiniMapComponent 2
+			end
+		end
+
+		MetaScene 3
+		sub
+			room
+			minimap <######...##.2.##...###+##>
+			special <SHAREDPALETTE>
+			sub
+				Door
+				USE <ifG -99 MetaPass else GoCloseDoor  if= StatVal STAT_Lock 0 else GoDoorLocked if= V1 0 else GoRealOpen ifYesNo 101 102 103 else GoLeaveAlone V= 1 1 Goto GoRealOpen>
+				GoRealOpen <Print 1 SetStat STAT_Pass 0  Transform 1>
+				GoLeaveAlone <Print 104>
+				Msg101 <Warning: This area closed for extermination. Do not enter.>
+				Msg102 <Open the door.>
+				Msg103 <Leave it alone.>
+				Msg104 <You leave the scary door alone.>
+
+				Trapdoor
+				desig <ENTRANCE %s2%>
+				MiniMapComponent 2
+			end
+		end
+	end
 
 Content
 	name <Space Market>

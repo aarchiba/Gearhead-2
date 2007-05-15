@@ -1,31 +1,31 @@
-%% *SHOP CONTENT
+%% *SHOP_RANDOM CONTENT
 %%   Contains a business.
 Content
-	requires <*SHOP>
+	requires <*SHOP_RANDOM>
 	content <Required *GENERAL_SHOP - Local>
 
 Content
-	requires <*SHOP>
+	requires <*SHOP_RANDOM>
 	content <Required *WEAPON_SHOP - Local>
 
 Content
-	requires <*SHOP>
+	requires <*SHOP_RANDOM>
 	content <Required *ARMOR_SHOP - Local>
 
 Content
-	requires <*SHOP>
+	requires <*SHOP_RANDOM>
 	content <Required *MECHANIC_SHOP - Local>
 
 Content
-	requires <*SHOP>
+	requires <*SHOP_RANDOM>
 	content <Required *MECHA_SHOP - Local>
 
 Content
-	requires <*SHOP>
+	requires <*SHOP_RANDOM>
 	content <Required *ELECTRONICS_SHOP - Local>
 
 Content
-	requires <*SHOP>
+	requires <*SHOP_RANDOM>
 	content <Required *SPECIAL_SHOP - Local>
 
 
@@ -184,40 +184,8 @@ Content
 %%   Contains an unusual or otherwise uncategorizable shop.
 
 Content
-	requires <*SPECIAL_SHOP Sleazy>
-	content <Required *DECOR_FOR_SHOP %1% Local>
-	element1 <Prefab>
-	team1 <Citizens>
-	teamdata1 <ally pass>
-	sub
-		Persona 1
-		*greeting <*NiceToMeetYou GoShop>
-		*GoShop <*SHOP_BLACKMARKET GoBye>
-		*GoBye <*GOODBYE>
-	end
-	inv
-		NPC Thief
-		skill 21 15
-		job <Smuggler>
-	end
-
-Content
 	requires <*SPECIAL_SHOP Sleazy Common>
-	content <Required *DECOR_FOR_SHOP %1% Local>
-	element1 <Prefab>
-	team1 <Citizens>
-	teamdata1 <ally pass>
-	sub
-		Persona 1
-		*greeting <*NiceToMeetYou GoShop>
-		*GoShop <*SHOP_BLACKMARKET GoBye>
-		*GoBye <*GOODBYE>
-	end
-	inv
-		NPC Thief
-		skill 21 10
-		job <Smuggler>
-	end
+	content <Required *BLACKMARKET_SHOP na Local>
 
 Content
 	requires <*SPECIAL_SHOP Common>
@@ -784,6 +752,132 @@ Content
 		NPC Shopkeeper
 		skill 21 15
 		chardesc renowned
+	end
+
+%% *BLACKMARKET_X CONTENT
+%%   A black market scene needs more than just the store. It also needs some extras.
+
+Content
+	requires <*BLACKMARKET_X>
+	content <Required *BLACKMARKET_SHOP na Local>
+
+Content
+	requires <*BLACKMARKET_X>
+	content <Required *BAR_SERVICE na Local>
+
+Content
+	requires <*BLACKMARKET_X>
+	content <Required *DECOR_FOR_SHOP %1% Local>
+	element1 <Prefab>
+	team1 <Citizens>
+	teamdata1 <ally pass>
+	sub
+		Persona 1
+		special <UNLISTED>
+		*greeting <*NiceToMeetYou GoShop>
+		*GoShop <*SHOP_SPECIALIST GoBye>
+		*GoBye <*GOODBYE>
+	end
+	inv
+		NPC Shopkeeper
+		chardesc Criminal
+	end
+
+Content
+	requires <*BLACKMARKET_X>
+	content <Required *DECOR_FOR_WEAPON_SHOP %1% Local>
+	element1 <Prefab>
+	team1 <Citizens>
+	teamdata1 <ally pass>
+	sub
+		Persona 1
+		special <UNLISTED>
+		*greeting <*NiceToMeetYou GoShop>
+		*GoShop <*SHOP_WEAPON GoBye>
+		*GoBye <*GOODBYE>
+	end
+	inv
+		NPC Shopkeeper
+		chardesc Criminal
+	end
+
+Content
+	requires <*BLACKMARKET_X>
+	content <Required *DECOR_FOR_SHOP %1% Local>
+	element1 <Prefab>
+	team1 <Citizens>
+	teamdata1 <ally pass>
+	sub
+		Persona 1
+		special <UNLISTED>
+		*greeting <*NiceToMeetYou GoShop>
+		*GoShop <*SHOP_MECHA GoBye>
+		*GoBye <*GOODBYE>
+	end
+	inv
+		NPC Mechanic
+		chardesc Criminal
+	end
+
+
+%% *BLACKMARKET_SHOP CONTENT
+%%   Contains a black market shopkeeper.
+
+Content
+	requires <*BLACKMARKET_SHOP>
+	content <Required *DECOR_FOR_SHOP %1% Local>
+	element1 <Prefab>
+	team1 <Citizens>
+	teamdata1 <ally pass>
+	sub
+		Persona 1
+		special <UNLISTED>
+		*greeting <*NiceToMeetYou GoShop>
+		*GoShop <*SHOP_BLACKMARKET GoBye>
+		*GoBye <*GOODBYE>
+	end
+	inv
+		NPC Thief
+		skill 21 15
+		job <Smuggler>
+	end
+
+Content
+	requires <*BLACKMARKET_SHOP>
+	content <Required *DECOR_FOR_SHOP %1% Local>
+	element1 <Prefab>
+	team1 <Citizens>
+	teamdata1 <ally pass>
+	sub
+		Persona 1
+		special <UNLISTED>
+		*greeting <*NiceToMeetYou GoShop>
+		*GoShop <*SHOP_BLACKMARKET GoBye>
+		*GoBye <*GOODBYE>
+	end
+	inv
+		NPC Shopkeeper
+		job <Smuggler>
+		chardesc Criminal
+	end
+
+Content
+	requires <*BLACKMARKET_SHOP Sleazy>
+	content <Required *DECOR_FOR_SHOP %1% Local>
+	element1 <Prefab>
+	team1 <Citizens>
+	teamdata1 <ally pass>
+	sub
+		Persona 1
+		special <UNLISTED>
+		*greeting <*NiceToMeetYou GoShop>
+		*GoShop <*SHOP_BLACKMARKET GoBye>
+		*GoBye <*GOODBYE>
+	end
+	inv
+		NPC Thief
+		skill 21 10
+		job <Smuggler>
 	end
 
 

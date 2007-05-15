@@ -1,0 +1,161 @@
+%%
+%%  *Dungeon Content
+%%
+%%  There are many subtypes; better include one of them when requesting a dungeon.
+
+Scene
+	name <# Tower>
+	requires <*Dungeon .UrbanHellhole>
+	special <NOEXIT>
+	type <DUNGEON building condemned>
+	dentrance <*GoUp>
+	content <Some 1 30 Sub *DUNGEON_X>
+	mapwidth 30
+	mapheight 30
+	MonkeyMap
+	LockedDoorChance 30
+	SecretDoorChance 5
+
+	NeededCells 3
+
+	start <Print 1>
+	msg1 <You enter \SCENE SceneID .>
+
+	sub
+		Team 1
+		SetEnemy 2
+
+		Team 2
+		name <Monster>
+		type <City Vermin Criminal>
+		SetEnemy 1
+		Stat 2 1
+
+		room
+		width 3
+		height 3
+		sub
+			StairsUp
+			Destination -1
+		end
+	end
+
+Scene
+	name <# Basement>
+	requires <*Dungeon .InfestedBasement>
+	special <NOEXIT>
+	type <DUNGEON basement>
+	dentrance <*GoDown>
+	content <Some 1 30 Sub *DUNGEON_X>
+	mapwidth 30
+	mapheight 30
+	MonkeyMap
+	RockyTiles
+	LockedDoorChance 15
+	SecretDoorChance 20
+
+	NeededCells 3
+
+	start <Print 1>
+	msg1 <You enter \SCENE SceneID .>
+
+	sub
+		Team 1
+		SetEnemy 2
+
+		Team 2
+		name <Monster>
+		type <City Vermin>
+		SetEnemy 1
+		Stat 2 1
+
+		room
+		width 3
+		height 3
+		sub
+			StairsUp
+			Destination -1
+		end
+	end
+
+Scene
+	name <the S.S. #>
+	requires <*Dungeon .Derelict>
+	special <NOEXIT>
+	type <DUNGEON ruin derelict>
+	terrain <SPACE>
+	dentrance <*GoDown>
+	content <Some 1 30 Sub *DUNGEON_X>
+	% Suffocation effect...
+	Vacuum
+	mapwidth 35
+	mapheight 35
+	MonkeyMap
+	LockedDoorChance 25
+	SecretDoorChance 10
+	IndustrialTiles
+
+	NeededCells 3
+
+	start <Print 1>
+	msg1 <You enter \SCENE SceneID .>
+
+	sub
+		Team 1
+		SetEnemy 2
+
+		Team 2
+		name <Monster>
+		type <Fungus Exorg Ruin PreZero>
+		SetEnemy 1
+		Stat 2 1
+
+		room
+		width 3
+		height 3
+		sub
+			Elevator
+			Destination -1
+		end
+	end
+
+Scene
+	name <# Mine>
+	requires <*Dungeon .Asteroid>
+	special <NOEXIT>
+	type <DUNGEON asteroid mine>
+	terrain <SPACE>
+	habitat <SPACE.ASTER>
+	dentrance <*GoDown>
+	content <Some 1 30 Sub *DUNGEON_X>
+	% Suffocation effect...
+	Vacuum
+	mapwidth 30
+	mapheight 30
+	CaveMap
+	RockyTiles
+
+	NeededCells 3
+
+	start <Print 1>
+	msg1 <You enter \SCENE SceneID .>
+
+	sub
+		Team 1
+		SetEnemy 2
+
+		Team 2
+		name <Monster>
+		type <Mine Fungus Asteroid>
+		SetEnemy 1
+		Stat 2 1
+
+		room
+		width 3
+		height 3
+		sub
+			StairsUp
+			Destination -1
+		end
+	end
+

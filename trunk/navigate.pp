@@ -26,9 +26,9 @@ unit navigate;
 interface
 
 {$IFDEF ASCII}
-uses gears,locale,vidgfx;
+uses gears,locale,vidgfx,backpack;
 {$ELSE}
-uses gears,locale,glgfx;
+uses gears,locale,glgfx,backpack;
 {$ENDIF}
 
 Const
@@ -863,6 +863,7 @@ var
 
 							{ Append the new scene to the SubQuest list. }
 							AppendGear( SubQ , NewScene );
+
 							SetNAtt( C^.NA , NAG_QuestElemScene , T , NewScene^.S );
 							SetSAtt( NewScene^.SA , 'name_1 <' + SAttValue( C^.SA , 'NAME_' + BStr( T ) ) + '>' );
 							if SAttValue( C^.SA , 'ELEMENT' + BStr( T ) ) = '' then begin
@@ -1159,6 +1160,8 @@ var
 		{ them all to each other. The SceneID of FRAG will be the first level of }
 		{ the dungeon. The goal level's SceneID will be stored and all further content }
 		{ sent to there. }
+	var
+		GoalLevel: GearPtr;
 		Procedure AssignSceneIDs( SList: GearPtr );
 			{ Assign unique IDs to all the scenes in this list and all of }
 			{ their children scenes. Also do the connections, as long as we're here. }
@@ -1168,7 +1171,7 @@ var
 					SList^.S := NewSceneID();
 					ConnectScene( SList );
 				end;
-				AssignSceneIDs( SList^.SubCom );
+				if SList <> GoalLevel then AssignSceneIDs( SList^.SubCom );
 				SList := SList^.next;
 			end;
 		end;
@@ -1220,8 +1223,6 @@ var
 				Team := Team^.Next;
 			end;
 		end;
-	var
-		GoalLevel: GearPtr;
 	begin
 		{ Start by initializing the dungeon prototype. }
 		InitPrototype;

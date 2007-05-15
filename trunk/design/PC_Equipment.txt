@@ -125,10 +125,10 @@ Mass 2
 Melee 8
 Name <Katana>
 desc <A long sword emphasising sharpness, based on the ancient PreZero Japanese design.>
-category <WEAPON MELEE>
+category <WEAPON MELEE NINJA>
 factions <GENERAL>
 SDL_PORTRAIT <item_katana.png>
-legality 0
+legality 5
 Acc 2
 Speed 4
 Mass -5
@@ -139,7 +139,7 @@ desc <A long-bladed sword capable of causing large amounts of damage through its
 category <WEAPON MELEE>
 factions <GENERAL>
 SDL_PORTRAIT <item_longsword.png>
-legality 0
+legality 5
 Acc 1
 Speed 4
 Mass -4
@@ -150,7 +150,7 @@ desc <A light dueling sword with a thin blade. Designed for stabbing and lunging
 category <WEAPON MELEE>
 factions <GENERAL>
 SDL_PORTRAIT <item_rapier.png>
-legality -5
+legality 0
 Acc 3
 Speed 5
 Mass -3
@@ -235,7 +235,7 @@ desc <A primitive melee weapon. Originally used to harvest crops, but these mode
 category <WEAPON MELEE>
 factions <GENERAL>
 SDL_PORTRAIT <item_scythe.png>
-legality 5
+legality 10
 
 EMelee 19
 Name <Chainsaw>
@@ -272,7 +272,7 @@ Melee 12
 Name <Gyro Mace>
 Type <BRUTAL>
 Mass -7
-legality 5
+legality 10
 Acc 2
 Speed 3
 desc <A combat mace with counterspinning contact heads for maximum damage potential.>
@@ -289,14 +289,14 @@ Speed 4
 Mass -6
 desc <A longsword with an integrated venom dispenser. This weapon is favored by assassins, since even a grazing hit can be lethal.>
 sdl_portrait <item_cutlass.png>
-category <WEAPON MELEE>
+category <WEAPON MELEE NINJA>
 factions <GENERAL>
 
 Melee 10
 Name <MonoSword>
 Type <ARMORPIERCING>
 Acc 1
-legality 5
+legality 10
 Speed 6
 Mass -8
 desc <A ceram sword with a monomolecularly sharp edge.>
@@ -331,7 +331,7 @@ Speed 5
 desc <A small plasma-beam projector, useful for cutting through tough materials.>
 category <WEAPON MELEE>
 factions <GENERAL>
-legality -10
+legality -5
 inv
 	PowerSource 1
 	mass -1
@@ -413,21 +413,69 @@ Gun 12
 name <Shotgun>
 desc <>
 caliber <18mm shell>
-category <>
-factions <>
+category <WEAPON MISSILE>
+factions <GENERAL>
 SDL_PORTRAIT <item_shotgun.png>
 mass -4
 Range 5
 Acc 1
 Recharge 3
+Legality 5
 sub
 	Ammo 15
 	name <18mm Shotgun Clip>
 	caliber <18mm shell>
 	type <SCATTER>
-	magazine 10
-	category <>
-	factions <>
+	magazine 16
+	category <AMMO>
+	factions <GENERAL>
+	SDL_PORTRAIT <item_ammoclip.png>
+end
+
+Gun 15
+name <Combat Shotgun>
+desc <>
+caliber <18mm shell>
+category <WEAPON MISSILE>
+factions <GENERAL>
+SDL_PORTRAIT <item_shotgun.png>
+mass -4
+Range 5
+Acc 1
+Recharge 5
+Legality 10
+sub
+	Ammo 15
+	name <18mm Shotgun Clip>
+	caliber <18mm shell>
+	type <SCATTER>
+	magazine 32
+	category <AMMO>
+	factions <GENERAL>
+	SDL_PORTRAIT <item_ammoclip.png>
+end
+
+Gun 12
+name <Auto-Shotgun>
+desc <>
+caliber <18mm shell>
+category <WEAPON MISSILE>
+factions <GENERAL>
+SDL_PORTRAIT <item_shotgun.png>
+mass -4
+Range 5
+Acc 1
+Recharge 3
+BV 1
+Legality 15
+sub
+	Ammo 15
+	name <18mm Shotgun Clip>
+	caliber <18mm shell>
+	type <SCATTER>
+	magazine 24
+	category <AMMO>
+	factions <GENERAL>
 	SDL_PORTRAIT <item_ammoclip.png>
 end
 
@@ -547,7 +595,7 @@ Category <ACCESSORY>
 Factions <GENERAL>
 Magazine 1
 Type <BLAST 6 TOXIN>
-legality 10
+legality 15
 
 HeavyAddOn 0
 Name <Laser Guidance System>
@@ -614,7 +662,7 @@ desc <Releases a deadly poison when attached to a close combat weapon.>
 Category <ACCESSORY>
 Factions <GENERAL>
 Type <POISON>
-legality 15
+legality 25
 
 MeleeAddOn 0
 Name <Magnet Token>
@@ -631,7 +679,7 @@ Category <ACCESSORY>
 Factions <GENERAL>
 Type <MYSTERY STONE>
 Speed 1
-legality 5
+legality 10
 
 MeleeAddOn 2
 Name <Rocket Token>
@@ -671,7 +719,7 @@ Grenade 10
 Name <Smoke Grenade>
 desc <A tactical grenade used to provide smoke cover.>
 sdl_portrait <item_grenade.png>
-Category <WEAPON GRENADE>
+Category <WEAPON GRENADE NINJA>
 Factions <GENERAL>
 Type <BLAST 3 SMOKE>
 legality -5
@@ -701,6 +749,7 @@ sdl_portrait <item_grenade.png>
 Category <WEAPON GRENADE>
 Factions <GENERAL>
 Type <BLAST 3 HAYWIRE>
+legality 5
 
 Grenade 12
 Name <Acid Grenade>
@@ -709,7 +758,7 @@ sdl_portrait <item_grenade.png>
 Category <WEAPON GRENADE>
 Factions <GENERAL>
 Type <BLAST 2 RUST>
-legality 5
+legality 10
 
 Grenade 13
 Name <Toxin Grenade>
@@ -718,7 +767,7 @@ sdl_portrait <item_grenade.png>
 Category <WEAPON GRENADE>
 Factions <GENERAL>
 Type <BLAST 5 TOXIN>
-legality 15
+legality 25
 
 Grenade 16
 Name <Plasma Grenade>
@@ -762,6 +811,7 @@ sdl_portrait <item_grenade.png>
 Category <WEAPON GRENADE>
 Factions <GENERAL>
 Type <ARMORPIERCING SCATTER>
+Legality 5
 
 Grenade 8
 Name <Stick Bomb>
@@ -783,7 +833,7 @@ legality 5
 Grenade 5
 Name <Shuriken>
 desc <A PreZero ancient Japanese weapon, literally "thrown blade." The four-bladed shuriken was considered the best in that era, despite the existence of others.>
-Category <WEAPON MELEE EXOTIC>
+Category <WEAPON MELEE EXOTIC NINJA>
 Factions <GENERAL>
 SDL_PORTRAIT <item_shurikens.png>
 GrenadeSkill 3
@@ -795,7 +845,7 @@ legality -5
 Grenade 13
 Name <MonoShuriken>
 desc <A redesign of the shuriken, this is manufactured with a monomolecularly sharp edge.>
-Category <WEAPON MELEE EXOTIC>
+Category <WEAPON MELEE EXOTIC NINJA>
 Factions <GENERAL>
 SDL_PORTRAIT <item_shurikens.png>
 GrenadeSkill 3
@@ -939,7 +989,6 @@ name <Plate Armor [set]>
 desc <Armor composed of ceramic plates.>
 Category <ARMOR>
 Factions <GENERAL>
-legality -5
 inv
 	BodyArmor 4
 	Name <Breastplate>
@@ -1190,14 +1239,12 @@ desc <A small, but sturdy shield.>
 Category <SHIELD>
 Factions <GENERAL>
 DefBonus -2
-legality -5
 
 Shield 6
 Name <Large Shield>
 desc <This shield can deflect attacks from multiple heights easily.>
 Category <SHIELD>
 Factions <GENERAL>
-legality -5
 
 Shield 5
 Name <Riot Shield>
@@ -1739,12 +1786,25 @@ Category <ELECTRONICS ACCESSORY>
 Factions <GENERAL>
 Legality -15
 
+BodyHarness 8
+name <Commando Powerpack>
+desc <A backpack containing a self-recharging superconducting power source.>
+Category <ELECTRONICS ACCESSORY>
+Factions <GENERAL>
+Legality 10
+sub
+	PowerSource 8
+	mass -12
+
+	PowerSource 8
+	mass -12
+end
+
 BodyHarness 4
 name <Power Backpack>
 desc <A backpack containing a self-recharging superconducting power source.>
 Category <ELECTRONICS ACCESSORY>
 Factions <GENERAL>
-Legality -5
 sub
 	PowerSource 8
 	mass -9
@@ -1755,7 +1815,7 @@ name <Industrial Powerpack>
 desc <A backpack containing a heavy duty power source.>
 Category <TOOL>
 Factions <GENERAL>
-Legality -10
+Legality -5
 sub
 	PowerSource 10
 	mass -8
@@ -1873,6 +1933,13 @@ desc <A tool used to circumvent security devices.>
 Category <TOOL CONTRABAND>
 Faction <GENERAL>
 Legality 5
+
+LockPick 2
+name <Advanced Lockpick>
+desc <A tool used to circumvent security devices.>
+Category <TOOL CONTRABAND>
+Faction <GENERAL>
+Legality 15
 
 ScienceTool 3
 name <MultiScanner>
@@ -2203,7 +2270,7 @@ desc <This medicine increases the body's ability to repair itself. While it is i
 Category <MEDICINE>
 Factions <GENERAL>
 SDL_PORTRAIT <item_pills.png>
-legality -10
+legality 0
 
 Food 0
 Name <Regen Boost Pill>
@@ -2215,7 +2282,7 @@ desc <This medicine increases the body's ability to repair itself. While it is i
 Category <MEDICINE>
 Factions <GENERAL>
 SDL_PORTRAIT <item_pills.png>
-legality -10
+legality 0
 
 Food 0
 name <Poison Antidote>
@@ -2277,7 +2344,7 @@ Factions <GENERAL>
 Body 7
 Speed -1
 Mass 25
-legality 5
+legality 10
 
 StatModifier 45
 Name <Lightened Skeleton>
@@ -2302,7 +2369,7 @@ Type <CHARA CYBER>
 SkillModWeightLifting
 SkillModAmount 8
 Mass 25
-legality 0
+legality 5
 
 StatModifier 45
 Name <Armored Spine>
@@ -2342,6 +2409,7 @@ Reflexes 1
 Knowledge 2
 Body -1
 Mass 10
+Legality 10
 
 StatModifier 60
 Name <Predator Reflexes>
@@ -2429,7 +2497,7 @@ Type <CHARA CYBER>
 SkillModSmallArms
 SkillModAmount 4
 Mass 1
-legality 5
+legality 10
 
 SkillModifier 25
 Name <Sniper Scope Eye>
@@ -2441,7 +2509,7 @@ Type <CHARA CYBER>
 SkillModHeavyWeapons
 SkillModAmount 3
 Mass 1
-legality 10
+legality 15
 
 StatModifier 15
 Name <Cyber Ears>

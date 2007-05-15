@@ -416,6 +416,19 @@
 	Prompt%id%02 <There's nothing here I need.>
 
 % TYPE: *SHOP_BLACKMARKET
+%  Every black market shop should sell CONTRABAND, but other than that they can sell anything.
+
+	Persona
+	requires <*SHOP_BLACKMARKET Easygoing>
+	START <NewChat Say %id%01 AddChat %id%01 AddChat %id%02>
+	result%id%01 <EndChat Say %id%02 shop .%id%_wares Goto %1%>
+	result%id%02 <Goto %1%>
+	.%id%_wares <WEAPON CONTRABAND>
+	KEYWORDS <BLACK MARKET>
+	Msg%id%01 <Hey, I just so happen to have all these great things lying about. I can't take any responsibility for the safety of these products, but if you'd like to take a look...>
+	Msg%id%02 <Be sure to go outside before testing any of these weapons. No warranty.>
+	Prompt%id%01 <Show me the goods.>
+	Prompt%id%02 <This place looks scary. I'm going.>
 
 	Persona
 	requires <*SHOP_BLACKMARKET Sociable>
@@ -423,7 +436,7 @@
 	result%id%01 <ifPCLawful else .%id%_GoR1Win EndChat Say %id%02 shop .%id%_badwares Goto %1%>
 	.%id%_GoR1Win <EndChat Say %id%03 shop .%id%_wares Goto %1%>
 	result%id%02 <Goto %1%>
-	.%id%_wares <WEAPON ARMOR GRENADE CLOTHING MEDICINE CYBERWARE ELECTRONICS TOOL>
+	.%id%_wares <WEAPON ARMOR GRENADE CLOTHING MEDICINE CYBERWARE ELECTRONICS TOOL CONTRABAND>
 	.%id%_badwares <TOOL CLOTHING Melee>
 	KEYWORDS <BLACK MARKET>
 	Msg%id%01 <Well then, are you here to buy something or just to chat? I can do either, it doesn't bother me either way.>
@@ -438,7 +451,7 @@
 	result%id%01 <ifPCCriminal else .%id%_GoR1Fail EndChat Say %id%02 shop .%id%_wares Goto %1%>
 	.%id%_GoR1Fail <EndChat Say %id%03 shop .%id%_badwares Goto %1%>
 	result%id%02 <Goto %1%>
-	.%id%_wares <WEAPON AMMO GRENADE ARMOR CLOTHING SHIELD MEDICINE CYBERWARE ELECTRONICS TOOL FOOD>
+	.%id%_wares <WEAPON AMMO GRENADE ARMOR CLOTHING SHIELD MEDICINE CYBERWARE ELECTRONICS TOOL FOOD CONTRABAND>
 	.%id%_badwares <TOOL FOOD>
 	KEYWORDS <BLACK MARKET>
 	Msg%id%01 <I have a fine selection of tools for the adventuring professional, if you catch my drift.>
