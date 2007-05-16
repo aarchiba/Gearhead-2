@@ -142,8 +142,62 @@ Content
 	end
 
 Content
+	name <Under Surveillance>
+	requires <*:NPCQuest C:POLIC>
+
+	% E1 is the NPC offering the quest
+	% E2 is the NPC being sought
+	Element1 <Key>
+	Element2 <Prefab>
+	Scene2 <New *BlackMarket>
+	Team2 <Citizens>
+	TeamData2 <Pass>
+
+	Quest1 <*SuccessVsChar.Evidence 1 2>
+	Quest2 <*Success1.TipOff 2>
+
+	sub
+		Persona 1
+		rumor0 <%name1% has been looking for %name2%.>
+		% NPCVar %1% 1 = Have spoken with E2.
+		greeting <if= QuestStatus %qid% %id% else GoGreet ifChatNPCArchEnemy else GoSeekInfo ifNPCDead %2% else GoBrushOff SetQuestStatus %qid% -2 Goto GoBrushOff>
+		GoSeekInfo <NewChat Say 1 AddChat 1>
+		*GoBrushOff <*BrushOff&GetOutOfHere>
+		*GoGreet <*NiceToMeetYou GoCheckFirst>
+		GoCheckFirst <if= QuestStatus %qid% 0 else GoChat ifNPCOK %2% else GoLoseQuest Goto GoStartQuest>
+		GoStartQuest <NewChat Say 1 QMemo %qid% 2 SetQuestStatus %qid% %id% AddChat 1>
+		GoLoseQuest <SetQuestStatus %qid% -2 Goto GoChat>
+		*GoChat <*MISC_CHATTER>
+		result1 <AddLawful 1 XPV 100 PCEnemy %2% Goto .%id1%_GoInit>
+		Msg1 <The crime lord %name2% has moved into the area. There's a reward being offered for information leading to \OPR %2% capture.>
+		Msg2 <%name1% in \SCENE %s1% is offering a reward for information about %name2%.>
+		Prompt1 <%name2% is hiding in the black market.>
+		CPrompt1 <if# NPCVar %1% 1 0 Accept>
+
+		Persona 2
+		special <UNLISTED>
+		rumor%id% <there's a black market in town where criminals can lay low.>
+		greeting <NPCVar= %1% 1 1 if= QuestStatus %qid% %id% else GoPreQuest NewChat Say 1 AddCHat 1 AddChat 2>
+		*GoPreQuest <*NiceToMeetYou GoChat>
+		*GoChat <*MISC_CHATTER>
+		result1 <XPV 100 PCFriend %2% AddLawful -5 Goto .%id2%_GoInit>
+		*result2 <*BrushOff>
+		Msg1 <Yeah, can I help you?>
+		Prompt1 <%name1% is looking for you.>
+		Prompt2 <No, I'm just looking around.>
+
+	end
+	inv
+		NPC Thief
+		Chardesc Renowned
+		EquipChar 15000
+		mecha <buruburu.txt>
+	end
+
+
+Content
 	name <Pirate Attack>
-	requires <*:NPCQuest "Spinner" C:POLIT>
+	requires <*:NPCQuest "Spinner" (C:POLIT|C:POLIC)>
 
 	% E1 is the NPC offering the quest.
 	% E2 is the encounter that the PC must destroy.
@@ -160,7 +214,8 @@ Content
 		rumor0 <%name1% is looking to hire some mecha pilots.>
 		greeting <if= QuestStatus %qid% %id% else GoCheckQuest Goto GoQuestInProgress>
 		*GoQuestInProgress <*ENEMY_CHECK GoCheckSuccess ChatNPCFac GoMakeEnemy>
-		GoCheckSuccess <NewChat Say 2 AddChat 1>
+		GoCheckSuccess <ifG ItemVar %2% 3 V1 else GoWaiting NewChat Say 2 AddChat 1>
+		GoWaiting <NewChat Say 1>
 
 		GoCheckQuest <if= QuestStatus %qid% 0 else GoBasicChat Goto GoStartQuest>
 		*GoStartQuest <*ENEMY_CHECK GoFirstGreeting ChatNPCFac GoMakeEnemy>
@@ -179,12 +234,40 @@ Content
 		GoR1NoBranch <NewChat Say 3 AddReact d5 CashPrize Reward Threat ItemVar %2% 2 100 100  V= 1 ItemVar %2% 3 ItemVar= %2% 1 ComTime ItemVar+ %2% 1 d86400 ItemVar+ %2% 1 d86400 ItemVar+ %2% 2 d10  QMemo %qid% 4>
 
 		Msg1 <Recently our colony has been attacked by pirates. There's been a bounty set for bringing them to justice.>
-		Msg2 <Have you encountered any pirates?>
+		Msg1_1 <If you're planning to fly around outside the station, you should know that there have been many pirate attacks recently. We're offering a bounty for anyone who can get rid of them.>
+		CMsg1_1 <ifNPCSociable Accept>
+		Msg1_2 <There are too many pirates nearby. A bounty has been set on them.>
+		CMsg1_2 <ifNPCShy Accept>
+		Msg1_3 <It won't be long before our pirate problems are all solved. I've authorized a bounty for anyone who can rid us of them.>
+		CMsg1_3 <ifNPCCheerful Accept>
+		Msg1_4 <It's terrible... our station is under constant attack by pirates. A bounty has been set for bringing them to justice.>
+		CMsg1_4 <ifNPCMelancholy Accept>
+		Msg1_5 <Everyone should keep calm about the recent pirate attacks. I've set a bounty against the pirate fleets, so it shouldn't be long before they're brought to justice.>
+		CMsg1_5 <ifNPCEasygoing Accept>
+		Msg1_6 <The pirate attacks against our station must stop now. I'm offering a reward for anyone who can defeat them.>
+		CMsg1_6 <ifNPCPassionate Accept>
+		Msg2 <I hear you defeated some pirates.>
+		Msg2_1 <I heard that you battled some pirates outside the station. Would you care to confirm that?>
+		CMsg2_1 <ifNPCSociable Accept>
+		Msg2_2 <Did you find the pirates?>
+		CMsg2_2 <ifNPCShy Accept>
+		Msg2_3 <I've heard that someone found the pirates. Was it you?>
+		CMsg2_3 <ifNPCCheerful Accept>
+		Msg2_4 <A patrol found the wreckage from a pirate lance. Did you have anything to do with that?>
+		CMsg2_4 <ifNPCMelancholy Accept>
+		Msg2_5 <Have you encountered any pirates?>
+		CMsg2_5 <ifNPCEasygoing Accept>
+		Msg2_6 <There's one less pirate lance out there today. Did you have anything to do with that?>
+		CMsg2_6 <ifNPCPassionate Accept>
 		Msg3 <Good job. Here's a reward... Let me know if you encounter any more of them.>
+		Msg3_1 <You've done a great service for \SCENE %s1% . Come back and see me if you find any more.>
+		Msg3_2 <I'm glad to hear it. Here's a reward... Let me know if you find any more pirates.>
 		Msg4 <%name1% in \SCENE %s1% told you that there's a reward for fighting pirates outside of the colony.>
 
-		Prompt1 <I have, and defeated them...>
+		Prompt1 <Yes, and I defeated them...>
 		CPrompt1 <ifG ItemVar %2% 3 V1 Accept>
+		Prompt1_1 <Yes. They're gone now.>
+		Prompt1_2 <Yes. I've dealt with them.>
 
 	end
 	inv

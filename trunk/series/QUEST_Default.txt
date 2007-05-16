@@ -1073,6 +1073,62 @@ Content
 %% .FinishMission	PC has ridden this metaphorical horse as far as it'll go
 %% .CriminalTransaction	PC has performed some kind of illegal business deal
 %% .BusinessDeal	PC has done some kind of business for/with NPC
+%% .TipOff              PC has provided useful information
+
+Content
+	name <You're good, now go fetch>
+	requires <*Success1 (.BusinessDeal|.TipOff) (1:THIEF|1:ACADE) BRANCHES>
+
+	%% E1 is the character previously helped.
+	%% E2 is the item to be sought
+	%%  S2 is the scene where it is hidden
+	Element2 <Prefab>
+	Scene2 <New *ItemCrypt>
+
+	%% Q1 is the success branch for locating the item
+	Quest1 <*SuccessGetItem.giveitem 1 2>
+
+	sub
+		Persona 1
+		% V%id%01 = Have accepted quest.
+		Greeting <if= QuestStatus %qid% %id% else %pop% ifChatNPCArchEnemy else GoNotEnemy SetQuestStatus %qid% -2 Goto .%id%_GoBlowOff>
+		*%id%_GoBlowOff <*BrushOff>
+		GoNotEnemy <NewChat Say %id%05 AddChat %id%03 AddChat %id%04 AddChat %id%05 AddChat %id%06>
+		.%id%_GoInit <SetQuestStatus %qid% %id% Goto GoOfferQuest NewChat Say %id%01 AddChat %id%01 AddChat %id%02 CashPrize Threat %threat% 100 150 QMemo %qid% %id%02>
+		result%id%01 <NewChat Say %id%03>
+		result%id%02 <NewChat Say %id%04 SetQuestStatus %qid% -2>
+		result%id%03 <SetQuestStatus %qid% -2  Goto .%id%_GoR7Final>
+		*.%id%_GoR3Final <*YouLostItem>
+		result%id%04 <SetQuestStatus %qid% -2 PCEnemy %1% Goto .%id%_Go04Finish>
+		*.%id%_Go04Finish <*PCWillKeepItem %2%>
+		result%id%05 <AddRenown 3   AddReact d5   DeleteItem %2%   Goto .%id1%_GoInit>
+		result%id%06 <NewChat Say %id%06>
+		Msg%id%01 <You've been a real help, \PC ... I may have some work for you. I'm looking for a sculpture known as "The Heart of Gold". If you could bring it to me, I'll give you another reward.>
+		Msg%id%02 <%name1% in \SCENE %s1% asked you to locate the Heart of Gold, a supposed work of art.>
+		Msg%id%03 <Very good. According to rumor, the Heart of Gold was last seen nearby. Come back and talk to me after you've located it.>
+		Msg%id%04 <It's up to you. I'll probably find it myself, given enough time...>
+		Msg%id%05 <Any luck finding the Heart of Gold?>
+		Msg%id%06 <It's still out there, somewhere... Don't give up until you've found it.>
+		Prompt%id%01 <I'll see what I can do.>
+		Prompt%id%01_1 <I'll be back when I've found it.>
+		Prompt%id%02 <No. I'm finished working for you.>
+		Prompt%id%02_1 <No thanks. I'm out of here.>
+		Prompt%id%03 <I'm afraid that I lost it...>
+		CPrompt%id%03 <ifItemDestroyed %2% Accept>
+		Prompt%id%04 <I've decided to keep it myself.>
+		CPrompt%id%05 <ifKeyItem %2% ifChatNPCInPlay Accept>
+		Prompt%id%05 <Here, I brought it to you.>
+		CPrompt%id%05 <ifKeyItem %2% ifChatNPCInPlay Accept>
+		Prompt%id%06 <I'm still looking for it.>
+		CPrompt%id%06 <ifItemOK %2% Accept>
+	end
+	inv
+		Treasure 100
+		name <Heart of Gold>
+		desc <A golden lump shaped vaguely like a heart. Some might call it art.>
+		Mass 7
+	end
+
 
 Content
 	name <How About A Quest?>
@@ -1554,8 +1610,34 @@ Content
 	end
 
 Content
+	name <Thanks for the Info>
+	requires <*Success1 .TipOff>
+	special <REUSABLE>
+
+	%% E1 is the character previously helped.
+
+	sub
+		Persona 1
+		.%id%_GoInit <NewChat Say 1 CashPrize Reward Threat %threat% 100 300 SetQuestStatus %qid% -1>
+		Msg1 <Thanks for the information. Here's a little reward for your trouble.>
+		Msg1_1 <Ah, it's always helpful to be on top of the latest information. Thanks for letting me know. Here's something for you.>
+		CMsg1_1 <ifNPCSociable Accept>
+		Msg1_2 <Thanks for the tip. Here's something for you.>
+		CMsg1_2 <ifNPCShy Accept>
+		Msg1_3 <How interesting. Your information is worth something... about this much, I'd say.>
+		CMsg1_3 <ifNPCEasygoing Accept>
+		Msg1_4 <Aha! That's going to be very useful to know... Here, take this reward for your help.>
+		CMsg1_4 <ifNPCPassionate Accept>
+		Msg1_5 <It's a good thing you told me that. Here, take this. It's my way of saying thanks.>
+		CMsg1_5 <ifNPCCheerful Accept>
+		Msg1_6 <It would have been very bad if you hadn't told me that. Here, thanks for the tip.>
+		CMsg1_6 <ifNPCMelancholy Accept>
+
+	end
+
+Content
 	name <Basic Reward End>
-	requires <*Success1>
+	requires <*Success1 -.TipOff>
 	special <REUSABLE>
 	%% This is the basic ending... The PC gets a reward and that's it.
 	%% Afterwards, set the QuestStatus to -1 to indicate a successfully
@@ -1566,7 +1648,7 @@ Content
 	sub
 		Persona 1
 		*.%id%_GoInit <*MissionWasSuccess&Reward .%id%_GoFinish ChatNPCFac na>
-		.%id%_GoFinish <CashPrize Reward Threat %threat% 100 200 SetQuestStatus %qid% -1>
+		.%id%_GoFinish <CashPrize Reward Threat %threat% 100 250 SetQuestStatus %qid% -1>
 	end
 
 

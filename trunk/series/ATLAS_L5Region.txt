@@ -2552,11 +2552,20 @@ sub
 		minimap <2....1..............##+##>
 		inv
 			NPC Police Officer
+			name <Matthias>
+			chardesc Male Lawful Shy Passionate Pragmatic
+			SDL_PORTRAIT <por_m_serious(J--).png>
+			SDL_COLORS <30 30 90 150 112 89 35 45 22>
 			SetTeam 2
 			SetFaction 9
 			EquipChar 45000
+			Age 10
 			MiniMapComponent 1
 			Quest <*:NPCQuest>
+
+			STC TV
+			MiniMapComponent 2
+			PDir 1
 		end
 	end
 
