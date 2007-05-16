@@ -131,6 +131,8 @@ MENTAL <GrabPCPilot GMental>
 OneVictimRecovered <GrabCurrentScene GAddNAtt NAG_Narrative NAS_VictimsRecovered 1>
 SetNPCRep <GrabNPC ? GSetNAtt NAG_CharDescription - ? ?>
 NPCQuitLance <GrabNPC ? GQuitLance>
+ifPCMale <GrabPCPilot if= GNAtt NAG_CharDescription 0 0>
+ifPCFemale <GrabPCPilot if= GNAtt NAG_CharDescription 0 1>
 ifNPCMale <GrabChatNPC if= GNAtt NAG_CharDescription 0 0>
 ifNPCFemale <GrabChatNPC if= GNAtt NAG_CharDescription 0 1>
 ifNPCLancemate <GrabChatNPC if= GNAtt NAG_Location NAS_Team NAV_LancemateTeam>

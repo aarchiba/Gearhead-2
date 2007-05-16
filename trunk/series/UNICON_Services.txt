@@ -3,7 +3,7 @@
 
 Content
 	name <The Ninja Store>
-	requires <*SPECIAL_SHOP ~Sleazy ~Dangerous>
+	requires <(*SPECIAL_SHOP|*BLACKMARKET_X) ~Sleazy ~Dangerous Static>
 	minimap <.......1.......##?##2...3>
 	element1 <Prefab>
 	team1 <Citizens>
@@ -33,15 +33,170 @@ Content
 		name <Kent>
 		SDL_Portrait <por_m_ninja(Y-Y).png>
 		SDL_Colors <10 25 80 112 28 28 210 35 41>
+		Age 2
 		skill 21 15
 		job <Ninja>
 		EquipChar 25000
 		chardesc Male Shy Spiritual Cheerful
 
-		STC VENDING-1
+		STC VIDEOGAME-1
 		PDir 0
 
-		STC VENDING-1
+		STC VIDEOGAME-3
 		PDir 4
 	end
+
+%% *BLACKMARKET_SHOP CONTENT
+%%   Contains a black market shopkeeper.
+
+Content
+	requires <*BLACKMARKET_SHOP (MAQUI|FCOMS|RISHI|BOHEM|CRIHN)>
+	content <Required *DECOR_FOR_SHOP %1% Local>
+	element1 <Prefab>
+	team1 <Citizens>
+	teamdata1 <ally pass>
+	sub
+		Persona 1
+		special <UNLISTED>
+		*greeting <*NiceToMeetYou GoShop>
+		GoShop <NewChat Say 1 AddChat 1 AddChat 2>
+		*GoBye <*GOODBYE>
+		result1 <EndChat Say 2 Shop .wares Goto GoBye>
+		.wares <WEAPON ARMOR CONTRABAND PIRATE>
+		result2 <Goto GoBye>
+		Msg1 <You seem like the adventuring sort. I've got a nice selection of combat equipment. You want a big boom? You've come to the right place.>
+		Msg2 <That's the spirit. I usually advise people to buy the biggest gun they can lift. You wouldn't want to be outclassed, would you?>
+		Prompt1 <\PC want big boom.>
+		Prompt2 <Thanks, I have all the boom I need.>
+	end
+	inv
+		NPC Shopkeeper
+		skill 21 15
+		name <Aileen>
+		job <Pirate>
+		SDL_PORTRAIT <por_f_jacket(-AY).png>
+		SDL_COLORS <130 50 20 150 112 89 99 182 175>
+		statline 15 14 14 11 13 12 11 15
+		skill 7 8
+		skill 10 7
+		skill 18 5
+		SetFaction 8
+		Age 9
+		Chardesc Female Cheerful
+	end
+
+
+
+%% *BLACKMARKET_X CONTENT
+%%   A black market scene needs more than just the store. It also needs some extras.
+
+Content
+	requires <*BLACKMARKET_X (MAQUI|FCOMS|RISHI|BOHEM)>
+	content <Required *DECOR_FOR_SHOP %1% Local>
+	element1 <Prefab>
+	team1 <Citizens>
+	teamdata1 <ally pass>
+	sub
+		Persona 1
+		special <UNLISTED>
+		*greeting <*NiceToMeetYou GoChooseShop>
+		GoChooseShop <IFCHATNPCARCHENEMY else GoGoodShop NewChat Say 1 AddChat 1 AddChat 2>
+		GoGoodShop <NewChat Say 3 AddChat 2 AddChat 3>
+		*GoBye <*GOODBYE>
+		result1 <EndChat Say 2 Shop .nowares Goto GoBye>
+		result2 <Goto GoBye>
+		result3 <EndChat Say 4 Shop .wares Goto GoBye>
+		.wares <MECHA>
+		Msg1 <What do you want?>
+		Msg2 <Come on, then. Let's get this over with.>
+		Msg3 <I've been upgrading mecha for the Crihna. There's a lot out there who'd like to see us pirates destroyed. I also do repairs, if you need that.>
+		Msg4 <Here they are. Some of these meks have a little something extra.>
+		Prompt1 <I need repairs.>
+		Prompt2 <I don't need anything.>
+		Prompt3 <I'd like to see what you have.>
+
+	end
+	inv
+		NPC Mechanic
+		name <Goshin>
+		chardesc Male Criminal Melancholy
+		sdl_PORTRAIT <por_m_mechanic(-U-).png>
+		SDL_COLORS <123 63 0  199 188 162  130 143 114>
+		Age 18
+		statline 13 12 13 15  15 14 12 8
+		Skill 21 10
+		Skill 31 7
+		SetFaction 8
+	end
+
+
+%% *VIDEOARCADE CONTENT
+%%   Contains a video arcade.
+
+Content
+	%% Video Arcade
+	requires <*VIDEOARCADE STATIC>
+	minimap <############5##3...41...2>
+	element1 <Prefab>
+	Element2 <Prefab>
+	Element3 <Prefab>
+	Element4 <Prefab>
+	Element5 <Prefab>
+	inv
+		STC VIDEOGAME-5
+		PDir 0
+
+		STC VIDEOGAME-3
+		PDir 4
+
+		STC VIDEOGAME-4
+		PDir 0
+
+		STC VIDEOGAME-2
+		PDir 4
+
+		Prop 10
+		name <Karaoke King>
+		Mesh 3
+		sdl_sprite <tex_electronics.png>
+		roguechar <&>
+		%% This game uses the concert minigame. If the PC wins
+		%% a number of times, he will be crowned the Karaoke King
+		%% and get a bonus to Performance.
+		% V1 = Recharge Timer
+		% V2 = Difficulcy rating
+		% V3 = Concert result recorder
+		% V4 = Win big prize
+		use <ifG PC$ 99 else GoCantAfford if= V4 0 else GoBeat ifG Comtime V1 else GoDoNotWant ifYesNo 1 2 3 Cash+ -100 V= 1 ComTime V+ 1 80000 V+ 1 d100000 Goto GoPlayGame>
+		GoCantAfford <Print 4>
+		GoDoNotWant <Print 5>
+		GoBeat <Print 8>
+		GoPlayGame <Print 12 if= V2 0 else GoStartConcert V= 2 15 Goto GoStartConcert>
+		GoStartConcert <V= 3 Concert 5 SkillTar V2 ifG V3 90 else GoCheckMedium ifG v2 64 else GoMinorWin Print 6 History 7 PCMoraleDmg -25 SkillXP 35 100 XPV 100 PCSkill+ 35 1 V= 4 1>
+		GoMinorWin <V+ 2 d10 V+ 2 d10 SkillXP 35 50 PCMoraleDmg -15  Print 9>
+		GoCheckMedium <ifG V3 50 else GoLose SkillXP 35 25 Print 10>
+		GoLose <PCMoraleDmg 15 Print 11>
+		Msg1 <This game is called Karaoke King. You have to sing a concert for a virtual audience.>
+		Msg2 <Play the game. [$100]>
+		Msg3 <Leave it alone.>
+		Msg4 <This game is called Karaoke King. You can't afford to play.>
+		Msg5 <You already played this game today.>
+		Msg6_1 <You have defeated the game at its highest level. You are hereby crowned the Karaoke King!>
+		CMsg6_1 <ifPCMale Accept>
+		Msg6_2 <You have defeated the game at its highest level. You are hereby crowned the Karaoke Queen!>
+		CMsg6_2 <ifPCFemale Accept>
+		Msg7_1 <You were crowned the Karaoke King.>
+		CMsg7_1 <ifPCMale Accept>
+		Msg7_2 <You were crowned the Karaoke Queen.>
+		CMsg7_2 <ifPCFemale Accept>
+		Msg8_1 <You were already crowned the Karaoke King.>
+		CMsg8_1 <ifPCMale Accept>
+		Msg8_2 <You were already crowned the Karaoke Queen.>
+		CMsg8_2 <ifPCFemale Accept>
+		Msg9 <You scored \VAL V3 points. Adjusting difficulcy level.>
+		Msg10 <You scored \VAL V3 points. That's quite respectable.>
+		Msg11 <You scored \VAL V3 points. You ought to be ashamed.>
+		Msg12 <You begin to sing.>
+	end
+
 

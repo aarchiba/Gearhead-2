@@ -67,6 +67,8 @@ Function DoConcert( GB: GameBoardPtr; PC: GearPtr; AudienceSize,SkTarget: Intege
 	{ AudienceSize tells how big the audience is. It should be in the range }
 	{ of 3 to 10. }
 	{ SkTarget is the basic skill target roll for performance rolls. }
+	{ The score returned can be read as being in the range 0-100, but scores }
+	{ above 100 are also possible. Just accept that 100 is a "flawless" score. }
 var
 	AL: AudienceList;
 	Function CreateSongMenu: RPGMenuPtr;

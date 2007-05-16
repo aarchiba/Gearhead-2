@@ -188,6 +188,10 @@ Content
 	content <Required *BLACKMARKET_SHOP na Local>
 
 Content
+	requires <*SPECIAL_SHOP ~Mall ~City ~Legit>
+	content <Required *VIDEOARCADE na Local>
+
+Content
 	requires <*SPECIAL_SHOP Common>
 	content <Required *DECOR_FOR_SHOP %1% Local>
 	element1 <Prefab>
@@ -321,19 +325,176 @@ Content
 		STC SHRINE-1
 	end
 
+%% *VIDEOARCADE CONTENT
+%%   Contains a video arcade.
+
 Content
 	%% Video Arcade
-	requires <*SPECIAL_SHOP>
+	requires <*VIDEOARCADE>
+	minimap <############5##3...41...2>
+	element1 <Prefab>
+	Element2 <Prefab>
+	Element3 <Prefab>
+	Element4 <Prefab>
+	Element5 <Prefab>
+	inv
+		STC VIDEOGAME-3
+		PDir 0
+
+		STC VIDEOGAME-2
+		PDir 4
+
+		STC VIDEOGAME-1
+		PDir 0
+
+		STC VIDEOGAME-5
+		PDir 4
+
+		STC VIDEOGAME-4
+		PDir 2
+	end
+
+
+Content
+	%% Video Arcade
+	requires <*VIDEOARCADE>
+	minimap <####################2...1>
+	element1 <Prefab>
+	Element2 <Prefab>
+	inv
+		STC VIDEOGAME-1
+		PDir 0
+
+		STC VIDEOGAME-2
+		PDir 4
+	end
+
+Content
+	%% Video Arcade
+	requires <*VIDEOARCADE>
 	minimap <####################1...2>
 	element1 <Prefab>
 	Element2 <Prefab>
 	inv
-		STC VENDING-1
+		STC VIDEOGAME-1
 		PDir 0
 
-		STC VENDING-1
+		STC VIDEOGAME-3
 		PDir 4
 	end
+
+Content
+	%% Video Arcade
+	requires <*VIDEOARCADE>
+	minimap <####################2...1>
+	element1 <Prefab>
+	Element2 <Prefab>
+	inv
+		STC VIDEOGAME-1
+		PDir 0
+
+		STC VIDEOGAME-4
+		PDir 4
+	end
+
+Content
+	%% Video Arcade
+	requires <*VIDEOARCADE>
+	minimap <####################1...2>
+	element1 <Prefab>
+	Element2 <Prefab>
+	inv
+		STC VIDEOGAME-1
+		PDir 0
+
+		STC VIDEOGAME-5
+		PDir 4
+	end
+
+Content
+	%% Video Arcade
+	requires <*VIDEOARCADE>
+	minimap <####################1...2>
+	element1 <Prefab>
+	Element2 <Prefab>
+	inv
+		STC VIDEOGAME-2
+		PDir 0
+
+		STC VIDEOGAME-3
+		PDir 4
+	end
+
+Content
+	%% Video Arcade
+	requires <*VIDEOARCADE>
+	minimap <####################1...2>
+	element1 <Prefab>
+	Element2 <Prefab>
+	inv
+		STC VIDEOGAME-2
+		PDir 0
+
+		STC VIDEOGAME-4
+		PDir 4
+	end
+
+Content
+	%% Video Arcade
+	requires <*VIDEOARCADE>
+	minimap <####################2...1>
+	element1 <Prefab>
+	Element2 <Prefab>
+	inv
+		STC VIDEOGAME-2
+		PDir 0
+
+		STC VIDEOGAME-5
+		PDir 4
+	end
+
+Content
+	%% Video Arcade
+	requires <*VIDEOARCADE>
+	minimap <####################1...2>
+	element1 <Prefab>
+	Element2 <Prefab>
+	inv
+		STC VIDEOGAME-3
+		PDir 0
+
+		STC VIDEOGAME-4
+		PDir 4
+	end
+
+Content
+	%% Video Arcade
+	requires <*VIDEOARCADE>
+	minimap <####################1...2>
+	element1 <Prefab>
+	Element2 <Prefab>
+	inv
+		STC VIDEOGAME-3
+		PDir 0
+
+		STC VIDEOGAME-5
+		PDir 4
+	end
+
+Content
+	%% Video Arcade
+	requires <*VIDEOARCADE>
+	minimap <####################1...2>
+	element1 <Prefab>
+	Element2 <Prefab>
+	inv
+		STC VIDEOGAME-5
+		PDir 0
+
+		STC VIDEOGAME-4
+		PDir 4
+	end
+
 
 
 %% *ELECTRONICS_SHOP CONTENT
@@ -483,7 +644,7 @@ Content
 	end
 
 Content
-	requires <*MECHANIC_SHOP (MAQUI|FCOMS) -HOELL>
+	requires <*MECHANIC_SHOP (MAQUI|FCOMS|RISHI) -HOELL>
 	content <Required *DECOR_FOR_SHOP %1% Local>
 	element1 <Prefab>
 	team1 <Citizens>
@@ -500,7 +661,7 @@ Content
 	end
 
 Content
-	requires <*MECHANIC_SHOP (MAQUI|FCOMS) -COMET>
+	requires <*MECHANIC_SHOP (MAQUI|FCOMS|RISHI) -COMET>
 	content <Required *DECOR_FOR_SHOP %1% Local>
 	element1 <Prefab>
 	team1 <Citizens>

@@ -504,6 +504,167 @@ Mesh 4
 Frame 3
 sdl_sprite <tex_electronics.png>
 
+Prop 5
+name <Alarmist Scope (Game)>
+desig <VIDEOGAME-1>
+Mesh 3
+sdl_sprite <tex_electronics.png>
+% V1 = Recharge counter
+% V2 = Skill roll container
+% V3 = Have won the game; you only get the XP bonus the first time.
+&Skill <1>
+roguechar <&>
+use <ifG PC$ 99 else GoCantAfford ifG Comtime V1 else GoDoNotWant ifYesNo 1 2 3 Cash+ -100 V= 1 ComTime V+ 1 80000 V+ 1 d100000 Goto GoPlayGame>
+GoCantAfford <Print 4>
+GoDoNotWant <Print 5>
+GoPlayGame <Print 12 V= 2 SkRoll &Skill ifG V2 25 else GoCheckL4 Print 6 PCMoraleDmg -25 if= v3 0 XPV 50 V= 3 1 SkillXP &Skill 100>
+GoCheckL4 <ifG V2 20 else GoCheckL3   Print 7 SkillXP &Skill 50  PCMoraleDmg -15>
+GoCheckL3 <ifG V2 15 else GoCheckL2   Print 8 SkillXP &Skill 20  PCMoraleDmg -5>
+GoCheckL2 <ifG V2 10 else GoCheckL1   Print 9 SkillXP &Skill 10>
+GoCheckL1 <ifG V2  5 else GoLoseGame  Print 10 SkillXP &Skill 5 PCMoraleDmg 5>
+GoLoseGame <Print 11 PCMoraleDmg 10>
+Msg1 <This is a fairly standard shooting game. Defeat the androids while protecting the civilians.>
+Msg2 <Play the game. [$100]>
+Msg3 <Leave it alone.>
+Msg4 <This is a fairly standard shooting game. You can't afford to play.>
+Msg5 <You already played this game today.>
+Msg6 <You destroy the master computer program and win the game! Congratulations.>
+Msg7 < You make it to the last level, but then die.>
+Msg8 <You finish stage one, but don't do well on stage two.>
+Msg9 <You are blasted by a meatmaker on the last level of stage one.>
+Msg10 <You don't get past level one.>
+Msg11 <You accidentally shoot your partner before the mission even begins.>
+Msg12 <You play the game.>
+
+Prop 5
+name <Off Target (Game)>
+desig <VIDEOGAME-2>
+Mesh 3
+sdl_sprite <tex_electronics.png>
+% V1 = Recharge counter
+% V2 = Skill roll container
+% V3 = Have won the game; you only get the XP bonus the first time.
+&Skill <2>
+roguechar <&>
+use <ifG PC$ 99 else GoCantAfford ifG Comtime V1 else GoDoNotWant ifYesNo 1 2 3 Cash+ -100 V= 1 ComTime V+ 1 80000 V+ 1 d100000 Goto GoPlayGame>
+GoCantAfford <Print 4>
+GoDoNotWant <Print 5>
+GoPlayGame <Print 12 V= 2 SkRoll &Skill ifG V2 25 else GoCheckL4 Print 6 PCMoraleDmg -25 if= v3 0 XPV 50 V= 3 1 SkillXP &Skill 100>
+GoCheckL4 <ifG V2 20 else GoCheckL3   Print 7 SkillXP &Skill 50  PCMoraleDmg -15>
+GoCheckL3 <ifG V2 15 else GoCheckL2   Print 8 SkillXP &Skill 20  PCMoraleDmg -5>
+GoCheckL2 <ifG V2 10 else GoCheckL1   Print 9 SkillXP &Skill 10>
+GoCheckL1 <ifG V2  5 else GoLoseGame  Print 10 SkillXP &Skill 5 PCMoraleDmg 5>
+GoLoseGame <Print 11 PCMoraleDmg 10>
+Msg1 <In this game, you have to hit your opponent's castle with a catapult. The castle is on wheels so it can dodge many attacks.>
+Msg2 <Play the game. [$100]>
+Msg3 <Leave it alone.>
+Msg4 <In this game, you have to hit your opponent's castle with a catapult. You can't afford to play.>
+Msg5 <You already played this game today.>
+Msg6 <You destroy the evil floating continent and win the game! Congratulations.>
+Msg7 <You get as far as the steam dragon but can advance no further.>
+Msg8 <You make it to the third level before dying.>
+Msg9 <You destroyed the enemy castle! Unfortunately, there's more than one level...>
+Msg10 <You don't do very well.>
+Msg11 <You completely suck.>
+Msg12 <You play the game.>
+
+Prop 5
+name <Ultimatum (Game)>
+desig <VIDEOGAME-3>
+Mesh 3
+sdl_sprite <tex_electronics.png>
+% V1 = Recharge counter
+% V2 = Skill roll container
+% V3 = Have won the game; you only get the XP bonus the first time.
+&Skill <3>
+roguechar <&>
+use <ifG PC$ 99 else GoCantAfford ifG Comtime V1 else GoDoNotWant ifYesNo 1 2 3 Cash+ -100 V= 1 ComTime V+ 1 80000 V+ 1 d100000 Goto GoPlayGame>
+GoCantAfford <Print 4>
+GoDoNotWant <Print 5>
+GoPlayGame <Print 12 V= 2 SkRoll &Skill ifG V2 25 else GoCheckL4 Print 6 PCMoraleDmg -25 if= v3 0 XPV 50 V= 3 1 SkillXP &Skill 100>
+GoCheckL4 <ifG V2 20 else GoCheckL3   Print 7 SkillXP &Skill 50  PCMoraleDmg -15>
+GoCheckL3 <ifG V2 15 else GoCheckL2   Print 8 SkillXP &Skill 20  PCMoraleDmg -5>
+GoCheckL2 <ifG V2 10 else GoCheckL1   Print 9 SkillXP &Skill 10>
+GoCheckL1 <ifG V2  5 else GoLoseGame  Print 10 SkillXP &Skill 5 PCMoraleDmg 5>
+GoLoseGame <Print 11 PCMoraleDmg 10>
+Msg1 <In this game, characters fight using a variety of primitive weapons in a corporate office environment.>
+Msg2 <Play the game. [$100]>
+Msg3 <Leave it alone.>
+Msg4 <In this game, characters fight using a variety of primitive weapons in a corporate office environment. You can't afford to play.>
+Msg5 <You already played this game today.>
+Msg6 <You defeat Doorpike and win the game! Congratulations.>
+Msg7 <You make it to general manager, but are then clubbed to death by CEO Doorpike.>
+Msg8 <After defeating the last of the engineers, you are taken out by a manager from human resources.>
+Msg9 <You beat all of the interns, but are defeated by an engineer with a broadsword.>
+Msg10 <You defeat a few interns, but don't make it past that.>
+Msg11 <You are defeated by the receptionist on the first level.>
+Msg12 <You play the game.>
+
+Prop 5
+name <Baby Battle (Game)>
+Mesh 3
+sdl_sprite <tex_electronics.png>
+% V1 = Recharge counter
+% V2 = Skill roll container
+% V3 = Have won the game; you only get the XP bonus the first time.
+&Skill <4>
+desig <VIDEOGAME-4>
+roguechar <&>
+use <ifG PC$ 99 else GoCantAfford ifG Comtime V1 else GoDoNotWant ifYesNo 1 2 3 Cash+ -100 V= 1 ComTime V+ 1 80000 V+ 1 d100000 Goto GoPlayGame>
+GoCantAfford <Print 4>
+GoDoNotWant <Print 5>
+GoPlayGame <Print 12 V= 2 SkRoll &Skill ifG V2 25 else GoCheckL4 Print 6 PCMoraleDmg -25 if= v3 0 XPV 50 V= 3 1 SkillXP &Skill 100>
+GoCheckL4 <ifG V2 20 else GoCheckL3   Print 7 SkillXP &Skill 50  PCMoraleDmg -15>
+GoCheckL3 <ifG V2 15 else GoCheckL2   Print 8 SkillXP &Skill 20  PCMoraleDmg -5>
+GoCheckL2 <ifG V2 10 else GoCheckL1   Print 9 SkillXP &Skill 10>
+GoCheckL1 <ifG V2  5 else GoLoseGame  Print 10 SkillXP &Skill 5 PCMoraleDmg 5>
+GoLoseGame <Print 11 PCMoraleDmg 10>
+Msg1 <This video game is about two giant babies fighting in a fully destructable virtual city.>
+Msg2 <Play the game. [$100]>
+Msg3 <Leave it alone.>
+Msg4 <This video game is about two giant babies fighting in a fully destructable virtual city. You can't afford to play.>
+Msg5 <You already played this game today.>
+Msg6 <You defeat Asura Bun-Bun and win the game! Congratulations.>
+Msg7 <You defeat Poopy McGee, but then lose to Asura Bun-Bun.>
+Msg8 <You defeat Bruno, but then lose to Poopy McGee.>
+Msg9 <You defeat Hana, but then lose to Bruno.>
+Msg10 <You are defeated by Hana, the second baby.>
+Msg11 <You don't manage to get very far in it at all.>
+Msg12 <You play the game.>
+
+Prop 5
+name <Speed Snake (Game)>
+desig <VIDEOGAME-5>
+Mesh 3
+sdl_sprite <tex_electronics.png>
+% V1 = Recharge counter
+% V2 = Skill roll container
+% V3 = Have won the game; you only get the XP bonus the first time.
+&Skill <5>
+roguechar <&>
+use <ifG PC$ 99 else GoCantAfford ifG Comtime V1 else GoDoNotWant ifYesNo 1 2 3 Cash+ -100 V= 1 ComTime V+ 1 80000 V+ 1 d100000 Goto GoPlayGame>
+GoCantAfford <Print 4>
+GoDoNotWant <Print 5>
+GoPlayGame <Print 12 V= 2 SkRoll &Skill ifG V2 25 else GoCheckL4 Print 6 PCMoraleDmg -25 if= v3 0 XPV 50 V= 3 1 SkillXP &Skill 100>
+GoCheckL4 <ifG V2 20 else GoCheckL3   Print 7 SkillXP &Skill 50  PCMoraleDmg -15>
+GoCheckL3 <ifG V2 15 else GoCheckL2   Print 8 SkillXP &Skill 20  PCMoraleDmg -5>
+GoCheckL2 <ifG V2 10 else GoCheckL1   Print 9 SkillXP &Skill 10>
+GoCheckL1 <ifG V2  5 else GoLoseGame  Print 10 SkillXP &Skill 5 PCMoraleDmg 5>
+GoLoseGame <Print 11 PCMoraleDmg 10>
+Msg1 <This video game is about racing atop giant snakes through a variety of imaginative courses. If your jockey falls off or you go off course, you lose.>
+Msg2 <Play the game. [$100]>
+Msg3 <Leave it alone.>
+Msg4 <This video game is about racing atop giant snakes through a variety of imaginative courses. You can't afford to play.>
+Msg5 <You already played this game today.>
+Msg6 <You finish the tesseract track and win the game! Congratulations.>
+Msg7 <You get as far as the sunspot level.>
+Msg8 <You complete the mecha facory, but fall off the snake on the glacier.>
+Msg9 <You don't manage to get past the ancient Egypt track.>
+Msg10 <You don't get very far.>
+Msg11 <You lose before completing the first lap.>
+Msg12 <You play the game.>
+
+
 Food 30
 name <Boxed Lunch>
 desig <FOOD-1>

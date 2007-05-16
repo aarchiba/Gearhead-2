@@ -253,7 +253,7 @@ sub
 
 	Scene
 	name <The Privateers Club>
-	type <building public sleazy garage mall>
+	type <building public sleazy garage mall dangerous>
 	context <>
 	entrance <*Building Short>
 	special <ADDEXIT>
@@ -1369,7 +1369,7 @@ sub
 
 		Scene
 		name <Steelworks Lounge>
-		type <building factory private sleazy meeting arenasite>
+		type <building factory private sleazy meeting arenasite dangerous>
 		mapwidth 24
 		mapheight 24
 		ClubMap
@@ -2540,7 +2540,7 @@ sub
 			EquipChar 45000
 			MiniMapComponent 1
 
-			NPC Beuracrat
+			NPC bureaucrat
 			job <Customs Official>
 			SetTeam 2
 			SetFaction 10

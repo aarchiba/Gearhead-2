@@ -51,6 +51,25 @@ sub
 	Mass -2
 end
 
+Melee 4
+name <Lawn Dart>
+Type <THROWN ARMORPIERCING>
+desc <An extremely dangerous toy.>
+category <CONTRABAND>
+factions <GENERAL>
+Mass -3
+
+Melee 8
+name <Sparkling Lawn Dart>
+Type <THROWN ARMORPIERCING BURN BRUTAL>
+desc <The inventor of this toy is currently serving eight consecutive life sentances on Phobos.>
+category <CONTRABAND>
+factions <GENERAL>
+Legality 15
+Acc 1
+Mass -7
+
+
 Melee 3
 Name <Sickle>
 Type <ARMORPIERCING>
