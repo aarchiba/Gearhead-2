@@ -92,7 +92,7 @@ sub
 		room
 		name <Foyer>
 		desig <EntranceGrid>
-		Content <Some 7 50 Here *URBAN_X>
+		Content <Some 5 50 Here *URBAN_X>
 		Content2 <Some 1 100 Here *ANTI_ATTACK_SECURITY 2>
 	end
 
@@ -126,7 +126,7 @@ sub
 
 		room
 		desig <EntranceGrid>
-		Content <Some 3 50 Here *URBAN_X>
+		Content <Some 2 30 Here *URBAN_X>
 		Content2 <Some 1 100 Here *ANTI_ATTACK_SECURITY 2>
 	end
 
@@ -188,7 +188,6 @@ sub
 		name <Foyer>
 		desig <EntranceGrid>
 		Content1 <Some 1  45 Here *NPC_GUARD>
-		Content2 <Some 1  20 Here *URBAN_X>
 		Content3 <Some 2  35 Here *CORP_EMPLOYEE>
 		Content4 <Some 1 100 Here *ANTI_ATTACK_SECURITY 2>
 
@@ -284,7 +283,7 @@ sub
 		room
 		name <Foyer>
 		desig <EntranceGrid>
-		Content <Some 7 45 Here *URBAN_X>
+		Content <Some 5 45 Here *URBAN_X>
 		Content2 <Some 1 100 Here *ANTI_ATTACK_SECURITY 2>
 
 	end
@@ -321,7 +320,7 @@ sub
 		room
 		name <Foyer>
 		desig <EntranceGrid>
-		Content <Some 4 40 Here *URBAN_X>
+		Content <Some 3 30 Here *URBAN_X>
 		Content2 <Some 1 100 Here *ANTI_ATTACK_SECURITY 2>
 	end
 
@@ -359,7 +358,7 @@ sub
 		room
 		name <Foyer>
 		desig <EntranceGrid>
-		Content <Some 3 55 Here *URBAN_X>
+		Content <Some 3 45 Here *URBAN_X>
 		Content2 <Some 1 100 Here *ANTI_ATTACK_SECURITY 2>
 
 		room
@@ -608,7 +607,7 @@ sub
 
 		room
 		desig <EntranceGrid>
-		Content <Some 3 50 Here *URBAN_X>
+		Content <Some 2 50 Here *URBAN_X>
 		Content2 <Some 1 100 Here *ANTI_ATTACK_SECURITY 2>
 	end
 
@@ -645,7 +644,7 @@ sub
 		room
 		name <Foyer>
 		desig <EntranceGrid>
-		Content <Some 4 40 Here *URBAN_X>
+		Content <Some 2 50 Here *URBAN_X>
 		Content2 <Some 1 100 Here *ANTI_ATTACK_SECURITY 2>
 	end
 
@@ -665,7 +664,7 @@ sub
 	start <Print 1>
 	Msg1 <You enter Athera Garden.>
 
-	Content <Some 7 70 Here *URBAN_X>
+	Content <Some 5 60 Here *URBAN_X>
 	Content2 <Some 1 100 Here *ANTI_ATTACK_SECURITY 2>
 
 	sub
@@ -761,7 +760,7 @@ sub
 			room
 			name <Foyer>
 			desig <EntranceGrid>
-			Content <Some 5 45 Here *URBAN_X>
+			Content <Some 2 45 Here *URBAN_X>
 			Content2 <Some 1 100 Here *ANTI_ATTACK_SECURITY 2>
 			sub
 				room
@@ -866,7 +865,7 @@ sub
 			Width 20
 			Height 20
 			PARAM <Fill 1 2 Ellipse 1 6 21>
-			Content <Some 5 70 Here *URBAN_X>
+			Content <Some 5 50 Here *URBAN_X>
 			Content2 <Some 1 100 Here *ANTI_ATTACK_SECURITY 2>
 
 			rect
@@ -1744,7 +1743,7 @@ Scene 0 3
 	world <L5 Region>
 	desc <Cesena Spinner is the site of the L5 Alliance's shipyards and the home port of the Silver Knights.>
 	special <NOEXIT SHOWALL SOLO TOWNMECHA>
-	type <city town spinner target outdoors urban destination hometown>
+	type <city town spinner target outdoors urban destination hometown industrial>
 	personatype <city spinner>
 	habitat <SPACE.URBAN>
 	MegaCityMap
@@ -1800,7 +1799,7 @@ sub
 		room
 		name <Foyer>
 		desig <EntranceGrid>
-		Content <Some 7 50 Here *URBAN_X>
+		Content <Some 4 50 Here *URBAN_X>
 		Content2 <Some 1 100 Here *ANTI_ATTACK_SECURITY 2>
 	end
 
@@ -1834,7 +1833,7 @@ sub
 
 		room
 		desig <EntranceGrid>
-		Content <Some 3 50 Here *URBAN_X>
+		Content <Some 2 50 Here *URBAN_X>
 		Content2 <Some 1 100 Here *ANTI_ATTACK_SECURITY 2>
 	end
 
@@ -1913,7 +1912,7 @@ sub
 		room
 		name <Foyer>
 		desig <EntranceGrid>
-		Content2 <Some 3  20 Here *URBAN_X>
+		Content2 <Some 1  20 Here *URBAN_X>
 		Content4 <Some 1 100 Here *ANTI_ATTACK_SECURITY 2>
 
 		Scene
@@ -1997,7 +1996,7 @@ sub
 		room
 		name <Foyer>
 		desig <EntranceGrid>
-		Content <Some 7 45 Here *URBAN_X>
+		Content <Some 5 45 Here *URBAN_X>
 		Content2 <Some 1 100 Here *ANTI_ATTACK_SECURITY 2>
 	end
 
@@ -2034,7 +2033,7 @@ sub
 		room
 		name <Foyer>
 		desig <EntranceGrid>
-		Content <Some 4 40 Here *URBAN_X>
+		Content <Some 3 40 Here *URBAN_X>
 		Content2 <Some 1 100 Here *ANTI_ATTACK_SECURITY 2>
 	end
 
@@ -2072,7 +2071,7 @@ sub
 		room
 		name <Foyer>
 		desig <EntranceGrid>
-		Content <Some 3 55 Here *URBAN_X>
+		Content <Some 2 55 Here *URBAN_X>
 		Content2 <Some 1 100 Here *ANTI_ATTACK_SECURITY 2>
 
 		room
@@ -2490,7 +2489,7 @@ sub
 
 		room
 		desig <EntranceGrid>
-		Content <Some 3 50 Here *URBAN_X>
+		Content <Some 2 50 Here *URBAN_X>
 		Content2 <Some 1 100 Here *ANTI_ATTACK_SECURITY 2>
 	end
 
@@ -2527,7 +2526,7 @@ sub
 		room
 		name <Foyer>
 		desig <EntranceGrid>
-		Content <Some 3 45 Here *URBAN_X>
+		Content <Some 2 40 Here *URBAN_X>
 		Content2 <Some 1 100 Here *ANTI_ATTACK_SECURITY 2>
 
 		room
@@ -2601,7 +2600,7 @@ sub
 		room
 		name <Foyer>
 		desig <EntranceGrid>
-		Content <Some 3 40 Here *URBAN_X>
+		Content <Some 2 40 Here *URBAN_X>
 		Content2 <Some 1 100 Here *ANTI_ATTACK_SECURITY 2>
 	end
 
@@ -2639,7 +2638,7 @@ sub
 		room
 		name <Foyer>
 		desig <EntranceGrid>
-		Content <Some 3 55 Here *URBAN_X>
+		Content <Some 2 55 Here *URBAN_X>
 		Content2 <Some 1 100 Here *ANTI_ATTACK_SECURITY 2>
 
 		room
@@ -2730,7 +2729,7 @@ sub
 		room
 		name <Foyer>
 		desig <EntranceGrid>
-		Content <Some 7 70 Here *URBAN_X>
+		Content <Some 7 60 Here *URBAN_X>
 		Content2 <Some 1 100 Here *ANTI_ATTACK_SECURITY 2>
 
 		room
@@ -2766,6 +2765,485 @@ sub
 % End of Xianzai Spinner...
 end
 
+
+Scene 0 3
+	mapwidth 30
+	mapheight 10
+	name <Gaos Spinner>
+	XPos 35
+	YPos 3
+
+	%% Fairly tightly regulated. All kinds of things you can get elsewhere aren't allowed here.
+	Tolerance -5
+
+	world <L5 Region>
+	desc <Gaos Spinner is a popular holiday destination in the L5 region.>
+	special <NOEXIT SHOWALL SOLO TOWNMECHA>
+	type <city town spinner target outdoors urban destination hometown resort>
+	habitat <SPACE.URBAN>
+	personatype <city spinner>
+	MegaCityMap
+	IndustrialTiles
+
+	entrance <*COLONY-1>
+
+	% V1 = Message Counter
+
+	SetFaction 10
+	factions <FCOMS PDASS PRIVA L5LAW>
+
+	desig <GAOSP>
+	context <spc>
+
+	Quest1 <*:LocalQuest>
+	Quest2 <*:>
+
+	start <if= V1 0 else GoSecondTime V= 1 1 Alert 1 Print 2>
+	GoSecondTime <Print 2>
+	Msg1 <Xianzai Spinner is a major trading port. People come here from all over the solar system to buy and sell goods.>
+	Msg2 <You enter Xianzai Spinner.>
+
+sub
+	Scene
+	name <Commerce Tower>
+	type <building mall public>
+	context <mall>
+	entrance <*DEPARTMENTSTORE>
+	special <ADDEXIT>
+	MallMap
+	MapWidth 30
+	MapHeight 25
+
+	start <Print 1>
+	Msg1 <You enter the Commerce Tower, L1.>
+
+	NeededCells 7
+
+	Content1 <Some 2 100 Sub *GENERAL_SHOP      na>
+	Content2 <Some 1 100 Sub *RESTAURANT        na>
+	Content4 <Some 2 100 Sub *ARMOR_SHOP        na>
+	Content5 <Some 1 100 Sub *ELECTRONICS_SHOP  na>
+	Content7 <Some 1 100 Sub *SPECIAL_SHOP      na>
+	Content9 <Fill Sub *SHOP_RANDOM             na>
+
+	sub
+		team 1
+
+		team 2
+		name <Citizens>
+		SetAlly 1
+		Passive
+
+		team 3
+		name <Guards>
+		SetAlly 2
+
+		room
+		name <Foyer>
+		desig <EntranceGrid>
+		Content <Some 5 50 Here *URBAN_X>
+		Content2 <Some 1 100 Here *ANTI_ATTACK_SECURITY 2>
+
+		room
+		name <To Second Floor>
+		minimap <#######1##...............>
+		inv
+			Elevator
+			name <Commerce Tower, L2>
+			MiniMapComponent 1
+		end
+
+		Scene
+		name <Commerce Tower, L2>
+		type <building mall public>
+		context <mall>
+		ClubMap
+		MapWidth 30
+		MapHeight 24
+
+		start <Print 1>
+		Msg1 <You enter the Commerce Tower, L2.>
+
+		NeededCells 7
+
+		Content3 <Some 3 100 Sub *WEAPON_SHOP       na>
+		Content4 <Some 1 100 Sub *ARMOR_SHOP        na>
+		Content6 <Some 2 100 Sub *MECHA_SHOP        na>
+		Content7 <Some 1 100 Sub *SPECIAL_SHOP      na>
+		Content9 <Fill Sub *SHOP_RANDOM             na>
+
+		sub
+			team 1
+
+			team 2
+			name <Citizens>
+			SetAlly 1
+			Passive
+
+			team 3
+			name <Guards>
+			SetAlly 2
+
+			room
+			name <Foyer>
+			desig <EntranceGrid>
+			Content <Some 4 50 Here *URBAN_X>
+			Content2 <Some 1 100 Here *ANTI_ATTACK_SECURITY 2>
+			minimap <......###..#1#...........>
+			inv
+				Elevator
+				Destination -1
+				MiniMapComponent 1
+			end
+
+		end
+	end
+
+	Scene
+	name <Xianzai Market>
+	type <building mall sleazy public>
+	context <mall>
+	entrance <*Building Short>
+	special <ADDEXIT>
+	MallMap
+	MapWidth 10
+	MapHeight 10
+
+	start <Print 1>
+	Msg1 <You enter Xianzai Market.>
+
+	NeededCells 6
+
+	Content1 <Some 1 100 Sub *GENERAL_SHOP      na>
+	Content2 <Some 1 100 Sub *RESTAURANT        na>
+	Content5 <Some 1 100 Sub *ELECTRONICS_SHOP  na>
+	Content7 <Some 3 100 Sub *SPECIAL_SHOP      na>
+	Content9 <Fill Sub *SHOP_RANDOM             na>
+
+	sub
+		team 1
+
+		team 2
+		name <Citizens>
+		SetAlly 1
+		Passive
+
+		team 3
+		name <Guards>
+		SetAlly 2
+
+		room
+		name <Foyer>
+		desig <EntranceGrid>
+		Content <Some 5 50 Here *URBAN_X>
+		Content2 <Some 1 100 Here *ANTI_ATTACK_SECURITY 2>
+	end
+
+	Scene
+	name <Crossroads Hospital>
+	type <Building hospital public legit>
+	entrance <*Hospital>
+	special <ADDEXIT>
+	MallMap
+	MapWidth 20
+	MapHeight 10
+
+	NeededCells 2
+	Content <Some 1 100 Sub *Doctor>
+	Content2 <Fill Sub *HOSPITAL_X>
+
+	start <Print 1>
+	Msg1 <You enter Crossroads Hospital.>
+
+	sub
+		team 1
+
+		team 2
+		name <Citizens>
+		SetAlly 1
+		Passive
+
+		team 3
+		name <Guards>
+		SetAlly 2
+
+		room
+		desig <EntranceGrid>
+		Content <Some 2 50 Here *URBAN_X>
+		Content2 <Some 1 100 Here *ANTI_ATTACK_SECURITY 2>
+	end
+
+	Scene
+	name <Trade Authority>
+	type <building public legit police>
+	context <>
+	entrance <*Building Short>
+	special <ADDEXIT>
+	MallMap
+	MapWidth 20
+	MapHeight 17
+	SetFaction 9
+
+	start <Print 1>
+	Msg1 <You enter the Xianzai Trade Authority.>
+
+	NeededCells 1
+	Content <Some 1 65 Sub *GOV_MILITARY na>
+	Content2 <Fill Sub *GOV_POLICE na>
+
+	sub
+		team 1
+
+		team 2
+		name <Citizens>
+		SetAlly 1
+		Passive
+
+		team 3
+		name <Guards>
+		SetAlly 2
+
+		room
+		name <Foyer>
+		desig <EntranceGrid>
+		Content <Some 2 40 Here *URBAN_X>
+		Content2 <Some 1 100 Here *ANTI_ATTACK_SECURITY 2>
+
+		room
+		name <Garrison>
+		minimap <2....1..............#---#>
+		inv
+			NPC Police Officer
+			SetTeam 3
+			SetFaction 9
+			EquipChar 45000
+			MiniMapComponent 1
+
+			NPC bureaucrat
+			job <Customs Official>
+			SetTeam 2
+			SetFaction 10
+			MiniMapComponent 2
+		end
+
+		room
+		name <Office>
+		minimap <2....1..............##+##>
+		inv
+			NPC Police Officer
+			name <Matthias>
+			chardesc Male Lawful Shy Passionate Pragmatic
+			SDL_PORTRAIT <por_m_serious(J--).png>
+			SDL_COLORS <30 30 90 150 112 89 35 45 22>
+			SetTeam 2
+			SetFaction 9
+			EquipChar 45000
+			Age 10
+			MiniMapComponent 1
+			Quest <*:NPCQuest>
+
+			STC TV
+			MiniMapComponent 2
+			PDir 1
+		end
+	end
+
+	Scene
+	name <Atma Motors>
+	type <building garage public>
+	context <>
+	entrance <*Garage>
+	special <ADDEXIT>
+	MallMap
+	IndustrialTiles
+	MapWidth 15
+	MapHeight 15
+
+	start <Print 1>
+	Msg1 <You enter Atma Motors.>
+
+	NeededCells 2
+	Content1 <Some 1 100 Sub *MECHANIC_SHOP>
+	Content3 <Fill Sub *GARAGE_X>
+	sub
+		team 1
+
+		team 2
+		name <Citizens>
+		SetAlly 1
+		Passive
+
+		team 3
+		name <Guards>
+		SetAlly 2
+
+		room
+		name <Foyer>
+		desig <EntranceGrid>
+		Content <Some 2 40 Here *URBAN_X>
+		Content2 <Some 1 100 Here *ANTI_ATTACK_SECURITY 2>
+	end
+
+	Scene
+	name <Administration Hall>
+	type <building government public>
+	context <gov>
+	entrance <*Building>
+	special <ADDEXIT>
+	SetFaction 10
+	ClubMap
+	PalaceParkTiles
+	MapWidth 30
+	MapHeight 21
+
+	start <Print 1>
+	Msg1 <You enter Administration Hall.>
+
+	NeededCells 2
+	Content1 <Some 2 90 Sub *GOV_MILITARY  na>
+	Content2 <Fill       Sub *GOV_MISC      na>
+
+	sub
+		team 1
+
+		team 2
+		name <Citizens>
+		SetAlly 1
+		Passive
+
+		team 3
+		name <Guards>
+		SetAlly 1
+
+		room
+		name <Foyer>
+		desig <EntranceGrid>
+		Content <Some 2 55 Here *URBAN_X>
+		Content2 <Some 1 100 Here *ANTI_ATTACK_SECURITY 2>
+
+		room
+		name <Garrison>
+		minimap <2....1..............#...#>
+		inv
+			NPC Police Officer
+			SetTeam 3
+			SetFaction 9
+			EquipChar 45000
+			MiniMapComponent 1
+
+			NPC Police Officer
+			SetTeam 3
+			SetFaction 9
+			EquipChar 45000
+			MiniMapComponent 2
+		end
+
+		room
+		name <Garrison>
+		minimap <2....1..............#...#>
+		inv
+			NPC Mecha Pilot
+			SetTeam 3
+			SetFaction 10
+			EquipChar 45000
+			MiniMapComponent 1
+
+			NPC Mecha Pilot
+			SetTeam 3
+			SetFaction 10
+			EquipChar 45000
+			MiniMapComponent 2
+		end
+
+
+		room
+		name <Main Office>
+		minimap <2....1..............#&+&#>
+		inv
+			NPC Politician
+			SetTeam 2
+			SetFaction 1
+			MiniMapComponent 1
+
+			NPC Soldier
+			job <Bodyguard>
+			SetTeam 3
+			SetFaction 10
+			EquipChar 50000
+			MiniMapComponent 2
+		end
+	end
+
+	Scene
+	name <Xianzai Spaceport>
+	type <building shuttle spaceport legit public>
+	entrance <*SpacePort>
+	special <ADDEXIT>
+	ClubMap
+	MapWidth 24
+	MapHeight 21
+
+	start <Print 1>
+	Msg1 <You enter Xianzai Spaceport.>
+
+	NeededCells 5
+	Content1 <Some 1 100 Sub *SHUTTLESERVICE  na>
+	Content2 <Some 1 100 Sub *RESTAURANT      na>
+	Content3 <Some 1  55 Sub *SHOP_RANDOM     na>
+	Content4 <Some 1  25 Sub *GOV_POLICE      na>
+	Content5 <Some 1  90 Sub *MECHANIC_SHOP   na>
+	Content6 <Fill Sub *GARAGE_X>
+
+	sub
+		team 1
+
+		team 2
+		name <Citizens>
+		SetAlly 1
+		Passive
+
+		team 3
+		name <Guards>
+		SetAlly 2
+
+		room
+		name <Foyer>
+		desig <EntranceGrid>
+		Content <Some 7 60 Here *URBAN_X>
+		Content2 <Some 1 100 Here *ANTI_ATTACK_SECURITY 2>
+
+		room
+		minimap <############1###...##...#>
+		sub
+			STC AIRLOCK-1
+			MiniMapComponent 1
+			destination <Xianzai Station Exterior>
+		end
+
+		Scene 0 3
+		name <Xianzai Station Exterior>
+		type <Environs Outdoors Space>
+		special <ShowAll>
+		terrain <SPACE>
+		MapWidth 30
+		MapHeight 30
+		SpaceMap
+		nu1 <if= T1 0 Exit WorldID>
+		Microgravity
+		Vacuum
+
+		inv
+			STC COLONY-1
+			name <Xianzai Spinner>
+			Destination -1
+			XPos 15
+			YPos 15
+		end
+
+	end
+
+% End of Gaos Spinner...
+end
 
 
 

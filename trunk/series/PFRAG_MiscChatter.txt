@@ -72,6 +72,24 @@
 	CMsg%id%01_7 <ifNPCSpiritual Accept>
 
 	Persona
+	requires <*MISC_CHATTER XIASP>
+	START <NewChat if= V%id%01 1 else .%id%_GoSpecial if# d3 1 else .%id%_GoSpecial SayAnything>
+	.%id%_GoSpecial <V= %id%01 1 Say %id%01>
+	Msg%id%01 <I heard there's a trading ship from Venus at the spaceport. You don't see those too often.>
+	Msg%id%01_1 <>
+	CMsg%id%01_1 <ifNPCSociable Accept>
+	Msg%id%01_2 <>
+	CMsg%id%01_2 <ifNPCShy Accept>
+	Msg%id%01_3 <Why bother to travel, when the entire solar system comes to visit us here?>
+	CMsg%id%01_3 <ifNPCEasygoing Accept>
+	Msg%id%01_4 <>
+	CMsg%id%01_4 <ifNPCPassionate Accept>
+	Msg%id%01_5 <>
+	CMsg%id%01_5 <ifNPCCheerful Accept>
+	Msg%id%01_6 <>
+	CMsg%id%01_6 <ifNPCMelancholy Accept>
+
+	Persona
 	requires <*MISC_CHATTER CSNSP>
 	START <NewChat if= V%id%01 1 else .%id%_GoSpecial if# d3 1 else .%id%_GoSpecial SayAnything>
 	.%id%_GoSpecial <V= %id%01 1 Say %id%01>

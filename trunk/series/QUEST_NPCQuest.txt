@@ -4,9 +4,67 @@
 %% The Key NPC is up to something. The PC may be able to help out or oppose. Or something.
 
 Content
+	name <Infiltrators>
+	requires <*:NPCQuest C:MILIT>
+
+	% E1 is the NPC offering the quest.
+	% E2 is the encounter that the PC must destroy.
+	element1 <KEY>
+	element2 <Prefab>
+	Scene2 <ENVIRONS>
+	element3 <Faction !Enemy 1>
+
+	% Quest1 is the continuation after the PC has defeated the pirates so many times.
+	Quest1 <*SUCCESS1.FinishMission 1>
+
+	sub
+		Persona 1
+		rumor0 <there are enemy mecha infiltrating our city; %name1% will protect us.>
+		% NPCVar %1% 1 = Complete quest counter
+		greeting <if= QuestStatus %qid% %id% else GoNoQuest Goto GoQuestInProgress>
+		*GoQuestInProgress <*ENEMY_CHECK GoCheckSuccess ChatNPCFac GoLoseQuest>
+		GoCheckSuccess <NewChat Say 3 AddChat 1>
+		GoLoseQuest <DeleteItem %2% SetQuestStatus %qid% -2>
+		GoNoQuest <if= QuestStatus %qid% 0 else GoBasicChat Goto GoStartQuest>
+		*GoStartQuest <*ENEMY_CHECK GoFirstGreeting ChatNPCFac GoLoseQuest>
+		*GoFirstGreeting <*DoYouWantAJob&Mecha GoOfferMission>
+		GoOfferMission <NewChat Say 1  SetQuestStatus %qid% %id%  QMemo %qid% 2>
+		*GoBasicChat <*MISC_CHATTER>
+		result1 <Goto .%id1%_GoInit>
+		Msg1 <Enemy infiltrators have penetrated our city's defenses. I suspect they were sent by %name3%, but have no direct confirmation of this. If you were to locate and destroy them I could guarantee a generous reward.>
+		Msg2 <%name1% in \SCENE %s1% told you that there are enemy infiltrators in \SCENE rootsceneid . There's a reward for defeating them.>
+		Msg3 <My troops are continuing to search for the enemy infiltrators. So far, our efforts have led to nothing.>
+		Prompt1 <I've found them myself.>
+		CPrompt1 <if# NPCVar %1% 1 0 Accept>
+		Prompt1_1 <Call off the search, they've been stopped.>
+	end
+	inv
+		Encounter
+		name <Infiltrators>
+		% V1 = Recharge Timer; needed to prevent double bounce when losing combat.
+		Special <NoMSID>
+		update <if= QuestStatus %qid% %id% else GoHide  ifG ComTime V1 else GoHide Goto GoSetVisible>
+		GoSetVisible <SetStat STAT_MetaVisibility 0  Goto GoSetOrders>
+		% Sets this encounter's orders to Passive
+		GoSetOrders <GrabSource GSetNAtt NAG_EpisodeData NAS_Orders 3>
+		EncounterMove 50
+		use <ifG StatVal STAT_MetaVisibility -1  Print -1  Goto GoStartCombat>
+		ATTACK <ifG StatVal STAT_MetaVisibility -1    ifUStealth 15 else GoAutoAttack ifYesNo -3 -4 -5 else GoAvoidAttack Goto Use>
+		GoAutoAttack <Alert -2 Goto GoStartCombat>
+		GoAvoidAttack <Print -6 AddSociable -1>
+		GoStartCombat <V= 1 0  SavePos Dynamic 2 Threat %threat% 100 .nu1 .nu2 ComposeD Msg1 .Msg1>
+		.nu1 <if= T1 0  Return   if= L1 0  L= 1 1  AddRenown -5  ItemVar= %2% 1 ComTime ItemVar+ %2% 1 d86400 ItemVar+ %2% 1 43200>
+		.nu2 <if= T2 0           if= L1 0  L= 1 1  Print 1 XPV 100  AddRenown 1   NPCVar= %1% 1 1  DeleteItem %2%  QMemo %qid% 1>
+		EncounterMove 50
+		Msg-1 <You attack the infiltrators!>
+		Msg-2 <You are attacked by infiltrators!>
+		.Msg1 <You have defeated the infiltrators and should report to %name1% in \SCENE %s1% .>
+	end
+
+Content
 	name <Where's My Battleship?>
 	desc <The NPC has ordered a battleship, but there are problems at the construction yard.>
-	requires <*:NPCQuest C:MILIT Spinner>
+	requires <*:NPCQuest C:MILIT Spinner ~industrial>
 
 	% E1 is the key character
 	% E2 is the construction site
