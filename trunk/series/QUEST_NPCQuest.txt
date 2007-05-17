@@ -142,6 +142,85 @@ Content
 	end
 
 Content
+	name <Wanted Murderer>
+	requires <*:NPCQuest C:POLIC>
+
+	% There's a wanted murderer hiding somewhere in the city. The PC can find
+	% him and fight. Nice and easy, since there's no possible negotiation
+	% with the criminal.
+
+	% E1 is the NPC offering the quest
+	% E2 is the NPC being sought
+	% E3 is the root scene; it's just needed for messages
+	Element1 <Key>
+	Element2 <Prefab>
+	Scene2 <New *Hideout>
+	Team2 <Guards>
+	TeamData2 <SD>
+	Scene3 <Town>
+
+	Quest1 <*SuccessVsChar.Capture 1 2>
+
+	sub
+		Persona 1
+		% NPCVar %1% 1 = Arrest status; if 1, E2 surrendered. If -1, E2 escaped.
+		rumor0 <%name1% is offering a reward for anyone who can bring %name2% to justice.>
+		greeting <if= QuestStatus %qid% %id% else GoGreet NewChat Say 1 AddChat 1 AddChat 2 AddChat 3>
+		*GoGreet <*NiceToMeetYou GoCheckFirst>
+		GoCheckFirst <if= QuestStatus %qid% 0 else GoChat NewChat Say 1 QMemo %qid% 2 SetQuestStatus %qid% %id%>
+		*GoChat <*MISC_CHATTER>
+		result1 <AddLawful 1 ifChatNPCArchEnemy else .%id1%_GoInit NewChat Say 5 SetQuestStatus %qid% -2 CashPrize Reward Threat %threat% 100 100>
+		result2 <NewChat Say 3 SetQuestStatus %qid% -2>
+		result3 <NewChat Say 4 SetQuestStatus %qid% -2 CashPrize Reward Threat %threat% 100 50>
+		Msg1 <Escaped murderer %name2% is on the loose in %name3%. I want this criminal brought in alive; there's a reward for anyone who can do that.>
+		Msg2 <%name1% in \SCENE %s1% is offering a bounty for the capture of wanted murderer %name2%.>
+		Msg3 <That's terrible news. Now it's certain that %name2% will kill again.>
+		Msg4 <Well, the bounty was for a live capture, but I suppose justice has been served... Here's a small reward for your efforts.>
+		Msg5 <You and I aren't usually on the same side of the law, but you did a great service for %name3% today. Here's a reward.>
+		Prompt1 <%name2% has been captured.>
+		CPrompt1 <if= NPCVar %1% 1 1 Accept>
+		Prompt2 <I think %name2% got away.>
+		CPrompt2 <if= NPCVar %1% 1 -1 Accept>
+		Prompt3 <%name2% is dead.>
+		CPrompt3 <if= NPCVar %1% 1 0 ifNPCDead %2% Accept>
+
+		Persona 2
+		Special <UNLISTED>
+		greeting <if= QuestStatus %qid% %id% else GoChat IfChatNPCSurrendered else GoConfront EndChat Say 4 Goto GoCapture>
+		*GoChat <*MISC_CHATTER>
+		*GoConfront <*IntruderGreeting&Arrest GoTalk>
+		GoTalk <NewChat Say 1 AddChat 1 AddChat 2 AddChat 3>
+		GoStartFight <SoloAttack %2%>
+		GoCapture <NPCVar= %1% 1 1 Trigger SURRENDER %2%>
+		result1 <EndChat Say 2 AddHeroic 1 Goto GoStartFight>
+		result2 <ifIntimidation %sktar_hard% else GoR2Fail EndChat Say 4 Goto GoCapture>
+		GoR2Fail <EndChat Say 3 Goto GoStartFight>
+		result3 <NewChat Say 5>
+		Msg1 <What do you want?>
+		Msg2 <I've seen what happens to their prisoners... There's no way I'll be taken alive, not while I still have time to kill!>
+		Msg3 <Is that so? I rather think that you're here to become my next victim.>
+		Msg4 <I'm not going to fight when it's clear that I'll lose... I'd rather try my luck with the psycho-surgery. You can take me in.>
+		Msg5 <So, you know who I am... Stay out of my business or you're likely to become my next victim.>
+		Prompt1 <%name1% sent me to collect you.>
+		Prompt2 <I'm here to kill you for your crimes.>
+		Prompt3 <I just wanted to see a real murderer.>
+
+		MetaScene 1
+		start <if= QuestStatus %qid% %id% else %pop% ifNPCDead %1% else %pop% SetQuestStatus %qid% -2 Goto %pop%>
+
+		MetaScene 2
+		Surrender%2% <Print 11 NPCVar= %1% 1 1 DeleteNPC %2%>
+		nu1 <if= t1 0 Return ifNPCOK %2% DeleteNPC %2% NPCVar= %1% 1 -1>
+		Msg11 <%name2% has been captured.>
+	end
+	inv
+		NPC bandit
+		job <murderer>
+		chardesc Criminal Villainous
+		EquipChar 25000
+	end
+
+Content
 	name <Under Surveillance>
 	requires <*:NPCQuest C:POLIC>
 
@@ -169,7 +248,7 @@ Content
 		GoLoseQuest <SetQuestStatus %qid% -2 Goto GoChat>
 		*GoChat <*MISC_CHATTER>
 		result1 <AddLawful 1 XPV 100 PCEnemy %2% Goto .%id1%_GoInit>
-		Msg1 <The crime lord %name2% has moved into the area. There's a reward being offered for information leading to \OPR %2% capture.>
+		Msg1 <The crime lord %name2% has moved into the area. There's a reward being offered for information leading to \PPR %2% capture.>
 		Msg2 <%name1% in \SCENE %s1% is offering a reward for information about %name2%.>
 		Prompt1 <%name2% is hiding in the black market.>
 		CPrompt1 <if# NPCVar %1% 1 0 Accept>
@@ -185,7 +264,6 @@ Content
 		Msg1 <Yeah, can I help you?>
 		Prompt1 <%name1% is looking for you.>
 		Prompt2 <No, I'm just looking around.>
-
 	end
 	inv
 		NPC Thief

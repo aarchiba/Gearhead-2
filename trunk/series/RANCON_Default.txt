@@ -1,5 +1,43 @@
 % RANDOM CONTENT FILE
 
+%% *HIDEOUT_X Content
+%%	Filler for hideouts and strongholds.
+%%	Minimaps should be open on all four sides.
+
+Content
+	requires <*HIDEOUT_X>
+	Minimap <.......1....2............>
+	element1 <PREFAB>
+	element2 <PREFAB>
+	inv
+		STC BOX-1
+		STC BOX-1
+	end
+
+Content
+	requires <*HIDEOUT_X>
+	Minimap <............1............>
+	element1 <PREFAB>
+	inv
+		STC BOX-1
+	end
+
+Content
+	requires <*HIDEOUT_X>
+	Minimap <............12...........>
+	element1 <PREFAB>
+	element2 <PREFAB>
+	inv
+		STC BOX-1
+		STC CHEST-1
+		Lock 10
+		inv
+			Treasure 10
+			name <Gold Chain>
+		end
+	end
+
+
 %% *CONSTRUCTION_X Content
 %%	Filler for construction sites, shipyards, and so on.
 %%	Minimaps should be open on all four sides.

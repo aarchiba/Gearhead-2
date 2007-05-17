@@ -1,4 +1,166 @@
 %%
+%%  *ENT_Hideout
+%%
+%% The PC is looking for someone's hideout.
+
+Content
+	name <Sewer Hideout>
+	% The NPC is hiding in the sewer.
+	requires <*ENT_Hideout City>
+	special <REUSABLE>
+
+	% E1 is the key scene the PC is looking for.
+	% E2 is a sewer dungeon.
+	% E3 is the trap door leading there.
+	Scene1 <Key>
+	Scene2 <New *Dungeon.Sewer>
+	Element3 <Prefab>
+	Scene3 <Building Public Government>
+
+	sub
+		MetaScene 2
+		sub
+			room
+			minimap <............1............>
+			special <SHAREDPALETTE>
+			sub
+				Trapdoor
+				desig <ENTRANCE %s1%>
+				MiniMapComponent 2
+			end
+		end
+
+		MetaScene 2
+		sub
+			room
+			minimap <............1.......##+##>
+			desig <HOME>
+			special <SHAREDPALETTE>
+			sub
+				Door
+				USE <ifG -99 MetaPass else GoCloseDoor  if= StatVal STAT_Lock 0 else GoDoorLocked if= V1 0 else GoRealOpen ifYesNo 101 102 103 else GoLeaveAlone V= 1 1 Goto GoRealOpen>
+				GoRealOpen <Print 1 SetStat STAT_Pass 0  Transform 1>
+				GoLeaveAlone <Print 104>
+				Msg101 <Sewer Access- Authorized personnel only.>
+				Msg102 <Open the door.>
+				Msg103 <Leave it alone.>
+				Msg104 <You decide that exploring the sewer would be a dumb idea.>
+			end
+		end
+	end
+	inv
+		Trapdoor
+		% V1 = Can enter sewer now
+		desig <ENTRANCE %s2%>
+		rumor%prev_id% <there's a fugitive hiding in the sewer system.>
+		update <if= QuestStatus %qid% %prev_id% V= 1 1>
+		use <if= V1 1 else GoDoNotWant Print 1 Exit StatVal 4>
+		GoDoNotWant <Print 11>
+		Msg11 <You have no reason to go down into the sewer right now.>
+	end
+
+Content
+	name <Space Hideout>
+	% The NPC is hiding in a space derelict.
+	requires <*ENT_Hideout Spinner>
+	special <REUSABLE>
+
+	% E1 is the key scene the PC is looking for.
+	% E2 is a space derelict dungeon.
+	% E3 is the map marker showing its location.
+	Scene1 <Key>
+	Scene2 <New *Dungeon.Derelict>
+	Element3 <Prefab>
+	Scene3 <Space Environs>
+
+	sub
+		MetaScene 2
+		sub
+			room
+			minimap <............2............>
+			special <SHAREDPALETTE>
+			sub
+				Trapdoor
+				desig <ENTRANCE %s1%>
+				MiniMapComponent 2
+			end
+
+		end
+	end
+	inv
+		STC QUEST-ENCOUNTER-AUTO-STATIONARY
+		desig <ENTRANCE %s2%>
+		name <Abandoned Spaceship>
+		rumor%prev_id% <sometimes fugitives hide in abandoned spaceships.>
+	end
+
+
+Content
+	name <Mickey the Rat>
+	% There's a thief who can tell the PC where to find the requested NPC.
+	requires <*ENT_Hideout C:++ (C:THIEF|C:ADVEN|C:LABOR|C:CRAFT)>
+
+	% E1 is the key character the PC is looking for
+	% E2 is the key scene that this provides the entrance to
+	% E3 is the entrance, actually a trapdoor hidden in a public building
+	% E4 is the character who can tell the PC where to look
+	Element1 <Key>
+
+	Scene2 <Key>
+
+	Element3 <Prefab>
+	Scene3 <Building Public>
+
+	Element4 <Prefab>
+	Scene4 <Building Public>
+	Team4 <Citizens>
+	TeamData 4 <Pass Ally>
+
+	sub
+		Persona 4
+		% V1 = Have revealed secret already
+		% V2 = Cash offer
+		% V3 = Have tried intimidation already
+		rumor%prev_id% <%name4% knows where %name1% is.>
+		Greeting <if= QuestStatus %qid% %prev_id% else GoFirst  if= V1 0 else GoFind  Goto GoLookFor>
+		*GoLookFor <*LookingForNPC %1% GoFind GoReject>
+		GoFind <NewChat   Say 1   Goto GoReveal>
+		GoReveal <ItemStat= %3% 5 0   ItemQSubMemo %3% %prev_id% 6 V= 1 1 UpdateProps>
+		GoReject <NewChat V= 2 Threat %threat% 10  Say 2 AddReact -d3  AddChat 1 AddChat 2 AddChat 3>
+		*GoFirst <*NiceToMeetYou GoChat>
+		*GoChat <*Misc_Chatter>
+		result1 <NewChat Say 3>
+		result2 <V= 3 1 ifIntimidation %sktar% else GoR2Fail NewChat Say 4 AddChat 4 V= 1 1 Goto GoReveal>
+		GoR2Fail <NewChat Say 5>
+		result3 <NewChat Say 7  V= 1 1  cash+ -V2  AddChat 5 Goto GoReveal>
+		result4 <Goto GoFind>
+		result5 <Goto GoFind>
+		Msg1 <%name1% has a hideout beneath \SCENE %s3% . If you look around there you should be able to find the way down.>
+		Msg2 <I can't say that I know anyone by that name... Though, for $ \VAL V2 I might be able to remember.>
+		Msg3 <It's your loss.>
+		Msg4 <Alright, I'll tell you what I know...>
+		Msg5 <You hurt me and you'll never get this info.>
+		Msg6 <You learned from %name4% that %name1% 's hideout can be accessed from \SCENE %s3% .>
+		Msg7 <Yes, I think I do remember %name1% now... I can even tell you where to find \OPR %1% .>
+		Prompt1 <No way, that's too much money!>
+		Prompt2 <How about I just beat the info from you instead?>
+		CPrompt2 <if= V3 0 Accept>
+		Prompt3 <Alright, here you go. [give money]>
+		CPrompt3 <ifG PC$ V2 Accept>
+		Prompt4 <You're very smart.>
+		Prompt5 <So, where is \OPR %1% ?>
+	end
+	inv
+		Trapdoor
+		desig <entrance %s2%>
+		update <if= QuestStatus %qid% %prev_id% if= Visibility -1 SetStat STAT_MetaVisibility %sktar_hard%>
+		Hide -1
+
+		NPC Thief
+	end
+
+
+%%
 %%  *ENT_SpaceWreck
 %%
 %% The PC is looking for a wrecked spaceship.
@@ -303,7 +465,6 @@ Content
 Content
 	name <Secret Region of Space>
 	requires <*ENT_SpaceSecret C:++>
-	special <REUSABLE>
 
 	% E1 is the key character the PC is looking for
 	% E2 is the key scene that this provides the entrance to
@@ -336,7 +497,7 @@ Content
 		result1 <NewChat Say 3>
 		result2 <V= 3 1 ifIntimidation %sktar-hard% else GoR2Fail NewChat Say 4 AddChat 4 V= 1 1>
 		GoR2Fail <NewChat Say 5>
-		result3 <NewChat Say 6  V= 1 1  cash+ -V2  AddChat 5>
+		result3 <NewChat Say 7  V= 1 1  cash+ -V2  AddChat 5>
 		result4 <Goto GoFind>
 		result5 <Goto GoFind>
 		Msg1 <%name1% is hiding in \SCENE %s3% .>
@@ -345,6 +506,7 @@ Content
 		Msg4 <Alright, I'll tell you...>
 		Msg5 <You hurt me and you'll never get this info.>
 		Msg6 <You learned from %name4% that %name1% is hiding in \SCENE %s3% .>
+		Msg7 <Ah, yes, that will do nicely.>
 		Prompt1 <No way, that's too much money!>
 		Prompt2 <How about I just beat the info from you instead?>
 		CPrompt2 <if= V3 0 Accept>

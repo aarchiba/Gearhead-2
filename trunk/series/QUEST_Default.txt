@@ -1040,6 +1040,7 @@ Content
 %% .Evidence		The PC has brought evidence implicating E2 in a crime.
 %% .ConJob		E2 has been conned by E1 and the PC.
 %% .FoilPlot		The PC foiled a plot by E2 against E1.
+%% .Capture		The PC has captured E2
 
 Content
 	name <Basic vs. Reward>
@@ -1618,20 +1619,20 @@ Content
 
 	sub
 		Persona 1
-		.%id%_GoInit <NewChat Say 1 CashPrize Reward Threat %threat% 100 300 SetQuestStatus %qid% -1>
-		Msg1 <Thanks for the information. Here's a little reward for your trouble.>
-		Msg1_1 <Ah, it's always helpful to be on top of the latest information. Thanks for letting me know. Here's something for you.>
-		CMsg1_1 <ifNPCSociable Accept>
-		Msg1_2 <Thanks for the tip. Here's something for you.>
-		CMsg1_2 <ifNPCShy Accept>
-		Msg1_3 <How interesting. Your information is worth something... about this much, I'd say.>
-		CMsg1_3 <ifNPCEasygoing Accept>
-		Msg1_4 <Aha! That's going to be very useful to know... Here, take this reward for your help.>
-		CMsg1_4 <ifNPCPassionate Accept>
-		Msg1_5 <It's a good thing you told me that. Here, take this. It's my way of saying thanks.>
-		CMsg1_5 <ifNPCCheerful Accept>
-		Msg1_6 <It would have been very bad if you hadn't told me that. Here, thanks for the tip.>
-		CMsg1_6 <ifNPCMelancholy Accept>
+		.%id%_GoInit <NewChat Say %id%01 CashPrize Reward Threat %threat% 100 300 SetQuestStatus %qid% -1>
+		Msg%id%01 <Thanks for the information. Here's a little reward for your trouble.>
+		Msg%id%01_1 <Ah, it's always helpful to be on top of the latest information. Thanks for letting me know. Here's something for you.>
+		CMsg%id%01_1 <ifNPCSociable Accept>
+		Msg%id%01_2 <Thanks for the tip. Here's something for you.>
+		CMsg%id%01_2 <ifNPCShy Accept>
+		Msg%id%01_3 <How interesting. Your information is worth something... about this much, I'd say.>
+		CMsg%id%01_3 <ifNPCEasygoing Accept>
+		Msg%id%01_4 <Aha! That's going to be very useful to know... Here, take this reward for your help.>
+		CMsg%id%01_4 <ifNPCPassionate Accept>
+		Msg%id%01_5 <It's a good thing you told me that. Here, take this. It's my way of saying thanks.>
+		CMsg%id%01_5 <ifNPCCheerful Accept>
+		Msg%id%01_6 <It would have been very bad if you hadn't told me that. Here, thanks for the tip.>
+		CMsg%id%01_6 <ifNPCMelancholy Accept>
 
 	end
 

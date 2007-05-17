@@ -1,5 +1,18 @@
 % Persona Fragment File
 
+% TYPE: *IntruderGreeting
+%			 &Arrest	The PC is here to arrest the NPC
+%	The PC has intruded into the NPC's personal space. The NPC will therefore
+%	confront the PC.
+%   PARAM1: Exit label
+
+	Persona
+	requires <*IntruderGreeting>
+	START <NewChat Say %id%01 AddChat %id%01>
+	result%id%01 <Goto %1%>
+	Msg%id%01 <This is a private place. You shouldn't be here.>
+	Prompt%id%01 <I'm not too concerned about that.>
+
 % TYPE: *PCChallengeNPC
 % 	The PC has a chance to challenge the NPC to combat... if he doesn't wuss out.
 %   PARAM1: Issue challenge exit label

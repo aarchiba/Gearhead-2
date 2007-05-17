@@ -41,6 +41,43 @@ Scene
 	end
 
 Scene
+	name <# Sewer>
+	requires <*Dungeon .Sewer>
+	special <NOEXIT>
+	type <DUNGEON sewer>
+	dentrance <*GoDown>
+	content <Some 1 30 Sub *DUNGEON_X>
+	mapwidth 30
+	mapheight 30
+	MonkeyMap
+	LockedDoorChance 25
+	SecretDoorChance 20
+
+	NeededCells 3
+
+	start <Print 1>
+	msg1 <You enter \SCENE SceneID .>
+
+	sub
+		Team 1
+		SetEnemy 2
+
+		Team 2
+		name <Monster>
+		type <City Water Reptile Fungus Sewer>
+		SetEnemy 1
+		Stat 2 1
+
+		room
+		width 3
+		height 3
+		sub
+			StairsUp
+			Destination -1
+		end
+	end
+
+Scene
 	name <# Basement>
 	requires <*Dungeon .InfestedBasement>
 	special <NOEXIT>

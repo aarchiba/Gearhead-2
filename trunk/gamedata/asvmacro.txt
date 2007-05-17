@@ -17,6 +17,7 @@ ItemVar  <GrabItem ?      GNAtt NAG_ScriptVar ?>
 SceneVar <GrabScene ?       GNAtt NAG_ScriptVar ?>
 LOCALFACTION <GrabCurrentScene   GNAtt NAG_Personal NAS_FactionID>
 Destination <StatVal 4>
+Visibility <StatVal 5>
 PCFac <GrabAdventure  GNAtt NAG_Personal NAS_FactionID>
 NPCFac <GrabNPC ?  GNAtt NAG_Personal NAS_FactionID>
 ChatNPCFac <GrabChatNPC  GNAtt NAG_Personal NAS_FactionID>

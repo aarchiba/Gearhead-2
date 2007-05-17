@@ -5,6 +5,50 @@
 %% use by the quest that generated them.
 
 %%
+%% *HideOut Content
+%%
+%%  Hideouts will be constructed as a bigbox or a monkeymap, so plan
+%%  your rooms appropriately.
+
+Scene
+	name <#'s Hideout>
+	requires <*HideOut>
+	type <Private Complex>
+	special <NOEXIT>
+	BoxMap
+
+	quest_entrance <*ENT_Hideout>
+
+	MapWidth 12
+	MapHeight 17
+
+	NeededCells 2
+	content <Fill Sub *HIDEOUT_X na>
+
+	Start <Print 1>
+	Msg1 <You enter \SCENE SceneID .>
+
+	sub
+		Team 1
+
+		Team 2
+		name <Citizens>
+
+		Team 2
+		name <Guards>
+		SetAlly 2
+
+		Room
+		minimap <......###..#1#...........>
+		sub
+			Elevator
+			Destination -1
+			MiniMapComponent 1
+		end
+	end
+
+
+%%
 %% *CargoHold Content
 %%
 
@@ -30,6 +74,11 @@ Scene
 
 		Team 2
 		name <Citizens>
+		SetAlly 1
+
+		Team 2
+		name <Guards>
+		SetAlly 2
 
 		Room
 		minimap <......###..#1#...........>
