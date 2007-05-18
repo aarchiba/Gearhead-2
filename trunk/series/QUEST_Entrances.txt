@@ -17,6 +17,9 @@ Content
 	Element3 <Prefab>
 	Scene3 <Building Public Government>
 
+requires <*ENT_Hideout Spinner COMMON COMMON COMMON>
+start <XPV %s1%>
+
 	sub
 		MetaScene 2
 		sub
@@ -84,11 +87,10 @@ Content
 				desig <ENTRANCE %s1%>
 				MiniMapComponent 2
 			end
-
 		end
 	end
 	inv
-		STC QUEST-ENCOUNTER-AUTO-STATIONARY
+		STC QUEST-ENCOUNTER-AUTOENTRANCE-STATIONARY
 		desig <ENTRANCE %s2%>
 		name <Abandoned Spaceship>
 		rumor%prev_id% <sometimes fugitives hide in abandoned spaceships.>
