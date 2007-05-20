@@ -450,6 +450,27 @@ Procedure SelectJobAndFaction( PC: GearPtr; CanEdit: Boolean; ForceFac: Integer 
 			J := J2;
 		end;
 	end;
+	Function JobDescription( Job: GearPtr ): String;
+		{ Return a description for this job: This will be its category }
+		{ and its list of skills. }
+	var
+		msg: String;
+		S,N: Integer;
+	begin
+		{ Start with the job category. }
+		msg := '(' + SAttValue( Job^.SA , 'DESIG' ) + ') ';
+
+		{ Add the skills. }
+		N := 0;
+		for S := 1 to NumSkill do begin
+			if NAttValue( Job^.NA , NAG_Skill , S ) <> 0 then begin
+				if N > 0 then msg := msg + ', ';
+				msg := msg + MsgString( 'SkillName_' + BStr( S ) );
+				inc( N );
+			end;
+		end;
+		JobDescription := msg;
+	end;
 var
 	RPM: RPGMenuPtr;
 	LegalJobList,Job,LegalFactionList,F: GearPtr;
@@ -464,7 +485,7 @@ begin
 
 	if CanEdit then begin
 		RPM := CreateRPGMenu( MenuItem , MenuSelect , ZONE_CharGenMenu );
-		AttachMenuDesc( RPM , ZONE_CharGenDesc );
+		AttachMenuDesc( RPM , ZONE_CharGenPrompt );
 
 		RCPromptMessage := '';
 		RCDescMessage := MsgString( 'RANDCHAR_JobDesc' );
@@ -474,7 +495,7 @@ begin
 		Job := LegalJobList;
 		N := 1;
 		while Job <> Nil do begin
-			AddRPGMenuItem( RPM , GearName( Job ) , N , SAttValue( Job^.SA , 'DESC' ) );
+			AddRPGMenuItem( RPM , GearName( Job ) , N , JobDescription( Job ) );
 			Inc( N );
 			Job := Job^.Next;
 		end;

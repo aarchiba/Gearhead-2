@@ -779,7 +779,7 @@ Plot
 	end
 
 Plot
-	name <Meet Enemy Fighter>
+	name <Meet Your New Enemy>
 	size 5
 	desc <Fight a group of mecha led by your new enemy.>
 	requires <#A +Tin +P-- ~+Ffi E:-- F:-->
@@ -820,7 +820,7 @@ Plot
 
 		Persona 2
 		special <UNLISTED>
-		*GREETING <*BattleChallenge GoThreat na>
+		*GREETING <*BattleIntroduction GoThreat>
 		*GoThreat <*THEME_EXPO&ENEMY na>
 	end
 	inv

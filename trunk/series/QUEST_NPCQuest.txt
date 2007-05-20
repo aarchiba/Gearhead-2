@@ -4,6 +4,175 @@
 %% The Key NPC is up to something. The PC may be able to help out or oppose. Or something.
 
 Content
+	name <Infectious Outbreak>
+	requires <*:NPCQuest C:MEDIC ~"resort">
+	% There's a disease outbreak. In order to fight the disease, it's nessecary to
+	% find the principal carrier. Unfortunately, the supposed patient zero has gone
+	% into hiding...
+
+	% E1 is the NPC offering the quest
+	% E2 is the carrier of a virus
+	Element1 <Key>
+	Element2 <Prefab>
+	Scene2 <New *Hideout>
+	Team2 <Citizens>
+	TeamData2 <Pass Ally>
+
+	% Quest1 is the success track.
+	Quest1 <*Success1.CharityWork 1>
+
+	sub
+		Persona 1
+		rumor0 <%name1% has been fighting the outbreak of a weird disease.>
+		greeting <if= QuestStatus %qid% %id% else GoCheckFirst if= NPCVar %2% 1 1 else GoCheckDeath NewChat Say 8 AddChat 4>
+		GoCheckDeath <ifNPCDead %2% else GoCheckProgress NewChat Say 7 SetQuestStatus %qid% -2 XPV 100>
+		GoCheckProgress <NewChat Say 6>
+		GoCheckFirst <if= QuestStatus %qid% 0 else GoChat NewChat Say 1 AddChat 1 AddChat 2>
+		*GoChat <*MISC_CHATTER>
+		result1 <NewChat Say 2 QMemo %qid% 3 SetQuestStatus %qid% %id%>
+		result2 <NewChat Say 4 AddChat 3>
+		result3 <NewChat Say 5 QMemo %qid% 3 SetQuestStatus %qid% %id%>
+		result4 <Goto .%id1%_GoInit>
+		Msg1 <There's been an outbreak of malboro syndrome. You are advised to seek immediate medical attention if you suffer from confusion, blindness, muteness, fits of rage, or bad breath.>
+		Msg2 <It's believed that the virus was brought here by a trucker named %name2%; unfortunately \SPR %2% 's either left town or gone into hiding. if \SPR %2% could be examined here, it would help us to identify the strain of the virus.>
+		Msg3 <Malboro syndrome was brought to \SCENE RootSceneID by a trucker named %name2%. %name1% in \SCENE %s1% wants to examine \OPR %2% to identify the strain of the virus.>
+		Msg4 <Please do. The virus is highly contagious... Also, if you happen to meet a trucker named %name2%, please come back to let me know.>
+		Msg5 <It's thought that \SPR %2% 's the one who first brought the virus here. If we could examine \OPR %2% , we could identify the strain we're dealing with. Unfortunately %name2% seems to have either skipped town or gone into hiding.>
+		Msg6 <New cases of malboro syndrome are turning up every day. The situation is getting desperate.>
+		Msg7 <It's very sad what happened to %name2%... Now that we have the body, hopefully we can prevent any more lives from being lost.>
+		Msg8 <%name2% has arrived here and is being treated. Thanks to \PPR %2% help, we've identified the strain of the virus and many more lives will be saved.>
+		Prompt1 <What caused this outbreak?>
+		Prompt2 <I'll be careful.>
+		Prompt3 <Who is this %name2%?>
+		Prompt4 <Don't forget my part in this.>
+
+		% Death check
+		Metascene 1
+		start <if= QuestStatus %qid% %id% else %pop% ifNPCDead %1% else %pop% SetQuestStatus %qid% -2 Goto %pop%>
+
+		Persona 2
+		% NPCVar %2% 1 = Have agreed to go to hospital
+		% V1 = First time counter.
+		special <UNLISTED>
+		greeting <if# NPCVar %2% 1 2 else GoChat if= NPCVar %2% 1 1 else GoCheckFirst NewChat Say 1 NPCVar= %2% 1 2>
+		GoCheckFirst <if= QuestStatus %qid% %id% else GoChat  ifChatNPCSurrendered else GoArgue EndChat Say 2 Goto GoSurrender>
+		GoArgue <if= V1 1 else GoFirstTime NewChat Say 10 AddChat 3 AddChat 4>
+		GoFirstTime <NewChat Say 5 AddChat 1 AddChat 2 V= 1 1>
+		GoSurrender <Print 3 QMemo %qid% 4 MoveAndPacifyNPC %2% %s1% UnSurrender %2% XPV 100>
+		GoAttack <SoloAttack %2%>
+		*GoChat <*MISC_CHATTER>
+		result1 <NewChat Say 6 AddCHat 3 AddChat 4 AddCheerful -d8>
+		result2 <NewChat Say 7 AddCHat 3 AddChat 4>
+		result3 <NewChat Say 8 AddChat 5 AddChat 6>
+		result4 <NewChat Say 9>
+		result5 <ifIntimidation %sktar% else GoR5Fail EndChat Say 11 Goto GoSurrender>
+		GoR5Fail <EndChat Say 14 Goto GoAttack>
+		result6 <ifConversation %sktar% else GoR6Fail NewChat Say 12 AddChat 7 AddChat 8>
+		GoR6Fail <EndChat Say 15 Goto GoAttack>
+		result7 <EndChat Say 13 Goto GoSurrender>
+		result8 <EndChat Say 15 Goto GoAttack>
+		% Apparently, the malboro virus causes people to talk in fluent Kitteh.
+		Msg1 <Hey, I'm sorry about before. I wasn't in my right mind, but things are starting to clear up... I guess if I had stayed in hiding I'd be dead by now. Thanks for making me come here.>
+		Msg2 <I give up... I'll go peacefully...>
+		Msg3 <%name2% goes to the hospital.>
+		Msg4 <%name2% went to \SCENE %s1% . You should go there and speak with %name1%.>
+		Msg5 <What are you? Who are you doing in my house? This isn't right... I don't need a doctor!>
+		Msg6 <My breath? How would you know... How do you know it's not your nose that smells, eh? My nose has smelled many things... Some things are bigger than my head!>
+		Msg7 <No, that's right... They sent you too, eh? The wily doctors... They sent you to collect my precious bodily fluids!>
+		Msg8 <They wants to cut me up! They blames me for bringing the sick, but it's not my fault, I only catches it... Evil doctors want to punish %name2%...>
+		Msg9 <Yes, you be going, before you die... They all die... I die too, I suppose.>
+		Msg10 <Yes, what you do want? I dreamed you before, don't I?>
+		Msg11 <Cut up here or cut up there... what's the difference? I be going then...>
+		Msg12 <You promises they won't vivisect %name2%?>
+		Msg13 <I has better be goes then... If you says it be safe.>
+		Msg14 <Die here or die there... I chooses die here!>
+		Msg15 <Stops the lies! I stops you... must protect precious bodily fluids!>
+		Prompt1 <Woah, your breath stinks.>
+		Prompt2 <You're %name2%, aren't you?>
+		Prompt3 <I think you should go to the hospital.>
+		Prompt4 <Well, it's been nice talking with you.>
+		Prompt5 <Go to the hospital, or you can die right now.>
+		Prompt6 <Don't worry, they only want to help you.>
+		Prompt7 <I promise.>
+		Prompt8 <Uh, actually I guess I can't promise...>
+
+		MetaScene 2
+		Surrender%2% <if= QuestStatus %qid% %id% ForceChat %2%>
+
+	end
+	inv
+		NPC Trucker
+	end
+
+
+Content
+	name <Charity Hospital>
+	requires <*:NPCQuest C:MEDIC ~"poor">
+
+	% E1 is the NPC offering the quest.
+	% E2 is a person whose brother benefitted from the hospital expansion; after the mission is
+	%   solved, he will provide a reward.
+	Element1 <KEY>
+	Element2 <Prefab>
+	Scene2 <Grab 1>
+	Team2 <Citizens>
+	TeamData2 <Pass Ally>
+
+	% Quest1 is the FindMoney task.
+	% Quest2 is the success track.
+	Quest1 <*:FindMoney.Charity 1>
+	Quest2 <*Success1.CharityWork 2>
+
+	sub
+		Persona 1
+		rumor0 <%name1% needs money to expand the hospital.>
+		% V1 = Have been told to speak with E2
+		greeting <if= QuestStatus %qid% %id% else GoCheckFirst if= V1 0 else GoCheckDeath NewChat Say 8 AddChat 3 AddChat 5>
+		% If E2 dies after being told to speak with him, end the quest.
+		GoCheckDeath <ifNPCDead %2% else GoChat SetQuestStatus %qid% -2 Goto GoChat>
+		*GoCheckFirst <*NiceToMeetYou GoOfferQuest>
+		GoOfferQuest <if= QuestStatus %qid% 0 else GoChat NewChat Say 1 AddChat 1 AddChat 2>
+		*GoChat <*MISC_CHATTER>
+		Result1 <NewChat Say 2 AddChat 3 AddChat 4 QMemo %qid% 3 SetQuestStatus %qid% %id% SetQuestStatus %qid1% %id1%>
+		Result2 <NewChat Say 4 AddSociable -10 AddCheerful -10 SetQuestStatus %qid% -2 ifG PCHeroism 0 AddHeroic -1>
+		result3 <NewChat Say 5 SetQuestStatus %qid1% -1 V= 1 1 Cash+ -5000000 AddHeroic 3 QMemo %qid% 6 NPCVar= %2% 1 1 ifNPCDead %2% SetQuestStatus %qid% -2>
+		result4 <NewCHat Say 7>
+		result5 <NewChat Say 9 V= 1 1 AddHeroic 1 QMemo %qid% 6 NPCVar= %2% 1 1 ifNPCDead %2% SetQuestStatus %qid% -2>
+		Msg1 <We really need to expand and modernize this hospital. The problem is, we don't have the money to do it. I don't know what we're going to do.>
+		Msg2 <Millions of credits, at least... It's too much for any one person to do, but if you wanted to help you could try and find some donations.>
+		Msg3 <%name1% in \SCENE %s1% needs money to expand the hospital.>
+		Msg4 <If everyone else feels the same way you do, I fear all hope will be lost.>
+		Msg5 <This is truly exceptional! Thank you, with your generous help we can begin the expansions at once... You must go speak with %name2% . I'm certain \SPR %2% will want to thank you as well.>
+		Msg6 <After helping %name1%, \SPR %1% told you to go speak with %name2%.>
+		Msg7 <Please, try your best. There are many people counting on this hospital.>
+		Msg8 <The hospital expansion is desperately needed. We have so many people depending on it.>
+		Msg9 <This is great news! Thank you, we can now begin the expansions... You must go speak with %name2% . I'm certain \SPR %2% will want to thank you as well.>
+		Prompt1 <How much money do you need?>
+		Prompt2 <I don't care about your problems.>
+		Prompt3 <I could contribute five million. [Give Money]>
+		CPrompt3 <ifG PC$ 4999999 Accept>
+		Prompt4 <I'll see what I can do.>
+		Prompt5 <I've found someone to donate money.>
+		CPrompt5 <if= QuestStatus %qid1% -1 Accept>
+
+		Persona 2
+		% NPCVar %2% 1 = Have completed quest
+		Greeting <if= QuestStatus %qid% %id% else GoGreet if= NPCVar %2% 1 1 else GoTellStory NewChat Say 1 AddCHat 1>
+		GoTellStory <NewChat Say 2>
+		*GoGreet <*NiceToMeetYou GoChat>
+		*GoChat <*MISC_CHATTER>
+		result1 <Goto .%id2%_GoInit>
+		Msg1 <Hey, I hear you're the one who found the money for the hospital expansion.>
+		Msg2 <My brother is in the hospital. I'm praying for him.>
+		Prompt1 <That's right.>
+	end
+	inv
+		NPC Priest
+		%% Originally this character was to be a citizen instead of a priest, but I decided
+		%% to make it a priest since this will open extra quest branches.
+	end
+
+Content
 	name <Infiltrators>
 	requires <*:NPCQuest C:MILIT>
 

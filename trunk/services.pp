@@ -843,7 +843,9 @@ begin
 	end;
 
 	{ Make sure this item is legal. }
-	if ( Scene <> Nil ) and not NGW then begin
+	{ Mecha don't have to be checked for legality. }
+	if ( Scene <> Nil ) and ( I^.G <> GG_Mecha ) and not NGW then begin
+		{ Scene should point to the root scene here, since we found it above. }
 		LL := NAttValue( Scene^.NA , NAG_GearOps , NAS_Legality );
 		if NAttValue( NPC^.NA , NAG_CharDescription , NAS_Lawful ) < 0 then begin
 			LL := LL - ( NAttValue( NPC^.NA , NAG_CharDescription , NAS_Lawful ) div 2 ) + 5;

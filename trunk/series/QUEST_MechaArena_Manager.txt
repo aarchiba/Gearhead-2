@@ -24,11 +24,11 @@ Content
 
 	Scene2 <New *Arena_Valhalla>
 
-	Element3 <Prefab>
-	Scene3 <Grab 1>
-
-	Quest1 <*:MECHA_ARENA_CHALLENGE #35 1 2>
-	Quest2 <*:MECHA_ARENA_CHALLENGE #60 1 2>
+	Quest1 <*:MECHA_ARENA_CHALLENGE #33 1 2>
+	Quest2 <*:MECHA_ARENA_CHALLENGE #45 1 2>
+	Quest3 <*:MECHA_ARENA_CHALLENGE #57 1 2>
+	Quest4 <*:MECHA_ARENA_CHALLENGE #69 1 2>
+	Quest5 <*:MECHA_ARENA_CHALLENGE #81 1 2>
 
 	sub
 		Persona 1
@@ -44,13 +44,16 @@ Content
 		*GoArenaFull <*ArenaIsFull %2%>
 		*GoArenaBusy <*ArenaIsBusy %2%>
 
-		GoChooseBattle <if= ArenaWins %2% 9 else GoCheckQ1 Goto .%id2%_GoInit>
-		GoCheckQ1 <if= ArenaWins %2% 5 else GoNormalBattle Goto .%id1%_GoInit>
+		GoChooseBattle <if= ArenaWins %2% 9 else GoCheckQ4 Goto .%id5%_GoInit>
+		GoCheckQ4 <if= ArenaWins %2% 7 else GoCheckQ3 Goto .%id4%_GoInit>
+		GoCheckQ3 <if= ArenaWins %2% 5 else GoCheckQ2 Goto .%id3%_GoInit>
+		GoCheckQ2 <if= ArenaWins %2% 3 else GoCheckQ1 Goto .%id2%_GoInit>
+		GoCheckQ1 <if= ArenaWins %2% 1 else GoNormalBattle Goto .%id1%_GoInit>
 		*GoNormalBattle <*StartArenaBattle %2% GoStartFight>
 		GoStartFight <SavePos PrepArena %2% 100 Jump %2%>
 		*GoRefuseBattle <*RefuseArenaFight %2%>
 
-		GoStartQuest <SetQuestStatus %qid% %id% SetArenaThreat %2% 5>
+		GoStartQuest <SetQuestStatus %qid% %id% SetArenaThreat %2% 25>
 
 		GoOfferFight <NewChat Say 1 AddChat 1 AddChat 2>
 		% Remember, there's a lot of fiddly bits for the big win.
@@ -90,19 +93,21 @@ Content
 			special <SHAREDPALETTE>
 			desig <HOME>
 			minimap <#...#........1......#---#>
-		end
 
-		MetaScene 3
-		sub
 			room
 			name <Glory Road>
 			special <SHAREDPALETTE>
-			desig <HOME>
-			minimap <######&1&##...##...##...#>
+			minimap <######&2&##...##...##...#>
+			sub
+				Elevator
+				name <To Arena>
+				desig <ENTRANCE %s2%>
+				MiniMapComponent 2
+			end
 		end
 	end
 	inv
-		NPC Citizen
+		NPC Celebrity
 		name <Hilda>
 		job <Arena Manager>
 		chardesc Female Easygoing Sociable Renowned Renowned
@@ -110,10 +115,6 @@ Content
 		SetFaction 5
 		SDL_PORTRAIT <por_f_sexy(AC-).png>
 		SDL_COLORS <1 75 67 255 212 195 245 200 100>
-
-		Elevator
-		name <To Arena>
-		desig <ENTRANCE %s2%>
 	end
 
 
@@ -233,8 +234,8 @@ Content
 	Scene3 <Environs>
 
 	Quest1 <*:MECHA_ARENA_CHALLENGE #30 1 2>
-	Quest2 <*:MECHA_ARENA_CHALLENGE #40 1 2>
-	Quest3 <*:MECHA_ARENA_CHALLENGE #52 1 2>
+	Quest2 <*:MECHA_ARENA_CHALLENGE #42 1 2>
+	Quest3 <*:MECHA_ARENA_CHALLENGE #54 1 2>
 	Quest4 <*:MECHA_ARENA_CHALLENGE #66 1 2>
 
 	sub

@@ -1075,6 +1075,7 @@ Content
 %% .CriminalTransaction	PC has performed some kind of illegal business deal
 %% .BusinessDeal	PC has done some kind of business for/with NPC
 %% .TipOff              PC has provided useful information
+%% .CharityWork		PC has done charity work, presumably without expecting a reward
 
 Content
 	name <You're good, now go fetch>
@@ -1130,10 +1131,35 @@ Content
 		Mass 7
 	end
 
+Content
+	name <Thanks for the Help>
+	requires <*Success1 .CharityWork>
+	special <REUSABLE>
+
+	%% E1 is the character previously helped.
+
+	sub
+		Persona 1
+		.%id%_GoInit <NewChat Say %id%01 CashPrize Reward Threat %threat% 100 100 AddHeroic 1 SetQuestStatus %qid% -1>
+		Msg%id%01 <Thank you so much for the help. Here's a small gift, in appreciation of what you've done... Please take it.>
+		Msg%id%01_1 <>
+		CMsg%id%01_1 <ifNPCSociable Accept>
+		Msg%id%01_2 <I'm not good with words but maybe this will speak better. I'd like to give you this small gift, in thanks for what you've done.>
+		CMsg%id%01_2 <ifNPCShy Accept>
+		Msg%id%01_3 <>
+		CMsg%id%01_3 <ifNPCEasygoing Accept>
+		Msg%id%01_4 <>
+		CMsg%id%01_4 <ifNPCPassionate Accept>
+		Msg%id%01_5 <>
+		CMsg%id%01_5 <ifNPCCheerful Accept>
+		Msg%id%01_6 <Thanks for partially restoring my faith in humanity. Here's a small token of my appreciation.>
+		CMsg%id%01_6 <ifNPCMelancholy Accept>
+	end
+
 
 Content
 	name <How About A Quest?>
-	requires <*Success1 .FinishMission (1:ADVEN|1:MILIT|1:FAITH) ~1:SILKN BRANCHES>
+	requires <*Success1 (.FinishMission|.CharityWork) (1:ADVEN|1:MILIT|1:FAITH) ~1:SILKN BRANCHES>
 	%% The PC has just completed a job for the NPC. The NPC will now suggest that
 	%% the player has what it takes to go on a dangerous quest... if asked about
 	%% it, the NPC will ask the PC to retrieve an item.
@@ -1188,7 +1214,6 @@ Content
 		CPrompt%id%06 <ifItemOK %2% Accept>
 		Prompt%id%07 <I'm afraid that I lost the %name2%...>
 		CPrompt%id%07 <ifItemDestroyed %2% Accept>
-
 	end
 
 Content
@@ -1638,7 +1663,7 @@ Content
 
 Content
 	name <Basic Reward End>
-	requires <*Success1 -.TipOff>
+	requires <*Success1 -.TipOff -.CharityWork>
 	special <REUSABLE>
 	%% This is the basic ending... The PC gets a reward and that's it.
 	%% Afterwards, set the QuestStatus to -1 to indicate a successfully

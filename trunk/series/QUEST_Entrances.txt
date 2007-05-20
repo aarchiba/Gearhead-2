@@ -17,9 +17,6 @@ Content
 	Element3 <Prefab>
 	Scene3 <Building Public Government>
 
-requires <*ENT_Hideout Spinner COMMON COMMON COMMON>
-start <XPV %s1%>
-
 	sub
 		MetaScene 2
 		sub
@@ -33,7 +30,7 @@ start <XPV %s1%>
 			end
 		end
 
-		MetaScene 2
+		MetaScene 3
 		sub
 			room
 			minimap <............1.......##+##>

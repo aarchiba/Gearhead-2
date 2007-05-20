@@ -15,6 +15,11 @@
 %% You may temporarily mark a challenger as *:DEBUG_MECHA_ARENA_CHALLENGE to load it
 %% into the debugging arena.
 
+%% REQUIREMENTS:
+%%  Maquise Spinner:	1 Low	2 Med	1 Hi
+%%  Cayley Rock:	1 Low	1 Med
+%%  Gaos Spinner:	1 Low	2 Med	2 Hi
+
 %%
 %% Low Level Compeditors
 %%
@@ -210,6 +215,7 @@ inv
 	SDL_PORTRAIT <por_m_lightjacket(Y--).png>
 	SDL_COLORS <136 141 101 245 213 160 77 35 101>
 	Skill 42 3
+	Talent 10
 
 	NPC Citizen
 	name <Lehya>
@@ -221,6 +227,76 @@ inv
 	Skill 11 7
 	Skill 29 1
 	Skill 37 1
+end
+
+Content
+	name <PC vs Derrich>
+	requires <*:MECHA_ARENA_CHALLENGE (!Ne|!Lo) L5PAT>
+
+	% E1 is the arena manager
+	% E2 is the arena proper
+	% E3 is the challenger
+	Element3 <Prefab>
+	Scene3 <Building Public !Okay 3>
+	Team3 <Citizens>
+	TeamData3 <Ally Pass>
+
+	Quest1 <*CHALLENGER_SUBQUEST 3>
+
+sub
+	Persona 1
+	Greeting <if= QuestStatus %qid% %id% else %pop%  if= ArenaState %2% NAV_AS_Win else .%id%_GoCheckLoss Goto .%id%_GoArenaWin>
+	*.%id%_GoCheckLoss <*ChallengerStatusReport %3% %2% .%id%_GoNPCDied>
+	.%id%_GoInit <ifNPCOK %3% else .%id%_GoNPCDied NewChat Say %id%01 SetQuestStatus %qid% %id%  NPCSubQMemo %3% %id% %id%02  AddChat %id%01>
+	%% Just in case the NPC who we're supposed to fight has died somehow, just set up a normal fight.
+	*.%id%_GoNPCDied <*YourChallengerDied %2% %qid%>
+	*.%id%_GoArenaWin <*ChallengeArenaWin %3% %2% .%id%_GoConclude>
+	.%id%_GoConclude <ResetArena %2% SetQuestStatus %qid% %id1%>
+	Result%id%01 <NewChat Say %id%03>
+	Msg%id%01 <For the next match, you'll be fighting a construction worker named %name3% . He's been working on the new space platform for Comet Industries. You can find \OPR %3% at \SCENE %s3% .>
+	Msg%id%02 <%name1% sent you to battle %name3% in arena combat; \SPR %3% can be found in \SCENE %s3% .>
+	Msg%id%03 <He tends to prefer brutal close combat attacks. If you can stay at range, you should be able to win.>
+	Prompt%id%01 <What can you tell me about him?>
+
+	Persona 3
+	% V1 = First time chat counter
+	Greeting <if= QuestStatus %qid% %id% else GoNoMatch  if= ArenaState %2% NAV_AS_Battle else GoCheckStatus Goto GoTrashTalk>
+	*GoTrashTalk <*ArenaChallenge GoThemeInfo>
+	*GoThemeInfo <*THEME_EXPO&Enemy NA>
+	GoCheckStatus <if= ArenaState %2% NAV_AS_Ready else GoCheckWin EndChat Say 1>
+	GoCheckWin <if= ArenaState %2% NAV_AS_Win else GoCheckChallenge ifNPCOK %1% else GoManagerDied NewChat Say 2>
+	GoManagerDied <NewChat Say %3% SetQuestStatus %qid% -1 ResetArena %2%>
+	GoCheckChallenge <ResetArena %2% ifG ComTime ArenaRecharge %2% else GoLater if= V1 1 else GoFirstTime NewChat Say 4 AddChat 1 AddChat 2>
+	GoFirstTime <NewChat Say 5 V= 1 1 AddCHat 1 AddChat 2>
+	*GoLater <*ChallengeMeLater>
+	*GoNoMatch <*NiceToMeetYou GoChat>
+	*GoChat <*MISC_CHATTER>
+	GoStartCombat <SetChallengerID %2% %3% SetChallengerHome %2% %s3% MoveNPC %3% %2% PrepArena %2% 0 SetNPCTeam %3% 2>
+	*result1 <*MeetMeAtArena %2% GoStartCombat>
+	*result2 <*RejectChallenge>
+	Msg1 <Hurry up and get your ass to the arena... We're on the clock, here.>
+	Msg2 <It seems like you've earned a promotion... Go talk with %name1% about the pay.>
+	Msg3 <%name1% died. Guess this means we've been laid off.>
+	Msg4 <I'm all finished with my work at the project. You ready to start our match now?>
+	Msg5 <I was wondering when you were going to show. %name1% says you're my next opponent. You wanna start our match now?>
+	Prompt1 <I'm all ready to go.>
+	Prompt2 <Let's do it later.>
+end
+inv
+	NPC Mecha Pilot
+	EquipChar 10000
+	name <Derrich>
+	job <Foreman>
+	job_desig <LABOR>
+	CharDesc Male Sociable Easygoing
+	Age 9
+	StatLine 13 17 14 13 14 12 9 11
+	SDL_Portrait <>
+	SDL_Colors <234 180 88 255 212 195 10 50 100>
+	SetTheme 4
+	SetSpecSkill 3
+	SetFaction 2
+	Talent 8
 end
 
 
@@ -563,7 +639,7 @@ Content
 	% Kolo is a thief on the run from the law, but he just can't help finishing
 	% his arena run.
 	requires <*:MECHA_ARENA_CHALLENGE !Md>
-requires <*:DEBUG_MECHA_ARENA_CHALLENGE>
+
 	% E1 is the arena manager
 	% E2 is the arena proper
 	% E3 is the challenger
@@ -694,10 +770,93 @@ inv
 	Age 7
 	SetTheme 5
 	SetSpecSkill 2
+	Talent 25
 
 	NPC Bounty Hunter
 	EquipChar 25000
 end
+
+Content
+	name <PC vs Rose>
+	requires <*:MECHA_ARENA_CHALLENGE !Md>
+
+	% E1 is the arena manager
+	% E2 is the arena proper
+	% E3 is the challenger
+	Element3 <Prefab>
+	Scene3 <Building Public>
+	Team3 <Citizens>
+	TeamData3 <Ally Pass>
+
+	Quest1 <*CHALLENGER_SUBQUEST 3>
+
+sub
+	Persona 1
+	Greeting <if= QuestStatus %qid% %id% else %pop%  if= ArenaState %2% NAV_AS_Win else .%id%_GoCheckLoss Goto .%id%_GoArenaWin>
+	*.%id%_GoCheckLoss <*ChallengerStatusReport %3% %2% .%id%_GoNPCDied>
+	.%id%_GoInit <ifNPCOK %3% else .%id%_GoNPCDied NewChat Say %id%01 SetQuestStatus %qid% %id%  NPCSubQMemo %3% %id% %id%02  AddChat %id%01>
+	%% Just in case the NPC who we're supposed to fight has died somehow, just set up a normal fight.
+	*.%id%_GoNPCDied <*YourChallengerDied %2% %qid%>
+	*.%id%_GoArenaWin <*ChallengeArenaWin %3% %2% .%id%_GoConclude>
+	.%id%_GoConclude <ResetArena %2% SetQuestStatus %qid% %id1%>
+	Result%id%01 <NewChat Say %id%03>
+	Msg%id%01 <You're scheduled to fight a pro duelist named Rose. She can usually be found at \SCENE %s3% .>
+	Msg%id%02 <%name1% sent you to battle %name3% in arena combat; \SPR %3% can be found in \SCENE %s3% .>
+	Msg%id%03 <Rose is a good pilot, but her vanity sometimes gets the better of her. She's more concerned with looking good than fighting well... of course, she's great at both, so you better be careful.>
+	Prompt%id%01 <Can you tell me about her?>
+
+	Persona 3
+	% V1 = First time chat counter
+	% V2 = Have gotten rep bonus
+	% V3 = Start combat counter
+	Greeting <if= QuestStatus %qid% %id% else GoNoMatch  if= ArenaState %2% NAV_AS_Battle else GoCheckStatus Goto GoTrashTalk>
+	*GoTrashTalk <*ArenaChallenge GoThemeInfo>
+	GoThemeInfo <EndChat Say 8>
+	GoCheckStatus <if= ArenaState %2% NAV_AS_Ready else GoCheckWin EndChat Say 1>
+	GoCheckWin <if= ArenaState %2% NAV_AS_Win else GoCheckChallenge ifNPCOK %1% else GoManagerDied NewChat Say 2>
+	GoManagerDied <NewChat Say %3% SetQuestStatus %qid% -1 ResetArena %2%>
+	GoCheckChallenge <ResetArena %2% ifG ComTime ArenaRecharge %2% else GoLater if= V1 1 else GoFirstTime NewChat Say 4 AddChat 1 AddChat 2>
+	*GoFirstTime <*PCChallengeNPC GoMakeChallenge GoWussOut>
+	GoMakeChallenge <V= 1 1 ifG PCRenown %threat% else GoTooWeak NewChat Say 5 AddCHat 1 AddChat 2>
+	GoTooWeak <NewChat Say 7 AddChat 1 AddChat 2>
+	GoWussOut <NewChat Say 6 if= V2 0 AddEasygoing d10 V= 2 1>
+	*GoLater <*ChallengeMeLater>
+	*GoNoMatch <*NiceToMeetYou GoChat>
+	*GoChat <*MISC_CHATTER>
+	GoStartCombat <SetChallengerID %2% %3% SetChallengerHome %2% %s3% MoveNPC %3% %2% PrepArena %2% 0 SetNPCTeam %3% 2 V+ 3 1>
+	*result1 <*MeetMeAtArena %2% GoStartCombat>
+	*result2 <*RejectChallenge>
+	Msg1 <Please hurry to \SCENE %2% . I'm waiting.>
+	Msg2_1 <It's not fair... How could you win? %name1% will want to see you.>
+	CMsg2_1 <if= V3 1 Accept>
+	Msg2_2 <You must have learned something from our previous fight. %name1% will want to see you.>
+	CMsg2_2 <if# V3 1 Accept>
+	Msg3 <Too bad about %name1%...>
+	Msg4 <It's time for us to battle.>
+	Msg5 <Finally, %name1% sent an opponent who is worthy of my skills. I look forward to facing you. Shall we begin our match?>
+	Msg6 <If you don't mind, I have to get ready for my next arena battle.>
+	Msg7 <There must be some mistake... surely %name1% doesn't think you're worthy of facing me, does \SPR %1% ? Oh well. I must accept this insult gracefully; at least it'll be an easy match. Shall we begin?>
+	Msg8 <Watch closely, and see how gracefully I defeat you. Maybe you can learn something from my technique.>
+	Prompt1 <I'll meet you at the arena.>
+	Prompt2 <Sorry, I need a moment to prepare.>
+end
+inv
+	NPC Arena Pilot
+	EquipChar 10000
+	name <Rose>
+	SDL_Portrait <por_f_rose(JA-).png>
+	SDL_COLORS <250 30 85 255 212 195 103 3 45>
+	statline 15 8 13 13  10 14 10 19
+	CharDesc Female Shy Melancholy
+	Age -1
+	SetTheme 7
+	SetSpecSkill 3
+	Skill 18 10
+	Skill 21 10
+	Skill 36 10
+	Talent 14
+end
+
 
 %%
 %% High Level Compeditors
@@ -1153,7 +1312,6 @@ end
 inv
 	NPC Arena Pilot
 	EquipChar 10000
-
 end
 
 Content

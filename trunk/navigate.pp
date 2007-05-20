@@ -1235,6 +1235,10 @@ var
 
 		{ Check the GoalLevel's subscenes for erroneous exits back to level one. }
 		VerifySubScenes( GoalLevel^.InvCom );
+		{ May 18 2007 - Originally only the InvComs were checked; now I'm checking the subcoms as well, }
+		{ since that's where a lot of entrances are. If anything starts acting strange it's probably a }
+		{ result of this. }
+		VerifySubScenes( GoalLevel^.SubCom );
 
 		{ Finally, save the ID of the goal level. }
 		SetNAtt( Frag^.NA , NAG_QuestInfo , NAS_GoalLevel , GoalLevel^.S );
@@ -1306,7 +1310,10 @@ var
 		{ Look for its entrance. This is gonna tell us where to place the scene }
 		{ in the adventure. }
 		ENtrance := SeekGearByDesig( LList , 'ENTRANCE ' + BStr( Frag^.S ) );
-		if ENtrance = Nil then Entrance := SeekGearByDesig( Adv , 'ENTRANCE ' + BStr( Frag^.S ) );
+		if ENtrance = Nil then begin
+			Entrance := SeekGearByDesig( Adv , 'ENTRANCE ' + BStr( Frag^.S ) );
+			DialogMsg( 'Entrance for ' + GearName( Frag ) + ' found in adventure.' );
+		end;
 		if Entrance <> Nil then begin
 			{ This entrance must itself have a scene where it's to be inserted. }
 			{ Find that scene, then insert this scene in that one. }
