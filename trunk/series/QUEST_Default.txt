@@ -1688,6 +1688,74 @@ Content
 %%	must set the the QuestStatus of the FindMoney component to its id.
 
 Content
+	name <Charity Mecha Tournament>
+	desc <The PC can enter and maybe even win a charity mecha tournament.>
+	requires <*:FindMoney .Charity>
+
+	% E1 is the character who needs the money
+	% E2 is the organizer of the tournament
+	% E3 is the tournament encounter
+	Element2 <Prefab>
+	Scene2 <Building Public Legit>
+	Team2 <Citizens>
+	TeamData2 <Pass>
+
+	Element3 <Prefab>
+	Scene3 <Environs>
+
+	sub
+		Persona 2
+		rumor%id% <%name2% has organized a charity mecha tournament.>
+		% NPCVar %2% 1 = Have won the fight
+		% V1 = Match recharge timer
+		% V2 = Registration counter
+		greeting <if= QuestStatus %qid% %id% else GoGreet if= NPCVar %2% 1 1 else GoCheckStatus NewChat Say 9 SetQuestStatus %qid% -1 History 10>
+		GoCheckStatus <if= ItemVar %3% 11 1 else GoCheckRecharge NewChat Say 7 AddChat 3>
+		GoCheckRecharge <ifG V1 ComTime else GoCheckFirst NewChat Say 6>
+		GoCheckFirst <if= V2 1 else GoRegister NewChat Say 4 AddChat 2>
+		GoRegister <NewChat Say 1 AddChat 1>
+		GoSetCombat <ItemVar= %3% 11 1 V= 1 ComTime V+ 1 86400>
+		*GoGreet <*NiceToMeetYou GoChat>
+		*GoChat <*MISC_CHATTER>
+		result1 <NewChat Say 2 QMemo %qid% 3 V= 2 1 Goto GoSetCombat>
+		result2 <NewChat Say 5 Goto GoSetCombat>
+		result3 <NewChat Say 8>
+		Msg1 <This is the \SCENE RootSceneID Charity Mecha Spectacular. Pilots from across the solar system have come to compete for their favorite charities. Would you like to register?>
+		Msg2 <Very good. There's a match coming up soon. Go to the arena in \SCENE %s3% and do your best.>
+		Msg3 <You joined %name2%'s charity mecha tournament to earn money for %name1%.>
+		Msg4 <Welcome to the \SCENE RootSceneID Charity Mecha Spectacular. Are you ready to fight?>
+		Msg5 <There's another match coming up shortly. I trust you remember where to find the arena.>
+		Msg6 <You lost the match, but you aren't out of the running yet... You can try in a different heat tomorrow.>
+		Msg7 <What are you doing here? You're supposed to be in the arena!>
+		Msg8 <You can find the arena entrance in \SCENE %s3% . It should be pretty obvious.>
+		msg9 <You did it! You've won the \SCENE RootSceneID Charity Mecha Spectacular. I've arranged for the prize money to be sent to %name1%... you must be very proud.>
+		Msg10 <You won the \SCENE RootSceneID Charity Mecha Spectacular.>
+		Prompt1 <I'm here to help %name1%.>
+		Prompt2 <I'm ready.>
+		Prompt3 <Where was that again?>
+
+		% Death check
+		Metascene 2
+		start <if= QuestStatus %qid% %id% else %pop% ifNPCDead %2% else %pop% SetQuestStatus %qid% -2 DeleteItem %3% Goto %pop%>
+	end
+	inv
+		NPC Arena Pilot
+		chardesc Heroic Sociable
+		EquipChar 15000
+
+		STC QUEST-MAPMARKER-STATIONARY
+		name <Charity Arena>
+		%% V11 = Primed for combat
+		update <if# V11 0 else GoHide  SetStat STAT_MetaVisibility 0  ShowEncounter  Goto GoSetOrders>
+		use <ifG StatVal STAT_MetaVisibility -1  Print 1  Goto GoStartCombat>
+		GoStartCombat <V= 11 0  SavePos Dynamic 2 Threat V2 100 .nu1 .nu2 ComposeD Msg1 .Msg1>
+		.nu1 <if= T1 0  Return   if= L1 0  L= 1 1  AddRenown -5>
+		.nu2 <if= T2 0           if= L1 0  L= 1 1  XPV 100  AddRenown 1   NPCVar= %2% 1 1  QMemo %qid% 1  DeleteItem %3%>
+		.msg1 <You have won the charity mecha tournament, and should inform %name2% in \SCENE %s2% .>
+		Msg1 <You enter the arena.>
+	end
+
+Content
 	name <Tycoon Party>
 	desc <If the PC can crash a party of the station's wealthiest residents, maybe he can get funding.>
 	requires <*:FindMoney SPINNER BRANCHES>

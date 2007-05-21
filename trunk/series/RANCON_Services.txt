@@ -1136,4 +1136,38 @@ Content
 		NPC Bartender
 	end
 
+% *PDARENA_MECHANIC_SHOP Content
+%	Every arena needs a mechanic/mecha supplier. This is that person.
+
+Content
+	requires <*PDARENA_MECHANIC_SHOP>
+	content <Required *DECOR_FOR_SHOP %1% Local>
+	element1 <Prefab>
+	team1 <Citizens>
+	teamdata1 <ally pass>
+	sub
+		Persona 1
+		*greeting <*NiceToMeetYou GoShop>
+		*GoShop <*SHOP_MECHA GoBye>
+		*GoBye <*GOODBYE>
+	end
+	inv
+		NPC Mechanic
+		SetFaction 5
+		Skill 21 10
+	end
+
+% *PDARENA_MISC Content
+%	Miscellaneous things for the arena. Mostly shops.
+
+Content
+	requires <*PDARENA_MISC>
+	content <Required *GARAGE_X %1% Local>
+
+Content
+	requires <*PDARENA_MISC>
+	content <Required *RESTAURANT %1% Local>
+
+
+
 

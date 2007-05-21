@@ -57,34 +57,37 @@ Content
 
 		GoOfferFight <NewChat Say 1 AddChat 1 AddChat 2>
 		% Remember, there's a lot of fiddly bits for the big win.
-		GoBigWin <NewChat Say 7 History 8 XPV 100 SetQuestStatus %qid% -1 RandomMecha .mektype 75 Goto GoResetArena>
-		.mektype <PDASS REGEX KETTE BIOCO FEDDE>
+		GoBigWin <NewChat Say 2 History 3 XPV 100 SetQuestStatus %qid% -1 RandomMecha .mektype 100 Goto GoResetArena>
+		.mektype <PDASS COMET HOELL>
 		*GoPreQuest <*NiceToMeetYou GoArenaIntro>
-		GoArenaIntro <NewChat Say 2 AddChat 3 AddChat 4>
+		GoArenaIntro <NewChat Say 4 AddChat 3 AddChat 4>
 
 		result1 <Goto GoChooseBattle>
 		result2 <Goto GoRefuseBattle>
-		result3 <NewChat Say 3 AddChat 5 AddChat 6 Goto GoStartQuest>
-		result4 <NewChat Say 4>
-		result5 <NewChat Say 5 AddChat 1 AddChat 2>
-		result6 <NewChat Say 6 AddChat 1 AddChat 2 AddCheerful -d10>
+		result3 <ifG PCRenown 20 else GoR3NoRenown NewChat Say 8 AddChat 1 AddChat 2  Goto GoStartQuest>
+		GoR3NoRenown <if= PCFac 5 else GoR3NoMember NewChat Say 7 AddChat 5 AddChat 6>
+		GoR3NoMember <NewChat Say 6>
+		result4 <NewChat Say 5>
+		result5 <NewChat Say 8 AddChat 1 AddChat 2 Goto GoStartQuest>
+		result6 <NewChat Say 9>
 
-		Msg1 <Welcome back to the Steel Arena. Are you ready to fight?>
-		Msg2 <Welcome to the Steel Arena. Are you here to fight, or just to watch?>
-		Msg3 <Our arena is on the far side of the rock. It's probably the best arena in all the colonies! We buried a ton of simgravs down there, so it feels just like you're fighting on Earth!>
-		Msg4 <Alright, then. You should be able to see the fight on one of the monitors, somewhere...>
-		Msg5 <It really is! We've got a battle coming up soon. Do you want to take part?>
-		Msg6 <Er... no, no I haven't, but I watch all the mecha tournament shows... Earth pilots rock. So, do you want to fight now?>
-		Msg7 <Since that was your tenth win, you've officially won our big prize! Here's a brand new dueling mecha, straight from Earth!>
-		Msg8 <You were crowned champion of the Steel Arena.>
+		Msg1 <It's good to see you back, \PC . We have another match happening soon. Would you like to take part?>
+		Msg2 <That was your tenth victory.>
+		Msg3 <You were crowned champion of the Valhalla Arena.>
+		Msg4 <This is the Valhalla Arena, the largest authorized dueling venue in the L5 pattern. Pilots from all over meet here to face off in deadly combat.>
+		Msg5 <We usually host five games per day. You can watch the matches from the obervation booth, or catch replays on the local Valhalla channel.>
+		Msg6 <I'm sorry, but you don't currently qualify to fight here. Come back after you've spent a bit more time building your reputation.>
+		Msg7 <Your ranking indicates that you're not yet qualified to fight here, but if you really think you can handle it I could slot you in.>
+		Msg8 <No problem. We have a match starting soon; would you like to get started right away?>
+		Msg9 <If you enter a fight before you're ready, all you end up doing is smash your mecha and ruin your reputation.>
 
-		Prompt1 <I'm ready to go.>
+		Prompt1 <That's what I'm here for.>
 		CPrompt1 <ifChatNPCInPlay ifG PCMeks 0 Accept>
-		Prompt2 <Wait a minute, okay?>
-		Prompt3 <I'm here to fight!>
-		Prompt4 <I think I'll just watch, for now.>
-		Prompt5 <Sounds like fun!>
-		Prompt6 <You've never been to Earth, have you?>
+		Prompt2 <Wait a sec while I get repairs.>
+		Prompt3 <I'd like to register, please.>
+		Prompt4 <What time is the next match?>
+		Prompt5 <Please do that; I want to fight now!>
+		Prompt6 <I guess I should wait, then.>
 
 		MetaScene 1
 		sub
@@ -92,13 +95,13 @@ Content
 			name <Manager's Office>
 			special <SHAREDPALETTE>
 			desig <HOME>
-			minimap <#...#........1......#---#>
+			minimap <.............1......&---&>
 
 			room
 			name <Glory Road>
 			special <SHAREDPALETTE>
 			minimap <######&2&##...##...##...#>
-			sub
+			inv
 				Elevator
 				name <To Arena>
 				desig <ENTRANCE %s2%>

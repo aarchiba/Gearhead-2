@@ -4,6 +4,87 @@
 %% The Key NPC is up to something. The PC may be able to help out or oppose. Or something.
 
 Content
+	name <Charity Orphanage>
+	requires <*:NPCQuest (C:MEDIC|C:FAITH) ~"poor" ~"dystopia">
+
+	% E1 is the NPC offering the quest.
+	Element1 <KEY>
+	% E2 through E4 are orphans living here.
+	Element2 <Prefab>
+	Scene2 <Grab 1>
+	Team2 <Citizens>
+	TeamData2 <ALLY PASS>
+	Element3 <Prefab>
+	Scene3 <Grab 1>
+	Team3 <Citizens>
+	TeamData3 <ALLY PASS>
+	Element4 <Prefab>
+	Scene4 <Grab 1>
+	Team4 <Citizens>
+	TeamData4 <ALLY PASS>
+
+	% Quest1 is the FindMoney task.
+	% Quest2 is the success track.
+	Quest1 <*:FindMoney.Charity 1>
+	Quest2 <*Success1.CharityWork 1>
+
+	sub
+		Persona 1
+		rumor0 <%name1% needs money to help build an orphanage.>
+		greeting <if= QuestStatus %qid% %id% else GoCheckFirst NewChat Say 7 AddChat 6 AddChat 3>
+		*GoCheckFirst <*NiceToMeetYou GoOfferQuest>
+		GoOfferQuest <if= QuestStatus %qid% 0 else GoChat NewChat Say 1 AddChat 1 AddChat 2 AddChat 3 QMemo %qid% 3 SetQuestStatus %qid% %id% SetQuestStatus %qid1% %id1%>
+		*GoChat <*MISC_CHATTER>
+		result1 <NewChat Say 2>
+		result2 <NewChat Say 4 SetQuestStatus %qid% -2 SetQuestStatus %qid1% -2>
+		result3 <NewChat Say 5 AddChat 4 AddChat 5>
+		result4 <Cash+ -5000000 AddHeroic 2 SetQuestStatus %qid1% -2 Goto .%id2%_GoInit>
+		result5 <NewChat Say 6>
+		result6 <Goto .%id2%_GoInit>
+		Msg1 <This city desperately needs a new orphanage. We are caring for many children here at \SCENE %s1% , but they lack adequate housing and support...>
+		Msg2 <Could you do that? Any help would be greatly appreciated.>
+		Msg3 <%name1% in \SCENE %s1% needs money to build a new orphanage.>
+		Msg4 <It's a sad day for the world when we cast off our own children, and nobody cares...>
+		Msg5 <Building a new orphanage isn't cheap... it would cost at least five million credits. Are you certain you're willing to do that?>
+		Msg6 <Please do your best.>
+		Msg7 <There are so many needy, but I fear we don't yet have the resources to help them all.>
+		Prompt1 <I could help you find the money.>
+		Prompt2 <I don't care about your stinky orphans.>
+		Prompt3 <Why don't I just buy you an orphanage myself?>
+		CPrompt3 <ifG PC$ 4999999 Accept>
+		Prompt4 <Sure. I'm good for it. [give $5M]>
+		Prompt5 <I'll see if I can find anything else first.>
+		Prompt6 <I've found a sponsor for your orphanage.>
+		CPrompt6 <if= QuestStatus %qid1% -1 Accept>
+
+		% Death check
+		Metascene 1
+		start <if= QuestStatus %qid% %id% else %pop% ifNPCDead %1% else %pop% SetQuestStatus %qid% -2 Goto %pop%>
+
+		Persona 2
+		*Greeting <*NiceToMeetYou GoChat>
+		*GoChat <*MISC_CHATTER>
+
+		Persona 3
+		*Greeting <*NiceToMeetYou GoChat>
+		*GoChat <*MISC_CHATTER>
+
+		Persona 4
+		*Greeting <*NiceToMeetYou GoChat>
+		*GoChat <*MISC_CHATTER>
+	end
+	inv
+		NPC Student
+		Age -4
+
+		NPC Student
+		Age -3
+
+		NPC Student
+		Age -2
+	end
+
+Content
 	name <Infectious Outbreak>
 	requires <*:NPCQuest C:MEDIC ~"resort">
 	% There's a disease outbreak. In order to fight the disease, it's nessecary to
@@ -24,7 +105,7 @@ Content
 	sub
 		Persona 1
 		rumor0 <%name1% has been fighting the outbreak of a weird disease.>
-		greeting <if= QuestStatus %qid% %id% else GoCheckFirst if= NPCVar %2% 1 1 else GoCheckDeath NewChat Say 8 AddChat 4>
+		greeting <if= QuestStatus %qid% %id% else GoCheckFirst if# NPCVar %2% 1 0 else GoCheckDeath NewChat Say 8 AddChat 4>
 		GoCheckDeath <ifNPCDead %2% else GoCheckProgress NewChat Say 7 SetQuestStatus %qid% -2 XPV 100>
 		GoCheckProgress <NewChat Say 6>
 		GoCheckFirst <if= QuestStatus %qid% 0 else GoChat NewChat Say 1 AddChat 1 AddChat 2>
@@ -33,7 +114,7 @@ Content
 		result2 <NewChat Say 4 AddChat 3>
 		result3 <NewChat Say 5 QMemo %qid% 3 SetQuestStatus %qid% %id%>
 		result4 <Goto .%id1%_GoInit>
-		Msg1 <There's been an outbreak of malboro syndrome. You are advised to seek immediate medical attention if you suffer from confusion, blindness, muteness, fits of rage, or bad breath.>
+		Msg1 <There's been an outbreak of malboro syndrome. You are advised to seek immediate medical attention if you suffer from confusion, blindness, muteness, fits of rage, or halitosis.>
 		Msg2 <It's believed that the virus was brought here by a trucker named %name2%; unfortunately \SPR %2% 's either left town or gone into hiding. if \SPR %2% could be examined here, it would help us to identify the strain of the virus.>
 		Msg3 <Malboro syndrome was brought to \SCENE RootSceneID by a trucker named %name2%. %name1% in \SCENE %s1% wants to examine \OPR %2% to identify the strain of the virus.>
 		Msg4 <Please do. The virus is highly contagious... Also, if you happen to meet a trucker named %name2%, please come back to let me know.>
@@ -58,7 +139,7 @@ Content
 		GoCheckFirst <if= QuestStatus %qid% %id% else GoChat  ifChatNPCSurrendered else GoArgue EndChat Say 2 Goto GoSurrender>
 		GoArgue <if= V1 1 else GoFirstTime NewChat Say 10 AddChat 3 AddChat 4>
 		GoFirstTime <NewChat Say 5 AddChat 1 AddChat 2 V= 1 1>
-		GoSurrender <Print 3 QMemo %qid% 4 MoveAndPacifyNPC %2% %s1% UnSurrender %2% XPV 100>
+		GoSurrender <Print 3 QMemo %qid% 4 MoveAndPacifyNPC %2% %s1% UnSurrender %2% XPV 100 NPCVar= %2% 1 1>
 		GoAttack <SoloAttack %2%>
 		*GoChat <*MISC_CHATTER>
 		result1 <NewChat Say 6 AddCHat 3 AddChat 4 AddCheerful -d8>
@@ -98,7 +179,6 @@ Content
 
 		MetaScene 2
 		Surrender%2% <if= QuestStatus %qid% %id% ForceChat %2%>
-
 	end
 	inv
 		NPC Trucker
