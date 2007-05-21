@@ -69,6 +69,20 @@ BM_SilverFortress
 roguechar <F>
 
 Building
+name <Arena>
+requires <*ARENA>
+Altitude 2
+BM_Arena
+roguechar <A>
+
+Building
+name <Park>
+requires <*PARK>
+Altitude 1
+BM_Park
+roguechar <%>
+
+Building
 name <Building>
 requires <*BUILDING Short>
 Altitude 1

@@ -547,14 +547,22 @@ const
 		glDisable( GL_Texture_2D );
 	end;
 
+	Procedure DrawPark( Tex: Integer );
+		{ Draw a park entrance. This is a forest with a border. }
+	begin
+		DrawWideBox( Tex );
+		DrawForest( 4 , 5 , 5 );
+	end;
 const
-	NumBuildingStyles = 18;
+	NumBuildingStyles = 20;
 
 	LEVEL_MCDBOX = 1;
 	LEVEL_WIDEBOX = 2;
 	LEVEL_NARROWBOX = 3;
 	LEVEL_PYRAMID = 4;
+	LEVEL_FOREST = 5;
 
+	CAP_NONE = 0;
 	CAP_WIDEFLAT = 1;
 	CAP_NARROWFLAT = 2;
 	CAP_WIDEPOINTY = 3;
@@ -579,8 +587,9 @@ const
 		(LEVEL_WIDEBOX,LEVEL_WIDEBOX,LEVEL_WIDEBOX,LEVEL_WIDEBOX), 	{TVeryLowBuilding 1}
 		(LEVEL_WIDEBOX,LEVEL_WIDEBOX,LEVEL_WIDEBOX,LEVEL_WIDEBOX), 		{TVeryLowBuilding 2}
 		(LEVEL_NARROWBOX,LEVEL_NARROWBOX,LEVEL_NARROWBOX,LEVEL_NARROWBOX), 	{TVeryLowBuilding 3}
-		(LEVEL_WIDEBOX,LEVEL_WIDEBOX,LEVEL_WIDEBOX,LEVEL_WIDEBOX) 	{TVeryLowBuilding 4}
-
+		(LEVEL_WIDEBOX,LEVEL_WIDEBOX,LEVEL_WIDEBOX,LEVEL_WIDEBOX), 	{TVeryLowBuilding 4}
+		(LEVEL_WIDEBOX,LEVEL_PYRAMID,LEVEL_NARROWBOX,LEVEL_NARROWBOX),	{ Arena }
+		(LEVEL_FOREST,LEVEL_FOREST,LEVEL_FOREST,LEVEL_FOREST)		{ Park }
 	);
 	Level_Texture: Array [0..NumBuildingStyles,1..4] of Integer = (
 		(1,2,2,2),
@@ -588,7 +597,7 @@ const
 		(6,7,7,7),(6,7,7,7),(6,7,7,7),(6,7,7,7),
 		(9,21,8,8),(1,11,2,11),(12,13,13,13),(14,15,15,15),
 		(17,17,17,17),(19,20,20,20),(6,7,7,7),(6,7,7,7),
-		(6,7,7,7),(6,7,7,7)
+		(6,7,7,7),(6,7,7,7),(22,20,20,20),(24,24,24,24)
 	);
 	Cap_Type: Array [0..NumBuildingStyles] of Integer = (
 		CAP_WIDEFLAT,
@@ -596,7 +605,7 @@ const
 		CAP_WIDEFLAT, CAP_WIDEFLAT, CAP_NARROWFLAT, CAP_NARROWFLAT,
 		CAP_NARROWFLAT, CAP_NARROWFLAT, CAP_WIDEFLAT, CAP_NARROWFLAT,
 		CAP_NARROWPOINTY,CAP_WIDEPOINTY, CAP_WIDEFLAT, CAP_WIDEFLAT,
-		CAP_NARROWFLAT, CAP_WIDEFLAT
+		CAP_NARROWFLAT, CAP_WIDEFLAT, CAP_NARROWFLAT, CAP_None
 	);
 	Cap_Texture: Array [0..NumBuildingStyles] of Integer = (
 		3,
@@ -604,7 +613,7 @@ const
 		4, 5, 4, 4,
 		10, 3, 5, 16,
 		18, 18, 4, 5,
-		4, 4
+		4, 4, 23, 3
 	);
 var
 	T: Integer;
@@ -620,6 +629,7 @@ begin
 			LEVEL_WIDEBOX:	DrawWideBox( Level_Texture[ Style , t ] );
 			LEVEL_NARROWBOX:	DrawNarrowBox( Level_Texture[ Style , t ] );
 			LEVEL_PYRAMID:	DrawPyramid( Level_Texture[ Style , t ] );
+			LEVEL_FOREST:	DrawPark( Level_Texture[ Style , t ] );
 		end;
 		glTranslated( 0 , 0.5 , 0 );
 	end;

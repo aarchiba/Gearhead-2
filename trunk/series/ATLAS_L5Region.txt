@@ -652,7 +652,7 @@ sub
 	name <Athera Garden>
 	type <public park legit meeting>
 	context <gov>
-	entrance <*Building>
+	entrance <*PARK>
 	special <SHOWALL>
 	SetFaction 1
 	WildMap
@@ -2931,7 +2931,7 @@ sub
 		Scene
 		name <Valhalla Hall>
 		type <building arenasite garage legit public meeting>
-		entrance <*Building>
+		entrance <*ARENA>
 		special <ADDEXIT>
 		SetFaction 5
 		ClubMap
@@ -2969,7 +2969,7 @@ sub
 		name <Yubon World>
 		type <amusement park legit public meeting>
 		special <SHOWALL>
-		entrance <*Building>
+		entrance <*PARK>
 		WildMap
 		GAPFILL <-4 -9 -4 -4>
 		PalaceParkTiles
@@ -3030,6 +3030,7 @@ sub
 			Msg1 <You enter the Tower of Delights.>
 
 			NeededCells 3
+			Content1 <Some 1 100 Sub *RESTAURANT            na>
 			Content3 <Fill       Sub *VIDEOARCADE           na>
 
 			sub
