@@ -2820,12 +2820,11 @@ sub
 	start <Print 1>
 	Msg1 <You enter Gaos Spaceport.>
 
-	NeededCells 5
+	NeededCells 4
 	Content1 <Some 1 100 Sub *SHUTTLESERVICE  na>
-	Content2 <Some 1 100 Sub *RESTAURANT      na>
-	Content3 <Some 1  55 Sub *SHOP_RANDOM     na>
+	Content2 <Some 1  90 Sub *RESTAURANT      na>
 	Content4 <Some 1  25 Sub *GOV_POLICE      na>
-	Content5 <Some 1  90 Sub *MECHANIC_SHOP   na>
+	Content5 <Some 1 100 Sub *MECHANIC_SHOP   na>
 	Content6 <Fill Sub *GARAGE_X>
 
 	sub
@@ -2845,15 +2844,15 @@ sub
 		desig <EntranceGrid>
 		Content <Some 7 60 Here *URBAN_X>
 		Content2 <Some 1 100 Here *ANTI_ATTACK_SECURITY 2>
-		sub
-			room
-			minimap <......###..###..#5#......>
-			inv
-				Elevator
-				MiniMapComponent 5
-				name <To Upper Level>
-				destination <Gaos Spinner Upper Level>
-			end
+
+		room
+		minimap <......###..###..#5#......>
+		special <NOGO>
+		inv
+			Elevator
+			MiniMapComponent 5
+			name <To Upper Level>
+			destination <Gaos Spinner Upper Level>
 		end
 
 		room
@@ -2966,6 +2965,75 @@ sub
 		end
 
 		Scene
+		name <Prince Hotel>
+		type <building legit public hotel>
+		entrance <*BUILDING tall>
+		special <ADDEXIT>
+		MallMap
+		PalaceParkTiles
+		MapWidth 42
+		MapHeight 17
+
+		start <Print 1>
+		Msg1 <You enter the Prince Hotel.>
+
+		NeededCells 3
+		Content1 <Fill       Sub *HOTEL_X           na>
+
+		sub
+			team 1
+
+			team 2
+			name <Citizens>
+			SetAlly 1
+			Passive
+
+			team 3
+			name <Guards>
+			SetAlly 2
+
+			room
+			name <Foyer>
+			desig <EntranceGrid>
+			Content <Some 3 45 Here *URBAN_X>
+			Content2 <Some 1 100 Here *ANTI_ATTACK_SECURITY 2>
+
+			room
+			MFX 2
+			MFY 2
+			Width 5
+			Height 5
+			name <Reception Area>
+			minimap <...#..1.#.---#...........>
+			inv
+				NPC Shopkeeper
+				name <Parshall>
+				job <Receptionist>
+				Age 14
+				chardesc male Sociable Melancholy Easygoing Lawful
+				MiniMapComponent 1
+				SetTeam 2
+			end
+
+			Persona
+			name <Parshall Persona>
+			greeting <if= V1 1 else GoFirstTime NewChat Say 1>
+			GoFirstTime <NewChat Say 2 AddChat 1>
+			result1 <NewChat Say 3 V= 1 1>
+			Msg1 <Hello, Gaos Prince Hotel.>
+			Msg1_1 <Hello, Gaos Prince Hotel. I guess you still don't want anything.>
+			Msg1_2 <Hello, Gaos Prince Hotel. I don't know where your arch-enemy is but I'm sure he's perfectly dreadful.>
+			Msg1_3 <Hello, Gaos Prince Hotel. Please excuse me; we may have some customers who actually want to stay here.>
+			Msg1_4 <Hello, Gaos Prince Hotel. May I help... oh, it's you.>
+			Msg1_5 <Hello, Gaos Prince Hotel. Why aren't you out cleaning sewers now?>
+			Msg1_6 <Hello, Gaos Prince Hotel. Please check your weapons at the front desk before attempting to open the minibar.>
+			Msg1_7 <Hello, Gaos Prince Hotel. No, I don't have any jobs for a mecha pilot.>
+			Msg2 <Hello, welcome to the Gaos Prince Hotel. Would you like to reserve a suite for this evening?>
+			Msg3 <That's what I heard about cavaliers... they all sleep in the driver's seat of their mecha.>
+			Prompt1 <No thanks, I never seem to need one.>
+		end
+
+		Scene
 		name <Yubon World>
 		type <amusement park legit public meeting>
 		special <SHOWALL>
@@ -3057,7 +3125,6 @@ sub
 					Destination -1
 				end
 			end
-
 		end
 
 
@@ -3159,7 +3226,7 @@ sub
 	end
 
 	Scene
-	name <Gaos Service Center>
+	name <Holiday Service Center>
 	type <building garage public sleazy>
 	entrance <*Garage>
 	special <ADDEXIT>
@@ -3169,7 +3236,7 @@ sub
 	MapHeight 15
 
 	start <Print 1>
-	Msg1 <You enter Gaos Service Center.>
+	Msg1 <You enter Holiday Service Center.>
 
 	NeededCells 3
 	Content1 <Some 1 100 Sub *MECHANIC_SHOP>

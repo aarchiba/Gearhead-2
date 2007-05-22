@@ -1,3 +1,10 @@
+***
+Important Note- The Windows version appears to have troubles if you are
+running BitTorrent or iTunes at startup. It appears to run fine if you
+start these programs after GH2 finishes loading. Thanks to Erathoniel
+for the info.
+***
+
 Welcome to GearHead-2. Although this game is in an early stage of development,
 comments and bug reports are welcome. Take a look around at what's being done
 and let me know if you think I'm on the right track.

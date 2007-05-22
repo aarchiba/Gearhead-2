@@ -766,6 +766,14 @@ torso
 	end
 end
 
+Door
+desig <ONESHOTDOOR>
+% A one shot door gives you a single chance to pick its lock. If you fail,
+% you must raise your CodeBreaking skill before you will be able to try again.
+CLUE32 <if# StatVal STAT_Lock 0 else GoNotLocked ifCodeBreaking StatVal STAT_Lock else GoNoUnlock Mental Print 3 SetStat STAT_Lock 0>
+Msg4 <This lock is beyond your ability to pick.>
+
+
 % **********************
 % ***   METASCENES   ***
 % **********************

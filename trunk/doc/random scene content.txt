@@ -23,6 +23,9 @@ in. "TEAM[n]" gives the name of the team this element should be assigned to. Thi
 works if the existing teams are named, and a suitable team can be found. "TEAMDATA[n]"
 is a standard team description string to be used if the named team cannot be found.
 
+A door prototype may be included as a subcom, just as if the random scene content
+were a map feature.
+
 STANDARD TEAM NAMES
 
 Citizens, Guards

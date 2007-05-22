@@ -2206,7 +2206,7 @@ Procedure InsertContentFragment( GB: GameBoardPtr; Adv,C: GearPtr );
 	{ - Move the requested gears to the scene, assign teams and homes. }
 	{   Don't move gears which have a PLACE string assigned; these have already been moved. }
 var
-	ZONE,E,P,P2,Team: GearPtr;
+	ZONE,E,P,P2,Team,Door: GearPtr;
 	T: Integer;
 	Loc: Point;
 	MiniMap,Z_Special,TeamData: String;
@@ -2221,6 +2221,13 @@ begin
 	if Zone <> Nil then begin
 		Z_Special := SAttValue( ZONE^.SA , 'SPECIAL' ) + ' ' + SAttValue( C^.SA , 'ZONE_SPECIAL' );
 		SetSAtt( Zone^.SA , 'SPECIAL <' + Z_Special + '>' );
+	end;
+
+	{ Copy over the door prototype, if present. }
+	Door := SeekCurrentLevelGear( C^.SubCom , GG_MetaTerrain , GS_MetaDoor );
+	if Door <> Nil then begin
+		DelinkGear( C^.SubCom , Door );
+		InsertSubCom( Zone , Door );
 	end;
 
 	if GearName( GB^.Scene ) = 'DEBUG' then begin

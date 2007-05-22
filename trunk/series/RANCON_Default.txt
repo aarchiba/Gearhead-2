@@ -123,54 +123,6 @@ Content
 	end
 
 
-%% *HABITATION_X Content
-%%	Filler rooms for apartment buildings, space stations, and so on.
-%%	Minimaps open to the bottom.
-
-Content
-	%% No Room
-	requires <*HABITATION_X>
-	minimap <#########################>
-
-Content
-	%% Empty Room
-	requires <*HABITATION_X>
-	minimap <....................##+##>
-	content <Optional *URBAN_X na Local>
-
-Content
-	requires <*HABITATION_X ~Legit ~Public>
-	minimap <#################1####+##>
-	element1 <Prefab>
-	ZONE_SPECIAL <NoGO>
-	inv
-		Melee 2
-		mass 5
-		name <Mop>
-		desc <A cleaning instrument.>
-	end
-
-Content
-	%% Basic room.
-	requires <*HABITATION_X ~Static ~Public ~Legit>
-	minimap <....................##+##>
-	content <Required *URBAN_X na Local>
-
-Content
-	%% Room with something worth stealing.
-	requires <*HABITATION_X ~Legit>
-	minimap <..1.................##=##>
-	element1 <Prefab>
-	ZONE_SPECIAL <NoGO>
-	inv
-		Treasure 10000
-		mass 5
-		name <Antique Video Player>
-		desc <This entertainment unit is long obsolete, but might have some value for collectors.>
-		Stolen
-	end
-
-
 
 %% *ANTI_ATTACK_SECURITY Content
 %%   A standard script to prevent the PC from firing weapons in public places.
@@ -201,89 +153,6 @@ Content
 	Msg%id%02 <ALERT: You are not permitted to fire weapons here.>
 
 
-%% *CLUB_X Content
-%%   Insert some content into this coffee shop, dance bar, or party.
-Content
-	requires <*CLUB_X>
-	minimap <....................##.##>
-	content <Optional *URBAN_X - Local>
-
-Content
-	requires <*CLUB_X>
-	minimap <....................##+##>
-	content <Optional *URBAN_X - Local>
-
-Content
-	requires <*CLUB_X ~Sleazy>
-	minimap <....................##=##>
-	ZONE_SPECIAL <NoGO>
-	content <Optional *URBAN_X - Local>
-
-Content
-	requires <*CLUB_X Sleazy ~Private>
-	minimap <....................##?##>
-	ZONE_SPECIAL <NoGO>
-	content <Optional *URBAN_X - Local>
-
-Content
-	requires <*CLUB_X>
-	minimap <######...##...##...##...#>
-	content <Optional *URBAN_X - Local>
-
-Content
-	requires <*CLUB_X Static>
-	content <Required *BAR_SERVICE - Local>
-
-Content
-	requires <*CLUB_X Dynamic>
-	minimap <######...##...##.1.##...#>
-	element1 <Character Bartender>
-	sub
-		Persona 1
-		*greeting <*HowAreYou GoShop>
-		*GoShop <*SERVICE_BARTENDER GoBye>
-		*GoBye <*GOODBYE>
-	end
-
-
-Content
-	requires <*CLUB_X ~Sleazy>
-	minimap <#################.####+##>
-
-Content
-	requires <*CLUB_X ~Legit ~Public>
-	minimap <#################1####+##>
-	element1 <Prefab>
-	ZONE_SPECIAL <NoGO>
-	inv
-		Melee 2
-		mass 5
-		name <Mop>
-		desc <A cleaning instrument.>
-	end
-
-Content
-	requires <*CLUB_X ~Private Dynamic>
-	minimap <#.2.##...###?####1####+##>
-	get%2% <if= L%id%01 0 L= %id%01 1 AddLawful -5 SetItemStolen %1%>
-	ZONE_SPECIAL <NoGO>
-	element1 <Prefab>
-	element2 <Prefab>
-	inv
-		Melee 2
-		mass 5
-		name <Mop>
-		desc <A cleaning instrument.>
-
-		Food 5
-		Name <Imperialis Classico>
-		% Status Effect (1), Duration Step5, Stoned(4), Skill10 to resist
-		Effect <10 STATUS 4  CanResist>
-		FoodXValue 10
-		FoodMorale 10
-		Fudge 300000
-		desc <A vintage wine from the Age of Superpowers. It is extremely rare and extremely expensive.>
-	end
 
 
 %% *NPC_GUARD Content
@@ -424,6 +293,21 @@ Content
 Content
 	requires <*URBAN_X ~Public Legit>
 	Content <Required *NPC_GUARD - Local>
+
+Content
+	requires <*URBAN_X Public Resort>
+	element1 <Prefab>
+	team1 <citizens>
+	teamdata1 <pass>
+	sub
+		Persona 1
+		*greeting <*NiceToMeetYou GoMiscTalk>
+		*GoMiscTalk <*MISC_CHATTER>
+	end
+	inv
+		NPC Citizen
+		job <Tourist>
+	end
 
 Content
 	requires <*URBAN_X Club Dynamic>
@@ -711,75 +595,6 @@ Content
 	end
 
 
-%% *GARAGE_X Content
-%%   Things you would find in a garage.
-Content
-	requires <*GARAGE_X>
-	Content <Required *MECHANIC_SHOP - Local>
-
-Content
-	requires <*GARAGE_X>
-	minimap <......1.2...3.......##=##>
-	ZONE_SPECIAL <NoGO>
-	element1 <Prefab>
-	element2 <Prefab>
-	element3 <Prefab>
-	get%1% <if= L%id%01 0 L= %id%01 1 AddLawful -3>
-	get%2% <if= L%id%01 0 L= %id%01 1 AddLawful -3>
-	get%3% <if= L%id%01 0 L= %id%01 1 AddLawful -3>
-	inv
-		MechaRepairFuel 1500
-		name <Mecha Parts>
-		mass 20
-
-		MechaRepairFuel 1500
-		name <Mecha Parts>
-		mass 20
-
-		MechaRepairFuel 1500
-		name <Mecha Parts>
-		mass 20
-	end
-
-
-%% *HOSPITAL_X Content
-%%   Things you would find in a hospital... A clinic will usually have one
-%%   mandatory doctor content and multiple random HOSPITAL_X contents.
-%%   These could be additional doctors, or other things.
-Content
-	requires <*HOSPITAL_X>
-	Content <Required *DOCTOR - Local>
-
-Content
-	requires <*HOSPITAL_X>
-	minimap <.1.2...3............##=##>
-	ZONE_SPECIAL <NoGO>
-	element1 <Prefab>
-	element2 <Prefab>
-	element3 <Prefab>
-	get%1% <if= L%id%01 0 L= %id%01 1 AddLawful -3>
-	get%2% <if= L%id%01 0 L= %id%01 1 AddLawful -3>
-	get%3% <if= L%id%01 0 L= %id%01 1 AddLawful -3>
-	inv
-		Food 0
-		Name <Quick Fix Pill>
-		FoodQuantity 5
-		Effect <2 10 20 0>
-		FoodXValue 1000
-		desc <This medicine promotes rapid cellular regeneration, and can instantly heal many injuries.>
-
-		Food 0
-		Name <Regen Boost Pill>
-		FoodQuantity 5
-		Effect <1 12 3 25>
-		FoodXValue 1500
-		desc <This medicine increases the body's ability to repair itself. While it is in effect injuries will be healed much faster than normal.>
-
-		FirstAidFuel 120
-		Name <Medicated Bandages>
-		desc <Premedicated sterile bandages.>
-		Mass 1
-	end
 
 
 
