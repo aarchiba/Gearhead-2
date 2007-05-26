@@ -1,0 +1,140 @@
+Plot
+name <Bounty Hunt #1>
+
+%% This is a fairly easy bounty hunting job. The target should be captured
+%% alive- no disintegrations.
+
+% E1 is the character offering the mission.
+% E2 is the character who knows where the target is.
+% E3 is where to place the encounter.
+% E4 is the encounter.
+% E5 is the target character.
+Element1 <Character Bounty Hunter>
+Element2 <Character !Near 1 Criminal>
+Element3 <Scene Urban !Near 1>
+Element4 <Prefab>
+Place4 <3>
+Element5 <Prefab>
+
+%% P1 = Timer/Initialization Indicator
+%% P2 = Have been given mission
+%%	= 1 Mission has started
+%%	= 2 Have received clue
+%%	= 3 Target has surrendered
+%%	= 4 Mission has timed out
+
+% Initialization Tasks:
+% - Move the fugitive (E5) to the hideout (E4)
+% - Set the mission timer
+% - Scale the fugitive's skills for the PC's level
+update <ifNPCOK E1 else GoDelete if= P1 0 else GoCheckTime P= 1 ComTime P+ 1 86400 MoveNPC E5 E4 NPCLevel E5 PCRenown>
+Start <ifNPCOK E1 else GoDelete ifG V1 0 Goto GoCheckTime>
+GoCheckTime <ifG ComTime V1  if= P2 0 else GoSetEnd  AdvancePlot 0>
+GoDelete <DeleteNPC E5 AdvancePlot 0>
+CleanUp <if= P2 0 else GoSetEnd  Goto GoDelete>
+%% If the time expires, but the PC is working on the plot, send him a message
+%% to say that everything's over.
+GoSetEnd <if= P2 1  P= 2 4 email 1 UpdateProps>
+
+Msg1 <\ELEMENT 1 @ \SCENE EScene 1 :// Come see me about the mission.>
+
+
+sub
+	Persona 1
+	rumor <!1 is offering a bounty for a wanted thief.>
+	% V1 = Cash reward offered/Initialization counter
+	% V2 = Dead reward; smaller than the live award
+	greeting <if= P2 4 else GoCheckWin  AddReact -d6  Goto GoMissionFailure>
+	*GoMissionFailure <*TargetEscaped GoEnd na>
+	GoCheckWin <if= P2 3 else GoCheckDeath  CashPrize V1  AddRenown 1 AddReact d4 Goto GoWinMission>
+	*GoWinMission <*HaveCapturedTarget GoEnd na>
+	GoCheckDeath <ifNPCDead E5 else GoCheckRemind  CashPrize V2  AddRenown 1 Goto GoDeadMission>
+	GoDeadMission <*HaveKilledTarget GoEnd na>
+	GoCheckRemind <ifG V1 0 else GoFirstTime NewChat Say 6 AddChat 1>
+	*GoFirstTime <*AutoMissionTest&Chara GoMissionBriefing GoRejectMission GoCheckSkill na na>
+	*GoCheckSkill <*GenericMissionTest&Chara  GoMissionBriefing GoEnd GoRejectMission na na>
+	*GoRejectMission <*RejectMission GoEnd>
+	GoEnd <DeleteNPC E5 AdvancePlot 0>
+	GoMissionBriefing <V= 1 Reward Threat PCRenown 100 250  V= 2 Reward Threat PCRenown 100 75   NewChat Say 1  AddChat 1 AddChat 2 AddChat 3 P= 2 1 Memo 2 P+ 1 20000>
+	Result1 <ifNPCOK E2 else GoR1Fail NewChat Say 3 Memo 4>
+	GoR1Fail <NewChat Say 7 AddChat 8>
+	Result2 <Goto GoRejectMission>
+	Result3 <NewChat Say 5 AddChat 1 AddChat 2>
+
+	Msg1 <I need you to locate and aprehend a thief named \PERSONA E5 . Bring \OPR E5 in alive and you'll earn $ \VAL V1 .>
+	Msg2 <\PERSONA E1 hired you to capture \PERSONA E5 , a wanted thief.>
+	Msg3 <I've heard that \PERSONA E2 has dealt with \OPR E5 in the past. You might want to ask \OPR E2 some questions.>
+	Msg4 <\PERSONA E1 hired you to capture \PERSONA E5 , a wanted thief. \PERSONA E2 may know where \SPR E5 is.>
+	Msg5 <In that case you'll only earn $ \VAL V2 . I suggest you try hard to take \PERSONA E5 alive, if at all possible.>
+	Msg6 <Are you hard at work bringing in \PERSONA E5 ?>
+	Msg7 <One of my contacts has told me that \PERSONA E5 's hideout is located in \SCENE E3 . You should go see if you can find it.>
+	Msg8 <\PERSONA E1 hired you to capture \PERSONA E5 , a wanted thief. Reports indicate that \PPR E5 hideout can be found in \SCENE E3 .>
+
+	Prompt1 <Where can I find \OPR E5 ?>
+	Prompt1_1 <Do you know where \SPR E5 is?>
+	Prompt1_2 <How can I find this \PERSONA E5 ?>
+	Prompt2 <This doesn't sound like my kind of job.>
+	Prompt2_1 <I don't think I want to do this.>
+	Prompt2_2 <You'll need to find someone else for this job.>
+	Prompt3 <What if I can't bring him alive?>
+	Prompt3_1 <What if I accidentally kill \OPR E5 ?>
+	Prompt3_2 <What if there's a terrible accident?>
+
+	Persona 2
+	greeting <if= P2 1 else GoChat Goto GoGetInfo>
+	*GoChat <*IAmBusy>
+	*GoGetInfo <*LookingForNPC E5 GoSuccess GoFailure>
+	GoSuccess <NewChat Say 1 P= 2 2 Memo 2>
+	*GoFailure <*BrushOff&Questioning>
+	Msg1 <I'll tell you- \PERSONA E5 used to have a hideout in \SCENE E3 . If you're looking for \OPR E5 , that's the first place I'd check.>
+	Msg2 <\PERSONA E2 told you that \PERSONA E5 's hideout can be found in \SCENE E3 .>
+
+	Persona 5
+	Special <UNLISTED>
+	greeting <ifChatNPCSurrendered else GoFirstTime EndChat Say 1 Goto GoSurrender>
+	*GoFirstTime <*IntruderGreeting&Arrest GoBargain>
+	*GoBargain <*YoureUnderArrest PCRenown GoWillSurrender GoWillResist>
+	GoWillSurrender <EndChat Say 1 Goto GoSurrender>
+	GoWillResist <>
+	GoSurrender <P= 2 3 DeleteNPC E5>
+	Msg1 <Alright, I give up... You can take me to jail.>
+
+	MetaScene 4
+	special <NOEXIT>
+	BoxMap
+	MapWidth 12
+	MapHeight 17
+	content <Fill Sub *HIDEOUT_X na>
+	Start <Print 1 if= L1 0 L= 1 1 ForceChat E5 Compose Surrender E5 .surrender>
+	.surrender <ForceChat E5>
+	Msg1 <You enter the hideout.>
+	sub
+		Team 1
+
+		Team 2
+		name <Citizens>
+
+		Team 2
+		name <Guards>
+		SetAlly 2
+
+		Room
+		minimap <......###..#1#...........>
+		sub
+			Elevator
+			Destination -1
+			MiniMapComponent 1
+		end
+	end
+
+end
+inv
+	STC ENCOUNTER-DUEL
+	name <Hideout>
+	update <if= P2 2 else GoHide  SetStat STAT_MetaVisibility 0  Goto GoSetOrders>
+	ENCOUNTER_Hostile
+
+	NPC Thief
+	EquipChar 15000
+end
+
