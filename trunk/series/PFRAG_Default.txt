@@ -12,7 +12,28 @@
 
 	Persona
 	requires <*YoureUnderArrest>
-	START <>
+	START <NewChat Say %id%01 AddChat %id%01 AddChat %id%02>
+	result%id%01 <ifIntimidation SkillTar %1% else %3% Goto %2%>
+	result%id%02 <ifConversation SkillTar %1% else %3% Goto %2%>
+	Msg%id%01 <You can't arrest me now... there are so many things I have yet to do...>
+	Msg%id%01_1 <>
+	CMsg%id%01_1 <ifNPCSociable Accept>
+	Msg%id%01_2 <>
+	CMsg%id%01_2 <ifNPCShy Accept>
+	Msg%id%01_3 <>
+	CMsg%id%01_3 <ifNPCEasygoing Accept>
+	Msg%id%01_4 <>
+	CMsg%id%01_4 <ifNPCPassionate Accept>
+	Msg%id%01_5 <>
+	CMsg%id%01_5 <ifNPCCheerful Accept>
+	Msg%id%01_6 <>
+	CMsg%id%01_6 <ifNPCMelancholy Accept>
+	Prompt%id%01 <I can take you alive or dead.>
+	Prompt%id%01_1 <Arrest you or shoot you, I don't care.>
+	Prompt%id%01_2 <I can take you dead just as easily.>
+	Prompt%id%02 <Just come quietly.>
+	Prompt%id%02_1 <Give up. There's no way out.>
+	Prompt%id%02_2 <Coming with me is your only chance.>
 
 
 % TYPE: *IntruderGreeting
@@ -20,6 +41,14 @@
 %	The PC has intruded into the NPC's personal space. The NPC will therefore
 %	confront the PC.
 %   PARAM1: Exit label
+
+	Persona
+	requires <*IntruderGreeting &Arrest>
+	% V%id%01 = One time use counter
+	START <if= V%id%01 0 else %1% V= %id%01 1 NewChat Say %id%01 AddChat %id%01>
+	result%id%01 <Goto %1%>
+	Msg%id%01 <You, how did you get in here? What do you want?>
+	Prompt%id%01 <I'm here to arrest you.>
 
 	Persona
 	requires <*IntruderGreeting>

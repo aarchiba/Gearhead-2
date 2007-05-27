@@ -21,7 +21,7 @@ Element5 <Prefab>
 %%	= 1 Mission has started
 %%	= 2 Have received clue
 %%	= 3 Target has surrendered
-%%	= 4 Mission has timed out
+%%	= 4 Mission has timed out or failed
 
 % Initialization Tasks:
 % - Move the fugitive (E5) to the hideout (E4)
@@ -29,7 +29,7 @@ Element5 <Prefab>
 % - Scale the fugitive's skills for the PC's level
 update <ifNPCOK E1 else GoDelete if= P1 0 else GoCheckTime P= 1 ComTime P+ 1 86400 MoveNPC E5 E4 NPCLevel E5 PCRenown>
 Start <ifNPCOK E1 else GoDelete ifG V1 0 Goto GoCheckTime>
-GoCheckTime <ifG ComTime V1  if= P2 0 else GoSetEnd  AdvancePlot 0>
+GoCheckTime <ifG ComTime V1  if= P2 0 else GoSetEnd  Goto GoDelete>
 GoDelete <DeleteNPC E5 AdvancePlot 0>
 CleanUp <if= P2 0 else GoSetEnd  Goto GoDelete>
 %% If the time expires, but the PC is working on the plot, send him a message
@@ -93,19 +93,23 @@ sub
 	Special <UNLISTED>
 	greeting <ifChatNPCSurrendered else GoFirstTime EndChat Say 1 Goto GoSurrender>
 	*GoFirstTime <*IntruderGreeting&Arrest GoBargain>
-	*GoBargain <*YoureUnderArrest PCRenown GoWillSurrender GoWillResist>
+	*GoBargain <*YoureUnderArrest PCRenown GoWillSurrender GoWillResist na>
 	GoWillSurrender <EndChat Say 1 Goto GoSurrender>
-	GoWillResist <>
+	GoWillResist <EndChat Say 2 SoloAttack E5 L= 2 1>
 	GoSurrender <P= 2 3 DeleteNPC E5>
 	Msg1 <Alright, I give up... You can take me to jail.>
+	Msg2 <I'm not ready to go yet... I think I'll kill you instead!>
 
 	MetaScene 4
 	special <NOEXIT>
+	% L1 = Initialization Counter
+	% L2 = Fight has started
 	BoxMap
 	MapWidth 12
 	MapHeight 17
 	content <Fill Sub *HIDEOUT_X na>
 	Start <Print 1 if= L1 0 L= 1 1 ForceChat E5 Compose Surrender E5 .surrender>
+	nu1 <if= T1 0 Return if= L2 1 ifNPCOK E5 DeleteNPC E5 P= 2 4>
 	.surrender <ForceChat E5>
 	Msg1 <You enter the hideout.>
 	sub
@@ -119,11 +123,13 @@ sub
 		SetAlly 2
 
 		Room
+		special <STARTHERE>
 		minimap <......###..#1#...........>
 		sub
 			Elevator
 			Destination -1
 			MiniMapComponent 1
+			use <Print 1 Return>
 		end
 	end
 
@@ -131,7 +137,7 @@ end
 inv
 	STC ENCOUNTER-DUEL
 	name <Hideout>
-	update <if= P2 2 else GoHide  SetStat STAT_MetaVisibility 0  Goto GoSetOrders>
+	update <if= P2 2 else GoHide  SetStat STAT_MetaVisibility 0  ShowEncounter  Goto GoSetOrders>
 	ENCOUNTER_Hostile
 
 	NPC Thief
