@@ -64,6 +64,8 @@ Function LoadNewMonster( MonsterName: String ): GearPtr;
 Function LoadNewNPC( NPCName: String; RandomizeNPCs: Boolean ): GearPtr;
 Function LoadNewSTC( Desig: String ): GearPtr;
 
+Procedure RandomLoot( Box: GearPtr; SRP: LongInt; const l_type,l_factions: String );
+
 implementation
 
 Const
@@ -1334,6 +1336,70 @@ begin
 	Reset( F );
 	STC_Item_List := ReadGear( F , True );
 	Close( F );
+end;
+
+Procedure RandomLoot( Box: GearPtr; SRP: LongInt; const l_type,l_factions: String );
+	{ Fill BOX with SRV (suggested retail price) worth of junk from the standard }
+	{ equipment files. }
+	Function ItemIsLegal( I: GearPtr ): Boolean;
+		{ Return TRUE if I's type and factions match those requested, or }
+		{ FALSE otherwise. Oh, I should also be a legal invcom of BOX. }
+	begin
+		ItemIsLegal := PartAtLeastOneMatch( l_type , SAttValue( I^.SA , 'CATEGORY' ) ) and PartAtLeastOneMatch( l_factions , SAttValue( I^.SA , 'FACTIONS' ) ) and IsLegalInvCom( Box , I );
+	end;
+	Function SelectAnItem: GearPtr;
+		{ Select an appropriate item from the standard items list. }
+	var
+		Total: Int64;
+		Cost: LongInt;
+		I,Selected_Item: GearPtr;
+	begin
+		Selected_Item := Nil;
+
+		{ Start by finding the total cost of all legal items. }
+		I := Standard_Equipment_List;
+		Total := 0;
+		while I <> Nil do begin
+			if ItemIsLegal( I ) then begin
+				Cost := GearValue( I );
+				if Cost < SRP then Total := Total + Cost;
+			end;
+			I := I^.Next;
+		end;
+
+		{ If no items found, exit NIL. }
+		if Total < 1 then Exit( Nil );
+
+		{ Next, go through the list again, selecting one at random. }
+		I := Standard_Equipment_List;
+		Total := Random( Total );
+		while ( I <> Nil ) and ( Selected_Item = Nil ) do begin
+			if ItemIsLegal( I ) then begin
+				Cost := GearValue( I );
+				if Cost < SRP then begin
+					Total := Total - Cost;
+					if Total < 1 then Selected_Item := I;
+				end;
+			end;
+			I := I^.Next;
+		end;
+
+		SelectAnItem := CloneGear( I );
+	end;
+var
+	Item: GearPtr;
+begin
+	{ Keep processing until we run out of money or objects. }
+	while SRP > 0 do begin
+		Item := SelectAnItem;
+		if Item <> Nil then begin
+			SRP := SRP - GearValue( Item );
+			InsertInvCom( Box , Item );
+		end else begin
+			{ No item found. Set SRP to 0. }
+			SRP := 0;
+		end;
+	end;
 end;
 
 initialization
