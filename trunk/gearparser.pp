@@ -1351,10 +1351,13 @@ Procedure RandomLoot( Box: GearPtr; SRP: LongInt; const l_type,l_factions: Strin
 		{ Select an appropriate item from the standard items list. }
 	var
 		Total: Int64;
-		Cost: LongInt;
+		MIC,Cost: LongInt;
 		I,Selected_Item: GearPtr;
 	begin
 		Selected_Item := Nil;
+		{ Calculate Max Item Cost }
+		MIC := ( SRP * 3 ) div 2;
+		if MIC < ( SRP + 1000 ) then MIC := SRP + 1000;
 
 		{ Start by finding the total cost of all legal items. }
 		I := Standard_Equipment_List;
@@ -1362,7 +1365,7 @@ Procedure RandomLoot( Box: GearPtr; SRP: LongInt; const l_type,l_factions: Strin
 		while I <> Nil do begin
 			if ItemIsLegal( I ) then begin
 				Cost := GearValue( I );
-				if Cost < SRP then Total := Total + Cost;
+				if Cost < MIC then Total := Total + Cost;
 			end;
 			I := I^.Next;
 		end;
@@ -1376,7 +1379,7 @@ Procedure RandomLoot( Box: GearPtr; SRP: LongInt; const l_type,l_factions: Strin
 		while ( I <> Nil ) and ( Selected_Item = Nil ) do begin
 			if ItemIsLegal( I ) then begin
 				Cost := GearValue( I );
-				if Cost < SRP then begin
+				if Cost < MIC then begin
 					Total := Total - Cost;
 					if Total < 1 then Selected_Item := I;
 				end;

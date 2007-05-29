@@ -73,7 +73,9 @@ const
 		ENCOUNTER_Defense = 1;
 		ENCOUNTER_NonCombat = 2;
 
+	{ Prop Stats }
 	STAT_PropMesh = 5;		{ Does this prop use a custom mesh? }
+	{ STAT_Lock is the same as above- used by treasure chests. }
 
 	NAG_MTAppearance = 19;		{ Holds some appearance info for metaterrain }
 		NAS_BuildingMesh = 1;	{ What mesh to use for building? }

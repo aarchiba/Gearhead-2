@@ -141,6 +141,10 @@ Const
 		{ exit to whatever scene is stored here. This functionality exists to }
 		{ make GH1-style "teleporting" battles possible. }
 
+	NAS_RandomLoot = 19;	{ A cash value for hiding random loot here. }
+		{ The loot category and allowable factions must be stored in }
+		{ string attributes LOOT_CATEGORY and LOOT_FACTIONS. }
+
 	{ The following are used by the randmaps unit... }
 	NAS_LockedDoorChance = 101;
 	NAS_SecretDoorChance = 102;

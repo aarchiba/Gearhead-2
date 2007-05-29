@@ -1374,6 +1374,32 @@ begin
 	PrepAllPersonas( Adventure , Plot , GB );
 end;
 
+Procedure InitRandomLoot( LList: GearPtr );
+	{ Search this list for random loot requests. Upon finding one, }
+	{ fill the resultant gear with sstuff. }
+const
+	Default_Category = 'TREASURE';
+var
+	LootVal: LongInt;
+	Loot_Category, Loot_Factions: String;
+begin
+	while LList <> Nil do begin
+		InitRandomLoot( LList^.SubCom );
+		InitRandomLoot( LList^.InvCom );
+		LootVal := NAttValue( LList^.NA , NAG_Narrative , NAS_RandomLoot );
+		if LootVal > 0 then begin
+			{ A request for random loot has been placed. Find the loot }
+			{ categories and the loot faction, then proceed to stuff. }
+			Loot_Category := SAttValue( LList^.SA , 'LOOT_CATEGORY' );
+			if Loot_Category = '' then Loot_Category := Default_Category;
+			Loot_Factions := 'GENERAL ' + SAttValue( LList^.SA , 'LOOT_FACTIONS' );
+			RandomLoot( LList , LootVal , Loot_Category , Loot_Factions );
+			SetNAtt( LList^.NA , NAG_Narrative , NAS_RandomLoot , 0 );
+		end;
+		LList := LList^.Next;
+	end;
+end;
+
 Function MatchPlotToAdventure( Slot,Plot: GearPtr; GB: GameBoardPtr; IsQuestContent,Debug: Boolean ): Boolean;
 	{ This PLOT gear is meant to be inserted into this ADVENTURE gear. }
 	{ Perform the insertion, select unselected elements, and make sure }
@@ -1456,6 +1482,8 @@ begin
 		{ mostly. }
 		{ Quest content doesn't get initialized here- that gets done later. }
 		if not IsQuestContent then InitPlot( Adventure , Plot , GB );
+		{ Actually, quest content does get its treasures initialized here. }
+		InitRandomLoot( Plot^.InvCom );
 	end else begin
 		{ This plot won't fit in this adventure. Dispose of it. }
 		{ First get rid of any already-placed prefab elements. }
