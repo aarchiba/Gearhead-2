@@ -1,57 +1,116 @@
 %% *DUNGEON_X CONTENT
 %%   Dungeon Extras. Little bits of personality for dungeon levels.
 
-Content
-name <Dead Miner>
-requires <*DUNGEON_X Mine Space Ruin>
-element1 <prefab>
-element2 <prefab>
-place2 <1>
-
-% A dead miner and his harmonica, v2.1
-%  a GH2 RANCON_Dungeon content entry written for the purpose of learning ASL.
-%	-by Yendaa
-%	-edited by Joe
-inv
-	% v%id%1 - how the body was treated
-	%   0 nothing yet
-	%   1 rummaged through
-	%   2 left alone
-	% v%id%02 - Mysticism counter
-
-	MetaTerrain
+	Content
 	name <Dead Miner>
-	desc <A dead miner> 
-	SDL_Sprite <prop_body.png>
-	roguechar <!>
-	mass 170
-	clue16 <Print %id%06>
-	clue20 <Print %id%07>
-	clue23 <Print %id%07>
-	clue29 <Print %id%06>
-	clue34 <Print %id%08 if= v%id%02 0 XPV 50 V= %id%02 1>
-	clue37 <Print %id%06>
+	requires <*DUNGEON_X Mine Space Ruin>
+	element1 <prefab>
+	element2 <prefab>
+	place2 <1>
 
-	use <if= v%id%01 0 else GoLeft ifYesNo %id%01 %id%02 %id%03 else GoLeave goto GoRummage>
-	GoLeave <v= %id%01 2 AddHeroic 1>
-	GoRummage <V= %id%01 1 Print %id%05 CASHPRIZE d50 GiveKeyItem %2% AddPragmatic 3>
+	% A dead miner and his harmonica, v2.1
+	%  a GH2 RANCON_Dungeon content entry written for the purpose of learning ASL.
+	%	-by Yendaa
+	%	-edited by Joe
+	inv
+		% v%id%1 - how the body was treated
+		%   0 nothing yet
+		%   1 rummaged through
+		%   2 left alone
+		% v%id%02 - Mysticism counter
 
-	GoLeft <if= v%id%01 2 else GoRummaged Print %id%01>
-	GoRummaged <Print %id%04>
+		MetaTerrain
+		name <Dead Miner>
+		desc <A dead miner> 
+		SDL_Sprite <prop_body.png>
+		roguechar <!>
+		mass 170
+		clue16 <Print %id%06>
+		clue20 <Print %id%07>
+		clue23 <Print %id%07>
+		clue29 <Print %id%06>
+		clue34 <Print %id%08 if= v%id%02 0 XPV 50 V= %id%02 1>
+		clue37 <Print %id%06>
 
-	Msg%id%01 <A dead miner lies on the ground before you, his spacesuit torn and helmet cracked.>
-	Msg%id%02 <Rummage through his belongings.>
-	Msg%id%03 <Leave him.>
-	Msg%id%04 <A dead miner lies here, his corpse desecrated.>
-	Msg%id%05 <Cutting open what remains of his spacesuit, you find a couple of credits and an old silver harmonica.>
-	Msg%id%06 <This man died of asphyxiation when his spacesuit lost pressure because of damage.>
-	Msg%id%07 <It's too late for that. Perhaps if you had been here at the time when he died...>
-	Msg%id%08 <You say a prayer for the soul of the deceased.>
+		use <if= v%id%01 0 else GoLeft ifYesNo %id%01 %id%02 %id%03 else GoLeave goto GoRummage>
+		GoLeave <v= %id%01 2 AddHeroic 1>
+		GoRummage <V= %id%01 1 Print %id%05 CASHPRIZE d50 GiveKeyItem %2% AddPragmatic 3>
 
-	Instrument 2
-	name <Old Harmonica>
-	desc <Scratches and dents cover the silver surface of this instrument.>
-end
+		GoLeft <if= v%id%01 2 else GoRummaged Print %id%01>
+		GoRummaged <Print %id%04>
+
+		Msg%id%01 <A dead miner lies on the ground before you, his spacesuit torn and helmet cracked.>
+		Msg%id%02 <Rummage through his belongings.>
+		Msg%id%03 <Leave him.>
+		Msg%id%04 <A dead miner lies here, his corpse desecrated.>
+		Msg%id%05 <Cutting open what remains of his spacesuit, you find a couple of credits and an old silver harmonica.>
+		Msg%id%06 <This man died of asphyxiation when his spacesuit lost pressure because of damage.>
+		Msg%id%07 <It's too late for that. Perhaps if you had been here at the time when he died...>
+		Msg%id%08 <You say a prayer for the soul of the deceased.>
+
+		Instrument 2
+		name <Old Harmonica>
+		desc <Scratches and dents cover the silver surface of this instrument.>
+	end
 
 %% *DUNGEON_GOAL CONTENT
+
+	Content
+	name <Careless Samurai>
+	requires <*DUNGEON_GOAL>
+
+	% Element1 is the katana
+	% E2 is the current scene being built.
+	% E3 is a public building somewhere in the same city.
+	% E4 is the samurai whom the PC can recruit.
+	Element1 <Prefab>
+	Element2 <.>
+	Element3 <Scene Building Public !Near 2>
+	Element4 <Prefab>
+	Place4 <3 SD Ally>
+
+	sub
+		Persona 4
+		% Kind of a kludgey thing- after resolving this event, one way or another,
+		% manually delete the following rumor.
+		rumor <%name4% lost something precious in %name2%.>
+		% V1 = Have resolved issue.
+		% V2 = Original Team Value
+		greeting <if= V1 0 else GoSolvedCase ifChatNPCSurrendered else GoAskAbout PCAlly %4% NewChat Say 2 History 3 Goto GoSurrender>
+		GoSurrender <UnSurrender %4% SetNPCTeam %4% V2 Goto GoResolve>
+		GoResolve <V= 1 1 EraseRumor>
+		GoAskAbout <ifChatNPCInPlay else GoNotHere NewChat Say 1 AddChat 1 AddChat 2 AddChat 3 ifItemDestroyed %1% Goto GoResolve>
+		*GoSolvedCase <*MISC_CHATTER>
+		*GoNotHere <*IAmBusy&OnPhone>
+		result1 <PCAlly %4% AddLawful 1 AddReact d20  NewChat Say 4 History 5 DeleteItem %1% Goto GoResolve>
+		result2 <ifG ChatNPCRenown PCRenown else GoR2Fail EndChat Say 6 V= 2 ChatNPCTeam SoloAttack %4%>
+		GoR2Fail <PCEnemy %4% NewChat Say 7 Goto GoResolve>
+		Msg1 <I have shamed myself deeply... While exploring %name2% I lost my ancestral weapon. It was a priceless artifact, and can never be replaced.>
+		Msg2 <You have proven that you are far more worthy of the blade than I... I pledge alleigance to you, and hope to learn from your example.>
+		Msg3 <You bested %name4% in combat, and \SPR %4% chose to follow you.>
+		Msg4 <Yes, it is! Thank you... Truly, you are a fearsome warrior with a noble heart. I pledge to aid you and to learn from your greatness.>
+		Msg5 <You returned %name4%'s katana, so \SPR %4% pledged to aid you.>
+		Msg6 <You think you are worthy to wield that blade? I will show you your true value!>
+		Msg7 <Fine. I have proven myself unworthy to posess that blade any longer... but do not think that I will forget what you have taken from me.>
+		Prompt1 <Is this it? [Give Katana]>
+		CPrompt1 <ifKeyItem %1% Accept>
+		Prompt2 <I found it... and I intend to keep it.>
+		CPrompt2 <ifKeyItem %1% Accept>
+	end
+	inv
+		Melee 9
+		Name <Heirloom Katana>
+		desc <A PreZero sword of great antiquity.>
+		SDL_PORTRAIT <item_katana.png>
+		type <ARMORPIERCING>
+		legality 5
+		Acc 3
+		Speed 5
+		Mass -5
+
+		NPC Warrior Monk
+		statline 16 14 13 14 11 16 10 9
+		job <Samurai>
+		EquipChar 10000
+	end
 

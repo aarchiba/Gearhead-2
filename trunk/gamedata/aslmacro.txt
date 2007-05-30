@@ -14,6 +14,7 @@ N= <GrabStory              GSetNAtt NAG_ElementID ? ?>
 SetTeamFaction <GrabTeam ? GSetNAtt NAG_Personal NAS_FactionID ?>
 SetSelfFaction <GrabSource GSetNAtt NAG_Personal NAS_FactionID ?>
 DynaFaction <GrabDynamic GSetNAtt NAG_Personal NAS_FactionID ?>
+EraseRumor <GrabSource GSetSAtt rumor na>
 PassVar <GrabDynamic GSetNAtt NAG_Scriptvar ? ?>
 ItemVar= <GrabItem ? GSetNAtt NAG_ScriptVar ? ?>
 ItemStat= <GrabItem ? GSetStat ? ?>

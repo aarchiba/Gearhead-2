@@ -511,7 +511,7 @@ var
 	ReTalk: LongInt;
 begin
 	NPC := LocatePilot( NPC );
-	if ( NPC <> Nil ) and GearOperational( NPC ) and AreEnemies( GB , NPC , PC ) and NotAnAnimal( NPC ) and IsFoundAlongTrack( GB^.Meks , NPC ) then begin
+	if ( NPC <> Nil ) and GearOperational( NPC ) and AreEnemies( GB , NPC , PC ) and NotAnAnimal( NPC ) and IsFoundAlongTrack( GB^.Meks , NPC ) and ( NATtValue( NPC^.NA , NAG_EpisodeData , NAS_SurrenderStatus ) <> NAV_NowSurrendered ) then begin
 		PCDoVerbalAttack( GB , PC , NPC );
 
 	end else if ( NPC <> Nil ) and GearOperational( NPC ) then begin

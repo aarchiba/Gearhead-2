@@ -891,6 +891,14 @@ begin
 				OK := True;
 			end else OK := False;
 
+		end else if ( EKind[1] = '.' ) then begin
+			if ( GB <> Nil ) and ( GB^.Scene <> Nil ) then begin
+				{ Insert the current scene as this element. }
+				SetSAtt( PLOT^.SA , 'ELEMENT' + BStr( N ) + ' <S>' );
+				SetNAtt( PLOT^.NA , NAG_ElementID , N , RealSceneID( GB^.Scene ) );
+				Fast_Seek_Element[ 1 , N ] := GB^.Scene;
+				OK := True;
+			end else OK := False;
 		end;		
 	end;
 
@@ -1555,10 +1563,6 @@ begin
 				{ may result in story elements being unnessecarily deleted. }
 				SetSAtt( Arc^.SA , 'ELEMENT' + BStr( T ) + ' <' + desc[1] + '>' );
 				SetNAtt( Arc^.NA , NAG_ElementID , T , ElementID( Story , N ) );
-			end else if ( desc = '.' ) and ( GB <> Nil ) and ( GB^.Scene <> Nil ) then begin
-				{ Insert the current scene as this element. }
-				SetSAtt( Arc^.SA , 'ELEMENT' + BStr( T ) + ' <S>' );
-				SetNAtt( Arc^.NA , NAG_ElementID , T , RealSceneID( GB^.Scene ) );
 			end;
 
 			{ If this gear is a character, better see whether or not }

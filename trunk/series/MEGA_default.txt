@@ -1,0 +1,16 @@
+%%
+%% MegaPlot Components
+%%
+
+%% Similar to quests, but work for plots.
+
+%% PARAM1 = Captive NPC
+%% PARAM2 = Holding Faction
+
+Content
+	name <Held on Battleship>
+	requires <*:RescuePrisoner>
+
+	% E1 is the captive NPC
+	% E2 is the faction holding him
+	% E3 is a spaceship to be 
