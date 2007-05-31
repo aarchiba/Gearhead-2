@@ -1837,7 +1837,7 @@ begin
 			SetSAtt( Frag^.SA , 'ELEMENT' + BStr( T ) + ' <' + SAttValue( Frag^.SA , 'ELEMENT0' ) + '>' );
 			SetSAtt( Frag^.SA , 'SCENE' + BStr( T ) + ' <KEY>' );
 			SetNAtt( Frag^.NA , NAG_ElementID , T , NAttValue( Frag^.NA , NAG_ElementID , 0 ) );
-		end else if EDesc[1] = 'A' then begin
+		end else if ( EDesc <> '' ) and ( EDesc[1] = 'A' ) then begin
 			{ This is an artifact request. If no difficulcy context has been }
 			{ defined, add one ourselves. }
 			if not AStringHasBString( EDesc , '!' ) then begin

@@ -1,1 +1,12 @@
 A megaplot is a plot with extras.
+
+- Better self-initialization
+	- Elements moved to correct locations
+	- Replacement strings
+- Automatically handled time limits
+- Key character indication/cleanup on death
+- Plot extensions
+	- Extensions may add further extensions recursively
+- Plot state, rumors can be keyed to current state
+- May add metascenes, and merge additional MS info
+	- Map features may be indicated as element home

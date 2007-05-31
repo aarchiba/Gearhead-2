@@ -267,7 +267,7 @@ Function IsMoreKey( A: Char ): Boolean;
 Procedure MoreKey;
 Function TextLength( F: PTTF_Font; msg: String ): LongInt;
 
-Function MsgString( key: String ): String;
+{Function MsgString( key: String ): String;}
 
 Function GetStringFromUser( Prompt: String; ReDrawer: RedrawProcedureType ): String;
 

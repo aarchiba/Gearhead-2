@@ -1365,7 +1365,7 @@ begin
 			W := TimeString( ID );
 		end;
 
-		if IsPunctuation( W[1] ) or ( S1[Length(S1)] = '$' ) or ( S1[Length(S1)] = '@' ) then begin
+		if ( W <> '' ) and ( S1 <> '' ) and ( IsPunctuation( W[1] ) or ( S1[Length(S1)] = '$' ) or ( S1[Length(S1)] = '@' ) ) then begin
 			S1 := S1 + W;
 		end else begin
 			S1 := S1 + ' ' + W;
