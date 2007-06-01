@@ -10,3 +10,24 @@ A megaplot is a plot with extras.
 - Plot state, rumors can be keyed to current state
 - May add metascenes, and merge additional MS info
 	- Map features may be indicated as element home
+
+Design Flow
+
+- Add extension
+  - Assign layer ID
+  - Select candidate
+    - Copy Elements, Match to adventure
+    - Add sub-extensions
+    - Repeat until everything initialized OK
+  - Delink candidate from adventure and return - leave stub in place to defend NPC selections
+- Remove the stubs
+- Assemble the plot
+
+Assembly Flow
+
+- Do all replacement strings %1%..%10% etc
+- Merge element lists
+- Merge personas
+- Merge plot scripts
+- Merge Metascenes
+- Move gears as required
