@@ -55,6 +55,7 @@ Function InitShard( GB: GameBoardPtr; Adv,Story,Shard: GearPtr; PlotID,LayerID: 
 var
 	InitOK: Boolean;
 	T: Integer;
+	I: GearPtr;
 begin
 	{ Start by copying over all provided parameters. }
 	for t := 1 to Num_Plot_Elements do begin
@@ -64,7 +65,22 @@ begin
 		end;
 	end;
 
-	{ Next, attempt the basic content insertion routine. }
+	{ Next, randomize the NPCs. }
+	I := Shard^.InvCom;
+	while I <> Nil do begin
+		{ Character gears have to be individualized. }
+		if ( I^.G = GG_Character ) and NotAnAnimal( I ) then begin
+			IndividualizeNPC( I );
+			cash := NAttValue( I^.NA , NAG_Experience , NAS_Credits );
+			if cash > 0 then begin
+				SetNAtt( I^.NA , NAG_Experience , NAS_Credits , 0 );
+				SelectCombatEquipment( I , Standard_Equipment_List , cash );
+			end;
+		end;
+		I := I^.Next;
+	end;
+
+	{ Attempt the basic content insertion routine. }
 	InitOK := InsertStory( Story, Shard , GB );
 
 	{ If the installation has gone well so far, we need to check for subplots. }
