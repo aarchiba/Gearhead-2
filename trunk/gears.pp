@@ -146,6 +146,10 @@ Const
 		{ string attributes LOOT_CATEGORY and LOOT_FACTIONS. }
 
 	NAS_MaxPlotID = 20;	{ New superplots are given ID numbers. }
+	NAS_NumSPElementsUsed = 21;	{ The number of elements used by subplots. }
+	NAS_PlotID = 22;		{ The ID number of a given plot. }
+	NAS_PlotLayer = 23;		{ The layer number of a superplot component. }
+	NAS_MaxPlotLayer = 24;
 
 	{ The following are used by the randmaps unit... }
 	NAS_LockedDoorChance = 101;
