@@ -1,5 +1,15 @@
 A megaplot is a plot with extras.
 
+%% Requesting SubPlots %%
+
+A subplot may be requested by adding a string describing the subplot.
+
+SUBPLOT[n] <[*SubPlot Type] Param1 Param2 ...>
+
+Basically it's the same as adding subquests. Up to 8 subplots may
+be defined, and they all must be numbered.
+
+
 - Better self-initialization
 	- Elements moved to correct locations
 	- Replacement strings

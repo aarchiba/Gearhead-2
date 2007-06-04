@@ -52,16 +52,20 @@ Function InitShard( GB: GameBoardPtr; Adv,Story,Shard: GearPtr; PlotID,LayerID: 
 	{   this shard and place it as Story's invcom. This stub is to prevent other shards }
 	{   from selecting characters or items used here. }
 	{ - Return the shard list }
+	{ If installation fails, SHARD will be deleted and NIL will be returned. }
 var
 	InitOK: Boolean;
-	T: Integer;
+	T,NumParam,NumElem: Integer;
 	I: GearPtr;
 begin
 	{ Start by copying over all provided parameters. }
+	{ Also count the number of parameters passed; it could be useful. }
+	NumParam := 0;
 	for t := 1 to Num_Plot_Elements do begin
 		if ParamIn[ t ].EValue <> 0 then begin
 			SetNAtt( Shard^.NA , NAG_ElementID , T , ParamIn[ t ].EValue );
 			SetSAtt( Shard^.SA , 'ELEMENT' + BStr( T ) + ' <' + ParamIn[ t ].EType + '>' );
+			Inc( NumParam );
 		end;
 	end;
 
@@ -83,8 +87,19 @@ begin
 	{ Attempt the basic content insertion routine. }
 	InitOK := InsertStory( Story, Shard , GB );
 
-	{ If the installation has gone well so far, we need to check for subplots. }
+	{ If the installation has gone well so far, time to move on. }
 	if InitOK then begin
+		{ Count the number of unique elements. If more elements have been }
+		{ defined than will fit in a single plot, then loading of this subplot }
+		{ will fail. }
+		NumElem := 0;
+		for t := 1 to Num_Plot_Elements do begin
+			if NAttValue( Shard^.NA , NAG_ElementID , T  ) <> 0 then begin
+				Inc( NumElem );
+			end;
+		end;
+
+
 		{ If any of the needed subplots fail, installation of this shard fails }
 		{ as well. }
 
