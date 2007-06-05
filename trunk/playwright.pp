@@ -49,6 +49,7 @@ Function SearchForScene( Adventure , Plot: GearPtr; GB: GameBoardPtr; Desc: Stri
 
 Procedure AddGearXRContext( GB: GameBoardPtr; Adv,Part: GearPtr; var Context: String; palette_entry_code: Char );
 Procedure AddElementContext( GB: GameBoardPtr; Story: GearPtr; var Context: String; palette_entry_code: Char; Element_Num: Integer );
+Function StoryContext( GB: GameBoardPtr; Story: GearPtr ): String;
 
 Function SeekUrbanArea( RootScene: GearPtr ): GearPtr;
 Procedure InsertPFrags( Plot,Persona: GearPtr; const Context: String; ID: Integer );

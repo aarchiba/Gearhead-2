@@ -62,6 +62,11 @@ Const
 	NAG_SubQuestLID = -11;
 	NAG_QuestElemScene = -13;
 
+	NAG_SubPlotLayerID = -19;	{ Most of the megaplot info is filed under }
+					{ "Narrative" in gears.pp, but I figured I'd }
+					{ place this here since it's thematically identical }
+					{ to the SubQuestLID above. }
+
 	NAG_QuestStatus = -14;	{ Used to record the PC's progress through set adventure content. }
 			{ Also used to determine whether the NPCs associated with the content }
 			{ are free to be used in plots or not. }
