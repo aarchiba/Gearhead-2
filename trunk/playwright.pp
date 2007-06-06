@@ -1314,7 +1314,7 @@ end;
 Procedure PrepAllPersonas( Adventure,Plot: GearPtr; GB: GameBoardPtr );
 	{ Prepare the personas of this plot. }
 var
-	P,P2,Scene,OldPersona: GearPtr;
+	P,P2: GearPtr;
 	Context: String;
 begin
 	P := Plot^.SubCom;
@@ -1491,8 +1491,16 @@ begin
 		{ mostly. }
 		{ Quest content doesn't get initialized here- that gets done later. }
 		if not IsQuestContent then InitPlot( Adventure , Plot , GB );
+
 		{ Actually, quest content does get its treasures initialized here. }
 		InitRandomLoot( Plot^.InvCom );
+
+		{ Also store the names of all known elements. They might come in handy later. }
+		for t := 1 to Num_Plot_Elements do begin
+			{ Store the name of this element, which should still be stored in }
+			{ the FSE array. }
+			SetSAtt( Plot^.SA , 'NAME_' + BStr( T ) + ' <' + GearName( Fast_Seek_Element[ 1 , t ] ) + '>' );
+		end;
 	end else begin
 		{ This plot won't fit in this adventure. Dispose of it. }
 		{ First get rid of any already-placed prefab elements. }
@@ -1598,16 +1606,8 @@ Function InsertRSC( Source,Frag: GearPtr; GB: GameBoardPtr ): Boolean;
 	{ needed later. }
 var
 	it: Boolean;
-	T: Integer;
 begin
 	it := InsertStoryArc( Source , Frag , GB );
-	if it then begin
-		for t := 1 to Num_Plot_Elements do begin
-			{ Store the name of this element, which should still be stored in }
-			{ the FSE array. }
-			SetSAtt( Frag^.SA , 'NAME_' + BStr( T ) + ' <' + GearName( Fast_Seek_Element[ 1 , t ] ) + '>' );
-		end;
-	end;
 	InsertRSC := it;
 end;
 
@@ -1857,10 +1857,6 @@ begin
 	{ If this worked, get all the needed scenes and store the element names. }
 	if MatchOK then begin
 		for t := 1 to Num_Plot_Elements do begin
-			{ Store the name of this element, which should still be stored in }
-			{ the FSE array. }
-			SetSAtt( Frag^.SA , 'NAME_' + BStr( T ) + ' <' + GearName( Fast_Seek_Element[ 1 , t ] ) + '>' );
-
 			{ If any scene cannot be found, delete FRAG and set MATCHOK to FALSE. }
 			SceneDesc := SAttValue( Frag^.SA , 'SCENE' + BStr( T ) );
 

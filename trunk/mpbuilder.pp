@@ -93,6 +93,20 @@ begin
 	end;
 end;
 
+Procedure DeletePlotPlaceholders( Slot: GearPtr; PlotID: LongInt );
+	{ Delete all the plot placeholders. They should be invcoms of SLOT, }
+	{ and be marked with the listed PlotID. }
+var
+	PP,PP2: GearPtr;
+begin
+	PP := Slot^.InvCom;
+	while PP <> Nil do begin
+		PP2 := PP^.Next;
+		if NAttValue( PP^.NA , NAG_Narrative , NAS_PlotID ) = PlotID then RemoveGear( Slot^.InvCom , PP );
+		PP := PP2;
+	end;
+end;
+
 Function AddSubPlot( GB: GameBoardPtr; Slot,Plot0: GearPtr; SPReq: String; EsSoFar, PlotID, LayerID: LongInt ): GearPtr; forward;
 
 Function InitShard( GB: GameBoardPtr; Slot,Shard: GearPtr; EsSoFar,PlotID,LayerID: LongInt; const ParamIn: ElementTable ): GearPtr;
@@ -274,7 +288,49 @@ begin
 	AddSubPlot := Shard;
 end;
 
-Procedure AssembleMegaPlot( Slot , SPList: GearPtr );
+Procedure ReplaceStrings( Part: GearPtr; Dictionary: SAttPtr );
+	{ We have a dictionary of substitute strings, and a part to do the replacements on. }
+var
+	S: SAttPtr;
+	P,P2: Integer;
+	SPat,SRep: String;
+begin
+	S := Part^.SA;
+	while S <> Nil do begin
+		P := 1;
+		while P < Length( S^.Info ) do begin
+			if ( S^.Info[P] = '%' ) and ( P < ( Length( S^.Info ) - 1 ) ) then begin
+				{ We've found a hash. This could be a replacement string. See what string it is. }
+				SPat := '%';
+				P2 := P;
+				repeat
+					Inc( P2 );
+					SPat := SPat + S^.Info[P2];
+				until ( P2 >= Length( S^.Info ) ) or ( S^.Info[P2] = '%' );
+
+				{ We now have a string that may very well be something we want to replace. Check it. }
+				SRep := SAttValue( Dictionary , SPat );
+				if SRep <> '' then begin
+					{ The pattern was found in the dictionary. Replace all instances of it. }
+					ReplacePat( S^.Info , SPat , SRep );
+					P := P + Length( SRep ) - 1;
+				end;
+			end;
+
+			Inc( P );
+		end;
+
+		S := S^.Next;
+	end;
+end;
+
+Procedure InitSubPlotStrings( MasterPlot: GearPtr );
+
+begin
+
+end;
+
+Procedure AssembleMegaPlot( Slot , SPList: GearPtr; PlotID: LongInt );
 	{ SPList is a list of subplots. Assemble them into a single coherent megaplot. }
 	{ The first item in the list is the base plot- all other plots get added to it. }
 	{ - Delete all placeholder stubs from SLOT }
@@ -285,8 +341,24 @@ Procedure AssembleMegaPlot( Slot , SPList: GearPtr );
 	{   - Combine metascene contents }
 	{   - Set element PLACE attributes }
 	{ - Insert the finished plot into slot }
+var
+	MasterPlot,SubPlot: GearPtr;
 begin
+	{ Delete the placeholders. }
+	DeletePlotPlaceholders( Slot , PlotID );
 
+	{ Extract the master plot. It should be the first one in the list. }
+	MasterPlot := SPList;
+	DelinkGear( SPList , MasterPlot );
+	InitSubPlotStrings( MasterPlot );
+	InsertInvCom( Slot , MasterPlot );
+
+	{ Keep processing until we run out of subplots. }
+	while SPList <> Nil do begin
+		SubPlot := SPList;
+		DelinkGear( SPList , SubPlot );
+
+	end;
 end;
 
 Procedure DeployPlot();
@@ -320,7 +392,7 @@ begin
 
 	{ Now that we have the list, assemble it. }
 	if SPList <> Nil then begin
-		AssembleMegaPlot( Slot , SPList );
+		AssembleMegaPlot( Slot , SPList , PlotID );
 	end;
 
 	InitMegaPlot := SPList;
