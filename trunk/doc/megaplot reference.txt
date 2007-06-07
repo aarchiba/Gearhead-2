@@ -21,6 +21,25 @@ be defined, and they all must be numbered.
 %1%..%10%	The element IDs
 %name1%..%name10%	The element names
 %id1%..%id8%	Layer IDs of subplots
+%e1%..%e10%	Element Index of subplot element
+
+*************************
+*** Element Placement ***
+*************************
+
+You can move elements automatically by defining a "PLACE[n]" string for them.
+
+Place[n] <[~](Destination Index) (team data)>
+
+The destination index is the element number where where the gear should be moved.
+
+If the first character in the place attribute is a ~, the gear will be placed
+in the scene of the requested element rather than the element itself.
+
+If being moved to a metascene, if there's a map feature with the designation
+"HOME [index]", where [index] is the Element Index of this element, it will be placed
+there as mini map component 1. Note that the Index here refers to the master plot
+index, not the subplot index; use %e1%..%e10% to set it.
 
 
 

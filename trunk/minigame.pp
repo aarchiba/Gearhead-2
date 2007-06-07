@@ -33,7 +33,7 @@ implementation
 {$IFDEF ASCII}
 uses	vidgfx,vidmenus,vidinfo,arenacfe,action,ghchars,texutil,ui4gh;
 {$ELSE}
-uses	glgfx,glmenus,glinfo,arenacfe,action,ghchars,texutil;
+uses	glgfx,glmenus,glinfo,arenacfe,action,ghchars,texutil,ui4gh;
 {$ENDIF}
 
 var

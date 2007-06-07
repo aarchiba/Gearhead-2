@@ -73,7 +73,7 @@ implementation
 {$IFDEF ASCII}
 uses gearutil,ghprop,rpgdice,texutil,vidgfx,gearparser,narration,ui4gh,arenascript,ghchars;
 {$ELSE}
-uses gearutil,ghprop,rpgdice,texutil,glgfx,gearparser,narration,arenascript,ghchars;
+uses gearutil,ghprop,rpgdice,texutil,glgfx,gearparser,narration,ui4gh,arenascript,ghchars;
 {$ENDIF}
 
 var
@@ -349,7 +349,6 @@ Procedure InstallDoor( GB: GameBoardPtr; MF: GearPtr; X,Y,LockVal,HideVal: Integ
 var
 	NewDoor,DoorPrototype: GearPtr;
 	Name: String;
-	Roll: Integer;
 begin
 	if MF <> Nil then DoorPrototype := SeekCurrentLevelGear( MF^.SubCom , GG_MetaTerrain , GS_MetaDoor )
 	else DoorPrototype := Nil;

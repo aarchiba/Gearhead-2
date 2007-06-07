@@ -28,7 +28,7 @@ uses gears,locale;
 
 implementation
 
-uses narration,playwright,texutil,gearutil,gearparser,ghchars;
+uses narration,playwright,texutil,gearutil,gearparser,ghchars,randmaps;
 
 Type
 	ElementDesc = Record
@@ -345,10 +345,12 @@ var
 	FirstFreeSlot,T,PlotIndex: Integer;
 	EID: LongInt;
 	EDesc: String;
+	Dictionary: SAttPtr;
 begin
 	{ Locate the first free slot in MasterPlot. }
 	FirstFreeSlot := 1;
 	While ( FirstFreeSlot <= Num_Plot_Elements ) and ( ElementID( MasterPlot , FirstFreeSlot ) <> 0 ) do Inc( FirstFreeSlot );
+	Dictionary := Nil;
 
 	{ Go through the elements of SubPlot. Check to see if they are found in }
 	{ MasterPlot. If so, do nothing. If not, add them. }
@@ -369,10 +371,14 @@ begin
 			{ We should now have a working PlotIndex. Save it in SubPlot, }
 			{ and copy over the PLACE to MasterPlot. }
 			SetNAtt( SubPlot^.NA , NAG_MasterPlotElementIndex , T , PlotIndex );
+			SetSAtt( Dictionary , '%e' + BStr( T ) + '% <' + BStr( PlotIndex ) + '>' );
 			EDesc := SAttValue( SubPlot^.SA , 'PLACE' + BStr( T ) );
 			if EDesc <> '' then SetSAtt( MasterPlot^.SA , 'PLACE' + BStr( T ) + ' <' + EDesc + '>' );
 		end;
 	end;
+
+	InitListStrings( SubPlot , Dictionary );
+	DisposeSAtt( Dictionary );
 end;
 
 Procedure MergePersona( MainPlot , SubPlot , Persona: GearPtr );
@@ -467,6 +473,13 @@ begin
 
 		Thing := T2;
 	end;
+
+	{ Move over the InvComs. }
+	while SubPlot^.InvCom <> Nil do begin
+		Thing := SubPlot^.InvCom;
+		DelinkGear( SubPlot^.InvCom , Thing );
+		InsertInvCom( MasterPlot , Thing );
+	end;
 end;
 
 
@@ -494,6 +507,8 @@ Function AssembleMegaPlot( Slot , SPList: GearPtr; PlotID: LongInt ): GearPtr;
 			SetSAtt( Dictionary , '%id' + BStr( T ) + '% <' + Bstr( NAttValue( SubPlot^.NA , NAG_SubPlotLayerID , T ) ) + '>' );
 		end;
 		for t := 1 to Num_Plot_Elements do begin
+			{ If dealing with the main plot, do substitutions for the Element Indicies now. }
+			if SubPlot = SPList then SetSAtt( Dictionary , '%E' + BStr( T ) + '% <' + BStr( T ) + '>' );
 			SetSAtt( Dictionary , '%' + BStr( T ) + '% <' + BStr( ElementID( SubPlot , T ) ) + '>' );
 			SetSAtt( Dictionary , '%name' + BStr( T ) + '% <' + SAttValue( SubPlot^.SA , 'name_' + BStr( T ) ) + '>' );
 		end;
@@ -527,14 +542,80 @@ begin
 	AssembleMegaPlot := MasterPlot;
 end;
 
+Procedure MoveElements( GB: GameBoardPtr; Plot: GearPtr );
+	{ There are a bunch of elements in this plot. Some of them need to be moved. }
+	{ Make it so. }
+var
+	T,PlaceIndex: Integer;
+	PlaceCmd: String;
+	Element,Dest,MF: GearPtr;
+	InSceneNotElement: Boolean;
+begin
+	for t := 1 to Num_Plot_ELements do begin
+		PlaceCmd := SAttValue( Plot^.SA , 'PLACE' + BStr( T ) );
+		if PlaceCmd <> '' then begin
+			Element := SeekPlotElement( FindRoot( GB^.Scene ) , Plot , T , GB );
+			DelinkGearForMovement( GB , Element );
+
+			InSceneNotElement := ( PlaceCmd[1] = '~' );
+			if InSceneNotElement then DeleteFirstChar( PlaceCmd );
+
+			PlaceIndex := ExtractValue( PlaceCmd );
+			Dest := SeekPlotElement( FindRoot( GB^.Scene ) , Plot , PlaceIndex , GB );
+
+			if InSceneNotElement and (( Dest = Nil ) or ( Dest^.G <> GG_Scene )) then begin
+				{ If the destination is a metascene, locate its entrance. }
+				if ( Dest = Nil ) or ( Dest^.G = GG_MetaScene ) then begin
+					Dest := FindSceneEntrance( FindRoot( GB^.Scene ) , GB , ElementID( Plot , PlaceIndex ) );
+				end;
+
+				{ Try to find the associated scene now. }
+				if Dest <> Nil then begin
+					Dest := FindActualScene( GB , FindGearScene( Dest , GB ) );
+				end;
+			end;
+
+			if ( Dest <> Nil ) then begin
+				if ( Dest^.G <> GG_Scene ) and ( Dest^.G <> GG_MetaScene ) and IsLegalInvCom( Dest , Element ) then begin
+					{ If E can be an InvCom of Dest, stick it there. }
+					InsertInvCom( Dest , Element );
+				end else begin
+					{ If Dest isn't a scene, find the scene DEST is in itself }
+					{ and stick E in there. }
+					while ( Dest <> Nil ) and ( not IsAScene( Dest ) ) do Dest := Dest^.Parent;
+
+					if IsMasterGear( Element ) then ChooseTeam( Element , Dest );
+
+					{ If a Metascene map feature has been defined as this element's home, }
+					{ stick it there instead of in the scene proper. Such an element will }
+					{ always be MiniMap component #1, so set that value here too. }
+					if ( Dest^.G = GG_MetaScene ) then begin
+						MF := SeekGearByDesig( Dest^.SubCom , 'HOME ' + BStr( T ) );
+						if MF <> Nil then begin
+							Dest := MF;
+							SetNAtt( Element^.NA , NAG_ComponentDesc , NAS_ELementID , 1 );
+						end;
+					end;
+
+					InsertInvCom( Dest , Element );
+				end;
+			end;
+		end;
+	end;
+end;
+
 Procedure DeployPlot( GB: GameBoardPtr; Slot,Plot: GearPtr );
 	{ Actually add the plot to the adventure. Set it in place, move any elements as }
 	{ requested. }
 	{ - Insert persona fragments as needed }
 	{ - Deploy elements as indicated by PLACE strings }
+var
+	Context: String;
 begin
+	Context := '';
 	if Slot^.G = GG_Story then Context := Context + ' ' + StoryContext( GB , Slot );
 
+	MoveElements( GB , Plot );
 end;
 
 Function InitMegaPlot( GB: GameBoardPtr; Slot,Plot: GearPtr ): GearPtr;
