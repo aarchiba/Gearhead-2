@@ -324,23 +324,184 @@ begin
 	end;
 end;
 
-Procedure InitSubPlotStrings( MasterPlot: GearPtr );
-
+Procedure InitListStrings( LList: GearPtr; Dictionary: SAttPtr );
+	{ Run LList, all of its siblings and children, through the ReplaceStrings }
+	{ procedure. }
 begin
-
+	while LList <> Nil do begin
+		ReplaceStrings( LList , Dictionary );
+		InitListStrings( LList^.SubCom , Dictionary );
+		InitListStrings( LList^.InvCom , Dictionary );
+		LList := LList^.Next;
+	end;
 end;
 
-Procedure AssembleMegaPlot( Slot , SPList: GearPtr; PlotID: LongInt );
+Procedure MergeElementLists( MasterPlot , SubPlot: GearPtr );
+	{ The element list of SUBPLOT should be merged into MASTERPLOT. }
+	{ If a SUBPLOT element is found in MASTERPLOT already, no need }
+	{ to merge. Store the master plot element indicies in SubPlot. }
+	{ Also copy the PLACE strings here. }
+var
+	FirstFreeSlot,T,PlotIndex: Integer;
+	EID: LongInt;
+	EDesc: String;
+begin
+	{ Locate the first free slot in MasterPlot. }
+	FirstFreeSlot := 1;
+	While ( FirstFreeSlot <= Num_Plot_Elements ) and ( ElementID( MasterPlot , FirstFreeSlot ) <> 0 ) do Inc( FirstFreeSlot );
+
+	{ Go through the elements of SubPlot. Check to see if they are found in }
+	{ MasterPlot. If so, do nothing. If not, add them. }
+	for T := 1 to Num_Plot_Elements do begin
+		EID := ElementID( SubPlot , T );
+		if EID <> 0 then begin
+			EDesc := SAttValue( SubPlot^.SA , 'ELEMENT' + BStr( T ) );
+			PlotIndex := PlotElementID( MasterPlot , EDesc[1] , EID );
+			if PlotIndex = 0 then begin
+				{ This element apparently doesn't currently have a }
+				{ place in this plot. Add it. }
+				PlotIndex := FirstFreeSlot;
+				Inc( FirstFreeSlot );
+				SetNAtt( MasterPlot^.NA , NAG_ElementID , PlotIndex , EID );
+				SetSAtt( MasterPlot^.SA , 'ELEMENT' + BStr( PlotIndex ) + ' <' + EDesc + '>' );
+			end;
+
+			{ We should now have a working PlotIndex. Save it in SubPlot, }
+			{ and copy over the PLACE to MasterPlot. }
+			SetNAtt( SubPlot^.NA , NAG_MasterPlotElementIndex , T , PlotIndex );
+			EDesc := SAttValue( SubPlot^.SA , 'PLACE' + BStr( T ) );
+			if EDesc <> '' then SetSAtt( MasterPlot^.SA , 'PLACE' + BStr( T ) + ' <' + EDesc + '>' );
+		end;
+	end;
+end;
+
+Procedure MergePersona( MainPlot , SubPlot , Persona: GearPtr );
+	{ We have a persona that needs to be merged into the main plot. }
+	{ If the main plot already has a persona for this character, merge }
+	{ this new persona in as a megalist. If no persona currently exists, }
+	{ delink this persona from MainPlot and stick in SubPlot. }
+var
+	MPIndex: Integer;
+	MainPersona: GearPtr;
+begin
+	{ Determine the index of this element in the main plot. }
+	MPIndex := NAttValue( SubPlot^.NA , NAG_MasterPlotElementIndex , Persona^.S );
+
+	{ Attempt to locate the main persona. }
+	MainPersona := SeekCurrentLevelGear( MainPlot^.SubCom , GG_Persona , MPIndex );
+	if MainPersona = Nil then begin
+		{ No main persona- delink, move, and relabel this one. }
+		DelinkGear( SubPlot^.SubCom , Persona );
+		InsertSubCom( MainPlot , Persona );
+		Persona^.S := MPIndex;
+	end else begin
+		{ Combine the two plots together. }
+		BuildMegalist( MainPersona , Persona^.SA );
+	end;
+end;
+
+Procedure MergeMetascene( MainPlot , SubPlot , MS: GearPtr );
+	{ Combine the sub-metascene with the main metascene. }
+	{ If no main metascene exists, simply move and relabel the }
+	{ one provided here. }
+var
+	MPIndex: Integer;
+	MainScene,Thing: GearPtr;
+begin
+	{ Determine the index of this element in the main plot. }
+	MPIndex := NAttValue( SubPlot^.NA , NAG_MasterPlotElementIndex , MS^.S );
+
+	{ Attempt to locate the main metascene. }
+	MainScene := SeekCurrentLevelGear( MainPlot^.SubCom , GG_MetaScene , MPIndex );
+	if MainScene = Nil then begin
+		{ No main scene- delink, move, and relabel this one. }
+		DelinkGear( SubPlot^.SubCom , MS );
+		InsertSubCom( MainPlot , MS );
+		MS^.S := MPIndex;
+	end else begin
+		{ Combine the two scenes together. }
+		BuildMegalist( MainScene , MS^.SA );
+
+		{ Copy over all InvComs and SubComs. }
+		while ( MS^.InvCom <> Nil ) do begin
+			Thing := MS^.InvCom;
+			DelinkGear( MS^.InvCom , Thing );
+			InsertInvCom( MainScene , Thing );
+		end;
+		while ( MS^.SubCom <> Nil ) do begin
+			Thing := MS^.SubCom;
+			DelinkGear( MS^.SubCom , Thing );
+			InsertSubCom( MainScene , Thing );
+		end;
+	end;
+end;
+
+Procedure CombinePlots( MasterPlot, SubPlot: GearPtr );
+	{ Combine SubPlot into MasterPlot, including all elements, scripts, }
+	{ personas, metascenes, and so on. }
+	{ - Merge element lists }
+	{ - Copy PLACE strings from SUBPLOT to MASTERPLOT. }
+	{   A place defined in a subplot take precedence over anything }
+	{   defined earlier. }
+	{ - Megalist scripts }
+	{ - Megalist personas }
+	{ - Combine MetaScenes }
+	{ - Move InvComs }
+var
+	Thing,T2: GearPtr;
+begin
+	MergeElementLists( MasterPlot , SubPlot );
+	BuildMegalist( MasterPlot , SubPlot^.SA );
+
+	{ Take a look at the things in this subplot. }
+	{ Deal with them separately, as appropriate. }
+	Thing := SubPlot^.SubCom;
+	while Thing <> Nil do begin
+		T2 := Thing^.Next;
+
+		if Thing^.G = GG_Persona then begin
+			MergePersona( MasterPlot , SubPlot , Thing );
+		end else if Thing^.G = GG_MetaScene then begin
+			MergeMetascene( MasterPlot , SubPlot , Thing );
+		end;
+
+		Thing := T2;
+	end;
+end;
+
+
+Function AssembleMegaPlot( Slot , SPList: GearPtr; PlotID: LongInt ): GearPtr;
 	{ SPList is a list of subplots. Assemble them into a single coherent megaplot. }
 	{ The first item in the list is the base plot- all other plots get added to it. }
 	{ - Delete all placeholder stubs from SLOT }
 	{ - Process each fragment in turn. }
 	{   - Delink from list }
 	{   - Do string substitutions }
-	{   - Combine plot scripts, personas, and metascenes via megalist }
-	{   - Combine metascene contents }
-	{   - Set element PLACE attributes }
+	{   - Combine plots }
 	{ - Insert the finished plot into slot }
+	Procedure DoStringSubstitutions( SubPlot: GearPtr );
+		{ Do the string substitutions for this subplot. Basically, }
+		{ create the dictionary and pass it on to the substituter. }
+	var
+		Dictionary: SAttPtr;
+		T: Integer;
+	begin
+		{ Begin creating. }
+		Dictionary := Nil;
+		SetSAtt( Dictionary , '%plotid% <' + BStr( PlotID ) + '>' );
+		SetSAtt( Dictionary , '%id% <' + BStr( NAttValue( SubPlot^.NA , NAG_Narrative , NAS_PlotLayer ) ) + '>' );
+		for t := 1 to Num_Sub_Plots do begin
+			SetSAtt( Dictionary , '%id' + BStr( T ) + '% <' + Bstr( NAttValue( SubPlot^.NA , NAG_SubPlotLayerID , T ) ) + '>' );
+		end;
+		for t := 1 to Num_Plot_Elements do begin
+			SetSAtt( Dictionary , '%' + BStr( T ) + '% <' + BStr( ElementID( SubPlot , T ) ) + '>' );
+			SetSAtt( Dictionary , '%name' + BStr( T ) + '% <' + SAttValue( SubPlot^.SA , 'name_' + BStr( T ) ) + '>' );
+		end;
+
+		{ Run the provided subplot through the convertor. }
+		InitListStrings( SubPlot , Dictionary );
+		DisposeSAtt( Dictionary );
+	end;
 var
 	MasterPlot,SubPlot: GearPtr;
 begin
@@ -350,21 +511,29 @@ begin
 	{ Extract the master plot. It should be the first one in the list. }
 	MasterPlot := SPList;
 	DelinkGear( SPList , MasterPlot );
-	InitSubPlotStrings( MasterPlot );
+	DoStringSubstitutions( MasterPlot );
 	InsertInvCom( Slot , MasterPlot );
 
 	{ Keep processing until we run out of subplots. }
 	while SPList <> Nil do begin
 		SubPlot := SPList;
 		DelinkGear( SPList , SubPlot );
-
+		DoStringSubstitutions( SubPlot );
+		CombinePlots( MasterPlot, SubPlot );
+		DisposeGear( SubPlot );
 	end;
+
+	{ Return the finished plot. }
+	AssembleMegaPlot := MasterPlot;
 end;
 
-Procedure DeployPlot();
+Procedure DeployPlot( GB: GameBoardPtr; Slot,Plot: GearPtr );
 	{ Actually add the plot to the adventure. Set it in place, move any elements as }
 	{ requested. }
+	{ - Insert persona fragments as needed }
+	{ - Deploy elements as indicated by PLACE strings }
 begin
+	if Slot^.G = GG_Story then Context := Context + ' ' + StoryContext( GB , Slot );
 
 end;
 
@@ -373,6 +542,8 @@ Function InitMegaPlot( GB: GameBoardPtr; Slot,Plot: GearPtr ): GearPtr;
 	{ Create all subplots, and initialize everything. }
 	{ 1 - Create list of components }
 	{ 2 - Merge all components into single plot }
+	{ 3 - Insert persona fragments }
+	{ 4 - Deploy elements as indicated by PLACE strings }
 var
 	SPList: GearPtr;
 	PlotID,LayerID: LongInt;
@@ -392,7 +563,8 @@ begin
 
 	{ Now that we have the list, assemble it. }
 	if SPList <> Nil then begin
-		AssembleMegaPlot( Slot , SPList , PlotID );
+		Plot := AssembleMegaPlot( Slot , SPList , PlotID );
+		DeployPlot( GB , Slot , Plot );
 	end;
 
 	InitMegaPlot := SPList;

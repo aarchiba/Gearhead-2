@@ -66,6 +66,8 @@ Const
 					{ "Narrative" in gears.pp, but I figured I'd }
 					{ place this here since it's thematically identical }
 					{ to the SubQuestLID above. }
+	NAG_MasterPlotElementIndex = -20;	{ When combining two plots, this NAtt stores }
+					{ the index number of element [S] in the master plot. }
 
 	NAG_QuestStatus = -14;	{ Used to record the PC's progress through set adventure content. }
 			{ Also used to determine whether the NPCs associated with the content }
@@ -252,10 +254,10 @@ begin
 
 	for t := 1 to Num_Plot_Elements do begin
 		if ElementID( Plot , T ) = ID then begin
-			EDesc := UpCase( SAttValue( Plot^.SA , 'ELEMENT' + BStr( T ) ) );
+			EDesc := SAttValue( Plot^.SA , 'ELEMENT' + BStr( T ) );
 			DeleteWhiteSpace( EDesc );
 
-			if ( EDesc <> '' ) and ( EDesc[1] = Code ) then begin
+			if ( EDesc <> '' ) and ( UpCase( EDesc[1] ) = Code ) then begin
 				N := T;
 			end;
 		end;

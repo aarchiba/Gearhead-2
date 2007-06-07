@@ -62,8 +62,6 @@ Function NewSubZone( MF: GearPtr ): GearPtr;
 
 Function SceneContext( GB: GameBoardPtr; Scene: GearPtr ): String;
 
-Procedure BuildMegalist( Dest: GearPtr; AddOn: SAttPtr );
-
 { WARNING: AddContent is for internal use only!!! }
 Function AddContent( CType: String; GB: GameboardPtr; Source,Zone: GearPtr; P: String; var Cells: SAttPtr; SCheck,STerr: Integer ): Boolean;
 
@@ -2164,39 +2162,6 @@ begin
 
 	ContentInitOkay := AllOk;
 end;
-
-Procedure BuildMegalist( Dest: GearPtr; AddOn: SAttPtr );
-	{ Combine the scripts listed in ADDON into LLIST. }
-	{ If a script with the same label already exists in LLIST, the new }
-	{ script from ADDON supercedes it, while the old script gets moved to }
-	{ a new label. }
-var
-	SPop,Key,Current: String;
-	SPopSA: SAttPtr;
-begin
-	SPop := 'na';
-	while AddOn <> Nil do begin
-		{ If there's currently a SAtt in the megalist with this }
-		{ key, it has to be "pushed" to a new position. }
-		Key := UpCase( RetrieveAPreamble( AddOn^.Info ) );
-		if ( Key <> 'REQUIRES' ) and ( Key <> 'DESC' ) and ( Key <> 'DESIG' ) and ( Key <> 'SPECIAL' )
-					 and not ( HeadMatchesString( 'ELEMENT' , Key ) or HeadMatchesString( 'TEAM' , Key ) or HeadMatchesString( 'CONTENT' , Key ) or HeadMatchesString( 'CONTEXT' , Key )
-					 or HeadMatchesString( 'MINIMAP' , Key ) or HeadMatchesString( 'QUEST' , Key ) or HeadMatchesString( 'SCENE' , Key ) or HeadMatchesString( 'NAME' , Key ) ) then begin
-			Current := AS_GetString( Dest , Key );
-
-			if Current <> '' then begin
-				SPopSA := AddSAtt( Dest^.SA , Key , Current );
-				SPop := RetrieveAPreamble( SPopSA^.Info );
-			end;
-
-			ReplacePat( AddOn^.Info , '%pop%' , SPop );
-			SetSAtt( Dest^.SA , AddOn^.Info );
-		end;
-
-		AddOn := AddOn^.Next;
-	end;
-end;
-
 
 Procedure InsertContentFragment( GB: GameBoardPtr; Adv,C: GearPtr );
 	{ A plot has been loaded which is actually a content fragment. This is what we need }

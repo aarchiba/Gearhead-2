@@ -39,6 +39,9 @@ var
 	Standard_XXRan_Components: GearPtr;
 
 
+Procedure BuildMegalist( Dest: GearPtr; AddOn: SAttPtr );
+
+
 Function SceneDesc( Scene: GearPtr ): String;
 
 Function NumFreeScene( Adventure,Plot: GearPtr; GB: GameBoardPtr; Desc: String ): Integer;
@@ -74,14 +77,47 @@ implementation
 
 {$IFDEF ASCII}
 uses 	ui4gh,rpgdice,vidgfx,texutil,gearutil,interact,ability,gearparser,ghchars,narration,ghprop,
-	vidmenus;
+	vidmenus,arenascript;
 {$ELSE}
 uses 	ui4gh,rpgdice,glgfx,texutil,gearutil,interact,ability,gearparser,ghchars,narration,ghprop,
-	glmenus;
+	glmenus,arenascript;
 {$ENDIF}
 
 var
 	Fast_Seek_Element: Array [0..1,1..Num_Plot_Elements] of GearPtr;
+
+Procedure BuildMegalist( Dest: GearPtr; AddOn: SAttPtr );
+	{ Combine the scripts listed in ADDON into LLIST. }
+	{ If a script with the same label already exists in LLIST, the new }
+	{ script from ADDON supercedes it, while the old script gets moved to }
+	{ a new label. }
+var
+	SPop,Key,Current: String;
+	SPopSA: SAttPtr;
+begin
+	SPop := 'na';
+	while AddOn <> Nil do begin
+		{ If there's currently a SAtt in the megalist with this }
+		{ key, it has to be "pushed" to a new position. }
+		Key := UpCase( RetrieveAPreamble( AddOn^.Info ) );
+		if ( Key <> 'REQUIRES' ) and ( Key <> 'DESC' ) and ( Key <> 'DESIG' ) and ( Key <> 'SPECIAL' )
+					 and not ( HeadMatchesString( 'ELEMENT' , Key ) or HeadMatchesString( 'TEAM' , Key ) or HeadMatchesString( 'CONTENT' , Key ) or HeadMatchesString( 'CONTEXT' , Key )
+					 or HeadMatchesString( 'MINIMAP' , Key ) or HeadMatchesString( 'QUEST' , Key ) or HeadMatchesString( 'SCENE' , Key ) or HeadMatchesString( 'NAME' , Key )
+					 or HeadMatchesString( 'PLACE' , Key ) ) then begin
+			Current := AS_GetString( Dest , Key );
+
+			if Current <> '' then begin
+				SPopSA := AddSAtt( Dest^.SA , Key , Current );
+				SPop := RetrieveAPreamble( SPopSA^.Info );
+			end;
+
+			ReplacePat( AddOn^.Info , '%pop%' , SPop );
+			SetSAtt( Dest^.SA , AddOn^.Info );
+		end;
+
+		AddOn := AddOn^.Next;
+	end;
+end;
 
 Function FilterElementDescription( var IDesc: String ): String;
 	{ Given this element description, break it up into the }
