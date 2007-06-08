@@ -29,9 +29,11 @@ be defined, and they all must be numbered.
 
 You can move elements automatically by defining a "PLACE[n]" string for them.
 
-Place[n] <[~](Destination Index) (team data)>
+Place[n] <[~](Destination Index)  ((Team Name)) (team data)>
 
 The destination index is the element number where where the gear should be moved.
+
+If a team name is indicated in brackets, this will be used.
 
 If the first character in the place attribute is a ~, the gear will be placed
 in the scene of the requested element rather than the element itself.

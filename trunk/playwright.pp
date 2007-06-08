@@ -56,6 +56,8 @@ Function StoryContext( GB: GameBoardPtr; Story: GearPtr ): String;
 
 Function SeekUrbanArea( RootScene: GearPtr ): GearPtr;
 Procedure InsertPFrags( Plot,Persona: GearPtr; const Context: String; ID: Integer );
+Procedure PrepAllPersonas( Adventure,Plot: GearPtr; GB: GameBoardPtr; MinID: Integer );
+Procedure PrepMetaScenes( Adventure,Plot: GearPtr; GB: GameBoardPtr );
 
 Function PersonalContext( Adv,NPC: GearPtr ): String;
 Function DifficulcyContext( Threat: Integer ): String;
@@ -638,7 +640,7 @@ begin
 	FindFreeFaction := F2;
 end;
 
-Function DeployNextPrefabElement( GB: GameBoardPtr; Adventure,Plot: GearPtr; N: Integer ): GearPtr;
+Function DeployNextPrefabElement( GB: GameBoardPtr; Adventure,Plot: GearPtr; N: Integer; MovePrefabs: Boolean ): GearPtr;
 	{ Deploy the next element, give it a unique ID number if }
 	{ appropriate, then return a pointer to the it. }
 var
@@ -679,95 +681,97 @@ begin
 		SetNAtt( Plot^.NA , NAG_ElementID , N , ID );
 
 
-		{ Find out if we have to put this element somewhere else. }
-		Place := SAttValue( Plot^.SA , 'PLACE' + BStr( N ) );
+		If MovePrefabs then begin
+			{ Find out if we have to put this element somewhere else. }
+			Place := SAttValue( Plot^.SA , 'PLACE' + BStr( N ) );
 
-		{ If we have to put it somewhere, do so now. }
-		{ Otherwise leave it where it is. }
-		if Place <> '' then begin
-			{ Delink the element from the plot. }
-			DelinkGear( Plot^.InvCom , E );
+			{ If we have to put it somewhere, do so now. }
+			{ Otherwise leave it where it is. }
+			if Place <> '' then begin
+				{ Delink the element from the plot. }
+				DelinkGear( Plot^.InvCom , E );
 
-			{ Determine its target location. }
-			{ If the PLACE string starts with a tilde, we want to }
-			{ place the prefab element in the same scene as the relative }
-			{ element rather than the element itself. }
-			InSceneNotElement := Place[1] = '~';
-			if InSceneNotElement then DeleteFirstChar( Place );
+				{ Determine its target location. }
+				{ If the PLACE string starts with a tilde, we want to }
+				{ place the prefab element in the same scene as the relative }
+				{ element rather than the element itself. }
+				InSceneNotElement := Place[1] = '~';
+				if InSceneNotElement then DeleteFirstChar( Place );
 
-			D := ExtractValue( Place );
-			Dest := GetFSE( D );
+				D := ExtractValue( Place );
+				Dest := GetFSE( D );
 
-			if InSceneNotElement and (( Dest = Nil ) or ( Dest^.G <> GG_Scene )) then begin
-				{ If the destination is a metascene, locate its entrance. }
-				if ( Dest = Nil ) or ( Dest^.G = GG_MetaScene ) then begin
-					Dest := FindSceneEntrance( Adventure , GB , GetFSEID( Plot^.Parent , Plot , D ) );
+				if InSceneNotElement and (( Dest = Nil ) or ( Dest^.G <> GG_Scene )) then begin
+					{ If the destination is a metascene, locate its entrance. }
+					if ( Dest = Nil ) or ( Dest^.G = GG_MetaScene ) then begin
+						Dest := FindSceneEntrance( Adventure , GB , GetFSEID( Plot^.Parent , Plot , D ) );
+					end;
+
+					{ Try to find the associated scene now. }
+					if Dest <> Nil then begin
+						Dest := FindActualScene( GB , FindGearScene( Dest , GB ) );
+					end;
 				end;
 
-				{ Try to find the associated scene now. }
-				if Dest <> Nil then begin
-					Dest := FindActualScene( GB , FindGearScene( Dest , GB ) );
-				end;
-			end;
+				if Dest = Nil then begin
+					{ An invalid location was specified... }
+					DisposeGear( E );
 
-			if Dest = Nil then begin
-				{ An invalid location was specified... }
-				DisposeGear( E );
-
-			end else if ( Dest^.G <> GG_Scene ) and ( Dest^.G <> GG_MetaScene ) and IsLegalInvCom( Dest , E ) then begin
-				{ If E can be an InvCom of Dest, stick it there. }
-				InsertInvCom( Dest , E );
-
-			end else begin
-				{ If Dest isn't a scene, find the scene DEST is in itself }
-				{ and stick E in there. }
-				while ( Dest <> Nil ) and ( not IsAScene( Dest ) ) do Dest := Dest^.Parent;
-
-				if Dest <> Nil then begin
-					{ Maybe set this item next to another item. }
-					P := Pos( '!N' , Place );
-					if P > 0 then begin
-						SubStr := copy( Place , P , 255 );
-						ExtractWord( SubStr );
-						ID := ExtractValue( SubStr );
-						Target := GetFSE( ID );
-						if ( Target <> Nil ) and ( ( Target^.G = GG_Scene ) or ( Target^.G = GG_MetaScene ) ) then begin
-							if ID > 0 then begin
-								Target := FindSceneEntrance( Adventure , GB , ElementID( Plot , ID ) );
-							end else begin
-								Target := FindSceneEntrance( Adventure , GB , ElementID( Plot^.Parent , Abs( ID ) ) );
-							end;
-						end;
-						if Target <> Nil then begin
-							SetNAtt( E^.NA , NAG_ParaLocation , NAS_X , NAttValue( Target^.NA , NAG_Location , NAS_X ) );
-							SetNAtt( E^.NA , NAG_ParaLocation , NAS_Y , NAttValue( Target^.NA , NAG_Location , NAS_Y ) );
-						end;
-					end;
-
-					{ If the destination is the current scene, }
-					{ we'll want to deploy this element right away. }
-					{ Otherwise just shove it in the invcoms. }
-					if Dest = GB^.Scene then begin
-						DeployMek( GB , E , True );
-					end else begin
-						InsertInvCom( Dest , E );
-					end;
-
-					{ If E is a character, this brings us to the next problem: }
-					{ we need to assign a TEAM for E to be a member of. }
-					if E^.G = GG_Character then begin
-						SetSAtt( E^.SA , 'TEAMDATA <' + Place + '>' );
-						ChooseTeam( E , Dest );
-					end;
-
-					{ If DEST is a metascene, give E an OriginalHome }
-					{ of -1 so it isn't deleted when the scene ends. }
-					if ( Dest^.G = GG_MetaScene ) or IsInvCom( Dest ) then SetNAtt( E^.NA , NAG_ParaLocation , NAS_OriginalHome , -1 );
+				end else if ( Dest^.G <> GG_Scene ) and ( Dest^.G <> GG_MetaScene ) and IsLegalInvCom( Dest , E ) then begin
+					{ If E can be an InvCom of Dest, stick it there. }
+					InsertInvCom( Dest , E );
 
 				end else begin
-					{ Couldn't find a SCENE gear. Get rid of E. }
-					DisposeGear( E );
-				end;
+					{ If Dest isn't a scene, find the scene DEST is in itself }
+					{ and stick E in there. }
+					while ( Dest <> Nil ) and ( not IsAScene( Dest ) ) do Dest := Dest^.Parent;
+
+					if Dest <> Nil then begin
+						{ Maybe set this item next to another item. }
+						P := Pos( '!N' , Place );
+						if P > 0 then begin
+							SubStr := copy( Place , P , 255 );
+							ExtractWord( SubStr );
+							ID := ExtractValue( SubStr );
+							Target := GetFSE( ID );
+							if ( Target <> Nil ) and ( ( Target^.G = GG_Scene ) or ( Target^.G = GG_MetaScene ) ) then begin
+								if ID > 0 then begin
+									Target := FindSceneEntrance( Adventure , GB , ElementID( Plot , ID ) );
+								end else begin
+									Target := FindSceneEntrance( Adventure , GB , ElementID( Plot^.Parent , Abs( ID ) ) );
+								end;
+							end;
+							if Target <> Nil then begin
+								SetNAtt( E^.NA , NAG_ParaLocation , NAS_X , NAttValue( Target^.NA , NAG_Location , NAS_X ) );
+								SetNAtt( E^.NA , NAG_ParaLocation , NAS_Y , NAttValue( Target^.NA , NAG_Location , NAS_Y ) );
+							end;
+						end;
+
+						{ If the destination is the current scene, }
+						{ we'll want to deploy this element right away. }
+						{ Otherwise just shove it in the invcoms. }
+						if Dest = GB^.Scene then begin
+							DeployMek( GB , E , True );
+						end else begin
+							InsertInvCom( Dest , E );
+						end;
+
+						{ If E is a character, this brings us to the next problem: }
+						{ we need to assign a TEAM for E to be a member of. }
+						if E^.G = GG_Character then begin
+							SetSAtt( E^.SA , 'TEAMDATA <' + Place + '>' );
+							ChooseTeam( E , Dest );
+						end;
+
+						{ If DEST is a metascene, give E an OriginalHome }
+						{ of -1 so it isn't deleted when the scene ends. }
+						if ( Dest^.G = GG_MetaScene ) or IsInvCom( Dest ) then SetNAtt( E^.NA , NAG_ParaLocation , NAS_OriginalHome , -1 );
+
+					end else begin
+						{ Couldn't find a SCENE gear. Get rid of E. }
+						DisposeGear( E );
+					end;
+				end; { If MovePrefabs }
 			end;
 
 		end; { if place <> '' }
@@ -813,7 +817,7 @@ begin
 	SelectArtifact := A;
 end;
 
-Function FindElement( Adventure,Plot: GearPtr; N: Integer; GB: GameBoardPtr ; Debug: Boolean ): Boolean;
+Function FindElement( Adventure,Plot: GearPtr; N: Integer; GB: GameBoardPtr ; MovePrefabs, Debug: Boolean ): Boolean;
 	{ Locate and store the Nth element for this plot. }
 	{ Return TRUE if a suitable element could be found, or FALSE }
 	{ if no suitable element exists in the adventure & this plot }
@@ -910,7 +914,7 @@ begin
 		end else if EKind[1] = 'P' then begin
 			{ PreFab element. Check Plot/InvCom and }
 			{ retrieve it. }
-			Element := DeployNextPrefabElement( GB , Adventure , Plot , N );
+			Element := DeployNextPrefabElement( GB , Adventure , Plot , N , MovePrefabs );
 			Fast_Seek_Element[ 1 , N ] := Element;
 			OK := Element <> Nil;
 
@@ -923,7 +927,7 @@ begin
 				Element^.Next := Plot^.InvCom;
 				Plot^.InvCom := Element;
 				Element^.Parent := Plot;
-				DeployNextPrefabElement( GB , Adventure , Plot , N );
+				DeployNextPrefabElement( GB , Adventure , Plot , N , MovePrefabs );
 				Fast_Seek_Element[ 1 , N ] := Element;
 				OK := True;
 			end else OK := False;
@@ -1347,7 +1351,7 @@ begin
 	PersonalContext := it;
 end;
 
-Procedure PrepAllPersonas( Adventure,Plot: GearPtr; GB: GameBoardPtr );
+Procedure PrepAllPersonas( Adventure,Plot: GearPtr; GB: GameBoardPtr; MinID: Integer );
 	{ Prepare the personas of this plot. }
 var
 	P,P2: GearPtr;
@@ -1363,7 +1367,7 @@ begin
 	while P <> Nil do begin
 		P2 := P^.Next;
 		if P^.G = GG_Persona then begin
-			InsertPFrags( Plot , P , Context + PersonalContext( Adventure , GetFSE( P^.S ) ) , 1 );
+			InsertPFrags( Plot , P , Context + PersonalContext( Adventure , GetFSE( P^.S ) ) , MinID );
 		end;
 		P := P2;
 	end;
@@ -1416,7 +1420,7 @@ Procedure InitPlot( Adventure,Plot: GearPtr; GB: GameBoardPtr );
 begin
 	FormatRumorString( Adventure , Plot , Plot , GB );
 	PrepMetaScenes( Adventure , Plot , GB );
-	PrepAllPersonas( Adventure , Plot , GB );
+	PrepAllPersonas( Adventure , Plot , GB , 1 );
 end;
 
 Procedure InitRandomLoot( LList: GearPtr );
@@ -1445,7 +1449,7 @@ begin
 	end;
 end;
 
-Function MatchPlotToAdventure( Slot,Plot: GearPtr; GB: GameBoardPtr; IsQuestContent,Debug: Boolean ): Boolean;
+Function MatchPlotToAdventure( Slot,Plot: GearPtr; GB: GameBoardPtr; DoFullInit,MovePrefabs,Debug: Boolean ): Boolean;
 	{ This PLOT gear is meant to be inserted into this ADVENTURE gear. }
 	{ Perform the insertion, select unselected elements, and make sure }
 	{ that everything fits. }
@@ -1486,7 +1490,7 @@ begin
 		{ random plot, several of the elements may already have been }
 		{ assigned. The plot is OK if those elements exist & are OK. }
 		if ( ElementID( Plot , T ) = 0 ) and EverythingOK then begin
-			OkNow := FindElement( Adventure , Plot , T , GB , Debug );
+			OkNow := FindElement( Adventure , Plot , T , GB , MovePrefabs , Debug );
 
 			if AStringHasBString( SAttValue( Plot^.SA , 'ELEMENT' + BStr( T ) ) , 'NEVERFAIL' ) and ( not OkNow ) then begin
 				CreateElement( Adventure , Plot , T , GB );
@@ -1526,7 +1530,7 @@ begin
 		{ adventure. Initialize the stuff... rumor strings }
 		{ mostly. }
 		{ Quest content doesn't get initialized here- that gets done later. }
-		if not IsQuestContent then InitPlot( Adventure , Plot , GB );
+		if DoFullInit then InitPlot( Adventure , Plot , GB );
 
 		{ Actually, quest content does get its treasures initialized here. }
 		InitRandomLoot( Plot^.InvCom );
@@ -1567,7 +1571,7 @@ Function InsertStory( Slot,Story: GearPtr; GB: GameBoardPtr ): Boolean;
 	{ as required. If everything is found, insert STORY as an InvCom }
 	{ of the SLOT. Otherwise, delete it. }
 begin
-	InsertStory := MatchPlotToAdventure( Slot , Story , GB , False , False );
+	InsertStory := MatchPlotToAdventure( Slot , Story , GB , True, True , False );
 end;
 
 Function InsertGlobalArc( Adventure,ARC: GearPtr; GB: GameBoardPtr ): Boolean;
@@ -1576,7 +1580,7 @@ Function InsertGlobalArc( Adventure,ARC: GearPtr; GB: GameBoardPtr ): Boolean;
 	{ of the Adventure. Otherwise, delete it. }
 begin
 	{ Step One and Only - Attempt to insert this plot into the adventure. }
-	InsertGlobalArc := MatchPlotToAdventure( Adventure , ARC , GB , False , False );
+	InsertGlobalArc := MatchPlotToAdventure( Adventure , ARC , GB , True , True , False );
 end;
 
 Function InsertStoryArc( Story,Arc: GearPtr; GB: GameBoardPtr ): Boolean;
@@ -1630,7 +1634,7 @@ begin
 
 	{ Step Two - Attempt to insert this plot into the adventure. }
 	if EverythingOK then begin
-		InsertStoryArc := MatchPlotToAdventure( Story , ARC , GB , False , False );
+		InsertStoryArc := MatchPlotToAdventure( Story , ARC , GB , True , True , False );
 	end else begin
 		DisposeGear( Arc );
 		InsertStoryArc := False;
@@ -1643,8 +1647,7 @@ Function InsertRSC( Source,Frag: GearPtr; GB: GameBoardPtr ): Boolean;
 var
 	it: Boolean;
 begin
-	it := InsertStoryArc( Source , Frag , GB );
-	InsertRSC := it;
+	InsertRSC := MatchPlotToAdventure( Source , Frag , GB , True , True , False );;
 end;
 
 Procedure AdvancePlot( GB: GameBoardPtr; Adv,Plot: GearPtr; N: Integer );
@@ -1832,7 +1835,7 @@ begin
 
 			end;
 
-			MergeOK := MatchPlotToAdventure( Story , C , GB , False , False );
+			MergeOK := MatchPlotToAdventure( Story , C , GB , True , True , False );
 		end else MergeOK := False;
 	until MergeOK or ( Shopping_List = Nil );
 
@@ -1888,7 +1891,7 @@ begin
 	City := FindRootScene( Nil , City );
 
 	{ Second, locate the rest of the elements. }
-	MatchOK := MatchPlotToAdventure( FindROot( City ) , Frag , Nil , TRUE , FALSE );
+	MatchOK := MatchPlotToAdventure( FindROot( City ) , Frag , Nil , FALSE , FALSE , FALSE );
 
 	{ If this worked, get all the needed scenes and store the element names. }
 	if MatchOK then begin
@@ -1945,7 +1948,7 @@ var
 	Desc: String;
 	T: Integer;
 begin
-	it := MatchPlotToAdventure( Source , Mission , Nil , False , False );
+	it := MatchPlotToAdventure( Source , Mission , Nil , TRUE , False , False );
 
 	{ If the mission was successfully added, we need to do extra initialization. }
 	if it then begin

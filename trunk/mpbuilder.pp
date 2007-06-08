@@ -547,8 +547,8 @@ Procedure MoveElements( GB: GameBoardPtr; Plot: GearPtr );
 	{ Make it so. }
 var
 	T,PlaceIndex: Integer;
-	PlaceCmd: String;
-	Element,Dest,MF: GearPtr;
+	PlaceCmd,TeamName: String;
+	Element,Dest,MF,Team: GearPtr;
 	InSceneNotElement: Boolean;
 begin
 	for t := 1 to Num_Plot_ELements do begin
@@ -562,6 +562,8 @@ begin
 
 			PlaceIndex := ExtractValue( PlaceCmd );
 			Dest := SeekPlotElement( FindRoot( GB^.Scene ) , Plot , PlaceIndex , GB );
+
+			TeamName := RetrieveBracketString( PlaceCmd );
 
 			if InSceneNotElement and (( Dest = Nil ) or ( Dest^.G <> GG_Scene )) then begin
 				{ If the destination is a metascene, locate its entrance. }
@@ -584,7 +586,18 @@ begin
 					{ and stick E in there. }
 					while ( Dest <> Nil ) and ( not IsAScene( Dest ) ) do Dest := Dest^.Parent;
 
-					if IsMasterGear( Element ) then ChooseTeam( Element , Dest );
+					if IsMasterGear( Element ) then begin
+						if TeamName <> '' then begin
+							Team := SeekChildByName( Dest , TeamName );
+							if ( Team <> Nil ) and ( Team^.G = GG_Team ) then begin
+								SetNAtt( Element^.NA , NAG_Location , NAS_Team , Team^.S );
+							end else begin
+								ChooseTeam( Element , Dest );
+							end;
+						end else begin
+							ChooseTeam( Element , Dest );
+						end;
+					end;
 
 					{ If a Metascene map feature has been defined as this element's home, }
 					{ stick it there instead of in the scene proper. Such an element will }
@@ -609,13 +622,12 @@ Procedure DeployPlot( GB: GameBoardPtr; Slot,Plot: GearPtr );
 	{ requested. }
 	{ - Insert persona fragments as needed }
 	{ - Deploy elements as indicated by PLACE strings }
-var
-	Context: String;
 begin
-	Context := '';
-	if Slot^.G = GG_Story then Context := Context + ' ' + StoryContext( GB , Slot );
+	PrepAllPersonas( FindRoot( GB^.Scene ) , Plot , GB , NAttValue( Slot^.NA , NAG_Narrative , NAS_MaxPlotLayer ) + 1 );
 
 	MoveElements( GB , Plot );
+
+	PrepMetascenes( FindRoot( GB^.Scene ) , Plot , GB );
 end;
 
 Function InitMegaPlot( GB: GameBoardPtr; Slot,Plot: GearPtr ): GearPtr;
