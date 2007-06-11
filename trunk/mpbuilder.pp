@@ -26,9 +26,16 @@ interface
 
 uses gears,locale;
 
+Function InitMegaPlot( GB: GameBoardPtr; Slot,Plot: GearPtr ): GearPtr;
+
+
 implementation
 
-uses narration,playwright,texutil,gearutil,gearparser,ghchars,randmaps;
+{$IFDEF ASCII}
+uses narration,playwright,texutil,gearutil,gearparser,ghchars,randmaps,vidgfx;
+{$ELSE}
+uses narration,playwright,texutil,gearutil,gearparser,ghchars,randmaps,glgfx;
+{$ENDIF}
 
 Type
 	ElementDesc = Record
@@ -136,6 +143,8 @@ begin
 	SetNAtt( Shard^.NA , NAG_Narrative , NAS_PlotID , PlotID );
 	SetNAtt( Shard^.NA , NAG_Narrative , NAS_LayerID , LayerID );
 
+DialogMsg( GearName( Shard ) );
+
 	{ Start by copying over all provided parameters. }
 	{ Also count the number of parameters passed; it could be useful. }
 	NumParam := 0;
@@ -143,6 +152,7 @@ begin
 		if ParamIn[ t ].EValue <> 0 then begin
 			SetNAtt( Shard^.NA , NAG_ElementID , T , ParamIn[ t ].EValue );
 			SetSAtt( Shard^.SA , 'ELEMENT' + BStr( T ) + ' <' + ParamIn[ t ].EType + '>' );
+DialogMsg( 'Adding element ' + ParamIn[ t ].EType + ': ' + Bstr( ParamIn[ t ].EValue ) );
 			Inc( NumParam );
 		end;
 	end;
@@ -166,7 +176,9 @@ begin
 	SPList := Nil;
 
 	{ Attempt the basic content insertion routine. }
-	InitOK := InsertStory( Slot, Shard , GB );
+	InitOK := InsertSubPlot( Slot, Shard , GB );
+
+DialogMsg( 'Init Okay' );
 
 	{ If the installation has gone well so far, time to move on. }
 	if InitOK then begin
@@ -183,12 +195,14 @@ begin
 
 		if ( NumElem + EsSoFar ) <= Num_Plot_Elements then begin
 			{ We have room for the elements. Good. Now move on by installing the subplots. }
+DialogMsg( 'Plenty of elements' );
 
 			{ If any of the needed subplots fail, installation of this shard fails }
 			{ as well. }
 			for t := 1 to Num_Sub_Plots do begin
 				SPReq := SAttValue( Shard^.SA , 'SUBPLOT' + BStr( T ) );
 				if SPReq <> '' then begin
+DialogMsg( 'Seeking subplot...' );
 					SPID := NewLayerID( Slot );
 					SetNAtt( Shard^.NA , NAG_SubPlotLayerID , T , SPID );
 					SubPlot := AddSubPlot( GB , Slot , Shard , SPReq , NumElem , PlotID , SPID );
@@ -197,6 +211,7 @@ begin
 						AppendGear( SPList , SubPlot );
 						NumElem := NumElem + NAttValue( SubPlot^.NA , NAG_Narrative , NAS_NumSPElementsUsed );
 					end else begin
+DialogMsg( 'Subplot not found' );
 						{ The subplot request failed, meaning that this shard fails }
 						{ as well. }
 						InitOK := False;
@@ -256,8 +271,8 @@ begin
 		E := ExtractValue( SPReq );
 		if ( E >= 1 ) and ( E <= Num_Plot_Elements ) then begin
 			{ This element is being shared with the subplot. }
-			ParamList[t].EValue := ElementID( Plot0 , T );
-			EDesc := SAttValue( Plot0^.SA , 'ELEMENT' + BStr( T ) );
+			ParamList[t].EValue := ElementID( Plot0 , E );
+			EDesc := SAttValue( Plot0^.SA , 'ELEMENT' + BStr( E ) );
 			if EDesc <> '' then ParamList[t].EType := EDesc[1];
 			AddElementContext( GB , Plot0 , Context , BStr( T )[1] , T );
 			Inc( T );
@@ -271,7 +286,7 @@ begin
 	{ fit them into the adventure. }
 	NotFoundMatch := True;
 	Shard := Nil;
-	while ( ShoppingList = Nil ) and NotFoundMatch do begin
+	while ( ShoppingList <> Nil ) and NotFoundMatch do begin
 		Shard := CloneGear( SelectComponentFromList( Sub_Plot_List , ShoppingList ) );
 		if Shard <> Nil then begin
 			{ See if we can add this one to the list. If not, it will be }
@@ -372,13 +387,21 @@ begin
 			{ and copy over the PLACE to MasterPlot. }
 			SetNAtt( SubPlot^.NA , NAG_MasterPlotElementIndex , T , PlotIndex );
 			SetSAtt( Dictionary , '%e' + BStr( T ) + '% <' + BStr( PlotIndex ) + '>' );
-			EDesc := SAttValue( SubPlot^.SA , 'PLACE' + BStr( T ) );
-			if EDesc <> '' then SetSAtt( MasterPlot^.SA , 'PLACE' + BStr( T ) + ' <' + EDesc + '>' );
 		end;
 	end;
 
 	InitListStrings( SubPlot , Dictionary );
 	DisposeSAtt( Dictionary );
+
+	{ After initializing the strings, do one more loop to copy over the PLACE info. }
+	for T := 1 to Num_Plot_Elements do begin
+		EID := ElementID( SubPlot , T );
+		if EID <> 0 then begin
+			PlotIndex := NAttValue( SubPlot^.NA , NAG_MasterPlotElementIndex , T );
+			EDesc := SAttValue( SubPlot^.SA , 'PLACE' + BStr( T ) );
+			if EDesc <> '' then SetSAtt( MasterPlot^.SA , 'PLACE' + BStr( PlotIndex ) + ' <' + EDesc + '>' );
+		end;
+	end;
 end;
 
 Procedure MergePersona( MainPlot , SubPlot , Persona: GearPtr );
@@ -610,7 +633,11 @@ begin
 						end;
 					end;
 
-					InsertInvCom( Dest , Element );
+					if Dest = GB^.Scene then begin
+						DeployMek( GB , Element , True );
+					end else begin
+						InsertInvCom( Dest , Element );
+					end;
 				end;
 			end;
 		end;

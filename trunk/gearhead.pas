@@ -31,7 +31,7 @@ uses 	gears,vidgfx,navigate,vidmap,randmaps,locale,arenaplay,ghchars,gearutil,ge
 	ability,chargen,vidmenus,backpack,ui4gh,gh2arena,menugear,customization;
 {$ELSE}
 uses 	gears,glgfx,navigate,glmap,randmaps,locale,arenaplay,ghchars,gearutil,gearparser,
-	ability,chargen,glmenus,backpack,gh2arena,menugear,customization;
+	ability,chargen,glmenus,backpack,gh2arena,menugear,customization,ui4gh;
 {$ENDIF}
 
 const

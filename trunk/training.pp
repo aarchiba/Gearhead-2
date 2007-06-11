@@ -37,7 +37,7 @@ implementation
 {$IFDEF ASCII}
 uses	ghchars,gearutil,texutil,vidmenus,vidinfo,ability,description,ui4gh;
 {$ELSE}
-uses	ghchars,gearutil,texutil,glmenus,glinfo,ability,description;
+uses	ghchars,gearutil,texutil,glmenus,glinfo,ability,description,ui4gh;
 {$ENDIF}
 
 var

@@ -1177,7 +1177,7 @@ begin
 		if pname <> '' then begin
 			Plot := LoadFile( pname , Series_Directory );
 
-			if InsertGlobalArc( FindRoot( Scene ) , Plot , GB ) then begin
+			if InsertPlot( FindRoot( Scene ) , Plot , GB ) then begin
 				DialogMsg( 'Plot successfully loaded.' );
 			end else begin
 				DialogMsg( 'Plot rejected.' );

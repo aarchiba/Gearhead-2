@@ -63,6 +63,8 @@ Function PersonalContext( Adv,NPC: GearPtr ): String;
 Function DifficulcyContext( Threat: Integer ): String;
 
 Function InsertStory( Slot,Story: GearPtr; GB: GameBoardPtr ): Boolean;
+Function InsertSubPlot( Slot,SubPlot: GearPtr; GB: GameBoardPtr ): Boolean;
+Function InsertPlot( Slot,Plot: GearPtr; GB: GameBoardPtr ): Boolean;
 
 Function InsertGlobalArc( Adventure,ARC: GearPtr; GB: GameBoardPtr ): Boolean;
 Function InsertStoryArc( Story,Arc: GearPtr; GB: GameBoardPtr ): Boolean;
@@ -79,10 +81,10 @@ implementation
 
 {$IFDEF ASCII}
 uses 	ui4gh,rpgdice,vidgfx,texutil,gearutil,interact,ability,gearparser,ghchars,narration,ghprop,
-	vidmenus,arenascript;
+	vidmenus,arenascript,mpbuilder;
 {$ELSE}
 uses 	ui4gh,rpgdice,glgfx,texutil,gearutil,interact,ability,gearparser,ghchars,narration,ghprop,
-	glmenus,arenascript;
+	glmenus,arenascript,mpbuilder;
 {$ENDIF}
 
 var
@@ -1573,6 +1575,73 @@ Function InsertStory( Slot,Story: GearPtr; GB: GameBoardPtr ): Boolean;
 begin
 	InsertStory := MatchPlotToAdventure( Slot , Story , GB , True, True , False );
 end;
+
+Function InsertSubPlot( Slot,SubPlot: GearPtr; GB: GameBoardPtr ): Boolean;
+	{ Stick SUBPLOT into SLOT, but better not initialize anything. }
+begin
+	{ Step One and Only - Attempt to insert this plot into the adventure. }
+	InsertSubPlot := MatchPlotToAdventure( Slot , SubPlot , GB , False , False , False );
+end;
+
+Function InsertPlot( Slot,Plot: GearPtr; GB: GameBoardPtr ): Boolean;
+	{ Stick PLOT into SLOT, selecting Actors and Locations }
+	{ as required. If everything is found, insert PLOT as an InvCom }
+	{ of SLOT. Otherwise, delete it. }
+	{ If SLOT is a story, copy over grabbed elements and so on. }
+var
+	Desc: String;
+	T,N: Integer;
+	P2: GearPtr;
+	EverythingOK: Boolean;
+begin
+	EverythingOK := True;
+
+	{ Step One - Copy element info from the parent story as required. }
+	{ If there are any characters requested by this plot, }
+	{ check to see if they are currently involved in other plots. If so, }
+	{ insertion will fail. }
+	if SLOT^.G = GG_Story then begin
+		for t := 1 to Num_Plot_Elements do begin
+			{ If an element grab is requested, process that now. }
+			desc := SAttValue( Plot^.SA , 'ELEMENT' + BStr( T ) );
+			if ( desc <> '' ) and ( UpCase( desc[1] ) = 'G' ) then begin
+				ExtractWord( desc );
+				N := ExtractValue( desc );
+				desc := SAttValue( Slot^.SA , 'ELEMENT' + BStr( N ) );
+				{ Only copy over the first character of the element description, }
+				{ since that's all we need, and also because copying a PREFAB tag }
+				{ may result in story elements being unnessecarily deleted. }
+				SetSAtt( Plot^.SA , 'ELEMENT' + BStr( T ) + ' <' + desc[1] + '>' );
+				SetNAtt( Plot^.NA , NAG_ElementID , T , ElementID( Slot , N ) );
+			end;
+
+			{ If this gear is a character, better see whether or not }
+			{ it is already involved in a plot. }
+			if ( ElementID( Plot , T ) <> 0 ) and ( UpCase( Desc[1] ) = 'C' ) then begin
+				{ Clear the Plot's stat for now, to keep it from }
+				{ being returned by SeekPlotElement. }
+				N := ElementID( Plot , T );
+				SetNAtt( Plot^.NA , NAG_ElementID , T , 0 );
+
+				P2 := FindPersonaPlot( FindRoot( Slot ) , N );
+				if P2 <> Nil then begin
+					EverythingOK := False;
+				end;
+
+				SetNAtt( Plot^.NA , NAG_ElementID , T , N );
+			end;
+		end;
+	end;	{ If Slot^.G = GG_Story }
+
+	{ Step Two - Attempt to insert this plot into the adventure. }
+	if EverythingOK then begin
+		InsertPlot := InitMegaPlot( GB , Slot , Plot ) <> Nil;
+	end else begin
+		DisposeGear( Plot );
+		InsertPlot := False;
+	end;
+end;
+
 
 Function InsertGlobalArc( Adventure,ARC: GearPtr; GB: GameBoardPtr ): Boolean;
 	{ Stick ARC into ADVENTURE, selecting Actors and Locations }
