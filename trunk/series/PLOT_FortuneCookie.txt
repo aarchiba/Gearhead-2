@@ -9,14 +9,14 @@ Plot 0
 
 	start <ifNPCOK E1 else GoDelete if= V1 0 else GoCheckTime V= 1 ComTime V+ 1 86400>
 	update <ifNPCOK E1 else GoDelete if= V1 0 else GoCheckTime V= 1 ComTime V+ 1 86400>
-	GoCheckTime <ifG ComTime V1 AdvancePlot 0>
-	GoDelete <AdvancePlot 0>
+	GoCheckTime <ifG ComTime V1 EndPlot>
+	GoDelete <EndPlot>
 
 sub
 	Persona 1
 	rumor <%name1% really likes fortune cookies.>
-	Greeting <NewChat ifG React 0 else GoNoLike Say 1 AdvancePlot 0>
-	GoNoLike <SayAnything AdvancePlot 0>
+	Greeting <NewChat ifG React 0 else GoNoLike Say 1 EndPlot>
+	GoNoLike <SayAnything EndPlot>
 
 	Msg1 <If you specialize in armed combat, you might want to think about getting a boomerang or a spear so you'll have a missile attack which uses your best skill.>
 	Msg1_1 <Cybernetics may make you more powerful, but the side effects are killer if you don't know what you're getting into.>
@@ -31,7 +31,7 @@ sub
 	Msg1_10 <The more difficult the fight, the more you'll learn from it.>
 	Msg1_11 <You can shoot carefully or you can shoot lots but you can't do both at once.>
 	Msg1_12 <The small pepper is hotter.>
-	Msg1_13 <If you're down on your luck and your mecha's been trashed, maybe you should just settle down and get a corporate job.>
+	Msg1_13 <If you're out of luck and your mecha's been trashed, maybe you should just settle down and get a corporate job.>
 	Msg1_14 <Survivalists often find dead animals very useful.>
 	Msg1_15 <Mystics can learn a lot from shrines.>
 	Msg1_16 <If you would be a great warrior, you must battle through the cave naked, armed only with a toothpick.>
