@@ -41,7 +41,7 @@ Msg1 <\ELEMENT 1 @ \SCENE EScene 1 :// Come see me about the mission.>
 
 sub
 	Persona 1
-	rumor <!1 is offering a bounty for a wanted thief.>
+	rumor <%name1% is offering a bounty for a wanted thief.>
 	% V1 = Cash reward offered/Initialization counter
 	% V2 = Dead reward; smaller than the live award
 	greeting <if= P2 4 else GoCheckWin  AddReact -d6  Goto GoMissionFailure>

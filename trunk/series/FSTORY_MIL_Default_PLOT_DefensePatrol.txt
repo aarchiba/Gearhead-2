@@ -31,7 +31,7 @@ CleanUp <if= P3 0  AdvancePlot 0>
 sub
 	Persona 1
 	special <UNLISTED NOESCAPE>
-	rumor <!1 is conducting a patrol of !2.>
+	rumor <%name1% is conducting a patrol of %name2%.>
 	% V1 = Reward offered
 	greeting <if= P4 1 else GoNoWin CashPrize V1  AdvancePlot 0  Goto GoWeWon>
 	*GoWeWon <*WeWon&Reward E4 E5>

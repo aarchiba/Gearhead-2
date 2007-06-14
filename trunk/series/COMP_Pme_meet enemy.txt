@@ -22,7 +22,7 @@ Plot
 
 	sub
 		MetaScene 2 2
-		rumor <a group of dangerous looking mecha has been seen in !1.>
+		rumor <a group of dangerous looking mecha has been seen in %name1%.>
 		% L1 = Encounter Over Counter
 		% L2 = Initialization Counter
 		MapWidth 30
@@ -103,7 +103,7 @@ Plot
 	sub
 		Persona 2
 		% V1 = Enemy Faction ID
-		rumor <!2 has been asking a lot of questions about you.>
+		rumor <%name2% has been asking a lot of questions about you.>
 		greeting <V= 1 N2  NewChat Say 1 AddChat 1 AddChat 2 AddChat 3>
 		GoWin <StoryNote 3  WinComp 0 .changes>
 		.changes <+Pun>

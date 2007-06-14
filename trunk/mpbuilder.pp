@@ -143,8 +143,6 @@ begin
 	SetNAtt( Shard^.NA , NAG_Narrative , NAS_PlotID , PlotID );
 	SetNAtt( Shard^.NA , NAG_Narrative , NAS_LayerID , LayerID );
 
-DialogMsg( GearName( Shard ) );
-
 	{ Start by copying over all provided parameters. }
 	{ Also count the number of parameters passed; it could be useful. }
 	NumParam := 0;
@@ -152,7 +150,6 @@ DialogMsg( GearName( Shard ) );
 		if ParamIn[ t ].EValue <> 0 then begin
 			SetNAtt( Shard^.NA , NAG_ElementID , T , ParamIn[ t ].EValue );
 			SetSAtt( Shard^.SA , 'ELEMENT' + BStr( T ) + ' <' + ParamIn[ t ].EType + '>' );
-DialogMsg( 'Adding element ' + ParamIn[ t ].EType + ': ' + Bstr( ParamIn[ t ].EValue ) );
 			Inc( NumParam );
 		end;
 	end;
@@ -178,8 +175,6 @@ DialogMsg( 'Adding element ' + ParamIn[ t ].EType + ': ' + Bstr( ParamIn[ t ].EV
 	{ Attempt the basic content insertion routine. }
 	InitOK := InsertSubPlot( Slot, Shard , GB );
 
-DialogMsg( 'Init Okay' );
-
 	{ If the installation has gone well so far, time to move on. }
 	if InitOK then begin
 		{ Count the number of unique elements. If more elements have been }
@@ -195,14 +190,12 @@ DialogMsg( 'Init Okay' );
 
 		if ( NumElem + EsSoFar ) <= Num_Plot_Elements then begin
 			{ We have room for the elements. Good. Now move on by installing the subplots. }
-DialogMsg( 'Plenty of elements' );
 
 			{ If any of the needed subplots fail, installation of this shard fails }
 			{ as well. }
 			for t := 1 to Num_Sub_Plots do begin
 				SPReq := SAttValue( Shard^.SA , 'SUBPLOT' + BStr( T ) );
 				if SPReq <> '' then begin
-DialogMsg( 'Seeking subplot...' );
 					SPID := NewLayerID( Slot );
 					SetNAtt( Shard^.NA , NAG_SubPlotLayerID , T , SPID );
 					SubPlot := AddSubPlot( GB , Slot , Shard , SPReq , NumElem , PlotID , SPID );
@@ -211,7 +204,6 @@ DialogMsg( 'Seeking subplot...' );
 						AppendGear( SPList , SubPlot );
 						NumElem := NumElem + NAttValue( SubPlot^.NA , NAG_Narrative , NAS_NumSPElementsUsed );
 					end else begin
-DialogMsg( 'Subplot not found' );
 						{ The subplot request failed, meaning that this shard fails }
 						{ as well. }
 						InitOK := False;

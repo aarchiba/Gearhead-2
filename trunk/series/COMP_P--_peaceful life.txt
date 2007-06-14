@@ -38,7 +38,7 @@ Plot
 
 	sub
 		Persona 2
-		rumor <!2 is the new security head at !1.>
+		rumor <%name2% is the new security head at %name1%.>
 		special <UNLISTED>
 		*Greeting <*DestructionGreeting GoGiveMission &EnemyFac>
 		&TheCompany <SceneFac E1>
@@ -115,7 +115,7 @@ Plot
 	sub
 		Persona 4
 		special <UNLISTED>
-		rumor <!4 has been looking for someone to challenge.>
+		rumor <%name4% has been looking for someone to challenge.>
 		*Greeting <*NiceToMeetYou GoChallenge>
 		GoChallenge <NewChat say 1 AddChat 1 AddChat 2>
 		GoAcceptChallenge <StoryNote 3 &SetTargetChar E4 P= 2 1 WinComp E6 .next>
@@ -176,7 +176,7 @@ Plot
 
 	sub
 		Persona 3
-		rumor <!3 is the security guard at !1.>
+		rumor <%name3% is the security guard at %name1%.>
 		*greeting <*DefenseCheckIn GoBriefing>
 		GoBriefing <NewChat Say 1 AddChat 1 AddChat 2>
 		result1 <NewChat Say 2 AddChat 3 AddChat 4 AddChat 5>
@@ -249,7 +249,7 @@ Plot
 
 	sub
 		Persona 2
-		rumor <!2 has some work for you.>
+		rumor <%name2% has some work for you.>
 		*greeting <*IHaveAJobForYou GoGiveJob>
 		GoGiveJob <NewChat Say 1 AddChat 1 AddChat 2>
 
@@ -389,7 +389,7 @@ Plot
 	sub
 		Persona 2
 		special <UNLISTED>
-		rumor <!2 has been recuperating in !1.>
+		rumor <%name2% has been recuperating in %name1%.>
 		*Greeting <*ThanksForRescue GoReveal>
 		GoReveal <NewChat Say 1 AddChat 1 AddChat 2>
 		GoWin <StoryNote 3 &SetTargetItem E3 FreezeItem E3 WinComp 0 .next>
@@ -441,7 +441,7 @@ Plot
 	sub
 		Persona 2
 		special <UNLISTED>
-		rumor <!2 has been seen in !1.>
+		rumor <%name2% has been seen in %name1%.>
 		*Greeting <*HowAreYou GoReveal>
 		GoReveal <NewChat Say 1 AddChat 1 AddChat 2  Goto GoWin>
 		GoWin <StoryNote 2  WinComp E4 .next>

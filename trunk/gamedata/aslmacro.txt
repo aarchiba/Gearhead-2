@@ -11,6 +11,7 @@ E= <GrabPlot               GSetNAtt NAG_ElementID ? ?>
 S= <GrabStory              GSetNAtt NAG_ScriptVar ? ?>
 S+ <GrabStory              GAddNAtt NAG_ScriptVar ? ?>
 N= <GrabStory              GSetNAtt NAG_ElementID ? ?>
+EndPlot <AdvancePlot 0>
 SetTeamFaction <GrabTeam ? GSetNAtt NAG_Personal NAS_FactionID ?>
 SetSelfFaction <GrabSource GSetNAtt NAG_Personal NAS_FactionID ?>
 DynaFaction <GrabDynamic GSetNAtt NAG_Personal NAS_FactionID ?>
@@ -223,6 +224,7 @@ ShowEncounter <GrabSource GSetNAtt NAG_EpisodeData NAS_EncVis ComTime GAddNAtt N
 ifEncounterVisible <GrabSource ifG GNatt NAG_EpisodeData NAS_EncVis ComTime>
 AddDatePoint <GrabSource GAddNAtt NAG_Narrative NAS_DatePoints 1>
 SetQuestStatus <GrabAdventure GSetNAtt NAG_QuestStatus ? ?>
+SetPlotStatus <GrabPlot GSetNAtt NAG_Narrative NAS_PlotState ?>
 AddTempLancemate <GrabNPC ? GSetNAtt NAG_CharDescription NAS_CharType NAV_TempLancemate GJoinLance>
 RemoveTempLancemate <GrabNPC ? GSetNAtt NAG_CharDescription NAS_CharType 0 GQuitLance>
 AddPartyPoint <GrabCurrentScene GAddNAtt NAG_Narrative NAS_PartyPoints 1>

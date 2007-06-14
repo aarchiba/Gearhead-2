@@ -149,7 +149,8 @@ Const
 	NAS_NumSPElementsUsed = 21;	{ The number of elements used by subplots. }
 	NAS_PlotID = 22;		{ The ID number of a given plot. }
 	NAS_PlotLayer = 23;		{ The layer number of a superplot component. }
-	NAS_MaxPlotLayer = 24;
+	NAS_MaxPlotLayer = 24;	{ Needed for generating Layer IDs. }
+	NAS_PlotState = 25;	{ The state of a plot. Should correspond to a layer number. }
 
 	{ The following are used by the randmaps unit... }
 	NAS_LockedDoorChance = 101;

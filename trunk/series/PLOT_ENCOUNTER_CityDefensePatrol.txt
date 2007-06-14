@@ -20,7 +20,7 @@ GoDelete <AdvancePlot 0>
 
 sub
 	Persona 3
-	rumor <!3 is out patrolling !2.>
+	rumor <%name3% is out patrolling %name2%.>
 	special <NOESCAPE>
 	greeting <if= P3 3 else GoCheckLoss   AdvancePlot 0   Goto GoDoWin>
 	*GoDoWin <*GetYouNextTime>

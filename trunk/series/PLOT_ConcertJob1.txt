@@ -18,7 +18,7 @@ Plot 0
 
 sub
 	Persona 1
-	rumor <!1 needs a singer.>
+	rumor <%name1% needs a singer.>
 	% V1 = Have offered job
 	% V2 = Concert Score
 	greeting <if= V1 1 else GoCheckPerformance Goto GoOfferJob>

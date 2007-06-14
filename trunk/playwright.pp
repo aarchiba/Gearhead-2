@@ -66,8 +66,6 @@ Function InsertStory( Slot,Story: GearPtr; GB: GameBoardPtr ): Boolean;
 Function InsertSubPlot( Slot,SubPlot: GearPtr; GB: GameBoardPtr ): Boolean;
 Function InsertPlot( Slot,Plot: GearPtr; GB: GameBoardPtr ): Boolean;
 
-Function InsertGlobalArc( Adventure,ARC: GearPtr; GB: GameBoardPtr ): Boolean;
-Function InsertStoryArc( Story,Arc: GearPtr; GB: GameBoardPtr ): Boolean;
 Function InsertRSC( Source,Frag: GearPtr; GB: GameBoardPtr ): Boolean;
 Procedure AdvancePlot( GB: GameBoardPtr; Adv,Plot: GearPtr; N: Integer );
 
@@ -1109,41 +1107,6 @@ begin
 	end;
 end;
 
-
-Procedure FormatRumorString( Adventure,Plot,RBase: GearPtr; GB: GameBoardPtr );
-	{ Make sure the rumor strings are properly formatted for this plot. }
-	{ RBase is the gear whose rumor we are currently interested in. }
-	{ Also, format rumor strings for all sub-components. }
-var
-	R0: String;
-	S: GearPtr;
-	T: Integer;
-begin
-	{ Locate the rumor string. }
-	R0 := SAttValue( RBase^.SA , 'RUMOR' );
-
-	if R0 <> '' then begin
-		for t := 1 to Num_Plot_Elements do begin
-			ReplacePat( R0 , '!' + BStr( T ) , ElementName( Adventure , Plot , T , GB ) );
-		end;
-
-		SetSAtt( RBase^.SA , 'RUMOR <' + R0 + '>' );
-	end;
-
-	{ Format the rumors of all sub and inv components. }
-	S := RBase^.SubCom;
-	while S <> Nil do begin
-		FormatRumorString( Adventure , Plot , S , GB );
-		S := S^.Next;
-	end;
-
-	S := RBase^.InvCom;
-	while S <> Nil do begin
-		FormatRumorString( Adventure , Plot , S , GB );
-		S := S^.Next;
-	end;
-end;
-
 Procedure AddGearXRContext( GB: GameBoardPtr; Adv,Part: GearPtr; var Context: String; palette_entry_code: Char );
 	{ Add the context information for PART to CONTEXT. }
 var
@@ -1420,7 +1383,6 @@ Procedure InitPlot( Adventure,Plot: GearPtr; GB: GameBoardPtr );
 	{ - Format rumor strings. }
 	{ - Provide unique names for all metascenes. }
 begin
-	FormatRumorString( Adventure , Plot , Plot , GB );
 	PrepMetaScenes( Adventure , Plot , GB );
 	PrepAllPersonas( Adventure , Plot , GB , 1 );
 end;
@@ -1642,74 +1604,6 @@ begin
 	end;
 end;
 
-
-Function InsertGlobalArc( Adventure,ARC: GearPtr; GB: GameBoardPtr ): Boolean;
-	{ Stick ARC into ADVENTURE, selecting Actors and Locations }
-	{ as required. If everything is found, insert PLOT as an InvCom }
-	{ of the Adventure. Otherwise, delete it. }
-begin
-	{ Step One and Only - Attempt to insert this plot into the adventure. }
-	InsertGlobalArc := MatchPlotToAdventure( Adventure , ARC , GB , True , True , False );
-end;
-
-Function InsertStoryArc( Story,Arc: GearPtr; GB: GameBoardPtr ): Boolean;
-	{ Stick ARC into Story, selecting Actors and Locations }
-	{ as required. If everything is found, insert PLOT as an InvCom }
-	{ of the Story. Otherwise, delete it. }
-var
-	Desc: String;
-	T,N: Integer;
-	Plot: GearPtr;
-	EverythingOK: Boolean;
-begin
-	EverythingOK := True;
-
-	{ Step One - Copy element info from the parent story as required. }
-	{ If there are any characters requested by this plot, }
-	{ check to see if they are currently involved in other plots. If so, }
-	{ insertion will fail. }
-	if Story^.G = GG_Story then begin
-		for t := 1 to Num_Plot_Elements do begin
-			{ If an element grab is requested, process that now. }
-			desc := SAttValue( Arc^.SA , 'ELEMENT' + BStr( T ) );
-			if ( desc <> '' ) and ( UpCase( desc[1] ) = 'G' ) then begin
-				ExtractWord( desc );
-				N := ExtractValue( desc );
-				desc := SAttValue( Story^.SA , 'ELEMENT' + BStr( N ) );
-				{ Only copy over the first character of the element description, }
-				{ since that's all we need, and also because copying a PREFAB tag }
-				{ may result in story elements being unnessecarily deleted. }
-				SetSAtt( Arc^.SA , 'ELEMENT' + BStr( T ) + ' <' + desc[1] + '>' );
-				SetNAtt( Arc^.NA , NAG_ElementID , T , ElementID( Story , N ) );
-			end;
-
-			{ If this gear is a character, better see whether or not }
-			{ it is already involved in a plot. }
-			if ( ElementID( Arc , T ) <> 0 ) and ( UpCase( Desc[1] ) = 'C' ) then begin
-				{ Clear the arc's stat for now, to keep it from }
-				{ being returned by SeekPlotElement. }
-				N := ElementID( Arc , T );
-				SetNAtt( Arc^.NA , NAG_ElementID , T , 0 );
-
-				Plot := FindPersonaPlot( FindRoot( Story ) , N );
-				if Plot <> Nil then begin
-					EverythingOK := False;
-				end;
-
-				SetNAtt( Arc^.NA , NAG_ElementID , T , N );
-			end;
-		end;
-	end;	{ If Story^.G = GG_Story }
-
-	{ Step Two - Attempt to insert this plot into the adventure. }
-	if EverythingOK then begin
-		InsertStoryArc := MatchPlotToAdventure( Story , ARC , GB , True , True , False );
-	end else begin
-		DisposeGear( Arc );
-		InsertStoryArc := False;
-	end;
-end;
-
 Function InsertRSC( Source,Frag: GearPtr; GB: GameBoardPtr ): Boolean;
 	{ Insert random scene content, then save some information that will be }
 	{ needed later. }
@@ -1887,24 +1781,7 @@ begin
 
 		if C <> Nil then begin
 			C := CloneGear( C );
-
-			for t := 1 to Num_Plot_Elements do begin
-				{ If an element grab is requested, process that now. }
-				desc := SAttValue( C^.SA , 'ELEMENT' + BStr( T ) );
-				if ( desc <> '' ) and ( UpCase( desc[1] ) = 'G' ) then begin
-					ExtractWord( desc );
-					N := ExtractValue( desc );
-					desc := SAttValue( Story^.SA , 'ELEMENT' + BStr( N ) );
-					{ Only copy over the first character of the element description, }
-					{ since that's all we need, and also because copying a PREFAB tag }
-					{ may result in story elements being unnessecarily deleted. }
-					SetSAtt( C^.SA , 'ELEMENT' + BStr( T ) + ' <' + desc[1] + '>' );
-					SetNAtt( C^.NA , NAG_ElementID , T , ElementID( Story , N ) );
-				end;
-
-			end;
-
-			MergeOK := MatchPlotToAdventure( Story , C , GB , True , True , False );
+			MergeOK := InsertPlot( Story , C , GB );
 		end else MergeOK := False;
 	until MergeOK or ( Shopping_List = Nil );
 

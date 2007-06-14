@@ -71,7 +71,7 @@
 
 	sub
 		Persona 1
-		rumor <!1 really likes to fight.>
+		rumor <%name1% really likes to fight.>
 		special <NOESCAPE NOPLOTS UNLISTED>
 		% V1 = Has been recruited or otherwise placated
 		greeting <if= V1 1 else GoCheckSurrender NewChat SayAnything>

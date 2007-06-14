@@ -103,7 +103,7 @@ Plot
 	sub
 		Persona 2
 		special <UNLISTED>
-		rumor <!2 has been doing research in !1.>
+		rumor <%name2% has been doing research in %name1%.>
 		greeting <NewChat Say 2 AddChat 1 AddChat 2>
 
 		result1 <NewChat   Say 3   AddSociable  d10   Goto GoWin>
@@ -154,7 +154,7 @@ Plot
 	end
 	sub
 		Persona 4
-		rumor <!4 knows something about !5.>
+		rumor <%name4% knows something about %name5%.>
 		*Greeting <*NiceToMeetYou GoAsk>
 		GoAsk <NewChat Say 1 AddChat 1 AddChat 2>
 

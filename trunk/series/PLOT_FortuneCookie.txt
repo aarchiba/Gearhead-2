@@ -14,7 +14,7 @@ Plot 0
 
 sub
 	Persona 1
-	rumor <!1 really likes fortune cookies.>
+	rumor <%name1% really likes fortune cookies.>
 	Greeting <NewChat ifG React 0 else GoNoLike Say 1 AdvancePlot 0>
 	GoNoLike <SayAnything AdvancePlot 0>
 

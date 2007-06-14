@@ -60,7 +60,7 @@ Msg2_3 <\ELEMENT 1 @ \SCENE EScene 1 :// The enemy units have left the area; rep
 sub
 	Persona 1
 	% V1 = Reward per patrol
-	rumor <!1 needs a mecha pilot for a city defense mission.>
+	rumor <%name1% needs a mecha pilot for a city defense mission.>
 
 	greeting <ifG P6 0 else GoCheckTime   NewChat  Say 8  CashPrize * V1 P6  AdvancePlot 0>
 	GoCheckTime <if= P2 2 else GoNoWins   NewChat  Say 7  AdvancePlot 0>

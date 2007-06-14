@@ -53,7 +53,7 @@ Plot 0
 
 sub
 	Persona 2
-	rumor <!2 needs a mecha pilot to intercept an enemy patrol.>
+	rumor <%name2% needs a mecha pilot to intercept an enemy patrol.>
 	% V1 = Cash reward offered
 	greeting <if= P2 4 else GoCheckWin AddReact -1 Goto GoLostMission>
 	*GoLostMission <*MissionWasFailure&Mecha GoEnd &AllyFac E5>

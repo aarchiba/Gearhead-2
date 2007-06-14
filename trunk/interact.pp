@@ -422,6 +422,34 @@ Function CreateRumorList( GB: gameBoardPtr; PC,NPC: GearPtr ): SAttPtr;
 var
 	InfoList: SAttPtr;
 
+	Procedure GetRumorFromGear( P: GearPtr );
+		{ Retrieve the rumor info from this gear, without caring about }
+		{ what kind of gear it is. Well, for the most part, anyhow... }
+	var
+		Rumor: String;
+		Level: LongInt;
+		Plot: GearPtr;
+	begin
+		{ First add the basic rumor.  }
+		Rumor := SAttValue( P^.SA , 'RUMOR' );
+		if Rumor <> '' then StoreSAtt( InfoList , MadLibString( RLI_List ) + ' ' + Rumor );
+
+		{ Next add the quest rumor. }
+		Level := NAttValue( P^.NA , NAG_QuestInfo , NAS_QuestID );
+		if Level <> 0 then begin
+			Rumor := SAttValue( P^.SA , 'RUMOR' + BStr( NAttValue( FindRoot( GB^.Scene )^.NA , NAG_QuestStatus , Level ) ) );
+			if Rumor <> '' then StoreSAtt( InfoList , MadLibString( RLI_List ) + ' ' + Rumor );
+		end;
+
+		{ Finally add the plot rumor. }
+		if ( P^.G = GG_Plot ) or ( ( P^.Parent <> Nil ) and ( P^.Parent^.G = GG_Plot ) ) then begin
+			if P^.G = GG_Plot then Plot := P else Plot := P^.Parent;
+			Level := NAttValue( Plot^.NA , NAG_Narrative , NAS_PlotState );
+			Rumor := SAttValue( P^.SA , 'RUMOR' + BStr( Level ) );
+			if Rumor <> '' then StoreSAtt( InfoList , MadLibString( RLI_List ) + ' ' + Rumor );
+		end;
+	end;
+
 	Procedure RumorWorkup( P: GearPtr ); Forward;
 	Procedure ExtractData( P: GearPtr );
 		{ Store all relevant info from PART. }
@@ -434,19 +462,7 @@ var
 		Persona: GearPtr;
 	begin
 		if ( P <> NPC ) and ( P^.G <> GG_Persona ) then begin
-			Rumor := SAttValue( P^.SA , 'RUMOR' );
-			if Rumor <> '' then StoreSAtt( InfoList , MadLibString( RLI_List ) + ' ' + Rumor );
-
-			{ Any gear associated with a quest may have a quest-specific memo }
-			{ attached to it. The label for this rumor will be "RUMOR" + QuestStatus. }
-			{ So, at the beginning of a quest (Status=0), "RUMOR0" will be added }
-			{ to the rumor list. }
-			Level := NAttValue( P^.NA , NAG_QuestInfo , NAS_QuestID );
-			if ( GB <> Nil ) and ( GB^.Scene <> Nil ) and ( Level <> 0 ) then begin
-				Rumor := SAttValue( P^.SA , 'RUMOR' + BStr( NAttValue( FindRoot( GB^.Scene )^.NA , NAG_QuestStatus , Level ) ) );
-				if Rumor <> '' then StoreSAtt( InfoList , MadLibString( RLI_List ) + ' ' + Rumor );
-			end;
-
+			GetRumorFromGear( P );
 			if P^.G = GG_Character then begin
 				{ At most one personality trait per NPC will be added }
 				{ to the list. This is to keep them from overwhelming the }
@@ -470,13 +486,7 @@ var
 					{ and be done with it, but since Quests have been introduced }
 					{ the rumor associated with a given NPC can change depending }
 					{ on quest state. }
-					Level := NAttValue( Persona^.NA , NAG_QuestInfo , NAS_QuestID );
-					if Level <> 0 then begin
-						Rumor := SAttValue( Persona^.SA , 'RUMOR' + BStr( NAttValue( FindRoot( Persona )^.NA , NAG_QuestStatus , Level ) ) );
-					end else begin
-						Rumor := SAttValue( Persona^.SA , 'RUMOR' );
-					end;
-					if Rumor <> '' then StoreSAtt( InfoList , MadLibString( RLI_List ) + ' ' + Rumor );
+					GetRumorFromGear( Persona );
 				end;
 
 			end else if ( P^.G = GG_Scene ) then begin

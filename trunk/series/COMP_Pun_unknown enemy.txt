@@ -29,7 +29,7 @@ Plot
 
 	sub
 		Persona 1
-		rumor <!1 wants to talk with you.>
+		rumor <%name1% wants to talk with you.>
 		greeting <if= V1 0 else GoNewMission CashPrize Reward Threat StoryDL 100 100 V= 1 1 Goto GoGetReward>
 		*GoGetReward <*MissionWasSuccess&Reward GoRewardOp N3 N2>
 		GoRewardOp <AddChat 3>
@@ -228,7 +228,7 @@ Plot
 	sub
 		Persona 2
 		special <UNLISTED>
-		rumor <!2 has been seen in !1.>
+		rumor <%name2% has been seen in %name1%.>
 		*Greeting <*GreetThenDiscuss GoReveal>
 		GoReveal <NewChat Say 1 AddChat 1 AddChat 2>
 		GoWin <StoryNote 3  WinComp E3 .next>

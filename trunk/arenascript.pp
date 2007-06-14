@@ -3204,9 +3204,9 @@ begin
 		if Arc <> Nil then begin
 			{ Insert the arc, calling IfSuccess or IfFailure. }
 			if Source^.G = GG_Story then begin
-				LoadOK := InsertStoryArc( Source , Arc , GB );
+				LoadOK := InsertPlot( Source , Arc , GB );
 			end else begin
-				LoadOK := InsertGlobalArc( Adv , Arc , GB );
+				LoadOK := InsertPlot( Adv , Arc , GB );
 			end;
 
 			if LoadOK then begin
@@ -3252,9 +3252,9 @@ begin
 		if Arc <> Nil then begin
 			{ Insert the arc, calling IfSuccess or IfFailure. }
 			if ( Source^.G = GG_Story ) and ( NumberOfPlots( Source ) <= Max_Plots_Per_Story ) then begin
-				InsertStoryArc( Source , Arc , GB );
+				InsertPlot( Source , Arc , GB );
 			end else if ( NumberOfPlots( Adv ) <= Max_Plots_Per_Adventure ) then begin
-				InsertGlobalArc( Adv , Arc , GB );
+				InsertPlot( Adv , Arc , GB );
 			end else begin
 				DisposeGear( Arc );
 				break;
@@ -4592,7 +4592,7 @@ begin
 		if R <> Nil then begin
 			DelinkGear( Rescue_List , R );
 			SetNAtt( R^.NA , NAG_ElementID , 1 , GB^.Scene^.S );
-			if InsertGlobalArc( FindRoot( GB^.Scene ) , R , GB ) then begin
+			if InsertPlot( FindRoot( GB^.Scene ) , R , GB ) then begin
 				{ Start by printing a message, since the time taken by the }
 				{ rescue scenario is likely to cause a noticeable delay. }
 				DialogMsg( MsgString( 'JustAMinute' ) );

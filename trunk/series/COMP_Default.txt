@@ -100,7 +100,7 @@ Plot
 
 	sub
 		Persona 2
-		rumor <!2 wanted to speak with you at !1.>
+		rumor <%name2% wanted to speak with you at %name1%.>
 		% V1 = Can only get reward once
 		*Greeting <*ThanksForRescue GoReward>
 		GoReward <if= V1 0 else GoBriefing V= 1 1 CashPrize Reward Threat StoryDL 100 200 NewChat Say 1 AddChat 1 AddChat 2>
@@ -182,7 +182,7 @@ Plot
 
 	sub
 		Persona 2
-		rumor <!2 has a reward for you.>
+		rumor <%name2% has a reward for you.>
 		*greeting <*MissionWasSuccess&Reward GoExit &AllyFac &EnemyFac>
 		GoExit <CashPrize Reward Threat StoryDL 150 100 WinComp 0 .next>
 		.next <+T-- +F-->
@@ -220,7 +220,7 @@ Plot
 
 	sub
 		Persona 2
-		rumor <!2 needs an adventurer for some kind of mission.>
+		rumor <%name2% needs an adventurer for some kind of mission.>
 		% V1 = Reward Obtained Counter
 		greeting <if= V1 1 else GoGetReward Goto GoBriefing>
 		*GoGetReward <*MissionWasSuccess&Reward GoNext &AllyFac &EnemyFac>
@@ -272,7 +272,7 @@ Plot
 
 	sub
 		Persona 2
-		rumor <!2 needs an adventurer for some kind of mission.>
+		rumor <%name2% needs an adventurer for some kind of mission.>
 		% V1 = Reward Obtained Counter
 		greeting <if= V1 1 else GoGetReward Goto GoBriefing>
 		*GoGetReward <*MissionWasSuccess&Reward GoNext &AllyFac &EnemyFac>
@@ -325,7 +325,7 @@ Plot
 
 	sub
 		Persona 2
-		rumor <!2 needs an adventurer for some kind of mission.>
+		rumor <%name2% needs an adventurer for some kind of mission.>
 		greeting <ifChatNPCUnknown else GoKnownGreeting ifChatNPCAlly else GoUnknownGreeting Goto GoKnownGreeting>
 		*GoKnownGreeting <*IHaveAJobForYou GoBriefing>
 		*GoUnknownGreeting <*AreYouHereAboutJob GoBriefing>
@@ -374,7 +374,7 @@ Plot
 
 	sub
 		Persona 2
-		rumor <!2 needs a cavalier for some kind of mission.>
+		rumor <%name2% needs a cavalier for some kind of mission.>
 		greeting <ifChatNPCUnknown else GoKnownGreeting ifChatNPCAlly else GoUnknownGreeting Goto GoKnownGreeting>
 		*GoKnownGreeting <*IHaveAJobForYou GoBriefing>
 		*GoUnknownGreeting <*AreYouHereAboutJob&Mecha GoBriefing>
@@ -416,7 +416,7 @@ Plot
 	sub
 		Persona 2
 		special <UNLISTED>
-		rumor <!2 is waiting for you in !1.>
+		rumor <%name2% is waiting for you in %name1%.>
 		*greeting <*DateGreeting GoQuestion>
 		*GoQuestion <*DateQuestion GoActivity>
 		*GoActivity <*DateActivity GoResult>
@@ -460,7 +460,7 @@ Plot
 	sub
 		Persona 2
 		special <UNLISTED>
-		rumor <!2 wants to speak with you in !1.>
+		rumor <%name2% wants to speak with you in %name1%.>
 		*Greeting <*MissionWasSuccess GoContinue na na>
 		GoContinue <AddChat 1>
 		result1 <NewChat Say 1 StoryNote 2 &SetTargetChar E2   WinComp E3 .date>
@@ -496,7 +496,7 @@ Plot
 	sub
 		Persona 2
 		special <UNLISTED>
-		rumor <!2 wants to speak with you in !1.>
+		rumor <%name2% wants to speak with you in %name1%.>
 		Greeting <NewChat Say 1 AddChat 1 AddChat 2>
 		result1 <NewChat Say 2 StoryNote 3 &SetTargetChar E2   WinComp E3 .date>
 		.date <+Tda +F-->
@@ -538,7 +538,7 @@ Plot
 	sub
 		Persona 2
 		special <UNLISTED>
-		rumor <!2 is waiting for you in !1.>
+		rumor <%name2% is waiting for you in %name1%.>
 		*Greeting <*HowAreYou GoShimli>
 		*GoShimli <*SHIMLI_CHATTER GoAsk>
 		*GoAsk <*PCInviteNPC GoAccept GoLose>
@@ -595,7 +595,7 @@ Plot
 		Persona 2
 		special <UNLISTED>
 		% V1 = Have been challenged
-		rumor <!2 is waiting for you in !1.>
+		rumor <%name2% is waiting for you in %name1%.>
 		Greeting <if= V1 1 else GoHowAreYou   Goto GoChallenge>
 		*GoHowAreYou <*HowAreYou GoShimli>
 		*GoShimli <*SHIMLI_CHATTER GoAsk>
@@ -791,7 +791,7 @@ Plot
 
 	sub
 		Persona 1
-		rumor <!1 knows where !3 is.>
+		rumor <%name1% knows where %name3% is.>
 		*greeting <*LookingForNPC E3 GoSuccess GoFailure>
 		GoSuccess <NewChat Say 1 StoryNote 2 WinComp E2 .next>
 		.next <+Tgt>
@@ -915,7 +915,7 @@ Plot
 	sub
 		Persona 2
 		special <UNLISTED>
-		rumor <!2 has been recuperating in !1.>
+		rumor <%name2% has been recuperating in %name1%.>
 		*greeting <*ThanksForRescue GoOffer>
 		GoOffer <PCFriend E2 ifG React 30 else GoNoOffer ifG PCCharm 10 else GoNoOffer NewChat Say 1 AddChat 1 AddChat 2 AddChat 3>
 		GoNoOffer <ifChatNPCSexy else GoCashAward ifG React d25 else GoCashAward NewChat Say 8 AddChat 6 AddChat 7>

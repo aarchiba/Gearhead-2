@@ -49,7 +49,7 @@ Plot 0
 
 sub
 	Persona 1
-	rumor <!1 needs a mecha pilot to do a mission for !2.>
+	rumor <%name1% needs a mecha pilot to do a mission for %name2%.>
 	% V1 = Cash reward offered
 	greeting <if= P2 4 else GoCheckWin AddReact -1 Goto GoLostMission>
 	*GoLostMission <*MissionWasFailure&Mecha GoEnd E2 na>
