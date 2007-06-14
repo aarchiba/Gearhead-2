@@ -1,0 +1,21 @@
+Plot
+name <Bounty Hunt #1>
+
+%% This is a fairly easy bounty hunting job. The target should be captured
+%% alive- no disintegrations.
+
+% E1 is the character offering the mission.
+% E2 is the character being sought.
+Element1 <Character Bounty Hunter>
+Element2 <Prefab>
+
+% SubPlot1 will place the criminal somewhere in the city.
+SubPlot1 <*ThiefHideout 2 1>
+
+sub
+
+
+end
+inv
+	NPC Thief
+end
