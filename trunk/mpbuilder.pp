@@ -141,7 +141,7 @@ var
 begin
 	{ Assign the values to this shard. }
 	SetNAtt( Shard^.NA , NAG_Narrative , NAS_PlotID , PlotID );
-	SetNAtt( Shard^.NA , NAG_Narrative , NAS_LayerID , LayerID );
+	SetNAtt( Shard^.NA , NAG_Narrative , NAS_PlotLayer , LayerID );
 
 	{ Start by copying over all provided parameters. }
 	{ Also count the number of parameters passed; it could be useful. }
@@ -562,14 +562,35 @@ Procedure MoveElements( GB: GameBoardPtr; Plot: GearPtr );
 	{ Make it so. }
 var
 	T,PlaceIndex: Integer;
-	PlaceCmd,TeamName: String;
+	PlaceCmd,EDesc,TeamName: String;
 	Element,Dest,MF,Team: GearPtr;
 	InSceneNotElement: Boolean;
+	EID: LongInt;
 begin
 	for t := 1 to Num_Plot_ELements do begin
 		PlaceCmd := SAttValue( Plot^.SA , 'PLACE' + BStr( T ) );
 		if PlaceCmd <> '' then begin
-			Element := SeekPlotElement( FindRoot( GB^.Scene ) , Plot , T , GB );
+			EDesc := SAttValue( Plot^.SA , 'ELEMENT' + BStr( T ) );
+			if ( EDesc <> '' ) and ( UpCase( EDesc[1] ) = 'S' ) then begin
+				{ I can't believe you just asked me to move a scene... }
+				{ What you really must want is for me to move an encounter }
+				{ attached to a metascene. Yeah, that must be it. }
+				EID := ElementID( Plot , T );
+				if EID < 0 then begin
+					Element := FindSceneEntrance( FindRoot( GB^.Scene ) , GB , EID );
+				end else begin
+					Element := Nil;
+				end;
+			end else begin
+				{ Just find the regular element. }
+				Element := SeekPlotElement( FindRoot( GB^.Scene ) , Plot , T , GB );
+			end;
+
+			if Element = Nil then begin
+				DialogMsg( 'ERROR- Element ' + BStr( T ) + ' of ' + GearName( Plot ) + ' not found for movement.' );
+				Exit;
+			end;
+
 			DelinkGearForMovement( GB , Element );
 
 			InSceneNotElement := ( PlaceCmd[1] = '~' );

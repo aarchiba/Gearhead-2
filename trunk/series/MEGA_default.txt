@@ -7,6 +7,7 @@
 %% *ThiefHideout Content
 %%
 %%  A thief is hiding out somewhere. Add a hideout, and a way to access it.
+%%  Most of these fragments should result in a personal scale fight.
 %%
 %%  The parent plot should set the plot status to this layer's ID when ready
 %%  for the player to go looking. Forcing a capture will delete the NPC.
@@ -21,6 +22,7 @@
 
 Content
 	name <Basic Hideout>
+	requires <*ThiefHideout>
 
 	% E1 is the thief being sought; set PLACE here.
 	% E2 is the bounty hunter looking for him.
@@ -28,6 +30,7 @@ Content
 	% E4 is the encounter/metascene itself
 	% E5 is a character who can tell the PC where the hideout is.
 
+	% P%id%01 = Capture Value
 	% P%id%11 = Have discovered location of target
 
 	Place1 <%e4% (Citizens) pass>
@@ -55,7 +58,7 @@ sub
 	rumor%id% <%name5% has had dealings with %name1% in the past.>
 	greeting <if= PlotStatus %id% else GoChat if= P%id%11 0 else GoChat Goto GoGetInfo>
 	*GoChat <*IAmBusy>
-	*GoGetInfo <*LookingForNPC E5 GoSuccess GoFailure>
+	*GoGetInfo <*LookingForNPC %1% GoSuccess GoFailure>
 	GoSuccess <NewChat Say 1 P= %id%11 1 Memo 2>
 	*GoFailure <*BrushOff&Questioning>
 	Msg1 <I'll tell you- %name1% used to have a hideout in %name3%. If you're looking for \OPR %1% , that's the first place I'd check.>
@@ -70,7 +73,7 @@ sub
 	MapHeight 17
 	content <Fill Sub *HIDEOUT_X na>
 	Start <Print 1 if= L1 0 L= 1 1 ForceChat %1%>
-	nu1 <if= T1 0 Return if= L2 1 ifNPCOK E5 DeleteNPC E5 P= %id%01 -1>
+	nu1 <if= T1 0 Return if= L2 1 ifNPCOK %1% DeleteNPC %1% P= %id%01 -1>
 	Surrender%1% <ForceChat %1%>
 	Msg1 <You enter the hideout.>
 	sub
@@ -96,5 +99,66 @@ inv
 	update <if= P%id%11 1 else GoHide  SetStat STAT_MetaVisibility 0  ShowEncounter  Goto GoSetOrders>
 	ENCOUNTER_Hostile
 end
+
+Content
+	name <Hiding in Mecha>
+	% The NPC is in his mecha outside of town. In order to capture him, the
+	% PC will have to fight in a mecha.
+	requires <*ThiefHideout>
+
+	% E1 is the thief being sought; set PLACE here.
+	% E2 is the bounty hunter looking for him.
+	% E3 is an environs scene, for placing the encounter
+	% E4 is the encounter/metascene itself
+
+	Place1 <%e4% (Enemies) SD Enemy>
+	Element3 <Scene Urban !Near 2>
+	Element4 <Prefab>
+	Place4 <%e3%>
+
+	% P%id%01 = Capture Counter
+
+sub
+	Persona 1
+	Special <UNLISTED>
+	rumor%id% <%name1% is out driving around in %name3%.>
+	greeting <ifChatNPCSurrendered else GoFirstTime EndChat Say 1 Goto GoSurrender>
+	*GoFirstTime <*IntruderGreeting&Arrest GoBargain>
+	*GoBargain <*YoureUnderArrest PCRenown GoWillSurrender GoWillResist na>
+	GoWillSurrender <EndChat Say 1 Goto GoSurrender>
+	GoWillResist <EndChat Say 2 SoloAttack %1% L= 2 1>
+	GoSurrender <P= %id%01 1  DeleteNPC %1%>
+	Msg1 <Alright, I give up... You can take me to jail.>
+	Msg2 <I'm not ready to go yet... I think I'll kill you instead!>
+
+	MetaScene 4 2
+	% L1 = Initialization Counter
+	% L2 = Fight has started
+	MapWidth 30
+	MapHeight 30
+	content <Fill Sub *HIDEOUT_X na>
+	Start <Print 1 if= L1 0 L= 1 1 ForceChat %1%>
+	nu1 <if= T1 0 Return if= L2 1 P= %id%01 -1>
+	nu2 <if= T2 0 >
+	sub
+		team 1
+		SetEnemy 2
+		ParaX 5
+		ParaY 5
+
+		team 2
+		name <Enemies>
+		SetEnemy 1
+		ParaX 25
+		ParaY 25
+	end
+end
+inv
+	STC ENCOUNTER-DUEL
+	name <%name1%'s Mecha>
+	update <if= PlotState %id% else GoHide  if= P%id%01 0 else GoHide SetStat STAT_MetaVisibility 0  Goto GoSetOrders>
+	ENCOUNTER_Hostile
+end
+
 
 

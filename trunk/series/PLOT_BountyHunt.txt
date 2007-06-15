@@ -1,5 +1,6 @@
 Plot
-name <Bounty Hunt #1>
+name <Bounty Hunt>
+name <DEBUG>
 
 %% This is a fairly easy bounty hunting job. The target should be captured
 %% alive- no disintegrations.
@@ -25,9 +26,9 @@ sub
 	rumor0 <%name1% is offering a bounty for a wanted thief.>
 	% V1 = Cash reward offered/Initialization counter
 	% V2 = Dead reward; smaller than the live award
-	greeting <if= PlotStatus %id% else GoFirstTime  if= P%id1%01 -1 else GoCheckWin Goto GoMissionFailure>
+	greeting <if= PlotStatus %id1% else GoFirstTime  if= P%id1%01 -1 else GoCheckWin Goto GoMissionFailure>
 	*GoMissionFailure <*TargetEscaped GoEnd na>
-	GoCheckWin <if= P%id%01 1 else GoCheckDeath  CashPrize V1  AddRenown 1 AddReact d4 Goto GoWinMission>
+	GoCheckWin <if= P%id1%01 1 else GoCheckDeath  CashPrize V1  AddRenown 1 AddLawful 1 AddReact d4 Goto GoWinMission>
 	*GoWinMission <*HaveCapturedTarget GoEnd na>
 	GoCheckDeath <ifNPCDead %2% else GoRemind  CashPrize V2  AddRenown 1 Goto GoDeadMission>
 	*GoDeadMission <*HaveKilledTarget GoEnd na>
