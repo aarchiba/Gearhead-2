@@ -289,8 +289,16 @@ Persona
 
 
 % TYPE: *BattleIntroduction
+%                          &SentToFight		The PC was sent here to fight the NPC
 %	The PC is meeting a new person for the first time... in combat.
 %   PARAM1: Start combat exit label (no message printed here)
+
+	Persona
+	requires <*BattleIntroduction &SentToFight>
+	start <EndChat Say %id%01 AddChat %id%01>
+	result%id%01 <Goto %1%>
+	Msg%id%01 <What do you think you're doing following me around? That's not going to be very good for your health.>
+	Prompt%id%01 <I'm \PC . I was sent to defeat you.>
 
 	Persona
 	requires <*BattleIntroduction>

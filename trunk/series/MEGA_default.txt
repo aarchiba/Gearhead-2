@@ -10,7 +10,8 @@
 %%  Most of these fragments should result in a personal scale fight.
 %%
 %%  The parent plot should set the plot status to this layer's ID when ready
-%%  for the player to go looking. Forcing a capture will delete the NPC.
+%%  for the player to go looking. Forcing a capture will freeze the NPC.
+%%  Causing the subplot to become unwinnable will also likely freeze the NPC.
 %%
 %%    PARAM1: Thief
 %%    PARAM2: Person looking for thief; plot wiil take place in his city
@@ -50,7 +51,7 @@ sub
 	*GoBargain <*YoureUnderArrest PCRenown GoWillSurrender GoWillResist na>
 	GoWillSurrender <EndChat Say 1 Goto GoSurrender>
 	GoWillResist <EndChat Say 2 SoloAttack %1% L= 2 1>
-	GoSurrender <P= %id%01 1  DeleteNPC %1%>
+	GoSurrender <P= %id%01 1  FreezeNPC %1%>
 	Msg1 <Alright, I give up... You can take me to jail.>
 	Msg2 <I'm not ready to go yet... I think I'll kill you instead!>
 
@@ -73,7 +74,7 @@ sub
 	MapHeight 17
 	content <Fill Sub *HIDEOUT_X na>
 	Start <Print 1 if= L1 0 L= 1 1 ForceChat %1%>
-	nu1 <if= T1 0 Return if= L2 1 ifNPCOK %1% DeleteNPC %1% P= %id%01 -1>
+	nu1 <if= T1 0 Return if= L2 1 ifNPCOK %1% FreezeNPC %1% P= %id%01 -1>
 	Surrender%1% <ForceChat %1%>
 	Msg1 <You enter the hideout.>
 	sub
@@ -112,34 +113,29 @@ Content
 	% E4 is the encounter/metascene itself
 
 	Place1 <%e4% (Enemies) SD Enemy>
-	Element3 <Scene Urban !Near 2>
+	Element3 <Scene Environs !Near 2>
 	Element4 <Prefab>
 	Place4 <%e3%>
 
 	% P%id%01 = Capture Counter
+	% P%id%11 = Entered Fight Once Counter
 
 sub
 	Persona 1
 	Special <UNLISTED>
 	rumor%id% <%name1% is out driving around in %name3%.>
-	greeting <ifChatNPCSurrendered else GoFirstTime EndChat Say 1 Goto GoSurrender>
-	*GoFirstTime <*IntruderGreeting&Arrest GoBargain>
-	*GoBargain <*YoureUnderArrest PCRenown GoWillSurrender GoWillResist na>
-	GoWillSurrender <EndChat Say 1 Goto GoSurrender>
-	GoWillResist <EndChat Say 2 SoloAttack %1% L= 2 1>
-	GoSurrender <P= %id%01 1  DeleteNPC %1%>
-	Msg1 <Alright, I give up... You can take me to jail.>
-	Msg2 <I'm not ready to go yet... I think I'll kill you instead!>
+	*Greeting <*BattleIntroduction&SentToFight GoThemeExpo>
+	*GoThemeExpo <*THEME_EXPO&Enemy na>
 
 	MetaScene 4 2
 	% L1 = Initialization Counter
-	% L2 = Fight has started
 	MapWidth 30
 	MapHeight 30
 	content <Fill Sub *HIDEOUT_X na>
-	Start <Print 1 if= L1 0 L= 1 1 ForceChat %1%>
-	nu1 <if= T1 0 Return if= L2 1 P= %id%01 -1>
-	nu2 <if= T2 0 >
+	Start <Print 1 if= L1 0 L= 1 1 P= %id%11 1 ForceChat %1%>
+	nu1 <if= T1 0 Return if= L1 1  L= 1 2 ifNPCOk %1% P= %id%01 -1  ifNPCOK %1% FreezeNPC %1%>
+	nu2 <if= T2 0        if= L1 1  L= 1 2 Salvage  ifNPCOk %1% P= %id%01 1   Print 1  FreezeNPC %1%>
+	Msg1 <%name1% has been captured.>
 	sub
 		team 1
 		SetEnemy 2
@@ -154,9 +150,9 @@ sub
 	end
 end
 inv
-	STC ENCOUNTER-DUEL
+	STC ENCOUNTER-WANDER
 	name <%name1%'s Mecha>
-	update <if= PlotState %id% else GoHide  if= P%id%01 0 else GoHide SetStat STAT_MetaVisibility 0  Goto GoSetOrders>
+	update <if= PlotStatus %id% else GoHide  if= P%id%11 0 else GoHide SetStat STAT_MetaVisibility 0  Goto GoSetOrders>
 	ENCOUNTER_Hostile
 end
 
