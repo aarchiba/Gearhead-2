@@ -64,7 +64,7 @@ Function DifficulcyContext( Threat: Integer ): String;
 
 Function InsertStory( Slot,Story: GearPtr; GB: GameBoardPtr ): Boolean;
 Function InsertSubPlot( Slot,SubPlot: GearPtr; GB: GameBoardPtr ): Boolean;
-Function InsertPlot( Slot,Plot: GearPtr; GB: GameBoardPtr ): Boolean;
+Function InsertPlot( Slot,Plot: GearPtr; GB: GameBoardPtr; Threat: Integer ): Boolean;
 
 Function InsertRSC( Source,Frag: GearPtr; GB: GameBoardPtr ): Boolean;
 Procedure AdvancePlot( GB: GameBoardPtr; Adv,Plot: GearPtr; N: Integer );
@@ -1545,7 +1545,7 @@ begin
 	InsertSubPlot := MatchPlotToAdventure( Slot , SubPlot , GB , False , False , False );
 end;
 
-Function InsertPlot( Slot,Plot: GearPtr; GB: GameBoardPtr ): Boolean;
+Function InsertPlot( Slot,Plot: GearPtr; GB: GameBoardPtr; Threat: Integer ): Boolean;
 	{ Stick PLOT into SLOT, selecting Actors and Locations }
 	{ as required. If everything is found, insert PLOT as an InvCom }
 	{ of SLOT. Otherwise, delete it. }
@@ -1597,7 +1597,7 @@ begin
 
 	{ Step Two - Attempt to insert this plot into the adventure. }
 	if EverythingOK then begin
-		InsertPlot := InitMegaPlot( GB , Slot , Plot ) <> Nil;
+		InsertPlot := InitMegaPlot( GB , Slot , Plot , Threat ) <> Nil;
 	end else begin
 		DisposeGear( Plot );
 		InsertPlot := False;
@@ -1781,7 +1781,7 @@ begin
 
 		if C <> Nil then begin
 			C := CloneGear( C );
-			MergeOK := InsertPlot( Story , C , GB );
+			MergeOK := InsertPlot( Story , C , GB , NAttValue( Story^.NA , NAG_XXRan , NAS_DifficulcyLevel ) );
 		end else MergeOK := False;
 	until MergeOK or ( Shopping_List = Nil );
 

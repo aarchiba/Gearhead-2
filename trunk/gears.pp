@@ -151,6 +151,7 @@ Const
 	NAS_PlotLayer = 23;		{ The layer number of a superplot component. }
 	NAS_MaxPlotLayer = 24;	{ Needed for generating Layer IDs. }
 	NAS_PlotState = 25;	{ The state of a plot. Should correspond to a layer number. }
+	NAS_PlotDifficulcy = 26;	{ Threat rating for plot, measured as Renown }
 
 	{ The following are used by the randmaps unit... }
 	NAS_LockedDoorChance = 101;

@@ -1156,7 +1156,7 @@ begin
 	end;
 end;
 
-Procedure ForcePlot( GB: GameBoardPtr; Scene: GearPtr );
+Procedure ForcePlot( GB: GameBoardPtr; PC,Scene: GearPtr );
 	{ Debugging command - forcibly loads a plot into the adventure. }
 var
 	RPM: RPGMenuPtr;
@@ -1177,7 +1177,7 @@ begin
 		if pname <> '' then begin
 			Plot := LoadFile( pname , Series_Directory );
 
-			if InsertPlot( FindRoot( Scene ) , Plot , GB ) then begin
+			if InsertPlot( FindRoot( Scene ) , Plot , GB , NAttValue( PC^.NA , NAG_CharDescription , NAS_Renowned ) ) then begin
 				DialogMsg( 'Plot successfully loaded.' );
 			end else begin
 				DialogMsg( 'Plot rejected.' );
@@ -2769,7 +2769,7 @@ begin
 {$ENDIF}
 
 			end else if KP = 'P' then begin
-				ForcePlot( Camp^.GB , Camp^.GB^.Scene );
+				ForcePlot( Camp^.GB , Mek , Camp^.GB^.Scene );
 			end else if ( KP = '!' ) and ( Camp^.GB^.Scene <> Nil ) then begin
 				MechaPartBrowser( FindRoot( Camp^.GB^.Scene ) , @PCActionRedraw );
 			end else if ( KP = '^' ) and ( Camp^.GB^.Scene <> Nil ) then begin

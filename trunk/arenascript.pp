@@ -3166,6 +3166,19 @@ begin
 	NumberOfPlots := N;
 end;
 
+Function CurrentPCRenown( GB: GameBoardPtr ): Integer;
+	{ Return the current renown score of the PC. }
+var
+	PC: GearPtr;
+begin
+	PC := GG_LocatePC( GB );
+	if PC <> Nil then begin
+		CurrentPCRenown := NAttValue( PC^.NA , NAG_CharDescription , NAS_Renowned );
+	end else begin
+		CurrentPCRenown := 0;
+	end;
+end;
+
 Procedure ProcessStartPlot( var Event: String; GB: GameBoardPtr; Source: GearPtr );
 	{ A new story arc is about to be loaded. }
 	{ This may be an invcomponent of an existing story (the source), }
@@ -3204,9 +3217,9 @@ begin
 		if Arc <> Nil then begin
 			{ Insert the arc, calling IfSuccess or IfFailure. }
 			if Source^.G = GG_Story then begin
-				LoadOK := InsertPlot( Source , Arc , GB );
+				LoadOK := InsertPlot( Source , Arc , GB , CurrentPCRenown( GB ) );
 			end else begin
-				LoadOK := InsertPlot( Adv , Arc , GB );
+				LoadOK := InsertPlot( Adv , Arc , GB , CurrentPCRenown( GB ) );
 			end;
 
 			if LoadOK then begin
@@ -3228,7 +3241,7 @@ Procedure ProcessBatchLoadPlot( var Trigger,Event: String; GB: GameBoardPtr; Sou
 var
 	FName: String;
 	Adv,Arc: GearPtr;
-	N,T: Integer;
+	N,T,Threat: Integer;
 begin
 	{ Error check - We need the ADVENTURE gear for this!!! }
 	Adv := FindRoot( GB^.Scene );
@@ -3245,6 +3258,8 @@ begin
 	if Load_Plots_At_Start and ( UpCase( Trigger ) <> 'START' ) then exit
 	else if ( not Load_Plots_At_Start ) and ( UpCase( Trigger ) = 'START' ) then exit;
 
+	Threat := CurrentPCRenown( GB );
+
 	for t := 1 to N do begin
 		{ Secondly, confirm the file name. }
 		Arc := LoadGearPattern( FName , Series_Directory );
@@ -3252,9 +3267,9 @@ begin
 		if Arc <> Nil then begin
 			{ Insert the arc, calling IfSuccess or IfFailure. }
 			if ( Source^.G = GG_Story ) and ( NumberOfPlots( Source ) <= Max_Plots_Per_Story ) then begin
-				InsertPlot( Source , Arc , GB );
+				InsertPlot( Source , Arc , GB , Threat );
 			end else if ( NumberOfPlots( Adv ) <= Max_Plots_Per_Adventure ) then begin
-				InsertPlot( Adv , Arc , GB );
+				InsertPlot( Adv , Arc , GB , Threat );
 			end else begin
 				DisposeGear( Arc );
 				break;
@@ -4592,7 +4607,7 @@ begin
 		if R <> Nil then begin
 			DelinkGear( Rescue_List , R );
 			SetNAtt( R^.NA , NAG_ElementID , 1 , GB^.Scene^.S );
-			if InsertPlot( FindRoot( GB^.Scene ) , R , GB ) then begin
+			if InsertPlot( FindRoot( GB^.Scene ) , R , GB , CurrentPCRenown( GB ) ) then begin
 				{ Start by printing a message, since the time taken by the }
 				{ rescue scenario is likely to cause a noticeable delay. }
 				DialogMsg( MsgString( 'JustAMinute' ) );

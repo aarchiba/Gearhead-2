@@ -26,7 +26,7 @@ interface
 
 uses gears,locale;
 
-Function InitMegaPlot( GB: GameBoardPtr; Slot,Plot: GearPtr ): GearPtr;
+Function InitMegaPlot( GB: GameBoardPtr; Slot,Plot: GearPtr; Threat: Integer ): GearPtr;
 
 
 implementation
@@ -116,7 +116,7 @@ end;
 
 Function AddSubPlot( GB: GameBoardPtr; Slot,Plot0: GearPtr; SPReq: String; EsSoFar, PlotID, LayerID: LongInt ): GearPtr; forward;
 
-Function InitShard( GB: GameBoardPtr; Slot,Shard: GearPtr; EsSoFar,PlotID,LayerID: LongInt; const ParamIn: ElementTable ): GearPtr;
+Function InitShard( GB: GameBoardPtr; Slot,Shard: GearPtr; EsSoFar,PlotID,LayerID,Threat: LongInt; const ParamIn: ElementTable ): GearPtr;
 	{ SHARD is a plot fragment candidate. Attempt to add it to the Slot. }
 	{ Attempt to add its subplots as well. }
 	{ SHARD can only be added if its number of new elements plus the current }
@@ -142,6 +142,7 @@ begin
 	{ Assign the values to this shard. }
 	SetNAtt( Shard^.NA , NAG_Narrative , NAS_PlotID , PlotID );
 	SetNAtt( Shard^.NA , NAG_Narrative , NAS_PlotLayer , LayerID );
+	SetNAtt( Shard^.NA , NAG_Narrative , NAS_PlotDifficulcy , Threat );
 
 	{ Start by copying over all provided parameters. }
 	{ Also count the number of parameters passed; it could be useful. }
@@ -283,7 +284,7 @@ begin
 		if Shard <> Nil then begin
 			{ See if we can add this one to the list. If not, it will be }
 			{ deleted by InitShard. }
-			Shard := InitShard( GB , Slot , Shard , EsSoFar , PlotID , LayerID , ParamList );
+			Shard := InitShard( GB , Slot , Shard , EsSoFar , PlotID , LayerID , NAttValue( Plot0^.NA , NAG_Narrative , NAS_PlotDifficulcy ) , ParamList );
 			if Shard <> Nil then NotFoundMatch := False;
 		end;
 	end;
@@ -518,6 +519,7 @@ Function AssembleMegaPlot( Slot , SPList: GearPtr; PlotID: LongInt ): GearPtr;
 		Dictionary := Nil;
 		SetSAtt( Dictionary , '%plotid% <' + BStr( PlotID ) + '>' );
 		SetSAtt( Dictionary , '%id% <' + BStr( NAttValue( SubPlot^.NA , NAG_Narrative , NAS_PlotLayer ) ) + '>' );
+		SetSAtt( Dictionary , '%threat% <' + BStr( NAttValue( SubPlot^.NA , NAG_Narrative , NAS_PlotDifficulcy ) ) + '>' );
 		for t := 1 to Num_Sub_Plots do begin
 			SetSAtt( Dictionary , '%id' + BStr( T ) + '% <' + Bstr( NAttValue( SubPlot^.NA , NAG_SubPlotLayerID , T ) ) + '>' );
 		end;
@@ -670,7 +672,7 @@ begin
 	PrepMetascenes( FindRoot( GB^.Scene ) , Plot , GB );
 end;
 
-Function InitMegaPlot( GB: GameBoardPtr; Slot,Plot: GearPtr ): GearPtr;
+Function InitMegaPlot( GB: GameBoardPtr; Slot,Plot: GearPtr; Threat: Integer ): GearPtr;
 	{ We've just been handed a prospective megaplot. }
 	{ Create all subplots, and initialize everything. }
 	{ 1 - Create list of components }
@@ -692,7 +694,7 @@ begin
 	LayerID := NewLayerID( Slot );
 
 	ClearElementTable( FakeParams );
-	SPList := InitShard( GB , Slot , Plot , 0 , PlotID , LayerID , FakeParams );
+	SPList := InitShard( GB , Slot , Plot , 0 , PlotID , LayerID , Threat , FakeParams );
 
 	{ Now that we have the list, assemble it. }
 	if SPList <> Nil then begin
