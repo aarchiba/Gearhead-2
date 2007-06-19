@@ -2785,35 +2785,34 @@ var
 	W,H: Integer;
 begin
 	if Scene <> Nil then begin
-		AdjustDimensions( Scene );
+		FName := SAttValue( Scene^.SA , 'MAP' );
+		if FName <> '' then begin
+			{ This scene is supposed to use a prefabricated map. Here's }
+			{ how we deal with this unpleasant situation: Create the gameboard }
+			{ by loading the map from disk. This map will likely have cells }
+			{ defined on it, but we won't worry about that here. Set the map }
+			{ generator to he PreGen type; this action will convert the MapEd }
+			{ cells to a list usable by this unit, and won't overwrite the }
+			{ map as defined. }
 
-		if Scene^.STAT[ STAT_MAPWIDTH ] < 10 then Scene^.STAT[ STAT_MAPWIDTH ] := 10
-		else if Scene^.STAT[ STAT_MAPWIDTH ] > MaxMapWidth then Scene^.STAT[ STAT_MAPWIDTH ] := MaxMapWidth;
-		if Scene^.STAT[ STAT_MAPHEIGHT ] < 10 then Scene^.STAT[ STAT_MAPHEIGHT ] := 10
-		else if Scene^.STAT[ STAT_MAPHEIGHT ] > MaxMapWidth then Scene^.STAT[ STAT_MAPHEIGHT ] := MaxMapWidth;
+		end else begin
+			AdjustDimensions( Scene );
 
-		it := NewMap( Scene^.STAT[ STAT_MAPWIDTH ] , Scene^.STAT[ STAT_MAPHEIGHT ] );
+			if Scene^.STAT[ STAT_MAPWIDTH ] < 10 then Scene^.STAT[ STAT_MAPWIDTH ] := 10
+			else if Scene^.STAT[ STAT_MAPWIDTH ] > MaxMapWidth then Scene^.STAT[ STAT_MAPWIDTH ] := MaxMapWidth;
+			if Scene^.STAT[ STAT_MAPHEIGHT ] < 10 then Scene^.STAT[ STAT_MAPHEIGHT ] := 10
+			else if Scene^.STAT[ STAT_MAPHEIGHT ] > MaxMapWidth then Scene^.STAT[ STAT_MAPHEIGHT ] := MaxMapWidth;
+
+			it := NewMap( Scene^.STAT[ STAT_MAPWIDTH ] , Scene^.STAT[ STAT_MAPHEIGHT ] );
+		end;
 	end else begin
 		it := NewMap( 50 , 50 );
 	end;
 
 	it^.Scene := Scene;
-	if Scene <> Nil then begin
-		FName := SAttValue( Scene^.SA , 'MAP' );
-		if FName <> '' then begin
-			Assign( F , Series_Directory + FName );
-			Reset( F );
-			ReadLn( F , W );
-			ReadLn( F , H );
-			it^.Map := ReadMap( F , W , H );
-			Close( F );
-		end;
-	end else begin
-		FName := '';
-	end;
 
 	High_Component_ID := 1;
-	if FName = '' then RenderFeature( it , Scene );
+	RenderFeature( it , Scene );
 
 	RandomMap := it;
 end;
