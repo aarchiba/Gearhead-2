@@ -33,7 +33,7 @@ begin
 end;
 
 Procedure ClearMap( GB: GameBoardPtr; Pen: Integer );
-	{ Clear thee map using the requested pen terrain. }
+	{ Clear the map using the requested pen terrain. }
 var
 	X,Y: Integer;
 begin
