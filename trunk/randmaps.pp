@@ -55,8 +55,22 @@ const
 	NAS_CompUID = 1;
 	NAS_ELementID = 2;	{ Used by the minimap to identify components. }
 
+	{ CELL FORMAT: X Y W H D }
+	{ Direction 0 means that the minimap will have the same orientation as }
+	{ when drawn out in a design file; dirs 1 through 3 rotate 90 degrees clockwise. }
+
+	{ Predrawn maps come with gears that describe their cells. }
+	STAT_PDMC_X = 1;
+	STAT_PDMC_Y = 2;
+	STAT_PDMC_W = 3;
+	STAT_PDMC_H = 4;
+	STAT_PDMC_D = 5;
+
 var
 	High_Component_ID: Integer;
+
+Function LoadPredrawnMap( const FName: String ): GameBoardPtr;
+Procedure SavePredrawnMap( GB: GameBoardPtr; const FName: String );
 
 Function NewSubZone( MF: GearPtr ): GearPtr;
 
@@ -71,14 +85,63 @@ function RandomMap( Scene: GearPtr ): GameBoardPtr;
 implementation
 
 {$IFDEF ASCII}
-uses gearutil,ghprop,rpgdice,texutil,vidgfx,gearparser,narration,ui4gh,arenascript,ghchars;
+uses gearutil,ghprop,rpgdice,texutil,vidgfx,gearparser,narration,ui4gh,arenascript,ghchars,sysutils;
 {$ELSE}
-uses gearutil,ghprop,rpgdice,texutil,glgfx,gearparser,narration,ui4gh,arenascript,ghchars;
+uses gearutil,ghprop,rpgdice,texutil,glgfx,gearparser,narration,ui4gh,arenascript,ghchars,sysutils;
 {$ENDIF}
 
 var
 	Standard_Param_List: SAttPtr;
 	random_scene_content,super_prop_list: GearPtr;
+
+Function LoadPredrawnMap( const FName: String ): GameBoardPtr;
+	{ Load the requested map feature from disk. If no such map can be found, }
+	{ return a blank map instead. }
+var
+	F: Text;
+	W,H: Integer;
+	it: GameBoardPtr;
+begin
+	if FileExists( Series_Directory + FName ) then begin
+		Assign( F , Series_Directory + FName );
+		Reset( F );
+
+		ReadLn( F , W );
+		ReadLn( F , H );
+		it := NewMap( W , H );
+
+		it^.Map := ReadMap( F , W , H );
+
+		it^.Meks := ReadCGears( F );
+
+		Close( F );
+	end else begin
+		it := NewMap( 50 , 50 );
+	end;
+	LoadPredrawnMap := it;
+end;
+
+Procedure SavePredrawnMap( GB: GameBoardPtr; const FName: String );
+	{ Save this map to disk using the provided filename. }
+var
+	F: Text;
+begin
+	Assign( F , Series_Directory + FName );
+	Rewrite( F );
+
+	{ Width and height get written first. }
+	writeln( F , GB^.Map_Width );
+	writeln( F , GB^.Map_Height );
+
+	{ Write the map data. This part should be easy. }
+	WriteMap( GB^.Map , F );
+
+	{ Write the cell data. This part may take a bit more work. }
+	WriteCGears( F , GB^.Meks );
+
+	Close( F );
+end;
+
 
 Function IsLegalTerrain( T: Integer ): Boolean;
 	{ Return TRUE if T is a legal terrain type, or FALSE otherwise. }
@@ -1120,6 +1183,27 @@ begin
 	ProcessClub := Cells;
 end;
 
+Function ProcessPredrawn( GB: GameBoardPtr ): SAttPtr;
+	{ This is a predrawn map. There's no actual rendering to do, but the }
+	{ cells to be used are currently stored as the map content. Remove them }
+	{ from the map and parse them. }
+var
+	CellList: SAttPtr;
+	Cell: GearPtr;
+begin
+	CellList := Nil;
+
+	while GB^.Meks <> Nil do begin
+		Cell := GB^.Meks;
+		DelinkGear( GB^.Meks , Cell );
+
+		{ This gear should be a cell description. Parse it. Parse it real good. }
+		StoreSAtt( CellList , BStr( Cell^.Stat[ STAT_PDMC_X ] ) + ' ' + BStr( Cell^.Stat[ STAT_PDMC_Y ] ) + ' ' + BStr( Cell^.Stat[ STAT_PDMC_W ] ) + ' ' + BStr( Cell^.Stat[ STAT_PDMC_H ] ) + ' ' + BStr( Cell^.Stat[ STAT_PDMC_D ] ) );
+		DisposeGear( Cell );
+	end;
+
+	ProcessPredrawn := CellList;
+end;
 
 Function ProcessMonkeyMaze( GB: GameBoardPtr; MF: GearPtr; var Cmd: String; X0,Y0,W,H: Integer ): SAttPtr;
 	{ Draw a maze as featured in my non-hit game, Dungeon Monkey. }
@@ -1877,6 +1961,11 @@ begin
 
 		end else if cmd = 'CELLBOX' then begin
 			Cells := ProcessCellbox( GB , MF , Command_String , X , Y , W , H );
+
+		end else if cmd = 'PREDRAWN' then begin
+			{ This is a predrawn map- the only thing the renderer needs to do }
+			{ is parse the cells. }
+			Cells := ProcessPredrawn( GB );
 
 		end;
 	end;
@@ -2781,8 +2870,6 @@ function RandomMap( Scene: GearPtr ): GameBoardPtr;
 var
 	it: GameBoardPtr;
 	FName: String;
-	F: Text;
-	W,H: Integer;
 begin
 	if Scene <> Nil then begin
 		FName := SAttValue( Scene^.SA , 'MAP' );
@@ -2794,7 +2881,8 @@ begin
 			{ generator to he PreGen type; this action will convert the MapEd }
 			{ cells to a list usable by this unit, and won't overwrite the }
 			{ map as defined. }
-
+			it := LoadPredrawnMap( FName );
+			SetSAtt( Scene^.SA , 'PARAM <PREDRAWN>' );
 		end else begin
 			AdjustDimensions( Scene );
 

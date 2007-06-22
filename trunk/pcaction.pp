@@ -58,7 +58,7 @@ const
 	Reverse_RL_D: Array [0..7] of Byte = ( 6 , 3 , 2 , 1 , 4 , 7, 8 , 9 );
 
 var
-	PCACTIONRD_PC,PCACTIONRD_NPC: GearPtr;
+	PCACTIONRD_PC: GearPtr;
 	PCACTIONRD_GB: GameBoardPtr;
 	PCACTIONRD_Menu: RPGMenuPtr;	{ These two are for redrawing the FieldHQ }
 	PCACTIONRD_Source: GearPtr;	{ with the new interface. }
@@ -2151,7 +2151,7 @@ Procedure RLSmartAction( GB: GameBoardPtr; Mek: GearPtr );
 	{ friend, talk to it. If it's a wall, just look at it... }
 var
 	CD,SD: Integer;	{ Current Direction, Smart Direction }
-	T,MoveAction,MoveSpeed: Integer;
+	T,MoveAction: Integer;
 	P,P0,P2: Point;
 	M2: GearPtr;
 begin
@@ -2580,7 +2580,6 @@ var
 	KP: Char;	{ Key Pressed }
 	GotMove: Boolean;
 	Mobile: Boolean;
-	P: Point;
 begin
 	{ Record where the mek currently is. }
 	Mobile := CurrentMoveRate( Camp^.GB^.Scene , Mek ) > 0;
@@ -2711,12 +2710,9 @@ begin
 			end else if KP = KeyMap[ KMC_PartBrowser ].KCode then begin
 				MechaPartBrowser( Mek , @PCActionRedraw );
 
-			end else if KP = '*' then begin
-				BrowseMapContents( Camp^.GB^.Meks );
-
 			end else if KP = KeyMap[ KMC_LearnSkills ].KCode then begin
-					PCACTIONRD_GB := Camp^.GB;
-					DoTraining( Camp^.GB , Mek , @PCActionRedraw );
+				PCACTIONRD_GB := Camp^.GB;
+				DoTraining( Camp^.GB , Mek , @PCActionRedraw );
 
 			end else if KP = KeyMap[ KMC_SelectMecha ].KCode then begin
 				DoSelectPCMek( Camp^.GB , Mek );
@@ -2774,6 +2770,9 @@ begin
 				MechaPartBrowser( FindRoot( Camp^.GB^.Scene ) , @PCActionRedraw );
 			end else if ( KP = '^' ) and ( Camp^.GB^.Scene <> Nil ) then begin
 				SpitContents( Camp^.GB^.meks );
+
+			end else if KP = '*' then begin
+				BrowseMapContents( Camp^.GB^.Meks );
 
 			end else if KP = '@' then begin
 				ShowRep( Mek );
@@ -2899,7 +2898,7 @@ Function MoveOnWorld( GB: GameBoardPtr; Mek: GearPtr; var X,Y: Integer; D: Integ
 		WorldMapMoveRate := it;
 	end;
 var
-	X2,Y2,TravelTime,TopSpeed,terr,T,spd: Integer;
+	X2,Y2,TopSpeed,terr,T,spd: Integer;
 begin
 	{ Locate the new position. }
 	X2 := X + AngDir[ D , 1 ];
@@ -2942,7 +2941,7 @@ var
 	TravelTime,T: Integer;
 	A: Char;
 	PCX,PCY: Integer;	{ The party's location on the map. }
-	PC,S: GearPtr;
+	PC: GearPtr;
 	update_trigger: String;
 begin
 	{ Set the gameboard's pointer to the campaign. }

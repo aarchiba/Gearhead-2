@@ -608,7 +608,7 @@ var
 begin
 	{ CLean up the message a bit. }
 	DeleteWhiteSpace( msg );
-	TextColorBackground( White , Black );
+	TextColorBackground( C , Black );
 
 	{Clear the message area, and set clipping bounds.}
 	ClrZone( Z );
