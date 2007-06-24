@@ -929,6 +929,7 @@ var
 	end;
 var
 	D: QWord;
+	PResult: Integer;
 begin
 	if Minimal_Screen_Refresh then begin
 		a := RPK_TimeEvent;
@@ -938,18 +939,23 @@ begin
 			end;
 		until a <> RPK_TimeEvent;
 	end else begin
+		{ Go through the accumulated events looking for good ones. }
+		a := RPK_TimeEvent;
+		repeat
+			PResult := SDL_PollEvent( @event );
+			if PResult = 1 then begin
+				{ See if this event is a keyboard one... }
+				ProcessThatEvent;
+			end;
+		until ( PResult <> 1 ) or ( a <> RPK_TimeEvent );
+
+		{ If necessary, do a delay. }
 		if SDL_GetTicks < ( Last_Clock_Update + 20 ) then begin
 			D := Last_Clock_Update + 30 - SDL_GetTicks;
 			SDL_Delay( D );
 		end;
 		Last_Clock_Update := SDL_GetTicks + 30;
 		Animation_Phase := ( Animation_Phase + 1 ) mod Animation_Phase_Period;
-		a := RPK_TimeEvent;
-
-		if SDL_PollEvent( @event ) = 1 then begin
-			{ See if this event is a keyboard one... }
-			ProcessThatEvent;
-		end;
 	end;
 
 	RK_KeyState := SDL_GetKeyState( RK_NumKeys );
