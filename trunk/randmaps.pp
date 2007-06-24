@@ -74,6 +74,8 @@ Procedure SavePredrawnMap( GB: GameBoardPtr; const FName: String );
 
 Function NewSubZone( MF: GearPtr ): GearPtr;
 
+Procedure DrawMiniMap( GB: GameBoardPtr; MF: GearPtr; MapDesc: String; D: Integer );
+
 Function SceneContext( GB: GameBoardPtr; Scene: GearPtr ): String;
 
 { WARNING: AddContent is for internal use only!!! }

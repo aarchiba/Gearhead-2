@@ -107,7 +107,11 @@ const
 	Display_Mini_Map: Boolean = FaLSE;
 
 	{ *** SCREEN DIMENSIONS *** }
+{$IFDEF WIN32}
 	ScreenRows: Byte = 25;
+{$ELSE}
+	ScreenRows: Byte = 24;
+{$ENDIF}
 	ScreenColumns: Byte = 80;
 
 	XXRan_Debug: Boolean = False;
