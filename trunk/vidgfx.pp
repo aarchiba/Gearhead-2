@@ -857,12 +857,18 @@ begin
 
 	Redraw;
 	InfoBox( ZONE_TextInputFull );
+
+	{ Give us a nice blinky cursor, please. }
+	SetCursorType( crBlock );
+
 	repeat
 		{ Set up the display. }
 		CMessage( Prompt , ZONE_TextInputPrompt , White );
 		CMessage( it , ZONE_TextInput , Green );
 		TextColor( LightGreen );
-		VWrite( '@' );
+
+		SetCursorPos( VG_X - 1 , VG_Y - 1 );
+
 		DoFlip;
 		A := RawKey;
 
@@ -872,6 +878,9 @@ begin
 			it := it + A;
 		end;
 	until ( A = #13 ) or ( A = #27 );
+
+	{ Get rid of the cursor, again. }
+	SetCursorType( crHidden );
 
 	GetStringFromUser := it;
 end;
@@ -992,9 +1001,8 @@ end;
 
 
 initialization
-	screenheight := ScreenColumns;
-	screenwidth := ScreenRows;
 	InitVideo;
+
 	InitKeyboard;
 	CalcPen;
 

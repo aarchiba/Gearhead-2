@@ -23,14 +23,30 @@ unit spaceships;
 
 interface
 
+uses gears,locale;
+
 Function NewSpaceship( GB: GameBoardPtr; const Desig: String );
 
 implementation
 
+uses gearparser,gearutil;
+
+var
+	Spaceship_Prototype_List: GearPtr;
+
 Function NewSpaceship( GB: GameBoardPtr; const Desig: String );
 	{ Create a new spaceship of type DESIG. Give it a unique name and scene IDs. }
+var
+	Ship: GearPtr;
 begin
 
 end;
+
+initialization
+	Spaceship_Prototype_List := AggregatePattern( 'SHIP_*.txt' , Series_Directory );
+
+
+finalization
+	DisposeGear( Spaceship_Prototype_List );
 
 end.
