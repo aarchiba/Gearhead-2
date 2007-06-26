@@ -1365,7 +1365,7 @@ Procedure RandomLoot( Box: GearPtr; SRP: LongInt; const l_type,l_factions: Strin
 		while I <> Nil do begin
 			if ItemIsLegal( I ) then begin
 				Cost := GearValue( I );
-				if Cost < MIC then Total := Total + Cost;
+				if Cost < MIC then Total := Total + ( Cost * Cost );
 			end;
 			I := I^.Next;
 		end;
@@ -1380,7 +1380,7 @@ Procedure RandomLoot( Box: GearPtr; SRP: LongInt; const l_type,l_factions: Strin
 			if ItemIsLegal( I ) then begin
 				Cost := GearValue( I );
 				if Cost < MIC then begin
-					Total := Total - Cost;
+					Total := Total - ( Cost * Cost );
 					if Total < 1 then Selected_Item := I;
 				end;
 			end;

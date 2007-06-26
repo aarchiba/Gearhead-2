@@ -1,14 +1,28 @@
 % NPC chatter file- mostly combat taunts
 CHAT_VA.ATTACK_ALL <Face it, you have no hope of defeating me.>
+CHAT_VA.ATTACK_ALL <You will fall before my superior skill.>
+CHAT_VA.ATTACK_ALL <You fight so poorly, this is barely even worthwhile as practice.>
+CHAT_VA.ATTACK_ALL <You will curse the day you crossed my path.>
+CHAT_VA.ATTACK_ALL <You have no chance to survive. I never show mercy to an opponent.>
 
 CHAT_VA.SUCCESS_ALL <Er...>
+CHAT_VA.SUCCESS_ALL <Cut it out!>
+CHAT_VA.SUCCESS_ALL <Shut up!>
+CHAT_VA.SUCCESS_ALL <Wha?>
+CHAT_VA.SUCCESS_ALL <Ouch!>
 
 CHAT_VA.FAILURE_ALL <If that's so, then why are you losing?>
+CHAT_VA.FAILURE_ALL <Is that the best you could do?>
+CHAT_VA.FAILURE_ALL <Keep talking all you want. It'll take your mind off losing.>
+CHAT_VA.FAILURE_ALL <All your talk is starting to get tiresome.>
+CHAT_VA.FAILURE_ALL <Oh, I'm sorry, did you say something? I've got some music on.>
 
 CHAT_VA.FORCESURRENDER.19_ALL <Give up, it's your only chance to survive.>
+
 CHAT_VA.FORCESURRENDER.28_ALL <Surrender now or I'll be forced to kill you.>
 
 CHAT_VA.FORCEEJECT.19_ALL <Why don't you eject? There's no way you can win this fight.>
+
 CHAT_VA.FORCEEJECT.28_ALL <This is your last chance to survive. You better eject now.>
 
 CHAT_VA.FORCEFAILURE_ALL <Forget it... I'm going all the way with this.>
@@ -28,6 +42,7 @@ CHAT_SURRENDER_T6+ <I can't believe you managed to beat me...>
 CHAT_SURRENDER_T6- <Alright, I give up, you've beaten me...>
 CHAT_SURRENDER_T7+ <It would be most logical for me to give up now...>
 CHAT_SURRENDER_T7- <By all that is holy, I give up!>
+
 CHAT_ATTACK_ALL <We will be victorious!>
 CHAT_ATTACK_T1+ <You will pay for the evil you've done!>
 CHAT_ATTACK_T1- <I will enjoy making you suffer!>
@@ -43,6 +58,7 @@ CHAT_ATTACK_T6+ <There's no way you can defeat me.>
 CHAT_ATTACK_T6- <I won't be defeated again!>
 CHAT_ATTACK_T7+ <It would be most logical if you gave up right now.>
 CHAT_ATTACK_T7- <I will send you to the other side!>
+
 CHAT_EJECT_ALL <I'm getting out of here!>
 CHAT_EJECT_ALL <This is enough damage for me...>
 CHAT_EJECT_ALL <I'm not sticking around!>

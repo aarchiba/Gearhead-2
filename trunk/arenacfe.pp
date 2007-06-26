@@ -880,9 +880,10 @@ Procedure VerbalAttack( GB: GameBoardPtr; Attacker,Target: GearPtr );
 var
 	AtSkill,AtRoll,DefRoll: Integer;
 	msg: String;
+	T: Integer;
 begin
 	DefRoll := SkillRoll( Target , NAS_Resistance , 0 , 0 , False );
-	AddMentalDown( Attacker , 5 );
+	AddMentalDown( Attacker , 3 );
 	if ( Target^.G = GG_Character ) and MightSurrender( GB , Target ) then begin
 		AtSkill := SelectTactic;
 		msg := GetTauntString( Attacker , 'CHAT_VA.FORCESURRENDER.' + BStr( AtSkill ) );
@@ -902,7 +903,7 @@ begin
 	end else if ( target^.G = GG_Mecha ) and ( NAttValue( Attacker^.NA , NAG_Location, NAS_Team ) = NAV_DefPlayerTeam ) and MightEject( Target ) and ( NAttValue( Target^.NA , NAG_EpisodeData , NAS_TauntResistance ) = 0 ) then begin
 		AtSkill := SelectTactic;
 		msg := GetTauntString( Attacker , 'CHAT_VA.FORCEEJECT.' + BStr( AtSkill ) );
-		AtRoll :=  SkillRoll( Attacker , AtSkill , DefRoll , -10 , False );
+		AtRoll :=  SkillRoll( Attacker , AtSkill , DefRoll , -5 , False );
 		SetNAtt( Target^.NA , NAG_EpisodeData , NAS_TauntResistance , 1 );
 		Monologue( GB , Attacker , msg );
 
@@ -927,6 +928,14 @@ begin
 			if Target <> Nil then begin
 				AddNAtt( Target^.NA , NAG_StatusEffect , NAS_Flummoxed , 1 + Random( 10 ) );
 				AddMoraleDmg( Target , 1 + AtRoll - DefRoll );
+
+				{ A good taunt will also drain MP and SP. }
+				if AtRoll > ( DefRoll + 2 ) then begin
+					for t := 1 to ( DefRoll + 2 - AtRoll ) do begin
+						if Random( 3 ) <> 1 then AddMentalDown( Target , 1 )
+						else AddStaminaDown( Target , 1 );
+					end;
+				end;
 			end;
 
 			{ Insulting your enemies makes you happy. }

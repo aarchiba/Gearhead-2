@@ -933,6 +933,7 @@ begin
 
 		AddRPGMenuItem( RPM , MsgString( 'ARENA_VMEK_AssignPilot' ) , 1 );
 		AddRPGMenuItem( RPM , MsgString( 'ARENA_VMEK_ViewInventory' ) , 5 );
+		if HasSkill( HQCamp^.Source , NAS_MechaEngineering ) then AddRPGMenuItem( RPM , MsgString( 'ARENA_VMEK_EditParts' ) , 6 );
 		AddRPGMenuItem( RPM , MsgString( 'ARENA_VMEK_SellMecha' ) + ' ($' + BStr( SalePrice ) + ')' , -2 );
 		if PC^.InvCom <> Nil then AddRPGMenuItem( RPM , MsgString( 'ARENA_VMEK_SellMechaInv' ) + ' ($' + BStr( InventoryValue ) + ')' , 4 );
 		Cost := AHQRepairCost( HQCamp ,  PC );
@@ -956,6 +957,7 @@ begin
 			3:	ArenaReloadMaster( HQCamp , PC );
 			4:	SellMechaInventory;
 			5:	ArenaHQBackpack( HQCamp^.Source , PC , @BasicArenaRedraw );
+			6:	MechaPartEditor( Nil , HQCamp^.Source^.SubCom , HQCamp^.Source , PC , @BasicArenaRedraw );
 			-2:	SellMecha( SalePrice );
 		end;
 	until N < 0;

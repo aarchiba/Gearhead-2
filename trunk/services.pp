@@ -237,7 +237,7 @@ begin
 	DisposeRPGMenu( YNMenu );
 end;
 
-Function SellGear( var LList,Part: GearPtr; PC,NPC: GearPtr ): Boolean;
+Function SellGear( var LList,Part: GearPtr; PC,NPC: GearPtr; const Categories: String ): Boolean;
 	{ The unit may or may not want to sell PART. }
 	{ Show the price of this gear, and ask whether or not the }
 	{ player wants to make this sale. }
@@ -279,6 +279,12 @@ begin
 
 	Cost := BaseGearValue( Part );
 	if Destroyed( Part ) then Cost := Cost div 3;
+
+	{ If this part matches the category of the shopkeeper, it's worth more money. }
+	{ Actually, it works so that selling inappropriate items are penalized. }
+	if not ( ( Part^.Scale < 1 ) and PartAtLeastOneMatch ( Categories , SAttValue( Part^.Sa , 'CATEGORY' ) ) ) then begin
+		Cost := ( Cost * 2 ) div 3;
+	end;
 
 	{ Determine shopping rank. }
 	ShopRk := SkillValue( PC , 21 );
@@ -814,10 +820,7 @@ begin
 
 	{ Search through STUFF to see if Item's type matches the CATEGORY. }
 	Category := SAttValue( I^.SA , 'CATEGORY' );
-	while Category <> '' do begin
-		Tag := ExtractWord( Category );
-		if AStringHasBString( Stuff , Tag ) then NGW := False;
-	end;
+	NGW := not PartAtLeastOneMatch ( Stuff , Category );
 
 	Scene := FindRootScene( GB , GB^.Scene );
 
@@ -1139,7 +1142,7 @@ begin
 	CreateMechaMenu := RPM;
 end;
 
-Procedure SellStuff( GB: GameBoardPtr; PCInv,PCChar,NPC: GearPtr );
+Procedure SellStuff( GB: GameBoardPtr; PCInv,PCChar,NPC: GearPtr; const Categories: String );
 	{ The player wants to sell some items to this NPC. }
 	{ PCInv points to the team-1 gear whose inventory is to be sold. }
 	{ PCChar points to the actual player character. }
@@ -1171,7 +1174,7 @@ begin
 		{ If N is positive, prompt to sell that item. }
 		if N > -1 then begin
 			Part := LocateGearByNumber( PCInv , N );
-			SellGear( Part^.Parent^.InvCom , Part , PCChar , NPC );
+			SellGear( Part^.Parent^.InvCom , Part , PCChar , NPC , Categories );
 		end;
 
 	until N = -1;
@@ -1208,7 +1211,7 @@ begin
 
 		if N = 1 then begin
 			{ Sell the mecha. }
-			if SellGear( GB^.Meks , Mek , PC , NPC ) then N := -1;
+			if SellGear( GB^.Meks , Mek , PC , NPC , '' ) then N := -1;
 
 		end else if N = 2 then begin
 			{ Repair the mecha. }
@@ -1222,7 +1225,7 @@ begin
 
 		end else if N = 4 then begin
 			{ Sell items. }
-			SellStuff( GB , Mek , PC , NPC );
+			SellStuff( GB , Mek , PC , NPC , '' );
 
 		end;
 
@@ -1544,7 +1547,7 @@ begin
 		end else if N = -4 then begin
 			DoReloadChars( GB , PC , NPC );
 		end else if N = -5 then begin
-			SellStuff( GB , PC , PC , NPC );
+			SellStuff( GB , PC , PC , NPC , Stuff );
 		end else if N = -6 then begin
 			BackpackMenu( GB , PC , True , @ServicesBackpackRedraw );
 

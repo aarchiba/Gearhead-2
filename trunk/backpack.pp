@@ -57,6 +57,7 @@ Procedure FHQ_SelectMechaForPilot( GB: GameBoardPtr; NPC: GearPtr );
 Procedure ArenaHQBackpack( Source,BPPC: GearPtr; BasicRedraw: RedrawProcedureType );
 Procedure LancemateBackpack( GB: GameBoardPtr; PC,NPC: GearPtr; BasicRedraw: RedrawProcedureType );
 Procedure BackpackMenu( GB: GameBoardPtr; PC: GearPtr; StartWithInv: Boolean; BasicRedraw: RedrawProcedureType );
+Procedure MechaPartEditor( GB: GameBoardPtr; var LList: GearPtr; PC,Mek: GearPtr; BasicRedraw: RedrawProcedureType  );
 
 Procedure MechaPartBrowser( Mek: GearPtr; RDP: RedrawProcedureType );
 Procedure MysteryPartBrowser( Mek: GearPtr; RDP: RedrawProcedureType );
@@ -164,6 +165,20 @@ begin
 			end;
 		end;
 	end;
+	if EqpRPM <> Nil then begin
+		DisplayMenu( EqpRPM , Nil );
+	end;
+end;
+
+Procedure InstallRedraw;
+	{ Redrawer for installing a part into a mecha. }
+var
+	N: Integer;
+	Part: GearPtr;
+begin
+	BP_Redraw;
+	DrawBPBorder;
+	BrowserInterfaceInfo( BP_Source , ZONE_ItemsInfo );
 	if EqpRPM <> Nil then begin
 		DisplayMenu( EqpRPM , Nil );
 	end;
@@ -1241,7 +1256,8 @@ begin
 
 	{ Select a slot for the item to go into. }
 	DialogMsg( ReplaceHash( MsgSTring( 'BACKPACK_InstallInfo' ) , GearName( Item ) ) );
-	N := SelectMenu( EI_Menu , @MiscProcRedraw);
+	BP_Source := Item;
+	N := SelectMenu( EI_Menu , @InstallRedraw);
 
 	DisposeRPGMenu( EI_Menu );
 
@@ -1750,6 +1766,7 @@ Procedure ThisItemWasSelected( GB: GameBoardPtr; var LList: GearPtr; TruePC , PC
 	{ LList is a list of mecha and other things which may or may not }
 	{  belong to the same team as TruePC et al. }
 	{ Item is the piece of wargear currently being examined. }
+	{ BP_Redraw must have been set some time before this procedure was called. }
 var
 	TIWS_Menu: RPGMenuPtr;
 	N: Integer;
@@ -1892,7 +1909,6 @@ var
 	QuitBP: Boolean;
 begin
 	{ Set up the display. }
-	DrawBPBorder;
 	ForceQuit := False;
 
 	BP_Redraw := BasicRedraw;
@@ -1936,9 +1952,11 @@ begin
 	RealBackPack( GB , GB^.Meks , PC , PC , StartWithInv , BasicRedraw );
 end;
 
-Procedure MechaPartEditor( GB: GameBoardPtr; var LList: GearPtr; PC,Mek: GearPtr );
+Procedure MechaPartEditor( GB: GameBoardPtr; var LList: GearPtr; PC,Mek: GearPtr; BasicRedraw: RedrawProcedureType  );
 	{ This procedure may be used to browse through all the various }
 	{ bits of a mecha and examine each one individually. }
+	{ LList is the list of mecha of which MEK is a sibling. If any item gets removed }
+	{ from Mek but can't be placed in the general inventory, it will be put there. }
 var
 	RPM: RPGMenuPtr;
 	N,I: Integer;
@@ -1954,6 +1972,7 @@ begin
 		if I > 0 then SetItemByPosition( RPM , I );
 		AddRPGMenuItem( RPM , 'Exit Editor' , -1 );
 
+		BP_Redraw := BasicRedraw;
 		BP_GB := GB;
 		BP_Source := Mek;
 		BP_SeekSibs := False;
@@ -2110,7 +2129,7 @@ begin
 				1: RealBackpack( GB , LList , PC , M , False , BasicRedrawer );
 				2: FHQ_SelectPilotForMecha( GB , M );
 				-3: FHQ_Transfer( LList , PC , M );
-				4: MechaPartEditor( GB , LList , PC , M );
+				4: MechaPartEditor( GB , LList , PC , M , @PlainRedraw );
 {$IFNDEF ASCII}
 				5: SelectColors( M , BasicRedrawer );
 {$ENDIF}
