@@ -2264,6 +2264,10 @@ begin
 	end else if ( Part^.G = GG_Support ) and ( Part^.S = GS_Engine ) then begin
 		it := Part^.V * 50;
 		if Part^.Stat[ STAT_EngineSubType ] = EST_HighOutput then it := it * 2;
+	end else if Part^.G = GG_Prop then begin
+		{ Props get loads of energy. Being stationary, it's easy to add lots of }
+		{ batteries or connect them to a power source. }
+		it := Part^.V * 25;
 	end;
 	{ Increase for scale. }
 	for t := 1 to Part^.Scale do it := it * 5;
@@ -2324,7 +2328,7 @@ Function EnergyPoints( Master: GearPtr ): LongInt;
 	end;
 begin
 	if Master = Nil then Exit( 0 );
-	EnergyPoints := CountEPAlongPath( Master^.SubCom );
+	EnergyPoints := PartEnergyPoints( Master ) + CountEPAlongPath( Master^.SubCom );
 end;
 
 Procedure SpendEnergy( Master: GearPtr; EP: Integer );

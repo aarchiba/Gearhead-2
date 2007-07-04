@@ -101,6 +101,9 @@ Const
 		NAV_RockyTiles = 1;
 		NAV_PalaceParkTiles = 2;
 		NAV_IndustrialTiles = 3;
+	NAS_Backdrop = 3;	{ The image used in the background. Left as 0, it means no backdrop. }
+		NumBackdrop = 1;
+		NAV_Starfield = 1;
 
 
 

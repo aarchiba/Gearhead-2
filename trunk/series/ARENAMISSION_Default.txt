@@ -6,6 +6,7 @@ ArenaMission
 	AsteroidMap
 	RockyTiles
 	Vacuum
+	SpaceBackdrop
 
 	MapWidth 50
 	MapHeight 50
@@ -89,6 +90,7 @@ ArenaMission
 	SpaceScroll
 	Microgravity
 	Vacuum
+	SpaceBackdrop
 
 	Element1 <Faction Enemy>
 
@@ -113,6 +115,72 @@ ArenaMission
 		Deploy <SetSelfFaction M1   WMecha 2 Threat ArenaRenown 400>
 		ParaX 45
 		ParaY 35
+	end
+
+ArenaMission
+	name <Destroy Spaceship>
+	requires <ArenaOK (!Md|!Hi|!Ex)>
+	desc <You must destroy a spaceship belonging to %name1%.>
+
+	MapWidth 50
+	MapHeight 50
+
+	PayRate 500
+
+	SpaceMap
+	SpaceScroll
+	Microgravity
+	Vacuum
+	SpaceBackdrop
+
+	Element1 <Faction Enemy>
+
+	% L1 = Initialization Counter
+	% L2 = Victory Counter
+	% L3 = Destroy Base Counter
+	Start <if= L1 0 Alert 1 L= 1 1>
+	nu1 <if= T1 0 Return if= L2 0 L= 2 1 if= L3 1 else GoLoseMission Goto GoWinMission>
+	nu2 <if= T2 0 if= L3 1 if= L2 0 L= 2 1 Return Goto GoWinMission>
+	nu3 <if= T3 0 if= L3 0 L= 3 1 Print 5 XPV 100 if= T2 0 Return L= 2 1 Goto GoWinMission>
+
+	GoWinMission <Salvage Alert 3 WinArenaMission Print 3>
+	GoLoseMission <Alert 2 LoseArenaMission Print 2>
+
+	5Min <if= d2 1  WMecha 3 Threat ArenaRenown 100>
+
+	Msg1 <Destroy the enemy spaceship.>
+	Msg2 <The mission is a failure.>
+	Msg3 <The mission is a success.>
+	Msg5 <The spaceship has been destroyed.>
+
+	sub
+		Team 1
+		SetEnemy 2 3
+		ParaX 45
+		ParaY 25
+
+		Team 2
+		SetEnemy 1
+		SetAlly 3
+		Deploy <SetSelfFaction M1   WMecha 2 Threat ArenaRenown 550>
+		home <Enemy Zone>
+
+		Team 3
+		SetEnemy 1
+		SetAlly 2
+		home <The Fortress>
+
+		void
+		name <Enemy Zone>
+		width 12
+		height 12
+		MFX 1
+		MFY 19
+		sub
+			SuperProp
+			requires <*Battleship>
+			SetTeam 3
+		end
 	end
 
 ArenaMission
@@ -224,7 +292,7 @@ ArenaMission
 	Start <if= L1 0 Alert 1 L= 1 1>
 	nu1 <if= T1 0 Return if= L2 0 L= 2 1 if= L3 1 else GoLoseMission Goto GoWinMission>
 	nu2 <if= T2 0 if= L3 1 if= L2 0 L= 2 1 Return Goto GoWinMission>
-	nu3 <if= T3 0 if= L3 0 else GoN3SomeLeft L= 3 1 Print 5 XPV 100 if= T2 0 Return L= 2 1 Goto GoWinMission>
+	nu3 <if= T3 0 else GoN3SomeLeft if= L3 0 L= 3 1 Print 5 XPV 100 if= T2 0 Return L= 2 1 Goto GoWinMission>
 	GoN3SomeLeft <ifG T3 0 Print 4>
 
 	GoWinMission <Salvage Alert 3 WinArenaMission Print 3>

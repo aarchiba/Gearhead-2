@@ -48,26 +48,6 @@ Scene
 		Content1 <Some 1 100 Here *MENTOR>
 		Content2 <Some 1 100 Here *ANTI_ATTACK_SECURITY 2>
 		Content3 <Some 2 50 Here *URBAN_X>
-
-		sub
-			room
-			width 3
-			height 3
-			name <The Start Position>
-			special <STARTHERE>
-		end
-	end
-	inv
-		NPC Bounty Hunter
-
-		NPC Bounty Hunter
-
-		NPC Bounty Hunter
-
-		NPC Thief
-
-		NPC Thief
-
-		NPC Thief
+		special <STARTHERE>
 	end
 

@@ -8,6 +8,115 @@
 %  requires <*Fortress>
 %
 
+%% *BATTLESHIP Props
+%% Team 1 = Crew
+%% Team 2 = Weapons
+%% Team 3 = Propulsion
+
+SuperProp
+requires <*BATTLEShip>
+Width 4
+Height 3
+inv
+	Prop 20
+	name <Hull>
+	SetTeam 1
+	SDL_SPRITE <tex_spaceship_body.png>
+	Mesh 6
+	XPos 1
+	YPos 0
+	Dir 6
+
+	Prop 20
+	name <Hull>
+	SDL_SPRITE <tex_spaceship_body.png>
+	SetTeam 1
+	Mesh 6
+	XPos 2
+	YPos 0
+	Dir 6
+
+	STC SS-CANNON-1
+	SetTeam 2
+	XPos 3
+	YPos 0
+	Dir 6
+
+	STC SS-CANNON-1
+	SetTeam 2
+	XPos 0
+	YPos 0
+	Dir 2
+
+	Prop 20
+	name <Engine>
+	SDL_SPRITE <tex_spaceship_engine.png>
+	SetTeam 3
+	Mesh 9
+	XPos 0
+	YPos 1
+	Dir 4
+
+	STC SS-CANNON-1
+	SetTeam 1
+	XPos 0
+	YPos 2
+	Dir 0
+
+
+	Prop 20
+	name <Bridge>
+	SDL_SPRITE <tex_spaceship_body.png>
+	SetTeam 1
+	Mesh 8
+	XPos 1
+	YPos 1
+	Dir 4
+
+	Prop 20
+	name <Hull>
+	SDL_SPRITE <tex_spaceship_body.png>
+	SetTeam 1
+	Mesh 5
+	XPos 2
+	YPos 1
+	Dir 0
+
+	Prop 20
+	name <Hull>
+	SDL_SPRITE <tex_spaceship_body.png>
+	SetTeam 1
+	Mesh 6
+	XPos 3
+	YPos 1
+	Dir 4
+
+
+	Prop 20
+	name <Hull>
+	SDL_SPRITE <tex_spaceship_body.png>
+	SetTeam 1
+	Mesh 6
+	XPos 1
+	YPos 2
+	Dir 2
+
+	Prop 20
+	name <Hull>
+	SDL_SPRITE <tex_spaceship_body.png>
+	SetTeam 1
+	Mesh 6
+	XPos 2
+	YPos 2
+	Dir 2
+
+	STC SS-CANNON-1
+	SetTeam 1
+	XPos 3
+	YPos 2
+	Dir 4
+end
+
 %% *FORTRESS Props
 %%  Team 1 = Support Buildings; at least one
 %%  Team 2 = Defense Buildings; maybe none

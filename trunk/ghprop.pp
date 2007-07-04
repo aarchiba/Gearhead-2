@@ -76,6 +76,16 @@ const
 	{ Prop Stats }
 	STAT_PropMesh = 5;		{ Does this prop use a custom mesh? }
 	{ STAT_Lock is the same as above- used by treasure chests. }
+		MESH_Bunker = 1;
+		MESH_Pillbox = 2;
+		MESH_VideoGame = 3;
+		MESH_BigBox = 4;
+		MESH_ShipBody = 5;
+		MESH_ShipWedge = 6;
+		MESH_ShipCurve = 7;
+		MESH_ShipTower = 8;
+		MESH_ShipEngine = 9;
+
 
 	NAG_MTAppearance = 19;		{ Holds some appearance info for metaterrain }
 		NAS_BuildingMesh = 1;	{ What mesh to use for building? }

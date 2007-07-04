@@ -1044,6 +1044,33 @@ Attack <  >
 EncounterMove 0
 ENCOUNTER_NonCombat
 
+% *************************
+% ***  SPACESHIP PARTS  ***
+% *************************
+
+CombatProp 15
+name <Cannon Mount>
+Desig <SS-CANNON-1>
+SDL_SPRITE <tex_spaceship_body.png>
+Mesh 7
+Scale 2
+Skill 1 10
+Skill 12 6
+Skill 18 10
+sub
+	Turret
+	size 3
+	armor 3
+	sub
+		BeamGun 10
+		name <Laser Cannon>
+		Range 8
+		scale 2
+		Speed 3
+	end
+end
+
+
 % **********************
 % ***  COMBAT PROPS  ***
 % **********************

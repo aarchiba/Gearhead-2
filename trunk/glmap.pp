@@ -35,7 +35,7 @@ const
 	LoAlt = -3;
 	HiAlt = 5;
 
-	Num_Prop_Meshes = 4;
+	Num_Prop_Meshes = 9;
 
 var
 	tile_x,tile_y,tile_z: LongInt;	{ Tile where the mouse pointer is pointing. }
@@ -47,6 +47,7 @@ var
 	TerrTex: Array [1..Num_Terrain_Textures] of GLUInt;
 	BitzTex: Array [1..Num_Bitz_Textures] of GLUInt;
 	BuildingTex: Array [1..Num_Building_Textures] of GLUInt;
+	SpaceTex: GLUInt;
 
 	Overlays,Underlays: Array [1..MaxMapWidth,1..MaxMapWidth,LoAlt..HiAlt] of GLUInt;
 
@@ -126,13 +127,14 @@ const
 	TT_StairsDown = 19;
 	TT_TrapDoor = 20;
 	TT_Door = 21;
-	TT_Space = 22;
+	{ Terrain texture 22 is open for expansion }
 	TT_Water = 23;
 
 var
 	Mini_Map_Sprite,World_Terrain: SensibleSpritePtr;
 	Camera_Crane_Height: Array [LowZoom..HiZoom] of GLFloat;
 	Current_Tileset: Integer;
+	Current_Backdrop: GLUInt;
 
 Procedure DrawTree( Tree_Tex: Integer; H: GLFloat );
 	{ Draw a tree with its base centered on the origin. }
@@ -214,7 +216,29 @@ begin
  	glEnd;
 
 	glDisable( GL_Texture_2D );
+end;
 
+Procedure DrawGrid();
+	{ Draw a grid. Actually, draw one empty square. Enough of them and they make a grid. }
+begin
+	glDisable( GL_Lighting );
+	glEnable( GL_BLEND );
+
+	glEnable( GL_ALPHA_TEST );
+	glAlphaFunc( GL_Greater , 0.0 );
+
+
+	glBegin( GL_QUADS );
+
+	GLColor4ub( 0 , 128 , 200 , 128 );
+
+	glVertex3f( 0.4 , 0 , 0.4 );
+	glVertex3f( 0.6 , 0 , 0.4 );
+	glVertex3f( 0.6 , 0 , 0.6 );
+	glVertex3f( 0.4 , 0 , 0.6 );
+
+ 	glEnd;
+	glEnable( GL_Lighting );
 end;
 
 
@@ -775,6 +799,7 @@ Procedure DrawModel( Tex: Integer; Width,Offset,Foot,Fade: GLFloat );
 	{ FOOT is the distance the model is off the ground. }
 	{ FADE is the percentage of the model to hide. Used for fading out models. }
 begin
+	glEnable( GL_BLEND );
 	GLColor3F( 1.0 , 1.0 , 1.0 );
 	glPushMatrix();
 
@@ -800,6 +825,8 @@ begin
 
 	glDisable( GL_Texture_2D );
 	glPopMatrix();
+
+	glDisable( GL_BLEND );
 end;
 
 Procedure DrawWave( T,WP: Integer );
@@ -1222,10 +1249,11 @@ begin
 	SpriteColor := it;
 end;
 
-Procedure DrawSkyBox( Tex: Integer );
+Procedure DrawSkyBox( Tex: GLUInt );
 	{ Draw the sky. }
 begin
-	glBindTexture(GL_TEXTURE_2D, TerrTex[ Tex ] );
+	GLColor4F( 1.0 , 1.0 , 1.0 , 0.0 );
+	glBindTexture(GL_TEXTURE_2D, Tex );
 	glEnable( GL_Texture_2D );
 
 	glMatrixMode( GL_Projection );
@@ -1238,11 +1266,11 @@ begin
 	glBegin(GL_Quads);
 	glTexCoord2f( 0.0 + origin_d / Num_Rotation_Angles , 0.0 );
 	glVertex2i( 0 , 0 );
-	glTexCoord2f( 10.0 + origin_d / Num_Rotation_Angles , 0.0 );
+	glTexCoord2f( 1.0 + origin_d / Num_Rotation_Angles , 0.0 );
 	glVertex2i( screenwidth , 0 );
-	glTexCoord2f( 10.0 + origin_d / Num_Rotation_Angles , 10.0 );
+	glTexCoord2f( 1.0 + origin_d / Num_Rotation_Angles , 1.0 );
 	glVertex2i( screenwidth , screenheight );
-	glTexCoord2f( 0.0 + origin_d / Num_Rotation_Angles , 10.0 );
+	glTexCoord2f( 0.0 + origin_d / Num_Rotation_Angles , 1.0 );
 	glVertex2i( 0 , screenheight );
 	glEnd;
 
@@ -1286,7 +1314,7 @@ begin
 		DrawFloor( TerrTex[ TT_Rubble ] , 0.05 );
 		DrawWall2( TT_WreckageWall , 0.45 , WallBrown , False );
 		end;
-	23:	DrawFloor( TerrTex[ TT_Space ] , -0.1 );	{ Space }
+	23:	DrawGrid();	{ Space }
 	24:	begin	{ Low Building }
 		DrawFloor( TerrTex[ TT_OpenGround ] , 0 );
 		DrawBuilding( ( ( X * 17 ) + ( Y * 71 ) ) mod 4 + 1 , 2 );
@@ -1406,7 +1434,9 @@ begin
 	glDisable( GL_BLEND );
 
 	glClear( GL_COLOR_BUFFER_BIT or GL_DEPTH_BUFFER_BIT );
-{	DrawSkybox( 18 );}
+	if Current_Backdrop <> 0 then begin
+		DrawSkybox( Current_Backdrop );
+	end;
 
 	glMatrixMode( GL_PROJECTION );
 	glLoadIdentity;
@@ -1760,8 +1790,19 @@ begin
 	end;
 	glFinish;
 	RemoveSprite( t2 );
+	SDL_FreeSurface(tmp);
 
-
+	glGenTextures( 1, @SpaceTex );
+	tmp := SDL_CreateRGBSurface( SDL_SWSURFACE , 512 , 512 , 32 , $000000ff , $0000ff00 , $00ff0000 , $ff000000 );
+	T2 := LocateSprite( 'bg_space.png' , 512 , 512 );
+	SDL_FillRect( tmp , Nil , SDL_MapRGBA( tmp^.Format , 0 , 0 , 255 , 0 ) );
+	DrawSprite( t2 , tmp , MySource , 0 );
+	glBindTexture( GL_TEXTURE_2D, SpaceTex );
+	glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_LINEAR);
+	glPixelStorei (GL_UNPACK_ALIGNMENT, 1);
+	glTexImage2D(GL_TEXTURE_2D,0,4,tmp^.w,tmp^.h,0,GL_RGBA,GL_UNSIGNED_BYTE,tmp^.pixels);
+	RemoveSprite( t2 );
 	SDL_FreeSurface(tmp);
 end;
 
@@ -2077,7 +2118,7 @@ end;
 Procedure InitGraphicsForScene( GB: GameBoardPtr );
 	{ Initialize the graphics for this scene. Make sure the correct tilesets are loaded. }
 var
-	TileSet: Integer;
+	TileSet,BDNum: Integer;
 begin
 	{ If we're using isometric mode, set the camera to the default angle. }
 	if Use_Isometric_Mode then begin
@@ -2089,6 +2130,16 @@ begin
 	if ( GB^.Scene <> Nil ) then TileSet := NAttValue( GB^.Scene^.NA , NAG_SceneData , NAS_TileSet )
 	else TileSet := NAV_DefaultTiles;
 	if TileSet <> Current_TileSet then LoadTerrTex( TileSet );
+
+	{ Also set the backdrop. }
+	if GB^.Scene <> Nil then begin
+		BDNum := NAttValue( GB^.Scene^.NA , NAG_SceneData , NAS_Backdrop );
+		if BDNum > 0 then begin
+			Current_Backdrop := SpaceTex;
+		end else Current_Backdrop := 0;
+	end else begin
+		Current_Backdrop := 0;
+	end;
 end;
 
 initialization
@@ -2115,6 +2166,8 @@ initialization
 	Weak_Hit_Sprite := LocateTexture( Weak_Hit_Sprite_Name , '' );
 	Parry_Sprite := LocateTexture( Parry_Sprite_Name , '' );
 	Miss_Sprite := LocateTexture( Miss_Sprite_Name , '' );
+
+	Current_Backdrop := 0;
 
 	ClearOverlays;
 	Focused_On_Mek := Nil;

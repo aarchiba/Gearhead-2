@@ -1711,11 +1711,17 @@ Procedure ExpandSuperprop( GB: GameBoardPtr; MF,SPReq: GearPtr );
 	{ Expand this SuperProp request. MF is the map feature the prop will be }
 	{ placed in. SPReq is the SuperProp request we'll be dealing with. }
 var
+	SPType: String;
 	SPTemp,P: GearPtr;
 	ox,oy,x,y,team: Integer;
 begin
 	{ Begin by selecting the template we'll be using for this superprop. }
-	SPTemp := CloneGear( FindNextComponent( super_prop_list , SAttValue( SPReq^.SA , 'REQUIRES' ) + ' ' + SceneContext( GB , GB^.Scene ) ) );
+	SPType := SAttValue( SPReq^.SA , 'REQUIRES' ) + ' ' + SceneContext( GB , GB^.Scene );
+	SPTemp := CloneGear( FindNextComponent( super_prop_list , SPType ) );
+	if SPTemp = Nil then begin
+		DialogMsg( 'ERROR: Superprop not found for request "' + SPType +'".' );
+		Exit;
+	end;
 
 	{ Calculate the northwest corner coordinates. }
 	ox := MF^.Stat[ STAT_XPos ] + ( MF^.Stat[ STAT_MFWidth ] - SPTemp^.Stat[ STAT_MFWidth ] ) div 2;

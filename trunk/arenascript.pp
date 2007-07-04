@@ -1074,8 +1074,9 @@ begin
 						if Dest^.Stat[ STAT_MapGenerator ] = TERRAIN_Space then Dest^.Stat[ STAT_SpaceMap ] := 1;
 					end;
 
-					{ Also copy over the tileset. }
+					{ Also copy over the tileset + backdrop. }
 					SetNAtt( Dest^.NA , NAG_SceneData , NAS_TileSet , NAttValue( GB^.Scene^.NA , NAG_SceneData , NAS_TileSet ) );
+					SetNAtt( Dest^.NA , NAG_SceneData , NAS_Backdrop , NAttValue( GB^.Scene^.NA , NAG_SceneData , NAS_Backdrop ) );
 
 					{ Copy the environmental effects from the parent scene. }
 					for t := 1 to Num_Environment_Variables do begin
@@ -2998,8 +2999,9 @@ begin
 			SetNAtt( SCRIPT_DynamicEncounter^.NA , NAG_EnvironmentData , T , NAttValue( Src^.NA , NAG_EnvironmentData , T ) );
 		end;
 
-		{ Also copy over the tileset. }
+		{ Also copy over the tileset + backdrop. }
 		SetNAtt( SCRIPT_DynamicEncounter^.NA , NAG_SceneData , NAS_TileSet , NAttValue( Src^.NA , NAG_SceneData , NAS_TileSet ) );
+		SetNAtt( SCRIPT_DynamicEncounter^.NA , NAG_SceneData , NAS_Backdrop , NAttValue( Src^.NA , NAG_SceneData , NAS_Backdrop ) );
 	end;
 
 	{ Set the exit values in the game board. }
