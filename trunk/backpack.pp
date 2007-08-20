@@ -1667,7 +1667,7 @@ Procedure InstallSoftware( GB: GameBoardPtr; PC , SW: GearPtr );
 		DialogMsg( ReplaceHash( MsgString( 'BACKPACK_FreeSoftwareSpace' ) , GearName( SW ) ) );
 		repeat
 			RPM := CreateRPGMenu( MenuItem , MenuSelect , ZONE_InvMenu );
-			BuildGearMenu( RPM , PC , GG_Computer );
+{			BuildGearMenu( RPM , PC , GG_Computer ); }
 			BP_Source := PC;
 			BP_SeekSibs := True;
 			BP_ActiveMenu := RPM;
@@ -1777,7 +1777,7 @@ begin
 
 		if ( Item^.G = GG_Tool ) and ( Item^.S = NAS_Performance ) and ( GB <> Nil ) then AddRPGMenuItem( TIWS_Menu , ReplaceHash( MsgString( 'BACKPACK_UseInstrument' ) , GearName( Item ) ) , -9 );
 		if ( Item^.G = GG_Consumable ) and ( GB <> Nil ) then AddRPGMenuItem( TIWS_Menu , ReplaceHash( MsgString( 'BACKPACK_EatItem' ) , GearName( Item ) ) , -10 );
-		if ( Item^.G = GG_Software ) and IsInvCom( Item ) then AddRPGMenuItem( TIWS_Menu , ReplaceHash( MsgString( 'BACKPACK_InstallSoftware' ) , GearName( Item ) ) , -12 );
+		if ( Item^.G = GG_Software ) and IsInvCom( Item ) then AddRPGMenuItem( TIWS_Menu , ReplaceHash( MsgString( 'BACKPACK_TIWS_InstallSoftware' ) , GearName( Item ) ) , -12 );
 
 		if ( GB <> Nil ) and ( SATtValue( Item^.SA , 'USE' ) <> '' ) then AddRPGMenuItem( TIWS_Menu , ReplaceHash( MsgString( 'BACKPACK_UseItemScript' ) , GearName( Item ) ) , -11 );
 

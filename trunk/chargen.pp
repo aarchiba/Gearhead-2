@@ -38,6 +38,7 @@ var
 	Goal_List,Focus_List: GearPtr;
 
 Function CharacterCreator( Fac: Integer ): GearPtr;
+Function RandomNPC( Adv: GearPtr; Fac,Hometown: Integer; JobDesig: String ): GearPtr;
 
 implementation
 
@@ -130,6 +131,25 @@ begin
 	SelectAge := T;
 end;
 
+Procedure StoreHomeTownDataInPC( PC,City: GearPtr );
+	{ Store the information for this PC's home town in the character record. }
+var
+	msg: String;
+	Fac: GearPtr;
+begin
+	StoreSAtt( PC^.SA , 'HOMETOWN <' + GearName( City ) + '>' );
+	StoreSAtt( PC^.SA , 'HOMETOWN_FACTIONS <' + SAttValue( City^.SA , 'FACTIONS' ) + '>' );
+	msg := SAttValue( City^.SA , 'TYPE' ) + ' ' + SAttValue( City^.SA , 'DESIG' );
+
+	Fac := SeekCurrentLevelGear( Factions_List , GG_Faction , NAttValue( City^.NA , NAG_Personal , NAS_FactionID ) );
+	if Fac <> Nil then begin
+		msg := msg + ' ' + SAttValue( Fac^.SA , 'DESIG' );
+		StoreSAtt( PC^.SA , 'HOMETOWN_GOVERNMENT <' + SAttValue( Fac^.SA , 'DESIG' ) + '>' );
+	end;
+
+	StoreSAtt( PC^.SA , 'HOMETOWN_CONTEXT <' + msg + '>' );
+end;
+
 Procedure SelectHomeTown( PC: GearPtr; CanEdit: Boolean; ForceFac: Integer );
 	{ Select the PC's home town. Store the home town information in the PC }
 	{ string attributes. }
@@ -186,17 +206,7 @@ begin
 	{ Store the data for this city. }
 	City := RetrieveGearSib( Atlas , N );
 	if City <> Nil then begin
-		StoreSAtt( PC^.SA , 'HOMETOWN <' + GearName( City ) + '>' );
-		StoreSAtt( PC^.SA , 'HOMETOWN_FACTIONS <' + SAttValue( City^.SA , 'FACTIONS' ) + '>' );
-		msg := SAttValue( City^.SA , 'TYPE' ) + ' ' + SAttValue( City^.SA , 'DESIG' );
-
-		Fac := SeekCurrentLevelGear( Factions_List , GG_Faction , NAttValue( City^.NA , NAG_Personal , NAS_FactionID ) );
-		if Fac <> Nil then begin
-			msg := msg + ' ' + SAttValue( Fac^.SA , 'DESIG' );
-			StoreSAtt( PC^.SA , 'HOMETOWN_GOVERNMENT <' + SAttValue( Fac^.SA , 'DESIG' ) + '>' );
-		end;
-
-		StoreSAtt( PC^.SA , 'HOMETOWN_CONTEXT <' + msg + '>' );
+		StoreHomeTownDataInPC( PC , City );
 	end;
 
 	{ Dispose of the atlas. }
@@ -1379,6 +1389,46 @@ begin
 
 	{ Clear the screen, and return the PC. }
 	CharacterCreator := PC;
+end;
+
+Function RandomNPC( Adv: GearPtr; Fac,Hometown: Integer; JobDesig: String ): GearPtr;
+	{ Create a random character, using most of the same materials as available }
+	{ for a regular character. }
+var
+	NPC,City: GearPtr;
+	msg: String;
+begin
+	NPC := NewGear( Nil );
+	NPC^.G := GG_Character;
+	InitGear( NPC );
+
+	{ Set a random gender and age. }
+	SetNAtt( NPC^.NA , NAG_CharDescription , NAS_Gender , Random( 2 ) );
+	SetNAtt( NPC^.NA , NAG_CharDescription , NAS_DAge , Random( 10 ) - Random( 5 ) );
+
+	{ If no home town was provided, select one randomly. }
+	if HomeTown = 0 then begin
+		SelectHomeTown( NPC , False , Fac );
+	end else begin
+		City := SeekGear( Adv , GG_Scene , HomeTown , False );
+		if City <> Nil then begin
+			StoreHomeTownDataInPC( NPC , City );
+		end;
+	end;
+
+	{ Select a job and maybe even a faction. }
+	SelectJobAndFaction( NPC , False , Fac );
+
+	{ Allocate stats and skills. }
+	EasyStatPoints( NPC , 100 );
+	RandomSkillPoints( NPC , 50 );
+
+	{ Assign a dummy mecha. All characters created through this procedure }
+	{ are theoretically combat-ready. }
+	SetSAtt( NPC^.SA , 'mecha <something>' );
+
+	{ Finally, individuazlize this NPC. }
+	IndividualizeNPC( NPC );
 end;
 
 initialization
