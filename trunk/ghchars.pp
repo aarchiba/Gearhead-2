@@ -78,6 +78,9 @@ Const
 	NAV_CTLancemate = 1;	{ lancemate }
 	NAV_TempLancemate = 2;	{ temporary lancemate, added to party by plots etc }
 
+	NAS_IsCombatant = 3;	{ If nonzero, this character is a combatant. }
+				{ Combatant characters can take part in mecha combat. }
+
 	{ CharDescription / Personality Traits }
 	Num_Personality_Traits = 7;
 	NAS_Heroic = -1;	{ CharDescription/ Heroic <-> Villanous }
@@ -502,6 +505,8 @@ Procedure ApplyTalent( PC: GearPtr; T: Integer );
 Function CharStamina( PC: GearPtr ): Integer;
 Function CharMental( PC: GearPtr ): Integer;
 
+Function IsACombatant( NPC: GearPtr ): Boolean;
+
 implementation
 
 Procedure InitChar(Part: GearPtr);
@@ -865,7 +870,7 @@ begin
 		it := it + ' ' + SAttValue( NPC^.SA , 'JOB' );
 
 		{ Add a note if this NPC has a mecha. }
-		if SATTValue( NPC^.SA , 'MECHA' ) <> '' then begin
+		if IsACombatant( NPC ) then begin
 			it := it + ' HASMECHA';
 		end;
 
@@ -1015,5 +1020,10 @@ begin
 	CharMental := MP;
 end;
 
+Function IsACombatant( NPC: GearPtr ): Boolean;
+	{ Return TRUE if this NPC should be given a mecha to take part in combat. }
+begin
+	IsACombatant := ( NPC <> Nil ) and ( NAttValue( NPC^.NA , NAG_CharDescription , NAS_IsCombatant ) <> 0 );
+end;
 
 end.

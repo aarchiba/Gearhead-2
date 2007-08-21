@@ -1065,10 +1065,9 @@ var
 
 					{ If this is a character with a mecha, set its renown and }
 					{ skills based on the difficulcy level of the fragment. }
-					if ( E^.G = GG_Character ) and ( SAttValue( E^.SA , 'MECHA' ) <> '' ) then begin
+					if ( E^.G = GG_Character ) and IsACombatant( E ) then begin
 						SetSkillsAtLevel( E , NAttValue( Frag^.NA , NAG_QuestInfo , NAS_DifficulcyLevel ) );
 						SetNAtt( E^.NA , NAG_CharDescription , NAS_Renowned , NAttValue( Frag^.NA , NAG_QuestInfo , NAS_DifficulcyLevel ) );
-						SelectNPCMecha( E );
 					end;
 
 					{ Don't forget to move the persona as well! }

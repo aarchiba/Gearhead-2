@@ -721,13 +721,46 @@ end;
 Procedure EasyStatPoints( PC: GearPtr; StatPt: Integer );
 	{ Allocate the stat points for the PC mostly randomly, making sure there are no }
 	{ obvious deficiencies. }
+const
+	NumBaseLineTypes = 7;
+	BaseLineName: Array [1..NumBaseLineTypes] of String = (
+		'ACADE|MEDIC','CORPO|TRADE','LABOR','MEDIA|POLIT','MILIT',
+		'THIEF','CRAFT'
+	);
+	BaseLineStats: Array [0..NumBaseLineTypes,1..NumGearStats] of Byte = (
+	{	Ref	Bod	Spd	Per	Cra	Ego	Kno	Cha	}
+	(	10,	10,	10,	10,	10,	10,	10,	10	),	
+	(	9,	6,	8,	10,	13,	10,	14,	10	),	{Professor}
+	(	10,	8,	10,	10,	10,	10,	10,	12	),	{Corporate}
+	(	10,	13,	10,	8,	12,	10,	7,	10	),	{Labor}
+	(	9,	10,	9,	8,	8,	13,	9,	14	),	{Celeb}
+	(	12,	12,	12,	12,	9,	9,	7,	7	),	{Soldier}
+	(	10,	6,	12,	12,	12,	8,	10,	10	),	{Thief}
+	(	9,	9,	9,	12,	13,	8,	11,	9	)	{Tech}
+	);
+
 var
-	T: Integer;
+	Job_Desig: String;
+	T,BL: Integer;	{ BL = BaseLine, determined by job. }
 begin
-	{ Every stat needs at least 10 in it. }
+	{ Start by determining the baseline stats for this caharacter. Those are going }
+	{ to depend upon the job designation. }
+	Job_Desig := SAttValue( PC^.SA , 'JOB_DESIG' );
+	BL := 0;
+	if ( Job_Desig <> '' ) then begin
+		for t := 1 to NumBaseLineTypes do begin
+			if AStringHasBString( BaseLineName[ T ] , Job_Desig ) then begin
+				BL := T;
+				Break;
+			end;
+		end;
+	end;
+
+	{ Copy over the baseline values, and reduce the number of free stat points }
+	{ appropriately. }
 	for t := 1 to NumGearStats do begin
-		PC^.Stat[ T ] := 10;
-		StatPt := StatPt - 10;
+		PC^.Stat[ T ] := BaseLineStats[ BL , T ];
+		StatPt := StatPt - BaseLineStats[ BL , T ];
 	end;
 
 	{ Spend remaining stat points randomly. }
@@ -1423,9 +1456,8 @@ begin
 	EasyStatPoints( NPC , 100 );
 	RandomSkillPoints( NPC , 50 );
 
-	{ Assign a dummy mecha. All characters created through this procedure }
-	{ are theoretically combat-ready. }
-	SetSAtt( NPC^.SA , 'mecha <something>' );
+	{ Set this NPC as a combatant. }
+	SetNAtt( NPC^.NA , NAG_CharDescription , NAS_IsCombatant , 1 );
 
 	{ Finally, individuazlize this NPC. }
 	IndividualizeNPC( NPC );

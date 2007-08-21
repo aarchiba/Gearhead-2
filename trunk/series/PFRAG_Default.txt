@@ -985,8 +985,8 @@ Prompt%id%03_2 <Probably fight somebody. No idea who yet.>
 
 	Persona
 	requires <*FACTION_JOIN_ACCEPT SILKN>
-	START <NewChat Say %id%01 mechaprize .%id%_mecha XPV 200 CashPrize 150000 SetPCFac %1%>
-	.%id%_mecha <Trailblazer.txt>
+	START <NewChat Say %id%01 randommecha .%id%_mecha PCRenown XPV 200 CashPrize 150000 SetPCFac %1%>
+	.%id%_mecha <GENERAL SILKN>
 	Msg%id%01 <Welcome to the force. You'll need a mecha, of course... Most of our recruits learn how to fly in a Trailblazer. Now get out there and see if there are any missions waiting.>
 
 

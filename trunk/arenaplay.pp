@@ -615,8 +615,10 @@ begin
 	while N <> Nil do begin
 		N2 := N^.Next;
 
-		if IsMasterGear( N ) and ( SAttValue( N^.SA , 'MECHA' ) <> '' ) and ( NAttValue( N^.NA , NAG_Location , NAS_Team ) <> NAV_LancemateTeam ) then begin
-			MEK := GetMecha( SAttValue( N^.SA , 'MECHA' ) , SAttValue( Scene^.SA , 'TERRAIN' ) );
+		if IsMasterGear( N ) and IsACombatant( N ) and ( NAttValue( N^.NA , NAG_Location , NAS_Team ) <> NAV_LancemateTeam ) then begin
+
+			MEK := SelectNPCMecha( Scene , N );
+
 			if ( Mek <> Nil ) and ( Mek^.SCale <= Scene^.V ) and ( Mek^.G = GG_Mecha ) then begin
 				{ Customize the mecha for its pilot. }
 				MechaMakeover( Mek , NAttValue( N^.NA , NAG_Personal , NAS_SpecialistSkill ) , NAttValue( N^.NA , NAG_Personal , NAS_MechaTheme ) , MechaModPoints( N ) );

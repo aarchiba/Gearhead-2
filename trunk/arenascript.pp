@@ -2825,7 +2825,7 @@ begin
 		InsertInvCom( Scene , Grabbed_Gear );
 
 		{ Set the TEAMDATA here. }
-		if SAttValue( Grabbed_Gear^.SA , 'MECHA' ) <> '' then begin
+		if IsACombatant( Grabbed_Gear ) then begin
 			SetSAtt( Grabbed_Gear^.SA , 'TEAMDATA <SD ALLY>' );
 		end else begin
 			SetSAtt( Grabbed_Gear^.SA , 'TEAMDATA <PASS ALLY>' );
@@ -3919,9 +3919,9 @@ begin
 		{ NPC type doesn't normally know them. }
 		for t := 1 to 10 do SetNAtt( Grabbed_Gear^.NA , NAG_Skill , T , ( Renown div 7 ) + 3 );
 
-		{ Record the character's new renown score and select a mecha. }
+		{ Record the character's new renown score and mark as a combatant. }
 		SetNAtt( Grabbed_Gear^.NA , NAG_CharDescription , NAS_Renowned , Renown );
-		SelectNPCMecha( Grabbed_Gear );
+		SetNAtt( Grabbed_Gear^.NA , NAG_CharDescription , NAS_IsCombatant , 1 );
 	end;
 end;
 

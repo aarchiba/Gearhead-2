@@ -45,7 +45,6 @@ var
 Procedure ScaleSkillsToLevel( NPC: GearPtr; Lvl: Integer );
 Procedure SetSkillsAtLevel( NPC: GearPtr; Lvl: Integer );
 Function SelectMechaByFactionAndRenown( Factions: String; Renown: Integer ): String;
-Procedure SelectNPCMecha( NPC: GearPtr );
 Procedure IndividualizeNPC( NPC: GearPtr );
 Procedure SelectCombatEquipment( NPC,EquipList: GearPtr; EPV: LongInt );
 
@@ -133,7 +132,7 @@ var
 	Skill: NAttPtr;
 begin
 	{ If the NPC doesn't have a specialist skill, pick a skill and theme now. }
-	if ( SAttValue( NPC^.SA , 'MECHA' ) <> '' ) and ( NAttValue( NPC^.NA , NAG_Personal , NAS_SpecialistSkill ) = 0 ) then begin
+	if IsACombatant( NPC ) and ( NAttValue( NPC^.NA , NAG_Personal , NAS_SpecialistSkill ) = 0 ) then begin
 		SelectThemeAndSpecialty( NPC );
 	end;
 
@@ -155,7 +154,7 @@ var
 	Skill: NAttPtr;
 begin
 	{ If the NPC doesn't have a specialist skill, pick a skill and theme now. }
-	if ( SAttValue( NPC^.SA , 'MECHA' ) <> '' ) and ( NAttValue( NPC^.NA , NAG_Personal , NAS_SpecialistSkill ) = 0 ) then begin
+	if IsACombatant( NPC ) and ( NAttValue( NPC^.NA , NAG_Personal , NAS_SpecialistSkill ) = 0 ) then begin
 		SelectThemeAndSpecialty( NPC );
 	end;
 
@@ -280,21 +279,6 @@ begin
 	SelectMechaByFactionAndRenown := MekName;
 end;
 
-Procedure SelectNPCMecha( NPC: GearPtr );
-	{ Select a mecha for this NPC. }
-var
-	Fac: GearPtr;
-	Factions,MekName: String;
-begin
-	Fac := SeekCurrentLevelGear( Factions_List , GG_Faction , NAttValue( NPC^.NA , NAG_Personal , NAS_FactionID ) );
-	if Fac <> Nil then Factions := 'GENERAL ' + SAttValue( Fac^.SA , 'DESIG' )
-	else Factions := 'GENERAL';
-
-	mekname := SelectMechaByFactionAndRenown( Factions , NAttValue( NPC^.NA , NAG_CharDescription , NAS_Renowned ) );
-
-	SetSAtt( NPC^.SA , 'MECHA <' + mekname + '>' );
-end;
-
 Procedure IndividualizeNPC( NPC: GearPtr );
 	{ Randomize up this NPC a bit, to give it that hand-crafted }
 	{ NPC look. }
@@ -348,7 +332,7 @@ begin
 
 	{ If this is a combatant character, set the skills to match the reputation. }
 	{ Also pick a personal mecha. }
-	if SAttValue( NPC^.SA , 'MECHA' ) <> '' then begin
+	if NAttValue( NPC^.NA , NAG_CharDescription , NAS_IsCombatant ) <> 0 then begin
 		Lvl := NAttValue( NPC^.NA , NAG_CharDescription , NAS_Renowned );
 		if Lvl = 0 then begin
 			AddReputation( NPC , Abs( NAS_Renowned ) , Random( 75 ) );
@@ -358,7 +342,6 @@ begin
 		Lvl := Lvl + 50;
 		if Lvl < 25 then Lvl := 25;
 		ScaleSkillsToLevel( NPC , Lvl );
-		SelectNPCMecha( NPC );
 	end;
 
 	{ The random personality traits may have affected morale. }

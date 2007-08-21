@@ -520,7 +520,7 @@ begin
 		end else if NPC^.Stat[ STAT_Charm ] >= 15 then begin
 			IsCharming :=  1;
 		end else IsCharming := 0;
-		HasMecha := SAttValue( NPC^.SA , 'MECHA' ) <> '';
+		HasMecha := IsACombatant( NPC );
 		P := PList;
 		while P <> Nil do begin
 			P2 := P^.Next;

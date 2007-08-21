@@ -39,7 +39,7 @@ Procedure StockSceneWithMonsters( Scene: GearPtr; MPV,TeamID: Integer; MDesc: St
 Procedure AddTeamForces( GB: GameBoardPtr; TeamID: Integer; UPV: LongInt );
 Procedure StockBoardWithMonsters( GB: GameBoardPtr; MPV,TeamID: Integer; MDesc: String );
 
-Function GetMecha( const FName,Terrain: String ): GearPtr;
+Function SelectNPCMecha( Scene,NPC: GearPtr ): GearPtr;
 
 implementation
 
@@ -219,6 +219,7 @@ Function GenerateMechaList( MPV: LongInt; Factions,Desc: String ): SAttPtr;
 	{ where PV = Point Value, Index = Root Gear Number (since a }
 	{ design file may contain more than one mecha), and filename }
 	{ is the filename stored as an alligator string. }
+	{ DESC is the terrain description taken from the scene. }
 var
 	SRec: SearchRec;
 	it,current: SAttPtr;
@@ -598,34 +599,100 @@ begin
 end;
 
 
-Function GetMecha( const FName,Terrain: String ): GearPtr;
-	{ Return a new mecha from the provided file that can operate in the }
-	{ listed terrain. }
+Function SelectNPCMecha( Scene,NPC: GearPtr ): GearPtr;
+	{ Select a mecha for the provided NPC. }
+	{ This mecha must match the NPC's faction, renown, and must also be legal for }
+	{ this game board. }
 var
-	MList,M,M2: GearPtr;
-begin
-	{ Error check- if no terrain has been specified, load it now. }
-	if Terrain = '' then Exit( LoadSingleMecha( FName , Design_Directory ) );
-	MList := LoadFile( FName , Design_Directory );
-	if MList = Nil then Exit( Nil );
+	MechaList: GearPtr;
+	Factions,Terrain_Type: String;
+	Renown: LongInt;
 
-	M := MList;
-	while M <> Nil do begin
-		M2 := M^.Next;
-		if not AStringHasBString( SAttValue( M^.SA , 'TYPE' ) , Terrain ) then begin
-			RemoveGear( MList , M );
+	Function CanUseMek( Mek: GearPtr ): Boolean;
+		{ Return TRUE if MEK is a legal design for the faction and map, }
+		{ or FALSE otherwise. }
+	begin
+		CanUseMek := ( Mek^.G = GG_Mecha ) and PartAtLeastOneMatch( SAttValue( Mek^.SA , 'FACTIONS' ) , Factions ) and PartMatchesCriteria( SAttValue( Mek^.SA , 'TYPE' ) , Terrain_Type );
+	end;
+const
+	Min_Max_Cost = 400000;
+	Max_Min_Cost = 750000;
+var
+	SRec: SearchRec;
+	M,M2,Fac,DList,RScene: GearPtr;
+	Cost,Minimum_Cost, Maximum_Cost: LongInt;
+	MekName: String;
+begin
+	MechaList := Nil;
+
+	Renown := NAttValue( NPC^.NA , NAG_CharDescription , NAS_Renowned );
+
+	{ Determine the factions to be used by the NPC. }
+	Fac := SeekCurrentLevelGear( Factions_List , GG_Faction , NAttValue( NPC^.NA , NAG_Personal , NAS_FactionID ) );
+	Factions := 'GENERAL';
+	if Fac <> Nil then Factions := Factions + SAttValue( Fac^.SA , 'DESIG' )
+	else begin
+		rscene := FindRootScene( Nil , Scene );
+		if rscene <> Nil then begin
+			Fac := SeekCurrentLevelGear( Factions_List , GG_Faction , NAttValue( RScene^.NA , NAG_Personal , NAS_FactionID ) );
+			if Fac <> Nil then factions := factions + ' ' + SAttValue( Fac^.SA , 'DESIG' );
 		end;
-		M := M2;
 	end;
-	if MList = Nil then begin
-		{ No design from this file is certified for this terrain. }
-		{ In that case, just load one at random and hope for the best. }
-		GetMecha := LoadSingleMecha( FName , Design_Directory );
+
+	{ Determine the terrain type to be used. }
+	if ( Scene <> Nil ) then Terrain_Type := SAttValue( Scene^.SA , 'TERRAIN' )
+	else Terrain_Type := 'GROUND';
+
+	{ Determine the maximum and minimum mecha costs. }
+	Maximum_Cost := Calculate_Threat_Points( Renown , 25 );
+	if Maximum_Cost < Min_Max_Cost then Maximum_Cost := Min_Max_Cost;
+	Minimum_Cost := Maximum_Cost div 2 - 200000;
+	if Minimum_Cost > Max_Min_Cost then Minimum_Cost := Max_Min_Cost;
+
+	{ Start the search process going... }
+	FindFirst( Design_Directory + Default_Search_Pattern , AnyFile , SRec );
+
+	{ As long as there are files which match our description, }
+	{ process them. }
+	While DosError = 0 do begin
+		{ Load this mecha design file from disk. }
+		DList := LoadFile( SRec.Name , Design_Directory );
+
+		{ Look through this list for mecha to use. }
+		M := DList;
+		while M <> Nil do begin
+			M2 := M^.Next;
+			if CanUseMek( M ) then begin
+				Cost := GearValue( M );
+				if ( Cost >= Minimum_Cost ) and ( Cost <= Maximum_Cost ) then begin
+					{ This is a legal mecha, usable in this terrain, and }
+					{ within our price range. Add it to the list. }
+					DelinkGear( DList , M );
+					AppendGear( MechaList , M );
+				end;
+			end;
+			M := M2;
+		end;
+
+		{ Dispose of the design list. }
+		DisposeGear( DList );
+
+		{ Look for the next file in the directory. }
+		FindNext( SRec );
+	end;
+
+	{ By now, we should have a mecha list full of candidates. If not, we better load }
+	{ something generic and junky. }
+	if MechaList <> Nil then begin
+		M := SelectRandomGear( MechaList );
+		DelinkGear( MechaList , M );
+		DisposeGear( MechaList );
 	end else begin
-		M := CloneGear( SelectRandomGear( MList ) );
-		DisposeGear( MList );
-		GetMecha := M;
+		DialogMsg( GearName( NPC ) + ' is forced to take a crappy mecha...' );
+		M := LoadSingleMecha( 'buruburu.txt' , Design_Directory );
 	end;
+
+	SelectNPCMecha := M;
 end;
 
 end.
