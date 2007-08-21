@@ -348,6 +348,53 @@ begin
 	SetNAtt( NPC^.NA , NAG_Condition , NAS_MoraleDamage , 0 );
 end;
 
+Procedure SelectEquipmentForNPC( NPC: GearPtr; Renown: Integer );
+	{ This procedure will select some decent equipment for the given NPC from the standard }
+	{ equipment list. Faction will be taken into account. }
+	Procedure BuyArmorForNPC();
+		{ Armor will be purchased in sets if possible. }
+		Function IsArmorSet( S: GearPtr ): Boolean;
+			{ Is this gear an armor set? }
+		var
+			A: GearPtr;
+			NeededLegs,NeededArms,NeededBodies: Integer;
+		begin
+			NeededLegs := 2;
+			NeededArms := 2;
+			NeededBodies := 1;
+			if S^.G = GG_Set then begin
+				{ Check through the armor to make sure it has a body, two arms, and two legs }
+				{ in SF: 0. The helmet is optional. }
+				A := S^.InvCom;
+				while A <> Nil do begin
+					if ( A^.G = GG_ExArmor ) and ( A^.Scale = 0 ) then begin
+						if ( A^.S = GS_Arm ) then Dec( NeededArms )
+						else if ( A^.S = GS_Leg ) then Dec( NeededLegs )
+						else if ( A^.S = GS_Body ) then Dec( NeededBodies );
+					end;
+					A := A^.Next;
+				end;
+			end;
+			IsArmorSet := (NeededLegs < 1 ) and ( NeededArms < 1 ) and ( NeededBodies < 1 );
+		end;
+	var
+		A: GearPtr;
+	begin
+		{ Start by looking for an armor set. }
+		A := Standard_Equipment_List;
+		while A <> Nil do begin
+			if IsArmorSet( A ) then begin
+
+			end;
+			A := A^.Next;
+		end;
+	end;
+begin
+	{ Unlike the previous, this will split things into several separate parts. }
+	BuyArmorForNPC();
+
+end;
+
 Procedure SelectCombatEquipment( NPC,EquipList: GearPtr; EPV: LongInt );
 	{ Search through the standard equipment list and find some }
 	{ combat gear to equip this NPC with. }

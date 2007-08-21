@@ -212,6 +212,14 @@ begin
 
 end;
 
+Function MechaMatchesFactionAndTerrain( Mek: GearPtr; const Factions,Terrain_Type: String ): Boolean;
+	{ Return TRUE if MEK is a legal design for the faction and map, }
+	{ or FALSE otherwise. }
+begin
+	MechaMatchesFactionAndTerrain := ( Mek^.G = GG_Mecha ) and PartAtLeastOneMatch( SAttValue( Mek^.SA , 'FACTIONS' ) , Factions ) and PartMatchesCriteria( SAttValue( Mek^.SA , 'TYPE' ) , Terrain_Type );
+end;
+
+
 Function GenerateMechaList( MPV: LongInt; Factions,Desc: String ): SAttPtr;
 	{ Build a list of mechas from the DESIGN diectory which have }
 	{ a maximum point value of MPV or less. }
@@ -246,11 +254,11 @@ begin
 		N := 1;
 		while Mek <> Nil do begin
 			if ( Mek^.G = GG_Mecha ) then begin
-				if ( GearValue( Mek ) <= MPV ) and PartMatchesCriteria( SAttValue( Mek^.SA , 'TYPE' ) , DESC ) and PartAtLeastOneMatch( SAttValue( Mek^.SA , 'FACTIONS' ) , Factions ) then begin
+				if ( GearValue( Mek ) <= MPV ) and MechaMatchesFactionAndTerrain( Mek , Factions , DESC ) then begin
 					Current := CreateSAtt( it );
 					Current^.Info := BStr( GearValue( Mek ) ) + ' ' + BStr( N ) + ' <' + SRec.Name + '>';
 				end;
-				if ( ( GearValue( Mek ) < MinValFound ) or ( MinValFound = 0 ) ) and PartMatchesCriteria( SAttValue( Mek^.SA , 'TYPE' ) , DESC ) and PartAtLeastOneMatch( SAttValue( Mek^.SA , 'FACTIONS' ) , Factions ) then begin
+				if ( ( GearValue( Mek ) < MinValFound ) or ( MinValFound = 0 ) ) and MechaMatchesFactionAndTerrain( Mek , Factions , DESC ) then begin
 					MVInfo := BStr( GearValue( Mek ) ) + ' ' + BStr( N ) + ' <' + SRec.Name + '>';
 					MinValFound := GearValue( Mek );
 				end;
@@ -607,13 +615,6 @@ var
 	MechaList: GearPtr;
 	Factions,Terrain_Type: String;
 	Renown: LongInt;
-
-	Function CanUseMek( Mek: GearPtr ): Boolean;
-		{ Return TRUE if MEK is a legal design for the faction and map, }
-		{ or FALSE otherwise. }
-	begin
-		CanUseMek := ( Mek^.G = GG_Mecha ) and PartAtLeastOneMatch( SAttValue( Mek^.SA , 'FACTIONS' ) , Factions ) and PartMatchesCriteria( SAttValue( Mek^.SA , 'TYPE' ) , Terrain_Type );
-	end;
 const
 	Min_Max_Cost = 400000;
 	Max_Min_Cost = 750000;
@@ -662,7 +663,7 @@ begin
 		M := DList;
 		while M <> Nil do begin
 			M2 := M^.Next;
-			if CanUseMek( M ) then begin
+			if MechaMatchesFactionAndTerrain( M , Factions , Terrain_Type ) then begin
 				Cost := GearValue( M );
 				if ( Cost >= Minimum_Cost ) and ( Cost <= Maximum_Cost ) then begin
 					{ This is a legal mecha, usable in this terrain, and }
