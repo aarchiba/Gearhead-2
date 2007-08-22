@@ -99,7 +99,9 @@ begin
 	end;
 
 	if PC <> Nil then begin
-		if PC^.SubCom = Nil then ExpandCharacter( PC );
+		if PC^.SubCom = Nil then begin
+			ExpandCharacter( PC );
+		end;
 
 		StartCampaign( PC );
 	end;

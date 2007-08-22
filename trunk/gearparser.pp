@@ -25,7 +25,7 @@ unit gearparser;
 
 interface
 
-uses dos,rpgdice,texutil,gears,ghmecha,ghmodule,ghchars,ghweapon,ghsupport,gearutil,locale,interact,ability,ui4gh;
+uses dos,rpgdice,texutil,gears,ghmecha,ghmodule,ghchars,ghweapon,ghsupport,gearutil,locale,interact,ability,ui4gh,ghholder;
 
 Const
 	SLOT_Next = 0;
@@ -47,6 +47,7 @@ Procedure SetSkillsAtLevel( NPC: GearPtr; Lvl: Integer );
 Function SelectMechaByFactionAndRenown( Factions: String; Renown: Integer ): String;
 Procedure IndividualizeNPC( NPC: GearPtr );
 Procedure SelectCombatEquipment( NPC,EquipList: GearPtr; EPV: LongInt );
+Procedure SelectEquipmentForNPC( NPC: GearPtr; Renown: Integer );
 
 
 Procedure CheckValidity( var it: GearPtr );
@@ -356,17 +357,17 @@ Procedure SelectEquipmentForNPC( NPC: GearPtr; Renown: Integer );
 	{ SHOPPING LIST }
 	{ G = Item index in Standard_Equipment_List }
 	{ S = Undefined }
-	{ V = Item "goodness"- basically cost plus a bonus for appropriate skills }
+	{ V = Item "goodness"- basically cost plus a bonus for appropriateness }
 var
 	Faction_Desc: String;
-	Spending_Limit: LongInt;
+	Spending_Limit,Legality_Limit: LongInt;
 	Function ItemLegalForFaction( I: GearPtr ): Boolean;
 		{ Return TRUE if this item can be used by the NPC's faction, or FALSE }
 		{ otherwise. }
 		{ This function uses the FACTION_DESC string, so better initialize it }
 		{ before calling this one. }
 	begin
-		ItemLegalForFaction := PartAtLeastOneMatch( SAttValue( I^.SA , 'FACTIONS' ) , Faction_Desc );
+		ItemLegalForFaction := PartAtLeastOneMatch( SAttValue( I^.SA , 'FACTIONS' ) , Faction_Desc ) and ( NAttValue( I^.NA , NAG_GearOps , NAS_Legality ) <= Legality_Limit );
 	end;
 	Procedure AddToShoppingList( var ShoppingList: NAttPtr; Item: GearPtr; N: Integer );
 		{ Calculate this item's desirability and add it to the list. }
@@ -418,12 +419,12 @@ var
 
 		{ To start, go through the list and count up how many }
 		{ points we'll be dealing with. }
-		{ In order to benefit the NPC we'll use quadratic weighting instead }
-		{ of sucky old linear weighting. }
+		{ Quadratic weighting didn't work so well- back to linear. }
 		Total := 0;
 		SLI := ShoppingList;
 		while SLI <> Nil do begin
-			Total := Total + ( SLI^.V * SLI^.V );
+			Total := Total + SLI^.V;
+{			Total := Total + ( SLI^.V * SLI^.V );}
 			SLI := SLI^.Next;
 		end;
 
@@ -432,7 +433,8 @@ var
 		SLI := ShoppingList;
 		N := 0;
 		while ( N = 0 ) and ( SLI <> Nil ) do begin
-			Total := Total - ( SLI^.V * SLI^.V );
+			Total := Total - SLI^.V;
+{			Total := Total - ( SLI^.V * SLI^.V );}
 			if Total < 0 then N := SLI^.G;
 			SLI := SLI^.Next;
 		end;
@@ -444,6 +446,18 @@ var
 	Function GenerateShoppingList( Slot: GearPtr; GG: Integer; MaxValue: LongInt ): NAttPtr;
 		{ Generate a shopping list of items with Gear General value GG which }
 		{ can be equipped as InvComs of Slot. }
+		Function ModifiedGearValue( Item: GearPtr ): LongInt;
+			{ This just basically calls GearValue, but applies an extra markup to melee weapons. }
+			{ I do this to keep the high end melee weapons out of the hands of low end thugs. }
+			{ Melee weapons are naturally cheaper than ranged weapons, so to keep the low to high }
+			{ spread we'll have to fudge things a little. }
+		begin
+			if ( Item^.G = GG_Weapon ) and ( ( Item^.S = GS_Melee ) or ( Item^.S = GS_EMelee ) ) then begin
+				ModifiedGearValue := GearValue( Item ) * 3;
+			end else begin
+				ModifiedGearValue := GearValue( Item );
+			end;
+		end;
 	var
 		ShoppingList: NAttPtr;
 		Item: GearPtr;
@@ -453,7 +467,7 @@ var
 		Item := Standard_Equipment_List;
 		N := 1;
 		while Item <> Nil do begin
-			if ( Item^.G = GG ) and ItemLegalForFaction( Item ) and isLegalInvCom( Slot , Item ) and ( GearValue( Item ) < MaxValue ) then begin
+			if ( Item^.G = GG ) and ItemLegalForFaction( Item ) and isLegalInvCom( Slot , Item ) and ( ModifiedGearValue( Item ) < MaxValue ) then begin
 				AddToShoppingList( ShoppingList , Item , N );
 			end;
 			Inc( N );
@@ -483,6 +497,8 @@ var
 			SampleLeg,SampleArm,SampleBody: GearPtr;
 			NeededLegs,NeededArms,NeededBodies: Integer;
 		begin
+			if S^.G <> GG_Set then Exit( False );
+
 			{ Locate the sample arm, leg, and body that we're going to need. }
 			SampleLeg := SeekCurrentLevelGear( NPC^.SubCom , GG_Module , GS_Leg );
 			if SampleLeg <> Nil then NeededLegs := 2
@@ -493,22 +509,21 @@ var
 			else NeededArms := 0;
 
 			SampleBody := SeekCurrentLevelGear( NPC^.SubCom , GG_Module , GS_Body );
-			if SampleBody <> Nil then NeededBodies := 2
+			if SampleBody <> Nil then NeededBodies := 1
 			else NeededBodies := 0;
 
-			if S^.G = GG_Set then begin
-				{ Check through the armor to make sure it has a body, two arms, and two legs }
-				{ in SF: 0. The helmet is optional. }
-				A := S^.InvCom;
-				while A <> Nil do begin
-					if ( A^.G = GG_ExArmor ) and ( A^.Scale = 0 ) then begin
-						if ( A^.S = GS_Arm ) and IsLegalInvCom( SampleArm , A ) then Dec( NeededArms )
-						else if ( A^.S = GS_Leg ) and IsLegalInvCom( SampleLeg , A ) then Dec( NeededLegs )
-						else if ( A^.S = GS_Body ) and IsLegalInvCom( SampleBody , A ) then Dec( NeededBodies );
-					end;
-					A := A^.Next;
+			{ Check through the armor to make sure it has a body, two arms, and two legs }
+			{ in SF: 0. The helmet is optional. }
+			A := S^.InvCom;
+			while A <> Nil do begin
+				if ( A^.G = GG_ExArmor ) and ( A^.Scale = 0 ) then begin
+					if ( A^.S = GS_Arm ) and IsLegalInvCom( SampleArm , A ) then Dec( NeededArms )
+					else if ( A^.S = GS_Leg ) and IsLegalInvCom( SampleLeg , A ) then Dec( NeededLegs )
+					else if ( A^.S = GS_Body ) and IsLegalInvCom( SampleBody , A ) then Dec( NeededBodies );
 				end;
+				A := A^.Next;
 			end;
+
 			IsArmorSet := (NeededLegs < 1 ) and ( NeededArms < 1 ) and ( NeededBodies < 1 );
 		end;
 		Function SetInPriceRange( S: GearPtr ): Boolean;
@@ -551,7 +566,7 @@ var
 							RemoveGear( ASet^.InvCom , Armor );
 							GetArmorForLimb( Limb );
 						end;
-					end else if Random( 80 ) <= Renown then begin
+					end else if Random( 60 ) <= Renown then begin
 						GetArmorForLimb( Limb );
 					end;
 				end;
@@ -569,7 +584,7 @@ var
 			while Limb <> Nil do begin
 				if Limb^.G = GG_Module then begin
 					{ Try to locate armor for this part. }
-					if Random( 100 ) <= Renown then GetArmorForLimb( Limb );
+					if Random( 40 ) <= Renown then GetArmorForLimb( Limb );
 				end;
 
 				Limb := Limb^.Next;
@@ -607,22 +622,131 @@ var
 			{ this character. }
 			ApplyPiecemealArmor();
 		end;
+	end;
+	Procedure BuyWeaponsForNPC();
+		{ In order to buy weapons we're going to have to search for appropriate parts. }
+		{ Look for some arms- the first arm found gets a primary weapon. Each additional }
+		{ arm has a random chance of getting either a secondary weapon or a shield. I }
+		{ know that people usually only come with two arms, but as with all things it's best }
+		{ to keep this procedure as versatile as possible. }
+		Function WSNeeded( Wep: GearPtr ): Integer;
+			{ Return the skill needed by this weapon. }
+			{ Note that WEP absolutely must be a weapon. No passing me other kinds of crap!!! }
+		begin
+			if ( Wep^.S = GS_Melee ) or ( Wep^.S = GS_EMelee ) then WSNeeded := 8
+			else if ( Wep^.S = GS_Missile ) or ( Wep^.S = GS_Grenade ) or ( Wep^.V > 10 ) then WSNeeded := 7
+			else WSNeeded := 6;
+		end;
+		Function GenerateWeaponList( Slot: GearPtr; WS: Integer; MaxValue: LongInt ): NAttPtr;
+			{ Generate a shopping list of weapons using the provided skill which }
+			{ can be equipped as InvComs of Slot. }
+		var
+			ShoppingList: NAttPtr;
+			Item,Best_Offer: GearPtr;
+			N,Best_N: Integer;
+			WCost,Best_Value: LongInt;
+		begin
+			ShoppingList := Nil;
+			Item := Standard_Equipment_List;
+			N := 1;
+			Best_Offer := Nil;
+			while Item <> Nil do begin
+				if ( Item^.G = GG_Weapon ) and ItemLegalForFaction( Item ) and isLegalInvCom( Slot , Item ) and ( WSNeeded( Item ) = WS ) then begin
+					WCost := GearValue( Item );
+					if ( WCost < MaxValue ) then begin
+						AddToShoppingList( ShoppingList , Item , N );
+					end else begin
+						if ( Best_Offer = Nil ) or ( WCost < Best_Value ) then begin
+							Best_Offer := Item;
+							Best_N := N;
+							Best_Value := WCost;
+						end;
+					end;
+				end;
+				Inc( N );
+				Item := Item^.Next;
+			end;
+			{ If, after all that, the list is empty... good thing we went looking for a spare, innit? }
+			if ( ShoppingList = Nil ) and ( Best_Offer <> Nil ) then AddToShoppingList( ShoppingList , Best_Offer , Best_N );
+			GenerateWeaponList := ShoppingList;
+		end;
+		Procedure GenerateWeaponForSlot( Slot: GearPtr; WS: Integer; MaxValue: LongInt );
+			{ Generate an weapon for this slot of the requested WS type and equip it. }
+		var
+			ShoppingList: NAttPtr;
+			Item: GearPtr;
+		begin
+			ShoppingList := GenerateWeaponList( Slot , WS , MaxValue );
+			Item := SelectItemForNPC( ShoppingList );
+			DisposeNAtt( ShoppingList );
+			EquipItem( Slot , Item );
+		end;
 
+	var
+		Limb,Hand: GearPtr;
+		NeedPW,NeedRanged: Boolean;	{ Need Primary Weapon }
+		AC_Skill,HW_Skill,SA_Skill: Integer;
+	begin
+		Limb := NPC^.SubCom;
+		NeedPW := True;
+		NeedRanged := True;
+		AC_Skill := SkillValue( NPC , 8 );
+		HW_Skill := SkillValue( NPC , 7 );
+		SA_Skill := SkillValue( NPC , 6 );
+		while Limb <> Nil do begin
+			if ( Limb^.G = GG_Module ) and ( Limb^.S = GS_Arm ) then begin
+				Hand := SeekCurrentLevelGear( Limb^.SubCom , GG_Holder , GS_Hand );
+				if ( Hand <> Nil ) then begin
+					if NeedPW then begin
+						if ( SA_Skill >= HW_Skill ) and ( SA_Skill >= AC_Skill ) then begin
+							{ Small Arms skill dominates. Better get a small arms weapon. }
+							GenerateWeaponForSlot( Hand , 6 , Spending_Limit * 2 );
+							NeedRanged := False;
+						end else if ( AC_Skill >= HW_Skill ) then begin
+							{ Armed Combat dominates. Better get a melee weapon. }
+							GenerateWeaponForSlot( Hand , 8 , Spending_Limit * 2 );
+						end else begin
+							{ Might as well get a heavy weapon. }
+							GenerateWeaponForSlot( Hand , 7 , Spending_Limit * 2 );
+							NeedRanged := False;
+						end;
+						NeedPW := False;
+					end else if Random( 100 ) < Renown then begin
+						{ Add either a shield or a second weapon. }
+						if Random( 20 ) = 1 then begin
+							GenerateItemForSlot( Limb , GG_Shield , Spending_Limit );
+						end else if NeedRanged then begin
+							if SA_Skill >= HW_Skill then GenerateWeaponForSlot( Hand , 6 , Spending_Limit )
+							else GenerateWeaponForSlot( Hand , 7 , Spending_Limit );
+							NeedRanged := False;
+						end else begin
+							GenerateItemForSlot( Hand , GG_Weapon , Spending_Limit );
+						end;
+					end;
+				end;
+			end;
+			Limb := Limb^.Next;
+		end;
 	end;
 var
 	Fac: GearPtr;
 begin
 	{ Initialize the values. }
 	Fac := SeekCurrentLevelGear( Factions_List , GG_Faction , NAttValue( NPC^.NA , NAG_Personal , NAS_FactionID ) );
-	Faction_Desc := 'GENERAL';
+	Faction_Desc := 'GENERAL ';
 	if Fac <> Nil then Faction_Desc := Faction_Desc + SAttValue( Fac^.SA , 'DESIG' );
 
 	if Renown < 10 then Renown := 10;
 	Spending_Limit := Calculate_Threat_Points( Renown , 1 );
 
+	Legality_Limit := -NAttValue( NPC^.NA , NAG_CharDescription , NAS_Lawful );
+	if Legality_Limit < 10 then Legality_Limit := 10;
+
 	{ Unlike the previous, this will split things into several separate parts. }
 	BuyArmorForNPC();
 
+	{ Purchase some weapons. }
+	BuyWeaponsForNPC();
 end;
 
 Procedure SelectCombatEquipment( NPC,EquipList: GearPtr; EPV: LongInt );

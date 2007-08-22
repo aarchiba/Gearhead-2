@@ -445,7 +445,7 @@ begin
 		NPC := RandomSoldier( StPt , SkPt );
 		ExpandCharacter( NPC );
 
-		SelectCombatEquipment( NPC , EquipList , EPV );
+		SelectEquipmentForNPC( NPC , 35 );
 		UPV := UPV - EPV;
 
 		{ Set its team to the ID provided. }
