@@ -351,45 +351,275 @@ end;
 Procedure SelectEquipmentForNPC( NPC: GearPtr; Renown: Integer );
 	{ This procedure will select some decent equipment for the given NPC from the standard }
 	{ equipment list. Faction will be taken into account. }
+	{ Many of these procedures will rely upon a special kind of shopping list }
+	{ composed of numeric attributes. }
+	{ SHOPPING LIST }
+	{ G = Item index in Standard_Equipment_List }
+	{ S = Undefined }
+	{ V = Item "goodness"- basically cost plus a bonus for appropriate skills }
+var
+	Faction_Desc: String;
+	Spending_Limit: LongInt;
+	Function ItemLegalForFaction( I: GearPtr ): Boolean;
+		{ Return TRUE if this item can be used by the NPC's faction, or FALSE }
+		{ otherwise. }
+		{ This function uses the FACTION_DESC string, so better initialize it }
+		{ before calling this one. }
+	begin
+		ItemLegalForFaction := PartAtLeastOneMatch( SAttValue( I^.SA , 'FACTIONS' ) , Faction_Desc );
+	end;
+	Procedure AddToShoppingList( var ShoppingList: NAttPtr; Item: GearPtr; N: Integer );
+		{ Calculate this item's desirability and add it to the list. }
+	var
+		Desi: LongInt;	{ Short for desirability. }
+	begin
+		Desi := GearValue( Item );
+		{ If this item is limited to certain factions, it gets extra desirability. }
+		if not AStringHasBString( SAttValue( Item^.SA , 'FACTIONS' ) , 'GENERAL' ) then Desi := ( Desi * 5 ) div 4;
+		SetNAtt( ShoppingList , N , 0 , Desi );
+	end;
+	Procedure EquipItem( Slot , Item: GearPtr );
+		{ This is the real equipping procedure. Stuff ITEM into SLOT. }
+		{ As noted in TheRules.txt, any nonmaster gear can only have one }
+		{ item of any particular "G" type equipped at a time. So, if }
+		{ SLOT already has equipment of type ITEM^.G, unequip that and }
+		{ stuff it into PC's general inventory. }
+	var
+		I2,I3: GearPtr;
+	begin
+		{ First, check for already equipped items. }
+		I2 := Slot^.InvCom;
+		while I2 <> Nil do begin
+			I3 := I2^.Next;		{ This next step might delink I2, so... }
+			if ( I2^.G = Item^.G ) or ( Slot^.G = GG_Holder ) then begin
+				DelinkGear( Slot^.InvCom , I2 );
+				InsertInvCom( NPC , I2 );
+			end;
+			I2 := I3;
+		end;
+
+		{ We can now link ITEM into SLOT. }
+		InsertInvCom( Slot , Item );
+	end;
+	Function SelectItemForNPC( ShoppingList: NAttPtr ): GearPtr;
+		{ Considering this shopping list, select an item for the NPC }
+		{ based on the listed desirabilities. Then, locate the item }
+		{ referred to in the master item list, clone it, and return the }
+		{ copy. Hooray! }
+	var
+		SLI: NAttPtr;
+		Total: Int64;
+		N: Integer;
+		Item: GearPtr;
+	begin
+		{ Quick way out- if this list is empty, no sense in doing any real }
+		{ work, is there? }
+		if ShoppingList = Nil then Exit( Nil );
+
+		{ To start, go through the list and count up how many }
+		{ points we'll be dealing with. }
+		{ In order to benefit the NPC we'll use quadratic weighting instead }
+		{ of sucky old linear weighting. }
+		Total := 0;
+		SLI := ShoppingList;
+		while SLI <> Nil do begin
+			Total := Total + ( SLI^.V * SLI^.V );
+			SLI := SLI^.Next;
+		end;
+
+		{ Next, go through one more time and pick one randomly. }
+		Total := Random( Total );
+		SLI := ShoppingList;
+		N := 0;
+		while ( N = 0 ) and ( SLI <> Nil ) do begin
+			Total := Total - ( SLI^.V * SLI^.V );
+			if Total < 0 then N := SLI^.G;
+			SLI := SLI^.Next;
+		end;
+
+		{ Ah, finally. We should now have a usable number. }
+		Item := RetrieveGearSib( Standard_Equipment_List , N );
+		SelectItemForNPC := CloneGear( Item );
+	end;
+	Function GenerateShoppingList( Slot: GearPtr; GG: Integer; MaxValue: LongInt ): NAttPtr;
+		{ Generate a shopping list of items with Gear General value GG which }
+		{ can be equipped as InvComs of Slot. }
+	var
+		ShoppingList: NAttPtr;
+		Item: GearPtr;
+		N: Integer;
+	begin
+		ShoppingList := Nil;
+		Item := Standard_Equipment_List;
+		N := 1;
+		while Item <> Nil do begin
+			if ( Item^.G = GG ) and ItemLegalForFaction( Item ) and isLegalInvCom( Slot , Item ) and ( GearValue( Item ) < MaxValue ) then begin
+				AddToShoppingList( ShoppingList , Item , N );
+			end;
+			Inc( N );
+			Item := Item^.Next;
+		end;
+		GenerateShoppingList := ShoppingList;
+	end;
+	Procedure GenerateItemForSlot( Slot: GearPtr; GG: Integer; MaxValue: LongInt );
+		{ Generate an item for this slot of the requested GG type and equip it. }
+	var
+		ShoppingList: NAttPtr;
+		Item: GearPtr;
+	begin
+		ShoppingList := GenerateShoppingList( Slot , GG , MaxValue );
+		Item := SelectItemForNPC( ShoppingList );
+		DisposeNAtt( ShoppingList );
+		EquipItem( Slot , Item );
+	end;
 	Procedure BuyArmorForNPC();
 		{ Armor will be purchased in sets if possible. }
 		Function IsArmorSet( S: GearPtr ): Boolean;
 			{ Is this gear an armor set? }
+			{ This procedure seems a bit like overkill, but it should cover all }
+			{ possibilities. }
 		var
 			A: GearPtr;
+			SampleLeg,SampleArm,SampleBody: GearPtr;
 			NeededLegs,NeededArms,NeededBodies: Integer;
 		begin
-			NeededLegs := 2;
-			NeededArms := 2;
-			NeededBodies := 1;
+			{ Locate the sample arm, leg, and body that we're going to need. }
+			SampleLeg := SeekCurrentLevelGear( NPC^.SubCom , GG_Module , GS_Leg );
+			if SampleLeg <> Nil then NeededLegs := 2
+			else NeededLegs := 0;
+
+			SampleArm := SeekCurrentLevelGear( NPC^.SubCom , GG_Module , GS_Arm );
+			if SampleArm <> Nil then NeededArms := 2
+			else NeededArms := 0;
+
+			SampleBody := SeekCurrentLevelGear( NPC^.SubCom , GG_Module , GS_Body );
+			if SampleBody <> Nil then NeededBodies := 2
+			else NeededBodies := 0;
+
 			if S^.G = GG_Set then begin
 				{ Check through the armor to make sure it has a body, two arms, and two legs }
 				{ in SF: 0. The helmet is optional. }
 				A := S^.InvCom;
 				while A <> Nil do begin
 					if ( A^.G = GG_ExArmor ) and ( A^.Scale = 0 ) then begin
-						if ( A^.S = GS_Arm ) then Dec( NeededArms )
-						else if ( A^.S = GS_Leg ) then Dec( NeededLegs )
-						else if ( A^.S = GS_Body ) then Dec( NeededBodies );
+						if ( A^.S = GS_Arm ) and IsLegalInvCom( SampleArm , A ) then Dec( NeededArms )
+						else if ( A^.S = GS_Leg ) and IsLegalInvCom( SampleLeg , A ) then Dec( NeededLegs )
+						else if ( A^.S = GS_Body ) and IsLegalInvCom( SampleBody , A ) then Dec( NeededBodies );
 					end;
 					A := A^.Next;
 				end;
 			end;
 			IsArmorSet := (NeededLegs < 1 ) and ( NeededArms < 1 ) and ( NeededBodies < 1 );
 		end;
+		Function SetInPriceRange( S: GearPtr ): Boolean;
+			{ Check this armor set to make sure that nothing within it }
+			{ is more expensive than our spending limit. }
+		var
+			A: GearPtr;
+			AllOK: Boolean;
+		begin
+			{ Assume TRUE unless found FALSE. }
+			AllOK := TRUE;
+			A := S^.InvCom;
+			while A <> Nil do begin
+				if GearValue( A ) > Spending_Limit then AllOK := False;
+				A := A^.Next;
+			end;
+			SetInPriceRange := AllOK;
+		end;
+		Procedure GetArmorForLimb( Limb: GearPtr );
+			{ We're getting armor for this particular limb. }
+		begin
+			GenerateItemForSlot( Limb , GG_ExArmor , Spending_Limit );
+		end;
+		Procedure WearArmorSet( ASet: GearPtr );
+			{ An armor set has been chosen. Wear it by going through }
+			{ the NPC's modules and applying armor to each one by one. }
+		var
+			Limb,Armor: GearPtr;
+		begin
+			Limb := NPC^.SubCom;
+			while Limb <> Nil do begin
+				if Limb^.G = GG_Module then begin
+					{ Try to locate armor for this part. }
+					Armor := SeekCurrentLevelGear( ASet^.InvCom , GG_ExArmor , Limb^.S );
+					if Armor <> Nil then begin
+						if IsLegalInvCom( Limb , Armor ) then begin
+							DelinkGear( ASet^.InvCom , Armor );
+							EquipItem( Limb , Armor );
+						end else begin
+							RemoveGear( ASet^.InvCom , Armor );
+							GetArmorForLimb( Limb );
+						end;
+					end else if Random( 80 ) <= Renown then begin
+						GetArmorForLimb( Limb );
+					end;
+				end;
+
+				Limb := Limb^.Next;
+			end;
+		end;
+		Procedure ApplyPiecemealArmor();
+			{ No armor set was found. Instead, go through each limb and }
+			{ locate an independant piece of armor for each. }
+		var
+			Limb: GearPtr;
+		begin
+			Limb := NPC^.SubCom;
+			while Limb <> Nil do begin
+				if Limb^.G = GG_Module then begin
+					{ Try to locate armor for this part. }
+					if Random( 100 ) <= Renown then GetArmorForLimb( Limb );
+				end;
+
+				Limb := Limb^.Next;
+			end;
+		end;
 	var
 		A: GearPtr;
+		ShoppingList: NAttPtr;
+		N: Integer;
 	begin
 		{ Start by looking for an armor set. }
+		{ Create the shopping list. }
+		ShoppingList := Nil;
 		A := Standard_Equipment_List;
+		N := 1;
 		while A <> Nil do begin
-			if IsArmorSet( A ) then begin
-
+			if IsArmorSet( A ) and SetInPriceRange( A ) and ItemLegalForFaction( A ) then begin
+				AddToShoppingList( ShoppingList , A , N );
 			end;
+			Inc( N );
 			A := A^.Next;
 		end;
+
+		{ Select a set from the shopping list. }
+		A := SelectItemForNPC( ShoppingList );
+		DisposeNAtt( ShoppingList );
+
+		{ If we got something, use it. }
+		if A <> Nil then begin
+			WearArmorSet( A );
+			{ Get rid of the leftover set bits. }
+			DisposeGear( A );
+		end else begin
+			{ No armor set was found. Instead, apply piecemeal armor to }
+			{ this character. }
+			ApplyPiecemealArmor();
+		end;
+
 	end;
+var
+	Fac: GearPtr;
 begin
+	{ Initialize the values. }
+	Fac := SeekCurrentLevelGear( Factions_List , GG_Faction , NAttValue( NPC^.NA , NAG_Personal , NAS_FactionID ) );
+	Faction_Desc := 'GENERAL';
+	if Fac <> Nil then Faction_Desc := Faction_Desc + SAttValue( Fac^.SA , 'DESIG' );
+
+	if Renown < 10 then Renown := 10;
+	Spending_Limit := Calculate_Threat_Points( Renown , 1 );
+
 	{ Unlike the previous, this will split things into several separate parts. }
 	BuyArmorForNPC();
 
