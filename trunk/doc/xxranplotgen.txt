@@ -113,11 +113,11 @@ LOCAL DESCRIPTORS
 +P??	Propp State
 	Describes the overall course of the story
 	+P--	Peaceful life
+
 	+Pme	PC meets an enemy pilot
 	+Pun	An unknown enemy attacks
 	+Pla	PC learns of the existence of an artifact
 	+Pen	The nature of the enemy/conflict is revealed
-
 	+Pst	An important item (TI) is stolen by E/EF
 	+Pre	E's plan/alleigance to EF is revealed
 	+Ptr	PC must travel to dangerous area/enemy territory
@@ -152,14 +152,14 @@ LOCAL DESCRIPTORS
 	Describes the PC's current short-term mission.
 	+T--	No task.(1)
 	+T01	Introduction. The first task given.
+
 	+Tin	Investigate Encounter -> usually to fight...
 	+Tlt	Look for target to speak with him
 	+Tgs	Guard Scene
-	+Tgt	Goto target for conversation; might be interrupted
-	+Ttt	Talk with target; will not be interrupted
+	+Tgt	Goto target for conversation
 	+Tdu	Proceed to encounter for duel with target character
 	+Tda	PC will go on a date with the target character
-	+Tre	PC will get a reward from the mission-giver (1)
+	+Tre	PC will get a reward/debriefing from the target character (1)
 	+Tsh	PC will attend a party/conference
 
 	(1) This task may be "#w" or "#l" as well as "#a".
