@@ -96,7 +96,6 @@ inv
 	SDL_Colors <112 28 28  255 230 210  56 25 81>
 	StatLine 16 13 14 16 14 12 13 8
 	Age -2
-	EquipChar 10000
 	SetTheme 2
 	SetSpecSkill 1
 	SetFaction 6
@@ -208,7 +207,6 @@ end
 inv
 	NPC Arena Pilot
 	name <Hammel>
-	EquipChar 10000
 	Chardesc Male Cheerful Passionate Heroic
 	Statline 17 12 16 14  11 13 12 12
 	Age -3
@@ -284,7 +282,6 @@ sub
 end
 inv
 	NPC Mecha Pilot
-	EquipChar 10000
 	name <Derrich>
 	job <Foreman>
 	job_desig <LABOR>
@@ -367,7 +364,7 @@ inv
 	name <Carter>
 	CharDesc Male Shy Easygoing Lawful
 	Age 22
-	EquipChar 10000
+	Combatant
 	StatLine 14 16 12 15 14 11 13 9
 	SDL_Portrait <por_m_comiccarter(OUY).png>
 	SDL_Colors <25 80 100 255 212 195 122 82 65>
@@ -452,7 +449,6 @@ end
 inv
 	NPC Mechanic
 	name <Shandir>
-	EquipChar 10000
 	statline 14 14 13 13  15 12 13 10
 	Chardesc Female Shy Easygoing Pragmatic
 	SDL_PORTRAIT <por_f_hunter(--Y).png>
@@ -531,8 +527,7 @@ end
 inv
 	NPC Singer
 	name <Fuschia>
-	% It's not mentioned here, but Fuschia is from Athera Spinner
-	EquipChar 10000
+	% It's not mentioned here, but Fuschia is from Athera Spinner	
 	statline 13 10 12 13 12 14 12 18
 	SDL_PORTRAIT <por_f_ladivikki(JAY).png>
 	SDL_COLORS <157 172 183  255 212 195  122 88 193>
@@ -610,7 +605,6 @@ end
 inv
 	NPC Scientist
 	name <Blaise>
-	EquipChar 10000
 	statline 13 11 12 16  17 9 17 11
 	SDL_PORTRAIT <por_m_blaise(YP-).png>
 	SDL_COLORS <208 34 51   255 212 195   234 180 88>
@@ -761,7 +755,6 @@ inv
 	name <Kolo>
 	% In his current state, Kolo is more of a thief than an adventurer.
 	job_desig <THIEF>
-	EquipChar 10000
 	SetFaction 8
 	SDL_Portrait <por_m_guy5(J-Y).png>
 	SDL_COLORS <130 50 20 150 112 89 49 91 161>
@@ -773,7 +766,6 @@ inv
 	Talent 25
 
 	NPC Bounty Hunter
-	EquipChar 25000
 end
 
 Content
@@ -842,7 +834,6 @@ sub
 end
 inv
 	NPC Arena Pilot
-	EquipChar 10000
 	name <Rose>
 	SDL_Portrait <por_f_rose(JA-).png>
 	SDL_COLORS <250 30 85 255 212 195 103 3 45>
@@ -998,7 +989,6 @@ inv
 	SDL_COLORS <166 47 32 245 213 190 180 150 20>
 	statline 15 13 17 14 10 12 11 15
 	Age 5
-	EquipChar 10000
 	SetTheme 3
 	SetSpecSkill 5
 	SetFaction 7
@@ -1105,7 +1095,6 @@ inv
 	name <Vanda>
 	CharDesc Female Sociable Passionate
 	Age 7
-	EquipChar 10000
 	StatLine 17 10 16 13 14 12 10 15
 	SDL_Portrait <por_f_mechpilot(--Y).png>
 	SDL_Colors <152 61 97 255 212 195 220 80 10>
@@ -1179,12 +1168,10 @@ sub
 end
 inv
 	NPC Arena Pilot
-	EquipChar 10000
 	name <Aspis>
 	job <Adventurer>
 	CharDesc Male Heroic Sociable Passionate Cheerful Spiritual
 	Age 6
-	EquipChar 10000
 	StatLine 17 14 15 14 10 15 16 24
 	SDL_Portrait <por_m_bishonen(-C-).png>
 	SDL_Colors <166 47 32 255 212 195 245 215 150>
@@ -1254,7 +1241,6 @@ sub
 end
 inv
 	NPC Arena Pilot
-	EquipChar 10000
 
 end
 
@@ -1311,7 +1297,6 @@ sub
 end
 inv
 	NPC Arena Pilot
-	EquipChar 10000
 end
 
 Content
@@ -1370,7 +1355,6 @@ sub
 end
 inv
 	NPC Arena Pilot
-	EquipChar 10000
 
 end
 
@@ -1433,7 +1417,6 @@ sub
 end
 inv
 	NPC Arena Pilot
-	EquipChar 10000
 
 end
 

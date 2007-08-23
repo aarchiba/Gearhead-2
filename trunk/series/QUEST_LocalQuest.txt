@@ -33,7 +33,6 @@ Content
 	inv
 		NPC Mecha Pilot
 		Chardesc Young
-		EquipChar 15000
 	end
 
 Content
@@ -162,11 +161,10 @@ Content
 	inv
 		NPC Bounty Hunter
 		CharDesc Lawful
-		EquipChar 10000
 
 		NPC Thief
 		CharDesc Young Criminal
-		EquipChar 10000
+		Combatant
 
 		Computer 4
 		name <Crimedex>

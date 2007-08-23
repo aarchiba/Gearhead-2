@@ -333,7 +333,7 @@ begin
 	{ Assume FALSE until we find this persona in use. }
 	it := False;
 	while ( Adventure <> Nil ) and ( not It ) do begin
-		if (( Adventure^.G = GG_Plot ) or ( Adventure^.G = GG_Story ) or ( Adventure^.G = GG_Remnant )) and ( PlotElementID( Adventure , 'C' , ID ) <> 0 ) then begin
+		if (( Adventure^.G = GG_Plot ) or ( Adventure^.G = GG_Story )) and ( PlotElementID( Adventure , 'C' , ID ) <> 0 ) then begin
 			it := True;
 		end else if ( Adventure^.G = GG_Story ) or ( Adventure^.G = GG_Faction ) or ( Adventure^.G = GG_Adventure ) then begin
 			it := PersonaInUse( Adventure^.InvCom , ID );

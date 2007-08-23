@@ -38,7 +38,7 @@ var
 	Goal_List,Focus_List: GearPtr;
 
 Function CharacterCreator( Fac: Integer ): GearPtr;
-Function RandomNPC( Adv: GearPtr; Fac,Hometown: Integer; JobDesig: String ): GearPtr;
+Function RandomNPC( Adv: GearPtr; Fac,Hometown: Integer ): GearPtr;
 
 implementation
 
@@ -927,6 +927,8 @@ begin
 	{ Add combat skills. }
 	{ The default character will get three decent combat skills for }
 	{ mecha and another three for personal. }
+	{ To make this work, we select one skill from each group for exclusion, }
+	{ and provide points to the other three. }
 	X1 := Random( 4 ) + 1;
 	X2 := Random( 4 ) + 1;
 	for t := 1 to 4 do begin
@@ -1424,7 +1426,7 @@ begin
 	CharacterCreator := PC;
 end;
 
-Function RandomNPC( Adv: GearPtr; Fac,Hometown: Integer; JobDesig: String ): GearPtr;
+Function RandomNPC( Adv: GearPtr; Fac,Hometown: Integer ): GearPtr;
 	{ Create a random character, using most of the same materials as available }
 	{ for a regular character. }
 var
@@ -1459,8 +1461,8 @@ begin
 	{ Set this NPC as a combatant. }
 	SetNAtt( NPC^.NA , NAG_CharDescription , NAS_IsCombatant , 1 );
 
-	{ Finally, individuazlize this NPC. }
-	IndividualizeNPC( NPC );
+	{ Return the result. }
+	RandomNPC := NPC;
 end;
 
 initialization

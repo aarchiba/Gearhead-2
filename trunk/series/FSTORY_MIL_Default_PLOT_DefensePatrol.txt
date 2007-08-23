@@ -25,15 +25,15 @@ Element5 <Grab 2>
 start <ifNPCOK E1 else CleanUp ifG V1 0 Goto GoCheckTime>
 update <ifNPCOK E1 else CleanUp if= V1 0 else GoCheckTime V= 1 ComTime V+ 1 86400 MoveNPC E1 E3  SetNPCTeam E1 3  SetEncounterName E3 .name  P= 5 PCRenown P+ 5 d6 P+ 5 -d8 ifG 2 P5 P= 5 d4>
 .name <\ELEMENT 1 's Patrol>
-GoCheckTime <ifG ComTime V1  if= P3 0  AdvancePlot 0>
-CleanUp <if= P3 0  AdvancePlot 0>
+GoCheckTime <ifG ComTime V1  if= P3 0  EndPlot>
+CleanUp <if= P3 0  EndPlot>
 
 sub
 	Persona 1
 	special <UNLISTED NOESCAPE>
 	rumor <%name1% is conducting a patrol of %name2%.>
 	% V1 = Reward offered
-	greeting <if= P4 1 else GoNoWin CashPrize V1  AdvancePlot 0  Goto GoWeWon>
+	greeting <if= P4 1 else GoNoWin CashPrize V1  EndPlot  Goto GoWeWon>
 	*GoWeWon <*WeWon&Reward E4 E5>
 
 	GoNoWin <if= P3 1 else GoCheckEnemy   EndChat SayAnything>
@@ -50,8 +50,8 @@ sub
 
 	*GoJoinPatrol <*LetsStartPatrol GoStartCombat>
 	GoStartCombat <Exit E3>
-	GoNoMission <EndChat    Say 2   AdvancePlot 0>
-	GoExit <AdvancePlot 0>
+	GoNoMission <EndChat    Say 2   EndPlot>
+	GoExit <EndPlot>
 
 	Msg1 <You are contacted by \ELEMENT 1 .>
 	Msg2 <I'm patrolling the city. No sign of enemy activity here.>
@@ -89,12 +89,12 @@ sub
 
 	% The PC has won this encounter... what happens next depends on who the PC was fighting.
 	GoVictory <if= P2 E5 else GoVictoryForInvaders  S+ 101 1  FacXP+ E4 1   SALVAGE  ifNPCOK E1 else GoE1Died ForceChat E1>
-	GoE1Died <AdvancePlot 0>
-	GoVictoryForInvaders <S+ 101 -1   FacXP+ E5 2  AdvancePlot 0>
+	GoE1Died <EndPlot>
+	GoVictoryForInvaders <S+ 101 -1   FacXP+ E5 2  EndPlot>
 
 	% The PC has lost this encounter... what happens next depends on who the PC was fighting.
-	GoLoss <if= P2 E5 else GoLossForInvaders  S+ 101 -1  AdvancePlot 0>
-	GoLossForInvaders <S+ 101 1   AdvancePlot 0>
+	GoLoss <if= P2 E5 else GoLossForInvaders  S+ 101 -1  EndPlot>
+	GoLossForInvaders <S+ 101 1   EndPlot>
 
 	sub
 		Team 1

@@ -1,3 +1,8 @@
+- AdvancePlot replaced with EndPlot (arenascript.pp)
+- XXRan components no longer have return scripts (arenascript.pp)
+- CharDesc may set relationship with PC (gearparser.pp)
+- Content may request random NPCs (playwright.pp,chargen.pp)
+- Combat NPCs automatically get equipment; equipchar deleted (gearparser.pp)
 - New NPC equipment selector (gearparser.pp)
 - NPCs will select mecha at start of encounter (arenaplay.pp)
 - Random stats affected by job type (chargen.pp)

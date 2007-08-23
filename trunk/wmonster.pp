@@ -611,14 +611,13 @@ Function SelectNPCMecha( Scene,NPC: GearPtr ): GearPtr;
 	{ Select a mecha for the provided NPC. }
 	{ This mecha must match the NPC's faction, renown, and must also be legal for }
 	{ this game board. }
-var
-	MechaList: GearPtr;
-	Factions,Terrain_Type: String;
-	Renown: LongInt;
 const
 	Min_Max_Cost = 400000;
 	Max_Min_Cost = 750000;
 var
+	MechaList: GearPtr;
+	Factions,Terrain_Type: String;
+	Renown: LongInt;
 	SRec: SearchRec;
 	M,M2,Fac,DList,RScene: GearPtr;
 	Cost,Minimum_Cost, Maximum_Cost: LongInt;
@@ -631,7 +630,7 @@ begin
 	{ Determine the factions to be used by the NPC. }
 	Fac := SeekCurrentLevelGear( Factions_List , GG_Faction , NAttValue( NPC^.NA , NAG_Personal , NAS_FactionID ) );
 	Factions := 'GENERAL';
-	if Fac <> Nil then Factions := Factions + SAttValue( Fac^.SA , 'DESIG' )
+	if Fac <> Nil then Factions := Factions + ' ' + SAttValue( Fac^.SA , 'DESIG' )
 	else begin
 		rscene := FindRootScene( Nil , Scene );
 		if rscene <> Nil then begin
@@ -689,7 +688,7 @@ begin
 		DelinkGear( MechaList , M );
 		DisposeGear( MechaList );
 	end else begin
-		DialogMsg( GearName( NPC ) + ' is forced to take a crappy mecha...' );
+		DialogMsg( GearName( NPC ) + ' is forced to take a crappy mecha...' + Terrain_Type + ' ' + Factions + BStr( Minimum_Cost ) + ' - ' + Bstr( Maximum_Cost ) );
 		M := LoadSingleMecha( 'buruburu.txt' , Design_Directory );
 	end;
 

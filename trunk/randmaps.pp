@@ -2185,11 +2185,6 @@ begin
 		{ Character gears have to be individualized. }
 		if ( I^.G = GG_Character ) and NotAnAnimal( I ) and ( NAttValue( C^.NA , NAG_Narrative , NAS_ContentID ) = 0 ) then begin
 			IndividualizeNPC( I );
-			cash := NAttValue( I^.NA , NAG_Experience , NAS_Credits );
-			if cash > 0 then begin
-				SetNAtt( I^.NA , NAG_Experience , NAS_Credits , 0 );
-				SelectCombatEquipment( I , Standard_Equipment_List , cash );
-			end;
 		end;
 		I := I^.Next;
 	end;

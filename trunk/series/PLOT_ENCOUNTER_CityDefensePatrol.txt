@@ -14,18 +14,18 @@ Place4 <2>
 start <ifNPCOK E3 else GoDelete ifG V1 0 Goto GoCheckTime>
 update <ifNPCOK E3 else GoDelete if= V1 0 else GoCheckTime V= 1 ComTime V+ 1 43200 MoveNPC E3 E4  SetNPCTeam E3 2  SetEncounterName E4 .name  P= 5 PCRenown  ifG 3 P5 P= 5 d4>
 .name <\ELEMENT 3 's Patrol>
-GoCheckTime <ifG ComTime V1  if= P3 0  AdvancePlot 0>
-GoDelete <AdvancePlot 0>
+GoCheckTime <ifG ComTime V1  if= P3 0  EndPlot>
+GoDelete <EndPlot>
 
 
 sub
 	Persona 3
 	rumor <%name3% is out patrolling %name2%.>
 	special <NOESCAPE>
-	greeting <if= P3 3 else GoCheckLoss   AdvancePlot 0   Goto GoDoWin>
+	greeting <if= P3 3 else GoCheckLoss   EndPlot   Goto GoDoWin>
 	*GoDoWin <*GetYouNextTime>
 
-	GoCheckLoss <if= P3 2 else GoCheckCombat   AdvancePlot 0   Goto GoDoLoss>
+	GoCheckLoss <if= P3 2 else GoCheckCombat   EndPlot   Goto GoDoLoss>
 	*GoDoLoss <*YouLose>
 
 	GoCheckCombat <if= P3 1 else GoCheckEnemy NewChat SayAnything>
@@ -33,8 +33,8 @@ sub
 	*GoFightPC <*BattleChallenge&Avoid GoThemeExpo GoExit>
 	*GoThemeExpo <*THEME_EXPO&Enemy GoStartCombat>
 	GoStartCombat <Exit E4>
-	GoExit <AdvancePlot 0>
-	GoNoEnemy <NewChat  Say 1  AdvancePlot 0>
+	GoExit <EndPlot>
+	GoNoEnemy <NewChat  Say 1  EndPlot>
 
 	Msg1 <I'm just doing a routine patrol of the city. Nothing to see here.>
 	Msg1_1 <Hello \PC ; I'm just doing a routine patrol of \SCENE E2 . This is something we have to do regularly. So far I haven't encountered any problems.>
@@ -76,7 +76,7 @@ sub
 
 	% The PC has won this encounter.
 	GoVictory <ifNPCOK E1 else GoE1Died ForceChat E1>
-	GoE1Died <AdvancePlot 0>
+	GoE1Died <EndPlot>
 
 	% The PC has lost this encounter...
 	GoLoss <ifNPCOK E1 else GoE1Died ForceChat E1>

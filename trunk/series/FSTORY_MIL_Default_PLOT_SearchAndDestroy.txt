@@ -31,10 +31,10 @@ place5 <2>
 
 start <ifNPCOK E1 else GoDelete ifG V1 0 Goto GoCheckTime>
 update <ifNPCOK E1 else GoDelete if= V1 0 else GoCheckTime  V= 1 ComTime  V+ 1 86400   P= 7 PCRenown  P= 8 100   P+ 7 d4   P+ 7 -d4   ifG 2 P7 P= 7 d4>
-GoDelete <AdvancePlot 0>
-GoCheckTime <ifG ComTime V1  if= P2 0 else GoSetEnd  AdvancePlot 0>
+GoDelete <EndPlot>
+GoCheckTime <ifG ComTime V1  if= P2 0 else GoSetEnd  EndPlot>
 GoSetEnd <P= 2 2 email 2>
-CleanUp <if= P2 0 else GoSetEnd  AdvancePlot 0>
+CleanUp <if= P2 0 else GoSetEnd  EndPlot>
 
 % Insert email here
 5min <if= P10 0  if= PCFac N1  if= P2 0  if= d20 1  ifG PCCharm d40  Email 1 P= 10 1>
@@ -62,9 +62,9 @@ sub
 	% V1 = Reward per patrol
 	rumor <%name1% needs a mecha pilot for a city defense mission.>
 
-	greeting <ifG P6 0 else GoCheckTime   NewChat  Say 8  CashPrize * V1 P6  AdvancePlot 0>
-	GoCheckTime <if= P2 2 else GoNoWins   NewChat  Say 7  AdvancePlot 0>
-	GoNoWins <ifG P9 0 else GoRemind      NewChat  Say 6  AdvancePlot 0>
+	greeting <ifG P6 0 else GoCheckTime   NewChat  Say 8  CashPrize * V1 P6  EndPlot>
+	GoCheckTime <if= P2 2 else GoNoWins   NewChat  Say 7  EndPlot>
+	GoNoWins <ifG P9 0 else GoRemind      NewChat  Say 6  EndPlot>
 	GoRemind <if= P2 1 else GoNoMission   NewChat  Say 5>
 
 	*GoNoMission <*ENEMY_CHECK GoCheckEmail N1 GoEnd>
@@ -74,7 +74,7 @@ sub
 	*GoCheckAuto <*AutoMissionTest&Mecha GoMissionBriefing result2 GoCheckCivil N1 N2> 
 	*GoCheckCivil <*CivilDefenseTest  GoMissionBriefing GoEnd GoVolunteer N1 N2>
 
-	GoEnd <AdvancePlot 0>
+	GoEnd <EndPlot>
 	GoVolunteer <P= 8 65   Goto GoMissionBriefing>
 	GoMissionBriefing <NewChat   V= 1 Reward Threat P7 100 P8  Say 1 AddChat 1 AddChat 2>
 
@@ -82,7 +82,7 @@ sub
 	% There will be 1-3 encounters activated.
 	GoR1Details <Memo 4   P= 2 1 P= 3 1 if# d5 1 P= 4 1  if= d2 1 p= 5 1>
 	*result2 <*RejectMission GoR2End>
-	GoR2End <AdvancePlot 0>
+	GoR2End <EndPlot>
 
 	Msg1 <Some patrols from \FACTION N2 are operating in \ELEMENT 2 . For every group eliminated, you'll be paid $ \VAL V1 plus salvage.>
 	Msg1_1 <Here are the mission details: We've got some scout patrols from \FACTION N2 operating in the \ELEMENT 2 area. I want you to seek these out and engage them; for each group defeated, you'll earn $ \VAl V1 plus salvage.>

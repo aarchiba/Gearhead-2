@@ -46,11 +46,11 @@ Procedure ScaleSkillsToLevel( NPC: GearPtr; Lvl: Integer );
 Procedure SetSkillsAtLevel( NPC: GearPtr; Lvl: Integer );
 Function SelectMechaByFactionAndRenown( Factions: String; Renown: Integer ): String;
 Procedure IndividualizeNPC( NPC: GearPtr );
-Procedure SelectCombatEquipment( NPC,EquipList: GearPtr; EPV: LongInt );
 Procedure SelectEquipmentForNPC( NPC: GearPtr; Renown: Integer );
 
 
 Procedure CheckValidity( var it: GearPtr );
+Procedure ApplyCharDesc( NPC: GearPtr; CDesc: String );
 
 Function LoadFile( FName,DName: String ): GearPtr;
 Function LoadFile( FName: String ): GearPtr;
@@ -283,6 +283,8 @@ end;
 Procedure IndividualizeNPC( NPC: GearPtr );
 	{ Randomize up this NPC a bit, to give it that hand-crafted }
 	{ NPC look. }
+	{ Note that if the NPC has a name by the time it reaches here, its }
+	{ personality traits and stats will not be touched. }
 var
 	N,T,Lvl: Integer;
 begin
@@ -292,54 +294,65 @@ begin
 	end;
 
 	{ Give the NPC a random name + gender + age + personality traits. }
-	SetSAtt( NPC^.SA , 'NAME <' + RandomName + '>' );
-	SetNAtt( NPC^.NA , NAG_CharDescription , NAS_Gender , Random( 2 ) );
-	AddNAtt( NPC^.NA , NAG_CharDescription , NAS_DAge , 1 + Random( 10 ) - Random( 10 ) + RollStep( 5 ) );
+	if SAttValue( NPC^.SA , 'NAME' ) = '' then begin
+		SetSAtt( NPC^.SA , 'NAME <' + RandomName + '>' );
+		SetNAtt( NPC^.NA , NAG_CharDescription , NAS_Gender , Random( 2 ) );
+		AddNAtt( NPC^.NA , NAG_CharDescription , NAS_DAge , 1 + Random( 10 ) - Random( 10 ) + RollStep( 5 ) );
 
-	{ Give out some personality traits. }
-	{ Most NPCs have at least a single trait in the group Sociable,Easygoing,Cheerful }
-	if Random( 5 ) <> 1 then begin
-		if Random( 3 ) = 1 then begin
-			AddReputation( NPC, 3 + Random( 3 ) , -RollStep( 40 ) );
-		end else begin
-			AddReputation( NPC, 3 + Random( 3 ) ,  RollStep( 40 ) );
-		end;
-	end;
-	{ Add RollStep(2) other personality traits. }
-	N := RollStep( 2 );
-	for t := 1 to N do begin
-		{ Positive traits are far more common than negative ones. }
-		if Random( 3 ) = 1 then begin
-			if Random( 7 ) = 1 then begin
-				AddReputation( NPC, Random( Num_Personality_Traits ) + 1 , -RollStep( 50 ) );
+		{ Give out some personality traits. }
+		{ Most NPCs have at least a single trait in the group Sociable,Easygoing,Cheerful }
+		if Random( 5 ) <> 1 then begin
+			if Random( 3 ) = 1 then begin
+				AddReputation( NPC, 3 + Random( 3 ) , -RollStep( 40 ) );
 			end else begin
-				AddReputation( NPC, Random( Num_Personality_Traits ) + 1 , -RollStep( 20 ) );
-			end;
-		end else begin
-			if Random( 7 ) = 1 then begin
-				AddReputation( NPC, Random( Num_Personality_Traits ) + 1 , RollStep( 50 ) );
-			end else begin
-				AddReputation( NPC, Random( Num_Personality_Traits ) + 1 , RollStep( 20 ) );
+				AddReputation( NPC, 3 + Random( 3 ) ,  RollStep( 40 ) );
 			end;
 		end;
-	end;
+		{ Add RollStep(2) other personality traits. }
+		N := RollStep( 2 );
+		for t := 1 to N do begin
+			{ Positive traits are far more common than negative ones. }
+			if Random( 3 ) = 1 then begin
+				if Random( 7 ) = 1 then begin
+					AddReputation( NPC, Random( Num_Personality_Traits ) + 1 , -RollStep( 50 ) );
+				end else begin
+					AddReputation( NPC, Random( Num_Personality_Traits ) + 1 , -RollStep( 20 ) );
+				end;
+			end else begin
+				if Random( 7 ) = 1 then begin
+					AddReputation( NPC, Random( Num_Personality_Traits ) + 1 , RollStep( 50 ) );
+				end else begin
+					AddReputation( NPC, Random( Num_Personality_Traits ) + 1 , RollStep( 20 ) );
+				end;
+			end;
+		end;
 
-	{ Randomize up those stats a bit. }
-	for t := 1 to NumGearStats do begin
-		NPC^.Stat[T] := NPC^.Stat[T] + Random( 4 ) - Random( 4 );
-		if Random( 32 ) = 1 then NPC^.Stat[T] := NPC^.Stat[T] + Random( 5 ) - Random( 5 );
-		if NPC^.Stat[T] < 1 then NPC^.Stat[T] := 1;
+		{ Randomize up those stats a bit. }
+		for t := 1 to NumGearStats do begin
+			NPC^.Stat[T] := NPC^.Stat[T] + Random( 4 ) - Random( 4 );
+			if Random( 32 ) = 1 then NPC^.Stat[T] := NPC^.Stat[T] + Random( 5 ) - Random( 5 );
+			if NPC^.Stat[T] < 1 then NPC^.Stat[T] := 1;
+		end;
 	end;
 
 	{ If this is a combatant character, set the skills to match the reputation. }
 	{ Also pick a personal mecha. }
-	if NAttValue( NPC^.NA , NAG_CharDescription , NAS_IsCombatant ) <> 0 then begin
+	if IsACombatant( NPC ) then begin
 		Lvl := NAttValue( NPC^.NA , NAG_CharDescription , NAS_Renowned );
 		if Lvl = 0 then begin
 			AddReputation( NPC , Abs( NAS_Renowned ) , Random( 75 ) );
 			if Random( 3 ) = 1 then AddReputation( NPC , Abs( NAS_Renowned ) , -Random( 25 ) );
 			Lvl := NAttValue( NPC^.NA , NAG_CharDescription , NAS_Renowned );
 		end;
+
+		{ Give some random equipment. }
+		{ Only do this once, otherwise certain characters might get it a }
+		{ second time. }
+		if NAttValue( NPC^.NA , NAG_Narrative , NAS_GotFreeEquipment ) = 0 then begin
+			SelectEquipmentForNPC( NPC , Lvl );
+			SetNAtt( NPC^.NA , NAG_Narrative , NAS_GotFreeEquipment , 1 );
+		end;
+
 		Lvl := Lvl + 50;
 		if Lvl < 25 then Lvl := 25;
 		ScaleSkillsToLevel( NPC , Lvl );
@@ -749,117 +762,6 @@ begin
 	BuyWeaponsForNPC();
 end;
 
-Procedure SelectCombatEquipment( NPC,EquipList: GearPtr; EPV: LongInt );
-	{ Search through the standard equipment list and find some }
-	{ combat gear to equip this NPC with. }
-	Function BuyWeapon: GearPtr;
-		{ Search through the list of equipment provided. Select }
-		{ a weapon for this character. }
-	var
-		Wep: GEarPtr;
-		N: Integer;
-		SL,Item: SAttPtr;	{ Shopping List. }
-	begin
-		{ Step One - Create a list of all weapons that this character }
-		{ can afford, based upon EPV. }
-		SL := Nil;
-		Wep := EquipList;
-		N := 1;
-		while Wep <> Nil do begin
-			{ If this item is a weapon and affordable, add it to the list. }
-			if ( Wep^.G = GG_Weapon ) and ( GearValue( Wep ) <= EPV ) then begin
-				StoreSAtt( SL , BStr( N ) );
-			end;
-
-			{ Move to the next item. }
-			Inc( N );
-			Wep := Wep^.Next;
-		end;
-		if SL = Nil then Exit( Nil );
-
-		{ Step Two - Select one of those weapons at random. }
-		Item := SelectRandomSAtt( SL );
-		N := ExtractValue( Item^.Info );
-
-		{ Step Three - Clone the desired weapon, reduce EPV, and }
-		{ get rid of the shopping list. }
-		Wep := CloneGear( RetrieveGearSib( EquipList , N ) );
-		EPV := EPV - GearValue( Wep );
-		DisposeSAtt( SL );
-		BuyWeapon := Wep;
-	end;
-	Function BuyArmor( Slot: GearPtr ): GearPtr;
-		{ Search through the list of equipment provided. Select }
-		{ some armor for the requested hit location. }
-	var
-		Armor: GEarPtr;
-		N: Integer;
-		SL,Item: SAttPtr;	{ Shopping List. }
-	begin
-		{ Step One - Create a list of all armor that this character }
-		{ can afford, based upon EPV. }
-		SL := Nil;
-		Armor := EquipList;
-		N := 1;
-		while Armor <> Nil do begin
-			{ If this item is a weapon and affordable, add it to the list. }
-			if ( Armor^.G = GG_ExArmor ) and IsLegalInvcom( Slot , Armor ) and ( GearValue( Armor ) <= EPV ) then begin
-				StoreSAtt( SL , BStr( N ) );
-			end;
-
-			{ Move to the next item. }
-			Inc( N );
-			Armor := Armor^.Next;
-		end;
-		if SL = Nil then Exit( Nil );
-
-		{ Step Two - Select one of those items at random. }
-		Item := SelectRandomSAtt( SL );
-		N := ExtractValue( Item^.Info );
-
-		{ Step Three - Clone the desired armor, reduce EPV, and }
-		{ get rid of the shopping list. }
-		Armor := CloneGear( RetrieveGearSib( EquipList , N ) );
-		EPV := EPV - GearValue( Armor );
-		DisposeSAtt( SL );
-		BuyArmor := Armor;
-	end;
-
-var
-	Slot: GearPtr; { Place to stick current equipment. }
-	Part: GearPtr; { Part to equip, part that's been unequipped. }
-begin
-	{ First, stick a weapon in the right hand. }
-	Slot := SeekGearByName( NPC^.SubCOm , MsgString( 'EXPAND_RightHand' ) );
-	if ( Slot <> Nil ) and ( Slot^.InvCom = Nil ) then begin
-		Part := BuyWeapon;
-		InsertInvCom( Slot , Part );
-	end;
-
-	{ Move through all the NPC's modules, possibly adding armor to each. }
-	Slot := NPC^.SubCOm;
-	while Slot <> Nil do begin
-		if ( Slot^.G = GG_Module ) and ( EPV > Random( 100 ) ) and ( Random( 3 ) <> 1 ) and ( Slot^.InvCom = Nil ) then begin
-			Part := BuyArmor( Slot );
-			InsertInvCom( Slot , Part );
-		end;
-
-		{ Move to the next module. }
-		Slot := Slot^.Next;
-	end;
-
-	{ If there's any monel left over, stick a weapon in }
-	{ the left hand as well. }
-	Slot := SeekGearByName( NPC^.SubCOm , MsgString( 'EXPAND_LeftHand' ) );
-	if ( Slot <> Nil ) and ( Slot^.InvCom = Nil ) and ( EPV > Random( 100 ) ) then begin
-		Part := BuyWeapon;
-		InsertInvCom( Slot , Part );
-	end;
-
-	{ Store remaining money. }
-	if EPV > 0 then AddNAtt( NPC^.NA , NAG_Experience , NAS_Credits , EPV );
-end;
-
 Procedure ComponentScan( it: GearPtr );
 	{ This procedure will check each individual component of a mek }
 	{ to make sure it is legal. }
@@ -983,6 +885,69 @@ begin
 
 	{ Do the metrics check for specific components. }
 	MetricScan( it );
+end;
+
+Procedure ApplyCharDesc( NPC: GearPtr; CDesc: String );
+	{ Apply a character description string to this NPC. The character description }
+	{ string can contain all kinds of info: personality traits, gender, etc. }
+var
+	CCD_Cmd: String;	{ Command extracted from line. }
+	t: Integer;
+begin
+	{ Error check! This command only works for characters. }
+	if ( NPC = Nil ) or ( NPC^.G <> GG_Character ) then Exit;
+
+	while CDesc <> '' do begin
+		CCD_Cmd := ExtractWord( CDesc );
+
+		{ Check to see if this is a gender command. }
+		for t := 0 to 1 do begin
+			if CCD_Cmd = UpCase( MsgString( 'GenderName_' + BStr( T ) ) ) then begin
+				SetNAtt( NPC^.NA , NAG_CharDescription , NAS_Gender , T );
+			end;
+		end;
+
+		{ If not, check to see if it's a personality command. }
+		for t := 1 to Num_Personality_Traits do begin
+			if CCD_Cmd = UpCase( MsgString( 'TRAITNAME_' + BStr( T ) + '_+' ) ) then begin
+				if NAttValue( NPC^.NA , NAG_CharDescription , -T ) < 50 then begin
+					SetNAtt( NPC^.NA , NAG_CharDescription , -T , 50 );
+				end else begin
+					AddNAtt( NPC^.NA , NAG_CharDescription , -T , 10 );
+				end;
+			end else if CCD_Cmd = UpCase( MsgString( 'TRAITNAME_' + BStr( T ) + '_-' ) ) then begin
+				if NAttValue( NPC^.NA , NAG_CharDescription , -T ) > -50 then begin
+					SetNAtt( NPC^.NA , NAG_CharDescription , -T , -50 );
+				end else begin
+					AddNAtt( NPC^.NA , NAG_CharDescription , -T , -10 );
+				end;
+			end;
+		end;
+
+		{ If not, check to see if it's an age command. }
+		if CCD_Cmd = 'YOUNG' then begin
+			{ Set the character's age to something below 20. }
+			while NAttValue( NPC^.NA , NAG_CharDescription , NAS_DAge ) >= 0 do begin
+				AddNAtt( NPC^.NA , NAG_CharDescription , NAS_DAge , -( Random( 6 ) + 1 ) );
+			end;
+		end else if CCD_Cmd = 'OLD' then begin
+			{ Set the character's age to something above 40. }
+			while NAttValue( NPC^.NA , NAG_CharDescription , NAS_DAge ) <= 20 do begin
+				AddNAtt( NPC^.NA , NAG_CharDescription , NAS_DAge , ( Random( 15 ) + RollStep( 5 ) ) );
+			end;
+
+		end else if CCD_Cmd = 'PCFRIEND' then begin
+			SetNAtt( NPC^.NA , NAG_Relationship , 0 , NAV_Friend );
+		end else if CCD_Cmd = 'PCFAMILY' then begin
+			SetNAtt( NPC^.NA , NAG_Relationship , 0 , NAV_Family );
+		end else if CCD_Cmd = 'PCLOVER' then begin
+			SetNAtt( NPC^.NA , NAG_Relationship , 0 , NAV_Lover );
+		end else if CCD_Cmd = 'PCENEMY' then begin
+			SetNAtt( NPC^.NA , NAG_Relationship , 0 , NAV_ArchEnemy );
+
+		end;
+	end;
+
 end;
 
 Function ReadGear( var F: Text; RandomizeNPCs: Boolean ): GearPtr;
@@ -1260,13 +1225,14 @@ begin
 	{ Clone the NPC record first. }
 	{ Exit the procedure if no appropriate NPC can be found. }
 	DeleteWhiteSpace( TheLine );
-	NPC := LoadNewNPC( TheLine , RandomizeNPCs );
+
+	{ Note that this procedure doesn't randomize the NPCs itself- that }
+	{ will have to wait for the second pass which will randomize all NPCs }
+	{ together. }
+	NPC := LoadNewNPC( TheLine , False );
 	if NPC = Nil then begin
 		Exit;
 	end;
-
-	{ Store a JOB description. This will be the archetype name. }
-	SetSATt( NPC^.SA , 'JOB <' + TheLine + '>' );
 
 	{ Get rid of the NPC name, so the parser doesn't try }
 	{ interpreting it as a series of commands. }
@@ -1358,68 +1324,24 @@ begin
 	C^.S := CS_S;
 end;
 
-Procedure CMD_EquipChar;
-	{ This procedure should equip a recently created NPC. }
-begin
-	{ Error check- we must be dealing with an NPC here. }
-	if ( C = Nil ) or ( C^.G <> GG_Character ) then exit;
-
-	if RandomizeNPCs then begin
-		SelectCOmbatEquipment( C , Standard_Equipment_List , ExtractValue( TheLine ) );
-	end else begin
-		AddNAtt( C^.NA , NAG_Experience , NAS_Credits , ExtractValue( TheLine ) );
-	end;
-end;
-
 Procedure CMD_CharDesc;
 	{ This procedure allows certain aspects of a character gear to be }
 	{ modified. }
-var
-	CCD_Cmd: String;	{ Command extracted from line. }
-	t: Integer;
 begin
-	{ Error check! This command only works for characters. }
-	if ( C = Nil ) or ( C^.G <> GG_Character ) then Exit;
+	{ Call the character description procedure above, then clear the line }
+	{ to make sure it's not interpreted as a command sequence. }
+	ApplyCharDesc( C , TheLine );
+	TheLine := '';
+end;
 
-	while TheLine <> '' do begin
-		CCD_Cmd := ExtractWord( TheLine );
-
-		{ Check to see if this is a gender command. }
-		for t := 0 to 1 do begin
-			if CCD_Cmd = UpCase( MsgString( 'GenderName_' + BStr( T ) ) ) then begin
-				SetNAtt( C^.NA , NAG_CharDescription , NAS_Gender , T );
-			end;
-		end;
-
-		{ If not, check to see if it's a personality command. }
-		for t := 1 to Num_Personality_Traits do begin
-			if CCD_Cmd = UpCase( MsgString( 'TRAITNAME_' + BStr( T ) + '_+' ) ) then begin
-				if NAttValue( C^.NA , NAG_CharDescription , -T ) < 25 then begin
-					SetNAtt( C^.NA , NAG_CharDescription , -T , 25 );
-				end else begin
-					AddNAtt( C^.NA , NAG_CharDescription , -T , 10 );
-				end;
-			end else if CCD_Cmd = UpCase( MsgString( 'TRAITNAME_' + BStr( T ) + '_-' ) ) then begin
-				if NAttValue( C^.NA , NAG_CharDescription , -T ) > -25 then begin
-					SetNAtt( C^.NA , NAG_CharDescription , -T , -25 );
-				end else begin
-					AddNAtt( C^.NA , NAG_CharDescription , -T , -10 );
-				end;
-			end;
-		end;
-
-		{ If not, check to see if it's an age command. }
-		if CCD_Cmd = 'YOUNG' then begin
-			{ Set the character's age to something below 20. }
-			while NAttValue( C^.NA , NAG_CharDescription , NAS_DAge ) >= 0 do begin
-				AddNAtt( C^.NA , NAG_CharDescription , NAS_DAge , -( Random( 6 ) + 1 ) );
-			end;
-		end else if CCD_Cmd = 'OLD' then begin
-			{ Set the character's age to something above 40. }
-			while NAttValue( C^.NA , NAG_CharDescription , NAS_DAge ) <= 20 do begin
-				AddNAtt( C^.NA , NAG_CharDescription , NAS_DAge , ( Random( 20 ) + 1 ) );
-			end;
-		end;
+Procedure GoIndividualize( LList: GearPtr );
+	{ Individualize any NPCs found along this list or in the children of it. }
+begin
+	while LList <> Nil do begin
+		if LList^.G = GG_Character then IndividualizeNPC( LList );
+		GoIndividualize( LList^.SubCom );
+		GoIndividualize( LList^.InvCom );
+		LList := LList^.Next;
 	end;
 end;
 
@@ -1472,11 +1394,18 @@ begin
 				else	if CMD = 'CHARDESC' then CMD_CharDesc
 				else	if CMD = 'MONSTER' then CMD_Monster
 				else	if CMD = 'STC' then CMD_STC
-				else	if CMD = 'EQUIPCHAR' then CMD_EquipChar
 				else	CheckMacros( CmD );
 			end;
 		end;
 	end;
+
+	{ If the NPCs are to be randomized, do that now. Why not do it at the }
+	{ point when they're loaded? Because they can still be modified by other }
+	{ commands, that's why. Imagine you create a NPC, then set its faction. }
+	{ if the individualization were done directly at the moment of creation, }
+	{ then the individualization procedure wouldn't know the NPC's faction. }
+	{ This would be bad. So, we do individualization as an extra step at the end. }
+	if RandomizeNPCs then GoIndividualize( it );
 
 	{Run a check on each of the Master Gears we have loaded,}
 	{making sure that they are both valid and complete. If}
@@ -1488,7 +1417,7 @@ begin
 	Dec( Recursion_Level );
 
 	ReadGear := it;
-end;
+end; { ReadGear }
 
 Function LoadFile( FName,DName: String ): GearPtr;
 	{ Open and load a text file. }
@@ -1680,6 +1609,7 @@ begin
 	if NPC <> Nil then begin
 		{ Store a JOB description. This will be the archetype name. }
 		SetSATt( NPC^.SA , 'JOB <' + NPCName + '>' );
+		SetSAtt( NPC^.SA , 'NAME <>' );
 
 		if RandomizeNPCs then IndividualizeNPC( NPC );
 	end;

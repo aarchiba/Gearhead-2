@@ -183,7 +183,7 @@ begin
 	{ advanced. }
 	{ GH2v0.231: It may also be a plot remnant. }
 	Plot := Source;
-	while ( Plot <> Nil ) and (Plot^.G <> GG_Plot ) and ( Plot^.G <> GG_AbsolutelyNothing ) and ( Plot^.G <> GG_Remnant ) do Plot := Plot^.Parent;
+	while ( Plot <> Nil ) and (Plot^.G <> GG_Plot ) and ( Plot^.G <> GG_AbsolutelyNothing ) do Plot := Plot^.Parent;
 	if ( Plot = Nil ) and ( GB <> Nil ) and ( GB^.Scene <> Nil ) then begin
 		Plot := GB^.Scene;
 		while ( Plot <> Nil ) and (Plot^.G <> GG_Plot ) and ( Plot^.G <> GG_AbsolutelyNothing ) do Plot := Plot^.Parent;

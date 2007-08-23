@@ -23,12 +23,6 @@ component being selected.
 If the lable "COMMON" is included in the list, this component is more likely to
 be selected.
 
-LEGACY COMPONENTS
-
-A component with a "RETURN" script label is not deleted when the next component is
-loaded. Instead, it leaves behind a remnant gear. When the current plot thread is
-completed (i.e. when the task is "No Task") the RETURN script is activated. This can
-use the ALTERCONTEXT command to set a new task or deal with unfinished business.
 
 
 COMPLICATION, RESOLUTION, FAILURE

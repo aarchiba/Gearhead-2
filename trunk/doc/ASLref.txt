@@ -51,7 +51,6 @@
 	ACTIVATEMEME [MemeID] [SceneID]	Activate a meme
 	ADDCHAT [number]	Add prompt[num] to interact menu
 	ADDREACT [value]	Alter NPC reaction score
-	ADVANCEPLOT [subplot number]	Advance to sub-plot
 	AIRRAIDSIREN		All NPCs will flee the gameboard
 	ALERT [msg number]	Display a text message the PC won't ignore
 	ALTERCONTEXT [changes label]	Will alter the story context by the string provided
@@ -75,6 +74,7 @@
 	E=			Set Plot Element
 	EMAIL [idnum]		Store message for PC in source gear
 	ENDCHAT			Delete all items from interact menu
+	ENDPLOT			Delete the current plot
 	ENDSTORY		Delete source story, pass CLEANUP to plots
 	EXIT [code]		Leave current scene with exit code
 	EXPRESSDELIVERY		Have shopkeeper ship mecha from another town

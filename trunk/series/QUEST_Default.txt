@@ -494,7 +494,6 @@ Content
 	end
 	inv
 		NPC Bounty Hunter
-		EquipChar 35000
 		CharDesc Lawful
 
 		STC QUEST-ENCOUNTER-WANDER
@@ -507,7 +506,6 @@ Content
 
 		NPC Pirate
 		SetFaction 8
-		EquipChar 25000
 	end
 
 %%
@@ -1417,7 +1415,6 @@ Content
 	inv
 		NPC Police Officer
 		SetFaction 9
-		EquipChar 10000
 
 		NPC Thief
 		job <Smuggler>
@@ -1741,7 +1738,6 @@ Content
 	inv
 		NPC Arena Pilot
 		chardesc Heroic Sociable
-		EquipChar 15000
 
 		STC QUEST-MAPMARKER-STATIONARY
 		name <Charity Arena>

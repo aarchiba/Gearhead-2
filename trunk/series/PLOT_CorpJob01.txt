@@ -27,9 +27,9 @@ Plot 0
 
 	start <ifNPCOK E1 else GoDelete ifG V1 0 Goto GoCheckTime>
 	update <ifNPCOK E1 else GoDelete if= V1 0 else GoCheckTime  V= 1 ComTime  V+ 1 86400   P= 3 PCRenown  P+ 3 d4   P+ 3 -d4   ifG 2 P3 P= 3 d4>
-	GoDelete <AdvancePlot 0>
-	GoCheckTime <ifG ComTime V1  if= P2 0 else GoSetEnd  AdvancePlot 0>
-	CleanUp <if= P2 0 else GoSetEnd  AdvancePlot 0>
+	GoDelete <EndPlot>
+	GoCheckTime <ifG ComTime V1  if= P2 0 else GoSetEnd  EndPlot>
+	CleanUp <if= P2 0 else GoSetEnd  EndPlot>
 	%% If the time expires, but the PC is working on the plot, send him a message
 	%% to say that everything's over.
 	GoSetEnd <if= P2 1  P= 2 4 email 2>
@@ -63,7 +63,7 @@ sub
 	*GoCheckAuto <*AutoMissionTest&Mecha GoMissionBriefing GoRejectMission GoCheckSkill E2 na>
 	*GoCheckSkill <*GenericMissionTest&Mecha  GoMissionBriefing GoEnd GoRejectMission E2 na>
 	*GoRejectMission <*RejectMission GoEnd>
-	GoEnd <AdvancePlot 0>
+	GoEnd <EndPlot>
 	GoMissionBriefing <V= 1 Reward Threat P3 100 150   NewChat Say 1  AddChat 1 AddChat 2 AddChat 3>
 	result1 <NewChat Say 2 Memo 4 P= 2 1>
 	result2 <NewChat Say 6 AddChat 1 if= P2 0 AddChat 3>

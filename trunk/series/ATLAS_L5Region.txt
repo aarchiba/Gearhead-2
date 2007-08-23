@@ -368,19 +368,16 @@ sub
 			NPC Police Officer
 			SetTeam 3
 			SetFaction 9
-			EquipChar 45000
 			MiniMapComponent 1
 
 			NPC Police Officer
 			SetTeam 3
 			SetFaction 9
-			EquipChar 45000
 			MiniMapComponent 2
 
 			NPC Police Officer
 			SetTeam 3
 			SetFaction 9
-			EquipChar 45000
 			MiniMapComponent 3
 		end
 
@@ -391,13 +388,11 @@ sub
 			NPC Knight
 			SetTeam 3
 			SetFaction 3
-			EquipChar 45000
 			MiniMapComponent 1
 
 			NPC Knight
 			SetTeam 3
 			SetFaction 3
-			EquipChar 45000
 			MiniMapComponent 2
 		end
 
@@ -413,7 +408,8 @@ sub
 			Age 17
 			name <Adrianna>
 			SDL_Colors <75 200 212 255 212 195 66 121 119>
-			chardesc Female Sociable Cheerful Passionate Pragmatic Renowned
+			chardesc Female Sociable Passionate Pragmatic Renowned
+			statline 13 10 14 16 13 17 16 17
 			MiniMapComponent 1
 			%% Adrianna will have a fairly extensive quest.
 			quest <*:NPCQuest>
@@ -421,7 +417,6 @@ sub
 			NPC Knight
 			SetTeam 3
 			SetFaction 3
-			EquipChar 50000
 			MiniMapComponent 2
 		end
 	end
@@ -781,6 +776,7 @@ sub
 				name <Liandor>
 				SDL_Portrait <por_m_guy3(AA-).png>
 				SDL_Colors <75 200 212 150 112 89 152 61 97>
+				statline 10 13 12 12 14 19 15 16
 				SetTeam 2
 				SetFaction 1
 				CharDesc Sociable Passionate Male
@@ -794,13 +790,11 @@ sub
 				NPC Police Officer
 				SetTeam 3
 				SetFaction 9
-				EquipChar 45000
 				MiniMapComponent 1
 
 				NPC Police Officer
 				SetTeam 3
 				SetFaction 9
-				EquipChar 45000
 				MiniMapComponent 2
 			end
 
@@ -811,13 +805,11 @@ sub
 				NPC Knight
 				SetTeam 3
 				SetFaction 3
-				EquipChar 45000
 				MiniMapComponent 1
 
 				NPC Knight
 				SetTeam 3
 				SetFaction 3
-				EquipChar 45000
 				MiniMapComponent 2
 			end
 			end
@@ -825,12 +817,10 @@ sub
 			NPC Police Officer
 			SetTeam 3
 			SetFaction 9
-			EquipChar 25000
 
 			NPC Mecha Pilot
 			SetTeam 3
 			SetFaction 3
-			EquipChar 50000
 		end
 
 		Scene
@@ -1058,6 +1048,7 @@ inv
 	SetFaction 1
 	Age 23
 	chardesc Male Heroic
+	statline 13 16 12 11 16 13 14 13
 
 	NPC Pirate
 	job <Privateer>
@@ -1123,7 +1114,6 @@ sub
 		NPC Police Officer
 		SetTeam 3
 		SetFaction 9
-		EquipChar 45000
 		MiniMapComponent 1
 	end
 
@@ -1284,6 +1274,7 @@ sub
 		name <Nordstrom>
 		chardesc Old Male Sociable Easygoing Melancholy
 		Age 48
+		statline 11 15 13 14 18 16 13 9
 		home <Foyer>
 		SetTeam 2
 	end
@@ -1399,7 +1390,6 @@ sub
 			NPC Soldier
 			job <Bouncer>
 			home <Entry Point>
-			EquipChar 8000
 			skill 9 9
 			name <Kodie>
 			desig <NPC_Kodie>
@@ -1882,13 +1872,11 @@ sub
 			NPC Knight
 			SetTeam 3
 			SetFaction 3
-			EquipChar 45000
 			MiniMapComponent 1
 
 			NPC Knight
 			SetTeam 3
 			SetFaction 3
-			EquipChar 45000
 			MiniMapComponent 2
 		end
 
@@ -2084,19 +2072,16 @@ sub
 			NPC Police Officer
 			SetTeam 3
 			SetFaction 9
-			EquipChar 45000
 			MiniMapComponent 1
 
 			NPC Police Officer
 			SetTeam 3
 			SetFaction 9
-			EquipChar 45000
 			MiniMapComponent 2
 
 			NPC Police Officer
 			SetTeam 3
 			SetFaction 9
-			EquipChar 45000
 			MiniMapComponent 3
 		end
 
@@ -2115,10 +2100,10 @@ sub
 			quest <*:NPCQuest>
 			SetTeam 3
 			SetFaction 3
-			EquipChar 50000
 			MiniMapComponent 3
 			chardesc Lawful Heroic Easygoing Shy Cheerful Male Renowned
 			Age 52
+			statline 19 22 18 19 14 16 17 15
 		end
 	end
 
@@ -2540,7 +2525,6 @@ sub
 			NPC Police Officer
 			SetTeam 3
 			SetFaction 9
-			EquipChar 45000
 			MiniMapComponent 1
 
 			NPC bureaucrat
@@ -2556,12 +2540,12 @@ sub
 		inv
 			NPC Police Officer
 			name <Matthias>
-			chardesc Male Lawful Shy Passionate Pragmatic
+			chardesc Male Lawful Shy Passionate Pragmatic Renowned
 			SDL_PORTRAIT <por_m_serious(J--).png>
 			SDL_COLORS <30 30 90 150 112 89 35 45 22>
+			StatLine 14 13 15 15 13 14 15 13
 			SetTeam 2
 			SetFaction 9
-			EquipChar 45000
 			Age 10
 			MiniMapComponent 1
 			Quest <*:NPCQuest>
@@ -2652,13 +2636,11 @@ sub
 			NPC Police Officer
 			SetTeam 3
 			SetFaction 9
-			EquipChar 45000
 			MiniMapComponent 1
 
 			NPC Police Officer
 			SetTeam 3
 			SetFaction 9
-			EquipChar 45000
 			MiniMapComponent 2
 		end
 
@@ -2669,13 +2651,11 @@ sub
 			NPC Mecha Pilot
 			SetTeam 3
 			SetFaction 10
-			EquipChar 45000
 			MiniMapComponent 1
 
 			NPC Mecha Pilot
 			SetTeam 3
 			SetFaction 10
-			EquipChar 45000
 			MiniMapComponent 2
 		end
 
@@ -2693,7 +2673,6 @@ sub
 			job <Bodyguard>
 			SetTeam 3
 			SetFaction 10
-			EquipChar 50000
 			MiniMapComponent 2
 		end
 	end
@@ -3019,6 +2998,7 @@ sub
 				chardesc male Sociable Melancholy Easygoing Lawful
 				MiniMapComponent 1
 				SetTeam 2
+				statline 12 11 12 10 13 11 12 11
 			end
 
 			Persona
@@ -3221,7 +3201,7 @@ sub
 			rumor <Galena Hodges has been helping the poor for nearly a century.>
 			Age 98
 			SetTeam 2
-			Statline 7 6 8 13 18 16 19 12
+			Statline 7 6 8 13 18 16 23 12
 			chardesc Female Heroic Heroic Heroic Sociable Spiritual
 			SDL_PORTRAIT <por_f_knowledge(--N).png>
 			SDL_COLORS <90 150 80 199 188 162 190 210 230>
@@ -3311,13 +3291,11 @@ sub
 			NPC Police Officer
 			SetTeam 3
 			SetFaction 9
-			EquipChar 45000
 			MiniMapComponent 1
 
 			NPC Police Officer
 			SetTeam 3
 			SetFaction 9
-			EquipChar 45000
 			MiniMapComponent 2
 		end
 
@@ -3328,13 +3306,11 @@ sub
 			NPC Mecha Pilot
 			SetTeam 3
 			SetFaction 10
-			EquipChar 45000
 			MiniMapComponent 1
 
 			NPC Mecha Pilot
 			SetTeam 3
 			SetFaction 10
-			EquipChar 45000
 			MiniMapComponent 2
 		end
 

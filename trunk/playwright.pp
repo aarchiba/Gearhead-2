@@ -67,7 +67,7 @@ Function InsertSubPlot( Slot,SubPlot: GearPtr; GB: GameBoardPtr ): Boolean;
 Function InsertPlot( Slot,Plot: GearPtr; GB: GameBoardPtr; Threat: Integer ): Boolean;
 
 Function InsertRSC( Source,Frag: GearPtr; GB: GameBoardPtr ): Boolean;
-Procedure AdvancePlot( GB: GameBoardPtr; Adv,Plot: GearPtr; N: Integer );
+Procedure EndPlot( GB: GameBoardPtr; Adv,Plot: GearPtr );
 
 Procedure PrepareNewComponent( Story: GearPtr; GB: GameBoardPtr );
 
@@ -79,10 +79,10 @@ implementation
 
 {$IFDEF ASCII}
 uses 	ui4gh,rpgdice,vidgfx,texutil,gearutil,interact,ability,gearparser,ghchars,narration,ghprop,
-	vidmenus,arenascript,mpbuilder;
+	vidmenus,arenascript,mpbuilder,chargen;
 {$ELSE}
 uses 	ui4gh,rpgdice,glgfx,texutil,gearutil,interact,ability,gearparser,ghchars,narration,ghprop,
-	glmenus,arenascript,mpbuilder;
+	glmenus,arenascript,mpbuilder,chargen;
 {$ENDIF}
 
 var
@@ -817,6 +817,36 @@ begin
 	SelectArtifact := A;
 end;
 
+Function NewContentNPC( Adv,Story,Plot: GearPtr; desc: String ): GearPtr;
+	{ Create a new NPC. Give it whatever traits are needed. }
+var
+	NPC,Fac: GearPtr;
+	FacID,HTID: LongInt;
+begin
+	{ First, we need to determine the NPC's faction and home town. }
+	{ These will be stored as separate elements. }
+	FacID := ExtractValue( desc );
+	if FacID <> 0 then begin
+		Fac := GetFSE( FacID );
+		FacID := GetFactionID( Fac );
+	end;
+
+	HTID := ExtractValue( desc );
+	if HTID <> 0 then HTID := GetFSEID( Story , Plot , HTID );
+
+	{ We have the info. Time to create our NPC. }
+	NPC := RandomNPC( Adv , FacID , HTID );
+
+	{ Customize the character. }
+	ApplyChardesc( NPC , Desc );
+
+	{ Finally do the individualization to it. }
+	IndividualizeNPC( NPC );
+
+	{ Return the result. }
+	NewContentNPC := NPC;
+end;
+
 Function FindElement( Adventure,Plot: GearPtr; N: Integer; GB: GameBoardPtr ; MovePrefabs, Debug: Boolean ): Boolean;
 	{ Locate and store the Nth element for this plot. }
 	{ Return TRUE if a suitable element could be found, or FALSE }
@@ -931,6 +961,21 @@ begin
 				Fast_Seek_Element[ 1 , N ] := Element;
 				OK := True;
 			end else OK := False;
+
+		end else if EKind[1] = 'N' then begin
+			{ New NPC. Create and format one, then deploy it as a prefab element. }
+			Element := NewContentNPC( Adventure , Plot^.Parent , Plot , desc );
+			if Element <> Nil then begin
+				{ We now want to deploy the artifact as though it were a }
+				{ prefab element. }
+				Element^.Next := Plot^.InvCom;
+				Plot^.InvCom := Element;
+				Element^.Parent := Plot;
+				DeployNextPrefabElement( GB , Adventure , Plot , N , MovePrefabs );
+				Fast_Seek_Element[ 1 , N ] := Element;
+				OK := True;
+			end else OK := False;
+
 
 		end else if ( EKind[1] = '.' ) then begin
 			if ( GB <> Nil ) and ( GB^.Scene <> Nil ) then begin
@@ -1613,20 +1658,17 @@ begin
 	InsertRSC := MatchPlotToAdventure( Source , Frag , GB , True , True , False );;
 end;
 
-Procedure AdvancePlot( GB: GameBoardPtr; Adv,Plot: GearPtr; N: Integer );
-	{ This plot is over... but it's possible that we'll be able to }
-	{ move to a sub-plot. }
+Procedure EndPlot( GB: GameBoardPtr; Adv,Plot: GearPtr );
+	{ This plot is over... }
 var
 	T: Integer;
-	SubPlot,P2,P3,M,M2: GearPtr;
+	P2,P3,M,M2: GearPtr;
 	EName: String;
 begin
-	{ Find the sub-plot, if one exists. }
+	{ Deal with metascenes and other things that need to be cleaned up. }
 	P2 := Plot^.SubCom;
-	SubPlot := Nil;
 	while ( P2 <> Nil ) do begin
 		P3 := P2^.Next;
-		if ( P2^.G = GG_Plot ) and ( P2^.S = N ) then SubPlot := P2;
 
 		{ Deal with metascenes as well. }
 		if ( P2^.G = GG_MetaScene ) then begin
@@ -1656,20 +1698,6 @@ begin
 		end;
 
 		P2 := P3;
-	end;
-
-	if SubPlot <> Nil then begin
-		{ Copy over all relevant values, then put the sub-plot }
-		{ in its correct place. }
-		SubPlot^.V := Plot^.V;
-		for t := 1 to Num_Plot_Elements do begin
-			SetNAtt( SubPlot^.NA , NAG_ElementID , T , ElementID( Plot , T ) );
-			EName := 'ELEMENT' + BStr( T );
-			SetSAtt( SubPlot^.SA , EName + ' <' + SAttValue( Plot^.SA , EName ) + '>' );
-		end;
-		DelinkGear( Plot^.SubCom , SubPlot );
-		InsertInvCom( Adv , SubPlot );
-		InitPlot( FindRoot( Adv ) , SubPlot , GB );
 	end;
 
 	{ Finally, set the PLOT's type to absolutely nothing, so it will }

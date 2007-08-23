@@ -37,7 +37,7 @@ Const
 	GG_Theme = -19;
 	GG_Meme = -18;		{ A collection of things the PC will be told, until timeout or all messages delivered. }
 	GG_SuperProp = -17;	{ Adds a bunch of props to the map in a pattern. }
-	GG_Remnant = -16;	{ A plot remnant for xxran stories. }
+
 	GG_ContentSet = -15;	{ The collection of unique scene content in an adventure. }
 	GG_ArtifactSet = -14;	{ The collection of unique artifacts in an adventure. }
 	GG_Set = -13;		{ A collection of things at a store, purchased as one item. }
@@ -152,6 +152,8 @@ Const
 	NAS_MaxPlotLayer = 24;	{ Needed for generating Layer IDs. }
 	NAS_PlotState = 25;	{ The state of a plot. Should correspond to a layer number. }
 	NAS_PlotDifficulcy = 26;	{ Threat rating for plot, measured as Renown }
+
+	NAS_GotFreeEquipment = 27;	{ NPC has been given free equipment; don't give again. }
 
 	{ The following are used by the randmaps unit... }
 	NAS_LockedDoorChance = 101;

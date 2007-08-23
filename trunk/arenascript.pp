@@ -2563,22 +2563,17 @@ begin
 	end;
 end;
 
-Procedure ProcessAdvancePlot( var Event: String; GB: GameBoardPtr; Source: GearPtr );
+Procedure ProcessEndPlot( var Event: String; GB: GameBoardPtr; Source: GearPtr );
 	{ This particular plot is over- mark it for deletion. }
 	{ First, though, check to see if there are any subcomponents that }
 	{ need to be moved around. }
-var
-	N: Integer;
 begin
-	{ Determine which sub-plot to advance to. }
-	N := ScriptValue( event , GB , Source );
-
-	{ If we have a valid SOURCE, attempt to advance the plot. }
+	{ If we have a valid SOURCE, attempt to end the plot. }
 	if ( Source <> Nil ) then begin
 		{ It's possible that our SOURCE is a PERSONA rather than }
 		{ a PLOT, so if SOURCE isn't a PLOT move to its parent. }
 		Source := PlotMaster( GB , Source );
-		if ( Source <> Nil ) and ( Source^.G = GG_Plot ) then AdvancePlot( GB , Source^.Parent , Source , N );
+		if ( Source <> Nil ) and ( Source^.G = GG_Plot ) then EndPlot( GB , Source^.Parent , Source );
 		SetTrigger( GB , 'UPDATE' );
 	end;
 end;
@@ -3371,22 +3366,6 @@ end;
 
 Procedure ProcessNextComp( var Event: String; GB: GameBoardPtr; Source: GearPtr );
 	{ Prepare things for the next component to be loaded. }
-	Function FindMostRecentRemnant( RList: GearPtr ): GearPtr;
-		{ Look through the invcoms of STORY for a remnant gear. Return the remnant }
-		{ with the highest ComponentID. }
-	var
-		R: GearPtr;
-	begin
-		R := Nil;
-		while RList <> Nil do begin
-			if RList^.G = GG_Remnant then begin
-				if R = Nil then R := RList
-				else if NAttValue( R^.NA , NAG_XXRan , NAS_ComponentID ) < NAttValue( RList^.NA , NAG_XXRan , NAS_ComponentID ) then R := RList;
-			end;
-			RList := RList^.Next;
-		end;
-		FindMostRecentRemnant := R;
-	end;
 var
 	Story,Remnant: GearPtr;
 	Base,Changes: String;
@@ -3411,27 +3390,8 @@ begin
 		{ Set this component for possible deletion. }
 		{ First make sure we have the plot itself. }
 		Source := PlotMaster( GB , Source );
-		AdvancePlot( GB , Source^.Parent , Source , 0 );
+		EndPlot( GB , Source^.Parent , Source );
 		SetTrigger( GB , 'UPDATE' );
-
-		{ If there are any pending remnants, those might be activated now. }
-		FoundRemnant := True;
-		while AStringHasBString( SAttValue( Story^.SA , 'CONTEXT' ) , '+T--' ) and FoundRemnant do begin
-			Remnant := FindMostRecentRemnant( Story^.InvCom );
-			if Remnant <> Nil then begin
-				Base := 'RETURN';
-				TriggerGearScript( GB , Remnant , Base );
-				RemoveGear( Story^.InvCom , Remnant );
-			end else begin
-				FoundRemnant := False;
-			end;
-		end;
-
-		{ But hold on a minute there. If this component has a RETURN script, }
-		{ we'll want to save it as a remnant. }
-		if SAttValue( Source^.SA , 'RETURN' ) <> '' then begin
-			Source^.G := GG_Remnant;
-		end;
 	end;
 end;
 
@@ -4126,7 +4086,7 @@ begin
 		else if cmd = 'SCHOOL' then ProcessSchool( Event , GB , Source )
 		else if cmd = 'EXPRESSDELIVERY' then ProcessExpressDelivery( Event , GB , Source )
 		else if cmd = 'SHUTTLE' then ProcessShuttle( Event , GB , Source )
-		else if cmd = 'ADVANCEPLOT' then ProcessAdvancePlot( Event , GB , Source )
+		else if cmd = 'ENDPLOT' then ProcessEndPlot( Event , GB , Source )
 		else if cmd = 'ENDSTORY' then ProcessEndStory( GB , Source )
 		else if cmd = 'PURGESTORY' then ProcessPurgeStory( GB , Source )
 		else if cmd = 'TREPUTATION' then ProcessTReputation( Event , GB , Source )

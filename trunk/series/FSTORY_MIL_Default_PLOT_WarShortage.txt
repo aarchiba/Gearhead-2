@@ -6,8 +6,8 @@ Plot 0
 
 	start <ifNPCOK E2 else CleanUp if= V1 0 else GoCheckTime V= 1 ComTime V+ 1 15000>
 	update <ifNPCOK E2 else CleanUp if= V1 0 else GoCheckTime V= 1 ComTime V+ 1 15000>
-	GoCheckTime <ifG ComTime V1 AdvancePlot 0>
-	CleanUp <AdvancePlot 0>
+	GoCheckTime <ifG ComTime V1 EndPlot>
+	CleanUp <EndPlot>
 
 sub
 	Persona 2

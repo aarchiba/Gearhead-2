@@ -15,22 +15,14 @@ Plot
 	element1 <MetaScene !Near -7 *Building NeverFail>
 	element2 <Scene !Near -7 building public>
 	element3 <Scene !Near -7 cavclub>
-	element4 <Prefab>
+	element4 <NewNPC -3 -7 PCFriend>
 	place4 <3 pass>
-	element5 <Prefab>
+	element5 <NewNPC -3 -7 PCFriend>
 	place5 <2 Pass>
 
 	update <Print 1 ForceChat E4>
 	Msg1 <\ELEMENT 4 strikes up a conversation with you.>
 
-	inv
-		NPC Citizen
-		home <The Start Position>
-		PCFriend
-
-		NPC Citizen
-		PCFriend
-	end
 	sub
 		Persona 4
 		% THE INTRO

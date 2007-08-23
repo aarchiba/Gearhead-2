@@ -11,7 +11,6 @@ E= <GrabPlot               GSetNAtt NAG_ElementID ? ?>
 S= <GrabStory              GSetNAtt NAG_ScriptVar ? ?>
 S+ <GrabStory              GAddNAtt NAG_ScriptVar ? ?>
 N= <GrabStory              GSetNAtt NAG_ElementID ? ?>
-EndPlot <AdvancePlot 0>
 SetTeamFaction <GrabTeam ? GSetNAtt NAG_Personal NAS_FactionID ?>
 SetSelfFaction <GrabSource GSetNAtt NAG_Personal NAS_FactionID ?>
 DynaFaction <GrabDynamic GSetNAtt NAG_Personal NAS_FactionID ?>

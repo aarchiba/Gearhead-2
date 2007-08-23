@@ -15,6 +15,16 @@ G: Grab
 
 M: METASCENE
 
+N: NEW NPC
+	A new, completely random NPC will be generated. The format for a NPC request is
+	as follows:
+
+		NPC  [Faction Element] [Hometown Element] [CharDesc commands]
+
+	Note that [Faction Element] and [Hometown Element] may be 0. The faction element
+	may either point to the faction itself, or to any gear that is a member of that
+	faction.
+
 P: PREFAB
 
 S: SCENE
