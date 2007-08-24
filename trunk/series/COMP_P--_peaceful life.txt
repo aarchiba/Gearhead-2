@@ -2,11 +2,58 @@
 %%
 %%  Peaceful Life components
 
+Plot
+	name <Boring day, let's go duel!>
+	desc <Your friend is bored, and suggests that the two of you go duel.>
+	requires <#A +Tgt +P-- (+F--|+Fch|+Fad) T:FRIEND (T:ADVEN|T:MILIT|T:PDASS) ~P:PDASS ~+Gfa>
+requires <#A +Tgt +P-- ~P:PDASS ~+Gfa>
+
+	% E1 is the scene where the meeting will take place.
+	% E2 is the friend being met.
+	% E3 is a location for the duel.
+	% E4 is the duel entrance.
+	Element1 <Grab 6>
+	Element2 <Grab 5>
+	Element3 <Scene Environs !Near -7>
+
+	% SubPlot1 is the duel itself
+	SubPlot1 <*CS_Duel 2 1 3>
+
+	% P1 = Initialization Counter
+	update <if= P1 0 MoveNPC %2% %1% P= 1 1>
+	% As long as we're still at the first phase, the NPC's death will end the plot.
+	start <if= PlotStatus 0 ifNPCDead %2% LoseComp 0 .loss>
+	.loss <+T-- +F-->
+
+	sub
+		Persona 2
+		greeting <if= PlotStatus 0 else GoChat Goto GoGreet>
+		*GoChat <*MISC_CHATTER>
+		*GoGreet <*HowAreYou GoChallenge>
+		GoChallenge <NewChat Say 1 AddChat 1 AddChat 2>
+
+		result1 <NewChat Say 2 SetPlotStatus %id1%>
+		result2 <NewChat Say 3 LoseComp 0 .changes>
+		.changes <+T-- +F-->
+
+		Msg1 <It's been kind of a boring day. How would you like to try out our new mecha?>
+		Msg2 <Great. Come meet me in %name3% when you're ready.>
+		Msg3 <That's too bad, but unfortunately I don't have anything else interesting for you right now.>
+
+		Prompt1 <Alright, let's do it.>
+
+		Prompt2 <I've got better things to do.>
+
+		STC MS_CAFE
+		SetID 1
+	end
+
 
 Plot
 	name <Surprise Announcement>
 	desc <Your friend announces that he's joined Aegis Overlord.>
-	requires <#A +Ttt +P-- E:-- (+F--|+Fin|+Fad) (L:MAQUI|L:FCOMS) T:Friend ~P:Mil ~+Gpe -P:AEGIS>
+	%% Temporarily disabled
+	Zrequires <#A +Tgt +P-- E:-- (+F--|+Fin|+Fad) (L:MAQUI|L:FCOMS) T:Friend ~P:Mil ~+Gpe -P:AEGIS>
 
 	% P1 = Initialization Counter
 

@@ -1,0 +1,128 @@
+%% *CS_Duel Content
+%%
+%%
+%% The PC is about to duel somebody as part of the core story.
+%%
+%% The parent plot sets the plot status to this layer's ID when ready.
+%% This component should move the opponent from its current location to the
+%% contest location at update, and then move the opponent back to its
+%% original location at the end of the battle.
+%% This component will usually have two subplots: one for when the PC wins
+%% the battle, and another for when the PC loses.
+%%
+%% Param1: The Challenger
+%% Param2: The Challenger's home scene, for the purpose of this component
+%% Param3: The outdoor scene where the duel will take place
+
+Content
+	name <Regular Duel>
+	desc <The PC and the NPC will fight. Nothing special happens.>
+	requires <*CS_Duel>
+
+	% E1 is the challenger
+	% E2 is the challenger's home scene
+	% E3 is the outdoor scene where the duel will take place
+	% E4 is the duel encounter
+	Element4 <Prefab>
+	Place4 <%e3%>
+
+	% SubPlot1 tells what happens when the PC wins the fight
+	% SubPlot2 tells what happens when the PC loses the fight
+	SubPlot1 <*CS_WinDuelVs 1>
+	SubPlot2 <*CS_LoseDuelVs 1>
+
+	% P%id%01 = Initialization Counter
+	update <if= PlotStatus %id% else %pop% if= P%id%01 0 MoveNPC %1% %4% SetNPCTeam %1% 2 NPCLevel %1% StoryDL P= %id%01 1>
+
+	sub
+		Persona 1
+		greeting <if= PlotStatus %id% else %pop%  Goto .%id%_GoChallenge>
+		*.%id%_GoChallenge <*ArenaChallenge .%id%_GoThemeInfo>
+		*.%id%_GoThemeInfo <*THEME_EXPO&Enemy NA>
+		*.%id%_GoThemeInfo2 <*THEME_EXPO NA>
+		*.%id%_GoThemeInfo3 <*MISC_CHATTER>
+
+		MetaScene 4 2
+		% L1 = Encounter Over Counter
+		% L2 = Initialization Counter
+		% L4 = Identity of enemy NPC
+		MapWidth 30
+		MapHeight 30
+
+		special <ARENA>
+
+		Start <if= L2 0 L= 2 1   ForceChat %1%>
+		nu1 <if= T1 0  Return   MoveNPC %1% %2%  if= L1 0 L= 1 1   StoryNote 1   Print 2   SetPlotStatus %id2%>
+		nu2 <if= T2 0           MoveNPC %1% %2%  if= L1 0 L= 1 2   StoryNote 3   Print 2 AddRenown 1   XPV 100   SetPlotStatus %id1%>
+
+		.next <+T-- +F-->
+
+		Msg1 <You were defeated by %name1% in a duel; \SPR %1% is waiting for you at %name2%.>
+		Msg2 <%name1% returns to %name2%.>
+		Msg3 <You defeated %name1% in a duel; \SPR %1% is waiting for you at %name2%.>
+
+		sub
+			team 1
+			SetEnemy 2
+			ParaX 5
+			ParaY 5
+
+			team 2
+			SetEnemy 1
+			ParaX 25
+			ParaY 25
+		end
+
+	end
+	inv
+		STC ENCOUNTER-DUEL
+		name <%name1%'s Mecha>
+		update <if= PlotStatus %id% else GoHide ShowEncounter SetStat STAT_MetaVisibility 0  Goto GoSetOrders>
+	end
+
+%%
+%% *CS_WinDuelVs Content
+%%
+%%
+%% The PC has won a duel against the NPC.
+%%
+%% The parent plot sets the plot status to this layer's ID when ready.
+%%
+%% Param1: The Challenger
+%%
+
+Content
+	name <You should go see...>
+	desc <The NPC will reccomend that the PC go ask someone about a job.>
+	requires <*CS_WinDuelVs>
+	Size 5
+
+	% E1 is the NPC.
+
+	start <if= PlotStatus %id% else %pop% ifNPCDead %1% LoseComp 0 .%id%_loss>
+	.%id%_loss <+T-- +F-->
+
+	sub
+		Persona 1
+		greeting <if= PlotStatus %id% else %pop% NewChat Say %id%01 WinComp 0 .%id%_win>
+		.%id%_win <+T-- +F-->
+		Msg%id%01 <You won the duel. Good for you.>
+	end
+
+Content
+	name <You should go see...>
+	desc <The NPC will reccomend that the PC go ask someone about a job.>
+	requires <*CS_LoseDuelVs>
+	Size 5
+
+	% E1 is the NPC.
+
+	start <if= PlotStatus %id% else %pop% ifNPCDead %1% LoseComp 0 .%id%_loss>
+	.%id%_loss <+T-- +F-->
+
+	sub
+		Persona 1
+		greeting <if= PlotStatus %id% else %pop% NewChat Say %id%01 LoseComp 0 .%id%_win>
+		.%id%_win <+T-- +F-->
+		Msg%id%01 <You lost the duel. Good for you.>
+	end

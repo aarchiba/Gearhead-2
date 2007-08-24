@@ -1274,6 +1274,15 @@ end;
 Procedure InsertPFrags( Plot,Persona: GearPtr; const Context: String; ID: Integer );
 	{ Prepare the persona for use in the game. Search its string attributes and }
 	{ add any persona fragments that are requested. }
+	Function SpaceyString( msg: String ): String;
+		{ Return a version of msg with all the quotes replaced by }
+		{ spaces. }
+	var
+		T: Integer;
+	begin
+		for t := 1 to Length( msg ) do if msg[t] = '"' then msg[t] := ' ';
+		SpaceyString := msg;
+	end;
 var
 	F: GearPtr;	{ The persona fragment to insert. }
 	S,FS: SAttPtr;
@@ -1330,6 +1339,8 @@ begin
 				Inc( ID );
 
 				DisposeGear( F );
+			end else begin
+				DialogMsg( 'ERROR: No persona fragment found for ' + TypeLabel + ' ' + SpaceyString( Context ) );
 			end;
 		end;
 
@@ -1357,7 +1368,7 @@ begin
 	it := XNPCDesc( Adv , NPC );
 	{ Add the theme here. }
 	Theme := NAttValue( NPC^.NA , NAG_Personal , NAS_MechaTheme );
-	if Theme <> 0 then it := it + ' [MT' + BStr( Theme ) + ']';
+	it := it + ' [MT' + BStr( Theme ) + ']';
 	PersonalContext := it;
 end;
 
@@ -1377,7 +1388,7 @@ begin
 	while P <> Nil do begin
 		P2 := P^.Next;
 		if P^.G = GG_Persona then begin
-			InsertPFrags( Plot , P , Context + PersonalContext( Adventure , GetFSE( P^.S ) ) , MinID );
+			InsertPFrags( Plot , P , Context + PersonalContext( Adventure , SeekPlotElement( Adventure , Plot , P^.S , GB ) ) , MinID );
 		end;
 		P := P2;
 	end;
@@ -1548,7 +1559,11 @@ begin
 		for t := 1 to Num_Plot_Elements do begin
 			{ Store the name of this element, which should still be stored in }
 			{ the FSE array. }
-			SetSAtt( Plot^.SA , 'NAME_' + BStr( T ) + ' <' + GearName( Fast_Seek_Element[ 1 , t ] ) + '>' );
+			if GB <> Nil then begin
+				SetSAtt( Plot^.SA , 'NAME_' + BStr( T ) + ' <' + ElementName( FindRoot( Slot ) , Plot , T , GB ) + '>' );
+			end else begin
+				SetSAtt( Plot^.SA , 'NAME_' + BStr( T ) + ' <' + GearName( Fast_Seek_Element[ 1 , t ] ) + '>' );
+			end;
 		end;
 	end else begin
 		{ This plot won't fit in this adventure. Dispose of it. }
@@ -1703,36 +1718,6 @@ begin
 	{ Finally, set the PLOT's type to absolutely nothing, so it will }
 	{ be removed. }
 	Plot^.G := GG_AbsolutelyNothing;
-end;
-
-Procedure ComponentMenuRedraw;
-	{ The redraw for the component selector below. }
-begin
-	ClrScreen;
-	InfoBox( ZONE_Menu );
-	InfoBox( ZONE_Info );
-	InfoBox( ZONE_Caption );
-	GameMsg( 'Select the next component in the core story.', ZONE_Caption , StdWhite );
-end;
-
-Function ComponentMenu( CList: GearPtr; ShoppingList: NAttPtr ): GearPtr;
-	{ Select one of the components from a menu. }
-var
-	RPM: RPGMenuPtr;
-	C: GearPtr;
-	N: Integer;
-begin
-	RPM := CreateRPGMenu( MenuItem, MenuSelect , ZONE_Menu );
-	AttachMenuDesc( RPM , ZONE_Info );
-	while ShoppingList <> Nil do begin
-		C := RetrieveGearSib( CList , ShoppingList^.S );
-		AddRPGMenuItem( RPM , '[' + BStr( ShoppingList^.V ) + ']' + GearName( C ) , ShoppingList^.S , SAttValue( C^.SA , 'DESC' ) );
-		ShoppingList := ShoppingList^.Next;
-	end;
-
-	N := SelectMenu( RPM , @ComponentMenuRedraw );
-	DisposeRPGMenu( RPM );
-	ComponentMenu := RetrieveGearSib( CList , N );
 end;
 
 Procedure PrepareNewComponent( Story: GearPtr; GB: GameBoardPtr );

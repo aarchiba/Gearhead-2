@@ -26,15 +26,18 @@ interface
 
 uses gears,locale;
 
+Function ComponentMenu( CList: GearPtr; ShoppingList: NAttPtr ): GearPtr;
 Function InitMegaPlot( GB: GameBoardPtr; Slot,Plot: GearPtr; Threat: Integer ): GearPtr;
 
 
 implementation
 
 {$IFDEF ASCII}
-uses narration,playwright,texutil,gearutil,gearparser,ghchars,randmaps,vidgfx;
+uses narration,playwright,texutil,gearutil,gearparser,ghchars,randmaps,vidgfx,
+	ui4gh,vidmenus;
 {$ELSE}
-uses narration,playwright,texutil,gearutil,gearparser,ghchars,randmaps,glgfx;
+uses narration,playwright,texutil,gearutil,gearparser,ghchars,randmaps,glgfx,
+	ui4gh,glmenus;
 {$ENDIF}
 
 Type
@@ -50,6 +53,36 @@ Const
 
 Var
 	Sub_Plot_List: GearPtr;
+
+Procedure ComponentMenuRedraw;
+	{ The redraw for the component selector below. }
+begin
+	ClrScreen;
+	InfoBox( ZONE_Menu );
+	InfoBox( ZONE_Info );
+	InfoBox( ZONE_Caption );
+	GameMsg( 'Select the next component in the core story.', ZONE_Caption , StdWhite );
+end;
+
+Function ComponentMenu( CList: GearPtr; ShoppingList: NAttPtr ): GearPtr;
+	{ Select one of the components from a menu. }
+var
+	RPM: RPGMenuPtr;
+	C: GearPtr;
+	N: Integer;
+begin
+	RPM := CreateRPGMenu( MenuItem, MenuSelect , ZONE_Menu );
+	AttachMenuDesc( RPM , ZONE_Info );
+	while ShoppingList <> Nil do begin
+		C := RetrieveGearSib( CList , ShoppingList^.S );
+		AddRPGMenuItem( RPM , '[' + BStr( ShoppingList^.V ) + ']' + GearName( C ) , ShoppingList^.S , SAttValue( C^.SA , 'DESC' ) );
+		ShoppingList := ShoppingList^.Next;
+	end;
+
+	N := SelectMenu( RPM , @ComponentMenuRedraw );
+	DisposeRPGMenu( RPM );
+	ComponentMenu := RetrieveGearSib( CList , N );
+end;
 
 Function NewPlotID( Adv: GearPtr ): LongInt;
 	{ Calculate a new unique Plot ID. }
@@ -275,7 +308,11 @@ begin
 	NotFoundMatch := True;
 	Shard := Nil;
 	while ( ShoppingList <> Nil ) and NotFoundMatch do begin
-		Shard := CloneGear( SelectComponentFromList( Sub_Plot_List , ShoppingList ) );
+		if XXRan_Wizard and ( ShoppingList <> Nil ) and ( Slot^.G = GG_Story ) then begin
+			Shard := CloneGear( ComponentMenu( Sub_Plot_List , ShoppingList ) );
+		end else begin
+			Shard := CloneGear( SelectComponentFromList( Sub_Plot_List , ShoppingList ) );
+		end;
 		if Shard <> Nil then begin
 			{ See if we can add this one to the list. If not, it will be }
 			{ deleted by InitShard. }
@@ -464,11 +501,15 @@ Procedure CombinePlots( MasterPlot, SubPlot: GearPtr );
 	{ - Megalist personas }
 	{ - Combine MetaScenes }
 	{ - Move InvComs }
+	{ - Add victory points }
 var
 	Thing,T2: GearPtr;
 begin
 	MergeElementLists( MasterPlot , SubPlot );
 	BuildMegalist( MasterPlot , SubPlot^.SA );
+
+	{ Combine the plot points. }
+	MasterPlot^.V := MasterPlot^.V + SubPlot^.V;
 
 	{ Take a look at the things in this subplot. }
 	{ Deal with them separately, as appropriate. }

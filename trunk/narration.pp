@@ -45,7 +45,7 @@ Const
 
 	NAG_ElementID = -9;	{ Used to store ID numbers for plot/story elements. }
 
-	Num_Plot_Elements = 10;	{ Maximum number of plot elements }
+	Num_Plot_Elements = 20;	{ Maximum number of plot elements }
 
 	NAG_QuestInfo = -12;	{ These NAGs deal with set quests; see the adventure compiler }
 				{ in navigate.pp for more info. }
@@ -1006,8 +1006,8 @@ Function FindRootScene( GB: GameBoardPtr; S: GearPtr ): GearPtr;
 	{ Return the root scene of S. If no root is found, return Nil. }
 begin
 	if S = Nil then Exit( Nil );
-	if ( S^.G = GG_MetaScene ) and ( NAttValue( S^.NA , NAG_Narrative , NAS_EntranceScene ) <> 0 ) then S := FindActualScene( GB , NAttValue( S^.NA , NAG_Narrative , NAS_EntranceScene ) )
-	else if IsInvCom( S ) then S := FindActualScene( GB , S^.S );
+	if ( S^.G = GG_MetaScene ) and ( NAttValue( S^.NA , NAG_Narrative , NAS_EntranceScene ) <> 0 ) then S := FindActualScene( FindRoot( S ) , NAttValue( S^.NA , NAG_Narrative , NAS_EntranceScene ) )
+	else if IsInvCom( S ) then S := FindActualScene( FindRoot( S ) , S^.S );
 	while ( S <> Nil ) and not ( ( S^.Parent <> Nil ) and ( S^.Parent^.G <> GG_Scene ) ) do begin
 		S := S^.Parent;
 	end;

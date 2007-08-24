@@ -605,7 +605,7 @@ begin
 	end;
 end;
 
-Procedure PrepareNPCForces( Scene: GearPtr );
+Procedure PrepareNPCForces( GB: GameBoardPtr; Scene: GearPtr );
 	{ Prepare the NPC forces involved in this scene for whatever is about to happen. }
 	{ If they have mecha defined, stick them in it. }
 var
@@ -617,7 +617,7 @@ begin
 
 		if IsMasterGear( N ) and IsACombatant( N ) and ( NAttValue( N^.NA , NAG_Location , NAS_Team ) <> NAV_LancemateTeam ) and ( Scene^.V > 0 ) then begin
 
-			MEK := SelectNPCMecha( Scene , N );
+			MEK := SelectNPCMecha( GB , Scene , N );
 
 			if ( Mek <> Nil ) and ( Mek^.SCale <= Scene^.V ) and ( Mek^.G = GG_Mecha ) then begin
 				{ Customize the mecha for its pilot. }
@@ -711,7 +711,7 @@ begin
 
 	{ Get the PC Forces ready for deployment. }
 	PreparePCForces( Camp^.GB , PCForces );
-	PrepareNPCForces( Scene );
+	PrepareNPCForces( Camp^.GB , Scene );
 
 	{ Stick the metaterrain on the map, since the PC position may well be }
 	{ determined by this. }

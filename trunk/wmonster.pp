@@ -39,7 +39,7 @@ Procedure StockSceneWithMonsters( Scene: GearPtr; MPV,TeamID: Integer; MDesc: St
 Procedure AddTeamForces( GB: GameBoardPtr; TeamID: Integer; UPV: LongInt );
 Procedure StockBoardWithMonsters( GB: GameBoardPtr; MPV,TeamID: Integer; MDesc: String );
 
-Function SelectNPCMecha( Scene,NPC: GearPtr ): GearPtr;
+Function SelectNPCMecha( GB: GameBoardPtr; Scene,NPC: GearPtr ): GearPtr;
 
 implementation
 
@@ -607,7 +607,7 @@ begin
 end;
 
 
-Function SelectNPCMecha( Scene,NPC: GearPtr ): GearPtr;
+Function SelectNPCMecha( GB: GameBoardPtr; Scene,NPC: GearPtr ): GearPtr;
 	{ Select a mecha for the provided NPC. }
 	{ This mecha must match the NPC's faction, renown, and must also be legal for }
 	{ this game board. }
@@ -632,7 +632,7 @@ begin
 	Factions := 'GENERAL';
 	if Fac <> Nil then Factions := Factions + ' ' + SAttValue( Fac^.SA , 'DESIG' )
 	else begin
-		rscene := FindRootScene( Nil , Scene );
+		rscene := FindRootScene( GB , Scene );
 		if rscene <> Nil then begin
 			Fac := SeekCurrentLevelGear( Factions_List , GG_Faction , NAttValue( RScene^.NA , NAG_Personal , NAS_FactionID ) );
 			if Fac <> Nil then factions := factions + ' ' + SAttValue( Fac^.SA , 'DESIG' );

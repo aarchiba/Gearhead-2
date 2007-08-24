@@ -68,6 +68,12 @@ Procedure RandomLoot( Box: GearPtr; SRP: LongInt; const l_type,l_factions: Strin
 
 implementation
 
+{$IFDEF ASCII}
+uses vidgfx;
+{$ELSE}
+uses glgfx;
+{$ENDIF}
+
 Const
 	Recursion_Level: Integer = 0;
 
@@ -124,7 +130,8 @@ begin
 	if Faction <> Nil then SkList := SkList + ' ' + SAttValue( Faction^.SA , 'DESIG' );
 
 	Theme := FindNextComponent( Mecha_Theme_List , SkList );
-	if Theme <> Nil then SetNAtt( NPC^.NA , NAG_Personal , NAS_MechaTheme , Theme^.S );
+	if Theme <> Nil then SetNAtt( NPC^.NA , NAG_Personal , NAS_MechaTheme , Theme^.S )
+	else DialogMsg( 'ERROR: No theme found for ' + SkList );
 end;
 
 Procedure ScaleSkillsToLevel( NPC: GearPtr; Lvl: Integer );
@@ -133,7 +140,7 @@ var
 	Skill: NAttPtr;
 begin
 	{ If the NPC doesn't have a specialist skill, pick a skill and theme now. }
-	if IsACombatant( NPC ) and ( NAttValue( NPC^.NA , NAG_Personal , NAS_SpecialistSkill ) = 0 ) then begin
+	if IsACombatant( NPC ) and ( NAttValue( NPC^.NA , NAG_Personal , NAS_MechaTheme ) = 0 ) then begin
 		SelectThemeAndSpecialty( NPC );
 	end;
 
@@ -155,7 +162,7 @@ var
 	Skill: NAttPtr;
 begin
 	{ If the NPC doesn't have a specialist skill, pick a skill and theme now. }
-	if IsACombatant( NPC ) and ( NAttValue( NPC^.NA , NAG_Personal , NAS_SpecialistSkill ) = 0 ) then begin
+	if IsACombatant( NPC ) and ( NAttValue( NPC^.NA , NAG_Personal , NAS_MechaTheme ) = 0 ) then begin
 		SelectThemeAndSpecialty( NPC );
 	end;
 
@@ -336,7 +343,6 @@ begin
 	end;
 
 	{ If this is a combatant character, set the skills to match the reputation. }
-	{ Also pick a personal mecha. }
 	if IsACombatant( NPC ) then begin
 		Lvl := NAttValue( NPC^.NA , NAG_CharDescription , NAS_Renowned );
 		if Lvl = 0 then begin
