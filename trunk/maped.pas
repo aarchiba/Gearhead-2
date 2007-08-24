@@ -19,6 +19,7 @@ Program maped;
 	along with this library; if not, write to the Free Software Foundation,
 	Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA 
 }
+{$LONGSTRINGS ON}
 
 {	This is the map editor for GH2. Note that this program must be compiled
 	in ASCII mode.

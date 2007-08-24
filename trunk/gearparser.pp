@@ -22,6 +22,7 @@ unit gearparser;
 	along with this library; if not, write to the Free Software Foundation,
 	Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA 
 }
+{$LONGSTRINGS ON}
 
 interface
 
@@ -87,6 +88,10 @@ var
 	SpecSkill,T,N: Integer;
 	SkList: String;
 begin
+	if NAttValue( NPC^.NA , NAG_Personal , NAS_SpecialistSkill ) <> 0 then begin
+		DialogMsg( 'WARNING: ' + GearName( NPC ) + '/' + SAttValue( NPC^.SA , 'JOB' ) + '/' + BStr( NAttValue( NPC^.NA , NAG_Personal , NAS_FactionID ) ) + ' had spec skill ' + BStr( NAttValue( NPC^.NA , NAG_Personal , NAS_SpecialistSkill ) ) + ' set.' );
+	end;
+
 	{ Start by locating the faction. This should contain a list of preferred skill specialties. }
 	Faction := SeekCurrentLevelGear( Factions_List , GG_Faction , NAttValue( NPC^.NA , NAG_Personal , NAS_FactionID ) );
 	if Faction <> Nil then SkList := SAttValue( Faction^.SA , 'Specialist_Skills' )

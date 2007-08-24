@@ -21,6 +21,7 @@ unit glgfx;
 }
 
 {$MODE FPC}
+{$LONGSTRINGS ON}
 	{ SDL/OpenGL rendering unit. }
 
 {$IFDEF ASCII}
@@ -1307,7 +1308,7 @@ begin
 	SDL_SetClipRect( Game_Screen , Nil );
 end;
 
-Procedure DialogMSG(msg: string);
+Procedure DialogMSG( msg: string );
 	{ Print a message in the scrolling dialog box, }
 	{ then store the line in Console_History. }
 	{ Don't worry about screen output since the console will be redrawn the next time }
