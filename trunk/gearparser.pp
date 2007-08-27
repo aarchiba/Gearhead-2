@@ -1654,7 +1654,7 @@ begin
 	{ Open and load the archetypes. }
 	Assign( F , Archetypes_File );
 	Reset( F );
-	Archetypes_List := ReadGear( F , True );
+	Archetypes_List := ReadGear( F , False );
 	Close( F );
 
 	Assign( F , STC_Item_File );

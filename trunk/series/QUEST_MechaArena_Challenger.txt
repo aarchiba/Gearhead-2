@@ -1420,4 +1420,66 @@ inv
 
 end
 
+Content
+	name <Generic Challenger 5>
+	% This challenger is randomly generated
+	requires <*:MECHA_ARENA_CHALLENGE>
+
+	% E1 is the arena manager
+	% E2 is the arena proper
+	% E3 is the root scene
+	% E4 is the PDASS faction
+	% E5 is the challenger
+	Element3 <Scene Town>
+	Element4 <Faction PDASS>
+	Element5 <NewNPC 4 3>
+	Scene5 <Building Public>
+	Team5 <Citizens>
+	TeamData5 <Ally Pass>
+
+	Quest1 <*CHALLENGER_SUBQUEST 5>
+
+sub
+	Persona 1
+	Greeting <if= QuestStatus %qid% %id% else %pop%  if= ArenaState %2% NAV_AS_Win else .%id%_GoCheckLoss Goto .%id%_GoArenaWin>
+	*.%id%_GoCheckLoss <*ChallengerStatusReport %5% %2% .%id%_GoNPCDied>
+	.%id%_GoInit <ifNPCOK %5% else .%id%_GoNPCDied NewChat Say %id%01 SetQuestStatus %qid% %id%  NPCSubQMemo %5% %id% %id%02  AddChat %id%01>
+	%% Just in case the NPC who we're supposed to fight has died somehow, just set up a normal fight.
+	*.%id%_GoNPCDied <*YourChallengerDied %2% %qid%>
+	*.%id%_GoArenaWin <*ChallengeArenaWin %5% %2% .%id%_GoConclude>
+	.%id%_GoConclude <ResetArena %2% SetQuestStatus %qid% %id1%>
+	Result%id%01 <NewChat Say %id%03>
+	Msg%id%01 <Your next fight will be against %name5% . Meet \OPR %5% at \SCENE %s5% .>
+	Msg%id%02 <%name1% sent you to battle %name5% in arena combat; \SPR %5% can be found in \SCENE %s5% .>
+	Msg%id%03 <Absolutely nothing. You'd be best off talking to %name5% yourself.>
+	Prompt%id%01 <What do you know about \OPR %5% ?>
+
+	Persona 5
+	% V1 = First time chat counter
+	Greeting <if= QuestStatus %qid% %id% else GoNoMatch  if= ArenaState %2% NAV_AS_Battle else GoCheckStatus Goto GoTrashTalk>
+	*GoTrashTalk <*ArenaChallenge GoThemeInfo>
+	*GoThemeInfo <*THEME_EXPO&Enemy NA>
+	GoCheckStatus <if= ArenaState %2% NAV_AS_Ready else GoCheckWin Goto GoWaiting>
+	*GoWaiting <*WaitingForDuel %2%>
+	GoCheckWin <if= ArenaState %2% NAV_AS_Win else GoCheckChallenge ifNPCOK %1% else GoManagerDied NewChat Say 2>
+	GoManagerDied <NewChat Say 3 SetQuestStatus %qid% -1 ResetArena %2%>
+	GoCheckChallenge <ResetArena %2% ifG ComTime ArenaRecharge %2% else GoLater if= V1 1 else GoFirstTime NewChat Say 4 AddChat 1 AddChat 2>
+	*GoFirstTime <*PCChallengeNPC GoMakeChallenge GoWussOut>
+	GoMakeChallenge <NewChat Say 5 V= 1 1 AddCHat 1 AddChat 2>
+	GoWussOut <AddEasygoing d10  NewChat Say 6 V= 1 1 AddCHat 1 AddChat 2>
+	*GoLater <*ChallengeMeLater>
+	*GoNoMatch <*NiceToMeetYou GoChat>
+	*GoChat <*MISC_CHATTER>
+	GoStartCombat <SetChallengerID %2% %5% SetChallengerHome %2% %s5% MoveNPC %5% %2% PrepArena %2% 0 SetNPCTeam %5% 2>
+	*result1 <*MeetMeAtArena %2% GoStartCombat>
+	*result2 <*RejectChallenge>
+	Msg2 <You win... Go speak with %name1% about the prize money.>
+	Msg3 <Too bad about what happened to %name1%...>
+	Msg4 <It's time for our match to begin. Are you ready?>
+	Msg5 <You must be my next challenger. I'm eager to get started. Are you ready for the match?>
+	Msg6 <There's no need to be bashful. I already know that you're my next compeditor. Are you ready for the match?>
+	Prompt1 <I'm always ready.>
+	Prompt2 <Maybe I'll be ready later.>
+end
+
 

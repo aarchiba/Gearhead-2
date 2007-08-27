@@ -14,10 +14,114 @@
 %% Param2: The Challenger's home scene, for the purpose of this component
 %% Param3: The outdoor scene where the duel will take place
 
+Plot
+	name <A Duel Interrupted>
+	Size 8
+	desc <When you go to fight, you find some other mecha there.>
+	requires <*CS_Duel (+P--|+Pme) ~F:-- ~T:Ally ~T:Friend -L:Enemy ~+Gpe>
+
+	% E1 is the challenger
+	% E2 is the challenger's home scene
+	% E3 is the outdoor scene where the duel will take place
+	% E4 is the faction whose mecha are present
+	% E5 is the faction of the current city
+	% E6 is the duel scene itself
+	element4 <Faction Military !Enemy -7 !Xclude 1>
+	% The faction of the root scene must not be an enemy of the character
+	% you're dueling...
+	element5 <Faction !Comrade -7 !Okay 1>
+	Element6 <Prefab>
+	Place6 <%e3%>
+
+	% P%id%01 = Initialization Counter
+	% P%id%02 = Duel target skill level calculator
+
+	update <if=  P%id%01 0  P= %id%01 1  MoveNPC %1% %6%  SetNPCTeam %1% 3  V= %id%02 StoryDL  V+ %id%02 d5  NPCLevel %1% V%id%02>
+
+	sub
+		MetaScene 6 2
+		% L1 = Encounter Over Counter
+		% L2 = Initialization Counter
+		% L4 = Identity of enemy NPC
+		MapWidth 30
+		MapHeight 30
+
+		special <ARENA>
+
+		Start <if= L2 0 L= 2 1   ForceChat %1%   L= 4 %1%>
+		nu1 <if= T1 0  Return   if= L1 0 L= 1 1   StoryNote 1   LoseComp 0 .next>
+		nu2 <if= T2 0           if= L1 0 L= 1 2   StoryNote 1   AddRenown 1   WinComp 0 .next XPV 100   SALVAGE>
+		.next <+T-- +F-- +Pun>
+
+		end <ifNPCOK %1% MoveNPC %1% %2%>
+
+		Msg1 <Your duel with %name1% was interrupted by %name4%.>
+
+		sub
+			team 1
+			SetEnemy 2
+			ParaX 5
+			ParaY 10
+
+			team 2
+			SetEnemy 1 3
+			Deploy <SetSelfFaction %4%   WMecha 2 Threat StoryDL 200>
+			ParaX 15
+			ParaY 25
+
+			team 3
+			SetEnemy 2
+			ParaX 25
+			ParaY 10
+		end
+
+		Persona 2
+		% V%id%01 = Have spoken already
+		greeting <if= PlotStatus %id% else %pop% if= V%id%01 1 else .%id%_GoFirstTime EndChat Say %id%01>
+		.%id%_GoFirstTime <EndChat Say %id%02 AddChat %id%01 AddChat %id%02 AddChat %id%03 V= %id%01 1>
+		result%id%01 <EndChat Say %id%03 AddHeroic 1        PCFriend %1% &SetAllyFac %5% &SetEnemyFac %4% PCFEnemy %4%>
+		result%id%02 <EndChat Say %id%04 AddEasygoing -10   AddHeroic -1  PCEnemy %1%  TeamAttack 3 if= &EnemyFac 0 &SetEnemyFac %4% PCFEnemy %4%>
+		result%id%03 <EndChat Say %id%05 AddRenown -1 AddReact -d20 if= &EnemyFac 0 &SetEnemyFac %4% PCFEnemy %4%>
+		Msg%id%01 <Keep your mind on the game.>
+		Msg%id%02 <It looks like we're not alone... those mecha are from %name4%. They can't possibly be up to any good. How about we fight them together?>
+		Msg%id%02_1 <As much as I'd like to fight you, I'm afraid that we just got something bigger to worry about... Those mecha are from %name4%. Obviously they're here on some kind of covert mission. We should stop them before they do any damage.>
+		CMsg%id%02_1 <ifNPCSociable Accept>
+		Msg%id%02_2 <Look at that... a raiding party from %name4%. Let's defeat them together.>
+		CMsg%id%02_2 <ifNPCShy Accept>
+		Msg%id%02_3 <Sorry to interrupt our duel, but there's a group of mecha from %name4% right here. Most likey they're planning something destructive. Shall we defeat them together?>
+		CMsg%id%02_3 <ifNPCEasygoing Accept>
+		Msg%id%02_4 <Our fight will have to wait, there's something more important to take care of first... Look, it's a scout team from %name4%. This could be bad. If we team up we should be able to defeat them easily.>
+		CMsg%id%02_4 <ifNPCPassionate Accept>
+		Msg%id%02_5 <I was hoping our duel would be interesting, but I just found something a whole lot more fun. My sensors picked up a raiding party from %name4%. If we join forces, they won't stand a chance against us.>
+		CMsg%id%02_5 <ifNPCCheerful Accept>
+		Msg%id%02_6 <I've got some bad news... Look over there, those mecha were sent by %name4%. Is this the start of an invasion? Let's put our duel aside and defeat them before they have a chance to kill anyone.>
+		CMsg%id%02_6 <ifNPCMelancholy Accept>
+		Msg%id%03 <You're an honorable pilot, \PC . Let's do this.>
+		Msg%id%03_1 <It'll be a pleasure to fight by your side. Let's go.>
+		Msg%id%04 <Your hatred means so much that you'd side with the enemies of \NARRATIVE 7 ? Then let's see who can kill you first, %name4% or me...>
+		Msg%id%04_1 <How spiteful are you? These mecha are here to destroy \NARRATIVE 7 , and still you can't think of anything but our fued. If it's a fight you want then it's a fight you're going to get!>
+		Msg%id%05 <You're just going to run? You coward! Do the lives of your fellow citizens mean nothing to you?>
+		Msg%id%05_1 <You're going to leave me to face them all by myself!? Coward! Traitor!>
+		Prompt%id%01 <I'll help you, for \NARRATIVE 7 's sake.>
+		Prompt%id%01_1 <It's up to us to protect \NARRATIVE 7 .>
+		Prompt%id%02 <No way, you aren't getting off that easy.>
+		CPrompt%id%02 <ifNPCArchEnemy E2 Accept>
+		Prompt%id%02_1 <Forget it. I hate you more than %name4%.>
+		Prompt%id%03 <You do it yourself. I'm out of here.>
+		Prompt%id%03_1 <You can fight them, I'm getting out of here.>
+	end
+	inv
+		STC ENCOUNTER-DUEL
+		name <%name1%'s Mecha>
+		update <if= PlotStatus %id% else GoHide ShowEncounter SetStat STAT_MetaVisibility 0  Goto GoSetOrders>
+	end
+
+
 Content
 	name <Regular Duel>
 	desc <The PC and the NPC will fight. Nothing special happens.>
 	requires <*CS_Duel>
+	Size 5
 
 	% E1 is the challenger
 	% E2 is the challenger's home scene
@@ -36,11 +140,10 @@ Content
 
 	sub
 		Persona 1
-		greeting <if= PlotStatus %id% else %pop%  Goto .%id%_GoChallenge>
+		greeting <if= PlotStatus %id% else %pop%  ifChatNPCInPlay else .%id%_GoNotInPlay Goto .%id%_GoChallenge>
 		*.%id%_GoChallenge <*ArenaChallenge .%id%_GoThemeInfo>
 		*.%id%_GoThemeInfo <*THEME_EXPO&Enemy NA>
-		*.%id%_GoThemeInfo2 <*THEME_EXPO NA>
-		*.%id%_GoThemeInfo3 <*MISC_CHATTER>
+		*.%id%_GoNotInPlay <*WaitingForDuel %3%>
 
 		MetaScene 4 2
 		% L1 = Encounter Over Counter
@@ -52,14 +155,16 @@ Content
 		special <ARENA>
 
 		Start <if= L2 0 L= 2 1   ForceChat %1%>
-		nu1 <if= T1 0  Return   MoveNPC %1% %2%  if= L1 0 L= 1 1   StoryNote 1   Print 2   SetPlotStatus %id2%>
-		nu2 <if= T2 0           MoveNPC %1% %2%  if= L1 0 L= 1 2   StoryNote 3   Print 2 AddRenown 1   XPV 100   SetPlotStatus %id1%>
+		nu1 <if= T1 0  Return   MoveNPC %1% %2%  if= L1 0 L= 1 1   StoryNote 1   History 4  Print 2   SetPlotStatus %id2%>
+		nu2 <if= T2 0           MoveNPC %1% %2%  if= L1 0 L= 1 2   StoryNote 3   History 5  Print 2 AddRenown 1   XPV 100   SetPlotStatus %id1%>
 
 		.next <+T-- +F-->
 
 		Msg1 <You were defeated by %name1% in a duel; \SPR %1% is waiting for you at %name2%.>
 		Msg2 <%name1% returns to %name2%.>
 		Msg3 <You defeated %name1% in a duel; \SPR %1% is waiting for you at %name2%.>
+		Msg4 <You were defeated by %name1% in a duel.>
+		Msg5 <You defeated %name1% in a duel.>
 
 		sub
 			team 1

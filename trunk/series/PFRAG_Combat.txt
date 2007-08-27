@@ -1,5 +1,15 @@
 %%% COMBAT PERSONA FRAGMENTS
 
+% TYPE: *WaitingForDuel
+%	The NPC is waiting for the PC to come fight him.
+%    PARAM1: Duel location
+
+	Persona
+	requires <*WaitingForDuel>
+	Start <EndChat Say %id%01>
+	Msg%id%01 <I'm waiting for you in \SCENE %1% .>
+
+
 % TYPE: *HelpMeVsMecha
 %		&Reward		The PC will get a reward for helping
 %    PARAM1: The PC will help exit label	[no message]
