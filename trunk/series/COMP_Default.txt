@@ -19,3 +19,41 @@
 %	STAT_XRP_TargetItem = 8;		{ I: }
 
 
+Plot
+	name <Basic Fighting Job>
+	desc <The PC will be asked to go fight some mecha.>
+	requires <#A +Tgt +Fmi (+P--|+Pme|+Pun|+Pen) ~F:MIL ~P:MIL>
+
+	% E1 is the scene where this component will take place
+	% E2 is the NPC that the PC will speak with
+	% E3 is the outdoors location where the encounter will be placed
+
+	element1 <Grab 6>
+	element2 <Grab 5>
+	Place2 <1 (Citizens) pass>
+	element3 <Scene Environs !Near -7>
+
+	start <if= PlotStatus 0 ifNPCDead E2 LoseComp 0 .loss>
+	.loss <+T-->
+
+	%% SubPlot1 is the combat encounter itself
+	SubPlot1 <*CS_CombatEncounter 1 3>
+
+	sub
+		Persona 2
+		rumor0 <%name2% needs a cavalier for some kind of mission.>
+		greeting <if= PlotStatus 0 else GoChat ifChatNPCUnknown else GoKnownGreeting ifChatNPCAlly else GoUnknownGreeting Goto GoKnownGreeting>
+		*GoKnownGreeting <*IHaveAJobForYou GoBriefing>
+		*GoUnknownGreeting <*AreYouHereAboutJob&Mecha GoBriefing>
+		*GoBriefing <*CORE_BasicJob GoAccept GoDeny>
+		*GoAccept <*GoodLuckOnMission GoR1Exit ChatNPCFac &EnemyFac>
+		*GoChat <*MISC_CHATTER>
+		GoR1Exit <SetPlotStatus %id1%>
+		*GoDeny <*RejectMission GoR2Exit>
+		GoR2Exit <LoseComp 0 .changes2>
+		.changes2 <+T-- +F-->
+
+		STC MS_OFFICE
+		SetID 1
+	end
+
