@@ -32,7 +32,7 @@ Plot
 		%   bits are in place: the introduction, the question, the story info, and the
 		%   advice.
 		% V1 = Have given story info.
-		greeting <&SetTargetChar E5   SMemo 2  WinComp E1 .next  if= V1 1 else GoGreeting Goto GoAdvice>
+		greeting <&SetTargetChar %5%   SMemo 2  WinComp E1 .next  if= V1 1 else GoGreeting Goto GoAdvice>
 		.next <+Tgt +F-->
 		*GoGreeting <*INTRO_Introduction GoAskQuestion>
 		*GoAskQuestion <*INTRO_Question GoStoryInfo>

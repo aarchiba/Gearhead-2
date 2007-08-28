@@ -44,7 +44,7 @@ Function MechaPilotName( Mek: GearPtr ): String;
 implementation
 
 uses 	ghmodule,ghweapon,ghsensor,ghsupport,ghmovers,ghguard,ghswag,ghholder,ghchars,
-	ability,ghintrinsic;
+	ability,ghintrinsic,interact;
 
 Function BasicWeaponDesc( Weapon: GearPtr ): String;
 	{Supply a default name for this particular weapon.}
@@ -525,11 +525,18 @@ Function JobAgeGenderDesc( NPC: GearPtr ): String;
 	{ a nicely formatted string. }
 var
 	msg,job: String;
+	R: Integer;
 begin
 	msg := BStr( NAttValue( NPC^.NA , NAG_CharDescription , NAS_DAge ) + 20 );
 	msg := msg + ' year old ' + LowerCase( MsgString( 'GenderName_' + BStr( NAttValue( NPC^.NA , NAG_CharDescription , NAS_Gender ) ) ) );
 	job := SAttValue( NPC^.SA , 'JOB' );
 	if job <> '' then msg := msg + ' ' + LowerCase( job );
+	{ Check the NPC's relationship with the PC. }
+	r := NAttValue( NPC^.NA , NAG_Relationship , 0 );
+	if R > 0 then begin
+		job := MsgString( 'RELATIONSHIP_' + BStr( R ) );
+		if job <> '' then msg := msg + ', ' + job;
+	end;
 	msg := msg + '.';
 	JobAgeGenderDesc := msg;
 end;

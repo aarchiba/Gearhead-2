@@ -7,12 +7,20 @@
 %% This component should move the opponent from its current location to the
 %% contest location at update, and then move the opponent back to its
 %% original location at the end of the battle.
-%% This component will usually have two subplots: one for when the PC wins
-%% the battle, and another for when the PC loses.
 %%
 %% Param1: The Challenger
 %% Param2: The Challenger's home scene, for the purpose of this component
 %% Param3: The outdoor scene where the duel will take place
+%%
+%% NEEDED SCRIPTS: To deal with the ending, the parent plot must define two
+%% scripts:
+%% 	.%id%_%plotid%_GoWin
+%% 	.%id%_%plotid%_GoLose
+%% %id% is the ID of the duel layer; so, if it was generated as subplot 1,
+%% the calling plot would use %id1%.
+%% Please note that it is possible this component will not exit to either of
+%% the above labels, if a complete derailment of the story takes place.
+
 
 Plot
 	name <A Duel Interrupted>
@@ -49,9 +57,10 @@ Plot
 		special <ARENA>
 
 		Start <if= L2 0 L= 2 1   ForceChat %1%   L= 4 %1%>
-		nu1 <if= T1 0  Return   if= L1 0 L= 1 1   StoryNote 1   LoseComp 0 .next>
-		nu2 <if= T2 0           if= L1 0 L= 1 2   StoryNote 1   AddRenown 1   WinComp 0 .next XPV 100   SALVAGE>
-		.next <+T-- +F-- +Pun>
+		nu1 <if= T1 0  Return   if= L1 0 L= 1 1   StoryNote 1   Trigger0 .%id%_%plotid%_GoLose>
+		nu2 <if= T2 0           if= L1 0 L= 1 2   StoryNote 1   AddRenown 1  XPV 100   SALVAGE  ifTeamNotHostile 3 else GoFoughtNPC   Trigger0 .%id%_%plotid%_GoWin>
+		GoFoughtNPC <WinComp 0 .Next>
+		.next <+T-- +F-->
 
 		end <ifNPCOK %1% MoveNPC %1% %2%>
 
@@ -75,10 +84,11 @@ Plot
 			ParaY 10
 		end
 
-		Persona 2
+		Persona 1
 		% V%id%01 = Have spoken already
 		greeting <if= PlotStatus %id% else %pop% if= V%id%01 1 else .%id%_GoFirstTime EndChat Say %id%01>
-		.%id%_GoFirstTime <EndChat Say %id%02 AddChat %id%01 AddChat %id%02 AddChat %id%03 V= %id%01 1>
+		.%id%_GoFirstTime <ifChatNPCInPlay else .%id%_GoWaiting EndChat Say %id%02 AddChat %id%01 AddChat %id%02 AddChat %id%03 V= %id%01 1>
+		*.%id%_GoWaiting <*WaitingForDuel %3%>
 		result%id%01 <EndChat Say %id%03 AddHeroic 1        PCFriend %1% &SetAllyFac %5% &SetEnemyFac %4% PCFEnemy %4%>
 		result%id%02 <EndChat Say %id%04 AddEasygoing -10   AddHeroic -1  PCEnemy %1%  TeamAttack 3 if= &EnemyFac 0 &SetEnemyFac %4% PCFEnemy %4%>
 		result%id%03 <EndChat Say %id%05 AddRenown -1 AddReact -d20 if= &EnemyFac 0 &SetEnemyFac %4% PCFEnemy %4%>
@@ -130,11 +140,6 @@ Content
 	Element4 <Prefab>
 	Place4 <%e3%>
 
-	% SubPlot1 tells what happens when the PC wins the fight
-	% SubPlot2 tells what happens when the PC loses the fight
-	SubPlot1 <*CS_WinDuelVs 1>
-	SubPlot2 <*CS_LoseDuelVs 1>
-
 	% P%id%01 = Initialization Counter
 	update <if= PlotStatus %id% else %pop% if= P%id%01 0 MoveNPC %1% %4% SetNPCTeam %1% 2 NPCLevel %1% StoryDL P= %id%01 1>
 
@@ -155,8 +160,8 @@ Content
 		special <ARENA>
 
 		Start <if= L2 0 L= 2 1   ForceChat %1%>
-		nu1 <if= T1 0  Return   MoveNPC %1% %2%  if= L1 0 L= 1 1   StoryNote 1   History 4  Print 2   SetPlotStatus %id2%>
-		nu2 <if= T2 0           MoveNPC %1% %2%  if= L1 0 L= 1 2   StoryNote 3   History 5  Print 2 AddRenown 1   XPV 100   SetPlotStatus %id1%>
+		nu1 <if= T1 0  Return   MoveNPC %1% %2%  if= L1 0 L= 1 1   SMemo 1   History 4  Print 2   Trigger0 .%id%_%plotid%_GoLose>
+		nu2 <if= T2 0           MoveNPC %1% %2%  if= L1 0 L= 1 2   SMemo 3   History 5  Print 2 AddRenown 1   XPV 100   Trigger0 .%id%_%plotid%_GoWin>
 
 		.next <+T-- +F-->
 
@@ -197,28 +202,45 @@ Content
 %%
 
 Content
-	name <You should go see...>
+	name <You should go see MILIT...>
 	desc <The NPC will reccomend that the PC go ask someone about a job.>
 	requires <*CS_WinDuelVs>
-	Size 5
 
 	% E1 is the NPC.
+	% E2 is the person to see about the job
+	% E3 is a public scene for the meeting.
+	Element2 <Character "MILIT" !Near -7 !Ally -7 !Okay -3>
+	Element3 <Scene Building Public !Okay 2>
 
-	start <if= PlotStatus %id% else %pop% ifNPCDead %1% LoseComp 0 .%id%_loss>
+	start <if= PlotStatus %id% else %pop% ifNPCDead %1% WinComp 0 .%id%_loss>
 	.%id%_loss <+T-- +F-->
 
 	sub
 		Persona 1
-		greeting <if= PlotStatus %id% else %pop% NewChat Say %id%01 WinComp 0 .%id%_win>
-		.%id%_win <+T-- +F-->
-		Msg%id%01 <You won the duel. Good for you.>
+		greeting <if= PlotStatus %id% else %pop% ifNPCOK %2% else .%id%_GoE2Died NewChat Say %id%01 SMemo %id%02 &SetTargetChar %2% WinComp %3% .%id%_win>
+		.%id%_GoE2Died <NewChat Say %id%03 WinComp 0 .%id%_draw>
+		.%id%_win <+Tgt +Fmi>
+		.%id%_draw <+T-- +F-->
+		Msg%id%01 <You beat me. You should go talk with %name2% in %name3%; I hear that \SPR %2% 's looking for a good pilot.>
+		Msg%id%02 <%name1% reccomended that you go ask %name2% in %name3% for a mission.>
+		Msg%id%03 <>
 	end
 
+%%
+%% *CS_LoseDuelVs Content
+%%
+%%
+%% The PC has lost a duel against the NPC.
+%%
+%% The parent plot sets the plot status to this layer's ID when ready.
+%%
+%% Param1: The Challenger
+%%
+
 Content
-	name <You should go see...>
-	desc <The NPC will reccomend that the PC go ask someone about a job.>
+	name <Ha ha!>
+	desc <The NPC will just chide the PC, then end the plot.>
 	requires <*CS_LoseDuelVs>
-	Size 5
 
 	% E1 is the NPC.
 
@@ -227,7 +249,7 @@ Content
 
 	sub
 		Persona 1
-		greeting <if= PlotStatus %id% else %pop% NewChat Say %id%01 LoseComp 0 .%id%_win>
-		.%id%_win <+T-- +F-->
-		Msg%id%01 <You lost the duel. Good for you.>
+		greeting <if= PlotStatus %id% else %pop% NewChat Say %id%01 LoseComp 0 .%id%_changes>
+		.%id%_changes <+T-- +F-->
+		Msg%id%01 <You lost the duel. Good for me.>
 	end

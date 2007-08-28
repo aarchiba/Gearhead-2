@@ -61,7 +61,7 @@ sub
 	GoThemeInfo <EndChat Say 6>
 	GoCheckStatus <if= ArenaState %2% NAV_AS_Ready else GoCheckWin EndChat Say 1>
 	GoCheckWin <if= ArenaState %2% NAV_AS_Win else GoCheckChallenge ifNPCOK %1% else GoManagerDied NewChat Say 2>
-	GoManagerDied <NewChat Say %3% SetQuestStatus %qid% -1 ResetArena %2%>
+	GoManagerDied <NewChat Say 3 SetQuestStatus %qid% -1 ResetArena %2%>
 	GoCheckChallenge <ResetArena %2% ifG ComTime ArenaRecharge %2% else GoLater if= V1 1 else GoFirstTime NewChat Say 4 AddChat 1 AddChat 2>
 	GoFirstTime <NewChat Say 5 V= 1 1 AddChat 1 AddChat 2 AddChat 3>
 	*GoLater <*ChallengeMeLater>
@@ -143,7 +143,7 @@ sub
 	*GoThemeInfo <*THEME_EXPO&Enemy NA>
 	GoCheckStatus <if= ArenaState %2% NAV_AS_Ready else GoCheckWin EndChat Say 1>
 	GoCheckWin <if= ArenaState %2% NAV_AS_Win else GoCheckChallenge ifNPCOK %1% else GoManagerDied NewChat Say 2>
-	GoManagerDied <NewChat Say %3% SetQuestStatus %qid% -1 ResetArena %2%>
+	GoManagerDied <NewChat Say 3 SetQuestStatus %qid% -1 ResetArena %2%>
 	GoCheckChallenge <ResetArena %2% ifG ComTime ArenaRecharge %2% else GoLater NewChat if= V1 1 else GoFirstTime Say 4 AddChat 1 AddChat 2>
 	*GoLater <*ChallengeMeLater>
 	*GoNoMatch <*NiceToMeetYou GoChat>
@@ -263,7 +263,7 @@ sub
 	*GoThemeInfo <*THEME_EXPO&Enemy NA>
 	GoCheckStatus <if= ArenaState %2% NAV_AS_Ready else GoCheckWin EndChat Say 1>
 	GoCheckWin <if= ArenaState %2% NAV_AS_Win else GoCheckChallenge ifNPCOK %1% else GoManagerDied NewChat Say 2>
-	GoManagerDied <NewChat Say %3% SetQuestStatus %qid% -1 ResetArena %2%>
+	GoManagerDied <NewChat Say 3 SetQuestStatus %qid% -1 ResetArena %2%>
 	GoCheckChallenge <ResetArena %2% ifG ComTime ArenaRecharge %2% else GoLater if= V1 1 else GoFirstTime NewChat Say 4 AddChat 1 AddChat 2>
 	GoFirstTime <NewChat Say 5 V= 1 1 AddCHat 1 AddChat 2>
 	*GoLater <*ChallengeMeLater>
@@ -285,7 +285,7 @@ inv
 	name <Derrich>
 	job <Foreman>
 	job_desig <LABOR>
-	CharDesc Male Sociable Easygoing
+	CharDesc Male Sociable Easygoing Lawful
 	Age 9
 	StatLine 13 17 14 13 14 12 9 11
 	SDL_Portrait <>
@@ -337,7 +337,7 @@ sub
 	GoThemeInfo <EndChat Say 6>
 	GoCheckStatus <if= ArenaState %2% NAV_AS_Ready else GoCheckWin EndChat Say 1>
 	GoCheckWin <if= ArenaState %2% NAV_AS_Win else GoCheckChallenge ifNPCOK %1% else GoManagerDied NewChat Say 2>
-	GoManagerDied <NewChat Say %3% SetQuestStatus %qid% -1 ResetArena %2%>
+	GoManagerDied <NewChat Say 3 SetQuestStatus %qid% -1 ResetArena %2%>
 	GoCheckChallenge <ResetArena %2% ifG ComTime ArenaRecharge %2% else GoLater if= V1 1 else GoFirstTime NewChat Say 4 AddChat 1 AddChat 2>
 	GoFirstTime <NewChat Say 5 V= 1 1  AddChat 1 AddChat 2>
 	*GoLater <*ChallengeMeLater>
@@ -413,7 +413,7 @@ sub
 	GoThemeInfo <EndChat Say 7>
 	GoCheckStatus <if= ArenaState %2% NAV_AS_Ready else GoCheckWin EndChat Say 1>
 	GoCheckWin <if= ArenaState %2% NAV_AS_Win else GoCheckChallenge ifNPCOK %1% else GoManagerDied NewChat Say 2>
-	GoManagerDied <NewChat Say %3% SetQuestStatus %qid% -1 ResetArena %2%>
+	GoManagerDied <NewChat Say 3 SetQuestStatus %qid% -1 ResetArena %2%>
 	GoCheckChallenge <ResetArena %2% ifG ComTime ArenaRecharge %2% else GoLater if= V1 1 else GoFirstTime NewChat Say 4 AddChat 1 AddChat 2 AddChat 3>
 	*GoFirstTime <*PCChallengeNPC GoMakeChallenge GoWussOut>
 	GoMakeChallenge <AddSociable d6  NewChat Say 5 V= 1 1 AddCHat 1 AddChat 2 AddChat 3>
@@ -503,7 +503,7 @@ sub
 	GoThemeInfo <EndCHat Say 6>
 	GoCheckStatus <if= ArenaState %2% NAV_AS_Ready else GoCheckWin EndChat Say 1>
 	GoCheckWin <if= ArenaState %2% NAV_AS_Win else GoCheckChallenge ifNPCOK %1% else GoManagerDied NewChat Say 2>
-	GoManagerDied <NewChat Say %3% SetQuestStatus %qid% -1 ResetArena %2%>
+	GoManagerDied <NewChat Say 3 SetQuestStatus %qid% -1 ResetArena %2%>
 	GoCheckChallenge <ResetArena %2% ifG ComTime ArenaRecharge %2% else GoLater if= V1 1 else GoFirstTime NewChat Say 4 AddChat 1 AddChat 2>
 	GoFirstTime <NewChat Say 5 V= 1 1 AddCHat 1 AddChat 2>
 	*GoLater <*ChallengeMeLater>
@@ -584,7 +584,7 @@ sub
 	GoThemeInfo <EndCHat Say 6>
 	GoCheckStatus <if= ArenaState %2% NAV_AS_Ready else GoCheckWin EndChat Say 1>
 	GoCheckWin <if= ArenaState %2% NAV_AS_Win else GoCheckChallenge ifNPCOK %1% else GoManagerDied NewChat Say 2>
-	GoManagerDied <NewChat Say %3% SetQuestStatus %qid% -1 ResetArena %2%>
+	GoManagerDied <NewChat Say 3 SetQuestStatus %qid% -1 ResetArena %2%>
 	GoCheckChallenge <ResetArena %2% ifG ComTime ArenaRecharge %2% else GoLater if= V1 1 else GoFirstTime NewChat Say 4 AddChat 1 AddChat 2>
 	GoFirstTime <NewChat Say 5 V= 1 1 AddCHat 1 AddChat 2>
 	*GoLater <*ChallengeMeLater>
@@ -673,7 +673,7 @@ sub
 	GoThemeInfo <EndChat Say 8>
 	GoCheckStatus <if= ArenaState %2% NAV_AS_Ready else GoCheckWin EndChat Say 1>
 	GoCheckWin <if= ArenaState %2% NAV_AS_Win else GoCheckChallenge ifNPCOK %1% else GoManagerDied NewChat Say 2>
-	GoManagerDied <NewChat Say %3% SetQuestStatus %qid% -1 ResetArena %2%>
+	GoManagerDied <NewChat Say 3 SetQuestStatus %qid% -1 ResetArena %2%>
 	GoCheckChallenge <ResetArena %2% ifG ComTime ArenaRecharge %2% else GoLater if= V1 1 else GoFirstTime NewChat Say 4 AddChat 1 AddChat 2 AddChat 4>
 	GoFirstTime <NewChat Say 5 V= 1 1 AddCHat 3>
 	*GoLater <*ChallengeMeLater>
@@ -759,7 +759,7 @@ inv
 	SDL_Portrait <por_m_guy5(J-Y).png>
 	SDL_COLORS <130 50 20 150 112 89 49 91 161>
 	statline 14 13 16 15  12 15 10 16
-	CharDesc Male Sociable Passionate Heroic
+	CharDesc Male Sociable Passionate Heroic Criminal
 	Age 7
 	SetTheme 5
 	SetSpecSkill 2
@@ -806,7 +806,7 @@ sub
 	GoThemeInfo <EndChat Say 8>
 	GoCheckStatus <if= ArenaState %2% NAV_AS_Ready else GoCheckWin EndChat Say 1>
 	GoCheckWin <if= ArenaState %2% NAV_AS_Win else GoCheckChallenge ifNPCOK %1% else GoManagerDied NewChat Say 2>
-	GoManagerDied <NewChat Say %3% SetQuestStatus %qid% -1 ResetArena %2%>
+	GoManagerDied <NewChat Say 3 SetQuestStatus %qid% -1 ResetArena %2%>
 	GoCheckChallenge <ResetArena %2% ifG ComTime ArenaRecharge %2% else GoLater if= V1 1 else GoFirstTime NewChat Say 4 AddChat 1 AddChat 2>
 	*GoFirstTime <*PCChallengeNPC GoMakeChallenge GoWussOut>
 	GoMakeChallenge <V= 1 1 ifG PCRenown %threat% else GoTooWeak NewChat Say 5 AddCHat 1 AddChat 2>
@@ -899,7 +899,7 @@ sub
 	GoThemeInfo <EndChat Say 5>
 	GoCheckStatus <if= ArenaState %2% NAV_AS_Ready else GoCheckWin EndChat Say 1>
 	GoCheckWin <if= ArenaState %2% NAV_AS_Win else GoCheckChallenge ifNPCOK %1% else GoManagerDied NewChat Say 2>
-	GoManagerDied <NewChat Say %3% SetQuestStatus %qid% -1 ResetArena %2%>
+	GoManagerDied <NewChat Say 3 SetQuestStatus %qid% -1 ResetArena %2%>
 	GoCheckChallenge <ResetArena %2% ifG ComTime ArenaRecharge %2% else GoLater if= QuestStatus %qid2% -1 else GoCheckForfeit NewChat Say 4 AddChat 1 AddChat 2>
 	GoCheckForfeit <if= QuestStatus %qid2% -2 else GoCheckSubQuest NewChat Say 6 SetQuestStatus %qid% -2>
 	GoCheckSubQuest <if= QuestStatus %qid2% %id2% else GoBasicChallenge   NewChat Say 16 AddChat 8 AddChat 9>
@@ -1054,7 +1054,7 @@ sub
 	GoThemeInfo <EndChat Say 12>
 	GoCheckStatus <if= ArenaState %2% NAV_AS_Ready else GoCheckWin EndChat Say 1>
 	GoCheckWin <if= ArenaState %2% NAV_AS_Win else GoCheckChallenge ifNPCOK %1% else GoManagerDied NewChat Say 2>
-	GoManagerDied <NewChat Say %3% SetQuestStatus %qid% -1 ResetArena %2%>
+	GoManagerDied <NewChat Say 3 SetQuestStatus %qid% -1 ResetArena %2%>
 	GoCheckChallenge <ResetArena %2% ifG ComTime ArenaRecharge %2% else GoLater NewChat if= V1 1 else GoFirstTime Say 4 AddChat 1 AddChat 2>
 	GoFirstTime <NewChat Say 5 V= 1 1 AddChat 3 AddChat 4 AddChat 5>
 	*GoLater <*ChallengeMeLater>
@@ -1145,7 +1145,7 @@ sub
 	GoThemeInfo <EndChat Say 7>
 	GoCheckStatus <if= ArenaState %2% NAV_AS_Ready else GoCheckWin EndChat Say 1>
 	GoCheckWin <if= ArenaState %2% NAV_AS_Win else GoCheckChallenge ifNPCOK %1% else GoManagerDied NewChat Say 2>
-	GoManagerDied <NewChat Say %3% SetQuestStatus %qid% -1 ResetArena %2%>
+	GoManagerDied <NewChat Say 3 SetQuestStatus %qid% -1 ResetArena %2%>
 	GoCheckChallenge <ResetArena %2% ifG ComTime ArenaRecharge %2% else GoLater if= V1 1 else GoFirstTime NewChat Say 4 AddChat 1 AddChat 2>
 	*GoFirstTime <*PCChallengeNPC GoMakeChallenge GoWussOut>
 	GoMakeChallenge <NewChat Say 5 V= 1 1 AddCHat 1 AddChat 2>
@@ -1224,7 +1224,7 @@ sub
 	*GoThemeInfo <*THEME_EXPO&Enemy NA>
 	GoCheckStatus <if= ArenaState %2% NAV_AS_Ready else GoCheckWin EndChat Say 1>
 	GoCheckWin <if= ArenaState %2% NAV_AS_Win else GoCheckChallenge ifNPCOK %1% else GoManagerDied NewChat Say 2>
-	GoManagerDied <NewChat Say %3% SetQuestStatus %qid% -1 ResetArena %2%>
+	GoManagerDied <NewChat Say 3 SetQuestStatus %qid% -1 ResetArena %2%>
 	GoCheckChallenge <ResetArena %2% ifG ComTime ArenaRecharge %2% else GoLater NewChat Say 4 AddChat 1 AddChat 2>
 	*GoLater <*ChallengeMeLater>
 	*GoNoMatch <*NiceToMeetYou GoChat>
@@ -1280,7 +1280,7 @@ sub
 	*GoThemeInfo <*THEME_EXPO&Enemy NA>
 	GoCheckStatus <if= ArenaState %2% NAV_AS_Ready else GoCheckWin EndChat Say 1>
 	GoCheckWin <if= ArenaState %2% NAV_AS_Win else GoCheckChallenge ifNPCOK %1% else GoManagerDied NewChat Say 2>
-	GoManagerDied <NewChat Say %3% SetQuestStatus %qid% -1 ResetArena %2%>
+	GoManagerDied <NewChat Say 3 SetQuestStatus %qid% -1 ResetArena %2%>
 	GoCheckChallenge <ResetArena %2% ifG ComTime ArenaRecharge %2% else GoLater NewChat Say 4 AddChat 1 AddChat 2>
 	*GoLater <*ChallengeMeLater>
 	*GoNoMatch <*NiceToMeetYou GoChat>
@@ -1336,7 +1336,7 @@ sub
 	*GoThemeInfo <*THEME_EXPO&Enemy NA>
 	GoCheckStatus <if= ArenaState %2% NAV_AS_Ready else GoCheckWin EndChat Say 1>
 	GoCheckWin <if= ArenaState %2% NAV_AS_Win else GoCheckChallenge ifNPCOK %1% else GoManagerDied NewChat Say 2>
-	GoManagerDied <NewChat Say %3% SetQuestStatus %qid% -1 ResetArena %2%>
+	GoManagerDied <NewChat Say 3 SetQuestStatus %qid% -1 ResetArena %2%>
 	GoCheckChallenge <ResetArena %2% ifG ComTime ArenaRecharge %2% else GoLater if= V1 1 else GoFirstTime NewChat Say 4 AddChat 1 AddChat 2>
 	GoFirstTime <NewChat Say 5 V= 1 1 AddCHat 1 AddChat 2>
 	*GoLater <*ChallengeMeLater>
@@ -1395,7 +1395,7 @@ sub
 	*GoThemeInfo <*THEME_EXPO&Enemy NA>
 	GoCheckStatus <if= ArenaState %2% NAV_AS_Ready else GoCheckWin EndChat Say 1>
 	GoCheckWin <if= ArenaState %2% NAV_AS_Win else GoCheckChallenge ifNPCOK %1% else GoManagerDied NewChat Say 2>
-	GoManagerDied <NewChat Say %3% SetQuestStatus %qid% -1 ResetArena %2%>
+	GoManagerDied <NewChat Say 3 SetQuestStatus %qid% -1 ResetArena %2%>
 	GoCheckChallenge <ResetArena %2% ifG ComTime ArenaRecharge %2% else GoLater if= V1 1 else GoFirstTime NewChat Say 4 AddChat 1 AddChat 2>
 	*GoFirstTime <*PCChallengeNPC GoMakeChallenge GoWussOut>
 	GoMakeChallenge <NewChat Say 5 V= 1 1 AddCHat 1 AddChat 2>

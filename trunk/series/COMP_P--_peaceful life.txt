@@ -3,27 +3,103 @@
 %%  Peaceful Life components
 
 Plot
+	name <A Gentle Reminder>
+	desc <Your friend reminds you that you were supposed to attend a meeting.>
+	requires <#A +P-- +Tgt ~+F-- T:++ T:FRIEND P:++ -P:PDASS>
+
+	%% E1 is the scene.
+	%% E2 is the friend.
+	%% E3 is the superior to report to.
+	element1 <Grab 6>
+	element2 <Grab 5>
+	Place2 <1 (Citizens) pass>
+	element3 <Character !Comrade -3 !Near -7 Renowned>
+
+	start <ifNPCDead E2  LoseComp 0 .loss>
+	.loss <+T-->
+
+	sub
+		STC MS_CLUB
+		SetID 1
+
+		Persona 2
+		special <UNLISTED>
+		*greeting <*HowAreYou GoChat>
+		*GoChat <*Shimli_Chatter GoRemind>
+		GoRemind <NewChat Say 1 AddChat 1 AddChat 2 SMemo 2 History 10 Goto GoWin>
+		GoWin <&SetTargetChar E3  WinComp EScene 3 .next>
+		.next <+Tgt +Fmi>
+		result1 <NewChat AddEasygoing -d3   Say 3 AddChat 4>
+		result2 <NewChat AddEasygoing  d6   Say 4>
+		result3 <NewChat AddCheerful   d4   Say 5  AddChat 5 AddChat 6>
+		result4 <NewChat Say 6>
+		result5 <NewChat Say 7>
+		result6 <NewChat AddCheerful d4     Say 8 AddChat 5 AddChat 7>
+		result7 <NewChat AddCheerful d4     Say 9>
+		Msg1 <It's been nice chatting, but you better get a move on. Weren't you supposed to meet your boss \ELEMENT 3 today?>
+		Msg1_1 <Say, weren't you supposed to meet your boss \ELEMENT 3 today? I think you mentioned something about it last night.>
+		Msg1_2 <I guess you have to leave soon. You've got that big meeting with \ELEMENT 3 today...>
+		Msg2 <You have to meet \ELEMENT 3 at \SCENE EScene 3 for important business regarding \NARRATIVE 3 .>
+		Msg3 <Well, it's a good thing you came here then. Otherwise you would've forgotten altogether.>
+		Msg4 <As a member of \FACTION PCFac you're always busy. I'll talk with you again after you finish at \SCENE EScene 3 .>
+		Msg5 <Last night, when we were talking, I'm quite sure you mentioned a meeting at \SCENE EScene 3 ...>
+		Msg6 <I think you said the meeting was at \SCENE EScene 3 . I'll talk with you after work.>
+		Msg7 <Are you feeling OK, \PC ? I guess you've been stressed lately... Anyhow, I'll talk with you after work.>
+		Msg8 <It's something about your job with \FACTION PCFac ... Are you really sure you don't remember?>
+		Msg9 <Strange, you didn't seem drunk last night... Maybe you should go to \SCENE EScene 3 and talk with \ELEMENT 3 anyways, just to be sure.>
+		Msg10 <%name2% reminded you to meet %name3%.>
+		Prompt1 <That's right! I totally forgot!>
+		Prompt1_1 <Argh! I'm late!!!>
+		Prompt2 <Yeah, I know.>
+		Prompt2_1 <I'm going there now.>
+		Prompt3 <No, I don't think so...>
+		Prompt3_1 <I don't remember that...>
+		Prompt4 <Thanks for the reminder...>
+		Prompt4_1 <Thanks for reminding me.>
+		Prompt5 <Ah, now I remember...>
+		Prompt5_1 <Yes, that's right!>
+		Prompt5_2 <Oh, you mean THAT meeting...>
+		Prompt6 <Nope. Not ringing any bells.>
+		Prompt7 <I'm getting nothing.>
+
+		Persona 3
+		greeting <NewChat Say 1>
+		Msg1 <You're too early for our meeting. Come back later.>
+	end
+
+Plot
 	name <Boring day, let's go duel!>
+	Size 1
 	desc <Your friend is bored, and suggests that the two of you go duel.>
 	requires <#A +Tgt +P-- (+F--|+Fch|+Fad) T:FRIEND (T:ADVEN|T:MILIT|T:PDASS) ~P:PDASS ~+Gfa>
-requires <#A +Tgt +P-- ~P:PDASS ~+Gfa>
 
 	% E1 is the scene where the meeting will take place.
 	% E2 is the friend being met.
 	% E3 is a location for the duel.
-	% E4 is the duel entrance.
+	% E4 is a scene to use if the PC refuses the duel
+	% E5 is a character to use if the PC refuses the duel
 	Element1 <Grab 6>
 	Element2 <Grab 5>
+	Place2 <1 (Citizens) pass>
 	Element3 <Scene Environs !Near -7>
+	Element4 <Scene Building Public !Okay -7>
+	Element5 <Character "MILIT" !Near -7 !Ally -7 !Okay -3>
 
 	% SubPlot1 is the duel itself
+	% SubPlot2 is the path if the PC wins the duel
+	% SubPlot3 is the path if the PC loses the duel
 	SubPlot1 <*CS_Duel 2 1 3>
+	SubPlot2 <*CS_WinDuelVs 2>
+	SubPlot3 <*CS_LoseDuelVs 2>
 
-	% P1 = Initialization Counter
-	update <if= P1 0 MoveNPC %2% %1% P= 1 1>
 	% As long as we're still at the first phase, the NPC's death will end the plot.
-	start <if= PlotStatus 0 ifNPCDead %2% LoseComp 0 .loss>
-	.loss <+T-- +F-->
+	start <if= PlotStatus 0 ifNPCDead %2% LoseComp 0 .changes>
+	.changes <+T-- +F-->
+
+	% Branch activators
+	.%id1%_%plotid%_GoWin <if NPCOK %2% else GoE2Died SetPlotStatus %id2%>
+	.%id1%_%plotid%_GoLose <SetPlotStatus %id3%>
+	GoE2Died <WinComp 0 .changes>
 
 	sub
 		Persona 2
@@ -31,18 +107,56 @@ requires <#A +Tgt +P-- ~P:PDASS ~+Gfa>
 		*GoChat <*MISC_CHATTER>
 		*GoGreet <*HowAreYou GoChallenge>
 		GoChallenge <NewChat Say 1 AddChat 1 AddChat 2>
-
-		result1 <NewChat Say 2 SetPlotStatus %id1%>
-		result2 <NewChat Say 3 LoseComp 0 .changes>
-		.changes <+T-- +F-->
-
+		result1 <NewChat Say 2  StoryNote 4 SetPlotStatus %id1%>
+		result2 <NewChat Say 3 AddChat 3 AddChat 4 AddChat 5
+		result3 <NewChat Say 5 SMemo 7 &SetTargetChar %5% NegateComp %4% .gojob>
+		.gojob <+Tgt +Fmi>
+		result4 <NewChat Say 6 AddEasygoing d8  LoseComp 0 .donothing>
+		.donothing <+T-- +F-->
+		result5 <Goto result1>
 		Msg1 <It's been kind of a boring day. How would you like to try out our new mecha?>
+		Msg1_1 <Say, I've been meaning to ask you something. I know that you're a bit of a mecha pilot too... How would you like try out against me in a friendly practice match?>
+		CMsg1_1 <ifNPCSociable Accept>
+		Msg1_2 <I'm bored. How about we go try out our new mecha in a friendly match?>
+		CMsg1_2 <ifNPCShy Accept>
+		Msg1_3 <Absolutely nothing's going on around here. I have an idea, though... What say we go try our new mecha in a friendly match?>
+		CMsg1_3 <ifNPCEasygoing Accept>
+		Msg1_4 <I've been aching to try out my new mecha. Hey, you're a pilot... How about we go spar?>
+		CMsg1_4 <ifNPCPassionate Accept>
+		Msg1_5 <I've got a fun idea to spice up the day. How'd you like to fight a practice match against me?>
+		CMsg1_5 <ifNPCCheerful Accept>
+		Msg1_6 <Today has been so dull... I have an idea that might spice things up. How about we have an impromptu mecha fight?>
+		CMsg1_6 <ifNPCMelancholy Accept>
 		Msg2 <Great. Come meet me in %name3% when you're ready.>
-		Msg3 <That's too bad, but unfortunately I don't have anything else interesting for you right now.>
-
+		Msg2_1 <I'll give you some time to get ready. Come meet me in %name3% when you are.>
+		Msg3 <Is that so? What could be more important than a senseless mecha fight?>
+		Msg3_1 <Really? Well, I didn't know that you had plans. What do you have to do, anyways?>
+		CMsg3_1 <ifNPCSociable Accept>
+		Msg3_2 <Is that so?>
+		CMsg3_2 <ifNPCShy Accept>
+		Msg3_3 <Cool. So, what's up?>
+		CMsg3_3 <ifNPCEasygoing Accept>
+		Msg3_4 <What could possibly be more important than defending your warrior honor?>
+		CMsg3_4 <ifNPCPassionate Accept>
+		Msg3_5 <Don't tell me that you have a date. What's going on?>
+		CMsg3_5 <ifNPCCheerful Accept>
+		Msg3_6 <Are you sure you're not just wussing out? What do you have to do that's so important?>
+		CMsg3_6 <ifNPCMelancholy Accept>
+		Msg4 <Your friend %name2% challenged you to a duel in %name3%.>
+		Msg5 <Wow, that is a big deal. Good luck with that.>
+		Msg5_1 <You don't say. I guess that is more important than a duel that doesn't even have a decent wager on it...>
+		Msg6 <That's better than dueling? \PC , I'm not certain that you're cut out to be a cavalier.>
+		Msg6_1 <Whatever makes you happy, \PC . I'll find something else to do.>
+		Msg7 <You are meeting %name5% at %name4% for some kind of mission.>
 		Prompt1 <Alright, let's do it.>
-
+		Prompt1_1 <Sure, why not?>
+		Prompt1_2 <That sounds like a fun idea.>
 		Prompt2 <I've got better things to do.>
+		Prompt2_1 <Sorry, I'm really busy right now.>
+		Prompt2_2 <Maybe some other time, but not today.>
+		Prompt3 <I'll be meeting %name5% about a job.>
+		Prompt4 <I'll be doing nothing.>
+		Prompt5 <I guess I can have that duel after all.>
 
 		STC MS_CAFE
 		SetID 1
@@ -53,19 +167,23 @@ Plot
 	name <Surprise Announcement>
 	desc <Your friend announces that he's joined Aegis Overlord.>
 	%% Temporarily disabled
-	Zrequires <#A +Tgt +P-- E:-- (+F--|+Fin|+Fad) (L:MAQUI|L:FCOMS) T:Friend ~P:Mil ~+Gpe -P:AEGIS>
+	requires <#A +Tgt +P-- E:-- (+F--|+Fin|+Fad) (L:MAQUI|L:FCOMS) T:Friend ~P:Mil ~+Gpe -P:AEGIS>
 
 	% P1 = Initialization Counter
 
+	% Element1 is the scene where the meeting will take place
+	% Element2 is the NPC to meet
+	% Element3 is Aegis Overlord
 	element1 <Grab 6>
 	element2 <Grab 5>
+	Place2 <1 (Citizens) pass>
 	element3 <Faction Aegis>
 
 	start <ifNPCOK E2 else GoLose>
 	GoLose <LoseComp 0 .loss>
 	.loss <+T-->
 
-	update <if= P1 0 P= 1 1 MoveNPC E2 E1 SetNPCFaction E2 E3>
+	update <if= P1 0 P= 1 1 SetNPCFaction E2 E3>
 
 	sub
 		STC MS_CAFE
