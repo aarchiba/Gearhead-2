@@ -30,14 +30,14 @@ Plot
 
 	element1 <Grab 6>
 	element2 <Grab 5>
-	Place2 <1 (Citizens) pass>
+	Place2 <%e1% (Citizens) pass>
 	element3 <Scene Environs !Near -7>
 
 	start <if= PlotStatus 0 ifNPCDead E2 LoseComp 0 .loss>
 	.loss <+T-->
 
 	%% SubPlot1 is the combat encounter itself
-	SubPlot1 <*CS_CombatEncounter 1 3>
+	SubPlot1 <*CS_MechaEncounter 1 3>
 
 	sub
 		Persona 2

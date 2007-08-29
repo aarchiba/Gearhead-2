@@ -6,6 +6,7 @@ Plot
 	name <A Gentle Reminder>
 	desc <Your friend reminds you that you were supposed to attend a meeting.>
 	requires <#A +P-- +Tgt ~+F-- T:++ T:FRIEND P:++ -P:PDASS>
+requires <#A +P-- +Tgt ~+F-- T:++ T:FRIEND P:++>
 
 	%% E1 is the scene.
 	%% E2 is the friend.
@@ -14,6 +15,7 @@ Plot
 	element2 <Grab 5>
 	Place2 <1 (Citizens) pass>
 	element3 <Character !Comrade -3 !Near -7 Renowned>
+element3 <Character MILIT !Near -7 Renowned>
 
 	start <ifNPCDead E2  LoseComp 0 .loss>
 	.loss <+T-->
@@ -36,17 +38,17 @@ Plot
 		result5 <NewChat Say 7>
 		result6 <NewChat AddCheerful d4     Say 8 AddChat 5 AddChat 7>
 		result7 <NewChat AddCheerful d4     Say 9>
-		Msg1 <It's been nice chatting, but you better get a move on. Weren't you supposed to meet your boss \ELEMENT 3 today?>
-		Msg1_1 <Say, weren't you supposed to meet your boss \ELEMENT 3 today? I think you mentioned something about it last night.>
-		Msg1_2 <I guess you have to leave soon. You've got that big meeting with \ELEMENT 3 today...>
-		Msg2 <You have to meet \ELEMENT 3 at \SCENE EScene 3 for important business regarding \NARRATIVE 3 .>
+		Msg1 <It's been nice chatting, but you better get a move on. Weren't you supposed to meet your boss %name3% today?>
+		Msg1_1 <Say, weren't you supposed to meet your boss %name3% today? I think you mentioned something about it last night.>
+		Msg1_2 <I guess you have to leave soon. You've got that big meeting with %name3% today...>
+		Msg2 <You have to meet %name3% at \SCENE EScene %e3% for important business regarding \NARRATIVE 3 .>
 		Msg3 <Well, it's a good thing you came here then. Otherwise you would've forgotten altogether.>
-		Msg4 <As a member of \FACTION PCFac you're always busy. I'll talk with you again after you finish at \SCENE EScene 3 .>
-		Msg5 <Last night, when we were talking, I'm quite sure you mentioned a meeting at \SCENE EScene 3 ...>
-		Msg6 <I think you said the meeting was at \SCENE EScene 3 . I'll talk with you after work.>
+		Msg4 <As a member of \FACTION PCFac you're always busy. I'll talk with you again after you finish at \SCENE EScene %e3% .>
+		Msg5 <Last night, when we were talking, I'm quite sure you mentioned a meeting at \SCENE EScene %e3% ...>
+		Msg6 <I think you said the meeting was at \SCENE EScene %e3% . I'll talk with you after work.>
 		Msg7 <Are you feeling OK, \PC ? I guess you've been stressed lately... Anyhow, I'll talk with you after work.>
 		Msg8 <It's something about your job with \FACTION PCFac ... Are you really sure you don't remember?>
-		Msg9 <Strange, you didn't seem drunk last night... Maybe you should go to \SCENE EScene 3 and talk with \ELEMENT 3 anyways, just to be sure.>
+		Msg9 <Strange, you didn't seem drunk last night... Maybe you should go to \SCENE EScene %e3% and talk with %name3% anyways, just to be sure.>
 		Msg10 <%name2% reminded you to meet %name3%.>
 		Prompt1 <That's right! I totally forgot!>
 		Prompt1_1 <Argh! I'm late!!!>

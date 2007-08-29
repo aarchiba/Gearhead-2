@@ -27,7 +27,7 @@ interface
 
 uses gears,locale;
 
-Function ComponentMenu( CList: GearPtr; ShoppingList: NAttPtr ): GearPtr;
+Function ComponentMenu( CList: GearPtr; var ShoppingList: NAttPtr ): GearPtr;
 Function InitMegaPlot( GB: GameBoardPtr; Slot,Plot: GearPtr; Threat: Integer ): GearPtr;
 
 
@@ -63,24 +63,28 @@ begin
 	InfoBox( ZONE_Info );
 	InfoBox( ZONE_Caption );
 	GameMsg( 'Select the next component in the core story.', ZONE_Caption , StdWhite );
+	RedrawConsole;
 end;
 
-Function ComponentMenu( CList: GearPtr; ShoppingList: NAttPtr ): GearPtr;
+Function ComponentMenu( CList: GearPtr; var ShoppingList: NAttPtr ): GearPtr;
 	{ Select one of the components from a menu. }
 var
 	RPM: RPGMenuPtr;
 	C: GearPtr;
 	N: Integer;
+	SL: NAttPtr;
 begin
 	RPM := CreateRPGMenu( MenuItem, MenuSelect , ZONE_Menu );
 	AttachMenuDesc( RPM , ZONE_Info );
-	while ShoppingList <> Nil do begin
-		C := RetrieveGearSib( CList , ShoppingList^.S );
-		AddRPGMenuItem( RPM , '[' + BStr( ShoppingList^.V ) + ']' + GearName( C ) , ShoppingList^.S , SAttValue( C^.SA , 'DESC' ) );
-		ShoppingList := ShoppingList^.Next;
+	SL := ShoppingList;
+	while SL <> Nil do begin
+		C := RetrieveGearSib( CList , SL^.S );
+		AddRPGMenuItem( RPM , '[' + BStr( SL^.V ) + ']' + GearName( C ) , SL^.S , SAttValue( C^.SA , 'DESC' ) );
+		SL := SL^.Next;
 	end;
 
 	N := SelectMenu( RPM , @ComponentMenuRedraw );
+	SetNAtt( ShoppingList , 0 , N , 0 );
 	DisposeRPGMenu( RPM );
 	ComponentMenu := RetrieveGearSib( CList , N );
 end;

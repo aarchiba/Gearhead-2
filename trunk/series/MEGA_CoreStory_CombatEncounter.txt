@@ -1,0 +1,75 @@
+%% *CS_MechaEncounter Content
+%%
+%% The PC is about to fight some mecha as part of the core story.
+%% Because this component will likely change the course of the story,
+%% this component is responsible for loading its own conclusion.
+%%
+%% The parent plot sets the plot status to this layer's ID when ready.
+%%
+%% Param1: The Mission Provider
+%% Param2: The outdoor scene where the fight will take place
+%%
+
+Content
+	name <Meet Your New Enemy>
+	size 8
+	desc <Fight a group of mecha led by your new enemy.>
+	requires <*CS_MechaEncounter +P-- ~+Ffi E:-- F:-- -!Ne>
+requires <*CS_MechaEncounter +P-- ~+Ffi E:-- F:-->
+
+	% E1 is the mission provider
+	% E2 is the outdoors scene where the fight will take place
+	% E3 is the combat scene
+	% E4 is the enemy NPC
+	Element3 <Prefab>
+	Place3 <%e2%>
+	Element4 <NewNPC -2 -7>
+	Place4 <%e3% sd enemy>
+
+	% V%id%01 = Initialization Counter
+	update <if= PlotStatus %id% else %pop% if= V%id%01 0 V= %id%01 1   FreezeNPC %4%   MoveNPC %4% %3% SetNPCTeam %4% 2 NPCLevel %4% StoryDL>
+
+	% SubPlot1 = Win the battle, get a reward
+	% SubPlot2 = Lose the battle, get scorned
+	SubPlot1 <*CS_CAWinMission 1>
+	SubPlot2 <*CS_CALoseMission 1>
+
+	sub
+		MetaScene 3 2
+		% L1 = Encounter Over Counter
+		% L2 = Initialization Counter
+		MapWidth 30
+		MapHeight 30
+
+		Start <if= L2 0 L= 2 1   SMemo 3 History 2   ForceChat %4%   &SetEnemyChar %4% AlterContext .next>
+		nu1 <if= T1 0   Return   if= V1 0 V= 1 1   SetPlotStatus %2%>
+		nu2 <if= T2 0   if= V1 0 V= 1 1   XPV 100  AddRenown 1   SALVAGE   Alert 1 SetPlotStatus %1%>
+		Msg1 <Who sent these mecha, and what do they want?>
+		Msg2 <You fought a group of mecha led by %name4%.>
+		Msg3 <You fought a group of mecha led by %name4%. You should report back to %name1%.>
+		.next <+Pun>
+
+		sub
+			team 1
+			SetEnemy 2
+			ParaX 5
+			ParaY 5
+
+			team 2
+			SetEnemy 1
+			Deploy <SetSelfFaction E2   WMecha 2 Threat StoryDL 100>
+			ParaX 25
+			ParaY 25
+		end
+
+		Persona 4
+		special <UNLISTED>
+		*GREETING <*BattleIntroduction GoThreat>
+		*GoThreat <*THEME_EXPO&ENEMY na>
+	end
+	inv
+		STC ENCOUNTER-WANDER
+		name <%name1%'s Mission>
+		update <if= PlotStatus %id% else GoHide SetStat STAT_MetaVisibility 0  Goto GoSetOrders>
+	end
+

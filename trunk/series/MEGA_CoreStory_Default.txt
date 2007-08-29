@@ -22,7 +22,7 @@
 %% the above labels, if a complete derailment of the story takes place.
 
 
-Plot
+Content
 	name <A Duel Interrupted>
 	Size 8
 	desc <When you go to fight, you find some other mecha there.>
@@ -56,11 +56,12 @@ Plot
 
 		special <ARENA>
 
-		Start <if= L2 0 L= 2 1   ForceChat %1%   L= 4 %1%>
+		Start <if= L2 0 L= 2 1   ForceChat %1%   AlterContext .change L= 4 %1%>
 		nu1 <if= T1 0  Return   if= L1 0 L= 1 1   StoryNote 1   Trigger0 .%id%_%plotid%_GoLose>
 		nu2 <if= T2 0           if= L1 0 L= 1 2   StoryNote 1   AddRenown 1  XPV 100   SALVAGE  ifTeamNotHostile 3 else GoFoughtNPC   Trigger0 .%id%_%plotid%_GoWin>
 		GoFoughtNPC <WinComp 0 .Next>
 		.next <+T-- +F-->
+		.change <+Pun>
 
 		end <ifNPCOK %1% MoveNPC %1% %2%>
 
@@ -191,6 +192,65 @@ Content
 	end
 
 %%
+%% *CS_CAWinMission Content
+%%
+%% Catch-all win mission component.
+%% The PC has won a mission provided by the NPC.
+%%
+%% The parent plot sets the plot status to this layer's ID when ready.
+%%
+%% Param1: The Mission-giver
+%%
+
+Content
+	name <Here, have some money>
+	desc <The NPC will pay the PC for the job.>
+	requires <*CS_CAWinMission>
+
+	% E1 is the NPC.
+
+	start <if= PlotStatus %id% else %pop% ifNPCDead %1% WinComp 0 .%id%_loss>
+	.%id%_loss <+T-- +F-->
+
+	sub
+		Persona 1
+		greeting <if= PlotStatus %id% else %pop% gOTO .%id%_GoReportSuccess>
+		*.%id%_GoReportSuccess <*MissionWasSuccess .%id%_GoEnd &AllyFac &EnemyFac>
+		.%id%_GoEnd <CashPrize Reward Threat StoryDL 100 200 WinComp 0 .%id%_win>
+		.%id%_win <+T-- +F-->
+	end
+
+%%
+%% *CS_CALoseMission Content
+%%
+%% Catch-all lose mission component.
+%% The PC has lost a mission provided by the NPC.
+%%
+%% The parent plot sets the plot status to this layer's ID when ready.
+%%
+%% Param1: The Mission-giver
+%%
+
+Content
+	name <Default Loss>
+	desc <The NPC will debrief the PC on the loss.>
+	requires <*CS_CALoseMission>
+
+	% E1 is the NPC.
+
+	start <if= PlotStatus %id% else %pop% ifNPCDead %1% LoseComp 0 .%id%_loss>
+	.%id%_loss <+T-- +F-->
+
+	sub
+		Persona 1
+		greeting <if= PlotStatus %id% else %pop% gOTO .%id%_GoReportLoss>
+		*.%id%_GoReportLoss <*MissionWasFailure .%id%_GoEnd &AllyFac &EnemyFac>
+		.%id%_GoEnd <LoseComp 0 .%id%_loss>
+		.%id%_loss <+T-- +F-->
+	end
+
+
+%%
 %% *CS_WinDuelVs Content
 %%
 %%
@@ -223,7 +283,7 @@ Content
 		.%id%_draw <+T-- +F-->
 		Msg%id%01 <You beat me. You should go talk with %name2% in %name3%; I hear that \SPR %2% 's looking for a good pilot.>
 		Msg%id%02 <%name1% reccomended that you go ask %name2% in %name3% for a mission.>
-		Msg%id%03 <>
+		Msg%id%03 <You won the duel. Congratulations.>
 	end
 
 %%

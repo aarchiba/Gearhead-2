@@ -321,60 +321,6 @@ Plot
 		SetID 1
 	end
 
-Plot
-	name <Basic Fighting Job>
-	desc <The PC will be asked to go fight some mecha.>
-	requires <#A +Ttt +Fmi (+P--|+Pme|+Pun|+Pen) ~F:MIL ~P:MIL>
-
-	% E1 is the scene where this component will take place
-	% E2 is the NPC that the PC will speak with
-	% E3 is the outdoors location where the encounter will be placed
-	% E4 is the encounter sought by the PC
-
-	element1 <Grab 6>
-	element2 <Grab 5>
-	element3 <Scene Environs !Near -7>
-	element4 <Prefab>
-	place4 <3>
-
-	% P1 = Initialization Counter
-	% P2 = Initial victory count
-	% P3 = Mission Accepted Indicator
-
-	start <ifNPCOK E2 else GoLose>
-	GoLose <LoseComp 0 .loss>
-	.loss <+T-->
-
-	update <if= V1 0 V= 1 1 MoveNPC E2 E1 V= 2 CurrentPPScore>
-
-	return <if# P3 0 ifNPCOK E2 &SetTargetChar E2  ifG CurrentPPScore V2 else GoNoWin AlterContext .loadreward>
-	GoNoWin <AlterContext .loadnoreward>
-	.loadreward <+Tre +F-->
-	.loadnoreward <+T-- +F-->
-
-	sub
-		Persona 2
-		rumor <%name2% needs a cavalier for some kind of mission.>
-		greeting <ifChatNPCUnknown else GoKnownGreeting ifChatNPCAlly else GoUnknownGreeting Goto GoKnownGreeting>
-		*GoKnownGreeting <*IHaveAJobForYou GoBriefing>
-		*GoUnknownGreeting <*AreYouHereAboutJob&Mecha GoBriefing>
-		*GoBriefing <*CORE_BasicJob GoAccept GoDeny>
-		*GoAccept <*GoodLuckOnMission GoR1Exit ChatNPCFac &EnemyFac>
-		GoR1Exit <P= 3 1 WinComp E4 .changes>
-		.changes <+Tin +F-->
-		*GoDeny <*RejectMission GoR2Exit>
-		GoR2Exit <LoseComp 0 .changes2>
-		.changes2 <+T-- +F-->
-
-		STC MS_OFFICE
-		SetID 1
-	end
-	inv
-		STC ENCOUNTER-WANDER
-		name <Target Mecha>
-		EncounterMove 10
-	end
-
 
 Plot
 	name <Basic Date>
@@ -2248,54 +2194,6 @@ Plot
 		Msg2 <It's not actually much of a map. If you're ever going to locate the treasure, you're going to need some more information.>
 	end
 
-Plot
-	name <Meet Your New Enemy>
-	size 5
-	desc <Fight a group of mecha led by your new enemy.>
-	requires <#A +Tin +P-- ~+Ffi E:-- F:-->
-
-	% E1 is the encounter for this component
-	% E2 is the new enemy pilot
-	element1 <Grab 6>
-	element2 <Prefab>
-
-	update <if= V1 0 V= 1 1   FreezeNPC E2   MoveNPC E2 E1 SetNPCTeam E2 2 NPCLevel E2 StoryDL>
-
-	sub
-		MetaScene 1 2
-		% L1 = Encounter Over Counter
-		% L2 = Initialization Counter
-		MapWidth 30
-		MapHeight 30
-
-		Start <if= L2 0 L= 2 1   StoryNote 2   ForceChat E2   &SetEnemyChar E2>
-		nu1 <if= T1 0   Return   if= V1 0 V= 1 1   LoseComp 0 .next>
-		nu2 <if= T2 0   if= V1 0 V= 1 1   XPV 100  AddRenown 1   SALVAGE   Alert 1 WinComp 0 .next>
-		Msg1 <Who sent these mecha, and what do they want?>
-		Msg2 <You fought a group of mecha led by \ELEMENT 2 .>
-		.next <+T-- +Pun>
-
-		sub
-			team 1
-			SetEnemy 2
-			ParaX 5
-			ParaY 5
-
-			team 2
-			SetEnemy 1
-			Deploy <SetSelfFaction E2   WMecha 2 Threat StoryDL 100>
-			ParaX 25
-			ParaY 25
-		end
-
-		Persona 2
-		special <UNLISTED>
-		*GREETING <*BattleIntroduction GoThreat>
-		*GoThreat <*THEME_EXPO&ENEMY na>
-	end
-	inv
-		NPC Mecha Pilot
-	end
 
 Plot
 	name <Enemy Faction Attacks>
