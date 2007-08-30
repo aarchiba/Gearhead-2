@@ -1599,30 +1599,18 @@ begin
 	InsertStory := MatchPlotToAdventure( Slot , Story , GB , True, True , False );
 end;
 
-Function InsertSubPlot( Slot,SubPlot: GearPtr; GB: GameBoardPtr ): Boolean;
-	{ Stick SUBPLOT into SLOT, but better not initialize anything. }
-begin
-	{ Step One and Only - Attempt to insert this plot into the adventure. }
-	InsertSubPlot := MatchPlotToAdventure( Slot , SubPlot , GB , False , False , False );
-end;
-
-Function InsertPlot( Slot,Plot: GearPtr; GB: GameBoardPtr; Threat: Integer ): Boolean;
-	{ Stick PLOT into SLOT, selecting Actors and Locations }
-	{ as required. If everything is found, insert PLOT as an InvCom }
-	{ of SLOT. Otherwise, delete it. }
-	{ If SLOT is a story, copy over grabbed elements and so on. }
+Function DoElementGrabbing( Slot,Plot: GearPtr ): Boolean;
+	{ Attempt to grab elements from the story to insert into the plot. }
+	{ Return TRUE if the elements were grabbed successfully, or FALSE }
+	{ if they could not be grabbed for whatever reason. }
 var
-	Desc: String;
-	T,N: Integer;
-	P2: GearPtr;
 	EverythingOK: Boolean;
+	T,N: Integer;
+	Desc: String;
+	P2: GearPtr;
 begin
 	EverythingOK := True;
 
-	{ Step One - Copy element info from the parent story as required. }
-	{ If there are any characters requested by this plot, }
-	{ check to see if they are currently involved in other plots. If so, }
-	{ insertion will fail. }
 	if SLOT^.G = GG_Story then begin
 		for t := 1 to Num_Plot_Elements do begin
 			{ If an element grab is requested, process that now. }
@@ -1636,33 +1624,44 @@ begin
 				{ may result in story elements being unnessecarily deleted. }
 				SetSAtt( Plot^.SA , 'ELEMENT' + BStr( T ) + ' <' + desc[1] + '>' );
 				SetNAtt( Plot^.NA , NAG_ElementID , T , ElementID( Slot , N ) );
-			end;
 
-			{ If this gear is a character, better see whether or not }
-			{ it is already involved in a plot. }
-			if ( ElementID( Plot , T ) <> 0 ) and ( UpCase( Desc[1] ) = 'C' ) then begin
-				{ Clear the Plot's stat for now, to keep it from }
-				{ being returned by SeekPlotElement. }
-				N := ElementID( Plot , T );
-				SetNAtt( Plot^.NA , NAG_ElementID , T , 0 );
+				{ If this gear is a character, better see whether or not }
+				{ it is already involved in a plot. }
+				if ( ElementID( Plot , T ) <> 0 ) and ( UpCase( Desc[1] ) = 'C' ) then begin
+					{ Clear the Plot's stat for now, to keep it from }
+					{ being returned by SeekPlotElement. }
+					N := ElementID( Plot , T );
+					SetNAtt( Plot^.NA , NAG_ElementID , T , 0 );
 
-				P2 := FindPersonaPlot( FindRoot( Slot ) , N );
-				if P2 <> Nil then begin
-					EverythingOK := False;
+					P2 := FindPersonaPlot( FindRoot( Slot ) , N );
+					if P2 <> Nil then begin
+						EverythingOK := False;
+					end;
+
+					SetNAtt( Plot^.NA , NAG_ElementID , T , N );
 				end;
-
-				SetNAtt( Plot^.NA , NAG_ElementID , T , N );
 			end;
 		end;
 	end;	{ If Slot^.G = GG_Story }
+	DoElementGrabbing := EverythingOK;
+end;
 
-	{ Step Two - Attempt to insert this plot into the adventure. }
-	if EverythingOK then begin
-		InsertPlot := InitMegaPlot( GB , Slot , Plot , Threat ) <> Nil;
-	end else begin
-		DisposeGear( Plot );
-		InsertPlot := False;
-	end;
+Function InsertSubPlot( Slot,SubPlot: GearPtr; GB: GameBoardPtr ): Boolean;
+	{ Stick SUBPLOT into SLOT, but better not initialize anything. }
+var
+	InitOK: Boolean;
+begin
+	InitOK := DoElementGrabbing( Slot , SubPlot );
+	InsertSubPlot := InitOK and MatchPlotToAdventure( Slot , SubPlot , GB , False , False , False );
+end;
+
+Function InsertPlot( Slot,Plot: GearPtr; GB: GameBoardPtr; Threat: Integer ): Boolean;
+	{ Stick PLOT into SLOT, selecting Actors and Locations }
+	{ as required. If everything is found, insert PLOT as an InvCom }
+	{ of SLOT. Otherwise, delete it. }
+	{ If SLOT is a story, copy over grabbed elements and so on. }
+begin
+	InsertPlot := InitMegaPlot( GB , Slot , Plot , Threat ) <> Nil;
 end;
 
 Function InsertRSC( Source,Frag: GearPtr; GB: GameBoardPtr ): Boolean;

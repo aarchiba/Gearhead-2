@@ -193,6 +193,7 @@ Content
 
 %%
 %% *CS_CAWinMission Content
+%%	&RevealEF	The enemy faction has been revealed
 %%
 %% Catch-all win mission component.
 %% The PC has won a mission provided by the NPC.
@@ -215,13 +216,14 @@ Content
 	sub
 		Persona 1
 		greeting <if= PlotStatus %id% else %pop% gOTO .%id%_GoReportSuccess>
-		*.%id%_GoReportSuccess <*MissionWasSuccess .%id%_GoEnd &AllyFac &EnemyFac>
+		*.%id%_GoReportSuccess <*MissionWasSuccess&Reward .%id%_GoEnd &AllyFac &EnemyFac>
 		.%id%_GoEnd <CashPrize Reward Threat StoryDL 100 200 WinComp 0 .%id%_win>
 		.%id%_win <+T-- +F-->
 	end
 
 %%
 %% *CS_CALoseMission Content
+%%	&RevealEF	The enemy faction has been revealed
 %%
 %% Catch-all lose mission component.
 %% The PC has lost a mission provided by the NPC.

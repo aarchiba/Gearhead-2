@@ -6,7 +6,6 @@ Plot
 	name <A Gentle Reminder>
 	desc <Your friend reminds you that you were supposed to attend a meeting.>
 	requires <#A +P-- +Tgt ~+F-- T:++ T:FRIEND P:++ -P:PDASS>
-requires <#A +P-- +Tgt ~+F-- T:++ T:FRIEND P:++>
 
 	%% E1 is the scene.
 	%% E2 is the friend.
@@ -15,7 +14,6 @@ requires <#A +P-- +Tgt ~+F-- T:++ T:FRIEND P:++>
 	element2 <Grab 5>
 	Place2 <1 (Citizens) pass>
 	element3 <Character !Comrade -3 !Near -7 Renowned>
-element3 <Character MILIT !Near -7 Renowned>
 
 	start <ifNPCDead E2  LoseComp 0 .loss>
 	.loss <+T-->
@@ -28,8 +26,8 @@ element3 <Character MILIT !Near -7 Renowned>
 		special <UNLISTED>
 		*greeting <*HowAreYou GoChat>
 		*GoChat <*Shimli_Chatter GoRemind>
-		GoRemind <NewChat Say 1 AddChat 1 AddChat 2 SMemo 2 History 10 Goto GoWin>
-		GoWin <&SetTargetChar E3  WinComp EScene 3 .next>
+		GoRemind <NewChat Say 1 AddChat 1 AddChat 2 AddChat 3 AddChat 8 SMemo 2 History 10 Goto GoWin>
+		GoWin <&SetTargetChar %3%  WinComp NPCScene %3% .next>
 		.next <+Tgt +Fmi>
 		result1 <NewChat AddEasygoing -d3   Say 3 AddChat 4>
 		result2 <NewChat AddEasygoing  d6   Say 4>
@@ -38,23 +36,29 @@ element3 <Character MILIT !Near -7 Renowned>
 		result5 <NewChat Say 7>
 		result6 <NewChat AddCheerful d4     Say 8 AddChat 5 AddChat 7>
 		result7 <NewChat AddCheerful d4     Say 9>
+		result8 <NewChat Say 11 AlterContext .loss>
+		.loss <+T-- +F-->
 		Msg1 <It's been nice chatting, but you better get a move on. Weren't you supposed to meet your boss %name3% today?>
 		Msg1_1 <Say, weren't you supposed to meet your boss %name3% today? I think you mentioned something about it last night.>
 		Msg1_2 <I guess you have to leave soon. You've got that big meeting with %name3% today...>
-		Msg2 <You have to meet %name3% at \SCENE EScene %e3% for important business regarding \NARRATIVE 3 .>
+		Msg2 <You have to meet %name3% at \SCENE NPCScene %3% for important business regarding \NARRATIVE 3 .>
 		Msg3 <Well, it's a good thing you came here then. Otherwise you would've forgotten altogether.>
-		Msg4 <As a member of \FACTION PCFac you're always busy. I'll talk with you again after you finish at \SCENE EScene %e3% .>
-		Msg5 <Last night, when we were talking, I'm quite sure you mentioned a meeting at \SCENE EScene %e3% ...>
-		Msg6 <I think you said the meeting was at \SCENE EScene %e3% . I'll talk with you after work.>
+		Msg4 <As a member of \FACTION PCFac you're always busy. I'll talk with you again after you finish at \SCENE NPCScene %3% .>
+		Msg5 <Last night, when we were talking, I'm quite sure you mentioned a meeting at \SCENE NPCScene %3% ...>
+		Msg6 <I think you said the meeting was at \SCENE NPCScene %3% . I'll talk with you after work.>
 		Msg7 <Are you feeling OK, \PC ? I guess you've been stressed lately... Anyhow, I'll talk with you after work.>
 		Msg8 <It's something about your job with \FACTION PCFac ... Are you really sure you don't remember?>
-		Msg9 <Strange, you didn't seem drunk last night... Maybe you should go to \SCENE EScene %e3% and talk with %name3% anyways, just to be sure.>
+		Msg9 <Strange, you didn't seem drunk last night... Maybe you should go to \SCENE NPCScene %3% and talk with %name3% anyways, just to be sure.>
 		Msg10 <%name2% reminded you to meet %name3%.>
+		Msg11 <Oh. Well, I guess you won't be having that meeting, then...>
 		Prompt1 <That's right! I totally forgot!>
+		CPrompt1 <ifNPCOK %3% Accept>
 		Prompt1_1 <Argh! I'm late!!!>
 		Prompt2 <Yeah, I know.>
+		CPrompt2 <ifNPCOK %3% Accept>
 		Prompt2_1 <I'm going there now.>
 		Prompt3 <No, I don't think so...>
+		CPrompt3 <ifNPCOK %3% Accept>
 		Prompt3_1 <I don't remember that...>
 		Prompt4 <Thanks for the reminder...>
 		Prompt4_1 <Thanks for reminding me.>
@@ -63,6 +67,8 @@ element3 <Character MILIT !Near -7 Renowned>
 		Prompt5_2 <Oh, you mean THAT meeting...>
 		Prompt6 <Nope. Not ringing any bells.>
 		Prompt7 <I'm getting nothing.>
+		Prompt8 <Actually, %name3% is dead.>
+		CPrompt8 <ifNPCDead %3% Accept>
 
 		Persona 3
 		greeting <NewChat Say 1>

@@ -59,4 +59,15 @@ Positive element indicies refer to elements of the plot/content.
 Negative element indicies refer to the elements of the story into which the
 	plot/content is being inserted.
 
+**************************
+***   PLACE  STRINGS   ***
+**************************
+
+The elements of plots and random scene content can be positioned in the adventure by using
+place strings.
+
+PLACE(n) <[~](Destination Slot) [(team name)] [team data]>
+
+If the destination slot is preceded by a ~. the element will be placed in the same
+scene as the destination rather than in the destination itself.
 

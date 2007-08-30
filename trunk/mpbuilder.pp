@@ -605,7 +605,7 @@ Procedure MoveElements( GB: GameBoardPtr; Plot: GearPtr );
 	{ Make it so. }
 var
 	T,PlaceIndex: Integer;
-	PlaceCmd,EDesc,TeamName: String;
+	PlaceCmd,EDesc,TeamName,DebugRec: String;
 	Element,Dest,MF,Team: GearPtr;
 	InSceneNotElement: Boolean;
 	EID: LongInt;
@@ -613,6 +613,7 @@ begin
 	for t := 1 to Num_Plot_ELements do begin
 		PlaceCmd := SAttValue( Plot^.SA , 'PLACE' + BStr( T ) );
 		if PlaceCmd <> '' then begin
+			DebugRec := PlaceCmd;
 			EDesc := SAttValue( Plot^.SA , 'ELEMENT' + BStr( T ) );
 			if ( EDesc <> '' ) and ( UpCase( EDesc[1] ) = 'S' ) then begin
 				{ I can't believe you just asked me to move a scene... }
@@ -695,6 +696,10 @@ begin
 						InsertInvCom( Dest , Element );
 					end;
 				end;
+			end else begin
+				DialogMsg( 'ERROR: Destination not found for ' + GearName( Element ) + '/' + GearName( Plot )  + ' PI:' + BStr( PlaceIndex ) );
+				DialogMsg( DebugRec );
+				InsertInvCom( Plot , Element );
 			end;
 		end;
 	end;
@@ -746,10 +751,45 @@ begin
 	InitMegaPlot := SPList;
 end;
 
+Procedure InitPlaceStrings();
+	{ Initialize all the place strings of the standard subplots. }
+	{ To be comprehended, place strings need to point to the master plot }
+	{ element slot, but for human readability it's better to point them }
+	{ at the subplot element slot. This procedure converts any subplot }
+	{ element slots to master plot slot references. }
+var
+	P: GearPtr;
+	T: Integer;
+	PlaceCmd,DestSlot: String;
+	HasTilde: Boolean;
+begin
+	P :=  Sub_Plot_List;
+	while P <> Nil do begin
+		for t := 1 to Num_Plot_Elements do begin
+			PlaceCmd := SAttValue( P^.SA , 'PLACE' + BStr( T ) );
+			DeleteWhiteSpace( PlaceCmd );
+			if PlaceCmd <> '' then begin
+				if PlaceCmd[1] = '~' then begin
+					HasTilde := True;
+					DeleteFirstChar( PlaceCmd );
+				end else HasTilde := False;
+
+				if PlaceCmd[1] <> '%' then begin
+					DestSlot := ExtractWord( PlaceCmd );
+					PlaceCmd := '%e' + DestSlot + '% ' +PlaceCmd;
+				end;
+				if HasTilde then PlaceCmd := '~' + PlaceCmd;
+				SetSAtt( P^.SA , 'PLACE' + BStr( T ) + ' <' + PlaceCmd + '>' );
+			end;
+		end;
+		P := P^.Next;
+	end;
+end;
+
 initialization
 	{ Load the list of subplots from disk. }
 	Sub_Plot_List := LoadRandomSceneContent( 'MEGA_*.txt' , series_directory );
-
+	InitPlaceStrings();
 
 finalization
 	{ Dispose of the list of subplots. }
