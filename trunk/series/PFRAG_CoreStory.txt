@@ -82,7 +82,7 @@
 	requires <*CORE_Pme_MEIB_Greeting -E:Friend>
 	start <EndChat Say %id%01 AddChat %id%01>
 	result%id%01 <Goto %1%>
-	Msg%id%01 <Hello \PC . We seem to keep bumping into each other... This time, though, will most probably be our last meeting.>
+	Msg%id%01 <Hello again \PC . We seem to keep bumping into each other... This time, though, will most probably be our last meeting.>
 	Prompt%id%01 <You think you can take me? Come on.>
 
 

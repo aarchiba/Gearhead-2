@@ -37,6 +37,7 @@ Const
 var
 	Jobs_List,Family_List,Bio_List: GearPtr;
 	Goal_List,Focus_List: GearPtr;
+	Hometown_List: GearPtr;
 
 Function CharacterCreator( Fac: Integer ): GearPtr;
 Function RandomNPC( Adv: GearPtr; Fac,Hometown: Integer ): GearPtr;
@@ -157,14 +158,11 @@ Procedure SelectHomeTown( PC: GearPtr; CanEdit: Boolean; ForceFac: Integer );
 	{ If ForceFac is nonzero, the generated PC must belong to this faction or }
 	{ no faction at all. So, only allow cities where this faction is active. }
 var
-	Atlas,City,Fac: GearPtr;
+	City,Fac: GearPtr;
 	N: Integer;
 	RPM: RPGMenuPtr;
 	msg,FacDesig: String;
 begin
-	{ Begin by loading the atlas. }
-	Atlas := AggregatePattern( 'ATLAS_*.txt' , Series_Directory );
-
 	if ForceFac <> 0 then begin
 		Fac := SeekCurrentLevelGear( Factions_List , GG_Faction , ForceFac );
 		FacDesig := SAttValue( Fac^.SA , 'DESIG' );
@@ -178,14 +176,12 @@ begin
 	RCPromptMessage := '';
 	RCCaption := MsgString( 'RANDCHAR_CityPrompt' );
 
-	{ Add any cities typed as HOMETOWN to the menu. }
+	{ Add all faction-legal HOMETOWNs to the menu. }
 	N := 1;
-	City := Atlas;
+	City := Hometown_List;
 	while City <> Nil do begin
-		if ( City^.G = GG_Scene ) and AStringHasBString( SAttValue( City^.SA , 'TYPE' ) , 'HOMETOWN' ) then begin
-			if ( ForceFac = 0 ) or AStringHasBString( SAttValue( City^.SA , 'FACTIONS' ) , FacDesig ) then begin
-				AddRPGMenuItem( RPM , GearName( City ) , N , SAttValue( City^.SA , 'DESC' ) );
-			end;
+		if ( ForceFac = 0 ) or AStringHasBString( SAttValue( City^.SA , 'FACTIONS' ) , FacDesig ) then begin
+			AddRPGMenuItem( RPM , GearName( City ) , N , SAttValue( City^.SA , 'DESC' ) );
 		end;
 		Inc( N );
 		City := City^.Next;
@@ -205,13 +201,10 @@ begin
 	DisposeRPGMenu( RPM );
 
 	{ Store the data for this city. }
-	City := RetrieveGearSib( Atlas , N );
+	City := RetrieveGearSib( Hometown_List , N );
 	if City <> Nil then begin
 		StoreHomeTownDataInPC( PC , City );
 	end;
-
-	{ Dispose of the atlas. }
-	DisposeGear( Atlas );
 end;
 
 Function FilterList( Source: GearPtr; Context: String ): GearPtr;
@@ -1466,12 +1459,34 @@ begin
 	RandomNPC := NPC;
 end;
 
+Procedure TrimTheAtlas();
+	{ Remove everything from the atlas that isn't a hometown. }
+var
+	City,C2: GearPtr;
+begin
+	City := Hometown_List;
+	while City <> Nil do begin
+		C2 := City^.Next;
+		if not( ( City^.G = GG_Scene ) and AStringHasBString( SAttValue( City^.SA , 'TYPE' ) , 'HOMETOWN' ) ) then begin
+			{ This isn't a home town. Delete it. }
+			RemoveGear( Hometown_List , City );
+		end else begin
+			{ This is a home town. Delete its children. }
+			DisposeGear( City^.SubCom );
+			DisposeGear( City^.InvCom );
+		end;
+		City := C2;
+	end;
+end;
+
 initialization
 	Jobs_List := AggregatePattern( 'CG_JOBS_*.txt' , Series_Directory );
 	Family_List := AggregatePattern( 'CG_FAMILY_*.txt' , Series_Directory );
 	Bio_List := AggregatePattern( 'CG_BIO_*.txt' , Series_Directory );
 	Goal_List := AggregatePattern( 'CG_GOAL_*.txt' , Series_Directory );
 	Focus_List := AggregatePattern( 'CG_FOCUS_*.txt' , Series_Directory );
+	Hometown_List := AggregatePattern( 'ATLAS_*.txt' , Series_Directory );
+	TrimTheAtlas();
 
 finalization
 	DisposeGear( Jobs_List );
@@ -1479,5 +1494,6 @@ finalization
 	DisposeGear( Bio_List );
 	DisposeGear( Goal_List );
 	DisposeGear( Focus_List );
+	DisposeGear( Hometown_List );
 
 end.

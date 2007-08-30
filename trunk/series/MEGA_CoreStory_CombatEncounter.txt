@@ -18,7 +18,7 @@ Content
 	requires <*CS_MechaEncounter   +Pme E:++>
 
 	% V%id%01 = Initialization
-	update <if= PlotStatus %id% else %pop% if= Vid%01 0 V= id%01 1 NPCLevel %4% StoryDL>
+	update <if= PlotStatus %id% else %pop% if= V%id%01 0 V= %id%01 1 NPCLevel %4% StoryDL>
 
 	% E1: The Mission Provider
 	% E2: The outdoor scene where the fight will take place
@@ -45,9 +45,9 @@ Content
 
 		Start <if= L2 0 L= 2 1   ForceChat %4%  AlterContext .next>
 		Faint%4% <if= L1 0  Goto GoDie>
-		GoDie <L= 1 2  L= 3 1   FreezeNPC %4%   History 4    SetPlotStatus %id1%>
+		GoDie <L= 1 2  L= 3 1   FreezeNPC %4%   SMemo 5  History 4    SetPlotStatus %id1%>
 		nu1 <if= T1 0  Return   if= L1 0 L= 1 1   SMemo 5  History 2     ForceChat %4%  SetPlotStatus %id2%>
-		nu2 <if= T2 0           if= L1 0 L= 1 2   SMemo 5  History 3   AddRenown 1   XPV 100   SALVAGE     ifNPCOK L4 else GoDie ForceChat %4%  SetPlotStatus %id1%>
+		nu2 <if= T2 0           if= L1 0 L= 1 2   SMemo 5  History 3   AddRenown 1   XPV 100   SALVAGE     ifNPCOK %4% else GoDie  ForceChat %4%  SetPlotStatus %id1%>
 		End <if# L3 0 Print 1>
 
 		.next <+Pen>
@@ -185,8 +185,8 @@ Plot
 	desc <You fight your arch-enemy.>
 	requires <*CS_MechaEncounter   E:++ +Pen ~!Lo -!Ne -E:ALLY>
 
-	% Vid%01 = Initialization Counter
-	update <if= PlotStatus %id% else %pop% if= Vid%01 0 V= id%01 1   NPCLevel %4% StoryDL>
+	% V%id%01 = Initialization Counter
+	update <if= PlotStatus %id% else %pop% if= V%id%01 0 V= %id%01 1   NPCLevel %4% StoryDL>
 
 	% E1: The Mission Provider
 	% E2: The outdoor scene where the fight will take place
