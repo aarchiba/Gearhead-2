@@ -594,14 +594,6 @@ Persona
 	Prompt%id%02_1 <Don't challenge me unless you want to die.>
 	Prompt%id%02_2 <It will be my pleasure to end your life.>
 
-	Persona
-	requires <*BattleChallenge +Pen>
-	Start <EndChat Say %id%01 AddChat %id%01 AddChat %id%02>
-	result%id%01 <AddCheerful  d8     Goto %1%>
-	result%id%02 <AddCheerful -d8     Goto %1%>
-	Msg%id%01 <You should not have come here. If you interfere in our plans, you will be killed.>
-	Prompt%id%01 <Well, it's too late to do anything about that.>
-	Prompt%id%02 <It's you who are going to die.>
 
 
 % TYPE: *YouLose

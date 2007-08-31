@@ -213,7 +213,7 @@ Content
 		nu2 <if= T2 0           if= L1 0 L= 1 2   SMemo 5  History 3   AddRenown 1   XPV 100   SALVAGE     ifNPCOK %4% else GoDie  ForceChat %4%  SetPlotStatus %id1%>
 		End <if# L3 0 Print 1>
 
-		.next <+Pen>
+		.next <+Pun>
 
 		Msg1 <%name4%'s cockpit is empty. Could \SPR %4% have escaped?>
 		Msg2 <You met %name4% in battle, and lost.>
@@ -255,7 +255,7 @@ Content
 	name <Fight Henchmen>
 	size 5
 	desc <You fight the henchmen of your arch-enemy.>
-	requires <*CS_MechaEncounter  E:++ +Pen !Ne -E:ALLY>
+	requires <*CS_MechaEncounter  E:++ +Pun !Ne -E:ALLY>
 
 	% E1: The Mission Provider
 	% E2: The outdoor scene where the fight will take place
@@ -346,7 +346,7 @@ Plot
 	name <Fight Arch-Enemy>
 	size 8
 	desc <You fight your arch-enemy.>
-	requires <*CS_MechaEncounter   E:++ +Pen ~!Lo -!Ne -E:ALLY>
+	requires <*CS_MechaEncounter   E:++ +Pun ~!Lo -!Ne -E:ALLY>
 
 	% V%id%01 = Initialization Counter
 	update <if= PlotStatus %id% else %pop% if= V%id%01 0 V= %id%01 1   NPCLevel %4% StoryDL>
@@ -466,57 +466,6 @@ Content
 	end
 
 
-Content
-	name <Enemy Confirmed>
-	size 5
-	desc <Fight a group of mecha; the identity of the attacker can no longer be in doubt.>
-	requires <*CS_MechaEncounter (+P--|+Pme|+Pun) F:++>
-
-	% E1: The Mission Provider
-	% E2: The outdoor scene where the fight will take place
-	% E3 is the combat scene
-	Element3 <Prefab>
-	Place3 <2>
-
-	% SubPlot1 = Win the battle, get a reward
-	% SubPlot2 = Lose the battle, get scorned
-	SubPlot1 <*CS_CAWinMission&RevealEF 1>
-	SubPlot2 <*CS_CALoseMission&RevealEF 1>
-
-	sub
-		MetaScene 3 2
-		% L1 = Encounter Over Counter
-		% L2 = Initialization Counter
-		MapWidth 30
-		MapHeight 30
-
-		Start <if= L2 0 L= 2 1 SMemo 3 History 2 AlterContext .next>
-		nu1 <if= T1 0   Return   if= V1 0 V= 1 1   SetPlotStatus %id2%>
-		nu2 <if= T2 0   if= V1 0 V= 1 1   XPV 100  AddRenown 1   SALVAGE   Alert 1 SetPlotStatus %id1%>
-		Msg1 <There can be no doubt: these mecha were sent by \FACTION &EnemyFac .>
-		Msg2 <You fought a group of mecha from \FACTION &EnemyFac .>
-		Msg3 <You fought a group of mecha from \FACTION &EnemyFac . You should report back to %name1%.>
-		.next <+Pen>
-
-		sub
-			team 1
-			SetEnemy 2
-			ParaX 5
-			ParaY 5
-
-			team 2
-			SetEnemy 1
-			Deploy <SetSelfFaction &EnemyFac   WMecha 2 Threat StoryDL 100>
-			ParaX 25
-			ParaY 25
-		end
-	end
-	inv
-		STC ENCOUNTER-WANDER
-		name <%name1%'s Mission>
-		update <if= PlotStatus %id% else GoHide SetStat STAT_MetaVisibility 0  Goto GoSetOrders>
-	end
-
 
 Content
 	name <Enemy Faction Attacks>
@@ -544,12 +493,12 @@ Content
 		MapWidth 30
 		MapHeight 30
 
-		Start <if= L2 0 L= 2 1 StoryNote 2 &SetEnemyFac %3% PCFEnemy %3% AlterContext .next>
+		Start <if= L2 0 L= 2 1 SMemo 3 History 2 &SetEnemyFac %3% PCFEnemy %3%>
 		nu1 <if= T1 0   Return   if= V1 0 V= 1 1   SetPlotStatus %id2%>
 		nu2 <if= T2 0   if= V1 0 V= 1 1   XPV 100  AddRenown 1   SALVAGE   Alert 1 SetPlotStatus %id1%>
-		Msg1 <There can be no doubt: these mecha were sent by %name3%.>
+		Msg1 <There can be no doubt: these mecha were sent by \FACTION &EnemyFac .>
 		Msg2 <You fought a group of mecha from %name3%.>
-		.next <+Pen>
+		Msg3 <You fought a group of mecha from %name3%. You should report back to %name1%.>
 
 		sub
 			team 1

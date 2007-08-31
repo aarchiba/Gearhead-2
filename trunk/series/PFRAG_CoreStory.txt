@@ -195,7 +195,7 @@
 	prompt%id%04_1 <Alright. I'll guard your dumb building.>
 
 	Persona
-	requires <*CORE_GuardJob (T:COR|T:CORPO) F:CRM (+P--|+Pme|+Pun|+Pen) Common>
+	requires <*CORE_GuardJob (T:COR|T:CORPO) F:CRM (+P--|+Pme|+Pun) Common>
 	% v%id%01 = Trait bonus counter
 	START <NewChat Say %id%01 AddChat %id%01 AddChat %id%02>
 	result%id%01 <StoryNote %id%02 Goto %1%>
