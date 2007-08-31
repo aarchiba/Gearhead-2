@@ -188,7 +188,10 @@ begin
 	end;
 	RPMSortAlpha( RPM );
 
-	if CanEdit then begin
+	if RPM^.NumItem < 1 then begin
+		{ We've got ourselves an empty menu. Just pick a hometown randomly. }
+		N := Random( NumSiblingGears( Hometown_List ) ) + 1;
+	end else if CanEdit then begin
 		{ Can edit - allow the PC to select a home town. }
 		N := SelectMenu( RPM , @RandCharRedraw );
 		if N = -1 then begin

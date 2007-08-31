@@ -34,12 +34,6 @@ Criteria
 
 ArchAlly,ArchEnemy: Character, Faction
 
-Special Criteria
-
-  If the plot has a SPECIAL string attribute defined, the element search
-  will be directed in certain ways.
-
-  LOCAL: Only characters and scenes in the current world will be considered.
 
 
 Relative Search Criteria
@@ -63,11 +57,14 @@ Negative element indicies refer to the elements of the story into which the
 ***   PLACE  STRINGS   ***
 **************************
 
-The elements of plots and random scene content can be positioned in the adventure by using
-place strings.
+The elements of plots, subplots, and random scene content can be
+positioned in the adventure by using place strings.
 
 PLACE(n) <[~](Destination Slot) [(team name)] [team data]>
 
 If the destination slot is preceded by a ~. the element will be placed in the same
 scene as the destination rather than in the destination itself.
+
+A subplot can assign a place string to an element it inherits.
+
 

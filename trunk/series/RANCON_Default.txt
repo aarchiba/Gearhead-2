@@ -291,6 +291,32 @@ Content
 	Content <Required *NPC_GUARD - Local>
 
 Content
+	requires <*URBAN_X Static>
+	element1 <.>
+	element2 <Scene Town !Near 1>
+	element3 <NewNPC 1 2>
+	team3 <citizens>
+	teamdata3 <pass>
+	sub
+		Persona 3
+		*greeting <*NiceToMeetYou GoMiscTalk>
+		*GoMiscTalk <*MISC_CHATTER>
+	end
+
+Content
+	requires <*URBAN_X Public Static>
+	element1 <.>
+	element2 <Scene Town !Near 1>
+	element3 <NewNPC 0 2>
+	team3 <citizens>
+	teamdata3 <pass>
+	sub
+		Persona 3
+		*greeting <*NiceToMeetYou GoMiscTalk>
+		*GoMiscTalk <*MISC_CHATTER>
+	end
+
+Content
 	requires <*URBAN_X Public Resort>
 	element1 <Prefab>
 	team1 <citizens>
