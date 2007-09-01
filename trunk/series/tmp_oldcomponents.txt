@@ -142,34 +142,6 @@ Plot
 
 	Msg1 <\ELEMENT 1 @ \ELEMENT 2 :// Meet me at \ELEMENT 2 for your reward.>
 
-Plot
-	name <Catchall Reward>
-	desc <This is a catch-all reward that will just give the PC money and send him on his way.>
-	requires <(#A|#L) +Tre S:++ (+F--|+Fmo)>
-
-	% E1 is the scene where this component will take place
-	% E2 is the NPC that the PC will speak with
-	element1 <Grab 6>
-	element2 <Grab 5>
-
-	% P1 = Initialization Counter
-
-	start <ifNPCOK E2 else GoLose>
-	GoLose <LoseComp 0 .loss>
-	.loss <+T-->
-
-	update <if= V1 0 V= 1 1 MoveNPC E2 E1 &SetTargetChar 0>
-
-	sub
-		Persona 2
-		rumor <%name2% has a reward for you.>
-		*greeting <*MissionWasSuccess&Reward GoExit &AllyFac &EnemyFac>
-		GoExit <CashPrize Reward Threat StoryDL 150 100 WinComp 0 .next>
-		.next <+T-- +F-->
-
-		STC MS_OFFICE
-		SetID 1
-	end
 
 Plot
 	name <Reward then Guard>

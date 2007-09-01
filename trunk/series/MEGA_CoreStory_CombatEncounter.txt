@@ -41,7 +41,7 @@ Plot
 		MapWidth 30
 		MapHeight 30
 
-		Start <if= L2 0 L= 2 1   ForceChat %4%   &SetEnemyChar %4%>
+		Start <if= L2 0 L= 2 1   ForceChat %4%   &SetEnemyChar %4%  PCFEnemy &EnemyFac>
 		Faint%4% <if= L1 0  Goto GoDie>
 		GoDie <L= 1 2  L= 3 1   FreezeNPC %4%   StoryNote 4     SetPlotStatus %id1%>
 		nu1 <if= T1 0  Return   if= L1 0 L= 1 1   StoryNote 2      ForceChat %4%  SetPlotStatus %id2%>
@@ -67,9 +67,9 @@ Plot
 			ParaY 25
 		end
 
-		Persona 2
+		Persona 4
 		special <UNLISTED>
-		greeting <PCFEnemy &EnemyFac   if= L1 2 else GoCheckLoss Goto GoWinSpeech>
+		greeting <if= L1 2 else GoCheckLoss Goto GoWinSpeech>
 		*GoWinSpeech <*GetYouNextTime>
 		GoCheckLoss <if= L1 1 else GoThreat  Goto GoLoseSpeech>
 		*GoLoseSpeech <*YouLose>
