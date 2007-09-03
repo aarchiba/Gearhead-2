@@ -245,3 +245,5 @@ PrepArena <GrabScene ? GSetNAtt NAG_ArenaData NAS_ArenaState NAV_AS_Ready GSetNA
 SetChallengerID <GrabScene ? GSetNAtt NAG_ArenaData NAS_ChallengerID ?>
 SetChallengerHome <GrabScene ? GSetNAtt NAG_ArenaData NAS_ChallengerHome ?>
 Jump <Exit ? GrabScene ! GSetNAtt NAG_Narrative NAS_ReturnTo SceneID>
+SetSelfX <GrabSource GSetNAtt NAG_Location NAS_X ?>
+SetSelfY <GrabSource GSetNAtt NAG_Location NAS_Y ?>

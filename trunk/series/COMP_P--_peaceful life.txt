@@ -3,6 +3,170 @@
 %%  Peaceful Life components
 
 Plot
+	name <Surprise Attack>
+	size 1
+	desc <The meeting place is attacked by mecha!>
+	requires <#A +Tgt (+P--|+Pme) T:++ S:meta>
+
+	% P1 = Initialization Counter
+
+	% E1 is the scene where this will take place
+	% E2 is the NPC the PC wants to talk to
+	% E3 is the scene outside the meeting area
+	element1 <Grab 6>
+	element2 <Grab 5>
+	Place2 <1 (Citizens) pass ally>
+	element3 <Scene Urban !Near -7>
+
+	% SubPlot1 contains the ambush battle
+	% SubPlot2 contains the victory, if the PC defeats the enemies
+	SubPlot1 <*CS_AmbushEncounter 3>
+	SubPlot2 <*CS_ThanksForRescue 2>
+
+	% Needed Scripts
+	.%id1%_%plotid%_GoWin <ifNPCOK %2% else GoJustEnd StoryNote 2 SetPlotStatus %id2%>
+	.%id1%_%plotid%_GoLose <ifNPCOK %2% else GoJustEnd StoryNote 1 DeleteNPC %2% Goto GoJustEnd>
+	GoJustEnd <LoseComp .loss>
+	.loss <+T-- +P-->
+	Msg1 <%name1% died during a mecha attack.>
+	Msg2 <You rescued %name1% from a mecha attack.>
+
+	sub
+		MetaScene 1
+		% L1 = Bombing started
+		% L2 = Bomb counter
+
+		ClubMap
+		MapWidth 20
+		MapHeight 25
+
+		type <CLUB LEGIT PUBLIC>
+		special <AddExit>
+		Content <Some 5 25 Sub *CLUB_X>
+
+		5Min <if= PlotStatus 0 else GoBomb if= L1 0 V+ 2 1 ifG V2 1 if= d2 1 Goto GoStartBombing>
+		GoStartBombing <SetPlotStatus %id1% AirRaidSiren Alert 1 StoryNote 2 Bomb  AlterContext .next  L= 1 1>
+		Faint%2% <if= PlotStatus 0 Goto GoStartBombing>
+		GoBomb <if= PlotStatus %id% Print 3 Bomb>
+		nu1 <if= T1 0 Return>
+		.next <+Pun>
+		Msg1 <Unexpectantly, the building is attacked by mecha!>
+		Msg2 <While meeting %name2%, %name1% was attacked by mysterious mecha.>
+		Msg3 <The battle outside rages!>
+		sub
+			Team 1
+
+			Team 2
+			name <Citizens>
+			setally 1
+			Passive
+
+			room
+			name <Dance Floor>
+			desig <EntranceGrid>
+			Content <Some 8 45 Here *URBAN_X>
+		end
+
+		Persona 2
+		special <UNLISTED>
+		greeting <if= PlotStatus %id1% else GoCheckFirstMeeting EndChat Say 4>
+		GoCheckFirstMeeting <if= PlotStatus 0 else GoChat Goto GoFirstMeeting>
+		*GoFirstMeeting <*HowAreYou GoMessage>
+		GoMessage <NewChat Say 1 AddChat 1 AddChat 2>
+		*GoChat <*MISC_CHATTER>
+		result1 <AddEasygoing d6 Goto result2>
+		result2 <Alert 5  EndChat Say 2  AirRaidSiren StoryNote 3 SetPlotStatus %id1% AlterContext .next  L= 1 1>
+		.next <+Pun>
+		Msg1 <Say, do you hear anything?>
+		Msg2 <We have to get out of here!>
+		Msg3 <While meeting %name2%, %name1% was attacked by mysterious mecha.>
+		Msg4 <We're under attack by mecha!>
+		Msg5 <Unexpectantly, the building is attacked by mecha!>
+		Prompt1 <No, I don't.>
+		Prompt2 <Look at the window, there are mecha!>
+	end
+
+
+Plot
+	name <Treasure Map>
+	size 2
+	desc <Your friend sells you a treasure map.>
+	requires <#A +Tgt (+Fin|+F--) +P-- T:FRIEND ~+Gmo ~+Gkn>
+
+	% P1 = Initialization Counter
+
+	% E1 is the scene
+	% E2 is the friend
+	% E3 is the treasure map
+	% E4 is the artifact
+	element1 <Grab 6>
+	element2 <Grab 5>
+	Place2 <1 (Citizens) ally pass>
+	element3 <Prefab>
+	place <2>
+	element4 <Artifact>
+
+	start <ifNPCDead %2% LoseComp 0 .loss>
+	.loss <+T-- +F-->
+
+	Get%3% <if= L1 0 L= 1 1 StoryNote 1 FreezeItem E4 &SetTargetItem E4 WinComp 0 .changes>
+	.changes <+T-- +Pla>
+	Msg1 <You stole a treasure map from your friend %name2%.>
+
+	sub
+		STC MS_CAFE
+		SetID 1
+
+		Persona 2
+		% V1 = Price Asked
+		special <UNLISTED>
+		*greeting <*HowAreYou GoMessage>
+		GoMessage <NewChat if= V1 0 else GoSecondTime V= 1 Threat StoryDL 2 Say 1 SMemo 2 AddChat 1 AddChat 2>
+		GoSecondTime <Say 3 AddChat 3 AddChat 4 AddChat 5 AddChat 6>
+		GoWin <GiveItem %3%  StoryNote 7 FreezeItem %4% &SetTargetItem %4% WinComp 0 .changes>
+		.changes <+T-- +Pla>
+		result1 <NewChat Say 4 AddChat 3 AddChat 4 AddChat 5 AddChat 6>
+		result2 <NewChat Say 5 AddChat 3 AddChat 4 AddChat 5 AddChat 6>
+		result3 <NewChat Say 6 cash+ -V1  XPV 100  Goto GoWin>
+		result4 <NewChat Say 8 LoseComp 0 .changes2>
+		.changes2 <+T-->
+		result5 <NewChat if= V2 0 else GoR5Again V= 2 1 ifG React d50 else GoR5Fail Say 9  SkillXP 19 100  Goto GoWin>
+		GoR5Again <Say 10 AddChat 3 AddChat 4 AddChat 6>
+		GoR5Fail <Say 11 AddChat 3 AddChat 4 AddChat 6>
+		*result6 <*Goodbye>
+		Msg1 <Hey, I know you've been planning on having an adventure, well I've got just the thing to get you started. It happens that I have a genuine treasure map.>
+		Msg2 <%name2% in %name1% offered to sell you a treasure map.>
+		Msg3 <I've still got this map. If you want it, the price is $ \VAL V1 .>
+		Msg4 <I've got connections, you know. Anyhow I'm hoping to sell this and thought I'd give you first pick. The price is $ \VAL V1 .>
+		Msg5 <What, you think I'm just going to give this away? I was hoping to sell it, but decided to give you first pick. If you want it, the price is $ \VAL V1 .>
+		Msg6 <Here you go. It's been a pleasure doing business with you.>
+		Msg7 <You received a treasure map from your friend %name2%.>
+		Msg8 <That's too bad.>
+		Msg9 <Well, since we are friends and all, I guess I could do that. Here you go.>
+		Msg10 <We've been through this before... Really, what kind of a friend are you trying to deprive me of my livelihood? Now, do you want the map or not?>
+		Msg11 <Sorry, I know that we're friends, but this is business. If you don't want the map I'll see how much I can get for it online.>
+		Prompt1 <Where did you get something like that?>
+		Prompt2 <Cool! Let me see it.>
+		Prompt3 <Alright, here you go. [pay money]>
+		CPrompt3 <ifG PC$ V1 Accept>
+		Prompt4 <I'm not interested.>
+		Prompt5 <Couldn't you just give it to me?>
+		CPrompt5 <ifG PCEgo 14 Accept>
+		Prompt6 <I'll be back later for it.>
+
+	end
+	inv
+		Treasure 1
+		name <Treasure Map>
+		desc <It's a map leading to the %name4%.>
+		use <Print 1>
+		clue37 <Print 2>
+		Msg1 <You have no idea how to read this map.>
+		Msg2 <It's not actually much of a map. If you're ever going to locate the treasure, you're going to need some more information.>
+	end
+
+
+Plot
 	name <A Gentle Reminder>
 	desc <Your friend reminds you that you were supposed to attend a meeting.>
 	requires <#A +P-- +Tgt ~+F-- T:++ T:FRIEND P:++ -P:PDASS>

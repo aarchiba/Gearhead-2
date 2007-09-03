@@ -1,3 +1,65 @@
+%% *CS_AmbushEncounter Content
+%%
+%% The PC will get jumped as soon as he enters a particular location.
+%%
+%% The parent plot sets the plot status to this layer's ID when ready.
+%%
+%% Param1: The outdoor scene where the encounter will take place
+%%
+%% NEEDED SCRIPTS: To deal with the ending, the parent plot must define two
+%% scripts:
+%% 	.%id%_%plotid%_GoWin
+%% 	.%id%_%plotid%_GoLose
+%% %id% is the ID of the encounter layer; so, if it was generated as subplot 1,
+%% the calling plot would use %id1%.
+%% Please note that it is possible this component will not exit to either of
+%% the above labels, if a complete derailment of the story takes place.
+
+Plot
+	name <Generic Ambush>
+	size 5
+	desc <Fight some generic mecha belonging to the enemy faction.>
+	requires <*CS_AmbushEncounter>
+
+	% E1: The outdoor scene
+	% E2 is the combat scene
+	Element2 <Prefab>
+	Place2 <1>
+
+	Start <if= PlotStatus %id% else %pop% if= SceneID %1% else %pop% Alert %id%01 Exit %2% Goto %pop%>
+	Msg%id%01 <You are suddenly attacked by mecha!>
+
+	sub
+		MetaScene 2 2
+		% L1 = Encounter Over Counter
+		% L2 = Initialization Counter
+		MapWidth 30
+		MapHeight 30
+
+		nu1 <if= T1 0   Return   if= V1 0 V= 1 1   Trigger0 .%id%_%plotid%_GoLose>
+		nu2 <if= T2 0   if= V1 0 V= 1 1            XPV 100   AddRenown 1  Salvage   Trigger0 .%id%_%plotid%_GoWin>
+
+		sub
+			team 1
+			SetEnemy 2
+			ParaX 5
+			ParaY 5
+
+			team 2
+			SetEnemy 1
+			Deploy <SetSelfFaction &EnemyFac   WMecha 2 Threat StoryDL 100>
+			ParaX 25
+			ParaY 25
+		end
+	end
+	inv
+		STC ENCOUNTER-SEEKPC
+		EncounterMove 100
+		name <Surprise Ambush>
+		update <if= PlotStatus %id% else GoHide SetSelfX PCX SetSelfY PCY Goto GoSetOrders>
+	end
+
+
 %% *CS_MechaEncounter Content
 %%
 %% The PC is about to fight some mecha as part of the core story.
@@ -9,6 +71,137 @@
 %% Param1: The Mission Provider
 %% Param2: The outdoor scene where the fight will take place
 %%
+
+Plot
+	name <Fight Mysterious Enemies>
+	size 5
+	desc <Fight a group of mecha presumably allied with the unknown enemies revealed earlier.>
+	requires <*CS_MechaEncounter +Pun !Ne ~E:-->
+
+	% E1: The Mission Provider
+	% E2: The outdoor scene where the fight will take place
+	% E3 is the combat scene
+	Element3 <Prefab>
+	Place3 <2>
+
+	% SubPlot1 = Win the battle, get a reward
+	% SubPlot2 = Lose the battle, get scorned
+	SubPlot1 <*CS_CAWinMission 1>
+	SubPlot2 <*CS_CALoseMission 1>
+
+	sub
+		MetaScene 3 2
+		% L1 = Encounter Over Counter
+		% L2 = Initialization Counter
+		MapWidth 30
+		MapHeight 30
+
+		Start <if= L2 0 L= 2 1 SMemo 1 History 2>
+		nu1 <if= T1 0   Return   if= V1 0 V= 1 1   SetPlotStatus %id2%>
+		nu2 <if= T2 0   if= V1 0 V= 1 1            XPV 100   AddRenown 1  Salvage   SetPlotStatus %id1%>
+
+		Msg1 <After fighting some mysterious mecha you should report back to %name1%.>
+		Msg2 <You fought a group of mysterious mecha.>
+		.next <+T-->
+
+		sub
+			team 1
+			SetEnemy 2
+			ParaX 5
+			ParaY 5
+
+			team 2
+			SetEnemy 1
+			Deploy <SetSelfFaction &EnemyFac   WMecha 2 Threat StoryDL 100>
+			ParaX 25
+			ParaY 25
+		end
+	end
+	inv
+		STC ENCOUNTER-WANDER
+		name <%name1%'s Mission>
+		update <if= PlotStatus %id% else GoHide SetStat STAT_MetaVisibility 0  Goto GoSetOrders>
+	end
+
+
+Plot
+	name <You're not the only one>
+	size 8
+	desc <You meet a new arch-enemy, who is also looking for TI.>
+	requires <*CS_MechaEncounter  +Pla I:++ E:-->
+	changes <+T-- E:++ +Pen>
+
+	% E1: The Mission Provider
+	% E2: The outdoor scene where the fight will take place
+	% E3 is the combat scene
+	% E4 is the enemy character
+	Element3 <Prefab>
+	Place3 <2>
+	element4 <NewNPC -2 0>
+	place4 <3 (Enemies) SD enemy>
+
+	% V%id%01 = Initialization
+	update <if= V%id%01 0 else %pop% V= %id%01 1 NPCLevel %4% StoryDL Goto %pop%>
+
+	% SubPlot1 = Win the battle, get a reward
+	% SubPlot2 = Lose the battle, get scorned
+	SubPlot1 <*CS_CAWinMission 1>
+	SubPlot2 <*CS_CALoseMission 1>
+
+	sub
+		MetaScene 3 2
+		% L1 = Encounter Over Counter
+		% L2 = Initialization Counter
+		% L3 = Script Immunity Counter
+		MapWidth 30
+		MapHeight 30
+
+		Start <if= L2 0 L= 2 1   ForceChat %4%   &SetEnemyChar %4%  PCFEnemy &EnemyFac>
+		Faint%4% <if= L1 0  Goto GoDie>
+		GoDie <L= 1 2  L= 3 1   FreezeNPC %4%   SMemo 3 History 2     SetPlotStatus %id1%>
+		nu1 <if= T1 0  Return   if= L1 0 L= 1 1   SMemo 3 History 2      ForceChat %4%  SetPlotStatus %id2%>
+		nu2 <if= T2 0           if= L1 0 L= 1 2   SMemo 3 History 2   AddRenown 1  Salvage   ifNPCOK %4% else GoDie  XPV 100    ForceChat %4%  SetPlotStatus %id1%>
+		End <if# L3 0 Print 1>
+
+		Msg1 <%name4%'s cockpit is empty. Could \SPR %4% have escaped?>
+		Msg2 <You met %name4%, who was also looking for \NARRATIVE 8 , in battle.>
+		Msg3 <You met %name4% in battle. You should return to %name1% for a debriefing.>
+
+		sub
+			team 1
+			SetEnemy 2
+			ParaX 5
+			ParaY 5
+
+			team 2
+			name <Enemies>
+			SetEnemy 1
+			Deploy <SetSelfFaction &EnemyFac   WMecha 2 Threat StoryDL 75>
+			ParaX 25
+			ParaY 25
+		end
+
+		Persona 4
+		special <UNLISTED>
+		greeting <PCFEnemy &EnemyFac   if= L1 2 else GoCheckLoss  Goto GoWinSpeech>
+		*GoWinSpeech <*GetYouNextTime>
+		GoCheckLoss <if= L1 1 else GoThreat  EndChat Say 2>
+		GoThreat <EndChat Say 1 AddChat 1 AddChat 2>
+		*result1 <*THEME_EXPO&ENEMY na>
+		result2 <AddEasygoing -d8  Goto result1>
+		Msg1 <What do you know about the \NARRATIVE 8 ? Tell me now before you die.>
+		Msg2 <So, you really know nothing? How unfortunate that you should suffer so pointlessly.>
+		Prompt1 <I don't know anything! Really!>
+		Prompt1_1 <\NARRATIVE 8 ? What's that?>
+		Prompt2 <I'm not telling you anything.>
+		Prompt2_1 <You'll have to kill me then.>
+	end
+	inv
+		STC ENCOUNTER-WANDER
+		name <%name1%'s Mission>
+		update <if= PlotStatus %id% else GoHide SetStat STAT_MetaVisibility 0  Goto GoSetOrders>
+	end
+
 
 Plot
 	name <A New Arch-Enemy>
@@ -43,15 +236,16 @@ Plot
 
 		Start <if= L2 0 L= 2 1   ForceChat %4%   &SetEnemyChar %4%  PCFEnemy &EnemyFac>
 		Faint%4% <if= L1 0  Goto GoDie>
-		GoDie <L= 1 2  L= 3 1   FreezeNPC %4%   StoryNote 4     SetPlotStatus %id1%>
-		nu1 <if= T1 0  Return   if= L1 0 L= 1 1   StoryNote 2      ForceChat %4%  SetPlotStatus %id2%>
-		nu2 <if= T2 0           if= L1 0 L= 1 2   StoryNote 3   AddRenown 1  Salvage   ifNPCOK %4% else GoDie  XPV 100    ForceChat %4%  SetPlotStatus %id1%>
+		GoDie <L= 1 2  L= 3 1   FreezeNPC %4%   SMemo 5 History 4     SetPlotStatus %id1%>
+		nu1 <if= T1 0  Return   if= L1 0 L= 1 1   SMemo 5 History 2      ForceChat %4%  SetPlotStatus %id2%>
+		nu2 <if= T2 0           if= L1 0 L= 1 2   SMemo 5 History 3   AddRenown 1  Salvage   ifNPCOK %4% else GoDie  XPV 100    ForceChat %4%  SetPlotStatus %id1%>
 		End <if# L3 0 Print 1>
 
 		Msg1 <%name4%'s cockpit is empty. Could \SPR %4% have escaped?>
 		Msg2 <You met %name4% in battle, and lost.>
 		Msg3 <You met %name4% in battle, and won.>
 		Msg4 <You appeared to kill %name4% in battle, but \PPR %4% body wasn't found...>
+		Msg5 <You met %name4% in battle. You should report back to %name1% about it.>
 
 		sub
 			team 1
