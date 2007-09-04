@@ -635,7 +635,15 @@ begin
 				Exit;
 			end;
 
-			DelinkGearForMovement( GB , Element );
+			{ Next, delink the gear for movement... but there's a catch. }
+			{ We don't want the delinker to give our element an OriginalHome }
+			{ if it's a prefab element, because we want to do that ourselves }
+			{ now in a bit. }
+			if ( Element^.Parent <> Nil ) and ( Element^.Parent^.G = GG_Plot ) and IsInvCom( Element ) then begin
+				DelinkGear( Element^.Parent^.InvCom , Element );
+			end else begin
+				DelinkGearForMovement( GB , Element );
+			end;
 
 			InSceneNotElement := ( PlaceCmd[1] = '~' );
 			if InSceneNotElement then DeleteFirstChar( PlaceCmd );
@@ -688,6 +696,14 @@ begin
 							Dest := MF;
 							SetNAtt( Element^.NA , NAG_ComponentDesc , NAS_ELementID , 1 );
 						end;
+					end;
+
+					{ If this is a prefab element and we're deploying }
+					{ to a metascene, assign an OriginalHome value of -1 }
+					{ to make sure it doesn't get deleted when the plot }
+					{ ends. }
+					if NAttValue( Element^.NA , NAG_ParaLocation , NAS_OriginalHome ) = 0 then begin
+						if Dest^.G = GG_MetaScene then SetNAtt( Element^.NA , NAG_ParaLocation , NAS_OriginalHome , -1 );
 					end;
 
 					if Dest = GB^.Scene then begin

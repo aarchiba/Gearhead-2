@@ -71,6 +71,7 @@ DynaNPC <GrabNPC ? DynaGG ?>
 NPCLevel <GrabNPC ? GSkillLevel ?>
 NPCAbsoluteLevel <GrabNPC ? GAbsoluteLevel ?> % scales all skills by percent
 ConGen <GrabNPC ? GSetNAtt 3 0 1 GAddNAtt 3 0 -PCGender> % set NPC opposite gender of PC
+IsoGen <GrabNPC ? GSetNAtt 3 0 PCGender>                 % set NPC same gender as PC
 DynaItem <GrabItem ? DynaGG 0>
 DynaItemTeam <GrabItem ? DynaGG ?>
 MOVEITEM <GrabItem ?  MoveGG ?>

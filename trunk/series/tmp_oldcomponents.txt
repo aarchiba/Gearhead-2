@@ -57,43 +57,6 @@ Plot
 
 
 Plot
-	name <Reward Scene (allied)>
-	desc <This will prevent rewards from being loaded without scenes.>
-	requires <+Tre T:++ S:-- Common>
-
-	% E1 is the NPC who will be giving the reward.
-	% E2 is a scene that's acceptable for the meeting.
-	element1 <Grab 5>
-	element2 <Scene !Near -7 !Ally 1 Building Public>
-
-	update <Email 1 WinComp E2 .next>
-	.next <>
-
-	% An empty return, to store the email...
-	return < >
-
-	Msg1 <\ELEMENT 1 @ \ELEMENT 2 :// Meet me at \ELEMENT 2 for your reward.>
-
-Plot
-	name <Reward Scene>
-	desc <This will prevent rewards from being loaded without scenes.>
-	requires <+Tre T:++ S:-->
-
-	% E1 is the NPC who will be giving the reward.
-	% E2 is a scene that's acceptable for the meeting.
-	element1 <Grab 5>
-	element2 <Scene !Near -7 !Okay 1 Building Public>
-
-	update <Email 1 WinComp E2 .next>
-	.next <>
-
-	% An empty return, to store the email...
-	return < >
-
-	Msg1 <\ELEMENT 1 @ \ELEMENT 2 :// Meet me at \ELEMENT 2 for your reward.>
-
-
-Plot
 	name <Reward then Guard>
 	desc <The PC will get a reward, then be asked to go guard a building.>
 	requires <#A +Tre S:++ (+F--|+Fmo|+Fmi) (+P--|+Pme|+Pun|+Pla|+Pen) ~F:CRM ~P:POL ~P:GOV>
