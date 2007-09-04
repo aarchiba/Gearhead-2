@@ -1,5 +1,27 @@
 % Persona Fragment File
 
+% TYPE: *WelcomeToLance
+%	The NPC has just joined the PC's team, and will give an opening
+%	speech of some type.
+
+	Persona
+	requires <*WelcomeToLance>
+	START <NewChat Say %id%01>
+	Msg%id%01 <Great! Let's go.>
+	Msg%id%01_1 <It's really good to be part of a team again. Let's go!>
+	CMsg%id%01_1 <ifNPCSociable Accept>
+	Msg%id%01_2 <It should be interesting having to work on a team again. Let's go.>
+	CMsg%id%01_2 <ifNPCShy Accept>
+	Msg%id%01_3 <I think I have enough free time for a bit of adventure. Let's go.>
+	CMsg%id%01_3 <ifNPCEasygoing Accept>
+	Msg%id%01_4 <Try not to get me killed. Let's go.>
+	CMsg%id%01_4 <ifNPCMelancholy Accept>
+	Msg%id%01_5 <Just you wait, I'll show you what I can do. Let's go!>
+	CMsg%id%01_5 <ifNPCPassionate Accept>
+	Msg%id%01_6 <I'm looking forward to all the great adventures we're going to have. Let's go!>
+	CMsg%id%01_6 <ifNPCCheerful Accept>
+
+
 % TYPE: *YoureUnderArrest
 %                        &CanMakeDeal	Can make a deal whereby the NPC avoids arrest
 %	The PC is trying to arrest a criminal. The criminal might go peacefully,

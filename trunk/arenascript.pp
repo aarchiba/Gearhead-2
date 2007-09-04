@@ -383,6 +383,27 @@ begin
 	end;
 end;
 
+Function CanJoinLance( GB: GameBoardPtr; PC,NPC: GearPtr ): Boolean;
+	{ Return TRUE if NPC can join the lance right now, or FALSE otherwise. }
+var
+	LMP: Integer;	{ Lancemate Points needed }
+	CanJoin: Boolean;
+begin
+	LMP := LancematesPresent( GB ) + 2;
+	CanJoin := True;
+	if ( NPC = Nil ) or ( NPC^.G <> GG_Character ) then begin
+		CanJoin := False;
+	end else if ReactionScore( GB^.Scene , PC , NPC ) < ( 50 - 2 * PC^.Stat[ STAT_Charm ] ) then begin
+		CanJoin := False;
+	end else if PersonaInUse( FindRoot( GB^.Scene ) , NAttValue( NPC^.NA , NAG_Personal , NAS_CID ) ) then begin
+		CanJoin := False;
+	end else if LMP > PartyLancemateSlots( PC ) then begin
+		CanJoin := False;
+	end;
+	CanJoinLance := CanJoin;
+end;
+
+
 Function SceneName( GB: GameBoardPtr; ID: Integer ): String;
 	{ Find the name of the scene with the given ID. If no such }
 	{ scene can be found, return a value that should let the player }
@@ -2091,6 +2112,21 @@ begin
 		IfSuccess( Event );
 	end else IfFailure( Event , Source );
 end;
+
+Procedure ProcessIfGCanJoinLance( var Event: String; GB: GameBoardPtr; Source: GearPtr );
+	{ Return true if the Grabbed_Gear can join the PC's lance, or FALSE otherwise. }
+	{ Please note that the NPC must be in play in order to join the lance. }
+var
+	PC: GearPtr;
+begin
+	PC := GG_LocatePC( GB );
+	if ( Grabbed_Gear <> Nil ) and OnTheMap( GB , Grabbed_Gear ) and GearOperational( Grabbed_Gear ) and IsFoundAlongTrack( GB^.Meks , FindRoot( Grabbed_Gear ) ) and CanJoinLance( GB , PC , Grabbed_Gear ) then begin
+		IfSuccess( Event );
+	end else begin
+		IfFailure( Event , Source );
+	end;
+end;
+
 
 Procedure ProcessIfTeamCanSeeGG( var Event: String; gb: GameBoardPtr; Source: GearPtr );
 	{ If the grabbed gear can be seen by the requested team, return TRUE. }
@@ -4061,6 +4097,7 @@ begin
 		else if cmd = 'IFGARCHENEMY' then ProcessIfGArchEnemy( Event , GB , Source )
 		else if cmd = 'IFGARCHALLY' then ProcessIfGArchAlly( Event , GB , Source )
 		else if cmd = 'IFGHASSKILL' then ProcessIfGHasSkill( Event , GB , Source )
+		else if cmd = 'IFGCANJOINLANCE' then ProcessIfGCanJoinLance( Event , GB , Source )
 		else if cmd = 'IFTEAMCANSEEGG' then ProcessIfTeamCanSeeGG( Event , GB , Source )
 		else if cmd = 'IFFACTION' then ProcessIfFaction( Event , GB , Source )
 		else if cmd = 'IFSCENE' then ProcessIfScene( Event , GB , Source )
@@ -4177,20 +4214,18 @@ begin
 	if I_NPC = Nil then Exit;
 
 	{ Need two more available lancemate points than are currently in use. }
-	LMP := LancematesPresent( GB ) + 2;
-	if ReactionScore( GB^.Scene , I_PC , I_NPC ) < ( 50 - 2 * I_PC^.Stat[ STAT_Charm ] ) then begin
-		CHAT_Message := MsgString( 'JOIN_REFUSE' );
-
-	end else if PersonaInUse( FindRoot( GB^.Scene ) , NAttValue( I_NPC^.NA , NAG_Personal , NAS_CID ) ) then begin
-		CHAT_Message := MsgString( 'JOIN_BUSY' );
-
-	end else if LMP > PartyLancemateSlots( I_PC ) then begin
-		CHAT_Message := MsgString( 'JOIN_NOPOINT' );
-
-	end else begin
+	if CanJoinLance( GB , I_PC , I_NPC ) then begin
 		CHAT_Message := MsgString( 'JOIN_JOIN' );
-
 		AddLancemate( GB , I_NPC );
+	end else begin
+		LMP := LancematesPresent( GB ) + 2;
+		if ReactionScore( GB^.Scene , I_PC , I_NPC ) < ( 50 - 2 * I_PC^.Stat[ STAT_Charm ] ) then begin
+			CHAT_Message := MsgString( 'JOIN_REFUSE' );
+		end else if LMP > PartyLancemateSlots( I_PC ) then begin
+			CHAT_Message := MsgString( 'JOIN_NOPOINT' );
+		end else begin
+			CHAT_Message := MsgString( 'JOIN_BUSY' );
+		end;
 	end;
 end;
 

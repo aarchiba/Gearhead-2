@@ -129,7 +129,6 @@ Plot
 	size 8
 	desc <You meet a new arch-enemy, who is also looking for TI.>
 	requires <*CS_MechaEncounter  +Pla I:++ E:-->
-	changes <+T-- E:++ +Pen>
 
 	% E1: The Mission Provider
 	% E2: The outdoor scene where the fight will take place
@@ -388,8 +387,8 @@ Content
 
 	% SubPlot1 = Win the battle, get a reward
 	% SubPlot2 = Lose the battle, get scorned
-	SubPlot1 <*CS_CAWinMission 1>
-	SubPlot2 <*CS_CALoseMission 1>
+	SubPlot1 <*CS_Win_ToUnknownEnemy 1>
+	SubPlot2 <*CS_Loss_ToUnknownEnemy 1>
 
 	sub
 		MetaScene 3 2
@@ -622,8 +621,8 @@ Content
 
 	% SubPlot1 = Win the battle, get a reward
 	% SubPlot2 = Lose the battle, get scorned
-	SubPlot1 <*CS_CAWinMission 1>
-	SubPlot2 <*CS_CALoseMission 1>
+	SubPlot1 <*CS_Win_ToUnknownEnemy 1>
+	SubPlot2 <*CS_Loss_ToUnknownEnemy 1>
 
 	sub
 		MetaScene 3 2
@@ -733,8 +732,8 @@ Content
 
 	% SubPlot1 = Win the battle, get a reward
 	% SubPlot2 = Lose the battle, get scorned
-	SubPlot1 <*CS_CAWinMission 1>
-	SubPlot2 <*CS_CALoseMission 1>
+	SubPlot1 <*CS_Win_ToUnknownEnemy 1>
+	SubPlot2 <*CS_Loss_ToUnknownEnemy 1>
 
 	sub
 		MetaScene 3 2

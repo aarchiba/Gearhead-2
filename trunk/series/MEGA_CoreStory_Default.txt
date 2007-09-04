@@ -396,13 +396,87 @@ Content
 		Prompt%id%02_1 <You don't want to know.>
 	end
 
+%%
+%% *CS_Win_ToUnknownEnemy Content
+%%
+%% The PC has won a mission and the plot state has changed to +Pun.
+%%
+%% The parent plot sets the plot status to this layer's ID when ready.
+%%
+%% Param1: The Mission-giver
+%%
+
+Content
+	name <Here, have some money>
+	desc <The NPC will pay the PC for the job.>
+	requires <*CS_Win_ToUnknownEnemy>
+
+	% E1 is the NPC.
+
+	start <if= PlotStatus %id% else %pop% ifNPCDead %1% SMemo 0 WinComp 0 .%id%_loss>
+	.%id%_loss <+T-- +F-->
+
+	sub
+		Persona 1
+		greeting <if= PlotStatus %id% else %pop% gOTO .%id%_GoReportSuccess>
+		*.%id%_GoReportSuccess <*MissionWasSuccess&Reward .%id%_GoEnd &AllyFac &EnemyFac>
+		.%id%_GoEnd <CashPrize Reward Threat StoryDL 100 500 SMemo 0 WinComp 0 .%id%_win>
+		.%id%_win <+T-- +F-->
+	end
+
+%%
+%% *CS_Loss_ToUnknownEnemy Content
+%%
+%% Catch-all lose mission component.
+%% The PC has lost a mission provided by the NPC.
+%%
+%% The parent plot sets the plot status to this layer's ID when ready.
+%%
+%% Param1: The Mission-giver
+%%
+
+Content
+	name <Default Loss>
+	desc <The NPC will debrief the PC on the loss.>
+	requires <*CS_Loss_ToUnknownEnemy>
+
+	% E1 is the NPC.
+
+	start <if= PlotStatus %id% else %pop% ifNPCDead %1% LoseComp 0 .%id%_loss>
+	.%id%_loss <+T-- +F-->
+
+	sub
+		Persona 1
+		greeting <if= PlotStatus %id% else %pop% NewChat Say %id%01 SMemo 0 LoseComp 0 .%id%_loss>
+		.%id%_loss <+T-- +F-->
+		Msg%id%01 <You have failed in the mission. Unless we can learn what our enemy is after, we have no chance of success.>
+		Msg%id%01_1 <We have lost, and even worse we don't know the purpose behind these attacks.>
+		CMsg%id%01_1 <ifNPCSociable Accept>
+		Msg%id%01_2 <You lost the mission. Our enemy moves in secret, but soon all will be revealed.>
+		CMsg%id%01_2 <ifNPCShy Accept>
+		Msg%id%01_3 <That last mission didn't go so well. It'd be a lot easier to deal with these attacks if we knew what they were after.>
+		CMsg%id%01_3 <ifNPCEasygoing Accept>
+		Msg%id%01_4 <You failed. There must be some purpose behind the attacks, but until we figure it out we are forced to play sitting ducks.>
+		CMsg%id%01_4 <ifNPCPassionate Accept>
+		Msg%id%01_5 <Too bad about that last mission, but don't let it get you down. We have to keep our guard up. There's no telling when another attack could come.>
+		CMsg%id%01_5 <ifNPCCheerful Accept>
+		Msg%id%01_6 <Your mission was a complete failure. This is madness... how are we supposed to defend ourselves, when we don't even know what the enemy is after?>
+		CMsg%id%01_6 <ifNPCMelancholy Accept>
+		Msg%id%01_10 <We have to learn what \FACTION &EnemyFac is up to. It seems like that's the only chance we have to stop them.>
+		CMsg%id%01_10 <ifFactionExists &EnemyFac Accept>
+		Msg%id%01_20 <It's clear now that \PERSONA &EnemyChar has some reason for these attacks, but what could it be?>
+		CMsg%id%01_20 <ifNPCOK &EnemyChar Accept>
+	end
+
 
 %%
 %% *CS_CAWinMission Content
 %%	&RevealEF	The enemy faction has been revealed
 %%
 %% Catch-all win mission component.
-%% The PC has won a mission provided by the NPC.
+%% The PC has won a mission provided by the NPC. Note that the mission should not
+%% have altered the state of the story; therefore, this reward is free to do so
+%% itself.
 %%
 %% The parent plot sets the plot status to this layer's ID when ready.
 %%
@@ -432,7 +506,9 @@ Content
 %%	&RevealEF	The enemy faction has been revealed
 %%
 %% Catch-all lose mission component.
-%% The PC has lost a mission provided by the NPC.
+%% The PC has lost a mission provided by the NPC. Note that the mission should not
+%% have altered the state of the story; therefore, this reward is free to do so
+%% itself.
 %%
 %% The parent plot sets the plot status to this layer's ID when ready.
 %%

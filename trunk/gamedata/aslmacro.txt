@@ -94,6 +94,7 @@ IFCHATNPCSEXY <GrabChatNPC IfGSexy>
 IFCHATNPCKNOWN <GrabChatNPC ifG GNAtt NAG_Personal NAS_NumConversation 0>
 IFCHATNPCUNKNOWN <GrabChatNPC if= GNAtt NAG_Personal NAS_NumConversation 0>
 IFCHATNPCALLY <GrabChatNPC ifGArchAlly>
+IFCHATNPCCANJOINLANCE <GrabChatNPC ifGCanJoinLance>
 IFFACTIONENEMY <GrabFaction ? ifGArchEnemy>
 IFFACTIONALLY <GrabFaction ? ifGArchAlly>
 IFNPCARCHENEMY <GrabNPC ? ifGArchEnemy>
@@ -227,6 +228,7 @@ AddDatePoint <GrabSource GAddNAtt NAG_Narrative NAS_DatePoints 1>
 SetQuestStatus <GrabAdventure GSetNAtt NAG_QuestStatus ? ?>
 SetPlotStatus <GrabPlot GSetNAtt NAG_Narrative NAS_PlotState ? Trigger0 Update>
 AddTempLancemate <GrabNPC ? GSetNAtt NAG_CharDescription NAS_CharType NAV_TempLancemate GJoinLance>
+ChatNPCJoinLance <GrabChatNPC GJoinLance>
 RemoveTempLancemate <GrabNPC ? GSetNAtt NAG_CharDescription NAS_CharType 0 GQuitLance>
 AddPartyPoint <GrabCurrentScene GAddNAtt NAG_Narrative NAS_PartyPoints 1>
 OpenInv <GrabSource GOpenInv>

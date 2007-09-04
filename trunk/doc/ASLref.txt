@@ -274,6 +274,7 @@
 	GSKILLXP [Skill] [XP]	Gives skill-specific experience to GG
 	IFGARCHALLY		True if GG an arch-ally of PC
 	IFGARCHENEMY		True if GG an arch-enemy of PC
+	IFGCANJOINLANCE		True if GG can join the lance, assuming GG is an ally
 	IFGHASSKILL [Skill]	True if GG has the listed skill
 	IFGINPLAY <else [label]>	True if GG on map and operational
 	IFGDEAD <else [label]>	True if GG is Nil or is destroyed

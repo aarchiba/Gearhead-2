@@ -2,6 +2,48 @@
 %%   Things you might find in a city. Generic content for cafes, parks,
 %%   shopping malls, waiting rooms, and so on. Mostly just NPCs.
 
+
+	Content
+	name <Recruitable Random>
+	requires <*URBAN_X Public Static>
+	%% A completely random NPC who might be recruitable as a lancemate.
+
+	element1 <.>
+	element2 <Scene Town !Near 1>
+	element3 <NewNPC 0 2>
+	team3 <citizens>
+	teamdata3 <pass>
+
+	sub
+		Persona 3
+		rumor <%name3% dreams of leaving town and becoming a cavalier.>
+		% V1 = Have made offer
+		*Greeting <*NiceToMeetYou GoCheckMember>
+		GoCheckMember <if# V1 0 else GoCheckEnemy Goto GoChat>
+		*GoChat <*MISC_CHATTER>
+		GoCheckEnemy <IFCHATNPCARCHENEMY else GoOffer EraseRumor Goto GoChat>
+		GoOffer <ifChatNPCCanJoinLance else GoPine ifG PCRenown ChatNPCRenown else GoPine ifG React 15 else GoPine NewChat Say 2 AddChat 1 AddChat 2 AddChat 3>
+		GoPine <NewChat Say 1>
+
+		result1 <PCAlly %3% ChatNPCJoinLance V= 1 1 EraseRumor Goto GoWelcome>
+		*GoWelcome <*WelcomeToLance>
+		result2 <NewChat Say 3 V= 1 1 EraseRumor AddSociable -d10>
+		result3 <NewChat Say 4 AddChat 4 AddChat 1>
+		result4 <NewChat Say 5 V= 1 1 EraseRumor>
+
+		Msg1 <I'd like to become a cavalier, but I don't have anyone to go with.>
+		Msg2 <Say, you're a cavalier, aren't you? If you're looking for a partner I'd love to join your crew.>
+		Msg3 <I see.>
+		Msg4 <Well, I mean, it's a dream, isn't it? I want to get out of this place, see the solar system, have exciting adventures...>
+		Msg5 <You could be right. Still, I'll never stop dreaming...>
+
+		Prompt1 <Alright, you can join.>
+		Prompt2 <Sorry, I don't need a lackey.>
+		Prompt3 <Why do you want to join me?>
+		Prompt4 <You're better off where you are.>
+	end
+
+
 	Content
 	requires <*URBAN_X Mall Static>
 	% A student to mooch money from the PC... previously a PFrag.

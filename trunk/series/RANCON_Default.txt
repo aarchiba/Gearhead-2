@@ -517,11 +517,12 @@ Content
 		% V2 = Recruitment Cost
 		greeting <IFNPCARCHENEMY ChatNPCID else GoNiceToMeetYou NewChat SayAnything>
 		*GoNiceToMeetYou <*NiceToMeetYou GoCheckOffer>
-		GoCheckOffer <ifG React 40 else GoMiscTalk if= V1 0 else GoMiscTalk if= V2 0 else GoMakeOffer V= 2 Threat NPCRep ChatNPCID 6 5 Goto GoMakeOffer>
+		GoCheckOffer <ifChatNPCCanJoinLance else GoMiscTalk if= V1 0 else GoMiscTalk if= V2 0 else GoMakeOffer V= 2 Threat ChatNPCRenown 5 Goto GoMakeOffer>
 		GoMakeOffer <NewChat Say 1 AddChat 1 AddChat 2 AddChat 3>
 		*GoMiscTalk <*MISC_CHATTER>
 		RESULT1 <NewChat Say 2 AddChat 4 AddChat 5>
-		result2 <PCAlly ChatNPCID NewChat Say 3 V= 1 1 Cash+ -V2>
+		result2 <PCAlly %1% ChatNPCJoinLance V= 1 1 Cash+ -V2 Goto GoWelcome>
+		*GoWelcome <*WelcomeToLance>
 		*result3 <*Goodbye>
 		result4 <NewChat Say 3 V= 1 1 AddSociable -10>
 		result5 <Goto result3>
