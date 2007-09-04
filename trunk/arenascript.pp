@@ -386,14 +386,19 @@ end;
 Function CanJoinLance( GB: GameBoardPtr; PC,NPC: GearPtr ): Boolean;
 	{ Return TRUE if NPC can join the lance right now, or FALSE otherwise. }
 var
-	LMP: Integer;	{ Lancemate Points needed }
+	LMP,ERen: Integer;	{ Lancemate Points needed, Effective Renown }
 	CanJoin: Boolean;
 begin
 	LMP := LancematesPresent( GB ) + 2;
+	ERen := NAttValue( PC^.NA , NAG_CharDescription , NAS_Renowned );
+	if ERen < 15 then ERen := 15;
+	ERen := ERen + CStat( PC , STAT_Charm ) + SkillRank( PC , NAS_Leadership );
 	CanJoin := True;
 	if ( NPC = Nil ) or ( NPC^.G <> GG_Character ) then begin
 		CanJoin := False;
-	end else if ReactionScore( GB^.Scene , PC , NPC ) < ( 50 - 2 * PC^.Stat[ STAT_Charm ] ) then begin
+	end else if NAttValue( NPC^.NA , NAG_CharDescription , NAS_Renowned ) > ERen then begin
+		CanJoin := False;
+	end else if ( GB <> Nil ) and ( ReactionScore( GB^.Scene , PC , NPC ) < 10 ) then begin
 		CanJoin := False;
 	end else if PersonaInUse( FindRoot( GB^.Scene ) , NAttValue( NPC^.NA , NAG_Personal , NAS_CID ) ) then begin
 		CanJoin := False;
@@ -2744,12 +2749,12 @@ begin
 	{ we need the renown level the mecha will be appropriate for. }
 	Factions := ExtractWord( Event );
 	if Source <> Nil then begin
-		Factions := AS_GetString( Source , FName );
+		Factions := AS_GetString( Source , Factions );
 	end;
 	Renown := ScriptValue( Event , GB , Source );
 
 	{ Call the random mecha picker. }
-	FName := SelectMechaByFactionAndRenown( FName , Renown );
+	FName := SelectMechaByFactionAndRenown( Factions , Renown );
 
 	{ Attempt to load the suggested mecha. }
 	MList := LoadGearPattern( FName , Design_Directory );
@@ -4219,7 +4224,7 @@ begin
 		AddLancemate( GB , I_NPC );
 	end else begin
 		LMP := LancematesPresent( GB ) + 2;
-		if ReactionScore( GB^.Scene , I_PC , I_NPC ) < ( 50 - 2 * I_PC^.Stat[ STAT_Charm ] ) then begin
+		if ReactionScore( GB^.Scene , I_PC , I_NPC ) < 25 then begin
 			CHAT_Message := MsgString( 'JOIN_REFUSE' );
 		end else if LMP > PartyLancemateSlots( I_PC ) then begin
 			CHAT_Message := MsgString( 'JOIN_NOPOINT' );

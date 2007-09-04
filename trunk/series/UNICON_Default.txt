@@ -24,19 +24,32 @@
 		GoCheckEnemy <IFCHATNPCARCHENEMY else GoOffer EraseRumor Goto GoChat>
 		GoOffer <ifChatNPCCanJoinLance else GoPine ifG PCRenown ChatNPCRenown else GoPine ifG React 15 else GoPine NewChat Say 2 AddChat 1 AddChat 2 AddChat 3>
 		GoPine <NewChat Say 1>
-
 		result1 <PCAlly %3% ChatNPCJoinLance V= 1 1 EraseRumor Goto GoWelcome>
 		*GoWelcome <*WelcomeToLance>
 		result2 <NewChat Say 3 V= 1 1 EraseRumor AddSociable -d10>
 		result3 <NewChat Say 4 AddChat 4 AddChat 1>
 		result4 <NewChat Say 5 V= 1 1 EraseRumor>
-
 		Msg1 <I'd like to become a cavalier, but I don't have anyone to go with.>
 		Msg2 <Say, you're a cavalier, aren't you? If you're looking for a partner I'd love to join your crew.>
-		Msg3 <I see.>
+		Msg2_1 <Hey, you're an adventurer, right? I'd like to join your group, if you'd be willing to have me.>
+		Msg2_2 <You're a mecha pilot, aren't you? I do a bit of piloting myself. If you need an assistant I'd love to join up with you.>
+		Msg3 <I see. That's fine... I'll just stay here, then.>
+		Msg3_1 <I understand. I won't ask again.>
 		Msg4 <Well, I mean, it's a dream, isn't it? I want to get out of this place, see the solar system, have exciting adventures...>
+		Msg4_1 <Well, you see, I've always wanted to be an adventurer. Of course it's not as easy as it looks, especially when you're just starting out. I've been practicing mecha combat on the simulators and I think I'm ready to really begin.>
+		CMsg4_1 <ifNPCSociable Accept>
+		Msg4_2 <My reasons are my own. I advise you not to ask again.>
+		CMsg4_2 <ifNPCShy Accept>
+		Msg4_3 <Meh. It seemed like a good idea.>
+		CMsg4_3 <ifNPCEasygoing Accept>
+		Msg4_4 <I've seen everything there is to see around here. It's time I moved on to something interesting.>
+		CMsg4_4 <ifNPCPassionate Accept>
+		Msg4_5 <Well, it's fun, isn't it? Flying around, piloting mecha, blowing up stuff... I want to do that myself!>
+		CMsg4_5 <ifNPCCheerful Accept>
+		Msg4_6 <The way I see things, I have two choices. I could stay here and die a boring death of old age. Or, I could go adventure and have an exciting death. I choose option number two.>
+		CMsg4_6 <ifNPCMelancholy Accept>
 		Msg5 <You could be right. Still, I'll never stop dreaming...>
-
+		Msg5_1 <I probably am, but that doesn't stop me from wanting to leave...>
 		Prompt1 <Alright, you can join.>
 		Prompt2 <Sorry, I don't need a lackey.>
 		Prompt3 <Why do you want to join me?>

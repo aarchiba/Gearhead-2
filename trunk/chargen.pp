@@ -1458,6 +1458,9 @@ begin
 	{ Set this NPC as a combatant. }
 	SetNAtt( NPC^.NA , NAG_CharDescription , NAS_IsCombatant , 1 );
 
+	{ Remove the character context, since it will get in the way later. }
+	SetSAtt( NPC^.SA , 'CONTEXT <>' );
+
 	{ Return the result. }
 	RandomNPC := NPC;
 end;
