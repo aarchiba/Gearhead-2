@@ -114,6 +114,10 @@ Content
 %% contest location at update, and then move the opponent back to its
 %% original location at the end of the battle.
 %%
+%% If the duel significantly alters the plot state, it should not exit
+%% to one of the provided endings but should instead provide its
+%% own resolution.
+%%
 %% Param1: The Challenger
 %% Param2: The Challenger's home scene, for the purpose of this component
 %% Param3: The outdoor scene where the duel will take place
@@ -551,7 +555,7 @@ Content
 	% E2 is the person to see about the job
 	% E3 is a public scene for the meeting.
 	Element2 <Character "MILIT" !Near -7 !Ally -7 !Okay -3>
-	Element3 <Scene Building Public !Okay 2>
+	Element3 <Scene Building Public !Near -7 !Okay 2>
 
 	start <if= PlotStatus %id% else %pop% ifNPCDead %1% SMemo 0 WinComp 0 .%id%_loss>
 	.%id%_loss <+T-- +F-->

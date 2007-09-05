@@ -1863,14 +1863,12 @@ Content
 		% L2 = Victory Counter
 		% L3 = NPC in play at end of battle
 		% L4 = Value of E1's cargo
-		start <if= L1 0  Print 2 ForceChat %2% L= 1 1>
+		start <if= L1 0  ForceChat %2% L= 1 1>
 		% If the PC leaves the scene before defeating all enemies, there's no second chance.
 		nu1 <if= T1 0 Return  if= L2 0   L= 2 -1  DeleteNPC %2%  SetQuestStatus %qid% -2>
 		nu2 <if= T2 0         if= L2 0   XPV 100   L= 2 1   ifNPCOK %2%  Print 2 ForceChat %2% ifNPCInPlay %2% else GoMove L= 3 1 Goto GoMove>
 		GoMove <MoveAndPacifyNPC %2% %s4%>
 		Faint%2% <SetQuestStatus %qid% -2>
-
-		Msg2 <%name2% contacts you.>
 
 		sub
 			Team 1

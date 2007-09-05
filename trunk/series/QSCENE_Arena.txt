@@ -34,7 +34,7 @@ Scene 0 2
 	special <SHOWALL SOLO ARENA>
 	terrain <GROUND>
 
-	start <if= SelfArenaState NAV_AS_Ready else GoCheckBattle          Alert 1 Print 1  SetSelfArenaState NAV_AS_Battle SetSelfArenaRecharge if# SelfChallengerID 0 Print 4 ForceChat SelfChallengerID>
+	start <if= SelfArenaState NAV_AS_Ready else GoCheckBattle          Alert 1 Print 1  SetSelfArenaState NAV_AS_Battle SetSelfArenaRecharge if# SelfChallengerID 0 ForceChat SelfChallengerID>
 	GoCheckBattle <if= SelfArenaState NAV_AS_Battle else GoBoringStart Print 2>
 	GoBoringStart <Print 3 Return>
 
@@ -47,7 +47,6 @@ Scene 0 2
 	Msg1 <You enter the arena. Prepare to battle.>
 	Msg2 <The arena battle rages on.>
 	Msg3 <You enter the arena. There's no fight going on here now.>
-	Msg4 <\PERSONA SelfChallengerID contacts you.>
 	Msg5 <You have lost the battle.>
 	Msg6 <You have won the battle.>
 
@@ -83,7 +82,7 @@ Scene 0 2
 	special <SHOWALL SOLO ARENA>
 	terrain <GROUND>
 
-	start <if= SelfArenaState NAV_AS_Ready else GoCheckBattle          Alert 1 Print 1  SetSelfArenaState NAV_AS_Battle SetSelfArenaRecharge if# SelfChallengerID 0 Print 4 ForceChat SelfChallengerID>
+	start <if= SelfArenaState NAV_AS_Ready else GoCheckBattle          Alert 1 Print 1  SetSelfArenaState NAV_AS_Battle SetSelfArenaRecharge if# SelfChallengerID 0 ForceChat SelfChallengerID>
 	GoCheckBattle <if= SelfArenaState NAV_AS_Battle else GoBoringStart Print 2>
 	GoBoringStart <Print 3 Return>
 
@@ -96,7 +95,6 @@ Scene 0 2
 	Msg1 <You enter the arena. Prepare to battle.>
 	Msg2 <The arena battle rages on.>
 	Msg3 <You enter the arena. There's no fight going on here now.>
-	Msg4 <\PERSONA SelfChallengerID contacts you.>
 	Msg5 <You have lost the battle.>
 	Msg6 <You have won the battle.>
 
@@ -134,7 +132,7 @@ Scene 0 2
 	MapWidth 50
 	MapHeight 50
 
-	start <if= SelfArenaState NAV_AS_Ready else GoCheckBattle          Alert 1 Print 1  SetSelfArenaState NAV_AS_Battle SetSelfArenaRecharge if# SelfChallengerID 0 Print 4 ForceChat SelfChallengerID>
+	start <if= SelfArenaState NAV_AS_Ready else GoCheckBattle          Alert 1 Print 1  SetSelfArenaState NAV_AS_Battle SetSelfArenaRecharge if# SelfChallengerID 0 ForceChat SelfChallengerID>
 	GoCheckBattle <if= SelfArenaState NAV_AS_Battle else GoBoringStart Print 2>
 	GoBoringStart <Print 3 Return>
 
@@ -147,7 +145,6 @@ Scene 0 2
 	Msg1 <You enter the arena. Prepare to battle.>
 	Msg2 <The arena battle rages on.>
 	Msg3 <You enter the arena. There's no fight going on here now.>
-	Msg4 <\PERSONA SelfChallengerID contacts you.>
 	Msg5 <You have lost the battle.>
 	Msg6 <You have won the battle.>
 
@@ -180,7 +177,7 @@ Scene 0 2
 	special <SHOWALL SOLO ARENA>
 	terrain <GROUND>
 
-	start <if= SelfArenaState NAV_AS_Ready else GoCheckBattle          Alert 1 Print 1  SetSelfArenaState NAV_AS_Battle SetSelfArenaRecharge if# SelfChallengerID 0 Print 4 ForceChat SelfChallengerID>
+	start <if= SelfArenaState NAV_AS_Ready else GoCheckBattle          Alert 1 Print 1  SetSelfArenaState NAV_AS_Battle SetSelfArenaRecharge if# SelfChallengerID 0 ForceChat SelfChallengerID>
 	GoCheckBattle <if= SelfArenaState NAV_AS_Battle else GoBoringStart Print 2>
 	GoBoringStart <Print 3 Return>
 
@@ -193,7 +190,6 @@ Scene 0 2
 	Msg1 <You enter the arena. Prepare to battle.>
 	Msg2 <The arena battle rages on.>
 	Msg3 <You enter the arena. There's no fight going on here now.>
-	Msg4 <\PERSONA SelfChallengerID contacts you.>
 	Msg5 <You have lost the battle.>
 	Msg6 <You have won the battle.>
 

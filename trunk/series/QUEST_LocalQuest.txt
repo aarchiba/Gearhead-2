@@ -458,10 +458,9 @@ Content
 		%% Because scene 1 is a blank, this metascene holds all the important stuff.
 		% L1 = Conversation Initializer; reset to 0 when PC leaves the scene.
 		% L2 = Victory Counter
-		start <if= L1 0 Print 1 ForceChat %1% L= 1 1>
+		start <if= L1 0 ForceChat %1% L= 1 1>
 		nu1 <if= T1 0 Return if= L1 1 if= L2 0 ifNPCOK %1% Print 1 ForceChat %1% L= 1 0>
 		nu2 <if= T2 0 if= L1 1 if= L2 0   XPV 100   L= 2 1   ifNPCOK %1% Print 1 ForceChat %1% MoveAndPacifyNPC %1% %s3%>
-		Msg1 <%name1% contacts you.>
 
 		sub
 			Team 1
@@ -539,7 +538,7 @@ Content
 		% L2 = Victory Counter
 		% L3 = If nonzero, PC has attacked E1
 		% L4 = Value of E1's cargo
-		start <if= L1 0  Print 2 ForceChat %1% L= 1 1>
+		start <if= L1 0  ForceChat %1% L= 1 1>
 		% If the PC leaves the scene before defeating all enemies, there's no second chance.
 		nu1 <if= T1 0 Return  if= L2 0   L= 2 -1  DeleteNPC %1%  SetQuestStatus %qid% -2>
 		nu2 <if= T2 0         if= L2 0   XPV 100   L= 2 1   if= L3 0 else GoFightE1  ifNPCOK %1%  Print 2 ForceChat %1% MoveAndPacifyNPC %1% %s3%>
@@ -547,7 +546,6 @@ Content
 		Faint%1% <SetQuestStatus %qid% -2>
 
 		Msg1 <You recover $ \VAL L4 from %name1%'s cargo.>
-		Msg2 <%name1% contacts you.>
 
 		sub
 			Team 1

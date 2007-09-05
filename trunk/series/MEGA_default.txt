@@ -212,10 +212,10 @@ sub
 	MapWidth 30
 	MapHeight 30
 	content <Fill Sub *HIDEOUT_X na>
-	Start <Print 1 if= L1 0 L= 1 1 P= %id%11 1 ForceChat %1%>
+	Start <if= L1 0 L= 1 1 P= %id%11 1 ForceChat %1%>
 	nu1 <if= T1 0 Return if= L1 1  L= 1 2 ifNPCOk %1% P= %id%01 -1  ifNPCOK %1% FreezeNPC %1%>
-	nu2 <if= T2 0        if= L1 1  L= 1 2 Salvage  ifNPCOk %1% P= %id%01 1   Print 1  FreezeNPC %1%>
-	Msg1 <%name1% has been captured.>
+	nu2 <if= T2 0        if= L1 1  L= 1 2 Salvage  ifNPCOk %1% P= %id%01 1   Print 2  FreezeNPC %1%>
+	Msg2 <%name1% has been captured.>
 	sub
 		team 1
 		SetEnemy 2

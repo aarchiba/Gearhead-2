@@ -334,12 +334,15 @@ Plot
 	SubPlot2 <*CS_WinDuelVs 2>
 	SubPlot3 <*CS_LoseDuelVs 2>
 
+	% V1 = Initialization Counter
+	update <if= v1 0 V= 1 1 NPCLevel %2% StoryDL>
+
 	% As long as we're still at the first phase, the NPC's death will end the plot.
 	start <if= PlotStatus 0 ifNPCDead %2% LoseComp 0 .changes>
 	.changes <+T-- +F-->
 
 	% Branch activators
-	.%id1%_%plotid%_GoWin <if NPCOK %2% else GoE2Died SetPlotStatus %id2%>
+	.%id1%_%plotid%_GoWin <ifNPCOK %2% else GoE2Died SetPlotStatus %id2%>
 	.%id1%_%plotid%_GoLose <SetPlotStatus %id3%>
 	GoE2Died <WinComp 0 .changes>
 

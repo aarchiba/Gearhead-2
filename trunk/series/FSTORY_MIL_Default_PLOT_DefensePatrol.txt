@@ -114,9 +114,9 @@ sub
 end
 inv
 	STC ENCOUNTER-WANDER
-	use <ifG StatVal STAT_MetaVisibility -1      ifG PCScale 0   Print 5 ForceChat E1>
+	use <ifG StatVal STAT_MetaVisibility -1      ifG PCScale 0   ForceChat E1>
 
-	ATTACK <ifG StatVal STAT_MetaVisibility -1    ifG PCScale 0  ifUStealth 15 else GoAutoAttack ifYesNo 1 2 3 else GoAvoidAttack Goto Print 6 ForceChat E1>
+	ATTACK <ifG StatVal STAT_MetaVisibility -1    ifG PCScale 0  ifUStealth 15 else GoAutoAttack ifYesNo 1 2 3 else GoAvoidAttack  ForceChat E1>
 	GoAutoAttack <Print 5 ForceChat E1>
 	GoAvoidAttack <Print 4 AddSociable -1>
 
@@ -124,8 +124,7 @@ inv
 	Msg2 <Contact \ELEMENT 1 .>
 	Msg3 <Avoid \ELEMENT 1 .>
 	Msg4 <You slip away unnoticed.>
-	Msg5 <You are contacted by \ELEMENT 1 .>
-	Msg6 <You contact \ELEMENT 1 .>
+
 
 	ENCOUNTER_Defense
 

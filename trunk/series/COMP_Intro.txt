@@ -2,6 +2,115 @@
 %% told vaguely what's going on in the game world.
 
 Plot
+	name <I'm a Contender>
+	Size 0
+	desc <You are going to challenge another arena pilot.>
+	requires <#A +T01 P:PDASS ~+Gfa>
+
+	% E1 is the metascene to be used for the meeting.
+	% E2 is the scene where the newly created arena pilot normally resides.
+	% E3 is the scene where the "Intro NPC" is
+	% E4 is the "Intro NPC"
+	% E5 is the pilot you're going to challenge
+	element1 <MetaScene !Near -7 *Building NeverFail>
+	element2 <Scene !Near -7 building public>
+	element3 <Scene !Near -7 cavclub>
+	element4 <NewNPC -3 -7 PCFriend>
+	place4 <3 pass>
+	element5 <Prefab>
+	place5 <2 Pass>
+
+	update <ForceChat %4%>
+
+	sub
+		Persona 4
+		% THE INTRO
+		% - All +T01 components should feature a intro character. They don't have to,
+		%   of course, but it'll be a major pissoff if they don't.
+		% - The intro character should follow this form, to insure that all the major
+		%   bits are in place: the introduction, the question, the story info, and the
+		%   advice.
+		% V1 = Have given story info.
+		greeting <&SetTargetChar %5%   SMemo 2  WinComp E1 .next  if= V1 1 else GoGreeting Goto GoAdvice>
+		.next <+Tgt +Fch>
+		*GoGreeting <*INTRO_Introduction GoAskQuestion>
+		*GoAskQuestion <*INTRO_Question GoStoryInfo>
+		GoStoryInfo <NewChat Say 1 V= 1 1 AddChat 1>
+		*GoAdvice <*INTRO_Advice>
+		result1 <Goto GoAdvice>
+		Msg1 <I hear that the famous arena pilot %name5% will be at %name1% today. Did you know about that?>
+		Msg1_1 <%name5% of the Pro Duelist League is on vacation here in \NARRATIVE 7 . From what I've heard, \SPR E5 'll be in %name1% today.>
+		CMsg1_1 <ifNPCSociable Accept>
+		Msg1_2 <Here's a secret... Arena champion %name5% is going to be at %name1% today. This could be your big chance.>
+		CMsg1_2 <ifNPCShy Accept>
+		Msg1_3 <Have you been reading the duelist interboard? Some bigshot pilot named %name5% is going to be at %name1% today. I thought maybe you'd like to meet \OPR E5 .>
+		CMsg1_3 <ifNPCEasygoing Accept>
+		Msg1_4 <You know who %name5% is, right? Pro duelist league bigshot... Well, \SPR E5 's going to be at \ELEMENT 1 today. This could be a big opportunity for you.>
+		CMsg1_4 <ifNPCPassionate Accept>
+		Msg1_5 <I heard that the famous arena pilot %name5% is going to be at %name1% today. I'm sure if you ask nicely the two of you could play together.>
+		CMsg1_5 <ifNPCCheerful Accept>
+		Msg1_6 <When you become a famous arena champion, are you going to forget all of your old friends? That reminds me... I heard that pro duelist %name5% is going to be in %name1% tonight.>
+		CMsg1_6 <ifNPCMelancholy Accept>
+		Msg2 <You are going to challenge %name5% to a mecha duel; \SPR %5% can be found at %name1%.>
+		Prompt1 <I'm planning to challenge \OPR E5 . Got any advice?>
+		Prompt1_1 <Do you have any advice before I challenge \OPR E5 ?>
+	end
+	inv
+		NPC Arena Pilot
+	end
+
+Plot
+	name <Crime Wave>
+	Size 0
+	desc <A criminal faction is on a crime spree.>
+	requires <#A +T01 (C:CORPO|C:POLIC|P:COR|P:POL)>
+
+	% E1 is the scene where the "Intro NPC" is
+	% E2 is the "Intro NPC"
+	% E3 is the local police faction
+	% E4 is the crime faction currently rampaging
+	element1 <Scene !Near -7 cavclub>
+	element2 <NewNPC -3 -7 PCFriend>
+	place2 <1 pass>
+	element3 <Faction Police !Ally -7>
+	element4 <Faction Crime !Enemy 3>
+
+	update <ForceChat %2%>
+
+	sub
+		Persona 2
+		% THE INTRO
+		% - All +T01 components should feature a intro character. They don't have to,
+		%   of course, but it'll be a major pissoff if they don't.
+		% - The intro character should follow this form, to insure that all the major
+		%   bits are in place: the introduction, the question, the story info, and the
+		%   advice.
+		% V1 = Have given story info.
+		greeting <&SetEnemyFac %4%   StoryNote 2  WinComp 0 .next  if= V1 1 else GoGreeting Goto GoAdvice>
+		.next <+T-- +F-->
+		*GoGreeting <*INTRO_Introduction GoAskQuestion>
+		*GoAskQuestion <*INTRO_Question GoStoryInfo>
+		GoStoryInfo <NewChat Say 1 V= 1 1 AddChat 1>
+		*result1 <*INTRO_Advice>
+		Msg1 <Did you hear about all the robberies by %name4% lately? It's a dangerous time to work in a bank, that's for sure...>
+		Msg1_1 <I heard there's been a string of robberies committed by %name4% . If you ask around, I'm sure there must be a bounty for helping to catch them.>
+		CMsg1_1 <ifNPCSociable Accept>
+		Msg1_2 <Do you know about %name4% ? They've been responsible for a string of robberies.>
+		CMsg1_2 <ifNPCShy Accept>
+		Msg1_3 <I saw on the news that there have been a number of robberies by %name4% . Did you hear about that?>
+		CMsg1_3 <ifNPCEasygoing Accept>
+		Msg1_4 <>
+		CMsg1_4 <ifNPCPassionate Accept>
+		Msg1_5 <>
+		CMsg1_5 <ifNPCCheerful Accept>
+		Msg1_6 <>
+		CMsg1_6 <ifNPCMelancholy Accept>
+		Msg2 <Lately there have been many robberies by %name4% .>
+		Prompt1 <Any advice in case I happen to meet them?>
+		Prompt1_1 <Do you have any advice in case I run into them?>
+	end
+
+Plot
 	name <Normal Day>
 	Size 0
 	desc <You are going to meet your friend.>
@@ -20,8 +129,7 @@ Plot
 	element5 <NewNPC -3 -7 PCFriend>
 	place5 <2 Pass>
 
-	update <Print 1 ForceChat E4>
-	Msg1 <\ELEMENT 4 strikes up a conversation with you.>
+	update <ForceChat %4%>
 
 	sub
 		Persona 4
@@ -50,7 +158,7 @@ Plot
 		CMsg1_4 <ifNPCPassionate Accept>
 		Msg1_5 <\PERSONA E5 asked me to tell you \OPR E5 wants to meet at \SCENE E1 later on today. Have a good time together.>
 		CMsg1_5 <ifNPCCheerful Accept>
-		Msg1_6 <I guess you won't be able to hang out with me, today... \ELEMENT 5 is waiting for you at \ELEMENT 1 . I don't know why \SPR E5 wants to meet, or why I wasn't invited too...>
+		Msg1_6 <I guess you won't be able to hang out with me, today... %name5% is waiting for you at %name1% . I don't know why \SPR E5 wants to meet, or why I wasn't invited too...>
 		CMsg1_6 <ifNPCMelancholy Accept>
 
 		Msg2 <You are going to meet your old friend \PERSONA E5 at \SCENE E1 .>

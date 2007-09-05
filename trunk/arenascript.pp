@@ -1489,6 +1489,7 @@ begin
 	msg := getTheMessage( 'msg', id , GB , Scene );
 	if msg <> '' then begin
 		YesNoMenu( GB , msg , '' , '' );
+		DialogMsg( msg );
 	end;
 end;
 
@@ -4440,6 +4441,16 @@ begin
 		{ recharge timer, since the NPC initiated this chat }
 		{ and won't get pissed off. }
 		SetNAtt( NPC^.NA , NAG_Personal , NAS_ReTalk , 0 );
+
+		{ Print an appropriate message. }
+		if NPC^.Parent = Nil then begin
+			{ The NPC has no parent, so it must be on the gameboard }
+			{ and not in a mecha. Use the conversation message. }
+			DialogMsg( ReplaceHash( MsgString( 'FORCECHAT_SPEAK' ) , GearName( NPC ) ) );
+		end else begin
+			{ Use the contact message. }
+			DialogMsg( ReplaceHash( MsgString( 'FORCECHAT_CONTACT' ) , GearName( NPC ) ) );
+		end;
 
 		{ Hand everything to the interaction procedure. }
 		HandleInteract( GB , PC , NPC , Interact );
