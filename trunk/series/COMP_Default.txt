@@ -19,9 +19,9 @@
 %	STAT_XRP_TargetItem = 8;		{ I: }
 
 Plot
-	name <Basic Duel>
+	name <Basic Challenge>
 	desc <You're going to challenge some guy.>
-	requires <#A +Tgt +Fch>
+	requires <#A +Tgt +Fch T:++>
 
 	% E1 is the scene where the meeting will take place.
 	% E2 is the friend being met.

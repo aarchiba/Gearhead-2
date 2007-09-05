@@ -131,6 +131,110 @@ Content
 %% Please note that it is possible this component will not exit to either of
 %% the above labels, if a complete derailment of the story takes place.
 
+Content
+	name <Against The Law>
+	Size 5
+	desc <Dueling's illegal in L5, don't you know? But you can cut a deal...>
+	requires <*CS_Duel (+P--|+Pme) F:-- (S:MAQUI|S:FCOMS|S:RISHI) -L:Enemy (C:MILIT|C:ADVEN|C:POLIC) -P:crm>
+
+	% E1 is the challenger
+	% E2 is the challenger's home scene
+	% E3 is the outdoor scene where the duel will take place
+	% E4 is the police officer who will make the deal
+	%  - Note: L5Law is faction #9
+	% E5 is a crime faction
+	% E6 is the duel scene itself
+	element4 <Character HasMecha !Member 9 !Near -7>
+	Element5 <Faction Crime !Enemy 4>
+	Element6 <Prefab>
+	Place6 <3>
+
+	% P%id%01 = Initialization Counter
+	% P%id%02 = E5's original home
+
+	update <if= PlotStatus %id% else %pop%  if=  P%id%01 0  P= %id%01 1  MoveNPC %1% %6%  SetNPCTeam %1% 3  NPCLevel %1% StoryDL   P= %id%02 NPCScene %4% FreezeNPC %4%>
+
+	sub
+		MetaScene 6 2
+		% L1 = Encounter Over Counter
+		% L2 = Initialization Counter
+		MapWidth 30
+		MapHeight 30
+
+		special <ARENA>
+
+		Start <if= L2 0 L= 2 1   Alert 1  ForceChat %4%>
+		nu1 <if= T1 0  Return   if= L1 0 L= 1 1   LoseComp 0 .next>
+		nu2 <if= T2 0           if= L1 0 L= 1 2   AddRenown 1  XPV 100   SALVAGE  Trigger0 .%id%_%plotid%_GoWin>
+		.next <+T-- +F-->
+
+		end <ifNPCOK %1% MoveNPC %1% %2%>
+
+		Msg1 <As you prepare to duel %name1%, the two of you are approached by L5Law.>
+
+		sub
+			team 1
+			SetEnemy 2
+			ParaX 5
+			ParaY 10
+
+			team 2
+			SetEnemy 1 3
+			SetFaction 9
+			Deploy <WMecha 2 Threat StoryDL 200>
+			ParaX 25
+			ParaY 25
+
+			team 3
+			SetEnemy 2
+			ParaX 10
+			ParaY 5
+		end
+
+		Persona 1
+		greeting <if= PlotStatus %id% else %pop% Goto GoBusy>
+		GoBusy <EndChat Say 1>
+		Msg1 <Not a good time to be talking right now...>
+
+		Persona 4
+		% V1 = Have chatted counter
+		special <UNLISTED NOESCAPE>
+		greeting <if= V1 0 else GoBeenBefore  MoveNPC %4% P%id%02   V= 1 1  EndChat Say 1  AddChat 1 AddChat 2 AddChat 3>
+		GoBeenBefore <EndChat SayAnything>
+
+		result1 <EndChat AddEasygoing -d10  Say 2 AddChat 4 AddChat 5>
+		result2 <EndChat Say 3 AddChat 6 AddChat 7>
+		result3 <EndChat AddReact d15 Say 4 AddChat 8>
+		result4 <EndChat Say 5 StoryNote 6 AddLawful -10 AlterContext .attack &SetEnemyFac %5%>
+		.attack <+Pun>
+		result5 <Goto result2>
+		result6 <>
+		result7 <Goto result4>
+		result8 <Goto result2>
+
+		Msg1 <You two do know that unlicensed dueling is prohibited in the colonies, don't you? Power down your weapons and come quietly; you're under arrest.>
+		Msg2 <Don't be a fool. Even if you escape from us now, resisting arrest is going to be on your record forever. Cooperate and things will go much better.>
+		Msg3 <L5Law is in need of your talents. There have been problems with %name5% lately; we could use a good mecha pilot to help fight them. Aid us in this, and this duel will be stricken from your record.>
+		Msg4 <You're observant... that's a good trait to have. It's true that I have an ulterior motive for being here today.>
+		Msg5 <I think you're making a big mistake... as %name5% increases in power it's going to be bad news for all of us.>
+		Msg6 <You were busted by L5Law for illegal dueling.>
+
+		Prompt1 <You'll never take me alive, copper!>
+		Prompt2 <Wait, let's work out a deal...>
+		Prompt3 <No-one ever enforces that law. What's going on?>
+		CPrompt3 <ifG PCKnowledge 13 Accept>
+		Prompt4 <Forget it, I'm fighting my way out!>
+		Prompt5 <Alright. Tell me what you want.>
+		Prompt6 <OK, I'll help you.>
+		Prompt7 <Sorry, I'd rather have my freedom.>
+		Prompt8 <So, what do you want?>
+
+	end
+	inv
+		STC ENCOUNTER-DUEL
+		name <%name1%'s Mecha>
+		update <if= PlotStatus %id% else GoHide ShowEncounter SetStat STAT_MetaVisibility 0  Goto GoSetOrders>
+	end
 
 Content
 	name <A Duel Interrupted>
@@ -154,7 +258,7 @@ Content
 	% P%id%01 = Initialization Counter
 	% P%id%02 = Duel target skill level calculator
 
-	update <if=  P%id%01 0  P= %id%01 1  MoveNPC %1% %6%  SetNPCTeam %1% 3  V= %id%02 StoryDL  V+ %id%02 d5  NPCLevel %1% V%id%02>
+	update <if= PlotStatus %id% else %pop%  if=  P%id%01 0  P= %id%01 1  MoveNPC %1% %6%  SetNPCTeam %1% 3  V= %id%02 StoryDL  V+ %id%02 d5  NPCLevel %1% V%id%02 Goto %pop%>
 
 	sub
 		MetaScene 6 2
