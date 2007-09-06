@@ -198,6 +198,11 @@ begin
 	PC := Nil;
 
 	while M <> Nil do begin
+		{ If this gameboard should be exited, better stop processing meks. }
+		{ We perform the check here in case some script action happening before }
+		{ the first mecha moved caused this condition. }
+		if not KeepPlayingSC( Camp^.GB ) then break;
+
 		if IsMasterGear( M ) then begin
 			{ Check for actions in progress. }
 			if NotDestroyed( M ) and OnTheMap( Camp^.GB , M ) then begin
@@ -511,31 +516,34 @@ begin
 			end;
 		until ( not FoundPCToAct );
 
-		{ Handle the enemy mecha next. }
-		M := Camp^.GB^.Meks;
-		while M <> Nil do begin
-			team := NAttValue( M^.NA , NAG_Location , NAS_Team );
-			if ( Team <> NAV_DefPlayerTeam ) and ( Team <> NAV_LancemateTeam ) then begin
-				if NotDestroyed( M ) and OnTheMap( Camp^.GB , M ) then begin
-					TacticsTurn( Camp , M , False );
+		{ Handle the enemy mecha next, as long as the game hasn't been quit. }
+		if KeepPlayingSC( Camp^.GB ) then begin
+			{ Handle NPC mecha }
+			M := Camp^.GB^.Meks;
+			while M <> Nil do begin
+				team := NAttValue( M^.NA , NAG_Location , NAS_Team );
+				if ( Team <> NAV_DefPlayerTeam ) and ( Team <> NAV_LancemateTeam ) then begin
+					if NotDestroyed( M ) and OnTheMap( Camp^.GB , M ) then begin
+						TacticsTurn( Camp , M , False );
+					end;
 				end;
+				M := M^.Next;
 			end;
-			M := M^.Next;
+
+			{ Advance the clock by 60 seconds. }
+			QuickTime( Camp^.GB , TacticsRoundLength );
+			AddNAtt( Camp^.GB^.Scene^.NA , NAG_SceneData , NAS_TacticsTurnStart , TacticsRoundLength );
+			HandleTriggers( Camp^.GB );
+
+			{ Update clouds every round. }
+			for team := 1 to ( TacticsRoundLength div 30 ) do BrownianMotion( Camp^.GB );
+
+			{ Handle environmental effects every other round. }
+			if ( FX_String <> '' ) and ( ( ( Camp^.GB^.ComTime div TacticsRoundLength ) mod 2 ) = 1 ) then MassEffectFrontEnd( Camp^.GB , FX_String , FX_Desc );
+
+			{ Once every 10 rounds, roll for random monsters. }
+			if ( ( Camp^.GB^.ComTime div TacticsRoundLength ) mod 10 ) = 0 then RestockRandomMonsters( Camp^.GB );
 		end;
-
-		{ Advance the clock by 60 seconds. }
-		QuickTime( Camp^.GB , TacticsRoundLength );
-		AddNAtt( Camp^.GB^.Scene^.NA , NAG_SceneData , NAS_TacticsTurnStart , TacticsRoundLength );
-		HandleTriggers( Camp^.GB );
-
-		{ Update clouds every round. }
-		for team := 1 to ( TacticsRoundLength div 30 ) do BrownianMotion( Camp^.GB );
-
-		{ Handle environmental effects every other round. }
-		if ( FX_String <> '' ) and ( ( ( Camp^.GB^.ComTime div TacticsRoundLength ) mod 2 ) = 1 ) then MassEffectFrontEnd( Camp^.GB , FX_String , FX_Desc );
-
-		{ Once every 10 rounds, roll for random monsters. }
-		if ( ( Camp^.GB^.ComTime div TacticsRoundLength ) mod 10 ) = 0 then RestockRandomMonsters( Camp^.GB );
 	end;
 
 	{ Handle the last pending triggers. }

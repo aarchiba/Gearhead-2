@@ -1,5 +1,52 @@
 % Persona Fragment File
 
+% TYPE: *GodImBored
+%	The NPC will express a state of boredom or ennui.
+
+	Persona
+	requires <*GodImBored>
+	START <NewChat Say %id%01>
+	Msg%id%01 <I wish I had something to do right now.>
+	Msg%id%01_1 <This place wouldn't be nearly so boring if only there were some decent people to talk with...>
+	CMsg%id%01_1 <ifNPCSociable Accept>
+	Msg%id%01_2 <The tedium would be bearable if only I had some solitude to go along with it.>
+	CMsg%id%01_2 <ifNPCShy Accept>
+	Msg%id%01_3 <>
+	CMsg%id%01_3 <ifNPCEasygoing Accept>
+	Msg%id%01_4 <>
+	CMsg%id%01_4 <ifNPCPassionate Accept>
+	Msg%id%01_5 <>
+	CMsg%id%01_5 <ifNPCCheerful Accept>
+	Msg%id%01_6 <>
+	CMsg%id%01_6 <ifNPCMelancholy Accept>
+	Msg%id%01_7 <>
+	CMsg%id%01_7 <ifNPCPragmatic Accept>
+	Msg%id%01_8 <God, I'm bored.>
+	CMsg%id%01_8 <ifNPCSpiritual Accept>
+
+
+% TYPE: *IAcceptYourChallenge
+%	The PC has challenged the NPC to a duel; the NPC has accepted.
+%   PARAM1: Duel Scene (referenced as \SCENE %1% here)
+
+	Persona
+	requires <*IAcceptYourChallenge>
+	START <NewChat Say %id%01>
+	Msg%id%01 <You think you're good enough to face me? Meet me in \Scene %1% and we'll find out.>
+	Msg%id%01_1 <I accept your challenge. We should arrange a place... how about I meet you in \SCENE %1% later on today? You should prepare your mecha first, of course. I'll see you there.>
+	CMsg%id%01_1 <ifNPCSociable Accept>
+	Msg%id%01_2 <Alright. Meet me in \Scene %1%.>
+	CMsg%id%01_2 <ifNPCShy Accept>
+	Msg%id%01_3 <A duel? I can agree to that. Go get yourself prepared and meet me in \Scene %1% whenever you're ready.>
+	CMsg%id%01_3 <ifNPCEasygoing Accept>
+	Msg%id%01_4 <You're lucky that I'm bored. Normally I wouldn't waste time facing an amateur like you... meet me in \Scene %1% and I'll show you how a pro fights.>
+	CMsg%id%01_4 <ifNPCPassionate Accept>
+	Msg%id%01_5 <Well, this sounds like fun. I accept your challenge! Meet me in \Scene %1% .>
+	CMsg%id%01_5 <ifNPCCheerful Accept>
+	Msg%id%01_6 <A challenge? Meet me in \Scene %1% and don't be late.>
+	CMsg%id%01_6 <ifNPCMelancholy Accept>
+
+
 % TYPE: *WelcomeToLance
 %	The NPC has just joined the PC's team, and will give an opening
 %	speech of some type.

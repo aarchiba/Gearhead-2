@@ -222,7 +222,7 @@ begin
 		end;
 		NumElem := NumElem - NumParam + EsSoFar;
 
-		if ( NumElem + EsSoFar ) <= Num_Plot_Elements then begin
+		if NumElem <= Num_Plot_Elements then begin
 			{ We have room for the elements. Good. Now move on by installing the subplots. }
 
 			{ If any of the needed subplots fail, installation of this shard fails }
@@ -249,6 +249,12 @@ begin
 
 		end else begin
 			{ We have too many elements to merge back into the main plot. }
+			if XXRan_Debug then begin
+				DialogMsg( 'ERROR: ' + GearName( Shard ) + ' has too many elements: ' + BStr( NumElem ) + ' / ' + BStr( EsSoFar ) );
+				for t := 1 to Num_Plot_Elements do begin
+					DialogMsg( ' ' + BStr( T ) + ' ' + SAttValue( Shard^.SA , 'NAME_' + BStr( T ) ) + ' ' + BStr( ElementID( Shard , T ) ) );
+				end;
+			end;
 			InitOk := False;
 			RemoveGear( Slot^.InvCom , Shard );
 		end;
@@ -449,14 +455,15 @@ begin
 	{ Attempt to locate the main persona. }
 	MainPersona := SeekCurrentLevelGear( MainPlot^.SubCom , GG_Persona , MPIndex );
 	if MainPersona = Nil then begin
-		{ No main persona- delink, move, and relabel this one. }
-		DelinkGear( SubPlot^.SubCom , Persona );
-		InsertSubCom( MainPlot , Persona );
-		Persona^.S := MPIndex;
-	end else begin
-		{ Combine the two plots together. }
-		BuildMegalist( MainPersona , Persona^.SA );
+		{ No main persona- create one. }
+		MainPersona := LoadNewSTC( 'PERSONA_BLANK' );
+		InsertSubCom( MainPlot , MainPersona );
+		SetSAtt( MainPersona^.SA , 'SPECIAL <' + SAttValue( Persona^.SA , 'SPECIAL' ) + '>' );
+		MainPersona^.S := MPIndex;
 	end;
+
+	{ Combine the two plots together. }
+	BuildMegalist( MainPersona , Persona^.SA );
 end;
 
 Procedure MergeMetascene( MainPlot , SubPlot , MS: GearPtr );

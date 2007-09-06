@@ -341,10 +341,12 @@ Plot
 	start <if= PlotStatus 0 ifNPCDead %2% LoseComp 0 .changes>
 	.changes <+T-- +F-->
 
-	% Branch activators
-	.%id1%_%plotid%_GoWin <ifNPCOK %2% else GoE2Died SetPlotStatus %id2%>
-	.%id1%_%plotid%_GoLose <SetPlotStatus %id3%>
-	GoE2Died <WinComp 0 .changes>
+	.%id1%_%plotid%_GoWin <ifNPCOK %2% else GoE2Died SMemo 1 SetPlotStatus %id2%>
+	.%id1%_%plotid%_GoLose <SMemo 2 SetPlotStatus %id3%>
+	GoE2Died <SMemo 0 WinComp 0 .changes>
+
+	Msg1 <You bested %name2% in a duel; \SPR %2% is waiting for you at %name1%.>
+	Msg2 <You were defeated by %name2% in a duel; \SPR %2% is waiting for you at %name1%.>
 
 	sub
 		Persona 2

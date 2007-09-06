@@ -104,6 +104,85 @@ Content
 		Prompt%id%07 <This isn't a good time for that.>
 	end
 
+%%
+%% *ForcedInduction Content
+%%
+%% The PC has been forced into the ranks of the target faction against his will.
+%% This component will move the PC to a induction location, alter the plot state,
+%% store the PC's current faction and set the new faction. The new propp state
+%% will be "+Psh".
+%%
+%% The parent plot sets the plot status to this layer's ID when ready.
+%%
+%% Param1: The NPC doing the induction
+%% Param2: The faction the PC will be inducted into
+%%
+
+Content
+	name <Induction Plus Mission>
+	requires <*ForcedInduction>
+	desc <You are forcibly inducted into a faction and told to report for a mission.>
+
+	% Element1 is the NPC doing the induction
+	% Element2 is the faction the PC will be inducted into
+	% Element3 is the scene where the induction will take place
+	% Element4 is the NPC you must report to
+	Element3 <Scene Building Public !Near -7 !Ally 2>
+	Element4 <Character !Ally 2 !Near -7>
+
+	% v%id%01 = Initialization/Conversation Counter
+
+	update <if= PlotStatus %id% else %pop% if= v%id%01 0 V= %id%01 1 Exit %3% MoveAndPacifyNPC %1% %3% MoveNPC %4% %3%>
+
+	start <if= v%id%01 1 else %pop% Alert %id%01 ForceChat %1% Goto %pop%>
+	Msg%id%01 <You are taken to %name3%.>
+
+	sub
+		Persona 1
+		greeting <if= PlotStatus %id% else %pop%  &SetAllyFac %2% StoreOldFaction SetPCFac %2% &SetTargetChar %4% WinComp %3% .%id%_next  StoryNote %id%02 Goto .%id%_GoGreet>
+		*.%id%_GoGreet <*CS_ForcedInduction_Greeting .%id%_GoBrief %2%>
+		.%id%_next <+Tgt +Fmi +Psh>
+		.%id%_GoBrief <ifNPCOK %4% else .%id%_GoScrapMission NewChat Say %id%01 SMemo %id%04>
+		.%id%_GoScrapMission <NewChat Say %id%03 AlterContext .%id%_ScrapContext>
+		.%id%_ScrapContext <+T-- +F-->
+		Msg%id%01 <Go talk with %name4% for your first mission; \SPR %4% should be somewhere in this building.>
+		Msg%id%01_1 <You have to speak with %name4% about your first mission. I believe \SPR %4% can be found somewhere in this building.>
+		Msg%id%01_2 <%name4% has the details of your first mission. You'll need to go talk with \OPR %4% right over there.>
+		Msg%id%02 <You were conscripted into %name2%.>
+		Msg%id%03 <There was a task planned for you, but I'm afraid it's been scrapped. I'll let you know when there's something for you to do.>
+		Msg%id%04 <You have to see %name4% in %name3% about your first mission for %name2%.>
+	end
+
+Content
+	name <Basic Induction>
+	requires <*ForcedInduction>
+	desc <You are forcibly inducted into a faction, but given no orders at this time.>
+
+	% Element1 is the NPC doing the induction
+	% Element2 is the faction the PC will be inducted into
+	% Element3 is the scene where the induction will take place
+	Element3 <Scene Building Public !Near -7 !Ally 1>
+
+	% v%id%01 = Initialization/Conversation Counter
+
+	update <if= PlotStatus %id% else %pop% if= v%id%01 0 V= %id%01 1 Exit %3% MoveAndPacifyNPC %1% %3%>
+
+	start <if= v%id%01 1 else %pop% Alert %id%01 ForceChat %1% Goto %pop%>
+	Msg%id%01 <You are taken to %name3%.>
+
+	sub
+		Persona 1
+		greeting <if= PlotStatus %id% else %pop%  &SetAllyFac %2% StoreOldFaction SetPCFac %2% WinComp 0 .%id%_next  StoryNote %id%02 Goto .%id%_GoGreet>
+		*.%id%_GoGreet <*CS_ForcedInduction_Greeting .%id%_GoBrief %2%>
+		.%id%_next <+T-- +F-- +Psh>
+		.%id%_GoBrief <NewChat Say %id%01>
+		Msg%id%01 <We'll let you know when there's some work that needs to be done. For the time being you're free to go.>
+		Msg%id%01_1 <For the time being you're free to do whatever you'd like. I'll let you know when it's time for your first mission.>
+		Msg%id%01_2 <You are free to go, for the moment. I'll call you back when we have a mission for you.>
+		Msg%id%02 <You were conscripted into %name2%.>
+	end
+
+
 %% *CS_Duel Content
 %%
 %%
@@ -126,6 +205,7 @@ Content
 %% scripts:
 %% 	.%id%_%plotid%_GoWin
 %% 	.%id%_%plotid%_GoLose
+%% These scripts should set story memos.
 %% %id% is the ID of the duel layer; so, if it was generated as subplot 1,
 %% the calling plot would use %id1%.
 %% Please note that it is possible this component will not exit to either of
@@ -135,24 +215,28 @@ Content
 	name <Against The Law>
 	Size 5
 	desc <Dueling's illegal in L5, don't you know? But you can cut a deal...>
-	requires <*CS_Duel (+P--|+Pme) F:-- (S:MAQUI|S:FCOMS|S:RISHI) -L:Enemy (C:MILIT|C:ADVEN|C:POLIC) -P:crm>
-
+	requires <*CS_Duel (+P--|+Pme) F:-- (L:MAQUI|L:FCOMS|L:RISHI) -L:Enemy (C:MILIT|C:ADVEN|C:POLIC|P:PDASS) -P:crm>
 	% E1 is the challenger
 	% E2 is the challenger's home scene
 	% E3 is the outdoor scene where the duel will take place
-	% E4 is the police officer who will make the deal
-	%  - Note: L5Law is faction #9
+	% E4 is L5Law
 	% E5 is a crime faction
 	% E6 is the duel scene itself
-	element4 <Character HasMecha !Member 9 !Near -7>
+	% E7 is the police officer
+	Element4 <Faction L5Law>
 	Element5 <Faction Crime !Enemy 4>
 	Element6 <Prefab>
 	Place6 <3>
+	element7 <Character HasMecha !Comrade 4 !Near -2 NeverFail>
+	NeverFail7 <Police Officer>
 
 	% P%id%01 = Initialization Counter
-	% P%id%02 = E5's original home
+	% P%id%02 = E7's original home
 
-	update <if= PlotStatus %id% else %pop%  if=  P%id%01 0  P= %id%01 1  MoveNPC %1% %6%  SetNPCTeam %1% 3  NPCLevel %1% StoryDL   P= %id%02 NPCScene %4% FreezeNPC %4%>
+	update <if= PlotStatus %id% else %pop%  if=  P%id%01 0  P= %id%01 1  MoveNPC %1% %6%  SetNPCTeam %1% 3  NPCLevel %1% StoryDL   P= %id%02 NPCScene %7% FreezeNPC %7%>
+
+	% SubPlot1 = The Induction
+	subplot1 <*ForcedInduction 7 4>
 
 	sub
 		MetaScene 6 2
@@ -163,7 +247,7 @@ Content
 
 		special <ARENA>
 
-		Start <if= L2 0 L= 2 1   Alert 1  ForceChat %4%>
+		Start <if= L2 0 L= 2 1   Alert 1  Monologue %1% 2 ForceChat %7%>
 		nu1 <if= T1 0  Return   if= L1 0 L= 1 1   LoseComp 0 .next>
 		nu2 <if= T2 0           if= L1 0 L= 1 2   AddRenown 1  XPV 100   SALVAGE  Trigger0 .%id%_%plotid%_GoWin>
 		.next <+T-- +F-->
@@ -171,6 +255,9 @@ Content
 		end <ifNPCOK %1% MoveNPC %1% %2%>
 
 		Msg1 <As you prepare to duel %name1%, the two of you are approached by L5Law.>
+		Msg2 <I hope this isn't about all my unpaid parking tickets...>
+		Msg2_1 <You stall the cops, I have to eat the contents of my glove box...>
+		Msg2_2 <I know I haven't done anything wrong... that means they must be after you.>
 
 		sub
 			team 1
@@ -181,7 +268,7 @@ Content
 			team 2
 			SetEnemy 1 3
 			SetFaction 9
-			Deploy <WMecha 2 Threat StoryDL 200>
+			Deploy <WMecha 2 Threat StoryDL 250>
 			ParaX 25
 			ParaY 25
 
@@ -196,10 +283,10 @@ Content
 		GoBusy <EndChat Say 1>
 		Msg1 <Not a good time to be talking right now...>
 
-		Persona 4
+		Persona 7
 		% V1 = Have chatted counter
 		special <UNLISTED NOESCAPE>
-		greeting <if= V1 0 else GoBeenBefore  MoveNPC %4% P%id%02   V= 1 1  EndChat Say 1  AddChat 1 AddChat 2 AddChat 3>
+		greeting <if= V1 0 else GoBeenBefore  MoveNPC %7% P%id%02   V= 1 1  EndChat Say 1  AddChat 1 AddChat 2 AddChat 3>
 		GoBeenBefore <EndChat SayAnything>
 
 		result1 <EndChat AddEasygoing -d10  Say 2 AddChat 4 AddChat 5>
@@ -208,7 +295,7 @@ Content
 		result4 <EndChat Say 5 StoryNote 6 AddLawful -10 AlterContext .attack &SetEnemyFac %5%>
 		.attack <+Pun>
 		result5 <Goto result2>
-		result6 <>
+		result6 <EndChat Say 7 StoryNote 6 AddLawful d6 SetPlotStatus %id1%>
 		result7 <Goto result4>
 		result8 <Goto result2>
 
@@ -218,6 +305,7 @@ Content
 		Msg4 <You're observant... that's a good trait to have. It's true that I have an ulterior motive for being here today.>
 		Msg5 <I think you're making a big mistake... as %name5% increases in power it's going to be bad news for all of us.>
 		Msg6 <You were busted by L5Law for illegal dueling.>
+		Msg7 <You're making a smart move. I promise that you won't regret it.>
 
 		Prompt1 <You'll never take me alive, copper!>
 		Prompt2 <Wait, let's work out a deal...>
@@ -375,12 +463,10 @@ Content
 		special <ARENA>
 
 		Start <if= L2 0 L= 2 1   ForceChat %1%>
-		nu1 <if= T1 0  Return   MoveNPC %1% %2%  if= L1 0 L= 1 1   SMemo 1   History 4  Print 2   Trigger0 .%id%_%plotid%_GoLose>
-		nu2 <if= T2 0           MoveNPC %1% %2%  if= L1 0 L= 1 2   SMemo 3   History 5  Print 2 AddRenown 1   XPV 100   Trigger0 .%id%_%plotid%_GoWin>
+		nu1 <if= T1 0  Return   MoveNPC %1% %2%  if= L1 0 L= 1 1   StoryNote 4  Print 2   Trigger0 .%id%_%plotid%_GoLose>
+		nu2 <if= T2 0           MoveNPC %1% %2%  if= L1 0 L= 1 2   StoryNote 5  Print 2 AddRenown 1   XPV 100   Trigger0 .%id%_%plotid%_GoWin>
 
-		Msg1 <You were defeated by %name1% in a duel; \SPR %1% is waiting for you at %name2%.>
 		Msg2 <%name1% returns to %name2%.>
-		Msg3 <You defeated %name1% in a duel; \SPR %1% is waiting for you at %name2%.>
 		Msg4 <You were defeated by %name1% in a duel.>
 		Msg5 <You defeated %name1% in a duel.>
 

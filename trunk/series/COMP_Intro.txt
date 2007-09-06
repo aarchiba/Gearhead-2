@@ -2,6 +2,77 @@
 %% told vaguely what's going on in the game world.
 
 Plot
+	name <The First Duel>
+	desc <Your rival is waiting to fight you.>
+	requires <#A +T01 (C:ADVEN|+Gpo)>
+
+	% E1 is the metascene to be used for the meeting.
+	% E2 is the scene where the newly created arena pilot normally resides.
+	% E3 is the scene where the "Intro NPC" is
+	% E4 is the "Intro NPC"
+	% E5 is the friend you're going to challenge
+	element1 <MetaScene !Near -7 *Building NeverFail>
+	element2 <Scene !Near -7 building public>
+	element3 <Scene !Near -7 cavclub>
+	element4 <NewNPC -3 -7 PCFriend>
+	place4 <3 pass>
+	element5 <NewNPC 0 -7 PCFriend>
+	place5 <2 Pass>
+
+	update <ForceChat %4%>
+
+	start <ifNPCDead %4% LoseComp 0 .next>
+	.next <+T-- +F-->
+
+	sub
+		Persona 4
+		% THE INTRO
+		% - All +T01 components should feature a intro character. They don't have to,
+		%   of course, but it'll be a major pissoff if they don't.
+		% - The intro character should follow this form, to insure that all the major
+		%   bits are in place: the introduction, the question, the story info, and the
+		%   advice.
+		% V1 = Have given story info.
+		greeting <if= V1 0 else GoStoryInfo V= 1 1 Goto GoGreeting>
+		*GoGreeting <*INTRO_Introduction GoAskQuestion>
+		*GoAskQuestion <*INTRO_Question GoStoryInfo>
+		GoStoryInfo <NewChat Say 1  AddChat 1 AddChat 2>
+		*GoAdvice <*INTRO_Advice>
+		result1 <NewChat Say 4   AddChat 3   Goto GoAcceptDuel>
+		result2 <NewChat Say 5   AddChat 4   Goto GoRejectDuel>
+		result3 <Goto GoAdvice>
+		result4 <Goto GoAdvice>
+		GoAcceptDuel <&SetTargetChar E6 SMemo 2  WinComp E2 .duel>
+		.duel <+Tgt +Fch>
+		GoRejectDuel <&SetTargetChar E6 SMemo 3  WinComp E5 .noduel>
+		.noduel <+Tgt +F-->
+		Msg1 <Did %name5% get in contact with you? Apparently %5% wants to duel. Something about trying out a new mecha that \SPR %5% just got.>
+		Msg1_1 <Did you see %name5%'s new mecha? It's kind of low-end, but still pretty cool. I think \SPR %5% 's hoping to challenge you to a duel.>
+		CMsg1_1 <ifNPCSociable Accept>
+		Msg1_2 <You should know that %name5% 's looking for you. I think \SPR %5% wants to duel.>
+		CMsg1_2 <ifNPCShy Accept>
+		Msg1_3 <%name5% has just gotten a new mecha and is looking for anyone to duel with it. Did you hear about that?>
+		CMsg1_3 <ifNPCEasygoing Accept>
+		Msg1_4 <Did you see %name5% 's new mecha? It's awesome! I think \SPR %5% was hoping you'd agree to a match sometime.>
+		CMsg1_4 <ifNPCPassionate Accept>
+		Msg1_5 <Here's some interesting news. %name5% recently purchased a new mecha, and I think \SPR %5% 's hoping you'll join \OPR %5% for a friendly duel.>
+		CMsg1_5 <ifNPCCheerful Accept>
+		Msg1_6 <Has %name5% been bugging you about \PPR %5% new mecha? Ever since \SPR %5% got it \SPR %5% 's been looking for people to duel...>
+		CMsg1_6 <ifNPCMelancholy Accept>
+		Msg2 <You are going to meet %name5% at %name1%, and challenge \OPR %5% to a duel.>
+		Msg3 <You are going to meet %name5% at %name1%.>
+		Msg4 <Be careful. I know it's just going to be a friendly match between two rivals, but one of you could get hurt... or even worse, damage your mecha...>
+		Msg5 <What kind of great adventurer dismisses challenges like that? Anyhow, since you're not going to fight, you better go to %name1% and tell %name5% yourself.>
+		Prompt1 <We're meeting in %name1% later.>
+		Prompt1_1 <I'll be meeting \OPR E6 in %name1% later today.>
+		Prompt2 <I told \OPR %5% I'm not interested.>
+		Prompt2_1 <Pointless dueling doesn't interest me.>
+		Prompt3 <Any other motherly advice before I head out?>
+		Prompt3_1 <I know. Do you have any useful advice?>
+		Prompt4 <Any final words of advice?>
+	end
+
+Plot
 	name <I'm a Contender>
 	Size 0
 	desc <You are going to challenge another arena pilot.>

@@ -2895,6 +2895,18 @@ begin
 	IsGoodDeploymentSpot := it;
 end;
 
+Procedure GearDownToLowestMM( Mek: GearPtr; GB: GameBoardPtr; X,Y: Integer );
+	{ Use the lowest movement mode legal for this terrain. }
+var
+	T: Integer;
+begin
+	for T := 1 to NumMoveMode do begin
+		if ( BaseMoveRate( Nil , Mek , T ) > 0 ) then begin
+			SetNAtt( Mek^.NA , NAG_Action , NAS_MoveMode , T );
+			if not MovementBlocked( Mek , GB , 0 , 0 , X , Y ) then break;
+		end;
+	end;
+end;
 
 Function FindSpotNearGate( GB: GameBoardPtr; Mek: GearPtr; GNum: Integer ): Point;
 	{ First, find the gate whose number we have been given. }
@@ -3266,6 +3278,9 @@ begin
 		P := FindDeploymentSpot( GB , Mek );
 		SetNAtt( mek^.NA , NAG_Location , NAS_X , P.X );
 		SetNAtt( mek^.NA , NAG_Location , NAS_Y , P.Y );
+
+		{ Gear down to the lowest legal movemode. }
+		GearDownToLowestMM( Mek , GB , P.X , P.Y );
 	end;
 
 

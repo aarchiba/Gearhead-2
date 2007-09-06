@@ -1493,6 +1493,27 @@ begin
 	end;
 end;
 
+Procedure ProcessMonologue( var Event: String; GB: GameBoardPtr; Source: GearPtr );
+	{ An NPC is about to say something. }
+var
+	cid,id: Integer;	{ Character ID, Message ID }
+	NPC: GearPtr;
+	msg: String;
+begin
+	{ Find the two needed numeric valies. }
+	cid := ScriptValue( Event , GB , Source );
+	id := ScriptValue( Event , GB , Source );
+
+	{ Locate the NPC and the message. }
+	NPC := GG_LocateNPC( CID , GB , Source );
+	msg := getTheMessage( 'msg', id , GB , Source );
+	if ( msg <> '' ) and ( NPC <> Nil ) then begin
+		Monologue( GB , NPC , msg );
+		{ The monologue will do its own output. }
+	end;
+end;
+
+
 Procedure ProcessMemo( var Event: String; GB: GameBoardPtr; Scene: GearPtr );
 	{ Locate and then store the specified message. }
 var
@@ -4084,6 +4105,7 @@ begin
 		else if cmd = 'RETURN' then ProcessReturn( GB )
 		else if cmd = 'PRINT' then ProcessPrint( Event , GB , Source )
 		else if cmd = 'ALERT' then ProcessAlert( Event , GB , Source )
+		else if cmd = 'MONOLOGUE' then ProcessMonologue( Event , GB , Source )
 		else if cmd = 'MEMO' then ProcessMemo( Event , GB , Source )
 		else if cmd = 'SMEMO' then ProcessSMemo( Event , GB , Source )
 		else if cmd = 'QMEMO' then ProcessQMemo( Event , GB , Source )

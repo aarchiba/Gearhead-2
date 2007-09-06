@@ -471,7 +471,8 @@ Const
 					{ and also combat text. }
 
 	NAS_PerformancePenalty = 13;	{ How many times the NPC has heard the PC perform. }
-
+	NAS_OldFaction = 14;		{ When the PC has his faction changed in the core story, }
+					{ this variable may be used to record its original value. }
 
 	{ FACREWARD attributes tell what perks the PC has been given by a faction. }
 	{  These are stored in the faction gear rather than the PC. }

@@ -23,13 +23,12 @@
 		*GoChat <*MISC_CHATTER>
 		GoCheckEnemy <IFCHATNPCARCHENEMY else GoOffer EraseRumor Goto GoChat>
 		GoOffer <ifChatNPCCanJoinLance else GoPine ifG PCRenown ChatNPCRenown else GoPine ifG React 15 else GoPine NewChat Say 2 AddChat 1 AddChat 2 AddChat 3>
-		GoPine <NewChat Say 1>
+		*GoPine <*GodImBored>
 		result1 <PCAlly %3% ChatNPCJoinLance V= 1 1 EraseRumor Goto GoWelcome>
 		*GoWelcome <*WelcomeToLance>
 		result2 <NewChat Say 3 V= 1 1 EraseRumor AddSociable -d10>
 		result3 <NewChat Say 4 AddChat 4 AddChat 1>
 		result4 <NewChat Say 5 V= 1 1 EraseRumor>
-		Msg1 <I'd like to become a cavalier, but I don't have anyone to go with.>
 		Msg2 <Say, you're a cavalier, aren't you? If you're looking for a partner I'd love to join your crew.>
 		Msg2_1 <Hey, you're an adventurer, right? I'd like to join your group, if you'd be willing to have me.>
 		Msg2_2 <You're a mecha pilot, aren't you? I do a bit of piloting myself. If you need an assistant I'd love to join up with you.>
@@ -51,7 +50,9 @@
 		Msg5 <You could be right. Still, I'll never stop dreaming...>
 		Msg5_1 <I probably am, but that doesn't stop me from wanting to leave...>
 		Prompt1 <Alright, you can join.>
+		Prompt1_1 <I could use an extra hand.>
 		Prompt2 <Sorry, I don't need a lackey.>
+		Prompt2_1 <Not interested.>
 		Prompt3 <Why do you want to join me?>
 		Prompt4 <You're better off where you are.>
 	end

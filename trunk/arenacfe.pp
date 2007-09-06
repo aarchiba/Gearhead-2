@@ -26,6 +26,8 @@ interface
 
 uses gears,locale;
 
+Procedure Monologue( GB: GameBoardPtr; NPC: GearPtr; Msg: String );
+
 Procedure CombatDisplay( GB: GameBoardPtr );
 Procedure BeginTurn( GB: GameBoardPtr; M: GearPtr );
 

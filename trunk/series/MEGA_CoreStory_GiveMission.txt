@@ -1,0 +1,48 @@
+%% *CS_GiveMission Content
+%%
+%% The PC will be given something to do by an NPC.
+%% The mission is separated from the plot so that the same mission code
+%% can be used in multiple plot instances- the two main instances are
+%% in "+Tgt +Fmi" when the PC has to see an NPC about a mission, and
+%% also "+T--" when a member of the PC's faction could contact him with
+%% a mission.
+%%
+%% The parent plot sets the plot status to this layer's ID when ready.
+%%
+%% Param1: The NPC who will be giving the mission. This NPC must have been
+%% moved to the correct place by the parent plot.
+%%
+
+Content
+	name <Basic Fighting Mission>
+	desc <The PC will be asked to go fight some mecha.>
+	requires <*CS_GiveMission (+P--|+Pme|+Pun|+Psh) ~F:MIL ~P:MIL>
+
+	% E1 is the NPC that the PC will speak with
+	% E2 is the outdoors location where the encounter will be placed
+
+	element2 <Scene Environs !Near -7>
+
+	start <if= PlotStatus %id% else %pop% ifNPCDead %1% LoseComp 0 .loss>
+	.loss <+T-->
+
+	%% SubPlot1 is the combat encounter itself
+	SubPlot1 <*CS_MechaEncounter 1 2>
+
+	sub
+		Persona 1
+		rumor0 <%name1% needs a cavalier for some kind of mission.>
+		greeting <if# PlotStatus %id% else .%id%_GoOfferMission if# PlotStatus %id1% else .%id%_GoRemind Goto %pop%>
+		.%id%_GoOfferMission <ifChatNPCUnknown else .%id%_GoKnownGreeting ifChatNPCAlly else .%id%_GoUnknownGreeting Goto .%id%_GoKnownGreeting>
+		*.%id%_GoKnownGreeting <*IHaveAJobForYou .%id%_GoBriefing>
+		*.%id%_GoUnknownGreeting <*AreYouHereAboutJob&Mecha .%id%_GoBriefing>
+		*.%id%_GoBriefing <*CORE_BasicJob .%id%_GoAccept .%id%_GoDeny>
+		*.%id%_GoAccept <*GoodLuckOnMission .%id%_GoR1Exit ChatNPCFac &EnemyFac>
+		.%id%_GoR1Exit <SetPlotStatus %id1%>
+		*.%id%_GoDeny <*RejectMission .%id%_GoR2Exit>
+		.%id%_GoR2Exit <LoseComp 0 .%id%_changes>
+		.%id%_changes <+T-- +F-->
+	end
+
+
+
