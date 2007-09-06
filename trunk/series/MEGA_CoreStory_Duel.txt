@@ -1,0 +1,389 @@
+%% *CS_Duel Content
+%%
+%%
+%% The PC is about to duel somebody as part of the core story.
+%%
+%% The parent plot sets the plot status to this layer's ID when ready.
+%% This component should move the opponent from its current location to the
+%% contest location at update, and then move the opponent back to its
+%% original location at the end of the battle.
+%%
+%% If the duel significantly alters the plot state, it should not exit
+%% to one of the provided endings but should instead provide its
+%% own resolution.
+%%
+%% Param1: The Challenger
+%% Param2: The Challenger's home scene, for the purpose of this component
+%% Param3: The outdoor scene where the duel will take place
+%%
+%% NEEDED SCRIPTS: To deal with the ending, the parent plot must define two
+%% scripts:
+%% 	.%id%_%plotid%_GoWin
+%% 	.%id%_%plotid%_GoLose
+%% These scripts should set story memos.
+%% %id% is the ID of the duel layer; so, if it was generated as subplot 1,
+%% the calling plot would use %id1%.
+%% Please note that it is possible this component will not exit to either of
+%% the above labels, if a complete derailment of the story takes place.
+
+Content
+	name <Psycho Duelist>
+	Size 9
+	desc <Your duel is cut short by the intervention of an apparent psychopath.>
+	requires <*CS_Duel (+P--|+Pme) E:-->
+
+	% E1 is the challenger
+	% E2 is the challenger's home scene
+	% E3 is the outdoor scene where the duel will take place
+	% E4 is the dueling scene
+	% E5 is the opposing character
+	% E6 is a hospital, to use if the PC wins
+	Element4 <Prefab>
+	Place4 <3>
+	Element5 <Prefab>
+	Element6 <Scene Hospital !Near -7>
+
+	% P%id%01 = Initialization Counter
+	% P%id%02 = Initialization Counter
+
+	update <if= PlotStatus %id% else %pop%  if=  P%id%01 0  P= %id%01 1  FreezeNPC %1% MoveNPC %5% %4% SetNPCTeam %5% 2 P= %id%02 StoryDL P+ %id%02 10 NPCLevel %5% P%id%02>
+
+	% SubPlot1 = If you managed to rescue E1...
+	SubPlot1 <*CS_ThanksForRescue&FromCSEnemy 1>
+
+	sub
+		MetaScene 4 2
+		% L1 = Encounter Over Counter
+		% L2 = Initialization Counter
+		% L3 = E1 powerup var
+		MapWidth 30
+		MapHeight 30
+
+		special <ARENA>
+
+		Start <if= L2 0 L= 2 1   StoryNote 1  ForceChat %5%    &SetEnemyChar %5%   AlterContext .alter>
+		.alter <+Pun>
+		nu1 <if= T1 0  Return   if= L1 0 L= 1 1   DeleteNPC %1%    LoseComp 0 .loss>
+		.loss <+T-- +F-->
+		nu2 <if= T2 0           if= L1 0 L= 1 2   ifYesNo 4 5 6 else GoLeaveE1ToDie MoveNPC %1% %6%  Print 3 SMemo 7 History 8   AddRenown 1   XPV 100   SetPlotStatus %id1%>
+		% If E1 is left to die, there's a chance he'll survive and become the PC's enemy.
+		GoLeaveE1ToDie <SMemo 0 History 9 WinComp 0 .win   XPV 100  AddHeroic -2  if= d2 1 else GoDeleteE1 PCEnemy %1% L= 3 StoryDL L+ 3 d40 LevelNPC %1% L3>
+		GoDeleteE1 <DeleteNPC %1%>
+		.win <+T-- +F-->
+
+		% E5 has script immunity for this encounter...
+		end <FreezeNPC %5%>
+
+		Msg1 <Your duel with %name1% was interrupted by %name5%.>
+		Msg3 <You call for help to take %name1% to %name6%.>
+		Msg4 <With %name5% gone, you can deal with %name1%; \PPR %1% mecha is severely damaged and \SPR %1% may be injured or dead.>
+		Msg5 <Call for help>
+		Msg6 <Leave \OPR %1% there>
+		Msg7 <You rescued %name1% from %name5%; \SPR %1% should be resting at %name6% now.>
+		Msg8 <You rescued %name1% from %name5%.>
+		Msg9 <After defeating %name5%, you left %name1% to die.>
+
+		sub
+			team 1
+			SetEnemy 2
+			ParaX 5
+			ParaY 5
+
+			team 2
+			SetEnemy 1
+			ParaX 25
+			ParaY 25
+		end
+
+		Persona 5
+		special <UNLISTED NOESCAPE>
+		greeting <>
+
+	end
+	inv
+		STC ENCOUNTER-DUEL
+		name <%name1%'s Mecha>
+		update <if= PlotStatus %id% else GoHide ShowEncounter SetStat STAT_MetaVisibility 0  Goto GoSetOrders>
+
+		NPC Mecha Pilot
+		chardesc Villainous Renowned
+	end
+
+Content
+	name <Against The Law>
+	Size 5
+	desc <Dueling's illegal in L5, don't you know? But you can cut a deal...>
+	requires <*CS_Duel (+P--|+Pme) F:-- (L:MAQUI|L:FCOMS|L:RISHI) -L:Enemy (C:MILIT|C:ADVEN|C:POLIC|P:PDASS) -P:crm>
+	% E1 is the challenger
+	% E2 is the challenger's home scene
+	% E3 is the outdoor scene where the duel will take place
+	% E4 is L5Law
+	% E5 is a crime faction
+	% E6 is the duel scene itself
+	% E7 is the police officer
+	Element4 <Faction L5Law>
+	Element5 <Faction Crime !Enemy 4>
+	Element6 <Prefab>
+	Place6 <3>
+	element7 <Character HasMecha !Comrade 4 !Near -2 NeverFail>
+	NeverFail7 <Police Officer>
+
+	% P%id%01 = Initialization Counter
+	% P%id%02 = E7's original home
+
+	update <if= PlotStatus %id% else %pop%  if=  P%id%01 0  P= %id%01 1  MoveNPC %1% %6%  SetNPCTeam %1% 3  NPCLevel %1% StoryDL   P= %id%02 NPCScene %7% FreezeNPC %7%>
+
+	% SubPlot1 = The Induction
+	subplot1 <*ForcedInduction 7 4>
+
+	sub
+		MetaScene 6 2
+		% L1 = Encounter Over Counter
+		% L2 = Initialization Counter
+		MapWidth 30
+		MapHeight 30
+
+		special <ARENA>
+
+		Start <if= L2 0 L= 2 1   Alert 1  Monologue %1% 2 ForceChat %7%>
+		nu1 <if= T1 0  Return   if= L1 0 L= 1 1   LoseComp 0 .next>
+		nu2 <if= T2 0           if= L1 0 L= 1 2   AddRenown 1  XPV 100   SALVAGE  Trigger0 .%id%_%plotid%_GoWin>
+		.next <+T-- +F-->
+
+		end <ifNPCOK %1% MoveNPC %1% %2%>
+
+		Msg1 <As you prepare to duel %name1%, the two of you are approached by L5Law.>
+		Msg2 <I hope this isn't about all my unpaid parking tickets...>
+		Msg2_1 <You stall the cops, I have to eat the contents of my glove box...>
+		Msg2_2 <I know I haven't done anything wrong... that means they must be after you.>
+
+		sub
+			team 1
+			SetEnemy 2
+			ParaX 5
+			ParaY 10
+
+			team 2
+			SetEnemy 1 3
+			SetFaction 9
+			Deploy <WMecha 2 Threat StoryDL 250>
+			ParaX 25
+			ParaY 25
+
+			team 3
+			SetEnemy 2
+			ParaX 10
+			ParaY 5
+		end
+
+		Persona 1
+		greeting <if= PlotStatus %id% else %pop% Goto GoBusy>
+		GoBusy <EndChat Say 1>
+		Msg1 <Not a good time to be talking right now...>
+
+		Persona 7
+		% V1 = Have chatted counter
+		special <UNLISTED NOESCAPE>
+		greeting <if= V1 0 else GoBeenBefore  MoveNPC %7% P%id%02   V= 1 1  EndChat Say 1  AddChat 1 AddChat 2 AddChat 3>
+		GoBeenBefore <EndChat SayAnything>
+
+		result1 <EndChat AddEasygoing -d10  Say 2 AddChat 4 AddChat 5>
+		result2 <EndChat Say 3 AddChat 6 AddChat 7>
+		result3 <EndChat AddReact d15 Say 4 AddChat 8>
+		result4 <EndChat Say 5 StoryNote 6 AddLawful -10 AlterContext .attack &SetEnemyFac %5%>
+		.attack <+Pun>
+		result5 <Goto result2>
+		result6 <EndChat Say 7 StoryNote 6 AddLawful d6 SetPlotStatus %id1%>
+		result7 <Goto result4>
+		result8 <Goto result2>
+
+		Msg1 <You two do know that unlicensed dueling is prohibited in the colonies, don't you? Power down your weapons and come quietly; you're under arrest.>
+		Msg2 <Don't be a fool. Even if you escape from us now, resisting arrest is going to be on your record forever. Cooperate and things will go much better.>
+		Msg3 <L5Law is in need of your talents. There have been problems with %name5% lately; we could use a good mecha pilot to help fight them. Aid us in this, and this duel will be stricken from your record.>
+		Msg4 <You're observant... that's a good trait to have. It's true that I have an ulterior motive for being here today.>
+		Msg5 <I think you're making a big mistake... as %name5% increases in power it's going to be bad news for all of us.>
+		Msg6 <You were busted by L5Law for illegal dueling.>
+		Msg7 <You're making a smart move. I promise that you won't regret it.>
+
+		Prompt1 <You'll never take me alive, copper!>
+		Prompt2 <Wait, let's work out a deal...>
+		Prompt3 <No-one ever enforces that law. What's going on?>
+		CPrompt3 <ifG PCKnowledge 13 Accept>
+		Prompt4 <Forget it, I'm fighting my way out!>
+		Prompt5 <Alright. Tell me what you want.>
+		Prompt6 <OK, I'll help you.>
+		Prompt7 <Sorry, I'd rather have my freedom.>
+		Prompt8 <So, what do you want?>
+
+	end
+	inv
+		STC ENCOUNTER-DUEL
+		name <%name1%'s Mecha>
+		update <if= PlotStatus %id% else GoHide ShowEncounter SetStat STAT_MetaVisibility 0  Goto GoSetOrders>
+	end
+
+Content
+	name <A Duel Interrupted>
+	Size 8
+	desc <When you go to fight, you find some other mecha there.>
+	requires <*CS_Duel (+P--|+Pme) ~F:-- ~T:Ally ~T:Friend -L:Enemy ~+Gpe>
+
+	% E1 is the challenger
+	% E2 is the challenger's home scene
+	% E3 is the outdoor scene where the duel will take place
+	% E4 is the faction whose mecha are present
+	% E5 is the faction of the current city
+	% E6 is the duel scene itself
+	element4 <Faction Military !Enemy -7 !Xclude 1>
+	% The faction of the root scene must not be an enemy of the character
+	% you're dueling...
+	element5 <Faction !Comrade -7 !Okay 1>
+	Element6 <Prefab>
+	Place6 <%e3%>
+
+	% P%id%01 = Initialization Counter
+	% P%id%02 = Duel target skill level calculator
+
+	update <if= PlotStatus %id% else %pop%  if=  P%id%01 0  P= %id%01 1  MoveNPC %1% %6%  SetNPCTeam %1% 3  V= %id%02 StoryDL  V+ %id%02 d5  NPCLevel %1% V%id%02 Goto %pop%>
+
+	sub
+		MetaScene 6 2
+		% L1 = Encounter Over Counter
+		% L2 = Initialization Counter
+		% L4 = Identity of enemy NPC
+		MapWidth 30
+		MapHeight 30
+
+		special <ARENA>
+
+		Start <if= L2 0 L= 2 1   ForceChat %1%   AlterContext .change L= 4 %1%>
+		nu1 <if= T1 0  Return   if= L1 0 L= 1 1   StoryNote 1   Trigger0 .%id%_%plotid%_GoLose>
+		nu2 <if= T2 0           if= L1 0 L= 1 2   StoryNote 1   AddRenown 1  XPV 100   SALVAGE  ifTeamNotHostile 3 else GoFoughtNPC   Trigger0 .%id%_%plotid%_GoWin>
+		GoFoughtNPC <WinComp 0 .Next>
+		.next <+T-- +F-->
+		.change <+Pun>
+
+		end <ifNPCOK %1% MoveNPC %1% %2%>
+
+		Msg1 <Your duel with %name1% was interrupted by %name4%.>
+
+		sub
+			team 1
+			SetEnemy 2
+			ParaX 5
+			ParaY 10
+
+			team 2
+			SetEnemy 1 3
+			Deploy <SetSelfFaction %4%   WMecha 2 Threat StoryDL 200>
+			ParaX 15
+			ParaY 25
+
+			team 3
+			SetEnemy 2
+			ParaX 25
+			ParaY 10
+		end
+
+		Persona 1
+		% V%id%01 = Have spoken already
+		greeting <if= PlotStatus %id% else %pop% if= V%id%01 1 else .%id%_GoFirstTime EndChat Say %id%01>
+		.%id%_GoFirstTime <ifChatNPCInPlay else .%id%_GoWaiting EndChat Say %id%02 AddChat %id%01 AddChat %id%02 AddChat %id%03 V= %id%01 1>
+		*.%id%_GoWaiting <*WaitingForDuel %3%>
+		result%id%01 <EndChat Say %id%03 AddHeroic 1        PCFriend %1% &SetAllyFac %5% &SetEnemyFac %4% PCFEnemy %4%>
+		result%id%02 <EndChat Say %id%04 AddEasygoing -10   AddHeroic -1  PCEnemy %1%  TeamAttack 3 if= &EnemyFac 0 &SetEnemyFac %4% PCFEnemy %4%>
+		result%id%03 <EndChat Say %id%05 AddRenown -1 AddReact -d20 if= &EnemyFac 0 &SetEnemyFac %4% PCFEnemy %4%>
+		Msg%id%01 <Keep your mind on the game.>
+		Msg%id%02 <It looks like we're not alone... those mecha are from %name4%. They can't possibly be up to any good. How about we fight them together?>
+		Msg%id%02_1 <As much as I'd like to fight you, I'm afraid that we just got something bigger to worry about... Those mecha are from %name4%. Obviously they're here on some kind of covert mission. We should stop them before they do any damage.>
+		CMsg%id%02_1 <ifNPCSociable Accept>
+		Msg%id%02_2 <Look at that... a raiding party from %name4%. Let's defeat them together.>
+		CMsg%id%02_2 <ifNPCShy Accept>
+		Msg%id%02_3 <Sorry to interrupt our duel, but there's a group of mecha from %name4% right here. Most likey they're planning something destructive. Shall we defeat them together?>
+		CMsg%id%02_3 <ifNPCEasygoing Accept>
+		Msg%id%02_4 <Our fight will have to wait, there's something more important to take care of first... Look, it's a scout team from %name4%. This could be bad. If we team up we should be able to defeat them easily.>
+		CMsg%id%02_4 <ifNPCPassionate Accept>
+		Msg%id%02_5 <I was hoping our duel would be interesting, but I just found something a whole lot more fun. My sensors picked up a raiding party from %name4%. If we join forces, they won't stand a chance against us.>
+		CMsg%id%02_5 <ifNPCCheerful Accept>
+		Msg%id%02_6 <I've got some bad news... Look over there, those mecha were sent by %name4%. Is this the start of an invasion? Let's put our duel aside and defeat them before they have a chance to kill anyone.>
+		CMsg%id%02_6 <ifNPCMelancholy Accept>
+		Msg%id%03 <You're an honorable pilot, \PC . Let's do this.>
+		Msg%id%03_1 <It'll be a pleasure to fight by your side. Let's go.>
+		Msg%id%04 <Your hatred means so much that you'd side with the enemies of \NARRATIVE 7 ? Then let's see who can kill you first, %name4% or me...>
+		Msg%id%04_1 <How spiteful are you? These mecha are here to destroy \NARRATIVE 7 , and still you can't think of anything but our fued. If it's a fight you want then it's a fight you're going to get!>
+		Msg%id%05 <You're just going to run? You coward! Do the lives of your fellow citizens mean nothing to you?>
+		Msg%id%05_1 <You're going to leave me to face them all by myself!? Coward! Traitor!>
+		Prompt%id%01 <I'll help you, for \NARRATIVE 7 's sake.>
+		Prompt%id%01_1 <It's up to us to protect \NARRATIVE 7 .>
+		Prompt%id%02 <No way, you aren't getting off that easy.>
+		CPrompt%id%02 <ifNPCArchEnemy E2 Accept>
+		Prompt%id%02_1 <Forget it. I hate you more than %name4%.>
+		Prompt%id%03 <You do it yourself. I'm out of here.>
+		Prompt%id%03_1 <You can fight them, I'm getting out of here.>
+	end
+	inv
+		STC ENCOUNTER-DUEL
+		name <%name1%'s Mecha>
+		update <if= PlotStatus %id% else GoHide ShowEncounter SetStat STAT_MetaVisibility 0  Goto GoSetOrders>
+	end
+
+
+Content
+	name <Regular Duel>
+	desc <The PC and the NPC will fight. Nothing special happens.>
+	requires <*CS_Duel>
+	Size 5
+
+	% E1 is the challenger
+	% E2 is the challenger's home scene
+	% E3 is the outdoor scene where the duel will take place
+	% E4 is the duel encounter
+	Element4 <Prefab>
+	Place4 <%e3%>
+
+	% P%id%01 = Initialization Counter
+	update <if= PlotStatus %id% else %pop% if= P%id%01 0 MoveNPC %1% %4% SetNPCTeam %1% 2 NPCLevel %1% StoryDL P= %id%01 1>
+
+	sub
+		Persona 1
+		greeting <if= PlotStatus %id% else %pop%  ifChatNPCInPlay else .%id%_GoNotInPlay Goto .%id%_GoChallenge>
+		*.%id%_GoChallenge <*ArenaChallenge .%id%_GoThemeInfo>
+		*.%id%_GoThemeInfo <*THEME_EXPO&Enemy NA>
+		*.%id%_GoNotInPlay <*WaitingForDuel %3%>
+
+		MetaScene 4 2
+		% L1 = Encounter Over Counter
+		% L2 = Initialization Counter
+		% L4 = Identity of enemy NPC
+		MapWidth 30
+		MapHeight 30
+
+		special <ARENA>
+
+		Start <if= L2 0 L= 2 1   ForceChat %1%>
+		nu1 <if= T1 0  Return   MoveNPC %1% %2%  if= L1 0 L= 1 1   StoryNote 4  Print 2   Trigger0 .%id%_%plotid%_GoLose>
+		nu2 <if= T2 0           MoveNPC %1% %2%  if= L1 0 L= 1 2   StoryNote 5  Print 2 AddRenown 1   XPV 100   Trigger0 .%id%_%plotid%_GoWin>
+
+		Msg2 <%name1% returns to %name2%.>
+		Msg4 <You were defeated by %name1% in a duel.>
+		Msg5 <You defeated %name1% in a duel.>
+
+		sub
+			team 1
+			SetEnemy 2
+			ParaX 5
+			ParaY 5
+
+			team 2
+			SetEnemy 1
+			ParaX 25
+			ParaY 25
+		end
+
+	end
+	inv
+		STC ENCOUNTER-DUEL
+		name <%name1%'s Mecha>
+		update <if= PlotStatus %id% else GoHide ShowEncounter SetStat STAT_MetaVisibility 0  Goto GoSetOrders>
+	end
+

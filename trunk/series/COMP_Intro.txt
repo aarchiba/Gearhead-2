@@ -3,7 +3,7 @@
 
 Plot
 	name <The First Duel>
-	desc <Your rival is waiting to fight you.>
+	desc <You're going to challenge your rival.>
 	requires <#A +T01 (C:ADVEN|+Gpo)>
 
 	% E1 is the metascene to be used for the meeting.
@@ -42,9 +42,9 @@ Plot
 		result2 <NewChat Say 5   AddChat 4   Goto GoRejectDuel>
 		result3 <Goto GoAdvice>
 		result4 <Goto GoAdvice>
-		GoAcceptDuel <&SetTargetChar E6 SMemo 2  WinComp E2 .duel>
+		GoAcceptDuel <&SetTargetChar %5% SMemo 2  WinComp %1% .duel>
 		.duel <+Tgt +Fch>
-		GoRejectDuel <&SetTargetChar E6 SMemo 3  WinComp E5 .noduel>
+		GoRejectDuel <&SetTargetChar %5% SMemo 3  WinComp %1% .noduel>
 		.noduel <+Tgt +F-->
 		Msg1 <Did %name5% get in contact with you? Apparently %5% wants to duel. Something about trying out a new mecha that \SPR %5% just got.>
 		Msg1_1 <Did you see %name5%'s new mecha? It's kind of low-end, but still pretty cool. I think \SPR %5% 's hoping to challenge you to a duel.>
