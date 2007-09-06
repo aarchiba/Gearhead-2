@@ -653,7 +653,7 @@ begin
 	until D <> -2;
 
 {$IFNDEF ASCII}
-	D := ( D + DirOffset[ origin_d ] + 6 ) mod 8;
+	if D <> -1 then D := ( D + DirOffset[ origin_d ] + 6 ) mod 8;
 {$ENDIF}
 
 	DirKey := D;
