@@ -61,7 +61,7 @@ Content
 
 		special <ARENA>
 
-		Start <if= L2 0 L= 2 1   StoryNote 1  ForceChat %5%    &SetEnemyChar %5%   AlterContext .alter>
+		Start <if= L2 0 L= 2 1   StoryNote 1  Alert 10  ForceChat %5%    &SetEnemyChar %5%   AlterContext .alter>
 		.alter <+Pun>
 		nu1 <if= T1 0  Return   if= L1 0 L= 1 1   DeleteNPC %1%    LoseComp 0 .loss>
 		.loss <+T-- +F-->
@@ -82,6 +82,7 @@ Content
 		Msg7 <You rescued %name1% from %name5%; \SPR %1% should be resting at %name6% now.>
 		Msg8 <You rescued %name1% from %name5%.>
 		Msg9 <After defeating %name5%, you left %name1% to die.>
+		Msg10 <You arrive for the duel, but %name1% is nowhere to be seen. Instead you are confronted by %name5%.>
 
 		sub
 			team 1
@@ -97,8 +98,29 @@ Content
 
 		Persona 5
 		special <UNLISTED NOESCAPE>
-		greeting <>
-
+		greeting <EndChat Say 1 AddChat 1>
+		result1 <EndChat Say 2 AddChat 2 AddChat 3 AddChat 4>
+		result2 <ifConversation HardSkillTar StoryDL else GoR2Fail EndChat Say 4 Print 9 MoveNPC %1% %6%  Exit %6%  SMemo 5  History 6   AddRenown 1  AddHeroic 1  AddReact -d20  SetPlotStatus %id1%>
+		GoR2Fail <EndChat Say 3 AddChat 5>
+		result3 <EndChat Say 7 AddChat 5>
+		result4 <EndChat Say 8 AddChat 5>
+		*result5 <*THEME_EXPO&Enemy NA>
+		Msg1 <Finally, the second pilot has arrived. I was hoping you'd show up in time for me to see both of you at once.>
+		Msg2 <That would be \PPR %1% wreckage you see over there. I'm afraid \SPR %1% didn't provide much of a challenge, but maybe you'll be harder to kill.>
+		Msg3 <Why should I let my plaything go when you haven't even been scratched yet?>
+		Msg4 <Isn't that touching... I take it from the sound of your voice that you're not likely to be much of a compeditor. Go, then, and know that you have been spared death.>
+		Msg5 <You rescued %name1% from %name5%; \SPR %1% should be resting at %name6% now.>
+		Msg6 <You rescued %name1% from %name5%.>
+		Msg7 <My plans will be clear to the whole world soon enough, but for right now I am merely looking at some light entertainment.>
+		Msg8 <You have spirit... There's a chance you'll last longer than %name1%, though I doubt that very much.>
+		Msg9 <You bring %name1% to %name6% for emergency treatment.>
+		Prompt1 <What happened to %name1%?>
+		Prompt1_1 <Where is %name1%?>
+		Prompt2 <Please, let me take %name1% to hospital.>
+		Prompt3 <Why are you doing this?>
+		Prompt4 <That's it, you're going down.>
+		Prompt4_1 <Enough talking. Let's fight.>
+		Prompt5 <[Continue]>
 	end
 	inv
 		STC ENCOUNTER-DUEL
@@ -143,7 +165,7 @@ Content
 		MapWidth 30
 		MapHeight 30
 
-		special <ARENA>
+		special <ARENA SOLO>
 
 		Start <if= L2 0 L= 2 1   Alert 1  Monologue %1% 2 ForceChat %7%>
 		nu1 <if= T1 0  Return   if= L1 0 L= 1 1   LoseComp 0 .next>
@@ -254,7 +276,7 @@ Content
 		MapWidth 30
 		MapHeight 30
 
-		special <ARENA>
+		special <ARENA SOLO>
 
 		Start <if= L2 0 L= 2 1   ForceChat %1%   AlterContext .change L= 4 %1%>
 		nu1 <if= T1 0  Return   if= L1 0 L= 1 1   StoryNote 1   Trigger0 .%id%_%plotid%_GoLose>
@@ -358,7 +380,7 @@ Content
 		MapWidth 30
 		MapHeight 30
 
-		special <ARENA>
+		special <ARENA SOLO>
 
 		Start <if= L2 0 L= 2 1   ForceChat %1%>
 		nu1 <if= T1 0  Return   MoveNPC %1% %2%  if= L1 0 L= 1 1   StoryNote 4  Print 2   Trigger0 .%id%_%plotid%_GoLose>
