@@ -224,6 +224,7 @@
 	WORLDID			Returns the ID of the current world
 
 4. MESSAGE FORMATTING STRINGS
+	\CHATNPC		The NPC currently being spoken with
 	\DATE [time]		Converts [time] to game display format
 	\ELEMENT [n]		The name of plot element N
 	\FACRANK [FID] [Rank]	Faction rank name

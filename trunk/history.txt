@@ -1,3 +1,7 @@
+- Will no longer drift on oversized maps (action.pp)
+- Added \CHATNPC message formatting string (arenascript.pp)
+- Fixed bug in MP element contexts (mpbuilder.pp)
+- Terrain included in scene XRContext (playwright.pp)
 - Fixed bug in SDL mode self repair (targetui.pp)
 - Mecha will start play in lowest legal movemode (locale.pp)
 - NPCs will not continue to act after scene finished (arenaplay.pp)

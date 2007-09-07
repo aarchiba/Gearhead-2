@@ -11,7 +11,7 @@
 	result%id%02 <Goto %1%>
 	.%id%_wares <FOOD>
 	KEYWORDS <FOOD>
-	Msg%id%01 <This is \PERSONA ChatNPCID 's Grocery Mart. I carry a fine variety of packaged foods.>
+	Msg%id%01 <This is \ChatNPC 's Grocery Mart. I carry a fine variety of packaged foods.>
 	Msg%id%02 <Yes, I think you should be able to find some of those here.>
 	Prompt%id%01 <I could use some rations.>
 	Prompt%id%02 <Maybe I'll be back when I'm hungry.>
@@ -71,7 +71,7 @@
 	result%id%02 <Goto %1%>
 	.%id%_wares <SPORTS>
 	KEYWORDS <SPORTS>
-	Msg%id%01 <Welcome to \PERSONA ChatNPCID 's Sporting Goods. Whatever your game is, you'll find the equipment you need right here.>
+	Msg%id%01 <Welcome to \ChatNPC 's Sporting Goods. Whatever your game is, you'll find the equipment you need right here.>
 	Msg%id%02 <Take a look through the merchandise.>
 	Prompt%id%01 <Let me see what you have.>
 	Prompt%id%02 <This isn't what I'm looking for.>
@@ -83,7 +83,7 @@
 	result%id%02 <Goto %1%>
 	.%id%_wares <SHIELD>
 	KEYWORDS <SHIELD>
-	Msg%id%01 <This is \PERSONA ChatNPCID 's Shield Source. In combat, a good shield might be the only thing standing between you and an early death.>
+	Msg%id%01 <This is \ChatNPC 's Shield Source. In combat, a good shield might be the only thing standing between you and an early death.>
 	Msg%id%02 <Take a look through our selection. Choose the shield that's right for you.>
 	Prompt%id%01 <I'd like to buy a shield.>
 	Prompt%id%02 <I'll come back later.>
@@ -95,7 +95,7 @@
 	result%id%02 <Goto %1%>
 	.%id%_wares <EXOTIC SCIENCE ODDITIES>
 	KEYWORDS <EXOTIC SCIENCE ODDITIES>
-	Msg%id%01 <Welcome to \PERSONA ChatNPCID 's Oddities and Antiquities. I have a fascinating variety of rare and unusual items for the discerning collector.>
+	Msg%id%01 <Welcome to \ChatNPC 's Oddities and Antiquities. I have a fascinating variety of rare and unusual items for the discerning collector.>
 	Msg%id%02 <Take your time looking around... I know, it's all interesting.>
 	Prompt%id%01 <Let me see what you have.>
 	Prompt%id%02 <Maybe I'll take a look later.>
@@ -179,7 +179,7 @@
 	result%id%02 <Goto %1%>
 	.%id%_wares <ELECTRONICS ENTERTAINMENT>
 	KEYWORDS <ELECTRONICS ENTERTAINMENT>
-	Msg%id%01 <Welcome to \PERSONA ChatNPCID 's software and game source. We have computers, games, and electronic devices.>
+	Msg%id%01 <Welcome to \ChatNPC 's software and game source. We have computers, games, and electronic devices.>
 	Msg%id%02 <If it looks like fun, it probably is!>
 	Prompt%id%01 <I'll take a look at your gear.>
 	Prompt%id%02 <Maybe I'll come back later.>
@@ -269,7 +269,7 @@
 	result%id%02 <Goto %1%>
 	.%id%_wares <CLOTHING SHIELD ACCESSORY>
 	KEYWORDS <CLOTHING SHIELD ACCESSORY>
-	Msg%id%01 <This is \PERSONA ChatNPCID 's Style Source. We have a variety of clothes and accessories for the well-dressed mecha pilot. Would you like to take a look at our selection?>
+	Msg%id%01 <This is \ChatNPC 's Style Source. We have a variety of clothes and accessories for the well-dressed mecha pilot. Would you like to take a look at our selection?>
 	Msg%id%02 <I'll be over here if you need any assistance.>
 	Msg%id%02_1 <I think we may even have some clothes in your size! If not, we also do alterations...>
 	CMsg%id%02_1 <ifG 12 PCCharm Accept>
@@ -297,7 +297,7 @@
 	result%id%02 <Goto %1%>
 	.%id%_wares <ARMOR CLOTHING>
 	KEYWORDS <ARMOR CLOTHING>
-	Msg%id%01 <This is \PERSONA ChatNPCID 's Armor Emporium. How'd you like to browse our extensive range of "AdventuWear"?>
+	Msg%id%01 <This is \ChatNPC 's Armor Emporium. How'd you like to browse our extensive range of "AdventuWear"?>
 	Msg%id%02 <Take your time. We've got all kinds of products to choose from!>
 	Prompt%id%01 <Alright, I'll have a look.>
 	Prompt%id%02 <I'm not interested right now.>
@@ -349,7 +349,7 @@
 	result%id%02 <Goto %1%>
 	.%id%_wares <MISSILE AMMo GRENADE>
 	KEYWORDS <MISSILE AMMo GRENADE>
-	Msg%id%01 <This is \PERSONA ChatNPCID 's Guns. We sell rifles, pistols, assault weapons and the ammo for them.>
+	Msg%id%01 <This is \ChatNPC 's Guns. We sell rifles, pistols, assault weapons and the ammo for them.>
 	Msg%id%02 <Take a look through all of our killing tools.>
 	Prompt%id%01 <I'd like to buy a gun.>
 	Prompt%id%02 <Thanks, but I don't need anything.>
@@ -385,7 +385,7 @@
 	result%id%02 <Goto %1%>
 	.%id%_wares <WEAPON AMMO GRENADE>
 	KEYWORDS <WEAPON AMMO GRENADE>
-	Msg%id%01 <This is \PERSONA ChatNPCID 's Armaments. I carry a full range of guns, weapons, ammunition, and grenades.>
+	Msg%id%01 <This is \ChatNPC 's Armaments. I carry a full range of guns, weapons, ammunition, and grenades.>
 	Msg%id%02 <Thanks to my distributor connections, you'll find that the selection of products here is second to none!>
 	Prompt%id%01 <I'd like to buy some weapons.>
 	Prompt%id%02 <Maybe I'll come here later.>
@@ -686,7 +686,7 @@
 	Keywords <FOOD RESTAURANT>
 	result%id%02 <Goto %1%>
 	result%id%02 <Goto result%id%01>
-	Msg%id%01 <Welcome to \PERSONA ChatNPCID 's Kitchen. I serve only the freshest organic produce shipped directly from Earth. Try one of my entrees for only $250.>
+	Msg%id%01 <Welcome to \ChatNPC 's Kitchen. I serve only the freshest organic produce shipped directly from Earth. Try one of my entrees for only $250.>
 	Msg%id%02 <Please enjoy your meal.>
 	Msg%id%03 <I'm sorry, but importing foods from Earth is expensive. I can't afford to give this away for free.>
 	Msg%id%04 <You'll have to visit me in person if you want to eat. I can't exactly fax this meal over the phone.>
@@ -704,7 +704,7 @@
 	.%id%_GoNoMoney <NewChat Say %id%03>
 	.%id%_GoNotHere <NewChat Say %id%04>
 	result%id%02 <Goto %1%>
-	Msg%id%01 <This is \PERSONA CHatNPCID 's Bistro. We offer finely prepared tubesteak in beef, turkey, salmon, and banana flavors. The price is $150 per entree.>
+	Msg%id%01 <This is \ChatNPC 's Bistro. We offer finely prepared tubesteak in beef, turkey, salmon, and banana flavors. The price is $150 per entree.>
 	Msg%id%02 <Please enjoy your meal.>
 	Msg%id%03 <Sorry, this restaurant is for paying customers only. Come back when you have some cash.>
 	Msg%id%04 <We don't do delivery. Why don't you come over here where you can sit and enjoy your meal?>
@@ -722,7 +722,7 @@
 	result%id%02 <Goto %1%>
 	result%id%03 <Goto result%id%01>
 	result%id%04 <Goto result%id%01>
-	Msg%id%01 <This is CometBurger. My name is \PERSONA ChatNPCID , and I will be your meal coordinator today. All items on our extra-value menu are $80.>
+	Msg%id%01 <This is CometBurger. My name is \ChatNPC , and I will be your meal coordinator today. All items on our extra-value menu are $80.>
 	Msg%id%02 <Enjoy your meal and have a Comet Happy Fun day.>
 	Msg%id%03 <Sorry, you don't have enough money to pay for this order. I can't let you have it for free. That's a company policy.>
 	Msg%id%04 <Hello? This is Comet Burger. I'm not supposed to be using this phone for personal calls.>

@@ -102,7 +102,7 @@ Content
 		CMsg1_5 <ifNPCCheerful Accept>
 		Msg1_6 <If I were doing espionage on the side I'd probably have enough money to fix my car. Hmmm... It seems like \PERSONA L%param%01 has had a lot of extra money recently. You might want to check into that.>
 		CMsg1_6 <ifNPCMelancholy Accept>
-		Msg2 <\PERSONA ChatNPCID suggested that \PERSONA L%param%01 might be the spy.>
+		Msg2 <\ChatNPC suggested that \PERSONA L%param%01 might be the spy.>
 	end
 
 
@@ -141,10 +141,10 @@ Content
 		Msg1 <If you have no further reason to question me, I have to get back to business.>
 		Msg2 <I have nothing else to say to you.>
 		Msg3 <Don't think for one minute that I'm going to forget about this... You've made an enemy today, \PC .>
-		Msg4 <You discovered \PERSONA ChatNPCID was spying on \ELEMENT 1 .>
+		Msg4 <You discovered \ChatNPC was spying on \ELEMENT 1 .>
 		Msg5 <Look, if you could just forget about what you heard, I could make it worth your while. How does $ \VAL CashPrize Reward Threat StoryDL 100 500 sound?>
 		Msg6 <Here you go. It's been a pleasure doing business with you.>
-		Msg7 <You accepted a bribe from \PERSONA ChatNPCID to keep \PPR ChatNPCID spying a secret.>
+		Msg7 <You accepted a bribe from \ChatNPC to keep \PPR ChatNPCID spying a secret.>
 		Prompt1 <There's evidence suggesting you are the spy.>
 		CPrompt1 <if# L%id%02 0 Accept>
 		Prompt1_1 <From what I heard, you might be the spy.>

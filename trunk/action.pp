@@ -1124,7 +1124,8 @@ begin
 	SetNAtt( Mek^.NA , NAG_Location , NAS_Y , P.Y );
 
 	{ If moving in microgravity, set the drift values. }
-	if OnTheMap( GB , P.X , P.Y ) and ( GB^.Scene <> Nil ) and ( NAttValue( GB^.Scene^.NA , NAG_EnvironmentData , NAS_Gravity ) = NAV_Microgravity ) then begin
+	{ Drift only happens if the model is at the same scale or larger than the map. }
+	if OnTheMap( GB , P.X , P.Y ) and ( GB^.Scene <> Nil ) and ( NAttValue( GB^.Scene^.NA , NAG_EnvironmentData , NAS_Gravity ) = NAV_Microgravity ) and ( Mek^.Scale >= GB^.Scale ) then begin
 		SetNAtt( Mek^.Na , NAG_Action , NAS_DriftVector , NAttValue( Mek^.NA , NAG_Location , NAS_D ) );
 		SetNAtt( Mek^.NA , NAG_Action , NAS_DriftSpeed , GB^.ComTime - NAttValue( Mek^.NA , NAG_Action , NAS_MoveStart ) );
 		SetNAtt( Mek^.NA , NAG_Action , NAS_DriftETA , GB^.ComTime + NAttValue( Mek^.NA , NAG_Action , NAS_DriftSpeed ) );

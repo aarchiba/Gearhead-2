@@ -618,9 +618,9 @@
 	result%id%04 <Goto %1%>
 	result%id%05 <EndChat   Say %id%02   Goto %5%>
 	Msg%id%01 <Hey, I've got a patrol here. You're a pretty good pilot... How'd you like to help me out?>
-	Msg%id%01_10 <This is \PERSONA ChatNPCID of \FACTION %6% . I'm conducting a patrol of this area... How would you like to join me for combat duty?>
+	Msg%id%01_10 <This is \ChatNPC of \FACTION %6% . I'm conducting a patrol of this area... How would you like to join me for combat duty?>
 	CMsg%id%01_10 <ifFactionExists %6% Accept>
-	Msg%id%01_11 <This is \PERSONA ChatNPCID of \FACTION %6% speaking. We are conducting a patrol of the area; sensors indicate a number of enemy mecha nearby. How would you like to help me engage them?>
+	Msg%id%01_11 <This is \ChatNPC of \FACTION %6% speaking. We are conducting a patrol of the area; sensors indicate a number of enemy mecha nearby. How would you like to help me engage them?>
 	CMsg%id%01_11 <ifNPCSociable ifFactionExists %6% Accept>
 	Msg%id%01_12 <This is an agent of \FACTION %6% . Enemy troops are operating in the area; I could use assistance to engage them.>
 	CMsg%id%01_12 <ifNPCShy ifFactionExists %6% Accept>

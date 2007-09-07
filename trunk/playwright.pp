@@ -1190,6 +1190,9 @@ begin
 			end;
 			m2 := SAttValue( Part^.SA , 'JOB_DESIG' );
 			if m2 <> '' then Context := Context + ' ' + palette_entry_code + ':' + m2;
+		end else if Part^.G = GG_Scene then begin
+			m2 := SAttValue( Part^.SA , 'TERRAIN' );
+			if m2 <> '' then Context := Context + ' ' + palette_entry_code + ':' + m2;
 		end;
 
 		if IsArchEnemy( Adv , Part ) then Context := Context + ' ' + palette_entry_code + ':ENEMY';

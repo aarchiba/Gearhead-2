@@ -317,15 +317,13 @@ Content
 		Faint%5% <L= 1 1  SMemo 5  History 1  SetPlotStatus %id2%>
 		% If the PC defeats all of T2 before the NPC dies, it's a win.
 		nu1 <if= T1 0   Return   if= V1 0 V= 1 1               SMemo 5  History 1   SetPlotStatus %id2%>
-		nu2 <if= T2 0   if= V1 0 V= 1 1   XPV 100  AddRenown 1   ifAwareness HardSkillTar StoryDL else GoNoAware Alert 4 FreezeNPC %5% SMemo 5 History 2 SetPlotStatus %id1%>
-		GoNoAware <Alert 3 RunAway %5% SMemo 5 History 2 SetPlotStatus %id1%>
+		nu2 <if= T2 0   if= V1 0 V= 1 1   XPV 100  AddRenown 1   ifAwareness HardSkillTar StoryDL else GoNoAware Alert 3 RunAway %5% SMemo 5 History 2 SetPlotStatus %id1%>
 		Msg1 <You found %name5% being attacked by mecha, but failed to help.>
 		Msg2 <You rescued %name5% from hostile mecha.>
 		Msg2_1 <You rescued %name5% from \FACTION &EnemyFac .>
 		CMsg2_1 <ifFactionExists &EnemyFac Accept>
 		Msg3 <As the battle ends, %name5% races off for \NARRATIVE 7 .>
-		Msg4 <As the battle ends, %name5% races off for %name4% .>
-		Msg5 <You should go tell %name1% about %name5%.>
+		Msg5 <You should go to \SCENE NPCScene %1% to tell %name1% about %name5%.>
 
 		sub
 			team 1

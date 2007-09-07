@@ -306,7 +306,7 @@ begin
 			ParamList[t].EValue := ElementID( Plot0 , E );
 			EDesc := SAttValue( Plot0^.SA , 'ELEMENT' + BStr( E ) );
 			if EDesc <> '' then ParamList[t].EType := EDesc[1];
-			AddElementContext( GB , Plot0 , Context , BStr( T )[1] , T );
+			AddElementContext( GB , Plot0 , Context , BStr( T )[1] , E );
 			Inc( T );
 		end;
 	end;
@@ -320,6 +320,7 @@ begin
 	Shard := Nil;
 	while ( ShoppingList <> Nil ) and NotFoundMatch do begin
 		if XXRan_Wizard and ( ShoppingList <> Nil ) and ( Slot^.G = GG_Story ) then begin
+			DialogMsg( Context );
 			Shard := CloneGear( ComponentMenu( Sub_Plot_List , ShoppingList ) );
 		end else begin
 			Shard := CloneGear( SelectComponentFromList( Sub_Plot_List , ShoppingList ) );

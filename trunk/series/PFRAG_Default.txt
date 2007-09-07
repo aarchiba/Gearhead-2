@@ -1016,16 +1016,16 @@ Prompt%id%03_2 <Probably fight somebody. No idea who yet.>
 	CMsg%id%01_5 <ifNPCCheerful Accept>
 	Msg%id%01_6 <It's good to see you, \PC . I guess your luck hasn't given out yet.>
 	CMsg%id%01_6 <ifNPCMelancholy Accept>
-	Prompt%id%01 <Hi \PERSONA ChatNPCID .>
+	Prompt%id%01 <Hi \ChatNPC .>
 	Prompt%id%01_1 <Hello. I trust everything is fine with you?>
 	CPrompt%id%01_1 <ifPCSociable Accept>
 	Prompt%id%01_2 <Hey.>
 	CPrompt%id%01_2 <ifPCShy Accept>
-	Prompt%id%01_3 <Hi \PERSONA ChatNPCID . What's up?>
+	Prompt%id%01_3 <Hi \ChatNPC . What's up?>
 	CPrompt%id%01_3 <ifPCEasygoing Accept>
 	Prompt%id%01_4 <>
 	CPrompt%id%01_4 <ifPCPassionate Accept>
-	Prompt%id%01_5 <It's good to see you, \PERSONA ChatNPCID .>
+	Prompt%id%01_5 <It's good to see you, \ChatNPC .>
 	CPrompt%id%01_5 <ifPCCheerful Accept>
 	Prompt%id%01_6 <>
 	CPrompt%id%01_6 <ifPCMelancholy Accept>

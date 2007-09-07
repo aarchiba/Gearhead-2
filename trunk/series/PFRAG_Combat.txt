@@ -314,7 +314,7 @@ Persona
 	requires <*BattleIntroduction>
 	start <EndChat Say %id%01 AddChat %id%01>
 	result%id%01 <Goto %1%>
-	Msg%id%01 <This is \PERSONA ChatNPCID . Normally I'd ask you to identify yourself, but in this case it would be pointless. I'm afraid that I'm going to have to destroy you.>
+	Msg%id%01 <This is \ChatNPC . Normally I'd ask you to identify yourself, but in this case it would be pointless. I'm afraid that I'm going to have to destroy you.>
 	Prompt%id%01 <Don't overestimate your chances.>
 
 
@@ -361,7 +361,7 @@ Persona
 	CPrompt%id%01_3 <ifPCEasygoing Accept>
 	Prompt%id%01_4 <If that happens, then so be it!>
 	CPrompt%id%01_4 <ifPCPassionate Accept>
-	Prompt%id%01_5 <Nice to see you too, \PERSONA ChatNPCID .>
+	Prompt%id%01_5 <Nice to see you too, \ChatNPC .>
 	CPrompt%id%01_5 <ifPCSociable Accept>
 	Prompt%id%01_6 <Enough talk. Let's get started.>
 	CPrompt%id%01_6 <ifPCShy Accept>
@@ -373,7 +373,7 @@ Persona
 	Msg%id%01 <Would you look at this. I've been authorized by the L5 Council to pillage any unauthorized meks I come across... I couldn't say for sure, but I'm guessing that includes you.>
 	Msg%id%01_1 <Well, look what we have here... That's a nice mecha you have. I think I'll take it.>
 	CMsg%id%01_1 <ifG PCScale 0 Accept>
-	Msg%id%01_2 <I'm \PERSONA ChatNPCID of the Privateers. This letter of marque I've been given entitles me to fight the enemies of the L5 Alliance anywhere I find them. In short, I challenge you to battle.>
+	Msg%id%01_2 <I'm \ChatNPC of the Privateers. This letter of marque I've been given entitles me to fight the enemies of the L5 Alliance anywhere I find them. In short, I challenge you to battle.>
 	CMsg%id%01_2 <ifNPCSociable Accept>
 	Msg%id%01_3 <For the L5 Alliance, I lay claim to your gear!>
 	CMsg%id%01_3 <ifNPCShy Accept>
@@ -393,13 +393,13 @@ Persona
 	start <EndChat Say %id%01 AddChat %id%01>
 	result%id%01 <Goto %1%>
 	Msg%id%01 <For the sake of the colonies, I challenge you!>
-	Msg%id%01_1 <I am \PERSONA ChatNPCID of the Silver Knights, and I challenge you to honorable combat.>
+	Msg%id%01_1 <I am \ChatNPC of the Silver Knights, and I challenge you to honorable combat.>
 	CMsg%id%01_1 <ifNPCSociable Accept>
 	Msg%id%01_2 <For great justice, I will defeat you.>
 	CMsg%id%01_2 <ifNPCShy Accept>
 	Msg%id%01_3 <>
 	CMsg%id%01_3 <ifNPCCheerful Accept>
-	Msg%id%01_4 <All I do is for the survival of my people. I, \PERSONA ChatNPCID of the Silver Knights, challenge you to battle.>
+	Msg%id%01_4 <All I do is for the survival of my people. I, \ChatNPC of the Silver Knights, challenge you to battle.>
 	CMsg%id%01_4 <ifNPCMelancholy Accept>
 	Msg%id%01_5 <>
 	CMsg%id%01_5 <ifNPCEasygoing Accept>
@@ -484,7 +484,7 @@ Persona
 	Prompt%id%02_1 <I was feeling bored myself. Let's go!>
 	Prompt%id%02_2 <Great idea! I'll kick your ass...>
 	Prompt%id%03 <Look, I don't have time for this.>
-	Prompt%id%03_1 <Buzz off, \PERSONA ChatNPCID . I'm not interested.>
+	Prompt%id%03_1 <Buzz off, \ChatNPC . I'm not interested.>
 	Prompt%id%03_2 <I'm not in the mood for you right now.>
 	CPrompt%id%03 <ifPCMelancholy Accept>
 	Prompt%id%04 <Kill you. Quickly. Without mercy.>
@@ -524,7 +524,7 @@ Persona
 	CMsg%id%01_5 <ifNPCEasygoing Accept>
 	Msg%id%01_6 <I found you at last! Prepare to defend yourself, \PC ...>
 	CMsg%id%01_6 <ifNPCPassionate Accept>
-	Msg%id%01_7 <This is \PERSONA ChatNPCID of \FACTION ChatNPCFac . I challenge you to battle.>
+	Msg%id%01_7 <This is \ChatNPC of \FACTION ChatNPCFac . I challenge you to battle.>
 	CMsg%id%01_7 <ifFactionExists ChatNPCFac ifNPCSociable Accept>
 	Msg%id%03 <Fighting you right now wouldn't be in my own best interest... You can go, but we'll meet again.>
 	Msg%id%03_1 <Er... I don't really want to fight... You win.>

@@ -70,6 +70,8 @@ an ally of the PC, an "ALLY" tag is included.
 If the element is a NPC, the relationship is also included. This may be one of "FAMILY",
 "LOVER", or "FRIEND".
 
+If the element is a scene, its terrain SAtt will also be included: "SPACE", "WATER", "GROUND"
+
 The job group of the PC is included as C:<job>. The available job designations are:
 %%   ACADE: Academic
 %%   ADVEN: Adventurer

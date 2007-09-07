@@ -36,7 +36,7 @@ Content
 		.%id%_GoOfferMission <ifChatNPCUnknown else .%id%_GoKnownGreeting ifChatNPCAlly else .%id%_GoUnknownGreeting Goto .%id%_GoKnownGreeting>
 		*.%id%_GoKnownGreeting <*IHaveAJobForYou .%id%_GoBriefing>
 		*.%id%_GoUnknownGreeting <*AreYouHereAboutJob&Mecha .%id%_GoBriefing>
-		*.%id%_GoBriefing <*CORE_BasicJob .%id%_GoAccept .%id%_GoDeny>
+		*.%id%_GoBriefing <*CORE_BasicJob .%id%_GoAccept .%id%_GoDeny %2%>
 		*.%id%_GoAccept <*GoodLuckOnMission .%id%_GoR1Exit ChatNPCFac &EnemyFac>
 		.%id%_GoR1Exit <SetPlotStatus %id1%>
 		*.%id%_GoDeny <*RejectMission .%id%_GoR2Exit>

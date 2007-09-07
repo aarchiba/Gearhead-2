@@ -10,9 +10,97 @@
 %%
 
 Content
+	name <Let Me Join You>
+	desc <The NPC wants revenge against the enemy character, himself.>
+	requires <*CS_ThanksForRescue &FromCSEnemy>
+
+	% E1 is the character who's been rescued
+
+	% P1 = Initialization Counter
+	start <if= PlotStatus %id% else %pop% ifNPCDead %1% LoseComp 0 .%id%_loss>
+	.%id%_loss <+T-->
+
+	sub
+		Persona 1
+		Greeting <if= PlotStatus %id% else %pop% WinComp 0 .%id%_Next goto .%id%_GoThanks>
+		.%id%_Next <+T-- +F-->
+		*.%id%_GoThanks <*ThanksForRescue .%id%_GoReward>
+		.%id%_GoReward <ifG ChatNPCRelationship NAV_Friend else .%id%_GoJoin  Goto .%id%_GoOffer>
+		.%id%_GoJoin <PCAlly %1%  Goto .%id%_GoOffer>
+		.%id%_GoOffer <NewChat Say %id%01 AddChat %id%01 AddChat %id%02 AddChat %id%03>
+
+		result%id%01 <ChatNPCJoinLance   StoryNote %id%02  Goto .%id%_GoWelcome>
+		*.%id%_GoWelcome <*WelcomeToLance>
+		result%id%02 <NewChat Say %id%03>
+		result%id%03 <NewChat Say %id%03 if= ChatNPCRelationship NAV_ArchAlly  ifChatNPCSexy  ifFlirtation SkillTar StoryDL PCLover %1%>
+
+		Msg%id%01 <If it's alright with you, I'd like to join your lance. It's the least I could do to repay you.>
+		Msg%id%01_1 <>
+		CMsg%id%01_1 <ifNPCSociable ifNPCOK &EnemyChar Accept>
+		Msg%id%01_2 <I want to come with you. I could repay you for saving me, and get my revenge against \PERSONA &EnemyChar at the same time.>
+		CMsg%id%01_2 <ifNPCShy ifNPCOK &EnemyChar Accept>
+		Msg%id%01_3 <>
+		CMsg%id%01_3 <ifNPCEasygoing ifNPCOK &EnemyChar Accept>
+		Msg%id%01_4 <>
+		CMsg%id%01_4 <ifNPCPassionate ifNPCOK &EnemyChar Accept>
+		Msg%id%01_5 <>
+		CMsg%id%01_5 <ifNPCCheerful ifNPCOK &EnemyChar Accept>
+		Msg%id%01_6 <Let me join your lance... I must have revenge against \PERSONA &EnemyChar .>
+		CMsg%id%01_6 <ifNPCMelancholy ifNPCOK &EnemyChar Accept>
+
+		Msg%id%02_1 <%name1% joined your lance to help fight \PERSONA &EnemyChar .>
+		CMsg%id%02_1 <ifNPCOK &EnemyChar Accept>
+		Msg%id%02_2 <%name1% joined your lance.>
+		CMsg%id%02_2 <ifNPCDead &EnemyChar Accept>
+		Msg%id%03 <Always remember, I'll be right here if you need me.>
+		Msg%id%03_1 <>
+		Msg%id%03_2 <>
+		Prompt%id%01 <I'd love to have you at my side.>
+		CPrompt%id%01 <ifChatNPCCanJoinLance Accept>
+		Prompt%id%01_1 <Alright, come along.>
+		Prompt%id%02 <Maybe some other time.>
+		Prompt%id%02_1 <Sorry, but now's not a good time.>
+		Prompt%id%03 <I think you'd be safer here.>
+		Prompt%id%03_1 <It's too dangerous to come with me.>
+	end
+
+Content
+	name <Generic Thanks>
+	desc <The PC has just rescued someone, and will get a cash prize. Lame.>
+	requires <*CS_ThanksForRescue>
+
+	% E1 is the character who's been rescued
+
+	% P1 = Initialization Counter
+	start <if= PlotStatus %id% else %pop% ifNPCDead %1% LoseComp 0 .%id%_loss>
+	.%id%_loss <+T-->
+
+	sub
+		Persona 1
+		Greeting <if= PlotStatus %id% else %pop% goto .%id%_GoThanks>
+		*.%id%_GoThanks <*ThanksForRescue .%id%_GoReward>
+		.%id%_GoReward <ifG 1 ChatNPCRelationship else .%id%_GoCash PCFriend %1% Goto .%id%_GoCash>
+		.%id%_GoCash <NewChat Say %id%01 CashPrize Reward Threat StoryDL 100 250 WinComp 0 .%id%_Next>
+		.%id%_Next <+T-- +F-->
+		Msg%id%01 <Here's a little reward, in appreciation of what you've done.>
+		Msg%id%01_1 <I'd like for you to have this reward. I know that it isn't much, but it's the least I could do to thank you for saving my life.>
+		CMsg%id%01_1 <ifNPCSociable Accept>
+		Msg%id%01_2 <Here, I'd like you to have this. Thanks again.>
+		CMsg%id%01_2 <ifNPCShy Accept>
+		Msg%id%01_3 <We all know that nothing says "thank you" like a big handfull of money. Unfortunately I don't have a big handfull, but I can give you this little one. Thanks for saving me.>
+		CMsg%id%01_3 <ifNPCEasygoing Accept>
+		Msg%id%01_4 <Nothing I could ever do would repay you for saving my life, but I can at least give you this money as a token of appreciation.>
+		CMsg%id%01_4 <ifNPCPassionate Accept>
+		Msg%id%01_5 <It's really lucky that you showed up when you did. Here, take this- it's my way of saying thanks.>
+		CMsg%id%01_5 <ifNPCCheerful Accept>
+		Msg%id%01_6 <If not for you, I would be dead right now. Here's a small token of my gratitude.>
+		CMsg%id%01_6 <ifNPCMelancholy Accept>
+	end
+
+Content
 	name <Rescued an Ally>
 	desc <The PC has just rescued an ally, who will suggest that he go speak with another member of the faction.>
-	requires <*CS_ThanksForRescue 1:Ally>
+	requires <*CS_ThanksForRescue 1:Ally -1:PDASS>
 
 	% E1 is the character who's been rescued
 	% E2 is a public scene in this city, to be used as home scene if a
@@ -432,15 +520,45 @@ Content
 %%
 
 Content
+	name <The Sore Loser>
+	desc <The NPC can't believe he lost; in fact, he will become CS Enemy.>
+	requires <*CS_WinDuelVs E:-- -1:ALLY -1:PDASS ~1:ENEMY>
+
+	% E1 is the NPC.
+
+	start <if= PlotStatus %id% else %pop% ifNPCDead %1% SMemo 0 WinComp 0 .%id%_loss>
+	.%id%_loss <+T-- +F-->
+
+	sub
+		Persona 1
+		greeting <if= PlotStatus %id% else %pop%  NewChat Say %id%01 FreezeNPC %1% StoryNote %id%02 &SetEnemyChar %1% WinComp 0 .%id%_win ifNPCPassionate PCEnemy %1%>
+		.%id%_win <+T-- +F-->
+		Msg%id%01 <I can't accept losing the duel to you... From this point on I'm going to train hard, then someday I'll be back and I'll defeat you!>
+		Msg%id%01_1 <People are already talking about how you defeated me... I can't accept that! You may have won this time, but I promise you that the next time we meet I will be the victor!>
+		CMsg%id%01_1 <ifNPCSociable Accept>
+		Msg%id%01_2 <Enjoy your victory, for now. I promise you that it won't last long.>
+		CMsg%id%01_2 <ifNPCShy Accept>
+		Msg%id%01_3 <Things used to be going so well... I can't accept being defeated by you, and I won't. We'll face each other again, sometime.>
+		CMsg%id%01_3 <ifNPCEasygoing Accept>
+		Msg%id%01_4 <You cheater! That's the only way you could have possibly beaten me... From this moment on, I pledge to destroy you. Sleep with one eye open \PC .>
+		CMsg%id%01_4 <ifNPCPassionate Accept>
+		Msg%id%01_5 <What, you've come here to rub your victory in my face? Get lost... the next time we meet won't be nearly so pleasant for you as today was.>
+		CMsg%id%01_5 <ifNPCCheerful Accept>
+		Msg%id%01_6 <You ruined everything! How did you beat me? You must have cheated... From this day forth I dedicate my life to making yours miserable. Don't think I'll ever forget what you've done.>
+		CMsg%id%01_6 <ifNPCMelancholy Accept>
+		Msg%id%02 <%name1% swore revenge on you for beating \OPR %1% in a duel.>
+	end
+
+Content
 	name <You should go see MILIT...>
 	desc <The NPC will reccomend that the PC go ask someone about a job.>
-	requires <*CS_WinDuelVs>
+	requires <*CS_WinDuelVs -7:ENEMY -C:THIEF>
 
 	% E1 is the NPC.
 	% E2 is the person to see about the job
 	% E3 is a public scene for the meeting.
-	Element2 <Character "MILIT" !Near -7 !Ally -7 !Okay -3>
-	Element3 <Scene Building Public !Near -7 !Okay 2>
+	Element2 <Character "MILIT" !Near -7 !Ally -7 !Okay -3 !Okay 1>
+	Element3 <Scene Building Public !Near -7 !Ally 2>
 
 	start <if= PlotStatus %id% else %pop% ifNPCDead %1% SMemo 0 WinComp 0 .%id%_loss>
 	.%id%_loss <+T-- +F-->
@@ -452,6 +570,18 @@ Content
 		.%id%_win <+Tgt +Fmi>
 		.%id%_draw <+T-- +F-->
 		Msg%id%01 <You beat me. You should go talk with %name2% in %name3%; I hear that \SPR %2% 's looking for a good pilot.>
+		Msg%id%01_1 <You won our duel. A fighter with your talents could really go places... I hear that %name2% is looking for a pilot over at %name3%. You should go talk with \OPR %2% .>
+		CMsg%id%01_1 <ifNPCSociable Accept>
+		Msg%id%01_2 <Good match. I've got a tip for you- %name2% in %name3% is looking for a mecha pilot. You should definitely check it out.>
+		CMsg%id%01_2 <ifNPCShy Accept>
+		Msg%id%01_3 <You did half decent out there, I thought. If you're interested I know of a job opening. %name2% in %name3% needs a pilot. Tell \OPR %2% I sent you.>
+		CMsg%id%01_3 <ifNPCEasygoing Accept>
+		Msg%id%01_4 <You've shown me the true art of fighting. I was going to go to %name3% and do a mission for %name2% , but you should go instead. You've proven yourself the better pilot.>
+		CMsg%id%01_4 <ifNPCPassionate Accept>
+		Msg%id%01_5 <That was a great fight. I've got a tip for you- %name2% in %name3% is looking for a pilot. You've proven yourself capable, I think you could get the job.>
+		CMsg%id%01_5 <ifNPCCheerful Accept>
+		Msg%id%01_6 <I can't believe I lost to you... I was supposed to run a mission for %name2% at %name3% today, but now that my mecha's in the shop I can't. If you wanted you could go take the mission yourself.>
+		CMsg%id%01_6 <ifNPCMelancholy Accept>
 		Msg%id%02 <%name1% reccomended that you go ask %name2% in %name3% for a mission.>
 		Msg%id%03 <You won the duel. Congratulations.>
 	end

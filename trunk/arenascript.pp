@@ -1252,145 +1252,152 @@ begin
 	while S0 <> '' do begin
 		w := ExtractWord( S0 );
 
-		if UpCase( W ) = '\MEK' then begin
-			{ Insert the name of a specified gear. }
-			ID := ScriptValue( S0 , GB , Scene );
-			Part := LocateMekByUID( GB , ID );
-			if Part <> Nil then begin
-				W := GearName( Part );
-			end else begin
-				W := 'ERROR!!!';
+		if ( W <> '' ) and ( W[1] = '\' ) then begin
+			W := UpCase( W );
+			if W = '\MEK' then begin
+				{ Insert the name of a specified gear. }
+				ID := ScriptValue( S0 , GB , Scene );
+				Part := LocateMekByUID( GB , ID );
+				if Part <> Nil then begin
+					W := GearName( Part );
+				end else begin
+					W := 'ERROR!!!';
+				end;
+
+			end else if W = '\PILOT' then begin
+				{ Insert the name of a specified gear. }
+				ID := ScriptValue( S0 , GB , Scene );
+				Part := LocateMekByUID( GB , ID );
+				if Part <> Nil then begin
+					W := PilotName( Part );
+				end else begin
+					W := 'ERROR!!!';
+				end;
+
+			end else if W = '\ELEMENT' then begin
+				{ Insert the name of a specified plot element. }
+				ID := ScriptValue( S0 , GB , Scene );
+				Part := PlotMaster( GB , Scene );
+				if Part <> Nil then begin
+					W := ElementName( FindRoot( GB^.Scene ) , Part , ID , GB );
+				end;
+
+			end else if W = '\NARRATIVE' then begin
+				{ Insert the name of a specified plot element. }
+				ID := ScriptValue( S0 , GB , Scene );
+				Part := StoryMaster( GB , Scene );
+				if Part <> Nil then begin
+					W := ElementName( FindRoot( GB^.Scene ) , Part , ID , GB );
+				end;
+
+			end else if W = '\PERSONA' then begin
+				{ Insert the name of a specified persona. }
+				ID := ScriptValue( S0 , GB , Scene );
+				Part := GG_LocateNPC( ID , GB , Scene );
+				W := GEarName( Part );
+
+			end else if W = '\ITEM' then begin
+				{ Insert the name of a specified item. }
+				ID := ScriptValue( S0 , GB , Scene );
+				Part := GG_LocateItem( ID , GB , Scene );
+				W := GEarName( Part );
+
+			end else if W = '\ITEM_DESC' then begin
+				{ Insert the description of a specified item. }
+				ID := ScriptValue( S0 , GB , Scene );
+				Part := GG_LocateItem( ID , GB , Scene );
+				if Part <> Nil then W := SAttValue( Part^.SA , 'ITEM_DESC' )
+				else W := 'ERROR: can''t find ITEM_DESC for item ' + BStr( ID );
+
+			end else if W = '\ITEM_HISTORY' then begin
+				{ Insert the description of a specified item. }
+				ID := ScriptValue( S0 , GB , Scene );
+				Part := GG_LocateItem( ID , GB , Scene );
+				if Part <> Nil then W := SAttValue( Part^.SA , 'ITEM_HISTORY' )
+				else W := 'ERROR: can''t find ITEM_DESC for item ' + BStr( ID );
+
+			end else if W = '\ITEM_USAGE' then begin
+				{ Insert the description of a specified item. }
+				ID := ScriptValue( S0 , GB , Scene );
+				Part := GG_LocateItem( ID , GB , Scene );
+				if Part <> Nil then W := SAttValue( Part^.SA , 'ITEM_USAGE' )
+				else W := 'ERROR: can''t find ITEM_DESC for item ' + BStr( ID );
+
+			end else if W = '\FACTION' then begin
+				{ Insert the name of a specified faction. }
+				ID := ScriptValue( S0 , GB , Scene );
+				Part := GG_LocateFaction( ID , GB , Scene );
+				W := GEarName( Part );
+
+			end else if W = '\SCENE' then begin
+				{ Insert the name of a specified scene. }
+				ID := ScriptValue( S0 , GB , Scene );
+				W := SceneName( GB , ID );
+
+			end else if W = '\VAL' then begin
+				{ Insert the value of a specified variable. }
+				ID := ScriptValue( S0 , GB , Scene );
+				W := BStr( ID );
+
+			end else if W = '\PC' then begin
+				{ The name of the PC. }
+				W := GearName( LocatePilot( GG_LocatePC( GB ) ) );
+
+			end else if W = '\CHATNPC' then begin
+				{ The name of the Chat PC. }
+				W := GearName( I_NPC );
+
+			end else if W = '\SOURCE' then begin
+				{ The name of the PC. }
+				W := GearName( Scene );
+
+			end else if W = '\OPR' then begin
+				{ Object Pronoun }
+				ID := ScriptValue( S0 , GB , Scene );
+				Part := GG_LocateNPC( ID , GB , Scene );
+				if Part <> Nil then begin
+					W := MsgString( 'OPR_' + BStr( NAttValue( Part^.NA , NAG_CharDescription , NAS_Gender ) ) );
+				end else begin
+					W := 'it';
+				end;
+
+			end else if W = '\SPR' then begin
+				{ Object Pronoun }
+				ID := ScriptValue( S0 , GB , Scene );
+				Part := GG_LocateNPC( ID , GB , Scene );
+				if Part <> Nil then begin
+					W := MsgString( 'SPR_' + BStr( NAttValue( Part^.NA , NAG_CharDescription , NAS_Gender ) ) );
+				end else begin
+					W := 'it';
+				end;
+
+			end else if W = '\PPR' then begin
+				{ Object Pronoun }
+				ID := ScriptValue( S0 , GB , Scene );
+				Part := GG_LocateNPC( ID , GB , Scene );
+				if Part <> Nil then begin
+					W := MsgString( 'PPR_' + BStr( NAttValue( Part^.NA , NAG_CharDescription , NAS_Gender ) ) );
+				end else begin
+					W := 'its';
+				end;
+
+			end else if W = '\RANK' then begin
+				{ The faction rank of the PC. }
+				W := PCRankName( GB , Scene );
+
+			end else if W = '\FACRANK' then begin
+				{ A generic faction rank, not nessecarilt belonging }
+				{ to the PC. }
+				ID := ScriptValue( S0 , GB , Scene );
+				ID2 := ScriptValue( S0 , GB , Scene );
+
+				W := FactionRankName( GB , Scene , ID , ID2 );
+
+			end else if W = '\DATE' then begin
+				ID := ScriptValue( S0 , GB , Scene );
+
+				W := TimeString( ID );
 			end;
-
-		end else if UpCase( W ) = '\PILOT' then begin
-			{ Insert the name of a specified gear. }
-			ID := ScriptValue( S0 , GB , Scene );
-			Part := LocateMekByUID( GB , ID );
-			if Part <> Nil then begin
-				W := PilotName( Part );
-			end else begin
-				W := 'ERROR!!!';
-			end;
-
-		end else if UpCase( W ) = '\ELEMENT' then begin
-			{ Insert the name of a specified plot element. }
-			ID := ScriptValue( S0 , GB , Scene );
-			Part := PlotMaster( GB , Scene );
-			if Part <> Nil then begin
-				W := ElementName( FindRoot( GB^.Scene ) , Part , ID , GB );
-			end;
-
-		end else if UpCase( W ) = '\NARRATIVE' then begin
-			{ Insert the name of a specified plot element. }
-			ID := ScriptValue( S0 , GB , Scene );
-			Part := StoryMaster( GB , Scene );
-			if Part <> Nil then begin
-				W := ElementName( FindRoot( GB^.Scene ) , Part , ID , GB );
-			end;
-
-		end else if UpCase( W ) = '\PERSONA' then begin
-			{ Insert the name of a specified persona. }
-			ID := ScriptValue( S0 , GB , Scene );
-			Part := GG_LocateNPC( ID , GB , Scene );
-			W := GEarName( Part );
-
-		end else if UpCase( W ) = '\ITEM' then begin
-			{ Insert the name of a specified item. }
-			ID := ScriptValue( S0 , GB , Scene );
-			Part := GG_LocateItem( ID , GB , Scene );
-			W := GEarName( Part );
-
-		end else if UpCase( W ) = '\ITEM_DESC' then begin
-			{ Insert the description of a specified item. }
-			ID := ScriptValue( S0 , GB , Scene );
-			Part := GG_LocateItem( ID , GB , Scene );
-			if Part <> Nil then W := SAttValue( Part^.SA , 'ITEM_DESC' )
-			else W := 'ERROR: can''t find ITEM_DESC for item ' + BStr( ID );
-
-		end else if UpCase( W ) = '\ITEM_HISTORY' then begin
-			{ Insert the description of a specified item. }
-			ID := ScriptValue( S0 , GB , Scene );
-			Part := GG_LocateItem( ID , GB , Scene );
-			if Part <> Nil then W := SAttValue( Part^.SA , 'ITEM_HISTORY' )
-			else W := 'ERROR: can''t find ITEM_DESC for item ' + BStr( ID );
-
-		end else if UpCase( W ) = '\ITEM_USAGE' then begin
-			{ Insert the description of a specified item. }
-			ID := ScriptValue( S0 , GB , Scene );
-			Part := GG_LocateItem( ID , GB , Scene );
-			if Part <> Nil then W := SAttValue( Part^.SA , 'ITEM_USAGE' )
-			else W := 'ERROR: can''t find ITEM_DESC for item ' + BStr( ID );
-
-		end else if UpCase( W ) = '\FACTION' then begin
-			{ Insert the name of a specified faction. }
-			ID := ScriptValue( S0 , GB , Scene );
-			Part := GG_LocateFaction( ID , GB , Scene );
-			W := GEarName( Part );
-
-		end else if UpCase( W ) = '\SCENE' then begin
-			{ Insert the name of a specified scene. }
-			ID := ScriptValue( S0 , GB , Scene );
-			W := SceneName( GB , ID );
-
-		end else if UpCase( W ) = '\VAL' then begin
-			{ Insert the value of a specified variable. }
-			ID := ScriptValue( S0 , GB , Scene );
-			W := BStr( ID );
-
-		end else if UpCase( W ) = '\PC' then begin
-			{ The name of the PC. }
-			W := GearName( LocatePilot( GG_LocatePC( GB ) ) );
-
-		end else if UpCase( W ) = '\SOURCE' then begin
-			{ The name of the PC. }
-			W := GearName( Scene );
-
-		end else if UpCase( W ) = '\OPR' then begin
-			{ Object Pronoun }
-			ID := ScriptValue( S0 , GB , Scene );
-			Part := GG_LocateNPC( ID , GB , Scene );
-			if Part <> Nil then begin
-				W := MsgString( 'OPR_' + BStr( NAttValue( Part^.NA , NAG_CharDescription , NAS_Gender ) ) );
-			end else begin
-				W := 'it';
-			end;
-
-		end else if UpCase( W ) = '\SPR' then begin
-			{ Object Pronoun }
-			ID := ScriptValue( S0 , GB , Scene );
-			Part := GG_LocateNPC( ID , GB , Scene );
-			if Part <> Nil then begin
-				W := MsgString( 'SPR_' + BStr( NAttValue( Part^.NA , NAG_CharDescription , NAS_Gender ) ) );
-			end else begin
-				W := 'it';
-			end;
-
-		end else if UpCase( W ) = '\PPR' then begin
-			{ Object Pronoun }
-			ID := ScriptValue( S0 , GB , Scene );
-			Part := GG_LocateNPC( ID , GB , Scene );
-			if Part <> Nil then begin
-				W := MsgString( 'PPR_' + BStr( NAttValue( Part^.NA , NAG_CharDescription , NAS_Gender ) ) );
-			end else begin
-				W := 'its';
-			end;
-
-		end else if UpCase( W ) = '\RANK' then begin
-			{ The faction rank of the PC. }
-			W := PCRankName( GB , Scene );
-
-		end else if UpCase( W ) = '\FACRANK' then begin
-			{ A generic faction rank, not nessecarilt belonging }
-			{ to the PC. }
-			ID := ScriptValue( S0 , GB , Scene );
-			ID2 := ScriptValue( S0 , GB , Scene );
-
-			W := FactionRankName( GB , Scene , ID , ID2 );
-
-		end else if UpCase( W ) = '\DATE' then begin
-			ID := ScriptValue( S0 , GB , Scene );
-
-			W := TimeString( ID );
 		end;
 
 		if ( W <> '' ) and ( S1 <> '' ) and ( IsPunctuation( W[1] ) or ( S1[Length(S1)] = '$' ) or ( S1[Length(S1)] = '@' ) ) then begin
