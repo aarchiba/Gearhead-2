@@ -228,7 +228,7 @@ Content
 
 	sub
 		Persona 1
-		greeting <if= PlotStatus %id% else %pop%  &SetAllyFac %2% StoreOldFaction SetPCFac %2% &SetTargetChar %4% WinComp %3% .%id%_next  StoryNote %id%02 Goto .%id%_GoGreet>
+		greeting <if= PlotStatus %id% else %pop%  &SetAllyFac %2% StoreOldFaction SetPCFac %2% &SetTargetChar %4% NegateComp %3% .%id%_next  StoryNote %id%02 Goto .%id%_GoGreet>
 		*.%id%_GoGreet <*CS_ForcedInduction_Greeting .%id%_GoBrief %2%>
 		.%id%_next <+Tgt +Fmi +Psh>
 		.%id%_GoBrief <ifNPCOK %4% else .%id%_GoScrapMission NewChat Say %id%01 SMemo %id%04>
@@ -261,7 +261,7 @@ Content
 
 	sub
 		Persona 1
-		greeting <if= PlotStatus %id% else %pop%  &SetAllyFac %2% StoreOldFaction SetPCFac %2% WinComp 0 .%id%_next  StoryNote %id%02 Goto .%id%_GoGreet>
+		greeting <if= PlotStatus %id% else %pop%  &SetAllyFac %2% StoreOldFaction SetPCFac %2% NegateComp 0 .%id%_next  StoryNote %id%02 Goto .%id%_GoGreet>
 		*.%id%_GoGreet <*CS_ForcedInduction_Greeting .%id%_GoBrief %2%>
 		.%id%_next <+T-- +F-- +Psh>
 		.%id%_GoBrief <NewChat Say %id%01>

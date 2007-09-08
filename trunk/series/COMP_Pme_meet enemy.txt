@@ -1,5 +1,40 @@
 %% COMP_Pme
 %%	+Pme	PC meets an enemy pilot under somewhat peaceful circumstances
 
+Plot
+	name <Wager For Friend>
+	desc <The PC can secure his friend's freedom by betting his own freedom and fighting a duel.>
+	requires <#A +Pme +T-- E:FRIEND (F:MIL|F:CRM|F:GOV) -F:ENEMY ~P:PDASS>
+	Size 1
 
+	% E1 is the friend/enemy
+	% E2 is the enemy faction
+	% E3 is a public scene to use for a meeting
+	% E4 is the member of E2
+	% E5 is an environs scene for the duel
+	Element1 <Grab 1>
+	Element2 <Grab 2>
+	Element3 <Scene Public !Near -7 !Okay 2>
+	Element4 <Prefab>
+	Place4 <2 (Citizens) Pass>
+	Element5 <Scene Environs !Near -7>
+
+	start <if= PlotStatus 0 ifNPCDead %4% LoseComp 0 .next>
+	.next <+T-- +F-->
+
+	% SubPlot1 is the duel
+	% SubPlot2 is the release of E1, if the duel is won
+	% SubPlot3 is the forcible recruitment of the PC, if the duel is lost
+
+	sub
+		Persona 4
+		rumor0 <%name4% from %name2% has been spotted in %name3%.>
+		greeting <if= PlotStatus 0 else GoChat >
+		*GoChat <*MISC_CHATTER>
+
+	end
+	inv
+		NPC Soldier
+		update <if= V1 0 V= 1 1 SetSelfFaction %2%>
+	end
 
