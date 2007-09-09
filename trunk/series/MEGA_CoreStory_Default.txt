@@ -1,4 +1,95 @@
 %%
+%% *CS_DelayedVictory Content
+%% *CS_DelayedNegation Content
+%%
+%% Victory is going to be delayed for several hours. This subplot is generally used when
+%% a mission-giver asks the PC to go relax for a while before the next mission.
+%%
+%% The parent plot sets the plot status to this layer's ID when ready.
+%% Before calling this subplot, the story status must have been set with AlterContext.
+%%
+
+Content
+	name <Default Delay>
+	desc <Several hours will pass before the next component is generated.>
+	requires <*CS_DelayedNegation>
+
+	% P%id%01 = Time Limit
+	update <if= PlotStatus %id% else %pop% if= P%id%01 0 P= %id%01 ComTime P+ %id%01 7200 P+ %id%01 d86400>
+	hour <if= PlotStatus %id% else %pop% ifG ComTime P%id%01 NegateComp &CompScene na>
+
+Content
+	name <Default Delay>
+	desc <Several hours will pass before the next component is generated.>
+	requires <*CS_DelayedVictory>
+
+	% P%id%01 = Time Limit
+	update <if= PlotStatus %id% else %pop% if= P%id%01 0 P= %id%01 ComTime P+ %id%01 7200 P+ %id%01 d86400>
+	hour <if= PlotStatus %id% else %pop% ifG ComTime P%id%01 WinComp &CompScene na>
+
+
+%%
+%% *CS_FriendFired_Win Content
+%%
+%% The PC's friend has just been fired from a faction, and for whatever reason this
+%% is a win for the PC.
+%%
+%% The parent plot sets the plot status to this layer's ID when ready.
+%%
+%% Param1: The NPC who has been fired
+%% Param2: The faction he's been fired from
+%%
+
+Content
+	name <What did I do?>
+	desc <The friend wonders what he did wrong.>
+	requires <*CS_FriendFired_Win>
+
+	% E1 is the friend
+	% E2 is the faction he's been fired from
+	% E3 is a public scene for the meeting
+	Element3 <Scene Building Public !NEar -7>
+
+	% p%id%01 = Initialization Counter
+	start <if= PlotStatus %id% else %pop% ifNPCDead %1% LoseComp 0 .%id%_Next>
+	.%id%_Next <+T-- +G-->
+	update <if= PlotStatus %id% else %pop% if= P%id%01 0 P= %id%01 1 MoveAndPacifyNPC %1% %3% SetNPCFaction %1% 0 Email %id%01>
+
+	Msg%id%01_1 <%name1%@ \NARRATIVE 7 :// I've received bad news from %name2%... come meet me in %name3%.>
+	Msg%id%01_2 <%name1%@ \NARRATIVE 7 :// I've got some bad news. Come see me in %name3%.>
+	Msg%id%01_3 <%name1%@ \NARRATIVE 7 :// This has been a terrible day... I'd like to talk with you in %name3%.>
+
+	sub
+		Persona 1
+		greeting <if= PlotStatus %id% else %pop% NewChat Say %id%01 WinComp 0 .%id%_next AddChat %id%01 AddChat %id%02>
+		.%id%_next <+T-- +F-->
+		result%id%01 <NewChat Say %id%02  AddCheerful d6>
+		result%id%02 <NewChat Say %id%02>
+		Msg%id%01 <I don't understand what happened; I've been fired from %name2%.>
+		Msg%id%01_1 <I have some terrible news... I've been fired from %name2%. I don't know why, but they told me to go and never come back.>
+		Msg%id%01_2 <I've been fired from %name2%. It was really a shock... I thought I was doing so well.>
+		Msg%id%02 <I know I'll find something else in time, but for right now I'm feeling very disappointed.>
+		Msg%id%02_1 <The worst part is, I made a lot of new friends while at %name2%. I guess maybe I'll see them again, but I don't know...>
+		CMsg%id%02_1 <ifNPCSociable Accept>
+		Msg%id%02_2 <I think I probably will do better by myself. I was never much of a joiner, anyhow.>
+		CMsg%id%02_2 <ifNPCShy Accept>
+		Msg%id%02_3 <Eh, it's not that bad. I'll find something else, or I won't... either way is fine.>
+		CMsg%id%02_3 <ifNPCEasygoing Accept>
+		Msg%id%02_4 <Those idiots at %name2% don't know what they're doing! I don't need them! I can do better by myself!>
+		CMsg%id%02_4 <ifNPCPassionate Accept>
+		Msg%id%02_5 <You know, I had been looking at this like an ending, but instead I think it's a beginning. Now that I'm free from %name2% I can choose my own destiny, wherever that may lead.>
+		CMsg%id%02_5 <ifNPCCheerful Accept>
+		Msg%id%02_6 <I guess I'm just not good enough to make it as a member of %name2%... I'll have to learn to accept that.>
+		CMsg%id%02_6 <ifNPCMelancholy Accept>
+		Prompt%id%01 <It's probably for the best.>
+		Prompt%id%01_1 <You're better off without them.>
+		Prompt%id%01_2 <You're too good to work for them, anyhow.>
+		Prompt%id%02 <Oh, that's too bad... I wonder what happened.>
+		Prompt%id%02_1 <How surprising... I wonder what happened.>
+		Prompt%id%02_2 <That's a shame... I wonder what happened.>
+	end
+
+%%
 %% *CS_ThanksForRescue Content
 %%	&FromCSEnemy	You rescued the NPC directly from the core story enemy NPC
 %%
@@ -259,9 +350,12 @@ Content
 	start <if= v%id%01 1 else %pop% Alert %id%01 ForceChat %1% Goto %pop%>
 	Msg%id%01 <You are taken to %name3%.>
 
+	% The only subplot is a delay before the next mission.
+	SubPlot1 <*CS_DelayedNegation>
+
 	sub
 		Persona 1
-		greeting <if= PlotStatus %id% else %pop%  &SetAllyFac %2% StoreOldFaction SetPCFac %2% NegateComp 0 .%id%_next  StoryNote %id%02 Goto .%id%_GoGreet>
+		greeting <if= PlotStatus %id% else %pop%  &SetAllyFac %2% StoreOldFaction SetPCFac %2% &SetCompScene 0 AlterCOntext .%id%_next SetPlotStatus %id1%  StoryNote %id%02 Goto .%id%_GoGreet>
 		*.%id%_GoGreet <*CS_ForcedInduction_Greeting .%id%_GoBrief %2%>
 		.%id%_next <+T-- +F-- +Psh>
 		.%id%_GoBrief <NewChat Say %id%01>
@@ -269,6 +363,49 @@ Content
 		Msg%id%01_1 <For the time being you're free to do whatever you'd like. I'll let you know when it's time for your first mission.>
 		Msg%id%01_2 <You are free to go, for the moment. I'll call you back when we have a mission for you.>
 		Msg%id%02 <You were conscripted into %name2%.>
+	end
+
+Content
+	name <Secret Base Induction>
+	requires <*ForcedInduction>
+	desc <You are forcibly inducted into a faction, but given no orders at this time.>
+
+	% Element1 is the NPC doing the induction
+	% Element2 is the faction the PC will be inducted into
+	% Element3 is an urban scene for the secret base
+	% Element4 is the secret base
+	Element3 <Scene Urban !Near -7>
+	Element4 <Prefab>
+	Place4 <3>
+
+	% v%id%01 = Initialization/Conversation Counter
+
+	update <if= PlotStatus %id% else %pop% if= v%id%01 0 V= %id%01 1 Exit %4% MoveAndPacifyNPC %1% %4%>
+
+	start <if= v%id%01 1 else %pop% Alert %id%01 ForceChat %1% Goto %pop%>
+	Msg%id%01 <You are taken to a secret base of %name2%.>
+
+	% The only subplot is a delay before the next mission.
+	SubPlot1 <*CS_DelayedNegation>
+
+	sub
+		Persona 1
+		greeting <if= PlotStatus %id% else %pop%  &SetAllyFac %2% StoreOldFaction SetPCFac %2% &SetCompScene 0 AlterCOntext .%id%_next SetPlotStatus %id1%  StoryNote %id%02 Goto .%id%_GoGreet>
+		*.%id%_GoGreet <*CS_ForcedInduction_Greeting .%id%_GoBrief %2%>
+		.%id%_next <+T-- +F-- +Psh>
+		.%id%_GoBrief <NewChat Say %id%01>
+		Msg%id%01 <We'll let you know when there's some work that needs to be done. For the time being you're free to go.>
+		Msg%id%01_1 <For the time being you're free to do whatever you'd like. I'll let you know when it's time for your first mission.>
+		Msg%id%01_2 <You are free to go, for the moment. I'll call you back when we have a mission for you.>
+		Msg%id%02 <You were conscripted into %name2%.>
+
+		STC MS_Office
+		SetID 4
+	end
+	inv
+		STC ENCOUNTER-WANDER
+		name <Secret Base>
+		update <if= PlotStatus %id% else GoHide SetStat STAT_MetaVisibility 0  Goto GoSetOrders>
 	end
 
 

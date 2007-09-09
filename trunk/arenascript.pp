@@ -84,6 +84,7 @@ var
 
 	lancemate_tactics_persona: GearPtr;	{ Persona for setting lancemate tactics. }
 
+
 {$IFDEF ASCII}
 Procedure MechaSelectionMenu( GB: GameBoardPtr; LList,PC: GearPtr; Z: VGFX_Zone );
 {$ELSE}
@@ -757,14 +758,22 @@ end;
 
 Function BasicSkillTarget( Renown: Integer ): Integer;
 	{ Return an appropriate target for skill rolls for someone of the listed renown. }
+var
+	it: Integer;
 begin
-	BasicSkillTarget := Renown div 8 + 2;
+	it := Renown div 8 + 2;
+	if it < 5 then it := 5;
+	BasicSkillTarget := it;
 end;
 
 Function HardSkillTarget( Renown: Integer ): Integer;
 	{ Return a difficult target for skill rolls for someone of the listed renown. }
+var
+	it: Integer;
 begin
-	HardSkillTarget := Renown div 7 + 5;
+	it := Renown div 7 + 5;
+	if it < 8 then it := 8;
+	HardSkillTarget := it;
 end;
 
 Function AV_ProcessConcert( GB: GameBoardPtr; AudienceSize,SkillTarget: Integer ): Integer;
@@ -4683,6 +4692,7 @@ initialization
 
 	lancemate_tactics_persona := LoadFile( 'lmtactics.txt' , Data_Directory );
 
+
 finalization
 	if SCRIPT_DynamicEncounter <> Nil then begin
 		DisposeGear( SCRIPT_DynamicEncounter );
@@ -4691,5 +4701,4 @@ finalization
 	DisposeSAtt( Value_Macros );
 	DisposeSAtt( Default_Scene_Scripts );
 	DisposeGear( lancemate_tactics_persona );
-
 end.

@@ -10,11 +10,13 @@ Content
 	%% Empty Room. All others can be based off this one.
 	requires <*HOTEL_X>
 	minimap <....................##+##>
+	ZONE_SPECIAL <NoGO>
 
 Content
 	%% Locked Room, but otherwise empty. All others can be based off this one.
 	requires <*HOTEL_X>
 	minimap <....................##=##>
+	ZONE_SPECIAL <NoGO>
 	Sub
 		STC OneShotDoor
 	end
@@ -23,6 +25,7 @@ Content
 	requires <*HOTEL_X>
 	minimap <......1.............##+##>
 	Element1 <Prefab>
+	ZONE_SPECIAL <NoGO>
 	Sub
 		STC OneShotDoor
 		update <if= V1 0 SetStat STAT_LOCK SkillTar 15 V= 1 1>
@@ -39,6 +42,7 @@ Content
 	requires <*HOTEL_X>
 	minimap <......1.............##+##>
 	Element1 <Prefab>
+	ZONE_SPECIAL <NoGO>
 	Sub
 		STC OneShotDoor
 		update <if= V1 0 SetStat STAT_LOCK SkillTar 35 V= 1 1>
@@ -54,6 +58,7 @@ Content
 	requires <*HOTEL_X>
 	minimap <......1.............##+##>
 	Element1 <Prefab>
+	ZONE_SPECIAL <NoGO>
 	Sub
 		STC OneShotDoor
 		update <if= V1 0 SetStat STAT_LOCK SkillTar 55 V= 1 1>
@@ -69,6 +74,7 @@ Content
 	requires <*HOTEL_X>
 	minimap <......1.............##+##>
 	Element1 <Prefab>
+	ZONE_SPECIAL <NoGO>
 	Sub
 		STC OneShotDoor
 		update <if= V1 0 SetStat STAT_LOCK SkillTar 75 V= 1 1>

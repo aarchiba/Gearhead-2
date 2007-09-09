@@ -411,6 +411,37 @@ Plot
 
 
 Plot
+	name <Best Buds Forever?>
+	desc <The PC and his friend turn out to be enemies. Bummer.>
+	requires <#A +P-- E:-- +Tgt (+F--|+Fin|+Fad) T:Friend T:Enemy P:++ Common>
+
+	% Element1 is the scene where the meeting will take place
+	% Element2 is the NPC to meet
+	element1 <Grab 6>
+	element2 <Grab 5>
+	Place2 <1 (Citizens) pass>
+
+	start <ifNPCDead %2% LoseComp 0 .loss>
+	.loss <+T-- +F-->
+
+	sub
+		STC MS_CAFE
+		SetID 1
+
+		Persona 2
+		special <UNLISTED>
+		*greeting <*HowAreYou GoCheckSituation>
+		% At the beginning of the conversation, make sure that things are still as we need them
+		GoCheckSituation <&SetAllyFac PCFac iffactionenemy ChatNPCFac else GoAbort if# PCFac 0 else GoAbort Goto GoPose>
+		GoAbort <NewChat Say 1 SMemo 0 WinComp 0 .abort>
+		.abort <+T-- +F-->
+		GoPose <NewChat Say 2 >
+
+		Msg1 <We've had some differences in the past, but I'd like to wish you the best of luck in your adventuring career.>
+		Msg2 <Now that you're a member of \FACTION PCFac , technically we're going to be enemies.>
+	end
+
+Plot
 	name <Surprise Announcement>
 	desc <Your friend announces that he's joined Aegis Overlord.>
 	%% Temporarily disabled
@@ -426,9 +457,8 @@ Plot
 	Place2 <1 (Citizens) pass>
 	element3 <Faction Aegis>
 
-	start <ifNPCOK E2 else GoLose>
-	GoLose <LoseComp 0 .loss>
-	.loss <+T-->
+	start <ifNPCDead %2% LoseComp 0 .loss>
+	.loss <+T-- +F-->
 
 	update <if= P1 0 P= 1 1 SetNPCFaction E2 E3>
 

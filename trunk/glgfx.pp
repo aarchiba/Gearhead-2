@@ -736,6 +736,8 @@ end;
 Function AddTexture( Name,Color: String ): SensibleTexPtr;
 	{ Add a texture to the list. }
 	{ PRECOND: Must be a good image for generating a texture!!! }
+const
+	tex_size = 64;
 var
 	MyTex: SensibleTexPtr;
 	MyImage: SensibleSpritePtr;
@@ -748,7 +750,7 @@ begin
 	MyTex^.Name := UpCase( Name );
 	MyTex^.Color := Color;
 
-	MyImage := LocateSprite( Lowercase( name ) , 64 , 64 );
+	MyImage := LocateSprite( Lowercase( name ) , tex_size , tex_size );
 
 	{ Error check- if the image couldn't be found, exit now. }
 	if MyImage^.Img = Nil then Exit( MyTex );
@@ -765,9 +767,9 @@ begin
 	MyDest.X := 0;
 	MyDest.Y := 0;
 
-	tmp := SDL_CreateRGBSurface( SDL_SWSURFACE , 64 , 64 , 32 , $000000ff , $0000ff00 , $00ff0000 , $ff000000 );
+	tmp := SDL_CreateRGBSurface( SDL_SWSURFACE , tex_size , tex_size , 32 , $000000ff , $0000ff00 , $00ff0000 , $ff000000 );
 
-	MyTex^.N := ( ( MyImage^.img^.H div 64 ) * ( MyImage^.img^.W div 64 ) );
+	MyTex^.N := ( ( MyImage^.img^.H div tex_size ) * ( MyImage^.img^.W div tex_size ) );
 {	SetLength( MyTex^.Img , MyTex^.N );
 }	glGenTextures( MyTex^.N , @MyTex^.Img );
 

@@ -1,5 +1,18 @@
 % Persona Fragment File
 
+% TYPE: *IWantToTalkAboutNPC
+%	The PC wants to ask the NPC about a second NPC.
+%   PARAM1: NPC to be discussed
+%   PARAM2: Exit label
+
+	Persona
+	requires <*IWantToTalkAboutNPC>
+	START <NewChat Say %id%01 AddChat %id%01>
+	result%id%01 <Goto %2%>
+	Msg%id%01 <Yes, may I help you?>
+	Prompt%id%01 <I want to talk about \PERSONA %1% .>
+
+
 % TYPE: *GodImBored
 %	The NPC will express a state of boredom or ennui.
 

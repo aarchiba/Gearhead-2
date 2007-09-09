@@ -16,21 +16,79 @@ Plot
 	Element2 <Grab 2>
 	Element3 <Scene Public !Near -7 !Okay 2>
 	Element4 <Prefab>
-	Place4 <2 (Citizens) Pass>
+	Place4 <3 (Citizens) Pass>
 	Element5 <Scene Environs !Near -7>
 
+	% P%id%01 = Nature of Wager
+	%		0: PC joins EnemyFac if he loses
+	%		1: PC pays $100000 if he loses
+	%		2: No bad effect if PC loses
 	start <if= PlotStatus 0 ifNPCDead %4% LoseComp 0 .next>
 	.next <+T-- +F-->
 
 	% SubPlot1 is the duel
 	% SubPlot2 is the release of E1, if the duel is won
 	% SubPlot3 is the forcible recruitment of the PC, if the duel is lost
+	SubPlot1 <*CS_Duel&NoDerailment 4 3 5>
+	SubPlot2 <*CS_FriendFired_Win 1 2>
+	SubPlot3 <*ForcedInduction 4 2>
+
+	% Needed scripts for the duel
+	.%id1%_%plotid%_GoWin <FreezeNPC %4% &SetEnemyChar %4% StoryNote 1 SetPlotStatus %id2%>
+	.%id1%_%plotid%_GoLose <if= P%id%01 0 else GoCheckCash ifPCOK else GoPCDown &SetEnemyChar 0 &SetEnemyFac 0 SetPlotStatus %id3%>
+	GoPCDown <FreezeNPC %4% StoryNote 2 LoseComp 0 .next>
+	GoCheckCash <FreezeNPC %4% if= P%id%01 1 else GoNoBadEffect ifG PC$ 99999 else GoNotEnough cash+ -100000 Goto GoNoBadEffect>
+	GoNotEnough <cash+ -PC$   AddRenown -5   Goto GoNoBadEffect>
+	GoNoBadEffect <SMemo 0   LoseComp 0 .next>
+	.next <+Pun +T-- +F-->
+
+	Msg1 <You defeated %name4%, who should now release %name1% from %name2%.>
+	Msg2 <%name4% left you behind for dead.>
 
 	sub
 		Persona 4
 		rumor0 <%name4% from %name2% has been spotted in %name3%.>
-		greeting <if= PlotStatus 0 else GoChat >
+		% V1 = Have spoken before
+		greeting <if= PlotStatus 0 else GoChat if= V1 1 else GoFirstTime NewChat Say 17 AddChat 1 AddChat 2 AddChat 3>
+		*GoFirstTime <*IWantToTalkAboutNPC %1% GoMakeDeal>
 		*GoChat <*MISC_CHATTER>
+		GoMakeDeal <NewChat V= 1 1 Say 1 SMemo 2 AddChat 1 AddChat 2 AddChat 3>
+		result1 <NewChat Say 3 AddChat 4 AddChat 5 AddChat 6 AddChat 7>
+		result2 <EndChat Say 4 StoryNote 5 &SetEnemyChar 0 &SetEnemyFac 0 SetPlotStatus %id3%>
+		result3 <NewChat Say 6 StoryNote 7 &SetEnemyChar %4% FreezeNPC %4% NegateComp 0 .negate>
+		.negate <+T-- +P-->
+		result4 <EndChat Say 8 SMemo 9 History 10 SetPlotStatus %id1%>
+		result5 <ifG PC$ 99999 else GoR5NoMoney ifConversation SkillTar StoryDL else GoR5Fail EndChat Say 8 SMemo 11 History 10 P= 1 1 SetPlotStatus %id1%>
+		GoR5Fail <NewChat Say 12 AddChat 4 AddChat 6 AddChat 7>
+		GoR5NoMoney <NewChat Say 13 AddChat 4 AddChat 6 AddChat 7>
+		result6 <EndChat Say 14 SMemo 15 History 10 P= 1 2 SetPlotStatus %id1%>
+		result7 <NewChat Say 16>
+		Msg1 <I recruited %name1% for %name2% a little while ago. I think \SPR %1% 'll make a good addition to our forces... From the sound of your voice, I take it that you are not happy about this?>
+		Msg2 <%name4% recruited %name1% for %name2% ; \SPR %4% can be found at %name3%.>
+		Msg3 <Well, I can't very well do that, but if you're serious about this I propose a wager. I'll face you in a duel. If you win, I will release %name1% from %name2%, but if I win... what do you propose?>
+		Msg4 <If you're really serious, I can make your wish come true.>
+		Msg5 <You joined %name2% along with %name1%.>
+		Msg6 <If you oppose %name2% then you are a fool. It can only lead to your death.>
+		Msg7 <You met %name4%, who recruited %name1% into %name2%.>
+		Msg8 <I accept your terms. Meet me in %name5% and we can begin.>
+		Msg9 <You must duel %name4% at %name5% to decide the fate of %name1%. If you lose, you must join %name2% yourself.>
+		Msg10 <You agreed to duel %name4% over the fate of %name1%.>
+		Msg11 <You must duel %name4% at %name5% to decide the fate of %name1%. If you lose, you must pay $100,000.>
+		Msg12 <That's not nearly enough. Surely you must have a better offer?>
+		Msg13 <You don't look like you have that kind of money. Can't you offer anything else?>
+		Msg14 <You're right, I don't. This is more of a lesson for you in the futility of opposing %name2% ... Meet me at %name5% whenever you're ready, and I'll show you why you have no chance to win.>
+		Msg15 <You must duel %name4% at %name5% to decide the fate of %name1%.>
+		Msg16 <You do that.>
+		Msg17 <Oh, it's you again. What do you want?>
+		Prompt1 <I want you to release %name1% at once.>
+		Prompt2 <I want to join %name2% too.>
+		CPrompt2 <ifFactionEnemy SceneFac &EpisodeScene Accept>
+		Prompt3 <I just want you to know that I'll fight you.>
+		Prompt4 <I'll join %name2% as well.>
+		Prompt5 <I'll pay $100,000.>
+		Prompt6 <You don't really expect to lose, do you?>
+		CPrompt6 <ifTaunt HardSkillTar StoryDL Accept>
+		Prompt7 <I'll think about it.>
 
 	end
 	inv
