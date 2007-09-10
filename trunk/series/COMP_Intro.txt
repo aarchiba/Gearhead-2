@@ -2,6 +2,64 @@
 %% told vaguely what's going on in the game world.
 
 Plot
+	name <You've Got Work>
+	Size 0
+	desc <You're reminded of a business meeting.>
+	requires <#A +T01 P:++ -P:CRM>
+
+	% E1 is the metascene to be used for the meeting.
+	% E2 is the associate you're going to meet.
+	% E3 is the scene where the "Intro NPC" is
+	% E4 is the "Intro NPC"
+	% E5 is the PC's faction
+	element1 <MetaScene !Near -7 *Building NeverFail>
+	element2 <Character !Comrade -3 !Near -7>
+	element3 <Scene !Near -7 cavclub>
+	element4 <NewNPC -3 -7 PCFriend>
+	place4 <3 pass>
+	element5 <Grab 3>
+
+	update <ForceChat %4%>
+
+	sub
+		Persona 4
+		% THE INTRO
+		% - All +T01 components should feature a intro character. They don't have to,
+		%   of course, but it'll be a major pissoff if they don't.
+		% - The intro character should follow this form, to insure that all the major
+		%   bits are in place: the introduction, the question, the story info, and the
+		%   advice.
+		% V1 = Have given story info.
+		greeting <&SetTargetChar %2%   SMemo 2  WinComp %1% .next  if= V1 1 else GoGreeting Goto GoAdvice>
+		.next <+Tgt +Fmi>
+		*GoGreeting <*INTRO_Introduction GoAskQuestion>
+		*GoAskQuestion <*INTRO_Question GoStoryInfo>
+		GoStoryInfo <NewChat Say 1 V= 1 1 AddChat 1>
+		*GoAdvice <*INTRO_Advice>
+		result1 <Goto GoAdvice>
+		Msg1 <I know you're very excited about being accepted into %name5% . Are you all ready for your meeting with %name2% at %name1% today?>
+		Msg1_1 <Everyone's talking about how great it is that you've been accepted into %name5% . Do you have everything ready for the meeting with %name2% at %name1% later on today?>
+		CMsg1_1 <ifNPCSociable Accept>
+		Msg1_2 <I see. All ready for your big meeting with %name2% at %name1% today?>
+		CMsg1_2 <ifNPCShy Accept>
+		Msg1_3 <Being a member of %name5% must really keep you busy. Are you ready for that big meeting with %name2% at %name1% ?>
+		CMsg1_3 <ifNPCEasygoing Accept>
+		Msg1_4 <It must be a great honor for you to be a part of %name5% . Are you ready for the meeting with %name2% at %name1% later today?>
+		CMsg1_4 <ifNPCPassionate Accept>
+		Msg1_5 <Congratulations on being accepted into %name5% . All ready for the big meeting with %name2% at %name1% ?>
+		CMsg1_5 <ifNPCCheerful Accept>
+		Msg1_6 <I guess the work never ends now that you're a member of %name5% . Did you get everything ready for the meeting with %name2% at %name1% later on today?>
+		CMsg1_6 <ifNPCMelancholy Accept>
+
+		Msg2 <You have to meet %name2% at %name1% to discuss %name5%.>
+
+		Prompt1 <I'm ready. Have any advice?>
+		Prompt1_1 <Yeah. Do you have any advice for me?>
+
+	end
+
+
+Plot
 	name <The First Duel>
 	desc <You're going to challenge your rival.>
 	requires <#A +T01 (C:ADVEN|+Gpo)>

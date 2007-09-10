@@ -3,6 +3,18 @@
 %%  Peaceful Life components
 
 Plot
+	name <Not Even The Police Are Safe>
+	desc <The officer you have to see for the mission? He got robbed.>
+	requires <#A +Tgt +Fmi +P-- T:POLIC (F:--|F:crm)>
+
+	% E1 is the building
+	% E2 is the police officer
+	element1 <Grab 6>
+	element2 <Grab 5>
+	Place2 <1 (Citizens) pass>
+
+
+Plot
 	name <Heist At Corp Office>
 	desc <This corporate office has just been raided. Yay!>
 	requires <#A (+P--|+Pme) +T-- F:crm ~P:cor ~C:CORPO>
@@ -429,16 +441,38 @@ Plot
 		SetID 1
 
 		Persona 2
-		special <UNLISTED>
+		special <UNLISTED NOESCAPE>
 		*greeting <*HowAreYou GoCheckSituation>
 		% At the beginning of the conversation, make sure that things are still as we need them
 		GoCheckSituation <&SetAllyFac PCFac iffactionenemy ChatNPCFac else GoAbort if# PCFac 0 else GoAbort Goto GoPose>
 		GoAbort <NewChat Say 1 SMemo 0 WinComp 0 .abort>
 		.abort <+T-- +F-->
-		GoPose <NewChat Say 2 >
+		GoPose <EndChat Say 2 AddChat 1 AddChat 2 AddChat 3>
+		.next <+Pme +T-- +F-->
+		GoPhase2 <EndChat Say 4 AddChat 4 AddChat 5>
+
+		Result1 <AddEasygoing d10    Goto GoPhase2>
+		Result2 <AddCheerful d10     Goto GoPhase2>
+		Result3 <AddEasygoing -d10   Goto GoPhase2>
+		result4 <EndChat Say 5  &SetEnemyChar %2% &SetEnemyFac ChatNPCFac FreezeNPC %2% StoryNote 3 WinComp 0 .next>
+		result5 <AddEasygoing -d6    Goto result4>
 
 		Msg1 <We've had some differences in the past, but I'd like to wish you the best of luck in your adventuring career.>
-		Msg2 <Now that you're a member of \FACTION PCFac , technically we're going to be enemies.>
+		Msg2 <Now that you're a member of \FACTION PCFac , technically we're going to be enemies. I can't say I'm looking forward to facing you in combat.>
+		Msg3 <Because you joined \FACTION PCFac , your friend %name2% became an enemy.>
+		Msg4 <I don't know why you decided to join \FACTION PCFac , anyhow... It's going to lead to nothing but trouble.>
+		Msg5 <I wish you the best of luck, \PC , and hope that we are never forced to fight one another...>
+
+		Prompt1 <I guess I didn't think of that.>
+		Prompt1_1 <These things happen.>
+		Prompt2 <Don't worry, we'll still be friends.>
+		Prompt2_1 <I won't let it come between us.>
+		Prompt3 <This'll give us a chance to finally settle our rivalry.>
+		Prompt3_1 <At last we'll be able to settle our rivalry.>
+		Prompt4 <You just say that because you're in \FACTION ChatNPCFac .>
+		Prompt4_1 <Did \FACTION ChatNPCFac tell you to say that?>
+		Prompt5 <I have to do what I have to do.>
+		Prompt5_1 <This is my destiny. You wouldn't understand.>
 	end
 
 Plot

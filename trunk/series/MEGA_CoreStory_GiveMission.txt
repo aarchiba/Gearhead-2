@@ -34,6 +34,7 @@ Content
 		rumor0 <%name1% needs a cavalier for some kind of mission.>
 		greeting <if# PlotStatus %id% else .%id%_GoOfferMission if# PlotStatus %id1% else .%id%_GoRemind Goto %pop%>
 		.%id%_GoOfferMission <ifChatNPCUnknown else .%id%_GoKnownGreeting ifChatNPCAlly else .%id%_GoUnknownGreeting Goto .%id%_GoKnownGreeting>
+		*.%id%_GoRemind <*MechaMissionReminder %2%>
 		*.%id%_GoKnownGreeting <*IHaveAJobForYou .%id%_GoBriefing>
 		*.%id%_GoUnknownGreeting <*AreYouHereAboutJob&Mecha .%id%_GoBriefing>
 		*.%id%_GoBriefing <*CORE_BasicJob .%id%_GoAccept .%id%_GoDeny %2%>

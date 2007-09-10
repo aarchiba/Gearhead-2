@@ -1,5 +1,15 @@
 % Persona Fragment File
 
+% TYPE: *MechaMissionReminder
+%	The NPC will remind the PC to go fight/investigate some mecha
+%	in Scene %1%.
+%   PARAM1: The scene where the mecha are
+
+	Persona
+	requires <*MechaMissionReminder>
+	START <NewChat Say %id%01>
+	Msg%id%01 <Come talk to me again after you've checked out \SCENE %1% .>
+
 % TYPE: *IWantToTalkAboutNPC
 %	The PC wants to ask the NPC about a second NPC.
 %   PARAM1: NPC to be discussed
