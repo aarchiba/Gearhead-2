@@ -19,6 +19,18 @@
 %	STAT_XRP_TargetItem = 8;		{ I: }
 
 Plot
+	name <Basic Manhunt>
+	desc <You're on the trail of a criminal.>
+
+	% E1 is the character being sought
+	Element1 <Grab 5>
+
+	% SubPlot1 is the hideout
+	SubPlot1 <*CS_Hideout 1>
+
+	update <if= PlotStatus 0 SetPlotStatus %id1%>
+
+Plot
 	name <Basic Challenge>
 	desc <You're going to challenge some guy.>
 	requires <#A +Tgt +Fch T:++ Common>
