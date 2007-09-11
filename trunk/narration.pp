@@ -639,6 +639,7 @@ var
 	it: LongInt;
 begin
 	it := NAttValue( Adventure^.NA , NAG_Narrative , NAS_MinMSID ) - 1;
+	if it > -100 then it := -100;
 	SetNAtt( Adventure^.NA , NAG_Narrative , NAS_MinMSID , it );
 	NewMetaSceneID := it;
 end;

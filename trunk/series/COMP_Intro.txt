@@ -31,6 +31,7 @@ Plot
 		*GoGreeting <*INTRO_Introduction GoAskQuestion>
 		*GoAskQuestion <*INTRO_Question GoStoryInfo>
 		GoStoryInfo <NewChat Say 1 V= 1 1 AddChat 1>
+
 		*result1 <*INTRO_Advice>
 		Msg1 <Did you hear that the wanted outlaw %name3% has been spotted in town? Every bounty hunter in \NARRATIVE 7 is on the lookout.>
 		Msg1_1 <I guess you've already heard that %name3% has been spotted in \NARRATIVE 7 . I don't know whether the rumors are true or not, but the police seem to be taking them seriously.>
