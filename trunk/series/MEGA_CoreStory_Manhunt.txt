@@ -1,0 +1,115 @@
+%%
+%% *CS_ManHunt_Confrontation Content
+%%
+%% The PC has found somebody who didn't want to be found.
+%% What happens now? A fight? A conversation? Absolutely nothing?
+%% Only the RNG knows for sure.
+%%
+%% The parent plot sets the plot status to this layer's ID when ready.
+%%
+%% Param1: The NPC being sought.
+%% Param2: The scene where he'll be found
+%%
+
+Content
+	name <Target becomes Enemy>
+	desc <That target you've been chasing? Surprise! He's your new enemy!>
+	requires <*CS_ManHunt_Confrontation (+Far|+Ffi) E:-->
+
+	% E3 is the note left for the PC
+	Element3 <Prefab>
+
+	update <if= PlotStatus %id% else %pop% FreezeNPC %1% MoveItem %3% %2%>
+	start <if= PlotStatus %id% else %pop% if= SceneID %2% Alert 1 History 2 &SetEnemyChar %1% &SetTargetChar 0 WinComp 0 .%id%_Next>
+	.%id%_Next <+T-- +F-->
+
+	Msg1 <There's no sign of %name1% here; \SPR %1% must have known you were coming.>
+	Msg2 <%name1% evaded your attempt to capture \OPR %1% .>
+
+	inv
+		Treasure 1
+		name <Note>
+		desc <Don't bother looking for me. From now on, I'll be looking for you instead. - %name1%>
+	end
+
+%%
+%% *CS_Manhunt_Search Content
+%%
+%% The PC is searching for someone who doesn't want to be found.
+%% This component will include a search path.
+%%
+%% The parent plot sets the plot status to this layer's ID when ready.
+%%
+%% This component will either call the MANHUNT_CONFRONTATION above, or
+%% resolve the manhunt in some other way.
+%%
+%% Param1: The NPC being sought. Must set a PLACE for it.
+%%
+
+Content
+	name <Basic Hideout>
+	requires <*CS_Manhunt_Search>
+	Size 2
+
+	% E1 is the character being sought; set PLACE here.
+	% E2 is an urban scene, for placing the encounter
+	% E3 is the encounter/metascene for the confrontation
+	% E4 is a character who can tell the PC where the hideout is.
+	Place1 <3 (Citizens) pass>
+	Element2 <Scene Urban !Near -7>
+	Element3 <Prefab>
+	Place3 <2>
+	Element4 <Character !Near -7 !Okay 1>
+
+	% P%id%01 = Have discovered location of target
+
+	% If this subplot has been activated, check to make sure the informant is OK.
+	Start <if= PlotStatus %id% else %pop% ifNPCDead %4% FreezeNPC %1% LoseComp 0 .%id%_next>
+	.%id%_next <+T-- +F-->
+
+	% SubPlot1 is the confrontation, to take place at E3
+	SubPlot1 <*CS_ManHunt_Confrontation 1 3>
+
+sub
+	Persona 4
+	rumor%id% <%name4% knows where %name1% is.>
+	greeting <if= PlotStatus %id% else GoChat Goto GoGetInfo>
+	*GoChat <*IAmBusy>
+	*GoGetInfo <*LookingForNPC %1% GoSuccess GoFailure>
+	GoSuccess <NewChat Say 1 P= %id%01 1 SMemo 2 SetPlotStatus %id1%>
+	*GoFailure <*BrushOff&Questioning>
+	Msg1 <I'll tell you- %name1% used to have a hideout in %name2%. If you're looking for \OPR %1% , that's the first place I'd check.>
+	Msg2 <%name5% told you that %name1%'s hideout can be found in %name2%.>
+
+	MetaScene 3
+	special <NOEXIT>
+	% L1 = Initialization Counter
+	% L2 = Fight has started
+	BoxMap
+	MapWidth 12
+	MapHeight 17
+	content <Fill Sub *HIDEOUT_X na>
+	sub
+		Team 1
+
+		Team 2
+		name <Citizens>
+
+		Room
+		special <STARTHERE>
+		minimap <......###..#1#...........>
+		sub
+			Elevator
+			Destination -1
+			MiniMapComponent 1
+			use <Print 1 Return>
+		end
+	end
+end
+inv
+	STC ENCOUNTER-DUEL
+	name <%name1%'s Hideout>
+	update <if= P%id%01 1 else GoHide  SetStat STAT_MetaVisibility 0  ShowEncounter  Goto GoSetOrders>
+	ENCOUNTER_Hostile
+end
+

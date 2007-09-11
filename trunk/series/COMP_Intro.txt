@@ -2,6 +2,55 @@
 %% told vaguely what's going on in the game world.
 
 Plot
+	name <Criminal At Large>
+	Size 0
+	desc <A wanted criminal is on the loose, and the PC intends to capture him.>
+	requires <#A +T01 C:POLIC>
+
+	% E1 is the scene where the "Intro NPC" is
+	% E2 is the "Intro NPC"
+	% E3 is the criminal to be sought
+	element1 <Scene !Near -7 cavclub>
+	element2 <NewNPC -3 -7 PCFriend>
+	place2 <1 pass>
+	element3 <NewNPC 0 -7 Criminal>
+
+	update <ForceChat %2%>
+
+	sub
+		Persona 2
+		% THE INTRO
+		% - All +T01 components should feature a intro character. They don't have to,
+		%   of course, but it'll be a major pissoff if they don't.
+		% - The intro character should follow this form, to insure that all the major
+		%   bits are in place: the introduction, the question, the story info, and the
+		%   advice.
+		% V1 = Have given story info.
+		greeting <&SetTargetChar %3% FreezeNPC %3%   StoryNote 2  WinComp 0 .next  if= V1 1 else GoGreeting Goto GoAdvice>
+		.next <+Tht +Far>
+		*GoGreeting <*INTRO_Introduction GoAskQuestion>
+		*GoAskQuestion <*INTRO_Question GoStoryInfo>
+		GoStoryInfo <NewChat Say 1 V= 1 1 AddChat 1>
+		*result1 <*INTRO_Advice>
+		Msg1 <Did you hear that the wanted outlaw %name3% has been spotted in town? Every bounty hunter in \NARRATIVE 7 is on the lookout.>
+		Msg1_1 <I guess you've already heard that %name3% has been spotted in \NARRATIVE 7 . I don't know whether the rumors are true or not, but the police seem to be taking them seriously.>
+		CMsg1_1 <ifNPCSociable Accept>
+		Msg1_2 <I've got a tip for you. The wanted fugitive %name3% has been spotted in town.>
+		CMsg1_2 <ifNPCShy Accept>
+		Msg1_3 <>
+		CMsg1_3 <ifNPCEasygoing Accept>
+		Msg1_4 <>
+		CMsg1_4 <ifNPCPassionate Accept>
+		Msg1_5 <This is an exciting time to be in law enforcement. I just heard that a fugitive named %name3% is on the loose in \NARRATIVE 7 .>
+		CMsg1_5 <ifNPCCheerful Accept>
+		Msg1_6 <>
+		CMsg1_6 <ifNPCMelancholy Accept>
+		Msg2 <You decided to try and capture the wanted outlaw %name3%.>
+		Prompt1 <It's my goal to capture \OPR %3% . Have any advice?>
+		Prompt1_1 <I plan to capture \OPR %3% . Any advice for me?>
+	end
+
+Plot
 	name <You've Got Work>
 	Size 0
 	desc <You're reminded of a business meeting.>

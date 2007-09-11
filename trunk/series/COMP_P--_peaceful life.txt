@@ -5,14 +5,38 @@
 Plot
 	name <Not Even The Police Are Safe>
 	desc <The officer you have to see for the mission? He got robbed.>
-	requires <#A +Tgt +Fmi +P-- T:POLIC (F:--|F:crm)>
+	requires <#A +Tgt (+Fmi|+Fin) +P-- T:POLIC (F:--|F:crm)>
 
 	% E1 is the building
 	% E2 is the police officer
+	% E3 is the thief
 	element1 <Grab 6>
 	element2 <Grab 5>
 	Place2 <1 (Citizens) pass>
+	element3 <Prefab>
 
+	sub
+		STC MS_OFFICE
+		SetID 1
+
+		Persona 2
+		special <UNLISTED>
+		greeting <NewChat Say 1 AddChat 1>
+		result1 <NewChat Say 2 StoryNote 3 FreezeNPC %3% &SetTargetChar %3% WinComp 0 .next>
+		.next <+Pun +Tht +Far>
+
+		Msg1 <It's a sad day in \SCENE &EpisodeScene when not even the police are safe...>
+		Msg1_1 <>
+		Msg2 <On my way here today I was robbed by %name3%! This could well be the start of a crime wave. I'm sorry but my mission slate was among the items stolen, so I don't even have any work for you.>
+		Msg2_1 <>
+		Msg3 <You went to see %name2% , but found \SPR %2% had been robbed by %name3%.>
+		Prompt1 <Tell me what happened.>
+		Prompt1_1 <What happened here?>
+	end
+	inv
+		NPC Thief
+		Combatant
+	end
 
 Plot
 	name <Heist At Corp Office>

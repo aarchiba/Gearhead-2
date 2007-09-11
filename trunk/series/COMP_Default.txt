@@ -21,14 +21,19 @@
 Plot
 	name <Basic Manhunt>
 	desc <You're on the trail of a criminal.>
+	requires <#A +Tht>
 
-	% E1 is the character being sought
+	% E1 is the character being sought.
 	Element1 <Grab 5>
 
-	% SubPlot1 is the hideout
-	SubPlot1 <*CS_Hideout 1>
+	% SubPlot1 is the hideout hider
+	%  This subplot should lead on to the conclusion
+	SubPlot1 <*CS_Manhunt_Search 1>
 
+	% All the update does is start the manhunt going...
 	update <if= PlotStatus 0 SetPlotStatus %id1%>
+
+
 
 Plot
 	name <Basic Challenge>

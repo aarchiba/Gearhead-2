@@ -156,8 +156,9 @@ LOCAL DESCRIPTORS
 	+T--	No task.(1)
 	+T01	Introduction. The first task given.
 	+Tgt	Goto target for conversation
-	+Tlt	Look for target to speak with him
+	+Tlt	Look for target to speak with him; the target is not actively avoiding the PC
 	+Tda	PC will go on a date with the target character
+	+Tht	The PC goes on a manhunt for target, who is actively avoiding him
 
 	+Tin	Investigate Encounter -> usually to fight...
 	+Tgs	Guard Scene
@@ -177,6 +178,7 @@ LOCAL DESCRIPTORS
 	+Fch	PC will challenge NPC to a duel
 	+Fpa	It's going to be a party (+Tsh)
 	+Fcc	It's a corporate conference (+Tsh)
+	+Far	To arrest the target (+Tht)
 
 	+Fmo	PC will get money
 	+Fad	PC will ask target for date
