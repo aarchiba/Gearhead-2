@@ -1,5 +1,36 @@
 % Persona Fragment File
 
+% TYPE: *IDisagreeYouDie
+%		&Arrest		The NPC will be taken to jail.
+%	The NPC won't do as the PC says, but will fight instead.
+%   PARAM1: Exit Label
+
+	Persona
+	requires <*IDisagreeYouDie &Arrest>
+	START <NewChat Say %id%01 Goto %1%>
+	Msg%id%01 <I'm not ready to go yet... I think I'll kill you instead!>
+
+	Persona
+	requires <*IDisagreeYouDie>
+	START <NewChat Say %id%01 Goto %1%>
+	Msg%id%01 <I don't think so. Instead, I think I'll kill you...>
+
+
+% TYPE: *ISurrender
+%		&Arrest		The NPC will be taken to jail.
+%	The NPC will surrender and go with the PC.
+%   PARAM1: Exit Label
+
+	Persona
+	requires <*ISurrender &Arrest>
+	START <NewChat Say %id%01 Goto %1%>
+	Msg%id%01 <Alright, I give up... You can take me to jail.>
+
+	Persona
+	requires <*ISurrender>
+	START <NewChat Say %id%01 Goto %1%>
+	Msg%id%01 <I give up! Just don't kill me...>
+
 % TYPE: *MechaMissionReminder
 %	The NPC will remind the PC to go fight/investigate some mecha
 %	in Scene %1%.

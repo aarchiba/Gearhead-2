@@ -778,73 +778,6 @@ Plot
 	end
 
 
-Plot
-	name <Invasion Alert>
-	Size 0
-	desc <You're informed that the town is under attack.>
-	requires <#A +T01 P:-- -L:ENEMY>
-
-	% E1 is the cavclub scene
-	% E2 is your friend
-	% E3 is the "scapegoat" faction- may or may not actually be the one doing the damage
-	element1 <Scene !Near -7 cavclub>
-	element2 <Prefab>
-	place2 <1 pass>
-	element3 <Faction !Enemy -7>
-
-	update <Print 1 ForceChat E2>
-	Msg2 <\ELEMENT 2 strikes up a conversation with you.>
-
-	sub
-		Persona 2
-		% THE INTRO
-		% - All +T01 components should feature a intro character. They don't have to,
-		%   of course, but it'll be a major pissoff if they don't.
-		% - The intro character should follow this form, to insure that all the major
-		%   bits are in place: the introduction, the question, the story info, and the
-		%   advice.
-		% V1 = Have given story info.
-		greeting <StoryNote 2  WinComp 0 .next  if= V1 1 else GoGreeting Goto GoAdvice>
-		.next <+T-- +Pun>
-		*GoGreeting <*INTRO_Introduction GoAskQuestion>
-		*GoAskQuestion <*INTRO_Question GoStoryInfo>
-		GoStoryInfo <NewChat Say 1 V= 1 1 AddChat 1 AddChat 2 AddChat 3>
-		*GoAdvice <*INTRO_Advice>
-		result1 <NewChat Say 3 AddEasygoing -d4  AddChat 4>
-		result2 <NewChat Say 4 AddChat 4>
-		result3 <NewChat Say 5 AddCheerful -d10  AddChat 4>
-		result4 <Goto GoAdvice>
-		Msg1 <Have you heard about the invaders who've been clashing with \SCENE RootSceneID security? There was a bit about it in the news, but there's not a lot of information yet.>
-		Msg1_1 <These days everybody's talking about a group of invaders who have supposedly clashed with \SCENE RootSceneID security . Personally, I don't know if I believe it or not. Did you hear about that?>
-		CMsg1_1 <ifNPCSociable Accept>
-		Msg1_2 <Have you heard anything about the invaders who have supposedly been fighting with the \SCENE RootSceneID guard? Apparently the military is trying to keep a lid on the story.>
-		CMsg1_2 <ifNPCShy Accept>
-		Msg1_3 <I hear that there's been some unauthorized mecha spotted near \SCENE RootSceneID . The security forces are on alert, but it'll probably turn out to be nothing. Did you hear anything about it?>
-		CMsg1_3 <ifNPCEasygoing Accept>
-		Msg1_4 <Right now \SCENE RootSceneID security has its panties in a bunch over some unauthorized mecha violating our space. So far there hasn't been a lot of info in the news about it. Did you hear anything?>
-		CMsg1_4 <ifNPCPassionate Accept>
-		Msg1_5 <All the local pilots are talking about some supposed invaders who have been spotted near the city... That means there's likely to be a lot of jobs available very soon. Did you hear anything about that?>
-		CMsg1_5 <ifNPCCheerful Accept>
-		Msg1_6 <Have you heard about the unknown mecha who've attacked our city guard? They could be terrorists, or worse...>
-		CMsg1_6 <ifNPCMelancholy Accept>
-		Msg2 <You learned that mysterious invaders are attacking \NARRATIVE 7 .>
-		Msg3 <According to the initial reports it doesn't look like them. I'd be less worried if it was, honestly... At least we know what \ELEMENT 3 wants.>
-		Msg3_1 <Maybe. This doesn't seem like their usual mode of operations, but they have done covert ops before. We'll have to wait and see I guess.>
-		Msg4 <A lot of the other pilots are talking about it. Some of them have been trying to find these invaders themselves. Personally I think that's a bad idea, but no guts no glory I suppose.>
-		Msg4_1 <You really ought to work on your contacts, \PC . Most of your job opportunities will come from rumors. If you don't have anyone to go to for info you'll be left in the cold.>
-		Msg5 <You might want to stick around for a while yet. I've got a feeling this situation's going to result in trouble, and whenever there's trouble there's plenty of jobs for pilots.>
-		Msg5_1 <Don't be racing off so fast... If there really are hostile mecha out there, that's going to mean lots of jobs for mecha pilots.>
-		Prompt1 <It must be \ELEMENT 3 again.>
-		Prompt2 <No, I didn't hear about that.>
-		Prompt3 <Yet one more reason to leave this place.>
-		Prompt4 <Anything else before I head out?>
-	end
-	inv
-		NPC Mecha Pilot
-		home <The Start Position>
-		PCFriend
-		EquipChar 10000
-	end
 
 
 
@@ -1045,57 +978,6 @@ Plot
 		SetID 1
 	end
 
-
-
-Plot
-	name <The Treasure Hunter>
-	Size 1
-	desc <The person you rescued was looking for treasure.>
-	requires <#A (+P--|+Pun) +Ttt +Frt T:++ -T:Enemy>
-
-	%% E1 is the scene where this will take place
-	%% E2 is the NPC that the PC is looking for
-	%% E3 is the item being sought
-	element1 <Grab 6>
-	element2 <Grab 5>
-	element3 <Artifact Item PreZero>
-
-	start <ifNPCOK E2 else GoLose>
-	GoLose <LoseComp 0 .loss>
-	.loss <+T-- +F-->
-
-	update <if=  P1 0  P= 1 1  &SetTargetChar 0  MoveNPC E2 E1>
-
-	sub
-		Persona 2
-		special <UNLISTED>
-		rumor <%name2% has been recuperating in %name1%.>
-		*Greeting <*ThanksForRescue GoReveal>
-		GoReveal <NewChat Say 1 AddChat 1 AddChat 2>
-		GoWin <StoryNote 3 &SetTargetItem E3 FreezeItem E3 WinComp 0 .next>
-		.next <+Pla +T-- +F-->
-		result1 <NewChat Say 2 AddChat 3 AddChat 4 Goto GoWin>
-		result2 <NewChat Say 4 AddEasygoing -d8   AddChat 3 AddChat 4 Goto GoWin>
-		result3 <NewChat Say 5>
-		result4 <NewChat Say 6>
-		Msg1 <If it wasn't for you, I might not even be here right now.>
-		Msg2 <They're probably after me because they think I know where the \ELEMENT 3 is.>
-		Msg3 <You learned about the \ELEMENT 3 from \ELEMENT 2 .>
-		Msg4 <That's the problem, you see. Right now I'm searching for the \ELEMENT 3 . Once I find it I'll have plenty of cash, but until that time I'm frankly broke.>
-		Msg5 <I thought there'd be some clue as to its location around here.>
-		Msg6 <Yes, and it could also be a source of lost scientific information.>
-		Prompt1 <Do you know why they were after you?>
-		Prompt1_1 <Any idea why those guys were after you?>
-		Prompt2 <You should give me some kind of reward, then.>
-		Prompt2_1 <How about a reward for my effort, then?>
-		Prompt3 <What do you know about this \ELEMENT 3 ?>
-		Prompt3_1 <What can you tell me about the \ELEMENT 3 ?>
-		Prompt4 <That must be pretty valuable.>
-		Prompt4_1 <Sounds like it must be valuable.>
-
-		STC MS_CAFE
-		SetID 1
-	end
 
 Plot
 	name <The Mecha Fighter>

@@ -46,14 +46,13 @@ Content
 sub
 	Persona 1
 	Special <UNLISTED>
-	greeting <ifChatNPCSurrendered else GoFirstTime EndChat Say 1 Goto GoSurrender>
+	greeting <ifChatNPCSurrendered else GoFirstTime Goto GoWillSurrender>
 	*GoFirstTime <*IntruderGreeting&Arrest GoBargain>
 	*GoBargain <*YoureUnderArrest %threat% GoWillSurrender GoWillResist na>
-	GoWillSurrender <EndChat Say 1 Goto GoSurrender>
-	GoWillResist <EndChat Say 2 SoloAttack %1% L= 2 1>
+	*GoWillSurrender <*ISurrender&Arrest GoSurrender>
+	*GoWillResist <*IDisagreeYouDie&Arrest GoAttack>
+	GoAttack <SoloAttack %1% L= 2 1>
 	GoSurrender <P= %id%01 1  FreezeNPC %1%>
-	Msg1 <Alright, I give up... You can take me to jail.>
-	Msg2 <I'm not ready to go yet... I think I'll kill you instead!>
 
 	Persona 5
 	rumor%id% <%name5% might know where %name1% is.>
@@ -126,14 +125,13 @@ Content
 sub
 	Persona 1
 	Special <UNLISTED>
-	greeting <ifChatNPCSurrendered else GoFirstTime EndChat Say 1 Goto GoSurrender>
+	greeting <ifChatNPCSurrendered else GoFirstTime Goto GoWillSurrender>
 	*GoFirstTime <*IntruderGreeting&Arrest GoBargain>
 	*GoBargain <*YoureUnderArrest %threat% GoWillSurrender GoWillResist na>
-	GoWillSurrender <EndChat Say 1 Goto GoSurrender>
-	GoWillResist <EndChat Say 2 SoloAttack %1% L= 2 1>
+	*GoWillSurrender <*ISurrender&Arrest GoSurrender>
+	*GoWillResist <*IDisagreeYouDie&Arrest GoAttack>
+	GoAttack <SoloAttack %1% L= 2 1>
 	GoSurrender <P= %id%01 1  FreezeNPC %1%>
-	Msg1 <Alright, I give up... You can take me to jail.>
-	Msg2 <I'm not ready to go yet... I think I'll kill you instead!>
 
 	Persona 5
 	rumor%id% <%name5% has had dealings with %name1% in the past.>

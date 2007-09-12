@@ -9,7 +9,60 @@
 %%
 %% Param1: The NPC being sought.
 %% Param2: The scene where he'll be found
+%%	If a metascene is provided, don't script it at all- we'll probably want to do
+%%	scripting here.
 %%
+
+Content
+	name <Target Has Hostage>
+	desc <That target you've been chasing has a hostage.>
+	requires <*CS_ManHunt_Confrontation (+Far|+Ffi) 2:META>
+	Size 6
+
+	% E3 is the hostage
+	Element3 <NewNPC -3 -7>
+	Place3 <2 (Citizens) pass>
+
+	update <if= PlotStatus %id% else %pop% if= P%id%01 0 P= %id%01 1 NPCLevel %1% StoryDL>
+
+	sub
+		Persona 1
+		% The person being sought... may be forced to surrender.
+		Special <UNLISTED>
+		greeting <if= PlotStatus %id% else %pop% ifChatNPCSurrendered else .%id%_GoFirstTime Goto .%id%_GoWillSurrender>
+		.%id%_GoFirstTime <if= L2 0 else .%id%_GoGreet SoloAttack %1% L= 2 1 Goto .%id%_GoGreet>
+		*.%id%_GoGreet <*IntruderGreeting&Arrest .%id%_GoBargain>
+		*.%id%_GoBargain <*YoureUnderArrest StoryDL .%id%_GoWillSurrender .%id%_GoWillResist na>
+		*.%id%_GoWillSurrender <*ISurrender&Arrest .%id%_GoSurrender>
+		*.%id%_GoWillResist <*IDisagreeYouDie na>
+		.%id%_GoSurrender <L= 2 2 Print %id%02 FreezeNPC %1% PCEnemy %1% ifNPCOK %3% else .%id%_GoE3Died StoryNote %id%03 Print %id%04 FreezeNPC %3% &SetTargetChar %3% WinComp 0 .%id%_win>
+		.%id%_GoE3Died <StoryNote %id%05 WinComp 0 .%id%_loss>
+		.%id%_win <+Tlt +Frt>
+		.%id%_loss <+T-- +F-->
+		Msg%id%02 <%name1% is captured.>
+		Msg%id%03 <You rescued %name3% from %name1%.>
+		Msg%id%04 <%name3% slips away and disappears...>
+		Msg%id%05 <You captured %name1%, but not soon enough to save %name3%.>
+
+		Metascene 2
+		% Contains scripts for the scene.
+		% L1 = Initialization Counter
+		% L2 = Have started fight (1), have ended fight (2)
+		start <if= L1 0 L= 1 1 Alert 1 Monologue %3% 2 ForceChat %1%>
+		end <if= L2 1 FreezeNPC %1% PCEnemy %1% DeleteNPC %3% StoryNote 3 LoseComp 0 .loss>
+		.loss <+T-- +F-->
+		Surrender%1% <ForceChat %1%>
+		Faint%1% <L= 2 2 ifNPCOK %3% else GoE3Died StoryNote 4 Print 5 FreezeNPC %3% &SetTargetChar %3% WinComp 0 .win>
+		GoE3Died <StoryNote 6 WinComp 0 .loss>
+		.win <+Tlt +Frt>
+		Msg1 <As you enter %name1%'s hideout, you see that \SPR %1% has a hostage.>
+		Msg2 <Please, help me get away from here!>
+		Msg3 <You failed to save %name3% from %name1%.>
+		Msg4 <You rescued %name3% from %name1%.>
+		Msg5 <In the chaos of battle, %name3% slips away and disappears...>
+		Msg6 <You defeated %name1%, but not soon enough to save %name3%.>
+	end
+
 
 Content
 	name <Target becomes Enemy>

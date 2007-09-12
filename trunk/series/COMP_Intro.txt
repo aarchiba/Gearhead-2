@@ -2,6 +2,68 @@
 %% told vaguely what's going on in the game world.
 
 Plot
+	name <Invasion Alert>
+	Size 0
+	desc <You're informed that the town is under attack.>
+	requires <#A +T01 P:-- -L:ENEMY>
+
+	% E1 is the cavclub scene
+	% E2 is your friend
+	% E3 is the "scapegoat" faction- may or may not actually be the one doing the damage
+	element1 <Scene !Near -7 cavclub>
+	element2 <NewNPC -3 -7 PCFriend>
+	place2 <1 pass>
+	element3 <Faction !Enemy -7>
+
+	update <ForceChat %2%>
+
+	sub
+		Persona 2
+		% THE INTRO
+		% - All +T01 components should feature a intro character. They don't have to,
+		%   of course, but it'll be a major pissoff if they don't.
+		% - The intro character should follow this form, to insure that all the major
+		%   bits are in place: the introduction, the question, the story info, and the
+		%   advice.
+		% V1 = Have given story info.
+		greeting <StoryNote 2  WinComp 0 .next  if= V1 1 else GoGreeting Goto GoAdvice>
+		.next <+T-- +Pun>
+		*GoGreeting <*INTRO_Introduction GoAskQuestion>
+		*GoAskQuestion <*INTRO_Question GoStoryInfo>
+		GoStoryInfo <NewChat Say 1 V= 1 1 AddChat 1 AddChat 2 AddChat 3>
+		*GoAdvice <*INTRO_Advice>
+		result1 <NewChat Say 3 AddEasygoing -d4  AddChat 4>
+		result2 <NewChat Say 4 AddChat 4>
+		result3 <NewChat Say 5 AddCheerful -d10  AddChat 4>
+		result4 <Goto GoAdvice>
+		Msg1 <Have you heard about the invaders who've been clashing with \NARRATIVE 7 security? There was a bit about it in the news, but there's not a lot of information yet.>
+		Msg1_1 <These days everybody's talking about a group of invaders who have supposedly clashed with \NARRATIVE 7 security . Personally, I don't know if I believe it or not. Did you hear about that?>
+		CMsg1_1 <ifNPCSociable Accept>
+		Msg1_2 <Have you heard anything about the invaders who have supposedly been fighting with the \NARRATIVE 7 guard? Apparently the military is trying to keep a lid on the story.>
+		CMsg1_2 <ifNPCShy Accept>
+		Msg1_3 <I hear that there's been some unauthorized mecha spotted near \NARRATIVE 7 . The security forces are on alert, but it'll probably turn out to be nothing. Did you hear anything about it?>
+		CMsg1_3 <ifNPCEasygoing Accept>
+		Msg1_4 <Right now \SCENE RootSceneID security has its panties in a bunch over some unauthorized mecha violating our space. So far there hasn't been a lot of info in the news about it. Did you hear anything?>
+		CMsg1_4 <ifNPCPassionate Accept>
+		Msg1_5 <All the local pilots are talking about some supposed invaders who have been spotted near the city... That means there's likely to be a lot of jobs available very soon. Did you hear anything about that?>
+		CMsg1_5 <ifNPCCheerful Accept>
+		Msg1_6 <Have you heard about the unknown mecha who've attacked our city guard? They could be terrorists, or worse...>
+		CMsg1_6 <ifNPCMelancholy Accept>
+		Msg2 <You learned that mysterious invaders are attacking \NARRATIVE 7 .>
+		Msg3 <According to the initial reports it doesn't look like them. I'd be less worried if it was, honestly... At least we know what %name3% wants.>
+		Msg3_1 <Maybe. This doesn't seem like their usual mode of operations, but they have done covert ops before. We'll have to wait and see I guess.>
+		Msg4 <A lot of the other pilots are talking about it. Some of them have been trying to find these invaders themselves. Personally I think that's a bad idea, but no guts no glory I suppose.>
+		Msg4_1 <You really ought to work on your contacts, \PC . Most of your job opportunities will come from rumors. If you don't have anyone to go to for info you'll be left in the cold.>
+		Msg5 <You might want to stick around for a while yet. I've got a feeling this situation's going to result in trouble, and whenever there's trouble there's plenty of jobs for pilots.>
+		Msg5_1 <Don't be racing off so fast... If there really are hostile mecha out there, that's going to mean lots of jobs for mecha pilots.>
+		Prompt1 <It must be %name3% again.>
+		Prompt2 <No, I didn't hear about that.>
+		Prompt3 <Yet one more reason to leave this place.>
+		Prompt4 <Anything else before I head out?>
+	end
+
+
+Plot
 	name <Criminal At Large>
 	Size 0
 	desc <A wanted criminal is on the loose, and the PC intends to capture him.>

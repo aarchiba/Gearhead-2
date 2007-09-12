@@ -19,6 +19,88 @@
 %	STAT_XRP_TargetItem = 8;		{ I: }
 
 Plot
+	name <Rescue Reward>
+	desc <The PC has to speak to a person he just rescued.>
+	requires <+Tgt +Frt>
+
+	% E1 is the scene where the meeting will take place.
+	% E2 is the person who was rescued.
+	Element1 <Grab 6>
+	Element2 <Grab 5>
+	Place2 <1 (Citizens) pass>
+
+	% All the update does is start the rescue reward going...
+	update <if= PlotStatus 0 SetPlotStatus %id1%>
+
+	% The subplot contains the reaction/reward.
+	SubPlot1 <*CS_ThanksForRescue 2>
+
+	sub
+		STC MS_CAFE
+		SetID 1
+	end
+
+Plot
+	name <Degenerate Lookfer: Perm>
+	desc <The PC needs to find an NPC for some reason. After speaking with an NPC, the search changes to +Tgt.>
+	requires <#A +Tlt>
+	Size 2
+
+	% E1 is the character being sought.
+	% E2 is the character who knows where E1 is.
+	% E3 is a scene for the meeting
+	Element1 <Grab 5>
+	Element2 <Character !Near -7 !Okay 1>
+	Element3 <Scene !Near -7 Building Public !Okay 1>
+
+	% P%id%01 = Initialization Counter
+
+	% All the update does is freeze the target...
+	update <if= PlotStatus 0 if= P%id%01 0 P= %id%01 1 FreezeNPC %1%>
+	start <if= PlotStatus 0 ifNPCDead %2% NegateComp 0 na>
+
+	sub
+		Persona 2
+		rumor <%name2% knows where %name1% is.>
+		*greeting <*LookingForNPC %1% GoSuccess GoFailure>
+		GoSuccess <NewChat Say 1 SMemo 2 WinComp %3% .win>
+		.win <+Tgt>
+		*GoFailure <*BrushOff&Questioning>
+		Msg1 <The last time I saw \OPR %1% , %name1% was going to %name3%. That's where you should probably check.>
+		Msg2 <%name2% told you that %name1% was at %name3%.>
+	end
+
+Plot
+	name <Degenerate Lookfer: Meta>
+	desc <The PC needs to find an NPC for some reason. After speaking with an NPC, the search changes to +Tgt.>
+	requires <#A +Tlt>
+	Size 2
+
+	% E1 is the character being sought.
+	% E2 is the character who knows where E1 is.
+	% E3 is a scene for the meeting
+	Element1 <Grab 5>
+	Element2 <Character !Near -7 !Okay 1>
+	Element3 <MetaScene !Near -7 *Building NeverFail>
+
+	% P%id%01 = Initialization Counter
+
+	% All the update does is freeze the target...
+	update <if= PlotStatus 0 if= P%id%01 0 P= %id%01 1 FreezeNPC %1%>
+	start <if= PlotStatus 0 ifNPCDead %2% NegateComp 0 na>
+
+	sub
+		Persona 2
+		rumor <%name2% knows where %name1% is.>
+		*greeting <*LookingForNPC %1% GoSuccess GoFailure>
+		GoSuccess <NewChat Say 1 SMemo 2 WinComp %3% .win>
+		.win <+Tgt>
+		*GoFailure <*BrushOff&Questioning>
+		Msg1 <The last time I saw \OPR %1% , %name1% was going to %name3%. That's where you should probably check.>
+		Msg2 <%name2% told you that %name1% was at %name3%.>
+	end
+
+Plot
 	name <Basic Manhunt>
 	desc <You're on the trail of a criminal.>
 	requires <#A +Tht>
