@@ -5,7 +5,7 @@
 % TYPE: *SHOP_SPECIALIST
 
 	Persona
-	requires <*SHOP_SPECIALIST>
+	requires <*SHOP_SPECIALIST ~restaurant ~cuisine>
 	START <NewChat Say %id%01 AddChat %id%01 AddChat %id%02>
 	result%id%01 <EndChat Say %id%02 shop .%id%_wares Goto %1%>
 	result%id%02 <Goto %1%>

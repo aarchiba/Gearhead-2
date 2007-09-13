@@ -4,6 +4,126 @@
 %% This content is tied to a city rather than any specific character within it.
 
 Content
+	name <Pirates Love Vegetables>
+	desc <There's a hydroponics station that's been taken over by pirates.>
+	requires <*:LocalQuest "Spinner">
+
+	% E1 is the cook who owns the station
+	% E2 is the station encounter, activated when QuestSTatus = %id%
+	% E3 is the pirate captain
+	% E4 is a place for the captain to go after the battle
+	Element1 <Prefab>
+	Scene1 <Building Mall Public>
+	Team1 <Citizens>
+	TeamData1 <Pass Ally>
+
+	Element2 <Prefab>
+	Scene2 <Environs Space>
+
+	Element3 <Prefab>
+	Scene3 <New *BLANK.Space.Mecha>
+	Team3 <Enemies>
+	TeamData3 <SD Enemy>
+
+	Scene4 <Building Public>
+
+	% SubQuest1 is the victory against the pirates.
+	Quest1 <*Success1.AgainstPirates 1>
+
+	sub
+		Persona 1
+		rumor0 <%name1% gets fresh vegetables from a hydroponic microstation.>
+		% V1 = Stupid Question Counter
+		greeting <if= QuestStatus %qid% %id% else GoGreet NewChat Say 8 AddChat 7 AddChat 8 AddChat 9>
+		*GoGreet <*NiceToMeetYou GoOpenStore>
+		GoOpenStore <NewChat Say 1 AddChat 1 AddChat 2 AddChat 3>
+		result1 <EndChat Say 2 PCEat Cash+ -300 PCMoraleDmg -15 AddChat 4>
+		*result2 <*GoodBye>
+		result3 <NewChat Say 3 V= 1 1 AddChat 1 AddChat 2>
+		result4 <NewChat Say 4 AddChat 5 AddChat 6>
+		result5 <NewChat Say 5 QMemo %qid% 6 SetQuestStatus %qid% %id%>
+		result6 <NewChat Say 7 SetQuestStatus %qid% -2>
+		result7 <Goto .%id1%_GoInit>
+		result8 <NewChat Say 9>
+		result9 <Goto result1>
+		Msg1 <This is %name1%'s Garden of Wonder. We serve a variety of dishes prepared with fresh, naturally grown ingredients. All entrees are $300.>
+		Msg2 <Here's your order. Please enjoy your meal.>
+		Msg3 <As I said, this food is both fresh and naturally grown. That's not easy to do in these parts. Now, do you want anything or not?>
+		Msg4 <Say, are you a cavalier? I've got a problem you might be able to help with. The microstation where I grow my vegetables has been taken over by a gang of pirates. I'm offering a reward to get rid of them.>
+		Msg5 <You can find the station in \SCENE %s2% . Make sure you don't damage the station while driving them off. Come back here when you're finished and I'll give you the reward.>
+		Msg6 <%name1% in \SCENE %s1% is offering a reward for anyone who can remove the pirates from \PPR %1% microstation in \SCENE %s2% .>
+		Msg7 <Okay, no problem.>
+		Msg8 <Have you cleared the pirates from my station yet?>
+		Msg9 <Well, come back when you have.>
+		Prompt1 <I'll take the daily special.>
+		CPrompt1 <ifG PCHunger 10 ifChatNPCInPlay ifG PC$ 299 Accept>
+		Prompt2 <I don't want anything right now.>
+		Prompt3 <Don't you have anything cheaper?>
+		CPrompt3 <if= v1 0 Accept>
+		Prompt4 <[Continue]>
+		CPrompt4 <if= QuestStatus %qid% 0 Accept>
+		Prompt5 <Give me the details.>
+		Prompt6 <I'm not interested.>
+		Prompt7 <The pirates are gone.>
+		CPrompt7 <if= SceneVar %s3% 2 1 Accept>
+		Prompt8 <Sorry, not yet.>
+		Prompt9 <Actually I'd like some food.>
+		CPrompt9 <ifG PCHunger 10 ifChatNPCInPlay ifG PC$ 299 Accept>
+
+		Persona 2
+		special <UNLISTED>
+		% V1 = Have given victory speech
+		greeting <if= PlotStatus %id% else GoCheckVictory EndChat Say 2 AddChat 1>
+		GoCheckVictory <if= SceneVar %s3% 2 1 else GoChat if= V1 0 else GoChat V= 1 1 NewChat Say 1>
+		GoChat <NewChat SayAnything>
+
+		Msg1 <You defeated me fair, \PC , but I'd be lying if I said I didn't miss the taste of those fresh taters...>
+		Msg2 <I'd be advising you to spark off, this here station belongs to me and my mates.>
+
+		Prompt1 <>
+
+
+		MetaScene 1
+		start <if= QuestStatus %qid% %id% else %pop% ifNPCDead %1% else %pop% SetQuestStatus %qid% -2 Goto %pop%>
+		sub
+			room
+			minimap <............1.......#---#>
+			special <SHAREDPALETTE>
+			desig <HOME>
+		end
+
+		MetaScene 3
+
+		% L1 = Initialization counter
+		% L2 = Have completed mission
+		start <if= L1 0 ForceChat %3% L= 1 1>
+
+		T2 <if= L2 0 if= T2 0 Print 1 L= 2 1 XPV 100 ifNPCOK %3% MoveAndPacifyNPC %3% %s4%>
+
+		sub
+			Team 1
+			SetEnemy 2
+
+			Team 2
+			name <Enemies>
+			SetEnemy 1
+			SetFaction 8
+			Deploy <if= L2 0 WMecha 2 Threat %threat% 100>
+		end
+	end
+	inv
+		NPC Cook
+		chardesc Renowned Easygoing
+
+		STC QUEST-MAPMARKER-AUTO-STATIONARY
+		name <%name1%'s Station>
+		desig <ENTRANCE %s3%>
+
+		NPC Pirate
+		SetFaction 8
+	end
+
+Content
 	name <Aspiring Pilot>
 	desc <A young pilot has lots of problems. This is truly a lame-ass quest.>
 	requires <*:LocalQuest (!Ne|!Lo)>
@@ -28,7 +148,8 @@ Content
 		Msg1 <I'd like to become a famous pilot some day, but in order to do that I'm going to need my mecha back...>
 		Msg2 <%name1% told you that \SPR %1% needs to get \PPR %1% mecha back from somewhere.>
 		Msg3 <Thanks for helping to get my mecha back! Now all I need is a chance to prove what a good pilot I could be...>
-		Msg4 <Without a mecha, I guess I'm just nothing...>
+		Msg4 <Without a mecha, I guess I'm just nothing..
+.>
 	end
 	inv
 		NPC Mecha Pilot
