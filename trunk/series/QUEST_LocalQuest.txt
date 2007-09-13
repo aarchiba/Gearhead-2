@@ -70,18 +70,19 @@ Content
 		Prompt9 <Actually I'd like some food.>
 		CPrompt9 <ifG PCHunger 10 ifChatNPCInPlay ifG PC$ 299 Accept>
 
-		Persona 2
+		Persona 3
 		special <UNLISTED>
 		% V1 = Have given victory speech
 		greeting <if= PlotStatus %id% else GoCheckVictory EndChat Say 2 AddChat 1>
 		GoCheckVictory <if= SceneVar %s3% 2 1 else GoChat if= V1 0 else GoChat V= 1 1 NewChat Say 1>
 		GoChat <NewChat SayAnything>
-
+		result1 <EndChat Say 3 AddChat 2>
+		*result2 <*THEME_EXPO&Enemy na>
 		Msg1 <You defeated me fair, \PC , but I'd be lying if I said I didn't miss the taste of those fresh taters...>
 		Msg2 <I'd be advising you to spark off, this here station belongs to me and my mates.>
-
-		Prompt1 <>
-
+		Msg3 <Haven't you ever heard of a little thing called scurvy? It's the bane of us pirates... but with this station, we'll be in salad and vegetable cocktail for as long as we wants!>
+		Prompt1 <Why do you need an agricultural station?>
+		Prompt2 <[Continue]>
 
 		MetaScene 1
 		start <if= QuestStatus %qid% %id% else %pop% ifNPCDead %1% else %pop% SetQuestStatus %qid% -2 Goto %pop%>
@@ -93,13 +94,10 @@ Content
 		end
 
 		MetaScene 3
-
 		% L1 = Initialization counter
 		% L2 = Have completed mission
 		start <if= L1 0 ForceChat %3% L= 1 1>
-
 		T2 <if= L2 0 if= T2 0 Print 1 L= 2 1 XPV 100 ifNPCOK %3% MoveAndPacifyNPC %3% %s4%>
-
 		sub
 			Team 1
 			SetEnemy 2
