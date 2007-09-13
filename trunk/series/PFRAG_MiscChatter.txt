@@ -145,6 +145,24 @@
 	Msg%id%01_7 <The mall is the best place to buy things, but I hear they also have shops at the Privateer's Club and Comet Tower.>
 
 	Persona
+	requires <*MISC_CHATTER FucSp>
+	START <NewChat if= V%id%01 1 else .%id%_GoSpecial if# d3 1 else .%id%_GoSpecial SayAnything>
+	.%id%_GoSpecial <V= %id%01 1 Say %id%01>
+	Msg%id%01 <How was your lunch? Mine was pretty good.>
+	Msg%id%01_1 <>
+	CMsg%id%01_1 <ifNPCSociable Accept>
+	Msg%id%01_2 <If I hear one more person reccomend the TubeVeal I'm moving to Cayley Rock...>
+	CMsg%id%01_2 <ifNPCShy Accept>
+	Msg%id%01_3 <Everyone around here is so obsessed about food... I won't complain, as long as there's enough of it.>
+	CMsg%id%01_3 <ifNPCEasygoing Accept>
+	Msg%id%01_4 <Do we eat that we might live, or live that we might eat? Obviously it's the latter.>
+	CMsg%id%01_4 <ifNPCPassionate Accept>
+	Msg%id%01_5 <The food here is better than anywhere else in the colonies. It's because we care more.>
+	CMsg%id%01_5 <ifNPCCheerful Accept>
+	Msg%id%01_6 <The only reason Fuchal Spinner joined the L5 Alliance is because we can't risk losing the fresh produce shipped from Earth.>
+	CMsg%id%01_6 <ifNPCMelancholy Accept>
+
+	Persona
 	requires <*MISC_CHATTER Mall>
 	START <NewChat Say %id%01>
 	Msg%id%01 <So, what are you hoping to buy?>

@@ -716,6 +716,7 @@ begin
 
 				if Dest = Nil then begin
 					{ An invalid location was specified... }
+					DialogMsg( 'ERROR: No dest found for ' + GearName( E ) + ' in ' + GearName( Plot ) );
 					DisposeGear( E );
 
 				end else if ( Dest^.G <> GG_Scene ) and ( Dest^.G <> GG_MetaScene ) and IsLegalInvCom( Dest , E ) then begin
@@ -770,6 +771,7 @@ begin
 
 					end else begin
 						{ Couldn't find a SCENE gear. Get rid of E. }
+						DialogMsg( 'ERROR: No dest found for ' + GearName( E ) + ' in ' + GearName( Plot ) );
 						DisposeGear( E );
 					end;
 				end; { If MovePrefabs }
@@ -1853,7 +1855,7 @@ begin
 	City := FindRootScene( Nil , City );
 
 	{ Second, locate the rest of the elements. }
-	MatchOK := MatchPlotToAdventure( FindROot( City ) , Frag , Nil , FALSE , FALSE , FALSE );
+	MatchOK := MatchPlotToAdventure( FindROot( City ) , Frag , Nil , FALSE , TRUE , FALSE );
 
 	{ If this worked, get all the needed scenes and store the element names. }
 	if MatchOK then begin

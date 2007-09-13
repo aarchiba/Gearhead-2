@@ -1279,7 +1279,20 @@ var
 			end;
 			SeekUndeployedScene := it;
 		end;
-
+		Procedure PrepWMonTeams( Scene: GearPtr );
+			{ Check for monster teams. Set appropriate threat levels. }
+		var
+			Team: GearPtr;
+		begin
+			Team := Scene^.SubCom;
+			while Team <> Nil do begin
+				if ( Team^.G = GG_Team ) and ( Team^.Stat[ STAT_WanderMon ] > 0 ) then begin
+					Team^.Stat[ STAT_WanderMon ] := WMonThreat( NAttValue( Frag^.NA , NAG_QuestInfo , NAS_DifficulcyLevel ) );
+					if Team^.Stat[ STAT_WanderMon ] < 3 then Team^.Stat[ STAT_WanderMon ] := 3;
+				end;
+				Team := Team^.Next;
+			end;
+		end;
 	var
 		Entrance,Element,Comp,PScene: GearPtr;
 		EID,ParentSceneID: Integer;
@@ -1360,6 +1373,10 @@ var
 			{ so any stairs up in the place will retain a destination of -1. }
 			if ( Frag <> Nil ) and AStringHasBString( SAttValue( Frag^.SA , 'TYPE' ) , 'DUNGEON' ) then begin
 				PrepQuestDungeon( Frag );
+			end else begin
+				{ This is not a dungeon, but may still have teams with }
+				{ random monsters that need to be set. }
+				PrepWMonTeams( Frag );
 			end;
 
 			{ Use the Parent Scene ID to initialize the reverse entrance. }

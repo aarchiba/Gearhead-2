@@ -110,11 +110,55 @@ factions <MAQUI>
 mass -4
 SDL_PORTRAIT <item_ammoclip.png>
 
+Gun 6
+Name <Assault Rifle>
+desig <Tyb 2-4>
+desc <A low caliber bullpup assault rifle manufactured in Theles Spinner.>
+caliber <5mm auto>
+category <WEAPON MISSILE>
+factions <FCOMS>
+legality 5
+Mass -3
+Range 6
+Speed 4
+BV 3
+sub
+	Ammo 8
+	name <5mm Auto Clip>
+	caliber <5mm auto>
+	magazine 80
+	category <AMMO>
+	factions <GENERAL>
+	SDL_PORTRAIT <item_ammoclip.png>
+end
+
+Gun 6
+name <Glitter Pistol>
+desig <Jonass 53>
+category <WEAPON MISSILE>
+Factions <FCOMS RISHI>
+desc <This pistol fires crystalline shard ammunition.>
+caliber <Crystalline Shard>
+Acc 1
+Range 4
+Speed 3
+Legality 0
+Mass -4
+sub
+	Ammo 6
+	name <Glitter Pistol Clip>
+	caliber <Crystalline Shard>
+	type <SCATTER BRUTAL>
+	magazine 40
+	mass -1
+	SDL_PORTRAIT <item_ammoclip.png>
+end
+
 Gun 4
 name <Pin Magnum>
 desig <VT2-X>
 category <WEAPON MISSILE>
-Factions <MAQUI>
+Factions <MAQUI L5LAW>
 desc <A light magnetic rifle often used by security forces.>
 caliber <2mm ferrous>
 Acc 1
@@ -160,7 +204,7 @@ Name <Slug Pistol>
 desig <Hounder>
 desc <A low velocity single firing pistol. Fires solid metal slugs.>
 category <WEAPON MISSILE>
-factions <MAQUI>
+factions <MAQUI FCOMS>
 caliber <6mm pistol>
 Mass -2
 Range 3
@@ -255,6 +299,42 @@ Legality 25
 %  ********************
 %  ***  BEAM  GUNS  ***
 %  ********************
+
+BeamGun 4
+Name <Stun Pistol>
+Desig <L12>
+desc <An electric beamgun. Its shots are intensely painful but rarely lethal.>
+category <WEAPON MISSILE>
+factions <MAQUI FCOMS L5LAW>
+type <NONLETHAL>
+Mass -3
+Range 3
+Acc 1
+Speed 4
+legality -15
+inv
+	PowerSource 1
+	name <Power Cell 25>
+end
+
+BeamGun 9
+Name <Stun Rifle>
+Desig <L50>
+desc <An electric beamgun. Its shots are intensely painful but rarely lethal.>
+category <WEAPON MISSILE>
+factions <MAQUI FCOMS L5LAW>
+type <NONLETHAL>
+Mass -5
+Acc 1
+Speed 3
+Range 6
+legality -10
+inv
+	PowerSource 3
+	name <Power Cell 75>
+	mass -2
+end
+
 
 
 %  ***************************

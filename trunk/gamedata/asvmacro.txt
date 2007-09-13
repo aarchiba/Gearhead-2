@@ -13,6 +13,7 @@ ROOTSCENEFAC <GrabCurrentScene GrabRootScene  GNAtt NAG_Personal NAS_FactionID>
 GUARDTEAM <GrabTeamName GUARDS GS>
 NPCVar   <GrabNPC ?       GNAtt NAG_ScriptVar ?>
 NPCScene <GrabNPC ? GScene>
+ItemScene <GrabItem ? GScene>
 ItemVar  <GrabItem ?      GNAtt NAG_ScriptVar ?>
 SceneVar <GrabScene ?       GNAtt NAG_ScriptVar ?>
 LOCALFACTION <GrabCurrentScene   GNAtt NAG_Personal NAS_FactionID>

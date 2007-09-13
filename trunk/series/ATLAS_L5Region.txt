@@ -1810,7 +1810,7 @@ sub
 	Content2 <Fill Sub *HOSPITAL_X>
 
 	start <Print 1>
-	Msg1 <You enter Maquise Hospital.>
+	Msg1 <You enter Cesena Hospital.>
 
 	sub
 		team 1
@@ -2125,7 +2125,7 @@ sub
 	Content3 <Some 1  55 Sub *SHOP_RANDOM     na>
 	Content4 <Some 1  25 Sub *GOV_POLICE      na>
 	Content5 <Some 1 100 Sub *MECHANIC_SHOP   na>
-	Content5 <Fill Sub *GARAGE_X>
+	Content6 <Fill Sub *GARAGE_X>
 
 	sub
 		team 1
@@ -3330,5 +3330,372 @@ sub
 % End of Gaos Spinner...
 end
 
+%%
+%%   **************************
+%%   ***   FUCHAL SPINNER   ***
+%%   **************************
+%%
 
+Scene 0 3
+	mapwidth 23
+	mapheight 10
+	name <Fuchal Spinner>
+	XPos 38
+	YPos 48
+
+	% Fuchal is fairly tightly regulated.
+	Tolerance -5
+
+	world <L5 Region>
+	desc <Fuchal Spinner is a station dedicated to the art of cooking. It has many restaurants and hydroponic gardens.>
+	special <NOEXIT SHOWALL SOLO TOWNMECHA>
+	type <city town spinner target outdoors urban destination hometown cuisine>
+	personatype <city spinner>
+	habitat <SPACE.URBAN>
+	MegaCityMap
+
+	entrance <*COLONY-1>
+
+	% V1 = Message Counter
+
+	SetFaction 1
+	factions <MAQUI COMET HOELL L5LAW>
+
+	desig <FUCSP>
+	context <spc>
+
+	Quest1 <*:LocalQuest>
+	Quest2 <*:GuaranteedQuest>
+
+	start <if= V1 0 else GoSecondTime V= 1 1 Alert 1 Print 2>
+	GoSecondTime <Print 2>
+	Msg1 <Fuchal Spinner is dedicated to the art of cooking. Chefs come from all over L5 to train and to purchase ingredients.>
+	Msg2 <You enter Fuchal Spinner.>
+
+sub
+	Scene
+	name <Fuchal Market>
+	type <building mall public legit>
+	context <mall>
+	entrance <*DEPARTMENTSTORE>
+	special <ADDEXIT>
+	MallMap
+	MapWidth 36
+	MapHeight 20
+
+	start <Print 1>
+	Msg1 <You enter the Fuchal Market.>
+
+	NeededCells 4
+	Content3 <Some 1 100 Sub *WEAPON_SHOP     na>
+	Content4 <Some 1 100 Sub *ARMOR_SHOP      na>
+	Content6 <Some 1 100 Sub *SPECIAL_SHOP    na>
+	Content6 <Some 1 100 Sub *GENERAL_SHOP    na>
+	Content9 <Fill Sub *SHOP_RANDOM           na>
+	sub
+		team 1
+
+		team 2
+		name <Citizens>
+		SetAlly 1
+		Passive
+
+		team 3
+		name <Guards>
+		SetAlly 2
+
+		room
+		name <Foyer>
+		desig <EntranceGrid>
+		Content <Some 3 50 Here *URBAN_X>
+		Content2 <Some 1 100 Here *ANTI_ATTACK_SECURITY 2>
+	end
+
+	Scene
+	name <Yan Memorial Hospital>
+	type <Building hospital public legit>
+	entrance <*Hospital>
+	special <ADDEXIT>
+	MallMap
+	MapWidth 15
+	MapHeight 20
+
+	NeededCells 2
+	Content <Some 1 100 Sub *Doctor>
+	Content2 <Fill Sub *HOSPITAL_X>
+
+	start <Print 1>
+	Msg1 <You enter Yan Memorial Hospital.>
+
+	sub
+		team 1
+
+		team 2
+		name <Citizens>
+		SetAlly 1
+		Passive
+
+		team 3
+		name <Guards>
+		SetAlly 2
+
+		room
+		desig <EntranceGrid>
+		Content <Some 2 50 Here *URBAN_X>
+		Content2 <Some 1 100 Here *ANTI_ATTACK_SECURITY 2>
+	end
+
+	Scene
+	name <Taste Island>
+	type <building public mall legit meeting>
+	context <>
+	entrance <*DEPARTMENTSTORE>
+	special <ADDEXIT>
+	MallMap
+	MapWidth 25
+	MapHeight 25
+
+	start <Print 1>
+	Msg1 <You enter Taste Island.>
+
+	NeededCells 4
+	Content1 <Some 1  99 Sub *GENERAL_SHOP>
+	Content2 <Some 2 100 Sub *RESTAURANT>
+	Content3 <Some 1 100 Sub *BAR_SERVICE  na>
+	Content4 <Some 1 100 Sub *ELECTRONICS_SHOP  na>
+	Content5 <Fill Sub *SHOP_RANDOM>
+	sub
+		team 1
+
+		team 2
+		name <Citizens>
+		SetAlly 1
+		Passive
+
+		team 3
+		name <Guards>
+		SetAlly 2
+
+		room
+		name <Foyer>
+		desig <EntranceGrid>
+		Content <Some 5 45 Here *URBAN_X>
+		Content2 <Some 1 100 Here *ANTI_ATTACK_SECURITY 2>
+	end
+
+	Scene
+	name <Cooking With Steel>
+	type <building garage public>
+	context <>
+	entrance <*Garage>
+	special <ADDEXIT>
+	MallMap
+	MapWidth 25
+	MapHeight 12
+	IndustrialTiles
+
+	start <Print 1>
+	Msg1 <You enter Cooking With Steel.>
+
+	NeededCells 3
+	Content1 <Some 1 100 Sub *MECHANIC_SHOP>
+	Content2 <Some 1  90 Sub *MECHA_SHOP>
+	Content3 <Fill Sub *GARAGE_X>
+	sub
+		team 1
+
+		team 2
+		name <Citizens>
+		SetAlly 1
+		Passive
+
+		team 3
+		name <Guards>
+		SetAlly 2
+
+		room
+		name <Foyer>
+		desig <EntranceGrid>
+		Content <Some 2 40 Here *URBAN_X>
+		Content2 <Some 1 100 Here *ANTI_ATTACK_SECURITY 2>
+	end
+
+	Scene
+	name <Fuchal Center>
+	type <building government public legit>
+	context <gov>
+	entrance <*Building>
+	special <ADDEXIT>
+	SetFaction 1
+	ClubMap
+	PalaceParkTiles
+	MapWidth 24
+	MapHeight 21
+
+	start <Print 1>
+	Msg1 <You enter the Fuchal Center.>
+
+	NeededCells 2
+	Content1 <Some 1 100 Sub *GOV_MILITARY  na>
+	Content2 <Fill       Sub *GOV_MISC      na>
+
+	sub
+		team 1
+
+		team 2
+		name <Citizens>
+		SetAlly 1
+		Passive
+
+		team 3
+		name <Guards>
+		SetAlly 1
+
+		room
+		name <Foyer>
+		desig <EntranceGrid>
+		Content <Some 2 55 Here *URBAN_X>
+		Content2 <Some 1 100 Here *ANTI_ATTACK_SECURITY 2>
+
+		room
+		name <Garrison>
+		minimap <2...31..............#---#>
+		inv
+			NPC Police Officer
+			SetTeam 3
+			SetFaction 9
+			MiniMapComponent 1
+
+			NPC Police Officer
+			SetTeam 3
+			SetFaction 9
+			MiniMapComponent 2
+		end
+
+		room
+		name <Main Office>
+		minimap <....31..............#&+&#>
+		inv
+			NPC Politician
+			SetTeam 2
+			SetFaction 1
+			MiniMapComponent 1
+		end
+	end
+
+	Scene
+	name <Fuchal Spaceport>
+	type <building shuttle spaceport public>
+	entrance <*SpacePort>
+	special <ADDEXIT>
+	ClubMap
+	MapWidth 30
+	MapHeight 21
+
+	start <Print 1>
+	Msg1 <You enter Fuchal Spaceport.>
+
+	NeededCells 6
+	Content1 <Some 1 100 Sub *SHUTTLESERVICE  na>
+	Content2 <Some 1 100 Sub *RESTAURANT      na>
+	Content5 <Some 1 100 Sub *MECHANIC_SHOP   na>
+	Content6 <Fill Sub *GARAGE_X>
+
+	sub
+		team 1
+
+		team 2
+		name <Citizens>
+		SetAlly 1
+		Passive
+
+		team 3
+		name <Guards>
+		SetAlly 2
+
+		room
+		name <Foyer>
+		desig <EntranceGrid>
+		Content <Some 3 50 Here *URBAN_X>
+		Content2 <Some 1 100 Here *ANTI_ATTACK_SECURITY 2>
+
+		room
+		minimap <############1###...##...#>
+		sub
+			STC AIRLOCK-1
+			MiniMapComponent 1
+			destination <Fuchal Station Exterior>
+		end
+
+		Scene 0 3
+		name <Fuchal Station Exterior>
+		type <Environs Outdoors Space>
+		special <ShowAll>
+		terrain <SPACE>
+		MapWidth 30
+		MapHeight 30
+		SpaceMap
+		nu1 <if= T1 0 Exit WorldID>
+		Microgravity
+		Vacuum
+		SpaceBackdrop
+
+		inv
+			STC COLONY-1
+			name <Fuchal Spinner>
+			Destination -1
+			XPos 15
+			YPos 15
+		end
+
+	end
+
+	Scene
+	name <CometBurger Head Office>
+	SetFaction 2
+	type <building public corporate>
+	context <comet corp>
+	entrance <*Building>
+	special <ADDEXIT>
+	MallMap
+	MapWidth 15
+	MapHeight 15
+
+	start <Print 1>
+	Msg1 <You enter the CometBurger head office.>
+
+	NeededCells 2
+	Content1 <Some 1 100 Sub *FUCSP_CBHQ_CometBurger  na>
+	Content2 <Fill Sub *CORP_PUBLIC>
+
+	5Min <ifTeamHostile 3  MonsterUp 3 d20>
+
+	sub
+		team 1
+
+		team 2
+		name <Citizens>
+		SetAlly 1
+		Passive
+
+		Team 3
+		name <Guards>
+		Deploy <if# L1 0 MonsterUp 3 10 TeamAttack 3>
+		SetAlly 1 2
+
+		room
+		name <Foyer>
+		desig <EntranceGrid>
+		Content1 <Some 1  50 Here *URBAN_X>
+		Content3 <Some 2  50 Here *CORP_EMPLOYEE>
+		Content4 <Some 1 100 Here *ANTI_ATTACK_SECURITY 2>
+	end
+	inv
+		NPC Corporate Executive
+		home <Foyer>
+		SetFaction 2
+	end
+
+% End of Fuchal Spinner...
+end
 

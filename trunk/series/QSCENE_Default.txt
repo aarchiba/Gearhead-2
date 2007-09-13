@@ -5,6 +5,48 @@
 %% use by the quest that generated them.
 
 %%
+%% *RobotFactory Content
+%%
+%% Contains a factory with killer robots. Not expanded as a dungeon.
+
+Scene
+	name <# Factory>
+	requires <*RobotFactory>
+	special <NOEXIT>
+	type <factory>
+	mapwidth 30
+	mapheight 30
+	MonkeyMap
+	IndustrialTiles
+	LockedDoorChance 15
+	SecretDoorChance 20
+
+	NeededCells 3
+
+	start <Print 1>
+	msg1 <You enter \SCENE SceneID .>
+
+	sub
+		Team 1
+		SetEnemy 2
+
+		Team 2
+		name <Monster>
+		type <Robot>
+		SetEnemy 1
+		Stat 2 1
+
+		room
+		width 3
+		height 3
+		sub
+			StairsUp
+			Destination -1
+		end
+	end
+
+
+%%
 %% *HideOut Content
 %%
 %%  Hideouts will be constructed as a bigbox or a monkeymap, so plan
@@ -491,6 +533,27 @@ Scene 0 0
 	RockyTiles
 
 	LockedDoorChance 15
+
+	sub
+		Room
+		sub
+			StairsUp
+			Destination -1
+		end
+	end
+
+Scene 0 0
+	name <# Basement>
+	% An empty basement containing stairs up and that's it.
+	requires <*BLANK .BoxBasement>
+	type <Basement Private>
+	terrain <GROUND>
+	special <NOEXIT>
+
+	BoxMap
+	MapWidth 17
+	MapHeight 17
+	RockyTiles
 
 	sub
 		Room

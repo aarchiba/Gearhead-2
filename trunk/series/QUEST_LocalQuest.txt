@@ -355,7 +355,7 @@ Content
 		GoStillLooking <NewChat Say 2 AddCHat 2 AddChat 3>
 		*GoIntroduction <*NiceToMeetYou GoInfo>
 		GoInfo <if= QuestStatus %qid% 0 else GoNoQuest NewChat Say 3 SetQuestStatus %qid% %id%  QMemo %qid% 4>
-		*GoNoQuest <*MiscChatter>
+		*GoNoQuest <*Misc_Chatter>
 		result1 <Goto .%id1%_GoInit>
 		result2 <NewChat Say 4>
 		result3 <NewChat Say 5 SetQuestStatus %qid% -2>
