@@ -893,15 +893,23 @@ var
 	Team: GearPtr;
 begin
 	TeamData := SAttValue( NPC^.SA , 'TEAMDATA' );
-	Team := FindMatchingTeam( Scene , TeamData );
 
-	{ If no matching team was found, create a new team. }
-	if Team = Nil then begin
-		Team := CreateTeam( Scene , TeamData );
+	{ If we have no teamdata, and the NPC is a prop, just set it to }
+	{ team zero. }
+	if ( TeamData = '' ) and ( NPC^.G = GG_Prop ) then begin
+		SetNAtt( NPC^.NA , NAG_Location , NAS_Team , 0 );
+
+	end else begin
+		Team := FindMatchingTeam( Scene , TeamData );
+
+		{ If no matching team was found, create a new team. }
+		if Team = Nil then begin
+			Team := CreateTeam( Scene , TeamData );
+		end;
+
+		{ Store the correct team number in the NPC. }
+		SetNAtt( NPC^.NA , NAG_Location , NAS_Team , Team^.S );
 	end;
-
-	{ Store the correct team number in the NPC. }
-	SetNAtt( NPC^.NA , NAG_Location , NAS_Team , Team^.S );
 end;
 
 

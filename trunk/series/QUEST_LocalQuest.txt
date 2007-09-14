@@ -4,14 +4,46 @@
 %% This content is tied to a city rather than any specific character within it.
 
 Content
+	name <Restaurant Dreams>
+	desc <An aspiring chef wants to start a restaurant. Maybe the PC can help.>
+	requires <*:LocalQuest "Cuisine">
+
+	% E1 is the cook
+	Element1 <Prefab>
+	Scene1 <Building Mall Public>
+	Team1 <Citizens>
+	TeamData1 <Pass Ally>
+
+	% SubQuest1 is the search for money
+	% SubQuest2 is the victory of the chef
+	Quest1 <*:FindMoney.Investor 1>
+	Quest2 <*Success1.BusinessDeal 1>
+
+	sub
+		Persona 1
+		rumor0 <%name1%'s dream is to some day open a restaurant.>
+
+		greeting <if= QuestStatus %qid% %id% else GoCheckOffer >
+
+		GoCheckOffer <if= QuestStatus %qid% 0 else GoChat  >
+
+		*GoChat <*MISC_CHATTER>
+
+	end
+	inv
+		NPC Cook
+		chardesc Passionate
+	end
+Content
 	name <Pirates Love Vegetables>
 	desc <There's a hydroponics station that's been taken over by pirates.>
-	requires <*:LocalQuest "Spinner">
+	requires <*:LocalQuest "Spinner" ~"Cuisine">
 
 	% E1 is the cook who owns the station
 	% E2 is the station encounter, activated when QuestSTatus = %id%
 	% E3 is the pirate captain
 	% E4 is a place for the captain to go after the battle
+	% E5 is the station itself
 	Element1 <Prefab>
 	Scene1 <Building Mall Public>
 	Team1 <Citizens>
@@ -26,6 +58,9 @@ Content
 	TeamData3 <SD Enemy>
 
 	Scene4 <Building Public>
+
+	Element5 <Prefab>
+	Scene5 <Grab 3>
 
 	% SubQuest1 is the victory against the pirates.
 	Quest1 <*Success1.AgainstPirates 1>
@@ -43,7 +78,8 @@ Content
 		result4 <NewChat Say 4 AddChat 5 AddChat 6>
 		result5 <NewChat Say 5 QMemo %qid% 6 SetQuestStatus %qid% %id%>
 		result6 <NewChat Say 7 SetQuestStatus %qid% -2>
-		result7 <Goto .%id1%_GoInit>
+		result7 <ifItemOK %5% else GoR7Fail Goto .%id1%_GoInit>
+		GoR7Fail <NewChat Say 10 CashPrize * 15 d30 AddRenown -2 SetQuestStatus %qid% -2>
 		result8 <NewChat Say 9>
 		result9 <Goto result1>
 		Msg1 <This is %name1%'s Garden of Wonder. We serve a variety of dishes prepared with fresh, naturally grown ingredients. All entrees are $300.>
@@ -55,6 +91,7 @@ Content
 		Msg7 <Okay, no problem.>
 		Msg8 <Have you cleared the pirates from my station yet?>
 		Msg9 <Well, come back when you have.>
+		Msg10 <The problem being, so is my station! Still, you did fight the pirates, so I'd hate to see you go away empty handed... Here's a small reward to cover your repairs.>
 		Prompt1 <I'll take the daily special.>
 		CPrompt1 <ifG PCHunger 10 ifChatNPCInPlay ifG PC$ 299 Accept>
 		Prompt2 <I don't want anything right now.>
@@ -73,7 +110,7 @@ Content
 		Persona 3
 		special <UNLISTED>
 		% V1 = Have given victory speech
-		greeting <if= PlotStatus %id% else GoCheckVictory EndChat Say 2 AddChat 1>
+		greeting <if= QuestStatus %qid% %id% else GoCheckVictory EndChat Say 2 AddChat 1>
 		GoCheckVictory <if= SceneVar %s3% 2 1 else GoChat if= V1 0 else GoChat V= 1 1 NewChat Say 1>
 		GoChat <NewChat SayAnything>
 		result1 <EndChat Say 3 AddChat 2>
@@ -97,7 +134,9 @@ Content
 		% L1 = Initialization counter
 		% L2 = Have completed mission
 		start <if= L1 0 ForceChat %3% L= 1 1>
-		T2 <if= L2 0 if= T2 0 Print 1 L= 2 1 XPV 100 ifNPCOK %3% MoveAndPacifyNPC %3% %s4%>
+		nu2 <if= L2 0 if= T2 0 Print 1 L= 2 1 Print 1 QMemo %qid% 2 XPV 100 ifNPCOK %3% MoveAndPacifyNPC %3% %s4% ClearOriginalHome %3%>
+		Msg1 <You have defeated all the pirates.>
+		Msg2 <You drove the pirates away from %name1%'s microstation.>
 		sub
 			Team 1
 			SetEnemy 2
@@ -119,6 +158,20 @@ Content
 
 		NPC Pirate
 		SetFaction 8
+
+		STC COLONY-PROP
+		name <Agricultural Station>
+		% v1 = Food recharge timer
+		use <ifG t2 0 else GoReallyUse Print 1>
+		GoReallyUse <ifG ComTime V1 else GoWaitRecharge ifYesNo 2 3 4 Print 5 GiveSTC .desc V= 1 ComTime V+ 1 90000>
+		.desc <SALAD-1>
+		GoWaitRecharge <Print 6>
+		Msg1 <You can't examine the station while there are still pirates around.>
+		Msg2 <This is %name1%'s agricultural microstation.>
+		Msg3 <Go in and get some food>
+		Msg4 <Leave it alone>
+		Msg5 <You enter the microstation and make yourself a salad.>
+		Msg6 <You've already had one salad today.>
 	end
 
 Content
@@ -146,8 +199,7 @@ Content
 		Msg1 <I'd like to become a famous pilot some day, but in order to do that I'm going to need my mecha back...>
 		Msg2 <%name1% told you that \SPR %1% needs to get \PPR %1% mecha back from somewhere.>
 		Msg3 <Thanks for helping to get my mecha back! Now all I need is a chance to prove what a good pilot I could be...>
-		Msg4 <Without a mecha, I guess I'm just nothing..
-.>
+		Msg4 <Without a mecha, I guess I'm just nothing...>
 	end
 	inv
 		NPC Mecha Pilot

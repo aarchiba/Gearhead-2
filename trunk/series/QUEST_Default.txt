@@ -1076,6 +1076,73 @@ Content
 %% .CharityWork		PC has done charity work, presumably without expecting a reward
 
 Content
+	name <Driven Away Pirates>
+	requires <*Success1 .AgainstPirates (1:CRAFT|1:TRADE|1:CORPO|1:LABOR|1:FAITH) ("spinner"|"asteroid")>
+	desc <The PC has defeated some pirates for this person. Maybe the PC can now find pirate treasure!>
+	special <REUSABLE>
+
+	% E1 is the character who provides the (measly) reward.
+	% E2 is the hard to find derelict ship the pirates were looking for
+	% E3 is the treasure ship interior
+	Element2 <Prefab>
+	Scene2 <Environs>
+	Scene3 <New *Dungeon.Derelict>
+
+	sub
+		Persona 1
+		.%id%_GoInit <NewChat Say %id%01 QMemo %qid% %id%02 SetQuestStatus %qid% %id% CashPrize Reward Threat %threat% 100 100 SetQEncActive %2%>
+		Msg%id%01 <Here's your reward. I expect the pirates could come back, though- according to rumor they were here searching for a lost treasure ship from the early days of colinization.>
+		Msg%id%02 <%name1% told you that the pirates may have been looking for a derelict treasure ship in \SCENE %s2% .>
+
+		MetaScene 3
+		sub
+			room
+			special <SHAREDPALETTE>
+			minimap <......#2#..3#4..#5#......>
+			inv
+				STC DISPLAYCASE-1
+				MiniMapComponent 2
+				RandomLoot
+				Use <Print 1 OpenInv if= QuestStatus %qid% %id% SetQuestStatus %qid% -1>
+				Msg1 <You examine the contents of the display case.>
+				Loot_Category <ARTWORK ANTIQUE ARMOR MELEE ACCESSORY>
+				Loot_Factions <CRIHN>
+
+				STC DISPLAYCASE-1
+				MiniMapComponent 3
+				RandomLoot
+				Use <Print 1 OpenInv if= QuestStatus %qid% %id% SetQuestStatus %qid% -1>
+				Msg1 <You examine the contents of the display case.>
+				Loot_Category <WEAPON JEWEL>
+				Loot_Factions <CRIHN>
+
+				STC DISPLAYCASE-1
+				MiniMapComponent 4
+				RandomLoot
+				Use <Print 1 OpenInv if= QuestStatus %qid% %id% SetQuestStatus %qid% -1>
+				Msg1 <You examine the contents of the display case.>
+				Loot_Category <TREASURE ARTWORK ANTIQUE>
+				Loot_Factions <CRIHN>
+
+				STC DISPLAYCASE-1
+				MiniMapComponent 5
+				RandomLoot
+				Use <Print 1 OpenInv if= QuestStatus %qid% %id% SetQuestStatus %qid% -1>
+				Msg1 <You examine the contents of the display case.>
+				Loot_Category <TREASURE WEAPON>
+				Loot_Factions <CRIHN>
+			end
+		end
+	end
+	inv
+		STC QUEST-ENCOUNTER-STATIONARY
+		name <Ghostly Wreck>
+		desig <ENTRANCE %s3%>
+		update <ifThisQEncActive else GoHide  SetStat STAT_MetaVisibility SkillTar %threat%  Goto GoSetOrders>
+		Attack < >
+	end
+
+Content
 	name <You're good, now go fetch>
 	requires <*Success1 (.BusinessDeal|.TipOff) (1:THIEF|1:ACADE) BRANCHES>
 

@@ -2591,7 +2591,7 @@ begin
 	end else if Mek^.G = GG_Mecha then begin
 		SR := 16 - Mek^.V;
 	end else if Mek^.G = GG_MetaTerrain then begin
-		SR := Mek^.Stat[ STAT_MetaVisibility ];
+		SR := Mek^.Stat[ STAT_MetaVisibility ] + 5;
 	end else SR := 12;
 	if SR < 5 then SR := 5;
 	MechaStealthRating := SR;

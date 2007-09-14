@@ -1942,10 +1942,11 @@ begin
 					end;
 				end;
 
-				{ Perform a vision check to see if this encounter will be spotted }
-				{ by the player. }
-				VisionCheck( GB , M );
 			end; { if random(100) < EncounterMove }
+
+			{ Perform a vision check to see if this encounter will be spotted }
+			{ by the player. }
+			VisionCheck( GB , M );
 
 			{ If the PC and an encounter share the same space, the ATTACK script }
 			{ is triggered. }

@@ -195,6 +195,12 @@ begin
 	{ Calculate the obscurement. }
 	O := CalcObscurement( Observer , Target , gb );
 
+	{ Encounters can only be spotted within a limited range, }
+	{ based on the observer's awareness skill. }
+	if ( Target^.G = GG_MetaTerrain ) and ( Target^.S = GS_MetaEncounter ) then begin
+		if Range( GB , Observer , Target ) > ( ( SkillValue( Observer , 11 ) + 2 ) div 2 ) then O := -1;
+	end;
+
 	{ If there's nothing standing between the target and the spotter, }
 	{ visibility is guaranteed. }
 	if ( O = 0 ) and ( Target^.G <> GG_MetaTerrain ) then begin
@@ -210,8 +216,7 @@ begin
 			T := T + ( GB^.Scale - Target^.Scale ) * Stealth_Per_Scale;
 		end;
 		if ( Target^.G = GG_MetaTerrain ) and ( Target^.S = GS_MetaEncounter ) then begin
-			{ Forget the original stealth rating for encounters. }
-			T := Range( GB , Observer , Target ) + 2;
+			T := T + Range( GB , Observer , Target );
 			if T < 5 then T := 5;
 		end;
 

@@ -442,6 +442,11 @@ Altitude 1
 Pass -100
 Msg1 <You enter the station.>
 
+Prop 20
+desig <COLONY-PROP>
+roguechar <*>
+SDL_SPRITE <prop_colony.png>
+
 MetaTerrain 0 0
 desig <DERELICT-1>
 roguechar <*>
@@ -689,6 +694,11 @@ Food 20
 name <Sashimi>
 desig <FOOD-4>
 FoodMorale 1
+
+Food 20
+name <Salad>
+desig <SALAD-1>
+
 
 Cloud
 name <Smoke>

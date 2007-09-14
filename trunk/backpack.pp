@@ -796,7 +796,7 @@ Procedure PCTradeItems( GB: GameBoardPtr; PC,Target: GearPtr );
 		{ The setup procedure for both menus is the same, so here }
 		{ it is. }
 	begin
-		BuildInventoryMenu( RPM , M );
+		BuildSiblingMenu( RPM , M^.InvCom );
 		RPMSortAlpha( RPM );
 
 		{ If the menu is empty, add a message saying so. }

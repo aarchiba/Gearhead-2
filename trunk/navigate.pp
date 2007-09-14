@@ -674,6 +674,24 @@ var
 		QuestIsReusable := AStringHasBString( SAttValue( Q^.SA , 'SPECIAL' ) , 'REUSABLE' );
 	end;
 
+	Procedure ScaleRandomTreasure( LList: GearPtr; Threat: Integer );
+		{ Scale any random loot values found along this path. }
+		{ The treasures found as part of a quest should be }
+		{ commesurate with the difficulcy rating of the quest. }
+	var
+		LootValue: LongInt;
+	begin
+		while LList <> Nil do begin
+			if NAttValue( LList^.NA , NAG_Narrative , NAS_RandomLoot ) > 0 then begin
+				LootValue := Calculate_Threat_Points( Threat , 2 + Random( 4 ) );
+				SetNAtt( LList^.NA , NAG_Narrative , NAS_RandomLoot , LootValue );
+			end;
+			ScaleRandomTreasure( LList^.SubCom , Threat );
+			ScaleRandomTreasure( LList^.InvCom , Threat );
+			LList := LList^.Next;
+		end;
+	end;
+
 	Function AddQuestComponent( Scene,Prev: GearPtr; ConReq: String; Threat,BranchPoints: Integer; KeyScene,KeyGear: GearPtr ): GearPtr;
 		{ Attempt to add a new component to the tree based on the provided }
 		{ information. If installation succeeded, this function will return }
@@ -806,6 +824,7 @@ var
 
 			{ Record the difficulcy rating. }
 			SetNAtt( C^.NA , NAG_QuestInfo , NAS_DifficulcyLevel , Threat );
+			ScaleRandomTreasure( C , Threat );
 
 			{ Reset the SubQuest Branch Total to a minimum value of 1. }
 			SQBranches := 1;

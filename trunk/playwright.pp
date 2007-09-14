@@ -1560,6 +1560,7 @@ begin
 
 		{ Actually, quest content does get its treasures initialized here. }
 		InitRandomLoot( Plot^.InvCom );
+		InitRandomLoot( Plot^.SubCom );
 
 		{ Also store the names of all known elements. They might come in handy later. }
 		for t := 1 to Num_Plot_Elements do begin
@@ -1854,7 +1855,7 @@ begin
 	{ Make sure the city really is the city. }
 	City := FindRootScene( Nil , City );
 
-	{ Second, locate the rest of the elements. }
+	{ Next, locate the rest of the elements. }
 	MatchOK := MatchPlotToAdventure( FindROot( City ) , Frag , Nil , FALSE , TRUE , FALSE );
 
 	{ If this worked, get all the needed scenes and store the element names. }

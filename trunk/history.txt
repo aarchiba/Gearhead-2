@@ -1,3 +1,7 @@
+- Props without teamdata will be assigned to team 0 (narration.pp)
+- Fixed a bug with trade items interface (backpack.pp)
+- Quests scale random loot to proper level (navigate.pp)
+- Encounters may only be spotted within awareness range (action.pp)
 - Quest scenes will have monster team threat set (navigate.pp)
 - Fixed problem with MetaScene -1 (narration.pp)
 - Will no longer drift on oversized maps (action.pp)

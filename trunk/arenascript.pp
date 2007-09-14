@@ -806,14 +806,19 @@ begin
 	SV := 0;
 
 	{ Start by checking for value macros. }
-	if SAttValue( Value_Macros , SMsg ) <> '' then begin
+	if SMsg = '' then begin
+		{ An empty string is a bad thing. }
+		SV := 0;
+		DialogMsg( 'WARNING: Blank scriptvalue from ' + GearName( Scene ) );
+
+	end else if SAttValue( Value_Macros , SMsg ) <> '' then begin
 		{ Install the macro, then re-call this procedure to get }
 		{ the results. }
 		InitiateMacro( GB , scene , Event , SAttValue( Value_Macros , SMsg ) );
 		SV := ScriptValue( Event , gb , scene );
 
 	{ If the command starts with a &, this means it's a local macro. }
-	end else if ( SMsg <> '' ) and ( Smsg[1] = '&' ) then begin
+	end else if Smsg[1] = '&' then begin
 		InitiateLocalMacro( GB , Event , SMsg , Scene );
 		SV := ScriptValue( Event , gb , scene );
 
