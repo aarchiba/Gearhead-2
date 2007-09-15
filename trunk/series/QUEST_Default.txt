@@ -1752,6 +1752,93 @@ Content
 %%	must set the the QuestStatus of the FindMoney component to its id.
 
 Content
+	name <Banking: The Boring Way>
+	desc <The PC can gain the loan by talking to a banker.>
+	requires <*:FindMoney .Investor "city" ~"safe">
+
+	% E1 is the character who needs the money
+	% E2 is a banker who the PC can argue with
+	Element2 <Prefab>
+	Scene2 <Building Public Legit Mall>
+	Team2 <Citizens>
+	TeamData2 <Pass>
+
+	sub
+		Persona 2
+		rumor%id% <%name2% offers business loans at reasonable rates.>
+		% V1 = Stupid question counter
+		Greeting <Goto GoGreet>
+		*GoGreet <*NiceToMeetYou GoChat>
+		GoChat <NewChat Say 1 AddChat 1 AddCHat 2>
+
+		Result1 <NewChat Say 2 AddChat 2 V= 1 1>
+		Result2 <NewChat Say 3 AddChat 3 AddChat 4 AddChat 5>
+		Result3 <ifG PCLaw %threat% else GoR3Fail NewChat Say 4 AddChat 6 AddChat 7>
+		GoR3Fail <NewChat Say 5 AddChat 7>
+		result4 <>
+
+		Msg1 <This is %name2%'s Financial Services. We provide loans to small and medium sized businesses.>
+		Msg2 <Sorry, but adventurers are a bad investment risk. They tend to either die or disappear before paying off what they owe.>
+		Msg3 <Ah, %name1%; \SPR %1% came to see me earlier. Unfortunately, \SPR %1% doesn't have any collatoral. I can't very well risk giving \SPR %1% a loan without a guarantee that I'll be paid back.>
+		Msg4 <Are you certain you want to do that? Your own reputation is beyond reproach; were %name1% to default on the loan, it could be severely tarnished.>
+		Msg5 <>
+		Msg5_1 <>
+		CMsg5_1 <ifPCCriminal Accept>
+
+		Prompt1 <Can I get a loan for myself?>
+		CPrompt1 <if= V1 0 Accept>
+		Prompt2 <%name1% needs a business loan.>
+		CPrompt2 <if= QuestStatus %qid% %id% ifNPCOK %1% Accept>
+		Prompt3 <How about if I vouch for %name1%'s character?>
+		Prompt4 <What if I co-sign on the loan?>
+		Prompt5 <It'd be in your best interest to give \OPR %1% that loan...>
+		Prompt6 <Yes, I want to vouch for %name1%.>
+		Prompt7 <Let's see what else I can try...>
+		Prompt7_1 <Let me try something else...>
+		Prompt7_2 <I've got another idea, then...>
+
+
+		MetaScene 2
+		start <if= QuestStatus %qid% %id% else %pop% ifNPCDead %2% else %pop% SetQuestStatus %qid% -2 Goto %pop%>
+		sub
+			room
+			% The bank itself. Can't add a bank without adding a safe to rob, can you?
+			name <%name2% Financial Services>
+			minimap <2.......1...........#&+&#>
+			special <SHAREDPALETTE>
+			desig <HOME>
+			sub
+				STC Safe
+				% V1 = Have robbed safe
+				% V2 = Have triggered alarm
+				MiniMapComponent 2
+				PDir 2
+				Use <if= V1 0 else GoAlreadyRobbed Print 1>
+				GoAlreadyRobbed <Print 2>
+				Clue32 <if= V1 0 else GoAlreadyRobbed if= V2 0 else GoSafeOpen ifNPCOK %2% else GoSafeOpen ifNPCCanSeePC %2% else GoSafeOpen Goto GoRiskyOpen>
+				GoRiskyOpen <ifStealth HardSkillTar %threat% else GoDiscovered Goto GoSafeOpen>
+				GoSafeOpen <Mental ifCodeBreaking HardSkillTar %threat% else GoCantOpen Goto GoOpen>
+				GoDiscovered <Alert 3 Alarm AddLawful -10 PCEnemy %2% if= QuestStatus %qid% %id% SetQuestStatus %qid% -2 V= 2 1>
+				GoCantOpen <Print 4>
+				GoOpen <Print 5 AddLawful -5 CashPrize Threat %threat% 20 V= 1 1>
+				Msg1_1 <This safe contains all the bank's money. %name2% keeps a close eye on it.>
+				CMsg1_1 <ifNPCOK %2% ifNPCCanSeePC %2% Accept>
+				Msg1_2 <This safe contains all the bank's money.>
+				CMsg1_3 <ifNPCOK %2% else GoAccept ifNPCCanSeePC %2% else GoAccept>
+				GoAccept <ACCEPT>
+				Msg2 <You've already stolen the money from this safe.>
+				Msg3 <You are spotted trying to open the safe!>
+				Msg4 <You can't open this safe at your current skill level.>
+				Msg5 <You open the safe and quickly grab the money.>
+			end
+		end
+	end
+	inv
+		NPC Corporate Executive
+		job <Banker>
+	end
+
+Content
 	name <Charity Mecha Tournament>
 	desc <The PC can enter and maybe even win a charity mecha tournament.>
 	requires <*:FindMoney .Charity>
