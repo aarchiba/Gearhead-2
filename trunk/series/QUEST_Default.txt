@@ -1041,6 +1041,36 @@ Content
 %% .Capture		The PC has captured E2
 
 Content
+	name <Capture vs. Reward>
+	%% The PC will be given a reward and that's it.
+	requires <*SuccessVsChar .Capture>
+	special <REUSABLE>
+
+	%% E1 is the character to give the reward.
+	%% E2 is the character who's been defeated.
+
+	sub
+		Persona 1
+		.%id%_GoInit <NewChat Say %id%01 CashPrize Reward Threat %threat% 100 200 SetQuestStatus %qid% -1>
+		Msg%id%01 <%name2% is now in custody. Thanks, \PC ... This wouldn't have been possible without you.>
+	end
+
+Content
+	name <Evidence vs. Reward>
+	%% The PC will be given a reward and that's it.
+	requires <*SuccessVsChar .Evidence>
+	special <REUSABLE>
+
+	%% E1 is the character to give the reward.
+	%% E2 is the character who's been defeated.
+
+	sub
+		Persona 1
+		.%id%_GoInit <NewChat Say %id%01 CashPrize Reward Threat %threat% 100 200 SetQuestStatus %qid% -1>
+		Msg%id%01 <This evidence will make it impossible for %name2% to get away this time. Thanks for your help.>
+	end
+
+Content
 	name <Basic vs. Reward>
 	%% The PC will be given a reward and that's it.
 	requires <*SuccessVsChar>
@@ -1074,6 +1104,34 @@ Content
 %% .BusinessDeal	PC has done some kind of business for/with NPC
 %% .TipOff              PC has provided useful information
 %% .CharityWork		PC has done charity work, presumably without expecting a reward
+
+Content
+	name <Corporate Perks>
+	requires <*Success1 .BusinessDeal (1:CORPO|1:TRADE|1:LABOR|1:CRAFT|1:FAITH)>
+	desc <The PC will be rewarded with a mecha.>
+	special <REUSABLE>
+
+	% E1 is the character who provides the mecha.
+
+	sub
+		Persona 1
+		.%id%_GoInit <NewChat Say %id%01 RandomMecha .%id%_factions %threat%  SetQuestStatus %qid% -1>
+		.%id%_factions <GENERAL PDASS>
+		Msg%id%01 <Because you've been such a big help to my business, I'd like for you to have this company mecha. It's got my logo printed on the sides.>
+		Msg%id%01_1 <For helping me with my business, I got something for you. It's a new mecha. I know that cavaliers always need new mecha... I hope you don't mind, but I had my logo painted onto the side of it. That way it's a business expense.>
+		CMsg%id%01_1 <ifNPCSociable Accept>
+		Msg%id%01_2 <That deal went nicely. Here's a perk for your trouble, a new mecha with my company logo on it.>
+		CMsg%id%01_2 <ifNPCShy Accept>
+		Msg%id%01_3 <Thanks. For helping my business, I bought you this new mecha. I know it seems like an extravagant gift, but since I had my logo painted onto the side it's actually advertising!>
+		CMsg%id%01_3 <ifNPCEasygoing Accept>
+		Msg%id%01_4 <You've been a great help to me, and now I'll be a great help to you! In thanks for your help, I got you this new mecha. It's got my logo printed right on the side, so everyone will know how stylish and cool you are.>
+		CMsg%id%01_4 <ifNPCPassionate Accept>
+		Msg%id%01_5 <That was great! Say, could you do me one more small favor? I bought this new mecha for you, and it's got my logo on the side. Just drive it around the city every once in a while.>
+		CMsg%id%01_5 <ifNPCCheerful Accept>
+		Msg%id%01_6 <Hey, I didn't think that was going to work out, but you really came through. I got something to thank you... unfortunately the guy at the mecha store thought I was buying this mecha for myself, and stuck the company logo on it.>
+		CMsg%id%01_6 <ifNPCMelancholy Accept>
+	end
+
 
 Content
 	name <Driven Away Pirates>
@@ -1754,7 +1812,7 @@ Content
 Content
 	name <Banking: The Boring Way>
 	desc <The PC can gain the loan by talking to a banker.>
-	requires <*:FindMoney .Investor "city" ~"safe">
+	requires <*:FindMoney .Investor "city" ~"safe" ~"banking">
 
 	% E1 is the character who needs the money
 	% E2 is a banker who the PC can argue with
@@ -1770,33 +1828,54 @@ Content
 		Greeting <Goto GoGreet>
 		*GoGreet <*NiceToMeetYou GoChat>
 		GoChat <NewChat Say 1 AddChat 1 AddCHat 2>
-
 		Result1 <NewChat Say 2 AddChat 2 V= 1 1>
 		Result2 <NewChat Say 3 AddChat 3 AddChat 4 AddChat 5>
 		Result3 <ifG PCLaw %threat% else GoR3Fail NewChat Say 4 AddChat 6 AddChat 7>
 		GoR3Fail <NewChat Say 5 AddChat 7>
-		result4 <>
-
+		result4 <ifConversation Skilltar %threat% else GoR4Fail NewChat say 6 AddChat 8>
+		GoR4Fail <NewChat Say 7 AddChat 7>
+		result5 <NewChat Say 8 AddChat 9 AddChat 10 AddChat 11>
+		% Vouching for a criminal character will result in a reputation hit
+		result6 <NewChat Say 9 SetQuestStatus %qid% -1 XPV 50 AddSociable d6 ifG -10 NPCLaw %1% AddLawful -1 AddRenown -5>
+		result7 <NewChat Say 10 AddChat 3 AddChat 4 AddChat 5 AddChat 12>
+		result8 <NewChat Say 9 SetQuestStatus %qid% -1 XPV 50>
+		result9 <NewChat Say 11 SetQuestStatus %qid% -1 XPV 50  AddEasygoing -d8  AddReact d10>
+		result10 <NewChat Say 12 SetQuestStatus %qid% -1 XPV 50  AddHeroic -1  AddEasygoing -d10  AddReact -d10>
+		result11 <Goto result7>
+		*result12 <*GoodBye>
 		Msg1 <This is %name2%'s Financial Services. We provide loans to small and medium sized businesses.>
 		Msg2 <Sorry, but adventurers are a bad investment risk. They tend to either die or disappear before paying off what they owe.>
-		Msg3 <Ah, %name1%; \SPR %1% came to see me earlier. Unfortunately, \SPR %1% doesn't have any collatoral. I can't very well risk giving \SPR %1% a loan without a guarantee that I'll be paid back.>
+		Msg3 <Ah, %name1%; \SPR %1% came to see me earlier. Unfortunately, \SPR %1% doesn't have any collatoral. I can't very well risk giving \OPR %1% a loan without a guarantee that I'll be paid back.>
 		Msg4 <Are you certain you want to do that? Your own reputation is beyond reproach; were %name1% to default on the loan, it could be severely tarnished.>
-		Msg5 <>
-		Msg5_1 <>
+		Msg5 <You're not exactly a reliable person to be making a character reference, now are you? I'm afraid I'm going to need something better than that.>
+		Msg5_1 <If you were to give a character reference for %name1%, don't you think it would be in my best interest to stay as far away from \OPR %1% as possible?>
 		CMsg5_1 <ifPCCriminal Accept>
-
+		Msg6 <You sound pretty sure of that. I've looked over %name1%'s proposal and it's certainly possible. You really think that there's a profit to be made here?>
+		Msg7 <It's easy to say that, but without numbers to back it up it's all quite meaningless. I'm going to need something more before I agree to invest my money.>
+		Msg8 <Really? And why is that?>
+		Msg9 <Alright, then. You can go tell %name1% that \PPR %1% loan is approved.>
+		Msg10 <Do you have any other reason why I should give a loan to %name1%?>
+		Msg11 <So I see... Very well, then. You can go tell %name1% that \PPR %1% loan has been approved.>
+		Msg12 <Um, you don't sound like the kind of person who jokes about grievous bodily harm... You can go tell %name1% that I've approved \PPR %1% loan.>
 		Prompt1 <Can I get a loan for myself?>
 		CPrompt1 <if= V1 0 Accept>
 		Prompt2 <%name1% needs a business loan.>
 		CPrompt2 <if= QuestStatus %qid% %id% ifNPCOK %1% Accept>
 		Prompt3 <How about if I vouch for %name1%'s character?>
 		Prompt4 <I think %name1%'s business is bound to succeed.>
+		CPrompt4 <ifG PCKnowledge 11 Accept>
 		Prompt5 <It'd be in your best interest to give \OPR %1% that loan...>
 		Prompt6 <Yes, I want to vouch for %name1%.>
 		Prompt7 <Let's see what else I can try...>
 		Prompt7_1 <Let me try something else...>
 		Prompt7_2 <I've got another idea, then...>
-
+		Prompt8 <Yes I do.>
+		Prompt9 <I could make it completely worth your while.>
+		CPrompt9 <ifChatNPCSexy ifFlirtation Skilltar %threat% Accept>
+		Prompt10 <It might be intensely painful to refuse.>
+		CPrompt10 <ifIntimidation HardSkillTar %threat% Accept>
+		Prompt11 <I have no idea.>
+		Prompt12 <Not right now, no.>
 
 		MetaScene 2
 		start <if= QuestStatus %qid% %id% else %pop% ifNPCDead %2% else %pop% SetQuestStatus %qid% -2 Goto %pop%>
@@ -1807,7 +1886,7 @@ Content
 			minimap <2.......1...........#&+&#>
 			special <SHAREDPALETTE>
 			desig <HOME>
-			sub
+			inv
 				STC Safe
 				% V1 = Have robbed safe
 				% V2 = Have triggered alarm

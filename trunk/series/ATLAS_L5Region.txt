@@ -511,7 +511,7 @@ Scene 0 3
 	world <L5 Region>
 	desc <Athera Spinner is the cultural center of the L5 region.>
 	special <NOEXIT SHOWALL SOLO TOWNMECHA>
-	type <city town spinner target outdoors urban destination hometown>
+	type <city town spinner target outdoors urban destination hometown safe>
 	personatype <city spinner>
 	habitat <SPACE.URBAN>
 	MegaCityMap
@@ -3386,11 +3386,12 @@ sub
 	start <Print 1>
 	Msg1 <You enter the Fuchal Market.>
 
-	NeededCells 4
+	NeededCells 5
 	Content3 <Some 1 100 Sub *WEAPON_SHOP     na>
 	Content4 <Some 1 100 Sub *ARMOR_SHOP      na>
 	Content6 <Some 1 100 Sub *SPECIAL_SHOP    na>
-	Content6 <Some 1 100 Sub *GENERAL_SHOP    na>
+	Content7 <Some 1 100 Sub *GENERAL_SHOP    na>
+	Content8 <Some 1 100 Sub *RESTAURANT      na>
 	Content9 <Fill Sub *SHOP_RANDOM           na>
 	sub
 		team 1
@@ -3537,7 +3538,8 @@ sub
 
 	NeededCells 2
 	Content1 <Some 1 100 Sub *GOV_MILITARY  na>
-	Content2 <Fill       Sub *GOV_MISC      na>
+	Content2 <Some 1 100 Sub *RESTAURANT      na>
+	Content3 <Fill       Sub *GOV_MISC      na>
 
 	sub
 		team 1
@@ -3585,7 +3587,7 @@ sub
 
 	Scene
 	name <Fuchal Spaceport>
-	type <building shuttle spaceport public>
+	type <building shuttle spaceport public sleazy>
 	entrance <*SpacePort>
 	special <ADDEXIT>
 	ClubMap
@@ -3595,7 +3597,7 @@ sub
 	start <Print 1>
 	Msg1 <You enter Fuchal Spaceport.>
 
-	NeededCells 6
+	NeededCells 4
 	Content1 <Some 1 100 Sub *SHUTTLESERVICE  na>
 	Content2 <Some 1 100 Sub *RESTAURANT      na>
 	Content5 <Some 1 100 Sub *MECHANIC_SHOP   na>

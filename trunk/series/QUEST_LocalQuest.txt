@@ -22,17 +22,53 @@ Content
 	sub
 		Persona 1
 		rumor0 <%name1%'s dream is to some day open a restaurant.>
-
-		greeting <if= QuestStatus %qid% %id% else GoCheckOffer >
-
-		GoCheckOffer <if= QuestStatus %qid% 0 else GoChat  >
-
+		greeting <if= QuestStatus %qid% %id% else GoCheckOffer NewChat Say 1 AddChat 1 AddChat 2 AddChat 3>
+		GoCheckOffer <if= QuestStatus %qid% 0 else GoChat  ifG React 30 else GoNoLike NewChat Say 10 AddChat 10 AddChat 11>
+		GoNoLike <NewChat SayAnything AddChat 7>
 		*GoChat <*MISC_CHATTER>
-
+		GoStartQuest <SetQuestStatus %qid% %id% SetQuestStatus %qid1% %id1% QMemo %qid% 7>
+		result1 <Goto .%id2%_GoInit>
+		result2 <NewChat Say 2>
+		result3 <NewChat Say 3 AddChat 4 AddChat 5>
+		result4 <EndChat Say 4 AddChat 6>
+		result5 <NewChat Say 5>
+		result6 <Cash+ -2000000 AddReact d10 ifConversation SkillTar %threat% else .%id2%_GoInit PCFriend %1% Goto .%id2%_GoInit>
+		result7 <NewChat Say 6 AddChat 8 AddChat 3 AddChat 9 Goto GoStartQuest>
+		result8 <NewChat Say 8>
+		result9 <NewChat Say 9>
+		result10 <NewChat Say 11 AddChat 8 AddChat 3 AddChat 9 Goto GoStartQuest>
+		result11 <NewChat Say 12 AddReact -React>
+		Msg1 <So, have you had any luck finding investors for my restaurant yet?>
+		Msg2 <Well, until such a time as you have, I'll be right here reading these cookbooks. I've got to be ready for my big day.>
+		Msg3 <It's going to take at least $2,000,000 to set up a decent restaurant, and even then I might not be able to afford chairs. It shouldn't matter, though- for fine cuisine, people should be willing to stand.>
+		Msg4 <Wow, you'd do that? Thanks! I'll be sure to name a salad in your honor... "Salad du \PC "...>
+		Msg5 <It's a bit too steep for me as well, and that's the problem. Let me know when you find something.>
+		Msg6 <Yes, that's right. Why does that matter to you?>
+		msg7 <%name1% in \SCENE %s1% needs an investor so \SPR %1% can open a restaurant.>
+		msg8 <It'd be great if you could. Come back here and let me know if you find anything.>
+		Msg9 <Well, if you come up with anything, come back here and let me know. I'll take all the help I can get.>
+		Msg10 <Hey, how would you like to help me with something?>
+		Msg11 <I came to this city to study cooking. It's my dream to open a restaurant, but right now I don't have the money. I heard that cavaliers know lots of people; do you think maybe someone you know could help me?>
+		Msg12 <I understand. Maybe someday when I'm rich and successful I'll be able to brush people off like that too.>
+		Prompt1 <As a matter of fact, I have.>
+		CPrompt1 <if= QuestStatus %qid1% -1 Accept>
+		Prompt2 <No, not yet.>
+		Prompt3 <I'd like to invest in it myself.>
+		CPrompt3 <ifPCRenowned Accept>
+		Prompt4 <I can afford that. [Give Money]>
+		CPrompt4 <ifG PC$ 1999999 Accept>
+		Prompt5 <That's a bit too steep for me.>
+		Prompt6 <[Continue]>
+		Prompt7 <Aren't you the person who wants to open a restaurant?>
+		CPrompt7 <ifG PCPerception 14 Accept>
+		Prompt8 <Maybe I could find you an investor.>
+		Prompt9 <I don't know.>
+		Prompt10 <Tell me what you want.>
+		Prompt11 <Sorry, kid, I don't have the time.>
 	end
 	inv
 		NPC Cook
-		chardesc Passionate
+		chardesc Passionate Young
 	end
 Content
 	name <Pirates Love Vegetables>

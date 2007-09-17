@@ -67,6 +67,7 @@ SELFNID <GrabSource GNAtt NAG_Narrative NAS_NID>
 SelfS <GrabSource GS>
 RReact <GrabPC GNatt NAG_ReactionScore ?>
 NPCRep <GrabNPC ? GNAtt NAG_CharDescription - ?>
+NPCLaw <GrabNPC ? GNAtt NAG_CharDescription -2>
 ChatNPCRep <GrabChatNPC GNAtt NAG_CharDescription - ?>
 ChatNPCRenown <GrabChatNPC GNAtt NAG_CharDescription -6>
 ChatNPCID <GrabChatNPC GNAtt NAG_Personal NAS_CID>
