@@ -17,7 +17,7 @@ Faction 2
 	Context <cor>
 	type <Corporate ArenaOK L5PAT>
 	jobs <CRAFT CORPO TRADE>
-	SetEnemy 7 8
+	SetEnemy 7 8 13
 	mecha_colors <75 200 212  234 180 88  200 000 100>
 	chara_colors <234 180 88>
 
@@ -41,7 +41,7 @@ Faction 3
 	type <Military ArenaOK L5PAT>
 	jobs <MILIT>
 	SetAlly 1
-	SetEnemy 4
+	SetEnemy 4 14
 	Controller 1
 	mecha_colors <75 200 212 201 205 229 200 100 0>
 	chara_colors <150 205 229>
@@ -96,7 +96,7 @@ Faction 6
 	mecha <MAQUI COMET>
 	type <Military Mercenary ArenaOK L5PAT>
 	jobs <ADVEN MILIT THIEF>
-	SetAlly 1
+	SetAlly 1 10
 	SetEnemy 4 8
 	Controller 1
 	mecha_colors <75 200 212 201 205 229 200 100 0>
@@ -131,7 +131,7 @@ Faction 7
 	Context <cor>
 	type <Corporate ArenaOK L5PAT>
 	jobs <CRAFT CORPO TRADE>
-	SetEnemy 2 8
+	SetEnemy 2 8 13
 	mecha_colors <75 200 212  170 150 230   200 100 0>
 	chara_colors <170 100 240>
 
@@ -153,7 +153,7 @@ Faction 8
 	type <Crime ArenaOK L5PAT EARTH>
 	jobs <ADVEN THIEF>
 	SetAlly 12
-	SetEnemy 2 4 6 7 9
+	SetEnemy 2 4 6 7 9 11 13 14
 	mecha_colors <168 153 230 78 150 137 200 0 0>
 	chara_colors <130 50 20>
 
@@ -223,4 +223,38 @@ Faction 12
 	jobs <POLIT ADVEN FAITH MEDIA>
 	SetAlly 8
 	SetEnemy 11
+
+Faction 13
+	name <MUGL Enterprises>
+	desig <MUGLE>
+	desc <>
+	Context <cor>
+	type <Corporate ArenaOK L5PAT>
+	jobs <CRAFT CORPO TRADE MEDIA>
+	SetEnemy 2 7 8
+	mecha_colors <255 80 120 157 172 183 0 240 240>
+	chara_colors <200 64 96>
+
+	FACRANK_0 <Wage Slave>
+	FACRANK_1 <Employee of the Month>
+	FACRANK_2 <Committee Head>
+	FACRANK_3 <Assistant Junior Manager>
+	FACRANK_4 <Junior Manager>
+	FACRANK_5 <Manager>
+	FACRANK_6 <Senior Manager>
+	FACRANK_7 <Branch Director>
+	FACRANK_8 <Vice President>
+
+Faction 14
+	name <the Rocket Stars>
+	desig <ROCKE>
+	desc <The elite mecha forces of Rishiri Spinner.>
+	Context <mil>
+	type <Military L5PAT>
+	jobs <MILIT ADVEN>
+	SetAlly 11
+	SetEnemy 3 8
+	Controller 11
+	mecha_colors <>
+	chara_colors <>
 

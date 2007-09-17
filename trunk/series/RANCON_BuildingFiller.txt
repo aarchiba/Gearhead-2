@@ -138,6 +138,12 @@ Content
 		Stolen
 	end
 
+%% *SPACEPORT_X Content
+%%   Things you would find in a spaceport.
+Content
+	requires <*SPACEPORT_X>
+	Content <Required *GARAGE_X - Local>
+
 
 %% *GARAGE_X Content
 %%   Things you would find in a garage.

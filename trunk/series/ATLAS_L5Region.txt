@@ -30,7 +30,7 @@ Scene 0 3
 	world <L5 Region>
 	desc <Maquise Spinner is home to fifteen million people. It is the largest and most powerful of the spinner colonies.>
 	special <NOEXIT SHOWALL SOLO TOWNMECHA>
-	type <city town spinner target outdoors urban destination hometown>
+	type <city town spinner target outdoors urban destination hometown capitol>
 	habitat <SPACE.URBAN>
 	personatype <city capitol spinner>
 	MegaCityMap
@@ -407,6 +407,7 @@ sub
 			% Set her age to 37
 			Age 17
 			name <Adrianna>
+			job <Technocrat>
 			SDL_Colors <75 200 212 255 212 195 66 121 119>
 			chardesc Female Sociable Passionate Pragmatic Renowned
 			statline 13 10 14 16 13 17 16 17
@@ -436,8 +437,9 @@ sub
 	NeededCells 4
 	Content1 <Some 1 100 Sub *SHUTTLESERVICE  na>
 	Content2 <Some 1 100 Sub *RESTAURANT      na>
-	Content3 <Some 1  55 Sub *GARAGE_X        na>
+	Content3 <Some 1 100 Sub *MECHANIC_SHOP   na>
 	Content4 <Some 1  25 Sub *MECHA_SHOP      na>
+	Content5 <Fill Sub *SPACEPORT_X>
 
 	sub
 		team 1
@@ -521,7 +523,7 @@ Scene 0 3
 	% V1 = Message Counter
 
 	SetFaction 1
-	factions <MAQUI COMET SILKN PRIVA HOELL L5LAW>
+	factions <MAQUI SILKN PRIVA MUGLE L5LAW>
 
 	Quest1 <*:LocalQuest>
 
@@ -888,7 +890,7 @@ sub
 	NeededCells 3
 	Content1 <Some 1 100 Sub *SHUTTLESERVICE  na>
 	Content2 <Some 1  90 Sub *RESTAURANT      na>
-	Content3 <Some 1  55 Sub *GARAGE_X        na>
+	Content3 <Some 1 100 Sub *MECHANIC_SHOP   na>
 	Content4 <Fill       Sub *SHOP_RANDOM     na>
 
 	sub
@@ -941,10 +943,10 @@ sub
 	end
 
 	Scene
-	name <Hoeller Garden Office>
-	SetFaction 7
+	name <MUGL Media Center>
+	SetFaction 13
 	type <building public legit corporate>
-	context <hoell corp>
+	context <mugle corp>
 	entrance <*Building>
 	special <ADDEXIT>
 	MallMap
@@ -952,7 +954,7 @@ sub
 	MapHeight 15
 
 	start <Print 1>
-	Msg1 <You enter Hoeller Garden Office.>
+	Msg1 <You enter the MUGL Media Center.>
 
 	NeededCells 3
 	Content2 <Fill Sub *CORP_PUBLIC>
@@ -982,7 +984,7 @@ sub
 	inv
 		NPC Corporate Executive
 		home <Foyer>
-		SetFaction 7
+		SetFaction 13
 	end
 
 
@@ -1044,6 +1046,7 @@ inv
 	NPC Politician
 	name <Mounteer>
 	home <Mayor's Office>
+	job <Mayor>
 	SetTeam 2
 	SetFaction 1
 	Age 23
@@ -2125,7 +2128,7 @@ sub
 	Content3 <Some 1  55 Sub *SHOP_RANDOM     na>
 	Content4 <Some 1  25 Sub *GOV_POLICE      na>
 	Content5 <Some 1 100 Sub *MECHANIC_SHOP   na>
-	Content6 <Fill Sub *GARAGE_X>
+	Content6 <Fill Sub *SPACEPORT_X>
 
 	sub
 		team 1
@@ -2299,7 +2302,7 @@ Scene 0 3
 	% V1 = Message Counter
 
 	SetFaction 10
-	factions <FCOMS COMET HOELL PRIVA L5LAW>
+	factions <FCOMS COMET HOELL PRIVA MUGLE L5LAW>
 
 	desig <XIASP>
 	context <spc>
@@ -2555,6 +2558,19 @@ sub
 			PDir 1
 		end
 	end
+	inv
+		NPC Corporate Executive
+		home <Foyer>
+		SetFaction 2
+
+		NPC Corporate Executive
+		home <Foyer>
+		SetFaction 7
+
+		NPC Corporate Executive
+		home <Foyer>
+		SetFaction 13
+	end
 
 	Scene
 	name <Atma Motors>
@@ -2666,7 +2682,7 @@ sub
 		inv
 			NPC Politician
 			SetTeam 2
-			SetFaction 1
+			SetFaction 10
 			MiniMapComponent 1
 
 			NPC Soldier
@@ -2694,8 +2710,8 @@ sub
 	Content2 <Some 1 100 Sub *RESTAURANT      na>
 	Content3 <Some 1  55 Sub *SHOP_RANDOM     na>
 	Content4 <Some 1  25 Sub *GOV_POLICE      na>
-	Content5 <Some 1  90 Sub *MECHANIC_SHOP   na>
-	Content6 <Fill Sub *GARAGE_X>
+	Content5 <Some 1 100 Sub *MECHANIC_SHOP   na>
+	Content6 <Fill Sub *SPACEPORT_X>
 
 	sub
 		team 1
@@ -2749,6 +2765,9 @@ sub
 % End of Xianzai Spinner...
 end
 
+%% *************************
+%% ***   GAOS  SPINNER   ***
+%% *************************
 
 Scene 0 3
 	mapwidth 25
@@ -2809,7 +2828,7 @@ sub
 	Content2 <Some 1  90 Sub *RESTAURANT      na>
 	Content4 <Some 1  25 Sub *GOV_POLICE      na>
 	Content5 <Some 1 100 Sub *MECHANIC_SHOP   na>
-	Content6 <Fill Sub *GARAGE_X>
+	Content7 <Fill Sub *SPACEPORT_X>
 
 	sub
 		team 1
@@ -3212,42 +3231,6 @@ sub
 	end
 
 	Scene
-	name <Holiday Service Center>
-	type <building garage public sleazy>
-	entrance <*Garage>
-	special <ADDEXIT>
-	MallMap
-	IndustrialTiles
-	MapWidth 20
-	MapHeight 15
-
-	start <Print 1>
-	Msg1 <You enter Holiday Service Center.>
-
-	NeededCells 3
-	Content1 <Some 1 100 Sub *MECHANIC_SHOP>
-	Content2 <Some 1 100 Sub *MECHA_SHOP>
-	Content3 <Fill Sub *GARAGE_X>
-	sub
-		team 1
-
-		team 2
-		name <Citizens>
-		SetAlly 1
-		Passive
-
-		team 3
-		name <Guards>
-		SetAlly 2
-
-		room
-		name <Foyer>
-		desig <EntranceGrid>
-		Content <Some 2 40 Here *URBAN_X>
-		Content2 <Some 1 100 Here *ANTI_ATTACK_SECURITY 2>
-	end
-
-	Scene
 	name <Gaos City Hall>
 	type <building government public>
 	context <gov>
@@ -3321,7 +3304,7 @@ sub
 		inv
 			NPC Politician
 			SetTeam 2
-			SetFaction 1
+			SetFaction 10
 			MiniMapComponent 1
 		end
 	end
@@ -3485,43 +3468,6 @@ sub
 	end
 
 	Scene
-	name <Cooking With Steel>
-	type <building garage public>
-	context <>
-	entrance <*Garage>
-	special <ADDEXIT>
-	MallMap
-	MapWidth 25
-	MapHeight 12
-	IndustrialTiles
-
-	start <Print 1>
-	Msg1 <You enter Cooking With Steel.>
-
-	NeededCells 3
-	Content1 <Some 1 100 Sub *MECHANIC_SHOP>
-	Content2 <Some 1  90 Sub *MECHA_SHOP>
-	Content3 <Fill Sub *GARAGE_X>
-	sub
-		team 1
-
-		team 2
-		name <Citizens>
-		SetAlly 1
-		Passive
-
-		team 3
-		name <Guards>
-		SetAlly 2
-
-		room
-		name <Foyer>
-		desig <EntranceGrid>
-		Content <Some 2 40 Here *URBAN_X>
-		Content2 <Some 1 100 Here *ANTI_ATTACK_SECURITY 2>
-	end
-
-	Scene
 	name <Fuchal Center>
 	type <building government public legit>
 	context <gov>
@@ -3600,8 +3546,8 @@ sub
 	NeededCells 4
 	Content1 <Some 1 100 Sub *SHUTTLESERVICE  na>
 	Content2 <Some 1 100 Sub *RESTAURANT      na>
-	Content5 <Some 1 100 Sub *MECHANIC_SHOP   na>
-	Content6 <Fill Sub *GARAGE_X>
+	Content3 <Some 1 100 Sub *MECHANIC_SHOP   na>
+	Content5 <Fill Sub *SPACEPORT_X>
 
 	sub
 		team 1
@@ -3700,4 +3646,515 @@ sub
 
 % End of Fuchal Spinner...
 end
+
+%%
+%%   **************************
+%%   ***   KOSAKA SPINNER   ***
+%%   **************************
+%%
+
+Scene 0 3
+	mapwidth 30
+	mapheight 10
+	name <Kosaka Spinner>
+	XPos 33
+	YPos 47
+
+	% Low tolerance here- it's the beuracracy.
+	Tolerance -5
+
+	world <L5 Region>
+	desc <Kosaka Spinner is the capital of the Free Commerce States.>
+	special <NOEXIT SHOWALL SOLO TOWNMECHA>
+	type <city town spinner target outdoors urban destination hometown safe capitol>
+	habitat <SPACE.URBAN>
+	personatype <city capitol spinner>
+	MegaCityMap
+
+	entrance <*COLONY-1>
+
+	% V1 = Message Counter
+
+	SetFaction 10
+	factions <FCOMS MAQUI RISHI L5LAW>
+
+	desig <KOSSP>
+	context <spc>
+
+	Quest1 <*:LocalQuest>
+
+	start <if= V1 0 else GoSecondTime V= 1 1 Alert 1 Print 2>
+	GoSecondTime <Print 2>
+	Msg1 <The flawless crystal towers and beautiful gardens of Kosaka Spinner clearly demonstrate the precision and efficiency with which this city governs the Free Commerce States.>
+	Msg2 <You enter Kosaka Spinner.>
+
+sub
+	Scene
+	name <Kosaka Core Market>
+	type <building mall public legit>
+	context <mall>
+	entrance <*DEPARTMENTSTORE>
+	special <ADDEXIT>
+	MallMap
+	MapWidth 35
+	MapHeight 30
+
+	start <Print 1>
+	Msg1 <You enter Kosaka Core Market.>
+
+	NeededCells 8
+
+	Content1 <Some 1 100 Sub *GENERAL_SHOP      na>
+	Content2 <Some 1 100 Sub *RESTAURANT        na>
+	Content3 <Some 1 100 Sub *WEAPON_SHOP       na>
+	Content4 <Some 1 100 Sub *ARMOR_SHOP        na>
+	Content5 <Some 1 100 Sub *ELECTRONICS_SHOP  na>
+	Content6 <Some 1 100 Sub *MECHA_SHOP        na>
+	Content9 <Fill Sub *SHOP_RANDOM             na>
+
+	sub
+		team 1
+
+		team 2
+		name <Citizens>
+		SetAlly 1
+		Passive
+
+		team 3
+		name <Guards>
+		SetAlly 2
+
+		room
+		name <Foyer>
+		desig <EntranceGrid>
+		Content <Some 5 50 Here *URBAN_X>
+		Content2 <Some 1 100 Here *ANTI_ATTACK_SECURITY 2>
+	end
+
+	Scene
+	name <Kosaka Hospital>
+	type <Building hospital public legit>
+	entrance <*Hospital>
+	special <ADDEXIT>
+	MallMap
+	MapWidth 20
+	MapHeight 10
+
+	NeededCells 2
+	Content <Some 1 100 Sub *Doctor>
+	Content2 <Fill Sub *HOSPITAL_X>
+
+	start <Print 1>
+	Msg1 <You enter Kosaka Hospital.>
+
+	sub
+		team 1
+
+		team 2
+		name <Citizens>
+		SetAlly 1
+		Passive
+
+		team 3
+		name <Guards>
+		SetAlly 2
+
+		room
+		desig <EntranceGrid>
+		Content <Some 2 30 Here *URBAN_X>
+		Content2 <Some 1 100 Here *ANTI_ATTACK_SECURITY 2>
+	end
+
+	Scene
+	name <Skull and Kraken Pub>
+	type <building restaurant meeting public sleazy>
+	context <>
+	entrance <*Building Short>
+	special <ADDEXIT>
+	ClubMap
+	MapWidth 20
+	MapHeight 19
+
+	start <Print 1>
+	Msg1 <You enter the Skull and Kraken Pub.>
+
+	NeededCells 4
+	Content1 <Some 1 100 Sub *RESTAURANT>
+	Content2 <Some 1 100 Sub *BAR_SERVICE>
+	Content3 <Some 1  70 Sub *CLUB_X>
+	Content4 <Some 1  70 Sub *WEAPON_SHOP>
+	Content5 <Fill Sub *SHOP_RANDOM>
+	sub
+		team 1
+
+		team 2
+		name <Citizens>
+		SetAlly 1
+		Passive
+
+		team 3
+		name <Guards>
+		SetAlly 2
+
+		room
+		name <Foyer>
+		desig <EntranceGrid>
+		Content <Some 4 65 Here *URBAN_X>
+		Content2 <Some 1 100 Here *ANTI_ATTACK_SECURITY 2>
+	end
+	inv
+		NPC Privateer
+		home <Foyer>
+		SetFaction 6
+	end
+
+	Scene
+	name <Capitol Motors>
+	type <building garage public>
+	context <>
+	entrance <*Garage>
+	special <ADDEXIT>
+	MallMap
+	IndustrialTiles
+	MapWidth 19
+	MapHeight 12
+
+	start <Print 1>
+	Msg1 <You enter Capitol Motors.>
+
+	NeededCells 3
+	Content1 <Some 1 100 Sub *MECHANIC_SHOP>
+	Content2 <Some 1 100 Sub *MECHA_SHOP>
+	Content3 <Fill Sub *GARAGE_X>
+	sub
+		team 1
+
+		team 2
+		name <Citizens>
+		SetAlly 1
+		Passive
+
+		team 3
+		name <Guards>
+		SetAlly 2
+
+		room
+		name <Foyer>
+		desig <EntranceGrid>
+		Content <Some 3 30 Here *URBAN_X>
+		Content2 <Some 1 100 Here *ANTI_ATTACK_SECURITY 2>
+	end
+
+	Scene
+	name <Crystal Tower>
+	type <building government public legit>
+	context <gov>
+	entrance <*Building Tall>
+	special <ADDEXIT>
+	SetFaction 10
+	ClubMap
+	PalaceParkTiles
+	MapWidth 30
+	MapHeight 21
+
+	start <Print 1>
+	Msg1 <You enter the Crystal Tower.>
+
+	NeededCells 2
+	Content1 <Some 1 100 Sub *GOV_MILITARY  na>
+	Content2 <Fill       Sub *GOV_MISC      na>
+
+	sub
+		team 1
+
+		team 2
+		name <Citizens>
+		SetAlly 1
+		Passive
+
+		team 3
+		name <Guards>
+		SetAlly 1
+
+		room
+		name <Foyer>
+		desig <EntranceGrid>
+		Content <Some 3 45 Here *URBAN_X>
+		Content2 <Some 1 100 Here *ANTI_ATTACK_SECURITY 2>
+
+		room
+		name <Garrison>
+		minimap <2...31..............#...#>
+		inv
+			NPC Police Officer
+			SetTeam 3
+			SetFaction 9
+			MiniMapComponent 1
+
+			NPC Police Officer
+			SetTeam 3
+			SetFaction 9
+			MiniMapComponent 2
+
+			NPC Police Officer
+			SetTeam 3
+			SetFaction 9
+			MiniMapComponent 3
+		end
+
+		room
+		name <Garrison>
+		minimap <2...31..............#...#>
+		inv
+			NPC Mecha Pilot
+			SetTeam 3
+			SetFaction 10
+			MiniMapComponent 1
+
+			NPC Mecha Pilot
+			SetTeam 3
+			SetFaction 10
+			MiniMapComponent 2
+		end
+
+
+		room
+		name <Main Office>
+		minimap <2....1..............#&+&#>
+		inv
+			NPC Politician
+			SetTeam 2
+			SetFaction 10
+			job <Chief Technocrat>
+			MiniMapComponent 1
+
+			NPC Soldier
+			SetTeam 3
+			SetFaction 10
+			MiniMapComponent 2
+		end
+	end
+
+	Scene
+	name <Kosaka Spaceport>
+	type <building shuttle spaceport legit public>
+	entrance <*SpacePort>
+	special <ADDEXIT>
+	ClubMap
+	MapWidth 24
+	MapHeight 21
+
+	start <Print 1>
+	Msg1 <You enter Maquise Spaceport.>
+
+	NeededCells 4
+	Content1 <Some 1 100 Sub *SHUTTLESERVICE  na>
+	Content2 <Some 1 100 Sub *RESTAURANT      na>
+	Content3 <Some 1 100 Sub *MECHANIC_SHOP   na>
+	Content5 <Fill Sub *SPACEPORT_X>
+
+	sub
+		team 1
+
+		team 2
+		name <Citizens>
+		SetAlly 1
+		Passive
+
+		team 3
+		name <Guards>
+		SetAlly 2
+
+		room
+		name <Foyer>
+		desig <EntranceGrid>
+		Content <Some 3 50 Here *URBAN_X>
+		Content2 <Some 1 100 Here *ANTI_ATTACK_SECURITY 2>
+
+		room
+		minimap <############1###...##...#>
+		sub
+			STC AIRLOCK-1
+			MiniMapComponent 1
+			destination <Kosaka Station Exterior>
+		end
+
+		Scene 0 3
+		name <Kosaka Station Exterior>
+		type <Environs Outdoors Space>
+		special <ShowAll>
+		terrain <SPACE>
+		MapWidth 30
+		MapHeight 30
+		SpaceMap
+		nu1 <if= T1 0 Exit WorldID>
+		Microgravity
+		Vacuum
+		SpaceBackdrop
+
+		inv
+			STC COLONY-1
+			name <Kosaka Spinner>
+			Destination -1
+			XPos 15
+			YPos 15
+		end
+
+	end
+
+	Scene
+	name <MUGL Mechanical>
+	SetFaction 13
+	type <building public corporate>
+	context <MUGLE corp>
+	entrance <*Building>
+	special <ADDEXIT>
+	MallMap
+	MapWidth 15
+	MapHeight 15
+
+	start <Print 1>
+	Msg1 <You enter MUGL Mechanical.>
+
+	NeededCells 3
+	Content2 <Fill Sub *CORP_PUBLIC>
+
+	5Min <ifTeamHostile 3  MonsterUp 3 d20>
+
+	sub
+		team 1
+
+		team 2
+		name <Citizens>
+		SetAlly 1
+		Passive
+
+		Team 3
+		name <Guards>
+		Deploy <if# L1 0 MonsterUp 3 10 TeamAttack 3>
+		SetAlly 1 2
+
+		room
+		name <Foyer>
+		desig <EntranceGrid>
+		Content1 <Some 1  35 Here *NPC_GUARD>
+		Content3 <Some 2  50 Here *CORP_EMPLOYEE>
+		Content4 <Some 1 100 Here *ANTI_ATTACK_SECURITY 2>
+	end
+	inv
+		NPC Corporate Executive
+		home <Foyer>
+		SetFaction 13
+	end
+
+	Scene
+	name <Alliance Proxen>
+	type <building government public legit>
+	context <gov>
+	entrance <*Building>
+	special <ADDEXIT>
+	SetFaction 1
+	ClubMap
+	PalaceParkTiles
+	MapWidth 15
+	MapHeight 15
+
+	start <Print 1>
+	Msg1 <You enter the Alliance Proxen.>
+
+	NeededCells 1
+	Content1 <Some 1  50 Sub *GOV_MILITARY  na>
+	Content2 <Fill       Sub *GOV_MISC      na>
+
+	sub
+		team 1
+
+		team 2
+		name <Citizens>
+		SetAlly 1
+		Passive
+
+		team 3
+		name <Guards>
+		SetAlly 1
+
+		room
+		name <Foyer>
+		desig <EntranceGrid>
+		Content <Some 2 45 Here *URBAN_X>
+		Content2 <Some 1 100 Here *ANTI_ATTACK_SECURITY 2>
+
+		room
+		name <Main Office>
+		minimap <2....1..............#&+&#>
+		inv
+			NPC Politician
+			SetTeam 2
+			SetFaction 1
+			job <Diplomat>
+
+			NPC Knight
+			SetTeam 3
+			SetFaction 3
+			MiniMapComponent 2
+		end
+	end
+
+	Scene
+	name <Rishiri Proxen>
+	type <building government public legit>
+	context <gov>
+	entrance <*Building>
+	special <ADDEXIT>
+	SetFaction 11
+	ClubMap
+	PalaceParkTiles
+	MapWidth 15
+	MapHeight 15
+
+	start <Print 1>
+	Msg1 <You enter the Rishiri Proxen.>
+
+	NeededCells 1
+	Content1 <Some 1  50 Sub *GOV_MILITARY  na>
+	Content2 <Fill       Sub *GOV_MISC      na>
+
+	sub
+		team 1
+
+		team 2
+		name <Citizens>
+		SetAlly 1
+		Passive
+
+		team 3
+		name <Guards>
+		SetAlly 1
+
+		room
+		name <Foyer>
+		desig <EntranceGrid>
+		Content <Some 2 45 Here *URBAN_X>
+		Content2 <Some 1 100 Here *ANTI_ATTACK_SECURITY 2>
+
+		room
+		name <Main Office>
+		minimap <2....1..............#&+&#>
+		inv
+			NPC Politician
+			SetTeam 2
+			SetFaction 11
+			job <Diplomat>
+
+			NPC Mecha Pilot
+			SetTeam 3
+			SetFaction 14
+			MiniMapComponent 2
+		end
+	end
+
+
+% End of Kosaka Spinner...
+end
+
 
