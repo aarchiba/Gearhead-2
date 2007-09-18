@@ -4,6 +4,73 @@
 %% This content is tied to a city rather than any specific character within it.
 
 Content
+	name <Addiction Issues>
+	desc <An NPC asks you to help his cousin escape a life of sin and debauchery.>
+	requires <*:LocalQuest "City">
+
+	% E1 is the home scene
+	% E2 is the mission-giving NPC
+	% E3 is the wayward cousin
+	Element1 <Scene Town>
+
+	Element2 <NewNPC 1 1 Lawful Easygoing>
+	Scene2 <Building Legit Public>
+	Team2 <Citizens>
+	TeamData2 <Pass Ally>
+
+	Element3 <NewNPC 0 1 Criminal Passionate Young>
+	Scene3 <New *BlackMarket>
+	Team3 <Citizens>
+	TeamData3 <Pass Ally>
+
+	% SubQuest1 is the intervention for the target
+	% SubQuest2 is the victory if E2 is reformed
+	Quest1 <*:PersonalIntervention 3 2>
+	Quest2 <*SuccessVsChar.Redemption 2 3>
+
+	sub
+		Persona 2
+		rumor0 <%name2% has been very worried about %name3%.>
+		greeting <if= QuestStatus %qid% %id% else GoGiveQuest if= QuestStatus %qid1% -1 else GoCheckQuest ifNPCOK %3% else GoCheckQuest EndChat Say 5 AddChat 7>
+		GoCheckQuest <NewChat Say 4 AddChat 4 AddChat 5 AddChat 6>
+		GoGiveQuest <if= QuestStatus %qid% 0 else GoNoQuest ifNPCOK %3% else GoCancelQuest ifG React d20 else GoNoQuest Goto GoAskHelp>
+		GoCancelQuest <SetQuestStatus %qid% -2 Goto GoNoQuest>
+		*GoAskHelp <*INeedYourHelp GoAccept GoRefuse>
+		GoNoQuest <NewChat SayAnything>
+		GoAccept <NewChat Say 1 QMemo %qid% 2 SetQuestStatus %qid% %id% SetQuestStatus %qid1% %id1% AddChat 1 AddChat 2 AddChat 3>
+		GoRefuse <NewChat Say 3 AddReact -React>
+		Result1 <NewChat Say 6>
+		Result2 <NewChat Say 7 AddEasygoing -d10>
+		result3 <NewChat Say 8>
+		result4 <NewChat Say 8>
+		result5 <NewChat Say 9 SetQuestStatus %qid% -2>
+		result6 <NewChat Say 9 SetQuestStatus %qid% -2>
+		Result7 <Goto .%id2%_GoInit>
+		Msg1 <My cousin %name3% has been missing for a couple of days now. In the past \SPR %3% 's had trouble with drugs and gambling, so I dread to think what \SPR %3% might be up to now.>
+		Msg2 <%name2% in \SCENE %s2% is worried that \PPR %2% cousin %name3% may have fallen off the wagon.>
+		Msg3 <Suit yourself, if you don't want to get involved.>
+		Msg4 <Have you had any news about %name3% yet?>
+		Msg5 <%name3% has returned! This is wonderful. Thank you so much for your help!>
+		Msg6 <I couldn't say... \SPR %3% always had a thing for drugs, gambling, and pornography, so wherever you can find those you should be able to find \OPR %3% .>
+		Msg7 <You may be right, but I can't help but worry... we are family, after all. If you see %name3% please tell \OPR %3% to come home.>
+		Msg8 <Thank you. Please, let me know when you have any information.>
+		Msg9 <That is terrible news... Thank you for letting me know.>
+		Prompt1 <Where do you think %name3% is?>
+		Prompt2 <What %name3% wants to do is none of your business.>
+		Prompt3 <I'll see what I can find out.>
+		Prompt4 <I'm still working on it.>
+		Prompt5 <%name3% has died.>
+		CPrompt5 <ifNPCDead %3% Accept>
+		Prompt6 <%name3% won't be coming back.>
+		CPrompt6 <if= QuestStatus %qid1% -2 Accept>
+		Prompt7 <[Continue]>
+
+		Persona 3
+		special <UNLISTED>
+		Greeting <NewChat SayAnything>
+	end
+
+Content
 	name <Restaurant Dreams>
 	desc <An aspiring chef wants to start a restaurant. Maybe the PC can help.>
 	requires <*:LocalQuest "Cuisine">

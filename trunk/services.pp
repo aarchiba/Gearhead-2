@@ -1895,6 +1895,7 @@ begin
 				GB^.QuitTheGame := True;
 				GB^.ReturnCode := N;
 				AddNAtt( PC^.NA , NAG_Experience , NAS_Credits , -Cost );
+				QuickTime( GB , Cost * 10 );
 			end else begin
 				{ Not enough cash to buy... }
 				CHAT_Message := MsgString( 'BUYNOCASH' + BStr( Random( 4 ) + 1 ) );

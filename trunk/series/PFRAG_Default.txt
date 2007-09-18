@@ -1,5 +1,42 @@
 % Persona Fragment File
 
+% TYPE: *INeedYourHelp
+%	The NPC wants the PC to help him.
+%   PARAM1: Will listen exit Label
+%   PARAM2: Won't listen exit label
+
+	Persona
+	requires <*INeedYourHelp>
+	START <NewChat Say %id%01 AddChat %id%01>
+	result%id%01 <Goto %1%>
+	Msg%id%01 <Excuse me, but you're a cavalier, right? I could really use your help with something.>
+	Msg%id%01_1 <>
+	CMsg%id%01_1 <ifNPCSociable Accept>
+	Msg%id%01_2 <>
+	CMsg%id%01_2 <ifNPCShy Accept>
+	Msg%id%01_3 <>
+	CMsg%id%01_3 <ifNPCEasygoing Accept>
+	Msg%id%01_4 <>
+	CMsg%id%01_4 <ifNPCPassionate Accept>
+	Msg%id%01_5 <>
+	CMsg%id%01_5 <ifNPCCheerful Accept>
+	Msg%id%01_6 <>
+	CMsg%id%01_6 <ifNPCMelancholy Accept>
+	Prompt%id%01 <Tell me what's wrong.>
+	Prompt%id%01_1 <>
+	CPrompt%id%01_1 <ifPCSociable Accept>
+	Prompt%id%01_2 <>
+	CPrompt%id%01_2 <ifPCShy Accept>
+	Prompt%id%01_3 <>
+	CPrompt%id%01_3 <ifPCEasygoing Accept>
+	Prompt%id%01_4 <>
+	CPrompt%id%01_4 <ifPCPassionate Accept>
+	Prompt%id%01_5 <>
+	CPrompt%id%01_5 <ifPCCheerful Accept>
+	Prompt%id%01_6 <>
+	CPrompt%id%01_6 <ifPCMelancholy Accept>
+
+
 % TYPE: *IDisagreeYouDie
 %		&Arrest		The NPC will be taken to jail.
 %	The NPC won't do as the PC says, but will fight instead.

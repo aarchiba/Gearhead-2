@@ -227,6 +227,9 @@ begin
 	Song := SelectMenu( RPM , @ConcertRedraw );
 	DisposeRPGMenu( RPM );
 
+	{ The concert should take some time. }
+	QuickTime( GB , Song * 600 + 100 + Random( 200 ) );
+
 	DoConcert := T;
 end;
 

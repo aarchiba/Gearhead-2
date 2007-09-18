@@ -7,6 +7,125 @@
 %%
 
 %%
+%% *:PersonalIntervention Content
+%%
+%% E1 is a character who's into a lot of bad things. E2 sent the PC to
+%% locate him and hopefully reform/return him.
+%%
+%% Note that if this subquest derails the quest, it can set the previous
+%% quests's status to -2.
+%%
+%% PARAM1: The intervention target
+%% PARAM2: The mission-giving NPC
+
+Content
+	name <I likes it like that>
+	desc <E1 has no intention to change his ways; may ask PC to get E2 off his back.>
+	requires <*:PersonalIntervention>
+
+	% E1 is the prodigal target - needs a scene
+	% E2 is the mission-giver
+
+	% NPCVar %1% %id%01 will be set if the PC accepts E1's request to make
+	% E2 leave him alone. If the PC convinces E1 to reform, remember to clear
+	% this variable so that E2 can provide the nessecary conclusion.
+
+	% NPCVar %1% %id%02 will be set if the PC succeeds at the above.
+
+	% SubQuest1 is the victory if the PC does as E1 asks, rather than complete
+	%  the original mission.
+	Quest1 <*SuccessVsChar.Evasion 1 2>
+
+	sub
+		Persona 1
+		rumor%id% <%name1% has been hanging out at the black market.>
+		%  V%id%01 = Thanks counter
+		greeting <if# QuestStatus %qid% -1 else .%id%_GoThanks if= QuestStatus %qid% %id% else %pop% if= NPCVar %1% %id%02 1 else .%id%_GoCheckQuest NewChat Say %id%01 AddChat %id%01>
+		.%id%_GoCheckQuest <ifNPCOK %2% else .%id%_GoE2Died NewChat Say %id%02 AddChat %id%02 AddChat %id%03 AddChat %id%04>
+		.%id%_GoE2Died <NewChat SayAnything SetQuestStatus %qid% -2>
+		.%id%_GoThanks <if= v%id%01 0 else .%id%_GoChat V= %id%01 1 NewChat Say %id%05>
+		.%id%_GoChat <NewChat SayAnything>
+		.%id%_GoWinQuest <QMemo %prev_qid% %id%08 SetQuestStatus %qid% -1 NPCVar= %1% %id%01 0 MoveNPC %1% %s2%>
+		result%id%01 <AddLawful -1  AddEasygoing -d8  Goto .%id1%_GoInit>
+		result%id%02 <NewChat Say %id%03 AddChat %id%05 AddChat %id%06 AddChat %id%07>
+		result%id%03 <NewChat Say %id%04 AddChat %id%05 AddChat %id%08>
+		result%id%04 <NewChat Say %id%06 AddChat %id%09 AddChat %id%10>
+		result%id%05 <ifConversation HardSkillTar %threat% else .%id%_GoR5Failed NewChat Say %id%07 Goto .%id%_GoWinQuest>
+		.%id%_GoR5Failed <NewChat Say %id%09 AddChat %id%11 AddChat %id%12 AddChat %id%07>
+		result%id%06 <NewChat Say %id%10 AddChat %id%03>
+		result%id%07 <NewChat Say %id%11 NPCVar= %1% %id%01 1 QMemo %qid% %id%12>
+		result%id%08 <ifIntimidation SkillTar %threat% else .%id%_GoR8Failed NewChat Say %id%13 Goto .%id%_GoWinQuest>
+		.%id%_GoR8Failed <NewChat Say %id%14>
+		result%id%09 <ifG PCLaw %threat% else .%id%_GoR9Fail NewChat Say %id%15 Goto .%id%_GoWinQuest>
+		.%id%_GoR9Fail <NewChat Say %id%16>
+		result%id%10 <NewChat Say %id%17>
+		result%id%11 <Goto result%id%08>
+		result%id%12 <AddLawful 1 NewChat Say %id%18 Goto .%id%_GoWinQuest>
+		Msg%id%01 <So, did you meet with %name2%?>
+		Msg%id%02 <Yeah, what do you want?>
+		Msg%id%03 <Well you can go back and tell %name2% that I'm busy. The last thing I need is \OPR %2% nosing into my affairs.>
+		Msg%id%04 <What are you trying to say, there?>
+		Msg%id%05 <Thanks for your help, \PC . I'll remember it.>
+		Msg%id%06 <You've just got to push harder! %name2% will give up eventually, \SPR %2% has to...>
+		Msg%id%07 <I know you're right, and I've tried to pull myself away, but... Maybe I'll give sobriety one more chance. I'm going back to %name2%.>
+		Msg%id%08 <You convinced %name1% to go back to %name2% at \SCENE %s2% .>
+		Msg%id%09 <%name2% doesn't know anything about my life, and neither do you. I'm not in any trouble. I've got everything under control.>
+		Msg%id%10 <Just hanging out, the usual. I spent the money I was supposed to give the loan shark, but that made me so nervous that I've been popping pills all day. So now I'm betting on a synthchicken fight to hopefully win the money back.>
+		Msg%id%11 <Man, if you could get %name2% off my back, that'd be awesome. I'm sure I could find a little something for you if you did that.>
+		Msg%id%12 <%name1% at \SCENE %s1% wants you to get %name2% to stop bothering \OPR %1% .>
+		Msg%id%13 <Oh. Umm... Well, if you're going to put it like that, I think it would be best if I went back to %name2%.>
+		Msg%id%14 <You don't scare me... at least not until after those pills I took wear off...>
+		Msg%id%15 <I know, I know... just when I was starting to have a bit of fun for the first time in ages. I guess it is good to have one person who cares about me, even if \SPR %2% is an old stick in the mud... Alright. I'll go back.>
+		Msg%id%16 <You're just saying that because you think it'll make me give in. Never mind %name2% ; there's more than enough alcohol around here to make me forget \OPR %2% .>
+		Msg%id%17 <Let me know when you've succeeded, would ya? I'll have something for you.>
+		Msg%id%18 <I know that life hasn't been good lately, but I'm on the right track! Aw, who am I kidding? I'll go back to %name2%, now while I still have a chance...>
+		Prompt%id%01 <%name2% won't be bothering you again.>
+		Prompt%id%02 <%name2% sent me to talk.>
+		Prompt%id%03 <You'd better go home before you get hurt.>
+		Prompt%id%04 <%name2% isn't going to budge.>
+		CPrompt%id%04 <if= NPCVar %1% %id%01 1 Accept>
+		Prompt%id%05 <You're going to get hurt if you keep this up.>
+		Prompt%id%06 <What are you doing, anyhow?>
+		Prompt%id%07 <I'll bet you'd like %name2% to leave you alone.>
+		Prompt%id%08 <I mean, I'll personally hurt you if you don't go.>
+		Prompt%id%09 <No, I really think you're stuck with \OPR %2% .>
+		Prompt%id%10 <I'll do my best.>
+		Prompt%id%11 <Go now or I may have to use force.>
+		Prompt%id%12 <Believe me, I've been there. You're in trouble.>
+		CPrompt%id%12 <ifPCCriminal Accept>
+
+		MetaScene 1
+		% Contains a check to end the quest if E1 dies
+		start <if= QuestStatus %qid% %id% else %pop% ifNPCDead %1% else %pop% SetQuestStatus %qid% -2 Goto %pop%>
+
+		Persona 2
+		greeting <if= QuestStatus %qid% %id% else %pop% if# NPCVar %1% %id%01 0 else %pop% if= NPCVar %1% %id%02 0 else .%id%_GoDidIt NewChat Say %id%01 AddChat %id%01 AddChat %id%02>
+		.%id%_GoDidIt <NewChat SayAnything>
+		Result%id%01 <NewChat Say %id%02 AddChat %id%03 AddChat %id%04>
+		Result%id%02 <NewChat Say %id%03 AddChat %id%05 AddChat %id%04 AddChat %id%06>
+		Result%id%03 <AddHeroic -1 ifIntimidation SkillTar %threat% else .%id%_GoR3Fail NewChat Say %id%04 QMemo %qid% %id%05 NPCVar= %1% %id%02 1 SetQuestStatus %prev_qid% -2>
+		.%id%_GoR3Fail <NewChat Say %id%06>
+		Result%id%04 <NewChat Say %id%07>
+		Result%id%05 <NewChat Say %id%08 QMemo %qid% %id%05 NPCVar= %1% %id%02 1 SetQuestStatus %prev_qid% -2>
+		Result%id%06 <NewChat Say %id%07>
+		Msg%id%01 <Do you have any news about %name1% yet?>
+		Msg%id%02 <I don't understand... I thought you were going to help me reform %name1%.>
+		Msg%id%03 <How can I accept these decisions? %name1% is on a self destructive track, but is too blinded to see. Without outside intervention I fear for \PPR %1% future.>
+		Msg%id%04 <So, \SPR %1% 's gotten to you, too... I can see this is a lost cause. You can tell %name1% that from now on I'll leave \OPR %1% alone.>
+		Msg%id%05 <%name2% agreed to stop bothering %name1% about \PPR %1% lifestyle.>
+		Msg%id%06 <I won't be so easily intimidated. Unlike %name1%, I have some strength in my convictions.>
+		Msg%id%07 <Come back when you have news about %name1%, then.>
+		Msg%id%08 <I think this may end in disaster, but it's clear that nothing I do or say will make %name1% change \PPR %1% mind. Hopefully \SPR %2% can learn something before it's too late.>
+		Prompt%id%01 <I think you better back off on %name1%.>
+		Prompt%id%02 <Why don't you accept %name1%'s decisions?>
+		CPrompt%id%02 <ifConversation HardSkillTar %threat% Accept>
+		Prompt%id%03 <Messing with %name1% could be bad for your health.>
+		Prompt%id%04 <Never mind.>
+		Prompt%id%05 <%name1%'s got to learn from \PPR %1% own mistakes.>
+		Prompt%id%06 <You could be right.>
+	end
+
+%%
 %% *:MechaHeld Content
 %%
 %% E1's mecha is currently being held by someone else. In this subquest,
@@ -1039,6 +1158,24 @@ Content
 %% .ConJob		E2 has been conned by E1 and the PC.
 %% .FoilPlot		The PC foiled a plot by E2 against E1.
 %% .Capture		The PC has captured E2
+%% .Redemption		The PC has saved E2 from himself, or whatnot
+%% .Evasion		The NPC has evaded E2's plans
+
+Content
+	name <Redemption vs. Reward>
+	%% The PC will be given a reward and that's it.
+	%% It hardly seems like "vs" when the goal is redemption, does it?
+	requires <*SuccessVsChar .Redemption>
+	special <REUSABLE>
+
+	%% E1 is the character to give the reward.
+	%% E2 is the character who's been redeemed.
+
+	sub
+		Persona 1
+		.%id%_GoInit <NewChat Say %id%01 CashPrize Reward Threat %threat% 100 200 SetQuestStatus %qid% -1>
+		Msg%id%01 <%name2% is now on the right track. Thanks, \PC ... This wouldn't have been possible without you.>
+	end
 
 Content
 	name <Capture vs. Reward>
@@ -1073,7 +1210,7 @@ Content
 Content
 	name <Basic vs. Reward>
 	%% The PC will be given a reward and that's it.
-	requires <*SuccessVsChar>
+	requires <*SuccessVsChar -.Redemption>
 	special <REUSABLE>
 
 	%% E1 is the character to give the reward.
