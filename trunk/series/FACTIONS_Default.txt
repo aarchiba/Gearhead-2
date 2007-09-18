@@ -99,7 +99,7 @@ Faction 6
 	SetAlly 1 10
 	SetEnemy 4 8
 	Controller 1
-	mecha_colors <75 200 212 201 205 229 200 100 0>
+	mecha_colors <75 200 212 80 80 85 200 100 0>
 	chara_colors <20 90 130>
 
 	% Every 6 hours, check to load a new story.
@@ -213,6 +213,7 @@ Faction 11
 	jobs <POLIT>
 	SetAlly 9 10 4
 	SetEnemy 1 8 12
+	mecha_colors <122 130 130 244 216 28 200 200 0>
 
 Faction 12
 	name <the Bohemian Collective>
@@ -232,7 +233,7 @@ Faction 13
 	type <Corporate ArenaOK L5PAT>
 	jobs <CRAFT CORPO TRADE MEDIA>
 	SetEnemy 2 7 8
-	mecha_colors <255 80 120 157 172 183 0 240 240>
+	mecha_colors <255 105 180 255 253 208 0 240 240>
 	chara_colors <200 64 96>
 
 	FACRANK_0 <Wage Slave>

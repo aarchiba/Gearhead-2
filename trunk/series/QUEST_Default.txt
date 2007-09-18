@@ -19,11 +19,142 @@
 %% PARAM2: The mission-giving NPC
 
 Content
+	name <Slave to Some Guy>
+	desc <E1 is in debt to a smuggler and can't leave until it's paid off.>
+	requires <*:PersonalIntervention>
+
+	% E1 is the prodigal target
+	% E2 is the mission-giver
+	% E3 is the character that E1 is in debt to
+	% E4 is E3's "office"
+	% E5 is the town scene
+	% E6 is a law enforcement faction loyal to E5, needed for "gotcha" victory
+	Element3 <Prefab>
+	Scene3 <Grab 1>
+	Team3 <Citizens>
+	TeamData3 <Pass>
+
+	Scene4 <New *BLANK.BoxBasement>
+
+	Element5 <Scene Town>
+	Element6 <Faction Police !Ally 5>
+
+	sub
+		% Scene %s4% is going to hold all the main variables for this quest.
+
+		Persona 1
+		rumor%id% <%name1% has been paying off a debt to a smuggler.>
+		greeting <if= QuestStatus %qid% %id% else %pop% ifG SceneVar %s4% 1 0 else .%id%_GoQuestIntro NewChat Say %id%08 AddChat %id%04 AddChat %id%05 AddChat %id%06>
+		.%id%_GoQuestIntro <NewChat Say %id%01 AddChat %id%01>
+		.%id%_GoWinQuest <QMemo %prev_qid% %id%05 MoveNPC %1% %s2% SetQuestStatus %qid% -1>
+		Result%id%01 <ifNPCOK %3% else .%id%_GoTrivial NewChat Say %id%02 SceneVar= %s4% 1 1 QMemo %qid% %id%03 AddCHat %id%02 AddChat %id%03>
+		.%id%_GoTrivial <NewChat Say %id%04 Goto .%id%_GoWinQuest>
+		Result%id%02 <NewChat Say %id%06>
+		Result%id%03 <NewChat Say %id%07>
+		Result%id%04 <NewChat Say %id%09>
+		Result%id%05 <NewChat Say %id%10 Goto .%id%_GoWinQuest>
+		Result%id%06 <NewChat Say %id%11 Goto .%id%_GoWinQuest>
+		Msg%id%01 <Yes, what is it? I'm really busy right now... I'll get in trouble if I don't finish this work.>
+		Msg%id%02 <I'm sorry that I haven't contacted %name2%, but I can't just yet. I want to get out of this life, I'm really trying, but I still owe some debts to %name3%. I have to work for \OPR %3% until everything's paid off.>
+		Msg%id%03 <%name1% owes a debt to %name3%, and cannot return to %name2% until this debt is repaid.>
+		Msg%id%04 <Now that %name3% is dead, there's no reason for me to stay around here. I'll go back to %name2%.>
+		Msg%id%05 <%name1% has been freed from %name3%, and went back to %name2% at \SCENE %s2% .>
+		Msg%id%06 <I don't think it'll do any good, but you can always try... be sure you don't make \OPR %3% angry, though, or it'll be taken out on me.>
+		Msg%id%07 <That's not possible, I'd have to spend the rest of my life in hiding. Just leave me here... it might not be much of a life, but at least I'm alive.>
+		Msg%id%08 <Did you convince %name3% to let me go?>
+		Msg%id%09 <I'm stuck here forever, I guess...>
+		Msg%id%10 <Is that true? I don't know what you did, but thanks! As long as there's no reason for me to stay here, I'm going to \SCENE %s2% and not looking back!>
+		Msg%id%11 <I wish I could say that I'm sorry, but after all I've been through I can't... I'll see you back at \SCENE %s2% . Thanks for saving me.>
+		Prompt%id%01 <%name2% sent me to check up on you.>
+		Prompt%id%02 <I'll speak with %name3% about that.>
+		Prompt%id%03 <Why don't I just sneak you out of here?>
+		Prompt%id%04 <No, not yet.>
+		Prompt%id%05 <%name3% has agreed to release you.>
+		CPrompt%id%05 <if= SceneVar %s4% 1 2 Accept>
+		Prompt%id%06 <%name3% is dead.>
+		CPrompt%id%06 <ifNPCDead %3% Accept>
+
+		Persona 3
+		% V1 = Debt Amount
+		special <UNLISTED>
+		greeting <if= QuestStatus %qid% %id% else GoChat if= SceneVar %s4% 1 1 else GoChat if= SceneVar %s4% 2 1 else GoPreFight ifChatNPCSurrendered %3% else GoMaybeFight EndChat Say 10 UnSurrender %3% MoveAndPacifyNPC %3% %s1% SceneVar= %s4% 1 2>
+		GoMaybeFight <ifNPCHeroic else GoStartFight NewChat Say 11 AddChat 7 SceneVar= %s4% 1 2>
+		GoStartFight <EndChat Say 13 SoloAttack %3% L= 3 1>
+		*GoPreFight <*IWantToTalkAboutNPC&YouBadNPC %1% GoExplain>
+		GoChat <NewChat SayAnything>
+		GoExplain <NewChat Say 1 AddChat 1 AddChat 2 AddChat 3>
+		result1 <NewChat V= 1 Threat %threat% 8 Say 2 AddChat 4 AddChat 5 AddCHat 2>
+		result2 <NewChat Say 3 QMemo %qid% 4 MoveNPC %3% %s4% SceneVar= %s4% 2 1>
+		result3 <NewChat Say 5 AddChat 1 AddChat 2 AddChat 5 AddChat 6>
+		result4 <NewChat Say 6 SceneVar= %s4% 1 2 Cash+ -V1>
+		result5 <NewChat Say 7>
+		result6 <EndChat Say 8 Print 9 SceneVar= %s4% 1 2 FacXP+ %6% 2 FreezeNPC %3% PCEnemy %3%>
+		result7 <NewChat Say 12>
+		Msg1 <%name1% had a lot of expensive habits, and because of these habits became very deeply indebted to me. I can't let \OPR %1% go until these debts are paid off. Since %name1% has no money, the debt must be paid in work.>
+		Msg2 <You'd do that? Personally, I don't care who pays, just as long as I get my money. %name1% owes me $ \VAL V1 .>
+		Msg3 <This isn't a good place to speak about that. Come downstairs to my office and we can discuss things in private.>
+		Msg4 <%name3% invited you downstairs to \PPR %3% office to discuss %name1%'s freedom.>
+		Msg5 <The usual, you know. Narcotics, Vesuvian polywine, vintage Imperator Zeta pornoreels... of course \SPR %1% 's been pretty clean these days, now that I've cut off \PPR %1% source.>
+		Msg6 <Ah, a big lump of cash is so much nicer than waiting for a lazy bum like %name1% to work off a debt. It's been a pleasure doing business with you.>
+		Msg7 <Take your time. %name1% isn't going anywhere.>
+		Msg8 <Wait, you're a member of %name6%!? Aw crap... well, I guess it's a fair cop.>
+		Msg9 <You arrest %name3%.>
+		Msg10 <All right, I give up- %name1% can go free. I officially cancel \PPR %1% debt.>
+		Msg11 <I officially cancel %name1%'s debts. You can take \OPR %1% back to %name2% or wherever \SPR %1% wants to go, with my blessing.>
+		Msg12 <Honestly speaking, I have no real interest in reclaiming %name1%'s debts. I just thought that I could frighten \OPR %1% away from \PPR %1% self-destructive habits. It was fun having a lackey for a while, but it got old really fast.>
+		Msg13 <You didn't really think you'd be able to talk me out of this, did you? I just brought you down here so it'll be easier to clean up the blood after you're dead!>
+		Prompt1 <How about I pay off %name1%'s debts?>
+		Prompt2 <I want you to release %name1% right away.>
+		Prompt3 <What kind of habits are we talking about?>
+		Prompt4 <I can afford that. [Give money]>
+		CPrompt4 <ifG PC$ V1 Accept>
+		Prompt5 <I'll be back later.>
+		Prompt6 <You admit that? In the name of %name6%, you're under arrest!>
+		CPrompt6 <if= PCFac %6% Accept>
+		Prompt7 <Wait, why are you giving up so easily?>
+
+		MetaScene 1
+		start <if= QuestStatus %qid% %id% else %pop% ifNPCDead %1% else %pop% SetQuestStatus %qid% -2 Goto %pop%>
+		inv
+			STC Trapdoor
+			name <To %name3%'s Office>
+			desig <ENTRANCE %s4%>
+		end
+
+		MetaScene 4
+		% L1 = E1 has explained about E3 (1), E3 has released E1 (2)
+		% L2 = E3 has moved to this scene for possible fight (1)
+		% L3 = Fight has started
+		% L4 = Conversation Counter
+		start <Print 1 if= L2 1 if= L4 0 ForceChat %3% L= 4 1>
+
+		% If the PC has started the fight, leaving the room results in a loss.
+		end <if= QuestStatus %qid% %id% if= L3 1 if# L1 2 ifNPCOK %3%  FreezeNPC %3% PCEnemy %3% DeleteNPC %1% SetQuestStatus %qid% -2>
+
+		Surrender%3% <if= QuestStatus %qid% %id% ForceChat %3%>
+
+		Msg1 <You enter %name3%'s office.>
+
+		sub
+			Team 1
+
+			Team 2
+			name <Citizens>
+			Passive
+		end
+	end
+	inv
+		NPC Pirate
+		job <Smuggler>
+		job_desig <THIEF>
+	end
+
+Content
 	name <I likes it like that>
 	desc <E1 has no intention to change his ways; may ask PC to get E2 off his back.>
 	requires <*:PersonalIntervention>
 
-	% E1 is the prodigal target - needs a scene
+	% E1 is the prodigal target
 	% E2 is the mission-giver
 
 	% NPCVar %1% %id%01 will be set if the PC accepts E1's request to make

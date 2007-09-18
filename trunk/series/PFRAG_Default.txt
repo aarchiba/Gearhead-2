@@ -79,6 +79,7 @@
 	Msg%id%01 <Come talk to me again after you've checked out \SCENE %1% .>
 
 % TYPE: *IWantToTalkAboutNPC
+%                           &YouBadNPC   ChatNPC has done something bad to P1 NPC, supposedly
 %	The PC wants to ask the NPC about a second NPC.
 %   PARAM1: NPC to be discussed
 %   PARAM2: Exit label
