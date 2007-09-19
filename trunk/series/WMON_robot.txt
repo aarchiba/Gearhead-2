@@ -117,6 +117,7 @@ skill 12 5
 skill 13 10
 skill 26 10
 skill 30 10
+skill 33 20
 sub
 turret
 armor 5
@@ -125,7 +126,9 @@ sub
 	inv
 		gear 4 3 25
 		name <Laser Cannon>
-		stat 2 1
+		desig <Antique>
+		Acc 1
+		type <ARMORPIERCING>
 		inv
 			PowerSource 20
 			name <Battery>
@@ -137,10 +140,12 @@ armor 5
 sub
 	mount
 	inv
-		gear 4 3 15
+		gear 4 3 12
 		name <Plasma Cannon>
+		desig <Antique>
+		type <SCATTER BRUTAL>
 		scale 0
-		mass 5
+		mass 8
 		stat 1 10
 		stat 2 1
 		stat 3 1
@@ -156,10 +161,12 @@ armor 5
 sub
 	mount
 	inv
-		gear 4 3 15
+		gear 4 3 12
 		name <Plasma Cannon>
+		desig <Antique>
+		type <SCATTER BRUTAL>
 		scale 0
-		mass 5
+		mass 8
 		stat 1 10
 		stat 2 1
 		stat 3 1

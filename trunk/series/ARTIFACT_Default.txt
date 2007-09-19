@@ -18,7 +18,7 @@ Treasure 50
 name <Crystal Skull>
 requires <ITEM PREZERO !Ne>
 SDL_PORTRAIT <item_crystalskull.png>
-Context <Ne>
+Context <TL_Ne>
 desc <A mysterious quartz skull said to date from the stone age.>
 ITEM_DESC <It's a skull made from transparent crystal.>
 ITEM_HISTORY <Supposedly it was created in the distant past by unknown methods.>
@@ -45,7 +45,7 @@ mass 1
 Treasure 10
 name <Cube of Koeneke>
 requires <ITEM PREZERO !Ne>
-Context <Ne>
+Context <TL_Ne>
 desc <A puzzle box from the previous age. Once this game was very popular, but today very few working copies remain.>
 ITEM_DESC <It was a very popular mechanical puzzle during the age of superpowers.>
 ITEM_HISTORY <Billions of these cubes must have been produced, but today only a few remain.>
@@ -71,7 +71,7 @@ Msg4 <You meditate upon the cube... but no, this is not a Lament Configuration.>
 PowerSource 3
 name <Biskup Engine>
 requires <ITEM PREZERO !Ne>
-Context <Ne>
+Context <TL_Ne>
 desc <A sphere made of hard, green stone.>
 ITEM_DESC <It's an experimental, possibly biological, power source.>
 ITEM_HISTORY <It was created in an orbital lab right before the night of fire.>
@@ -92,7 +92,7 @@ ITEM_USAGE <Supposedly it was a very powerful weapon in its day.>
 caliber <.45 Archaic>
 requires <ITEM PREZERO !Ne>
 SDL_PORTRAIT <item_peacemakerrevolver.png>
-Context <Ne>
+Context <TL_Ne>
 Mass -7
 Range 3
 Acc -2
@@ -115,15 +115,31 @@ ITEM_HISTORY <It went missing during its first field test and hasn't been seen s
 ITEM_USAGE <We could learn a lot about power generation by examining it.>
 type <Blast 7 Brutal ArmorPiercing Burn Mystery>
 requires <ITEM PREZERO !Lo>
-Context <Lo>
+Context <TL_Lo>
 SDL_PORTRAIT <item_mace.png>
 Acc -1
 mass -7
 
+Melee 10
+Scale 0
+name <Szczerbiec Sword>
+desc <An ancient, finely crafted sword of European design.>
+requires <ITEM PREZERO !Lo>
+context <TL_Lo>
+Fudge 10000
+ITEM_DESC <Szczerbiec is an ancient sword associated with Pax Europa.>
+ITEM_HISTORY <Originally created over a thousand years ago, Szczerbiec was rebuilt and enhanced by Pax Europa.>
+ITEM_USAGE <According to legend, the bearer of this weapon is rightful heir to Pax Europa.>
+category <WEAPON MELEE>
+SDL_PORTRAIT <item_longsword.png>
+Acc 1
+Speed 5
+Mass -7
+
 HeadArmor 5
 name <Chitin Helm>
 requires <ITEM PREZERO !Lo>
-context <Lo>
+context <TL_Lo>
 desc <An ornate helmet, apparently made of bone. It feels warm to the touch.>
 ITEM_DESC <It's an organic helmet made of a bonelike material.>
 ITEM_HISTORY <These helmets were produced in great numbers for Pax Europa commanders.>
@@ -135,7 +151,7 @@ mass -9
 BodyArmor 5
 name <Chitin Breastplate>
 requires <ITEM PREZERO !Lo>
-context <Lo>
+context <TL_Lo>
 desc <An ornate breastplate, apparently made of bone. It feels warm to the touch.>
 ITEM_DESC <It's armor made from a bonelike, organic material.>
 ITEM_HISTORY <These breastplates were originally constructed for Pax Europa military commanders.>
@@ -151,7 +167,7 @@ ITEM_DESC <Although it resembles a gem, it is actually an ancient computer.>
 ITEM_HISTORY <It was the control center of an Imperator Zeta weapons factory.>
 ITEM_USAGE <There are many secrets that could be extracted from the Emerald.>
 requires <ITEM PREZERO !Md>
-Context <Md>
+Context <TL_Md>
 
 Melee 20
 Scale 0
@@ -162,7 +178,7 @@ ITEM_HISTORY <These swords were created for the military brass of Pax Europa.>
 ITEM_USAGE <It must be an incredible weapon, even by today's standards.>
 type <ArmorPiercing Mystery>
 requires <ITEM PREZERO !Md>
-Context <Md>
+Context <TL_Md>
 SDL_PORTRAIT <item_bonesword.png>
 mass -12
 Biotech
@@ -174,7 +190,7 @@ name <Fire of Heaven>
 mass 8
 Fudge 250000
 requires <ITEM PREZERO !Md>
-Context <Md>
+Context <TL_Md>
 type <Blast 7 Mystery Hyper Armorpiercing Brutal Burn Haywire>
 desc <An intricately detailed glowing orb.>
 ITEM_DESC <It's a microfusion generator, one of the earliest examples known.>
@@ -185,7 +201,8 @@ Msg1 <This appears to be a primitive but extremely powerful microfusion reactor.
 
 HeadArmor 7
 name <Zeron Helmet>
-requires <ITEM PREZERO>
+requires <ITEM PREZERO !Hi>
+Context <TL_Hi>
 Biotech
 mass -12
 scale 0
@@ -205,7 +222,7 @@ scale 0
 mass -4
 name <Zeron Armor>
 requires <ITEM PREZERO !Hi>
-Context <Hi>
+Context <TL_Hi>
 Biotech
 desc <A suit of strangely biological armor.>
 ITEM_DESC <It's a prototype symbiotic armor created during the age of superpowers.>
@@ -229,7 +246,7 @@ end
 ArmArmor 7
 name <Zeron Sleeve>
 requires <ITEM PREZERO !Hi>
-Context <Hi>
+Context <TL_Hi>
 scale 0
 mass -2
 Biotech
@@ -252,7 +269,7 @@ end
 LegArmor 7
 name <Zeron Legging>
 requires <ITEM PREZERO !Hi>
-Context <Hi>
+Context <TL_Hi>
 mass -2
 scale 0
 Biotech
@@ -271,7 +288,7 @@ end
 ArmArmor 7
 name <Zeron Sleeve>
 requires <ITEM PREZERO !Hi>
-Context <Hi>
+Context <TL_Hi>
 scale 0
 mass -2
 Biotech
@@ -294,7 +311,7 @@ end
 LegArmor 7
 name <Zeron Legging>
 requires <ITEM PREZERO !Hi>
-Context <Hi>
+Context <TL_Hi>
 mass -2
 scale 0
 Biotech
@@ -317,5 +334,5 @@ ITEM_DESC <It's a PreZero computer core.>
 ITEM_HISTORY <It was one of the most important computers in Imperator Zeta.>
 ITEM_USAGE <The Ruby contains invaluable lost knowledge... much of which would be dangerous in the wrong hands.>
 requires <ITEM PREZERO !Ex>
-Context <Ex>
+Context <TL_Ex>
 

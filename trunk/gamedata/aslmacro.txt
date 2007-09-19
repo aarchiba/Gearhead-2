@@ -69,6 +69,7 @@ MOVEANDPACIFYNPC <GrabNPC ? MoveAndPacifyGG ?>
 DEPLOYNPC <GrabNPC ? DeployGG ?>
 DynaNPC <GrabNPC ? DynaGG ?>
 NPCLevel <GrabNPC ? GSkillLevel ?>
+ItemLevel <GrabItem ? GSkillLevel ?>
 NPCAbsoluteLevel <GrabNPC ? GAbsoluteLevel ?> % scales all skills by percent
 ConGen <GrabNPC ? GSetNAtt 3 0 1 GAddNAtt 3 0 -PCGender> % set NPC opposite gender of PC
 IsoGen <GrabNPC ? GSetNAtt 3 0 PCGender>                 % set NPC same gender as PC
@@ -225,7 +226,7 @@ UnSurrender <GrabNPC ? GSetNAtt NAG_EpisodeData NAS_SurrenderStatus 0>
 ShowEncounter <GrabSource GSetNAtt NAG_EpisodeData NAS_EncVis ComTime GAddNAtt NAG_EpisodeData NAS_EncVis 86400>
 ifEncounterVisible <GrabSource ifG GNatt NAG_EpisodeData NAS_EncVis ComTime>
 AddDatePoint <GrabSource GAddNAtt NAG_Narrative NAS_DatePoints 1>
-SetQuestStatus <GrabAdventure GSetNAtt NAG_QuestStatus ? ?>
+SetQuestStatus <GrabAdventure GSetNAtt NAG_QuestStatus ? ? Trigger0 Update>
 SetPlotStatus <GrabPlot GSetNAtt NAG_Narrative NAS_PlotState ? Trigger0 Update>
 AddTempLancemate <GrabNPC ? GSetNAtt NAG_CharDescription NAS_CharType NAV_TempLancemate GJoinLance>
 ChatNPCJoinLance <GrabChatNPC GJoinLance>
@@ -252,3 +253,4 @@ SetSelfX <GrabSource GSetNAtt NAG_Location NAS_X ?>
 SetSelfY <GrabSource GSetNAtt NAG_Location NAS_Y ?>
 StoreOldFaction <GrabAdventure GSetNAtt NAG_Personal NAS_OldFaction PCFac>
 ClearOriginalHome <GrabNPC ? GSetNAtt NAG_ParaLocation NAS_OriginalHome 0>
+ChatLMFollow <GrabChatNPC GSetNAtt 5 10 5>

@@ -15,7 +15,8 @@ Plot
 	place2 <1 pass>
 	element3 <Faction !Enemy -7>
 
-	update <ForceChat %2%>
+	% P1 = Forcechat counter
+	update <if= P1 0 P= 1 1 ForceChat %2%>
 
 	sub
 		Persona 2
@@ -77,7 +78,8 @@ Plot
 	place2 <1 pass>
 	element3 <NewNPC 0 -7 Criminal>
 
-	update <ForceChat %2%>
+	% P1 = Forcechat counter
+	update <if= P1 0 P= 1 1 ForceChat %2%>
 
 	sub
 		Persona 2
@@ -131,7 +133,8 @@ Plot
 	place4 <3 pass>
 	element5 <Grab 3>
 
-	update <ForceChat %4%>
+	% P1 = Forcechat counter
+	update <if= P1 0 P= 1 1 ForceChat %4%>
 
 	sub
 		Persona 4
@@ -189,7 +192,8 @@ Plot
 	element5 <NewNPC 0 -7 PCFriend>
 	place5 <2 Pass>
 
-	update <ForceChat %4%>
+	% P1 = Forcechat counter
+	update <if= P1 0 P= 1 1 ForceChat %4%>
 
 	start <ifNPCDead %4% LoseComp 0 .next>
 	.next <+T-- +F-->
@@ -261,7 +265,8 @@ Plot
 	element5 <Prefab>
 	place5 <2 Pass>
 
-	update <ForceChat %4%>
+	% P1 = Forcechat counter
+	update <if= P1 0 P= 1 1 ForceChat %4%>
 
 	sub
 		Persona 4
@@ -316,7 +321,8 @@ Plot
 	element3 <Faction Police !Ally -7>
 	element4 <Faction Crime !Enemy 3>
 
-	update <ForceChat %2%>
+	% P1 = Forcechat counter
+	update <if= P1 0 P= 1 1 ForceChat %2%>
 
 	sub
 		Persona 2
@@ -370,7 +376,8 @@ Plot
 	element5 <NewNPC -3 -7 PCFriend>
 	place5 <2 Pass>
 
-	update <ForceChat %4%>
+	% P1 = Forcechat counter
+	update <if= P1 0 P= 1 1 ForceChat %4%>
 
 	sub
 		Persona 4

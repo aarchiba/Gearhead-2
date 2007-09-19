@@ -4,6 +4,73 @@
 %% This content is tied to a city rather than any specific character within it.
 
 Content
+	name <Losing my Inventory>
+	desc <A local mechanic is losing his repair parts. The PC may be able to help.>
+	requires <*:LocalQuest>
+
+	% E1 is the mechanic. The end.
+	Element1 <Prefab>
+	Scene1 <Building Garage Public>
+	Team1 <Citizens>
+	TeamData1 <Pass Ally>
+
+	% SubQuest1 is the search for the missing parts.
+	% SubQuest2 is the reward for finding the parts.
+	Quest1 <*:StolenMaterials 1>
+	Quest2 <*Success1.BusinessDeal 1>
+
+	sub
+		Persona 1
+		rumor0 <%name1% doesn't have enough spare parts to keep the garage in business.>
+		Greeting <if= QuestStatus %qid% %id% else GoGreet NewChat Say 1 AddChat 1 AddChat 2 AddChat 3>
+		*GoGreet <*NiceToMeetYou GoCheckFirst>
+		GoCheckFirst <if= QuestStatus %qid% 0 else GoCheckClose NewChat Say 2 AddChat 4 AddChat 5>
+		GoCheckClose <if= QuestStatus %qid% -2 else GoRegularService NewChat Say 6>
+		*GoRegularService <*SHOP_MECHA GoBye>
+		*GoBye <*GOODBYE>
+		Result1 <NewChat Say 3>
+		result2 <EndChat Say 4 AddChat 6>
+		result3 <NewChat Say 5 SetQuestStatus %qid% -2>
+		result4 <Goto GoBye>
+		result5 <NewChat Say 7 QMemo %qid% 8 SetQuestStatus %qid1% %id1% SetQuestStatus %qid% %id% AddChat 7>
+		result6 <Goto .%id2%_GoInit>
+		result7 <NewChat Say 9>
+		Msg1 <Have you found out what happened to all my missing repair parts yet?>
+		Msg2 <I usually do service on all kinds of machine. I also sell a variety of new mecha and replacement parts.>
+		Msg3 <Three hundred tons of salvage doesn't just disappear... It's got to be around this place somewhere.>
+		Msg4 <That's fantastic news! I'll be able to re-open my shop shortly.>
+		Msg5 <That's serious bad news. My business can't afford a loss like that... I can't see any way to re-open the shop.>
+		Msg6 <The shop's closed.>
+		Msg7 <Well, you see, that's a problem. I'm in a bit of a jam right now- all of my stock has gone missing. It seems likely that someone stole it, but then again it seems unlikely that anyone would steal 300 tons of scrap metal.>
+		Msg8 <%name1% in \SCENE %s1% had to close \PPR %1% garage because all of \PPR %1% stock went missing.>
+		Msg9 <It'd be great if you could. Without those parts, I won't be able to stay in business.>
+		Prompt1 <No, I haven't.>
+		Prompt2 <Yes, I have.>
+		CPrompt2 <if= QuestStatus %qid1% -1 Accept>
+		Prompt3 <I don't think you'll be getting your parts.>
+		CPrompt3 <if= QuestStatus %qid1% -2 Accept>
+		Prompt4 <Thanks, but I don't need anything now.>
+		Prompt5 <Let me see what you have.>
+		Prompt6 <[Continue]>
+		Prompt7 <I could try to find it for you.>
+
+		MetaScene 1
+		start <if= QuestStatus %qid% %id% else %pop% ifNPCDead %1% else %pop% SetQuestStatus %qid% -2 Goto %pop%>
+		sub
+			room
+			minimap <..............1.....&---&>
+			special <SHAREDPALETTE>
+			desig <HOME>
+		end
+
+	end
+	inv
+		NPC Mechanic
+		Skill 31 5
+		CharDesc Easygoing
+	end
+
+Content
 	name <Addiction Issues>
 	desc <An NPC asks you to help his cousin escape a life of sin and debauchery.>
 	requires <*:LocalQuest "City">

@@ -48,13 +48,52 @@ Scene
 
 %%
 %% *HideOut Content
+%%		&MonkeyMap	Must be a monkeymap
+%%		&BoxMap		Must be a boxmap
 %%
 %%  Hideouts will be constructed as a bigbox or a monkeymap, so plan
 %%  your rooms appropriately.
 
 Scene
 	name <#'s Hideout>
-	requires <*HideOut>
+	requires <*HideOut -&BoxMap>
+	type <Private Complex>
+	special <NOEXIT>
+	MonkeyMap
+
+	quest_entrance <*ENT_Hideout>
+
+	MapWidth 28
+	MapHeight 28
+
+	NeededCells 2
+	content <Fill Sub *HIDEOUT_X na>
+
+	Start <Print 1>
+	Msg1 <You enter \SCENE SceneID .>
+
+	sub
+		Team 1
+
+		Team 2
+		name <Citizens>
+
+		Team 3
+		name <Guards>
+		SetAlly 2
+
+		Room
+		minimap <......###..#1#...........>
+		sub
+			Elevator
+			Destination -1
+			MiniMapComponent 1
+		end
+	end
+
+Scene
+	name <#'s Hideout>
+	requires <*HideOut -&MonkeyMap>
 	type <Private Complex>
 	special <NOEXIT>
 	BoxMap
@@ -534,6 +573,9 @@ Scene 0 0
 
 	LockedDoorChance 15
 
+	NeededCells 2
+	content <Fill Sub *STORAGE_X na>
+
 	sub
 		Room
 		sub
@@ -554,6 +596,9 @@ Scene 0 0
 	MapWidth 17
 	MapHeight 17
 	RockyTiles
+
+	NeededCells 3
+	content <Fill Sub *STORAGE_X na>
 
 	sub
 		Room
