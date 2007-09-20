@@ -2868,6 +2868,7 @@ begin
 
 		{ Find the new scene to stick our gear into. }
 		SID := ScriptValue( Event , GB , Source );
+
 		if SID <> 0 then begin
 			Scene := FindActualScene( GB , SID );
 			if Scene = Nil then Scene := GG_LocateAdventure( GB , Source );
