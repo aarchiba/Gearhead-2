@@ -174,17 +174,6 @@ Acc 3
 Speed 5
 Mass -3
 
-Melee 3
-Name <Steel Pipe>
-desc <A simple but effective weapon.>
-category <>
-factions <GENERAL>
-SDL_PORTRAIT <item_steelpipe.png>
-legality -15
-Mass 2
-Acc -2
-Speed 3
-
 Melee 7
 Name <War Hammer>
 desc <A big hammer weighted for combat.>
@@ -939,6 +928,49 @@ inv
 	legality -5
 end
 
+Set
+name <Corporate Uniform [set]>
+desc <A lightly armored corporate uniform.>
+Category <ARMOR CLOTHING>
+Factions <COMET HOELL MUGL>
+legality -25
+inv
+	BodyArmor 1
+	Name <Corporate Uniform>
+	desc <A lightly armored corporate uniform.>
+	Category <CLOTHING>
+	Factions <GENERAL>
+	legality -25
+	Mass -1
+
+	ArmArmor 1
+	Name <Corporate Uniform Sleeve>
+	desc <A lightly armored corporate uniform.>
+	Category <CLOTHING>
+	Mass -1
+	legality -25
+
+	ArmArmor 1
+	Name <Corporate Uniform Sleeve>
+	desc <A lightly armored corporate uniform.>
+	Category <CLOTHING>
+	Mass -1
+	legality -25
+
+	LegArmor 1
+	Name <Corporate Uniform Legging>
+	desc <A lightly armored corporate uniform.>
+	Category <CLOTHING>
+	Mass -1
+	legality -25
+
+	LegArmor 1
+	Name <Corporate Uniform Legging>
+	desc <A lightly armored corporate uniform.>
+	Category <CLOTHING>
+	Mass -1
+	legality -25
+end
 
 BodyArmor 2
 Name <Security Vest>
@@ -1916,7 +1948,7 @@ Legality -50
 AcrobatTool 2
 name <Razor Ribbon>
 desc <This ribbon may be used for rythmic gymnastics. It can also be used to kill people.>
-Category <EXOTIC SPORTS>
+Category <EXOTIC NINJA SPORTS>
 Factions <GENERAL>
 Legality 0
 sub

@@ -2,6 +2,290 @@
 %% *:NPCQuest Content
 %%
 %% The Key NPC is up to something. The PC may be able to help out or oppose. Or something.
+%% Always make sure to do an *ENEMY_CHECK or equivalent in these quests.
+
+Content
+	name <A Spy In Hiding>
+	requires <*:NPCQuest C:POLIT "City" ~"Capitol">
+
+	% There's an enemy spy in the city.
+
+	% E1 is the NPC offering the quest
+	% E2 is the NPC being sought
+	% E3 is the root scene; it's just needed for messages
+	Element1 <Key>
+	Element2 <Prefab>
+	Scene2 <New *Hideout>
+	Team2 <Guards>
+	TeamData2 <SD>
+	Scene3 <Town>
+
+	% SQ1 is the victory for capturing the spy
+	% SQ2 is the victory for aiding the spy
+	Quest1 <*SuccessVsChar.Capture 1 2>
+	Quest2 <*SuccessVsChar.Evasion 2 1>
+
+	sub
+		Persona 1
+		% SceneVar %s2% 11 = Arrest status; if 1, E2 surrendered. If -1, E2 escaped.
+		%                if -2, PC agreed to lie about E2
+		% This quest doesn't have an enemy check at the beginning, so if the PC
+		% is an enemy of E1's faction he can catch the spy to either remove the
+		% enemy status (faction relations still apply) or can aid E2.
+		rumor0 <there's an enemy spy hiding in %name3%.>
+		greeting <if= QuestStatus %qid% %id% else GoCheckQuest if= SceneVar %s2% 12 0 else GoChat NewChat Say 3 AddChat 1 AddChat 2 AddChat 3>
+		GoCheckQuest <if= QuestStatus %qid% 0 else GoChat Goto GoOfferQuest>
+		*GoChat <*MISC_CHATTER>
+		GoOfferQuest <NewChat Say 1 QMemo %qid% 2 SetQuestStatus %qid% %id%>
+		Result1 <if= FacRelationship ChatNPCFac NAV_ArchEnemy else .%id1%_GoInit GrabFaction ChatNPCFac GSetNAtt NAG_Relationship 0 0 Goto .%id1%_GoInit>
+		result2 <NewChat Say 4 SetQuestStatus %qid% -2>
+		result3 <NewChat Say 5 QMemo %qid% 6 SceneVar= %s2% 12 1>
+		Msg1 <There's an enemy spy operating in %name3%. We have learned that \PPR %2% name is %name2%, but so far have not been able to catch \OPR %2% . There's a sizable reward available for anyone who manages to do so.>
+		Msg2 <%name1% revealed that there's a reward available for capturing or killing the spy %name2%.>
+		msg3 <As of this time %name2% remains at large.>
+		Msg4 <It's most unfortunate that we were not able to capture %name2%, but I guess that's someone else's problem now.>
+		Msg5 <It's a shame that %name2% couldn't have been captured alive; we could have learned so much from \OPR %2% . There will be no reward as you have provided no evidence that you were the one who did this.>
+		Msg6 <You lied to %name1%, telling \OPR %1% that %name2% is dead.>
+		Prompt1 <I've stopped %name2%.>
+		CPrompt1 <if= SceneVar %s2% 11  1  Accept>
+		Prompt2 <%name2% is no longer in the area.>
+		CPrompt2 <if= SceneVar %s2% 11 -1  Accept>
+		Prompt3 <%name2% is dead.>
+		CPrompt3 <if= SceneVar %s2% 11 -2  ifNPCOK %2%  Accept>
+
+
+		Persona 2
+		Special <UNLISTED>
+		% SceneVar %s2% 12 = Have lied to E1 about E2's death
+		greeting <if= QuestStatus %qid% %id% else GoChat if= SceneVar %s2% 12 1 else GoCheckOffer NewChat Say 12 AddChat 8>
+		GoCheckOffer <if= SceneVar %s2% 11 -2 else GoCheckSurrender NewChat Say 9 AddChat 6 AddChat 7>
+		GoCheckSurrender <ifChatNPCSurrendered else GoBeginFight ifFactionAlly NPCFac %1% else GoMaybeDeal EndChat Say 2 AddChat 1>
+		GoMaybeDeal <EndChat Say 2 AddChat 1 AddChat 2>
+		GoChat <NewChat SayAnything>
+		GoBeginFight <SoloAttack %2% Goto GoThreat>
+		*GoThreat <*IntruderGreeting&Arrest GoDie>
+		GoDie <EndChat Say 1>
+		result1 <EndChat Say 3 FreezeNPC %2% PCEnemy %2% SceneVar= %s2% 11 1 Print 4 QMemo %qid% 5 XPV 100>
+		result2 <NewChat Say 6 UnSurrender %2% SetNPCTeam %2% 2 SceneVar= %s2% 11 -2 QMemo %qid% 7 AddChat 3 AddChat 4 AddChat 5>
+		result3 <NewChat Say 8>
+		result4 <PCFriend %2% Goto result3>
+		result5 <ifChatNPCSexy else result3 ifFlirtation SkillTar %threat% else result3 PCLover %2% Goto result3>
+		result6 <EndChat Say 10 AddHeroic -5 SoloAttack %2% SceneVar= %s2% 11 0>
+		result7 <NewChat Say 11>
+		result8 <Goto .%id2%_GoInit>
+		Msg1 <You made a big mistake in seeking me out. I've studied thirty two varieties of martial arts... Killing you will be no problem.>
+		Msg2 <I am defeated... Do with me what you want with me, but I'll reveal nothing.>
+		Msg3 <As you wish. Don't think you've seen the last of me.>
+		Msg4 <You capture %name2%.>
+		Msg5 <You should go tell %name1% that %name2% has been captured.>
+		Msg6 <You're letting me go!? But why would you want to do that?>
+		Msg7 <You agreed to tell %name1% that %name2% died, thereby saving \OPR %2% from \OPR %1% .>
+		Msg8 <I don't know whether you are crazy or simply a fool, but I won't refuse any help. Go back to %name1% and tell \OPR %1% that I've been killed. It's important that \SPR %1% suspect nothing.>
+		Msg9 <Have you spoken with %name1% already?>
+		Msg10 <You liar! I should have known better than to trust someone from \SCENE PCHomeTown ...>
+		Msg11 <Be very careful, a single mistake could mean the death of us both.>
+		Msg12 <Do you come bearing any good news?>
+		Prompt1 <I'm bringing you back to %name1%.>
+		Prompt2 <I want to help you, not capture you.>
+		Prompt3 <I'm no fan of %name1%.>
+		Prompt4 <I'm an enemy of %name1% myself.>
+		CPrompt4 <ifNPCArchEnemy %1% Accept>
+		Prompt5 <No reason. I just like you.>
+		Prompt6 <I've decided I should kill you after all.>
+		Prompt7 <No, not yet.>
+		Prompt8 <%name1% thinks you're dead.>
+
+		MetaScene 1
+		start <if= QuestStatus %qid% %id% else %pop% if= SceneVar %s2% 12 0 else %pop% ifNPCDead %1% else %pop% SetQuestStatus %qid% -2 Goto %pop%>
+
+		MetaScene 2
+		Surrender%2% <Forcechat %2%>
+		Faint%2% <if= QuestStatus %qid% %id% ifNPCOK %1% else GoEndQuest L= 11 1>
+		GoEndQuest <SetQuestStatus %qid% -2>
+		end <if= QuestStatus %qid% %id% if= L11 0 ifNPCOK %2% DeleteNPC %2% L= 11 -1>
+	end
+	inv
+		NPC Spy
+		Talent 5
+		Talent 6
+	end
+
+
+Content
+	name <Construction Problems>
+	requires <*:NPCQuest (C:POLIT|C:CORPO|C:LABOR|C:CRAFT|C:TRADE)>
+	desc <The NPC has a building under construction, but there's something going wrong.>
+
+	% E1 is the key character
+	% E2 is the construction site
+	% E3 is the entry to the construction site
+	element1 <Key>
+
+	Scene2 <New *ConstructionSite>
+
+	element3 <Prefab>
+	Scene3 <Urban>
+
+	Quest1 <*:ConstructionProblem 1 2>
+	Quest2 <*Success1.FinishMission 1>
+
+	sub
+		Persona 1
+		rumor0 <%name1%'s building project is not going very well.>
+		greeting <if= QuestStatus %qid% %id% else GoCheckQuest NewChat Say 3 AddChat 1 AddChat 2>
+		GoCheckQuest <if= QuestStatus %qid% 0 else GoChat Goto GoCheckEnemy>
+		*GoCheckEnemy <*ENEMY_CHECK GoOfferQuest ChatNPCFac GoMakeEnemy>
+		GoMakeEnemy <SetQuestStatus %qid% -2 ifG d20 React PCEnemy %1%>
+		*GoOfferQuest <*NiceToMeetYou GoExplainQuest>
+		*GoChat <*MISC_CHATTER>
+		GoExplainQuest <NewChat Say 1 SetQuestStatus %qid% %id%  SetQuestStatus %qid1% %id1%  QMemo %qid% 2>
+		Result1 <Goto .%id2%_GoInit>
+		Result2 <NewChat Say 4 SetQuestStatus %qid% -2>
+		Msg1 <There's been a problem at the site of our new construction project. If anyone could find out what's going on and solve matters, I'd be willing to provide a generous reward.>
+		Msg2 <%name1% in \SCENE %s1% has ordered the construction of a building, but progress has mysteriously halted.>
+		Msg3 <Construction still hasn't been finished on my new building.>
+		Msg4 <I have anticipated this possibility. It is a minor setback, but will not affect our long term goals.>
+		Prompt1 <Actually, I've fixed the problem.>
+		CPrompt1 <if= QuestStatus %qid1% -1 Accept>
+		Prompt2 <I don't think it ever will be.>
+		CPrompt2 <if= QuestStatus %qid1% -2 Accept>
+	end
+	inv
+		STC Building
+		name <%name1%'s Construction Site>
+		desig <ENTRANCE %s2%>
+	end
+
+
+Content
+	name <Military Teacher Shortage>
+	requires <*:NPCQuest C:MILIT ~"Safe">
+	desc <There's a shortage of drill instructors, so the PC will be asked to teach some stuff to three recruits.>
+
+	% E1 is the key character
+	% E2 through E4 are the students
+	Element1 <Key>
+
+	Element2 <Prefab>
+	Scene2 <Grab 1>
+	Team2 <Guards>
+	TeamData2 <SD Ally>
+
+	Element3 <Prefab>
+	Scene3 <Grab 1>
+	Team3 <Guards>
+	TeamData3 <SD Ally>
+
+	Element4 <Prefab>
+	Scene4 <Grab 1>
+	Team4 <Guards>
+	TeamData4 <SD Ally>
+
+	% SubQuest1 is the success when the PC has trained all the soldiers.
+	Quest1 <*Success1.FinishMission 1>
+
+	sub
+		Persona 1
+		rumor0 <%name1% has been training some new recruits.>
+		greeting <if= QuestStatus %qid% %id% else GoCheckFirst NewChat Say 2 AddChat 3 AddChat 4 AddChat 5 AddChat 6 AddChat 7>
+		GoCheckFirst <if= QuestStatus %qid% 0 else GoChat Goto GoCheckEnemy>
+		*GoCheckEnemy <*ENEMY_CHECK GoOfferQuest ChatNPCFac GoDenyQuest>
+		*GoChat <*MISC_CHATTER>
+		GoOfferQuest <NewChat Say 1 AddChat 1 AddChat 2>
+		GoDenyQuest <SetQuestStatus %qid% -2>
+		Result1 <NewChat Say 3 QMemo %qid% 4 SetQuestStatus %qid% %id%>
+		Result2 <NewChat Say 5 SetQuestStatus %qid% -2>
+		Result3 <NewChat Say 6>
+		Result4 <NewChat Say 7 SetQuestStatus %qid% -2>
+		result5 <Goto result3>
+		result6 <Goto result3>
+		result7 <XPV 100  Goto .%id1%_GoInit>
+		Msg1 <Right now we don't have enough qualified instructors for all the new recruits. I've been training some of them myself, but it's slow going.>
+		Msg2 <How is the training going?>
+		Msg3 <It would be appreciated if you could. The three recruits are %name2%, %name3%, and %name4%. They're stationed here at \SCENE %s1% along with me.>
+		Msg4 <%name1% asked you to train three recruits at \SCENE %s1% : %name2%, %name3%, and %name4%.>
+		Msg5 <No reason why it should. Carry on.>
+		Msg6 <Come back and speak to me when you're finished; I'll see what kind of reward I can requisition.>
+		Msg7 <What the hell did you teach them!? It's probably best if we cut the training short, before any more recruits get hurt.>
+		Prompt1 <Maybe I could give you a hand.>
+		Prompt2 <That doesn't concern me.>
+		Prompt3 <I'm still working on it.>
+		Prompt4 <%name2% is dead.>
+		CPrompt4 <ifNPCDead %2% Accept>
+		Prompt5 <%name3% is dead.>
+		CPrompt5 <ifNPCDead %3% Accept>
+		Prompt6 <%name4% is dead.>
+		CPrompt6 <ifNPCDead %4% Accept>
+		Prompt7 <All three recruits are ready for their test.>
+		CPrompt7 <if= NPCVar %2% 1 1 if= NPCVar %3% 1 1 if= NPCVar %4% 1 1 Accept>
+
+		MetaScene 1
+		start <if= QuestStatus %qid% %id% else %pop% ifNPCDead %1% else %pop% SetQuestStatus %qid% -2 Goto %pop%>
+
+		Persona 2
+		% The ranged combat student
+		% Upon succeeding in this quest, set NPCVar ChatNPCID 1 to 1 and
+		%  induct into E1's faction.
+		greeting <if= QuestStatus %qid% %id% else GoChat if= NPCVar ChatNPCID 1 1 else GoTrain NewChat Say 1>
+		GoChat <NewChat SayAnything>
+		GoTrain <NewChat Say 2 AddChat 1 AddChat 2>
+		GoFail <NewChat Say 4>
+		GoWin <NewChat Say 3 Mental NPCVar= ChatNPCID 1 1  SetNPCFaction ChatNPCID NPCFac %1%>
+		result1 <ifSkillTest 6 SkillTar %threat% else GoFail Goto GoWin>
+		result2 <ifSkillTest 7 SkillTar %threat% else GoFail Goto GoWin>
+		Msg1 <I'm ready to take on all comers, thanks to you.>
+		Msg2 <I've got to work on my ranged combat skills if I want to get accepted into the sniper program.>
+		Msg3 <Hey, thanks. With your help I think I can do it.>
+		Msg4 <I think I'm better off training on my own.>
+		Prompt1 <Let me teach you about Small Arms.>
+		Prompt2 <Let me teach you about Heavy Weapons.>
+
+		Persona 3
+		% The close combat student
+		% Upon succeeding in this quest, set NPCVar ChatNPCID 1 to 1 and
+		%  induct into E1's faction.
+		greeting <if= QuestStatus %qid% %id% else GoChat if= NPCVar ChatNPCID 1 1 else GoTrain NewChat Say 1>
+		GoChat <NewChat SayAnything>
+		GoTrain <NewChat Say 2 AddChat 1 AddChat 2>
+		GoFail <NewChat Say 4>
+		GoWin <NewChat Say 3 Mental NPCVar= ChatNPCID 1 1  SetNPCFaction ChatNPCID NPCFac %1%>
+		result1 <ifSkillTest 8 SkillTar %threat% else GoFail Goto GoWin>
+		result2 <ifSkillTest 9 SkillTar %threat% else GoFail Goto GoWin>
+		Msg1 <I'm ready to deploy! Woo-hoo!>
+		Msg2 <Man, I can't wait to be finished with this training so I can get out there and taste some real combat, you know?>
+		Msg3 <You're pretty good at this. Thanks for the pointers.>
+		Msg4 <Woah, are you trying to get me killed? I think I better train by myself.>
+		Prompt1 <Let me teach you about Armed Combat.>
+		Prompt2 <Let me teach you about Martial Arts.>
+
+		Persona 4
+		% The defense student
+		% Upon succeeding in this quest, set NPCVar ChatNPCID 1 to 1 and
+		%  induct into E1's faction.
+		greeting <if= QuestStatus %qid% %id% else GoChat if= NPCVar ChatNPCID 1 1 else GoTrain NewChat Say 1>
+		GoChat <NewChat SayAnything>
+		GoTrain <NewChat Say 2 AddChat 1 AddChat 2>
+		GoFail <NewChat Say 4>
+		GoWin <NewChat Say 3 Mental NPCVar= ChatNPCID 1 1  SetNPCFaction ChatNPCID NPCFac %1%>
+		result1 <ifSkillTest 10 SkillTar %threat% else GoFail Goto GoWin>
+		result2 <ifSkillTest 36 SkillTar %threat% else GoFail Goto GoWin>
+		Msg1 <Thanks to you, I'm all ready to go out. Hopefully I can even come back alive.>
+		Msg2 <I signed up to help protect my home, but now that I'm getting close to the end of training I'm really worried about dying in combat...>
+		Msg3 <Thanks for those tips. I feel a bit more confident now.>
+		Msg4 <Stop. It's clear that you don't know any better than me, so listening to your advice could easily get me killed.>
+		Prompt1 <Let me teach you about Dodge.>
+		Prompt2 <Let me teach you about Resistance.>
+	end
+	inv
+		NPC Soldier
+		CharDesc Young Shy
+
+		NPC Soldier
+		CharDesc Young Passionate
+
+		NPC Soldier
+		CharDesc Young Melancholy
+	end
 
 Content
 	name <Charity Orphanage>
@@ -524,7 +808,6 @@ Content
 		NPC bandit
 		job <murderer>
 		chardesc Criminal Villainous
-		EquipChar 25000
 	end
 
 Content
@@ -575,7 +858,6 @@ Content
 	inv
 		NPC Thief
 		Chardesc Renowned
-		EquipChar 15000
 		Combatant
 	end
 

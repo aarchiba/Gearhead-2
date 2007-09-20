@@ -445,7 +445,7 @@ Set
 name <SkinSuit [set]>
 desc <A skintight spacesuit.>
 Category <CLOTHING SPACE>
-Factions <MAQUI FCOMS RISHI CRIHN>
+Factions <MAQUI FCOMS RISHI CRIHN COMET HOELL MUGLE>
 Legality -25
 inv
 	HeadArmor 2
@@ -514,10 +514,147 @@ inv
 end
 
 Set
+name <Squire Armor [set]>
+desc <An armored spacesuit used by the Silver Knights.>
+Category <ARMOR SPACE>
+Factions <SILKN>
+inv
+	HeadArmor 4
+	name <Squire Helm>
+	desc <A light spacesuit helm with integrated rebreather.>
+	SDL_PORTRAIT <item_lightspacehelm.png>
+	Mass -6
+	Legality 10
+	Sealed
+	Hardened
+
+	BodyArmor 4
+	name <Squire Armor>
+	desc <An armored spacesuit used by the Silver Knights.>
+	Mass -6
+	Legality 10
+	Sealed
+	sub
+		SpaceFlight 3
+	end
+
+	ArmArmor 4
+	name <Squire Sleeve>
+	desc <An armored spacesuit used by the Silver Knights.>
+	Mass -6
+	Legality 10
+	Sealed
+
+	LegArmor 4
+	name <Squire Legging>
+	desc <An armored spacesuit used by the Silver Knights.>
+	Mass -6
+	Legality 10
+	Sealed
+	sub
+		SpaceFlight 3
+	end
+
+	ArmArmor 4
+	name <Squire Sleeve>
+	desc <An armored spacesuit used by the Silver Knights.>
+	Mass -6
+	Legality 10
+	Sealed
+
+	LegArmor 4
+	name <Squire Legging>
+	desc <An armored spacesuit used by the Silver Knights.>
+	Mass -6
+	Legality 10
+	Sealed
+	sub
+		SpaceFlight 3
+	end
+end
+
+Set
+name <Paladin Suit [set]>
+desc <A light powered armor used by the Silver Knights.>
+Category <ARMOR>
+Factions <SILKN>
+Legality 10
+inv
+	HeadArmor 6
+	name <Paladin Helm>
+	desc <A light powered armor used by the Silver Knights.>
+	SDL_PORTRAIT <>
+	Mass -8
+	Legality 10
+	Sealed
+	Hardened
+	Perception 10
+
+	BodyArmor 6
+	name <Paladin Suit>
+	desc <A light powered armor used by the Silver Knights.>
+	Mass -7
+	Legality 10
+	Sealed
+	Hardened
+	Body 10
+	sub
+		HoverJet 3
+	end
+
+	ArmArmor 6
+	name <Paladin Sleeve>
+	desc <A light powered armor used by the Silver Knights.>
+	Mass -7
+	Legality 10
+	Sealed
+	Hardened
+	Body 5
+	Reflexes 5
+
+	ArmArmor 6
+	name <Paladin Sleeve>
+	desc <A light powered armor used by the Silver Knights.>
+	Mass -7
+	Legality 10
+	Sealed
+	Hardened
+	Body 5
+	Reflexes 5
+
+	LegArmor 6
+	name <Paladin Legging>
+	desc <A light powered armor used by the Silver Knights.>
+	Mass -7
+	Legality 10
+	Sealed
+	Hardened
+	Body 5
+	Speed 5
+	sub
+		HoverJet 3
+	end
+
+	LegArmor 6
+	name <Paladin Legging>
+	desc <A light powered armor used by the Silver Knights.>
+	Mass -7
+	Legality 10
+	Sealed
+	Hardened
+	Body 5
+	Speed 5
+	sub
+		HoverJet 3
+	end
+end
+
+
+Set
 name <Combat Spacesuit [set]>
 desc <An armored spacesuit.>
 Category <ARMOR SPACE>
-Factions <MAQUI FCOMS RISHI>
+Factions <MAQUI FCOMS RISHI ROCKE>
 Legality 10
 inv
 	HeadArmor 5
@@ -555,6 +692,9 @@ inv
 	Legality 10
 	Sealed
 	Hardened
+	sub
+		SpaceFlight 3
+	end
 
 	ArmArmor 5
 	name <Combat Spacesuit Sleeve>
@@ -563,12 +703,9 @@ inv
 	Legality 10
 	Sealed
 	Hardened
-	sub
-		SpaceFlight 3
-	end
 
 	LegArmor 5
-	name <SkinSuit Legging>
+	name <Combat Spacesuit Legging>
 	desc <An armored spacesuit.>
 	Mass -7
 	Legality 10
@@ -580,15 +717,76 @@ inv
 end
 
 Set
+name <Space Suit [set]>
+desc <A regular spacesuit.>
+Category <ARMOR CLOTHING SPACE>
+Factions <MAQUI BOHEM CRIHN PRIVA FCOMS RISHI COMET HOELL MUGLE>
+Legality -15
+inv
+	BodyArmor 3
+	name <Space Suit>
+	desc <A regular spacesuit.>
+	Category <ARMOR CLOTHING SPACE>
+	Mass -4
+	Legality -15
+	Sealed
+	sub
+		SpaceFlight 3
+	end
+
+	ArmArmor 3
+	name <Spacesuit Sleeve>
+	desc <A regular spacesuit.>
+	Category <ARMOR CLOTHING SPACE>
+	Mass -4
+	Legality -15
+	Sealed
+
+	ArmArmor 3
+	name <Spacesuit Sleeve>
+	desc <A regular spacesuit.>
+	Category <ARMOR CLOTHING SPACE>
+	Mass -4
+	Legality -15
+	Sealed
+
+	LegArmor 3
+	name <Spacesuit Legging>
+	desc <A regular spacesuit.>
+	Category <ARMOR CLOTHING SPACE>
+	Mass -4
+	Legality -15
+	Sealed
+
+	LegArmor 3
+	name <Spacesuit Legging>
+	desc <A regular spacesuit.>
+	Category <ARMOR CLOTHING SPACE>
+	Mass -4
+	Legality -15
+	Sealed
+
+	HeadArmor 2
+	name <Light Space Helm>
+	desc <A light spacesuit helm with integrated rebreather.>
+	Category <CLOTHING SPACE>
+	SDL_PORTRAIT <item_lightspacehelm.png>
+	Mass -2
+	Legality -25
+	Sealed
+	Hardened
+end
+
+Set
 name <Encounter Suit [set]>
-desc <A bulky spacesuit.>
+desc <A bulky spacesuit with added protection.>
 Category <ARMOR SPACE>
-Factions <MAQUI>
+Factions <MAQUI BOHEM CRIHN PRIVA FCOMS RISHI>
 Legality -15
 inv
 	BodyArmor 4
 	name <Encounter Suit>
-	desc <A bulky spacesuit.>
+	desc <A bulky spacesuit with added protection.>
 	Category <ARMOR SPACE>
 	Factions <MAQUI>
 	Mass -4
@@ -600,7 +798,7 @@ inv
 
 	ArmArmor 4
 	name <Encounter Sleeve>
-	desc <A bulky spacesuit.>
+	desc <A bulky spacesuit with added protection.>
 	Category <ARMOR SPACE>
 	Factions <MAQUI>
 	Mass -4
@@ -609,7 +807,7 @@ inv
 
 	LegArmor 4
 	name <Encounter Legging>
-	desc <A bulky spacesuit.>
+	desc <A bulky spacesuit with added protection.>
 	Category <ARMOR SPACE>
 	Factions <MAQUI>
 	Mass -4
@@ -618,7 +816,7 @@ inv
 
 	ArmArmor 4
 	name <Encounter Sleeve>
-	desc <A bulky spacesuit.>
+	desc <A bulky spacesuit with added protection.>
 	Category <ARMOR SPACE>
 	Factions <MAQUI>
 	Mass -4
@@ -627,7 +825,7 @@ inv
 
 	LegArmor 4
 	name <Encounter Legging>
-	desc <A bulky spacesuit.>
+	desc <A bulky spacesuit with added protection.>
 	Category <ARMOR SPACE>
 	Factions <MAQUI>
 	Mass -4

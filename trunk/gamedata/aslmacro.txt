@@ -62,6 +62,7 @@ CLEARFACXP <GrabPCPilot GSetNAtt NAG_Experience NAS_FacXP 0 GSetNAtt NAG_Experie
 SETNPCFACTION <GrabNPC ? GSetNAtt NAG_Personal NAS_FactionID ?>
 SETSCENEFACTION <GrabScene ? GSetNAtt NAG_Personal NAS_FactionID ?>
 SetNPCTeam <GrabNPC ? GSetNAtt NAG_Location NAS_Team ?>
+SetChatNPCTeam <GrabChatNPC GSetNAtt NAG_Location NAS_Team ?>
 DELETENPC <GrabNPC ?  DeleteGG>
 DELETEITEM <GrabItem ?  DeleteGG>
 MOVENPC <GrabNPC ?  MoveGG ?>
@@ -242,6 +243,7 @@ SetSelfArenaState <GrabCurrentScene GSetNAtt NAG_ArenaData NAS_ArenaState ?>
 AddSelfArenaWin <GrabCurrentScene GAddNAtt NAG_ArenaData NAS_ArenaWins 1>
 AddSelfArenaThreat <GrabCurrentScene GAddNAtt NAG_ArenaData NAS_ArenaThreat ?>
 SetArenaThreat <GrabScene ? GSetNAtt NAG_ArenaData NAS_ArenaThreat ?>
+SetArenaState <GrabScene ? GSetNAtt NAG_ArenaData NAS_ArenaState ?>
 ClearSelfChallengerID <GrabCurrentScene GSetNAtt NAG_ArenaData NAS_ChallengerID 0>
 SetSelfArenaRecharge <GrabCurrentScene GSetNAtt NAG_ArenaData NAS_ArenaRecharge ComTime GAddNAtt NAG_ArenaData NAS_ArenaRecharge 85000>
 ResetArena <GrabScene ? GSetNAtt NAG_ArenaData NAS_ArenaState NAV_AS_Vacant>

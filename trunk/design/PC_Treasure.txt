@@ -1,0 +1,140 @@
+%  ******************
+%  ***  TREASURE  ***
+%  ******************
+%
+% A collection of items with little or no practical use. Generally, these items
+% will not be sold in stores but must instead be discovered.
+%
+% TREASURE, JEWELRY, ARTWORK, ANTIQUE, GEMSTONE
+% ODDITIES
+%
+
+Treasure 1
+name <Quartz Crystal>
+desc <A pretty, though presumably worthless, quartz crystal.>
+Category <TREASURE GEMSTONE>
+Factions <GENERAL>
+SDL_PORTRAIT <>
+Legality -50
+
+	BigTreasure 25
+	name <Phobos Emerald>
+	desc <A large, flawless emerald.>
+	mass 1
+	Category <TREASURE GENSTONE>
+	Factions <GENERAL>
+	Legality -25
+
+Treasure 5
+name <Mood Ring>
+desc <An advanced polymer ring which changes color according to biometrics.>
+Category <TREASURE JEWELRY>
+Factions <GENERAL>
+SDL_PORTRAIT <>
+Legality -25
+
+Treasure 8
+name <Crystal Ring>
+desc <An attractive ring featuring a synthetic crystal stone.>
+Category <TREASURE JEWELRY>
+Factions <GENERAL>
+SDL_PORTRAIT <>
+Legality -25
+
+Treasure 12
+name <Brass Ring>
+desc <A plain brass ring.>
+Category <TREASURE JEWELRY>
+Factions <GENERAL>
+SDL_PORTRAIT <>
+Legality -25
+
+Treasure 22
+name <Steel Ring>
+desc <A plain steel ring.>
+Category <TREASURE JEWELRY>
+Factions <GENERAL>
+SDL_PORTRAIT <>
+Legality -25
+
+Treasure 42
+name <Ceramic Ring>
+desc <A plain ceramic ring.>
+Category <TREASURE JEWELRY>
+Factions <GENERAL>
+SDL_PORTRAIT <>
+Legality -25
+
+Treasure 60
+name <Silver Ring>
+desc <A plain silver ring.>
+Category <TREASURE JEWELRY>
+Factions <GENERAL>
+SDL_PORTRAIT <>
+Legality -25
+
+Treasure 90
+name <Gold Ring>
+desc <A plain gold ring.>
+Category <TREASURE JEWELRY>
+Factions <GENERAL>
+SDL_PORTRAIT <>
+Legality -25
+
+Treasure 190
+name <Platinum Ring>
+desc <A plain platinum ring.>
+Category <TREASURE JEWELRY>
+Factions <GENERAL>
+SDL_PORTRAIT <>
+Legality -25
+
+Treasure 700
+name <Impervium Ring>
+desc <A plain ring made of impervium.>
+Category <TREASURE JEWELRY>
+Factions <GENERAL>
+SDL_PORTRAIT <>
+special <ARTIFACT>
+
+Treasure 2
+name <Cheap Necklace>
+desc <A cheap necklace made of shiny plastic.>
+Category <TREASURE JEWELRY>
+Factions <GENERAL>
+SDL_PORTRAIT <>
+Legality -25
+
+Treasure 80
+name <Silver Chain>
+desc <A simple chain made of silver.>
+Category <TREASURE JEWELRY>
+Factions <GENERAL>
+SDL_PORTRAIT <>
+Legality -25
+
+Treasure 160
+name <Gold Chain>
+desc <A simple chain made of gold.>
+Category <TREASURE JEWELRY>
+Factions <GENERAL>
+SDL_PORTRAIT <>
+Legality -25
+
+Treasure 360
+name <Platinum Chain>
+desc <A simple chain made of platinum.>
+Category <TREASURE JEWELRY>
+Factions <GENERAL>
+SDL_PORTRAIT <>
+Legality -25
+
+Treasure 1200
+name <Impervium Chain>
+desc <A simple chain made of impervium.>
+Category <TREASURE JEWELRY>
+Factions <GENERAL>
+special <ARTIFACT>
+SDL_PORTRAIT <>
+Legality 0
+

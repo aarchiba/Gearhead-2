@@ -403,6 +403,8 @@ begin
 		CanJoin := False;
 	end else if PersonaInUse( FindRoot( GB^.Scene ) , NAttValue( NPC^.NA , NAG_Personal , NAS_CID ) ) then begin
 		CanJoin := False;
+	end else if ( GB <> Nil ) and ( GB^.Scene <> Nil ) and ( NAttValue( NPC^.NA , NAG_QuestInfo , NAS_QuestID ) <> 0 ) and ( NAttValue( FindROot( GB^.Scene )^.NA , NAG_QuestStatus , NAttValue( NPC^.NA , NAG_QuestInfo , NAS_QuestID ) ) >= 0 ) then begin
+		CanJoin := False;
 	end else if LMP > PartyLancemateSlots( PC ) then begin
 		CanJoin := False;
 	end;

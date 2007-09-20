@@ -53,6 +53,7 @@ NPCCHARM <GrabNPC ? GStat 8>
 CHATNPCPERCEPTION <GrabChatNPC GStat 4>
 ChatNPCRenown <GrabChatNPC GNAtt NAG_CharDescription -6>
 ChatNPCRelationship <GrabChatNPC GNAtt NAG_Relationship 0>
+FacRelationship <GrabFaction ? GNatt NAG_Relationship 0>
 NPCUID <GrabNPC ? GNAtt NAG_EpisodeData NAS_UID>
 NPCX <GrabNPC ? GrabRoot GNAtt NAG_Location NAS_X>
 NPCY <GrabNPC ? GrabRoot GNAtt NAG_Location NAS_Y>

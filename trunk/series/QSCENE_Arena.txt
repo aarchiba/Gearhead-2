@@ -166,6 +166,48 @@ sub
 end
 
 Scene 0 2
+	name <#'s Quarry>
+	requires <*Arena_ConstructionSite>
+
+	BoxMap
+	MapWidth 17
+	MapHeight 12
+	terrain <GROUND>
+	special <SHOWALL SOLO ARENA>
+
+	start <if= SelfArenaState NAV_AS_Ready else GoCheckBattle          Alert 1 Print 1  SetSelfArenaState NAV_AS_Battle SetSelfArenaRecharge if# SelfChallengerID 0 ForceChat SelfChallengerID>
+	GoCheckBattle <if= SelfArenaState NAV_AS_Battle else GoBoringStart Print 2>
+	GoBoringStart <Print 3 Return>
+
+	nu1 <if= T1 0 Return   if= SelfArenaState NAV_AS_Battle SetSelfArenaState NAV_AS_Loss  Alert 5 Print 5  AddRenown -5 Goto GoEndBattle>
+
+	nu2 <if= T2 0 Return   if= SelfArenaState NAV_AS_Battle SetSelfArenaState NAV_AS_Win   Alert 6 Print 6  AddSelfArenaWin  AddSelfArenaThreat d10  XPV 100 FacXP+ 5 1 AddRenown 1 Goto GoEndBattle>
+
+	GoEndBattle <ifNPCOK SelfChallengerID ForceChat SelfChallengerID MoveAndPacifyNPC SelfChallengerID SelfChallengerHome ClearSelfChallengerID>
+
+	Msg1 <You enter the quarry. Prepare to battle.>
+	Msg2 <The arena battle rages on.>
+	Msg3 <You enter the quarry. There's nothing interesting here.>
+	Msg5 <You have lost the battle.>
+	Msg6 <You have won the battle.>
+
+sub
+	Team 1
+	name <Player Team>
+	SetEnemy 2
+	ParaX 5
+	ParaY 5
+
+	Team 2
+	name <Enemies>
+	SetFaction 5
+	SetEnemy 1
+	Deploy <if= SelfArenaState NAV_AS_Ready ifG SelfArenaForces 0 WMecha 2 Threat SelfArenaThreat SelfArenaForces>
+	ParaX 12
+	ParaY 7
+end
+
+Scene 0 2
 	name <the # Arena>
 	requires <*Arena_Default>
 	%% This is the default arena. For individual arena, copy this one and change the details.

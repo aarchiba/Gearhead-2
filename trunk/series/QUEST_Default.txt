@@ -1239,209 +1239,6 @@ Content
 		ENCOUNTER_HOSTILE
 	end
 
-%%
-%% *:ConstructionProblem Content
-%%
-%% There's a problem at a construction site. To start this subquest, the calling
-%% quest should set its QuestId to its component ID. At the end the QuestID will
-%% be set to -1 if the construction problem was solved, or -2 if the construction
-%% problem has been rendered unsolvable.
-%%
-%% Param1: The boss NPC who sent the PC to find the problem
-%% Param2: Construction Site Scene
-
-Content
-	name <Stupid Fungus>
-	requires <*:ConstructionProblem (Spinner|Asteroid)>
-	% The construction site has been infested with spaceworms, and the boss hasn't
-	% provided the funds for extermination.
-
-	% E1 is the boss
-	% E2 is the construction site
-	% E3 is the foreman
-	% E4 is the extermination scene
-	element3 <Prefab>
-	scene3 <Grab 2>
-	team3 <Citizens>
-	teamdata3 <Pass Ally>
-
-	scene4 <New *BLANK.Basement>
-
-	sub
-		% Both the boss and the foreman get speaking roles this time around- if the
-		% PC returns to speak with the boss, he may be able to convince him to pay for
-		% a sensible de-fung'ing of the construction site.
-		Persona 1
-		% V%id%01 = Have argued the point already
-		% If the PC has spoken to character 3, then he can talk to E1 and maybe get money.
-		greeting <if= QuestStatus %qid% %id% else %pop% if= NPCVar %3% 1 1 else %pop% Goto .%id%_GoArgue>
-		.%id%_GoArgue <if= v%id%01 0 else .%id%_GoArgue2 NewChat Say %id%01 V= %id%01 1 AddChat %id%01>
-		.%id%_GoArgue2 <NewChat Say %id%02 AddChat %id%02>
-		result%id%01 <NewChat Say %id%03 AddChat %id%03>
-		result%id%02 <NewChat Say %id%04 AddChat %id%04 AddChat %id%05 AddChat %id%06>
-		result%id%03 <Goto result%id%02>
-		result%id%04 <NewChat Say %id%05>
-		result%id%05 <NewChat Say %id%06 NPCVar= %3% 1 2>
-		result%id%06 <NewChat Say %id%07 NPCVar= %3% 1 2>
-		Msg%id%01 <Have you found out from %name3% why construction has been delayed?>
-		Msg%id%02 <I'm still waiting for %name3% to finish construction.>
-		Msg%id%03 <That shouldn't be a big problem. I already provided funds for an exterminator.>
-		Msg%id%04 <This project is over budget already. There must be a better way... You're a cavalier, couldn't you just go kill all the fungus?>
-		Msg%id%05 <You do that.>
-		Msg%id%06 <You're probably right... some added expense at this point will save us headaches down the road. Tell %name3% that I'll arrange for a more thorough extermination.>
-		Msg%id%07 <Seriously? In that case, I guess there's nothing I can do... Tell %name3% that I'll provide extra funds for extermination.>
-		Prompt%id%01 <There's a fungus infestation at the site.>
-		Prompt%id%02 <%name3%'s still waiting for the exterminator.>
-		Prompt%id%03 <Apparently, the funds weren't enough.>
-		Prompt%id%04 <I'll see what I can do.>
-		Prompt%id%05 <Really, I think we need a professional.>
-		CPrompt%id%05 <ifConversation %sktar_hard% Accept>
-		Prompt%id%06 <Without proper treatment they'll be back in a week.>
-		CPrompt%id%06 <ifScience %sktar% Accept>
-
-		Persona 3
-		% NPCVar %3% 1 = Have told about problem (1), have secured funding (2)
-		% V%id%01 = Have discussed problem
-		% V%id%02 = PC is a biotech expert qualified to do the extermination
-		rumor%id% <%name3% has been having problems with %name1%'s construction project.>
-		greeting <if= QuestStatus %qid% %id% else GoChat  if= v%id%01 1 else GoFirstTime NewChat Say 10 AddChat 9 AddChat 10 AddChat 11>
-		GoFirstTime <NewChat Say 1 AddChat 1 AddChat 2>
-		*GoChat <*MISC_CHATTER>
-		result1 <NewChat Say 2 V= %id%01 1 NPCVar= %3% 1 1 QMemo %qid% 6 AddChat 3 AddChat 4 AddChat 5>
-		result2 <AddEasygoing -d8 Goto result1>
-		result3 <NewChat Say 3 AddChat 6 AddChat 7 AddChat 8>
-		result4 <NewChat Say 4>
-		result5 <NewChat Say 5>
-		result6 <NewChat Say 7>
-		result7 <NewChat Say 8 V= %id%02 1>
-		result8 <NewChat Say 9>
-		result9 <NewChat Say 11>
-		result10 <NewChat Say 12 XPV 100 SetQuestStatus %qid% -1>
-		result11 <SetQuestStatus %qid% -1  if= v%id%02 1 else GoR11Fail NewChat Say 12 XPV 100>
-		GoR11Fail <NewChat Say 13 XPV 50>
-		Msg1 <Yes, were you sent here by %name1%? It's about time that something was done...>
-		Msg2 <Construction has halted due to a fungus infestation. It's not even safe for the workbots to go there. %name1% hired an exterminator once, but now the fungi are back and stronger than ever.>
-		Msg3 <I don't think that's a good idea. We already tried that, remember? After a while the fungus came back... What we really need is some kind of quasinatural organism expert to clear the place out.>
-		Msg4 <I think that would be best. Let me know what happens.>
-		Msg5 <Come back and let me know if you find some way to help.>
-		Msg6 <%name3% revealed that %name1%'s construction site is infested with space fungus.>
-		Msg7 <Fine. Do whatever you think is best... Come back and let me know when we can get back to work.>
-		Msg8 <Really? In that case, you should be qualified to handle the extermination. Come back and let me know when you're satisfied that the construction zone is safe.>
-		Msg9 <I know I am. If only %name3% were as reasonable as you...>
-		Msg10 <We will be able to begin construction as soon as the fungi are cleared out. Do you have any progress to report?>
-		Msg11 <Well, come see me when you do.>
-		Msg12 <Fantastic. You can tell %name1% that construction will resume as soon as possible.>
-		Msg13 <Thanks. Hopefully this time they'll stay gone, at least long enough for us to finish the work. You can go tell %name1% that construction will resume shortly.>
-		Prompt1 <Hold on, what's the matter?>
-		Prompt2 <I'm here. Everything will be fine now.>
-		Prompt3 <Why don't I just kill the fungi for you?>
-		Prompt4 <I'll talk to %name1% about the exterminator.>
-		Prompt5 <Let me see what I can do.>
-		Prompt6 <We don't need no stinking expert!>
-		Prompt7 <Hey, I'm an expert on quasinatural organisms.>
-		CPrompt7 <ifBiotech %sktar% Accept>
-		Prompt8 <You're probably right.>
-		Prompt9 <Nothing yet.>
-		Prompt10 <%name1% has agreed to provide extra funds.>
-		CPrompt10 <if= NPCVar %3% 1 2 Accept>
-		Prompt11 <I've exterminated all the fungus myself.>
-		CPrompt11 <if= SceneVar %s4% 1 1 Accept>
-
-
-		MetaScene 3
-		start <if= QuestStatus %qid% %id% else %pop% ifNPCDead %3% else %pop% SetQuestSTatus %qid% -2 Goto %pop%>
-		end   <if= QuestStatus %qid% %id% else %pop% ifNPCDead %3% else %pop% SetQuestSTatus %qid% -2 Goto %pop%>
-		sub
-			room
-			minimap <......###..#2#........1..>
-			special <SHAREDPALETTE>
-			desig <HOME>
-			sub
-				Elevator
-				name <Sub-Basement>
-				desig <Entrance %s4%>
-				MiniMapComponent 2
-				use <if= V1 1 else GoLocked Print 1 Exit Destination>
-				Update <if= QuestStatus %qid% %id% V= 1 1>
-				GoLocked <Print 2>
-				Msg2 <There's nothing interesting in here.>
-			end
-		end
-
-		MetaScene 4
-		% L1 = Victory Indicator
-		% L2 = Initialization Counter
-		content <Fill Sub *STORAGE_X na>
-		% Do two generations of monsters- one regular, and one at double strength.
-		% Clearing out this area by brute force is going to be a challenge.
-		Start <Print 1 if= L2 0 if= QuestStatus %qid% %id% L= 2 1 WMonster 2 * 2 %threat% WMonster 2 %threat%>
-		nu2 <if= t2 0 if= L2 1 if= L1 0 Print 2 XPV 100 L= 1 1>
-		Msg1 <You enter the basement.>
-		Msg2 <That seems to be the last of the fungi.>
-		sub
-			Team 1
-			SetEnemy 2
-
-			Team 2
-			name <Monsters>
-			type <Fungus>
-			SetEnemy 1
-		end
-
-	end
-	inv
-		NPC Construction Worker
-		job <Foreman>
-	end
-
-
-Content
-	name <Supplies Went Missing>
-	requires <*:ConstructionProblem BRANCHES>
-	% The trouble with construction is that someone stole the materials!
-
-	% E1 is the boss
-	% E2 is the construction site
-	% E3 is the foreman
-	element3 <Prefab>
-	scene3 <Grab 2>
-	team3 <Citizens>
-	teamdata3 <Pass Ally>
-
-	Quest1 <*:StolenMaterials&ConstructionSite 3>
-
-	sub
-		Persona 3
-		% V1 = Have revealed problem
-		greeting <if= QuestStatus %qid% %id% else GoChat if= V1 1 else GoFirstTime NewChat Say 3 AddChat 2 AddChat 5>
-		GoFirstTime <NewChat Say 1 AddChat 1>
-		*GoChat <*MISC_CHATTER>
-		result1 <NewChat V= 1 1 Say 2 AddChat 3 AddChat 4 SetQuestStatus %qid1% %id1% QMemo %qid% 4>
-		result2 <NewChat Say 5 SetQuestStatus %qid% -1 ifG React %threat% PCFriend %3%>
-		result3 <NewChat Say 6>
-		result4 <NewChat Say 7 AddCheerful -d10>
-		result5 <NewChat Say 8 SetQuestStatus %qid% -2>
-		Msg1 <Yes, may I help you? We're very busy here right now.>
-		Msg2 <I wish I could tell you that things are proceeding well, but they aren't. The trouble is, we've been losing building materials.>
-		Msg3 <Have you found anything about the missing building materials?>
-		Msg4 <%name3% revealed that materials are being stolen from %name1%'s construction site.>
-		Msg5 <Fantastic! We'll be able to get back to work soon... You should report to %name1% .>
-		Msg6 <Ask around and see if you can uncover any clues. I'll help you in whatever way I can.>
-		Msg7 <If you can't find the materials and bring them back, then it'll be both of us who have failed, won't it? Search around and see what you can find out. I'll keep working on the project.>
-		Msg8 <The our project is lost... report back to %name1%.>
-		Prompt1 <I was send to hurry up the construction.>
-		Prompt1_1 <%name1% sent me to check your progress.>
-		Prompt2 <I've solved your materials problem.>
-		CPrompt2 <if= QuestStatus %qid1% -1 Accept>
-		Prompt3 <I could find out what happened to them.>
-		Prompt4 <%name1% won't be pleased at your failure.>
-		Prompt5 <I think you better give up on those supplies...>
-		CPrompt5 <if= QuestStatus %qid1% -2 Accept>
-	end
-	inv
-		NPC Construction Worker
-		job <Foreman>
-	end
 
 %%
 %% *SuccessGetItem Content
@@ -1569,7 +1366,9 @@ Content
 	sub
 		Persona 1
 		.%id%_GoInit <NewChat Say %id%01 CashPrize Reward Threat %threat% 100 200 SetQuestStatus %qid% -1>
-		Msg%id%01 <%name2% is now in custody. Thanks, \PC ... This wouldn't have been possible without you.>
+		Msg%id%01_10 <%name2% is now in custody. Thanks, \PC ... This wouldn't have been possible without you.>
+		CMsg%id%01_10 <ifNPCOK %2% Accept>
+		Msg%id%01_20 <%name2% won't be a threat any more. Thanks, \PC ... This wouldn't have been possible without you.>
 	end
 
 Content
@@ -1688,7 +1487,7 @@ Content
 				RandomLoot
 				Use <Print 1 OpenInv if= QuestStatus %qid% %id% SetQuestStatus %qid% -1>
 				Msg1 <You examine the contents of the display case.>
-				Loot_Category <WEAPON JEWEL>
+				Loot_Category <WEAPON JEWELRY GEMSTONE>
 				Loot_Factions <CRIHN>
 
 				STC DISPLAYCASE-1
