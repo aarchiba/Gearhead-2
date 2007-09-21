@@ -1809,6 +1809,7 @@ begin
 	if MergeOK then begin
 		{ Assign a ComponentID to the new component. }
 		SetNAtt( C^.NA , NAG_XXRan , NAS_ComponentID , NAttValue( Story^.NA , NAG_XXRan , NAS_ComponentID ) );
+		if XXRan_Debug then DialogMsg( 'New component size: ' + BStr( C^.V ) );
 		AddNAtt( Story^.NA , NAG_XXRan , NAS_ComponentID , 1 );
 		SetTrigger( GB , 'UPDATE' );
 

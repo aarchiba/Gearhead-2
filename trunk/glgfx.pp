@@ -1531,6 +1531,8 @@ initialization
 
 	Last_Clock_Update := 0;
 
+	Idle_Display;
+
 finalization
 
 	DisposeSAtt( Console_History );

@@ -2,6 +2,73 @@
 %%	+Pme	PC meets an enemy pilot under somewhat peaceful circumstances
 
 Plot
+	name <Loyalty Check>
+	size 2
+	desc <PC questioned by authorities; revealed there have been attacks lately.>
+	requires <#A +T-- +Pme E:++ (F:MIL|F:GOV|F:--) -F:ENEMY -L:ENEMY ~L:ALLY ~+Gre>
+
+	% E1 is the scene for this component
+	% E2 is the NPC to do the interrogation
+	% E3 is your enemy character, needed for the conversation
+	element1 <Scene Government !Near -7 !Enemy -1>
+	element2 <Character police !near 1 !Ally -7 NeverFail>
+	neverfail2 <police officer>
+	place2 <1 (Citizens) ally pass>
+	Element3 <Grab 1>
+
+	% V1 = Email Counter
+	5Min <if= V1 0 if= d10 1 email 1 V= 1 1>
+	Msg1_1 <%name2%@ \NARRATIVE 7 :// You are wanted for questioning. Please report to %name1% as soon as possible.>
+
+	start <ifNPCDead %2% LoseComp 0 .loss>
+	.loss <+T-->
+
+	sub
+		Persona 2
+		% V1 = Enemy Faction ID
+		rumor <%name2% has been asking a lot of questions about you.>
+		greeting <V= 1 N2  NewChat Say 1 AddChat 1 AddChat 2 AddChat 3>
+		GoWin <StoryNote 3  WinComp 0 .changes>
+		.changes <+Pun +T-- +F-->
+		result1 <NewChat Say 2                                     AddChat 4 AddChat 5  Goto GoWin>
+		result2 <NewChat Say 4  AddReact -d6  AddNPCReact N1 5     AddChat 4 AddChat 5  Goto GoWin>
+		result3 <NewChat Say 5  AddReact d8                        AddChat 4 AddChat 5  Goto GoWin>
+		result4 <                                       Goto GoBigQuestion>
+		result5 <AddNPCReact N1 10  AddSociable -d10    Goto GoBigQuestion>
+		GoBigQuestion <NewChat ifFactionAlly RootSceneFac else GoAskQuestion Say 6>
+		GoAskQuestion <Say 7  AddChat 6 AddChat 7 AddChat 8>
+		result6 <NewChat Say 8   AddEasygoing -d10   AddReact -d10>
+		result7 <NewChat Say 9   PCFEnemy V1  AddReact d10  AddLawful 1>
+		result8 <NewChat Say 10  AddEasygoing d10   AddReact -d10>
+		Msg1 <Hello \PC , I've been waiting for you. I'll get straight to the point: You were recently seen in the company of a known enemy agent. How do you plead?>
+		Msg1_2 <I've been looking for you. You should know that you're under investigation. We have surveillance video of you meeting with a known enemy agent, possibly collaborating with \OPR N1 , and I need to know why.>
+		CMsg1_2 <ifPCCriminal Accept>
+		Msg1_3 <\PC , I was hoping to speak with you. It seems that you were recently in the company of someone who may be an enemy agent. Would you care to respond?>
+		CMsg1_3 <ifPCLawful Accept>
+		Msg2 <You met with %name3% , who may be here on a subversive mission. Recently unauthorized mecha have been spotted. We may be looking at an invasion, or worse.>
+		Msg3 <You were investigated by \ELEMENT 2 for meeting with an enemy.>
+		Msg4 <\NARRATIVE 1 is collaborating with the enemy. Recently unauthorized mecha have been spotted nearby. We may be looking at an invasion, or worse.>
+		Msg5 <I'm not saying that you did, but \NARRATIVE 1 is an enemy agent, and we need all the information we can get. Recently unauthorized mecha have been spotted nearby. We may be looking at an invasion, or worse.>
+		Msg6 <I know your loyalty lies with \FACTION RootSceneFac , but even speaking with an enemy agent is dangerous. You could give away vital information without knowing it... Be careful.>
+		Msg7 <The main thing I need to know is, where do your loyalties lie? Will you stand with \FACTION RootSceneFac or are you going to betray us?>
+		Msg8  <I see. Well, I'll be keeping my eye on you. If you have any further contact with the enemy we'll know about it.>
+		Msg9  <That's good to hear. Stay vigilant... The enemies of our city are everywhere.>
+		Msg10 <Then I suggest you think about it. Do you really want to betray \SCENE RootSceneID and everyone who lives here?>
+		prompt1 <I don't know what you're talking about.>
+		prompt1_1 <Enemy agent? What are you talking about?>
+		Prompt2 <Maybe I was. So what?>
+		Prompt2_1 <Is it illegal to talk with people now?>
+		Prompt3 <Whatever I did, I broke no laws.>
+		Prompt3_1 <You know I'd never break any laws.>
+		CPrompt3 <ifG PCRep 2 0 Accept>
+		Prompt4 <I promise it won't happen again.>
+		Prompt5 <Just stay out of my business from now on, okay?>
+		Prompt6 <I'm loyal to no-one but myself.>
+		Prompt7 <I won't betray \FACTION RootSceneFac .>
+		Prompt8 <I don't know...>
+	end
+
+Plot
 	name <Wager For Friend>
 	desc <The PC can secure his friend's freedom by betting his own freedom and fighting a duel.>
 	requires <#A +Pme +T-- E:FRIEND (F:MIL|F:CRM|F:GOV) -F:ENEMY ~P:PDASS>

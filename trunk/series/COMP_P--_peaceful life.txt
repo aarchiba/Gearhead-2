@@ -270,7 +270,7 @@ Plot
 	name <Boring day, let's go duel!>
 	Size 1
 	desc <Your friend is bored, and suggests that the two of you go duel.>
-	requires <#A +Tgt +P-- (+F--|+Fch|+Fad) T:FRIEND (T:ADVEN|T:MILIT|T:PDASS) ~P:PDASS ~+Gfa>
+	requires <#A +Tgt +P-- (+F--|+Fch) T:FRIEND (T:ADVEN|T:MILIT|T:PDASS) ~P:PDASS ~+Gfa>
 
 	% E1 is the scene where the meeting will take place.
 	% E2 is the friend being met.

@@ -61,7 +61,7 @@ Content
 
 	sub
 		Persona 1
-		greeting <if= PlotStatus %id% else %pop% NewChat Say %id%01 WinComp 0 .%id%_next AddChat %id%01 AddChat %id%02>
+		greeting <if= PlotStatus %id% else %pop% NewChat Say %id%01 WinComp 0 .%id%_next StoryNote %id%03 AddChat %id%01 AddChat %id%02>
 		.%id%_next <+T-- +F-->
 		result%id%01 <NewChat Say %id%02  AddCheerful d6>
 		result%id%02 <NewChat Say %id%02>
@@ -81,6 +81,7 @@ Content
 		CMsg%id%02_5 <ifNPCCheerful Accept>
 		Msg%id%02_6 <I guess I'm just not good enough to make it as a member of %name2%... I'll have to learn to accept that.>
 		CMsg%id%02_6 <ifNPCMelancholy Accept>
+		Msg%id%03 <%name1% was fired from %name2%, much to your relief.>
 		Prompt%id%01 <It's probably for the best.>
 		Prompt%id%01_1 <You're better off without them.>
 		Prompt%id%01_2 <You're too good to work for them, anyhow.>
@@ -593,6 +594,58 @@ Content
 %%
 %% Param1: The Mission-giver
 %%
+
+Plot
+	name <City in Trouble>
+	desc <PC asked to help defend against the unknown enemy.>
+	requires <*CS_Win_ToUnknownEnemy (P:--|P:COR|P:PDASS) (F:MIL|F:CRM|F:--) (1:POLIT|1:POLIC|1:MILIT) -L:ENEMY>
+
+	% E1 is the target NPC.
+	% E3 is the next NPC to meet about a mission
+	% E3 is the scene for the next mission
+	% E4 is the local government faction
+	element2 <Character !Near -7 !Ally -7>
+	element3 <MetaScene !Near -7 *Building NeverFail>
+	element4 <Faction Government !Comrade -7>
+
+	start <if= PlotStatus %id% else %pop% ifNPCDead %1% LoseComp 0 .%id%_loss>
+	.%id%_loss <+T-->
+
+	sub
+		Persona 1
+		% V%id%01 = Have given reward
+		greeting <if= PlotSTatus %id% else %pop% if= V%id%01 0 else .%id%_GoNewMission CashPrize Reward Threat StoryDL 100 500 V= %id%01 1 Goto .%id%_GoGetReward>
+		*.%id%_GoGetReward <*MissionWasSuccess&Reward .%id%_GoRewardOp N3 N2>
+		.%id%_GoRewardOp <AddChat %id%03>
+		.%id%_GoNewMission <NewChat Say %id%01 AddChat %id%01 AddChat %id%02>
+		result%id%01 <ifNPCOK %2% else .%id%_GoNoMission NewChat Say %id%03 &SetTargetChar %2% &SetAllyFac %4% StoryNote %id%02 WinComp %3% .%id%_changes>
+		.%id%_changes <+Tgt +Fmi>
+		.%id%_GoNoMission <NewChat Say %id%04 &SetAllyFac %4% StoryNote %id%05 WinComp 0 .%id%_changes2>
+		*result%id%02 <*RejectMission .%id%_GoR2Exit>
+		.%id%_GoR2Exit <WinComp 0 .%id%_changes2>
+		.%id%_changes2 <+T-->
+		result3 <Goto .%id%_GoNewMission>
+		Msg%id%01 <We still don't know where these invaders are coming from, nor what they want. You know, %name4% could use a good pilot like you to help face this threat.>
+		Msg%id%01_1 <>
+		CMsg%id%01_1 <ifNPCSociable Accept>
+		Msg%id%01_2 <>
+		CMsg%id%01_2 <ifNPCShy Accept>
+		Msg%id%01_3 <>
+		CMsg%id%01_3 <ifNPCEasygoing Accept>
+		Msg%id%01_4 <>
+		CMsg%id%01_4 <ifNPCPassionate Accept>
+		Msg%id%01_5 <>
+		CMsg%id%01_5 <ifNPCCheerful Accept>
+		Msg%id%01_6 <>
+		CMsg%id%01_6 <ifNPCMelancholy Accept>
+		Msg%id%02 <%name1% sent you to speak with %name2% in %name3%.>
+		Msg%id%03 <In that case you should go to %name3% and speak with %name2%. I believe \SPR E2 has something you could help with.>
+		Msg%id%04 <That's good to hear. Go rest up, and get your stuff repaired. There's no telling when we could be attacked again.>
+		Msg%id%05 <You accepted %name1%'s request to help defend %name4%.>
+		Prompt%id%01 <It would be an honor to help.>
+		Prompt%id%02 <Sorry, I'm not signing up for anyone's war.>
+		Prompt%id%03 <Thank you.>
+	end
 
 Content
 	name <Here, have some money>

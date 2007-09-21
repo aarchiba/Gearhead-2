@@ -145,6 +145,8 @@ Content
 	desc <Your friend announces that he's joined Aegis Overlord.>
 	requires <*CS_Conversation +P-- E:-- (L:MAQUI|L:FCOMS) 1:Friend -1:Enemy ~P:Mil ~+Gpe -P:AEGIS>
 
+	Size 1
+
 	% Element1 is the NPC to meet
 	% Element2 is Aegis Overlord
 	element2 <Faction Aegis>
