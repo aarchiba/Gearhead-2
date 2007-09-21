@@ -483,7 +483,7 @@ Const
 
 
 Procedure InitChar(Part: GearPtr);
-Function CharBaseDamage( PC: GearPtr; CBod: Integer ): Integer;
+Function CharBaseDamage( PC: GearPtr; CBod,CVit: Integer ): Integer;
 
 Function RandomName: String;
 procedure RollStats( PC: GearPtr; Pts: Integer);
@@ -522,7 +522,7 @@ begin
 	SetNAtt( Part^.NA , NAG_GearOps , NAS_Material , NAV_Meat );
 end;
 
-Function CharBaseDamage( PC: GearPtr; CBod: Integer ): Integer;
+Function CharBaseDamage( PC: GearPtr; CBod,CVit: Integer ): Integer;
 	{Calculate the number of general HPs that a character}
 	{can take.}
 var
@@ -533,7 +533,7 @@ begin
 	HP := ( CBod + 5 ) div 2;
 
 	{ Add the Vitality skill. }
-	HP := HP + NAttValue( PC^.NA , NAG_Skill , 13 );
+	HP := HP + CVit;
 
 	CharBaseDamage := HP;
 end;

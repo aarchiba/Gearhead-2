@@ -656,6 +656,121 @@ Content
 		CMsg%id%01_20 <ifNPCOK &EnemyChar Accept>
 	end
 
+%%
+%% *CS_Win_RevealEnemyNPC
+%%
+%% The PC has defeated a new enemy NPC; this NPC should _not_ have been set as
+%% the story enemy by the calling component! That will probably but not nessecarily
+%% be done here. This component may alter the story state.
+%%
+%% The parent plot sets the plot status to this layer's ID when ready.
+%%
+%% Param1: The Mission-giver
+%% Param2: The enemy met; check to make sure he's not dead
+%%
+
+Content
+	name <Begin the Manhunt>
+	desc <The PC will begin a manhunt for the enemy NPC.>
+	requires <*CS_Win_RevealEnemyNPC (C:POLIC|P:POL|2:THIEF|E:++)>
+
+	% E1 is the mission-giver.
+	% E2 is the target.
+
+	start <if= PlotStatus %id% else %pop% ifNPCDead %1% SMemo 0 WinComp 0 .%id%_loss>
+	.%id%_loss <+T-- +F-->
+
+	sub
+		Persona 1
+		greeting <if= PlotStatus %id% else %pop% gOTO .%id%_GoReportSuccess>
+		.%id%_GoReportSuccess <NewChat Say %id%01 AddChat %id%01 Goto .%id%_GoEnd>
+		.%id%_GoEnd <CashPrize Reward Threat StoryDL 100 500 ifNPCOK %2% else .%id%_GoTrivialEnd SMemo %id%02  &SetTargetChar %2%  WinComp 0 .%id%_win>
+		.%id%_GoTrivialEnd <SMemo 0  WinComp 0 .%id%_meh>
+		.%id%_win <+Tht +Far>
+		.%id%_meh <+T-- +F-->
+		Result%id%01 <NewChat Say %id%03>
+		Msg%id%01 <Good work on the mission. Here's a reward.>
+		Msg%id%02 <%name2% could still be in \SCENE &EpisodeScene ; you should probably try to find \OPR %2% .>
+		Msg%id%03 <If %name2% is still nearby, it could be dangerous. It's important that \SPR %2% be found before \SPR %2% can attack again.>
+		Prompt%id%01 <I fought someone named %name2%.>
+		CPrompt%id%01 <ifNPCOK %2% Accept>
+	end
+
+Content
+	name <E2 is a priority>
+	desc <The new enemy will become the core story enemy.>
+	requires <*CS_Win_RevealEnemyNPC E:-->
+
+	% E1 is the mission-giver.
+	% E2 is the target.
+
+	start <if= PlotStatus %id% else %pop% ifNPCDead %1% SMemo 0 WinComp 0 .%id%_loss>
+	.%id%_loss <+T-- +F-->
+
+	sub
+		Persona 1
+		greeting <if= PlotStatus %id% else %pop% ifNPCOK %2% else .%id%_GoReportSuccess &SetEnemyChar %2% gOTO .%id%_GoReportSuccess>
+		*.%id%_GoReportSuccess <*MissionWasSuccess&Reward .%id%_GoEnd &AllyFac &EnemyFac>
+		.%id%_GoEnd <CashPrize Reward Threat StoryDL 100 500 SMemo 0 WinComp 0 .%id%_win>
+		.%id%_win <+T-- +F-->
+	end
+
+%%
+%% *CS_Loss_RevealEnemyNPC
+%%
+%% The PC has lost to a new enemy NPC; this NPC should _not_ have been set as
+%% the story enemy by the calling component! That will probably but not nessecarily
+%% be done here. This component may alter the story state.
+%%
+%% The parent plot sets the plot status to this layer's ID when ready.
+%%
+%% Param1: The Mission-giver
+%% Param2: The enemy met; check to make sure he's not dead
+%%
+
+Content
+	name <Never Again>
+	desc <The PC will make up for this loss by finding E2.>
+	requires <*CS_Loss_RevealEnemyNPC>
+
+	% E1 is the mission-giver.
+	% E2 is the target.
+
+	start <if= PlotStatus %id% else %pop% ifNPCDead %1% SMemo 0 WinComp 0 .%id%_loss>
+	.%id%_loss <+T-- +F-->
+
+	sub
+		Persona 1
+		greeting <if= PlotStatus %id% else %pop% gOTO .%id%_GoReportFailure>
+		.%id%_GoReportFailure <NewChat Say %id%01 AddChat %id%01 SMemo 0  LoseComp 0 .%id%_loss>
+		.%id%_hunt <+Tht +Far>
+		.%id%_loss <+T-- +F-->
+		Result%id%01 <NewChat Say %id%03 SMemo %id%02  &SetTargetChar %2%  AlterContext .%id%_hunt>
+		Msg%id%01 <You were defeated by %name2%. This is very bad.>
+		Msg%id%02 <%name2% could still be in \SCENE &EpisodeScene ; you should probably try to find \OPR %2% .>
+		Msg%id%03 <I certainly hope that you can. If \SPR %2% is still in \SCENE &EpisodeScene we could be in for some more trouble.>
+		Prompt%id%01 <I will find %name2%, and finish this.>
+		CPrompt%id%01 <ifNPCOK %2% Accept>
+	end
+
+Content
+	name <Default Loss to Enemy NPC>
+	desc <The NPC will debrief the PC on the loss; E2 becomes the core enemy.>
+	requires <*CS_Loss_RevealEnemyNPC E:-->
+
+	% E1 is the NPC.
+
+	start <if= PlotStatus %id% else %pop% ifNPCDead %1% LoseComp 0 .%id%_loss>
+	.%id%_loss <+T-- +F-->
+
+	sub
+		Persona 1
+		greeting <if= PlotStatus %id% else %pop% gOTO .%id%_GoReportLoss>
+		*.%id%_GoReportLoss <*MissionWasFailure .%id%_GoEnd &AllyFac &EnemyFac>
+		.%id%_GoEnd <SMemo 0 LoseComp 0 .%id%_loss ifNPCOK %2% &SetEnemyChar %2%>
+		.%id%_loss <+T-- +F-->
+	end
+
 
 %%
 %% *CS_CAWinMission Content

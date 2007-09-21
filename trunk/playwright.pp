@@ -1755,7 +1755,9 @@ var
 	Function TaskCanConclude: Boolean;
 		{ Return TRUE if this task can be a conclusion task, or FALSE otherwise. }
 	begin
-		TaskCanConclude := AStringHasBString( plot_desc , '+T--' ) or AStringHasBString( plot_desc , '+Tre' );
+		{ Previously some tasks couldn't conclude. Maybe they won't again in the }
+		{ future. For right now, though, I'm saying that everything can conclude. }
+		TaskCanConclude := True;
 	end;
 begin
 	desc := SAttValue( Story^.SA , 'XXRAN_PATTERN' );

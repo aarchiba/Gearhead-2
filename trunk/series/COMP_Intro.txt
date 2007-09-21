@@ -2,6 +2,200 @@
 %% told vaguely what's going on in the game world.
 
 Plot
+	name <Meet Professor>
+	Size 0
+	desc <You're reminded to meet your professor.>
+	requires <#A +T01 C:ACADE>
+
+	% E1 is the metascene to be used for the meeting.
+	% E2 is the original home of our new professor
+	% E3 is the scene where the "Intro NPC" is
+	% E4 is the "Intro NPC"
+	% E5 is the item to discuss
+	% E6 is the associate you're going to meet.
+	element1 <MetaScene !Near -7 *Building NeverFail>
+	element2 <Scene Building Public !Near -7>
+	element3 <Scene !Near -7 cavclub>
+	element4 <NewNPC -3 -7>
+	place4 <3 pass>
+	element5 <Artifact PreZero>
+	element6 <Prefab>
+	place6 <2 pass>
+
+	% V1 = Chat counter
+	update <if= V1 0 v= 1 1 ForceChat E4>
+
+	inv
+		NPC Citizen
+		home <The Start Position>
+		PCFriend
+
+		NPC Professor
+		PCFriend
+		chardesc Old Heroic
+	end
+	sub
+		Persona 4
+		% THE INTRO
+		% - All +T01 components should feature a intro character. They don't have to,
+		%   of course, but it'll be a major pissoff if they don't.
+		% - The intro character should follow this form, to insure that all the major
+		%   bits are in place: the introduction, the question, the story info, and the
+		%   advice.
+		% V1 = Have given story info.
+		greeting <&SetTargetChar E6 &SetTargetItem E5   SMemo 2  WinComp E1 .next  if= V1 1 else GoGreeting Goto GoAdvice>
+		.next <+Tgt +Fin +Pla>
+		*GoGreeting <*INTRO_Introduction GoAskQuestion>
+		*GoAskQuestion <*INTRO_Question GoStoryInfo>
+		GoStoryInfo <NewChat Say 1 V= 1 1 AddChat 1>
+		*GoAdvice <*INTRO_Advice>
+		result1 <Goto GoAdvice>
+		Msg1 <Aren't you supposed to meet your professor \ELEMENT 6 at \SCENE E1 later today?>
+		Msg1_1 <I thought you were heading to \SCENE E1 to speak with \ELEMENT 6 today. Shouldn't you be getting ready?>
+		CMsg1_1 <ifNPCSociable Accept>
+		Msg1_2 <Aren't you going to meet Doc \ELEMENT 6 at \SCENE E1 later today?>
+		CMsg1_2 <ifNPCShy Accept>
+		Msg1_3 <Man, I could never work as much as you do. Didn't you say you were meeting \ELEMENT 6 at \SCENE E1 later today to talk about something or another?>
+		CMsg1_3 <ifNPCEasygoing Accept>
+		Msg1_4 <So you're off now to \SCENE E1 to talk about something with \ELEMENT 6 , then? Sounds awfully boring to me.>
+		CMsg1_4 <ifNPCPassionate Accept>
+		Msg1_5 <I guess you'll be heading to \SCENE E1 soon so you can talk with \ELEMENT 6 . You always were the teacher's favorite.>
+		CMsg1_5 <ifNPCCheerful Accept>
+		Msg1_6 <I guess you'll be heading to \SCENE E1 soon so you can talk with \ELEMENT 6 . You always were a bit of a teacher's pet.>
+		CMsg1_6 <ifNPCMelancholy Accept>
+		Msg2 <You plan to meet \PERSONA E6 at \SCENE E1 to discuss the \ELEMENT 5 .>
+		Prompt1 <We'll be talking about the \ELEMENT 5 .>
+		Prompt1_1 <Yes. We have to discuss the \ELEMENT 5 .>
+	end
+
+Plot
+	name <Meet Priest>
+	Size 0
+	desc <You're reminded to meet a priest.>
+	requires <#A +T01 C:FAITH>
+
+	% E1 is the metascene to be used for the meeting.
+	% E2 is the original home of our new priest
+	% E3 is the scene where the "Intro NPC" is
+	% E4 is the "Intro NPC"
+	% E5 is the associate you're going to meet.
+	element1 <MetaScene !Near -7 *Building NeverFail>
+	element2 <Scene Building Public !Near -7>
+	element3 <Scene !Near -7 cavclub>
+	element4 <NewNPC -3 -7>
+	place4 <3 pass>
+	element5 <Prefab>
+	place5 <2 pass>
+
+	% V1 = Chat counter
+	update <if= V1 0 v= 1 1 ForceChat E4>
+
+	sub
+		Persona 4
+		% THE INTRO
+		% - All +T01 components should feature a intro character. They don't have to,
+		%   of course, but it'll be a major pissoff if they don't.
+		% - The intro character should follow this form, to insure that all the major
+		%   bits are in place: the introduction, the question, the story info, and the
+		%   advice.
+		% V1 = Have given story info.
+		greeting <&SetTargetChar E5 SMemo 2  WinComp E1 .next  if= V1 1 else GoGreeting Goto GoAdvice>
+		.next <+Tgt +Fin>
+		*GoGreeting <*INTRO_Introduction GoAskQuestion>
+		*GoAskQuestion <*INTRO_Question GoStoryInfo>
+		GoStoryInfo <NewChat Say 1 V= 1 1 AddChat 1 AddChat 2>
+		*GoAdvice <*INTRO_Advice>
+		result1 <NewChat Say 3 AddPragmatic -10   AddChat 3>
+		result2 <NewChat Say 3 AddChat 3>
+		result3 <Goto GoAdvice>
+		Msg1 <Are you going to go to \SCENE E1 today for your weekly argument with \ELEMENT 5 ? I guess it's nearly time for you to head out...>
+		Msg1_1 <Will you be meeting \ELEMENT 5 today? It's just about time for your regularly scheduled argument at \SCENE E1 , if I remember correctly.>
+		CMsg1_1 <ifNPCSociable Accept>
+		Msg1_2 <I guess you'll be heading to \SCENE E1 for your regular argument with \ELEMENT 5 soon.>
+		CMsg1_2 <ifNPCShy Accept>
+		Msg1_3 <I guess it's about time for you to head to \SCENE E1 , isn't it? Are you still having that argument with \ELEMENT 5 ?>
+		CMsg1_3 <ifNPCEasygoing Accept>
+		Msg1_4 <Isn't it time for you to go to \SCENE E1 ? I'm sure \ELEMENT 5 can't wait for you to continue that argument you've been having.>
+		CMsg1_4 <ifNPCPassionate Accept>
+		Msg1_5 <Have fun when you go to \SCENE E1 for your weekly argument with \ELEMENT 5 . That is today, isn't it?>
+		CMsg1_5 <ifNPCCheerful Accept>
+		Msg1_6 <Are you heading to \SCENE E1 for your weekly argument with \ELEMENT 5 again today? You're never going to change \PPR E5 mind about anything, you know.>
+		CMsg1_6 <ifNPCMelancholy Accept>
+		Msg2 <You will meet \PERSONA E5 at \SCENE E1 for a philosophical discussion.>
+		Msg3 <Well, I guess the two of you will have something else to discuss today, with you becoming a cavalier and all.>
+		Msg3_1 <Today you can discuss the theological ramifications of becoming a cavalier. I'm sure \ELEMENT 5 will have lots of opinions about that.>
+		Prompt1 <It's not an argument. It's a debate.>
+		Prompt1_1 <We don't argue, we discuss. There's a difference.>
+		Prompt2 <Yes, that's today.>
+		Prompt2_1 <Yeah, we're doing that.>
+		Prompt3 <Any advice before I head out?>
+		Prompt3_1 <Do you have any advice for me?>
+	end
+	inv
+		NPC Priest
+		PCFriend
+		chardesc Old Heroic
+	end
+
+Plot
+	name <Corporate Rivalries>
+	Size 0
+	desc <You have a meeting to discuss a rival corporation.>
+	requires <#A +T01 P:COR>
+
+	% E1 is the metascene to be used for the meeting.
+	% E2 is the associate you're going to meet.
+	% E3 is the scene where the "Intro NPC" is
+	% E4 is the "Intro NPC"
+	% E5 is the PC's faction
+	% E6 is the enemy faction
+	element1 <MetaScene !Near -7 *Building NeverFail>
+	element2 <Character !Comrade -3 !Near -7>
+	element3 <Scene !Near -7 cavclub>
+	element4 <NewNPC -3 -7 PCFriend>
+	place4 <3 pass>
+	element5 <Grab 3>
+	element6 <Faction Corporate !Enemy 5>
+
+	% V1 = Conversation counter
+	update <if= V1 0 V= 1 1 ForceChat %4%>
+
+	sub
+		Persona 4
+		% THE INTRO
+		% - All +T01 components should feature a intro character. They don't have to,
+		%   of course, but it'll be a major pissoff if they don't.
+		% - The intro character should follow this form, to insure that all the major
+		%   bits are in place: the introduction, the question, the story info, and the
+		%   advice.
+		% V1 = Have given story info.
+		greeting <&SetTargetChar %2%  &SetEnemyFac %6%   SMemo 2  WinComp %1% .next  if= V1 1 else GoGreeting Goto GoAdvice>
+		.next <+Tgt +Fmi>
+		*GoGreeting <*INTRO_Introduction GoAskQuestion>
+		*GoAskQuestion <*INTRO_Question GoStoryInfo>
+		GoStoryInfo <NewChat Say 1 V= 1 1 AddChat 1>
+		*GoAdvice <*INTRO_Advice>
+		result1 <Goto GoAdvice>
+		Msg1 <I hear that the rivalry between \ELEMENT 5 and \ELEMENT 6 is really heating up. You have a meeting with \ELEMENT 2 at \ELEMENT 1 today to discuss that, don't you?>
+		Msg1_1 <From what I hear, there's been a lot of competition recently between your company and \ELEMENT 6 . That's what you'll be discussing with \ELEMENT 2 at \ELEMENT 1 today, isn't it?>
+		CMsg1_1 <ifNPCSociable Accept>
+		Msg1_2 <It's nearly time for your meeting with \ELEMENT 2 at \ELEMENT 1 . The first order of business will likely be reducing \ELEMENT 6 's market share.>
+		CMsg1_2 <ifNPCShy Accept>
+		Msg1_3 <I hear your company's been having trouble with \ELEMENT 6 lately. That's probably what \ELEMENT 2 wants to speak with you about at \ELEMENT 1 today.>
+		CMsg1_3 <ifNPCEasygoing Accept>
+		Msg1_4 <It's good that you work for \ELEMENT 5 . They're a reputable company, not like \ELEMENT 6 ... It's nearly time for your meeting with \ELEMENT 2 at \ELEMENT 1 .>
+		CMsg1_4 <ifNPCPassionate Accept>
+		Msg1_5 <I hear that \ELEMENT 5 is coming out with a new dataset that totally blows the \ELEMENT 6 one away. You'll probably be talking about that at your meeting with \ELEMENT 2 in \ELEMENT 1 .>
+		CMsg1_5 <ifNPCCheerful Accept>
+		Msg1_6 <Call me paranoid, but I've been hearing talk about a corp war between \ELEMENT 6 and \ELEMENT 5 . Maybe that's why \ELEMENT 2 wanted to speak with you at \ELEMENT 1 today.>
+		CMsg1_6 <ifNPCMelancholy Accept>
+		Msg2 <You have to meet \PERSONA E2 at \SCENE E1 to discuss \ELEMENT 6 .>
+		Prompt1 <That's right. Do you have any advice for me?>
+		Prompt1_1 <Any advice in case this situation gets ugly?>
+	end
+
+
+Plot
 	name <Invasion Alert>
 	Size 0
 	desc <You're informed that the town is under attack.>

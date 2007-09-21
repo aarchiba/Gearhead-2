@@ -599,6 +599,7 @@ begin
 	while SPList <> Nil do begin
 		SubPlot := SPList;
 		DelinkGear( SPList , SubPlot );
+		AddSAtt( MasterPlot^.SA , 'SUBPLOT_NAME' , GearName( SubPlot ) );
 		DoStringSubstitutions( SubPlot );
 		CombinePlots( MasterPlot, SubPlot );
 		DisposeGear( SubPlot );

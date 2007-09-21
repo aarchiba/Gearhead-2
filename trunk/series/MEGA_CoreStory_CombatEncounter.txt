@@ -195,8 +195,8 @@ Plot
 
 	% SubPlot1 = Win the battle, get a reward
 	% SubPlot2 = Lose the battle, get scorned
-	SubPlot1 <*CS_CAWinMission 1>
-	SubPlot2 <*CS_CALoseMission 1>
+	SubPlot1 <*CS_Win_RevealEnemyNPC  1 4>
+	SubPlot2 <*CS_Loss_RevealEnemyNPC 1 4>
 
 	sub
 		MetaScene 3 2
@@ -206,7 +206,7 @@ Plot
 		MapWidth 30
 		MapHeight 30
 
-		Start <if= L2 0 L= 2 1   ForceChat %4%   &SetEnemyChar %4%  PCFEnemy &EnemyFac>
+		Start <if= L2 0 L= 2 1   ForceChat %4%     PCFEnemy &EnemyFac>
 		Faint%4% <if= L1 0  Goto GoDie>
 		GoDie <L= 1 2  L= 3 1   FreezeNPC %4%   SMemo 3 History 2     SetPlotStatus %id1%>
 		nu1 <if= T1 0  Return   if= L1 0 L= 1 1   SMemo 3 History 2      ForceChat %4%  SetPlotStatus %id2%>
@@ -251,81 +251,6 @@ Plot
 		name <%name1%'s Mission>
 		update <if= PlotStatus %id% else GoHide SetStat STAT_MetaVisibility 0  Goto GoSetOrders>
 	end
-
-
-Plot
-	name <A New Arch-Enemy>
-	size 8
-	desc <Fight your new arch-enemy for the first time.>
-	requires <*CS_MechaEncounter +Pun ~!Lo ~!Md E:-- -F:Ally>
-
-	% E1: The Mission Provider
-	% E2: The outdoor scene where the fight will take place
-	% E3 is the combat scene
-	% E4 is the enemy character
-	Element3 <Prefab>
-	Place3 <2>
-	element4 <NewNPC -2 0>
-	place4 <3 (Enemies) SD enemy>
-
-	% V%id%01 = Initialization Counter
-	update <if= V%id%01 0 else %pop% V= %id%01 1 NPCLevel %4% StoryDL Goto %pop%>
-
-	% SubPlot1 = Win the battle, get a reward
-	% SubPlot2 = Lose the battle, get scorned
-	SubPlot1 <*CS_CAWinMission 1>
-	SubPlot2 <*CS_CALoseMission 1>
-
-	sub
-		MetaScene 3 2
-		% L1 = Encounter Over Counter
-		% L2 = Initialization Counter
-		% L3 = Script Immunity Counter
-		MapWidth 30
-		MapHeight 30
-
-		Start <if= L2 0 L= 2 1   ForceChat %4%   &SetEnemyChar %4%  PCFEnemy &EnemyFac>
-		Faint%4% <if= L1 0  Goto GoDie>
-		GoDie <L= 1 2  L= 3 1   FreezeNPC %4%   SMemo 5 History 4     SetPlotStatus %id1%>
-		nu1 <if= T1 0  Return   if= L1 0 L= 1 1   SMemo 5 History 2      ForceChat %4%  SetPlotStatus %id2%>
-		nu2 <if= T2 0           if= L1 0 L= 1 2   SMemo 5 History 3   AddRenown 1  Salvage   ifNPCOK %4% else GoDie  XPV 100    ForceChat %4%  SetPlotStatus %id1%>
-		End <if# L3 0 Print 1>
-
-		Msg1 <%name4%'s cockpit is empty. Could \SPR %4% have escaped?>
-		Msg2 <You met %name4% in battle, and lost.>
-		Msg3 <You met %name4% in battle, and won.>
-		Msg4 <You appeared to kill %name4% in battle, but \PPR %4% body wasn't found...>
-		Msg5 <You met %name4% in battle. You should report back to %name1% about it.>
-
-		sub
-			team 1
-			SetEnemy 2
-			ParaX 5
-			ParaY 5
-
-			team 2
-			name <Enemies>
-			SetEnemy 1
-			Deploy <SetSelfFaction &EnemyFac   WMecha 2 Threat StoryDL 75>
-			ParaX 25
-			ParaY 25
-		end
-
-		Persona 4
-		special <UNLISTED>
-		greeting <if= L1 2 else GoCheckLoss Goto GoWinSpeech>
-		*GoWinSpeech <*GetYouNextTime>
-		GoCheckLoss <if= L1 1 else GoThreat  Goto GoLoseSpeech>
-		*GoLoseSpeech <*YouLose>
-		*GoThreat <*COMP_Pun_MAE_Greeting GoFight>
-		*GoFight <*THEME_EXPO&ENEMY na>
-	end
-	inv
-		STC ENCOUNTER-WANDER
-		name <%name1%'s Mission>
-		update <if= PlotStatus %id% else GoHide SetStat STAT_MetaVisibility 0  Goto GoSetOrders>
-	end
-
 
 Content
 	name <A Pilot in Trouble>
@@ -761,6 +686,80 @@ Content
 		update <if= PlotStatus %id% else GoHide SetStat STAT_MetaVisibility 0  Goto GoSetOrders>
 	end
 
+Plot
+	name <A New Arch-Enemy>
+	size 8
+	desc <Fight your new arch-enemy for the first time.>
+	requires <*CS_MechaEncounter +Pun ~!Lo ~!Md E:-- -F:Ally>
+
+	% E1: The Mission Provider
+	% E2: The outdoor scene where the fight will take place
+	% E3 is the combat scene
+	% E4 is the enemy character
+	Element3 <Prefab>
+	Place3 <2>
+	element4 <NewNPC -2 0>
+	place4 <3 (Enemies) SD enemy>
+
+	% V%id%01 = Initialization Counter
+	update <if= V%id%01 0 else %pop% V= %id%01 1 NPCLevel %4% StoryDL Goto %pop%>
+
+	% SubPlot1 = Win the battle, get a reward
+	% SubPlot2 = Lose the battle, get scorned
+	SubPlot1 <*CS_Win_RevealEnemyNPC 1 4>
+	SubPlot2 <*CS_Loss_RevealEnemyNPC 1 4>
+
+	sub
+		MetaScene 3 2
+		% L1 = Encounter Over Counter
+		% L2 = Initialization Counter
+		% L3 = Script Immunity Counter
+		MapWidth 30
+		MapHeight 30
+
+		Start <if= L2 0 L= 2 1   ForceChat %4%     PCFEnemy &EnemyFac>
+		Faint%4% <if= L1 0  Goto GoDie>
+		GoDie <L= 1 2  L= 3 1   FreezeNPC %4%   SMemo 5 History 4     SetPlotStatus %id1%>
+		nu1 <if= T1 0  Return   if= L1 0 L= 1 1   SMemo 5 History 2      ForceChat %4%  SetPlotStatus %id2%>
+		nu2 <if= T2 0           if= L1 0 L= 1 2   SMemo 5 History 3   AddRenown 1  Salvage   ifNPCOK %4% else GoDie  XPV 100    ForceChat %4%  SetPlotStatus %id1%>
+		End <if# L3 0 Print 1>
+
+		Msg1 <%name4%'s cockpit is empty. Could \SPR %4% have escaped?>
+		Msg2 <You met %name4% in battle, and lost.>
+		Msg3 <You met %name4% in battle, and won.>
+		Msg4 <You appeared to kill %name4% in battle, but \PPR %4% body wasn't found...>
+		Msg5 <You met %name4% in battle. You should report back to %name1% about it.>
+
+		sub
+			team 1
+			SetEnemy 2
+			ParaX 5
+			ParaY 5
+
+			team 2
+			name <Enemies>
+			SetEnemy 1
+			Deploy <SetSelfFaction &EnemyFac   WMecha 2 Threat StoryDL 75>
+			ParaX 25
+			ParaY 25
+		end
+
+		Persona 4
+		special <UNLISTED>
+		greeting <if= L1 2 else GoCheckLoss Goto GoWinSpeech>
+		*GoWinSpeech <*GetYouNextTime>
+		GoCheckLoss <if= L1 1 else GoThreat  Goto GoLoseSpeech>
+		*GoLoseSpeech <*YouLose>
+		*GoThreat <*COMP_Pun_MAE_Greeting GoFight>
+		*GoFight <*THEME_EXPO&ENEMY na>
+	end
+	inv
+		STC ENCOUNTER-WANDER
+		name <%name1%'s Mission>
+		update <if= PlotStatus %id% else GoHide SetStat STAT_MetaVisibility 0  Goto GoSetOrders>
+	end
+
+
 Content
 	name <Meet Your New Enemy>
 	size 8
@@ -781,8 +780,8 @@ Content
 
 	% SubPlot1 = Win the battle, get a reward
 	% SubPlot2 = Lose the battle, get scorned
-	SubPlot1 <*CS_Win_ToUnknownEnemy 1>
-	SubPlot2 <*CS_Loss_ToUnknownEnemy 1>
+	SubPlot1 <*CS_Win_RevealEnemyNPC 1 4>
+	SubPlot2 <*CS_Loss_RevealEnemyNPC 1 4>
 
 	sub
 		MetaScene 3 2
@@ -791,7 +790,7 @@ Content
 		MapWidth 30
 		MapHeight 30
 
-		Start <if= L2 0 L= 2 1   SMemo 3 History 2   ForceChat %4%   &SetEnemyChar %4% AlterContext .next>
+		Start <if= L2 0 L= 2 1   SMemo 3 History 2   ForceChat %4%    AlterContext .next>
 		nu1 <if= T1 0   Return   if= V1 0 V= 1 1   SetPlotStatus %id2%>
 		nu2 <if= T2 0   if= V1 0 V= 1 1   XPV 100  AddRenown 1   SALVAGE   Alert 1 SetPlotStatus %id1%>
 		Msg1 <Who sent these mecha, and what do they want?>

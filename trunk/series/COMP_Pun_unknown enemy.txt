@@ -1,4 +1,29 @@
 %% COMP_Pun
 %%	+Pun	An unknown enemy attacks
 
+Plot
+	name <City Under Attack>
+	desc <The leader of the city puts out a call for heroes.>
+	requires <#A +T-- +Pun F:-- -L:ENEMY ~L:ALLY ~P:-- ~+Gpe>
+
+	% E1 is the scene where this component will take place
+	% E2 is the NPC that the PC will speak with
+	element1 <Scene Building Public !Ally -7 !Near -7>
+	element2 <Character POLIT !Near -7 !Comrade -7>
+	Place2 <1 (Citizens) pass>
+
+	% All this plot does is move the NPC, post some news,
+	% and activate the mission subplot
+	update <if= PlotStatus 0  News 1  SetPlotStatus %id1%>
+
+	%% SubPlot1 is the mission to be offered
+	SubPlot1 <*CS_GiveMission 2>
+
+	Msg1_1  <%name2% of \NARRATIVE 7 seeks cavaliers to help defend the town. Interested parties should apply at %name1%.>
+	Msg1_2  <\NARRATIVE 7 is under attack! %name2% will be interviewing cavaliers for defense missions at %name1%.>
+	Msg1_3  <Unknown mecha are attacking \SCENE &EpisodeScene . %name2% has put out a call for volunteers; applicants are to meet at %name1%.>
+	Msg1_4  <Is \SCENE &EpisodeScene under attack? %name2% has been meeting with mecha pilots at %name1%.>
+	Msg1_5  <%name2% has called on adventurers to defend \NARRATIVE 7 from a mysterious enemy. Defense efforts are being coordinated from %name1%.>
+
+
 

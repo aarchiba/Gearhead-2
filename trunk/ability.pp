@@ -213,27 +213,18 @@ begin
 	else GearActive := False;
 end;
 
+Function SkillRank( PC: GearPtr; Skill: Integer ): Integer;
+	{ Return the PC's rank in this skill. }
+begin
+	{ Make sure we're dealing with the real PC here. }
+	PC := LocatePilot( PC );
+	SkillRank := CharaSkillRank( PC , Skill );
+end;
+
 function SkillValue( Master: GearPtr; Skill: Integer ): Integer;
 	{ Find MASTER's skill roll value. This is the }
 	{ skill rank + the attribute value + any modifiers }
 	{ that might apply (maneuver class, etc). }
-	function PartMod( Part: GearPtr ): Integer;
-		{ Determine the total modifier gained from MODIFIER }
-		{ gears installed in PART. }
-	var
-		MD: GearPtr;	{ Modifier gears. }
-		it: Integer;
-	begin
-		MD := Part^.SubCom;
-		it := 0;
-		while MD <> Nil do begin
-			if ( MD^.G = GG_Modifier ) and ( MD^.S = GS_SkillModifier ) then begin
-				if ( MD^.Stat[ STAT_SkillToModify ] = Skill ) and ( MD^.Stat[ STAT_SkillModBonus ] > it ) then it := MD^.Stat[ STAT_SkillModBonus ];
-			end;
-			MD := MD^.Next;
-		end;
-		PartMod := it;
-	end;
 	function UnitSkillValue( M: GearPtr ): Integer;
 		{ Return the skill value of this unit. }
 		{ M points to the list of unit models. }
@@ -273,17 +264,18 @@ begin
 	if Master^.G = GG_Character then begin
 		{ Since this is a character, just grab the needed }
 		{ ranks from the gear's stats and attributes. }
-		SkRk := NAttValue( Master^.NA , NAG_Skill , Skill) + PartMod( Master );
+		SkRk := CharaSkillRank( Master , Skill );
 		StRk := CStat( Master , SkillMan[Skill].stat );
 
-		{ If the skill isn't known at all, there's a penalty. }
-		if ( SkRk < 1 ) and ( NAttValue( Master^.NA , NAG_Talent , NAS_JackOfAll ) = 0 ) then SkMod := -2;
 		C := Master;
+
+		{ If the skill isn't known at all, there's a penalty. }
+		if ( SkRk < 1 ) then SkMod := -2;
 
 		{ Check for tools. }
 		if SkillMan[ Skill ].ToolNeeded <> TOOL_None then begin
 			{ If the tool is mandatory, it doesn't matter if it's been equipped or not. }
-			Tool := SeekGear( master , GG_Tool , Skill , True );
+			Tool := SeekGear( Master , GG_Tool , Skill , True );
 			if Tool <> Nil then begin
 				SkMod := SkMod + Tool^.V;
 			end else begin
@@ -325,7 +317,7 @@ begin
 		C := LocatePilot( Master );
 		if C = Nil then Exit( 0 );
 
-		SkRk := SkillValue( C , Skill) + PartMod( Master );
+		SkRk := SkillValue( C , Skill) + ModifiersSkillBonus( Master , Skill );
 		StRk := 0;
 
 		if SkillMan[Skill].MekSys = MS_Maneuver then begin
@@ -783,23 +775,6 @@ begin
 	PC := LocatePilot( PC );
 	if PC = Nil then Exit( 0 );
 	PartyLancemateSlots := ( PC^.Stat[ STAT_Charm ] + NAttValue( PC^.NA , NAG_Skill , NAS_Leadership ) + ( NAttValue( PC^.NA , NAG_CharDescription , NAS_Renowned ) div 10 ) ) div 4;
-end;
-
-Function SkillRank( PC: GearPtr; Skill: Integer ): Integer;
-	{ Return the PC's rank in this skill. }
-var
-	it: Integer;
-begin
-	{ Make sure we're dealing with the real PC here. }
-	PC := LocatePilot( PC );
-
-	if PC <> Nil then begin
-		it := NAttValue( PC^.NA , NAG_Skill , Skill ); 
-		if ( it = 0 ) and HasTalent( PC , NAS_JackOfAll ) then it := 1;
-		SkillRank := it;
-	end else begin
-		SkillRank := 0;
-	end;
 end;
 
 Function HasSkill( PC: GearPtr; Skill: Integer ): Boolean;

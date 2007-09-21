@@ -929,6 +929,74 @@ inv
 end
 
 Set
+name <Pilot Suit [set]>
+desc <A light spacesuit used by the Pro Duelist Association.>
+Category <CLOTHING SPACE>
+Factions <PDASS>
+Legality -25
+inv
+	HeadArmor 3
+	name <Duelist Helm>
+	desc <A spacesuit helm with an integrated rebreather and communicator.>
+	Category <CLOTHING SPACE>
+	SDL_PORTRAIT <item_lightspacehelm.png>
+	Mass -4
+	Legality -25
+	Sealed
+	Hardened
+	Phone
+
+	BodyArmor 3
+	name <Pilot Suit>
+	desc <A light spacesuit used by the Pro Duelist Association.>
+	Category <CLOTHING SPACE>
+	Mass -4
+	Legality -25
+	Sealed
+	sub
+		SpaceFlight 2
+	end
+
+	ArmArmor 2
+	name <Pilot Suit Sleeve>
+	desc <A light spacesuit used by the Pro Duelist Association.>
+	Category <CLOTHING SPACE>
+	Mass -3
+	Legality -25
+	Sealed
+
+	LegArmor 2
+	name <Pilot Suit Legging>
+	desc <A light spacesuit used by the Pro Duelist Association.>
+	Category <CLOTHING SPACE>
+	Mass -3
+	Legality -25
+	Sealed
+	sub
+		SpaceFlight 1
+	end
+
+	ArmArmor 2
+	name <Pilot Suit Sleeve>
+	desc <A light spacesuit used by the Pro Duelist Association.>
+	Category <CLOTHING SPACE>
+	Mass -3
+	Legality -25
+	Sealed
+
+	LegArmor 2
+	name <Pilot Suit Legging>
+	desc <A light spacesuit used by the Pro Duelist Association.>
+	Category <CLOTHING SPACE>
+	Mass -3
+	Legality -25
+	Sealed
+	sub
+		SpaceFlight 1
+	end
+end
+
+Set
 name <Corporate Uniform [set]>
 desc <A lightly armored corporate uniform.>
 Category <ARMOR CLOTHING>

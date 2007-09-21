@@ -49,6 +49,9 @@ function FindMaster( Part: GearPtr ): GearPtr;
 Function MasterSize(Part: GearPtr): Integer;
 function FindModule( Part: GearPtr ): GearPtr;
 
+function ModifiersSkillBonus( Part: GearPtr; Skill: Integer ): Integer;
+Function CharaSkillRank( PC: GearPtr; Skill: Integer ): Integer;
+
 function InGoodModule( Part: GearPtr ): Boolean;
 
 Function ScaleDP( DP , Scale , Material: Integer ): Integer;
@@ -256,6 +259,48 @@ begin
 	FindModule := Part;
 end;
 
+function ModifiersSkillBonus( Part: GearPtr; Skill: Integer ): Integer;
+	{ Determine the total skill bonus gained from MODIFIER }
+	{ gears installed in PART. }
+var
+	MD: GearPtr;	{ Modifier gears. }
+	it: Integer;
+begin
+	MD := Part^.SubCom;
+	it := 0;
+	while MD <> Nil do begin
+		if ( MD^.G = GG_Modifier ) and ( MD^.S = GS_SkillModifier ) then begin
+			if ( MD^.Stat[ STAT_SkillToModify ] = Skill ) and ( MD^.Stat[ STAT_SkillModBonus ] > it ) then it := MD^.Stat[ STAT_SkillModBonus ];
+		end;
+		MD := MD^.Next;
+	end;
+	ModifiersSkillBonus := it;
+end;
+
+Function CharaSkillRank( PC: GearPtr; Skill: Integer ): Integer;
+	{ Return the PC's rank in this skill. }
+	{ Note that PC _MUST_ be the actual PC!!! This does not work on }
+	{ mecha, or props, or anything else!!! }
+	{ Also note that this function does not check the presence of tools. }
+var
+	it: Integer;
+begin
+	if ( PC <> Nil ) and ( PC^.G = GG_Character ) then begin
+		it := NAttValue( PC^.NA , NAG_Skill , Skill ) + ModifiersSkillBonus( PC , Skill );
+
+		{ Normally to check for a talent we'd use the HAStALENT function, }
+		{ but since that isn't available here and we know we're dealing with }
+		{ the PC and also because you can't be granted talents from items or }
+		{ mecha, I'll just check the NAtt to see if it's present. }
+		if ( it = 0 ) and ( NAttValue( PC^.NA , NAG_Talent , NAS_JackOfAll ) <> 0 ) then it := 1;
+
+		CharaSkillRank := it;
+	end else begin
+		CharaSkillRank := 0;
+	end;
+end;
+
+
 
 function InGoodModule( Part: GearPtr ): Boolean;
 	{ Check PART to make sure that it is mounted in a good module. }
@@ -319,9 +364,9 @@ var
 	it: Integer;
 begin
 	case Part^.G of
-		GG_Module:	it := ModuleBaseDamage(Part);
+		GG_Module:	it := ModuleBaseDamage( Part );
 		GG_Mecha:	it := -1;
-		GG_Character:	it := CharBaseDamage(Part , CStat( Part , STAT_Body ) );
+		GG_Character:	it := CharBaseDamage(Part , CStat( Part , STAT_Body ) , CharaSkillRank( Part , NAS_Vitality ) );
 		GG_Cockpit:	it := -1;
 		GG_Weapon:	it := WeaponBaseDamage(Part);
 		GG_Ammo:	it := AmmoBaseDamage(Part);
@@ -1116,8 +1161,8 @@ begin
 		{ Encumberance value is basic MassPerMV + Size of mecha. }
 		GearEncumberance := MassPerMV + Mek^.V;
 	end else if Mek^.G = GG_Character then begin
-		{ Encumberance value is BODY stat + 3. }
-		GearEncumberance := CStat( Mek , STAT_Body ) + 2 + NAttValue( Mek^.NA , NAG_Skill , NAS_WeightLifting );
+		{ Encumberance value is BODY stat + 2 + WeightLifting. }
+		GearEncumberance := CStat( Mek , STAT_Body ) + 2 + CharaSkillRank( Mek , NAS_WeightLifting );
 	end else begin
 		GearEncumberance := 0;
 	end;
@@ -1476,7 +1521,7 @@ begin
 
 	{ Reduce the basic mass by the character's weight lifting skill. }
 	if PC^.G = GG_Character then begin
-		EMass := EMass - NAttValue( PC^.NA , NAG_Skill , NAS_WeightLifting );
+		EMass := EMass - CharaSkillRank( PC , NAS_WeightLifting );
 	end;
 
 	if EMass > 0 then begin
@@ -1806,6 +1851,8 @@ var
 	Master,Ammo: GearPtr;
 	Procedure ApplyCCBonus;
 		{ Apply the close combat bonus for weapons. }
+	var
+		Module: GearPtr;
 	begin
 		if Master <> Nil then begin
 			if Master^.G = GG_Character then begin
@@ -1813,12 +1860,18 @@ var
 
 				{ Martial Arts attacks get a bonus based on skill level. }
 				if Attacker^.G = GG_Module then begin
-					D := D + ( NAttValue( Master^.NA , NAG_Skill , 9 ) - 1 ) div 2;
+					D := D + ( CharaSkillRank( Master , 9 ) - 1 ) div 2;
 				end;
 
 				if D < 1 then D := 1;
 			end else if Master^.G = GG_Mecha then begin
 				D := D + ( Master^.V - 1 ) div 2;
+
+				{ Having an oversized module gives a +1 bonus to damage. }
+				Module := FindModule( Attacker );
+				if Module <> Nil then begin
+					if Module^.V > Master^.V then Inc( D );
+				end;
 
 				{ Zoanoids get a CC damage bonus. Apply that here. }
 				if Master^.S = GS_Zoanoid then begin

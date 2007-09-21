@@ -7,6 +7,45 @@
 %%
 %% NAME: *[city designation]_[building name abbreviated]_[content type]
 
+%% *MAQSP_PG_PrivateerShop
+%%	One shop at the Privateer's Guild sells privateer weapons, armor, and
+%%	mecha.
+
+Content
+	requires <*MAQSP_PG_PrivateerShop>
+	element1 <Prefab>
+	team1 <Citizens>
+	teamdata1 <Pass>
+	minimap <..1.................#---#>
+	sub
+		Persona 1
+		% V1 = Stupid question counter
+		*greeting <*NiceToMeetYou GoOpenStore>
+		GoOpenStore <NewChat Say 1 AddChat 1 AddChat 2 AddChat 3>
+		result1 <EndChat Say 2 Shop .wares Goto result2>
+		.wares <WEAPON ARMOR PIRATE MECHA>
+		*result2 <*GoodBye>
+		result3 <NewChat Say 3 V= 1 1 AddChat 1 AddChat 2>
+		Msg1 <This is the Weapons Locker, official supplier of the Privateer's Guild. Here you'll find all and sundry for turning a profit on your letter of marque.>
+		Msg2 <Now, our clients may be mostly ex-pirates, but that doesn't mean this isn't all top of the line gear. I know the serial numbers are all scratched off the pistols but those were damaged in shipping.>
+		Msg3 <No, you bloody well do not get a membership discount. What kind of a stupid question is that? Now, do you want to look at my gear or not?>
+		Prompt1 <I'll take a look.>
+		Prompt2 <I don't need anything.>
+		Prompt3 <Do I get a membership discount?>
+		CPrompt3 <if= PCFac 6 if= V1 0 Accept>
+	end
+	inv
+		NPC Privateer
+		name <Aveyhar>
+		NonCombatant
+		SetFaction 6
+		Age 23
+		% He isn't lying about the pistols, btw
+		CharDesc Lawful Pragmatic Passionate Male
+		skill 21 12
+	end
+
+
 %% *FUCSP_CBHQ_CometBurger
 %%	The actual CometBurger restaurant needed for the HQ.
 

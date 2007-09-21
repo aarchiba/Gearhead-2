@@ -514,6 +514,72 @@ inv
 end
 
 Set
+name <Bunny Armor [set]>
+desc <A sophisticated active armor from MUGL Enterprises. It is decorated with the MUGL bunny mascot.>
+Category <ARMOR SPACE>
+Factions <MUGLE>
+inv
+	HeadArmor 4
+	name <Bunny Helm>
+	desc <A light spacesuit helm with "rabbit ear" sensory enhancers.>
+	SDL_PORTRAIT <>
+	Mass -6
+	Sealed
+	Hardened
+	Perception 5
+
+	BodyArmor 5
+	name <Bunny Armor>
+	desc <A sophisticated active armor decorated with the MUGL bunny mascot.>
+	Mass -7
+	Sealed
+	Hardened
+	Speed 2
+	Perception 5
+	sub
+		Flight 3
+	end
+
+	ArmArmor 4
+	name <Bunny Sleeve>
+	desc <A sophisticated active armor decorated with the MUGL bunny mascot.>
+	Mass -6
+	Speed 2
+	Hardened
+	Sealed
+
+	ArmArmor 4
+	name <Bunny Sleeve>
+	desc <A sophisticated active armor decorated with the MUGL bunny mascot.>
+	Mass -6
+	Speed 2
+	Hardened
+	Sealed
+
+	LegArmor 4
+	name <Bunny Legging>
+	desc <A sophisticated active armor decorated with the MUGL bunny mascot.>
+	Mass -6
+	Sealed
+	Hardened
+	Speed 2
+	sub
+		Flight 2
+	end
+
+	LegArmor 4
+	name <Bunny Legging>
+	desc <A sophisticated active armor decorated with the MUGL bunny mascot.>
+	Mass -6
+	Sealed
+	Hardened
+	Speed 2
+	sub
+		Flight 2
+	end
+end
+
+Set
 name <Squire Armor [set]>
 desc <An armored spacesuit used by the Silver Knights.>
 Category <ARMOR SPACE>
@@ -588,7 +654,11 @@ inv
 	Legality 10
 	Sealed
 	Hardened
-	Perception 10
+	Perception 5
+	Memo
+	Phone
+	Email
+	News
 
 	BodyArmor 6
 	name <Paladin Suit>
@@ -598,6 +668,7 @@ inv
 	Sealed
 	Hardened
 	Body 10
+	Perception 5
 	sub
 		HoverJet 3
 	end
@@ -648,7 +719,6 @@ inv
 		HoverJet 3
 	end
 end
-
 
 Set
 name <Combat Spacesuit [set]>
@@ -717,6 +787,59 @@ inv
 end
 
 Set
+name <Utility Suit [set]>
+desc <A cheaply made spacesuit.>
+Category <CLOTHING SPACE>
+Factions <BOHEM CRIHN FCOMS COMET HOELL MUGLE>
+Legality -25
+inv
+	BodyArmor 3
+	name <Utility Suit>
+	desc <A cheaply made spacesuit.>
+	Category <CLOTHING SPACE>
+	Mass -2
+	Sealed
+	sub
+		SpaceFlight 3
+	end
+
+	ArmArmor 3
+	name <Utility Sleeve>
+	desc <A cheaply made spacesuit.>
+	Category <CLOTHING SPACE>
+	Mass -2
+	Sealed
+
+	ArmArmor 3
+	name <Utility Sleeve>
+	desc <A cheaply made spacesuit.>
+	Category <CLOTHING SPACE>
+	Mass -2
+	Sealed
+
+	LegArmor 3
+	name <Utility Legging>
+	desc <A cheaply made spacesuit.>
+	Category <CLOTHING SPACE>
+	Mass -2
+	Sealed
+
+	LegArmor 3
+	name <Utility Legging>
+	desc <A cheaply made spacesuit.>
+	Category <CLOTHING SPACE>
+	Mass -2
+	Sealed
+
+	HeadArmor 3
+	name <Utility Helm>
+	desc <A cheaply made spacesuit.>
+	Category <CLOTHING SPACE>
+	Mass -3
+	Sealed
+end
+
+Set
 name <Space Suit [set]>
 desc <A regular spacesuit.>
 Category <ARMOR CLOTHING SPACE>
@@ -778,11 +901,69 @@ inv
 end
 
 Set
+name <Wynn Suit [set]>
+desc <An armored spacesuit commonly used by pirates.>
+Category <ARMOR SPACE>
+Factions <BOHEM CRIHN PRIVA>
+Legality -5
+inv
+	BodyArmor 4
+	name <Wynn Suit>
+	desc <An armored spacesuit commonly used by pirates.>
+	Category <ARMOR SPACE>
+	Mass -5
+	Sealed
+
+	ArmArmor 4
+	name <Wynn Sleeve>
+	desc <An armored spacesuit commonly used by pirates.>
+	Category <ARMOR SPACE>
+	Mass -5
+	Sealed
+
+	ArmArmor 4
+	name <Wynn Sleeve>
+	desc <An armored spacesuit commonly used by pirates.>
+	Category <ARMOR SPACE>
+	Mass -5
+	Sealed
+
+	LegArmor 4
+	name <Wynn Legging>
+	desc <An armored spacesuit commonly used by pirates.>
+	Category <ARMOR SPACE>
+	Mass -5
+	Sealed
+	sub
+		SpaceFlight 2
+	end
+
+	LegArmor 4
+	name <Wynn Legging>
+	desc <An armored spacesuit commonly used by pirates.>
+	Category <ARMOR SPACE>
+	Mass -5
+	Sealed
+	sub
+		SpaceFlight 2
+	end
+
+	HeadArmor 4
+	name <Skull Helm>
+	desc <An armored spacesuit helm with a holographic skull image on the visor.>
+	Category <ARMOR SPACE>
+	Mass -6
+	Sealed
+	Phone
+end
+
+
+Set
 name <Encounter Suit [set]>
 desc <A bulky spacesuit with added protection.>
 Category <ARMOR SPACE>
 Factions <MAQUI BOHEM CRIHN PRIVA FCOMS RISHI>
-Legality -15
+Legality -5
 inv
 	BodyArmor 4
 	name <Encounter Suit>

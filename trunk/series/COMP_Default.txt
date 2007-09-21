@@ -189,6 +189,53 @@ Plot
 	end
 
 Plot
+	name <Basic Conversation>
+	desc <The PC has to talk with someone; here it is!>
+	requires <#A +Tgt (+F--|+Fin) Common>
+
+	% E1 is the scene where this component will take place
+	% E2 is the NPC that the PC will speak with
+	element1 <Grab 6>
+	element2 <Grab 5>
+	Place2 <1 (Citizens) pass>
+
+	% All this plot does is move the NPC and activate the conversation subplot
+	update <if= PlotStatus 0 SetPlotStatus %id1%>
+
+	%% SubPlot1 is the conversation to be had
+	SubPlot1 <*CS_Conversation 2>
+
+	sub
+		STC MS_CAFE
+		SetID 1
+	end
+
+Plot
+	name <Basic Friend Contact>
+	desc <The PC's friend will call about something.>
+	requires <#A +T-->
+
+	% E1 is the scene where this component will take place
+	% E2 is the NPC that the PC will speak with
+	element1 <Scene Building Public>
+	element2 <Character !Near -7 !Okay 1 Friend>
+	Place2 <1 (Citizens) pass>
+
+	% All this plot does is move the NPC, send an email,
+	% and activate the mission subplot
+	update <if= PlotStatus 0  EMail 1  SetPlotStatus %id1%>
+
+	%% SubPlot1 is the mission to be offered
+	SubPlot1 <*CS_Conversation 2>
+
+	Msg1_1  <%name2%@ \NARRATIVE 7 :// Hey \PC , when you have the time come see me at %name1%>
+	Msg1_2  <%name2%@ \NARRATIVE 7 :// I'll be at %name1% for a while. Drop by and we can have a chat.>
+	Msg1_3  <%name2%@ \NARRATIVE 7 :// If you're not busy, I'd like to meet with you at %name1%.>
+	Msg1_4  <%name2%@ \NARRATIVE 7 :// There are things we need to discuss. Meet me at %name1%.>
+	Msg1_5  <%name2%@ \NARRATIVE 7 :// \PC , come meet me at %name1%. I'll be waiting there.>
+
+
+Plot
 	name <Basic Friendly Mission>
 	desc <The PC will be offered a job by a faction member.>
 	requires <#A +T-- P:++ -P:ENEMY>

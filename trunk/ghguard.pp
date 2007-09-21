@@ -158,14 +158,6 @@ end;
 
 Function ArmorValue( Part: GearPtr ): LongInt;
 	{ Return the cost of this armor. }
-const
-	StatModCOst: Array [1..10] of Integer = (
-	125,300,5000,1000,1500,
-	2000,2500,3000,3500,4000
-	);
-	StatCostModifier: Array [1..NumGearStats] of Byte = (
-	20, 10, 35, 15, 20, 100, 100, 8
-	);
 var
 	T: Integer;
 	Cost: LongInt;
@@ -174,11 +166,7 @@ begin
 	Cost := BaseArmorCost( Part , Part^.V );
 
 	{ Add the value from the statmodifiers. }
-	for t := 1 to NumGearStats do begin
-		if Part^.Stat[t] > 0 then begin
-			Cost := Cost + StatModCost[ Part^.Stat[t] ] * StatCostModifier[ t ];
-		end;
-	end;
+	Cost := Cost + StatModifierCost( Part ) * 2;
 
 	ArmorValue := Cost;
 end;

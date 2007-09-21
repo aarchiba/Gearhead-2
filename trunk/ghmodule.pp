@@ -120,6 +120,7 @@ Procedure CheckModuleRange( Part: GearPtr );
 Function IsLegalModuleInv( Slot, Equip: GearPtr ): Boolean;
 Function IsLegalModuleSub( Slot, Equip: GearPtr ): Boolean;
 
+Function StatModifierCost( Part: GearPtr ): LongInt;
 Function ModifierCost( Part: GearPtr ): LongInt;
 Procedure CheckModifierRange( Part: GearPtr );
 
@@ -342,6 +343,59 @@ begin
 	end;
 end;
 
+Function StatModifierCost( Part: GearPtr ): LongInt;
+	{ Return a price for this particular stat modifier. }
+const
+	BasePrice: Array [1..5] of Byte = (10,25,45,70,100);
+	PriceFactor = 2000;
+var
+	plusses,minuses,T,Change: Integer;
+	it: LongInt;
+begin
+	{ Initialize our counters. }
+	plusses := 0;
+	minuses := 0;
+	change := 0;	{ Leftover tenths of a stat point. }
+
+	for t := 1 to NumGearStats do begin
+		if Part^.Stat[ T ] > 0 then begin
+			plusses := plusses + Part^.Stat[ T ];
+		end else if Part^.Stat[ T ] < 0 then begin
+			minuses := minuses - Part^.Stat[ T ];
+		end;
+	end;
+
+	{ ExArmor measures stat bonuses in tenths of a point, so rescale the }
+	{ values we got above. }
+	if Part^.G = GG_ExArmor then begin
+		Change := Plusses mod 10;
+		Plusses := Plusses div 10;
+	end;
+
+	it := 0;
+	if Plusses > 5 then begin
+		it := it + ( PriceFactor * 50 * ( Plusses - 3 ) );
+		Plusses := 5;
+	end;
+	if Plusses > 0 then begin
+		it := BasePrice[ Plusses ] * PriceFactor + it;
+	end;
+
+	if Change > 0 then it := it + Change * PriceFactor;
+
+	if Minuses > 0 then begin
+		it := it - PriceFactor * 5 * Minuses;
+	end else if Part^.G <> GG_ExArmor then begin
+		{ If no minuses, a 50% increase in price. }
+		it := ( it * 3 ) div 2;
+
+		{ Make sure the cost doesn't fall below the minimum value. }
+		if ( it < PriceFactor )  then it := PriceFactor;
+	end;
+
+	StatModifierCost := it;
+end;
+
 Function ModifierCost( Part: GearPtr ): LongInt;
 	{ The cost of a modifier part will depend upon how many +s it }
 	{ gives versus how many -s it imparts. }
@@ -354,34 +408,26 @@ var
 begin
 	{ Initialize our counters. }
 	plusses := 0;
-	minuses := 0;
+	it := 0;
 
 	{ Count up the plusses and minuses. }
 	if Part^.S = GS_StatModifier then begin
-		for t := 1 to NumGearStats do begin
-			if Part^.Stat[ T ] > 0 then begin
-				plusses := plusses + Part^.Stat[ T ];
-			end else if Part^.Stat[ T ] < 0 then begin
-				minuses := minuses - Part^.Stat[ T ];
-			end;
-		end;
+		it := StatModifierCost( Part );
 	end else if Part^.S = GS_SkillModifier then begin
 		Plusses := Part^.Stat[ STAT_SkillModBonus ];
-	end;
-
-	it := 0;
-	if Plusses > 5 then begin
-		it := it + ( PriceFactor * 50 * ( Plusses - 3 ) );
-		Plusses := 5;
-	end;
-	if Plusses > 0 then begin
-		it := BasePrice[ Plusses ] * PriceFactor + it;
-	end;
-	if Minuses > 0 then begin
-		it := it - PriceFactor * 5 * Minuses;
-	end else begin
-		{ If no minuses, a 50% increase in price. }
-		it := ( it * 3 ) div 2;
+		if Plusses > 5 then begin
+			it := it + ( PriceFactor * 50 * ( Plusses - 3 ) );
+			Plusses := 5;
+		end;
+		if Plusses > 0 then begin
+			it := BasePrice[ Plusses ] * PriceFactor + it;
+		end;
+		{ Modify the price for noncombat skills. }
+		if Part^.Stat[ STAT_SkillToModify ] > 10 then begin
+			it := it * 3 div 4;
+		end else begin
+			it := it * 3 div 2;
+		end;
 	end;
 
 	{ Reduce cost by the trauma value of the system. }
@@ -391,9 +437,6 @@ begin
 		{ Non-character modifiers are considerably cheaper. }
 		it := it div 2;
 	end;
-
-	{ Reduce cost for a non-combat skillmodifier. }
-	if ( Part^.S = GS_SkillModifier ) and ( Part^.Stat[ STAT_SkillToModify ] > 10 ) then it := it div 2;
 
 	{ Make sure the cost doesn't fall below the minimum value. }
 	if it < PriceFactor then it := PriceFactor;
