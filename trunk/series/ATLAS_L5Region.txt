@@ -4158,4 +4158,474 @@ sub
 % End of Kosaka Spinner...
 end
 
+%%
+%%   *************************
+%%   ***   TOHRU SPINNER   ***
+%%   *************************
+%%
+
+Scene 0 3
+	mapwidth 20
+	mapheight 10
+	name <Tohru Spinner>
+	XPos 40
+	YPos 44
+
+	Tolerance 0
+
+	world <L5 Region>
+	desc <Tohru Spinner is an industrial station close to the dusty ring. It was badly damaged by a meteor strike and struggles to regain its former greatness.>
+	special <NOEXIT SHOWALL SOLO TOWNMECHA>
+	type <city town spinner target outdoors urban destination hometown industrial disaster>
+	personatype <city spinner>
+	habitat <SPACE.URBAN>
+	MegaCityMap
+
+	entrance <*COLONY-1>
+
+	% V1 = Message Counter
+
+	SetFaction 10
+	factions <FCOMS PRIVA L5LAW HOELL MUGLE>
+
+	desig <TOHSP>
+	context <spc>
+
+	Quest1 <*:LocalQuest>
+
+	start <if= V1 0 else GoSecondTime V= 1 1 Alert 1 Print 2>
+	GoSecondTime <Print 2>
+	Msg1 <Tohru Spinner used to be one of the most important industrial stations until it was badly damaged by a meteor strike. These days it is rebuilding, hoping to regain its former greatness.>
+	Msg2 <You enter Tohru Spinner.>
+
+sub
+	Scene
+	name <Tohru Mall>
+	type <building mall public>
+	context <mall>
+	entrance <*Building>
+	special <ADDEXIT>
+	MallMap
+	MapWidth 25
+	MapHeight 17
+
+	start <Print 1>
+	Msg1 <You enter Tohru Mall.>
+
+	NeededCells 4
+	Content3 <Some 1 100 Sub *WEAPON_SHOP     na>
+	Content4 <Some 1 100 Sub *ARMOR_SHOP      na>
+	Content6 <Some 1 100 Sub *MECHA_SHOP      na>
+	Content7 <Some 1  75 Sub *GENERAL_SHOP    na>
+	Content9 <Fill Sub *SHOP_RANDOM           na>
+	sub
+		team 1
+
+		team 2
+		name <Citizens>
+		SetAlly 1
+		Passive
+
+		team 3
+		name <Guards>
+		SetAlly 2
+
+		room
+		name <Foyer>
+		desig <EntranceGrid>
+		Content <Some 3 50 Here *URBAN_X>
+		Content2 <Some 1 100 Here *ANTI_ATTACK_SECURITY 2>
+	end
+
+	Scene
+	name <Tohru Emergency Center>
+	type <Building hospital public legit>
+	entrance <*Hospital>
+	special <ADDEXIT>
+	MallMap
+	MapWidth 24
+	MapHeight 10
+
+	NeededCells 3
+	Content <Some 1 100 Sub *Doctor>
+	Content3 <Fill Sub *HOSPITAL_X>
+
+	start <Print 1>
+	Msg1 <You enter the Tohru Emergency Center.>
+
+	sub
+		team 1
+
+		team 2
+		name <Citizens>
+		SetAlly 1
+		Passive
+
+		team 3
+		name <Guards>
+		SetAlly 2
+
+		room
+		desig <EntranceGrid>
+		Content <Some 3 50 Here *URBAN_X>
+		Content2 <Some 1 100 Here *ANTI_ATTACK_SECURITY 2>
+	end
+
+	Scene
+	name <Jiason Factory>
+	type <building garage factory public>
+	context <>
+	entrance <*Garage>
+	special <ADDEXIT>
+	MallMap
+	MapWidth 20
+	MapHeight 20
+	IndustrialTiles
+	SetFaction 10
+
+	% V1 = First time counter
+	start <if= V1 0 else GoBeenBefore Alert 2 V= 1 1>
+	GoBeenBefore <Print 1>
+	Msg1 <You enter Jiason Factory.>
+	Msg2 <Jiason was the only factory to emerge from the meteor impact undamaged. In order to promote investment and speed rebuilding, access to Jiason was granted equally to all three corporations operating in Tohru Spinner.>
+
+	NeededCells 3
+	Content1 <Some 1 100 Sub *MECHANIC_SHOP>
+	Content2 <Some 2  90 Sub *MECHA_SHOP>
+	Content3 <Fill Sub *GARAGE_X>
+	sub
+		team 1
+
+		team 2
+		name <Citizens>
+		SetAlly 1
+		Passive
+
+		team 3
+		name <Guards>
+		SetAlly 2
+
+		room
+		name <Foyer>
+		desig <EntranceGrid>
+		Content <Some 3 40 Here *URBAN_X>
+		Content2 <Some 1 100 Here *ANTI_ATTACK_SECURITY 2>
+
+		room
+		minimap <####################1#2#3>
+		inv
+			Elevator
+			destination <Jiason Comet Office>
+			MiniMapComponent 1
+
+			Elevator
+			destination <Jiason Hoeller Office>
+			MiniMapComponent 2
+
+			Elevator
+			destination <Jiason MUGL Office>
+			MiniMapComponent 3
+		end
+
+		Scene
+		name <Jiason Comet Office>
+		SetFaction 2
+		special <NOEXIT>
+		type <building public corporate>
+		MallMap
+		MapWidth 17
+		MapHeight 17
+
+		start <Print 1>
+		Msg1 <You enter the Jiason Comet Office.>
+
+		NeededCells 2
+		Content2 <Fill Sub *CORP_PUBLIC>
+
+		sub
+			team 1
+
+			team 2
+			name <Citizens>
+			SetAlly 1
+			Passive
+
+			Team 3
+			name <Guards>
+			SetAlly 1 2
+
+			room
+			name <Foyer>
+			desig <EntranceGrid>
+			Content3 <Some 1  50 Here *CORP_EMPLOYEE>
+			Content4 <Some 1 100 Here *ANTI_ATTACK_SECURITY 2>
+
+			room
+			minimap <############1###...##...#>
+			inv
+				Elevator
+				Destination -1
+				MiniMapComponent 1
+			end
+		end
+		inv
+			NPC Corporate Executive
+			home <Foyer>
+			SetFaction 2
+		end
+
+		Scene
+		name <Jiason Hoeller Office>
+		SetFaction 7
+		type <building public corporate>
+		special <NOEXIT>
+		MallMap
+		MapWidth 17
+		MapHeight 17
+
+		start <Print 1>
+		Msg1 <You enter the Jiason Hoeller Office.>
+
+		NeededCells 2
+		Content2 <Fill Sub *CORP_PUBLIC>
+
+		sub
+			team 1
+
+			team 2
+			name <Citizens>
+			SetAlly 1
+			Passive
+
+			Team 3
+			name <Guards>
+			SetAlly 1 2
+
+			room
+			name <Foyer>
+			desig <EntranceGrid>
+			Content3 <Some 1  50 Here *CORP_EMPLOYEE>
+			Content4 <Some 1 100 Here *ANTI_ATTACK_SECURITY 2>
+
+			room
+			minimap <############1###...##...#>
+			inv
+				Elevator
+				Destination -1
+				MiniMapComponent 1
+			end
+		end
+		inv
+			NPC Corporate Executive
+			home <Foyer>
+			SetFaction 7
+		end
+
+		Scene
+		name <Jiason MUGL Office>
+		SetFaction 13
+		type <building public corporate>
+		special <NOEXIT>
+		MallMap
+		MapWidth 17
+		MapHeight 17
+
+		start <Print 1>
+		Msg1 <You enter the Jiason MUGL Office.>
+
+		NeededCells 2
+		Content2 <Fill Sub *CORP_PUBLIC>
+
+		sub
+			team 1
+
+			team 2
+			name <Citizens>
+			SetAlly 1
+			Passive
+
+			Team 3
+			name <Guards>
+			SetAlly 1 2
+
+			room
+			name <Foyer>
+			desig <EntranceGrid>
+			Content3 <Some 1  50 Here *CORP_EMPLOYEE>
+			Content4 <Some 1 100 Here *ANTI_ATTACK_SECURITY 2>
+
+			room
+			minimap <############1###...##...#>
+			inv
+				Elevator
+				Destination -1
+				MiniMapComponent 1
+			end
+		end
+		inv
+			NPC Corporate Executive
+			home <Foyer>
+			SetFaction 13
+		end
+	end
+	inv
+		%% Inventory of Jiason Factory
+		NPC Construction Worker
+		name <McCabe>
+		SetFaction 10
+		home <Foyer>
+		quest <*:NPCQuest>
+		CharDesc Female Melancholy Easygoing Pragmatic
+		Age 16
+	end
+
+	Scene
+	name <Meteor Center>
+	type <building government public legit>
+	context <gov>
+	entrance <*Building>
+	special <ADDEXIT>
+	SetFaction 10
+	ClubMap
+	MapWidth 24
+	MapHeight 19
+
+	start <if= V1 1 else GoFirstTime Print 1>
+	GoFirstTime <Alert 2 V= 1 1>
+	Msg1 <You enter the Meteor Center.>
+	Msg2 <After Tohru City Hall was destroyed in the meteor impact, this building was constructed as a temporary command center.>
+
+	NeededCells 1
+	Content1 <Some 1 100 Sub *GOV_MILITARY  na>
+	Content2 <Fill       Sub *GOV_MISC      na>
+
+	sub
+		team 1
+
+		team 2
+		name <Citizens>
+		SetAlly 1
+		Passive
+
+		team 3
+		name <Guards>
+		SetAlly 1
+
+		room
+		name <Foyer>
+		desig <EntranceGrid>
+		Content <Some 2 55 Here *URBAN_X>
+		Content2 <Some 1 100 Here *ANTI_ATTACK_SECURITY 2>
+
+		room
+		name <Garrison>
+		minimap <2...31..............#---#>
+		inv
+			NPC Police Officer
+			SetTeam 3
+			SetFaction 9
+			MiniMapComponent 1
+		end
+
+		room
+		name <Main Office>
+		minimap <..2.31..............#&+&#>
+		inv
+			NPC Politician
+			SetTeam 2
+			SetFaction 13
+			MiniMapComponent 1
+
+			NPC Privateer
+			SetTeam 3
+			SetFaction 6
+			MiniMapComponent 3
+
+			STC DISPLAYCASE-1
+			name <Meteor Fragment>
+			MiniMapComponent 2
+			Use <Print 1>
+			Clue14 <Print 4>
+			Clue22 <Print 3>
+			Clue29 <Print 2>
+			Clue34 <Print 5 if= V1 0 ifMysticism 10 XPV 50 V= 1 1 AddPragmatic -d10>
+			Clue37 <Print 4>
+			Msg1 <This display houses a fragment of the meteor which struck Tohru Spinner.>
+			Msg2 <It's possible that the meteor's unusual organic-metallic composition allowed it to slip past Tohru Spinner's long range sensors.>
+			Msg3 <This meteor is composed of a metallic alloy interwoven with organic polymer chains. This was a common building material for bioweapons during the Age of Superpowers.>
+			Msg4 <It's a rock, presumably from space.>
+			Msg5 <You say a short prayer for the people who died in the meteor impact.>
+		end
+	end
+
+	Scene
+	name <Tohru Spaceport>
+	type <building shuttle spaceport public>
+	entrance <*SpacePort>
+	special <ADDEXIT>
+	ClubMap
+	MapWidth 30
+	MapHeight 21
+
+	start <Print 1>
+	Msg1 <You enter Tohru Spaceport.>
+
+	NeededCells 4
+	Content1 <Some 1 100 Sub *SHUTTLESERVICE  na>
+	Content2 <Some 1 100 Sub *RESTAURANT      na>
+	Content5 <Some 1 100 Sub *MECHANIC_SHOP   na>
+	Content6 <Fill Sub *SPACEPORT_X>
+
+	sub
+		team 1
+
+		team 2
+		name <Citizens>
+		SetAlly 1
+		Passive
+
+		team 3
+		name <Guards>
+		SetAlly 2
+
+		room
+		name <Foyer>
+		desig <EntranceGrid>
+		Content <Some 3 50 Here *URBAN_X>
+		Content2 <Some 1 100 Here *ANTI_ATTACK_SECURITY 2>
+
+		room
+		minimap <############1###...##...#>
+		sub
+			STC AIRLOCK-1
+			MiniMapComponent 1
+			destination <Tohru Station Exterior>
+		end
+
+		Scene 0 3
+		name <Tohru Station Exterior>
+		type <Environs Outdoors Space>
+		special <ShowAll>
+		terrain <SPACE>
+		MapWidth 30
+		MapHeight 30
+		SpaceMap
+		nu1 <if= T1 0 Exit WorldID>
+		Microgravity
+		Vacuum
+		SpaceBackdrop
+
+		inv
+			STC COLONY-1
+			name <Tohru Spinner>
+			Destination -1
+			XPos 15
+			YPos 15
+		end
+
+	end
+
+
+% End of Tohru Spinner...
+end
 
