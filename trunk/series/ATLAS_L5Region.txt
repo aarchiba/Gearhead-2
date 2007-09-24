@@ -4233,7 +4233,7 @@ sub
 		room
 		name <Foyer>
 		desig <EntranceGrid>
-		Content <Some 3 50 Here *URBAN_X>
+		Content <Some 3 45 Here *URBAN_X>
 		Content2 <Some 1 100 Here *ANTI_ATTACK_SECURITY 2>
 	end
 
@@ -4244,9 +4244,9 @@ sub
 	special <ADDEXIT>
 	MallMap
 	MapWidth 24
-	MapHeight 10
+	MapHeight 15
 
-	NeededCells 3
+	NeededCells 2
 	Content <Some 1 100 Sub *Doctor>
 	Content3 <Fill Sub *HOSPITAL_X>
 
@@ -4332,15 +4332,15 @@ sub
 		SetFaction 2
 		special <NOEXIT>
 		type <building public corporate>
-		MallMap
-		MapWidth 17
-		MapHeight 17
+		ClubMap
+		MapWidth 25
+		MapHeight 25
 
 		start <Print 1>
 		Msg1 <You enter the Jiason Comet Office.>
 
 		NeededCells 2
-		Content2 <Fill Sub *CORP_PUBLIC>
+		Content2 <Some 2 50 Sub *CORP_PUBLIC>
 
 		sub
 			team 1
@@ -4379,15 +4379,15 @@ sub
 		SetFaction 7
 		type <building public corporate>
 		special <NOEXIT>
-		MallMap
-		MapWidth 17
-		MapHeight 17
+		ClubMap
+		MapWidth 25
+		MapHeight 25
 
 		start <Print 1>
 		Msg1 <You enter the Jiason Hoeller Office.>
 
 		NeededCells 2
-		Content2 <Fill Sub *CORP_PUBLIC>
+		Content2 <Some 2 50 Sub *CORP_PUBLIC>
 
 		sub
 			team 1
@@ -4426,15 +4426,15 @@ sub
 		SetFaction 13
 		type <building public corporate>
 		special <NOEXIT>
-		MallMap
-		MapWidth 17
-		MapHeight 17
+		ClubMap
+		MapWidth 25
+		MapHeight 25
 
 		start <Print 1>
 		Msg1 <You enter the Jiason MUGL Office.>
 
 		NeededCells 2
-		Content2 <Fill Sub *CORP_PUBLIC>
+		Content2 <Some 2 50 Sub *CORP_PUBLIC>
 
 		sub
 			team 1
@@ -4475,7 +4475,10 @@ sub
 		SetFaction 10
 		home <Foyer>
 		quest <*:NPCQuest>
-		CharDesc Female Melancholy Easygoing Pragmatic
+		SDL_PORTRAIT <por_f_allisonnewver(J--).png>
+		SDL_COLORS <239 198 58 255 212 195 6 42 120>
+		CharDesc Female Melancholy Easygoing Pragmatic Heroic
+		Combatant
 		Age 16
 	end
 
@@ -4533,7 +4536,7 @@ sub
 		inv
 			NPC Politician
 			SetTeam 2
-			SetFaction 13
+			SetFaction 10
 			MiniMapComponent 1
 
 			NPC Privateer
@@ -4548,7 +4551,7 @@ sub
 			Clue14 <Print 4>
 			Clue22 <Print 3>
 			Clue29 <Print 2>
-			Clue34 <Print 5 if= V1 0 ifMysticism 10 XPV 50 V= 1 1 AddPragmatic -d10>
+			Clue34 <Print 5 if= V1 0 ifMysticism 5 XPV 50 V= 1 1 AddPragmatic -d10>
 			Clue37 <Print 4>
 			Msg1 <This display houses a fragment of the meteor which struck Tohru Spinner.>
 			Msg2 <It's possible that the meteor's unusual organic-metallic composition allowed it to slip past Tohru Spinner's long range sensors.>
@@ -4622,9 +4625,7 @@ sub
 			XPos 15
 			YPos 15
 		end
-
 	end
-
 
 % End of Tohru Spinner...
 end

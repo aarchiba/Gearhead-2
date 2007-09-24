@@ -83,6 +83,8 @@ GIVEITEM <GrabItem ?  GiveGG>
 IFSELFOK <GrabSource ifGOK>
 IFNPCOK <GrabNPC ?  IfGOK>
 IFNPCDEAD <GrabNPC ? ifGDead>
+IFNPCMALE <if= NPCGender ? 0>
+IFNPCFEMALE <if= NPCGender ? 1>
 IFPCOK <GrabPCPilot IfGOK>
 ifNPCinPlay <GrabNPC ?  IfGInPlay>
 ifChatNPCinPlay <GrabChatNPC  IfGInPlay>
@@ -138,8 +140,8 @@ SetNPCRep <GrabNPC ? GSetNAtt NAG_CharDescription - ? ?>
 NPCQuitLance <GrabNPC ? GQuitLance>
 ifPCMale <GrabPCPilot if= GNAtt NAG_CharDescription 0 0>
 ifPCFemale <GrabPCPilot if= GNAtt NAG_CharDescription 0 1>
-ifNPCMale <GrabChatNPC if= GNAtt NAG_CharDescription 0 0>
-ifNPCFemale <GrabChatNPC if= GNAtt NAG_CharDescription 0 1>
+ifChatNPCMale <GrabChatNPC if= GNAtt NAG_CharDescription 0 0>
+ifChatNPCFemale <GrabChatNPC if= GNAtt NAG_CharDescription 0 1>
 ifNPCLancemate <GrabChatNPC if= GNAtt NAG_Location NAS_Team NAV_LancemateTeam>
 ifNPCHeroic <GrabChatNPC ifG GNAtt NAG_CharDescription -1  0>
 ifNPCVillainous <GrabChatNPC ifG 0  GNAtt NAG_CharDescription -1>

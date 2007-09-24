@@ -4,6 +4,90 @@
 %% This content is tied to a city rather than any specific character within it.
 
 Content
+	name <Tower of Decay>
+	desc <Not all the wreckage from the disaster has been removed, nor all the survivors located.>
+	requires <*:LocalQuest "DISASTER">
+
+	% E1 is the ruined building
+	% E2 is the entrance to this building
+	% E3 is hermit who lives at the top of the tower
+	% E4 is the "orphan" looking for E3
+	% E5 is the town scene
+	Scene1 <New *Dungeon.UrbanHellhole>
+	Element2 <Prefab>
+	Scene2 <Urban>
+	Element3 <NewNPC 0 0 Old Shy Melancholy>
+	Scene3 <New *HideOut&BoxMap>
+	Team3 <Citizens>
+	TeamData3 <Pass>
+	Element4 <NewNPC 0 0 Young Sociable Melancholy>
+	Scene4 <Building Public>
+	Team4 <Citizens>
+	TeamData4 <Pass Ally>
+	Scene5 <Town>
+
+	Quest1 <*SuccessRescue 4 3>
+
+	sub
+		Persona 3
+		rumor%id% <%name4% was orphaned by the disaster.>
+		greeting <if= QuestStatus %qid% %id% else GoFirstTime   NewChat Say 4 AddChat 4 AddChat 5>
+		GoFirstTime <if= QuestStatus %qid% 0 else GoChat NewChat Say 1 AddChat 1 SetQuestStatus %qid% %id%>
+		GoChat <NewChat SayAnything>
+		Result1 <NewChat Say 2 AddChat 2 AddChat 3>
+		Result2 <NewChat Say 3>
+		*Result3 <*GOODBYE>
+		Result4 <NewChat Say 5 AddChat 6>
+		Result5 <NewChat Say 6 AddChat 3>
+		Result6 <NewChat Say 7>
+		Msg1 <You! What are you doing in here?>
+		Msg2 <What am I doing here? I live here, of course. This is my house... I'm one of the last survivors, now that %name5% has been destroyed.>
+		Msg3 <It's been destroyed as far as I'm concerned. All of my children are dead... This is the best place for me now. I'll just stay right here, here where I belong...>
+		Msg4 <Oh, it's you again... I'm surprised the rats didn't eat you. Maybe they think you're a visitor.>
+		Msg5 <I couldn't do that. Who'd take care of my plants? Besides, there's nothing out there for me anymore.>
+		Msg6 <It's not so bad. I caught a nice juicy rat for lunch. There's plenty to share if you want to have some.>
+		Msg7 <It's not safe there! Everything is in ruins, everybody is dead. I'm better off staying here. If you were smart you'd find a nice hole to hide in, as well.>
+		Prompt1 <What am I doing!? What are you doing here?>
+		Prompt2 <%name5% wasn't destroyed.>
+		Prompt3 <Well, I'll just leave you, then.>
+		Prompt4 <You should come back to %name5% with me.>
+		Prompt5 <How's life been treating you?>
+		Prompt6 <It's not safe here.>
+
+		Persona 4
+		greeting <if# QuestStatus %qid% %id% else GoLament if# QuestStatus %qid% 0 else GoLament NewCHat SayAnything>
+		GoLament <ifNPCOK %3% else GoQuit NewChat Say 1 AddChat 1>
+		GoQuit <NewChat SayAnything SetQuestStatus %qid% -2>
+		result1 <EndChat Say 2 AddChat 2>
+		result2 <XPV 100  MoveNPC %3% %s4% Goto .%id1%_GoInit>
+		Msg1_10 <My father %name3% was killed in the %name5% Incident. Although \PPR %3% body was never found in the rubble, I've learned to accept that \SPR %3% won't be coming back.>
+		CMsg1_10 <ifNPCMale %3% Accept>
+		Msg1_20 <My mother %name3% was killed in the %name5% Incident. Although \PPR %3% body was never found in the rubble, I've learned to accept that \SPR %3% won't be coming back.>
+		CMsg1_20 <ifNPCFemale %3% Accept>
+		Msg2 <Is that true!? Then, after all this time, I will finally see \OPR %3% again!>
+		Prompt1 <Actually, I met %name3% in a ruined building.>
+		CPrompt1 <if= QuestStatus %qid% %id% Accept>
+		Prompt2 <[Continue]>
+
+		MetaScene 1
+		sub
+			Room
+			special <SHAREDPALETTE>
+			MiniMap <............2............>
+			inv
+				StairsUp
+				desig <ENTRANCE %s3%>
+				MiniMapComponent 2
+			end
+		end
+	end
+	inv
+		STC Building
+		name <Destroyed Apartment>
+		desig <ENTRANCE %s1%>
+	end
+
+Content
 	name <Losing my Inventory>
 	desc <A local mechanic is losing his repair parts. The PC may be able to help.>
 	requires <*:LocalQuest>

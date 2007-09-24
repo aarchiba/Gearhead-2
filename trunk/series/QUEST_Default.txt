@@ -1316,6 +1316,32 @@ Content
 		Msg%id%01 <So this is the %name2% . Here's a reward for bringing it to me.>
 	end
 
+%%
+%% *SuccessRescue Content
+%%
+%% The PC has rescued a NPC. E1 is happy about this and will
+%% provide a reward.
+%%
+%% Param1: The character who will provide the reward.
+%%   Persona 1 must have a .%id%_GoInit script.
+%% Param2: The character who was rescued.
+%%
+
+Content
+	name <Basic Rescue Reward>
+	%% The PC will be given a reward and that's it.
+	requires <*SuccessRescue>
+	special <REUSABLE>
+
+	%% E1 is the character to give the reward.
+	%% E2 is the character who's been redeemed.
+
+	sub
+		Persona 1
+		.%id%_GoInit <NewChat Say %id%01 CashPrize Reward Threat %threat% 100 300 SetQuestStatus %qid% -1>
+		Msg%id%01 <Thank you so much for saving %name2%! Here, take this money as a reward.>
+	end
+
 
 %%
 %% *SuccessVsChar Content

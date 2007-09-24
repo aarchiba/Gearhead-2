@@ -1,5 +1,23 @@
 % Persona Fragment File
 
+% TYPE: *SomeoneSentPCToTalk
+%	The PC will tell the NPC that someone sent him here to talk.
+%   PARAM1: NPC who sent PC
+%   PARAM2: Exit script label
+
+	Persona
+	requires <*SomeoneSentPCToTalk>
+	START <NewChat Say %id%01 AddChat %id%01>
+	result%id%01 <Goto %2%>
+
+	Msg%id%01 <Yes, may I help you?>
+
+	Prompt%id%01_10 <\PERSONA %1% sent me to talk.>
+	CPrompt%id%01_10 <ifNPCOK %1% Accept>
+	Prompt%id%01_20 <I was sent here to talk with you.>
+	CPrompt%id%01_20 <ifNPCDead %1% Accept>
+
+
 % TYPE: *INeedYourHelp
 %	The NPC wants the PC to help him.
 %   PARAM1: Will listen exit Label
@@ -561,9 +579,9 @@ result%id%03 <Goto %1%>
 Msg%id%01 <What do you think of my outfit?>
 Msg%id%02 <"Interesting"? Nobody wants to hear that their clothes are "interesting". What does that me, anyhow? Am I wearing a tuba on my head or something?>
 Msg%id%03_10 <"Nice"? Just "nice", as in "boring"? Nobody wants to hear that their clothes are just "nice". What, do I look like your brother?>
-CMsg%id%03_10 <ifNPCMale Accept>
+CMsg%id%03_10 <ifChatNPCMale Accept>
 Msg%id%03_20 <"Nice"? Just "nice", as in "boring"? Nobody wants to hear that their clothes are just "nice". What, do I look like your mother?>
-CMsg%id%03_20 <ifNPCFemale Accept>
+CMsg%id%03_20 <ifChatNPCFemale Accept>
 Prompt%id%01 <It's... interesting.>
 Prompt%id%02 <It's very nice!>
 Prompt%id%03 <I don't know...>

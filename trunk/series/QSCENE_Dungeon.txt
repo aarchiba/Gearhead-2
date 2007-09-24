@@ -35,7 +35,7 @@ Scene
 		width 3
 		height 3
 		sub
-			StairsUp
+			StairsDown
 			Destination -1
 		end
 	end
@@ -52,6 +52,7 @@ Scene
 	MonkeyMap
 	LockedDoorChance 25
 	SecretDoorChance 20
+	MarbleType 7
 
 	NeededCells 3
 

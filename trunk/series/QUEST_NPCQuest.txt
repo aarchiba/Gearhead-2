@@ -5,6 +5,62 @@
 %% Always make sure to do an *ENEMY_CHECK or equivalent in these quests.
 
 Content
+	name <Re-Construction Problems>
+	requires <*:NPCQuest (C:POLIT|C:CORPO|C:LABOR|C:CRAFT|C:TRADE) "DISASTER">
+	desc <The city is rebuilding from a previous disaster, but something's going wrong.>
+
+	% E1 is the key character
+	% E2 is the construction site
+	% E3 is the entry to the construction site
+	% E4 is the root scene
+	element1 <Key>
+	Scene2 <New *ConstructionSite>
+	element3 <Prefab>
+	Scene3 <Urban>
+	Scene4 <Town>
+
+	Quest1 <*:ConstructionProblem 1 2>
+	Quest2 <*Success1.FinishMission 1>
+
+	sub
+		Persona 1
+		rumor0 <%name1%'s reconstruction effort has hit a problem.>
+		greeting <if= QuestStatus %qid% %id% else GoCheckQuest if= QuestStatus %qid1% -1 else GoCheckResult EndChat Say 5 AddChat 1>
+		GoCheckResult <NewChat Say 3 AddChat 3 AddChat 2>
+		GoCheckQuest <if= QuestStatus %qid% 0 else GoChat Goto GoCheckEnemy>
+		*GoCheckEnemy <*ENEMY_CHECK GoOfferQuest ChatNPCFac GoMakeEnemy>
+		GoMakeEnemy <SetQuestStatus %qid% -2 ifG d20 React PCEnemy %1%>
+		*GoOfferQuest <*NiceToMeetYou GoExplainQuest>
+		*GoChat <*MISC_CHATTER>
+		GoExplainQuest <NewChat Say 1 AddChat 4 AddChat 5>
+		Result1 <Goto .%id2%_GoInit>
+		Result2 <NewChat Say 4 SetQuestStatus %qid% -2>
+		Result3 <NewChat Say 6>
+		Result4 <NewChat Say 7  AddCheerful -d10  SetQuestStatus %qid% %id%  SetQuestStatus %qid1% %id1%  QMemo %qid% 2>
+		Result5 <NewChat Say 8  SetQuestStatus %qid% %id%  SetQuestStatus %qid1% %id1%  QMemo %qid% 2>
+		Msg1 <As you probably know, we're still rebuilding from the damage we suffered in the disaster. I'm in charge of reconstruction efforts in \SCENE %s3% .>
+		Msg2 <%name1% is in charge of the reconstruction of \SCENE %s3% . Unfortunately, the one of the projects has hit a problem.>
+		Msg3 <Do you have any good news for me about the reconstruction work?>
+		Msg4 <This is just what we need; hasn't \SCENE %s3% suffered enough?>
+		Msg5 <I hear that you've solved our construction problem. Congratulations.>
+		Msg6 <Please do. The citizens of %name4% are counting on this.>
+		Msg7 <Maybe not, but you might be interested to know that there's been a problem at one of the reconstruction sites. I'm offering a reward to anyone who can get the project back on track.>
+		Msg8 <Not so well, I'm afraid. There's been a problem at one of the reconstruction sites; work has all but halted. If you could find out what's going wrong and fix it, it would be a great help to us.>
+		Prompt1 <[Continue]>
+		Prompt2 <The reconstruction has halted.>
+		CPrompt2 <if= QuestStatus %qid1% -2 Accept>
+		Prompt3 <I'll be back when I have something to report.>
+		Prompt4 <I don't care; I don't live here.>
+		CPrompt4 <if# PCHomeTown %4% Accept>
+		Prompt5 <How is the work coming along?>
+	end
+	inv
+		STC Building
+		name <%name1%'s Construction Site>
+		desig <ENTRANCE %s2%>
+	end
+
+Content
 	name <A Spy In Hiding>
 	requires <*:NPCQuest C:POLIT "City" ~"Capitol">
 

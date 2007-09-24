@@ -2820,7 +2820,7 @@ const
 			C := X * Y;
 		end else begin
 			X := ( Scene^.Stat[ STAT_MapWidth ] - 12 ) div 6;
-			if Scene^.Stat[ STAT_MapHeight ] >= 18 then X := X * 2;
+			if Scene^.Stat[ STAT_MapHeight ] >= 25 then X := X * 2;
 			Y := ( Scene^.Stat[ STAT_MapHeight ] - 12 ) div 6;
 			C := X + Y;
 		end;

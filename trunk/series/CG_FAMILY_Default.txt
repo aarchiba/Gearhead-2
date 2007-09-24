@@ -47,6 +47,11 @@ desc <You never knew your parents, and were raised in an orphanage.>
 requires <GENERAL>
 context <+Bor +G-->
 
+Family 0
+desc <Your parents were too poor to care for you, so they put you up for adoption.>
+requires <POOR>
+context <+Bor +G-->
+
 Family 1
 desc <Your school circle was trained to become #s.>
 requires <SPINNER>
@@ -60,6 +65,11 @@ context <+Bor +G-->
 Family 0
 desc <Your parents died when you were very young.>
 requires <GENERAL>
+context <+Bpd +G-->
+
+Family 0
+desc <Your parents died in the disaster.>
+requires <DISASTER>
 context <+Bpd +G-->
 
 Family 0

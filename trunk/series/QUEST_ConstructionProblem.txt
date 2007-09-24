@@ -10,6 +10,112 @@
 %% Param2: Construction Site Scene
 
 Content
+	name <Robot Rampage>
+	requires <*:ConstructionProblem>
+	desc <The construction robots have malfunctioned; the PC can repair them or destroy them.>
+
+	% E1 is the boss
+	% E2 is the construction site
+	% E3 is the robotics specialist
+	% E4 is the basement full of robots
+	Element3 <Prefab>
+	Scene3 <Grab 2>
+	Team3 <Citizens>
+	TeamData3 <Pass Ally>
+
+	Scene4 <New *BLANK.Basement>
+
+	sub
+		Persona 3
+		% This character just explains how to win the component; other than that he's
+		% pretty useless. If the PC wins without destroying all the robots, then this
+		% person will become a friend.
+		rumor%id% <%name3% is in charge of the robots for %name1%'s project.>
+		% V1 = Have given victory speech
+		% V2 = Have given first introduction
+		greeting <if= QuestStatus %qid% -1 else GoCheckQuest if= V1 0 else GoChat V= 1 1 if= SceneVar %s4% 1 0 else GoBadWin PCFriend %3% NewChat Say 7>
+		GoBadWin <NewChat Say 8>
+		GoCheckQuest <if= QuestStatus %qid% %id% else GoChat if= V2 1 else GoFirstTime NewChat Say 5 AddChat 3 AddChat 4>
+		*GoFirstTime <*SomeoneSentPCToTalk %1% GoExplain>
+		*GoChat <*MISC_CHATTER>
+		GoExplain <V= 2 1 NewChat Say 1 QMemo %qid% 2 AddChat 1 AddChat 2>
+		Result1 <NewChat Say 3>
+		Result2 <NewChat Say 4>
+		Result3 <Goto GoExplain>
+		Result4 <NewChat Say 6>
+		Msg1 <The construction robots on the lower level have malfunctioned. They haven't gone aggressive, exactly, it's just that they no longer seem to recognize the difference between human beings and building materials. It's pretty dangerous down there.>
+		Msg2 <%name3% told you that the construction robots at %name1%'s project have malfunctioned, making life dangerous for the workers.>
+		Msg3 <Not really. The control station here stopped working, so we can't even shut them down remotely. Personally I suspect industrial sabotage, though I shudder to think that one of our employees could be working for someone else.>
+		Msg4 <Destroying the robots is probably the only way we're going to get construction back on track. Please try to leave enough wreckage so we can figure out what went wrong.>
+		Msg5 <Do you have anything to report?>
+		Msg6 <Please do your best.>
+		Msg7 <The problem has been fixed, and we didn't even need to destroy all the robots. Thanks to you we'll be back on schedule in no time! You should go tell %name1% about what you've accomplished.>
+		Msg8 <The problem has been solved, so I guess it's time for us to get to work... and without any robots to do the heavy bits, either. You should go tell %name1% that the project is back on track.>
+		Prompt1 <Any idea what happened?>
+		Prompt2 <Don't worry, I can deal with them.>
+		Prompt3 <Could you remind me what's going on again?>
+		Prompt4 <Not yet. I'll be back when I do.>
+
+		MetaScene 3
+		sub
+			room
+			desig <HOME>
+			minimap <......1.2..#3#..###......>
+			special <SHAREDPALETTE>
+			inv
+				STC COMPUTER-1
+				% Using this computer may repair the robots.
+				MiniMapComponent 2
+				PDir 6
+				use <if= QuestStatus %qid% %id% else GoQuestFinished Print 1>
+				GoQuestFinished <Print 2>
+				GoWin  <Print 3 SetQuestStatus %qid% -1 QMemo %prev_qid% 4 XPV 100>
+				GoLose <Print 5>
+				GoNothing <Print 2>
+				% Mecha Repair, Code Breaking and Science allow difficult skill rolls to fix the robots
+				Clue15 <if= QuestStatus %qid% %id% else GoNothing  ifMechaRepair   HardSkillTar %threat% else GoLose Goto GoWin>
+				Clue29 <if= QuestStatus %qid% %id% else GoNothing  ifScience       HardSkillTar %threat% else GoLose Goto GoWin>
+				Clue32 <if= QuestStatus %qid% %id% else GoNothing  ifCodeBreaking  HardSkillTar %threat% else GoLose Goto GoWin>
+				% General Repair allows a relatively easy roll to fix the robots
+				Clue23 <if= QuestStatus %qid% %id% else GoNothing  ifGeneralRepair SkillTar %threat%     else GoLose Goto GoWin>
+				Msg1 <This computer controls the robots for the construction site. The lights on its display are blinking wildly.>
+				Msg2 <This computer controls the robots for the construction site.>
+				Msg3 <You repair the computer and deactivate the malfunctioning robots.>
+				Msg4 <You repaired the malfunctioning robots that were causing problems at %name1%'s construction site.>
+				Msg5 <You can't repair this computer at your current skill level.>
+
+				StairsDown
+				desig <ENTRANCE %s4%>
+				MiniMapComponent 3
+			end
+		end
+
+		MetaScene 4
+		% L1 = Robots destroyed counter
+		% L2 = Monster generation counter
+		Start <Print 1 if= L2 0 if= QuestStatus %qid% %id% L= 2 1 WMonster 2 %threat% WMonster 2 %threat%>
+		nu2 <if= T2 0 if= QuestStatus %qid% %id% Print 2 XPV 100 SetQuestStatus %qid% -1 QMemo %prev_qid% 3 L= 1 1>
+		Msg1 <You enter the robot construction site.>
+		Msg2 <That appears to be the last of the robots.>
+		Msg3 <You deactivated the malfunctioning robots that were causing problems at %name1%'s construction site.>
+		sub
+			Team 1
+			SetEnemy 2
+
+			Team 2
+			name <Enemies>
+			SetEnemy 1
+			type <Robot>
+		end
+	end
+	inv
+		NPC Construction Worker
+		job <Robot Wrangler>
+		Skill 38 5
+	end
+
+
+Content
 	name <Rowdy Foreman>
 	requires <*:ConstructionProblem>
 	desc <The foreman is refusing to work; the PC has to put a stop to it.>

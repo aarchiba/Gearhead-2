@@ -1531,6 +1531,7 @@ initialization
 
 	Last_Clock_Update := 0;
 
+	Randomize();
 	Idle_Display;
 
 finalization
