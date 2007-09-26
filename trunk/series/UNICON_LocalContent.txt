@@ -7,6 +7,126 @@
 %%
 %% NAME: *[city designation]_[building name abbreviated]_[content type]
 
+%% *EMESP_EB_Investment
+%%	At the Emerald Bank, there's a place to invest money. The success or failure of the
+%% 	PC's investment will be determined by the Shopping skill.
+
+Content
+	requires <*EMESP_EB_Investment>
+	element1 <Prefab>
+	team1 <Citizens>
+	teamdata1 <Pass>
+	minimap <..1............##+###...#>
+	sub
+		Persona 1
+		rumor <you can lose your shirt playing stocks if you don't know what you're doing.>
+		% This is going to be a complicated one. Investing here is pretty much like
+		% gambling- if your Shopping skill exceeds a target number, you get a return
+		% on your investment. Otherwise you lose your money.
+		% Every time the PC successfully gains money, the difficulcy number for the
+		% next transaction increases.
+		%
+		% V1 = Cash units invested
+		% V2 = Renown at last withdrawl
+		% V3 = Initialization Counter
+		% V4 = Cash units requested; doesn't get stored until transaction complete
+		% V5 = Risk level; 0=Low, 1=Medium, 2=High
+		% V6 = Renown at last deposit
+		% V7 = Shopping roll at last deposit
+		% V8 = Investment Timer
+		% V9 = Number of successful investments
+		% V10 = Investment target
+		%
+		% InvestmentCost = the cost of investing X cash units.
+		&InvestmentCost <* ? 25000>
+		%
+		*Greeting <*NiceToMeetYou GoOpenBank>
+		GoOpenBank <NewChat Say 1 AddChat 1 AddChat 2 AddChat 3  if= V3 0  V= 3 1  V= 2 -1>
+		GoNoClients <NewChat Say 4>
+		GoSelectStock <NewChat Say 6 AddChat 13 AddChat 14 AddChat 15 AddChat 12>
+		GoConfirm <V= 1 V4   V= 7 Shopping   Cash+ - &InvestmentCost V4   V= 6 PCRenown   NewChat Say 7 Memo 8  V= 8 ComTime V+ 8 86400>
+		GoNotYet <NewChat Say 9>
+		GoInvestSucceed <NewChat Say 10 Memo 0 V= 2 PCRenown V+ 9 1 if= V5 2 else GoCheckMedium CashPrize * V1 100000 V= 1 0>
+		GoCheckMedium <if= V5 1 else GoLowMoney  CashPrize * V1 50000 V= 1 0>
+		GoLowMoney <CashPrize * V1 37500 V= 1 0>
+		GoInvestFailed <NewChat Say 11  SkillXP 21 * V1 5  Memo 0 V= 2 PCRenown V= 1 0>
+		result1 <ifG PCRenown V2 else GoNoClients if# PCRenown 100 else GoNoClients NewChat Say 5 AddChat 6 AddChat 7 AddChat 8 AddChat 9 AddChat 10 AddChat 11 AddChat 12>
+		result2 <NewChat Say 2 AddChat 4>
+		result3 <ifG ComTime V8 else GoNotYet ifG PCRenown V6 else GoNotYet V= 10 5 V+ 10 * 5 V5 V+ 10 V9 ifG V7 V10 else GoInvestFailed Goto GoInvestSucceed>
+		result4 <NewChat Say 3 AddChat 1 AddChat 3 AddChat 5>
+		*result5 <*GoodBye>
+		result6 <V= 4 1 Goto GoSelectStock>
+		result7 <V= 4 2 Goto GoSelectStock>
+		result8 <V= 4 4 Goto GoSelectStock>
+		result9 <V= 4 10 Goto GoSelectStock>
+		result10 <V= 4 20 Goto GoSelectStock>
+		result11 <V= 4 40 Goto GoSelectStock>
+		result12 <Goto result5>
+		result13 <V= 5 0 Goto GoConfirm>
+		result14 <V= 5 1 Goto GoConfirm>
+		result15 <V= 5 2 Goto GoConfirm>
+		Msg1 <Welcome to %name1% Personal Investment. I offer a variety of stock trading and investment services.>
+		Msg2 <You give me some money to invest in a stock of your choice. Some stocks are high risk, others are low risk. If everything goes well your stock will increase in value and you'll earn money.>
+		Msg3 <In that case, you'll probably lose the money you invested. At least you'll have learned something in the process. It takes at least 24 hours for a stock to mature but may take longer, depending on your situation.>
+		Msg4 <I'm sorry, but my portfolio is currently full. I'm not accepting any more clients at this time.>
+		Msg5 <Certainly. How much money would you like to invest? Remember, if the stock turns sour, you could lose all of this.>
+		Msg6 <Very good. Next, which type of stock would you like to invest in? It's probably best to stick with low risk stocks unless you know what you're doing.>
+		Msg7_1 <Very well. I have you confirmed for a $ \VAL &InvestmentCost V1 investment in a low risk stock. Come back tomorrow to see how your stock is doing.>
+		CMsg7_1 <if= V5 0 Accept>
+		Msg7_2 <Very well. I have you confirmed for a $ \VAL &InvestmentCost V1 investment in a low risk stock. Come back tomorrow to see how your stock is doing.>
+		CMsg7_2 <if= V5 1 Accept>
+		Msg7_3 <Very well. I have you confirmed for a $ \VAL &InvestmentCost V1 investment in a low risk stock. Come back tomorrow to see how your stock is doing.>
+		CMsg7_3 <if= V5 2 Accept>
+		Msg8_1 <You invested $ \VAL &InvestmentCost V1 in a low risk stock with %name1%.>
+		CMsg8_1 <if= V5 0 Accept>
+		Msg8_2 <You invested $ \VAL &InvestmentCost V1 in a medium risk stock with %name1%.>
+		CMsg8_2 <if= V5 1 Accept>
+		Msg8_3 <You invested $ \VAL &InvestmentCost V1 in a high risk stock with %name1%.>
+		CMsg8_3 <if= V5 2 Accept>
+		Msg9 <I'm afraid that your stock has not yet matured. You'll have to come back later.>
+		Msg10 <I'm pleased to inform you that your stocks did very well. Here's the money you earned from their sale.>
+		Msg11 <I'm sorry to inform you that your stocks crashed. Maybe you'll have better luck next time.>
+		Prompt1 <I'd like to invest some money.>
+		CPrompt1 <if= V1 0 Accept>
+		Prompt2 <Just how does investment work?>
+		Prompt3 <I'd like to check on my investments.>
+		CPrompt3 <if# V1 0 Accept>
+		Prompt4 <What if everything doesn't go well?>
+		Prompt5 <That's all I needed to know.>
+		Prompt6 <I want to invest $ \VAL &InvestmentCost 1 .>
+		CPrompt6 <ifG PC$ &InvestmentCost 1 Accept>
+		Prompt7 <I want to invest $ \VAL &InvestmentCost 2 .>
+		CPrompt7 <ifG PC$ &InvestmentCost 2 Accept>
+		Prompt8 <I want to invest $ \VAL &InvestmentCost 4 .>
+		CPrompt8 <ifG PC$ &InvestmentCost 4 Accept>
+		Prompt9 <I want to invest $ \VAL &InvestmentCost 10 .>
+		CPrompt9 <ifG PC$ &InvestmentCost 10 Accept>
+		Prompt10 <I want to invest $ \VAL &InvestmentCost 20 .>
+		CPrompt10 <ifG PC$ &InvestmentCost 20 Accept>
+		Prompt11 <I want to invest $ \VAL &InvestmentCost 40 .>
+		CPrompt11 <ifG PC$ &InvestmentCost 40 Accept>
+		Prompt12 <Sorry, I changed my mind.>
+		Prompt13_1 <Terran Agriculture (low risk)>
+		Prompt13_2 <Martian Steel (low risk)>
+		Prompt13_3 <L5 Electronics (low risk)>
+		Prompt13_4 <Lunar Ceramics (low risk)>
+		Prompt13_5 <Vesuvian Pharma (low risk)>
+		Prompt14_1 <Asteroid Mining (medium risk)>
+		Prompt14_2 <Fusion Engines (medium risk)>
+		Prompt14_3 <Basketball Shoes (medium risk)>
+		Prompt14_4 <Music Distribution (medium risk)>
+		Prompt14_5 <Snack Foods (medium risk)>
+		Prompt15_1 <Biotech Research (high risk)>
+		Prompt15_2 <Computer Games (high risk)>
+		Prompt15_3 <Novelty Pillows (high risk)>
+		Prompt15_4 <Artificial Stupidity (high risk)>
+		Prompt15_5 <Fancy Hats (high risk)>
+	end
+	inv
+		NPC Corporate Executive
+		job <Stockbroker>
+	end
+
 %% *MAQSP_PG_PrivateerShop
 %%	One shop at the Privateer's Guild sells privateer weapons, armor, and
 %%	mecha.

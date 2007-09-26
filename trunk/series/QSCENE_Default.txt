@@ -5,6 +5,32 @@
 %% use by the quest that generated them.
 
 %%
+%% *CityBlock Content
+%%
+%% Contains a mecha-scale city block
+
+Scene 0 2
+	name <# District>
+	requires <*CityBlock>
+	MegaCityMap
+	MapWidth 30
+	MapHeight 30
+
+	sub
+		Team 1
+		SetEnemy 2
+		ParaX 5
+		ParaY 5
+
+		Team 2
+		name <Citizens>
+		Passive
+		ParaX 25
+		ParaY 25
+	end
+
+
+%%
 %% *RobotFactory Content
 %%
 %% Contains a factory with killer robots. Not expanded as a dungeon.
@@ -557,6 +583,14 @@ Scene
 %% A blank scene of the requested type. The calling content had better provide teams and
 %% everything else that this scene is going to need, because this prototype comes with
 %% nothing.
+
+Scene 0 2
+	name <# District>
+	requires <*Blank .CityBlock>
+	MegaCityMap
+	MapWidth 30
+	MapHeight 30
+	terrain <GROUND>
 
 Scene 0 0
 	name <# Basement>

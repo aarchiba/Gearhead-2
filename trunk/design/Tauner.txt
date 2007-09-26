@@ -1,0 +1,51 @@
+Groundcar 5
+name <Tauner>
+SDL_Sprite <>
+SDL_Portrait <>
+Desig <MA-073>
+desc <A three-wheeled combat vehicle produced by MUGL Enterprises.>
+TYPE <GROUND>
+FACTIONS <MUGLE L5LAW>
+
+sub
+Torso
+	Armor 5
+	Mass -2
+	Sub
+		CPit
+
+		Sensor 5
+
+		ECM 3
+
+		Mount
+		name <Body Mount>
+		inv
+			MLauncher 4
+			sub
+				STC SWM-2
+				magazine 20
+			end
+		end
+
+		Wheels 8
+		Mass -4
+	end
+Turret
+	Armor 4
+	mass -1
+	Sub
+		BeamGun 6
+		name <Rapid Laser Cannon>
+		Speed 3
+		BV 1
+		Range 6
+
+		STC LAS-3
+		name <Light Intercept Laser>
+		type <INTERCEPT>
+
+		Mount
+		name <Turret Mount>
+	End
+End

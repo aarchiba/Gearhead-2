@@ -39,7 +39,7 @@ Type
 	end;
 
 Const
-	NumMoveSys = 7;
+	NumMoveSys = 8;
 	MovesysMan: Array [1..NumMoveSys] of MoveSysDesc = (
 		(	{Wheels}
 			dmg: 1;
@@ -68,6 +68,10 @@ Const
 		(	{Space Flight}
 			dmg: 0;
 			cost: 44;
+		),
+		(	{Heavy Myomer}
+			dmg: 1;
+			cost: 100;
 		)
 	);
 
@@ -77,6 +81,7 @@ Const
 	GS_FlightJets = 4;
 	GS_Overchargers = 6;
 	GS_SpaceFlight = 7;
+	GS_HeavyMyomer = 8;
 
 
 Function MovesysBaseDamage( Part: GearPtr ): Integer;

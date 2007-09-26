@@ -4,9 +4,301 @@
 %% This content is tied to a city rather than any specific character within it.
 
 Content
+	name <Tourists Gone Nuts>
+	desc <While on vacation, a tourist ended up as part of a risque video... Can the PC get the videoslate back?>
+	requires <*:LocalQuest "RESORT" ~"SAFE">
+
+	% E1 is the tourist
+	% E2 is the cameraman
+	% E3 is the videoslate of ill repute
+	Element1 <NewNPC 0 0 Young Easygoing>
+	Scene1 <Building Public Shuttle>
+	Team1 <Citizens>
+	TeamData1 <Pass Ally>
+
+	Element2 <Prefab>
+	Scene2 <Building Public Meeting>
+	Team2 <Citizens>
+	TeamData2 <Pass Ally>
+
+	Element3 <Prefab>
+	Place3 <2>
+
+	% Quest1 is the success reward
+	Quest1 <*SuccessGetItem.giveitem.NPCSecret 1 3>
+
+requires <*:DEBUG>
+name <DEBUG>
+Scene1 <cavclub>
+Scene2 <cavclub>
+
+	sub
+		Persona 1
+		rumor0 <%name1% did some embarassing things while on vacation.>
+		% V2 = Ransom amount
+		greeting <if= QuestStatus %qid% %id% else GoCheckOffer NewChat Say 9 AddChat 6 AddChat 7 AddChat 8>
+		GoCheckOffer <if= QuestStatus %qid% 0 else GoChat ifG PCLaw d20 else GoCheckReact Goto GoOfferMission>
+		GoCheckReact <ifG React %threat% else GoCheckItem Goto GoOfferMission>
+		GoCheckItem <ifKeyItem %3% else GoChat NewChat Say 12 AddChat 9>
+		GoChat <NewChat SayAnything>
+		*GoOfferMission <*INeedYourHelp&SomethingPersonal GoAccept GoDeny>
+		GoAccept <EndChat Say 2 SetQuestStatus %qid% %id% QMemo %qid% 3 AddChat 1>
+		GoDeny <NewChat Say 1 AddReact -d10>
+		GoOfferItem <V= 2 Reward Threat %threat% 100 1000 NewChat Say 13 AddChat 10 AddChat 11 AddChat 12>
+		Result1 <NewChat Say 4 AddChat 2 AddChat 3 AddChat 4>
+		Result2 <NewChat Say 5  AddCheerful  d10  AddChat 5>
+		Result3 <NewChat Say 6  AddCheerful -d10  AddChat 5>
+		Result4 <NewChat Say 7                    AddChat 5>
+		Result5 <NewChat Say 8>
+		Result6 <NewChat Say 10 SetQUestStatus %qid% -2>
+		Result7 <Goto GoOfferItem>
+		Result8 <NewChat Say 11>
+		Result9 <Goto GoOfferItem>
+		Result10 <XPV 100 DeleteItem %3% Goto .%id1%_GoInit>
+		Result11 <NewChat Say 16 AddChat 13 AddChat 14>
+		Result12 <NewChat Say 15 AddChat 10 AddChat 11>
+		Result13 <Say 14 AddLawful -1 AddRenown -1 AddReact -30 CashPrize V2 DeleteItem %3% SetQuestStatus %qid% -1 if= d3 1 PCEnemy %1%>
+		Result14 <Goto Result10>
+		Msg1 <I see. Well, don't let me keep you. You're obviously doing something very important.>
+		Msg2 <While here on vacation I did a few things I'm not proud of... unfortunately, someone caught those things on video.>
+		Msg3 <%name1% was filmed for "Tourists Gone Nuts"; \SPR %1% wants you to locate the videoslate before it can be made public.>
+		mSG4 <I went to a party being sponsored by "Tourists Gone Nuts" because I heard they were giving out free beer. The next morning I woke up naked in an alley with a copy of the release form I apparently signed.>
+		Msg5 <I've learned that nothing is more expensive that something given away for free... Anyhow, if you could find that video and give it to me before copies are posted to Thruweb, I'd be sure to reward you.>
+		Msg6 <That's a bit harsh, don't you think? I know I was a bit stupid, but this punishment is way over the top.  Anyhow, if you could find that video and give it to me, I'd have a nice reward for you.>
+		Msg7 <Exactly. If you could do that, I'd have a nice reward waiting here for you.>
+		Msg8 <I don't know. I don't remember meeting any of the photographers, and my memory of the entire night is a bit hazy... If you ask around you may be able to find something, I hope.>
+		Msg9 <Have you found the video yet? I'm hoping to get this over with before my vacation is over.>
+		Msg10 <This is terrible... my reputation is going to be ruined!>
+		Msg11 <Please hurry back when you have. I'll be waiting.>
+		Msg12 <Oh, hi! You must be an adventurer. This has been a wild vacation!>
+		Msg13 <That's it! Hurry, please give it to me so I can destroy it!>
+		Msg14 <This is extortion! I'll pay, because I really need that video, but I won't forget this...>
+		Msg15 <I'd rather not say. The contents of the video are of a personal nature. If you give it to me, I'll provide a generous reward.>
+		Msg16 <That's too much! You can't seriously expect me to pay that, can you?>
+		Prompt1 <[Continue]>
+		Prompt2 <At least you got some free beer.>
+		Prompt3 <Sounds like you got what you deserved.>
+		Prompt4 <You want me to recover that video?>
+		Prompt5 <So where do you think I can find it?>
+		Prompt6 <I don't think you're going to find the video.>
+		CPrompt6 <ifItemDestroyed %3% Accept>
+		Prompt7 <I've got the video right here.>
+		CPrompt7 <ifKeyItem %3% Accept>
+		Prompt8 <Sorry, not yet.>
+		Prompt9 <Say, does this videoslate belong to you?>
+		Prompt10 <Here you go. [Give Videoslate]>
+		Prompt11 <Is it worth $ \VAL V2 to you?>
+		CPrompt11 <ifG PCEgo 12 Accept>
+		Prompt12 <Why is it so important?>
+		CPrompt12 <if= QuestStatus %qid% 0 Accept>
+		Prompt13 <You'll find the money or this video goes public.>
+		Prompt14 <Pay whatever you can. [Give Videoslate]>
+
+		Persona 2
+		rumor%id% <%name2% is filming a new video series called "Tourists Gone Nuts".>
+		% V1 = Have spoken before
+		% V2 = Cost to buy video
+		% V3 = Have given video
+		greeting <if= QuestStatus %qid% %id% else GoGreet if= V1 1 else GoFirstTime NewChat Say 2 AddChat 1 AddChat 3>
+		*GoFirstTime <*IWantToTalkAboutNPC&YouBadNPC %1% GoExplain>
+		GoExplain <V= 1 1 V= 2 Threat %threat% 5 QMemo %qid% 4 NewChat Say 1 AddChat 1 AddChat 2 AddChat 3>
+		GoItemGone <NewChat Say 8 V= 3 1>
+		GoGiveItem <QMemo %qid% 7 V= 3 1 GiveItem %3%>
+		*GoGreet <*NiceToMeetYou GoChat>
+		*GoChat <*MISC_CHATTER>
+		Result1 <ifItemOK %3% ELSE GoItemGone NewChat Say 3 AddChat 4 AddChat 5 AddChat 6 AddChat 7>
+		Result2 <NewChat Say 5>
+		Result3 <ifItemOK %3% ELSE GoItemGone NewChat Say 6 Goto GoGiveItem>
+		Result4 <NewChat  Say 9  AddEasygoing -d8  AddReact -d10  Goto GoGiveItem>
+		Result5 <NewChat  Say 10  Cash+ -V2  Goto GoGiveItem>
+		% Offering to appear in a naughty video will tarnish your reputation a bit... but threatening
+		% to kill someone won't. What a strange universe this is.
+		Result6 <NewChat  Say 11  AddEasygoing -10  AddCheerful d10  AddPragmatic d10  AddRenown -1  SkillXP 27 100  ifG PCHeroism 0 else GoGiveItem  AddHeroic -1  Goto GoGiveItem>
+		Result7 <NewChat Say 12>
+		Msg1 <%name1%... Yes, that name does ring a bell. I believe \SPR %1% appeared in one of my recent videos.>
+		Msg2 <Hello \PC . I guess you're back to talk about %name1%'s video again.>
+		Msg3 <Why would I do that? This video is worth a lot of money... unless you have a better offer, of course.>
+		Msg4 <You discovered that %name2% has the "Tourists Gone Nuts" video of %name1%.>
+		Msg5 <Er... okay?>
+		Msg6 <No way! %name1% told me \SPR %1% was 21! Here, you can have the videoslate... If the cops catch me with it they'll close us down for sure.>
+		Msg7 <%name2% gave you the "Tourists Gone Nuts" videoslate featuring %name1%.>
+		Msg8 <I don't have the video anymore. I don't know what happened to it, but it's not here.>
+		Msg9 <Um, that sounds like a fair trade. Here, you take the video... I'll be going away now.>
+		Msg10 <That's a fair price. Here, you take the video, and I'll take the money.>
+		Msg11 <That deal is more than fair. Here's the video; I'll be sure to let you know when I have a position that needs your "special touch".>
+		Msg12 <You better hurry, I'll be putting this video on our netsite soon.>
+		Prompt1 <I want you to give me the video.>
+		Prompt2 <That's all I wanted to know.>
+		Prompt3 <You do know that %name1% is underage, right?>
+		% Age of majority in the GearHead universe is hereby set to 16, since that's the youngest
+		% possible PC age. Only a perceptive PC will think to mention this, however.
+		CPrompt3 <ifG PCPerception 14 ifG -4 NPCDAge %1% Accept>
+		Prompt4 <Give me the video, and I let you live.>
+		CPrompt4 <ifIntimidation HardSkillTar %threat% Accept>
+		Prompt5 <I'll buy it for $ \VAL V2 .>
+		CPrompt5 <ifG PC$ V2 Accept>
+		Prompt6 <I'll help you make a much better video, later.>
+		CPrompt6 <ifChatNPCSexy ifFlirtation SkillTar %threat% Accept>
+		Prompt7 <I'll get back to you on that.>
+
+		MetaScene 1
+		start <if= QuestStatus %qid% %id% else %pop% ifNPCDead %1% else %pop% SetQuestStatus %qid% -2 DeleteNPC %2% Goto %pop%>
+	end
+	inv
+		NPC Citizen
+		job <Photographer>
+		job_desig <MEDIA>
+
+		Treasure 10
+		name <Videoslate>
+		desc <The name "%name1%" is marked on its label.>
+	end
+
+Content
+	name <Mecha on Strike!>
+	desc <A group of workers have gone on strike, and they're picketing in their mecha.>
+	% The outline for this quest came from my wife. It may or may not be based on actual
+	% events at the Hyundai car factory in Ulsan.
+	requires <*:LocalQuest "INDUSTRIAL">
+
+	% E1 is the factory boss
+	% E2 is the union leader
+	% E3 is the picket encounter
+	Element1 <Prefab>
+	Scene1 <Building Public>
+	Team1 <Citizens>
+	TeamData1 <Pass Ally>
+
+	Element2 <Prefab>
+	Scene2 <New *Blank.CityBlock>
+	Team2 <Citizens>
+	TeamData2 <Pass Ally>
+
+	Element3 <Prefab>
+	Scene3 <Urban>
+
+	% SubQuest1 is the success for getting the union back to the table.
+	Quest1 <*Success1.BusinessDeal 1>
+
+	sub
+		Persona 1
+		rumor0 <the workers are on strike at %name1%'s factory.>
+		greeting <if= QuestStatus %qid% %id% else GoCheckFirst  NewChat Say 6 AddChat 4 AddChat 5 AddChat 6>
+		GoCheckFirst <if= QuestStatus %qid% 0 else GoChat  ifG React d20 else GoChat Goto GoOfferMission>
+		GoChat <NewChat SayAnything>
+		*GoOfferMission <*DoYouWantAJob GoExplain>
+		GoExplain <NewChat Say 1 QMemo %qid% 2 SetQuestStatus %qid% %id% AddChat 1 AddChat 2 AddChat 3>
+		GoQuitFail <NewChat Say 9>
+		GoQuitSucceed <NewChat Say 10 MoveAndPacifyNPC %2% %s1% SetQuestStatus %qid% -2 ifNPCVillainous XPV 50 AddRenown 1 AddHeroic 1>
+		Result1 <NewChat Say 3>
+		Result2 <AddEasygoing -d8  NewChat Say 4>
+		Result3 <AddCheerful  -d4  NewChat Say 5>
+		Result4 <NewChat Say 8>
+		Result5 <NewChat Say 7 AddChat 7 AddChat 8>
+		Result6 <if= SceneVar %s2% 11 2 else .%id1%_GoInit AddRenown 1 XPV 100 Goto .%id1%_GoInit>
+		Result7 <ifConversation HardSkillTar %threat% else GoQuitFail Goto GoQuitSucceed>
+		Result8 <AddEasygoing -d12 Goto GoQuitSucceed>
+		Msg1 <The workers from my factory have gone on strike. Under normal circumstances that would be bad, but I'm afraid these are not normal circumstances... You see, they've formed a picket line using their mecha. Things could soon get out of hand.>
+		Msg2 <%name1% asked you to deal with the mecha picket line set up by \PPR %1% striking workers.>
+		Msg3 <Yes, if you could just get them back to the bargaining table and their mecha off the street, it would save our company a whole lot of trouble. Right now this is a public relations disaster just waiting to happen.>
+		Msg4 <No, the last thing we need is another riot. All I want is for them to come back to the bargaining table and take their mecha off the street. Right now this is a public relations disaster just waiting to happen.>
+		Msg5 <I'd prefer to not think of things that way as they could certainly get much worse. All I want is for the workers to come back to the bargaining table and take their mecha off the street. Right now this is a public relations disaster just waiting to happen.>
+		Msg6 <Has there been any progress with the striking workers?>
+		Msg7 <Why should I give in to any of their demands?>
+		Msg8 <I'll be waiting to hear back from you, then.>
+		Msg9 <I'm not going to be swayed by weak arguments like that. That's why we need to get back to the bargaining table, so %name1% and I can butt heads and get this finished quickly.>
+		Msg10 <Alright, I'll give the workers what they want, it's apparently the only way I'll ever get my factory running again.>
+		Prompt1 <Do you want me to talk with them?>
+		Prompt2 <Do you want me to bust some heads?>
+		Prompt3 <You mean things aren't already out of hand?>
+		Prompt4 <No, not yet.>
+		Prompt5 <I think you should give in to their demands.>
+		Prompt6 <They'll be coming back to the bargaining table.>
+		CPrompt6 <if# SceneVar %s2% 11 0 Accept>
+		Prompt7 <Because it's the right thing to do.>
+		Prompt8 <Because I'll hurt you if you don't.>
+		CPrompt8 <ifIntimidation SkillTar %threat% Accept>
+
+		Persona 2
+		rumor%id% <%name2% is the boss of the striking union.>
+		% V1 = Have already fought NPC
+		% V2 = Fake counter
+		greeting <if= QUestStatus %qid% %id% else GoCheckPreQuest if# SceneVar %s2% 11 0 else GoCheckChance NewChat Say 1>
+		GoCheckChance <if= V1 1 else GoCheckFight EndChat Say 2>
+		GoCheckFight <ifChatNPCInPlay else GoPreFight TeamAttack 2 V= 1 1 EndChat Say 3 AddChat 1 AddChat 2>
+		GoPreFight <NewChat Say 11 AddChat 6>
+		GoCheckPreQuest <if# QuestStatus %qid% 0 else GoBuzzOff NewChat SayAnything>
+		*GoBuzzOff <*IAmBusy&OnPhone>
+		Result1 <AddReact -d10 EndChat Say 4 AddChat 3 AddChat 4 AddChat 5>
+		Result2 <EndChat Say 5 AddChat 3 AddChat 4 AddChat 5>
+		Result3 <ifConversation HardSkillTar %threat% else GoR3Fail EndChat Say 6 QMemo %qid% 7 MoveAndPacifyNPC %2% %s1% SceneVar= %s2% 11 2 Return>
+		GoR3Fail <EndChat Say 8>
+		% Intimidation is actually impossible, but make a skill roll just to tease the player.
+		Result4 <V= 2 Intimidation EndChat Say 9>
+		Result5 <EndChat Say 10 Return>
+		Result6 <ifConversation SkillTar %threat% else GoR6Fail NewChat Say 6 QMemo %qid% 7 MoveAndPacifyNPC %2% %s1% SceneVar= %s2% 11 2>
+		GoR6Fail <EndChat Say 12>
+		Msg1 <You should go talk to %name1% about what just happened.>
+		Msg2 <I'm done speaking with you. Either you're with us, or you're against us.>
+		Msg3 <Hey, what are you doing here? You're not one of the workers.>
+		Msg4 <%name1%, huh? You can tell \OPR %1% that we're not going back to work until conditions at the factory improve.>
+		Msg5 <This protest is the only way we're going to get our message across. You can tell %name1% that nobody here is going back to work until conditions at the factory improve.>
+		Msg6 <So \SPR %1% 's ready to talk again, huh? I knew this strike would be effective. You can let \OPR %1% know that we're ready to negotiate.>
+		Msg7 <You convinced the striking workers from %name2%'s factory to return to negotiation.>
+		Msg8 <You think %name1% is actually interested in negotiation? If you believe in \OPR %1% so much, you can die for \OPR %1% !>
+		Msg9 <We're not going to be intimidated by one of %name1%'s lackeys!>
+		Msg10 <We're not going to bend until %name1% acknowledges our grievances.>
+		Msg11 <Hello, who is this? I'm a bit busy leading a strike at the moment.>
+		Msg12 <Do you know what kind of a boss %name1% is? We're not coming back to negotiation unless we get some concessions!>
+		Prompt1 <I was sent by %name1%.>
+		Prompt2 <You should get out of the street before someone gets hurt.>
+		Prompt3 <It'd be more effective if you told \OPR %1% yourself.>
+		Prompt4 <You're going to end this strike now, or else.>
+		Prompt5 <I'll go do that.>
+		Prompt6 <%name1% wants to negotiate with you.>
+
+		MetaScene 1
+		start <if= QuestStatus %qid% %id% else %pop% ifNPCDead %1% else %pop% SetQuestStatus %qid% -2 DeleteNPC %2% Goto %pop%>
+
+		MetaScene 2
+		% SceneVar %s2% 11 = Victory Counter; if nonzero, PC has resolved conflict.
+		%      if 1, the PC resolved the conflict through violence
+		%      if 2, the PC resolved the conflict through negotiation
+		% Scenevar %s2% 12 = ForceChat Counter
+		start <if= L12 0 L= 12 1 ForceChat %2%>
+		nu2 <if= T2 0 if= L11 0 if= QuestStatus %qid% %id% L= 11 1 XPV 100 Print 11 QMemo %qid% 12 ifNPCOK %2% MoveAndPacifyNPC %2% %s1% Monologue %2% 13>
+		Msg11 <That appears to be the last of the strikers.>
+		Msg12 <You defeated the striking workers. %name1% will want to hear about this.>
+		Msg13 <By union rules, the results of a mecha duel are to be legally binding upon both sides. You can tell %name1% that we're coming back to the bargaining table.>
+		Sub
+			Team 1
+			SetEnemy 2
+			ParaX 5
+			ParaY 5
+
+			Team 2
+			name <Citizens>
+			ParaX 25
+			ParaY 25
+			Deploy <if= L11 0  if= QuestStatus %qid% %id%   WMecha 2 Threat %threat% 100>
+		end
+	end
+	inv
+		NPC Corporate Executive
+
+		NPC Construction Worker
+		Chardesc Passionate
+		Combatant
+
+		STC QUEST-MAPMARKER-AUTO-STATIONARY
+		name <Picket Line>
+		desig <ENTRANCE %s2%>		
+	end
+
+Content
 	name <Tower of Decay>
 	desc <Not all the wreckage from the disaster has been removed, nor all the survivors located.>
-	requires <*:LocalQuest "DISASTER">
+	requires <*:LocalQuest "DISASTER" ~"Dangerous">
 
 	% E1 is the ruined building
 	% E2 is the entrance to this building
@@ -291,7 +583,7 @@ Content
 Content
 	name <Pirates Love Vegetables>
 	desc <There's a hydroponics station that's been taken over by pirates.>
-	requires <*:LocalQuest "Spinner" ~"Cuisine">
+	requires <*:LocalQuest "Spinner" ~"Cuisine" ~"Dangerous">
 
 	% E1 is the cook who owns the station
 	% E2 is the station encounter, activated when QuestSTatus = %id%
@@ -463,7 +755,7 @@ Content
 Content
 	name <Mine Hideout>
 	desc <A gang of thieves has left behind a base in the mine.>
-	requires <*:LocalQuest (!Ne|!Lo)>
+	requires <*:LocalQuest (!Ne|!Lo) ~"Dangerous">
 
 	% E1 is the police officer.
 	% E2 is the thief.
@@ -837,7 +1129,7 @@ Content
 	desc <The PC will encounter a NPC in space, who will try to drive him away.>
 	%% Upon defeating E1, he will be sent to a nearby building. If the PC speaks with
 	%% him again, he'll find out what E1 was guarding.
-	requires <*:LocalQuest "Spinner" "L5PAT">
+	requires <*:LocalQuest "Spinner" "L5PAT" ~"Dangerous">
 
 	% E1 is the character the PC will be fighting
 	% E2 is the entrance to the space scene
@@ -917,7 +1209,7 @@ Content
 	desc <The PC will encounter a space trucker being attacked, and may help.>
 	%% Upon saving E1, he will be sent to a nearby building. If the PC speaks with
 	%% him again, he'll find out what E1 found.
-	requires <*:LocalQuest "Spinner">
+	requires <*:LocalQuest "Spinner" ~"Dangerous">
 
 	% E1 is the character the PC will be helping
 	% E2 is the entrance to the space scene
@@ -1007,7 +1299,7 @@ Content
 Content
 	name <Rishtan: Mechanical Genius>
 	desc <The local mechanic wants to start a customization shop, but lacks money.>
-	requires <*:LocalQuest L5PAT>
+	requires <*:LocalQuest L5PAT ~"Safe">
 
 	quest1 <*:FindMoney.Investor 2>
 	quest2 <*Success1.BusinessDeal 1>

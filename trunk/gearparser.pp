@@ -1672,6 +1672,15 @@ Procedure RandomLoot( Box: GearPtr; SRP: LongInt; const l_type,l_factions: Strin
 	begin
 		ItemIsLegal := PartAtLeastOneMatch( l_type , SAttValue( I^.SA , 'CATEGORY' ) ) and PartAtLeastOneMatch( l_factions , SAttValue( I^.SA , 'FACTIONS' ) ) and IsLegalInvCom( Box , I );
 	end;
+	Function RLWeight( Cost,MIC: LongInt ): LongInt;
+		{ Return the chance of this item being selected. }
+	begin
+		if Cost < ( MIC div 4 ) then begin
+			RLWeight := 1;
+		end else begin
+			RLWeight := Cost;
+		end;
+	end;
 	Function SelectAnItem: GearPtr;
 		{ Select an appropriate item from the standard items list. }
 	var
@@ -1690,7 +1699,8 @@ Procedure RandomLoot( Box: GearPtr; SRP: LongInt; const l_type,l_factions: Strin
 		while I <> Nil do begin
 			if ItemIsLegal( I ) then begin
 				Cost := GearValue( I );
-				if Cost < MIC then Total := Total + ( Cost * Cost );
+{				if Cost < MIC then Total := Total + ( Cost * Cost );}
+				if Cost < MIC then Total := Total + RLWeight( Cost , MIC );
 			end;
 			I := I^.Next;
 		end;
@@ -1705,7 +1715,7 @@ Procedure RandomLoot( Box: GearPtr; SRP: LongInt; const l_type,l_factions: Strin
 			if ItemIsLegal( I ) then begin
 				Cost := GearValue( I );
 				if Cost < MIC then begin
-					Total := Total - ( Cost * Cost );
+					Total := Total - RLWeight( Cost , MIC );
 					if Total < 1 then Selected_Item := I;
 				end;
 			end;

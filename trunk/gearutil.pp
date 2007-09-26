@@ -1154,12 +1154,16 @@ end;
 Function GearEncumberance( Mek: GearPtr ): Integer;
 	{ Return how many unscaled mass units this gear may carry without }
 	{ incurring a penalty. }
+var
+	HM: Integer;
 begin
 	if Mek = Nil then begin
 		GearEncumberance := 0;
 	end else if Mek^.G = GG_Mecha then begin
-		{ Encumberance value is basic MassPerMV + Size of mecha. }
-		GearEncumberance := MassPerMV + Mek^.V;
+		{ Encumberance value is basic MassPerMV + Size of mecha + bonus for heavy myomer. }
+		HM := CountActivePoints( Mek , GG_MoveSys , GS_HeavyMyomer ) div Mek^.V;
+		if HM > 2 then HM := 2;
+		GearEncumberance := MassPerMV + Mek^.V + HM;
 	end else if Mek^.G = GG_Character then begin
 		{ Encumberance value is BODY stat + 2 + WeightLifting. }
 		GearEncumberance := CStat( Mek , STAT_Body ) + 2 + CharaSkillRank( Mek , NAS_WeightLifting );
@@ -1853,6 +1857,7 @@ var
 		{ Apply the close combat bonus for weapons. }
 	var
 		Module: GearPtr;
+		HeavyMyomer: Integer;
 	begin
 		if Master <> Nil then begin
 			if Master^.G = GG_Character then begin
@@ -1866,6 +1871,10 @@ var
 				if D < 1 then D := 1;
 			end else if Master^.G = GG_Mecha then begin
 				D := D + ( Master^.V - 1 ) div 2;
+
+				{ May also get a bonus from heavy myomer. }
+				HeavyMyomer := CountActivePoints( Master , GG_MoveSys , GS_HeavyMyomer );
+				if HeavyMyomer > 0 then D := D + ( HeavyMyomer div Master^.V );
 
 				{ Having an oversized module gives a +1 bonus to damage. }
 				Module := FindModule( Attacker );

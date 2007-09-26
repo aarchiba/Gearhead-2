@@ -1481,7 +1481,11 @@ var
 		LList := AddQuestComponent( RootScene , Nil , QuestType , QuestThreat , QuestComplexity , KeyScene , KeyGear );
 
 		{ Next, assemble these components into actual adventure content. }
-		AssembleQuest( LList );
+		if LList <> Nil then begin
+			AssembleQuest( LList );
+		end else begin
+			if XXRan_Debug then DialogMsg( 'ERROR: AddQuest failed for ' + GearName( Source ) + '/' + QuestType);
+		end;
 	end;
 
 	Function InitialThreat( Part: GearPtr ): Integer;

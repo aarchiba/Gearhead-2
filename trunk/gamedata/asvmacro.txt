@@ -51,6 +51,7 @@ PCCHARM <GrabPCPilot GStat 8>
 NPCEGO <GrabNPC ? GStat 6>
 CHATNPCEGO <GrabChatNPC GStat 6>
 NPCCHARM <GrabNPC ? GStat 8>
+NPCDAGE <GrabNPC ? GNAtt NAG_CharDescription NAS_DAge>
 CHATNPCPERCEPTION <GrabChatNPC GStat 4>
 ChatNPCRenown <GrabChatNPC GNAtt NAG_CharDescription -6>
 ChatNPCRelationship <GrabChatNPC GNAtt NAG_Relationship 0>
@@ -94,6 +95,7 @@ Awareness <SkRoll 11>
 Stealth <SkRoll 25>
 Flirtation <SkRoll 27>
 Taunt <SkRoll 42>
+Shopping <SkRoll 21>
 FacVar <GrabFaction ? GNAtt NAG_ScriptVar ?>
 PCFacXP <GrabFaction PCFac GNAtt NAG_Experience NAS_FacXP>
 PCFacLevel <GrabFaction PCFac GNAtt NAG_Experience NAS_FacLevel>
@@ -122,6 +124,7 @@ NAS_OriginalHome <255>
 NAG_Location <-1>
 NAG_ScriptVar <0>
 NAG_CharDescription <3>
+NAS_DAge <1>
 NAS_CharType <2>
 NAV_TempLancemate <2>
 NAG_Experience <4>

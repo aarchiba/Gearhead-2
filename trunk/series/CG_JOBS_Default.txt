@@ -104,6 +104,13 @@ skill 36
 Easygoingness -10
 
 Job
+name <Banker>
+desig <CORPO>
+requires <financial>
+% Shopping
+Skill 21
+
+Job
 name <Corporate Executive>
 desig <CORPO>
 requires <CITY>
@@ -157,7 +164,7 @@ Pragmatism 5
 Job
 name <Mecha Designer>
 desig <CRAFT>
-requires <CITY>
+requires <Industrial>
 % Mecha Repair, Mecha Engineering, Robotics
 Skill 15
 skill 31
@@ -370,7 +377,7 @@ Skill 10
 Job
 name <Diplomat>
 desig <POLIT>
-requires <CITY>
+requires <CAPITOL>
 % Conversation, Intimidation, Leadership
 skill 19
 skill 28

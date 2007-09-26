@@ -21,7 +21,7 @@
 Content
 	name <Pissed Off Loan Shark>
 	desc <E1 hasn't paid his debt, and so has been thrown in the pit.>
-	requires <*:PersonalIntervention ~"City">
+	requires <*:PersonalIntervention ~"City" ~"Dangerous">
 
 	% E1 is the prodigal target
 	% E2 is the mission-giver
@@ -253,7 +253,7 @@ Content
 Content
 	name <I likes it like that>
 	desc <E1 has no intention to change his ways; may ask PC to get E2 off his back.>
-	requires <*:PersonalIntervention>
+	requires <*:PersonalIntervention ~"Safe">
 
 	% E1 is the prodigal target
 	% E2 is the mission-giver
@@ -403,7 +403,7 @@ Content
 Content
 	name <Mecha Impounded by L5Law>
 	desc <E1 broke some traffic rules; must pass a test to get mecha back>
-	requires <*:MechaHeld L5PAT>
+	requires <*:MechaHeld L5PAT ~"Safe">
 
 	% E1 is the character who owns the mecha.
 	% E2 is the police officer holding the mecha.
@@ -614,7 +614,7 @@ Content
 	% for the first person to locate its cargo hold. The PC can take part in the mission,
 	% but will be beaten there by E1... at which point in time the PC can allow him to
 	% claim the prize, or fight him and take the prize himself.
-	requires <*ProveMyself L5PAT>
+	requires <*ProveMyself L5PAT ~"Safe">
 
 	% E1 is the character who must prove himself
 	% E2 is the professor offering the quest
@@ -734,7 +734,7 @@ Content
 
 Content
 	name <Prove Myself Vs Pirates>
-	requires <*ProveMyself Spinner -1:CRIHN>
+	requires <*ProveMyself Spinner -1:CRIHN ~"Dangerous">
 
 	% E1 is the character who must prove himself.
 	% E2 is the character offering a bounty on pirates
@@ -1256,6 +1256,7 @@ Content
 %% SubTypes:
 %% .giveitem	PC gave the item to the NPC
 %% .keepitem	PC didn't give the item to the NPC
+%% .NPCsecret	The item is potentially embarassing to the NPC
 
 Content
 	name <Good job, let's study>

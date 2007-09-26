@@ -16,6 +16,8 @@ Head
 		Sensor 6
 
 		ECM 5
+
+		HeavyMyomer 1
 	end
 
 Torso
@@ -36,8 +38,13 @@ Torso
 		end
 
 		STC LAS-5
+		mass -2
 
 		STC LAS-5
+		mass -2
+
+		HeavyMyomer 3
+		mass -1
 	end
 
 Arm
@@ -56,10 +63,11 @@ Arm
 			Acc 2
 			Magazine 1
 		end
+
+		HeavyMyomer 1
 	end
 	inv
 		ArmArmor 3
-		Mass -2
 	end
 
 Arm
@@ -78,10 +86,11 @@ Arm
 			Acc 2
 			Magazine 1
 		end
+
+		HeavyMyomer 1
 	end
 	inv
 		ArmArmor 3
-		Mass -2
 	end
 
 Leg
@@ -100,6 +109,9 @@ Leg
 		end
 		PowerSource 3
 		mass -4
+
+		HeavyMyomer 3
+		Mass -1
 	end
 
 Leg
@@ -118,6 +130,9 @@ Leg
 		end
 		PowerSource 3
 		mass -4
+
+		HeavyMyomer 3
+		Mass -1
 	end
 
 Storage
