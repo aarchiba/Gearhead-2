@@ -1271,12 +1271,12 @@ Content
 		Persona 1
 		Greeting <if= QuestStatus %qid% -1 else %pop% ifChatNPCArchEnemy else .%id%_GoNoEnemy SetQuestStatus %qid% -2 Goto .%id%_GoBlowOff>
 		*.%id%_GoBlowOff <*BrushOff>
-		.%id%_GoNoEnemy <Say %id%02 AddChat %id%01 AddChat %id%02>
+		.%id%_GoNoEnemy <NewChat Say %id%02 AddChat %id%01 AddChat %id%02>
 		.%id%_GoInit <NewChat Say %id%01 SetQuestStatus %qid% -1 AddChat %id%03>
 		*.%id%_GoBye <*GOODBYE>
 		result%id%01 <EndChat Say %id%03 School .%id%_skills Goto .%id%_GoBye>
 		.%id%_skills <1 2 3 4 5 6 7 8 9 10 11 12>
-		result%id%02 <NewChat Say Msg%id%04>
+		result%id%02 <NewChat Say %id%04>
 		result%id%03 <Goto result%id%01>
 		Msg%id%01 <So this is the %name2%. You've proven yourself to be a great cavalier... If you want, I could train you to be even better.>
 		Msg%id%02 <Hello \PC . Are you in the mood for some training?>

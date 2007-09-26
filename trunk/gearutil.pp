@@ -1517,7 +1517,7 @@ Function EncumberanceLevel( PC: GearPtr ): Integer;
 	{ Return a value indicating this character's current }
 	{ encumberance level. }
 var
-	EMass,EV: Integer;
+	EMass,EV,HM: Integer;
 begin
 	EV := GearEncumberance( PC );
 	if EV < 1 then EV := 1;
@@ -1525,7 +1525,11 @@ begin
 
 	{ Reduce the basic mass by the character's weight lifting skill. }
 	if PC^.G = GG_Character then begin
-		EMass := EMass - CharaSkillRank( PC , NAS_WeightLifting );
+		{ The amount of weight beging carried gets reduced by the amount of Heavy Myomer the PC has equipped. }
+		{ This also reduces the amount of effective weight being carried. }
+		HM := CountActivePoints( Mek , GG_MoveSys , GS_HeavyMyomer ) * 2;
+
+		EMass := EMass - HM - CharaSkillRank( PC , NAS_WeightLifting );
 	end;
 
 	if EMass > 0 then begin

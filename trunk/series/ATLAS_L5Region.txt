@@ -4724,8 +4724,8 @@ sub
 
 			Elevator
 			MiniMapComponent 4
-			name <To Emerald Style>
-			destination <Emerald Style>
+			name <To Emerald Life>
+			destination <Emerald Life>
 		end
 
 		Scene
@@ -4866,7 +4866,7 @@ sub
 		end
 
 		Scene
-		name <Emerald Style>
+		name <Emerald Life>
 		type <building mall public legit>
 		context <mall>
 		special <NOEXIT>
@@ -4875,7 +4875,7 @@ sub
 		MapHeight 17
 
 		start <Print 1>
-		Msg1 <You enter Emerald Style.>
+		Msg1 <You enter Emerald Life.>
 
 		NeededCells 2
 		Content1 <Some 1 100 Sub *SPECIAL_SHOP    na>
