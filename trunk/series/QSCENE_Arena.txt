@@ -34,7 +34,7 @@ Scene 0 2
 	special <SHOWALL SOLO ARENA>
 	terrain <GROUND>
 
-	start <if= SelfArenaState NAV_AS_Ready else GoCheckBattle          Alert 1 Print 1  SetSelfArenaState NAV_AS_Battle SetSelfArenaRecharge if# SelfChallengerID 0 ForceChat SelfChallengerID>
+	start <if= SelfArenaState NAV_AS_Ready else GoCheckBattle          Alert 1   SetSelfArenaState NAV_AS_Battle SetSelfArenaRecharge if# SelfChallengerID 0 ForceChat SelfChallengerID>
 	GoCheckBattle <if= SelfArenaState NAV_AS_Battle else GoBoringStart Print 2>
 	GoBoringStart <Print 3 Return>
 
@@ -82,7 +82,7 @@ Scene 0 2
 	special <SHOWALL SOLO ARENA>
 	terrain <GROUND>
 
-	start <if= SelfArenaState NAV_AS_Ready else GoCheckBattle          Alert 1 Print 1  SetSelfArenaState NAV_AS_Battle SetSelfArenaRecharge if# SelfChallengerID 0 ForceChat SelfChallengerID>
+	start <if= SelfArenaState NAV_AS_Ready else GoCheckBattle          Alert 1   SetSelfArenaState NAV_AS_Battle SetSelfArenaRecharge if# SelfChallengerID 0 ForceChat SelfChallengerID>
 	GoCheckBattle <if= SelfArenaState NAV_AS_Battle else GoBoringStart Print 2>
 	GoBoringStart <Print 3 Return>
 
@@ -132,7 +132,7 @@ Scene 0 2
 	MapWidth 50
 	MapHeight 50
 
-	start <if= SelfArenaState NAV_AS_Ready else GoCheckBattle          Alert 1 Print 1  SetSelfArenaState NAV_AS_Battle SetSelfArenaRecharge if# SelfChallengerID 0 ForceChat SelfChallengerID>
+	start <if= SelfArenaState NAV_AS_Ready else GoCheckBattle          Alert 1   SetSelfArenaState NAV_AS_Battle SetSelfArenaRecharge if# SelfChallengerID 0 ForceChat SelfChallengerID>
 	GoCheckBattle <if= SelfArenaState NAV_AS_Battle else GoBoringStart Print 2>
 	GoBoringStart <Print 3 Return>
 
@@ -175,7 +175,7 @@ Scene 0 2
 	terrain <GROUND>
 	special <SHOWALL SOLO ARENA>
 
-	start <if= SelfArenaState NAV_AS_Ready else GoCheckBattle          Alert 1 Print 1  SetSelfArenaState NAV_AS_Battle SetSelfArenaRecharge if# SelfChallengerID 0 ForceChat SelfChallengerID>
+	start <if= SelfArenaState NAV_AS_Ready else GoCheckBattle          Alert 1   SetSelfArenaState NAV_AS_Battle SetSelfArenaRecharge if# SelfChallengerID 0 ForceChat SelfChallengerID>
 	GoCheckBattle <if= SelfArenaState NAV_AS_Battle else GoBoringStart Print 2>
 	GoBoringStart <Print 3 Return>
 
@@ -219,7 +219,7 @@ Scene 0 2
 	special <SHOWALL SOLO ARENA>
 	terrain <GROUND>
 
-	start <if= SelfArenaState NAV_AS_Ready else GoCheckBattle          Alert 1 Print 1  SetSelfArenaState NAV_AS_Battle SetSelfArenaRecharge if# SelfChallengerID 0 ForceChat SelfChallengerID>
+	start <if= SelfArenaState NAV_AS_Ready else GoCheckBattle          Alert 1   SetSelfArenaState NAV_AS_Battle SetSelfArenaRecharge if# SelfChallengerID 0 ForceChat SelfChallengerID>
 	GoCheckBattle <if= SelfArenaState NAV_AS_Battle else GoBoringStart Print 2>
 	GoBoringStart <Print 3 Return>
 

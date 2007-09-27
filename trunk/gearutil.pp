@@ -1160,8 +1160,8 @@ begin
 	if Mek = Nil then begin
 		GearEncumberance := 0;
 	end else if Mek^.G = GG_Mecha then begin
-		{ Encumberance value is basic MassPerMV + Size of mecha + bonus for heavy myomer. }
-		HM := CountActivePoints( Mek , GG_MoveSys , GS_HeavyMyomer ) div Mek^.V;
+		{ Encumberance value is basic MassPerMV + Size of mecha + bonus for heavy Actuator. }
+		HM := CountActivePoints( Mek , GG_MoveSys , GS_HeavyActuator ) div Mek^.V;
 		if HM > 2 then HM := 2;
 		GearEncumberance := MassPerMV + Mek^.V + HM;
 	end else if Mek^.G = GG_Character then begin
@@ -1525,9 +1525,9 @@ begin
 
 	{ Reduce the basic mass by the character's weight lifting skill. }
 	if PC^.G = GG_Character then begin
-		{ The amount of weight beging carried gets reduced by the amount of Heavy Myomer the PC has equipped. }
+		{ The amount of weight beging carried gets reduced by the amount of Heavy Actuator the PC has equipped. }
 		{ This also reduces the amount of effective weight being carried. }
-		HM := CountActivePoints( Mek , GG_MoveSys , GS_HeavyMyomer ) * 2;
+		HM := CountActivePoints( PC , GG_MoveSys , GS_HeavyActuator ) * 2;
 
 		EMass := EMass - HM - CharaSkillRank( PC , NAS_WeightLifting );
 	end;
@@ -1861,7 +1861,7 @@ var
 		{ Apply the close combat bonus for weapons. }
 	var
 		Module: GearPtr;
-		HeavyMyomer: Integer;
+		HeavyActuator: Integer;
 	begin
 		if Master <> Nil then begin
 			if Master^.G = GG_Character then begin
@@ -1876,9 +1876,9 @@ var
 			end else if Master^.G = GG_Mecha then begin
 				D := D + ( Master^.V - 1 ) div 2;
 
-				{ May also get a bonus from heavy myomer. }
-				HeavyMyomer := CountActivePoints( Master , GG_MoveSys , GS_HeavyMyomer );
-				if HeavyMyomer > 0 then D := D + ( HeavyMyomer div Master^.V );
+				{ May also get a bonus from heavy Actuator. }
+				HeavyActuator := CountActivePoints( Master , GG_MoveSys , GS_HeavyActuator );
+				if HeavyActuator > 0 then D := D + ( HeavyActuator div Master^.V );
 
 				{ Having an oversized module gives a +1 bonus to damage. }
 				Module := FindModule( Attacker );

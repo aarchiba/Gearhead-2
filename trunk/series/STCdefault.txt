@@ -1033,6 +1033,21 @@ EncounterMove 0
 ENCOUNTER_NonCombat
 
 Encounter
+desig <QUEST-MAPMARKER-AUTO-WANDER>
+% A Quest MapMarker doesn't have a MetaScene ID.
+% It becomes active when QuestStatus %qid% = %id% and remains
+% active forever after.
+%  V-1 = Have become visible counter
+Special <NoMSID>
+update <if= V-1 0 else GoSetVisible if= QuestStatus %qid% %id% else GoHide  Goto GoSetVisible>
+GoSetVisible <V= -1 1 SetStat STAT_MetaVisibility 0  ShowEncounter  Goto GoSetOrders>
+% Sets this encounter's orders to Passive
+GoSetOrders <GrabSource GSetNAtt NAG_EpisodeData NAS_Orders 3>
+Attack <  >
+EncounterMove 50
+ENCOUNTER_NonCombat
+
+Encounter
 desig <QUEST-ENCOUNTER-AUTOENTRANCE-STATIONARY>
 % A Quest Encounter doesn't have a MetaScene ID.
 % It becomes active when QuestStatus %qid% = %prev_id% and remains

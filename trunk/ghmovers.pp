@@ -69,7 +69,7 @@ Const
 			dmg: 0;
 			cost: 44;
 		),
-		(	{Heavy Myomer}
+		(	{Heavy Actuators}
 			dmg: 1;
 			cost: 100;
 		)
@@ -81,7 +81,7 @@ Const
 	GS_FlightJets = 4;
 	GS_Overchargers = 6;
 	GS_SpaceFlight = 7;
-	GS_HeavyMyomer = 8;
+	GS_HeavyActuator = 8;
 
 
 Function MovesysBaseDamage( Part: GearPtr ): Integer;

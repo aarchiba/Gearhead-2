@@ -272,6 +272,7 @@ Content
 	sub
 		Persona 2
 		rumor%id% <%name2% is hosting a fancy yacht party for all the spinner's richest inhabitants.>
+		special <Unlisted>
 		% V1 = Have applied reaction boost.
 		greeting <if= QuestStatus %qid% %id% else GoChat ifG PartyScore 2 else GoBadParty NewChat Say 1 AddChat 1 AddChat 2 if= V1 0 V= 1 1 AddReact 20>
 		GoBadParty <NewChat Say 2 QMemo %qid% 6>

@@ -5,6 +5,87 @@
 %% Always make sure to do an *ENEMY_CHECK or equivalent in these quests.
 
 Content
+	name <Entertain the Diplomat>
+	requires <*:NPCQuest (C:POLIT|C:MILIT|C:TRADE) "Financial" ~"Safe">
+	desc <There's a dignitary who wants to be entertained, and only the PC can do it.>
+
+	% E1 is the person who will be giving this quest
+	% E2 is the Diplomat to be entertained
+	% E3 is the entrance to the party yacht
+	Element1 <Key>
+	Element2 <Prefab>
+	Scene2 <New *PartyYacht>
+	Team2 <Citizens>
+	TeamData2 <Pass>
+	Element3 <Prefab>
+	Scene3 <Urban>
+
+	% SubQuest1 is the success branch
+	Quest1 <*Success1.BusinessDeal 1>
+
+	sub
+		Persona 1
+		Rumor0 <%name1% has been trying to convince a visiting diplomat to invest in our city.>
+		greeting <if= QuestStatus %qid% %id% else GoCheckFirst NewChat Say 8 AddChat 4>
+		GoCheckFirst <if= QuestStatus %qid% 0 else GoChat Goto GoEnemyCheck>
+		GoChat <NewChat SayAnything>
+		*GoEnemyCheck <*ENEMY_CHECK GoMaybeOfferQuest ChatNPCFac GoMakeEnemy>
+		GoMakeEnemy <SetQuestStatus %qid% -2 ifG d20 React PCEnemy %1%>
+		% The PC can get this quest if he's an ally of the NPC, if his Renown
+		% is sufficiently high, or if he can make a decent Conversation roll.
+		GoMaybeOfferQuest <ifChatNPCAlly else GoCheckRenown                NewChat Say 1 Goto GoStartQuest>
+		GoCheckRenown <ifG PCRenown %threat% else GoCheckConversation      NewChat Say 2 Goto GoStartQuest>
+		GoCheckConversation <ifConversation SkillTar %threat% else GoChat  NewChat Say 3 Goto GoStartQuest>
+		GoStartQuest <QMemo %qid% 4 SetQuestStatus %qid% %id% AddChat 1 AddChat 2 AddChat 3>
+		Result1 <AddCheerful -d6   NewChat Say 5>
+		Result2 <NewChat Say 6>
+		Result3 <AddSociable d8    NewChat Say 7>
+		Result4 <Goto .%id1%_GoInit>
+		Msg1 <\PC , how would you like to go to a party? There's a diplomat in town and we're trying to convince \OPR %2% to invest here. There's a reception being held on a yacht above the city. All public servants have been invited to attend.>
+		Msg2 <You're a pretty well known pilot, \PC . The city is holding a party for a visiting diplomat, and I'd like for you to attend. We're hoping to impress \OPR %2% so \SPR %2% 'll invest here. Make sure \SPR %2% has a good time and you'll be rewarded.>
+		Msg3 <\PC , may I have a moment? There's a diplomat visiting our city and we're hoping \SPR %2% 'll invest here. I'm throwing a party for \OPR %2% tonight which I'd like for you to attend. Make sure \SPR %2% has a good time and there'll be a reward.>
+		Msg4 <You've been invited to a party thrown by %name1% to convince a visiting diplomat to invest in the city.>
+		Msg5_1 <Of course you will. I like you, how could %name2% not? You better get over there soon before all the free booze is gone.>
+		CMsg5_1 <ifG React 20 Accept>
+		Msg5_2 <Good point. No, I'm not particularly sure of that... I'm sure it'll be fine.>
+		CMsg5_2 <ifG 21 React Accept>
+		Msg6 <I'm sure there will be food, yes. Just don't eat all of it yourself.>
+		Msg7 <Great. You can find the yacht floating over \SCENE RootSceneID . Just radio to them and the shuttle will pick you up.>
+		Msg8 <I hope that %name2% is enjoying the party...>
+		Prompt1 <Are you sure I'd make a good impression?>
+		Prompt2 <Will there be free food?>
+		Prompt3 <A party? I'm there.>
+		Prompt4 <I'm here to tell you that \SPR %2% 'll invest.>
+		CPrompt4 <if= SceneVar %s2% 11 1 Accept>
+
+		Persona 2
+		special <UNLISTED>
+		greeting <if= QuestStatus %qid% %id% else GoChat if= SceneVar %s2% 11 0 else GoChat ifG PartyScore 2 else GoNotYet NewChat Say 1 QMemo %qid% 2  XPV 100  SceneVar= %s2% 11 1>
+		GoChat <NewChat SayAnything>
+		GoNotYet <NewChat Say 3>
+		Msg1 <I must say, this is a fine party that %name1% has thrown. I'm more convinced than ever to proceed with our mutual investment.>
+		Msg2 <%name2% was impressed by the amusements provided by %name1%. You should go back to \SCENE %s1% and report on your success.>
+		Msg3 <I heard that the people of \SCENE RootSceneID were hospitable, but so far I'm just not seeing it.>
+
+		% Some checks to make sure the quest ends if the NPC is killed...
+		MetaScene 1
+		start <if= QuestStatus %qid% %id% else %pop% ifNPCDead %1% else %pop% SetQuestStatus %qid% -2 Goto %pop%>
+
+		MetaScene 2
+		% L11 = Have amused the diplomat
+		end <if= QuestStatus %qid% %id% else %pop% ifNPCDead %2% else %pop% SetQuestStatus %qid% -2 Goto %pop%>
+	end
+	inv
+		NPC Politician
+		job <Diplomat>
+		chardesc old cheerful sociable renowned
+
+		STC QUEST-MAPMARKER-AUTO-WANDER
+		name <Diplomatic Yacht>
+		desig <ENTRANCE %s2%>
+	end
+
+Content
 	name <Re-Construction Problems>
 	requires <*:NPCQuest (C:POLIT|C:CORPO|C:LABOR|C:CRAFT|C:TRADE) "DISASTER">
 	desc <The city is rebuilding from a previous disaster, but something's going wrong.>

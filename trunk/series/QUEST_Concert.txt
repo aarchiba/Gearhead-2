@@ -1,0 +1,95 @@
+%%
+%% Concert Quest Series
+%%
+%%
+%% The PC wants to play a concert at one of the big venues, but first has to
+%% work his way up and maybe perform some sub-quests.
+%%
+
+%% *:Concert_Venue Content
+%%
+%% Contains a manager for a concert venue and the "goal" concert.
+
+Content
+	name <Athera Garden Concert>
+	requires <*:Concert_Venue ATHSP>
+
+	% Element1 is the venue manager
+	Element1 <Prefab>
+	Scene1 <Theatre>
+	Team1 <Citizens>
+	TeamData1 <Pass>
+
+	sub
+		Persona 1
+
+
+	end
+	inv
+		NPC Celebrity
+		name <Phivos>
+		SDL_PORTRAIT <por_m_ladikei(JC-).png>
+		SDL_COLORS <201 205 229 240 199 120 244 216 28>
+		Age 4
+		Chardesc Male Renowned
+	end
+
+
+%% *:Concert_Step Content
+%%
+%% Contains a subquest that must be completed before the next stage can
+%% be activated. Often this will be a concert that must be performed somewhere,
+%% but may be another type of adventure instead.
+%%
+%% If a task fails, it can be repeated after 24 hours. If a task is made
+%% incompletable (due to the death of a required NPC or whatever else) then
+%% the venue manager should do a Renown-based delay before the next task.
+%%
+%% Set QuestStatus to -1 for successful completion, -2 for irrevocable failure,
+%%   and -3 for resolved with the venue manager.
+%%
+%% PARAM1: Venue Manager
+%%
+%% Each *:CONCERT_STEP subquest needs a .%id%_GoInit script for the venue manager.
+
+Content
+	name <Promotion Cavalier>
+	desc <The PC has to work promotion for a shopkeeper; at least it's show business.>
+	requires <*:Concert_Step>
+
+	% E1 is the venue manager
+	% E2 is the shopkeeper
+	Element2 <Prefab>
+	Scene2 <Building Public Mall>
+	Team2 <Citizens>
+	TeamData2 <Pass>
+
+	sub
+		Persona 1
+		Greeting <if# QuestStatus %qid% -2 else .%id%_GoAbort >
+		.%id%_GoInit <ifNPCOK %2% else .%id%_GoAbort NewChat Say %id%01 QMemo %prev_qid% %id%02 SetQuestStatus %qid% %id%>
+		.%id%_GoAbort <>
+
+		Msg%id%01 <At your stage in the game, any paying job is a good job. I hear that %name2% needs someone to stand outside \PPR %2% shop and attract customers. You should go see \OPR %2% at \SCENE %s2% .>
+		Msg%id%02 <%name1% sent you to do some advertising for %name2% at \SCENE %s2% .>
+
+		Persona 2
+		greeting <if= QuestStatus %qid% %id% else GoGreet >
+		*GoGreet <*NiceToMeetYou GoShop>
+		*GoShop <*SHOP_GENERAL GoBye>
+		*GoBye <*GOODBYE>
+
+		Metascene 1
+		end <if= QuestStatus %qid% %id% else %pop% ifNPCDead %2% else %pop% SetQuestStatus %qid% -2 Goto %pop%>
+		sub
+			room
+			minimap <.#...+#.......1.....&---&>
+			special <SHAREDPALETTE>
+			desig <HOME>
+		end
+
+	end
+	inv
+		NPC Shopkeeper
+	end
+

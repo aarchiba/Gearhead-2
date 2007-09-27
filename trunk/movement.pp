@@ -84,7 +84,7 @@ const
 	(	100,	100,	87	),	{ Arc Jets }
 	(	7,	7,	13	),	{ Overchargers }
 	(	0,	0,	93	),	{ Space Flight }
-	(	0,	0,	0	)	{ Heavy Myomer }
+	(	0,	0,	0	)	{ Heavy Actuator }
 	);
 
 	MinWalkSpeed = 20;
@@ -239,8 +239,8 @@ begin
 			ActualLegPoints := ActualLegPoints + CountActivePoints( Mek , GG_Module , GS_Arm );
 		end;
 
-		{ Add a bonus for heavy myomer. }
-		HM := CountActivePoints( Mek , GG_MoveSys , GS_HeavyMyomer ) * ThrustPerHM;
+		{ Add a bonus for heavy Actuator. }
+		HM := CountActivePoints( Mek , GG_MoveSys , GS_HeavyActuator ) * ThrustPerHM;
 		if HM > Mass then begin
 			spd := spd + ( HM * 10 ) div mass;
 		end;

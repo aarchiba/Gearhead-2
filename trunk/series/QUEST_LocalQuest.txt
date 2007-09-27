@@ -4,6 +4,86 @@
 %% This content is tied to a city rather than any specific character within it.
 
 Content
+	name <Bank Robbery>
+	requires <*:LocalQuest "Financial">
+
+	% The bank has been robbed, and there's a thief on the loose.
+
+	% E1 is the NPC offering the quest
+	% E2 is the NPC being sought
+	Element1 <Prefab>
+	Scene1 <Building Public Government>
+	Team1 <Citizens>
+	TeamData1 <Pass>
+	Element2 <Prefab>
+	Scene2 <New *Hideout>
+	Team2 <Guards>
+	TeamData2 <SD>
+
+	Quest1 <*SuccessVsChar.Capture 1 2>
+
+	sub
+		Persona 1
+		% NPCVar %1% 1 = Arrest status; if 1, E2 surrendered. If -1, E2 escaped.
+		rumor0 <%name1% has been trying to catch a bank robber.>
+		greeting <if= QuestStatus %qid% %id% else GoCheckOffer NewChat Say 3 AddChat 1>
+		GoCheckOffer <if= QuestStatus %qid% 0 else GoChat NewChat Say 1 QMemo %qid% 2 SetQuestStatus %qid% %id%>
+		GoChat <NewChat SayAnything>
+		Result1 <Goto .%id1%_GoInit>
+		Msg1 <Be on the lookout for %name2%; \SPR %2% 's a thief wanted in connection with a series of bank robberies. There's a bounty available for anyone who can bring \OPR %2% to justice.>
+		Msg2 <%name1% has a bounty contract for %name2%, a thief who recently robbed a bank in \SCENE RootSceneID .>
+		Msg3 <The bounty for catching wanted bank robber %name2% is still open.>
+		Prompt1 <I'm here to collect the bounty.>
+		CPrompt1 <if= SceneVar %s2% 11 1 Accept>
+
+		Persona 2
+		Special <UNLISTED>
+		% V1 = Bribe amount
+		greeting <if= QuestStatus %qid% %id% else GoChat NewChat Say 1 AddChat 1 AddChat 2>
+		GoChat <NewChat SayAnything>
+		Result1 <EndChat Say 2 SoloAttack %2%>
+		Result2 <V= 1 Threat %threat% 8 NewChat Say 3 AddChat 3 AddChat 4 AddChat 5>
+		Result3 <NewChat Say 4 CashPrize V1 SetQuestStatus %qid% -2 AddRenown -3 AddLawful -5 ifConversation HardSkillTar %threat% PCFriend %2%>
+		Result4 <Goto Result1>
+		Result5 <ifConversation SkillTar %threat% else GoR5Fail NewChat Say 5  CashPrize * 2 V1 SetQuestStatus %qid% -2 AddRenown -5 AddLawful -5 AddHeroic -1>
+		GoR5Fail <AddLawful -3 EndChat Say 6 SoloAttack %2%>
+		Msg1 <How did you get in here? %name1% sent you, didn't \SPR %1% ? Well, we don't have to fight... I can make you a better offer than \SPR %1% can.>
+		Msg2 <It's too bad that you weren't willing to listen to reason. Fortunately, I'm quite able to defend myself.>
+		Msg3 <I've saved up lots of money from the banks I've robbed. If you were to let me go, I'd pay you $ \VAL V1 . %name1% won't give you half that much for taking me in.>
+		Msg4 <Here you go. Since you're now an accomplaice to my crimes, I know that you won't go blabbing my location to the police.>
+		Msg5 <You're greedy... that's a good quality for a thief. Here, take all of this. Since you're now an accomplaice to my crimes, I know that you won't go blabbing my location to the police.>
+		Msg6 <I offered you an easy way out, but you got too greedy. Fortunately it won't be too hard to kill you.>
+		Prompt1 <No deal. You're going to jail.>
+		Prompt2 <What kind of deal?>
+		Prompt3 <Alright, it's a deal.>
+		Prompt4 <Sorry, but no dice.>
+		Prompt5 <You can afford to spend more than that.>
+		CPrompt5 <ifG PCEgo 10 Accept>
+
+		MetaScene 1
+		start <if= QuestStatus %qid% %id% else %pop% ifNPCDead %1% else %pop% SetQuestStatus %qid% -2 Goto %pop%>
+
+		MetaScene 2
+		% SceneVar %s2% 11 = Capture Status
+		%                    -1: Mission blown
+		%                     1: NPC captured
+		Surrender%2% <if= QuestStatus %qid% %id% if= L11 0  Print 11  L= 11 1  DeleteNPC %2%  XPV 100  QMemo %qid% 12>
+		Faint%2% <if= QuestStatus %qid% %id% if= L11 0 L= 11 1 QMemo %qid% 12>
+		end <if= QuestStatus %qid% %id% if= L11 0  ifNPCOK %2% Print 13 DeleteNPC %2% L= 11 -1  SetQuestStatus %qid% -2>
+		Msg11 <%name2% has been captured.>
+		Msg12 <You should let %name1% know that %name2% has been brought to justice.>
+		Msg13 <%name2% gets away...>
+	end
+	inv
+		NPC Bounty Hunter
+
+		NPC thief
+		job <Hacker>
+		chardesc Criminal Cheerful
+		Combatant
+	end
+
+Content
 	name <Tourists Gone Nuts>
 	desc <While on vacation, a tourist ended up as part of a risque video... Can the PC get the videoslate back?>
 	requires <*:LocalQuest "RESORT" ~"SAFE">
