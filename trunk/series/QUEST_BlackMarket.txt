@@ -62,7 +62,7 @@ Content
 
 Content
 	name <The Condemned Building>
-	requires <*:ENT_BlackMarket City>
+	requires <*:ENT_BlackMarket City ~"DISASTER">
 	% The black market is at the top of a condemned building.
 
 	% E1 is the black market
@@ -97,7 +97,7 @@ Content
 
 Content
 	name <Rat's Bottom>
-	requires <*:ENT_BlackMarket>
+	requires <*:ENT_BlackMarket ~"SLEAZY">
 	% The black market is at the bottom of a rat-infested basement.
 
 	% E1 is the black market

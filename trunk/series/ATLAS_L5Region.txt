@@ -836,7 +836,7 @@ sub
 		MapWidth 23
 		MapHeight 24
 
-		start <if= L1 0 else GoBeenBefore Alert 2 Print 1>
+		start <if= L1 0 else GoBeenBefore Alert 2 Print 1 L= 1 1>
 		GoBeenBefore <Print 1>
 		Msg1 <You enter the Athera Garden Theatre.>
 		Msg2 <The Garden Theatre is located in the middle of Athera Spinner's largest park. When a show is underway, spectators can watch from one of the simgrav-propelled floating balconies that circle the stage.>
