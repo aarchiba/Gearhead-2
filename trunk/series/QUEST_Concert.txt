@@ -28,6 +28,9 @@ Content
 	TeamData1 <Pass>
 
 	Quest1 <*:Concert_Step #30 1>
+	Quest2 <*:Concert_Step #42 1>
+	Quest3 <*:Concert_Step #54 1>
+	Quest4 <*:Concert_Step #66 1>
 
 	sub
 		Persona 1
@@ -40,7 +43,10 @@ Content
 		GoNotReady <NewChat Say 2>
 		GoCheckOffer <if= QuestStatus %qid% 0 else GoChat IfPCHasPerformance else GoChat NewChat Say 3 AddChat 3 AddChat 4>
 		GoChat <NewChat SayAnything>
-		GoStep1 <if= V1 0 else GoConclude   Goto .%id1%_GoInit>
+		GoStep1 <if= V1 0 else GoStep2      Goto .%id1%_GoInit>
+		GoStep2 <if= V1 1 else GoStep3      Goto .%id2%_GoInit>
+		GoStep3 <if= V1 2 else GoStep4      Goto .%id3%_GoInit>
+		GoStep4 <if= V1 3 else GoConclude   Goto .%id4%_GoInit>
 		GoConclude <>
 
 		Result1 <Goto GoStep1>
@@ -75,6 +81,28 @@ Content
 		SDL_COLORS <201 205 229 240 199 120 244 216 28>
 		Age 4
 		Chardesc Male Renowned
+	end
+
+%% *Concert_Final Content
+%%
+%% Each concert venue above should have a matching Concert_Final subquest to represent
+%% the eventual concert at the big venue and its associated reward.
+%%
+%% Param1: Venue Manager
+%%
+%% Each *Concert_Final subquest needs a .%id%_GoInit script for the venue manager.
+
+Content
+	name <Athera Garden Concert>
+	requires <*Concert_Final "ATHSP">
+
+	% E1 is Phivos the producer.
+
+	sub
+		Persona 1
+		greeting <if= QuestStatus %qid% %id% else %pop%  >
+		.%id%_GoInit <  SetQuestStatus %qid% %id%>
+
 	end
 
 
@@ -154,13 +182,13 @@ Content
 		Result9 <V= 1 ComTime V+ 1 86400 V= 2 Concert 3 SkillTar %threat%  ifG V2 50 else GoLoseMission Goto GoWinMission>
 		Msg1 <If you're ready now, everything's all set up for the promotion event.>
 		Msg2 <I'm not ready to start the next promotion. You can come back tomorrow for that.>
-		Msg3 <What I need is for you to sing outside of my store and sing. I've got a portable music platform that you'll be able to stand on and plug your instruments into.>
-		Msg4 <Good luck out there. I'm counting on you.>
+		Msg3 <Great! Let me tell you what I want. You just need to stand outside of my store and sing. I've got a portable music platform that you'll be able to plug your instruments into. If my customers increase, I'll give you a cut of the profits.>
+		Msg4 <Let's get to work. Good luck out there.>
 		Msg5 <Okay then. Come see me when you're ready.>
 		Msg6 <That was terrible! I think you actually drove away some customers... Go tune your instrument, maybe practice a little, and we can try this again tomorrow.>
 		Msg7 <That was fantastic! Thanks to your singing, I got a lot of new customers. %name1% was certainly right to reccomend you for this job. Here's your pay.>
-		Msg8 <You helped %name2% to increase \PPR %2% business. You should go back to %name1% now.>
-		Prompt1 <I can get started any time.>
+		Msg8 <You helped %name2% to increase \PPR %2% business. You should go talk to %name1% now.>
+		Prompt1 <I can start right now.>
 		Prompt2 <I need some more time to prepare.>
 		Prompt3 <Right now I need a look at your store.>
 		Prompt4 <Actually, I'm here to shop.>
@@ -183,4 +211,244 @@ Content
 		NPC Shopkeeper
 		Chardesc Easygoing Sociable
 	end
+
+Content
+	name <Charity Concert>
+	desc <The PC will do a charity show at a hospital. Hopefully he won't make anybody sick.>
+	requires <*:Concert_Step !Md>
+
+	% E1 is the venue manager
+	% E2 is the nurse
+	Element2 <Prefab>
+	Scene2 <Building Public Hospital>
+	Team2 <Citizens>
+	TeamData2 <Pass>
+
+	sub
+		Persona 1
+		Greeting <if# QuestStatus %qid% -2 else .%id%_GoAbort if# QuestStatus %qid% -1 else .%id%_GoConclude if= QuestStatus %qid% %id% else %pop% Goto .%id%_GoRemind>
+		.%id%_GoInit <ifNPCOK %2% else .%id%_GoAbort NewChat Say %id%01 QMemo %prev_qid% %id%02 SetQuestStatus %qid% %id% AddChat %id%01 AddChat %id%02>
+		.%id%_GoAbort <NewChat Say %id%03   SetQuestStatus %qid% -3  &LoseStep %threat%>
+		.%id%_GoConclude <NewChat Say %id%04   SetQuestStatus %qid% -3   &WinStep>
+		.%id%_GoRemind <NewChat Say %id%05>
+		Result%id%01 <NewChat Say %id%06>
+		Result%id%02 <AddEasygoing -d8   NewChat Say %id%07>
+		Msg%id%01 <One of the things we need to do is build a positive image for you in the public eye. I've told %name2% at \SCENE %s2% that you'd be willing to do a charity show for the children's ward. You should go there and work out the details.>
+		Msg%id%02 <%name1% sent you to do a charity show at \SCENE %s2% . %name2% is organizing the event.>
+		Msg%id%03 <Unfortunately, not everything can work out as we would like. The charity show I had planned for you has fallen through. Maybe you should consider taking a break from singing for a little while.>
+		Msg%id%04 <I hear that you did a good job at the hospital. When word of that gets around you might even be offered a paying job.>
+		Msg%id%05 <The kids at the hospital are counting on you, \PC .>
+		Msg%id%06 <Good luck. Try to get a photo taken with a sick kid- people love those.>
+		Msg%id%07 <You're not working for nothing. You're doing self promotion and image manipulation. You need to learn that often the best advertising is the type you can't buy.>
+		Prompt%id%01 <Great. I'll get over there right away.>
+		Prompt%id%02 <Wait, I don't work for nothing.>
+
+		Persona 2
+		% V1 = Mission recharge timer
+		% V2 = Concert Result
+		% V3 = First Time Counter
+		% V4 = Difficulcy Rating
+		greeting <if= QuestStatus %qid% %id% else GoGreet ifChatNPCInPlay else GoBusy ifG ComTime V1 else GoDelay if= V3 1 else GoFirstTime NewChat Say 1 AddChat 1 AddChat 2>
+		*GoGreet <*NiceToMeetYou GoChat>
+		*GoChat <*MISC_CHATTER>
+		*GoBusy <*IAmBusy&OnPhone>
+		GoDelay <NewChat Say 2>
+		*GoFirstTime <*SomeoneSentPCToTalk&ForJob %1% GoExplain>
+		GoExplain <V= 3 1  V= 4 %threat%  NewChat Say 3 AddChat 3 AddChat 4 AddChat 5>
+		GoWinMission <EndChat Say 4 QMemo %prev_qid% 5 XPV 100  AddRenown 1  SetQuestStatus %qid% -1  ifG V2 75   AddHeroic 1>
+		GoLoseMission <EndChat Say 6 AddReact -d8 AddRenown -1>
+
+		Result1 <EndChat Say 7 AddChat 6>
+		Result2 <NewChat Say 8>
+		Result3 <AddReact d10 NewChat Say 9 AddChat 1 AddChat 2>
+		Result4 <AddCheerful -d6  NewChat Say 10 AddChat 1 AddChat 2>
+		Result5 <Cash+ -10000  V+ 4 -d20  AddReact 10  NewChat Say 11 AddChat 1 AddChat 2>
+		Result6 <V= 1 ComTime V+ 1 86400 V= 2 Concert d6 SkillTar V4  ifG V2 50 else GoLoseMission Goto GoWinMission>
+
+		Msg1 <Oh, \PC , I was waiting for you. Are you ready to start the show?>
+		Msg2 <We'll hold another show tomorrow. You can come back then.>
+		Msg3 <Thank you so much for coming. We need to raise some money for the children's wing of the hospital, and it was decided that a charity concert would be a good way to do that. Of course we can't afford to pay you for your services.>
+		Msg4 <We made enough money to pay for the new facilities we need. Thank you so much!>
+		Msg5 <You helped %name2% to raise money for \SCENE %s2% . You should go talk to %name1% now.>
+		Msg6 <Stop, stop! You're frightening the children! I'm afraid that we didn't raise very much money at all... We'll have to hold another show tomorrow.>
+		Msg7 <Please do your best. Remember that the children are depending on you!>
+		Msg8 <I see. If you're feeling ill, you should check with one of our doctors.>
+		Msg9 <That's good to know. Shall we begin the performance now?>
+		Msg10 <%name1% told me you'd probably say that. Shall we begin the performance right now or wait for later?>
+		Msg11 <Oh, you're so generous! Thank you! I'll add this money to the charity fund right away. Now, shall we begin the performance or wait until later?>
+
+		Prompt1 <I'm ready.>
+		Prompt2 <This isn't a good time for me.>
+		Prompt3 <I'm just glad to help.>
+		Prompt4 <I don't really like that bit...>
+		Prompt5 <Can I donate some money myself? [Give $10000]>
+		CPrompt5 <ifPCHeroic ifG PC$ 9999 Accept>
+		Prompt6 <[Begin Concert]>
+
+		Metascene 2
+		end <if= QuestStatus %qid% %id% else %pop% ifNPCDead %2% else %pop% SetQuestStatus %qid% -2 Goto %pop%>
+	end
+	inv
+		NPC Nurse
+	end
+
+Content
+	name <Night Club>
+	desc <The PC will have a paying job at a night club.>
+	requires <*:Concert_Step !Md>
+
+	% E1 is the venue manager
+	% E2 is the DJ at the club
+	% E3 is the nightclub entrance
+	Element2 <Prefab>
+	Scene2 <new *NightClub&Public>
+	Team2 <Citizens>
+	TeamData2 <Pass>
+	Element3 <Prefab>
+	Scene3 <Urban>
+
+	sub
+		Persona 1
+		Greeting <if# QuestStatus %qid% -2 else .%id%_GoAbort if# QuestStatus %qid% -1 else .%id%_GoConclude if= QuestStatus %qid% %id% else %pop% Goto .%id%_GoRemind>
+		.%id%_GoInit <ifNPCOK %2% else .%id%_GoAbort NewChat Say %id%01 QMemo %prev_qid% %id%02 SetQuestStatus %qid% %id% AddChat %id%01 AddChat %id%02>
+		.%id%_GoAbort <NewChat Say %id%03   SetQuestStatus %qid% -3  &LoseStep %threat%>
+		.%id%_GoConclude <NewChat Say %id%04   SetQuestStatus %qid% -3   &WinStep>
+		.%id%_GoRemind <NewChat Say %id%05>
+		Result%id%01 <AddSociable   d6   NewChat Say %id%06>
+		Result%id%02 <AddSociable -d10   NewChat Say %id%07>
+		Msg%id%01 <You should be happy to know that I finally have a paying gig for you. %name2% of \SCENE %s2% is always on the lookout for fresh new talent, and \SPR %2% wants you to play at \PPR %2% club.>
+		Msg%id%02 <%name1% sent you to perform at \SCENE %s2% .>
+		Msg%id%03 <You know \SCENE %s2% ? Well, since %name2% died I guess you won't be having a show there... Hopefully something else will come along in a few days.>
+		Msg%id%04 <%name2% was quite impressed with your performance. You should know that \SPR %2% isn't impressed very often. Come back tomorrow and I'll see if I have another gig for you.>
+		Msg%id%05 <I hear that \SCENE %s2% is a happening place. Alas, I'm too busy to do much socializing these days.>
+		Msg%id%06 <Yes, and if you can do well there you'll be well on your way to establishing a fan base. Good luck.>
+		Msg%id%07 <The secret is to keep looking at your shoes all through the concert. It worked for the ancient pop idols of Scotland and it can work for you too!>
+		Prompt%id%01 <Wow, that's a popular place...>
+		Prompt%id%02 <Oh no! I get nervous in front of crowds!>
+
+		Persona 2
+		% V1 = Mission recharge timer
+		% V2 = Concert Result
+		% V3 = First Time Counter
+		greeting <if= QuestStatus %qid% %id% else GoGreet ifChatNPCInPlay else GoBusy ifG ComTime V1 else GoDelay if= V3 1 else GoFirstTime NewChat Say 1 AddChat 1 AddChat 2>
+		*GoGreet <*NiceToMeetYou GoChat>
+		*GoChat <*MISC_CHATTER>
+		*GoBusy <*IAmBusy&OnPhone>
+		GoDelay <NewChat Say 2>
+		GoFirstTime <NewChat Say 3 AddChat 3>
+		GoExplain <V= 3 1  NewChat Say 4 AddChat 1 AddChat 2>
+		GoWinMission <EndChat Say 5 QMemo %prev_qid% 6 XPV 100  AddRenown 1  SetQuestStatus %qid% -1  CashPrize Reward Threat %threat% 100 V2>
+		GoLoseMission <EndChat Say 7 AddRenown -1>
+
+		Result1 <EndChat Say 8 AddChat 4>
+		Result2 <NewChat Say 9>
+		Result3 <Goto GoExplain>
+		Result4 <V= 1 ComTime V+ 1 86400 V= 2 Concert d8 SkillTar %threat%  ifG V2 50 else GoLoseMission Goto GoWinMission>
+
+		Msg1 <It's the \PC ! Club's full, we're all just waiting on the music. You ready?>
+		Msg2 <The next show doesn't start until tomorrow. Don't be late... or early, either.>
+		Msg3 <Hey, \PC . I told %name1% to send your ass over here. The name's %name2%.>
+		Msg4 <Let me explain what's going to happen. You play the music up here however you like it. The crowds out there freak however they like it. If it's green then you get paid. Are you ready to kick the tunes?>
+		Msg5 <I knew there was talent in you, \PC . You're going to go far. Here's your pay.>
+		Msg6 <Your concert at \SCENE %s2% was a complete success. You should go talk to %name1% .>
+		Msg7 <I don't feel that you're living up to all that potential, \PC . Come back tomorrow and we'll give it another shot.>
+		Msg8 <Ladies and gentlemen! May I present, the one and only, \PC !>
+		Msg9 <It's up to you when to start... just don't wait until you're old and crooked.>
+
+		Prompt1 <Let's rock it.>
+		Prompt2 <Wait, give me a minute.>
+		Prompt3 <Nice to meet you.>
+		Prompt4 <[Begin Concert]>
+
+		Metascene 2
+		end <if= QuestStatus %qid% %id% else %pop% ifNPCDead %2% else %pop% SetQuestStatus %qid% -2 Goto %pop%>
+		sub
+			room
+			minimap <######...##.1.##...##---#>
+			special <SHAREDPALETTE>
+			desig <HOME>
+		end
+	end
+	inv
+		NPC Celebrity
+		job <DJ>
+		Chardesc Sociable Cheerful Renowned
+
+		STC BUILDING
+		name <%name2%'s Nightclub>
+		desig <ENTRANCE %s2%>
+	end
+
+Content
+	name <Open Air Performance>
+	desc <The PC will have a paying job at a park.>
+	requires <*:Concert_Step (!Hi|!Ex)>
+
+	% E1 is the venue manager
+	% E2 is the event organizer
+	Element2 <Prefab>
+	Scene2 <Public Park>
+	Team2 <Citizens>
+	TeamData2 <Pass>
+
+	sub
+		Persona 1
+		Greeting <if# QuestStatus %qid% -2 else .%id%_GoAbort if# QuestStatus %qid% -1 else .%id%_GoConclude if= QuestStatus %qid% %id% else %pop% Goto .%id%_GoRemind>
+		.%id%_GoInit <ifNPCOK %2% else .%id%_GoAbort NewChat Say %id%01 QMemo %prev_qid% %id%02 SetQuestStatus %qid% %id% AddChat %id%01 AddChat %id%02>
+		.%id%_GoAbort <NewChat Say %id%03   SetQuestStatus %qid% -3  &LoseStep %threat%>
+		.%id%_GoConclude <NewChat Say %id%04   SetQuestStatus %qid% -3   &WinStep>
+		.%id%_GoRemind <NewChat Say %id%05>
+		Result%id%01 <AddEasygoing -d3   NewChat Say %id%06>
+		Result%id%02 <AddCheerful  -d6   NewChat Say %id%07>
+		Msg%id%01 <It's about time you did something really big. %name2% is organizing an open air concert at \SCENE %s2% , and I've convinced \OPR %2% that you should headline.>
+		Msg%id%02 <%name1% sent you to perform at \SCENE %s2% . %name2% is organizing the concert.>
+		Msg%id%03 <There was going to be a concert at \SCENE %s2% , but the organizer %name2% has gone missing. You can have a break from singing for a while.>
+		Msg%id%04 <The concert at \SCENE %s2% was a great success. Just a short while more, and you'll be ready for the big time. Come back tomorrow for your next gig.>
+		Msg%id%05 <The \SCENE %s2% concert series has been pretty good so far.>
+		Msg%id%06 <If you do well here, there'll be a lot more people who recognize that talent. Break a leg.>
+		Msg%id%07 <It's not about the sound quality, it's about the energy of live performance. Give the audience what they came for and they won't care if the audio is being carried through two tin cans and a length of duct tape.>
+		Prompt%id%01 <About time someone recognized my talent.>
+		Prompt%id%02 <I hate open concerts; the audio sucks.>
+
+		Persona 2
+		% V1 = Mission recharge timer
+		% V2 = Concert Result
+		% V3 = First Time Counter
+		% V4 = Concert size randomizer
+		greeting <if= QuestStatus %qid% %id% else GoGreet ifChatNPCInPlay else GoBusy ifG ComTime V1 else GoDelay if= V3 1 else GoFirstTime NewChat Say 1 AddChat 1 AddChat 2>
+		*GoGreet <*NiceToMeetYou GoChat>
+		*GoChat <*MISC_CHATTER>
+		*GoBusy <*IAmBusy&OnPhone>
+		GoDelay <NewChat Say 2>
+		*GoFirstTime <*SomeoneSentPCToTalk&ForJob %1% GoExplain>
+		GoExplain <V= 3 1  NewChat Say 3 AddChat 1 AddChat 2>
+		GoWinMission <EndChat Say 4 QMemo %prev_qid% 5 XPV 100  AddRenown 1  SetQuestStatus %qid% -1  CashPrize Reward Threat %threat% 200 V2>
+		GoLoseMission <EndChat Say 6 AddRenown -1>
+
+		Result1 <EndChat Say 7 AddChat 3>
+		Result2 <NewChat Say 8>
+		Result3 <V= 1 ComTime V+ 1 86400 V= 4 5 V+ 4 d8 V= 2 Concert V4 SkillTar %threat%  ifG V2 50 else GoLoseMission Goto GoWinMission>
+
+		Msg1 <Welcome back. Are you ready to perform now?>
+		Msg2 <There's an open slot in the schedule that you can take tomorrow. Come back then and I'll fit you in.>
+		Msg3 <We've got a number of bands playing here today, but %name1% convinced me to give you the prime slot. I certainly hope that you won't let me down.>
+		Msg4 <That was a great show! The audience loved it. Here's your pay... you can let %name1% know that the concert was a success.>
+		Msg5 <Your concert at \SCENE %s2% was a complete success. You should go talk to %name1% .>
+		Msg6 <What happened? %name1% said you were supposed to be good. Look, I'm willing to give you another shot... come back here tomorrow and I'll fit you into the schedule then.>
+		Msg7 <Right this way... break a leg out there.>
+		Msg8 <You realize that's going to mess with my time table? Ah, never mind... just get back as soon as you can.>
+
+		Prompt1 <Just show me to the stage.>
+		Prompt2 <I need some more time to get ready.>
+		Prompt3 <[Begin Concert]>
+
+		Metascene 2
+		end <if= QuestStatus %qid% %id% else %pop% ifNPCDead %2% else %pop% SetQuestStatus %qid% -2 Goto %pop%>
+	end
+	inv
+		NPC Citizen
+		Chardesc Melancholy Sociable
+	end
+
+
 
