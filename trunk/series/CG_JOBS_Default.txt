@@ -255,6 +255,25 @@ skill 26
 skill 33
 
 Job
+name <Comedian>
+desig <MEDIA>
+requires <CULTURE>
+% Performance, Resistance, Taunt
+Skill 35
+Skill 36
+Skill 42
+Cheerfulness 15
+
+Job
+name <Dancer>
+desig <MEDIA>
+requires <CULTURE>
+% Athletics, Flirtation, Acrobatics
+Skill 26
+Skill 27
+Skill 43
+
+Job
 name <Journalist>
 desig <MEDIA>
 requires <CITY>
@@ -436,6 +455,7 @@ skill 25
 skill 30
 skill 32
 Lawfulness -5
+Pragmatism 10
 
 Job
 name <Pirate>
@@ -459,6 +479,15 @@ Skill 25
 Skill 27
 Skill 32
 Sociability -25
+
+Job
+name <Chef>
+desig <TRADE>
+requires <Cuisine>
+% Armed Combat, Shopping, Concentration
+Skill 8
+Skill 21
+Skill 30
 
 Job
 name <Shopkeeper>
