@@ -40,7 +40,7 @@ Content
 		% V3 = Delay renown
 		&WinStep  <V+ 1 1 QMemo %qid% 7 V= 2 ComTime V+ 2 86400>
 		&LoseStep <V+ 1 1 QMemo %qid% 8 V= 2 ComTime V+ 2 86400 V= 3 ?>
-		greeting <if= QuestStatus %qid% %id% else GoCheckOffer ifG V2 ComTime else GoNotReady ifG PCRenown V3 else GoNotReady NewChat Say 1 AddChat 1 AddChat 2>
+		greeting <if= QuestStatus %qid% %id% else GoCheckOffer ifG ComTime V2 else GoNotReady ifG PCRenown V3 else GoNotReady NewChat Say 1 AddChat 1 AddChat 2>
 		GoNotReady <NewChat Say 2>
 		GoCheckOffer <if= QuestStatus %qid% 0 else GoChat IfPCHasPerformance else GoChat NewChat Say 3 AddChat 3 AddChat 4>
 		GoChat <NewChat SayAnything>
@@ -78,6 +78,7 @@ Content
 		NPC Celebrity
 		name <Phivos>
 		job <Producer>
+		home <The Stage>
 		SDL_PORTRAIT <por_m_ladikei(JC-).png>
 		SDL_COLORS <201 205 229 240 199 120 244 216 28>
 		Age 4
@@ -195,8 +196,8 @@ Content
 		.%id%_GoAbort <NewChat Say %id%03   SetQuestStatus %qid% -3  &LoseStep %threat%>
 		.%id%_GoConclude <NewChat Say %id%04   SetQuestStatus %qid% -3   &WinStep>
 		.%id%_GoRemind <NewChat Say %id%05>
-		Result%id%01 <AddCheerful -d8   NewChat Say %id%06>
-		Result%id%02 <AddCheerful  d8   NewChat Say %id%07>
+		Result%id%01 <AddEasygoing -d8   NewChat Say %id%06>
+		Result%id%02 <AddCheerful   d8   NewChat Say %id%07>
 		Msg%id%01 <At your stage in the game, any paying job is a good job. I hear that %name2% needs someone to stand outside \PPR %2% shop and attract customers. You should go see \OPR %2% at \SCENE %s2% .>
 		Msg%id%02 <%name1% sent you to do some advertising for %name2% at \SCENE %s2% .>
 		Msg%id%03 <The gig I had all lined up for you has fallen through. Come back tomorrow and I'll see if I can find anything else.>
@@ -458,7 +459,7 @@ Content
 		Msg%id%03 <There was going to be a concert at \SCENE %s2% , but the organizer %name2% has gone missing. You can have a break from singing for a while.>
 		Msg%id%04 <The concert at \SCENE %s2% was a great success. Just a short while more, and you'll be ready for the big time. Come back tomorrow for your next gig.>
 		Msg%id%05 <The \SCENE %s2% concert series has been pretty good so far.>
-		Msg%id%06 <If you do well here, there'll be a lot more people who recognize that talent. Break a leg.>
+		Msg%id%06 <If you do well here, there'll be a lot more people who recognize that talent. Good luck.>
 		Msg%id%07 <It's not about the sound quality, it's about the energy of live performance. Give the audience what they came for and they won't care if the audio is being carried through two tin cans and a length of duct tape.>
 		Prompt%id%01 <About time someone recognized my talent.>
 		Prompt%id%02 <I hate open concerts; the audio sucks.>

@@ -854,6 +854,7 @@ sub
 			SetAlly 1
 
 			rect
+			name <The Stage>
 			XPos 2
 			YPos 2
 			Width 20
@@ -871,6 +872,7 @@ sub
 			sub
 				STC HIDDEN_ENTRANCE
 				Destination -1
+
 			end
 		end
 	end
