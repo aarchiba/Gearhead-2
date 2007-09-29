@@ -10,4 +10,9 @@ start <BatchLoadPlot .standard 5>
 
 % Factions will be responsible for their own stories and plots
 
+inv
+	% Stick the plot item container here.
+	Gear -16 0 0
+	name <Plot Thing Collection>
 
+end

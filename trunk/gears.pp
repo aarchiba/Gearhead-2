@@ -38,7 +38,7 @@ Const
 	GG_Theme = -19;
 	GG_Meme = -18;		{ A collection of things the PC will be told, until timeout or all messages delivered. }
 	GG_SuperProp = -17;	{ Adds a bunch of props to the map in a pattern. }
-
+	GG_PlotThingSet = -16;	{ The collection of plot/quest/rancon-associated things that start play frozen. }
 	GG_ContentSet = -15;	{ The collection of unique scene content in an adventure. }
 	GG_ArtifactSet = -14;	{ The collection of unique artifacts in an adventure. }
 	GG_Set = -13;		{ A collection of things at a store, purchased as one item. }

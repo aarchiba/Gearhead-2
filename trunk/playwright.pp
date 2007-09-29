@@ -699,8 +699,14 @@ begin
 				InSceneNotElement := Place[1] = '~';
 				if InSceneNotElement then DeleteFirstChar( Place );
 
-				D := ExtractValue( Place );
-				Dest := GetFSE( D );
+				{ If the PLACE is /, then this element should start play frozen. }
+				if Place[1] = '/' then begin
+					Dest := SeekCurrentLevelGear( FindRoot( Adventure )^.InvCom , GG_PlotThingSet , 0 );
+					InSceneNotElement := False;
+				end else begin
+					D := ExtractValue( Place );
+					Dest := GetFSE( D );
+				end;
 
 				if InSceneNotElement and (( Dest = Nil ) or ( Dest^.G <> GG_Scene )) then begin
 					{ If the destination is a metascene, locate its entrance. }

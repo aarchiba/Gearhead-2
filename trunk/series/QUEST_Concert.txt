@@ -31,6 +31,7 @@ Content
 	Quest2 <*:Concert_Step #42 1>
 	Quest3 <*:Concert_Step #54 1>
 	Quest4 <*:Concert_Step #66 1>
+	Quest5 <*Concert_Final #78 1>
 
 	sub
 		Persona 1
@@ -47,7 +48,7 @@ Content
 		GoStep2 <if= V1 1 else GoStep3      Goto .%id2%_GoInit>
 		GoStep3 <if= V1 2 else GoStep4      Goto .%id3%_GoInit>
 		GoStep4 <if= V1 3 else GoConclude   Goto .%id4%_GoInit>
-		GoConclude <>
+		GoConclude <Goto .%id5%_GoInit>
 
 		Result1 <Goto GoStep1>
 		Result2 <NewChat Say 4>
@@ -93,16 +94,68 @@ Content
 %% Each *Concert_Final subquest needs a .%id%_GoInit script for the venue manager.
 
 Content
-	name <Athera Garden Concert>
+	name <Athera Garden Final>
 	requires <*Concert_Final "ATHSP">
 
 	% E1 is Phivos the producer.
+	% E2 is the trophy for completing the concert.
+	Element2 <Prefab>
+	Place2 </>
 
 	sub
 		Persona 1
-		greeting <if= QuestStatus %qid% %id% else %pop%  >
-		.%id%_GoInit <  SetQuestStatus %qid% %id%>
+		% V%id%01 = Delay Time
+		% V%id%02 = Delay Renown
+		% V%id%03 = Concert Result
+		% V%id%04 = Audience randomizer
+		greeting <if= QuestStatus %qid% %id% else %pop%  ifG PCRenown v%id%02 else .%id%_GoRedeem ifG ComTime V%id%01 else .%id%_GoDelay NewChat Say %id%01 QMemo %qid% %id%03 AddChat %id%01 AddChat %id%02>
+		.%id%_GoInit <NewChat Say %id%02 QMemo %qid% %id%03 AddChat %id%01 AddChat %id%02  SetQuestStatus %qid% %id%>
+		.%id%_GoDelay <NewChat Say %id%04>
+		.%id%_GoRedeem <NewChat Say %id%05>
+		.%id%_GoWinMission <EndChat Say %id%09 History %id%10  XPV 100  CashPrize Reward Threat V%id%03 100 500  AddRenown 1  SetQuestStatus %qid% -1  GiveItem %2%>
+		.%id%_GoLoseMission <EndChat  Say %id%11  QMemo %qid% %id%12  AddRenown -10  V= %id%02 %threat%>
 
+		Result%id%01 <EndChat Say %id%06 AddCHat %id%03>
+		Result%id%02 <NewChat Say %id%07>
+		Result%id%03 <Alert %id%08 V= %id%01 ComTime V+ %id%01 86400 V= %id%04 10 V+ %id%04 d5  V= %id%03 Concert V%id%04 SkillTar %threat%  ifG V%id%03 75 else .%id%_GoLoseMission Goto .%id%_GoWinMission>
+
+		Msg%id%01 <You've earned the right to play at Athera Garden. Simply let me know when you desire to perform, and I will make all the arrangements.>
+		Msg%id%02 <This is it... you've proven yourself worthy. It's finally time for you to play at Athera Garden. Simply let me know when you desire to perform, and I will make all the arrangements.>
+		Msg%id%03 <You've earned the right to perform at Athera Garden Theatre. You should speak with %name1% to arrange a show time.>
+		Msg%id%04 <It's too soon for you to hold another concert just yet... people haven't forgotten how bad the previous one was.>
+		Msg%id%05 <I think you should concentrate on your other talents before attempting a concert again. People will be more forgiving of your voice if you're famous for something else.>
+		Msg%id%06 <Let me post a concert announcement to the control center. In a few minutes, this park will be filled with thousands of fans. You better get ready, the show's about to start!>
+		Msg%id%07 <It's up to you when to start. Come speak with me when you're ready.>
+		Msg%id%08 <The park quickly fills with spectators. The sky goes dark, the show lights come up, and the massive balconies lift into the air.>
+		Msg%id%09 <Now that was a great show! Here, I'd like for you to have this- the golden kithara is the symbol of Athera Garden. Use it with pride. Know that you are now officially a superstar in the L5 pattern.>
+		Msg%id%10 <You played a successful concert at the Athera Garden Theatre.>
+		Msg%id%11_1 <That concert was almost perfect... but almost perfect still has room for improvement. I know that you can do better than this, \PC . I suggest that you practice a bit more and try here again.>
+		CMsg%id%11_1 <ifG v%id%03 65 Accept>
+		Msg%id%11_2 <That concert was pretty good... but people come to Athera Garden expecting better than just pretty good. I want you to practice some more and try again. Come back in a few days.>
+		CMsg%id%11_2 <ifG v%id%03 50 ifG 66 v%id%03 Accept>
+		Msg%id%11_3 <That was terrible... I'll give you another chance, but first you're really going to have to improve. Work on your skills and come back here in a few days.>
+		CMsg%id%11_3 <ifG 51 v%id%03 Accept>
+		Msg%id%12 <Your concert at Athera Garden didn't go very well. %name1% advised you to try again later.>
+
+		Prompt%id%01 <I'm ready to go right now.>
+		Prompt%id%02 <I'll be back to do this later.>
+		Prompt%id%03 <[Begin Concert]>
+
+	end
+	inv
+		Instrument 4
+		name <Golden Kithara>
+		desc <An ornate and technologically sophisticated lyre. It is awarded to those who perform at Athera Garden Theatre.>
+		Category <INSTRUMENT>
+		sub
+			BeamGun 5
+			name <Laser Lightshow>
+			mass -4
+			Speed 4
+
+			PowerSource 3
+			mass -5
+		end
 	end
 
 

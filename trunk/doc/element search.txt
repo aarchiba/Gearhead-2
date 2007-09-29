@@ -57,7 +57,7 @@ Negative element indicies refer to the elements of the story into which the
 ***   PLACE  STRINGS   ***
 **************************
 
-The elements of plots, subplots, and random scene content can be
+The elements of plots, subplots, quests, and random scene content can be
 positioned in the adventure by using place strings.
 
 PLACE(n) <[~](Destination Slot) [(team name)] [team data]>
@@ -67,4 +67,8 @@ scene as the destination rather than in the destination itself.
 
 A subplot can assign a place string to an element it inherits.
 
-
+If (Destination Slot) is "/", and we're dealing with either a quest or
+a rancon, the element will be frozen in a special holding zone and will
+need to be moved by the script. This does not work with regular plots,
+where prefab components without a defined place are left as invcoms of
+the plot itself.
