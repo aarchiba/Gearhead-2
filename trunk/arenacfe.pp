@@ -856,7 +856,7 @@ Function MightSurrender( GB: GameBoardPtr; NPC: GearPtr ): Boolean;
 	{ Return TRUE if it's possible that NPC might surrender given its }
 	{ current situation, or FALSE otherwise. }
 begin
-	MightSurrender := ( CurrentStamina(NPC) = 0 ) and AreEnemies(GB,NAttValue(NPC^.NA,NAG_Location,NAS_Team),NAV_DefPlayerTeam) and (NAttValue(NPC^.NA,NAG_EpisodeData,NAS_SurrenderStatus) = 0) and NotAnAnimal( NPC );
+	MightSurrender := (( CurrentStamina(NPC) = 0 ) or ( GearCurrentDamage( NPC ) < Random( 4 ) )) and AreEnemies(GB,NAttValue(NPC^.NA,NAG_Location,NAS_Team),NAV_DefPlayerTeam) and (NAttValue(NPC^.NA,NAG_EpisodeData,NAS_SurrenderStatus) = 0) and NotAnAnimal( NPC );
 end;
 
 Procedure VerbalAttack( GB: GameBoardPtr; Attacker,Target: GearPtr );

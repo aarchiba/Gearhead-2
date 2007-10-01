@@ -551,11 +551,11 @@ sub
 	Msg1 <You enter the Atrium.>
 
 	NeededCells 6
-	Content1 <Some 1 100 Sub *GENERAL_SHOP    na>
-	Content2 <Some 1 100 Sub *RESTAURANT      na>
-	Content3 <Some 1 100 Sub *WEAPON_SHOP     na>
-	Content4 <Some 1 100 Sub *ARMOR_SHOP      na>
-	Content5 <Some 1 100 Sub *ELECTRONICS_SHOP  na>
+	Content1 <Some 1 100 Sub *GENERAL_SHOP        na>
+	Content2 <Some 1 100 Sub *RESTAURANT          na>
+	Content3 <Some 1 100 Sub *WEAPON_SHOP         na>
+	Content4 <Some 1 100 Sub *ARMOR_SHOP          na>
+	Content6 <Some 1 100 Sub *ATHSP_TA_MusicShop  na>
 	Content9 <Fill Sub *SHOP_RANDOM>
 
 	sub
@@ -627,7 +627,8 @@ sub
 	NeededCells 3
 	Content1 <Some 1 100 Sub *MECHANIC_SHOP>
 	Content2 <Some 1 100 Sub *MECHA_SHOP>
-	Content3 <Fill Sub *GARAGE_X>
+	Content3 <Some 1 100 Sub *ELECTRONICS_SHOP    na>
+	Content4 <Fill Sub *GARAGE_X>
 	sub
 		team 1
 

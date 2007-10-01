@@ -1,0 +1,18 @@
+%%
+%% Every faction that has "ArenaOK" in its type needs a list of NPCs. These NPCs are used to introduce missions,
+%% debrief the player, so on and so forth. The role of the NPC is determined by setting its persona number manually
+%% using the SetPersona command.
+%%
+%% It's important that all the NPCs listed here have the correct pictures, traits, and biographical data.
+%%
+%% ROLES:
+%% 11 = Faction Commander, usually the PC won't interact with this character much
+%% 12 = Direct Commander, the person the missions normally come from
+%% 13 = Mechanic, who will give damage reports
+%% 14 = Medic, who will give casulty reports
+%% 15 = Supply, who will tell the PC when new equipment becomes available
+
+Set 3
+	name <Silver Knights NPCs>
+
+

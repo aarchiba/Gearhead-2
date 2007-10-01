@@ -7,6 +7,62 @@
 %%
 %% NAME: *[city designation]_[building name abbreviated]_[content type]
 
+%% *ATHSP_TA_MusicShop
+%%	At the Atrium in Athera Spinner, there is a guaranteed music shop.
+
+Content
+	requires <*ATHSP_TA_MusicShop>
+	element1 <Prefab>
+	team1 <Citizens>
+	teamdata1 <Pass>
+	minimap <..1.................#---#>
+	sub
+		Persona 1
+		% V1 = Have become skill trainer (1) or PC has declined the offer (-1)
+		*greeting <*NiceToMeetYou GoCheckOFfer>
+		GoCheckOffer <if= V1 0 else GoOpenStore ifChatNPCKnown else GoOpenStore ifG React 50 else GoOpenStore EndChat Say 4 AddChat 4>
+		GoOpenStore <NewChat Say 1 AddChat 1 AddChat 2 AddChat 3>
+		result1 <EndChat Say 2 Shop .wares Goto result2>
+		.wares <INSTRUMENT ENTERTAINMENT>
+		*result2 <*GoodBye>
+		result3 <EndChat Say 3 School .skills Goto result2>
+		.skills <19 27 30 35 43>
+		result4 <NewChat Say 5 AddChat 5 AddChat 6>
+		result5 <NewChat Say 6 V= 1 1 AddChat 7 AddChat 8 PCFriend %1%>
+		result6 <NewChat Say 7 V= 1 -1 AddEasygoing -d10>
+		result7 <Goto result1>
+		result8 <goto result3>
+		Msg1 <Athera Spinner is the place where dreams are born. I carry a selection of instruments for aspiring musicians, and a variety of entertainment goods for those who choose to appreciate rather than create art.>
+		Msg2 <Take your time looking around; you never know when you'll find that one thing you need.>
+		Msg3 <Come, let's see what I may have learned that you might find useful.>
+		Msg4 <\PC , I'd like a word with you, if I could. I told you once that Athera Spinner is the place where dreams are born- far too often, it is also the place where dreams come to die. When I came here first I dreamt of becoming a star.>
+		Msg5 <As time went on, though, I discovered that I was happiest just running this shop. I know that you have big dreams yourself, \PC . I could share with you some of the things I've learned about singing and the entertainment business.>
+		Msg6 <That makes me glad. Shall we get started right away, or is there something else you need?>
+		Msg7 <You're very confident. That can be a blessing, but sometimes also a curse.>
+		Prompt1 <Let me see what you have.>
+		Prompt2 <Sorry, but I don't need anything here.>
+		Prompt3 <I'd like to train.>
+		CPrompt3 <if= V1 1 Accept>
+		Prompt4 <[Continue]>
+		Prompt5 <I'd like that.>
+		Prompt6 <There's nothing you could teach me.>
+		Prompt7 <Actually, I want to buy something.>
+		Prompt8 <Okay, let's do that.>
+	end
+	inv
+		NPC Singer
+		name <Artemis>
+		Combatant
+		Age 5
+		CharDesc Lawful Sociable Easygoing Female
+		skill 21 12
+		skill 30 10
+		skill 43 10
+		SDL_PORTRAIT <por_f_artemis(-C-).png>
+		SDL_COLORS <168 153 230 255 212 195 112 28 28>
+	end
+
+
 %% *EMESP_EB_Investment
 %%	At the Emerald Bank, there's a place to invest money. The success or failure of the
 %% 	PC's investment will be determined by the Shopping skill.

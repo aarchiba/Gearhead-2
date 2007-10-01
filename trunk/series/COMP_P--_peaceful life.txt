@@ -134,8 +134,8 @@ Plot
 	.%id1%_%plotid%_GoLose <ifNPCOK %2% else GoJustEnd StoryNote 1 DeleteNPC %2% Goto GoJustEnd>
 	GoJustEnd <LoseComp .loss>
 	.loss <+T-- +P-->
-	Msg1 <%name1% died during a mecha attack.>
-	Msg2 <You rescued %name1% from a mecha attack.>
+	Msg1 <%name2% died during a mecha attack.>
+	Msg2 <You rescued %name2% from a mecha attack.>
 
 	sub
 		MetaScene 1
