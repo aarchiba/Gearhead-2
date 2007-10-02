@@ -1545,7 +1545,7 @@ var
 	RootScene: GearPtr;
 begin
 	RootScene := FindRootScene( GB , GB^.Scene );
-	if RootScene <> Nil then begin
+	if ( RootScene <> Nil ) and ( msg <> '' ) then begin
 		FormatMemoString := GearName( RootScene ) + ': ' + msg;
 	end else begin
 		FormatMemoString := msg;

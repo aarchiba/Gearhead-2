@@ -2,11 +2,12 @@
 %% of information. The NPC involved may or may not be forthcoming with the information.
 
 % TYPE: *IHaveInformation
+%		&AboutNPC		The information is about a NPC.
 %	The NPC has information that the PC might find valuable.
 %	Note that depending on the NPC, the information may be withheld until
 %	the PC pays money or something else.
 %   PARAM1: Tell Info Exit Label (no message printed here)
-%   PARAM2: NPC who the information is about
+%   PARAM2: ID number of whatever the info's about; must use one of the above subtypes.
 
 Persona
 requires <*IHaveInformation>
