@@ -43,7 +43,7 @@ Content
 		greeting <if= QuestStatus %qid% %id% else GoCheckOffer ifG ComTime V2 else GoNotReady ifG PCRenown V3 else GoNotReady NewChat Say 1 AddChat 1 AddChat 2>
 		GoNotReady <NewChat Say 2>
 		GoCheckOffer <if= QuestStatus %qid% 0 else GoChat IfPCHasPerformance else GoChat NewChat Say 3 AddChat 3 AddChat 4>
-		GoChat <NewChat SayAnything>
+		GoChat <NewChat Say 9>
 		GoStep1 <if= V1 0 else GoStep2      Goto .%id1%_GoInit>
 		GoStep2 <if= V1 1 else GoStep3      Goto .%id2%_GoInit>
 		GoStep3 <if= V1 2 else GoStep4      Goto .%id3%_GoInit>
@@ -66,6 +66,7 @@ Content
 		Msg6 <If you ever decide that dreaming isn't enough, come back here and we'll make you a star.>
 		Msg7 <You should return to %name1% later for a new gig.>
 		Msg8 <%name1% said you should take a break from performing before starting your next gig.>
+		Msg9 <It's a good day for a concert.>
 
 		Prompt1 <I'm ready to take the next step.>
 		Prompt2 <Maybe I'll try that someday.>
@@ -100,8 +101,10 @@ Content
 
 	% E1 is Phivos the producer.
 	% E2 is the trophy for completing the concert.
+	% E3 is the meme.
 	Element2 <Prefab>
 	Place2 </>
+	Element3 <Prefab>
 
 	sub
 		Persona 1
@@ -113,7 +116,7 @@ Content
 		.%id%_GoInit <NewChat Say %id%02 QMemo %qid% %id%03 AddChat %id%01 AddChat %id%02  SetQuestStatus %qid% %id%>
 		.%id%_GoDelay <NewChat Say %id%04>
 		.%id%_GoRedeem <NewChat Say %id%05>
-		.%id%_GoWinMission <EndChat Say %id%09 History %id%10  XPV 100  CashPrize Reward Threat V%id%03 100 500  AddRenown 1  SetQuestStatus %qid% -1  GiveItem %2%>
+		.%id%_GoWinMission <EndChat Say %id%09 History %id%10  XPV 100  CashPrize Reward Threat V%id%03 100 500  AddRenown 1  SetQuestStatus %qid% -1  GiveItem %2%  ActivateMeme %3% %s1%>
 		.%id%_GoLoseMission <EndChat  Say %id%11  QMemo %qid% %id%12  AddRenown -10  V= %id%02 %threat%>
 
 		Result%id%01 <EndChat Say %id%06 AddCHat %id%03>
@@ -157,6 +160,28 @@ Content
 			PowerSource 3
 			mass -5
 		end
+
+		Meme
+		MaxMemeViews 3
+		MemeTimeLimit
+		Msg <Wow, you did a really great show at Athera Garden, \PC .>
+		Msg_1 <Everybody's talking about your concert, \PC . Enjoy your fifteen minutes of fame while it lasts.>
+		CMsg_1 <ifNPCSociable Accept>
+		Msg_2 <Hey, I enjoyed your concert.>
+		CMsg_2 <ifNPCShy Accept>
+		Msg_3 <>
+		CMsg_3 <ifNPCEasygoing Accept>
+		Msg_4 <\PC ! Can I get your autograph? That concert you had was fantastic.>
+		CMsg_4 <ifNPCPassionate Accept>
+		Msg_5 <>
+		CMsg_5 <ifNPCCheerful Accept>
+		Msg_6 <I didn't really think that your concert at Athera Garden was your best performance ever. Still, congratulations on a good show.>
+		CMsg_6 <ifNPCMelancholy Accept>
+		Msg_7 <You should see how people react when I tell them I knew \PC before you got famous. Good job at the concert.>
+		CMsg_7 <ifChatNPCKnown Accept>
+		Msg_8 <Oh my god, I can't believe I'm talking to \PC ! The concert you had at the Garden was just wonderful.>
+		CMsg_8 <ifChatNPCUnknown Accept>
+
 	end
 
 

@@ -161,7 +161,7 @@ var
 	City,Fac: GearPtr;
 	N: Integer;
 	RPM: RPGMenuPtr;
-	msg,FacDesig: String;
+	FacDesig: String;
 begin
 	if ForceFac <> 0 then begin
 		Fac := SeekCurrentLevelGear( Factions_List , GG_Faction , ForceFac );
@@ -210,20 +210,21 @@ begin
 	end;
 end;
 
-Function FilterList( Source: GearPtr; Context: String ): GearPtr;
+Function FilterList( Source: GearPtr; const PContext: String ): GearPtr;
 	{ Create a list of things based on the context provided. }
 	{ Yeah, I know, real specific there... }
 var
 	it,J: GearPtr;
+	Context: String;
 begin
 	{ Add a GENERAL tag to the context. Everybody gets a GENERAL tag. }
-	context := 'GENERAL ' + context;
+	context := 'GENERAL ' + PContext;
 	it := Nil;
 
 	{ Go through the jobs list and copy everything that matches the context. }
 	J := Source;
 	while J <> Nil do begin
-		if PartMatchesCriteria( Context , SAttValue( J^.SA , 'REQUIRES' ) ) then begin
+		if StringMatchWeight( Context , SAttValue( J^.SA , 'REQUIRES' ) ) > 0 then begin
 			AppendGear( it , CloneGear( J ) );
 		end;
 		J := J^.Next;

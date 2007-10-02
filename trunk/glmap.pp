@@ -1145,7 +1145,7 @@ const
 	FORM_DEFAULT: Array [1..NumForm] of String = (
 	'btr_buruburu.png','zoa_scylla.png','ghu_ultari.png',
 	'ara_kojedo.png', 'aer_wraith.png', 'orn_wasp.png',
-	'ger_harpy.png', 'btr_buruburu.png', 'gca_rover.png'
+	'ger_harpy.png', 'aer_bluebird.png', 'gca_rover.png'
 	);
 	DefaultMaleSpriteName = 'cha_m_citizen.png';
 	DefaultFemaleSpriteName = 'cha_f_citizen.png';

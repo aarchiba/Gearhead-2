@@ -13,6 +13,7 @@ Content
 	% Element3 is the robot-infested factory level
 	% Element4 is the burger vat level
 	% Element5 is the Bac-Bomh
+	% Element6 is the meme
 	Element1 <Prefab>
 	Scene1 <Building Public>
 	team1 <Citizens>
@@ -25,6 +26,7 @@ Content
 	Scene4 <New *BLANK.BoxBasement>
 	Element5 <Prefab>
 	Place5 <1>
+	Element6 <Prefab>
 
 	% SubQuest1 is the E1 victory
 	% SubQuest2 is the E2 victory
@@ -38,7 +40,7 @@ Content
 		KeyWorrds <TERRORIST>
 		greeting <if# QuestStatus %qid% %id% else GoDoQuest if# QuestStatus %qid% 0 else GoDoQuest Goto GoNoQuest>
 		GoDoQuest <if= V1 1 else GoOfferQuest NewChat Say 1 AddChat 1 AddChat 2 AddChat 3>
-		*GoNoQuest <*MISC_CHATTER>
+		GoNoQuest <NewChat Say 17>
 		% If the PC has accepted the job offer from E2, getting the job offer here will
 		% be more difficult.
 		GoOfferQuest <ifItemOK %5% else GoRuinQuest if= QuestStatus %qid% %id% else GoPlainOffer NewChat Say 13 AddChat 12 AddChat 13>
@@ -48,7 +50,7 @@ Content
 		result2 <NewChat Say 3>
 		result3 <SetQuestStatus %qid% -2 Goto GoR3Finish>
 		*GoR3Finish <*YouLostItem>
-		result4 <AddLawful -5 AddEasygoing -10 AddReact 20 History 4 DeleteItem %5% XPV 100 Goto .%id1%_GoInit>
+		result4 <AddLawful -5 AddEasygoing -10 AddReact 20 History 4 DeleteItem %5% XPV 100 ActivateMeme %6% %s1% Goto .%id1%_GoInit>
 		result5 <EndChat Say 6>
 		result6 <NewChat Say 7 AddChat 7 AddChat 8 AddChat 9>
 		result7 <NewChat Say 8 QMemo %qid% 9 V= 1 1 SetQuestStatus %qid% %id% GiveItem %5%>
@@ -76,6 +78,7 @@ Content
 		Msg14 <I'm plotting the destruction of CometBurger! Their loathsome fast food must be stopped, and if the law won't do anything it's up to us to do it ourselves! Are you with me or against me?>
 		Msg15 <You don't sound like you really mean that... the burger sauce must have rotted your brain...>
 		Msg16 <I'm not telling you my plan... You might be one of them!>
+		Msg17 <The price we pay for good food is eternal vigilance and sometimes violence.>
 		Prompt1 <It has been done.>
 		CPrompt1 <if= ItemScene %5% %s4% Accept>
 		Prompt2 <Uh, no, not yet.>
@@ -283,6 +286,27 @@ Content
 		Treasure 15
 		name <Bac-Bomb>
 		desc <A home-made bacteriological bomb. There is no obvious way to trigger it.>
+
+		Meme
+		MaxMemeViews 3
+		Msg <Did you hear that someone set off a bomb in the CometBurger factory? I never thought it could happen here...>
+		Msg_1 <Everybody's talking about the bomb that went off at CometBurger. I wonder who could have done something like that...>
+		CMsg_1 <ifNPCSociable Accept>
+		Msg_2 <I think I know who planted the bomb at CometBurger, but I can't say until I find some evidence.>
+		CMsg_2 <ifNPCShy Accept>
+		Msg_3 <How could anyone do such a crappy thing to CometBurger? I mean, everybody loves the food there!>
+		CMsg_3 <ifNPCEasygoing Accept>
+		Msg_4 <It's terrible what happened at CometBurger headquarters... but a part of me thinks they brought it on themselves for serving crappy food.>
+		CMsg_4 <ifNPCPassionate if# ChatNPCFac 2 Accept>
+		Msg_5 <>
+		CMsg_5 <ifNPCCheerful Accept>
+		Msg_6 <>
+		CMsg_6 <ifNPCMelancholy Accept>
+		Msg_7 <Somebody bombed CometBurger! Oh yeah, stickin' it to the man!>
+		CMsg_7 <ifNPCCriminal if# ChatNPCFac 2 Accept>
+		Msg_8 <This attack must have been carried out by our enemies. The strange thing is, if it were MUGL the bomb would have been painted pink, and if it were Hoeller they would have just sent mecha.>
+		CMsg_8 <if= ChatNPCFac 2 Accept>
+
 	end
 
 %%
@@ -303,6 +327,7 @@ Content
 	% E4 is the corporate office that opens after this quest is completed
 	%  Initially E4 has no faction assigned; once its faction gets assigned, it's
 	%  open for business.
+	% E5 is the meme telling all about it
 	element1 <Prefab>
 	Scene1 <Building Public>
 
@@ -312,6 +337,8 @@ Content
 	Scene3 <Environs>
 
 	Scene4 <New *Office>
+
+	Element5 <Prefab>
 
 	Quest1 <*:ConstructionProblem 1 2>
 	Quest2 <*Success1.FinishMission 1>
@@ -329,7 +356,7 @@ Content
 		GoOfferMission <NewChat Say 1 AddChat 1 AddChat 2 AddChat 6>
 		result1 <NewChat Say 2 SetQuestStatus %qid% %id%  SetQuestStatus %qid1% %id1%  QMemo %qid% 5>
 		result2 <NewCHat Say 4 SetQuestStatus %qid% -2 ifNPCVillainous PCEnemy %1%>
-		result3 <FacXP+ 7 5   SetSceneFaction %4% 7   ActivateMeme 1 %s1%   Goto .%id2%_GoInit>
+		result3 <FacXP+ 7 5   SetSceneFaction %4% 7   ActivateMeme %5% %s1%   Goto .%id2%_GoInit>
 		result4 <NewChat Say 6>
 		result5 <NewChat Say 7 SetQuestStatus %qid% -2 AddReact -10>
 		result6 <NewChat Say 8 AddChat 7 AddChat 8>
@@ -355,13 +382,6 @@ Content
 		Prompt7 <Let me see what I can find out.>
 		Prompt8 <Sorry, I don't think I can.>
 		CPrompt8 <if# PCFac ChatNPCFac Accept>
-		sub
-			Meme 1
-			%% After the corporate office is opened, this meme will let the player know.
-			MaxMemeViews 2
-			Msg <The new Hoeller corporate office has opened for business. They have some shops there, too.>
-
-		end
 
 		Metascene 2
 		sub
@@ -390,5 +410,12 @@ Content
 		STC Building
 		name <Hoeller Construction Site>
 		desig <ENTRANCE %s2%>
+
+		Meme
+		%% After the corporate office is opened, this meme will let the player know.
+		MaxMemeViews 2
+		Msg <The new Hoeller corporate office has opened for business. They have some shops there, too.>
+		Msg_1 <Have you seen the new Hoeller office? It's good that there's finally some new stores here.>
+
 	end
 

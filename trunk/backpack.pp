@@ -1668,7 +1668,6 @@ Procedure InstallSoftware( GB: GameBoardPtr; PC , SW: GearPtr );
 		DialogMsg( ReplaceHash( MsgString( 'BACKPACK_FreeSoftwareSpace' ) , GearName( SW ) ) );
 		repeat
 			RPM := CreateRPGMenu( MenuItem , MenuSelect , ZONE_InvMenu );
-{			BuildGearMenu( RPM , PC , GG_Computer ); }
 			BP_Source := PC;
 			BP_SeekSibs := True;
 			BP_ActiveMenu := RPM;
@@ -1755,6 +1754,10 @@ begin
 	SetNAtt( PC^.NA , NAG_Location , NAS_SmartCount , 4 );
 	SetNAtt( PC^.NA , NAG_Location , NAS_SmartAction , NAV_UseSkill );
 	SetNAtt( PC^.NA , NAG_Location , NAS_SmartSkill , NAS_Performance );
+
+	{ ...and also exit the backpack. }
+	ForceQuit := True;
+
 	PCDoPerformance( GB , PC );
 	WaitAMinute( GB , PC , ReactionTime( PC ) );
 end;

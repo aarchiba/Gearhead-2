@@ -52,7 +52,7 @@ const
 	(	True,	True,	True,	True,	True	),	{Battroid}
 	(	True,	False,	False,	True,	True	),	{Zoanoid}
 	(	False,	True,	True,	False,	False	),	{GroundHugger}
-	(	True,	False,	False,	False,	False	),	{Arachnoid}
+	(	True,	False,	False,	True,	False	),	{Arachnoid}
 	(	False,	False,	False,	True,	True	),	{AeroFighter}
 	(	True,	False,	False,	True,	True	),	{Ornithoid}
 	(	True,	False,	True,	True,	True	),	{GerWalk}
@@ -65,7 +65,7 @@ const
 	(	200,	100,	150,	150,	300	),	{Battroid}
 	(	200,	0,	0,	200,	300	),	{Zoanoid}
 	(	200,	150,	200,	0,	300	),	{GroundHugger}
-	(	200,	0,	0,	0,	300	),	{Arachnoid}
+	(	200,	0,	0,	100,	300	),	{Arachnoid}
 	(	200,	0,	0,	300,	500	),	{AeroFighter}
 	(	200,	0,	0,	300,	300	),	{Ornithoid}
 	(	60,	0,	300,	250,	300	),	{GerWalk}
@@ -692,8 +692,8 @@ var
 begin
 	it := CalcFly( Scene , Master , False );
 
-	{ Zoanoids cannot fly, but they jump really well. }
-	if ( Master^.G = GG_Mecha ) and ( Master^.S = GS_Zoanoid ) then begin
+	{ Zoanoids and Arachnoids cannot fly, but they jump really well. }
+	if ( Master^.G = GG_Mecha ) and (( Master^.S = GS_Zoanoid ) or ( Master^.S = GS_Arachnoid )) then begin
 		it := ( it * 3 ) div 2;
 	end else if it >= MinFlightSpeed then begin
 		it := 0;

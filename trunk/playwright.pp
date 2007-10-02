@@ -684,7 +684,12 @@ begin
 
 		If MovePrefabs then begin
 			{ Find out if we have to put this element somewhere else. }
-			Place := SAttValue( Plot^.SA , 'PLACE' + BStr( N ) );
+			{ Memes automatically get frozen. }
+			if E^.G = GG_Meme then begin
+				Place := '/';
+			end else begin
+				Place := SAttValue( Plot^.SA , 'PLACE' + BStr( N ) );
+			end;
 
 			{ If we have to put it somewhere, do so now. }
 			{ Otherwise leave it where it is. }

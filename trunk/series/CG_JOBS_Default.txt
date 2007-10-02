@@ -62,7 +62,7 @@ Skill 28
 Job
 name <Explorer>
 desig <ADVEN>
-requires <GENERAL>
+requires <GENERAL -SAFE>
 % Dodge, Awareness, Survival, First Aid
 skill 10
 skill 11
@@ -83,7 +83,7 @@ skill 26
 Job
 name <Mercenary>
 desig <ADVEN>
-requires <GENERAL>
+requires <TARGET>
 % Heavy Weapons, Dodge, Mecha Gunnery, Mecha Artillery, Mecha Piloting
 Skill 2
 Skill 5
@@ -94,7 +94,7 @@ Skill 10
 Job
 name <Test Pilot>
 desig <ADVEN>
-requires <CITY>
+requires <Industrial>
 % Mecha Weapons, Mecha Piloting, Dodge, Vitality, Resistance
 skill 3
 skill 5
@@ -154,7 +154,7 @@ Pragmatism 5
 Job
 name <Engineer>
 desig <CRAFT>
-requires <CITY>
+requires <Industrial>
 % Mecha Repair, General Repair, Mecha Engineering
 Skill 15
 skill 23

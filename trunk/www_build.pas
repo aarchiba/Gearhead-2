@@ -24,60 +24,6 @@ Program www_build;
 
 uses gears,gearparser,texutil,gearutil,description;
 
-Procedure SortStringList( var LList: SAttPtr );
-	{ Sort this list of strings in alphabetical order. }
-var
-	sorted: SAttPtr;	{The sorted list}
-	a,b,c,d: SAttPtr;{Counters. We always need them, you know.}
-	youshouldstop: Boolean;	{Can you think of a better name?}
-begin
-	{Initialize A and Sorted.}
-	a := LList;
-	Sorted := Nil;
-
-	while a <> Nil do begin
-		b := a;		{b is to be added to sorted}
-		a := a^.next;	{increase A to the next item in the menu}
-
-		{Give b's Next field a value of Nil.}
-		b^.next := nil;
-
-		{Locate the correct position in Sorted to store b}
-		{ Get rid of anything that isn't a mecha. }
-		if HeadMatchesString( 'PC_' , b^.info ) then begin
-			{ This is an equipment file, not a mecha file. Delete it. }
-			DisposeSAtt( b );
-		end else if Sorted = Nil then
-			{This is the trivial case- Sorted is empty.}
-			Sorted := b
-		else if UpCase( b^.info ) < Upcase( Sorted^.info ) then begin
-			{b should be the first element in the list.}
-			c := sorted;
-			sorted := b;
-			sorted^.next := c;
-			end
-		else begin
-			{c and d will be used to move through Sorted.}
-			c := Sorted;
-
-			{Locate the last item lower than b}
-			youshouldstop := false;
-			repeat
-				d := c;
-				c := c^.next;
-
-				if c = Nil then
-					youshouldstop := true
-				else if UpCase( c^.info ) > UpCase( b^.info ) then begin
-					youshouldstop := true;
-				end;
-			until youshouldstop;
-			b^.next := c;
-			d^.next := b;
-		end;
-	end;
-	LList := Sorted;
-end;
 
 var
 	MechaBlueprint: GearPtr;

@@ -317,7 +317,10 @@ begin
 	CreateMemoList( Adv , Tag );
 	if UpCase( Tag ) = 'MEMO' then AddQuestMemos;
 
-	if MemoList = Nil then StoreSAtt( MemoList , ReplaceHash( MsgString( 'MEMO_None' ) , LowerCase( Tag ) ) );
+	{ Sort the memo list. }
+	if MemoList <> Nil then SortStringList( MemoList )
+	else StoreSAtt( MemoList , ReplaceHash( MsgString( 'MEMO_None' ) , LowerCase( Tag ) ) );
+
 	BrowseList;
 end;
 
@@ -1536,6 +1539,18 @@ begin
 	end;
 end;
 
+Function FormatMemoString( GB: GameBoardPtr; const Msg: String ): String;
+	{ Add the name of the city to the memo. }
+var
+	RootScene: GearPtr;
+begin
+	RootScene := FindRootScene( GB , GB^.Scene );
+	if RootScene <> Nil then begin
+		FormatMemoString := GearName( RootScene ) + ': ' + msg;
+	end else begin
+		FormatMemoString := msg;
+	end;
+end;
 
 Procedure ProcessMemo( var Event: String; GB: GameBoardPtr; Scene: GearPtr );
 	{ Locate and then store the specified message. }
@@ -1544,7 +1559,7 @@ var
 	msg: String;
 begin
 	id := ScriptValue( Event , GB , Scene );
-	msg := getTheMessage( 'msg', id , GB , Scene );
+	msg := FormatMemoString( GB , getTheMessage( 'msg', id , GB , Scene ) );
 	if ( Scene <> Nil ) then SetSAtt( Scene^.SA , 'MEMO <' + msg + '>' );
 end;
 
@@ -1555,7 +1570,7 @@ var
 	msg: String;
 begin
 	id := ScriptValue( Event , GB , Scene );
-	msg := getTheMessage( 'msg', id , GB , Scene );
+	msg := FormatMemoString( GB , getTheMessage( 'msg', id , GB , Scene ) );
 	Scene := StoryMaster( GB , Scene );
 	if ( Scene <> Nil ) then SetSAtt( Scene^.SA , 'MEMO <' + msg + '>' );
 end;
@@ -1569,7 +1584,7 @@ begin
 	{ Determine the Quest ID and the Message ID. }
 	qid := ScriptValue( Event , GB , Source );
 	mid := ScriptValue( Event , GB , Source );
-	msg := getTheMessage( 'msg', mid , GB , Source );
+	msg := FormatMemoString( GB , getTheMessage( 'msg', mid , GB , Source ) );
 
 	{ Store this message in the adventure. }
 	Source := GG_LocateAdventure( GB , Source );
@@ -1589,7 +1604,7 @@ begin
 	{ Determine the relevant Quest Status and the Message ID. }
 	qstat := ScriptValue( Event , GB , Source );
 	mid := ScriptValue( Event , GB , Source );
-	msg := getTheMessage( 'msg', mid , GB , Source );
+	msg := FormatMemoString( GB , getTheMessage( 'msg', mid , GB , Source ) );
 
 	{ Quest Submemos look like regular memos but their tag is followed by an underscore }
 	{ and the Quest Status. }
@@ -1896,7 +1911,7 @@ Procedure ProcessSayAnything( GB: GameBoardPtr );
 		NumMeme := N;
 	end;
 	Function GetMeme( City: GearPtr; N: Integer ): GearPtr;
-		{ Return the number of active memes in this city. }
+		{ Return the requested meme. }
 	var
 		S,M: GearPtr;
 	begin
@@ -1947,34 +1962,26 @@ Procedure ProcessActivateMeme( var Event: String; GB: GameBoardPtr; Source: Gear
 	{ Activate a meme. The meme should be stored in SOURCE, the plot master of SOURCE, or the }
 	{ story master of SOURCE. If the named meme cannot be found this will generate an error. }
 var
-	MemeID,SceneID: Integer;
-	Meme,Scene,M: GearPtr;
+	MemeID,SceneID: LongInt;
+	Meme,Scene: GearPtr;
 begin
 	{ Get the meme ID and the scene ID. }
 	MemeID := ScriptValue( event , GB , source );
 	SceneID := ScriptValue( event , GB , source );
-	Meme := SeekGear( Source , GG_Meme , MemeID );
-	if Meme = Nil then begin
-		M := PlotMaster( GB , Source );
-		Meme := SeekGear( M , GG_Meme , MemeID );
-		if Meme = Nil then begin
-			M := StoryMaster( GB , Source );
-			Meme := SeekGear( M , GG_Meme , MemeID );
-		end;
-	end;
+	Meme := GG_LocateItem( MemeID , GB , Source );
 	Scene := FindRootScene( GB , FindActualScene( GB , SceneID ) );
 
-	if Meme = Nil then begin
+	if ( Meme = Nil ) or ( Meme^.G <> GG_Meme ) then begin
 		DialogMsg( 'ERROR: Meme ' + BStr( MemeID ) + ' not found. Context: ' + Event );
 	end else if Scene = Nil then begin
 		DialogMsg( 'ERROR: ActivateMeme failed, scene ' + BStr( SceneID ) + ' not found. Context: ' + Event );
 	end else begin
-		M := CloneGear( Meme );
-		InsertSubCom( Scene , M );
+		DelinkGearForMovement( GB , Meme );
+		InsertSubCom( Scene , Meme );
 
 		{ If this meme has a time limit, set that now. }
-		if NAttValue( M^.NA , NAG_MemeData , NAS_MemeTimeLimit ) > 0 then begin
-			AddNAtt( M^.NA , NAG_MemeData , NAS_MemeTimeLimit , GB^.ComTime );
+		if NAttValue( Meme^.NA , NAG_MemeData , NAS_MemeTimeLimit ) > 0 then begin
+			AddNAtt( Meme^.NA , NAG_MemeData , NAS_MemeTimeLimit , GB^.ComTime );
 		end;
 	end;
 end;
