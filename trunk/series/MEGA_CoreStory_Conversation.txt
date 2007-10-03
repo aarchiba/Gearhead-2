@@ -94,8 +94,8 @@ Plot
 		result%id%04 <NewChat Say %id%08 LoseComp 0 .%id%_changes2>
 		.%id%_changes2 <+T-- +F-->
 		result%id%05 <NewChat if= V%id%02 0 else .%id%_GoR5Again V= %id%02 1 ifG React d50 else .%id%_GoR5Fail Say %id%09  SkillXP 19 100  Goto .%id%_GoWin>
-		.%id%_GoR5Again <Say %id%010 AddChat %id%03 AddChat %id%04 AddChat %id%06>
-		.%id%_GoR5Fail <Say %id%011 AddChat %id%03 AddChat %id%04 AddChat %id%06>
+		.%id%_GoR5Again <Say %id%10 AddChat %id%03 AddChat %id%04 AddChat %id%06>
+		.%id%_GoR5Fail <Say %id%11 AddChat %id%03 AddChat %id%04 AddChat %id%06>
 		*result%id%06 <*Goodbye>
 		Msg%id%01 <Hey, I know you've been planning on having an adventure, well I've got just the thing to get you started. It happens that I have a genuine treasure map.>
 		Msg%id%02 <%name1% in \SCENE NPCScene %1% offered to sell you a treasure map for $ \VAL V%id%01 .>
@@ -131,7 +131,7 @@ Plot
 Plot
 	name <Best Buds Forever?>
 	desc <The PC and his friend turn out to be enemies. Bummer.>
-	requires <*CS_Conversation +P-- E:-- 1:Friend 1:Enemy P:++ Common>
+	requires <*CS_Conversation +P-- E:-- 1:Friend 1:Enemy P:++ Common Common>
 
 	% Element1 is the NPC to meet
 

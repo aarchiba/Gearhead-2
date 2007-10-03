@@ -4,6 +4,7 @@
 %% using the SetPersona command.
 %%
 %% It's important that all the NPCs listed here have the correct pictures, traits, and biographical data.
+%% Skills, equipment, and even faction aren't needed.
 %%
 %% ROLES:
 %% 11 = Faction Commander, usually the PC won't interact with this character much
@@ -11,8 +12,38 @@
 %% 13 = Mechanic, who will give damage reports
 %% 14 = Medic, who will give casulty reports
 %% 15 = Supply, who will tell the PC when new equipment becomes available
+%% 16 = Information, who will give intel reports and tell about earned rewards
 
 Set 3
 	name <Silver Knights NPCs>
+	inv
+		NPC Knight
+		name <Gordon Valeus>
+		job <Lord Master>
+		SDL_PORTRAIT <por_m_gordonvaleus(OAY).png>
+		SDL_COLORS <150 205 229 235 212 195 130 143 114>
+		chardesc Lawful Heroic Easygoing Shy Cheerful Male Renowned
+		Age 52
+		statline 19 22 18 19 14 16 17 15
+		SetPersona 11
 
+		NPC Knight
+		SetPersona 12
 
+		NPC Mechanic
+		name <Keefa>
+		SDL_PORTRAIT <por_f_keefa(-P-).png>
+		SDL_COLORS <150 205 229 255 215 195 152 61 97>
+		CharDesc Female Lawful Shy Easygoing Pragmatic
+		Age 5
+		SetPersona 13
+
+		NPC Knight
+		SetPersona 14
+
+		NPC Knight
+		SetPersona 15
+
+		NPC Knight
+		SetPersona 16
+	end
