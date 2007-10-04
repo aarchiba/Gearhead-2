@@ -59,6 +59,9 @@ uses arenaplay,arenascript,interact,gearutil,narration,texutil,ghprop,rpgdice,ab
 	glinfo,pcaction,menugear,navigate,services,skilluse,training,backpack,chargen;
 {$ENDIF}
 
+Const
+	GS_CharacterSet = 1;
+
 var
 	ADR_Source: GearPtr;	{ Source gear for various redrawers. }
 	ADR_SourceMenu: RPGMenuPtr;
@@ -78,6 +81,21 @@ begin
 	if ADR_PilotMenu <> Nil then DisplayMenu( ADR_PilotMenu , Nil );
 	if ADR_MechaMenu <> Nil then DisplayMenu( ADR_MechaMenu , Nil );
 	if ADR_HQCamp <> Nil then ArenaTeamInfo( ADR_HQCamp^.Source , ZONE_PCStatus );
+end;
+
+Procedure HQMonologue( NPC: GearPtr; Msg: String );
+	{ NPC is about to deliver a line. }
+var
+	A: Char;
+begin
+	NPC := LocatePilot( NPC );
+	repeat
+		BasicArenaRedraw;
+		DoMonologueDisplay( Nil , NPC , Msg );
+		DoFlip;
+
+		A := RPGKey;
+	until IsMoreKey( A );
 end;
 
 Procedure SelectAMissionRedraw;
@@ -1336,6 +1354,23 @@ begin
 	end;
 end;
 
+Procedure CheckFactionsPresent( Adv: GearPtr );
+	{ Check to make sure that all of the factions which currently exist are represented }
+	{ in this adventure. Update the alliegances as necessary. }
+begin
+
+end;
+
+Procedure CheckFactionPersonalities( Adv: GearPtr );
+	{ Check to make sure that the faction personalities are loaded, and that all }
+	{ positions are accounted for. }
+var
+	NPCSet: GearPtr;
+begin
+	{ Search for the NPC Set. }
+
+end;
+
 Procedure PlayArenaCampaign( Camp: CampaignPtr );
 	{ Play this arena campaign. }
 var
@@ -1344,6 +1379,12 @@ var
 begin
 	{ Set the campaign pointer for redraw purposes. }
 	ADR_HQCamp := Camp;
+
+	{  As soon as the campaign has been loaded, do some checks to make sure it has everything }
+	{ it needs. These checks are done here so that save files from previous versions will remain }
+	{ compatable with the current version. }
+	CheckFactionsPresent( Camp^.Source );
+	CheckFactionPersonalities( Camp^.Source );
 
 	{ If Camp^.GB exists, then the game was saved in the middle of a battle. }
 	{ Handle that battle before heading to the main menu. }
