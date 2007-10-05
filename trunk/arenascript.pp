@@ -104,6 +104,7 @@ Function ScriptValue( var Event: String; GB: GameBoardPtr; Scene: GearPtr ): Lon
 
 Function AS_GetString( Source: GearPtr; Key: String ): String;
 Function ScriptMessage( msg_label: String; GB: GameBoardPtr; Source: GearPtr ): String;
+Function NPCScriptMessage( const msg_label: String; GB: GameBoardPtr; NPC, Source: GearPtr ): String;
 
 Procedure InvokeEvent( Event: String; GB: GameBoardPtr; Source: GearPtr; var Trigger: String );
 
@@ -1488,6 +1489,19 @@ begin
 	ScriptMessage := Msg;
 end;
 
+Function NPCScriptMessage( const msg_label: String; GB: GameBoardPtr; NPC, Source: GearPtr ): String;
+	{ Get a script message, temporarily setting the I_NPC to the provided NPC. }
+var
+	Temp_NPC: GearPtr;
+	msg: String;
+begin
+	Temp_NPC := I_NPC;
+	I_NPC := NPC;
+	msg := ScriptMessage( msg_label , GB , Source );
+	I_NPC := Temp_NPC;
+	NPCScriptMessage := Msg;
+end;
+
 Function GetTheMessage( head: String; idnum: Integer; GB: GameBoardPtr; Scene: GearPtr ): String;
 	{ Just call the SCRIPTMESSAGE with the correct label. }
 begin
@@ -1532,7 +1546,7 @@ begin
 
 	{ Locate the NPC and the message. }
 	NPC := GG_LocateNPC( CID , GB , Source );
-	msg := getTheMessage( 'msg', id , GB , Source );
+	msg := NPCScriptMessage( 'msg' + BStr( id ) , GB , NPC , Source );
 	if ( msg <> '' ) and ( NPC <> Nil ) then begin
 		Monologue( GB , NPC , msg );
 		{ The monologue will do its own output. }
@@ -3576,12 +3590,16 @@ begin
 				SetNAtt( Mek^.NA , NAG_EpisodeData , NAS_Temporary , 0 );
 				{ Also move off the map, to prevent the runaway salvage bug. }
 				SetNAtt( Mek^.NA , NAG_Location , NAS_X , 0 );
+				{ Record that this is a salvaged mek. }
+				SetNAtt( Mek^.NA , NAG_MissionReport , NAS_WasSalvaged , 1 );
 			end else if CanScavenge then begin
 				M2 := SelectRandomGear( Mek^.SubCom );
 				if NotDestroyed( M2 ) and CanBeExtracted( M2 ) and ( RollStep( SkillValue( PC , 15 ) ) > 12 ) then begin
 					DelinkGear( Mek^.SubCom , M2 );
 					SetNAtt( M2^.NA , NAG_Location , NAS_Team , NAV_DefPlayerTeam );
 					AppendGear( GB^.Meks , M2 );
+					{ Record that this is a salvaged part. }
+					SetNAtt( M2^.NA , NAG_MissionReport , NAS_WasSalvaged , 1 );
 				end;
 			end;
 

@@ -7,8 +7,8 @@
 %% Skills, equipment, and even faction aren't needed.
 %%
 %% ROLES:
-%% 1 = Faction Commander, usually the PC won't interact with this character much
-%% 2 = Direct Commander, the person the missions normally come from
+%% 1 = Faction Head, usually the PC won't interact with this character much
+%% 2 = Commander, the person the missions normally come from
 %% 3 = Mechanic, who will give damage reports
 %% 4 = Medic, who will give casulty reports
 %% 5 = Supply, who will tell the PC when new equipment becomes available
@@ -28,6 +28,11 @@ Set 3
 		SetPersona 1
 
 		NPC Knight
+		name <Brianna>
+		SDL_PORTRAIT <por_f_brianna(JAY).png>
+		SDL_COLORS <150 205 229 255 212 195 240 160 35>
+		Chardesc Female Lawful Heroic Sociable Spiritual
+		Age 7
 		SetPersona 2
 
 		NPC Mechanic
@@ -41,11 +46,15 @@ Set 3
 		NPC Cyberdoc
 		name <Gamaliel>
 		Age 16
-		chardesc Pragmatic Melancholy Lawful Heroic Male
+		SDL_PORTRAIT <por_m_gamaliel(APY).png>
+		SDL_COLORS <150 205 229 123 63 0 55 25 81>
+		chardesc Pragmatic Melancholy Heroic Male
 		SetPersona 4
 
 		NPC Knight
 		name <Arleus>
+		SDL_PORTRAIT <por_f_arleus(AAY).png>
+		SDL_COLORS <150 205 229 150 112 89 103 3 45>
 		Age 19
 		chardesc Passionate Shy Cheerful Lawful Heroic Female
 		SetPersona 5
@@ -54,6 +63,8 @@ Set 3
 		name <Marlowe>
 		Age 22
 		chardesc Spiritual Easygoing Lawful Heroic Male
+		SDL_PORTRAIT <por_m_marlowe(-CY).png>
+		SDL_COLORS <150 205 229 255 212 195 65 121 119>
 		job <Chaplain>
 		SetPersona 6
 	end

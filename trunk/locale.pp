@@ -106,6 +106,8 @@ Const
 		NumBackdrop = 1;
 		NAV_Starfield = 1;
 
+	NAG_MissionReport = 23;		{ Holds data that will be erased the next time this mecha is deployed. }
+		NAS_WasSalvaged = 1;	{ If nonzero, this gear was salvaged. }
 
 
 	SA_MapEdgeObstacle = 'NOEXIT';
@@ -3252,6 +3254,9 @@ var
 	P: Point;
 begin
 	if ( GB = Nil ) or ( Mek = Nil ) then Exit;
+
+	{ Erase any MissionReport attributes still attached to this mek. }
+	StripNAtt( Mek , NAG_MissionReport );
 
 	{ We set the direction first. This has to be done before }
 	{ FindDeploymentSpot screws up our values. }

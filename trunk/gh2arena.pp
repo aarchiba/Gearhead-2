@@ -62,6 +62,14 @@ uses arenaplay,arenascript,interact,gearutil,narration,texutil,ghprop,rpgdice,ab
 Const
 	GS_CharacterSet = 1;
 
+	NumArenaNPCs = 6;
+	ANPC_FactionHead = 1;
+	ANPC_Commander = 2;
+	ANPC_Mechanic = 3;
+	ANPC_Medic = 4;
+	ANPC_Supply = 5;
+	ANPC_Intel = 6;
+
 var
 	ADR_Source: GearPtr;	{ Source gear for various redrawers. }
 	ADR_SourceMenu: RPGMenuPtr;
@@ -70,6 +78,8 @@ var
 	ADR_NumPilotsSelected,ADR_PilotsAllowed: Integer;
 
 	ADR_PilotMenu,ADR_MechaMenu: RPGMenuPtr;
+
+	ANPC_MasterPersona: GearPtr;
 
 
 { *** REDRAW PROCEDURES *** }
@@ -83,12 +93,13 @@ begin
 	if ADR_HQCamp <> Nil then ArenaTeamInfo( ADR_HQCamp^.Source , ZONE_PCStatus );
 end;
 
-Procedure HQMonologue( NPC: GearPtr; Msg: String );
+Procedure HQMonologue( Adv: GearPtr; ArenaNPC: LongInt; Msg: String );
 	{ NPC is about to deliver a line. }
 var
+	NPC: GearPtr;
 	A: Char;
 begin
-	NPC := LocatePilot( NPC );
+	NPC := SeekGearByCID( Adv^.InvCom , ArenaNPC );
 	repeat
 		BasicArenaRedraw;
 		DoMonologueDisplay( Nil , NPC , Msg );
@@ -96,6 +107,8 @@ begin
 
 		A := RPGKey;
 	until IsMoreKey( A );
+
+	DialogMsg( '[' + GearName( NPC ) + ']: ' + Msg );
 end;
 
 Procedure SelectAMissionRedraw;
@@ -242,6 +255,15 @@ end;
 
 { *** UTILITY FUNCTIONS *** }
 
+Function ArenaNPCMessage( Adv: GearPtr; ArenaNPC: LongInt; const Msg_Key: String ): String;
+	{ Try to find an appropriate message for the requested NPC to say. }
+var
+	NPC: GearPtr;
+begin
+	NPC := SeekGearByCID( Adv^.InvCom , ArenaNPC );
+	ArenaNPCMessage := NPCScriptMessage( Msg_Key , Nil , NPC , ANPC_MasterPersona );
+end;
+
 Function FindMechasPilot( U , Mek: GearPtr ): GearPtr;
 	{ Search unit U to locate whatever pilot is assigned to mecha Mek. }
 	{ If no such pilot is found, clear Mek's PILOT attribute and }
@@ -338,6 +360,13 @@ begin
 	HQCash := NAttValue( HQCamp^.Source^.NA , NAG_Experience , NAS_Credits );
 end;
 
+Function HQRenown( HQCamp: CampaignPtr ): LongInt;
+	{ This is pretty much just a macro for returning the amount of }
+	{ renown this arena unit has. }
+begin
+	HQRenown := NAttValue( HQCamp^.Source^.NA , NAG_CharDescription , NAS_Renowned );
+end;
+
 Function HQFac( HQCamp: CampaignPtr ): Integer;
 	{ Return the faction of this arena unit. }
 begin
@@ -372,7 +401,7 @@ var
 	M: GearPtr;
 	Desc: String;
 begin
-	TL := NAttValue( HQCamp^.Source^.NA , NAG_CharDescription , NAS_Renowned );
+	TL := HQRenown( HQCamp );
 	PayRate := NAttValue( Scene^.NA , NAG_ArenaMissionInfo , NAS_PayRate );
 	if PayRate = 0 then PayRate := 400;
 	SetNAtt( Scene^.NA , NAG_ArenaMissionInfo , NAS_Pay , Calculate_Reward_Value( Nil , Calculate_Threat_Points( TL , 100 ) , PaYRate ) );
@@ -511,7 +540,7 @@ begin
 	PC := PCForces;
 	while PC <> Nil do begin
 		{ Status effects get repaired for free- otherwise, a low-on-cash }
-		{ arena unit could enter fire with a mecha still on fire from their }
+		{ arena unit could enter the next battle with a mecha still on fire from their }
 		{ last battle, and that would suck. Also remove conditions now, since }
 		{ everybody needs that done. }
 		StripNAtt( PC , NAG_StatusEffect );
@@ -1197,20 +1226,87 @@ begin
 	until N = -1;
 end;
 
+Procedure DeliverMissionDebriefing( Adv,Scene: GearPtr );
+	{ Deliver any pending news to the player. The big news will be which characters died, }
+	{ which ones were rescued by the Medicine skill, which mecha were destroyed, and which }
+	{ mecha were returned from the brink. }
+	Procedure GiveTheNews( NPC: Integer; const Msg_Key: String; NameList: SAttPtr );
+		{ The provided NPC will give the provided message about the provided names. }
+	begin
+		while NameList <> Nil do begin
+			HQMonologue( Adv, NPC , ReplaceHash( ArenaNPCMessage( Adv , NPC , Msg_Key ) , NameList^.Info ) );
+			NameList := NameList^.Next;
+		end;
+	end;
+var
+	Dead,Healed,Destroyed,Fixed,SList: SAttPtr;	{ The various message classes. }
+begin
+	Dead := Nil;
+	Healed := Nil;
+	Destroyed := Nil;
+	Fixed := Nil;
+
+	{ Step one: Look for matching messages. }
+	SList := Scene^.SA;
+	while SList <> Nil do begin
+		if HeadMatchesString( ARENAREPORT_CharRecovered , SList^.Info ) then StoreSAtt( Healed , RetrieveAString( SList^.Info ) )
+		else if HeadMatchesString( ARENAREPORT_CharDied , SList^.Info ) then StoreSAtt( Dead , RetrieveAString( SList^.Info ) )
+		else if HeadMatchesString( ARENAREPORT_MechaRecovered , SList^.Info ) then StoreSAtt( Fixed , RetrieveAString( SList^.Info ) )
+		else if HeadMatchesString( ARENAREPORT_MechaDestroyed , SList^.Info ) then StoreSAtt( Destroyed , RetrieveAString( SList^.Info ) );
+		SList := SList^.Next;
+	end;
+
+	{ Step two: Report the stuff we just found out. }
+	GiveTheNews( ANPC_Medic , 'PCHealed' , Healed );
+	GiveTheNews( ANPC_Medic , 'PCDead' , Dead );
+	GiveTheNews( ANPC_Mechanic , 'MechaFixed' , Fixed );
+	GiveTheNews( ANPC_Mechanic , 'MechaDestroyed' , Destroyed );
+
+	DisposeSAtt( Dead );
+	DisposeSAtt( Healed );
+	DisposeSAtt( Destroyed );
+	DisposeSAtt( Fixed );
+end;
+
+Procedure DeliverSalvageReport( Adv , PCList: GearPtr );
+	{ Report on any salvage recovered from the battle. }
+begin
+	while PCList <> Nil do begin
+		if NAttValue( PCList^.NA , NAG_MissionReport , NAS_WasSalvaged ) <> 0 then begin
+			HQMonologue( Adv, ANPC_Supply , ReplaceHash( ArenaNPCMessage( Adv , ANPC_Supply , 'SalvageReport' ) , FullGearName( PCList ) ) );
+		end;
+		PCList := PCList^.Next;
+	end;
+end;
+
 Function MissionFrontEnd( HQCamp: CampaignPtr; Scene,PCForces: GearPtr ): Integer;
 	{ Play the mission, along with all the needed wrapper stuff. }
 var
 	N: Integer;
 	C0,C1: LongInt;	{ Cash0, Cash1 }
+	R0,R1: Integer;	{ Renown0, Renown1 }
 begin
-	{ Save the initial money. }
+	{ Save the initial money and renown. }
 	C0 := HQCash( HQCamp );
+	R0 := HQRenown( HQCamp );
 
 	N := ScenePlayer( HQCamp , Scene , PCForces );
 
-	{ After the mission is over, see if any cash was gained. }
-	C1 := HQCash( HQCamp );
-	if ( C1 > C0 ) and ( N <> 0 ) then DialogMsg( ReplaceHash( MsgString( 'ARENA_PAM_Earnings' ) , BStr( C1 - C0 ) ) );
+	{ After the mission is over, deliver any reports. }
+	if N <> 0 then begin
+		{ The mission has ended properly; it wasn't quit. }
+		{ Do the debriefing here. }
+		R1 := HQRenown( HQCamp );
+
+		C1 := HQCash( HQCamp );
+		if C1 > C0 then begin
+			HQMonologue( HQCamp^.Source , ANPC_Commander , ReplaceHash( ArenaNPCMessage( HQCamp^.Source , ANPC_Commander , 'ReportEarnings' ) , BStr( C1 - C0 ) ) );
+		end;
+
+		DeliverMissionDebriefing( HQCamp^.Source , Scene );
+
+		DeliverSalvageReport( HQCamp^.Source , PCForces );
+	end;
 
 	{ After finishing the battle, get rid of the scene. }
 	RemoveGear( HQCamp^.Source^.InvCom , Scene );
@@ -1357,18 +1453,81 @@ end;
 Procedure CheckFactionsPresent( Adv: GearPtr );
 	{ Check to make sure that all of the factions which currently exist are represented }
 	{ in this adventure. Update the alliegances as necessary. }
+	Procedure ModifyFacRelations( NewFac: GearPtr );
+		{ NewFac has just been added to the game. Check through the existing factions, and }
+		{ make sure they all have the appropriate reaction score for it. }
+	var
+		Fac,ProtoFac: GearPtr;
+	begin
+		Fac := Adv^.InvCom;
+		while Fac <> Nil do begin
+			if ( Fac^.G = GG_Faction ) and ( NewFac <> Fac ) then begin
+				{ We've found a faction, and it's not the new faction. How does }
+				{ this faction feel about the new faction? The answer can be found }
+				{ in the faction prototype. }
+				ProtoFac := SeekCurrentLevelGear( Factions_List , GG_Faction , Fac^.S );
+				if ProtoFac <> Nil then begin
+					SetNAtt( Fac^.NA , NAG_FactionScore , NewFac^.S , NAttValue( ProtoFac^.NA , NAG_FactionScore , NewFac^.S ) );
+				end;
+			end;
+			Fac := Fac^.Next;
+		end;
+	end;
+var
+	FLF,InGameFac: GearPtr;
 begin
-
+	{ Start by looking through the Faction List Factions }
+	FLF := Factions_List;
+	while FLF <> Nil do begin
+		InGameFac := SeekCurrentLevelGear( Adv^.InvCom , GG_Faction , FLF^.S );
+		if InGameFac = Nil then begin
+			{ We don't have this faction in the campaign. Horrors! In order to fix things, }
+			{ copy it over, then copy over all the faction relations. }
+			InGameFac := CloneGear( FLF );
+			InsertInvCom( Adv , InGameFac );
+			ModifyFacRelations( InGameFac );
+		end;
+		FLF := FLF^.Next;
+	end;
 end;
 
 Procedure CheckFactionPersonalities( Adv: GearPtr );
 	{ Check to make sure that the faction personalities are loaded, and that all }
 	{ positions are accounted for. }
 var
-	NPCSet: GearPtr;
+	NPCSet,NPCFile,FacNPCs,NewNPC: GearPtr;
+	T: Integer;
 begin
 	{ Search for the NPC Set. }
+	NPCSet := SeekCurrentLevelGear( Adv^.InvCom , GG_Set , GS_CharacterSet );
+	if NPCSet = Nil then begin
+		{ We don't have a NPCSet. Horrors! Better add one. }
+		NPCSet := NewGear( Nil );
+		NPCSet^.G := GG_Set;
+		NPCSet^.S := GS_CharacterSet;
+		InsertInvCom( Adv , NPCSet );
 
+		{ Load the NPC file from disk, and copy over the appropriate NPCs for the adventure faction. }
+		NPCFile := LoadFile( 'ARENADATA_Personalities.txt' , Series_Directory );
+		FacNPCs := SeekCurrentLevelGear( NPCFile , GG_Set , NAttValue( Adv^.NA , NAG_Personal , NAS_FactionID ) );
+		if FacNPCs <> Nil then begin
+			{ We found a set containing this faction's members. Move them over to the NPCSet. }
+			while FacNPCs^.InvCom <> Nil do begin
+				NewNPC := FacNPCs^.InvCom;
+				DelinkGear( FacNPCs^.InvCom , NewNPC );
+				InsertInvCom( NPCSet , NewNPC );
+			end;
+
+		end else begin
+			{ We found nothing. Create a bunch of stand-in NPCs. }
+			for t := 1 to NumArenaNPCs do begin
+				NewNPC := LoadNewNPC( 'CITIZEN' , True );
+				SetNAtt( NewNPC^.NA , NAG_Personal , NAS_CID , T );
+				InsertInvCom( NPCSet , NewNPC );
+			end;
+		end;
+		DisposeGear( NPCFile );
+	end;
 end;
 
 Procedure PlayArenaCampaign( Camp: CampaignPtr );
@@ -1534,7 +1693,10 @@ initialization
 	ADR_MechaMenu := Nil;
 	ADR_HQCamp := Nil;
 
+	ANPC_MasterPersona := LoadFile( 'ARENADATA_NPCMessages.txt' , Series_Directory );
 
 finalization
+
+	DisposeGear( ANPC_MasterPersona );
 
 end.

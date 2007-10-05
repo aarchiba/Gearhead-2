@@ -1208,7 +1208,16 @@ begin
 	it := SAttValue( M^.SA , 'SDL_COLORS' );
 	{ Props usually but not always have their own palette, so if no }
 	{ color has been stored in SDL_COLORS assume no color is needed. }
-	if ( it = '' ) and ( M^.G <> GG_Prop ) and ( M^.G <> GG_MetaTerrain ) then begin
+	if ( it = '' ) and ( M^.G <> GG_Prop ) and ( M^.G <> GG_MetaTerrain ) and ( GB = Nil ) then begin
+		if M^.G = GG_Character then begin
+			it := '100 100 100';
+			it := it + ' ' + SkinColor[ Random(NumSkinColor) ] + ' ' + HairColor[ Random(NumHairColor) ];
+		end else begin
+			it := '175 175 171 100 100 120 0 200 200';
+		end;
+		SetSAtt( M^.SA , 'SDL_COLORS <' + it + '>' );
+
+	end else if ( it = '' ) and ( M^.G <> GG_Prop ) and ( M^.G <> GG_MetaTerrain ) then begin
 		T := NAttValue( M^.NA , NAG_Location , NAS_Team );
 		Team := LocateTeam( GB , T );
 		if Team <> Nil then it := SAttValue( Team^.SA , 'SDL_COLORS' );

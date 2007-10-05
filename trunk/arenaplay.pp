@@ -29,6 +29,14 @@ uses gears,locale;
 Const
 	SATT_Artifact = 'ARTIFACT';
 
+	{ When playing in arena mode, the following string attributes will be added to the scene }
+	{ following battle. }
+	ARENAREPORT_CharDied = 'AR_PCDIED';
+	ARENAREPORT_CharRecovered = 'AR_PCRECOVERED';
+	ARENAREPORT_MechaDestroyed = 'AR_MECHADIED';
+	ARENAREPORT_MechaRecovered = 'AR_MECHARECOVERED';
+
+
 Procedure CombatMain( Camp: CampaignPtr );
 Function ScenePlayer( Camp: CampaignPtr ; Scene: GearPtr; var PCForces: GearPtr ): Integer;
 
@@ -887,7 +895,7 @@ begin
 end;
 
 
-Procedure ApplyEmergencyHealing( GB: GameboardPtr );
+Procedure ApplyEmergencyHealing( Adv: GearPtr; GB: GameboardPtr );
 	{ Apply healing to any character or mecha on the PC's team that has been destroyed. }
 	{ Anything not restored to health by this procedure is likely to be deleted. If that }
 	{ includes the PC, then the game is over. }
@@ -919,28 +927,50 @@ begin
 					end;
 				end;	{ Checking the repair skills. }
 
-				if ( PC^.G = GG_Character ) and ( Team = NAV_DefPlayerTeam ) and Destroyed( PC ) then begin
-					{ At this point in time, the PC is dead. Attempt to load a }
-					{ rescue scenario. If the rescue fails, then the PC will be }
-					{ perminantly dead. }
-					if ( NAttValue( PC^.NA , NAG_Personal , NAS_Resurrections ) < ((NAttValue( PC^.NA , NAG_CharDescription , NAS_Heroic ) div 10 ) + 1 + RollStep( 1 ) ) ) and StartRescueScenario( GB , PC , '*DEATH' ) then begin
-						AddNAtt( PC^.NA , NAG_Personal , NAS_Resurrections , 1 );
-						if Random( 3 ) = 1 then ApplyPerminantInjury( PC );
-						AddReputation( PC , 6 , -10 );
-						AddMoraleDmg( PC , 100 );
-					end;
-				end else if GearActive( PC ) then begin
-					StripNAtt( PC , NAG_StatusEffect );
-					if PC^.G = GG_Mecha then begin
-						DialogMsg( ReplaceHash( MsgString( 'DJ_MECHARECOVERED' ) , GearName( PC ) ) );
-					end else if ( PC^.G = GG_Character ) and ( Team = NAV_DefPlayerTeam ) then begin
-						StartRescueScenario( GB , PC , '*RECOVERY' );
-						AddReputation( PC , 6 , -10 );
-						AddMoraleDmg( PC , 100 );
+				{ What happense next depends on whether this is arena mode or RPG mode. }
+				if ( Adv <> Nil ) and ( Adv^.S = GS_ArenaCampaign ) then begin
+					{ Killed PCs who don't get the medicine roll in arena mode are out of luck. }
+					{ Record a message in the scene to tell whether this gear is recovered }
+					{ or destroyed. }
+					if PC^.G = GG_Character then begin
+						{ It's a character. The message will be handled by the medic. }
+						if NotDestroyed( PC ) then begin
+							AddSAtt( GB^.Scene^.SA , ARENAREPORT_CharRecovered , GearName( PC ) );
+						end else begin
+							AddSAtt( GB^.Scene^.SA , ARENAREPORT_CharDied , GearName( PC ) );
+						end;
 					end else begin
-						DialogMsg( ReplaceHash( MsgString( 'DJ_OUTOFACTION' ) , PilotName( PC ) ) );
+						{ It's a thing. The message will be handled by the mechanic. }
+						if NotDestroyed( PC ) then begin
+							AddSAtt( GB^.Scene^.SA , ARENAREPORT_MechaRecovered , GearName( PC ) );
+						end else begin
+							AddSAtt( GB^.Scene^.SA , ARENAREPORT_MechaDestroyed , GearName( PC ) );
+						end;
 					end;
-				end;
+				end else begin
+					if ( PC^.G = GG_Character ) and ( Team = NAV_DefPlayerTeam ) and Destroyed( PC ) then begin
+						{ At this point in time, the PC is dead. Attempt to load a }
+						{ rescue scenario. If the rescue fails, then the PC will be }
+						{ perminantly dead. }
+						if ( NAttValue( PC^.NA , NAG_Personal , NAS_Resurrections ) < ((NAttValue( PC^.NA , NAG_CharDescription , NAS_Heroic ) div 10 ) + 1 + RollStep( 1 ) ) ) and StartRescueScenario( GB , PC , '*DEATH' ) then begin
+							AddNAtt( PC^.NA , NAG_Personal , NAS_Resurrections , 1 );
+							if Random( 3 ) = 1 then ApplyPerminantInjury( PC );
+							AddReputation( PC , 6 , -10 );
+							AddMoraleDmg( PC , 100 );
+						end;
+					end else if GearActive( PC ) then begin
+						StripNAtt( PC , NAG_StatusEffect );
+						if PC^.G = GG_Mecha then begin
+							DialogMsg( ReplaceHash( MsgString( 'DJ_MECHARECOVERED' ) , GearName( PC ) ) );
+						end else if ( PC^.G = GG_Character ) and ( Team = NAV_DefPlayerTeam ) then begin
+							StartRescueScenario( GB , PC , '*RECOVERY' );
+							AddReputation( PC , 6 , -10 );
+							AddMoraleDmg( PC , 100 );
+						end else begin
+							DialogMsg( ReplaceHash( MsgString( 'DJ_OUTOFACTION' ) , PilotName( PC ) ) );
+						end;
+					end;
+				end; { If ArenaCampaign ... Else }
 			end;	{ if Destroyed... }
 		end;
 		PC := PC^.Next;
@@ -972,7 +1002,7 @@ begin
 	{ Step Two: Apply emergency healing to all. }
 	{ If this scene is of a NORESCUE type, don't bother. }
 	if ( GB^.Scene = Nil ) or not AStringHasBString( SAttValue( GB^.Scene^.SA , 'SPECIAL' ) , 'NORESCUE' ) then begin
-		ApplyEmergencyHealing( GB );
+		ApplyEmergencyHealing( FindRoot( GB^.Scene ) , GB );
 	end;
 
 	{ Step Three: Remove PILOT tags from mecha whose pilots are }
