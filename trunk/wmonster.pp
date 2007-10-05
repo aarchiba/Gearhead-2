@@ -32,6 +32,8 @@ const
 
 
 Procedure RestockRandomMonsters( GB: GameBoardPtr );
+
+Function MechaMatchesFaction( Mek: GearPtr; const Factions: String ): Boolean;
 Function GenerateMechaList( MPV: LongInt; Factions,Desc: String ): SAttPtr;
 Function PurchaseForces( ShoppingList: SAttPtr; UPV: LongInt ): GearPtr;
 Procedure StockSceneWithEnemies( Scene: GearPtr; UPV: longInt; TeamID: Integer );
@@ -213,11 +215,17 @@ begin
 
 end;
 
+Function MechaMatchesFaction( Mek: GearPtr; const Factions: String ): Boolean;
+	{ Return TRUE if this mecha matches one of the listed factions. }
+begin
+	MechaMatchesFaction := PartAtLeastOneMatch( SAttValue( Mek^.SA , 'FACTIONS' ) , Factions );
+end;
+
 Function MechaMatchesFactionAndTerrain( Mek: GearPtr; const Factions,Terrain_Type: String ): Boolean;
 	{ Return TRUE if MEK is a legal design for the faction and map, }
 	{ or FALSE otherwise. }
 begin
-	MechaMatchesFactionAndTerrain := ( Mek^.G = GG_Mecha ) and PartAtLeastOneMatch( SAttValue( Mek^.SA , 'FACTIONS' ) , Factions ) and PartMatchesCriteria( SAttValue( Mek^.SA , 'TYPE' ) , Terrain_Type );
+	MechaMatchesFactionAndTerrain := ( Mek^.G = GG_Mecha ) and MechaMatchesFaction( Mek , Factions ) and PartMatchesCriteria( SAttValue( Mek^.SA , 'TYPE' ) , Terrain_Type );
 end;
 
 
@@ -233,7 +241,6 @@ var
 	SRec: SearchRec;
 	it,current: SAttPtr;
 	DList,Mek: GearPtr;
-	F: Text;
 	N,MinValFound: LongInt;	{ The lowest value found so far. }
 	MVInfo: String;		{ Info on the mek with the lowest value. }
 begin
@@ -294,7 +301,6 @@ Function PurchaseForces( ShoppingList: SAttPtr; UPV: LongInt ): GearPtr;
 		{ a mek from disk. }
 	var
 		N: LongInt;
-		F: Text;
 		FList,Mek: GearPtr;
 	begin
 		{ Load the design file. }
@@ -622,7 +628,6 @@ var
 	SRec: SearchRec;
 	M,M2,Fac,DList,RScene: GearPtr;
 	Cost,Minimum_Cost, Maximum_Cost: LongInt;
-	MekName: String;
 begin
 	MechaList := Nil;
 

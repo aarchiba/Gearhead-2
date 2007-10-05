@@ -510,7 +510,7 @@ procedure SelectMoveMode( Mek: GearPtr; GB: GameBoardPtr );
 	{ Set the mek's MoveMode attribute to the highest }
 	{ active movemode that this mek has. }
 var
-	T,MM,MaxSpeed,Terr: Integer;
+	T,MM,MaxSpeed: Integer;
 	P: Point;
 begin
 	MM := 0;
@@ -639,7 +639,6 @@ Procedure AttackTargetOfOppurtunity( GB: GameBoardPtr; Mek: GearPtr );
 var
 	weapon: GearPtr;
 	TL,Target: GearPtr;
-	BestWeight: LongInt;
 { *** PROCEDURES BLOCK *** }
 	procedure SeekFarWeapon( Part: GearPtr );
 		{ Find the weapon with the longest current range. }
@@ -665,7 +664,6 @@ begin
 	{ Start by finding a good weapon to fire with. }
 	{ Preference will be given to the weapon with the longest range. }
 	Weapon := Nil;
-	BestWeight := -10000;
 	SeekFarWeapon( Mek^.SubCom );
 	SeekFarWeapon( Mek^.InvCom );
 

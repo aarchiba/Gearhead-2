@@ -17,9 +17,9 @@ ArenaMission
 
 	% L1 = Initialization Counter
 	% L2 = Victory Counter
-	Start <if= L1 0 Alert 1 L= 1 1>
-	nu1 <if= T1 0 if= L2 0 L= 2 1 Alert 2 LoseArenaMission Print 2>
-	nu2 <if= T2 0 if= L2 0 Salvage Return XPV 100 L= 2 1 Alert 3 WinArenaMission Print 3>
+	Start <if= L1 0  CommanderSays 1  L= 1 1>
+	nu1 <if= T1 0 if= L2 0 L= 2 1 Alert 2 LoseArenaMission>
+	nu2 <if= T2 0 if= L2 0 Salvage Return XPV 100 L= 2 1 Alert 3 WinArenaMission>
 
 	Msg1 <Enemy mecha have been spotted. Eliminate them all.>
 	Msg2 <The mission is a failure.>
@@ -55,9 +55,9 @@ ArenaMission
 
 	% L1 = Initialization Counter
 	% L2 = Victory Counter
-	Start <if= L1 0 Alert 1 L= 1 1>
-	nu1 <if= T1 0 if= L2 0 L= 2 1 Alert 2 LoseArenaMission Print 2>
-	nu2 <if= T2 0 if= L2 0 Salvage Return XPV 100 L= 2 1 Alert 3 WinArenaMission Print 3>
+	Start <if= L1 0 CommanderSays 1 L= 1 1>
+	nu1 <if= T1 0 if= L2 0 L= 2 1 Alert 2 LoseArenaMission>
+	nu2 <if= T2 0 if= L2 0 Salvage Return XPV 100 L= 2 1 Alert 3 WinArenaMission>
 
 	Msg1 <Enemy mecha have been spotted. Eliminate them all.>
 	Msg2 <The mission is a failure.>
@@ -96,9 +96,9 @@ ArenaMission
 
 	% L1 = Initialization Counter
 	% L2 = Victory Counter
-	Start <if= L1 0 Alert 1 L= 1 1>
-	nu1 <if= T1 0 if= L2 0 L= 2 1 Alert 2 LoseArenaMission Print 2>
-	nu2 <if= T2 0 if= L2 0 Salvage Return XPV 100 L= 2 1 Alert 3 WinArenaMission Print 3>
+	Start <if= L1 0 CommanderSays 1 L= 1 1>
+	nu1 <if= T1 0 if= L2 0 L= 2 1 Alert 2 LoseArenaMission>
+	nu2 <if= T2 0 if= L2 0 Salvage Return XPV 100 L= 2 1 Alert 3 WinArenaMission>
 
 	Msg1 <Enemy mecha have been spotted. Eliminate them all.>
 	Msg2 <The mission is a failure.>
@@ -138,13 +138,13 @@ ArenaMission
 	% L1 = Initialization Counter
 	% L2 = Victory Counter
 	% L3 = Destroy Base Counter
-	Start <if= L1 0 Alert 1 L= 1 1>
+	Start <if= L1 0 CommanderSays 1 L= 1 1>
 	nu1 <if= T1 0 Return if= L2 0 L= 2 1 if= L3 1 else GoLoseMission Goto GoWinMission>
 	nu2 <if= T2 0 if= L3 1 if= L2 0 L= 2 1 Return Goto GoWinMission>
 	nu3 <if= T3 0 if= L3 0 L= 3 1 Print 5 XPV 100 if= T2 0 Return L= 2 1 Goto GoWinMission>
 
-	GoWinMission <Salvage Alert 3 WinArenaMission Print 3>
-	GoLoseMission <Alert 2 LoseArenaMission Print 2>
+	GoWinMission <Salvage Alert 3 WinArenaMission>
+	GoLoseMission <Alert 2 LoseArenaMission>
 
 	5Min <if= d2 1  WMecha 3 Threat ArenaRenown 100>
 
@@ -200,13 +200,13 @@ ArenaMission
 	% L1 = Initialization Counter
 	% L2 = Victory Counter
 	% L3 = Destroy Base Counter
-	Start <if= L1 0 Alert 1 L= 1 1>
+	Start <if= L1 0  CommanderSays 1  L= 1 1>
 	nu1 <if= T1 0 Return if= L2 0 L= 2 1 if= L3 0 else GoLoseMission if= T2 0 else GoLoseMission Goto GoWinMission>
 	nu2 <if= T2 0 if= L2 0 L= 2 1 Return if= L3 1 else GoWinMission Goto GoLoseMission>
 	nu3 <if= T3 0 if= L3 0 L= 3 1>
 
-	GoWinMission <Salvage Alert 3 WinArenaMission Print 3 XPV 100>
-	GoLoseMission <Alert 2 LoseArenaMission Print 2>
+	GoWinMission <Salvage Alert 3 WinArenaMission XPV 100>
+	GoLoseMission <Alert 2 LoseArenaMission>
 
 	Msg1 <Defend the base against enemy mecha.>
 	Msg2 <The mission is a failure.>
@@ -236,17 +236,23 @@ ArenaMission
 		home <Deploy Zone 2>
 
 		rect
+		MFX 40
+		MFY 10
 		width 5
 		height 5
 		home <Deploy Zone 1>
 
 		rect
+		MFX 10
+		MFY 40
 		width 5
 		height 5
 		home <Deploy Zone 2>
 
 		rect
 		name <The Base>
+		MFX 5
+		MFY 5
 		Height 8
 		Width 8
 		FloorType 6
@@ -289,14 +295,14 @@ ArenaMission
 	% L1 = Initialization Counter
 	% L2 = Victory Counter
 	% L3 = Destroy Base Counter
-	Start <if= L1 0 Alert 1 L= 1 1>
+	Start <if= L1 0 CommanderSays 1 L= 1 1>
 	nu1 <if= T1 0 Return if= L2 0 L= 2 1 if= L3 1 else GoLoseMission Goto GoWinMission>
 	nu2 <if= T2 0 if= L3 1 if= L2 0 L= 2 1 Return Goto GoWinMission>
 	nu3 <if= T3 0 else GoN3SomeLeft if= L3 0 L= 3 1 Print 5 XPV 100 if= T2 0 Return L= 2 1 Goto GoWinMission>
 	GoN3SomeLeft <ifG T3 0 Print 4>
 
-	GoWinMission <Salvage Alert 3 WinArenaMission Print 3>
-	GoLoseMission <Alert 2 LoseArenaMission Print 2>
+	GoWinMission <Salvage Alert 3 WinArenaMission>
+	GoLoseMission <Alert 2 LoseArenaMission>
 
 	5Min <if= d2 1  WMecha 3 Threat ArenaRenown 100>
 

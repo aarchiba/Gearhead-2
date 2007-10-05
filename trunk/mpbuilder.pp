@@ -174,7 +174,7 @@ var
 	InitOK: Boolean;
 	T,NumParam,NumElem: Integer;
 	I,SubPlot,SPList: GearPtr;
-	cash,SPID: LongInt;
+	SPID: LongInt;
 	SPReq: String;
 begin
 	{ Assign the values to this shard. }

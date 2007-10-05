@@ -142,7 +142,6 @@ const
 
 var
 	script_macros,value_macros,Default_Scene_Scripts: SAttPtr;
-	ASRD_InfoGear: GearPtr;
 	ASRD_GameBoard: GameBoardPtr;
 	ASRD_MemoMessage: String;
 
@@ -189,7 +188,6 @@ begin
 
 	if RPM^.NumItem <> 0 then begin
 		ASRD_GameBoard := GB;
-		ASRD_InfoGear := PC;
 		N := SelectMenu( RPM , @ArenaScriptReDraw );
 
 		if N <> -1 then begin
@@ -290,7 +288,6 @@ var
 
 			repeat
 				M := RetrieveSAtt( MemoList , N );
-				ASRD_InfoGear := Nil;
 				ASRD_GameBoard := GB;
 				ASRD_MemoMessage := M^.Info;
 				D := SelectMenu( RPM , @MemoPageRedraw );
@@ -334,14 +331,12 @@ Function YesNoMenu( GB: GameBoardPtr; Prompt,YesMsg,NoMsg: String ): Boolean;
 var
 	rpm: RPGMenuPtr;
 	N: Integer;
-	PC: GearPtr;
 begin
 	RPM := CreateRPGMenu( MenuItem , MenuSelect , ZONE_MemoMenu );
 	AddRPGMenuItem( RPM , YesMsg , 1 );
 	AddRPGMenuItem( RPM , NoMsg , -1 );
 	RPM^.Mode := RPMNoCancel;
 
-	ASRD_InfoGear := Nil;
 	ASRD_GameBoard := GB;
 	ASRD_MemoMessage := Prompt;
 	N := SelectMenu( RPM , @MemoPageRedraw );
@@ -2375,8 +2370,6 @@ end;
 Procedure ProcessIfSafeArea( var Event: String; GB: GameBoardPtr; Source: GearPtr );
 	{ Return TRUE if the current scene is a Safe Area (as determined }
 	{ by the function of the same name), or FALSE otherwise. }
-var
-	Desc: String;
 begin
 	if ( GB <> Nil ) and IsSafeArea( GB ) then begin
 		IfSuccess( Event );
@@ -2947,7 +2940,6 @@ Procedure ProcessDeployGG( var Event: String; GB: GameBoardPtr; Source: GearPtr 
 	{ Only physical gears can be moved in this way. }
 var
 	TID: Integer;
-	Scene: GearPtr;
 begin
 	{ Check to make sure we have a valid gear to move. }
 	if ( Grabbed_Gear <> Nil ) and ( GB <> Nil ) and ( Grabbed_Gear^.G >= 0 ) then begin
@@ -2968,7 +2960,6 @@ Procedure ProcessDynaGG( var Event: String; GB: GameBoardPtr; Source: GearPtr );
 	{ If the specified scene is 0, the gear will be "frozen" isntead. }
 var
 	TID: Integer;	{ Scene ID, Team ID. }
-	Scene: GearPtr;
 begin
 	{ Check to make sure we have a valid gear to move. }
 	if ( Grabbed_Gear <> Nil ) and ( Grabbed_Gear^.G >= 0 ) and ( SCRIPT_DynamicEncounter <> Nil ) then begin
@@ -3476,9 +3467,8 @@ end;
 Procedure ProcessNextComp( var Event: String; GB: GameBoardPtr; Source: GearPtr );
 	{ Prepare things for the next component to be loaded. }
 var
-	Story,Remnant: GearPtr;
+	Story: GearPtr;
 	Base,Changes: String;
-	FoundRemnant: Boolean;
 begin
 	Story := StoryMaster( GB , Source );
 	Changes := ExtractWord( Event );
@@ -3615,7 +3605,6 @@ Procedure ProcessRetreat( var Event: String; GB: GameBoardPtr; Source: GearPtr )
 var
 	Team: Integer;
 	Mek: GearPtr;
-	P: Point;
 begin
 	{ ERROR CHECK - GB must be defined!!! }
 	if GB = Nil then Exit;
@@ -3627,7 +3616,6 @@ begin
 	Mek := GB^.Meks;
 	while Mek <> Nil do begin
 		if GearOperational( Mek ) and ( NAttValue( Mek^.NA , NAG_Location , NAS_Team ) = Team ) then begin
-			P := GearCurrentLocation( Mek );
 			SetNAtt( Mek^.NA , NAG_Location , NAS_X , 0 );
 			SetNAtt( Mek^.NA , NAG_Location , NAS_Y , 0 );
 		end;
@@ -3662,7 +3650,6 @@ Procedure ProcessGRunAway( var Event: String; GB: GameBoardPtr; Source: GearPtr 
 	{ from the map. A Number Of Units trigger is then set. }
 var
 	Mek,NPC: GearPtr;
-	P: Point;
 begin
 	{ ERROR CHECK - GB must be defined!!! }
 	if ( GB = Nil ) or ( Grabbed_Gear = Nil ) then Exit;
@@ -3671,7 +3658,6 @@ begin
 	Mek := GB^.Meks;
 	while Mek <> Nil do begin
 		if Mek = Grabbed_Gear then begin
-			P := GearCurrentLocation( Mek );
 			SetNAtt( Mek^.NA , NAG_Location , NAS_X , 0 );
 			SetNAtt( Mek^.NA , NAG_Location , NAS_Y , 0 );
 
@@ -3680,7 +3666,6 @@ begin
 		end else if IsMasterGear( Mek ) then begin
 			NPC := LocatePilot( Mek );
 			if ( NPC <> Nil ) and ( NPC = Grabbed_Gear ) then begin
-				P := GearCurrentLocation( Mek );
 				SetNAtt( Mek^.NA , NAG_Location , NAS_X , 0 );
 				SetNAtt( Mek^.NA , NAG_Location , NAS_Y , 0 );
 
@@ -4003,7 +3988,6 @@ Procedure ProcessGAbsoluteLevel( var Event: String; GB: GameBoardPtr; Source: Ge
 	{ Unlike the above procedure, this one scales the skill points by a % based on }
 	{ their current value. }
 var
-	Skill: NAttPtr;
 	SkLvl: Integer;
 begin
 	{ Find out what level the NPC should be at. }
@@ -4671,7 +4655,6 @@ Function StartRescueScenario( GB: GameBoardPtr; PC: GearPtr; Context: String ): 
 	end;	{ RescueContext }
 var
 	Rescue_list,R: GearPtr;
-	RC: String;
 	ItWorked: Boolean;
 begin
 	{ If no scene, can't be rescued. Sorry. }

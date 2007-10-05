@@ -1429,7 +1429,6 @@ Function RandomNPC( Adv: GearPtr; Fac,Hometown: Integer ): GearPtr;
 	{ for a regular character. }
 var
 	NPC,City: GearPtr;
-	msg: String;
 begin
 	NPC := NewGear( Nil );
 	NPC^.G := GG_Character;

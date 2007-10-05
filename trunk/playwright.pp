@@ -1684,8 +1684,6 @@ end;
 Function InsertRSC( Source,Frag: GearPtr; GB: GameBoardPtr ): Boolean;
 	{ Insert random scene content, then save some information that will be }
 	{ needed later. }
-var
-	it: Boolean;
 begin
 	InsertRSC := MatchPlotToAdventure( Source , Frag , GB , True , True , False );;
 end;
@@ -1693,9 +1691,7 @@ end;
 Procedure EndPlot( GB: GameBoardPtr; Adv,Plot: GearPtr );
 	{ This plot is over... }
 var
-	T: Integer;
 	P2,P3,M,M2: GearPtr;
-	EName: String;
 begin
 	{ Deal with metascenes and other things that need to be cleaned up. }
 	P2 := Plot^.SubCom;
@@ -1761,7 +1757,6 @@ var
 	All_Comps,C: GearPtr;
 	Shopping_List: NAttPtr;
 	plot_desc,desc: String;
-	t,N: Integer;
 	MergeOK,DeleteAllComps: Boolean;
 	Function TaskCanConclude: Boolean;
 		{ Return TRUE if this task can be a conclusion task, or FALSE otherwise. }

@@ -151,7 +151,7 @@ var
 	TMM: RPGMenuPtr;
 	N,T: Integer;
 	Mek: GearPtr;
-	msg,PName: String;
+	msg: String;
 begin
 	TMM := CreateRPGMenu( InfoGreen , InfoHilight , ZONE_Caption );
 
@@ -402,10 +402,7 @@ Function TrueLooker( GB: GameBoardPtr; X , Y: Integer ): Boolean;
 	{ If Mek <> Nil, do range calculations from that spot. }
 	{ If WPN <> Nil, allow weapon selection. }
 var
-	N,MekNum: Integer;
-	TMM: RPGMenuPtr;
 	A: Char;
-	P: Point;
 	Procedure RepositionCursor( D: Integer );
 	begin
 {$IFNDEF ASCII}
@@ -424,8 +421,6 @@ begin
 	end;
 
 	LOOKER_LastGearSelected := Nil;
-
-	if LOOKER_Origin <> Nil then P := GearCurrentLocation( LOOKER_Origin );
 
 	{ Start going here. }
 	repeat

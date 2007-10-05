@@ -51,11 +51,11 @@ implementation
 
 {$IFDEF ASCII}
 uses arenaplay,arenascript,interact,gearutil,narration,texutil,ghprop,rpgdice,ability,
-     ghchars,ghweapon,movement,ui4gh,vidmap,vidmenus,gearparser,playwright,randmaps,
+     ghchars,ghweapon,movement,ui4gh,vidmap,vidmenus,gearparser,playwright,randmaps,wmonster,
 	vidinfo,pcaction,menugear,navigate,services,skilluse,training,backpack,chargen;
 {$ELSE}
 uses arenaplay,arenascript,interact,gearutil,narration,texutil,ghprop,rpgdice,ability,
-     ghchars,ghweapon,movement,ui4gh,glmap,glmenus,gearparser,playwright,randmaps,
+     ghchars,ghweapon,movement,ui4gh,glmap,glmenus,gearparser,playwright,randmaps,wmonster,
 	glinfo,pcaction,menugear,navigate,services,skilluse,training,backpack,chargen;
 {$ENDIF}
 
@@ -866,15 +866,30 @@ var
 	m1,mek: GearPtr;	{ The start of the mecha file, }
 			{ and the mek being considered for purchase. }
 	N: Integer;
+	Factions,DefaultColors: String;
 begin
 	{ Create the list of mecha that can be purchased. }
 	MekList := AggregatePattern( '*.txt' , Design_Directory );
 
-	{ Remove non-mecha. }
+	{ Create the list of factions that mecha can be purchased from. }
+	Factions := 'GENERAL';
+	mek := SeekCurrentLevelGear( HQCamp^.Source^.InvCom , GG_Faction , HQFac( HQCamp ) );
+	if mek <> Nil then begin
+		Factions := Factions + ' ' + SAttValue( mek^.SA , 'DESIG' );
+		DefaultColors := 'SDL_COLORS <' + SAttValue( mek^.SA , 'mecha_colors' ) + '>';
+	end else begin
+		DefaultColors := 'SDL_COLORS <66 121 179 210 215 80 205 25 0>';
+	end;
+
+	{ Remove non-mecha, expensive mecha, and extra-factional mecha. }
+	{ I don't think extra-factional is a word, but it's 1:30 at night and you know what I mean. }
 	mek := MekList;
 	while mek <> Nil do begin
 		M1 := mek^.Next;
-		if ( Mek^.G <> GG_Mecha ) or ( ModifiedCost( HQCamp , GearValue( Mek ) , NAS_Shopping ) > HQCash( HQCamp ) ) then RemoveGear( MekList , Mek );
+		{ If it doesn't fit, remove it. }
+		if ( Mek^.G <> GG_Mecha ) or ( ModifiedCost( HQCamp , GearValue( Mek ) , NAS_Shopping ) > HQCash( HQCamp ) ) or not MechaMatchesFaction( Mek , Factions ) then RemoveGear( MekList , Mek )
+		{ If it does fit, paint it. }
+		else SetSAtt( Mek^.SA , DefaultColors );
 		mek := M1;
 	end;
 
@@ -1281,6 +1296,31 @@ end;
 
 Function MissionFrontEnd( HQCamp: CampaignPtr; Scene,PCForces: GearPtr ): Integer;
 	{ Play the mission, along with all the needed wrapper stuff. }
+	Procedure ReportRenownGain( R0,R1: Integer );
+		{ The team has gained some renown. If this causes a change in rank, }
+		{ the Intel officer will let the player know. }
+		{ R0 is initial renown, R1 is current renown. }
+	var
+		T,NewRank: Integer;
+	begin
+		NewRank := 0;
+		for t := 1 to 4 do begin
+			if ( R1 > ( t * 20 ) ) and ( R0 <= ( t * 20 ) ) then NewRank := T + 1;
+		end;
+		if NewRank <> 0 then HQMonologue( HQCamp^.Source , ANPC_Intel , ReplaceHash( ArenaNPCMessage( HQCamp^.Source , ANPC_Intel , 'GainPromotion' ) , MsgSTring( 'AHQRANK_' + BStr( NewRank ) ) ) );
+	end;
+	Procedure ReportRenownLoss( R0,R1: Integer );
+		{ Check for the team's rank dropping; if so, report it. }
+		{ R0 is initial renown, R1 is current renown. }
+	var
+		T,NewRank: Integer;
+	begin
+		NewRank := 0;
+		for t := 1 to 4 do begin
+			if ( R0 > ( t * 20 ) ) and ( R1 <= ( t * 20 ) ) then NewRank := T;
+		end;
+		if NewRank <> 0 then HQMonologue( HQCamp^.Source , ANPC_Intel , ReplaceHash( ArenaNPCMessage( HQCamp^.Source , ANPC_Intel , 'LosePromotion' ) , MsgSTring( 'AHQRANK_' + BStr( NewRank ) ) ) );
+	end;
 var
 	N: Integer;
 	C0,C1: LongInt;	{ Cash0, Cash1 }
@@ -1296,8 +1336,6 @@ begin
 	if N <> 0 then begin
 		{ The mission has ended properly; it wasn't quit. }
 		{ Do the debriefing here. }
-		R1 := HQRenown( HQCamp );
-
 		C1 := HQCash( HQCamp );
 		if C1 > C0 then begin
 			HQMonologue( HQCamp^.Source , ANPC_Commander , ReplaceHash( ArenaNPCMessage( HQCamp^.Source , ANPC_Commander , 'ReportEarnings' ) , BStr( C1 - C0 ) ) );
@@ -1317,7 +1355,11 @@ begin
 	{ See how much money the repairs/reload cost. }
 	if N <> 0 then begin
 		C0 := HQCash( HQCamp );
-		if C0 < C1 then DialogMsg( ReplaceHash( MsgString( 'ARENA_PAM_Expenses' ) , BStr( C1 - C0 ) ) );
+		if C0 < C1 then HQMonologue( HQCamp^.Source , ANPC_Mechanic , ReplaceHash( ArenaNPCMessage( HQCamp^.Source , ANPC_Mechanic , 'ReportExpenses' ) , BStr( C1 - C0 ) ) );
+
+		R1 := HQRenown( HQCamp );
+		if R1 > R0 then ReportRenownGain( R0 , R1 )
+		else if R1 < R0 then ReportRenownLoss( R0 , R1 );
 	end;
 
 	MissionFrontEnd := N;

@@ -813,7 +813,7 @@ const
 var
 	NGW: Boolean;
 	Tag,Category,Desc: String;
-	N,Cost,LL: LongInt;
+	N,LL: LongInt;
 	Scene,Fac: GearPtr;
 begin
 	{ Begin by assuming TRUE. }

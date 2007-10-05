@@ -693,8 +693,6 @@ end;
 
 Procedure DisplayConsoleHistory( GB: GameBoardPtr );
 	{ Display the console history, then restore the display. }
-var
-	SL: SAttPtr;
 begin
 	MoreText( Console_History , MoreHighFirstLine( Console_History ) );
 	CombatDisplay( GB );

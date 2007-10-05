@@ -2173,7 +2173,6 @@ var
 	ThrowParam: String;
 	SA: SAttPtr;
 	TZone,I: GearPtr;
-	cash: LongInt;
 begin
 	{ Initialize the values. }
 	Inc( High_Component_ID );

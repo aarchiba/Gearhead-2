@@ -173,9 +173,6 @@ end;
 
 Procedure InstallRedraw;
 	{ Redrawer for installing a part into a mecha. }
-var
-	N: Integer;
-	Part: GearPtr;
 begin
 	BP_Redraw;
 	DrawBPBorder;
@@ -277,8 +274,6 @@ Procedure MysteryBrowserRedraw;
 	{ Redraw the screen for the mystery display. }
 	{ This is the screen that shows no real information when the PC doesn't have }
 	{ the correct software to view a target. }
-var
-	Part: GearPtr;
 begin
 	if MPB_Redraw <> Nil then MPB_Redraw;
 	SetupFHQDisplay;
@@ -2020,13 +2015,12 @@ Procedure MysteryPartBrowser( Mek: GearPtr; RDP: RedrawProcedureType );
 	{ but lacks the proper identification software. }
 var
 	RPM: RPGMenuPtr;
-	N: Integer;
 begin
 	MPB_Redraw := RDP;
 	BP_Source := Mek;
 	RPM := CreateRPGMenu( MenuItem , MenuSelect , ZONE_FieldHQMenu );
 	AddRPGMenuItem( RPM , '????' , -1 );
-	N := SelectMenu( RPM , @MysteryBrowserRedraw );
+	SelectMenu( RPM , @MysteryBrowserRedraw );
 	DisposeRPGMenu( RPM );
 end;
 

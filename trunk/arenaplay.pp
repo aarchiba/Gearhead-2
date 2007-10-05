@@ -61,13 +61,8 @@ Procedure ProcessMovement( GB: GameBoardPtr; Mek: GearPtr );
 	{ here if need be. }
 var
 	result,Team: Integer;
-	X,Y: LongInt;
 	msg: String;
 begin
-	{ Store the initial position of the mek. }
-	X := NAttValue( Mek^.NA , NAG_Location , NAS_X );
-	Y := NAttValue( Mek^.NA , NAG_Location , NAS_Y );
-
 	{ Call the movement procedure, and store the result. }
 	result := EnactMovement( GB , Mek );
 
@@ -900,7 +895,7 @@ Procedure ApplyEmergencyHealing( Adv: GearPtr; GB: GameboardPtr );
 	{ Anything not restored to health by this procedure is likely to be deleted. If that }
 	{ includes the PC, then the game is over. }
 var
-	PC,TruePC: GearPtr;
+	PC: GearPtr;
 	team,T,SkRk: LongInt;
 begin
 	PC := GB^.Meks;
@@ -982,7 +977,7 @@ Procedure PreparePCForDelink( GB: GameBoardPtr );
 	{ posessed by the party; maybe call a rescue procedure. }
 var
 	PC,TruePC: GearPtr;
-	team,T,SkRk: LongInt;
+	team: LongInt;
 begin
 	{ Step One: Delink the pilots from their mecha. }
 	PC := GB^.Meks;
