@@ -779,15 +779,27 @@ end;
 
 Function HasSkill( PC: GearPtr; Skill: Integer ): Boolean;
 	{ Return TRUE if the PC has the listed skill, or FALSE otherwise. }
+var
+	it: Boolean;
 begin
-	{ Make sure we're dealing with the real PC here. }
-	PC := LocatePilot( PC );
-
-	if PC <> Nil then begin
-		HasSkill := ( NAttValue( PC^.NA , NAG_Skill , Skill ) > 0 ) or HasTalent( PC , NAS_JackOfAll );
+	if ( PC <> Nil ) and ( PC^.G = GG_Adventure ) then begin
+		PC := PC^.SubCom;
+		it := False;
+		while ( PC <> Nil ) and not it do begin
+			if PC^.G = GG_Character then it := HasSkill( PC , Skill );
+			PC := PC^.Next;
+		end;
 	end else begin
-		HasSkill := False;
+		{ Make sure we're dealing with the real PC here. }
+		PC := LocatePilot( PC );
+
+		if PC <> Nil then begin
+			it := ( NAttValue( PC^.NA , NAG_Skill , Skill ) > 0 ) or HasTalent( PC , NAS_JackOfAll );
+		end else begin
+			it := False;
+		end;
 	end;
+	HasSkill := it;
 end;
 
 Procedure SkillComment( const Msg: String );

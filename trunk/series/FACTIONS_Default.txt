@@ -100,6 +100,7 @@ Faction 6
 	SetEnemy 4 8 14
 	Controller 1
 	mecha_colors <75 200 212 80 80 85 200 100 0>
+mecha_colors <0 49 83 80 80 85 200 100 0>
 	chara_colors <20 90 130>
 
 	% Every 6 hours, check to load a new story.
@@ -133,6 +134,7 @@ Faction 7
 	jobs <CRAFT CORPO TRADE>
 	SetEnemy 2 8 13
 	mecha_colors <75 200 212  170 150 230   200 100 0>
+mecha_colors <172 225 175 77 93 83 250 100 0>
 	chara_colors <170 100 240>
 
 	FACRANK_0 <Wage Slave>
@@ -224,6 +226,8 @@ Faction 12
 	jobs <POLIT ADVEN FAITH MEDIA>
 	SetAlly 8
 	SetEnemy 11
+	mecha_colors <49 91 141 208 34 51 150 220 220>
+	chara_colors <>
 
 Faction 13
 	name <MUGL Enterprises>
@@ -256,6 +260,6 @@ Faction 14
 	SetAlly 11
 	SetEnemy 3 8
 	Controller 11
-	mecha_colors <>
-	chara_colors <>
+	mecha_colors <153 17 153 230 20 130 75 200 212>
+	chara_colors <153 17 153>
 

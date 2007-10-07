@@ -125,7 +125,7 @@ ArenaMission
 	MapWidth 50
 	MapHeight 50
 
-	PayRate 500
+	PayRate 1000
 
 	SpaceMap
 	SpaceScroll
@@ -191,7 +191,7 @@ ArenaMission
 	MapWidth 50
 	MapHeight 50
 
-	PayRate 400
+	PayRate 800
 
 	WildMap
 
@@ -202,10 +202,11 @@ ArenaMission
 	% L3 = Destroy Base Counter
 	Start <if= L1 0  CommanderSays 1  L= 1 1>
 	nu1 <if= T1 0 Return if= L2 0 L= 2 1 if= L3 0 else GoLoseMission if= T2 0 else GoLoseMission Goto GoWinMission>
-	nu2 <if= T2 0 if= L2 0 L= 2 1 Return if= L3 1 else GoWinMission Goto GoLoseMission>
+	nu2 <if= T2 0 if= T4 0 if= L2 0 L= 2 1 Return if= L3 1 else GoWinMission Goto GoLoseMission>
 	nu3 <if= T3 0 if= L3 0 L= 3 1>
+	nu4 <Goto nu2>
 
-	GoWinMission <Salvage Alert 3 WinArenaMission XPV 100>
+	GoWinMission <Salvage Alert 3 WinArenaMission XPV * T3 75>
 	GoLoseMission <Alert 2 LoseArenaMission>
 
 	Msg1 <Defend the base against enemy mecha.>
@@ -221,8 +222,9 @@ ArenaMission
 		Team 2
 		SetAlly 4
 		SetEnemy 1 3
-		Deploy <SetSelfFaction M1 WMecha 2 Threat ArenaRenown 350>
-		home <Deploy Zone 1>
+		Deploy <SetSelfFaction M1 WMecha 2 Threat ArenaRenown 300>
+		ParaX 20
+		ParaY 40
 
 		Team 3
 		SetEnemy 2 4
@@ -232,22 +234,9 @@ ArenaMission
 		Team 4
 		SetAlly 2
 		SetEnemy 1 3
-		Deploy <SetSelfFaction M1 WMecha 2 Threat ArenaRenown 350>
-		home <Deploy Zone 2>
-
-		rect
-		MFX 40
-		MFY 10
-		width 5
-		height 5
-		home <Deploy Zone 1>
-
-		rect
-		MFX 10
-		MFY 40
-		width 5
-		height 5
-		home <Deploy Zone 2>
+		Deploy <SetSelfFaction M1 WMecha 4 Threat ArenaRenown 300>
+		ParaX 40
+		ParaY 20
 
 		rect
 		name <The Base>
@@ -256,7 +245,6 @@ ArenaMission
 		Height 8
 		Width 8
 		FloorType 6
-
 	end
 	inv
 		Prop 30
@@ -286,7 +274,7 @@ ArenaMission
 	MapWidth 50
 	MapHeight 50
 
-	PayRate 400
+	PayRate 500
 
 	WildMap
 
@@ -319,7 +307,8 @@ ArenaMission
 	sub
 		Team 1
 		SetEnemy 2 3 4
-		home <PC Team Start>
+		ParaX 5
+		ParaY 5
 
 		Team 2
 		SetEnemy 1
@@ -341,15 +330,12 @@ ArenaMission
 		rect
 		width 5
 		height 5
-		name <PC Team Start>
-
-		rect
-		width 5
-		height 5
 		name <Entry 2>
 
 		rect
 		name <The Fortress>
+		MFX 35
+		MFY 35
 		width 10
 		height 10
 		sub

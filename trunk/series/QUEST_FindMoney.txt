@@ -453,8 +453,8 @@ Content
 		*GoGoodbye <*GOODBYE>
 		result1 <NewChat Say 2 V= 1 1 AddChat 3 AddChat 4>
 		result2 <Goto GoOpenShop>
-		result3 <ifChatNPCInPlay else GoR3NotHere NewChat Say 3 QMemo 5 AddChat 13>
-		GoR3NotHere <NewChat Say 4 QMemo 5 AddChat 13>
+		result3 <ifChatNPCInPlay else GoR3NotHere NewChat Say 3 QMemo %qid% 5 AddChat 13>
+		GoR3NotHere <NewChat Say 4 QMemo %qid% 5 AddChat 13>
 		result4 <NewChat Say 6 AddChat 5 AddChat 6>
 		result5 <Goto result3>
 		result6 <NewChat Say 7 AddChat 5 AddChat 7>
