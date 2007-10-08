@@ -89,6 +89,8 @@ var
 
 	ANPC_MasterPersona: GearPtr;
 
+	Arena_Mission_Master_List: GearPtr;
+
 
 { *** REDRAW PROCEDURES *** }
 
@@ -499,7 +501,7 @@ begin
 
 	{ Check for coupons. }
 	for t := 1 to NumMissionCouponTypes do begin
-		if ( Coupons_Per_Level[ T , Renown ] - NAttValue( HQCanp^.Source , NAG_MissionCoupon , T ) ) >  0 then begin
+		if ( Coupons_Per_Level[ T , Renown ] - NAttValue( HQCamp^.Source^.NA , NAG_MissionCoupon , T ) ) >  0 then begin
 			{ We have a coupon left. Add a note. }
 			HQC := HQC + ' ' + Coupon_Tag[ T ];
 		end;
@@ -516,21 +518,18 @@ Procedure AddMissions( HQCamp: CampaignPtr; N: Integer );
 	{ choose between. }
 var
 	Context: String;
-	Arena_Mission_Master_List,M: GearPtr;
+	M: GearPtr;
 	ShoppingList: NAttPtr;
 begin
-	{ Load the missions from disk. }
-	{ I load them each time this procedure is called to make sure the NPCs }
-	{ and other things are randomized correctly; also so I can make changes }
-	{ to the mission lists while playing without restarting. }
-	Arena_Mission_Master_List := AggregatePattern( 'ARENAMISSION_*.txt' , Series_Directory );
-
 	{ Start by determining the arena unit's context. This is determied by the }
 	{ current faction being fought for plus the arena unit's renown. }
 	Context := HQContext( HQCamp );
 
 	{ Next create the list of potential content to add. }
-	ShoppingList := CreateComponentList( Arena_Mission_Master_List , Context );
+	{ There are two content lists- regular content, and reward content. One reward mission }
+	{ should be loaded per five regular missions. A core campaign mission could also be selected, }
+	{ but this is handled differently. }
+	ShoppingList := CreateComponentList( Arena_Mission_Master_List , '*MISSION ' + Context );
 
 	while ( ShoppingList <> Nil ) and ( N > 0 ) do begin
 		M := CloneGear( SelectComponentFromList( Arena_Mission_Master_List , ShoppingList ) );
@@ -540,7 +539,6 @@ begin
 	end;
 
 	DisposeNAtt( ShoppingList );
-	DisposeGear( Arena_Mission_Master_List );
 end;
 
 Procedure UpdateMissions( HQCamp: CampaignPtr );
@@ -1788,8 +1786,11 @@ initialization
 
 	ANPC_MasterPersona := LoadFile( 'ARENADATA_NPCMessages.txt' , Series_Directory );
 
-finalization
+	Arena_Mission_Master_List := LoadRandomSceneContent( 'ARENAMISSION_*.txt' , Series_Directory );
 
+
+finalization
+	DisposeGear( Arena_Mission_Master_List );
 	DisposeGear( ANPC_MasterPersona );
 
 end.

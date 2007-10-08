@@ -1,6 +1,6 @@
 ArenaMission
 	name <Asteroid Encounter>
-	requires <L5PAT>
+	requires <*MISSION L5PAT>
 	desc <Mecha from %name1% have been encountered on an asteroid.>
 
 	AsteroidMap
@@ -41,7 +41,7 @@ ArenaMission
 
 ArenaMission
 	name <Wilderness Encounter>
-	requires <ArenaOK>
+	requires <*MISSION ArenaOK>
 	desc <Mecha from %name1% have been encountered in the wilds.>
 
 	MapWidth 50
@@ -78,7 +78,7 @@ ArenaMission
 
 ArenaMission
 	name <Space Encounter>
-	requires <(SILKN|COMET|HOELL|PRIVA)>
+	requires <*MISSION (SILKN|COMET|HOELL|PRIVA)>
 	desc <Mecha from %name1% have been encountered in space.>
 
 	MapWidth 50
@@ -119,7 +119,7 @@ ArenaMission
 
 ArenaMission
 	name <Destroy Spaceship>
-	requires <ArenaOK (!Md|!Hi|!Ex)>
+	requires <*MISSION ArenaOK (!Md|!Hi|!Ex)>
 	desc <You must destroy a spaceship belonging to %name1%.>
 
 	MapWidth 50
@@ -185,7 +185,7 @@ ArenaMission
 
 ArenaMission
 	name <Defend The Base>
-	requires <Military>
+	requires <*MISSION Military>
 	desc <Our base is under attack by %name1%. You must defend it.>
 
 	MapWidth 50
@@ -268,7 +268,7 @@ ArenaMission
 
 ArenaMission
 	name <Destroy Enemy Base>
-	requires <Military>
+	requires <*MISSION Military>
 	desc <A base belonging to %name1% has been discovered. Destroy it completely.>
 
 	MapWidth 50

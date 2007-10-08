@@ -1922,7 +1922,16 @@ var
 	Desc: String;
 	T: Integer;
 begin
-	it := MatchPlotToAdventure( Source , Mission , Nil , TRUE , False , False );
+	{ Start by randomizing the NPCs. }
+{	P := Mission^.InvCom;
+	while P <> Nil do begin
+		if P^.G = GG_Character then IndividualizeNPC( P );
+		P := P^.Next;
+	end;}
+
+
+{	it := MatchPlotToAdventure( Source , Mission , Nil , TRUE , False , False );}
+	it := InsertPlot( Source , Mission , Nil , 0 );
 
 	{ If the mission was successfully added, we need to do extra initialization. }
 	if it then begin

@@ -1,6 +1,6 @@
 ArenaMission
 	name <Oribital Weapon>
-	requires <Military -!Ne -!Lo>
+	requires <*MISSION Military -!Ne -!Lo>
 	desc <%name1% has deployed an orbital laser satellite. It must be destroyed before it can be used against us.>
 
 	MapWidth 50
@@ -83,7 +83,7 @@ ArenaMission
 
 ArenaMission
 	name <Space Duel>
-	requires <Military -!Ne L5PAT>
+	requires <*MISSION Military -!Ne L5PAT>
 	desc <%name1% pilot %name2% has been encountered in space.>
 
 	SpaceMap
@@ -136,7 +136,7 @@ ArenaMission
 
 ArenaMission
 	name <Enemy Ace>
-	requires <Military -!Ne>
+	requires <*MISSION Military -!Ne>
 	desc <An asteroid base belonging to %name1% pilot %name2% has been found.>
 
 	AsteroidMap

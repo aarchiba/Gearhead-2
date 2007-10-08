@@ -227,22 +227,25 @@ begin
 
 			{ If any of the needed subplots fail, installation of this shard fails }
 			{ as well. }
-			for t := 1 to Num_Sub_Plots do begin
-				SPReq := SAttValue( Shard^.SA , 'SUBPLOT' + BStr( T ) );
-				if SPReq <> '' then begin
-					SPID := NewLayerID( Slot );
-					SetNAtt( Shard^.NA , NAG_SubPlotLayerID , T , SPID );
-					SubPlot := AddSubPlot( GB , Slot , Shard , SPReq , NumElem , PlotID , SPID );
-					if SubPlot <> Nil then begin
-						{ A subplot was correctly installed. Add it to the list. }
-						AppendGear( SPList , SubPlot );
-						NumElem := NumElem + NAttValue( SubPlot^.NA , NAG_Narrative , NAS_NumSPElementsUsed );
-					end else begin
-						{ The subplot request failed, meaning that this shard fails }
-						{ as well. }
-						InitOK := False;
-						RemoveGear( Slot^.InvCom , Shard );
-						Break;
+			{ Arena missions may not request subplots. Sorry, that's just how it is. }
+			if Shard^.G <> GG_Scene then begin
+				for t := 1 to Num_Sub_Plots do begin
+					SPReq := SAttValue( Shard^.SA , 'SUBPLOT' + BStr( T ) );
+					if SPReq <> '' then begin
+						SPID := NewLayerID( Slot );
+						SetNAtt( Shard^.NA , NAG_SubPlotLayerID , T , SPID );
+						SubPlot := AddSubPlot( GB , Slot , Shard , SPReq , NumElem , PlotID , SPID );
+						if SubPlot <> Nil then begin
+							{ A subplot was correctly installed. Add it to the list. }
+							AppendGear( SPList , SubPlot );
+							NumElem := NumElem + NAttValue( SubPlot^.NA , NAG_Narrative , NAS_NumSPElementsUsed );
+						end else begin
+							{ The subplot request failed, meaning that this shard fails }
+							{ as well. }
+							InitOK := False;
+							RemoveGear( Slot^.InvCom , Shard );
+							Break;
+						end;
 					end;
 				end;
 			end;
@@ -736,11 +739,12 @@ Procedure DeployPlot( GB: GameBoardPtr; Slot,Plot: GearPtr );
 	{ - Insert persona fragments as needed }
 	{ - Deploy elements as indicated by PLACE strings }
 begin
-	PrepAllPersonas( FindRoot( GB^.Scene ) , Plot , GB , NAttValue( Slot^.NA , NAG_Narrative , NAS_MaxPlotLayer ) + 1 );
+	PrepAllPersonas( FindRoot( Slot ) , Plot , GB , NAttValue( Slot^.NA , NAG_Narrative , NAS_MaxPlotLayer ) + 1 );
 
-	MoveElements( GB , Plot );
-
-	PrepMetascenes( FindRoot( GB^.Scene ) , Plot , GB );
+	if Plot^.G <> GG_Scene then begin
+		MoveElements( GB , Plot );
+		PrepMetascenes( FindRoot( Slot ) , Plot , GB );
+	end;
 end;
 
 Function InitMegaPlot( GB: GameBoardPtr; Slot,Plot: GearPtr; Threat: Integer ): GearPtr;
