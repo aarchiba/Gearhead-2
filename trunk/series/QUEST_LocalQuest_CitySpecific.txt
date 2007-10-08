@@ -53,7 +53,8 @@ Content
 		result4 <AddLawful -5 AddEasygoing -10 AddReact 20 History 4 DeleteItem %5% XPV 100 ActivateMeme %6% %s1% Goto .%id1%_GoInit>
 		result5 <EndChat Say 6>
 		result6 <NewChat Say 7 AddChat 7 AddChat 8 AddChat 9>
-		result7 <NewChat Say 8 QMemo %qid% 9 V= 1 1 SetQuestStatus %qid% %id% GiveItem %5%>
+		result7 <ifChatNPCInPlay else GoR7NotHere NewChat Say 8 QMemo %qid% 9 V= 1 1 SetQuestStatus %qid% %id% GiveItem %5%>
+		GoR7NotHere <NewChat Say 18>
 		result8 <NewChat Say 10>
 		result9 <NewChat Say 11 AddChat 10 AddChat 11>
 		result10 <Goto result7>
@@ -79,6 +80,7 @@ Content
 		Msg15 <You don't sound like you really mean that... the burger sauce must have rotted your brain...>
 		Msg16 <I'm not telling you my plan... You might be one of them!>
 		Msg17 <The price we pay for good food is eternal vigilance and sometimes violence.>
+		Msg18 <Come see me in \SCENE %s1% then. I can't do everything over the phone!>
 		Prompt1 <It has been done.>
 		CPrompt1 <if= ItemScene %5% %s4% Accept>
 		Prompt2 <Uh, no, not yet.>
@@ -125,12 +127,12 @@ Content
 		Msg9 <Good. It's nice to know that we have the trust of the public.>
 		Msg10 <Reports indicate that \OPR %1% can be found at \SCENE %s1% . Good luck.>
 		Prompt1 <I have \PPR %1% Bac-Bomb right here.>
-		CPrompt1 <ifKeyItem %5% Accept>
+		CPrompt1 <ifKeyItem %5% ifChatNPCInPlay Accept>
 		Prompt2 <Still working on that.>
 		Prompt3 <I think the evidence has been destroyed.>
 		CPrompt3 <ifItemDestroyed %5% Accept>
 		Prompt4 <I have some evidence. [give Bac-Bomb]>
-		CPrompt4 <ifKeyItem %5% Accept>
+		CPrompt4 <ifKeyItem %5% ifChatNPCInPlay Accept>
 		Prompt5 <Is there anything i could do to help?>
 		Prompt6 <I'm not too worried about it.>
 		Prompt7 <Where can I find %name1%?>

@@ -43,6 +43,14 @@ const
 		NAS_PayRate = 1;	{ Determines how much money the unit will earn upon }
 					{ completing the mission. }
 		NAS_Pay = 2;		{ Holds the actual calculated pay value. }
+	NAG_MissionCoupon = 24;		{ Certain missions can only be taken a set number }
+					{ of times. }
+		NumMissionCouponTypes = 2;
+		NAS_SkillTrain_Coupon = 1;
+		NAS_MechaFac_Coupon = 2;
+
+	NAG_AHQSkillTrainer = 25;	{ Tells what skill trainers the PC has acquired. }
+	NAG_AHQMechaFaction = 26;	{ Tells what mecha factions the PC has acquired. }
 
 Procedure StartArenaCampaign;
 Procedure RestoreArenaCampaign( RDP: RedrawProcedureType );
@@ -454,12 +462,61 @@ begin
 	GetMission := it;
 end;
 
+Function HQContext( HQCamp: CampaignPtr ): String;
+	{ Return a context for this arena unit. }
+	{ The context is used to determine what missions can be }
+	{ loaded. }
+const
+	Coupons_Per_Level: Array [1..NumMissionCouponTypes,1..5] of Byte = (
+	( 2, 4, 6, 8, 10 ),	{ Skill Trainers }
+	( 1, 2, 3, 4, 5 )	{ Mecha Factions }
+	);
+	Coupon_Tag: Array [1..NumMissionCouponTypes] of String = (
+		'SKILL_TRAIN_MISSION',
+		'MECHA_SOURCE_MISSION'
+	);
+var
+	Fac: GearPtr;
+	HQC: String;
+	Renown,T: Integer;
+begin
+	{ Start with the faction designation. }
+	Fac := SeekCurrentLevelGear( HQCamp^.Source^.InvCom , GG_Faction , HQFac( HQCamp ) );
+	if Fac <> Nil then begin
+		HQC := SAttValue( Fac^.SA , 'TYPE' ) + ' ' + SAttValue( Fac^.SA , 'DESIG' );
+	end else begin
+		HQC := 'FDFOR MILITARY';
+	end;
+
+	{ Add the difficulcy level. }
+	Renown := HQRenown( HQCamp );
+	HQC := HQC + ' ' + DifficulcyContext( Renown );
+
+	{ Add any mission coupons that haven't been spent yet. }
+	{ Determine the faction level. }
+	if Renown < 1 then Renown := 1;
+	Renown := ( Renown + 19 ) div 20;
+
+	{ Check for coupons. }
+	for t := 1 to NumMissionCouponTypes do begin
+		if ( Coupons_Per_Level[ T , Renown ] - NAttValue( HQCanp^.Source , NAG_MissionCoupon , T ) ) >  0 then begin
+			{ We have a coupon left. Add a note. }
+			HQC := HQC + ' ' + Coupon_Tag[ T ];
+		end;
+	end;
+
+	{ Add tags for the skills and mecha factions that the PC hasn't earned yet. }
+
+
+	HQContext := HQC;
+end;
+
 Procedure AddMissions( HQCamp: CampaignPtr; N: Integer );
-	{ Refresh the missions. Yay! Basically make sure there are five missions to }
+	{ Refresh the missions. Yay! Basically make sure there are some missions to }
 	{ choose between. }
 var
-	HQContext: String;
-	Arena_Mission_Master_List,M,Fac: GearPtr;
+	Context: String;
+	Arena_Mission_Master_List,M: GearPtr;
 	ShoppingList: NAttPtr;
 begin
 	{ Load the missions from disk. }
@@ -470,16 +527,10 @@ begin
 
 	{ Start by determining the arena unit's context. This is determied by the }
 	{ current faction being fought for plus the arena unit's renown. }
-	Fac := SeekCurrentLevelGear( HQCamp^.Source^.InvCom , GG_Faction , NAttValue( HQCamp^.Source^.NA , NAG_Personal , NAS_FactionID ) );
-	if Fac <> Nil then begin
-		HQContext := SAttValue( Fac^.SA , 'TYPE' ) + ' ' + SAttValue( Fac^.SA , 'DESIG' );
-	end else begin
-		HQContext := 'FDFOR MILITARY';
-	end;
-	HQContext := HQContext + ' ' + DifficulcyContext( NAttValue( HQCamp^.Source^.NA , NAG_CharDescription , NAS_Renowned ) );
+	Context := HQContext( HQCamp );
 
 	{ Next create the list of potential content to add. }
-	ShoppingList := CreateComponentList( Arena_Mission_Master_List , HQContext );
+	ShoppingList := CreateComponentList( Arena_Mission_Master_List , Context );
 
 	while ( ShoppingList <> Nil ) and ( N > 0 ) do begin
 		M := CloneGear( SelectComponentFromList( Arena_Mission_Master_List , ShoppingList ) );
