@@ -1844,6 +1844,9 @@ var
 	EDesc,SceneDesc: String;
 	Scene: GearPtr;
 begin
+	{ Make sure the city really is the city. }
+	City := FindRootScene( Nil , City );
+
 	{ First, insert the key character as requested. }
 	for t := 1 to Num_Plot_Elements do begin
 		EDesc := UpCase( SAttValue( Frag^.SA , 'ELEMENT' + BStr( T ) ) );
@@ -1851,6 +1854,12 @@ begin
 			SetSAtt( Frag^.SA , 'ELEMENT' + BStr( T ) + ' <' + SAttValue( Frag^.SA , 'ELEMENT0' ) + '>' );
 			SetSAtt( Frag^.SA , 'SCENE' + BStr( T ) + ' <KEY>' );
 			SetNAtt( Frag^.NA , NAG_ElementID , T , NAttValue( Frag^.NA , NAG_ElementID , 0 ) );
+		end else if EDesc = '.' then begin
+			{ This element is the city scene. }
+			SetSAtt( Frag^.SA , 'ELEMENT' + BStr( T ) + ' <SCENE>' );
+			SetSAtt( Frag^.SA , 'SCENE' + BStr( T ) + ' <>' );
+			SetNAtt( Frag^.NA , NAG_ElementID , T , City^.S );
+
 		end else if ( EDesc <> '' ) and ( EDesc[1] = 'A' ) then begin
 			{ This is an artifact request. If no difficulcy context has been }
 			{ defined, add one ourselves. }
@@ -1860,9 +1869,6 @@ begin
 			end;
 		end;
 	end;
-
-	{ Make sure the city really is the city. }
-	City := FindRootScene( Nil , City );
 
 	{ Next, locate the rest of the elements. }
 	MatchOK := MatchPlotToAdventure( FindROot( City ) , Frag , Nil , FALSE , TRUE , FALSE );
@@ -1919,8 +1925,6 @@ Function InsertArenaMission( Source,Mission: GearPtr; ThreatAtGeneration: Intege
 var
 	it: Boolean;
 	P: GearPtr;
-	Desc: String;
-	T: Integer;
 begin
 	it := InsertPlot( Source , Mission , Nil , ThreatAtGeneration );
 

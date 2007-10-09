@@ -530,7 +530,7 @@ Content
 	% E1 is the home scene
 	% E2 is the mission-giving NPC
 	% E3 is the wayward cousin
-	Element1 <Scene Town>
+	Element1 <.>
 
 	Element2 <NewNPC 1 1 Lawful Easygoing>
 	Scene2 <Building Legit Public>
@@ -1061,7 +1061,7 @@ Content
 	teamdata1 <Pass>
 	Element2 <ARTIFACT ITEM PREZERO>
 	Scene2 <New *ItemCrypt>
-	Element3 <Scene town>
+	Element3 <.>
 
 	%% Q1 is the success branch for locating the item
 	Quest1 <*SuccessGetItem.giveitem 1 2>

@@ -98,7 +98,7 @@ var
 
 	ANPC_MasterPersona: GearPtr;
 
-	Arena_Mission_Master_List: GearPtr;
+	Arena_Mission_Master_List,Core_Mission_Master_List: GearPtr;
 
 
 { *** REDRAW PROCEDURES *** }
@@ -529,11 +529,42 @@ Function AddCoreMission( HQCamp: CampaignPtr ): Boolean;
 	{ Return TRUE if the core mission was generated successfully, or FALSE if the }
 	{ generation fails. This procedure should print an error message if the generation }
 	{ fails, since that's a pretty serious thing. }
+	Function CoreCampaignContext( CMStep: Integer ): String;
+		{ Return the context of the core campaign. This includes the }
+		{ story state, the difficulcy level, the context of the player's faction (P:), }
+		{ and the context of the enemy faction (F:). }
+	var
+		Context: String;
+		Fac: GearPtr;
+	begin
+		{ Determine the campaign context. This is stored right in the adventure gear itself. }
+		Context := SAttValue( HQCamp^.Source^.SA , 'CORE_CONTEXT' );
+		if Context = '' then begin
+			Context := '+P--';
+			SetSAtt( HQCamp^.Source^.SA , 'CORE_CONTEXT <+P-->' );
+		end;
+
+		{ Locate the player faction and the element faction. Provide context for both. }
+		Fac := SeekCurrentLevelGear( HQCamp^.Source^.InvCom , HQFac( HQCamp ) );
+		AddGearXRContext( Nil , HQCamp^.Source , Fac , Context , 'P' );
+
+
+		{ Add the difficulcy context. }
+		Context := COntext + ' ' + DifficulcyContext( CMStep * 10 + 5 );
+	end;
 	Function NewCoreMissionPrototype( CMSet: GearPtr ): GearPtr;
 		{ Select a new core mission for the next step in the progress. }
 		{ Set its core mission ID, and return a pointer to it. }
+		{ If no appropriate mission can be found, print an error message and return Nil. }
+	var
+		CMStep: Integer;
+		Context: String;
 	begin
+		{ Determine the threat level of this mission. }
+		CMStep := NAttValue( HQCamp^.Source^.NA , NAG_AHQData , NAS_CoreMissionStep ) + 1;
 
+
+		NewCoreMissionPrototype := Nil;
 	end;
 var
 	CMSet,CMProto,CM: GearPtr;
@@ -1652,7 +1683,7 @@ begin
 	{ Start by selecting the mission. }
 	if NumMissions( HQCamp ) < 1 then AddMissions( HQCamp , HQMaxMissions( HQCamp ) );
 	Scene := SelectAMission;
-	if Scene = Nil then Exit;
+	if Scene = Nil then Exit( True );
 
 	{ Start by selecting the PCForces. }
 	PCForces := SelectAMForces;
@@ -1927,10 +1958,12 @@ initialization
 	ANPC_MasterPersona := LoadFile( 'ARENADATA_NPCMessages.txt' , Series_Directory );
 
 	Arena_Mission_Master_List := LoadRandomSceneContent( 'ARENAMISSION_*.txt' , Series_Directory );
+	Core_Mission_Master_List := LoadRandomSceneContent( 'ARENACORE_*.txt' , Series_Directory );
 
 
 finalization
 	DisposeGear( Arena_Mission_Master_List );
+	DisposeGear( Core_Mission_Master_List );
 	DisposeGear( ANPC_MasterPersona );
 
 end.

@@ -136,7 +136,7 @@ Content
 
 	Scene4 <New *BLANK.BoxBasement>
 
-	Element5 <Scene Town>
+	Element5 <.>
 	Element6 <Faction Police !Ally 5>
 
 	sub
@@ -1636,7 +1636,7 @@ Content
 	%%  S2 is the scene where it is hidden
 	Element2 <ARTIFACT ITEM PREZERO>
 	Scene2 <New *ItemCrypt>
-	Element3 <Scene town>
+	Element3 <.>
 
 	%% Q1 is the success branch for locating the item
 	Quest1 <*SuccessGetItem.keepitem 1 2>

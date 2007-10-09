@@ -295,7 +295,7 @@ begin
 		X := ScriptValue( Event , GB , Source );
 		Grabbed_Gear := GG_LocateItem( X , GB , Source );
 
-	end else if ( CMD = 'GRABCHATNPC' ) and ( IntMenu <> Nil ) then begin
+	end else if ( CMD = 'GRABCHATNPC' ) then begin
 		Grabbed_Gear := I_NPC;
 
 	end else if ( CMD = 'GRABPC' ) and ( GB <> Nil ) then begin

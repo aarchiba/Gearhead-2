@@ -2845,7 +2845,7 @@ begin
 		if ( Adv <> Nil ) and ( GB <> Nil ) and ( GB^.Scene <> Nil ) then begin
 			{ This is Arena mode. Store the mecha announcement for the }
 			{ mission debriefing. }
-			AddSAtt( GB^.Scene^.SA , ARENAREPORT_MechaCaptured , GearName( Mek ) );
+			AddSAtt( GB^.Scene^.SA , ARENAREPORT_MechaCaptured , FullGearName( Mek ) );
 
 		end else begin
 			{ This is RPG mode. Report the mecha directly. }
