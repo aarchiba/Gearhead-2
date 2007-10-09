@@ -143,6 +143,8 @@ begin
 	P.X := P.X - 1;
 	P.Y := P.Y - 1;
 	if not Use_Isometric_Mode then origin_d_target := ( ( ( NAttValue( M^.NA , NAG_Location , NAS_D ) + 4 ) * Num_Rotation_Angles ) div 8 ) mod Num_Rotation_Angles;
+{$ELSE}
+	FocusOn( M );
 {$ENDIF}
 	repeat
 {$IFNDEF ASCII}

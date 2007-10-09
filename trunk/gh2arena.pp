@@ -43,6 +43,8 @@ const
 		NAS_PayRate = 1;	{ Determines how much money the unit will earn upon }
 					{ completing the mission. }
 		NAS_Pay = 2;		{ Holds the actual calculated pay value. }
+		NAS_IsCoreMission = 3;	{ If nonzero, this is a core mission. }
+
 	NAG_MissionCoupon = 24;		{ Certain missions can only be taken a set number }
 					{ of times. }
 		NumMissionCouponTypes = 2;
@@ -51,6 +53,12 @@ const
 
 	NAG_AHQSkillTrainer = 25;	{ Tells what skill trainers the PC has acquired. }
 	NAG_AHQMechaFaction = 26;	{ Tells what mecha factions the PC has acquired. }
+
+	NAG_AHQData = 27;
+		NAS_RewardMissionTimer = 1;	{ Used for spacing out reward missions. }
+		NAS_CoreMissionTimer = 2;	{ Used for spacing out core missions. }
+		NAS_CoreMissionStep = 3;	{ Records the number of core missions completed. }
+
 
 Procedure StartArenaCampaign;
 Procedure RestoreArenaCampaign( RDP: RedrawProcedureType );
@@ -69,6 +77,7 @@ uses arenaplay,arenascript,interact,gearutil,narration,texutil,ghprop,rpgdice,ab
 
 Const
 	GS_CharacterSet = 1;
+	GS_CoreMissionSet = 2;
 
 	NumArenaNPCs = 6;
 	ANPC_FactionHead = 1;
@@ -513,13 +522,107 @@ begin
 	HQContext := HQC;
 end;
 
+Function AddCoreMission( HQCamp: CampaignPtr ): Boolean;
+	{ Add a core mission. If there's a mission stored in the core mission holder, }
+	{ and it hasn't been completed yet (check CoreMissionID against the CoreMissionStep) }
+	{ then use that one. Otherwise generate a new mission. }
+	{ Return TRUE if the core mission was generated successfully, or FALSE if the }
+	{ generation fails. This procedure should print an error message if the generation }
+	{ fails, since that's a pretty serious thing. }
+	Function NewCoreMissionPrototype( CMSet: GearPtr ): GearPtr;
+		{ Select a new core mission for the next step in the progress. }
+		{ Set its core mission ID, and return a pointer to it. }
+	begin
+
+	end;
+var
+	CMSet,CMProto,CM: GearPtr;
+	AddOK: Boolean;
+begin
+	AddOK := False;
+
+	{ Start by locating the core mission set, if it exists. }
+	CMSet := SeekCurrentLevelGear( HQCamp^.Source^.InvCom , GG_Set , GS_CoreMissionSet );
+	if CMSet = Nil then begin
+		{ We don't have a Core Mission Set. Horrors! Better add one. }
+		CMSet := NewGear( Nil );
+		CMSet^.G := GG_Set;
+		CMSet^.S := GS_CoreMissionSet;
+		InsertInvCom( HQCamp^.Source , CMSet );
+	end;
+
+	{ This set should contain a single gear- the core mission. If this mission }
+	{ doesn't exist, or if it has already been completed, better generate another }
+	{ one. }
+	CMProto := CMSet^.InvCom;
+	if CMProto = Nil then begin
+		CMProto := NewCoreMissionPrototype( CMSet );
+	end else if NAttValue( CMProto^.NA , NAG_ArenaMissionInfo , NAS_IsCoreMission ) <= NAttValue( HQCamp^.Source^.NA , NAG_AHQData , NAS_CoreMissionStep ) then begin
+		RemoveGear( CMSet^.InvCom , CMProto );
+		CMProto := NewCoreMissionPrototype( CMSet );
+	end;
+
+	{ If the prototype was found, insert a clone. }
+	if CMProto <> Nil then begin
+		CM := CloneGear( CMProto );
+		AddOK := InsertArenaMission( HQCamp^.Source , CM , HQRenown( HQCamp ) );
+		if not AddOK then begin
+			DialogMsg( 'ERROR: Insertion of core mission ' + GearName( CMProto ) + ' failed.' );
+		end;
+	end;
+
+	AddCoreMission := AddOK;
+end;
+
 Procedure AddMissions( HQCamp: CampaignPtr; N: Integer );
 	{ Refresh the missions. Yay! Basically make sure there are some missions to }
 	{ choose between. }
+	Procedure AddAMission( var ShoppingList: NAttPtr );
+		{ Add a mission from the provided list. }
+	var
+		MissionOK: Boolean;
+		M: GearPtr;
+	begin
+		MissionOK := False;
+		while ( ShoppingList <> Nil ) and not MissionOK do begin
+			M := CloneGear( SelectComponentFromList( Arena_Mission_Master_List , ShoppingList ) );
+			if InsertArenaMission( HQCamp^.Source , M , HQRenown( HQCamp ) ) then begin
+				MissionOK := True;
+			end;
+		end;
+	end;
+	Function NoCoreMissionFound: Boolean;
+		{ Return TRUE if none of the pending missions belong to the core campaign, }
+		{ or FALSE if one of them does. }
+	var
+		M: GearPtr;
+		NCMF: Boolean;
+	begin
+		{ Assume true unless proven otherwise. }
+		NCMF := True;
+		M := HQCamp^.Source^.InvCom;
+		while M <> Nil do begin
+			if ( M^.G = GG_Scene ) and ( NAttValue( M^.NA , NAG_ArenaMissionInfo , NAS_IsCoreMission ) <> 0 ) then NCMF := False;
+			M := M^.Next;
+		end;
+		NoCoreMissionFound := NCMF;
+	end;
+	Function CanAddCoreMission: Boolean;
+		{ Return TRUE if a core mission can currently be loaded, or FALSE if }
+		{ it can't be. It can be loaded if: }
+		{  A) the player hasn't already completed the core campaign }
+		{  B) the unit's renown is high enough to load the next step }
+		{  C) there isn't currently a core mission in the pending list }
+	var
+		CMS: Integer;
+	begin
+		{ Determine the core mission step. }
+		CMS := NAttValue( HQCamp^.Source^.NA , NAG_AHQData , NAS_CoreMissionStep );
+		CanAddCoreMission := ( CMS < 8 ) and ( ( ( CMS + 1 ) * 10 ) <= HQRenown( HQCamp ) ) and NoCoreMissionFound;
+	end;
 var
 	Context: String;
-	M: GearPtr;
-	ShoppingList: NAttPtr;
+	MissionList,RewardList: NAttPtr;
 begin
 	{ Start by determining the arena unit's context. This is determied by the }
 	{ current faction being fought for plus the arena unit's renown. }
@@ -529,16 +632,35 @@ begin
 	{ There are two content lists- regular content, and reward content. One reward mission }
 	{ should be loaded per five regular missions. A core campaign mission could also be selected, }
 	{ but this is handled differently. }
-	ShoppingList := CreateComponentList( Arena_Mission_Master_List , '*MISSION ' + Context );
+	MissionList := CreateComponentList( Arena_Mission_Master_List , '*MISSION ' + Context );
+	RewardList := CreateComponentList( Arena_Mission_Master_List , '*REWARD ' + Context );
 
-	while ( ShoppingList <> Nil ) and ( N > 0 ) do begin
-		M := CloneGear( SelectComponentFromList( Arena_Mission_Master_List , ShoppingList ) );
-		if InsertArenaMission( HQCamp^.Source , M ) then begin
-			Dec( N );
+	while N > 0 do begin
+		{ Decrement the mission timers, and add special mission types as appropriate. }
+		if RewardList <> Nil then AddNAtt( HQCamp^.Source^.NA , NAG_AHQData , NAS_RewardMissionTimer , -1 );
+		if CanAddCoreMission then AddNAtt( HQCamp^.Source^.NA , NAG_AHQData , NAS_CoreMissionTimer , -1 );
+
+		if ( NAttValue( HQCamp^.Source^.NA , NAG_AHQData , NAS_CoreMissionTimer ) < 0 ) and CanAddCoreMission then begin
+			if AddCoreMission( HQCamp ) then begin
+				{ Set the mission recharge timer to something large. }
+				SetNAtt( HQCamp^.Source^.NA , NAG_AHQData , NAS_CoreMissionTimer , 20 + Random( 10 ) + N );
+			end else begin
+				{ Adding the core mission failed for some reason, probably }
+				{ a plot deadend. }
+				SetNAtt( HQCamp^.Source^.NA , NAG_AHQData , NAS_CoreMissionTimer , 10 + N );
+				Inc( N );
+			end;
+		end else if ( NAttValue( HQCamp^.Source^.NA , NAG_AHQData , NAS_RewardMissionTimer ) < 0 ) and ( RewardList <> Nil ) then begin
+			AddAMission( RewardList );
+			SetNAtt( HQCamp^.Source^.NA , NAG_AHQData , NAS_RewardMissionTimer , 5 + Random( 3 ) );
+		end else begin
+			AddAMission( MissionList );
 		end;
+		Dec( N );
 	end;
 
-	DisposeNAtt( ShoppingList );
+	DisposeNAtt( MissionList );
+	DisposeNAtt( RewardList );
 end;
 
 Procedure UpdateMissions( HQCamp: CampaignPtr );
@@ -557,6 +679,19 @@ begin
 		end;
 		Dec( N );
 	until ( N < 1 ) or ( Random( 3 ) <> 1 );
+
+	{ Step one point five- remove the core campaign mission if the unit's }
+	{ renown has fallen beneath the critical threshold. }
+	M := HQCamp^.Source^.InvCom;
+	while M <> Nil do begin
+		if ( M^.G = GG_Scene ) and ( NAttValue( M^.NA , NAG_ArenaMissionInfo , NAS_IsCoreMission ) <> 0 ) then begin
+			if HQRenown( HQCamp ) < ( ( NAttValue( M^.NA , NAG_ArenaMissionInfo , NAS_IsCoreMission ) + 1 ) * 10 ) then begin
+				RemoveGear( HQCamp^.Source^.InvCom , M );
+				Break;
+			end;
+		end;
+		M := M^.Next;
+	end;
 
 	{ Step two- make sure we have enough missions. }
 	AddMissions( HQCamp , HQMaxMissions( HQCamp ) - NumMissions( HQCamp ) );
@@ -1303,12 +1438,13 @@ Procedure DeliverMissionDebriefing( Adv,Scene: GearPtr );
 		end;
 	end;
 var
-	Dead,Healed,Destroyed,Fixed,SList: SAttPtr;	{ The various message classes. }
+	Dead,Healed,Destroyed,Fixed,Captured,SList: SAttPtr;	{ The various message classes. }
 begin
 	Dead := Nil;
 	Healed := Nil;
 	Destroyed := Nil;
 	Fixed := Nil;
+	Captured := Nil;
 
 	{ Step one: Look for matching messages. }
 	SList := Scene^.SA;
@@ -1316,7 +1452,9 @@ begin
 		if HeadMatchesString( ARENAREPORT_CharRecovered , SList^.Info ) then StoreSAtt( Healed , RetrieveAString( SList^.Info ) )
 		else if HeadMatchesString( ARENAREPORT_CharDied , SList^.Info ) then StoreSAtt( Dead , RetrieveAString( SList^.Info ) )
 		else if HeadMatchesString( ARENAREPORT_MechaRecovered , SList^.Info ) then StoreSAtt( Fixed , RetrieveAString( SList^.Info ) )
-		else if HeadMatchesString( ARENAREPORT_MechaDestroyed , SList^.Info ) then StoreSAtt( Destroyed , RetrieveAString( SList^.Info ) );
+		else if HeadMatchesString( ARENAREPORT_MechaDestroyed , SList^.Info ) then StoreSAtt( Destroyed , RetrieveAString( SList^.Info ) )
+		else if HeadMatchesString( ARENAREPORT_MechaCaptured , SList^.Info ) then StoreSAtt( Captured , RetrieveAString( SList^.Info ) )
+		;
 		SList := SList^.Next;
 	end;
 
@@ -1325,11 +1463,13 @@ begin
 	GiveTheNews( ANPC_Medic , 'PCDead' , Dead );
 	GiveTheNews( ANPC_Mechanic , 'MechaFixed' , Fixed );
 	GiveTheNews( ANPC_Mechanic , 'MechaDestroyed' , Destroyed );
+	GiveTheNews( ANPC_Supply , 'MechaCaptured' , Captured );
 
 	DisposeSAtt( Dead );
 	DisposeSAtt( Healed );
 	DisposeSAtt( Destroyed );
 	DisposeSAtt( Fixed );
+	DisposeSAtt( Captured );
 end;
 
 Procedure DeliverSalvageReport( Adv , PCList: GearPtr );

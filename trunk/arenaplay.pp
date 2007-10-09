@@ -29,14 +29,6 @@ uses gears,locale;
 Const
 	SATT_Artifact = 'ARTIFACT';
 
-	{ When playing in arena mode, the following string attributes will be added to the scene }
-	{ following battle. }
-	ARENAREPORT_CharDied = 'AR_PCDIED';
-	ARENAREPORT_CharRecovered = 'AR_PCRECOVERED';
-	ARENAREPORT_MechaDestroyed = 'AR_MECHADIED';
-	ARENAREPORT_MechaRecovered = 'AR_MECHARECOVERED';
-
-
 Procedure CombatMain( Camp: CampaignPtr );
 Function ScenePlayer( Camp: CampaignPtr ; Scene: GearPtr; var PCForces: GearPtr ): Integer;
 

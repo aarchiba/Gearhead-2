@@ -73,7 +73,7 @@ Procedure EndPlot( GB: GameBoardPtr; Adv,Plot: GearPtr );
 Procedure PrepareNewComponent( Story: GearPtr; GB: GameBoardPtr );
 
 Function PrepareQuestFragment( City,Frag: GearPtr; DoDebug: Boolean ): Boolean;
-Function InsertArenaMission( Source,Mission: GearPtr ): Boolean;
+Function InsertArenaMission( Source,Mission: GearPtr; ThreatAtGeneration: Integer ): Boolean;
 
 
 implementation
@@ -1914,7 +1914,7 @@ begin
 	PrepareQuestFragment := MatchOK;
 end;
 
-Function InsertArenaMission( Source,Mission: GearPtr ): Boolean;
+Function InsertArenaMission( Source,Mission: GearPtr; ThreatAtGeneration: Integer ): Boolean;
 	{ Insert an arena mission into the campaign. }
 var
 	it: Boolean;
@@ -1922,26 +1922,10 @@ var
 	Desc: String;
 	T: Integer;
 begin
-	{ Start by randomizing the NPCs. }
-{	P := Mission^.InvCom;
-	while P <> Nil do begin
-		if P^.G = GG_Character then IndividualizeNPC( P );
-		P := P^.Next;
-	end;}
-
-
-{	it := MatchPlotToAdventure( Source , Mission , Nil , TRUE , False , False );}
-	it := InsertPlot( Source , Mission , Nil , 0 );
+	it := InsertPlot( Source , Mission , Nil , ThreatAtGeneration );
 
 	{ If the mission was successfully added, we need to do extra initialization. }
 	if it then begin
-		{ Alter the DESC string, to contain the element names. }
-		Desc := SAttValue( Mission^.SA , 'DESC' );
-		for t := 1 to Num_Plot_ELements do begin
-			ReplacePat( Desc , '%name' + BStr( T ) + '%' , GearName( Fast_Seek_Element[ 1 , t ] ) );
-		end;
-		SetSAtt( Mission^.SA , 'DESC <' + Desc + '>' );
-
 		{ Set correct PersonaIDs for all the personas involved. }
 		P := Mission^.SubCom;
 		while P <> Nil do begin

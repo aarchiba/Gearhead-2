@@ -61,6 +61,14 @@ const
 		NAS_ChallengerHome = 7;	{ Where to return champion after fight }
 		NAS_ArenaRecharge = 8;	{ Time when next fight can take place }
 
+	{ When playing in arena mode, the following string attributes will be added to the scene }
+	{ following battle. }
+	ARENAREPORT_CharDied = 'AR_PCDIED';
+	ARENAREPORT_CharRecovered = 'AR_PCRECOVERED';
+	ARENAREPORT_MechaDestroyed = 'AR_MECHADIED';
+	ARENAREPORT_MechaRecovered = 'AR_MECHARECOVERED';
+	ARENAREPORT_MechaCaptured = 'AR_MECHACAPTURED';
+
 var
 	{ This gear pointer will be created if a dynamic scene is requested. }
 	SCRIPT_DynamicEncounter: GearPtr;
@@ -2797,10 +2805,13 @@ Procedure ProcessRandomMecha( var Event: String; GB: GameBoardPtr; Source: GearP
 var
 	Factions,FName,msg: String;
 	Renown: Integer;
-	MList,Mek,PC: GearPtr;
+	MList,Mek,PC,Adv: GearPtr;
 begin
 	{ ERROR CHECK - We need the gameboard to exist!!! }
 	if GB = Nil then Exit;
+
+	{ Find the adventure; it'll be needed later. }
+	Adv := GG_LocateAdventure( GB , Source );
 
 	{ First, find the file name of the mecha file to look for. }
 	{ Because this mecha is gonna be randomly determined we'll need some information }
@@ -2831,12 +2842,20 @@ begin
 		SetNAtt( Mek^.NA , NAG_Location , NAS_Team , NAV_DefPlayerTeam );
 		DeployMek( GB , Mek , False );
 
-		msg := ReplaceHash( MsgString( 'MechaPrize_Announce' ) , FullGearName( Mek ) );
-		AToAn( msg );
-		DialogMsg( msg );
+		if ( Adv <> Nil ) and ( GB <> Nil ) and ( GB^.Scene <> Nil ) then begin
+			{ This is Arena mode. Store the mecha announcement for the }
+			{ mission debriefing. }
+			AddSAtt( GB^.Scene^.SA , ARENAREPORT_MechaCaptured , GearName( Mek ) );
 
-		PC := GG_LocatePC( GB );
-		if FindPilotsMecha( GB^.Meks , PC ) = Nil then AssociatePilotMek( GB^.Meks , PC , Mek );
+		end else begin
+			{ This is RPG mode. Report the mecha directly. }
+			msg := ReplaceHash( MsgString( 'MechaPrize_Announce' ) , FullGearName( Mek ) );
+			AToAn( msg );
+			DialogMsg( msg );
+
+			PC := GG_LocatePC( GB );
+			if FindPilotsMecha( GB^.Meks , PC ) = Nil then AssociatePilotMek( GB^.Meks , PC , Mek );
+		end;
 	end;
 end;
 

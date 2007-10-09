@@ -1317,6 +1317,7 @@ var
 	N,StatPt,SkillPt: LongInt;
 	name: String;
 begin
+	RCPC := Nil;
 	M := SelectMode;
 	if M = -1 then Exit( Nil );
 

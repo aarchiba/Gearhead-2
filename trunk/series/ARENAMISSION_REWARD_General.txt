@@ -1,0 +1,87 @@
+%%
+%% *REWARD missions
+%%
+%% Don't let the name fool you- these missions aren't rewards in themselves;
+%% rather, they present an opportunity for the PC to earn a significant reward.
+%% The reward missions are typically more difficult than regular missions.
+%%
+%% The General rewards don't require a coupon, and consequently don't give
+%% rationed rewards.
+
+ArenaMission
+	name <Aegis Factory>
+	requires <*REWARD>
+	desc <Lead a raid against a mecha factory owned by %name1%.>
+
+	AsteroidMap
+	RockyTiles
+	Vacuum
+	SpaceBackdrop
+
+	MapWidth 50
+	MapHeight 50
+
+	PayRate 400
+
+	Element1 <Faction Enemy AEGIS>
+	Element2 <Prefab>
+
+	% L1 = Initialization Counter
+	% L2 = Victory Counter
+	% L3 = Number of mecha to award
+	Start <if= L1 0  CommanderSays 1  L= 1 1>
+	nu1 <if= T1 0 if= L2 0 L= 2 1 Alert 2 LoseArenaMission>
+	nu2 <if= T2 0 if= L2 0 Salvage Return XPV 100 L= 2 1 Alert 3 L= 3 T3 Goto GoMechaFactory>
+	GoMechaFactory <ifG L3 0 else GoWinMission L+ 3 -1 RandomMecha .faction ArenaRenown Goto GoMechaFactory>
+	.faction <AEGIS>
+	GoWinMission <WinArenaMission>
+
+	Msg1 <Disable the guards surrounding this factory. Try to leave the buildings intact, if possible.>
+	Msg2 <The mission is a failure.>
+	Msg3 <The mission is a success.>
+
+	sub
+		Team 1
+		SetEnemy 2 3
+		ParaX 5
+		ParaY 15
+
+		Team 2
+		SetEnemy 1
+		SetAlly 3
+		Deploy <SetSelfFaction M1   WMecha 2 Threat ArenaRenown 600>
+		ParaX 45
+		ParaY 45
+
+		Team 3
+		home <The Factory>
+		SetEnemy 1
+		SetAlly 2
+
+		rect
+		name <The Factory>
+		MFX 35
+		MFY 35
+		Height 8
+		Width 8
+		FloorType 6
+	end
+	inv
+		NPC Mecha Pilot
+		SetFaction -1
+		SetTeam 2
+
+		STC BUNKER-1
+		name <Factory>
+		SetTeam 3
+
+		STC BUNKER-1
+		name <Factory>
+		SetTeam 3
+
+		STC BUNKER-1
+		name <Factory>
+		SetTeam 3
+	end
+
+

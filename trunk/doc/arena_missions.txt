@@ -6,11 +6,32 @@ A mission must have a "requires" SATt which describes what factions can
 take it. This string can include:
 
 - Faction type, designation
-- Difficulcy rating: !Ex, !Hi, !Md, !Lo, !Ne
+- Difficulcy rating:
+	!Ex, !Hi, !Md, !Lo, !Ne
+- Unspent coupons for reward missions:
+	SKILL_TRAIN_MISSION, MECHA_SOURCE_MISSION
 
 As with plots, the first invcoms of the mission will be taken as the
 prefab elements. To assign a faction to a prefab NPC, use a negative
 value to assign one of the elements (E1..E10 = -1..-10).
+
+****************************
+***   COMBAT  MISSIONS   ***
+****************************
+
+This is the default mission type. These missions must include a *MISSION tag
+in their requires attribute.
+
+
+****************************
+***   REWARD  MISSIONS   ***
+****************************
+
+These are difficult missions which offer special rewards. They don't appear as
+often as combat missions do. Reward missions must include a *REWARD tag in their
+requires attribute, and all the good rewards need a coupon as well.
+
+Remember to spend the coupon when applying the reward at the end of the mission.
 
 
 **************************
