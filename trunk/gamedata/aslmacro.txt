@@ -242,8 +242,16 @@ LoseArenaMission <Return ArenaRep -5>
 WinCoreMission <GiveArenaPay Return ArenaRep 1 GrabAdventure GAddNAtt 27 3 1>
 LoseCoreMission <Return ArenaRep -5>
 SetCoreMissionEnemy <GrabAdventure GSetNAtt 27 4 ?>	% For the arena mode core campaign
+AlterCoreMissionContext <GrabAdventure GAlterContext ?>
+CommanderSays <Monologue 2 ?> % The commander will give orders in Arena mode.
+HeadDebriefing <AddDebriefing 1 ?>      % 
+CommanderDebriefing <AddDebriefing 2 ?> % Note that debriefings only
+MechanicDebriefing <AddDebriefing 3 ?>  % work in arena mode, and only for the standard
+MedicDebriefing <AddDebriefing 4 ?>     % faction NPCs.
+SupplyDebriefing <AddDebriefing 5 ?>    % 
+IntelDebriefing <AddDebriefing 6 ?>     % 
+AddMechaSource <GrabAdventure GSetNAtt 26 ? 1 GAddNAtt 24 2 1> % Adds a mecha faction for arena unit
 AlterContext <GrabStory GAlterContext ?>
-AlterCoreStoryContext <GrabAdventure GAlterContext ?>
 IfPCHasSkill <GrabPCPilot ifGHasSkill ?>
 IfPCHasPerformance <GrabPCPilot ifGHasSkill 35>
 SetSelfArenaState <GrabCurrentScene GSetNAtt NAG_ArenaData NAS_ArenaState ?>
@@ -263,4 +271,4 @@ SetSelfY <GrabSource GSetNAtt NAG_Location NAS_Y ?>
 StoreOldFaction <GrabAdventure GSetNAtt NAG_Personal NAS_OldFaction PCFac>
 ClearOriginalHome <GrabNPC ? GSetNAtt NAG_ParaLocation NAS_OriginalHome 0>
 ChatLMFollow <GrabChatNPC GSetNAtt 5 10 5>
-CommanderSays <Monologue 2 ?> % The commander will give orders in Arena mode.
+

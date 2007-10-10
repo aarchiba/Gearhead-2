@@ -52,7 +52,7 @@ const
 		NAS_MechaFac_Coupon = 2;
 
 	NAG_AHQSkillTrainer = 25;	{ Tells what skill trainers the PC has acquired. }
-	NAG_AHQMechaFaction = 26;	{ Tells what mecha factions the PC has acquired. }
+	NAG_AHQMechaSource = 26;	{ Tells what mecha factions the PC has acquired. }
 
 
 Procedure StartArenaCampaign;
@@ -81,6 +81,11 @@ Const
 	ANPC_Medic = 4;
 	ANPC_Supply = 5;
 	ANPC_Intel = 6;
+
+	{ Play Arena Mission selection types. }
+	PAM_Regular = 0;
+	PAM_Debug_Missions = 1;
+	PAM_Debug_Core = 2;
 
 var
 	ADR_Source: GearPtr;	{ Source gear for various redrawers. }
@@ -512,7 +517,19 @@ begin
 	end;
 
 	{ Add tags for the skills and mecha factions that the PC hasn't earned yet. }
+	for t := 1 to NumSkill do begin
+		if NAttValue( HQCamp^.Source^.NA , NAG_AHQSkillTrainer , T ) = 0 then begin
+			HQC := HQC + ' [s' + BStr( T ) + ']';
+		end;
+	end;
 
+	Fac := Factions_List;
+	while Fac <> Nil do begin
+		if NAttValue( HQCamp^.Source^.NA , NAG_AHQMechaSource , Fac^.S ) = 0 then begin
+			HQC := HQC + ' [f' + BStr( Fac^.S ) + ']';
+		end;
+		Fac := Fac^.Next;
+	end;
 
 	HQContext := HQC;
 end;
@@ -1100,7 +1117,7 @@ begin
 	DisposeRPGMenu( YNMenu );
 end;
 
-procedure PurchaseHardware( HQCamp: CampaignPtr );
+procedure AHQShopping( HQCamp: CampaignPtr );
 	{ Create a list of mecha which are within this unit's price }
 	{ range, then allow the user to browse the list and maybe }
 	{ purchase some. }
@@ -1123,6 +1140,15 @@ begin
 		DefaultColors := 'SDL_COLORS <' + SAttValue( mek^.SA , 'mecha_colors' ) + '>';
 	end else begin
 		DefaultColors := 'SDL_COLORS <66 121 179 210 215 80 205 25 0>';
+	end;
+
+	{ Add the faction designations for the earned mecha source rewards. }
+	mek := Factions_List;
+	while mek <> Nil do begin
+		if NAttValue( HQCamp^.Source^.NA , NAG_AHQMechaSource , Mek^.S ) <> 0 then begin
+			Factions := Factions + ' ' + SAttValue( mek^.SA , 'DESIG' );
+		end;
+		mek := mek^.Next;
 	end;
 
 	{ Remove non-mecha, expensive mecha, and extra-factional mecha. }
@@ -1513,7 +1539,7 @@ begin
 		else if HeadMatchesString( ARENAREPORT_CharDied , SList^.Info ) then StoreSAtt( Dead , RetrieveAString( SList^.Info ) )
 		else if HeadMatchesString( ARENAREPORT_MechaRecovered , SList^.Info ) then StoreSAtt( Fixed , RetrieveAString( SList^.Info ) )
 		else if HeadMatchesString( ARENAREPORT_MechaDestroyed , SList^.Info ) then StoreSAtt( Destroyed , RetrieveAString( SList^.Info ) )
-		else if HeadMatchesString( ARENAREPORT_MechaCaptured , SList^.Info ) then StoreSAtt( Captured , RetrieveAString( SList^.Info ) )
+		else if HeadMatchesString( ARENAREPORT_MechaObtained , SList^.Info ) then StoreSAtt( Captured , RetrieveAString( SList^.Info ) )
 		;
 		SList := SList^.Next;
 	end;
@@ -1523,7 +1549,7 @@ begin
 	GiveTheNews( ANPC_Medic , 'PCDead' , Dead );
 	GiveTheNews( ANPC_Mechanic , 'MechaFixed' , Fixed );
 	GiveTheNews( ANPC_Mechanic , 'MechaDestroyed' , Destroyed );
-	GiveTheNews( ANPC_Supply , 'MechaCaptured' , Captured );
+	GiveTheNews( ANPC_Supply , 'MechaObtained' , Captured );
 
 	DisposeSAtt( Dead );
 	DisposeSAtt( Healed );
@@ -1541,6 +1567,32 @@ begin
 		end;
 		PCList := PCList^.Next;
 	end;
+end;
+
+Procedure DeliverPersonalDebriefing( Adv , Scene: GearPtr );
+	{ Deliver personal debriefing messages from the faction NPCs. }
+var
+	SList,Messages: SAttPtr;
+	NPC: LongInt;
+begin
+	{ Step one: Look for matching messages. }
+	SList := Scene^.SA;
+	Messages := Nil;
+	while SList <> Nil do begin
+		if HeadMatchesString( ARENAREPORT_Personal , SList^.Info ) then StoreSAtt( Messages , RetrieveAString( SList^.Info ) );
+		SList := SList^.Next;
+	end;
+
+	{ Step Two: Deliver those messages. }
+	SList := Messages;
+	while SList <> Nil do begin
+		NPC := ExtractValue( SList^.Info );
+		HQMonologue( Adv, NPC , SList^.Info );
+		SList := SList^.Next;
+	end;
+
+	{ Step three- dispose of the messages. }
+	DisposeSAtt( Messages );
 end;
 
 Function MissionFrontEnd( HQCamp: CampaignPtr; Scene,PCForces: GearPtr ): Integer;
@@ -1583,6 +1635,9 @@ begin
 
 	{ After the mission is over, deliver any reports. }
 	if N <> 0 then begin
+		{ Deliver the member debriefings first. }
+		DeliverPersonalDebriefing( HQCamp^.Source , Scene );
+
 		{ The mission has ended properly; it wasn't quit. }
 		{ Do the debriefing here. }
 		C1 := HQCash( HQCamp );
@@ -1614,7 +1669,7 @@ begin
 	MissionFrontEnd := N;
 end;
 
-Function PlayArenaMission( HQCamp: CampaignPtr ): Boolean;
+Function PlayArenaMission( HQCamp: CampaignPtr; SelectionMode: Byte ): Boolean;
 	{ Play an arena mission. Yahoo! }
 	{ Return TRUE if the mission was completed, or FALSE if the mission was }
 	{ quit in progress. }
@@ -1653,6 +1708,46 @@ Function PlayArenaMission( HQCamp: CampaignPtr ): Boolean;
 			M := Nil;
 		end;
 		SelectAMission := M;
+	end;
+	Function GetCustomMission( LList: GearPtr ): GearPtr;
+		{ Select one of the missions from LList. Initialize it, }
+		{ stick it in the adventure, and return a pointer to it. }
+	var
+		RPM: RPGMenuPtr;
+		N: Integer;
+		M: GearPtr;
+	begin
+		{ Step one- select something from the list. This is going to require }
+		{ a menu. }
+		{ Create the menu. }
+		RPM := CreateRPGMenu( MenuItem , MenuSelect , ZONE_MemoText );
+		AttachMenuDesc( RPM , ZONE_MemoMenu );
+
+		{ Add all the missions to the menu. }
+		N := 1;
+		M := LList;
+		while M <> Nil do begin
+			AddRPGMenuItem( RPM , GearName( M ) , N , SAttValue( M^.SA , 'DESC' ) );
+			Inc( N );
+			M := M^.Next;
+		end;
+
+		RPMSortAlpha( RPM );
+		AlphaKeyMenu( RPM );
+		AddRPGMenuItem( RPM , MsgString( 'CANCEL' ) , -2 );
+
+		N := SelectMenu( RPM , @SelectAMissionRedraw );
+		DisposeRPGMenu( RPM );
+
+		if N > -1 then begin
+			{ Clone the mission we want. Set its name to DEBUG. }
+			M := CloneGear( RetrieveGearSib( LList , N ) );
+			SetSAtt( M^.SA , 'name <DEBUG>' );
+
+			{ Attempt to place it in the adventure. }
+			if not InsertArenaMission( HQCamp^.Source , M , HQRenown( HQCamp ) ) then M := Nil;
+		end;
+		GetCustomMission := M;
 	end;
 	Function SelectAMForces: GearPtr;
 		{ Select a number of pilots for this mission. Only pilots who have }
@@ -1711,7 +1806,17 @@ var
 begin
 	{ Start by selecting the mission. }
 	if NumMissions( HQCamp ) < 1 then AddMissions( HQCamp , HQMaxMissions( HQCamp ) );
-	Scene := SelectAMission;
+	if SelectionMode = PAM_Debug_Missions then begin
+		{ Select an insert a mission from the master list for }
+		{ debugging purposes. }
+		Scene := GetCustomMission( Arena_Mission_Master_List );
+	end else if SelectionMode = PAM_Debug_Core then begin
+		{ Select and insert a mission from the core campaign }
+		{ list for debugging purposes. }
+		Scene := GetCustomMission( Core_Mission_Master_List );
+	end else begin
+		Scene := SelectAMission;
+	end;
 	if Scene = Nil then Exit( True );
 
 	{ Start by selecting the PCForces. }
@@ -1857,6 +1962,10 @@ begin
 	AddRPGMenuItem( RPM , MsgString( 'ARENA_HireCharacter' ) , 3 );
 	AddRPGMenuItem( RPM , MsgString( 'ARENA_CreateNewCharacter' ) , 4 );
 	AddRPGMenuItem( RPM , MsgString( 'ARENA_EnterCombat' ) , 6 );
+	if ArenaMode_Wizard then begin
+		AddRPGMenuItem( RPM , 'Debug Missions' , 7 );
+		AddRPGMenuItem( RPM , 'Debug Core Campaign' , 8 );
+	end;
 	AddRPGMenuItem( RPM , MsgString( 'ARENA_ExitToMain' ) , 0 );
 	RPM^.mode := RPMNoCancel;
 
@@ -1866,11 +1975,13 @@ begin
 
 		Case N of
 			1: ExamineMecha( Camp );
-			2: PurchaseHardware( Camp );
+			2: AHQShopping( Camp );
 			3: AddPilotToUnit( Camp );
 			4: CreateNewPilot( Camp );
 			5: ExamineCharacters( Camp );
-			6: if not PlayArenaMission( Camp ) then N := -1;
+			6: if not PlayArenaMission( Camp , PAM_Regular ) then N := -1;
+			7: if not PlayArenaMission( Camp , PAM_Debug_Missions ) then N := -1;
+			8: if not PlayArenaMission( Camp , PAM_Debug_Core ) then N := -1;
 		end;
 
 	until N < 1;

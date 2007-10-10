@@ -84,6 +84,7 @@ const
 	Tactics_Turn_In_Progess: Boolean = False;
 
 	XXRan_Wizard: Boolean = False;
+	ArenaMode_Wizard: Boolean = False;
 
 	PC_SHOULD_RUN: Boolean = False;
 
@@ -507,6 +508,8 @@ begin
 					XXRan_Wizard := True;
 				end else if cmd = 'XXRANDEBUG' then begin
 					XXRan_Debug := True;
+				end else if cmd = 'GARYGYGAX' then begin
+					ArenaMode_Wizard := True;
 
 				end;
 			end;
@@ -585,6 +588,7 @@ begin
 	{ The "secret options" come at the end. These tokens only get }
 	{ included if they're already set. }
 	if XXRAN_Wizard then writeln( F , 'GIMMEGIMMECHOICE' );
+	if ArenaMode_Wizard then writeln( F , 'GARYGYGAX' );
 	if XXRAN_Debug then writeln( F , 'XXRANDEBUG' );
 
 	Close(F);

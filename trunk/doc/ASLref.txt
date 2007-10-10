@@ -50,6 +50,7 @@
 	ACCEPT			Return TRUE from ConditionAccepted
 	ACTIVATEMEME [NarrativeID] [SceneID]	Activate a meme
 	ADDCHAT [number]	Add prompt[num] to interact menu
+	ADDDEBRIEFING [npc] [msg]	Add a message from NPC for debriefing [ARENA MODE]
 	ADDREACT [value]	Alter NPC reaction score
 	AIRRAIDSIREN		All NPCs will flee the gameboard
 	ALERT [msg number]	Display a text message the PC won't ignore

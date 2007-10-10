@@ -10,6 +10,10 @@ take it. This string can include:
 	!Ex, !Hi, !Md, !Lo, !Ne
 - Unspent coupons for reward missions:
 	SKILL_TRAIN_MISSION, MECHA_SOURCE_MISSION
+- Mecha sources which haven't been earned
+	[f(faction id number)]
+- Skill trainers which haven't been earned
+	[s(skill id)]
 
 As with plots, the first invcoms of the mission will be taken as the
 prefab elements. To assign a faction to a prefab NPC, use a negative

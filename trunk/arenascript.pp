@@ -67,7 +67,8 @@ const
 	ARENAREPORT_CharRecovered = 'AR_PCRECOVERED';
 	ARENAREPORT_MechaDestroyed = 'AR_MECHADIED';
 	ARENAREPORT_MechaRecovered = 'AR_MECHARECOVERED';
-	ARENAREPORT_MechaCaptured = 'AR_MECHACAPTURED';
+	ARENAREPORT_MechaObtained = 'AR_MECHAOBTAINED';
+	ARENAREPORT_Personal = 'AR_PERSONAL';
 
 var
 	{ This gear pointer will be created if a dynamic scene is requested. }
@@ -1556,6 +1557,27 @@ begin
 	end;
 end;
 
+Procedure ProcessAddDebriefing( var Event: String; GB: GameBoardPtr; Source: GearPtr );
+	{ Add a message for a certain NPC to speak during the debriefing. }
+	{ Note that the first word in the debriefing message will be the ID of the }
+	{ character meant to deliver the line. }
+var
+	cid,id: Integer;	{ Character ID, Message ID }
+	NPC: GearPtr;
+	msg: String;
+begin
+	{ Find the two needed numeric valies. }
+	cid := ScriptValue( Event , GB , Source );
+	id := ScriptValue( Event , GB , Source );
+
+	{ Locate the message. }
+	NPC := GG_LocateNPC( CID , GB , Source );
+	msg := NPCScriptMessage( 'msg' + BStr( id ) , GB , NPC , Source );
+	if ( msg <> '' ) and ( GB <> Nil ) and ( GB^.Scene <> Nil ) then begin
+		SetSAtt( GB^.Scene^.SA , ARENAREPORT_Personal + ' <' + BStr( cid ) + ' ' + msg + '>' );
+	end;
+end;
+
 Function FormatMemoString( GB: GameBoardPtr; const Msg: String ): String;
 	{ Add the name of the city to the memo. }
 var
@@ -2845,7 +2867,7 @@ begin
 		if ( Adv <> Nil ) and ( GB <> Nil ) and ( GB^.Scene <> Nil ) then begin
 			{ This is Arena mode. Store the mecha announcement for the }
 			{ mission debriefing. }
-			AddSAtt( GB^.Scene^.SA , ARENAREPORT_MechaCaptured , FullGearName( Mek ) );
+			AddSAtt( GB^.Scene^.SA , ARENAREPORT_MechaObtained , FullGearName( Mek ) );
 
 		end else begin
 			{ This is RPG mode. Report the mecha directly. }
@@ -4158,6 +4180,7 @@ begin
 		else if cmd = 'PRINT' then ProcessPrint( Event , GB , Source )
 		else if cmd = 'ALERT' then ProcessAlert( Event , GB , Source )
 		else if cmd = 'MONOLOGUE' then ProcessMonologue( Event , GB , Source )
+		else if cmd = 'ADDDEBRIEFING' then ProcessAddDebriefing( Event , GB , Source )
 		else if cmd = 'MEMO' then ProcessMemo( Event , GB , Source )
 		else if cmd = 'SMEMO' then ProcessSMemo( Event , GB , Source )
 		else if cmd = 'QMEMO' then ProcessQMemo( Event , GB , Source )
