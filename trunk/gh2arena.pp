@@ -565,6 +565,8 @@ Function AddCoreMission( HQCamp: CampaignPtr ): Boolean;
 
 		{ Add the difficulcy context. }
 		Context := COntext + ' ' + DifficulcyContext( CMStep * 10 + 5 );
+
+		CoreCampaignContext := Context;
 	end;
 	Function NewCoreMissionPrototype( CMSet: GearPtr ): GearPtr;
 		{ Select a new core mission for the next step in the progress. }
@@ -697,6 +699,22 @@ Procedure AddMissions( HQCamp: CampaignPtr; N: Integer );
 		CMS := NAttValue( HQCamp^.Source^.NA , NAG_AHQData , NAS_CoreMissionStep );
 		CanAddCoreMission := ( CMS < 8 ) and ( ( ( CMS + 1 ) * 10 ) <= HQRenown( HQCamp ) ) and NoCoreMissionFound;
 	end;
+	Function CanAddRewardMission: Boolean;
+		{ Return TRUE if a reward mission can currently be loaded, or FALSE if }
+		{ it can't be. It can be loaded if: }
+		{  A) there isn't currently a core mission in the pending list }
+	var
+		M: GearPtr;
+		NRMF: Boolean;
+	begin
+		NRMF := True;
+		M := HQCamp^.Source^.InvCom;
+		while M <> Nil do begin
+			if ( M^.G = GG_Scene ) and AStringHasBString( SAttValue( M^.SA , 'REQUIRES' ) , '*REWARD' ) then NRMF := False;
+			M := M^.Next;
+		end;
+		CanAddRewardMission := NRMF;
+	end;
 var
 	Context: String;
 	MissionList,RewardList: NAttPtr;
@@ -710,7 +728,11 @@ begin
 	{ should be loaded per five regular missions. A core campaign mission could also be selected, }
 	{ but this is handled differently. }
 	MissionList := CreateComponentList( Arena_Mission_Master_List , '*MISSION ' + Context );
-	RewardList := CreateComponentList( Arena_Mission_Master_List , '*REWARD ' + Context );
+	if CanAddRewardMission then begin
+		RewardList := CreateComponentList( Arena_Mission_Master_List , '*REWARD ' + Context );
+	end else begin
+		RewardList := Nil;
+	end;
 
 	while N > 0 do begin
 		{ Decrement the mission timers, and add special mission types as appropriate. }
@@ -729,7 +751,8 @@ begin
 			end;
 		end else if ( NAttValue( HQCamp^.Source^.NA , NAG_AHQData , NAS_RewardMissionTimer ) < 0 ) and ( RewardList <> Nil ) then begin
 			AddAMission( RewardList );
-			SetNAtt( HQCamp^.Source^.NA , NAG_AHQData , NAS_RewardMissionTimer , 5 + Random( 3 ) );
+			SetNAtt( HQCamp^.Source^.NA , NAG_AHQData , NAS_RewardMissionTimer , 5 + Random( 3 ) + N );
+			DisposeNAtt( RewardList );
 		end else begin
 			AddAMission( MissionList );
 		end;

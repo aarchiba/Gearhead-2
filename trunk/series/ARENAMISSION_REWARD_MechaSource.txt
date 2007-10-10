@@ -8,5 +8,72 @@
 %% The MechaSource rewards require a MECHA_SOURCE_MISSION coupon. Also check to
 %% make sure that the appropriate mecha source tag is present. Note that gaining
 %% a mecha source may unlock additional missions and rewards.
+%%
+%% The mecha source missions are arranged by faction, in order of Faction ID.
+%%
+
+%% **************************************
+%% ***   [f5]  PRO  DUELIST  LEAGUE   ***
+%% **************************************
+
+ArenaMission
+	name <Exhibition Game>
+	requires <*REWARD MECHA_SOURCE_MISSION [f5] -PDASS>
+	desc <The Pro Duelist League has invited you to take part in an exhibition match.>
+	special <ARENA NOPILLAGE>
+
+	MapWidth 50
+	MapHeight 50
+
+	PayRate 500
+
+	ArenaMap
+
+	Element1 <Faction PDASS>
+	Element2 <Prefab>
+	Element3 <Prefab>
+	Element4 <Prefab>
+
+	% L1 = Initialization Counter
+	% L2 = Victory Counter
+	Start <if= L1 0 Monologue %2% 1 L= 1 1>
+	nu1 <if= T1 0 if= L2 0 L= 2 1 Alert 3 LoseArenaMission>
+	nu2 <if= T2 0 if= L2 0 Return XPV 100 L= 2 1 Alert 2 AddMechaSource %1% SupplyDebriefing 4 WinArenaMission>
+
+	Msg1 <Welcome to the arena. Let's see how how good \FACTION PCFac are.>
+	Msg1_1 <So, this is \FACTION PCFac . Let's see if you're good enough to survive in the arena.>
+	Msg2 <Your team won the match.>
+	Msg3 <Your team lost the match.>
+	Msg4 <Because you did so well in the arena, we have obtained some Pro Duelist mecha for you to use in real combat.>
+
+	sub
+		Team 1
+		SetEnemy 2
+		ParaX 5
+		ParaY 15
+
+		Team 2
+		SetEnemy 1
+		Deploy <SetSelfFaction %1% WMecha 2 Threat ArenaRenown 300>
+		ParaX 45
+		ParaY 35
+	end
+	inv
+		NPC Arena Pilot
+		SetTeam 2
+
+		NPC Arena Pilot
+		SetTeam 2
+
+		NPC Arena Pilot
+		SetTeam 2
+	end
+
+%% *************************************
+%% ***   [f7]  HOELLER  INDUSTRIES   ***
+%% *************************************
+
+
+
 
 

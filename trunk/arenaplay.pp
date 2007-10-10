@@ -1019,7 +1019,7 @@ begin
 	PC := GG_LocatePC( GB );
 
 	{ If this is a NOPILLAGE scene, exit. }
-	if ( GB^.Scene <> Nil ) and AStringHasBString( SAttValue( GB^.Scene^.SA, 'TYPE' ) , 'NOPILLAGE' ) then Exit;
+	if ( GB^.Scene <> Nil ) and AStringHasBString( SAttValue( GB^.Scene^.SA, 'SPECIAL' ) , 'NOPILLAGE' ) then Exit;
 
 	if ( PC <> Nil ) and OnTheMap( GB , PC ) then begin
 		{ First pass: Shakedown anything that's destroyed. }

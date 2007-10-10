@@ -254,7 +254,7 @@ var
 begin
 	MechaList := Nil;
 
-	Maximum_Cost := Calculate_Threat_Points( Renown , 25 );
+	Maximum_Cost := Calculate_Threat_Points( Renown , 35 );
 	if Maximum_Cost < Min_Max_Cost then Maximum_Cost := Min_Max_Cost;
 	Minimum_Cost := Maximum_Cost div 2 - 200000;
 	if Minimum_Cost > Max_Min_Cost then Minimum_Cost := Max_Min_Cost;
