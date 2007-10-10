@@ -3467,13 +3467,13 @@ begin
 	end;
 end;
 
-Procedure ProcessAlterContext( var Event: String; GB: GameBoardPtr; Source: GearPtr );
+Procedure ProcessGAlterContext( var Event: String; GB: GameBoardPtr; Source: GearPtr );
 	{ Alter the context by the changes string provided. }
 var
 	Story: GearPtr;
 	Changes,Base: String;
 begin
-	Story := StoryMaster( GB , Source );
+	Story := Grabbed_Gear;
 	Changes := ExtractWord( Event );
 	Changes := SAttValue( Source^.SA , Changes );
 	if Story <> Nil then begin
@@ -4222,7 +4222,7 @@ begin
 		else if cmd = 'STARTSTORY' then ProcessStartStory( Event , GB , Source )
 		else if cmd = 'CHECKCOMPONENTS' then ProcessCheckComponents( GB , Source )
 		else if cmd = 'NEXTCOMP' then ProcessNextComp( Event , GB , Source )
-		else if cmd = 'ALTERCONTEXT' then ProcessAlterContext( Event , GB , Source )
+		else if cmd = 'GALTERCONTEXT' then ProcessGAlterContext( Event , GB , Source )
 		else if cmd = 'ATTACK' then ProcessAttack( Event , GB , Source )
 		else if cmd = 'SALVAGE' then ProcessSalvage( GB )
 		else if cmd = 'RETREAT' then ProcessRetreat( Event , GB , Source )

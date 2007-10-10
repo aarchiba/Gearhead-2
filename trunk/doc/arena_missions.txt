@@ -45,18 +45,32 @@ Remember to spend the coupon when applying the reward at the end of the mission.
 The context for the core campaign is stored in a SAtt in the adventure named
 CORE_CONTEXT. Oooh, such nice alliteration.
 
+The context information includes:
+- The story context, stored as CORE_CONTEXT
+- The context of the player faction, marked as "P:"
+- The context of the enemy faction, marked as "F:"
+- The difficulcy rating of the mission (!Ne..!Ex)
+
+If KEY is requested as an element, it selects the core campaign enemy faction.
+
+As of right now the story context contains only one thing, the propp state.
+The propp states for the arena campaign are as follows:
+
 	+P--	Initial State
 	+Pin	We Want Information
+
 	+Pha	Home under attack
 	+Pls	Looking for something
+
 	+Par	Arms Race
+
 	+Ptf	Take the fight to them
 	+Ppt	Peace Talks
 	+Pfm	Fleet mobilized
 	+Pew	Enemy superweapon
 
 - Initial State
-  The PC's faction will fight the enemy faction.
+  The PC's faction will fight the enemy faction. Probably.
 
 - We Want Information
   The PC must discover what the enemy faction is up to.

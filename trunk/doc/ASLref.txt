@@ -54,6 +54,7 @@
 	AIRRAIDSIREN		All NPCs will flee the gameboard
 	ALERT [msg number]	Display a text message the PC won't ignore
 	ALTERCONTEXT [changes label]	Will alter the story context by the string provided
+	ALTERCOREMISSIONNTEXT [changes label]	Will alter the core mission context [ARENA MODE]
 	ARENAREP [change]	Changes the arena team reputation by a set amount [ARENA MODE ONLY]
 	ATTACK [Team1] [Team2]	Team1 will attack Team2
 	BATCHLOADPLOT [label] [n]	Load a number of plots all at once,
@@ -261,6 +262,7 @@
 	DEPLOYGG [team]		Places the grabbed gear in the current scene
 	GABSOLUTELEVEL [%]	Scale skill values by percent
 	GADDNATT [G] [S] [V]
+	GALTERCONTEXT [label]	Alters the story context string by the changes provided
 	GIVEGG			Gives the grabbed (physical) gear to PC
 	GMENTAL			The grabbed gear will waitaminute and 1MP
 	GMORALEDMG [Morale]	Adds morale damage to the grabbed gear

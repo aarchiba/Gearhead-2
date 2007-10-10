@@ -1,5 +1,6 @@
 .: CURRENT SCENE
 	The current scene will be inserted as this element.
+	In the case of a quest, this selects the root scene.
 
 A: ARTIFACT
 	Select one of the artifacts from the adventure list.
@@ -12,6 +13,11 @@ G: Grab
 	The element will be grabbed from the story into which this plot or scene content
 	is being inserted. Using G will result in an error if the plot/content isn't being
 	inserted into a story.
+
+KEY: Key Element
+	This element request can be made from a quest or an arena mission.
+	From a quest it selects the key character or item.
+	From an arena mission it selects the core campaign enemy faction.
 
 M: METASCENE
 

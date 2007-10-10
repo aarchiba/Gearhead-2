@@ -1925,7 +1925,20 @@ Function InsertArenaMission( Source,Mission: GearPtr; ThreatAtGeneration: Intege
 var
 	it: Boolean;
 	P: GearPtr;
+	T: Integer;
+	EDesc: String;
 begin
+	{ Look through the elements. If KEY was requested, replace it with the }
+	{ core campaign enemy faction. }
+	for t := 1 to Num_Plot_Elements do begin
+		EDesc := UpCase( SAttValue( Mission^.SA , 'ELEMENT' + BStr( T ) ) );
+		if EDesc = 'KEY' then begin
+			SetSAtt( Mission^.SA , 'ELEMENT' + BStr( T ) + ' <FACTION ENEMY>' );
+			SetNAtt( Mission^.NA , NAG_ElementID , T , NAttValue( Source^.NA , NAG_AHQData , NAS_CoreMissionEnemy ) );
+		end;
+	end;
+
+	{ Attempt the plot insertion. }
 	it := InsertPlot( Source , Mission , Nil , ThreatAtGeneration );
 
 	{ If the mission was successfully added, we need to do extra initialization. }

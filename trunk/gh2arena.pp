@@ -54,11 +54,6 @@ const
 	NAG_AHQSkillTrainer = 25;	{ Tells what skill trainers the PC has acquired. }
 	NAG_AHQMechaFaction = 26;	{ Tells what mecha factions the PC has acquired. }
 
-	NAG_AHQData = 27;
-		NAS_RewardMissionTimer = 1;	{ Used for spacing out reward missions. }
-		NAS_CoreMissionTimer = 2;	{ Used for spacing out core missions. }
-		NAS_CoreMissionStep = 3;	{ Records the number of core missions completed. }
-
 
 Procedure StartArenaCampaign;
 Procedure RestoreArenaCampaign( RDP: RedrawProcedureType );
@@ -398,7 +393,7 @@ Function HQMaxMissions( HQCamp: CampaignPtr ): Integer;
 var
 	C: Integer;
 begin
-	C := UnitSkill( HQCamp , NAS_Conversation ) div 3;
+	C := ( UnitSkill( HQCamp , NAS_Conversation ) + 4 ) div 3;
 	if C < 3 then C := 3;
 	HQMaxMissions := C;
 end;
@@ -413,8 +408,8 @@ begin
 end;
 
 Procedure PrepMission( HQCamp: CampaignPtr; Scene: GearPtr );
-	{ Prepare the mission. Basically, this just involves initializing the }
-	{ cash payout counter. }
+	{ Prepare the mission right before combat. Mostly, this just }
+	{ involves initializing the cash payout counter and NPCs. }
 var
 	F,TL,PayRate: LongInt;
 	M: GearPtr;
@@ -545,9 +540,11 @@ Function AddCoreMission( HQCamp: CampaignPtr ): Boolean;
 		end;
 
 		{ Locate the player faction and the element faction. Provide context for both. }
-		Fac := SeekCurrentLevelGear( HQCamp^.Source^.InvCom , HQFac( HQCamp ) );
+		Fac := SeekCurrentLevelGear( HQCamp^.Source^.InvCom , GG_Faction , HQFac( HQCamp ) );
 		AddGearXRContext( Nil , HQCamp^.Source , Fac , Context , 'P' );
 
+		Fac := SeekCurrentLevelGear( HQCamp^.Source^.InvCom , GG_Faction , NAttValue( HQCamp^.Source^.NA , NAG_AHQData , NAS_CoreMissionEnemy ) );
+		AddGearXRContext( Nil , HQCamp^.Source , Fac , Context , 'F' );
 
 		{ Add the difficulcy context. }
 		Context := COntext + ' ' + DifficulcyContext( CMStep * 10 + 5 );
@@ -559,12 +556,44 @@ Function AddCoreMission( HQCamp: CampaignPtr ): Boolean;
 	var
 		CMStep: Integer;
 		Context: String;
+		CM,CMProto,CMTest: GearPtr;
+		ShoppingList: NAttPtr;
 	begin
 		{ Determine the threat level of this mission. }
 		CMStep := NAttValue( HQCamp^.Source^.NA , NAG_AHQData , NAS_CoreMissionStep ) + 1;
 
+		{ Determine the campaign context. }
+		Context := CoreCampaignContext( CMStep );
 
-		NewCoreMissionPrototype := Nil;
+		{ Create the shopping list of potential candidates. }
+		ShoppingList := CreateComponentList( Core_Mission_Master_List , Context );
+
+		{ As long as we still have candidates, look for one to select. }
+		{ Attempt to load it into the adventure- if loading succeeds, it's }
+		{ a good one. Delete the temporary copy and stick the clone in the set. }
+		CMProto := Nil;
+		while ( ShoppingList <> Nil ) and ( CMProto = Nil ) do begin
+			CM := SelectComponentFromList( Core_Mission_Master_List , ShoppingList );
+			CMTest := CloneGear( CM );
+			if InsertArenaMission( HQCamp^.Source , CMTest , HQRenown( HQCamp ) ) then begin
+				CMProto := CloneGear( CM );
+				InsertInvCom( CMSet , CMProto );
+				RemoveGear( HQCamp^.Source^.InvCom , CMTest );
+			end;
+		end;
+
+		{ If no mission was found, print a debugging message along with the }
+		{ context so that future generations can learn from my mistakes. Or }
+		{ so I can add a new mission to fill in the gap. }
+		if CMProto = Nil then begin
+			Dialogmsg( 'ERROR: Core mission not found for context:' + Context );
+		end;
+
+		{ Dispose of the shopping list. }
+		DisposeNAtt( ShoppingList );
+
+		{ Return a pointer to the new mission. }
+		NewCoreMissionPrototype := CMProto;
 	end;
 var
 	CMSet,CMProto,CM: GearPtr;
@@ -1689,7 +1718,7 @@ begin
 	PCForces := SelectAMForces;
 
 	if PCForces <> Nil then begin
-		{ Load a scenario. }
+		{ Prep the mission, and pass to the mission front end. }
 		PrepMission( HQCamp , Scene );
 		N := MissionFrontEnd( HQCamp , Scene , PCForces );
 

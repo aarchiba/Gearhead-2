@@ -118,6 +118,14 @@ Const
 	TRIGGER_StartGame = 'Start';
 	TRIGGER_EndGame = 'END';
 
+	{ ArenaHQ Data. Not really narrative, but this is a good place }
+	{ to stick it. }
+	NAG_AHQData = 27;
+		NAS_RewardMissionTimer = 1;	{ Used for spacing out reward missions. }
+		NAS_CoreMissionTimer = 2;	{ Used for spacing out core missions. }
+		NAS_CoreMissionStep = 3;	{ Records the number of core missions completed. }
+		NAS_CoreMissionEnemy = 4;	{ Enemy for the core story. }
+
 
 
 Function SeekFaction( Scene: GearPtr; ID: Integer ): GearPtr;
