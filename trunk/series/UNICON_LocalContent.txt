@@ -7,6 +7,42 @@
 %%
 %% NAME: *[city designation]_[building name abbreviated]_[content type]
 
+%% *MAQSP_ComTow_Content
+%%	NPCs for Comet Tower in Maquise Spinner
+
+Content
+	requires <*MAQSP_ComTow_Content>
+	minimap <............1.......##+##>
+	element1 <Prefab>
+	team1 <Citizens>
+	teamdata1 <ally pass>
+
+	content1 <Optional *CORP_EMPLOYEE - Local>
+
+	sub
+		Persona 1
+		greeting <if# ChatNPCFac 0 else GoChat if= PCFac ChatNPCFac else GoCheckEligibility Goto GoTrain>
+		*GoTrain <*SKILL_TRAINING GoGoodbye>
+		*GoCheckEligibility <*ENEMY_CHECK GoCheckFaction ChatNPCFac GoNil>
+		GoCheckFaction <if= PCFac 0 else GoChat Goto GoCheckSkills>
+		*GoCheckSkills <*FACTION_ENTRANCE_EXAM GoJobOffer ChatNPCFac>
+		*GoChat <*MISC_CHATTER>
+		*GoGoodbye <*GOODBYE>
+		*GoJobOffer <*FACTION_JOIN_OFFER ChatNPCFac GoJoin>
+		*GoJoin <*FACTION_JOIN_ACCEPT ChatNPCFac>
+	end
+	inv
+		NPC Corporate Executive
+		name <Bracett>
+		job <Human Resources Manager>
+		SDL_PORTRAIT <por_m_guy2(-A-).png>
+		SDL_COLORS <234 180 88 245 213 160 50 50 50>
+		Chardesc Male Villainous Sociable Melancholy
+		SetFaction 2
+		Age 12
+	end
+
+
 %% *ATHSP_TA_MusicShop
 %%	At the Atrium in Athera Spinner, there is a guaranteed music shop.
 

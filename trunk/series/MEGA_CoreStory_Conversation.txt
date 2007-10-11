@@ -86,12 +86,12 @@ Plot
 		*.%id%_GoGreet <*HowAreYou .%id%_GoMessage>
 		.%id%_GoMessage <NewChat if= V%id%01 0 else .%id%_GoSecondTime V= %id%01 Threat StoryDL 2 Say %id%01 SMemo %id%02 AddChat %id%01 AddChat %id%02>
 		.%id%_GoSecondTime <Say %id%03 AddChat %id%03 AddChat %id%04 AddChat %id%05 AddChat %id%06>
-		.%id%_GoWin <GiveItem %2%  StoryNote %id%07 FreezeItem %3% &SetTargetItem %3% WinComp 0 .%id%_changes>
+		.%id%_GoWin <GiveItem %2%  StoryNote %id%07 FreezeItem %3% &SetTargetItem %3% NTBWinComp 0 .%id%_changes>
 		.%id%_changes <+T-- +F-- +Pla>
 		result%id%01 <NewChat Say %id%04 AddChat %id%03 AddChat %id%04 AddChat %id%05 AddChat %id%06>
 		result%id%02 <NewChat Say %id%05 AddChat %id%03 AddChat %id%04 AddChat %id%05 AddChat %id%06>
 		result%id%03 <NewChat Say %id%06 cash+ -V%id%01  XPV 100  Goto .%id%_GoWin>
-		result%id%04 <NewChat Say %id%08 LoseComp 0 .%id%_changes2>
+		result%id%04 <NewChat Say %id%08 NTBLoseComp 0 .%id%_changes2>
 		.%id%_changes2 <+T-- +F-->
 		result%id%05 <NewChat if= V%id%02 0 else .%id%_GoR5Again V= %id%02 1 ifG React d50 else .%id%_GoR5Fail Say %id%09  SkillXP 19 100  Goto .%id%_GoWin>
 		.%id%_GoR5Again <Say %id%10 AddChat %id%03 AddChat %id%04 AddChat %id%06>

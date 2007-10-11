@@ -1,3 +1,42 @@
+%% *SHOP_MECHANIC CONTENT
+%%   Contains a mechanic and/or mecha shop.
+
+Content
+	requires <*MECHANIC_SHOP (MAQUI|FCOMS) -HOELL -MUGLE ~COMET>
+	content <Required *DECOR_FOR_SHOP %1% Local>
+	element1 <Prefab>
+	team1 <Citizens>
+	teamdata1 <ally pass>
+	sub
+		Persona 1
+		*greeting <*NiceToMeetYou GoShop>
+		GoShop <if= PCFac 2 else GoBadShop NewChat Say 1 AddChat 1 AddChat 2>
+		GoBadShop <NewChat Say 2 AddChat 2 AddChat 3>
+		*GoBye <*GOODBYE>
+		result1 <EndChat Say 3 Shop .wares Goto GoBye>
+		.wares <MECHA>
+		result3 <Goto GoBye>
+		result3 <EndChat Say 4 Shop .nowares Goto GoBye>
+		Msg1 <I have some new line mecha available exclusively to Comet employees. Take my advice and pick up one of these beauties while they're still in stock.>
+		Msg2 <I offer a full range of repair services. Since you're not a member of Comet Metalworks, I'm afraid that I can't show you the complete selection.>
+		Msg3 <Most of these are prototype models. Some of them will go into production later on, while others won't.>
+		Msg4 <You have to keep your machine in top condition. The middle of battle is no time to find that your leg's gone wonky.>
+		Prompt1 <I'd like to see what you have.>
+		Prompt2 <Thanks, but I don't need anything.>
+		Prompt3 <I need some repairs.>
+	end
+	inv
+		NPC Mechanic
+		name <Dana>
+		SDL_PORTRAIT <por_f_hunter(--Y).png>
+		SDL_COLORS <234 180 88 255 212 195 166 47 32>
+		Chardesc Female Sociable Passionate Pragmatic
+		SetFaction 2
+		Age 4
+		Skill 31 10
+	end
+
+
 %% *SPECIAL_SHOP CONTENT
 %%   Contains an unusual or otherwise uncategorizable shop.
 

@@ -102,7 +102,7 @@ sub
 	CMsg2_6 <ifNPCMelancholy Accept>
 
 	Msg3 <Have you started work on that mission I gave you yet?>
-	Msg3_1 <Any luck in finding those bandits yet?>
+	Msg3_1 <Any luck in finding the enemy patrol yet?>
 
 	Msg4 <\ELEMENT 2 in \SCENE E1 hired you to fight a patrol from \ELEMENT 5 .>
 
@@ -164,7 +164,7 @@ end
 inv
 	STC ENCOUNTER-WANDER
 	name <Enemy Patrol>
-	update <if= P2 1 else GoHide  SetStat STAT_MetaVisibility 0  Goto GoSetOrders>
+	update <if= P2 1 else GoHide  SetStat STAT_MetaVisibility 0  ShowEncounter  Goto GoSetOrders>
 	ENCOUNTER_Hostile
 end
 

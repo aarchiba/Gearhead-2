@@ -221,7 +221,7 @@ Plot
 		%   bits are in place: the introduction, the question, the story info, and the
 		%   advice.
 		% V1 = Have given story info.
-		greeting <StoryNote 2  WinComp 0 .next  if= V1 1 else GoGreeting Goto GoAdvice>
+		greeting <StoryNote 2  NTBWinComp 0 .next  if= V1 1 else GoGreeting Goto GoAdvice>
 		.next <+T-- +Pun>
 		*GoGreeting <*INTRO_Introduction GoAskQuestion>
 		*GoAskQuestion <*INTRO_Question GoStoryInfo>
@@ -527,7 +527,7 @@ Plot
 		%   bits are in place: the introduction, the question, the story info, and the
 		%   advice.
 		% V1 = Have given story info.
-		greeting <&SetEnemyFac %4%   StoryNote 2  WinComp 0 .next  if= V1 1 else GoGreeting Goto GoAdvice>
+		greeting <&SetEnemyFac %4%   StoryNote 2  NTBWinComp 0 .next  if= V1 1 else GoGreeting Goto GoAdvice>
 		.next <+T-- +F-->
 		*GoGreeting <*INTRO_Introduction GoAskQuestion>
 		*GoAskQuestion <*INTRO_Question GoStoryInfo>

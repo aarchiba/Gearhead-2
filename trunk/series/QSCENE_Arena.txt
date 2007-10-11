@@ -26,12 +26,12 @@
 Scene 0 2
 	name <the Valhalla Arena>
 	requires <*Arena_Valhalla>
-	WildMap
+	ArenaMap
 	MapWidth 50
 	MapHeight 50
 
 	type <Arena>
-	special <SHOWALL SOLO ARENA>
+	special <SHOWALL SOLO ARENA NOPILLAGE>
 	terrain <GROUND>
 
 	start <if= SelfArenaState NAV_AS_Ready else GoCheckBattle          Alert 1   SetSelfArenaState NAV_AS_Battle SetSelfArenaRecharge if# SelfChallengerID 0 ForceChat SelfChallengerID>
@@ -79,7 +79,7 @@ Scene 0 2
 	SpaceBackdrop
 
 	type <Arena>
-	special <SHOWALL SOLO ARENA>
+	special <SHOWALL SOLO ARENA NOPILLAGE>
 	terrain <GROUND>
 
 	start <if= SelfArenaState NAV_AS_Ready else GoCheckBattle          Alert 1   SetSelfArenaState NAV_AS_Battle SetSelfArenaRecharge if# SelfChallengerID 0 ForceChat SelfChallengerID>
@@ -128,7 +128,7 @@ Scene 0 2
 	MapHeight 50
 	terrain <SPACE>
 	type <Arena>
-	special <SHOWALL SOLO ARENA>
+	special <SHOWALL SOLO ARENA NOPILLAGE>
 	MapWidth 50
 	MapHeight 50
 
@@ -173,7 +173,7 @@ Scene 0 2
 	MapWidth 17
 	MapHeight 12
 	terrain <GROUND>
-	special <SHOWALL SOLO ARENA>
+	special <SHOWALL SOLO ARENA NOPILLAGE>
 
 	start <if= SelfArenaState NAV_AS_Ready else GoCheckBattle          Alert 1   SetSelfArenaState NAV_AS_Battle SetSelfArenaRecharge if# SelfChallengerID 0 ForceChat SelfChallengerID>
 	GoCheckBattle <if= SelfArenaState NAV_AS_Battle else GoBoringStart Print 2>
@@ -211,12 +211,12 @@ Scene 0 2
 	name <the # Arena>
 	requires <*Arena_Default>
 	%% This is the default arena. For individual arena, copy this one and change the details.
-	WildMap
+	ArenaMap
 	MapWidth 50
 	MapHeight 50
 
 	type <Arena>
-	special <SHOWALL SOLO ARENA>
+	special <SHOWALL SOLO ARENA NOPILLAGE>
 	terrain <GROUND>
 
 	start <if= SelfArenaState NAV_AS_Ready else GoCheckBattle          Alert 1   SetSelfArenaState NAV_AS_Battle SetSelfArenaRecharge if# SelfChallengerID 0 ForceChat SelfChallengerID>

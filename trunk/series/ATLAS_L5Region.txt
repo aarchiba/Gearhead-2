@@ -143,7 +143,7 @@ sub
 	MapHeight 15
 
 	NeededCells 2
-	Content1 <Some 1 99 Sub *CORP_RECRUITER>
+	Content1 <Variety 1 1 Sub *MAQSP_ComTow_Content>
 	Content2 <Fill Sub *CORP_PUBLIC>
 
 	5Min <ifTeamHostile 3  MonsterUp 3 d20>
@@ -153,6 +153,11 @@ sub
 
 	inv
 		NPC Corporate Executive
+		name <Jamil>
+		SDL_PORTRAIT <por_m_guy3(AA-).png>
+		SDL_COLORS <234 180 88 255 212 195 1 75 67>
+		Chardesc Male Sociable Easygoing Pragmatic
+		Age 6
 		home <Office>
 		SetFaction 2
 	end

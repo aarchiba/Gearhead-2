@@ -151,7 +151,7 @@ end
 inv
 	STC ENCOUNTER-WANDER
 	name <Bandit Patrol>
-	update <if= P2 1 else GoHide  SetStat STAT_MetaVisibility 0  Goto GoSetOrders>
+	update <if= P2 1 else GoHide  SetStat STAT_MetaVisibility 0  ShowEncounter  Goto GoSetOrders>
 	ENCOUNTER_Hostile
 end
 

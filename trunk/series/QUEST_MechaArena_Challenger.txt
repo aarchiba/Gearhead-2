@@ -288,7 +288,7 @@ inv
 	CharDesc Male Sociable Easygoing Lawful
 	Age 9
 	StatLine 13 17 14 13 14 12 9 11
-	SDL_Portrait <>
+	SDL_Portrait <por_m_guy6(-P-).png>
 	SDL_Colors <234 180 88 255 212 195 10 50 100>
 	SetTheme 4
 	SetSpecSkill 3
@@ -451,7 +451,7 @@ inv
 	name <Shandir>
 	statline 14 14 13 13  15 12 13 10
 	Chardesc Female Shy Easygoing Pragmatic
-	SDL_PORTRAIT <por_f_hunter(--Y).png>
+	SDL_PORTRAIT <por_f_jacket(-AY).png>
 	SDL_COLORS <66 121 119 245 213 160 152 70 97>
 	Age 6
 	SetFaction 5
@@ -846,6 +846,79 @@ inv
 	Skill 21 10
 	Skill 36 10
 	Talent 14
+end
+
+Content
+	name <PC vs Havelock>
+	requires <*:MECHA_ARENA_CHALLENGE !Md>
+
+	% E1 is the arena manager
+	% E2 is the arena proper
+	% E3 is the challenger
+	Element3 <Prefab>
+	Scene3 <Building Public>
+	Team3 <Citizens>
+	TeamData3 <Ally Pass>
+
+	Quest1 <*CHALLENGER_SUBQUEST 3>
+
+sub
+	Persona 1
+	Greeting <if= QuestStatus %qid% %id% else %pop%  if= ArenaState %2% NAV_AS_Win else .%id%_GoCheckLoss Goto .%id%_GoArenaWin>
+	*.%id%_GoCheckLoss <*ChallengerStatusReport %3% %2% .%id%_GoNPCDied>
+	.%id%_GoInit <ifNPCOK %3% else .%id%_GoNPCDied NewChat Say %id%01 SetQuestStatus %qid% %id%  NPCSubQMemo %3% %id% %id%02  AddChat %id%01>
+	%% Just in case the NPC who we're supposed to fight has died somehow, just set up a normal fight.
+	*.%id%_GoNPCDied <*YourChallengerDied %2% %qid%>
+	*.%id%_GoArenaWin <*ChallengeArenaWin %3% %2% .%id%_GoConclude>
+	.%id%_GoConclude <ResetArena %2% SetQuestStatus %qid% %id1%>
+	Result%id%01 <NewChat Say %id%03>
+	Msg%id%01 <For the next match, you're up against a privateer named Havelock. He's had a fair amount of experience in real combat, so look out.>
+	Msg%id%02 <%name1% sent you to battle %name3% in arena combat; \SPR %3% can be found in \SCENE %s3% .>
+	Msg%id%03 <He can be found in \SCENE %s3% . Arrange a time for a duel, and good luck.>
+	Prompt%id%01 <Where can I find him?>
+
+	Persona 3
+	% V1 = First time chat counter
+	Greeting <if= QuestStatus %qid% %id% else GoNoMatch  if= ArenaState %2% NAV_AS_Battle else GoCheckStatus Goto GoTrashTalk>
+	*GoTrashTalk <*ArenaChallenge GoThemeInfo>
+	GoThemeInfo <EndChat Say 6>
+	GoCheckStatus <if= ArenaState %2% NAV_AS_Ready else GoCheckWin Goto GoWaiting>
+	*GoWaiting <*WaitingForDuel %2%>
+	GoCheckWin <if= ArenaState %2% NAV_AS_Win else GoCheckChallenge ifNPCOK %1% else GoManagerDied NewChat Say 2>
+	GoManagerDied <NewChat Say 3 SetQuestStatus %qid% -1 ResetArena %2%>
+	GoCheckChallenge <ResetArena %2% ifG ComTime ArenaRecharge %2% else GoLater if= V1 1 else GoFirstTime NewChat Say 4 AddChat 1 AddChat 2>
+	*GoFirstTime <*PCChallengeNPC GoMakeChallenge GoWussOut>
+	GoMakeChallenge <NewChat Say 5 V= 1 1 AddCHat 1 AddChat 2>
+	*GoWussOut <*GodImBored>
+	*GoLater <*ChallengeMeLater>
+	*GoNoMatch <*NiceToMeetYou GoChat>
+	*GoChat <*MISC_CHATTER>
+	GoStartCombat <SetChallengerID %2% %3% SetChallengerHome %2% %s3% MoveNPC %3% %2% PrepArena %2% 0 SetNPCTeam %3% 2>
+	*result1 <*MeetMeAtArena %2% GoStartCombat>
+	*result2 <*RejectChallenge>
+	Msg2 <I concede to your awesome skills. Better go tell %name1% that you've won the match.>
+	Msg3 <Too bad about what happened to %name1%...>
+	Msg4 <Ah, \PC . I was wondering if you had forgotten all about our duel.>
+	Msg5 <Ah, a challenge... I accept your offer! Do you want to go to %name2% now or are you just here to tease me?>
+	Msg6 <Let the games begin!>
+	Prompt1 <I'm ready to fight.>
+	Prompt2 <Let's do that later..>
+end
+inv
+	NPC Privateer
+	name <Havelock>
+	SetFaction 6
+	Age 5
+	SDL_PORTRAIT <por_m_ladipunk(JA-).png>
+	SDL_COLORS <20 90 130 142 62 39 234 180 88>
+	chardesc Male Cheerful Heroic Easygoing
+	StatLine 15 13 15 15 13 13 10 14
+	SetTheme 2
+	SetSpecSkill 5
+	Skill 12 10
+	Skill 36 10
+	Talent 9
+	Talent 13
 end
 
 

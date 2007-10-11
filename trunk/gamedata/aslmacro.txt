@@ -185,8 +185,11 @@ GSetOptMin <GSetNAtt NAG_Personal NAS_OptMin ?>
 Gut <GrabSource GSetNAtt NAG_EpisodeData 9 1>
 Flay <GrabSource GSetNAtt NAG_EpisodeData 10 1>
 WinComp <GrabStory GAddNAtt NAG_XXRan NAS_PPVictory ComponentPP N= 6 ? NextComp ?>
+NTBWinComp <&SetTargetChar ChatNPCID WinComp ? ?>	% NoTagBack WinComp- prevents selecting NPC again
 NegateComp <GrabStory GAddNAtt NAG_XXRan NAS_PPVictory ComponentPP GAddNAtt NAG_XXRan NAS_PPGoal ComponentPP N= 6 ? NextComp ?>
 LoseComp <N= 6 ? NextComp ?>
+NTBLoseComp <&SetTargetChar ChatNPCID LoseComp ? ?>
+NTBNegateComp <&SetTargetChar ChatNPCID NegateComp ? ?>
 StoryDL= <GrabStory GSetNAtt NAG_XXRan 1 ?>
 NextEpisode <N= 7 ? N= 6 0 GrabStory GAddNAtt -7 1 * 2 d10 GAddNAtt -7 2 1 GSetNAtt -7 3 0 GSetNAtt -7 4 0 NextComp ?>
 IfFacReward     <GrabFaction ? if# GNAtt NAG_FacReward ? 0>

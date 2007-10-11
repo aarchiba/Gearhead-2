@@ -38,13 +38,14 @@ ArenaMission
 	% L2 = Victory Counter
 	Start <if= L1 0 Monologue %2% 1 L= 1 1>
 	nu1 <if= T1 0 if= L2 0 L= 2 1 Alert 3 LoseArenaMission>
-	nu2 <if= T2 0 if= L2 0 Return XPV 100 L= 2 1 Alert 2 AddMechaSource %1% SupplyDebriefing 4 WinArenaMission>
+	nu2 <if= T2 0 if= L2 0 Return XPV 100 L= 2 1 Alert 2 AddMechaSource %1% SupplyDebriefing 4 History 5 WinArenaMission>
 
 	Msg1 <Welcome to the arena. Let's see how how good \FACTION PCFac are.>
 	Msg1_1 <So, this is \FACTION PCFac . Let's see if you're good enough to survive in the arena.>
 	Msg2 <Your team won the match.>
 	Msg3 <Your team lost the match.>
 	Msg4 <Because you did so well in the arena, we have obtained some Pro Duelist mecha for you to use in real combat.>
+	Msg5 <You won an exhibition match against the Pro Duelist League.>
 
 	sub
 		Team 1

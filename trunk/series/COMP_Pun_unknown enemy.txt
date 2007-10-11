@@ -8,13 +8,16 @@ Plot
 
 	% E1 is the scene where this component will take place
 	% E2 is the NPC that the PC will speak with
+	% E3 is the meme, for extra coverage
 	element1 <Scene Building Public !Ally -7 !Near -7>
-	element2 <Character POLIT !Near -7 !Comrade -7>
+	element2 <Character POLIT !Near -7 !Comrade -7 NeverFail>
+	NeverFail2 <Politician>
 	Place2 <1 (Citizens) pass>
+	Element3 <Prefab>
 
 	% All this plot does is move the NPC, post some news,
 	% and activate the mission subplot
-	update <if= PlotStatus 0  News 1  SetPlotStatus %id1%>
+	update <if= PlotStatus 0  News 1  ActivateMeme %3% %1%  SetPlotStatus %id1%>
 
 	%% SubPlot1 is the mission to be offered
 	SubPlot1 <*CS_GiveMission 2>
@@ -25,5 +28,23 @@ Plot
 	Msg1_4  <Is \SCENE &EpisodeScene under attack? %name2% has been meeting with mecha pilots at %name1%.>
 	Msg1_5  <%name2% has called on adventurers to defend \NARRATIVE 7 from a mysterious enemy. Defense efforts are being coordinated from %name1%.>
 
+	inv
+		Meme
+		MaxMemeViews 1
+		MemeTimeLimit
+		Msg <%name2% is looking for someone to fight the mecha that have been attacking town.>
+		Msg_1 <You might be interested to know that %name2% is looking for some mecha pilots at %name1%. I think it has something to do with the mysterious attacks we've had.>
+		CMsg_1 <ifNPCSociable Accept>
+		Msg_2 <There was something on the news about those mecha attacks.>
+		CMsg_2 <ifNPCShy Accept>
+		Msg_3 <If you're interested in the recent mecha attacks, I hear that %name2% at %name1% is looking for someone to fight them.>
+		CMsg_3 <ifNPCEasygoing Accept>
+		Msg_4 <>
+		CMsg_4 <ifNPCPassionate Accept>
+		Msg_5 <%name2% will find out what's going on with those mecha attacks. I'm sure of it.>
+		CMsg_5 <ifNPCCheerful Accept>
+		Msg_6 <Is there going to be a war? I hope %name2% can find out who sent those mecha to attack us.>
+		CMsg_6 <ifNPCMelancholy Accept>
+	end
 
 
