@@ -92,6 +92,8 @@ const
 
 	Cycle_All_Weapons: Boolean = False;
 
+	Splash_Screen_At_Start: Boolean = True;
+
 	BV_Off = 1;
 	BV_Quarter = 2;
 	BV_Half = 3;
@@ -503,6 +505,8 @@ begin
 					Minimal_Screen_Refresh := True;
 				end else if cmd = 'USE_SOFTWARE_SURFACE' then begin
 					Use_Software_Surface := True;
+				end else if cmd = 'NO_SPLASH_SCREEN_AT_START' then begin
+					Splash_Screen_At_Start := False;
 
 				end else if cmd = 'GIMMEGIMMECHOICE' then begin
 					XXRan_Wizard := True;
@@ -584,6 +588,7 @@ begin
 	AddBoolean( 'CYCLE_ALL_WEAPONS' , Cycle_All_Weapons );
 	AddBoolean( 'MINIMAL_SCREEN_REFRESH' , Minimal_Screen_Refresh );
 	AddBoolean( 'USE_SOFTWARE_SURFACE' , Use_Software_Surface );
+	AddBoolean( 'NO_SPLASH_SCREEN_AT_START' , not Splash_Screen_At_Start );
 
 	{ The "secret options" come at the end. These tokens only get }
 	{ included if they're already set. }

@@ -1531,9 +1531,11 @@ initialization
 
 	Last_Clock_Update := 0;
 
-	glFinish();
-	Randomize();
-	Idle_Display;
+	if Splash_Screen_At_Start then begin
+		glFinish();
+		Randomize();
+		Idle_Display;
+	end;
 
 finalization
 

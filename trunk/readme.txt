@@ -4,6 +4,9 @@ running BitTorrent or iTunes at startup. It appears to run fine if you
 start these programs after GH2 finishes loading. Thanks to Erathoniel
 for the info.
 ***
+If the program crashes at startup, try editing the config file (gearhead.cfg)
+and enable "NO_SPLASH_SCREEN_AT_START".
+***
 
 Welcome to GearHead-2. Although this game is in an early stage of development,
 comments and bug reports are welcome. Take a look around at what's being done

@@ -357,7 +357,7 @@ Content
 
 	update <if= PlotStatus %id% else %pop% if= v%id%01 0 V= %id%01 1 Exit %3% MoveAndPacifyNPC %1% %3% MoveNPC %4% %3%>
 
-	start <if= v%id%01 1 else %pop% Alert %id%01 ForceChat %1% Goto %pop%>
+	start <if= v%id%01 1 else %pop% Alert %id%01 ForceChat %1% V= %id%01 2 Goto %pop%>
 	Msg%id%01 <You are taken to %name3%.>
 
 	sub
@@ -390,7 +390,7 @@ Content
 
 	update <if= PlotStatus %id% else %pop% if= v%id%01 0 V= %id%01 1 Exit %3% MoveAndPacifyNPC %1% %3%>
 
-	start <if= v%id%01 1 else %pop% Alert %id%01 ForceChat %1% Goto %pop%>
+	start <if= v%id%01 1 else %pop% Alert %id%01 ForceChat %1% V= %id%01 2 Goto %pop%>
 	Msg%id%01 <You are taken to %name3%.>
 
 	% The only subplot is a delay before the next mission.
@@ -425,7 +425,7 @@ Content
 
 	update <if= PlotStatus %id% else %pop% if= v%id%01 0 V= %id%01 1 Exit %4% MoveAndPacifyNPC %1% %4%>
 
-	start <if= v%id%01 1 else %pop% Alert %id%01 ForceChat %1% Goto %pop%>
+	start <if= v%id%01 1 else %pop% Alert %id%01 ForceChat %1%  V= %id%01 2  Goto %pop%>
 	Msg%id%01 <You are taken to a secret base of %name2%.>
 
 	% The only subplot is a delay before the next mission.
