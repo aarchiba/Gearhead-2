@@ -47,4 +47,105 @@ Plot
 		CMsg_6 <ifNPCMelancholy Accept>
 	end
 
+Plot
+	name <Shrine Destroyed>
+	desc <A shrine is destroyed; the caretaker demands action!>
+	requires <#A +T-- +Pun C:FAITH I:-->
+
+	% E1 is a metascene
+	% E2 is a public scene; the "natural home" of the monk
+	% E3 is the monk who will tell the PC about the situation
+	% E4 is the artifact the attackers may have been looking for
+	% E5 is a location for a combat mission
+	% E6 is the other researcher
+	element1 <Metascene  !Near -7 *Building NeverFail>
+	element2 <Scene Public Legit !Near -7>
+	element3 <Character "FAITH" !Near 2 NeverFail>
+	neverfail3 <Monk>
+	Place3 <1 (Citizens) Pass>
+	element4 <Artifact PreZero>
+	element5 <Scene Environs !Near -7>
+	element6 <Prefab>
+
+	% P1 = Initialization Counter
+
+	start <if= PlotStatus 0 ifNPCOK E3 else GoLose>
+	GoLose <LoseComp 0 .loss>
+	.loss <+T-- +F-->
+
+	update <if=  P1 0  P= 1 1    News 1   FreezeItem E4>
+
+	Msg1 <The Ecumenical Temple of \NARRATIVE 7 was heavily damaged today when a force of unidentified mecha attacked %name1%.>
+
+	% SubPlot1 is the combat encounter, should the PC want to go after the people
+	%  who did this.
+	SubPlot1 <*CS_MechaRetribution 3 5>
+
+	sub
+		MetaScene 1
+		% The Ecumenical Temple
+		ClubMap
+		MapWidth 20
+		MapHeight 25
+		type <TEMPLE LEGIT BUILDING PUBLIC>
+		special <AddExit>
+		nu1 <if= T1 0 Return>
+		inv
+			STC SHRINE-1
+		end
+		sub
+			Team 1
+
+			Team 2
+			name <Civilian>
+			setally 1
+			Passive
+
+			room
+			name <Foyer>
+			desig <EntranceGrid>
+			Content <Some 4 45 Here *URBAN_X>
+		end
+
+		Persona 3
+		% The persona of the monk to give the mission...
+		greeting <if# PlotStatus 0 else GoStartPlot NewChat SayAnything>
+		*GoStartPlot <*DestructionGreeting GoTellStory &EnemyFac>
+		GoTellStory <NewChat ifNPCPassionate else GoEasyStory Say 1 AddChat 1 AddChat 2>
+		GoEasyStory <Say 2 AddChat 3 AddChat 4>
+		result1 <NewChat Say 3 History 10 SMemo 4 History 11  AddEasygoing -10 Goto GoPassionateWin>
+		GoPassionateWin <&SetTargetItem %4% SetPlotStatus %id1%>
+		result2 <NewChat Say 5 AddChat 1 AddChat 3>
+		result3 <NewChat Say 6 AddChat 4 AddChat 5>
+		result4 <NewChat Say 7 AddChat 7 AddChat 6>
+		result5 <NewChat Say 8 History 10 StoryNote 9  AddEasygoing 10  Goto GoEasyWin>
+		GoEasyWin <FreezeNPC %6% &SetTargetChar %6% &SetTargetItem %4%  NegateComp 0 .easygoing>
+		.easygoing <+Pla +Tlt +Fin>
+		result6 <Goto result5>
+		result7 <Goto result1>
+		Msg1 <The animals who destroyed this temple must be punished.>
+		Msg2 <They must have attacked this place because they were looking for the %name4% ... It's not here any longer, but I fear what dark purpose they have planned for it.>
+		Msg3 <They can't have gotten far... You should be able to find them somewhere in %name5%.>
+		Msg4 <%name3% asked you to find the mecha in %name5% who attacked \PPR E3 temple.>
+		Msg5 <They must have been searching for the %name4% . It was here once, a long time ago, but was moved years ago.>
+		Msg6 <It's an artifact from PreZero times; a relic from the past... and perhaps something more. Professor %name6% was researching it but I don't know where it is now.>
+		Msg7 <There will be time for that later. Right now, I'm concerned about %name6% ... \SPR %6% has been researching the %name4% and the same thugs who attacked this temple may go after \OPR %6% .>
+		Msg8 <Go find Professor %name6% , then, before the people who attacked the temple find \OPR %6% .>
+		Msg9 <%name3% asked you to find %name6% , who knows about the %name4%.>
+		Msg10 <Unknown mecha destroyed the Ecumenical Temple in \NARRATIVE 7 .>
+		Msg11 <%name3% asked you to find the mecha who attacked \PPR E3 temple.>
+		Prompt1 <I could bring them to justice.>
+		Prompt1_1 <I could bring make them pay for it.>
+		Prompt2 <Why did they attack this temple?>
+		Prompt2_1 <Why was this place attacked?>
+		Prompt3 <What is the %name4%?>
+		Prompt4 <The people responsible for this must be punished.>
+		Prompt5 <I could find it for you.>
+		Prompt6 <I'll find %name6% and protect \OPR %6% .>
+		Prompt7 <It'd be better if I found those mecha.>
+	end
+	inv
+		NPC Professor
+		chardesc Old Heroic Spiritual
+	end
 

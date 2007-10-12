@@ -731,8 +731,8 @@ begin
 
 		end else if ( MoveAction = NAV_Stop ) or ( MoveAction = NAV_Hover ) then begin
 			{ Flying mecha can only stop if they are }
-			{ capable of skimming. }
-			it := BaseMoveRate( Scene, Mek , MM_Skim ) > 0;
+			{ capable of skimming, or on an oversized map. }
+			it := ( BaseMoveRate( Scene, Mek , MM_Skim ) > 0 ) or ( ( Scene <> Nil ) and ( Scene^.V > Mek^.Scale ) );
 		end;
 	end else if MoveAction = NAV_Hover then begin
 		{ Only flying mecha are capable of hovering, and even those might not }

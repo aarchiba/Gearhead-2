@@ -22,6 +22,37 @@
 %%
 
 Plot
+	name <Someone Else Looking>
+	desc <The PC will be informed of his new rival.>
+	requires <*CS_Conversation +Pla +Fin E:-- ~1:ACADE ~1:THIEF>
+
+	% E1 is the person with the information
+	% E2 is the new rival
+	Element2 <NewNPC -2 -7>
+
+	start <if= PlotStatus %id% else %pop% ifNPCDead %1% LoseComp 0 .%id%_loss>
+	.%id%_loss <+T-- +F-->
+
+	sub
+		Persona 1
+		% V%id%01, V%id%02 = Question indicators
+		greeting <if= PlotStatus %id% else %pop% Goto .%id%_GoIntro>
+		*.%id%_GoIntro <*LookingForItem &TargetItem .%id%_GoExplain>
+		.%id%_GoExplain <NewChat Say %id%01 StoryNote %id%02 AddChat %id%01 AddChat %id%02 FreezeNPC %2% &SetEnemyChar %2% WinComp 0 .%id%_win>
+		.%id%_win <+T-- +F-->
+		Result%id%01 <NewChat Say %id%03 V= %id%01 1 AddChat %id%02>
+		Result%id%02 <NewChat Say %id%04 V= %id%02 1 AddChat %id%01>
+		Msg%id%01 <Who isn't looking for the \ITEM &TargetItem ? I just had someone named %name2% in earlier asking about it, though at least you have more manners than \OPR %2% .>
+		Msg%id%02 <%name1% revealed that %name2% is also looking for the \ITEM &TargetItem .>
+		Msg%id%03 <If I knew that don't you think I'd have it for myself? My advice, forget about the \ITEM &TargetItem . Go look for something easy to find, like the Argoseyer or the Holy Grail.>
+		Msg%id%04 <I don't know, I'm just glad \SPR %2% left without killing me. Why, you're not a friend of \OPR %2% are you?>
+		Prompt%id%01 <Tell me where the \ITEM &TargetItem is.>
+		CPrompt%id%01 <if= v%id%01 0 Accept>
+		Prompt%id%02 <Where did %name2% go?>
+		CPrompt%id%02 <if= v%id%02 0 Accept>
+	end
+
+Plot
 	name <Why Are They Doing It?>
 	desc <The PC will be directed to someone who may have answers.>
 	requires <*CS_Conversation +Pun (C:MEDIA|+Gkn) ~E:-- ~F:-- (1:POLIT|1:MEDIA|1:POLIC|1:ADVEN|1:MILIT|1:CORPO)>

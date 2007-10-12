@@ -451,6 +451,68 @@ Content
 		update <if= PlotStatus %id% else GoHide SetStat STAT_MetaVisibility 0  Goto GoSetOrders>
 	end
 
+%%
+%% *CS_Win_MechaRetribution
+%%
+%% The PC has won a mecha retribution encounter. This subplot is free to modify
+%% the story as it sees fit.
+%%
+%% Param1: The Mission-giver
+
+Content
+	name <There Are Others>
+	desc <The NPC will refer the PC to someone else who's had problems.>
+	requires <*CS_Win_MechaRetribution>
+
+	% E1 is the NPC.
+	% E2 is the other NPC who's had troubles
+	% E3 is the scene for the next meeting
+	Element2 <Character !Near -7 !Okay -3 !Xclude -2 !Okay 1>
+	Element3 <Scene Building Public !Okay 2>
+
+	start <if= PlotStatus %id% else %pop% ifNPCDead %1% SMemo 0 WinComp 0 .%id%_loss>
+	.%id%_loss <+T-- +F-->
+
+	sub
+		Persona 1
+		greeting <if= PlotStatus %id% else %pop% NewChat Say %id%01 AddChat %id%01 AddChat %id%02 SMemo 0 Goto .%id%_GoEnd>
+		.%id%_GoEnd <CashPrize Reward Threat StoryDL 100 500 SMemo 0 NTBWinComp 0 .%id%_win>
+		.%id%_win <+T-- +F-->
+		Result%id%01 <ifNPCOK %2% else .%id%_GoFail NewChat Say %id%02 StoryNote %id%03 &SetTargetChar %2% &SetCompScene %3% AlterContext .%id%_GoHelp>
+		.%id%_GoHelp <+Tgt +Fmi>
+		.%id%_GoFail <NewChat Say %id%05>
+		Result%id%02 <NewChat  AddSociable -d10  Say %id%04>
+		Msg%id%01_10 <You've made \FACTION &EnemyFac pay for what they did here, but they haven't been stopped. I know there are others who have suffered at their hands.>
+		CMsg%id%01_10 <ifFactionExists &EnemyFac Accept>
+		Msg%id%01_20 <You've made those raiders pay, but I fear that this is only the beginning. Other people have also been attacked.>
+		CMsg%id%01_20 <if= &EnemyFac 0 Accept>
+		Msg%id%02 <In that case, go see %name2% at %name3% . I hear that \SPR %2% has also suffered from unprovoked mecha attacks.>
+		Msg%id%03 <%name1% sent you to help %name2% at %name3% .>
+		Msg%id%04 <Given time, it's likely to become everyone's problem.>
+		Msg%id%05 <I'm sure that given time you'll get that chance.>
+		Prompt%id%01 <I'd like to help them, too.>
+		Prompt%id%02 <That's not my problem.>
+	end
+
+Content
+	name <Justice Has Been Served>
+	desc <The NPC will pay the PC for the job.>
+	requires <*CS_Win_MechaRetribution -1:THIEF>
+
+	% E1 is the NPC.
+
+	start <if= PlotStatus %id% else %pop% ifNPCDead %1% SMemo 0 WinComp 0 .%id%_loss>
+	.%id%_loss <+T-- +F-->
+
+	sub
+		Persona 1
+		greeting <if= PlotStatus %id% else %pop% NewChat Say %id%01 SMemo 0 Goto .%id%_GoEnd>
+		.%id%_GoEnd <CashPrize Reward Threat StoryDL 100 500 SMemo 0 NTBWinComp 0 .%id%_win>
+		.%id%_win <+T-- +F-->
+		Msg%id%01 <They have been punished. Thanks for your help.>
+	end
+
+
 
 %%
 %% *CS_Win_UnexpectedMeeting Content
@@ -647,23 +709,6 @@ Plot
 		Prompt%id%03 <Thank you.>
 	end
 
-Content
-	name <Here, have some money>
-	desc <The NPC will pay the PC for the job.>
-	requires <*CS_Win_ToUnknownEnemy>
-
-	% E1 is the NPC.
-
-	start <if= PlotStatus %id% else %pop% ifNPCDead %1% SMemo 0 WinComp 0 .%id%_loss>
-	.%id%_loss <+T-- +F-->
-
-	sub
-		Persona 1
-		greeting <if= PlotStatus %id% else %pop% gOTO .%id%_GoReportSuccess>
-		*.%id%_GoReportSuccess <*MissionWasSuccess&Reward .%id%_GoEnd &AllyFac &EnemyFac>
-		.%id%_GoEnd <CashPrize Reward Threat StoryDL 100 500 SMemo 0 NTBWinComp 0 .%id%_win>
-		.%id%_win <+T-- +F-->
-	end
 
 %%
 %% *CS_Loss_ToUnknownEnemy Content
@@ -840,6 +885,44 @@ Content
 %%
 
 Content
+	name <Pass the Buck>
+	desc <The NPC will send the PC to talk with someone else.>
+	requires <*CS_CAWinMission>
+
+	% E1 is the NPC.
+	% E2 is another NPC the PC can speak with
+	% E3 is a scene for the meeting
+	Element2 <Character !Near -7 !Ally 1 !Okay -3>
+	Element3 <Scene Building Public !Near -7 !Okay 2>
+
+	start <if= PlotStatus %id% else %pop% ifNPCDead %1% SMemo 0 WinComp 0 .%id%_loss>
+	.%id%_loss <+T-- +F-->
+
+	sub
+		Persona 1
+		greeting <if= PlotStatus %id% else %pop% SMemo 0  ifNPCOK %2% else .%id%_GoReportSuccess  if# ChatNPCFac 0 else .%id%_GoReportSuccess NewChat Say %id%01 SMemo %id%02 Goto .%id%_GoEnd>
+		*.%id%_GoReportSuccess <*MissionWasSuccess&Reward .%id%_GoMeh &AllyFac &EnemyFac>
+		.%id%_GoEnd <CashPrize Reward Threat StoryDL 100 500 &SetTargetChar %2% WinComp %3% .%id%_win>
+		.%id%_win <+Tgt +Fmi>
+		.%id%_GoMeh <CashPrize Reward Threat StoryDL 100 500 NTBWinComp 0 .%id%_meh>
+		.%id%_meh <+T-- +F-->
+		Msg%id%01 <Good work, \PC . If you want to see this through, I believe %name2% at %name3% has another mission you could help with.>
+		Msg%id%01_1 <Thanks \PC . We're going to need a lot of help to fight this problem... I believe %name2% at %name3% is looking for someone to run another mission, if you're interested.>
+		CMsg%id%01_1 <ifNPCSociable Accept>
+		Msg%id%01_2 <Good job. %name2% at %name3% has another mission for you, if you're interested.>
+		CMsg%id%01_2 <ifNPCShy Accept>
+		Msg%id%01_3 <Back for your pay, I see. I believe %name2% at %name3% has another mission if you're planning to continue this.>
+		CMsg%id%01_3 <ifNPCEasygoing Accept>
+		Msg%id%01_4 <One battle's over, but we're a long way from the end yet... %name2% could use some help over at %name3% , if you're up for another mission.>
+		CMsg%id%01_4 <ifNPCPassionate Accept>
+		Msg%id%01_5 <>
+		CMsg%id%01_5 <ifNPCCheerful Accept>
+		Msg%id%01_6 <>
+		CMsg%id%01_6 <ifNPCMelancholy Accept>
+		Msg%id%02 <%name1% sent you to %name2% at %name3% for another mission.>
+	end
+
+Content
 	name <Here, have some money>
 	desc <The NPC will pay the PC for the job.>
 	requires <*CS_CAWinMission>
@@ -856,6 +939,7 @@ Content
 		.%id%_GoEnd <CashPrize Reward Threat StoryDL 100 500 SMemo 0 NTBWinComp 0 .%id%_win>
 		.%id%_win <+T-- +F-->
 	end
+
 
 %%
 %% *CS_CALoseMission Content
