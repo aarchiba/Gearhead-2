@@ -1660,12 +1660,13 @@ end;
 
 Function ThingInSpot( GB: GameBoardPtr; X,Y: Integer ): Boolean;
 	{ Return TRUE if there's a thing in the specified spot, FALSE otherwise. }
+	{ The thing could be either another gear or an obstacle. }
 var
 	M: GearPtr;
 	it: Boolean;
 begin
-	it := False;
-	if GB^.Scene <> Nil then begin
+	it := TerrMan[ TileTerrain( GB , X , Y ) ].Pass = -100;
+	if ( GB^.Scene <> Nil ) and not it then begin
 		M := GB^.Scene^.InvCom;
 		while ( M <> Nil ) and not it do begin
 			it := ( NAttValue( M^.NA , NAG_Location , NAS_X ) = X ) and ( NAttValue( M^.NA , NAG_Location , NAS_Y ) = Y );

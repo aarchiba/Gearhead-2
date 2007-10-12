@@ -22,6 +22,35 @@
 %%
 
 Plot
+	name <Fix My Stuff>
+	desc <The PC will be asked to fix some things.>
+	requires <*CS_Conversation (+P--|+Pla) +F-- C:CRAFT -1:CRAFT ~1:FRIEND ~1:ALLY>
+
+	% E1 is the person who has problems. Lots of them.
+	% E2 is the corporate executive to whom E1 will reccomend the PC
+	%   following the repairs.
+	% E3 is a scene for the next meeting
+	Element2 <Character Corporate !Near -7 !Okay -3 !XClude -2>
+	Element3 <Scene Building Public !Near -7 !Okay -3 !Okay 2>
+
+	start <if= PlotStatus %id% else %pop% ifNPCDead %1% LoseComp 0 .%id%_loss>
+	.%id%_loss <+T-- +F-->
+
+	sub
+		Persona 1
+		% V%id%01 = Have explained situation
+		greeting <if= PlotStatus %id% else %pop% if= V%id%01 0 else .%id%_GoCheckRepair ifChatNPCKnown else .%id%_GoUnknownGreeting Goto .%id%_GoKnownGreeting>
+		*.%id%_GoUnknownGreeting <*INeedYourHelp .%id%_GoExplain .%id%_GoGiveUp>
+		*.%id%_GoKnownGreeting <*HowAreYou .%id%_GoExplain>
+		.%id%_GoGiveUp <NewChat Say %id%01 NTBLoseComp 0 .%id%_Loss>
+		.%id%_Loss <+T-- +F-->
+		.%id%_GoExplain <   V= %id%01 1>
+		.%id%_GoCheckRepair <>
+
+		Msg%id%01 <Fine, be that way. I can find somebody else to help.>
+	end
+
+Plot
 	name <Someone Else Looking>
 	desc <The PC will be informed of his new rival.>
 	requires <*CS_Conversation +Pla +Fin E:-- ~1:ACADE ~1:THIEF>

@@ -2,6 +2,59 @@
 %% told vaguely what's going on in the game world.
 
 Plot
+	name <Trade Show In Town>
+	Size 0
+	desc <There's a trade show in town and you plan to attend.>
+	requires <#A +T01 ~P:-- (C:CRAFT|C:TRADE)>
+
+	% E1 is the cavclub scene
+	% E2 is your friend
+	% E3 is the location of the trade show
+	element1 <Scene !Near -7 cavclub>
+	element2 <NewNPC -3 -7 PCFriend>
+	place2 <1 pass>
+	element3 <MetaScene !Near -7 *Building NeverFail>
+
+	% P1 = Forcechat counter
+	update <if= P1 0 P= 1 1 ForceChat %2%>
+
+	sub
+		Persona 2
+		% THE INTRO
+		% - All +T01 components should feature a intro character. They don't have to,
+		%   of course, but it'll be a major pissoff if they don't.
+		% - The intro character should follow this form, to insure that all the major
+		%   bits are in place: the introduction, the question, the story info, and the
+		%   advice.
+		% V1 = Have given story info.
+		greeting <StoryNote 2  WinComp %3% .next  if= V1 1 else GoGreeting Goto GoAdvice>
+		.next <+Tsh +Fcc>
+		*GoGreeting <*INTRO_Introduction GoAskQuestion>
+		*GoAskQuestion <*INTRO_Question GoStoryInfo>
+		GoStoryInfo <NewChat Say 1 V= 1 1 AddChat 1 AddChat 2>
+		*GoAdvice <*INTRO_Advice>
+		Result1 <AddCheerful  d5   Goto GoAdvice>
+		Result2 <AddCheerful -d5   Goto GoAdvice>
+		Msg1 <Are you ready for the big trade show at %name3%? If you're lucky, you'll be able to make some contacts and maybe even get a mission there.>
+		Msg1_1 <>
+		CMsg1_1 <ifNPCSociable Accept>
+		Msg1_2 <>
+		CMsg1_2 <ifNPCShy Accept>
+		Msg1_3 <>
+		CMsg1_3 <ifNPCEasygoing Accept>
+		Msg1_4 <>
+		CMsg1_4 <ifNPCPassionate Accept>
+		Msg1_5 <>
+		CMsg1_5 <ifNPCCheerful Accept>
+		Msg1_6 <>
+		CMsg1_6 <ifNPCMelancholy Accept>
+		Msg2 <You were invited to a trade conference at %name3%.>
+		Prompt1 <I'm ready. It should be a lot of fun.>
+		Prompt2 <It's going to be a pain in the arse, but I have it go.>
+	end
+
+
+Plot
 	name <Meet Professor>
 	Size 0
 	desc <You're reminded to meet your professor.>
