@@ -24,13 +24,14 @@
 Plot
 	name <Fix My Stuff>
 	desc <The PC will be asked to fix some things.>
-	requires <*CS_Conversation (+P--|+Pla) +F-- C:CRAFT -1:CRAFT ~1:FRIEND ~1:ALLY>
+	requires <*CS_Conversation (+P--|+Pla) +F-- C:CRAFT -1:CRAFT ~1:FRIEND ~1:ALLY (!Ne|!Lo)>
+	Size 3
 
 	% E1 is the person who has problems. Lots of them.
 	% E2 is the corporate executive to whom E1 will reccomend the PC
 	%   following the repairs.
 	% E3 is a scene for the next meeting
-	Element2 <Character Corporate !Near -7 !Okay -3 !XClude -2>
+	Element2 <Character Corporate !Near -7 !Okay -3 !Okay 1 !XClude -2>
 	Element3 <Scene Building Public !Near -7 !Okay -3 !Okay 2>
 
 	start <if= PlotStatus %id% else %pop% ifNPCDead %1% LoseComp 0 .%id%_loss>
@@ -39,15 +40,65 @@ Plot
 	sub
 		Persona 1
 		% V%id%01 = Have explained situation
-		greeting <if= PlotStatus %id% else %pop% if= V%id%01 0 else .%id%_GoCheckRepair ifChatNPCKnown else .%id%_GoUnknownGreeting Goto .%id%_GoKnownGreeting>
+		% V%id%02 = Skill for test
+		greeting <if= PlotStatus %id% else %pop% if= V%id%01 0 else .%id%_GoCheckRepair if= ChatNPCRelationship 0 else .%id%_GoKnownGreeting ifChatNPCKnown else .%id%_GoUnknownGreeting Goto .%id%_GoKnownGreeting>
 		*.%id%_GoUnknownGreeting <*INeedYourHelp .%id%_GoExplain .%id%_GoGiveUp>
 		*.%id%_GoKnownGreeting <*HowAreYou .%id%_GoExplain>
-		.%id%_GoGiveUp <NewChat Say %id%01 NTBLoseComp 0 .%id%_Loss>
+		.%id%_GoGiveUp <NewChat Say %id%01 SMemo 0  NTBLoseComp 0 .%id%_Loss>
 		.%id%_Loss <+T-- +F-->
-		.%id%_GoExplain <   V= %id%01 1>
-		.%id%_GoCheckRepair <>
-
+		.%id%_GoExplain <NewChat Say %id%02 StoryNote %id%03   AddChat %id%01 AddChat %id%02   V= %id%01 1>
+		.%id%_GoCheckRepair <NewChat Say %id%04 AddChat %id%03 AddChat %id%04 AddChat %id%05 AddChat %id%06>
+		.%id%_GoRepairFailed <NewChat Say %id%09 AddChat %id%10 AddCHat %id%11 AddChat %id%06>
+		.%id%_GoRepairSucceed <AddReact d20 ifNPCOK %2% else .%id%_GoTrivial NewChat Say %id%10 SMemo %id%12 XPV 100 &SetTargetChar %2% WinComp %3% .%id%_Win  AddChat %id%12 AddChat %id%13>
+		.%id%_Win <+Tgt +Fmi>
+		.%id%_GoTrivial <NewChat Say %id%11 SMemo 0 XPV 100 NTBWinComp 0 .%id%_Loss if= ChatNPCRelationship 0 PCFriend %1%>
+		result%id%01 <Goto .%id%_GoCheckRepair>
+		result%id%02 <NewChat Say %id%05 AddChat %id%07 AddChat %id%08>
+		% The car needs Mecha Repair (15), the videoset General Repair (23), and the
+		% computer Code Breaking (32)
+		result%id%03 <EndChat Say %id%06 V= %id%02 15 AddChat %id%09>
+		result%id%04 <EndChat Say %id%07 V= %id%02 23 AddChat %id%09>
+		result%id%05 <EndChat Say %id%08 V= %id%02 32 AddChat %id%09>
+		result%id%06 <Goto .%id%_GoGiveUp>
+		result%id%07 <Goto .%id%_GoCheckRepair>
+		result%id%08 <Goto .%id%_GoGiveUp>
+		result%id%09 <ifSkillTest V%id%02 SkillTar StoryDL else .%id%_GoRepairFailed Goto .%id%_GoRepairSucceed>
+		result%id%10 <NewChat Say %id%13 AddChat %id%03 AddChat %id%04 AddChat %id%05 AddChat %id%06>
+		result%id%11 <NewChat Say %id%14>
+		result%id%12 <NewChat Say %id%15 History %id%12>
+		result%id%13 <NewChat Say %id%16 SMemo 0 &SetTargetChar %1% AlterContext .%id%_Loss>
 		Msg%id%01 <Fine, be that way. I can find somebody else to help.>
+		Msg%id%02 <I need some technical help. There are a couple of things around my house which need fixing. I know you're pretty good with machines, so if you wouldn't mind...>
+		Msg%id%03 <%name1% asked you to fix some of \PPR %1% things.>
+		Msg%id%04 <My videoset is busted, my computer's picked up some kind of virus, and my car has been making a kind of grindy-whiny noise.>
+		Msg%id%05 <I thought you were a professional... Anyhow, I can't afford to bring all this stuff to a shop.>
+		Msg%id%06 <Great. I don't know exactly what's wrong; I had the plasma grid relined just a few weeks ago.>
+		Msg%id%07 <Thanks. Sometimes there's no picture, but when there is it's all purple. The audio works fine, though.>
+		Msg%id%08 <I don't know what's wrong with it. My friend was using it a few days ago; I think he might have done something with it.>
+		Msg%id%09 <I'm sorry, but you don't seem to be good enough to fix this.>
+		Msg%id%10_10 <Thanks, it works now! Say, if you're looking for some work that might actually pay money, I know that %name2% needs help with something. I can put in a good word for you.>
+		CMsg%id%10_10 <if= NPCFac %2% 0 Accept>
+		Msg%id%10_20 <Thanks, it works now! Say, if you're looking for some work that might actually pay money, I know that %name2% of \FACTION NPCFac %2% needs help with something. I can put in a good word for you.>
+		CMsg%id%10_20 <if# NPCFac %2% 0 Accept>
+		Msg%id%11 <Thanks, it works now! I wish I had some useful information to give you in exchange for the help, but at least you have my gratitude.>
+		Msg%id%12 <%name1% sent you to do some work for %name2% at %name3%.>
+		Msg%id%13 <Sure. What do you want to take a look at?>
+		Msg%id%14 <No problem. I may be asking for free service, but I'm not going to be pushy about it.>
+		Msg%id%15 <You can find \OPR %2% at %name3% . Just tell \OPR %2% that I sent you and you're sure to get a job.>
+		Msg%id%16 <It's up to you. Once again, thanks for the help.>
+		Prompt%id%01 <Alright, let me take a look.>
+		Prompt%id%02 <Why don't you go to a professional, instead?>
+		Prompt%id%03 <I'll take a look at the car.>
+		Prompt%id%04 <I'll take a look at the videoset.>
+		Prompt%id%05 <I'll take a look at the computer.>
+		Prompt%id%06 <That's enough. I can't fix your stuff.>
+		Prompt%id%07 <Fine. Tell me what's wrong.>
+		Prompt%id%08 <You can't afford me, either.>
+		Prompt%id%09 <[Attempt Repair]>
+		Prompt%id%10 <Let me try something else.>
+		Prompt%id%11 <I'll be back later to try again.>
+		Prompt%id%12 <I'll do that.>
+		Prompt%id%13 <Sorry, I'm not interested.>
 	end
 
 Plot

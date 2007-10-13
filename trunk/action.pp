@@ -455,6 +455,7 @@ var
 		{ ammo and add it to the OVERKILL history variable. }
 	var
 		NumShots: Integer;
+		M: GearPtr;
 	begin
 		{ Only installed ammo can explode. This may seem silly, and it }
 		{ probably is, but otherwise carrying replacement clips is }
@@ -465,7 +466,10 @@ var
 		{ If it is empty, no ammo explosion will take place. }
 		NumShots := Part^.Stat[ STAT_AmmoPresent ] - NAttValue( Part^.NA , NAG_WeaponModifier , NAS_AmmoSpent );
 		if NumShots > 0 then begin
-			DAMAGE_OverKill := DAMAGE_OverKill + RollDamage( Part^.V + NumShots , Part^.Scale );
+			M := FindModule( Part );
+			if ( M = Nil ) or ( M^.S <> GS_Storage ) then begin
+				DAMAGE_OverKill := DAMAGE_OverKill + RollDamage( Part^.V + NumShots , Part^.Scale );
+			end;
 		end;
 	end;
 

@@ -9,6 +9,7 @@ ArenaMission
 	PayRate 500
 
 	SpaceMap
+	terrain <SPACE>
 	SpaceScroll
 	Microgravity
 	Vacuum
@@ -87,6 +88,7 @@ ArenaMission
 	desc <%name1% pilot %name2% has been encountered in space.>
 
 	SpaceMap
+	terrain <SPACE>
 	SpaceScroll
 	Microgravity
 	Vacuum
@@ -140,6 +142,7 @@ ArenaMission
 	desc <An asteroid base belonging to %name1% pilot %name2% has been found.>
 
 	AsteroidMap
+	terrain <GROUND>
 	RockyTiles
 	Vacuum
 	SpaceBackdrop
