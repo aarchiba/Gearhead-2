@@ -492,82 +492,9 @@ Plot
 
 	end
 
-
-
-
 %% COMP_P--.txt
 %%
 %%  Peaceful Life components
-
-
-Plot
-	name <Meet Enemy Fighter>
-	desc <PC meets a rival corporate pilot at the convention, and will be challenged to duel.>
-	requires <+Tsh +P-- E:-- (F:--|F:cor) ~+Fcc>
-	Size 1
-
-	% V1 = Initialization Counter
-	% V2 = Challenge accepted counter
-	% V3 = Original enemy faction
-
-	% E1 is the scene where this component will take place
-	% E2 is the faction to which the enemy belongs
-	% E3 is the natural home of the enemy
-	% E4 is the enemy character itself
-	% E5 is a scene outside
-	% E6 is the encounter to be used for the duel
-	element1 <Grab 6>
-	element2 <Faction Corporate ArchEnemy !Okay -2>
-	element3 <Scene Building Public !Okay 2>
-	element4 <Prefab>
-	Place4 <3 Pass>
-	element5 <Scene Urban !Near -7>
-	element6 <Prefab>
-	place6 <5>
-
-	start <ifNPCOK E4 else GoDelete>
-	GoDelete <LoseComp 0 .loss>
-	.loss <+T-- +F-->
-
-	update <if= V1 0 V= 1 1  MoveNPC E4 E1  SetNPCFaction E4 E2  NPCLevel E4 StoryDL V= 3 &EnemyFac>
-
-	return <if= V2 1 ifNPCOK E4 if= &EnemyChar 0 if= &EnemyFac V3 &SetEnemyChar E4 &SetTargetChar 0 &SetEnemyFac E2>
-
-	sub
-		Persona 4
-		special <UNLISTED>
-		rumor <%name4% has been looking for someone to challenge.>
-		*Greeting <*NiceToMeetYou GoChallenge>
-		GoChallenge <NewChat say 1 AddChat 1 AddChat 2>
-		GoAcceptChallenge <StoryNote 3 &SetTargetChar E4 P= 2 1 WinComp E6 .next>
-		.next <+Tdu +F-- +Pme>
-		result1 <NewChat Say 2 Goto GoAcceptChallenge>
-		result2 <NewChat Say 4 AddChat 3 AddChat 4>
-		result3 <Goto result1>
-		result4 <&SetEnemyChar E4 StoryNote 7  ifG PCRenown StoryDL else GoR4Fail NewChat Say 6 AddReact d6  WinComp 0 .loss>
-		GoR4Fail <NewChat Say 5 AddRenown -1 LoseComp 0 .loss>
-		.loss <+T-- +F-- +Pme>
-		Msg1 <You work for the competition, don't you? Let's take our mecha to the streets of \ELEMENT 5 and see which one of us is better.>
-		Msg2 <Meet me in \ELEMENT 5 then.>
-		Msg3 <You were challenged to a duel by \ELEMENT 2 pilot \ELEMENT 4 in \ELEMENT 5 .>
-		Msg4 <Are you afraid that you'll lose? Come now, you can't tell me that you're as timid as that.>
-		Msg5 <So that's how it is...>
-		Msg6 <I see. Well, I was hoping to test my skill against the famous \PC , but it seems I will have to be disappointed.>
-		Msg7 <You were challenged to a duel by \ELEMENT 2 pilot \ELEMENT 4 , but refused.>
-		Prompt1 <Sounds good. Let's go.>
-		Prompt2 <I've got better things to do than fight you.>
-		Prompt3 <Alright, if you really want, let's do this.>
-		Prompt4 <No, really, I don't want to fight.>
-
-		STC MS_SOCIAL
-		SetID 1
-	end
-	inv
-		NPC Mecha Pilot
-		job <Corporate Pilot>
-
-		STC ENCOUNTER-DUEL
-	end
 
 Plot
 	name <Boring Guard Job>
