@@ -56,6 +56,7 @@ selected quickly without doing full element searches. The standard palette entri
 	S:meta for metascene, S:perm for perminant scene
 7. Root location of current episode (L:)
 8. Target Item (I:)
+9. Partner (R:)
 
 These labels are followed by "++" if the element exists, or "--" if the element doesn't.
 In addition, the desig and context strings for each element are included. For instance,
@@ -158,9 +159,9 @@ LOCAL DESCRIPTORS
 	+Tgt	Goto target for conversation
 	+Tht	The PC goes on a manhunt for target, who is actively avoiding him
 	+Tlt	Look for target to speak with him; the target is not actively avoiding the PC
+	+Tsh	PC will attend a party/conference
 
 	+Tda	PC will go on a date with the target character
-	+Tsh	PC will attend a party/conference
 
 	+Ten	Go to Encounter -> often to fight...
 	+Tgs	Guard Scene

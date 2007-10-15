@@ -528,6 +528,43 @@ Content
 %%
 
 Content
+	name <You Work Well Together>
+	desc <The PC will be teamed up with the person he just met.>
+	requires <*CS_Win_UnexpectedMeeting R:-- 1:ALLY -2:ENEMY (1:CORPO|1:TRADE|1:LABOR|1:POLIT) (2:CORPO|2:LABOR)>
+
+	% E1 is the mission-giver.
+	% E2 is the NPC previously met
+
+	% V%id%01 = Initialization counter
+	update <if= PlotStatus %id% else %pop% if= v%id%01 0 else %pop% MoveNPC %2% NPCScene %1% V= %id%01 1>
+
+	start <if= PlotStatus %id% else %pop% ifNPCDead %1%  SMemo 0 WinComp 0 .%id%_loss>
+	.%id%_loss <+T-- +F-->
+
+	sub
+		Persona 1
+		greeting <if= PlotStatus %id% else %pop% ifNPCOK %2% else .%id%_GoTrivial ifCHatNPCInPlay else .%id%_GoNotHere NewChat Say %id%01  AddChat %id%01  AddChat %id%02>
+		*.%id%_GoTrivial <*MissionWasSuccess&Reward .%id%_GoEnd &AllyFac &EnemyFac>
+		.%id%_GoEnd <CashPrize Reward Threat StoryDL 100 300  SMemo 0  NTBWinComp 0 .%id%_end>
+		.%id%_GoNotHere <NewChat Say %id%02>
+		.%id%_end <+T-- +F-->
+		Result%id%01 <NewChat Say %id%03 StoryNote %id%04 &SetPartnerChar %2% Goto .%id%_GoEnd>
+		Result%id%02 <NewChat Say %id%05 SMemo 0           AddSociable -d10   Goto .%id%_GoEnd>
+		Msg%id%01 <Good work out there, \PC . I hear that you met %name2% during the mission. How did you enjoy working together?>
+		Msg%id%02 <Come to \SCENE NPCScene %1% and we can talk there.>
+		Msg%id%03 <In that case, I'd like to assign \SPR %1% as your partner. Here's your pay for a successful mission.>
+		Msg%id%04 <%name1% assigned %name2% as your partner.>
+		Msg%id%05 <That's too bad. Well, here's your pay for a successful mission.>
+		Prompt%id%01 <I'd say we made a good team.>
+		Prompt%id%02 <That's not something I'd want to do again.>
+
+		Persona 2
+		greeting <if= PlotStatus %id% else %pop% NewChat Say %id%01>
+		Msg%id%01 <You should go speak with %name1% now.>
+	end
+
+
+Content
 	name <He'll want to thank you>
 	desc <The PC will be sent to find the NPC, because he'll want to thank him.>
 	requires <*CS_Win_UnexpectedMeeting &Rescue>
@@ -540,7 +577,7 @@ Content
 
 	sub
 		Persona 1
-		greeting <if= PlotStatus %id% else %pop% CashPrize CashPrize Reward Threat StoryDL 100 300 ifNPCOK %2% else .%id%_GoNPCGone Goto .%id%_GoSearchNPC>
+		greeting <if= PlotStatus %id% else %pop% CashPrize Reward Threat StoryDL 100 300 ifNPCOK %2% else .%id%_GoNPCGone Goto .%id%_GoSearchNPC>
 		.%id%_GoSearchNPC <NewChat Say %id%01 SMemo %id%02 &SetTargetChar %2% WinComp 0 .%id%_Win>
 		*.%id%_GoNPCGone <*MissionWasSuccess&Reward .%id%_GoEnd &AllyFac &EnemyFac>
 		.%id%_GoEnd <SMemo 0 WinComp 0 .%id%_end>
