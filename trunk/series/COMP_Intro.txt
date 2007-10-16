@@ -96,7 +96,7 @@ Plot
 		%   bits are in place: the introduction, the question, the story info, and the
 		%   advice.
 		% V1 = Have given story info.
-		greeting <&SetTargetChar E6 &SetTargetItem E5   SMemo 2  WinComp E1 .next  if= V1 1 else GoGreeting Goto GoAdvice>
+		greeting <&SetTargetNPC E6 &SetTargetItem E5   SMemo 2  WinComp E1 .next  if= V1 1 else GoGreeting Goto GoAdvice>
 		.next <+Tgt +Fin +Pla>
 		*GoGreeting <*INTRO_Introduction GoAskQuestion>
 		*GoAskQuestion <*INTRO_Question GoStoryInfo>
@@ -152,7 +152,7 @@ Plot
 		%   bits are in place: the introduction, the question, the story info, and the
 		%   advice.
 		% V1 = Have given story info.
-		greeting <&SetTargetChar E5 SMemo 2  WinComp E1 .next  if= V1 1 else GoGreeting Goto GoAdvice>
+		greeting <&SetTargetNPC E5 SMemo 2  WinComp E1 .next  if= V1 1 else GoGreeting Goto GoAdvice>
 		.next <+Tgt +Fin>
 		*GoGreeting <*INTRO_Introduction GoAskQuestion>
 		*GoAskQuestion <*INTRO_Question GoStoryInfo>
@@ -194,7 +194,7 @@ Plot
 	name <Corporate Rivalries>
 	Size 0
 	desc <You have a meeting to discuss a rival corporation.>
-	requires <#A +T01 P:COR>
+	requires <#A +T01 P:CORPO>
 
 	% E1 is the metascene to be used for the meeting.
 	% E2 is the associate you're going to meet.
@@ -222,7 +222,7 @@ Plot
 		%   bits are in place: the introduction, the question, the story info, and the
 		%   advice.
 		% V1 = Have given story info.
-		greeting <&SetTargetChar %2%  &SetEnemyFac %6%   SMemo 2  WinComp %1% .next  if= V1 1 else GoGreeting Goto GoAdvice>
+		greeting <&SetTargetNPC %2%  &SetEnemyFac %6%   SMemo 2  WinComp %1% .next  if= V1 1 else GoGreeting Goto GoAdvice>
 		.next <+Tgt +Fmi>
 		*GoGreeting <*INTRO_Introduction GoAskQuestion>
 		*GoAskQuestion <*INTRO_Question GoStoryInfo>
@@ -337,7 +337,7 @@ Plot
 		%   bits are in place: the introduction, the question, the story info, and the
 		%   advice.
 		% V1 = Have given story info.
-		greeting <&SetTargetChar %3% FreezeNPC %3%   StoryNote 2  WinComp 0 .next  if= V1 1 else GoGreeting Goto GoAdvice>
+		greeting <&SetTargetNPC %3% FreezeNPC %3%   StoryNote 2  WinComp 0 .next  if= V1 1 else GoGreeting Goto GoAdvice>
 		.next <+Tht +Far>
 		*GoGreeting <*INTRO_Introduction GoAskQuestion>
 		*GoAskQuestion <*INTRO_Question GoStoryInfo>
@@ -366,7 +366,7 @@ Plot
 	name <You've Got Work>
 	Size 0
 	desc <You're reminded of a business meeting.>
-	requires <#A +T01 P:++ -P:CRM>
+	requires <#A +T01 P:++ -P:CRIME>
 
 	% E1 is the metascene to be used for the meeting.
 	% E2 is the associate you're going to meet.
@@ -392,7 +392,7 @@ Plot
 		%   bits are in place: the introduction, the question, the story info, and the
 		%   advice.
 		% V1 = Have given story info.
-		greeting <&SetTargetChar %2%   SMemo 2  WinComp %1% .next  if= V1 1 else GoGreeting Goto GoAdvice>
+		greeting <&SetTargetNPC %2%   SMemo 2  WinComp %1% .next  if= V1 1 else GoGreeting Goto GoAdvice>
 		.next <+Tgt +Fmi>
 		*GoGreeting <*INTRO_Introduction GoAskQuestion>
 		*GoAskQuestion <*INTRO_Question GoStoryInfo>
@@ -463,9 +463,9 @@ Plot
 		result2 <NewChat Say 5   AddChat 4   Goto GoRejectDuel>
 		result3 <Goto GoAdvice>
 		result4 <Goto GoAdvice>
-		GoAcceptDuel <&SetTargetChar %5% SMemo 2  WinComp %1% .duel>
+		GoAcceptDuel <&SetTargetNPC %5% SMemo 2  WinComp %1% .duel>
 		.duel <+Tgt +Fch>
-		GoRejectDuel <&SetTargetChar %5% SMemo 3  WinComp %1% .noduel>
+		GoRejectDuel <&SetTargetNPC %5% SMemo 3  WinComp %1% .noduel>
 		.noduel <+Tgt +F-->
 		Msg1 <Did %name5% get in contact with you? Apparently \SPR %5% wants to duel. Something about trying out a new mecha that \SPR %5% just got.>
 		Msg1_1 <Did you see %name5%'s new mecha? It's kind of low-end, but still pretty cool. I think \SPR %5% 's hoping to challenge you to a duel.>
@@ -524,7 +524,7 @@ Plot
 		%   bits are in place: the introduction, the question, the story info, and the
 		%   advice.
 		% V1 = Have given story info.
-		greeting <&SetTargetChar %5%   SMemo 2  WinComp E1 .next  if= V1 1 else GoGreeting Goto GoAdvice>
+		greeting <&SetTargetNPC %5%   SMemo 2  WinComp E1 .next  if= V1 1 else GoGreeting Goto GoAdvice>
 		.next <+Tgt +Fch>
 		*GoGreeting <*INTRO_Introduction GoAskQuestion>
 		*GoAskQuestion <*INTRO_Question GoStoryInfo>
@@ -556,7 +556,7 @@ Plot
 	name <Crime Wave>
 	Size 0
 	desc <A criminal faction is on a crime spree.>
-	requires <#A +T01 (C:CORPO|C:POLIC|P:COR|P:POL)>
+	requires <#A +T01 (C:CORPO|C:POLIC|P:CORPO|P:POLIC)>
 
 	% E1 is the scene where the "Intro NPC" is
 	% E2 is the "Intro NPC"
@@ -635,7 +635,7 @@ Plot
 		%   bits are in place: the introduction, the question, the story info, and the
 		%   advice.
 		% V1 = Have given story info.
-		greeting <&SetTargetChar %5%   SMemo 2  WinComp E1 .next  if= V1 1 else GoGreeting Goto GoAdvice>
+		greeting <&SetTargetNPC %5%   SMemo 2  WinComp E1 .next  if= V1 1 else GoGreeting Goto GoAdvice>
 		.next <+Tgt +F-->
 		*GoGreeting <*INTRO_Introduction GoAskQuestion>
 		*GoAskQuestion <*INTRO_Question GoStoryInfo>

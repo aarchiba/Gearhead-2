@@ -2,7 +2,7 @@ Faction 1
 	name <the L5 Council>
 	desig <MAQUI>
 	desc <The governing body of Maquise Spinner, organized along meritocratic principles.>
-	Context <gov>
+	Context <POLIT>
 	type <Government>
 	jobs <CRAFT POLIT>
 	SetAlly 3 6 9 10
@@ -14,7 +14,7 @@ Faction 2
 	name <Comet Metalworks>
 	desig <COMET>
 	desc <>
-	Context <cor>
+	Context <CORPO>
 	type <Corporate ArenaOK L5PAT>
 	jobs <CRAFT CORPO TRADE>
 	SetEnemy 7 8 13
@@ -37,7 +37,7 @@ Faction 3
 	% V1 = Number of faction rewards pending
 	desig <SILKN>
 	desc <The elite mecha forces of Maquise Spinner.>
-	Context <mil>
+	Context <MILIT>
 	type <Military ArenaOK L5PAT>
 	jobs <MILIT>
 	SetAlly 1
@@ -74,7 +74,7 @@ Faction 4
 	name <Aegis Overlord>
 	desig <AEGIS>
 	desc <The totalitarian government of Luna.>
-	CONTEXT <mil gov>
+	CONTEXT <MILIT POLIT>
 	type <Military Government>
 	SetEnemy 1 3 8
 	mecha_colors <122 130 130 230 20 130 200 200 0>
@@ -83,7 +83,7 @@ Faction 5
 	name <the Pro Duelist Association>
 	desig <PDASS>
 	desc <The association of professional arena pilots.>
-	CONTEXT <spo>
+	CONTEXT <MEDIA>
 	jobs <ADVEN>
 	mecha_colors <201 205 229 208 34 51 0 200 0>
 
@@ -92,7 +92,7 @@ Faction 6
 	% V1 = Number of faction rewards pending
 	desig <PRIVA>
 	desc <The mercenary mecha forces of the L5 Alliance.>
-	Context <mil>
+	Context <MILIT>
 	mecha <MAQUI COMET>
 	type <Military Mercenary ArenaOK L5PAT>
 	jobs <ADVEN MILIT THIEF>
@@ -128,7 +128,7 @@ Faction 7
 	name <Hoeller Industries>
 	desig <HOELL>
 	desc <>
-	Context <cor>
+	Context <CORPO>
 	type <Corporate ArenaOK L5PAT>
 	jobs <CRAFT CORPO TRADE>
 	SetEnemy 2 8 13
@@ -149,7 +149,7 @@ Faction 8
 	name <the Blades of Crihna>
 	desig <CRIHN>
 	desc <>
-	Context <crm>
+	Context <CRIME>
 	type <Crime ArenaOK L5PAT EARTH>
 	jobs <ADVEN THIEF>
 	SetAlly 12
@@ -162,7 +162,7 @@ Faction 9
 	% V1 = Number of faction rewards pending
 	desig <L5LAW>
 	desc <>
-	context <pol>
+	context <POLIC>
 	type <police ArenaOK L5PAT>
 	jobs <POLIC>
 	Controller 1
@@ -196,7 +196,7 @@ Faction 10
 	name <the Free Commerce States>
 	desig <FCOMS>
 	desc <>
-	Context <gov mil>
+	Context <MILIT POLIT>
 	type <Government Military>
 	jobs <POLIT CORPO MEDIA MILIT>
 	SetAlly 1 9
@@ -208,7 +208,7 @@ Faction 11
 	name <the Rishiri Dominion>
 	desig <RISHI>
 	desc <>
-	Context <gov>
+	Context <POLIT>
 	type <Government>
 	jobs <POLIT>
 	SetAlly 9 10 4
@@ -219,7 +219,7 @@ Faction 12
 	name <the Bohemian Collective>
 	desig <BOHEM>
 	desc <>
-	Context <gov>
+	Context <POLIT>
 	type <Government>
 	jobs <POLIT ADVEN FAITH MEDIA>
 	SetAlly 8
@@ -231,7 +231,7 @@ Faction 13
 	name <MUGL Enterprises>
 	desig <MUGLE>
 	desc <>
-	Context <cor>
+	Context <CORPO>
 	type <Corporate ArenaOK L5PAT>
 	jobs <CRAFT CORPO TRADE MEDIA>
 	SetEnemy 2 7 8
@@ -252,7 +252,7 @@ Faction 14
 	name <the Rocket Stars>
 	desig <ROCKE>
 	desc <The elite mecha forces of Rishiri Spinner.>
-	Context <mil>
+	Context <MILIT>
 	type <Military L5PAT>
 	jobs <MILIT ADVEN>
 	SetAlly 11

@@ -180,7 +180,7 @@
 
 	Persona
 	% V%id%01 = Reputation counter
-	requires <*CORE_GuardJob (+P--|+Pme) ~F:-- ~T:COR Common>
+	requires <*CORE_GuardJob (+P--|+Pme) ~F:-- ~T:CORPO Common>
 	START <NewChat Say %id%01 AddChat %id%01 AddChat %id%02 AddChat %id%03>
 	result%id%01 <if= v%id%01 0 else result%id%02 V= %id%01 1 AddEasygoing -d6  NewChat Say %id%03 AddChat %id%04 AddChat %id%03>
 	result%id%02 <StoryNote %id%02  Goto %1%>
@@ -224,7 +224,7 @@
 	prompt%id%04_1 <Alright. I'll guard your dumb building.>
 
 	Persona
-	requires <*CORE_GuardJob (T:COR|T:CORPO) F:CRM (+P--|+Pme|+Pun) Common>
+	requires <*CORE_GuardJob (T:CORPO) F:CRIME (+P--|+Pme|+Pun) Common>
 	% v%id%01 = Trait bonus counter
 	START <NewChat Say %id%01 AddChat %id%01 AddChat %id%02>
 	result%id%01 <StoryNote %id%02 Goto %1%>
@@ -241,7 +241,7 @@
 	Prompt%id%04 <Forget it. I'm out of here.>
 
 	Persona
-	requires <*CORE_GuardJob T:COR F:COR (+P--|+Pme|+Pun) Common>
+	requires <*CORE_GuardJob T:CORPO F:CORPO (+P--|+Pme|+Pun) Common>
 	START <NewChat Say %id%01 AddChat %id%01 AddChat %id%02>
 	result%id%01 <NewChat Say %id%03 AddChat %id%03 AddChat %id%04>
 	result%id%02 <NewChat Say %id%04 AddChat %id%03 AddChat %id%04>
@@ -261,7 +261,7 @@
 	Prompt%id%04_1 <You can guard the building by yourself.>
 
 	Persona
-	requires <*CORE_GuardJob T:POLIC F:CRM Common>
+	requires <*CORE_GuardJob T:POLIC F:CRIME Common>
 	START <NewChat Say %id%01 AddChat %id%01>
 	result%id%01 <StoryNote %id%02 Goto %1%>
 	Msg%id%01 <It seems like the next target of \NARRATIVE 2 is going to be \ELEMENT 3 .>
@@ -392,7 +392,7 @@
 	Prompt%id%02_2 <Find someone else for this mission.>
 
 	Persona
-	requires <*CORE_BasicJob +P-- ~"ArchALLY" P:++ ~P:Mil Common>
+	requires <*CORE_BasicJob +P-- ~"ArchALLY" P:++ ~P:MILIT Common>
 	START <NewChat Say %id%01 AddChat %id%01 AddChat %id%02 AddChat %id%04>
 	result%id%01 <StoryNote %id%04 Goto %1%>
 	result%id%02 <NewChat Say %id%02 AddChat %id%03 AddChat %id%04>

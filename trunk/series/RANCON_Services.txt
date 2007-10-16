@@ -591,7 +591,7 @@ Content
 	end
 
 Content
-	requires <*MECHA_SHOP (MAQUI|FCOMS|RISHI) -HOELL ~COMET>
+	requires <*MECHA_SHOP (MAQUI|FCOMS|RISHI) -HOELL -MUGLE ~COMET>
 	content <Required *DECOR_FOR_SHOP %1% Local>
 	element1 <Prefab>
 	team1 <Citizens>
@@ -608,7 +608,7 @@ Content
 	end
 
 Content
-	requires <*MECHA_SHOP (MAQUI|FCOMS|RISHI) -COMET ~HOELL>
+	requires <*MECHA_SHOP (MAQUI|FCOMS|RISHI) -COMET -MUGLE ~HOELL>
 	content <Required *DECOR_FOR_SHOP %1% Local>
 	element1 <Prefab>
 	team1 <Citizens>
@@ -644,7 +644,7 @@ Content
 	end
 
 Content
-	requires <*MECHANIC_SHOP (MAQUI|FCOMS|RISHI) -HOELL>
+	requires <*MECHANIC_SHOP (MAQUI|FCOMS|RISHI) -HOELL -MUGLE>
 	content <Required *DECOR_FOR_SHOP %1% Local>
 	element1 <Prefab>
 	team1 <Citizens>
@@ -661,7 +661,7 @@ Content
 	end
 
 Content
-	requires <*MECHANIC_SHOP (MAQUI|FCOMS|RISHI) -COMET>
+	requires <*MECHANIC_SHOP (MAQUI|FCOMS|RISHI) -COMET -MUGLE>
 	content <Required *DECOR_FOR_SHOP %1% Local>
 	element1 <Prefab>
 	team1 <Citizens>
@@ -842,7 +842,7 @@ Content
 	end
 
 Content
-	requires <*WEAPON_SHOP (MAQUI|FCOMS) -COMET ~HOELL>
+	requires <*WEAPON_SHOP (MAQUI|FCOMS) -COMET ~HOELL -MUGLE>
 	content <Required *DECOR_FOR_WEAPON_SHOP %1% Local>
 	element1 <Prefab>
 	team1 <Citizens>

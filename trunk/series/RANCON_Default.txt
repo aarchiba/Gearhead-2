@@ -168,7 +168,7 @@ Content
 	end
 
 Content
-	requires <*NPC_GUARD Public ~Government ~Mall Maqui ~Legit>
+	requires <*NPC_GUARD Public ~Government ~Mall (Maqui|FCOMS|RISHI) ~Legit Common>
 	element1 <Prefab>
 	team1 <Guards>
 	teamdesc1 <SD>
@@ -205,7 +205,7 @@ Content
 	end
 
 Content
-	requires <*NPC_GUARD Static Maqui ~Sleazy Public>
+	requires <*NPC_GUARD Static (Maqui|FCOMS) ~Sleazy Public>
 	element1 <Prefab>
 	team1 <guards>
 	teamdata1 <pass>
@@ -398,7 +398,7 @@ Content
 	end
 
 Content
-	requires <*URBAN_X Static Maqui Sleazy>
+	requires <*URBAN_X Static (Maqui|FCOMS) Sleazy>
 	element1 <Prefab>
 	team1 <guards>
 	teamdata1 <pass>
@@ -521,7 +521,7 @@ Content
 		GoMakeOffer <NewChat Say 1 AddChat 1 AddChat 2 AddChat 3>
 		*GoMiscTalk <*MISC_CHATTER>
 		RESULT1 <NewChat Say 2 AddChat 4 AddChat 5>
-		result2 <PCAlly %1% ChatNPCJoinLance V= 1 1 Cash+ -V2 Goto GoWelcome>
+		result2 <PCAlly %1% ChatNPCJoinLance History 4 V= 1 1 Cash+ -V2 Goto GoWelcome>
 		*GoWelcome <*WelcomeToLance>
 		*result3 <*Goodbye>
 		result4 <NewChat Say 3 V= 1 1 AddSociable -10>
@@ -543,6 +543,7 @@ Content
 		Msg2_1 <Do you really mean that, or might you need me sometime in the future?>
 		Msg3 <That's your choice. Be careful, it's a dangerous world out there.>
 		Msg3_1 <Okay, no problem.>
+		Msg4 <You hired %name1% as a lancemate.>
 		Prompt1 <I'm not interested.>
 		Prompt2 <Sounds good. Here you go.>
 		CPrompt2 <ifG PC$ V2 Accept>

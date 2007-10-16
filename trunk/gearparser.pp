@@ -43,7 +43,6 @@ var
 	Factions_List: GearPtr;
 	Mecha_Theme_List: GearPtr;
 
-Procedure ScaleSkillsToLevel( NPC: GearPtr; Lvl: Integer );
 Procedure SetSkillsAtLevel( NPC: GearPtr; Lvl: Integer );
 Function SelectMechaByFactionAndRenown( Factions: String; Renown: Integer ): String;
 Procedure IndividualizeNPC( NPC: GearPtr );
@@ -137,26 +136,6 @@ begin
 	Theme := FindNextComponent( Mecha_Theme_List , SkList );
 	if Theme <> Nil then SetNAtt( NPC^.NA , NAG_Personal , NAS_MechaTheme , Theme^.S )
 	else DialogMsg( 'ERROR: No theme found for ' + SkList );
-end;
-
-Procedure ScaleSkillsToLevel( NPC: GearPtr; Lvl: Integer );
-	{ Scale this NPC's skills to the requested level. }
-var
-	Skill: NAttPtr;
-begin
-	{ If the NPC doesn't have a specialist skill, pick a skill and theme now. }
-	if IsACombatant( NPC ) and ( NAttValue( NPC^.NA , NAG_Personal , NAS_MechaTheme ) = 0 ) then begin
-		SelectThemeAndSpecialty( NPC );
-	end;
-
-	Skill := NPC^.NA;
-	while Skill <> Nil do begin
-		if Skill^.G = NAG_Skill then begin
-			Skill^.V := ( Skill^.V * Lvl ) div 100;
-			if Skill^.V < 1 then Skill^.V := 1;
-		end;
-		Skill := Skill^.Next;
-	end;
 end;
 
 Procedure SetSkillsAtLevel( NPC: GearPtr; Lvl: Integer );
@@ -366,7 +345,7 @@ begin
 
 		Lvl := Lvl + 50;
 		if Lvl < 25 then Lvl := 25;
-		ScaleSkillsToLevel( NPC , Lvl );
+		SetSkillsAtLevel( NPC , Lvl );
 	end;
 
 	{ The random personality traits may have affected morale. }

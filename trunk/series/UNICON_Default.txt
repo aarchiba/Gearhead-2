@@ -24,7 +24,7 @@
 		GoCheckEnemy <IFCHATNPCARCHENEMY else GoOffer EraseRumor Goto GoChat>
 		GoOffer <ifChatNPCCanJoinLance else GoPine ifG PCRenown ChatNPCRenown else GoPine ifG React 15 else GoPine NewChat Say 2 AddChat 1 AddChat 2 AddChat 3>
 		*GoPine <*GodImBored>
-		result1 <PCAlly %3% ChatNPCJoinLance V= 1 1 EraseRumor Goto GoWelcome>
+		result1 <PCAlly %3% History 6 ChatNPCJoinLance V= 1 1 EraseRumor Goto GoWelcome>
 		*GoWelcome <*WelcomeToLance>
 		result2 <NewChat Say 3 V= 1 1 EraseRumor AddSociable -d10>
 		result3 <NewChat Say 4 AddChat 4 AddChat 1>
@@ -49,6 +49,7 @@
 		CMsg4_6 <ifNPCMelancholy Accept>
 		Msg5 <You could be right. Still, I'll never stop dreaming...>
 		Msg5_1 <I probably am, but that doesn't stop me from wanting to leave...>
+		Msg6 <%name3% joined your lance.>
 		Prompt1 <Alright, you can join.>
 		Prompt1_1 <I could use an extra hand.>
 		Prompt2 <Sorry, I don't need a lackey.>
@@ -132,7 +133,7 @@
 		% V1 = Has been recruited or otherwise placated
 		greeting <if= V1 1 else GoCheckSurrender NewChat SayAnything>
 		GoCheckSurrender <ifNPCSurrendered ChatNPCID else GoFirstTime Goto GoGainLM>
-		GoGainLM <PCAlly ChatNPCID AddReact 20   NewChat Say 1 Goto GoPlacate>
+		GoGainLM <PCAlly ChatNPCID AddReact 20   NewChat Say 1 History 5 Goto GoPlacate>
 		GoPlacate <V= 1 1   UnSurrender ChatNPCID   GrabSource GSetSAtt special .nothing>
 		GoFirstTime <EndChat Say 2 AddChat 1 AddChat 2>
 		result1 <ifIntimidation 20 else GoAttack Goto GoGainLM>
@@ -142,6 +143,7 @@
 		Msg2 <You're breathing my air, spongenuts. Better clear out before I decide to off you.>
 		Msg3 <You wanna die? Okay, I was looking for something to liven up today anyhow...>
 		Msg4 <Hah, that's right, run away little sheep... Go back to yer mommy...>
+		Msg5 <%name1% joined your lance after you defeated \OPR %1% in combat.>
 		Prompt1 <Don't threaten me.>
 		Prompt2 <Sorry, I'll be going now...>
 	end

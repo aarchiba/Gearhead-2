@@ -49,7 +49,7 @@ Plot
 		.%id%_GoExplain <NewChat Say %id%02 StoryNote %id%03   AddChat %id%01 AddChat %id%02   V= %id%01 1>
 		.%id%_GoCheckRepair <NewChat Say %id%04 AddChat %id%03 AddChat %id%04 AddChat %id%05 AddChat %id%06>
 		.%id%_GoRepairFailed <NewChat Say %id%09 AddChat %id%10 AddCHat %id%11 AddChat %id%06>
-		.%id%_GoRepairSucceed <AddReact d20 ifNPCOK %2% else .%id%_GoTrivial NewChat Say %id%10 SMemo %id%12 XPV 100 &SetTargetChar %2% WinComp %3% .%id%_Win  AddChat %id%12 AddChat %id%13>
+		.%id%_GoRepairSucceed <AddReact d20 ifNPCOK %2% else .%id%_GoTrivial NewChat Say %id%10 SMemo %id%12 XPV 100 &SetTargetNPC %2% WinComp %3% .%id%_Win  AddChat %id%12 AddChat %id%13>
 		.%id%_Win <+Tgt +Fmi>
 		.%id%_GoTrivial <NewChat Say %id%11 SMemo 0 XPV 100 NTBWinComp 0 .%id%_Loss if= ChatNPCRelationship 0 PCFriend %1%>
 		result%id%01 <Goto .%id%_GoCheckRepair>
@@ -66,7 +66,7 @@ Plot
 		result%id%10 <NewChat Say %id%13 AddChat %id%03 AddChat %id%04 AddChat %id%05 AddChat %id%06>
 		result%id%11 <NewChat Say %id%14>
 		result%id%12 <NewChat Say %id%15 History %id%12>
-		result%id%13 <NewChat Say %id%16 SMemo 0 &SetTargetChar %1% AlterContext .%id%_Loss>
+		result%id%13 <NewChat Say %id%16 SMemo 0 &SetTargetNPC %1% AlterContext .%id%_Loss>
 		Msg%id%01 <Fine, be that way. I can find somebody else to help.>
 		Msg%id%02 <I need some technical help. There are a couple of things around my house which need fixing. I know you're pretty good with machines, so if you wouldn't mind...>
 		Msg%id%03 <%name1% asked you to fix some of \PPR %1% things.>
@@ -118,7 +118,7 @@ Plot
 		% V%id%01, V%id%02 = Question indicators
 		greeting <if= PlotStatus %id% else %pop% Goto .%id%_GoIntro>
 		*.%id%_GoIntro <*LookingForItem &TargetItem .%id%_GoExplain>
-		.%id%_GoExplain <NewChat Say %id%01 StoryNote %id%02 AddChat %id%01 AddChat %id%02 FreezeNPC %2% &SetEnemyChar %2% WinComp 0 .%id%_win>
+		.%id%_GoExplain <NewChat Say %id%01 StoryNote %id%02 AddChat %id%01 AddChat %id%02 FreezeNPC %2% &SetEnemyNPC %2% WinComp 0 .%id%_win>
 		.%id%_win <+T-- +F-->
 		Result%id%01 <NewChat Say %id%03 V= %id%01 1 AddChat %id%02>
 		Result%id%02 <NewChat Say %id%04 V= %id%02 1 AddChat %id%01>
@@ -150,10 +150,10 @@ Plot
 		*.%id%_GoGreet <*HowAreYou .%id%_GoExplain>
 		.%id%_GoExplain <NewChat Say %id%01 AddChat %id%01 AddChat %id%03>
 
-		Result%id%01 <NewChat Say %id%02 SMemo %id%03 History %id%04 AddChat %id%02 FreezeNPC %2% &SetTargetChar %2% WinComp 0 .%id%_next>
+		Result%id%01 <NewChat Say %id%02 SMemo %id%03 History %id%04 AddChat %id%02 FreezeNPC %2% &SetTargetNPC %2% WinComp 0 .%id%_next>
 		.%id%_next <+Tht +Fin>
 		Result%id%02 <NewChat Say %id%06>
-		Result%id%03 <NewChat Say %id%05 SMemo %id%03 History %id%04 AddChat %id%02 FreezeNPC %2% &SetTargetChar %2% WinComp 0 .%id%_next>
+		Result%id%03 <NewChat Say %id%05 SMemo %id%03 History %id%04 AddChat %id%02 FreezeNPC %2% &SetTargetNPC %2% WinComp 0 .%id%_next>
 
 		Msg%id%01 <These mecha attacks that we've had recently, they're very strange. People are wondering what the reason behind them is.>
 		Msg%id%02 <Not directly, no, but I have heard some things. Apparently a person named %name2% is involved with the attacks somehow. They're looking for \OPR %2% , but \SPR %2% 's in hiding.>
@@ -264,7 +264,7 @@ Plot
 		Result%id%01 <AddEasygoing d10    Goto .%id%_GoPhase2>
 		Result%id%02 <AddCheerful d10     Goto .%id%_GoPhase2>
 		Result%id%03 <AddEasygoing -d10   Goto .%id%_GoPhase2>
-		result%id%04 <EndChat Say %id%05  &SetEnemyChar %1% &SetEnemyFac ChatNPCFac FreezeNPC %1% StoryNote %id%03 WinComp 0 .%id%_next>
+		result%id%04 <EndChat Say %id%05  &SetEnemyNPC %1% &SetEnemyFac ChatNPCFac FreezeNPC %1% StoryNote %id%03 WinComp 0 .%id%_next>
 		result%id%05 <AddEasygoing -d6    Goto result%id%04>
 		Msg%id%01 <We've had some differences in the past, but I'd like to wish you the best of luck in your adventuring career.>
 		Msg%id%02 <Now that you're a member of \FACTION PCFac , technically we're going to be enemies. I can't say I'm looking forward to facing you in combat.>
@@ -310,7 +310,7 @@ Content
 		*.%id%_GoPose <*IHaveSomethingToTellYou .%id%_GoMessage>
 		.%id%_GoMessage <NewChat Say %id%01 AddChat %id%01 AddChat %id%02 AddChat %id%03 Goto .%id%_GoWin>
 
-		.%id%_GoWin <StoryNote %id%08  &SetEnemyChar %1% &SetEnemyFac %2%  WinComp 0 .%id%_changes  FreezeNPC %1% NPCLevel %1% StoryDL>
+		.%id%_GoWin <StoryNote %id%08  &SetEnemyNPC %1% &SetEnemyFac %2%  WinComp 0 .%id%_changes  FreezeNPC %1% NPCLevel %1% StoryDL>
 		.%id%_changes <+T-- +Pme>
 
 		result%id%01 <NewChat  AddSociable d10   Say %id%02   AddChat %id%04 AddChat %id%05 AddChat %id%06>

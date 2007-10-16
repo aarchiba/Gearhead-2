@@ -119,7 +119,7 @@ Plot
 		result3 <NewChat Say 6 AddChat 4 AddChat 5>
 		result4 <NewChat Say 7 AddChat 7 AddChat 6>
 		result5 <NewChat Say 8 History 10 StoryNote 9  AddEasygoing 10  Goto GoEasyWin>
-		GoEasyWin <FreezeNPC %6% &SetTargetChar %6% &SetTargetItem %4%  NegateComp 0 .easygoing>
+		GoEasyWin <FreezeNPC %6% &SetTargetNPC %6% &SetTargetItem %4%  NegateComp 0 .easygoing>
 		.easygoing <+Pla +Tlt +Fin>
 		result6 <Goto result5>
 		result7 <Goto result1>

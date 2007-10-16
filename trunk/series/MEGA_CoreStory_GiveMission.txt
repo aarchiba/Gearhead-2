@@ -16,7 +16,7 @@
 Content
 	name <Basic Fighting Mission>
 	desc <The PC will be asked to go fight some mecha.>
-	requires <*CS_GiveMission (+P--|+Pme|+Pun|+Psh) (1:MILIT|1:POLIT|1:CORPO|1:ADVEN|1:POLIC) ~F:MIL ~P:MIL>
+	requires <*CS_GiveMission (+P--|+Pme|+Pun|+Psh) (1:MILIT|1:POLIT|1:CORPO|1:ADVEN|1:POLIC) ~F:MILIT ~P:MILIT>
 
 	% E1 is the NPC that the PC will speak with
 	% E2 is the outdoors location where the encounter will be placed

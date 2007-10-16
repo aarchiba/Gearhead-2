@@ -170,22 +170,22 @@ Content
 
 		Msg%id%01 <If it's alright with you, I'd like to join your lance. It's the least I could do to repay you.>
 		Msg%id%01_1 <>
-		CMsg%id%01_1 <ifNPCSociable ifNPCOK &EnemyChar Accept>
-		Msg%id%01_2 <I want to come with you. I could repay you for saving me, and get my revenge against \PERSONA &EnemyChar at the same time.>
-		CMsg%id%01_2 <ifNPCShy ifNPCOK &EnemyChar Accept>
+		CMsg%id%01_1 <ifNPCSociable ifNPCOK &EnemyNPC Accept>
+		Msg%id%01_2 <I want to come with you. I could repay you for saving me, and get my revenge against \PERSONA &EnemyNPC at the same time.>
+		CMsg%id%01_2 <ifNPCShy ifNPCOK &EnemyNPC Accept>
 		Msg%id%01_3 <>
-		CMsg%id%01_3 <ifNPCEasygoing ifNPCOK &EnemyChar Accept>
+		CMsg%id%01_3 <ifNPCEasygoing ifNPCOK &EnemyNPC Accept>
 		Msg%id%01_4 <>
-		CMsg%id%01_4 <ifNPCPassionate ifNPCOK &EnemyChar Accept>
+		CMsg%id%01_4 <ifNPCPassionate ifNPCOK &EnemyNPC Accept>
 		Msg%id%01_5 <>
-		CMsg%id%01_5 <ifNPCCheerful ifNPCOK &EnemyChar Accept>
-		Msg%id%01_6 <Let me join your lance... I must have revenge against \PERSONA &EnemyChar .>
-		CMsg%id%01_6 <ifNPCMelancholy ifNPCOK &EnemyChar Accept>
+		CMsg%id%01_5 <ifNPCCheerful ifNPCOK &EnemyNPC Accept>
+		Msg%id%01_6 <Let me join your lance... I must have revenge against \PERSONA &EnemyNPC .>
+		CMsg%id%01_6 <ifNPCMelancholy ifNPCOK &EnemyNPC Accept>
 
-		Msg%id%02_1 <%name1% joined your lance to help fight \PERSONA &EnemyChar .>
-		CMsg%id%02_1 <ifNPCOK &EnemyChar Accept>
+		Msg%id%02_1 <%name1% joined your lance to help fight \PERSONA &EnemyNPC .>
+		CMsg%id%02_1 <ifNPCOK &EnemyNPC Accept>
 		Msg%id%02_2 <%name1% joined your lance.>
-		CMsg%id%02_2 <ifNPCDead &EnemyChar Accept>
+		CMsg%id%02_2 <ifNPCDead &EnemyNPC Accept>
 		Msg%id%03 <Always remember, I'll be right here if you need me.>
 		Msg%id%03_1 <>
 		Msg%id%03_2 <>
@@ -254,7 +254,7 @@ Content
 		Greeting <if= PlotStatus %id% else %pop% goto .%id%_GoThanks>
 		*.%id%_GoThanks <*ThanksForRescue .%id%_GoReward>
 		.%id%_GoReward <if= V%id%01 0 else .%id%_GoBriefing V= %id%01 1 CashPrize Reward Threat StoryDL 100 200 NewChat Say %id%01 AddChat %id%01 AddChat %id%02>
-		.%id%_GoBriefing <ifNPCOK %3% else .%id%_GoE3Dead NewChat Say %id%02 StoryNote %id%03 &SetTargetChar %3%  WinComp NPCScene %3% .%id%_changes>
+		.%id%_GoBriefing <ifNPCOK %3% else .%id%_GoE3Dead NewChat Say %id%02 StoryNote %id%03 &SetTargetNPC %3%  WinComp NPCScene %3% .%id%_changes>
 		.%id%_changes <+Tgt +Fmi>
 		.%id%_GoE3Dead <NewChat Say %id%05 SMemo 0 NTBWinComp 0 .%id%_changes2>
 		result%id%01 <Goto .%id%_GoBriefing>
@@ -301,7 +301,7 @@ Content
 		result%id%03 <NewChat Say %id%06 AddChat %id%04 AddChat %id%05>
 		result%id%04 <Goto result%id%01>
 		result%id%05 <Goto result%id%02>
-		result%id%06 <NewChat Say %id%09 StoryNote %id%010 &SetTargetChar %1% WinComp %2% .%id%_date>
+		result%id%06 <NewChat Say %id%09 StoryNote %id%010 &SetTargetNPC %1% WinComp %2% .%id%_date>
 		.%id%_date <+Tda +F-->
 		result%id%07 <Goto result%id%02>
 		Msg%id%01 <I thought that to repay you for saving my life, I could join your team and maybe help out. What do you think?>
@@ -362,7 +362,7 @@ Content
 
 	sub
 		Persona 1
-		greeting <if= PlotStatus %id% else %pop%  &SetAllyFac %2% StoreOldFaction SetPCFac %2% &SetTargetChar %4% NegateComp %3% .%id%_next  StoryNote %id%02 Goto .%id%_GoGreet>
+		greeting <if= PlotStatus %id% else %pop%  &SetAllyFac %2% StoreOldFaction SetPCFac %2% &SetTargetNPC %4% NegateComp %3% .%id%_next  StoryNote %id%02 Goto .%id%_GoGreet>
 		*.%id%_GoGreet <*CS_ForcedInduction_Greeting .%id%_GoBrief %2%>
 		.%id%_next <+Tgt +Fmi +Psh>
 		.%id%_GoBrief <ifNPCOK %4% else .%id%_GoScrapMission NewChat Say %id%01 SMemo %id%04>
@@ -478,7 +478,7 @@ Content
 		greeting <if= PlotStatus %id% else %pop% NewChat Say %id%01 AddChat %id%01 AddChat %id%02 SMemo 0 Goto .%id%_GoEnd>
 		.%id%_GoEnd <CashPrize Reward Threat StoryDL 100 500 SMemo 0 NTBWinComp 0 .%id%_win>
 		.%id%_win <+T-- +F-->
-		Result%id%01 <ifNPCOK %2% else .%id%_GoFail NewChat Say %id%02 StoryNote %id%03 &SetTargetChar %2% &SetCompScene %3% AlterContext .%id%_GoHelp>
+		Result%id%01 <ifNPCOK %2% else .%id%_GoFail NewChat Say %id%02 StoryNote %id%03 &SetTargetNPC %2% &SetCompScene %3% AlterContext .%id%_GoHelp>
 		.%id%_GoHelp <+Tgt +Fmi>
 		.%id%_GoFail <NewChat Say %id%05>
 		Result%id%02 <NewChat  AddSociable -d10  Say %id%04>
@@ -548,7 +548,7 @@ Content
 		.%id%_GoEnd <CashPrize Reward Threat StoryDL 100 300  SMemo 0  NTBWinComp 0 .%id%_end>
 		.%id%_GoNotHere <NewChat Say %id%02>
 		.%id%_end <+T-- +F-->
-		Result%id%01 <NewChat Say %id%03 StoryNote %id%04 &SetPartnerChar %2% Goto .%id%_GoEnd>
+		Result%id%01 <NewChat Say %id%03 StoryNote %id%04 &SetPartnerNPC %2% Goto .%id%_GoEnd>
 		Result%id%02 <NewChat Say %id%05 SMemo 0           AddSociable -d10   Goto .%id%_GoEnd>
 		Msg%id%01 <Good work out there, \PC . I hear that you met %name2% during the mission. How did you enjoy working together?>
 		Msg%id%02 <Come to \SCENE NPCScene %1% and we can talk there.>
@@ -578,7 +578,7 @@ Content
 	sub
 		Persona 1
 		greeting <if= PlotStatus %id% else %pop% CashPrize Reward Threat StoryDL 100 300 ifNPCOK %2% else .%id%_GoNPCGone Goto .%id%_GoSearchNPC>
-		.%id%_GoSearchNPC <NewChat Say %id%01 SMemo %id%02 &SetTargetChar %2% WinComp 0 .%id%_Win>
+		.%id%_GoSearchNPC <NewChat Say %id%01 SMemo %id%02 &SetTargetNPC %2% WinComp 0 .%id%_Win>
 		*.%id%_GoNPCGone <*MissionWasSuccess&Reward .%id%_GoEnd &AllyFac &EnemyFac>
 		.%id%_GoEnd <SMemo 0 WinComp 0 .%id%_end>
 		.%id%_win <+Tlt +Frt>
@@ -615,7 +615,7 @@ Content
 		greeting <if= PlotStatus %id% else %pop% NewChat Say %id%01 AddChat %id%01 AddChat %id%02>
 		.%id%_win <+Tlt +Fin>
 		.%id%_meh <+T-- +F-->
-		result%id%01 <ifNPCOK %2% else .%id%_GoTargetDead NewChat Say %id%02 &SetTargetChar %2% WinComp 0 .%id%_win CashPrize Reward Threat StoryDL 100 200 AddReact d10 SMemo %id%04>
+		result%id%01 <ifNPCOK %2% else .%id%_GoTargetDead NewChat Say %id%02 &SetTargetNPC %2% WinComp 0 .%id%_win CashPrize Reward Threat StoryDL 100 200 AddReact d10 SMemo %id%04>
 		.%id%_GoTargetDead <NewChat Say %id%03 SMemo 0 WinComp 0 .%id%_meh CashPrize Threat StoryDL 100 300>
 		result%id%02 <NewChat Say %id%05 SMemo 0 WinComp 0 .%id%_meh CashPrize Threat StoryDL 100 150 AddSociable -d10>
 		Msg%id%01 <Welcome back, \PC . How did the mission go?>
@@ -665,7 +665,7 @@ Content
 
 		.%id%_GoEnd <SMemo 0  NTBLoseComp 0 .%id%_loss>
 		.%id%_loss <+T-- +F-->
-		.%id%_GoContinue <SMemo %id%05  &SetTargetChar %2% LoseComp 0 .%id%_find>
+		.%id%_GoContinue <SMemo %id%05  &SetTargetNPC %2% LoseComp 0 .%id%_find>
 		.%id%_find <+Tlt +Fin>
 
 		result%id%01 <ifNPCDead %2% else .%id%_GoE2Find NewChat Say %id%02 Goto .%id%_GoEnd>
@@ -697,7 +697,7 @@ Content
 Plot
 	name <City in Trouble>
 	desc <PC asked to help defend against the unknown enemy.>
-	requires <*CS_Win_ToUnknownEnemy (P:--|P:COR|P:PDASS) (F:MIL|F:CRM|F:--) (1:POLIT|1:POLIC|1:MILIT) -L:ENEMY>
+	requires <*CS_Win_ToUnknownEnemy (P:--|P:CORPO|P:PDASS) (F:MILIT|F:CRIME|F:--) (1:POLIT|1:POLIC|1:MILIT) -L:ENEMY>
 
 	% E1 is the target NPC.
 	% E3 is the next NPC to meet about a mission
@@ -717,7 +717,7 @@ Plot
 		*.%id%_GoGetReward <*MissionWasSuccess&Reward .%id%_GoRewardOp N3 N2>
 		.%id%_GoRewardOp <AddChat %id%03>
 		.%id%_GoNewMission <NewChat Say %id%01 AddChat %id%01 AddChat %id%02>
-		result%id%01 <ifNPCOK %2% else .%id%_GoNoMission NewChat Say %id%03 &SetTargetChar %2% &SetAllyFac %4% StoryNote %id%02 WinComp %3% .%id%_changes>
+		result%id%01 <ifNPCOK %2% else .%id%_GoNoMission NewChat Say %id%03 &SetTargetNPC %2% &SetAllyFac %4% StoryNote %id%02 WinComp %3% .%id%_changes>
 		.%id%_changes <+Tgt +Fmi>
 		.%id%_GoNoMission <NewChat Say %id%04 &SetAllyFac %4% StoryNote %id%05 WinComp 0 .%id%_changes2>
 		*result%id%02 <*RejectMission .%id%_GoR2Exit>
@@ -787,8 +787,8 @@ Content
 		CMsg%id%01_6 <ifNPCMelancholy Accept>
 		Msg%id%01_10 <We have to learn what \FACTION &EnemyFac is up to. It seems like that's the only chance we have to stop them.>
 		CMsg%id%01_10 <ifFactionExists &EnemyFac Accept>
-		Msg%id%01_20 <It's clear now that \PERSONA &EnemyChar has some reason for these attacks, but what could it be?>
-		CMsg%id%01_20 <ifNPCOK &EnemyChar Accept>
+		Msg%id%01_20 <It's clear now that \PERSONA &EnemyNPC has some reason for these attacks, but what could it be?>
+		CMsg%id%01_20 <ifNPCOK &EnemyNPC Accept>
 	end
 
 %%
@@ -807,7 +807,7 @@ Content
 Content
 	name <Begin the Manhunt>
 	desc <The PC will begin a manhunt for the enemy NPC.>
-	requires <*CS_Win_RevealEnemyNPC (C:POLIC|P:POL|2:THIEF|E:++)>
+	requires <*CS_Win_RevealEnemyNPC (C:POLIC|P:POLIC|2:THIEF|E:++)>
 
 	% E1 is the mission-giver.
 	% E2 is the target.
@@ -819,7 +819,7 @@ Content
 		Persona 1
 		greeting <if= PlotStatus %id% else %pop% gOTO .%id%_GoReportSuccess>
 		.%id%_GoReportSuccess <NewChat Say %id%01 AddChat %id%01 Goto .%id%_GoEnd>
-		.%id%_GoEnd <CashPrize Reward Threat StoryDL 100 500 ifNPCOK %2% else .%id%_GoTrivialEnd SMemo %id%02  &SetTargetChar %2%  WinComp 0 .%id%_win>
+		.%id%_GoEnd <CashPrize Reward Threat StoryDL 100 500 ifNPCOK %2% else .%id%_GoTrivialEnd SMemo %id%02  &SetTargetNPC %2%  WinComp 0 .%id%_win>
 		.%id%_GoTrivialEnd <SMemo 0  NTBWinComp 0 .%id%_meh>
 		.%id%_win <+Tht +Far>
 		.%id%_meh <+T-- +F-->
@@ -844,7 +844,7 @@ Content
 
 	sub
 		Persona 1
-		greeting <if= PlotStatus %id% else %pop% ifNPCOK %2% else .%id%_GoReportSuccess &SetEnemyChar %2% gOTO .%id%_GoReportSuccess>
+		greeting <if= PlotStatus %id% else %pop% ifNPCOK %2% else .%id%_GoReportSuccess &SetEnemyNPC %2% gOTO .%id%_GoReportSuccess>
 		*.%id%_GoReportSuccess <*MissionWasSuccess&Reward .%id%_GoEnd &AllyFac &EnemyFac>
 		.%id%_GoEnd <CashPrize Reward Threat StoryDL 100 500 SMemo 0 NTBWinComp 0 .%id%_win>
 		.%id%_win <+T-- +F-->
@@ -880,7 +880,7 @@ Content
 		.%id%_GoReportFailure <NewChat Say %id%01 AddChat %id%01 SMemo 0  NTBLoseComp 0 .%id%_loss>
 		.%id%_hunt <+Tht +Far>
 		.%id%_loss <+T-- +F-->
-		Result%id%01 <NewChat Say %id%03 SMemo %id%02  &SetTargetChar %2%  AlterContext .%id%_hunt>
+		Result%id%01 <NewChat Say %id%03 SMemo %id%02  &SetTargetNPC %2%  AlterContext .%id%_hunt>
 		Msg%id%01 <You were defeated by %name2%. This is very bad.>
 		Msg%id%02 <%name2% could still be in \SCENE &EpisodeScene ; you should probably try to find \OPR %2% .>
 		Msg%id%03 <I certainly hope that you can. If \SPR %2% is still in \SCENE &EpisodeScene we could be in for some more trouble.>
@@ -902,7 +902,7 @@ Content
 		Persona 1
 		greeting <if= PlotStatus %id% else %pop% gOTO .%id%_GoReportLoss>
 		*.%id%_GoReportLoss <*MissionWasFailure .%id%_GoEnd &AllyFac &EnemyFac>
-		.%id%_GoEnd <SMemo 0 NTBLoseComp 0 .%id%_loss ifNPCOK %2% &SetEnemyChar %2%>
+		.%id%_GoEnd <SMemo 0 NTBLoseComp 0 .%id%_loss ifNPCOK %2% &SetEnemyNPC %2%>
 		.%id%_loss <+T-- +F-->
 	end
 
@@ -939,7 +939,7 @@ Content
 		Persona 1
 		greeting <if= PlotStatus %id% else %pop% SMemo 0  ifNPCOK %2% else .%id%_GoReportSuccess  if# ChatNPCFac 0 else .%id%_GoReportSuccess NewChat Say %id%01 SMemo %id%02 Goto .%id%_GoEnd>
 		*.%id%_GoReportSuccess <*MissionWasSuccess&Reward .%id%_GoMeh &AllyFac &EnemyFac>
-		.%id%_GoEnd <CashPrize Reward Threat StoryDL 100 500 &SetTargetChar %2% WinComp %3% .%id%_win>
+		.%id%_GoEnd <CashPrize Reward Threat StoryDL 100 500 &SetTargetNPC %2% WinComp %3% .%id%_win>
 		.%id%_win <+Tgt +Fmi>
 		.%id%_GoMeh <CashPrize Reward Threat StoryDL 100 500 NTBWinComp 0 .%id%_meh>
 		.%id%_meh <+T-- +F-->
@@ -1034,7 +1034,7 @@ Content
 
 	sub
 		Persona 1
-		greeting <if= PlotStatus %id% else %pop%  NewChat Say %id%01 FreezeNPC %1% StoryNote %id%02 &SetEnemyChar %1% WinComp 0 .%id%_win ifNPCPassionate PCEnemy %1%>
+		greeting <if= PlotStatus %id% else %pop%  NewChat Say %id%01 FreezeNPC %1% StoryNote %id%02 &SetEnemyNPC %1% WinComp 0 .%id%_win ifNPCPassionate PCEnemy %1%>
 		.%id%_win <+T-- +F-->
 		Msg%id%01 <I can't accept losing the duel to you... From this point on I'm going to train hard, then someday I'll be back and I'll defeat you!>
 		Msg%id%01_1 <People are already talking about how you defeated me... I can't accept that! You may have won this time, but I promise you that the next time we meet I will be the victor!>
@@ -1068,7 +1068,7 @@ Content
 
 	sub
 		Persona 1
-		greeting <if= PlotStatus %id% else %pop% ifNPCOK %2% else .%id%_GoE2Died NewChat Say %id%01 SMemo %id%02 &SetTargetChar %2% WinComp %3% .%id%_win>
+		greeting <if= PlotStatus %id% else %pop% ifNPCOK %2% else .%id%_GoE2Died NewChat Say %id%01 SMemo %id%02 &SetTargetNPC %2% WinComp %3% .%id%_win>
 		.%id%_GoE2Died <NewChat Say %id%03 SMemo 0 WinComp 0 .%id%_draw>
 		.%id%_win <+Tgt +Fmi>
 		.%id%_draw <+T-- +F-->

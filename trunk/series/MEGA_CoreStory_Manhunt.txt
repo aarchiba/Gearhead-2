@@ -35,7 +35,7 @@ Content
 		*.%id%_GoBargain <*YoureUnderArrest StoryDL .%id%_GoWillSurrender .%id%_GoWillResist na>
 		*.%id%_GoWillSurrender <*ISurrender&Arrest .%id%_GoSurrender>
 		*.%id%_GoWillResist <*IDisagreeYouDie na>
-		.%id%_GoSurrender <L= 2 2 Print %id%02 FreezeNPC %1% PCEnemy %1% ifNPCOK %3% else .%id%_GoE3Died StoryNote %id%03 Print %id%04 FreezeNPC %3% &SetTargetChar %3% WinComp 0 .%id%_win>
+		.%id%_GoSurrender <L= 2 2 Print %id%02 FreezeNPC %1% PCEnemy %1% ifNPCOK %3% else .%id%_GoE3Died StoryNote %id%03 Print %id%04 FreezeNPC %3% &SetTargetNPC %3% WinComp 0 .%id%_win>
 		.%id%_GoE3Died <StoryNote %id%05 WinComp 0 .%id%_loss>
 		.%id%_win <+Tlt +Frt>
 		.%id%_loss <+T-- +F-->
@@ -52,7 +52,7 @@ Content
 		end <if= L2 1 FreezeNPC %1% PCEnemy %1% DeleteNPC %3% StoryNote 3 LoseComp 0 .loss>
 		.loss <+T-- +F-->
 		Surrender%1% <ForceChat %1%>
-		Faint%1% <L= 2 2 ifNPCOK %3% else GoE3Died StoryNote 4 Print 5 FreezeNPC %3% &SetTargetChar %3% WinComp 0 .win>
+		Faint%1% <L= 2 2 ifNPCOK %3% else GoE3Died StoryNote 4 Print 5 FreezeNPC %3% &SetTargetNPC %3% WinComp 0 .win>
 		GoE3Died <StoryNote 6 WinComp 0 .loss>
 		.win <+Tlt +Frt>
 		Msg1 <As you enter %name1%'s hideout, you see that \SPR %1% has a hostage.>
@@ -73,7 +73,7 @@ Content
 	Element3 <Prefab>
 
 	update <if= PlotStatus %id% else %pop% FreezeNPC %1% MoveItem %3% %2%>
-	start <if= PlotStatus %id% else %pop% if= SceneID %2% Alert 1 History 2 &SetEnemyChar %1% &SetTargetChar 0 WinComp 0 .%id%_Next>
+	start <if= PlotStatus %id% else %pop% if= SceneID %2% Alert 1 History 2 &SetEnemyNPC %1% &SetTargetNPC 0 WinComp 0 .%id%_Next>
 	.%id%_Next <+T-- +F-->
 
 	Msg1 <There's no sign of %name1% here; \SPR %1% must have known you were coming.>

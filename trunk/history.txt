@@ -1,3 +1,9 @@
+- Script debugging messages always active (arenascript.pp)
+- NPC skill training uses SetSkillsAtLevel (gearparser.pp)
+- Removed GAbsoluteLevel command (arenascript.pp)
+- All context tags should be five characters long
+- Scene context includes faction of current scene (randmaps.pp)
+- Core story macro names use "NPC" instead of "Char" (corestorystub.txt)
 - Storage module ammo explosions don't cause overkill (action.pp)
 - SelectSpotInFeature won't place gears on obstacles (randmaps.pp)
 - Flying mecha don't make wide turns on oversized maps (movement.pp)

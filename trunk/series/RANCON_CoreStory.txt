@@ -171,7 +171,7 @@ Content
 
 	inv
 		STC COMPUTER-1
-		use <if= L1 0 else GoDone ifYesNo 1 2 3 Print 4 Alert 5 Print 8 StoryNote 6   &SetEnemyChar %3% L= 1 1  WinComp 0 .next>
+		use <if= L1 0 else GoDone ifYesNo 1 2 3 Print 4 Alert 5 Print 8 StoryNote 6   &SetEnemyNPC %3% L= 1 1  WinComp 0 .next>
 		.next <+T-- +F-->
 		clue32 <Print 7>
 		Msg1 <Someone left this computer logged in to their account. Do you want to see what they were reading?>

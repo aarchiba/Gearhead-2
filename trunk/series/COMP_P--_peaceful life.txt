@@ -6,7 +6,7 @@
 Plot
 	name <Meet Enemy Fighter>
 	desc <PC meets a rival corporate pilot at the convention, and will be challenged to duel.>
-	requires <+Tsh +P-- E:-- (F:--|F:cor) ~+Fcc>
+	requires <+Tsh +P-- E:-- (F:--|F:CORPO) ~+Fcc>
 	Size 1
 
 	% E1 is the scene where this component will take place
@@ -31,8 +31,8 @@ Plot
 	SubPlot1 <*CS_Duel 4 3 5>
 
 	% Plot Resolvers
-	.%id1%_%plotid%_GoWin <&SetEnemyChar %4% StoryNote 1 WinComp 0 .win>
-	.%id1%_%plotid%_GoLose <&SetEnemyChar %4% StoryNote 2 LoseComp 0 .win>
+	.%id1%_%plotid%_GoWin <&SetEnemyNPC %4% StoryNote 1 WinComp 0 .win>
+	.%id1%_%plotid%_GoLose <&SetEnemyNPC %4% StoryNote 2 LoseComp 0 .win>
 	.win <+Pme +T-- +F-->
 
 	Msg1 <You bested %name2% in a duel.>
@@ -50,7 +50,7 @@ Plot
 		result1 <NewChat Say 2 Goto GoAcceptChallenge>
 		result2 <NewChat Say 4 AddChat 3 AddChat 4>
 		result3 <Goto result1>
-		result4 <&SetEnemyChar %4% StoryNote 7  ifG PCRenown StoryDL else GoR4Fail NewChat Say 6 AddReact d6  WinComp 0 .loss>
+		result4 <&SetEnemyNPC %4% StoryNote 7  ifG PCRenown StoryDL else GoR4Fail NewChat Say 6 AddReact d6  WinComp 0 .loss>
 		GoR4Fail <NewChat Say 5 AddRenown -1 LoseComp 0 .loss>
 		.loss <+T-- +F-- +Pme>
 		Msg1 <You work for the competition, don't you? Let's take our mecha to the streets of %name5% and see which one of us is better.>
@@ -76,7 +76,7 @@ Plot
 Plot
 	name <Not Even The Police Are Safe>
 	desc <The officer you have to see for the mission? He got robbed.>
-	requires <#A +Tgt (+Fmi|+Fin) +P-- T:POLIC (F:--|F:crm)>
+	requires <#A +Tgt (+Fmi|+Fin) +P-- T:POLIC (F:--|F:CRIME)>
 
 	% E1 is the building
 	% E2 is the police officer
@@ -93,7 +93,7 @@ Plot
 		Persona 2
 		special <UNLISTED>
 		greeting <NewChat Say 1 AddChat 1>
-		result1 <NewChat Say 2 StoryNote 3 FreezeNPC %3% &SetTargetChar %3% WinComp 0 .next>
+		result1 <NewChat Say 2 StoryNote 3 FreezeNPC %3% &SetTargetNPC %3% WinComp 0 .next>
 		.next <+Pun +Tht +Far>
 
 		Msg1 <It's a sad day in \SCENE &EpisodeScene when not even the police are safe...>
@@ -112,7 +112,7 @@ Plot
 Plot
 	name <Heist At Corp Office>
 	desc <This corporate office has just been raided. Yay!>
-	requires <#A (+P--|+Pme) +T-- F:crm ~P:cor ~C:CORPO>
+	requires <#A (+P--|+Pme) +T-- F:CRIME ~P:CORPO ~C:CORPO>
 
 	% E1 is the building.
 	% E2 is the security head who gives the mission.
@@ -289,7 +289,7 @@ Plot
 		*greeting <*HowAreYou GoChat>
 		*GoChat <*Shimli_Chatter GoRemind>
 		GoRemind <NewChat Say 1 AddChat 1 AddChat 2 AddChat 3 AddChat 8 SMemo 2 History 10 Goto GoWin>
-		GoWin <&SetTargetChar %3%  WinComp NPCScene %3% .next>
+		GoWin <&SetTargetNPC %3%  WinComp NPCScene %3% .next>
 		.next <+Tgt +Fmi>
 		result1 <NewChat AddEasygoing -d3   Say 3 AddChat 4>
 		result2 <NewChat AddEasygoing  d6   Say 4>
@@ -384,7 +384,7 @@ Plot
 		GoChallenge <NewChat Say 1 AddChat 1 AddChat 2>
 		result1 <NewChat Say 2  StoryNote 4 SetPlotStatus %id1%>
 		result2 <NewChat Say 3 AddChat 3 AddChat 4 AddChat 5
-		result3 <NewChat Say 5 SMemo 7 &SetTargetChar %5% NegateComp %4% .gojob>
+		result3 <NewChat Say 5 SMemo 7 &SetTargetNPC %5% NegateComp %4% .gojob>
 		.gojob <+Tgt +Fmi>
 		result4 <NewChat Say 6 AddEasygoing d8  LoseComp 0 .donothing>
 		.donothing <+T-- +F-->

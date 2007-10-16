@@ -14,14 +14,16 @@
 	update <CheckComponents>
 	reset_core_story <GrabSource GSetNAtt -7 0 0 Goto update>
 
-	&SetEnemyChar <N= 1 ?>
-	&EnemyChar <N1>
+	&SetEnemyNPC <N= 1 ?>
+	&EnemyNPC <N1>
 	&SetEnemyFac <N= 2 ?>
 	&EnemyFac <N2>
 	&SetAllyFac <N= 3 ?>
 	&AllyFac <N3>
-	&SetPlotChar <N= 4 ?>
-	&SetTargetChar <N= 5 ?>
+	&SetPlotNPC <N= 4 ?>
+	&PlotNPC <N4>
+	&SetTargetNPC <N= 5 ?>
+	&TargetNPC <N5>
 	&SetCompScene <N= 6 ?>
 	%% Note that "SetNextScene" is not normally called, since it's done
 	%% already by NextComp.
@@ -29,8 +31,8 @@
 	&EpisodeScene <N7>
 	&SetTargetItem <N= 8 ?>
 	&TargetItem <N8>
-	&SetPartnerChar <N= 9 ? AddTempLancemate !>
-	&PartnerChar <N9>
+	&SetPartnerNPC <N= 9 ? AddTempLancemate !>
+	&PartnerNPC <N9>
 
 	element1 <C>
 	palette_entry_code1 <E>

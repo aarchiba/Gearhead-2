@@ -2431,6 +2431,11 @@ begin
 	CType := CType + ' ' + TType;
 	if ( Scene^.G = GG_Scene ) and IsSubCom( Scene ) then CType := CType + ' STATIC'
 	else CType := CType + ' DYNAMIC';
+
+	{ Add the faction context. }
+	C := SeekFaction( FindRoot( Scene ) , NAttValue( Scene^.NA , NAG_Personal , NAS_FactionID ) );
+	if C <> Nil then AddTraits( CType , SAttValue( C^.SA , 'DESIG' ) );
+
 	{ Next add the data for the city we're located in, its faction, and the }
 	{ world that it's located in. }
 	C := FindRootScene( GB , Scene );

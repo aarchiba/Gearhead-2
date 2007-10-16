@@ -43,7 +43,7 @@ Scene 0 3
 	factions <MAQUI COMET SILKN PRIVA L5LAW>
 
 	desig <MAQSP>
-	context <spc>
+	context <SPACE>
 
 	Quest1 <*:LocalQuest>
 	Quest2 <*:MECHA_ARENA_BASE>
@@ -57,7 +57,6 @@ sub
 	Scene
 	name <Maquise Shopping Center>
 	type <building mall public legit meeting>
-	context <mall>
 	entrance <*DEPARTMENTSTORE>
 	special <ADDEXIT>
 	MallMap
@@ -135,7 +134,6 @@ sub
 	% L1 = If alarm sounded on factory level, will be nonzero.
 	SetFaction 2
 	type <building public legit corporate>
-	context <comet corp>
 	entrance <*Building Tall>
 	special <ADDEXIT>
 	MallMap
@@ -200,7 +198,6 @@ sub
 		name <Comet Factory>
 		SetFaction 2
 		type <Building Secret>
-		context <COMET CORP>
 		special <NORESCUE NOEXIT>
 
 		% V1 = Security System Disabled
@@ -258,7 +255,6 @@ sub
 	Scene
 	name <The Privateers Club>
 	type <building public sleazy garage mall dangerous>
-	context <>
 	entrance <*Building Short>
 	special <ADDEXIT>
 	MallMap
@@ -296,7 +292,6 @@ sub
 	Scene
 	name <Maquise Service Depot>
 	type <building garage public>
-	context <>
 	entrance <*Garage>
 	special <ADDEXIT>
 	MallMap
@@ -332,7 +327,6 @@ sub
 	Scene
 	name <Alliance Plaza>
 	type <building government public legit>
-	context <gov>
 	entrance <*Building>
 	special <ADDEXIT>
 	SetFaction 1
@@ -534,7 +528,7 @@ Scene 0 3
 	Quest2 <*:Concert_Venue>
 
 	desig <ATHSP>
-	context <spc>
+	context <SPACE>
 
 	start <if= V1 0 else GoSecondTime V= 1 1 Alert 1 Print 2>
 	GoSecondTime <Print 2>
@@ -545,7 +539,6 @@ sub
 	Scene
 	name <The Atrium>
 	type <building mall public legit>
-	context <mall>
 	entrance <*DEPARTMENTSTORE>
 	special <ADDEXIT>
 	MallMap
@@ -618,7 +611,6 @@ sub
 	Scene
 	name <Athera Mecha Center>
 	type <building garage public>
-	context <>
 	entrance <*Garage>
 	special <ADDEXIT>
 	MallMap
@@ -656,7 +648,6 @@ sub
 	Scene
 	name <Athera Garden>
 	type <public park legit meeting>
-	context <gov>
 	entrance <*PARK>
 	special <SHOWALL>
 	SetFaction 1
@@ -955,7 +946,6 @@ sub
 	name <MUGL Media Center>
 	SetFaction 13
 	type <building public legit corporate>
-	context <mugle corp>
 	entrance <*Building>
 	special <ADDEXIT>
 	MallMap
@@ -1036,7 +1026,7 @@ Scene
 	factions <MAQUI COMET PRIVA HOELL CRIHN L5LAW>
 
 	desig <CAYLE>
-	context <spc>
+	context <SPACE>
 
 	NeededCells 6
 	Content1 <Some 1 100 Sub *MECHANIC_SHOP   na>
@@ -1386,7 +1376,7 @@ sub
 		% V2 = Have been allowed into the lounge.
 		% V3 = CID of the bouncer
 
-		start <Print 1 if= L1 0 else GoCheckChallenge  L= 1 1 L= 3 DesigNPCID NPC_Kodie Compose FAINT V3 .BouncerDies Compose SURRENDER V3 .BouncerSurrender NPCAbsoluteLevel L3 30 Goto GoCheckChallenge>
+		start <Print 1 if= L1 0 else GoCheckChallenge  L= 1 1 L= 3 DesigNPCID NPC_Kodie Compose FAINT V3 .BouncerDies Compose SURRENDER V3 .BouncerSurrender NPCLevel L3 30 Goto GoCheckChallenge>
 		.BouncerDies <L= 2 1>
 		.BouncerSurrender <if= L2 0 XPV 100  L= 2 1  ForceChat L3  GrabNPC L3  GSetNAtt NAG_Location NAS_Team 3>
 		GoCheckChallenge <if= L2 0 ForceChat L3>
@@ -1761,7 +1751,7 @@ Scene 0 3
 	factions <MAQUI COMET HOELL SILKN PRIVA L5LAW>
 
 	desig <CSNSP>
-	context <spc>
+	context <SPACE>
 
 	Quest1 <*:LocalQuest>
 
@@ -1774,7 +1764,6 @@ sub
 	Scene
 	name <Cesena Arms Market>
 	type <building mall public legit>
-	context <mall>
 	entrance <*Building>
 	special <ADDEXIT>
 	MallMap
@@ -1845,7 +1834,6 @@ sub
 	Scene
 	name <Silver Fortress>
 	type <building legit>
-	context <silkn mil>
 	entrance <*SilverFortress>
 	special <ADDEXIT>
 	SetFaction 3
@@ -1969,7 +1957,6 @@ sub
 	Scene
 	name <Cesena Mall>
 	type <building public mall legit meeting>
-	context <>
 	entrance <*DEPARTMENTSTORE>
 	special <ADDEXIT>
 	MallMap
@@ -2006,7 +1993,6 @@ sub
 	Scene
 	name <The Mecha Source>
 	type <building garage public legit>
-	context <>
 	entrance <*Garage>
 	special <ADDEXIT>
 	MallMap
@@ -2043,7 +2029,6 @@ sub
 	Scene
 	name <Alliance Fleet HQ>
 	type <building government public legit>
-	context <gov>
 	entrance <*Building>
 	special <ADDEXIT>
 	SetFaction 1
@@ -2194,7 +2179,6 @@ sub
 	name <Hoeller Heavy Industries>
 	SetFaction 7
 	type <building public legit corporate>
-	context <hoell corp>
 	entrance <*Building>
 	special <ADDEXIT>
 	MallMap
@@ -2239,7 +2223,6 @@ sub
 	name <Comet Space Engineering>
 	SetFaction 2
 	type <building public legit corporate>
-	context <comet corp>
 	entrance <*Building>
 	special <ADDEXIT>
 	MallMap
@@ -2316,7 +2299,7 @@ Scene 0 3
 	factions <FCOMS COMET HOELL PRIVA MUGLE L5LAW>
 
 	desig <XIASP>
-	context <spc>
+	context <SPACE>
 
 	Quest1 <*:LocalQuest>
 	Quest2 <*:BlackMarket>
@@ -2330,7 +2313,6 @@ sub
 	Scene
 	name <Commerce Tower>
 	type <building mall public>
-	context <mall>
 	entrance <*DEPARTMENTSTORE>
 	special <ADDEXIT>
 	MallMap
@@ -2379,7 +2361,6 @@ sub
 		Scene
 		name <Commerce Tower, L2>
 		type <building mall public>
-		context <mall>
 		ClubMap
 		MapWidth 30
 		MapHeight 24
@@ -2425,7 +2406,6 @@ sub
 	Scene
 	name <Xianzai Market>
 	type <building mall sleazy public>
-	context <mall>
 	entrance <*Building Short>
 	special <ADDEXIT>
 	MallMap
@@ -2499,7 +2479,6 @@ sub
 	Scene
 	name <Trade Authority>
 	type <building public legit police>
-	context <>
 	entrance <*Building Short>
 	special <ADDEXIT>
 	MallMap
@@ -2586,7 +2565,6 @@ sub
 	Scene
 	name <Atma Motors>
 	type <building garage public>
-	context <>
 	entrance <*Garage>
 	special <ADDEXIT>
 	MallMap
@@ -2622,7 +2600,6 @@ sub
 	Scene
 	name <Administration Hall>
 	type <building government public>
-	context <gov>
 	entrance <*Building>
 	special <ADDEXIT>
 	SetFaction 10
@@ -2810,7 +2787,7 @@ Scene 0 3
 	factions <FCOMS PDASS PRIVA L5LAW>
 
 	desig <GAOSP>
-	context <spc>
+	context <SPACE>
 
 	Quest1 <*:LocalQuest>
 	Quest2 <*:MECHA_ARENA_BASE>
@@ -3152,7 +3129,6 @@ sub
 	Scene
 	name <Vitae Mart>
 	type <building mall public>
-	context <mall>
 	entrance <*DEPARTMENTSTORE>
 	special <ADDEXIT>
 	MallMap
@@ -3244,7 +3220,6 @@ sub
 	Scene
 	name <Gaos City Hall>
 	type <building government public>
-	context <gov>
 	entrance <*Building>
 	special <ADDEXIT>
 	SetFaction 10
@@ -3356,7 +3331,7 @@ Scene 0 3
 	factions <MAQUI COMET HOELL L5LAW>
 
 	desig <FUCSP>
-	context <spc>
+	context <SPACE>
 
 	Quest1 <*:LocalQuest>
 	Quest2 <*:GuaranteedQuest>
@@ -3370,7 +3345,6 @@ sub
 	Scene
 	name <Fuchal Market>
 	type <building mall public legit>
-	context <mall>
 	entrance <*DEPARTMENTSTORE>
 	special <ADDEXIT>
 	MallMap
@@ -3443,7 +3417,6 @@ sub
 	Scene
 	name <Taste Island>
 	type <building public mall legit meeting>
-	context <>
 	entrance <*DEPARTMENTSTORE>
 	special <ADDEXIT>
 	MallMap
@@ -3481,7 +3454,6 @@ sub
 	Scene
 	name <Fuchal Center>
 	type <building government public legit>
-	context <gov>
 	entrance <*Building>
 	special <ADDEXIT>
 	SetFaction 1
@@ -3613,7 +3585,6 @@ sub
 	name <CometBurger Head Office>
 	SetFaction 2
 	type <building public corporate>
-	context <comet corp>
 	entrance <*Building>
 	special <ADDEXIT>
 	MallMap
@@ -3690,7 +3661,7 @@ Scene 0 3
 	factions <FCOMS MAQUI RISHI L5LAW>
 
 	desig <KOSSP>
-	context <spc>
+	context <SPACE>
 
 	Quest1 <*:LocalQuest>
 
@@ -3703,7 +3674,6 @@ sub
 	Scene
 	name <Kosaka Core Market>
 	type <building mall public legit>
-	context <mall>
 	entrance <*DEPARTMENTSTORE>
 	special <ADDEXIT>
 	MallMap
@@ -3779,7 +3749,6 @@ sub
 	Scene
 	name <Skull and Kraken Pub>
 	type <building restaurant nightclub meeting public sleazy>
-	context <>
 	entrance <*Building Short>
 	special <ADDEXIT>
 	ClubMap
@@ -3822,7 +3791,6 @@ sub
 	Scene
 	name <Capitol Motors>
 	type <building garage public>
-	context <>
 	entrance <*Garage>
 	special <ADDEXIT>
 	MallMap
@@ -3859,7 +3827,6 @@ sub
 	Scene
 	name <Crystal Tower>
 	type <building government public legit>
-	context <gov>
 	entrance <*Building Tall>
 	special <ADDEXIT>
 	SetFaction 10
@@ -4018,7 +3985,6 @@ sub
 	name <MUGL Mechanical>
 	SetFaction 13
 	type <building public corporate>
-	context <MUGLE corp>
 	entrance <*Building>
 	special <ADDEXIT>
 	MallMap
@@ -4062,7 +4028,6 @@ sub
 	Scene
 	name <Alliance Proxen>
 	type <building embassy public legit>
-	context <gov>
 	entrance <*Building>
 	special <ADDEXIT>
 	SetFaction 1
@@ -4115,7 +4080,6 @@ sub
 	Scene
 	name <Rishiri Proxen>
 	type <building embassy public legit>
-	context <gov>
 	entrance <*Building>
 	special <ADDEXIT>
 	SetFaction 11
@@ -4200,7 +4164,7 @@ Scene 0 3
 	factions <FCOMS PRIVA L5LAW HOELL MUGLE>
 
 	desig <TOHSP>
-	context <spc>
+	context <SPACE>
 
 	Quest1 <*:LocalQuest>
 
@@ -4213,7 +4177,6 @@ sub
 	Scene
 	name <Tohru Mall>
 	type <building mall public>
-	context <mall>
 	entrance <*Building>
 	special <ADDEXIT>
 	MallMap
@@ -4285,7 +4248,6 @@ sub
 	Scene
 	name <Jiason Factory>
 	type <building garage factory public>
-	context <>
 	entrance <*Garage>
 	special <ADDEXIT>
 	MallMap
@@ -4499,7 +4461,6 @@ sub
 	Scene
 	name <Meteor Center>
 	type <building government public legit>
-	context <gov>
 	entrance <*Building>
 	special <ADDEXIT>
 	SetFaction 10
@@ -4673,7 +4634,7 @@ Scene 0 3
 	factions <FCOMS L5LAW HOELL MUGLE>
 
 	desig <EMESP>
-	context <spc>
+	context <SPACE>
 
 	Quest1 <*:LocalQuest>
 
@@ -4686,7 +4647,6 @@ sub
 	Scene
 	name <Emerald Department Store>
 	type <building mall public legit>
-	context <mall>
 	entrance <*DEPARTMENTSTORE>
 	special <ADDEXIT>
 	MallMap
@@ -4802,7 +4762,6 @@ sub
 		Scene
 		name <Emerald Fashion>
 		type <building mall public legit>
-		context <mall>
 		special <NOEXIT>
 		MallMap
 		MapWidth 17
@@ -4842,7 +4801,6 @@ sub
 		Scene
 		name <Emerald Weapons>
 		type <building mall public legit>
-		context <mall>
 		special <NOEXIT>
 		MallMap
 		MapWidth 17
@@ -4882,7 +4840,6 @@ sub
 		Scene
 		name <Emerald Life>
 		type <building mall public legit>
-		context <mall>
 		special <NOEXIT>
 		MallMap
 		MapWidth 17
@@ -4958,7 +4915,6 @@ sub
 	Scene
 	name <Emerald Bank>
 	type <building government public bank legit>
-	context <gov>
 	entrance <*Building>
 	special <ADDEXIT>
 	SetFaction 10
@@ -5126,7 +5082,6 @@ sub
 	name <MUGL Financial>
 	SetFaction 13
 	type <building public corporate>
-	context <corp>
 	entrance <*Building>
 	special <ADDEXIT>
 	MallMap
@@ -5167,7 +5122,6 @@ sub
 	name <Hoeller Investments>
 	SetFaction 7
 	type <building public corporate>
-	context <corp>
 	entrance <*Building>
 	special <ADDEXIT>
 	MallMap

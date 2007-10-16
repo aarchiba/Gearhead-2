@@ -126,7 +126,6 @@
 	NEWS [idnum]		Store global news message in source gear
 	NEXTCOMP [changes]		End current plot, load next component
 	NEXTEPISODE [sceneid] [changes]	Load next component in new city, reset state vars
-	NPCABSOLUTELEVEL [NPC] [%]	Scales all skill values by percent
 	P= [idnum] [value]	Set plot variable
 	P+ [idnum] [value]	Add plot variable
 	PCENEMY [cid]		NPC will become PC's enemy
@@ -261,7 +260,6 @@
 6. GRABBED GEAR COMMANDS
 	DELETEGG		Deletes the grabbed (physical) gear
 	DEPLOYGG [team]		Places the grabbed gear in the current scene
-	GABSOLUTELEVEL [%]	Scale skill values by percent
 	GADDNATT [G] [S] [V]
 	GALTERCONTEXT [label]	Alters the story context string by the changes provided
 	GIVEGG			Gives the grabbed (physical) gear to PC

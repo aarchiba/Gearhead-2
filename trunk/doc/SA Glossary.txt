@@ -20,6 +20,11 @@ CATEGORY
 	TREASURE, JEWELRY, ARTWORK, ANTIQUE, GEMSTONE
 	NPCONLY - This item will only be generated for NPCs; useful for armor sets
 
+CONTEXT
+	Used for selecting random content connected to this thing. Tags are 5 chars long.
+	MILIT, POLIT, POLIC, CRIME, CORPO: Faction types
+	SPACE
+
 DESC
 	Description. Contains a readable description of the gear.
 

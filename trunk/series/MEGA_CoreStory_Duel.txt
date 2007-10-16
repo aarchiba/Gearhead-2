@@ -207,7 +207,7 @@ Content
 
 		special <SOLO ARENA>
 
-		Start <if= L2 0 L= 2 1   StoryNote 1  Alert 10  ForceChat %5%    &SetEnemyChar %5%   AlterContext .alter>
+		Start <if= L2 0 L= 2 1   StoryNote 1  Alert 10  ForceChat %5%    &SetEnemyNPC %5%   AlterContext .alter>
 		.alter <+Pun>
 		nu1 <if= T1 0  Return   if= L1 0 L= 1 1   DeleteNPC %1%    LoseComp 0 .loss>
 		.loss <+T-- +F-->
@@ -281,7 +281,7 @@ Content
 	name <Against The Law>
 	Size 5
 	desc <Dueling's illegal in L5, don't you know? But you can cut a deal...>
-	requires <*CS_Duel (+P--|+Pme) F:-- (L:MAQUI|L:FCOMS|L:RISHI) -L:Enemy (C:MILIT|C:ADVEN|C:POLIC|P:PDASS) -P:crm -&NoDerailment>
+	requires <*CS_Duel (+P--|+Pme) F:-- (L:MAQUI|L:FCOMS|L:RISHI) -L:Enemy (C:MILIT|C:ADVEN|C:POLIC|P:PDASS) -P:CRIME -&NoDerailment>
 	% E1 is the challenger
 	% E2 is the challenger's home scene
 	% E3 is the outdoor scene where the duel will take place

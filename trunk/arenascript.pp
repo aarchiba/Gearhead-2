@@ -1042,16 +1042,12 @@ begin
 
 	end else begin
 		{ No command was given, so this must be a constant value. }
-{$IFDEF DEBUG}
 		S2 := SMsg;
-{$ENDIF}
 		SV := ExtractValue( SMsg );
-{$IFDEF DEBUG}
 		if ( SV = 0 ) and ( S2 <> '' ) and ( S2 <> '0' ) then begin
 			DialogMsg( 'WARNING: Script value ' + S2 );
 			DialogMsg( 'CONTEXT: ' + event );
 		end;
-{$ENDIF}
 	end;
 
 	{ Restore the grabbed gear before exiting. }
@@ -4024,23 +4020,6 @@ begin
 	end;
 end;
 
-Procedure ProcessGAbsoluteLevel( var Event: String; GB: GameBoardPtr; Source: GearPtr );
-	{ Set the skill points for the grabbed gear. }
-	{ Unlike the above procedure, this one scales the skill points by a % based on }
-	{ their current value. }
-var
-	SkLvl: Integer;
-begin
-	{ Find out what level the NPC should be at. }
-	SkLvl := ScriptValue( Event , GB , Source ) + 35;
-	if SkLvl < 1 then SkLvl := 1;
-
-	{ As long as we have a grabbed gear, go for it! }
-	if ( Grabbed_Gear <> Nil ) then begin
-		ScaleSkillsToLevel( Grabbed_Gear , SkLvl );
-	end;
-end;
-
 Procedure ProcessGMoraleDmg( var Event: String; GB: GameBoardPtr; Source: GearPtr );
 	{ Give some morale points to the grabbed gear. }
 var
@@ -4262,7 +4241,6 @@ begin
 		else if cmd = 'MOREMEMO' then ProcessMoreMemo( Event , GB )
 		else if cmd = 'BOMB' then ProcessBomb( GB )
 		else if cmd = 'GSKILLXP' then ProcessGSkillXP( Event , GB , Source )
-		else if cmd = 'GABSOLUTELEVEL' then ProcessGAbsoluteLevel( Event , GB , Source )
 		else if cmd = 'GSKILLLEVEL' then ProcessGSkillLevel( Event , GB , Source )
 		else if cmd = 'GMORALEDMG' then ProcessGMoraleDmg( Event , GB , Source )
 		else if cmd = 'DRAWTERR' then ProcessDrawTerr( Event , GB , Source )
@@ -4272,14 +4250,10 @@ begin
 		else if cmd = 'GJOINLANCE' then ProcessGJoinLance( GB )
 		else if cmd = 'GOPENINV' then ProcessGOpenInv( GB )
 		else if cmd = 'ARENAREP' then ProcessArenaRep( Event , GB , Source )
-{$IFDEF DEBUG}
 		else if cmd <> '' then begin
 					DialogMsg( 'ERROR: Unknown ASL command ' + cmd );
 					DialogMsg( 'CONTEXT: ' + event );
-				end;
-{$ELSE}
-		;
-{$ENDIF}
+				end
 		end; { If not GrabGear }
 	end;
 
