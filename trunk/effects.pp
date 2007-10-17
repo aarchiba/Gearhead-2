@@ -2518,7 +2518,7 @@ var
 				if T <= ( ( AtOp + 1 ) mod N ) then Inc( AtOp2 );
 
 				if MekIsTargetInRadius( GB, Mek, FindRoot( Attacker ) , Attacker, FindRoot( Attacker ), X, Y, R ) and ( AtOp2 > 0 ) then begin
-					AddTargetToList( Mek , AtOp );
+					AddTargetToList( Mek , AtOp2 );
 					Inc( T );
 				end;
 
