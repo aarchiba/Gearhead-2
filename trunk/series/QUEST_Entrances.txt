@@ -220,7 +220,7 @@ Content
 		result2 <NewChat Say 3 AddChat 3>
 		result3 <NewChat Say 4 ItemQSubMemo %2% %prev_id% 5 SetQEncActive %2%>
 		result4 <NewChat Say 4>
-		result5 <NewChat V= 2 Reward Threat %threat% 100 150 Say 7 AddChat 6 AddChat 7>
+		result5 <NewChat V= 2 Reward %threat% 150 Say 7 AddChat 6 AddChat 7>
 		result6 <ifG React 25 else GoR6Fail NewChat Say 10 V= 1 2 DeleteItem %1% CashPrize V2 AddLawful -1 PCFriend %3%>
 		GoR6Fail <NewChat Say 8 V= 1 2 CashPrize V2 DeleteItem %1% AddLawful -1>
 		result7 <NewChat Say 9>

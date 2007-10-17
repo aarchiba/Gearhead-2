@@ -679,6 +679,7 @@ Content
 
 	% E1 is the NPC offering the quest.
 	% E2 is the encounter that the PC must destroy.
+	% E3 is the enemy faction
 	element1 <KEY>
 	element2 <Prefab>
 	Scene2 <ENVIRONS>
@@ -722,7 +723,7 @@ Content
 		ATTACK <ifG StatVal STAT_MetaVisibility -1    ifUStealth 15 else GoAutoAttack ifYesNo -3 -4 -5 else GoAvoidAttack Goto Use>
 		GoAutoAttack <Alert -2 Goto GoStartCombat>
 		GoAvoidAttack <Print -6 AddSociable -1>
-		GoStartCombat <V= 1 0  SavePos Dynamic 2 Threat %threat% 100 .nu1 .nu2 ComposeD Msg1 .Msg1>
+		GoStartCombat <V= 1 0  SavePos Dynamic 2 %threat% 100 .nu1 .nu2 ComposeD Msg1 .Msg1 DynaFaction %3%>
 		.nu1 <if= T1 0  Return   if= L1 0  L= 1 1  AddRenown -5  ItemVar= %2% 1 ComTime ItemVar+ %2% 1 d86400 ItemVar+ %2% 1 43200>
 		.nu2 <if= T2 0           if= L1 0  L= 1 1  Print 1 XPV 100  AddRenown 1   NPCVar= %1% 1 1  DeleteItem %2%  QMemo %qid% 1>
 		EncounterMove 50
@@ -897,9 +898,9 @@ Content
 		*GoGreet <*NiceToMeetYou GoCheckFirst>
 		GoCheckFirst <if= QuestStatus %qid% 0 else GoChat NewChat Say 1 QMemo %qid% 2 SetQuestStatus %qid% %id%>
 		*GoChat <*MISC_CHATTER>
-		result1 <AddLawful 1 ifChatNPCArchEnemy else .%id1%_GoInit NewChat Say 5 SetQuestStatus %qid% -2 CashPrize Reward Threat %threat% 100 100>
+		result1 <AddLawful 1 ifChatNPCArchEnemy else .%id1%_GoInit NewChat Say 5 SetQuestStatus %qid% -2 CashPrize Reward %threat% 100>
 		result2 <NewChat Say 3 SetQuestStatus %qid% -2>
-		result3 <NewChat Say 4 SetQuestStatus %qid% -2 CashPrize Reward Threat %threat% 100 50>
+		result3 <NewChat Say 4 SetQuestStatus %qid% -2 CashPrize Reward %threat% 50>
 		Msg1 <Escaped murderer %name2% is on the loose in %name3%. I want this criminal brought in alive; there's a reward for anyone who can do that.>
 		Msg2 <%name1% in \SCENE %s1% is offering a bounty for the capture of wanted murderer %name2%.>
 		Msg3 <That's terrible news. Now it's certain that %name2% will kill again.>
@@ -1035,7 +1036,7 @@ Content
 		Result1 <ifG ItemVar %2% 2  %threat%  else GoR1NoBranch Goto .%id1%_GoInit>
 		%% Upon revealing a win against the pirates, give a reward, then set the local victory
 		%% counter, reset the pirate reappearance counter, and up its difficulcy rating.
-		GoR1NoBranch <NewChat Say 3 AddReact d5 CashPrize Reward Threat ItemVar %2% 2 100 100  V= 1 ItemVar %2% 3 ItemVar= %2% 1 ComTime ItemVar+ %2% 1 d86400 ItemVar+ %2% 1 d86400 ItemVar+ %2% 2 d10  QMemo %qid% 4>
+		GoR1NoBranch <NewChat Say 3 AddReact d5 CashPrize Reward ItemVar %2% 2 100  V= 1 ItemVar %2% 3 ItemVar= %2% 1 ComTime ItemVar+ %2% 1 d86400 ItemVar+ %2% 1 d86400 ItemVar+ %2% 2 d10  QMemo %qid% 4>
 
 		Msg1 <Recently our colony has been attacked by pirates. There's been a bounty set for bringing them to justice.>
 		Msg1_1 <If you're planning to fly around outside the station, you should know that there have been many pirate attacks recently. We're offering a bounty for anyone who can get rid of them.>
@@ -1089,7 +1090,7 @@ Content
 		GoAutoAttack <Alert -2 Goto GoStartCombat>
 		GoAvoidAttack <Print -6 AddSociable -1>
 
-		GoStartCombat <V= 1 0  SavePos Dynamic 2 Threat V2 100 .nu1 .nu2 ComposeD Msg1 .Msg1>
+		GoStartCombat <V= 1 0  SavePos Dynamic 2 V2 100 .nu1 .nu2 ComposeD Msg1 .Msg1 DynaFaction 8>
 		.nu1 <if= T1 0  Return   if= L1 0  L= 1 1  AddRenown -5  ItemVar= %2% 1 ComTime ItemVar+ %2% 1 d86400 ItemVar+ %2% 1 43200>
 		.nu2 <if= T2 0           if= L1 0  L= 1 1  XPV 100  AddRenown 1   ItemVar+ %2% 3 1  QMemo %qid% 1>
 		EncounterMove 50

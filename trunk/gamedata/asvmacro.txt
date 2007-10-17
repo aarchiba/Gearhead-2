@@ -10,6 +10,7 @@ RootSceneID <GrabCurrentScene GrabRootScene GS>
 ParentSceneID <GrabScene ? GrabParent GS>
 SCENEFAC <GrabScene ?  GNAtt NAG_Personal NAS_FactionID>
 ROOTSCENEFAC <GrabCurrentScene GrabRootScene  GNAtt NAG_Personal NAS_FactionID>
+CURRENTSCENEFAC <GrabCurrentScene  GNAtt NAG_Personal NAS_FactionID>
 GUARDTEAM <GrabTeamName GUARDS GS>
 NPCVar   <GrabNPC ?       GNAtt NAG_ScriptVar ?>
 NPCScene <GrabNPC ? GScene>
@@ -68,6 +69,7 @@ SELFY <GrabSource GNAtt NAG_Location NAS_Y>
 SELFUID <GrabSource GNAtt NAG_EpisodeData NAS_UID>
 SELFNID <GrabSource GNAtt NAG_Narrative NAS_NID>
 SelfS <GrabSource GS>
+SelfFac <GrabSource GNAtt NAG_Personal NAS_FactionID>
 RReact <GrabPC GNatt NAG_ReactionScore ?>
 NPCRep <GrabNPC ? GNAtt NAG_CharDescription - ?>
 NPCLaw <GrabNPC ? GNAtt NAG_CharDescription -2>
@@ -100,6 +102,8 @@ FacVar <GrabFaction ? GNAtt NAG_ScriptVar ?>
 PCFacXP <GrabFaction PCFac GNAtt NAG_Experience NAS_FacXP>
 PCFacLevel <GrabFaction PCFac GNAtt NAG_Experience NAS_FacLevel>
 FacXPNeeded <FXPNeeded PCFacLevel>
+DynaRenown <GrabCurrentScene GNAtt 21 4>
+DynaStrength <GrabCurrentScene GNAtt 21 5>
 WildMap <1>
 CityMap <-6>
 CaveMap <-2>

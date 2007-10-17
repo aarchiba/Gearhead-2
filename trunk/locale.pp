@@ -106,6 +106,9 @@ Const
 		NumBackdrop = 1;
 		NAV_Starfield = 1;
 
+	NAS_DynaRenown = 4;	{ These two attributes record the enemy force renown/strength }
+	NAS_DynaStrength = 5;	{ for a dynamic scene. }
+
 	NAG_MissionReport = 23;		{ Holds data that will be erased the next time this mecha is deployed. }
 		NAS_WasSalvaged = 1;	{ If nonzero, this gear was salvaged. }
 

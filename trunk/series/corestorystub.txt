@@ -20,8 +20,8 @@
 	&EnemyFac <N2>
 	&SetAllyFac <N= 3 ?>
 	&AllyFac <N3>
-	&SetPlotNPC <N= 4 ?>
-	&PlotNPC <N4>
+	&SetPartnerNPC <N= 4 ? AddTempLancemate !>
+	&PartnerNPC <N4>
 	&SetTargetNPC <N= 5 ?>
 	&TargetNPC <N5>
 	&SetCompScene <N= 6 ?>
@@ -31,8 +31,6 @@
 	&EpisodeScene <N7>
 	&SetTargetItem <N= 8 ?>
 	&TargetItem <N8>
-	&SetPartnerNPC <N= 9 ? AddTempLancemate !>
-	&PartnerNPC <N9>
 
 	element1 <C>
 	palette_entry_code1 <E>
@@ -41,7 +39,7 @@
 	element3 <F>
 	palette_entry_code3 <P>
 	element4 <C>
-	palette_entry_code4 <N>
+	palette_entry_code4 <R>
 	element5 <C>
 	palette_entry_code5 <T>
 	element6 <S>
@@ -50,6 +48,4 @@
 	palette_entry_code7 <L>
 	element8 <I>
 	palette_entry_code8 <I>
-	element9 <C>
-	palette_entry_code9 <R>
 

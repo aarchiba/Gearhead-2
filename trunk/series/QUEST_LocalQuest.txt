@@ -4,6 +4,58 @@
 %% This content is tied to a city rather than any specific character within it.
 
 Content
+	name <Joyriders>
+	requires <*:LocalQuest (City|Dangerous) -"Safe">
+
+	% There are some mecha joyriders out and about. A police officer
+	% will ask you to get rid of them.
+
+	% E1 is the root scene
+	% E2 is the police faction allied with the root scene
+	% E3 is a police officer
+	% E4 is the joyrider encounter
+	Element1 <.>
+	Element2 <Faction Police !Ally 1>
+	Element3 <Prefab>
+	Scene3 <Building Public !Okay 2>
+	Team3 <Citizens>
+	TeamData3 <Pass>
+	Element4 <Prefab>
+	Scene4 <Outdoors>
+
+	% SubQuest1 is the victory subquest.
+	Quest1 <*Success1.FinishMission 3>
+
+	sub
+		Persona 3
+		rumor0 <%name3% has been trying to stop a group of mecha joyriders.>
+		greeting <if= QuestStatus %qid% %id% else GoCheckChat NewChat Say 1 AddChat 1>
+		GoCheckChat <if# QuestStatus %qid% 0 else GoCheckEnemy NewChat SayAnything>
+		*GoCheckEnemy <*ENEMY_CHECK GoStartQuest %2% GoEndQuest>
+		GoStartQuest <NewChat Say 1 QMemo %qid% 2 SetQuestStatus %qid% %id% ItemVar= %4% 1 ComTime ItemVar= %4% 2 %threat%>
+		GoEndQuest <DeleteItem %4% SetQuestStatus %qid% -2>
+		result1 <Goto .%id1%_GoInit>
+		Msg1 <I'm advising everyone to be cautious when traveling through \SCENE %s4% . There's a delinquent joyrider gang that's been attacking other mecha for fun.>
+		Msg2 <%name3% informed you that there are dangerous mecha joyriders in \SCENE %s4% .>
+		Prompt1 <I've taken care of the joyriders.>
+		CPrompt1 <if# ItemVar %4% 3 0 Accept>
+
+		MetaScene 3
+		end <if= QuestStatus %qid% %id% else %pop% ifNPCDead %3% else %pop% SetQuestStatus %qid% -2 Goto %pop%>
+	end
+	inv
+		NPC Police Officer
+		update <if= V1 0 SetSelfFaction %2% V= 1 1>
+
+		STC DYNAMICENCOUNTER-DAILY-WANDER
+		name <Joy Riders>
+		GoStartCombat <V= 1 0  SavePos Dynamic 2 V2 100 .nu1 .nu2 ComposeD Msg1 .Msg1 ComposeD Msg2 .Msg2 DynaVar= 1 SelfNID DynaFaction SelfFac>
+		.nu2 <if= T2 0 if= L2 0  L= 2 1  XPV 100  AddRenown 1 QMemo %qid% 2 ItemVar+ L1 3 1  Alert 1>
+		.msg1 <You have defeated the joyriders.>
+		.msg2 <You should let %name3% know that you've defeated the joyriders.>
+	end
+
+Content
 	name <Bank Robbery>
 	requires <*:LocalQuest "Financial">
 
@@ -119,7 +171,7 @@ Content
 		*GoOfferMission <*INeedYourHelp&SomethingPersonal GoAccept GoDeny>
 		GoAccept <EndChat Say 2 SetQuestStatus %qid% %id% QMemo %qid% 3 AddChat 1>
 		GoDeny <NewChat Say 1 AddReact -d10>
-		GoOfferItem <V= 2 Reward Threat %threat% 100 1000 NewChat Say 13 AddChat 10 AddChat 11 AddChat 12>
+		GoOfferItem <V= 2 Reward %threat% 1000 NewChat Say 13 AddChat 10 AddChat 11 AddChat 12>
 		Result1 <NewChat Say 4 AddChat 2 AddChat 3 AddChat 4>
 		Result2 <NewChat Say 5  AddCheerful  d10  AddChat 5>
 		Result3 <NewChat Say 6  AddCheerful -d10  AddChat 5>
@@ -356,7 +408,7 @@ Content
 			name <Citizens>
 			ParaX 25
 			ParaY 25
-			Deploy <if= L11 0  if= QuestStatus %qid% %id%   WMecha 2 Threat %threat% 100>
+			Deploy <if= L11 0  if= QuestStatus %qid% %id%   WMecha 2 %threat% 100>
 		end
 	end
 	inv
@@ -767,7 +819,7 @@ Content
 			name <Enemies>
 			SetEnemy 1
 			SetFaction 8
-			Deploy <if= L2 0 WMecha 2 Threat %threat% 100>
+			Deploy <if= L2 0 WMecha 2 %threat% 100>
 		end
 	end
 	inv
@@ -1264,7 +1316,7 @@ Content
 
 			Team 2
 			name <Enemies>
-			Deploy <if= L2 0  SetSelfFaction NPCFac %1%   WMecha 2 Threat %threat% 80>
+			Deploy <if= L2 0  SetSelfFaction NPCFac %1%   WMecha 2 %threat% 80>
 			ParaX 25
 			ParaY 25
 			SetEnemy 1
@@ -1335,7 +1387,7 @@ Content
 		% If the PC leaves the scene before defeating all enemies, there's no second chance.
 		nu1 <if= T1 0 Return  if= L2 0   L= 2 -1  DeleteNPC %1%  SetQuestStatus %qid% -2>
 		nu2 <if= T2 0         if= L2 0   XPV 100   L= 2 1   if= L3 0 else GoFightE1  ifNPCOK %1%  Print 2 ForceChat %1% MoveAndPacifyNPC %1% %s3%>
-		GoFightE1 <L= 2 -1 L= 4 Reward Threat %threat% 100 500  Alert 1 AddLawful -5 SetQuestStatus %qid% -2  CashPrize L4 ifNPCOK %1% FreezeNPC %1% PCEnemy %1%>
+		GoFightE1 <L= 2 -1 L= 4 Reward %threat% 500  Alert 1 AddLawful -5 SetQuestStatus %qid% -2  CashPrize L4 ifNPCOK %1% FreezeNPC %1% PCEnemy %1%>
 		Faint%1% <SetQuestStatus %qid% -2>
 
 		Msg1 <You recover $ \VAL L4 from %name1%'s cargo.>
@@ -1350,7 +1402,7 @@ Content
 			Team 2
 			name <Enemies>
 			SetFaction 8
-			Deploy <if= L2 0   WMecha 2 Threat %threat% 150>
+			Deploy <if= L2 0   WMecha 2 %threat% 150>
 			ParaX 25
 			ParaY 25
 			SetEnemy 1 3

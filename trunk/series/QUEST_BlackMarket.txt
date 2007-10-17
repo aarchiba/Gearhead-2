@@ -183,7 +183,7 @@ Content
 			name <Enemy Team>
 			SetEnemy 1
 			SetFaction 8
-			Deploy <if= L2 0 WMecha 2 Threat %threat% 100>
+			Deploy <if= L2 0 WMecha 2 %threat% 100>
 		end
 		inv
 			stc DERELICT-1

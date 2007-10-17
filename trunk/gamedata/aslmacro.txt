@@ -13,9 +13,7 @@ S+ <GrabStory              GAddNAtt NAG_ScriptVar ? ?>
 N= <GrabStory              GSetNAtt NAG_ElementID ? ?>
 SetTeamFaction <GrabTeam ? GSetNAtt NAG_Personal NAS_FactionID ?>
 SetSelfFaction <GrabSource GSetNAtt NAG_Personal NAS_FactionID ?>
-DynaFaction <GrabDynamic GSetNAtt NAG_Personal NAS_FactionID ?>
 EraseRumor <GrabSource GSetSAtt rumor na>
-PassVar <GrabDynamic GSetNAtt NAG_Scriptvar ? ?>
 ItemVar= <GrabItem ? GSetNAtt NAG_ScriptVar ? ?>
 ItemStat= <GrabItem ? GSetStat ? ?>
 ItemVar+ <GrabItem ? GAddNAtt NAG_ScriptVar ? ?>
@@ -103,11 +101,10 @@ IFFACTIONALLY <GrabFaction ? ifGArchAlly>
 IFNPCARCHENEMY <GrabNPC ? ifGArchEnemy>
 IFCHATNPCARCHENEMY <GrabChatNPC ifGArchEnemy>
 ifVisible <if= StatVal STAT_MetaVisibility 0>
-DYNAMIC <NewD ? StockD ? ComposeD NU1 ? ComposeD NU2 ?>
-STOCKD <TSTOCKD NAV_DefEnemyTeam ?>
-STAGED <LoadD ? StockD ?>
+DYNAMIC <NewD ? GrabDynamic GSetNAtt 21 4 ? GSetNAtt 21 5 ? GSetSAtt NU1 ? GSetSAtt NU2 ?>
+DynaFaction <GrabDynamic GSetNAtt NAG_Personal NAS_FactionID ?>
+DynaVar= <GrabDynamic GSetNAtt NAG_Scriptvar ? ?>
 MDYNAMIC <NewD ? MStockD ? ? ComposeD NU1 ? ComposeD NU2 ?>
-MSTAGED <LoadD ? MStockD ? ?>
 MSTOCKD <TMSTOCKD NAV_DefEnemyTeam ? ?>
 ComposeD <GrabDynamic GSetSAtt ? ?>
 SetMapType <GrabDynamic GSetStat STAT_MapGenerator ?>

@@ -423,7 +423,7 @@ begin
 	TL := HQRenown( HQCamp );
 	PayRate := NAttValue( Scene^.NA , NAG_ArenaMissionInfo , NAS_PayRate );
 	if PayRate = 0 then PayRate := 400;
-	SetNAtt( Scene^.NA , NAG_ArenaMissionInfo , NAS_Pay , Calculate_Reward_Value( Nil , Calculate_Threat_Points( TL , 100 ) , PaYRate ) );
+	SetNAtt( Scene^.NA , NAG_ArenaMissionInfo , NAS_Pay , Calculate_Reward_Value( Nil , TL , PaYRate ) );
 	SetSAtt( Scene^.SA , 'name <>' );
 	Desc := SAttValue( Scene^.SA , 'TYPE' ) + ' ' + DifficulcyContext( TL );
 	SetSAtt( Scene^.SA , 'TYPE <' + Desc + '>' );

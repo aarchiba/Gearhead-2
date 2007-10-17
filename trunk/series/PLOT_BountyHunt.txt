@@ -37,7 +37,7 @@ sub
 	*GoCheckSkill <*GenericMissionTest&Chara  GoMissionBriefing GoEnd GoRejectMission na na>
 	*GoRejectMission <*RejectMission GoEnd>
 	GoEnd <DeleteNPC %2%  EndPlot>
-	GoMissionBriefing <V= 1 Reward Threat %threat% 100 250  V= 2 Reward Threat %threat% 100 75   NewChat Say 1   SetPlotStatus %id1% Memo 2>
+	GoMissionBriefing <V= 1 Reward %threat% 250  V= 2 Reward %threat% 75   NewChat Say 1   SetPlotStatus %id1% Memo 2>
 
 	Msg1 <I need you to locate and aprehend a thief named %name2%. Bring \OPR %2% in alive and you'll earn $ \VAL V1 .>
 	Msg2 <%name1% hired you to capture %name2%, a wanted thief.>

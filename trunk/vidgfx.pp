@@ -805,8 +805,8 @@ begin
 	ClrScreen;
 	VGotoXY( 1 , ScreenHeight );
 	TextColorBackground( LightGreen , Black );
-{	VWrite( MsgString( 'MORETEXT_Prompt' ) );
-}
+	VWrite( MsgString( 'MORETEXT_Prompt' ) );
+
 	{ Display the screen. }
 	TextColor( LightGray );
 	DisplayTextHere;

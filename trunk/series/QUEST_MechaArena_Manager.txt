@@ -268,7 +268,7 @@ Content
 		GoStartQuest <SetQuestStatus %qid% %id% SetArenaThreat %2% 10>
 
 		GoOfferFight <NewChat Say 1 AddChat 1 AddChat 2 AddChat 3>
-		GoBigWin <NewChat Say 4 History 5 XPV 500 SetQuestStatus %qid% -1 AddChat 4  CashPrize Reward Threat ArenaThreat %2% 100 100 Goto GoResetArena>
+		GoBigWin <NewChat Say 4 History 5 XPV 500 SetQuestStatus %qid% -1 AddChat 4  CashPrize Reward ArenaThreat %2% 1000 Goto GoResetArena>
 		GoSkillTraining <NewChat Say 6 AddChat 5>
 		*GoPreQuest <*NiceToMeetYou GoArenaIntro>
 		GoArenaIntro <NewChat Say 7 AddChat 6 AddChat 7 AddCHat 8>

@@ -670,7 +670,7 @@ Content
 		GoStartQuest <SceneVar= %s5% 12 1  MoveNPC %1% %5%  SetNPCTeam %1% 2  SetQEncActive %3% ifNPCDead %1% V= 3 1>
 		*GoNoQuest <*NiceToMeetYou GoChat>
 		*GoChat <*MISC_CHATTER>
-		result1 <NewChat Say 2 CashPrize Reward Threat %threat% 100 100 V= 1 1>
+		result1 <NewChat Say 2 CashPrize Reward %threat% 100 V= 1 1>
 		result2 <NewChat Say 3  AddHeroic 1 AddRenown -5   V= 1 1>
 		Msg1 <Welcome back. Have you discovered anything of interest?>
 		Msg2 <Ah, that's good to hear. Now I have a good place to begin my expedition. Here's a small reward for your trouble.>
@@ -784,7 +784,7 @@ Content
 		% V1 = Initialization Counter
 		% V2 = Have offered mission
 		greeting <if= V1 0 else GoGreet2 V= 1 1 MoveNPC %1% %3% SetNPCTeam %1% 3 SceneVar= %3% 2 1 SetQEncActive %4% Goto GoGreet2>
-		GoGreet2 <if= V2 1 else GoCheckOffer if= SceneVar %3% 1 2 else GoCheckLoss NewChat Say %id%01 CashPrize Reward Threat %threat% 100 100 V= 2 2>
+		GoGreet2 <if= V2 1 else GoCheckOffer if= SceneVar %3% 1 2 else GoCheckLoss NewChat Say %id%01 CashPrize Reward %threat% 100 V= 2 2>
 		GoCheckLoss <if= SceneVar %3% 1 3 else GoMissionReminder NewChat Say %id%02 V= 2 2>
 		GoMissionReminder <NewChat Say %id%03>
 		GoCheckOffer <if= SceneVar %3% 1 0 else GoAlreadyFought if= QuestStatus %qid% %id% else GoNoQuest Goto GoCheckAuto>
@@ -826,7 +826,7 @@ Content
 			name <Enemy Team>
 			SetEnemy 1 3
 			SetFaction 8
-			Deploy <if= L1 0 WMecha 2 Threat %threat% 220>
+			Deploy <if= L1 0 WMecha 2 %threat% 220>
 
 			Team 3
 			name <E3 Team>
@@ -1214,7 +1214,7 @@ Content
 			Team 2
 			name <Enemies>
 			SetFaction 8
-			Deploy <if= L2 0   WMecha 2 Threat %threat% 100  L= 3 ComTime L+ 3 43200>
+			Deploy <if= L2 0   WMecha 2 %threat% 100  L= 3 ComTime L+ 3 43200>
 			ParaX 25
 			ParaY 25
 			SetEnemy 1
@@ -1298,7 +1298,7 @@ Content
 
 	sub
 		Persona 1
-		.%id%_GoInit <NewChat Say %id%01 CashPrize Reward Threat %threat% 100 80 SetQuestStatus %qid% -1>
+		.%id%_GoInit <NewChat Say %id%01 CashPrize Reward %threat% 80 SetQuestStatus %qid% -1>
 		Msg%id%01 <So this is it. Thanks for showing it to me... Here's some cash to help finance your next expedition, wherever that leads.>
 	end
 
@@ -1313,7 +1313,7 @@ Content
 
 	sub
 		Persona 1
-		.%id%_GoInit <NewChat Say %id%01 CashPrize Reward Threat %threat% 100 200 SetQuestStatus %qid% -1>
+		.%id%_GoInit <NewChat Say %id%01 CashPrize Reward %threat% 200 SetQuestStatus %qid% -1>
 		Msg%id%01 <So this is the %name2% . Here's a reward for bringing it to me.>
 	end
 
@@ -1339,7 +1339,7 @@ Content
 
 	sub
 		Persona 1
-		.%id%_GoInit <NewChat Say %id%01 CashPrize Reward Threat %threat% 100 300 SetQuestStatus %qid% -1>
+		.%id%_GoInit <NewChat Say %id%01 CashPrize Reward %threat% 300 SetQuestStatus %qid% -1>
 		Msg%id%01 <Thank you so much for saving %name2%! Here, take this money as a reward.>
 	end
 
@@ -1377,7 +1377,7 @@ Content
 
 	sub
 		Persona 1
-		.%id%_GoInit <NewChat Say %id%01 CashPrize Reward Threat %threat% 100 200 SetQuestStatus %qid% -1>
+		.%id%_GoInit <NewChat Say %id%01 CashPrize Reward %threat% 200 SetQuestStatus %qid% -1>
 		Msg%id%01 <%name2% is now on the right track. Thanks, \PC ... This wouldn't have been possible without you.>
 	end
 
@@ -1392,7 +1392,7 @@ Content
 
 	sub
 		Persona 1
-		.%id%_GoInit <NewChat Say %id%01 CashPrize Reward Threat %threat% 100 200 SetQuestStatus %qid% -1>
+		.%id%_GoInit <NewChat Say %id%01 CashPrize Reward %threat% 200 SetQuestStatus %qid% -1>
 		Msg%id%01_10 <%name2% is now in custody. Thanks, \PC ... This wouldn't have been possible without you.>
 		CMsg%id%01_10 <ifNPCOK %2% Accept>
 		Msg%id%01_20 <%name2% won't be a threat any more. Thanks, \PC ... This wouldn't have been possible without you.>
@@ -1409,7 +1409,7 @@ Content
 
 	sub
 		Persona 1
-		.%id%_GoInit <NewChat Say %id%01 CashPrize Reward Threat %threat% 100 200 SetQuestStatus %qid% -1>
+		.%id%_GoInit <NewChat Say %id%01 CashPrize Reward %threat% 200 SetQuestStatus %qid% -1>
 		Msg%id%01 <This evidence will make it impossible for %name2% to get away this time. Thanks for your help.>
 	end
 
@@ -1424,7 +1424,7 @@ Content
 
 	sub
 		Persona 1
-		.%id%_GoInit <NewChat Say %id%01 CashPrize Reward Threat %threat% 100 200 SetQuestStatus %qid% -1>
+		.%id%_GoInit <NewChat Say %id%01 CashPrize Reward %threat% 200 SetQuestStatus %qid% -1>
 		Msg%id%01 <%name2% has been defeated! Here's a reward for your help.>
 	end
 
@@ -1491,7 +1491,7 @@ Content
 
 	sub
 		Persona 1
-		.%id%_GoInit <NewChat Say %id%01 QMemo %qid% %id%02 SetQuestStatus %qid% %id% CashPrize Reward Threat %threat% 100 100 SetQEncActive %2%>
+		.%id%_GoInit <NewChat Say %id%01 QMemo %qid% %id%02 SetQuestStatus %qid% %id% CashPrize Reward %threat% 100 SetQEncActive %2%>
 		Msg%id%01 <Here's your reward. I expect the pirates could come back, though- according to rumor they were here searching for a lost treasure ship from the early days of colinization.>
 		Msg%id%02 <%name1% told you that the pirates may have been looking for a derelict treasure ship in \SCENE %s2% .>
 
@@ -1606,7 +1606,7 @@ Content
 
 	sub
 		Persona 1
-		.%id%_GoInit <NewChat Say %id%01 CashPrize Reward Threat %threat% 100 100 AddHeroic 1 SetQuestStatus %qid% -1>
+		.%id%_GoInit <NewChat Say %id%01 CashPrize Reward %threat% 100 AddHeroic 1 SetQuestStatus %qid% -1>
 		Msg%id%01 <Thank you so much for the help. Here's a small gift, in appreciation of what you've done... Please take it.>
 		Msg%id%01_1 <>
 		CMsg%id%01_1 <ifNPCSociable Accept>
@@ -1721,7 +1721,7 @@ Content
 
 	sub
 		Persona 1
-		.%id%_GoInit <NewChat Say %id%01 AddChat %id%01 AddChat %id%02 CashPrize Reward Threat %threat% 100 100 SetQuestStatus %qid% %id% QMemo %qid% %id%04>
+		.%id%_GoInit <NewChat Say %id%01 AddChat %id%01 AddChat %id%02 CashPrize Reward %threat% 100 SetQuestStatus %qid% %id% QMemo %qid% %id%04>
 		result%id%01 <NewChat   Say %id%02   AddReact d10>
 		result%id%02 <NewChat   Say %id%03   AddCheerful d6>
 		Msg%id%01 <Thanks for your help! It'll be a lot safer from now on. I just wonder... where could those creatures had come from?>
@@ -1918,7 +1918,7 @@ Content
 		Use <ifKeyItem %6% else GoNoItem Goto Attack>
 		GoNoItem <Alert 1 SetStat STAT_MetaVisibility -1 V= 1 ComTime V+ 1 3600 V+ 1 d7200>
 		Attack <ifKeyItem %6% Alert 2 Print 3 V= 1 ComTime V+ 1 3600 V+ 1 d7200 Goto GoStartCombat>
-		GoStartCombat <SavePos Dynamic 2  Threat %threat% 120 .nu1 .nu2  DynaFaction 9>
+		GoStartCombat <SavePos Dynamic 2 %threat% 120 .nu1 .nu2  DynaFaction 9>
 		.nu1 <if= T1 0  Return   if= L1 0  L= 1 1  AddRenown -5>
 		.nu2 <if= T2 0           if= L1 0  L= 1 1  XPV 50   AddLawful -1>
 		EncounterMove 30
@@ -1950,7 +1950,7 @@ Content
 	Sub
 		Persona 1
 		Greeting <if= QuestStatus %qid% %id% else %pop%  NewChat Say %id%02 AddChat %id%01>
-		.%id%_GoInit <NewChat Say %id%01   CashPrize Reward Threat %threat% 100 100   SetQuestStatus %qid% %id% QMemo %qid% %id%03>
+		.%id%_GoInit <NewChat Say %id%01   CashPrize Reward %threat% 100   SetQuestStatus %qid% %id% QMemo %qid% %id%03>
 		Result%id%01 <Goto .%id1%_GoInit>
 		Msg%id%01 <Good job... very good. The pirates must have a base somewhere around here. If we could destroy that, their attacks would be stopped for good.>
 		Msg%id%02 <Our forces are still looking for the pirate base. Never fear, it will be located and destroyed soon.>
@@ -1988,7 +1988,7 @@ Content
 		greeting <if= QuestStatus %qid% %id% else %pop% if# NPCVar %2% 1 3 else .%id%_GoIntimidate ifKeyItem %3% else %pop% if= SceneID %s1% else %pop% Goto .%id%_GoHaveCan>
 		.%id%_GoHaveCan <NewChat Say %id%02 AddChat %id%01 AddChat %id%02 AddChat %id%03>
 		.%id%_GoIntimidate <NewChat Say %id%02 AddChat %id%04>
-		.%id%_GoInit <NewChat Say %id%01 CashPrize Reward Threat %threat% 100 100  SetQuestStatus %qid% %id% QMemo %qid% %id%05>
+		.%id%_GoInit <NewChat Say %id%01 CashPrize Reward %threat% 100  SetQuestStatus %qid% %id% QMemo %qid% %id%05>
 		Result%id%01 <NewChat Say %id%03>
 		Result%id%02 <PCFriend %1% PCEnemy %2% DeleteItem %3%  NPCVar= %2% 1 4  XPV 50   Goto .%id1%_GoInit>
 		Result%id%03 <NewChat Say %id%04 DeleteItem %3%  NPCVar= %2% 1 2 Qmemo %qid% %id%06>
@@ -2109,7 +2109,7 @@ Content
 
 	sub
 		Persona 1
-		.%id%_GoInit <NewChat Say %id%01 CashPrize Reward Threat %threat% 100 300 SetQuestStatus %qid% -1>
+		.%id%_GoInit <NewChat Say %id%01 CashPrize Reward %threat% 300 SetQuestStatus %qid% -1>
 		Msg%id%01 <Thanks for the information. Here's a little reward for your trouble.>
 		Msg%id%01_1 <Ah, it's always helpful to be on top of the latest information. Thanks for letting me know. Here's something for you.>
 		CMsg%id%01_1 <ifNPCSociable Accept>
@@ -2139,7 +2139,7 @@ Content
 	sub
 		Persona 1
 		*.%id%_GoInit <*MissionWasSuccess&Reward .%id%_GoFinish ChatNPCFac na>
-		.%id%_GoFinish <CashPrize Reward Threat %threat% 100 250 SetQuestStatus %qid% -1>
+		.%id%_GoFinish <CashPrize Reward %threat% 250 SetQuestStatus %qid% -1>
 	end
 
 

@@ -70,7 +70,7 @@
 	DELETEFACTION [Faction ID]	Deactivate faction
 	DELETEKEYITEM [Narrative ID]	Eliminate key item
 	DRAWTERR [x] [y] [terrain]	Alter the gameboard
-	DYNAMIC [Scale] [Point Value] [NU1 label] [NU2 label]
+	DYNAMIC [Scale] [Renown] [Strength] [NU1 label] [NU2 label]
 			Start a dynamic scene
 	DYNANPC [cid] [team]	Insert NPC into dynamic scene
 	E=			Set Plot Element
@@ -151,10 +151,8 @@
 	SHOP [wares identifier]
 	SHUTTLE			Start the intercity shuttle service
 	SMEMO [Message Number]	Store a memo in the story
-	STAGED [Label] [Point Value]	Load dynamic scene from disk
 	STARTPLOT [script line label] <ELSE [label]>	Load a plot
 	STARTSTORY [script line label] <ELSE [label]>	Load a story
-	STOCKD [UPV]		Stock dynamic encounter with enemies
 	TIME [delay]		Advance game clock
 	TMSTOCKD [team] [upv] [label]	Stock dynamic scene team with monsters
 	TORD [team] [order <parameters>]	Set orders for team
@@ -162,13 +160,12 @@
 	TREPUTATION [team number] [rep num] [value]	Set rep for team
 	TRIGGER [base] [value]	Add an event trigger to the queue
 	TRIGGER0 [base]		Add an event trigger w/o parameter to the queue
-	TSTOCKD [team] [upv]	Stock dynamic scene team with mecha
 	UPDATEPROPS		Sends an "UPDATE" trigger to all gears on gameboard
 	V= [idnum] [value]	Set source variable
 	V+ [idnum] [value]	Add source variable
 	VMSG [ident] [value]	Print standard value message
 	WINCOMP [sceneid] [changes]	Win current component, load next
-	WMECHA [team] [upv]	Stock current scene with mecha
+	WMECHA [team] [renown] [strength]	Stock current scene with mecha
 	WMONSTER [team] [renown]	Stock current scene with monsters
 	XPV [experience award]	Give PC experience
 	XRANPLOT [label]	Load plot using experimental Extra Randomness
@@ -211,7 +208,7 @@
 	PCSKILLVAL [skill]	Highest rank in skill from PC, lancemates
 	RANGE [uid1] [uid2]	Range between two gears by UID
 	REACT			Reaction score with interact NPC
-	REWARD [threat value] [percent]	Good salary for combat mission
+	REWARD [renown] [percent]	Good salary for combat mission
 	S[idnum]		Story variable
 	SCENEFACTION [scene ID]		Scene's faction ID
 	SCENEID			ID of current scene

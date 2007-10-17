@@ -137,12 +137,12 @@ Content
 		result1 <NewChat Say 5 AddChat 2 AddChat 3>
 		result2 <NewChat Say 3 AddLawful  1   StoryNote 4  xpv 50 SetNPCFaction ChatNPCID 0  FreezeNPC ChatNPCID  PCEnemy ChatNPCID  V= 1 1  L= 1 1  WinComp 0 .Next>
 		.Next <+T-- +F-->
-		result3 <NewChat Say 6 AddLawful -2   StoryNote 7  CashPrize Reward Threat StoryDL 100 500  V= 1 1  L= 1 -1  LoseComp 0 .Next>
+		result3 <NewChat Say 6 AddLawful -2   StoryNote 7  CashPrize Reward StoryDL 500  V= 1 1  L= 1 -1  LoseComp 0 .Next>
 		Msg1 <If you have no further reason to question me, I have to get back to business.>
 		Msg2 <I have nothing else to say to you.>
 		Msg3 <Don't think for one minute that I'm going to forget about this... You've made an enemy today, \PC .>
 		Msg4 <You discovered \ChatNPC was spying on \ELEMENT 1 .>
-		Msg5 <Look, if you could just forget about what you heard, I could make it worth your while. How does $ \VAL CashPrize Reward Threat StoryDL 100 500 sound?>
+		Msg5 <Look, if you could just forget about what you heard, I could make it worth your while. How does $ \VAL CashPrize Reward StoryDL 500 sound?>
 		Msg6 <Here you go. It's been a pleasure doing business with you.>
 		Msg7 <You accepted a bribe from \ChatNPC to keep \PPR ChatNPCID spying a secret.>
 		Prompt1 <There's evidence suggesting you are the spy.>

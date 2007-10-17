@@ -61,7 +61,7 @@ sub
 	name <Enemies>
 	SetFaction 5
 	SetEnemy 1
-	Deploy <if= SelfArenaState NAV_AS_Ready ifG SelfArenaForces 0 WMecha 2 Threat SelfArenaThreat SelfArenaForces>
+	Deploy <if= SelfArenaState NAV_AS_Ready ifG SelfArenaForces 0 WMecha 2 SelfArenaThreat SelfArenaForces>
 	ParaX 45
 	ParaY 25
 
@@ -109,7 +109,7 @@ sub
 	name <Enemies>
 	SetFaction 5
 	SetEnemy 1
-	Deploy <if= SelfArenaState NAV_AS_Ready ifG SelfArenaForces 0 WMecha 2 Threat SelfArenaThreat SelfArenaForces>
+	Deploy <if= SelfArenaState NAV_AS_Ready ifG SelfArenaForces 0 WMecha 2 SelfArenaThreat SelfArenaForces>
 	ParaX 45
 	ParaY 25
 
@@ -159,7 +159,7 @@ sub
 	name <Enemies>
 	SetFaction 5
 	SetEnemy 1
-	Deploy <if= SelfArenaState NAV_AS_Ready ifG SelfArenaForces 0 WMecha 2 Threat SelfArenaThreat SelfArenaForces>
+	Deploy <if= SelfArenaState NAV_AS_Ready ifG SelfArenaForces 0 WMecha 2 SelfArenaThreat SelfArenaForces>
 	ParaX 45
 	ParaY 45
 
@@ -202,7 +202,7 @@ sub
 	name <Enemies>
 	SetFaction 5
 	SetEnemy 1
-	Deploy <if= SelfArenaState NAV_AS_Ready ifG SelfArenaForces 0 WMecha 2 Threat SelfArenaThreat SelfArenaForces>
+	Deploy <if= SelfArenaState NAV_AS_Ready ifG SelfArenaForces 0 WMecha 2 SelfArenaThreat SelfArenaForces>
 	ParaX 12
 	ParaY 7
 end
@@ -246,7 +246,7 @@ sub
 	name <Enemies>
 	SetFaction 5
 	SetEnemy 1
-	Deploy <if= SelfArenaState NAV_AS_Ready ifG SelfArenaForces 0 WMecha 2 Threat SelfArenaThreat SelfArenaForces>
+	Deploy <if= SelfArenaState NAV_AS_Ready ifG SelfArenaForces 0 WMecha 2 SelfArenaThreat SelfArenaForces>
 	ParaX 45
 	ParaY 25
 

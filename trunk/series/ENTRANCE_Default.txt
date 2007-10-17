@@ -9,7 +9,7 @@ use <if= StatVal STAT_MetaVisibility 0 ifNoObjections EWM StatVal 4 ifFactionEne
 GoFight <ifG SkRoll 11 15 else GoNoSee ifYesNo 2 3 4 else GoStartCombat Reputation 3 -d3 ifG SkRoll 25 15 else GoStealthFail Print 5 Exit StatVal 4>
 GoNoSee <Alert 1 Goto GoStartCombat>
 GoStealthFail <Print 6 Goto GoStartCombat>
-GoStartCombat <SavePos Dynamic 2 Threat PCRep 6 200 .nu1 .nu2 PassVar 1 StatVal 4 PassVar 2 SceneID   SetMapType MapTile PCX PCY>
+GoStartCombat <SavePos Dynamic 2 PCRenown 200 .nu1 .nu2 DynaVar= 1 StatVal 4 DynaVar= 2 SceneID  DynaFaction SceneFac StatVal 4>
 .nu1 <if= T1 0 Return>
 .nu2 <if= T2 0 if# V1 0 Exit V1 SeekGate V2 V= 1 0>
 GoEnter <Exit StatVal 4>

@@ -28,7 +28,7 @@ ArenaMission
 	GoWinMission <Salvage Alert 3 WinArenaMission>
 	GoLoseMission <Alert 2 LoseArenaMission>
 
-	5Min <if= d2 1  WMecha 2 Threat ArenaRenown 100>
+	5Min <if= d2 1  WMecha 2 ArenaRenown 100>
 
 	Msg1 <Locate and destroy the orbital weapon.>
 	Msg2 <The mission is a failure.>
@@ -45,7 +45,7 @@ ArenaMission
 		Team 2
 		SetEnemy 1
 		SetAlly 3 4
-		Deploy <SetSelfFaction M1 WMecha 2 Threat ArenaRenown 450>
+		Deploy <SetSelfFaction M1 WMecha 2 ArenaRenown 450>
 		ParaX 40
 		ParaY 40
 
@@ -119,7 +119,7 @@ ArenaMission
 
 		Team 2
 		SetEnemy 1
-		Deploy <SetSelfFaction M1   WMecha 2 Threat ArenaRenown 300>
+		Deploy <SetSelfFaction M1   WMecha 2 ArenaRenown 300>
 		ParaX 45
 		ParaY 35
 
@@ -173,7 +173,7 @@ ArenaMission
 
 		Team 2
 		SetEnemy 1
-		Deploy <SetSelfFaction M1   WMecha 2 Threat ArenaRenown 200>
+		Deploy <SetSelfFaction M1   WMecha 2 ArenaRenown 200>
 		ParaX 45
 		ParaY 35
 

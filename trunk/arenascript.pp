@@ -106,7 +106,7 @@ Procedure BrowseMemoType( GB: GameBoardPtr; Tag: String );
 
 Function BasicSkillTarget( Renown: Integer ): Integer;
 Function HardSkillTarget( Renown: Integer ): Integer;
-Function Calculate_Reward_Value( GB: GameBoardPtr; ThreatLevel,Percent: LongInt ): LongInt;
+Function Calculate_Reward_Value( GB: GameBoardPtr; Renown,Percent: LongInt ): LongInt;
 Function WMonThreat( Renown: Integer ): Integer;
 
 Function ScriptValue( var Event: String; GB: GameBoardPtr; Scene: GearPtr ): LongInt;
@@ -566,14 +566,14 @@ begin
 	end;
 end;
 
-Function Calculate_Reward_Value( GB: GameBoardPtr; ThreatLevel,Percent: LongInt ): LongInt;
+Function Calculate_Reward_Value( GB: GameBoardPtr; Renown,Percent: LongInt ): LongInt;
 	{ Return an appropriate reward value, based on the listed }
 	{ threat level and percent scale. }
 var
 	RV: LongInt;
 begin
 	{ Calculate the base reward value. }
-	RV := ThreatLevel div 100 * Percent div 100;
+	RV := Calculate_Threat_Points( Renown , 100 ) div 100 * Percent div 100;
 
 	{ Modify this for the PC's talents. }
 	if GB <> Nil then begin
@@ -645,7 +645,7 @@ Procedure InitiateMacro( GB: GameBoardPtr; Source: GearPtr; var Event: String; P
 		{ from the number of ?s in the macro. }
 		if it = 0 then begin
 			Mac := SAttValue( Value_Macros , Cmd );
-			if ( Mac = '' ) and ( Cmd[1] = '&' ) then Mac := FindLocalMacro( cmd , GB , Source );
+			if ( Mac = '' ) and ( Cmd <> '' ) and ( Cmd[1] = '&' ) then Mac := FindLocalMacro( cmd , GB , Source );
 			if Mac <> '' then begin
 				for t := 1 to Length( Mac ) do begin
 					if Mac[ T ] = '?' then Inc( it );
@@ -3104,14 +3104,15 @@ begin
 	Team^.S := NAV_DefPlayerTeam;
 	SetNAtt( Team^.NA , NAG_SideReaction , NAV_DefEnemyTeam , NAV_AreEnemies );
 	SetNAtt( Team^.NA , NAG_ParaLocation , NAS_X , DefaultMapSize div 5 );
-	SetNAtt( Team^.NA , NAG_ParaLocation , NAS_Y , DefaultMapSize div 2 );
+	SetNAtt( Team^.NA , NAG_ParaLocation , NAS_Y , DefaultMapSize div 5 );
 
 	Team := AddGear( SCRIPT_DynamicEncounter^.SubCom , SCRIPT_DynamicEncounter );
 	Team^.G := GG_Team;
 	Team^.S := NAV_DefEnemyTeam;
 	SetNAtt( Team^.NA , NAG_SideReaction , NAV_DefPlayerTeam , NAV_AreEnemies );
 	SetNAtt( Team^.NA , NAG_ParaLocation , NAS_X , ( DefaultMapSize * 4 ) div 5 );
-	SetNAtt( Team^.NA , NAG_ParaLocation , NAS_Y , DefaultMapSize div 2 );
+	SetNAtt( Team^.NA , NAG_ParaLocation , NAS_Y , ( DefaultMapSize * 4 ) div 5 );
+	SetSAtt( Team^.SA , 'Deploy <SetSelfFaction CurrentSceneFac   WMecha 2 DynaRenown DynaStrength>' );
 
 	{ Set the default map generator of the Dynamic Encounter based on the position of }
 	{ the PC. }
@@ -3151,82 +3152,16 @@ begin
 	BuildGenericEncounter( GB , Scale );
 end;
 
-Procedure ProcessLoadD( var Event: String; GB: GameBoardPtr; Source: GearPtr );
-	{ A random encounter has been called for. Yay! Fill out the details }
-	{ in SCENE_DynamicEncounter, then set the GB's exit code. }
-var
-	FName: String;
-begin
-	{ First, if for some reason there's already a dynamic encounter in }
-	{ place, get rid of it. }
-	if SCRIPT_DynamicEncounter <> Nil then DisposeGear( SCRIPT_DynamicEncounter );
-
-	{ First, find the file name of the scene file to look for. }
-	FName := ExtractWord( Event );
-	if Source <> Nil then begin
-		FName := AS_GetString( Source , FName );
-	end else begin
-		FName := '';
-	end;
-
-	{ Secondly, confirm the file name. }
-	if FName <> '' then begin
-		SCRIPT_DynamicEncounter := LoadGearPattern( FName , Series_Directory );
-
-		if ( SCRIPT_DynamicEncounter <> Nil ) and ( SCRIPT_DynamicEncounter^.G = GG_Scene ) then begin
-			{ Fill in the ID number to be used by RETURN. }
-			if ( GB <> Nil ) and ( GB^.Scene <> Nil ) then begin
-				SCRIPT_DynamicEncounter^.S := GB^.Scene^.S;
-
-				{ Copy the Faction ID of the original scene in order to prevent }
-				{ erroneous readings from SCENEFACTION. I don't really like this }
-				{ solution to the problem since it's a bit hackish, but at least }
-				{ it's more expandable than the alternatives. }
-				SetNAtt( SCRIPT_DynamicEncounter^.NA , NAG_Personal , NAS_FactionID , NAttValue( GB^.Scene^.NA , NAG_Personal , NAS_FactionID ) );
-
-			end;
-
-			{ Set the exit values in the game board. }
-			if GB <> Nil then begin
-				AS_SetExit( GB , 0 );
-
-				{ Advance the game clock by one hour. }
-				QuickTime( GB , AP_HalfHour + RollStep( 35 ) * 5 );
-			end;
-
-		end else begin
-			DisposeGear( SCRIPT_DynamicEncounter );
-
-		end;
-	end;
-
-end; { ProcessLoadD }
-
-Procedure ProcessTStockD( var Event: String; GB: GameBoardPtr; Source: GearPtr );
-	{ Fill SCRIPT_DynamicEncounter with enemies. }
-var
-	TID,UPV: LongInt;
-begin
-	{ Find out the team, and how many enemies to add. }
-	TID := ScriptValue( Event , GB , Source );
- 	UPV := ScriptValue( Event , GB , Source );
-
-	{ Error check - Make sure we have a dynamic encounter to stock! }
-	if SCRIPT_DynamicEncounter <> Nil then begin
-		{ Stick enemies in the scene. }
-		StockSceneWithEnemies( SCRIPT_DynamicEncounter , UPV , TID );
-	end;
-end; { ProcessTStockD }
-
 Procedure ProcessWMecha( var Event: String; GB: GameBoardPtr; Source: GearPtr );
 	{ Fill current scene with enemies. }
 var
-	TID,UPV: LongInt;
+	TID,Renown,Strength: LongInt;
 begin
 	{ Find out the team, and how many enemies to add. }
 	TID := ScriptValue( Event , GB , Source );
- 	UPV := ScriptValue( Event , GB , Source );
-	AddTeamForces( GB , TID , UPV );
+ 	Renown := ScriptValue( Event , GB , Source );
+	Strength := ScriptValue( Event , GB , Source );
+	AddTeamForces( GB , TID , Renown , Strength );
 end; { ProcessWMecha }
 
 Procedure ProcessWMonster( var Event: String; GB: GameBoardPtr; Source: GearPtr );
@@ -4214,8 +4149,6 @@ begin
 		else if cmd = 'MECHAPRIZE' then ProcessMechaPrize( Event , GB , Source )
 		else if cmd = 'RANDOMMECHA' then ProcessRandomMecha( Event , GB , Source )
 		else if cmd = 'NEWD' then ProcessNewD( Event , GB , Source )
-		else if cmd = 'LOADD' then ProcessLoadD( Event , GB , Source )
-		else if cmd = 'TSTOCKD' then ProcessTStockD( Event , GB , Source )
 		else if cmd = 'WMECHA' then ProcessWMecha( Event , GB , Source )
 		else if cmd = 'WMONSTER' then ProcessWMonster( Event , GB , Source )
 		else if cmd = 'TMSTOCKD' then ProcessTMStockD( Event , GB , Source )

@@ -250,7 +250,7 @@ Content
 		%% V11 = Primed for combat
 		update <if# V11 0 else GoHide  SetStat STAT_MetaVisibility 0  ShowEncounter  Goto GoSetOrders>
 		use <ifG StatVal STAT_MetaVisibility -1  Print 1  Goto GoStartCombat>
-		GoStartCombat <V= 11 0  SavePos Dynamic 2 Threat V2 100 .nu1 .nu2 ComposeD Msg1 .Msg1>
+		GoStartCombat <V= 11 0  SavePos Dynamic 2 V2 100 .nu1 .nu2 ComposeD Msg1 .Msg1 DynaFaction 5>
 		.nu1 <if= T1 0  Return   if= L1 0  L= 1 1  AddRenown -5>
 		.nu2 <if= T2 0           if= L1 0  L= 1 1  XPV 100  AddRenown 1   NPCVar= %2% 1 1  QMemo %qid% 1  DeleteItem %3%>
 		.msg1 <You have won the charity mecha tournament, and should inform %name2% in \SCENE %s2% .>
@@ -338,7 +338,7 @@ Content
 		result2 <if= SceneVar %s2% 3 1 else GoR2RealFail ifFlirtation skilltar %threat% else GoR2Fail ifG React 20 else GoR2Fail V= 2 1 NewChat Say 8 PCLover %2% AddChat 1 AddChat 3 AddChat 5>
 		GoR2Fail <V= 2 -1 ifG React 15 else GoR2RealFail PCFriend %2% NewChat Say 9 AddChat 1 AddChat 3 AddChat 5>
 		GoR2RealFail <V= 2 -1 NewChat Say 10 AddChat 1 AddChat 3 AddChat 5>
-		result3 <NewChat Say 11 SetQuestStatus %qid% -2  CashPrize Reward Threat %threat% 100 200>
+		result3 <NewChat Say 11 SetQuestStatus %qid% -2  CashPrize Reward %threat% 200>
 		result4 <NewChat Say 12 ifChatNPCSexy AddRenown 1>
 		result5 <NewChat Say 13>
 		Msg1 <The pirates aren't defeated yet! Let's keep fighting!>
@@ -388,7 +388,7 @@ Content
 			Team 2
 			name <Enemies>
 			SetFaction 8
-			Deploy <if= L2 0   WMecha 2 Threat %threat% 170>
+			Deploy <if= L2 0   WMecha 2 %threat% 170>
 			ParaX 25
 			ParaY 25
 			SetEnemy 1 3

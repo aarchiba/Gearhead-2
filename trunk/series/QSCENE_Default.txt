@@ -751,7 +751,7 @@ Scene 0 2
 		% If the PC is a member of the base's faction, he can approach it
 		% without being stopped.
 		Deploy <if= L1 0 if# PCFac 0 else GoRealDeploy if= PCFac %scenefac% else GoRealDeploy>
-		GoRealDeploy <SetSelfFaction %scenefac%  WMecha 2 Threat %threat% 200>
+		GoRealDeploy <SetSelfFaction %scenefac%  WMecha 2 %threat% 200>
 		SetEnemy 1
 
 		Team 3

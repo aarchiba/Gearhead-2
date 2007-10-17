@@ -35,11 +35,9 @@ Procedure RestockRandomMonsters( GB: GameBoardPtr );
 
 Function MechaMatchesFaction( Mek: GearPtr; const Factions: String ): Boolean;
 Function GenerateMechaList( MPV: LongInt; Factions,Desc: String ): SAttPtr;
-Function PurchaseForces( ShoppingList: SAttPtr; UPV: LongInt ): GearPtr;
-Procedure StockSceneWithEnemies( Scene: GearPtr; UPV: longInt; TeamID: Integer );
 Procedure StockSceneWithMonsters( Scene: GearPtr; MPV,TeamID: Integer; MDesc: String );
 
-Procedure AddTeamForces( GB: GameBoardPtr; TeamID: Integer; UPV: LongInt );
+Procedure AddTeamForces( GB: GameBoardPtr; TeamID,Renown,Strength: Integer );
 Procedure StockBoardWithMonsters( GB: GameBoardPtr; MPV,TeamID: Integer; MDesc: String );
 
 Function SelectNPCMecha( GB: GameBoardPtr; Scene,NPC: GearPtr ): GearPtr;
@@ -292,9 +290,28 @@ begin
 	GenerateMechaList := it;
 end;
 
-Function PurchaseForces( ShoppingList: SAttPtr; UPV: LongInt ): GearPtr;
-	{ Pick a number of random meks with point value at least }
-	{ equal to UPV. Add pilots to these meks. }
+Function OptimalMechaValue( Renown: Integer ): LongInt;
+	{ Return the optimal mecha value for a grunt NPC fighting a character }
+	{ with the provided renown. }
+const
+	MinOMV = 50000;
+var
+	it: LongInt;
+begin
+	it := Calculate_Threat_Points( Renown , 30 );
+	if it < MinOMV then it := MinOMV;
+	OptimalMechaValue := it;
+end;
+
+Function PurchaseForces( ShoppingList: SAttPtr; Renown,Strength: Integer ): GearPtr;
+	{ Pick a number of random meks. Add pilots to these meks. }
+	{ The expected PC skill level is measured by RENOWN. The difficulty of the }
+	{ encounter is measured by STRENGTH, which is a percentage with 100 representing }
+	{ an average fight. }
+const
+	BasicGruntCost = 30;
+var
+	OptimalValue: LongInt;	{ The ideal value for a mecha. }
 
 	Function ObtainMekFromFile( S: String ): GearPtr;
 		{ Using the description string S, locate and load }
@@ -334,16 +351,31 @@ Function PurchaseForces( ShoppingList: SAttPtr; UPV: LongInt ): GearPtr;
 		{ If the PV of this mecha seems a bit low, }
 		{ look for a more expensive model and maybe pick that }
 		{ one instead. }
-		t := 3;
-		while ( t > 0 ) and ( V < ( UPV div 5 ) ) do begin
-			M2 := SelectRandomSAtt( ShoppingList )^.Info;
-			V2 := ExtractValue( M2 );
-			if V2 > V then begin
-				M1 := M2;
-				V := V2;
-			end;
+		if Strength >= BasicGruntCost then begin
+			t := 3;
+			while ( t > 0 ) and ( V < ( OptimalValue div 2 ) ) do begin
+				M2 := SelectRandomSAtt( ShoppingList )^.Info;
+				V2 := ExtractValue( M2 );
+				if V2 > V then begin
+					M1 := M2;
+					V := V2;
+				end;
 
-			Dec( T );
+				Dec( T );
+			end;
+		end else begin
+			{ If STRENGTH is running out, select a small mecha instead. }
+			t := 2;
+			while ( t > 0 ) do begin
+				M2 := SelectRandomSAtt( ShoppingList )^.Info;
+				V2 := ExtractValue( M2 );
+				if V2 < V then begin
+					M1 := M2;
+					V := V2;
+				end;
+
+				Dec( T );
+			end;
 		end;
 
 		{ Return the info string selected. }
@@ -351,159 +383,72 @@ Function PurchaseForces( ShoppingList: SAttPtr; UPV: LongInt ): GearPtr;
 	end;
 var
 	MPV: LongInt;
-	Lvl: LongInt;		{ Pilot level. }
-	StPt,SkPt: LongInt;	{ Stat points and skill points of the pilot. }
-	Mek,MList,CP: GearPtr;
+	StrCost: LongInt;	{ The number of strength points this mecha will cost. }
+
+	Lvl,Bonus: LongInt;		{ Pilot level. }
+	Mek,MList,CP,Pilot: GearPtr;
 begin
 	{ Initialize our list to Nil. }
 	MList := Nil;
 
+	{ Record the optimal mecha value. }
+	OptimalValue := OptimalMechaValue( Renown );
+
 	{ Keep processing until we run out of points. }
-	while ( UPV > 0 ) and ( ShoppingList <> Nil ) do begin
+	{ The points are represented by STRENGTH. }
+	while ( Strength > 0 ) and ( ShoppingList <> Nil ) do begin
 		{ Select a mek at random. }
 		{ Load & Clone the mek. }
 		Mek := ObtainMekFromFile( SelectNextMecha );
+		{ Determine its cash value. }
 		MPV := GearValue( Mek );
 
+		{ From this, we may determine its base STRENGTH value. }
+		StrCost := ( MPV * BasicGruntCost ) div OptimalValue;
+		if StrCost < 5 then StrCost := 5;
+
 		{ Select a pilot skill level. }
-		{ Set default values. }
-		StPt := 90;
-		SkPt := 3;
+		{ Base pilot level is 20 beneath the PC's renown. }
+		Lvl := Renown - 20;
 
-		if ( MPV > UPV ) or ( Random(10) = 1 ) then begin
-			{ Level will be between 0 and -5 }
-			Lvl := Random( 6 );
-			StPt := StPt - ( Lvl * 3 );
-			SkPt := SkPt - ( Lvl div 2 );
-			MPV := ( MPV * ( 10 - Lvl ) ) div 10;
+		{ This level may be adjusted up or down depending on the mecha's cost. }
+		if StrCost > Strength then begin
+			{ We've gone overbudget. Whack this mecha's pilot. }
+			Lvl := Lvl - 7 * ( StrCost - Strength ) div 5;
+			StrCost := Strength;
 
-		end else if Random( MPV ) < Random( UPV ) then begin
-			{ Level will be between 0 and 20 }
-			Lvl := Random( 21 );
+		end else if StrCost > ( BasicGruntCost + 1 + Random( 20 ) ) then begin
+			{ Slightly overbudget... can reduce the cost with skill reduction. }
+			Bonus := Random( 4 );
+			Lvl := Lvl - Bonus * 7;
+			StrCost := StrCost - Bonus * 5;
 
-			{ Make sure we don't go overboard. }
-			while ( ( ( MPV * ( 5 + Lvl ) ) div 5 ) > UPV ) and ( Lvl > 0 ) do begin
-				Dec( Lvl );
-			end;
-
-			StPt := StPt + Lvl;
-			SkPt := SkPt + ( Lvl div 2 );
-			MPV := ( MPV * ( 5 + Lvl ) ) div 5;
+		end else if StrCost < ( BasicGruntCost - 1 - Random( 15 ) ) then begin
+			{ Underbudget... we can afford a better pilot. }
+			Bonus := Random( 3 );
+			if Random( 10 ) = 4 then Inc( Bonus );
+			Lvl := Lvl + Bonus * 7;
+			StrCost := StrCost + Bonus * 10;
 		end;
 
 		{ Add this mecha to our list. }
-		Mek^.Next := MList;
-		MList := Mek;
+		AppendGear( MList , Mek );
 
-		{ Insert pilot in this mecha. }
+		{ Create a pilot, add it to the mecha. }
 		CP := SeekGear( Mek , GG_CockPit , 0 );
 		if CP <> Nil then begin
-			InsertSubCom( CP , RandomPilot( StPt , SkPt ) );
+			Pilot := RandomPilot( 90  , 10 );
+			SetSkillsAtLevel( Pilot , Lvl );
+			InsertSubCom( CP , Pilot );
 		end;
 
 		{ Reduce UPV by an appropriate amount. }
-		UPV := UPV - MPV;
+		Strength := Strength - StrCost;
 	end;
 
 	PurchaseForces := MList;
 end;
 
-Procedure StockSceneWithSoldiers( Scene: GearPtr; UPV: LongInt; TeamID: Integer );
-	{ Fill this team with people, but instead of mechas just give }
-	{ them some random equipment. }
-var
-	EquipList,NPC: GearPtr;
-	EPV,AvgPointValue: LongInt;
-	StPt,SkPt,Lvl: Integer;
-begin
-	EquipList := AggregatePattern( PC_Equipment_Pattern , Design_Directory );
-
-	AvgPointValue := 800;
-	{ Use Lvl temporarily to store the maximum number of combatants we want. }
-	lvl := 10 + Random( 20 );
-	if ( UPV div AvgPointValue ) > lvl then AvgPointValue := UPV div lvl;
-
-	While UPV > 0 do begin
-		StPt := 90;
-		SkPt := 5;
-		EPV := AvgPointValue + Random( 500 ) - Random( 500 );
-		if EPV > UPV then EPV := UPV
-		else if EPV < 500 then EPV := 500;
-
-		if ( EPV < 1000 ) or ( Random( 5 ) = 1 ) then begin
-			Lvl := -Random( 5 );
-			StPt := StPt + 2*Lvl;
-			SkPt := SkPt + Lvl;
-			EPV := EPV - ( 500 - lvl * lvl * 20 );
-			UPV := UPV - ( 500 - lvl * lvl * 20 );
-		end else if ( EPV > 1500 ) and ( Random( 5 ) <> 1 ) then begin
-			repeat
-				Lvl := Random( 10 );
-			until ( 500 + lvl * lvl * 150 ) < ( EPV div 2 );
-			StPt := StPt + Lvl;
-			SkPt := SkPt + Lvl;
-			EPV := EPV - ( 500 + lvl * lvl * 150 );
-			UPV := UPV - ( 500 + lvl * lvl * 150 );
-		end else begin
-			EPV := EPV - 500;
-			UPV := UPV - 500;
-		end;
-
-		NPC := RandomSoldier( StPt , SkPt );
-		ExpandCharacter( NPC );
-
-		SelectEquipmentForNPC( NPC , 35 );
-		UPV := UPV - EPV;
-
-		{ Set its team to the ID provided. }
-		SetNAtt( NPC^.NA , NAG_Location , NAS_Team , TeamID );
-
-		{ Place it in the scene. }
-		InsertInvCom( Scene , NPC );
-	end;
-
-	DisposeGear( EquipList );
-end;
-
-Procedure StockSceneWithMeks( Scene: GearPtr; UPV: longInt; TeamID: Integer );
-	{ This scene requires a number of mecha to be added. Purchase an }
-	{ appropriate value of mecha, then stick them in the scene. }
-var
-	ShoppingList: SAttPtr;
-	MaxPointValue: LongInt;
-	MList,Mek: GearPtr;
-begin
-	{ Generate the shopping list, then purchase mecha. }
-	MaxPointValue := UPV div 2;
-	if MaxPointValue < MinPointValue then MaxPointValue := MinPointValue;
-	ShoppingList := GenerateMechaList( UPV , 'GENERAL' , '' );
-	MList := PurchaseForces( ShoppingList , UPV );
-	DisposeSAtt( ShoppingList );
-
-	{ Stick the mecha in the scene. }
-	while MList <> Nil do begin
-		{ Delink the first mecha from the list. }
-		Mek := MList;
-		DelinkGear( MList , Mek );
-
-		{ Set its team to the ID provided. }
-		SetNAtt( Mek^.NA , NAG_Location , NAS_Team , TeamID );
-
-		{ Place it in the scene. }
-		InsertInvCom( Scene , Mek );
-	end;
-
-end;
-
-Procedure StockSceneWithEnemies( Scene: GearPtr; UPV: longInt; TeamID: Integer );
-	{ Put some enemies in the scene. }
-begin
-	if Scene^.V = 0 then begin
-		StockSceneWithSoldiers( Scene , UPV , TeamID );
-	end else begin
-		StockSceneWithMeks( Scene , UPV , TeamID );
-	end;
-end;
 
 Procedure StockSceneWithMonsters( Scene: GearPtr; MPV,TeamID: Integer; MDesc: String );
 	{ Place some monsters in this scene. }
@@ -527,8 +472,10 @@ begin
 
 end;
 
-Procedure AddTeamForces( GB: GameBoardPtr; TeamID: Integer; UPV: LongInt );
+Procedure AddTeamForces( GB: GameBoardPtr; TeamID,Renown,Strength: Integer );
 	{ Add forces to the gameboard. }
+	{ RENOWN is the expected renown of the player's team. }
+	{ STRENGTH is the difficulty level of this fight expressed as a percent. }
 var
 	SList: SAttPtr;
 	MList,Mek,Pilot: GearPtr;
@@ -561,12 +508,12 @@ begin
 	end;
 
 	{ Generate the list of mecha. }
-	MPV := UPV div 2;
+	MPV := OptimalMechaValue( Renown ) * 2;
 	if MPV < 300000 then MPV := 300000;
 	SList := GenerateMechaList( MPV , fdesc , desc );
 
 	{ Generate the mecha list. }
-	MList := PurchaseForces( SList , UPV );
+	MList := PurchaseForces( SList , Renown , Strength );
 
 	{ Get rid of the shopping list. }
 	DisposeSAtt( SList );

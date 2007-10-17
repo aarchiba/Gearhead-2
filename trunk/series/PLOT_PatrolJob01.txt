@@ -68,7 +68,7 @@ sub
 	*GoCheckSkill <*GenericMissionTest&Mecha  GoMissionBriefing GoEnd GoRejectMission &AllyFac E5>
 	*GoRejectMission <*RejectMission GoEnd>
 	GoEnd <EndPlot>
-	GoMissionBriefing <V= 1 Reward Threat P3 100 100   NewChat Say 1  AddChat 1 AddChat 2 AddChat 3>
+	GoMissionBriefing <V= 1 Reward P3 100   NewChat Say 1  AddChat 1 AddChat 2 AddChat 3>
 	result1 <NewChat Say 2 Memo 4 P= 2 1>
 	result2 <NewChat Say 6 AddChat 1 if= P2 0 AddChat 3>
 	result3 <Goto GoRejectMission>
@@ -155,7 +155,7 @@ sub
 
 		Team 2
 		SetEnemy 1 3
-		Deploy <SetSelfFaction E5  WMecha 2 Threat P3 100>
+		Deploy <SetSelfFaction E5  WMecha 2 P3 100>
 		ParaX 25
 		ParaY 25
 	end

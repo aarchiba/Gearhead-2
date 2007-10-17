@@ -214,7 +214,7 @@ Content
 		Greeting <if= PlotStatus %id% else %pop% goto .%id%_GoThanks>
 		*.%id%_GoThanks <*ThanksForRescue .%id%_GoReward>
 		.%id%_GoReward <ifG 1 ChatNPCRelationship else .%id%_GoCash PCFriend %1% Goto .%id%_GoCash>
-		.%id%_GoCash <NewChat Say %id%01 CashPrize Reward Threat StoryDL 100 250 NTBWinComp 0 .%id%_Next>
+		.%id%_GoCash <NewChat Say %id%01 CashPrize Reward StoryDL 250 NTBWinComp 0 .%id%_Next>
 		.%id%_Next <+T-- +F-->
 		Msg%id%01 <Here's a little reward, in appreciation of what you've done.>
 		Msg%id%01_1 <I'd like for you to have this reward. I know that it isn't much, but it's the least I could do to thank you for saving my life.>
@@ -253,7 +253,7 @@ Content
 		% V1 = Can only get reward once
 		Greeting <if= PlotStatus %id% else %pop% goto .%id%_GoThanks>
 		*.%id%_GoThanks <*ThanksForRescue .%id%_GoReward>
-		.%id%_GoReward <if= V%id%01 0 else .%id%_GoBriefing V= %id%01 1 CashPrize Reward Threat StoryDL 100 200 NewChat Say %id%01 AddChat %id%01 AddChat %id%02>
+		.%id%_GoReward <if= V%id%01 0 else .%id%_GoBriefing V= %id%01 1 CashPrize Reward StoryDL 200 NewChat Say %id%01 AddChat %id%01 AddChat %id%02>
 		.%id%_GoBriefing <ifNPCOK %3% else .%id%_GoE3Dead NewChat Say %id%02 StoryNote %id%03 &SetTargetNPC %3%  WinComp NPCScene %3% .%id%_changes>
 		.%id%_changes <+Tgt +Fmi>
 		.%id%_GoE3Dead <NewChat Say %id%05 SMemo 0 NTBWinComp 0 .%id%_changes2>
@@ -294,10 +294,10 @@ Content
 		*.%id%_GoStart <*ThanksForRescue .%id%_GoOffer>
 		.%id%_GoOffer <PCFriend %1% ifG React 30 else .%id%_GoNoOffer ifG PCCharm 10 else .%id%_GoNoOffer NewChat Say %id%01 AddChat %id%01 AddChat %id%02 AddChat %id%03>
 		.%id%_GoNoOffer <ifChatNPCSexy else .%id%_GoCashAward ifFlirtation SkillTar StoryDL else .%id%_GoCashAward ifG React d10 else .%id%_GoCashAward NewChat Say %id%08 AddChat %id%06 AddChat %id%07>
-		.%id%_GoCashAward <NewChat Say %id%07  StoryNote %id%05 CashPrize Reward Threat StoryDL 150 100 NTBWinComp 0 .%id%_next>
+		.%id%_GoCashAward <NewChat Say %id%07  StoryNote %id%05 CashPrize Reward StoryDL 150 NTBWinComp 0 .%id%_next>
 		result%id%01 <NewChat Say %id%02 StoryNote %id%03 PCAlly %1% WinComp 0 .%id%_next>
 		.%id%_next <+T-- +F-->
-		result%id%02 <NewChat Say %id%04 StoryNote %id%05 CashPrize Reward Threat StoryDL 150 100 NTBWinComp 0 .%id%_next>
+		result%id%02 <NewChat Say %id%04 StoryNote %id%05 CashPrize Reward StoryDL 150 NTBWinComp 0 .%id%_next>
 		result%id%03 <NewChat Say %id%06 AddChat %id%04 AddChat %id%05>
 		result%id%04 <Goto result%id%01>
 		result%id%05 <Goto result%id%02>
@@ -476,7 +476,7 @@ Content
 	sub
 		Persona 1
 		greeting <if= PlotStatus %id% else %pop% NewChat Say %id%01 AddChat %id%01 AddChat %id%02 SMemo 0 Goto .%id%_GoEnd>
-		.%id%_GoEnd <CashPrize Reward Threat StoryDL 100 500 SMemo 0 NTBWinComp 0 .%id%_win>
+		.%id%_GoEnd <CashPrize Reward StoryDL 500 SMemo 0 NTBWinComp 0 .%id%_win>
 		.%id%_win <+T-- +F-->
 		Result%id%01 <ifNPCOK %2% else .%id%_GoFail NewChat Say %id%02 StoryNote %id%03 &SetTargetNPC %2% &SetCompScene %3% AlterContext .%id%_GoHelp>
 		.%id%_GoHelp <+Tgt +Fmi>
@@ -507,7 +507,7 @@ Content
 	sub
 		Persona 1
 		greeting <if= PlotStatus %id% else %pop% NewChat Say %id%01 SMemo 0 Goto .%id%_GoEnd>
-		.%id%_GoEnd <CashPrize Reward Threat StoryDL 100 500 SMemo 0 NTBWinComp 0 .%id%_win>
+		.%id%_GoEnd <CashPrize Reward StoryDL 500 SMemo 0 NTBWinComp 0 .%id%_win>
 		.%id%_win <+T-- +F-->
 		Msg%id%01 <They have been punished. Thanks for your help.>
 	end
@@ -545,7 +545,7 @@ Content
 		Persona 1
 		greeting <if= PlotStatus %id% else %pop% ifNPCOK %2% else .%id%_GoTrivial ifCHatNPCInPlay else .%id%_GoNotHere NewChat Say %id%01  AddChat %id%01  AddChat %id%02>
 		*.%id%_GoTrivial <*MissionWasSuccess&Reward .%id%_GoEnd &AllyFac &EnemyFac>
-		.%id%_GoEnd <CashPrize Reward Threat StoryDL 100 300  SMemo 0  NTBWinComp 0 .%id%_end>
+		.%id%_GoEnd <CashPrize Reward StoryDL 300  SMemo 0  NTBWinComp 0 .%id%_end>
 		.%id%_GoNotHere <NewChat Say %id%02>
 		.%id%_end <+T-- +F-->
 		Result%id%01 <NewChat Say %id%03 StoryNote %id%04 &SetPartnerNPC %2% Goto .%id%_GoEnd>
@@ -577,7 +577,7 @@ Content
 
 	sub
 		Persona 1
-		greeting <if= PlotStatus %id% else %pop% CashPrize Reward Threat StoryDL 100 300 ifNPCOK %2% else .%id%_GoNPCGone Goto .%id%_GoSearchNPC>
+		greeting <if= PlotStatus %id% else %pop% CashPrize Reward StoryDL 300 ifNPCOK %2% else .%id%_GoNPCGone Goto .%id%_GoSearchNPC>
 		.%id%_GoSearchNPC <NewChat Say %id%01 SMemo %id%02 &SetTargetNPC %2% WinComp 0 .%id%_Win>
 		*.%id%_GoNPCGone <*MissionWasSuccess&Reward .%id%_GoEnd &AllyFac &EnemyFac>
 		.%id%_GoEnd <SMemo 0 WinComp 0 .%id%_end>
@@ -615,7 +615,7 @@ Content
 		greeting <if= PlotStatus %id% else %pop% NewChat Say %id%01 AddChat %id%01 AddChat %id%02>
 		.%id%_win <+Tlt +Fin>
 		.%id%_meh <+T-- +F-->
-		result%id%01 <ifNPCOK %2% else .%id%_GoTargetDead NewChat Say %id%02 &SetTargetNPC %2% WinComp 0 .%id%_win CashPrize Reward Threat StoryDL 100 200 AddReact d10 SMemo %id%04>
+		result%id%01 <ifNPCOK %2% else .%id%_GoTargetDead NewChat Say %id%02 &SetTargetNPC %2% WinComp 0 .%id%_win CashPrize Reward StoryDL 200 AddReact d10 SMemo %id%04>
 		.%id%_GoTargetDead <NewChat Say %id%03 SMemo 0 WinComp 0 .%id%_meh CashPrize Threat StoryDL 100 300>
 		result%id%02 <NewChat Say %id%05 SMemo 0 WinComp 0 .%id%_meh CashPrize Threat StoryDL 100 150 AddSociable -d10>
 		Msg%id%01 <Welcome back, \PC . How did the mission go?>
@@ -713,7 +713,7 @@ Plot
 	sub
 		Persona 1
 		% V%id%01 = Have given reward
-		greeting <if= PlotSTatus %id% else %pop% if= V%id%01 0 else .%id%_GoNewMission CashPrize Reward Threat StoryDL 100 500 V= %id%01 1 Goto .%id%_GoGetReward>
+		greeting <if= PlotSTatus %id% else %pop% if= V%id%01 0 else .%id%_GoNewMission CashPrize Reward StoryDL 500 V= %id%01 1 Goto .%id%_GoGetReward>
 		*.%id%_GoGetReward <*MissionWasSuccess&Reward .%id%_GoRewardOp N3 N2>
 		.%id%_GoRewardOp <AddChat %id%03>
 		.%id%_GoNewMission <NewChat Say %id%01 AddChat %id%01 AddChat %id%02>
@@ -819,7 +819,7 @@ Content
 		Persona 1
 		greeting <if= PlotStatus %id% else %pop% gOTO .%id%_GoReportSuccess>
 		.%id%_GoReportSuccess <NewChat Say %id%01 AddChat %id%01 Goto .%id%_GoEnd>
-		.%id%_GoEnd <CashPrize Reward Threat StoryDL 100 500 ifNPCOK %2% else .%id%_GoTrivialEnd SMemo %id%02  &SetTargetNPC %2%  WinComp 0 .%id%_win>
+		.%id%_GoEnd <CashPrize Reward StoryDL 500 ifNPCOK %2% else .%id%_GoTrivialEnd SMemo %id%02  &SetTargetNPC %2%  WinComp 0 .%id%_win>
 		.%id%_GoTrivialEnd <SMemo 0  NTBWinComp 0 .%id%_meh>
 		.%id%_win <+Tht +Far>
 		.%id%_meh <+T-- +F-->
@@ -846,7 +846,7 @@ Content
 		Persona 1
 		greeting <if= PlotStatus %id% else %pop% ifNPCOK %2% else .%id%_GoReportSuccess &SetEnemyNPC %2% gOTO .%id%_GoReportSuccess>
 		*.%id%_GoReportSuccess <*MissionWasSuccess&Reward .%id%_GoEnd &AllyFac &EnemyFac>
-		.%id%_GoEnd <CashPrize Reward Threat StoryDL 100 500 SMemo 0 NTBWinComp 0 .%id%_win>
+		.%id%_GoEnd <CashPrize Reward StoryDL 500 SMemo 0 NTBWinComp 0 .%id%_win>
 		.%id%_win <+T-- +F-->
 	end
 
@@ -939,9 +939,9 @@ Content
 		Persona 1
 		greeting <if= PlotStatus %id% else %pop% SMemo 0  ifNPCOK %2% else .%id%_GoReportSuccess  if# ChatNPCFac 0 else .%id%_GoReportSuccess NewChat Say %id%01 SMemo %id%02 Goto .%id%_GoEnd>
 		*.%id%_GoReportSuccess <*MissionWasSuccess&Reward .%id%_GoMeh &AllyFac &EnemyFac>
-		.%id%_GoEnd <CashPrize Reward Threat StoryDL 100 500 &SetTargetNPC %2% WinComp %3% .%id%_win>
+		.%id%_GoEnd <CashPrize Reward StoryDL 500 &SetTargetNPC %2% WinComp %3% .%id%_win>
 		.%id%_win <+Tgt +Fmi>
-		.%id%_GoMeh <CashPrize Reward Threat StoryDL 100 500 NTBWinComp 0 .%id%_meh>
+		.%id%_GoMeh <CashPrize Reward StoryDL 500 NTBWinComp 0 .%id%_meh>
 		.%id%_meh <+T-- +F-->
 		Msg%id%01 <Good work, \PC . If you want to see this through, I believe %name2% at %name3% has another mission you could help with.>
 		Msg%id%01_1 <Thanks \PC . We're going to need a lot of help to fight this problem... I believe %name2% at %name3% is looking for someone to run another mission, if you're interested.>
@@ -973,7 +973,7 @@ Content
 		Persona 1
 		greeting <if= PlotStatus %id% else %pop% gOTO .%id%_GoReportSuccess>
 		*.%id%_GoReportSuccess <*MissionWasSuccess&Reward .%id%_GoEnd &AllyFac &EnemyFac>
-		.%id%_GoEnd <CashPrize Reward Threat StoryDL 100 500 SMemo 0 NTBWinComp 0 .%id%_win>
+		.%id%_GoEnd <CashPrize Reward StoryDL 500 SMemo 0 NTBWinComp 0 .%id%_win>
 		.%id%_win <+T-- +F-->
 	end
 

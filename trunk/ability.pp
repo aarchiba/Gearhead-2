@@ -415,6 +415,7 @@ Procedure DoleExperience( Mek,Target: GearPtr; XPV: LongInt );
 	{ values of Mek and Target. }
 var
 	MPV,TPV,MonPV: LongInt;	{ Mek PV, Target PV }
+	XP2: Int64;	{ To prevent arithmetic overflows. }
 begin
 	MPV := GearValue( Mek );
 	if MPV < 1 then MPV := 1;
@@ -427,7 +428,8 @@ begin
 			MonPV := MonsterThreatLevel( Target ) * MonsterThreatLevel( Target ) * 150 - MonsterThreatLevel( Target ) * 100;
 			if MonPV > TPV then TPV := MonPV;
 		end;
-		XPV := ( XPV * TPV * ( Target^.Scale + 1 ) ) div MPV;
+		XP2 := ( XPV * TPV * ( Target^.Scale + 1 ) ) div MPV;
+		XPV := XP2;
 	end;
 	if XPV < 1 then XPV := 1;
 	DoleExperience( Mek , XPV );
