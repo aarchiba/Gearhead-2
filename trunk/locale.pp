@@ -56,6 +56,10 @@ Const
 	NAS_Y = 1;
 	NAS_D = 2;
 	NAS_Team = 4;
+		NAV_DefNeutralTeam = 0;
+		NAV_DefPlayerTeam = 1;
+		NAV_LancemateTeam = -3;
+		NAV_DefEnemyTeam = 2;
 	NAS_LastMenuItem = 5;	{Is the theme dead yet?}
 	NAS_GX = 6;		{ Waypoint Destination X - the G means "Go". }
 	NAS_GY = 7;		{ Waypoint Destination Y }
@@ -76,10 +80,6 @@ Const
 	NAG_Visibility = -5;	{ NAS is the team ID which spotted this gear }
 	NAV_Spotted = 1;
 	NAV_Hidden = 0;
-	NAV_DefNeutralTeam = 0;
-	NAV_DefPlayerTeam = 1;
-	NAV_LancemateTeam = -3;
-	NAV_DefEnemyTeam = 2;
 
 	NAG_SideReaction = -1;	{ Same as Location, since teams are virtual. }
 	NAV_AreEnemies = -1;

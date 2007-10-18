@@ -109,15 +109,13 @@ const
 	Overcharge_Thrust = 155;
 
 	NAS_MoveAction = 1;	{ Stop, Cruise, Flank Speed, Turn }
-	NAV_Stop = 0;
-	NAV_NormSpeed = 1;
-	NAV_FullSpeed = 2;
-	NAV_TurnLeft = 3;
-	NAV_TurnRight = 4;
-	NAV_Reverse = 5;
-	NAV_Hover = 6;
-
-	NumMoveAction = 5;
+		NAV_Stop = 0;
+		NAV_NormSpeed = 1;
+		NAV_FullSpeed = 2;
+		NAV_TurnLeft = 3;
+		NAV_TurnRight = 4;
+		NAV_Reverse = 5;
+		NAV_Hover = 6;
 
 	NAS_MoveETA = 2;	{ Estimated Time of Arrival }
 	NAS_MoveStart = 3;	{ Time when movement started }
@@ -128,6 +126,8 @@ const
 	NAS_DriftVector = 7;	{ Direction of speed, in space }
 	NAS_DriftSpeed = 8;	{ Speed of movement, in space }
 	NAS_DriftETA = 9;	{ When drifting will happen, in space }
+
+
 
 	NAG_EnvironmentData = 22;	{ Tells things about the scene. }
 					{ Environment data is inherited by encounters and }
