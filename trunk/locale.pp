@@ -1995,7 +1995,11 @@ begin
 			if Weapon^.S = GS_Missile then begin
 				Ammo := LocateGoodAmmo( Weapon );
 				if Ammo <> Nil then rng := Ammo^.Stat[ STAT_Range ]
-				else rng := 0;
+				else begin
+					Ammo := LocateAnyAmmo( Weapon );
+					if Ammo <> Nil then rng := Ammo^.Stat[ STAT_Range ]
+					else rng := 0;
+				end;
 			end else begin
 				rng := Weapon^.Stat[ STAT_Range ];
 			end;

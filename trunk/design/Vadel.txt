@@ -44,7 +44,9 @@ torso
 		Overcharger 6
 
 		STC VC-5
+		mass -10
 		STC VC-5
+		mass -10
 	end
 	inv
 		BodyArmor 4
@@ -67,8 +69,16 @@ Arm
 		end
 	end
 	inv
-		ArmArmor 2
-		Mass -3
+		ArmArmor 3
+		Mass -4
+		sub
+			MLauncher 2
+			Name <Heavy Rocket Pod>
+			sub
+				STC PLM-4
+				Magazine 5
+			end
+		end
 	end
 
 Arm
@@ -81,12 +91,20 @@ Arm
 		inv
 			Melee 7
 			Name <Sword>
-			mass -1
+			mass -3
 		end
 	end
 	inv
-		ArmArmor 2
-		Mass -3
+		ArmArmor 3
+		Mass -4
+		sub
+			MLauncher 2
+			Name <Heavy Rocket Pod>
+			sub
+				STC PLM-4
+				Magazine 5
+			end
+		end
 
 		Shield 3
 		DefBonus -1
@@ -103,8 +121,8 @@ Leg
 		inv
 			MLauncher 4
 			sub
-				STC FBM-5
-				Magazine 8
+				STC GM-10
+				Magazine 4
 			end
 		end
 
@@ -128,8 +146,8 @@ Leg
 		inv
 			MLauncher 4
 			sub
-				STC FBM-5
-				Magazine 8
+				STC GM-10
+				Magazine 4
 			end
 		end
 

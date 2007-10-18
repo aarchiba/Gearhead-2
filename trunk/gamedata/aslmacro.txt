@@ -13,6 +13,7 @@ S+ <GrabStory              GAddNAtt NAG_ScriptVar ? ?>
 N= <GrabStory              GSetNAtt NAG_ElementID ? ?>
 SetTeamFaction <GrabTeam ? GSetNAtt NAG_Personal NAS_FactionID ?>
 SetSelfFaction <GrabSource GSetNAtt NAG_Personal NAS_FactionID ?>
+SetSelfTeam <GrabSource GSetNAtt NAG_Location NAS_Team ?>
 EraseRumor <GrabSource GSetSAtt rumor na>
 ItemVar= <GrabItem ? GSetNAtt NAG_ScriptVar ? ?>
 ItemStat= <GrabItem ? GSetStat ? ?>

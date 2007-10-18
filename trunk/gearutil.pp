@@ -130,6 +130,7 @@ Function MechaSensorRating( Mek: GearPtr ): Integer;
 Function MechaStealthRating( Mek: GearPtr ): Integer;
 
 Function LocateGoodAmmo( Weapon: GearPtr ): GearPtr;
+Function LocateAnyAmmo( Weapon: GearPtr ): GearPtr;
 
 Function WeaponAttackAttributes( Attacker: GearPtr ): String;
 Function HasAttackAttribute( AtAt: String; N: Integer ): Boolean;
@@ -2680,6 +2681,22 @@ begin
 		ammo := ammo^.Next;
 	end;
 	LocateGoodAmmo := GAmmo;
+end;
+
+Function LocateAnyAmmo( Weapon: GearPtr ): GearPtr;
+	{ There is no good ammo. Just return anything. }
+var
+	Ammo,GAmmo: GearPtr;
+begin
+	Ammo := Weapon^.SubCom;
+	GAmmo := Nil;
+	while ( Ammo <> Nil ) and ( GAmmo = Nil ) do begin
+		if Ammo^.G = GG_Ammo then begin
+			GAmmo := Ammo;
+		end;
+		ammo := ammo^.Next;
+	end;
+	LocateAnyAmmo := GAmmo;
 end;
 
 Function WeaponAttackAttributes( Attacker: GearPtr ): String;

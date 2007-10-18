@@ -762,16 +762,15 @@ Procedure SayCombatTaunt( GB: GameBoardPtr; NPC: GearPtr; Msg_Label: String );
 var
 	msg: String;
 begin
+	{ Make sure we have a proper NPC, and not a mecha. }
+	NPC := LocatePilot( NPC );
+	if NPC = Nil then Exit;
+
 	{ Make sure combat taunts are enabled. }
 	if No_Combat_Taunts then begin
 		SetNAtt( FindRoot( NPC )^.NA , NAG_EpisodeData , NAS_ChatterRecharge , GB^.ComTime + ( 2500 div CStat( NPC , STAT_Charm ) ) );
 		Exit;
 	end;
-
-	{ Make sure we have a proper NPC, and not a mecha. }
-	NPC := LocatePilot( NPC );
-	if NPC = Nil then Exit;
-
 
 	{ If at least one phrase was found, and the NPC is visible, it can say something. }
 	if NotAnAnimal( NPC ) and ( ( Msg_Label = 'CHAT_EJECT' ) or ( NAttValue( NPC^.NA , NAG_Personal , NAS_CID ) <> 0 ) ) then begin

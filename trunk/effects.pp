@@ -152,7 +152,7 @@ implementation
 
 uses ability,action,gearutil,ghchars,ghmodule,ghguard,gearparser,ui4gh,
      ghprop,ghsensor,ghsupport,ghweapon,movement,rpgdice,skilluse,texutil,
-	ghholder;
+	ghholder,vidgfx;
 
 Type
 	EffectRequest = Record
@@ -2464,6 +2464,8 @@ Function MekIsTargetInRadius( GB: GameBoardPtr; Mek,Attacker,Weapon,Spotter: Gea
 	{ Used by the NumTargetsInRadius and FindTargetInRadius functions. }
 	{ Returns TRUE is Mek is an enemy of ATTACKER, is visible by }
 	{ SPOTTER, and is within the prescribed screen area. }
+var
+	it: Boolean;
 begin
 	Spotter := FindRoot( SPotter );
 	MekIsTargetInRadius := AreEnemies( GB , Attacker , Mek ) and MekCanSeeTarget( GB , Spotter , Mek ) and RangeArcCheck( GB , Attacker , Weapon , Mek ) and ( Range( Mek , X , Y ) <= R ) and GearOperational( Mek );
@@ -2514,7 +2516,7 @@ var
 			Mek := GB^.Meks;
 			T := 1;
 			while Mek <> Nil do begin
-				AtOp2 := ( AtOp + 1 ) div N;
+				AtOp2 := ( AtOp + 1 ) div N - 1;
 				if T <= ( ( AtOp + 1 ) mod N ) then Inc( AtOp2 );
 
 				if MekIsTargetInRadius( GB, Mek, FindRoot( Attacker ) , Attacker, FindRoot( Attacker ), X, Y, R ) and ( AtOp2 > 0 ) then begin
