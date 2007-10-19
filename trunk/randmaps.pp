@@ -463,14 +463,14 @@ begin
 		if Chance > 0 then begin
 			Roll := Random( 100 );
 			if Roll < Chance then begin
-				LockVal := ( Roll div 4 ) + 5;
+				LockVal := ( Roll div 10 ) + 3;
 			end;
 		end;
 		Chance := NAttValue( MF^.NA , NAG_Narrative , NAS_SecretDoorChance );
 		if Chance > 0 then begin
 			Roll := Random( 100 );
 			if Roll < Chance then begin
-				HideVal := ( Roll div 4 ) + 5;
+				HideVal := ( Roll div 8 ) + 2;
 			end;
 		end;
 	end;
@@ -1877,11 +1877,11 @@ begin
 					end;
 				'?':	begin
 					SetTerrain( GB , GBP.X , GBP.Y , Palette[ STAT_MFBorder ] );
-					InstallDoor( GB , MF , GBP.X , GBP.Y , 0 , 10 + Random( 10 ) );
+					InstallDoor( GB , MF , GBP.X , GBP.Y , 0 , 5 + Random( 11 ) );
 					end;
 				'=':	begin
 					SetTerrain( GB , GBP.X , GBP.Y , TERRAIN_Threshold );
-					InstallDoor( GB , MF , GBP.X , GBP.Y , 6 + Random( 10 ) , 0 );
+					InstallDoor( GB , MF , GBP.X , GBP.Y , 5 + Random( 11 ) , 0 );
 					end;
 				'#':	SetTerrain( GB , GBP.X , GBP.Y , Palette[ STAT_MFBorder ] );
 				',':	SetTerrain( GB , GBP.X , GBP.Y , Palette[ STAT_MFMarble ] );

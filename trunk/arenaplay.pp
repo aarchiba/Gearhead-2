@@ -53,7 +53,6 @@ Procedure ProcessMovement( GB: GameBoardPtr; Mek: GearPtr );
 	{ here if need be. }
 var
 	result,Team: Integer;
-	msg: String;
 begin
 	{ Call the movement procedure, and store the result. }
 	result := EnactMovement( GB , Mek );
@@ -72,13 +71,8 @@ begin
 			SetTrigger( GB , TRIGGER_UnitEliminated + BStr( NAttValue( Mek^.NA , NAG_EpisodeData , NAS_UID ) ) );
 		end;
 
-	end else if result = EMR_Crash then begin
-		if Mek^.G = GG_Character then begin
-			msg := ReplaceHash( MsgString( 'PROCESSMOVEMENT_Fall' ) , GearName( Mek ) );
-		end else begin
-			msg := ReplaceHash( MsgString( 'PROCESSMOVEMENT_Crash' ) , GearName( Mek ) );
-		end;
-		DialogMsg( msg );
+		{ Check for charges and crashes. }
+		ResolveCrashesAndCharges( GB );
 	end;
 end;
 

@@ -47,8 +47,9 @@ const
 	TRIGGER_PCAttack = 'PCATTACK';
 
 	{ *** ENACT MOVEMENT RESULTS *** }
-	EMR_Blocked = -2;
-	EMR_Crash = -1;
+	EMR_Blocked = -2;	{ May indicate a charge... }
+	EMR_Crash = -1;		{ If either of these are returned from movement, }
+				{ you should do a check to resolve crashes and charges. }
 
 var
 	Destroyed_Parts_List: SAttPtr;
@@ -844,6 +845,7 @@ var
 	Total,T,Scale: LongInt;
 	TMaster,TPilot: GearPtr;
 	TMasterOK,TPilotOK: Boolean;
+	MobileAtStart: Boolean;
 begin
 	{ Initialize History Variables. }
 	DR.EjectRoll := False;
@@ -860,6 +862,7 @@ begin
 	TMasterOK := ( TMaster <> TPilot ) and NotDestroyed( TMaster );
 	TPilotOK := NoTDestroyed( TPilot );
 
+	MobileAtStart := CurrentMoveRate( GB^.Scene , TMaster ) > 0;
 
 	{ Make sure at least one hit will be caused. }
 	if O_NumHits < 1 then O_NumHits := 1;
@@ -948,6 +951,10 @@ begin
 	DR.PilotDied := TPilotOK and Destroyed( TPilot );
 	DR.MechaDestroyed := TMasterOK and not GearOperational( TMaster );
 
+	if MobileAtStart and ( CurrentMoveRate( GB^.Scene , TMaster ) = 0 ) and NotDestroyed( TMaster ) then begin
+		Crash( GB , TMaster );
+	end;
+
 	DamageGear := DR;
 end;
 
@@ -962,9 +969,11 @@ procedure Crash( gb: GameBoardPtr; Mek: GearPtr );
 var
 	MM,MA,DMG,N: Integer;	{ Move Mode and Move Action }
 	MT: LongInt;
+	P: Point;
 begin
 	{ Make sure we have the root gear. }
 	Mek := FindRoot( Mek );
+	P := GearCurrentLocation( Mek );
 
 	{ Determine both the move mode and the move action for this mek. }
 	MM := NAttValue( Mek^.NA , NAG_Action , NAS_MoveMode );
@@ -987,19 +996,22 @@ begin
 		DMG := 1;
 	end;
 
-	if MA = NAV_FullSpeed then N := 5
-	else if MA = NAV_NormSpeed then N := 3
-	else N := 2;
+	if MA = NAV_FullSpeed then DMG := DMG * 5
+	else if MA = NAV_NormSpeed then DMG := DMG * 3
+	else DMG := DMG * 2;
 
-	DamageGear( gb , Mek , Nil , DMG , 0 , N , '' );
+	{ Note that mecha only take damage from a crash in space if they're blocked. }
+	if MoveBlocked( Mek , GB ) or ( TileTerrain( GB , P.X , P.Y ) <> TERRAIN_SPACE ) then begin
+		SetNAtt( Mek^.NA , NAG_Action , NAS_WillCrash , DMG );
+		SetNAtt( Mek^.NA, NAG_Action , NAS_DriftSpeed , 0 );
+	end;
 
 	MT := NAttValue( Mek^.NA , NAG_Action , NAS_MoveETA );
 
 	SetNAtt( Mek^.NA, NAG_Action , NAS_MoveAction , NAV_Stop );
 	SetNAtt( Mek^.NA, NAG_Action , NAS_TimeLimit , 0 );
 	SetNAtt( Mek^.NA , NAG_Action , NAS_MoveETA , MT + 1000 );
-	SetNAtt( Mek^.NA , NAG_Action , NAS_CallTime , MT + ClicksPerRound );
-	SetNAtt( Mek^.NA, NAG_Action , NAS_DriftSpeed , 0 );
+	SetNAtt( Mek^.NA , NAG_Action , NAS_CallTime , GB^.ComTime + ClicksPerRound );
 end;
 
 Procedure DoActionSetup( GB: GameBoardPtr; Mek: GearPtr; Action: Integer );
@@ -1204,6 +1216,25 @@ begin
 	CrashTarget := it;
 end;
 
+Procedure MaybeCharge( GB: GameBoardPtr; Mek: GearPtr );
+	{ This mecha is blocked by something. If it's another mecha, maybe }
+	{ do a charge attack. }
+var
+	D: Point;
+	Target: GearPtr;
+begin
+	{ If the mek exists, it's bigger than SF:0, and it's moved at least one tile, }
+	{ then it might be ready for a charge attack. }
+	if ( Mek <> Nil ) and ( Mek^.Scale > 0 ) and ( NAttValue( Mek^.NA , NAG_Action , NAS_TilesInARow ) > 0 ) then begin
+		D := GearDestination( Mek );
+		Target := FindBlockerXYZ( GB , D.X , D.Y , MekAltitude( GB , Mek ) );
+		if ( Target <> Nil ) and AreEnemies( GB , Mek , Target ) then begin
+			SetNAtt( Mek^.NA , NAG_Action , NAS_WillCharge , NAttValue( Target^.NA , NAG_EpisodeData , NAS_UID ) );
+			SetNAtt( Mek^.NA , NAG_Action , NAS_ChargeSpeed , Speedometer( GB^.Scene , Mek ) );
+		end;
+	end;
+end;
+
 Function EnactMovement( GB: GameBoardPtr; Mek: GearPtr ): Integer;
 	{ The time has come for this mech to move. }
 	{ This procedure checks to see what kind of movement is }
@@ -1240,16 +1271,21 @@ begin
 
 		SetNAtt( Mek^.NA , NAG_Action , NAS_MoveETA , ETA + 1000 );
 
+		{ Clear the TilesInARow counter. }
+		SetNAtt( Mek^.NA , NAG_Action , NAS_TilesInARow , 0 );
+
 	end else if ( NAttValue( Mek^.NA , NAG_Action , NAS_TimeLimit ) > 0 ) and ( NAttValue( Mek^.NA , NAG_Action , NAS_TimeLimit ) < GB^.ComTime ) then begin
 		{ If the mek was jumping and overshot the time limit, }
 		{ make it crash now. }
 		if NAttValue( Mek^.NA , NAG_Action , NAS_MoveMode ) = MM_Fly then begin
 			Crash( GB , Mek );
 			NeedRedraw := EMR_Crash;
+			SetNAtt( Mek^.NA , NAG_Action , NAS_TilesInARow , 0 );
 		end else begin
 			{ If the time limit was overshot but the mek isn't }
 			{ jumping, clear it now. }
 			SetNAtt( Mek^.NA , NAG_Action , NAS_TimeLimit , 0 );
+			SetNAtt( Mek^.NA , NAG_Action , NAS_TilesInARow , 0 );
 		end;
 
 	end else if MoveBlocked( Mek , GB ) then begin
@@ -1257,8 +1293,10 @@ begin
 		{ stop. Otherwise it will crash into the obstacle. }
 		if MoveLegal( GB^.Scene , Mek , NAV_Stop , GB^.ComTime ) then begin
 			NeedRedraw := EMR_Blocked;
+			MaybeCharge( GB , Mek );
 			PrepAction( GB , Mek , NAV_Stop );
 		end else begin
+			MaybeCharge( GB , Mek );
 			Crash( GB , Mek );
 			NeedRedraw := EMR_Crash;
 		end;
@@ -1268,6 +1306,7 @@ begin
 		{ is blocked. In any case, this could be crash material. }
 		Crash( GB , Mek );
 		NeedRedraw := EMR_Crash;
+		SetNAtt( Mek^.NA , NAG_Action , NAS_TilesInARow , 0 );
 
 	end else if ( Mek^.G = GG_Character ) and ( Order = NAV_FullSpeed ) and ( CurrentStamina( Mek ) <= 0 ) then begin
 		PrepAction( GB , Mek , NAV_NormSpeed );
@@ -1284,12 +1323,16 @@ begin
 			NAV_NormSpeed,NAV_FullSpeed,NAV_Reverse:
 				begin
 				DoMoveTile( Mek , GB );
+				if Order <> NAV_Reverse then AddNAtt( Mek^.NA , NAG_Action , NAS_TilesInARow , 1 );
 				SetTrigger( GB , TRIGGER_TeamMovement + BStr( NAttValue( Mek^.NA , NAG_Location , NAS_Team ) ) );
 				Pilot := LocatePilot( Mek );
 				if ( Pilot <> Nil ) and ( NAttValue( Pilot^.NA , NAG_Personal , NAS_CID ) <> 0 ) then SetTrigger( GB , TRIGGER_NPCMovement + BStr( NAttValue( Pilot^.NA , NAG_Personal , NAS_CID ) ) );
 				end;
 			NAV_TurnLeft,NAV_TurnRight:
+				begin
 				DoTurn( Mek , GB );
+				SetNAtt( Mek^.NA , NAG_Action , NAS_TilesInARow , 0 );
+				end;
 		end;
 
 		Alt1 := MekAltitude( GB , Mek );

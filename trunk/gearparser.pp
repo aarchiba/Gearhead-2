@@ -653,6 +653,7 @@ var
 			Item := Standard_Equipment_List;
 			N := 1;
 			Best_Offer := Nil;
+			Best_Value := 0;
 			while Item <> Nil do begin
 				if ( Item^.G = GG_Weapon ) and ItemLegalForFaction( Item ) and isLegalInvCom( Slot , Item ) and ( WSNeeded( Item ) = WS ) then begin
 					WCost := GearValue( Item );

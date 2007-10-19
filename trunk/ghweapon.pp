@@ -99,18 +99,18 @@ Const
 	{ ************************************ }
 	{ Stick an attack attribute or status effect name in a weapon's TYPE string }
 	{ attribute to activate said ability. }
-	Num_Attack_Attributes = 24;
+	Num_Attack_Attributes = 25;
 	AA_Name: Array [1..Num_Attack_Attributes] of string = (
 		'SWARM', 'BLAST', 'LINE', 'SCATTER', 'EXTEND',
 		'HYPER', 'ARMORPIERCING', 'MYSTERY', 'THROWN', 'RETURN',
 		'ARMORIGNORE','INTERCEPT','OVERLOAD','BRUTAL', 'FLAIL',
 		'ANTIAIR','SMOKE','TOXIN','DRONE','NOMETAL',
-		'STRAIN','COMPLEX','GASATTACK','NONLETHAL'
+		'STRAIN','COMPLEX','GASATTACK','NONLETHAL','EXPERIMENTAL'
 	);
 	AA_Cost: Array [1..Num_Attack_Attributes] of SmallInt = (
 		15, 15, 20,  9, 11,     100, 20, 10,15,30,
 		85, 25, 15, 20, 25,	12,2,30, 20,10,
-		 7,  7, 10,  5
+		 7,  7, 10,  5, 13
 	);
 
 	AA_SwarmAttack = 1;
@@ -137,6 +137,7 @@ Const
 	AA_Complex = 22;
 	AA_GasAttack = 23;
 	AA_NonLethal = 24;
+	AA_Experimental = 25;
 
 	Max_Blast_Rating = 16;
 	BlastModCost: Array [1..Max_Blast_Rating] of Byte = (

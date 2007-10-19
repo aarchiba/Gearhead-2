@@ -417,8 +417,16 @@ begin
 			Lvl := Lvl - 7 * ( StrCost - Strength ) div 5;
 			StrCost := Strength;
 
-		end else if StrCost > ( BasicGruntCost + 1 + Random( 20 ) ) then begin
+		end else if ( ( StrCost * 3 ) < Strength ) and ( Strength > 90 ) and ( Random( 3 ) <> 1 ) then begin
+			{ We have plenty of points to spare. Give this pilot some lovin'. }
+			Bonus := Random( 3 ) + 1;
+			Lvl := Lvl + Bonus * 7;
+			StrCost := StrCost + Bonus * 10;
+
+		end else if ( StrCost > ( BasicGruntCost + 1 + Random( 20 ) ) ) and ( Strength < ( 76 + Random( 175 ) ) ) then begin
 			{ Slightly overbudget... can reduce the cost with skill reduction. }
+			{ Note that we won't be reducing skills at all if STRENGTH is }
+			{ sufficiently high. }
 			Bonus := Random( 4 );
 			Lvl := Lvl - Bonus * 7;
 			StrCost := StrCost - Bonus * 5;
@@ -431,13 +439,20 @@ begin
 			StrCost := StrCost + Bonus * 10;
 		end;
 
+		{ If Strength is extremely high, maybe give an extra skill point }
+		{ in order to increase the cost. }
+		if ( Strength > ( 201 + Random( 300 ) ) ) and ( Strength > ( StrCost * 3 ) ) then begin
+			Lvl := Lvl + 7;
+			StrCost := StrCost + 10;
+		end;
+
 		{ Add this mecha to our list. }
 		AppendGear( MList , Mek );
 
 		{ Create a pilot, add it to the mecha. }
 		CP := SeekGear( Mek , GG_CockPit , 0 );
 		if CP <> Nil then begin
-			Pilot := RandomPilot( 90  , 10 );
+			Pilot := RandomPilot( 80  , 10 );
 			SetSkillsAtLevel( Pilot , Lvl );
 			InsertSubCom( CP , Pilot );
 		end;

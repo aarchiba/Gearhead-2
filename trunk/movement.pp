@@ -127,7 +127,12 @@ const
 	NAS_DriftSpeed = 8;	{ Speed of movement, in space }
 	NAS_DriftETA = 9;	{ When drifting will happen, in space }
 
-
+	NAS_TilesInARow = 10;	{ Counts how many tiles the model has been going forward. }
+	NAS_WillCrash = 11;	{ If nonzero, this mecha is due for a crashing. }
+				{ The value is the damage due from the crash. }
+	NAS_WillCharge = 12;	{ If nonzero, this mecha is set to charge another mecha. }
+				{ The value is the UID of the target. }
+	NAS_ChargeSpeed = 13;	{ Speed at the time the charge is declared. }
 
 	NAG_EnvironmentData = 22;	{ Tells things about the scene. }
 					{ Environment data is inherited by encounters and }

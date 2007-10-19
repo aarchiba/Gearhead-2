@@ -50,4 +50,20 @@ Scene
 		Content3 <Some 2 50 Here *URBAN_X>
 		special <STARTHERE>
 	end
+	inv
+BeamGun 10
+Name <Laser Rifle>
+desc <An advanced combat rifle, powered by a laser generator.>
+category <WEAPON MISSILE>
+factions <GENERAL>
+type <EXPERIMENTAL>
+Mass -6
+Acc 1
+Speed 3
+inv
+	PowerSource 4
+	name <Power Cell 100>
+	mass -2
+end
 
+	end

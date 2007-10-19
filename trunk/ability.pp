@@ -576,14 +576,22 @@ begin
 
 		{ Increasing a favored reputation improves morale, }
 		{ while decreasing a reputation abuses it. }
-		if Sgn( CL ) = Sgn( V ) then begin
-			if Abs( R ) = 1 then begin
+		if R = -NAS_Renowned then begin
+			{ Gaining renown always improves mood, losing it always }
+			{ abuses mood. }
+			if V > 0 then begin
+				AddMoraleDmg( PC , -MORALE_RepSmall );
+			end else if V < 0 then begin
+				AddMoraleDmg( PC , MORALE_RepSmall );
+			end;
+		end else if Sgn( CL ) = Sgn( V ) then begin
+			if Abs( V ) = 1 then begin
 				AddMoraleDmg( PC , -MORALE_RepSmall );
 			end else begin
 				AddMoraleDmg( PC , -MORALE_RepBig );
 			end;
 		end else if Sgn( CL ) = -Sgn( V ) then begin
-			if Abs( R ) = 1 then begin
+			if Abs( V ) = 1 then begin
 				AddMoraleDmg( PC , MORALE_RepSmall );
 			end else begin
 				AddMoraleDmg( PC , MORALE_RepBig );

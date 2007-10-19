@@ -143,6 +143,7 @@ Procedure DestroyTerrain( GB: GameBoardPtr; X,Y: Integer );
 Procedure Explosion( GB: GameBoardPtr; X0,Y0,DC,R: Integer );
 
 Procedure DoAttack( GB: GameBoardPtr; Attacker,Target: GearPtr; X,Y,Z,AtOp: Integer);
+Procedure DoCharge( GB: GameBoardPtr; Attacker,Target: GearPtr );
 
 Procedure HandleEffectString( GB: GameBoardPtr; Target: GearPtr; FX_String,FX_Desc: String );
 Procedure MassEffectString( GB: GameBoardPtr; FX_String,FX_Desc: String );
@@ -152,7 +153,7 @@ implementation
 
 uses ability,action,gearutil,ghchars,ghmodule,ghguard,gearparser,ui4gh,
      ghprop,ghsensor,ghsupport,ghweapon,movement,rpgdice,skilluse,texutil,
-	ghholder,vidgfx;
+	ghholder,vidgfx,ghmecha,ghmovers;
 
 Type
 	EffectRequest = Record
@@ -2133,6 +2134,66 @@ begin
 	FinishEffectRequest( ER );
 end;
 
+Procedure ExperimentifyAttack( var ER: EffectRequest; var AtAt: String; var ATOp: Integer );
+	{ This attack is going to get weird. An EXPERIMENTAL weapon is kind of like }
+	{ a wand of wonder- you never really know what's going to happen. One special }
+	{ effect will be applied to the attack- it may gain a blast radius, hit bonuses }
+	{ or penalties, do nothing but launch smoke... there's no way of telling. }
+var
+	roll: Integer;
+begin
+	roll := Random( 25 ) + 1;
+	case Roll of
+		11:	begin	{ Accuracy Bonus }
+			ER.FXMod := ER.FXMod + 5;
+			end;
+		12:	begin	{ Accuracy Penalty }
+			ER.FXMod := ER.FXMod - 10;
+			end;
+		13:	begin	{ Damage Boost }
+			ER.FXDice := ER.FXDice * 2;
+			end;
+		14:	begin	{ Damage Thwack }
+			ER.FXDice := 1;
+			end;
+		15:	begin	{ Blast Radius }
+			AtAt := AtAt + ' BLAST ' + BStr( Random( 3 ) + 1 );
+			end;
+		16:	begin	{ Weak Blast }
+			ER.FXDice := ER.FXDice div 3 + 1;
+			AtAt := AtAt + ' BLAST ' + BStr( Random( 6 ) + 1 );
+			end;
+		17:	begin	{ Smoke }
+			AtAt := ATAt + ' SMOKE BLAST ' + BStr( Random( 4 ) + 1 );
+			end;
+		18:	begin	{ A Little Smoke }
+			AtAt := ATAt + ' SMOKE';
+			end;
+		19:	begin	{ Hyper }
+			AtAt := ATAt + ' HYPER';
+			ER.FXDice := ER.FXDice div 2 + 1;
+			ER.FXMod := ER.FXMod - 5;
+			end;
+		20:	begin	{ Haywire }
+			AtAt := ATAt + ' HAYWIRE';
+			end;
+		21,22:	begin	{ Burn }
+			AtAt := ATAt + ' BURN';
+			end;
+		23:	begin	{ Nonlethal }
+			AtAt := ATAt + ' NONLETHAL';
+			end;
+		24:	begin	{ Weak Disintegrate }
+			ER.FXDice := 1;
+			ER.FXMod := ER.FXMod - 5;
+			AtAt := AtAt + ' DISINTEGRATE';
+			end;
+		25:	begin	{ Stun }
+			AtAt := ATAt + ' STUN';
+			end;
+	end;
+end;
+
 Procedure FunkyMartialArts( var ER: EffectRequest; var AtAt: String; var ATOp: Integer );
 	{ This attack may well get some special bonuses. }
 const
@@ -2297,11 +2358,11 @@ begin
 end;
 
 
-Function BuildAttackRequest( Attacker: GearPtr; AtOp: Integer ): EffectRequest;
+Function BuildAttackRequest( Attacker: GearPtr; AtOp: Integer; var AtAt: String ): EffectRequest;
 	{ Create the effect request for this particular attack. }
 var
 	ER: EffectRequest;
-	AtAt,msg: String;
+	msg: String;
 	T: Integer;
 begin
 	InitEffectRequest( ER );
@@ -2318,12 +2379,11 @@ begin
 		ER.AttackName := ReplaceHash( MsgString( 'LOW_POWER_ATTACK' ) , GearName( Attacker ) );
 	end;
 
-	AtAt := WeaponAttackAttributes( Attacker );
-
 	{ Modify the AtOp for close combat attacks if NONLETHAL is turned on. }
 	if ( Attacker^.G = GG_Module ) and ( NAttValue( ER.Originator^.NA , NAG_Prefrences , NAS_UseNonLethalAttacks ) <> 0 ) then AtOp := AtOp_NonLethal;
 
 	if ( Attacker^.G = GG_Module ) and ( ER.Originator^.G = GG_Character ) and ( AtOp = 0 ) then FunkyMartialArts( ER , AtAt , AtOp );
+	if HasAttackAttribute( AtAt , AA_Experimental ) then ExperimentifyAttack( ER , AtAt , AtOp );
 
 	if not NonDamagingAttack( AtAt ) then begin
 		{ This is not a NonDamaging effect. So, the first command in the }
@@ -2609,7 +2669,6 @@ var
 		t_stencil: MapStencil;
 		TX,TY: Integer;
 	begin
-{		rng := WeaponRange( GB , Attacker );}
 		rng := Range( X , Y , X0 , Y0 );
 
 		t_rad := rng div 3;
@@ -2665,6 +2724,19 @@ begin
 	GenerateAttackTemplate := Stencil;
 end;
 
+Procedure GiveAwayPosition( GB: GameBoardPtr; Master: GearPtr );
+	{ Firing weapons automatically gives away the firer's position. }
+var
+	EMek: GearPtr;
+begin
+	EMek := GB^.Meks;
+	while EMek <> Nil do begin
+		if AreEnemies( GB , EMek , Master ) and not MekCanSeeTarget( GB , EMek , Master ) then begin
+			RevealMek( GB , Master , EMek );
+		end;
+		EMek := Emek^.Next;
+	end;
+end;
 
 Procedure DoAttack( GB: GameBoardPtr; Attacker,Target: GearPtr; X,Y,Z,AtOp: Integer);
 	{ ATTACKER is a weapon. TARGET is a target. X,Y,Z are map coordinates in case }
@@ -2677,7 +2749,8 @@ var
 begin
 	{ Clear the attack history and build the effect request. }
 	ClearAttackHistory;
-	ER := BuildAttackRequest( Attacker , AtOp );
+	AtAt := WeaponAttackAttributes( Attacker );
+	ER := BuildAttackRequest( Attacker , AtOp , AtAt );
 
 	{ Add a divider to the skill roll history. }
 	SkillCommentDivider;
@@ -2685,8 +2758,6 @@ begin
 	{ Now that we have the effect request, see if the Originator is on the PC's team. }
 	{ If so, better throw a PCATTACK trigger. }
 	if ( ER.Originator <> Nil ) and ( NAttValue( ER.Originator^.NA , NAG_Location , NAS_Team ) = NAV_DefPlayerTeam ) then SetTrigger( GB , TRIGGER_PCAttack );
-
-	AtAt := WeaponAttackAttributes( Attacker );
 
 	{ Either generate a template for the attack or generate the list of targets. }
 	{ Also, verify that the targets are legal. If NOCALLEDSHOTS applies, take the }
@@ -2736,14 +2807,7 @@ begin
 			{ Set the calltime for the next attack. }
 			SetNAtt( Master^.NA , NAG_Action , NAS_CallTime , GB^.ComTime + ReactionTime( Master ) );
 
-			{ Firing weapons automatically gives away the firer's position. }
-			EMek := GB^.Meks;
-			while EMek <> Nil do begin
-				if AreEnemies( GB , EMek , Master ) and not MekCanSeeTarget( GB , EMek , Master ) then begin
-					RevealMek( GB , Master , EMek );
-				end;
-				EMek := Emek^.Next;
-			end;
+			GiveAwayPosition( GB , Master );
 
 			{ Update the alleigances of everyone involved. }
 			if Target <> Nil then DeclarationOfHostilities( GB , NAttValue( Master^.NA , NAG_Location , NAS_Team ) , NAttValue( FindRoot( Target )^.NA , NAG_Location , NAS_Team ) );
@@ -2752,6 +2816,85 @@ begin
 		{ Perform cleanup duties. }
 		PostAttackCleanup( GB , Attacker , X , Y , Z );
 	end;
+
+	{ Finalize any pending announcements. }
+	FlushAnnouncements;
+
+	{ Get rid of any dynamic resources allocated. }
+	FinishEffectRequest( ER );
+end;
+
+Procedure DoCharge( GB: GameBoardPtr; Attacker,Target: GearPtr );
+	{ ATTACKER is charging TARGET. Do the math. }
+	{ Both ATTACKER and TARGET are root level gears of SF:1 or larger. }
+	Function ChargeDCBonus( Master: GearPtr ): Integer;
+		{ Certain mecha get a bonus to charge attack damage. Calculate }
+		{ that here. }
+	var
+		CDCB: Integer;
+		HeavyActuator: Integer;
+	begin
+		CDCB := 0;
+		if Master^.G = GG_Mecha then begin
+			{ May also get a bonus from heavy Actuator. }
+			HeavyActuator := CountActivePoints( Master , GG_MoveSys , GS_HeavyActuator );
+			if HeavyActuator > 0 then CDCB := CDCB + ( HeavyActuator div Master^.V );
+
+			{ Zoanoids get a CC damage bonus. Apply that here. }
+			if Master^.S = GS_Zoanoid then begin
+				CDCB := CDCB + ZoaDmgBonus;
+			end;
+		end;
+		ChargeDCBonus := CDCB;
+	end;
+	Function ChargeDC( Master: GearPtr ): Integer;
+		{ Return the DC for this charge. }
+	begin
+		ChargeDC := ( GearMass( Master ) div 8 ) + ChargeDCBonus( Master ) + ( NAttValue( Master^.NA , NAG_Action , NAS_ChargeSpeed ) div 30 );
+	end;
+var
+	ER: EffectRequest;
+	FXScript,Msg: String;
+begin
+	ClearAttackHistory;
+	InitEffectRequest( ER );
+
+	ER.FXDice := ChargeDC( Attacker );
+	ER.Originator := Attacker;
+	ER.Weapon := Attacker;
+	ER.FXMod := 2;
+	FXScript := '4 0 SCATTER ' + FX_CanDodge;
+
+	{ Add a divider to the skill roll history. }
+	SkillCommentDivider;
+
+	{ If the Originator is on the PC's team, better throw a PCATTACK trigger. }
+	if NAttValue( Attacker^.NA , NAG_Location , NAS_Team ) = NAV_DefPlayerTeam then SetTrigger( GB , TRIGGER_PCAttack );
+
+	{ Record the charge announcement. }
+	msg := MsgString( 'XchargesY' );
+	msg := ReplaceHash( msg , PilotName( Attacker ) );
+	msg := ReplaceHash( msg , GearName( Target ) );
+	RecordAnnouncement( msg );
+	StartNewAnnouncement;
+
+	{ If this attack hits, do a countercharge. }
+	if PAG_CauseDamage( GB , FXScript , ER , Target , 0 ) then begin
+		PrepAction( GB , Target , NAV_Stop );
+		FlushAnnouncements;
+		ER.FXDice := ChargeDC( Target ) div 3 + 1;
+		ER.Originator := Target;
+		ER.Weapon := Target;
+		ER.FXMod := 0;
+		FXScript := '4 0 SCATTER ' + FX_CanDodge + ' ' + FX_CanBlock;
+		PAG_CauseDamage( GB , FXScript , ER , Attacker , 0 )
+	end;
+
+	{ Declare hostilities. }
+	DeclarationOfHostilities( GB , NAttValue( Attacker^.NA , NAG_Location , NAS_Team ) , NAttValue( Target^.NA , NAG_Location , NAS_Team ) );
+
+	{ Give away the charger's position. }
+	GiveAwayPosition( GB , Attacker );
 
 	{ Finalize any pending announcements. }
 	FlushAnnouncements;

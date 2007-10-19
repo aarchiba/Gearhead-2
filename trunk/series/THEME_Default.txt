@@ -1994,7 +1994,7 @@ Theme 5
 
 Theme 6
 	name <Mad Scientist>
-	requires <ACADE ~KNOWLEDGE ~PRAGMATIC>
+	requires <(ACADE|MEDIC) ~KNOWLEDGE ~PRAGMATIC>
 	%% Mostly beamguns. An odd grab bag of weird effects.
 	
 	CUSTOMIZATION_ADJECTIVE_0 <Atomic>
@@ -2046,7 +2046,14 @@ Theme 6
 
 		STC PAR-2
 
-		STC PAR-6
+		BeamGun 8
+		name <Quark Inversion Gun>
+		desc <This device has unpredictable, but generally destructive, effects.>
+		Scale 2
+		Range 5
+		Speed 3
+		mass -3
+		type <EXPERIMENTAL>
 
 		STC PHS-8
 
@@ -2070,7 +2077,8 @@ Theme 6
 		desc <No-one's really sure what this is or how it works...>
 		scale 2
 		Range 8
-		type <HAYWIRE BRUTAL>
+		Acc 2
+		type <EXPERIMENTAL BRUTAL>
 
 		BeamGun 7
 		name <Disintegration Ray>
@@ -2160,9 +2168,12 @@ Theme 6
 			magazine 16
 		end
 
-		STC PHS-25
+		BeamGun 14
 		%% #9
 		name <Quantum Destabilizer>
+		type <EXPERIMENTAL>
+		Scale 2
+		Recharge 3
 
 		Gun 16
 		%% #10

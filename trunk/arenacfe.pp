@@ -53,6 +53,7 @@ Function MightSurrender( GB: GameBoardPtr; NPC: GearPtr ): Boolean;
 
 Procedure VerbalAttack( GB: GameBoardPtr; Attacker,Target: GearPtr );
 
+Procedure ResolveCrashesAndCharges( GB: GameBoardPtr );
 
 implementation
 
@@ -359,6 +360,9 @@ begin
 	Display_Effect_History( FakeGB );
 	DisposeMapClone( FakeGB );
 
+	{ Resolve any crashes resulting from the attack. }
+	ResolveCrashesAndCharges( GB );
+
 	{ AT the end, redisplay the map. }
 	CombatDisplay( GB );
 end;
@@ -380,8 +384,69 @@ begin
 	Display_Effect_History( FakeGB );
 	DisposeMapClone( FakeGB );
 
+	{ Resolve any crashes resulting from the attack. }
+	ResolveCrashesAndCharges( GB );
+
 	{ AT the end, redisplay the map. }
 	CombatDisplay( GB );
+end;
+
+Procedure ResolveCrashesAndCharges( GB: GameBoardPtr );
+	{ Check the gameboard for mecha which have either crashed or charged. }
+	{ Search for charges first, crashes second. }
+var
+	FakeGB: GameBoardPtr;
+	Mek,Target: GearPtr;
+	FX_Desc: String;
+	V: LongInt;
+begin
+	{ Check for charges first. }
+	Mek := GB^.Meks;
+	while Mek <> Nil do begin
+		V := NAttValue( Mek^.NA , NAG_Action , NAS_WillCharge );
+		if V <> 0 then begin
+			Target := LocateMekByUID( GB , V );
+
+			if ( Target <> Nil ) and NotDestroyed( Target ) then begin
+				{ Generate a fake gameboard to be used for screen output. }
+				FakeGB := CloneMap( GB );
+
+				DoCharge( GB , Mek , Target );
+
+				{ Report the effect of the attack. }
+				Display_Effect_History( FakeGB );
+				DisposeMapClone( FakeGB );
+			end;
+
+			SetNAtt( Mek^.NA , NAG_Action , NAS_WillCharge , 0 );
+			SetNAtt( Mek^.NA , NAG_Action , NAS_ChargeSpeed , 0 );
+		end;
+		Mek := Mek^.Next;
+	end;
+
+	{ Check for crashes now. }
+	Mek := GB^.Meks;
+	while Mek <> Nil do begin
+		V := NAttValue( Mek^.NA , NAG_Action , NAS_WillCrash );
+		if V > 0 then begin
+			{ Generate a fake gameboard to be used for screen output. }
+			FakeGB := CloneMap( GB );
+			if Mek^.G = GG_Character then begin
+				FX_Desc := MsgString( 'FXDESC_FALL' );
+			end else begin
+				FX_Desc := MsgString( 'FXDESC_CRASH' );
+			end;
+
+			HandleEffectString( GB , Mek , BStr( V ) + ' ' + FX_CauseDamage + ' 10 0 SCATTER' , FX_Desc );
+
+			{ Report the effect of the attack. }
+			Display_Effect_History( FakeGB );
+			DisposeMapClone( FakeGB );
+
+			SetNAtt( Mek^.NA , NAG_Action , NAS_WillCrash , 0 );
+		end;
+		Mek := Mek^.Next;
+	end;
 end;
 
 Procedure EffectFrontEnd( GB: GameBoardPtr; Target: GearPtr; FX_String,FX_Desc: String );
@@ -390,6 +455,9 @@ Procedure EffectFrontEnd( GB: GameBoardPtr; Target: GearPtr; FX_String,FX_Desc: 
 begin
 	HandleEffectString( GB , Target , FX_String , FX_Desc );
 	Display_Effect_History( GB );
+
+	{ Resolve any crashes resulting from the effect. }
+	ResolveCrashesAndCharges( GB );
 end;
 
 Procedure MassEffectFrontEnd( GB: GameBoardPtr; FX_String,FX_Desc: String );
@@ -398,6 +466,9 @@ Procedure MassEffectFrontEnd( GB: GameBoardPtr; FX_String,FX_Desc: String );
 begin
 	MassEffectString( GB , FX_String , FX_Desc );
 	Display_Effect_History( GB );
+
+	{ Resolve any crashes resulting from the effect. }
+	ResolveCrashesAndCharges( GB );
 end;
 
 Procedure RandomExplosion( GB: GameBoardPtr );
@@ -412,6 +483,9 @@ begin
 
 	{ Report the effect of the attack. }
 	Display_Effect_History( GB );
+
+	{ Resolve any crashes resulting from the effect. }
+	ResolveCrashesAndCharges( GB );
 end;
 
 Procedure StatusEffectCheck( GB: GameBoardPtr );
