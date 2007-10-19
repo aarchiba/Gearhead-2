@@ -1214,6 +1214,8 @@ end;
 Procedure ViewMecha( HQCamp: CampaignPtr; PC: GearPtr );
 	{ Examine this mecha. Call up a menu with options related to this }
 	{ character. }
+const
+	SaleFactor = 25;
 	Procedure SellMecha( SalePrice: LongInt );
 		{ This mecha should be removed from the unit, and some cash gained. }
 	begin
@@ -1259,7 +1261,7 @@ Procedure ViewMecha( HQCamp: CampaignPtr; PC: GearPtr );
 			Total := Total + GearValue( I );
 			I := I^.Next;
 		end;
-		InventoryValue := Total div 10;
+		InventoryValue := Total div SaleFactor;
 	end;
 	Procedure SellMechaInventory;
 		{ This mecha's inventory should be deleted, and some cash gained. }
@@ -1279,9 +1281,7 @@ var
 	N: Integer;
 	SalePrice,Cost: LongInt;
 begin
-	{ The sale price is 25% of the original price times the damage status, in order }
-	{ to prevent shop-scumming. }
-	SalePrice := GearValue( PC ) div 10;
+	SalePrice := GearValue( PC ) div SaleFactor;
 	repeat
 		ADR_Source := PC;
 

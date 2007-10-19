@@ -153,7 +153,7 @@ implementation
 
 uses ability,action,gearutil,ghchars,ghmodule,ghguard,gearparser,ui4gh,
      ghprop,ghsensor,ghsupport,ghweapon,movement,rpgdice,skilluse,texutil,
-	ghholder,vidgfx,ghmecha,ghmovers;
+	ghholder,ghmecha,ghmovers;
 
 Type
 	EffectRequest = Record
@@ -2579,7 +2579,7 @@ var
 				AtOp2 := ( AtOp + 1 ) div N - 1;
 				if T <= ( ( AtOp + 1 ) mod N ) then Inc( AtOp2 );
 
-				if MekIsTargetInRadius( GB, Mek, FindRoot( Attacker ) , Attacker, FindRoot( Attacker ), X, Y, R ) and ( AtOp2 > 0 ) then begin
+				if MekIsTargetInRadius( GB, Mek, FindRoot( Attacker ) , Attacker, FindRoot( Attacker ), X, Y, R ) and ( AtOp2 >= 0 ) then begin
 					AddTargetToList( Mek , AtOp2 );
 					Inc( T );
 				end;

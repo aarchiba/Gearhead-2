@@ -310,6 +310,8 @@ Function PurchaseForces( ShoppingList: SAttPtr; Renown,Strength: Integer ): Gear
 	{ an average fight. }
 const
 	BasicGruntCost = 30;
+	SkillPlusCost = 15;
+	SkillMinusCost = 7;
 var
 	OptimalValue: LongInt;	{ The ideal value for a mecha. }
 
@@ -414,14 +416,14 @@ begin
 		{ This level may be adjusted up or down depending on the mecha's cost. }
 		if StrCost > Strength then begin
 			{ We've gone overbudget. Whack this mecha's pilot. }
-			Lvl := Lvl - 7 * ( StrCost - Strength ) div 5;
+			Lvl := Lvl - ( StrCost - Strength );
 			StrCost := Strength;
 
 		end else if ( ( StrCost * 3 ) < Strength ) and ( Strength > 90 ) and ( Random( 3 ) <> 1 ) then begin
 			{ We have plenty of points to spare. Give this pilot some lovin'. }
 			Bonus := Random( 3 ) + 1;
 			Lvl := Lvl + Bonus * 7;
-			StrCost := StrCost + Bonus * 10;
+			StrCost := StrCost + Bonus * SkillPlusCost;
 
 		end else if ( StrCost > ( BasicGruntCost + 1 + Random( 20 ) ) ) and ( Strength < ( 76 + Random( 175 ) ) ) then begin
 			{ Slightly overbudget... can reduce the cost with skill reduction. }
@@ -429,21 +431,21 @@ begin
 			{ sufficiently high. }
 			Bonus := Random( 4 );
 			Lvl := Lvl - Bonus * 7;
-			StrCost := StrCost - Bonus * 5;
+			StrCost := StrCost - Bonus * SkillMinusCost;
 
 		end else if StrCost < ( BasicGruntCost - 1 - Random( 15 ) ) then begin
 			{ Underbudget... we can afford a better pilot. }
 			Bonus := Random( 3 );
 			if Random( 10 ) = 4 then Inc( Bonus );
 			Lvl := Lvl + Bonus * 7;
-			StrCost := StrCost + Bonus * 10;
+			StrCost := StrCost + Bonus * SkillPlusCost;
 		end;
 
 		{ If Strength is extremely high, maybe give an extra skill point }
 		{ in order to increase the cost. }
 		if ( Strength > ( 201 + Random( 300 ) ) ) and ( Strength > ( StrCost * 3 ) ) then begin
 			Lvl := Lvl + 7;
-			StrCost := StrCost + 10;
+			StrCost := StrCost + SkillPlusCost;
 		end;
 
 		{ Add this mecha to our list. }
