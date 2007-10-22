@@ -378,6 +378,7 @@ Const
 	NAS_Vitality = 13;
 	NAS_Conversation = 19;
 	NAS_Shopping = 21;
+	NAS_Flirtation = 27;
 	NAS_Intimidation = 28;
 	NAS_MechaEngineering = 31;
 	NAS_WeightLifting = 33;

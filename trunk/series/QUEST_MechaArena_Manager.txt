@@ -243,7 +243,8 @@ Content
 
 	sub
 		Persona 1
-		rumor0 <Mullins used to be one of the greatest privateers, but had to retire when she was crippled in battle.>
+		rumor <Mullins used to be one of the greatest privateers, but had to retire when she was crippled in battle.>
+		rumor0 <there's an illegal mecha arena somewhere in the colony.>
 		greeting <if# QuestStatus %qid% 0 else GoPreQuest if= ArenaState %2% NAV_AS_Win else GoCheckLoss Goto GoArenaWin>
 		GoCheckLoss <if= ArenaState %2% NAV_AS_Loss else GoCheckReady Goto GoArenaLoss>
 		GoCheckReady <if= ArenaState %2% NAV_AS_Vacant else GoArenaFull ifG ComTime ArenaRecharge %2% else GoArenaBusy Goto GoOfferFight>

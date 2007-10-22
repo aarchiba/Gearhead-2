@@ -98,9 +98,8 @@ uses narration,texutil,rpgdice,ghchars,gearutil,ability,ui4gh,ghprop,action;
 
 const
 	Num_Openings = 7;	{ Number of TraitChatter opening phrases. }
-	Num_Improve_Msg = 3;	{ Number of skill improvement messages. }
 
-	Chat_MOS_Measure = 10;
+	Chat_MOS_Measure = 5;
 
 
 var
@@ -463,7 +462,7 @@ var
 		Persona: GearPtr;
 	begin
 		if ( P <> NPC ) and ( P^.G <> GG_Persona ) then begin
-			GetRumorFromGear( P );
+			if P <> GB^.Scene then GetRumorFromGear( P );
 			if P^.G = GG_Character then begin
 				{ At most one personality trait per NPC will be added }
 				{ to the list. This is to keep them from overwhelming the }
@@ -604,30 +603,6 @@ begin
 	IsSexy := ( NAttValue( PC^.NA , NAG_CharDescription , NAS_Gender ) <> NAttValue( NPC^.NA , NAG_CharDescription , NAS_Gender ) ) or HasTalent( PC , NAS_Bishounen );
 end;
 
-Function DoleChatExperience( PC,NPC: GearPtr ): String;
-	{ Give a skill-specific experience award to either Conversation }
-	{ or Flirtation. }
-var
-	Skill_To_Improve: Integer;
-	msg: sTRING;
-begin
-	{ Give a single point of general experience or a }
-	{ skill-specific award. }
-	if Random( 2 ) = 1 then begin
-		DoleExperience( PC , XPA_GoodChat );
-		msg := '';
-	end else begin
-		Skill_To_Improve := 19;
-		if IsSexy( PC , NPC ) and ( Random( 3 ) = 1 ) then Skill_To_Improve := 27;
-		if DoleSkillExperience( PC , Skill_To_Improve , XPA_GoodChat ) then begin
-			msg := SAttValue( Chat_Msg_List , 'CHAT_Skill' + BStr( Skill_To_Improve ) + '_' + BStr( Random( Num_Improve_Msg ) + 1 ) );
-		end else begin
-			msg := '';
-		end;
-	end;
-	DoleChatExperience := msg;
-end;
-
 function DoChatting( GB: GameBoardPtr; var Rumors: SAttPtr; PC,NPC: GearPtr; Var Endurance,FreeRumors: Integer ): String;
 	{ This function will do chatting between the specified PC }
 	{ and NPC with the specified persona, adjust the Reaction and }
@@ -639,6 +614,8 @@ var
 	msg,alt_msg: String;
 	RTemp: SAttPtr;
 	Trait: Integer;		{ The personality trait invoked by this conversation. }
+	RS: Integer;		{ Reaction Score }
+	InOp: Boolean;
 	Function TraitWeight( N : Integer ): Integer;
 		{ Return a value indicating how strongly this NPC }
 		{ feels about this particular personality trait. }
@@ -670,7 +647,7 @@ var
 		{ Normally idle chatter has been selected; this procedure may }
 		{ select a trait-based interaction instead. }
 	begin
-		if ( Trait <> 0 ) and ( Random( 2 ) = 1 ) then begin
+		if ( Trait <> 0 ) and ( Random( 3 ) <> 1 ) then begin
 			{ Trait-Based Chatter. }
 			msg := DoTraitChatter( NPC , Trait );
 		end else begin
@@ -678,38 +655,48 @@ var
 			msg := IdleChatter;
 		end;
 	end;
+	Function MaxReactBonus: LongInt;
+		{ Return the maximum reaction bonus this PC can get from }
+		{ this NPC. }
+	var
+		MRB: LongInt;
+	begin
+		MRB := ( SkillValue( PC , NAS_Conversation ) + CStat( PC , STAT_Charm ) ) * 2;
+		MaxReactBonus := MRB;
+	end;
 begin
 	{ Determine the effect target number. The more extreme the NPC's }
 	{ current opinion of the PC is, the more difficult it will be to }
 	{ change that opinion.  In addition, if the opinion is a negative }
 	{ one, it'll be even harder to change the opinion. }
-	SkTarget := 5 + Abs( ReactionScore( GB^.Scene , PC , NPC ) - 10 ) div 5;
+	RS := ReactionScore( GB^.Scene , PC , NPC );
+	Persona := NAttValue( NPC^.NA , NAG_Personal , NAS_CID );
+	SkTarget := 5 + Abs( NAttValue( PC^.NA , NAG_ReactionScore , Persona ) ) div 4;
 
 	{ Start by making a social interaction roll for the PC. }
-	SkRoll := SkillRoll( PC , 19 , SkTarget , 0 , False );
+	SkRoll := SkillRoll( PC , NAS_Conversation , SkTarget , 0 , False );
 
 	{ Apply flirtation bonus to the skill roll, if appropriate. }
 	{ The bonus only applies if the PC has ranks in flirtation or is a Jack of all Trades. }
-	if IsSexy( PC , NPC ) and HasSkill( PC , 27 ) then begin
-		SkRoll := SkRoll + SkillRoll( PC , 27 , SkTarget , 0 , False );
+	if IsSexy( PC , NPC ) and HasSkill( PC , NAS_Flirtation ) then begin
+		SkRoll := SkRoll + SkillRoll( PC , NAS_Flirtation , SkTarget , 0 , False );
 	end;
 
-	{ Initialize TRAIT to random, and find the NPC's PERSONA value. }
-	{ These things will be needed later. }
+	{ Initialize TRAIT to random. These things will be needed later. }
 	if Random( 3 ) <> 1 then begin
 		Trait := SelectTraitForChatter;
 	end else begin
 		Trait := 0;
 	end;
-	Persona := NAttValue( NPC^.NA , NAG_Personal , NAS_CID );
 
 	{ Reduce ENDURANCE. }
-	if ( SkRoll > SkTarget ) or ( Random ( 110 ) > ReactionScore( GB^.Scene , PC , NPC ) ) then Dec( Endurance );
+	if ( SkRoll > SkTarget ) or ( Random ( 110 ) > RS ) then Dec( Endurance );
 	if SkRoll < RollStep( 4 ) then Dec( Endurance );
 
-	{ Finally, decide what the result of all this die rolling will be. }
+	{ After all that stuff, we're ready to get to the useful effects. }
 	{ First see what useful (or useless) information the NPC will share. }
-	if ( SkRoll + ReactionScore( GB^.Scene , PC , NPC ) + Random(10) - Random(10) ) < 0 then begin
+	if ( RS < Random( 10 ) ) and ( SkRoll < RollStep( 10 ) ) then begin
+		{ If the PC is unliked and not very charming, a blowoff will happen. }
 		msg := BlowOff;
 
 		{ Since the NPC is trying to get rid of the PC, }
@@ -717,22 +704,19 @@ begin
 		Dec( Endurance );
 
 	end else if ( FreeRumors > 0 ) and ( Rumors <> Nil ) then begin
+		{ If the PC is entitled to any free rumors, give one out now. }
 		RTemp := SelectRandomSAtt( Rumors );
 		msg := RTemp^.info;
 		RemoveSAtt( Rumors, RTemp );
 		Dec( FreeRumors );
 
-	end else if ( SkRoll + ( ReactionScore( GB^.Scene , PC , NPC ) div  10 ) ) < 8 then begin
-		SelectChatter;
+	end else if ( Rumors <> Nil ) and ( SkRoll > ( 5 + Random( 10 ) ) ) then begin
+		RTemp := SelectRandomSAtt( Rumors );
+		msg := RTemp^.info;
+		RemoveSAtt( Rumors, RTemp );
 
 	end else begin
-		if ( Rumors <> Nil ) and ( SkRoll > ( 5 + Random( 10 ) ) ) then begin
-			RTemp := SelectRandomSAtt( Rumors );
-			msg := RTemp^.info;
-			RemoveSAtt( Rumors, RTemp );
-		end else begin
-			SelectChatter;
-		end;
+		SelectChatter;
 	end;
 
 	{ Secondly there's a chance that the chatting will improve relations }
@@ -740,38 +724,32 @@ begin
 	{ this could make things harder. }
 	if ( Trait <> 0 ) then begin
 		if InOpposition( PC , NPC , Trait ) then begin
-			SkRoll := SkRoll - SkTarget;
-		end else if InHarmony( PC , NPC , Trait ) then begin
-			SkRoll := SkRoll + ( ( SkRoll * Abs( NAttValue( PC^.NA , NAG_CharDescription , -Trait ) ) ) div 100 );
+			SkRoll := SkRoll div 3;
+			{ Characters with the Diplomatic talent don't count as in opposition, }
+			{ although they still do suffer the roll penalty. }
+			InOp := Not TeamHasTalent( GB , NAV_DefPlayerTeam , NAS_Diplomatic );
+		end else begin
+			InOp := False;
 		end;
 	end;
 
 
-	if SkRoll > SkTarget then begin
+	if ( SkRoll > SkTarget ) and not InOp then begin
 		MOS := 1 + ( SkRoll - SkTarget ) div Chat_MOS_Measure;
 		if Persona > 0 then begin
-			AddNAtt( PC^.NA , NAG_ReactionScore , Persona , MOS );
-			if ( MOS > 1 ) and ( SkTarget > 15 ) then DoleExperience( PC , MOS div 2 );
+			if NAttValue( PC^.NA , NAG_ReactionScore , Persona ) < MaxReactBonus then AddNAtt( PC^.NA , NAG_ReactionScore , Persona , MOS );
 		end;
 
-	end else if SkRoll < 0 then begin
-		{ A negative skill roll means that the reaction is going to worsen. }
-		MOS := 1 + Abs( SkRoll ) div 2;
-
-		{ If the PC has the DIPLOMATIC talent, this can be avoided. }
-		if TeamHasTalent( GB , NAV_DefPlayerTeam , NAS_Diplomatic ) and ( RollStep( SkillValue( PC , 19 ) ) > ( NPC^.Stat[ STAT_Ego ] - 3 ) ) then begin
-			MOS := 0;
+	end else if SkRoll < ( SkTarget div 2 ) then begin
+		{ A bad skill roll means that the reaction is going to worsen. }
+		{ How much worse depends on whether or not the PC and NPC are in opposition. }
+		if InOp then begin
+			MOS := 1 + Random( 10 );
+		end else begin
+			MOS := 1;
 		end;
 
 		AddNAtt( PC^.NA , NAG_ReactionScore , Persona , -MOS );
-	end;
-
-	{ If appropriate, dole some experience points out. }
-	{ Note that we're doing it down here since flirtation bonus }
-	{ should apply. }
-	if SkRoll > CHAT_EXPERIENCE_TARGET then begin
-		alt_msg := DoleChatExperience( PC , NPC );
-		if alt_msg <> '' then msg := alt_msg;
 	end;
 
 	DoChatting := msg;

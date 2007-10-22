@@ -33,7 +33,7 @@ start <ifNPCOK E1 else GoDelete ifG V1 0 Goto GoCheckTime>
 update <ifNPCOK E1 else GoDelete if= V1 0 else GoCheckTime  V= 1 ComTime  V+ 1 86400   P= 7 PCRenown  P= 8 100   P+ 7 d4   P+ 7 -d4   ifG 2 P7 P= 7 d4>
 GoDelete <EndPlot>
 GoCheckTime <ifG ComTime V1  if= P2 0 else GoSetEnd  EndPlot>
-GoSetEnd <P= 2 2 email 2>
+GoSetEnd <if= P2 1 P= 2 2 email 2>
 CleanUp <if= P2 0 else GoSetEnd  EndPlot>
 
 % Insert email here

@@ -42,8 +42,6 @@ const
 	XPA_SK_Basic = 1;	{ XP for just using a combat skill. }
 	XPA_SK_UseRepair = 3;
 
-	CHAT_EXPERIENCE_TARGET = 20;
-
 	{ Even the slowest people will react at this base speed. }
 	Minimum_Initiative = 6;
 
