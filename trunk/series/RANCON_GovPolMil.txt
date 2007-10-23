@@ -165,6 +165,43 @@ Content
 		SetFaction 3
 	end
 
+Content
+	% Rocket Stars detachment
+	requires <*GOV_MILITARY RISHI>
+	minimap <.....1..............#...#>
+
+	Element1 <Prefab>
+	team1 <Guards>
+	teamdesc1 <SD>
+
+	sub
+		Persona 1
+		*greeting <*NiceToMeetYou GoMiscTalk>
+		*GoMiscTalk <*MISC_CHATTER>
+	end
+	inv
+		NPC Rocket Star
+	end
+
+Content
+	% FComS detachment
+	requires <*GOV_MILITARY FCOMS>
+	minimap <.....1..............#...#>
+
+	Element1 <Prefab>
+	team1 <Guards>
+	teamdesc1 <SD>
+
+	sub
+		Persona 1
+		*greeting <*NiceToMeetYou GoMiscTalk>
+		*GoMiscTalk <*MISC_CHATTER>
+	end
+	inv
+		NPC Mecha Pilot
+		SetFaction 10
+	end
+
 
 %% *GOV_POLICE Content
 %%	Add a police garrison to this location.

@@ -220,6 +220,35 @@ Content
 	end
 
 Content
+	requires <*NPC_GUARD Static FCOMS Public>
+	element1 <Prefab>
+	team1 <guards>
+	teamdata1 <pass>
+	sub
+		Persona 1
+		*greeting <*NiceToMeetYou GoMiscTalk>
+		*GoMiscTalk <*MISC_CHATTER>
+	end
+	inv
+		NPC Mecha Pilot
+		SetFaction 10
+	end
+
+Content
+	requires <*NPC_GUARD Static RISHI Public>
+	element1 <Prefab>
+	team1 <guards>
+	teamdata1 <pass>
+	sub
+		Persona 1
+		*greeting <*NiceToMeetYou GoMiscTalk>
+		*GoMiscTalk <*MISC_CHATTER>
+	end
+	inv
+		NPC Rocket Star
+	end
+
+Content
 	requires <*NPC_GUARD Static Maqui Legit Public ~Government>
 	element1 <Prefab>
 	team1 <guards>
@@ -410,6 +439,20 @@ Content
 	inv
 		NPC Privateer
 		SetFaction 6
+	end
+
+Content
+	requires <*URBAN_X RISHI Public>
+	element1 <Prefab>
+	team1 <guards>
+	teamdata1 <pass>
+	sub
+		Persona 1
+		*greeting <*NiceToMeetYou GoMiscTalk>
+		*GoMiscTalk <*MISC_CHATTER>
+	end
+	inv
+		NPC Rocket Star
 	end
 
 Content

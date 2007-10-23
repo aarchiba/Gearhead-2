@@ -624,6 +624,24 @@ Content
 		SetFaction 7
 	end
 
+Content
+	requires <*MECHA_SHOP (MAQUI|FCOMS|RISHI|BOHEM) -HOELL ~MUGLE -COMET>
+	content <Required *DECOR_FOR_SHOP %1% Local>
+	element1 <Prefab>
+	team1 <Citizens>
+	teamdata1 <ally pass>
+	sub
+		Persona 1
+		*greeting <*NiceToMeetYou GoShop>
+		*GoShop <*SHOP_MECHA GoBye>
+		*GoBye <*GOODBYE>
+	end
+	inv
+		NPC Shopkeeper
+		SetFaction 13
+		CharDesc Cheerful Cheerful
+	end
+
 
 %% *SHOP_MECHANIC CONTENT
 %%   Contains a mechanic and/or mecha shop.
@@ -914,6 +932,25 @@ Content
 		skill 21 15
 		chardesc renowned
 	end
+
+Content
+	requires <*ARMOR_SHOP (MAQUI|FCOMS|RISHI|BOHEM) -HOELL ~MUGLE -COMET>
+	content <Required *DECOR_FOR_SHOP %1% Local>
+	element1 <Prefab>
+	team1 <Citizens>
+	teamdata1 <ally pass>
+	sub
+		Persona 1
+		*greeting <*NiceToMeetYou GoShop>
+		*GoShop <*SHOP_ARMOR GoBye>
+		*GoBye <*GOODBYE>
+	end
+	inv
+		NPC Shopkeeper
+		SetFaction 13
+		CharDesc Cheerful Cheerful
+	end
+
 
 %% *BLACKMARKET_X CONTENT
 %%   A black market scene needs more than just the store. It also needs some extras.

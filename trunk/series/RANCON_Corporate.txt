@@ -116,6 +116,36 @@ Content
 		SetFaction 7
 	end
 
+Content
+	requires <*CORP_EMPLOYEE Public MUGLE>
+	element1 <Prefab>
+	team1 <citizens>
+	teamdata1 <pass>
+	sub
+		Persona 1
+		*greeting <*NiceToMeetYou GoChat>
+		*GoChat <*MISC_CHATTER>
+	end
+	inv
+		NPC Corporate Executive
+		SetFaction 13
+	end
+
+Content
+	requires <*CORP_EMPLOYEE Public MUGLE>
+	element1 <Prefab>
+	team1 <citizens>
+	teamdata1 <pass>
+	sub
+		Persona 1
+		*greeting <*NiceToMeetYou GoShop>
+		*GoShop <*SHOP_ARMOR GoBye>
+		*GoBye <*GOODBYE>
+	end
+	inv
+		NPC Shopkeeper
+		SetFaction 13
+	end
 
 
 % *CORP_RND content
@@ -279,6 +309,25 @@ Content
 		skill 21 12
 	end
 
+Content
+	requires <*CORP_PUBLIC MUGLE>
+	name <Corporate Shop>
+	minimap <............1.......&---&>
+	element1 <Prefab>
+	team1 <Citizens>
+	teamdata1 <ally pass>
+	content <Optional *CORP_EMPLOYEE - Local>
+	sub
+		Persona 1
+		*greeting <*NiceToMeetYou GoShop>
+		*GoShop <*SHOP_GENERAL GoBye>
+		*GoBye <*GOODBYE>
+	end
+	inv
+		NPC Shopkeeper
+		SetFaction 13
+		skill 21 12
+	end
 
 Content
 	requires <*CORP_PUBLIC>

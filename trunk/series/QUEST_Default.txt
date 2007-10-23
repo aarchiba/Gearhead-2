@@ -1770,7 +1770,7 @@ Content
 		Prompt6 <Sorry, I don't want to get involved.>
 		Prompt7 <I'll help you with this case.>
 		Prompt8 <I've got your evidence right here.>
-		CPrompt8 <ifKeyItem %6% Accept>
+		CPrompt8 <ifKeyItem %6% ifChatNPCInPlay Accept>
 		Prompt9 <I think %name3% may be involved.>
 		CPrompt9 <if# NPCVar %3% 2 0 Accept>
 

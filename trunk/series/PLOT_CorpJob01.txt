@@ -65,7 +65,7 @@ sub
 	*GoRejectMission <*RejectMission GoEnd>
 	GoEnd <EndPlot>
 	GoMissionBriefing <V= 1 Reward P3 150   NewChat Say 1  AddChat 1 AddChat 2 AddChat 3>
-	result1 <NewChat Say 2 Memo 4 P= 2 1>
+	result1 <NewChat Say 2 Memo 4 P= 2 1  P+ 1 20000>
 	result2 <NewChat Say 6 AddChat 1 if= P2 0 AddChat 3>
 	result3 <Goto GoRejectMission>
 	result4 <NewChat Say 5 AddChat 2>

@@ -517,6 +517,129 @@ inv
 end
 
 Set
+name <Armored Casuals [set]>
+desc <A set of lightly armored street clothes.>
+Category <Clothing>
+Factions <MUGLE>
+legality -25
+inv
+	BodyArmor 1
+	Name <Armorweave Shirt>
+	desc <Comfortable armor for everyday use.>
+	Category <CLOTHING>
+	legality -25
+
+	ArmArmor 1
+	Name <Armorweave Sleeve>
+	desc <Comfortable armor for everyday use.>
+	Category <CLOTHING>
+	Mass -1
+	legality -25
+
+	ArmArmor 1
+	Name <Armorweave Sleeve>
+	desc <Comfortable armor for everyday use.>
+	Category <CLOTHING>
+	Mass -1
+	legality -25
+
+	LegArmor 1
+	Name <Armorweave Legging>
+	desc <Comfortable armor for everyday use.>
+	Category <CLOTHING SPORTS>
+	Mass -1
+	legality -25
+
+	LegArmor 1
+	Name <Armorweave Legging>
+	desc <Comfortable armor for everyday use.>
+	Category <CLOTHING SPORTS>
+	Mass -1
+	legality -25
+end
+
+HeadArmor 1
+name <Bunny Hat>
+desc <A character hat fashioned from nigh-indestructable fabric.>
+Category <CLOTHING ENTERTAINMENT>
+Factions <MUGLE>
+Mass -1
+Hardened
+
+Set
+name <Allure SkinSuit [set]>
+desc <A skintight figure-enhancing spacesuit.>
+Category <CLOTHING SPACE>
+Factions <MUGLE>
+Legality -25
+inv
+	HeadArmor 2
+	name <Allure Helm>
+	desc <A light spacesuit helm with integrated rebreather.>
+	Category <CLOTHING SPACE>
+	SDL_PORTRAIT <item_lightspacehelm.png>
+	Mass -2
+	Legality -25
+	Sealed
+	Hardened
+	Phone
+	Charm 5
+
+	BodyArmor 2
+	name <Allure SkinSuit Suit>
+	desc <A skintight figure-enhancing spacesuit.>
+	Category <CLOTHING SPACE>
+	Mass -3
+	Legality -25
+	Sealed
+	Hardened
+	Charm 5
+	sub
+		SpaceFlight 3
+	end
+
+	ArmArmor 2
+	name <Allure SkinSuit Sleeve>
+	desc <A skintight figure-enhancing spacesuit.>
+	Category <CLOTHING SPACE>
+	Mass -3
+	Legality -25
+	Sealed
+	Hardened
+	Charm 5
+
+	LegArmor 2
+	name <Allure SkinSuit Legging>
+	desc <A skintight figure-enhancing spacesuit.>
+	Category <CLOTHING SPACE>
+	Mass -3
+	Legality -25
+	Sealed
+	Hardened
+	Charm 5
+
+	ArmArmor 2
+	name <Allure SkinSuit Sleeve>
+	desc <A skintight figure-enhancing spacesuit.>
+	Category <CLOTHING SPACE>
+	Mass -3
+	Legality -25
+	Sealed
+	Hardened
+	Charm 5
+
+	LegArmor 2
+	name <Allure SkinSuit Legging>
+	desc <A skintight figure-enhancing spacesuit.>
+	Category <CLOTHING SPACE>
+	Mass -3
+	Legality -25
+	Sealed
+	Hardened
+	Charm 5
+end
+
+Set
 name <Bunny Armor [set]>
 desc <A sophisticated active armor from MUGL Enterprises. It is decorated with the MUGL bunny mascot.>
 Category <ARMOR SPACE>

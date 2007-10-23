@@ -326,6 +326,18 @@
 	Prompt%id%01 <Let me see what you have.>
 	Prompt%id%02 <No thanks.>
 
+	Persona
+	requires <*SHOP_ARMOR C:MUGLE>
+	START <NewChat Say %id%01 AddChat %id%01 AddChat %id%02>
+	result%id%01 <EndChat Say %id%02 shop .%id%_wares Goto %1%>
+	result%id%02 <Goto %1%>
+	.%id%_wares <ARMOR CLOTHING>
+	KEYWORDS <ARMOR CLOTHING>
+	Msg%id%01 <This is MUGL Fashion. Experience the full range of our style and character goods.>
+	Msg%id%02 <Everything you see here has been designed for maximum cuteness.>
+	Prompt%id%01 <I'll see what you have.>
+	Prompt%id%02 <No thanks.>
+
 
 %       *SHOP_WEAPON
 
