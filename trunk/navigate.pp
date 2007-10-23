@@ -1783,6 +1783,7 @@ begin
 			reset(F);
 			Camp := ReadCampaign(F);
 			Close(F);
+
 			Navigator( Camp , Camp^.GB^.Scene , PC );
 			DoSave := Camp^.Source^.V <> 0;
 			DisposeCampaign( Camp );

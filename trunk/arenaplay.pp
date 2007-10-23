@@ -1115,11 +1115,6 @@ Function WorldPlayer( Camp: CampaignPtr ; Scene: GearPtr; var PCForces: GearPtr 
 var
 	it: Integer;
 begin
-	{ ERROR CHECK - If this campaign already has a GameBoard, no need to }
-	{ deploy anything. It was presumably just restored from disk and should }
-	{ be fully stocked. }
-	if Camp^.GB <> Nil then Exit;
-
 	DeployJjang( Camp , Scene , PCForces );
 
 	it := WorldMapMain( Camp );
