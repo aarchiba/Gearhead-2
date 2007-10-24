@@ -1010,7 +1010,7 @@ Scene
 	world <L5 Region>
 	desc <Cayley Rock is an asteroid station. Although its own mines were exhausted long ago, it remains a major ore processing station.>
 	special <NOEXIT>
-	type <asteroid town village destination hometown building public mine hospital>
+	type <asteroid town village destination hometown building public mine hospital residence>
 	personatype <asteroid village mine>
 	habitat <SPACE.ASTER>
 
@@ -5403,6 +5403,86 @@ sub
 			end
 		end
 	% End Kapec Robots...
+	end
+
+	Scene
+	name <Hovel Manor>
+	type <building residence public poor>
+	entrance <*Building>
+	mapwidth 28
+	mapheight 21
+
+	special <ADDEXIT>
+
+	MallMap
+
+	start <Print 1>
+	Msg2 <You enter the Hovel Manor.>
+
+	Content1 <Some 1 100 Sub *RESTAURANT      na>
+	Content9 <Fill Sub *HABITATION_X          na>
+
+	sub
+		team 1
+
+		team 2
+		name <Citizens>
+		SetAlly 1
+		Passive
+
+		team 3
+		name <Guards>
+		SetAlly 2
+
+		room
+		name <Foyer>
+		desig <EntranceGrid>
+		Content <Some 3 50 Here *URBAN_X>
+		Content2 <Some 1 100 Here *ANTI_ATTACK_SECURITY 2>
+
+		room
+		minimap <#######1###...##...##...#>
+		special <SHAREDPALETTE>
+		inv
+			Elevator
+			MiniMapComponent 1
+			name <Dark Hovel>
+		end
+
+		Scene
+		name <Dark Hovel>
+		special <NOEXIT>
+		type <DUNGEON building condemned>
+		terrain <GROUND>
+		dentrance <*GoUp>
+		NeededCells 1
+		content <Some 1 30 Sub *DUNGEON_X>
+		mapwidth 35
+		mapheight 35
+		MonkeyMap
+
+		start <Print 1>
+		msg1 <You enter \SCENE SceneID .>
+
+		sub
+			Team 1
+			SetEnemy 2
+
+			Team 2
+			name <Monster>
+			type <City Vermin Criminal>
+			SetEnemy 1
+			Stat 2 2
+
+			room
+			width 3
+			height 3
+			sub
+				StairsDown
+				Destination -1
+			end
+		end
+	% End Hovel Manor...
 	end
 
 
