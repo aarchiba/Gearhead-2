@@ -172,7 +172,7 @@ Function ExpandDungeon( Dung: GearPtr ): GearPtr;
 	{ Expand this dungeon. Return the "goal scene", which is the lowest level generated. }
 	{ Add sub-levels, branches, and goal requests. }
 var
-	name_base,context_base: String;
+	name_base,type_base: String;
 	branch_number: Integer;
 	sub_scenes: GearPtr;
 	LowestLevel: GearPtr;
@@ -234,15 +234,15 @@ var
 
 				{ Add the context description for the difficulcy level. }
 				if T^.Stat[ STAT_WanderMon ] > 70 then begin
-					SetSAtt( S2^.SA , 'context <' + context_base + ' !Ex>' );
+					SetSAtt( S2^.SA , 'type <' + type_base + ' !Ex>' );
 				end else if T^.Stat[ STAT_WanderMon ] > 40 then begin
-					SetSAtt( S2^.SA , 'context <' + context_base + ' !Hi>' );
+					SetSAtt( S2^.SA , 'type <' + type_base + ' !Hi>' );
 				end else if T^.Stat[ STAT_WanderMon ] > 15 then begin
-					SetSAtt( S2^.SA , 'context <' + context_base + ' !Md>' );
+					SetSAtt( S2^.SA , 'type <' + type_base + ' !Md>' );
 				end else if T^.Stat[ STAT_WanderMon ] > 5 then begin
-					SetSAtt( S2^.SA , 'context <' + context_base + ' !Lo>' );
+					SetSAtt( S2^.SA , 'type <' + type_base + ' !Lo>' );
 				end else begin
-					SetSAtt( S2^.SA , 'context <' + context_base + ' !Ne>' );
+					SetSAtt( S2^.SA , 'type <' + type_base + ' !Ne>' );
 				end;
 
 			end;
@@ -291,7 +291,7 @@ begin
 	{ Record some information, initialize some variables. }
 	name_base := GearName( Dung );
 	SetSAtt( Dung^.SA , 'DUNGEONNAME <' + name_base + '>' );
-	context_base := SAttValue( Dung^.SA , 'CONTEXT' );
+	type_base := SAttValue( Dung^.SA , 'TYPE' );
 	sub_scenes := ExtractSubScenes;
 	LowestLevel := Dung;
 	Branch_Number := 0;

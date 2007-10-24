@@ -7,6 +7,57 @@
 %%
 %% NAME: *[city designation]_[building name abbreviated]_[content type]
 
+%% *THESP_FR_Content
+%%	NPCs for Factory Rejects in Theles Spinner
+
+Content
+	requires <*THESP_FR_Content>
+	minimap <............1.......#&+&#>
+	element1 <Prefab>
+	team1 <Citizens>
+	teamdata1 <ally pass>
+
+	sub
+		Persona 1
+		greeting <if# ChatNPCFac 0 else GoChat if= PCFac ChatNPCFac else GoCheckEligibility Goto GoTrain>
+		*GoTrain <*SKILL_TRAINING GoGoodbye>
+		*GoCheckEligibility <*ENEMY_CHECK GoCheckFaction ChatNPCFac GoNil>
+		GoCheckFaction <if= PCFac 0 else GoChat Goto GoCheckSkills>
+		*GoCheckSkills <*FACTION_ENTRANCE_EXAM GoJobOffer ChatNPCFac>
+		*GoChat <*MISC_CHATTER>
+		*GoGoodbye <*GOODBYE>
+		*GoJobOffer <*FACTION_JOIN_OFFER ChatNPCFac GoJoin>
+		*GoJoin <*FACTION_JOIN_ACCEPT ChatNPCFac>
+	end
+	inv
+		NPC Privateer
+		SetFaction 6
+	end
+
+%% *THESP_TheSpPo_Content
+%%	NPCs for Theles Spinner's spaceport.
+
+Content
+	requires <*THESP_TheSpPo_Content>
+	minimap <............1.......##+##>
+	element1 <Prefab>
+	team1 <Guards>
+	teamdata1 <ally SD>
+
+	sub
+		Persona 1
+		% V1 = Have spoken counter
+		*Greeting <*NiceToMeetYou GoChat>
+		GoChat <if# V1 0 else GoDeliverSpeech if# d4 1 else GoDeliverSpeech NewChat SayAnything>
+		GoDeliverSpeech <NewChat Say 1>
+		Msg1 <L5Law has jurisdiction over the station exterior and interspinner crime, but law enforcement inside of Theles is handled by a private security force... barely.>
+	end
+	inv
+		NPC Police Officer
+		SetFaction 9
+	end
+
+
 %% *MAQSP_ComTow_Content
 %%	NPCs for Comet Tower in Maquise Spinner
 

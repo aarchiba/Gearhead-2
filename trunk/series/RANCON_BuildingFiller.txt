@@ -3,6 +3,98 @@
 %% will contain things that unlawful characters can steal.
 %%
 
+%% *FACTORY_X Content
+%%	Filler for factories.
+%%	Minimaps should be open on all four sides.
+
+Content
+	requires <*FACTORY_X>
+	content <Required *STORAGE_X na Local>
+
+%% *CONSTRUCTION_X Content
+%%	Filler for construction sites, shipyards, and so on.
+%%	Minimaps should be open on all four sides.
+
+Content
+	requires <*CONSTRUCTION_X>
+	content <Required *STORAGE_X na Local>
+
+Content
+	requires <*CONSTRUCTION_X ~Static>
+	element1 <Prefab>
+	team1 <citizens>
+	teamdata1 <pass>
+	sub
+		Persona 1
+		*greeting <*NiceToMeetYou GoMiscTalk>
+		*GoMiscTalk <*MISC_CHATTER>
+	end
+	inv
+		NPC Construction Worker
+	end
+
+Content
+	requires <*CONSTRUCTION_X ~Static>
+	Minimap <.......#...###..1#.......>
+	element1 <Prefab>
+	team1 <citizens>
+	teamdata1 <pass>
+	sub
+		Persona 1
+		*greeting <*NiceToMeetYou GoMiscTalk>
+		*GoMiscTalk <*MISC_CHATTER>
+	end
+	inv
+		NPC Construction Worker
+	end
+
+
+%% *STORAGE_X Content
+%%	Filler for basements, workshops, and so on.
+%%	Minimaps should be open on all four sides.
+
+Content
+	%% Sub-Basement; really just a red herring
+	requires <*STORAGE_X>
+	Element1 <Prefab>
+	minimap <......###..#1#...........>
+	inv
+		Elevator
+		name <Sub-Basement>
+		MiniMapComponent 1
+		use <Print 1>
+		Msg1 <There's nothing interesting in here.>
+	end
+
+Content
+	%% Pylon
+	requires <*STORAGE_X>
+	Minimap <.......#...###...#.......>
+
+Content
+	requires <*STORAGE_X Common>
+	Minimap <12......................3>
+	element1 <PREFAB>
+	element2 <PREFAB>
+	element3 <PREFAB>
+	inv
+		STC BOX-1
+		STC BOX-1
+		STC BOX-1
+	end
+
+Content
+	requires <*STORAGE_X Common>
+	Minimap <.......1....23...........>
+	element1 <PREFAB>
+	element2 <PREFAB>
+	element3 <PREFAB>
+	inv
+		STC BOX-1
+		STC BOX-1
+		STC BOX-1
+	end
+
 %% *HOTEL_X Content
 %%	Contains a hotel room. There should be something worth stealing inside.
 

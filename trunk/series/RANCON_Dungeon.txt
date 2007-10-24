@@ -26,7 +26,7 @@ Content
 	element1 <Prefab>
 	inv
 		STC CHEST-1
-		Lock 10
+		Lock 5
 		inv
 			BodyArmor 2
 			name <SkinSuit Suit>
@@ -104,7 +104,7 @@ Content
 		EMelee 20
 		Name <Rock Drill>
 		Type <BRUTAL>
-		Mass -5
+		Mass 14
 		Acc -1
 		Speed 1
 		desc <A plasma drill used in mining. It would also make a decent weapon.>
@@ -204,7 +204,7 @@ Content
 
 Content
 	name <Sentinel>
-	requires <*DUNGEON_X !Hi ~EARTH>
+	requires <*DUNGEON_X (!Hi|!Ex) ~EARTH>
 	element1 <Prefab>
 	teamdata1 <sd enemy>
 	start <if= V%id%01 0 else %pop% V= %id%01 1 ifAwareness 5 else %pop% Print %id%01 Goto %pop%>

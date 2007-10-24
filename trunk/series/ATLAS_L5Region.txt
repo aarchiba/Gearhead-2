@@ -5160,4 +5160,252 @@ sub
 % End of Emerald Spinner...
 end
 
+%%
+%%   **************************
+%%   ***   THELES SPINNER   ***
+%%   **************************
+%%
+
+Scene 0 3
+	mapwidth 20
+	mapheight 10
+	name <Theles Spinner>
+	XPos 35
+	YPos 5
+
+	% What the hey!? Despite the lawlessness inside, Theles Spinner's trade
+	% is tightly controlled. Most weapons are unavailable... unless you can
+	% find the black market.
+	Tolerance -10
+
+	world <L5 Region>
+	desc <Theles Spinner is also known as "The Meatyard". It is a place where lives may be bought and sold.>
+	special <NOEXIT SHOWALL SOLO TOWNMECHA>
+	type <city town spinner target outdoors urban destination hometown dangerous sleazy dystopia>
+	habitat <SPACE.URBAN>
+	personatype <city dystopia spinner>
+	MegaCityMap
+
+	entrance <*COLONY-1>
+
+	% V1 = Message Counter
+
+	SetFaction 10
+	factions <PRIVA>
+
+	desig <THESP>
+	context <SPACE>
+
+	Quest1 <*:LocalQuest>
+
+	start <if= V1 0 else GoSecondTime V= 1 1 Alert 1 Print 2>
+	GoSecondTime <Print 2>
+	Msg1 <Theles Spinner is also known as "The Meatyard". It is a place where human life is cheap, populated by exiles from the other colonies.>
+	Msg2 <You enter Theles Spinner.>
+
+sub
+	Scene
+	name <Theles Spaceport>
+	type <building shuttle spaceport legit public>
+	entrance <*SpacePort>
+	special <ADDEXIT>
+	ClubMap
+	MapWidth 20
+	MapHeight 21
+
+	start <Print 1>
+	Msg1 <You enter Theles Spaceport.>
+
+	NeededCells 4
+	Content1 <Some 1 100 Sub *SHUTTLESERVICE          na>
+	Content2 <Some 1 100 Sub *RESTAURANT              na>
+	Content3 <Some 1 100 Sub *MECHANIC_SHOP           na>
+	Content4 <Some 1 100 Sub *THESP_TheSpPo_Content   na>
+	Content5 <Fill Sub *SPACEPORT_X>
+
+	sub
+		team 1
+
+		team 2
+		name <Citizens>
+		SetAlly 1
+		Passive
+
+		team 3
+		name <Guards>
+		SetAlly 2
+
+		room
+		name <Foyer>
+		desig <EntranceGrid>
+		Content <Some 2 50 Here *URBAN_X>
+		Content2 <Some 1 100 Here *ANTI_ATTACK_SECURITY 2>
+
+		room
+		minimap <############1###...##...#>
+		sub
+			STC AIRLOCK-1
+			MiniMapComponent 1
+			destination <Theles Station Exterior>
+		end
+
+		Scene 0 3
+		name <Theles Station Exterior>
+		type <Environs Outdoors Space>
+		special <ShowAll>
+		terrain <SPACE>
+		MapWidth 30
+		MapHeight 30
+		SpaceMap
+		nu1 <if= T1 0 Exit WorldID>
+		Microgravity
+		Vacuum
+		SpaceBackdrop
+
+		inv
+			STC COLONY-1
+			name <Theles Spinner>
+			Destination -1
+			XPos 15
+			YPos 15
+		end
+	end
+
+	Scene
+	name <Factory Rejects>
+	type <building mall public sleazy>
+	entrance <*DEPARTMENTSTORE>
+	special <ADDEXIT>
+	MallMap
+	MapWidth 21
+	MapHeight 20
+
+	start <Print 1>
+	Msg1 <You enter Factory Rejects.>
+
+	NeededCells 4
+
+	Content1 <Some 1 100 Sub *GENERAL_SHOP      na>
+	Content4 <Some 1 100 Sub *ARMOR_SHOP        na>
+	Content5 <Some 1 100 Sub *ELECTRONICS_SHOP  na>
+	Content7 <Some 1 100 Sub *THESP_FR_Content  na>
+	Content9 <Fill Sub *SHOP_RANDOM             na>
+
+	sub
+		team 1
+
+		team 2
+		name <Citizens>
+		SetAlly 1
+		Passive
+
+		team 3
+		name <Guards>
+		SetAlly 2
+
+		room
+		name <Foyer>
+		desig <EntranceGrid>
+		Content <Some 3 50 Here *URBAN_X>
+		Content2 <Some 1 100 Here *ANTI_ATTACK_SECURITY 2>
+	end
+
+	Scene
+	name <Kapec's Robots>
+	type <building factory>
+	entrance <*Building>
+	mapwidth 28
+	mapheight 21
+
+	special <ADDEXIT>
+
+	MonkeyMap
+	IndustrialTiles
+
+	% L1 = First time counter
+	start <if= L1 0 else GoBeenBefore Alert 1 L= 1 1>
+	GoBeenBefore <Print 2>
+	Msg1 <You enter the Kapec Robot Factory. Here, human workers build robots and weapons for export to other colonies.>
+	Msg2 <You enter the Kapec Robot Factory.>
+
+	Content9 <Fill Sub *FACTORY_X             na>
+
+	sub
+		team 1
+
+		team 2
+		name <Citizens>
+		SetAlly 1
+		Passive
+
+		team 3
+		name <Guards>
+		SetAlly 2
+
+		room
+		minimap <......###..#1#..#=#......>
+		special <SHAREDPALETTE>
+		inv
+			StairsUp
+			MiniMapComponent 1
+			name <the Robot Mill>
+		end
+		sub
+			Door
+			use <if= v1 0 else GoJustUse ifYesNo 101 102 103 else GoLeaveDoor V= 1 1 Goto GoJustUse>
+			GoJustUse <ifG -99 MetaPass else GoCloseDoor  if= StatVal STAT_Lock 0 else GoDoorLocked Print 1  SetStat STAT_Pass 0  Transform 1>
+			GoLeaveDoor <Print 104>
+			Msg101 <WARNING: Factory level guarded by security robots. Unauthorized personnel will be exterminated.>
+			Msg102 <Open the door>
+			Msg103 <Leave it alone>
+			Msg104 <You leave the door alone.>
+		end
+
+		room
+		Content <Some 2 50 Here *URBAN_X>
+
+		room
+		Content2 <Some 1 100 Here *ANTI_ATTACK_SECURITY 3>
+
+
+		Scene
+		name <the Robot Mill>
+		special <NOEXIT>
+		type <DUNGEON factory>
+		terrain <GROUND>
+		dentrance <*GoUp>
+		NeededCells 1
+		content1 <Some 1 70 Sub *THESP_RoMi_WeaponCache>
+		mapwidth 35
+		mapheight 35
+		MonkeyMap
+		IndustrialTiles
+
+		start <Print 1>
+		msg1 <You enter \SCENE SceneID .>
+
+		sub
+			Team 1
+			SetEnemy 2
+
+			Team 2
+			name <Monster>
+			type <Robot Guard Factory>
+			SetEnemy 1
+			Stat 2 2
+
+			room
+			width 3
+			height 3
+			sub
+				StairsDown
+				Destination -1
+			end
+		end
+	% End Kapec Robots...
+	end
+
+
+% End of Theles Spinner...
+end
 

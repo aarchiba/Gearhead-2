@@ -791,6 +791,25 @@ desig <ONESHOTDOOR>
 CLUE32 <if# StatVal STAT_Lock 0 else GoNotLocked ifCodeBreaking StatVal STAT_Lock else GoNoUnlock Mental Print 3 SetStat STAT_Lock 0>
 Msg4 <This lock is beyond your ability to pick.>
 
+Prop 10
+name <Crate>
+Desig <CRATE>
+roguechar <=>
+SDL_Sprite <prop_box_low.png>
+use <if= StatVal STAT_Lock 0 else GoLocked Print -5 OpenInv>
+GoLocked <Print -4>
+CLUE32 <if# StatVal STAT_Lock 0 else GoNotLocked Mental ifCodeBreaking StatVal STAT_Lock else GoNoUnlock Print -1 SetStat STAT_Lock 0>
+GoNoUnlock <Print -2>
+GoNotLocked <Print -3>
+Mesh 4
+Frame 4
+sdl_sprite <tex_electronics.png>
+Msg-1 <You unlock the crate.>
+Msg-2 <You cannot unlock this crate at your current skill level.>
+Msg-3 <This crate isn't locked.>
+Msg-4 <The crate is locked.>
+Msg-5 <You open the crate.>
+
 Prop 50
 name <Safe>
 Desig <SAFE>
