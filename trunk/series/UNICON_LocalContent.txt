@@ -7,6 +7,33 @@
 %%
 %% NAME: *[city designation]_[building name abbreviated]_[content type]
 
+%% *THESP_HM_Content
+%%	NPCs for Hovel Manor in Theles Spinner
+
+Content
+	requires <*THESP_HM_Content>
+	element1 <Prefab>
+	team1 <Citizens>
+	teamdata1 <ally pass>
+
+	% L%id%01 = Monologue Counter
+	start <if= v%id%01 0 else %pop% ifNPCOK %1% else %pop% ifNPCInPlay %1% else %pop% Monologue %1% %id%01 v= %id%01 1 Goto %pop%>
+	Msg%id%01_1 <Well if it isn't \PC ... I thought for sure you'd have gotten out of this hellhole by now.>
+	CMsg%id%01_1 <if= PCHomeTown RootSceneID Accept>
+	Msg%id%01_2 <Look at this, some fresh meat for the hovel. Abandon all hope while you still have any left!>
+	CMsg%id%01_2 <if# PCHomeTown RootSceneID Accept>
+
+	sub
+		Persona 1
+		special <NOPLOTS>
+		greeting <NewChat Say 1>
+		Msg1 <We don't have nothing down here; they have some things up there, but mostly just killer rats.>
+	end
+	inv
+		NPC Citizen
+		chardesc old melancholy passionate spiritual
+	end
+
 %% *THESP_SH_Content
 %%	NPCs for Salvation Hospital in Theles Spinner
 
@@ -24,6 +51,10 @@ Content
 		% V2 = Have sold some body tissue already.
 		% V3 = Sell tissue timer
 		% V6 .. V9 = Have sold appropriate body part.
+		&MuscleCost <150000>
+		&EyeCost <200000>
+		&SpineCost <250000>
+		&BrainCost <300000>
 		*greeting <*NiceToMeetYou GoOpenShop>
 		GoOpenShop <NewChat Say 1 AddChat 1 AddChat 2 AddChat 3 AddChat 4>
 		*GoBye <*GOODBYE>
@@ -36,22 +67,22 @@ Content
 		result4 <if= PCDamage 0 else GoR4Fail NewChat Say 6 AddChat 6 AddChat 7 AddChat 8 AddChat 9 AddChat 10>
 		GoR4Fail <NewChat Say 5 AddChat 1 AddChat 2>
 		result5 <NewChat Say 7>
-		result6 <ifG PCBody 8 else GoR6Fail Cash+ 100000 PCStat+ STAT_Body -1 V= 6 1 Goto GoOperate>
+		result6 <ifG PCBody 8 else GoR6Fail Cash+ &MuscleCost PCStat+ STAT_Body -1 V= 6 1 Goto GoOperate>
 		GoR6Fail <NewChat Say 8 AddChat 7 AddChat 8 AddChat 9>
-		result7 <ifG PCCharm 7 else GoR7Fail Cash+ 150000 PCStat+ STAT_Charm -1 V= 7 1 GrabPCPilot GSetNAtt NAG_StatusEffect 21 1 Goto GoOperate>
+		result7 <ifG PCCharm 7 else GoR7Fail Cash+ &EyeCost PCStat+ STAT_Charm -1 V= 7 1 GrabPCPilot GSetNAtt NAG_StatusEffect 21 1 Goto GoOperate>
 		GoR7Fail <NewChat Say 9 AddChat 6 AddChat 8 AddChat 9>
-		result8 <ifG PCReflexes 5 else GoR8Fail ifG PCSpeed 5 else GoR8Fail Cash+ 200000 PCStat+ STAT_Reflexes -1 PCStat+ STAT_Speed -1 V= 8 1  Goto GoOperate>
+		result8 <ifG PCReflexes 5 else GoR8Fail ifG PCSpeed 5 else GoR8Fail Cash+ &SpineCost PCStat+ STAT_Reflexes -1 PCStat+ STAT_Speed -1 V= 8 1  Goto GoOperate>
 		GoR8Fail <NewChat Say 10 AddChat 6 AddChat 7 AddChat 9>
-		result9 <ifG PCKnowledge 7 else GoR9Fail Cash+ 250000 PCStat+ STAT_Knowledge -1 V= 9 1 Goto GoOperate>
+		result9 <ifG PCKnowledge 7 else GoR9Fail Cash+ &BrainCost PCStat+ STAT_Knowledge -1 V= 9 1 Goto GoOperate>
 		GoR9Fail <NewChat Say 11 AddChat 6 AddChat 8 AddChat 7>
 		result10 <Goto result5>
 		result11 <EndChat Say 13>
 		Msg1 <All flesh is doomed to die, but as long as it's here you might as well make some money off it. What can I do for you?>
 		Msg2 <I'll patch up your body, in exchange for some monetary compensation of course.>
 		Msg3 <You could probably use some cyberware to counter the side effects of your tissue donation. I'll show you what I have in stock.>
-		Msg4 <I mean that it's a commodity. Some of the companies here are doing research which requires living human tissue; if you'd be willing to part with some of your own, they'd be willing to pay. It's the easiest money in Theles.>
+		Msg4 <I mean that it's a commodity. Some companies here have need of living human tissue; it's best not to wonder about their reasons. If you'd be willing to sacrifice a part of yourself, it's the easiest money in Theles.>
 		Msg5 <I'm afraid that you're not in any condition to donate anything. As much as I hate to lose my commission, I'm afraid that I can't operate on you.>
-		Msg6 <Here's what the companies are looking for. I can offer you $100000 for muscle fiber, $150000 for an eyeball, $250000 for spinal neurons, or $300000 for brain matter.>
+		Msg6 <Here's what the companies are looking for. I can offer you $ \VAL &MuscleCost for muscle fiber, $ \VAL &EyeCost for an eyeball, $ \VAL &SpineCost for spinal neurons, or $ \VAL &BrainCost for brain matter.>
 		Msg7 <Can't say I blame you. Still, there are plenty of others who are desperate enough to take the money.>
 		Msg8 <I'm sorry, but you don't look like you have any muscle fiber to spare. Perhaps you'd like to sell something else?>
 		Msg9 <Those eyes look a little glassy... Perhaps you'd be interested in selling something else?>
@@ -80,7 +111,7 @@ Content
 	inv
 		NPC Cyberdoc
 		name <Cab Glodener>
-		SDL_SPRITE <por_m_guy4(A-Y).png>
+		SDL_PORTRAIT <por_m_guy4(A-Y).png>
 		SDL_COLORS <136 141 101 255 233 225 244 216 28>
 		chardesc Male Criminal Melancholy Easygoinge
 		Age 14
@@ -127,14 +158,35 @@ Content
 
 	sub
 		Persona 1
+		special <NOPLOTS>
 		% V1 = Have spoken counter
 		*Greeting <*NiceToMeetYou GoChat>
-		GoChat <if# V1 0 else GoDeliverSpeech if# d4 1 else GoDeliverSpeech NewChat SayAnything>
-		GoDeliverSpeech <NewChat Say 1>
-		Msg1 <L5Law has jurisdiction over the station exterior and interspinner crime, but law enforcement inside of Theles is handled by a private security force... barely.>
+		GoChat <NewChat Say 1 AddChat 1 AddChat 2 AddChat 3 EraseSpecial>
+		result1 <NewChat Say 2 AddChat 4 AddChat 5>
+		result2 <NewChat Say 3 AddChat 4 AddChat 5>
+		result3 <NewChat Say 4>
+		result4 <NewChat Say 5>
+		result5 <NewChat Say 6>
+		Msg1 <Exercise caution when traveling in this colony. L5Law does not have jurisdiction in Theles Spinner; the lower level is extremely dangerous.>
+		Msg2 <Criminal gangs run the streets. In theory the Theles Security Force is responsible for keeping order, but in reality they're not much better than the gangs. As long as the factories keep working no-one cares what else goes on.>
+		Msg3 <We have jurisdiction for interspinner crime, but inside the colony we serve at the whim of the technocrats. Theles has a private security force, but as long as the factories keep running they don't care what happens on the street.>
+		Msg4 <I see. Well, best of luck to you, then.>
+		Msg5 <As long as Theles Spinner continues to turn an energy profit, the charter of the Free Commerce States doesn't allow any action to be taken against it. Personally, I don't like it but there's nothing legal that can be done.>
+		Msg6 <Most of them have no choice. They've been exiled from other spinners and have no place to go, or were born here and can't afford to leave. The whole setup is sleazy and exploitative, but completely within the law.>
+		Prompt1 <What's so dangerous about it?>
+		Prompt2 <Why doesn't L5Law have jurisdiction?>
+		Prompt3 <I know. I was born here.>
+		CPrompt3 <if= PCHomeTown RootSceneID Accept>
+		Prompt4 <Isn't there anything you can do about it?>
+		Prompt5 <How can people tolerate this?>
 	end
 	inv
 		NPC Police Officer
+		name <Sidnea>
+		Age 7
+		chardesc female heroic passionate
+		SDL_PORTRAIT <por_f_mechpilot(--Y).png>
+		SDL_COLORS <30 30 90 150 112 89 172 225 175>
 		SetFaction 9
 	end
 

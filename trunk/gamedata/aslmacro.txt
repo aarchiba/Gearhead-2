@@ -15,6 +15,7 @@ SetTeamFaction <GrabTeam ? GSetNAtt NAG_Personal NAS_FactionID ?>
 SetSelfFaction <GrabSource GSetNAtt NAG_Personal NAS_FactionID ?>
 SetSelfTeam <GrabSource GSetNAtt NAG_Location NAS_Team ?>
 EraseRumor <GrabSource GSetSAtt rumor na>
+EraseSpecial <GrabSource GSetSAtt special na>
 ItemVar= <GrabItem ? GSetNAtt NAG_ScriptVar ? ?>
 ItemStat= <GrabItem ? GSetStat ? ?>
 ItemVar+ <GrabItem ? GAddNAtt NAG_ScriptVar ? ?>

@@ -504,7 +504,7 @@ begin
 			FX := M^.NA;
 			while FX <> Nil do begin
 				FX2 := FX^.Next;
-				if ( FX^.G = NAG_StatusEffect ) then begin
+				if ( FX^.G = NAG_StatusEffect ) and ( FX^.S >= 1 ) and ( FX^.S <= Num_Status_FX )then begin
 					if SX_Effect_String[ FX^.S ] <> '' then begin
 						EffectFrontEnd( GB , M , SX_Effect_String[ FX^.S ] , MSgString( 'Status_FXDesc' + BStr( FX^.S ) ) );
 					end;
@@ -513,7 +513,7 @@ begin
 						{ Set rate of diminishment }
 						if Random( 2 ) = 1 then Dec( FX^.V );
 						if FX^.V = 0 then SetNAtt( M^.NA , NAG_StatusEffect , FX^.S , 0 );
-					end else if ( FX^.V > 0 ) and ( RollStep( SkillValue( M , NAS_Resistance ) ) > SX_ResistTarget[ FX^.S ] ) then begin
+					end else if ( FX^.V > 0 ) and ( SX_ResistTarget[ FX^.S ] > 0 ) and ( RollStep( SkillValue( M , NAS_Resistance ) ) > SX_ResistTarget[ FX^.S ] ) then begin
 						{ Diminishment determined by RESISTANCE }
 						Dec( FX^.V );
 						if FX^.V = 0 then SetNAtt( M^.NA , NAG_StatusEffect , FX^.S , 0 );

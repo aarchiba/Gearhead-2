@@ -711,7 +711,7 @@ Content
 Content
 	name <Pirates Love Vegetables>
 	desc <There's a hydroponics station that's been taken over by pirates.>
-	requires <*:LocalQuest "Spinner" ~"Cuisine" ~"Dangerous">
+	requires <*:LocalQuest "Spinner" ~"Cuisine" ~"Dangerous" -"Dystopia">
 
 	% E1 is the cook who owns the station
 	% E2 is the station encounter, activated when QuestSTatus = %id%
@@ -814,12 +814,16 @@ Content
 		sub
 			Team 1
 			SetEnemy 2
+			ParaX 5
+			ParaY 5
 
 			Team 2
 			name <Enemies>
 			SetEnemy 1
 			SetFaction 8
 			Deploy <if= L2 0 WMecha 2 %threat% 100>
+			ParaX 25
+			ParaY 25
 		end
 	end
 	inv
