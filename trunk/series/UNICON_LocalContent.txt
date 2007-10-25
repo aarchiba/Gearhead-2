@@ -7,6 +7,87 @@
 %%
 %% NAME: *[city designation]_[building name abbreviated]_[content type]
 
+%% *THESP_SH_Content
+%%	NPCs for Salvation Hospital in Theles Spinner
+
+Content
+	requires <*THESP_SH_Content>
+	minimap <............1.......#&+&#>
+	element1 <Prefab>
+	team1 <Citizens>
+	teamdata1 <ally pass>
+
+	sub
+		Persona 1
+		special <NoEscape>
+		% V1 = Have been told about offer.
+		% V2 = Have sold some body tissue already.
+		% V3 = Sell tissue timer
+		% V6 .. V9 = Have sold appropriate body part.
+		*greeting <*NiceToMeetYou GoOpenShop>
+		GoOpenShop <NewChat Say 1 AddChat 1 AddChat 2 AddChat 3 AddChat 4>
+		*GoBye <*GOODBYE>
+		GoOperate <EndChat Say 12 AddChat 11 V= 2 1 GrabPCPilot GAddNAtt NAG_Condition NAS_StaminaDown 50  V= 3 ComTime V+ 3 * 2 86400>
+		result1 <ifG V2 0 else GoR1Base EndChat Say 3 Shop .wares Goto GoBye>
+		GoR1Base <EndChat Say 2 Shop .nowares Goto GoBye>
+		.wares <CYBERWARE>
+		result2 <Goto GoBye>
+		result3 <NewChat Say 4 V= 1 1 AddChat 5 AddChat 4>
+		result4 <if= PCDamage 0 else GoR4Fail NewChat Say 6 AddChat 6 AddChat 7 AddChat 8 AddChat 9 AddChat 10>
+		GoR4Fail <NewChat Say 5 AddChat 1 AddChat 2>
+		result5 <NewChat Say 7>
+		result6 <ifG PCBody 8 else GoR6Fail Cash+ 100000 PCStat+ STAT_Body -1 V= 6 1 Goto GoOperate>
+		GoR6Fail <NewChat Say 8 AddChat 7 AddChat 8 AddChat 9>
+		result7 <ifG PCCharm 7 else GoR7Fail Cash+ 150000 PCStat+ STAT_Charm -1 V= 7 1 GrabPCPilot GSetNAtt NAG_StatusEffect 21 1 Goto GoOperate>
+		GoR7Fail <NewChat Say 9 AddChat 6 AddChat 8 AddChat 9>
+		result8 <ifG PCReflexes 5 else GoR8Fail ifG PCSpeed 5 else GoR8Fail Cash+ 200000 PCStat+ STAT_Reflexes -1 PCStat+ STAT_Speed -1 V= 8 1  Goto GoOperate>
+		GoR8Fail <NewChat Say 10 AddChat 6 AddChat 7 AddChat 9>
+		result9 <ifG PCKnowledge 7 else GoR9Fail Cash+ 250000 PCStat+ STAT_Knowledge -1 V= 9 1 Goto GoOperate>
+		GoR9Fail <NewChat Say 11 AddChat 6 AddChat 8 AddChat 7>
+		result10 <Goto result5>
+		result11 <EndChat Say 13>
+		Msg1 <All flesh is doomed to die, but as long as it's here you might as well make some money off it. What can I do for you?>
+		Msg2 <I'll patch up your body, in exchange for some monetary compensation of course.>
+		Msg3 <You could probably use some cyberware to counter the side effects of your tissue donation. I'll show you what I have in stock.>
+		Msg4 <I mean that it's a commodity. Some of the companies here are doing research which requires living human tissue; if you'd be willing to part with some of your own, they'd be willing to pay. It's the easiest money in Theles.>
+		Msg5 <I'm afraid that you're not in any condition to donate anything. As much as I hate to lose my commission, I'm afraid that I can't operate on you.>
+		Msg6 <Here's what the companies are looking for. I can offer you $100000 for muscle fiber, $150000 for an eyeball, $250000 for spinal neurons, or $300000 for brain matter.>
+		Msg7 <Can't say I blame you. Still, there are plenty of others who are desperate enough to take the money.>
+		Msg8 <I'm sorry, but you don't look like you have any muscle fiber to spare. Perhaps you'd like to sell something else?>
+		Msg9 <Those eyes look a little glassy... Perhaps you'd be interested in selling something else?>
+		Msg10 <Based on your hand-eye coordination, I'm inclined to judge that your spinal tissue is sub-par. Perhaps you'd like to sell something else?>
+		Msg11 <I know that you aren't really using it, but I think it would be best if you kept what brains you have. Perhaps you'd like to sell something else?>
+		Msg12 <Just lie back on the operating table. This won't hurt for long.>
+		Msg13 <Thank you for your generous contribution; here's your cut of the money. I wouldn't advise toward making any further tissue donations for at least a couple of days.>
+		Prompt1 <I need medical help.>
+		Prompt2 <You can't do anything for me.>
+		Prompt3 <What do you mean, make some money?>
+		CPrompt3 <if= V1 0 Accept>
+		Prompt4 <I'd like to sell some body tissue.>
+		CPrompt4 <if# V1 0 ifChatNPCInPlay ifG ComTime V3 Accept>
+		Prompt5 <No thanks- I'm kind of attached to my body.>
+		Prompt6 <I'd like to sell muscle fiber.>
+		CPrompt6 <if= V6 0 Accept>
+		Prompt7 <I'd like to sell an eyeball.>
+		CPrompt7 <if= V7 0 GrabPCPilot if= GNAtt NAG_StatusEffect 21 0 Accept>
+		Prompt8 <I'd like to sell part of my spine.>
+		CPrompt8 <if= V8 0 GrabPCPilot if= GNAtt NAG_StatusEffect 22 0 Accept>
+		Prompt9 <I'd like to sell part of my brain.>
+		CPrompt9 <if= V9 0 Accept>
+		Prompt10 <On second thought, I don't want to do this.>
+		Prompt11 <[Continue]>
+	end
+	inv
+		NPC Cyberdoc
+		name <Cab Glodener>
+		SDL_SPRITE <por_m_guy4(A-Y).png>
+		SDL_COLORS <136 141 101 255 233 225 244 216 28>
+		chardesc Male Criminal Melancholy Easygoinge
+		Age 14
+		Skill 21 15
+		Skill 24 5
+	end
+
 %% *THESP_FR_Content
 %%	NPCs for Factory Rejects in Theles Spinner
 

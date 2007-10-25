@@ -5201,7 +5201,7 @@ Scene 0 3
 	start <if= V1 0 else GoSecondTime V= 1 1 Alert 1 Print 2>
 	GoSecondTime <Print 2>
 	Msg1 <Theles Spinner is also known as "The Meatyard". It is a place where human life is cheap, populated by exiles from the other colonies.>
-	Msg2 <You enter Theles Spinner.>
+	Msg2 <You enter the Theles Spinner lower level.>
 
 sub
 	Scene
@@ -5371,7 +5371,7 @@ sub
 		Scene
 		name <the Robot Mill>
 		special <NOEXIT>
-		type <DUNGEON factory>
+		type <DUNGEON factory open>
 		terrain <GROUND>
 		dentrance <*GoUp>
 		NeededCells 1
@@ -5452,7 +5452,7 @@ sub
 		Scene
 		name <Dark Hovel>
 		special <NOEXIT>
-		type <DUNGEON building condemned>
+		type <DUNGEON building condemned open>
 		terrain <GROUND>
 		dentrance <*GoUp>
 		NeededCells 1
@@ -5472,7 +5472,7 @@ sub
 			name <Monster>
 			type <City Vermin Criminal>
 			SetEnemy 1
-			Stat 2 2
+			Stat 2 4
 
 			room
 			width 3
@@ -5481,10 +5481,86 @@ sub
 				StairsDown
 				Destination -1
 			end
-		end
-	% End Hovel Manor...
-	end
 
+			Scene
+			name <Hovel Market>
+			type <building Sleazy Dangerous BlackMarket>
+			mapwidth 15
+			mapheight 24
+			MallMap
+
+			entrance <*GoUp>
+
+			NeededCells 3
+			Content1 <Some 2 100 Sub *BLACKMARKET_SHOP na>
+			Content2 <Some 2 100 Sub *MECHA_SHOP na>
+			Content3 <Fill Sub *BLACKMARKET_X na>
+
+			Start <if= L1 0 else GoBeenBefore L= 1 1 Alert 2>
+			GoBeenBefore <Print 1>
+			Msg1 <You enter Hovel Market.>
+			Msg2 <This level of the hovel seems less rowdy than the previous ones. At the far end of the room you see people with weapons and other goods for sale.>
+
+			sub
+				team 1
+
+				team 2
+				name <Citizens>
+				SetAlly 1
+				Passive
+
+				team 3
+				name <Guards>
+				SetAlly 2
+
+				room
+				name <Foyer>
+				desig <EntranceGrid>
+				Content <Some 3 45 Here *URBAN_X>
+				Content2 <Some 1 100 Here *ANTI_ATTACK_SECURITY 2>
+				minimap <......##...#1...##.......>
+				inv
+					Elevator
+					Destination -1
+					MiniMapComponent 1
+				end
+			end % Hovel Market...
+		end % Dark Hovel...
+	end % Hovel Manor
+
+	Scene
+	name <Salvation Hospital>
+	type <Building hospital public>
+	entrance <*Hospital>
+	special <ADDEXIT>
+	MallMap
+	MapWidth 20
+	MapHeight 10
+
+	NeededCells 2
+	Content1 <Some 1 100 Sub *THESP_SH_Content   na>
+	Content2 <Fill Sub *HOSPITAL_X               na>
+
+	start <Print 1>
+	Msg1 <You enter Salvation Hospital.>
+
+	sub
+		team 1
+
+		team 2
+		name <Citizens>
+		SetAlly 1
+		Passive
+
+		team 3
+		name <Guards>
+		SetAlly 2
+
+		room
+		desig <EntranceGrid>
+		Content <Some 2 50 Here *URBAN_X>
+		Content2 <Some 1 100 Here *ANTI_ATTACK_SECURITY 2>
+	end
 
 % End of Theles Spinner...
 end
