@@ -14,8 +14,6 @@ Content
 	% E2 is the entrance to the gateman's scene
 	% E3 is the dungeon leading to the top
 	% E4 is the middle layer of the spinner
-
-
 	Element1 <Prefab>
 	Scene1 <New *THESP_FirstRung>
 	Team1 <Citizens>
@@ -24,9 +22,12 @@ Content
 	Element2 <Prefab>
 	Scene2 <City Urban>
 
-	Scene3 <New *Dungeon.IndustrialSpire>
+	Scene3 <New *THESP_IndustrialSpire>
 
 	Scene4 <New *THESP_SecondLevel>
+
+	% SubQuest1 is rung two: the journey from the middle layer to joining the ranks of the technocrats.
+	Quest1 <*THELES_RungTwo :50 4>
 
 	sub
 
@@ -66,10 +67,21 @@ Content
 		end
 
 		MetaScene 3
+		sub
+			Room
+			minimap <............2............>
+			special <SHAREDPALETTE>
+			inv
+				StairsUp
+				use <Print 1 Exit %s4% SeekGate %s1%>
+				MiniMapComponent 2
+				update <SetDestination %s4%>
+			end
+		end
 
 		MetaScene 4
-		start <if= QuestStatus %qid% 0 else %pop% SetQuestStatus %qid% %id% Alert 11 Goto %pop%>
-		Msg11 <[Voice]: You have proven yourself worthy of level two clearance. Report to the >
+		start <if= QuestStatus %qid% 0 else %pop% SetQuestStatus %qid% %id% Alert 11 XPV 100 Goto %pop%>
+		Msg11 <[Voice]: You have proven yourself worthy of level two clearance. Please report to Ascension Complex immediately or face termination.>
 		inv
 			STC Building
 			name <Theles Control Office>

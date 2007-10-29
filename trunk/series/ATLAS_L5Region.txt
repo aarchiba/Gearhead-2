@@ -5197,6 +5197,7 @@ Scene 0 3
 	context <SPACE>
 
 	Quest1 <*:LocalQuest>
+	Quest2 <*:GuaranteedQuest 35>
 
 	start <if= V1 0 else GoSecondTime V= 1 1 Alert 1 Print 2>
 	GoSecondTime <Print 2>
