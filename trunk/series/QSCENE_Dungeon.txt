@@ -4,6 +4,44 @@
 %%  There are many subtypes; better include one of them when requesting a dungeon.
 
 Scene
+	name <# Spire>
+	requires <*Dungeon .IndustrialSpire>
+	special <NOEXIT>
+	type <DUNGEON Industrial>
+	dentrance <*GoUp>
+	content <Some 1 10 Sub *DUNGEON_X>
+	mapwidth 35
+	mapheight 35
+	MonkeyMap
+	LockedDoorChance 30
+	SecretDoorChance 5
+	IndustrialTiles
+
+	NeededCells 3
+
+	start <Print 1>
+	msg1 <You enter \SCENE SceneID .>
+
+	sub
+		Team 1
+		SetEnemy 2
+
+		Team 2
+		name <Monster>
+		type <Robot Vermin>
+		SetEnemy 1
+		Stat 2 1
+
+		room
+		width 3
+		height 3
+		sub
+			StairsDown
+			Destination -1
+		end
+	end
+
+Scene
 	name <# Tower>
 	requires <*Dungeon .UrbanHellhole>
 	special <NOEXIT>

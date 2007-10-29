@@ -4,6 +4,89 @@
 %% This content is guaranteed to show up at the given location.
 
 Content
+	name <Climbing the Ladder, First Rung>
+	desc <Theles Spinner is divided into regions based on social class. The PC has a chance to climb the ladder.>
+	requires <*:GuaranteedQuest THESP>
+
+	% The first rung is pretty simple- the player can either buy his way into
+	% the top level, or complete a grueling dungeon.
+	% E1 is the "gateman"
+	% E2 is the entrance to the gateman's scene
+	% E3 is the dungeon leading to the top
+	% E4 is the middle layer of the spinner
+
+
+	Element1 <Prefab>
+	Scene1 <New *THESP_FirstRung>
+	Team1 <Citizens>
+	TeamData1 <Pass>
+
+	Element2 <Prefab>
+	Scene2 <City Urban>
+
+	Scene3 <New *Dungeon.IndustrialSpire>
+
+	Scene4 <New *THESP_SecondLevel>
+
+	sub
+
+		MetaScene 1
+		sub
+			Room
+			minimap <##2##............1..#---#>
+			special <SHAREDPALETTE NOGO>
+			desig <HOME>
+			inv
+				Elevator
+				MiniMapComponent 2
+				desig <ENTRANCE %s4%>
+				use <if# QuestStatus %qid% 0 else GoAccessDenied Print -1 Exit Destination>
+				GoAccessDenied <Print 1>
+				Msg1 <You have not been authorized to use this elevator.>
+			end
+
+			Room
+			minimap <#######2###...##...###=##>
+			special <SHAREDPALETTE NOGO>
+			sub
+				Door
+				use <if= StatVal STAT_Lock 0 else GoDoorLocked if= v1 0 else GoJustUse ifYesNo 101 102 103 else GoLeaveDoor V= 1 1 Goto GoJustUse>
+				GoJustUse <ifG -99 MetaPass else GoCloseDoor  if= StatVal STAT_Lock 0 else GoDoorLocked Print 1  SetStat STAT_Pass 0  Transform 1>
+				GoLeaveDoor <Print 104>
+				Msg101 <Central life support and mechanicals. Access strictly prohibited.>
+				Msg102 <Open the door>
+				Msg103 <Leave it alone>
+				Msg104 <You leave the door alone.>
+			end
+			inv
+				Elevator
+				MiniMapComponent 2
+				desig <ENTRANCE %s3%>
+			end
+		end
+
+		MetaScene 3
+
+		MetaScene 4
+		start <if= QuestStatus %qid% 0 else %pop% SetQuestStatus %qid% %id% Alert 11 Goto %pop%>
+		Msg11 <[Voice]: You have proven yourself worthy of level two clearance. Report to the >
+		inv
+			STC Building
+			name <Theles Control Office>
+			Destination -1
+		end
+	end
+	inv
+		NPC Soldier
+		job <Gateman>
+
+		STC Building
+		name <Theles Control Office>
+		desig <ENTRANCE %s1%>
+	end
+
+
+Content
 	name <Ronald McComet Must Die>
 	desc <Someone doesn't like CometBurger. Will the PC stand up for fast food or become a culinary terrorist?>
 	requires <*:GuaranteedQuest FUCSP>
