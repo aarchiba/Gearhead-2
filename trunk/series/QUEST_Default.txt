@@ -1444,10 +1444,13 @@ Content
 %% .AgainstPirates	PC has defeated a pirate or pirates
 %% .Extermination	PC has cleared an area of monsters
 %% .FinishMission	PC has ridden this metaphorical horse as far as it'll go
+%%			Note that this success should not generate another GiveMission subquest,
+%%			as it might result in repeating the just-completed mission!
 %% .CriminalTransaction	PC has performed some kind of illegal business deal
 %% .BusinessDeal	PC has done some kind of business for/with NPC
 %% .TipOff              PC has provided useful information
 %% .CharityWork		PC has done charity work, presumably without expecting a reward
+%% .CivicService	PC has helped the city in some way
 
 Content
 	name <Corporate Perks>

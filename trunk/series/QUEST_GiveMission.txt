@@ -1,7 +1,9 @@
 %%
 %% *:GiveMission Content
 %%
-%% An NPC will give the PC a mission to complete.
+%% An NPC will give the PC a mission to complete. When the mission is
+%% completed, the QuestStatus of this subquest will be set to -1. If
+%% the mission is rendered uncompletable, the QuestStatus will be -2.
 %%
 %% Param1 is the NPC providing the mission
 %%   note: Persona 1 must have a .%id%_GoInit script

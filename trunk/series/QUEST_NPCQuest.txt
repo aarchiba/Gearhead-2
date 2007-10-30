@@ -5,6 +5,40 @@
 %% Always make sure to do an *ENEMY_CHECK or equivalent in these quests.
 
 Content
+	name <"Give Mission" Stub>
+	requires <*:NPCQuest>
+	desc <The NPC will give the PC a mission, to be handled by a "GiveMission" subquest.>
+	% This is absolutely the most generic NPCQuest imaginable. Its primary use is as a space filler.
+	special <REUSABLE>
+
+	% E1 is the person who will be giving the mission.
+	Element1 <Key>
+
+	% SubQuest1 is the mission.
+	% SubQuest2 is the victory, after the mission is completed.
+	Quest1 <*:GiveMission 1>
+	Quest2 <*Success1.FinishMission 1>
+
+	sub
+		Persona 1
+		rumor0 <%name1% needs a cavalier for a mission of some kind.>
+		% V1 = Have responded to win/loss
+		greeting <if= QUestStatus %qid1% -1 else GoCheckLoss if= V1 0 else GoChat EndChat Say 1 AddChat 1>
+		GoCheckLoss <if= QuestStatus %qid1% -2 else GoCheckFirst if= V1 0 else GoChat  V= 1 1 SetQuestStatus %qid% -2 Goto GoEndInLoss>
+		*GoEndInLoss <*MissionWasFailure na na na>
+		GoCheckFirst <if= QuestStatus %qid% 0 else GoChat Goto GoEnemyCheck>
+		*GoEnemyCheck <*ENEMY_CHECK GoOfferQuest ChatNPCFac GoMakeEnemy>
+		GoMakeEnemy <SetQuestStatus %qid% -2 ifG d20 React PCEnemy %1%>
+		GoOfferQuest <>
+
+		result1 <V= 1 1 Goto .%id2%_GoInit>
+
+		Msg1 <I hear that your mission was a success.>
+
+		Prompt1 <[Continue]>
+	end
+
+Content
 	name <Entertain the Diplomat>
 	requires <*:NPCQuest (C:POLIT|C:MILIT|C:TRADE) "Financial" ~"Safe">
 	desc <There's a dignitary who wants to be entertained, and only the PC can do it.>
@@ -101,7 +135,7 @@ Content
 	Scene4 <Town>
 
 	Quest1 <*:ConstructionProblem 1 2>
-	Quest2 <*Success1.FinishMission 1>
+	Quest2 <*Success1.CivicService 1>
 
 	sub
 		Persona 1
@@ -319,7 +353,7 @@ Content
 	TeamData4 <SD Ally>
 
 	% SubQuest1 is the success when the PC has trained all the soldiers.
-	Quest1 <*Success1.FinishMission 1>
+	Quest1 <*Success1.CivicService 1>
 
 	sub
 		Persona 1
@@ -686,7 +720,7 @@ Content
 	element3 <Faction !Enemy 1>
 
 	% Quest1 is the continuation after the PC has defeated the pirates so many times.
-	Quest1 <*SUCCESS1.FinishMission 1>
+	Quest1 <*SUCCESS1.CivicService 1>
 
 	sub
 		Persona 1
