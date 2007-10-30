@@ -184,6 +184,61 @@ Content
 %%	Minimaps open to the bottom.
 
 Content
+	%% A Single Rat
+	requires <*HABITATION_X Poor>
+	minimap <..1.................##+##>
+	ZONE_SPECIAL <NoGO>
+	element1 <Prefab>
+	teamdata1 <sd enemy>
+	inv
+		monster Rat
+	end
+
+Content
+	%% Rat Nest
+	requires <*HABITATION_X Dangerous ~Poor>
+	minimap <..1...234....5......##+##>
+	ZONE_SPECIAL <NoGO>
+	element1 <Prefab>
+	teamdata1 <sd enemy>
+	element2 <Prefab>
+	teamdata2 <sd enemy>
+	element3 <Prefab>
+	teamdata3 <sd enemy>
+	element4 <Prefab>
+	teamdata4 <sd enemy>
+	element5 <Prefab>
+	teamdata5 <sd enemy>
+	inv
+		monster Rat
+		monster Rat
+		monster Rat
+		monster Rat
+		monster Death Rat
+	end
+
+Content
+	%% Crazed Killer
+	requires <*HABITATION_X Dystopia>
+	minimap <..1.................##+##>
+	element1 <Prefab>
+	Team1 <Enemies>
+	teamdata1 <SD ENEMY>
+	ZONE_SPECIAL <NoGO>
+	Surrender%1% <Print %id%01 DeleteNPC %1%>
+	Msg%id%01 <%name1% returns to \PPR %1% senses and wanders off.>
+	sub
+		Persona 1
+		special <UNLISTED>
+		greeting <NewChat SayAnything>
+	end
+	inv
+		NPC Bandit
+		job <Futsie>
+	end
+
+
+Content
 	%% No Room
 	requires <*HABITATION_X>
 	minimap <#########################>
@@ -275,6 +330,19 @@ Content
 %%   Things you would find in a hospital... A clinic will usually have one
 %%   mandatory doctor content and multiple random HOSPITAL_X contents.
 %%   These could be additional doctors, or other things.
+
+Content
+	%% Abomination
+	requires <*HOSPITAL_X Dystopia>
+	minimap <..1.................##=##>
+	ZONE_SPECIAL <NoGO>
+	element1 <Prefab>
+	teamdata1 <sd enemy>
+	inv
+		monster Hunter-Scout
+		name <Abomination>
+	end
+
 Content
 	requires <*HOSPITAL_X>
 	Content <Required *DOCTOR - Local>
