@@ -26,9 +26,10 @@ Scene
 	Content2 <Some 1 100 Sub *INTRO_SHOP>
 	Content3 <Fill Sub *SHOP_RANDOM>
 
-	% Load the debug quest. For testing purposes, set difficulcy to 1.
+	% Load the debug quests. For testing purposes, set difficulcy to 1.
 	Quest1 <*:DEBUG 1>
 	Quest2 <*:DEBUGARENA 1>
+	Quest3 <*:DEBUGGIVEMISSION 1>
 
 	sub
 		Team 1

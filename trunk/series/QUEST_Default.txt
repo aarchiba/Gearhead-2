@@ -1260,6 +1260,41 @@ Content
 %% .NPCsecret	The item is potentially embarassing to the NPC
 
 Content
+	name <Another Mission>
+	requires <*SuccessGetItem BRANCHES>
+	desc <The PC did so well last time, he'll be offered an extra mission.>
+	special <REUSABLE>
+
+	% E1 is the character was helped.
+	% E2 is the item being given
+
+	% SubQuest1 is the mission.
+	% SubQuest2 is the victory, after the mission is completed.
+	Quest1 <*:GiveMission 1>
+	Quest2 <*Success1.FinishMission 1>
+
+	sub
+		Persona 1
+		greeting <if= QuestStatus %qid% %id% else %pop% if= QuestStatus %qid1% -1 else .%id%_GoCheckLoss EndChat Say %id%01 AddChat %id%01>
+		.%id%_GoCheckLoss <if= QuestStatus %qid1% -2 else GoChooseMission SetQuestStatus %qid% -2 Goto .%id%_GoEndInLoss>
+		*.%id%_GoEndInLoss <*MissionWasFailure na na na>
+		.%id%_GoInit <IFCHATNPCARCHENEMY else .%id%_GoOfferNew Goto .%id%_GoJustEnd>
+		.%id%_GoOfferNew <CashPrize Reward %threat% 250 SetQuestStatus %qid% %id% Goto .%id%_GoChooseMission>
+		*.%id%_GoJustEnd <*MissionWasSuccess&Reward .%id%_GoTrivial ChatNPCFac na>
+		.%id%_GoTrivial <CashPrize Reward %threat% 250 SetQuestStatus %qid% -1>
+		.%id%_GoChooseMission <NewChat Say %id%02 AddChat %id%02 AddChat %id%03>
+		.%id%_GoEnd <AddRenown -1 SetQuestStatus %qid% -1>
+		result%id%01 <Goto .%id2%_GoInit>
+		result%id%02 <Goto .%id1%_GoInit>
+		*result%id%03 <*RejectMission .%id%_GoEnd>
+		Msg%id%01 <Good work on that mission, \PC .>
+		Msg%id%02 <You did very well retrieving the %name2%, \PC . If you're interested, I have another mission that you could help with.>
+		Prompt%id%01 <[Continue]>
+		Prompt%id%02 <Give me the details.>
+		Prompt%id%03 <Sorry, I'm not interested.>
+	end
+
+Content
 	name <Good job, let's study>
 	%% The PC will gain a new teacher.
 	requires <*SuccessGetItem (1:MILIT|1:ADVEN)>
@@ -1451,6 +1486,40 @@ Content
 %% .TipOff              PC has provided useful information
 %% .CharityWork		PC has done charity work, presumably without expecting a reward
 %% .CivicService	PC has helped the city in some way
+
+Content
+	name <A Little Something Extra>
+	requires <*Success1 -.FinishMission -.CharityWork BRANCHES>
+	desc <The PC did so well last time, he'll be offered an extra mission.>
+	special <REUSABLE>
+
+	% E1 is the character was helped.
+
+	% SubQuest1 is the mission.
+	% SubQuest2 is the victory, after the mission is completed.
+	Quest1 <*:GiveMission 1>
+	Quest2 <*Success1.FinishMission 1>
+
+	sub
+		Persona 1
+		greeting <if= QuestStatus %qid% %id% else %pop% if= QuestStatus %qid1% -1 else .%id%_GoCheckLoss EndChat Say %id%01 AddChat %id%01>
+		.%id%_GoCheckLoss <if= QuestStatus %qid1% -2 else GoChooseMission SetQuestStatus %qid% -2 Goto .%id%_GoEndInLoss>
+		*.%id%_GoEndInLoss <*MissionWasFailure na na na>
+		.%id%_GoInit <IFCHATNPCARCHENEMY else .%id%_GoOfferNew Goto .%id%_GoJustEnd>
+		.%id%_GoOfferNew <CashPrize Reward %threat% 250 SetQuestStatus %qid% %id% Goto .%id%_GoChooseMission>
+		*.%id%_GoJustEnd <*MissionWasSuccess&Reward .%id%_GoTrivial ChatNPCFac na>
+		.%id%_GoTrivial <CashPrize Reward %threat% 250 SetQuestStatus %qid% -1>
+		.%id%_GoChooseMission <NewChat Say %id%02 AddChat %id%02 AddChat %id%03>
+		.%id%_GoEnd <AddRenown -1 SetQuestStatus %qid% -1>
+		result%id%01 <Goto .%id2%_GoInit>
+		result%id%02 <Goto .%id1%_GoInit>
+		*result%id%03 <*RejectMission .%id%_GoEnd>
+		Msg%id%01 <You did a good job on that mission, \PC .>
+		Msg%id%02 <You've been a great help, \PC . How would you like to do another mission for me?>
+		Prompt%id%01 <[Continue]>
+		Prompt%id%02 <I'd like that, yes.>
+		Prompt%id%03 <Sorry, this is where I call it quits.>
+	end
 
 Content
 	name <Corporate Perks>

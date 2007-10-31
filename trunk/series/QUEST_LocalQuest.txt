@@ -4,6 +4,42 @@
 %% This content is tied to a city rather than any specific character within it.
 
 Content
+	name <"Give Mission" NewNPC>
+	requires <*:LocalQuest>
+	desc <A randomly generated NPC will give the PC a mission, to be handled by a "GiveMission" subquest.>
+
+	% E1 is the root scene
+	% E2 is the person who will be giving the mission.
+	Element1 <.>
+	Element2 <NewNPC 0 1>
+	Scene2 <Building Public !Okay 2>
+	Team2 <Citizens>
+	TeamData2 <Pass>
+
+	% SubQuest1 is the mission.
+	% SubQuest2 is the victory, after the mission is completed.
+	Quest1 <*:GiveMission 2>
+	Quest2 <*Success1.FinishMission 2>
+
+	sub
+		Persona 2
+		rumor0 <%name2% needs help from a cavalier.>
+		greeting <if= QuestStatus %qid% %id% else GoCheckFirst if= QUestStatus %qid1% -1 else GoCheckLoss EndChat Say 1 AddChat 1>
+		GoCheckLoss <if= QuestStatus %qid1% -2 else GoCheckFirst SetQuestStatus %qid% -2 Goto GoEndInLoss>
+		*GoEndInLoss <*MissionWasFailure na na na>
+		GoCheckFirst <if= QuestStatus %qid% 0 else GoChat Goto GoEnemyCheck>
+		*GoEnemyCheck <*ENEMY_CHECK GoOfferQuest ChatNPCFac GoMakeEnemy>
+		GoMakeEnemy <SetQuestStatus %qid% -2 ifG d20 React PCEnemy %2%>
+		*GoOfferQuest <*DoYouWantAJob GoStartQuest>
+		GoStartQuest <SetQuestStatus %qid% %id% Goto .%id1%_GoInit>
+		GoChat <NewChat SayAnything>
+		result1 <Goto .%id2%_GoInit>
+		Msg1 <I hear that your mission was a success.>
+		Prompt1 <[Continue]>
+	end
+
+
+Content
 	name <Joyriders>
 	requires <*:LocalQuest (City|Dangerous) -"Safe">
 
