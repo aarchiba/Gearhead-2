@@ -1,0 +1,19 @@
+%%
+%% *CS_PressConference Content
+%%
+%% A press conference is being called for some reason or another. The PC may have been directed
+%% here by a superior, or may just have heard about it on the news.
+%%
+%% Param1: The scene where the conference will take place.
+%% Param2: The NPC who will be leading the press conference.
+
+Content
+	name <>
+	requires <*CS_PressConference +Pla>
+
+	% E1 is the scene where this conference takes place
+	% E2 is the person giving the conference
+
+
+
+

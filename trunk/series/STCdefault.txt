@@ -833,6 +833,29 @@ Msg-5 <You open the safe.>
 % **********************
 
 MetaScene
+desig <MS_PRESENTATION>
+%% This is a press conference or similar media event
+ClubMap
+MapWidth 25
+MapHeight 25
+type <BUILDING PUBLIC>
+special <AddExit>
+nu1 <if= T1 0 Return>
+sub
+	Team 1
+
+	Team 2
+	name <Civilian>
+	setally 1
+	Passive
+
+	room
+	name <Foyer>
+	desig <EntranceGrid>
+	Content <Some 4 45 Here *URBAN_X>
+end
+
+MetaScene
 desig <MS_SOCIAL>
 %% This metascene is used in core story components based on task +Tsh.
 %% It included opportunities for the PC to earn "party points".
@@ -877,7 +900,7 @@ sub
 	room
 	name <Foyer>
 	desig <EntranceGrid>
-	Content <Some 8 45 Here *URBAN_X>
+	Content <Some 5 45 Here *URBAN_X>
 end
 
 MetaScene
@@ -900,7 +923,7 @@ sub
 	room
 	name <Dance Floor>
 	desig <EntranceGrid>
-	Content <Some 8 45 Here *URBAN_X>
+	Content <Some 5 45 Here *URBAN_X>
 end
 
 MetaScene
@@ -924,7 +947,7 @@ sub
 	room
 	name <Dance Floor>
 	desig <EntranceGrid>
-	Content <Some 8 45 Here *URBAN_X>
+	Content <Some 5 45 Here *URBAN_X>
 end
 
 MetaScene
@@ -945,9 +968,9 @@ sub
 	Passive
 
 	room
-	name <Dance Floor>
+	name <Foyer>
 	desig <EntranceGrid>
-	Content <Some 8 45 Here *URBAN_X>
+	Content <Some 5 45 Here *URBAN_X>
 end
 
 
