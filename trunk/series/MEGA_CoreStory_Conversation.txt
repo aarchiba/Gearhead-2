@@ -21,6 +21,10 @@
 %% Param1: The NPC being spoken to
 %%
 
+%%  ********************************
+%%  ***   +P--  Peaceful  Life   ***
+%%  ********************************
+
 Plot
 	name <Fix My Stuff>
 	desc <The PC will be asked to fix some things.>
@@ -101,70 +105,6 @@ Plot
 		Prompt%id%13 <Sorry, I'm not interested.>
 	end
 
-Plot
-	name <Someone Else Looking>
-	desc <The PC will be informed of his new rival.>
-	requires <*CS_Conversation +Pla +Fin E:-- ~1:ACADE ~1:THIEF>
-
-	% E1 is the person with the information
-	% E2 is the new rival
-	Element2 <NewNPC -2 -7>
-
-	start <if= PlotStatus %id% else %pop% ifNPCDead %1% LoseComp 0 .%id%_loss>
-	.%id%_loss <+T-- +F-->
-
-	sub
-		Persona 1
-		% V%id%01, V%id%02 = Question indicators
-		greeting <if= PlotStatus %id% else %pop% Goto .%id%_GoIntro>
-		*.%id%_GoIntro <*LookingForItem &TargetItem .%id%_GoExplain>
-		.%id%_GoExplain <NewChat Say %id%01 StoryNote %id%02 AddChat %id%01 AddChat %id%02 FreezeNPC %2% &SetEnemyNPC %2% WinComp 0 .%id%_win>
-		.%id%_win <+T-- +F-->
-		Result%id%01 <NewChat Say %id%03 V= %id%01 1 AddChat %id%02>
-		Result%id%02 <NewChat Say %id%04 V= %id%02 1 AddChat %id%01>
-		Msg%id%01 <Who isn't looking for the \ITEM &TargetItem ? I just had someone named %name2% in earlier asking about it, though at least you have more manners than \OPR %2% .>
-		Msg%id%02 <%name1% revealed that %name2% is also looking for the \ITEM &TargetItem .>
-		Msg%id%03 <If I knew that don't you think I'd have it for myself? My advice, forget about the \ITEM &TargetItem . Go look for something easy to find, like the Argoseyer or the Holy Grail.>
-		Msg%id%04 <I don't know, I'm just glad \SPR %2% left without killing me. Why, you're not a friend of \OPR %2% are you?>
-		Prompt%id%01 <Tell me where the \ITEM &TargetItem is.>
-		CPrompt%id%01 <if= v%id%01 0 Accept>
-		Prompt%id%02 <Where did %name2% go?>
-		CPrompt%id%02 <if= v%id%02 0 Accept>
-	end
-
-Plot
-	name <Why Are They Doing It?>
-	desc <The PC will be directed to someone who may have answers.>
-	requires <*CS_Conversation +Pun (C:MEDIA|+Gkn) ~E:-- ~F:-- (1:POLIT|1:MEDIA|1:POLIC|1:ADVEN|1:MILIT|1:CORPO)>
-
-	% E1 is the friend
-	% E2 is the NPC to be sought
-	Element2 <NewNPC -2 -7 Shy>
-
-	start <if= PlotStatus %id% else %pop% ifNPCDead %1% LoseComp 0 .%id%_loss>
-	.%id%_loss <+T-- +F-->
-
-	sub
-		Persona 1
-		greeting <if= PlotStatus %id% else %pop% Goto .%id%_GoGreet>
-		*.%id%_GoGreet <*HowAreYou .%id%_GoExplain>
-		.%id%_GoExplain <NewChat Say %id%01 AddChat %id%01 AddChat %id%03>
-
-		Result%id%01 <NewChat Say %id%02 SMemo %id%03 History %id%04 AddChat %id%02 FreezeNPC %2% &SetTargetNPC %2% WinComp 0 .%id%_next>
-		.%id%_next <+Tht +Fin>
-		Result%id%02 <NewChat Say %id%06>
-		Result%id%03 <NewChat Say %id%05 SMemo %id%03 History %id%04 AddChat %id%02 FreezeNPC %2% &SetTargetNPC %2% WinComp 0 .%id%_next>
-
-		Msg%id%01 <These mecha attacks that we've had recently, they're very strange. People are wondering what the reason behind them is.>
-		Msg%id%02 <Not directly, no, but I have heard some things. Apparently a person named %name2% is involved with the attacks somehow. They're looking for \OPR %2% , but \SPR %2% 's in hiding.>
-		Msg%id%03 <%name2% might know something about the mecha attacks. Unfortunately \SPR %2% is in hiding.>
-		Msg%id%04 <%name1% told you that %name2% might know something about the mecha attacks.>
-		Msg%id%05 <Then you need to speak with %name2%. According to rumor, \SPR %2% knows something about the attacks... unfortunately, \SPR %2% 's hiding. There are a lot of people who either want to know what \SPR %2% does, or keep \SPR %2% quiet.>
-		Msg%id%06 <If I had that kind of information, I'd hardly be wasting my time chatting with you.>
-		Prompt%id%01 <Do you know anything about that?>
-		Prompt%id%02 <Any idea where %name2% might be?>
-		Prompt%id%03 <I'm wondering that too.>
-	end
 
 Plot
 	name <Treasure Map>
@@ -243,6 +183,7 @@ Plot
 	name <Best Buds Forever?>
 	desc <The PC and his friend turn out to be enemies. Bummer.>
 	requires <*CS_Conversation +P-- E:-- 1:Friend 1:Enemy P:++ Common Common>
+	Size 1
 
 	% Element1 is the NPC to meet
 
@@ -438,5 +379,80 @@ Content
 		Prompt%id%06 <Never forget Tycho Madang.>
 		CPrompt%id%06 <ifG PCKnowledge 15 Accept>
 
+	end
+
+%%  *****************************************
+%%  ***   +Pun  Unknown  Enemy  Attacks   ***
+%%  *****************************************
+
+Plot
+	name <Why Are They Doing It?>
+	desc <The PC will be directed to someone who may have answers.>
+	requires <*CS_Conversation +Pun (C:MEDIA|+Gkn) ~E:-- ~F:-- (1:POLIT|1:MEDIA|1:POLIC|1:ADVEN|1:MILIT|1:CORPO)>
+	Size 1
+
+	% E1 is the friend
+	% E2 is the NPC to be sought
+	Element2 <NewNPC -2 -7 Shy>
+
+	start <if= PlotStatus %id% else %pop% ifNPCDead %1% LoseComp 0 .%id%_loss>
+	.%id%_loss <+T-- +F-->
+
+	sub
+		Persona 1
+		greeting <if= PlotStatus %id% else %pop% Goto .%id%_GoGreet>
+		*.%id%_GoGreet <*HowAreYou .%id%_GoExplain>
+		.%id%_GoExplain <NewChat Say %id%01 AddChat %id%01 AddChat %id%03>
+
+		Result%id%01 <NewChat Say %id%02 SMemo %id%03 History %id%04 AddChat %id%02 FreezeNPC %2% &SetTargetNPC %2% WinComp 0 .%id%_next>
+		.%id%_next <+Tht +Fin>
+		Result%id%02 <NewChat Say %id%06>
+		Result%id%03 <NewChat Say %id%05 SMemo %id%03 History %id%04 AddChat %id%02 FreezeNPC %2% &SetTargetNPC %2% WinComp 0 .%id%_next>
+
+		Msg%id%01 <These mecha attacks that we've had recently, they're very strange. People are wondering what the reason behind them is.>
+		Msg%id%02 <Not directly, no, but I have heard some things. Apparently a person named %name2% is involved with the attacks somehow. They're looking for \OPR %2% , but \SPR %2% 's in hiding.>
+		Msg%id%03 <%name2% might know something about the mecha attacks. Unfortunately \SPR %2% is in hiding.>
+		Msg%id%04 <%name1% told you that %name2% might know something about the mecha attacks.>
+		Msg%id%05 <Then you need to speak with %name2%. According to rumor, \SPR %2% knows something about the attacks... unfortunately, \SPR %2% 's hiding. There are a lot of people who either want to know what \SPR %2% does, or keep \SPR %2% quiet.>
+		Msg%id%06 <If I had that kind of information, I'd hardly be wasting my time chatting with you.>
+		Prompt%id%01 <Do you know anything about that?>
+		Prompt%id%02 <Any idea where %name2% might be?>
+		Prompt%id%03 <I'm wondering that too.>
+	end
+
+%%  *************************************
+%%  ***   +Pla  Learn  of  Artifact   ***
+%%  *************************************
+
+Plot
+	name <Someone Else Looking>
+	desc <The PC will be informed of his new rival.>
+	requires <*CS_Conversation +Pla +Fin E:-- ~1:ACADE ~1:THIEF>
+	Size 1
+
+	% E1 is the person with the information
+	% E2 is the new rival
+	Element2 <NewNPC -2 -7>
+
+	start <if= PlotStatus %id% else %pop% ifNPCDead %1% LoseComp 0 .%id%_loss>
+	.%id%_loss <+T-- +F-->
+
+	sub
+		Persona 1
+		% V%id%01, V%id%02 = Question indicators
+		greeting <if= PlotStatus %id% else %pop% Goto .%id%_GoIntro>
+		*.%id%_GoIntro <*LookingForItem &TargetItem .%id%_GoExplain>
+		.%id%_GoExplain <NewChat Say %id%01 StoryNote %id%02 AddChat %id%01 AddChat %id%02 FreezeNPC %2% &SetEnemyNPC %2% WinComp 0 .%id%_win>
+		.%id%_win <+T-- +F-->
+		Result%id%01 <NewChat Say %id%03 V= %id%01 1 AddChat %id%02>
+		Result%id%02 <NewChat Say %id%04 V= %id%02 1 AddChat %id%01>
+		Msg%id%01 <Who isn't looking for the \ITEM &TargetItem ? I just had someone named %name2% in earlier asking about it, though at least you have more manners than \OPR %2% .>
+		Msg%id%02 <%name1% revealed that %name2% is also looking for the \ITEM &TargetItem .>
+		Msg%id%03 <If I knew that don't you think I'd have it for myself? My advice, forget about the \ITEM &TargetItem . Go look for something easy to find, like the Argoseyer or the Holy Grail.>
+		Msg%id%04 <I don't know, I'm just glad \SPR %2% left without killing me. Why, you're not a friend of \OPR %2% are you?>
+		Prompt%id%01 <Tell me where the \ITEM &TargetItem is.>
+		CPrompt%id%01 <if= v%id%01 0 Accept>
+		Prompt%id%02 <Where did %name2% go?>
+		CPrompt%id%02 <if= v%id%02 0 Accept>
 	end
 

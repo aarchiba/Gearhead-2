@@ -11,32 +11,13 @@
 %%  ***   +P--  Peaceful  Life   ***
 %%  ********************************
 
-Content
-	name <Defense Overview>
-	requires <*CS_PressConference +P-- F:-->
-	% The PC missed a talk on the threat to peace caused by E3.
 
-	% E1 is the scene where this conference takes place
-	% E2 is the person giving the conference
-	% E3 is the new enemy faction
-	Element3 <Faction !Enemy 2 !Exclude -3>
 
-	start <if= PlotStatus %id% else %pop% ifNPCDead %2% LoseComp 0 .%id%_Loss>
-	.%id%_Loss <+T-- +F-->
+%%  *****************************************
+%%  ***   +Pun  Unknown  Enemy  Attacks   ***
+%%  *****************************************
 
-	sub
-		Persona 2
-		greeting <if= PlotStatus %id% else %pop% ifChatNPCInPlay else .%id%_GoBrushOff Goto .%id%_GoIntro>
-		*.%id%_GoBrushOff <*IAmBusy&OnPhone>
-		*.%id%_GoIntro <*PressConferenceGreeting .%id%_GoTell na>
-		.%id%_GoTell <NewChat Say %id%01 AddChat %id%01 AddChat %id%02 AddChat %id%03>
 
-		Msg%id%01 <So, what do you think of my point that %name3% is responsible for undermining solar peace and security?>
-
-		Prompt%id%01 <I agree completely.>
-		Prompt%id%02 <I think you're way off base.>
-		Prompt%id%03 <Actually, I didn't hear your speech.>
-	end
 
 %%  *************************************
 %%  ***   +Pla  Learn  of  Artifact   ***
@@ -70,7 +51,7 @@ Content
 		result%id%04 <Goto .%id%_GoOffer>
 		result%id%05 <NewChat Say %id%03 History %id%04 SMemo %id%05 &SetPartnerNPC %2% WinComp %3% .%id%_WinComp>
 		.%id%_WinComp <+Tgi +Fin>
-		result%id%05 <NewChat Say %id%06 History %id%07 SMemo 0 LoseComp 0 .%id%_LoseComp ifNPCDead &EnemyNPC &SetEnemyNPC %2% FreezeNPC %2%>
+		result%id%06 <NewChat Say %id%06 History %id%07 SMemo 0 NTBLoseComp 0 .%id%_LoseComp ifNPCDead &EnemyNPC &SetEnemyNPC %2% FreezeNPC %2%>
 		.%id%_LoseComp <+T-- +F-->
 		Msg%id%01 <Tell me, \PC ... Why is it that you're interested in the \ITEM &TargetItem ?>
 		Msg%id%02 <It seems we have some common interests. I propose that we join forces. Working together, it will be much easier to find the \ITEM &TargetItem .>
@@ -80,7 +61,7 @@ Content
 		Msg%id%06 <Is that so... Well, it's not like I would have needed your help to locate it. Good luck in your search.>
 		Msg%id%07 <%name2% suggested a partnership, but you refused \OPR %2% .>
 		Prompt%id%01 <It's worth a lot of money.>
-		Prompt%id%02 <I'm doing it for the adventure.>
+		Prompt%id%02 <I'm seeking it for the adventure!>
 		Prompt%id%03 <I don't really have a reason...>
 		Prompt%id%04 <I can't let \PERSONA &EnemyNPC get it.>
 		CPrompt%id%04 <ifNPCOK &EnemyNPC Accept>

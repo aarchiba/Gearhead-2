@@ -2,6 +2,24 @@
 %%
 %%  Peaceful Life components
 
+Plot
+	name <Recruiting Drive>
+	desc <Recruiters from two corporate factions are at the conference; maybe the PC will be recruited.>
+	requires <+Tsh +P-- P:-- (C:CORPO|C:LABOR|C:CRAFT|C:TRADE) ~+Fcc>
+	Size 1
+
+	% E1 is the scene where this component will take place
+	% E2 is a corporate building in this city
+	% E3 is Corporate Faction 1, ally of E2
+	% E4 is Corporate Faction 2, enemy of E3
+	% E5 is a member of E3
+	% E6 is a member of E4
+	Element2 <Building Coporate !Near -7>
+	Element3 <Faction Corporate !Comrade 2>
+	Element4 <Faction Corporate !Enemy 3>
+	ELement5 <>
+	Element6 <>
+
 
 Plot
 	name <Meet Enemy Fighter>
