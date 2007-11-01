@@ -830,7 +830,7 @@ end;
 
 Function Calculate_Threat_Points( Level,Percent: Integer ): LongInt;
 	{ Calculate an appropriate threat value, based upon the modified }
-	{ encounter level ( usually PCRep + d50 ) and the % scale factor. }
+	{ renown level and the % scale factor. }
 var
 	it: LongInt;
 begin

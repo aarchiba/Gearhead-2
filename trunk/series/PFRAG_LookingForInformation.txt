@@ -1,6 +1,29 @@
 %% This unit contains persona fragments in which the PC is looking for some kind
 %% of information. The NPC involved may or may not be forthcoming with the information.
 
+% TYPE: *PressConferenceGreeting
+%		&AboutItem		The NPC has info about an item
+%		&AboutNPC		The NPC has info about a NPC
+%	This NPC is holding a press conference, lecture, or some other type
+%	of presentation and presumably has some information that might be
+%	useful for the PC.
+%   PARAM1: Exit label
+%   PARAM2: Identity number of subject; must be specified by tag
+
+Persona
+requires <*PressConferenceGreeting &AboutItem>
+START <NewChat Say %id%01 AddChat %id%01>
+Result%id%01 <Goto %1%>
+Msg%id%01 <Ah, you must want to hear about the \ITEM %2% , is that right?>
+Prompt%id%01 <That's right.>
+
+Persona
+requires <*PressConferenceGreeting>
+START <NewChat Say %id%01 AddChat %id%01>
+Result%id%01 <Goto %1%>
+Msg%id%01 <You must be here for the conference. Is that right?>
+Prompt%id%01 <That's right.>
+
 % TYPE: *IHaveInformation
 %		&AboutNPC		The information is about a NPC.
 %		&AboutItem		The information is about an item.

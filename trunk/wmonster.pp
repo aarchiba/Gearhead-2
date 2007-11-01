@@ -498,7 +498,7 @@ var
 	MList,Mek,Pilot: GearPtr;
 	desc,fdesc: String;
 	team,fac,rscene: GearPtr;
-	MPV: LongInt;
+	MaxMekShare,MPV: LongInt;
 begin
 	{ First, generate the mecha description. }
 	{ GENERAL mecha are always welcome. }
@@ -525,7 +525,9 @@ begin
 	end;
 
 	{ Generate the list of mecha. }
-	MPV := OptimalMechaValue( Renown ) * 2;
+	if Strength < 202 then MaxMekShare := 200
+	else MaxMekShare := ( Strength div 2 ) + 100;
+	MPV := ( OptimalMechaValue( Renown ) * MaxMekShare ) div 100;
 	if MPV < 300000 then MPV := 300000;
 	SList := GenerateMechaList( MPV , fdesc , desc );
 
