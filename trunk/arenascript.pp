@@ -1349,6 +1349,13 @@ begin
 				Part := GG_LocateFaction( ID , GB , Scene );
 				W := GEarName( Part );
 
+			end else if W = '\FACTION_DESIG' then begin
+				{ Insert the name of a specified faction. }
+				ID := ScriptValue( S0 , GB , Scene );
+				Part := GG_LocateFaction( ID , GB , Scene );
+				if Part <> Nil then W := SAttValue( Part , 'DESIG' )
+				else W = 'ERROR:Faction_Not_Found';
+
 			end else if W = '\SCENE' then begin
 				{ Insert the name of a specified scene. }
 				ID := ScriptValue( S0 , GB , Scene );
@@ -2837,7 +2844,7 @@ begin
 	{ we need the renown level the mecha will be appropriate for. }
 	Factions := ExtractWord( Event );
 	if Source <> Nil then begin
-		Factions := AS_GetString( Source , Factions );
+		Factions := ScriptMessage( Factions , GB , Source );
 	end;
 	Renown := ScriptValue( Event , GB , Source );
 

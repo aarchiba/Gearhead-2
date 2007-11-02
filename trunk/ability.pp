@@ -838,13 +838,11 @@ begin
 	else if Level > 300 then Level := 300;
 
 	{ For low level encounters, use a linear equation. }
-	if Level < 42 then begin
-		it := 50 + Level * 125;
+	if Level < 31 then begin
+		it := Level * 10000 div 30;
 	{ Higher on, switch to the quadratic. }
-	{ This equation provides similar values to the standard values }
-	{ previously used in the combat encounters. }
 	end else begin
-		it := 25 * Level * Level - 1850 * Level + 39000;
+		it := 20 * Level * Level - 900 * Level + 19040;
 	end;
 
 	{ Modify for the percent requested. }

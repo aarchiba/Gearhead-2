@@ -34,6 +34,7 @@ const
 Procedure RestockRandomMonsters( GB: GameBoardPtr );
 
 Function MechaMatchesFaction( Mek: GearPtr; const Factions: String ): Boolean;
+Function OptimalMechaValue( Renown: Integer ): LongInt;
 Function GenerateMechaList( MPV: LongInt; Factions,Desc: String ): SAttPtr;
 Procedure StockSceneWithMonsters( Scene: GearPtr; MPV,TeamID: Integer; MDesc: String );
 
@@ -298,7 +299,7 @@ const
 var
 	it: LongInt;
 begin
-	it := Calculate_Threat_Points( Renown , 30 );
+	it := Calculate_Threat_Points( Renown , 20 );
 	if it < MinOMV then it := MinOMV;
 	OptimalMechaValue := it;
 end;
@@ -309,7 +310,7 @@ Function PurchaseForces( ShoppingList: SAttPtr; Renown,Strength: Integer ): Gear
 	{ encounter is measured by STRENGTH, which is a percentage with 100 representing }
 	{ an average fight. }
 const
-	BasicGruntCost = 30;
+	BasicGruntCost = 35;
 	SkillPlusCost = 15;
 	SkillMinusCost = 7;
 var

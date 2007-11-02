@@ -1131,11 +1131,8 @@ begin
 
 		end else begin
 			Element := Nil;
-{$IFDEF DEBUG}
 			DialogMsg( 'ERROR- CreateElement asked to create element of type ' + EKind +'.' );
 			DialogMsg( 'Resultant plot ' + GearName( Plot ) + ' may fail.' );
-{$ENDIF}
-
 		end;
 
 		{ After this point, don't expect to use "desc" any more. It may have been }
