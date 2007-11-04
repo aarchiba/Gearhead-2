@@ -5,7 +5,7 @@
 Plot
 	name <Recruiting Drive>
 	desc <Recruiters from two corporate factions are at the conference; maybe the PC will be recruited.>
-	requires <+Tsh +P-- P:-- F:-- (C:CORPO|C:LABOR|C:CRAFT|C:TRADE) ~+Fcc>
+	requires <+Tsh (+P--|+Pme|+Pla) P:-- F:-- (C:CORPO|C:LABOR|C:CRAFT|C:TRADE) ~+Fcc>
 	Size 1
 
 	% E1 is the scene where this component will take place
@@ -15,8 +15,8 @@ Plot
 	% E5 is a member of E3
 	% E6 is a public building
 	% E7 is a member of E4
-	% E8 is a building for a meeting later
-	Element2 <Scene Building Coporate !Near -7>
+	Element1 <Grab 6>
+	Element2 <Scene Building Corporate !Near -7>
 	Element3 <Faction Corporate !Comrade 2>
 	Element4 <Faction Corporate !Enemy 3>
 	ELement5 <Character !Comrade 3 !Near 2 NeverFail>
@@ -26,7 +26,9 @@ Plot
 	ELement7 <Character !Comrade 4 !Near 6 NeverFail>
 	NeverFail7 <Corporate Executive>
 	Place7 <1 (Citizens) Pass Ally>
-	Element8 <Scene Public !Okay 3 !Okay 4>
+
+	% P5 = Have been offered job by E5
+	% P7 = Have been offered job by E7
 
 	start <ifNPCDead %5% ifNPCDead %7% LoseComp 0 .next>
 	.next <+T-- +F-->
@@ -34,51 +36,103 @@ Plot
 	% SubPlot1 is the delayed victory, if the PC accepts the job.
 	SubPlot1 <*CS_DelayedVictory>
 
-
 	sub
 		Persona 5
 		rumor0 <%name5% is recruiting for %name3% at %name1% today.>
-		% V1 = Have spoken already counter
+		% V1 = Mecha Size
+		% V2 = Signing Bonus
 		&RecFac <%3%>
+		&AltFac <%4%>
 		greeting <if= PlotStatus 0 else GoChat Goto GoCheckFirst>
 		GoChat <NewChat SayAnything>
 		GoCheckFirst <IFFACTIONENEMY &RecFac else GoOfferJoin NewChat Say 1 StoryNote 2 &SetEnemyFac &RecFac WinComp 0 .make_enemy>
-		GoOfferJoin <NewChat Say 3 AddChat 1 AddChat 2 AddChat 3 AddChat 4 V= 1 1>
+		GoOfferJoin <NewChat Say 3 AddChat 1 AddChat 2 AddChat 3 AddChat 4 P= 5 1>
 		.make_enemy <+T-- +F-->
-
-		result1 <NewChat Say 4 AddChat 2 AddChat 3 AddChat 5>
+		result1 <NewChat Say 4 AddChat 2 AddChat 3 AddChat 5 AddChat 6 V= 1 StoryDL V= 2 150000>
 		result2 <NewChat Say 5 StoryNote 6 &SetEnemyFac &RecFac WinComp 0 .make_enemy>
 		result3 <NewChat Say 7>
 		result4 <NewChat Say 8 SMemo 0 &SetAllyFac PCFac WinComp 0 .make_enemy>
-		result5 <NewChat Say 9 StoryNote 10 &SetAllyFac &RecFac RandomMecha .meks StoryDL AlterContext .make_enemy SetPlotStatus %id1%>
+		result5 <NewChat Say 9 StoryNote 10 &SetAllyFac &RecFac  RandomMecha .meks V1  CashPrize V2  XPV 200  AlterContext .make_enemy SetPlotStatus %id1%>
 		.meks <GENERAL \FACTION_DESIG &RecFac>
-
+		result6 <NewChat Say 11 AddChat 2 AddChat 3 AddChat 5 V+ 1 10 V= 2 * 2 V2  &SetEnemyFac &AltFac>
 		Msg1 <The evil plans of %name3% will soon come to fruition! Oh, wait, you're not the human resources director... forget I said that.>
 		Msg2 <%name5% revealed that %name3% is planning something.>
 		Msg3 <You should know that %name3% is looking for some fresh talent. If you'd like a position with our company, I can sign you up right away.>
+		Msg3_1 <>
+		Msg3_2 <>
 		Msg4 <For joining %name3% you'll receive a company mecha, skill training, access to company perks and the possibility of rapid promotion. What do you say?>
+		Msg4_1 <>
+		Msg4_2 <>
 		Msg5 <You choose to reject us? Fine... but be warned that the %name3% juggernaut will not be stopped!>
+		Msg5_1 <>
 		Msg6 <%name5% seemed upset that you refused to join %name3%.>
 		Msg7 <Please do. Let me know when you've made your decision.>
+		Msg7_1 <>
 		Msg8 <Well, isn't that nice. If you'll excuse me I should go scout out some people who are actually looking for jobs.>
-		Msg9 <>
+		Msg9 <Great! To start with, here's your company mecha and an equipment bonus. We'll let you know when there's some work for you to do.>
+		Msg9_1 <>
 		Msg10 <You accepted a job offer from %name3%.>
-
+		Msg11 <Is that so? Well, whatever %name4% is offering, %name3% can promise more! How about it, do we have a deal?>
+		Msg11_1 <>
 		Prompt1 <What do I get for signing on?>
 		Prompt2 <No thanks. I'm not interested.>
-		CPrompt2 <if= V1 1 Accept>
+		CPrompt2 <if# P5 0 Accept>
 		Prompt3 <Hmmm... I'll think about that.>
 		Prompt4 <I'm quite happy working for \FACTION PCFac .>
 		CPrompt4 <if# PCFac 0 Accept>
 		Prompt5 <Alright, I'll join!>
+		Prompt6 <%name7% offered me a better deal.>
+		CPrompt6 <if# P7 0 Accept>
 
 		Persona 7
 		rumor0 <%name7% is recruiting for %name4% at %name1% today.>
+		% V1 = Mecha Size
+		% V2 = Signing Bonus
 		&RecFac <%4%>
+		&AltFac <%3%>
+		greeting <if= PlotStatus 0 else GoChat Goto GoCheckFirst>
+		GoChat <NewChat SayAnything>
+		GoCheckFirst <IFFACTIONENEMY &RecFac else GoOfferJoin NewChat Say 1 StoryNote 2 &SetEnemyFac &RecFac WinComp 0 .make_enemy>
+		GoOfferJoin <NewChat Say 3 AddChat 1 AddChat 2 AddChat 3 AddChat 4 P= 7 1>
+		.make_enemy <+T-- +F-->
+		result1 <NewChat Say 4 AddChat 2 AddChat 3 AddChat 5 AddChat 6 V= 1 StoryDL V= 2 150000>
+		result2 <NewChat Say 5 StoryNote 6 &SetEnemyFac &RecFac WinComp 0 .make_enemy>
+		result3 <NewChat Say 7>
+		result4 <NewChat Say 8 SMemo 0 &SetAllyFac PCFac WinComp 0 .make_enemy>
+		result5 <NewChat Say 9 StoryNote 10 &SetAllyFac &RecFac  RandomMecha .meks V1  CashPrize V2  XPV 200  AlterContext .make_enemy SetPlotStatus %id1%>
+		.meks <GENERAL \FACTION_DESIG &RecFac>
+		result6 <NewChat Say 11 AddChat 2 AddChat 3 AddChat 5 V+ 1 10 V= 2 * 2 V2  &SetEnemyFac &AltFac>
+		Msg1 <The evil plans of %name4% will soon come to fruition! Oh, wait, you're not the human resources director... forget I said that.>
+		Msg2 <%name7% revealed that %name4% is planning something.>
+		Msg3 <You should know that %name4% is looking for some fresh talent. If you'd like a position with our company, I can sign you up right away.>
+		Msg3_1 <>
+		Msg3_2 <>
+		Msg4 <For joining %name4% you'll receive a company mecha, skill training, access to company perks and the possibility of rapid promotion. What do you say?>
+		Msg4_1 <>
+		Msg4_2 <>
+		Msg5 <You choose to reject us? Fine... but be warned that the %name4% juggernaut will not be stopped!>
+		Msg5_1 <>
+		Msg6 <%name7% seemed upset that you refused to join %name4%.>
+		Msg7 <Please do. Let me know when you've made your decision.>
+		Msg7_1 <>
+		Msg8 <Well, isn't that nice. If you'll excuse me I should go scout out some people who are actually looking for jobs.>
+		Msg9 <Great! To start with, here's your company mecha and an equipment bonus. We'll let you know when there's some work for you to do.>
+		Msg9_1 <>
+		Msg10 <You accepted a job offer from %name4%.>
+		Msg11 <Is that so? Well, whatever %name3% is offering, %name4% can promise more! How about it, do we have a deal?>
+		Msg11_1 <>
+		Prompt1 <What do I get for signing on?>
+		Prompt2 <No thanks. I'm not interested.>
+		CPrompt2 <if# P7 0 Accept>
+		Prompt3 <Hmmm... I'll think about that.>
+		Prompt4 <I'm quite happy working for \FACTION PCFac .>
+		CPrompt4 <if# PCFac 0 Accept>
+		Prompt5 <Alright, I'll join!>
+		Prompt6 <%name5% offered me a better deal.>
+		CPrompt6 <if# P5 0 Accept>
 
-		Msg1 <The evil plans of %name3% will soon come to fruition! Oh, wait, you're not the human resources director... forget I said that.>
-		Msg2 <%name7% revealed something about %name4%'s evil plot.>
-
+		STC MS_SOCIAL
+		SetID 1
 	end
 
 Plot

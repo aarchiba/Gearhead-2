@@ -148,7 +148,7 @@ Function Calculate_Threat_Points( Level,Percent: Integer ): LongInt;
 
 implementation
 
-uses ghchars,ghmodule,ghholder,ghsensor;
+uses ghchars,ghmodule,ghholder,ghsensor,ghmecha;
 
 Function LocatePilot( Mecha: GearPtr ): GearPtr;
 	{ Locate the pilot of this mecha. If no pilot may be found, }
@@ -302,21 +302,19 @@ begin
 		{ the skill value and return it. }
 		Exit( UnitSkillValue( Master^.SubCom ) );
 
-	end else if Master^.G = GG_Prop then begin
-		{ Props are easy. Return the basic skill rank. }
-		StRk := 0;
-		SkRk := NAttValue( Master^.NA , NAG_Skill , Skill);
-		C := Master;
-
-	end else begin
+	end else if Master^.G = GG_Mecha then begin
 		{ As of this implementation, mecha are assumed to }
-		{ have a single pilot. This will change at some }
-		{ point in time, but for now just locate the cockpit. }
+		{ have a single pilot. }
 		C := LocatePilot( Master );
 		if C = Nil then Exit( 0 );
 
 		SkRk := SkillValue( C , Skill) + ModifiersSkillBonus( Master , Skill );
 		StRk := 0;
+
+		{ If this mecha has reflex control, there may be a +1 bonus to this skill. }
+		if HasMechaTrait( Master , MT_ReflexSystem ) and ( Skill < 6 ) then begin
+			if CharaSkillRank( C , Skill + 5 ) >= CharaSkillRank( C , Skill ) then Inc( SkRk );
+		end;
 
 		if SkillMan[Skill].MekSys = MS_Maneuver then begin
 			SkMod := SkMod + MechaManeuver( Master );
@@ -325,6 +323,13 @@ begin
 		end else if SkillMan[Skill].MekSys = MS_Sensor then begin
 			SkMod := SkMod + MechaSensorRating( Master );
 		end;
+
+	end else begin
+		{ Props are easy. Return the basic skill rank. }
+		StRk := 0;
+		SkRk := NAttValue( Master^.NA , NAG_Skill , Skill);
+		C := Master;
+
 	end;
 
 	{ The final value equals the Skill Rank plus }

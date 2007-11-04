@@ -52,10 +52,11 @@ Torso
 		PowerSource 1
 		mass -1
 
-		BeamGun 12
+		BeamGun 16
 		Name <Plasma Quad Cannon>
 		Type <BRUTAL>
 		Integral
+		mass -4
 		Acc 1
 		Speed 2
 		BV 3
@@ -105,7 +106,7 @@ Arm
 
 		BeamGun 10
 		name <Plasma Fist>
-		Range 4
+		Range 5
 		type <LINE BRUTAL>
 		Integral
 	end

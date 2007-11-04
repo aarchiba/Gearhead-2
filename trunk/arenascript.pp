@@ -1353,8 +1353,8 @@ begin
 				{ Insert the name of a specified faction. }
 				ID := ScriptValue( S0 , GB , Scene );
 				Part := GG_LocateFaction( ID , GB , Scene );
-				if Part <> Nil then W := SAttValue( Part , 'DESIG' )
-				else W = 'ERROR:Faction_Not_Found';
+				if Part <> Nil then W := SAttValue( Part^.SA , 'DESIG' )
+				else W := 'ERROR:Faction_Not_Found';
 
 			end else if W = '\SCENE' then begin
 				{ Insert the name of a specified scene. }

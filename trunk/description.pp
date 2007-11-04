@@ -44,7 +44,7 @@ Function MechaPilotName( Mek: GearPtr ): String;
 implementation
 
 uses 	ghmodule,ghweapon,ghsensor,ghsupport,ghmovers,ghguard,ghswag,ghholder,ghchars,
-	ability,ghintrinsic,interact;
+	ability,ghintrinsic,interact,ghmecha;
 
 Function BasicWeaponDesc( Weapon: GearPtr ): String;
 	{Supply a default name for this particular weapon.}
@@ -482,6 +482,10 @@ begin
 				it := it + ' ' + MsgString( 'MoveModeName_' + BStr( MM ) ) + ':' + BStr( MMS );
 			end;
 		end;
+	end;
+
+	if Mek^.Stat[ STAT_MechaTrait ] <> 0 then begin
+		it := it + ' ' + MsgString( 'MECHATRAIT_' + BStr( Mek^.Stat[ STAT_MechaTrait ] ) );
 	end;
 
 	Engine := SeekGear( Mek , GG_Support , GS_Engine );

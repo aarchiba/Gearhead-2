@@ -945,23 +945,27 @@ Function AttemptAcrobatics( TMaster: GearPtr; SkRoll: Integer ): Integer;
 	{ Try to evade this attack using Acrobatics. }
 var
 	Part,Armor: GearPtr;
-	DefRoll: Integer;
+	DefRoll,SkMod: Integer;
 	CanUseAcrobatics: Boolean;
 begin
-	{ Mecha can't use Acrobatics. }
-	if ( TMaster^.G <> GG_Character ) then Exit( 0 );
-
-	{ First, check to see whether or not the character can even use Acrobatics. }
-	{ In order to do so he must not be wearing any armor higher than DC2. }
-	{ Assume TRUE until shown false. }
-	CanUseAcrobatics := True;
-	Part := TMaster^.SubCom;
-	while Part <> Nil do begin
-		if Part^.G = GG_Module then begin
-			Armor := SeekCurrentLevelGear( Part^.InvCom , GG_EXArmor , Part^.S );
-			if ( Armor <> Nil ) and ( Armor^.V > 2 ) then CanUseAcrobatics := False;
+	CanUseAcrobatics := False;
+	SkMod := 0;
+	if TMaster^.G = GG_Character then begin
+		{ First, check to see whether or not the character can even use Acrobatics. }
+		{ In order to do so he must not be wearing any armor higher than DC2. }
+		{ Assume TRUE until shown false. }
+		CanUseAcrobatics := True;
+		Part := TMaster^.SubCom;
+		while Part <> Nil do begin
+			if Part^.G = GG_Module then begin
+				Armor := SeekCurrentLevelGear( Part^.InvCom , GG_EXArmor , Part^.S );
+				if ( Armor <> Nil ) and ( Armor^.V > 2 ) then CanUseAcrobatics := False;
+			end;
+			Part := Part^.Next;
 		end;
-		Part := Part^.Next;
+	end else if TMaster^.G = GG_Mecha then begin
+		CanUseAcrobatics := HasMechaTrait( TMaster , MT_ReflexSystem );
+		SkMod := -5;
 	end;
 
 	DefRoll := 0;
@@ -969,7 +973,7 @@ begin
 	{ If it's possible, do the acrobatics attempt. }
 	if CanUseAcrobatics then begin
 		{ Make an attack roll to block. }
-		DefRoll := SkillRoll( TMaster , NAS_Acrobatics , SkRoll , 0 , False );
+		DefRoll := SkillRoll( TMaster , NAS_Acrobatics , SkRoll , SkMod , False );
 	end;
 
 	{ Return the resultant defense roll. }

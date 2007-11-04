@@ -310,7 +310,7 @@ Function PurchaseForces( ShoppingList: SAttPtr; Renown,Strength: Integer ): Gear
 	{ encounter is measured by STRENGTH, which is a percentage with 100 representing }
 	{ an average fight. }
 const
-	BasicGruntCost = 35;
+	BasicGruntCost = 30;
 	SkillPlusCost = 15;
 	SkillMinusCost = 7;
 var
@@ -587,7 +587,7 @@ Function SelectNPCMecha( GB: GameBoardPtr; Scene,NPC: GearPtr ): GearPtr;
 	{ this game board. }
 const
 	Min_Max_Cost = 400000;
-	Max_Min_Cost = 750000;
+	Max_Min_Cost = 1000000;
 var
 	MechaList: GearPtr;
 	Factions,Terrain_Type: String;
@@ -617,9 +617,9 @@ begin
 	else Terrain_Type := 'GROUND';
 
 	{ Determine the maximum and minimum mecha costs. }
-	Maximum_Cost := Calculate_Threat_Points( Renown , 25 );
+	Maximum_Cost := OptimalMechaValue( Renown ) * 3;
 	if Maximum_Cost < Min_Max_Cost then Maximum_Cost := Min_Max_Cost;
-	Minimum_Cost := Maximum_Cost div 2 - 200000;
+	Minimum_Cost := Maximum_Cost div 3;
 	if Minimum_Cost > Max_Min_Cost then Minimum_Cost := Max_Min_Cost;
 
 	{ Start the search process going... }

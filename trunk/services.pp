@@ -1879,6 +1879,10 @@ begin
 		City := City^.Next;
 	end;
 
+	{ Sort the menu. }
+	RPMSortAlpha( RPM );
+	AlphaKeyMenu( RPM );
+
 	{ Add the cancel option. }
 	AddRPGMenuItem( RPM , MsgString( 'EXIT' ) , -1 );
 

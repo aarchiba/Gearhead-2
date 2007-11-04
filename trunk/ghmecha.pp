@@ -43,6 +43,9 @@ Const
 	GS_HoverFighter = 7;	{ Helicopter, etc. }
 	GS_GroundCar = 8;	{ Land Vehicle - High Speed }
 
+	STAT_MechaTrait = 1;	{ The design perk associated with this design. }
+		NumMechaTrait = 1;
+		MT_ReflexSystem = 1;	{ Bonus to mecha skills if matched by personal skills. }
 
 	FormMVBonus: Array [ 0 .. ( NumForm - 1 ) ] of SmallInt = (
 		1, 2, -1, 0, -5,
@@ -60,7 +63,10 @@ Function MechaName(Part: GearPtr): String;
 Procedure CheckMechaRange( Mek: GearPtr );
 Function IsLegalMechaSubCom( Part, Equip: GearPtr ): Boolean;
 
+Function MechaCost( Mek: GearPtr ): LongInt;
+
 Function MechaTraitDesc( Mek: GearPtr ): String;
+Function HasMechaTrait( Mek: GearPtr; Trait: Integer ): Boolean;
 
 
 implementation
@@ -95,8 +101,11 @@ begin
 	if Mek^.V < 1 then Mek^.V := 1
 	else if Mek^.V > 10 then Mek^.V := 10;
 
-	{ Check Stats - No Stats are defined. }
-	for t := 1 to NumGearStats do Mek^.Stat[ T ] := 0;
+	{ Check Stats }
+	if Mek^.Stat[ STAT_MechaTrait ] < 0 then Mek^.Stat[ STAT_MechaTrait ] := 0
+	else if Mek^.Stat[ STAT_MechaTrait ] > NumMechaTrait then Mek^.Stat[ STAT_MechaTrait ] := 0;
+	
+	for t := 2 to NumGearStats do Mek^.Stat[ T ] := 0;
 end;
 
 Function IsLegalMechaSubCom( Part, Equip: GearPtr ): Boolean;
@@ -125,11 +134,32 @@ begin
 	end else IsLegalMechaSubCom := False;
 end;
 
+Function MechaCost( Mek: GearPtr ): LongInt;
+	{ Return the basic cost of this mecha. Cost gets increased based on material and trait. }
+const
+	TraitCost: Array [0..NumMechaTrait] of LongInt = (
+	0,
+	1000
+	);
+begin
+	if ( Mek^.Stat[ STAT_MechaTrait ] >= 0 ) and ( Mek^.Stat[ STAT_MechaTrait ] <= NumMechaTrait ) then begin
+		MechaCost := TraitCost[ Mek^.Stat[ STAT_MechaTrait ] ] * Mek^.V;
+	end else begin
+		MechaCost := 0;
+	end;
+end;
+
 Function MechaTraitDesc( Mek: GearPtr ): String;
 	{ Create a string describing the traits of this mecha. }
 	{ At the moment, this only contains form name. }
 begin
 	MechaTraitDesc := MsgString( 'FORMNAME_' + BStr( Mek^.S ) );
+end;
+
+Function HasMechaTrait( Mek: GearPtr; Trait: Integer ): Boolean;
+	{ Return TRUE if this mecha has the specified trait. }
+begin
+	HasMechaTrait := ( Mek <> Nil ) and ( Mek^.G = GG_Mecha ) and ( Mek^.Stat[ STAT_MechaTrait ] = Trait );
 end;
 
 end.

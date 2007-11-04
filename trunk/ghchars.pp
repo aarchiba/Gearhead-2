@@ -367,7 +367,7 @@ Const
 			Usage: USAGE_Taunt;		),
 		(	{Acrobatics}
 			stat: STAT_Speed;
-			meksys: 0;
+			meksys: MS_Maneuver;
 			ToolNeeded: TOOL_None;
 			Usage: 0;			)
 

@@ -1297,6 +1297,7 @@ begin
 		GG_Computer:	it := ComputerValue( Part );
 		GG_Software:	it := SoftwareValue( Part );
 		GG_Harness:	it := HarnessValue( Part );
+		GG_Mecha:	it := MechaCost( Part );
 
 	{If a component type is not listed above, it has no value.}
 	else it := 0

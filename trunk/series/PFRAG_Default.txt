@@ -1160,8 +1160,8 @@ Prompt%id%03_2 <Probably fight somebody. No idea who yet.>
 %  PARAM1: Faction ID
 	Persona
 	requires <*FACTION_JOIN_ACCEPT>
-	START <NewChat Say %id%01 mechaprize .%id%_mecha XPV 200 CashPrize 150000 SetPCFac %1%>
-	.%id%_mecha <BuruBuru.txt>
+	START <NewChat Say %id%01 RandomMecha .%id%_mecha PCRenown XPV 200 CashPrize 150000 SetPCFac %1%>
+	.%id%_mecha <GENERAL \FACTION_DESIG %1%>
 	Msg%id%01 <Great! To start with, you'll recieve a basic mecha and an equipment allowance. Welcome to \FACTION %1% .>
 
 	Persona
