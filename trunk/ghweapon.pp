@@ -472,14 +472,26 @@ Function AmmoBaseMass( Ammo: GearPtr ): Integer;
 	{Calculate the weight of the ammunition.}
 var
 	it: Integer;
-	NumShots: Integer;
+	NumShots,R: Integer;
+	AList,AA: String;
 begin
 	NumShots := Ammo^.Stat[STAT_AmmoPresent] - NAttValue( Ammo^.NA , NAG_WeaponModifier , NAS_AmmoSpent );
 
+	it := Ammo^.V * NumShots;
+
+	{ Extra mass for BLAST, HYPER ammo. }
+	AList := UpCase( SAttValue( Ammo^.SA , 'TYPE' ) );
+	if AStringHasBString( AList , AA_NAME[ AA_HYPER ] ) then it := it * 5;
+	if AStringHasBString( AList , AA_NAME[ AA_BLASTATTACK ] ) then begin
+		AA := Copy( AList , Pos( 'BLAST' , AList ) + 6 , Length( AList ) );
+		R := ExtractValue( AA );
+		if R > 0 then it := it * ( R + 1 );
+	end;
+
 	if ( Ammo^.S = GS_Missile ) or ( Ammo^.S = GS_Grenade ) then begin
-		it := AmmoBaseDamage(Ammo);
+		it := it div 25;
 	end else begin
-		it := Ammo^.V * NumShots div 100;
+		it := it div 100;
 	end;
 
 	if it < 1 then it := 1;
@@ -859,12 +871,7 @@ begin
 
 	AAV := AttackAttributeValue( Part ) - 5;
 	if AAV < 1 then AAV := 1
-	else if AAV > 5 then AAV := AAV * 3;
-
-	{ Extra cost for BLAST, HYPER ammo. }
-	AA := SAttValue( Part^.SA , 'TYPE' );
-	if AStringHasBString( AA , AA_NAME[ AA_BLASTATTACK ] ) then AAV := AAV * 2;
-	if AStringHasBString( AA , AA_NAME[ AA_HYPER ] ) then AAV := AAV * 3;
+	else if ( AAV > 5 ) and ( Part^.S = GS_Ballistic ) then AAV := AAV * 3;
 
 	BaseAmmoValue := ( NumShots * Part^.V * AAV ) div 50;
 end;

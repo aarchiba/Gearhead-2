@@ -54,14 +54,18 @@ Arm
 	sub
 		STC PHS-8
 
-		MLauncher 2
-		sub
-			Rockets 20
-			Name <Superheavy Missile>
-			Type <BLAST 5 BRUTAL>
-			Range 10
-			Acc 2
-			Magazine 1
+		mount
+		name <Right Shoulder Mount>
+		inv
+			MLauncher 2
+			sub
+				Rockets 20
+				Name <Superheavy Missile>
+				Type <BLAST 5 BRUTAL>
+				Range 10
+				Acc 2
+				Magazine 1
+			end
 		end
 
 		HeavyActuator 1
@@ -77,14 +81,18 @@ Arm
 	sub
 		STC PHS-8
 
-		MLauncher 2
-		sub
-			Rockets 20
-			Name <Superheavy Missile>
-			Type <BLAST 5 BRUTAL>
-			Range 10
-			Acc 2
-			Magazine 1
+		mount
+		name <Left Shoulder Mount>
+		inv
+			MLauncher 2
+			sub
+				Rockets 20
+				Name <Superheavy Missile>
+				Type <BLAST 5 BRUTAL>
+				Range 10
+				Acc 2
+				Magazine 1
+			end
 		end
 
 		HeavyActuator 1
@@ -145,6 +153,7 @@ Storage
 			STC FRM-6
 			Magazine 20
 			range 8
+			mass -3
 		end
 	end
 
@@ -158,6 +167,7 @@ Storage
 			STC FRM-6
 			Magazine 20
 			range 8
+			mass -3
 		end
 	end
 end

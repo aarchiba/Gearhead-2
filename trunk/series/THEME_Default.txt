@@ -209,9 +209,10 @@ Theme 1
 		caliber <70mm self-propelled>
 		range 8
 		scale 2
+		Speed 3
 		sub
 			Ammo 14
-			Magazine 12
+			Magazine 24
 			caliber <70mm self-propelled>
 			type <BLAST 3 BURN BRUTAL>
 		end
@@ -223,6 +224,7 @@ Theme 1
 		scale 2
 		type <SWARM>
 		BV 2
+		Acc 2
 		Speed 1
 		sub
 			Ammo 14
@@ -285,9 +287,10 @@ Theme 1
 		caliber <50mm self-propelled>
 		range 7
 		scale 2
+		Acc 1
 		sub
 			Ammo 8
-			Magazine 12
+			Magazine 16
 			caliber <50mm self-propelled>
 			type <BLAST 2 BURN BRUTAL>
 		end
@@ -344,15 +347,15 @@ Theme 1
 			type <BURN>
 		end
 
-		Gun 5
+		Gun 9
 		name <Immolation Cannon>
 		caliber <150mm self-propelled>
 		Range 6
 		Speed 3
 		scale 2
 		sub
-			Ammo 5
-			Magazine 35
+			Ammo 9
+			Magazine 50
 			caliber <150mm self-propelled>
 			type <BURN HYPER>
 		end
@@ -370,32 +373,11 @@ Theme 1
 		Range 6
 		BV 3
 
-		MLauncher 1
-		Scale 2
-		sub
-			STC ICM-5
-			magazine 2
-		end
-
-		MLauncher 2
-		Scale 2
-		sub
-			STC ICM-5
-			magazine 4
-		end
-
 		MLauncher 4
 		Scale 2
 		sub
 			STC ICM-5
 			magazine 8
-		end
-
-		MLauncher 1
-		Scale 2
-		sub
-			STC FBM-8
-			magazine 1
 		end
 
 		MLauncher 6
@@ -405,13 +387,6 @@ Theme 1
 			magazine 12
 		end
 
-		MLauncher 2
-		Scale 2
-		sub
-			STC FBM-8
-			magazine 2
-		end
-
 		MLauncher 12
 		Scale 2
 		sub
@@ -419,18 +394,18 @@ Theme 1
 			magazine 24
 		end
 
-		MLauncher 3
-		Scale 2
-		sub
-			STC FBM-8
-			magazine 3
-		end
-
 		MLauncher 4
 		Scale 2
 		sub
 			STC FBM-8
-			magazine 5
+			magazine 4
+		end
+
+		MLauncher 10
+		Scale 2
+		sub
+			STC FBM-8
+			magazine 12
 		end
 
 		MLauncher 18
@@ -452,6 +427,27 @@ Theme 1
 		sub
 			STC FBM-8
 			magazine 15
+		end
+
+		MLauncher 5
+		Scale 2
+		sub
+			Rockets 25
+			Name <Nova Bomb>
+			Type <BURN BRUTAL BLAST 5>
+			Range 12
+			Magazine 2
+		end
+
+		MLauncher 24
+		Scale 2
+		sub
+			Rockets 6
+			Name <Pyro Storm>
+			Type <BURN BRUTAL SWARM>
+			Acc 2
+			Range 7
+			Magazine 40
 		end
 
 
@@ -566,6 +562,7 @@ Theme 2
 		end
 
 		STC RG-8
+		Speed 3
 
 		Gun 10
 		Scale 2
@@ -574,6 +571,7 @@ Theme 2
 		Range 6
 		BV 2
 		Speed 3
+		Acc 1
 		mass -5
 		sub
 			Ammo 10
@@ -656,7 +654,6 @@ Theme 2
 		caliber <70mm self-propelled>
 		range 8
 		scale 2
-		Speed 1
 		mass -4
 		sub
 			Ammo 17
@@ -699,7 +696,6 @@ Theme 2
 		caliber <150mm self-propelled>
 		range 15
 		scale 2
-		Speed 1
 		Acc 1
 		mass -11
 		sub
@@ -710,20 +706,6 @@ Theme 2
 		end
 
 		%% Missiles
-		MLauncher 4
-		Scale 2
-		sub
-			STC HR-10
-			Magazine 4
-		end
-
-		MLauncher 4
-		Scale 2
-		sub
-			STC SWM-2
-			Magazine 20
-		end
-
 		MLauncher 8
 		Scale 2
 		sub
@@ -736,27 +718,6 @@ Theme 2
 		sub
 			STC AAM-8
 			Magazine 10
-		end
-
-		MLauncher 12
-		Scale 2
-		sub
-			STC SWM-2
-			Magazine 60
-		end
-
-		MLauncher 2
-		Scale 2
-		sub
-			STC DCM-15
-			Magazine 1
-		end
-
-		MLauncher 16
-		Scale 2
-		sub
-			STC AAM-8
-			Magazine 20
 		end
 
 		MLauncher 15
@@ -780,19 +741,41 @@ Theme 2
 			Magazine 2
 		end
 
-		MLauncher 20
-		Scale 2
-		sub
-			STC FRM-6
-			Magazine 32
-		end
-
-		MLauncher 5
+		MLauncher 6
 		Scale 2
 		sub
 			STC DCM-15
-			Magazine 3
+			Magazine 4
 		end
+
+		MLauncher 9
+		Scale 2
+		sub
+			STC DCM-15
+			Magazine 6
+		end
+
+		MLauncher 12
+		Scale 2
+		sub
+			STC DCM-15
+			Magazine 8
+		end
+
+		MLauncher 15
+		Scale 2
+		sub
+			STC DCM-15
+			Magazine 10
+		end
+
+		MLauncher 18
+		Scale 2
+		sub
+			STC DCM-15
+			Magazine 12
+		end
+
 
 	% End SOLDIER
 	end
@@ -818,13 +801,6 @@ Theme 3
 	CUSTOMIZATION_NOUN_4 <Skill>
 
 	inv
-		MLauncher 4
-		Scale 2
-		sub
-			STC ICM-5
-			magazine 8
-		end
-
 		MLauncher 1
 		Scale 2
 		sub
@@ -837,20 +813,6 @@ Theme 3
 		sub
 			STC HWM-4
 			magazine 10
-		end
-
-		MLauncher 4
-		Scale 2
-		sub
-			STC AAM-8
-			magazine 5
-		end
-
-		MLauncher 12
-		Scale 2
-		sub
-			STC AAM-8
-			magazine 15
 		end
 
 		MLauncher 24
@@ -874,18 +836,39 @@ Theme 3
 			magazine 10
 		end
 
-		MLauncher 20
-		Scale 2
-		sub
-			STC GM-10
-			magazine 20
-		end
-
 		MLauncher 25
 		Scale 2
 		sub
 			STC GM-10
 			magazine 25
+		end
+
+		MLauncher 20
+		Scale 2
+		sub
+			STC HWM-4
+			magazine 50
+		end
+
+		MLauncher 15
+		Scale 2
+		sub
+			STC THM-12
+			magazine 12
+		end
+
+		MLauncher 20
+		Scale 2
+		sub
+			STC THM-12
+			magazine 16
+		end
+
+		MLauncher 24
+		Scale 2
+		sub
+			STC THM-12
+			magazine 20
 		end
 
 		%% Big Guns
@@ -1132,25 +1115,11 @@ Theme 4
 
 	inv
 		%Missile Launchers
-		MLauncher 10
-		Scale 2
-		sub
-			STC LR-1
-			magazine 100
-		end
-
 		MLauncher 12
 		Scale 2
 		sub
 			STC HR-10
 			magazine 12
-		end
-
-		MLauncher 24
-		Scale 2
-		sub
-			STC HR-10
-			magazine 24
 		end
 
 		MLauncher 2
@@ -1163,40 +1132,6 @@ Theme 4
 			Magazine 2
 			Acc -1
 			type <BLAST 3 BRUTAL>
-		end
-
-		MLauncher 3
-		Scale 2
-		sub
-			STC FRM-6
-			magazine 5
-		end
-
-		MLauncher 9
-		Scale 2
-		sub
-			STC FRM-6
-			magazine 15
-		end
-
-		MLauncher 2
-		Scale 2
-		sub
-			STC HR-10
-			name <Demolition Missiles>
-			type <BLAST 2 BRUTAL>
-			Acc -1
-			magazine 2
-		end
-
-		MLauncher 4
-		Scale 2
-		sub
-			STC HR-10
-			name <Demolition Missiles>
-			type <BLAST 2 BRUTAL>
-			Acc -1
-			magazine 4
 		end
 
 		MLauncher 5
@@ -1218,6 +1153,73 @@ Theme 4
 			Acc -1
 			magazine 6
 		end
+
+		MLauncher 7
+		Scale 2
+		sub
+			Rockets 7
+			scale 2
+			name <Slag Missiles>
+			Range 7
+			Magazine 10
+			Acc -1
+			type <BLAST 3 BRUTAL>
+		end
+
+		MLauncher 10
+		Scale 2
+		sub
+			STC HR-10
+			name <Demolition Missiles>
+			type <BLAST 2 BRUTAL>
+			Acc -1
+			magazine 10
+		end
+
+		MLauncher 15
+		Scale 2
+		sub
+			STC HR-10
+			name <Demolition Missiles>
+			type <BLAST 2 BRUTAL>
+			Acc -1
+			magazine 15
+		end
+
+		MLauncher 14
+		Scale 2
+		sub
+			Rockets 7
+			scale 2
+			name <Slag Missiles>
+			Range 7
+			Magazine 20
+			Acc -1
+			type <BLAST 3 BRUTAL>
+		end
+
+		MLauncher 25
+		Scale 2
+		sub
+			Rockets 7
+			scale 2
+			name <Slag Missiles>
+			Range 7
+			Magazine 35
+			Acc -1
+			type <BLAST 3 BRUTAL>
+		end
+
+		MLauncher 25
+		Scale 2
+		sub
+			STC HR-10
+			name <Demolition Missiles>
+			type <BLAST 2 BRUTAL>
+			Acc -1
+			magazine 25
+		end
+
 
 		%Big guns
 		Gun 11
@@ -1300,7 +1302,7 @@ Theme 4
 			Magazine 20
 			mass -1
 			caliber <70mm self-propelled>
-			type <BLAST 1 BRUTAL>
+			type <BLAST 2 BRUTAL>
 		end
 
 		Gun 15
@@ -1586,26 +1588,6 @@ Theme 5
 			Magazine 2
 		end
 
-		MLauncher 2
-		Scale 2
-		sub
-			Rockets 15
-			name <Hurricane Missiles>
-			Scale 2
-			Range 10
-			type <BLAST 3 HAYWIRE>
-			Magazine 1
-		end
-
-
-		MLauncher 1
-		Scale 2
-		sub
-			STC GM-10
-			Magazine 1
-			name <Clever Parrot Missiles>
-		end
-
 		MLauncher 5
 		Scale 2
 		sub
@@ -1622,14 +1604,6 @@ Theme 5
 			name <Clever Parrot Missiles>
 		end
 
-
-		MLauncher 4
-		Scale 2
-		sub
-			STC AAM-8
-			Magazine 5
-		end
-
 		MLauncher 2
 		Scale 2
 		sub
@@ -1637,24 +1611,6 @@ Theme 5
 			name <Disabler Rockets>
 			type <HAYWIRE OVERLOAD>
 			Magazine 5
-		end
-	
-		MLauncher 4
-		Scale 2
-		sub
-			STC HWM-4
-			name <Disabler Rockets>
-			type <HAYWIRE OVERLOAD>
-			Magazine 10
-		end
-
-		MLauncher 8
-		Scale 2
-		sub
-			STC HWM-4
-			name <Disabler Rockets>
-			type <HAYWIRE OVERLOAD>
-			Magazine 20
 		end
 
 		MLauncher 12
@@ -1666,6 +1622,60 @@ Theme 5
 			Magazine 30
 		end
 
+		MLauncher 5
+		Scale 2
+		sub
+			Rockets 15
+			name <Hurricane Missiles>
+			Scale 2
+			Range 10
+			type <BLAST 3 HAYWIRE>
+			Magazine 3
+		end
+
+		MLauncher 9
+		Scale 2
+		sub
+			Rockets 15
+			name <Hurricane Missiles>
+			Scale 2
+			Range 10
+			type <BLAST 3 HAYWIRE>
+			Magazine 6
+		end
+
+		MLauncher 12
+		Scale 2
+		sub
+			Rockets 15
+			name <Hurricane Missiles>
+			Scale 2
+			Range 10
+			type <BLAST 3 HAYWIRE>
+			Magazine 8
+		end
+
+		MLauncher 15
+		Scale 2
+		sub
+			Rockets 15
+			name <Hurricane Missiles>
+			Scale 2
+			Range 10
+			type <BLAST 3 HAYWIRE>
+			Magazine 10
+		end
+
+		MLauncher 18
+		Scale 2
+		sub
+			Rockets 15
+			name <Hurricane Missiles>
+			Scale 2
+			Range 10
+			type <BLAST 3 HAYWIRE>
+			Magazine 12
+		end
 
 		% Big Guns
 		Gun 15
@@ -1720,6 +1730,7 @@ Theme 5
 		range 8
 		scale 2
 		Speed 1
+		Acc 2
 		mass -4
 		sub
 			Ammo 17
@@ -1750,16 +1761,18 @@ Theme 5
 		name <Broadsides Cannon>
 		Speed 3
 
-		Gun 19
+		Gun 24
 		name <Dynamite Gun>
 		%% Looking for naval weapons to use here I came across the Dynamite Gun.
 		%% It wasn't invented until well after the golden age of piracy, but with
 		%% a name like "Dynamite Gun" I had to include it.
 		caliber <100mm explosive cannister>
 		range 10
+		Speed 3
 		scale 2
+		mass -5
 		sub
-			Ammo 19
+			Ammo 24
 			Magazine 20
 			caliber <100mm explosive cannister>
 			type <BLAST 3 BRUTAL>
@@ -2154,52 +2167,45 @@ Theme 6
 		STC PAR-13
 		%% #7
 
-		Gun 12
+		Gun 15
 		%% #8
 		name <AntiMatter Gauss Rifle>
 		scale 2
 		Range 10
+		Acc 1
 		Recharge 2
 		caliber <70mm antiferrous>
 		sub
-			Ammo 12
+			Ammo 15
 			caliber <70mm antiferrous>
 			type <HYPER>
-			magazine 16
+			magazine 32
 		end
 
 		BeamGun 14
-		%% #9
+		%% #10
 		name <Quantum Destabilizer>
 		type <EXPERIMENTAL>
 		Scale 2
 		Recharge 3
+		mass -4
 
-		Gun 16
-		%% #10
+		Gun 24
+		%% #9
 		name <Singularity Cannon>
 		scale 2
 		Range 8
-		Acc -3
+		Speed 3
 		caliber <gravitic negation shell>
+		mass -10
 		sub
-			Ammo 16
-			caliber <gravitic negation shell>
+			Ammo 24
 			type <BLAST 1 HYPER MYSTERY>
-			magazine 8
+			caliber <gravitic negation shell>
+			magazine 13
 		end
 
 		%% Missiles
-		MLauncher 3
-		Scale 2
-		sub
-			Rockets 15
-			name <Implosion Bomb>
-			type <Armorpiercing>
-			Range 4
-			Magazine 2
-		end
-
 		MLauncher 6
 		Scale 2
 		sub
@@ -2220,24 +2226,6 @@ Theme 6
 			Magazine 8
 		end
 
-		MLauncher 4
-		Scale 2
-		sub
-			STC SWM-2
-			acc 3
-			name <A.I. Guided Missiles>
-			Magazine 20
-		end
-	
-		MLauncher 8
-		Scale 2
-		sub
-			STC SWM-2
-			acc 3
-			name <A.I. Guided Missiles>
-			Magazine 40
-		end	
-
 		MLauncher 12
 		Scale 2
 		sub
@@ -2256,22 +2244,22 @@ Theme 6
 			Magazine 100
 		end	
 
-		MLauncher 4
+		MLauncher 12
 		Scale 2
 		sub
-			STC HR-10
-			name <Glass Rockets>
+			STC GR-10
+			name <Medusa Rockets>
 			type <RUST>
-			Magazine 4
+			Magazine 12
 		end
 
-		MLauncher 2
+		MLauncher 8
 		Scale 2
 		sub
-			STC HR-10
+			STC GR-10
 			name <Neutronic Rockets>
 			type <HYPER>
-			Magazine 2
+			Magazine 8
 		end
 
 		MLauncher 2
@@ -2282,6 +2270,34 @@ Theme 6
 			type <Blast 4 Brutal Mystery>
 			Magazine 1
 		end
+
+		MLauncher 6
+		Scale 2
+		sub
+			STC NUKE-20
+			name <Quantum Missile>
+			type <Blast 4 Brutal Mystery>
+			Magazine 3
+		end
+
+		MLauncher 24
+		Scale 2
+		sub
+			STC GR-10
+			name <Medusa Rockets>
+			type <RUST>
+			Magazine 24
+		end
+
+		MLauncher 16
+		Scale 2
+		sub
+			STC GR-10
+			name <Neutronic Rockets>
+			type <HYPER>
+			Magazine 16
+		end
+
 
 		%% Melee Weapons
 		EMelee 4
@@ -2374,7 +2390,7 @@ Theme 7
 	%% A collection of beautiful attacks- think the kind of thing Sailor Moon
 	%% would approve of. The Beauty warrior is mostly just concerned with
 	%% looking good.
-	
+
 	CUSTOMIZATION_ADJECTIVE_0 <Beautiful>
 	CUSTOMIZATION_ADJECTIVE_1 <Lovely>
 	CUSTOMIZATION_ADJECTIVE_2 <Charming>
@@ -2574,7 +2590,7 @@ Theme 7
 		caliber <70mm self-propelled>
 		range 8
 		scale 2
-		Speed 1
+		Speed 3
 		sub
 			Ammo 14
 			Magazine 16
@@ -2603,7 +2619,7 @@ Theme 7
 		scale 2
 		type <SWARM>
 		BV 2
-		Speed 1
+		Speed 2
 		sub
 			Ammo 14
 			Magazine 36
@@ -2622,14 +2638,6 @@ Theme 7
 		Recharge 1
 
 		%% Missile Launchers
-		MLauncher 1
-		Scale 2
-		sub
-			STC ICM-5
-			name <Star Flares>
-			Magazine 2
-		end
-
 		MLauncher 5
 		Scale 2
 		sub
@@ -2638,32 +2646,7 @@ Theme 7
 			Magazine 10
 		end
 
-		MLauncher 2
-		Scale 2
-		sub
-			STC ICM-5
-			name <Star Flares>
-			Magazine 4
-		end
-
-		MLauncher 1
-		%% Three
-		Scale 2
-		sub
-			STC SPKM-2
-			Magazine 5
-		end
-
-		MLauncher 2
-		%% Five
-		Scale 2
-		sub
-			STC SPKM-2
-			Magazine 10
-		end
-
 		MLauncher 3
-		%% Six
 		Scale 2
 		sub
 			STC SPKM-2
@@ -2671,18 +2654,17 @@ Theme 7
 		end
 
 		MLauncher 5
-		%% Eight
 		Scale 2
 		sub
 			STC SPKM-2
 			Magazine 25
 		end
 
-		MLauncher 16
+		MLauncher 24
 		Scale 2
 		sub
 			STC SWM-5
-			Magazine 32
+			Magazine 48
 			name <Rose Missiles>
 			type <SWARM ARMORPIERCING>
 			Acc 1
@@ -2711,6 +2693,42 @@ Theme 7
 			range 10
 		end
 
+		MLauncher 25
+		Scale 2
+		sub
+			STC ICM-5
+			name <Star Flares>
+			Magazine 50
+		end
+
+		MLauncher 20
+		Scale 2
+		sub
+			STC SPKM-2
+			Magazine 100
+		end
+
+		MLauncher 12
+		Scale 2
+		sub
+			Rockets 2
+			name <Fairy Missile>
+			Magazine 60
+			Acc 2
+			Range 7
+			type <SWARM BRUTAL OVERLOAD HAYWIRE>
+		end
+
+		MLauncher 18
+		Scale 2
+		sub
+			Rockets 2
+			name <Fairy Missile>
+			Magazine 90
+			Acc 2
+			Range 7
+			type <SWARM BRUTAL OVERLOAD HAYWIRE>
+		end
 
 		%% Melee Weapons
 		Melee 8

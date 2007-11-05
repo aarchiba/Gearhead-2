@@ -97,7 +97,7 @@ Storage
 
 Torso
 	Armor 7
-	Mass -7
+	Mass -9
 	sub
 		CPit
 		Armor 2
@@ -149,7 +149,7 @@ Torso
 Arm
 	Size 5
 	Armor 7
-	Mass -6
+	Mass -7
 	Name <Right Arm>
 	sub
 		Hand
@@ -169,7 +169,7 @@ Arm
 			sub
 				Ammo 20
 				Magazine 50
-				Mass -3
+				Mass -5
 				caliber <120mm ferrous>
 			end
 		end
@@ -186,7 +186,7 @@ Arm
 Arm
 	Size 5
 	Armor 7
-	Mass -6
+	Mass -7
 	Name <Left Arm>
 	sub
 		Hand
@@ -206,7 +206,7 @@ Arm
 			sub
 				Ammo 22
 				Magazine 50
-				Mass -3
+				Mass -5
 				caliber <120mm ferrous>
 			end
 		end
@@ -223,7 +223,7 @@ Arm
 Leg
 	Size 8
 	Armor 7
-	Mass -7
+	Mass -8
 	Name <Right Leg>
 	sub
 		HoverJet 5
@@ -240,7 +240,7 @@ Leg
 Leg
 	Size 8
 	Armor 7
-	Mass -7
+	Mass -8
 	Name <Left Leg>
 	sub
 		HoverJet 5
@@ -263,7 +263,7 @@ Tail
 		Name <Tail Spike>
 		Speed 3
 		Acc 2
-		mass -6
+		mass -8
 		Integral
 	end
 end

@@ -1,6 +1,6 @@
 Battroid 5
 Name <Vadel>
-Desig <AD28>
+Desig <AD28c>
 type <GROUND SPACE>
 factions <GENERAL>
 SDL_Sprite <btr_vadel.png>
@@ -19,7 +19,7 @@ Head
 
 torso
 	Armor 4
-	mass -4
+	mass -6
 	sub
 		CPit
 		Armor 2
@@ -44,13 +44,13 @@ torso
 		Overcharger 6
 
 		STC VC-5
-		mass -10
+		mass -11
 		STC VC-5
-		mass -10
+		mass -11
 	end
 	inv
 		BodyArmor 4
-		Mass -6
+		Mass -4
 		sub
 			HoverJet 2
 		end
@@ -60,17 +60,22 @@ Arm
 	Name <Right Arm>
 	Size 4
 	Armor 4
-	Mass -4
+	Mass -5
 	sub
 		Hand
 		inv
-			STC LAS-10
-			mass -6
+			BeamGun 5
+			name <Plasma Cannon>
+			type <BRUTAL>
+			Range 5
+			BV 2
+			Acc 1
 		end
+		HoverJet 3
 	end
 	inv
 		ArmArmor 3
-		Mass -4
+		Mass -3
 		sub
 			MLauncher 2
 			Name <Heavy Rocket Pod>
@@ -85,7 +90,7 @@ Arm
 	Name <Left Arm>
 	Size 4
 	Armor 4
-	Mass -4
+	Mass -5
 	sub
 		Hand
 		inv
@@ -93,10 +98,11 @@ Arm
 			Name <Sword>
 			mass -3
 		end
+		HoverJet 3
 	end
 	inv
 		ArmArmor 3
-		Mass -4
+		Mass -3
 		sub
 			MLauncher 2
 			Name <Heavy Rocket Pod>
@@ -114,15 +120,15 @@ Arm
 Leg
 	Name <Right Leg>
 	Armor 4
-	Mass -4
+	Mass -5
 	sub
 		Mount
 		Name <Right Leg Mount>
 		inv
-			MLauncher 4
+			MLauncher 8
 			sub
 				STC GM-10
-				Magazine 4
+				Magazine 8
 			end
 		end
 
@@ -130,7 +136,7 @@ Leg
 	end
 	inv
 		LegArmor 3
-		Mass -5
+		Mass -3
 		sub
 			Overcharger 2
 		end
@@ -139,15 +145,15 @@ Leg
 Leg
 	Name <Left Leg>
 	Armor 4
-	Mass -4
+	Mass -5
 	sub
 		Mount
 		Name <Left Leg Mount>
 		inv
-			MLauncher 4
+			MLauncher 8
 			sub
 				STC GM-10
-				Magazine 4
+				Magazine 8
 			end
 		end
 
@@ -155,7 +161,7 @@ Leg
 	end
 	inv
 		LegArmor 3
-		Mass -5
+		Mass -3
 		sub
 			Overcharger 2
 		end
