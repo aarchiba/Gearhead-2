@@ -152,13 +152,46 @@ Content
 	TeamData2 <Pass>
 	Element3 <Prefab>
 	Scene3 <Grab 1>
+	Element4 <Prefab>
+	Scene4 <New *THESP_>
 
 	% SubQuest1 is E4's mission
 	% SubQuest2 is E6's mission
 	% SubQuest3 is E9's mission
+	% SubQuest4 is the third rung
+	Quest1 <*:GiveMission :50 4>
+	Quest2 <*:GiveMission :50 6>
+	Quest3 <*:GiveMission :50 9>
+	Quest4 <*THELES_RungTwo :60 8>
 
 	sub
-		MetaScene 1
+		Persona 2
+		rumor%id% <people granted access to level three never return to the lower levels.>
+		% V1 = Asked for work counter
+		greeting <if= QuestStatus %qid% %id% else GoChat NewChat Say 1 AddChat 1 AddChat 2>
+		GoChat <NewChat SayAnything>
+		result1 <NewChat Say 2 AddChat 3>
+		result2 <NewChat Say 3 v= 1 1 AddChat 4>
+		result3 <NewChat Say 4 AddChat 4>
+		result4 <NewChat Say 5 AddChat 5>
+		result5 <NewChat Say 6>
+		Msg1 <This is the Ascension Complex. It is our job to enact the orders of the technocrats above on the city floor below.>
+		Msg2 <All residents of level two are expected to file periodic reports for the technocrat council. You can enclose your questions or comments with this report.>
+		Msg3 <Let me check the databoard... No specific orders for you have come from level three, but if you ask around I'm sure you'll find things which need doing.>
+		Msg4 <I'm afraid that's not possible. The technocrats never come down to the lower levels. When they choose to interact directly with the rest of us, which isn't very often, they do so via phone or holopresence.>
+		Msg5 <Sometimes residents of the second level are promoted into the ranks of the technocrats. If you want to advance you should work hard and prove your value to Theles Spinner, though I should warn you that it might not be a good idea.>
+		Msg6 <I've seen loads of people go into that door, but I've never seen anyone come back out. I don't know what happens to the people who become technocrats but I do know that they never leave.>
+		Prompt1 <I want to speak with the technocrats.>
+		Prompt2 <I was told you'd have some work for me?>
+		CPrompt2 <if= V1 0 Accept>
+		Prompt3 <No, I mean I want to speak with them in person.>
+		Prompt4 <How do I gain access to level three myself?>
+		Prompt5 <Why do you say that?>
+
+		MetaScene 2
+		% V11 = surprise message counter
+		start <if= L11 1 else %pop% ifNPCOK %2% else %pop% Monologue %2% 11 L= 11 2>
+		Msg11 <Well, there's a first time for everything!>
 		sub
 			Room
 			minimap <##2##............1..#---#>
@@ -176,13 +209,12 @@ Content
 				%% also open.
 				GoCheckEligibility <ifG PCRenown 60 else GoCheckM1 ifG PC$ 1000000 else GoCheckM1 Goto GoAccessGranted>
 				GoCheckM1 <if= QuestStatus %qid1% -1 else GoAccessDenied if= QuestStatus %qid2% -1 else GoAccessDenied if= QuestStatus %qid3% -1 else GoAccessDenied Goto GoAccessGranted>
-
-				GoAccessGranted <>
-
+				GoAccessGranted <ifYesNo 2 3 4 V= 1 1 XPV 100 SetQuestSTatus %qid% %id4% L= 11 1 Print -1 Exit Destination>
 				GoAccessDenied <Print 1>
-
 				Msg1 <You have not been authorized to use this elevator.>
-
+				Msg2 <The door of the elevator opens as you approach. You think back on the stories you've heard- people who go to level three never return to the lower levels.>
+				Msg3 <Go to level three.>
+				Msg4 <Stay right here.>
 			end
 		end
 
