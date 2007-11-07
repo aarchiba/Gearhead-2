@@ -4,6 +4,35 @@
 %% *UNIQUE_[Something].
 
 Scene
+	name <Ascension Complex>
+	requires <*THESP_AscensionComplex>
+	type <building private>
+	mapwidth 15
+	mapheight 15
+	MallMap
+
+	special <ADDEXIT>
+
+	sub
+		team 1
+
+		team 2
+		name <Citizens>
+		SetAlly 1
+		Passive
+
+		team 3
+		name <Guards>
+		SetAlly 2
+
+		room
+		name <Foyer>
+		desig <EntranceGrid>
+		Content <Some 1 20 Here *URBAN_X>
+		Content2 <Some 1 100 Here *ANTI_ATTACK_SECURITY 3>
+	end
+
+Scene
 	name <# Spire>
 	requires <*THESP_IndustrialSpire>
 	special <NOEXIT NORESCUE>
@@ -63,6 +92,7 @@ Scene
 
 	special <ADDEXIT>
 	NeededCells 2
+	content <Some 2 70 Sub *GOV_MILITARY na>
 
 	sub
 		team 1

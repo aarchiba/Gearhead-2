@@ -30,6 +30,30 @@ Content
 	Quest1 <*THELES_RungTwo :50 4>
 
 	sub
+		Persona 1
+		% V1 = Threat Counter
+		greeting <if= QuestStatus %qid% 0 else GoChat NewChat Say 1 AddChat 1 AddChat 2>
+		GoChat <NewChat SayAnything>
+		result1 <ifG PCRenown 10 else GoR1Fail ifG PCLaw -1 else GoR1Fail NewChat Say 2 AddChat 3 AddChat 4 AddChat 5>
+		GoR1Fail <NewChat Say 3 AddChat 4>
+		result2 <NewChat Say 4>
+		result3 <NewChat Say 5 SetQuestStatus %qid% %id1% XPV 100 Cash+ -500000>
+		result4 <NewChat Say 6 V= 1 1>
+		result5 <NewChat Say 7>
+		Msg1 <Access to the second level is restricted to those with SecTag Beta. I'm afraid that I can't let you pass.>
+		Msg2 <In order to weed out the scum and the riffraff, applicants for SecTag Beta must perform a demonstration of their industriousness and determination. This demonstration takes the form of a $500,000 fee.>
+		Msg3 <I'm sorry, but you are strictly inelgible for this security clearance. The technocrats only allow those who have proven their ability, drive, and strength of character to advance.>
+		Msg4 <Of course not! You don't think the technocrats would be stupid enough to allow that, do you? Even just wondering about such things is treasonous...>
+		Msg5 <This money proves your worth to Theles Spinner. When you step into the elevator, your brain-pattern will be scanned and added to the database. On level two you should head to the Ascension Complex; they'll probably have work for you there.>
+		Msg6 <It's not up to me, I just explain how things work. The real decision is made by the Ascension Complex. If an unauthorized person attempts to board the elevator, instead of going to the second level it goes straight to a plasma furnace.>
+		Msg7 <Be seeing you.>
+		Prompt1 <How do I get this "SecTag Beta"?>
+		Prompt2 <Isn't there any other way up there?>
+		Prompt3 <No problem. [Give $500000]>
+		CPrompt3 <ifG PC$ 499999 Accept>
+		Prompt4 <Let me in now, or else.>
+		CPrompt4 <if= V1 0 Accept>
+		Prompt5 <I'll be back later.>
 
 		MetaScene 1
 		sub
@@ -47,7 +71,7 @@ Content
 			end
 
 			Room
-			minimap <#######2###...##...###=##>
+			minimap <##2###...###?###3.4###=##>
 			special <SHAREDPALETTE NOGO>
 			sub
 				Door
@@ -63,6 +87,12 @@ Content
 				Elevator
 				MiniMapComponent 2
 				desig <ENTRANCE %s3%>
+
+				STC Crate
+				MiniMapComponent 3
+
+				STC Crate
+				MiniMapComponent 4
 			end
 		end
 
@@ -80,7 +110,7 @@ Content
 		end
 
 		MetaScene 4
-		start <if= QuestStatus %qid% 0 else %pop% SetQuestStatus %qid% %id% Alert 11 XPV 100 Goto %pop%>
+		start <if= QuestStatus %qid% 0 else %pop% SetQuestStatus %qid% %id1% Alert 11 XPV 100 Goto %pop%>
 		Msg11 <[Voice]: You have proven yourself worthy of level two clearance. Please report to Ascension Complex immediately or face termination.>
 		inv
 			STC Building
@@ -112,6 +142,60 @@ Content
 	% E5 is the entrance to the shopping center
 	% E6 is the NPC at the factory control who will offer a quest
 	% E7 is the entrance to the factory control office
+	% E8 is the third level
+	% E9 is the NPC at the population control who will offer a quest
+	% E10 is the entrance to the population control office
+
+	Element2 <Prefab>
+	Scene2 <New *THESP_AscensionComplex>
+	Team2 <Citizens>
+	TeamData2 <Pass>
+	Element3 <Prefab>
+	Scene3 <Grab 1>
+
+	% SubQuest1 is E4's mission
+	% SubQuest2 is E6's mission
+	% SubQuest3 is E9's mission
+
+	sub
+		MetaScene 1
+		sub
+			Room
+			minimap <##2##............1..#---#>
+			special <SHAREDPALETTE NOGO>
+			desig <HOME>
+			inv
+				Elevator
+				% V1 = Have used the elevator already				MiniMapComponent 2
+				desig <ENTRANCE %s8%>
+				use <if= V1 1 else GoCheckEligibility  Print -1 Exit Destination>
+				%% There are two ways to gain access to L3: First, the PC
+				%% can simply obtain a lot of renown and money, and the door
+				%% will magically open. Second, the player can complete all
+				%% the miniquests on this level, in which case the door will
+				%% also open.
+				GoCheckEligibility <ifG PCRenown 60 else GoCheckM1 ifG PC$ 1000000 else GoCheckM1 Goto GoAccessGranted>
+				GoCheckM1 <if= QuestStatus %qid1% -1 else GoAccessDenied if= QuestStatus %qid2% -1 else GoAccessDenied if= QuestStatus %qid3% -1 else GoAccessDenied Goto GoAccessGranted>
+
+				GoAccessGranted <>
+
+				GoAccessDenied <Print 1>
+
+				Msg1 <You have not been authorized to use this elevator.>
+
+			end
+		end
+
+	end
+	inv
+		NPC Soldier
+		job <Gateman>
+
+		STC Building
+		name <Ascension Complex>
+		desig <ENTRANCE %s2%>
+
+	end
 
 
 Content
