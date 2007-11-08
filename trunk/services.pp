@@ -850,7 +850,11 @@ begin
 	{ Mecha don't have to be checked for legality. }
 	if ( Scene <> Nil ) and ( I^.G <> GG_Mecha ) and not NGW then begin
 		{ Scene should point to the root scene here, since we found it above. }
+		{ If the current scene is marked for a modified legality level, }
+		{ use the local tolerance value instead. }
+
 		LL := NAttValue( Scene^.NA , NAG_GearOps , NAS_Legality );
+
 		if NAttValue( NPC^.NA , NAG_CharDescription , NAS_Lawful ) < 0 then begin
 			LL := LL - ( NAttValue( NPC^.NA , NAG_CharDescription , NAS_Lawful ) div 2 ) + 5;
 		end else if LL < LowLegalityLevel then begin
