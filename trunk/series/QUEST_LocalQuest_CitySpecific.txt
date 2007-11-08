@@ -153,7 +153,11 @@ Content
 	Element3 <Prefab>
 	Scene3 <Grab 1>
 	Element4 <Prefab>
-	Scene4 <New *THESP_>
+	Scene4 <New *THESP_Armory>
+	Team4 <Citizens>
+	TeamData4 <Pass>
+	Element5 <Prefab>
+	Scene5 <Grab 1>
 
 	% SubQuest1 is E4's mission
 	% SubQuest2 is E6's mission
@@ -227,6 +231,12 @@ Content
 		name <Ascension Complex>
 		desig <ENTRANCE %s2%>
 
+		NPC Shopkeeper
+		job <Production Manager>
+
+		STC Building
+		name <Second Tier Armory>
+		desig <ENTRANCE %s4%>
 	end
 
 

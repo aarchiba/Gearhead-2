@@ -4,6 +4,45 @@
 %% *UNIQUE_[Something].
 
 Scene
+	name <Second Tier Armory>
+	requires <*THESP_Armory>
+	type <building private>
+	mapwidth 15
+	mapheight 15
+	MallMap
+
+	special <ADDEXIT UNREGULATED>
+	Tolerance 10
+
+	Start <Print 1>
+	Msg1 <You enter the Second Tier Armory.>
+
+	NeededCells 4
+	Content3 <Some 1 100 Sub *WEAPON_SHOP     na>
+	Content4 <Some 1 100 Sub *ARMOR_SHOP      na>
+	Content6 <Some 1 100 Sub *MECHA_SHOP      na>
+	Content9 <Fill Sub *SHOP_RANDOM           na>
+
+	sub
+		team 1
+
+		team 2
+		name <Citizens>
+		SetAlly 1
+		Passive
+
+		team 3
+		name <Guards>
+		SetAlly 2
+
+		room
+		name <Foyer>
+		desig <EntranceGrid>
+		Content <Some 2 50 Here *URBAN_X>
+		Content2 <Some 1 100 Here *ANTI_ATTACK_SECURITY 3>
+	end
+
+Scene
 	name <Ascension Complex>
 	requires <*THESP_AscensionComplex>
 	type <building private>
@@ -74,7 +113,7 @@ Scene
 	end
 
 Scene 0 3
-	name <Theles Spinner Upper Level>
+	name <Theles Spinner Second Level>
 	requires <*THESP_SecondLevel>
 	type <Private>
 	MegaCityMap
@@ -82,7 +121,7 @@ Scene 0 3
 	MapHeight 8
 
 	Start <Print 1>
-	Msg1 <You enter the Theles Spinner middle layer.>
+	Msg1 <You enter the Theles Spinner second layer.>
 
 
 Scene

@@ -801,7 +801,7 @@ begin
 	ItemShopWeight := N;
 end;
 
-Function NotGoodWares( GB: GameBoardPtr; I , NPC: GearPtr; Stuff: String ): Boolean;
+Function NotGoodWares( GB: GameBoardPtr; I , NPC: GearPtr; Stuff: String; Tolerance: LongInt ): Boolean;
 	{ Return TRUE if this item is inappropriate for NPC's shop, }
 	{ FALSE if it is. An item is appropriate if: }
 	{ - one of its CATEGORY tags may be found in STUFF. }
@@ -813,7 +813,7 @@ const
 var
 	NGW: Boolean;
 	Tag,Category,Desc: String;
-	N,LL: LongInt;
+	N: LongInt;
 	Scene,Fac: GearPtr;
 begin
 	{ Begin by assuming TRUE. }
@@ -853,18 +853,7 @@ begin
 		{ If the current scene is marked for a modified legality level, }
 		{ use the local tolerance value instead. }
 
-		LL := NAttValue( Scene^.NA , NAG_GearOps , NAS_Legality );
-
-		if NAttValue( NPC^.NA , NAG_CharDescription , NAS_Lawful ) < 0 then begin
-			LL := LL - ( NAttValue( NPC^.NA , NAG_CharDescription , NAS_Lawful ) div 2 ) + 5;
-		end else if LL < LowLegalityLevel then begin
-			{ If we're dealing with a low legality threshold and the PC is }
-			{ an ally of the ruling faction, give the legality level a boost. }
-			if IsArchAlly( FindRoot( GB^.Scene ) , Scene ) then begin
-				LL := LowLegalityLevel;
-			end;
-		end;
-		NGW := NAttValue( I^.NA , NAG_GearOps , NAS_Legality ) > LL;
+		NGW := NAttValue( I^.NA , NAG_GearOps , NAS_Legality ) > Tolerance;
 	end;
 
 	if not NGW then begin
@@ -972,8 +961,8 @@ end;
 Function CreateWaresList( GB: GameBoardPtr; NPC: GearPtr; Stuff: String ): GearPtr;
 	{ Fabricate the list of items this NPC has for sale. }
 var
-	Wares,I,I2: GearPtr;	{ List of items for sale. }
-	NPCSeed,NPCRestock: LongInt;
+	Scene,Wares,I,I2: GearPtr;	{ List of items for sale. }
+	NPCSeed,NPCRestock,Tolerance: LongInt;
 	TotalSP,MaxSP: Integer;
 begin
 	{ Set the random seed to something less than random... }
@@ -1000,6 +989,24 @@ begin
 		AddSomeMeks( GB , NPC , Wares );
 	end;
 
+	{ Calculate the shopkeeper's tolerance. }
+	if ( GB <> Nil ) and ( GB^.Scene <> Nil ) then begin
+		Scene := FindRootScene( GB , GB^.Scene );
+		if AStringHasBSTring( SAttValue( GB^.Scene^.SA , 'SPECIAL' ) , 'UNREGULATED' ) then begin
+			Tolerance := NAttValue( GB^.Scene^.NA , NAG_GearOps , NAS_Legality );
+		end else begin
+			Tolerance := NAttValue( Scene^.NA , NAG_GearOps , NAS_Legality );
+		end;
+
+		{ Criminal shopkeepers have a higher than normal tolerance. }
+		if NAttValue( NPC^.NA , NAG_CharDescription , NAS_Lawful ) < 0 then begin
+			Tolerance := Tolerance - ( NAttValue( NPC^.NA , NAG_CharDescription , NAS_Lawful ) div 2 ) + 5;
+		end;
+	end else begin
+		Tolerance := 0;
+	end;
+
+
 	{ Do filtering here. }
 	I := Wares;
 	while I <> Nil do begin
@@ -1007,7 +1014,7 @@ begin
 
 		{ If this isn't a good item for this shop, remove it. }
 		{ Otherwise increment the item counter. }
-		if NotGoodWares( GB , I , NPC , Stuff ) then RemoveGear( Wares , I );
+		if NotGoodWares( GB , I , NPC , Stuff , Tolerance ) then RemoveGear( Wares , I );
 
 		I := I2;
 	end;
