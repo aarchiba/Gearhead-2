@@ -52,11 +52,13 @@ CONSTRUCTION RULES
 	External Armor may have as subcoms:
 		Weapons, Movement Systems
 	Weapon/Projectile may have as subcoms:
-		Ammo/Projectile (with matching CALIBER string attribute)
+		Ammo/Projectile (with matching CALIBER string attribute), Integral Weapons
 	Weapon Add-Ons may have as subcoms:
 		Weapons
 	Weapon/Missile may have as subcoms:
-		Ammo/Missile
+		Ammo/Missile, Integral Weapons
+	Weapon/Melee,EMelee may have as subcoms:
+		Integral Weapons
 	Computers may have as subcoms:
 		Software
 	Harnesses may have as subcoms:

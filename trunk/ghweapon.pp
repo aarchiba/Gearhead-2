@@ -338,6 +338,7 @@ Function PowerSourceCost( Part: GearPtr ): Integer;
 
 implementation
 
+uses ghintrinsic;
 
 Function ScaleDC( DC,Scale: LongInt ): LongInt;
 	{ Take the basic, unscaled damage class DC and change it }
@@ -632,7 +633,9 @@ Function IsLegalWeaponSub( Wep, Equip: GearPtr ): Boolean;
 	{ Return TRUE if the provided EQUIP can be installed in WEP, }
 	{ FALSE if it can't be. }
 begin
-	if ( Wep^.S = GS_Ballistic ) or ( Wep^.S = GS_Missile ) then begin
+	if Equip^.G = GG_Weapon then begin
+		IsLegalWeaponSub := PartHasIntrinsic( Equip , NAS_Integral );
+	end else if ( Wep^.S = GS_Ballistic ) or ( Wep^.S = GS_Missile ) then begin
 		IsLegalWeaponSub := Not NotGoodAmmo( Wep, Equip );
 	end else IsLegalWeaponSub := False;
 end;
@@ -893,6 +896,7 @@ Function WeaponComplexity( Part: GearPtr ): Integer;
 	{ weapon should take. }
 var
 	it: Integer;
+	SubWep: GearPtr;
 begin
 	if Part^.S = GS_Missile then begin
 		it := Part^.V;
@@ -900,6 +904,13 @@ begin
 		it := Part^.V div 3;
 		if Part^.S = GS_BeamGun then it := it + 1;
 	end;
+	{ Check for sub-weapons, and add their complexity. }
+	SubWep := Part^.SubCom;
+	while ( SubWep <> Nil ) do begin
+		if SubWep^.G = GG_Weapon then it := it + WeaponComplexity( SubWep );
+		SubWep := SubWep^.Next;
+	end;
+
 	if it < 1 then it := 1;
 	WeaponComplexity := it;
 end;
