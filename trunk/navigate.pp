@@ -716,7 +716,7 @@ var
 		SQBranches: Integer;	{ The highest branch points of a subquest/newscene }
 					{ not including successors. }
 		SQTotal: Integer;	{ As above, but including successors. }
-		QID,LID,T,N,SFaction: Integer;
+		QID,LID,T,N,SFaction,GrabElement: Integer;
 		Elem_ID,Elem_Scene: Array [1..Num_Plot_Elements] of LongInt;
 		Elem_Code: Array [1..Num_Plot_Elements] of Char;
 		QInUse,InitOK,DoDebug: Boolean;
@@ -767,11 +767,15 @@ var
 			for t := 1 to Num_Plot_Elements do begin
 				N := ExtractValue( ConReq );
 				if ( N >= 1 ) and ( N <= Num_Plot_Elements ) then begin
-					AddElementContext( Nil , Prev , ComType , Bstr( N )[1] , N );
+					AddElementContext( Nil , Prev , ComType , Bstr( T )[1] , N );
 					Elem_ID[ t ] := ElementID( Prev , N );
 					msg := SAttValue( Prev^.SA , 'ELEMENT' + BStr( n ) );
 					Elem_Code[ t ] := msg[1];
 					Elem_Scene[ t ] := NAttValue( Prev^.NA , NAG_QuestElemScene , N );
+					if Elem_ID[t] = 0 then begin
+						DialogMsg( 'ERROR: Copying erroneous parameter' );
+						DialogMsg( '=Element Desc: "' + msg + '"' );
+					end;
 				end;
 			end;
 		end;
@@ -898,7 +902,8 @@ var
 						{ First get rid of the GRAB tag, then find the number of }
 						{ the scene we want. }
 						ExtractWord( msg );
-						N := NAttValue( C^.NA , NAG_QuestElemScene , ExtractValue( msg ) );
+						GrabElement := ExtractValue( msg );
+						N := NAttValue( C^.NA , NAG_QuestElemScene , GrabElement );
 						NewScene := FindActualScene( Adv , N );
 						if N <> 0 then begin
 							SetNAtt( C^.NA , NAG_QuestElemScene , T , N );
@@ -910,6 +915,7 @@ var
 						end else begin
 							InitOK := False;
 							DialogMsg( 'DEBUG Quest error: Grabbed Scene ' + BStr( T ) + ' not found.' );
+							DialogMsg( '= Grab ' + BStr( GrabElement ) + ', ' + SAttValue( C^.SA , 'ELEMENT' + BStr( GrabELement ) ) );
 							Break;
 						end;
 

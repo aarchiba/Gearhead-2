@@ -4,6 +4,115 @@
 %% *UNIQUE_[Something].
 
 Scene
+	name <Theles Spinner Third Level>
+	requires <*THESP_ThirdLevel>
+	type <building private>
+	map <MAP_Theles3F.txt>
+	special <NOEXIT UNREGULATED>
+	Tolerance 15
+
+	Start <Print 1>
+	Msg1 <You enter the Theles Spinner third level.>
+
+	sub
+		team 1
+
+		team 2
+		name <Citizens>
+		SetAlly 3
+		Passive
+
+		team 3
+		name <Guards>
+		SetAlly 2
+
+		room
+		name <Foyer>
+		desig <EntranceGrid>
+		Content <Some 2 50 Here *URBAN_X>
+		Content2 <Some 1 100 Here *ANTI_ATTACK_SECURITY 3>
+	end
+	inv
+
+	end
+
+
+Scene
+	name <Population Control>
+	requires <*THESP_Population>
+	type <building private>
+	mapwidth 15
+	mapheight 15
+	MallMap
+
+	special <ADDEXIT UNREGULATED>
+	Tolerance 10
+
+	Start <Print 1>
+	Msg1 <You enter the Theles Industrial Control Center.>
+
+	NeededCells 2
+
+	Content2 <Fill Sub *HOSPITAL_X>
+
+	sub
+		team 1
+
+		team 2
+		name <Citizens>
+		SetAlly 1
+		Passive
+
+		team 3
+		name <Guards>
+		SetAlly 2
+
+		room
+		name <Foyer>
+		desig <EntranceGrid>
+		Content <Some 2 50 Here *URBAN_X>
+		Content2 <Some 1 100 Here *ANTI_ATTACK_SECURITY 3>
+	end
+
+Scene
+	name <Theles Industrial>
+	requires <*THESP_Industrial>
+	type <building private>
+	mapwidth 15
+	mapheight 15
+	MallMap
+
+	special <ADDEXIT UNREGULATED>
+	Tolerance 10
+
+	Start <Print 1>
+	Msg1 <You enter the Theles Industrial Control Center.>
+
+	NeededCells 2
+	Content3 <Some 1 100 Sub *MECHANIC_SHOP   na>
+	Content6 <Some 1 100 Sub *MECHA_SHOP      na>
+	Content9 <Fill Sub *SHOP_RANDOM           na>
+
+	sub
+		team 1
+
+		team 2
+		name <Citizens>
+		SetAlly 1
+		Passive
+
+		team 3
+		name <Guards>
+		SetAlly 2
+
+		room
+		name <Foyer>
+		desig <EntranceGrid>
+		Content <Some 2 50 Here *URBAN_X>
+		Content2 <Some 1 100 Here *ANTI_ATTACK_SECURITY 3>
+	end
+
+Scene
 	name <Second Tier Armory>
 	requires <*THESP_Armory>
 	type <building private>
@@ -17,10 +126,9 @@ Scene
 	Start <Print 1>
 	Msg1 <You enter the Second Tier Armory.>
 
-	NeededCells 4
+	NeededCells 2
 	Content3 <Some 1 100 Sub *WEAPON_SHOP     na>
 	Content4 <Some 1 100 Sub *ARMOR_SHOP      na>
-	Content6 <Some 1 100 Sub *MECHA_SHOP      na>
 	Content9 <Fill Sub *SHOP_RANDOM           na>
 
 	sub

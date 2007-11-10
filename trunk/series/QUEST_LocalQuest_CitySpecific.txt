@@ -27,7 +27,7 @@ Content
 	Scene4 <New *THESP_SecondLevel>
 
 	% SubQuest1 is rung two: the journey from the middle layer to joining the ranks of the technocrats.
-	Quest1 <*THELES_RungTwo :50 4>
+	Quest1 <*THELES_RungTwo #50 4>
 
 	sub
 		Persona 1
@@ -145,7 +145,6 @@ Content
 	% E8 is the third level
 	% E9 is the NPC at the population control who will offer a quest
 	% E10 is the entrance to the population control office
-
 	Element2 <Prefab>
 	Scene2 <New *THESP_AscensionComplex>
 	Team2 <Citizens>
@@ -158,15 +157,28 @@ Content
 	TeamData4 <Pass>
 	Element5 <Prefab>
 	Scene5 <Grab 1>
+	Element6 <Prefab>
+	Scene6 <New *THESP_Industrial>
+	Team6 <Citizens>
+	TeamData6 <Pass>
+	Element7 <Prefab>
+	Scene7 <Grab 1>
+	Scene8 <New *THESP_ThirdLevel>
+	Element9 <Prefab>
+	Scene9 <New *THESP_Population>
+	Team9 <Citizens>
+	TeamData9 <Pass>
+	Element10 <Prefab>
+	Scene10 <Grab 1>
 
 	% SubQuest1 is E4's mission
 	% SubQuest2 is E6's mission
 	% SubQuest3 is E9's mission
 	% SubQuest4 is the third rung
-	Quest1 <*:GiveMission :50 4>
-	Quest2 <*:GiveMission :50 6>
-	Quest3 <*:GiveMission :50 9>
-	Quest4 <*THELES_RungTwo :60 8>
+	Quest1 <*:GiveMission #50 4>
+	Quest2 <*:GiveMission #50 6>
+	Quest3 <*:GiveMission #50 9>
+	zQuest4 <*THELES_RungThree #60 8>
 
 	sub
 		Persona 2
@@ -191,6 +203,39 @@ Content
 		Prompt3 <No, I mean I want to speak with them in person.>
 		Prompt4 <How do I gain access to level three myself?>
 		Prompt5 <Why do you say that?>
+
+		Persona 4
+		% V%id%01 = Have given reward
+		greeting <if= QuestStatus              %qid1% -1   else GoCheckLoss if= v%id%01 0 else GoWin v= %id%01 1  CashPrize Reward %threat% 200  Goto GoWin>
+		GoCheckLoss <if= QuestStatus           %qid1% -2   else GoCheckFirst Goto GoLose>
+		GoCheckFirst <if= QuestStatus          %qid1%  0   else GoChat if= QuestStatus %qid% %id% else GoChat Goto GoOfferMission>
+		*GoOfferMission <*AreYouHereAboutJob  .%id1%_GoInit>
+		GoEnd <SetQuestStatus                  %qid1% -3>
+		GoChat <NewChat SayAnything>
+		*GoLose <*MissionWasFailure GoEnd na na>
+		*GoWin <*MissionWasSuccess&Reward GoEnd na na>
+
+		Persona 6
+		% V%id%01 = Have given reward
+		greeting <if= QuestStatus              %qid2% -1   else GoCheckLoss if= v%id%01 0 else GoWin v= %id%01 1  CashPrize Reward %threat% 200  Goto GoWin>
+		GoCheckLoss <if= QuestStatus           %qid2% -2   else GoCheckFirst Goto GoLose>
+		GoCheckFirst <if= QuestStatus          %qid2%  0   else GoChat if= QuestStatus %qid% %id% else GoChat Goto GoOfferMission>
+		*GoOfferMission <*AreYouHereAboutJob  .%id2%_GoInit>
+		GoEnd <SetQuestStatus                  %qid2% -3>
+		GoChat <NewChat SayAnything>
+		*GoLose <*MissionWasFailure GoEnd na na>
+		*GoWin <*MissionWasSuccess&Reward GoEnd na na>
+
+		Persona 9
+		% V%id%01 = Have given reward
+		greeting <if= QuestStatus              %qid3% -1   else GoCheckLoss if= v%id%01 0 else GoWin v= %id%01 1  CashPrize Reward %threat% 200  Goto GoWin>
+		GoCheckLoss <if= QuestStatus           %qid3% -2   else GoCheckFirst Goto GoLose>
+		GoCheckFirst <if= QuestStatus          %qid3%  0   else GoChat if= QuestStatus %qid% %id% else GoChat Goto GoOfferMission>
+		*GoOfferMission <*AreYouHereAboutJob  .%id3%_GoInit>
+		GoEnd <SetQuestStatus                  %qid3% -3>
+		GoChat <NewChat SayAnything>
+		*GoLose <*MissionWasFailure GoEnd na na>
+		*GoWin <*MissionWasSuccess&Reward GoEnd na na>
 
 		MetaScene 2
 		% V11 = surprise message counter
@@ -237,6 +282,20 @@ Content
 		STC Building
 		name <Second Tier Armory>
 		desig <ENTRANCE %s4%>
+
+		NPC Mechanic
+		job <Production Manager>
+
+		STC Building
+		name <Theles Industrial>
+		desig <ENTRANCE %s6%>
+
+		NPC Politician
+		job <Security Chief>
+
+		STC Building
+		name <Population Control>
+		desig <ENTRANCE %s6%>
 	end
 
 
