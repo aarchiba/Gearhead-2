@@ -1060,7 +1060,9 @@ var
 	Function IsGoodSocTarget: Boolean;
 		{ Return TRUE if M is a good target, or FALSE otherwise. }
 	begin
-		if ( NAttValue( NPC^.NA , NAG_Personal , NAS_CID ) = 0 ) or ( NAttValue( M^.NA , NAG_Location , NAS_Team ) = Team ) or ( NAttValue( M^.NA , NAG_Location , NAS_Team ) = NAV_DefPlayerTeam ) then begin
+		if ( NAttValue( M^.NA , NAG_Personal , NAS_CID ) = 0 ) or ( NAttValue( M^.NA , NAG_Location , NAS_Team ) = Team ) or ( NAttValue( M^.NA , NAG_Location , NAS_Team ) = NAV_DefPlayerTeam ) then begin
+			IsGoodSocTarget := False;
+		end else if not NotAnAnimal( M ) then begin
 			IsGoodSocTarget := False;
 		end else if MustBeSexy then begin
 			IsGoodSocTarget := GearActive( M ) and ( not AreEnemies( GB , NPC , M ) ) and IsSexy( NPC , M );

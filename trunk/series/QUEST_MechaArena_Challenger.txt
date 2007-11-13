@@ -5,6 +5,10 @@
 %%  PARAM1: The Arena Manager
 %%  PARAM2: The Arena Itself
 %%
+%%  %1%'s persona needs a GoBigWin script, to be called if ArenaWins = 10.
+%%   If this is not the case for some specific arena, you better not use
+%%   a standard challenger as the 10th or final match.
+%%
 %% The persona for the arena manager must contain a .%id%_Init script, to be called
 %% when the PC reaches this particular rung of the arena ladder.
 %% Said script should set the QuestID to %id%.
@@ -40,13 +44,13 @@ Content
 
 sub
 	Persona 1
-	Greeting <if= QuestStatus %qid% %id% else %pop%  if= ArenaState %2% NAV_AS_Win else .%id%_GoCheckLoss Goto .%id%_GoArenaWin>
+	Greeting <if= QuestStatus %qid% %id% else %pop%  if= ArenaState %2% NAV_AS_Win else .%id%_GoCheckLoss SetQuestStatus %qid% %id1% if# ArenaWins %2% 10 else GoBigWin Goto .%id%_GoArenaWin>
 	*.%id%_GoCheckLoss <*ChallengerStatusReport %3% %2% .%id%_GoNPCDied>
 	.%id%_GoInit <ifNPCOK %3% else .%id%_GoNPCDied NewChat Say %id%01 SetQuestStatus %qid% %id%  NPCSubQMemo %3% %id% %id%02  AddChat %id%01>
 	%% Just in case the NPC who we're supposed to fight has died somehow, just set up a normal fight.
 	*.%id%_GoNPCDied <*YourChallengerDied %2% %qid%>
 	*.%id%_GoArenaWin <*ChallengeArenaWin %3% %2% .%id%_GoConclude>
-	.%id%_GoConclude <ResetArena %2% SetQuestStatus %qid% %id1%>
+	.%id%_GoConclude <ResetArena %2%>
 	Result%id%01 <NewChat Say %id%03>
 	Msg%id%01 <We have a special match lined up next. You'll be fighting a young privateer named Keight.>
 	Msg%id%02 <%name1% sent you to battle %name3% in arena combat; \SPR %3% can be found in \SCENE %s3% .>
@@ -123,13 +127,13 @@ Content
 
 sub
 	Persona 1
-	Greeting <if= QuestStatus %qid% %id% else %pop%  if= ArenaState %2% NAV_AS_Win else .%id%_GoCheckLoss Goto .%id%_GoArenaWin>
+	Greeting <if= QuestStatus %qid% %id% else %pop%  if= ArenaState %2% NAV_AS_Win else .%id%_GoCheckLoss SetQuestStatus %qid% %id1% if# ArenaWins %2% 10 else GoBigWin Goto .%id%_GoArenaWin>
 	*.%id%_GoCheckLoss <*ChallengerStatusReport %3% %2% .%id%_GoNPCDied>
 	.%id%_GoInit <ifNPCOK %3% else .%id%_GoNPCDied NewChat Say %id%01 SetQuestStatus %qid% %id%  NPCSubQMemo %3% %id% %id%02 AddChat %id%01>
 	%% Just in case the NPC who we're supposed to fight has died somehow, just set up a normal fight.
 	*.%id%_GoNPCDied <*YourChallengerDied %2% %qid%>
 	*.%id%_GoArenaWin <*ChallengeArenaWin %3% %2% .%id%_GoConclude>
-	.%id%_GoConclude <ResetArena %2% SetQuestStatus %qid% %id1%>
+	.%id%_GoConclude <ResetArena %2%>
 	result%id%01 <NewChat Say %id%03>
 	Msg%id%01 <For the next battle, you'll be facing a young pilot named %name3%. You can find him in \SCENE %s3% .>
 	Msg%id%02 <%name1% sent you to battle Hammel in arena combat; \SPR %3% can be found in \SCENE %s3% .>
@@ -243,13 +247,13 @@ Content
 
 sub
 	Persona 1
-	Greeting <if= QuestStatus %qid% %id% else %pop%  if= ArenaState %2% NAV_AS_Win else .%id%_GoCheckLoss Goto .%id%_GoArenaWin>
+	Greeting <if= QuestStatus %qid% %id% else %pop%  if= ArenaState %2% NAV_AS_Win else .%id%_GoCheckLoss SetQuestStatus %qid% %id1% if# ArenaWins %2% 10 else GoBigWin Goto .%id%_GoArenaWin>
 	*.%id%_GoCheckLoss <*ChallengerStatusReport %3% %2% .%id%_GoNPCDied>
 	.%id%_GoInit <ifNPCOK %3% else .%id%_GoNPCDied NewChat Say %id%01 SetQuestStatus %qid% %id%  NPCSubQMemo %3% %id% %id%02  AddChat %id%01>
 	%% Just in case the NPC who we're supposed to fight has died somehow, just set up a normal fight.
 	*.%id%_GoNPCDied <*YourChallengerDied %2% %qid%>
 	*.%id%_GoArenaWin <*ChallengeArenaWin %3% %2% .%id%_GoConclude>
-	.%id%_GoConclude <ResetArena %2% SetQuestStatus %qid% %id1%>
+	.%id%_GoConclude <ResetArena %2%>
 	Result%id%01 <NewChat Say %id%03>
 	Msg%id%01 <For the next match, you'll be fighting a construction worker named %name3% . He's been working on the new space platform for Comet Industries. You can find \OPR %3% at \SCENE %s3% .>
 	Msg%id%02 <%name1% sent you to battle %name3% in arena combat; \SPR %3% can be found in \SCENE %s3% .>
@@ -317,13 +321,13 @@ Content
 
 sub
 	Persona 1
-	Greeting <if= QuestStatus %qid% %id% else %pop%  if= ArenaState %2% NAV_AS_Win else .%id%_GoCheckLoss Goto .%id%_GoArenaWin>
+	Greeting <if= QuestStatus %qid% %id% else %pop%  if= ArenaState %2% NAV_AS_Win else .%id%_GoCheckLoss SetQuestStatus %qid% %id1% if# ArenaWins %2% 10 else GoBigWin Goto .%id%_GoArenaWin>
 	*.%id%_GoCheckLoss <*ChallengerStatusReport %3% %2% .%id%_GoNPCDied>
 	.%id%_GoInit <ifNPCOK %3% else .%id%_GoNPCDied NewChat Say %id%01 SetQuestStatus %qid% %id%  NPCSubQMemo %3% %id% %id%02  AddChat %id%01>
 	%% Just in case the NPC who we're supposed to fight has died somehow, just set up a normal fight.
 	*.%id%_GoNPCDied <*YourChallengerDied %2% %qid%>
 	*.%id%_GoArenaWin <*ChallengeArenaWin %3% %2% .%id%_GoConclude>
-	.%id%_GoConclude <ResetArena %2% SetQuestStatus %qid% %id1%>
+	.%id%_GoConclude <ResetArena %2%>
 	Result%id%01 <NewChat Say %id%03>
 	Msg%id%01 <You'll be going up against Carter for the next battle. He's one of the old regulars. You should be able to find him at \SCENE %s3% .>
 	Msg%id%02 <%name1% sent you to battle %name3% in arena combat; \SPR %3% can be found in \SENE %s3% .>
@@ -393,13 +397,13 @@ Content
 	Quest1 <*CHALLENGER_SUBQUEST 3>
 sub
 	Persona 1
-	Greeting <if= QuestStatus %qid% %id% else %pop%  if= ArenaState %2% NAV_AS_Win else .%id%_GoCheckLoss Goto .%id%_GoArenaWin>
+	Greeting <if= QuestStatus %qid% %id% else %pop%  if= ArenaState %2% NAV_AS_Win else .%id%_GoCheckLoss SetQuestStatus %qid% %id1% if# ArenaWins %2% 10 else GoBigWin Goto .%id%_GoArenaWin>
 	*.%id%_GoCheckLoss <*ChallengerStatusReport %3% %2% .%id%_GoNPCDied>
 	.%id%_GoInit <ifNPCOK %3% else .%id%_GoNPCDied NewChat Say %id%01 SetQuestStatus %qid% %id%  NPCSubQMemo %3% %id% %id%02  AddChat %id%01>
 	%% Just in case the NPC who we're supposed to fight has died somehow, just set up a normal fight.
 	*.%id%_GoNPCDied <*YourChallengerDied %2% %qid%>
 	*.%id%_GoArenaWin <*ChallengeArenaWin %3% %2% .%id%_GoConclude>
-	.%id%_GoConclude <ResetArena %2% SetQuestStatus %qid% %id1%>
+	.%id%_GoConclude <ResetArena %2%>
 	Result%id%01 <NewChat Say %id%03>
 	Msg%id%01 <You've been scheduled to fight a pilot named %name3% . You can find her at her place of business in \SCENE %s3% .>
 	Msg%id%02 <%name1% sent you to battle %name3% in arena combat; \SPR %3% can be found in \SCENE %s3% .>
@@ -483,13 +487,13 @@ Content
 	Quest1 <*CHALLENGER_SUBQUEST 3>
 sub
 	Persona 1
-	Greeting <if= QuestStatus %qid% %id% else %pop%  if= ArenaState %2% NAV_AS_Win else .%id%_GoCheckLoss Goto .%id%_GoArenaWin>
+	Greeting <if= QuestStatus %qid% %id% else %pop%  if= ArenaState %2% NAV_AS_Win else .%id%_GoCheckLoss SetQuestStatus %qid% %id1% if# ArenaWins %2% 10 else GoBigWin Goto .%id%_GoArenaWin>
 	*.%id%_GoCheckLoss <*ChallengerStatusReport %3% %2% .%id%_GoNPCDied>
 	.%id%_GoInit <ifNPCOK %3% else .%id%_GoNPCDied NewChat Say %id%01 SetQuestStatus %qid% %id%  NPCSubQMemo %3% %id% %id%02  AddChat %id%01>
 	%% Just in case the NPC who we're supposed to fight has died somehow, just set up a normal fight.
 	*.%id%_GoNPCDied <*YourChallengerDied %2% %qid%>
 	*.%id%_GoArenaWin <*ChallengeArenaWin %3% %2% .%id%_GoConclude>
-	.%id%_GoConclude <ResetArena %2% SetQuestStatus %qid% %id1%>
+	.%id%_GoConclude <ResetArena %2%>
 	Result%id%01 <NewChat Say %id%03>
 	Msg%id%01 <Your next match is against a pop singer named %name3% . You should be able to find \OPR %3% at \SCENE %s3% .>
 	Msg%id%02 <%name1% sent you to battle %name3% in arena combat; \SPR %3% can be found in \SCENE %s3% .>
@@ -564,13 +568,13 @@ Content
 	Quest1 <*CHALLENGER_SUBQUEST 3>
 sub
 	Persona 1
-	Greeting <if= QuestStatus %qid% %id% else %pop%  if= ArenaState %2% NAV_AS_Win else .%id%_GoCheckLoss Goto .%id%_GoArenaWin>
+	Greeting <if= QuestStatus %qid% %id% else %pop%  if= ArenaState %2% NAV_AS_Win else .%id%_GoCheckLoss SetQuestStatus %qid% %id1% if# ArenaWins %2% 10 else GoBigWin Goto .%id%_GoArenaWin>
 	*.%id%_GoCheckLoss <*ChallengerStatusReport %3% %2% .%id%_GoNPCDied>
 	.%id%_GoInit <ifNPCOK %3% else .%id%_GoNPCDied NewChat Say %id%01 SetQuestStatus %qid% %id%  NPCSubQMemo %3% %id% %id%02  AddChat %id%01>
 	%% Just in case the NPC who we're supposed to fight has died somehow, just set up a normal fight.
 	*.%id%_GoNPCDied <*YourChallengerDied %2% %qid%>
 	*.%id%_GoArenaWin <*ChallengeArenaWin %3% %2% .%id%_GoConclude>
-	.%id%_GoConclude <ResetArena %2% SetQuestStatus %qid% %id1%>
+	.%id%_GoConclude <ResetArena %2%>
 	Result%id%01 <NewChat Say %id%03>
 	Msg%id%01 <For the next match, you'll be facing a challenger named %name3% . You'll be able to find \OPR %3% at \SCENE %s3% .>
 	Msg%id%02 <%name1% sent you to battle %name3% in arena combat; \SPR %3% can be found in \SCENE %s3% .>
@@ -652,13 +656,13 @@ Content
 
 sub
 	Persona 1
-	Greeting <if= QuestStatus %qid% %id% else %pop%  if= ArenaState %2% NAV_AS_Win else .%id%_GoCheckLoss Goto .%id%_GoArenaWin>
+	Greeting <if= QuestStatus %qid% %id% else %pop%  if= ArenaState %2% NAV_AS_Win else .%id%_GoCheckLoss SetQuestStatus %qid% %id1% if# ArenaWins %2% 10 else GoBigWin Goto .%id%_GoArenaWin>
 	*.%id%_GoCheckLoss <*ChallengerStatusReport %3% %2% .%id%_GoNPCDied>
 	.%id%_GoInit <ifNPCOK %3% else .%id%_GoNPCDied NewChat Say %id%01 SetQuestStatus %qid% %id%  NPCSubQMemo %3% %id% %id%02  AddChat %id%01>
 	%% Just in case the NPC who we're supposed to fight has died somehow, just set up a normal fight.
 	*.%id%_GoNPCDied <*YourChallengerDied %2% %qid%>
 	*.%id%_GoArenaWin <*ChallengeArenaWin %3% %2% .%id%_GoConclude>
-	.%id%_GoConclude <ResetArena %2% SetQuestStatus %qid% %id1%>
+	.%id%_GoConclude <ResetArena %2%>
 	Result%id%01 <NewChat Say %id%03>
 	Msg%id%01 <This time around you'll face a pirate named %name3% in single combat. He's a skilled pilot who specializes in heavy weapons.>
 	Msg%id%02 <%name1% sent you to battle %name3% in arena combat; unfortunately, he's on the run from the law and therefore in hiding.>
@@ -784,13 +788,13 @@ Content
 
 sub
 	Persona 1
-	Greeting <if= QuestStatus %qid% %id% else %pop%  if= ArenaState %2% NAV_AS_Win else .%id%_GoCheckLoss Goto .%id%_GoArenaWin>
+	Greeting <if= QuestStatus %qid% %id% else %pop%  if= ArenaState %2% NAV_AS_Win else .%id%_GoCheckLoss SetQuestStatus %qid% %id1% if# ArenaWins %2% 10 else GoBigWin Goto .%id%_GoArenaWin>
 	*.%id%_GoCheckLoss <*ChallengerStatusReport %3% %2% .%id%_GoNPCDied>
 	.%id%_GoInit <ifNPCOK %3% else .%id%_GoNPCDied NewChat Say %id%01 SetQuestStatus %qid% %id%  NPCSubQMemo %3% %id% %id%02  AddChat %id%01>
 	%% Just in case the NPC who we're supposed to fight has died somehow, just set up a normal fight.
 	*.%id%_GoNPCDied <*YourChallengerDied %2% %qid%>
 	*.%id%_GoArenaWin <*ChallengeArenaWin %3% %2% .%id%_GoConclude>
-	.%id%_GoConclude <ResetArena %2% SetQuestStatus %qid% %id1%>
+	.%id%_GoConclude <ResetArena %2%>
 	Result%id%01 <NewChat Say %id%03>
 	Msg%id%01 <You're scheduled to fight a pro duelist named Rose. She can usually be found at \SCENE %s3% .>
 	Msg%id%02 <%name1% sent you to battle %name3% in arena combat; \SPR %3% can be found in \SCENE %s3% .>
@@ -850,7 +854,7 @@ end
 
 Content
 	name <PC vs Havelock>
-	requires <*:MECHA_ARENA_CHALLENGE !Md>
+	requires <*:MECHA_ARENA_CHALLENGE !Md ~MAQUI ~FCOMS -RISHI>
 
 	% E1 is the arena manager
 	% E2 is the arena proper
@@ -864,13 +868,13 @@ Content
 
 sub
 	Persona 1
-	Greeting <if= QuestStatus %qid% %id% else %pop%  if= ArenaState %2% NAV_AS_Win else .%id%_GoCheckLoss Goto .%id%_GoArenaWin>
+	Greeting <if= QuestStatus %qid% %id% else %pop%  if= ArenaState %2% NAV_AS_Win else .%id%_GoCheckLoss SetQuestStatus %qid% %id1% if# ArenaWins %2% 10 else GoBigWin Goto .%id%_GoArenaWin>
 	*.%id%_GoCheckLoss <*ChallengerStatusReport %3% %2% .%id%_GoNPCDied>
 	.%id%_GoInit <ifNPCOK %3% else .%id%_GoNPCDied NewChat Say %id%01 SetQuestStatus %qid% %id%  NPCSubQMemo %3% %id% %id%02  AddChat %id%01>
 	%% Just in case the NPC who we're supposed to fight has died somehow, just set up a normal fight.
 	*.%id%_GoNPCDied <*YourChallengerDied %2% %qid%>
 	*.%id%_GoArenaWin <*ChallengeArenaWin %3% %2% .%id%_GoConclude>
-	.%id%_GoConclude <ResetArena %2% SetQuestStatus %qid% %id1%>
+	.%id%_GoConclude <ResetArena %2%>
 	Result%id%01 <NewChat Say %id%03>
 	Msg%id%01 <For the next match, you're up against a privateer named Havelock. He's had a fair amount of experience in real combat, so look out.>
 	Msg%id%02 <%name1% sent you to battle %name3% in arena combat; \SPR %3% can be found in \SCENE %s3% .>
@@ -950,13 +954,13 @@ Content
 
 sub
 	Persona 1
-	Greeting <if= QuestStatus %qid% %id% else %pop%  if= ArenaState %2% NAV_AS_Win else .%id%_GoCheckLoss Goto .%id%_GoArenaWin>
+	Greeting <if= QuestStatus %qid% %id% else %pop%  if= ArenaState %2% NAV_AS_Win else .%id%_GoCheckLoss SetQuestStatus %qid% %id1% if# ArenaWins %2% 10 else GoBigWin Goto .%id%_GoArenaWin>
 	*.%id%_GoCheckLoss <*ChallengerStatusReport %3% %2% .%id%_GoNPCDied>
 	.%id%_GoInit <ifNPCOK %3% else .%id%_GoNPCDied if# QuestStatus %qid% -2 else .%id%_GoBackOut NewChat Say %id%01 SetQuestStatus %qid% %id%  NPCSubQMemo %3% %id% %id%02  AddChat %id%01>
 	%% Just in case the NPC who we're supposed to fight has died somehow, just set up a normal fight.
 	*.%id%_GoNPCDied <*YourChallengerDied %2% %qid%>
 	*.%id%_GoArenaWin <*ChallengeArenaWin %3% %2% .%id%_GoConclude>
-	.%id%_GoConclude <ResetArena %2% SetQuestStatus %qid% %id1%>
+	.%id%_GoConclude <ResetArena %2%>
 	.%id%_GoBackOut <EndChat Say %id%04 SavePos PrepArena %2% 150 Jump %2% SetQuestStatus %qid% -2>
 	Result%id%01 <NewChat Say %id%03>
 	Msg%id%01 <For your next match, you'll be fighting a Martian named Caher. He's travelled all around the solar system and competed in every major competition. You should be able to find him at \SCENE %s3% .>
@@ -1107,13 +1111,13 @@ Content
 
 sub
 	Persona 1
-	Greeting <if= QuestStatus %qid% %id% else %pop%  if= ArenaState %2% NAV_AS_Win else .%id%_GoCheckLoss Goto .%id%_GoArenaWin>
+	Greeting <if= QuestStatus %qid% %id% else %pop%  if= ArenaState %2% NAV_AS_Win else .%id%_GoCheckLoss SetQuestStatus %qid% %id1% if# ArenaWins %2% 10 else GoBigWin Goto .%id%_GoArenaWin>
 	*.%id%_GoCheckLoss <*ChallengerStatusReport %3% %2% .%id%_GoNPCDied>
 	.%id%_GoInit <ifNPCOK %3% else .%id%_GoNPCDied NewChat Say %id%01 SetQuestStatus %qid% %id%  NPCSubQMemo %3% %id% %id%02 AddChat %id%01>
 	%% Just in case the NPC who we're supposed to fight has died somehow, just set up a normal fight.
 	*.%id%_GoNPCDied <*YourChallengerDied %2% %qid%>
 	*.%id%_GoArenaWin <*ChallengeArenaWin %3% %2% .%id%_GoConclude>
-	.%id%_GoConclude <ResetArena %2% SetQuestStatus %qid% %id1%>
+	.%id%_GoConclude <ResetArena %2%>
 	Result%id%01 <NewChat Say %id%02>
 	Msg%id%01 <You have a special challenger for the next battle. Her name is Vanda; you can find her at \SCENE %s3% .>
 	Msg%id%02 <%name1% sent you to battle %name3% in arena combat; \SPR %3% can be found in \SCENE %s3% .>
@@ -1198,13 +1202,13 @@ Content
 
 sub
 	Persona 1
-	Greeting <if= QuestStatus %qid% %id% else %pop%  if= ArenaState %2% NAV_AS_Win else .%id%_GoCheckLoss Goto .%id%_GoArenaWin>
+	Greeting <if= QuestStatus %qid% %id% else %pop%  if= ArenaState %2% NAV_AS_Win else .%id%_GoCheckLoss SetQuestStatus %qid% %id1% if# ArenaWins %2% 10 else GoBigWin Goto .%id%_GoArenaWin>
 	*.%id%_GoCheckLoss <*ChallengerStatusReport %3% %2% .%id%_GoNPCDied>
 	.%id%_GoInit <ifNPCOK %3% else .%id%_GoNPCDied NewChat Say %id%01 SetQuestStatus %qid% %id%  NPCSubQMemo %3% %id% %id%02  AddChat %id%01>
 	%% Just in case the NPC who we're supposed to fight has died somehow, just set up a normal fight.
 	*.%id%_GoNPCDied <*YourChallengerDied %2% %qid%>
 	*.%id%_GoArenaWin <*ChallengeArenaWin %3% %2% .%id%_GoConclude>
-	.%id%_GoConclude <ResetArena %2% SetQuestStatus %qid% %id1%>
+	.%id%_GoConclude <ResetArena %2%>
 	Result%id%01 <NewChat Say %id%03>
 	Msg%id%01 <This time, you'll be facing a pilot named %name3% . He's done a bit of everything: started as a musician, got hired for Kettel Industries, then left them to study at Hwang-Sa Temple. You can meet \OPR %3% at \SCENE %s3% .>
 	Msg%id%02 <%name1% sent you to battle %name3% in arena combat; \SPR %3% can be found in \SCENE %s3% .>
@@ -1281,13 +1285,13 @@ Content
 
 sub
 	Persona 1
-	Greeting <if= QuestStatus %qid% %id% else %pop%  if= ArenaState %2% NAV_AS_Win else .%id%_GoCheckLoss Goto .%id%_GoArenaWin>
+	Greeting <if= QuestStatus %qid% %id% else %pop%  if= ArenaState %2% NAV_AS_Win else .%id%_GoCheckLoss SetQuestStatus %qid% %id1% if# ArenaWins %2% 10 else GoBigWin Goto .%id%_GoArenaWin>
 	*.%id%_GoCheckLoss <*ChallengerStatusReport %3% %2% .%id%_GoNPCDied>
 	.%id%_GoInit <ifNPCOK %3% else .%id%_GoNPCDied NewChat Say %id%01 SetQuestStatus %qid% %id%  NPCSubQMemo %3% %id% %id%02>
 	%% Just in case the NPC who we're supposed to fight has died somehow, just set up a normal fight.
 	*.%id%_GoNPCDied <*YourChallengerDied %2% %qid%>
 	*.%id%_GoArenaWin <*ChallengeArenaWin %3% %2% .%id%_GoConclude>
-	.%id%_GoConclude <ResetArena %2% SetQuestStatus %qid% %id1%>
+	.%id%_GoConclude <ResetArena %2%>
 	Msg%id%01 <For the next battle, you'll be facing %name3%. You can find \OPR %3% in \SCENE %s3% .>
 	Msg%id%02 <%name1% sent you to battle %name3% in arena combat; \SPR %3% can be found in \SCENE %s3% .>
 
@@ -1334,13 +1338,13 @@ Content
 
 sub
 	Persona 1
-	Greeting <if= QuestStatus %qid% %id% else %pop%  if= ArenaState %2% NAV_AS_Win else .%id%_GoCheckLoss Goto .%id%_GoArenaWin>
+	Greeting <if= QuestStatus %qid% %id% else %pop%  if= ArenaState %2% NAV_AS_Win else .%id%_GoCheckLoss SetQuestStatus %qid% %id1% if# ArenaWins %2% 10 else GoBigWin Goto .%id%_GoArenaWin>
 	*.%id%_GoCheckLoss <*ChallengerStatusReport %3% %2% .%id%_GoNPCDied>
 	.%id%_GoInit <ifNPCOK %3% else .%id%_GoNPCDied NewChat Say %id%01 SetQuestStatus %qid% %id%  NPCSubQMemo %3% %id% %id%02  AddChat %id%01>
 	%% Just in case the NPC who we're supposed to fight has died somehow, just set up a normal fight.
 	*.%id%_GoNPCDied <*YourChallengerDied %2% %qid%>
 	*.%id%_GoArenaWin <*ChallengeArenaWin %3% %2% .%id%_GoConclude>
-	.%id%_GoConclude <ResetArena %2% SetQuestStatus %qid% %id1%>
+	.%id%_GoConclude <ResetArena %2%>
 	Result%id%01 <NewChat Say %id%03>
 	Msg%id%01 <The next match is a one-on-one challenge. You'll be facing %name3%; \SPR %3% can be found at \SCENE %s3% .>
 	Msg%id%02 <%name1% sent you to battle %name3% in arena combat; \SPR %3% can be found in \SCENE %s3% .>
@@ -1389,13 +1393,13 @@ Content
 
 sub
 	Persona 1
-	Greeting <if= QuestStatus %qid% %id% else %pop%  if= ArenaState %2% NAV_AS_Win else .%id%_GoCheckLoss Goto .%id%_GoArenaWin>
+	Greeting <if= QuestStatus %qid% %id% else %pop%  if= ArenaState %2% NAV_AS_Win else .%id%_GoCheckLoss SetQuestStatus %qid% %id1% if# ArenaWins %2% 10 else GoBigWin Goto .%id%_GoArenaWin>
 	*.%id%_GoCheckLoss <*ChallengerStatusReport %3% %2% .%id%_GoNPCDied>
 	.%id%_GoInit <ifNPCOK %3% else .%id%_GoNPCDied NewChat Say %id%01 SetQuestStatus %qid% %id%  NPCSubQMemo %3% %id% %id%02  AddChat %id%01>
 	%% Just in case the NPC who we're supposed to fight has died somehow, just set up a normal fight.
 	*.%id%_GoNPCDied <*YourChallengerDied %2% %qid%>
 	*.%id%_GoArenaWin <*ChallengeArenaWin %3% %2% .%id%_GoConclude>
-	.%id%_GoConclude <ResetArena %2% SetQuestStatus %qid% %id1%>
+	.%id%_GoConclude <ResetArena %2%>
 	Result%id%01 <NewChat Say %id%03>
 	Msg%id%01 <For this match, you'll be going up against %name3% in single combat. You can find \OPR %3% at \SCENE %s3% .>
 	Msg%id%02 <%name1% sent you to battle %name3% in arena combat; \SPR %3% can be found in \SCENE %s3% .>
@@ -1448,13 +1452,13 @@ Content
 
 sub
 	Persona 1
-	Greeting <if= QuestStatus %qid% %id% else %pop%  if= ArenaState %2% NAV_AS_Win else .%id%_GoCheckLoss Goto .%id%_GoArenaWin>
+	Greeting <if= QuestStatus %qid% %id% else %pop%  if= ArenaState %2% NAV_AS_Win else .%id%_GoCheckLoss SetQuestStatus %qid% %id1% if# ArenaWins %2% 10 else GoBigWin Goto .%id%_GoArenaWin>
 	*.%id%_GoCheckLoss <*ChallengerStatusReport %3% %2% .%id%_GoNPCDied>
 	.%id%_GoInit <ifNPCOK %3% else .%id%_GoNPCDied NewChat Say %id%01 SetQuestStatus %qid% %id%  NPCSubQMemo %3% %id% %id%02  AddChat %id%01>
 	%% Just in case the NPC who we're supposed to fight has died somehow, just set up a normal fight.
 	*.%id%_GoNPCDied <*YourChallengerDied %2% %qid%>
 	*.%id%_GoArenaWin <*ChallengeArenaWin %3% %2% .%id%_GoConclude>
-	.%id%_GoConclude <ResetArena %2% SetQuestStatus %qid% %id1%>
+	.%id%_GoConclude <ResetArena %2%>
 	Result%id%01 <NewChat Say %id%03>
 	Msg%id%01 <Your next match is a personal challenge against %name3% . Meet \OPR %3% at \SCENE %s3% and work out a fight time.>
 	Msg%id%02 <%name1% sent you to battle %name3% in arena combat; \SPR %3% can be found in \SCENE %s3% .>
@@ -1514,13 +1518,13 @@ Content
 
 sub
 	Persona 1
-	Greeting <if= QuestStatus %qid% %id% else %pop%  if= ArenaState %2% NAV_AS_Win else .%id%_GoCheckLoss Goto .%id%_GoArenaWin>
+	Greeting <if= QuestStatus %qid% %id% else %pop%  if= ArenaState %2% NAV_AS_Win else .%id%_GoCheckLoss SetQuestStatus %qid% %id1% if# ArenaWins %2% 10 else GoBigWin Goto .%id%_GoArenaWin>
 	*.%id%_GoCheckLoss <*ChallengerStatusReport %5% %2% .%id%_GoNPCDied>
 	.%id%_GoInit <ifNPCOK %5% else .%id%_GoNPCDied NewChat Say %id%01 SetQuestStatus %qid% %id%  NPCSubQMemo %5% %id% %id%02  AddChat %id%01>
 	%% Just in case the NPC who we're supposed to fight has died somehow, just set up a normal fight.
 	*.%id%_GoNPCDied <*YourChallengerDied %2% %qid%>
 	*.%id%_GoArenaWin <*ChallengeArenaWin %5% %2% .%id%_GoConclude>
-	.%id%_GoConclude <ResetArena %2% SetQuestStatus %qid% %id1%>
+	.%id%_GoConclude <ResetArena %2%>
 	Result%id%01 <NewChat Say %id%03>
 	Msg%id%01 <Your next fight will be against %name5% . Meet \OPR %5% at \SCENE %s5% .>
 	Msg%id%02 <%name1% sent you to battle %name5% in arena combat; \SPR %5% can be found in \SCENE %s5% .>

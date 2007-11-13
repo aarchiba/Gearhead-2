@@ -1663,7 +1663,7 @@ Procedure InstallSoftware( GB: GameBoardPtr; PC , SW: GearPtr );
 		DialogMsg( ReplaceHash( MsgString( 'BACKPACK_FreeSoftwareSpace' ) , GearName( SW ) ) );
 		repeat
 			RPM := CreateRPGMenu( MenuItem , MenuSelect , ZONE_InvMenu );
-			BP_Source := PC;
+			BP_Source := Compy^.SubCom;
 			BP_SeekSibs := True;
 			BP_ActiveMenu := RPM;
 

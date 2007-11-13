@@ -409,6 +409,9 @@ begin
 		CanJoin := False;
 	end else if ( GB <> Nil ) and ( ReactionScore( GB^.Scene , PC , NPC ) < 10 ) then begin
 		CanJoin := False;
+	end else if ( GB <> Nil ) and not ( OnTheMap( GB , FindRoot( NPC ) ) and IsFoundAlongTrack( GB^.Meks , FindRoot( NPC ) ) ) then begin
+		{ Can only join if in the same scene as the PC. }
+		CanJoin := False;
 	end else if PersonaInUse( FindRoot( GB^.Scene ) , NAttValue( NPC^.NA , NAG_Personal , NAS_CID ) ) then begin
 		CanJoin := False;
 	end else if ( GB <> Nil ) and ( GB^.Scene <> Nil ) and ( NAttValue( NPC^.NA , NAG_QuestInfo , NAS_QuestID ) <> 0 ) and ( NAttValue( FindROot( GB^.Scene )^.NA , NAG_QuestStatus , NAttValue( NPC^.NA , NAG_QuestInfo , NAS_QuestID ) ) >= 0 ) then begin
@@ -2540,7 +2543,7 @@ begin
 	StoreSAtt( Source^.SA , Trigger + BStr( P ) + ' <' + Ev2 + '>' );
 end;
 
-Procedure ProcessNewChat;
+Procedure ProcessNewChat( GB: GameBoardPtr );
 	{ Reset the dialog menu with the standard options. }
 begin
 	{ Error check - make sure the interaction menu is active. }
@@ -2555,10 +2558,13 @@ begin
 
 	AddRPGMenuItem( IntMenu , '[Chat]' , CMD_Chat );
 	AddRPGMenuItem( IntMenu , '[Goodbye]' , -1 );
-	if ( I_PC <> Nil ) and HasTalent( I_PC , NAS_Camaraderie ) then begin
-		if ( I_NPC <> Nil ) and ( NAttValue( I_NPC^.NA , NAG_Relationship , 0 ) >= NAV_Friend ) and ( NAttValue( I_NPC^.NA , NAG_Location , NAS_Team ) <> NAV_LancemateTeam ) then AddRPGMenuItem( IntMenu , '[Join]' , CMD_Join );
-	end else begin
-		if ( I_NPC <> Nil ) and ( NAttValue( I_NPC^.NA , NAG_Relationship , 0 ) >= NAV_ArchAlly ) and ( NAttValue( I_NPC^.NA , NAG_Location , NAS_Team ) <> NAV_LancemateTeam ) then AddRPGMenuItem( IntMenu , '[Join]' , CMD_Join );
+	if ( GB <> Nil ) and OnTheMap( GB , FindRoot( I_NPC ) ) and IsFoundAlongTrack( GB^.Meks , FindRoot( I_NPC ) ) then begin
+		{ Only add the JOIN command if this NPC is in the same scene as the PC. }
+		if ( I_PC <> Nil ) and HasTalent( I_PC , NAS_Camaraderie ) then begin
+			if ( I_NPC <> Nil ) and ( NAttValue( I_NPC^.NA , NAG_Relationship , 0 ) >= NAV_Friend ) and ( NAttValue( I_NPC^.NA , NAG_Location , NAS_Team ) <> NAV_LancemateTeam ) then AddRPGMenuItem( IntMenu , '[Join]' , CMD_Join );
+		end else begin
+			if ( I_NPC <> Nil ) and ( NAttValue( I_NPC^.NA , NAG_Relationship , 0 ) >= NAV_ArchAlly ) and ( NAttValue( I_NPC^.NA , NAG_Location , NAS_Team ) <> NAV_LancemateTeam ) then AddRPGMenuItem( IntMenu , '[Join]' , CMD_Join );
+		end;
 	end;
 	if ( I_NPC <> Nil ) and ( NAttValue( I_NPC^.NA , NAG_Location , NAS_Team ) = NAV_LancemateTeam ) and ( NAttValue( I_NPC^.NA , NAG_CharDescription , NAS_CharType ) <> NAV_TempLancemate ) then AddRPGMenuItem( IntMenu , '[Quit Lance]' , CMD_Quit );
 	RPMSortAlpha( IntMenu );
@@ -4139,7 +4145,7 @@ begin
 		else if cmd = 'COMPOSE' then ProcessCompose( Event , GB , Source )
 		else if cmd = 'BLOCK' then ProcessBlock( Trigger )
 		else if cmd = 'ACCEPT' then ProcessAccept( Trigger )
-		else if cmd = 'NEWCHAT' then ProcessNewChat
+		else if cmd = 'NEWCHAT' then ProcessNewChat( GB )
 		else if cmd = 'ENDCHAT' then ProcessEndChat
 		else if cmd = 'GOTO' then ProcessGoto( Event , Source )
 		else if cmd = 'ADDCHAT' then ProcessAddChat( Event , GB , Source )

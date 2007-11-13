@@ -9,6 +9,12 @@
 %%	Set QuestStatus when manager admits PC to arena; end the quest after the PC has
 %%	completed the championship.
 %%
+%%	Each manager persona must have a GoBigWin script defined, to be called when the
+%%	10th match is won. This script must reset the arena.
+%%	  - If this particular arena doesn't conclude on the tenth match, then you
+%%          don't need a GoBigWin script and you shouldn't use a standard challenger
+%%          as either the last fight or the 10th fight.
+%%
 
 Content
 	name <Gaos Spinner Arena>
