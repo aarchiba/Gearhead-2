@@ -108,7 +108,7 @@ Const
 		'STRAIN','COMPLEX','GASATTACK','NONLETHAL','EXPERIMENTAL'
 	);
 	AA_Cost: Array [1..Num_Attack_Attributes] of SmallInt = (
-		15, 15, 20,  9, 11,     100, 20, 10,15,30,
+		15, 15, 20,  9, 11,     150, 20, 10,15,30,
 		85, 25, 15, 20, 25,	12,2,30, 20,10,
 		 7,  7, 10,  5, 13
 	);

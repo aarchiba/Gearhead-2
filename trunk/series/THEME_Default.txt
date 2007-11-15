@@ -347,14 +347,14 @@ Theme 1
 			type <BURN>
 		end
 
-		Gun 9
+		Gun 7
 		name <Immolation Cannon>
 		caliber <150mm self-propelled>
 		Range 6
 		Speed 3
 		scale 2
 		sub
-			Ammo 9
+			Ammo 7
 			Magazine 50
 			caliber <150mm self-propelled>
 			type <BURN HYPER>
@@ -2167,7 +2167,7 @@ Theme 6
 		STC PAR-13
 		%% #7
 
-		Gun 15
+		Gun 12
 		%% #8
 		name <AntiMatter Gauss Rifle>
 		scale 2
@@ -2176,7 +2176,7 @@ Theme 6
 		Recharge 2
 		caliber <70mm antiferrous>
 		sub
-			Ammo 15
+			Ammo 12
 			caliber <70mm antiferrous>
 			type <HYPER>
 			magazine 32
@@ -2190,7 +2190,7 @@ Theme 6
 		Recharge 3
 		mass -4
 
-		Gun 24
+		Gun 19
 		%% #9
 		name <Singularity Cannon>
 		scale 2
@@ -2199,7 +2199,7 @@ Theme 6
 		caliber <gravitic negation shell>
 		mass -10
 		sub
-			Ammo 24
+			Ammo 19
 			type <BLAST 1 HYPER MYSTERY>
 			caliber <gravitic negation shell>
 			magazine 13
@@ -2253,13 +2253,13 @@ Theme 6
 			Magazine 12
 		end
 
-		MLauncher 8
+		MLauncher 6
 		Scale 2
 		sub
 			STC GR-10
 			name <Neutronic Rockets>
 			type <HYPER>
-			Magazine 8
+			Magazine 6
 		end
 
 		MLauncher 2
@@ -2289,13 +2289,13 @@ Theme 6
 			Magazine 24
 		end
 
-		MLauncher 16
+		MLauncher 12
 		Scale 2
 		sub
 			STC GR-10
 			name <Neutronic Rockets>
 			type <HYPER>
-			Magazine 16
+			Magazine 12
 		end
 
 
@@ -2358,7 +2358,7 @@ Theme 6
 		mass -9
 		desc <A living weapon cloned from the wreckage of Typhon.>
 
-		EMelee 6
+		Melee 16
 		Scale 2
 		name <Nuclear Scepter>
 		type <HYPER>
