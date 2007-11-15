@@ -298,6 +298,22 @@ Content
 		desig <ENTRANCE %s6%>
 	end
 
+Content
+	name <Climbing the Ladder, Third Rung>
+	desc <Theles Spinner is divided into regions based on social class. The PC has a chance to climb the ladder.>
+	requires <*THELES_RungThree>
+
+	% For the third level, the PC will be given a chance to crush the anti-technocrat
+	% rebellion... or become a part of it.
+	% E1 is the third level. Unlike the previous two, this is not an outdoors scene.
+	% E2 is the mission-giver. If the PC accepts the offer, the path back down to the
+	%  second level is opened.
+	% E3 is the leader of the rebellion, who the PC needs to find. Actually he's not
+	%  much better than the technocrats...
+
+	sub
+
+	end
 
 Content
 	name <Ronald McComet Must Die>

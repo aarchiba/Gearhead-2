@@ -8,8 +8,10 @@ Scene
 	requires <*THESP_ThirdLevel>
 	type <building private>
 	map <MAP_Theles3F.txt>
-	special <NOEXIT UNREGULATED>
+	special <NOEXIT UNREGULATED NORESCUE SOLO UNSAFE>
 	Tolerance 15
+
+	% L1 = If nonzero, this level may be exited.
 
 	Start <Print 1>
 	Msg1 <You enter the Theles Spinner third level.>
@@ -24,16 +26,40 @@ Scene
 
 		team 3
 		name <Guards>
+		type <ROBOT>
 		SetAlly 2
+		Stat 2 50
 
 		room
 		name <Foyer>
 		desig <EntranceGrid>
-		Content <Some 2 50 Here *URBAN_X>
 		Content2 <Some 1 100 Here *ANTI_ATTACK_SECURITY 3>
 	end
 	inv
+		Elevator
+		use <if# L1 0 else GoNoElevator  Print 1 Exit Destination>
+		GoNoElevator <Print 11>
+		Msg11 <This elevator doesn't respond.>
+		Destination -1
+		XPos 2
+		YPos 9
 
+		STC ELEVATOR_TO_NOWHERE
+		XPos 3
+		YPos 3
+
+		STC ELEVATOR_TO_NOWHERE
+		XPos 3
+		YPos 16
+
+		STC ELEVATOR_TO_NOWHERE
+		XPos 36
+		YPos 4
+
+		STC ONESHOTDOOR
+		XPos 30
+		YPos 14
+		Lock 14
 	end
 
 
