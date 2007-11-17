@@ -9,7 +9,7 @@
 %% rationed rewards.
 
 ArenaMission
-	name <Aegis Factory>
+	name <Factory Raid>
 	requires <*REWARD>
 	desc <Lead a raid against a mecha factory owned by %name1%.>
 
@@ -24,7 +24,7 @@ ArenaMission
 
 	PayRate 400
 
-	Element1 <Faction Enemy AEGIS>
+	Element1 <Faction Enemy>
 	Element2 <Prefab>
 
 	% L1 = Initialization Counter
@@ -34,7 +34,7 @@ ArenaMission
 	nu1 <if= T1 0 if= L2 0 L= 2 1 Alert 2 LoseArenaMission>
 	nu2 <if= T2 0 if= L2 0 Salvage Return XPV 100 L= 2 1 Alert 3 L= 3 T3 Goto GoMechaFactory>
 	GoMechaFactory <ifG L3 0 else GoWinMission L+ 3 -1 RandomMecha .faction ArenaRenown Goto GoMechaFactory>
-	.faction <AEGIS>
+	.faction <\FACTION_DESIG %1% GENERAL>
 	GoWinMission <WinArenaMission>
 
 	Msg1 <Disable the guards surrounding this factory. Try to leave the buildings intact, if possible.>

@@ -79,6 +79,44 @@ ArenaMission
 	end
 
 ArenaMission
+	name <Jungle Encounter>
+	requires <*MISSION ArenaOK>
+	desc <Mecha from %name1% have been encountered in the jungles of Earth.>
+
+	MapWidth 50
+	MapHeight 50
+
+	PayRate 400
+
+	ForestMap
+	terrain <GROUND>
+
+	Element1 <Faction Enemy>
+
+	% L1 = Initialization Counter
+	% L2 = Victory Counter
+	Start <if= L1 0 CommanderSays 1 L= 1 1>
+	nu1 <if= T1 0 if= L2 0 L= 2 1 Alert 2 LoseArenaMission>
+	nu2 <if= T2 0 if= L2 0 Salvage Return XPV 100 L= 2 1 Alert 3 WinArenaMission>
+
+	Msg1 <Enemy mecha have been spotted. Eliminate them all.>
+	Msg2 <The mission is a failure.>
+	Msg3 <The mission is a success.>
+
+	sub
+		Team 1
+		SetEnemy 2
+		ParaX 5
+		ParaY 15
+
+		Team 2
+		SetEnemy 1
+		Deploy <SetSelfFaction M1   WMecha 2 ArenaRenown 400>
+		ParaX 45
+		ParaY 35
+	end
+
+ArenaMission
 	name <Space Encounter>
 	requires <*MISSION (SILKN|COMET|HOELL|PRIVA)>
 	desc <Mecha from %name1% have been encountered in space.>
@@ -189,7 +227,7 @@ ArenaMission
 
 ArenaMission
 	name <Defend The Base>
-	requires <*MISSION Military>
+	requires <*MISSION -!Ne>
 	desc <Our base is under attack by %name1%. You must defend it.>
 
 	MapWidth 50
@@ -267,7 +305,7 @@ ArenaMission
 
 ArenaMission
 	name <Destroy Enemy Base>
-	requires <*MISSION Military>
+	requires <*MISSION -!Ne>
 	desc <A base belonging to %name1% has been discovered. Destroy it completely.>
 
 	MapWidth 50

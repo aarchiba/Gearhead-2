@@ -239,7 +239,7 @@ AddPartyPoint <GrabCurrentScene GAddNAtt NAG_Narrative NAS_PartyPoints 1>
 OpenInv <GrabSource GOpenInv>
 GiveArenaPay <GrabAdventure GAddNAtt NAG_Experience NAS_Credits ArenaPay>
 WinArenaMission <GiveArenaPay Return ArenaRep 1>
-LoseArenaMission <Return ArenaRep -5>
+LoseArenaMission <Return ArenaRep -8>
 WinCoreMission <GiveArenaPay Return ArenaRep 1 GrabAdventure GAddNAtt 27 3 1>
 LoseCoreMission <Return ArenaRep -5>
 SetCoreMissionEnemy <GrabAdventure GSetNAtt 27 4 ?>	% For the arena mode core campaign

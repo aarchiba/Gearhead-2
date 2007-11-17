@@ -742,6 +742,7 @@ begin
 	{ should be loaded per five regular missions. A core campaign mission could also be selected, }
 	{ but this is handled differently. }
 	MissionList := CreateComponentList( Arena_Mission_Master_List , '*MISSION ' + Context );
+	RewardList := Nil;
 
 	while N > 0 do begin
 		{ Decrement the mission timers, and add special mission types as appropriate. }
@@ -1549,7 +1550,7 @@ begin
 					if Cash < 1 then Cash := 1;
 				end;
 
-				DialogMsg( ReplaceHash( MsgString( 'SCHOOL_STUDY' ) , MsgString( 'SKILLNAME_' + BStr( N ) ) ) );
+				DialogMsg( ReplaceHash( MsgString( 'SCHOOL_STUDY' ) , MsgString( 'SKILLNAME_' + BStr( Skill ) ) ) );
 				if DoleSkillExperience( PC , Skill , Cash ) then begin
 					DialogMsg( MsgString( 'SCHOOL_Learn' + BStr( Random( 5 ) + 1 ) ) );
 				end;
@@ -1610,6 +1611,7 @@ begin
 		RPM := CreateRPGMenu( MenuItem , MenuSelect , ZONE_ArenaPilotMenu );
 
 		AddRPGMenuItem( RPM , MsgString( 'ARENA_VCHAR_DoTraining' ) , 4 );
+		if HasSkillTrainers( HQCamp ) then AddRPGMenuItem( RPM , MSgString( 'ARENA_OpenSchool' ) , 6 );
 		AddRPGMenuItem( RPM , MsgString( 'ARENA_VCHAR_ViewInventory' ) , 5 );
 		AddRPGMenuItem( RPM , MsgString( 'ARENA_VCHAR_AssignMecha' ) , 1 );
 		AddRPGMenuItem( RPM , MsgString( 'ARENA_VCHAR_RemoveCharacter' ) , -2 );
@@ -1622,8 +1624,6 @@ begin
 		if ( Cost > 0 ) and ( Cost <= HQCash( HQCamp ) ) then begin
 			AddRPGMenuItem( RPM , ReplaceHash( MsgSTring( 'ARENA_ReloadUnit' ) , GearName( PC ) ) + ' ($' + BStr( Cost ) + ')' , 3 );
 		end;
-
-		if HasSkillTrainers( HQCamp ) then AddRPGMenuItem( RPM , MSgString( 'ARENA_OpenSchool' ) , 6 );
 
 		AddRPGMenuItem( RPM , MsgString( 'EXIT' ) , -1 );
 
