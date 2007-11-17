@@ -1,0 +1,124 @@
+%%
+%% *REWARD missions
+%%
+%% Don't let the name fool you- these missions aren't rewards in themselves;
+%% rather, they present an opportunity for the PC to earn a significant reward.
+%% The reward missions are typically more difficult than regular missions.
+%%
+%% The SkillTrainer rewards usually need a SKILL_TRAIN_MISSION coupon. Check to
+%% make sure that the appropriate skill tag is present. Minor skills, which do
+%% not require a coupon, will be indicated in the section headers.
+%%
+%% The skill trainer missions are arranged by Skill ID.
+%%
+
+%% ********************************
+%% ***   [s1]  MECHA  GUNNERY   ***
+%% ********************************
+
+
+%% **********************************
+%% ***   [s2]  MECHA  ARTILLERY   ***
+%% **********************************
+
+
+%% ********************************
+%% ***   [s3]  MECHA  WEAPONS   ***
+%% ********************************
+
+
+%% *********************************
+%% ***   [s4]  MECHA  FIGHTING   ***
+%% *********************************
+
+
+%% *********************************
+%% ***   [s5]  MECHA  PILOTING   ***
+%% *********************************
+%% NOTE: Mecha Piloting should not be made available at !Ne or !Lo levels.
+ArenaMission
+	name <Deep Extraction>
+	requires <*REWARD SKILL_TRAIN_MISSION [s5] -!Ne -!Lo>
+	desc <You must recover an allied scout from %name1% territory.>
+
+	MapWidth 50
+	MapHeight 50
+
+	PayRate 500
+
+	ForestMap
+	terrain <GROUND>
+
+	Element1 <Faction Enemy>
+	Element2 <Faction Ally>
+	Element3 <Prefab>
+
+	% L1 = Initialization Counter
+	% L2 = Victory Counter
+	Start <if= L1 0 Monologue %3% 1 L= 1 1>
+	nu1 <if= T1 0 if= L2 0 L= 2 1 Alert 2 LoseArenaMission>
+	nu2 <if= T2 0 if= L2 0 Salvage Return XPV 100 L= 2 1 Alert 3 WinArenaMission ifNPCInPlay %3% else GoBadWin Monologue %3% 4 IntelDebriefing 5 AddMajorSkill 5>
+	GoBadWin <IntelDebriefing 6>
+
+	Msg1 <I'm surrounded by enemies! Help me get rid of them.>
+	Msg2 <The mission is a failure.>
+	Msg3 <The mission is a success.>
+	Msg4 <Thanks, we did it!>
+	Msg5 <Good work resucing %name3%. In thanks, \SPR %3% has offered to teach you some things about mecha piloting.>
+	Msg6 <We recovered some useful information from %name3%'s wreckage, but not as much as we would have if \SPR %3% returned here alive.>
+
+	sub
+		Team 1
+		SetEnemy 2
+		SetAlly 3
+		ParaX 5
+		ParaY 5
+
+		Team 2
+		SetEnemy 1 3
+		Deploy <SetSelfFaction M1   WMecha 2 ArenaRenown 600>
+		ParaX 15
+		ParaY 35
+
+		Team 3
+		SetEnemy 2
+		SetAlly 1
+		ParaX 45
+		ParaY 45
+	end
+	inv
+		NPC Mecha Pilot
+		job <Recon Pilot>
+		SetFaction -2
+		SetTeam 3
+	end
+
+
+%% *****************************
+%% ***   [s12]  INITIATIVE   ***
+%% *****************************
+
+
+%% ********************************
+%% ***   [s15]  MECHA  REPAIR   ***
+%% ********************************
+%% NOTE: Mecha Repair should not be made available at !Ne level.
+
+
+%% ***************************
+%% ***   [s16]  MEDICINE   ***
+%% ***************************
+%% NOTE: Medicine should not be made available at !Ne level.
+
+
+%% **************************************
+%% ***   [s17]  ELECTRONIC  WARFARE   ***
+%% **************************************
+
+
+%% *********************************
+%% ***   [s18]  SPOT  WEAKNESS   ***
+%% *********************************
+
+
+

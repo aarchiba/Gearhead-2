@@ -63,11 +63,13 @@ implementation
 {$IFDEF ASCII}
 uses arenaplay,arenascript,interact,gearutil,narration,texutil,ghprop,rpgdice,ability,
      ghchars,ghweapon,movement,ui4gh,vidmap,vidmenus,gearparser,playwright,randmaps,wmonster,
-	vidinfo,pcaction,menugear,navigate,services,skilluse,training,backpack,chargen;
+	vidinfo,pcaction,menugear,navigate,services,skilluse,training,backpack,chargen,
+	description;
 {$ELSE}
 uses arenaplay,arenascript,interact,gearutil,narration,texutil,ghprop,rpgdice,ability,
      ghchars,ghweapon,movement,ui4gh,glmap,glmenus,gearparser,playwright,randmaps,wmonster,
-	glinfo,pcaction,menugear,navigate,services,skilluse,training,backpack,chargen;
+	glinfo,pcaction,menugear,navigate,services,skilluse,training,backpack,chargen,
+	description;
 {$ENDIF}
 
 Const
@@ -477,15 +479,6 @@ Function HQContext( HQCamp: CampaignPtr ): String;
 	{ Return a context for this arena unit. }
 	{ The context is used to determine what missions can be }
 	{ loaded. }
-const
-	Coupons_Per_Level: Array [1..NumMissionCouponTypes,1..5] of Byte = (
-	( 2, 4, 6, 8, 10 ),	{ Skill Trainers }
-	( 1, 2, 3, 4, 5 )	{ Mecha Factions }
-	);
-	Coupon_Tag: Array [1..NumMissionCouponTypes] of String = (
-		'SKILL_TRAIN_MISSION',
-		'MECHA_SOURCE_MISSION'
-	);
 var
 	Fac: GearPtr;
 	HQC: String;
@@ -503,19 +496,6 @@ begin
 	Renown := HQRenown( HQCamp );
 	HQC := HQC + ' ' + DifficulcyContext( Renown );
 
-	{ Add any mission coupons that haven't been spent yet. }
-	{ Determine the faction level. }
-	if Renown < 1 then Renown := 1;
-	Renown := ( Renown + 19 ) div 20;
-
-	{ Check for coupons. }
-	for t := 1 to NumMissionCouponTypes do begin
-		if ( Coupons_Per_Level[ T , Renown ] - NAttValue( HQCamp^.Source^.NA , NAG_MissionCoupon , T ) ) >  0 then begin
-			{ We have a coupon left. Add a note. }
-			HQC := HQC + ' ' + Coupon_Tag[ T ];
-		end;
-	end;
-
 	{ Add tags for the skills and mecha factions that the PC hasn't earned yet. }
 	for t := 1 to NumSkill do begin
 		if NAttValue( HQCamp^.Source^.NA , NAG_AHQSkillTrainer , T ) = 0 then begin
@@ -532,6 +512,56 @@ begin
 	end;
 
 	HQContext := HQC;
+end;
+
+Function HQCoupons( HQCamp: CampaignPtr ): STring;
+	{ Return the coupons this campaign has. }
+const
+	Coupons_Per_Level: Array [1..NumMissionCouponTypes,1..5] of Byte = (
+	( 2, 4, 6, 8, 10 ),	{ Skill Trainers }
+	( 1, 2, 3, 4, 5 )	{ Mecha Factions }
+	);
+	Coupon_Tag: Array [1..NumMissionCouponTypes] of String = (
+		'SKILL_TRAIN_MISSION',
+		'MECHA_SOURCE_MISSION'
+	);
+	Function CanAddCoupon( N: Integer ): Boolean;
+		{ You can add this coupon if no currently loaded mission is using it. }
+	var
+		M: GearPtr;
+		CAC:Boolean;
+	begin
+		{ Assume true until shown false. }
+		CAC := True;
+		M := HQCamp^.Source^.InvCom;
+		while M <> Nil do begin
+			if ( M^.G = GG_Scene ) and AStringHasBString( SAttValue( M^.SA , 'REQUIRES' ) , Coupon_Tag[ N ] ) then CAC := False;
+			M := M^.Next;
+		end;
+		CanAddCoupon := CAC;
+	end;
+var
+	HQC: String;
+	Renown,T: Integer;
+begin
+	HQC := '';
+
+	{ Add any mission coupons that haven't been spent yet. }
+	{ Determine the faction level. }
+	Renown := HQRenown( HQCamp );
+	if Renown < 1 then Renown := 1;
+	Renown := ( Renown + 19 ) div 20;
+	{ Check for coupons. }
+	for t := 1 to NumMissionCouponTypes do begin
+		if ( Coupons_Per_Level[ T , Renown ] - NAttValue( HQCamp^.Source^.NA , NAG_MissionCoupon , T ) ) >  0 then begin
+			{ We have a coupon left. Add a note. }
+			if CanAddCoupon( T ) then begin
+				HQC := HQC + ' ' + Coupon_Tag[ T ];
+			end;
+		end;
+	end;
+
+	HQCoupons := HQC;
 end;
 
 Function AddCoreMission( HQCamp: CampaignPtr ): Boolean;
@@ -699,22 +729,6 @@ Procedure AddMissions( HQCamp: CampaignPtr; N: Integer );
 		CMS := NAttValue( HQCamp^.Source^.NA , NAG_AHQData , NAS_CoreMissionStep );
 		CanAddCoreMission := ( CMS < 8 ) and ( ( ( CMS + 1 ) * 10 ) <= HQRenown( HQCamp ) ) and NoCoreMissionFound;
 	end;
-	Function CanAddRewardMission: Boolean;
-		{ Return TRUE if a reward mission can currently be loaded, or FALSE if }
-		{ it can't be. It can be loaded if: }
-		{  A) there isn't currently a core mission in the pending list }
-	var
-		M: GearPtr;
-		NRMF: Boolean;
-	begin
-		NRMF := True;
-		M := HQCamp^.Source^.InvCom;
-		while M <> Nil do begin
-			if ( M^.G = GG_Scene ) and AStringHasBString( SAttValue( M^.SA , 'REQUIRES' ) , '*REWARD' ) then NRMF := False;
-			M := M^.Next;
-		end;
-		CanAddRewardMission := NRMF;
-	end;
 var
 	Context: String;
 	MissionList,RewardList: NAttPtr;
@@ -728,15 +742,10 @@ begin
 	{ should be loaded per five regular missions. A core campaign mission could also be selected, }
 	{ but this is handled differently. }
 	MissionList := CreateComponentList( Arena_Mission_Master_List , '*MISSION ' + Context );
-	if CanAddRewardMission then begin
-		RewardList := CreateComponentList( Arena_Mission_Master_List , '*REWARD ' + Context );
-	end else begin
-		RewardList := Nil;
-	end;
 
 	while N > 0 do begin
 		{ Decrement the mission timers, and add special mission types as appropriate. }
-		if RewardList <> Nil then AddNAtt( HQCamp^.Source^.NA , NAG_AHQData , NAS_RewardMissionTimer , -1 );
+		AddNAtt( HQCamp^.Source^.NA , NAG_AHQData , NAS_RewardMissionTimer , -1 );
 		if CanAddCoreMission then AddNAtt( HQCamp^.Source^.NA , NAG_AHQData , NAS_CoreMissionTimer , -1 );
 
 		if ( NAttValue( HQCamp^.Source^.NA , NAG_AHQData , NAS_CoreMissionTimer ) < 0 ) and CanAddCoreMission then begin
@@ -749,9 +758,14 @@ begin
 				SetNAtt( HQCamp^.Source^.NA , NAG_AHQData , NAS_CoreMissionTimer , 10 + N );
 				Inc( N );
 			end;
-		end else if ( NAttValue( HQCamp^.Source^.NA , NAG_AHQData , NAS_RewardMissionTimer ) < 0 ) and ( RewardList <> Nil ) then begin
-			AddAMission( RewardList );
-			SetNAtt( HQCamp^.Source^.NA , NAG_AHQData , NAS_RewardMissionTimer , 5 + Random( 3 ) + N );
+		end else if ( NAttValue( HQCamp^.Source^.NA , NAG_AHQData , NAS_RewardMissionTimer ) < 0 ) then begin
+			RewardList := CreateComponentList( Arena_Mission_Master_List , '*REWARD ' + Context + ' ' + HQCoupons( HQCamp ) );
+			if RewardList <> Nil then begin
+				AddAMission( RewardList );
+			end else begin
+				AddAMission( MissionList );
+			end;
+			SetNAtt( HQCamp^.Source^.NA , NAG_AHQData , NAS_RewardMissionTimer , 4 );
 			DisposeNAtt( RewardList );
 		end else begin
 			AddAMission( MissionList );
@@ -984,6 +998,21 @@ begin
 	if ( PC <> Nil ) and ( PC^.Next = Nil ) then AddNAtt( PC^.NA , NAG_Experience, NAS_Credits , Total );
 end;
 
+Function HasSkillTrainers( HQCamp: CampaignPtr ): Boolean;
+	{ Return TRUE if this campaign has some skill trainers, or FALSE otherwise. }
+var
+	HasTrainer: Boolean;
+	T: Integer;
+begin
+	HasTrainer := False;
+	for T := 1 to NumSkill do begin
+		if NAttValue( HQCamp^.Source^.NA , NAG_AHQSkillTrainer , T ) <> 0 then begin
+			HasTrainer := True;
+			Break;
+		end;
+	end;
+	HasSkillTrainers := HasTrainer;
+end;
 
 { *** USER INTERFACE BITS *** }
 
@@ -1438,6 +1467,102 @@ begin
 	until N = -1;
 end;
 
+Procedure HQSchool( HQCamp: CampaignPtr; PC: GearPtr );
+	{ Let the teaching commence! I was hoping to use the services.pp/OpenSchool procedure, }
+	{ but really this procedure is mostly a frontend for the DoleSkillExperience function }
+	{ and making it work in both cases would be more trouble than it's worth. }
+	{ The going rate for training is $100 = 1XP. }
+	{ I should probably share the constants between both procedures... heh. }
+const
+	XPStep: Array [1..40] of Integer = (
+		1,2,3,4,5, 6,7,8,9,10,
+		12,15,20,25,50, 75,100,150,200,250,
+		500,750,1000,1500,2000, 2500,3000,3500,4000,4500,
+		5000,6000,7000,8000,9000, 10000,12500,15000,20000,25000
+	);
+	Knowledge_First_Bonus = 14;
+	Knowledge_First_Penalty = 8;
+	CostFactor = 250;
+var
+	SkillMenu,CostMenu: RPGMenuPtr;
+	Skill,N: Integer;
+	Cash: LongInt;
+	DSLTemp: Boolean;
+begin
+	ADR_Source := PC;
+
+	{ When using a school, can always learn directly. }
+	DSLTemp := Direct_Skill_Learning;
+	Direct_Skill_Learning := True;
+
+	{ Step One: Create the skills menu. }
+	SkillMenu := CreateRPGMenu( MenuItem , MenuSelect , ZONE_ArenaPilotMenu );
+
+	for N := 1 to NumSkill do begin
+		if NAttValue( HQCamp^.Source^.NA , NAG_AHQSkillTrainer , N ) <> 0 then begin
+			AddRPGMenuItem( SkillMenu , MsgString( 'SKILLNAME_' + BStr( N ) ) , N , SkillDescription( N ) );
+		end;
+	end;
+	RPMSortAlpha( SkillMenu );
+	AddRPGMenuItem( SkillMenu , MsgString( 'SCHOOL_Exit' ) , -1 );
+
+	repeat
+		{ Get a selection from the menu. }
+		Skill := SelectMenu( SkillMenu , @ViewSourcePilotRedraw );
+
+		{ If a skill was chosen, do the training. }
+		if ( Skill >= 1 ) and ( Skill <= NumSkill ) then begin
+			{ Create the CostMenu, and see how much the }
+			{ player wants to spend. }
+			CostMenu := CreateRPGMenu( MenuItem , MenuSelect , ZONE_ArenaPilotMenu );
+			Cash := HQCash( HQCamp );
+
+			{ Add menu entries for each of the cost values }
+			{ that the PC can afford. }
+			for N := 1 to 40 do begin
+				if XPStep[ N ] * CostFactor <= Cash then begin
+					AddRPGMenuItem( CostMenu , '$' + BStr( XPStep[ N ] * CostFactor ) , N );
+				end;
+			end;
+
+			{ Add the exit option, so that we'll never have }
+			{ an empty menu. }
+			AddRPGMenuItem( CostMenu , MsgString( 'SCHOOL_ExitCostSelector' ) , -1 );
+
+			N := SelectMenu( CostMenu , @ViewSourcePilotRedraw );
+			DisposeRPGMenu( CostMenu );
+
+			{ If CANCEL wasn't selected, take away the cash }
+			{ and give the PC some experience. }
+			if N <> -1 then begin
+				AddNAtt( HQCamp^.Source^.NA , NAG_Experience , NAS_Credits , -( XPStep[ N ] * CostFactor ) );
+
+				{ Calculate the number of XPs earned. }
+				Cash := XPStep[ N ];
+
+				{ Add bonus for high Knowledge stat, }
+				{ or penalty for low Knowledge stat. }
+				if CStat( PC , STAT_Knowledge ) >= Knowledge_First_Bonus then begin
+					Cash := ( Cash * ( 100 + ( CStat( PC , STAT_Knowledge ) - Knowledge_First_Bonus + 1 ) * 5 ) ) div 100;
+				end else if CStat( PC , STAT_Knowledge ) <= Knowledge_First_Penalty then begin
+					Cash := ( Cash * ( 100 - ( Knowledge_First_Penalty - CStat( PC , STAT_Knowledge ) + 1 ) * 10 ) ) div 100;
+					if Cash < 1 then Cash := 1;
+				end;
+
+				DialogMsg( ReplaceHash( MsgString( 'SCHOOL_STUDY' ) , MsgString( 'SKILLNAME_' + BStr( N ) ) ) );
+				if DoleSkillExperience( PC , Skill , Cash ) then begin
+					DialogMsg( MsgString( 'SCHOOL_Learn' + BStr( Random( 5 ) + 1 ) ) );
+				end;
+			end;
+		end;
+	until Skill = -1;
+
+	{ Restore the Direct_Skill_Learning setting. }
+	Direct_Skill_Learning := DSLTemp;
+
+	DisposeRPGMenu( SkillMenu );
+end;
+
 Procedure ViewCharacter( HQCamp: CampaignPtr; PC: GearPtr );
 	{ Examine this character. Call up a menu with options related to this }
 	{ character. }
@@ -1498,6 +1623,8 @@ begin
 			AddRPGMenuItem( RPM , ReplaceHash( MsgSTring( 'ARENA_ReloadUnit' ) , GearName( PC ) ) + ' ($' + BStr( Cost ) + ')' , 3 );
 		end;
 
+		if HasSkillTrainers( HQCamp ) then AddRPGMenuItem( RPM , MSgString( 'ARENA_OpenSchool' ) , 6 );
+
 		AddRPGMenuItem( RPM , MsgString( 'EXIT' ) , -1 );
 
 		N := SelectMenu( RPM , @ViewSourcePilotRedraw );
@@ -1509,6 +1636,7 @@ begin
 			3:	ArenaReloadMaster( HQCamp , PC );
 			4:	DoTraining( Nil , PC , @BasicArenaRedraw );
 			5:	ArenaHQBackpack( HQCamp^.Source , PC , @BasicArenaRedraw );
+			6:	HQSchool( HQCamp , PC );
 			-2:	RemoveCharacter;
 		end;
 	until N < 0;

@@ -1656,7 +1656,11 @@ begin
 				AddNAtt( PC^.NA , NAG_Experience , NAS_Credits , -( XPStep[ N ] * CostFactor ) );
 
 				{ Calculate the number of XPs earned. }
-				Cash := ( XPStep[ N ] * ( 400 + ReactionScore( GB^.Scene , PC , NPC ) ) ) div 400;
+				if NPC <> Nil then begin
+					Cash := ( XPStep[ N ] * ( 400 + ReactionScore( GB^.Scene , PC , NPC ) ) ) div 400;
+				end else begin
+					Cash := XPStep[ N ];
+				end;
 
 				{ Add bonus for high Knowledge stat, }
 				{ or penalty for low Knowledge stat. }
@@ -1672,7 +1676,7 @@ begin
 				end;
 
 				{ Training takes time. }
-				while N > 0 do begin
+				while ( N > 0 ) and ( GB <> Nil ) do begin
 					QuickTime( GB , 100 + Random( 100 ) );
 					Dec( N );
 				end;
@@ -1682,7 +1686,6 @@ begin
 
 	{ Restore the Direct_Skill_Learning setting. }
 	Direct_Skill_Learning := DSLTemp;
-
 
 	DisposeRPGMenu( SkillMenu );
 end;

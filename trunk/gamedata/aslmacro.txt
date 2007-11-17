@@ -252,6 +252,8 @@ MedicDebriefing <AddDebriefing 4 ?>     % faction NPCs.
 SupplyDebriefing <AddDebriefing 5 ?>    % 
 IntelDebriefing <AddDebriefing 6 ?>     % 
 AddMechaSource <GrabAdventure GSetNAtt 26 ? 1 GAddNAtt 24 2 1> % Adds a mecha faction for arena unit
+AddMajorSkill <GrabAdventure GSetNAtt 25 ? 1 GAddNAtt 24 1 1>  % Adds a skill trainer for arena unit
+AddMinorSkill <GrabAdventure GSetNAtt 25 ? 1>                  % Adds a skill trainer for arena unit
 AlterContext <GrabStory GAlterContext ?>
 IfPCHasSkill <GrabPCPilot ifGHasSkill ?>
 IfPCHasPerformance <GrabPCPilot ifGHasSkill 35>
