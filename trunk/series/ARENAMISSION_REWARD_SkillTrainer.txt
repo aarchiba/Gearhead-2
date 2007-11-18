@@ -97,6 +97,47 @@ ArenaMission
 %% *****************************
 %% ***   [s12]  INITIATIVE   ***
 %% *****************************
+ArenaMission
+	name <Lightning Strike>
+	requires <*REWARD SKILL_TRAIN_MISSION [s12]>
+	desc <You must defeat a group of enemy mecha quickly in order to rendezvous with an allied strike team.>
+
+	MapWidth 50
+	MapHeight 50
+
+	PayRate 500
+
+	WildMap
+	terrain <GROUND>
+
+	Element1 <Faction Enemy>
+
+	% L1 = Initialization Counter
+	% L2 = Victory Counter
+	% L3 = Time Limit
+	Start <if= L1 0 CommanderSays 1 L= 1 1 L= 3 ComTime L+ 3 600>
+	nu1 <if= T1 0 if= L2 0 L= 2 1 Alert 2 LoseArenaMission>
+	nu2 <if= T2 0 if= L2 0 Salvage Return XPV 100 L= 2 1 Alert 3 WinArenaMission ifG L3 ComTime else GoFailRendezvous IntelDebriefing 5 AddMajorSkill 12>
+	GoFailRendezvous <IntelDebriefing 4>
+
+	Msg1 <You should defeat these enemies within ten minutes in order to make the rendezvous with Strike Team Beta. The success of thie operation is depending on you.>
+	Msg2 <The mission is a failure.>
+	Msg3 <The mission is a success.>
+	Msg4 <You did not make the rendezvous with Strike Team Beta in time.>
+	Msg5 <You made it to the rendezvous with Strike Team Beta. Because of this, your unit been granted a place in our rapid assault training program.>
+
+	sub
+		Team 1
+		SetEnemy 2
+		ParaX 5
+		ParaY 15
+
+		Team 2
+		SetEnemy 1
+		Deploy <SetSelfFaction M1   WMecha 2 ArenaRenown 450>
+		ParaX 45
+		ParaY 35
+	end
 
 
 %% ********************************
