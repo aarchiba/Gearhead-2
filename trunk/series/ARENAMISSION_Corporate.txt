@@ -7,9 +7,9 @@
 %%  ****************************************
 
 	ArenaMission
-	name <Destroy Enemy Base>
-	requires <*MISSION -!Ne MILITARY>
-	desc <A base belonging to %name1% has been discovered. Destroy it completely.>
+	name <Destroy Factory>
+	requires <*MISSION -!Ne CORPORATE>
+	desc <A factory belonging to %name1% has been discovered. Destroy it completely.>
 
 	MapWidth 50
 	MapHeight 50
@@ -19,7 +19,7 @@
 	WildMap
 	terrain <GROUND>
 
-	Element1 <Faction Enemy>
+	Element1 <Faction Corporate Enemy>
 
 	% L1 = Initialization Counter
 	% L2 = Victory Counter
@@ -89,90 +89,6 @@
 %%  *******************************************
 %%  ***   [!Md+]  MEDIUM  LEVEL  MISSIONS   ***
 %%  *******************************************
-
-	ArenaMission
-	name <Oribital Weapon>
-	requires <*MISSION Military -!Ne -!Lo>
-	desc <%name1% has deployed an orbital laser satellite. It must be destroyed before it can be used against us.>
-
-	MapWidth 50
-	MapHeight 50
-
-	PayRate 500
-
-	SpaceMap
-	terrain <SPACE>
-	SpaceScroll
-	Microgravity
-	Vacuum
-	SpaceBackdrop
-
-	Element1 <Faction Enemy>
-
-	% L1 = Initialization Counter
-	% L2 = Victory Counter
-	% L3 = Destroy Base Counter
-	Start <if= L1 0 CommanderSays 1 L= 1 1>
-	nu1 <if= T1 0 Return if= L2 0 L= 2 1 if= L3 1 else GoLoseMission Goto GoWinMission>
-	nu2 <if= T2 0 if= L3 1 if= L2 0 L= 2 1 Return Goto GoWinMission>
-	nu3 <if= T3 0 if= L3 0 L= 3 1 Print 4 XPV 100 if= T2 0 Return L= 2 1 Goto GoWinMission>
-
-	GoWinMission <Salvage Alert 3 WinArenaMission>
-	GoLoseMission <Alert 2 LoseArenaMission>
-
-	5Min <if= d2 1  WMecha 2 ArenaRenown 100>
-
-	Msg1 <Locate and destroy the orbital weapon.>
-	Msg2 <The mission is a failure.>
-	Msg3 <The mission is a success.>
-	Msg4 <The base has been destroyed.>
-
-
-	sub
-		Team 1
-		SetEnemy 2 3 4
-		ParaX 5
-		ParaY 5
-
-		Team 2
-		SetEnemy 1
-		SetAlly 3 4
-		Deploy <SetSelfFaction M1 WMecha 2 ArenaRenown 450>
-		ParaX 40
-		ParaY 40
-
-		Team 3
-		SetEnemy 1
-		SetAlly 2 4
-		ParaX 45
-		ParaY 45
-	end
-	inv
-		CombatProp 30
-		SetTeam 3
-		name <Orbital Laser Platform>
-		sdl_sprite <prop_turret1.png>
-		roguechar <&>
-		Scale 2
-		Skill 1 8
-		Skill 5 8
-		Skill 12 2
-		sub
-			Turret
-			size 8
-			armor 8
-			sub
-				BeamGun 8
-				name <Defense Laser>
-				Range 12
-				type <HYPER>
-
-				PowerSource 10
-			end
-			PowerSource 10
-		end
-
-	end
 
 
 %%  *****************************************
