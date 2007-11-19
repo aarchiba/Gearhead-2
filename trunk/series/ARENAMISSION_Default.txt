@@ -398,15 +398,20 @@ ArenaMission
 %%  ***   [!Md+]  MEDIUM  LEVEL  MISSIONS   ***
 %%  *******************************************
 
+
+%%  *****************************************
+%%  ***   [!Hi+]  HIGH  LEVEL  MISSIONS   ***
+%%  *****************************************
+
 ArenaMission
 	name <Destroy Spaceship>
-	requires <*MISSION ArenaOK (!Md|!Hi|!Ex)>
+	requires <*MISSION ArenaOK (!Hi|!Ex)>
 	desc <You must destroy a spaceship belonging to %name1%.>
 
 	MapWidth 50
 	MapHeight 50
 
-	PayRate 1000
+	PayRate 2000
 
 	SpaceMap
 	terrain <SPACE>
@@ -450,7 +455,6 @@ ArenaMission
 		Team 3
 		SetEnemy 1
 		SetAlly 2
-		home <The Fortress>
 
 		void
 		name <Enemy Zone>
@@ -464,11 +468,6 @@ ArenaMission
 			SetTeam 3
 		end
 	end
-
-
-%%  *****************************************
-%%  ***   [!Hi+]  HIGH  LEVEL  MISSIONS   ***
-%%  *****************************************
 
 
 %%  ***************************************

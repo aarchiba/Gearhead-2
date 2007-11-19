@@ -428,6 +428,7 @@ begin
 	else if ( Part^.G = GG_Shield ) then it := Part^.V * 2
 	else if ( Part^.G = GG_ExArmor ) then it := Part^.V
 	else if ( Part^.G = GG_MetaTerrain ) then it := Part^.V
+	else if Part^.G = GG_Prop then it := Part^.V
 	else it := 0;
 
 	{ If this is an armored part, perform additional checks now. }

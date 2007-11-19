@@ -384,8 +384,17 @@ end;
 Function HQRenown( HQCamp: CampaignPtr ): LongInt;
 	{ This is pretty much just a macro for returning the amount of }
 	{ renown this arena unit has. }
+	{ This procedure will also check to make sure the renown doesn't }
+	{ drop below zero. }
+var
+	it: LongInt;
 begin
-	HQRenown := NAttValue( HQCamp^.Source^.NA , NAG_CharDescription , NAS_Renowned );
+	it := NAttValue( HQCamp^.Source^.NA , NAG_CharDescription , NAS_Renowned );
+	if it < 0 then begin
+		it := 0;
+		SetNAtt( HQCamp^.Source^.NA , NAG_CharDescription , NAS_Renowned , 0 );
+	end;
+	HQRenown := it;
 end;
 
 Function HQFac( HQCamp: CampaignPtr ): Integer;
