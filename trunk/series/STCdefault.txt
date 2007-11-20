@@ -1160,6 +1160,37 @@ EncounterMove 0
 ENCOUNTER_NonCombat
 
 Encounter
+desig <QUEST-MAPMARKER-STATIONARY-DEFENDED>
+% A Quest Encounter doesn't have a MetaScene ID.
+% This one does, however, require a NID
+% It becomes active when its NAG_QuestInfo/NAS_QEncActive attribute is nonzero.
+%
+% The first time the PC tries to enter, he will be attacked. Afterwards he may enter
+% the location normally. The fight uses %threat% for its difficulty rating.
+%
+%%
+%%  V1 =  Have defeated mecha counter
+%%
+%% %  Dynamic Combat Info
+%% %    V1 = Entrance NID
+%% %    V2 = Initialization Counter
+%% %    V3 = Destination Scene
+%%
+Special <NoMSID>
+update <ifThisQEncActive else GoHide  SetStat STAT_MetaVisibility 0  ShowEncounter  Goto GoSetOrders>
+% Sets this encounter's orders to Passive
+GoSetOrders <GrabSource GSetNAtt NAG_EpisodeData NAS_Orders 3>
+Attack <  >
+use <ifG StatVal STAT_MetaVisibility -1  if# V1 0 else GoStartCombat  Print -1 Exit Destination>
+GoStartCombat <Alert 1 SavePos Dynamic 2 %threat% 100 .nu1 .nu2 ComposeD Msg1 .Msg1 DynaVar= 1 SelfNID DynaVar= 3 Destination  DynaFaction SelfFac>
+.nu1 <if= T1 0  Return   if= L2 0  L= 2 1  AddRenown -5>
+.nu2 <if= T2 0           if= L2 0  L= 2 1  XPV 100  AddRenown 1   ItemVar= L1 1 1  Alert 1  Exit L3>
+.msg1 <You have defeated the mecha.>
+Msg1 <You are attacked by the defenders of this place!>
+EncounterMove 0
+ENCOUNTER_NonCombat
+
+Encounter
 desig <DYNAMICENCOUNTER-DAILY-WANDER>
 %
 % A Dynamic Encounter doesn't lead to a scene; instead, it triggers a
