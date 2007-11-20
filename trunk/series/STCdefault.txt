@@ -1186,7 +1186,7 @@ GoStartCombat <Alert 1 SavePos Dynamic 2 %threat% 100 .nu1 .nu2 ComposeD Msg1 .M
 .nu1 <if= T1 0  Return   if= L2 0  L= 2 1  AddRenown -5>
 .nu2 <if= T2 0           if= L2 0  L= 2 1  XPV 100  AddRenown 1   ItemVar= L1 1 1  Alert 1  Exit L3>
 .msg1 <You have defeated the mecha.>
-Msg1 <You are attacked by the defenders of this place!>
+Msg1 <You are attacked by mecha as you approach \SCENE Destination !>
 EncounterMove 0
 ENCOUNTER_NonCombat
 
