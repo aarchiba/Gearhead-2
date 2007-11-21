@@ -662,6 +662,28 @@ Scene 0 0
 	end
 
 Scene 0 0
+	name <#'s Lair>
+	% An empty boxroom containing stairs up and that's it.
+	% It's useful for those things where the PC walks into a big encounter-
+	% like the mummy's tomb in ADOM.
+	requires <*BLANK .NPCLair>
+	type <Lair Private>
+	terrain <GROUND>
+	special <NOEXIT>
+
+	BoxMap
+	MapWidth 17
+	MapHeight 17
+
+	sub
+		Room
+		sub
+			Trapdoor
+			Destination -1
+		end
+	end
+
+Scene 0 0
 	name <# Basement>
 	% An empty basement containing stairs up and that's it.
 	requires <*BLANK .BoxBasement>

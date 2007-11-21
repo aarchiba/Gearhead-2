@@ -6,6 +6,67 @@
 %% instead of being housed in a plot or story.
 %%
 
+%%
+%% *:RevealQuestEncounter
+%%		&RebelHQ	The encounter is a rebellion headquarters
+%%
+%% The PC wants to locate a certain quest encounter. By completing this
+%% subquest, the encounter will be activated.
+%%
+%% PARAM1: The encounter to activate
+
+Content
+	name <It Has a Price>
+	desc <The PC can purchase the information from an NPC.>
+	requires <*:RevealQuestEncounter>
+
+	% E1 is the encounter to activate
+	% E2 is the NPC with the info
+	%  If this NPC dies, the PC might manage to spot the encounter with
+	%  a hard AWARENESS check.
+	Element2 <Prefab>
+	Scene2 <Building Public>
+	Team2 <Citizens>
+	TeamData2 <Pass>
+
+	sub
+		Persona 2
+		rumor%id% <%name2% knows where the %name1% is.>
+		% V1 = Information Cost
+		greeting <if# QuestStatus %qid% %id% else GoMaybeAsk NewChat SayAnything>
+		GoMayBeAsk <if= v1 0 else GoMakeDeal Goto GoAskInfo>
+		*GoAskInfo <*LookingForItem %1% GoMakeDeal>
+		GoMakeDeal <V= 1 Threat %threat% 10 NewChat Say 1 QMemo %qid% 2 AddChat 1 AddChat 2 AddChat 3 AddChat 4>
+		GoReveal <ItemQSubMemo %1% %prev_id% 3 SetQEncActive %1% SetQuestStatus %qid% -1>
+		Result1 <NewChat Say 4 Cash+ -v1 Goto GoReveal>
+		Result2 <NewChat Say 5>
+		Result3 <NewChat Say 7 AddReact d10 AddEasygoing -d4  Goto GoReveal>
+		Result4 <NewChat Say 6 AddHeroic -1 AddCheerful -d10  Goto GoReveal>
+		Msg1 <Information doesn't come cheap. I know where the %name1% is, but if you want to know it's going to cost $ \VAL V1 .>
+		Msg2 <%name2% in \SCENE %s2% knows where the %name1% is, and will tell you for $ \VAL V1 .>
+		Msg3 <%name2% revealed that the %name1% is in \SCENE %s1% .>
+		Msg4 <Ah, it's always a pleasure to hear the sound of credits being transferred. You can find the %name1% in \SCENE %s1% .>
+		Msg5 <I'll be here. Come back when you have the money.>
+		Msg6 <Ulp... knowledge comes at a price, but sometimes there's a discount. You can find the %name1% in \SCENE %s1% .>
+		Msg7 <Well, er, I... oh forget it. You can find the %name1% in \SCENE %s1% . These navpoints will lead you straight to it.>
+		Prompt1 <Sounds reasonable. [Give Money]>
+		Prompt1_1 <No problem. [Give Money]>
+		CPrompt1 <ifG PC$ V1 Accept>
+		Prompt2 <I'll be back later.>
+		Prompt2_1 <Let me think about that.>
+		Prompt3 <Are you only interested in money, or...?>
+		CPrompt3 <ifChatNPCSexy ifFlirtation SkillTar %threat% Accept>
+		Prompt4 <Tell me now and I let you live.>
+		CPrompt4 <ifIntimidation HardSkillTar %threat% Accept>
+
+		MetaScene 1
+		% If E2 is dead, maybe reveal the encounter manually.
+		start <if= QuestStatus %qid% %id% else %pop% ifNPCDead %2% else %pop% ifAwareness HardSkillTar %threat% else %pop% SetQEncActive %1% SetQuestStatus %qid% -1 Goto %pop%>
+	end
+	inv
+		NPC Citizen
+		Skill 10 10
+	end
 
 %%
 %% *:PersonalIntervention Content
