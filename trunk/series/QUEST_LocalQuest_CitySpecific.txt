@@ -250,7 +250,7 @@ Content
 				Elevator
 				% V1 = Have used the elevator already				MiniMapComponent 2
 				desig <ENTRANCE %s8%>
-				use <if= V1 1 else GoCheckEligibility  Print -1 Exit Destination>
+				use <if= V1 1 else GoCheckEligibility  if= SceneVar %s8% 12 0 else GoAccessDenied Print -1 Exit Destination>
 				%% There are two ways to gain access to L3: First, the PC
 				%% can simply obtain a lot of renown and money, and the door
 				%% will magically open. Second, the player can complete all
@@ -332,12 +332,19 @@ Content
 		Persona 2
 		special <UNLISTED>
 		%%  V1 = Have accepted mission
-		greeting <if= QuestStatus %qid% %id% else GoChat >
+		greeting <if= QuestStatus %qid% %id% else GoChat if= V1 1 else GoOfferMission NewChat Say 2 AddChat 1 AddChat 2 AddChat 3>
 		GoChat <NewChat SayAnything>
 		GoStartMission <V= 1 1 SceneVar= %s2% 1 1 SetQuestStatus %qid1% %id1% QMemo %qid% 1>
+		GoOfferMission <>
 
 		Msg1 <Technocrat %name2% sent you back to the lower levels to find and eliminate a rebel movement.>
+		Msg2 <Have you dealt with the insurgents yet? The Technocrats demand progress.>
 
+		Prompt1 <I'm still working on it.>
+		Prompt2 <I've decided that I'm not going to help you.>
+		CPrompt2 <if= SceneVar %s3% 2 0 Accept>
+		Prompt3 <The rebels have been dealt with.>
+		CPrompt3 <if= SceneVar %s3% 2 1 Accept>
 
 
 		Persona 3
@@ -346,8 +353,12 @@ Content
 		GoChat <NewChat SayAnything>
 
 		MetaScene 2
+		% L11 = Initialization Counter
+		% L12 = Re-entry denied; PC will not be allowed to return to this level
 		start <if= L11 0 else %pop% L= 11 1 SetQuestStatus %qid% %id% Monologue %2% 11 Goto %pop%>
+		Surrender%2% <Print 12 KillNPC %2%>
 		Msg11 <It's about time you arrived. Get over here.>
+		Msg12 <%name2% suddenly drops dead!>
 		sub
 			Room
 			minimap <.......1............#---#>

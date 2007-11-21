@@ -2873,7 +2873,7 @@ begin
 		SetNAtt( Mek^.NA , NAG_Location , NAS_Team , NAV_DefPlayerTeam );
 		DeployMek( GB , Mek , False );
 
-		if ( Adv <> Nil ) and ( GB <> Nil ) and ( GB^.Scene <> Nil ) then begin
+		if ( Adv <> Nil ) and ( Adv^.S = GS_ArenaCampaign ) and ( GB <> Nil ) and ( GB^.Scene <> Nil ) then begin
 			{ This is Arena mode. Store the mecha announcement for the }
 			{ mission debriefing. }
 			AddSAtt( GB^.Scene^.SA , ARENAREPORT_MechaObtained , FullGearName( Mek ) );

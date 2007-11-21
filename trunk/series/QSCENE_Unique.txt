@@ -15,6 +15,7 @@ Scene
 
 	Start <Print 1>
 	Msg1 <You enter the Theles Spinner third level.>
+	5Min <ifTeamHostile 3 MonsterUp 3 d10>
 
 	sub
 		team 1
