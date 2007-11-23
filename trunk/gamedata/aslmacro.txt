@@ -64,7 +64,8 @@ SETSCENEFACTION <GrabScene ? GSetNAtt NAG_Personal NAS_FactionID ?>
 SetNPCTeam <GrabNPC ? GSetNAtt NAG_Location NAS_Team ?>
 SetChatNPCTeam <GrabChatNPC GSetNAtt NAG_Location NAS_Team ?>
 DELETENPC <GrabNPC ?  DeleteGG>
-KILLNPC <GrabNPC ? GAddNAtt 12 0 9999>
+KILLNPC <GrabNPC ? GAddNAtt 12 0 9999 Trigger NU NPCTeam !>
+KILLPC <GrabPC ? GAddNAtt 12 0 9999 Trigger0 NU1>
 DELETEITEM <GrabItem ?  DeleteGG>
 MOVENPC <GrabNPC ?  MoveGG ?>
 MOVEANDPACIFYNPC <GrabNPC ? MoveAndPacifyGG ?>

@@ -4,6 +4,170 @@
 %% *UNIQUE_[Something].
 
 Scene
+	name <Theles Spinner Fourth Level>
+	requires <*THESP_FourthLevel>
+	type <building private>
+	special <NOEXIT NORESCUE SOLO UNSAFE>
+	PalaceParkTiles
+
+	MapWidth 32
+	MapHeight 22
+	BoxMap
+	Special <NOEXIT SHOWALL>
+	FloorType 1
+
+	sub
+		team 1
+
+		team 2
+		name <Citizens>
+		SetAlly 3
+
+		team 3
+		name <Guards>
+		SetAlly 2
+
+		rect
+		minimap <......###..#1#...........>
+		special <SHAREDPALETTE>
+		inv
+			Elevator
+			MiniMapComponent 1
+			Destination -1
+			use <if# L2 0 else GoNoElevator  Print 1 Exit Destination>
+			GoNoElevator <Print 11>
+			Msg11 <This elevator doesn't respond.>
+		end
+
+		rect
+		minimap <......1#2..###..3#4......>
+		special <SHAREDPALETTE>
+		inv
+			STC BIOTANK
+			use <Print 1>
+			Msg1 <This tank contains a human being floating in a foetal position.>
+			MiniMapComponent 1
+
+			STC BIOTANK
+			use <Print 1>
+			Msg1 <This tank contains a human being floating in a foetal position.>
+			MiniMapComponent 2
+
+			STC BIOTANK
+			use <Print 1>
+			Msg1 <This tank contains a human being floating in a foetal position.>
+			MiniMapComponent 3
+
+			STC BIOTANK
+			use <Print 1>
+			Msg1 <This tank contains a human being floating in a foetal position.>
+			MiniMapComponent 4
+		end
+
+		rect
+		minimap <......1#2..###..3#4......>
+		special <SHAREDPALETTE>
+		inv
+			STC BIOTANK
+			use <Print 1>
+			Msg1 <This tank contains a human being floating in a foetal position.>
+			MiniMapComponent 1
+
+			STC BIOTANK
+			use <Print 1>
+			Msg1 <This tank contains a human being floating in a foetal position.>
+			MiniMapComponent 2
+
+			STC BIOTANK
+			use <Print 1>
+			Msg1 <This tank contains a human being floating in a foetal position.>
+			MiniMapComponent 3
+
+			STC BIOTANK
+			use <Print 1>
+			Msg1 <This tank contains a human being floating in a foetal position.>
+			MiniMapComponent 4
+		end
+
+		rect
+		minimap <......1#2..###..3#4......>
+		special <SHAREDPALETTE>
+		inv
+			STC BIOTANK
+			use <Print 1>
+			Msg1 <This tank appears to be empty.>
+			MiniMapComponent 1
+
+			STC BIOTANK
+			use <Print 1>
+			Msg1 <This tank contains a human being floating in a foetal position.>
+			MiniMapComponent 2
+
+			STC BIOTANK
+			use <Print 1>
+			Msg1 <This tank contains a human being floating in a foetal position.>
+			MiniMapComponent 3
+
+			STC BIOTANK
+			use <Print 1>
+			Msg1 <This tank contains a human being floating in a foetal position.>
+			MiniMapComponent 4
+		end
+
+		forest
+
+		forest
+
+		forest
+
+		forest
+
+		forest
+
+		lake
+
+		lake
+	end
+
+
+Scene
+	name <# Spire>
+	requires <*THESP_FinalSpire>
+	special <SOLO NOEXIT NORESCUE>
+	type <DUNGEON Industrial>
+	dentrance <*GoUp>
+	mapwidth 40
+	mapheight 40
+	MonkeyMap
+	LockedDoorChance 5
+	SecretDoorChance 15
+	IndustrialTiles
+
+	NeededCells 3
+
+	start <Print 1>
+	msg1 <You enter \SCENE SceneID .>
+
+	sub
+		Team 1
+		SetEnemy 2
+
+		Team 2
+		name <Monster>
+		type <Robot Vermin>
+		SetEnemy 1
+		Stat 2 1
+
+		room
+		width 3
+		height 3
+		sub
+			StairsDown
+			Destination -1
+		end
+	end
+
+Scene
 	name <Theles Spinner Third Level>
 	requires <*THESP_ThirdLevel>
 	type <building private>
@@ -58,6 +222,7 @@ Scene
 		YPos 4
 
 		STC ONESHOTDOOR
+		update <if# L2 0 SetStat STAT_Lock 0>
 		XPos 30
 		YPos 14
 		Lock 14

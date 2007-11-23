@@ -310,6 +310,8 @@ Content
 	% E3 is the leader of the rebellion, who the PC needs to find. Actually he's not
 	%  much better than the technocrats...
 	% E4 is the entrance to E3's hideout
+	% E5 is the final spire
+	% E6 is the fourth layer
 
 	Element2 <Prefab>
 	Scene2 <Grab 1>
@@ -324,35 +326,106 @@ Content
 	Element4 <Prefab>
 	Place4 <Space Environs>
 
+	Scene5 <New *THESP_FinalSpire>
+	Scene6 <New *THESP_FourthLevel>
+
 	% SubQuest1 is the task to locate the rebel hideout
 	% SubQuest2 is the final rung of this quest
 	Quest1 <*:RevealQuestEncounter 4>
+	Quest2 <*THELES_RungFour 1 6>
 
 	sub
 		Persona 2
 		special <UNLISTED>
 		%%  V1 = Have accepted mission
-		greeting <if= QuestStatus %qid% %id% else GoChat if= V1 1 else GoOfferMission NewChat Say 2 AddChat 1 AddChat 2 AddChat 3>
+		greeting <if= QuestStatus %qid% %id% else GoChat if# V1 2 else GoChat if= V1 1 else GoOfferMission NewChat Say 2 AddChat 1 AddChat 2 AddChat 3>
 		GoChat <NewChat SayAnything>
 		GoStartMission <V= 1 1 SceneVar= %s2% 1 1 SetQuestStatus %qid1% %id1% QMemo %qid% 1>
-		GoOfferMission <>
-
+		GoOfferMission <NewChat Say 3 AddChat 4 AddChat 5>
+		GoAttack <TeamAttack 2 QMemo %qid% 0 TeamAttack 3 SceneVar= %s2% 12 1 SceneVar= %s2% 1 0>
+		result1 <NewChat Say 4>
+		result2 <NewChat Say 5 AddChat 6 AddChat 7>
+		result3 <EndChat Say 6 AddChat 8  SceneVar= %s2% 1 0>
+		result4 <NewChat Say 7 AddChat 9 AddChat 10>
+		result5 <NewChat Say 8 Goto GoStartMission>
+		result6 <NewChat Say 4>
+		result7 <EndChat Say 9 Goto GoAttack>
+		result8 <NewChat Say 10 QMemo %qid% 11 SceneVar= %s2% 2 1 SceneVar= %s2% 1 0 V= 1 2 UpdateProps AddChat 11 AddChat 12>
+		result9 <Goto result5>
+		result10 <NewChat Say 12 QMemo %qid% 0 SceneVar= %s2% 1 1 SceneVar= %s2% 12 1>
+		result11 <NewChat Say 13>
+		result12 <NewChat Say 14>
 		Msg1 <Technocrat %name2% sent you back to the lower levels to find and eliminate a rebel movement.>
 		Msg2 <Have you dealt with the insurgents yet? The Technocrats demand progress.>
-
+		Msg3 <We've been waiting for a long time. Let me give you the details of your task...>
+		Msg4 <Don't come back until the rebels have been dealt with.>
+		Msg5 <I don't have time to play games, \PC , so I'd advise that you think very carefully about what you say. Are you going to complete this mission or will we find some other purpose for you?>
+		Msg6 <So, I guess you really are as good as the tests indicated. You've even attracted the attention of the fourth level.>
+		Msg7 <You? A technocrat? Don't make me laugh. You were brought here because we intend to use your abilities, though if you prove yourself there's a chance that you could be promoted to join our ranks.>
+		Msg8 <There's a rebellion brewing on the lower levels. Certain residents dislike the way Theles Spinner is run. Your task is to destroy their mecha and eliminate their leader. Return here when the task has been completed.>
+		Msg9 <You were given every chance. If you will not serve your purpose in life, then your body will serve us in death.>
+		Msg10 <The door in the southeast corner of the room will now be open to you. I suppose I should warn you that... no, it will be more fun if you discover on your own.>
+		Msg11 <Technocrat %name2% informed you that you've been granted access to Theles level four.>
+		Msg12 <I can see that the testing has been for nothing. You are not suited to be one of us; you may leave any time you desire.>
+		Msg13 <It doesn't make any difference what I was going to say. Your fate from this point onwards is sealed.>
+		Msg14 <You are ignorant of how things operate in Theles. What would be the point of a third level, if not for a fourth?>
 		Prompt1 <I'm still working on it.>
 		Prompt2 <I've decided that I'm not going to help you.>
 		CPrompt2 <if= SceneVar %s3% 2 0 Accept>
 		Prompt3 <The rebels have been dealt with.>
 		CPrompt3 <if= SceneVar %s3% 2 1 Accept>
-
+		Prompt4 <Wait, I'm a technocrat now, you can't order me...>
+		Prompt5 <Tell me what I must do.>
+		Prompt6 <I'll do the mission.>
+		Prompt7 <You can take this mission and burn it.>
+		Prompt8 <[Continue]>
+		Prompt9 <Fine. Tell me what you want.>
+		Prompt10 <I'm not your slave to boss around.>
+		Prompt11 <Wait, what were you going to say?>
+		Prompt12 <There's a fourth level? Isn't this the top?>
 
 		Persona 3
 		special <UNLISTED>
-		greeting <if= QuestStatus %qid% %id% else GoChat >
+		% V1 = Have joined rebellion
+		greeting <if= QuestStatus %qid% %id% else GoChat if= V1 0 else GoChat ifChatNPCSurrendered else GoChallenge NewChat Say 1 AddChat 1 AddChat 2>
 		GoChat <NewChat SayAnything>
+		GoChallenge <NewChat Say 2 AddChat 3 AddChat 4>
+		Result1 <EndChat Say 3 Print 4 KillNPC %3%>
+		Result2 <EndChat Say 5 History 6 FreezeNPC %3% Trigger0 NU2 ifChatNPCHeroic else GoMakeEnemy PCAlly %3%>
+		GoMakeEnemy <PCEnemy %3%>
+		Result3 <EndChat Say 7  TeamAttack 2>
+		Result4 <NewChat Say 8 AddChat 5>
+		Result5 <NewChat Say 9 AddChat 6 AddChat 7 AddChat 8>
+		result6 <NewChat Say 10 V= 1 1 QMemo %qid% 11 ifConversation SkillTar %threat% PCFriend %3%>
+		result7 <EndChat Say 12  TeamAttack 2>
+		result8 <NewChat Say 13 AddChat 3 AddChat 9>
+		*result9 <*GOODBYE>
+		Msg1 <Please, you have defeated me, spare my life...>
+		Msg2 <You've come to a dangerous place. What do you hope to find here?>
+		Msg3 <Then I'll die of my own free will, and not at the hand of their slave!>
+		Msg4 <%name3% kills \PPR %3% self.>
+		Msg5 <Thank you... we will probably meet again, though as friends or enemies I couldn't say.>
+		Msg6 <You spared the life of rebel leader %name3%.>
+		Msg7 <You aren't the first one they've sent, and I doubt you'll be the last. Kill the intruder!>
+		Msg8 <The people of Theles Spinner are regarded as living waste! It's the fault of the technocrats- these abuses would never be tolerated in any other spinner.>
+		Msg9 <We have a two part plan. First, the technocracy must be eliminated. Second, the shipment of criminals and slackers from the other colonies will be stopped.>
+		Msg10 <Great! We could always use more members. Look, just see what kind of trouble you can make for the technocrats. I'll be here administrating.>
+		Msg11 <You joined %name3%'s rebellion against the technocrats. %name2% isn't going to be happy.>
+		Msg12 <Another slave of the technocrats, I should have known... Destroy the intruder!>
+		Msg13 <What are you doing asking questions like that!? It's as though you don't want this rebellion to succeed. Tell me, where do your loyalties lie?>
+		Prompt1 <No. The technocrats ordered your death.>
+		Prompt2 <Fine. Leave this place, and never come back.>
+		Prompt3 <The technocrats sent me to kill you.>
+		Prompt4 <I want to learn about the rebellion.>
+		Prompt5 <What do you plan to do about it?>
+		Prompt6 <I want to join your rebellion!>
+		Prompt7 <I think it's time that I kill you.>
+		Prompt8 <But how will you keep the colony operating?>
+		Prompt9 <I'm not going to oppose you... yet.>
 
 		MetaScene 2
+		% L1 = PC can return to the lower levels from this level
+		% L2 = Granted entrance to Level 4
 		% L11 = Initialization Counter
 		% L12 = Re-entry denied; PC will not be allowed to return to this level
 		start <if= L11 0 else %pop% L= 11 1 SetQuestStatus %qid% %id% Monologue %2% 11 Goto %pop%>
@@ -364,6 +437,10 @@ Content
 			minimap <.......1............#---#>
 			special <SHAREDPALETTE>
 			desig <HOME>
+		end
+		inv
+			Elevator
+			desig <Entrance %s5%>
 		end
 
 		MetaScene 3
@@ -380,6 +457,15 @@ Content
 			name <Rebels>
 			type <Criminal Guard City>
 		end
+
+		MetaScene 5
+		sub
+			Room
+			inv
+				StairsUp
+				desig <Entrance %s6%>
+			end
+		end
 	end
 	inv
 		NPC Scientist
@@ -389,11 +475,52 @@ Content
 
 		NPC Soldier
 		job <Rebel Leader>
+		chardesc melancholy criminal passionate
 
 		STC QUEST-MAPMARKER-STATIONARY-DEFENDED
 		name <Rebel Station>
 		desig <ENTRANCE %s2%>
 	end
+
+Content
+	name <Climbing the Ladder, Fourth Rung>
+	desc <Theles Spinner is divided into regions based on social class. The PC has a chance to climb the ladder.>
+	requires <*THELES_RungFour>
+
+	% For the final level, the PC will meet the gardener behind Theles Spinner and
+	% be given a choice that could end the game.
+	% E1 is the third level. This is needed to open up the pathways after finishing
+	%   the fourth level.
+	% E2 is the fourth level itself.
+	% E3 is the gardener.
+
+	Element3 <Prefab>
+	Scene3 <Grab 2>
+	Team3 <Citizens>
+	TeamData3 <SD>
+
+	sub
+		Persona 3
+		special <UNLISTED NOPLOTS>
+
+
+		MetaScene 2
+		% L1 = Initialization Counter
+		% L2 = Can use elevator
+		Faint%3% <>
+		start <if= L1 0 else GoBeenBefore L= 1 1 SetQuestStatus %qid% %id% Alert 1>
+		GoBeenBefore <Print 2>
+
+		Msg1 <You enter the fourth level. The area is brightly illuminated by reflected sunlight. In the distance, an old man tends to the plants.>
+		Msg2 <You enter Theles Spinner fourth level.>
+	end
+	inv
+		NPC Soldier
+		Biotech
+		job <Gardener>
+
+	end
+
 
 Content
 	name <Ronald McComet Must Die>
