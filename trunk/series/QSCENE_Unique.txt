@@ -94,9 +94,19 @@ Scene
 		special <SHAREDPALETTE>
 		inv
 			STC BIOTANK
-			use <Print 1>
-			Msg1 <This tank appears to be empty.>
+			name <Empty Biotank>
 			MiniMapComponent 1
+			use <if= L3 0 else GoMaybeDie Print 1>
+			GoMaybeDie <ifYesNo 2 3 4 else GoDontDie Alert 5 Alert 6 History 8 KillPC>
+			GoDontDie <Print 7>
+			Msg1 <This tank appears to be empty.>
+			Msg2 <You find the empty tank that the gardener mentioned.>
+			Msg3 <Enter the container.>
+			Msg4 <Don't do it.>
+			Msg5 <You climb inside the biotank and close the door. Relaxing music begins to play as a pleasantly smelling gas fills the chamber.>
+			Msg6 <You drift into a strange dream from which you never awaken.>
+			Msg7 <You leave it alone.>
+			Msg8 <You became part of the collective consciousness which runs Theles Spinner.>
 
 			STC BIOTANK
 			use <Print 1>

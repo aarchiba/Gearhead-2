@@ -507,6 +507,7 @@ Content
 		MetaScene 2
 		% L1 = Initialization Counter
 		% L2 = Can use elevator
+		% L3 = Can use biotank
 		Faint%3% <>
 		start <if= L1 0 else GoBeenBefore L= 1 1 SetQuestStatus %qid% %id% Alert 1>
 		GoBeenBefore <Print 2>
@@ -518,7 +519,8 @@ Content
 		NPC Soldier
 		Biotech
 		job <Gardener>
-
+		job_desig <ACADE>
+		Chardesc Old Old Old Old Old
 	end
 
 
