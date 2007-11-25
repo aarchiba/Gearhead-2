@@ -31,7 +31,7 @@ ArenaMission
 	nu2 <if= T2 0 if= T3 0 if= L2 0 L= 2 1 Return if= T4 0 else GoWinMission Goto GoDebrisLost>
 	nu3 <if= T3 0 if= T2 0 if= L2 0 L= 2 1 Return if= T4 0 else GoWinMission Goto GoDebrisLost>
 
-	GoWinMission <TeamNeutral 4 Salvage XPV 100 Alert 3 WinArenaMission>
+	GoWinMission <TeamNeutral 4 Salvage XPV 200 Alert 3 WinArenaMission>
 	GoDebrisLost <Alert 4 WinArenaMission>
 
 	Msg1 <They are fighting over a downed ship. Investigate and secure the area. Keep the ship intact if possible. Eliminate both parties.>

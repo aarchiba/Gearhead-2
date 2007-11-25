@@ -24,7 +24,7 @@ ArenaMission
 	% L2 = Victory Counter
 	Start <if= L1 0  CommanderSays 1  L= 1 1>
 	nu1 <if= T1 0 if= L2 0 L= 2 1 Alert 2 LoseArenaMission>
-	nu2 <if= T2 0 if= L2 0 Salvage Return XPV 100 L= 2 1 Alert 3 WinArenaMission>
+	nu2 <if= T2 0 if= L2 0 Salvage Return XPV 200 L= 2 1 Alert 3 WinArenaMission>
 
 	Msg1 <Enemy mecha have been spotted. Eliminate them all.>
 	Msg2 <The mission is a failure.>
@@ -62,7 +62,7 @@ ArenaMission
 	% L2 = Victory Counter
 	Start <if= L1 0 CommanderSays 1 L= 1 1>
 	nu1 <if= T1 0 if= L2 0 L= 2 1 Alert 2 LoseArenaMission>
-	nu2 <if= T2 0 if= L2 0 Salvage Return XPV 100 L= 2 1 Alert 3 WinArenaMission>
+	nu2 <if= T2 0 if= L2 0 Salvage Return XPV 200 L= 2 1 Alert 3 WinArenaMission>
 
 	Msg1 <Enemy mecha have been spotted. Eliminate them all.>
 	Msg2 <The mission is a failure.>
@@ -100,7 +100,7 @@ ArenaMission
 	% L2 = Victory Counter
 	Start <if= L1 0 CommanderSays 1 L= 1 1>
 	nu1 <if= T1 0 if= L2 0 L= 2 1 Alert 2 LoseArenaMission>
-	nu2 <if= T2 0 if= L2 0 Salvage Return XPV 100 L= 2 1 Alert 3 WinArenaMission>
+	nu2 <if= T2 0 if= L2 0 Salvage Return XPV 200 L= 2 1 Alert 3 WinArenaMission>
 
 	Msg1 <Enemy mecha have been spotted. Eliminate them all.>
 	Msg2 <The mission is a failure.>
@@ -142,7 +142,7 @@ ArenaMission
 	% L2 = Victory Counter
 	Start <if= L1 0 CommanderSays 1 L= 1 1>
 	nu1 <if= T1 0 if= L2 0 L= 2 1 Alert 2 LoseArenaMission>
-	nu2 <if= T2 0 if= L2 0 Salvage Return XPV 100 L= 2 1 Alert 3 WinArenaMission>
+	nu2 <if= T2 0 if= L2 0 Salvage Return XPV 200 L= 2 1 Alert 3 WinArenaMission>
 
 	Msg1 <Enemy mecha have been spotted. Eliminate them all.>
 	Msg2 <The mission is a failure.>
@@ -185,7 +185,7 @@ ArenaMission
 	% L2 = Victory Counter
 	Start <if= L1 0 ForceChat M2 L= 1 1>
 	nu1 <if= T1 0 if= L2 0 L= 2 1 Alert 2 LoseArenaMission>
-	nu2 <if= T2 0 if= L2 0 Salvage Return XPV 100 L= 2 1 Alert 3 WinArenaMission>
+	nu2 <if= T2 0 if= L2 0 Salvage Return XPV 200 L= 2 1 Alert 3 WinArenaMission>
 
 	Msg2 <The mission is a failure.>
 	Msg3 <The mission is a success.>
@@ -239,7 +239,7 @@ ArenaMission
 	% L2 = Victory Counter
 	Start <if= L1 0 ForceChat M2 L= 1 1>
 	nu1 <if= T1 0 if= L2 0 L= 2 1 Alert 2 LoseArenaMission>
-	nu2 <if= T2 0 if= L2 0 Salvage Return XPV 100 L= 2 1 Alert 3 WinArenaMission>
+	nu2 <if= T2 0 if= L2 0 Salvage Return XPV 200 L= 2 1 Alert 3 WinArenaMission>
 
 	Msg2 <The mission is a failure.>
 	Msg3 <The mission is a success.>
@@ -292,7 +292,7 @@ ArenaMission
 	% L2 = Victory Counter
 	Start <if= L1 0 ForceChat M2 L= 1 1>
 	nu1 <if= T1 0 if= L2 0 L= 2 1 Alert 2 LoseArenaMission>
-	nu2 <if= T2 0 if= L2 0 Salvage Return XPV 100 L= 2 1 Alert 3 WinArenaMission>
+	nu2 <if= T2 0 if= L2 0 Salvage Return XPV 200 L= 2 1 Alert 3 WinArenaMission>
 
 	Msg1 <Enemy mecha have been spotted. Eliminate them all.>
 	Msg2 <The mission is a failure.>
@@ -347,7 +347,7 @@ ArenaMission
 	nu3 <if= T3 0 if= L3 0 L= 3 1>
 	nu4 <Goto nu2>
 
-	GoWinMission <Salvage Alert 3 WinArenaMission XPV * T3 75>
+	GoWinMission <Salvage Alert 3 WinArenaMission XPV 200>
 	GoLoseMission <Alert 2 LoseArenaMission>
 
 	Msg1 <Defend the base against enemy mecha.>
@@ -428,7 +428,7 @@ ArenaMission
 	Start <if= L1 0 CommanderSays 1 L= 1 1>
 	nu1 <if= T1 0 Return if= L2 0 L= 2 1 if= L3 1 else GoLoseMission Goto GoWinMission>
 	nu2 <if= T2 0 if= L3 1 if= L2 0 L= 2 1 Return Goto GoWinMission>
-	nu3 <if= T3 0 if= L3 0 L= 3 1 Print 5 XPV 100 if= T2 0 Return L= 2 1 Goto GoWinMission>
+	nu3 <if= T3 0 if= L3 0 L= 3 1 Print 5 XPV 200 if= T2 0 Return L= 2 1 Goto GoWinMission>
 
 	GoWinMission <Salvage Alert 3 WinArenaMission>
 	GoLoseMission <Alert 2 LoseArenaMission>

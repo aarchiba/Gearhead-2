@@ -115,7 +115,7 @@
 	Start <if= L1 0 CommanderSays 1 L= 1 1>
 	nu1 <if= T1 0 Return if= L2 0 L= 2 1 if= L3 1 else GoLoseMission Goto GoWinMission>
 	nu2 <if= T2 0 if= L3 1 if= L2 0 L= 2 1 Return Goto GoWinMission>
-	nu3 <if= T3 0 if= L3 0 L= 3 1 Print 4 XPV 100 if= T2 0 Return L= 2 1 Goto GoWinMission>
+	nu3 <if= T3 0 if= L3 0 L= 3 1 Print 4 XPV 200 if= T2 0 Return L= 2 1 Goto GoWinMission>
 
 	GoWinMission <Salvage Alert 3 WinArenaMission>
 	GoLoseMission <Alert 2 LoseArenaMission>

@@ -32,7 +32,7 @@ ArenaMission
 	% L3 = Number of mecha to award
 	Start <if= L1 0  CommanderSays 1  L= 1 1>
 	nu1 <if= T1 0 if= L2 0 L= 2 1 Alert 2 LoseArenaMission>
-	nu2 <if= T2 0 if= L2 0 Salvage Return XPV 100 L= 2 1 Alert 3 L= 3 T3 Goto GoMechaFactory>
+	nu2 <if= T2 0 if= L2 0 Salvage Return XPV 200 L= 2 1 Alert 3 L= 3 T3 Goto GoMechaFactory>
 	GoMechaFactory <ifG L3 0 else GoWinMission L+ 3 -1 RandomMecha .faction ArenaRenown Goto GoMechaFactory>
 	.faction <\FACTION_DESIG %1% GENERAL>
 	GoWinMission <WinArenaMission>

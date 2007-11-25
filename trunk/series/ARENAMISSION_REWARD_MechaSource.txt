@@ -41,12 +41,9 @@ ArenaMission
 	% L3 = Destroy Base Counter
 	Start <if= L1 0  CommanderSays 1  L= 1 1>
 	nu1 <if= T1 0 if= L2 0 L= 2 1 Alert 2 LoseArenaMission>
-	nu2 <if= T2 0 if= L2 0 Salvage XPV 100 L= 2 1 Alert 3 WinArenaMission if= L3 0 AddMechaSource %1% IntelDebriefing 4 History 5>
+	nu2 <if= T2 0 if= L2 0 Salvage XPV 200 L= 2 1 Alert 3 WinArenaMission if= L3 0 AddMechaSource %1% IntelDebriefing 4 History 5>
 	nu3 <if= T3 0 if= L3 0 L= 3 1>
 	nu4 <Goto nu2>
-
-	GoWinMission <Salvage Alert 3 WinArenaMission XPV * T3 75>
-	GoLoseMission <Alert 2 LoseArenaMission>
 
 	Msg1 <Destroy the attackers. Protect the factory if at all possible.>
 	Msg2 <The mission is a failure.>
@@ -132,7 +129,7 @@ ArenaMission
 	% L2 = Victory Counter
 	Start <if= L1 0 Monologue %2% 1 L= 1 1>
 	nu1 <if= T1 0 if= L2 0 L= 2 1 Alert 3 LoseArenaMission>
-	nu2 <if= T2 0 if= L2 0 Return XPV 100 L= 2 1 Alert 2 AddMechaSource %1% SupplyDebriefing 4 History 5 WinArenaMission>
+	nu2 <if= T2 0 if= L2 0 Return XPV 200 L= 2 1 Alert 2 AddMechaSource %1% SupplyDebriefing 4 History 5 WinArenaMission>
 
 	Msg1 <Welcome to the arena. Let's see how how good \FACTION PCFac are.>
 	Msg1_1 <So, this is \FACTION PCFac . Let's see if you're good enough to survive in the arena.>
@@ -199,7 +196,7 @@ ArenaMission
 	% L2 = Victory Counter
 	Start <if= L1 0 Monologue %3% 1 L= 1 1>
 	nu1 <if= T1 0 if= L2 0 L= 2 1 Alert 2 LoseArenaMission>
-	nu2 <if= T2 0 if= L2 0 L= 2 1 ifNPCInPlay %3% else GoLose Salvage XPV 100 WinArenaMission Monologue %3% 3  IntelDebriefing 4 History 5 AddMechaSource %1%>
+	nu2 <if= T2 0 if= L2 0 L= 2 1 ifNPCInPlay %3% else GoLose Salvage XPV 200 WinArenaMission Monologue %3% 3  IntelDebriefing 4 History 5 AddMechaSource %1%>
 	GoLose <Alert 2 LoseArenaMission>
 
 	Msg1 <Hey, I could really use some help here- they've got me surrounded!>
