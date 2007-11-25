@@ -394,11 +394,11 @@ Theme 1
 			magazine 24
 		end
 
-		MLauncher 4
+		MLauncher 3
 		Scale 2
 		sub
 			STC FBM-8
-			magazine 4
+			magazine 3
 		end
 
 		MLauncher 10
@@ -419,7 +419,7 @@ Theme 1
 		Scale 2
 		sub
 			STC FBM-8
-			magazine 10
+			magazine 9
 		end
 
 		MLauncher 12
@@ -434,7 +434,7 @@ Theme 1
 		sub
 			Rockets 25
 			Name <Nova Bomb>
-			Type <BURN BRUTAL BLAST 5>
+			Type <BURN BRUTAL BLAST 3>
 			Range 12
 			Magazine 2
 		end
@@ -702,7 +702,7 @@ Theme 2
 			Ammo 25
 			Magazine 10
 			caliber <150mm self-propelled>
-			type <BLAST 5 BRUTAL>
+			type <BLAST 4 BRUTAL>
 		end
 
 		%% Missiles
@@ -1154,14 +1154,14 @@ Theme 4
 			magazine 6
 		end
 
-		MLauncher 7
+		MLauncher 6
 		Scale 2
 		sub
 			Rockets 7
 			scale 2
 			name <Slag Missiles>
 			Range 7
-			Magazine 10
+			Magazine 8
 			Acc -1
 			type <BLAST 3 BRUTAL>
 		end
@@ -1198,14 +1198,14 @@ Theme 4
 			type <BLAST 3 BRUTAL>
 		end
 
-		MLauncher 25
+		MLauncher 21
 		Scale 2
 		sub
 			Rockets 7
 			scale 2
 			name <Slag Missiles>
 			Range 7
-			Magazine 35
+			Magazine 30
 			Acc -1
 			type <BLAST 3 BRUTAL>
 		end
@@ -1577,15 +1577,15 @@ Theme 5
 
 	inv
 		%% Missile Launchers
-		MLauncher 3
+		MLauncher 8
 		Scale 2
 		sub
 			Rockets 15
 			name <Hurricane Missiles>
 			Scale 2
 			Range 10
-			type <BLAST 3 HAYWIRE>
-			Magazine 2
+			type <BLAST 2 HAYWIRE>
+			Magazine 5
 		end
 
 		MLauncher 5
@@ -1629,19 +1629,8 @@ Theme 5
 			name <Hurricane Missiles>
 			Scale 2
 			Range 10
-			type <BLAST 3 HAYWIRE>
+			type <BLAST 2 HAYWIRE>
 			Magazine 3
-		end
-
-		MLauncher 9
-		Scale 2
-		sub
-			Rockets 15
-			name <Hurricane Missiles>
-			Scale 2
-			Range 10
-			type <BLAST 3 HAYWIRE>
-			Magazine 6
 		end
 
 		MLauncher 12
@@ -1651,19 +1640,30 @@ Theme 5
 			name <Hurricane Missiles>
 			Scale 2
 			Range 10
-			type <BLAST 3 HAYWIRE>
+			type <BLAST 2 HAYWIRE>
 			Magazine 8
 		end
 
-		MLauncher 15
+		MLauncher 24
 		Scale 2
 		sub
 			Rockets 15
 			name <Hurricane Missiles>
 			Scale 2
 			Range 10
-			type <BLAST 3 HAYWIRE>
-			Magazine 10
+			type <BLAST 2 HAYWIRE>
+			Magazine 16
+		end
+
+		MLauncher 21
+		Scale 2
+		sub
+			Rockets 15
+			name <Hurricane Missiles>
+			Scale 2
+			Range 10
+			type <BLAST 2 HAYWIRE>
+			Magazine 14
 		end
 
 		MLauncher 18
@@ -1673,7 +1673,7 @@ Theme 5
 			name <Hurricane Missiles>
 			Scale 2
 			Range 10
-			type <BLAST 3 HAYWIRE>
+			type <BLAST 2 HAYWIRE>
 			Magazine 12
 		end
 
@@ -2009,7 +2009,7 @@ Theme 6
 	name <Mad Scientist>
 	requires <(ACADE|MEDIC) ~KNOWLEDGE ~PRAGMATIC>
 	%% Mostly beamguns. An odd grab bag of weird effects.
-	
+
 	CUSTOMIZATION_ADJECTIVE_0 <Atomic>
 	CUSTOMIZATION_ADJECTIVE_1 <Quantic>
 	CUSTOMIZATION_ADJECTIVE_2 <Neutronic>
@@ -2265,18 +2265,18 @@ Theme 6
 		MLauncher 2
 		Scale 2
 		sub
-			STC NUKE-20
+			Rockets 20
 			name <Quantum Missile>
-			type <Blast 4 Brutal Mystery>
+			type <Blast 3 Brutal Mystery>
 			Magazine 1
 		end
 
 		MLauncher 6
 		Scale 2
 		sub
-			STC NUKE-20
+			Rockets 20
 			name <Quantum Missile>
-			type <Blast 4 Brutal Mystery>
+			type <Blast 3 Brutal Mystery>
 			Magazine 3
 		end
 

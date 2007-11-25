@@ -34,8 +34,7 @@ Scene
 			Elevator
 			MiniMapComponent 1
 			Destination -1
-			use <if# L2 0 else GoNoElevator  Print 1 Exit Destination>
-			GoNoElevator <Print 11>
+			use <Print 11>
 			Msg11 <This elevator doesn't respond.>
 		end
 

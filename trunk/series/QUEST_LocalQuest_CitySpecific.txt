@@ -294,7 +294,7 @@ Content
 
 		STC Building
 		name <Population Control>
-		desig <ENTRANCE %s6%>
+		desig <ENTRANCE %s9%>
 	end
 
 Content
@@ -324,7 +324,7 @@ Content
 	TeamData3 <sd>
 
 	Element4 <Prefab>
-	Place4 <Space Environs>
+	Scene4 <Space Environs>
 
 	Scene5 <New *THESP_FinalSpire>
 	Scene6 <New *THESP_FourthLevel>
@@ -336,7 +336,7 @@ Content
 
 	sub
 		Persona 2
-		special <UNLISTED>
+		special <UNLISTED NOPLOTS>
 		%%  V1 = Have accepted mission
 		greeting <if= QuestStatus %qid% %id% else GoChat if# V1 2 else GoChat if= V1 1 else GoOfferMission NewChat Say 2 AddChat 1 AddChat 2 AddChat 3>
 		GoChat <NewChat SayAnything>
@@ -387,7 +387,8 @@ Content
 		Persona 3
 		special <UNLISTED>
 		% V1 = Have joined rebellion
-		greeting <if= QuestStatus %qid% %id% else GoChat if= V1 0 else GoChat ifChatNPCSurrendered else GoChallenge NewChat Say 1 AddChat 1 AddChat 2>
+		greeting <if= QuestStatus %qid% %id% else GoCheck if= V1 0 else GoChat ifChatNPCSurrendered else GoChallenge NewChat Say 1 AddChat 1 AddChat 2>
+		GoCheck <if= V1 1 else GoChat if= SceneVar RootSceneID 2 1 else GoChat PCAlly %3% NewChat Say 14>
 		GoChat <NewChat SayAnything>
 		GoChallenge <NewChat Say 2 AddChat 3 AddChat 4>
 		Result1 <EndChat Say 3 Print 4 KillNPC %3%>
@@ -413,6 +414,7 @@ Content
 		Msg11 <You joined %name3%'s rebellion against the technocrats. %name2% isn't going to be happy.>
 		Msg12 <Another slave of the technocrats, I should have known... Destroy the intruder!>
 		Msg13 <What are you doing asking questions like that!? It's as though you don't want this rebellion to succeed. Tell me, where do your loyalties lie?>
+		Msg14 <They say you had something to do with getting rid of the technocrats. I salute you!>
 		Prompt1 <No. The technocrats ordered your death.>
 		Prompt2 <Fine. Leave this place, and never come back.>
 		Prompt3 <The technocrats sent me to kill you.>
@@ -441,6 +443,24 @@ Content
 		inv
 			Elevator
 			desig <Entrance %s5%>
+			XPos 38
+			YPos 12
+
+			STC FOOD-1
+			XPos 37
+			YPos 13
+
+			STC FOOD-1
+			XPos 37
+			YPos 14
+
+			STC FOOD-1
+			XPos 39
+			YPos 13
+
+			STC FOOD-1
+			XPos 39
+			YPos 14
 		end
 
 		MetaScene 3
@@ -479,7 +499,7 @@ Content
 
 		STC QUEST-MAPMARKER-STATIONARY-DEFENDED
 		name <Rebel Station>
-		desig <ENTRANCE %s2%>
+		desig <ENTRANCE %s3%>
 	end
 
 Content
@@ -493,27 +513,77 @@ Content
 	%   the fourth level.
 	% E2 is the fourth level itself.
 	% E3 is the gardener.
+	% E4 is the meme
 
 	Element3 <Prefab>
 	Scene3 <Grab 2>
 	Team3 <Citizens>
 	TeamData3 <SD>
 
+	Element4 <Prefab>
+
 	sub
 		Persona 3
 		special <UNLISTED NOPLOTS>
-
+		% V1 = Have been told to get in the pod.
+		greeting <if= V1 1 else GoFirstTime NewChat Say 1 AddChat 1 AddChat 2>
+		GoFirstTime <NewChat Say 2 AddChat 3>
+		result1 <NewChat Say 3>
+		result2 <EndChat Say 4 SoloAttack %3%>
+		result3 <NewChat Say 5 AddChat 4>
+		result4 <NewChat Say 6 AddChat 5>
+		result5 <NewChat Say 7 AddChat 6>
+		result6 <NewChat Say 8 AddChat 7>
+		result7 <NewChat Say 9 QMemo %qid% 10 V= 1 1 AddChat 8 AddChat 9 AddChat 10>
+		result8 <NewChat Say 11 L= 3 1>
+		result9 <NewChat Say 12 L= 3 1>
+		result10 <EndChat Say 13 SoloAttack %3%>
+		Msg1 <Yes, are you having trouble finding the cell?>
+		Msg2 <Hello \PC . I've been watching you, watching you from way up here. I see that you've bloomed into a beautiful flower.>
+		Msg3 <You really shouldn't dawdle. The administration of Theles Spinner is a serious business... it makes me glad that I'm simply a gardener.>
+		Msg4 <My, but that was the wrong answer. Wilted flowers must be pruned, before they infect the rest of the garden. I'm so sorry.>
+		Msg5 <This is the fourth level of Theles Spinner, the home of the supreme technocrats. I am merely a humble gardener. My purpose is to keep everything running.>
+		Msg6 <They are the technocrats, of course, the fruits of Theles Spinner, those people who have proven themselves smarter, more competitive, far more ruthless than the rabble below.>
+		Msg7 <Leaders such as these, giants if I may say, cannot be expected to work together under normal circumstances. Luckily we've found a way to let them share. They are dreaming.>
+		Msg8 <Yes, dreaming. Their subconscious minds send orders to the levels below. If their orders result in energy profit for the colony, their brains are granted exquisite pleasure. If they result in energy loss... well, let's not mention that.>
+		Msg9 <Why, to add you to the garden, of course! You have proven that you belong here.>
+		Msg10 <%name3% offered you a position as technocrat of Theles Spinner, as long as you don't mind spending the rest of your life in a tube.>
+		Msg11 <There's an empty biotank around here someplace. Just climb inside, and all the worries of this life will pass from your mind.>
+		Msg12 <Don't be so hasty. Take a look around the garden, see how peaceful they are. Make your decision then.>
+		Msg13 <Oh, so you are a weed, not a flower at all. I think we both know what happens to them.>
+		Prompt1 <I'll go there in a minute.>
+		Prompt2 <I've decided that I don't want to.>
+		Prompt3 <Who are you? What is this place?>
+		Prompt4 <Who are these people in the tanks?>
+		Prompt5 <Why are they in those containment tanks?>
+		Prompt6 <Dreaming?>
+		Prompt7 <Why did you call me here?>
+		Prompt8 <I accept your offer.>
+		Prompt9 <I'm not going to spend my life in a fishtank.>
+		Prompt10 <Actually I came here to destroy the technocracy.>
 
 		MetaScene 2
 		% L1 = Initialization Counter
 		% L2 = Can use elevator
 		% L3 = Can use biotank
-		Faint%3% <>
+		Faint%3% <SetQuestStatus %qid% -1 Alert 5 History 3 XPV 100 L= 2 1 L= 3 0 ActivateMeme %4% RootSceneID SceneVar= %1% 1 1 SceneVar= RootSceneID 2 1 SceneVar= %1% 12 1>
+		Surrender%3% <Print 4 KillNPC %3%>
 		start <if= L1 0 else GoBeenBefore L= 1 1 SetQuestStatus %qid% %id% Alert 1>
 		GoBeenBefore <Print 2>
-
 		Msg1 <You enter the fourth level. The area is brightly illuminated by reflected sunlight. In the distance, an old man tends to the plants.>
 		Msg2 <You enter Theles Spinner fourth level.>
+		Msg3 <You killed the gardener of Theles Spinner.>
+		Msg4 <%name4% crumples over and dies.>
+		Msg5 <With the gardener gone, you wonder what is going to happen to Theles Spinner. Is this the beginning of a better tomorrow, or of a new age of chaos?>
+		sub
+			room
+			inv
+				trapdoor
+				use <if# L2 0 else GoAccessDenied Print 1 Exit RootSceneID>
+				GoAccessDenied <Print 101>
+				Msg101 <You can't open this trapdoor right now.>
+			end
+		end
 	end
 	inv
 		NPC Soldier
@@ -521,6 +591,49 @@ Content
 		job <Gardener>
 		job_desig <ACADE>
 		Chardesc Old Old Old Old Old
+		CHAT_ATTACK <It's strange fruit we grow in Theles Spinner... very strange.>
+		CHAT_SAFE <It's strange fruit we grow in Theles Spinner... very strange.>
+
+		Meme
+		MaxMemeViews 10
+		Msg_1 <What's going to happen to Theles Spinner without the technocrats?>
+		Msg_2 <Did you hear? Someone went all the way to the top level and killed the technocrats!>
+		Msg_10 <This is the time when we should band together. Free from the technocrats, we can make Theles Spinner a normal place, like all the others.>
+		CMsg_10 <ifNPCSociable Accept>
+		Msg_11 <Stay away from me.>
+		CMsg_11 <ifNPCShy Accept>
+		Msg_12 <With the technocrats we had chaos. Now with them gone we have chaos. Big deal.>
+		CMsg_12 <ifNPCEasygoing Accept>
+		Msg_13 <Time to get ours, before the FCS security forces arrive and put their boots to our heads.>
+		CMsg_13 <ifNPCPassionate Accept>
+		Msg_14 <Maybe with the technocrats gone, we can build a better society for ourselves!>
+		CMsg_14 <ifNPCCheerful Accept>
+		Msg_15 <The FCS is going to declare martial law while they clean up the mess made by the last technocrats. I get a feeling the new boss isn't going to be much different from the old one.>
+		CMsg_15 <ifNPCMelancholy Accept>
+		Msg_16 <Pillage and burn! The city belongs to us now!>
+		CMsg_16 <ifNPCCriminal Accept>
+		Msg_17 <This isn't going to change anything. Theles Spinner is sick to its core.>
+		CMsg_17 <ifNPCVillainous Accept>
+		Msg_18 <I wonder what the death of the technocrats is going to mean for my job...>
+		CMsg_18 <ifNPCLawful Accept>
+		Msg_20 <I hear there's a riot on the upper level! I'm gonna go join it!>
+		CMsg_20 <ifNPCSociable Accept>
+		Msg_21 <Keep away from me... with society breaking down, the crazies are more dangerous than ever.>
+		CMsg_21 <ifNPCShy Accept>
+		Msg_22 <I got exiled here for being a slacker. Hopefully the new technocrats aren't going to kick people out for not working like my last spinner did.>
+		CMsg_22 <ifNPCEasygoing Accept>
+		Msg_23 <It's about time someone brought a taste of the city floor up to the top level!>
+		CMsg_23 <ifNPCPassionate Accept>
+		Msg_24 <Hooray! Did you hear? The technocrats are dead! I grabbed myself a vidscreen during the riot!>
+		CMsg_24 <ifNPCCheerful Accept>
+		Msg_25 <The technocracy has been beaten, but life down here stays the same.>
+		CMsg_25 <ifNPCMelancholy Accept>
+		Msg_26 <It's great that the technocrats are gone, but if the new bosses decide to close the doors I wonder where all of the exiles will be able to go.>
+		CMsg_26 <ifNPCCriminal Accept>
+		Msg_27 <When the FCS installs a new technocrat and brings law to this place, that's going to be the end of our fun.>
+		CMsg_27 <ifNPCVillainous Accept>
+		Msg_28 <I wanted to see the technocrats gone, but is this anarchy really any better?>
+		CMsg_28 <ifNPCHeroic Accept>
 	end
 
 

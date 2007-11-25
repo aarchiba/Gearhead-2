@@ -572,11 +572,14 @@ end;
 Function Calculate_Reward_Value( GB: GameBoardPtr; Renown,Percent: LongInt ): LongInt;
 	{ Return an appropriate reward value, based on the listed }
 	{ threat level and percent scale. }
+const
+	Min_Reward_Value = 3000;
 var
 	RV: LongInt;
 begin
 	{ Calculate the base reward value. }
 	RV := Calculate_Threat_Points( Renown , 100 ) div 100 * Percent div 100;
+	if RV < Min_Reward_Value then RV := Min_Reward_Value;
 
 	{ Modify this for the PC's talents. }
 	if GB <> Nil then begin

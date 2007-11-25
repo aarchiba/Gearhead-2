@@ -25,7 +25,7 @@ ArenaMission
 	MapWidth 50
 	MapHeight 50
 
-	PayRate 800
+	PayRate 500
 
 	AsteroidMap
 	terrain <GROUND>
@@ -182,7 +182,7 @@ ArenaMission
 	MapWidth 50
 	MapHeight 50
 
-	PayRate 400
+	PayRate 500
 
 	SpaceMap
 	terrain <SPACE>
@@ -217,7 +217,7 @@ ArenaMission
 
 		Team 2
 		SetEnemy 1 3
-		Deploy <SetSelfFaction M1   WMecha 2 ArenaRenown 600>
+		Deploy <SetSelfFaction %2%   WMecha 2 ArenaRenown 600>
 		ParaX 45
 		ParaY 45
 

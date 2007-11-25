@@ -1401,6 +1401,8 @@ var
 				SetNAtt( Mek^.NA , NAG_EpisodeData , NAS_ChatterRecharge , GB^.ComTime + 250 );
 				DoVerbalAttack := True;
 			end else DoVerbalAttack := False;
+		end else begin
+			DoVerbalAttack := False;
 		end;
 	end;
 begin

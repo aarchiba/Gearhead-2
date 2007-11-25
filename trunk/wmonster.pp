@@ -309,6 +309,9 @@ Function PurchaseForces( ShoppingList: SAttPtr; Renown,Strength: Integer ): Gear
 	{ The expected PC skill level is measured by RENOWN. The difficulty of the }
 	{ encounter is measured by STRENGTH, which is a percentage with 100 representing }
 	{ an average fight. }
+	{ Within this procedure it is assumed that 7 points of renown translate to one }
+	{ point of skill. That isn't necessarily true at the high and low ends of the spectrum, }
+	{ but it's a good heuristic. }
 const
 	BasicGruntCost = 30;
 	SkillPlusCost = 15;
@@ -443,10 +446,12 @@ begin
 		end;
 
 		{ If Strength is extremely high, maybe give an extra skill point }
-		{ in order to increase the cost. }
+		{ in order to increase the cost. This extra skill point costs more than }
+		{ the above, since it can potentially raise the pilot to named-NPC-like }
+		{ status. }
 		if ( Strength > ( 201 + Random( 300 ) ) ) and ( Strength > ( StrCost * 3 ) ) then begin
 			Lvl := Lvl + 7;
-			StrCost := StrCost + SkillPlusCost;
+			StrCost := StrCost + SkillPlusCost * 2;
 		end;
 
 		{ Add this mecha to our list. }

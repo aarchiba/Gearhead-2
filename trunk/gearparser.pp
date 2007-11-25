@@ -141,6 +141,13 @@ end;
 Procedure SetSkillsAtLevel( NPC: GearPtr; Lvl: Integer );
 	{ Set all of this NPC's skills to an appropriate value for }
 	{ the requested level. }
+const
+	NumSkillLevel = 15;
+	NeededRenown: Array [2..NumSkillLevel] of Integer = (
+	-20, -13, 7, 14,
+	21, 28, 35, 43, 52,
+	62, 73, 85, 98, 112
+	);
 var
 	SkLvl: Integer;
 	Skill: NAttPtr;
@@ -148,11 +155,13 @@ begin
 	{ If the NPC doesn't have a specialist skill, pick a skill and theme now. }
 	if IsACombatant( NPC ) and ( NAttValue( NPC^.NA , NAG_Personal , NAS_MechaTheme ) = 0 ) then begin
 		SelectThemeAndSpecialty( NPC );
+		{ Combatants automatically get all the basic combat skills. }
+		for SkLvl := 1 to 10 do SetNAtt( NPC^.NA , NAG_Skill, SkLvl , 1 );
 	end;
 
 	{ Determine the value to set all skills to. }
-	SkLvl := ( Lvl div 7 ) + 3;
-	if SkLvl < 1 then SkLvl := 1;
+	SkLvl := NumSkillLevel;
+	while ( SkLvl > 1 ) and ( NeededRenown[ SkLvl ] > Lvl ) do Dec( SkLvl );
 
 	{ Go through the skills and set them. }
 	Skill := NPC^.NA;
@@ -166,6 +175,9 @@ begin
 	{ Apply a slight bonus to the specialist skill. }
 	SkLvl := NAttValue( NPC^.NA , NAG_Personal , NAS_SpecialistSkill );
 	if ( SkLvl > 0 ) and ( SkLvl <= NumSkill ) then AddNAtt( NPC^.NA , NAG_Skill , SkLvl , 1 );
+
+	{ Record the NPC's new Renown score. }
+	SetNAtt( NPC^.NA , NAG_CharDescription , NAS_Renowned , Lvl );
 end;
 
 

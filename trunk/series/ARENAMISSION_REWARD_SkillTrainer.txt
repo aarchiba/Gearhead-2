@@ -44,7 +44,7 @@ ArenaMission
 	MapWidth 50
 	MapHeight 50
 
-	PayRate 400
+	PayRate 500
 
 	ForestMap
 	terrain <GROUND>
@@ -105,7 +105,7 @@ ArenaMission
 	MapWidth 50
 	MapHeight 50
 
-	PayRate 400
+	PayRate 500
 
 	WildMap
 	terrain <GROUND>
@@ -115,12 +115,12 @@ ArenaMission
 	% L1 = Initialization Counter
 	% L2 = Victory Counter
 	% L3 = Time Limit
-	Start <if= L1 0 CommanderSays 1 L= 1 1 L= 3 ComTime L+ 3 480>
+	Start <if= L1 0 CommanderSays 1 L= 1 1 L= 3 ComTime L+ 3 300>
 	nu1 <if= T1 0 if= L2 0 L= 2 1 Alert 2 LoseArenaMission>
 	nu2 <if= T2 0 if= L2 0 Salvage Return XPV 100 L= 2 1 Alert 3 WinArenaMission ifG L3 ComTime else GoFailRendezvous IntelDebriefing 5 AddMajorSkill 12>
 	GoFailRendezvous <IntelDebriefing 4>
 
-	Msg1 <You should defeat these enemies within eight minutes in order to make the rendezvous with Strike Team Beta. The success of this operation is depending on you.>
+	Msg1 <You should defeat these enemies within five minutes in order to make the rendezvous with Strike Team Beta. The success of this operation is depending on you.>
 	Msg2 <The mission is a failure.>
 	Msg3 <The mission is a success.>
 	Msg4 <You did not make the rendezvous with Strike Team Beta in time.>
@@ -175,7 +175,7 @@ ArenaMission
 	MapWidth 50
 	MapHeight 50
 
-	PayRate 400
+	PayRate 500
 
 	CityMap
 	terrain <GROUND>

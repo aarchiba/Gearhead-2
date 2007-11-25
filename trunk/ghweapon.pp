@@ -139,11 +139,10 @@ Const
 	AA_NonLethal = 24;
 	AA_Experimental = 25;
 
-	Max_Blast_Rating = 16;
+	Max_Blast_Rating = 10;
 	BlastModCost: Array [1..Max_Blast_Rating] of Byte = (
-		10, 20, 30, 35, 40, 45,
-		50, 55, 60, 65, 70, 75,
-		80, 85, 90, 95
+		10, 20, 35, 50, 65,
+		80, 95, 110, 125, 140
 	);
 
 	{ ******************************** }

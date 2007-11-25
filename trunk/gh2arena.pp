@@ -1675,6 +1675,8 @@ Procedure DeliverMissionDebriefing( Adv,Scene: GearPtr );
 	{ Deliver any pending news to the player. The big news will be which characters died, }
 	{ which ones were rescued by the Medicine skill, which mecha were destroyed, and which }
 	{ mecha were returned from the brink. }
+	{ If any characters died or mecha were lost, a small renown penalty will be applied to }
+	{ the team. }
 	Procedure GiveTheNews( NPC: Integer; const Msg_Key: String; NameList: SAttPtr );
 		{ The provided NPC will give the provided message about the provided names. }
 	begin
@@ -1696,10 +1698,14 @@ begin
 	SList := Scene^.SA;
 	while SList <> Nil do begin
 		if HeadMatchesString( ARENAREPORT_CharRecovered , SList^.Info ) then StoreSAtt( Healed , RetrieveAString( SList^.Info ) )
-		else if HeadMatchesString( ARENAREPORT_CharDied , SList^.Info ) then StoreSAtt( Dead , RetrieveAString( SList^.Info ) )
-		else if HeadMatchesString( ARENAREPORT_MechaRecovered , SList^.Info ) then StoreSAtt( Fixed , RetrieveAString( SList^.Info ) )
-		else if HeadMatchesString( ARENAREPORT_MechaDestroyed , SList^.Info ) then StoreSAtt( Destroyed , RetrieveAString( SList^.Info ) )
-		else if HeadMatchesString( ARENAREPORT_MechaObtained , SList^.Info ) then StoreSAtt( Captured , RetrieveAString( SList^.Info ) )
+		else if HeadMatchesString( ARENAREPORT_CharDied , SList^.Info ) then begin
+			StoreSAtt( Dead , RetrieveAString( SList^.Info ) );
+			AddNAtt( Adv^.NA , NAG_CharDescription , NAS_Renowned , -2 );
+		end else if HeadMatchesString( ARENAREPORT_MechaRecovered , SList^.Info ) then StoreSAtt( Fixed , RetrieveAString( SList^.Info ) )
+		else if HeadMatchesString( ARENAREPORT_MechaDestroyed , SList^.Info ) then begin
+			StoreSAtt( Destroyed , RetrieveAString( SList^.Info ) );
+			AddNAtt( Adv^.NA , NAG_CharDescription , NAS_Renowned , -1 );
+		end else if HeadMatchesString( ARENAREPORT_MechaObtained , SList^.Info ) then StoreSAtt( Captured , RetrieveAString( SList^.Info ) )
 		;
 		SList := SList^.Next;
 	end;

@@ -161,7 +161,8 @@ Content
 		special <NOPLOTS>
 		% V1 = Have spoken counter
 		*Greeting <*NiceToMeetYou GoChat>
-		GoChat <NewChat Say 1 AddChat 1 AddChat 2 AddChat 3 EraseSpecial>
+		GoChat <if= SceneVar RootSceneID 2 0 else GoChaos NewChat Say 1 AddChat 1 AddChat 2 AddChat 3 EraseSpecial>
+		GoChaos <NewChat Say 7>
 		result1 <NewChat Say 2 AddChat 4 AddChat 5>
 		result2 <NewChat Say 3 AddChat 4 AddChat 5>
 		result3 <NewChat Say 4>
@@ -173,6 +174,7 @@ Content
 		Msg4 <I see. Well, best of luck to you, then.>
 		Msg5 <As long as Theles Spinner continues to turn an energy profit, the charter of the Free Commerce States doesn't allow any action to be taken against it. Personally, I don't like it but there's nothing legal that can be done.>
 		Msg6 <Most of them have no choice. They've been exiled from other spinners and have no place to go, or were born here and can't afford to leave. The whole setup is sleazy and exploitative, but completely within the law.>
+		Msg7 <The FCS Council is planning to appoint a new technocrat for Theles Spinner. We need to find out how this place ever got in such a mess, and make sure that it can never happen again.>
 		Prompt1 <What's so dangerous about it?>
 		Prompt2 <Why doesn't L5Law have jurisdiction?>
 		Prompt3 <I know. I was born here.>
