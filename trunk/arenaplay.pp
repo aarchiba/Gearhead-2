@@ -897,11 +897,11 @@ begin
 							{ Determine how many repair points it's possible }
 							{ to apply. }
 							if ( PC^.G = GG_Mecha ) then begin
-								SkRk := RollStep( TeamSkill( GB , NAV_DefPlayerTeam , T ) ) * 5;
+								SkRk := RollStep( TeamSkill( GB , NAV_DefPlayerTeam , T ) ) - 5;
 							end else begin
-								SkRk := RollStep( TeamSkill( GB , NAV_DefPlayerTeam , T ) ) - 10;
-								if SkRk < 0 then SkRk := 0;
+								SkRk := RollStep( TeamSkill( GB , NAV_DefPlayerTeam , T ) ) - 7;
 							end;
+							if SkRk < 0 then SkRk := 0;
 							ApplyEmergencyRepairPoints( PC , T , SkRk );
 							if PC^.G = GG_Character then SetNAtt( PC^.NA , NAG_Damage , NAS_OutOfAction , 1 );
 						end;

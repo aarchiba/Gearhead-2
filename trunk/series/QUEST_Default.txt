@@ -315,7 +315,7 @@ Content
 Content
 	name <I likes it like that>
 	desc <E1 has no intention to change his ways; may ask PC to get E2 off his back.>
-	requires <*:PersonalIntervention ~"Safe">
+	requires <*:PersonalIntervention ~"Safe" BRANCHES>
 
 	% E1 is the prodigal target
 	% E2 is the mission-giver
@@ -796,7 +796,7 @@ Content
 
 Content
 	name <Prove Myself Vs Pirates>
-	requires <*ProveMyself Spinner -1:CRIHN ~"Dangerous">
+	requires <*ProveMyself Spinner -1:CRIHN ~"Dangerous" BRANCHES>
 
 	% E1 is the character who must prove himself.
 	% E2 is the character offering a bounty on pirates
