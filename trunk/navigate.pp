@@ -56,6 +56,16 @@ uses arenaplay,arenascript,interact,gearutil,narration,texutil,ghprop,rpgdice,ab
 var
 	MasterEntranceList: GearPtr;
 
+Procedure DebugMessage( msg: String );
+	{ Display a debugging message, and refresh the screen right away. }
+begin
+	DialogMsg( msg );
+	ClrScreen;
+	InfoBox( ZONE_Dialog );
+	RedrawConsole;
+	DoFlip;
+end;
+
 Procedure SaveChar( PC: GearPtr );
 	{ Save this character to disk, in the "SaveGame" directory. }
 var
@@ -290,6 +300,7 @@ var
 begin
 	{ Record some information, initialize some variables. }
 	name_base := GearName( Dung );
+	if Full_RPGWorld_Info then DebugMessage( 'Expanding ' + name_base );
 	SetSAtt( Dung^.SA , 'DUNGEONNAME <' + name_base + '>' );
 	type_base := SAttValue( Dung^.SA , 'TYPE' );
 	sub_scenes := ExtractSubScenes;
@@ -584,6 +595,7 @@ var
 		SID: Integer;
 	begin
 		{ Add the context for the number of branch points. }
+		if Full_RPGWorld_Info then DebugMessage( 'AddNewScene: ' + SceneReq );
 		if BranchPoints > 0 then SceneReq := SceneReq + ' BRANCHES';
 
 		{ Create the shopping list }
@@ -723,6 +735,7 @@ var
 	begin
 		{ Remove the ComType from the Content Request }
 		{ and combine it with the scene context. }
+		if Full_RPGWorld_Info then DebugMessage( 'AddQuestCom: ' + ConReq );
 		SContext := QuoteString( SceneContext( Nil , Scene ) );
 		ComType := ExtractWord( ConReq ) + ' ' + SContext;
 
@@ -795,7 +808,6 @@ var
 			{ matches our criteria. }
 			CPro := SelectComponentFromList( MasterList , ShoppingList );
 			C := CloneGear( CPro );
-
 			{ Right away, determine whether or not to use the debugging messages. }
 			DoDebug := GearName( C ) = 'DEBUG';
 
@@ -858,6 +870,7 @@ var
 				{ Continue with the initialization. This component will only be }
 				{ successfully initialized if its sub-quests and complications }
 				{ are also successfully initialized. }
+if Full_RPGWorld_Info then DebugMessage( 'Advanced Init ' + GearName(C ) );
 
 				{ Create any new scenes requested and store their IDs; }
 				{ we need this info for the sub-quests. }
@@ -921,6 +934,7 @@ var
 
 					end;
 				end; { For T...}
+if Full_RPGWorld_Info then DebugMessage( 'Done with scenes ' + GearName(C ) );
 
 				{ Now that we have all of the scenes we can proceed with the }
 				{ sub-quests themselves. }
@@ -955,6 +969,7 @@ var
 						end;
 					end;
 				end;
+if Full_RPGWorld_Info then DebugMessage( 'Done with subquests ' + GearName(C ) );
 
 				{ If initialization failed for whatever reason, delete }
 				{ the fragment and also any new scenes created by it. }
@@ -1040,6 +1055,8 @@ var
 		T: Integer;
 		ElemDesc: String;
 	begin
+		if Full_RPGWorld_Info then DebugMessage( 'InsertCom: ' + GearName( Frag ) );
+
 		{ Unless this fragment is reusable, remove its prototype }
 		{ from the master list now. }
 		if not QuestIsReusable( Frag ) then begin
@@ -1323,7 +1340,10 @@ var
 		EID,ParentSceneID: Integer;
 		BaseName,UniqueName,msg: String;
 		q1,q2: SAttPtr;
+		Tries: Integer;
 	begin
+		if Full_RPGWorld_Info then DebugMessage( 'InsertScene: ' + GearName( Frag ) );
+
 		DelinkGear( LList , Frag );
 
 		{ Generate a unique name for this scene. }
@@ -1331,10 +1351,19 @@ var
 		msg := SAttValue( Frag^.SA , 'NAME_1' );
 		if msg <> '' then UniqueName := ReplaceHash( BaseName , msg )
 		else UniqueName := ReplaceHash( BaseName , RandomName );
+		Tries := 0;
 		repeat
 			PScene := SeekGearByName( Adv , UniqueName );
 			if PScene <> Nil then UniqueName := ReplaceHash( BaseName , RandomName );
-		until PScene = Nil;
+			Inc( Tries );
+		until ( PScene = Nil ) or ( Tries > 500 );
+
+		if Tries > 500 then begin
+			{ We tried, and failed, to get a unique name. }
+			UniqueName := 'Ique ' + BStr( Frag^.S );
+			DialogMsg( 'ERROR: Scene ' + GearName( Frag ) + ' (' + BStr( Frag^.S ) + ') couldn''t generate unique name.' );
+		end;
+
 		SetSAtt( Frag^.SA , 'NAME <' + UniqueName + '>' );
 
 		{ Dispose of any QUEST attributes it may have. }
@@ -1422,6 +1451,8 @@ var
 	var
 		Frag,F2: GearPtr;
 	begin
+		if Full_RPGWorld_Info then DebugMessage( 'Assembling ' + GearName( LList ) );
+
 		{ Start by first installing the scenes. }
 		Frag := LList;
 		while Frag <> Nil do begin

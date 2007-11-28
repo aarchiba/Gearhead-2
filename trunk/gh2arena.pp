@@ -136,7 +136,7 @@ Procedure SelectAMissionRedraw;
 	{ Do the basic display, then draw the select forces dialog on top of that. }
 begin
 	BasicArenaRedraw;
-	SetupMemoDisplay;
+	SetupArenaMissionMenu;
 end;
 
 Procedure SelectAMForcesRedraw;
@@ -423,18 +423,29 @@ begin
 	DoReloadMaster( PC );
 end;
 
-Procedure PrepMission( HQCamp: CampaignPtr; Scene: GearPtr );
-	{ Prepare the mission right before combat. Mostly, this just }
-	{ involves initializing the cash payout counter and NPCs. }
+Function ExpectedMissionReward( HQCamp: CampaignPtr; Scene: GearPtr ): LongInt;
+	{ Return the amount of cash the PC can expect if he completes this }
+	{ mission. }
 var
-	F,TL,PayRate: LongInt;
-	M: GearPtr;
-	Desc: String;
+	TL,PayRate: LongInt;
 begin
 	TL := HQRenown( HQCamp );
 	PayRate := NAttValue( Scene^.NA , NAG_ArenaMissionInfo , NAS_PayRate );
 	if PayRate = 0 then PayRate := 400;
-	SetNAtt( Scene^.NA , NAG_ArenaMissionInfo , NAS_Pay , Calculate_Reward_Value( Nil , TL , PaYRate ) );
+	ExpectedMissionReward := Calculate_Reward_Value( Nil , TL , PaYRate );
+end;
+
+
+Procedure PrepMission( HQCamp: CampaignPtr; Scene: GearPtr );
+	{ Prepare the mission right before combat. Mostly, this just }
+	{ involves initializing the cash payout counter and NPCs. }
+var
+	F,TL: LongInt;
+	M: GearPtr;
+	Desc: String;
+begin
+	TL := HQRenown( HQCamp );
+	SetNAtt( Scene^.NA , NAG_ArenaMissionInfo , NAS_Pay , ExpectedMissionReward( HQCamp , Scene ) );
 	SetSAtt( Scene^.SA , 'name <>' );
 	Desc := SAttValue( Scene^.SA , 'TYPE' ) + ' ' + DifficulcyContext( TL );
 	SetSAtt( Scene^.SA , 'TYPE <' + Desc + '>' );
@@ -1847,15 +1858,15 @@ Function PlayArenaMission( HQCamp: CampaignPtr; SelectionMode: Byte ): Boolean;
 		M: GearPtr;
 	begin
 		{ Create the menu. }
-		RPM := CreateRPGMenu( MenuItem , MenuSelect , ZONE_MemoText );
-		AttachMenuDesc( RPM , ZONE_MemoMenu );
+		RPM := CreateRPGMenu( MenuItem , MenuSelect , ZONE_SAMMenu );
+		AttachMenuDesc( RPM , ZONE_SAMText );
 
 		{ Add all the missions to the menu. }
 		N := 1;
 		M := HQCamp^.Source^.InvCom;
 		while M <> Nil do begin
 			if M^.G = GG_Scene then begin
-				AddRPGMenuItem( RPM , GearName( M ) , N , SAttValue( M^.SA , 'DESC' ) );
+				AddRPGMenuItem( RPM , GearName( M ) , N , SAttValue( M^.SA , 'DESC' ) + ' ($' + BStr( ExpectedMissionReward( HQCamp , M ) ) + ')' );
 				Inc( N );
 			end;
 			M := M^.Next;
@@ -1886,8 +1897,8 @@ Function PlayArenaMission( HQCamp: CampaignPtr; SelectionMode: Byte ): Boolean;
 		{ Step one- select something from the list. This is going to require }
 		{ a menu. }
 		{ Create the menu. }
-		RPM := CreateRPGMenu( MenuItem , MenuSelect , ZONE_MemoText );
-		AttachMenuDesc( RPM , ZONE_MemoMenu );
+		RPM := CreateRPGMenu( MenuItem , MenuSelect , ZONE_SAMMenu );
+		AttachMenuDesc( RPM , ZONE_SAMText );
 
 		{ Add all the missions to the menu. }
 		N := 1;

@@ -349,6 +349,8 @@ const
 	Minimal_Screen_Refresh: Boolean = False;
 	Use_Software_Surface: Boolean = False;
 
+	Full_RPGWorld_Info: Boolean = False;
+
 var
 	Text_Messages: SAttPtr;
 
@@ -514,6 +516,8 @@ begin
 					XXRan_Debug := True;
 				end else if cmd = 'GARYGYGAX' then begin
 					ArenaMode_Wizard := True;
+				end else if cmd = 'DEMIURGE' then begin
+					Full_RPGWorld_Info := True;
 
 				end;
 			end;
@@ -595,6 +599,7 @@ begin
 	if XXRAN_Wizard then writeln( F , 'GIMMEGIMMECHOICE' );
 	if ArenaMode_Wizard then writeln( F , 'GARYGYGAX' );
 	if XXRAN_Debug then writeln( F , 'XXRANDEBUG' );
+	if Full_RPGWorld_Info then writeln( F , 'DEMIURGE' );
 
 	Close(F);
 end;

@@ -183,6 +183,10 @@ const
 	ZONE_MemoText: TSDL_Rect = ( x:ScreenWidth div 2 - 200; y:ScreenHeight div 2 - 190; w:400; h:200 );
 	ZONE_MemoMenu: TSDL_Rect = ( x:ScreenWidth div 2 - 200; y:ScreenHeight div 2 + 25; w:400; h:50 );
 
+	{ The SelectArenaMission zones. }
+	ZONE_SAMMenu: TSDL_Rect = ( x:ScreenWidth div 2 - 200; y:ScreenHeight div 2 - 190; w:400; h:200 );
+	ZONE_SAMText: TSDL_Rect = ( x:ScreenWidth div 2 - 200; y:ScreenHeight div 2 + 25; w:400; h:50 );
+
 	ZONE_WorldMap: TSDL_Rect = ( x: ScreenWidth div 2 - 160; y: ScreenHeight div 2 - 160; W:320; H:320 );
 
 	ZONE_Clock: TSDL_Rect = ( x: ScreenWidth - 150; y: 30; w: 120; H:20 );
@@ -291,6 +295,7 @@ Procedure InfoBox( Dest: TSDL_Rect );
 Procedure Idle_Display;
 
 Procedure SetupArenaDisplay;
+Procedure SetupArenaMissionMenu;
 Procedure SetupConcertDisplay;
 
 implementation
@@ -1464,6 +1469,14 @@ begin
 	InfoBox( ZONE_ArenaMechaMenu );
 	InfoBox( ZONE_PCStatus );
 	RedrawConsole;
+end;
+
+Procedure SetupArenaMissionMenu;
+	{ Set up the menu from which the mission will be selected in arena mode. }
+begin
+	InfoBox( ZONE_MemoTotal );
+	ClearExtendedBorder( ZONE_SAMText );
+	ClearExtendedBorder( ZONE_SAMMenu );
 end;
 
 Procedure SetupConcertDisplay;

@@ -188,6 +188,16 @@ Const
 		Y_Anchor: ANC_Mid; Y_Justify:   3; H:  2;
 	);
 
+	{ The SelectArenaMission display zones: }
+	ZONE_SAMText: vgfx_zone = (
+		X_Anchor: ANC_Mid; X_Justify: -20; W: 40;
+		Y_Anchor: ANC_Mid; Y_Justify:   0; H:  5;
+	);
+	ZONE_SAMMenu: vgfx_zone = (
+		X_Anchor: ANC_Mid; X_Justify: -20; W: 40;
+		Y_Anchor: ANC_Mid; Y_Justify:  -6; H:  5;
+	);
+
 	ZONE_UsagePrompt: vgfx_zone = (
 		X_Anchor: ANC_Mid; X_Justify: -20; W: 40;
 		Y_Anchor: ANC_Mid; Y_Justify: - 8; H: 10;
@@ -343,6 +353,7 @@ Procedure InfoBox( Z: VGFX_Zone );
 Procedure ClockBorder;
 
 Procedure SetupArenaDisplay;
+Procedure SetupArenaMissionMenu;
 Procedure SetupConcertDisplay;
 
 
@@ -989,6 +1000,13 @@ begin
 	InfoBox( ZONE_ArenaMechaMenu );
 	InfoBox( ZONE_PCStatus );
 	RedrawConsole;
+end;
+
+Procedure SetupArenaMissionMenu;
+	{ This sets up the select arena mission menu. }
+begin
+	InfoBox( ZONE_SAMText );
+	InfoBox( ZONE_SAMMenu );
 end;
 
 Procedure SetupConcertDisplay;

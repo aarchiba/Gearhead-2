@@ -833,7 +833,8 @@ begin
 		Fac := SeekFaction( GB^.Scene , NAttValue( NPC^.NA , NAG_Personal , NAS_FactionID ) );
 		if Fac <> Nil then desc := SAttValue( Fac^.SA , 'DESIG' ) + ' ' + desc;
 
-		if Scene <> Nil then begin
+		{ Scene here points to the root scene. }
+		if ( Scene <> Nil ) and ( Fac = Nil ) then begin
 			Fac := SeekFaction( GB^.Scene , NAttValue( Scene^.NA , NAG_Personal , NAS_FactionID ) );
 			if Fac <> Nil then desc := SAttValue( Fac^.SA , 'DESIG' ) + ' ' + desc;
 		end;
@@ -1756,6 +1757,7 @@ begin
 		RPM := CreateRPGMenu( MenuItem , MenuSelect , ZONE_ShopMenu );
 		FillExpressMenu( GB , RPM );
 		RPMSortAlpha( RPM );
+		AlphaKeyMenu( RPM );
 		AddRPGMenuItem( RPM , MsgString( 'EXIT' ) , -1 );
 		N := SelectMenu( RPM , @ServiceRedraw );
 		DisposeRPGMenu( RPM );
