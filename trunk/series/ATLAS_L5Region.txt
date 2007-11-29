@@ -5199,6 +5199,7 @@ Scene 0 3
 
 	Quest1 <*:LocalQuest>
 	Quest2 <*:GuaranteedQuest 35>
+	Quest3 <*:CHARA_ARENA_BASE>
 
 	start <if= V1 0 else GoSecondTime V= 1 1 Alert 1 Print 2>
 	GoSecondTime <Print 2>
@@ -5562,6 +5563,40 @@ sub
 		room
 		desig <EntranceGrid>
 		Content <Some 2 50 Here *URBAN_X>
+		Content2 <Some 1 100 Here *ANTI_ATTACK_SECURITY 2>
+	end
+
+	Scene
+	name <the Boom Club>
+	type <building nightclub meeting public sleazy ArenaSite>
+	entrance <*Building Short>
+	special <ADDEXIT>
+	ClubMap
+	MapWidth 20
+	MapHeight 19
+
+	start <Print 1>
+	Msg1 <You enter the Boom Club.>
+
+	NeededCells 3
+	Content2 <Some 1 100 Sub *BAR_SERVICE>
+	Content3 <Some 2  70 Sub *CLUB_X>
+	sub
+		team 1
+
+		team 2
+		name <Citizens>
+		SetAlly 1
+		Passive
+
+		team 3
+		name <Guards>
+		SetAlly 2
+
+		room
+		name <Foyer>
+		desig <EntranceGrid>
+		Content <Some 4 65 Here *URBAN_X>
 		Content2 <Some 1 100 Here *ANTI_ATTACK_SECURITY 2>
 	end
 

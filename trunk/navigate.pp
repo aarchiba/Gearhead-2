@@ -870,7 +870,6 @@ var
 				{ Continue with the initialization. This component will only be }
 				{ successfully initialized if its sub-quests and complications }
 				{ are also successfully initialized. }
-if Full_RPGWorld_Info then DebugMessage( 'Advanced Init ' + GearName(C ) );
 
 				{ Create any new scenes requested and store their IDs; }
 				{ we need this info for the sub-quests. }

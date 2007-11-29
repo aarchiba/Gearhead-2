@@ -2048,12 +2048,13 @@ begin
 	if ( Weapon <> Nil ) and ( Weapon^.G = GG_Weapon ) then begin
 		if HasAttackAttribute( WeaponATtackAttributes( Weapon ) , AA_THrown ) then begin
 			rng := MasterSize( User ) + 2;
+
+			{ EXTEND weapons get a longer throwing range. }
+			if HasAttackAttribute( WeaponAttackAttributes( Weapon ) , AA_Extended ) then begin
+				rng := rng + 3;
+			end;
 		end;
 
-		{ EXTEND weapons get a longer throwing range. }
-		if HasAttackAttribute( WeaponAttackAttributes( Weapon ) , AA_Extended ) then begin
-			rng := rng + 3;
-		end;
 	end else if ( Weapon <> Nil ) and ( Weapon^.G = GG_Ammo ) and ( Weapon^.S = GS_Grenade ) then begin
 		rng := MasterSize( User ) * 2 + 1;
 	end;
