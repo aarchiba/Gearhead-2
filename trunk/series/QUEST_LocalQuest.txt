@@ -4,6 +4,21 @@
 %% This content is tied to a city rather than any specific character within it.
 
 Content
+	name <Bandit's Den>
+	requires <*:LocalQuest Dangerous>
+	desc <There are bandits. Defeat them or dominate them.>
+
+	% E1 is the bandit king
+	% E2 is the second-in-command, who may be persuaded to revolt for criminal PC
+	% E3 is the entrance to the bandit's lair
+	% E4 is the bandit encounter that exists until plot completed
+	% E5 is the weapon smuggler
+	% E6 is the mecha dealer
+
+	% SubQuest1 is the activator for the bandit hideout, itself activated after the mecha are beat one time
+	% SubQuest2 is a further mission path for defeating the bandits
+
+Content
 	name <"Give Mission" NewNPC>
 	requires <*:LocalQuest>
 	desc <A randomly generated NPC will give the PC a mission, to be handled by a "GiveMission" subquest.>
