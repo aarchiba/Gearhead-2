@@ -9,11 +9,94 @@
 %%
 %% *:RevealQuestEncounter
 %%		&RebelHQ	The encounter is a rebellion headquarters
+%%		&Criminals	The encounter is a criminal hideout
 %%
 %% The PC wants to locate a certain quest encounter. By completing this
 %% subquest, the encounter will be activated.
 %%
 %% PARAM1: The encounter to activate
+
+Content
+	name <Anybody Want A Pizza?>
+	desc <The PC can deliver a pizza to the scene.>
+	requires <*:RevealQuestEncounter ~Safe ~Cuisine>
+
+	% E1 is the encounter to activate
+	% E2 is the NPC with the info
+	%  If this NPC dies, the PC might manage to spot the encounter with
+	%  a hard AWARENESS check.
+	% E3 is the pizza
+	Element2 <Prefab>
+	Scene2 <Building Mall Public>
+	Team2 <Citizens>
+	TeamData2 <Pass>
+
+	Element3 <Prefab>
+	Place3 </>
+
+	sub
+		Persona 2
+		rumor%id% <%name2% often delivers pizza to %name1%.>
+		% V1 = Have offered mission.
+		greeting <if= QuestStatus %qid% %id% else GoGreet if= V1 0 else GoAskQuestion Goto GoOfferMission>
+		GoReveal <NewChat Say 5 GiveItem %3% ItemQSubMemo %1% %prev_id% 6 SetQEncActive %1% SetQuestStatus %qid% -1>
+		*GoGreet <*NiceToMeetYou GoOpenShop>
+		GoOpenShop <NewChat Say 1 AddChat 1 AddChat 2>
+		*GoOfferMission <*AreYouHereAboutJob GoAskQuestion>
+		GoAskQuestion <V= 1 1 NewChat Say 3 QMemo %qid% 4 AddChat 3 AddChat 4 AddChat 5>
+		GoAccept <EndChat Say 9 AddChat 9>
+		GoDeny <NewChat Say 10>
+		Result1 <NewChat Say 2 PCEat Cash+ -90>
+		*Result2 <*GoodBye>
+		Result3 <ifG %threat% PCRenown else GoReveal NewChat Say 7 AddChat 6 AddChat 7 AddChat 8>
+		Result4 <NewChat Say 8>
+		Result5 <Goto Result1>
+		Result6 <ifConversation SkillTar %threat% else GoDeny Goto GoAccept>
+		Result7 <ifIntimidation SkillTar %threat% else GoDeny AddEasygoing -d6  Goto GoAccept>
+		Result8 <NewChat Say 11>
+		Result9 <Goto GoReveal>
+		Msg1 <This to %name2%'s Pizza Emporium. I offer authentic classical pizza, cooked in the style of the ancient Belgians. It's just $90 a serving.>
+		Msg2 <Please enjoy your meal.>
+		Msg3 <I got a pizza order for %name1%. Unfortunately, it's a bit dangerous for my usual delivery guy. That's why I'm looking for a cavalier.>
+		Msg4 <%name2% needs to deliver a pizza to %name1%.>
+		Msg5 <You can find the %name1% in \SCENE %s1% ; I'll upload the info to your mecha. There's no pay for this mission but if no-one picks up the order in twenty minutes you can eat it yourself.>
+		Msg6 <%name2% revealed that %name1% is in \SCENE %s1% .>
+		Msg7 <Hold on a minute, there. How do I know I can trust you to get the job done? Delivering pizza is a sacred task.>
+		Msg8 <You clearly do not understand the true nature of pizza.>
+		Msg9 <You seem to care a lot about pizza. Alright, you can have the job.>
+		Msg10 <I don't know... You don't seem to really mean it.>
+		Msg11 <Pizza is a way of life. The ancients truly understood this...>
+		Prompt1 <I'll take some.>
+		CPrompt1 <ifG PCHunger 10 ifChatNPCInPlay ifG PC$ 89 Accept>
+		Prompt2 <Maybe I'll stop by later.>
+		Prompt3 <I'll do it!>
+		Prompt4 <Your job sounds boring.>
+		Prompt5 <Right now I want pizza myself.>
+		CPrompt5 <ifG PCHunger 10 ifChatNPCInPlay ifG PC$ 89 Accept>
+		Prompt6 <Look in my eyes. You can trust me.>
+		Prompt7 <I would kill to get the pizza there on time.>
+		Prompt8 <Maybe I should think about that.>
+		Prompt9 <[Continue]>
+
+		MetaScene 1
+		% If E2 is dead, maybe reveal the encounter manually.
+		start <if= QuestStatus %qid% %id% else %pop% ifNPCDead %2% else %pop% ifAwareness HardSkillTar %threat% else %pop% SetQEncActive %1% SetQuestStatus %qid% -1 Goto %pop%>
+
+		MetaScene 2
+		sub
+			room
+			minimap <.#...+#.......1.....#---#>
+			special <SHAREDPALETTE>
+			desig <HOME>
+		end
+	end
+	inv
+		NPC Cook
+		chardesc Passionate
+
+		Food 50
+		name <Deluxe Pizza>
+	end
 
 Content
 	name <It Has a Price>
