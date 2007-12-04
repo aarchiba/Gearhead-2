@@ -94,12 +94,6 @@ var
 	lancemate_tactics_persona: GearPtr;	{ Persona for setting lancemate tactics. }
 
 
-{$IFDEF ASCII}
-Procedure MechaSelectionMenu( GB: GameBoardPtr; LList,PC: GearPtr; Z: VGFX_Zone );
-{$ELSE}
-Procedure MechaSelectionMenu( GB: GameBoardPtr; LList,PC: GearPtr; Z: TSDL_Rect );
-{$ENDIF}
-
 Procedure SetLancemateOrders( GB: GameBoardPtr );
 
 Procedure BrowseMemoType( GB: GameBoardPtr; Tag: String );
@@ -147,6 +141,7 @@ const
 	CMD_Chat = -2;
 	CMD_Join = -3;
 	CMD_Quit = -4;
+	CMD_WhereAreYou = -5;
 	Debug_On: Boolean = False;
 
 var
@@ -166,54 +161,6 @@ begin
 	if ASRD_GameBoard <> Nil then CombatDisplay( ASRD_GameBoard );
 	SetupMemoDisplay;
 	GameMsg( ASRD_MemoMessage , ZONE_MemoText , StdWhite );
-end;
-
-{$IFDEF ASCII}
-Procedure MechaSelectionMenu( GB: GameBoardPtr; LList,PC: GearPtr; Z: VGFX_Zone );
-{$ELSE}
-Procedure MechaSelectionMenu( GB: GameBoardPtr; LList,PC: GearPtr; Z: TSDL_Rect );
-{$ENDIF}
-	{ Create a menu by which the player can select a mecha to use. }
-var
-	RPM: RPGMenuPtr;
-	msg: String;
-	M: GearPtr;
-	N: Integer;
-begin
-	{ Step one - Create the menu. }
-	RPM := CreateRPGMenu( MenuItem , MenuSelect , Z );
-	RPM^.Mode := RPMNoCancel;
-	M := LList;
-	N := 1;
-	while M <> Nil do begin
-		if ( M^.G = GG_Mecha ) and ( NAttValue( M^.NA , NAG_Location , NAS_Team ) = NAV_DefPlayerTeam ) then begin
-			msg := FullGearName( M );
-			AddRPGMenuItem( RPM , msg , N );
-		end;
-
-		Inc( N );
-		M := M^.Next;
-	end;
-
-	if RPM^.NumItem <> 0 then begin
-		ASRD_GameBoard := GB;
-		N := SelectMenu( RPM , @ArenaScriptReDraw );
-
-		if N <> -1 then begin
-			{ Find the gear that was selected, and set its }
-			{ pilot attribute. }
-			M := RetrieveGearSib( LList , N );
-			AssociatePilotMek( LList , PC , M );
-
-			{ Print an informative message for the user. }
-			DialogMsg( MsgString( 'SELECTMECHA_RESULT1' ) + GearName( M ) + MsgString( 'SELECTMECHA_RESULT2' ) );
-		end;
-
-	end else begin
-		DialogMsg( MsgString( 'SELECTMECHA_NoMeks' ) );
-	end;
-
-	DisposeRPGMenu( RPM );
 end;
 
 Procedure BrowseMemoType( GB: GameBoardPtr; Tag: String );
@@ -578,7 +525,7 @@ var
 	RV: LongInt;
 begin
 	{ Calculate the base reward value. }
-	RV := Calculate_Threat_Points( Renown , 100 ) div 100 * Percent div 100;
+	RV := Calculate_Threat_Points( Renown , 100 ) div 80 * Percent div 100;
 	if RV < Min_Reward_Value then RV := Min_Reward_Value;
 
 	{ Modify this for the PC's talents. }
@@ -2570,6 +2517,7 @@ begin
 		end;
 	end;
 	if ( I_NPC <> Nil ) and ( NAttValue( I_NPC^.NA , NAG_Location , NAS_Team ) = NAV_LancemateTeam ) and ( NAttValue( I_NPC^.NA , NAG_CharDescription , NAS_CharType ) <> NAV_TempLancemate ) then AddRPGMenuItem( IntMenu , '[Quit Lance]' , CMD_Quit );
+	if not ( OnTheMap( GB , FindRoot( I_NPC ) ) and IsFoundAlongTrack( GB^.Meks , FindRoot( I_NPC ) ) ) then AddRPGMenuItem( IntMenu , '[Where are you?]' , CMD_WhereAreYou );
 	RPMSortAlpha( IntMenu );
 end;
 
@@ -4060,7 +4008,7 @@ begin
 		Mek := FindPilotsMecha( GB^.Meks , PC );
 		if ( Mek = Nil ) and ( NumPCMeks( GB ) > 0 ) then begin
 			GameMSG( MsgString( 'ARENASCRIPT_CheckMechaEquipped' ) , ZONE_UsagePrompt , InfoGreen );
-			MechaSelectionMenu( GB , GB^.Meks , PC , ZONE_UsageMenu );
+			FHQ_SelectMechaForPilot( GB , PC );
 		end;
 	end;
 end;
@@ -4219,6 +4167,21 @@ begin
 	CHAT_Message := msg;
 	QuickTime( GB , 16 + Random( 15 ) );
 end;
+
+Procedure HandleWhereAreYou( GB: GameBoardPtr );
+	{ The PC has asked the NPC where he is. The NPC will tell the PC }
+	{ his or her current location. }
+var
+	SID: Integer;
+begin
+	SID := FindGearScene( I_NPC , GB );
+	if SID <> 0 then begin
+		CHAT_Message := ReplaceHash( MsgString( 'WHEREAREYOU_IAMHERE' ) , SceneName( GB , SID ) );
+	end else begin
+		CHAT_Message := MsgString( 'WHEREAREYOU_Dunno' );
+	end;
+end;
+
 
 Procedure AddLancemate( GB: GameBoardPtr; NPC: GearPtr );
 	{ Add the listed NPC to the PC's lance. }
@@ -4399,6 +4362,9 @@ begin
 
 		end else if N = CMD_Quit then begin
 			HandleQuit( GB );
+
+		end else if N = CMD_WhereAreYou then begin
+			HandleWhereAreYou( GB );
 
 		end;
 

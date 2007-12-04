@@ -1,13 +1,20 @@
+- Fixed the mecha selection menu issues (backpack.pp)
+- Recalibrated the cash reward generator (arenascript.pp)
+- Fixed some issues with smartaction (pcaction.pp)
+- Added "Where are you?" conversation option (arenascript.pp)
+- Adjusted mecha software value (ghsensor.pp)
+- Distinction now made between point value and cost (gearutil.pp)
+- Fixed some bugs with selling in ArenaHQ (gh2arena.pp)
 - Fixed bug with Extend/non-Thrown weapons (locale.pp)
 
-0.451	October 28 2007
+0.451	November 28 2007
 - Improved the mission selection menu for ArenaHQ (gh2arena.pp)
 - Shopkeepers with a faction won't sell non-faction goods (services.pp)
 - Throwing weapons with Extend tag get extra range (locale.pp)
 - Fixed endless loop in quest generator (navigator.pp)
 - Adjusted the emergency recovery rate (arenaplay.pp)
 
-0.450	October 25 2007
+0.450	November 25 2007
 - If characters or mecha lost in ArenaMode, team renown reduced (gh2arena.pp)
 - Props have an armor rating (gearutil.pp)
 - Added arena mode skill schooling (gh2arena.pp)

@@ -918,10 +918,15 @@ begin
 	if N > 0 then QuickTextRJ( MassString( Part ) , MyDest , NeutralGrey , game_font );
 
 	{ Display the cost. }
-	N := GearValue( Part );
 	MyDest.Y := MyDest.Y + TTF_FontLineSkip( Game_Font );
 	MyDest.X := Z.X + Z.W - 5;
-	if N > 0 then QuickTextRJ( '$' + BStr( GearValue( Part ) ) , MyDest , NeutralGrey , game_font );
+	if Part^.G = GG_Mecha then begin
+		N := GearValue( Part );
+		if N > 0 then QuickTextRJ( 'PV:' + BStr( N ) , MyDest , NeutralGrey , game_font );
+	end else begin
+		N := GearCost( Part );
+		if N > 0 then QuickTextRJ( '$' + BStr( N ) , MyDest , NeutralGrey , game_font );
+	end;
 
 	if ( Part^.G < 0 ) and ( Part^.G <> GG_Set ) then begin
 		MyDest.Y := MyDest.Y + TTF_FontLineSkip( Game_Font );

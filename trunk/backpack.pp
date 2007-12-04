@@ -1427,6 +1427,21 @@ begin
 	DialogMsg( ReplaceHash( MsgString( 'FHQ_AssociatePM' ) , GearName( PC ) ) );
 end;
 
+Procedure FHQ_AssociateRedraw;
+	{ Do a redraw for the Field HQ. }
+var
+	Part: GearPtr;
+begin
+	CombatDisplay( BP_GB );
+	SetupFHQDisplay;
+	if ( BP_ActiveMenu <> Nil ) and ( BP_Source <> Nil ) then begin
+		Part := RetrieveGearSib( BP_Source , CurrentMenuItemValue( BP_ActiveMenu ) );
+		if Part <> Nil then begin
+			BrowserInterfaceInfo( Part , ZONE_ItemsInfo );
+		end;
+	end;
+end;
+
 Procedure FHQ_SelectPilotForMecha( GB: GameBoardPtr; Mek: GearPtr );
 	{ Select a pilot for the mecha in question. }
 	{ Pilots must be characters- they must either belong to the default }
@@ -1438,8 +1453,13 @@ var
 	N: Integer;
 	M: GearPtr;
 begin
+	BP_GB := GB;
+	BP_Source := GB^.Meks;
+	DialogMsg( ReplaceHash( MsgString( 'FHQ_SP4M_Prompt' ) , FullGearName( Mek ) ) );
+
 	{ Create the menu. }
-	RPM := CreateRPGMenu( MenuItem , MenuSelect , ZONE_Menu );
+	RPM := CreateRPGMenu( MenuItem , MenuSelect , ZONE_FieldHQMenu );
+	BP_ActiveMenu := RPM;
 	M := GB^.Meks;
 	N := 1;
 	while M <> Nil do begin
@@ -1457,7 +1477,7 @@ begin
 	AddRPGMenuItem( RPM , MSgString( 'EXIT' ) , -1 );
 
 	{ Get a selection from the menu. }
-	n := SelectMenu( RPM , @PlainRedraw );
+	n := SelectMenu( RPM , @FHQ_AssociateRedraw );
 
 	DisposeRPGMenu( RPM );
 
@@ -1479,15 +1499,18 @@ var
 	M: GearPtr;
 begin
 	BP_GB := GB;
+	BP_Source := GB^.Meks;
+	DialogMsg( ReplaceHash( MsgString( 'FHQ_SM4P_Prompt' ) , GearName( NPC ) ) );
 
 	{ Error check- only characters can pilot mecha! Pets can't. }
-	if ( NAttValue( NPC^.NA , NAG_Personal , NAS_CID ) = 0 ) then begin
+	if ( NAttValue( NPC^.NA , NAG_Personal , NAS_CID ) = 0 ) and ( NAttValue( NPC^.NA , NAG_Location , NAS_Team ) <> NAV_DefPlayerTeam ) then begin
 		DialogMsg( ReplaceHash( MsgString( 'FHQ_SMFP_NoPets' ) , GearName( NPC ) ) );
 		Exit;
 	end;
 
 	{ Create the menu. }
-	RPM := CreateRPGMenu( MenuItem , MenuSelect , ZONE_Menu );
+	RPM := CreateRPGMenu( MenuItem , MenuSelect , ZONE_FieldHQMenu );
+	BP_ActiveMenu := RPM;
 	M := GB^.Meks;
 	N := 1;
 	while M <> Nil do begin
@@ -1501,7 +1524,7 @@ begin
 	AddRPGMenuItem( RPM , MSgString( 'EXIT' ) , -1 );
 
 	{ Get a selection from the menu. }
-	n := SelectMenu( RPM , @PlainRedraw );
+	n := SelectMenu( RPM , @FHQ_AssociateRedraw );
 
 	DisposeRPGMenu( RPM );
 

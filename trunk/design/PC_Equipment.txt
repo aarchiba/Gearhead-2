@@ -537,6 +537,16 @@ end
 %  ***  WEAPON ADD-ONS  ***
 %  ************************
 
+MeleeAddOn 0
+Name <Long Haft>
+desc <Extends the reach of a weapon.>
+Category <ACCESSORY>
+Factions <GENERAL>
+Type <EXTEND>
+Acc 1
+Mass 1
+legality -5
+
 GunAddOn 0
 Name <Barrel Extension>
 desc <The increased barrel length provided by this addon will slightly increase range.>

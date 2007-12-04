@@ -1213,10 +1213,7 @@ end;
 Procedure DoSelectPCMek( GB: GameBoardPtr; PC: GearPtr );
 	{ Select one of the team 1 mecha for the player to use. }
 begin
-	CMessage( MsgString( 'SELECTMECHA_PROMPT' ) , ZONE_Menu1 , InfoHilight );
-
-	MechaSelectionMenu( GB , GB^.Meks ,PC , ZONE_Menu2 );
-
+	FHQ_SelectMechaForPilot( GB , PC );
 end;
 
 Procedure PCBackpackMenu( GB: GameBoardPtr; PC: GearPtr; StartWithInv: Boolean );
@@ -2196,57 +2193,54 @@ begin
 		P.X := P0.X + AngDir[ CD , 1 ];
 		P.Y := P0.Y + AngDir[ CD , 2 ];
 
-		M2 := FindVisibleBlockerAtSpot( GB , P.X , P.Y );
-
-		if ( M2 = Nil ) or not GearOperational( M2 ) then begin
-			{ CLear the SmartBump counter. }
-			SetNAtt( Mek^.NA , NAG_Location , NAS_SmartAction , 0 );
-
-			if MovementBlocked( Mek , GB , P0.X , P0.Y , P.X , P.Y ) then begin
-				DialogMsg( 'Blocked!' );
+		if not MovementBlocked( Mek , GB , P0.X , P0.Y , P.X , P.Y ) then begin
+			{ We can move in this direction. Do so. }
+			if ( NAttValue( Mek^.NA , NAG_Location , NAS_SmartSpeed ) = NAV_FullSpeed ) and ( CurrentStamina( Mek ) > 0 ) then begin
+				PrepAction( GB , Mek , NAV_FullSpeed );
 			end else begin
-				{ The move isn't blocked, so walk straight ahead. }
-				if ( NAttValue( Mek^.NA , NAG_Location , NAS_SmartSpeed ) = NAV_FullSpeed ) and ( CurrentStamina( Mek ) > 0 ) then begin
-					PrepAction( GB , Mek , NAV_FullSpeed );
-				end else begin
-					PrepAction( GB , Mek , NAV_NormSpeed );
-					SetNAtt( Mek^.NA , NAG_Location , NAS_SmartSpeed , NAV_NormSpeed );
-				end;
+				PrepAction( GB , Mek , NAV_NormSpeed );
+				SetNAtt( Mek^.NA , NAG_Location , NAS_SmartSpeed , NAV_NormSpeed );
 			end;
-
-		end else if ( M2^.G = GG_Prop ) or not IsMasterGear( M2 ) then begin
-			{ M2 is an object of some type. Try using it. }
 			{ CLear the SmartBump counter. }
-			SetNAtt( Mek^.NA , NAG_Location , NAS_SmartAction , 0 );
-			PrepAction( GB , Mek , NAV_Stop );
-			UsePropFrontEnd( GB , Mek , M2 , 'USE' );
-
-		end else if AreEnemies( GB , Mek , M2 ) and ( NAttValue( M2^.NA , NAG_EpisodeData , NAS_SurrenderStatus ) <> NAV_NowSurrendered ) then begin
-			{ M2 is an enemy! Thwack it! Thwack it now!!! }
-			RLBumpAttack( GB , Mek , M2 );
-
-		end else if ( NAttValue( M2^.NA , NAG_Location , NAS_Team ) = NAV_LancemateTeam ) and not IsBlockingTerrain( GB , Mek , TileTerrain( GB , P.X , P.Y ) ) then begin
-			{ M2 is a lancemate. Try changing places with it. }
-			{ This will happen outside of the normal movement code... I hope that }
-			{ it won't be exploitable... }
-			P := GearCurrentLocation( Mek );
-			P2 := GearCurrentLocation( M2 );
-			SetNAtt( Mek^.NA , NAG_Location , NAS_X , P2.X );
-			SetNAtt( Mek^.NA , NAG_Location , NAS_Y , P2.Y );
-			SetNAtt( M2^.NA , NAG_Location , NAS_X , P.X );
-			SetNAtt( M2^.NA , NAG_Location , NAS_Y , P.Y );
-			WaitAMinute( GB , Mek , CPHMoveRate( GB^.Scene , Mek , GB^.Scale ) );
-			WaitAMinute( GB , M2 , CPHMoveRate( GB^.Scene , M2 , GB^.Scale ) );
 			SetNAtt( Mek^.NA , NAG_Location , NAS_SmartAction , 0 );
 
 		end else begin
-			{ M2 isn't an enemy... try talking to it. }
-			DoTalkingWithNPC( GB , Mek , M2 , False );
-			SetNAtt( Mek^.NA , NAG_Location , NAS_SmartAction , 0 );
+			{ There's something in the way of our movement. Deal with it. }
+			M2 := FindVisibleBlockerAtSpot( GB , P.X , P.Y );
 
+			if M2 = Nil then begin
+				DialogMsg( MsgString( 'SMARTACTION_Blocked' ) );
+				SetNAtt( Mek^.NA , NAG_Location , NAS_SmartAction , 0 );
+			end else if AreEnemies( GB , Mek , M2 ) and ( NAttValue( M2^.NA , NAG_EpisodeData , NAS_SurrenderStatus ) <> NAV_NowSurrendered ) then begin
+				{ M2 is an enemy! Thwack it! Thwack it now!!! }
+				RLBumpAttack( GB , Mek , M2 );
+			end else if ( NAttValue( M2^.NA , NAG_Location , NAS_Team ) = NAV_LancemateTeam ) and not IsBlockingTerrain( GB , Mek , TileTerrain( GB , P.X , P.Y ) ) then begin
+				{ M2 is a lancemate. Try changing places with it. }
+				{ This will happen outside of the normal movement code... I hope that }
+				{ it won't be exploitable... }
+				P := GearCurrentLocation( Mek );
+				P2 := GearCurrentLocation( M2 );
+				SetNAtt( Mek^.NA , NAG_Location , NAS_X , P2.X );
+				SetNAtt( Mek^.NA , NAG_Location , NAS_Y , P2.Y );
+				SetNAtt( M2^.NA , NAG_Location , NAS_X , P.X );
+				SetNAtt( M2^.NA , NAG_Location , NAS_Y , P.Y );
+				WaitAMinute( GB , Mek , CPHMoveRate( GB^.Scene , Mek , GB^.Scale ) );
+				WaitAMinute( GB , M2 , CPHMoveRate( GB^.Scene , M2 , GB^.Scale ) );
+				SetNAtt( Mek^.NA , NAG_Location , NAS_SmartAction , 0 );
+
+			end else if ( M2^.G = GG_Prop ) or not IsMasterGear( M2 ) then begin
+				{ M2 is an object of some type. Try using it. }
+				{ CLear the SmartBump counter. }
+				SetNAtt( Mek^.NA , NAG_Location , NAS_SmartAction , 0 );
+				PrepAction( GB , Mek , NAV_Stop );
+				UsePropFrontEnd( GB , Mek , M2 , 'USE' );
+
+			end else begin
+				{ M2 isn't an enemy... try talking to it. }
+				DoTalkingWithNPC( GB , Mek , M2 , False );
+				SetNAtt( Mek^.NA , NAG_Location , NAS_SmartAction , 0 );
+			end;
 		end;
-
-
 	end;
 end;
 

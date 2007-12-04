@@ -1497,7 +1497,7 @@ sub
 
 	Scene
 	name <Old Wynter's Mine>
-	type <building ruin mine !Lo>
+	type <building ruin mine !Lo open>
 	terrain <SPACE>
 	habitat <SPACE.ASTER>
 	entrance <*Building>
@@ -1542,7 +1542,7 @@ sub
 		Scene
 		name <Wynter's Mine>
 		special <NOEXIT>
-		type <DUNGEON ruin mine>
+		type <DUNGEON ruin mine open>
 		terrain <SPACE>
 		habitat <SPACE.ASTER>
 		dentrance <*GoDown>
@@ -1579,7 +1579,7 @@ sub
 			% Beneath the main mine, there's more tunnels
 			name <Lower Wynter's Mine>
 			special <NOEXIT>
-			type <DUNGEON ruin mine>
+			type <DUNGEON ruin mine open>
 			terrain <SPACE>
 			habitat <SPACE.ASTER>
 			entrance <*GoDown>
@@ -1670,7 +1670,7 @@ sub
 					% Beneath Wynter's Mine, there's another series of caves
 					name <Cayley Caves>
 					special <NOEXIT>
-					type <DUNGEON cave mine>
+					type <DUNGEON cave mine open>
 					terrain <SPACE>
 					habitat <SPACE.ASTER>
 					entrance <*GoDown>

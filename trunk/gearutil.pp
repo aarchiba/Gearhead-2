@@ -87,6 +87,7 @@ Function SeekSoftware( Mek: GearPtr; SW_Type,SW_Param: Integer; CasualUse: Boole
 Function GearEncumberance( Mek: GearPtr ): Integer;
 Function BaseMVTVScore( Mek: GearPtr ): Integer;
 Function BaseGearValue( Master: GearPtr ): LongInt;
+Function GearCost( Master: GearPtr ): LongInt;
 Function GearValue( Master: GearPtr ): LongInt;
 
 function SeekGearByName( LList: GearPtr; Name: String ): GearPtr;
@@ -1345,9 +1346,6 @@ begin
 		for t := 1 to Part^.Scale do it := it * 5;
 	end;
 
-	{ Modify for Fudge. }
-	it := it + NAttValue( Part^.NA , NAG_GearOps , NAS_Fudge );
-
 	ComponentValue := it;
 end;
 
@@ -1383,6 +1381,32 @@ begin
 	{The formula to work out the total value of this gear}
 	{is basic value + SubCom value + InvCom value.}
 	BaseGearValue := ComponentValue(Master) + TrackValue(Master^.SubCom) + TrackValue(Master^.InvCom);
+end;
+
+Function FudgeCost( Master: GearPtr ): LongInt;
+	{ Determine the total fudge cost of this master and all of its children. }
+var
+	it: LongInt;
+	CG: GearPtr;
+begin
+	it := NAttValue( Master^.NA , NAG_GearOps , NAS_Fudge );
+	CG := Master^.SubCom;
+	while CG <> Nil do begin
+		it := it + FudgeCost( CG );
+		CG := CG^.Next;
+	end;
+	CG := Master^.InvCom;
+	while CG <> Nil do begin
+		it := it + FudgeCost( CG );
+		CG := CG^.Next;
+	end;
+	FudgeCost := it;
+end;
+
+Function GearCost( Master: GearPtr ): LongInt;
+	{ Return the cash value of this gear. }
+begin
+	GearCost := BaseGearValue( Master ) + FudgeCost( Master );
 end;
 
 Function GearValue( Master: GearPtr ): LongInt;

@@ -4,6 +4,107 @@
 %% The PC is looking for someone's hideout.
 
 Content
+	name <Dungeon Hideout 1>
+	requires <*ENT_Hideout (!Ne|!Lo)>
+	special <REUSABLE>
+
+	% E1 is the key scene
+	% E2 is an open dungeon
+	% E3 is the entrance, to be placed in E2
+	Scene2 <Dungeon Open !Ne>
+	Element3 <Prefab>
+	Place3 <Grab 2>
+
+	inv
+		Trapdoor
+		Hide -1
+		desig <ENTRANCE %s1%>
+		rumor%prev_id% <there's a fugitive hiding in %name2%.>
+		update <if= QuestStatus %qid% %prev_id%  SetStat STAT_MetaVisibility 0>
+	end
+
+Content
+	name <Dungeon Hideout 2>
+	requires <*ENT_Hideout (!Lo|!Md)>
+	special <REUSABLE>
+
+	% E1 is the key scene
+	% E2 is an open dungeon
+	% E3 is the entrance, to be placed in E2
+	Scene2 <Dungeon Open !Lo>
+	Element3 <Prefab>
+	Place3 <Grab 2>
+
+	inv
+		Trapdoor
+		Hide -1
+		desig <ENTRANCE %s1%>
+		rumor%prev_id% <there's a fugitive hiding in %name2%.>
+		update <if= QuestStatus %qid% %prev_id%  SetStat STAT_MetaVisibility 0>
+	end
+
+Content
+	name <Dungeon Hideout 3>
+	requires <*ENT_Hideout (!Md|!Hi)>
+	special <REUSABLE>
+
+	% E1 is the key scene
+	% E2 is an open dungeon
+	% E3 is the entrance, to be placed in E2
+	Scene2 <Dungeon Open !Md>
+	Element3 <Prefab>
+	Place3 <Grab 2>
+
+	inv
+		Trapdoor
+		Hide -1
+		desig <ENTRANCE %s1%>
+		rumor%prev_id% <there's a fugitive hiding in %name2%.>
+		update <if= QuestStatus %qid% %prev_id%  SetStat STAT_MetaVisibility 0>
+	end
+
+Content
+	name <Dungeon Hideout 4>
+	requires <*ENT_Hideout (!Hi|!Ex)>
+	special <REUSABLE>
+
+	% E1 is the key scene
+	% E2 is an open dungeon
+	% E3 is the entrance, to be placed in E2
+	Scene2 <Dungeon Open !Hi>
+	Element3 <Prefab>
+	Place3 <Grab 2>
+
+	inv
+		Trapdoor
+		Hide -1
+		desig <ENTRANCE %s1%>
+		rumor%prev_id% <there's a fugitive hiding in %name2%.>
+		update <if= QuestStatus %qid% %prev_id%  SetStat STAT_MetaVisibility 0>
+	end
+
+Content
+	name <Dungeon Hideout 5>
+	requires <*ENT_Hideout !Ex>
+	special <REUSABLE>
+
+	% E1 is the key scene
+	% E2 is an open dungeon
+	% E3 is the entrance, to be placed in E2
+	Scene2 <Dungeon Open !Ex>
+	Element3 <Prefab>
+	Place3 <Grab 2>
+
+	inv
+		Trapdoor
+		Hide -1
+		desig <ENTRANCE %s1%>
+		rumor%prev_id% <there's a fugitive hiding in %name2%.>
+		update <if= QuestStatus %qid% %prev_id%  SetStat STAT_MetaVisibility 0>
+	end
+
+
+Content
 	name <Sewer Hideout>
 	% The NPC is hiding in the sewer.
 	requires <*ENT_Hideout City>

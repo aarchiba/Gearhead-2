@@ -736,6 +736,7 @@ var
 	MyDest: VGFX_Rect;
 	msg: String;
 	X,YEnd,N: Integer;
+	Cost: LongInt;
 begin
 	MyDest := ZoneToRect( Z );
 	ClrZone( MyDest );
@@ -772,9 +773,18 @@ begin
 	end;
 
 	{ Display the cost. }
-	if ( GearValue( Part ) > 0 ) then begin
-		msg := '$' + BStr(GearValue( Part ));
-		TextOut( MyDest.X  , MyDest.Y + 2 , msg );
+	if Part^.G = GG_Mecha then begin
+		Cost := GearValue( Part );
+		if Cost > 0 then begin
+			msg := 'PV:' + BStr(GearValue( Part ));
+			TextOut( MyDest.X  , MyDest.Y + 2 , msg );
+		end;
+	end else begin
+		Cost := GearCost( Part );
+		if ( Cost > 0 ) then begin
+			msg := '$' + BStr(GearValue( Part ));
+			TextOut( MyDest.X  , MyDest.Y + 2 , msg );
+		end;
 	end;
 	{ Display the spaces. }
 	if not IsMasterGear( Part ) then begin

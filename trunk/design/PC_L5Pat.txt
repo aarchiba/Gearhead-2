@@ -350,7 +350,20 @@ end
 %  ***  WEAPON ADD-ONS  ***
 %  ************************
 
-
+MeleeAddOn 0
+Name <Bladed Haft>
+desc <Extends the reach of a weapon and adds a secondary blade.>
+Category <ACCESSORY>
+Factions <MAQUI FCOMS BOHEM PRIVA CRIHN RISHI HOELL>
+Type <EXTEND>
+Acc 1
+Mass 1
+sub
+	Melee 8
+	mass -6
+	name <Haft Blade>
+	Acc 1
+end
 
 %  ******************
 %  ***  GRENADES  ***

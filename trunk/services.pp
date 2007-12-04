@@ -159,7 +159,7 @@ Function PurchasePrice( PC,NPC,Item: GearPtr ): LongInt;
 	{ to PC. }
 begin
 	{ Scale the base cost for the item. }
-	PurchasePrice := ScalePrice( PC , NPC , GearValue( Item ) );
+	PurchasePrice := ScalePrice( PC , NPC , GearCost( Item ) );
 end;
 
 Procedure ShoppingXP( PC , Part: GearPtr );
@@ -170,7 +170,7 @@ var
 begin
 	{ Find the price of the gear. This must be positive or it'll }
 	{ crash the logarithm function. }
-	Price := GearValue( Part );
+	Price := GearCost( Part );
 	if Price < 1 then Price := 1;
 	if DoleSkillExperience( PC , 21 , Round( Ln( Price ) ) + 1 ) then begin
 		DialogMsg( MsgString( 'SHOPPING_SkillAdvance' ) );
@@ -278,7 +278,7 @@ begin
 		end;
 	end;
 
-	Cost := BaseGearValue( Part );
+	Cost := GearCost( Part );
 	if Destroyed( Part ) then Cost := Cost div 3;
 
 	{ If this part matches the category of the shopkeeper, it's worth more money. }
@@ -771,7 +771,7 @@ var
 	N: Integer;
 begin
 	{ First, determine what the unscaled price is. }
-	Cost := GearValue( I );
+	Cost := GearCost( I );
 	N := I^.Scale;
 	{ SF:1 items are 10x more expensive than SF:0 items. After that }
 	{ it costs x5 per scale factor. }

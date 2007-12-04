@@ -199,13 +199,13 @@ begin
 	if ( Part^.Stat[ STAT_SW_Type ] = S_MVBoost ) or ( Part^.Stat[ STAT_SW_Type ] = S_TRBoost ) then begin
 		{ The basic price is quadratic, multiplied upwards by the scale it's }
 		{ meant to apply to. }
-		it := Part^.V * Part^.V * 30;
+		it := Part^.V * Part^.V * 100;
 		for t := 1 to Part^.Stat[ STAT_SW_Param ] do it := it * 5;
 	end else if ( Part^.Stat[ STAT_SW_Type ] = S_SkillBoost ) and ( Part^.Stat[ STAT_SW_Param ] >= 1 ) and ( Part^.Stat[ STAT_SW_Param ] <= NumSkill ) then begin
 		it := Part^.V * Part^.V * Software_Skill_Cost[ Part^.Stat[ STAT_SW_Param ] ] * 25 + 100;
 
 	end else if Part^.Stat[ STAT_SW_Type ] = S_SpeedComp then begin
-		it := Part^.V * Part^.V * 10;
+		it := Part^.V * Part^.V * 35;
 		for t := 1 to Part^.Stat[ STAT_SW_Param ] do it := it * 5;
 
 	end else if Part^.Stat[ STAT_SW_Type ] = S_Information then begin

@@ -89,6 +89,8 @@ Const
 	PAM_Debug_Missions = 1;
 	PAM_Debug_Core = 2;
 
+	SaleFactor = 25;
+
 var
 	ADR_Source: GearPtr;	{ Source gear for various redrawers. }
 	ADR_SourceMenu: RPGMenuPtr;
@@ -1011,7 +1013,7 @@ begin
 	while Mek <> Nil do begin
 		M2 := Mek^.Next;
 		if Mek^.G <> GG_Character then begin
-			Total := Total + GearValue( Mek );
+			Total := Total + GearCost( Mek );
 			RemoveGear( PC , Mek );
 		end;
 		Mek := M2;
@@ -1163,7 +1165,7 @@ var
 	YNMenu: RPGMenuPtr;
 	Cost: LongInt;
 begin
-	Cost := ModifiedCost( HQCamp , GearValue( Part ) , NAS_Shopping );
+	Cost := ModifiedCost( HQCamp , GearCost( Part ) , NAS_Shopping );
 
 	YNMenu := CreateRPGMenu( MenuItem , MenuSelect , ZONE_FieldHQMenu );
 	AddRPGMenuItem( YNMenu , ReplaceHash( MsgString( 'ARENA_PurchaseYes' ) , GearName( Part ) ) + ' ($' + BStr( Cost ) + ')' , 1 );
@@ -1230,7 +1232,7 @@ begin
 	while mek <> Nil do begin
 		M1 := mek^.Next;
 		{ If it doesn't fit, remove it. }
-		if ( Mek^.G <> GG_Mecha ) or ( ModifiedCost( HQCamp , GearValue( Mek ) , NAS_Shopping ) > HQCash( HQCamp ) ) or not MechaMatchesFaction( Mek , Factions ) then RemoveGear( MekList , Mek )
+		if ( Mek^.G <> GG_Mecha ) or ( ModifiedCost( HQCamp , GearCost( Mek ) , NAS_Shopping ) > HQCash( HQCamp ) ) or not MechaMatchesFaction( Mek , Factions ) then RemoveGear( MekList , Mek )
 		{ If it does fit, paint it. }
 		else SetSAtt( Mek^.SA , DefaultColors );
 		mek := M1;
@@ -1264,8 +1266,6 @@ end;
 Procedure ViewMecha( HQCamp: CampaignPtr; PC: GearPtr );
 	{ Examine this mecha. Call up a menu with options related to this }
 	{ character. }
-const
-	SaleFactor = 25;
 	Procedure SellMecha( SalePrice: LongInt );
 		{ This mecha should be removed from the unit, and some cash gained. }
 	begin
@@ -1308,7 +1308,7 @@ const
 		I := PC^.InvCom;
 		Total := 0;
 		while I <> Nil do begin
-			Total := Total + GearValue( I );
+			Total := Total + GearCost( I );
 			I := I^.Next;
 		end;
 		InventoryValue := Total div SaleFactor;
@@ -1331,7 +1331,7 @@ var
 	N: Integer;
 	SalePrice,Cost: LongInt;
 begin
-	SalePrice := GearValue( PC ) div SaleFactor;
+	SalePrice := GearCost( PC ) div SaleFactor;
 	repeat
 		ADR_Source := PC;
 
@@ -1361,7 +1361,10 @@ begin
 			1:	AssignPilotForMecha;
 			2:	DoFullRepair( HQCamp , PC );
 			3:	ArenaReloadMaster( HQCamp , PC );
-			4:	SellMechaInventory;
+			4:	begin
+				SellMechaInventory;
+				SalePrice := GearCost( PC ) div SaleFactor;
+				end;
 			5:	ArenaHQBackpack( HQCamp^.Source , PC , @BasicArenaRedraw );
 			6:	MechaPartEditor( Nil , HQCamp^.Source^.SubCom , HQCamp^.Source , PC , @BasicArenaRedraw );
 			-2:	SellMecha( SalePrice );
@@ -1424,9 +1427,7 @@ var
 	N: Integer;
 	SalePrice,Cost: LongInt;
 begin
-	{ The sale price is 25% of the original price times the damage status, in order }
-	{ to prevent shop-scumming. }
-	SalePrice := GearValue( Part ) div 10;
+	SalePrice := GearCost( Part ) div SaleFactor;
 	repeat
 		ADR_Source := Part;
 
