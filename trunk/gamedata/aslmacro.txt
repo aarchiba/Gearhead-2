@@ -67,6 +67,7 @@ DELETENPC <GrabNPC ?  DeleteGG>
 KILLNPC <GrabNPC ? GAddNAtt 12 0 9999 Trigger NU NPCTeam ! Trigger FAINT !>
 KILLPC <GrabPC ? GAddNAtt 12 0 9999 Trigger0 NU1>
 DELETEITEM <GrabItem ?  DeleteGG>
+DeleteSelf <GrabSource DeleteGG>
 MOVENPC <GrabNPC ?  MoveGG ?>
 MOVEANDPACIFYNPC <GrabNPC ? MoveAndPacifyGG ?>
 DEPLOYNPC <GrabNPC ? DeployGG ?>
@@ -130,6 +131,7 @@ RunAway <GrabNPC ? GrabRoot GRunAway>
 LocalRunAway <GrabLocal ? GRunAway>
 SelfRunAway <GrabSource GRunAway>
 TeamAttack <GrabTeam ? GSetNAtt NAG_SideReaction 1 -1 GrabTeam 1 GSetNAtt NAG_SideReaction ! -1>
+TeamAttackTeam <GrabTeam ? GSetNAtt NAG_SideReaction ? -1> % Note: Does not force reciprocity
 ifTeamHostile <grabTeam ? if= GNAtt NAG_SideReaction 1 -1>
 ifTeamNotHostile <grabTeam ? if# GNAtt NAG_SideReaction 1 -1>
 TeamAlly <GrabTeam ? GSetNAtt NAG_SideReaction 1 1 GrabTeam 1 GSetNAtt NAG_SideReaction ! 1>
@@ -229,6 +231,7 @@ SeekEntrance <SeekGate ParentSceneID ?>
 IfNPCSurrendered <GrabNPC ? if= GNAtt NAG_EpisodeData NAS_SurrenderStatus NAV_NowSurrendered>
 IfChatNPCSurrendered <GrabChatNPC if= GNAtt NAG_EpisodeData NAS_SurrenderStatus NAV_NowSurrendered>
 UnSurrender <GrabNPC ? GSetNAtt NAG_EpisodeData NAS_SurrenderStatus 0>
+ReAttack <GrabNPC ? GSetNAtt NAG_EpisodeData NAS_SurrenderStatus 2>
 ShowEncounter <GrabSource GSetNAtt NAG_EpisodeData NAS_EncVis ComTime GAddNAtt NAG_EpisodeData NAS_EncVis 86400>
 ifEncounterVisible <GrabSource ifG GNatt NAG_EpisodeData NAS_EncVis ComTime>
 AddDatePoint <GrabSource GAddNAtt NAG_Narrative NAS_DatePoints 1>

@@ -933,7 +933,6 @@ var
 
 					end;
 				end; { For T...}
-if Full_RPGWorld_Info then DebugMessage( 'Done with scenes ' + GearName(C ) );
 
 				{ Now that we have all of the scenes we can proceed with the }
 				{ sub-quests themselves. }
@@ -968,7 +967,6 @@ if Full_RPGWorld_Info then DebugMessage( 'Done with scenes ' + GearName(C ) );
 						end;
 					end;
 				end;
-if Full_RPGWorld_Info then DebugMessage( 'Done with subquests ' + GearName(C ) );
 
 				{ If initialization failed for whatever reason, delete }
 				{ the fragment and also any new scenes created by it. }
@@ -1064,6 +1062,73 @@ if Full_RPGWorld_Info then DebugMessage( 'Done with subquests ' + GearName(C ) )
 			else dialogmsg( 'WARNING: Quest fragment ' + GearName( Frag ) + ' used multiple times.' );
 		end;
 
+		{ Initialize personas and scenes. }
+		for t := 1 to Num_Plot_Elements do begin
+			{ Start with the element description. If nonempty, }
+			{ that means we have a significant element to deal with. }
+			ElemDesc := SAttValue( Frag^.SA , 'ELEMENT' + BStr( T ) );
+			if ElemDesc <> '' then begin
+				Scene := FindQuestScene( NAttValue( Frag^.NA , NAG_QuestElemScene , T ) );
+
+				{ If this is a character, deal with the persona. }
+				if UpCase( ElemDesc[1] ) = 'C' then begin
+					Persona := FindMetaPersona( Frag , T );
+					if Persona <> Nil then begin
+						{ We have a persona fragment to }
+						{ deal with. Locate the main persona; }
+						{ store it in variable "E" and megalist away. }
+						E := SeekPersona( Adv , ElementID( Frag , T ) );
+						if E = Nil then begin
+							DelinkGear( Frag^.SubCom , Persona );
+							Persona^.S := ElementID( Frag , T );
+							InsertSubCom( Scene , Persona );
+							SetNAtt( Persona^.NA , NAG_QuestInfo , NAS_QuestID , NAttValue( Frag^.NA , NAG_QuestInfo , NAS_QuestID ) );
+							SetNAtt( Persona^.NA , NAG_QuestInfo , NAS_LayerID , NAttValue( Frag^.NA , NAG_QuestInfo , NAS_LayerID ) );
+						end else if E <> Nil then begin
+							BuildMegalist( E , Persona^.SA );
+						end;
+					end else begin
+						{ We don't have a persona yet, and no persona }
+						{ is defined in the component, so create a new }
+						{ one from scratch. }
+						Persona := LoadNewSTC( 'PERSONA_BLANK' );
+						InsertSubCom( Scene , Persona );
+						Persona^.S := ElementID( Frag , T );
+						SetNAtt( Persona^.NA , NAG_QuestInfo , NAS_QuestID , NAttValue( Frag^.NA , NAG_QuestInfo , NAS_QuestID ) );
+						SetNAtt( Persona^.NA , NAG_QuestInfo , NAS_LayerID , NAttValue( Frag^.NA , NAG_QuestInfo , NAS_LayerID ) );
+					end;
+				end;
+
+				{ Deal with the scene scripts and content. }
+				{ These are stored in metascenes in the subs of the frag. }
+				if Scene <> Nil then begin
+					Persona := SeekCurrentLevelGear( Frag^.SubCom , GG_MetaScene , T );
+					if Persona <> Nil then begin
+						{ Locate the "Container"- this will be the home }
+						{ of this element in this scene. Mark it as such. }
+						Container := SeekGearByDesig( Persona^.SubCom , 'HOME' );
+						if Container <> Nil then begin
+							SetSAtt( Container^.SA , 'DESIG <HOME ' + BStr( T ) + '>' );
+						end;
+
+						BuildMegaList( Scene , Persona^.SA );
+						while Persona^.InvCom <> Nil do begin
+							MoveThis := Persona^.InvCom;
+							DelinkGear( Persona^.InvCom , MoveThis );
+							InsertInvCom( Scene , MoveThis );
+							SetTeamForAllMasters( Scene , MoveThis );
+						end;
+						while Persona^.SubCom <> Nil do begin
+							MoveThis := Persona^.SubCom;
+							DelinkGear( Persona^.SubCom , MoveThis );
+							InsertSubCom( Scene , MoveThis );
+							SetTeamForAllMasters( Scene , MoveThis );
+						end;
+					end;
+				end;
+			end;	{ if ElemDesc <> '' }
+		end;	{ for t... }
+
 		{ Deploy all the prefab gears }
 		while Frag^.InvCom <> Nil do begin
 			E := Frag^.InvCom;
@@ -1079,10 +1144,9 @@ if Full_RPGWorld_Info then DebugMessage( 'Done with subquests ' + GearName(C ) )
 			{ Next, attempt to locate the scene associated with this element. }
 			{ It should be stored as a NAtt. }
 			Scene := FindQuestScene( NAttValue( Frag^.NA , NAG_QuestElemScene , T ) );
-			Container := SeekCurrentLevelGear( Frag^.SubCom , GG_MetaScene , T );
-			if Container <> Nil then begin
-				Container := SeekGearByDesig( Container^.SubCom , 'HOME' );
-			end;
+			Container := SeekGearByDesig( Scene^.SubCom , 'HOME ' + BStr( T ) );
+			{ Clear the container's designation, we no longer need it. }
+			if Container <> Nil then SetSAtt( Container^.SA , 'DESIG <>' );
 			if ( Container = Nil ) or ( Container^.G <> GG_MapFeature ) then Container := Scene;
 
 			{ As long as we found the scene, proceed with the movement of stuff. }
@@ -1111,24 +1175,6 @@ if Full_RPGWorld_Info then DebugMessage( 'Done with subquests ' + GearName(C ) )
 						SetSkillsAtLevel( E , NAttValue( Frag^.NA , NAG_QuestInfo , NAS_DifficulcyLevel ) );
 						SetNAtt( E^.NA , NAG_CharDescription , NAS_Renowned , NAttValue( Frag^.NA , NAG_QuestInfo , NAS_DifficulcyLevel ) );
 					end;
-
-					{ Don't forget to move the persona as well! }
-					Persona := FindMetaPersona( Frag , T );
-					if Persona <> Nil then begin
-						{ Copy this persona over. }
-						DelinkGear( Frag^.SubCom , Persona );
-						InsertSubCom( Scene , Persona );
-						Persona^.S := NAttValue( E^.NA , NAG_Personal , NAS_CID );
-						SetNAtt( Persona^.NA , NAG_QuestInfo , NAS_QuestID , NAttValue( Frag^.NA , NAG_QuestInfo , NAS_QuestID ) );
-						SetNAtt( Persona^.NA , NAG_QuestInfo , NAS_LayerID , NAttValue( Frag^.NA , NAG_QuestInfo , NAS_LayerID ) );
-					end else if NAttValue( E^.NA , NAG_Personal , NAS_CID ) <> 0 then begin
-						{ Create a blank persona for this character. }
-						Persona := LoadNewSTC( 'PERSONA_BLANK' );
-						InsertSubCom( Scene , Persona );
-						Persona^.S := NAttValue( E^.NA , NAG_Personal , NAS_CID );
-						SetNAtt( Persona^.NA , NAG_QuestInfo , NAS_QuestID , NAttValue( Frag^.NA , NAG_QuestInfo , NAS_QuestID ) );
-						SetNAtt( Persona^.NA , NAG_QuestInfo , NAS_LayerID , NAttValue( Frag^.NA , NAG_QuestInfo , NAS_LayerID ) );
-					end;
 				end;
 
 			end else begin
@@ -1136,58 +1182,6 @@ if Full_RPGWorld_Info then DebugMessage( 'Done with subquests ' + GearName(C ) )
 				DisposeGear( E );
 			end;
 		end; { While Frag^.InvCom <> Nil... }
-
-		{ Initialize personas etc. }
-		for t := 1 to Num_Plot_Elements do begin
-			{ Start with the element description. If nonempty, }
-			{ that means we have a significant element to deal with. }
-			ElemDesc := SAttValue( Frag^.SA , 'ELEMENT' + BStr( T ) );
-			if ElemDesc <> '' then begin
-				Scene := FindQuestScene( NAttValue( Frag^.NA , NAG_QuestElemScene , T ) );
-
-				{ If this is a character, deal with the persona. }
-				if UpCase( ElemDesc[1] ) = 'C' then begin
-					Persona := FindMetaPersona( Frag , T );
-					if Persona <> Nil then begin
-						{ We have a persona fragment to }
-						{ deal with. Locate the main persona; }
-						{ store it in variable "E" and megalist away. }
-						E := SeekPersona( Adv , ElementID( Frag , T ) );
-						if E = Nil then begin
-							DelinkGear( Frag^.SubCom , Persona );
-							Persona^.S := ElementID( Frag , T );
-							InsertSubCom( Scene , Persona );
-							SetNAtt( Persona^.NA , NAG_QuestInfo , NAS_QuestID , NAttValue( Frag^.NA , NAG_QuestInfo , NAS_QuestID ) );
-							SetNAtt( Persona^.NA , NAG_QuestInfo , NAS_LayerID , NAttValue( Frag^.NA , NAG_QuestInfo , NAS_LayerID ) );
-						end else if E <> Nil then begin
-							BuildMegalist( E , Persona^.SA );
-						end;
-					end;
-				end;
-
-				{ Deal with the scene scripts. }
-				{ These are stored in metascenes in the subs of the frag. }
-				if Scene <> Nil then begin
-					Persona := SeekCurrentLevelGear( Frag^.SubCom , GG_MetaScene , T );
-					if Persona <> Nil then begin
-						BuildMegaList( Scene , Persona^.SA );
-						while Persona^.InvCom <> Nil do begin
-							MoveThis := Persona^.InvCom;
-							DelinkGear( Persona^.InvCom , MoveThis );
-							InsertInvCom( Scene , MoveThis );
-							SetTeamForAllMasters( Scene , MoveThis );
-						end;
-						while Persona^.SubCom <> Nil do begin
-							MoveThis := Persona^.SubCom;
-							DelinkGear( Persona^.SubCom , MoveThis );
-							InsertSubCom( Scene , MoveThis );
-							SetTeamForAllMasters( Scene , MoveThis );
-						end;
-					end;
-				end;
-			end;	{ if ElemDesc <> '' }
-		end;	{ for t... }
-
 
 		{ Add the global scripts to the adventure itsel. }
 		{ Use global scripts sparingly- I can see this becoming a major problem }

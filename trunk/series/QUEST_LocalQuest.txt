@@ -7,6 +7,7 @@ Content
 	name <Bandit's Den>
 	requires <*:LocalQuest Dangerous>
 	desc <There are bandits. Defeat them or dominate them.>
+requires <*:DEBUG>
 
 	% E1 is the bandit king
 	% E2 is the second-in-command, who may be persuaded to revolt for criminal PC
@@ -14,11 +15,178 @@ Content
 	% E4 is the bandit encounter that exists until plot completed
 	% E5 is the weapon smuggler
 	% E6 is the mecha dealer
+	Element1 <Prefab>
+	Scene1 <New *BLANK.NPCLair>
+	Team1 <BanditKing>
+	TeamData1 <SD>
+
+	Element2 <Prefab>
+	Scene2 <Grab 1>
+	Team2 <Bandits>
+	TeamData2 <SD>
+
+	Element3 <Prefab>
+	Scene3 <Environs>
+
+	Element4 <Prefab>
+	Scene4 <Outdoors>
+
+	Element5 <Prefab>
+	Scene5 <Grab 1>
+	Team5 <Bandits>
+	TeamData5 <SD>
+
+	Element6 <Prefab>
+	Scene6 <Grab 1>
+	Team6 <Bandits>
+	TeamData6 <SD>
 
 	% SubQuest1 is the activator for the bandit hideout, itself activated after the mecha are beat one time
 	% SubQuest2 is a further mission path for defeating the bandits
-	Quest1 <*:RevealQuestEncounter&Criminals>
+	Quest1 <*:RevealQuestEncounter&Criminals 3>
 
+	sub
+		Persona 1
+		special <UNLISTED>
+		greeting <if= QuestStatus %qid% 0 else GoChat ifChatNPCSurrendered else GoFirstTime EndChat Say 1 AddChat 1 AddChat 2>
+		GoChat <NewChat SayAnything>
+		GoFirstTime <EndChat Say 5 if= L2 0 else GoRebellion TeamAttack 2 TeamAttack 3>
+		GoRebellion <TeamAttackTeam 2 1 TeamAttackTeam 1 2 TeamAttackTeam 2 3 TeamAttackTeam 3 2>
+		result1 <EndChat Say 2 History 3 AddHeroic 1 FreezeNPC %1% PCEnemy %1% XPV 100 SetQuestStatus %qid% -1 if= L2 0 DeleteNPC %2% DeleteNPC %5% DeleteNPC %6% SetQuestStatus %qid2% %id2%>
+		result2 <EndChat Say 4 ReAttack %1% GrabChatNPC GSetNAtt 12 0 0>
+		Msg1 <I am at your mercy... What do you want from me?>
+		Msg2 <You've won today, but the next time we meet I intend to even the score!>
+		Msg3 <You drove the bandit %name1% away from \SCENE RootSceneID .>
+		Msg4 <Bah, I gave you a chance to end this easily, but if you won't take it then I can just as easily kill you!>
+		Msg5 <Nobody breaks into my home unannounced and lives to talk about it, you got that?>
+		Prompt1 <Leave this place and never return.>
+		Prompt2 <I want you to die.>
+
+		Persona 2
+		% V1 = Have tried to convince E2; you only get one shot.
+		special <UNLISTED>
+		greeting <if= QuestStatus %qid% 0 else GoChat if= L2 1 else GoNoOffer EndChat Say 1>
+		GoChat <NewChat SayAnything>
+		GoNoOffer <NewChat Say 2 AddChat 1>
+		GoFailOffer <NewChat Say 6>
+		result1 <NewChat Say 3 AddChat 2 AddChat 3>
+		result2 <V= 1 1 ifConversation SkillTar %threat% else GoFailOffer NewChat Say 4 AddChat 4 AddChat 5>
+		result3 <V= 1 1 ifIntimidation SkillTar %threat% else GoFailOffer NewChat Say 5 AddChat 4 AddChat 5>
+		result4 <NewChat Say 7 L= 2 1>
+		result5 <NewChat Say 8>
+		Msg1 <No time to talk, while %name1%'s still around.>
+		Msg2 <%name1%'s waiting to speak with you. It's not a good idea to keep \OPR %1% waiting.>
+		Msg3 <What kind of question are you asking!? %name1% is the boss, I've got no choice but to obey.>
+		Msg4 <Maybe you would. %name1% hasn't exactly delivered on all of \PPR %1% promises.>
+		Msg5 <You think you're really going to beat %name1%? You look like you might... it wouldn't make much sense for me to end up on the losing side of that fight, I guess.>
+		Msg6 <I don't care what you think. %name1% is waiting. Get over there, right now.>
+		Msg7 <Alright, me and the boys here will back you up. If you win I'll swear personal alliegance to you. If not... well, I guess we're both going to be food for the dogs.>
+		Msg8 <In that case I'm sticking with %name1%... \SPR %1% hasn't failed me yet.>
+		Prompt1 <Are you happy working for %name1%?>
+		CPrompt1 <if= V1 0 ifPCCriminal Accept>
+		Prompt2 <I think I'd make a better boss.>
+		Prompt3 <%name1% won't be boss for much longer.>
+		Prompt4 <Help me defeat \OPR %1% , then.>
+		Prompt5 <You do whatever you want.>
+
+		Persona 5
+		special <UNLISTED>
+		*Greeting <*NiceToMeetYou GoShop>
+		*GoShop <*SHOP_WEAPON GoBye>
+		*GoBye <*GOODBYE>
+
+		Persona 6
+		special <UNLISTED>
+		*Greeting <*NiceToMeetYou GoShop>
+		*GoShop <*SHOP_BLACKMARKET GoBye>
+		*GoBye <*GOODBYE>
+
+		MetaScene 1
+		% L1 = Initialization Counter
+		% L2 = Other bandits have been convinced to rebel
+		% L3 = E2 surrender counter
+		% L4 = E5 surrender counter
+		% L5 = E6 surrender counter
+
+		start <Print 1 if= L1 0 L= 1 1 Monologue %1% 2>
+
+		Surrender%1% <if= L2 0 else GoBanditsKill ForceChat %1%>
+		GoBanditsKill <ifG T3 0 else GoJustSpeak Alert 5 KillNPC %1%>
+		GoJustSpeak <ForceChat %1%>
+		Faint%1% <if= QuestStatus %qid% 0   XPV 100   SetQuestStatus %qid% -1 if= L2 0 else GoMadeDeal History 7 SetQuestStatus %qid2% %id2%>
+		GoMadeDeal <ifNPCOK %2%   PCAlly %2%   Monologue %2% 4   History 6   TeamNeutral 3>
+
+		Surrender%2% <if= L3 0 L= 3 1 Monologue %2% 3 DeleteNPC %2% XPV 50>
+		Surrender%5% <if= L4 0 L= 4 1 Monologue %5% 3 DeleteNPC %5% XPV 50>
+		Surrender%6% <if= L5 0 L= 5 1 Monologue %6% 3 DeleteNPC %6% XPV 50>
+
+		Msg1 <You enter \SCENE %s1% .>
+		Msg2 <You've got guts, I'll say that much for you. Come over here and let's have a talk before we kill you.>
+		Msg3 <This banditry gig isn't working out... Maybe I'll become an accountant.>
+		Msg3_1 <I'll go away quietly...>
+		Msg3_2 <You can have %name1%; I'm not going to fight any more.>
+		Msg3_3 <I promise never to engage in highway robbery again...>
+		Msg3_4 <Who knew being a bandit was so dangerous? I quit!>
+		Msg4 <%name1% is gone! All hail \PC , the new bandit king!>
+		Msg5 <The bandits turn on their former leader and slaughter \OPR %1% .>
+		Msg6 <%name2% swore loyalty to you after you defeated the former bandit king.>
+		Msg7 <You defeated the bandit king of \SCENE RootSceneID .>
+
+		sub
+			Team 1
+
+			Team 2
+			name <BanditKing>
+			SetAlly 3
+
+			Team 3
+			name <Bandits>
+			SetAlly 2
+		end
+	end
+	inv
+		NPC Bandit
+		job <Bandit King>
+		CharDesc Male
+
+		NPC Bandit
+
+		STC QUEST-MAPMARKER-STATIONARY-DEFENDED
+		name <Bandit Lair>
+		desig <ENTRANCE %s1%>
+
+		Encounter
+		name <Bandits>
+		Special <NoMSID>
+		Rumor0 <this city is plagued with bandits.>
+		% These bandits hang out in the local area and attack the PC once every
+		% twenty four hours or so. They will remain in play until the bandit king
+		% is dealt with.
+		% Defeating the bandits once will activate the subquest to locate the
+		% bandit hideout.
+		% V1 = Visibility Clock. If ComTime > V1 and V1 <> 0, encounter is active
+		update <if= QuestStatus %qid% 0 else GoDelete ifG ComTime V1 else GoHide  SetStat STAT_MetaVisibility 0  Goto GoSetOrders>
+		GoDelete <DeleteSelf>
+		GoSetOrders <GrabSource GSetNAtt NAG_EpisodeData NAS_Orders 3>
+		use <ifG StatVal STAT_MetaVisibility -1  Print -1  Goto GoStartCombat>
+		ATTACK <ifG StatVal STAT_MetaVisibility -1    ifUStealth SkillTar %threat% else GoAutoAttack ifYesNo -3 -4 -5 else GoAvoidAttack Goto GoAutoAttack>
+		GoAutoAttack <Alert -2 Goto GoStartCombat>
+		GoAvoidAttack <Print -6 AddSociable -1>
+		% In the dynamic scene, L1 = This encounter's NID, L2 = Ending counter
+		GoStartCombat <V= 1 0  SavePos Dynamic 2 %threat% 100 .nu1 .nu2 ComposeD Msg1 .Msg1 DynaVar= 1 SelfNID>
+		.nu1 <if= T1 0  Return   if= L2 0  L= 2 1  AddRenown -5  ItemVar= L1 1 ComTime ItemVar+ L1 1 d86400 ItemVar+ L1 1 43200>
+		.nu2 <if= T2 0           if= L2 0  L= 2 1  XPV 100   ItemVar= L1 1 ComTime ItemVar+ L1 1 d86400 ItemVar+ L1 1 86400  Alert 1 if= QuestStatus %qid1% 0 SetQuestStatus %qid1% %id1%>
+		.msg1 <You have defeated the bandits.>
+		EncounterMove 50
+		Msg-1 <You attack the bandits.>
+		Msg-2 <You are attacked by bandits!>
+
+		NPC Bandit
+		Skill 21 10
+
+		NPC Bandit
+		Skill 21 10
+	end
 
 
 Content

@@ -710,7 +710,11 @@ begin
 					InSceneNotElement := False;
 				end else begin
 					D := ExtractValue( Place );
-					Dest := GetFSE( D );
+					if ( Abs( D ) >= 1 ) and ( Abs( D ) <= Num_Plot_Elements ) then begin
+						Dest := GetFSE( D );
+					end else begin
+						DialogMsg( 'ERROR: Illegal place for element ' + BStr( N ) + ' in plot ' + GearName( Plot ) );
+					end;
 				end;
 
 				if InSceneNotElement and (( Dest = Nil ) or ( Dest^.G <> GG_Scene )) then begin
