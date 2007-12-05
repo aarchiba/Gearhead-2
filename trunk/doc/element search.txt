@@ -73,8 +73,5 @@ scene as the destination rather than in the destination itself.
 
 A subplot can assign a place string to an element it inherits.
 
-If (Destination Slot) is "/", and we're dealing with either a quest or
-a rancon, the element will be frozen in a special holding zone and will
-need to be moved by the script. This does not work with regular plots,
-where prefab components without a defined place are left as invcoms of
-the plot itself.
+If (Destination Slot) is "/", the element will be frozen in a special
+holding zone and will need to be moved by the script.

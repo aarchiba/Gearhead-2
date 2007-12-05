@@ -660,8 +660,13 @@ begin
 			InSceneNotElement := ( PlaceCmd[1] = '~' );
 			if InSceneNotElement then DeleteFirstChar( PlaceCmd );
 
-			PlaceIndex := ExtractValue( PlaceCmd );
-			Dest := SeekPlotElement( FindRoot( GB^.Scene ) , Plot , PlaceIndex , GB );
+			if PlaceCmd = '/' then begin
+				Dest := SeekCurrentLevelGear( FindRoot( GB^.Scene )^.InvCom , GG_PlotThingSet , 0 );
+				InSceneNotElement := False;
+			end else begin
+				PlaceIndex := ExtractValue( PlaceCmd );
+				Dest := SeekPlotElement( FindRoot( GB^.Scene ) , Plot , PlaceIndex , GB );
+			end;
 
 			TeamName := RetrieveBracketString( PlaceCmd );
 

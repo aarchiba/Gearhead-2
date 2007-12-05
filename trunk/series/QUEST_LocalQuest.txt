@@ -7,7 +7,6 @@ Content
 	name <Bandit's Den>
 	requires <*:LocalQuest Dangerous>
 	desc <There are bandits. Defeat them or dominate them.>
-requires <*:DEBUG>
 
 	% E1 is the bandit king
 	% E2 is the second-in-command, who may be persuaded to revolt for criminal PC
@@ -121,7 +120,7 @@ requires <*:DEBUG>
 		Surrender%6% <if= L5 0 L= 5 1 Monologue %6% 3 DeleteNPC %6% XPV 50>
 
 		Msg1 <You enter \SCENE %s1% .>
-		Msg2 <You've got guts, I'll say that much for you. Come over here and let's have a talk before we kill you.>
+		Msg2 <You've got guts, I'll say that much. Come over here and let's have a talk before we kill you.>
 		Msg3 <This banditry gig isn't working out... Maybe I'll become an accountant.>
 		Msg3_1 <I'll go away quietly...>
 		Msg3_2 <You can have %name1%; I'm not going to fight any more.>
@@ -148,6 +147,7 @@ requires <*:DEBUG>
 		NPC Bandit
 		job <Bandit King>
 		CharDesc Male
+		SDL_SPRITE <cha_m_bandit.png>
 
 		NPC Bandit
 
