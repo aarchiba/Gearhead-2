@@ -1063,11 +1063,13 @@ var
 				{ If this is a character, deal with the persona. }
 				if UpCase( ElemDesc[1] ) = 'C' then begin
 					Persona := FindMetaPersona( Frag , T );
+					{ Locate the main persona; }
+					{ store it in variable "E" and megalist away. }
+					E := SeekPersona( Adv , ElementID( Frag , T ) );
+
 					if Persona <> Nil then begin
 						{ We have a persona fragment to }
-						{ deal with. Locate the main persona; }
-						{ store it in variable "E" and megalist away. }
-						E := SeekPersona( Adv , ElementID( Frag , T ) );
+						{ deal with. }
 						if E = Nil then begin
 							DelinkGear( Frag^.SubCom , Persona );
 							Persona^.S := ElementID( Frag , T );
@@ -1077,7 +1079,7 @@ var
 						end else if E <> Nil then begin
 							BuildMegalist( E , Persona^.SA );
 						end;
-					end else begin
+					end else if ( E = Nil ) then begin
 						{ We don't have a persona yet, and no persona }
 						{ is defined in the component, so create a new }
 						{ one from scratch. }
@@ -1098,7 +1100,7 @@ var
 						{ of this element in this scene. Mark it as such. }
 						Container := SeekGearByDesig( Persona^.SubCom , 'HOME' );
 						if Container <> Nil then begin
-							SetSAtt( Container^.SA , 'DESIG <HOME ' + BStr( T ) + '>' );
+							SetSAtt( Container^.SA , 'DESIG <CONTAINER ' + BStr( T ) + '>' );
 						end;
 
 						BuildMegaList( Scene , Persona^.SA );
@@ -1134,7 +1136,7 @@ var
 			{ Next, attempt to locate the scene associated with this element. }
 			{ It should be stored as a NAtt. }
 			Scene := FindQuestScene( NAttValue( Frag^.NA , NAG_QuestElemScene , T ) );
-			Container := SeekGearByDesig( Scene^.SubCom , 'HOME ' + BStr( T ) );
+			Container := SeekGearByDesig( Scene^.SubCom , 'CONTAINER ' + BStr( T ) );
 			{ Clear the container's designation, we no longer need it. }
 			if Container <> Nil then SetSAtt( Container^.SA , 'DESIG <>' );
 			if ( Container = Nil ) or ( Container^.G <> GG_MapFeature ) then Container := Scene;

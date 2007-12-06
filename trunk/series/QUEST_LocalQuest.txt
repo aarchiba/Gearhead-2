@@ -28,8 +28,8 @@ Content
 		MetaScene 1
 		sub
 			room
-			special <SHAREDPALETTE>
-			minimap <#...##.2.##...###+###...#>
+			special <SHAREDPALETTE NOGO>
+			minimap <######...##.2.##...###+##>
 			sub
 				Trapdoor
 				MiniMapComponent 2
@@ -38,7 +38,7 @@ Content
 		end
 
 		MetaScene 2
-		Surrender%2% <Alert 11 MoveAndPacifyNPC %2% %s1% SceneVar= %s3% 11 1>
+		Surrender%2% <Alert 11 xpv 100 MoveAndPacifyNPC %2% %s1% SceneVar= %s3% 11 1>
 		Msg11 <%name2% appears to regain \PPR %2% senses, and returns to the surface.>
 		sub
 			room
@@ -51,7 +51,7 @@ Content
 
 		Persona 2
 		special <UNLISTED>
-		rumor0 <mad doctor %name2% created a monster, and hid beneath the hospital.>
+		rumor0 <mad doctor %name2% created something terrible, and buried it beneath the hospital.>
 		greeting <if= SceneVar %s3% 11 1 else GoChat ifItemOK %3% else GoMonsterDead EndChat Say 1>
 		GoMonsterDead <EndChat Say 2 SceneVar= %s3% 11 0>
 		GoChat <NewChat SayAnything>
@@ -81,13 +81,17 @@ Content
 		NPC Doctor
 		Combatant
 		CharDesc Old Melancholy Passionate
+		CHAT_ATTACK1 <After you die I can patch you back up!>
+		CHAT_ATTACK2 <Flesh for the experiments! Always so much blood.>
+		CHAT_ATTACK3 <Wrong, wrong... maybe you were happier dead.>
 
 		Chara
+		rumor0 <there have been a lot of mysterious deaths lately. People say that a monster is on the loose.>
 		name <%name2%'s Monster>
 		job <ANIMAL>
 		roguechar <M>
 		sdl_sprite <monster_morlock.png>
-		sdl_colors <115 95 85 170 160 130 80 120 150>
+		sdl_colors <105 115 85 170 160 130 80 120 150>
 		statline 13 15 12 13 10 11 7 10
 		update <ItemLevel %3% %threat%>
 		skill 6 2

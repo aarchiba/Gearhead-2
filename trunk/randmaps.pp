@@ -96,6 +96,7 @@ uses gearutil,ghprop,rpgdice,texutil,glgfx,gearparser,narration,ui4gh,arenascrip
 var
 	Standard_Param_List: SAttPtr;
 	random_scene_content,super_prop_list: GearPtr;
+	UniqueZoneNum: Integer;
 
 Function LoadPredrawnMap( const FName: String ): GameBoardPtr;
 	{ Load the requested map feature from disk. If no such map can be found, }
@@ -431,12 +432,12 @@ begin
 	SetNAtt( NewDoor^.NA , NAG_Location , NAS_X , X );
 	SetNAtt( NewDoor^.NA , NAG_Location , NAS_Y , Y );
 
-	if MF <> Nil then begin
+{	if MF <> Nil then begin
 		Name := SAttValue( MF^.SA , 'NAME' );
 		if Name <> '' then begin
 			SetSAtt( NewDoor^.SA , 'NAME <' + MsgString( 'RANDMAPS_DoorSign' ) + Name + '>' );
 		end;
-	end;
+	end;}
 
 	NewDoor^.Stat[ STAT_Lock ] := LockVal;
 
@@ -2605,6 +2606,13 @@ begin
 	while ( Source <> Nil ) and ( Source^.G <> GG_Adventure ) and ( Source^.G <> GG_Story ) do Source := Source^.Parent;
 	if Source = Nil then Exit;
 
+	{ If this map feature doesn't have a unique name, better give it one. This will be }
+	{ important for the map generator. }
+	if SAttValue( MF^.SA , 'NAME' ) = '' then begin
+		SetSAtt( MF^.SA , 'name <UZONE_' + BStr( UniqueZoneNum ) + '>' );
+		Inc( UniqueZoneNum );
+	end;
+
 	{ Look through the map feature for content requests. }
 	{ If the map feature is a scene (or metascene), the content zone will be a sub-region }
 	{ of the map. Otherwise, the content zone will be this map feature exactly and any }
@@ -2880,6 +2888,9 @@ var
 	it: GameBoardPtr;
 	FName: String;
 begin
+	{ Initialize the UniqueZoneNum variable. }
+	UniqueZoneNum := 1;
+
 	if Scene <> Nil then begin
 		FName := SAttValue( Scene^.SA , 'MAP' );
 		if FName <> '' then begin

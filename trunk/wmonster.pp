@@ -136,8 +136,10 @@ begin
 		if ( WM^.Scale <= Scale ) and HabitatMatch( WM ) and EnvironmentMatch( WM ) then begin
 			MonRenown := MonsterThreatLevel( WM );
 			Match := MatchWeight( MType , SAttValue( WM^.SA , 'TYPE' ) );
-			if ( Match > 0 ) and ( ( MonRenown > ( Renown + 10 ) ) or ( MonRenown < ( Renown - 20 ) ) ) then begin
-				Match := Match div 4;
+			if ( Match > 0 ) then begin
+				if ( ( MonRenown > ( Renown + 10 ) ) or ( MonRenown < ( Renown - 20 ) ) ) then begin
+					Match := Match div 4;
+				end;
 				if Match < 1 then Match := 1;
 			end;
 
@@ -147,9 +149,9 @@ begin
 			if MonRenown <= MaxRenown then begin
 				SetNAtt( ShoppingList , 0 , N , Match );
 				Total := Total + Match;
-			end else if MonsterStrength( WM , Renown ) < SmallTV then begin
+			end else if MonsterThreatLevel( WM ) < SmallTV then begin
 				Smallest := N;
-				SmallTV := MonsterStrength( WM , Renown );
+				SmallTV := MonsterThreatLevel( WM );
 			end;
 		end;
 
