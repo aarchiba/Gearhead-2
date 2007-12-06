@@ -347,14 +347,6 @@ begin
 			Lvl := NAttValue( NPC^.NA , NAG_CharDescription , NAS_Renowned );
 		end;
 
-		{ Give some random equipment. }
-		{ Only do this once, otherwise certain characters might get it a }
-		{ second time. }
-		if NAttValue( NPC^.NA , NAG_Narrative , NAS_GotFreeEquipment ) = 0 then begin
-			SelectEquipmentForNPC( NPC , Lvl );
-			SetNAtt( NPC^.NA , NAG_Narrative , NAS_GotFreeEquipment , 1 );
-		end;
-
 		Lvl := Lvl + 50;
 		if Lvl < 25 then Lvl := 25;
 		SetSkillsAtLevel( NPC , Lvl );
@@ -376,6 +368,7 @@ Procedure SelectEquipmentForNPC( NPC: GearPtr; Renown: Integer );
 var
 	Faction_Desc: String;
 	Spending_Limit,Legality_Limit: LongInt;
+
 	Function ItemLegalForFaction( I: GearPtr ): Boolean;
 		{ Return TRUE if this item can be used by the NPC's faction, or FALSE }
 		{ otherwise. }
@@ -408,11 +401,18 @@ var
 		while I2 <> Nil do begin
 			I3 := I2^.Next;		{ This next step might delink I2, so... }
 			if ( I2^.G = Item^.G ) or ( Slot^.G = GG_Holder ) then begin
-				DelinkGear( Slot^.InvCom , I2 );
-				InsertInvCom( NPC , I2 );
+				if NAttValue( I2^.NA , NAG_Narrative , NAS_IsRandomEquipment ) <> 0 then begin
+					RemoveGear( Slot^.InvCom , I2 );
+				end else begin
+					DelinkGear( Slot^.InvCom , I2 );
+					InsertInvCom( NPC , I2 );
+				end;
 			end;
 			I2 := I3;
 		end;
+
+		{ Mark ITEM as being generated randomly. }
+		SetNAtt( Item^.NA , NAG_Narrative , NAS_IsRandomEquipment , 1 );
 
 		{ We can now link ITEM into SLOT. }
 		InsertInvCom( Slot , Item );

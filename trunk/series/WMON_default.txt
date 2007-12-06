@@ -11,7 +11,7 @@ sdl_colors <122 88 193 70 121 119 208 30 50>
 type <mutant wasteland air dark>
 habitat <>
 statline 13 13 13 8 7 5 2 2
-MonsterTV 12
+MonsterTV 68
 skill 6 4
 skill 8 6
 skill 9 5
@@ -78,7 +78,7 @@ end
 ARCH Stone Dragon
 roguechar <D>
 genepool <DRAGON>
-MonsterTV 22
+MonsterTV 110
 DomTarget 37
 type <Exotic Reptile Earth Cave Mountain>
 habitat <>
@@ -150,7 +150,7 @@ type <BUG EARTH MUTANT>
 habitat <>
 sdl_sprite <monster_worm.png>
 sdl_colors <110 80 85 250 80 0 244 216 0>
-MonsterTV 15
+MonsterTV 80
 DomTarget 30
 skill 6 4
 skill 8 5
@@ -189,7 +189,7 @@ type <BUG RUINS WASTELAND>
 habitat <>
 sdl_sprite <monster_worm.png>
 sdl_colors <180 155 88 245 213 150 208 0 51>
-MonsterTV 35
+MonsterTV 115
 skill 6 6
 skill 8 2
 skill 9 3
@@ -238,7 +238,7 @@ roguechar <D>
 genepool <DRAGON>
 SDL_SPRITE <monster_seadragon.png>
 SDL_COLORS <1 75 67 238 180 88 66 121 119>
-MonsterTV 20
+MonsterTV 100
 DomTarget 25
 type <Exotic Reptile Water Sea>
 habitat <>
@@ -315,7 +315,7 @@ ARCH Dune Dragon
 roguechar <D>
 sdl_sprite <monster_triceratops.png>
 sdl_colors <160 130 90 240 190 100 51 90 161>
-MonsterTV 16
+MonsterTV 84
 DomTarget 21
 genepool <DRAGON>
 type <Exotic Reptile Bright Fire Desert Lab>
@@ -388,7 +388,7 @@ sdl_colors <127 45 35 250 50 100 244 244 30>
 type <mutant fire desert wasteland air>
 habitat <>
 statline 10 4 8 9 2 2 2 2
-MonsterTV 5
+MonsterTV 40
 skill 6 3
 skill 8 2
 skill 9 4
@@ -425,7 +425,7 @@ Arch Cyclops Progenitor
 statline 15 21 13 12 11 13 9 8
 Biotech
 scale 1
-MonsterTV 30
+MonsterTV 110
 type <Cyclops>
 habitat <>
 roguechar <Y>
@@ -481,7 +481,7 @@ end
 
 Arch Cyclops Guard
 statline 15 21 13 12 11 13 9 8
-MonsterTV 19
+MonsterTV 95
 Biotech
 type <Cyclops>
 habitat <>
@@ -564,7 +564,7 @@ end
 
 Arch Cyclops
 statline 14 19 13 10 13 7 9 8
-MonsterTV 10
+MonsterTV 60
 Biotech
 type <Cyclops>
 habitat <>
@@ -607,7 +607,7 @@ ARCH Hunter-Destroyer
 roguechar <H>
 sdl_sprite <monster_hx3.png>
 sdl_colors <152 70 97 122 88 193 208 228 21>
-MonsterTV 27
+MonsterTV 110
 Biotech
 Sealed
 type <Synth Dark Hunter-X>
@@ -665,7 +665,7 @@ armor 6
 end
 
 ARCH Hunter-Berserker
-MonsterTV 21
+MonsterTV 100
 Biotech
 Sealed
 roguechar <H>
@@ -715,7 +715,7 @@ ARCH Hunter-Slayer
 roguechar <H>
 sdl_sprite <monster_hx2.png>
 sdl_colors <152 70 97 122 88 193 208 39 51>
-MonsterTV 19
+MonsterTV 95
 Biotech
 Sealed
 genepool <HUNTER-X>
@@ -761,7 +761,7 @@ end
 end
 
 ARCH Hunter-Killer
-MonsterTV 15
+MonsterTV 80
 Biotech
 Sealed
 genepool <HUNTER-X>
@@ -805,7 +805,7 @@ armor 4
 end
 
 ARCH Hunter-Drone
-MonsterTV 13
+MonsterTV 72
 Biotech
 Sealed
 roguechar <H>
@@ -839,7 +839,7 @@ armor 3
 end
 
 ARCH Hunter-Scout
-MonsterTV 9
+MonsterTV 56
 Biotech
 Sealed
 roguechar <H>
@@ -875,7 +875,7 @@ armor 3
 end
 
 ARCH Hunter-Larva
-MonsterTV 3
+MonsterTV 30
 Biotech
 Sealed
 roguechar <H>
@@ -912,7 +912,7 @@ habitat <>
 statline 13 15 12 13 10 11 7 10
 sdl_sprite <monster_morlock.png>
 sdl_colors <115 95 85 170 160 130 112 50 50>
-MonsterTV 8
+MonsterTV 52
 skill 6 2
 skill 7 1
 skill 8 5
@@ -956,7 +956,7 @@ habitat <>
 statline 13 15 12 13 10 11 7 10
 sdl_sprite <monster_morlock.png>
 sdl_colors <115 95 85 170 160 130 112 50 50>
-MonsterTV 6
+MonsterTV 44
 skill 6 2
 skill 7 1
 skill 8 5
@@ -1000,7 +1000,7 @@ habitat <>
 sdl_sprite <monster_morlock.png>
 sdl_colors <115 95 85 170 160 130 112 50 50>
 statline 13 15 12 13 10 11 7 10
-MonsterTV 5
+MonsterTV 40
 skill 6 2
 skill 7 1
 skill 8 5
@@ -1033,7 +1033,7 @@ roguechar <C>
 type <mutant bug dark cave city swamp ruins>
 habitat <>
 statline 12 15 10 15 4 7 1 1
-MonsterTV 7
+MonsterTV 48
 skill 8 5
 skill 10 2
 skill 13 6
@@ -1059,7 +1059,7 @@ roguechar <b>
 type <synth factory guard>
 habitat <>
 statline 10 10 10 10 10 10 10 10
-MonsterTV 3
+MonsterTV 30
 Biotech
 skill 6 3
 skill 10 3
@@ -1095,7 +1095,7 @@ sdl_colors <70 121 119 49 91 159 244 215 28>
 type <synth factory ruins dark vermin>
 habitat <>
 statline 11 5 13 9 16 8 7 6
-MonsterTV 1
+MonsterTV 22
 Biotech
 skill 8 1
 skill 9 2
@@ -1122,7 +1122,7 @@ roguechar <j>
 SDL_SPRITE <monster_jelly.png>
 SDL_COLORS <235 150 0 208 30 90 0 0 0>
 statline 13 15 9 10 2 2 1 1
-MonsterTV 15
+MonsterTV 82
 skill 6 5
 skill 8 7
 skill 10 5
@@ -1160,7 +1160,7 @@ roguechar <j>
 type <mutant cave earth>
 habitat <>
 statline 8 14 4 7 1 1 1 1
-MonsterTV 8
+MonsterTV 52
 skill 8 5
 skill 10 1
 skill 12 3
@@ -1192,7 +1192,7 @@ roguechar <j>
 type <mutant cave>
 habitat <>
 statline 5 6 7 5 1 1 1 1
-MonsterTV 2
+MonsterTV 25
 skill 8 1
 skill 36 15
 Sealed

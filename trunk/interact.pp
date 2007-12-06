@@ -243,12 +243,10 @@ Function FactionCompatability( Scene, PC, NPC: GearPtr ): Integer;
 	{ - if PC is ally of enemy faction. }
 var
 	NPC_FID,PC_FID,it: Integer;
-	FAC: GearPtr;
 begin
 	{ Step one - Locate the FACTION information of the NPC, and }
 	{ the PC's FACTION ID.. }
 	NPC_FID := NAttValue( NPC^.NA , NAG_Personal , NAS_FactionID );
-	Fac := SeekFaction( Scene , NPC_FID );
 	PC_FID := NAttValue( PC^.NA , NAG_Personal , NAS_FactionID );
 
 	it := FactionScore( Scene , NPC_FID , PC_FID );
@@ -611,7 +609,7 @@ function DoChatting( GB: GameBoardPtr; var Rumors: SAttPtr; PC,NPC: GearPtr; Var
 var
 	SkRoll,SkTarget,MOS: Integer;
 	Persona: Integer;
-	msg,alt_msg: String;
+	msg: String;
 	RTemp: SAttPtr;
 	Trait: Integer;		{ The personality trait invoked by this conversation. }
 	RS: Integer;		{ Reaction Score }

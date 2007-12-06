@@ -109,8 +109,6 @@
 	LOADD [script line label]	Load a dynamic scene
 	LOSECOMP [sceneid] [changes]	Lose current component, load next
 	MAGICMAP		Makes all tiles on current map visible
-	MDYNAMIC [Scale] [PC Encounter Level] [MDesc Label] [NU1 label] [NU2 label]
-			Create dynamic scene with monsters
 	MECHAPRIZE [script line label]	Give PC a mecha
 	MEMO [idnum]		Store reminder for PC in source gear
 	MONOLOGUE [cid] [msg id]	The requested NPC will speak a single line outside of conversation
@@ -118,7 +116,6 @@
 	MOREMEMO [tag]		View memos of type [tag] - EMAIL,MEMO,NEWS
 	MOVENPC [CID] [Scene ID]	Move a character to the requested scene
 	MOVEKEYITEM [NID] [Scene ID]
-	MSTAGED [Label] [UPV] [MDesc Label]	Like Staged, with monsters
 	MSTOCKD [UPV] [MDesc Label]	Stock dynamic encounter with monsters
 	N=			Set Story Element
 	NEWCHAT			Reset interact menu
@@ -154,7 +151,6 @@
 	STARTPLOT [script line label] <ELSE [label]>	Load a plot
 	STARTSTORY [script line label] <ELSE [label]>	Load a story
 	TIME [delay]		Advance game clock
-	TMSTOCKD [team] [upv] [label]	Stock dynamic scene team with monsters
 	TORD [team] [order <parameters>]	Set orders for team
 	TRANSFORM [frame]	Switch a prop's appearance to alternate state
 	TREPUTATION [team number] [rep num] [value]	Set rep for team
@@ -166,7 +162,7 @@
 	VMSG [ident] [value]	Print standard value message
 	WINCOMP [sceneid] [changes]	Win current component, load next
 	WMECHA [team] [renown] [strength]	Stock current scene with mecha
-	WMONSTER [team] [renown]	Stock current scene with monsters
+	WMONSTER [team] [renown] [strength]	Stock current scene with monsters
 	XPV [experience award]	Give PC experience
 	XRANPLOT [label]	Load plot using experimental Extra Randomness
 

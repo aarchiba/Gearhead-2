@@ -4,6 +4,132 @@
 %% This content is tied to a city rather than any specific character within it.
 
 Content
+	name <Failed Experiment>
+	requires <*:LocalQuest Dystopia>
+	desc <There's a failed experiment living beneath the hospital.>
+
+	% E1 is the hospital
+	% E2 is the mad doctor/series of catacombs beneath the hospital
+	% E3 is the creation
+	scene1 <Building Hospital Public>
+	Element2 <Prefab>
+	scene2 <New *Dungeon.Catacombs>
+	Team2 <Monster>
+	TeamData2 <SD Enemy>
+	Element3 <Prefab>
+	scene3 <New *BLANK.BoxBasement>
+	Team3 <Monster>
+	TeamData3 <SD Enemy>
+
+	% SubQuest 1 is the aftereffect when the PC kills the monster
+	Quest1 <*:Vanquish.Monster 3>
+
+	sub
+		MetaScene 1
+		sub
+			room
+			special <SHAREDPALETTE>
+			minimap <#...##.2.##...###+###...#>
+			sub
+				Trapdoor
+				MiniMapComponent 2
+				desig <Entrance %s2%>
+			end
+		end
+
+		MetaScene 2
+		Surrender%2% <Alert 11 MoveAndPacifyNPC %2% %s1% SceneVar= %s3% 11 1>
+		Msg11 <%name2% appears to regain \PPR %2% senses, and returns to the surface.>
+		sub
+			room
+			special <SHAREDPALETTE>
+			sub
+				Trapdoor
+				desig <Entrance %s3%>
+			end
+		end
+
+		Persona 2
+		special <UNLISTED>
+		rumor0 <mad doctor %name2% created a monster, and hid beneath the hospital.>
+		greeting <if= SceneVar %s3% 11 1 else GoChat ifItemOK %3% else GoMonsterDead EndChat Say 1>
+		GoMonsterDead <EndChat Say 2 SceneVar= %s3% 11 0>
+		GoChat <NewChat SayAnything>
+		Msg1 <I should never have created it, but then when it broke free from its prison... It must be stopped before it can kill again!>
+		Msg2 <It's gone now, poor creature, but nothing will make up for what it or I have done... the blood on my hands will never wash off.>
+
+		MetaScene 3
+		% L1 = Initialization Counter
+		% L2 = Victory counter
+		% L11 = Have brought the mad scientist back to his senses
+		Start <if= L1 0 else GoBeenBefore Alert 2 SetQuestStatus %qid% %id%>
+		GoBeenBefore <Print 3>
+		nu2 <if= T2 0 if= L2 0 L= 2 1  Alert 1 XPV 100 SetQuestStatus %qid% -1 SetQuestStatus %qid1% %id1%>
+		Msg1 <With a sickening cry the monster slumps over, and returns once more to death.>
+		Msg2 <The air here is thick with the smell of death. On the other side of the room you see something that shouldn't be alive, yet it moves...>
+		Msg3 <You enter the monster's lair.>
+		sub
+			Team 1
+			SetEnemy 2
+
+			Team 2
+			name <Monster>
+			SetEnemy 1
+		end
+	end
+	inv
+		NPC Doctor
+		Combatant
+		CharDesc Old Melancholy Passionate
+
+		Chara
+		name <%name2%'s Monster>
+		job <ANIMAL>
+		roguechar <M>
+		sdl_sprite <monster_morlock.png>
+		sdl_colors <115 95 85 170 160 130 80 120 150>
+		statline 13 15 12 13 10 11 7 10
+		update <ItemLevel %3% %threat%>
+		skill 6 2
+		skill 7 1
+		skill 8 5
+		skill 9 4
+		skill 10 5
+		skill 13 7
+		sub
+		head
+		torso
+		sub
+			BeamGun 4
+			name <Corrupted Spew>
+			type <Brutal SICKNESS>
+
+			PowerSource 8
+			name <Plague Heart>
+		end
+		arm
+			name <Right Arm>
+			sub
+				hand
+				inv
+					Melee 9
+					name <Bone Saw>
+					Fudge 5000
+				end
+			end
+		arm
+			name <Left Arm>
+			sub
+				hand
+			end
+		leg
+			name <Right Leg>
+		leg
+			name <Left Leg>
+		end
+	end
+
+Content
 	name <Bandit's Den>
 	requires <*:LocalQuest Dangerous>
 	desc <There are bandits. Defeat them or dominate them.>
@@ -43,6 +169,7 @@ Content
 	% SubQuest1 is the activator for the bandit hideout, itself activated after the mecha are beat one time
 	% SubQuest2 is a further mission path for defeating the bandits
 	Quest1 <*:RevealQuestEncounter&Criminals 3>
+	Quest2 <*:Vanquish.Criminal 1>
 
 	sub
 		Persona 1
@@ -222,6 +349,9 @@ Content
 		result1 <Goto .%id2%_GoInit>
 		Msg1 <I hear that your mission was a success.>
 		Prompt1 <[Continue]>
+
+		MetaScene 2
+		end <if= QuestStatus %qid% %id% else %pop% ifNPCDead %2% else %pop% SetQuestStatus %qid% -2 SetQuestStatus %qid1% -2 Goto %pop%>
 	end
 
 

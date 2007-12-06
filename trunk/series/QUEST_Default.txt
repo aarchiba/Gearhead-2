@@ -1114,7 +1114,7 @@ Content
 		MetaScene 3
 		% L1 = E2 has opened the door to this level
 		% L2 = Monster generation counter
-		Start <Print 1 if= L2 0 if= QuestStatus %qid% %id% L= 2 1 WMonster 2 %threat%>
+		Start <Print 1 if= L2 0 if= QuestStatus %qid% %id% L= 2 1 WMonster 2 %threat% 100>
 		Msg1 <You enter %name2%'s warehouse.>
 		sub
 			Team 1
@@ -2074,7 +2074,7 @@ Content
 		% Contains the teams and scripts for the basement.
 		% L1 = Initialization Counter
 		% L2 = XP gained for getting case counter
-		start <if= L1 0 else GoBeenBefore Print 1 L= 1 1 MonsterUp 2 WMThreat %threat%>
+		start <if= L1 0 else GoBeenBefore Print 1 L= 1 1 MonsterUp 2 %threat%>
 		GoBeenBefore <Print 2>
 		Msg1 <You enter the basement. Strange noises can be heard coming from the darkness.>
 		Msg2 <You enter the basement.>

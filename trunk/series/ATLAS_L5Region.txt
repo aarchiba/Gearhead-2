@@ -1532,7 +1532,7 @@ sub
 			trapdoor
 			name <Wynter's Mine>
 			use <if= StatVal STAT_Lock 0 else GoLocked if= V1 1 else GoFirstTime Print 1 Exit StatVal 4>
-			GoFirstTime <ifYesNo 101 102 103  V= 1 1  Print 1 Exit StatVal 4 MonsterUp 2 d5>
+			GoFirstTime <ifYesNo 101 102 103  V= 1 1  Print 1 Exit StatVal 4 MonsterUp 2 10>
 			Msg101 <This is an airlock. There's still power here, but no guarantee there will be power in the mines.>
 			Msg102 <Enter the mine.>
 			Msg103 <Don't enter the mine.>
@@ -1565,7 +1565,7 @@ sub
 			name <Monster>
 			type <Mine Fungus Asteroid>
 			SetEnemy 1
-			Stat 2 4
+			Stat 2 10
 
 			room
 			width 3
@@ -1603,7 +1603,7 @@ sub
 				name <Monster>
 				type <Mine Fungus Asteroid Exorg>
 				SetEnemy 1
-				Stat 2 13
+				Stat 2 30
 
 				room
 				width 3
@@ -1656,7 +1656,7 @@ sub
 					name <Monster>
 					type <Mine Fungus Asteroid Exorg>
 					SetEnemy 1
-					Stat 2 27
+					Stat 2 50
 
 					room
 					width 3
@@ -1694,7 +1694,7 @@ sub
 						name <Monster>
 						type <Mine Fungus Asteroid Exorg>
 						SetEnemy 1
-						Stat 2 38
+						Stat 2 65
 
 						room
 						width 3
@@ -4541,13 +4541,13 @@ sub
 	entrance <*SpacePort>
 	special <ADDEXIT>
 	ClubMap
-	MapWidth 30
+	MapWidth 20
 	MapHeight 21
 
 	start <Print 1>
 	Msg1 <You enter Tohru Spaceport.>
 
-	NeededCells 4
+	NeededCells 3
 	Content1 <Some 1 100 Sub *SHUTTLESERVICE  na>
 	Content2 <Some 1 100 Sub *RESTAURANT      na>
 	Content5 <Some 1 100 Sub *MECHANIC_SHOP   na>
@@ -5395,7 +5395,7 @@ sub
 			name <Monster>
 			type <Robot Guard Factory>
 			SetEnemy 1
-			Stat 2 2
+			Stat 2 10
 
 			room
 			width 3
@@ -5476,7 +5476,7 @@ sub
 			name <Monster>
 			type <City Vermin Criminal>
 			SetEnemy 1
-			Stat 2 4
+			Stat 2 15
 
 			room
 			width 3

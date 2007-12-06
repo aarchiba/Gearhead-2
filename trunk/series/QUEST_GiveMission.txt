@@ -15,6 +15,50 @@
 %% Set REQUIRES to *:DebugMission to load into the debugging stub.
 
 Content
+	name <Go Kill Rats>
+	desc <The PC will be sent to exterminate a basement. Very posh.>
+	requires <*:GiveMission (1:CRAFT|1:CORPO|1:TRADE)>
+
+	% E1 is the NPC offering the mission
+	% E2 is the extermination basement
+	% E3 is the bassement entrance
+	Scene2 <New *ExterminationBasement>
+	Scene3 <Building Mall Public !Okay 1>
+
+	sub
+		Persona 1
+		Greeting <if= QuestStatus %qid% %id% else %pop% NewChat Say %id%01>
+		.%id%_GoInit <SetQuestStatus %qid% %id% NewChat Say %id%02 QMemo %qid% %id%03 SceneVar= %s2% 11 1 UpdateProps>
+		Msg%id%01 <The warehouse at \SCENE %s3% is still infested. I can't reopen my shop until it's been cleaned out.>
+		Msg%id%02 <My warehouse in \SCENE %s3% has been infested with rats... or something. I'd like for you to go down there and clean it out.>
+		Msg%id%03 <%name1% asked you to clean out \PPR %1% warehouse in \SCENE %s3% .>
+
+		MetaScene 2
+		% L11 = Can enter storehouse
+		End <if= QuestStatus %qid% %id% else %pop% if= L1 1 else %pop% SetQuestStatus %qid% -1 Goto %pop%>
+
+		MetaScene 3
+		sub
+			room
+			special <SHAREDPALETTE>
+			minimap <#...##.2.##...###+###...#>
+			sub
+				Door
+				update <if= V1 0 else GoCheckQuest V= 1 1 SetStat STAT_Lock %sktar_hard%>
+				GoCheckQuest <if= SceneVar %s2% 11 1  SetStat STAT_Lock 0>
+			end
+			inv
+				TrapDoor
+				MiniMapComponent 2
+				desig <ENTRANCE %s2%>
+				use <if= SceneVar %s2% 11 1 else GoNotYet Print 1 Exit Destination>
+				GoNotYet <Print 11>
+				Msg11 <You don't want to go down there. It's dark and there are scary noises.>
+			end
+		end
+	end
+
+Content
 	name <Go Beat Thieves>
 	desc <Some mecha have been stolen, and are galavanting around. See what you can do.>
 	requires <*:GiveMission (1:POLIC|1:CRAFT)>

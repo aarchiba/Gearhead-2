@@ -255,8 +255,7 @@ end
 %% 
 %%   CHARA ARENA SCENES
 %%
-%% Like mecha arenas, but for personal scale combat. Note that the ArenaForces variable
-%% is only used as a boolean variable; if nonzero, monsters will be added.
+%% Like mecha arenas, but for personal scale combat.
 
 Scene
 	name <the Gladiator Pit>
@@ -296,7 +295,7 @@ sub
 	type <CRIMINAL ROBOT CITY>
 	SetFaction 5
 	SetEnemy 1
-	Deploy <if= SelfArenaState NAV_AS_Ready ifG SelfArenaForces 0 WMonster 2 SelfArenaThreat>
+	Deploy <if= SelfArenaState NAV_AS_Ready ifG SelfArenaForces 0 WMonster 2 SelfArenaThreat SelfArenaForces>
 	ParaX 25
 	ParaY 25
 end

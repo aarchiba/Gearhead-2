@@ -159,7 +159,6 @@ end;
 Function ArmorValue( Part: GearPtr ): LongInt;
 	{ Return the cost of this armor. }
 var
-	T: Integer;
 	Cost: LongInt;
 begin
 	{ Start with the base price of the armor. }

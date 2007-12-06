@@ -1221,7 +1221,7 @@ end;
 Function TeamHasSkill( GB: GameBoardPtr; Team,Skill: Integer): Boolean;
 	{ Return TRUE if at least one member of the team has the requested skill. }
 var
-	M,P: GearPtr;
+	M: GearPtr;
 	Found: Boolean;
 	T2: Integer;
 begin
@@ -1245,7 +1245,7 @@ end;
 Function TeamHasTalent( GB: GameBoardPtr; Team,Talent: Integer): Boolean;
 	{ Return TRUE if at least one member of the team has the requested skill. }
 var
-	M,P: GearPtr;
+	M: GearPtr;
 	Found: Boolean;
 	T2: Integer;
 begin
@@ -2297,8 +2297,7 @@ const
 var
 	it: Integer;
 	Action: Integer;
-	Terrain,TerrMod, MM, D: Integer;
-	MTerr: GearPtr;
+	TerrMod, D: Integer;
 begin
 	it := CPHMoveRate( GB^.Scene , Mek , GB^.Scale );
 	Action := NAttValue( Mek^.NA , NAG_Action , NAS_MoveAction );

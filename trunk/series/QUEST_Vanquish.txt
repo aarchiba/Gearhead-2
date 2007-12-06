@@ -1,0 +1,115 @@
+%%
+%% *:Vanquish Content
+%%
+%% The PC has just defeated someone or something. Because of this, an
+%% event of some kind will happen. Often the PC will be offered a job
+%% by someone else as a result of his heroism.
+%% The calling quest will set this subquest's ID when the time comes.
+%%
+%% Param1: The thing vanquished; will be referenced in name only.
+%%
+%% Subtypes:
+%% .Criminal		The PC vanquished a criminal
+%% .Monster		The PC vanquished a monster
+
+
+
+Content
+	name <Work for Shopkeeper>
+	desc <A shopkeeper will offer a new mission.>
+	requires <*:Vanquish BRANCHES>
+
+	% E1 is the entity that was vanquished.
+	% E2 is a shopkeeper.
+	Element2 <Prefab>
+	Scene2 <Building Public Mall>
+	Team2 <Guards>
+	TeamData2 <SD Ally>
+
+	% SubQuest1 is the mission.
+	% SubQuest2 is the victory, after the mission is completed.
+	Quest1 <*:GiveMission 2>
+	Quest2 <*Success1.FinishMission 2>
+
+	sub
+		Persona 2
+		rumor%id% <%name2% really wants to speak with you.>
+		greeting <if= QuestStatus %qid% %id% else GoChat if= QUestStatus %qid1% -1 else GoCheckLoss EndChat Say 1 AddChat 1>
+		GoCheckLoss <if= QuestStatus %qid1% -2 else GoCheckFirst SetQuestStatus %qid% -2 Goto GoEndInLoss>
+		*GoEndInLoss <*MissionWasFailure na ChatNPCFac na>
+		GoCheckFirst <NewChat Say 2 AddChat 2 AddChat 3>
+		*GoChat <*NiceToMeetYou GoShop>
+		*GoShop <*SHOP_GENERAL GoBye>
+		*GoBye <*GOODBYE>
+		result1 <Goto .%id2%_GoInit>
+		result2 <Goto .%id1%_GoInit>
+		result3 <NewChat Say 3 SetQuestStatus %qid% -2 AddReact -d20>
+		Msg1 <I knew you were the right person to get the job done.>
+		Msg2 <Ah, \PC , I was hoping I'd get the chance to speak with you. I have something you might be able to help with.>
+		Msg3 <Oh, I see... Well, don't let me keep you, then.>
+		Prompt1 <[Continue]>
+		Prompt2 <I'd be happy to help.>
+		Prompt3 <Sorry, I'm too busy for that now.>
+
+		MetaScene 2
+		end <if= QuestStatus %qid% %id% else %pop% ifNPCDead %2% else %pop% SetQuestStatus %qid% -2 SetQuestStatus %qid1% -2 Goto %pop%>
+		sub
+			room
+			minimap <..............1.....&---&>
+			special <SHAREDPALETTE>
+			desig <HOME>
+		end
+	end
+	inv
+		NPC Shopkeeper
+	end
+
+Content
+	name <L5Law Likes You>
+	desc <A police officer will offer a new mission.>
+	requires <*:Vanquish .Criminal ("FCOMS"|"RISHI"|"MAQUI") BRANCHES>
+
+	% E1 is the criminal that was vanquished.
+	% E2 is a L5Law officer.
+	Element2 <Prefab>
+	Scene2 <Building Public>
+	Team2 <Guards>
+	TeamData2 <SD Ally>
+
+	% SubQuest1 is the mission.
+	% SubQuest2 is the victory, after the mission is completed.
+	Quest1 <*:GiveMission 2>
+	Quest2 <*Success1.FinishMission 2>
+
+	sub
+		Persona 2
+		rumor%id% <%name2% is impressed with how you dealt with %name1%.>
+		greeting <if= QuestStatus %qid% %id% else GoChat if= QUestStatus %qid1% -1 else GoCheckLoss EndChat Say 1 AddChat 1>
+		GoCheckLoss <if= QuestStatus %qid1% -2 else GoCheckFirst SetQuestStatus %qid% -2 Goto GoEndInLoss>
+		*GoEndInLoss <*MissionWasFailure na ChatNPCFac na>
+		% If the PC is an enemy of this NPC, no mission will be offered but at least
+		% he'll get a reward.
+		GoCheckFirst <ifFactionEnemy ChatNPCFac else GoOfferQuest NewChat Say 2 CashPrize Reward %threat% 100 SetQuestStatus %qid% -1 AddLawful 1>
+		GoOfferQuest <NewChat Say 3 AddChat 2 AddChat 3>
+		GoChat <NewChat SayAnything>
+		result1 <Goto .%id2%_GoInit>
+		result2 <Goto .%id1%_GoInit>
+		result3 <NewChat Say 4 SetQuestStatus %qid% -2>
+		Msg1 <I hear that your mission was a success.>
+		Msg2 <You did a good thing defeating %name1%. Here, you deserve this reward.>
+		Msg3 <Hello \PC . Word is that you're the one who defeated %name1% . L5Law could use your help with another case, if you're willing.>
+		Msg4 <That's a shame.>
+		Prompt1 <[Continue]>
+		Prompt2 <Give me the details.>
+		Prompt3 <No, I'm tired of catching crooks.>
+
+		MetaScene 2
+		end <if= QuestStatus %qid% %id% else %pop% ifNPCDead %2% else %pop% SetQuestStatus %qid% -2 SetQuestStatus %qid1% -2 Goto %pop%>
+	end
+	inv
+		NPC Police Officer
+		SetFaction 9
+	end
+
+
+

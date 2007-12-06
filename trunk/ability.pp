@@ -428,7 +428,7 @@ begin
 		{ Monsters might benefit from an upward-adjusted TPV based on }
 		{ their difficulcy rating. }
 		if MonsterThreatLevel( Target ) > 0 then begin
-			MonPV := MonsterThreatLevel( Target ) * MonsterThreatLevel( Target ) * 150 - MonsterThreatLevel( Target ) * 100;
+			MonPV := MonsterThreatLevel( Target ) * MonsterThreatLevel( Target ) * 10 - MonsterThreatLevel( Target ) * 100;
 			if MonPV > TPV then TPV := MonPV;
 		end;
 		XP2 := ( XPV * TPV * ( Target^.Scale + 1 ) ) div MPV;

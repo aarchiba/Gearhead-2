@@ -32,14 +32,13 @@ const
 
 
 Procedure RestockRandomMonsters( GB: GameBoardPtr );
+Procedure StockBoardWithMonsters( GB: GameBoardPtr; Renown,Strength,TeamID: Integer; MDesc: String );
 
 Function MechaMatchesFaction( Mek: GearPtr; const Factions: String ): Boolean;
 Function OptimalMechaValue( Renown: Integer ): LongInt;
 Function GenerateMechaList( MPV: LongInt; Factions,Desc: String ): SAttPtr;
-Procedure StockSceneWithMonsters( Scene: GearPtr; MPV,TeamID: Integer; MDesc: String );
 
 Procedure AddTeamForces( GB: GameBoardPtr; TeamID,Renown,Strength: Integer );
-Procedure StockBoardWithMonsters( GB: GameBoardPtr; MPV,TeamID: Integer; MDesc: String );
 
 Function SelectNPCMecha( GB: GameBoardPtr; Scene,NPC: GearPtr ): GearPtr;
 
@@ -72,7 +71,27 @@ begin
 	MatchWeight := it;
 end;
 
-Function GenerateMonster( MaxTV,Scale: Integer; const MType,Habitat: String; Scene: GearPtr ): GearPtr;
+Function MonsterStrength( Mon: GearPtr; Renown: Integer ): Integer;
+	{ Return the Strength, or point cost, of this monster. The strength }
+	{ isn't based objectively on the monster's level, but calculated }
+	{ relatively from the provided threat value. }
+const
+	BaseStrengthValue = 15;
+	MinStrengthValue = 1;
+var
+	it: Integer;
+begin
+	it := MonsterThreatLevel( Mon );
+	if it > Renown then begin
+		it := ( it * 3 - Renown * 2 ) * BaseStrengthValue div Renown;
+	end else begin
+		it := it * BaseStrengthValue div Renown;
+	end;
+	if it < MinStrengthValue then it := MinStrengthValue;
+	MonsterStrength := it;
+end;
+
+Function GenerateMonster( Renown,Scale: Integer; const MType,Habitat: String; Scene: GearPtr ): GearPtr;
 	{ Generate a monster with no greater than MaxTV threat value, }
 	{ which corresponds to MDesc. Its type must match MType and its habitat must be compatable with Habitat. }
 	{ Finally, the monsters's characteristics must be appropriate for the scene it will be placed in: }
@@ -98,6 +117,7 @@ Function GenerateMonster( MaxTV,Scale: Integer; const MType,Habitat: String; Sce
 		end;
 	end;
 var
+	MonRenown,MaxRenown: Integer;
 	ShoppingList,ShoppingItem: NAttPtr;
 	Total,Smallest,SmallTV: LongInt;
 	WM: GearPtr;
@@ -109,20 +129,27 @@ begin
 	Total := 0;
 	Smallest := 0;
 	SmallTV := 100000;
+	MaxRenown := ( Renown * 3 ) div 2;
+	if MaxRenown < ( Renown + 20 ) then MaxRenown := Renown + 20;
 	while WM <> Nil do begin
 		{ If this monster matches our criteria, maybe add its number to the list. }
 		if ( WM^.Scale <= Scale ) and HabitatMatch( WM ) and EnvironmentMatch( WM ) then begin
+			MonRenown := MonsterThreatLevel( WM );
 			Match := MatchWeight( MType , SAttValue( WM^.SA , 'TYPE' ) );
+			if ( Match > 0 ) and ( ( MonRenown > ( Renown + 10 ) ) or ( MonRenown < ( Renown - 20 ) ) ) then begin
+				Match := Match div 4;
+				if Match < 1 then Match := 1;
+			end;
 
 			{ If this monster's threat value is within the acceptable range, add it to the list. }
 			{ Otherwise see if it's the smallest TV found so far, in which case store its identity }
 			{ just in case no monsters with acceptable TV are found. }
-			if MonsterThreatLevel( WM ) <= MaxTV then begin
+			if MonRenown <= MaxRenown then begin
 				SetNAtt( ShoppingList , 0 , N , Match );
 				Total := Total + Match;
-			end else if MonsterThreatLevel( WM ) < SmallTV then begin
+			end else if MonsterStrength( WM , Renown ) < SmallTV then begin
 				Smallest := N;
-				SmallTV := MonsterThreatLevel( WM );
+				SmallTV := MonsterStrength( WM , Renown );
 			end;
 		end;
 
@@ -149,39 +176,57 @@ begin
 		{ Return a random monster. }
 		WM := CloneGear( SelectRandomGear( WMonList ) );
 	end;
+
+	DisposeNAtt( ShoppingList );
 	SetSATt( WM^.SA , 'JOB <ANIMAL>' );
 	GenerateMonster := WM;
 end;
 
-Procedure AddRandomMonsters( GB: GameBoardPtr; Team: GearPtr; Threat: Integer );
+Procedure AddRandomMonsters( GB: GameBoardPtr; const WMonType: String; TeamID , Renown,Strength,Gen: Integer );
 	{ Place some wandering monsters on the map. }
 var
 	WM: GearPtr;
-	WMonType,Habitat: String;
-	Gen,MaxTV: LongInt;	{ Maximum Threat Value }
+	Habitat: String;
 begin
 	{ Find the WMonType and the Habitat. }
-	WMonType := SAttValue( Team^.SA , 'TYPE' );
 	if GB^.Scene <> Nil then begin
 		Habitat := SAttValue( GB^.Scene^.SA , 'HABITAT' );
 	end else Habitat := '';
 
-	{ Determine the maximum threat value. }
-	MaxTV := Team^.Stat[ STAT_WanderMon ] div 2;
-	if MaxTV < 1 then MaxTV := 1;
-
-	{ Decide upon how many monsters to add. }
-	Gen := Random( 5 );
-
-	while ( Gen > 0 ) and ( Threat > 0 ) do begin
-		WM := GenerateMonster( MaxTV , GB^.Scale , WMonType , Habitat , GB^.Scene );
-		SetNAtt( WM^.NA , NAG_Location , NAS_Team , Team^.S );
+	while ( Gen > 0 ) and ( Strength > 0 ) do begin
+		WM := GenerateMonster( Renown , GB^.Scale , WMonType , Habitat , GB^.Scene );
+		SetNAtt( WM^.NA , NAG_Location , NAS_Team , TeamID );
 		DeployMek( GB , WM , True );
 
 		{ Reduce the generation counter and the threat points. }
-		Threat := Threat - MonsterThreatLevel( WM );
+		Strength := Strength - MonsterStrength( WM , Renown );
 		Dec( Gen );
 	end;
+end;
+
+Procedure StockBoardWithMonsters( GB: GameBoardPtr; Renown,Strength,TeamID: Integer; MDesc: String );
+	{ Place some monsters in this scene. }
+begin
+	AddRandomMonsters( GB , MDesc , TeamID , Renown , Strength , 9999 );
+end;
+
+Function TeamTV( MList: GearPtr; Team,Threat: Integer ): LongInt;
+	{ Calculate the total monster strength value of active models belonging }
+	{ to TEAM which are present on the map. }
+	{ Generally, only characters have monster threat values. }
+var
+	it: LongInt;
+begin
+	it := 0;
+
+	while MList <> Nil do begin
+		if GearActive( MList ) and ( NAttValue( MList^.NA , NAG_Location , NAS_TEam ) = Team ) then begin
+			it := it + MonsterStrength( MList , Threat );
+		end;
+		MList := MList^.Next;
+	end;
+
+	TeamTV := it;
 end;
 
 Procedure RestockRandomMonsters( GB: GameBoardPtr );
@@ -189,9 +234,12 @@ Procedure RestockRandomMonsters( GB: GameBoardPtr );
 var
 	Team: GearPtr;
 	TPV: LongInt;
+	DungeonStrength: Integer;
 begin
 	{ Error check - make sure the scene is defined. }
 	if ( GB = Nil ) or ( GB^.Scene = Nil ) then Exit;
+
+	DungeonStrength := GB^.map_width * GB^.map_height div 10;
 
 	{ Search through the scene gear for teams which need random }
 	{ monsters. If they don't have enough PV, add some monsters. }
@@ -201,17 +249,16 @@ begin
 		{ allocation set, add some monsters. }
 		if ( Team^.G = GG_Team ) and ( Team^.STat[ STAT_WanderMon ] > 0 ) then begin
 			{ Calculate total point value of this team's units. }
-			TPV := TeamTV( GB^.Meks , Team^.S );
+			TPV := TeamTV( GB^.Meks , Team^.S , Team^.Stat[ STAT_WanderMon ] );
 
-			if TPV < Team^.Stat[ STAT_WanderMon ] then begin
-				AddRandomMonsters( GB , Team , Team^.Stat[ STAT_WanderMon ] - TPV );
+			if TPV < DungeonStrength then begin
+				AddRandomMonsters( GB , SAttValue( Team^.SA , 'TYPE' ) , Team^.S , Team^.Stat[ STAT_WanderMon ] , DungeonStrength - TPV , Random( 3 ) );
 			end;
 		end;
 
 		{ Move to the next gear. }
 		Team := Team^.Next;
 	end;
-
 end;
 
 Function MechaMatchesFaction( Mek: GearPtr; const Factions: String ): Boolean;
@@ -472,29 +519,6 @@ begin
 	PurchaseForces := MList;
 end;
 
-
-Procedure StockSceneWithMonsters( Scene: GearPtr; MPV,TeamID: Integer; MDesc: String );
-	{ Place some monsters in this scene. }
-var
-	M: GearPtr;
-begin
-	while MPV > 0 do begin
-		{ Grab a monster. }
-		M := GenerateMonster( MPV , Scene^.V , MDesc, SAttValue( Scene^.SA , 'HABITAT' ) , Scene );
-
-		{ Reduce the PV by the monster's threat value. }
-		MPV := MPV - MonsterThreatLevel( M );
-
-		{ Set the team to the correct value. }
-		{ Set its team to the ID provided. }
-		SetNAtt( M^.NA , NAG_Location , NAS_Team , TeamID );
-
-		{ Stick the monster in the scene. }
-		InsertInvCom( Scene , M );
-	end;
-
-end;
-
 Procedure AddTeamForces( GB: GameBoardPtr; TeamID,Renown,Strength: Integer );
 	{ Add forces to the gameboard. }
 	{ RENOWN is the expected renown of the player's team. }
@@ -563,27 +587,6 @@ begin
 	end;
 end;
 
-Procedure StockBoardWithMonsters( GB: GameBoardPtr; MPV,TeamID: Integer; MDesc: String );
-	{ Place some monsters in this scene. }
-var
-	M: GearPtr;
-begin
-	while MPV > 0 do begin
-		{ Grab a monster. }
-		M := GenerateMonster( MPV , GB^.Scale , MDesc , SAttValue( GB^.Scene^.SA , 'HABITAT' ) , GB^.Scene );
-
-		{ Reduce the PV by the monster's threat value. }
-		MPV := MPV - MonsterThreatLevel( M );
-
-		{ Set the team to the correct value. }
-		{ Set its team to the ID provided. }
-		SetNAtt( M^.NA , NAG_Location , NAS_Team , TeamID );
-
-		{ Stick the monster in the scene. }
-		DeployMek( GB , M , True );
-	end;
-
-end;
 
 
 Function SelectNPCMecha( GB: GameBoardPtr; Scene,NPC: GearPtr ): GearPtr;

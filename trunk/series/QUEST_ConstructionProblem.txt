@@ -93,7 +93,7 @@ Content
 		MetaScene 4
 		% L1 = Robots destroyed counter
 		% L2 = Monster generation counter
-		Start <Print 1 if= L2 0 if= QuestStatus %qid% %id% L= 2 1 WMonster 2 %threat% WMonster 2 %threat%>
+		Start <Print 1 if= L2 0 if= QuestStatus %qid% %id% L= 2 1 WMonster 2 %threat% 200>
 		nu2 <if= T2 0 if= QuestStatus %qid% %id% Print 2 XPV 100 SetQuestStatus %qid% -1 QMemo %prev_qid% 3 L= 1 1>
 		Msg1 <You enter the robot construction site.>
 		Msg2 <That appears to be the last of the robots.>
@@ -362,10 +362,9 @@ Content
 		MetaScene 4
 		% L1 = Victory Indicator
 		% L2 = Initialization Counter
+		% L3 = Monster Level; clearing this by brute force not reccomended
 		content <Fill Sub *STORAGE_X na>
-		% Do two generations of monsters- one regular, and one at double strength.
-		% Clearing out this area by brute force is going to be a challenge.
-		Start <Print 1 if= L2 0 if= QuestStatus %qid% %id% L= 2 1 WMonster 2 * 2 %threat% WMonster 2 %threat%>
+		Start <Print 1 if= L2 0 if= QuestStatus %qid% %id% L= 2 1 L= 3 %threat% L+ 3 20 WMonster 2 L3 200>
 		nu2 <if= t2 0 if= L2 1 if= L1 0 Print 2 XPV 100 L= 1 1>
 		Msg1 <You enter the basement.>
 		Msg2 <That seems to be the last of the fungi.>

@@ -69,9 +69,6 @@ Function EnactMovement( GB: GameBoardPtr; Mek: GearPtr ): Integer;
 
 Procedure DoDrift( GB: GameBoardPtr; Mek: GearPtr );
 
-Function TeamPV( MList: GearPtr; Team: Integer ): LongInt;
-Function TeamTV( MList: GearPtr; Team: Integer ): LongInt;
-
 Procedure WaitAMinute( GB: GameBoardPtr; Mek: GearPtr; D: Integer );
 
 
@@ -724,7 +721,6 @@ var
 		{This is where the REAL damage process starts, for nonlethal damage.}
 	var
 		XA: GearPtr;
-		N: Integer;
 	begin
 		{ Reduce the damage based on the target's armor value. }
 		StagedPenetration( Part , DMG , MOS , Scale );
@@ -967,7 +963,7 @@ end;
 procedure Crash( gb: GameBoardPtr; Mek: GearPtr );
 	{ This mek has just become incapable of moving. Crash it. }
 var
-	MM,MA,DMG,N: Integer;	{ Move Mode and Move Action }
+	MM,MA,DMG: Integer;	{ Move Mode and Move Action }
 	MT: LongInt;
 	P: Point;
 begin
@@ -1393,43 +1389,6 @@ begin
 			if ( Pilot <> Nil ) and ( NAttValue( Pilot^.NA , NAG_Personal , NAS_CID ) <> 0 ) then SetTrigger( GB , TRIGGER_NPCMovement + BStr( NAttValue( Pilot^.NA , NAG_Personal , NAS_CID ) ) );
 		end;
 	end;
-end;
-
-Function TeamPV( MList: GearPtr; Team: Integer ): LongInt;
-	{ Calculate the total point value of active models belonging }
-	{ to TEAM which are present on the map. }
-var
-	it: LongInt;
-begin
-	it := 0;
-
-	while MList <> Nil do begin
-		if GearActive( MList ) and ( NAttValue( MList^.NA , NAG_Location , NAS_TEam ) = Team ) then begin
-			it := it + GearValue( MList );
-		end;
-		MList := MList^.Next;
-	end;
-
-	TeamPV := it;
-end;
-
-Function TeamTV( MList: GearPtr; Team: Integer ): LongInt;
-	{ Calculate the total monster threat value of active models belonging }
-	{ to TEAM which are present on the map. }
-	{ Generally, only characters have monster threat values. }
-var
-	it: LongInt;
-begin
-	it := 0;
-
-	while MList <> Nil do begin
-		if GearActive( MList ) and ( NAttValue( MList^.NA , NAG_Location , NAS_TEam ) = Team ) then begin
-			it := it + MonsterThreatLevel( MList );
-		end;
-		MList := MList^.Next;
-	end;
-
-	TeamTV := it;
 end;
 
 Procedure WaitAMinute( GB: GameBoardPtr; Mek: GearPtr; D: Integer );

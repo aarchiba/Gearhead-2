@@ -657,7 +657,6 @@ Function ElementLocation( Adv,Plot: GearPtr; N: Integer; GB: GameBoardPtr ): Int
 	{ scene can be found, return 0. }
 var
 	E: GearPtr;
-	it: Integer;
 begin
 	E := SeekPlotElement( Adv, Plot, N , GB );
 	ElementLocation := FindGearScene( E , GB );

@@ -1644,8 +1644,6 @@ var
 	SFX: Integer;
 	Procedure AttemptStatusChange( Part: GearPtr );
 		{ Attempt a status change for this part. If successful, record a message. }
-	var
-		StatusChange: Boolean;
 	begin
 		{ It's only possible to get a status change from an existing, }
 		{ active gear. }
@@ -2528,8 +2526,6 @@ Function MekIsTargetInRadius( GB: GameBoardPtr; Mek,Attacker,Weapon,Spotter: Gea
 	{ Used by the NumTargetsInRadius and FindTargetInRadius functions. }
 	{ Returns TRUE is Mek is an enemy of ATTACKER, is visible by }
 	{ SPOTTER, and is within the prescribed screen area. }
-var
-	it: Boolean;
 begin
 	Spotter := FindRoot( SPotter );
 	MekIsTargetInRadius := AreEnemies( GB , Attacker , Mek ) and MekCanSeeTarget( GB , Spotter , Mek ) and RangeArcCheck( GB , Attacker , Weapon , Mek ) and ( Range( Mek , X , Y ) <= R ) and GearOperational( Mek );
@@ -2689,7 +2685,6 @@ var
 		end;
 	end;
 var
-	Rng: Integer;
 	TarList,Mek: GearPtr;
 	P: Point;
 begin
@@ -2749,7 +2744,7 @@ var
 	ER: EffectRequest;
 	AtAt,msg: String;
 	Stencil: MapStencil;
-	TarList,EMek,Master: GearPtr;
+	TarList,Master: GearPtr;
 begin
 	{ Clear the attack history and build the effect request. }
 	ClearAttackHistory;

@@ -851,7 +851,7 @@ Scene
 	NeededCells 2
 	content <Fill Sub *STORAGE_X na>
 
-	Start <Print 1 if= L2 0 if= QuestStatus %qid% %id% L= 2 1 WMonster 2 %threat%>
+	Start <Print 1 if= L2 0 if= QuestStatus %qid% %id% L= 2 1 WMonster 2 %threat% 100>
 	nu2 <if= t2 0 if= L1 0 Print 2 XPV 100 L= 1 1>
 	Msg1 <You enter the basement.>
 	Msg2 <That seems to be the last of the vermin.>
@@ -890,10 +890,7 @@ Scene
 	NeededCells 2
 	content <Fill Sub *STORAGE_X na>
 
-	%% Do two monster generations, since this basement is pretty big and they have
-	%% a lot of area to fill. Why not do one generation at twice the threat? Because
-	%% we don't want to generate out of depth monsters.
-	Start <Print 1 if= L2 0 if= QuestStatus %qid% %id% L= 2 1 WMonster 2 %threat% WMonster 2 %threat%>
+	Start <Print 1 if= L2 0 if= QuestStatus %qid% %id% L= 2 1 WMonster 2 %threat% 200>
 	nu2 <if= t2 0 if= L1 0 Print 2 XPV 100 L= 1 1>
 	Msg1 <You enter the basement.>
 	Msg2 <That seems to be the last of the vermin.>
@@ -933,10 +930,7 @@ Scene
 	NeededCells 2
 	content <Fill Sub *STORAGE_X na>
 
-	%% Do two monster generations, since this basement is pretty big and they have
-	%% a lot of area to fill. Why not do one generation at twice the threat? Because
-	%% we don't want to generate out of depth monsters.
-	Start <Print 1 if= L2 0 if= QuestStatus %qid% %id% Print 3 L= 2 1 WMonster 2 %threat% WMonster 2 %threat%>
+	Start <Print 1 if= L2 0 if= QuestStatus %qid% %id% Print 3 L= 2 1 WMonster 2 %threat% 200>
 	nu2 <if= t2 0 if= L1 0 Print 2 XPV 100 L= 1 1>
 	Msg1 <You enter the basement.>
 	Msg2 <That seems to be the last of the vermin.>

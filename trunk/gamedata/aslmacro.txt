@@ -109,8 +109,6 @@ ifVisible <if= StatVal STAT_MetaVisibility 0>
 DYNAMIC <NewD ? GrabDynamic GSetNAtt 21 4 ? GSetNAtt 21 5 ? GSetSAtt NU1 ? GSetSAtt NU2 ?>
 DynaFaction <GrabDynamic GSetNAtt NAG_Personal NAS_FactionID ?>
 DynaVar= <GrabDynamic GSetNAtt NAG_Scriptvar ? ?>
-MDYNAMIC <NewD ? MStockD ? ? ComposeD NU1 ? ComposeD NU2 ?>
-MSTOCKD <TMSTOCKD NAV_DefEnemyTeam ? ?>
 ComposeD <GrabDynamic GSetSAtt ? ?>
 SetMapType <GrabDynamic GSetStat STAT_MapGenerator ?>
 SetMapString <GrabDynamic GSetSAtt SPECIAL ?>

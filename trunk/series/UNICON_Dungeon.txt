@@ -34,7 +34,7 @@
 
 		use <if= v%id%01 0 else GoLeft ifYesNo %id%01 %id%02 %id%03 else GoLeave goto GoRummage>
 		GoLeave <v= %id%01 2 AddHeroic 1>
-		GoRummage <V= %id%01 1 Print %id%05 CASHPRIZE d50 GiveKeyItem %2% AddPragmatic 3>
+		GoRummage <V= %id%01 1 Print %id%05 CASHPRIZE d50 GiveItem %2% AddPragmatic 3>
 
 		GoLeft <if= v%id%01 2 else GoRummaged Print %id%01>
 		GoRummaged <Print %id%04>

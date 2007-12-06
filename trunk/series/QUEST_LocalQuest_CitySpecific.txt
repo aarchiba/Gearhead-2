@@ -466,7 +466,7 @@ Content
 		MetaScene 3
 		% V1 = First time entry counter
 		% V2 = Have defeated all rebels
-		start <Print 1 if= V1 0 ForceChat %3% V= 1 1 WMonster 2 %threat%>
+		start <Print 1 if= V1 0 ForceChat %3% V= 1 1 WMonster 2 %threat% 150>
 		nu2 <if= T2 0 if= V2 0 V= 2 1 XPV 100 QMemo %qid% 2>
 		Msg1 <You enter the rebel microstation.>
 		Msg2 <You have defeated the rebels and should report back to %name2%.>

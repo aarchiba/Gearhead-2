@@ -240,20 +240,10 @@ var
 		T := S2^.SubCom;
 		while T <> Nil do begin
 			if ( T^.G = GG_Team ) and ( T^.Stat[ STAT_WanderMon ] > 0 ) then begin
-				T^.Stat[ STAT_WanderMon ] := T^.Stat[ STAT_WanderMon ] + 1 + Random( 3 ) + Random( 3 );
+				T^.Stat[ STAT_WanderMon ] := T^.Stat[ STAT_WanderMon ] + 1 + Random( 4 ) + Random( 4 );
 
 				{ Add the context description for the difficulcy level. }
-				if T^.Stat[ STAT_WanderMon ] > 70 then begin
-					SetSAtt( S2^.SA , 'type <' + type_base + ' !Ex>' );
-				end else if T^.Stat[ STAT_WanderMon ] > 40 then begin
-					SetSAtt( S2^.SA , 'type <' + type_base + ' !Hi>' );
-				end else if T^.Stat[ STAT_WanderMon ] > 15 then begin
-					SetSAtt( S2^.SA , 'type <' + type_base + ' !Md>' );
-				end else if T^.Stat[ STAT_WanderMon ] > 5 then begin
-					SetSAtt( S2^.SA , 'type <' + type_base + ' !Lo>' );
-				end else begin
-					SetSAtt( S2^.SA , 'type <' + type_base + ' !Ne>' );
-				end;
+				SetSAtt( S2^.SA , 'type <' + type_base + ' ' + DifficulcyContext( T^.Stat[ STAT_WanderMon ] ) );
 
 			end;
 			T := T^.Next;
@@ -1252,7 +1242,7 @@ var
 			Team := Frag^.SubCom;
 			while Team <> Nil do begin
 				if ( Team^.G = GG_Team ) and ( Team^.Stat[ STAT_WanderMon ] > 0 ) then begin
-					Team^.Stat[ STAT_WanderMon ] := WMonThreat( NAttValue( Frag^.NA , NAG_QuestInfo , NAS_DifficulcyLevel ) ) - 8;
+					Team^.Stat[ STAT_WanderMon ] := NAttValue( Frag^.NA , NAG_QuestInfo , NAS_DifficulcyLevel ) - 12;
 					if Team^.Stat[ STAT_WanderMon ] < 4 then Team^.Stat[ STAT_WanderMon ] := 2 + Random( 3 );
 				end;
 				Team := Team^.Next;
@@ -1322,7 +1312,7 @@ var
 			Team := Scene^.SubCom;
 			while Team <> Nil do begin
 				if ( Team^.G = GG_Team ) and ( Team^.Stat[ STAT_WanderMon ] > 0 ) then begin
-					Team^.Stat[ STAT_WanderMon ] := WMonThreat( NAttValue( Frag^.NA , NAG_QuestInfo , NAS_DifficulcyLevel ) );
+					Team^.Stat[ STAT_WanderMon ] := NAttValue( Frag^.NA , NAG_QuestInfo , NAS_DifficulcyLevel );
 					if Team^.Stat[ STAT_WanderMon ] < 3 then Team^.Stat[ STAT_WanderMon ] := 3;
 				end;
 				Team := Team^.Next;

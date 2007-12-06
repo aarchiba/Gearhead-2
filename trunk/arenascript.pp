@@ -101,7 +101,6 @@ Procedure BrowseMemoType( GB: GameBoardPtr; Tag: String );
 Function BasicSkillTarget( Renown: Integer ): Integer;
 Function HardSkillTarget( Renown: Integer ): Integer;
 Function Calculate_Reward_Value( GB: GameBoardPtr; Renown,Percent: LongInt ): LongInt;
-Function WMonThreat( Renown: Integer ): Integer;
 
 Function ScriptValue( var Event: String; GB: GameBoardPtr; Scene: GearPtr ): LongInt;
 
@@ -536,14 +535,6 @@ begin
 	Calculate_Reward_Value := RV;
 end;
 
-Function WMonThreat( Renown: Integer ): Integer;
-	{ Return a good wandering monster threat rating for this renown level. }
-begin
-	if Renown < 4 then Renown := 4;
-	WMonThreat := Renown div 2;
-end;
-
-
 Function FindLocalMacro( const cmd: String; GB: GameBoardPtr; Source: GearPtr ): String;
 	{ Locate the local macro described by "cmd". }
 var
@@ -569,18 +560,16 @@ Procedure InitiateMacro( GB: GameBoardPtr; Source: GearPtr; var Event: String; P
 	function NeededParameters( cmd: String ): Integer;
 		{ Return the number of parameters needed by this function. }
 	const
-		NumStandardFunctions = 14;
+		NumStandardFunctions = 13;
 		StdFunName: Array [1..NumStandardFunctions] of string = (
 			'-', 'GNATT', 'GSTAT',
 			'SKROLL', 'THREAT', 'REWARD', 'ESCENE', 'RANGE',
-			'FXPNEEDED','WMTHREAT','*','MAPTILE','PCSKILLVAL',
-			'CONCERT'
+			'FXPNEEDED','*','MAPTILE','PCSKILLVAL','CONCERT'
 		);
 		StdFunParam: Array [1..NumStandardFunctions] of byte = (
 			1,2,1,
 			1,2,2,1,2,
-			1,1,2,2,1,
-			2
+			1,2,2,1,2
 		);
 	var
 		it,T: Integer;
@@ -903,10 +892,6 @@ begin
 		VCode := ScriptValue( Event , GB , Scene );
 		VC2 := ScriptValue( Event , GB , Scene );
 		SV := VCode * VC2;
-
-	end else if ( SMsg = 'WMTHREAT' ) then begin
-		VCode := ScriptValue( Event , GB , Scene );
-		SV := WMonThreat( VCode );
 
 	end else if ( SMsg = 'REWARD' ) then begin
 		VCode := ScriptValue( Event , GB , Scene );
@@ -3131,18 +3116,14 @@ end; { ProcessWMecha }
 Procedure ProcessWMonster( var Event: String; GB: GameBoardPtr; Source: GearPtr );
 	{ Fill current scene with monsters. }
 var
-	TID,UPV: LongInt;
+	TID,Renown,Strength: LongInt;
 	Team: GearPtr;
 	MonType: String;
 begin
 	{ Find out the team, and how many enemies to add. }
 	TID := ScriptValue( Event , GB , Source );
- 	UPV := ScriptValue( Event , GB , Source );
-
-	{ This UPV is roughly equal to the PC's reputation score, give or take a }
-	{ little bit. Convert it to a usable value. }
-	if UPV < 5 then UPV := 5;
-	UPV := ( UPV * UPV div 250 ) + UPV div 5;
+	Renown := ScriptValue( Event , GB , Source );
+	Strength := ScriptValue( Event , GB , Source );
 
 	{ Determine the type of monster to add. This should be indicated by }
 	{ the team to which the monsters belong. }
@@ -3151,36 +3132,8 @@ begin
 	else MonType := 'ROBOT NINJA';
 	if MonType = '' then MonType := 'ROBOT NINJA';
 
-	StockBoardWithMonsters( GB , UPV , TID , MonType );
+	StockBoardWithMonsters( GB , Renown , Strength , TID , MonType );
 end; { ProcessWMonster }
-
-Procedure ProcessTMStockD( var Event: String; GB: GameBoardPtr; Source: GearPtr );
-	{ Fill SCRIPT_DynamicEncounter with enemies. }
-var
-	TID,UPV: LongInt;
-	MDesc: String;
-begin
-	{ Find out the team, and how many enemies to add. }
- 	TID := ScriptValue( Event , GB , Source );
- 	UPV := ScriptValue( Event , GB , Source );
-
-	{ This UPV is roughly equal to the PC's reputation score, give or take a }
-	{ little bit. Convert it to a usable value. }
-	if UPV < 5 then UPV := 5;
-	UPV := ( UPV * UPV div 250 ) + UPV div 5;
-
-	MDesc := ExtractWord( Event );
-	if Source <> Nil then begin
-		MDesc := AS_GetString( Source , MDesc );
-	end;
-
-	{ Error check - Make sure we have a dynamic encounter to stock! }
-	if SCRIPT_DynamicEncounter <> Nil then begin
-		{ Stick enemies in the scene. }
-		StockSceneWithMonsters( SCRIPT_DynamicEncounter , UPV , TID , MDesc );
-	end;
-end; { ProcessTMStockD }
-
 
 Function NumberOfPlots( Part: GearPtr ): Integer;
 	{ Check the number of plots this PART has loaded. }
@@ -4115,7 +4068,6 @@ begin
 		else if cmd = 'NEWD' then ProcessNewD( Event , GB , Source )
 		else if cmd = 'WMECHA' then ProcessWMecha( Event , GB , Source )
 		else if cmd = 'WMONSTER' then ProcessWMonster( Event , GB , Source )
-		else if cmd = 'TMSTOCKD' then ProcessTMStockD( Event , GB , Source )
 		else if cmd = 'STARTPLOT' then ProcessStartPlot( Event , GB , Source )
 		else if cmd = 'BATCHLOADPLOT' then ProcessBatchLoadPlot( Trigger , Event , GB , Source )
 		else if cmd = 'STARTSTORY' then ProcessStartStory( Event , GB , Source )

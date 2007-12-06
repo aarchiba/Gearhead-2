@@ -613,26 +613,33 @@ begin
 	while N <> Nil do begin
 		N2 := N^.Next;
 
-		if IsMasterGear( N ) and IsACombatant( N ) and ( NAttValue( N^.NA , NAG_Location , NAS_Team ) <> NAV_LancemateTeam ) and ( Scene^.V > 0 ) then begin
+		if IsMasterGear( N ) and IsACombatant( N ) and ( NAttValue( N^.NA , NAG_Location , NAS_Team ) <> NAV_LancemateTeam ) then begin
 
-			MEK := SelectNPCMecha( GB , Scene , N );
+			{ On big maps, load a mecha. On small maps, give equipment. }
+			if Scene^.V > 0 then begin
+				MEK := SelectNPCMecha( GB , Scene , N );
 
-			if ( Mek <> Nil ) and ( Mek^.SCale <= Scene^.V ) and ( Mek^.G = GG_Mecha ) then begin
-				{ Customize the mecha for its pilot. }
-				MechaMakeover( Mek , NAttValue( N^.NA , NAG_Personal , NAS_SpecialistSkill ) , NAttValue( N^.NA , NAG_Personal , NAS_MechaTheme ) , MechaModPoints( N ) );
+				if ( Mek <> Nil ) and ( Mek^.SCale <= Scene^.V ) and ( Mek^.G = GG_Mecha ) then begin
+					{ Customize the mecha for its pilot. }
+					MechaMakeover( Mek , NAttValue( N^.NA , NAG_Personal , NAS_SpecialistSkill ) , NAttValue( N^.NA , NAG_Personal , NAS_MechaTheme ) , MechaModPoints( N ) );
 
-				{ Stick the mecha in the scene, stick the pilot in the mecha, and }
-				{ set the needed values. }
-				InsertInvCom( Scene , MEK );
-				DelinkGear( Scene^.InvCom , N );
-				SetNAtt( MEK^.NA , NAG_Location , NAS_Team , NAttValue( N^.NA , NAG_Location , NAS_Team ) );
-				SetNAtt( Mek^.NA , NAG_EpisodeData , NAS_Temporary , 1 );
-				SetNAtt( Mek^.NA , NAG_Personal , NAS_FactionID , NATtValue( N^.NA , NAG_Personal , NAS_FactionID ) );
-				if not BoardMecha( Mek , N ) then begin
-					InsertInvCom( Scene , N );
+					{ Stick the mecha in the scene, stick the pilot in the mecha, and }
+					{ set the needed values. }
+					InsertInvCom( Scene , MEK );
+					DelinkGear( Scene^.InvCom , N );
+					SetNAtt( MEK^.NA , NAG_Location , NAS_Team , NAttValue( N^.NA , NAG_Location , NAS_Team ) );
+					SetNAtt( Mek^.NA , NAG_EpisodeData , NAS_Temporary , 1 );
+					SetNAtt( Mek^.NA , NAG_Personal , NAS_FactionID , NATtValue( N^.NA , NAG_Personal , NAS_FactionID ) );
+					if not BoardMecha( Mek , N ) then begin
+						InsertInvCom( Scene , N );
+					end;
+				end else if Mek <> Nil then begin
+					DisposeGear( Mek );
 				end;
-			end else if Mek <> Nil then begin
-				DisposeGear( Mek );
+			end else begin
+				{ This is a personal-scale map. Give this combatant }
+				{ some equipment to use. }
+				SelectEquipmentForNPC( N , NAttValue( N^.NA , NAG_CharDescription , NAS_Renowned ) );
 			end;
 		end;
 

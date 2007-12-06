@@ -126,11 +126,11 @@ begin
 
 		end else if AreEnemies( GB , NAV_DefPlayerTeam , T ) then begin
 			{ Enemy team. Color = Red. }
-			color := EnemyRed;
+			color := LightMagenta;
 
 		end else if AreAllies( GB , NAV_DefPlayerTeam , T ) then begin
 			{ Ally team. Color = Purple. }
-			color := AllyPurple;
+			color := LightCyan;
 
 		end else begin
 			{ Neutral team. Color = Brown. }
@@ -187,7 +187,7 @@ begin
 		roguechar := SAttValue( G^.SA , 'ROGUECHAR' );
 		if roguechar <> '' then begin
 			gfx := roguechar[1];
-		end else if ( NAttValue( G^.NA , NAG_Location , NAS_Team ) = NAV_DefPlayerTeam ) then begin
+		end else if ( NAttValue( G^.NA , NAG_Location , NAS_Team ) = NAV_DefPlayerTeam ) and IsMasterGear( G ) then begin
 			gfx := '@';
 		end else if IsMasterGear( G ) then begin
 			gfx := GearName( G )[1];
@@ -233,7 +233,7 @@ Procedure RenderMap( GB: GameBoardPtr );
 	end;
 var
 	Map_Zone: VGFX_Rect;
-	TX,TY,MX,MY,Terr,X,Y: Integer;
+	TX,TY,MX,MY,Terr: Integer;
 	M: GearPtr;
 	ImageWeight: Array [1..MaxMapWidth,1..MaxMapWidth] of Byte;
 		{ This array is used to stop models from being drawn if there's }

@@ -403,7 +403,7 @@ const
 	BasePrice: Array [1..5] of Byte = (10,25,45,70,100);
 	PriceFactor = 2000;
 var
-	plusses,minuses,T: Integer;
+	plusses: Integer;
 	it: LongInt;
 begin
 	{ Initialize our counters. }

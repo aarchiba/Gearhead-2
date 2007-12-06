@@ -7,9 +7,9 @@
 %  STATS  REF BOD SPD PER CFT EGO KNO CHA
 
 ARCH Exorg Floater
-MonsterTV 10
+MonsterTV 60
 Sealed
-roguechar <H>
+roguechar <X>
 sdl_sprite <monster_exorg_flyer.png>
 sdl_colors <255 230 210 255 157 123 200 0 100>
 type <Space Exorg Asteroid>
@@ -59,7 +59,7 @@ roguechar <S>
 type <fungus ruin derelict>
 habitat <SPACE>
 statline 13 2 13 2 1 1 1 1
-MonsterTV 3
+MonsterTV 30
 skill 8 3
 skill 10 3
 skill 43 3
@@ -82,7 +82,7 @@ roguechar <'>
 type <fungus mine asteroid>
 habitat <SPACE>
 statline 10 8 10 1 1 1 1 1
-MonsterTV 5
+MonsterTV 40
 skill 6 2
 skill 8 4
 skill 10 5
@@ -119,7 +119,7 @@ roguechar <f>
 type <fungus mine asteroid>
 habitat <SPACE>
 statline 7 20 7 8 1 1 1 1
-MonsterTV 6
+MonsterTV 44
 skill 8 4
 skill 10 4
 skill 12 7
@@ -179,7 +179,7 @@ roguechar <f>
 type <fungus mine asteroid>
 habitat <SPACE>
 statline 7 5 8 5 1 1 1 1
-MonsterTV 2
+MonsterTV 25
 skill 8 3
 skill 10 5
 sealed
@@ -225,7 +225,7 @@ roguechar <f>
 type <fungus mine asteroid>
 habitat <SPACE>
 statline 9 13 13 10 1 1 1 1
-MonsterTV 8
+MonsterTV 52
 skill 8 7
 skill 10 5
 skill 12 5
@@ -274,27 +274,6 @@ leg
 	end
 end
 
-CombatProp 1
-name <SPIKE MUSHROOM>
-roguechar <m>
-SDL_SPRITE <prop_turret1.png>
-SDL_COLORS <>
-type <fungus vermin mine asteroid>
-habitat <ASTER>
-MonsterTV 1
-sealed
-meat
-skill 8 4
-skill 12 12
-sub
-	turret
-	sub
-		Melee 8
-		name <Spikes>
-		Speed 5
-	end
-end
-
 arch spaceworm
 roguechar <w>
 SDL_SPRITE <monster_larva.png>
@@ -302,7 +281,7 @@ SDL_COLORS <245 213 160 245 213 160 255 230 195>
 type <mutant vermin mine asteroid>
 habitat <SPACE>
 statline 7 3 6 5 4 5 1 1
-MonsterTV 1
+MonsterTV 18
 sealed
 skill 8 3
 skill 13 1

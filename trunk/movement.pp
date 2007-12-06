@@ -591,7 +591,7 @@ Function AdjustedMoveRate( Scene, Master: GearPtr; MoveMode, MoveOrder: Integer)
 	{ Return the movement rate of this gear, adjusted for the }
 	{ current movement action. }
 var
-	BMR,T,SF: Integer;
+	BMR,T: Integer;
 begin
 	BMR := BaseMoveRate( Scene, Master , MoveMode );
 
