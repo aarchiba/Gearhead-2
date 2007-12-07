@@ -2100,6 +2100,7 @@ sub
 			SetFaction 3
 			MiniMapComponent 3
 			chardesc Lawful Heroic Easygoing Shy Cheerful Male Renowned
+			Renown 90
 			Age 52
 			statline 19 22 18 19 14 16 17 15
 		end
@@ -5838,8 +5839,8 @@ sub
 	end
 
 	Scene
-	name <>
-	type <building garage public>
+	name <Gunpal Service>
+	type <building garage public legit>
 	entrance <*Garage>
 	special <ADDEXIT>
 	MallMap
@@ -5848,7 +5849,7 @@ sub
 	IndustrialTiles
 
 	start <Print 1>
-	Msg1 <You enter the Mecha Source.>
+	Msg1 <You enter Gunpal Service Station.>
 
 	NeededCells 4
 	Content1 <Some 1 100 Sub *MECHANIC_SHOP>
@@ -5874,7 +5875,7 @@ sub
 	end
 
 	Scene
-	name <>
+	name <Yatate Tower>
 	type <building government public legit>
 	entrance <*Building>
 	special <ADDEXIT>
@@ -5885,7 +5886,7 @@ sub
 	MapHeight 21
 
 	start <Print 1>
-	Msg1 <You enter the Alliance Fleet Headquarters.>
+	Msg1 <You enter Yatate Tower.>
 
 	NeededCells 2
 	Content1 <Some 1 100 Sub *GOV_MILITARY  na>
@@ -6008,7 +6009,7 @@ sub
 	end
 
 	Scene
-	name <Hoeller Heavy Industries>
+	name <Hoeller Mecha Works>
 	SetFaction 7
 	type <building public legit corporate>
 	entrance <*Building>
@@ -6018,7 +6019,7 @@ sub
 	MapHeight 15
 
 	start <Print 1>
-	Msg1 <You enter Hoeller Heavy Industries.>
+	Msg1 <You enter Hoeller Mecha Works.>
 
 	NeededCells 2
 	Content2 <Fill Sub *CORP_PUBLIC>

@@ -8,7 +8,96 @@
 %% NAME: *[city designation]_[building name abbreviated]_[content type]
 
 %% *YATSP_RB2_Content
-%%	NPCs for Rocket Base 1
+%%	NPCs for Rocket Penthouse, aka Rocket Base 2
+
+Content
+	requires <*YATSP_RB2_Content>
+	element1 <Prefab>
+	team1 <Citizens>
+	teamdata1 <ally pass>
+	element2 <Prefab>
+	team2 <Citizens>
+	teamdata2 <ally pass>
+	minimap <#...#..2....1.......#---#>
+
+	sub
+		Persona 1
+		greeting <if= PCFac ChatNPCFac else GoChat ifChatNPCUnknown else GoTeach EndChat Say 3 AddCHat 3>
+		GoTeach <NewChat Say 1 AddChat 1 AddChat 2>
+		GoChat <NewChat SayAnything>
+		result1 <EndChat Say 2 School .skills Goto result2>
+		.skills <11 18 19 37 39 42>
+		*result2 <*GoodBye>
+		result3 <Goto GoTeach>
+		Msg1 <Life is a process of reinventing oneself. When you stop learning, we call that state death. I, being closer to death than you are, know a number of things that you may find useful.>
+		Msg2 <A Star needs to master three skills. The first is the ability to avoid dying; it's very handy. The second is the ability to see things as they really are. The third is the ability to look cool at all times. Everything else is just details.>
+		Msg3 <\PC . I have been watching your advancement... Remember this, that legends are written of the bold. Someday you may become legend, but for right now I suggest you simply get the hang of being.>
+		Prompt1 <Teach me something.>
+		Prompt2 <I don't have time for this.>
+		Prompt3 <[Continue]>
+
+		Persona 2
+		greeting <if= PCFac ChatNPCFac else GoChat NewChat Say 1 AddChat 1 AddChat 2>
+		GoChat <NewChat SayAnything>
+		*GoEnd <*GoodBye>
+		result1 <EndChat Say 2 School .skills Goto GoEnd>
+		.skills <27 28 35 43>
+		result2 <NewChat Say 3>
+		Msg1 <Welcome to the hall of Master Kynan. Do you like my song? I could teach it to you.>
+		Msg2 <Without music, a warrior's heart is filled only with death. Take this song and make it your own.>
+		Msg3 <That's so sad... You must feel very empty inside.>
+		Prompt1 <I'd enjoy that.>
+		Prompt2 <Sorry, I'm not a musician.>
+	end
+	inv
+		NPC Rocket Star
+		name <Kynan>
+		job <Mentor>
+		SetFaction 14
+		Age 42
+		Chardesc Male Sociable Passionate Pragmatic Heroic
+		Renown 65
+		NonCombatant
+
+		NPC Singer
+		name <Leppiu>
+		job <Musician>
+		SetFaction 14
+		Age -3
+		Chardesc Female Passionate Sociable Melancholy Heroic
+		Combatant
+	end
+
+Content
+	requires <*YATSP_RB2_Content>
+	element1 <Prefab>
+	team1 <Citizens>
+	teamdata1 <ally pass>
+	minimap <............1.......#---#>
+
+	sub
+		Persona 1
+		special <UNLISTED>
+		Greeting <if= PCFac ChatNPCFac else GoChat NewChat Say 1 AddChat 1 AddChat 2>
+		GoChat <NewChat SayAnything>
+		result1 <EndChat Say 2 Shop .wares Goto result2>
+		.wares <WEAPON EXOTIC ARMOR>
+		*result2 <*GoodBye>
+		Msg1 <You can tell the worth of a pilot by the gear he carries. Looking at you, it's obviously time for an upgrade.>
+		Msg2 <These weapons are the finest in all of space. Use them well, and look good while doing so.>
+		Prompt1 <I could use some new gear.>
+		Prompt2 <Right now I've got everything I need.>
+	end
+	inv
+		NPC Rocket Star
+		name <Jondi Syd>
+		job <Weaponmaster>
+		SetFaction 14
+		Skill 21 13
+		Age 8
+		Chardesc Male Sociable Passionate Villainous
+		NonCombatant
+	end
 
 Content
 	requires <*YATSP_RB2_Content>
@@ -27,7 +116,7 @@ Content
 		job <Star Commander>
 		age 34
 		renown 90
-		chardesc sociable passionate
+		chardesc female sociable passionate
 	end
 
 
@@ -49,9 +138,9 @@ Content
 		.wares1 <MEDICINE CYBERWARE>
 		.wares2 <MEDICINE>
 		*result2 <*GoodBye>
-		Msg1 <Crash your mek? Party a little too hard? You've come to the right place. I can make it all better.>
+		Msg1 <Crash your mek? Party a little too hard? You've come to the right place. Let me take away your pain.>
 		Msg2 <Just wait and I'll make you as good as new... or maybe even better.>
-		Prompt1 <I need your help.>
+		Prompt1 <I could use some help.>
 		Prompt2 <No thanks, I'm fine.>
 	end
 	inv
@@ -92,7 +181,7 @@ Content
 		CMsg4_3 <if= PCMeks 0 Accept>
 		Prompt1 <Could you take a look at my mecha?>
 		Prompt2 <I don't need any repairs right now.>
-		Prompt3 <Give it to me.>
+		Prompt3 <Give it to me, Makk.>
 	end
 	inv
 		NPC Mechanic
