@@ -5603,3 +5603,455 @@ sub
 % End of Theles Spinner...
 end
 
+%%
+%%   **************************
+%%   ***   YATATE SPINNER   ***
+%%   **************************
+%%
+
+Scene 0 3
+	mapwidth 27
+	mapheight 10
+	name <Yatate Spinner>
+	XPos 14
+	YPos 42
+
+	Tolerance 0
+
+	world <L5 Region>
+	desc <Yatate Spinner is known for its exciting night life and extreme fashion. It is home to the Rocket Stars.>
+	special <NOEXIT SHOWALL SOLO TOWNMECHA>
+	type <city town spinner target outdoors urban destination hometown culture>
+	personatype <city spinner>
+	habitat <SPACE.URBAN>
+	MegaCityMap
+
+	entrance <*COLONY-1>
+
+	% V1 = Message Counter
+
+	SetFaction 11
+	factions <RISHI ROCKE HOELL L5LAW>
+
+	desig <YATSP>
+	context <SPACE>
+
+	Quest1 <*:LocalQuest>
+
+	start <if= V1 0 else GoSecondTime V= 1 1 Alert 1 Print 2>
+	GoSecondTime <Print 2>
+	Msg1 <Yatate Spinner is the home port of the Rocket Stars. Aspiring mecha pilots from all over come here hoping to make it big.>
+	Msg2 <You enter Yatate Spinner.>
+
+sub
+	Scene
+	name <Style Maker>
+	type <building mall public legit>
+	entrance <*Building>
+	special <ADDEXIT>
+	MallMap
+	MapWidth 36
+	MapHeight 20
+
+	start <Print 1>
+	Msg1 <You enter Style Maker.>
+
+	NeededCells 8
+	Content3 <Some 2 100 Sub *WEAPON_SHOP     na>
+	Content4 <Some 2 100 Sub *ARMOR_SHOP      na>
+	Content6 <Some 2 100 Sub *MECHA_SHOP      na>
+	Content9 <Fill Sub *SHOP_RANDOM           na>
+	sub
+		team 1
+
+		team 2
+		name <Citizens>
+		SetAlly 1
+		Passive
+
+		team 3
+		name <Guards>
+		SetAlly 2
+
+		room
+		name <Foyer>
+		desig <EntranceGrid>
+		Content <Some 4 50 Here *URBAN_X>
+		Content2 <Some 1 100 Here *ANTI_ATTACK_SECURITY 2>
+	end
+
+	Scene
+	name <Albion Hospital>
+	type <Building hospital public legit>
+	entrance <*Hospital>
+	special <ADDEXIT>
+	MallMap
+	MapWidth 20
+	MapHeight 10
+
+	NeededCells 2
+	Content <Some 1 100 Sub *Doctor>
+	Content2 <Fill Sub *HOSPITAL_X>
+
+	start <Print 1>
+	Msg1 <You enter Albion Hospital.>
+
+	sub
+		team 1
+
+		team 2
+		name <Citizens>
+		SetAlly 1
+		Passive
+
+		team 3
+		name <Guards>
+		SetAlly 2
+
+		room
+		desig <EntranceGrid>
+		Content <Some 2 50 Here *URBAN_X>
+		Content2 <Some 1 100 Here *ANTI_ATTACK_SECURITY 2>
+	end
+
+	Scene
+	name <Rocket Base One>
+	type <building military>
+	entrance <*Building>
+	special <ADDEXIT>
+	SetFaction 14
+	ClubMap
+	MapWidth 25
+	MapHeight 25
+
+	PalaceParkTiles
+
+	NeededCells 3
+	Content1 <Some 1 100 Sub *MIL_RECRUITER>
+	Content2 <Variety 2 2 Sub *YATSP_RB1_Content>
+	Content3 <Fill Sub *GOV_MILITARY>
+
+	5Min <ifTeamHostile 3  MonsterUp 3 d20>
+
+	start <Print 1>
+	Msg1 <You enter Rocket Base One.>
+
+	sub
+		team 1
+
+		team 2
+		name <Citizens>
+		SetAlly 1
+		Passive
+
+		Team 3
+		name <Guards>
+		Deploy <ifTeamHostile 3 if= V1 0 V= 1 1 MonsterUp 3 10>
+		type <Guard Robot>
+		SetAlly 1 2
+
+		room
+		name <Garrison>
+		minimap <2...31..............#---#>
+		inv
+			NPC Rocket Star
+			SetTeam 3
+			SetFaction 14
+			MiniMapComponent 1
+
+			NPC Rocket Star
+			SetTeam 3
+			SetFaction 14
+			MiniMapComponent 2
+		end
+
+
+		room
+		special <NOGO>
+		minimap <##1##...............##=##>
+		sub
+			Door
+			update <if= PCFac 14 SetStat 6 0>
+		end
+		inv
+			Elevator
+			name <Rocket Penthouse>
+			MiniMapComponent 1
+			use <if= PCFac 14 else GoNoAccess  Print 1 Exit Destination>
+			GoNoAccess <Print 101>
+			Msg1 <You board the elevator.>
+			Msg101 <This elevator doesn't respond to you.>
+		end
+
+		room
+		name <Foyer>
+		desig <EntranceGrid>
+		Content2 <Some 3  20 Here *URBAN_X>
+		Content4 <Some 1 100 Here *ANTI_ATTACK_SECURITY 2>
+
+		Scene
+		name <Rocket Penthouse>
+		type <building private military>
+		special <NOEXIT>
+		SetFaction 3
+		PalaceParkTiles
+		ClubMap
+		MapWidth 25
+		MapHeight 25
+
+		NeededCells 6
+		Content <Variety 3 3 Sub *YATSP_RB2_Content>
+		Content2 <Some 3 75 Sub *GOV_MILITARY>
+
+		5Min <ifTeamHostile 3  MonsterUp 3 d20>
+
+		start <Print 1>
+		Msg1 <You enter the Rocket Penthouse.>
+
+		sub
+			team 1
+
+			team 2
+			name <Citizens>
+			SetAlly 1 3
+			Passive
+
+			Team 3
+			name <Guards>
+			type <Guard Robot>
+			SetAlly 1 2
+
+			room
+			name <Foyer>
+			desig <EntranceGrid>
+			Content <Some 1 100 Here *ANTI_ATTACK_SECURITY 2>
+			sub
+				room
+				minimap <......###..#1#...........>
+				inv
+					Elevator
+					MiniMapComponent 1
+					Destination -1
+				end
+			end
+		end
+	end
+
+	Scene
+	name <>
+	type <building garage public>
+	entrance <*Garage>
+	special <ADDEXIT>
+	MallMap
+	MapWidth 20
+	MapHeight 20
+	IndustrialTiles
+
+	start <Print 1>
+	Msg1 <You enter the Mecha Source.>
+
+	NeededCells 4
+	Content1 <Some 1 100 Sub *MECHANIC_SHOP>
+	Content2 <Some 2  90 Sub *MECHA_SHOP>
+	Content3 <Fill Sub *GARAGE_X>
+	sub
+		team 1
+
+		team 2
+		name <Citizens>
+		SetAlly 1
+		Passive
+
+		team 3
+		name <Guards>
+		SetAlly 2
+
+		room
+		name <Foyer>
+		desig <EntranceGrid>
+		Content <Some 3 40 Here *URBAN_X>
+		Content2 <Some 1 100 Here *ANTI_ATTACK_SECURITY 2>
+	end
+
+	Scene
+	name <>
+	type <building government public legit>
+	entrance <*Building>
+	special <ADDEXIT>
+	SetFaction 1
+	ClubMap
+	PalaceParkTiles
+	MapWidth 24
+	MapHeight 21
+
+	start <Print 1>
+	Msg1 <You enter the Alliance Fleet Headquarters.>
+
+	NeededCells 2
+	Content1 <Some 1 100 Sub *GOV_MILITARY  na>
+	Content2 <Fill       Sub *GOV_MISC      na>
+
+	sub
+		team 1
+
+		team 2
+		name <Citizens>
+		SetAlly 1
+		Passive
+
+		team 3
+		name <Guards>
+		SetAlly 1
+
+		room
+		name <Foyer>
+		desig <EntranceGrid>
+		Content <Some 2 55 Here *URBAN_X>
+		Content2 <Some 1 100 Here *ANTI_ATTACK_SECURITY 2>
+
+		room
+		name <Garrison>
+		minimap <2...31..............#---#>
+		inv
+			NPC Police Officer
+			SetTeam 3
+			SetFaction 9
+			MiniMapComponent 1
+
+			NPC Police Officer
+			SetTeam 3
+			SetFaction 9
+			MiniMapComponent 2
+
+			NPC Police Officer
+			SetTeam 3
+			SetFaction 9
+			MiniMapComponent 3
+		end
+
+		room
+		name <Main Office>
+		minimap <....31..............#&+&#>
+		inv
+			NPC Politician
+			SetTeam 2
+			SetFaction 11
+			MiniMapComponent 1
+		end
+	end
+
+	Scene
+	name <Yatate Spaceport>
+	type <building shuttle spaceport legit public>
+	entrance <*SpacePort>
+	special <ADDEXIT>
+	ClubMap
+	MapWidth 20
+	MapHeight 21
+
+	start <Print 1>
+	Msg1 <You enter Yatate Spaceport.>
+
+	NeededCells 4
+	Content1 <Some 1 100 Sub *SHUTTLESERVICE  na>
+	Content2 <Some 1 100 Sub *RESTAURANT      na>
+	Content5 <Some 1 100 Sub *MECHANIC_SHOP   na>
+	Content6 <Fill Sub *SPACEPORT_X>
+
+	sub
+		team 1
+
+		team 2
+		name <Citizens>
+		SetAlly 1
+		Passive
+
+		team 3
+		name <Guards>
+		SetAlly 2
+
+		room
+		name <Foyer>
+		desig <EntranceGrid>
+		Content <Some 4 50 Here *URBAN_X>
+		Content2 <Some 1 100 Here *ANTI_ATTACK_SECURITY 2>
+
+		room
+		minimap <############1###...##...#>
+		sub
+			STC AIRLOCK-1
+			MiniMapComponent 1
+			destination <Yatate Station Exterior>
+		end
+
+		Scene 0 3
+		name <Yatate Station Exterior>
+		type <Environs Outdoors Space>
+		special <ShowAll>
+		terrain <SPACE>
+		MapWidth 30
+		MapHeight 30
+		SpaceMap
+		nu1 <if= T1 0 Exit WorldID>
+		Microgravity
+		Vacuum
+		SpaceBackdrop
+
+		inv
+			STC COLONY-1
+			name <Yatate Spinner>
+			Destination -1
+			XPos 15
+			YPos 15
+		end
+
+	end
+
+	Scene
+	name <Hoeller Heavy Industries>
+	SetFaction 7
+	type <building public legit corporate>
+	entrance <*Building>
+	special <ADDEXIT>
+	MallMap
+	MapWidth 15
+	MapHeight 15
+
+	start <Print 1>
+	Msg1 <You enter Hoeller Heavy Industries.>
+
+	NeededCells 2
+	Content2 <Fill Sub *CORP_PUBLIC>
+
+	5Min <ifTeamHostile 3  MonsterUp 3 d20>
+
+	sub
+		team 1
+
+		team 2
+		name <Citizens>
+		SetAlly 1
+		Passive
+
+		Team 3
+		name <Guards>
+		Deploy <if# L1 0 MonsterUp 3 10 TeamAttack 3>
+		SetAlly 1 2
+
+		room
+		name <Foyer>
+		desig <EntranceGrid>
+		Content1 <Some 1  35 Here *NPC_GUARD>
+		Content3 <Some 2  50 Here *CORP_EMPLOYEE>
+		Content4 <Some 1 100 Here *ANTI_ATTACK_SECURITY 2>
+	end
+	inv
+		NPC Corporate Executive
+		home <Foyer>
+		SetFaction 7
+	end
+
+% End of Yatate Spinner...
+end
+
+

@@ -7,6 +7,105 @@
 %%
 %% NAME: *[city designation]_[building name abbreviated]_[content type]
 
+%% *YATSP_RB2_Content
+%%	NPCs for Rocket Base 1
+
+Content
+	requires <*YATSP_RB2_Content>
+	element1 <Prefab>
+	team1 <Citizens>
+	teamdata1 <ally pass>
+	minimap <............1.......#&+&#>
+
+	sub
+		Persona 1
+		greeting <NewChat SayAnything>
+	end
+	inv
+		NPC Rocket Star
+		name <Vannis Abdiel>
+		job <Star Commander>
+		age 34
+		renown 90
+		chardesc sociable passionate
+	end
+
+
+%% *YATSP_RB1_Content
+%%	NPCs for Rocket Base 1
+
+Content
+	requires <*YATSP_RB1_Content>
+	element1 <Prefab>
+	team1 <Citizens>
+	teamdata1 <ally pass>
+	minimap <............1.......#&+&#>
+
+	sub
+		Persona 1
+		Greeting <NewChat Say 1 AddChat 1 AddChat 2>
+		result1 <EndChat Say 2 if= PCFac ChatNPCFac else GoBadWares Shop .wares1 Goto result2>
+		GoBadWares <Shop .wares2 Goto result2>
+		.wares1 <MEDICINE CYBERWARE>
+		.wares2 <MEDICINE>
+		*result2 <*GoodBye>
+		Msg1 <Crash your mek? Party a little too hard? You've come to the right place. I can make it all better.>
+		Msg2 <Just wait and I'll make you as good as new... or maybe even better.>
+		Prompt1 <I need your help.>
+		Prompt2 <No thanks, I'm fine.>
+	end
+	inv
+		NPC Cyberdoc
+		name <Edeline>
+		SetFaction 14
+		Skill 21 10
+		Age 8
+		Chardesc Female sociable passionate cheerful heroic
+	end
+
+Content
+	requires <*YATSP_RB1_Content>
+	content <Required *DECOR_FOR_SHOP %1% Local>
+	element1 <Prefab>
+	team1 <Citizens>
+	teamdata1 <ally pass>
+	sub
+		Persona 1
+		*greeting <*NiceToMeetYou GoCheckEnemy>
+		*GoCheckEnemy <*ENEMY_CHECK GoShop 3 GoIsEnemy>
+		GoIsEnemy <PCEnemy SelfCID>
+		GoShop <if= PCFac ChatNPCFac else GoMinorShop NewChat Say 3 AddChat 3 AddChat 2>
+		GoMinorShop <NewChat Say 1 AddChat 1 AddChat 2>
+		*GoBye <*GOODBYE>
+		result1 <EndChat Say 2 Shop .nowares Goto GoBye>
+		result2 <Goto GoBye>
+		result3 <EndChat Say 4 Shop .wares Goto GoBye>
+		.wares <MECHA MEXTRA>
+		Msg1 <You stand in the presence of the official mechanic for the Rocket Stars. I'm the one who keeps their dream machines flying.>
+		Msg2 <Normally I wouldn't, but since the Stars are all such ace pilots I don't have a lot of fixing to do. Let's see what's wrong with it.>
+		Msg3 <All hail \RANK \PC ! Just say the word and I'll get straight to work on your beautiful machine.>
+		Msg4 <If you think you'd rather upgrade, I have a couple of new machines you might be interested in.>
+		Msg4_1 <The good thing is, this job never gets old. I just love working with these machines.>
+		Msg4_2 <So, when are you planning to upgrade that antique you've been riding? Take a look through my selection, I'm sure you can find something better back there.>
+		CMsg4_2 <ifG PCMeks 0 Accept>
+		Msg4_3 <Walking is no way for a Star to get around town. You should pick up a new mecha, if you have the money.>
+		CMsg4_3 <if= PCMeks 0 Accept>
+		Prompt1 <Could you take a look at my mecha?>
+		Prompt2 <I don't need any repairs right now.>
+		Prompt3 <Give it to me.>
+	end
+	inv
+		NPC Mechanic
+		name <Makk>
+		SetFaction 14
+		skill 21 10
+		SDL_PORTRAIT <>
+		SDL_COLORS <>
+		CharDesc Male Sociable Passionate Passionate Cheerful Pragmatic
+		Age 2
+	end
+
+
 %% *THESP_HM_Content
 %%	NPCs for Hovel Manor in Theles Spinner
 

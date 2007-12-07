@@ -36,7 +36,7 @@ Faction 3
 	name <the Silver Knights>
 	% V1 = Number of faction rewards pending
 	desig <SILKN>
-	desc <The elite mecha forces of Maquise Spinner.>
+	desc <The elite mecha forces of Cesena Spinner, defenders of the L5 Alliance.>
 	Context <MILIT>
 	type <Military ArenaOK L5PAT>
 	jobs <MILIT>
@@ -91,7 +91,7 @@ Faction 6
 	name <the Privateer Guild>
 	% V1 = Number of faction rewards pending
 	desig <PRIVA>
-	desc <The mercenary mecha forces of the L5 Alliance.>
+	desc <The mercenary mecha forces used by the Free Commerce States and the L5 Alliance.>
 	Context <MILIT>
 	mecha <MAQUI COMET>
 	type <Military Mercenary ArenaOK L5PAT>
@@ -161,7 +161,7 @@ Faction 9
 	name <L5Law>
 	% V1 = Number of faction rewards pending
 	desig <L5LAW>
-	desc <>
+	desc <The law enforcement agency of the Free Commerce States.>
 	context <POLIC>
 	type <police ArenaOK L5PAT>
 	jobs <POLIC>
@@ -233,7 +233,7 @@ Faction 13
 	desc <This corporation is best known for its character and lifestyle goods. Recently it has entered the mecha market.>
 	Context <CORPO>
 	type <Corporate ArenaOK L5PAT>
-	jobs <CRAFT CORPO TRADE MEDIA>
+	jobs <CORPO TRADE MEDIA>
 	SetEnemy 2 7 8
 	mecha_colors <255 105 180 255 253 208 0 240 240>
 	chara_colors <200 64 96>
@@ -251,9 +251,9 @@ Faction 13
 Faction 14
 	name <the Rocket Stars>
 	desig <ROCKE>
-	desc <The elite mecha forces of Rishiri Spinner.>
+	desc <The elite mecha forces of Yatate Spinner, defenders of the Rishiri Dominion.>
 	Context <MILIT>
-	type <Military L5PAT>
+	type <Military L5PAT ArenaOK>
 	jobs <MILIT ADVEN>
 	SetAlly 11
 	SetEnemy 3 8
