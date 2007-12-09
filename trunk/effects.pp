@@ -1284,7 +1284,7 @@ begin
 
 	end else begin
 		if CurrentMoveRate( GB^.Scene , TMaster ) > 0 then AddModifier( 'tr-stop' , StopPenalty )
-		else AddModifier( 'tr-immobile' , ImmobilePenalty );
+		else if ( TMaster^.G <> GG_Prop ) or ( NAttValue( TMaster^.NA , NAG_Skill , NAS_Dodge ) = 0 ) then AddModifier( 'tr-immobile' , ImmobilePenalty );
 	end;
 
 	{ Modify for attack attributes. }
@@ -1596,6 +1596,8 @@ begin
 		PAG_CauseDamage := False;
 	end;
 
+	{ Receiving an attack causes the target to take a morale check, whether the attack hit or not. }
+	SetNAtt( TMaster^.NA , NAG_Action , NAS_MightGiveUp , 1 );
 end;
 
 Function PAG_CauseStatusEffect( GB: GameBoardPtr; AtDesc: String; ER: EffectRequest; Target: GearPtr ): Boolean;
@@ -1773,7 +1775,7 @@ end;
 
 
 
-{ PROCESS EFFECTS VS GEAR TARGETS }
+{ PROCESS EFFECTS VS TILE TARGETS }
 
 Procedure DestroyTerrain( GB: GameBoardPtr; X,Y: Integer );
 	{ Destroy the terrain in this spot. Pretty simple actually. }

@@ -1038,7 +1038,7 @@ var
 			end;
 		end;
 	var
-		E,Scene,Container,Team,Persona,MoveThis: GearPtr;
+		E,Scene,PScene,Container,Team,Persona,MoveThis: GearPtr;
 		T: Integer;
 		ElemDesc: String;
 	begin
@@ -1059,6 +1059,7 @@ var
 			ElemDesc := SAttValue( Frag^.SA , 'ELEMENT' + BStr( T ) );
 			if ElemDesc <> '' then begin
 				Scene := FindQuestScene( NAttValue( Frag^.NA , NAG_QuestElemScene , T ) );
+				PScene := Scene;
 
 				{ If this is a character, deal with the persona. }
 				if UpCase( ElemDesc[1] ) = 'C' then begin
@@ -1067,13 +1068,20 @@ var
 					{ store it in variable "E" and megalist away. }
 					E := SeekPersona( Adv , ElementID( Frag , T ) );
 
+					if PScene = Nil then begin
+						{ We don't have a scene for this character. Weird. }
+						DialogMsg( 'WARNING: No scene for Persona ' + Bstr( T ) + ' of ' + GearName( Frag ) );
+						PScene := Adv^.SubCom;
+						DialogMsg( 'I''ll just use ' + GearName( PScene ) + ' instead.' );
+					end;
+
 					if Persona <> Nil then begin
 						{ We have a persona fragment to }
 						{ deal with. }
 						if E = Nil then begin
 							DelinkGear( Frag^.SubCom , Persona );
 							Persona^.S := ElementID( Frag , T );
-							InsertSubCom( Scene , Persona );
+							InsertSubCom( PScene , Persona );
 							SetNAtt( Persona^.NA , NAG_QuestInfo , NAS_QuestID , NAttValue( Frag^.NA , NAG_QuestInfo , NAS_QuestID ) );
 							SetNAtt( Persona^.NA , NAG_QuestInfo , NAS_LayerID , NAttValue( Frag^.NA , NAG_QuestInfo , NAS_LayerID ) );
 						end else if E <> Nil then begin
@@ -1084,7 +1092,7 @@ var
 						{ is defined in the component, so create a new }
 						{ one from scratch. }
 						Persona := LoadNewSTC( 'PERSONA_BLANK' );
-						InsertSubCom( Scene , Persona );
+						InsertSubCom( PScene , Persona );
 						Persona^.S := ElementID( Frag , T );
 						SetNAtt( Persona^.NA , NAG_QuestInfo , NAS_QuestID , NAttValue( Frag^.NA , NAG_QuestInfo , NAS_QuestID ) );
 						SetNAtt( Persona^.NA , NAG_QuestInfo , NAS_LayerID , NAttValue( Frag^.NA , NAG_QuestInfo , NAS_LayerID ) );

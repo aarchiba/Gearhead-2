@@ -1,20 +1,23 @@
 % RANDOM MAPS STANDARD PARAMETER FILE % See randmaps.pp for details
-Name27 <City>
-PARAM27 <City 1 6 20 20 10>
+Name27 <City Block>
+PARAM27 <Lattice 1 0 6>
 SELECTOR27 <-1 8 6>
-SubZone27 <1>
+GapFill27 <-8 -8 -8 -8 -8 -8 -4>
+SubZone27 <-3>
 Terrain27 <GROUND>
 
-Name25 <MegaCity>
-PARAM25 <City 1 6 30 35 25>
+Name25 <City Block>
+PARAM25 <Lattice 1 0 6>
 SELECTOR25 <-1 8 6>
-SubZone25 <1>
+GapFill25 <-8 -8 -8 -8 -8 -8 -4>
+SubZone25 <-3>
 Terrain25 <GROUND>
 
-Name24 <City>
-PARAM24 <City 1 6 20 20 10>
+Name24 <City Block>
+PARAM24 <Lattice 1 0 6>
 SELECTOR24 <-1 8 6>
-SubZone24 <1>
+GapFill24 <-8 -8 -8 -8 -8 -8 -4>
+SubZone24 <-3>
 Terrain24 <GROUND>
 
 Name23 <Outer Space>
@@ -47,10 +50,11 @@ GapFill7 <-4 -4 -9 -9 -9 -13 -17>
 SubZone7 <7>
 Terrain7 <GROUND>
 
-Name6 <City>
-PARAM6 <City 1 6 20 20 10>
+Name6 <City Block>
+PARAM6 <Lattice 1 0 6>
 SELECTOR6 <-1 8 6>
-SubZone6 <1>
+GapFill6 <-8 -8 -8 -8 -8 -8 -4>
+SubZone6 <-3>
 Terrain6 <GROUND>
 
 Name3 <Deep Forest>
@@ -80,7 +84,7 @@ SubZone-1 <-27>
 
 Name-2 <Cavern>
 PARAM-2 <Carve 14 0 13 Wall 13>
-SELECTOR-2 <1 5 14> % Include (1) the Floor Terrain (5) Stone Floor (14)
+SELECTOR-2 <1 5 14> % Include (1) the Floor Terrain (5) Default Floor (14)
 SubZone-2 <-27>
 
 Name-3 <Rectangle>
@@ -91,14 +95,28 @@ PARAM-4 <Scatter 2 3 0>
 Name-5 <Hills>
 PARAM-5 <Scatter 8 9 10>
 
-Name-6 <Castle>
-PARAM-6 <Fill 14 0 OWall 12>
+Name-6 <City>
+PARAM-6 <City 1 6 20 20 10>
+SELECTOR-6 <-1 8 6>
+SubZone-6 <1>
+Terrain-6 <GROUND>
 
-Name-7 <Parking Lot>
-PARAM-7 <Fill 6 0 Wall 1>
+Name-7 <MegaCity>
+PARAM-7 <City 1 6 30 35 25>
+SELECTOR-7 <-1 8 6>
+SubZone-7 <1>
+Terrain-7 <GROUND>
+
+Name-8 <Buildings Block>
+PARAM-8 <Scatter 27 24 25>
 
 Name-9 <Lake>
 PARAM-9 <ELLIPSE 4 17 18>
+
+Name-10 <Complex Map>
+PARAM-10 <Wall 13 Mitose 14 13>
+SUBZONE-10 <-27>
+TERRAIN-10 <GROUND>
 
 Name-15 <Arena>
 PARAM-15 <Fill 1 0 Wall 12>

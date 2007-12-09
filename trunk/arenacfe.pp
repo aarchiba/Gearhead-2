@@ -53,7 +53,7 @@ Function MightSurrender( GB: GameBoardPtr; NPC: GearPtr ): Boolean;
 
 Procedure VerbalAttack( GB: GameBoardPtr; Attacker,Target: GearPtr );
 
-Procedure ResolveCrashesAndCharges( GB: GameBoardPtr );
+Procedure ResolveAfterEffects( GB: GameBoardPtr );
 
 implementation
 
@@ -361,7 +361,7 @@ begin
 	DisposeMapClone( FakeGB );
 
 	{ Resolve any crashes resulting from the attack. }
-	ResolveCrashesAndCharges( GB );
+	ResolveAfterEffects( GB );
 
 	{ AT the end, redisplay the map. }
 	CombatDisplay( GB );
@@ -385,68 +385,10 @@ begin
 	DisposeMapClone( FakeGB );
 
 	{ Resolve any crashes resulting from the attack. }
-	ResolveCrashesAndCharges( GB );
+	ResolveAfterEffects( GB );
 
 	{ AT the end, redisplay the map. }
 	CombatDisplay( GB );
-end;
-
-Procedure ResolveCrashesAndCharges( GB: GameBoardPtr );
-	{ Check the gameboard for mecha which have either crashed or charged. }
-	{ Search for charges first, crashes second. }
-var
-	FakeGB: GameBoardPtr;
-	Mek,Target: GearPtr;
-	FX_Desc: String;
-	V: LongInt;
-begin
-	{ Check for charges first. }
-	Mek := GB^.Meks;
-	while Mek <> Nil do begin
-		V := NAttValue( Mek^.NA , NAG_Action , NAS_WillCharge );
-		if V <> 0 then begin
-			Target := LocateMekByUID( GB , V );
-
-			if ( Target <> Nil ) and NotDestroyed( Target ) then begin
-				{ Generate a fake gameboard to be used for screen output. }
-				FakeGB := CloneMap( GB );
-
-				DoCharge( GB , Mek , Target );
-
-				{ Report the effect of the attack. }
-				Display_Effect_History( FakeGB );
-				DisposeMapClone( FakeGB );
-			end;
-
-			SetNAtt( Mek^.NA , NAG_Action , NAS_WillCharge , 0 );
-			SetNAtt( Mek^.NA , NAG_Action , NAS_ChargeSpeed , 0 );
-		end;
-		Mek := Mek^.Next;
-	end;
-
-	{ Check for crashes now. }
-	Mek := GB^.Meks;
-	while Mek <> Nil do begin
-		V := NAttValue( Mek^.NA , NAG_Action , NAS_WillCrash );
-		if V > 0 then begin
-			{ Generate a fake gameboard to be used for screen output. }
-			FakeGB := CloneMap( GB );
-			if Mek^.G = GG_Character then begin
-				FX_Desc := MsgString( 'FXDESC_FALL' );
-			end else begin
-				FX_Desc := MsgString( 'FXDESC_CRASH' );
-			end;
-
-			HandleEffectString( GB , Mek , BStr( V ) + ' ' + FX_CauseDamage + ' 10 0 SCATTER' , FX_Desc );
-
-			{ Report the effect of the attack. }
-			Display_Effect_History( FakeGB );
-			DisposeMapClone( FakeGB );
-
-			SetNAtt( Mek^.NA , NAG_Action , NAS_WillCrash , 0 );
-		end;
-		Mek := Mek^.Next;
-	end;
 end;
 
 Procedure EffectFrontEnd( GB: GameBoardPtr; Target: GearPtr; FX_String,FX_Desc: String );
@@ -457,7 +399,7 @@ begin
 	Display_Effect_History( GB );
 
 	{ Resolve any crashes resulting from the effect. }
-	ResolveCrashesAndCharges( GB );
+	ResolveAfterEffects( GB );
 end;
 
 Procedure MassEffectFrontEnd( GB: GameBoardPtr; FX_String,FX_Desc: String );
@@ -468,7 +410,7 @@ begin
 	Display_Effect_History( GB );
 
 	{ Resolve any crashes resulting from the effect. }
-	ResolveCrashesAndCharges( GB );
+	ResolveAfterEffects( GB );
 end;
 
 Procedure RandomExplosion( GB: GameBoardPtr );
@@ -485,7 +427,7 @@ begin
 	Display_Effect_History( GB );
 
 	{ Resolve any crashes resulting from the effect. }
-	ResolveCrashesAndCharges( GB );
+	ResolveAfterEffects( GB );
 end;
 
 Procedure StatusEffectCheck( GB: GameBoardPtr );
@@ -922,14 +864,148 @@ Function MightEject( Mek: GearPtr ): Boolean;
 	{ Return TRUE if it's possible that MEK might eject given its }
 	{ current situation, or FALSE otherwise. }
 begin
-	MightEject := ( PercentDamaged( Mek ) < 60 ) or not HasAtLeastOneValidMovemode( Mek );
+	MightEject := GearActive( Mek ) and ( ( PercentDamaged( Mek ) < 75 ) or not HasAtLeastOneValidMovemode( Mek ) );
 end;
 
 Function MightSurrender( GB: GameBoardPtr; NPC: GearPtr ): Boolean;
 	{ Return TRUE if it's possible that NPC might surrender given its }
 	{ current situation, or FALSE otherwise. }
 begin
-	MightSurrender := (( CurrentStamina(NPC) = 0 ) or ( GearCurrentDamage( NPC ) < Random( 4 ) )) and AreEnemies(GB,NAttValue(NPC^.NA,NAG_Location,NAS_Team),NAV_DefPlayerTeam) and (NAttValue(NPC^.NA,NAG_EpisodeData,NAS_SurrenderStatus) = 0) and NotAnAnimal( NPC );
+	MightSurrender := (( CurrentStamina(NPC) = 0 ) or ( GearCurrentDamage( NPC ) < Random( 6 ) )) and AreEnemies(GB,NAttValue(NPC^.NA,NAG_Location,NAS_Team),NAV_DefPlayerTeam) and (NAttValue(NPC^.NA,NAG_EpisodeData,NAS_SurrenderStatus) = 0) and NotAnAnimal( NPC );
+end;
+
+Function ShouldEject( Mek: GearPtr; GB: GameBoardPtr ): Boolean;
+	{ Return TRUE if this mecha should eject, or FALSE otherwise. }
+var
+	Dmg,PrevDmg,Intimidation,LeaderShip,TeamID: Integer;
+	Team: GearPtr;
+begin
+	{ Error check- members of the PC team never eject. }
+	TeamID := NAttValue( Mek^.NA , NAG_Location , NAS_Team );
+	if TeamID = NAV_DefPlayerTeam then Exit( False );
+
+	{ Calculate the Intimidation and Leadership values. }
+	Intimidation := 5;
+	Leadership := TeamSkill( GB , TeamID , NAS_Leadership );
+	if GB^.Scene <> Nil then begin
+		Team := GB^.Scene^.SubCom;
+		while Team <> Nil do begin
+			if ( Team^.S <> TeamID ) and AreAllies( GB , Team^.S , TeamID ) then begin
+				Dmg := TeamSkill( GB , Team^.S , NAS_Leadership );
+				if Dmg > Leadership then Leadership := Dmg;
+			end else if ( Team^.S <> TeamID ) and AreEnemies( GB , Team^.S , TeamID ) then begin
+				Dmg := TeamSkill( GB , Team^.S , NAS_Intimidation );
+				if Dmg > Intimidation then Intimidation := Dmg;
+			end;
+			Team := Team^.Next;
+		end;
+	end;
+
+	Dmg := PercentDamaged( Mek );
+	PrevDmg := 100 - NAttValue( Mek^.NA , NAG_EpisodeData , NAS_PrevDamage );
+	SetNAtt( Mek^.NA , NAG_EpisodeData , NAS_PrevDamage , 100 - DMG );
+	if MightEject( Mek ) and ( DMG < PrevDmg ) then begin
+		if CurrentMoveRate( GB^.Scene , Mek ) = 0 then Dmg := Dmg - 25;
+ 		ShouldEject := Dmg < ( Random( 60 ) + RollStep( Intimidation ) - RollStep( Leadership ) );
+
+	end else ShouldEject := False;
+end;
+
+Function ShouldSurrender( GB: GameBoardPtr; NPC: GearPtr ): Boolean;
+	{ Check to see whether or not NPC should surrender. Surrender should take place }
+	{ if the following conditions are met: The NPC has no stamina left, the NPC is }
+	{ an enemy of Team1, the NPC has not previously surrendered, the NPC is not an }
+	{ animal, }
+	{ ...and Team1 can manage an intimidation roll. }
+var
+	SkRank,NPC_Stamina,Dmg,PrevDmg: Integer;
+begin
+	Dmg := PercentDamaged( NPC );
+	NPC_Stamina := CurrentStamina(NPC);
+	if NPC_Stamina = 0 then Dmg := Dmg - 5;
+	PrevDmg := 100 - NAttValue( NPC^.NA , NAG_EpisodeData , NAS_PrevDamage );
+	SetNAtt( NPC^.NA , NAG_EpisodeData , NAS_PrevDamage , 100 - DMG );
+	if ( DMG < PrevDmg ) and MightSurrender( GB , NPC ) then begin
+		SkRank := TeamSkill( GB , NAV_DefPlayerTeam , NAS_Intimidation );
+		PrevDmg := GearCurrentDamage( NPC );
+		if PrevDmg < 10 then SkRank := SkRank + 15 - PrevDmg;
+		ShouldSurrender := RollStep( SkRank ) > ( CStat( NPC , STAT_Ego ) + Dmg div 10 );
+	end else begin
+		ShouldSurrender := False;
+	end;
+end;
+
+Procedure ResolveAfterEffects( GB: GameBoardPtr );
+	{ Check the gameboard for mecha which have either crashed or charged. }
+	{ Search for charges first, crashes second. }
+var
+	FakeGB: GameBoardPtr;
+	Mek,Target: GearPtr;
+	FX_Desc: String;
+	V: LongInt;
+begin
+	{ Check for charges first. }
+	Mek := GB^.Meks;
+	while Mek <> Nil do begin
+		V := NAttValue( Mek^.NA , NAG_Action , NAS_WillCharge );
+		if V <> 0 then begin
+			Target := LocateMekByUID( GB , V );
+
+			if ( Target <> Nil ) and NotDestroyed( Target ) then begin
+				{ Generate a fake gameboard to be used for screen output. }
+				FakeGB := CloneMap( GB );
+
+				DoCharge( GB , Mek , Target );
+
+				{ Report the effect of the attack. }
+				Display_Effect_History( FakeGB );
+				DisposeMapClone( FakeGB );
+			end;
+
+			SetNAtt( Mek^.NA , NAG_Action , NAS_WillCharge , 0 );
+			SetNAtt( Mek^.NA , NAG_Action , NAS_ChargeSpeed , 0 );
+		end;
+		Mek := Mek^.Next;
+	end;
+
+	{ Check for crashes now. }
+	Mek := GB^.Meks;
+	while Mek <> Nil do begin
+		V := NAttValue( Mek^.NA , NAG_Action , NAS_WillCrash );
+		if V > 0 then begin
+			{ Generate a fake gameboard to be used for screen output. }
+			FakeGB := CloneMap( GB );
+			if Mek^.G = GG_Character then begin
+				FX_Desc := MsgString( 'FXDESC_FALL' );
+			end else begin
+				FX_Desc := MsgString( 'FXDESC_CRASH' );
+			end;
+
+			HandleEffectString( GB , Mek , BStr( V ) + ' ' + FX_CauseDamage + ' 10 0 SCATTER' , FX_Desc );
+
+			{ Report the effect of the attack. }
+			Display_Effect_History( FakeGB );
+			DisposeMapClone( FakeGB );
+
+			SetNAtt( Mek^.NA , NAG_Action , NAS_WillCrash , 0 );
+		end;
+		Mek := Mek^.Next;
+	end;
+
+	{ Finally, check for ejection and surrender. }
+	Mek := GB^.Meks;
+	while Mek <> Nil do begin
+		V := NAttValue( Mek^.NA , NAG_Action , NAS_MightGiveUp );
+		if V <> 0 then begin
+			if ( Mek^.G = GG_Mecha ) and ShouldEject( Mek , GB ) then begin
+				AI_EJECT( Mek , GB );
+			end else if ( Mek^.G = GG_Character ) and ShouldSurrender( GB , Mek ) then begin
+				AI_SURRENDER( GB , Mek );
+			end;
+			SetNAtt( Mek^.NA , NAG_Action , NAS_MightGiveUp , 0 );
+		end;
+		Mek := Mek^.Next;
+	end;	
 end;
 
 Procedure VerbalAttack( GB: GameBoardPtr; Attacker,Target: GearPtr );

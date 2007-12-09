@@ -133,6 +133,7 @@ const
 	NAS_WillCharge = 12;	{ If nonzero, this mecha is set to charge another mecha. }
 				{ The value is the UID of the target. }
 	NAS_ChargeSpeed = 13;	{ Speed at the time the charge is declared. }
+	NAS_MightGiveUp = 14;	{ The NPC will make an ejection/surrender check now. }
 
 	NAG_EnvironmentData = 22;	{ Tells things about the scene. }
 					{ Environment data is inherited by encounters and }

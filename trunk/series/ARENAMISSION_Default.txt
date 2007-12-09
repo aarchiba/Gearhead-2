@@ -3,6 +3,52 @@
 %%  **************************************
 
 ArenaMission
+	name <Urban Encounter>
+	requires <*MISSION ArenaOK>
+	desc <Mecha from %name1% have been encountered in a city.>
+
+	MapWidth 50
+	MapHeight 50
+
+	PayRate 400
+
+	CityBlockMap
+	terrain <GROUND>
+
+	Element1 <Faction Enemy>
+
+	% L1 = Initialization Counter
+	% L2 = Victory Counter
+	Start <if= L1 0 CommanderSays 1 L= 1 1>
+	nu1 <if= T1 0 if= L2 0 L= 2 1 Alert 2 LoseArenaMission>
+	nu2 <if= T2 0 if= L2 0 Salvage Return XPV 200 L= 2 1 Alert 3 WinArenaMission>
+
+	Msg1 <Enemy mecha have been spotted. Eliminate them all.>
+	Msg2 <The mission is a failure.>
+	Msg3 <The mission is a success.>
+
+	sub
+		Team 1
+		SetEnemy 2
+		ParaX 5
+		ParaY 5
+
+		Team 2
+		SetEnemy 1
+		Deploy <SetSelfFaction M1   WMecha 2 ArenaRenown 400>
+		ParaX 45
+		ParaY 45
+
+		rect
+		name <PC Deploy Spot>
+		desig <NW>
+
+		rect
+		name <Enemy Deploy Spot>
+		desig <SE>
+	end
+
+ArenaMission
 	name <Asteroid Encounter>
 	requires <*MISSION L5PAT>
 	desc <Mecha from %name1% have been encountered on an asteroid.>

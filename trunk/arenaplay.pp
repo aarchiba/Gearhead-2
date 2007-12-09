@@ -72,7 +72,7 @@ begin
 		end;
 
 		{ Check for charges and crashes. }
-		ResolveCrashesAndCharges( GB );
+		ResolveAfterEffects( GB );
 	end;
 end;
 

@@ -374,6 +374,7 @@ Const
 
 	);
 
+	NAS_Dodge = 10;
 	NAS_Awareness = 11;
 	NAS_Vitality = 13;
 	NAS_Conversation = 19;

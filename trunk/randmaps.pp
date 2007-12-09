@@ -88,9 +88,9 @@ function RandomMap( Scene: GearPtr ): GameBoardPtr;
 implementation
 
 {$IFDEF ASCII}
-uses gearutil,ghprop,rpgdice,texutil,vidgfx,gearparser,narration,ui4gh,arenascript,ghchars,sysutils;
+uses gearutil,ghprop,rpgdice,texutil,vidgfx,gearparser,narration,ui4gh,arenascript,ghchars,sysutils,ability;
 {$ELSE}
-uses gearutil,ghprop,rpgdice,texutil,glgfx,gearparser,narration,ui4gh,arenascript,ghchars,sysutils;
+uses gearutil,ghprop,rpgdice,texutil,glgfx,gearparser,narration,ui4gh,arenascript,ghchars,sysutils,ability;
 {$ENDIF}
 
 var
@@ -415,7 +415,6 @@ Procedure InstallDoor( GB: GameBoardPtr; MF: GearPtr; X,Y,LockVal,HideVal: Integ
 	end;
 var
 	NewDoor,DoorPrototype: GearPtr;
-	Name: String;
 begin
 	if MF <> Nil then DoorPrototype := SeekCurrentLevelGear( MF^.SubCom , GG_MetaTerrain , GS_MetaDoor )
 	else DoorPrototype := Nil;
@@ -551,39 +550,6 @@ begin
 	end;
 end;
 
-Procedure DrawWall( GB: GameBoardPtr; X, Y, L, Style, WallType: Integer );
-	{ Draw a wall starting at X0,Y0 and continuing for L tiles in }
-	{ the direction indicated by Style. Use WallType as the wall }
-	{ terrain, and DoorPrototype for the door. } 
-var
-	DL: Integer;	{ Door longitude. The tile at which to add the door. }
-	T: Integer;
-begin
-	{ Select the door point now. }
-	DL := Random( L - 2 ) + 2;
-	for t := 1 to L do begin
-		{ If our point is on the map, do drawing here. }
-		if OnTheMap( GB , X , Y ) then begin
-			{ If this is our door point, do that now. }
-			if T = DL then begin
-				SetTerrain( GB , X , Y  , TERRAIN_Threshold );
-				AddDoor( GB , Nil , X , Y );
-
-			{ Otherwise draw the wall terrain. }
-			end else begin
-				SetTerrain( GB , X , Y , WallType );
-
-			end;
-
-			if Style = DW_Horizontal then begin
-				Inc( X );
-			end else begin
-				Inc( Y );
-			end;
-		end;
-	end;
-end;
-
 Procedure ProcessWall( GB: GameBoardPtr; MF: GearPtr; var Cmd: String; X0,Y0,W,H: Integer; AddGaps,AddDoors: Boolean );
 	{ Draw a wall around this map feature. Use the MFBORDER terrain, if }
 	{ appropriate. }
@@ -642,6 +608,22 @@ begin
 	DX := X;
 	for Y := Y0 to ( Y0 + H - 1 ) do begin
 		DrawWallNow;
+	end;
+
+	{ Maybe add the exit, if one was requested. }
+	if ASTringHasBString( GetSpecial( MF ) , 'ADDEXIT' ) then begin
+		if ( MF^.G = GG_Scene ) or ( MF^.G = GG_MetaScene ) then begin
+			Terrain := MF^.Stat[ STAT_MFFloor ];
+			if ( Terrain < 1 ) or ( Terrain > NumTerr ) then Terrain := TERRAIN_Floor;
+			SetTerrain( GB , X0 , Y0 + H div 2 + 1 , TERRAIN );
+			SetTerrain( GB , X0 , Y0 + H div 2 , TERRAIN );
+			SetTerrain( GB , X0 , Y0 + H div 2 - 1 , TERRAIN );
+			AddHiddenEntrance( GB , X0 , Y0 + H div 2 , 0 );
+
+		end else begin
+			DrawTerrain( GB , X0 , Y0 + H div 2 , TERRAIN_Threshold , 0 );
+			AddDoor( GB , MF , X0 , Y0 + H div 2 );
+		end;
 	end;
 end;
 
@@ -778,43 +760,79 @@ begin
 
 end;
 
-Procedure ProcessLattice( GB: GameBoardPtr; MF: GearPtr; var Cmd: String; X0,Y0,W,H: Integer );
+Function SeekRoom( MF: GearPtr; Desig: String ): GearPtr;
+	{ Seek a sub-mapfeature with the provided deignation. }
+	{ Return NIL if no such map feature could be found. }
+begin
+	Desig := UpCase( Desig );
+	MF := MF^.SubCom;
+	while ( MF <> Nil ) and ( UpCase( SAttValue( MF^.SA , 'DESIG' ) ) <> Desig ) do MF := MF^.Next;
+	SeekRoom := MF;
+end;
+
+Function ProcessLattice( GB: GameBoardPtr; MF: GearPtr; var Cmd: String; X0,Y0,W,H: Integer ): SAttPtr;
 	{ Draw a grid of lines on the map. }
+	{ GH2- The lattice will be of 5x5 cells separated by corridors of width 3. }
 var
-	LineTerr,FieldTerr,X,Y: Integer;
-	P: Point;
+	LineTerr,FieldTerr,MarbleTerr,X,Y,CX,CY,L_W,L_H,X_Offset,Y_Offset: Integer;
+	CornerCell: GearPtr;
+	Cells: SAttPtr;
 begin
 	FieldTerr := DecideTerrainType( MF , Cmd , STAT_MFFloor );
+	MarbleTerr := DecideTerrainType( MF , Cmd , STAT_MFMarble );
 	LineTerr := DecideTerrainType( MF , Cmd , STAT_MFSpecial );
+	Cells := Nil;
 
-	{ Fill in entire area with the field terrain type. }
-	RectFill( GB , FieldTerr , 0 , X0 , Y0 , W , H );
+	{ Fill in entire area with the corridor terrain type. }
+	RectFill( GB , LineTerr , 0 , X0 , Y0 , W , H );
 
-	{ Draw the vertical lines. }
-	P.X := X0;
-	while P.X < ( X0 + W ) do begin
-		P.X := P.X + 8 + RollStep( 10 );
-		for x := P.X to ( P.X + 3 ) do begin
-			if X < ( X0 + W ) then begin
-				for Y := Y0 to ( Y0 + H - 1 ) do begin
-					if OnTheMap( GB , X , Y ) then SetTerrain( GB , X , Y , LineTerr );
-				end;
+	{ Start drawing boxes. }
+	{ The first cell needs 7 tiles, plus 8 tiles for each additional cell. }
+	L_W := ( W + 1 ) div 8;
+	L_H := ( H + 1 ) div 8;
+
+	{ There should be at least one tile's worth of corridor surrounding the cells, and depending }
+	{ on the map size there may be as many as 4. Determine the offset to the first cell. }
+	X_Offset := ( W - ( L_W * 8 - 3 ) ) div 2 + X0;
+	Y_Offset := ( H - ( L_H * 8 - 3 ) ) div 2 + Y0;
+
+	{ I think we're ready to start generating. }
+	for CX := 1 to L_W do begin
+		for CY := 1 to L_H do begin
+			{ Calculate the coordinates of our next cell. }
+			X := ( CX - 1 ) * 8 + X_Offset;
+			Y := ( CY - 1 ) * 8 + Y_Offset;
+
+			{ If this is one of the four corners, seek the corner cell. }
+			if ( CX = 1 ) and ( CY = 1 ) then begin
+				CornerCell := SeekRoom( MF , 'NW' );
+			end else if ( CX = L_W ) and ( CY = 1 ) then begin
+				CornerCell := SeekRoom( MF , 'NE' );
+			end else if ( CX = 1 ) and ( CY = L_H ) then begin
+				CornerCell := SeekRoom( MF , 'SW' );
+			end else if ( CX = L_W ) and ( CY = L_H ) then begin
+				CornerCell := SeekRoom( MF , 'SE' );
+			end else CornerCell := Nil;
+
+			{ Draw the basic terrain. }
+			RectFill( GB , FieldTerr , MarbleTerr , X , Y , 5 , 5 );
+
+			{ Record the cell position. }
+			if CornerCell <> Nil then begin
+				{ We have a cell that wants to belong here. Store the info. }
+				CornerCell^.Stat[ STAT_XPos ] := X;
+				CornerCell^.Stat[ STAT_YPos ] := Y;
+				CornerCell^.Stat[ STAT_MFWidth ] := 5;
+				CornerCell^.Stat[ STAT_MFHeight ] := 5;
+			end else begin
+				{ Record a new cell. }
+				StoreSAtt( Cells , BStr( X ) + ' ' + BStr( Y ) + ' 5 5 ' + BStr( Random( 4 ) ) );
 			end;
 		end;
 	end;
 
-	{ Draw the horizontal lines. }
-	P.Y := Y0;
-	while P.Y < ( Y0 + H ) do begin
-		P.Y := P.Y + 8 + RollStep( 10 );
-		for Y := P.Y to ( P.Y + 3 ) do begin
-			if Y < ( Y0 + H ) then begin
-				for X := X0 to ( X0 + W - 1 ) do begin
-					if OnTheMap( GB , X , Y ) then SetTerrain( GB , X , Y , LineTerr );
-				end;
-			end;
-		end;
-	end;
+	{ Return the list of cells. }
+	ProcessLattice := Cells;
 end;
 
 Procedure ProcessCity( GB: GameBoardPtr; MF: GearPtr; var Cmd: String; X0,Y0,W,H: Integer );
@@ -888,6 +906,38 @@ begin
 	end;
 end;
 
+Procedure DrawWall( GB: GameBoardPtr; MF: GearPtr; X, Y, L, Style, WallType: Integer );
+	{ Draw a wall starting at X0,Y0 and continuing for L tiles in }
+	{ the direction indicated by Style. Use WallType as the wall }
+	{ terrain, and DoorPrototype for the door. } 
+var
+	DL: Integer;	{ Door longitude. The tile at which to add the door. }
+	T: Integer;
+begin
+	{ Select the door point now. }
+	DL := Random( L - 2 ) + 2;
+	for t := 1 to L do begin
+		{ If our point is on the map, do drawing here. }
+		if OnTheMap( GB , X , Y ) then begin
+			{ If this is our door point, do that now. }
+			if T = DL then begin
+				SetTerrain( GB , X , Y  , TERRAIN_Threshold );
+				AddDoor( GB , MF , X , Y );
+
+			{ Otherwise draw the wall terrain. }
+			end else begin
+				SetTerrain( GB , X , Y , WallType );
+
+			end;
+
+			if Style = DW_Horizontal then begin
+				Inc( X );
+			end else begin
+				Inc( Y );
+			end;
+		end;
+	end;
+end;
 
 Function ProcessMitose( GB: GameBoardPtr; MF: GearPtr; var Cmd: String; X0,Y0,W,H: Integer ): SAttPtr;
 	{ The requested area will split in two. A wall will be drawn }
@@ -902,7 +952,7 @@ var
 		{ This spot is a good anchor point for a wall as long as }
 		{ there isn't a door. }
 	begin
-		IsGoodWallAnchor := OnTheMap( GB , AX , AY ) and ( TileTerrain( GB , AX , AY ) <> TERRAIN_Threshold );
+		IsGoodWallAnchor := OnTheMap( GB , AX , AY ) and ( TileTerrain( GB , AX , AY ) <> TERRAIN_Threshold ) and ( TileTerrain( GB , AX , AY ) <> FloorType );
 	end;
 
 	Procedure DivideArea( CX0 , CY0 , CW , CH: Integer );
@@ -911,22 +961,22 @@ var
 		{ sub-areas. If it is not large enough, then just }
 		{ add its coordinates to the CELLS list. }
 		Procedure VerticalDivison;
-			{ Attempt to divide this area with a vertical wall. }
+			{ Attempt to divide this area with a horizontal wall. }
 		var
 			MaybeD,D,Tries: Integer;
 		begin
 			tries := 0;
 			D := 0;
 			repeat
-				MaybeD := Random( CH - 2 ) + 1;
+				MaybeD := Random( CH - 10 ) + 5;
 				if IsGoodWallAnchor( CX0 - 1 , CY0 + MaybeD ) and IsGoodWallAnchor( CX0 + CW , CY0 + MaybeD ) then D := MaybeD;
 				Inc( Tries );
-			until ( D <> 0 ) or ( Tries > 5 );
+			until ( D <> 0 ) or ( Tries > 15 );
 
 			{ Check to make sure it's a good place. }
 			if D <> 0 then begin
 				{ Draw the wall. }
-				DrawWall( GB, CX0, CY0 + D , CW, DW_Horizontal, WallType );
+				DrawWall( GB, MF , CX0, CY0 + D , CW, DW_Horizontal, WallType );
 
 				{ Recurse to the two sub-areas. }
 				DivideArea( CX0 , CY0 , CW , D );
@@ -946,15 +996,15 @@ var
 			tries := 0;
 			D := 0;
 			repeat
-				MaybeD := Random( CW - 2 ) + 1;
+				MaybeD := Random( CW - 10 ) + 5;
 				if IsGoodWallAnchor( CX0 + MaybeD , CY0 - 1 ) and IsGoodWallAnchor( CX0 + MaybeD , CY0 + CH ) then D := MaybeD;
 				Inc( Tries );
-			until ( D <> 0 ) or ( Tries > 5 );
+			until ( D <> 0 ) or ( Tries > 15 );
 
 			{ Check to make sure it's a good place. }
 			if D <> 0 then begin
 				{ Draw the wall. }
-				DrawWall( GB, CX0 + D , CY0 , CH, DW_Vertical, WallType );
+				DrawWall( GB, MF , CX0 + D , CY0 , CH, DW_Vertical, WallType );
 
 				{ Recurse to the two sub-areas. }
 				DivideArea( CX0 , CY0 , D , CH );
@@ -966,13 +1016,13 @@ var
 			end;
 		end;
 	begin
-		if ( CW > 8 ) and ( CH > 2 ) and ( Random( 2 ) = 1 ) then begin
+		if ( CW > 12 ) and ( CH > 5 ) and ( Random( 2 ) = 1 ) then begin
 			HorizontalDivison;
-		end else if ( CH > 8 ) and ( CW > 2 ) and ( Random( 2 ) = 1 ) then begin
+		end else if ( CH > 12 ) and ( CW > 5 ) and ( Random( 2 ) = 1 ) then begin
 			VerticalDivison;
-		end else if ( CW > CH ) and ( CW > 8 ) and ( CH > 4 ) then begin
+		end else if ( CW > CH ) and ( CW > 12 ) and ( CH > 4 ) then begin
 			HorizontalDivison;
-		end else if ( CH > 8 ) and ( CW > 4 ) then begin
+		end else if ( CH > 12 ) and ( CW > 4 ) then begin
 			VerticalDivison;
 		end else begin
 			{ No room for further divisions. Just store this cell. }
@@ -988,16 +1038,6 @@ begin
 	RectFill( GB , FloorType , 0 , X0 + 1 , Y0 + 1 , W - 2 , H - 2 );
 	DivideArea( X0 + 1 , Y0 + 1 , W - 2 , H - 2 );
 	ProcessMitose := Cells;
-end;
-
-Function SeekRoom( MF: GearPtr; Desig: String ): GearPtr;
-	{ Seek a sub-mapfeature with the provided deignation. }
-	{ Return NIL if no such map feature could be found. }
-begin
-	Desig := UpCase( Desig );
-	MF := MF^.SubCom;
-	while ( MF <> Nil ) and ( UpCase( SAttValue( MF^.SA , 'DESIG' ) ) <> Desig ) do MF := MF^.Next;
-	SeekRoom := MF;
 end;
 
 Function ProcessMall( GB: GameBoardPtr; MF: GearPtr; var Cmd: String; X0,Y0,W,H: Integer ): SAttPtr;
@@ -1953,29 +1993,36 @@ begin
 			ProcessEllipse( GB , MF , Command_String , X , Y , W , H );
 
 		end else if cmd = 'LATTICE' then begin
-			ProcessLattice( GB , MF , Command_String , X , Y , W , H );
+			if Cells <> Nil then DisposeSAtt( Cells );
+			Cells := ProcessLattice( GB , MF , Command_String , X , Y , W , H );
 
 		end else if cmd = 'MITOSE' then begin
+			if Cells <> Nil then DisposeSAtt( Cells );
 			Cells := ProcessMitose( GB , MF , Command_String , X , Y , W , H );
 
 		end else if cmd = 'MALL' then begin
+			if Cells <> Nil then DisposeSAtt( Cells );
 			Cells := ProcessMall( GB , MF , Command_String , X , Y , W , H );
 
 		end else if cmd = 'CLUB' then begin
+			if Cells <> Nil then DisposeSAtt( Cells );
 			Cells := ProcessClub( GB , MF , Command_String , X , Y , W , H );
 
 		end else if cmd = 'MONKEYMAZE' then begin
+			if Cells <> Nil then DisposeSAtt( Cells );
 			Cells := ProcessMonkeyMaze( GB , MF , Command_String , X , Y , W , H );
 
 		end else if cmd = 'CITY' then begin
 			ProcessCity( GB , MF , Command_String , X , Y , W , H );
 
 		end else if cmd = 'CELLBOX' then begin
+			if Cells <> Nil then DisposeSAtt( Cells );
 			Cells := ProcessCellbox( GB , MF , Command_String , X , Y , W , H );
 
 		end else if cmd = 'PREDRAWN' then begin
 			{ This is a predrawn map- the only thing the renderer needs to do }
 			{ is parse the cells. }
+			if Cells <> Nil then DisposeSAtt( Cells );
 			Cells := ProcessPredrawn( GB );
 
 		end;
@@ -2013,59 +2060,87 @@ begin
 	TheRenderer := Cells;
 end;
 
-Procedure DoGapFilling( GB: GameBoardPtr; Container: GearPtr; C_X,C_Y,C_W,C_H,SCheck,STerr: Integer; Gapfill_String: String );
+Procedure DoGapFilling( GB: GameBoardPtr; Container: GearPtr; C_X,C_Y,C_W,C_H,SCheck,STerr: Integer; Gapfill_String: String; var Cells: SAttPtr );
 	{ Search the container for empty regions, filling them with junk }
 	{ as appropriate. }
+	{ GH2- if any cells remain unfilled, fill them now. }
 const
 	MaxGFStyle = 7;
 var
-	P: Point;
-	N,T,W,H,Style: Integer;
 	GFStyle: Array [0..MaxGFStyle] of Integer;
-	NewMF: GearPtr;
+	NumStyle: Integer;
+	Procedure AddGFMF( X , Y , W , H: Integer );
+		{ Add a new map feature in the specified location. }
+	var
+		Style: Integer;
+		NewMF: GearPtr;
+	begin
+		Style := GFStyle[ Random( NumStyle ) ];
+		if Container <> Nil then begin
+			{ Create a new gear for this gap filler. }
+			NewMF := NewGear( Nil );
+			InsertSubCom( Container , NewMF );
+			NewMF^.G := GG_MapFeature;
+			NewMF^.S := Style;
+			InitGear( NewMF );
+			NewMF^.Stat[ STAT_XPos ] := X;
+			NewMF^.Stat[ STAT_YPos ] := Y;
+			NewMF^.Stat[ STAT_MFHeight ] := H;
+			NewMF^.Stat[ STAT_MFWidth ] := W;
+		end else begin
+			NewMF := Nil;
+		end;
+
+		{ Mark this map feature as temporary. }
+		SetNAtt( NewMF^.NA , NAG_EpisodeData , NAS_Temporary , 1 );
+
+		{ Render it on the map. }
+		TheRenderer( GB , NewMF , X , Y , W , H , Style );
+	end;
+var
+	P: Point;
+	T,W,H: Integer;
+	C: SAttPtr;
 begin
-	{ Only do this if the container area meets our minimum size. }
+	{ Extract the GF styles. }
+	NumStyle := 0;
+	for t := 0 to MaxGFStyle do begin
+		GFStyle[ T ] := ExtractValue( Gapfill_String );
+		if GFStyle[ t ] <> 0 then Inc( NumStyle );
+	end;
+	if NumStyle = 0 then begin
+		DisposeSAtt( Cells );
+		Exit;
+	end;
+
+	{ Use up any remaining cells. }
+	C := Cells;
+	while C <> Nil do begin
+		P.X := ExtractValue( C^.Info );
+		P.Y := ExtractValue( C^.Info );
+		W := ExtractValue( C^.Info );
+		H := ExtractValue( C^.Info );
+		AddGFMF( P.X , P.Y , W , H );
+		C := C^.Next;
+	end;
+	DisposeSAtt( Cells );
+
+	{ If the container area meets our minimum size, add more stuff. }
 	if ( C_W > 12 ) and ( C_H > 12 ) then begin
-		{ Extract the GF styles. }
-		N := 0;
-		for t := 0 to MaxGFStyle do begin
-			GFStyle[ T ] := ExtractValue( Gapfill_String );
-			if GFStyle[ t ] <> 0 then Inc( N );
-		end;
+		{ Try to place an item on the map 100 times. }
+		for t := 1 to 15000 do begin
+			{ Choose a random width, height, and placement point in container. }
+			W := Random( 15 ) + 3;
+			H := Random( 15 ) + 3;
+			P := RandomPointWithinBounds( Container , W , H );
 
-		if N > 0 then begin
-			{ Try to place an item on the map 100 times. }
-			for t := 1 to 15000 do begin
-				{ Choose a random width, height, and placement point in container. }
-				W := Random( 15 ) + 3;
-				H := Random( 15 ) + 3;
-				Style := GFStyle[ Random( N ) ];
-				P := RandomPointWithinBounds( Container , W , H );
-
-				{ if this placement point is good, i.e. empty, then }
-				{ fill it with one of the style types taken from the }
-				{ GapFiller parameter string. }
-				if PlacementPointIsGood( GB , Container , SCheck , STerr , P.X , P.Y , W , H  ) then begin
-					if Container <> Nil then begin
-						{ Create a new gear for this gap filler. }
-						NewMF := NewGear( Nil );
-						InsertSubCom( Container , NewMF );
-						NewMF^.G := GG_MapFeature;
-						NewMF^.S := Style;
-						InitGear( NewMF );
-						NewMF^.Stat[ STAT_XPos ] := P.X;
-						NewMF^.Stat[ STAT_YPos ] := P.Y;
-						NewMF^.Stat[ STAT_MFHeight ] := H;
-						NewMF^.Stat[ STAT_MFWidth ] := W;
-					end else begin
-						NewMF := Nil;
-					end;
-
-					{ Render it on the map. }
-					TheRenderer( GB , NewMF , P.X , P.Y , W , H , Style );
-				end;
-			end; { for t = 1 to 100 }
-		end;
+			{ if this placement point is good, i.e. empty, then }
+			{ fill it with one of the style types taken from the }
+			{ GapFiller parameter string. }
+			if PlacementPointIsGood( GB , Container , SCheck , STerr , P.X , P.Y , W , H  ) then begin
+				AddGFMF( P.X , P.Y , W , H );
+			end;
+		end; { for t = 1 to 100 }
 	end;
 end;
 
@@ -2608,7 +2683,7 @@ begin
 
 	{ If this map feature doesn't have a unique name, better give it one. This will be }
 	{ important for the map generator. }
-	if SAttValue( MF^.SA , 'NAME' ) = '' then begin
+	if ( SAttValue( MF^.SA , 'NAME' ) = '' ) and ( MF^.G = GG_MapFeature ) then begin
 		SetSAtt( MF^.SA , 'name <UZONE_' + BStr( UniqueZoneNum ) + '>' );
 		Inc( UniqueZoneNum );
 	end;
@@ -2795,7 +2870,7 @@ begin
 
 
 	{ If GAPFILL defined, check for empty spaces. }
-	if GapFill_String <> '' then DoGapFilling( GB , MF , X , Y , W , H , Select_Check , Select_Terrain , Gapfill_String );
+	if GapFill_String <> '' then DoGapFilling( GB , MF , X , Y , W , H , Select_Check , Select_Terrain , Gapfill_String , Cells );
 
 	{ Delete the cells, since we're finished with them. }
 	if Cells <> Nil then DisposeSAtt( Cells );
@@ -2881,6 +2956,22 @@ begin
 	end;
 end;
 
+Procedure DeleteTempFeatures( var LList: GearPtr );
+	{ Certain map features will have been marked as temporary. Delete those now. }
+var
+	MF,MF2: GearPtr;
+begin
+	MF := LList;
+	while MF <> Nil do begin
+		MF2 := MF^.Next;
+		if ( MF^.G = GG_MapFeature) and ( NAttValue( MF^.NA , NAG_EpisodeData , NAS_Temporary ) <> 0 ) then begin
+			RemoveGear( LList , MF );
+		end else begin
+			DeleteTempFeatures( MF^.SubCom );
+		end;
+		MF := MF2;
+	end;
+end;
 
 function RandomMap( Scene: GearPtr ): GameBoardPtr;
 	{Allocate a new GameBoard and stock it with random terrain.}
@@ -2921,6 +3012,8 @@ begin
 
 	High_Component_ID := 1;
 	RenderFeature( it , Scene );
+
+	if Scene <> Nil then DeleteTempFeatures( Scene^.SubCom );
 
 	RandomMap := it;
 end;

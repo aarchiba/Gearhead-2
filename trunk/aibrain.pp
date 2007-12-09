@@ -1558,52 +1558,6 @@ begin
 	AttackTargetOfOppurtunity( GB , Mek );
 end;
 
-
-
-Function ShouldEject( Mek: GearPtr; GB: GameBoardPtr ): Boolean;
-	{ Return TRUE if this mecha should eject, or FALSE otherwise. }
-var
-	Dmg,PrevDmg,Intimidation: Integer;
-begin
-	Dmg := PercentDamaged( Mek );
-	PrevDmg := 100 - NAttValue( Mek^.NA , NAG_EpisodeData , NAS_PrevDamage );
-	SetNAtt( Mek^.NA , NAG_EpisodeData , NAS_PrevDamage , 100 - DMG );
-	if AreEnemies( GB , NAttValue( Mek^.NA , NAG_Location , NAS_Team ) , NAV_DefPlayerTeam ) and ( Dmg < 75 ) and ( DMG < PrevDmg ) then begin
-		Intimidation := TeamSkill( GB , NAV_DefPlayerTeam , NAS_Intimidation );
-		if CurrentMoveRate( GB^.Scene , Mek ) = 0 then Dmg := Dmg - RollStep( Intimidation ) - RollStep( Intimidation );
- 		ShouldEject := Dmg < ( Random( 60 ) + RollStep( Intimidation ) - RollStep( SkillValue( Mek , NAS_Intimidation ) ) );
-	end else if AreAllies( GB , NAttValue( Mek^.NA , NAG_Location , NAS_Team ) , NAV_DefPlayerTeam ) and ( Dmg < 75 ) and ( DMG < PrevDmg ) then begin
-		{ Determine the player team's Leadership score. }
-		Intimidation := TeamSkill( GB , NAV_DefPlayerTeam , NAS_Leadership );
-		if CurrentMoveRate( GB^.Scene , Mek ) = 0 then Dmg := Dmg - 25;
- 		ShouldEject := Dmg < ( Random( 77 ) - RollStep( Intimidation ) );
-	end else ShouldEject := False;
-end;
-
-Function ShouldSurrender( GB: GameBoardPtr; NPC: GearPtr ): Boolean;
-	{ Check to see whether or not NPC should surrender. Surrender should take place }
-	{ if the following conditions are met: The NPC has no stamina left, the NPC is }
-	{ an enemy of Team1, the NPC has not previously surrendered, the NPC is not an }
-	{ animal, }
-	{ ...and Team1 can manage an intimidation roll. }
-var
-	SkRank,NPC_Stamina,Dmg,PrevDmg: Integer;
-begin
-	Dmg := PercentDamaged( NPC );
-	NPC_Stamina := CurrentStamina(NPC);
-	if NPC_Stamina = 0 then Dmg := Dmg - 5;
-	PrevDmg := 100 - NAttValue( NPC^.NA , NAG_EpisodeData , NAS_PrevDamage );
-	SetNAtt( NPC^.NA , NAG_EpisodeData , NAS_PrevDamage , 100 - DMG );
-	if ( DMG < PrevDmg ) and MightSurrender( GB , NPC ) then begin
-		SkRank := TeamSkill( GB , NAV_DefPlayerTeam , NAS_Intimidation );
-		PrevDmg := GearCurrentDamage( NPC );
-		if PrevDmg < 10 then SkRank := SkRank + 15 - PrevDmg;
-		ShouldSurrender := RollStep( SkRank ) > ( CStat( NPC , STAT_Ego ) + Dmg div 10 );
-	end else begin
-		ShouldSurrender := False;
-	end;
-end;
-
 Procedure GetPropInput( GB: GameBoardPtr; Mek: GearPtr );
 	{ Props just kind of sit there. Usually. }
 begin
@@ -1636,13 +1590,7 @@ begin
 
 	{ If MEK is actually a mecha, and it's significantly damaged, }
 	{ maybe the pilot would rather eject than continue fighting. }
-	if ( Mek^.G = GG_Mecha ) and ShouldEject( Mek , GB ) then begin
-		AI_EJECT( Mek , GB );
-
-	end else if ( Mek^.G = GG_Character ) and ShouldSurrender( GB , Mek ) then begin
-		AI_SURRENDER( GB , Mek );
-
-	end else if Mek^.G = GG_Prop then begin
+	if Mek^.G = GG_Prop then begin
 		GetPropInput( GB , Mek );
 
 	end else begin

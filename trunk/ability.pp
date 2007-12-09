@@ -205,7 +205,6 @@ Function GearActive( Mek: GearPtr ): Boolean;
 	{ Generally only master gears may be active. }
 begin
 	if Mek = Nil then GearActive := False
-{	else if Mek^.G = GG_Prop then GearActive := False}
 	else if Mek^.G = GG_Character then GearActive := GearOperational( Mek ) and ( NAttValue( Mek^.NA , NAG_EpisodeData , NAS_SurrenderStatus ) <> NAV_NowSurrendered )
 	else if IsMasterGear( Mek ) then GearActive := GearOperational( Mek )
 	else GearActive := False;

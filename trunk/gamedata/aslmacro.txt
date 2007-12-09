@@ -36,6 +36,7 @@ SetItemDesc <GrabItem ? GSetSAtt desc ?>
 SetEncounterName <GrabEntrance ? GSetSAtt name ?>
 SetStat <GrabSource GSetStat ? ?>
 NPCSkill+ <GrabNPC ? GAddNAtt NAG_Skill ? ?>
+SelfSkill= <GrabSource GSetNAtt NAG_Skill ? ?>
 PCSkill+ <GrabPCPilot GAddNAtt NAG_Skill ? ?>
 PCSTAT+ <GrabPCPilot GAddStat ? ?>
 PCSTAT= <GrabPCPilot GSetStat ? ?>
