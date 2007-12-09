@@ -2104,6 +2104,23 @@ begin
 	end;
 end;
 
+Procedure WipeMissions( HQCamp: CampaignPtr );
+	{ Delete all currently loaded missions, and regenerate the list. }
+var
+	M,M2: GearPtr;
+begin
+	{ Also print the context, for debugging purposes. }
+	DialogMsg( HQContext( HQCamp ) );
+	M := HQCamp^.Source^.InvCom;
+	while M <> Nil do begin
+		M2 := M^.Next;
+		if M^.G = GG_Scene then begin
+			RemoveGear( HQCamp^.Source^.InvCom , M );
+		end;
+		M := M2;
+	end;
+end;
+
 Procedure PlayArenaCampaign( Camp: CampaignPtr );
 	{ Play this arena campaign. }
 var
@@ -2143,6 +2160,7 @@ begin
 	if ArenaMode_Wizard then begin
 		AddRPGMenuItem( RPM , 'Debug Missions' , 7 );
 		AddRPGMenuItem( RPM , 'Debug Core Campaign' , 8 );
+		AddRPGMenuItem( RPM , 'Wipe Missions' , 9 );
 	end;
 	AddRPGMenuItem( RPM , MsgString( 'ARENA_ExitToMain' ) , 0 );
 	RPM^.mode := RPMNoCancel;
@@ -2160,6 +2178,7 @@ begin
 			6: if not PlayArenaMission( Camp , PAM_Regular ) then N := -1;
 			7: if not PlayArenaMission( Camp , PAM_Debug_Missions ) then N := -1;
 			8: if not PlayArenaMission( Camp , PAM_Debug_Core ) then N := -1;
+			9: WipeMissions( Camp );
 		end;
 
 	until N < 1;
