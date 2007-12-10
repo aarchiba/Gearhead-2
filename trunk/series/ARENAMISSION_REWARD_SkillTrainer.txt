@@ -107,6 +107,7 @@ ArenaMission
 	% L1 = Initialization Counter
 	% L2 = Victory Counter
 	% L3 = Destroy Bases Counter- if all four are destroyed, earn Mecha Artillery training
+	% L4 = Reinforcement calculator
 	% L11 = B1 Destroyed
 	% L12 = B2 Destroyed
 	% L13 = B3 Destroyed
@@ -117,10 +118,10 @@ ArenaMission
 	%%  1  2
 	%%   PC 	<--- Map!
 	%%  3  4
-	nu11 <if= T11 0 if= L11 0 L= 11 1 XPV 100 L+ 3 1 if# L3 4 else GoWinMission Print 4  WMecha 24 ArenaRenown 150>
-	nu12 <if= T12 0 if= L12 0 L= 12 1 XPV 100 L+ 3 1 if# L3 4 else GoWinMission Print 4  WMecha 23 ArenaRenown 150>
-	nu13 <if= T13 0 if= L13 0 L= 13 1 XPV 100 L+ 3 1 if# L3 4 else GoWinMission Print 4  WMecha 22 ArenaRenown 150>
-	nu14 <if= T14 0 if= L14 0 L= 14 1 XPV 100 L+ 3 1 if# L3 4 else GoWinMission Print 4  WMecha 21 ArenaRenown 150>
+	nu11 <if= T11 0 if= L11 0 L= 11 1 XPV 100 L+ 3 1 if# L3 4 else GoWinMission Print 4   L= 4 * 50 L3 L+ 4 100   WMecha 24 ArenaRenown L4>
+	nu12 <if= T12 0 if= L12 0 L= 12 1 XPV 100 L+ 3 1 if# L3 4 else GoWinMission Print 4   L= 4 * 50 L3 L+ 4 100   WMecha 23 ArenaRenown L4>
+	nu13 <if= T13 0 if= L13 0 L= 13 1 XPV 100 L+ 3 1 if# L3 4 else GoWinMission Print 4   L= 4 * 50 L3 L+ 4 100   WMecha 22 ArenaRenown L4>
+	nu14 <if= T14 0 if= L14 0 L= 14 1 XPV 100 L+ 3 1 if# L3 4 else GoWinMission Print 4   L= 4 * 50 L3 L+ 4 100   WMecha 21 ArenaRenown L4>
 
 	GoWinMission <Alert 3 WinArenaMission if= L3 4 IntelDebriefing 5 History 6 AddMajorSkill 2>
 	GoLoseMission <Alert 2 LoseArenaMission>
