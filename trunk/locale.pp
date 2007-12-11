@@ -649,6 +649,7 @@ Function WorldWrapsY( World: GearPtr ): Boolean;
 Procedure FixWorldCoords( Scene: GearPtr; var X,Y: Integer );
 
 Function ArcCheck( X0,Y0,D0,X1,Y1,A: Integer ): Boolean;
+Function IsHidden( Mek: GearPtr ): Boolean;
 
 
 implementation
@@ -3368,7 +3369,21 @@ begin
 	ArcCheck := OK;
 end;
 
-
+Function IsHidden( Mek: GearPtr ): Boolean;
+	{ Return TRUE if Mek has no visibility markers, or FALSE otherwise. }
+var
+	IH: Boolean;
+	Mark: NAttPtr;
+begin
+	{ Assume TRUE until shown otherwise. }
+	IH := True;
+	Mark := Mek^.NA;
+	while ( Mark <> Nil ) and IH do begin
+		if Mark^.G = NAG_Visibility then IH := False;
+		Mark := Mark^.Next;
+	end;
+	IsHidden := IH;
+end;
 
 initialization
 	Shadow_Map_Update := -1;

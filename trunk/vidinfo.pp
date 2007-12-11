@@ -170,7 +170,12 @@ var
 begin
 	{ Show the character's status conditions. }
 
-	{ Hunger and morale come first. }
+	{ Display whether or not the mecha is hidden. }
+	if ( Part^.Parent = Nil ) and IsHidden( Part ) then begin
+		DrawStatusGlyph( 'S' , DarkGray );
+	end;
+
+	{ Hunger and morale come next. }
 	if Part^.G = GG_Character then begin
 		T := NAttValue( Part^.NA , NAG_Condition , NAS_Hunger ) - Hunger_Penalty_Starts;
 		if T > ( NumGearStats * 3 ) then begin

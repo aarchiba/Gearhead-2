@@ -186,8 +186,26 @@ end;
 
 Function CheckLOS( GB: GameBoardPtr; Observer,Target: GearPtr ): Boolean;
 	{ Do the line-of-sight roll to see if Observer notices Target. }
+	Function TargetStealth: Integer;
+		{ Return the modified stealth rating of this target. }
+	var
+		T: Integer;
+	begin
+		T := MechaStealthRating( Target );
+		if Target^.Scale > GB^.Scale then begin
+			T := T - ( Target^.Scale - GB^.Scale ) * Stealth_Per_Scale;
+		end else if Target^.Scale < GB^.Scale then begin
+			T := T + ( GB^.Scale - Target^.Scale ) * Stealth_Per_Scale;
+		end;
+		if ( Target^.G = GG_MetaTerrain ) and ( Target^.S = GS_MetaEncounter ) then begin
+			T := T + Range( GB , Observer , Target );
+			if T < 5 then T := 5;
+		end;
+		TargetStealth := T;
+	end;
 var
 	O,T,Roll: Integer;
+	P1,P2: Point;
 	it: Boolean;
 begin
 	{ Calculate the obscurement. }
@@ -200,29 +218,45 @@ begin
 	end;
 
 	{ If there's nothing standing between the target and the spotter, }
-	{ visibility is guaranteed. }
+	{ visibility is mostly guaranteed. }
 	if ( O = 0 ) and ( Target^.G <> GG_MetaTerrain ) then begin
-		it := True;
+		{ If the target has stealth and is outside of the spotter's front arc, }
+		{ then it gets a STEALTH roll. }
+		if ( NAttValue( Target^.NA , NAG_Action , NAS_MoveAction ) <> NAV_FullSpeed ) and HasSkill( Target , 25 ) then begin
+			{ Get the position of the spotter and the target. }
+			P1 := GearCurrentLocation( Observer );
+			P2 := GearCurrentLocation( Target );
+
+			if not ArcCheck( P1.X , P1.Y , NAttValue( Observer^.NA , NAG_Location , NAS_D ) , P2.X , P2.Y , ARC_F90 ) then begin
+				{ Make the awareness roll. }
+				T := TargetStealth;
+				Roll := SkillRoll( Observer , 11 , T , 0 , False );
+
+				if SkillRoll( Target , 25 , Roll , 0 , False ) > Roll then begin
+					it := False;
+					if AreEnemies( GB , Target , Observer ) then DoleSkillExperience( Target , 25 , 1 );
+				end else begin
+					it := True;
+					if AreEnemies( GB , Target , Observer ) then DoleSkillExperience( Observer , 11 , 1 );
+				end;
+
+			end else begin
+				{ Within the front arc and with no cover, Stealth is of no help. }
+				it := True;
+			end;
+		end else begin
+			it := True;
+		end;
 	end else if O = -1 then begin
 		it := False;
 	end else begin
-		{ Calculate target number. }
-		T := MechaStealthRating( Target );
-		if Target^.Scale > GB^.Scale then begin
-			T := T - ( Target^.Scale - GB^.Scale ) * Stealth_Per_Scale;
-		end else if Target^.Scale < GB^.Scale then begin
-			T := T + ( GB^.Scale - Target^.Scale ) * Stealth_Per_Scale;
-		end;
-		if ( Target^.G = GG_MetaTerrain ) and ( Target^.S = GS_MetaEncounter ) then begin
-			T := T + Range( GB , Observer , Target );
-			if T < 5 then T := 5;
-		end;
-
-		Roll := SkillRoll( Observer , 11 , O + T , 0 , False );
+		{ Make the awareness roll. }
+		T := O + TargetStealth;
+		Roll := SkillRoll( Observer , 11 , T , 0 , False );
 
 		if Roll > T then begin
 			{ The target might get a STEALTH save now. }
-			if IsInCover( GB , Target ) and ( NAttValue( Target^.NA , NAG_Action , NAS_MoveAction ) <> NAV_FullSpeed ) and HasSkill( Target , 25 ) then begin
+			if ( NAttValue( Target^.NA , NAG_Action , NAS_MoveAction ) <> NAV_FullSpeed ) and HasSkill( Target , 25 ) then begin
 				if SkillRoll( Target , 25 , Roll , 5 , False ) > Roll then begin
 					it := False;
 					if AreEnemies( GB , Target , Observer ) then DoleSkillExperience( Target , 25 , 1 );

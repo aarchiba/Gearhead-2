@@ -296,6 +296,13 @@ begin
 	MyDest.X := CZone.X + 4;
 	MyDest.Y := CZone.Y + CZone.H - 12;
 
+	{ Display whether or not the mecha is hidden. }
+	if ( Part^.Parent = Nil ) and IsHidden( Part ) then begin
+		DrawSprite( OtherFX_Sprite , MyDest , 14 + ( Animation_Phase div 5 mod 2 ) );
+		MyDest.X := MyDest.X + 10;
+	end;
+
+
 	if Part^.G = GG_Character then begin
 		T := NAttValue( Part^.NA , NAG_Condition , NAS_Hunger ) - Hunger_Penalty_Starts;
 		if T > ( NumGearStats * 3 ) then begin

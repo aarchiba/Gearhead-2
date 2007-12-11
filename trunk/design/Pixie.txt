@@ -236,10 +236,10 @@ Head
 		mass -1
 	end
 	inv
-		HeadArmor 1
-		mass -1
+		HeadArmor 3
+		mass -4
 		sub
-			ArcJet 1
+			ArcJet 2
 		end
 	end
 
@@ -304,10 +304,10 @@ Torso
 		end
 	end
 	inv
-		BodyArmor 2
-		mass -2
+		BodyArmor 5
+		mass -6
 		sub
-			ArcJet 1
+			ArcJet 3
 		end
 	end
 
@@ -349,10 +349,10 @@ Arm
 		end
 	end
 	inv
-		ArmArmor 2
-		mass -2
+		ArmArmor 3
+		mass -4
 		sub
-			ArcJet 1
+			ArcJet 2
 		end
 	end
 
@@ -371,10 +371,10 @@ Arm
 		name <Left Arm Mount>
 	end
 	inv
-		ArmArmor 2
-		mass -2
+		ArmArmor 3
+		mass -4
 		sub
-			ArcJet 1
+			ArcJet 2
 		end
 
 		Shield 3
@@ -396,10 +396,10 @@ Leg
 		ArcJet 4
 	end
 	inv
-		LegArmor 2
-		mass -2
+		LegArmor 3
+		mass -4
 		sub
-			ArcJet 1
+			ArcJet 2
 		end
 	end
 
@@ -414,10 +414,10 @@ Leg
 		ArcJet 4
 	end
 	inv
-		LegArmor 2
-		mass -2
+		LegArmor 3
+		mass -4
 		sub
-			ArcJet 1
+			ArcJet 2
 		end
 	end
 
