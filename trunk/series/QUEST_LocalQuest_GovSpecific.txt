@@ -57,7 +57,7 @@ Content
 		result7 <NewChat Say 9 AddChat 10 AddChat 11 if= V2 0 V= 2 1 AddEasygoing d10>
 		result8 <NewChat Say 10 AddChat 10 AddChat 11>
 		result9 <NewChat Say 11 AddChat 12>
-		result10 <SetQEncActive %2% SetQuestStatus %qid2% %id2% SetQuestStatus %qid% %id% Goto .%id2%_GoInit>
+		result10 <SetQEncActive %2% SetQuestStatus %qid2% %id2% SetQuestStatus %qid% %id%  AddLawful -5  Goto .%id2%_GoInit>
 		result11 <EndChat Say 12 TeamAttack 2>
 		result12 <Goto result10>
 		Msg1 <So, you did it. Good. You'll be a bloody fine pirate yet.>
