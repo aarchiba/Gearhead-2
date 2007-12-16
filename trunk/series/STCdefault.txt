@@ -1237,7 +1237,7 @@ Desig <SS-CANNON-1>
 SDL_SPRITE <tex_spaceship_body.png>
 Mesh 7
 Scale 2
-Skill 1 10
+Skill 6 10
 Skill 12 6
 Skill 18 10
 sub
@@ -1264,7 +1264,7 @@ Desig <TURRET-1>
 sdl_sprite <prop_turret1.png>
 roguechar <&>
 Scale 2
-Skill 1 8
+Skill 6 8
 Skill 12 6
 sub
 	Turret
@@ -1291,7 +1291,7 @@ name <Pillbox>
 Desig <TURRET-2>
 roguechar <&>
 Scale 2
-Skill 1 8
+Skill 6 8
 Skill 12 6
 Mesh 2
 sdl_sprite <tex_building_pillbox.png>
@@ -1315,7 +1315,7 @@ sub
 	end
 end
 
-Prop 30
+Prop 20
 name <Bunker>
 Desig <Bunker-1>
 roguechar <&>
