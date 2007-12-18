@@ -5919,14 +5919,12 @@ sub
 			SetFaction 9
 			MiniMapComponent 1
 
-			NPC Police Officer
+			NPC Rocket Star
 			SetTeam 3
-			SetFaction 9
 			MiniMapComponent 2
 
-			NPC Police Officer
+			NPC Rocket Star
 			SetTeam 3
-			SetFaction 9
 			MiniMapComponent 3
 		end
 
@@ -5938,6 +5936,16 @@ sub
 			SetTeam 2
 			SetFaction 11
 			MiniMapComponent 1
+
+			NPC Rocket Star
+			name <Vannis Abdiel>
+			job <Star Commander>
+			age 34
+			renown 90
+			chardesc female sociable passionate
+			MiniMapComponent 3
+			quest <*:NPCQuest>
+			SetTeam 3
 		end
 	end
 

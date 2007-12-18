@@ -29,8 +29,8 @@ Content
 		.skills <11 18 19 37 39 42>
 		*result2 <*GoodBye>
 		result3 <Goto GoTeach>
-		Msg1 <Life is a process of reinventing oneself. When you stop learning, we call that state death. I, being closer to death than you are, know a number of things that you may find useful.>
-		Msg2 <A Star needs to master three skills. The first is the ability to avoid dying; it's very handy. The second is the ability to see things as they really are. The third is the ability to look cool at all times. Everything else is just details.>
+		Msg1 <Life is a process of reinventing oneself. When you stop learning, it means you have achieved either perfection or death. I, being relatively closer to that state, know more about these things than you.>
+		Msg2 <A Star needs to master three skills. The first is the ability to avoid dying; it's quite handy. The second is the ability to see things as they really are. The third is the ability to look cool at all times. Everything else is just details.>
 		Msg3 <\PC . I have been watching your advancement... Remember this, that legends are written of the bold. Someday you may become legend, but for right now I suggest you simply get the hang of being.>
 		Prompt1 <Teach me something.>
 		Prompt2 <I don't have time for this.>
@@ -102,9 +102,9 @@ Content
 Content
 	requires <*YATSP_RB2_Content>
 	element1 <Prefab>
-	team1 <Citizens>
+	team1 <Guards>
 	teamdata1 <ally pass>
-	minimap <............1.......#&+&#>
+	minimap <............1.......##+##>
 
 	sub
 		Persona 1
@@ -112,11 +112,6 @@ Content
 	end
 	inv
 		NPC Rocket Star
-		name <Vannis Abdiel>
-		job <Star Commander>
-		age 34
-		renown 90
-		chardesc female sociable passionate
 	end
 
 

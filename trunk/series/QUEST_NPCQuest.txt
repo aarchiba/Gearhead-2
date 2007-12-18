@@ -5,6 +5,66 @@
 %% Always make sure to do an *ENEMY_CHECK or equivalent in these quests.
 
 Content
+	name <Plenty of Enemies>
+	requires <*:NPCQuest C:MILIT ~Dangerous>
+
+	% E1 is the person who will be giving the mission.
+	% E2 is an enemy faction
+	% E3 is another enemy faction
+	% E4 is yet another enemy faction
+	% E5 is a combat encounter tied to E2
+	% E6 is a combat encounter tied to E3
+	% E7 is a combat encounter tied to E4
+	Element1 <Key>
+	Element2 <Faction !Enemy 1>
+	Element3 <Faction !Enemy 1>
+	Element4 <Faction !Enemy 1>
+	Element5 <Prefab>
+	Scene5 <Environs>
+	Element6 <Prefab>
+	Scene6 <Environs>
+	Element7 <Prefab>
+	Scene7 <Outdoors>
+
+	% SubQuest1 is the success if the PC completes the mission.
+	Quest1 <*Success1.CivicService 1>
+
+	sub
+		Persona 1
+		rumor0 <%name1% is very busy protecting our city from its many enemies.>
+		greeting <if= QuestStatus %qid% %id% else GoCheckFirst ifG ItemVar %5% 3 0 else GoStillWorking ifG ItemVar %6% 3 0 else GoStillWorking ifG ItemVar %7% 3 0 else GoStillWorking EndChat Say 1 AddChat 1>
+		GoStillWorking <NewChat Say 2>
+		GoCheckFirst <if= QuestStatus %qid% 0 else GoChat Goto GoEnemyCheck>
+		GoChat <NewChat SayAnything>
+		*GoEnemyCheck <*ENEMY_CHECK GoOfferQuest ChatNPCFac GoMakeEnemy>
+		GoMakeEnemy <SetQuestStatus %qid% -2 ifG d20 React PCEnemy %1%>
+		GoOfferQuest <NewChat Say 3 QMemo %qid% 4 SetQuestStatus %qid% %id%   ItemVar= %5% 1 ComTime   ItemVar= %6% 1 ComTime   ItemVar= %7% 1 ComTime>
+		result1 <DeleteItem %5% DeleteItem %6% DeleteItem %7%  Goto .%id1%_GoInit>
+		Msg1 <I see that you've done a good job making our city safe again. I owe you our thanks.>
+		Msg2 <The enemies of \SCENE RootSceneID are still operating in this area.>
+		Msg3 <Our city has many enemies. It's a never ending battle to keep them at bay.>
+		Msg4 <%name1% told you that \SCENE RootSceneID has many enemies.>
+		Prompt1 <[Continue]>
+
+		MetaScene 1
+		end <if= QuestStatus %qid% %id% else %pop% ifNPCDead %1% else %pop% SetQuestStatus %qid% -2 Goto %pop%>
+	end
+	inv
+		stc DYNAMICENCOUNTER-DAILY-WANDER
+		name <City Enemies>
+		GoStartCombat <V= 1 0  SavePos Dynamic 2 %threat% 100 .nu1 .nu2 ComposeD Msg1 .Msg1 DynaVar= 1 SelfNID DynaFaction %2%>
+
+		stc DYNAMICENCOUNTER-DAILY-WANDER
+		name <City Enemies>
+		GoStartCombat <V= 1 0  SavePos Dynamic 2 %threat% 100 .nu1 .nu2 ComposeD Msg1 .Msg1 DynaVar= 1 SelfNID DynaFaction %3%>
+
+		stc DYNAMICENCOUNTER-DAILY-WANDER
+		name <City Enemies>
+		GoStartCombat <V= 1 0  SavePos Dynamic 2 %threat% 100 .nu1 .nu2 ComposeD Msg1 .Msg1 DynaVar= 1 SelfNID DynaFaction %4%>
+	end
+
+
+Content
 	name <"Give Mission" Stub>
 	requires <*:NPCQuest>
 	desc <The NPC will give the PC a mission, to be handled by a "GiveMission" subquest.>
@@ -32,6 +92,9 @@ Content
 		result1 <Goto .%id2%_GoInit>
 		Msg1 <I hear that your mission was a success.>
 		Prompt1 <[Continue]>
+
+		MetaScene 1
+		end <if= QuestStatus %qid% %id% else %pop% ifNPCDead %1% else %pop% SetQuestStatus %qid% -2 Goto %pop%>
 	end
 
 Content
