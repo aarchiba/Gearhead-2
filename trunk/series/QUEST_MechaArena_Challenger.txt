@@ -23,10 +23,80 @@
 %%  Maquise Spinner:	1 Low	2 Med	1 Hi
 %%  Cayley Rock:	1 Low	1 Med
 %%  Gaos Spinner:	1 Low	2 Med	2 Hi
+%%  Yatate Spinner:	1 Low	2 Med	1 Hi
 
 %%
 %% Low Level Compeditors
 %%
+
+Content
+	name <PC vs Aran>
+	% As above, but the first time you meet the PC can make a formal challenge
+	requires <*:MECHA_ARENA_CHALLENGE (!Ne|!Lo) ~L5PAT>
+
+	% E1 is the arena manager
+	% E2 is the arena proper
+	% E3 is the challenger
+	Element3 <Prefab>
+	Scene3 <Building Public>
+	Team3 <Citizens>
+	TeamData3 <Ally Pass>
+
+	Quest1 <*CHALLENGER_SUBQUEST 3>
+
+sub
+	Persona 1
+	Greeting <if= QuestStatus %qid% %id% else %pop%  if= ArenaState %2% NAV_AS_Win else .%id%_GoCheckLoss SetQuestStatus %qid% %id1% if# ArenaWins %2% 10 else GoBigWin Goto .%id%_GoArenaWin>
+	*.%id%_GoCheckLoss <*ChallengerStatusReport %3% %2% .%id%_GoNPCDied>
+	.%id%_GoInit <ifNPCOK %3% else .%id%_GoNPCDied NewChat Say %id%01 SetQuestStatus %qid% %id%  NPCSubQMemo %3% %id% %id%02  AddChat %id%01>
+	%% Just in case the NPC who we're supposed to fight has died somehow, just set up a normal fight.
+	*.%id%_GoNPCDied <*YourChallengerDied %2% %qid%>
+	*.%id%_GoArenaWin <*ChallengeArenaWin %3% %2% .%id%_GoConclude>
+	.%id%_GoConclude <ResetArena %2%>
+	Result%id%01 <NewChat Say %id%03>
+	Msg%id%01 <For the next fight, you'll be facing a rocket star named Aran. He's young but they say he has a lot of talent. The two of you can meet at \SCENE %s3% and work out a fight time.>
+	Msg%id%02 <%name1% sent you to battle %name3% in arena combat; \SPR %3% can be found in \SCENE %s3% .>
+	Msg%id%03 <Aran is a perfectionist. His usual tactic is to make called shots against his opponent's weak points. Don't let him pin you down or you'll lose for sure.>
+	Prompt%id%01 <What's \PPR %3% specialty?>
+
+	Persona 3
+	% V1 = First time chat counter
+	Greeting <if= QuestStatus %qid% %id% else GoNoMatch  if= ArenaState %2% NAV_AS_Battle else GoCheckStatus Goto GoTrashTalk>
+	*GoTrashTalk <*ArenaChallenge GoThemeInfo>
+	*GoThemeInfo <*THEME_EXPO&Enemy NA>
+	GoCheckStatus <if= ArenaState %2% NAV_AS_Ready else GoCheckWin EndChat Say 1>
+	GoCheckWin <if= ArenaState %2% NAV_AS_Win else GoCheckChallenge ifNPCOK %1% else GoManagerDied NewChat Say 2>
+	GoManagerDied <NewChat Say 3 SetQuestStatus %qid% -1 ResetArena %2%>
+	GoCheckChallenge <ResetArena %2% ifG ComTime ArenaRecharge %2% else GoLater if= V1 1 else GoFirstTime NewChat Say 4 AddChat 1 AddChat 2>
+	*GoFirstTime <*PCChallengeNPC GoMakeChallenge GoWussOut>
+	GoMakeChallenge <NewChat Say 5 V= 1 1 AddCHat 1 AddChat 2>
+	*GoWussOut <*GodImBored>
+	*GoLater <*ChallengeMeLater>
+	*GoNoMatch <*NiceToMeetYou GoChat>
+	*GoChat <*MISC_CHATTER>
+	GoStartCombat <SetChallengerID %2% %3% SetChallengerHome %2% %s3% MoveNPC %3% %2% PrepArena %2% 0 SetNPCTeam %3% 2>
+	*result1 <*MeetMeAtArena %2% GoStartCombat>
+	*result2 <*RejectChallenge>
+	Msg1 <Hey, did you forget about our match? I'm waiting in \SCENE %2% .>
+	Msg2 <It seems I still have a lot to learn. Go tell %name1% that you won our fight.>
+	Msg3 <Our duel is off. Something happened to %name1%.>
+	Msg4 <I've been waiting to start our duel. Are you ready yet?>
+	Msg5 <Finally. I was getting bored waiting for a new challenger. My last fight wasn't very tough at all. Are you ready to start or did you just come here now to tease me?>
+	Prompt1 <Let's go to %name2%.>
+	Prompt2 <Sorry, I need some time to prepare.>
+end
+inv
+	NPC Rocket Star
+	name <Aran>
+	chardesc Male Sociable Passionate Pragmatic
+	StatLine 15 11 14 13 13 15 10 14
+	Age -1
+	SetTheme 3
+	SetSpecSkill 18
+	Skill 18
+	Skill 35
+end
+
 
 Content
 	name <PC vs Keight>
@@ -206,7 +276,6 @@ sub
 	Prompt3 <Your brother just needs to grow up.>
 	Prompt4 <Alright, I'll speak with him.>
 	Prompt5 <He can work this out by himself.>
-
 end
 inv
 	NPC Arena Pilot

@@ -5638,6 +5638,7 @@ Scene 0 3
 	context <SPACE>
 
 	Quest1 <*:LocalQuest>
+	Quest2 <*:MECHA_ARENA_BASE>
 
 	start <if= V1 0 else GoSecondTime V= 1 1 Alert 1 Print 2>
 	GoSecondTime <Print 2>
@@ -6058,6 +6059,43 @@ sub
 		NPC Corporate Executive
 		home <Foyer>
 		SetFaction 7
+	end
+
+	Scene
+	name <Aurora Night>
+	type <building restaurant nightclub meeting public ArenaSite>
+	entrance <*Building Short>
+	special <ADDEXIT>
+	ClubMap
+	MapWidth 20
+	MapHeight 19
+
+	start <Print 1>
+	Msg1 <You enter Aurora Night.>
+
+	NeededCells 4
+	Content1 <Some 1 100 Sub *RESTAURANT>
+	Content2 <Some 1 100 Sub *BAR_SERVICE>
+	Content3 <Some 1  70 Sub *CLUB_X>
+	Content4 <Some 1  70 Sub *WEAPON_SHOP>
+	Content5 <Fill Sub *SHOP_RANDOM>
+	sub
+		team 1
+
+		team 2
+		name <Citizens>
+		SetAlly 1
+		Passive
+
+		team 3
+		name <Guards>
+		SetAlly 2
+
+		room
+		name <Foyer>
+		desig <EntranceGrid>
+		Content <Some 4 65 Here *URBAN_X>
+		Content2 <Some 1 100 Here *ANTI_ATTACK_SECURITY 2>
 	end
 
 % End of Yatate Spinner...

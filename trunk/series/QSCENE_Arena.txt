@@ -22,6 +22,62 @@
 %% Challenger ID = A single NPC who has been moved here to fight the PC
 %% Challenger Home = Where to move the challenger after the fight is over
 
+Scene 0 2
+	name <the Rocket Arena>
+	requires <*Arena_RocketArena>
+
+	CaveMap
+	RockyTiles
+	Vacuum
+	SpaceBackdrop
+	MapWidth 50
+	MapHeight 50
+	terrain <GROUND>
+	type <Arena>
+	special <SHOWALL SOLO ARENA NOPILLAGE>
+	MapWidth 50
+	MapHeight 50
+
+	start <if= SelfArenaState NAV_AS_Ready else GoCheckBattle          Alert 1   SetSelfArenaState NAV_AS_Battle SetSelfArenaRecharge if# SelfChallengerID 0 ForceChat SelfChallengerID>
+	GoCheckBattle <if= SelfArenaState NAV_AS_Battle else GoBoringStart Print 2>
+	GoBoringStart <Print 3 Return>
+
+	nu1 <if= T1 0 Return   if= SelfArenaState NAV_AS_Battle SetSelfArenaState NAV_AS_Loss  Alert 5 Print 5  AddRenown -5 Goto GoEndBattle>
+
+	nu2 <if= T2 0 Return   if= SelfArenaState NAV_AS_Battle SetSelfArenaState NAV_AS_Win   Alert 6 Print 6  AddSelfArenaWin  AddSelfArenaThreat d10  XPV 100 FacXP+ 5 1 AddRenown 1 Goto GoEndBattle>
+
+	GoEndBattle <ifNPCOK SelfChallengerID ForceChat SelfChallengerID MoveAndPacifyNPC SelfChallengerID SelfChallengerHome ClearSelfChallengerID>
+
+	Msg1 <You enter the arena. Prepare to battle.>
+	Msg2 <The arena battle rages on.>
+	Msg3 <You enter the arena. There's no fight going on here now.>
+	Msg5 <You have lost the battle.>
+	Msg6 <You have won the battle.>
+
+sub
+	Team 1
+	name <Player Team>
+	home <Player Start Point>
+	SetEnemy 2
+
+	Team 2
+	name <Enemies>
+	home <Enemy Start Point>
+	SetFaction 5
+	SetEnemy 1
+	Deploy <if= SelfArenaState NAV_AS_Ready ifG SelfArenaForces 0 WMecha 2 SelfArenaThreat SelfArenaForces>
+
+	Rect
+	name <Player Start Point>
+	Width 7
+	Height 7
+
+	Rect
+	name <Enemy Start Point>
+	Width 7
+	Height 7
+end
+
 
 Scene 0 2
 	name <the Valhalla Arena>

@@ -3,103 +3,6 @@
 %%
 
 %%
-%% *:CHARA_ARENA_BASE
-%%	Contains a personal-scale arena.
-%%
-%%	These places will typically only show up in dystopian, dangerous,
-%%	and typically bad cities.
-
-Content
-	name <Theles Spinner Arena>
-	requires <*:CHARA_ARENA_BASE THESP>
-
-	% E1 is the manager
-	% E2 is the arena
-	% E3 is the prize
-	Element1 <Prefab>
-	Scene1 <ArenaSite>
-	Team1 <Citizens>
-	TeamData1 <Pass Ally>
-
-	Scene2 <New *Arena_ThelesSpinner>
-
-	Element3 <Prefab>
-	Place3 </>
-
-	sub
-		Persona 1
-		greeting <if= QuestStatus %qid% -1 else GoCheckProgress NewChat Say 5>
-		GoCheckProgress <if# QuestStatus %qid% 0 else GoPreQuest if= ArenaState %2% NAV_AS_Win else GoCheckLoss Goto GoArenaWin>
-		GoCheckLoss <if= ArenaState %2% NAV_AS_Loss else GoCheckReady Goto GoArenaLoss>
-		GoCheckReady <if= ArenaState %2% NAV_AS_Vacant else GoArenaFull ifG ComTime ArenaRecharge %2% else GoArenaBusy Goto GoOfferFight>
-
-		GoArenaWin <if= ArenaWins %2% 10 else GoMinorWin Goto GoBigWin>
-		*GoMinorWin <*CharaArenaWin %2% GoResetArena>
-		*GoArenaLoss <*CharaArenaLoss %2% GoResetArena>
-		GoResetArena <ResetArena %2%>
-
-		*GoArenaFull <*ArenaIsFull %2%>
-		*GoArenaBusy <*ArenaIsBusy %2%>
-
-		*GoChooseBattle <*StartCharaBattle %2% GoStartFight>
-		GoStartFight <SavePos PrepArena %2% 100 Jump %2%>
-		*GoRefuseBattle <*RefuseArenaFight %2%>
-
-		GoStartQuest <SetQuestStatus %qid% %id% SetArenaThreat %2% %threat%>
-
-		GoOfferFight <NewChat Say 1 AddChat 1 AddChat 2>
-		% Remember, there's a lot of fiddly bits for the big win.
-		GoBigWin <NewChat Say 2 History 3 GiveItem %3% XPV 100 SetQuestStatus %qid% -1  Goto GoResetArena>
-		*GoPreQuest <*NiceToMeetYou GoArenaIntro>
-		GoArenaIntro <NewChat Say 4 AddChat 3 AddChat 4>
-
-		result1 <Goto GoChooseBattle>
-		result2 <Goto GoRefuseBattle>
-		result3 <NewChat Say 6 AddChat 1 AddChat 2  Goto GoStartQuest>
-		result4 <NewChat Say 7>
-
-		Msg1 <Welcome back. Are you ready to fight?>
-		Msg2 <In honor of your tenth victory, I'd like to present you with this Thracian helmet.>
-		Msg3 <You were crowned champion of the Gladiator Pit.>
-		Msg4 <Hey, are you looking to make some cash? I've got a great deal. We have a gladiator pit just below here. Take part in the games and you could make big money. Lose, and you don't have to worry about being poor ever again.>
-		Msg5 <Champions like you get retired from the games. We used to let them just keep on fighting, but that screwed with the betting odds.>
-		Msg6 <All matches are to the death. You could try surrendering but nobody can hear you over the screams. If you want, you can have your first match right away.>
-		Msg7 <Look around you. When violence is a way of life, the only entertainment possible becomes megaviolence.>
-
-		Prompt1 <I'm all set to go.>
-		CPrompt1 <ifChatNPCInPlay Accept>
-		Prompt2 <Not right now, no.>
-		Prompt3 <That sounds like something I'd like.>
-		Prompt4 <You've got to be kidding.>
-
-		MetaScene 1
-		sub
-			room
-			name <Manager's Office>
-			special <SHAREDPALETTE>
-			desig <HOME>
-			minimap <.......2.....1......&---&>
-			inv
-				TrapDoor
-				desig <ENTRANCE %s2%>
-				MiniMapComponent 2
-			end
-		end
-	end
-	inv
-		NPC Bandit
-		job <Arena Manager>
-
-		HeadArmor 7
-		mass -12
-		name <Thracian Helmet>
-		Sealed
-		Hardened
-		Ego 10
-	end
-
-
-%%
 %% *:MECHA_ARENA_BASE
 %%	Contains the arena manager.
 %%
@@ -112,6 +15,84 @@ Content
 %%          don't need a GoBigWin script and you shouldn't use a standard challenger
 %%          as either the last fight or the 10th fight.
 %%
+
+Content
+	name <Rocket Arena>
+	requires <*:MECHA_ARENA_BASE YATSP>
+
+	% E1 is the manager
+	% E2 is the arena
+	% E3 is the entrance to the arena
+	Element1 <Prefab>
+	Scene1 <ArenaSite>
+	Team1 <Citizens>
+	TeamData1 <Pass Ally>
+
+	Scene2 <New *Arena_RocketArena>
+
+	Element3 <Prefab>
+	Scene3 <Environs>
+
+	Quest1 <*:MECHA_ARENA_CHALLENGE #30 1 2>
+	Quest2 <*:MECHA_ARENA_CHALLENGE #42 1 2>
+	Quest3 <*:MECHA_ARENA_CHALLENGE #54 1 2>
+	Quest4 <*:MECHA_ARENA_CHALLENGE #66 1 2>
+
+	sub
+		Persona 1
+		rumor0 <%name1% manages the underground dueling meets at Aurora Night.>
+		greeting <if# QuestStatus %qid% 0 else GoPreQuest if= ArenaState %2% NAV_AS_Win else GoCheckLoss Goto GoArenaWin>
+		GoCheckLoss <if= ArenaState %2% NAV_AS_Loss else GoCheckReady Goto GoArenaLoss>
+		GoCheckReady <if= ArenaState %2% NAV_AS_Vacant else GoArenaFull ifG ComTime ArenaRecharge %2% else GoArenaBusy Goto GoOfferFight>
+
+		GoArenaWin <if= ArenaWins %2% 10 else GoMinorWin Goto GoBigWin>
+		*GoMinorWin <*BasicArenaWin %2% GoResetArena>
+		*GoArenaLoss <*BasicArenaLoss %2% GoResetArena>
+		GoResetArena <ResetArena %2%>
+
+		*GoArenaFull <*ArenaIsFull %2%>
+		*GoArenaBusy <*ArenaIsBusy %2%>
+
+		GoChooseBattle <if= ArenaWins %2% 9 else GoCheckQ3 Goto .%id4%_GoInit>
+		GoCheckQ3 <if= ArenaWins %2% 7 else GoCheckQ2 Goto .%id3%_GoInit>>
+		GoCheckQ2 <if= ArenaWins %2% 5 else GoCheckQ1 Goto .%id2%_GoInit>>
+		GoCheckQ1 <if= ArenaWins %2% 3 else GoNormalBattle Goto .%id1%_GoInit>
+		*GoNormalBattle <*StartArenaBattle %2% GoStartFight>
+		GoStartFight <SavePos PrepArena %2% 100 Jump %2%>
+		*GoRefuseBattle <*RefuseArenaFight %2%>
+
+		GoStartQuest <SetQuestStatus %qid% %id% SetArenaThreat %2% 10>
+
+		GoOfferFight <NewChat Say 1 AddChat 1 AddChat 2>
+		GoBigWin <NewChat Say 2 History 3 XPV 500 SetQuestStatus %qid% -1 RandomMecha .mektype 72  CashPrize Reward ArenaThreat %2% 500 Goto GoResetArena>
+		.mektype <ROCKE RISHI>
+		*GoPreQuest <*NiceToMeetYou GoArenaIntro>
+		GoArenaIntro <NewChat Say 4 >
+
+		result1 <Goto GoChooseBattle>
+		result2 <Goto GoRefuseBattle>
+
+		Msg1 <Are you here for the battle? There's another match all ready to go.>
+		Msg2 <Very well done. That was your tenth fight, making you our new champion.>
+		Msg3 <You were crowned champion of the Rocket Arena.>
+		Msg4 <>
+
+		Prompt1 <That's what I wanted to hear.>
+		CPrompt1 <ifChatNPCInPlay ifG PCMeks 0 Accept>
+		Prompt2 <Not right now, sorry.>
+
+
+	end
+	inv
+		NPC Arena Pilot
+		SetFaction 5
+		chardesc Shy Passionate
+		NonCombatant
+
+		STC QUEST-MAPMARKER-AUTO-STATIONARY
+		name <Rocket Arena>
+		desig <ENTRANCE %s2%>
+	end
 
 Content
 	name <Gaos Spinner Arena>
@@ -528,4 +509,102 @@ Content
 		name <Steel Arena>
 		desig <ENTRANCE %s2%>
 	end
+
+
+%%
+%% *:CHARA_ARENA_BASE
+%%	Contains a personal-scale arena.
+%%
+%%	These places will typically only show up in dystopian, dangerous,
+%%	and typically bad cities.
+
+Content
+	name <Theles Spinner Arena>
+	requires <*:CHARA_ARENA_BASE THESP>
+
+	% E1 is the manager
+	% E2 is the arena
+	% E3 is the prize
+	Element1 <Prefab>
+	Scene1 <ArenaSite>
+	Team1 <Citizens>
+	TeamData1 <Pass Ally>
+
+	Scene2 <New *Arena_ThelesSpinner>
+
+	Element3 <Prefab>
+	Place3 </>
+
+	sub
+		Persona 1
+		greeting <if= QuestStatus %qid% -1 else GoCheckProgress NewChat Say 5>
+		GoCheckProgress <if# QuestStatus %qid% 0 else GoPreQuest if= ArenaState %2% NAV_AS_Win else GoCheckLoss Goto GoArenaWin>
+		GoCheckLoss <if= ArenaState %2% NAV_AS_Loss else GoCheckReady Goto GoArenaLoss>
+		GoCheckReady <if= ArenaState %2% NAV_AS_Vacant else GoArenaFull ifG ComTime ArenaRecharge %2% else GoArenaBusy Goto GoOfferFight>
+
+		GoArenaWin <if= ArenaWins %2% 10 else GoMinorWin Goto GoBigWin>
+		*GoMinorWin <*CharaArenaWin %2% GoResetArena>
+		*GoArenaLoss <*CharaArenaLoss %2% GoResetArena>
+		GoResetArena <ResetArena %2%>
+
+		*GoArenaFull <*ArenaIsFull %2%>
+		*GoArenaBusy <*ArenaIsBusy %2%>
+
+		*GoChooseBattle <*StartCharaBattle %2% GoStartFight>
+		GoStartFight <SavePos PrepArena %2% 100 Jump %2%>
+		*GoRefuseBattle <*RefuseArenaFight %2%>
+
+		GoStartQuest <SetQuestStatus %qid% %id% SetArenaThreat %2% %threat%>
+
+		GoOfferFight <NewChat Say 1 AddChat 1 AddChat 2>
+		% Remember, there's a lot of fiddly bits for the big win.
+		GoBigWin <NewChat Say 2 History 3 GiveItem %3% XPV 100 SetQuestStatus %qid% -1  Goto GoResetArena>
+		*GoPreQuest <*NiceToMeetYou GoArenaIntro>
+		GoArenaIntro <NewChat Say 4 AddChat 3 AddChat 4>
+
+		result1 <Goto GoChooseBattle>
+		result2 <Goto GoRefuseBattle>
+		result3 <NewChat Say 6 AddChat 1 AddChat 2  Goto GoStartQuest>
+		result4 <NewChat Say 7>
+
+		Msg1 <Welcome back. Are you ready to fight?>
+		Msg2 <In honor of your tenth victory, I'd like to present you with this Thracian helmet.>
+		Msg3 <You were crowned champion of the Gladiator Pit.>
+		Msg4 <Hey, are you looking to make some cash? I've got a great deal. We have a gladiator pit just below here. Take part in the games and you could make big money. Lose, and you don't have to worry about being poor ever again.>
+		Msg5 <Champions like you get retired from the games. We used to let them just keep on fighting, but that screwed with the betting odds.>
+		Msg6 <All matches are to the death. You could try surrendering but nobody can hear you over the screams. If you want, you can have your first match right away.>
+		Msg7 <Look around you. When violence is a way of life, the only entertainment possible becomes megaviolence.>
+
+		Prompt1 <I'm all set to go.>
+		CPrompt1 <ifChatNPCInPlay Accept>
+		Prompt2 <Not right now, no.>
+		Prompt3 <That sounds like something I'd like.>
+		Prompt4 <You've got to be kidding.>
+
+		MetaScene 1
+		sub
+			room
+			name <Manager's Office>
+			special <SHAREDPALETTE>
+			desig <HOME>
+			minimap <.......2.....1......&---&>
+			inv
+				TrapDoor
+				desig <ENTRANCE %s2%>
+				MiniMapComponent 2
+			end
+		end
+	end
+	inv
+		NPC Bandit
+		job <Arena Manager>
+
+		HeadArmor 7
+		mass -12
+		name <Thracian Helmet>
+		Sealed
+		Hardened
+		Ego 10
+	end
+
 

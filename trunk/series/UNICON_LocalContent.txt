@@ -31,7 +31,7 @@ Content
 		result3 <Goto GoTeach>
 		Msg1 <Life is a process of reinventing oneself. When you stop learning, it means you have achieved either perfection or death. I, being relatively closer to that state, know more about these things than you.>
 		Msg2 <A Star needs to master three skills. The first is the ability to avoid dying; it's quite handy. The second is the ability to see things as they really are. The third is the ability to look cool at all times. Everything else is just details.>
-		Msg3 <\PC . I have been watching your advancement... Remember this, that legends are written of the bold. Someday you may become legend, but for right now I suggest you simply get the hang of being.>
+		Msg3 <\PC . I have been watching your advancement... Remember this, that legends are written of the bold. Someday you may become legend, but for right now I suggest you concentrate on simply being.>
 		Prompt1 <Teach me something.>
 		Prompt2 <I don't have time for this.>
 		Prompt3 <[Continue]>
@@ -55,7 +55,9 @@ Content
 		job <Mentor>
 		SetFaction 14
 		Age 42
-		Chardesc Male Sociable Passionate Pragmatic Heroic
+		Chardesc Male Sociable Passionate Spiritual Heroic
+		SDL_PORTRAIT <por_m_kynan(OC-).png>
+		SDL_COLORS <166 47 32 255 212 195 115 100 13>
 		Renown 65
 		NonCombatant
 
