@@ -72,6 +72,19 @@
 %%  PARAM2: Exit label
 
 	Persona
+	requires <*MeetMeAtArena Easygoing>
+	START <EndChat Say %id%01 Goto %2%>
+	Msg%id%01 <I'll go wait for you at \SCENE %1% . Take however much time you need.>
+	Msg%id%01_1 <>
+	CMsg%id%01_1 <ifNPCSociable Accept>
+	Msg%id%01_2 <Cool. I'll see you at \SCENE %1% , then.>
+	CMsg%id%01_2 <ifNPCShy Accept>
+	Msg%id%01_5 <This is going to be a fun match! Come meet me at \SCENE %1% when you're ready.>
+	CMsg%id%01_5 <ifNPCCheerful Accept>
+	Msg%id%01_6 <>
+	CMsg%id%01_6 <ifNPCMelancholy Accept>
+
+	Persona
 	requires <*MeetMeAtArena>
 	START <EndChat Say %id%01 Goto %2%>
 	Msg%id%01 <Meet me at the arena. We'll find out who the superior pilot is.>

@@ -30,8 +30,83 @@
 %%
 
 Content
+	name <PC vs Tama>
+	requires <*:MECHA_ARENA_CHALLENGE (!Ne|!Lo) L5PAT>
+
+	% E1 is the arena manager
+	% E2 is the arena proper
+	% E3 is the challenger
+	Element3 <Prefab>
+	Scene3 <Building Public>
+	Team3 <Citizens>
+	TeamData3 <Ally Pass>
+
+	Quest1 <*CHALLENGER_SUBQUEST 3>
+sub
+	Persona 1
+	Greeting <if= QuestStatus %qid% %id% else %pop%  if= ArenaState %2% NAV_AS_Win else .%id%_GoCheckLoss SetQuestStatus %qid% %id1% if# ArenaWins %2% 10 else GoBigWin Goto .%id%_GoArenaWin>
+	*.%id%_GoCheckLoss <*ChallengerStatusReport %3% %2% .%id%_GoNPCDied>
+	.%id%_GoInit <ifNPCOK %3% else .%id%_GoNPCDied NewChat Say %id%01 SetQuestStatus %qid% %id%  NPCSubQMemo %3% %id% %id%02  AddChat %id%01>
+	%% Just in case the NPC who we're supposed to fight has died somehow, just set up a normal fight.
+	*.%id%_GoNPCDied <*YourChallengerDied %2% %qid%>
+	*.%id%_GoArenaWin <*ChallengeArenaWin %3% %2% .%id%_GoConclude>
+	.%id%_GoConclude <ResetArena %2%>
+	Result%id%01 <NewChat Say %id%03>
+	Msg%id%01 <Your next match is against a young mecha pilot named Tama. She grew up on an asteroid mining station, so she's been handling mecha since she's been old enough to walk. You can find her at \SCENE %s3% .>
+	Msg%id%02 <%name1% sent you to battle %name3% in arena combat; \SPR %3% can be found in \SCENE %s3% .>
+	Msg%id%03 <Tama doesn't have much experience in real combat yet, so maybe you can use that to your advantage. She's much better at defense than she is at offense.>
+	Prompt%id%01 <Do you have any hints for me?>
+
+	Persona 3
+	% V1 = First time chat counter
+	Greeting <if= QuestStatus %qid% %id% else GoNoMatch  if= ArenaState %2% NAV_AS_Battle else GoCheckStatus Goto GoTrashTalk>
+	*GoTrashTalk <*ArenaChallenge GoThemeInfo>
+	GoThemeInfo <EndChat Say 9>
+	GoCheckStatus <if= ArenaState %2% NAV_AS_Ready else GoCheckWin EndChat Say 1>
+	GoCheckWin <if= ArenaState %2% NAV_AS_Win else GoCheckChallenge ifNPCOK %1% else GoManagerDied NewChat Say 2>
+	GoManagerDied <NewChat Say 3 SetQuestStatus %qid% -1 ResetArena %2%>
+	GoCheckChallenge <ResetArena %2% ifG ComTime ArenaRecharge %2% else GoLater if= V1 1 else GoFirstTime NewChat Say 4 AddChat 1 AddChat 2>
+	GoFirstTime <NewChat Say 5 V= 1 1 AddCHat 3 AddChat 4>
+	*GoLater <*ChallengeMeLater>
+	*GoNoMatch <*NiceToMeetYou GoChat>
+	*GoChat <*MISC_CHATTER>
+	GoStartCombat <SetChallengerID %2% %3% SetChallengerHome %2% %s3% MoveNPC %3% %2% PrepArena %2% 0 SetNPCTeam %3% 2>
+	*result1 <*MeetMeAtArena %2% GoStartCombat>
+	*result2 <*RejectChallenge>
+	result3 <NewChat Say 6 AddReact d10 AddChat 1 AddChat 2>
+	result4 <EndChat Say 7 AddCheerful -d6  AddChat 5>
+	result5 <NewChat Say 8 AddChat 1 AddChat 2>
+	Msg1 <I'm bored! Come on and let's start the match.>
+	Msg2 <Wow... Fighting mecha is way harder than blasting rocks. Rocks don't shoot back. You can tell %name1% that our match is over.>
+	Msg3 <I'm sorry, but I don't think we can have that match anymore...>
+	Msg4 <So, do you want to go to the arena now? I've been looking forward to this.>
+	Msg5 <Aha, \PC ! %name1% told me you were coming. I challenge you to a duel at \SCENE %s2% !>
+	Msg6 <Ooh, I can't wait. This is going to be my first arena match. Do you want to head out now?>
+	Msg7 <Really? Ashes... this is my first time around, so I'm still learning how things work. Sorry about ruining that.>
+	Msg8 <As long as you're here, though, I guess we can get started anyways. Are you all ready to head over to the arena?>
+	Msg9 <Let's get this game rolling. Yee-haw!>
+	Prompt1 <I'm all ready to go.>
+	Prompt2 <I need a bit more time to get ready first.>
+	Prompt3 <I accept your challenge!>
+	Prompt4 <Wait, I thought I was supposed to challenge you.>
+	Prompt5 <[Continue]>
+end
+inv
+	NPC Mecha Pilot
+	name <Tama>
+	SetFaction 13
+	CHAT_ATTACK <Yee-haw!>
+	chardesc Female Cheerful Easygoing Spiritual
+	StatLine 14 13 17 10 16 12 11 15
+	Age -3
+	SetTheme 4
+	SetSpecSkill 5
+	Skill 12
+	Skill 23
+end
+
+Content
 	name <PC vs Aran>
-	% As above, but the first time you meet the PC can make a formal challenge
 	requires <*:MECHA_ARENA_CHALLENGE (!Ne|!Lo) ~L5PAT>
 
 	% E1 is the arena manager
@@ -373,6 +448,84 @@ end
 %%
 %% Mid Range Compeditors
 %%
+
+Content
+	name <PC vs Onawa>
+	requires <*:MECHA_ARENA_CHALLENGE !Md ~L5PAT>
+
+	% E1 is the arena manager
+	% E2 is the arena proper
+	% E3 is the challenger
+	Element3 <Prefab>
+	Scene3 <Building Public>
+	Team3 <Citizens>
+	TeamData3 <Ally Pass>
+
+	Quest1 <*CHALLENGER_SUBQUEST 3>
+sub
+	Persona 1
+	Greeting <if= QuestStatus %qid% %id% else %pop%  if= ArenaState %2% NAV_AS_Win else .%id%_GoCheckLoss SetQuestStatus %qid% %id1% if# ArenaWins %2% 10 else GoBigWin Goto .%id%_GoArenaWin>
+	*.%id%_GoCheckLoss <*ChallengerStatusReport %3% %2% .%id%_GoNPCDied>
+	.%id%_GoInit <ifNPCOK %3% else .%id%_GoNPCDied NewChat Say %id%01 SetQuestStatus %qid% %id%  NPCSubQMemo %3% %id% %id%02  AddChat %id%01>
+	%% Just in case the NPC who we're supposed to fight has died somehow, just set up a normal fight.
+	*.%id%_GoNPCDied <*YourChallengerDied %2% %qid%>
+	*.%id%_GoArenaWin <*ChallengeArenaWin %3% %2% .%id%_GoConclude>
+	.%id%_GoConclude <ResetArena %2%>
+	Result%id%01 <NewChat Say %id%03>
+	Msg%id%01 <Your next match is against a Hoeller Industries pilot named Onawa. You can find her in \SCENE %s3% .>
+	Msg%id%02 <%name1% sent you to battle %name3% in arena combat; \SPR %3% can be found in \SCENE %s3% .>
+	Msg%id%03 <She was born on Earth, but moved to the colonies at a young age. They say she learned ninjitsu from her grandfather but I don't believe that.>
+	Prompt%id%01 <What can you tell me about her?>
+
+	Persona 3
+	% V1 = First time chat counter
+	Greeting <if= QuestStatus %qid% %id% else GoNoMatch  if= ArenaState %2% NAV_AS_Battle else GoCheckStatus Goto GoTrashTalk>
+	*GoTrashTalk <*ArenaChallenge GoThemeInfo>
+	GoThemeInfo <EndChat Say 8>
+	GoCheckStatus <if= ArenaState %2% NAV_AS_Ready else GoCheckWin EndChat Say 1>
+	GoCheckWin <if= ArenaState %2% NAV_AS_Win else GoCheckChallenge ifNPCOK %1% else GoManagerDied NewChat Say 2>
+	GoManagerDied <NewChat Say 3 SetQuestStatus %qid% -1 ResetArena %2%>
+	GoCheckChallenge <ResetArena %2% ifG ComTime ArenaRecharge %2% else GoLater if= V1 1 else GoFirstTime NewChat Say 4 AddChat 1 AddChat 2>
+	GoFirstTime <NewChat Say 5 V= 1 1 AddCHat 1 AddChat 2 AddChat 3>
+	*GoLater <*ChallengeMeLater>
+	*GoNoMatch <*NiceToMeetYou GoChat>
+	*GoChat <*MISC_CHATTER>
+	GoStartCombat <SetChallengerID %2% %3% SetChallengerHome %2% %s3% MoveNPC %3% %2% PrepArena %2% 0 SetNPCTeam %3% 2>
+	*result1 <*MeetMeAtArena %2% GoStartCombat>
+	*result2 <*RejectChallenge>
+	result3 <EndChat Say 6 AddChat 4>
+	result4 <NewChat Say 7 AddChat 1 AddChat 2>
+	Msg1 <Our match is set to begin. Please come face me at \SCENE %2% .>
+	Msg2 <You may go tell %name1% that you defeated me.>
+	Msg3 <Did you hear? %name1% has died...>
+	Msg4 <I am ready for our battle now. Are you prepared to face me?>
+	Msg5 <I was told that you are my next challenger. I am completely prepared for our battle, if you can say the same.>
+	Msg6 <There is no reason to speak until after our fight. If we get to know one another first, it will be all the more devastating should one of us get killed during the match.>
+	Msg7 <So, I ask one more time: Are you prepared to fight now, or do you prefer to wait until later?>
+	Msg8 <The darkness will take you!>
+	Prompt1 <Let's get started.>
+	Prompt2 <Sorry, I'm not ready yet.>
+	Prompt3 <Wait, I'd like to talk first.>
+	Prompt4 <[Continue]>
+end
+inv
+	NPC Arena Pilot
+	name <Onawa>
+	job <Corporate Pilot>
+	job_desig <CORPO>
+	CharDesc Female Shy Easygoing Melancholy
+	Age 5
+	StatLine 15 14 14 15 12 15 12 11
+	SDL_Portrait <por_f_brianna(JAY).png>
+	SDL_Colors <64 130 109 150 112 89 103 3 45>
+	SetTheme 2
+	SetSpecSkill 1
+	Skill 11
+	Skill 17
+	Skill 25
+	Talent 23
+	SetFaction 7
+end
 
 Content
 	name <PC vs Carter>

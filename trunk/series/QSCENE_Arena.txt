@@ -44,9 +44,9 @@ Scene 0 2
 
 	nu1 <if= T1 0 Return   if= SelfArenaState NAV_AS_Battle SetSelfArenaState NAV_AS_Loss  Alert 5 Print 5  AddRenown -5 Goto GoEndBattle>
 
-	nu2 <if= T2 0 Return   if= SelfArenaState NAV_AS_Battle SetSelfArenaState NAV_AS_Win   Alert 6 Print 6  AddSelfArenaWin  AddSelfArenaThreat d10  XPV 100 FacXP+ 5 1 AddRenown 1 Goto GoEndBattle>
+	nu2 <if= T2 0 Return   if= SelfArenaState NAV_AS_Battle SetSelfArenaState NAV_AS_Win   Alert 6 Print 6  AddSelfArenaWin  AddSelfArenaThreat d10  XPV 100 FacXP+ 5 1 AddRenown 1 ifNPCOK SelfChallengerID else GoEndBattle ForceChat SelfChallengerID Goto GoEndBattle>
 
-	GoEndBattle <ifNPCOK SelfChallengerID ForceChat SelfChallengerID MoveAndPacifyNPC SelfChallengerID SelfChallengerHome ClearSelfChallengerID>
+	GoEndBattle <ifNPCOK SelfChallengerID MoveAndPacifyNPC SelfChallengerID SelfChallengerHome ClearSelfChallengerID>
 
 	Msg1 <You enter the arena. Prepare to battle.>
 	Msg2 <The arena battle rages on.>
@@ -96,9 +96,9 @@ Scene 0 2
 
 	nu1 <if= T1 0 Return   if= SelfArenaState NAV_AS_Battle SetSelfArenaState NAV_AS_Loss  Alert 5 Print 5  AddRenown -5 Goto GoEndBattle>
 
-	nu2 <if= T2 0 Return   if= SelfArenaState NAV_AS_Battle SetSelfArenaState NAV_AS_Win   Alert 6 Print 6  AddSelfArenaWin  AddSelfArenaThreat d10  XPV 100 FacXP+ 5 1 AddRenown 1 Goto GoEndBattle>
+	nu2 <if= T2 0 Return   if= SelfArenaState NAV_AS_Battle SetSelfArenaState NAV_AS_Win   Alert 6 Print 6  AddSelfArenaWin  AddSelfArenaThreat d10  XPV 100 FacXP+ 5 1 AddRenown 1 ifNPCOK SelfChallengerID else GoEndBattle ForceChat SelfChallengerID Goto GoEndBattle>
 
-	GoEndBattle <ifNPCOK SelfChallengerID ForceChat SelfChallengerID MoveAndPacifyNPC SelfChallengerID SelfChallengerHome ClearSelfChallengerID>
+	GoEndBattle <ifNPCOK SelfChallengerID MoveAndPacifyNPC SelfChallengerID SelfChallengerHome ClearSelfChallengerID>
 
 	Msg1 <You enter the arena. Prepare to battle.>
 	Msg2 <The arena battle rages on.>
@@ -144,9 +144,9 @@ Scene 0 2
 
 	nu1 <if= T1 0 Return   if= SelfArenaState NAV_AS_Battle SetSelfArenaState NAV_AS_Loss  Alert 5 Print 5  AddRenown -5 Goto GoEndBattle>
 
-	nu2 <if= T2 0 Return   if= SelfArenaState NAV_AS_Battle SetSelfArenaState NAV_AS_Win   Alert 6 Print 6  AddSelfArenaWin  AddSelfArenaThreat d10  XPV 100 FacXP+ 5 1 AddRenown 1 Goto GoEndBattle>
+	nu2 <if= T2 0 Return   if= SelfArenaState NAV_AS_Battle SetSelfArenaState NAV_AS_Win   Alert 6 Print 6  AddSelfArenaWin  AddSelfArenaThreat d10  XPV 100 FacXP+ 5 1 AddRenown 1 ifNPCOK SelfChallengerID else GoEndBattle ForceChat SelfChallengerID Goto GoEndBattle>
 
-	GoEndBattle <ifNPCOK SelfChallengerID ForceChat SelfChallengerID MoveAndPacifyNPC SelfChallengerID SelfChallengerHome ClearSelfChallengerID>
+	GoEndBattle <ifNPCOK SelfChallengerID MoveAndPacifyNPC SelfChallengerID SelfChallengerHome ClearSelfChallengerID>
 
 	Msg1 <You enter the arena. Prepare to battle.>
 	Msg2 <The arena battle rages on.>
@@ -194,9 +194,9 @@ Scene 0 2
 
 	nu1 <if= T1 0 Return   if= SelfArenaState NAV_AS_Battle SetSelfArenaState NAV_AS_Loss  Alert 5 Print 5  AddRenown -5 Goto GoEndBattle>
 
-	nu2 <if= T2 0 Return   if= SelfArenaState NAV_AS_Battle SetSelfArenaState NAV_AS_Win   Alert 6 Print 6  AddSelfArenaWin  AddSelfArenaThreat d10  XPV 100 FacXP+ 5 1 AddRenown 1 Goto GoEndBattle>
+	nu2 <if= T2 0 Return   if= SelfArenaState NAV_AS_Battle SetSelfArenaState NAV_AS_Win   Alert 6 Print 6  AddSelfArenaWin  AddSelfArenaThreat d10  XPV 100 FacXP+ 5 1 AddRenown 1 ifNPCOK SelfChallengerID else GoEndBattle ForceChat SelfChallengerID Goto GoEndBattle>
 
-	GoEndBattle <ifNPCOK SelfChallengerID ForceChat SelfChallengerID MoveAndPacifyNPC SelfChallengerID SelfChallengerHome ClearSelfChallengerID>
+	GoEndBattle <ifNPCOK SelfChallengerID MoveAndPacifyNPC SelfChallengerID SelfChallengerHome ClearSelfChallengerID>
 
 	Msg1 <You enter the arena. Prepare to battle.>
 	Msg2 <The arena battle rages on.>
@@ -237,9 +237,9 @@ Scene 0 2
 
 	nu1 <if= T1 0 Return   if= SelfArenaState NAV_AS_Battle SetSelfArenaState NAV_AS_Loss  Alert 5 Print 5  AddRenown -5 Goto GoEndBattle>
 
-	nu2 <if= T2 0 Return   if= SelfArenaState NAV_AS_Battle SetSelfArenaState NAV_AS_Win   Alert 6 Print 6  AddSelfArenaWin  AddSelfArenaThreat d10  XPV 100 FacXP+ 5 1 AddRenown 1 Goto GoEndBattle>
+	nu2 <if= T2 0 Return   if= SelfArenaState NAV_AS_Battle SetSelfArenaState NAV_AS_Win   Alert 6 Print 6  AddSelfArenaWin  AddSelfArenaThreat d10  XPV 100 FacXP+ 5 1 AddRenown 1 ifNPCOK SelfChallengerID else GoEndBattle ForceChat SelfChallengerID Goto GoEndBattle>
 
-	GoEndBattle <ifNPCOK SelfChallengerID ForceChat SelfChallengerID MoveAndPacifyNPC SelfChallengerID SelfChallengerHome ClearSelfChallengerID>
+	GoEndBattle <ifNPCOK SelfChallengerID MoveAndPacifyNPC SelfChallengerID SelfChallengerHome ClearSelfChallengerID>
 
 	Msg1 <You enter the quarry. Prepare to battle.>
 	Msg2 <The arena battle rages on.>
@@ -281,9 +281,9 @@ Scene 0 2
 
 	nu1 <if= T1 0 Return   if= SelfArenaState NAV_AS_Battle SetSelfArenaState NAV_AS_Loss  Alert 5 Print 5  AddRenown -5 Goto GoEndBattle>
 
-	nu2 <if= T2 0 Return   if= SelfArenaState NAV_AS_Battle SetSelfArenaState NAV_AS_Win   Alert 6 Print 6  AddSelfArenaWin  AddSelfArenaThreat d10  XPV 100 FacXP+ 5 1 AddRenown 1 Goto GoEndBattle>
+	nu2 <if= T2 0 Return   if= SelfArenaState NAV_AS_Battle SetSelfArenaState NAV_AS_Win   Alert 6 Print 6  AddSelfArenaWin  AddSelfArenaThreat d10  XPV 100 FacXP+ 5 1 AddRenown 1 ifNPCOK SelfChallengerID else GoEndBattle ForceChat SelfChallengerID Goto GoEndBattle>
 
-	GoEndBattle <ifNPCOK SelfChallengerID ForceChat SelfChallengerID MoveAndPacifyNPC SelfChallengerID SelfChallengerHome ClearSelfChallengerID>
+	GoEndBattle <ifNPCOK SelfChallengerID MoveAndPacifyNPC SelfChallengerID SelfChallengerHome ClearSelfChallengerID>
 
 	Msg1 <You enter the arena. Prepare to battle.>
 	Msg2 <The arena battle rages on.>
@@ -329,9 +329,9 @@ Scene
 
 	nu1 <if= T1 0 Return   if= SelfArenaState NAV_AS_Battle SetSelfArenaState NAV_AS_Loss  Alert 5  AddRenown -5 Goto GoEndBattle>
 
-	nu2 <if= T2 0 Return   if= SelfArenaState NAV_AS_Battle SetSelfArenaState NAV_AS_Win   Alert 6  AddSelfArenaWin  AddSelfArenaThreat d10  XPV 100 AddRenown 1 Goto GoEndBattle>
+	nu2 <if= T2 0 Return   if= SelfArenaState NAV_AS_Battle SetSelfArenaState NAV_AS_Win   Alert 6 Print 6  AddSelfArenaWin  AddSelfArenaThreat d10  XPV 100 FacXP+ 5 1 AddRenown 1 ifNPCOK SelfChallengerID else GoEndBattle ForceChat SelfChallengerID Goto GoEndBattle>
 
-	GoEndBattle <ifNPCOK SelfChallengerID ForceChat SelfChallengerID MoveAndPacifyNPC SelfChallengerID SelfChallengerHome ClearSelfChallengerID>
+	GoEndBattle <ifNPCOK SelfChallengerID MoveAndPacifyNPC SelfChallengerID SelfChallengerHome ClearSelfChallengerID>
 
 	Msg1 <You enter the pit. Prepare to battle.>
 	Msg2 <The arena battle rages on.>
