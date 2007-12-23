@@ -1882,6 +1882,7 @@ Procedure ProcessSayAnything( GB: GameBoardPtr );
 		M: GearPtr;
 		N: Integer;
 	begin
+		if City = Nil then Exit( 0 );
 		M := City^.SubCom;
 		N := 0;
 		while M <> Nil do begin
@@ -1913,7 +1914,7 @@ var
 begin
 	City := FindRootScene( GB , GB^.Scene );
 	{ Before checking for memes, delete any expired memes that might still be kicking around. }
-	CleanMemes( City );
+	if City <> Nil then CleanMemes( City );
 
 	N := NumMeme( City );
 	if N > 0 then begin

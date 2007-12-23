@@ -657,9 +657,9 @@ begin
 		ASkill := 4;
 	end;
 
-	{ If the master is a character, add +5 to the skill index. }
+	{ If the master isn't a mecha, add +5 to the skill index. }
 	AMaster := FindMaster( Attacker );
-	if ( AMaster <> Nil ) and ( AMaster^.G = GG_Character ) then begin
+	if ( AMaster <> Nil ) and ( AMaster^.G <> GG_Mecha ) then begin
 		ASkill := ASkill + 5;
 	end;
 
