@@ -1178,18 +1178,16 @@ sub
 	Persona 1
 	Greeting <if= QuestStatus %qid% %id% else %pop%  if= ArenaState %2% NAV_AS_Win else .%id%_GoCheckLoss SetQuestStatus %qid% %id1% if# ArenaWins %2% 10 else GoBigWin Goto .%id%_GoArenaWin>
 	*.%id%_GoCheckLoss <*ChallengerStatusReport %3% %2% .%id%_GoNPCDied>
-	.%id%_GoInit <ifNPCOK %3% else .%id%_GoNPCDied if# QuestStatus %qid% -2 else .%id%_GoBackOut NewChat Say %id%01 SetQuestStatus %qid% %id%  NPCSubQMemo %3% %id% %id%02  AddChat %id%01>
+	.%id%_GoInit <ifNPCOK %3% else .%id%_GoNPCDied NewChat Say %id%01 SetQuestStatus %qid% %id%  NPCSubQMemo %3% %id% %id%02 AddChat %id%01>
 	%% Just in case the NPC who we're supposed to fight has died somehow, just set up a normal fight.
 	*.%id%_GoNPCDied <*YourChallengerDied %2% %qid%>
 	*.%id%_GoArenaWin <*ChallengeArenaWin %3% %2% .%id%_GoConclude>
 	.%id%_GoConclude <ResetArena %2%>
-	.%id%_GoBackOut <EndChat Say %id%04 SavePos PrepArena %2% 150 Jump %2% SetQuestStatus %qid% -2>
-	Result%id%01 <NewChat Say %id%03>
-	Msg%id%01 <For your next match, you'll be fighting a Martian named Caher. He's travelled all around the solar system and competed in every major competition. You should be able to find him at \SCENE %s3% .>
+	Result%id%01 <NewChat Say %id%02>
+	Msg%id%01 <You have a special challenger for the next battle. Her name is Vanda; you can find her at \SCENE %s3% .>
 	Msg%id%02 <%name1% sent you to battle %name3% in arena combat; \SPR %3% can be found in \SCENE %s3% .>
-	Msg%id%03 <He's recently signed an endorsement deal with Hoeller Industries. Be careful of his surprise attacks. Also be careful of his mechanic, Vord... there's something not quite right with that guy.>
-	Msg%id%04 <Caher has forfeited on the match, so I've rescheduled you for a regular battle. Good luck.>
-	Prompt%id%01 <What can you tell me about him?>
+	Msg%id%02 <She's an extremely talented fighter. Her specialty is flame weapons. Although she's good at just about everything, she's particularly deadly in close combat. Watch out.>
+	Prompt%id%01 <What can you tell me about this Vanda?>
 
 	Persona 3
 	% V1 = Have been told to wait before

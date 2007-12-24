@@ -3080,7 +3080,7 @@ sub
 			end
 
 			Scene
-			name <the Tower of Delights>
+			name <The Tower of Delights>
 			type <building legit public meeting arcade>
 			ClubMap
 			PalaceParkTiles
@@ -6099,6 +6099,332 @@ sub
 	end
 
 % End of Yatate Spinner...
+end
+
+%%
+%%   ****************************
+%%   ***   GALCONDE SPINNER   ***
+%%   ****************************
+%%
+
+Scene 0 3
+	mapwidth 20
+	mapheight 10
+	name <Galconde Spinner>
+	XPos 44
+	YPos 45
+
+	Tolerance 0
+
+	world <L5 Region>
+	desc <Galconde Spinner is >
+	special <NOEXIT SHOWALL SOLO TOWNMECHA>
+	type <city town spinner target outdoors urban destination hometown research>
+	personatype <city spinner research>
+	habitat <SPACE.URBAN>
+	MegaCityMap
+
+	entrance <*COLONY-1>
+
+	% V1 = Message Counter
+
+	SetFaction 1
+	factions <RISHI L5LAW ROCKE>
+
+	desig <GALSP>
+	context <SPACE>
+
+	Quest1 <*:LocalQuest>
+
+	start <if= V1 0 else GoSecondTime V= 1 1 Alert 1 Print 2>
+	GoSecondTime <Print 2>
+	Msg1 <Galconde Spinner >
+	Msg2 <You enter Galconde Spinner.>
+
+sub
+	Scene
+	name <Cesena Arms Market>
+	type <building mall public legit>
+	entrance <*Building>
+	special <ADDEXIT>
+	MallMap
+	MapWidth 36
+	MapHeight 20
+
+	start <Print 1>
+	Msg1 <You enter the Cesena Arms Market.>
+
+	NeededCells 8
+	Content3 <Some 2 100 Sub *WEAPON_SHOP     na>
+	Content4 <Some 2 100 Sub *ARMOR_SHOP      na>
+	Content6 <Some 2 100 Sub *MECHA_SHOP      na>
+	Content9 <Fill Sub *SHOP_RANDOM           na>
+	sub
+		team 1
+
+		team 2
+		name <Citizens>
+		SetAlly 1
+		Passive
+
+		team 3
+		name <Guards>
+		SetAlly 2
+
+		room
+		name <Foyer>
+		desig <EntranceGrid>
+		Content <Some 4 50 Here *URBAN_X>
+		Content2 <Some 1 100 Here *ANTI_ATTACK_SECURITY 2>
+	end
+
+	Scene
+	name <Cesena Hospital>
+	type <Building hospital public legit>
+	entrance <*Hospital>
+	special <ADDEXIT>
+	MallMap
+	MapWidth 20
+	MapHeight 10
+
+	NeededCells 2
+	Content <Some 1 100 Sub *Doctor>
+	Content2 <Fill Sub *HOSPITAL_X>
+
+	start <Print 1>
+	Msg1 <You enter Cesena Hospital.>
+
+	sub
+		team 1
+
+		team 2
+		name <Citizens>
+		SetAlly 1
+		Passive
+
+		team 3
+		name <Guards>
+		SetAlly 2
+
+		room
+		desig <EntranceGrid>
+		Content <Some 2 50 Here *URBAN_X>
+		Content2 <Some 1 100 Here *ANTI_ATTACK_SECURITY 2>
+	end
+
+	Scene
+	name <Cesena Mall>
+	type <building public mall legit meeting>
+	entrance <*DEPARTMENTSTORE>
+	special <ADDEXIT>
+	MallMap
+	MapWidth 30
+	MapHeight 15
+
+	start <Print 1>
+	Msg1 <You enter the Cesena Mall.>
+
+	NeededCells 4
+	Content1 <Some 2  99 Sub *GENERAL_SHOP>
+	Content2 <Some 1 100 Sub *RESTAURANT>
+	Content3 <Some 1 100 Sub *ELECTRONICS_SHOP  na>
+	Content4 <Fill Sub *SHOP_RANDOM>
+	sub
+		team 1
+
+		team 2
+		name <Citizens>
+		SetAlly 1
+		Passive
+
+		team 3
+		name <Guards>
+		SetAlly 2
+
+		room
+		name <Foyer>
+		desig <EntranceGrid>
+		Content <Some 5 45 Here *URBAN_X>
+		Content2 <Some 1 100 Here *ANTI_ATTACK_SECURITY 2>
+	end
+
+	Scene
+	name <The Mecha Source>
+	type <building garage public legit>
+	entrance <*Garage>
+	special <ADDEXIT>
+	MallMap
+	MapWidth 20
+	MapHeight 20
+	IndustrialTiles
+
+	start <Print 1>
+	Msg1 <You enter the Mecha Source.>
+
+	NeededCells 4
+	Content1 <Some 1 100 Sub *MECHANIC_SHOP>
+	Content2 <Some 2  90 Sub *MECHA_SHOP>
+	Content3 <Fill Sub *GARAGE_X>
+	sub
+		team 1
+
+		team 2
+		name <Citizens>
+		SetAlly 1
+		Passive
+
+		team 3
+		name <Guards>
+		SetAlly 2
+
+		room
+		name <Foyer>
+		desig <EntranceGrid>
+		Content <Some 3 40 Here *URBAN_X>
+		Content2 <Some 1 100 Here *ANTI_ATTACK_SECURITY 2>
+	end
+
+	Scene
+	name <The Adminitarium>
+	type <building government public legit>
+	entrance <*Building>
+	special <ADDEXIT>
+	SetFaction 11
+	ClubMap
+	PalaceParkTiles
+	MapWidth 24
+	MapHeight 21
+
+	start <Print 1>
+	Msg1 <You enter the Adminitarium.>
+
+	NeededCells 2
+	Content1 <Some 1 100 Sub *GOV_MILITARY  na>
+	Content2 <Fill       Sub *GOV_MISC      na>
+
+	sub
+		team 1
+
+		team 2
+		name <Citizens>
+		SetAlly 1
+		Passive
+
+		team 3
+		name <Guards>
+		SetAlly 1
+
+		room
+		name <Foyer>
+		desig <EntranceGrid>
+		Content <Some 2 55 Here *URBAN_X>
+		Content2 <Some 1 100 Here *ANTI_ATTACK_SECURITY 2>
+
+		room
+		name <Garrison>
+		minimap <2...31..............#---#>
+		inv
+			NPC Police Officer
+			SetTeam 3
+			SetFaction 9
+			MiniMapComponent 1
+
+			NPC Police Officer
+			SetTeam 3
+			SetFaction 9
+			MiniMapComponent 2
+
+			NPC Police Officer
+			SetTeam 3
+			SetFaction 9
+			MiniMapComponent 3
+		end
+
+		room
+		name <Main Office>
+		minimap <....31..............#&+&#>
+		inv
+			NPC Politician
+			SetTeam 2
+			SetFaction 11
+			MiniMapComponent 1
+
+			NPC Mecha Pilot
+			SetTeam 3
+			SetFaction 11
+			MiniMapComponent 3
+		end
+	end
+
+	Scene
+	name <Galconde Spaceport>
+	type <building shuttle spaceport legit public>
+	entrance <*SpacePort>
+	special <ADDEXIT>
+	ClubMap
+	MapWidth 20
+	MapHeight 21
+
+	start <Print 1>
+	Msg1 <You enter Galconde Spaceport.>
+
+	NeededCells 4
+	Content1 <Some 1 100 Sub *SHUTTLESERVICE  na>
+	Content2 <Some 1 100 Sub *RESTAURANT      na>
+	Content4 <Some 1  75 Sub *GOV_POLICE      na>
+	Content5 <Some 1 100 Sub *MECHANIC_SHOP   na>
+	Content6 <Fill Sub *SPACEPORT_X>
+
+	sub
+		team 1
+
+		team 2
+		name <Citizens>
+		SetAlly 1
+		Passive
+
+		team 3
+		name <Guards>
+		SetAlly 2
+
+		room
+		name <Foyer>
+		desig <EntranceGrid>
+		Content <Some 4 50 Here *URBAN_X>
+		Content2 <Some 1 100 Here *ANTI_ATTACK_SECURITY 2>
+
+		room
+		minimap <############1###...##...#>
+		sub
+			STC AIRLOCK-1
+			MiniMapComponent 1
+			destination <Galconde Station Exterior>
+		end
+
+		Scene 0 3
+		name <Galconde Station Exterior>
+		type <Environs Outdoors Space>
+		special <ShowAll>
+		terrain <SPACE>
+		MapWidth 30
+		MapHeight 30
+		SpaceMap
+		nu1 <if= T1 0 Exit WorldID>
+		Microgravity
+		Vacuum
+		SpaceBackdrop
+
+		inv
+			STC COLONY-1
+			name <Galconde Spinner>
+			Destination -1
+			XPos 15
+			YPos 15
+		end
+
+	end
+
+% End of Galconde Spinner...
 end
 
 
