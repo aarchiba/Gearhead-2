@@ -7,7 +7,7 @@
 	desig <SML-5>
 	type <SMOKE BLAST 3>
 	caliber <50mm cannister>
-	Range 5
+	Range 4
 	Scale 2
 	sub
 		Ammo 5
@@ -91,7 +91,7 @@
 	name <Gauss Rifle>
 	desig <GR-12>
 	caliber <70mm ferrous>
-	Range 10
+	Range 7
 	Recharge 1
 	sub
 		Ammo 12
@@ -104,7 +104,7 @@
 	name <Heavy Gauss Rifle>
 	desig <GR-24>
 	caliber <120mm ferrous>
-	Range 12
+	Range 8
 	Recharge 1
 	sub
 		Ammo 24
@@ -166,7 +166,7 @@ name <Phase Cannon>
 desig <PHS-8>
 type <ArmorPiercing>
 scale 2
-Range 12
+Range 7
 
 BeamGun 25
 name <Heavy Phase Cannon>
@@ -181,7 +181,7 @@ Recharge 1
 	SCALE 2
 	desig <ICM-5>
 	type <SWARM BURN>
-	Range 8
+	Range 7
 	Magazine 1
 
 	Rockets 4
@@ -189,7 +189,7 @@ Recharge 1
 	desig <HWM-4>
 	Scale 2
 	type <HAYWIRE ANTIAIR>
-	range 10
+	range 7
 	acc 2
 	Magazine 1
 
@@ -198,7 +198,7 @@ Recharge 1
 	desig <PLM-4>
 	Scale 2
 	type <BLAST 2 BRUTAL>
-	Range 7
+	Range 6
 	Magazine 1
 
 	Rockets 2
@@ -206,14 +206,14 @@ Recharge 1
 	Scale 2
 	desig <SPKM-2>
 	type <BLAST 2 OVERLOAD>
-	Range 8
+	Range 7
 	Magazine 1
 
 	Rockets 1
 	name <Light Rockets>
 	desig <LR-1>
 	Scale 2
-	Range 6
+	Range 5
 	ACC -2
 	Magazine 1
 
@@ -222,14 +222,14 @@ Recharge 1
 	desig <AAM-8>
 	type <ARMORPIERCING>
 	Scale 2
-	Range 7
+	Range 6
 	Magazine 1
 
 	Rockets 10
 	name <Heavy Rockets>
 	desig <HR-10>
 	Scale 2
-	Range 9
+	Range 6
 	ACC -2
 	Magazine 1
 
@@ -238,7 +238,7 @@ Recharge 1
 	desig <GM-10>
 	type <ARMORPIERCING>
 	Scale 2
-	Range 9
+	Range 7
 	ACC 2
 	Magazine 1
 
@@ -247,14 +247,14 @@ Recharge 1
 	type <Blast 3 Hyper Haywire>
 	desig <NUKE-20>
 	Scale 2
-	Range 15
+	Range 8
 	Magazine 1
 
 	Rockets 2
 	scale 2
 	name <Swarm Missiles>
 	desig <SWM-2>
-	Range 8
+	Range 7
 	Magazine 1
 	type <SWARM>
 
@@ -270,7 +270,7 @@ Recharge 1
 	scale 2
 	name <Frag Missiles>
 	desig <FRM-6>
-	Range 8
+	Range 7
 	Magazine 1
 	type <SWARM BLAST 1>
 
@@ -278,7 +278,7 @@ Recharge 1
 	scale 2
 	name <Fire Bee Missiles>
 	desig <FBM-8>
-	Range 8
+	Range 7
 	Magazine 1
 	type <BURN BLAST 3>
 
@@ -286,7 +286,7 @@ Recharge 1
 	scale 2
 	name <Decimator Missiles>
 	desig <DCM-15>
-	Range 9
+	Range 8
 	Acc -1
 	Magazine 1
 	type <BRUTAL BLAST 3>
@@ -295,10 +295,19 @@ Recharge 1
 	scale 2
 	name <Thanatos Missiles>
 	Desig <THM-12>
-	range 8
-	Acc 2
+	range 6
 	Magazine 1
 	type <SWARM ARMORPIERCING HAYWIRE>
+
+		BeamGun 7
+		name <Jove Rifle>
+		desig <JR-7>
+		desc <This cannon fires a stream of charged particles, hopefully disrupting the electrical systems of its target.>
+		scale 2
+		range 5
+		Speed 3
+		mass -1
+		type <HAYWIRE>
 
 
 

@@ -117,7 +117,7 @@ Theme 1
 		Scale 2
 		name <Fire Bomber>
 		caliber <50mm self-propelled>
-		Range 6
+		Range 5
 		Recharge 1
 		sub
 			Ammo 11
@@ -130,7 +130,7 @@ Theme 1
 		Scale 2
 		name <Firestarter Rifle>
 		caliber <70mm ferrous>
-		Range 10
+		Range 6
 		Recharge 1
 		sub
 			Ammo 12
@@ -157,7 +157,7 @@ Theme 1
 		Gun 13
 		name <Fire Mortar>
 		caliber <Chemical>
-		range 6
+		range 4
 		Speed 1
 		scale 2
 		type <BLAST 2>
@@ -172,13 +172,14 @@ Theme 1
 		name <Thermal Cannon>
 		Scale 2
 		Speed 2
-		range 6
+		Acc -2
+		range 5
 
 		Gun 15
 		name <Heavy Flamethrower>
 		caliber <Chemical>
 		type <Line>
-		range 6
+		range 4
 		Acc 1
 		Speed 2
 		scale 2
@@ -193,7 +194,7 @@ Theme 1
 		name <Heavy Dragon Cannon>
 		caliber <Chemical>
 		type <Line>
-		range 8
+		range 5
 		Acc 1
 		Speed 2
 		scale 2
@@ -207,9 +208,9 @@ Theme 1
 		Gun 14
 		name <Volcano Cannon>
 		caliber <70mm self-propelled>
-		range 8
+		range 6
 		scale 2
-		Speed 3
+		Speed 2
 		sub
 			Ammo 14
 			Magazine 24
@@ -220,7 +221,7 @@ Theme 1
 		Gun 14
 		name <Meteor Cannon>
 		caliber <70mm self-propelled>
-		range 8
+		range 6
 		scale 2
 		type <SWARM>
 		BV 2
@@ -237,7 +238,7 @@ Theme 1
 		name <Ultimate Incinerator>
 		caliber <Chemical>
 		type <Line>
-		range 10
+		range 5
 		Acc 1
 		Speed 2
 		scale 2
@@ -271,9 +272,8 @@ Theme 1
 		name <Flare Cannon>
 		type <Swarm>
 		caliber <20mm caseless>
-		Range 6
+		Range 4
 		BV 2
-		Acc 1
 		scale 2
 		sub
 			Ammo 4
@@ -285,9 +285,8 @@ Theme 1
 		Gun 8
 		name <Volcano Rifle>
 		caliber <50mm self-propelled>
-		range 7
+		range 6
 		scale 2
-		Acc 1
 		sub
 			Ammo 8
 			Magazine 16
@@ -299,9 +298,8 @@ Theme 1
 		name <Flamethrower>
 		caliber <Chemical>
 		type <Line>
-		range 6
+		range 4
 		Acc 1
-		Speed 3
 		scale 2
 		sub
 			Ammo 10
@@ -314,7 +312,7 @@ Theme 1
 		name <Dragon Cannon>
 		caliber <Chemical>
 		type <Line>
-		range 8
+		range 5
 		Acc 1
 		Speed 3
 		scale 2
@@ -330,14 +328,15 @@ Theme 1
 		name <Plasma Cannon>
 		type <BRUTAL>
 		Range 4
+		Acc -2
 		BV 2
 
 		Gun 8
 		name <Heavy Flare Cannon>
 		type <Swarm>
 		caliber <28mm caseless>
-		Range 8
-		BV 4
+		Range 6
+		BV 3
 		Acc 1
 		scale 2
 		sub
@@ -351,7 +350,6 @@ Theme 1
 		name <Immolation Cannon>
 		caliber <150mm self-propelled>
 		Range 6
-		Speed 3
 		scale 2
 		sub
 			Ammo 7
@@ -360,18 +358,12 @@ Theme 1
 			type <BURN HYPER>
 		end
 
-		BeamGun 8
-		Scale 2
-		name <Nova Beam>
-		type <BRUTAL LINE>
-		Range 8
-
 		BeamGun 7
 		Scale 2
 		name <Heavy Plasma Cannon>
 		type <BRUTAL>
-		Range 6
-		BV 3
+		Range 5
+		BV 2
 
 		MLauncher 4
 		Scale 2
@@ -401,11 +393,11 @@ Theme 1
 			magazine 3
 		end
 
-		MLauncher 10
+		MLauncher 1
 		Scale 2
 		sub
 			STC FBM-8
-			magazine 12
+			magazine 1
 		end
 
 		MLauncher 18
@@ -415,18 +407,18 @@ Theme 1
 			magazine 36
 		end
 
+		MLauncher 7
+		Scale 2
+		sub
+			STC FBM-8
+			magazine 7
+		end
+
 		MLauncher 8
 		Scale 2
 		sub
 			STC FBM-8
 			magazine 9
-		end
-
-		MLauncher 12
-		Scale 2
-		sub
-			STC FBM-8
-			magazine 15
 		end
 
 		MLauncher 5
@@ -435,7 +427,7 @@ Theme 1
 			Rockets 25
 			Name <Nova Bomb>
 			Type <BURN BRUTAL BLAST 3>
-			Range 12
+			Range 7
 			Magazine 2
 		end
 
@@ -446,7 +438,7 @@ Theme 1
 			Name <Pyro Storm>
 			Type <BURN BRUTAL SWARM>
 			Acc 2
-			Range 7
+			Range 5
 			Magazine 40
 		end
 
@@ -542,42 +534,35 @@ Theme 2
 		%% Small Guns
 		STC MAC-2
 
-		STC MAC-4
-
-		STC PAR-2
-
-		Gun 9
+		Gun 5
 		Scale 2
-		name <Long Cannon>
+		name <Mech Rifle>
 		caliber <30mm caseless>
-		Acc 1
-		Speed 3
-		Range 9
+		Speed 2
+		Range 6
 		mass -4
 		sub
-			Ammo 9
+			Ammo 5
 			caliber <30mm caseless>
 			Magazine 120
 			mass -8
 		end
 
-		STC RG-8
-		Speed 3
+		STC MAC-4
 
-		Gun 10
+		Gun 6
 		Scale 2
-		name <Mech Assault Rifle>
+		name <Long Cannon>
 		caliber <30mm caseless>
-		Range 6
-		BV 2
-		Speed 3
 		Acc 1
-		mass -5
+		Speed 3
+		Range 7
+		mass -4
 		sub
-			Ammo 10
+			Ammo 6
 			caliber <30mm caseless>
-			Magazine 60
-			mass -6
+			Magazine 120
+			mass -8
 		end
 
 		Gun 9
@@ -592,15 +577,28 @@ Theme 2
 			type <BLAST 3 BRUTAL>
 		end
 
-		STC VC-5
-		name <Super Vulcan>
-		range 5
+		STC RG-8
+
+		Gun 8
+		Scale 2
+		name <Mech Assault Rifle>
+		caliber <30mm caseless>
+		Range 6
+		BV 2
+		Speed 3
+		Acc 1
+		mass -5
+		sub
+			Ammo 8
+			caliber <30mm caseless>
+			Magazine 60
+			mass -6
+		end
 
 		gun 8
 		name <Sweeper Cannon>
-		range 7
-		Acc 1
-		BV 5
+		range 6
+		BV 3
 		type <SWARM>
 		caliber <30mm ferrous>
 		scale 2
@@ -611,13 +609,17 @@ Theme 2
 			caliber <30mm ferrous>
 		end
 
+		STC VC-5
+		name <Super Vulcan>
+		range 4
+
 		gun 10
 		name <Heavy Autocannon>
-		range 8
+		range 6
 		Scale 2
 		type <Armorpiercing>
 		BV 2
-		Speed 4
+		Speed 3
 		caliber <30mm caseless>
 		mass -2
 		sub
@@ -631,7 +633,8 @@ Theme 2
 		Scale 2
 		name <Heavy Cannon>
 		caliber <50mm shell>
-		Range 6
+		Range 5
+		Acc -1
 		Recharge 1
 		sub
 			Ammo 14
@@ -644,68 +647,84 @@ Theme 2
 		STC GR-12
 		mass -7
 
-		STC GR-24
+		Gun 12
+		Scale 2
+		name <Barracas Cannon>
+		caliber <50mm ferrous>
+		Range 4
+		BV 2
+		Acc -1
+		sub
+			Ammo 12
+			Magazine 60
+			caliber <50mm ferrous>
+		end
 
 		STC GR-24
-		mass -9
 
 		Gun 17
 		name <Mecha Bazooka>
 		caliber <70mm self-propelled>
-		range 8
+		range 7
 		scale 2
 		mass -4
 		sub
 			Ammo 17
 			Magazine 12
 			caliber <70mm self-propelled>
-			type <BLAST 3 BRUTAL>
+			type <BLAST 2 BRUTAL>
 		end
 
-		STC RG-16
-
-		Gun 22
+		Gun 20
 		name <Howitzer>
 		Scale 2
 		caliber <120mm ferrous>
-		Acc 1
-		Range 9
-		mass -11
+		Range 6
+		mass -5
 		sub
-			Ammo 22
+			Ammo 20
 			Magazine 50
 			caliber <120mm ferrous>
 			type <Armorpiercing>
 		end
 
-		Gun 24
+		Gun 20
 		Scale 2
-		name <Superheavy Railgun>
-		caliber <120mm ferrous>
+		name <Naval Cannon>
+		caliber <80mm shell>
 		Range 8
-		BV 3
+		Acc 1
+		Speed 3
 		sub
-			Ammo 24
-			caliber <120mm ferrous>
-			mass -15
-			Magazine 60
+			Ammo 20
+			Magazine 20
+			caliber <50mm shell>
 		end
+
+		STC RG-16
 
 		Gun 25
 		name <Ultra Bazooka>
 		caliber <150mm self-propelled>
-		range 15
+		range 8
 		scale 2
 		Acc 1
-		mass -11
+		mass -10
 		sub
 			Ammo 25
 			Magazine 10
 			caliber <150mm self-propelled>
-			type <BLAST 4 BRUTAL>
+			type <BLAST 3 BRUTAL>
 		end
 
 		%% Missiles
+		MLauncher 5
+		Scale 2
+		sub
+			STC AAM-8
+			Magazine 6
+		end
+
 		MLauncher 8
 		Scale 2
 		sub
@@ -713,25 +732,18 @@ Theme 2
 			Magazine 40
 		end
 
-		MLauncher 8
-		Scale 2
-		sub
-			STC AAM-8
-			Magazine 10
-		end
-
-		MLauncher 15
+		MLauncher 9
 		Scale 2
 		sub
 			STC FRM-6
-			Magazine 24
+			Magazine 15
 		end
 
-		MLauncher 24
+		MLauncher 16
 		Scale 2
 		sub
-			STC AAM-8
-			Magazine 30
+			STC SWM-2
+			Magazine 80
 		end
 
 		MLauncher 3
@@ -741,11 +753,25 @@ Theme 2
 			Magazine 2
 		end
 
+		MLauncher 24
+		Scale 2
+		sub
+			STC AAM-8
+			Magazine 30
+		end
+
 		MLauncher 6
 		Scale 2
 		sub
 			STC DCM-15
 			Magazine 4
+		end
+
+		MLauncher 8
+		Scale 2
+		sub
+			STC DCM-15
+			Magazine 5
 		end
 
 		MLauncher 9
@@ -767,13 +793,6 @@ Theme 2
 		sub
 			STC DCM-15
 			Magazine 10
-		end
-
-		MLauncher 18
-		Scale 2
-		sub
-			STC DCM-15
-			Magazine 12
 		end
 
 
@@ -801,11 +820,11 @@ Theme 3
 	CUSTOMIZATION_NOUN_4 <Skill>
 
 	inv
-		MLauncher 1
+		MLauncher 2
 		Scale 2
 		sub
 			STC HWM-4
-			magazine 2
+			magazine 4
 		end
 
 		MLauncher 4
@@ -815,18 +834,11 @@ Theme 3
 			magazine 10
 		end
 
-		MLauncher 24
+		MLauncher 8
 		Scale 2
 		sub
-			STC AAM-8
-			magazine 30
-		end
-
-		MLauncher 10
-		Scale 2
-		sub
-			STC HWM-4
-			magazine 25
+			STC GM-10
+			magazine 8
 		end
 
 		MLauncher 10
@@ -836,18 +848,25 @@ Theme 3
 			magazine 10
 		end
 
+		MLauncher 10
+		Scale 2
+		sub
+			STC HWM-4
+			magazine 25
+		end
+
+		MLauncher 24
+		Scale 2
+		sub
+			STC AAM-8
+			magazine 30
+		end
+
 		MLauncher 25
 		Scale 2
 		sub
 			STC GM-10
 			magazine 25
-		end
-
-		MLauncher 20
-		Scale 2
-		sub
-			STC HWM-4
-			magazine 50
 		end
 
 		MLauncher 15
@@ -872,14 +891,14 @@ Theme 3
 		end
 
 		%% Big Guns
-		Gun 14
+		Gun 11
 		Scale 2
 		name <Heavy Cannon>
 		caliber <50mm shell>
 		Range 6
 		Recharge 1
 		sub
-			Ammo 14
+			Ammo 11
 			Magazine 20
 			caliber <50mm shell>
 		end
@@ -889,13 +908,14 @@ Theme 3
 		STC GR-12
 		mass -7
 
-		STC GR-24
-		mass -7
-
 		STC GR-12
 		name <EV Gauss Rifle>
-		mass -7
 		type <Armorpiercing>
+
+		STC GR-24
+
+		STC GR-24
+		mass -7
 
 		BeamGun 12
 		Scale 2
@@ -913,7 +933,7 @@ Theme 3
 		Scale 2
 		name <Master Gauss Rifle>
 		caliber <70mm ferrous>
-		Range 12
+		Range 7
 		Recharge 3
 		Acc 1
 		type <Armorpiercing>
@@ -923,19 +943,17 @@ Theme 3
 			caliber <70mm ferrous>
 		end
 
-		STC PHS-25
-
 		BeamGun 20
 		name <Heavy Laser Cannon>
-		mass -10
 		Scale 2
-		Range 8
+		Acc 1
+		Range 7
 
 		%% Small Guns
 		STC LAS-3
 		mass -1
 
-		Gun 5
+		Gun 4
 		Scale 2
 		name <Skybolt Rifle>
 		caliber <15mm ferrous needle>
@@ -945,7 +963,7 @@ Theme 3
 		Speed 3
 		Mass -1
 		sub
-			Ammo 5
+			Ammo 4
 			Magazine 20
 			caliber <15mm ferrous needle>
 			type <HAYWIRE>
@@ -953,6 +971,21 @@ Theme 3
 
 		STC LAS-5
 		mass -1
+
+		Gun 8
+		Scale 2
+		name <Trophy Rifle>
+		caliber <30mm caseless>
+		Acc 1
+		Speed 2
+		Range 7
+		mass -4
+		sub
+			Ammo 8
+			caliber <30mm caseless>
+			Magazine 60
+			mass -3
+		end
 
 		Gun 9
 		Scale 2
@@ -975,7 +1008,7 @@ Theme 3
 		name <Gauss Sniper Rifle>
 		caliber <50mm ferrous>
 		type <ARMORPIERCING>
-		Range 10
+		Range 8
 		mass -2
 		Acc 1
 		sub
@@ -984,6 +1017,8 @@ Theme 3
 			caliber <50mm ferrous>
 		end
 
+		STC LAS-10
+
 		STC PAR-6
 
 		STC LAS-10
@@ -991,26 +1026,15 @@ Theme 3
 		range 6
 		mass -4
 
-		STC PHS-8
-
-		BeamGun 7
-		name <Jove Rifle>
-		desc <This cannon fires a stream of charged particles, hopefully disrupting the electrical systems of its target.>
-		scale 2
-		range 5
-		Speed 3
-		mass -1
-		type <ARMORPIERCING HAYWIRE>
-
 		Gun 9
 		Scale 2
 		name <Master Cannon>
 		caliber <45mm self-propelled>
 		type <ARMORPIERCING ANTIAIR>
-		Range 14
+		Range 8
 		mass -4
 		Acc 2
-		Speed 4
+		Speed 3
 		sub
 			Ammo 9
 			Magazine 50
@@ -1047,13 +1071,26 @@ Theme 3
 		type <HAYWIRE ARMORPIERCING>
 		mass -4
 
-		Melee 12
-		name <Double Sword>
+		Melee 7
+		name <Gun Rapier>
 		Scale 2
-		Speed 4
-		Acc 1
+		Speed 3
 		type <ArmorPiercing>
-		mass -6
+		mass -5
+		sub
+			Gun 4
+			name <Blade Gun>
+			caliber <25mm shell>
+			type <Armorpiercing>
+			Range 5
+			Integral
+			mass -2
+			sub
+				Ammo 4
+				Magazine 12
+				caliber <25mm shell>
+			end
+		end
 
 		Melee 8
 		name <Javelin>
@@ -1115,11 +1152,11 @@ Theme 4
 
 	inv
 		%Missile Launchers
-		MLauncher 12
+		MLauncher 8
 		Scale 2
 		sub
 			STC HR-10
-			magazine 12
+			magazine 8
 		end
 
 		MLauncher 2
@@ -1134,14 +1171,14 @@ Theme 4
 			type <BLAST 3 BRUTAL>
 		end
 
-		MLauncher 5
+		MLauncher 4
 		Scale 2
 		sub
 			STC HR-10
 			name <Demolition Missiles>
 			type <BLAST 2 BRUTAL>
 			Acc -1
-			magazine 5
+			magazine 4
 		end
 
 		MLauncher 6

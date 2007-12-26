@@ -377,11 +377,11 @@ begin
 	{ ranges so "vanilla" weapons will have some character. }
 	if Weapon^.S = GS_Ballistic then begin
 		{Set default range.}
-		Weapon^.Stat[STAT_Range] := ( Weapon^.V + 1 ) div 2;
+		Weapon^.Stat[STAT_Range] := ( Weapon^.V + 2 ) div 3;
 
 	end else if Weapon^.S = GS_BeamGun then begin
 		{Set default range.}
-		Weapon^.Stat[STAT_Range] := Weapon^.V div 2 + 2;
+		Weapon^.Stat[STAT_Range] := ( Weapon^.V + 5 ) div 3;
 
 	end;
 
@@ -393,7 +393,7 @@ Procedure InitAmmo( Ammo: GearPtr );
 	{Initialize an ammo gear.}
 begin
 	if Ammo^.S = GS_Missile then begin
-		Ammo^.Stat[STAT_Range] := Ammo^.V * 2 div 3 + 3;
+		Ammo^.Stat[STAT_Range] := ( Ammo^.V + 5 ) div 2;
 	end;
 	Ammo^.Stat[ STAT_GrenadeSkill ] := 2;
 end;
@@ -405,7 +405,7 @@ Function WeaponBaseDamage( Weapon: GearPtr ): Integer;
 var
 	it: Integer;
 begin
-	if Weapon^.S = GS_EMelee then begin
+	if ( Weapon^.S = GS_EMelee ) or ( Weapon^.S = GS_BeamGun ) then begin
 		it := ( Weapon^.V + 1 ) div 2;
 	end else if Weapon^.S = GS_Missile then begin
 		it := -1;
@@ -435,8 +435,7 @@ begin
 		it := 1;
 
 	end else begin
-		{ Other weapons weight is equal to their damage class. }
-		it := WeaponBaseDamage(Weapon);
+		it := Weapon^.V;
 
 		if ( Weapon^.S = GS_Ballistic ) then begin
 			{ Ballistic weapons are made heavier by having a }
@@ -561,7 +560,7 @@ begin
 	{ Stat[1] = Range. }
 	if ( Wpn^.S = GS_Ballistic ) or ( Wpn^.S = GS_Beamgun ) then begin
 		if Wpn^.Stat[1] < 1 then Wpn^.Stat[1] := 1
-		else if Wpn^.Stat[1] > 20 then Wpn^.Stat[1] := 20;
+		else if Wpn^.Stat[1] > 10 then Wpn^.Stat[1] := 10;
 	end else begin
 		Wpn^.Stat[1] := 0;
 	end;
@@ -571,7 +570,8 @@ begin
 	else if Wpn^.Stat[2] > 5 then Wpn^.Stat[2] := 5;
 
 	{ Stat[3] = Recharge Period. Generally 2 shots per round. }
-	if Wpn^.Stat[3] < 1 then Wpn^.Stat[3] := 1;
+	if Wpn^.Stat[3] < 1 then Wpn^.Stat[3] := 1
+	else if Wpn^.Stat[3] > 10 then Wpn^.Stat[3] := 10;
 
 	{ Stat[4] = Burst Value }
 	if ( Wpn^.S = GS_Ballistic ) or ( Wpn^.S = GS_Beamgun ) or ( Wpn^.S = GS_Missile ) then begin
@@ -656,7 +656,7 @@ begin
 	if Ammo^.S = GS_Missile then begin
 		{ Stat[1] = Range. }
 		if Ammo^.Stat[1] < 1 then Ammo^.Stat[1] := 1
-		else if Ammo^.Stat[1] > 20 then Ammo^.Stat[1] := 20;
+		else if Ammo^.Stat[1] > 10 then Ammo^.Stat[1] := 10;
 
 		{ Stat[2] = Accuracy }
 		if Ammo^.Stat[2] < -5 then Ammo^.Stat[2] := -5
@@ -726,6 +726,17 @@ begin
 	AttackAttributeValue := N;
 end;
 
+Function RangeCostMod( R: Integer ): Integer;
+	{ Return the range cost multiplier for this weapon, measured in tenths of }
+	{ total cost. }
+	{ At Range = 0, weapon is 4/10 cost. }
+var
+	it: Integer;
+begin
+	it := R * R div 4 + 2 * R + 4;
+	RangeCostMod := it;
+end;
+
 Function WeaponValue( Part: GearPtr ): LongInt;
 	{ Decide how many standard points this weapon should cost. }
 var
@@ -761,7 +772,7 @@ begin
 	if Part^.S <> GS_Missile then begin
 		{ STAT 1 - Range }
 		{ At Range = 0, weapon is 2/5 cost. At Range = 3, weapon is full cost. }
-		AddToTotal( ( 2 + Part^.Stat[ STAT_Range ] ) , 5 );
+		AddToTotal( RangeCostMod( Part^.Stat[ STAT_Range ] ) , 10 );
 
 		{ STAT 2 - Accuracy }
 		{ Acc 0 = No effect }
@@ -818,7 +829,7 @@ begin
 	if Part^.V > 0 then it := it * Part^.V * 2;
 
 	{ STAT 1 - Range }
-	if Part^.Stat[ STAT_Range ] > 0 then it := ( it * ( Part^.Stat[ STAT_Range ] + 3 ) ) div 2;
+	if Part^.Stat[ STAT_Range ] > 0 then it := it * ( Part^.Stat[ STAT_Range ] + 1 );
 
 	{ STAT 2 - Accuracy }
 	if Part^.Stat[ STAT_Accuracy ] > 0 then it := ( it * ( Part^.Stat[ STAT_Accuracy ] + 3 ) ) div 2;
@@ -849,7 +860,7 @@ begin
 		NumShots := NumShots * 10;
 
 		{ Increase cost for Range and Accuracy. }
-		NumShots := NumShots * ( 2 + Part^.Stat[ STAT_Range ] ) div 5;
+		NumShots := NumShots * RangeCostMod( Part^.Stat[ STAT_Range ] ) div 10;
 
 		{ STAT 2 - Accuracy }
 		{ Acc 0 = No effect }
