@@ -6114,10 +6114,11 @@ Scene 0 3
 	XPos 15
 	YPos 38
 
-	Tolerance 0
+	% A bit more tolerant than usual.
+	Tolerance 5
 
 	world <L5 Region>
-	desc <Galconde Spinner is >
+	desc <Galconde Spinner is the largest research center in the L5 region. It is a mecca for technophiles and geeks.>
 	special <NOEXIT SHOWALL SOLO TOWNMECHA>
 	type <city town spinner target outdoors urban destination hometown research safe>
 	personatype <city spinner research>
@@ -6138,13 +6139,13 @@ Scene 0 3
 
 	start <if= V1 0 else GoSecondTime V= 1 1 Alert 1 Print 2>
 	GoSecondTime <Print 2>
-	Msg1 <Galconde Spinner >
+	Msg1 <Galconde Spinner is the scientific wonderland of the L5 region. New technology is available here before it appears anywhere else.>
 	Msg2 <You enter Galconde Spinner.>
 
 sub
 	Scene
-	name <Cesena Arms Market>
-	type <building mall public legit>
+	name <Tech Outlet>
+	type <building mall garage public>
 	entrance <*Building>
 	special <ADDEXIT>
 	MallMap
@@ -6152,13 +6153,19 @@ sub
 	MapHeight 20
 
 	start <Print 1>
-	Msg1 <You enter the Cesena Arms Market.>
+	Msg1 <You enter the Tech Outlet.>
 
-	NeededCells 8
-	Content3 <Some 2 100 Sub *WEAPON_SHOP     na>
-	Content4 <Some 2 100 Sub *ARMOR_SHOP      na>
-	Content6 <Some 2 100 Sub *MECHA_SHOP      na>
-	Content9 <Fill Sub *SHOP_RANDOM           na>
+	NeededCells 10
+	Content1 <Some 1  40 Sub *GARAGE_X          na>
+	Content2 <Some 1 100 Sub *WEAPON_SHOP       na>
+	Content3 <Some 1 100 Sub *ARMOR_SHOP        na>
+	Content4 <Some 1 100 Sub *MECHA_SHOP        na>
+	Content5 <Some 1 100 Sub *GENERAL_SHOP      na>
+	Content6 <Some 2 100 Sub *ELECTRONICS_SHOP  na>
+	Content7 <Some 1 100 Sub *MECHANIC_SHOP     na>
+
+	Content9 <Fill Sub *SHOP_RANDOM             na>
+
 	sub
 		team 1
 
@@ -6179,7 +6186,7 @@ sub
 	end
 
 	Scene
-	name <Cesena Hospital>
+	name <Guyatt Medical>
 	type <Building hospital public legit>
 	entrance <*Hospital>
 	special <ADDEXIT>
@@ -6188,11 +6195,11 @@ sub
 	MapHeight 10
 
 	NeededCells 2
-	Content <Some 1 100 Sub *Doctor>
+	Content <Some 1 100 Sub *GALSP_Guyatt_Content>
 	Content2 <Fill Sub *HOSPITAL_X>
 
 	start <Print 1>
-	Msg1 <You enter Cesena Hospital.>
+	Msg1 <You enter Guyatt Medical.>
 
 	sub
 		team 1
@@ -6209,78 +6216,6 @@ sub
 		room
 		desig <EntranceGrid>
 		Content <Some 2 50 Here *URBAN_X>
-		Content2 <Some 1 100 Here *ANTI_ATTACK_SECURITY 2>
-	end
-
-	Scene
-	name <Cesena Mall>
-	type <building public mall legit meeting>
-	entrance <*DEPARTMENTSTORE>
-	special <ADDEXIT>
-	MallMap
-	MapWidth 30
-	MapHeight 15
-
-	start <Print 1>
-	Msg1 <You enter the Cesena Mall.>
-
-	NeededCells 4
-	Content1 <Some 2  99 Sub *GENERAL_SHOP>
-	Content2 <Some 1 100 Sub *RESTAURANT>
-	Content3 <Some 1 100 Sub *ELECTRONICS_SHOP  na>
-	Content4 <Fill Sub *SHOP_RANDOM>
-	sub
-		team 1
-
-		team 2
-		name <Citizens>
-		SetAlly 1
-		Passive
-
-		team 3
-		name <Guards>
-		SetAlly 2
-
-		room
-		name <Foyer>
-		desig <EntranceGrid>
-		Content <Some 5 45 Here *URBAN_X>
-		Content2 <Some 1 100 Here *ANTI_ATTACK_SECURITY 2>
-	end
-
-	Scene
-	name <The Mecha Source>
-	type <building garage public legit>
-	entrance <*Garage>
-	special <ADDEXIT>
-	MallMap
-	MapWidth 20
-	MapHeight 20
-	IndustrialTiles
-
-	start <Print 1>
-	Msg1 <You enter the Mecha Source.>
-
-	NeededCells 4
-	Content1 <Some 1 100 Sub *MECHANIC_SHOP>
-	Content2 <Some 2  90 Sub *MECHA_SHOP>
-	Content3 <Fill Sub *GARAGE_X>
-	sub
-		team 1
-
-		team 2
-		name <Citizens>
-		SetAlly 1
-		Passive
-
-		team 3
-		name <Guards>
-		SetAlly 2
-
-		room
-		name <Foyer>
-		desig <EntranceGrid>
-		Content <Some 3 40 Here *URBAN_X>
 		Content2 <Some 1 100 Here *ANTI_ATTACK_SECURITY 2>
 	end
 
@@ -6392,6 +6327,10 @@ sub
 		desig <EntranceGrid>
 		Content <Some 4 50 Here *URBAN_X>
 		Content2 <Some 1 100 Here *ANTI_ATTACK_SECURITY 2>
+		inv
+			NPC Rocket Star
+			SetTeam 3
+		end
 
 		room
 		minimap <############1###...##...#>

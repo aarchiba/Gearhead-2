@@ -1369,6 +1369,12 @@ var
 	msg: String;
 	DP: SAttPtr;	{ Destroyed Part }
 begin
+	{ Error check- if the damage is to be applied to a metaterrain gear with }
+	{ a damage score of 0, just exit. There's nothing to be done here. }
+	if ( Target^.G = GG_MetaTerrain ) and ( GearMaxDamage( Target ) = 0 ) then begin
+		Exit( False );
+	end;
+
 	{ The two parameters for this command are the attack skill to be used and the }
 	{ critical hit skill to be used. If the CritSkill is 0, then this attack will not use }
 	{ critical hits. }

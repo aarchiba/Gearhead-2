@@ -7,6 +7,42 @@
 %%
 %% NAME: *[city designation]_[building name abbreviated]_[content type]
 
+
+%% *GALSP_Guyatt_Content
+%%	NPCs for Guyatt Medical in Galconde Spinner
+
+Content
+	requires <*GALSP_Guyatt_Content>
+	minimap <............1.......##+##>
+	element1 <Prefab>
+	team1 <Citizens>
+	teamdata1 <ally pass>
+	sub
+		Persona 1
+		*greeting <*NiceToMeetYou GoShop>
+		GoShop <NewChat Say 1 AddChat 1 AddChat 2>
+		result1 <EndChat Say 2 Shop .wares Goto result2>
+		.wares <MEDICINE CYBERWARE>
+		Keywords <MEDICINE CYBERWARE>
+		*result2 <*GOODBYE>
+		Msg1 <Guyatt Medical is primarily a research hospital, but we also offer conventional medical services. Is there anything I could help you with?>
+		Msg2_1 <Let me see what the body scan says... Hm, disappointing. You don't have any rare diseases.>
+		Msg2_2 <Let me see what the body scan says... Strange. Did you know you have a dark spot in your brain?>
+		Msg2_3 <Let me see what the body scan says... Not bad. Perfectly boring, in fact.>
+		Prompt1 <I think there is.>
+		Prompt2 <Not today, thanks.>
+	end
+	inv
+		NPC CyberDoc
+		Skill 21 15
+		name <Freedman>
+		Age 16
+		chardesc Male Pragmatic Heroic Melancholy Sociable
+		SDL_Portrait <por_m_guy4(A-Y).png>
+		SDL_Colors <201 205 229 255 230 210 255 120 80>
+	end
+
+
 %% *YATSP_RB2_Content
 %%	NPCs for Rocket Penthouse, aka Rocket Base 2
 

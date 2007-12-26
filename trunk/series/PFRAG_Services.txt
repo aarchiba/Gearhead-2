@@ -670,6 +670,19 @@
 	Prompt%id%01 <I need some medical help.>
 	Prompt%id%02 <I'm fine.>
 
+	Persona
+	requires <*SERVICE_DOCTOR Cyberdoc>
+	START <NewChat Say %id%01 AddChat %id%01 AddChat %id%02>
+	result%id%01 <EndChat Say %id%02 shop .%id%_wares Goto %1%>
+	result%id%02 <Goto %1%>
+	.%id%_wares <MEDICINE CYBERWARE>
+	Keywords <MEDICINE CYBERWARE>
+	Msg%id%01 <I offer a full range of medical and cybernetic services. Whether you are in need of aid or augmentation I'll do my best to help.>
+	Msg%id%02 <Rest assured that you will receive the best possible care here.>
+	Prompt%id%01 <Let me see what you can do.>
+	Prompt%id%02 <Thankfully, I don't need any of that.>
+
+
 % TYPE: *SERVICE_RESTAURANT
 %  PARAM1: Exit script label
 
