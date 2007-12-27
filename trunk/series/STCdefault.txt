@@ -112,69 +112,69 @@
 		caliber <120mm ferrous>
 	end
 
-BeamGun 3
-Scale 2
-name <Light Laser>
-DESIG <LAS-3>
-Range 2
-Recharge 3
-Acc 1
+	BeamGun 3
+	Scale 2
+	name <Light Laser>
+	DESIG <LAS-3>
+	Range 2
+	Recharge 3
+	Acc 1
 
-BeamGun 5
-Scale 2
-name <Combat Laser>
-DESIG <LAS-5>
-Range 3
-Recharge 3
-ACC 1
+	BeamGun 5
+	Scale 2
+	name <Combat Laser>
+	DESIG <LAS-5>
+	Range 3
+	Recharge 3
+	ACC 1
 
-BeamGun 10
-Scale 2
-name <Laser Cannon>
-DESIG <LAS-10>
-Range 5
-Recharge 3
-ACC 1
+	BeamGun 10
+	Scale 2
+	name <Laser Cannon>
+	DESIG <LAS-10>
+	Range 5
+	Recharge 3
+	ACC 1
 
-BeamGun 2
-Scale 2
-name <Particle Cannon>
-desig <PAR-2>
-type <OVERLOAD ANTIAIR>
-Range 7
-ACC 1
-Recharge 3
+	BeamGun 2
+	Scale 2
+	name <Particle Cannon>
+	desig <PAR-2>
+	type <OVERLOAD ANTIAIR>
+	Range 7
+	ACC 1
+	Recharge 3
 
-BeamGun 6
-Scale 2
-name <Heavy Particle Cannon>
-desig <PAR-6>
-type <OVERLOAD ANTIAIR>
-Range 8
-ACC 1
+	BeamGun 6
+	Scale 2
+	name <Heavy Particle Cannon>
+	desig <PAR-6>
+	type <OVERLOAD ANTIAIR>
+	Range 8
+	ACC 1
 
-BeamGun 13
-Scale 2
-name <Superheavy Particle Cannon>
-desig <PAR-13>
-type <OVERLOAD ANTIAIR>
-Range 9
-Recharge 1
+	BeamGun 13
+	Scale 2
+	name <Superheavy Particle Cannon>
+	desig <PAR-13>
+	type <OVERLOAD ANTIAIR>
+	Range 9
+	Recharge 1
 
-BeamGun 8
-name <Phase Cannon>
-desig <PHS-8>
-type <ArmorPiercing>
-scale 2
-Range 7
+	BeamGun 8
+	name <Phase Cannon>
+	desig <PHS-8>
+	type <ArmorPiercing>
+	scale 2
+	Range 7
 
-BeamGun 25
-name <Heavy Phase Cannon>
-desig <PHS-25>
-type <ArmorPiercing>
-Scale 2
-Range 8
-Recharge 1
+	BeamGun 25
+	name <Heavy Phase Cannon>
+	desig <PHS-25>
+	type <ArmorPiercing>
+	Scale 2
+	Range 8
+	Recharge 1
 
 	rockets 5
 	name <Incendiary Missiles>
@@ -192,6 +192,15 @@ Recharge 1
 	range 7
 	acc 2
 	Magazine 1
+
+	Rockets 20
+	Name <Leveler Missiles>
+	Desig <LM-20>
+	Scale 2
+	Type <BLAST 1>
+	Magazine 1
+	range 8
+
 
 	Rockets 4
 	name <Plasma Missiles>

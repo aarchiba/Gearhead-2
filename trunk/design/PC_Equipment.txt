@@ -372,7 +372,7 @@ category <WEAPON MISSILE>
 factions <GENERAL>
 caliber <5mm rifle>
 Mass -1
-Range 10
+Range 9
 Acc 1
 Speed 3
 sub
@@ -390,7 +390,7 @@ desc <A rifle designed for hunting animals.>
 category <WEAPON MISSILE>
 factions <GENERAL>
 caliber <5mm rifle>
-Range 12
+Range 7
 Acc 1
 Magazine 30
 sub
@@ -410,7 +410,7 @@ category <WEAPON MISSILE>
 factions <GENERAL>
 legality 5
 Mass -3
-Range 7
+Range 6
 Speed 5
 sub
 	Ammo 8
@@ -517,6 +517,7 @@ Name <Laser Rifle>
 desc <An advanced combat rifle, powered by a laser generator.>
 category <WEAPON MISSILE>
 factions <GENERAL>
+Range 5
 Mass -6
 Acc 1
 Speed 3

@@ -148,6 +148,12 @@ Persona
 	Start <EndChat Say %id%01>
 	Msg%id%01 <Don't get too distracted watching me, it'll take both of us to finish them off.>
 
+Persona
+	%% Dark Version
+	requires <*LetsDefeatThem [MT8]>
+	Start <EndChat Say %id%01>
+	Msg%id%01 <We'll send them to oblivion.>
+
 
 % TYPE: *LetsStartPatrol
 %	The PC has joined a patrol, and combat is about to begin.
@@ -296,6 +302,18 @@ Persona
 	requires <*THEME_EXPO [MT7] &ENEMY>
 	Start <EndChat Say %id%01 Goto %1%>
 	Msg%id%01 <You should feel honored... The last sight you see will be one of indescribable beauty.>
+
+	Persona
+	%% Dark Theme
+	requires <*THEME_EXPO [MT8]>
+	Start <EndChat Say %id%01 Goto %1%>
+	Msg%id%01 <Death walks the battlefield. Whose turn will it be to die today?>
+
+	Persona
+	%% Dark Theme
+	requires <*THEME_EXPO [MT8] &ENEMY>
+	Start <EndChat Say %id%01 Goto %1%>
+	Msg%id%01 <Do you fear death? Soon you will embrace it.>
 
 
 % TYPE: *BattleIntroduction

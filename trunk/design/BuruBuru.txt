@@ -48,8 +48,9 @@ Arm
 			Gun 9
 			Name <Shaka Cannon>
 			Caliber <150mm Shells>
+			range 5
 			sub
-				Ammo 10
+				Ammo 9
 				Caliber <150mm Shells>
 				Magazine 15
 			end
@@ -135,7 +136,7 @@ Arm
 	sub
 		Hand
 		inv
-			STC PAR-6
+			STC PAR-2
 		end
 
 		Mount

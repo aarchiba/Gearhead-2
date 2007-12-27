@@ -21,7 +21,7 @@ Storage
 			BeamGun 8
 			Name <Heavy Pulse Cannon>
 			Acc -1
-			Range 7
+			Range 6
 			BV 5
 			Speed 1
 		end
@@ -41,10 +41,8 @@ Storage
 		sub
 			MLauncher 2
 			sub
-				Rockets 20
-				Name <Leveler Missiles>
-				Type <BLAST 1>
-				Magazine 1
+				STC LM-20
+				magazine 1
 			end
 		end
 	end
@@ -62,7 +60,7 @@ Storage
 			BeamGun 8
 			Name <Heavy Pulse Cannon>
 			Acc -1
-			Range 7
+			Range 6
 			BV 5
 			Speed 1
 		end
@@ -87,10 +85,8 @@ Storage
 		sub
 			MLauncher 2
 			sub
-				Rockets 20
-				Name <Leveler Missiles>
-				Type <BLAST 1>
-				Magazine 1
+				STC LM-20
+				magazine 1
 			end
 		end
 	end
@@ -120,6 +116,7 @@ Torso
 		Integral
 		Acc 1
 		Speed 1
+		Range 7
 		
 		Mount
 		Name <Lower Weapon Mount>
@@ -176,9 +173,7 @@ Arm
 
 		MLauncher 4
 		sub
-			Rockets 20
-			Name <Leveler Missiles>
-			Type <BLAST 1>
+			STC LM-20
 			Magazine 2
 		end
 	end
@@ -213,10 +208,8 @@ Arm
 
 		MLauncher 4
 		sub
-			Rockets 20
-			Name <Leveler Missiles>
-			Type <BLAST 1>
-			Magazine 2
+			STC LM-20
+			magazine 2
 		end
 	end
 
@@ -230,10 +223,8 @@ Leg
 
 		MLauncher 4
 		sub
-			Rockets 20
-			Name <Leveler Missiles>
-			Magazine 2
-			Type <BLAST 1>
+			STC LM-20
+			magazine 2
 		end
 	end
 
@@ -247,10 +238,8 @@ Leg
 
 		MLauncher 4
 		sub
-			Rockets 20
-			Name <Leveler Missiles>
-			Magazine 2
-			Type <BLAST 1>
+			STC LM-20
+			magazine 2
 		end
 	end
 
