@@ -7,6 +7,120 @@
 %%
 %% NAME: *[city designation]_[building name abbreviated]_[content type]
 
+%% *GALSP_NI_Content
+%%	NPCs and stuff for the Nova Initiative in Galconde Spinner
+
+Content
+	%% Technology Professor - free skill trainer
+	requires <*GALSP_NI_Content>
+	minimap <............1.......##+##>
+	element1 <Prefab>
+	team1 <Citizens>
+	teamdata1 <ally pass>
+	sub
+		Persona 1
+		*greeting <*NiceToMeetYou GoSchool>
+		GoSchool <NewChat Say 1 AddChat 1 AddChat 2>
+		Result1 <EndChat Say 2 School .skills Goto Result2>
+		.skills <16 22 24 29 38>
+		*Result2 <*GoodBye>
+		Msg1 <The Nova Initiative has programs for both research and education. Our doors are open to all people with an interest in science.>
+		Msg2 <Certainly. What subject do you want to know more about?>
+		Prompt1 <I'd like to study here.>
+		Prompt2 <No thanks, I've had enough schooling.>
+	end
+	inv
+		NPC Scientist
+		job <Technology Professor>
+	end
+
+
+Content
+	%% Laboratory - guaranteed science toy
+	requires <*GALSP_NI_Content>
+	minimap <#.2.#.......1.......##+##>
+	element1 <Prefab>
+	team1 <Citizens>
+	teamdata1 <ally pass>
+	Element2 <Prefab>
+	sub
+		Persona 1
+		*greeting <*NiceToMeetYou GoChat>
+		*GoChat <*MISC_CHATTER>
+	end
+	inv
+		NPC Scientist
+
+		Prop 10
+		name <Physics Apparatus>
+		SDL_SPRITE <prop_displaycase.png>
+		roguechar <+>
+		use <Print 1>
+		clue29 <ifG ComTime V1 else GoBeenBefore V= 1 NextDay Reputation 7 d4 MENTAL ifUScience 10 else GoNoDice ifG PCRep 7 -d100 else GoNoDice Print 2 XPV 150>
+		GoNoDice <Print 3>
+		GoBeenBefore <Print 4>
+		Msg1 <It's a classical physics workbench.>
+		Msg2 <You conduct an experiment. You feel that your understanding of the universe has improved.>
+		Msg3 <You conduct an experiment.>
+		Msg4 <You've already done an experiment today.>
+	end
+
+
+
+%% *GALSP_TO_Content
+%%	NPCs for the tech outlet in Galconde Spinner
+
+Content
+	%% Mechanic at the Tech Outlet- may become skill trainer
+	requires <*GALSP_TO_Content>
+	content <Required *DECOR_FOR_SHOP %1% Local>
+	element1 <Prefab>
+	team1 <Citizens>
+	teamdata1 <ally pass>
+	sub
+		Persona 1
+		% V1 = Have accepted/denied skill training
+		*greeting <*NiceToMeetYou GoCheckGift>
+		GoCheckGift <if= V1 0 else GoOpenShop ifG React 50 else GoOpenShop ifG PCHeroism 25 else GoOpenShop ifChatNPCKnown else GoOpenShop NewChat say 1 AddChat 1 AddChat 2>
+		GoOpenShop <NewChat Say 2 AddChat 3 AddChat 4 AddChat 5>
+		Result1 <NewChat Say 3 History 4 V= 1 1  AddChat 6 AddChat 7 AddChat 4 AddReact d20>
+		Result2 <NewChat Say 5 History 6 V= 1 -1 AddSociable -d6 RandomMecha .facs 30>
+		.facs <GENERAL ROCKE>
+		Result3 <EndChat Say 7 Shop .wares Goto Result4>
+		.wares <MEXTRA TOOL>
+		*Result4 <*GoodBye>
+		Result5 <EndChat Say 8 School .skills Goto Result4>
+		.skills <15 18 23 31 38>
+		Result6 <Goto result5>
+		Result7 <Goto result3>
+		Msg1 <I've been following your adventures, \PC , and I'd like to help you out. If you want I can teach you some things about mecha design.>
+		Msg2 <If you want to upgrade your mecha you've come to the right place. Galconde is where all the new technologies appear first.>
+		Msg3 <Great! Whenever you need training, just come and ask. Would you like to do that right away?>
+		Msg4 <%name1% in Galconde Spinner agreed to teach you about mecha design.>
+		Msg5 <Fair enough. You can have this mecha, then. Its original owner couldn't afford to pay for the work I did on it, but I don't have any use for it myself, so now it's yours.>
+		Msg6 <%name1% in Galconde Spinner gave you a free mecha.>
+		Msg7 <The key to building a good mecha is having the right parts. If you can't find what you need right now then come back again tomorrow.>
+		Msg8 <While it's important to have the right parts when designing a mek, that's not going to help much if you don't know how to put them together.>
+		Prompt1 <I'd like that.>
+		Prompt2 <Really, some free gear would be more helpful.>
+		Prompt3 <I'd like to see what you have.>
+		Prompt4 <Sorry, but I don't need anything right now.>
+		Prompt5 <I want to study mecha design with you.>
+		CPrompt5 <if= V1 1 Accept>
+		Prompt6 <Alright, let's train.>
+		Prompt7 <Not now, but I do need your other services.>
+	end
+	inv
+		NPC Mechanic
+		name <Fabrianne>
+		CharDesc Female Heroic Lawful Sociable
+		Age 12
+		Skill 21 15
+		SDL_Portrait <por_f_musical(J--).png>
+		SDL_Colors <80 80 85 245 213 160 168 133 230>
+	end
+
+
 
 %% *GALSP_Guyatt_Content
 %%	NPCs for Guyatt Medical in Galconde Spinner
@@ -36,7 +150,7 @@ Content
 		NPC CyberDoc
 		Skill 21 15
 		name <Freedman>
-		Age 16
+		Age 21
 		chardesc Male Pragmatic Heroic Melancholy Sociable
 		SDL_Portrait <por_m_guy4(A-Y).png>
 		SDL_Colors <201 205 229 255 230 210 255 120 80>
@@ -471,8 +585,8 @@ Content
 		result3 <EndChat Say 3 School .skills Goto result2>
 		.skills <19 27 30 35 43>
 		result4 <NewChat Say 5 AddChat 5 AddChat 6>
-		result5 <NewChat Say 6 V= 1 1 AddChat 7 AddChat 8 PCFriend %1%>
-		result6 <NewChat Say 7 V= 1 -1 AddEasygoing -d10>
+		result5 <NewChat Say 6 V= 1 1 History 8 AddChat 7 AddChat 8 PCFriend %1%>
+		result6 <NewChat Say 7 V= 1 -1 History 9 AddEasygoing -d10>
 		result7 <Goto result1>
 		result8 <goto result3>
 		Msg1 <Athera Spinner is the place where dreams are born. I carry a selection of instruments for aspiring musicians, and a variety of entertainment goods for those who choose to appreciate rather than create art.>
@@ -482,6 +596,8 @@ Content
 		Msg5 <As time went on, though, I discovered that I was happiest just running this shop. I know that you have big dreams yourself, \PC . I could share with you some of the things I've learned about singing and the entertainment business.>
 		Msg6 <That makes me glad. Shall we get started right away, or is there something else you need?>
 		Msg7 <You're very confident. That can be a blessing, but sometimes also a curse.>
+		Msg8 <Artemis in Athera Spinner offered to teach you about performance.>
+		Msg9 <You refused Artemis's offer to become your teacher.>
 		Prompt1 <Let me see what you have.>
 		Prompt2 <Sorry, but I don't need anything here.>
 		Prompt3 <I'd like to train.>

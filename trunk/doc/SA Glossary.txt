@@ -18,6 +18,7 @@ CATEGORY
 	SPORTS
 	ODDITIES, NINJA, PIRATE
 	TREASURE, JEWELRY, ARTWORK, ANTIQUE, GEMSTONE
+	MEXTRA
 	NPCONLY - This item will only be generated for NPCs; useful for armor sets
 
 CONTEXT
@@ -151,6 +152,7 @@ TYPE
 		Ground, Space: Terrain types
 		Hometown: Included in root scene; may be selected as home of new PCs
 		Industrial
+		Laboratory
 		Legit, Sleazy
 		Meeting: This is a place used for meetings and dates
 		Mine: This is a mine. Not yours, a mine.
@@ -166,6 +168,7 @@ TYPE
 		Safe
 		Target: A city that might get invaded
 		Town: Included in root scene, indicates that people live here
+		University
 		Urban: A city area where encounters can be placed
 	For a mecha:
 		Ground, Space

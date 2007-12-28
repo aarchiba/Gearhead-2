@@ -6162,7 +6162,7 @@ sub
 	Content4 <Some 1 100 Sub *MECHA_SHOP        na>
 	Content5 <Some 1 100 Sub *GENERAL_SHOP      na>
 	Content6 <Some 2 100 Sub *ELECTRONICS_SHOP  na>
-	Content7 <Some 1 100 Sub *MECHANIC_SHOP     na>
+	Content7 <Some 1 100 Sub *GALSP_TO_Content  na>
 
 	Content9 <Fill Sub *SHOP_RANDOM             na>
 
@@ -6360,8 +6360,79 @@ sub
 			XPos 15
 			YPos 15
 		end
-
 	end
+
+	Scene
+	name <Nova Initiative>
+	type <building university laboratory public>
+	entrance <*Building>
+	special <ADDEXIT>
+	ClubMap
+	PalaceParkTiles
+	MapWidth 15
+	MapHeight 15
+
+	start <Print 1>
+	Msg1 <You enter the Nova Initiative building.>
+
+	NeededCells 4
+	Content7 <Some 2 100 Sub *GALSP_NI_Content  na>
+	Content9 <Fill Sub *UNIVERSITY_X            na>
+
+	sub
+		team 1
+
+		team 2
+		name <Citizens>
+		SetAlly 1
+		Passive
+
+		team 3
+		name <Guards>
+		SetAlly 2
+
+		room
+		name <Foyer>
+		desig <EntranceGrid>
+		Content <Some 4 50 Here *URBAN_X>
+		Content2 <Some 1 100 Here *ANTI_ATTACK_SECURITY 2>
+		minimap <.......2....1....3.......>
+		inv
+			Sign
+			Name <About Nova>
+			use <Alert 1>
+			msg1 <The Nova Initiative was founded by Rishiri Spinner to promote science and technology in the L5 region.>
+			MiniMapComponent 1
+
+			STC MANNEKIN-M
+			name <Pasteur Statue>
+			use <Alert 1>
+			Msg1 <Science and Peace will triumph over Ignorance and War, nations will eventually unite not to destroy but to edify, and the future will belong to those who have done the most for the sake of humanity. - Louis Pasteur>
+			MiniMapComponent 2
+			PDir 4
+
+			STC MANNEKIN-F
+			name <Curie Statue>
+			use <Alert 1>
+			Msg1 <Nothing in life is to be feared, it is only to be understood. Now is the time to understand more, so that we may fear less. - Marie Curie>
+			MiniMapComponent 3
+			PDir 4
+		end
+
+		room
+		name <Main Office>
+		minimap <.....1..............#&+&#>
+		inv
+			NPC Scientist
+			name <Faski>
+			CharDesc Female Pragmatic Passionate
+			SetTeam 2
+			Age 28
+			MiniMapComponent 1
+			quest <*:NPCQuest>
+		end
+	end
+
 
 % End of Galconde Spinner...
 end

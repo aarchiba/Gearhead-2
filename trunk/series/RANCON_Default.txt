@@ -319,7 +319,35 @@ Content
 	end
 
 Content
-	requires <*URBAN_X Public ~School ~Static>
+	requires <*URBAN_X Laboratory>
+	element1 <Prefab>
+	team1 <citizens>
+	teamdata1 <pass>
+	sub
+		Persona 1
+		*greeting <*NiceToMeetYou GoMiscTalk>
+		*GoMiscTalk <*MISC_CHATTER>
+	end
+	inv
+		NPC Scientist
+	end
+
+Content
+	requires <*URBAN_X University>
+	element1 <Prefab>
+	team1 <citizens>
+	teamdata1 <pass>
+	sub
+		Persona 1
+		*greeting <*NiceToMeetYou GoMiscTalk>
+		*GoMiscTalk <*MISC_CHATTER>
+	end
+	inv
+		NPC Professor
+	end
+
+Content
+	requires <*URBAN_X Public ~University ~Static>
 	element1 <Prefab>
 	team1 <citizens>
 	teamdata1 <pass>

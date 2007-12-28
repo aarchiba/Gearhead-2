@@ -3,6 +3,66 @@
 %% will contain things that unlawful characters can steal.
 %%
 
+%% *UNIVERSITY_X Content
+%%	Filler for universities. Professor's offices, student lounges, etc.
+%%	Minimaps open on one side.
+
+Content
+	requires <*UNIVERSITY_X>
+	minimap <#1#2#......3........#---#>
+
+	element1 <Prefab>
+	element2 <Prefab>
+	element3 <Prefab>
+	team3 <citizens>
+	teamdata3 <pass>
+
+	sub
+		Persona 3
+		*Greeting <*NiceToMeetYou GoChat>
+		*GoChat <*MISC_CHATTER>
+	end
+	inv
+		STC TV
+		PDir 2
+
+		STC COMPUTER-1
+		PDir 2
+		use <ifYesNo 1 2 3 MoreMemo Email>
+		Msg1 <This is a public thruweb terminal. Would you like to check your email?>
+		Msg2 <Yes I would.>
+		Msg3 <No, not really.>
+
+		NPC Student
+	end
+
+Content
+	requires <*UNIVERSITY_X>
+	minimap <#1#2#......3........#---#>
+
+	element1 <Prefab>
+	element2 <Prefab>
+	element3 <Prefab>
+	team3 <citizens>
+	teamdata3 <pass>
+
+	sub
+		Persona 3
+		*Greeting <*NiceToMeetYou GoChat>
+		*GoChat <*MISC_CHATTER>
+	end
+	inv
+		STC VENDING-1
+		PDir 2
+
+		STC VIDEOGAME-4
+		PDir 2
+
+		NPC Student
+	end
+
+
+
 %% *FACTORY_X Content
 %%	Filler for factories.
 %%	Minimaps should be open on all four sides.
