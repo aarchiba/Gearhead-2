@@ -1492,7 +1492,7 @@ Content
 		result5 <NewChat Say 7 AddChat 6 AddCHat 7 AddChat 11>
 		result6 <NewChat Say 8 AddChat 5 AddCHat 7 AddChat 11>
 		result7 <NewChat Say 9 AddChat 5 AddCHat 6 AddChat 11>
-		result8 <DeleteItem %2% Goto .%id1%_GoInit>
+		result8 <DeleteItem %2% XPV 100  Goto .%id1%_GoInit>
 		result9 <NewChat Say 12 AddChat 5 AddChat 6 AddChat 7>
 		result10 <SetQuestStatus %qid% -2  Goto .GoR10Final>
 		*GoR10Final <*YouLostItem>

@@ -1144,7 +1144,12 @@ var
 			{ Next, attempt to locate the scene associated with this element. }
 			{ It should be stored as a NAtt. }
 			Scene := FindQuestScene( NAttValue( Frag^.NA , NAG_QuestElemScene , T ) );
-			Container := SeekGearByDesig( Scene^.SubCom , 'CONTAINER ' + BStr( T ) );
+			if Scene = Nil then begin
+				DialogMsg( 'ERROR: No scene ' + BStr( T ) + ' in ' + GearName( Frag ) );
+				Container := Nil;
+			end else begin
+				Container := SeekGearByDesig( Scene^.SubCom , 'CONTAINER ' + BStr( T ) );
+			end;
 			{ Clear the container's designation, we no longer need it. }
 			if Container <> Nil then SetSAtt( Container^.SA , 'DESIG <>' );
 			if ( Container = Nil ) or ( Container^.G <> GG_MapFeature ) then Container := Scene;

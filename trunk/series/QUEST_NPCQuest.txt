@@ -5,6 +5,69 @@
 %% Always make sure to do an *ENEMY_CHECK or equivalent in these quests.
 
 Content
+	name <Archaeology for Fun and Profit>
+	desc <This character is looking for an item.>
+	requires <*:NPCQuest C:ACADE>
+
+	%% E1 is the key character.
+	%% E2 is the artifact to be sought
+	%%  S2 is the scene where it is hidden
+	Element1 <Key>
+	Element2 <ARTIFACT ITEM PREZERO>
+	Scene2 <New *ItemCrypt>
+
+	%% Q1 is the success branch for locating the item
+	Quest1 <*SuccessGetItem.giveitem 1 2>
+
+	sub
+		Persona 1
+		rumor0 <%name1% has been researching the %name2%.>
+		greeting <if= QuestStatus %qid% %id% else GoCheckFirst NewChat Say 1 AddChat 1 AddChat 2>
+		GoCheckFirst <if= QuestStatus %qid% 0 else GoChat NewChat Say 2 AddChat 3 AddChat 4 AddChat 5>
+		GoChat <NewChat SayAnything>
+		Result1 <NewChat Say 3 AddChat 6 AddChat 7>
+		result2 <SetQuestStatus %qid% -2  Goto .GoR2Final>
+		*GoR2Final <*YouLostItem>
+		result3 <NewChat Say 4 AddChat 8 AddChat 9 QMemo %qid% 5 SetQuestStatus %qid% %id%>
+		result4 <Goto result3>
+		result5 <NewChat Say 6 QMemo %qid% 5 SetQuestStatus %qid% %id% AddChat 10 AddChat 11>
+		result6 <SetQuestStatus %qid% -2 Goto GoR6Final>
+		*GoR6Final <*PCWillKeepItem %2%>
+		result7 <DeleteItem %2% XPV 100  Goto .%id1%_GoInit>
+		result8 <NewChat Say 7 AddChat 10 AddChat 11>
+		result9 <NewChat Say 8>
+		result10 <NewChat Say 9>
+		result11 <NewChat Say 10>
+		Msg1 <My grad students are continuing to search for the %name2%. If you have any information, it would be greatly appreciated.>
+		Msg2 <I have been researching the %name2%. According to historical records, it should be located somewhere in \SCENE RootSceneID . My grad students are out searching for it now.>
+		Msg3 <You do? Please, give it to me. The %name2% is vital to my research... I can promise that you'll be fairly compensated for your work.>
+		Msg4 <Just a minute, there... Why are you so interested in the %name2%?>
+		Msg5 <%name1% revealed that \SPR %1% is looking for the %name2% , which should be nearby.>
+		Msg6_1 <More help would certainly be appreciated. We don't know its exact location, but if there's anything else I can tell you then feel free to ask.>
+		CMsg6_1 <ifG PCLaw -1 Accept>
+		Msg6_2 <I can't say that I trust your motives, but if you're serious then I won't refuse your help. We don't know its exact location, but if there's anything else I can tell you then feel free to ask.>
+		CMsg6_2 <ifG 0 PCLaw Accept>
+		Msg7 <Fair enough. If you should happen to find the %name2%, return it to me and I'll make sure you're amply rewarded. In the meantime, do you have any more questions?>
+		Msg8 <If you are merely a treasure hunter then you'll get no help from me... though I will mention that I am offering a quite generous reward for the %name2%.>
+		Msg9 <\ITEM_DESC %2% \ITEM_HISTORY %2%>
+		Msg10 <Good luck. Come see me again if you find it.>
+		Prompt1 <I have the %name2% here, now.>
+		CPrompt1 <ifKeyItem %2% Accept>
+		Prompt2 <I think the %name2% has been lost...>
+		CPrompt2 <ifItemDestroyed %2% Accept>
+		Prompt3 <What is the %name2%?>
+		Prompt4 <Where do you think it is?>
+		Prompt5 <Do you need any help finding it?>
+		Prompt6 <Actually, I plan to keep it myself.>
+		Prompt7 <Here you go. [Give Item]>
+		Prompt8 <Like you, I'm interested in history.>
+		Prompt9 <I'm hoping to find it for myself.>
+		Prompt10 <What's so important about the %name2%?>
+		Prompt11 <I don't need to know anything else.>
+	end
+
+
+Content
 	name <Plenty of Enemies>
 	requires <*:NPCQuest C:MILIT ~Dangerous>
 

@@ -1189,7 +1189,7 @@ begin
 	{ The WreckTarget is the target number that must be beat }
 	{ in order to avoid accidentally destroying the part... }
 	if ( Item^.G = GG_Module ) then begin
-		WreckTarget := 5 + NumSiblingGears( Slot^.SubCom ) - Item^.V;
+		WreckTarget := 3 + NumSiblingGears( Slot^.SubCom ) - Item^.V;
 	end else if Item^.G = GG_MoveSys then begin
 		WreckTarget := 5 + ItemCom;
 	end else if ( Item^.G = GG_Modifier ) then begin
