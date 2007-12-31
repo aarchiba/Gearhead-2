@@ -52,7 +52,7 @@ FacXP+ <GrabFaction ? GAddNAtt NAG_Experience NAS_FacXP ?>
 FacXP= <GrabFaction ? GSetNAtt NAG_Experience NAS_FacXP ?>
 FacVar+ <GrabFaction ? GAddNAtt NAG_ScriptVar ? ?>
 PCFacXP= <GrabFaction PCFac GSetNAtt NAG_Experience NAS_FacXP ?>
-PCFacLevel+ <GrabFaction PCFac GAddNAtt NAG_Experience NAS_FacLevel ?>
+PCFacLevel+ <GrabAdventure GAddNAtt NAG_Experience NAS_FacLevel ?>
 CASHPRIZE <GrabPCPilot  GAddNAtt NAG_Experience NAS_Credits ?  VMsg AS_CashPrize !>
 CASH+ <GrabPCPilot  GAddNAtt NAG_Experience NAS_Credits ?>
 ADDREACT <GrabPCPilot GAddNAtt NAG_ReactionScore ChatNPCID ?>
@@ -241,6 +241,7 @@ ChatNPCJoinLance <GrabChatNPC GJoinLance>
 RemoveTempLancemate <GrabNPC ? GSetNAtt NAG_CharDescription NAS_CharType 0 GQuitLance>
 AddPartyPoint <GrabCurrentScene GAddNAtt NAG_Narrative NAS_PartyPoints 1>
 OpenInv <GrabSource GOpenInv>
+IfSelfHasItem <GrabSource IfGHasItem ?>
 GiveArenaPay <GrabAdventure GAddNAtt NAG_Experience NAS_Credits ArenaPay>
 WinArenaMission <GiveArenaPay Return ArenaRep 1>
 LoseArenaMission <Return ArenaRep -8>

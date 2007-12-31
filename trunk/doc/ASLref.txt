@@ -68,7 +68,6 @@
 			Create new script event
 	DELETENPC [Character ID]	Eliminate NPC
 	DELETEFACTION [Faction ID]	Deactivate faction
-	DELETEKEYITEM [Narrative ID]	Eliminate key item
 	DRAWTERR [x] [y] [terrain]	Alter the gameboard
 	DYNAMIC [Scale] [Renown] [Strength] [NU1 label] [NU2 label]
 			Start a dynamic scene
@@ -115,8 +114,6 @@
 	MORETEXT [script line label]	Display text file from disk
 	MOREMEMO [tag]		View memos of type [tag] - EMAIL,MEMO,NEWS
 	MOVENPC [CID] [Scene ID]	Move a character to the requested scene
-	MOVEKEYITEM [NID] [Scene ID]
-	MSTOCKD [UPV] [MDesc Label]	Stock dynamic encounter with monsters
 	N=			Set Story Element
 	NEWCHAT			Reset interact menu
 	NEWD [scale]		Create a new dynamic scene
@@ -272,6 +269,7 @@
 	IFGARCHALLY		True if GG an arch-ally of PC
 	IFGARCHENEMY		True if GG an arch-enemy of PC
 	IFGCANJOINLANCE		True if GG can join the lance, assuming GG is an ally
+	IFGHASITEM [NID]	True if GG has item in possession
 	IFGHASSKILL [Skill]	True if GG has the listed skill
 	IFGINPLAY <else [label]>	True if GG on map and operational
 	IFGDEAD <else [label]>	True if GG is Nil or is destroyed

@@ -58,6 +58,8 @@ STAT_Charm <8>
 NPCEGO <GrabNPC ? GStat 6>
 CHATNPCEGO <GrabChatNPC GStat 6>
 NPCCHARM <GrabNPC ? GStat 8>
+PCDAGE <GrabPCPilot GNAtt NAG_CharDescription NAS_DAge>
+CHATNPCDAGE <GrabChatNPC GNAtt NAG_CharDescription NAS_DAge>
 NPCDAGE <GrabNPC ? GNAtt NAG_CharDescription NAS_DAge>
 CHATNPCPERCEPTION <GrabChatNPC GStat 4>
 ChatNPCRenown <GrabChatNPC GNAtt NAG_CharDescription -6>
@@ -106,7 +108,7 @@ Taunt <SkRoll 42>
 Shopping <SkRoll 21>
 FacVar <GrabFaction ? GNAtt NAG_ScriptVar ?>
 PCFacXP <GrabFaction PCFac GNAtt NAG_Experience NAS_FacXP>
-PCFacLevel <GrabFaction PCFac GNAtt NAG_Experience NAS_FacLevel>
+PCFacLevel <GrabAdventure GNAtt NAG_Experience NAS_FacLevel>
 FacXPNeeded <FXPNeeded PCFacLevel>
 DynaRenown <GrabCurrentScene GNAtt 21 4>
 DynaStrength <GrabCurrentScene GNAtt 21 5>

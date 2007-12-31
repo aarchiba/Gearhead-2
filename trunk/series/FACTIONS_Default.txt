@@ -10,6 +10,14 @@ Faction 1
 	mecha_colors <75 200 212  49 91 141  200 000 0>
 	chara_colors <75 200 212>
 
+	% Every start, check to see if the PC has advanced in this faction.
+	start <if= PCFac SelfS else GoNoMember   ifFactionEnemy SelfS else GoPro1 StartStory .fired>
+	.fired <SPECIAL_PLOT_Fired.txt>
+	GoPro1 <ifG PCFacXP FacXPNeeded else GoCheckPromotion PCFacLevel+ 1 PCFacXP= 0 V+ 1 1>
+	GoCheckPromotion <ifG V1 0 StartStory .promostory V+ 1 -1>
+	.promostory <SPECIAL_PLOT_Promotion.txt>
+	GoNoMember <FacXP= SelfS 0>
+
 Faction 2
 	name <Comet Metalworks>
 	desig <COMET>
@@ -20,6 +28,14 @@ Faction 2
 	SetEnemy 7 8 13
 	mecha_colors <75 200 212  234 180 88  200 000 100>
 	chara_colors <234 180 88>
+
+	% Every start, check to see if the PC has advanced in this faction.
+	start <if= PCFac SelfS else GoNoMember   ifFactionEnemy SelfS else GoPro1 StartStory .fired>
+	.fired <SPECIAL_PLOT_Fired.txt>
+	GoPro1 <ifG PCFacXP FacXPNeeded else GoCheckPromotion PCFacLevel+ 1 PCFacXP= 0 V+ 1 1>
+	GoCheckPromotion <ifG V1 0 StartStory .promostory V+ 1 -1>
+	.promostory <SPECIAL_PLOT_Promotion.txt>
+	GoNoMember <FacXP= SelfS 0>
 
 	FACRANK_0 <Wage Slave>
 	FACRANK_1 <Employee of the Month>
@@ -45,10 +61,6 @@ Faction 3
 	Controller 1
 	mecha_colors <75 200 212 201 205 229 200 100 0>
 	chara_colors <150 205 229>
-
-	% Every 6 hours, check to load a new story.
-	quarter <ifFaction 3  ifStoryless if# d3 1 StartStory .facstory>
-	.facstory <FSTORY_MIL_*_MAIN.txt>
 
 	% Every start, check to see if the PC has advanced in this faction.
 	start <if= PCFac SelfS else GoNoMember   ifFactionEnemy SelfS else GoPro1 StartStory .fired>
@@ -79,6 +91,14 @@ Faction 4
 	SetEnemy 1 3 8
 	mecha_colors <122 130 130 230 20 130 200 200 0>
 
+	% Every start, check to see if the PC has advanced in this faction.
+	start <if= PCFac SelfS else GoNoMember   ifFactionEnemy SelfS else GoPro1 StartStory .fired>
+	.fired <SPECIAL_PLOT_Fired.txt>
+	GoPro1 <ifG PCFacXP FacXPNeeded else GoCheckPromotion PCFacLevel+ 1 PCFacXP= 0 V+ 1 1>
+	GoCheckPromotion <ifG V1 0 StartStory .promostory V+ 1 -1>
+	.promostory <SPECIAL_PLOT_Promotion.txt>
+	GoNoMember <FacXP= SelfS 0>
+
 Faction 5
 	name <the Pro Duelist Association>
 	desig <PDASS>
@@ -86,6 +106,14 @@ Faction 5
 	CONTEXT <MEDIA>
 	jobs <ADVEN>
 	mecha_colors <201 205 229 208 34 51 0 200 0>
+
+	% Every start, check to see if the PC has advanced in this faction.
+	start <if= PCFac SelfS else GoNoMember   ifFactionEnemy SelfS else GoPro1 StartStory .fired>
+	.fired <SPECIAL_PLOT_Fired.txt>
+	GoPro1 <ifG PCFacXP FacXPNeeded else GoCheckPromotion PCFacLevel+ 1 PCFacXP= 0 V+ 1 1>
+	GoCheckPromotion <ifG V1 0 StartStory .promostory V+ 1 -1>
+	.promostory <SPECIAL_PLOT_Promotion.txt>
+	GoNoMember <FacXP= SelfS 0>
 
 Faction 6
 	name <the Privateer Guild>
@@ -101,10 +129,6 @@ Faction 6
 	Controller 1
 	mecha_colors <0 49 83 80 80 85 200 100 0>
 	chara_colors <20 90 130>
-
-	% Every 6 hours, check to load a new story.
-	quarter <ifFaction 3  ifStoryless if# d3 1 StartStory .facstory>
-	.facstory <FSTORY_MERC_*_MAIN.txt>
 
 	% Every start, check to see if the PC has advanced in this faction.
 	start <if= PCFac SelfS else GoNoMember   ifFactionEnemy SelfS else GoPro1 StartStory .fired>
@@ -135,6 +159,14 @@ Faction 7
 	mecha_colors <172 225 175 77 93 83 250 100 0>
 	chara_colors <170 100 240>
 
+	% Every start, check to see if the PC has advanced in this faction.
+	start <if= PCFac SelfS else GoNoMember   ifFactionEnemy SelfS else GoPro1 StartStory .fired>
+	.fired <SPECIAL_PLOT_Fired.txt>
+	GoPro1 <ifG PCFacXP FacXPNeeded else GoCheckPromotion PCFacLevel+ 1 PCFacXP= 0 V+ 1 1>
+	GoCheckPromotion <ifG V1 0 StartStory .promostory V+ 1 -1>
+	.promostory <SPECIAL_PLOT_Promotion.txt>
+	GoNoMember <FacXP= SelfS 0>
+
 	FACRANK_0 <Wage Slave>
 	FACRANK_1 <Employee of the Month>
 	FACRANK_2 <Committee Head>
@@ -157,6 +189,14 @@ Faction 8
 	mecha_colors <168 153 230 78 150 137 200 0 0>
 	chara_colors <130 50 20>
 
+	% Every start, check to see if the PC has advanced in this faction.
+	start <if= PCFac SelfS else GoNoMember   ifFactionEnemy SelfS else GoPro1 StartStory .fired>
+	.fired <SPECIAL_PLOT_Fired.txt>
+	GoPro1 <ifG PCFacXP FacXPNeeded else GoCheckPromotion PCFacLevel+ 1 PCFacXP= 0 V+ 1 1>
+	GoCheckPromotion <ifG V1 0 StartStory .promostory V+ 1 -1>
+	.promostory <SPECIAL_PLOT_Promotion.txt>
+	GoNoMember <FacXP= SelfS 0>
+
 Faction 9
 	name <L5Law>
 	% V1 = Number of faction rewards pending
@@ -171,6 +211,14 @@ Faction 9
 	mecha_colors <70 70 85  75 200 212  200 200 0>
 	chara_colors <30 30 90>
 
+	% Every start, check to see if the PC has advanced in this faction.
+	start <if= PCFac SelfS else GoNoMember   ifFactionEnemy SelfS else GoPro1 StartStory .fired>
+	.fired <SPECIAL_PLOT_Fired.txt>
+	GoPro1 <ifG PCFacXP FacXPNeeded else GoCheckPromotion PCFacLevel+ 1 PCFacXP= 0 V+ 1 1>
+	GoCheckPromotion <ifG V1 0 StartStory .promostory V+ 1 -1>
+	.promostory <SPECIAL_PLOT_Promotion.txt>
+	GoNoMember <FacXP= SelfS 0>
+
 	FACRANK_1 <Officer>
 	FACRANK_2 <Investigator>
 	FACRANK_3 <Detective>
@@ -179,18 +227,6 @@ Faction 9
 	FACRANK_6 <Inspector>
 	FACRANK_7 <Superintendent>
 	FACRANK_8 <Commissioner>
-
-	% Every 6 hours, check to load a new story.
-	quarter <ifFaction 3  ifStoryless if# d3 1 StartStory .facstory>
-	.facstory <FSTORY_POLICE_*_MAIN.txt>
-
-	% Every start, check to see if the PC has advanced in this faction.
-	start <if= PCFac SelfS else GoNoMember   ifFactionEnemy SelfS else GoPro1 StartStory .fired>
-	.fired <SPECIAL_PLOT_Fired.txt>
-	GoPro1 <ifG PCFacXP FacXPNeeded else GoCheckPromotion PCFacLevel+ 1 PCFacXP= 0 V+ 1 1>
-	GoCheckPromotion <ifG V1 0 StartStory .promostory V+ 1 -1>
-	.promostory <SPECIAL_PLOT_Promotion.txt>
-	GoNoMember <FacXP= SelfS 0>
 
 Faction 10
 	name <the Free Commerce States>
@@ -204,16 +240,32 @@ Faction 10
 	mecha_colors <244 216 28 116 100 13 152 61 97>
 	chara_colors <239 198 58>
 
+	% Every start, check to see if the PC has advanced in this faction.
+	start <if= PCFac SelfS else GoNoMember   ifFactionEnemy SelfS else GoPro1 StartStory .fired>
+	.fired <SPECIAL_PLOT_Fired.txt>
+	GoPro1 <ifG PCFacXP FacXPNeeded else GoCheckPromotion PCFacLevel+ 1 PCFacXP= 0 V+ 1 1>
+	GoCheckPromotion <ifG V1 0 StartStory .promostory V+ 1 -1>
+	.promostory <SPECIAL_PLOT_Promotion.txt>
+	GoNoMember <FacXP= SelfS 0>
+
 Faction 11
 	name <the Rishiri Dominion>
 	desig <RISHI>
 	desc <>
 	Context <POLIT>
 	type <Government>
-	jobs <POLIT>
+	jobs <POLIT MILIT>
 	SetAlly 9 10 4
 	SetEnemy 1 8 12
 	mecha_colors <122 130 130 244 216 28 200 200 0>
+
+	% Every start, check to see if the PC has advanced in this faction.
+	start <if= PCFac SelfS else GoNoMember   ifFactionEnemy SelfS else GoPro1 StartStory .fired>
+	.fired <SPECIAL_PLOT_Fired.txt>
+	GoPro1 <ifG PCFacXP FacXPNeeded else GoCheckPromotion PCFacLevel+ 1 PCFacXP= 0 V+ 1 1>
+	GoCheckPromotion <ifG V1 0 StartStory .promostory V+ 1 -1>
+	.promostory <SPECIAL_PLOT_Promotion.txt>
+	GoNoMember <FacXP= SelfS 0>
 
 Faction 12
 	name <the Bohemian Collective>
@@ -227,6 +279,14 @@ Faction 12
 	mecha_colors <49 91 141 208 34 51 150 220 220>
 	chara_colors <>
 
+	% Every start, check to see if the PC has advanced in this faction.
+	start <if= PCFac SelfS else GoNoMember   ifFactionEnemy SelfS else GoPro1 StartStory .fired>
+	.fired <SPECIAL_PLOT_Fired.txt>
+	GoPro1 <ifG PCFacXP FacXPNeeded else GoCheckPromotion PCFacLevel+ 1 PCFacXP= 0 V+ 1 1>
+	GoCheckPromotion <ifG V1 0 StartStory .promostory V+ 1 -1>
+	.promostory <SPECIAL_PLOT_Promotion.txt>
+	GoNoMember <FacXP= SelfS 0>
+
 Faction 13
 	name <MUGL Enterprises>
 	desig <MUGLE>
@@ -237,6 +297,14 @@ Faction 13
 	SetEnemy 2 7 8
 	mecha_colors <255 105 180 255 253 208 0 240 240>
 	chara_colors <200 64 96>
+
+	% Every start, check to see if the PC has advanced in this faction.
+	start <if= PCFac SelfS else GoNoMember   ifFactionEnemy SelfS else GoPro1 StartStory .fired>
+	.fired <SPECIAL_PLOT_Fired.txt>
+	GoPro1 <ifG PCFacXP FacXPNeeded else GoCheckPromotion PCFacLevel+ 1 PCFacXP= 0 V+ 1 1>
+	GoCheckPromotion <ifG V1 0 StartStory .promostory V+ 1 -1>
+	.promostory <SPECIAL_PLOT_Promotion.txt>
+	GoNoMember <FacXP= SelfS 0>
 
 	FACRANK_0 <Wage Slave>
 	FACRANK_1 <Employee of the Month>
@@ -260,4 +328,13 @@ Faction 14
 	Controller 11
 	mecha_colors <153 17 153 230 20 130 75 200 212>
 	chara_colors <153 17 153>
+
+	% Every start, check to see if the PC has advanced in this faction.
+	start <if= PCFac SelfS else GoNoMember   ifFactionEnemy SelfS else GoPro1 StartStory .fired>
+	.fired <SPECIAL_PLOT_Fired.txt>
+	GoPro1 <ifG PCFacXP FacXPNeeded else GoCheckPromotion PCFacLevel+ 1 PCFacXP= 0 V+ 1 1>
+	GoCheckPromotion <ifG V1 0 StartStory .promostory V+ 1 -1>
+	.promostory <SPECIAL_PLOT_Promotion.txt>
+	GoNoMember <FacXP= SelfS 0>
+
 

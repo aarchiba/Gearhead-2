@@ -15,6 +15,54 @@
 %% Set REQUIRES to *:DebugMission to load into the debugging stub.
 
 Content
+	name <Recharge Service>
+	desc <The PC will be sent to replace the batteries in a spore collector.>
+	requires <*:GiveMission "Spinner" (1:ACADE|1:CORPO)>
+
+	% E1 is the NPC offering the mission
+	% E2 is the machine to be recharged
+	% E3 is the dungeon entrance
+	% E4 is the very special isotropic battery
+	Element2 <Prefab>
+	Scene2 <New *Dungeon.AsteroidCave>
+
+	Element3 <Prefab>
+	Scene3 <Space Environs>
+
+	Element4 <Prefab>
+	Place4 </>
+
+	sub
+		Persona 1
+		Greeting <if= QuestStatus %qid% %id% else %pop% NewChat Say %id%01>
+		.%id%_GoInit <SetQuestStatus %qid% %id% NewChat Say %id%02 QMemo %qid% %id%03 GiveItem %4%>
+		Msg%id%01 <The spore collector is still offline. Please bring the isotropic battery to the asteroid.>
+		Msg%id%02 <We've been researching the space fungus living on a nearby asteroid. Unfortunately, the automatic spore collector is running low on power. I want you to take this isotropic battery there and install it.>
+		Msg%id%03 <%name1% asked you to replace the battery in the spore collector in an asteroid in \SCENE %s3% .>
+
+		MetaScene 1
+		start <if= QuestStatus %qid% %id% else %pop% ifItemDestroyed %4% else %pop% SetQuestStatus %qid% -2 Goto %pop%>
+
+		MetaScene 2
+		end <if= QuestStatus %qid% %id% else %pop% ifItemDestroyed %2% else %pop% SetQuestStatus %qid% -2 Goto %pop%>
+	end
+	inv
+		STC COMPUTER-1
+		name <Spore Extractor>
+		use <Print 1 OpenInv ifSelfHasItem %4% SetQuestStatus %qid% -1 DeleteItem %4% Print 2 XPV 100>
+		Msg1 <You open the spore collector access panel.>
+		Msg2 <The spore collector starts working again.>
+
+		STC QUEST-MAPMARKER-AUTO-STATIONARY
+		name <%name1%'s Asteroid>
+		desig <Entrance %s2%>
+
+		Treasure 5
+		name <Isotropic Battery>
+		desc <You need to install this battery in the spore collector.>
+	end
+
+Content
 	name <Go Beat Rishiri>
 	desc <What could be better than blowing up some Rishiri mecha?>
 	requires <*:GiveMission 1:CRIHN ("RISHI"|"ROCKE")>

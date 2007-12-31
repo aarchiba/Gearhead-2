@@ -235,8 +235,48 @@ Scene
 	end
 
 Scene
+	name <# Asteroid>
+	requires <*Dungeon .AsteroidCave>
+	special <NOEXIT>
+	type <DUNGEON asteroid cave>
+	terrain <SPACE>
+	habitat <SPACE.ASTER>
+	dentrance <*GoDown>
+	content <Some 1 30 Sub *DUNGEON_X>
+	% Suffocation effect...
+	Vacuum
+	mapwidth 30
+	mapheight 30
+	CaveMap
+	RockyTiles
+
+	NeededCells 3
+
+	start <Print 1>
+	msg1 <You enter \SCENE SceneID .>
+
+	sub
+		Team 1
+		SetEnemy 2
+
+		Team 2
+		name <Monster>
+		type <Cave Exorg Fungus Asteroid>
+		SetEnemy 1
+		Stat 2 1
+
+		room
+		width 3
+		height 3
+		sub
+			StairsUp
+			Destination -1
+		end
+	end
+
+Scene
 	name <# Mine>
-	requires <*Dungeon .Asteroid>
+	requires <*Dungeon .AsteroidMine>
 	special <NOEXIT>
 	type <DUNGEON asteroid mine>
 	terrain <SPACE>

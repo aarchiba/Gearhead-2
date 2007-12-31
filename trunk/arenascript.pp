@@ -1185,7 +1185,7 @@ begin
 		F := GG_LocateFaction( FID , GB , Source );
 		if F <> Nil then begin
 			{ Call the general Faction Rank function. }
-			PCRankName := FactionRankName( GB , Source , FID , NAttValue( F^.NA , NAG_Experience , NAS_FacLevel ) );
+			PCRankName := FactionRankName( GB , Source , FID , NAttValue( A^.NA , NAG_Experience , NAS_FacLevel ) );
 		end else begin
 			{ No faction found. Return the default value. }
 			PCRankName := MsgSTring( 'FACRANK_0' );
@@ -2293,6 +2293,31 @@ begin
 			{ Move to the next gear to check. }
 			PC := PC^.Next;
 		end;
+	end;
+
+	{ Finally, do something appropriate depending upon whether or not }
+	{ the item was found. }
+	if FoundTheItem then IfSuccess( Event )
+	else IfFailure( Event , Source );
+end;
+
+Procedure ProcessIfGHasItem( var Event: String; gb: GameBoardPtr; Source: GearPtr );
+	{ Process TRUE if the specified key item is in the posession of the grabbed gear. }
+var
+	NID: Integer;
+	FoundTheItem: Boolean;
+	PC: GearPtr;
+begin
+	{ Start by assuming FALSE, then go looking for it. }
+	FoundTheItem := False;
+
+	{ Find out what Key Item we're looking for. }
+	NID := ScriptValue( Event , GB , Source );
+
+	if ( Grabbed_Gear <> Nil ) and ( NID <> 0 ) then begin
+		if NAttValue( Grabbed_Gear^.NA , NAG_Narrative , NAS_NID ) = NID then FoundTheItem := True
+		else if SeekGearByIDTag( Grabbed_Gear^.SubCom , NAG_Narrative , NAS_NID , NID ) <> Nil then FoundTheItem := True
+		else if SeekGearByIDTag( Grabbed_Gear^.InvCom , NAG_Narrative , NAS_NID , NID ) <> Nil then FoundTheItem := True;
 	end;
 
 	{ Finally, do something appropriate depending upon whether or not }
@@ -4038,6 +4063,7 @@ begin
 		else if cmd = 'IFSCENE' then ProcessIfScene( Event , GB , Source )
 		else if cmd = 'IFSAFEAREA' then ProcessIfSafeArea( Event , GB , Source )
 		else if cmd = 'IFKEYITEM' then ProcessIfKeyItem( Event , GB , Source )
+		else if cmd = 'IFGHASITEM' then ProcessIfGHasItem( Event , GB , Source )
 		else if cmd = 'IF=' then ProcessIfEqual( Event , GB , Source )
 		else if cmd = 'IF#' then ProcessIfNotEqual( Event , GB , Source )
 		else if cmd = 'IFG' then ProcessIfGreater( Event , GB , Source )

@@ -5,6 +5,80 @@
 %% Always make sure to do an *ENEMY_CHECK or equivalent in these quests.
 
 Content
+	name <Rat Killing in Academia>
+	desc <The PC has to kill a rat for the NPC.>
+	% Unlike "Rat Killing in Government", this quest can happen at any difficulcy level,
+	% to demonstrate the higher quality of rat used by scientists.
+	requires <*:NPCQuest C:ACADE>
+
+	% Quest1 is the continuation after the PC has cleared the basement.
+	Quest1 <*SUCCESS1.FinishMission 1>
+
+	% E1 is the key character
+	% E2 is the basement that has to be cleared
+	% E3 is the scene where the lab entrance is
+	element1 <Key>
+	Scene2 <NEW *ExterminationBasement>
+	Scene3 <building university public>
+
+	sub
+		Persona 1
+		rumor0 <%name1% has lost control of the lab.>
+		greeting <if= QuestStatus %qid% %id% else GoFirstTime NewChat Say 1 AddChat 1 AddChat 2>
+		*GoFirstTime <*ENEMY_CHECK GoGreeting ChatNPCFac GoMakeEnemy>
+		GoMakeEnemy <PCEnemy %1% SetQuestStatus %qid% -2>
+		*GoGreeting <*NiceToMeetYou GoCheckRenown>
+		GoCheckRenown <if= QuestStatus %qid% 0 else GoChat  ifG PCRenown d%threat% else GoCheckWangtta   Goto GoOfferMission>
+		GoCheckWangtta <ifG React d10 else GoChat ifG -d10 PCRenown else GoChat   Goto GoOfferMission>
+		*GoOfferMission <*AreYouHereAboutJob GoMissionDesc>
+		GoMissionDesc <NewChat Say 2 AddChat 3 AddChat 4 AddChat 5>
+		GoStartQuest <SetQuestStatus %qid% %id% UpdateProps QMemo %qid% 5>
+		*GoChat <*MISC_CHATTER>
+		Result1 <NewChat Say 3>
+		Result2 <Goto .%id1%_GoInit>
+		result3 <NewChat Say 4 Goto GoStartQuest>
+		result4 <NewChat Say 6 SetQuestStatus %qid% -2>
+		result5 <NewChat Say 7 AddChat 6 AddChat 7>
+		result6 <NewChat Say 8 AddEasygoing -d10 AddHeroic 1 AddReact -10 SetQuestStatus %qid% -2>
+		result7 <NewChat Say 9 AddHeroic 1 Goto GoStartQuest>
+		Msg1 <Have you solved the problem at the lab? I can't afford to lose another grad student down there.>
+		Msg2 <Some of the lab rats at \SCENE %s3% have gotten loose and started multiplying in the basement. Unfortunately, these aren't white rats, but instead Amazonian Mutazorgs, so it's a bit dangerous...>
+		Msg3 <Always looking for an extension... that's the story of my life.>
+		Msg4 <Yes, that's right. I even have a bit of money left over from the research grant to offer you a reward if you succeed.>
+		Msg5 <%name1% asked you to clear the escaped lab rats from the basement of \SCENE %s3% .>
+		Msg6 <In that case, you should probably stick to studying physics. All the other sciences, and quite a few of the humanities, involve rats to some degree or another.>
+		Msg7 <We can argue about the morality of using lab animals some other time. Right now there are dangerous creatures loose on campus, and someone has to stop them!>
+		Msg8 <I find your lack of concern for human life disturbing. Luckily, you aren't the only cavalier in \SCENE RootSceneID .>
+		Msg9 <Thank you. If you succeed, I'll reward you with some of the leftover grant money.>
+		Prompt1 <I'll get to it soon.>
+		Prompt2 <Your rats have been terminated.>
+		CPrompt2 <if= SceneVar %2% 1 1 Accept>
+		Prompt3 <And you want me to get rid of them?>
+		Prompt4 <Giant rats? I want nothing to do with this.>
+		Prompt5 <Serves you right. Animal experimentation is wrong.>
+		CPrompt5 <ifPCSpiritual Accept>
+		Prompt6 <It's your mess. You clean it up.>
+		Prompt7 <You're right. I'll see what I can do.>
+
+		MetaScene 3
+		sub
+			room
+			minimap <#...##.2.##...###+###...#>
+			special <SHAREDPALETTE>
+			sub
+				Door
+				update <if= V1 0 else GoCheckQuest V= 1 1 SetStat STAT_Lock %sktar_hard%>
+				GoCheckQuest <ifG QuestStatus %qid% 0 SetStat STAT_Lock 0>
+			end
+			inv
+				TrapDoor
+				MiniMapComponent 2
+				desig <ENTRANCE %s2%>
+			end
+		end
+	end
+
+Content
 	name <Archaeology for Fun and Profit>
 	desc <This character is looking for an item.>
 	requires <*:NPCQuest C:ACADE>

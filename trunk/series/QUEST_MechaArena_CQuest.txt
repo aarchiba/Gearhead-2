@@ -32,9 +32,90 @@ sub
 	CMsg%id%01_5 <ifNPCCheerful Accept>
 	Msg%id%01_6 <As much as I hate to admit it, you beat me... but let's not have any hard feelings over any of that. I'd like to meet with you again.>
 	CMsg%id%01_6 <ifNPCMelancholy Accept>
-
 end
 
+Content
+	name <Mentor/Ally>
+	% The challenger will likely become either a mentor or ally to the PC,
+	% depending on their relative ages.
+	requires <*CHALLENGER_SUBQUEST (1:ADVEN|1:MILIT)>
+	special <REUSABLE>
+
+	% E1 is the challenger
+sub
+	Persona 1
+	% V%id%01 = Have become trainer
+	greeting <if# v%id%01 1 else .%id%_GoSchool if= QuestStatus %qid% %id% else %pop% SetQuestStatus %qid% -1  ifG React d30 else .%id%_GoFail ifG ChatNPCDAge PCDAge else .%id%_GoMakeAlly if= d2 1 else .%id%_GoMakeAlly V= %id%01 1 NewChat Say %id%02 History %id%03 PCFriend %1% AddChat %id%01>
+	.%id%_GoSchool <NewChat Say %id%04 AddChat %id%01>
+	.%id%_GoMakeAlly <PCAlly %1% NewChat Say %id%01>
+	*.%id%_GoFail <*IConcedeDefeat&Battle>
+
+	result%id%01 <EndChat Say %id%05 School .%id%_Skills Goto .%id%_GoBye>
+	.%id%_Skills <1 2 3 4 5 6 7 8 9 10 18>
+	*.%id%_GoBye <*GoodBye>
+
+	Msg%id%01 <You're a great pilot. The next time we meet on the battlefield, I plan to be on your side.>
+	Msg%id%01_1 <>
+	CMsg%id%01_1 <ifNPCSociable Accept>
+	Msg%id%01_2 <>
+	CMsg%id%01_2 <ifNPCShy Accept>
+	Msg%id%01_3 <>
+	CMsg%id%01_3 <ifNPCEasygoing Accept>
+	Msg%id%01_4 <>
+	CMsg%id%01_4 <ifNPCPassionate Accept>
+	Msg%id%01_5 <>
+	CMsg%id%01_5 <ifNPCCheerful Accept>
+	Msg%id%01_6 <>
+	CMsg%id%01_6 <ifNPCMelancholy Accept>
+
+	Msg%id%02 <You did pretty well out there, but if you don't mind me saying so, there are still a couple of things you could learn. I can teach you a few new tricks.>
+	Msg%id%02_1 <>
+	CMsg%id%02_1 <ifNPCSociable Accept>
+	Msg%id%02_2 <>
+	CMsg%id%02_2 <ifNPCShy Accept>
+	Msg%id%02_3 <>
+	CMsg%id%02_3 <ifNPCEasygoing Accept>
+	Msg%id%02_4 <>
+	CMsg%id%02_4 <ifNPCPassionate Accept>
+	Msg%id%02_5 <>
+	CMsg%id%02_5 <ifNPCCheerful Accept>
+	Msg%id%02_6 <>
+	CMsg%id%02_6 <ifNPCMelancholy Accept>
+	Msg%id%03 <%name1% in \SCENE RootSceneID offered to become your mentor.>
+
+	Msg%id%04 <Hello, \PC . I hope that your adventure's been going well.>
+	Msg%id%04_1 <>
+	CMsg%id%04_1 <ifNPCSociable Accept>
+	Msg%id%04_2 <>
+	CMsg%id%04_2 <ifNPCShy Accept>
+	Msg%id%04_3 <>
+	CMsg%id%04_3 <ifNPCEasygoing Accept>
+	Msg%id%04_4 <>
+	CMsg%id%04_4 <ifNPCPassionate Accept>
+	Msg%id%04_5 <>
+	CMsg%id%04_5 <ifNPCCheerful Accept>
+	Msg%id%04_6 <>
+	CMsg%id%04_6 <ifNPCMelancholy Accept>
+
+	Msg%id%05 <I'll show you some of the things that have helped me in the arena.>
+	Msg%id%05_1 <>
+	CMsg%id%05_1 <ifNPCSociable Accept>
+	Msg%id%05_2 <>
+	CMsg%id%05_2 <ifNPCShy Accept>
+	Msg%id%05_3 <>
+	CMsg%id%05_3 <ifNPCEasygoing Accept>
+	Msg%id%05_4 <>
+	CMsg%id%05_4 <ifNPCPassionate Accept>
+	Msg%id%05_5 <>
+	CMsg%id%05_5 <ifNPCCheerful Accept>
+	Msg%id%05_6 <>
+	CMsg%id%05_6 <ifNPCMelancholy Accept>
+
+	Prompt%id%01 <I'd like to train.>
+	Prompt%id%01_1 <Let's do some training now.>
+	Prompt%id%01_2 <I'd like to study now.>
+
+end
 
 
 

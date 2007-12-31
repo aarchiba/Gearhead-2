@@ -815,7 +815,11 @@ Procedure PCTradeItems( GB: GameBoardPtr; PC,Target: GearPtr );
 
 			{ Clear the home, to prevent wandering items. }
 			SetSAtt( Item^.SA , 'HOME <>' );
-			DialogMsg( ReplaceHash( MsgString( 'YOU_GET_?' ) , GearName( Item ) ) );
+			if Destination = PC then begin
+				DialogMsg( ReplaceHash( MsgString( 'YOU_GET_?' ) , GearName( Item ) ) );
+			end else begin
+				DialogMsg( ReplaceHash( MsgString( 'YOU_PUT_?' ) , GearName( Item ) ) );
+			end;
 
 			NID := NAttValue( Item^.NA , NAG_Narrative , NAS_NID );
 			if NID <> 0 then SetTrigger( GB , TRIGGER_GetItem + BStr( NID ) );
