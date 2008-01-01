@@ -1630,10 +1630,11 @@ Content
 %% .TipOff              PC has provided useful information
 %% .CharityWork		PC has done charity work, presumably without expecting a reward
 %% .CivicService	PC has helped the city in some way
+%% .PersonalFavor	PC has completed a personal favor, presumably without expecting a reward
 
 Content
 	name <A Little Something Extra>
-	requires <*Success1 -.FinishMission -.CharityWork BRANCHES>
+	requires <*Success1 -.FinishMission -.CharityWork -.PersonalFavor BRANCHES>
 	desc <The PC did so well last time, he'll be offered an extra mission.>
 	special <REUSABLE>
 
@@ -1816,7 +1817,7 @@ Content
 
 Content
 	name <Thanks for the Help>
-	requires <*Success1 .CharityWork>
+	requires <*Success1 (.CharityWork|.PersonalFavor)>
 	special <REUSABLE>
 
 	%% E1 is the character previously helped.
@@ -1842,7 +1843,7 @@ Content
 
 Content
 	name <How About A Quest?>
-	requires <*Success1 (.FinishMission|.CharityWork) (1:ADVEN|1:MILIT|1:FAITH) ~1:SILKN BRANCHES>
+	requires <*Success1 (.FinishMission|.CharityWork|.PersonalFavor) (1:ADVEN|1:MILIT|1:FAITH) ~1:SILKN BRANCHES>
 	%% The PC has just completed a job for the NPC. The NPC will now suggest that
 	%% the player has what it takes to go on a dangerous quest... if asked about
 	%% it, the NPC will ask the PC to retrieve an item.
@@ -2345,7 +2346,7 @@ Content
 
 Content
 	name <Basic Reward End>
-	requires <*Success1 -.TipOff -.CharityWork>
+	requires <*Success1 -.TipOff -.CharityWork -.PersonalFavor>
 	special <REUSABLE>
 	%% This is the basic ending... The PC gets a reward and that's it.
 	%% Afterwards, set the QuestStatus to -1 to indicate a successfully

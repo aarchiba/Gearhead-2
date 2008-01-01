@@ -4,6 +4,58 @@
 %% This content is tied to a city rather than any specific character within it.
 
 Content
+	name <Student Loans>
+	requires <*:LocalQuest ~"Research" ~"Poor" -"Dystopia">
+	desc <A grad student needs help paying for tuition. We all know how expensive education is in the GH universe.>
+
+	% E1 is the student. That's it.
+	Element1 <Prefab>
+	Scene1 <Building Public>
+	Team1 <Citizens>
+	TeamData1 <Ally Pass>
+
+	% SubQuest1 is the FindMoney bit.
+	% SubQuest2 is the victory bit.
+	Quest1 <*:FindMoney 1>
+	Quest2 <*Success1.PersonalFavor 1>
+
+	sub
+		Persona 1
+		rumor0 <%name1% has a lot of student loans.>
+		greeting <if= QuestStatus %qid% %id% else GoCheckFirst NewChat Say 1 AddChat 1 AddChat 2>
+		GoCheckFirst <if= QuestStatus %qid% 0 else GoChat ifG React 0 else GoChat ifChatNPCInPlay else GoComplain NewChat Say 2 AddChat 3 AddChat 4>
+		GoComplain <NewChat Say 8>
+		GoChat <NewChat SayAnything>
+		result1 <Goto .%id2%_GoInit>
+		result2 <Cash+ -2000000  PCAlly %1% NPCLevel %1% %threat% SetQuestStatus %qid% -1 NewChat Say 5 History 6>
+		result3 <NewChat Say 3 Cash+ -1 SetQuestStatus %qid% %id% SetQuestStatus %qid1% %id1% QMemo %qid% 4>
+		result4 <EndChat Say 7 AddHeroic -1 SetQuestStatus %qid% -2>
+		Msg1_1 <The student loan people called today. I told them that %name1% was dead; they didn't believe me.>
+		Msg1_2 <How long can you survive on just noodles before you start to catch scurvy? I think I'm okay...>
+		Msg1_3 <I expect it'll take five years to pay off my student debt. The problem is, it's only three weeks until I starve to death.>
+		Msg2 <Hey there, spare a credit for a starving student?>
+		Msg3 <Thank you so much. I went to university to improve my life, but now I'm stuck with two million in student loans and no way to pay them off. If only I had some kind of benefactor...>
+		Msg4 <%name1% has $2M in student loan debt, and could use some help to get on \PPR %1% feet.>
+		Msg5 <Wow, thanks! Look, if you ever need my help, I want you to know that you can count on me.>
+		Msg6 <After you repaid \PPR %1% student debt, %name1% pledged to help you.>
+		Msg7 <If I had money you wouldn't treat me with such disrespect! Then again, if I had money I wouldn't be forced to beg...>
+		Msg8 <Um, %name1% isn't here... And if you're one of the student loan people, you should know that \SPR %1% 's dead.>		Prompt1 <I found someone to help you out.>
+		CPrompt1 <if= QuestStatus %qid1% -1 Accept>
+		Prompt2 <I've decided to help you myself. [Give $2M]>
+		CPrompt2 <ifG PC$ 1999999 Accept>
+		Prompt3 <I can do that. [Give $1]>
+		CPrompt3 <ifG PC$ 0 Accept>
+		Prompt4 <Out of my way, freeloader.>
+	end
+	inv
+		NPC Student
+		statline 11 11 11 11 12 12 12 12
+		Talent 10
+		Skill 14
+		Skill 29
+	end
+
+Content
 	name <Failed Experiment>
 	requires <*:LocalQuest Dystopia>
 	desc <There's a failed experiment living beneath the hospital.>

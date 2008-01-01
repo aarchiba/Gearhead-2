@@ -333,12 +333,14 @@ Plot
 	SubPlot2 <*CS_ThanksForRescue 2>
 
 	% Needed Scripts
-	.%id1%_%plotid%_GoWin <ifNPCOK %2% else GoJustEnd StoryNote 2 SetPlotStatus %id2%>
-	.%id1%_%plotid%_GoLose <ifNPCOK %2% else GoJustEnd StoryNote 1 DeleteNPC %2% Goto GoJustEnd>
+	.%id1%_%plotid%_GoWin <ifNPCOK %2% else GoJustEnd Alert 4 StoryNote 2 SetPlotStatus %id2%>
+	.%id1%_%plotid%_GoLose <ifNPCOK %2% else GoJustEnd Alert 3 StoryNote 1 DeleteNPC %2% Goto GoJustEnd>
 	GoJustEnd <LoseComp 0 .loss>
-	.loss <+T-- +P-->
+	.loss <+T-- +Pun>
 	Msg1 <%name2% died during a mecha attack.>
 	Msg2 <You rescued %name2% from a mecha attack.>
+	Msg3 <%name1% is blasted by the mecha, killing those trapped inside.>
+	Msg4 <You have defended %name1% from the mecha attack.>
 
 	sub
 		MetaScene 1

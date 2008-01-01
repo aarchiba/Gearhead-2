@@ -2306,7 +2306,6 @@ Procedure ProcessIfGHasItem( var Event: String; gb: GameBoardPtr; Source: GearPt
 var
 	NID: Integer;
 	FoundTheItem: Boolean;
-	PC: GearPtr;
 begin
 	{ Start by assuming FALSE, then go looking for it. }
 	FoundTheItem := False;

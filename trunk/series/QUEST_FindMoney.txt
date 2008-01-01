@@ -8,6 +8,116 @@
 %%
 %%	When the time comes to go scrounging for funds, the parent quest fragment
 %%	must set the the QuestStatus of the FindMoney component to its id.
+%%
+%%	QuestStatus = -1 if successfully get money, -2 if attempt is ruined
+
+Content
+	name <Mechanic Mission>
+	desc <A mechanic may provide funding, if the PC does something for him.>
+	requires <*:FindMoney BRANCHES>
+
+	% E1 is the character who needs the money
+	% E2 is the character who can give the money
+	Element2 <Prefab>
+	Scene2 <Building Public Garage>
+	Team2 <Citizens>
+	TeamData2 <Pass>
+
+	% Quest1 is the mission offered by the shopkeeper.
+	Quest1 <*:GiveMission 2>
+
+	sub
+		Persona 2
+		rumor%id% <%name2% is known as a great philanthropist.>
+		greeting <if= QuestStatus %qid% %id% else GoGreet if= QuestStatus %qid1% -1 else GoCheckLoss NewChat Say 1 QMemo %prev_qid% 2 SetQuestStatus %qid% -1>
+		GoCheckLoss <if= QuestStatus %qid1% -2 else GoCheckQuest NewChat Say 3 SetQuestStatus %qid% -2>
+		GoCheckQuest <NewChat Say 4 AddChat 1 AddChat 2>
+		*GoGreet <*NiceToMeetYou GoShop>
+		*GoShop <*SHOP_MECHA GoBye>
+		*GoBye <*GoodBye>
+		result1 <EndChat Say 5 AddChat 3>
+		result2 <Goto GoShop>
+		result3 <Goto .%id1%_GoInit>
+		Msg1 <You really came through; thanks. Go let %name1% know that I'm willing to back \PPR %1% project.>
+		Msg2 <%name2% has pledged to help %name1%.>
+		Msg3 <You failed to complete the task I asked of you. I'm afraid that I won't be able to help %name1%.>
+		Msg4 <Yes? You look like there's something you want.>
+		Msg5 <Interesting. Well, before I can help %name1%, I need some help myself. If you could do one small thing for me I'd be more than willing to provide funding.>
+		Prompt1 <%name1% needs your help.>
+		Prompt2 <Right now, I just need repairs.>
+		Prompt3 <[Continue]>
+
+		MetaScene 2
+		start <if= QuestStatus %qid% %id% else %pop% ifNPCDead %2% else %pop% SetQuestStatus %qid% -2 Goto %pop%>
+		sub
+			room
+			minimap <....1...............&---&>
+			special <SHAREDPALETTE>
+			desig <HOME>
+		end
+	end
+	inv
+		NPC Mechanic
+	end
+
+Content
+	name <Shopkeeper Mission>
+	desc <A shopkeeper may provide funding, if the PC does something for him.>
+	requires <*:FindMoney BRANCHES>
+
+	% E1 is the character who needs the money
+	% E2 is the character who can give the money
+	Element2 <Prefab>
+	Scene2 <Building Public Mall>
+	Team2 <Citizens>
+	TeamData2 <Pass>
+
+	% Quest1 is the mission offered by the shopkeeper.
+	Quest1 <*:GiveMission 2>
+
+	sub
+		Persona 2
+		rumor%id% <%name2% has been known to donate money to a variety of causes.>
+		greeting <if= QuestStatus %qid% %id% else GoGreet if= QuestStatus %qid1% -1 else GoCheckLoss NewChat Say 1 QMemo %prev_qid% 2 SetQuestStatus %qid% -1>
+		GoCheckLoss <if= QuestStatus %qid1% -2 else GoCheckQuest NewChat Say 3 SetQuestStatus %qid% -2>
+		GoCheckQuest <NewChat Say 4 AddChat 1 AddChat 2>
+		*GoGreet <*NiceToMeetYou GoShop>
+		*GoShop <*SHOP_ARMOR GoBye>
+		*GoBye <*GoodBye>
+		result1 <EndChat Say 5 AddChat 3>
+		result2 <Goto GoShop>
+		result3 <Goto .%id1%_GoInit>
+		Msg1 <Thanks for your help. I'll send that money to %name1% right away.>
+		Msg2 <%name2% agreed to donate money to help %name1%.>
+		Msg3 <Things are looking grim. Under these circumstances, I can't afford to give any money to %name1%.>
+		Msg4 <May I help you?>
+		Msg5 <I'd like to help %name1%, but before I can do that there's a little something I need you to do for me.>
+		Prompt1 <I'm soliciting donations for %name1%.>
+		Prompt2 <I'd like to buy something.>
+		Prompt3 <[Continue]>
+
+		MetaScene 2
+		start <if= QuestStatus %qid% %id% else %pop% ifNPCDead %2% else %pop% SetQuestStatus %qid% -2 Goto %pop%>
+		sub
+			room
+			minimap <....1..........2...3&---&>
+			special <SHAREDPALETTE>
+			desig <HOME>
+			inv
+				STC MANNEKIN-M
+				PDir 1
+				MiniMapComponent 2
+
+				STC MANNEKIN-F
+				PDir 3
+				MiniMapComponent 3
+			end
+		end
+	end
+	inv
+		NPC Shopkeeper
+		Chardesc Shy
+	end
 
 Content
 	name <The Prodigal Son/Daughter>

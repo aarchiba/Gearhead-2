@@ -200,6 +200,18 @@
 	Prompt%id%02 <Maybe I'll come back later.>
 
 	Persona
+	requires <*SHOP_MECHA Easygoing>
+	START <NewChat Say %id%01 AddChat %id%01 AddChat %id%02>
+	result%id%01 <EndChat Say %id%02 shop .%id%_wares Goto %1%>
+	result%id%02 <Goto %1%>
+	.%id%_wares <MECHA>
+	KEYWORDS <MECHA>
+	Msg%id%01 <I stock a variety of mecha. I don't know if there's anything you'd like, but it couldn't hurt to take a look.>
+	Msg%id%02 <Take your time. I'll be just over here.>
+	Prompt%id%01 <Alright, I'll take a look.>
+	Prompt%id%02 <I'm not interested.>
+
+	Persona
 	requires <*SHOP_MECHA Pragmatic>
 	START <NewChat Say %id%01 AddChat %id%01 AddChat %id%02>
 	result%id%01 <EndChat Say %id%02 shop .%id%_wares Goto %1%>

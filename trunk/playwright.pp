@@ -1126,6 +1126,7 @@ begin
 				Destination := Dest2;
 				ID := NewMetaSceneID( Adventure );
 				Element^.Stat[ STAT_Destination ] := ID;
+				Element^.Scale := Dest2^.V;
 				SetNAtt( Plot^.NA , NAG_ElementID , N , ID );
 				SetSAtt( Plot^.SA , 'ELEMENT' + BStr( N ) + ' <S>' );
 			end else begin
