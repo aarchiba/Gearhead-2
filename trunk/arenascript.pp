@@ -2968,9 +2968,8 @@ end;
 Procedure ProcessDynaGG( var Event: String; GB: GameBoardPtr; Source: GearPtr );
 	{ Move the grabbed gear to the dynamic scene. }
 	{ Only physical gears can be moved in this way. }
-	{ If the specified scene is 0, the gear will be "frozen" isntead. }
 var
-	TID: Integer;	{ Scene ID, Team ID. }
+	TID: Integer;	{ Team ID. }
 begin
 	{ Check to make sure we have a valid gear to move. }
 	if ( Grabbed_Gear <> Nil ) and ( Grabbed_Gear^.G >= 0 ) and ( SCRIPT_DynamicEncounter <> Nil ) then begin

@@ -486,7 +486,7 @@ Plot
 	Element2 <Grab 5>
 	Place2 <1 (Citizens) pass>
 	Element3 <Scene Environs !Near -7>
-	Element4 <Scene Building Public !Okay -7>
+	Element4 <Scene Building Public !Near -7 !Okay -7>
 	Element5 <Character "MILIT" !Near -7 !Ally -7 !Okay -3>
 
 	% SubPlot1 is the duel itself
@@ -552,8 +552,8 @@ Plot
 		Msg3_6 <Are you sure you're not just wussing out? What do you have to do that's so important?>
 		CMsg3_6 <ifNPCMelancholy Accept>
 		Msg4 <Your friend %name2% challenged you to a duel in %name3%.>
-		Msg5 <Wow, that is a big deal. Good luck with that.>
-		Msg5_1 <You don't say. I guess that is more important than a duel that doesn't even have a decent wager on it...>
+		Msg5 <Wow, that is a big deal. Good luck with that. I guess you better head on to %name4% then.>
+		Msg5_1 <You don't say. I guess that is more important than a duel that doesn't even have a decent wager on it... You better get over to %name4%, then.>
 		Msg6 <That's better than dueling? \PC , I'm not certain that you're cut out to be a cavalier.>
 		Msg6_1 <Whatever makes you happy, \PC . I'll find something else to do.>
 		Msg7 <You are meeting %name5% at %name4% for some kind of mission.>

@@ -3,9 +3,11 @@
 %%
 %% This content is tied to a city rather than any specific character within it.
 
+
+
 Content
 	name <Student Loans>
-	requires <*:LocalQuest ~"Research" ~"Poor" -"Dystopia">
+	requires <*:LocalQuest ~Research ~Poor -Dystopia>
 	desc <A grad student needs help paying for tuition. We all know how expensive education is in the GH universe.>
 
 	% E1 is the student. That's it.
