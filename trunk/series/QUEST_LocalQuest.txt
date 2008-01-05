@@ -3,7 +3,167 @@
 %%
 %% This content is tied to a city rather than any specific character within it.
 
+Content
+	name <Treasure Hulk>
+	requires <*:LocalQuest Spinner>
+	desc <There's a floating mass of wrecks outside the spaceship created by robomonster Aigaion.>
 
+	% E1 is the dungeon
+	% E2 is Aigaion
+	% E3 is the dungeon entance
+	Scene1 <New *Dungeon.TreasureWreck>
+	Element2 <Prefab>
+	Scene2 <New *BLANK.Space.Mecha>
+	Team2 <Monsters>
+	Element3 <Prefab>
+	Scene3 <Space Environs>
+
+	% SubQuest1 is the victory branch, after Aigaion is defeated.
+	Quest1 <*:Vanquish.Monster 2>
+
+	sub
+		Metascene 1
+		end <if= SceneVar %s2% 2 0 SceneVar= %s2% 2 SceneID>
+		sub
+			room
+			minimap <......###..###..#2#......>
+			inv
+				STC AIRLOCK-1
+				desig <ENTRANCE %s2%>
+				use <if= V1 1 else GoFirstTime Goto GoExit>
+				MiniMapComponent 2
+				Msg2 <This airlock leads back to the surface of the asteroid. Do you want to leave?>
+			end
+		end
+
+		Metascene 2
+		% L1 = Init
+		% L2 = Dungeon entrance
+		% L3 = Victory Counter
+		% L4 = Have fought before
+		Start <if= L1 0 else GoBeenBefore L= 1 1 Alert 1 ItemLevel %2% %threat% SetQuestStatus %qid% %id%>
+		GoBeenBefore <Print 2>
+
+		nu1 <if= T1 0 exit %s3% SeekGate L2 L+ 4 1>
+		nu2 <if= T2 0 if= L3 0 L= 3 1 Alert 3 History 4 XPV 100 SetQuestStatus %qid% %id1% ifG d4 L4 Alert 5 RandomMecha .fac %threat%>
+		.fac <RISHI FCOMS MAQUI BOHEM SOLAR AEGIS CRIHN GENERAL>
+
+		Msg1 <As you lift off from the surface of the asteroid, you are confronted by an enormous robot.>
+		Msg2 <You enter Aigaion's lair.>
+		Msg3 <Aigaion appears to be defeated... though with this sort of robot it's impossible to be sure.>
+		Msg4 <You defeated the space monster Aigaion.>
+		Msg5 <You find some useful salvage in Aigaion's lair.>
+
+		sub
+			Team 1
+			SetEnemy 2
+			ParaX 7
+			ParaY 7
+
+			Team 2
+			name <Monsters>
+			SetEnemy 1
+			ParaX 23
+			ParaY 23
+		end
+	end
+	inv
+		Arch Aigaion
+		% Aigaion is a composite robot- it collects parts from the spaceships and mecha it captures,
+		% then adds them to itself. In this way it's not too much different from the average GearHead PC.
+		Scale 2
+		rumor0 <there's a space monster living in the wreckage outside the station.>
+		job <ANIMAL>
+		Metal
+		roguechar <A>
+		sdl_sprite <ara_esher.png>
+		sdl_colors <201 205 229 157 172 183 208 34 51>
+		Statline 11 36 13 17 15 16 21 3
+		sealed
+		skill 6
+		skill 7
+		skill 8
+		skill 9
+		skill 10
+		skill 12
+		skill 13
+		skill 17
+		skill 31
+		skill 33
+		skill 36
+		sub
+			torso
+			armor 5
+			sub
+				ECM 5
+
+				SpaceFlight 5
+			end
+
+			turret
+			armor 4
+			sub
+				BeamGun 16
+				name <Plasma Beam>
+				Recharge 1
+				type <SCATTER>
+				range 5
+
+				SpaceFlight 5
+			end
+
+			arm
+			armor 5
+			sub
+				hand
+				inv
+					STC PAR-6
+				end
+
+				SpaceFlight 5
+			end
+
+			arm
+			armor 5
+			sub
+				hand
+				inv
+					STC GR-12
+				end
+
+				SpaceFlight 5
+			end
+
+			arm
+			armor 5
+			sub
+				hand
+				inv
+					STC MAC-4
+				end
+
+				SpaceFlight 5
+			end
+
+			arm
+			armor 5
+			sub
+				hand
+				inv
+					melee 18
+					name <Wrecking Ball>
+					Scale 2
+					type <FLAIL EXTEND BRUTAL>
+					mass -6
+				end
+				SpaceFlight 5
+			end
+		end
+
+		STC QUEST-ENCOUNTER-ACTIVE-STATIONARY
+		name <Space Wreckage>
+		desig <Entrance %s1%>
+	end
 
 Content
 	name <Student Loans>

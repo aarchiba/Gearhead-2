@@ -1,5 +1,64 @@
+%% *TREASUREROOM_? CONTENT
+
+Content
+	requires <*TREASUREROOM_WRECK !Ne>
+	element1 <Prefab>
+	minimap <............1............>
+	inv
+		STC Crate
+		RandomLoot 2000
+		Loot_Category <SPACE ANTIQUE PIRATE JEWELRY FOOD>
+		Loot_Factions <GENERAL FCOMS RISHI MAQUI>
+	end
+
+Content
+	requires <*TREASUREROOM_WRECK !Lo>
+	element1 <Prefab>
+	minimap <............1............>
+	inv
+		STC Crate
+		RandomLoot 8000
+		Loot_Category <SPACE ANTIQUE PIRATE JEWELRY FOOD>
+		Loot_Factions <GENERAL FCOMS RISHI MAQUI>
+	end
+
+Content
+	requires <*TREASUREROOM_WRECK !Md>
+	element1 <Prefab>
+	minimap <............1............>
+	inv
+		STC Crate
+		RandomLoot 32000
+		Loot_Category <SPACE ANTIQUE PIRATE JEWELRY FOOD>
+		Loot_Factions <GENERAL FCOMS RISHI MAQUI>
+	end
+
+Content
+	requires <*TREASUREROOM_WRECK !Hi>
+	element1 <Prefab>
+	minimap <............1............>
+	inv
+		STC Crate
+		RandomLoot 128000
+		Loot_Category <SPACE ANTIQUE PIRATE JEWELRY FOOD>
+		Loot_Factions <GENERAL FCOMS RISHI MAQUI>
+	end
+
+Content
+	requires <*TREASUREROOM_WRECK !Ex>
+	element1 <Prefab>
+	minimap <............1............>
+	inv
+		STC Crate
+		RandomLoot 512000
+		Loot_Category <SPACE ANTIQUE PIRATE JEWELRY FOOD>
+		Loot_Factions <GENERAL FCOMS RISHI MAQUI>
+	end
+
+
 %% *DUNGEON_X CONTENT
 %%   Dungeon Extras. Little bits of personality for dungeon levels.
+
 Content
 	name <Computer Map>
 	requires <*DUNGEON_X Ruin>

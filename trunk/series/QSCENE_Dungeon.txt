@@ -194,6 +194,48 @@ Scene
 	end
 
 Scene
+	name <the # Wreck>
+	requires <*Dungeon .TreasureWreck>
+	special <NOEXIT>
+	type <DUNGEON ruin derelict>
+	terrain <SPACE>
+	dentrance <*GoDown>
+	content1 <Some 1 15 Sub *DUNGEON_X>
+	content2 <Some 1 35 Sub *TREASUREROOM_WRECK>
+	% Suffocation effect...
+	Vacuum
+	mapwidth 49
+	mapheight 49
+	MonkeyMap
+	LockedDoorChance 35
+	SecretDoorChance 20
+	IndustrialTiles
+
+	NeededCells 5
+
+	start <Print 1>
+	msg1 <You enter \SCENE SceneID .>
+
+	sub
+		Team 1
+		SetEnemy 2
+
+		Team 2
+		name <Monster>
+		type <Fungus Exorg Ruin PreZero>
+		SetEnemy 1
+		Stat 2 1
+
+		room
+		width 3
+		height 3
+		sub
+			Elevator
+			Destination -1
+		end
+	end
+
+Scene
 	name <the S.S. #>
 	requires <*Dungeon .Derelict>
 	special <NOEXIT>

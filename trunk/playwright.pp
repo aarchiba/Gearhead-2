@@ -112,6 +112,8 @@ begin
 			if Current <> '' then begin
 				SPopSA := AddSAtt( Dest^.SA , Key , Current );
 				SPop := RetrieveAPreamble( SPopSA^.Info );
+			end else begin
+				SPop := 'na';
 			end;
 
 			ReplacePat( AddOn^.Info , '%pop%' , SPop );

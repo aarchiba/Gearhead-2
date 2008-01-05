@@ -613,7 +613,7 @@ begin
 	while N <> Nil do begin
 		N2 := N^.Next;
 
-		if IsMasterGear( N ) and IsACombatant( N ) and ( NAttValue( N^.NA , NAG_Location , NAS_Team ) <> NAV_LancemateTeam ) then begin
+		if IsMasterGear( N ) and IsACombatant( N ) and NotAnAnimal( N ) and ( NAttValue( N^.NA , NAG_Location , NAS_Team ) <> NAV_LancemateTeam ) then begin
 
 			{ On big maps, load a mecha. On small maps, give equipment. }
 			if Scene^.V > 0 then begin
