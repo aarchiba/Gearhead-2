@@ -134,7 +134,7 @@ LOCAL DESCRIPTORS
 	+Pat	E attacks TF using TI
 	+Pa2	EF attacks TF
 
-+B??	PC Background
++B??	PC Background/Motivation
 	Describes the situation of the PC's life so far.
 	+B--	Nothing special.
 	+Bor	PC was an orphan/raised communaly
@@ -153,7 +153,7 @@ LOCAL DESCRIPTORS
 
 +T??	Task
 	Describes the PC's current short-term mission.
-	+T--	No task.(1)
+	+T--	No task.
 	+T01	Introduction. The first task given.
 	+Tgt	Goto target for conversation
 	+Tht	The PC goes on a manhunt for target, who is actively avoiding him
@@ -165,9 +165,6 @@ LOCAL DESCRIPTORS
 
 	+Ten	Go to Encounter -> often to fight...
 	+Tgs	Guard Scene
-	+Tre	PC will get a reward/debriefing from the target character (1)
-
-	(1) This task may be "#w" or "#l" as well as "#a".
 
 
 +F??	Task Flavor

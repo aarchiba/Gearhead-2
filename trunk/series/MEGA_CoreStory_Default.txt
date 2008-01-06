@@ -717,13 +717,13 @@ Plot
 		*.%id%_GoGetReward <*MissionWasSuccess&Reward .%id%_GoRewardOp N3 N2>
 		.%id%_GoRewardOp <AddChat %id%03>
 		.%id%_GoNewMission <NewChat Say %id%01 AddChat %id%01 AddChat %id%02>
-		result%id%01 <ifNPCOK %2% else .%id%_GoNoMission NewChat Say %id%03 &SetTargetNPC %2% &SetAllyFac %4% StoryNote %id%02 WinComp %3% .%id%_changes>
+		result%id%01 <ifNPCOK %2% else .%id%_GoNoMission NewChat Say %id%03 &SetTargetNPC %2% &SetAllyFac %4% History %id%05 StoryNote %id%02 WinComp %3% .%id%_changes>
 		.%id%_changes <+Tgt +Fmi>
 		.%id%_GoNoMission <NewChat Say %id%04 &SetAllyFac %4% StoryNote %id%05 WinComp 0 .%id%_changes2>
 		*result%id%02 <*RejectMission .%id%_GoR2Exit>
 		.%id%_GoR2Exit <WinComp 0 .%id%_changes2>
 		.%id%_changes2 <+T-->
-		result3 <Goto .%id%_GoNewMission>
+		result%id%03 <Goto .%id%_GoNewMission>
 		Msg%id%01 <We still don't know where these invaders are coming from, nor what they want. You know, %name4% could use a good pilot like you to help face this threat.>
 		Msg%id%01_1 <>
 		CMsg%id%01_1 <ifNPCSociable Accept>
@@ -844,10 +844,10 @@ Content
 
 	sub
 		Persona 1
-		greeting <if= PlotStatus %id% else %pop% ifNPCOK %2% else .%id%_GoReportSuccess &SetEnemyNPC %2% gOTO .%id%_GoReportSuccess>
-		*.%id%_GoReportSuccess <*MissionWasSuccess&Reward .%id%_GoEnd &AllyFac &EnemyFac>
+		greeting <if= PlotStatus %id% else %pop% ifNPCOK %2% else .%id%_GoReportSuccess &SetEnemyNPC %2% NewChat Say %id%01 Goto .%id%_GoEnd>
 		.%id%_GoEnd <CashPrize Reward StoryDL 500 SMemo 0 NTBWinComp 0 .%id%_win>
 		.%id%_win <+T-- +F-->
+		Msg%id%01 <Good work out there, \PC . I think we should try to find out more about this mysterious pilot, %name2%.>
 	end
 
 %%

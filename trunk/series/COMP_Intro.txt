@@ -2,6 +2,116 @@
 %% told vaguely what's going on in the game world.
 
 Plot
+	name <Heroes Apply Here>
+	Size 0
+	desc <A local politician is looking for volunteers.>
+	requires <#A +T01 (L:ALLY|P:--) -P:CRIME -L:ENEMY ~+Gpe>
+
+	% E1 is the metascene to be used for the meeting.
+	% E2 is a government building.
+	% E3 is the scene where the "Intro NPC" is
+	% E4 is the "Intro NPC"
+	% E5 is the NPC that the PC will meet
+	element1 <MetaScene !Near -7 *Building NeverFail>
+	element2 <Scene Government !Near -7>
+	element3 <Scene !Near -7 cavclub>
+	element4 <NewNPC -3 -7 PCFriend>
+	place4 <3 pass>
+	element5 <Character !Near 2 !Comrade -7 NeverFail>
+	NeverFail5 <Politician>
+
+	% P1 = Forcechat counter
+	update <if= P1 0 P= 1 1 ForceChat %4%>
+
+	sub
+		Persona 4
+		% THE INTRO
+		% - All +T01 components should feature a intro character. They don't have to,
+		%   of course, but it'll be a major pissoff if they don't.
+		% - The intro character should follow this form, to insure that all the major
+		%   bits are in place: the introduction, the question, the story info, and the
+		%   advice.
+		% V1 = Have given story info.
+		greeting <&SetTargetNPC %5%   SMemo 2  WinComp %1% .next  if= V1 1 else GoGreeting Goto GoAdvice>
+		.next <+Tgt +Fmi>
+		*GoGreeting <*INTRO_Introduction GoAskQuestion>
+		*GoAskQuestion <*INTRO_Question GoStoryInfo>
+		GoStoryInfo <NewChat Say 1 V= 1 1 AddChat 1>
+		*GoAdvice <*INTRO_Advice>
+		result1 <Goto GoAdvice>
+		Msg1 <You should know that %name5% is looking for a pilot to run some kind of mission for \SCENE RootSceneID . If you head over to %name1% right away, you could be the one who gets the job.>
+		Msg1_1 <>
+		CMsg1_1 <ifNPCSociable Accept>
+		Msg1_2 <>
+		CMsg1_2 <ifNPCShy Accept>
+		Msg1_3 <>
+		CMsg1_3 <ifNPCEasygoing Accept>
+		Msg1_4 <>
+		CMsg1_4 <ifNPCPassionate Accept>
+		Msg1_5 <>
+		CMsg1_5 <ifNPCCheerful Accept>
+		Msg1_6 <>
+		CMsg1_6 <ifNPCMelancholy Accept>
+
+		Msg2 <%name5% at %name1% is looking for a cavalier to perform a mission for \SCENE RootSceneID .>
+
+		Prompt1 <Thanks for the tip. Do you have any more advice?>
+		Prompt1_1 <Thanks for letting me know. Anything else I should know?>
+
+	end
+
+
+Plot
+	name <Grand Opening>
+	Size 0
+	desc <There's a new building opening.>
+	requires <#A +T01 (C:LABOR|C:CORPO) ~+Gmo>
+
+	% E1 is the cavclub scene
+	% E2 is your friend
+	% E3 is the location of the new building
+	element1 <Scene !Near -7 cavclub>
+	element2 <NewNPC -3 -7 PCFriend>
+	place2 <1 pass>
+	element3 <MetaScene !Near -7 *Building NeverFail>
+
+	% P1 = Forcechat counter
+	update <if= P1 0 P= 1 1 ForceChat %2%>
+
+	sub
+		Persona 2
+		% THE INTRO
+		% - All +T01 components should feature a intro character. They don't have to,
+		%   of course, but it'll be a major pissoff if they don't.
+		% - The intro character should follow this form, to insure that all the major
+		%   bits are in place: the introduction, the question, the story info, and the
+		%   advice.
+		% V1 = Have given story info.
+		greeting <StoryNote 2  WinComp %3% .next  if= V1 1 else GoGreeting Goto GoAdvice>
+		.next <+Tsh +Fpa>
+		*GoGreeting <*INTRO_Introduction GoAskQuestion>
+		*GoAskQuestion <*INTRO_Question GoStoryInfo>
+		GoStoryInfo <NewChat Say 1 V= 1 1 AddChat 1>
+		*GoAdvice <*INTRO_Advice>
+		Result1 <Goto GoAdvice>
+		Msg1 <I hear that %name3%'s grand opening is happening today. Since you worked on the project, did you get invited to the party?>
+		Msg1_1 <>
+		CMsg1_1 <ifNPCSociable Accept>
+		Msg1_2 <>
+		CMsg1_2 <ifNPCShy Accept>
+		Msg1_3 <>
+		CMsg1_3 <ifNPCEasygoing Accept>
+		Msg1_4 <>
+		CMsg1_4 <ifNPCPassionate Accept>
+		Msg1_5 <>
+		CMsg1_5 <ifNPCCheerful Accept>
+		Msg1_6 <>
+		CMsg1_6 <ifNPCMelancholy Accept>
+		Msg2 <You were invited to the grand opening of %name3%.>
+		Prompt1 <Of course. I'll be heading there soon.>
+	end
+
+Plot
 	name <Trade Show In Town>
 	Size 0
 	desc <There's a trade show in town and you plan to attend.>
