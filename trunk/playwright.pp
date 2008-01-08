@@ -857,11 +857,11 @@ begin
 	{ We have the info. Time to create our NPC. }
 	NPC := RandomNPC( Adv , FacID , HTID );
 
+	{ Do the individualization. }
+	IndividualizeNPC( NPC );
+
 	{ Customize the character. }
 	ApplyChardesc( NPC , Desc );
-
-	{ Finally do the individualization to it. }
-	IndividualizeNPC( NPC );
 
 	{ Return the result. }
 	NewContentNPC := NPC;

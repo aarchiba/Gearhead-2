@@ -206,7 +206,9 @@ ItemQSubMemo <GrabItem ? GQSubMemo ? ?>
 NPCSubQMemo <GrabNPC ? GQSubMemo ? ?>
 IfMechaPiloting <ifSkillTest 5 ?>
 IfIntimidation <ifSkillTest 28 ?>
+IfUIntimidation <ifUSkillTest 28 ?>
 IfConversation <ifSkillTest 19 ?>
+IfUConversation <ifUSkillTest 19 ?>
 IfCodeBreaking <ifSkillTest 32 ?>
 IfUCodeBreaking <ifUSkillTest 32 ?>
 IfStealth <ifSkillTest 25 ?>
@@ -214,6 +216,7 @@ IfUStealth <ifUSkillTest 25 ?>
 IfAwareness <ifSkillTest 11 ?>
 IfUAwareness <ifUSkillTest 11 ?>
 ifFlirtation <ifSkillTest 27 ?>
+ifUFlirtation <ifUSkillTest 27 ?>
 IfInvestigation <ifSkillTest 37 ?>
 IfUInvestigation <ifUSkillTest 37 ?>
 IfScience <ifSkillTest 29 ?>
