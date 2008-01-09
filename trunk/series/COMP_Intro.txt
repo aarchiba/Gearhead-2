@@ -758,7 +758,7 @@ Plot
 		CMsg1_1 <ifNPCSociable Accept>
 		Msg1_2 <Oh yeah... \PERSONA E5 asked me to tell you to meet \OPR E5 at \SCENE E1 .>
 		CMsg1_2 <ifNPCShy Accept>
-		Msg1_3 <Did you meet with \PERSONA E5 yet? Oh, wait, I think I forgot to tell you... \OPR E5 's waiting for you at \SCENE E1 .>
+		Msg1_3 <Did you meet with \PERSONA E5 yet? Oh, wait, I think I forgot to tell you... \SPR E5 's waiting for you at \SCENE E1 .>
 		CMsg1_3 <ifNPCEasygoing Accept>
 		Msg1_4 <Crap, I almost forgot! \PERSONA E5 wants to meet you today. I was supposed to deliver the message... \SPR E5 'll be at \SCENE E1 .>
 		CMsg1_4 <ifNPCPassionate Accept>

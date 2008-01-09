@@ -876,7 +876,7 @@ Prompt%id%03_2 <Probably fight somebody. No idea who yet.>
 %	The NPC has something delicate to tell the PC.
 %   PARAM1: Exit script label
 	Persona
-	requires <*IHaveSomethingToTellYou ~Shy>
+	requires <*IHaveSomethingToTellYou ~Sociable>
 	Start <if= V%id%01 0 else %1% V= %id%01 1 NewChat Say %id%01 AddChat %id%01 AddChat %id%02>
 	result%id%01 <AddSociable -d10  Goto %1%>
 	result%id%02 <Goto %1%>
@@ -885,6 +885,14 @@ Prompt%id%03_2 <Probably fight somebody. No idea who yet.>
 	Prompt%id%01_1 <This better be important.>
 	Prompt%id%02 <Alright. What do you have to say?>
 	Prompt%id%02_1 <No problem. What's bothering you?>
+
+	Persona
+	requires <*IHaveSomethingToTellYou Friend>
+	Start <if= V%id%01 0 else %1% V= %id%01 1 NewChat Say %id%01 AddChat %id%01>
+	result%id%01 <Goto %1%>
+	Msg%id%01 <\PC , you should know that I have a secret. I'm a bit nervous about telling anyone...>
+	Prompt%id%01 <It's alright. You can trust me.>
+
 
 % TYPE: *IHaveAJobForYou
 %	The NPC has a job for the PC,

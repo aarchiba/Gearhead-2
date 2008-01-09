@@ -67,7 +67,7 @@ Content
 Content
 	name <Target becomes Enemy>
 	desc <That target you've been chasing? Surprise! He's your new enemy!>
-	requires <*CS_ManHunt_Confrontation (+Far|+Ffi) E:-->
+	requires <*CS_ManHunt_Confrontation (+Far|+Ffi) E:-- ~+P-->
 
 	% E3 is the note left for the PC
 	Element3 <Prefab>

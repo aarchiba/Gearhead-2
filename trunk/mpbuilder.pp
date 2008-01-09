@@ -802,7 +802,7 @@ begin
 		for t := 1 to Num_Plot_Elements do begin
 			PlaceCmd := SAttValue( P^.SA , 'PLACE' + BStr( T ) );
 			DeleteWhiteSpace( PlaceCmd );
-			if PlaceCmd <> '' then begin
+			if ( PlaceCmd <> '' ) and ( PlaceCmd[1] <> '/' ) then begin
 				if PlaceCmd[1] = '~' then begin
 					HasTilde := True;
 					DeleteFirstChar( PlaceCmd );

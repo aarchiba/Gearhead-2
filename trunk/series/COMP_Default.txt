@@ -19,6 +19,89 @@
 %	STAT_XRP_TargetItem = 8;		{ I: }
 
 Plot
+	name <Level That House>
+	size 1
+	desc <The meeting place is attacked by mecha!>
+	requires <#A +Tpt T:++ S:++ S:meta>
+
+	% P1 = Initialization Counter
+
+	% E1 is the scene where this will take place
+	% E2 is the NPC the PC wants to talk to
+	% E3 is the scene outside the meeting area
+	element1 <Grab 6>
+	element2 <Grab 5>
+	Place2 <1 (Citizens) pass ally>
+	element3 <Scene Urban !Near -7>
+
+	% SubPlot1 contains the ambush battle
+	% SubPlot2 contains the victory, if the PC defeats the enemies
+	SubPlot1 <*CS_AmbushEncounter 3>
+	SubPlot2 <*CS_ThanksForRescue 2>
+
+	% Needed Scripts
+	.%id1%_%plotid%_GoWin <ifNPCOK %2% else GoJustEnd Alert 4 StoryNote 2 SetPlotStatus %id2%>
+	.%id1%_%plotid%_GoLose <ifNPCOK %2% else GoJustEnd Alert 3 StoryNote 1 DeleteNPC %2% Goto GoJustEnd>
+	GoJustEnd <LoseComp 0 .loss>
+	.loss <+T-- +Pun>
+	Msg1 <You couldn't protect %name2% from a mecha attack.>
+	Msg2 <You rescued %name2% from a mecha attack.>
+	Msg3 <%name1% is blasted by the mecha, killing those trapped inside.>
+	Msg4 <You have defended %name2% from the mecha attack.>
+
+	sub
+		MetaScene 1
+		% L1 = Bombing started
+		% L2 = Bomb counter
+
+		BoxMap
+		MapWidth 15
+		MapHeight 15
+
+		special <AddExit>
+
+		5Min <if= PlotStatus 0 else GoBomb if= L1 0 V+ 2 1 ifG V2 1 if= d2 1 Goto GoStartBombing>
+		GoStartBombing <SetPlotStatus %id1% AirRaidSiren Alert 1 StoryNote 2 Bomb  AlterContext .next  L= 1 1>
+		Faint%2% <if= PlotStatus 0 Goto GoStartBombing>
+		GoBomb <if= PlotStatus %id% Print 3 Bomb>
+		nu1 <if= T1 0 Return>
+		.next <+Pun>
+		Msg1 <Unexpectantly, the building is attacked by mecha!>
+		Msg2 <While meeting %name2%, %name1% was attacked by mysterious mecha.>
+		Msg3 <The battle outside rages!>
+		sub
+			Team 1
+
+			Team 2
+			name <Citizens>
+			setally 1
+			Passive
+
+			room
+			name <Dance Floor>
+			desig <EntranceGrid>
+		end
+
+		Persona 2
+		special <UNLISTED>
+		greeting <if= PlotStatus %id1% else GoCheckFirstMeeting EndChat Say 4>
+		GoCheckFirstMeeting <if= PlotStatus 0 else GoChat Goto GoFirstMeeting>
+		*GoFirstMeeting <*HowAreYou GoMessage>
+		GoMessage <NewChat Say 1 AddChat 1 AddChat 2>
+		*GoChat <*MISC_CHATTER>
+		result1 <AddEasygoing d6 Goto result2>
+		result2 <Alert 5  EndChat Say 2  AirRaidSiren StoryNote 3 SetPlotStatus %id1% AlterContext .next  L= 1 1>
+		.next <+Pun>
+		Msg1 <Say, do you hear anything?>
+		Msg2 <We have to get out of here!>
+		Msg3 <While meeting %name2%, %name1% was attacked by mysterious mecha.>
+		Msg4 <We're under attack!>
+		Msg5 <Unexpectantly, the building is attacked by mecha!>
+		Prompt1 <No, I don't.>
+		Prompt2 <Look at the window, there are mecha!>
+	end
+
+Plot
 	name <Convention Press Conference>
 	desc <This convention is about to feature a press conference.>
 	requires <#A +Tsh +Fcc>
@@ -66,6 +149,60 @@ Plot
 	sub
 		STC MS_CAFE
 		SetID 1
+	end
+
+Plot
+	name <Locate Target NPC: Perm>
+	desc <The PC needs to find an NPC for some reason, but no scene exists.>
+	requires <#A +Tpt S:-->
+	Size 2
+
+	% E1 is the character being sought.
+	% E2 is the character who knows where E1 is.
+	% E3 is a scene for the meeting
+	Element1 <Grab 5>
+	Place1 </>
+	Element2 <Character !Near -7 !Okay 1>
+	Element3 <Scene !Near -7 Building Public !Okay 1>
+
+	start <if= PlotStatus 0 ifNPCDead %2% NegateComp 0 na>
+
+	sub
+		Persona 2
+		rumor <%name2% has seen %name1% .>
+		*greeting <*LookingForNPC %1% GoSuccess GoFailure>
+		GoSuccess <NewChat Say 1 SMemo 2 WinComp %3% .win>
+		.win <>
+		*GoFailure <*BrushOff&Questioning>
+		Msg1 <As far as I know, %name1% is now at %name3%. I hope \SPR %1% isn't in any trouble.>
+		Msg2 <%name2% told you that %name1% was at %name3%.>
+	end
+
+Plot
+	name <Locate Target NPC: Meta>
+	desc <The PC needs to find an NPC for some reason, but no scene exists.>
+	requires <#A +Tpt S:-->
+	Size 2
+
+	% E1 is the character being sought.
+	% E2 is the character who knows where E1 is.
+	% E3 is a scene for the meeting
+	Element1 <Grab 5>
+	Place1 </>
+	Element2 <Character !Near -7 !Okay 1>
+	Element3 <MetaScene !Near -7 *Building NeverFail>
+
+	start <if= PlotStatus 0 ifNPCDead %2% NegateComp 0 na>
+
+	sub
+		Persona 2
+		rumor <%name2% has seen %name1% .>
+		*greeting <*LookingForNPC %1% GoSuccess GoFailure>
+		GoSuccess <NewChat Say 1 SMemo 2 WinComp %3% .win>
+		.win <>
+		*GoFailure <*BrushOff&Questioning>
+		Msg1 <As far as I know, %name1% is now at %name3%. I hope \SPR %1% isn't in any trouble.>
+		Msg2 <%name2% told you that %name1% was at %name3%.>
 	end
 
 Plot

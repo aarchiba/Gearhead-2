@@ -25,6 +25,62 @@
 %%  ***   +P--  Peaceful  Life   ***
 %%  ********************************
 
+Content
+	name <Witless Protection>
+	desc <Your friend announces that he's going into hiding because of a loan shark.>
+	requires <*CS_Conversation (+P--|+Pun) E:-- 1:Friend -1:Enemy ~C:POLIC ~C:THIEF ~1:THIEF ~+Gmo>
+
+	Size 1
+
+	% Element1 is the NPC to meet
+	% Element2 is the loan shark looking for him
+	element2 <Prefab>
+	place2 </>
+
+	start <if= PlotStatus %id% else %pop% ifNPCDead %1% LoseComp 0 .%id%_loss>
+	.%id%_loss <+T-- +F-->
+
+	sub
+		Persona 1
+		special <UNLISTED>
+		% V%id%01 = Reputation Counter
+		greeting <if= PlotStatus %id% else %pop% Goto .%id%_GoGreet>
+		*.%id%_GoGreet <*HowAreYou .%id%_GoPose>
+		*.%id%_GoPose <*IHaveSomethingToTellYou .%id%_GoMessage>
+		.%id%_GoMessage <NewChat Say %id%01 AddChat %id%01 AddChat %id%02 AddChat %id%03>
+		.%id%_GoProtect <History %id%02 SMemo %id%07  &SetEnemyNPC %2%  &SetTargetNPC %1%  WinComp 0 .%id%_changes  FreezeNPC %1%>
+		.%id%_changes <+Tpt +F-->
+		.%id%_GoHunt <History %id%02 SMemo %id%09  &SetTargetNPC %2%  WinComp 0 .%id%_changes2  FreezeNPC %1%>
+		.%id%_changes2 <+Tht +Far>
+		result%id%01 <NewChat Say %id%03 AddChat %id%04 AddChat %id%05>
+		result%id%02 <NewChat Say %id%04 AddChat %id%04 AddChat %id%05   if= V%id%01 0 V= %id%01 1   AddCheerful  d8>
+		result%id%03 <NewChat Say %id%05 AddChat %id%04 AddChat %id%05   if= V%id%01 0 V= %id%01 1   AddCheerful -d8>
+		result%id%04 <EndChat Say %id%06 Print %id%10   AddHeroic 1   Goto .%id%_GoProtect>
+		result%id%05 <EndChat Say %id%08 Print %id%10                 Goto .%id%_GoHunt>
+		Msg%id%01 <I'm in a lot of trouble. A while back I really needed money, so I did some things I probably shouldn't have. Now %name2% is calling back my debt and I can't afford to pay.>
+		Msg%id%02 <Your friend %name1% revealed that the crime lord %name2% wants \OPR %1% dead.>
+		Msg%id%03 <Yeah. I didn't realize how serious things were getting until it was too late. Look, \PC , I need to get out of town for a while. I'm going into hiding until %name2% forgets about me.>
+		Msg%id%04 <I can't ask you to do that. %name2% won't be satisfied until I'm dead. The only thing I can do is to go into hiding.>
+		Msg%id%05 <I know, I know, but I think I can learn that lesson without having to die for it. Look, \PC , I need to get out of town for a while. I'm going into hiding until %name2% forgets about me.>
+		Msg%id%06 <It's too dangerous. Don't try to find me... I'll be alright on my own.>
+		Msg%id%07 <%name1% revealed that the crime lord %name2% wants \OPR %1% dead. You promised to protect \OPR %1% .>
+		Msg%id%08 <I hope you can do that... and I hope that we can see each other again, someday...>
+		Msg%id%09 <%name1% revealed that the crime lord %name2% wants \OPR %1% dead. You promised to defeat %name2% before \SPR %1% can harm %name1% .>
+		Msg%id%10 <%name1% leaves the building.>
+		Prompt%id%01 <Isn't %name2% the crime lord of \SCENE RootSceneID ?>
+		Prompt%id%02 <Don't worry. I can protect you.>
+		Prompt%id%03 <That was a stupid thing to do.>
+		Prompt%id%04 <Please, let me be your bodyguard.>
+		Prompt%id%05 <I'll find %name2% before \SPR %2% can hurt you.>
+	end
+	inv
+		NPC Thief
+		chardesc Criminal Villainous
+		job <Crime Lord>
+		Combatant
+	end
+
+
 Plot
 	name <Fix My Stuff>
 	desc <The PC will be asked to fix some things.>
@@ -224,12 +280,10 @@ Plot
 		Prompt%id%05_1 <This is my destiny. You wouldn't understand.>
 	end
 
-
-
 Content
 	name <Surprise Announcement>
 	desc <Your friend announces that he's joined Aegis Overlord.>
-	requires <*CS_Conversation +P-- E:-- (L:MAQUI|L:FCOMS) 1:Friend -1:Enemy ~P:Mil ~+Gpe -P:AEGIS>
+	requires <*CS_Conversation +P-- E:-- (L:MAQUI|L:FCOMS) 1:Friend -1:Enemy ~P:MILIT ~+Gpe -P:AEGIS>
 
 	Size 1
 
