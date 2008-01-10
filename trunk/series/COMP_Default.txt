@@ -29,15 +29,20 @@ Plot
 	% E1 is the scene where this will take place
 	% E2 is the NPC the PC wants to talk to
 	% E3 is the scene outside the meeting area
+	% E4 is a public building, if the player chooses to sneak
 	element1 <Grab 6>
 	element2 <Grab 5>
 	Place2 <1 (Citizens) pass ally>
 	element3 <Scene Urban !Near -7>
+	element4 <Scene Building Public !Near -7 !Okay 2>
 
 	% SubPlot1 contains the ambush battle
 	% SubPlot2 contains the victory, if the PC defeats the enemies
 	SubPlot1 <*CS_AmbushEncounter 3>
 	SubPlot2 <*CS_ThanksForRescue 2>
+
+	start <if= PlotStatus 0 ifNPCDead %2% LoseComp 0 .loss>
+	.loss <+T-- +F-->
 
 	% Needed Scripts
 	.%id1%_%plotid%_GoWin <ifNPCOK %2% else GoJustEnd Alert 4 StoryNote 2 SetPlotStatus %id2%>
@@ -45,7 +50,7 @@ Plot
 	GoJustEnd <LoseComp 0 .loss>
 	.loss <+T-- +Pun>
 	Msg1 <You couldn't protect %name2% from a mecha attack.>
-	Msg2 <You rescued %name2% from a mecha attack.>
+	Msg2 <You rescued %name2% from a mecha attack against %name1%.>
 	Msg3 <%name1% is blasted by the mecha, killing those trapped inside.>
 	Msg4 <You have defended %name2% from the mecha attack.>
 
@@ -60,15 +65,6 @@ Plot
 
 		special <AddExit>
 
-		5Min <if= PlotStatus 0 else GoBomb if= L1 0 V+ 2 1 ifG V2 1 if= d2 1 Goto GoStartBombing>
-		GoStartBombing <SetPlotStatus %id1% AirRaidSiren Alert 1 StoryNote 2 Bomb  AlterContext .next  L= 1 1>
-		Faint%2% <if= PlotStatus 0 Goto GoStartBombing>
-		GoBomb <if= PlotStatus %id% Print 3 Bomb>
-		nu1 <if= T1 0 Return>
-		.next <+Pun>
-		Msg1 <Unexpectantly, the building is attacked by mecha!>
-		Msg2 <While meeting %name2%, %name1% was attacked by mysterious mecha.>
-		Msg3 <The battle outside rages!>
 		sub
 			Team 1
 
@@ -84,21 +80,32 @@ Plot
 
 		Persona 2
 		special <UNLISTED>
-		greeting <if= PlotStatus %id1% else GoCheckFirstMeeting EndChat Say 4>
-		GoCheckFirstMeeting <if= PlotStatus 0 else GoChat Goto GoFirstMeeting>
-		*GoFirstMeeting <*HowAreYou GoMessage>
-		GoMessage <NewChat Say 1 AddChat 1 AddChat 2>
-		*GoChat <*MISC_CHATTER>
-		result1 <AddEasygoing d6 Goto result2>
-		result2 <Alert 5  EndChat Say 2  AirRaidSiren StoryNote 3 SetPlotStatus %id1% AlterContext .next  L= 1 1>
-		.next <+Pun>
-		Msg1 <Say, do you hear anything?>
-		Msg2 <We have to get out of here!>
-		Msg3 <While meeting %name2%, %name1% was attacked by mysterious mecha.>
-		Msg4 <We're under attack!>
-		Msg5 <Unexpectantly, the building is attacked by mecha!>
-		Prompt1 <No, I don't.>
-		Prompt2 <Look at the window, there are mecha!>
+		greeting <if= PlotStatus %id1% else GoCheckFirstMeeting EndChat Say 1>
+		GoCheckFirstMeeting <if= PlotStatus 0 else GoChat Goto GoGreet>
+		GoSetAttack <StoryNote 2 SetPlotStatus %id1%>
+		GoChat <NewChat SayAnything>
+		*GoGreet <*ProtectCheckIn GoMiisionInfo>
+		GoMiisionInfo <NewChat Say 3 AddChat 1 AddChat 2 Goto GoSetAttack>
+		result1 <NewChat Say 4>
+		result2 <NewChat Say 5 AddChat 3 AddChat 4>
+		result3 <EndChat Say 6 AddReact d10 Print 7 XPV 100 Exit %4% SeekGate %3% MoveNPC %2% %4% StoryNote 8 SetPlotStatus %id2%>
+		result4 <Goto result1>
+		Msg1 <We can't leave here while those mecha are outside...>
+		Msg2 <You found %name2% trapped in %name1% by hostile mecha.>
+		Msg3_10 <I can't leave this building. There are people outside, with mecha... I'm certain that \PERSONA &EnemyNPC sent them.>
+		CMsg3_10 <ifNPCOK &EnemyNPC Accept>
+		Msg3_20 <I can't leave this building. There are people outside, with mecha... The second I show my face in public I'll be dead.>
+		CMsg3_20 <ifNPCDead &EnemyNPC Accept>
+		Msg4 <Good luck.>
+		Msg5 <Are you sure? That sounds awfully dangerous...>
+		Msg6 <I'll believe in you. Let's go.>
+		Msg7 <You sneak %name2% out of the building, and the two of you proceed to %name4%.>
+		Msg8 <You sneaked %name2% away to safety.>
+		Prompt1 <I can handle the mecha.>
+		Prompt2 <Why don't we just sneak past them?>
+		CPrompt2 <IfStealth HardSkillTar StoryDL Accept>
+		Prompt3 <Trust me. I know what I'm doing.>
+		Prompt4 <You could be right. I'll just fight the mecha.>
 	end
 
 Plot

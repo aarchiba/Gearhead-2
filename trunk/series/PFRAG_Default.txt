@@ -512,6 +512,21 @@ requires <*BrushOff &Questioning>
 START <NewChat Say %id%01>
 Msg%id%01 <I've told you as much as I'm going to. I have nothing else to say.>
 
+% TYPE: *ProtectCheckIn
+%	The PC is here to protect this NPC.
+%   PARAM1: Exit label (to mission briefing, usually)
+
+Persona
+requires <*ProtectCheckIn>
+START <NewChat Say %id%01 AddChat %id%01>
+result%id%01 <Goto %1%>
+Msg%id%01_1 <\PC ? What are you doing here?>
+CMsg%id%01_1 <ifChatNPCKnown Accept>
+Msg%id%01_2 <Who are you? What do you want?>
+CMsg%id%01_2 <ifChatNPCUnknown Accept>
+Prompt%id%01 <I came here to protect you.>
+Prompt%id%01_1 <I believe you may be in great danger.>
+
 
 % TYPE: *DefenseCheckIn
 %	The PC is checking in to defend a building.
