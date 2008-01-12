@@ -317,6 +317,8 @@ Function IsLegalWeaponInv( Slot , Equip: GearPtr ): Boolean;
 Function IsLegalWeaponSub( Wep, Equip: GearPtr ): Boolean;
 Procedure CheckAmmoRange( Ammo: GearPtr );
 
+Function AttackAttributeValue( var AList: String ): LongInt;
+Function AttackAttributeValue( Part: GearPtr ): LongInt;
 Function WeaponValue( Part: GearPtr ): LongInt;
 Function WeaponAddOnCost( Part: GearPtr ): LongInt;
 Function BaseAmmoValue( Part: GearPtr ): Int64;
@@ -679,15 +681,13 @@ begin
 	if Ammo^.Stat[7] < 1 then Ammo^.Stat[7] := 1;
 end;
 
-Function AttackAttributeValue( Part: GearPtr ): LongInt;
+Function AttackAttributeValue( var AList: String ): LongInt;
 	{ Returns the cost (in tenths of total) of the attack attributes }
 	{ associated with this weapon. }
 var
 	N,T,R: LongInt;
-	AList,AA: String;
+	AA: String;
 begin
-	{ Find the basic attack attributes string. }
-	AList := SAttValue( Part^.SA , 'TYPE' );
 	N := 10;
 
 	{ Go through the string one word at a time looking for }
@@ -724,6 +724,16 @@ begin
 	if N < 5 then N := 5;
 
 	AttackAttributeValue := N;
+end;
+
+Function AttackAttributeValue( Part: GearPtr ): LongInt;
+	{ Find the attack attribute value for a part. }
+var
+	AList: String;
+begin
+	{ Find the basic attack attributes string. }
+	AList := SAttValue( Part^.SA , 'TYPE' );
+	AttackAttributeValue := AttackAttributeValue( AList );
 end;
 
 Function RangeCostMod( R: Integer ): Integer;

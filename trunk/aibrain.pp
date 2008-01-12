@@ -567,8 +567,9 @@ var
 	function WGoodness( Part, Target: GearPtr ): Integer;
 		{ This is the heuristic SeekBigWeapon uses }
 	var
-		WG,AS,AM		 : Integer;
+		WG,AS,AM,BV,AAV		 : Integer;
 		AttSkillVal, DefSkillVal : Integer;
+		AtAt: String;
 	begin
 		{ Can your lancemates size up the abilities of a defender in a }
 		{ mecha, very far away, in heavy cover?  Sure they can! }
@@ -582,10 +583,29 @@ var
 		{ until you can see the whites of their eyes. }
 		AS := SkillValue( FindRoot(Part) , AttackSkillNeeded( Part ) );
 		AM := CalcTotalModifiers( gb , Part , Target , Part^.Stat[ STAT_BurstValue ] , WeaponAttackAttributes( Part ) );
-		AttSkillVal := AS + AM;
+		AttSkillVal := AS + AM + 5 - DefSkillVal;
+		if AttSkillVal < 0 then AttSkillVal := 0;
 
-		WG := Part^.V * (1+Part^.Stat[ STAT_BurstValue ]) + 2*(AttSkillVal-DefSkillVal);
+		if ( Part^.G = GG_Weapon ) and (( Part^.S = GS_Ballistic ) or ( Part^.S = GS_BeamGun )) then begin
+			BV := 1 + Part^.Stat[ STAT_BurstValue ];
+		end else if ( Part^.G = GG_Weapon ) and ( Part^.S = GS_Missile ) then begin
+			BV := 2;
+		end else begin
+			BV := 3;
+		end;
+
+		{ Apply special modifiers to BV. }
+		AtAt := WeaponAttackAttributes( Part );
+		AAV := AttackAttributeValue( AtAt ) - 10;
+		if AAV < 0 then AAV := 0;
+
+		WG := WeaponDC( Part ) * BV + AAV + 2 * AttSkillVal;
 		for AS := 1 to Part^.Scale do WG := WG * 3;
+
+		{ Debugging message
+		DialogMsg( PilotName( Mek ) + '/' + GearName( Part ) + ': ' + BStr( WG ) );
+		DialogMsg( '- -  DC: ' + BStr( WeaponDC( Part ) ) + ', BV:' + BStr( BV ) + ', AtAt:' + BStr( AAV ) + ', AtSkill:' + BStr( AttSkillVal ) );
+		}
 		WGoodness := WG;
 	end;
 
@@ -601,13 +621,11 @@ var
 		{	fire it at.  This could help a lot with LINE weapons. }
 		{	Or even find a weight for every weapon/target pair...) }
 	var
-		{Range : Integer;}
 		Weight : Integer;
 	begin
 		while ( Part <> Nil ) do begin
 			if ( Part^.G = GG_Module ) or ( Part^.G = GG_Weapon ) then begin
 				if ReadyToFire( GB , Mek , Part ) and RangeArcCheck( GB , Mek , Part , Target ) and SafeToFire( Part ) then begin
-
 					if Weapon = Nil then begin
 						Weapon := Part;
 						BestWeight := WGoodness(Part, Target);

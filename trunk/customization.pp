@@ -418,7 +418,7 @@ var
 
 		{ If either WeaponToReplace or NewWeapon are Nil, call the AddNewWeapon upgrade }
 		{ instead. }
-		if ( WeaponToReplace = Nil ) or ( NewWeapon = Nil ) then Exit;
+		if ( WeaponToReplace = Nil ) or ( NewWeapon = Nil ) then AddNewWeapon;
 
 		{ Record the WeaponUpgrades total. }
 		NewWeapon := CloneGear( NewWeapon );
@@ -467,7 +467,7 @@ begin
 	NumMassAdjusts := 0;
 
 	while MP > 0 do begin
-		if Random( 4 ) = 1 then begin
+		if Random( 20 ) = 1 then begin
 			AddNewWeapon;
 		end else begin
 			UpgradeWeapons;

@@ -1220,7 +1220,7 @@ begin
 
 		{ Missiles use sensor rating instead of targeting rating. }
 		if ( Attacker^.S = GS_Missile ) and ( AMaster^.G = GG_Mecha ) then begin
-			AddModifier( 'sensor' ,  - MechaTargeting( AMaster ) + MechaSensorRating( AMaster ) );
+			AddModifier( 'sensor' ,  - ( MechaTargeting( AMaster ) + MechaSensorRating( AMaster ) ) );
 		end;
 
 		if ( Attacker^.S = GS_Ballistic ) or ( Attacker^.S = GS_BeamGun ) or ( Attacker^.S = GS_Missile ) then begin
