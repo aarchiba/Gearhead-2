@@ -1101,6 +1101,32 @@ Content
 %%
 
 Content
+	name <Job Advice>
+	desc <The NPC will suggest the PC go ask someone for a job.>
+	requires <*CS_LoseDuelVs ~1:FRIEND ~1:PDASS ~P:-- -L:ENEMY>
+
+	% E1 is the NPC.
+	% E2 is the person to ask about the job.
+	% E3 is a scene for the meeting.
+	Element2 <Character !Ally -7 !Near -7>
+	Element3 <Scene Building Public !Near -7 !Okay 2>
+
+	start <if= PlotStatus %id% else %pop% ifNPCDead %1% SMemo 0 LoseComp 0 .%id%_loss>
+	.%id%_loss <+T-- +F-->
+
+	sub
+		Persona 1
+		greeting <if= PlotStatus %id% else %pop% ifNPCOK %2% else .%id%_GoTrivial NewChat Say %id%01 SMemo %id%02 History %id%03 &SetTargetNPC %2% LoseComp %3% .%id%_changes>
+		.%id%_GoTrivial <NewChat Say %id%04 SMemo 0 NTBLoseComp 0 .%id%_loss>
+		.%id%_changes <+Tgt +Fmi>
+		.%id%_loss <+T-- +F-->
+		Msg%id%01 <Hey, don't be disappointed about losing, you tried your best. Here's something that might cheer you up- I hear that %name2% is looking to hire a cavalier. If you get over to %name3% right away maybe you could get the job.>
+		Msg%id%02 <After beating you in a duel, %name1% reccomended that you ask %name2% at %name3% for a job.>
+		Msg%id%03 <%name1% reccomended that you ask %name2% for a job.>
+		Msg%id%04 <You lost the duel. Good for me.>
+	end
+
+Content
 	name <Ha ha!>
 	desc <The NPC will just chide the PC, then end the plot.>
 	requires <*CS_LoseDuelVs>
@@ -1116,3 +1142,4 @@ Content
 		.%id%_changes <+T-- +F-->
 		Msg%id%01 <You lost the duel. Good for me.>
 	end
+

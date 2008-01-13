@@ -1,3 +1,75 @@
+%% *CS_NPCAmbushPC Content
+%%	&IsEnemyNPC	E2 is the core story enemy NPC
+%%
+%% The NPC will attack the PC in a certain location.
+%%
+%% The parent plot sets the plot status to this layer's ID when ready.
+%%
+%% Param1: The outdoor scene where the encounter will take place
+%% Param2: The NPC to do the ambushing
+%%
+%% NEEDED SCRIPTS: To deal with the ending, the parent plot must define two
+%% scripts:
+%% 	.%id%_%plotid%_GoWin
+%% 	.%id%_%plotid%_GoLose
+%% %id% is the ID of the encounter layer; so, if it was generated as subplot 1,
+%% the calling plot would use %id1%.
+%% Please note that it is possible this component will not exit to either of
+%% the above labels, if a complete derailment of the story takes place.
+
+Plot
+	name <Generic NPC Ambush>
+	size 5
+	desc <You fight the NPC.>
+	requires <*CS_NPCAmbushPC>
+
+	% E1: The outdoor scene
+	% E3 is the combat scene
+	Element3 <Prefab>
+	Place3 <1>
+
+	% v%id%01 = Initialization Counter
+
+	update <if= PlotStatus %id% else %pop% if= v%id%01 0 V= %id%01 1 MoveNPC %2% %3% SetNPCTeam %2% 2>
+
+	sub
+		Persona 2
+		special <UNLISTED>
+		greeting <if= PlotStatus %id% else %pop% if= L1 2 else GoCheckLoss Goto GoWinSpeech>
+		*GoWinSpeech <*GetYouNextTime>
+		GoCheckLoss <if= L1 1 else GoThreat Goto GoLoseSpeech>
+		*GoLoseSpeech <*YouLose>
+		*GoThreat <*BattleChallenge GoInfo GoInfo>
+		*GoInfo <*THEME_EXPO&ENEMY na>
+
+		MetaScene 3 2
+		% L1 = Encounter Over Counter
+		% L2 = Initialization Counter
+		MapWidth 30
+		MapHeight 30
+
+		start <if= L2 0 L= 2 1 ForceChat %2%>
+		nu1 <if= T1 0   Return   if= V1 0 V= 1 1   Trigger0 .%id%_%plotid%_GoLose>
+		nu2 <if= T2 0   if= V1 0 V= 1 1            XPV 100   AddRenown 1  Salvage   Trigger0 .%id%_%plotid%_GoWin>
+
+		sub
+			team 1
+			SetEnemy 2
+			ParaX 5
+			ParaY 5
+
+			team 2
+			SetEnemy 1
+			Deploy <SetSelfFaction &EnemyFac   WMecha 2 StoryDL 50>
+			ParaX 25
+			ParaY 25
+		end
+	end
+	inv
+		STC CORE-MECHAAMBUSH
+	end
+
+
 %% *CS_AmbushEncounter Content
 %%
 %% The PC will get jumped as soon as he enters a particular location.

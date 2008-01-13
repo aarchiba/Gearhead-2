@@ -19,6 +19,68 @@
 %	STAT_XRP_TargetItem = 8;		{ I: }
 
 Plot
+	name <Drive Off Attacker>
+	desc <You walk in just as NPC is about to be attacked.>
+	requires <#A +Tpt T:++ S:++ ~C:POLIC>
+
+	% E1 is the scene where this will take place
+	% E2 is the NPC to be rescued
+	% E3 is the attacker
+	% E4 is the exterior scene where the battle will take place
+	element1 <Grab 6>
+	element2 <Grab 5>
+	Place2 <1 (Citizens) pass ally>
+	element3 <Prefab>
+	Place3 <1 (Citizens) pass ally>
+	element4 <Scene Outdoors !Near -7>
+
+	% SubPlot1 is the combat with E3
+	% SubPlot2 is the victory
+	SubPlot1 <*CS_NPCAmbushPC 4 3>
+	SubPlot2 <*CS_ThanksForRescue 2>
+
+	start <if= PlotStatus %id% else GoCheckFirst ifNPCDead %2% LoseComp 0 .loss>
+	GoCheckFirst <if= PlotStatus 0 if= SceneID %1% Monologue %3% 1 Monologue %2% 2 Monologue %3% 3 StoryNote 4 Print 5 FreezeNPC %3% SetPlotStatus %id% SetNPCFaction %3% &EnemyFac>
+	.%id1%_%plotid%_GoWin <ifNPCOK %2% else GoJustEnd StoryNote 6 SetPlotStatus %id2%>
+	.%id1%_%plotid%_GoLose <DeleteNPC %2%  Goto GoJustEnd>
+	GoJustEnd <LoseComp 0 .loss>
+	.loss <+T-- +F-->
+
+	Msg1 <Hey %name2%, it's time for you to get what's coming to you.>
+	Msg2 <Not so fast- it looks like my reinforcements have just arrived.>
+	Msg3 <Hmph. You win this time, %name2%, but I'll be back later...>
+	Msg4 <You scared off %name3% before \SPR %3% could attack %name2%.>
+	Msg5 <%name3% leaves in a hurry.>
+	Msg6 <You were ambushed by %name3% , but defeated \OPR %3% .>
+
+	sub
+		Persona 2
+		special <UNLISTED>
+		rumor%id2% <%name2% wants to thank you for defeating %name3%.>
+		greeting <if= PlotStatus %id% else GoChat NewChat Say 1 AddChat 1 AddChat 2 EraseSpecial>
+		GoChat <NewChat SayAnything>
+		result1 <NewChat Say 2 SMemo 3 AddReact 10 &SetTargetNPC %3% NegateComp 0 .FindE3>
+		.FindE3 <+Tht +Far>
+		result2 <NewChat Say 4 SMemo 5 PCEnemy %3% SetPlotStatus %id1%>
+		Msg1 <\PC , thanks for driving off %name3%. I was pretty worried there for a minute... The problem is, I know that \SPR %3% 's just going to be back later.>
+		Msg2 <You plan to go after \OPR %3% ? Good luck.>
+		Msg3 <You told %name2% that you'd find %name3% before \SPR %3% can attack \OPR %2% again.>
+		Msg4 <You showed up at the right time; that's all you had to do, today. I'm sure %name3% isn't going to forget this, though.>
+		Msg5 <After driving off %name3%, %name2% warned you that \SPR %2% might come looking for revenge.>
+		Prompt1 <Not if I find \OPR %3% first.>
+		Prompt2 <I didn't even really do anything.>
+
+		STC MS_CAFE
+		SetID 1
+	end
+	inv
+		NPC Soldier
+		job <Hired Thug>
+		job_desig <ADVEN>
+		chardesc villainous criminal
+	end
+
+Plot
 	name <Level That House>
 	size 1
 	desc <The meeting place is attacked by mecha!>

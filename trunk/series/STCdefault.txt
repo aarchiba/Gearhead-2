@@ -1038,6 +1038,14 @@ update <if= PlotStatus %id% else GoHide SetStat STAT_MetaVisibility 0  ShowEncou
 EncounterMove 50
 
 Encounter
+desig <CORE-MECHAAMBUSH>
+% Sets this encounter's orders to Seek & Destroy
+GoSetOrders <GrabSource GSetNAtt NAG_EpisodeData NAS_Orders 0>
+name <%name2%'s Mecha>
+update <if= PlotStatus %id% else GoHide SetStat STAT_MetaVisibility 0  Goto GoSetOrders>
+EncounterMove 50
+
+Encounter
 desig <ENCOUNTER-SEEKPC>
 % Sets this encounter's orders to Seek & Destroy
 GoSetOrders <GrabSource GSetNAtt NAG_EpisodeData NAS_Orders 0>

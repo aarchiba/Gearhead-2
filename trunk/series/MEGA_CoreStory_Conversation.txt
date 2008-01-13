@@ -26,6 +26,54 @@
 %%  ********************************
 
 Content
+	name <I Hear They're Hiring>
+	desc <The PC will be told of a corporate job.>
+	requires <*CS_Conversation +P-- P:-- (1:Friend|1:LABOR|1:TRADE) (C:LABOR|C:CRAFT|C:TRADE|C:CORPO) ~+Gmo>
+
+	% Element1 is the NPC to meet
+	% Element2 is a local corporate character
+	% Element3 is a public scene to meet in
+	% Element4 is E2's faction
+	Element2 <Character Corporate !Near -7 !Okay 1>
+	Element3 <Scene Building Public !Okay 2 !Near -7>
+	Element4 <Faction !Ally 2>
+
+	start <if= PlotStatus %id% else %pop% ifNPCDead %1% LoseComp 0 .%id%_loss>
+	.%id%_loss <+T-- +F-->
+
+	sub
+		Persona 1
+		greeting <if= PlotStatus %id% else %pop% Goto .%id%_GoGreet>
+		*.%id%_GoGreet <*HowAreYou .%id%_GoAsk>
+		.%id%_GoAsk <ifFactionEnemy %4% else .%id%_GoNoEnemy NewChat Say %id%02 AddChat %id%04 AddChat %id%05>
+		.%id%_GoNoEnemy <NewChat Say %id%01 AddChat %id%01 AddChat %id%02>
+		result%id%01 <NewChat Say %id%03 History %id%04 SMemo %id%05 &SetTargetNPC %2% WinComp %3% .%id%_GetMission>
+		.%id%_GetMission <+Tgt +Fmi +Pun>
+		result%id%02 <NewChat Say %id%06 AddChat %id%06 AddChat %id%03>
+		result%id%03 <NewChat Say %id%07 StoryNote %id%04  WinComp 0 .%id%_RefuseMission>
+		.%id%_RefuseMission <+T-- +F-- +Pun>
+		result%id%04 <NewChat Say %id%08 StoryNote %id%04  WinComp 0 .%id%_RefuseMission if= &EnemyFac 0 &SetEnemyFac %4%>
+		result%id%05 <NewChat Say %id%09 StoryNote %id%04  &SetAllyFac PCFac WinComp 0 .%id%_RefuseMission>
+		result%id%06 <Goto result%id%01>
+		Msg%id%01 <Are you looking for work? %name2% of %name4% is going to hire a pilot, and I can put in a good word for you.>
+		Msg%id%02 <Did you hear that %name4% has been suffering a lot of attacks recently? I hear that %name2% is looking for a pilot to help defend their factories.>
+		Msg%id%03 <Go speak with \OPR %2% at %name3%, then. Tell \OPR %2% I sent you.>
+		Msg%id%04 <%name1% told you that %name4% was being attacked.>
+		Msg%id%05 <%name2% in %name3% is looking for a pilot to protect %name4%.>
+		Msg%id%06 <There have been a lot of attacks against them recently. I don't know what's going on, but for a pilot that can get his foot in the door this could be a gold mine.>
+		Msg%id%07 <That's too bad. I don't know who's behind the attacks against %name4%, but chances are that the other corporations are involved in some way.>
+		Msg%id%08 <Don't be too glib about it. Whatever's going on, it's bound to affect more than just %name4%.>
+		Msg%id%09 <I wouldn't be able to say. Whatever's going on, it's bound to affect more than just %name4%.>
+		Prompt%id%01 <Sounds good. I'd like that.>
+		Prompt%id%02 <Why does \SPR %2% need a pilot?>
+		Prompt%id%03 <Thanks, but I'm not interested.>
+		Prompt%id%04 <Good. I hate %name4%.>
+		Prompt%id%05 <I hope \FACTION PCFac won't be attacked next.>
+		CPrompt%id%05 <if# PCFac 0 Accept>
+		Prompt%id%06 <Alright, I'll do it.>
+	end
+
+Content
 	name <Witless Protection>
 	desc <Your friend announces that he's going into hiding because of a loan shark.>
 	requires <*CS_Conversation (+P--|+Pun) E:-- 1:Friend -1:Enemy ~C:POLIC ~C:THIEF ~1:THIEF ~+Gmo>
