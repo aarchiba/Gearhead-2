@@ -5,7 +5,7 @@ Plot
 	name <Loyalty Check>
 	size 2
 	desc <PC questioned by authorities; revealed there have been attacks lately.>
-	requires <#A +T-- +Pme E:++ (F:MILIT|F:POLIT|F:--) -F:ENEMY -L:ENEMY ~L:ALLY ~+Gre>
+	requires <#A +T-- +Pme E:++ (F:MILIT|F:POLIT|F:--) -F:ENEMY -L:ENEMY ~L:ALLY ~+Gre ~E:FRIEND>
 
 	% E1 is the scene for this component
 	% E2 is the NPC to do the interrogation
