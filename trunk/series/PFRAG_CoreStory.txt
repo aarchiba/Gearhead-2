@@ -290,6 +290,29 @@
 %   PARAM3: the location where the encounter will take place
 
 	Persona
+	requires <*CORE_BasicJob F:++ (+P--|+Pun)>
+	START <NewChat Say %id%01 AddChat %id%01 AddChat %id%02>
+	Result%id%01 <SMemo %id%02 History %id%03 Goto %1%>
+	result%id%02 <Goto %2%>
+	Msg%id%01 <There's a team of mecha from \FACTION &EnemyFac operating in \SCENE %3% . Since we don't know what they're after, I need you to locate them and see what you can find out.>
+	Msg%id%02 <\CHATNPC sent you to investigate a group of mecha from \FACTION &EnemyFac in \SCENE %3% .>
+	Msg%id%03 <\CHATNPC sent you to investigate a group of mecha from \FACTION &EnemyFac .>
+	Prompt%id%01 <I'll be back when I find something.>
+	Prompt%id%02 <Sorry, but I can't do this job.>
+	CPrompt%id%02 <if# PCFac ChatNPCFac Accept>
+
+	Persona
+	requires <*CORE_BasicJob F:++ F:CRIME>
+	START <NewChat Say %id%01 AddChat %id%01 AddChat %id%02>
+	Result%id%01 <StoryNote %id%02 Goto %1%>
+	result%id%02 <Goto %2%>
+	Msg%id%01 <We've detected some mecha from \FACTION &EnemyFac in \SCENE %3% . They must be planning some kind of heist in town; I want you to find them and stop them before that can happen.>
+	Msg%id%02 <\CHATNPC sent you to intercept a group of mecha from \FACTION &EnemyFac in \SCENE %3% .>
+	Prompt%id%01 <I'll do it.>
+	Prompt%id%02 <You'll need to find someone else for this job.>
+	CPrompt%id%02 <if# PCFac ChatNPCFac Accept>
+
+	Persona
 	requires <*CORE_BasicJob (CORPO|TRADE) +Pun ~F:-- Common>
 	START <NewChat Say %id%01 AddChat %id%01>
 	Result%id%01 <StoryNote %id%02 Goto %1%>

@@ -1853,7 +1853,6 @@ begin
 					StripNAtt( Part , NAG_Condition );
 					StripNAtt( Part , NAG_StatusEffect );
 					StripNAtt( Part , NAG_Narrative );
-					SetNAtt( Part^.NA , NAG_Personal , NAS_FactionID , 0 );
 				end;
 				Part := P2;
 			end;

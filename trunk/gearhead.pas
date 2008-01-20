@@ -228,9 +228,9 @@ begin
 
 	AddRPGMenuItem( RPM , 'View Design Files' , 4 );
 
-{$IFDEF DEBUG}
-	AddRPGMenuItem( RPM , 'View Series Files' , 5 );
-{$ENDIF}
+	if XXRan_Debug then begin
+		AddRPGMenuItem( RPM , 'View Series Files' , 5 );
+	end;
 
 	AddRPGMenuItem( RPM , 'Quit Game' , -1 );
 
