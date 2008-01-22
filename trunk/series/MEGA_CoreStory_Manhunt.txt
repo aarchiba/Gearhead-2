@@ -31,18 +31,33 @@ Content
 		Special <UNLISTED>
 		greeting <if= PlotStatus %id% else %pop% ifChatNPCSurrendered else .%id%_GoFirstTime Goto .%id%_GoWillSurrender>
 		.%id%_GoFirstTime <if= L2 0 else .%id%_GoGreet SoloAttack %1% L= 2 1 Goto .%id%_GoGreet>
-		*.%id%_GoGreet <*IntruderGreeting&Arrest .%id%_GoBargain>
-		*.%id%_GoBargain <*YoureUnderArrest StoryDL .%id%_GoWillSurrender .%id%_GoWillResist na>
+		.%id%_GoGreet <EndChat Say %id%01 AddChat %id%01 AddChat %id%02>
 		*.%id%_GoWillSurrender <*ISurrender&Arrest .%id%_GoSurrender>
 		*.%id%_GoWillResist <*IDisagreeYouDie na>
 		.%id%_GoSurrender <L= 2 2 Print %id%02 FreezeNPC %1% PCEnemy %1% ifNPCOK %3% else .%id%_GoE3Died StoryNote %id%03 Print %id%04 FreezeNPC %3% &SetTargetNPC %3% WinComp 0 .%id%_win>
 		.%id%_GoE3Died <StoryNote %id%05 WinComp 0 .%id%_loss>
 		.%id%_win <+Tlt +Frt>
 		.%id%_loss <+T-- +F-->
+		result%id%01 <ifConversation HardSkillTar StoryDL else .%id%_GoWillResist FreezeNPC %3% EndChat Say %id%06 XPV 100>
+		result%id%02 <ifIntimidation HardSkillTar StoryDL else .%id%_GoWillResist EndChat Say %id%07 AddChat %id%03>
+		result%id%03 <Goto .%id%_GoWillSurrender>
+		Msg%id%01_10 <Why do you have to make this difficult, \PC ? I didn't want to hurt anyone today but it seems that you're tying my hands...>
+		CMsg%id%01_10 <ifChatNPCKnown Accept>
+		Msg%id%01_20 <You're getting involved in something you don't understand. %name3% and I have unfinished business.>
+		CMsg%id%01_20 <ifChatNPCUnknown Accept>
 		Msg%id%02 <%name1% is captured.>
 		Msg%id%03 <You rescued %name3% from %name1%.>
 		Msg%id%04 <%name3% slips away and disappears...>
 		Msg%id%05 <You captured %name1%, but not soon enough to save %name3%.>
+		Msg%id%06 <I'll let %name3% go, all right, but I've got no interest in talking...>
+		Msg%id%07 <Wait, I've got a hostage, you can't attack me now!>
+		Prompt%id%01 <Let %name3% go and we can talk.>
+		Prompt%id%01_1 <You don't need a hostage; let %name3% go.>
+		Prompt%id%01_2 <I want you to release %name3%.>
+		Prompt%id%02 <Give up now before I'm forced to kill you.>
+		Prompt%id%02_1 <You have one chance to surrender, then you die.>
+		Prompt%id%02_2 <It's over, %name1%. Give up.>
+		Prompt%id%03 <Do I look like I care?>
 
 		Metascene 2
 		% Contains scripts for the scene.

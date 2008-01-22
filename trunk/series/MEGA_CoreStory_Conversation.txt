@@ -26,6 +26,30 @@
 %%  ********************************
 
 Content
+	name <In The Army Now>
+	desc <The NPC is joining the army; maybe the PC can join as well!>
+	requires <ZZZ*CS_Conversation +P-- +F-- P:-- R:-- (1:Friend|1:Family|1:Lover)>
+
+	% Element1 is the NPC to meet
+	% Element2 is a military faction allied to the current city
+	% Element3 is a nearby member of the faction
+	% Element4 is an enemy of the faction
+	Element2 <Faction Military !Ally -7 !Okay 1>
+	Element3 <Character !Comrade 2 !Near -7>
+	Element4 <Faction !Enemy 2>
+
+	start <if= PlotStatus %id% else %pop% ifNPCDead %1% LoseComp 0 .%id%_loss>
+	.%id%_loss <+T-- +F-->
+
+	sub
+		Persona 1
+		greeting <if= PlotStatus %id% else %pop% Goto .%id%_GoGreet>
+		*.%id%_GoGreet <*HowAreYou .%id%_GoAsk>
+		.%id%_GoAsk <>
+
+	end
+
+Content
 	name <I Hear They're Hiring>
 	desc <The PC will be told of a corporate job.>
 	requires <*CS_Conversation +P-- P:-- (1:Friend|1:LABOR|1:TRADE) (C:LABOR|C:CRAFT|C:TRADE|C:CORPO) ~+Gmo>
