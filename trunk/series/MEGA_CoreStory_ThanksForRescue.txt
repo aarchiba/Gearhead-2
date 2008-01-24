@@ -1,0 +1,265 @@
+%%
+%% *CS_ThanksForRescue Content
+%%	&FromCSEnemy	You rescued the NPC directly from the core story enemy NPC
+%%
+%% The PC has rescued the NPC. Hooray.
+%%
+%% The parent plot sets the plot status to this layer's ID when ready.
+%%
+%% Param1: The one who was rescued
+%%
+
+%%  ********************************
+%%  ***   +P--  Peaceful  Life   ***
+%%  ********************************
+
+Content
+	name <The Treasure Hunter>
+	desc <The NPC you rescued was looking for treasure.>
+	requires <*CS_ThanksForRescue (+P--|+Pun) -1:ENEMY -1:FRIEND ~+Gkn>
+
+	% E1 is the NPC being sought
+	% E2 is the artifact that E1 was seeking
+	element2 <Artifact Item PreZero>
+
+	start <if= PlotStatus %id% else %pop% ifNPCDead %1% LoseComp 0 .%id%_loss>
+	.%id%_loss <+T-->
+
+	sub
+		Persona 1
+		Greeting <if= PlotStatus %id% else %pop% Goto .%id%_GoGreet>
+		*.%id%_GoGreet <*ThanksForRescue .%id%_GoReveal>
+		.%id%_GoReveal <NewChat Say %id%01 AddChat %id%01 AddChat %id%02>
+		.%id%_GoWin <StoryNote %id%03 &SetTargetItem %2% FreezeItem %2% NTBWinComp 0 .%id%_next>
+		.%id%_next <+Pla +T-- +F-->
+		result%id%01 <NewChat Say %id%02 AddChat %id%03 AddChat %id%04 Goto .%id%_GoWin>
+		result%id%02 <NewChat Say %id%04 AddEasygoing -d8   AddChat %id%03 AddChat %id%04 Goto .%id%_GoWin>
+		result%id%03 <NewChat Say %id%05 AddChat %id%05>
+		result%id%04 <NewChat Say %id%06 AddChat %id%05>
+		result%id%04 <NewChat Say %id%07>
+		Msg%id%01 <If it wasn't for you, I might not even be here right now.>
+		Msg%id%02 <They're probably after me because they think I know where the %name2% is.>
+		Msg%id%03 <You learned about the %name2% from %name1%.>
+		Msg%id%04 <That's the problem, you see. Right now I'm searching for the %name2%. Once I find it I'll have plenty of cash, but until that time I'm frankly broke.>
+		Msg%id%05 <I thought there'd be some clue as to its location around here.>
+		Msg%id%06 <The %name2% is worth more than just money. \ITEM_DESC %2% \ITEM_USAGE %2%>
+		Msg%id%07 <I had planned on continuing my search, but this brush with death has made me reconsider. I just might take up chess.>
+		Prompt%id%01 <Do you know why they were after you?>
+		Prompt%id%01_1 <Any idea why those guys were after you?>
+		Prompt%id%02 <You should give me some kind of reward, then.>
+		Prompt%id%02_1 <How about a reward for my effort, then?>
+		Prompt%id%03 <What do you know about this %name2%?>
+		Prompt%id%03_1 <What can you tell me about the %name2%?>
+		Prompt%id%04 <That must be pretty valuable.>
+		Prompt%id%04_1 <Sounds like it must be valuable.>
+		Prompt%id%05 <What are you going to do now?>
+	end
+
+%%  *****************************************
+%%  ***   +Pme	PC meets an enemy pilot   ***
+%%  *****************************************
+
+
+%%  *****************************************
+%%  ***   +Pun  Unknown  Enemy  Attacks   ***
+%%  *****************************************
+
+
+%%  ***********************************************************
+%%  ***   +Psh	PC is shanghaied into working for faction   ***
+%%  ***********************************************************
+
+
+%%  *************************************
+%%  ***   +Pla  Learn  of  Artifact   ***
+%%  *************************************
+
+
+
+%%  *******************
+%%  ***   GENERAL   ***
+%%  *******************
+
+Content
+	name <Let Me Join You>
+	desc <The NPC wants revenge against the enemy character, himself.>
+	requires <*CS_ThanksForRescue &FromCSEnemy>
+
+	% E1 is the character who's been rescued
+
+	start <if= PlotStatus %id% else %pop% ifNPCDead %1% LoseComp 0 .%id%_loss>
+	.%id%_loss <+T-->
+
+	sub
+		Persona 1
+		Greeting <if= PlotStatus %id% else %pop% NTBWinComp 0 .%id%_Next goto .%id%_GoThanks>
+		.%id%_Next <+T-- +F-->
+		*.%id%_GoThanks <*ThanksForRescue .%id%_GoReward>
+		.%id%_GoReward <ifG ChatNPCRelationship NAV_Friend else .%id%_GoJoin  Goto .%id%_GoOffer>
+		.%id%_GoJoin <PCAlly %1%  Goto .%id%_GoOffer>
+		.%id%_GoOffer <NewChat Say %id%01 AddChat %id%01 AddChat %id%02 AddChat %id%03>
+
+		result%id%01 <ChatNPCJoinLance   StoryNote %id%02  Goto .%id%_GoWelcome>
+		*.%id%_GoWelcome <*WelcomeToLance>
+		result%id%02 <NewChat Say %id%03>
+		result%id%03 <NewChat Say %id%03 if= ChatNPCRelationship NAV_ArchAlly  ifChatNPCSexy  ifFlirtation SkillTar StoryDL PCLover %1%>
+
+		Msg%id%01 <If it's alright with you, I'd like to join your lance. It's the least I could do to repay you.>
+		Msg%id%01_1 <>
+		CMsg%id%01_1 <ifNPCSociable ifNPCOK &EnemyNPC Accept>
+		Msg%id%01_2 <I want to come with you. I could repay you for saving me, and get my revenge against \PERSONA &EnemyNPC at the same time.>
+		CMsg%id%01_2 <ifNPCShy ifNPCOK &EnemyNPC Accept>
+		Msg%id%01_3 <>
+		CMsg%id%01_3 <ifNPCEasygoing ifNPCOK &EnemyNPC Accept>
+		Msg%id%01_4 <>
+		CMsg%id%01_4 <ifNPCPassionate ifNPCOK &EnemyNPC Accept>
+		Msg%id%01_5 <>
+		CMsg%id%01_5 <ifNPCCheerful ifNPCOK &EnemyNPC Accept>
+		Msg%id%01_6 <Let me join your lance... I must have revenge against \PERSONA &EnemyNPC .>
+		CMsg%id%01_6 <ifNPCMelancholy ifNPCOK &EnemyNPC Accept>
+
+		Msg%id%02_1 <%name1% joined your lance to help fight \PERSONA &EnemyNPC .>
+		CMsg%id%02_1 <ifNPCOK &EnemyNPC Accept>
+		Msg%id%02_2 <%name1% joined your lance.>
+		CMsg%id%02_2 <ifNPCDead &EnemyNPC Accept>
+		Msg%id%03 <Always remember, I'll be right here if you need me.>
+		Msg%id%03_1 <>
+		Msg%id%03_2 <>
+		Prompt%id%01 <I'd love to have you at my side.>
+		CPrompt%id%01 <ifChatNPCCanJoinLance Accept>
+		Prompt%id%01_1 <Alright, come along.>
+		Prompt%id%02 <Maybe some other time.>
+		Prompt%id%02_1 <Sorry, but now's not a good time.>
+		Prompt%id%03 <I think you'd be safer here.>
+		Prompt%id%03_1 <It's too dangerous to come with me.>
+	end
+
+Content
+	name <Generic Thanks>
+	desc <The PC has just rescued someone, and will get a cash prize. Lame.>
+	requires <*CS_ThanksForRescue>
+
+	% E1 is the character who's been rescued
+
+	% P1 = Initialization Counter
+	start <if= PlotStatus %id% else %pop% ifNPCDead %1% LoseComp 0 .%id%_loss>
+	.%id%_loss <+T-->
+
+	sub
+		Persona 1
+		Greeting <if= PlotStatus %id% else %pop% goto .%id%_GoThanks>
+		*.%id%_GoThanks <*ThanksForRescue .%id%_GoReward>
+		.%id%_GoReward <ifG 1 ChatNPCRelationship else .%id%_GoCash PCFriend %1% Goto .%id%_GoCash>
+		.%id%_GoCash <NewChat Say %id%01 CashPrize Reward StoryDL 250 NTBWinComp 0 .%id%_Next>
+		.%id%_Next <+T-- +F-->
+		Msg%id%01 <Here's a little reward, in appreciation of what you've done.>
+		Msg%id%01_1 <I'd like for you to have this reward. I know that it isn't much, but it's the least I could do to thank you for saving my life.>
+		CMsg%id%01_1 <ifNPCSociable Accept>
+		Msg%id%01_2 <Here, I'd like you to have this. Thanks again.>
+		CMsg%id%01_2 <ifNPCShy Accept>
+		Msg%id%01_3 <We all know that nothing says "thank you" like a big handfull of money. Unfortunately I don't have a big handfull, but I can give you this little one. Thanks for saving me.>
+		CMsg%id%01_3 <ifNPCEasygoing Accept>
+		Msg%id%01_4 <Nothing I could ever do would repay you for saving my life, but I can at least give you this money as a token of appreciation.>
+		CMsg%id%01_4 <ifNPCPassionate Accept>
+		Msg%id%01_5 <It's really lucky that you showed up when you did. Here, take this- it's my way of saying thanks.>
+		CMsg%id%01_5 <ifNPCCheerful Accept>
+		Msg%id%01_6 <If not for you, I would be dead right now. Here's a small token of my gratitude.>
+		CMsg%id%01_6 <ifNPCMelancholy Accept>
+	end
+
+Content
+	name <Rescued an Ally>
+	desc <The PC has just rescued an ally, who will suggest that he go speak with another member of the faction.>
+	requires <*CS_ThanksForRescue 1:Ally -1:PDASS>
+
+	% E1 is the character who's been rescued
+	% E2 is a public scene in this city, to be used as home scene if a
+	%    pre-existing E4 can't be found.
+	% E3 is another character allied with E2
+	element2 <Scene Public !Okay -3 Building !Near -7>
+	element3 <Character !Comrade 1 !Near 2 Neverfail>
+	NeverFail3 <Mecha Pilot>
+
+	% P1 = Initialization Counter
+	start <if= PlotStatus %id% else %pop% ifNPCDead %1% LoseComp 0 .%id%_loss>
+	.%id%_loss <+T-->
+
+	sub
+		Persona 1
+		% V1 = Can only get reward once
+		Greeting <if= PlotStatus %id% else %pop% goto .%id%_GoThanks>
+		*.%id%_GoThanks <*ThanksForRescue .%id%_GoReward>
+		.%id%_GoReward <if= V%id%01 0 else .%id%_GoBriefing V= %id%01 1 CashPrize Reward StoryDL 200 NewChat Say %id%01 AddChat %id%01 AddChat %id%02>
+		.%id%_GoBriefing <ifNPCOK %3% else .%id%_GoE3Dead NewChat Say %id%02 StoryNote %id%03 &SetTargetNPC %3%  WinComp NPCScene %3% .%id%_changes>
+		.%id%_changes <+Tgt +Fmi>
+		.%id%_GoE3Dead <NewChat Say %id%05 SMemo 0 NTBWinComp 0 .%id%_changes2>
+		result%id%01 <Goto .%id%_GoBriefing>
+		result%id%02 <if= ChatNPCFac PCFac else .%id%_GoR2Reject if# PCFac 0 else .%id%_GoR2Reject NewChat Say %id%04 AddChat %id%03>
+		*.%id%_GoR2Reject <*RejectMission .%id%_GoR2Exit>
+		.%id%_GoR2Exit <NTBWinComp 0 .%id%_changes2>
+		.%id%_changes2 <+T-- +F-->
+		result%id%03 <Goto .%id%_GoBriefing>
+		Msg%id%01 <Here's a reward for your quick thinking. This matter needs to be dealt with quickly, before it gets out of hand. We could use someone like you on our side.>
+		Msg%id%02 <Go speak with %name3% at \Scene NPCScene %3% . I think \SPR %3% 'll have a mission you can help with.>
+		Msg%id%03 <%name1% sent you to speak with %name3% at \SCENE NPCScene %3% .>
+		Msg%id%04 <This is now official \FACTION ChatNPCFac business. All your other missions can wait; this is top priority.>
+		Msg%id%05 <With %name3% dead, all our operatives will have to be extra careful. Stay on your toes for the next little while.>
+		Prompt%id%01 <Tell me what you need.>
+		Prompt%id%02 <Forget it, I'm finished here.>
+		Prompt%id%03 <Understood. Tell me what I have to do.>
+		Prompt%id%03_1 <Yeah, I'll be a good little quest-bitch...>
+		CPrompt%id%03_1 <ifPCPassionate ifPCMelancholy Accept>
+	end
+
+
+Content
+	name <Thanks for the Help>
+	desc <The PC has rescued someone, who now wants to join the lance.>
+	requires <*CS_ThanksForRescue -1:Ally -1:Enemy ~+Glo>
+
+	%% E1 is the NPC that the PC rescued
+	%% E2 is a nice scene for a date
+	element2 <Scene !Near -7 Building Public Meeting>
+
+	start <if= PlotStatus %id% else %pop% ifNPCDead %1% LoseComp 0 .loss>
+	.loss <+T-- +F-->
+
+	sub
+		Persona 1
+		greeting <if= PlotStatus %id% else %pop% Goto .%id%_GoStart>
+		*.%id%_GoStart <*ThanksForRescue .%id%_GoOffer>
+		.%id%_GoOffer <PCFriend %1% ifG React 30 else .%id%_GoNoOffer ifG PCCharm 10 else .%id%_GoNoOffer NewChat Say %id%01 AddChat %id%01 AddChat %id%02 AddChat %id%03>
+		.%id%_GoNoOffer <ifChatNPCSexy else .%id%_GoCashAward ifFlirtation SkillTar StoryDL else .%id%_GoCashAward ifG React d10 else .%id%_GoCashAward NewChat Say %id%08 AddChat %id%06 AddChat %id%07>
+		.%id%_GoCashAward <NewChat Say %id%07  StoryNote %id%05 CashPrize Reward StoryDL 150 NTBWinComp 0 .%id%_next>
+		result%id%01 <NewChat Say %id%02 StoryNote %id%03 PCAlly %1% WinComp 0 .%id%_next>
+		.%id%_next <+T-- +F-->
+		result%id%02 <NewChat Say %id%04 StoryNote %id%05 CashPrize Reward StoryDL 150 NTBWinComp 0 .%id%_next>
+		result%id%03 <NewChat Say %id%06 AddChat %id%04 AddChat %id%05>
+		result%id%04 <Goto result%id%01>
+		result%id%05 <Goto result%id%02>
+		result%id%06 <NewChat Say %id%09 StoryNote %id%010 &SetTargetNPC %1% WinComp %2% .%id%_date>
+		.%id%_date <+Tda +F-->
+		result%id%07 <Goto result%id%02>
+		Msg%id%01 <I thought that to repay you for saving my life, I could join your team and maybe help out. What do you think?>
+		Msg%id%02 <Thanks! I won't let you down!>
+		Msg%id%03 <%name1% joined your lance in thanks for saving \PPR %1% life.>
+		Msg%id%04 <I understand. Well, the least I can do is give you some money. Thanks for your help. I won't forget it.>
+		Msg%id%05 <%name1% rewarded you for saving \PPR %1% life.>
+		Msg%id%06 <I know, but... I have other talents that could be useful. And you could teach me to fight. Can't I come along with you, please?>
+		Msg%id%07 <In thanks for saving my life, I'd like you to have this money.>
+		Msg%id%08 <In thanks for saving my life, I'd like... honestly, I'd like to go out with you sometime.>
+		Msg%id%09 <Great! Meet me in %name2% later on.>
+		Msg%id%010 <After saving \PPR %1% life, %name1% invited you to %name2% for a date.>
+		Prompt%id%01 <I think it's a good idea.>
+		Prompt%id%01_1 <I'd be honored to have you join me.>
+		Prompt%id%02 <No thanks. I don't need any help.>
+		Prompt%id%02_1 <Sorry, I'm not looking for another lancemate.>
+		Prompt%id%03 <Thanks, but aren't you a bit useless?>
+		CPrompt%id%03 <if= NPCSkill E2 10 0 Accept>
+		Prompt%id%03_1 <Thanks, but you aren't much of a fighter.>
+		Prompt%id%04 <Alright. You can join me.>
+		Prompt%id%05 <I don't have time to look after you.>
+		Prompt%id%06 <I'd like that too.>
+		Prompt%id%07 <This isn't a good time for that.>
+	end
+
