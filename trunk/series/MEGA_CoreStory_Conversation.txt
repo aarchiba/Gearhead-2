@@ -28,15 +28,22 @@
 Content
 	name <In The Army Now>
 	desc <The NPC is joining the army; maybe the PC can join as well!>
-	requires <ZZZ*CS_Conversation +P-- +F-- P:-- R:-- (1:Friend|1:Family|1:Lover)>
+	requires <*CS_Conversation +P-- +F-- P:-- R:-- (1:Friend|1:Family|1:Lover) -L:ENEMY ~C:MILIT ~C:ADVEN ~+Gpe ~1:MILIT ~1:LABOR>
+	Size 1
 
 	% Element1 is the NPC to meet
 	% Element2 is a military faction allied to the current city
 	% Element3 is a nearby member of the faction
 	% Element4 is an enemy of the faction
+	% Element5 is the meeting scene
 	Element2 <Faction Military !Ally -7 !Okay 1>
-	Element3 <Character !Comrade 2 !Near -7>
+	Element3 <Character !Comrade 2 !Near -7 NEVERFAIL>
+	Place3 <5 (Citizens) pass ally>
 	Element4 <Faction !Enemy 2>
+	Element5 <Scene Building Public !Near -7 !Okay 2>
+
+	% P%id%01 = Initialization Counter
+	update <if= PlotStatus %id% else %pop% if= P%id%01 0 P= %id%01 1 NPCLevel %1% StoryDL SetNPCFaction %1% %2%>
 
 	start <if= PlotStatus %id% else %pop% ifNPCDead %1% LoseComp 0 .%id%_loss>
 	.%id%_loss <+T-- +F-->
@@ -44,9 +51,36 @@ Content
 	sub
 		Persona 1
 		greeting <if= PlotStatus %id% else %pop% Goto .%id%_GoGreet>
+		% v%id%01 = First Reputation Counter
 		*.%id%_GoGreet <*HowAreYou .%id%_GoAsk>
-		.%id%_GoAsk <>
-
+		.%id%_GoAsk <NewChat Say %id%01 AddChat %id%01 AddChat %id%02 AlterContext .%id%_UnknownEnemy>
+		.%id%_UnknownEnemy <+Pun>
+		result%id%01 <NewChat Say %id%02    AddCHat %id%03 AddChat %id%04 AddChat %id%05    if= V%id%01 0 V= %id%01 1 AddCheerful d6>
+		result%id%02 <NewChat Say %id%03    AddCHat %id%03 AddChat %id%04 AddChat %id%05    if= V%id%01 0 V= %id%01 1 AddCheerful -d6>
+		result%id%03 <NewChat Say %id%04   SMemo %id%05  History %id%06   &SetPartnerNPC %1% &SetTargetNPC %3% &SetAllyFac %2% SetPCFac %2% XPV 150 WinComp %5% .%id%_next>
+		result%id%04 <NewChat Say %id%07   StoryNote %id%05   &SetPartnerNPC %1% &SetTargetNPC %3%  WinComp %5% .%id%_next>
+		.%id%_next <+Tgt +Fmi>
+		result%id%05 <NewChat Say %id%08 AddChat %id%06 AddChat %id%07>
+		result%id%06 <EndChat Say %id%09 SMemo 0 History %id%10 FreezeNPC %1% LoseComp 0 .%id%_loss>
+		.%id%_loss <+T-- +F-->
+		result%id%07 <Goto result%id%04>
+		Msg%id%01 <There's been a lot of fighting with %name4% recently. Some people say there's going to be a war... That's why I've decided to sign up with %name2%.>
+		Msg%id%02 <I'm glad you think so. How would you like to join %name2% as well? I'm supposed to go see %name3% about my first mission, but I'm a bit nervous. I'd feel better if I had someone else to go with.>
+		Msg%id%03 <Why do you always have to be so mean? I told %name3% that you were interested in joining as well. Would you come with me on the first mission? I'm a bit nervous about it, and could really use the morale support.>
+		Msg%id%04 <Really? Wow! Alright then, let's head over to %name5% and see what this mission is about. This is so exciting!>
+		Msg%id%05 <You agreed to go with %name1% to meet %name3% at %name5% for a mission.>
+		Msg%id%06 <You agreed to join %name2% with %name1%.>
+		Msg%id%07 <Great! Let's head over to %name5% and see what this mission is about, then.>
+		Msg%id%08 <Are you sure I can't change your mind? You'll be sorry when %name4% invades and forces us all to wear lederhosen.>
+		Msg%id%09 <So that's how it is. I'll see you later, \PC . I'm likely to be very busy with my duties for the next while at least.>
+		Msg%id%10 <Your friend %name1% joined %name2% because of the war brewing.>
+		Prompt%id%01 <Great! This could be a good opportunity for you.>
+		Prompt%id%02 <I knew you were a fool, but I didn't know it was this bad.>
+		Prompt%id%03 <Yes, I'd love to join %name2%.>
+		Prompt%id%04 <I'll come on your mission, but I'm not joining.>
+		Prompt%id%05 <Sorry, but you can do this by yourself.>
+		Prompt%id%06 <My mind is made. Don't ask me again.>
+		Prompt%id%07 <Alright, I'll go on your stupid mission.>
 	end
 
 Content

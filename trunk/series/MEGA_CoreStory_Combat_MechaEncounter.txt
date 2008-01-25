@@ -1,0 +1,843 @@
+%% *CS_MechaEncounter Content
+%%
+%% The PC is about to fight some mecha as part of the core story.
+%% Because this component will likely change the course of the story,
+%% this component is responsible for loading its own conclusion.
+%%
+%% The parent plot sets the plot status to this layer's ID when ready.
+%%
+%% Param1: The Mission Provider
+%% Param2: The outdoor scene where the fight will take place
+%%
+
+%%  ********************************
+%%  ***   +P--  Peaceful  Life   ***
+%%  ********************************
+
+Content
+	name <Thief on the Run>
+	size 5
+	desc <The PC has been sent to fight his friend! He may either continue with the fight, or join his friend on the dark side.>
+	requires <*CS_MechaEncounter  (+P--|+Pme|+Pun) 1:POLIC I:-->
+
+	% E1 is the mission provider
+	% E2 is the outdoor scene where the fight will take place
+	% E3 is the combat scene
+	% E4 is the friend
+	% E5 is the artifact
+	% E6 is a scene for the next meeting
+	Element3 <Prefab>
+	Place3 <2>
+	Element4 <Character Friend Criminal>
+	Place4 <3 (Enemy) sd enemy>
+	Element5 <Artifact Item Prezero>
+	Place5 </>
+	Element6 <Scene Building Public !Near -7 !Okay 4 !Xclude 1>
+
+	% SubPlot1 = Win the battle, get a reward
+	% SubPlot2 = Lose the battle, get scorned
+	SubPlot1 <*CS_Win_ToUnknownEnemy 1>
+	SubPlot2 <*CS_Loss_ToUnknownEnemy 1>
+
+	% V%id%01 = Initialization Counter
+	update <if= PlotStatus %id% else %pop% if= V%id%01 0 V= %id%01 1   NPCLevel %4% StoryDL>
+
+	sub
+		MetaScene 3 2
+		% L1 = Encounter Over Counter
+		% L2 = Initialization Counter
+		MapWidth 30
+		MapHeight 30
+
+		Start <if= L2 0 L= 2 1   ForceChat %4% StoryNote 1>
+		nu1 <if= T1 0   Return   if= V1 0 V= 1 1   SMemo 2 SetPlotStatus %id2%>
+		nu2 <if= T2 0   if= V1 0 V= 1 1   XPV 100  AddRenown 1   SALVAGE  SMemo 3   SetPlotStatus %id1%>
+
+		Msg1 <You discovered that your opponent was your friend %name4%.>
+		Msg2 <You were defeated by %name4%. You should return to \SCENE NPCScene %1% and tell %name1%.>
+		Msg3 <You defeated %name4%. You should return to \SCENE NPCScene %1% and tell %name1%.>
+
+		sub
+			team 1
+			SetEnemy 2
+			ParaX 5
+			ParaY 5
+
+			team 2
+			name <Enemy>
+			SetEnemy 1
+			ParaX 25
+			ParaY 25
+		end
+
+		Persona 4
+		special <UNLISTED NOESCAPE>
+		GREETING <EndChat Say 1 AddChat 1 AddCHat 2>
+		result1 <EndChat Say 2 AddChat 3 AddChat 4>
+		result2 <EndChat Say 3 AddChat 3 AddChat 4>
+		result3 <EndChat Say 7 AddLawful 1  &SetTargetItem %5%>
+		result4 <EndChat Say 4 History 5 SMemo 6 L= 1 1 MoveAndPacifyNPC %4% %6% &SetTargetNPC %4% &SetTargetItem %5% AddLawful -5 WinComp %6% .next>
+		.next <+Pla +Tgt +Fin>
+		Msg1 <\PC ! What are you doing out here?>
+		Msg2 <Right now I'm trying to shake the police off my tail, but as you can see that's not working so well. Look, I've got a big score lined up, and if you let me go I'll let you in on it.>
+		Msg3 <Ashes! I've been trying to shake off the police; looks like I should've tried harder. \PC , we're buds. Help me out here. I've got a big score lined up, and if you let me go I'll let you in on it.>
+		Msg4 <That's good to hear. For a while I was worried that I might have had to fight you. Come meet me at %name6% and I'll tell you all about the %name4% .>
+		Msg5 <You agreed to spare %name4% in exchange for information about the %name5%.>
+		Msg6 <You should meet %name4% at %name6% to learn more about the %name5%.>
+		Msg7 <I was afraid you were going to say that. Don't worry, I don't have any hard feelings... but that doesn't mean I plan to go easy on you.>
+		Prompt1 <I should ask you the same question!>
+		Prompt2 <%name1% sent me to fight you.>
+		Prompt3 <Sorry, I can't do that.>
+		Prompt3_1 <Nothing personal, but I can't.>
+		Prompt4 <A big score, you say? It's a deal.>
+		Prompt4_1 <Well, since we're friends, I'll do it.>
+	end
+	inv
+		STC CORE-MECHAENCOUNTER
+	end
+
+
+Content
+	name <The Game Is On>
+	size 5
+	desc <Fight a group of mecha belonging to your enemy faction.>
+	requires <*CS_MechaEncounter  +P-- F:++>
+
+	% E1: The Mission Provider
+	% E2: The outdoor scene where the fight will take place
+	% E3 is the combat scene
+	Element3 <Prefab>
+	Place3 <2>
+
+	% SubPlot1 = Win the battle, get a reward
+	% SubPlot2 = Lose the battle, get scorned
+	SubPlot1 <*CS_Win_ToUnknownEnemy 1>
+	SubPlot2 <*CS_Loss_ToUnknownEnemy 1>
+
+	sub
+		MetaScene 3 2
+		% L1 = Encounter Over Counter
+		% L2 = Initialization Counter
+		MapWidth 30
+		MapHeight 30
+
+		Start <if= L2 0 L= 2 1 History 2 SMemo 3 AlterContext .next>
+		nu1 <if= T1 0   Return   if= V1 0 V= 1 1   SetPlotStatus %id2%>
+		nu2 <if= T2 0   if= V1 0 V= 1 1   XPV 100  AddRenown 1   SALVAGE   Alert 1 SetPlotStatus %id1%>
+		Msg1 <It's clear that \FACTION &EnemyFac are up to something.>
+		Msg2 <You fought a group of mecha from \Faction &EnemyFac .>
+		Msg3 <You fought a group of mecha from \Faction &EnemyFac . You should report back to %name1%.>
+		.next <+Pun>
+
+		sub
+			team 1
+			SetEnemy 2
+			ParaX 5
+			ParaY 5
+
+			team 2
+			SetEnemy 1
+			Deploy <SetSelfFaction &EnemyFac   WMecha 2 StoryDL 100>
+			ParaX 25
+			ParaY 25
+		end
+	end
+	inv
+		STC CORE-MECHAENCOUNTER
+	end
+
+Content
+	name <First Wave>
+	size 5
+	desc <Fight a group of mecha; may be first wave of an invasion.>
+	requires <*CS_MechaEncounter  +P-- ~!Ne (F:--|F:MILIT|F:POLIT)>
+
+	% E1: The Mission Provider
+	% E2: The outdoor scene where the fight will take place
+	% E3 is the combat scene
+	Element3 <Prefab>
+	Place3 <2>
+
+	% SubPlot1 = Win the battle, get a reward
+	% SubPlot2 = Lose the battle, get scorned
+	SubPlot1 <*CS_Win_ToUnknownEnemy 1>
+	SubPlot2 <*CS_Loss_ToUnknownEnemy 1>
+
+	sub
+		MetaScene 3 2
+		% L1 = Encounter Over Counter
+		% L2 = Initialization Counter
+		MapWidth 30
+		MapHeight 30
+
+		Start <if= L2 0 L= 2 1 History 2 SMemo 3 AlterContext .next>
+		nu1 <if= T1 0   Return   if= V1 0 V= 1 1   SetPlotStatus %id2%>
+		nu2 <if= T2 0   if= V1 0 V= 1 1   XPV 100  AddRenown 1   SALVAGE   Alert 1 SetPlotStatus %id1%>
+		Msg1 <This may have been the first wave of an invasion force!>
+		Msg2 <You fought a group of unknown mecha.>
+		Msg3 <You fought a group of unknown mecha. You should report back to %name1%.>
+		.next <+Pun>
+
+		sub
+			team 1
+			SetEnemy 2
+			ParaX 5
+			ParaY 5
+
+			team 2
+			SetEnemy 1
+			Deploy <SetSelfFaction N2   WMecha 2 StoryDL 100>
+			ParaX 25
+			ParaY 25
+		end
+	end
+	inv
+		STC CORE-MECHAENCOUNTER
+	end
+
+
+
+Content
+	name <Enemy Faction Attacks>
+	size 5
+	desc <Fight a group of mecha belonging to new enemy faction.>
+	requires <*CS_MechaEncounter (+P--|+Pun) E:-- F:-- P:++>
+
+	% E1: The Mission Provider
+	% E2: The outdoor scene where the fight will take place
+	% E3 is the new enemy faction
+	% E4 is the combat scene
+	element3 <Faction !Enemy -3>
+	Element4 <Prefab>
+	Place4 <2>
+
+	% SubPlot1 = Win the battle, get a reward
+	% SubPlot2 = Lose the battle, get scorned
+	SubPlot1 <*CS_CAWinMission&RevealEF 1>
+	SubPlot2 <*CS_CALoseMission&RevealEF 1>
+
+	sub
+		MetaScene 4 2
+		% L1 = Encounter Over Counter
+		% L2 = Initialization Counter
+		MapWidth 30
+		MapHeight 30
+
+		Start <if= L2 0 L= 2 1 SMemo 3 History 2 &SetEnemyFac %3% PCFEnemy %3%>
+		nu1 <if= T1 0   Return   if= V1 0 V= 1 1   SetPlotStatus %id2%>
+		nu2 <if= T2 0   if= V1 0 V= 1 1   XPV 100  AddRenown 1   SALVAGE   Alert 1 SetPlotStatus %id1%>
+		Msg1 <There can be no doubt: these mecha were sent by \FACTION &EnemyFac .>
+		Msg2 <You fought a group of mecha from %name3%.>
+		Msg3 <You fought a group of mecha from %name3%. You should report back to %name1%.>
+
+		sub
+			team 1
+			SetEnemy 2
+			ParaX 5
+			ParaY 5
+
+			team 2
+			SetEnemy 1
+			Deploy <SetSelfFaction %3%   WMecha 2 StoryDL 100>
+			ParaX 25
+			ParaY 25
+		end
+	end
+	inv
+		STC CORE-MECHAENCOUNTER
+	end
+
+Content
+	name <Meet Your New Enemy>
+	size 8
+	desc <Fight a group of mecha led by your new enemy.>
+	requires <*CS_MechaEncounter +P-- ~+Ffi E:-- F:-- -!Ne>
+
+	% E1 is the mission provider
+	% E2 is the outdoors scene where the fight will take place
+	% E3 is the combat scene
+	% E4 is the enemy NPC
+	Element3 <Prefab>
+	Place3 <2>
+	Element4 <NewNPC -2 -7>
+	Place4 <3 sd enemy>
+
+	% V%id%01 = Initialization Counter
+	update <if= PlotStatus %id% else %pop% if= V%id%01 0 V= %id%01 1   FreezeNPC %4%   MoveNPC %4% %3% SetNPCTeam %4% 2 NPCLevel %4% StoryDL>
+
+	% SubPlot1 = Win the battle, get a reward
+	% SubPlot2 = Lose the battle, get scorned
+	SubPlot1 <*CS_Win_RevealEnemyNPC 1 4>
+	SubPlot2 <*CS_Loss_RevealEnemyNPC 1 4>
+
+	sub
+		MetaScene 3 2
+		% L1 = Encounter Over Counter
+		% L2 = Initialization Counter
+		MapWidth 30
+		MapHeight 30
+
+		Start <if= L2 0 L= 2 1   SMemo 3 History 2   ForceChat %4%    AlterContext .next>
+		nu1 <if= T1 0   Return   if= V1 0 V= 1 1   SetPlotStatus %id2%>
+		nu2 <if= T2 0   if= V1 0 V= 1 1   XPV 100  AddRenown 1   SALVAGE   Alert 1 SetPlotStatus %id1%>
+		Msg1 <Who sent these mecha, and what do they want?>
+		Msg2 <You fought a group of mecha led by %name4%.>
+		Msg3 <You fought a group of mecha led by %name4%. You should report back to %name1%.>
+		.next <+Pun>
+
+		sub
+			team 1
+			SetEnemy 2
+			ParaX 5
+			ParaY 5
+
+			team 2
+			SetEnemy 1
+			Deploy <SetSelfFaction E2   WMecha 2 StoryDL 100>
+			ParaX 25
+			ParaY 25
+		end
+
+		Persona 4
+		special <UNLISTED>
+		*GREETING <*BattleIntroduction GoThreat>
+		*GoThreat <*THEME_EXPO&ENEMY na>
+	end
+	inv
+		STC CORE-MECHAENCOUNTER
+	end
+
+
+%%  ****************************
+%%  ***   +Pme  Meet Enemy   ***
+%%  ****************************
+
+Content
+	name <Meet Enemy in Battle>
+	size 8
+	desc <Meet the enemy you met earlier in battle.>
+	requires <*CS_MechaEncounter   +Pme E:++>
+
+	% V%id%01 = Initialization
+	update <if= PlotStatus %id% else %pop% if= V%id%01 0 V= %id%01 1 NPCLevel %4% StoryDL>
+
+	% E1: The Mission Provider
+	% E2: The outdoor scene where the fight will take place
+	% E3 is the combat scene
+	% E4 is the enemy character
+	Element3 <Prefab>
+	Place3 <2>
+	element4 <Grab 1>
+	Place4 <3 (Enemies) SD Enemy>
+
+	% SubPlot1 = Win the battle, get a reward
+	% SubPlot2 = Lose the battle, get scorned
+	SubPlot1 <*CS_Win_ToUnknownEnemy 1>
+	SubPlot2 <*CS_Loss_ToUnknownEnemy 1>
+
+	sub
+		MetaScene 3 2
+		% L1 = Encounter Over Counter
+		% L2 = Initialization Counter
+		% L3 = Script Immunity Counter
+		% L4 = Identity of enemy NPC
+		MapWidth 30
+		MapHeight 30
+
+		Start <if= L2 0 L= 2 1   ForceChat %4%  AlterContext .next>
+		Faint%4% <if= L1 0  Goto GoDie>
+		GoDie <L= 1 2  L= 3 1   FreezeNPC %4%   SMemo 5  History 4    SetPlotStatus %id1%>
+		nu1 <if= T1 0  Return   if= L1 0 L= 1 1   SMemo 5  History 2     ForceChat %4%  SetPlotStatus %id2%>
+		nu2 <if= T2 0           if= L1 0 L= 1 2   SMemo 5  History 3   AddRenown 1   XPV 100   SALVAGE     ifNPCOK %4% else GoDie  ForceChat %4%  SetPlotStatus %id1%>
+		End <if# L3 0 Print 1>
+
+		.next <+Pun>
+
+		Msg1 <%name4%'s cockpit is empty. Could \SPR %4% have escaped?>
+		Msg2 <You met %name4% in battle, and lost.>
+		Msg3 <You met %name4% in battle, and won.>
+		Msg4 <You appeared to kill %name4% in battle, but \PPR %4% body wasn't found...>
+		Msg5 <You should report back to %name1% after meeting %name4% in battle.>
+
+		sub
+			team 1
+			SetEnemy 2
+			ParaX 5
+			ParaY 5
+
+			team 2
+			name <Enemies>
+			SetEnemy 1
+			Deploy <SetSelfFaction &EnemyFac   WMecha 2 StoryDL 75>
+			ParaX 25
+			ParaY 25
+		end
+
+		Persona 4
+		special <UNLISTED>
+		greeting <if= L1 2 else GoCheckLoss Goto GoWinSpeech>
+		*GoWinSpeech <*GetYouNextTime>
+		GoCheckLoss <if= L1 1 else GoThreat Goto GoLoseSpeech>
+		*GoLoseSpeech <*YouLose>
+		*GoThreat <*CORE_Pme_MEIB_Greeting GoInfo>
+		*GoInfo <*THEME_EXPO&ENEMY na>
+	end
+	inv
+		STC CORE-MECHAENCOUNTER
+	end
+
+%%  *****************************************
+%%  ***   +Pun  Unknown  Enemy  Attacks   ***
+%%  *****************************************
+
+Content
+	name <Fight Henchmen>
+	size 5
+	desc <You fight the henchmen of your arch-enemy.>
+	requires <*CS_MechaEncounter  E:++ +Pun !Ne -E:ALLY>
+
+	% E1: The Mission Provider
+	% E2: The outdoor scene where the fight will take place
+	% E3 is the combat scene
+	% E4 is the enemy character
+	Element3 <Prefab>
+	Place3 <2>
+	element4 <Grab 1>
+
+	% SubPlot1 = Win the battle, get a reward
+	% SubPlot2 = Lose the battle, get scorned
+	SubPlot1 <*CS_CAWinMission 1>
+	SubPlot2 <*CS_CALoseMission 1>
+
+	sub
+		MetaScene 3 2
+		% L1 = Encounter Over Counter
+		% L2 = Initialization Counter
+		MapWidth 30
+		MapHeight 30
+
+		Start <if= L2 0 L= 2 1   ifNPCOK %4% else GoE4Died ForceChat %4%>
+		GoE4Died <Alert 4 Retreat 2 SetPlotStatus %id1%>
+		nu1 <if= T1 0  Return   if= L1 0 L= 1 1   SMemo 1 History 2   ForceChat %4%>
+		nu2 <if= T2 0           if= L1 0 L= 1 2   SMemo 1 History 3   AddRenown 1   XPV 100   Salvage   ForceChat %4%>
+
+		Msg1 <You fought %name4%'s henchmen. You should return to %name1% for a debriefing now.>
+		Msg2 <You fought %name4%'s henchmen , and lost.>
+		Msg3 <You fought %name4%'s henchmen , and won.>
+		Msg4 <Without %name4%'s leadership, the enemy fighters run away.>
+
+		sub
+			team 1
+			SetEnemy 2
+			ParaX 5
+			ParaY 5
+
+			team 2
+			SetEnemy 1
+			Deploy <SetSelfFaction &EnemyFac   WMecha 2 StoryDL 100>
+			ParaX 25
+			ParaY 25
+		end
+
+		Persona 4
+		special <UNLISTED>
+		greeting <PCFEnemy &EnemyFac   if= L1 2 else GoCheckLoss SetPlotStatus %id1% Goto GoWinSpeech>
+		GoWinSpeech <EndChat Say 2>
+		GoCheckLoss <if= L1 1 else GoThreat SetPlotStatus %id2% Goto GoLoseSpeech>
+		*GoLoseSpeech <*YouLose>
+		*GoThreat <*BattleChallenge GoFight na>
+		GoFight <EndChat Say 1>
+		Msg1 <I can see that I'm not needed here. My henchmen should be more than capable of taking you out.>
+		Msg1_1 <As much as I'd love to stay and fight you myself, I'm afraid that there's business elsewhere I really must attend to. If you survive then we'll meet again.>
+		CMsg1_1 <ifNPCSociable Accept>
+		Msg1_2 <My men can finish you on their own. I have more important things to attend to.>
+		CMsg1_2 <ifNPCShy Accept>
+		Msg1_3 <I'm afraid I have to go now, but my assistants should be skilled enough to keep you busy for a while.>
+		CMsg1_3 <ifNPCEasygoing Accept>
+		Msg1_4 <It would be a waste of my talents to kill you myself. Men, destroy \PC ... I must be off.>
+		CMsg1_4 <ifNPCPassionate Accept>
+		Msg1_5 <You're very lucky, \PC ... I'm too busy to fight you myself, today. Of course I do have some assistants who will fight you in my place, so you're not that lucky.>
+		CMsg1_5 <ifNPCCheerful Accept>
+		Msg1_6 <I cannot allow you to delay our mission. I must be off, but my subordinates will make sure you never leave this place. Goodbye \PC .>
+		CMsg1_6 <ifNPCMelancholy Accept>
+		Msg2 <You're stronger than I thought. Next time, I will face you myself.>
+		Msg2_1 <Well done, \PC , I see now that you're destined to become a great pilot. The next time we meet I hope I have a chance to test your skills myself.>
+		CMsg2_1 <ifNPCSociable Accept>
+		Msg2_2 <So, you survived... We'll meet again.>
+		CMsg2_2 <ifNPCShy Accept>
+		Msg2_3 <They say good help is hard to find... I guess next time I'll have to face you myself. Until then, goodbye...>
+		CMsg2_3 <ifNPCEasygoing Accept>
+		Msg2_4 <So, you aren't as weak as you first appeared... I look forward to our next meeting.>
+		CMsg2_4 <ifNPCPassionate Accept>
+		Msg2_5 <How interesting. Next time I'll be sure to fight you myself.>
+		CMsg2_5 <ifNPCCheerful Accept>
+		Msg2_6 <How disappointing, I expected you to be dead by now... but in any case you were too slow to stop me.>
+		CMsg2_6 <ifNPCMelancholy Accept>
+	end
+	inv
+		STC CORE-MECHAENCOUNTER
+	end
+
+
+Plot
+	name <Fight Arch-Enemy>
+	size 8
+	desc <You fight your arch-enemy.>
+	requires <*CS_MechaEncounter   E:++ +Pun ~!Lo -!Ne -E:ALLY>
+
+	% V%id%01 = Initialization Counter
+	update <if= PlotStatus %id% else %pop% if= V%id%01 0 V= %id%01 1   NPCLevel %4% StoryDL>
+
+	% E1: The Mission Provider
+	% E2: The outdoor scene where the fight will take place
+	% E3 is the combat scene
+	% E4 is the enemy character
+	Element3 <Prefab>
+	Place3 <2>
+	element4 <Grab 1>
+	Place4 <3 (Enemies) SD Enemy>
+
+	% SubPlot1 = Win the battle, get a reward
+	% SubPlot2 = Lose the battle, get scorned
+	SubPlot1 <*CS_CAWinMission 1>
+	SubPlot2 <*CS_CALoseMission 1>
+
+	sub
+		MetaScene 3 2
+		% L1 = Encounter Over Counter
+		% L2 = Initialization Counter
+		% L3 = Script Immunity Counter
+		MapWidth 30
+		MapHeight 30
+
+		Start <if= L2 0 L= 2 1   ForceChat %4%>
+		Faint%4% <if= L1 0 Goto GoDie>
+		GoDie <L= 1 2  L= 3 1   FreezeNPC %4%   StoryNote 4   SetPlotStatus %id1%>
+		nu1 <if= T1 0  Return   if= L1 0 L= 1 1   StoryNote 2   SetPlotStatus %id2%   ForceChat %4%>
+		nu2 <if= T2 0           if= L1 0 L= 1 2   StoryNote 3   AddRenown 1   XPV 100   Salvage   ifNPCOK %4% else GoDie   SetPlotStatus %id1%   ForceChat %4%>
+		End <if# L3 0 Print 1>
+
+		Msg1 <%name4%'s cockpit is empty. Could \SPR %4% have escaped?>
+		Msg2 <You fought your enemy %name4%, and lost.>
+		Msg3 <You fought your enemy %name4%, and won.>
+		Msg4 <You appeared to kill %name4% in battle, but \PPR %4% body wasn't found...>
+
+		sub
+			team 1
+			SetEnemy 2
+			ParaX 5
+			ParaY 5
+
+			team 2
+			name <Enemies>
+			SetEnemy 1
+			Deploy <SetSelfFaction &EnemyFac   WMecha 2 StoryDL 75>
+			ParaX 25
+			ParaY 25
+		end
+
+		Persona 4
+		special <UNLISTED>
+		greeting <PCFEnemy &EnemyFac  if= L1 2 else GoCheckLoss Goto GoWinSpeech>
+		*GoWinSpeech <*GetYouNextTime>
+		GoCheckLoss <if= L1 1 else GoThreat Goto GoLoseSpeech>
+		*GoLoseSpeech <*YouLose>
+		*GoThreat <*BattleChallenge GoFight na>
+		*GoFight <*THEME_EXPO&ENEMY na>
+	end
+	inv
+		STC CORE-MECHAENCOUNTER
+	end
+
+Content
+	name <Fight Mysterious Enemies>
+	size 5
+	desc <Fight a group of mecha presumably allied with the unknown enemies revealed earlier.>
+	requires <*CS_MechaEncounter +Pun !Ne ~E:-->
+
+	% E1: The Mission Provider
+	% E2: The outdoor scene where the fight will take place
+	% E3 is the combat scene
+	Element3 <Prefab>
+	Place3 <2>
+
+	% SubPlot1 = Win the battle, get a reward
+	% SubPlot2 = Lose the battle, get scorned
+	SubPlot1 <*CS_CAWinMission 1>
+	SubPlot2 <*CS_CALoseMission 1>
+
+	sub
+		MetaScene 3 2
+		% L1 = Encounter Over Counter
+		% L2 = Initialization Counter
+		MapWidth 30
+		MapHeight 30
+
+		Start <if= L2 0 L= 2 1 SMemo 1 History 2>
+		nu1 <if= T1 0   Return   if= V1 0 V= 1 1   SetPlotStatus %id2%>
+		nu2 <if= T2 0   if= V1 0 V= 1 1            XPV 100   AddRenown 1  Salvage   SetPlotStatus %id1%>
+
+		Msg1 <After fighting some mysterious mecha you should report back to %name1%.>
+		Msg2 <You fought a group of mysterious mecha.>
+		.next <+T-->
+
+		sub
+			team 1
+			SetEnemy 2
+			ParaX 5
+			ParaY 5
+
+			team 2
+			SetEnemy 1
+			Deploy <SetSelfFaction &EnemyFac   WMecha 2 StoryDL 100>
+			ParaX 25
+			ParaY 25
+		end
+	end
+	inv
+		STC CORE-MECHAENCOUNTER
+	end
+
+Plot
+	name <A New Arch-Enemy>
+	size 8
+	desc <Fight your new arch-enemy for the first time.>
+	requires <*CS_MechaEncounter +Pun ~!Lo ~!Md E:-- -F:Ally>
+
+	% E1: The Mission Provider
+	% E2: The outdoor scene where the fight will take place
+	% E3 is the combat scene
+	% E4 is the enemy character
+	Element3 <Prefab>
+	Place3 <2>
+	element4 <NewNPC -2 0>
+	place4 <3 (Enemies) SD enemy>
+
+	% V%id%01 = Initialization Counter
+	update <if= V%id%01 0 else %pop% V= %id%01 1 NPCLevel %4% StoryDL Goto %pop%>
+
+	% SubPlot1 = Win the battle, get a reward
+	% SubPlot2 = Lose the battle, get scorned
+	SubPlot1 <*CS_Win_RevealEnemyNPC 1 4>
+	SubPlot2 <*CS_Loss_RevealEnemyNPC 1 4>
+
+	sub
+		MetaScene 3 2
+		% L1 = Encounter Over Counter
+		% L2 = Initialization Counter
+		% L3 = Script Immunity Counter
+		MapWidth 30
+		MapHeight 30
+
+		Start <if= L2 0 L= 2 1   ForceChat %4%     PCFEnemy &EnemyFac>
+		Faint%4% <if= L1 0  Goto GoDie>
+		GoDie <L= 1 2  L= 3 1   FreezeNPC %4%   SMemo 5 History 4     SetPlotStatus %id1%>
+		nu1 <if= T1 0  Return   if= L1 0 L= 1 1   SMemo 5 History 2      ForceChat %4%  SetPlotStatus %id2%>
+		nu2 <if= T2 0           if= L1 0 L= 1 2   SMemo 5 History 3   AddRenown 1  Salvage   ifNPCOK %4% else GoDie  XPV 100    ForceChat %4%  SetPlotStatus %id1%>
+		End <if# L3 0 Print 1>
+
+		Msg1 <%name4%'s cockpit is empty. Could \SPR %4% have escaped?>
+		Msg2 <You met %name4% in battle, and lost.>
+		Msg3 <You met %name4% in battle, and won.>
+		Msg4 <You appeared to kill %name4% in battle, but \PPR %4% body wasn't found...>
+		Msg5 <You met %name4% in battle. You should report back to %name1% about it.>
+
+		sub
+			team 1
+			SetEnemy 2
+			ParaX 5
+			ParaY 5
+
+			team 2
+			name <Enemies>
+			SetEnemy 1
+			Deploy <SetSelfFaction &EnemyFac   WMecha 2 StoryDL 75>
+			ParaX 25
+			ParaY 25
+		end
+
+		Persona 4
+		special <UNLISTED>
+		greeting <if= L1 2 else GoCheckLoss Goto GoWinSpeech>
+		*GoWinSpeech <*GetYouNextTime>
+		GoCheckLoss <if= L1 1 else GoThreat  Goto GoLoseSpeech>
+		*GoLoseSpeech <*YouLose>
+		*GoThreat <*COMP_Pun_MAE_Greeting GoFight>
+		*GoFight <*THEME_EXPO&ENEMY na>
+	end
+	inv
+		STC CORE-MECHAENCOUNTER
+	end
+
+
+
+%%  *************************************
+%%  ***   +Pla  Learn  of  Artifact   ***
+%%  *************************************
+
+Plot
+	name <You're not the only one>
+	size 8
+	desc <You meet a new arch-enemy, who is also looking for TI.>
+	requires <*CS_MechaEncounter  +Pla I:++ E:-->
+
+	% E1: The Mission Provider
+	% E2: The outdoor scene where the fight will take place
+	% E3 is the combat scene
+	% E4 is the enemy character
+	Element3 <Prefab>
+	Place3 <2>
+	element4 <NewNPC -2 0>
+	place4 <3 (Enemies) SD enemy>
+
+	% V%id%01 = Initialization
+	update <if= V%id%01 0 else %pop% V= %id%01 1 NPCLevel %4% StoryDL Goto %pop%>
+
+	% SubPlot1 = Win the battle, get a reward
+	% SubPlot2 = Lose the battle, get scorned
+	SubPlot1 <*CS_Win_RevealEnemyNPC  1 4>
+	SubPlot2 <*CS_Loss_RevealEnemyNPC 1 4>
+
+	sub
+		MetaScene 3 2
+		% L1 = Encounter Over Counter
+		% L2 = Initialization Counter
+		% L3 = Script Immunity Counter
+		MapWidth 30
+		MapHeight 30
+
+		Start <if= L2 0 L= 2 1   ForceChat %4%     PCFEnemy &EnemyFac>
+		Faint%4% <if= L1 0  Goto GoDie>
+		GoDie <L= 1 2  L= 3 1   FreezeNPC %4%   SMemo 3 History 2     SetPlotStatus %id1%>
+		nu1 <if= T1 0  Return   if= L1 0 L= 1 1   SMemo 3 History 2      ForceChat %4%  SetPlotStatus %id2%>
+		nu2 <if= T2 0           if= L1 0 L= 1 2   SMemo 3 History 2   AddRenown 1  Salvage   ifNPCOK %4% else GoDie  XPV 100    ForceChat %4%  SetPlotStatus %id1%>
+		End <if# L3 0 Print 1>
+
+		Msg1 <%name4%'s cockpit is empty. Could \SPR %4% have escaped?>
+		Msg2 <You met %name4%, who was also looking for \NARRATIVE 8 , in battle.>
+		Msg3 <You met %name4% in battle. You should return to %name1% for a debriefing.>
+
+		sub
+			team 1
+			SetEnemy 2
+			ParaX 5
+			ParaY 5
+
+			team 2
+			name <Enemies>
+			SetEnemy 1
+			Deploy <SetSelfFaction &EnemyFac   WMecha 2 StoryDL 75>
+			ParaX 25
+			ParaY 25
+		end
+
+		Persona 4
+		special <UNLISTED>
+		greeting <PCFEnemy &EnemyFac   if= L1 2 else GoCheckLoss  Goto GoWinSpeech>
+		*GoWinSpeech <*GetYouNextTime>
+		GoCheckLoss <if= L1 1 else GoThreat  EndChat Say 2>
+		GoThreat <EndChat Say 1 AddChat 1 AddChat 2>
+		*result1 <*THEME_EXPO&ENEMY na>
+		result2 <AddEasygoing -d8  Goto result1>
+		Msg1 <What do you know about the \NARRATIVE 8 ? Tell me now before you die.>
+		Msg2 <So, you really know nothing? How unfortunate that you should suffer so pointlessly.>
+		Prompt1 <I don't know anything! Really!>
+		Prompt1_1 <\NARRATIVE 8 ? What's that?>
+		Prompt2 <I'm not telling you anything.>
+		Prompt2_1 <You'll have to kill me then.>
+	end
+	inv
+		STC CORE-MECHAENCOUNTER
+	end
+
+%%  *******************
+%%  ***   GENERAL   ***
+%%  *******************
+
+
+Content
+	name <A Pilot in Trouble>
+	size 6
+	desc <Find a pilot fighting other mecha; can help out.>
+	requires <*CS_MechaEncounter>
+
+	% E1: The Mission Provider
+	% E2: The outdoor scene where the fight will take place
+	% E3 is the combat scene
+	% E4 is the home scene of the character to help
+	% E5 is the character itself
+	Element3 <Prefab>
+	Place3 <2>
+	element4 <Scene Building Public !Near -7 !XClude -2>
+	element5 <NewNPC 0 -7>
+	Place5 <4 (Citizens) Pass>
+
+	% V%id%01 = Initialization Counter
+
+	update <if= V%id%01 0 else %pop% V= %id%01 1   MoveNPC %5% %3%  SetNPCTeam %5% 3  NPCLevel %5% StoryDL  Goto %pop%>
+
+	% SubPlot1 = Win the battle, now find NPC
+	% SubPlot2 = Lose the battle, get scorned
+	SubPlot1 <*CS_Win_UnexpectedMeeting&Rescue 1 5>
+	SubPlot2 <*CS_Loss_UnexpectedMeeting&Rescue 1 5>
+
+	sub
+		MetaScene 3 2
+		% L1 = Encounter Over Counter
+		% L2 = Initialization Counter
+		MapWidth 30
+		MapHeight 30
+
+		% L1 = Match Over counter
+		% L2 = Initialization Counter
+
+		Start <if= L2 0 L= 2 1 ForceChat %5%>
+		% If the NPC dies, this scenario ends in a loss.
+		Faint%5% <L= 1 1  SMemo 5  History 1  SetPlotStatus %id2%>
+		% If the PC defeats all of T2 before the NPC dies, it's a win.
+		nu1 <if= T1 0   Return   if= V1 0 V= 1 1               SMemo 5  History 1   SetPlotStatus %id2%>
+		nu2 <if= T2 0   if= V1 0 V= 1 1   XPV 100  AddRenown 1   Alert 3 RunAway %5% SMemo 5 History 2 SetPlotStatus %id1%>
+		Msg1 <You found %name5% being attacked by mecha, but failed to help.>
+		Msg2 <You rescued %name5% from hostile mecha.>
+		Msg2_1 <You rescued %name5% from \FACTION &EnemyFac .>
+		CMsg2_1 <ifFactionExists &EnemyFac Accept>
+		Msg3 <As the battle ends, %name5% races off.>
+		Msg5 <You should go to \SCENE NPCScene %1% to tell %name1% about %name5%.>
+
+		sub
+			team 1
+			SetAlly 3
+			SetEnemy 2
+			ParaX 5
+			ParaY 10
+
+			team 2
+			SetEnemy 1
+			Deploy <SetSelfFaction &EnemyFac   WMecha 2 StoryDL 130>
+			ParaX 25
+			ParaY 25
+
+			team 3
+			SetAlly 1
+			SetEnemy 2
+			ParaX 10
+			ParaY 5
+		end
+
+		Persona 5
+		special <Unlisted>
+		greeting <if= PlotStatus %id% else GoChat if# V1 0 else GoFirst EndChat Say 1>
+		*GoFirst <*HelpMeVsMecha GoAccept GoDeny>
+		GoAccept <V= 1 1 EndChat Say 2 AddHeroic 1 AddReact d10>
+		GoDeny <V= 1 1 EndChat Say 3 AddRenown -1>
+		*GoChat <*MISC_CHATTER>
+		Msg1 <Shouldn't we concentrate on fighting right now?>
+		Msg2 <Thanks! Between the two of us, they shouldn't be much trouble...>
+		Msg3 <Well, seeing that you're here, it seems that those mecha are your problem as well right now...>
+
+	end
+	inv
+		STC CORE-MECHAENCOUNTER
+	end
+
+

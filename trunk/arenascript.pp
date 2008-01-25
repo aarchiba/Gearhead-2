@@ -4162,10 +4162,23 @@ end;
 
 Procedure AddLancemate( GB: GameBoardPtr; NPC: GearPtr );
 	{ Add the listed NPC to the PC's lance. }
+var
+	Mecha: GearPtr;
 begin
 	{ This NPC will have to quit their current team to do this... }
 	{ so, better set a trigger. }
 	SetTrigger( GB , TRIGGER_NumberOfUnits + BStr( NAttValue( NPC^.NA , NAG_Location , NAS_Team ) ) );
+
+	{ If this is the first time the lancemate has joined, add the NPC's mecha. }
+	if IsACombatant( NPC ) and ( NAttValue( NPC^.NA , NAG_Narrative , NAS_GaveLMMecha ) = 0 ) then begin
+		Mecha := SelectNPCMecha( GB , GB^.Scene , NPC );
+		if Mecha <> Nil then begin
+			SetNAtt( Mecha^.NA , NAG_Location , NAS_Team , NAV_DefPlayerTeam );
+			DeployMek( GB , Mecha , False );
+			AssociatePilotMek( GB^.Meks , NPC , Mecha );
+			SetNAtt( NPC^.NA , NAG_Narrative , NAS_GaveLMMecha , 1 );
+		end;
+	end;
 
 	SetNAtt( NPC^.NA , NAG_Location , NAS_Team , NAV_LancemateTeam );
 	SetLancemateOrders( GB );

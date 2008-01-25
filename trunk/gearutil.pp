@@ -153,6 +153,10 @@ Function SelectComponentFromList( MasterList: GearPtr; var ShoppingList: NAttPtr
 
 Function FindNextComponent( CList: GearPtr; const plot_desc: String ): GearPtr;
 
+Function NumberOfSkillSlots( PC: GearPtr ): Integer;
+Function TooManySkillsPenalty( PC: GearPtr; N: Integer ): Integer;
+Function SkillAdvCost( PC: GearPtr; CurrentLevel: Integer ): LongInt;
+
 
 implementation
 
@@ -2948,6 +2952,64 @@ begin
 	it := SelectComponentFromList( CList , ShoppingList );
 	DisposeNAtt( ShoppingList );
 	FindNextComponent := it;
+end;
+
+
+Function NumberOfSkillSlots( PC: GearPtr ): Integer;
+	{ Return the number of skill slots this PC has. }
+var
+	N: Integer;
+begin
+	N := ( ( CStat( PC , STAT_Knowledge ) * 6 ) div  5 + 5 );
+	if NAttValue( PC^.NA , NAG_Talent , NAS_Savant ) <> 0 then N := N + 5;
+	NumberOfSkillSlots := N;
+end;
+
+Function TooManySkillsPenalty( PC: GearPtr; N: Integer ): Integer;
+	{ Return the % XP penalty that this character will suffer. }
+begin
+	N := N - NumberOfSkillSlots( PC );
+	N := N * 10 - 5;
+	if N < 0 then N := 0;
+	TooManySkillsPenalty := N;
+end;
+
+Function SkillAdvCost( PC: GearPtr; CurrentLevel: Integer ): LongInt;
+	{ Return the cost, in XP points, to improve this skill by }
+	{ one level. }
+const
+	chart: Array [1..15] of LongInt = (
+		100,100,200,300,400,
+		500,800,1300,2100,3400,
+		5500,8900,14400,23300,37700
+	);
+var
+	SAC,N: LongInt;
+begin
+	{ The chart lists skill costs according to desired level, }
+	{ not current level. So, modify things a bit. }
+	Inc( CurrentLevel );
+
+	{ Range check - after level 15, it all costs the same. }
+	if CurrentLevel < 1 then CurrentLevel := 1;
+	if CurrentLevel <= 15 then begin
+		{ Base level advance cost is found in the chart. }
+		SAC := chart[ CurrentLevel ];
+	end else begin
+		{ For "epic level" skills, lay on a nice pile of deep hurting. }
+		SAC := chart[ 15 ] * ( ( CurrentLevel - 15 ) * ( CurrentLevel - 15 ) + 1 );
+	end;
+
+
+	{ May be adjusted upwards if PC has too many skills... }
+	if ( PC <> Nil ) and ( PC^.G = GG_Character ) then begin
+		N := TooManySkillsPenalty( PC , NumberOfSkills( PC ) );
+		if N > 0 then begin
+			SAC := ( SAC * ( 100 + N ) ) div 100;
+		end;
+	end;
+
+	SkillAdvCost := SAC;
 end;
 
 

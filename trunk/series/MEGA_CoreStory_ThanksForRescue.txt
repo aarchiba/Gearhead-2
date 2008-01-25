@@ -36,7 +36,7 @@ Content
 		result%id%02 <NewChat Say %id%04 AddEasygoing -d8   AddChat %id%03 AddChat %id%04 Goto .%id%_GoWin>
 		result%id%03 <NewChat Say %id%05 AddChat %id%05>
 		result%id%04 <NewChat Say %id%06 AddChat %id%05>
-		result%id%04 <NewChat Say %id%07>
+		result%id%05 <NewChat Say %id%07>
 		Msg%id%01 <If it wasn't for you, I might not even be here right now.>
 		Msg%id%02 <They're probably after me because they think I know where the %name2% is.>
 		Msg%id%03 <You learned about the %name2% from %name1%.>

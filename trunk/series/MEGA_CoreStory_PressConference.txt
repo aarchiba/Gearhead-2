@@ -49,7 +49,7 @@ Content
 		result%id%02 <AddEasygoing -d8         Goto .%id%_GoOffer>
 		result%id%03 <AddEasygoing  d8         Goto .%id%_GoOffer>
 		result%id%04 <Goto .%id%_GoOffer>
-		result%id%05 <NewChat Say %id%03 History %id%04 SMemo %id%05 &SetPartnerNPC %2% WinComp %3% .%id%_WinComp>
+		result%id%05 <NewChat Say %id%03 History %id%04 SMemo %id%05 LevelNPC %2% StoryDL &SetPartnerNPC %2% WinComp %3% .%id%_WinComp>
 		.%id%_WinComp <+Tgi +Fin>
 		result%id%06 <NewChat Say %id%06 History %id%07 SMemo 0 NTBLoseComp 0 .%id%_LoseComp ifNPCDead &EnemyNPC &SetEnemyNPC %2% FreezeNPC %2%>
 		.%id%_LoseComp <+T-- +F-->
