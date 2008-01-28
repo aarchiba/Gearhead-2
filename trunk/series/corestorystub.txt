@@ -1,7 +1,7 @@
 % Core Story Stub
 	XRanStory
 	name <Core Story>
-	CONTEXT <+P-- +T01 +F-->
+	CONTEXT <+P-- +C-- +T01 +F-->
 
 	XXRAN_PATTERN <COMP_*.txt>
 
@@ -31,6 +31,8 @@
 	&EpisodeScene <N7>
 	&SetTargetItem <N= 8 ?>
 	&TargetItem <N8>
+	&SetAmoreNPC <N= 9 ?>
+	&AmoreNPC <N9>
 
 	element1 <C>
 	palette_entry_code1 <E>
@@ -48,4 +50,6 @@
 	palette_entry_code7 <L>
 	element8 <I>
 	palette_entry_code8 <I>
+	element9 <C>
+	palette_entry_code9 <A>
 
