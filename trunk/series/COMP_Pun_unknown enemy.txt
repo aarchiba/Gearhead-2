@@ -2,6 +2,78 @@
 %%	+Pun	An unknown enemy attacks
 
 Plot
+	name <Pirate War>
+	desc <The thief you're looking for knows about the pirate war.>
+	requires <#A +Tht (+Far|+Ffi|+F--) +Pun T:++ F:-- -T:ENEMY -P:CRIHN (T:THIEF|T:CRIHN) (L:FCOMS|L:MAQUI|L:RISHI|L:CRIHN|L:BOHEM) ~C:THEIF ~+Gmo>
+	size 6
+
+	% E1 is an environs scene where the pirates are hanging out
+	% E2 is the metascene for the encounter
+	% E3 is the pirate faction
+	% E4 is a public scene
+	% E5 is a pirate captain who the PC can fight, and learn about the war
+	% E6 is the target NPC
+	element1 <Scene Environs !Near -7>
+	element2 <Prefab>
+	Place2 <1>
+	element3 <Faction CRIHN>
+	element4 <Scene Building Public !Okay 3 !Near -7>
+	element5 <Character HasMecha !Comrade 3 !Near 4 NeverFail>
+	NeverFail5 <Pirate>
+	element6 <Grab 5>
+
+	% P%id%01 = Initialization Counter
+	update <if= p%id%01 0 p= %id%01 1 NPCLevel %5% StoryDL MoveNPC %5% %2% SetNPCTeam %5% 2>
+
+	sub
+		MetaScene 2 2
+		rumor <there have been a lot of pirates fighting in %name1%.>
+		% L1 = Encounter Over Counter
+		% L2 = Initialization Counter
+		MapWidth 30
+		MapHeight 30
+
+		Start <if= L2 0 L= 2 1   StoryNote 1   ForceChat %5%    &SetEnemyFac %3%>
+		nu1 <if= T1 0   Return   if= V1 0 V= 1 1                                   LoseComp 0 .next>
+		nu2 <if= T2 0            if= V1 0 V= 1 1   XPV 100  AddRenown 1   SALVAGE   WinComp 0 .next ifNPCOK %5% PCEnemy %5%>
+		.next <+Tht +Fin>
+		Msg1 <You learned from %name5% that %name6% has a secret that the pirates are fighting to get.>
+
+		sub
+			team 1
+			SetEnemy 2
+			ParaX 5
+			ParaY 5
+
+			team 2
+			SetEnemy 1
+			Deploy <SetSelfFaction E2   WMecha 2 StoryDL 30>
+			ParaX 25
+			ParaY 25
+		end
+
+		Persona 5
+		special <UNLISTED NOESCAPE>
+		rumor <all the pirates in town have been looking for %name6%.>
+		greeting <EndChat Say 1 AddChat 1 AddChat 2>
+		result1 <EndChat Say 2 AddChat 3>
+		result2 <EndChat Say 3 AddChat 3>
+		result3 <EndChat Say 4>
+		Msg1 <You there... The word on the street is that you can tell me where %name6% is.>
+		Msg2 <Don't play games. I know that you've been looking for %name6%, just like we all have. Maybe you even found out \PPR %6% secret already. If you want to live you'd better share that knowledge with me.>
+		Msg3 <Ah, a clever ploy, but it's not going to work. I know that you've been looking for %name6%, just like we all have. Maybe you even found out \PPR %6% secret already. If you want to live you'd better share that knowledge with me.>
+		Msg4 <Five captains of the Blades have declared war to find out what %name6% knows. Maybe you really don't have any part in what's going on... but that's not a chance I'm willing to take.>
+		prompt1 <Me? I know nothing.>
+		prompt2 <And here I thought you were the one who could tell me.>
+		Prompt3 <Look, I don't understand what you're talking about.>
+	end
+	inv
+		Encounter
+		name <Pirates>
+		EncounterMove 50
+	end
+
+Plot
 	name <City Under Attack>
 	desc <The leader of the city puts out a call for heroes.>
 	requires <#A +T-- +Pun F:-- -L:ENEMY ~L:ALLY ~P:-- ~+Gpe>

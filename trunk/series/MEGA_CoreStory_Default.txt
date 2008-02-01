@@ -294,7 +294,7 @@ Content
 Content
 	name <You Work Well Together>
 	desc <The PC will be teamed up with the person he just met.>
-	requires <*CS_Win_UnexpectedMeeting R:-- 1:ALLY -2:ENEMY (1:CORPO|1:TRADE|1:LABOR|1:POLIT) (2:CORPO|2:LABOR)>
+	requires <*CS_Win_UnexpectedMeeting R:-- 1:ALLY -2:ENEMY (+C--|+Cro) (1:CORPO|1:TRADE|1:LABOR|1:POLIT) (2:CORPO|2:LABOR)>
 
 	% E1 is the mission-giver.
 	% E2 is the NPC previously met
@@ -312,7 +312,8 @@ Content
 		.%id%_GoEnd <CashPrize Reward StoryDL 300  SMemo 0  NTBWinComp 0 .%id%_end>
 		.%id%_GoNotHere <NewChat Say %id%02>
 		.%id%_end <+T-- +F-->
-		Result%id%01 <NewChat Say %id%03 StoryNote %id%04 &SetPartnerNPC %2% Goto .%id%_GoEnd>
+		Result%id%01 <NewChat Say %id%03 StoryNote %id%04 &SetPartnerNPC %2%  CashPrize Reward StoryDL 300  NTBWinComp 0 .%id%_GetPartner>
+		.%id%_GetPartner <+T-- +F-- +Cme>
 		Result%id%02 <NewChat Say %id%05 SMemo 0           AddSociable -d10   Goto .%id%_GoEnd>
 		Msg%id%01 <Good work out there, \PC . I hear that you met %name2% during the mission. How did you enjoy working together?>
 		Msg%id%02 <Come to \SCENE NPCScene %1% and we can talk there.>

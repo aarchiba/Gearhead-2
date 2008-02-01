@@ -139,10 +139,15 @@ LOCAL DESCRIPTORS
 	Describes the current state of the PC's life
 	+C--	Just going along with the flow
 
-	+C	Wooing a love interest
+	+Cro	PC is a rookie member of faction
+	+Cme	PC is acting as mentor to partner (R:++)
+	+Clo	Wooing a love interest
+	+Cre	PC attempts to reform enemy
+	+Cfa	The PC has to live down a massive failure
+
+	+C	Searching for lost friend/lover/family
 	+C	Investigating mystery of past (+B)
 	+C	PC is falsely accused of something (+B)
-	+C	Searching for lost friend/lover/family
 	+C	Love interest works for the enemy
 	+C	Love triangle with enemy
 	+C	Collaborating with enemy to end conflict
@@ -153,8 +158,9 @@ LOCAL DESCRIPTORS
 	+B--	Nothing special.
 	+Bor	PC was an orphan/raised communaly
 	+Bpd	PC's parents died
-
+	+Bad	PC responsible for ally/partner/friend's death
 	+Bld	PC's love interest died
+	+Bam	PC has amnesia
 
 +G??	PC Goal
 	The stated goal of the PC.
@@ -179,8 +185,8 @@ LOCAL DESCRIPTORS
 
 	+Tda	PC will go on a date with the target character
 	+Tgi	PC will go to a certain location to gather information
-
 	+Ten	Go to Encounter -> often to fight...
+
 	+Tgs	Guard Scene
 
 

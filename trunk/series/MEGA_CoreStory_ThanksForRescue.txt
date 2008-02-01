@@ -16,7 +16,7 @@
 Content
 	name <I need someone like you>
 	desc <The NPC will offer the PC a job.>
-	requires <*CS_ThanksForRescue (+P--|+Pun) (1:MILIT|1:POLIT|1:POLIC|1:CORPO) -1:ENEMY P:-->
+	requires <*CS_ThanksForRescue (+P--|+Pun) +C-- (1:MILIT|1:POLIT|1:POLIC|1:CORPO) -1:ENEMY P:-->
 
 	% E1 is the NPC who was rescued
 	% E2 is a local building allied with the NPC
@@ -34,9 +34,10 @@ Content
 		*.%id%_GoGreet <*ThanksForRescue .%id%_GoReveal>
 		.%id%_GoReveal <if# PCFac ChatNPCFac else .%id%_GoOrder if# 0 ChatNPCFac else .%id%_GoOrder NewChat Say %id%01 AddChat %id%01 AddChat %id%02 if= V%id%01 0 V= %id%01 1 AddReact 10>
 		.%id%_GoOrder <NewChat Say %id%06 SMemo %id%03 &SetTargetNPC %1%  AlterContext .%id%_Changes  SetPlotStatus %id1%  FacXP+ ChatNPCFac 5>
-		result%id%01 <NewChat Say %id%02 SMemo %id%03 History %id%04 XPV 100 &SetTargetNPC %1% SetPCFaction ChatNPCFac &SetAllyFac ChatNPCFac AlterContext .%id%_Changes SetPlotStatus %id1%>
+		result%id%01 <NewChat Say %id%02 SMemo %id%03 History %id%04 XPV 100 &SetTargetNPC %1% SetPCFaction ChatNPCFac &SetAllyFac ChatNPCFac AlterContext .%id%_Changes2 SetPlotStatus %id1%>
 		result%id%02 <NewChat Say %id%05 SMemo %id%03 &SetTargetNPC %1%  AlterContext .%id%_Changes  SetPlotStatus %id1%  ifG ChatNPCHeroism -1 PCFriend %1%>
 		.%id%_Changes <+Tgt +Fmi>
+		.%id%_Changes2 <+Tgt +Fmi +Cro>
 		Msg%id%01 <I want you to know that \FACTION ChatNPCFac could use you on our side. I'd like for you to come and work for us.>
 		Msg%id%02 <Welcome to the team. Come meet me at %name2% in a couple of hours; I'll have a mission for you then.>
 		Msg%id%03 <%name1% told you to meet \OPR %1% at %name2% later on.>

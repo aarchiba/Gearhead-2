@@ -1,0 +1,27 @@
+
+
+Plot
+	name <Target Has Moved On>
+	requires <#L +Tht T:++>
+	desc <The PC will be told that his target has moved on, but won't be told where.>
+
+	% E1 is the informant
+	% E2 is the new city
+	% E3 is the target
+	Element1 <Character !Near -7 Mechanic>
+	Element2 <Scene !Far -7 !Comrade -7 Town>
+	Element3 <Grab 5>
+
+	sub
+		Persona 1
+		rumor <%name1% might know where %name3% went.>
+		*greeting <*LookingForNPC %3% GoSuccess GoFail>
+		GoSuccess <NewChat Say 1 StoryNote 2   LoseEpisode %2% .next>
+		GoFail <NewChat Say 3 StoryNote 2   LoseEpisode %2% .next>
+		.next <>
+		Msg1 <Yeah, %name3% was in here a while back to get \PPR %3% mecha repaired. As far as I know \SPR %3% 's left town now, but I don't know where \SPR %3% went.>
+		Msg2 <%name1% told you that %name3% has left town.>
+		Msg3 <I don't know anything about %name3% . As far as I know, \SPR %3% 's not even in town anymore.>
+	end
+
+

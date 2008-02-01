@@ -1,0 +1,18 @@
+%% COMP_Cme_MentoringPartner.txt
+%%
+%%  PC assigned to mentor Partner components
+
+
+%%  *******************
+%%  ***   DEFAULT   ***
+%%  *******************
+
+Plot
+	name <You Have Failed>
+	desc <If set to mentor someone, and that someone has died, the PC will get blamed.>
+	requires <+Cme R:-- Common Common Common>
+
+	update <AddRenown -10   LoseComp &CompScene .next>
+	.next <+Cfa +Bad>
+
+

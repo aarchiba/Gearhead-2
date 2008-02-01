@@ -2,6 +2,63 @@
 %% told vaguely what's going on in the game world.
 
 Plot
+	name <There's Something Out There>
+	Size 0
+	desc <There's something out there. The PC will go find out what.>
+	requires <#A +T01 (C:MILIT|+Gfa)>
+
+	% E1 is the cavclub scene
+	% E2 is your friend
+	% E3 is an environs scene
+	% E4 is the encounter to be placed there
+	element1 <Scene !Near -7 cavclub>
+	element2 <NewNPC -3 -7 PCFriend>
+	place2 <1 pass>
+	element3 <Scene Environs !NEar -7>
+	element4 <Prefab>
+	Place4 <3>
+
+	% P1 = Forcechat counter
+	update <if= P1 0 P= 1 1 ForceChat %2%>
+
+	sub
+		Persona 2
+		% THE INTRO
+		% - All +T01 components should feature a intro character. They don't have to,
+		%   of course, but it'll be a major pissoff if they don't.
+		% - The intro character should follow this form, to insure that all the major
+		%   bits are in place: the introduction, the question, the story info, and the
+		%   advice.
+		% V1 = Have given story info.
+		greeting <StoryNote 2  WinComp %4% .next  if= V1 1 else GoGreeting Goto GoAdvice>
+		.next <+Ten +F-->
+		*GoGreeting <*INTRO_Introduction GoAskQuestion>
+		*GoAskQuestion <*INTRO_Question GoStoryInfo>
+		GoStoryInfo <NewChat Say 1 V= 1 1 AddChat 1>
+		*GoAdvice <*INTRO_Advice>
+		Result1 <Goto GoAdvice>
+		Msg1 <Did you hear that a group of strange mecha has been spotted in %name3%? It could be raiders or invaders or just about anything.>
+		Msg1_1 <>
+		CMsg1_1 <ifNPCSociable Accept>
+		Msg1_2 <>
+		CMsg1_2 <ifNPCShy Accept>
+		Msg1_3 <>
+		CMsg1_3 <ifNPCEasygoing Accept>
+		Msg1_4 <>
+		CMsg1_4 <ifNPCPassionate Accept>
+		Msg1_5 <>
+		CMsg1_5 <ifNPCCheerful Accept>
+		Msg1_6 <>
+		CMsg1_6 <ifNPCMelancholy Accept>
+		Msg2 <You heard that a mysterious mecha has been spotted in %name3%.>
+		Prompt1 <Neat. I'll have to go check it out.>
+	end
+	inv
+		STC ENCOUNTER-WANDER
+		name <Mysterious Mecha>
+	end
+
+Plot
 	name <Heroes Apply Here>
 	Size 0
 	desc <A local politician is looking for volunteers.>
@@ -504,7 +561,7 @@ Plot
 		%   advice.
 		% V1 = Have given story info.
 		greeting <&SetTargetNPC %2%   SMemo 2  WinComp %1% .next  if= V1 1 else GoGreeting Goto GoAdvice>
-		.next <+Tgt +Fmi>
+		.next <+Tgt +Fmi +Cro>
 		*GoGreeting <*INTRO_Introduction GoAskQuestion>
 		*GoAskQuestion <*INTRO_Question GoStoryInfo>
 		GoStoryInfo <NewChat Say 1 V= 1 1 AddChat 1>
@@ -608,7 +665,7 @@ Plot
 	name <I'm a Contender>
 	Size 0
 	desc <You are going to challenge another arena pilot.>
-	requires <#A +T01 P:PDASS ~+Gfa>
+	requires <#A +T01 (P:PDASS|+Gfa)>
 
 	% E1 is the metascene to be used for the meeting.
 	% E2 is the scene where the newly created arena pilot normally resides.

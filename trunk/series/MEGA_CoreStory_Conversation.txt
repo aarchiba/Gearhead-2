@@ -28,7 +28,7 @@
 Content
 	name <In The Army Now>
 	desc <The NPC is joining the army; maybe the PC can join as well!>
-	requires <*CS_Conversation +P-- +F-- P:-- R:-- (1:Friend|1:Family|1:Lover) -L:ENEMY ~C:MILIT ~C:ADVEN ~+Gpe ~1:MILIT ~1:LABOR>
+	requires <*CS_Conversation +P-- +F-- +C-- P:-- R:-- (1:Friend|1:Family|1:Lover) -L:ENEMY ~+Gpe>
 	Size 1
 
 	% Element1 is the NPC to meet
@@ -59,7 +59,7 @@ Content
 		result%id%02 <NewChat Say %id%03    AddCHat %id%03 AddChat %id%04 AddChat %id%05    if= V%id%01 0 V= %id%01 1 AddCheerful -d6>
 		result%id%03 <NewChat Say %id%04   SMemo %id%05  History %id%06   &SetPartnerNPC %1% &SetTargetNPC %3% &SetAllyFac %2% SetPCFac %2% XPV 150 WinComp %5% .%id%_next>
 		result%id%04 <NewChat Say %id%07   StoryNote %id%05   &SetPartnerNPC %1% &SetTargetNPC %3%  WinComp %5% .%id%_next>
-		.%id%_next <+Tgt +Fmi>
+		.%id%_next <+Tgt +Fmi +Cme>
 		result%id%05 <NewChat Say %id%08 AddChat %id%06 AddChat %id%07>
 		result%id%06 <EndChat Say %id%09 SMemo 0 History %id%10 FreezeNPC %1% LoseComp 0 .%id%_loss>
 		.%id%_loss <+T-- +F-->
