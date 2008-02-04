@@ -2960,7 +2960,7 @@ Function NumberOfSkillSlots( PC: GearPtr ): Integer;
 var
 	N: Integer;
 begin
-	N := ( ( CStat( PC , STAT_Knowledge ) * 6 ) div  5 + 5 );
+	N := ( ( PC^.Stat[ STAT_Knowledge ] * 6 ) div  5 + 5 );
 	if NAttValue( PC^.NA , NAG_Talent , NAS_Savant ) <> 0 then N := N + 5;
 	NumberOfSkillSlots := N;
 end;

@@ -676,7 +676,7 @@ Content
 		rumor%id% <%name2% is holding %name1%'s mecha until all debts are paid.>
 		greeting <if= QuestStatus %qid% %id% else GoNoQuest NewChat Say 1 AddChat 1 AddChat 2>
 		GoE1Dead <NewChat Say 2 SetQuestStatus %qid% -2>
-		result1 <ifNPCOK %1% else GoE1Dead NewChat Say 3 AddChat 3 AddChat 4 AddChat 5 AddCHat 6 if= NPCVar %2% 1 0 NPCVar= %2% 1 1 V= 1 Threat %threat% 2 QuestMemo %qid% 4>
+		result1 <ifNPCOK %1% else GoE1Dead NewChat Say 3 AddChat 3 AddChat 4 AddChat 5 AddCHat 6 if= NPCVar %2% 1 0 NPCVar= %2% 1 1 V= 1 Threat %threat% 2 QMemo %qid% 4>
 		result2 <Goto GoShop>
 		result3 <NewChat Say 6 AddChat 7 AddChat 8 AddChat 4>
 		result4 <ifConversation %sktar_hard% else GoR4Fail NewChat Say 7 SetQuestStatus %qid% -1>

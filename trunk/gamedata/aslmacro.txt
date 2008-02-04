@@ -11,6 +11,7 @@ E= <GrabPlot               GSetNAtt NAG_ElementID ? ?>
 S= <GrabStory              GSetNAtt NAG_ScriptVar ? ?>
 S+ <GrabStory              GAddNAtt NAG_ScriptVar ? ?>
 N= <GrabStory              GSetNAtt NAG_ElementID ? ?>
+rcs <Trigger0 RESET_CORE_STORY>
 SetTeamFaction <GrabTeam ? GSetNAtt NAG_Personal NAS_FactionID ?>
 SetSelfFaction <GrabSource GSetNAtt NAG_Personal NAS_FactionID ?>
 SetSelfTeam <GrabSource GSetNAtt NAG_Location NAS_Team ?>

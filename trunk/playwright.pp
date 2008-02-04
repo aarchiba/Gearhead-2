@@ -38,9 +38,11 @@ const
 var
 	persona_fragments: GearPtr;
 	Standard_XXRan_Components: GearPtr;
+	Standard_Plots: GearPtr;
 
 
 Procedure BuildMegalist( Dest: GearPtr; AddOn: SAttPtr );
+Function SceneContext( GB: GameBoardPtr; Scene: GearPtr ): String;
 
 
 Function SceneDesc( Scene: GearPtr ): String;
@@ -64,8 +66,8 @@ Function PersonalContext( Adv,NPC: GearPtr ): String;
 Function DifficulcyContext( Threat: Integer ): String;
 
 Function InsertStory( Slot,Story: GearPtr; GB: GameBoardPtr ): Boolean;
-Function InsertSubPlot( Slot,SubPlot: GearPtr; GB: GameBoardPtr ): Boolean;
-Function InsertPlot( Slot,Plot: GearPtr; GB: GameBoardPtr; Threat: Integer ): Boolean;
+Function InsertSubPlot( Scope,Slot,SubPlot: GearPtr; GB: GameBoardPtr ): Boolean;
+Function InsertPlot( Scope,Slot,Plot: GearPtr; GB: GameBoardPtr; Threat: Integer ): Boolean;
 
 Function InsertRSC( Source,Frag: GearPtr; GB: GameBoardPtr ): Boolean;
 Procedure EndPlot( GB: GameBoardPtr; Adv,Plot: GearPtr );
@@ -74,6 +76,8 @@ Procedure PrepareNewComponent( Story: GearPtr; GB: GameBoardPtr );
 
 Function PrepareQuestFragment( City,Frag: GearPtr; DoDebug: Boolean ): Boolean;
 Function InsertArenaMission( Source,Mission: GearPtr; ThreatAtGeneration: Integer ): Boolean;
+
+Procedure UpdatePlots( GB: GameBoardPtr; Renown: Integer );
 
 
 implementation
@@ -85,6 +89,12 @@ uses 	ui4gh,rpgdice,vidgfx,texutil,gearutil,interact,ability,gearparser,ghchars,
 uses 	ui4gh,rpgdice,glgfx,texutil,gearutil,interact,ability,gearparser,ghchars,narration,ghprop,
 	glmenus,arenascript,mpbuilder,chargen;
 {$ENDIF}
+
+Type
+	PWSearchResult = Record
+		thing: GearPtr;
+		match: Integer;
+	end;
 
 var
 	Fast_Seek_Element: Array [0..1,1..Num_Plot_Elements] of GearPtr;
@@ -123,6 +133,40 @@ begin
 		AddOn := AddOn^.Next;
 	end;
 end;
+
+Function SceneContext( GB: GameBoardPtr; Scene: GearPtr ): String;
+	{ Return a string describing the context of this scene. }
+var
+	CType,TType: String;
+	C: GearPtr;
+begin
+	CType := SAttValue( Scene^.SA , 'CONTEXT' ) + ' ' + SATtValue( Scene^.SA , 'DESIG' ) + ' ' + SAttValue( Scene^.SA , 'TYPE' );
+	TType := SAttValue( Scene^.SA , 'TERRAIN' );
+	if TType = '' then TType := 'GROUND';
+	CType := CType + ' ' + TType;
+	if ( Scene^.G = GG_Scene ) and IsSubCom( Scene ) then CType := CType + ' STATIC'
+	else CType := CType + ' DYNAMIC';
+
+	{ Add the faction context. }
+	C := SeekFaction( FindRoot( Scene ) , NAttValue( Scene^.NA , NAG_Personal , NAS_FactionID ) );
+	if C <> Nil then AddTraits( CType , SAttValue( C^.SA , 'DESIG' ) );
+
+	{ Next add the data for the city we're located in, its faction, and the }
+	{ world that it's located in. }
+	C := FindRootScene( GB , Scene );
+	if C <> Nil then begin
+		if C <> Scene then AddTraits( CType , SAttValue( C^.SA , 'DESIG' ) );
+		AddTraits( CType , SAttValue( C^.SA , 'PERSONATYPE' ) );
+		C := SeekFaction( FindRoot( Scene ) , NAttValue( C^.NA , NAG_Personal , NAS_FactionID ) );
+		if C <> Nil then AddTraits( CType , SAttValue( C^.SA , 'DESIG' ) );
+		C := FindRootScene( GB , Scene )^.Parent;
+		if ( C <> Nil ) and ( C^.G = GG_World ) then begin
+			AddTraits( CType , SAttValue( C^.SA , 'DESIG' ) );
+		end;
+	end;
+	SceneContext := CType;
+end;
+
 
 Function FilterElementDescription( var IDesc: String ): String;
 	{ Given this element description, break it up into the }
@@ -294,7 +338,7 @@ begin
 	PartMatchesRelativeCriteria := it;
 end;
 
-Function NPCMatchesDesc( Adv,Plot,NPC: GearPtr; IDesc,RDesc: String; GB: GameBoardPtr ): Boolean;
+Function NPCMatchesDesc( Adv,Plot,NPC: GearPtr; const IDesc,RDesc: String; GB: GameBoardPtr ): Boolean;
 	{ Return TRUE if the supplied NPC matches this description }
 	{ string, FALSE otherwise. Note that an extra check is performed }
 	{ to prevent animals from being chosen for plots, which could }
@@ -315,114 +359,73 @@ begin
 	NPCMatchesDesc := it and NotAnAnimal( NPC );
 end;
 
-Function NumFreeNPC( Adv, Plot: GearPtr; Desc: String; GB: GameBoardPtr ): Integer;
-	{ This function will count the number of CHARACTER gears }
-	{ present in ADVENTURE which have a CID, which match the DESC, }
-	{ and which are not currently involved in a plot. }
+Function CharacterSearch( Adv, Plot: GearPtr; Desc: String; GB: GameBoardPtr ): GearPtr;
+	{ Search high and low looking for a character that matches }
+	{ the provided search description! }
+	{ GH2- note that ADV probably isn't the adventure proper. It's the limit for our element }
+	{ search, probably the city in which this plot will take place. }
 var
+	NPC: GearPtr;
+	NumMatches: Integer;
+	Results: Array of PWSearchResult;
 	IDesc,RDesc: String;
-	Total: Integer;
-	Function CheckAlongPath( P: GearPtr ): Integer;
+
+	Procedure CheckAlongPath( P: GearPtr );
+		{ Check along this path looking for characters. If a match is found, }
+		{ add it to the array. }
 	var
 		CID: LongInt;
-		N: Integer;
 	begin
-		N := 0;
 		while P <> Nil do begin
 			if ( P^.G = GG_Character ) and NPCMatchesDesc( Adv, Plot, P , IDesc , RDesc , GB ) then begin
 				{ Next, check to make sure it has an assigned CID. }
 				CID := NAttValue( P^.NA , NAG_Personal , NAS_CID );
-				if ( CID <> 0 ) then Inc( N );
+				if ( CID <> 0 ) then begin
+					Results[ NumMatches ].thing := P;
+					Results[ NumMatches ].match := 1;
+					Inc( NumMatches );
+				end;
 			end;
-			N := N + CheckAlongPath( P^.SubCom );
-			if P^.G <> GG_MetaScene then N := N + CheckAlongPath( P^.InvCom );
+			CheckAlongPath( P^.SubCom );
+			if P^.G <> GG_MetaScene then CheckAlongPath( P^.InvCom );
 			P := P^.Next;
 		end;
-		CheckAlongPath := N;
 	end;
+
 begin
-	{ Initialize the total to 0. }
-	Adv := FindRoot( Adv );
+	{ Step one- size the array. We have a good estimate for how many characters are in the adventure in }
+	{ the MaxCID value. }
+	NumMatches := NAttValue( FindRoot( Adv )^.NA , NAG_Narrative , NAS_MaxCID );
+	if NumMatches = 0 then begin
+		DialogMsg( 'ERROR: No CIDs recorded in ' + GearName( FindRoot( Adv ) ) + '.' );
+		Exit( Nil );
+	end;
+	SetLength( Results , NumMatches );
 
 	{ Filter the relative description from the instrinsic description. }
 	IDesc := Desc;
 	RDesc := FilterElementDescription( IDesc );
 
-	Total := CheckAlongPath( Adv^.SubCom );
-
-	{ Check the invcomponents of the adventure only if global }
-	{ NPCs are allowed by the DESC string. }
-	if AStringHasBString( RDesc , '!G' ) then begin
-		Total := Total + CheckAlongPath( Adv^.InvCom );
-	end;
+	{ Step two- search the adventure looking for characters. }
+	NumMatches := 0;
+	CheckAlongPath( Adv^.SubCom );
+	if Adv^.G = GG_Scene then CheckAlongPath( Adv^.InvCom );
 	if GB <> Nil then begin
-		Total := Total + CheckAlongPath( GB^.Meks );
+		CheckAlongPath( GB^.Meks );
 	end;
-
-	{ Return the value. }
-	NumFreeNPC := Total;
-end;
-
-Function FindFreeNPC( Adventure,Plot: GearPtr; Desc: String; Num: Integer; GB: GameBoardPtr ): GearPtr;
-	{ Locate the Nth free NPC in the tree. }
-var
-	CID,N: Integer;
-	RDesc: String;
-	TheGearWeWant: GearPtr;
-{ PROCEDURES BLOCK. }
-	Procedure CheckAlongPath( Part: GearPtr );
-		{ CHeck along the path specified. }
-	begin
-		while ( Part <> Nil ) and ( TheGearWeWant = Nil ) do begin
-			{ Increment N if this gear matches our description. }
-			if ( Part^.G = GG_Character ) and NPCMatchesDesc( Adventure, Plot, Part , Desc , RDesc , GB ) then begin
-				{ Next, check to make sure it has an assigned CID. }
-				CID := NAttValue( Part^.NA , NAG_Personal , NAS_CID );
-				if ( CID <> 0 ) then Inc( N );
-			end;
-
-			if N = Num then TheGearWeWant := Part;
-			if ( TheGearWeWant = Nil ) and ( Part^.G <> GG_MetaScene ) then CheckAlongPath( Part^.InvCom );
-			if TheGearWeWant = Nil then CheckAlongPath( Part^.SubCom );
-			Part := Part^.Next;
-		end;
-	end;
-begin
-	TheGearWeWant := Nil;
-	N := 0;
-
-	{ Filter the description into relative and intrinsic bits. }
-	RDesc := FilterElementDescription( Desc );
-
-	{ Part 0 is the master gear itself. }
-	if Num < 1 then Exit( Adventure );
 
 	{ Check the invcomponents of the adventure only if global }
 	{ NPCs are allowed by the DESC string. }
-	if AStringHasBString( RDesc , '!G' ) then begin
-		CheckAlongPath( Adventure^.InvCom );
+	if AStringHasBString( Desc , '!G' ) then begin
+		CheckAlongPath( FindRoot( Adv )^.InvCom );
 	end;
-	if TheGearWeWant = Nil then CheckAlongPath( Adventure^.SubCom );
-	if TheGearWeWant = Nil then CheckAlongPath( GB^.Meks );
 
-	FindFreeNPC := TheGearWeWant;
-end; { FindFreeNPC }
-
-Function CharacterSearch(Adv, Plot: GearPtr; Desc: String; GB: GameBoardPtr ): GearPtr;
-	{ Search high and low looking for a character that matches }
-	{ the provided search description! }
-var
-	NPC: GearPtr;
-	NumMatches: Integer;
-begin
-	NumMatches := NumFreeNPC( Adv , Plot , Desc , GB );
 	if NumMatches > 0 then begin
-		{ Pick one of the free NPCs at random. }
-		NPC := FindFreeNPC( Adv , Plot , Desc , Random( NumMatches ) + 1 , GB );
+		NPC := Results[ Random( NumMatches ) ].Thing;
 	end else begin
-		{ No free NPCs were found. Bummer. }
 		NPC := Nil;
 	end;
+
 	CharacterSearch := NPC;
 end; { Character Search }
 
@@ -1490,10 +1493,12 @@ begin
 	end;
 end;
 
-Function MatchPlotToAdventure( Slot,Plot: GearPtr; GB: GameBoardPtr; DoFullInit,MovePrefabs,Debug: Boolean ): Boolean;
-	{ This PLOT gear is meant to be inserted into this ADVENTURE gear. }
+Function MatchPlotToAdventure( Scope,Slot,Plot: GearPtr; GB: GameBoardPtr; DoFullInit,MovePrefabs,Debug: Boolean ): Boolean;
+	{ This PLOT gear is meant to be inserted into this SLOT gear. }
 	{ Perform the insertion, select unselected elements, and make sure }
 	{ that everything fits. }
+	{ SLOT must be a descendant of the adventure. }
+	{ SCOPE is usually the adventure- the the higest level at which element searches will take place. }
 	{ IMPORTANT: PLOT must not already be inserted into SLOT!!! }
 	{ This procedure also works for Stories. }
 var
@@ -1507,10 +1512,12 @@ begin
 
 	EverythingOK := True;
 
-	{ We need to stick the PLOT into the ADVENTURE to prevent }
+	{ We need to stick the PLOT into the SLOT to prevent }
 	{ the FindElement procedure from choosing the same item for }
 	{ multiple elements. }
 	InsertInvCom( Slot , Plot );
+
+	{ Locate the adventure. It must be the root of Slot. }
 	Adventure := FindRoot( Slot );
 
 	{ Select Actors }
@@ -1520,18 +1527,22 @@ begin
 		Fast_Seek_Element[ 1 , t ] := Nil;
 	end;
 
-	if Slot^.G = GG_Story then begin
+	if ( Slot^.G = GG_Story ) then begin
 		for t := 1 to Num_Plot_Elements do begin
 			Fast_Seek_Element[ 0 , t ] := SeekPlotElement( Adventure , Slot , T , GB );
 		end;
+	end else if Scope^.G = GG_CityMood then begin
+		{ We've been handed a mood rather than a scene. }
+		for t := 1 to Num_Plot_Elements do begin
+			Fast_Seek_Element[ 0 , t ] := SeekPlotElement( Adventure , Scope , T , GB );
+		end;
+		Scope := Scope^.Parent;
 	end;
 
 	for t := 1 to Num_Plot_Elements do begin
-		{ If we are inserting an adventure arc instead of a truly }
-		{ random plot, several of the elements may already have been }
-		{ assigned. The plot is OK if those elements exist & are OK. }
+		{ Check all the plot elements. Some of these may have been inherited from the SLOT. }
 		if ( ElementID( Plot , T ) = 0 ) and EverythingOK then begin
-			OkNow := FindElement( Adventure , Plot , T , GB , MovePrefabs , Debug );
+			OkNow := FindElement( Scope , Plot , T , GB , MovePrefabs , Debug );
 
 			if AStringHasBString( SAttValue( Plot^.SA , 'ELEMENT' + BStr( T ) ) , 'NEVERFAIL' ) and ( not OkNow ) then begin
 				CreateElement( Adventure , Plot , T , GB );
@@ -1582,7 +1593,7 @@ begin
 			{ Store the name of this element, which should still be stored in }
 			{ the FSE array. }
 			if GB <> Nil then begin
-				SetSAtt( Plot^.SA , 'NAME_' + BStr( T ) + ' <' + ElementName( FindRoot( Slot ) , Plot , T , GB ) + '>' );
+				SetSAtt( Plot^.SA , 'NAME_' + BStr( T ) + ' <' + ElementName( Adventure , Plot , T , GB ) + '>' );
 			end else begin
 				SetSAtt( Plot^.SA , 'NAME_' + BStr( T ) + ' <' + GearName( Fast_Seek_Element[ 1 , t ] ) + '>' );
 			end;
@@ -1617,10 +1628,10 @@ Function InsertStory( Slot,Story: GearPtr; GB: GameBoardPtr ): Boolean;
 	{ as required. If everything is found, insert STORY as an InvCom }
 	{ of the SLOT. Otherwise, delete it. }
 begin
-	InsertStory := MatchPlotToAdventure( Slot , Story , GB , True, True , False );
+	InsertStory := MatchPlotToAdventure( FindRoot( Slot ) , Slot , Story , GB , True, True , False );
 end;
 
-Function DoElementGrabbing( Slot,Plot: GearPtr ): Boolean;
+Function DoElementGrabbing( Scope,Slot,Plot: GearPtr ): Boolean;
 	{ Attempt to grab elements from the story to insert into the plot. }
 	{ Return TRUE if the elements were grabbed successfully, or FALSE }
 	{ if they could not be grabbed for whatever reason. }
@@ -1632,7 +1643,9 @@ var
 begin
 	EverythingOK := True;
 
-	if SLOT^.G = GG_Story then begin
+	if Scope^.G = GG_CityMood then Slot := Scope;
+
+	if ( SLOT^.G = GG_Story ) or ( SLOT^.G = GG_CityMood ) then begin
 		for t := 1 to Num_Plot_Elements do begin
 			{ If an element grab is requested, process that now. }
 			desc := SAttValue( Plot^.SA , 'ELEMENT' + BStr( T ) );
@@ -1667,29 +1680,30 @@ begin
 	DoElementGrabbing := EverythingOK;
 end;
 
-Function InsertSubPlot( Slot,SubPlot: GearPtr; GB: GameBoardPtr ): Boolean;
+Function InsertSubPlot( Scope,Slot,SubPlot: GearPtr; GB: GameBoardPtr ): Boolean;
 	{ Stick SUBPLOT into SLOT, but better not initialize anything. }
 var
 	InitOK: Boolean;
 begin
-	InitOK := DoElementGrabbing( Slot , SubPlot );
-	InsertSubPlot := InitOK and MatchPlotToAdventure( Slot , SubPlot , GB , False , False , False );
+	InitOK := DoElementGrabbing( Scope , Slot , SubPlot );
+	InsertSubPlot := InitOK and MatchPlotToAdventure( Scope , Slot , SubPlot , GB , False , False , False );
 end;
 
-Function InsertPlot( Slot,Plot: GearPtr; GB: GameBoardPtr; Threat: Integer ): Boolean;
+Function InsertPlot( Scope,Slot,Plot: GearPtr; GB: GameBoardPtr; Threat: Integer ): Boolean;
 	{ Stick PLOT into SLOT, selecting Actors and Locations }
 	{ as required. If everything is found, insert PLOT as an InvCom }
 	{ of SLOT. Otherwise, delete it. }
+	{ All element searches will be restricted to descendants of SCOPE. }
 	{ If SLOT is a story, copy over grabbed elements and so on. }
 begin
-	InsertPlot := InitMegaPlot( GB , Slot , Plot , Threat ) <> Nil;
+	InsertPlot := InitMegaPlot( GB , Scope , Slot , Plot , Threat ) <> Nil;
 end;
 
 Function InsertRSC( Source,Frag: GearPtr; GB: GameBoardPtr ): Boolean;
 	{ Insert random scene content, then save some information that will be }
 	{ needed later. }
 begin
-	InsertRSC := MatchPlotToAdventure( Source , Frag , GB , True , True , False );;
+	InsertRSC := MatchPlotToAdventure( FindRoot( Source ) , Source , Frag , GB , True , True , False );;
 end;
 
 Procedure EndPlot( GB: GameBoardPtr; Adv,Plot: GearPtr );
@@ -1812,7 +1826,7 @@ begin
 
 		if C <> Nil then begin
 			C := CloneGear( C );
-			MergeOK := InsertPlot( Story , C , GB , NAttValue( Story^.NA , NAG_XXRan , NAS_DifficulcyLevel ) );
+			MergeOK := InsertPlot( FindRoot( Story ) , Story , C , GB , NAttValue( Story^.NA , NAG_XXRan , NAS_DifficulcyLevel ) );
 		end else MergeOK := False;
 	until MergeOK or ( Shopping_List = Nil );
 
@@ -1875,7 +1889,7 @@ begin
 	end;
 
 	{ Next, locate the rest of the elements. }
-	MatchOK := MatchPlotToAdventure( FindROot( City ) , Frag , Nil , FALSE , TRUE , FALSE );
+	MatchOK := MatchPlotToAdventure( FindROot( City ) , FindROot( City ) , Frag , Nil , FALSE , TRUE , FALSE );
 
 	{ If this worked, get all the needed scenes and store the element names. }
 	if MatchOK then begin
@@ -1943,7 +1957,7 @@ begin
 	end;
 
 	{ Attempt the plot insertion. }
-	it := InsertPlot( Source , Mission , Nil , ThreatAtGeneration );
+	it := InsertPlot( Source , Source , Mission , Nil , ThreatAtGeneration );
 
 	{ If the mission was successfully added, we need to do extra initialization. }
 	if it then begin
@@ -1960,13 +1974,151 @@ begin
 	InsertArenaMission := it;
 end;
 
+Procedure UpdatePlots( GB: GameBoardPtr; Renown: Integer );
+	{ It's time to update the plots. Check the city, and also its associated moods. }
+	{ For each one, check to see how many associated plots it has, then try to load }
+	{ a new plot if there's any room. }
+var
+	Adv,City,Mood: GearPtr;
+	Context: String;
+	Function GetControllerID( Controller: GearPtr ): LongInt;
+		{ Get the Controller ID for this controller. If no Controller ID is found, }
+		{ assign a new one. }
+	var
+		CID: LongInt;
+	begin
+		CID := NAttValue( Controller^.NA , NAG_Narrative , NAS_ControllerID );
+		if CID = 0 then begin
+			AddNAtt( Adv^.NA , NAG_Narrative , NAS_MaxControllerID , 1 );
+			CID := NAttValue( Adv^.NA , NAG_Narrative , NAS_MaxControllerID );
+			SetNAtt( Controller^.NA , NAG_Narrative , NAS_ControllerID , CID );
+		end;
+		GetControllerID := CID;
+	end;
+	Function NumAttachedPlots( CID: LongInt ): Integer;
+		{ Return the total number of plots attached to this Controller ID. }
+	var
+		P: GearPtr;
+		Total: Integer;
+	begin
+		P := Adv^.InvCom;
+		Total := 0;
+		while P <> Nil do begin
+			if ( P^.G = GG_Plot ) and ( NAttValue( P^.NA , NAG_Narrative , NAS_ControllerID ) = CID ) then Inc( Total );
+			P := P^.Next;
+		end;
+		NumAttachedPlots := Total;
+	end;
+	Function NumAllowedPlots( Controller: GearPtr ): Integer;
+		{ Return the maximum number of plots that this controller can have attached. }
+	begin
+		if Controller^.G = GG_CityMood then begin
+			NumAllowedPlots := Controller^.V;
+		end else begin
+			NumAllowedPlots := 10;
+		end;
+	end;
+	Procedure AddAPlot( Controller: GearPtr );
+		{ Select a legal plot for this controller and attempt to insert it into }
+		{ the adventure. }
+	var
+		plot_cmd: String;
+		Plot: GearPtr;
+		ShoppingList: NAttPtr;
+		N: Integer;
+	begin
+		{ Determine the plot type being requested. If no explicit request is found, }
+		{ go with a *GENERAL plot. }
+		plot_cmd := SAttValue( Controller^.SA , 'PLOT_TYPE' );
+		if plot_cmd = '' then plot_cmd := '*GENERAL';
+		plot_cmd := plot_cmd + Context;
+
+		{ Next, create a list of those plots which match the plot_cmd. }
+		ShoppingList := Nil;
+		Plot := Standard_Plots;
+		N := 1;
+		while Plot <> Nil do begin
+			if StringMatchWeight( plot_cmd , SAttValue( Plot^.SA , 'REQUIRES' ) ) > 0 then begin
+				SetNAtt( ShoppingList , N , N , 5 );
+			end;
+			Plot := Plot^.Next;
+			Inc( N );
+		end;
+
+		{ If we have some matches, select one at random and give it a whirl. }
+		if ShoppingList <> Nil then begin
+			Plot := SelectComponentFromList( Standard_Plots , ShoppingList );
+
+			{ Mark this plot with our ComponentID, }
+			{ and store the plot stuff. }
+			SetNAtt( Plot^.NA , NAG_Narrative , NAS_ControllerID , GetControllerID( Controller ) );
+			SetSAtt( Plot^.SA , 'SPCONTEXT <' + Context + '>' );
+
+			{ Attempt to add this plot to the adventure. }
+			InsertPlot( Controller , Adv , Plot , GB , Renown );
+
+			{ Get rid of the shopping list. }
+			DisposeNAtt( ShoppingList );
+		end;
+	end;
+	Procedure CheckAttachedPlots( Controller: GearPtr );
+		{ Check to see how many plots are associated with this controller. }
+		{ If more plots are needed, add one. }
+	var
+		ControllerID: LongInt;
+		Attached,Allowed: Integer;
+	begin
+		ControllerID := GetControllerID( Controller );
+
+		{ Count how many plots are being used by the city and each of its moods. }
+		Allowed := NumAllowedPlots( Controller );
+		if Allowed > 0 then begin
+			Attached := NumAttachedPlots( ControllerID );
+
+			{ If we have room for some more plots, try adding one. }
+			if Attached < Allowed then begin
+				AddAPlot( Controller );
+			end;
+		end;
+	end;
+begin
+	{ Locate the adventure and the city. These will be important. }
+	Adv := FindRoot( GB^.Scene );
+	City := FindRootScene( GB , GB^.Scene );
+
+	{ If either the adventure or the city cannot be found, exit. }
+	if ( Adv = Nil ) or ( Adv^.G <> GG_Adventure ) or ( City = Nil ) then Exit;
+
+	{ Determine the city context. This will be affected by moods. }
+	Context := SceneContext( GB , City ) + DifficulcyContext( Renown );
+	Mood := City^.SubCom;
+	while Mood <> Nil do begin
+		if Mood^.G = GG_CityMood then begin
+			AddTraits( Context , SAttValue( Mood^.SA , 'TYPE' ) );
+		end;
+		Mood := Mood^.Next;
+	end;
+	Context := QuoteString( Context );
+
+	{ Go through the city and the moods one by one. If there's a free space for a plot, }
+	{ attempt to load one. }
+	CheckAttachedPlots( City );
+	Mood := City^.SubCom;
+	while Mood <> Nil do begin
+		if Mood^.G = GG_CityMood then CheckAttachedPlots( Mood );
+		Mood := Mood^.Next;
+	end;
+end;
+
 initialization
 	persona_fragments := AggregatePattern( 'PFRAG_*.txt' , series_directory );
 	if persona_fragments = Nil then writeln( 'ERROR!!!' );
 	Standard_XXRan_Components := AggregatePattern( 'COMP_*.txt' , series_directory );
+	Standard_Plots := AggregatePattern( 'PLOT_*.txt' , series_directory );
 
 finalization
 	DisposeGear( persona_fragments );
 	DisposeGear( Standard_XXRan_Components );
+	DisposeGear( Standard_Plots );
 
 end.

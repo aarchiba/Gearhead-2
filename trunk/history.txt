@@ -1,4 +1,5 @@
-- Knowledge modifiers now affect skill cost (gearutil.pp)
+- BatchLoadPlots has been changed to UpdatePlots (arenascript.pp)
+- Plot loading is limited to the PC's current location (playwright.pp)
 - Fixed bug with missile sensor modifier (effects.pp)
 - When joining a lance for the first time, NPCs bring their own mecha (arenascript.pp)
 - Fixed problem with always_save character faction (navigate.pp)

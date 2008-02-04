@@ -77,8 +77,6 @@ Function NewSubZone( MF: GearPtr ): GearPtr;
 
 Procedure DrawMiniMap( GB: GameBoardPtr; MF: GearPtr; MapDesc: String; D: Integer );
 
-Function SceneContext( GB: GameBoardPtr; Scene: GearPtr ): String;
-
 { WARNING: AddContent is for internal use only!!! }
 Function AddContent( CType: String; GB: GameboardPtr; Source,Zone: GearPtr; P: String; var Cells: SAttPtr; SCheck,STerr: Integer ): Boolean;
 
@@ -2493,39 +2491,6 @@ begin
 		end;
 	end;
 	CreateContentList := it;
-end;
-
-Function SceneContext( GB: GameBoardPtr; Scene: GearPtr ): String;
-	{ Return a string describing the context of this scene. }
-var
-	CType,TType: String;
-	C: GearPtr;
-begin
-	CType := SAttValue( Scene^.SA , 'CONTEXT' ) + ' ' + SATtValue( Scene^.SA , 'DESIG' ) + ' ' + SAttValue( Scene^.SA , 'TYPE' );
-	TType := SAttValue( Scene^.SA , 'TERRAIN' );
-	if TType = '' then TType := 'GROUND';
-	CType := CType + ' ' + TType;
-	if ( Scene^.G = GG_Scene ) and IsSubCom( Scene ) then CType := CType + ' STATIC'
-	else CType := CType + ' DYNAMIC';
-
-	{ Add the faction context. }
-	C := SeekFaction( FindRoot( Scene ) , NAttValue( Scene^.NA , NAG_Personal , NAS_FactionID ) );
-	if C <> Nil then AddTraits( CType , SAttValue( C^.SA , 'DESIG' ) );
-
-	{ Next add the data for the city we're located in, its faction, and the }
-	{ world that it's located in. }
-	C := FindRootScene( GB , Scene );
-	if C <> Nil then begin
-		if C <> Scene then AddTraits( CType , SAttValue( C^.SA , 'DESIG' ) );
-		AddTraits( CType , SAttValue( C^.SA , 'PERSONATYPE' ) );
-		C := SeekFaction( FindRoot( Scene ) , NAttValue( C^.NA , NAG_Personal , NAS_FactionID ) );
-		if C <> Nil then AddTraits( CType , SAttValue( C^.SA , 'DESIG' ) );
-		C := FindRootScene( GB , Scene )^.Parent;
-		if ( C <> Nil ) and ( C^.G = GG_World ) then begin
-			AddTraits( CType , SAttValue( C^.SA , 'DESIG' ) );
-		end;
-	end;
-	SceneContext := CType;
 end;
 
 

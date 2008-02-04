@@ -58,8 +58,6 @@
 	ALTERCOREMISSIONNTEXT [changes label]	Will alter the core mission context [ARENA MODE]
 	ARENAREP [change]	Changes the arena team reputation by a set amount [ARENA MODE ONLY]
 	ATTACK [Team1] [Team2]	Team1 will attack Team2
-	BATCHLOADPLOT [label] [n]	Load a number of plots all at once,
-					subject to config file option
 	BLOCK			Erase trigger, prevent further events
 	BOMB			Blow up current scene
 	CASHPRIZE [value]	Give player money
@@ -153,6 +151,7 @@
 	TREPUTATION [team number] [rep num] [value]	Set rep for team
 	TRIGGER [base] [value]	Add an event trigger to the queue
 	TRIGGER0 [base]		Add an event trigger w/o parameter to the queue
+	UPDATEPLOTS		Check the plots for this city; load more if needed
 	UPDATEPROPS		Sends an "UPDATE" trigger to all gears on gameboard
 	V= [idnum] [value]	Set source variable
 	V+ [idnum] [value]	Add source variable

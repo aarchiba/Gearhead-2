@@ -3190,11 +3190,8 @@ begin
 end;
 
 Procedure ProcessStartPlot( var Event: String; GB: GameBoardPtr; Source: GearPtr );
-	{ A new story arc is about to be loaded. }
-	{ This may be an invcomponent of an existing story (the source), }
-	{ or it may be a global arc which is to be inserted as an invcom }
-	{ of the adventure. Once loaded, global arcs are treated like }
-	{ regular plots. }
+	{ A new plot is being loaded, probably by a story. }
+	{ For now I'm going to treat such plots as global. }
 var
 	FName: String;
 	Adv,Arc: GearPtr;
@@ -3227,9 +3224,9 @@ begin
 		if Arc <> Nil then begin
 			{ Insert the arc, calling IfSuccess or IfFailure. }
 			if Source^.G = GG_Story then begin
-				LoadOK := InsertPlot( Source , Arc , GB , CurrentPCRenown( GB ) );
+				LoadOK := InsertPlot( Adv , Source , Arc , GB , CurrentPCRenown( GB ) );
 			end else begin
-				LoadOK := InsertPlot( Adv , Arc , GB , CurrentPCRenown( GB ) );
+				LoadOK := InsertPlot( Adv , Adv , Arc , GB , CurrentPCRenown( GB ) );
 			end;
 
 			if LoadOK then begin
@@ -3246,50 +3243,20 @@ begin
 	end;
 end;
 
-Procedure ProcessBatchLoadPlot( var Trigger,Event: String; GB: GameBoardPtr; Source: GearPtr );
-	{ A number of story arcs are about to be loaded. }
+Procedure ProcessUpdatePlots( var Trigger,Event: String; GB: GameBoardPtr; Source: GearPtr );
+	{ Check the current city and all of its moods. Attempt to load new plots as appropriate. }
 var
-	FName: String;
-	Adv,Arc: GearPtr;
-	N,T,Threat: Integer;
+	Threat: Integer;
 begin
-	{ Error check - We need the ADVENTURE gear for this!!! }
-	Adv := FindRoot( GB^.Scene );
-	if ( Adv = Nil ) or ( Adv^.G <> GG_Adventure ) or ( Source = Nil ) then Exit;
-
-	{ First, find the plot pattern to look for. }
-	FName := ExtractWord( Event );
-	FName := AS_GetString( Source , FName );
-
-	{ Next, find out how many plots to load. }
-	N := ScriptValue( Event , GB , Source );
-
 	{ Final error check- based on the config options, maybe exit. }
 	if Load_Plots_At_Start and ( UpCase( Trigger ) <> 'START' ) then exit
 	else if ( not Load_Plots_At_Start ) and ( UpCase( Trigger ) = 'START' ) then exit;
 
 	Threat := CurrentPCRenown( GB );
+	UpdatePlots( GB , Threat );
 
-	for t := 1 to N do begin
-		{ Secondly, confirm the file name. }
-		Arc := LoadGearPattern( FName , Series_Directory );
-
-		if Arc <> Nil then begin
-			{ Insert the arc, calling IfSuccess or IfFailure. }
-			if ( Source^.G = GG_Story ) and ( NumberOfPlots( Source ) <= Max_Plots_Per_Story ) then begin
-				InsertPlot( Source , Arc , GB , Threat );
-			end else if ( NumberOfPlots( Adv ) <= Max_Plots_Per_Adventure ) then begin
-				InsertPlot( Adv , Arc , GB , Threat );
-			end else begin
-				DisposeGear( Arc );
-				break;
-			end;
-		end;
-	end;
 	SetTrigger( GB , 'UPDATE' );
 end;
-
-
 
 Function AS_StoryInsertion( GB: GameBoardPtr; Source: GearPtr; FName: String ): Boolean;
 	{ Attempt to load and initialize the requested story. }
@@ -4094,7 +4061,7 @@ begin
 		else if cmd = 'WMECHA' then ProcessWMecha( Event , GB , Source )
 		else if cmd = 'WMONSTER' then ProcessWMonster( Event , GB , Source )
 		else if cmd = 'STARTPLOT' then ProcessStartPlot( Event , GB , Source )
-		else if cmd = 'BATCHLOADPLOT' then ProcessBatchLoadPlot( Trigger , Event , GB , Source )
+		else if cmd = 'UPDATEPLOTS' then ProcessUpdatePlots( Trigger , Event , GB , Source )
 		else if cmd = 'STARTSTORY' then ProcessStartStory( Event , GB , Source )
 		else if cmd = 'CHECKCOMPONENTS' then ProcessCheckComponents( GB , Source )
 		else if cmd = 'NEXTCOMP' then ProcessNextComp( Event , GB , Source )
@@ -4596,7 +4563,7 @@ begin
 		if R <> Nil then begin
 			DelinkGear( Rescue_List , R );
 			SetNAtt( R^.NA , NAG_ElementID , 1 , GB^.Scene^.S );
-			if InsertPlot( FindRoot( GB^.Scene ) , R , GB , CurrentPCRenown( GB ) ) then begin
+			if InsertPlot( FindRoot( GB^.Scene ) , FindRoot( GB^.Scene ) , R , GB , CurrentPCRenown( GB ) ) then begin
 				{ Start by printing a message, since the time taken by the }
 				{ rescue scenario is likely to cause a noticeable delay. }
 				DialogMsg( MsgString( 'JustAMinute' ) );

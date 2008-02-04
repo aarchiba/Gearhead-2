@@ -28,7 +28,7 @@ interface
 uses gears,locale;
 
 Function ComponentMenu( CList: GearPtr; var ShoppingList: NAttPtr ): GearPtr;
-Function InitMegaPlot( GB: GameBoardPtr; Slot,Plot: GearPtr; Threat: Integer ): GearPtr;
+Function InitMegaPlot( GB: GameBoardPtr; Scope,Slot,Plot: GearPtr; Threat: Integer ): GearPtr;
 
 
 implementation
@@ -152,9 +152,9 @@ begin
 	end;
 end;
 
-Function AddSubPlot( GB: GameBoardPtr; Slot,Plot0: GearPtr; SPReq: String; EsSoFar, PlotID, LayerID: LongInt ): GearPtr; forward;
+Function AddSubPlot( GB: GameBoardPtr; Scope,Slot,Plot0: GearPtr; SPReq: String; EsSoFar, PlotID, LayerID: LongInt ): GearPtr; forward;
 
-Function InitShard( GB: GameBoardPtr; Slot,Shard: GearPtr; EsSoFar,PlotID,LayerID,Threat: LongInt; const ParamIn: ElementTable ): GearPtr;
+Function InitShard( GB: GameBoardPtr; Scope,Slot,Shard: GearPtr; EsSoFar,PlotID,LayerID,Threat: LongInt; const ParamIn: ElementTable ): GearPtr;
 	{ SHARD is a plot fragment candidate. Attempt to add it to the Slot. }
 	{ Attempt to add its subplots as well. }
 	{ SHARD can only be added if its number of new elements plus the current }
@@ -207,7 +207,7 @@ begin
 	SPList := Nil;
 
 	{ Attempt the basic content insertion routine. }
-	InitOK := InsertSubPlot( Slot, Shard , GB );
+	InitOK := InsertSubPlot( Scope, Slot, Shard , GB );
 
 	{ If the installation has gone well so far, time to move on. }
 	if InitOK then begin
@@ -234,7 +234,7 @@ begin
 					if SPReq <> '' then begin
 						SPID := NewLayerID( Slot );
 						SetNAtt( Shard^.NA , NAG_SubPlotLayerID , T , SPID );
-						SubPlot := AddSubPlot( GB , Slot , Shard , SPReq , NumElem , PlotID , SPID );
+						SubPlot := AddSubPlot( GB , Scope , Slot , Shard , SPReq , NumElem , PlotID , SPID );
 						if SubPlot <> Nil then begin
 							{ A subplot was correctly installed. Add it to the list. }
 							AppendGear( SPList , SubPlot );
@@ -283,13 +283,13 @@ begin
 	end;
 end;
 
-Function AddSubPlot( GB: GameBoardPtr; Slot,Plot0: GearPtr; SPReq: String; EsSoFar, PlotID, LayerID: LongInt ): GearPtr;
+Function AddSubPlot( GB: GameBoardPtr; Scope,Slot,Plot0: GearPtr; SPReq: String; EsSoFar, PlotID, LayerID: LongInt ): GearPtr;
 	{ A request has been issued for a subplot. Search through the plot }
 	{ component list and see if there's anything that matches our criteria. }
 	{ Plot0 must not be Nil. }
 var
 	ShoppingList: NAttPtr;
-	Context,EDesc: String;
+	Context,EDesc,SPContext: String;
 	ParamList: ElementTable;
 	T,E: Integer;
 	Shard: GearPtr;
@@ -298,6 +298,8 @@ begin
 	{ Start by determining the context. }
 	Context := ExtractWord( SPReq );
 	if Slot^.G = GG_Story then Context := Context + ' ' + StoryContext( GB , Slot );
+	SPContext := SAttValue( Plot0^.SA , 'SPContext' );
+	if SPContext <> '' then Context := Context + ' ' + SPContext;
 
 	{ Determine the parameters to be sent, and add context info for them. }
 	ClearElementTable( ParamList );
@@ -331,7 +333,8 @@ begin
 		if Shard <> Nil then begin
 			{ See if we can add this one to the list. If not, it will be }
 			{ deleted by InitShard. }
-			Shard := InitShard( GB , Slot , Shard , EsSoFar , PlotID , LayerID , NAttValue( Plot0^.NA , NAG_Narrative , NAS_PlotDifficulcy ) , ParamList );
+			if SPContext <> '' then SetSAtt( Shard^.SA , 'SPCONTEXT <' + SPContext + '>' );
+			Shard := InitShard( GB , Scope , Slot , Shard , EsSoFar , PlotID , LayerID , NAttValue( Plot0^.NA , NAG_Narrative , NAS_PlotDifficulcy ) , ParamList );
 			if Shard <> Nil then NotFoundMatch := False;
 		end;
 	end;
@@ -752,7 +755,7 @@ begin
 	end;
 end;
 
-Function InitMegaPlot( GB: GameBoardPtr; Slot,Plot: GearPtr; Threat: Integer ): GearPtr;
+Function InitMegaPlot( GB: GameBoardPtr; Scope,Slot,Plot: GearPtr; Threat: Integer ): GearPtr;
 	{ We've just been handed a prospective megaplot. }
 	{ Create all subplots, and initialize everything. }
 	{ 1 - Create list of components }
@@ -774,7 +777,7 @@ begin
 	LayerID := NewLayerID( Slot );
 
 	ClearElementTable( FakeParams );
-	SPList := InitShard( GB , Slot , Plot , 0 , PlotID , LayerID , Threat , FakeParams );
+	SPList := InitShard( GB , Scope , Slot , Plot , 0 , PlotID , LayerID , Threat , FakeParams );
 
 	{ Now that we have the list, assemble it. }
 	if SPList <> Nil then begin

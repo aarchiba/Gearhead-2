@@ -1178,7 +1178,7 @@ begin
 		if pname <> '' then begin
 			Plot := LoadFile( pname , Series_Directory );
 
-			if InsertPlot( FindRoot( Scene ) , Plot , GB , NAttValue( PC^.NA , NAG_CharDescription , NAS_Renowned ) ) then begin
+			if InsertPlot( FindRootScene( GB , GB^.Scene ) , FindRoot( Scene ) , Plot , GB , NAttValue( PC^.NA , NAG_CharDescription , NAS_Renowned ) ) then begin
 				DialogMsg( 'Plot successfully loaded.' );
 			end else begin
 				DialogMsg( 'Plot rejected.' );
