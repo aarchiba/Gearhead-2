@@ -107,7 +107,7 @@ Function SkillRoll( PC: GearPtr; Skill,SkTar,SkMod: Integer; CasualUse: Boolean 
 const
 	Basic_Skill_Award: Array [1..NumSkill] of Byte = (
 		5,5,5,5,7,	4,4,4,5,5,
-		2,2,2,10,2,	2,2,2,2,2,
+		1,2,2,10,2,	2,2,2,1,2,
 		2,2,2,2,2,	2,2,7,7,2,
 		2,7,2,7,2,	5,7,2,2,15,
 		10,7,5
