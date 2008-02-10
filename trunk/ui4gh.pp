@@ -119,6 +119,7 @@ const
 	ScreenColumns: Byte = 80;
 
 	XXRan_Debug: Boolean = False;
+	StdPlot_Debug: Boolean = False;
 
 
 	NumMappedKeys = 49;
@@ -514,6 +515,8 @@ begin
 					XXRan_Wizard := True;
 				end else if cmd = 'XXRANDEBUG' then begin
 					XXRan_Debug := True;
+				end else if cmd = 'YOUARE#6' then begin
+					StdPlot_Debug := True;
 				end else if cmd = 'GARYGYGAX' then begin
 					ArenaMode_Wizard := True;
 				end else if cmd = 'DEMIURGE' then begin
@@ -599,6 +602,7 @@ begin
 	if XXRAN_Wizard then writeln( F , 'GIMMEGIMMECHOICE' );
 	if ArenaMode_Wizard then writeln( F , 'GARYGYGAX' );
 	if XXRAN_Debug then writeln( F , 'XXRANDEBUG' );
+	if StdPlot_Debug then writeln( F , 'YOUARE#6' );
 	if Full_RPGWorld_Info then writeln( F , 'DEMIURGE' );
 
 	Close(F);

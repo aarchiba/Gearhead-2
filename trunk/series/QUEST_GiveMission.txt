@@ -132,7 +132,7 @@ Content
 			minimap <#...##.2.##...###+###...#>
 			sub
 				Door
-				update <if= V1 0 else GoCheckQuest V= 1 1 SetStat STAT_Lock %sktar_hard%>
+				update <if= V1 0 else GoCheckQuest V= 1 1 SetStat STAT_Lock %sktar_hard% Goto GoCheckQuest>
 				GoCheckQuest <if= SceneVar %s2% 11 1  SetStat STAT_Lock 0>
 			end
 			inv

@@ -1,5 +1,5 @@
 unit narration;
-	{ This unit holds utilities for dealing with campaigns and random plots. }
+	{ This unit holds utilities for dealing with RPG campaigns and random plots. }
 {
 	GearHead2, a roguelike mecha CRPG
 	Copyright (C) 2005 Joseph Hewitt
@@ -32,6 +32,15 @@ uses gears,locale;
 	{   V = Undefined      }
 	{ A Meme is only active when it's a subcom of a root scene. There is an ASL command }
 	{ for activating a meme. }
+
+	{ CITYMOOD DEFINITION }
+	{  G = GG_CityMood     }
+	{  S = Undefined       }
+	{  V = Number of attached plots }
+	{ A mood may also have TYPE and a PLOT_TYPE string attributes. The first modifies the }
+	{ type of the city to which the mood is attached. The second determines what sort of plot }
+	{ will be loaded by this mood; the default value is *GENERAL. }
+	{ The ControllerID for a mood is assigned automatically. }
 
 
 Const
@@ -157,8 +166,8 @@ Function MetaSceneNotInUse( Adventure: GearPtr; MSID: LongInt ): Boolean;
 Function FindMetascene( Adventure: GearPtr; MSID: LongInt ): GearPtr;
 Function FindSceneEntrance( Adventure: GearPtr; GB: GameBoardPtr; MSID: LongInt ): GearPtr;
 
-Function NewCID( GB: GameBoardPtr; Adventure: GearPtr ): LongInt;
-Function NewNID( GB: GameBoardPtr; Adventure: GearPtr ): LongInt;
+Function NewCID( Adventure: GearPtr ): LongInt;
+Function NewNID( Adventure: GearPtr ): LongInt;
 Function NewMetaSceneID( Adventure: GearPtr ): LongInt;
 
 Function ElementLocation( Adv,Plot: GearPtr; N: Integer; GB: GameBoardPtr ): Integer;
@@ -582,59 +591,35 @@ begin
 	SeekGearByCID := SeekGearByIDTag( LList , NAG_Personal , NAS_CID , CID );
 end;
 
-Function NewCID( GB: GameBoardPtr; Adventure: GearPtr ): LongInt;
+Function NewCID( Adventure: GearPtr ): LongInt;
 	{ Determine a new, unique CID for a character being added to the }
-	{ campaign. To make sure our CID is unique, we'll be making it one }
-	{ point higher than the highest CID we can find. }
+	{ campaign. In GH2, all CIDs come from this function, so we don't }
+	{ have to worry about searching for any pre-existing CIDs. }
 var
-	it,it2: LongInt;
-	Procedure CheckAlongPath( LList: GearPtr );
-	begin
-		while LList <> Nil do begin
-			if ( LList^.G = GG_Persona ) and ( LList^.S > it ) then it := LList^.S;
-			CheckAlongPath( LList^.SubCom );
-			CheckAlongPath( LList^.InvCom );
-			LList := LList^.Next;
-		end;
-	end;
+	it: LongInt;
 begin
+	{ Make sure the Adventure really is the Adventure. }
+	Adventure := FindRoot( Adventure );
+
 	{ To start with, find the highest ID being used by a character. }
 	it := NAttValue( Adventure^.NA , NAG_Narrative , NAS_MaxCID );
-	if it = 0 then begin
-		IT := MaxIDTag( Adventure , NAG_Personal , NAS_CID );
-		if GB <> Nil then begin
-			it2 := MaxIDTag( GB^.Meks , NAG_Personal , NAS_CID );
-			if it2 > it then it := it2;
-		end;
-
-		{ Next, search all the PERSONA gears to make sure none of them }
-		{ have one higher. }
-		CheckAlongPath( Adventure );
-
-		if it <= Num_Plot_Elements then it := Num_Plot_Elements + 1;
-	end;
+	if it = 0 then it := Num_Plot_Elements;
 
 	{ Return the highest value found, +1. }
 	SetNAtt( Adventure^.NA , NAG_Narrative , NAS_MaxCID , it + 1 );
 	NewCID := it + 1;
 end;
 
-Function NewNID( GB: GameBoardPtr; Adventure: GearPtr ): LongInt;
+Function NewNID( Adventure: GearPtr ): LongInt;
 	{ Determine a new, unique NID for an item being added to the }
-	{ campaign. To make sure our NID is unique, we'll be making it one }
-	{ point higher than the highest NID we can find. }
+	{ campaign. Again, all IDs come from this procedure, so don't }
+	{ worry about pre-existing values. }
 var
-	it,it2: LongInt;
+	it: LongInt;
 begin
-	{ To start with, find the highest ID being used by a character. }
+	Adventure := FindRoot( Adventure );
+
 	it := NAttValue( Adventure^.NA , NAG_Narrative , NAS_MaxNID );
-	if it = 0 then begin
-		IT := MaxIDTag( Adventure , NAG_Narrative , NAS_NID );
-		if GB <> Nil then begin
-			it2 := MaxIDTag( GB^.Meks , NAG_Narrative , NAS_NID );
-			if it2 > it then it := it2;
-		end;
-	end;
 
 	{ Return the highest value found, +1. }
 	SetNAtt( Adventure^.NA , NAG_Narrative , NAS_MaxNID , it + 1 );
@@ -646,6 +631,7 @@ Function NewMetaSceneID( Adventure: GearPtr ): LongInt;
 var
 	it: LongInt;
 begin
+	Adventure := FindRoot( Adventure );
 	it := NAttValue( Adventure^.NA , NAG_Narrative , NAS_MinMSID ) - 1;
 	if it > -100 then it := -100;
 	SetNAtt( Adventure^.NA , NAG_Narrative , NAS_MinMSID , it );

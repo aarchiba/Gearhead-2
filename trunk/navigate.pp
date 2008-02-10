@@ -444,18 +444,17 @@ end;
 
 Procedure InitializeCampaignNPCs( Adv: GearPtr );
 	{ Provide unique character IDs for each of the pre-loaded characters. }
-var
-	HighCID: LongInt;
 	Procedure CheckAlongPath( P: GearPtr );
 	var
 		S: GearPtr;	{ The Persona for this NPC. }
+		CID: LongInt;
 	begin
 		while P <> Nil do begin
 			if P^.G = GG_Character then begin
-				SetNAtt( P^.NA , NAG_Personal , NAS_CID , HighCID );
+				CID := NewCID( Adv );
+				SetNAtt( P^.NA , NAG_Personal , NAS_CID , CID );
 				S := SeekGearByName( Adv , GearName( P ) + ' PERSONA' );
-				if S <> Nil then S^.S := HighCID;
-				Inc( HighCID );
+				if S <> Nil then S^.S := CID;
 			end;
 			CheckAlongPath( P^.SubCom );
 			CheckAlongPath( P^.InvCom );
@@ -463,7 +462,6 @@ var
 		end;
 	end;
 begin
-	HighCID := 1;
 	CheckAlongPath( Adv );
 end;
 
@@ -1508,7 +1506,7 @@ var
 
 		{ Determine the key gear, if one exists. }
 		if Source^.G <> GG_Scene then begin
-			if NAttValue( Source^.NA , NAG_Personal , NAS_CID ) = 0 then SetNAtt( Source^.NA , NAG_Narrative , NAS_NID , NewNID( Nil , Adv ) );
+			if NAttValue( Source^.NA , NAG_Personal , NAS_CID ) = 0 then SetNAtt( Source^.NA , NAG_Narrative , NAS_NID , NewNID( Adv ) );
 			KeyGear := Source;
 		end else KeyGear := Nil;
 
@@ -1584,7 +1582,7 @@ var
 					if LList^.G <> GG_Character then begin
 						{ Assign a narrative ID to anything that isn't }
 						{ a character, but has a quest. }
-						ID := NewNID( Nil , Adv );
+						ID := NewNID( Adv );
 						SetNAtt( LList^.NA , NAG_Narrative , NAS_NID , ID );
 					end;
 					AddQuestHere( LList , ConReq );

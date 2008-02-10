@@ -3,6 +3,84 @@
 %%  Peaceful Life components
 
 Plot
+	name <Proving Ground>
+	desc <The PC can help a pilot, and get a job.>
+	requires <+Ten (!Ne|!Lo) (+F--|+Ffi) (+P--|+Pun) P:-- -L:ENEMY>
+	Size 4
+
+	% E1 is the encounter for this component
+	% E2 is a local scene for the next meeting
+	% E3 is a mecha pilot for the PC to help
+	Element1 <Grab 6>
+	Element2 <Scene Building Public !Near -7 !Ally -7>
+	Element3 <Character HasMecha !Comrade 2 NeverFail>
+	Place3 <1 (Allies) sd ally>
+
+	% P1 = Initialization Counter
+	start <ifNPCDead %3% LoseComp 0 .next>
+	update <if= P1 0 P= 1 1 NPCLevel %3% StoryDL>
+
+	sub
+		Persona 3
+		special <Unlisted NoEscape>
+		greeting <if# V1 0 else GoFirst EndChat Say 1>
+		*GoFirst <*HelpMeVsMecha GoAccept GoDeny>
+		GoAccept <V= 1 1 EndChat Say 2 AddReact 10>
+		GoDeny <V= 1 1 EndChat Say 3 AddReact -10>
+		Msg1 <Shouldn't we concentrate on fighting right now?>
+		Msg2 <Great! If you can prove yourself against these foes, I'll have something for you later.>
+		Msg3 <You coward! You would abandon \SCENE RootSceneID to its enemies?>
+
+		MetaScene 1 2
+		% L1 = Encounter Over Counter
+		% L2 = Initialization Counter
+		MapWidth 30
+		MapHeight 30
+
+		% L1 = Match Over counter
+		% L2 = Initialization Counter
+
+		Start <if= L2 0 L= 2 1 ForceChat %3%>
+		% If the NPC dies, this scenario ends in a loss.
+		Faint%3% <L= 1 1  Goto GoLoseMission>
+		% If the PC defeats all of T2 before the NPC dies, it's a win.
+		nu1 <if= T1 0   Return   if= V1 0 V= 1 1   Goto GoLoseMission>
+		nu2 <if= T2 0            if= V1 0 V= 1 1   Goto GoWinMission>
+
+		GoWinMission <XPV 100  AddRenown 1   Monologue %3% 1 Print 2 MoveAndPacifyNPC %3% %2% SMemo 3 History 4 &SetTargetNPC %3% WinComp %2% .win>
+		.win <+Tgt +Fmi>
+		GoLoseMission <AddRenown -5 SMemo 0 History 5 LoseComp 0 .loss ifNPCOK %3% MoveAndPacifyNPC %3% %2%>
+		.loss <+T-- +F-->
+
+		Msg1 <Thanks for helping me out! Meet me at %name2% later and I can repay the favor by giving you a mission.>
+		Msg2 <%name3% leaves the area.>
+		Msg3 <In thanks for helping %name3% to defeat some mecha, \SPR %3% offered to give you a mission later at %name2%.>
+		Msg4 <You helped %name3% defeat some mecha.>
+		Msg5 <You failed to help %name3% fight off some mecha.>
+
+		sub
+			team 1
+			SetAlly 3
+			SetEnemy 2
+			ParaX 5
+			ParaY 10
+
+			team 2
+			SetEnemy 1
+			Deploy <SetSelfFaction &EnemyFac   WMecha 2 StoryDL 100>
+			ParaX 25
+			ParaY 25
+
+			team 3
+			name <Allies>
+			SetAlly 1
+			SetEnemy 2
+			ParaX 10
+			ParaY 5
+		end
+	end
+
+Plot
 	name <Lover's Quarrel>
 	desc <An ex-boyfriend and ex-girlfriend are argueing at the party.>
 	requires <+Tsh (+P--|+Pun|+Pla) E:-- ~+Fpa ~+Glo>

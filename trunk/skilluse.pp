@@ -683,7 +683,7 @@ begin
 		if Robot^.Stat[ STAT_Charm ] > 10 then begin
 			{ This robot has become self-aware!!! }
 			{ Give it a CID, a gender, and it likes the PC. }
-			SetNAtt( Robot^.NA , NAG_Personal , NAS_CID , NewCID( GB , FindRoot( GB^.Scene ) ) );
+			SetNAtt( Robot^.NA , NAG_Personal , NAS_CID , NewCID( FindRoot( GB^.Scene ) ) );
 			SetNAtt( Robot^.NA , NAG_CharDescription , NAS_Gender , Random( 2 ) );
 			AddNAtt( PC^.NA , NAG_ReactionScore , NAttValue( Robot^.NA , NAG_Personal , NAS_CID ) , 50 );
 

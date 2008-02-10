@@ -34,10 +34,10 @@ Content
 	% P%id%01 = Capture Value
 	% P%id%11 = Have discovered location of target
 
-	Place1 <%e4% (Citizens) pass>
+	Place1 <4 (Citizens) pass>
 	Element3 <Scene Outdoors Space !Near 2>
 	Element4 <Prefab>
-	Place4 <%e3%>
+	Place4 <3>
 	Element5 <Character !Near 2>
 
 	% If this subplot has been activated, check to make sure the informant is OK.
@@ -113,10 +113,10 @@ Content
 	% P%id%01 = Capture Value
 	% P%id%11 = Have discovered location of target
 
-	Place1 <%e4% (Citizens) pass>
+	Place1 <4 (Citizens) pass>
 	Element3 <Scene Urban !Near 2>
 	Element4 <Prefab>
-	Place4 <%e3%>
+	Place4 <3>
 	Element5 <Character !Near 2 Criminal>
 
 	% If this subplot has been activated, check to make sure the informant is OK.
@@ -190,10 +190,10 @@ Content
 	% E3 is an environs scene, for placing the encounter
 	% E4 is the encounter/metascene itself
 
-	Place1 <%e4% (Enemies) SD Enemy>
+	Place1 <4 (Enemies) SD Enemy>
 	Element3 <Scene Environs !Near 2>
 	Element4 <Prefab>
-	Place4 <%e3%>
+	Place4 <3>
 
 	% P%id%01 = Capture Counter
 	% P%id%11 = Entered Fight Once Counter

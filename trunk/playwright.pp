@@ -182,7 +182,7 @@ begin
 	while ZeroDesc <> '' do begin
 		cmd := ExtractWord( ZeroDesc );
 
-		if cmd[1] = '!' then begin
+		if ( cmd <> '' ) and ( cmd[1] = '!' ) then begin
 			RDesc := RDesc + ' ' + cmd;
 
 			{ If this relative command requires a value, }
@@ -193,7 +193,7 @@ begin
 				RDesc := RDesc + ' ' + cmd;
 			end;
 
-		end else if UpCase( cmd ) <> 'NEVERFAIL' then begin
+		end else if ( cmd <> '' ) and ( UpCase( cmd ) <> 'NEVERFAIL' ) then begin
 			IDesc := IDesc + ' ' + cmd;
 
 		end;
@@ -668,7 +668,7 @@ begin
 		{ Characters who aren't animals get CIDs, encounters get scene IDs, }
 		{ everything else gets NIDs. }
 		if ( E^.G = GG_Character ) and NotAnAnimal( E ) then begin
-			ID := NewCID( GB , Adventure );
+			ID := NewCID( Adventure );
 			SetNAtt( E^.NA , NAG_Personal , NAS_CID , ID );
 			SetSAtt( Plot^.SA , 'ELEMENT' + BStr( N ) + ' <C Prefab>' );
 			SetSAtt( E^.SA , 'ELEMENT <C Prefab>' );
@@ -679,7 +679,7 @@ begin
 			SetSAtt( E^.SA , 'ELEMENT <S Prefab>' );
 
 		end else begin
-			ID := NewNID( GB , Adventure );
+			ID := NewNID( Adventure );
 			SetNAtt( E^.NA , NAG_Narrative , NAS_NID , ID );
 			SetSAtt( Plot^.SA , 'ELEMENT' + BStr( N ) + ' <I Prefab>' );
 			SetSAtt( E^.SA , 'ELEMENT <I Prefab>' );
@@ -1105,7 +1105,7 @@ begin
 			SetSAtt( Element^.SA , 'TEAMDATA <Pass>' );
 
 			{ Store the NPC's ID in the plot. }
-			ID := NewCID( GB , Adventure );
+			ID := NewCID( Adventure );
 			SetNAtt( Element^.NA , NAG_Personal , NAS_CID , ID );
 			SetNAtt( Plot^.NA , NAG_ElementID , N , ID );
 			Fast_Seek_Element[ 1 , N ] := Element;
@@ -2026,6 +2026,7 @@ var
 		Plot: GearPtr;
 		ShoppingList: NAttPtr;
 		N: Integer;
+		ItWorked: Boolean;
 	begin
 		{ Determine the plot type being requested. If no explicit request is found, }
 		{ go with a *GENERAL plot. }
@@ -2047,15 +2048,22 @@ var
 
 		{ If we have some matches, select one at random and give it a whirl. }
 		if ShoppingList <> Nil then begin
-			Plot := SelectComponentFromList( Standard_Plots , ShoppingList );
+			Plot := CloneGear( SelectComponentFromList( Standard_Plots , ShoppingList ) );
 
 			{ Mark this plot with our ComponentID, }
 			{ and store the plot stuff. }
 			SetNAtt( Plot^.NA , NAG_Narrative , NAS_ControllerID , GetControllerID( Controller ) );
 			SetSAtt( Plot^.SA , 'SPCONTEXT <' + Context + '>' );
 
+			if StdPlot_Debug then DialogMsg( 'Attempting to insert ' + GearName( Plot ) );
+
 			{ Attempt to add this plot to the adventure. }
-			InsertPlot( Controller , Adv , Plot , GB , Renown );
+			ItWorked := InsertPlot( Controller , Adv , Plot , GB , Renown );
+
+			if StdPlot_Debug then begin
+				if ItWorked then DialogMsg( 'Plot insertion succeeded.' )
+				else DialogMsg( 'Plot insertion failed.' );
+			end;
 
 			{ Get rid of the shopping list. }
 			DisposeNAtt( ShoppingList );
@@ -2108,6 +2116,14 @@ begin
 		if Mood^.G = GG_CityMood then CheckAttachedPlots( Mood );
 		Mood := Mood^.Next;
 	end;
+end;
+
+Procedure UpdateMoods( GB: GameBoardPtr );
+	{ Check through all the towns in the current world. Check the time limits on all }
+	{ moods found, removing those that have expired. If a town has no mood attached, }
+	{ consider attaching one. }
+begin
+
 end;
 
 initialization

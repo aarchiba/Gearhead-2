@@ -110,6 +110,48 @@ Content
 %%  *************************************
 
 
+%%  *********************************
+%%  ***   +C--  Nothing Special   ***
+%%  *********************************
+
+Content
+	name <You can be my bodyguard>
+	desc <The NPC will ask the PC to guard him.>
+	requires <*CS_ThanksForRescue +C-- -1:ENEMY R:-- ~+Gkn ~1:MEDIA ~1:FAITH ~1:ACADE>
+
+	% E1 is the character who's been rescued
+	% P%id%01 = Initialization Counter
+	update <if= PlotStatus %id% else %pop% if= P%id%01 0 P= %id%01 1 NPCLevel %1% StoryDL>
+	start <if= PlotStatus %id% else %pop% ifNPCDead %1% LoseComp 0 .%id%_loss>
+	.%id%_loss <+T-->
+
+	sub
+		Persona 1
+		Greeting <if= PlotStatus %id% else %pop% goto .%id%_GoThanks>
+		*.%id%_GoThanks <*ThanksForRescue .%id%_GoAsk>
+		.%id%_GoAsk <NewChat Say %id%01 AddChat %id%01 AddChat %id%02>
+		result%id%01 <NewChat Say %id%02 StoryNote %id%03 &SetTargetNPC 0 &SetPartnerNPC %1% WinComp 0 .%id%_Join>
+		.%id%_Join <+T-- +F-- +Cps>
+		result%id%02 <NewChat Say %id%04 AddChat %id%03 AddCHat %id%04>
+		result%id%03 <NewChat Say %id%05 StoryNote %id%06 &SetTargetNPC 0 &SetAmoreNPC %1% WinComp 0 .%id%_Love>
+		.%id%_Love <+T-- +F-- +Clo>
+		result%id%04 <NewChat Say %id%07 StoryNote %id%08  CashPrize Reward StoryDL 100  WinComp 0 .%id%_Pass>
+		.%id%_Pass <+T-- +F-->
+		Msg%id%01 <I've learned how dangerous the world is, but there are certain things that I have to do... Say, how would you like to be my bodyguard? I can't afford to pay you much, but you can share in the adventure!>
+		Msg%id%02 <That's great! I'll let you know when there's something I need to do. Until then, I'll help you out as well as I can.>
+		Msg%id%03 <%name1% asked you to be \PPR %1% bodyguard, and you agreed.>
+		Msg%id%04 <That's too bad. I don't know if I'll be able to do this by myself... well, I guess this is the last time we'll see each other.>
+		Msg%id%05 <Really? Me too... I'd like that a lot.>
+		Msg%id%06 <%name1% asked you to be \PPR %1% bodyguard.>
+		Msg%id%07 <Well, at least I can give you this small reward for saving me once. I'll see you around, \PC .>
+		Msg%id%08 <%name1% asked you to be \PPR %1% bodyguard, but you declined.>
+		Prompt%id%01 <Sure. I'd like that.>
+		Prompt%id%02 <Sorry, but I have my own problems.>
+		Prompt%id%02_1 <Coming with me would be too dangerous.>
+		Prompt%id%03 <Actually, I'd like to see more of you.>
+		CPrompt%id%03 <if= 0 &AmoreNPC ifChatNPCSexy Accept>
+		Prompt%id%04 <Probably.>
+	end
 
 %%  *******************
 %%  ***   GENERAL   ***
@@ -167,39 +209,6 @@ Content
 		Prompt%id%02_1 <Sorry, but now's not a good time.>
 		Prompt%id%03 <I think you'd be safer here.>
 		Prompt%id%03_1 <It's too dangerous to come with me.>
-	end
-
-Content
-	name <Generic Thanks>
-	desc <The PC has just rescued someone, and will get a cash prize. Lame.>
-	requires <*CS_ThanksForRescue>
-
-	% E1 is the character who's been rescued
-
-	% P1 = Initialization Counter
-	start <if= PlotStatus %id% else %pop% ifNPCDead %1% LoseComp 0 .%id%_loss>
-	.%id%_loss <+T-->
-
-	sub
-		Persona 1
-		Greeting <if= PlotStatus %id% else %pop% goto .%id%_GoThanks>
-		*.%id%_GoThanks <*ThanksForRescue .%id%_GoReward>
-		.%id%_GoReward <ifG 1 ChatNPCRelationship else .%id%_GoCash PCFriend %1% Goto .%id%_GoCash>
-		.%id%_GoCash <NewChat Say %id%01 CashPrize Reward StoryDL 250 NTBWinComp 0 .%id%_Next>
-		.%id%_Next <+T-- +F-->
-		Msg%id%01 <Here's a little reward, in appreciation of what you've done.>
-		Msg%id%01_1 <I'd like for you to have this reward. I know that it isn't much, but it's the least I could do to thank you for saving my life.>
-		CMsg%id%01_1 <ifNPCSociable Accept>
-		Msg%id%01_2 <Here, I'd like you to have this. Thanks again.>
-		CMsg%id%01_2 <ifNPCShy Accept>
-		Msg%id%01_3 <We all know that nothing says "thank you" like a big handfull of money. Unfortunately I don't have a big handfull, but I can give you this little one. Thanks for saving me.>
-		CMsg%id%01_3 <ifNPCEasygoing Accept>
-		Msg%id%01_4 <Nothing I could ever do would repay you for saving my life, but I can at least give you this money as a token of appreciation.>
-		CMsg%id%01_4 <ifNPCPassionate Accept>
-		Msg%id%01_5 <It's really lucky that you showed up when you did. Here, take this- it's my way of saying thanks.>
-		CMsg%id%01_5 <ifNPCCheerful Accept>
-		Msg%id%01_6 <If not for you, I would be dead right now. Here's a small token of my gratitude.>
-		CMsg%id%01_6 <ifNPCMelancholy Accept>
 	end
 
 Content
@@ -263,7 +272,7 @@ Content
 		Persona 1
 		greeting <if= PlotStatus %id% else %pop% Goto .%id%_GoStart>
 		*.%id%_GoStart <*ThanksForRescue .%id%_GoOffer>
-		.%id%_GoOffer <PCFriend %1% ifG React 30 else .%id%_GoNoOffer ifG PCCharm 10 else .%id%_GoNoOffer NewChat Say %id%01 AddChat %id%01 AddChat %id%02 AddChat %id%03>
+		.%id%_GoOffer <PCFriend %1% ifG React d10 else .%id%_GoNoOffer ifG PCCharm 10 else .%id%_GoNoOffer NewChat Say %id%01 AddChat %id%01 AddChat %id%02 AddChat %id%03>
 		.%id%_GoNoOffer <ifChatNPCSexy else .%id%_GoCashAward ifFlirtation SkillTar StoryDL else .%id%_GoCashAward ifG React d10 else .%id%_GoCashAward NewChat Say %id%08 AddChat %id%06 AddChat %id%07>
 		.%id%_GoCashAward <NewChat Say %id%07  StoryNote %id%05 CashPrize Reward StoryDL 150 NTBWinComp 0 .%id%_next>
 		result%id%01 <NewChat Say %id%02 StoryNote %id%03 PCAlly %1% WinComp 0 .%id%_next>

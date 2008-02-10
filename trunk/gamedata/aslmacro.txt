@@ -193,7 +193,7 @@ LoseComp <N= 6 ? NextComp ?>
 NTBLoseComp <&SetTargetNPC ChatNPCID LoseComp ? ?>
 NTBNegateComp <&SetTargetNPC ChatNPCID NegateComp ? ?>
 StoryDL= <GrabStory GSetNAtt NAG_XXRan 1 ?>
-NextEpisode <N= 7 ? N= 6 0 GrabStory GAddNAtt -7 1 10 GAddNAtt -7 2 1 GSetNAtt -7 3 0 GSetNAtt -7 4 0 NextComp ?>
+WinEpisode <XPV 200   N= 7 ? N= 6 0 GrabStory GAddNAtt -7 1 10 GAddNAtt -7 2 1 GSetNAtt -7 3 0 GSetNAtt -7 4 0 NextComp ?>
 LoseEpisode <N= 7 ? N= 6 0 GrabStory                  GAddNAtt -7 2 1 GSetNAtt -7 3 0 GSetNAtt -7 4 0 NextComp ?>
 IfFacReward     <GrabFaction ? if# GNAtt NAG_FacReward ? 0>
 IfAccessArmory  <GrabFaction LocalFaction if# GNAtt NAG_FacReward 1 0>

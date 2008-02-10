@@ -1,24 +1,26 @@
 Plot
-name <Bounty Hunt>
+	name <Bounty Hunt>
+	requires <*GENERAL>
 
-%% This is a fairly easy bounty hunting job. The target should be captured
-%% alive- no disintegrations.
+	%% This is a fairly easy bounty hunting job. The target should be captured
+	%% alive- no disintegrations.
 
-% E1 is the character offering the mission.
-% E2 is the character being sought.
-Element1 <Character Bounty Hunter>
-Element2 <Prefab>
+	% E1 is the character offering the mission.
+	% E2 is the character being sought.
+	Element1 <Character Bounty Hunter>
 
-% SubPlot1 will place the criminal somewhere in the city.
-SubPlot1 <*ThiefHideout 2 1>
+	Element2 <Prefab>
 
-%% P1 = Timer/Initialization Indicator
+	% SubPlot1 will place the criminal somewhere in the city.
+	SubPlot1 <*ThiefHideout 2 1>
 
-update <ifNPCOK %1% else GoDelete if= P1 0 else GoCheckTime P= 1 ComTime P+ 1 86400 NPCLevel %2% %threat%>
-Start <ifNPCOK %1% else GoDelete ifG V1 0 Goto GoCheckTime>
-GoCheckTime <ifG ComTime V1  if= PlotStatus 0   Goto GoDelete>
-GoDelete <DeleteNPC %2% EndPlot>
-CleanUp <if= PlotStatus 0   Goto GoDelete>
+	%% P1 = Timer/Initialization Indicator
+
+	update <ifNPCOK %1% else GoDelete if= P1 0 else GoCheckTime P= 1 ComTime P+ 1 86400 NPCLevel %2% %threat%>
+	Start <ifNPCOK %1% else GoDelete ifG V1 0 Goto GoCheckTime>
+	GoCheckTime <ifG ComTime V1  if= PlotStatus 0   Goto GoDelete>
+	GoDelete <DeleteNPC %2% EndPlot>
+	CleanUp <if= PlotStatus 0   Goto GoDelete>
 
 sub
 	Persona 1
