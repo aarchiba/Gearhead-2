@@ -1508,7 +1508,7 @@ sub
 	IndustrialTiles
 
 	NeededCells 1
-	content <Some 1 100 Sub *DUNGEON_X>
+	content <Some 1 100 Sub *DUNGEON_DECOR>
 
 	% V1 = First time entry indicator.
 
@@ -1546,7 +1546,9 @@ sub
 		terrain <SPACE>
 		habitat <SPACE.ASTER>
 		dentrance <*GoDown>
-		content <Some 1 30 Sub *DUNGEON_X>
+		content1 <Some 1 40 Sub *DUNGEON_THREAT>
+		content2 <Some 1 30 Sub *DUNGEON_DECOR>
+		content3 <Some 1 30 Sub *DUNGEON_REWARD>
 		% Suffocation effect...
 		Vacuum
 		mapwidth 30
@@ -1584,7 +1586,9 @@ sub
 			habitat <SPACE.ASTER>
 			entrance <*GoDown>
 			dentrance <*GoDown>
-			content <Some 1 35 Sub *DUNGEON_X>
+			content1 <Some 1 40 Sub *DUNGEON_THREAT>
+			content2 <Some 1 30 Sub *DUNGEON_DECOR>
+			content3 <Some 1 30 Sub *DUNGEON_REWARD>
 			% Suffocation effect...
 			Vacuum
 			mapwidth 30
@@ -1621,7 +1625,9 @@ sub
 				terrain <SPACE>
 				habitat <SPACE.ASTER>
 				entrance <*GoDown>
-				content <Some 1 20 Sub *DUNGEON_X>
+				content1 <Some 1 40 Sub *DUNGEON_THREAT>
+				content2 <Some 1 30 Sub *DUNGEON_DECOR>
+				content3 <Some 1 30 Sub *DUNGEON_REWARD>
 				% Suffocation effect...
 				Vacuum
 				mapwidth 30
@@ -1675,7 +1681,9 @@ sub
 					habitat <SPACE.ASTER>
 					entrance <*GoDown>
 					dentrance <*GoDown>
-					content <Some 1 32 Sub *DUNGEON_X>
+					content1 <Some 1 40 Sub *DUNGEON_THREAT>
+					content2 <Some 1 30 Sub *DUNGEON_DECOR>
+					content3 <Some 1 30 Sub *DUNGEON_REWARD>
 					% Suffocation effect...
 					Vacuum
 					mapwidth 30
@@ -5461,8 +5469,10 @@ sub
 		type <DUNGEON building condemned open>
 		terrain <GROUND>
 		dentrance <*GoUp>
-		NeededCells 1
-		content <Some 1 30 Sub *DUNGEON_X>
+		NeededCells 3
+		content1 <Some 1 50 Sub *DUNGEON_THREAT>
+		content2 <Some 1 15 Sub *DUNGEON_DECOR>
+		content3 <Some 1  5 Sub *DUNGEON_REWARD>
 		mapwidth 35
 		mapheight 35
 		MonkeyMap

@@ -389,7 +389,8 @@ Scene
 	special <NOEXIT NORESCUE>
 	type <DUNGEON Industrial>
 	dentrance <*GoUp>
-	content <Some 1 10 Sub *DUNGEON_X>
+	content1 <Some 2 35 Sub *DUNGEON_THREAT>
+	content2 <Some 1 10 Sub *DUNGEON_DECOR>
 	mapwidth 35
 	mapheight 35
 	MonkeyMap

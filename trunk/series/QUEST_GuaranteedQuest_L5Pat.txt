@@ -206,7 +206,7 @@ Content
 
 		Persona 4
 		% V%id%01 = Have given reward
-		greeting <if= QuestStatus              %qid1% -1   else GoCheckLoss if= v%id%01 0 else GoWin v= %id%01 1  CashPrize Reward %threat% 200  Goto GoWin>
+		greeting <if= QuestStatus              %qid1% -1   else GoCheckLoss if= v%id%01 0 else GoWin v= %id%01 1  CashPrize Reward %threat% 200  QMemo %qid% 0 Goto GoWin>
 		GoCheckLoss <if= QuestStatus           %qid1% -2   else GoCheckFirst Goto GoLose>
 		GoCheckFirst <if= QuestStatus          %qid1%  0   else GoChat if= QuestStatus %qid% %id% else GoChat Goto GoOfferMission>
 		*GoOfferMission <*AreYouHereAboutJob  .%id1%_GoInit>
@@ -217,7 +217,7 @@ Content
 
 		Persona 6
 		% V%id%01 = Have given reward
-		greeting <if= QuestStatus              %qid2% -1   else GoCheckLoss if= v%id%01 0 else GoWin v= %id%01 1  CashPrize Reward %threat% 200  Goto GoWin>
+		greeting <if= QuestStatus              %qid2% -1   else GoCheckLoss if= v%id%01 0 else GoWin v= %id%01 1  CashPrize Reward %threat% 200  QMemo %qid% 0 Goto GoWin>
 		GoCheckLoss <if= QuestStatus           %qid2% -2   else GoCheckFirst Goto GoLose>
 		GoCheckFirst <if= QuestStatus          %qid2%  0   else GoChat if= QuestStatus %qid% %id% else GoChat Goto GoOfferMission>
 		*GoOfferMission <*AreYouHereAboutJob  .%id2%_GoInit>
@@ -228,7 +228,7 @@ Content
 
 		Persona 9
 		% V%id%01 = Have given reward
-		greeting <if= QuestStatus              %qid3% -1   else GoCheckLoss if= v%id%01 0 else GoWin v= %id%01 1  CashPrize Reward %threat% 200  Goto GoWin>
+		greeting <if= QuestStatus              %qid3% -1   else GoCheckLoss if= v%id%01 0 else GoWin v= %id%01 1  CashPrize Reward %threat% 200  QMemo %qid% 0 Goto GoWin>
 		GoCheckLoss <if= QuestStatus           %qid3% -2   else GoCheckFirst Goto GoLose>
 		GoCheckFirst <if= QuestStatus          %qid3%  0   else GoChat if= QuestStatus %qid% %id% else GoChat Goto GoOfferMission>
 		*GoOfferMission <*AreYouHereAboutJob  .%id3%_GoInit>

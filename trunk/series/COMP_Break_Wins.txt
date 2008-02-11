@@ -15,8 +15,8 @@ Plot
 		Persona 2
 		rumor <%name2% was speaking with %name1% recently.>
 		*greeting <*LookingForNPC %1% GoSuccess GoFail>
-		GoSuccess <NewChat Say 1 StoryNote 2   WinEpisode %2% .next>
-		GoFail <NewChat Say 3 StoryNote 2   WinEpisode %2% .next>
+		GoSuccess <NewChat Say 1 StoryNote 2   WinEpisode %3% .next>
+		GoFail <NewChat Say 3 StoryNote 2   WinEpisode %3% .next>
 		.next <>
 		Msg1 <I'm afraid that you've just missed \OPR %1% ; \SPR %1% 's just left for %name3%.>
 		Msg2 <%name2% told you that %name1% went to %name3%.>

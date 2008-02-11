@@ -49,9 +49,10 @@ Content
 	inv
 		STC COMPUTER-1
 		name <Spore Extractor>
-		use <Print 1 OpenInv ifSelfHasItem %4% SetQuestStatus %qid% -1 DeleteItem %4% Print 2 XPV 100>
+		use <Print 1 OpenInv ifSelfHasItem %4% SetQuestStatus %qid% -1 QMemo %prev_qid% 3 DeleteItem %4% Print 2 XPV 100>
 		Msg1 <You open the spore collector access panel.>
 		Msg2 <The spore collector starts working again.>
+		Msg3 <You have completed %name1%'s task.>
 
 		STC QUEST-MAPMARKER-AUTO-STATIONARY
 		name <%name1%'s Asteroid>
@@ -95,10 +96,11 @@ Content
 		ATTACK <ifG StatVal STAT_MetaVisibility -1    ifUStealth 15 else GoAutoAttack ifYesNo -3 -4 -5 else GoAvoidAttack Goto GoAutoAttack>
 		GoAutoAttack <Alert -2 Goto GoStartCombat>
 		GoAvoidAttack <Print -6 AddSociable -1>
-		GoStartCombat <V= 1 ComTime V+ 1 86400  SavePos Dynamic 2 %threat% 100 .nu1 .nu2 ComposeD Msg1 .Msg1 DynaFaction 11>
+		GoStartCombat <V= 1 ComTime V+ 1 86400  SavePos Dynamic 2 %threat% 100 .nu1 .nu2 ComposeD Msg1 .Msg1 ComposeD Msg2 .Msg2 DynaFaction 11>
 		.nu1 <if= T1 0  Return   if= L2 0  L= 2 1  AddRenown -5  ItemVar= %2% 1 ComTime ItemVar+ %2% 1 d86400 ItemVar+ %2% 1 43200>
-		.nu2 <if= T2 0           if= L2 0  L= 2 1  XPV 100  AddRenown 1   Alert 1  Salvage  SetQuestStatus %qid% -1 DeleteItem %2%>
+		.nu2 <if= T2 0           if= L2 0  L= 2 1  XPV 100  AddRenown 1   Alert 1  Salvage  SetQuestStatus %qid% -1 QMemo %prev_qid% 2 DeleteItem %2%>
 		.msg1 <You have defeated the Rishiri mecha force.>
+		.msg2 <You have completed %name1%'s task.>
 		EncounterMove 50
 	end
 
@@ -123,7 +125,8 @@ Content
 
 		MetaScene 2
 		% L11 = Can enter storehouse
-		End <if= QuestStatus %qid% %id% else %pop% if= L1 1 else %pop% SetQuestStatus %qid% -1 Goto %pop%>
+		End <if= QuestStatus %qid% %id% else %pop% if= L1 1 else %pop% SetQuestStatus %qid% -1 QMemo %prev_qid% 11 Goto %pop%>
+		Msg11 <You have completed %name1%'s task.>
 
 		MetaScene 3
 		sub
@@ -180,10 +183,11 @@ Content
 		ATTACK <ifG StatVal STAT_MetaVisibility -1    ifUStealth 15 else GoAutoAttack ifYesNo -3 -4 -5 else GoAvoidAttack Goto GoAutoAttack>
 		GoAutoAttack <Alert -2 Goto GoStartCombat>
 		GoAvoidAttack <Print -6 AddSociable -1>
-		GoStartCombat <V= 1 ComTime V+ 1 86400  SavePos Dynamic 2 %threat% 100 .nu1 .nu2 ComposeD Msg1 .Msg1 DynaFaction 0>
+		GoStartCombat <V= 1 ComTime V+ 1 86400  SavePos Dynamic 2 %threat% 100 .nu1 .nu2 ComposeD Msg1 .Msg1 ComposeD msg2 .msg2 DynaFaction 0>
 		.nu1 <if= T1 0  Return   if= L2 0  L= 2 1  AddRenown -5  ItemVar= %2% 1 ComTime ItemVar+ %2% 1 d86400 ItemVar+ %2% 1 43200>
-		.nu2 <if= T2 0           if= L2 0  L= 2 1  XPV 100  AddRenown 1   Alert 1  SetQuestStatus %qid% -1 DeleteItem %2%>
+		.nu2 <if= T2 0           if= L2 0  L= 2 1  XPV 100  AddRenown 1   Alert 1  SetQuestStatus %qid% -1 QMemo %prev_qid% 2 DeleteItem %2%>
 		.msg1 <You have defeated the mecha thieves.>
+		.msg2 <You have completed %name1%'s task.>
 		EncounterMove 50
 	end
 
@@ -221,10 +225,11 @@ Content
 		ATTACK <ifG StatVal STAT_MetaVisibility -1    ifUStealth 15 else GoAutoAttack ifYesNo -3 -4 -5 else GoAvoidAttack Goto GoAutoAttack>
 		GoAutoAttack <Alert -2 Goto GoStartCombat>
 		GoAvoidAttack <Print -6 AddSociable -1>
-		GoStartCombat <V= 1 ComTime V+ 1 86400  SavePos Dynamic 2 %threat% 100 .nu1 .nu2 ComposeD Msg1 .Msg1 DynaFaction 0>
+		GoStartCombat <V= 1 ComTime V+ 1 86400  SavePos Dynamic 2 %threat% 100 .nu1 .nu2 ComposeD Msg1 .Msg1 ComposeD msg2 .msg2 DynaFaction 0>
 		.nu1 <if= T1 0  Return   if= L2 0  L= 2 1  AddRenown -5  ItemVar= %2% 1 ComTime ItemVar+ %2% 1 d86400 ItemVar+ %2% 1 43200>
-		.nu2 <if= T2 0           if= L2 0  L= 2 1  XPV 100  AddRenown 1   Alert 1  Salvage  SetQuestStatus %qid% -1 DeleteItem %2%>
+		.nu2 <if= T2 0           if= L2 0  L= 2 1  XPV 100  AddRenown 1   Alert 1  Salvage  SetQuestStatus %qid% -1 QMemo %prev_qid% 2 DeleteItem %2%>
 		.msg1 <You have defeated the invaders.>
+		.msg2 <You have completed %name1%'s task.>
 		EncounterMove 50
 	end
 
@@ -262,10 +267,11 @@ Content
 		ATTACK <ifG StatVal STAT_MetaVisibility -1    ifUStealth 15 else GoAutoAttack ifYesNo -3 -4 -5 else GoAvoidAttack Goto GoAutoAttack>
 		GoAutoAttack <Alert -2 Goto GoStartCombat>
 		GoAvoidAttack <Print -6 AddSociable -1>
-		GoStartCombat <V= 1 ComTime V+ 1 86400  SavePos Dynamic 2 %threat% 100 .nu1 .nu2 ComposeD Msg1 .Msg1 DynaFaction 0>
+		GoStartCombat <V= 1 ComTime V+ 1 86400  SavePos Dynamic 2 %threat% 100 .nu1 .nu2 ComposeD Msg1 .Msg1 ComposeD msg2 .msg2 DynaFaction 0>
 		.nu1 <if= T1 0  Return   if= L2 0  L= 2 1  AddRenown -5  ItemVar= %2% 1 ComTime ItemVar+ %2% 1 d86400 ItemVar+ %2% 1 43200>
-		.nu2 <if= T2 0           if= L2 0  L= 2 1  XPV 100  AddRenown 1   Alert 1  Salvage  SetQuestStatus %qid% -1 DeleteItem %2%>
+		.nu2 <if= T2 0           if= L2 0  L= 2 1  XPV 100  AddRenown 1   Alert 1  Salvage  SetQuestStatus %qid% -1 QMemo %prev_qid% 2 DeleteItem %2%>
 		.msg1 <You have defeated the bandits.>
+		.msg2 <You have completed %name1%'s task.>
 		EncounterMove 50
 	end
 

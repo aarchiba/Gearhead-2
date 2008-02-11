@@ -343,7 +343,7 @@ Content
 	sub
 		Persona 1
 		greeting <if= PlotStatus %id% else %pop% CashPrize Reward StoryDL 300 ifNPCOK %2% else .%id%_GoNPCGone Goto .%id%_GoSearchNPC>
-		.%id%_GoSearchNPC <NewChat Say %id%01 SMemo %id%02 &SetTargetNPC %2% WinComp 0 .%id%_Win>
+		.%id%_GoSearchNPC <NewChat Say %id%01 SMemo %id%02 History %id%03 &SetTargetNPC %2% WinComp 0 .%id%_Win>
 		*.%id%_GoNPCGone <*MissionWasSuccess&Reward .%id%_GoEnd &AllyFac &EnemyFac>
 		.%id%_GoEnd <SMemo 0 WinComp 0 .%id%_end>
 		.%id%_win <+Tlt +Frt>
@@ -362,6 +362,7 @@ Content
 		Msg%id%01_6 <The mission was a success. In the name of completeness, though, you should try to find %name2% and make sure \SPR %2% got back alright.>
 		CMsg%id%01_6 <ifNPCMelancholy Accept>
 		Msg%id%02 <You should try to find %name2%, whom you recently rescued.>
+		Msg%id%03 <%name1% suggested that %name2% might want to thank you.>
 	end
 
 Content

@@ -1657,7 +1657,7 @@ Procedure StartCampaign( PC: GearPtr );
 	{ - Insert the PC's central story. }
 var
 	Camp: CampaignPtr;
-	Atlas,S,S2,W,Story,Club: GearPtr;
+	TruePC,Atlas,S,S2,W,Story,Club: GearPtr;
 	Factions,Artifacts: GearPtr;
 	HighWorldID: Integer;
 	Base,Changes: String;	{ Context Strings. }
@@ -1665,6 +1665,10 @@ begin
 {$IFNDEF ASCII}
 	Idle_Display;
 {$ENDIF}
+
+	{ Locate the TruePC. }
+	TruePC := PC;
+	while ( TruePC <> Nil ) and ( ( TruePC^.G <> GG_Character ) or ( NAttValue( TruePC^.NA , NAG_CharDescription , NAS_CharType ) <> 0 ) ) do TruePC := TruePC^.Next;
 
 	Camp := NewCampaign;
 	Camp^.Source := LoadFile( 'adventurestub.txt' , Series_Directory );
@@ -1736,7 +1740,7 @@ begin
 	DisposeGear( Atlas );
 
 	{ Locate the PC's home town. Insert a "Cavalier Club" as the starting location. }
-	S := SeekGearByName( Camp^.Source , SAttValue( PC^.SA , 'HOMETOWN' ) );
+	S := SeekGearByName( Camp^.Source , SAttValue( TruePC^.SA , 'HOMETOWN' ) );
 	if S <> Nil then S := SeekUrbanArea( S );
 	if S <> Nil then begin
 		Club := LoadSingleMecha( 'stub_cavalierclub.txt' , Series_Directory );
@@ -1753,20 +1757,20 @@ begin
 
 	{ Locate the PC's home town again, this time to record the scene ID. }
 	{ We're also going to need this scene ID for the central story below. }
-	S := SeekGearByName( Camp^.Source , SAttValue( PC^.SA , 'HOMETOWN' ) );
+	S := SeekGearByName( Camp^.Source , SAttValue( TruePC^.SA , 'HOMETOWN' ) );
 	if S <> Nil then begin
-		SetNAtt( PC^.NA , NAG_Narrative , NAS_HomeTownID , S^.S );
+		SetNAtt( TruePC^.NA , NAG_Narrative , NAS_HomeTownID , S^.S );
 	end;
 
 	{ Insert the central story. }
 	Story := LoadFile( 'corestorystub.txt' , Series_Directory );
 	SetNAtt( Story^.NA , NAG_ElementID , XRP_EpisodeScene , S^.S );
-	SetNAtt( Story^.NA , NAG_ElementID , XRP_TargetFac , NAttValue( PC^.NA , NAG_Personal , NAS_FactionID ) );
-	SetNAtt( Camp^.Source^.NA , NAG_Personal , NAS_FactionID , NAttValue( PC^.NA , NAG_Personal , NAS_FactionID ) );
+	SetNAtt( Story^.NA , NAG_ElementID , XRP_TargetFac , NAttValue( TruePC^.NA , NAG_Personal , NAS_FactionID ) );
+	SetNAtt( Camp^.Source^.NA , NAG_Personal , NAS_FactionID , NAttValue( TruePC^.NA , NAG_Personal , NAS_FactionID ) );
 
 	{ Copy the PC's personal context to the story. }
 	Base := SAttValue( Story^.SA , 'CONTEXT' );
-	Changes := SAttValue( PC^.SA , 'CONTEXT' );
+	Changes := SAttValue( TruePC^.SA , 'CONTEXT' );
 	AlterDescriptors( Base , Changes );
 	SetSAtt( Story^.SA , 'CONTEXT <' + Base + '>' );
 

@@ -1,9 +1,65 @@
-%% *DUNGEON_X CONTENT
+%% *DUNGEON_THREAT CONTENT
+%%   Dungeon threats. Little things to make life more dangerous for hapless adventurers.
+
+
+%% *DUNGEON_REWARD CONTENT
+%%   Dungeon treasure. Something that's good for everyone.
+
+Content
+	name <Dungeon Medic>
+	requires <*DUNGEON_REWARD GROUND>
+	element1 <Prefab>
+	team1 <Citizen>
+	teamdata1 <pass>
+	sub
+		Persona 1
+		*greeting <*NiceToMeetYou GoMain>
+		GoMain <NewChat Say 1 AddChat 1 AddChat 2>
+		result1 <EndChat Say 2 shop .nowares Say 3>
+		result2 <NewChat Say 4>
+		Msg1 <This is a pretty dangerous place. If you've been injured, I could give you some help.>
+		Msg2 <I'm not equipped to deal with everything, but I should be able to patch things up until you get back to the surface.>
+		Msg3 <Happy exploring!>
+		Msg4 <If ever you do need help you know where you can find me.>
+		Prompt1 <I could use a bit of that, yeah.>
+		Prompt2 <No thanks, I'm doing fine.>
+	end
+	inv
+		NPC Nurse
+	end
+
+
+%% *DUNGEON_DECOR CONTENT
 %%   Dungeon Extras. Little bits of personality for dungeon levels.
 
-	Content
+Content
+	name <Mine Treasure>
+	requires <*DUNGEON_DECOR (Mine|derelict) !Ex ~Asteroid>
+	element1 <Prefab>
+	element2 <Prefab>
+	teamdata2 <sd enemy>
+	start <if= V%id%01 0 else %pop% V= %id%01 1 ifAwareness 5 else %pop% Print %id%01 Goto %pop%>
+	msg%id%01 <The walls of this level have been sliced erratically.>
+	inv
+		BigTreasure 500
+		mass 2
+		name <Ruby>
+		desc <An enormous red jewel.>
+		Clue29 <Print 1 if= V1 0 V= 1 1 SkillXP 29 100>
+		Clue37 <Print 2 if= V2 0 V= 2 1 SkillXP 37 100>
+		Msg1 <Jewels like this are often formed on asteroids, but this one is exceptionally large.>
+		Msg2 <This jewel is both large and flawless. It must be worth a lot of money.>
+
+		monster murder machine
+		% This is a worse than usual murder machine, in that it has a
+		% dodge skill of 10 and an attack skill of 15. Killer.
+		skill  8 15
+		skill 10 10
+	end
+
+Content
 	name <Dead Miner>
-	requires <*DUNGEON_X Mine Space Ruin>
+	requires <*DUNGEON_DECOR Mine Space Ruin>
 	element1 <prefab>
 	element2 <prefab>
 	place2 <1>
