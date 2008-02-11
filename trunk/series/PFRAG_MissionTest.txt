@@ -211,15 +211,67 @@
 %   PARAM3: Reject Mission Exit Label (no message)
 %   PARAM4: Allied Faction	[optional]
 %   PARAM5: Enemy Faction	[optional]
+%   PARAM6: Difficulcy number, expressed as Renown
+
+	Persona
+	requires <*GenericMissionTest &Mecha "POLIC">
+	start <NewChat Say %id%01 AddChat %id%01 AddChat %id%02 AddChat %id%03>
+	.%id%_GoFail <EndChat Say %id%03 Goto %2%>
+	result%id%01 <ifConversation HardSkillTar %threat% else .%id%_GoFail Goto %1%>
+	result%id%02 <ifTaunt SkillTar %threat% else .%id%_GoFail ifG React 0 else .%id%_GoFail NewChat Say %id%02 AddChat %id%04 AddChat %id%05>
+	result%id%03 <Goto %1%>
+	result%id%04 <Goto %1%>
+	result%id%05 <Goto %3%>
+	Msg%id%01 <There's been a lot of mecha crime in \SCENE RootSceneID lately. This problem must be stopped.>
+	Msg%id%01_1 <I suppose you've heard about the convoy attack last week... one attack is one attack too many. These criminals must be stopped.>
+	CMsg%id%01_1 <ifNPCSociable Accept>
+	Msg%id%01_2 <There are too many bandits and mekjackers operating in this area.>
+	CMsg%id%01_2 <ifNPCShy Accept>
+	Msg%id%01_3 <You know, my life would be much easier if not for all the mecha crime we've been having recently. Someone ought to do something about it.>
+	CMsg%id%01_3 <ifNPCEasygoing Accept>
+	Msg%id%01_4 <I can't talk now- we're in the midst of a crime wave! Gangs of mecha-equipped criminals are tearing up the streets.>
+	CMsg%id%01_4 <ifNPCPassionate Accept>
+	Msg%id%01_5 <Mecha crimes have been down recently, but any at all is still too many.>
+	CMsg%id%01_5 <ifNPCCheerful Accept>
+	Msg%id%01_6 <Mecha crimes in \SCENE RootSceneID have been increasing at an alarming rate. It's imperative that this trend be stopped.>
+	CMsg%id%01_6 <ifNPCMelancholy Accept>
+	Msg%id%02 <If you think you could do any better, I've got a mission you can try.>
+	Msg%id%02_1 <What, you think that you could do better? If you're willing to back that up, I've got a mission you could do...>
+	Msg%id%02_2 <Talk is cheap. If you want to help solve the problem instead of just complaining about it, I've got a mission you could do.>
+	Msg%id%03 <This matter is under control. There's no reason for citizens to be concerned.>
+	Msg%id%03_1 <You don't need to concern yourself about this. We have the situation under control, or we will shortly...>
+	CMsg%id%03_1 <ifNPCSociable Accept>
+	Msg%id%03_2 <Your concern is noted.>
+	CMsg%id%03_2 <ifNPCShy Accept>
+	Msg%id%03_3 <Eh, just try to stay out of trouble, okay?>
+	CMsg%id%03_3 <ifNPCEasygoing Accept>
+	Msg%id%03_4 <You think you can help? I doubt it. The situation's not that desperate yet.>
+	CMsg%id%03_4 <ifNPCPassionate Accept>
+	Msg%id%03_5 <Rest assured that the police have this matter well under control.>
+	CMsg%id%03_5 <ifNPCCheerful Accept>
+	Msg%id%03_6 <Just don't do anything to contribute to the problem, and we'll call it square.>
+	CMsg%id%03_6 <ifNPCMelancholy Accept>
+	Prompt%id%01_1 <What can I do to help?>
+	Prompt%id%01_2 <I'd like to volunteer to help.>
+	Prompt%id%01_3 <Maybe I could help you.>
+	Prompt%id%02_1 <Maybe it wouldn't happen if you weren't so useless.>
+	Prompt%id%02_2 <You just need to hire better pilots.>
+	Prompt%id%02_3 <As usual, the police are powerless to stop it.>
+	Prompt%id%03 <I've had some experience with this sort of thing.>
+	CPrompt%id%03 <ifG PCLaw %6% Accept>
+	Prompt%id%04 <Alright. It doesn't sound hard.>
+	Prompt%id%04_1 <I'll take you up on that offer.>
+	Prompt%id%05 <Sorry, but this is your mess to sort out.>
+	Prompt%id%05_1 <No way. I don't work for cops.>
 
 	Persona
 	requires <*GenericMissionTest &Mecha>
 	start <if= v%id%01 0 else .%id%_GoBeenBefore V= %id%01 1 NewChat Say %id%01  AddChat %id%01 AddChat %id%02 AddChat %id%03 AddChat %id%04>
 	.%id%_GoBeenBefore <NewChat SayAnything Goto %2%>
-	result%id%01 <ifConversation 10 else .%id%_GoR1Lose ifG React -1 else .%id%_GoR1Lose Goto %1%>
+	result%id%01 <ifConversation HardSkillTar %6% else .%id%_GoR1Lose ifG React -1 else .%id%_GoR1Lose Goto %1%>
 	.%id%_GoR1Lose <NewChat Say %id%02 Goto %2%>
-	result%id%02 <ifIntimidation 8 else .%id%_GoR1Lose Goto %1%>
-	result%id%03 <AddEasygoing -d10  ifFlirtation 10 else .%id%_GoR3Lose  ifG React 20 else .%id%_GoR3Lose  AddReact 10  NewChat Say %id%03 AddChat %id%05>
+	result%id%02 <ifIntimidation SkillTar %6% else .%id%_GoR1Lose Goto %1%>
+	result%id%03 <AddEasygoing -d10  ifFlirtation HardSkillTar %6% else .%id%_GoR3Lose  ifG React 20 else .%id%_GoR3Lose  AddReact 10  NewChat Say %id%03 AddChat %id%05>
 	.%id%_GoR3Lose <AddReact -10  EndChat Say %id%04>
 	result%id%04 <Goto %3%>
 	result%id%05 <Goto %1%>
@@ -297,14 +349,13 @@
 	Prompt%id%05 <Go on.>
 	Prompt%id%05_1 <Please do.>
 
-
 	Persona
 	requires <*GenericMissionTest ~Shy>
 	start <if= v%id%01 0 else .%id%_GoBeenBefore V= %id%01 1 NewChat Say %id%01  AddChat %id%01 AddChat %id%02>
 	.%id%_GoBeenBefore <NewChat SayAnything Goto %2%>
-	result%id%01 <ifG PCRenown d20 else .%id%_GoR1Fail Goto .%id%_GoOfferMission>
+	result%id%01 <ifIntimidation SkillTar %6% else .%id%_GoR1Fail Goto .%id%_GoOfferMission>
 	.%id%_GoR1Fail <NewChat Say %id%02 Goto %2%>
-	result%id%02 <ifConversation 10 else .%id%_GoR2Fail Goto .%id%_GoOfferMission>
+	result%id%02 <ifConversation SkillTar %6% else .%id%_GoR2Fail Goto .%id%_GoOfferMission>
 	.%id%_GoR2Fail <NewChat Say %id%03 Goto %2%>
 	.%id%_GoOfferMission <NewChat Say %id%04 AddChat %id%03 AddChat %id%04>
 	result%id%03 <Goto %1%>

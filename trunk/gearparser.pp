@@ -499,7 +499,8 @@ var
 		ShoppingList := GenerateShoppingList( Slot , GG , MaxValue );
 		Item := SelectItemForNPC( ShoppingList );
 		DisposeNAtt( ShoppingList );
-		EquipItem( Slot , Item );
+		if Item <> Nil then EquipItem( Slot , Item )
+		else DialogMsg( 'Couldn''t generate item for ' + GearName( Slot ) + '/' + GearName( NPC ) + ', $' + BStr( MaxValue ) );
 	end;
 	Procedure BuyArmorForNPC();
 		{ Armor will be purchased in sets if possible. }
@@ -744,6 +745,8 @@ var
 			Limb := Limb^.Next;
 		end;
 	end;
+const
+	Min_Spending_Limit = 2500;
 var
 	Fac: GearPtr;
 begin
@@ -754,6 +757,7 @@ begin
 
 	if Renown < 10 then Renown := 10;
 	Spending_Limit := Calculate_Threat_Points( Renown , 1 );
+	if Spending_Limit < Min_Spending_Limit then Spending_Limit := Min_Spending_Limit;
 
 	Legality_Limit := -NAttValue( NPC^.NA , NAG_CharDescription , NAS_Lawful );
 	if Legality_Limit < 10 then Legality_Limit := 10;

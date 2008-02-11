@@ -41,25 +41,25 @@ Plot
 		GoCheckMember <if= PCFac %2% else GoCheckAuto  Goto GoIsMember>
 		*GoIsMember <*IHaveAJobForYou GoMissionBriefing>
 		*GoCheckAuto <*AutoMissionTest&Mecha GoMissionBriefing GoRejectMission GoCheckSkill %2% na>
-		*GoCheckSkill <*GenericMissionTest&Mecha  GoMissionBriefing GoEnd GoRejectMission %2% na>
+		*GoCheckSkill <*GenericMissionTest&Mecha  GoMissionBriefing GoEnd GoRejectMission %2% na %threat%>
 		*GoRejectMission <*RejectMission GoEnd>
 		GoEnd <EndPlot>
 		GoMissionBriefing <NewChat Say 1  AddChat 1 AddChat 2>
 		*result1 <*GoodLuckOnMission&NoEnemyFac GoR1Final %2% na>
 		GoR1Final <Memo 2 SetPlotStatus %id1%>
 		result2 <Goto GoRejectMission>
-		Msg1 <Recently, a number of our shipments have been attacked by bandits. Your job will be to locate those responsible and make sure they are incapable of attacking us again. For this you will earn $ \VAL V1 plus salvage.>
-		Msg1_1 <You've probably heard that several of our convoys have been attacked recently. We've identified the bandit gang responsible; your job will be to eliminate them once and for all. Do this and you'll earn $ \VAL V1 plus salvage.>
+		Msg1 <Recently, a number of our shipments have been attacked by bandits. Your job will be to locate those responsible and make sure they are incapable of attacking us again. For this you will earn $ \VAL Reward %threat% PayRate plus salvage.>
+		Msg1_1 <You've probably heard that several of our convoys have been attacked recently. We've identified the bandit gang responsible; your job will be to eliminate them once and for all. Do this and you'll earn $ \VAL Reward %threat% PayRate plus salvage.>
 		CMsg1_1 <ifNPCSociable Accept>
-		Msg1_2 <Some bandits have been attacking our shipments. Defeat them and you'll earn $ \VAL V1 plus salvage rights.>
+		Msg1_2 <Some bandits have been attacking our shipments. Defeat them and you'll earn $ \VAL Reward %threat% PayRate plus salvage rights.>
 		CMsg1_2 <ifNPCShy Accept>
-		Msg1_3 <This should be a straightforward assignment. Some bandits have been attacking our shipments; you'll be paid $ \VAL V1 plus salvage rights for locating and eliminating them.>
+		Msg1_3 <This should be a straightforward assignment. Some bandits have been attacking our shipments; you'll be paid $ \VAL Reward %threat% PayRate plus salvage rights for locating and eliminating them.>
 		CMsg1_3 <ifNPCEasygoing Accept>
-		Msg1_4 <The enemies of \ELEMENT 2 never sleep. Some bandits have been attacking our property... Your job will be to engage them in combat and eliminate them. Do this and you'll earn $ \VAL V1 plus salvage.>
+		Msg1_4 <The enemies of \ELEMENT 2 never sleep. Some bandits have been attacking our property... Your job will be to engage them in combat and eliminate them. Do this and you'll earn $ \VAL Reward %threat% PayRate plus salvage.>
 		CMsg1_4 <ifNPCPassionate Accept>
-		Msg1_5 <I want you to locate a particular bandit gang and disable their mecha. If you can perform this task, \ELEMENT 2 will pay you $ \VAL V1 plus full salvage rights.>
+		Msg1_5 <I want you to locate a particular bandit gang and disable their mecha. If you can perform this task, \ELEMENT 2 will pay you $ \VAL Reward %threat% PayRate plus full salvage rights.>
 		CMsg1_5 <ifNPCCheerful Accept>
-		Msg1_6 <A gang of bandits has been attacking our shipments; several employees of \ELEMENT 2 have been killed already. I want you to locate the bandits and eliminate them. Upon completion of this mission you'll earn $ \VAL V1 and salvage.>
+		Msg1_6 <A gang of bandits has been attacking our shipments; several employees of \ELEMENT 2 have been killed already. I want you to locate the bandits and eliminate them. Upon completion of this mission you'll earn $ \VAL Reward %threat% PayRate and salvage.>
 		CMsg1_6 <ifNPCMelancholy Accept>
 		Msg2 <\ELEMENT 1 in \SCENE EScene 1 hired you to fight some bandits in \ELEMENT 3 for \ELEMENT 2 .>
 		Prompt1 <Sounds good. I'll do it.>

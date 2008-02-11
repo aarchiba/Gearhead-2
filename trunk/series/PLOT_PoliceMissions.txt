@@ -1,25 +1,21 @@
-%%
-%% City missions are given by civil servants. They can be politicians, police
-%% officers, military, or anything else.
-%%
-
 Plot
-	name <Basic City Patrol Job>
+	name <Basic Police Patrol Job>
 	% The basic patrol job is a fight against some generic enemy mecha.
-	% This job gives salvage. This job will not result in the PC making
-	% any enemies.
+	% As a police job, this misssion doesn't offer salvage but it will
+	% give a point of Lawful reputation.
+	% This job will not result in the PC making any enemies.
 	requires <*GENERAL>
-	PayRate 100
+	PayRate 90
 
 	% E1 is the town itself
 	% E2 is a character who will offer the mission
 	% E3 is a scene where the encounter will take place
 	Element1 <Scene Town>
-	Element2 <Character (HasMecha|POLIT) !Ally 1>
+	Element2 <Character POLIC !Ally 1>
 	Element3 <Scene Environs>
 
 	% SubPlot1 is the combat encounter
-	SubPlot1 <*MECHAMISSION_Basic 2 3>
+	SubPlot1 <*POLICEMISSION_Basic 2 3>
 
 	% P1 = Time Limit
 	% P2 = Email Indicator
@@ -30,12 +26,12 @@ Plot
 	5min <if= PlotStatus 0 if= P2 0  if= PCFac NPCFac %2%  if= d20 1  ifG PCCharm d40  Email 1 P= 2 1>
 	Msg1   <%name2%@ \SCENE ESCene 2 :// Hey \RANK , I've got a mission for you in %name1%.>
 	Msg1_1 <%name2%@ \SCENE ESCene 2 :// Report to \SCENE EScene 2 for a mission at once.>
-	Msg1_2 <%name2%@ \SCENE ESCene 2 :// Your services are required by \FACTION NPCFac E2 . Come see me for mission briefing.>
+	Msg1_2 <%name2%@ \SCENE ESCene 2 :// Your services are required by \FACTION NPCFac %2% . Come see me for mission briefing.>
 	Msg1_3 <%name2%@ \SCENE ESCene 2 :// I've got a mission for you. Come to \SCENE ESCene 2 for the briefing.>
 
 	sub
 		Persona 2
-		rumor0 <%name2% needs a mecha pilot to intercept an enemy patrol.>
+		rumor0 <%name2% needs a pilot to fight some criminals.>
 		greeting <if= PlotStatus %id1% else GoCheckOffer Goto GoRemind>
 		*GoRemind <*MechaMissionReminder %3%>
 		GoCheckOffer <if# PlotStatus 0 else GoCheckEnemy NewChat SayAnything>
@@ -52,26 +48,26 @@ Plot
 		*result1 <*GoodLuckOnMission&NoEnemyFac GoR1Final ChatNPCFac na>
 		GoR1Final <Memo 2 SetPlotStatus %id1%>
 		result2 <Goto GoRejectMission>
-		Msg1 <A lance of unauthorized mecha has been spotted outside the city. Track them down and you'll get $ \VAL Reward %threat% PayRate plus salvage.>
-		Msg1_1 <>
+		Msg1 <There's a mecha gang operating in %name3% . I want you to locate them and disable their machines; for this, you'll earn $ \VAL Reward %threat% PayRate .>
+		Msg1_1 <My sources have tipped us off to a meeting of mecha thieves that's going to happen in %name3% later on today. I want you to go there, and defeat them all. If you can do that, you'll earn $ \VAL Reward %threat% PayRate .>
 		CMsg1_1 <ifNPCSociable Accept>
-		Msg1_2 <>
+		Msg1_2 <We've traced some mecha criminals to %name3%. Defeat them and you'll earn $ \VAL Reward %threat% PayRate .>
 		CMsg1_2 <ifNPCShy Accept>
-		Msg1_3 <>
+		Msg1_3 <There's a gang of criminals hanging out in %name3%. If you can defeat them, I'll give you $ \VAL Reward %threat% PayRate . What do you say?>
 		CMsg1_3 <ifNPCEasygoing Accept>
-		Msg1_4 <>
+		Msg1_4 <The criminals I'm after are holed up in %name3%. I need you to locate them and eliminate every last one. Do this, and you'll earn $ \VAL Reward %threat% PayRate .>
 		CMsg1_4 <ifNPCPassionate Accept>
-		Msg1_5 <>
+		Msg1_5 <We've located a mecha gang in %name3%. Go defeat them, and you'll earn $ \VAL Reward %threat% PayRate .>
 		CMsg1_5 <ifNPCCheerful Accept>
-		Msg1_6 <>
+		Msg1_6 <I need you to eliminate a gang of mecha thieves. You'll earn $ \VAL Reward %threat% PayRate for this job; there's no salvage, since we're going to need that for evidence.>
 		CMsg1_6 <ifNPCMelancholy Accept>
-		Msg2 <\ELEMENT 2 in \SCENE EScene %e2% hired you to fight some unauthorized mecha in %name3%.>
-		Prompt1 <Sounds good. I'll do it.>
-		Prompt1_1 <Alright, I'll do it.>
-		Prompt1_2 <I'll get to work immediately.>
-		Prompt2 <Sorry, I don't want this job.>
+		Msg2 <%name2% in \SCENE EScene %e2% hired you to fight some mecha criminals in %name3%.>
+		Prompt1 <I'll be back when I'm finished.>
+		Prompt1_1 <I'd love to do that.>
+		Prompt1_2 <You can count on me.>
+		Prompt2 <This isn't my kind of work.>
 		CPrompt2 <if# PCFac &AllyFac Accept>
-		Prompt2_1 <On second thought, I don't want this job.>
+		Prompt2_1 <You can find someone else for this mission.>
 		Prompt2_2 <Really, I don't want to do this.>
 	end
 

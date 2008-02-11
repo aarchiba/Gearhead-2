@@ -427,7 +427,7 @@ Function PartMatchesCriteria( const Part_In,Desc_In: String ): Boolean;
 	{ search criteria. Return FALSE otherwise. }
 	{ A match is had if all the words in DESC are found in PART. }
 begin
-	PartMatchesCriteria := StringMatchWeight( Part_In , Desc_In ) > 0;
+	PartMatchesCriteria := StringMatchWeight( Part_In + ' ONE_MATCH' , Desc_In + ' ONE_MATCH' ) > 0;
 end;
 
 Function PartAtLeastOneMatch( const Part_In,Desc_In: String ): Boolean;

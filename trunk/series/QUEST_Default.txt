@@ -935,7 +935,7 @@ Content
 		GoCheckOffer <if= SceneVar %3% 1 0 else GoAlreadyFought if= QuestStatus %qid% %id% else GoNoQuest Goto GoCheckAuto>
 		GoAlreadyFought <V= 2 2 Goto GoNoQuest>
 		*GoCheckAuto <*AutoMissionTest&Mecha GoMissionBriefing GoRejectMission GoCheckSkill na 8>
-		*GoCheckSkill <*GenericMissionTest&Mecha  GoMissionBriefing na GoRejectMission na 8>
+		*GoCheckSkill <*GenericMissionTest&Mecha  GoMissionBriefing na GoRejectMission na 8 %threat%>
 		*GoRejectMission <*RejectMission na>
 		GoMissionBriefing <NewChat Say %id%04 QMemo %qid% %id%05>
 		*GoNoQuest <*NiceToMeetYou GoChat>

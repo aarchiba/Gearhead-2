@@ -68,7 +68,7 @@ Const
 		Y_Anchor: ANC_Mid; Y_Justify: 9; H: 2;
 	);
 	ZONE_CharGenDesc: vgfx_zone = (
-		X_Anchor: ANC_Mid; X_Justify: -35; W: 70;
+		X_Anchor: ANC_Mid; X_Justify: -37; W: 74;
 		Y_Anchor: ANC_High; Y_Justify: -3; H: 3;
 	);
 

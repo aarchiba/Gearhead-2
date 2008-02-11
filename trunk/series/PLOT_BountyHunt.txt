@@ -36,7 +36,7 @@ sub
 	GoRemind <NewChat Say 1>
 
 	*GoFirstTime <*AutoMissionTest&Chara GoMissionBriefing GoRejectMission GoCheckSkill na na>
-	*GoCheckSkill <*GenericMissionTest&Chara  GoMissionBriefing GoEnd GoRejectMission na na>
+	*GoCheckSkill <*GenericMissionTest&Chara  GoMissionBriefing GoEnd GoRejectMission na na %threat%>
 	*GoRejectMission <*RejectMission GoEnd>
 	GoEnd <DeleteNPC %2%  EndPlot>
 	GoMissionBriefing <V= 1 Reward %threat% 250  V= 2 Reward %threat% 75   NewChat Say 1   SetPlotStatus %id1% Memo 2 P+ 1 20000>
