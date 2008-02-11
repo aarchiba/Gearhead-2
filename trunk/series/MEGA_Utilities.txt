@@ -28,7 +28,7 @@ Content
 		Persona 1
 		greeting <if= PlotStatus %id% else %pop%  Goto .%id%_GoWinMission>
 		*.%id%_GoWinMission <*MissionWasSuccess&Reward&Mecha .%id%_GoEnd ChatNPCFac na>
-		.%id%_GoEnd <CashPrize Reward %threat% PayRate EndPlot>
+		.%id%_GoEnd <CashPrize Reward %threat% PayRate    FacXP+ ChatNPCFac 1   EndPlot>
 	end
 
 %%

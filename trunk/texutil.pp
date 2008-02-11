@@ -326,29 +326,108 @@ begin
 	else Sgn := 0;
 end;
 
-Function PartMatchesCriteria( const Part_In,Desc_In: String ): Boolean;
-	{ Return TRUE if the provided part description matches the provided }
-	{ search criteria. Return FALSE otherwise. }
-	{ A match is had if all the words in DESC are found in PART. }
+Function StringMatchWeight( Part,Desc: String ): Integer;
+	{ Return the match weight of PART to DESC. If the weight is 0, then }
+	{ PART doesn't match DESC. All important traits listed in DESC must }
+	{ be found in PART. Optional traits are preceded by a ~; these don't have }
+	{ to be included in PART but increase the weight if they are. }
+	{ Negative traits must be preceded by a -; these must _not_ be present }
+	{ in Part. }
+	Function ExtractOrClause(var S: String): String;
+		{Extract the next trait from the or-list.}
+	var
+		P: Integer;
+		it: String;
+	begin
+		{Error check- make sure that we have something left to}
+		{extract! The string could have been nothing but white space.}
+		if S <> '' then begin
+
+			{Determine the position of the next whitespace.}
+			P := Pos('|',S);
+			if P = 0 then P := Pos(')',S);
+
+			{Extract the command.}
+			if P <> 0 then begin
+				it := Copy(S,1,P-1);
+				S := Copy(S,P+1,Length(S));
+			end else begin
+				it := Copy(S,1,Length(S));
+				S := '';
+			end;
+
+		end else begin
+			it := '';
+		end;
+
+		ExtractOrClause := it;
+	end;
 var
-	Trait: String;
-	it: Boolean;
-        Part, Desc: String;
+	Trait,T2: String;
+	it,MatchFound: Boolean;
+	N: Integer;
 begin
-	Part := UpCase( Part_In );
-	Desc := UpCase( Desc_In );
+	Part := UpCase( Part );
+	Desc := UpCase( Desc );
 
 	{ Assume TRUE unless a trait is found that isn't in NDesc. }
 	it := True;
+	N := -1;
 
 	DeleteWhiteSpace( Desc );
 
 	while Desc <> '' do begin
 		Trait := ExtractWord( Desc );
-		if Pos( Trait , Part ) = 0 then it := False;
+		if Trait[1] = '~' then begin
+			DeleteFirstChar( Trait );
+			if Pos( Trait , Part ) > 0 then Inc( N );
+
+		end else if Trait[1] = '-' then begin
+			{ A trait beginning with a "-" must NOT be present. }
+			DeleteFirstChar( Trait );
+			if Pos( Trait , Part ) <> 0 then begin
+				it := False;
+			end;
+		end else if Trait[1] = '(' then begin
+			{ A set of traits surrounded by parenthesis and separated by |s }
+			{ is an or-list. One of the traits must be present. }
+			DeleteFirstChar( Trait );
+			MatChFound := False;
+			repeat
+				T2 := ExtractOrClause( Trait );
+				if Pos( T2 , Part ) <> 0 then MatchFound := True;
+			until ( Trait = '' ) or MatchFound;
+
+			if MatchFound then Inc( N )
+			else it := False;
+
+		end else if UpCase( Trait ) = 'COMMON' then begin
+			{ A trait marked as COMMON will appear more often, despite number }
+			{ of matches. Use sparingly. }
+			N := N + 5;
+
+		end else begin
+			if Pos( Trait , Part ) = 0 then begin
+				it := False;
+			end else begin
+				Inc( N );
+			end;
+		end;
 	end;
 
-	PartMatchesCriteria := it;
+	if IT and ( N >= 0 ) then begin
+		StringMatchWeight := ( N * N div 2 ) - N + 2;
+	end else begin
+		StringMatchWeight := 0;
+	end;
+end;
+
+Function PartMatchesCriteria( const Part_In,Desc_In: String ): Boolean;
+	{ Return TRUE if the provided part description matches the provided }
+	{ search criteria. Return FALSE otherwise. }
+	{ A match is had if all the words in DESC are found in PART. }
+begin
+	PartMatchesCriteria := StringMatchWeight( Part_In , Desc_In ) > 0;
 end;
 
 Function PartAtLeastOneMatch( const Part_In,Desc_In: String ): Boolean;
@@ -444,102 +523,6 @@ begin
                 msg_out := msg;
 	end;
 	ReplaceHash := msg_out;
-end;
-
-Function StringMatchWeight( Part,Desc: String ): Integer;
-	{ Return the match weight of PART to DESC. If the weight is 0, then }
-	{ PART doesn't match DESC. All important traits listed in DESC must }
-	{ be found in PART. Optional traits are preceded by a ~; these don't have }
-	{ to be included in PART but increase the weight if they are. }
-	{ Negative traits must be preceded by a -; these must _not_ be present }
-	{ in Part. }
-	Function ExtractOrClause(var S: String): String;
-		{Extract the next trait from the or-list.}
-	var
-		P: Integer;
-		it: String;
-	begin
-		{Error check- make sure that we have something left to}
-		{extract! The string could have been nothing but white space.}
-		if S <> '' then begin
-
-			{Determine the position of the next whitespace.}
-			P := Pos('|',S);
-			if P = 0 then P := Pos(')',S);
-
-			{Extract the command.}
-			if P <> 0 then begin
-				it := Copy(S,1,P-1);
-				S := Copy(S,P+1,Length(S));
-			end else begin
-				it := Copy(S,1,Length(S));
-				S := '';
-			end;
-
-		end else begin
-			it := '';
-		end;
-
-		ExtractOrClause := it;
-	end;
-var
-	Trait,T2: String;
-	it,MatchFound: Boolean;
-	N: Integer;
-begin
-	Part := UpCase( Part );
-	Desc := UpCase( Desc );
-
-	{ Assume TRUE unless a trait is found that isn't in NDesc. }
-	it := True;
-	N := -1;
-
-	DeleteWhiteSpace( Desc );
-
-	while Desc <> '' do begin
-		Trait := ExtractWord( Desc );
-		if Trait[1] = '~' then begin
-			DeleteFirstChar( Trait );
-			if Pos( Trait , Part ) > 0 then Inc( N );
-
-		end else if Trait[1] = '-' then begin
-			{ A trait beginning with a "-" must NOT be present. }
-			DeleteFirstChar( Trait );
-			if Pos( Trait , Part ) <> 0 then begin
-				it := False;
-			end;
-		end else if Trait[1] = '(' then begin
-			{ A set of traits surrounded by parenthesis and separated by |s }
-			{ is an or-list. One of the traits must be present. }
-			DeleteFirstChar( Trait );
-			MatChFound := False;
-			repeat
-				T2 := ExtractOrClause( Trait );
-				if Pos( T2 , Part ) <> 0 then MatchFound := True;
-			until ( Trait = '' ) or MatchFound;
-
-			if MatchFound then Inc( N )
-			else it := False;
-
-		end else if UpCase( Trait ) = 'COMMON' then begin
-			{ A trait marked as COMMON will appear more often, despite number }
-			{ of matches. Use sparingly. }
-			N := N + 5;
-
-		end else begin
-			if Pos( Trait , Part ) = 0 then begin
-				it := False;
-			end else begin
-				Inc( N );
-			end;
-		end;
-	end;
-
-	if IT and ( N >= 0 ) then begin
-		StringMatchWeight := ( N * N div 2 ) - N + 2;
-	end else begin
-		StringMatchWeight := 0;
-	end;
 end;
 
 Procedure AlterDescriptors( var Original,Change: String );

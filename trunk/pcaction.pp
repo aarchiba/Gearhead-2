@@ -1161,22 +1161,23 @@ Procedure ForcePlot( GB: GameBoardPtr; PC,Scene: GearPtr );
 	{ Debugging command - forcibly loads a plot into the adventure. }
 var
 	RPM: RPGMenuPtr;
-	PName: String;
+	PID: Integer;
 	Plot: GearPtr;
 begin
 	if ( scene = Nil ) or ( Scene^.Parent = Nil ) then exit;
 	{ Create a menu listing all the units in the SaveGame directory. }
 	RPM := CreateRPGMenu( MenuItem , MenuSelect , ZONE_Menu );
-	BuildFileMenu( RPM , Plot_Seacrh_Pattern );
+	BuildSiblingMenu( RPM , Standard_Plots );
 
 	if RPM^.NumItem > 0 then begin
 		RPMSortAlpha( RPM );
 		DialogMSG('Select plot file to load.');
 
-		pname := SelectFile( RPM , @PCMenuRedraw );
+		pID := SelectMenu( RPM , @PCMenuRedraw );
 
-		if pname <> '' then begin
-			Plot := LoadFile( pname , Series_Directory );
+		if PID <> -1 then begin
+			Plot := CloneGear( RetrieveGearSib( Standard_Plots , PID ) );
+			SetSAtt( Plot^.SA , 'name <DEBUG>' );
 
 			if InsertPlot( FindRootScene( GB , GB^.Scene ) , FindRoot( Scene ) , Plot , GB , NAttValue( PC^.NA , NAG_CharDescription , NAS_Renowned ) ) then begin
 				DialogMsg( 'Plot successfully loaded.' );

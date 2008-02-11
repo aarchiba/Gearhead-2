@@ -10,10 +10,11 @@
 %% one conclusion for winning the battle, one conclusion for losing the battle, and a third
 %% conclusion for running out of time.
 %%
-%% The master plot must have a PayRate set.
+%% The master plot must have a PayRate set. The master plot is also responsible for E1's
+%% mission reminder message.
 %%
 %% Param1: The NPC offering the mission
-%% Param2: The encounter where the mission will take place
+%% Param2: The outdoors scene where the encounter will be placed
 
 Content
 	name <Generic Enemies>
@@ -21,7 +22,10 @@ Content
 	desc <The PC will fight some factionless mecha.>
 
 	% E1: The Mission Provider
-	% E2: The combat scene
+	% E2: The scene where the encounter will be placed
+	% E3: The combat scene
+	Element3 <Prefab>
+	Place3 <2>
 
 	% P%id%01 = Time Limit
 	% P%id%02 = Have entered combat
@@ -36,7 +40,7 @@ Content
 	SubPlot3 <*Util_TimeOver 1>
 
 	sub
-		MetaScene 2 2
+		MetaScene 3 2
 		% L1 = Encounter Over Counter
 		MapWidth 30
 		MapHeight 30
@@ -61,4 +65,64 @@ Content
 			ParaY 25
 		end
 	end
+	inv
+		STC PLOT-MECHAMISSION-WANDER
+	end
+
+Content
+	name <Faction Enemies>
+	requires <*MECHAMISSION_Basic>
+	desc <The PC will fight some enemies of the mission-giving NPC.>
+
+	% E1: The Mission Provider
+	% E2: The scene where the encounter will be placed
+	% E3: The combat scene
+	% E4: The enemy faction
+	Element3 <Prefab>
+	Place3 <2>
+	Element4 <Faction !Enemy 1>
+
+	% P%id%01 = Time Limit
+	% P%id%02 = Have entered combat
+	update <if= PlotStatus %id% else %pop% if= p%id%01 0 P= %id%01 ComTime P+ %id%01 86400>
+	start <if= PlotStatus %id% else %pop% ifG ComTime P%id%01 if= P%id%02 0 SetPlotStatus %id3%>
+
+	% SubPlot1 = Win the battle, get a reward
+	% SubPlot2 = Lose the battle, get scorned
+	% SubPlot3 = Run out of time, get email
+	SubPlot1 <*Util_WinMission_Basic 1>
+	SubPlot2 <*Util_LoseMission 1>
+	SubPlot3 <*Util_TimeOver 1>
+
+	sub
+		MetaScene 3 2
+		% L1 = Encounter Over Counter
+		MapWidth 30
+		MapHeight 30
+
+		Start <if= P%id%02 0  P= %id%02 1>
+		nu1 <if= T1 0   Return   if= V1 0 V= 1 1   AddRenwon -5                     Memo 1   SetPlotStatus %id2%>
+		nu2 <if= T2 0   if= V1 0 V= 1 1            XPV 100   AddRenown 1  Salvage   Memo 2   SetPlotStatus %id1%>
+
+		Msg1 <You lost %name1%'s mission.>
+		Msg2 <You successfully completed %name1%'s mission.>
+
+		sub
+			team 1
+			SetEnemy 2
+			ParaX 5
+			ParaY 5
+
+			team 2
+			SetEnemy 1
+			Deploy <SetSelfFaction %4% WMecha 2 %threat% 100>
+			ParaX 25
+			ParaY 25
+		end
+	end
+	inv
+		STC PLOT-MECHAMISSION-WANDER
+	end
+
+
 

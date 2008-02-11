@@ -549,79 +549,6 @@ result%id%01 <Goto %1%>
 Msg%id%01 <Were you sent here to provide security?>
 Prompt%id%01 <Yes, I was.>
 
-% TYPE: *DateActivity
-%	This is apparently a date. Time to decide what to do.
-%   PARAM1: Exit label
-
-Persona
-requires <*DateActivity>
-START <if= V%id%01 0 else %1% V= %id%01 1 NewChat Say %id%01 AddChat %id%01 AddChat %id%02>
-result%id%01 <ifNPCPassionate else .%id%_GoGoodAnswer  Goto .%id%_GoBadAnswer>
-result%id%02 <ifNPCEasygoing else .%id%_GoGoodAnswer  Goto .%id%_GoBadAnswer>
-.%id%_GoGoodAnswer <AddDatePoint   AddReact  d10   Goto %1%>
-.%id%_GoBadAnswer  <AddReact -d10   Goto %1%>
-Msg%id%01 <So, what would you like to do?>
-Prompt%id%01 <Let's watch a movie.>
-Prompt%id%02 <Let's go dancing.>
-
-% TYPE: *DateQuestion
-%	This is apparently a date. The NPC will ask a question of the PC.
-%   PARAM1: Exit label
-
-Persona
-requires <*DateQuestion>
-START <if= V%id%01 0 else %1% V= %id%01 1 NewChat Say %id%01 AddChat %id%01 AddChat %id%02>
-result%id%01 <ifNPCShy else .%id%_GoR1BadAnswer Goto .%id%_GoGoodAnswer>
-result%id%02 <ifNPCShy else .%id%_GoGoodAnswer Goto .%id%_GoBadR2Answer>
-.%id%_GoGoodAnswer <AddDatePoint   AddReact  d10   Goto %1%>
-.%id%_GoR1BadAnswer  <AddReact -d10   NewChat Say %id%02 AddChat %id%03>
-.%id%_GoR2BadAnswer  <AddReact -d10   NewChat Say %id%03 AddChat %id%03>
-result%id%03 <Goto %1%>
-Msg%id%01 <Have you made plans for our time together?>
-Msg%id%02 <How much interest does it show when you can't even be bothered to think about what we're going to do? If you're going to date me I'd like to think I'm worth at least a bit of effort.>
-Msg%id%03 <That's too bad... I had plans myself, I guess I should have told you. I can just forget about what I planned and we'll do what you want.>
-Prompt%id%01 <No, I was hoping you'd have planned it.>
-Prompt%id%02 <Yes, I have.>
-Prompt%id%03 <I see...>
-
-Persona
-requires <*DateQuestion>
-START <if= V%id%01 0 else %1% V= %id%01 1 NewChat Say %id%01 AddChat %id%01 AddChat %id%02>
-result%id%01 <ifNPCPassionate else .%id%_GoR1BadAnswer Goto .%id%_GoGoodAnswer>
-result%id%02 <ifNPCPassionate else .%id%_GoGoodAnswer Goto .%id%_GoR2BadAnswer>
-.%id%_GoGoodAnswer <AddDatePoint   AddReact  d10   Goto %1%>
-.%id%_GoR1BadAnswer  <AddReact -d10   NewChat Say %id%02 AddChat %id%03>
-.%id%_GoR2BadAnswer  <AddReact -d10   NewChat Say %id%03 AddChat %id%03>
-result%id%03 <Goto %1%>
-Msg%id%01 <What do you think of my outfit?>
-Msg%id%02 <"Interesting"? Nobody wants to hear that their clothes are "interesting". What does that me, anyhow? Am I wearing a tuba on my head or something?>
-Msg%id%03_10 <"Nice"? Just "nice", as in "boring"? Nobody wants to hear that their clothes are just "nice". What, do I look like your brother?>
-CMsg%id%03_10 <ifChatNPCMale Accept>
-Msg%id%03_20 <"Nice"? Just "nice", as in "boring"? Nobody wants to hear that their clothes are just "nice". What, do I look like your mother?>
-CMsg%id%03_20 <ifChatNPCFemale Accept>
-Prompt%id%01 <It's... interesting.>
-Prompt%id%02 <It's very nice!>
-Prompt%id%03 <I don't know...>
-
-% TYPE: *DateGreeting
-%	This is apparently a date. The NPC will greet the PC.
-%   PARAM1: Exit label
-
-Persona
-requires <*DateGreeting>
-START <if= V%id%01 0 else %1% V= %id%01 1 NewChat Say %id%01 AddChat %id%01 AddChat %id%02>
-result%id%01 <ifNPCMelancholy else .%id%_GoR1BadAnswer Goto .%id%_GoGoodAnswer>
-result%id%02 <ifNPCMelancholy else .%id%_GoGoodAnswer Goto .%id%_GoR2BadAnswer>
-.%id%_GoGoodAnswer <AddDatePoint   AddReact  d10   Goto %1%>
-.%id%_GoR1BadAnswer  <AddReact -d10   NewChat Say %id%02 AddChat %id%03>
-.%id%_GoR2BadAnswer  <AddReact -d10   NewChat Say %id%03 AddChat %id%03>
-result%id%03 <Goto %1%>
-Msg%id%01 <Hello \PC . You look very nice today.>
-Msg%id%02 <I wouldn't have said it if I didn't think it. I hope you're not going to have such a sour attitude all night...>
-Msg%id%03 <Don't lie. I know that I look like hell... This is the first chance I've had to relax in over a week, and didn't have enough time to fix myself up beforehand.>
-Prompt%id%01 <Really? I can't believe it...>
-Prompt%id%02 <Thanks. So do you.>
-Prompt%id%03 <Er, sorry...>
 
 % TYPE: *PCinviteNPC
 %	The PC is asking the NPC to meet somewhere.
@@ -774,6 +701,7 @@ Prompt%id%03_2 <Probably fight somebody. No idea who yet.>
 
 % TYPE: *GoodLuckOnMission
 %		          &Advance	PC will get an advance payment for this mission
+%			  &NoEnemyFac	There's no enemy faction to worry about
 %	The NPC has just given the PC a mission, the PC has accepted, so the NPC is
 %	seeing the PC off.
 %   PARAM1: Exit script label

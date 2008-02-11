@@ -2130,7 +2130,7 @@ initialization
 	persona_fragments := AggregatePattern( 'PFRAG_*.txt' , series_directory );
 	if persona_fragments = Nil then writeln( 'ERROR!!!' );
 	Standard_XXRan_Components := AggregatePattern( 'COMP_*.txt' , series_directory );
-	Standard_Plots := AggregatePattern( 'PLOT_*.txt' , series_directory );
+	Standard_Plots := LoadRandomSceneContent( 'PLOT_*.txt' , series_directory );
 
 finalization
 	DisposeGear( persona_fragments );

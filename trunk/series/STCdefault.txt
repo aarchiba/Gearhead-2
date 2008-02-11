@@ -1030,6 +1030,15 @@ GoSetOrders <GrabSource GSetNAtt NAG_EpisodeData NAS_Orders 3>
 EncounterMove 50
 
 Encounter
+desig <PLOT-MECHAMISSION-WANDER>
+% Sets this encounter's orders to Passive
+%  E1 must be the mission-giver
+GoSetOrders <GrabSource GSetNAtt NAG_EpisodeData NAS_Orders 3>
+name <%name1%'s Mission>
+update <if= PlotStatus %id% else GoHide SetStat STAT_MetaVisibility 0  ShowEncounter Goto GoSetOrders>
+EncounterMove 50
+
+Encounter
 desig <CORE-MECHAENCOUNTER>
 % Sets this encounter's orders to Passive
 GoSetOrders <GrabSource GSetNAtt NAG_EpisodeData NAS_Orders 3>
