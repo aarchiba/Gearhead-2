@@ -487,7 +487,7 @@ Plot
 		.%id%_changes <+Tgt +Fmi>
 		.%id%_GoNoMission <NewChat Say %id%04 &SetAllyFac %4% StoryNote %id%05 WinComp 0 .%id%_changes2>
 		*result%id%02 <*RejectMission .%id%_GoR2Exit>
-		.%id%_GoR2Exit <WinComp 0 .%id%_changes2>
+		.%id%_GoR2Exit <StoryNote %id%06 WinComp 0 .%id%_changes2>
 		.%id%_changes2 <+T-->
 		result%id%03 <Goto .%id%_GoNewMission>
 		Msg%id%01 <We still don't know where these invaders are coming from, nor what they want. You know, %name4% could use a good pilot like you to help face this threat.>
@@ -507,6 +507,7 @@ Plot
 		Msg%id%03 <In that case you should go to %name3% and speak with %name2%. I believe \SPR E2 has something you could help with.>
 		Msg%id%04 <That's good to hear. Go rest up, and get your stuff repaired. There's no telling when we could be attacked again.>
 		Msg%id%05 <You accepted %name1%'s request to help defend %name4%.>
+		Msg%id%06 <You declined %name1%'s request to help defend %name4%.>
 		Prompt%id%01 <It would be an honor to help.>
 		Prompt%id%02 <Sorry, I'm not signing up for anyone's war.>
 		Prompt%id%03 <Thank you.>

@@ -35,7 +35,7 @@ Plot
 		greeting <if= PlotStatus %id1% else GoCheckOffer Goto GoRemind>
 		*GoRemind <*MechaMissionReminder %3%>
 		GoCheckOffer <if# PlotStatus 0 else GoCheckEnemy NewChat SayAnything>
-		*GoCheckEnemy <*ENEMY_CHECK GoCheckEmail &AllyFac GoEnd>
+		*GoCheckEnemy <*ENEMY_CHECK GoCheckEmail ChatNPCFac GoEnd>
 		GoCheckEmail <if= P2 1 else GoCheckMember Goto GoGotEmail>
 		*GoGotEmail <*DidYouGetEmail GoMissionBriefing>
 		GoCheckMember <if= PCFac ChatNPCFac else GoCheckAuto  Goto GoIsMember>
@@ -66,7 +66,7 @@ Plot
 		Prompt1_1 <I'd love to do that.>
 		Prompt1_2 <You can count on me.>
 		Prompt2 <This isn't my kind of work.>
-		CPrompt2 <if# PCFac &AllyFac Accept>
+		CPrompt2 <if# PCFac ChatNPCFac Accept>
 		Prompt2_1 <You can find someone else for this mission.>
 		Prompt2_2 <Really, I don't want to do this.>
 	end

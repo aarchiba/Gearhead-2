@@ -59,6 +59,34 @@ Content
 %%   Dungeon threats. Little things to make life more dangerous for hapless adventurers.
 
 Content
+	name <Mining Robot>
+	requires <*DUNGEON_THREAT !Ne (mine|cave)>
+	element1 <Prefab>
+	teamdata1 <sd enemy>
+	start <if= V%id%01 0 else %pop% V= %id%01 1 ifAwareness 10 else %pop% Print %id%01 Goto %pop%>
+	msg%id%01 <The walls of this level have been worked by machines.>
+	inv
+		Monster Mining bot
+	end
+
+Content
+	name <Robot Gang>
+	requires <*DUNGEON_THREAT !Lo (mine|cave)>
+	element1 <Prefab>
+	teamdata1 <sd enemy>
+	element2 <Prefab>
+	teamdata2 <sd enemy>
+	element3 <Prefab>
+	teamdata3 <sd enemy>
+	start <if= V%id%01 0 else %pop% V= %id%01 1 ifAwareness 10 else %pop% Print %id%01 Goto %pop%>
+	msg%id%01 <You see many rectangular footprints in the dust on the floor.>
+	inv
+		Monster Mining bot
+		Monster Mining bot
+		Monster Guardbot
+	end
+
+Content
 	name <Fungus Bomb>
 	requires <*DUNGEON_THREAT !Lo SPACE>
 	element1 <Prefab>
@@ -74,7 +102,6 @@ Content
 		Monster Fungal Sphere
 		Monster Fungal Sphere
 	end
-
 
 Content
 	name <Mouse Nest>
@@ -132,6 +159,66 @@ Content
 
 %% *DUNGEON_REWARD CONTENT
 %%   Dungeon treasure. Something that's good for everyone.
+
+Content
+	name <Box of Jewels>
+	requires <*DUNGEON_REWARD !Ne (Mine|Cave)>
+	element1 <Prefab>
+	minimap <............1............>
+	inv
+		STC Crate
+		RandomLoot 8000
+		Loot_Category <GEMSTONE MINERAL>
+		Loot_Factions <GENERAL>
+	end
+
+Content
+	name <Box of Jewels>
+	requires <*DUNGEON_REWARD !Lo (Mine|Cave)>
+	element1 <Prefab>
+	minimap <............1............>
+	inv
+		STC Crate
+		RandomLoot 30000
+		Loot_Category <GEMSTONE MINERAL>
+		Loot_Factions <GENERAL>
+	end
+
+Content
+	name <Box of Jewels>
+	requires <*DUNGEON_REWARD !Md (Mine|Cave)>
+	element1 <Prefab>
+	minimap <............1............>
+	inv
+		STC Crate
+		RandomLoot 150000
+		Loot_Category <GEMSTONE MINERAL>
+		Loot_Factions <GENERAL>
+	end
+
+Content
+	name <Box of Jewels>
+	requires <*DUNGEON_REWARD !Hi (Mine|Cave)>
+	element1 <Prefab>
+	minimap <............1............>
+	inv
+		STC Crate
+		RandomLoot 750000
+		Loot_Category <GEMSTONE MINERAL>
+		Loot_Factions <GENERAL>
+	end
+
+Content
+	name <Box of Jewels>
+	requires <*DUNGEON_REWARD !Ex (Mine|Cave)>
+	element1 <Prefab>
+	minimap <............1............>
+	inv
+		STC Crate
+		RandomLoot 3750000
+		Loot_Category <GEMSTONE MINERAL>
+		Loot_Factions <GENERAL>
+	end
 
 Content
 	name <Emergency Spacesuit>
@@ -218,6 +305,22 @@ Content
 %% *DUNGEON_DECOR CONTENT
 %%   Dungeon Extras. Little bits of personality for dungeon levels, or things which aren't
 %%   usable by all characters, or reward/threat combos.
+
+Content
+	name <Robot Team>
+	requires <*DUNGEON_DECOR !Lo (mine|cave)>
+	element1 <Prefab>
+	teamdata1 <sd enemy>
+	element2 <Prefab>
+	teamdata2 <sd enemy>
+	element3 <Prefab>
+	inv
+		Monster Mining bot
+		Monster Mining bot
+		Treasure
+		name <Gold Nugget>
+		Fudge 32000
+	end
 
 Content
 	name <Computer Map>

@@ -5,18 +5,92 @@
 % A collection of items with little or no practical use. Generally, these items
 % will not be sold in stores but must instead be discovered.
 %
-% TREASURE, JEWELRY, ARTWORK, ANTIQUE, GEMSTONE
+% TREASURE, JEWELRY, ARTWORK, ANTIQUE, GEMSTONE, MINERAL
 % ODDITIES
 %
 
-Treasure
-Fudge 250
-name <Quartz Crystal>
-desc <A pretty, though presumably worthless, quartz crystal.>
-Category <TREASURE GEMSTONE>
-Factions <GENERAL>
-SDL_PORTRAIT <>
-Legality -50
+		Treasure
+		Fudge 250
+		name <Quartz Crystal>
+		desc <A pretty, though presumably worthless, quartz crystal.>
+		Category <TREASURE GEMSTONE MINERAL>
+		Factions <GENERAL>
+		SDL_PORTRAIT <>
+		Legality -50
+
+		Treasure
+		name <Silver Ingot>
+		Fudge 12000
+		Category <TREASURE MINERAL>
+		Factions <GENERAL>
+		SDL_PORTRAIT <>
+		Legality -50
+
+		Treasure
+		name <Gold Nugget>
+		Fudge 32000
+		Category <TREASURE MINERAL>
+		Factions <GENERAL>
+		SDL_PORTRAIT <>
+		Legality -50
+
+		Treasure
+		name <Platinum Ingot>
+		Fudge 60000
+		Category <TREASURE MINERAL>
+		Factions <GENERAL>
+		SDL_PORTRAIT <>
+		Legality -50
+
+		Treasure
+		name <Gold Nugget>
+		mass 2
+		Fudge 96000
+		Category <TREASURE MINERAL>
+		Factions <GENERAL>
+		SDL_PORTRAIT <>
+		Legality -50
+
+		Treasure
+		name <Aquamarine>
+		Fudge 15000
+		Category <TREASURE GEMSTONE>
+		Factions <GENERAL>
+		SDL_PORTRAIT <>
+		Legality -50
+
+		Treasure
+		name <Topaz>
+		Fudge 65000
+		Category <TREASURE GEMSTONE>
+		Factions <GENERAL>
+		SDL_PORTRAIT <>
+		Legality -50
+
+		Treasure
+		name <Diamond>
+		Fudge 250000
+		Category <TREASURE GEMSTONE>
+		Factions <GENERAL>
+		SDL_PORTRAIT <>
+		Legality -50
+
+		Treasure
+		name <Ruby>
+		Fudge 1250000
+		Category <TREASURE GEMSTONE>
+		Factions <GENERAL>
+		SDL_PORTRAIT <>
+		Legality -50
+
+		Treasure
+		name <Emerald>
+		Fudge 6250000
+		Category <TREASURE GEMSTONE>
+		Factions <GENERAL>
+		SDL_PORTRAIT <>
+		Legality -50
+
 
 Treasure
 Fudge 2500000

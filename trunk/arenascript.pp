@@ -547,9 +547,10 @@ begin
 		it := SAttValue( Plot^.SA , cmd );
 		if it = '' then begin
 			Plot := StoryMaster( GB , Source );
-			it := SAttValue( Plot^.SA , cmd );
+			if Plot <> Nil then it := SAttValue( Plot^.SA , cmd );
 		end;
 	end;
+	if it = '' then DialogMsg( 'ERROR: Local macro ' + cmd + ' not found.' );
 	FindLocalMacro := it;
 end;
 

@@ -9,7 +9,7 @@ Scene
 	special <NOEXIT>
 	type <DUNGEON Industrial>
 	dentrance <*GoUp>
-	content1 <Some 1 30 Sub *DUNGEON_THREAT>
+	content1 <Some 1 40 Sub *DUNGEON_THREAT>
 	content2 <Some 1 30 Sub *DUNGEON_DECOR>
 	content3 <Some 1 20 Sub *DUNGEON_REWARD>
 	mapwidth 35
@@ -49,7 +49,7 @@ Scene
 	special <NOEXIT>
 	type <DUNGEON building condemned>
 	dentrance <*GoUp>
-	content1 <Some 1 30 Sub *DUNGEON_THREAT>
+	content1 <Some 1 40 Sub *DUNGEON_THREAT>
 	content2 <Some 1 30 Sub *DUNGEON_DECOR>
 	content3 <Some 1 20 Sub *DUNGEON_REWARD>
 	mapwidth 30
@@ -88,9 +88,9 @@ Scene
 	special <NOEXIT>
 	type <DUNGEON sewer>
 	dentrance <*GoDown>
-	content1 <Some 1 30 Sub *DUNGEON_THREAT>
+	content1 <Some 1 50 Sub *DUNGEON_THREAT>
 	content2 <Some 1 30 Sub *DUNGEON_DECOR>
-	content3 <Some 1 20 Sub *DUNGEON_REWARD>
+	content3 <Some 1 10 Sub *DUNGEON_REWARD>
 	mapwidth 30
 	mapheight 30
 	MonkeyMap
@@ -128,7 +128,7 @@ Scene
 	special <NOEXIT>
 	type <DUNGEON Catacombs>
 	dentrance <*GoDown>
-	content1 <Some 1 30 Sub *DUNGEON_THREAT>
+	content1 <Some 1 40 Sub *DUNGEON_THREAT>
 	content2 <Some 1 30 Sub *DUNGEON_DECOR>
 	content3 <Some 1 20 Sub *DUNGEON_REWARD>
 	mapwidth 30
@@ -170,7 +170,7 @@ Scene
 	type <DUNGEON basement>
 	dentrance <*GoDown>
 	content1 <Some 1 30 Sub *DUNGEON_THREAT>
-	content2 <Some 1 30 Sub *DUNGEON_DECOR>
+	content2 <Some 1 40 Sub *DUNGEON_DECOR>
 	content3 <Some 1 20 Sub *DUNGEON_REWARD>
 	mapwidth 30
 	mapheight 30
@@ -210,7 +210,7 @@ Scene
 	type <DUNGEON ruin derelict>
 	terrain <SPACE>
 	dentrance <*GoDown>
-	content1 <Some 2 30 Sub *DUNGEON_THREAT>
+	content1 <Some 2 50 Sub *DUNGEON_THREAT>
 	content2 <Some 1 30 Sub *DUNGEON_DECOR>
 	content3 <Some 1  5 Sub *DUNGEON_REWARD>
 	content4 <Some 1 35 Sub *TREASUREROOM_WRECK>
@@ -254,7 +254,7 @@ Scene
 	type <DUNGEON ruin derelict>
 	terrain <SPACE>
 	dentrance <*GoDown>
-	content1 <Some 1 30 Sub *DUNGEON_THREAT>
+	content1 <Some 1 40 Sub *DUNGEON_THREAT>
 	content2 <Some 1 30 Sub *DUNGEON_DECOR>
 	content3 <Some 1 20 Sub *DUNGEON_REWARD>
 	% Suffocation effect...
@@ -298,7 +298,7 @@ Scene
 	terrain <SPACE>
 	habitat <SPACE.ASTER>
 	dentrance <*GoDown>
-	content1 <Some 1 30 Sub *DUNGEON_THREAT>
+	content1 <Some 1 40 Sub *DUNGEON_THREAT>
 	content2 <Some 1 30 Sub *DUNGEON_DECOR>
 	content3 <Some 1 20 Sub *DUNGEON_REWARD>
 	% Suffocation effect...
@@ -340,7 +340,7 @@ Scene
 	terrain <SPACE>
 	habitat <SPACE.ASTER>
 	dentrance <*GoDown>
-	content1 <Some 1 30 Sub *DUNGEON_THREAT>
+	content1 <Some 1 40 Sub *DUNGEON_THREAT>
 	content2 <Some 1 30 Sub *DUNGEON_DECOR>
 	content3 <Some 1 20 Sub *DUNGEON_REWARD>
 	% Suffocation effect...

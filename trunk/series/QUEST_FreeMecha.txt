@@ -8,6 +8,7 @@
 %% If there's an NPC associated with this quest, he should be placed in the
 %% Cavalier's Club, so the PC can find him easily.
 %%
+%% The free mecha should be generated using renown 15.
 
 Content
 	name <First Job>
@@ -35,7 +36,7 @@ Content
 		GoCheckFirst <if= QuestStatus %qid% 0 else GoChat if= V1 0 else GoBeenBefore NewChat Say 2 AddChat 2 AddChat 3>
 		GoBeenBefore <NewChat Say 3 AddChat 2 AddChat 3>
 		GoChat <NewChat SayAnything>
-		result1 <NewChat Say 4 RandomMecha .mek %threat% SetQuestStatus %qid% -1>
+		result1 <NewChat Say 4 RandomMecha .mek 15 SetQuestStatus %qid% -1>
 		.mek <GENERAL \FACTION_DESIG ChatNPCFac>
 		result2 <SetQuestStatus %qid% %id% Goto .%id1%_GoInit>
 		result3 <NewChat Say 5 V= 1 1 AddReact -1>
@@ -84,7 +85,7 @@ Content
 
 		Elevator
 		name <Mecha Bay>
-		use <if= QuestStatus %qid% 0 else GoBeenBefore ifYesNo 1 2 3 SetQuestStatus %qid% -1 RandomMecha .mektype %threat%>
+		use <if= QuestStatus %qid% 0 else GoBeenBefore ifYesNo 1 2 3 SetQuestStatus %qid% -1 RandomMecha .mektype 15>
 		.mektype <GENERAL MUGLE>
 		GoBeenBefore <Print 4>
 		Msg1 <You find an old mecha left behind when the mine closed.>
