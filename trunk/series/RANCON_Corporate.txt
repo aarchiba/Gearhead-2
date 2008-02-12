@@ -160,8 +160,9 @@ Content
 	Get%1% <ifNotAccessArmory if= L%id%01 0 L= %id%01 1 SetItemStolen %1% AddLawful -5 if= L%param% 0  Alert %id%01>
 	Msg%id%01 <Suddenly an alarm sounds!>
 	inv
-		Treasure 5000
+		Treasure
 		name <MegaMem Cartridge>
+		Fudge 500000
 		desc <An experimental new memory cartridge, which should store ten times as much data as the nearest compeditor.>
 	end
 
@@ -171,8 +172,9 @@ Content
 	Get%1% <ifNotAccessArmory if= L%id%01 0 L= %id%01 1 SetItemStolen %1% AddLawful -5 if= L%param% 0  Alert %id%01>
 	Msg%id%01 <Suddenly an alarm sounds!>
 	inv
-		Treasure 3500
+		Treasure
 		name <Twitch Processor>
+		Fudge 350000
 		desc <A new type of computer processor based on cutting edge physics. There are maybe five people in the solar system who can even understand how it works.>
 		clue29 <if= V1 0 else GoFail V= 1 1 ifG SkRoll 29 15 else GoFail Print 1 XPV 100>
 		GoFail <Print 2>

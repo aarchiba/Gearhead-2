@@ -781,13 +781,13 @@ begin
 	if Part^.G = GG_Mecha then begin
 		Cost := GearValue( Part );
 		if Cost > 0 then begin
-			msg := 'PV:' + BStr(GearValue( Part ));
+			msg := 'PV:' + BStr( Cost );
 			TextOut( MyDest.X  , MyDest.Y + 2 , msg );
 		end;
 	end else begin
 		Cost := GearCost( Part );
 		if ( Cost > 0 ) then begin
-			msg := '$' + BStr(GearValue( Part ));
+			msg := '$' + BStr( Cost );
 			TextOut( MyDest.X  , MyDest.Y + 2 , msg );
 		end;
 	end;

@@ -183,7 +183,8 @@ Content
 		update <if= V1 0 SetStat STAT_LOCK SkillTar 15 V= 1 1>
 	end
 	Inv
-		Treasure 9
+		Treasure
+		Fudge 900
 		name <Tiki Clock>
 		Mass 1
 		desc <A decorative souvenir clock, crafted in the style of an ancient Polynesian idol. It must be worth something to someone.>
@@ -200,8 +201,9 @@ Content
 		update <if= V1 0 SetStat STAT_LOCK SkillTar 35 V= 1 1>
 	end
 	Inv
-		Treasure 80
+		Treasure
 		name <Corporate Datachip>
+		Fudge 40000
 		desc <There must be loads of valuable information stored here. The right people would pay a fortune for it.>
 		StolenGoods
 	end
@@ -216,8 +218,9 @@ Content
 		update <if= V1 0 SetStat STAT_LOCK SkillTar 55 V= 1 1>
 	end
 	Inv
-		Treasure 700
+		Treasure
 		name <Necklace>
+		Fudge 70000
 		desc <A gold necklace.>
 		StolenGoods
 	end
@@ -232,8 +235,9 @@ Content
 		update <if= V1 0 SetStat STAT_LOCK SkillTar 75 V= 1 1>
 	end
 	Inv
-		BigTreasure 7
+		Treasure
 		name <Emerald Bracelet>
+		Fudge 700000
 		desc <A golden bracelet decorated with many jewels.>
 		StolenGoods
 	end
@@ -338,7 +342,8 @@ Content
 		update <if= V1 0 SetStat STAT_LOCK SkillTar 55 V= 1 1>
 	end
 	inv
-		Treasure 1000
+		Treasure
+		Fudge 100000
 		mass 5
 		name <Antique Video Player>
 		desc <This entertainment unit is long obsolete, but might have some value for collectors.>

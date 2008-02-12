@@ -41,9 +41,10 @@ Content
 	start <if= V%id%01 0 else %pop% V= %id%01 1 ifAwareness 5 else %pop% Print %id%01 Goto %pop%>
 	msg%id%01 <The walls of this level have been sliced erratically.>
 	inv
-		BigTreasure 500
-		mass 2
+		Treasure
 		name <Ruby>
+		Fudge 12000000
+		mass 2
 		desc <An enormous red jewel.>
 		Clue29 <Print 1 if= V1 0 V= 1 1 SkillXP 29 100>
 		Clue37 <Print 2 if= V2 0 V= 2 1 SkillXP 37 100>

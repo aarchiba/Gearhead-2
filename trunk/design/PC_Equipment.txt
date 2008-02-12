@@ -1439,7 +1439,7 @@ News
 legality -15
 Mass -1
 
-Treasure 1
+Treasure
 name <Mobile Phone>
 desc <A handheld communication device.>
 Category <ELECTRONICS COMMUNICATIONS>
@@ -1449,7 +1449,7 @@ Email
 Phone
 legality -10
 
-Treasure 1
+Treasure
 Mass 1
 name <Personal Communicator>
 desc <A handheld communication device.>
@@ -2376,7 +2376,7 @@ Name <Quick Fix Pill>
 FoodQuantity 10
 % Healing , restore Step7 damage using skill 20 (First Aid)
 Effect <7 HEALING 20>
-FoodXValue 1750
+FoodXValue 375
 desc <This medicine promotes rapid cellular regeneration, and can instantly heal many injuries.>
 Category <MEDICINE>
 Factions <GENERAL>
@@ -2388,7 +2388,7 @@ Name <Quick Fix Pill>
 FoodQuantity 5
 % Healing , restore Step7 damage using skill 20 (First Aid)
 Effect <7 HEALING 20>
-FoodXValue 1750
+FoodXValue 375
 desc <This medicine promotes rapid cellular regeneration, and can instantly heal many injuries.>
 Category <MEDICINE>
 Factions <GENERAL>
@@ -2400,7 +2400,7 @@ Name <Regen Boost Pill>
 FoodQuantity 10
 % Status Effect, Duration Step6, Regen(3), Skill25 but can't resist
 Effect <6 STATUS 3 25>
-FoodXValue 2500
+FoodXValue 500
 desc <This medicine increases the body's ability to repair itself. While it is in effect injuries will be healed much faster than normal.>
 Category <MEDICINE>
 Factions <GENERAL>
@@ -2412,7 +2412,7 @@ Name <Regen Boost Pill>
 FoodQuantity 5
 % Status Effect, Duration Step6, Regen(3), Skill25 but can't resist
 Effect <6 STATUS 3 25>
-FoodXValue 2500
+FoodXValue 500
 desc <This medicine increases the body's ability to repair itself. While it is in effect injuries will be healed much faster than normal.>
 Category <MEDICINE>
 Factions <GENERAL>
@@ -2424,7 +2424,7 @@ name <Poison Antidote>
 FoodQuantity 5
 % Cure Status, Poison (1), no magnitude
 Effect <0 Cure 1>
-FoodXValue 3000
+FoodXValue 600
 desc <A broad spectrum antivenom effective against most organic and synthetic poisons.>
 Category <MEDICINE>
 Factions <GENERAL>
@@ -2436,7 +2436,7 @@ name <Antibiotic Pill>
 FoodQuantity 5
 % Cure Status, Sickness (20), no magnitude
 Effect <0 Cure 20>
-FoodXValue 2000
+FoodXValue 400
 desc <A fast acting antiviral, antibacterial drug coupled with an immune system booster.>
 Category <MEDICINE>
 Factions <GENERAL>

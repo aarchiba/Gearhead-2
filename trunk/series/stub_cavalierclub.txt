@@ -32,6 +32,9 @@ Scene
 	Quest2 <*:DEBUGARENA 1>
 	Quest3 <*:DEBUGGIVEMISSION 1>
 
+	% The FreeMecha quest has a difficulcy rating of 5.
+	Quest4 <*:FREEMECHA 5>
+
 	sub
 		Team 1
 
@@ -49,7 +52,7 @@ Scene
 		desig <EntranceGrid>
 		Content1 <Some 1 100 Here *MENTOR>
 		Content2 <Some 1 100 Here *ANTI_ATTACK_SECURITY 2>
-		Content3 <Some 2 50 Here *URBAN_X>
+		Content3 <Some 2 30 Here *URBAN_X>
 		special <STARTHERE>
 	end
 

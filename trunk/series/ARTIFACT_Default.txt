@@ -14,7 +14,8 @@
 %%
 
 
-Treasure 50
+Treasure
+Fudge 20000
 name <Crystal Skull>
 requires <ITEM PREZERO !Ne>
 SDL_PORTRAIT <item_crystalskull.png>
@@ -42,8 +43,9 @@ Msg5_4 <You meditate upon the skull. You, too, will someday die.>
 Msg6 <You try to meditate upon the skull but your concentration fails.>
 mass 1
 
-Treasure 10
+Treasure
 name <Cube of Koeneke>
+Fudge 15000
 requires <ITEM PREZERO !Ne>
 Context <TL_Ne>
 desc <A puzzle box from the previous age. Once this game was very popular, but today very few working copies remain.>
@@ -160,8 +162,9 @@ Biotech
 Hardened
 mass -7
 
-BigTreasure 10
+Treasure
 name <MAGNUS Emerald>
+Fudge 1000000
 desc <This is a rectangular prism of dark green crystal.>
 ITEM_DESC <Although it resembles a gem, it is actually an ancient computer.>
 ITEM_HISTORY <It was the control center of an Imperator Zeta weapons factory.>
@@ -327,8 +330,9 @@ sub
         Flight 7
 end
 
-BigTreasure 250
+Treasure
 name <IRIA Ruby>
+Fudge 25000000
 desc <This is a hexagonal prism of blood red crystal.>
 ITEM_DESC <It's a PreZero computer core.>
 ITEM_HISTORY <It was one of the most important computers in Imperator Zeta.>

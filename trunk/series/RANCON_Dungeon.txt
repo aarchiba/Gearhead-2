@@ -221,7 +221,7 @@ Content
 
 Content
 	name <Computer Map>
-	requires <*DUNGEON_DECOR Ruin>
+	requires <*DUNGEON_DECOR (Ruin|Derelict|Laboratory)>
 	minimap < ... .###..#1+..###. ... >
 	element1 <Prefab>
 	start <if= V%id%01 0 else %pop% V= %id%01 1 ifAwareness 10 else %pop% Print %id%01 Goto %pop%>
@@ -261,8 +261,9 @@ Content
 	requires <*DUNGEON_GOAL !Ne ~Mine>
 	element1 <Prefab>
 	inv
-		Treasure 10
+		Treasure
 		name <Aquamarine>
+		Fudge 15000
 	end
 
 Content
@@ -270,8 +271,9 @@ Content
 	requires <*DUNGEON_GOAL !Lo ~Mine>
 	element1 <Prefab>
 	inv
-		Treasure 100
+		Treasure
 		name <Topaz>
+		Fudge 65000
 	end
 
 Content
@@ -279,8 +281,9 @@ Content
 	requires <*DUNGEON_GOAL !Md ~Mine>
 	element1 <Prefab>
 	inv
-		Treasure 1000
+		Treasure
 		name <Emerald>
+		Fudge 250000
 	end
 
 Content
@@ -288,8 +291,9 @@ Content
 	requires <*DUNGEON_GOAL !Hi ~Mine>
 	element1 <Prefab>
 	inv
-		BigTreasure 10
+		Treasure
 		name <Ruby>
+		Fudge 1250000
 	end
 
 Content
@@ -297,10 +301,68 @@ Content
 	requires <*DUNGEON_GOAL !Ex ~Mine>
 	element1 <Prefab>
 	inv
-		BigTreasure 100
+		Treasure
 		name <Diamond>
+		Fudge 6250000
 	end
 
+Content
+	requires <*DUNGEON_GOAL !Ne>
+	element1 <Prefab>
+	minimap <............1............>
+	inv
+		STC Crate
+		RandomLoot 20000
+		Loot_Category <TREASURE>
+		Loot_Factions <GENERAL>
+	end
+
+Content
+	requires <*DUNGEON_GOAL !Lo>
+	element1 <Prefab>
+	minimap <............1............>
+	inv
+		STC Crate
+		RandomLoot 100000
+		Loot_Category <TREASURE>
+		Loot_Factions <GENERAL>
+	end
+
+
+Content
+	requires <*DUNGEON_GOAL !Md>
+	element1 <Prefab>
+	minimap <............1............>
+	inv
+		STC Crate
+		RandomLoot 500000
+		Loot_Category <TREASURE>
+		Loot_Factions <GENERAL>
+	end
+
+
+Content
+	requires <*DUNGEON_GOAL !Hi>
+	element1 <Prefab>
+	minimap <............1............>
+	inv
+		STC Crate
+		RandomLoot 1000000
+		Loot_Category <TREASURE>
+		Loot_Factions <GENERAL>
+	end
+
+
+Content
+	requires <*DUNGEON_GOAL !Ex>
+	element1 <Prefab>
+	minimap <............1............>
+	inv
+		STC Crate
+		RandomLoot 5000000
+		Loot_Category <TREASURE>
+		Loot_Factions <GENERAL>
+	end
 
 
 

@@ -86,7 +86,8 @@ Function SeekSoftware( Mek: GearPtr; SW_Type,SW_Param: Integer; CasualUse: Boole
 
 Function GearEncumberance( Mek: GearPtr ): Integer;
 Function BaseMVTVScore( Mek: GearPtr ): Integer;
-Function BaseGearValue( Master: GearPtr ): LongInt;
+
+Function ComponentValue( Part: GearPtr; CalcCost,FullLoad: Boolean ): LongInt;
 Function GearCost( Master: GearPtr ): LongInt;
 Function GearValue( Master: GearPtr ): LongInt;
 
@@ -1013,7 +1014,6 @@ begin
 	else if Part^.G = GG_Support then CheckSupportRange( Part )
 	else if Part^.G = GG_Shield then CheckShieldRange( Part )
 	else if Part^.G = GG_ExArmor then CheckArmorRange( Part )
-	else if Part^.G = GG_Treasure then CheckTreasureRange( Part )
 	else if Part^.G = GG_Prop then CheckPropRange( Part )
 	else if Part^.G = GG_Tool then CheckToolRange( Part )
 	else if Part^.G = GG_RepairFuel then CheckRepairFuelRange( Part )
@@ -1275,9 +1275,13 @@ begin
 end;
 
 
-Function ComponentValue( Part: GearPtr ): LongInt;
+Function ComponentValue( Part: GearPtr; CalcCost,FullLoad: Boolean ): LongInt;
 	{Calculate the scaled value of PART, ignoring for the}
 	{moment its subcomponents.}
+	{ If CALCCOST is TRUE, we are calculating the cost of this component }
+	{ rather than its value. Add in the fudge factor and other modifiers. }
+	{ If FULLLOAD is TRUE, ignore any spent bullets or expended capabilities }
+	{ and return the value as though PART were fully loaded. }
 var
 	it: LongInt;
 	t,n,MAV: Integer;
@@ -1285,7 +1289,8 @@ begin
 	Case Part^.G of
 		GG_Module:	it := ModuleValue( Part );
 		GG_Weapon:	it := WeaponValue(Part);
-		GG_Ammo:	it := AmmoValue(Part);
+		GG_Ammo:	if FullLoad then it := BaseAmmoValue( Part )
+				else it := AmmoValue(Part);
 		GG_MoveSys:	it := MovesysValue(Part);
 		GG_Holder:	it := 15;
 		GG_ExArmor:	it := ArmorValue( Part );
@@ -1293,10 +1298,12 @@ begin
 		GG_Sensor:	it := SensorValue( Part );
 		GG_Support:	it := SupportValue( Part );
 		GG_Shield:	it := ShieldValue( Part );
-		GG_Treasure:	it := TreasureValue( Part );
+		GG_Treasure:	if CalcCost then it := 5
+				else it := 0;
 		GG_Tool:	it := ToolValue( Part );
 		GG_RepairFuel:	it := Part^.V;
-		GG_Consumable:	it := FoodValue( Part );
+		GG_Consumable:	if CalcCost then it := FoodValue( Part )
+				else it := 0;
 		GG_Modifier:	it := ModifierCost( Part );
 		GG_WeaponAddOn:	it := WeaponAddOnCost( Part );
 		GG_PowerSource: it := PowerSourceCost( Part );
@@ -1308,9 +1315,6 @@ begin
 	{If a component type is not listed above, it has no value.}
 	else it := 0
 	end;
-
-	{ Modify for intrinsics. }
-	it := it + IntrinsicCost( Part );
 
 	{ Modify for mass adjustment. }
 	MAV := NAttValue( PArt^.NA , NAG_GearOps , NAS_MassAdjust );
@@ -1348,12 +1352,21 @@ begin
 		{ This is done to compensate for the changes made to the MV/TR cost calculator. }
 		it := it * 2;
 		for t := 1 to Part^.Scale do it := it * 5;
+	end else if CalcCost and ( it > 0 ) and ( Part^.Scale = 0 ) then begin
+		{ Increase consumer cost of all SF:0 equipment. }
+		it := it * 5;
 	end;
+
+	{ Modify for intrinsics. }
+	it := it + IntrinsicCost( Part );
+
+	{ Modify for Fudge. }
+	if CalcCost then it := it + NAttValue( Part^.NA , NAG_GearOps , NAS_Fudge );
 
 	ComponentValue := it;
 end;
 
-Function TrackValue( Part: GearPtr ): LongInt;
+Function TrackValue( Part: GearPtr; CalcCost: Boolean ): LongInt;
 	{Calculate the value of this list of gears, including all}
 	{subcomponents.}
 var
@@ -1364,11 +1377,11 @@ begin
 
 	{Loop through all components.}
 	while Part <> Nil do begin
-		it := it + ComponentValue(Part);
+		it := it + ComponentValue( Part , CalcCost , False );
 
 		{Check for subcomponents and invcomponents.}
-		if Part^.SubCom <> Nil then it := it + TrackValue(Part^.SubCom);
-		if Part^.InvCom <> Nil then it := it + TrackValue(Part^.InvCom);
+		if Part^.SubCom <> Nil then it := it + TrackValue(Part^.SubCom , CalcCost);
+		if Part^.InvCom <> Nil then it := it + TrackValue(Part^.InvCom , CalcCost);
 
 		{Go to the next part in the series.}
 		Part := Part^.Next;
@@ -1378,39 +1391,19 @@ begin
 	TrackValue := it;
 end;
 
-Function BaseGearValue( Master: GearPtr ): LongInt;
+Function BaseGearValue( Master: GearPtr; CalcCost: Boolean ): LongInt;
 	{Calculate the value of MASTER, including all of its}
 	{subcomponents.}
 begin
 	{The formula to work out the total value of this gear}
 	{is basic value + SubCom value + InvCom value.}
-	BaseGearValue := ComponentValue(Master) + TrackValue(Master^.SubCom) + TrackValue(Master^.InvCom);
-end;
-
-Function FudgeCost( Master: GearPtr ): LongInt;
-	{ Determine the total fudge cost of this master and all of its children. }
-var
-	it: LongInt;
-	CG: GearPtr;
-begin
-	it := NAttValue( Master^.NA , NAG_GearOps , NAS_Fudge );
-	CG := Master^.SubCom;
-	while CG <> Nil do begin
-		it := it + FudgeCost( CG );
-		CG := CG^.Next;
-	end;
-	CG := Master^.InvCom;
-	while CG <> Nil do begin
-		it := it + FudgeCost( CG );
-		CG := CG^.Next;
-	end;
-	FudgeCost := it;
+	BaseGearValue := ComponentValue( Master , CalcCost , False ) + TrackValue( Master^.SubCom , CalcCost ) + TrackValue( Master^.InvCom , CalcCost );
 end;
 
 Function GearCost( Master: GearPtr ): LongInt;
 	{ Return the cash value of this gear. }
 begin
-	GearCost := BaseGearValue( Master ) + FudgeCost( Master );
+	GearCost := BaseGearValue( Master , True );
 end;
 
 Function GearValue( Master: GearPtr ): LongInt;
@@ -1419,7 +1412,7 @@ var
 	it: Int64;	{ Using a larger container than the cost needs so as to catch }
 	MV: LongInt;	{ overflow when doing calculations. }
 begin
-	it := BaseGearValue( Master );
+	it := BaseGearValue( Master , False );
 
 	{ Mecha have a special on-top-of-everything cost modifier for }
 	{ a high MV or TR. }
@@ -2360,7 +2353,7 @@ begin
 	if Part^.G = GG_PowerSource then begin
 		it := Part^.V * 25;
 	end else if ( Part^.G = GG_Support ) and ( Part^.S = GS_Engine ) then begin
-		it := Part^.V * 50;
+		it := Part^.V * 25;
 		if Part^.Stat[ STAT_EngineSubType ] = EST_HighOutput then it := it * 2;
 	end else if Part^.G = GG_Prop then begin
 		{ Props get loads of energy. Being stationary, it's easy to add lots of }
@@ -2383,12 +2376,13 @@ var
 	it,t: Integer;
 begin
 	if ( Part^.G = GG_Weapon ) and (( Part^.S = GS_BeamGun ) or ( Part^.S = GS_EMelee )) then begin
-		it := Part^.V + Part^.Stat[ STAT_BurstValue ];
+		it := Part^.V;
 		if HasAttackAttribute( WeaponAttackAttributes( Part ) , AA_Hyper ) then it := it * 3;
 		if HasAreaEffect( Part ) then it := it * 2;
 
 		{ Increase for scale. }
-		for t := 1 to Part^.Scale do it := it * 5;
+		if Part^.Scale = 0 then it := it * 2
+		else for t := 1 to Part^.Scale do it := it * 5;
 	end else it := 0;
 	EnergyCost := it;
 end;

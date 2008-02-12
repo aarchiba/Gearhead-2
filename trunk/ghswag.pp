@@ -30,8 +30,8 @@ uses gears;
 
 	{ TREASURE format }
 	{ G = GG_Treasure               }
-	{ S = Treasure Exponent         }
-	{ V = Treasure Value            }
+	{ S = Undefined                 }
+	{ V = Undefined                 }
 
 	{ TOOL format }
 	{ G = GG_Tool               }
@@ -54,9 +54,6 @@ Const
 	STAT_FoodQuantity = 3;
 
 
-Procedure CheckTreasureRange( Part: GearPtr );
-Function TreasureValue( Part: GearPtr ): LongInt;
-
 Function ToolDamage( Part: GearPtr ): Integer;
 Function ToolValue( Part: GearPtr ): Integer;
 Procedure CheckToolRange( Part: GearPtr );
@@ -74,25 +71,6 @@ implementation
 
 uses ghchars,ui4gh,texutil;
 
-
-Procedure CheckTreasureRange( Part: GearPtr );
-	{ Examine the various bits of this gear to make sure everything }
-	{ is all nice and legal. }
-begin
-	{ Check S - Treasure Exponent }
-	if Part^.S < 0 then Part^.S := 0
-	else if Part^.S > 6 then Part^.S := 6;
-end;
-
-Function TreasureValue( Part: GearPtr ): LongInt;
-	{ This function will find the cost of the provided item. }
-var
-	it,T: LongInt;
-begin
-	it := Part^.V;
-	for t := 1 to Part^.S do it := it * 10;
-	TreasureValue := it;
-end;
 
 Function ToolDamage( Part: GearPtr ): Integer;
 	{ Return how much damage this usable gear can withstand. }
@@ -176,10 +154,10 @@ Function FoodValue( Part: GearPtr ): LongInt;
 var
 	it,M: LongInt;
 begin
-	it := Part^.V + Part^.Stat[ Stat_FoodEffectValue ];
+	it := Part^.V div 3 + Part^.Stat[ Stat_FoodEffectValue ];
 
 	if Part^.Stat[ STAT_MoraleBoost ] > 0 then begin
-		it := it + ( Part^.Stat[ STAT_MoraleBoost ] * ( 150 - 2 * Part^.V ) );
+		it := it + ( Part^.Stat[ STAT_MoraleBoost ] * ( 75 - Part^.V ) );
 	end else begin
 		M := it * ( Part^.Stat[ STAT_MoraleBoost ] + 10 ) div 10;
 		if M < ( it div 2 ) then M := it div 2;

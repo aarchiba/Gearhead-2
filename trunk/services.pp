@@ -534,7 +534,7 @@ begin
 	if Mag^.G = GG_Ammo then begin
 		Spent := NAttValue( Mag^.NA , NAG_WeaponModifier , NAS_AmmoSpent );
 		if Spent > 0 then begin
-			it := ( BaseAmmoValue( Mag ) * Spent ) div Mag^.Stat[ STAT_AmmoPresent ];
+			it := ( ComponentValue( Mag , True , True ) * Spent ) div Mag^.Stat[ STAT_AmmoPresent ];
 			if it < 1 then it := 1;
 		end;
 	end;

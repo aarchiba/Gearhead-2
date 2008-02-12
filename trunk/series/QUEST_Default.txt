@@ -1809,8 +1809,9 @@ Content
 		CPrompt%id%06 <ifItemOK %2% Accept>
 	end
 	inv
-		Treasure 100
+		Treasure
 		name <Heart of Gold>
+		Fudge 10000
 		desc <A golden lump shaped vaguely like a heart. Some might call it art.>
 		Mass 7
 	end
@@ -2145,8 +2146,9 @@ Content
 		Msg2 <Police Patrol: Power down and surrender. You are transporting known contraband.>
 		Msg3 <You are attacked by the police!>
 
-		Treasure 10
+		Treasure
 		name <Cold Storage Crate>
+		Fudge 10000
 		mass 39
 		StolenGoods
 		desc <A container for storing things at extremely low temperatures. It is often used to transport living material.>
@@ -2304,8 +2306,9 @@ Content
 		Chardesc Passionate
 		Lawfulness 0
 
-		Treasure 100
+		Treasure
 		name <Aerosol Container>
+		Fudge 1000
 		desc <This unmarked aerosol container looks mighty suspicious.>
 		use <Print 4>
 		Clue16 <Print 2>
