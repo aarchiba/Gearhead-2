@@ -1,0 +1,57 @@
+%%
+%% *CS_Revelation Content
+%%		&Friendly	The NPC makes the revelation freely
+%%		&Hostile	The NPC is somehow coerced into making the revelation
+%%
+%% An NPC is about to reveal a secret to the PC. This secret should have something to do
+%% with the core story.
+%%
+%% Each of these components needs a .%id%_GoInit script in the main persona; each component
+%% should be enterable from either setting the PlotID and starting a conversation or from
+%% branching within a conversation.
+%%
+%% Param1 = The NPC to make the revelation
+%%
+
+
+%%  ********************************
+%%  ***   +P--  Peaceful  Life   ***
+%%  ********************************
+
+
+%%  *****************************************
+%%  ***   +Pun  Unknown  Enemy  Attacks   ***
+%%  *****************************************
+
+
+%%  *************************************
+%%  ***   +Pla  Learn  of  Artifact   ***
+%%  *************************************
+
+Content
+	name <There's Gonna Be a Conference>
+	desc <The NPC will reveal to the PC that there's going to be a conference about the item.>
+	requires <*CS_Revelation +Pla I:++>
+
+	% Element1 is the NPC
+	% Element2 is a metascene
+	Element2 <MetaScene !Near -7 *Building NeverFail>
+
+	start <if= PlotStatus %id% else %pop% ifNPCDead %1% LoseComp 0 .%id%_loss>
+	.%id%_loss <+T-- +F-->
+
+	sub
+		Persona 1
+		greeting <if= PlotStatus %id% else %pop% Goto .%id%_GoGreet>
+		*.%id%_GoGreet <*RevealSecret .%id%_GoInit>
+		.%id%_GoInit <NewChat Say %id%01 SMemo %id%02 History %id%03 WinComp %2% .%id%_next>
+		.%id%_next <+Tsh +Fin>
+		Msg%id%01 <There's going to be a conference about the \ITEM &TargetItem at %name2% soon. It's by invitation only, but you shouldn't have any problems sneaking in.>
+		Msg%id%02 <%name1% told you that there's going to be a conference about the \ITEM &TargetItem at %name2%.>
+		Msg%id%03 <%name1% told you about the conference at %name2%.>
+	end
+
+%%  *******************
+%%  ***   DEFAULT   ***
+%%  *******************
+

@@ -19,9 +19,102 @@
 %	STAT_XRP_TargetItem = 8;		{ I: }
 
 Plot
+	name <Partner Job Lead>
+	desc <Your partner has a message for you.>
+	requires <#A +T-- R:++>
+
+	% Element1 is the partner
+	% Element2 is the episode town
+	% Element3 is the person to ask for a mission
+	% Element4 is a scene for the meeting
+	Element1 <Grab 4>
+	Element2 <Grab 7>
+	Element3 <Character !Ally 1 !Near 2>
+	Element4 <Scene Building Public !Near 2 !Okay 3>
+
+	% P1 = Have unlocked conversation by visiting destination scene
+	start <ifNPCOK %1% else GoEndPlot if= SceneID %2% if= P1 0     P= 1 1  ForceChat %1% SMemo 1>
+	GoEndPlot <StoryNote 2 AddRenown -10   LoseComp 0 .loss>
+	.loss <+Cfa +Bad>
+
+	Msg1 <%name1% wants to speak with you about something.>
+	Msg2 <%name1% died.>
+
+	sub
+		Persona 1
+		% V1 = First Reputation Counter
+		% V2 = Skill to improve
+		greeting <if= P1 0 else GoReveal NewChat SayAnything>
+		*GoReveal <*LancemateWantsToTalk GoNow GoLater>
+		GoNow <NewChat Say %id%01 SMemo %id%03 AddChat %id%01 ifNPCOK %3% else GoE3Died &SetTargetNPC %3% WinComp %4% .next>
+		.next <+Tgt +Fmi>
+		GoE3Died <WinComp %4% .dead>
+		.dead <+Tgs +Fin>
+		GoLater <EndChat Say %id%02>
+		result%id%01 <NewChat Say %id%04 SMemo %id%05>
+		Msg%id%01 <I got a call from %name3%. We've been asked to go to %name4% for a mission.>
+		Msg%id%02 <Fine. Ask me about it later, then.>
+		Msg%id%03 <You should meet %name3% at %name4% for a mission.>
+		Msg%id%04 <Really? Well, maybe we should head over there and see if we can find any information, anyhow.>
+		Msg%id%05 <You should search %name4% for information.>
+		Prompt%id%01 <Didn't you hear? %name3% is dead.>
+		CPrompt%id%01 <ifNPCDead %3% Accept>
+	end
+
+Plot
+	name <Protect, then Inform>
+	desc <The enemy character has sent some mecha to trail this NPC; the PC can get info if he destroys those mecha.>
+	requires <#A +Tpt +Fin F:++>
+
+	% E1 is the scene where this will take place
+	% E2 is the NPC to be protected
+	% E3 is the outdoors scene where the encounter is
+	element1 <Grab 6>
+	element2 <Grab 5>
+	Place2 <1 (Citizens) pass ally>
+	element3 <Scene Outdoors !Near -7>
+
+	% SubPlot1 is the combat encounter
+	% SubPlot2 is the revelation of this NPC
+	SubPlot1 <*CS_InvisibleEncounter 3>
+	SubPlot2 <*CS_Revelation&Friendly 2>
+
+	start <if= PlotStatus %id% else GoCheckFirst ifNPCDead %2% LoseComp 0 .loss>
+	.%id1%_%plotid%_GoWin <ifNPCOK %2% else GoJustEnd StoryNote 1 Alert 2 SetPlotStatus %id2%>
+	.%id1%_%plotid%_GoLose <DeleteNPC %2%  Goto GoJustEnd>
+	GoJustEnd <LoseComp 0 .loss>
+	.loss <+T-- +F-->
+
+	Msg1 <You defeated the mecha which were threatening %name2%.>
+	Msg2 <You have defeated the mecha which were threatening %name2%.>
+
+	sub
+		Persona 2
+		greeting <if# PlotStatus 0 else GoGreet if# PlotStatus %id1% else GoRemind NewChat SayAnything>
+		*GoGreet <*ProtectCheckIn GoMissionInfo>
+		*GoRemind <*MechaMissionReminder %3%>
+		GoMissionInfo <NewChat Say %id%01 AddChat %id%01 AddChat %id%02>
+		result%id%01 <NewChat Say %id%02 SMemo %id%03 History %id%04 SetPlotStatus %id1%>
+		result%id%02 <EndChat Say %id%05 AddChat %id%03>
+		result%id%03 <AddHeroic -1 AddReact -10 Goto .%id2%_GoInit>
+		Msg%id%01 <You're not here to protect me; you're just trying to find out what I know. You're no better than \FACTION &EnemyFac .>
+		Msg%id%02 <You think you can do that? They've sent a mecha that follows me wherever I go. Get rid of it, then we can talk... and if you fail, at least I'll have one less person bothering me.>
+		Msg%id%03 <%name2% is being harassed by \FACTION &EnemyFac . If you can destroy the mecha they sent to follow \OPR %2% , \SPR %2% will give you some information.>
+		Msg%id%04 <You agreed to defeat the mecha harassing %name2%.>
+		Msg%id%05 <Er... You make a persuasive argument.>
+		Prompt%id%01 <If I make them go away, will you help me?>
+		Prompt%id%02 <Tell me what you know, or you'll find out I'm worse.>
+		CPrompt%id%02 <ifIntimidation HardSkillTar StoryDL Accept>
+		Prompt%id%03 <[Continue]>
+
+		STC MS_CAFE
+		SetID 1
+	end
+
+Plot
 	name <Drive Off Attacker>
 	desc <You walk in just as NPC is about to be attacked.>
-	requires <#A +Tpt T:++ S:++ ~C:POLIC>
+	requires <#A +Tpt -Fin T:++ S:++ ~C:POLIC>
 
 	% E1 is the scene where this will take place
 	% E2 is the NPC to be rescued

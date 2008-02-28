@@ -2,6 +2,67 @@
 %%	+Pun	An unknown enemy attacks
 
 Plot
+	name <So That's Who You Work For>
+	desc <You learn who the enemy NPC has been working for.>
+	requires <#A +Pun +Ten E:++ F:-->
+	Size 7
+
+	% Element1 is the metascene for the battle
+	% Element2 is the enemy character
+	% Element3 is the faction he's working for
+	Element1 <Grab 6>
+	Element2 <Grab 1>
+	Place2 <1 (Enemies) SD>
+	Element3 <Faction ArchEnemy !OKay 2>
+
+	% P1 = Initialization Counter
+	update <if= P1 0 P= 1 1 NPCLevel %2% StoryDL SetNPCFaction %2% %3%>
+
+	sub
+		Persona 2
+		special <Unlisted NoEscape>
+		greeting <EndChat Say %id%01 AddChat %id%01>
+		result%id%01 <EndChat Say %id%02>
+		Msg%id%01 <Oh, it's you. I should have expected that we would meet again... it serves me right for not being more thorough the last time. My masters at %name3% will be upset.>
+		Msg%id%02 <Don't be so sure of yourself. You might be able to face me, but you don't stand a chance against our combined might.>
+		Prompt%id%01 <They'll be even more upset when I defeat you again.>
+
+		MetaScene 1 2
+		% L1 = Encounter Over Counter
+		% L2 = Initialization Counter
+		MapWidth 30
+		MapHeight 30
+
+		% L1 = Match Over counter
+		% L2 = Initialization Counter
+
+		Start <if= L2 0 L= 2 1 ForceChat %2% &SetEnemyFac %3% StoryNote 1>
+		nu1 <if= T1 0   Return   if= V1 0 V= 1 1   Goto GoLoseMission>
+		nu2 <if= T2 0            if= V1 0 V= 1 1   Goto GoWinMission>
+
+		GoWinMission <XPV 100  AddRenown 1   Alert 2 WinComp 0 .next>
+		GoLoseMission <AddRenown -5 LoseComp 0 .next>
+		.next <+T-- +F-->
+
+		Msg1 <You learned that %name2% was working for %name3%.>
+		Msg2 <You have defeated %name2%, but the real threat is now %name3%.>
+
+		sub
+			team 1
+			SetEnemy 2
+			ParaX 5
+			ParaY 10
+
+			team 2
+			name <Enemies>
+			Deploy <SetSelfFaction %3%   WMecha 2 StoryDL 30>
+			SetEnemy 1
+			ParaX 25
+			ParaY 25
+		end
+	end
+
+Plot
 	name <Pirate War>
 	desc <The thief you're looking for knows about the pirate war.>
 	requires <#A +Tht (+Far|+Ffi|+F--) +Pun T:++ F:-- -T:ENEMY -P:CRIHN (T:THIEF|T:CRIHN) (L:FCOMS|L:MAQUI|L:RISHI|L:CRIHN|L:BOHEM) ~C:THEIF ~+Gmo>

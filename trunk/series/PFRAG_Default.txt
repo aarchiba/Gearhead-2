@@ -1,5 +1,61 @@
 % Persona Fragment File
 
+% TYPE: *RevealSecret
+%	The NPC will reveal a secret to the PC, usually after the PC has done something.
+%   PARAM1: Exit label
+
+	Persona
+	requires <*RevealSecret>
+	START <NewChat Say %id%01 AddChat %id%01>
+	result%id%01 <Goto %1%>
+	Msg%id%01 <Now I can tell you about that thing...>
+	Msg%id%01_1 <>
+	CMsg%id%01_1 <ifNPCSociable Accept>
+	Msg%id%01_2 <>
+	CMsg%id%01_2 <ifNPCShy Accept>
+	Msg%id%01_3 <>
+	CMsg%id%01_3 <ifNPCEasygoing Accept>
+	Msg%id%01_4 <>
+	CMsg%id%01_4 <ifNPCPassionate Accept>
+	Msg%id%01_5 <>
+	CMsg%id%01_5 <ifNPCCheerful Accept>
+	Msg%id%01_6 <>
+	CMsg%id%01_6 <ifNPCMelancholy Accept>
+	Prompt%id%01 <It's about time.>
+	Prompt%id%01_1 <Tell me.>
+	Prompt%id%01_2 <Do you mind if I write this down?>
+
+% TYPE: *LancemateWantsToTalk
+%	One of the PC's lancemates wants to talk about something. The PC will either be able to
+%	accept the conversation or delay it until later.
+%   PARAM1: Accept exit label
+%   PARAM2: Deny exit label
+
+	Persona
+	requires <*LancemateWantsToTalk>
+	START <NewChat Say %id%01 AddChat %id%01 AddChat %id%02>
+	result%id%01 <Goto %1%>
+	result%id%02 <Goto %2%>
+	Msg%id%01 <\PC , there's something I have to tell you.>
+	Msg%id%01_1 <\PC , there's something that I really think we ought to discuss.>
+	CMsg%id%01_1 <ifNPCSociable Accept>
+	Msg%id%01_2 <I have something to tell you.>
+	CMsg%id%01_2 <ifNPCShy Accept>
+	Msg%id%01_3 <Hey, I don't know if this is a good time or not, but there's something I'd like to talk about.>
+	CMsg%id%01_3 <ifNPCEasygoing Accept>
+	Msg%id%01_4 <\PC , there's a matter which we urgently need to discuss.>
+	CMsg%id%01_4 <ifNPCPassionate Accept>
+	Msg%id%01_5 <\PC , there's something I want to talk about. This seems like a pretty good time.>
+	CMsg%id%01_5 <ifNPCCheerful Accept>
+	Msg%id%01_6 <Sorry to bring this up at what may be a bad time, but there's something we need to talk about.>
+	CMsg%id%01_6 <ifNPCMelancholy Accept>
+	Prompt%id%01 <No problem. What is it?>
+	Prompt%id%01_1 <Go ahead.>
+	Prompt%id%01_2 <Sure. What's going on?>
+	Prompt%id%02 <This can wait until later.>
+	Prompt%id%02_1 <We don't have time for this right now.>
+	Prompt%id%02_2 <This isn't a good time for that.>
+
 % TYPE: *SomeoneSentPCToTalk
 %			&ForJob		The PC is here to do a job for the NPC
 %	The PC will tell the NPC that someone sent him here to talk.
@@ -21,6 +77,7 @@
 
 % TYPE: *INeedYourHelp
 %                     &SomethingPersonal	The NPC needs help of a sensitive nature
+%		      &PCSpecifically		The NPC wants the PC's help, not just anyone
 %	The NPC wants the PC to help him.
 %   PARAM1: Will listen exit Label
 %   PARAM2: Won't listen exit label
@@ -1147,13 +1204,13 @@ Prompt%id%03_2 <Probably fight somebody. No idea who yet.>
 %  PARAM2: Faction to maybe join
 	Persona
 	requires <*FACTION_ENTRANCE_EXAM>
-	START <ifG PCRep 6 19  else .%id%_GoFail     ifG React 0 else .%id%_GoFail     Goto %1%>
+	START <ifG PCRenown 19  else .%id%_GoFail     ifG React 0 else .%id%_GoFail     Goto %1%>
 	.%id%_GoFail <NewChat Say %id%01>
 	Msg%id%01 <We're looking for some talented recruits. Unfortunately, there's nobody like that around here...>
 
 	Persona
 	requires <*FACTION_ENTRANCE_EXAM SILKN>
-	START <ifG PCRep 6 20  else .%id%_GoFail     ifG PCRep 1 1  else .%id%_GoFail  ifG PCRep 2 -1  else .%id%_GoFail   Goto %1%>
+	START <ifG PCRenown 20  else .%id%_GoFail     ifG PCRep 1 1  else .%id%_GoFail  ifG PCRep 2 -1  else .%id%_GoFail   Goto %1%>
 	.%id%_GoFail <NewChat Say %id%01>
 	Msg%id%01 <There are many who want to join the Silver Knights, but only those of both the highest ability and purest virtue are accepted.>
 

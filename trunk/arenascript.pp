@@ -3182,7 +3182,7 @@ Function CurrentPCRenown( GB: GameBoardPtr ): Integer;
 var
 	PC: GearPtr;
 begin
-	PC := GG_LocatePC( GB );
+	PC := LocatePilot( GG_LocatePC( GB ) );
 	if PC <> Nil then begin
 		CurrentPCRenown := NAttValue( PC^.NA , NAG_CharDescription , NAS_Renowned );
 	end else begin

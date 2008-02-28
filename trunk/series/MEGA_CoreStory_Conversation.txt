@@ -546,6 +546,45 @@ Content
 %%  *****************************************
 
 Plot
+	name <They're After an Item>
+	desc <The PC will learn that the attacking enemy is searching for an item.>
+	requires <*CS_Conversation +Pun +Fin F:++ I:-- ~+Gmo>
+	Size 1
+
+	% E1 is the information source
+	% E2 is the artifact being sought
+	% E3 is a local scene for the information-gathering next component
+	Element2 <Artifact>
+	Place2 </>
+	Element3 <Scene (Building|Meeting) Public !Near -7>
+
+	start <if= PlotStatus %id% else %pop% ifNPCDead %1% LoseComp 0 .%id%_loss>
+	.%id%_loss <+T-- +F-->
+
+	sub
+		Persona 1
+		greeting <if= PlotStatus %id% else %pop% Goto .%id%_GoGreet>
+		*.%id%_GoGreet <*QuestionsAboutFaction&IsEnemy .%id%_GoExplain &EnemyFac>
+		.%id%_GoExplain <NewChat Say %id%01 AddChat %id%01 AddChat %id%02 AddChat %id%03>
+		result%id%01 <NewChat Say %id%03 AddChat %id%02 AddChat %id%03 AddChat %id%04>
+		result%id%02 <NewChat Say %id%04 AddChat %id%01 AddChat %id%03 AddChat %id%04>
+		result%id%03 <NewChat Say %id%05 AddChat %id%02 AddChat %id%01 AddChat %id%04>
+		result%id%04 <NewChat Say %id%06 SMemo %id%07 History %id%02 &SetTargetItem %2% WinComp %3% .%id%_next>
+		.%id%_next <+Pla +Tgs +Fin>
+		Msg%id%01 <As far as I know, the reason behind these attacks is that \FACTION &EnemyFac is looking for the %name2%.>
+		Msg%id%02 <%name1% told you that \FACTION &EnemyFac was looking for the %name2%.>
+		Msg%id%03 <\ITEM_DESC %2%>
+		Msg%id%04 <\ITEM_HISTORY %2%>
+		Msg%id%05 <\ITEM_USAGE %2%>
+		Msg%id%06 <I heard that some pilots from \FACTION &EnemyFac were hanging around in %name3%, so that might be a good place to start looking for more information.>
+		Msg%id%07 <%name1% told you that \FACTION &EnemyFac is looking for the %name2%. You might be able to find more information in %name3%.>
+		Prompt%id%01 <And the %name2% is...?>
+		Prompt%id%02 <Where did it come from?>
+		Prompt%id%03 <What does it do?>
+		Prompt%id%04 <How can I find it myself?>
+	end
+
+Plot
 	name <Why Are They Doing It?>
 	desc <The PC will be directed to someone who may have answers.>
 	requires <*CS_Conversation +Pun (C:MEDIA|+Gkn) ~E:-- ~F:-- (1:POLIT|1:MEDIA|1:POLIC|1:ADVEN|1:MILIT|1:CORPO)>
@@ -585,9 +624,39 @@ Plot
 %%  *************************************
 
 Plot
+	name <Not This Monk, The Other One>
+	desc <This character will send the PC to go speak with a monk.>
+	requires <*CS_Conversation +Pla +Fin (1:FAITH|1:ADVEN) I:++>
+	Size 1
+
+	% E1 is the person with the information
+	% E2 is the monk who knows about it
+	Element2 <Prefab>
+	Place2 </>
+
+	start <if= PlotStatus %id% else %pop% ifNPCDead %1% LoseComp 0 .%id%_loss>
+	.%id%_loss <+T-- +F-->
+
+	sub
+		Persona 1
+		greeting <if= PlotStatus %id% else %pop% Goto .%id%_GoIntro>
+		*.%id%_GoIntro <*LookingForItem &TargetItem .%id%_GoExplain>
+		.%id%_GoExplain <NewChat Say %id%01 StoryNote %id%02 AddChat %id%01 &SetTargetNPC %2% WinComp 0 .%id%_win>
+		.%id%_win <+Tpt +Fin>
+		result%id%01 <NewChat Say %id%03>
+		Msg%id%01 <I don't know about that myself, but %name2% does... unfortunately, \SPR %2% 's currently in hiding. There are many others who seek knowledge of the \ITEM &TargetItem . Some of them are dangerous.>
+		Msg%id%02 <You learned that %name2% is hiding from people who seek the \ITEM &TargetItem .>
+		Msg%id%03 <I don't know. That's why they call it "hiding", because nobody knows where you are.>
+		Prompt%id%01 <Where can I find %name2%?>
+	end
+	inv
+		NPC Monk
+	end
+
+Plot
 	name <Someone Else Looking>
 	desc <The PC will be informed of his new rival.>
-	requires <*CS_Conversation +Pla +Fin E:-- ~1:ACADE ~1:THIEF>
+	requires <*CS_Conversation +Pla +Fin E:-- ~1:ACADE ~1:THIEF I:++>
 	Size 1
 
 	% E1 is the person with the information
@@ -615,4 +684,41 @@ Plot
 		Prompt%id%02 <Where did %name2% go?>
 		CPrompt%id%02 <if= v%id%02 0 Accept>
 	end
+
+%%  *******************
+%%  ***   DEFAULT   ***
+%%  *******************
+
+Plot
+	name <Dream Quest>
+	desc <This monk will send the PC on a quest.>
+	requires <*CS_Conversation 1:FAITH>
+	Size 1
+
+	% E1 is the person with the information
+	% E2 is the outdoor scene where the PC will be sent
+	% E3 is an encounter to be placed there
+	Element2 <Scene Outdoors !Near -7>
+	Element3 <Prefab>
+	Place3 <2>
+
+	start <if= PlotStatus %id% else %pop% ifNPCDead %1% LoseComp 0 .%id%_loss>
+	.%id%_loss <+T-- +F-->
+
+	sub
+		Persona 1
+		greeting <if= PlotStatus %id% else %pop% Goto .%id%_GoIntro>
+		*.%id%_GoIntro <*IHaveInformation .%id%_GoExplain na>
+		.%id%_GoExplain <NewChat Say %id%01 StoryNote %id%02 WinComp %3% .%id%_win>
+		.%id%_win <+Ten +F-->
+		Msg%id%01 <You have already quested long and far. I have a feeling that you should go to %name2%... it is there that your destiny awaits.>
+		Msg%id%02 <%name1% advised you to seek your destiny in %name2%.>
+	end
+	inv
+		Encounter
+		Name <Fated Encounter>
+		EncounterMove 25
+	end
+
+
 

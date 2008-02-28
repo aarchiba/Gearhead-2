@@ -217,8 +217,8 @@
 	requires <*GenericMissionTest &Mecha "POLIC">
 	start <NewChat Say %id%01 AddChat %id%01 AddChat %id%02 AddChat %id%03>
 	.%id%_GoFail <EndChat Say %id%03 Goto %2%>
-	result%id%01 <ifConversation HardSkillTar %threat% else .%id%_GoFail Goto %1%>
-	result%id%02 <ifTaunt SkillTar %threat% else .%id%_GoFail ifG React 0 else .%id%_GoFail NewChat Say %id%02 AddChat %id%04 AddChat %id%05>
+	result%id%01 <ifConversation HardSkillTar %6% else .%id%_GoFail Goto %1%>
+	result%id%02 <ifTaunt SkillTar %6% else .%id%_GoFail ifG React 0 else .%id%_GoFail NewChat Say %id%02 AddChat %id%04 AddChat %id%05>
 	result%id%03 <Goto %1%>
 	result%id%04 <Goto %1%>
 	result%id%05 <Goto %3%>

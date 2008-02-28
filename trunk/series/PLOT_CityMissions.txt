@@ -23,15 +23,16 @@ Plot
 
 	% P1 = Time Limit
 	% P2 = Email Indicator
-	start <if= PlotStatus 0 ifG ComTime P1 EndPlot>
+	start <if= PlotStatus 0 ifNPCOK %2% else GoDelete ifG ComTime P1 EndPlot>
+	GoDelete <EndPlot>
 	update <if= PlotStatus 0 if= P1 0 P= 1 ComTime P+ 1 86400>
 
 	% Insert email here
 	5min <if= PlotStatus 0 if= P2 0  if= PCFac NPCFac %2%  if= d20 1  ifG PCCharm d40  Email 1 P= 2 1>
-	Msg1   <%name2%@ \SCENE ESCene 2 :// Hey \RANK , I've got a mission for you in %name1%.>
-	Msg1_1 <%name2%@ \SCENE ESCene 2 :// Report to \SCENE EScene 2 for a mission at once.>
-	Msg1_2 <%name2%@ \SCENE ESCene 2 :// Your services are required by \FACTION NPCFac E2 . Come see me for mission briefing.>
-	Msg1_3 <%name2%@ \SCENE ESCene 2 :// I've got a mission for you. Come to \SCENE ESCene 2 for the briefing.>
+	Msg1   <%name2%@ \SCENE NPCSCene %2% :// Hey \RANK , I've got a mission for you in %name1%.>
+	Msg1_1 <%name2%@ \SCENE NPCSCene %2% :// Report to \SCENE EScene 2 for a mission at once.>
+	Msg1_2 <%name2%@ \SCENE NPCSCene %2% :// Your services are required by \FACTION NPCFac E2 . Come see me for mission briefing.>
+	Msg1_3 <%name2%@ \SCENE NPCSCene %2% :// I've got a mission for you. Come to \SCENE ESCene 2 for the briefing.>
 
 	sub
 		Persona 2
@@ -65,7 +66,7 @@ Plot
 		CMsg1_5 <ifNPCCheerful Accept>
 		Msg1_6 <>
 		CMsg1_6 <ifNPCMelancholy Accept>
-		Msg2 <\ELEMENT 2 in \SCENE EScene %e2% hired you to fight some unauthorized mecha in %name3%.>
+		Msg2 <\ELEMENT 2 in \SCENE NPCScene %2% hired you to fight some unauthorized mecha in %name3%.>
 		Prompt1 <Sounds good. I'll do it.>
 		Prompt1_1 <Alright, I'll do it.>
 		Prompt1_2 <I'll get to work immediately.>

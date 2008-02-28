@@ -87,6 +87,20 @@ Content
 	end
 
 Content
+	name <Bad Mushroom>
+	requires <*DUNGEON_THREAT !Ne SPACE>
+	element1 <Prefab>
+	teamdata1 <sd enemy>
+	start <if= V%id%01 0 else %pop% V= %id%01 1 ifAwareness 10 else %pop% Print %id%01 Goto %pop%>
+	msg%id%01 <You notice a strange blue fungus growing on the walls.>
+	inv
+		Monster Armored Fungus
+		% This armored fungus is slightly easier than a regular one.
+		Skill 10 1
+		Skill 13 2
+	end
+
+Content
 	name <Fungus Bomb>
 	requires <*DUNGEON_THREAT !Lo SPACE>
 	element1 <Prefab>
@@ -104,6 +118,55 @@ Content
 	end
 
 Content
+	name <Killer Cleanbot>
+	requires <*DUNGEON_THREAT !Ne (Derelict|Industrial|Ruin)>
+	element1 <Prefab>
+	teamdata1 <sd enemy>
+	start <if= V%id%01 0 else %pop% V= %id%01 1 ifAwareness 10 else %pop% Print %id%01 Goto %pop%>
+	msg%id%01 <This level is clean... too clean.>
+	inv
+		Monster Cleanbot
+		name <KILLER CLEANBOT>
+		Skill 8 4
+		Skill 10 4
+		Skill 13 4
+		Skill 18 2
+	end
+
+Content
+	name <Station Defense>
+	requires <*DUNGEON_THREAT !Lo (Derelict|Industrial|Laboratory)>
+	element1 <Prefab>
+	teamdata1 <sd enemy>
+	start <if= V%id%01 0 else %pop% V= %id%01 1 ifAwareness 10 else %pop% Print %id%01 Goto %pop%>
+	msg%id%01 <This level seems to be well-defended.>
+	inv
+		Monster Guardbot
+	end
+
+Content
+	name <Vacuum Flowers>
+	requires <*DUNGEON_THREAT !Lo Ruin SPACE>
+	element1 <Prefab>
+	teamdata1 <sd enemy>
+	start <if= V%id%01 0 else %pop% V= %id%01 1 ifAwareness 10 else %pop% Print %id%01 Goto %pop%>
+	msg%id%01 <You sense an alien presence here.>
+	inv
+		Monster Exorg Floater
+	end
+
+Content
+	name <Big Rat>
+	requires <*DUNGEON_THREAT !Ne GROUND>
+	element1 <Prefab>
+	teamdata1 <sd enemy>
+	start <if= V%id%01 0 else %pop% V= %id%01 1 ifAwareness 10 else %pop% Print %id%01 Goto %pop%>
+	msg%id%01 <You hear the pitter-patter of little feet.>
+	inv
+		Monster Plague Rat
+	end
+
+Content
 	name <Mouse Nest>
 	requires <*DUNGEON_THREAT !Lo GROUND>
 	element1 <Prefab>
@@ -118,8 +181,7 @@ Content
 	teamdata5 <sd enemy>
 	element6 <Prefab>
 	start <if= V%id%01 0 else %pop% V= %id%01 1 ifAwareness 5 else %pop% Print %id%01 Goto %pop%>
-	msg%id%01 <You hear squeaks in the distance.>
-	msg%id%01_1 <You hear the pitter-patter of little feet. Lots of little feet.>
+	msg%id%01 <You hear the pitter-patter of little feet. Lots of little feet.>
 	inv
 		monster Rat
 		monster Rat
@@ -159,6 +221,126 @@ Content
 
 %% *DUNGEON_REWARD CONTENT
 %%   Dungeon treasure. Something that's good for everyone.
+
+Content
+	name <Old Junk 1>
+	requires <*DUNGEON_REWARD !Ne Ruin>
+	element1 <Prefab>
+	minimap <............1............>
+	inv
+		STC Crate
+		RandomLoot 8000
+		Loot_Category <EXOTIC ANTIQUE TREASURE>
+		Loot_Factions <GENERAL>
+	end
+
+Content
+	name <Old Junk 2>
+	requires <*DUNGEON_REWARD !Lo Ruin>
+	element1 <Prefab>
+	minimap <............1............>
+	inv
+		STC Crate
+		RandomLoot 30000
+		Loot_Category <EXOTIC ANTIQUE TREASURE>
+		Loot_Factions <GENERAL>
+	end
+
+Content
+	name <Old Junk 3>
+	requires <*DUNGEON_REWARD !Md Ruin>
+	element1 <Prefab>
+	minimap <............1............>
+	inv
+		STC Crate
+		RandomLoot 150000
+		Loot_Category <EXOTIC ANTIQUE TREASURE>
+		Loot_Factions <GENERAL>
+	end
+
+Content
+	name <Old Junk 4>
+	requires <*DUNGEON_REWARD !Hi Ruin>
+	element1 <Prefab>
+	minimap <............1............>
+	inv
+		STC Crate
+		RandomLoot 750000
+		Loot_Category <EXOTIC ANTIQUE TREASURE>
+		Loot_Factions <GENERAL>
+	end
+
+Content
+	name <Old Junk 5>
+	requires <*DUNGEON_REWARD !Ex Ruin>
+	element1 <Prefab>
+	minimap <............1............>
+	inv
+		STC Crate
+		RandomLoot 3750000
+		Loot_Category <EXOTIC ANTIQUE TREASURE>
+		Loot_Factions <GENERAL>
+	end
+
+Content
+	name <Foot Locker 1>
+	requires <*DUNGEON_REWARD !Ne (Derelict|Building)>
+	element1 <Prefab>
+	minimap <............1............>
+	inv
+		STC Crate
+		RandomLoot 8000
+		Loot_Category <WEAPON ARMOR TOOL TREASURE>
+		Loot_Factions <GENERAL>
+	end
+
+Content
+	name <Foot Locker 2>
+	requires <*DUNGEON_REWARD !Lo (Derelict|Building)>
+	element1 <Prefab>
+	minimap <............1............>
+	inv
+		STC Crate
+		RandomLoot 30000
+		Loot_Category <WEAPON ARMOR TOOL TREASURE>
+		Loot_Factions <GENERAL>
+	end
+
+Content
+	name <Foot Locker 3>
+	requires <*DUNGEON_REWARD !Md (Derelict|Building)>
+	element1 <Prefab>
+	minimap <............1............>
+	inv
+		STC Crate
+		RandomLoot 150000
+		Loot_Category <WEAPON ARMOR TOOL TREASURE>
+		Loot_Factions <GENERAL>
+	end
+
+Content
+	name <Foot Locker 4>
+	requires <*DUNGEON_REWARD !Hi (Derelict|Building)>
+	element1 <Prefab>
+	minimap <............1............>
+	inv
+		STC Crate
+		RandomLoot 750000
+		Loot_Category <WEAPON ARMOR TOOL TREASURE>
+		Loot_Factions <GENERAL>
+	end
+
+Content
+	name <Foot Locker 5>
+	requires <*DUNGEON_REWARD !Ex (Derelict|Building)>
+	element1 <Prefab>
+	minimap <............1............>
+	inv
+		STC Crate
+		RandomLoot 3750000
+		Loot_Category <WEAPON ARMOR TOOL TREASURE>
+		Loot_Factions <GENERAL>
+	end
 
 Content
 	name <Box of Jewels>
@@ -305,6 +487,70 @@ Content
 %% *DUNGEON_DECOR CONTENT
 %%   Dungeon Extras. Little bits of personality for dungeon levels, or things which aren't
 %%   usable by all characters, or reward/threat combos.
+
+Content
+	name <Broken Computer>
+	requires <*DUNGEON_DECOR (Derelict|Laboratory)>
+	minimap <............1............>
+	element1 <Prefab>
+	inv
+		STC COMPUTER-1
+		use <Print 1>
+		clue32 <Print 1>
+		clue23 <if= V1 0 else GoBeenBefore V= 1 1 Print 2 GiveSTC .parts  SkillXP 23 25>
+		clue29 <if= V1 0 else GoBeenBefore V= 1 1 Print 2 GiveSTC .parts  SkillXP 29 25>
+		.parts <SPAREPARTS-1>
+		GoBeenBefore <Print 3>
+		msg1 <This old computer appears to be broken.>
+		msg2 <You salvage some spare parts from this computer.>
+		msg3 <There's nothing else you can do here.>
+	end
+
+Content
+	name <Defense Robot (Good)>
+	requires <*DUNGEON_DECOR (Ruin|Laboratory) ~!Lo ~!Md>
+	minimap <......#1#..#2#..###......>
+	element1 <Prefab>
+	element2 <Prefab>
+	Teamdata2 <sd ally>
+	inv
+		Door
+		use <if= V1 0 else GoUsed ifYesNo 101 102 103 else GoRefuse Print 104 SetStat STAT_Pass 0  Transform 1 V= 1 1>
+		GoRefuse <Print 105>
+		GoUsed <Print 106>
+		NPCOpenDoor < >
+		Msg101 <[DEFENSE ROBOT RECHARGE STATION] Lift bar to activate defense robot.>
+		Msg102 <Lift the bar.>
+		Msg103 <Leave it alone.>
+		Msg104 <You activate the defense robot.>
+		Msg105 <You leave the defense robot in the recharge station.>
+		Msg106 <You have already activated the defense robot.>
+
+		Monster Androbot
+	end
+
+Content
+	name <Defense Robot (Bad)>
+	requires <*DUNGEON_DECOR (Ruin|Laboratory) -!Ne ~!Hi ~!Ex>
+	minimap <......#1#..#2#..###......>
+	element1 <Prefab>
+	element2 <Prefab>
+	Teamdata2 <sd enemy>
+	inv
+		Door
+		use <if= V1 0 else GoUsed ifYesNo 101 102 103 else GoRefuse Print 104 SetStat STAT_Pass 0  Transform 1 V= 1 1>
+		GoRefuse <Print 105>
+		GoUsed <Print 106>
+		NPCOpenDoor < >
+		Msg101 <[DEFENSE ROBOT RECHARGE STATION] Lift bar to activate defense robot.>
+		Msg102 <Lift the bar.>
+		Msg103 <Leave it alone.>
+		Msg104 <You activate the defense robot.>
+		Msg105 <You leave the defense robot in the recharge station.>
+		Msg106 <You have already activated the defense robot.>
+
+		Monster Androbot
+	end
 
 Content
 	name <Robot Team>

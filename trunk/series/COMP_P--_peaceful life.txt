@@ -3,6 +3,139 @@
 %%  Peaceful Life components
 
 Plot
+	name <Destroyed Spaceship>
+	desc <The PC can rescue someone from pirates, or just loot the wreckage.>
+	requires <+Ten +P-- ~F:CRIHN ~E:CRIHN -P:CRIHN>
+	Size 5
+
+	% E1 is the encounter for this component
+	% E2 is the pilot who may be rescued, or the pirate who the PC ripped off.
+	%   Isn't it wonderful to define new elements and then decide what they're
+	%   going to be based on the player's actions? Of course it's wonderful.
+	% E3 is the Captain's log which may be recovered
+	% E4 is the Blades of Crihna faction, needed for the encounter
+	% E5 is the local hospital, needed if the PC decides to be heroic
+	% E6 is the town itself, needed for the diary
+	Element1 <Grab 6>
+	Element2 <NewNPC 0 -7>
+	Place2 </>
+	Element3 <Prefab>
+	Element4 <Faction CRIHN>
+	Element5 <Scene Hospital !Near -7>
+	Element6 <Scene Town !Near -7>
+
+	% SubPlot1 is the rescue scenario.
+	SubPlot1 <*CS_ThanksForRescue 2>
+
+	sub
+		MetaScene 1 2
+		% L1 = Encounter Over Counter
+		% L2 = Initialization Counter
+		MapWidth 30
+		MapHeight 30
+		Start <if= L2 0 L= 2 1 Alert 1 History 7>
+		nu1 <if= T1 0   Return   if= V1 0 V= 1 1   LoseComp 0 .loss>
+		.loss <+Pun +T-- +F-->
+		nu2 <if= T2 0   if= V1 0 V= 1 1   AddRenown 1   SALVAGE   ifYesNo 2 3 4 else GoRansack Goto GoRescue>
+		GoRescue  <Print 5 StoryNote 6 XPV 100 AddHeroic 1 MoveNPC %2% %5% Exit %5% SetPlotStatus %id1%>
+		GoRansack <Print 8 StoryNote 9 GiveItem %3% CashPrize Reward StoryDL 500 XPV 100 AddHeroic -1 PCEnemy %2% if= &EnemyNPC 0 else GoEndRansack &SetEnemyNPC %2% Goto GoEndRansack>
+		GoEndRansack <WinComp 0 .ransack>
+		.ransack <+Pla +T-- +F-->
+		Msg1 <You find a heavily damaged spaceship besieged by pirates. It looks like it's too late to save anybody on board.>
+		Msg2 <The pirates have been defeated. You are now free to loot the wreckage yourself, or maybe look for survivors.>
+		Msg3 <Look for survivors.>
+		Msg4 <Loot the wreckage.>
+		Msg5 <You find %name2% in the wreckage, and bring \OPR %2% to %name5%.>
+		Msg6 <You rescued %name2% from the wreckage.>
+		Msg7 <You found a spaceship being attacked by pirates.>
+		Msg8 <While searching the wreckage, you find an archaic paper diary. It appears to be the captain's log.>
+		Msg9 <You recovered the captain's log from the wreckage.>
+
+		sub
+			team 1
+			SetEnemy 2
+			ParaX 5
+			ParaY 5
+
+			team 2
+			SetEnemy 1
+			Deploy <SetSelfFaction %4%   WMecha 2 StoryDL 100>
+			ParaX 25
+			ParaY 25
+
+			void
+			name <Enemy Zone>
+			width 12
+			height 12
+			MFX 1
+			MFY 19
+			sub
+				SuperProp
+				requires <*Battleship>
+				SetTeam 0
+			end
+		end
+	end
+	inv
+		Treasure
+		name <Captain's Log>
+		desc <An archaic-style paper diary. It apparently belonged to the ship's captain.>
+		use <Alert 1 Alert 2 Alert 3 Alert 4>
+		Msg1 <[The log describes the crew's search for a hidden treasure. The exact nature of this treasure isn't specified.]>
+		Msg2 <"Our wandering has led us here, to %name6%. The pirates have been on our tail every step of the way, which means we must be close. I can almost smell it.">
+		Msg3 <"Still, we aren't out of trouble yet. There are others who are on the same trail. If we can't find it before %name2% gets here, then I fear we may all be as good as dead.">
+		Msg4 <[The log ends here.]>
+	end
+
+
+Plot
+	name <I will not be stopped!>
+	desc <The PC will make a new enemy. Hooray!>
+	requires <+Ten (+P--|+Pun|+Pla) E:-->
+	Size 5
+
+	% E1 is the encounter for this component
+	% E2 is a new enemy NPC
+	Element1 <Grab 6>
+	Element2 <NewNPC -2 -7 Villainous>
+	% Note that even though E2 talks in this encounter, he doesn't actually show up
+	% in person.
+	Place2 </>
+
+	sub
+		Persona 2
+		*GREETING <*BattleIntroduction GoInfo>
+		GoInfo <EndChat Say 1>
+		Msg1 <I don't care who sent you; you have no chance of stopping my plan! My men should be able to easily defeat you on their own.>
+
+		MetaScene 1 2
+		% L1 = Encounter Over Counter
+		% L2 = Initialization Counter
+		MapWidth 30
+		MapHeight 30
+
+		Start <if= L2 0 L= 2 1 ForceChat %2% &SetEnemyNPC %2% StoryNote 1>
+		nu1 <if= T1 0   Return   if= V1 0 V= 1 1   LoseComp 0 .next>
+		nu2 <if= T2 0   if= V1 0 V= 1 1   Print 2 XPV 100  AddRenown 1   SALVAGE   WinComp 0 .next>
+		.next <+T-- +F-->
+		Msg1 <You met %name2% in battle, and fought \PPR %2% henchmen.>
+		Msg2 <You have defeated the henchmen.>
+
+		sub
+			team 1
+			SetEnemy 2
+			ParaX 5
+			ParaY 5
+
+			team 2
+			SetEnemy 1
+			Deploy <SetSelfFaction N2   WMecha 2 StoryDL 100>
+			ParaX 25
+			ParaY 25
+		end
+	end
+
+Plot
 	name <Proving Ground>
 	desc <The PC can help a pilot, and get a job.>
 	requires <+Ten (!Ne|!Lo) (+F--|+Ffi) (+P--|+Pun) P:-- -L:ENEMY>
@@ -18,6 +151,7 @@ Plot
 
 	% P1 = Initialization Counter
 	start <ifNPCDead %3% LoseComp 0 .next>
+	.next <+T-- +F-->
 	update <if= P1 0 P= 1 1 NPCLevel %3% StoryDL>
 
 	sub
@@ -66,7 +200,7 @@ Plot
 			ParaY 10
 
 			team 2
-			SetEnemy 1
+			SetEnemy 1 3
 			Deploy <SetSelfFaction &EnemyFac   WMecha 2 StoryDL 100>
 			ParaX 25
 			ParaY 25

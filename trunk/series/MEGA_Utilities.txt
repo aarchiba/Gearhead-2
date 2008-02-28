@@ -74,8 +74,8 @@ Content
 	.%id%_GoEnd <EndPlot>
 	update <if= PlotStatus %id% else %pop% if= p%id%01 0 P= %id%01 ComTime P+ %id%01 21600 EMail %id%01>
 
-	Msg%id%01_1 <%name1% @ \SCENE EScene %e1% :// Your mission has been cancelled.>
-	Msg%id%01_2 <%name1% @ \SCENE EScene %e1% :// Your mission has been aborted.>
+	Msg%id%01_1 <%name1% @ \SCENE NPCScene %1% :// Your mission has been cancelled.>
+	Msg%id%01_2 <%name1% @ \SCENE NPCScene %1% :// Your mission has been aborted.>
 
 	sub
 		Persona 1

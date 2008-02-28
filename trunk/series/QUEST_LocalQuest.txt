@@ -6,7 +6,7 @@
 Content
 	name <Treasure Hulk>
 	requires <*:LocalQuest Spinner>
-	desc <There's a floating mass of wrecks outside the spaceship created by robomonster Aigaion.>
+	desc <There's a floating mass of wrecks outside the station created by robomonster Aigaion.>
 
 	% E1 is the dungeon
 	% E2 is Aigaion
@@ -202,6 +202,7 @@ Content
 		Msg6 <After you repaid \PPR %1% student debt, %name1% pledged to help you.>
 		Msg7 <If I had money you wouldn't treat me with such disrespect! Then again, if I had money I wouldn't be forced to beg...>
 		Msg8 <Um, %name1% isn't here... And if you're one of the student loan people, you should know that \SPR %1% 's dead.>		Prompt1 <I found someone to help you out.>
+		Prompt1 <I found a sponsor to pay off your loan.>
 		CPrompt1 <if= QuestStatus %qid1% -1 Accept>
 		Prompt2 <I've decided to help you myself. [Give $2M]>
 		CPrompt2 <ifG PC$ 1999999 Accept>

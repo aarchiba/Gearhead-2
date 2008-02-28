@@ -1047,10 +1047,18 @@ update <if= PlotStatus %id% else GoHide SetStat STAT_MetaVisibility 0  ShowEncou
 EncounterMove 50
 
 Encounter
+desig <CORE-INVISIBLEENCOUNTER>
+% Sets this encounter's orders to Passive
+GoSetOrders <GrabSource GSetNAtt NAG_EpisodeData NAS_Orders 3>
+name <Hostile Mecha>
+update <if= PlotStatus %id% else GoHide SetStat STAT_MetaVisibility 0  Goto GoSetOrders>
+EncounterMove 50
+
+Encounter
 desig <CORE-MECHAAMBUSH>
 % Sets this encounter's orders to Seek & Destroy
 GoSetOrders <GrabSource GSetNAtt NAG_EpisodeData NAS_Orders 0>
-name <%name2%'s Mecha>
+name <Hostile Mecha>
 update <if= PlotStatus %id% else GoHide SetStat STAT_MetaVisibility 0  Goto GoSetOrders>
 EncounterMove 50
 

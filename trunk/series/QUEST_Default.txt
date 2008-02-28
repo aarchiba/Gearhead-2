@@ -1429,7 +1429,7 @@ Content
 		.%id%_GoChooseMission <NewChat Say %id%02 AddChat %id%02 AddChat %id%03>
 		.%id%_GoEnd <AddRenown -1 SetQuestStatus %qid% -1>
 		result%id%01 <Goto .%id2%_GoInit>
-		result%id%02 <Goto .%id1%_GoInit>
+		result%id%02 <QMemo %qid% 0 Goto .%id1%_GoInit>
 		*result%id%03 <*RejectMission .%id%_GoEnd>
 		Msg%id%01 <Good work on that mission, \PC .>
 		Msg%id%02 <You did very well retrieving the %name2%, \PC . If you're interested, I have another mission that you could help with.>
@@ -1657,7 +1657,7 @@ Content
 		.%id%_GoChooseMission <NewChat Say %id%02 AddChat %id%02 AddChat %id%03>
 		.%id%_GoEnd <AddRenown -1 SetQuestStatus %qid% -1>
 		result%id%01 <Goto .%id2%_GoInit>
-		result%id%02 <Goto .%id1%_GoInit>
+		result%id%02 <QMemo %qid% 0 Goto .%id1%_GoInit>
 		*result%id%03 <*RejectMission .%id%_GoEnd>
 		Msg%id%01 <You did a good job on that mission, \PC .>
 		Msg%id%02 <You've been a great help, \PC . How would you like to do another mission for me?>

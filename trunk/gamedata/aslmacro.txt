@@ -273,7 +273,7 @@ AddSelfArenaThreat <GrabCurrentScene GAddNAtt NAG_ArenaData NAS_ArenaThreat ?>
 SetArenaThreat <GrabScene ? GSetNAtt NAG_ArenaData NAS_ArenaThreat ?>
 SetArenaState <GrabScene ? GSetNAtt NAG_ArenaData NAS_ArenaState ?>
 ClearSelfChallengerID <GrabCurrentScene GSetNAtt NAG_ArenaData NAS_ChallengerID 0>
-SetSelfArenaRecharge <GrabCurrentScene GSetNAtt NAG_ArenaData NAS_ArenaRecharge ComTime GAddNAtt NAG_ArenaData NAS_ArenaRecharge 85000>
+SetSelfArenaRecharge <GrabCurrentScene GSetNAtt NAG_ArenaData NAS_ArenaRecharge NextDay>
 ResetArena <GrabScene ? GSetNAtt NAG_ArenaData NAS_ArenaState NAV_AS_Vacant>
 PrepArena <GrabScene ? GSetNAtt NAG_ArenaData NAS_ArenaState NAV_AS_Ready GSetNAtt NAG_ArenaData NAS_ArenaForces ?>
 SetChallengerID <GrabScene ? GSetNAtt NAG_ArenaData NAS_ChallengerID ?>

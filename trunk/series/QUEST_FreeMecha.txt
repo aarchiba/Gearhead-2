@@ -11,6 +11,46 @@
 %% The free mecha should be generated using renown 15.
 
 Content
+	name <Warship Wreckage>
+	desc <There's a destroyed warship that may still have mecha inside.>
+	requires <*:FreeMecha SPINNER>
+
+	% E1 is the ship entrance
+	% E2 is the dungeon
+	% E3 is the elevator in the dungeon that will provide the mecha
+	Element1 <Prefab>
+	Scene1 <Environs>
+	Scene2 <New *Dungeon.Derelict>
+	Element3 <Prefab>
+	Scene3 <Grab 2>
+
+	sub
+		MetaScene 3
+		sub
+			room
+			minimap <......###..##1..###......>
+			special <SHAREDPALETTE>
+			desig <HOME>
+		end
+	end
+	inv
+		STC QUEST-MAPMARKER-ACTIVE-STATIONARY
+		name <Derelict Warship>
+		desig <Entrance %s2%>
+		rumor0 <there may be something left in the derelict warship outside the station.>
+
+		Elevator
+		name <Mecha Bay>
+		use <if= QuestStatus %qid% 0 else GoBeenBefore ifYesNo 1 2 3 SetQuestStatus %qid% -1 RandomMecha .mektype 15>
+		.mektype <SOLAR AEGIS SILKN ROCKE CRIHN>
+		GoBeenBefore <Print 4>
+		Msg1 <You find a mecha bay. It appears to be operational.>
+		Msg2 <Open external bay doors.>
+		Msg3 <Leave it alone.>
+		Msg4 <There's nothing left here now.>
+	end
+
+Content
 	name <First Job>
 	desc <There's someone looking for help, and you'll get paid in mecha.>
 	requires <*:FreeMecha>

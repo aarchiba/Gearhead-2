@@ -1,3 +1,60 @@
+%% *CS_InvisibleEncounter Content
+%%
+%% The PC is sent to locate and fight some mecha. Unlike the regular
+%% encounter, this one will not be visible.
+%%
+%% The parent plot sets the plot status to this layer's ID when ready.
+%%
+%% Param1: The outdoor scene where the encounter will take place
+%%
+%% NEEDED SCRIPTS: To deal with the ending, the parent plot must define two
+%% scripts:
+%% 	.%id%_%plotid%_GoWin
+%% 	.%id%_%plotid%_GoLose
+%% %id% is the ID of the encounter layer; so, if it was generated as subplot 1,
+%% the calling plot would use %id1%.
+%% Please note that it is possible this component will not exit to either of
+%% the above labels, if a complete derailment of the story takes place.
+
+Plot
+	name <Generic Invisible Encounter>
+	size 5
+	desc <Fight some generic mecha belonging to the enemy faction.>
+	requires <*CS_InvisibleEncounter>
+
+	% E1: The outdoor scene
+	% E2 is the combat scene
+	Element2 <Prefab>
+	Place2 <1>
+
+	sub
+		MetaScene 2 2
+		% L1 = Encounter Over Counter
+		% L2 = Initialization Counter
+		MapWidth 30
+		MapHeight 30
+
+		nu1 <if= T1 0   Return   if= V1 0 V= 1 1   Trigger0 .%id%_%plotid%_GoLose>
+		nu2 <if= T2 0   if= V1 0 V= 1 1            XPV 100   AddRenown 1  Salvage   Trigger0 .%id%_%plotid%_GoWin>
+
+		sub
+			team 1
+			SetEnemy 2
+			ParaX 5
+			ParaY 5
+
+			team 2
+			SetEnemy 1
+			Deploy <SetSelfFaction &EnemyFac   WMecha 2 StoryDL 100>
+			ParaX 25
+			ParaY 25
+		end
+	end
+	inv
+		STC CORE-INVISIBLEENCOUNTER
+	end
+
+
 %% *CS_NPCAmbushPC Content
 %%	&IsEnemyNPC	E2 is the core story enemy NPC
 %%
@@ -24,13 +81,14 @@ Plot
 	requires <*CS_NPCAmbushPC>
 
 	% E1: The outdoor scene
+	% E2 is the enemy NPC
 	% E3 is the combat scene
 	Element3 <Prefab>
 	Place3 <1>
 
 	% v%id%01 = Initialization Counter
 
-	update <if= PlotStatus %id% else %pop% if= v%id%01 0 V= %id%01 1 MoveNPC %2% %3% SetNPCTeam %2% 2>
+	update <if= PlotStatus %id% else %pop% if= v%id%01 0 V= %id%01 1 NPCLevel %2% StoryDL MoveNPC %2% %3% SetNPCTeam %2% 2>
 
 	sub
 		Persona 2

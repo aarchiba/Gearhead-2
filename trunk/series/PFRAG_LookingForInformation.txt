@@ -24,6 +24,33 @@ Result%id%01 <Goto %1%>
 Msg%id%01 <You must be here for the conference. Is that right?>
 Prompt%id%01 <That's right.>
 
+% TYPE: *QuestionsAboutFaction
+%		&IsEnemy	The faction is an enemy of the PC.
+%	The PC will ask the NPC about a faction.
+%   PARAM1: Exit Label
+%   PARAM2: Faction being asked about
+
+	Persona
+	requires <*QuestionsAboutFaction>
+	START <NewChat Say %id%01 AddChat %id%01>
+	Result%id%01 <Goto %1%>
+	Msg%id%01 <You look like there's something you want. How can I help?>
+	Msg%id%01_1 <You don't look like you're just dropping round for a social call. What can I do for you?>
+	CMsg%id%01_1 <ifNPCSociable Accept>
+	Msg%id%01_2 <Yes, what is it?>
+	CMsg%id%01_2 <ifNPCShy Accept>
+	Msg%id%01_3 <Is there something you're looking for?>
+	CMsg%id%01_3 <ifNPCEasygoing Accept>
+	Msg%id%01_4 <I can tell from your piercing gaze that you didn't just come here to chat. What are you after?>
+	CMsg%id%01_4 <ifNPCPassionate Accept>
+	Msg%id%01_5 <You look happy to see me.>
+	CMsg%id%01_5 <ifNPCCheerful Accept>
+	Msg%id%01_6 <What are you here for?>
+	CMsg%id%01_6 <ifNPCMelancholy Accept>
+	Prompt%id%01 <I'm looking for information about \FACTION %2% .>
+	Prompt%id%01_1 <I heard that you know something about \FACTION %2% .>
+	Prompt%id%01_2 <I wanted to ask you about \FACTION %2% .>
+
 % TYPE: *IHaveInformation
 %		&AboutNPC		The information is about a NPC.
 %		&AboutItem		The information is about an item.
@@ -32,6 +59,7 @@ Prompt%id%01 <That's right.>
 %	the PC pays money or something else.
 %   PARAM1: Tell Info Exit Label (no message printed here)
 %   PARAM2: ID number of whatever the info's about; must use one of the above subtypes.
+%           If no subtype is specified, you can use "na" for this.
 
 Persona
 requires <*IHaveInformation>

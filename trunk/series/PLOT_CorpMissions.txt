@@ -18,16 +18,17 @@ Plot
 
 	% P1 = Time Limit
 	% P2 = Email Indicator
-	start <if= PlotStatus 0 ifG ComTime P1 EndPlot>
+	start <if= PlotStatus 0 ifNPCOK %1% else GoDelete ifG ComTime P1 EndPlot>
+	GoDelete <EndPlot>
 	update <if= PlotStatus 0 if= P1 0 P= 1 ComTime P+ 1 86400>
 
 	% Insert email here
 	5min <if= PlotStatus 0 if= P2 0  if= PCFac %2%  if= d20 1  ifG PCCharm d40  Email 1 P= 2 1>
-	Msg1 <\ELEMENT 1 @ \SCENE EScene 1 :// I have a mission for you from \ELEMENT 2 .>
-	Msg1_1 <\ELEMENT 1 @ \SCENE EScene 1 :// Report to \SCENE EScene 1 for a mission at once.>
-	Msg1_2 <\ELEMENT 1 @ \SCENE EScene 1 :// Your services are required by \ELEMENT 2 . Come see me for mission briefing.>
-	Msg1_3 <\ELEMENT 1 @ \SCENE EScene 1 :// I've got a mission for you. Come here for the briefing.>
-	Msg1_4 <\ELEMENT 1 @ \SCENE EScene 1 :// There's a matter that requires your attention. This is official \ELEMENT 2 business, so come as soon as possible.>
+	Msg1 <\ELEMENT 1 @ \SCENE NPCScene %1% :// I have a mission for you from \ELEMENT 2 .>
+	Msg1_1 <\ELEMENT 1 @ \SCENE NPCScene %1% :// Report to \SCENE EScene 1 for a mission at once.>
+	Msg1_2 <\ELEMENT 1 @ \SCENE NPCScene %1% :// Your services are required by \ELEMENT 2 . Come see me for mission briefing.>
+	Msg1_3 <\ELEMENT 1 @ \SCENE NPCScene %1% :// I've got a mission for you. Come here for the briefing.>
+	Msg1_4 <\ELEMENT 1 @ \SCENE NPCScene %1% :// There's a matter that requires your attention. This is official \ELEMENT 2 business, so come as soon as possible.>
 
 	sub
 		Persona 1
@@ -61,7 +62,7 @@ Plot
 		CMsg1_5 <ifNPCCheerful Accept>
 		Msg1_6 <A gang of bandits has been attacking our shipments; several employees of \ELEMENT 2 have been killed already. I want you to locate the bandits and eliminate them. Upon completion of this mission you'll earn $ \VAL Reward %threat% PayRate and salvage.>
 		CMsg1_6 <ifNPCMelancholy Accept>
-		Msg2 <\ELEMENT 1 in \SCENE EScene 1 hired you to fight some bandits in \ELEMENT 3 for \ELEMENT 2 .>
+		Msg2 <\ELEMENT 1 in \SCENE NPCScene %1% hired you to fight some bandits in \ELEMENT 3 for \ELEMENT 2 .>
 		Prompt1 <Sounds good. I'll do it.>
 		Prompt1_1 <Alright, I'll do it.>
 		Prompt1_2 <I'll get to work immediately.>

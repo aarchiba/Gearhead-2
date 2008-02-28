@@ -1695,8 +1695,7 @@ Procedure RandomLoot( Box: GearPtr; SRP: LongInt; const l_type,l_factions: Strin
 		while I <> Nil do begin
 			if ItemIsLegal( I ) then begin
 				Cost := GearCost( I );
-{				if Cost < MIC then Total := Total + ( Cost * Cost );}
-				if Cost < MIC then Total := Total + RLWeight( Cost , MIC );
+				if ( Cost > 0 ) and ( Cost < MIC ) then Total := Total + RLWeight( Cost , MIC );
 			end;
 			I := I^.Next;
 		end;
@@ -1710,7 +1709,7 @@ Procedure RandomLoot( Box: GearPtr; SRP: LongInt; const l_type,l_factions: Strin
 		while ( I <> Nil ) and ( Selected_Item = Nil ) do begin
 			if ItemIsLegal( I ) then begin
 				Cost := GearCost( I );
-				if Cost < MIC then begin
+				if ( Cost > 0 ) and ( Cost < MIC ) then begin
 					Total := Total - RLWeight( Cost , MIC );
 					if Total < 1 then Selected_Item := I;
 				end;
@@ -1718,7 +1717,7 @@ Procedure RandomLoot( Box: GearPtr; SRP: LongInt; const l_type,l_factions: Strin
 			I := I^.Next;
 		end;
 
-		SelectAnItem := CloneGear( I );
+		SelectAnItem := CloneGear( Selected_Item );
 	end;
 var
 	Item: GearPtr;
@@ -1727,7 +1726,7 @@ begin
 	while SRP > 0 do begin
 		Item := SelectAnItem;
 		if Item <> Nil then begin
-			SRP := SRP - GearValue( Item );
+			SRP := SRP - GearCost( Item );
 			InsertInvCom( Box , Item );
 		end else begin
 			{ No item found. Set SRP to 0. }

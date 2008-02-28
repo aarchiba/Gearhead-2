@@ -852,8 +852,11 @@ Function XNPCDesc( Adv,NPC: GearPtr ): String;
 var
 	it: String;
 	Fac,Persona: GearPtr;
-	CID: LongInt;
+	CID,FID: LongInt;
 begin
+	{ Error check- make sure the adventure really is the adventure. }
+	Adv := FindRoot( Adv );
+
 	it := NPCTraitDesc( NPC );
 	it := it + ' ' + SAttValue( NPC^.SA , 'JOB_DESIG' );
 
@@ -872,8 +875,10 @@ begin
 	else if PersonaInUse( Adv , CID ) then it := it + ' INUSE'
 	else it := it + ' NOTUSED';
 
-	Fac := SeekFaction( Adv , NAttValue( NPC^.NA , NAG_Personal , NAS_FactionID ) );
+	FID := NAttValue( NPC^.NA , NAG_Personal , NAS_FactionID );
+	Fac := SeekFaction( Adv , FID );
 	if Fac <> Nil then it := it + ' ' + SATtValue( Fac^.SA , 'DESIG' ) + ' ' + SATtValue( Fac^.SA , 'CONTEXT' );
+	if ( FID <> 0 ) and ( FID = NAttValue( Adv^.NA , NAG_Personal , NAS_FactionID ) ) then it := it + ' PCFAC';
 
 	it := QuoteString( it );
 

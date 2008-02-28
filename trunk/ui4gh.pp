@@ -108,6 +108,8 @@ const
 	Max_Plots_Per_Adventure: Byte = 50;
 	Load_Plots_At_Start: Boolean = False;
 
+	Reload_All_Weapons: Boolean = False;
+
 	Display_Mini_Map: Boolean = FaLSE;
 
 	{ *** SCREEN DIMENSIONS *** }
@@ -496,6 +498,9 @@ begin
 				end else if cmd = 'SHORTWALLS' then begin
 					Use_Tall_Walls := False;
 
+				end else if cmd = 'RELOAD_UNEQUIPPED_WEAPONS_AT_SHOP' then begin
+					Reload_All_Weapons := True;
+
 				end else if cmd = 'ISOMETRIC' then begin
 					Use_Isometric_Mode := True;
 				end else if cmd = 'LAPTOP_ISO_KEYS' then begin
@@ -577,6 +582,8 @@ begin
 	AddBoolean( 'NOAUTOSAVE' , not DoAutoSave );
 	AddBoolean( 'ALWAYSSAVECHARACTER' , Always_Save_Character );
 	AddBoolean( 'NOCOMBATTAUNTS' , No_Combat_Taunts );
+
+	AddBoolean( 'RELOAD_UNEQUIPPED_WEAPONS_AT_SHOP' , Reload_All_Weapons );
 
 	writeln( F , 'NUMPLOTS ' + BStr( Max_Plots_Per_Adventure ) );
 

@@ -13,6 +13,80 @@
 %% moved to the correct place by the parent plot.
 %%
 
+
+Content
+	name <Training Mission>
+	desc <The PC will be sent on a combat mission, for his partner's sake.>
+	requires <*CS_GiveMission +Cme R:++ 1:Ally (1:MILIT|1:ADVEN|1:CORPO) ~R:PCFAC>
+
+	% E1 is the NPC that the PC will speak with
+	% E2 is the outdoors location where the encounter will be placed
+	% E3 is the partner
+	element2 <Scene Environs !Near -7>
+	element3 <Grab 4>
+
+	start <if= PlotStatus %id% else %pop% ifNPCDead %1% LoseComp 0 .loss>
+	.loss <+T-->
+
+	%% SubPlot1 is the combat encounter itself
+	SubPlot1 <*CS_MechaEncounter 1 2>
+
+	sub
+		Persona 1
+		rumor0 <%name1% needs a cavalier for some kind of mission.>
+		greeting <if# PlotStatus %id% else .%id%_GoOfferMission if# PlotStatus %id1% else .%id%_GoRemind Goto %pop%>
+		.%id%_GoOfferMission <NewChat Say %id%01 AddChat %id%01>
+		*.%id%_GoRemind <*MechaMissionReminder %2%>
+		*.%id%_GoBriefing <*CORE_BasicJob .%id%_GoAccept .%id%_GoDeny %2%>
+		*.%id%_GoAccept <*GoodLuckOnMission .%id%_GoR1Exit ChatNPCFac &EnemyFac>
+		.%id%_GoR1Exit <SetPlotStatus %id1%>
+		*.%id%_GoDeny <*RejectMission .%id%_GoR2Exit>
+		.%id%_GoR2Exit <LoseComp 0 .%id%_changes>
+		.%id%_changes <+T-- +F-->
+		Result%id%01 <Goto .%id%_GoBriefing>
+		Msg%id%01 <I think that %name3% could use some practice, so I've lined up a combat mission for the two of you.>
+		Prompt%id%01 <Give me the details.>
+	end
+
+
+Content
+	name <Protect Scientist>
+	desc <The PC will be sent to protect a scientist.>
+	requires <*CS_GiveMission I:++ (+P--|+Pla) P:++>
+
+	% E1 is the NPC that the PC will speak with
+	% E2 is the NPC that the PC has to guard
+	% E3 is the scene where the NPC currently is
+	% E4 is the item
+	Element2 <Character ACADE !Near -7 NeverFail>
+	NeverFail2 <Professor>
+	Place2 </>
+	Element3 <MetaScene !Near -7 *Building NeverFail>
+	Element4 <Grab 8>
+
+	start <if= PlotStatus %id% else %pop% ifNPCDead %1% LoseComp 0 .loss>
+	.loss <+T-->
+
+	sub
+		Persona 1
+		greeting <if= PlotStatus %id% else %pop% ifChatNPCUnknown else .%id%_GoKnownGreeting ifChatNPCAlly else .%id%_GoUnknownGreeting Goto .%id%_GoKnownGreeting>
+		*.%id%_GoKnownGreeting <*IHaveAJobForYou .%id%_GoBriefing>
+		*.%id%_GoUnknownGreeting <*AreYouHereAboutJob .%id%_GoBriefing>
+		.%id%_GoBriefing <NewChat Say %id%01 AddChat %id%01 AddChat %id%02>
+		*result%id%01 <*GoodLuckOnMission&Advance .%id%_GoR1Exit ChatNPCFac &EnemyFac>
+		.%id%_GoR1Exit <SMemo %id%02 History %id%03 CashPrize Reward StoryDL 100 &SetTargetNPC %2% WinComp %3% .%id%_next>
+		.%id%_next <+Tpt +Fin>
+		*result%id%02 <*RejectMission .%id%_GoR2Exit>
+		.%id%_GoR2Exit <SMemo 0 LoseComp 0 .%id%_reject>
+		.%id%_reject <+T-- +F-->
+		Msg%id%01 <%name2% has been researching the %name4%, and because of this may be in danger. I want you to protect \OPR %2% and hopefully find out some of what \SPR %2% knows. You will be paid in advance for this mission.>
+		Msg%id%02 <%name1% sent you to %name3% to protect %name2%, who has been researching the %name4%.>
+		Msg%id%03 <%name1% sent you to protect %name2%, who had been researching the %name4%.>
+		Prompt%id%01 <For advance pay, I'll do anything.>
+		Prompt%id%02 <I'm not here to be anyone's babysitter.>
+		CPrompt%id%02 <if# PCFac ChatNPCFac Accept>
+	end
+
 Content
 	name <Basic Fighting Mission>
 	desc <The PC will be asked to go fight some mecha.>

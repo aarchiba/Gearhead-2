@@ -1,3 +1,142 @@
+Plot
+	name <Conference Was Moved>
+	requires <#L +Tsh>
+	desc <The event has been moved. No-one told the PC.>
+
+	% E1 is the scene where this component will take place
+	% E2 is the NPC that the PC will speak with
+	% E3 is the town for the next episode
+	element1 <Grab 6>
+	element2 <Character Citizen !Near -7>
+	Place2 <1 (Citizens) pass>
+	Element3 <Scene !Far -7 !Comrade -7 Town>
+
+	start <ifNPCDead %1% &SetCompScene 0 LoseEpisode %3% .next>
+	.next <+T-- +F-->
+
+	sub
+		Persona 2
+		greeting <NewChat Say %id%01 SMemo 0 History %id%02 &SetCompScene 0 LoseEpisode %3% .next>
+		.next <+T-- +F-->
+		Msg%id%01 <The event they were going to have here was cancelled. Unless you're a member of the cleaning crew, I'm afraid that you'll have to go home.>
+		Msg%id%02 <The event at %name1% was cancelled.>
+
+		MetaScene 1
+		desig <MS_PRESENTATION>
+		%% This is a press conference or similar media event
+		ClubMap
+		MapWidth 25
+		MapHeight 25
+		type <BUILDING PUBLIC>
+		special <AddExit>
+		nu1 <if= T1 0 Return>
+		sub
+			Team 1
+
+			Team 2
+			name <Civilian>
+			setally 1
+			Passive
+
+			room
+			name <Foyer>
+			desig <EntranceGrid>
+		end
+	end
+
+Plot
+	name <Danger Is Everywhere>
+	requires <#L +Tpt T:++>
+	desc <The PC will be told that his target has moved on, but won't be told where.>
+
+	% E1 is the informant
+	% E2 is the new city
+	% E3 is the target
+	Element1 <Character !Near -7 Mechanic>
+	Element2 <Scene !Far -7 !Comrade -7 Town>
+	Element3 <Grab 5>
+
+	start <ifNPCDead %1% &SetCompScene 0  LoseEpisode %2% .next>
+	.next <>
+
+	sub
+		Persona 1
+		rumor <%name1% might know where %name3% went.>
+		*greeting <*LookingForNPC %3% GoSuccess GoFail>
+		GoSuccess <NewChat Say 1 StoryNote 2   &SetCompScene 0  LoseEpisode %2% .next>
+		GoFail <NewChat Say 3 StoryNote 2   &SetCompScene 0  LoseEpisode %2% .next>
+		.next <>
+		Msg1 <As far as I know, %name3% was in some kind of trouble, so \SPR %3% decided to get out of town. I don't know where \SPR %3% went.>
+		Msg2 <%name1% told you that %name3% has left \SCENE &EpisodeScene .>
+		Msg3 <%name3% didn't want anybody to come looking for \OPR %3% . All I'm going to tell you is that \SPR %3% isn't here any more.>
+	end
+
+Plot
+	name <Target is Not Here>
+	requires <#L (+Tgt|+Tlt)>
+	desc <The target has moved on to another city.>
+
+	% E1 is the informant
+	% E2 is the new city
+	% E3 is the target
+	Element1 <Character !Near -7 Mechanic>
+	Element2 <Scene !Far -7 !Comrade -7 Town>
+	Element3 <Grab 5>
+	Place3 </>
+
+	start <ifNPCDead %1% &SetCompScene 0 LoseEpisode %2% .next>
+	.next <+Tlt>
+
+	sub
+		Persona 1
+		rumor <%name1% spoke with %name3% a short time ago.>
+		*greeting <*LookingForNPC %3% GoSuccess GoFail>
+		GoSuccess <NewChat Say 1 StoryNote 2   &SetCompScene 0  LoseEpisode %2% .next>
+		GoFail <NewChat Say 3 StoryNote 2   &SetCompScene 0  LoseEpisode %2% .next>
+		.next <+Tlt>
+		Msg1 <Oh, %name3% isn't here anymore; \SPR %3% had to leave town on some kind of bvsiness. I don't know where \SPR %3% went.>
+		Msg2 <%name1% told you that %name3% has left \SCENE &EpisodeScene .>
+		Msg3 <If you're looking for %name3% then you're out of luck- \SPR %3% 's gone somewhere on business. Don't expect me to tell you where, because I don't even know.>
+	end
+
+
+Plot
+	name <No Mission For You>
+	requires <#L +Tgt +Fmi>
+	desc <You seek a mission, but we don't give missions to losers.>
+
+	% E1 is the scene where this component will take place
+	% E2 is the NPC that the PC will speak with
+	% E3 is the town for the next episode
+	element1 <Grab 6>
+	element2 <Grab 5>
+	Place2 <1 (Citizens) pass>
+	Element3 <Scene !Far -7 !Comrade -7 Town>
+
+	start <ifNPCDead %1% LoseEpisode %3% .next>
+	.next <+T-- +F-->
+
+	sub
+		Persona 2
+		greeting <NewChat Say %id%01 SMemo 0 History %id%02 LoseEpisode %3% .next>
+		.next <+T-- +F-->
+		Msg%id%01 <I'm afraid that your services are no longer required, \PC ... besides, things seem to be settling down in \SCENE &EpisodeScene now.>
+		Msg%id%02 <%name1% said that you were no longer needed in \SCENE &EpisodeScene .>
+
+		STC MS_OFFICE
+		SetID 1
+	end
+
+Plot
+	name <No Frills Loss>
+	requires <#L +T-->
+	desc <No need for fanfare... the PC has lost the episode.>
+
+	% Element1 is the new city
+	Element1 <Scene !Far -7 !Ally -7 Town>
+
+	update <SMemo 0 LoseEpisode %1% .next>
+	.next <+T-- +F-->
 
 
 Plot
@@ -11,6 +150,9 @@ Plot
 	Element1 <Character !Near -7 Mechanic>
 	Element2 <Scene !Far -7 !Comrade -7 Town>
 	Element3 <Grab 5>
+
+	start <ifNPCDead %1% LoseEpisode %2% .next>
+	.next <>
 
 	sub
 		Persona 1

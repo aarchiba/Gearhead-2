@@ -768,12 +768,7 @@ begin
 	if Part^.S = GS_EMelee then begin
 		it := Part^.V * 125;
 	end else if Part^.S = GS_BeamGun then begin
-		{ SF:0 beam weapons are more expensive than normal. }
-		if Part^.Scale = 0 then begin
-			it := Part^.V * 150;
-		end else begin
-			it := Part^.V * 75;
-		end;
+		it := Part^.V * 75;
 	end else it := Part^.V * 35;
 
 	{ Set the numerator to 1 and the denominator to 1. }

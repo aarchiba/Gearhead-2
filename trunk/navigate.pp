@@ -240,7 +240,7 @@ var
 		T := S2^.SubCom;
 		while T <> Nil do begin
 			if ( T^.G = GG_Team ) and ( T^.Stat[ STAT_WanderMon ] > 0 ) then begin
-				T^.Stat[ STAT_WanderMon ] := T^.Stat[ STAT_WanderMon ] + 1 + Random( 4 ) + Random( 4 );
+				T^.Stat[ STAT_WanderMon ] := T^.Stat[ STAT_WanderMon ] + 1 + Random( 3 ) + Random( 2 );
 
 				{ Add the context description for the difficulcy level. }
 				SetSAtt( S2^.SA , 'type <' + type_base + ' ' + DifficulcyContext( T^.Stat[ STAT_WanderMon ] ) );
@@ -1255,7 +1255,7 @@ var
 			Team := Frag^.SubCom;
 			while Team <> Nil do begin
 				if ( Team^.G = GG_Team ) and ( Team^.Stat[ STAT_WanderMon ] > 0 ) then begin
-					Team^.Stat[ STAT_WanderMon ] := NAttValue( Frag^.NA , NAG_QuestInfo , NAS_DifficulcyLevel ) - 12;
+					Team^.Stat[ STAT_WanderMon ] := NAttValue( Frag^.NA , NAG_QuestInfo , NAS_DifficulcyLevel ) - 10;
 					if Team^.Stat[ STAT_WanderMon ] < 4 then Team^.Stat[ STAT_WanderMon ] := 2 + Random( 3 );
 				end;
 				Team := Team^.Next;

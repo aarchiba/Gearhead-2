@@ -1,3 +1,95 @@
+Plot
+	name <Enemy Has Moved>
+	requires <#W +Tgs E:++>
+	desc <You will learn that your enemy has gone to another city.>
+
+	% E1 is the scene you were to visit
+	% E2 is a citizen who can be found there
+	% E3 is the next city to visit
+	% E4 is the enemy NPC
+	Element1 <Grab 6>
+	Element2 <Character Citizen !Near 1 NeverFail>
+	Place2 <1 (Citizens) Ally Pass>
+	NeverFail2 <Citizen>
+	Element3 <Scene !Far -7 !Comrade -7 Town>
+	Element4 <Grab 1>
+
+	% V1 = Lancemate Hint
+	start <ifNPCDead %2% else GoCheckPartner LoseComp 0 na>
+	GoCheckPartner <ifNPCOK &PartnerNPC if= SceneID %1% if= V1 0 Monologue &PartnerNPC 1 V= 1 1>
+	Msg1 <Look at %name2%... I have a hunch that \SPR %2% might know something.>
+
+	sub
+		Persona 2
+		rumor <%name2% has seen %name4%.>
+		Greeting <NewChat Say 1 StoryNote 2 WinEpisode %3% .next>
+		.next <+T-- +F-->
+		Msg1 <You missed all the excitement. A little while ago %name4% came through here, and it was terrifying! Fortunately, \SPR %4% 's gone to %name3% now.>
+		Msg2 <You learned from %name2% that %name4% went to %name3%.>
+
+		STC MS_CAFE
+		SetID 1
+	end
+
+Plot
+	name <Call From HQ>
+	requires <#W +T-- P:ALLY R:PCFAC>
+	desc <Your partner gets a call from HQ to proceed there for a mission.>
+
+	% E1 is the partner
+	% E2 is a faction member far away
+	% E3 is the city where E2 is
+	% E4 is the scene for the meeting
+	Element1 <Grab 4>
+	Element2 <Character !Ally 1 !Far -7>
+	Element3 <Scene Town !Near 2 !Okay 1>
+	Element4 <Scene Building Public !Near 3 !Okay 1>
+
+	% V1 = Conversation Counter
+	start <ifNPCDead %2% LoseComp 0 na>
+
+	5Min <if= v1 0 ifSafeArea if= d4 1 ForceChat %1% V= 1 1>
+
+	sub
+		Persona 1
+		*Greeting <*LancemateWantsToTalk GoNow GoLater>
+		GoNow <NewChat Say %id%01 Goto GoEndEpisode>
+		GoLater <NewChat Say %id%04 Goto GoEndEpisode>
+		GoEndEpisode <SMemo %id%02 History %id%03 &SetCompScene %4% &SetTargetNPC %2% WinEpisode %3% .next>
+		.next <+Tgt +Fmi>
+		Msg%id%01 <I've been contacted by %name2% at %name3%. We've got a mission to do for \FACTION ChatNPCFac over there.>
+		Msg%id%02 <%name1% told you that \SPR %1% had been contacted by %name2%. You've been asked to go to %name3% to do a mission for \FACTION ChatNPCFac .>
+		Msg%id%03 <You were called to %name3% to do a mission for \FACTION ChatNPCFac .>
+		Msg%id%04 <This won't take long. I've been contacted by %name2% at %name3%. We've got a mission to do for \FACTION ChatNPCFac .>
+	end
+
+Plot
+	name <Thanks for the Help>
+	requires <#W +Pun +T-- (F:--|F:CRIME|F:MILIT) (P:--|P:MILIT|P:POLIC) -L:ENEMY ~L:ALLY>
+	desc <A local politician will personally thank the PC.>
+
+	% E1 is a public scene for a meeting
+	% E2 is the politician
+	% E3 is the new city
+	Element1 <Scene Building Public !Near -7 !Ally -7>
+	Element2 <Character POLIT !Near -7 !Ally -7 -ENEMY>
+	Place2 <1 (Citizens) ally pass>
+	Element3 <Scene !Far -7 !Comrade -7 Town>
+
+	% P1 = email indicator
+	start <ifNPCDead %2% LoseComp 0 na>
+	hour <if= P1 0 email 1 P= 1 1>
+
+	Msg1 <%name2%@%name1%:// I'd like to commend you on your recent actions, \PC . Come see me at %name1%.>
+
+	sub
+		Persona 2
+		*greeting <*DidYouGetEmail GoExplain>
+		GoExplain <PCFriend %2% NewChat Say 1 StoryNote 2 WinEpisode %3% .next>
+		.next <+T-- +F-->
+		Msg1 <I'd like to thank you for all you've done for \SCENE RootSceneID . You know, they say that there have been unexplained mecha attacks in %name3% recently, too. Maybe you could help them as well.>
+		Msg2 <%name2% told you that %name3% has also been under attack.>
+	end
 
 Plot
 	name <Target Went Elsewhere>
@@ -10,6 +102,8 @@ Plot
 	Element1 <Grab 5>
 	Element2 <Character !Near -7 !Okay 1>
 	Element3 <Scene !Far -7 !Comrade -7 Town>
+
+	start <ifNPCDead %2% LoseComp 0 na>
 
 	sub
 		Persona 2

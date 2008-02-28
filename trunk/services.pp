@@ -555,10 +555,12 @@ begin
 		Part := Part^.Next;
 	end;
 
-	Part := M^.InvCom;
-	while Part <> Nil do begin
-		it := it + ReloadMasterCost( Part );
-		Part := Part^.Next;
+	if Reload_All_Weapons or not IsMasterGear( M ) then begin
+		Part := M^.InvCom;
+		while Part <> Nil do begin
+			it := it + ReloadMasterCost( Part );
+			Part := Part^.Next;
+		end;
 	end;
 
 	ReloadMasterCost := it;
@@ -578,10 +580,12 @@ begin
 		DoReloadMaster( Part );
 		Part := Part^.Next;
 	end;
-	Part := M^.InvCom;
-	while Part <> Nil do begin
-		DoReloadMaster( Part );
-		Part := Part^.Next;
+	if Reload_All_Weapons or not IsMasterGear( M ) then begin
+		Part := M^.InvCom;
+		while Part <> Nil do begin
+			DoReloadMaster( Part );
+			Part := Part^.Next;
+		end;
 	end;
 end;
 

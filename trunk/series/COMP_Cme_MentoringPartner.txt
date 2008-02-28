@@ -2,10 +2,105 @@
 %%
 %%  PC assigned to mentor Partner components
 
+%%  ********************************
+%%  ***   +P--  Peaceful  Life   ***
+%%  ********************************
+
+
+%%  *****************************************
+%%  ***   +Pme	PC meets an enemy pilot   ***
+%%  *****************************************
+
+
+%%  *****************************************
+%%  ***   +Pun  Unknown  Enemy  Attacks   ***
+%%  *****************************************
+
+
+%%  ***********************************************************
+%%  ***   +Psh	PC is shanghaied into working for faction   ***
+%%  ***********************************************************
+
+
+%%  *************************************
+%%  ***   +Pla  Learn  of  Artifact   ***
+%%  *************************************
+
 
 %%  *******************
 %%  ***   DEFAULT   ***
 %%  *******************
+
+Plot
+	name <What's it Like?>
+	desc <The partner asks the PC about his faction, setting the core story faction to that.>
+	requires <#A +Cme +T-- R:++ -P:PCFAC -R:PCFAC>
+
+	% Element1 is the partner
+	% Element2 is the episode town
+	% Element3 is the PC's faction
+	% Element4 is an environs scene for the next part of the mission
+	% Element5 is an encounter for the next part of the mission
+	Element1 <Grab 4>
+	Element2 <Grab 7>
+	Element3 <Faction PCFac>
+	Element4 <Scene Environs !Near -7>
+	Element5 <Prefab>
+	Place5 <4>
+
+	% P1 = Have unlocked conversation by visiting destination scene
+	start <ifNPCOK %1% else GoEndPlot if= PCFac %3% else GoNegatePlot if= SceneID %2% if= P1 0     P= 1 1  ForceChat %1% SMemo 1>
+	GoEndPlot <StoryNote 2 AddRenown -10   LoseComp 0 .loss>
+	.loss <+Cfa +Bad>
+	GoNegatePlot <SMemo 0 LoseComp 0 .next>
+	.next <+T-- +F-->
+
+	Msg1 <%name1% wants to speak with you about something.>
+	Msg2 <%name1% died.>
+
+	sub
+		Persona 1
+		% V1 = First Reputation Counter
+		% V2 = Skill to improve
+		greeting <if= P1 0 else GoReveal NewChat SayAnything>
+		*GoReveal <*LancemateWantsToTalk GoNow GoLater>
+		GoNow <NewChat Say %id%01 AddChat %id%01 AddChat %id%02 AddChat %id%03>
+		GoLater <EndChat Say %id%02>
+		GoQuestion2 <if= V2 0 else GoQuestion3 NewChat Say %id%03 AddChat %id%04 AddChat %id%05 AddChat %id%06 AddChat %id%07>
+		GoQuestion3 <NewChat Say %id%04 AddChat %id%08 AddChat %id%09>
+		GoEndConversation <NewChat Say %id%05 SMemo %id%06 History %id%07 NPCSkill+ %1% V2 1 &SetAllyFac %3% WinComp %5% .next>
+		.next <+Ten +F-->
+		result%id%01 <if= V1 0 else GoQuestion2 AddCheerful d10 V= 1 1 Goto GoQuestion2>
+		result%id%02 <V= 1 1 Goto GoQuestion2>
+		result%id%03 <if= V1 0 else GoQuestion2 AddCheerful -d10 V= 1 1 Goto GoQuestion2>
+		result%id%04 <V= 2 10 Goto GoQuestion3>
+		result%id%05 <V= 2  5 Goto GoQuestion3>
+		result%id%06 <V= 2 19 Goto GoQuestion3>
+		result%id%07 <V= 2 d43 Goto GoQuestion3>
+		result%id%08 <SetNPCFaction %1% %3% Goto GoEndConversation>
+		result%id%09 <Goto GoEndConversation>
+		Msg%id%01 <I wanted to ask you about being a member of %name3%. What's it like working for them?>
+		Msg%id%02 <Well then, ask me about it later.>
+		Msg%id%03 <I see. Well then, what's the most important skill you need when doing missions for %name3%?>
+		Msg%id%04 <I'll keep that in mind. So, do you think I should join %name3% myself?>
+		Msg%id%05 <Thanks for clearing all of that up. By the way, did you hear about the unknown mecha that's been spotted in %name4%? Maybe we should go check it out.>
+		Msg%id%06 <%name1% told you about an unknown mecha that's been seen in %name4%.>
+		Msg%id%07 <%name1% told you that an unknown mecha had been seen in %name4%.>
+		Prompt%id%01 <It's the best thing in the world.>
+		Prompt%id%02 <It's okay.>
+		Prompt%id%03 <It's not that great, actually.>
+		Prompt%id%04 <You need to be good at personal combat.>
+		Prompt%id%05 <The ability to pilot a mecha is most important.>
+		Prompt%id%06 <Interpersonal skills are always good to have.>
+		Prompt%id%07 <Really, you need to know a bit of everything.>
+		Prompt%id%08 <Absolutely. That'd be best.>
+		Prompt%id%09 <No, I think things are fine the way they are now.>
+	end
+	inv
+		STC ENCOUNTER
+		name <Unknown Mecha>
+		EncounterMove 25
+	end
 
 Plot
 	name <You Have Failed>

@@ -36,13 +36,21 @@ P: PREFAB
 S: SCENE
 
 
-Criteria
+********************
+***   CRITERIA   ***
+********************
 
-ArchAlly,ArchEnemy: Character, Faction
+ArchAlly, ArchEnemy
+LOVER, FAMILY, FRIEND
+INUSE, NOTUSED
+YOUNG, OLD
+HASMECHA
+SEX:MALE, SEX:FEMALE
+PCFAC
 
-
-
-Relative Search Criteria
+**************************************
+***   RELATIVE  SEARCH  CRITERIA   ***
+**************************************
 
 !L		Lancemate
 !G		Global Gear

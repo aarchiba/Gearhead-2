@@ -597,11 +597,15 @@ function FactionDesc( Adv,Fac: GearPtr ): String;
 var
 	it: String;
 begin
+	{ Error check- make sure the adventure really is the adventure. }
+	Adv := FindRoot( Adv );
+
 	{ Basic description is the faction's TYPE string attribute. }
 	it := SATtValue( Fac^.SA , 'TYPE' ) + ' ' + SATtValue( Fac^.SA , 'CONTEXT' ) + ' ' + SATtValue( Fac^.SA , 'DESIG' );
 
 	if IsArchEnemy( Adv, Fac ) then it := it + ' ARCHENEMY';
 	if IsArchAlly( Adv, Fac ) then it := it + ' ARCHALLY';
+	if Fac^.S = NAttValue( Adv^.NA , NAG_Personal , NAS_FactionID ) then it := it + ' PCFAC';
 
 	FactionDesc := it;
 end;
@@ -1198,6 +1202,12 @@ begin
 				msg := SAttValue( F^.SA , 'DESIG' );
 				if msg <> '' then Context := Context + ' ' + palette_entry_code + ':' + msg;
 			end;
+		end else begin
+			F := Part;
+		end;
+		if F <> Nil then begin
+			{ If this faction is also the PC's faction, add a PCFAC tag. }
+			if F^.S = NAttValue( FindRoot( Adv )^.NA , NAG_Personal , NAS_FactionID ) then Context := Context + ' ' + palette_entry_code + ':PCFAC';
 		end;
 
 		{ If Part is a character, add relationship info. Unless the }

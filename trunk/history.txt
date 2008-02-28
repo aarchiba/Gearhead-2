@@ -1,3 +1,9 @@
+- XRContextString includes PCFAC if same faction as PC (playwright.pp)
+- Faction, Character search indicates PCFAC (interact.pp,playwright.pp)
+- Unequipped weapons won't get reloaded by default (services.pp)
+- Dungeon challenge level doesn't rise so quickly (navigate.pp)
+- Fixed a number of serious bugs with RandomLoot (gearparser.pp)
+- Fixed XNPCDesc "in use" bug (interact.pp)
 - Added *:FreeMecha quest to the Cavalier's Club
 - *DUNGEON_X content split into DECOR, THREAT, and REWARD
 - BV doesn't cause higher base energy cost for weapons (gearutil.pp)
