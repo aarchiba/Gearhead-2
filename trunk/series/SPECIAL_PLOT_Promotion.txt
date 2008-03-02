@@ -1,0 +1,30 @@
+Plot
+	name <PLOT: Promotion>
+	desc <The PC has advanced a level in his current faction.>
+
+	% E1 is the faction that triggered this plot.
+	% E2 is a local scene.
+	% E3 is a member of E1 who is near E2
+	% E4 is a nice place for a meeting
+	Element2 <.>
+	Element3 <Character !Comrade 1 !Near 2>
+	Place3 <4 (Citizens) ally sd>
+	Element4 <Scene Building Public !Okay 1 !Near 2>
+
+	% V1 = Email indicator
+
+	start <if= PCFac %1% else GoLoseReward ifNPCDead %3% FacVar+ %1% 1 1 EndPlot>
+	GoLoseReward <EndPlot>
+
+	5min <if= V1 0 if= d3 2 EMail 1 V= 1 1>
+
+	Msg1_1 <%name3%@%name4%:// You've earned a promotion. Come see me to accept your reward.>
+	Msg1_2 <%name3%@%name4%:// I have urgent business which requires your attention at once.>
+	Msg1_3 <%name3%@%name4%:// Report here for debriefing at once, \RANK .>
+	Msg1_4 <%name3%@%name4%:// You have been promoted. Report here to receive your comission.>
+	Msg1_5 <%name3%@%name4%:// Your presence is required over here immediately.>
+
+
+	% SubPlot1 is the reward. Actually, it's the subplot that handles everything.
+	SubPlot1 <*FACTION_PROMOTION_REWARD 3>
+

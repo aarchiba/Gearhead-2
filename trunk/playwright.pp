@@ -953,10 +953,10 @@ begin
 
 		end else if EKind[1] = 'F' then begin
 			{ Faction element. }
-			NumElements := NumFreeFaction( Adventure , Plot , GB , Desc );
+			NumElements := NumFreeFaction( FindRoot( Adventure ) , Plot , GB , Desc );
 			if NumElements > 0 then begin
 				{ Pick one of the free scenes at random. }
-				Element := FindFreeFaction( Adventure , Plot , GB , Desc , Random( NumElements ) + 1 );
+				Element := FindFreeFaction( FindRoot( Adventure ) , Plot , GB , Desc , Random( NumElements ) + 1 );
 				Fast_Seek_Element[ 1 , N ] := Element;
 
 				{ Store the Scene ID in the plot. }
