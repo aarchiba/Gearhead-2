@@ -1,5 +1,27 @@
 % Persona Fragment File
 
+% TYPE: *PROMOTION_Minor_Reward
+%	The PC doesn't have enough renown (or some other reputation) for the good
+%	promotion reward, so instead he's going to get a relatively minor cash
+%	prize. How awful.
+
+	Persona
+	requires <*PROMOTION_Minor_Reward>
+	START <NewChat Say %id%01 CashPrize Reward * 10 PCFacLevel 250>
+	Msg%id%01 <You have been promoted to the rank of \Rank . Here is a cash reward in recognition of your service to \FACTION ChatNPCFac .>
+	Msg%id%01_1 <>
+	CMsg%id%01_1 <ifNPCSociable Accept>
+	Msg%id%01_2 <>
+	CMsg%id%01_2 <ifNPCShy Accept>
+	Msg%id%01_3 <>
+	CMsg%id%01_3 <ifNPCEasygoing Accept>
+	Msg%id%01_4 <>
+	CMsg%id%01_4 <ifNPCPassionate Accept>
+	Msg%id%01_5 <>
+	CMsg%id%01_5 <ifNPCCheerful Accept>
+	Msg%id%01_6 <>
+	CMsg%id%01_6 <ifNPCMelancholy Accept>
+
 % TYPE: *RevealSecret
 %	The NPC will reveal a secret to the PC, usually after the PC has done something.
 %   PARAM1: Exit label
