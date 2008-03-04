@@ -100,7 +100,7 @@ inv
 	STC ENCOUNTER-WANDER
 	use <ifG StatVal STAT_MetaVisibility -1      ifG PCScale 0 else GoTooSmall   ForceChat E3>
 	GoTooSmall <Print 101>
-	Attack <ifG StatVal STAT_MetaVisibility -1   ifG PCScale 0   ifNPCArchEnemy E3   ifUStealth 15 else GoAutoAttack ifYesNo 1 2 3 else GoAvoidAttack  ForceChat E3>
+	Attack <ifG StatVal STAT_MetaVisibility -1   ifG PCScale 0   ifNPCArchEnemy E3   ifUStealth HardSkillTar %threat% else GoAutoAttack ifYesNo 1 2 3 else GoAvoidAttack  ForceChat E3>
 	GoAutoAttack <ForceChat E3>
 	GoAvoidAttack <Print 4 AddSociable -1>
 	Msg1 <You spot a hostile patrol led by \ELEMENT 3 .>

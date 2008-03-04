@@ -1850,46 +1850,6 @@ begin
 	end;
 end;
 
-
-
-
-procedure ShiftGears( GB: GameBoardPtr; Mek: GearPtr );
-	{ Set the mek's MoveMode attribute to the next }
-	{ active movemode that this mek has. }
-var
-	P: Point;
-	Terr,MM,CMM: Integer;
-begin
-	{ Initialize values. }
-	CMM := NAttValue( Mek^.NA , NAG_Action , NAS_MoveMode );
-	MM := CMM mod NumMoveMode + 1;
-
-	{ Determine the terrain of the tile the mek is pointing at. The shifted movemode }
-	{ must be legal there. }
-	P := GearCurrentLocation( Mek );
-	P.X := P.X + AngDir[ NAttValue( Mek^.NA , NAG_Location , NAS_D ) ,1];
-	P.Y := P.Y + AngDir[ NAttValue( Mek^.NA , NAG_Location , NAS_D ) ,2];
-
-	{ If it turns out that the model's facing the edge of the map, use the current tile }
-	{ instead. }
-	if not OnTheMap( GB , P.X , P.Y ) then P := GearCurrentLocation( Mek );
-	Terr := TileTerrain( GB , P.X , P.Y );
-
-	{ Check each movemode in turn until we find one the mek is capable of that is also }
-	{ legal for the tile in front. }
-	while ( MM <> CMM ) and ( ( BaseMoveRate( GB^.Scene , Mek , MM ) <= 0 ) or IsBlockingTerrainForMM( GB , Mek , Terr , MM ) ) do begin
-		MM := MM mod NumMoveMode + 1;
-	end;
-
-	{ If a legal move mode was found, switch to that. }
-	if ( MM <> 0 ) and ( MM <> CMM ) then begin
-		SetMoveMode( GB , Mek , MM );
-		DialogMsg( ReplaceHash( MsgString( 'ShiftGears' ) , MsgString( 'MOVEMODENAME_' + BStr( MM ) ) ) );
-	end else begin
-		DialogMsg( MsgString( 'SHIFTGEARS_FAIL' ) );
-	end;
-end;
-
 Procedure KeyMapDisplay;
 	{ Display the game commands and their associated keystrokes. }
 var
@@ -2673,7 +2633,7 @@ begin
 				PrepAction( Camp^.GB , Mek , NAV_Stop );
 
 			end else if KP = KeyMap[ KMC_ShiftGears ].KCode then begin
-				ShiftGears( Camp^.GB , Mek );
+				ShiftGears( Camp^.GB , Mek , TRUE );
 			end else if KP = KeyMap[ KMC_ExamineMap ].KCode then begin
 				LookAround( Camp^.GB , Mek );
 			end else if KP = KeyMap[ KMC_AttackMenu ].KCode then begin

@@ -8,7 +8,7 @@
 	Persona
 	requires <*PROMOTION_Minor_Reward>
 	START <NewChat Say %id%01 CashPrize Reward * 10 PCFacLevel 250>
-	Msg%id%01 <You have been promoted to the rank of \Rank . Here is a cash reward in recognition of your service to \FACTION ChatNPCFac .>
+	Msg%id%01 <You've done well, \Rank . Here is a cash reward in recognition of your service to \FACTION ChatNPCFac .>
 	Msg%id%01_1 <>
 	CMsg%id%01_1 <ifNPCSociable Accept>
 	Msg%id%01_2 <>

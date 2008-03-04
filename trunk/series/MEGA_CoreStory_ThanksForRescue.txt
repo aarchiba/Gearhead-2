@@ -259,11 +259,9 @@ Content
 Content
 	name <Thanks for the Help>
 	desc <The PC has rescued someone, who now wants to join the lance.>
-	requires <*CS_ThanksForRescue -1:Ally -1:Enemy ~+Glo>
+	requires <*CS_ThanksForRescue -1:Ally -1:Enemy ~+Glo A:-->
 
 	%% E1 is the NPC that the PC rescued
-	%% E2 is a nice scene for a date
-	element2 <Scene !Near -7 Building Public Meeting>
 
 	start <if= PlotStatus %id% else %pop% ifNPCDead %1% LoseComp 0 .loss>
 	.loss <+T-- +F-->
@@ -281,8 +279,8 @@ Content
 		result%id%03 <NewChat Say %id%06 AddChat %id%04 AddChat %id%05>
 		result%id%04 <Goto result%id%01>
 		result%id%05 <Goto result%id%02>
-		result%id%06 <NewChat Say %id%09 StoryNote %id%010 &SetTargetNPC %1% WinComp %2% .%id%_date>
-		.%id%_date <+Tda +F-->
+		result%id%06 <NewChat Say %id%09 StoryNote %id%010 &SetAmoreNPC %1% WinComp 0 .%id%_date>
+		.%id%_date <+T-- +F-->
 		result%id%07 <Goto result%id%02>
 		Msg%id%01 <I thought that to repay you for saving my life, I could join your team and maybe help out. What do you think?>
 		Msg%id%02 <Thanks! I won't let you down!>
@@ -292,8 +290,8 @@ Content
 		Msg%id%06 <I know, but... I have other talents that could be useful. And you could teach me to fight. Can't I come along with you, please?>
 		Msg%id%07 <In thanks for saving my life, I'd like you to have this money.>
 		Msg%id%08 <In thanks for saving my life, I'd like... honestly, I'd like to go out with you sometime.>
-		Msg%id%09 <Great! Meet me in %name2% later on.>
-		Msg%id%010 <After saving \PPR %1% life, %name1% invited you to %name2% for a date.>
+		Msg%id%09 <Great! Well, I'll see you around.>
+		Msg%id%010 <After saving \PPR %1% life, %name1% asked for a date sometime.>
 		Prompt%id%01 <I think it's a good idea.>
 		Prompt%id%01_1 <I'd be honored to have you join me.>
 		Prompt%id%02 <No thanks. I don't need any help.>

@@ -9,19 +9,24 @@
 %% test; for instance, a police faction may only give the premium reward
 %% if the PC's Lawfulness is also greater than FacRank * 10.
 %%
+%% Reward components also have to check to make sure the level being
+%% rewarded is in the range 1..8; for faction level 9 and above, a cash
+%% prize is all that the PC can get.
+%%
 %%  PARAM 1 = The NPC to give the reward.
 %%            This NPC will belong to the faction rewarding the PC.
 
 Content
 	name <Generic Reward>
 	desc <The most generic reward possible is to give the PC a mecha.>
+	requires <*FACTION_PROMOTION_REWARD>
 
 	% E1 is the character giving the reward
 
 	sub
 		Persona 1
 		% V%id%01 = Mecha rating calculator
-		greeting <PCFacLevel+ 1 XPV 100 EndPlot ifG PCRenown * 10 PCFacLevel else .%id%_GoMinorPrize Goto .%id%_GoBigPrize>
+		greeting <PCFacLevel+ 1 XPV 100 EndPlot ifG 9 PCFacLevel else .%id%_GoMinorPrize ifG PCRenown * 10 PCFacLevel else .%id%_GoMinorPrize Goto .%id%_GoBigPrize>
 		*.%id%_GoMinorPrize <*PROMOTION_Minor_Reward>
 		.%id%_GoBigPrize <NewChat Say %id%01   V= %id%01 * 11 PCFacLevel V+ %id%01 12   RandomMecha .%id%_fac V%id%01>
 		.%id%_fac <GENERAL \FACTION_DESIG ChatNPCFac>

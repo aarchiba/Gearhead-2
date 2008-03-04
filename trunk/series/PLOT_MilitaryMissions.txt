@@ -1,0 +1,80 @@
+%%
+%%  Military missions are given by military factions.
+%%  These missions typically offer decent pay and salvage.
+%%
+
+Plot
+	name <Basic Military Patrol Job>
+	% The basic patrol job is a fight against some generic enemy mecha.
+	% This job gives salvage. This job will not result in the PC making
+	% any enemies.
+	requires <*GENERAL>
+	PayRate 100
+
+	% E1 is the town itself
+	% E2 is a military faction allied with the city
+	% E3 is a member of that faction
+	% E4 is a scene where the encounter will take place
+	Element1 <Scene Town>
+	Element2 <Faction Military !Ally 1>
+	Element3 <Character !Comrade 2>
+	Element4 <Scene Environs>
+
+	% SubPlot1 is the combat encounter
+	SubPlot1 <*MECHAMISSION_Basic 3 4>
+
+	% P1 = Time Limit
+	% P2 = Email Indicator
+	start <if= PlotStatus 0 ifNPCOK %3% else GoDelete ifG ComTime P1 EndPlot>
+	GoDelete <EndPlot>
+	update <if= PlotStatus 0 if= P1 0 P= 1 ComTime P+ 1 86400>
+
+	% Insert email here
+	5min <if= PlotStatus 0 if= P2 0  if= PCFac NPCFac %3%  if= d20 1  ifG PCCharm d40  Email 1 P= 2 1>
+	Msg1   <%name3%@ \SCENE NPCSCene %3% :// Hey \RANK , I've got a mission for you in %name1%.>
+	Msg1_1 <%name3%@ \SCENE NPCSCene %3% :// Report to \SCENE NPCScene %3% for a mission at once.>
+	Msg1_2 <%name3%@ \SCENE NPCSCene %3% :// Your services are required by %name2%. Come see me for mission briefing.>
+	Msg1_3 <%name3%@ \SCENE NPCSCene %3% :// I've got a mission for you. Come to \SCENE NPCScene %3% for the briefing.>
+
+	sub
+		Persona 3
+		rumor0 <%name3% needs a mecha pilot for an upcoming combat mission.>
+		greeting <if= PlotStatus %id1% else GoCheckOffer Goto GoRemind>
+		*GoRemind <*MechaMissionReminder %4%>
+		GoCheckOffer <if# PlotStatus 0 else GoCheckEnemy NewChat SayAnything>
+		*GoCheckEnemy <*ENEMY_CHECK GoCheckEmail ChatNPCFac GoEnd>
+		GoCheckEmail <if= P2 1 else GoCheckMember Goto GoGotEmail>
+		*GoGotEmail <*DidYouGetEmail GoMissionBriefing>
+		GoCheckMember <if= PCFac ChatNPCFac else GoCheckAuto  Goto GoIsMember>
+		*GoIsMember <*IHaveAJobForYou GoMissionBriefing>
+		*GoCheckAuto <*AutoMissionTest&Mecha GoMissionBriefing GoRejectMission GoCheckSkill ChatNPCFac na>
+		*GoCheckSkill <*GenericMissionTest&Mecha  GoMissionBriefing GoEnd GoRejectMission ChatNPCFac na %threat%>
+		*GoRejectMission <*RejectMission GoEnd>
+		GoEnd <EndPlot>
+		GoMissionBriefing <NewChat Say 1  AddChat 1 AddChat 2>
+		*result1 <*GoodLuckOnMission&NoEnemyFac GoR1Final ChatNPCFac na>
+		GoR1Final <Memo 2 SetPlotStatus %id1%>
+		result2 <Goto GoRejectMission>
+		Msg1 <Some intruders have broken through our defense perimeter. They must be stopped. This mission is worth $ \VAL Reward %threat% PayRate plus salvage rights.>
+		Msg1_1 <Our scouts have located a group of intruders in %name4% . Your job, if you accept it, will be to locate these intruders and engage them in combat. Win, and you'll earn $ \VAL Reward %threat% PayRate plus full salvage rights.>
+		CMsg1_1 <ifNPCSociable Accept>
+		Msg1_2 <There are enemy mecha in %name4%; defeat them for $ \VAL Reward %threat% PayRate plus salvage.>
+		CMsg1_2 <ifNPCShy Accept>
+		Msg1_3 <This is a straightforward mission. There are some intruders in %name4%; defeat them for $ \VAL Reward %threat% PayRate and salvage.>
+		CMsg1_3 <ifNPCEasygoing Accept>
+		Msg1_4 <Constant vigilance is needed to protect us from outside threats. There are some unidentified mecha in %name4%, and they must be destroyed. Do this and you'll earn $ \VAL Reward %threat% PayRate plus salvage.>
+		CMsg1_4 <ifNPCPassionate Accept>
+		Msg1_5 <We've picked up some intruders in %name4%, and now have a chance to engage them before they even know they've been spotted. For this mission you'll get $ \VAL Reward %threat% PayRate and salvage rights.>
+		CMsg1_5 <ifNPCCheerful Accept>
+		Msg1_6 <Our town is under some kind of attack. We've located some intruders in %name4%; they must be destroyed before they have a chance to kill. Do this, and you'll earn $ \VAL Reward %threat% PayRate plus salvage.>
+		CMsg1_6 <ifNPCMelancholy Accept>
+		Msg2 <%name3% in \SCENE NPCScene %3% hired you to fight some intruders in %name4%.>
+		Prompt1 <I'll be back when I'm finished.>
+		Prompt1_1 <No problem.>
+		Prompt1_2 <I'll get the job done.>
+		Prompt2 <You can find someone else for this job.>
+		CPrompt2 <if# PCFac ChatNPCFac Accept>
+		Prompt2_1 <This isn't my type of job.>
+		Prompt2_2 <Sorry, but I don't want this mission.>
+	end
+
