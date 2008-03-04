@@ -11,10 +11,10 @@ Faction 1
 	chara_colors <75 200 212>
 
 	% Every start, check to see if the PC has advanced in this faction.
-	start <if= PCFac SelfS else GoNoMember   ifFactionEnemy SelfS else GoPro1 StartStory .fired>
+	start <if= PCFac SelfS else GoNoMember   ifFactionEnemy SelfS else GoPro1 StartPlot .fired>
 	.fired <SPECIAL_PLOT_Fired.txt>
 	GoPro1 <ifG PCFacXP FacXPNeeded else GoCheckPromotion PCFacLevel+ 1 PCFacXP= 0 V+ 1 1>
-	GoCheckPromotion <ifG V1 0 StartStory .promostory V+ 1 -1>
+	GoCheckPromotion <ifG V1 0 StartPlot .promostory V+ 1 -1>
 	.promostory <SPECIAL_PLOT_Promotion.txt>
 	GoNoMember <FacXP= SelfS 0>
 
@@ -30,10 +30,10 @@ Faction 2
 	chara_colors <234 180 88>
 
 	% Every start, check to see if the PC has advanced in this faction.
-	start <if= PCFac SelfS else GoNoMember   ifFactionEnemy SelfS else GoPro1 StartStory .fired>
+	start <if= PCFac SelfS else GoNoMember   ifFactionEnemy SelfS else GoPro1 StartPlot .fired>
 	.fired <SPECIAL_PLOT_Fired.txt>
 	GoPro1 <ifG PCFacXP FacXPNeeded else GoCheckPromotion PCFacLevel+ 1 PCFacXP= 0 V+ 1 1>
-	GoCheckPromotion <ifG V1 0 StartStory .promostory V+ 1 -1>
+	GoCheckPromotion <ifG V1 0 StartPlot .promostory V+ 1 -1>
 	.promostory <SPECIAL_PLOT_Promotion.txt>
 	GoNoMember <FacXP= SelfS 0>
 
@@ -63,10 +63,10 @@ Faction 3
 	chara_colors <150 205 229>
 
 	% Every start, check to see if the PC has advanced in this faction.
-	start <if= PCFac SelfS else GoNoMember   ifFactionEnemy SelfS else GoPro1 StartStory .fired>
+	start <if= PCFac SelfS else GoNoMember   ifFactionEnemy SelfS else GoPro1 StartPlot .fired>
 	.fired <SPECIAL_PLOT_Fired.txt>
 	GoPro1 <ifG PCFacXP FacXPNeeded else GoCheckPromotion PCFacLevel+ 1 PCFacXP= 0 V+ 1 1>
-	GoCheckPromotion <ifG V1 0 StartStory .promostory V+ 1 -1>
+	GoCheckPromotion <ifG V1 0 StartPlot .promostory V+ 1 -1>
 	.promostory <SPECIAL_PLOT_Promotion.txt>
 	GoNoMember <FacXP= SelfS 0>
 
@@ -93,10 +93,10 @@ Faction 4
 	mecha_colors <122 130 130 230 20 130 200 200 0>
 
 	% Every start, check to see if the PC has advanced in this faction.
-	start <if= PCFac SelfS else GoNoMember   ifFactionEnemy SelfS else GoPro1 StartStory .fired>
+	start <if= PCFac SelfS else GoNoMember   ifFactionEnemy SelfS else GoPro1 StartPlot .fired>
 	.fired <SPECIAL_PLOT_Fired.txt>
 	GoPro1 <ifG PCFacXP FacXPNeeded else GoCheckPromotion PCFacLevel+ 1 PCFacXP= 0 V+ 1 1>
-	GoCheckPromotion <ifG V1 0 StartStory .promostory V+ 1 -1>
+	GoCheckPromotion <ifG V1 0 StartPlot .promostory V+ 1 -1>
 	.promostory <SPECIAL_PLOT_Promotion.txt>
 	GoNoMember <FacXP= SelfS 0>
 
@@ -109,10 +109,10 @@ Faction 5
 	mecha_colors <201 205 229 208 34 51 0 200 0>
 
 	% Every start, check to see if the PC has advanced in this faction.
-	start <if= PCFac SelfS else GoNoMember   ifFactionEnemy SelfS else GoPro1 StartStory .fired>
+	start <if= PCFac SelfS else GoNoMember   ifFactionEnemy SelfS else GoPro1 StartPlot .fired>
 	.fired <SPECIAL_PLOT_Fired.txt>
 	GoPro1 <ifG PCFacXP FacXPNeeded else GoCheckPromotion PCFacLevel+ 1 PCFacXP= 0 V+ 1 1>
-	GoCheckPromotion <ifG V1 0 StartStory .promostory V+ 1 -1>
+	GoCheckPromotion <ifG V1 0 StartPlot .promostory V+ 1 -1>
 	.promostory <SPECIAL_PLOT_Promotion.txt>
 	GoNoMember <FacXP= SelfS 0>
 
@@ -132,10 +132,10 @@ Faction 6
 	chara_colors <20 90 130>
 
 	% Every start, check to see if the PC has advanced in this faction.
-	start <if= PCFac SelfS else GoNoMember   ifFactionEnemy SelfS else GoPro1 StartStory .fired>
+	start <if= PCFac SelfS else GoNoMember   ifFactionEnemy SelfS else GoPro1 StartPlot .fired>
 	.fired <SPECIAL_PLOT_Fired.txt>
 	GoPro1 <ifG PCFacXP FacXPNeeded else GoCheckPromotion PCFacLevel+ 1 PCFacXP= 0 V+ 1 1>
-	GoCheckPromotion <ifG V1 0 StartStory .promostory V+ 1 -1>
+	GoCheckPromotion <ifG V1 0 StartPlot .promostory V+ 1 -1>
 	.promostory <SPECIAL_PLOT_Promotion.txt>
 	GoNoMember <FacXP= SelfS 0>
 
@@ -161,10 +161,10 @@ Faction 7
 	chara_colors <170 100 240>
 
 	% Every start, check to see if the PC has advanced in this faction.
-	start <if= PCFac SelfS else GoNoMember   ifFactionEnemy SelfS else GoPro1 StartStory .fired>
+	start <if= PCFac SelfS else GoNoMember   ifFactionEnemy SelfS else GoPro1 StartPlot .fired>
 	.fired <SPECIAL_PLOT_Fired.txt>
 	GoPro1 <ifG PCFacXP FacXPNeeded else GoCheckPromotion PCFacLevel+ 1 PCFacXP= 0 V+ 1 1>
-	GoCheckPromotion <ifG V1 0 StartStory .promostory V+ 1 -1>
+	GoCheckPromotion <ifG V1 0 StartPlot .promostory V+ 1 -1>
 	.promostory <SPECIAL_PLOT_Promotion.txt>
 	GoNoMember <FacXP= SelfS 0>
 
@@ -191,10 +191,10 @@ Faction 8
 	chara_colors <130 50 20>
 
 	% Every start, check to see if the PC has advanced in this faction.
-	start <if= PCFac SelfS else GoNoMember   ifFactionEnemy SelfS else GoPro1 StartStory .fired>
+	start <if= PCFac SelfS else GoNoMember   ifFactionEnemy SelfS else GoPro1 StartPlot .fired>
 	.fired <SPECIAL_PLOT_Fired.txt>
 	GoPro1 <ifG PCFacXP FacXPNeeded else GoCheckPromotion PCFacLevel+ 1 PCFacXP= 0 V+ 1 1>
-	GoCheckPromotion <ifG V1 0 StartStory .promostory V+ 1 -1>
+	GoCheckPromotion <ifG V1 0 StartPlot .promostory V+ 1 -1>
 	.promostory <SPECIAL_PLOT_Promotion.txt>
 	GoNoMember <FacXP= SelfS 0>
 
@@ -213,10 +213,10 @@ Faction 9
 	chara_colors <30 30 90>
 
 	% Every start, check to see if the PC has advanced in this faction.
-	start <if= PCFac SelfS else GoNoMember   ifFactionEnemy SelfS else GoPro1 StartStory .fired>
+	start <if= PCFac SelfS else GoNoMember   ifFactionEnemy SelfS else GoPro1 StartPlot .fired>
 	.fired <SPECIAL_PLOT_Fired.txt>
 	GoPro1 <ifG PCFacXP FacXPNeeded else GoCheckPromotion PCFacLevel+ 1 PCFacXP= 0 V+ 1 1>
-	GoCheckPromotion <ifG V1 0 StartStory .promostory V+ 1 -1>
+	GoCheckPromotion <ifG V1 0 StartPlot .promostory V+ 1 -1>
 	.promostory <SPECIAL_PLOT_Promotion.txt>
 	GoNoMember <FacXP= SelfS 0>
 
@@ -242,10 +242,10 @@ Faction 10
 	chara_colors <239 198 58>
 
 	% Every start, check to see if the PC has advanced in this faction.
-	start <if= PCFac SelfS else GoNoMember   ifFactionEnemy SelfS else GoPro1 StartStory .fired>
+	start <if= PCFac SelfS else GoNoMember   ifFactionEnemy SelfS else GoPro1 StartPlot .fired>
 	.fired <SPECIAL_PLOT_Fired.txt>
 	GoPro1 <ifG PCFacXP FacXPNeeded else GoCheckPromotion PCFacLevel+ 1 PCFacXP= 0 V+ 1 1>
-	GoCheckPromotion <ifG V1 0 StartStory .promostory V+ 1 -1>
+	GoCheckPromotion <ifG V1 0 StartPlot .promostory V+ 1 -1>
 	.promostory <SPECIAL_PLOT_Promotion.txt>
 	GoNoMember <FacXP= SelfS 0>
 
@@ -261,10 +261,10 @@ Faction 11
 	mecha_colors <122 130 130 244 216 28 200 200 0>
 
 	% Every start, check to see if the PC has advanced in this faction.
-	start <if= PCFac SelfS else GoNoMember   ifFactionEnemy SelfS else GoPro1 StartStory .fired>
+	start <if= PCFac SelfS else GoNoMember   ifFactionEnemy SelfS else GoPro1 StartPlot .fired>
 	.fired <SPECIAL_PLOT_Fired.txt>
 	GoPro1 <ifG PCFacXP FacXPNeeded else GoCheckPromotion PCFacLevel+ 1 PCFacXP= 0 V+ 1 1>
-	GoCheckPromotion <ifG V1 0 StartStory .promostory V+ 1 -1>
+	GoCheckPromotion <ifG V1 0 StartPlot .promostory V+ 1 -1>
 	.promostory <SPECIAL_PLOT_Promotion.txt>
 	GoNoMember <FacXP= SelfS 0>
 
@@ -281,10 +281,10 @@ Faction 12
 	chara_colors <>
 
 	% Every start, check to see if the PC has advanced in this faction.
-	start <if= PCFac SelfS else GoNoMember   ifFactionEnemy SelfS else GoPro1 StartStory .fired>
+	start <if= PCFac SelfS else GoNoMember   ifFactionEnemy SelfS else GoPro1 StartPlot .fired>
 	.fired <SPECIAL_PLOT_Fired.txt>
 	GoPro1 <ifG PCFacXP FacXPNeeded else GoCheckPromotion PCFacLevel+ 1 PCFacXP= 0 V+ 1 1>
-	GoCheckPromotion <ifG V1 0 StartStory .promostory V+ 1 -1>
+	GoCheckPromotion <ifG V1 0 StartPlot .promostory V+ 1 -1>
 	.promostory <SPECIAL_PLOT_Promotion.txt>
 	GoNoMember <FacXP= SelfS 0>
 
@@ -300,10 +300,10 @@ Faction 13
 	chara_colors <200 64 96>
 
 	% Every start, check to see if the PC has advanced in this faction.
-	start <if= PCFac SelfS else GoNoMember   ifFactionEnemy SelfS else GoPro1 StartStory .fired>
+	start <if= PCFac SelfS else GoNoMember   ifFactionEnemy SelfS else GoPro1 StartPlot .fired>
 	.fired <SPECIAL_PLOT_Fired.txt>
 	GoPro1 <ifG PCFacXP FacXPNeeded else GoCheckPromotion PCFacLevel+ 1 PCFacXP= 0 V+ 1 1>
-	GoCheckPromotion <ifG V1 0 StartStory .promostory V+ 1 -1>
+	GoCheckPromotion <ifG V1 0 StartPlot .promostory V+ 1 -1>
 	.promostory <SPECIAL_PLOT_Promotion.txt>
 	GoNoMember <FacXP= SelfS 0>
 
@@ -331,10 +331,10 @@ Faction 14
 	chara_colors <153 17 153>
 
 	% Every start, check to see if the PC has advanced in this faction.
-	start <if= PCFac SelfS else GoNoMember   ifFactionEnemy SelfS else GoPro1 StartStory .fired>
+	start <if= PCFac SelfS else GoNoMember   ifFactionEnemy SelfS else GoPro1 StartPlot .fired>
 	.fired <SPECIAL_PLOT_Fired.txt>
 	GoPro1 <ifG PCFacXP FacXPNeeded else GoCheckPromotion PCFacLevel+ 1 PCFacXP= 0 V+ 1 1>
-	GoCheckPromotion <ifG V1 0 StartStory .promostory V+ 1 -1>
+	GoCheckPromotion <ifG V1 0 StartPlot .promostory V+ 1 -1>
 	.promostory <SPECIAL_PLOT_Promotion.txt>
 	GoNoMember <FacXP= SelfS 0>
 

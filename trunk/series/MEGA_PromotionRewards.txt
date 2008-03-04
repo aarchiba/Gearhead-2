@@ -4,10 +4,10 @@
 %% These components contain faction reward stuff.
 %%
 %% Reward components have to check the PC's RENOWN. Renown must be greater
-%% than FacRank * 10 or the PC will get a cash prize instead of whatever
+%% than RewardRank * 10 or the PC will get a cash prize instead of whatever
 %% super reward was being planned. Certain factions may add an additional
 %% test; for instance, a police faction may only give the premium reward
-%% if the PC's Lawfulness is also greater than FacRank * 10.
+%% if the PC's Lawfulness is also greater than RewardRank * 10.
 %%
 %% Reward components also have to check to make sure the level being
 %% rewarded is in the range 1..8; for faction level 9 and above, a cash
@@ -26,7 +26,7 @@ Content
 	sub
 		Persona 1
 		% V%id%01 = Mecha rating calculator
-		greeting <PCFacLevel+ 1 XPV 100 EndPlot ifG 9 PCFacLevel else .%id%_GoMinorPrize ifG PCRenown * 10 PCFacLevel else .%id%_GoMinorPrize Goto .%id%_GoBigPrize>
+		greeting <XPV 100 EndPlot ifG 9 PCFacLevel else .%id%_GoMinorPrize ifG PCRenown * 10 PCFacLevel else .%id%_GoMinorPrize Goto .%id%_GoBigPrize>
 		*.%id%_GoMinorPrize <*PROMOTION_Minor_Reward>
 		.%id%_GoBigPrize <NewChat Say %id%01   V= %id%01 * 11 PCFacLevel V+ %id%01 12   RandomMecha .%id%_fac V%id%01>
 		.%id%_fac <GENERAL \FACTION_DESIG ChatNPCFac>

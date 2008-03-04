@@ -3190,6 +3190,64 @@ begin
 	end;
 end;
 
+Function AS_ContentInsertion( GB: GameBoardPtr; Source: GearPtr; FName: String ): Boolean;
+	{ Attempt to load and initialize the requested story. }
+var
+	Adv,Slot,Content: GearPtr;
+begin
+	Content := LoadGearPattern( FName , Series_Directory );
+	Adv := GG_LocateAdventure( GB , Source );
+
+	if Content <> Nil then begin
+		{ Sub in the first element, if needed. }
+		if Source^.G = GG_Faction then begin
+			SetNAtt( Content^.NA , NAG_ElementID , 1 , Source^.S );
+			SetSAtt( Content^.SA , 'ELEMENT1 <F>' );
+			Slot := Source;
+		end else if Source^.G = GG_Scene then begin
+			SetNAtt( Content^.NA , NAG_ElementID , 1 , Source^.S );
+			SetSAtt( Content^.SA , 'ELEMENT1 <S>' );
+			Slot := Adv;
+		end else if Source^.G = GG_Story then begin
+			Slot := Source;
+		end else begin
+			Slot := Adv;
+		end;
+
+		if InsertPlot( Adv , Slot , Content , GB , CurrentPCRenown( GB ) ) then begin
+			AS_ContentInsertion := True;
+		end else begin
+			AS_ContentInsertion := False;
+		end;
+
+	end else begin
+		{ File was not loaded successfully. }
+		AS_ContentInsertion := False;
+	end;
+end;
+
+Procedure ProcessStartStory( var Event: String; GB: GameBoardPtr; Source: GearPtr );
+	{ A new story gear is about to be loaded. }
+var
+	FName: String;
+begin
+	{ First, find the file name of the plot file to look for. }
+	FName := ExtractWord( Event );
+	if Source <> Nil then begin
+		FName := AS_GetString( Source , FName );
+	end else begin
+		FName := '';
+	end;
+
+	{ Call the above procedure to see if it works or not. }
+	if AS_ContentInsertion( GB , Source , FName ) then begin
+		SetTrigger( GB , 'UPDATE' );
+		IfSuccess( Event );
+	end else begin
+		IfFailure( Event , Source );
+	end;
+end;
+
 Procedure ProcessStartPlot( var Event: String; GB: GameBoardPtr; Source: GearPtr );
 	{ A new plot is being loaded, probably by a story. }
 	{ For now I'm going to treat such plots as global. }
@@ -3206,10 +3264,6 @@ begin
 		{ Can't load a new plot at this time. }
 		IfFailure( Event , Source );
 
-	end else if ( Source <> Nil ) and ( Source^.G = GG_Story ) and ( NumberOfPlots( Source ) >= Max_Plots_Per_Adventure ) then begin
-		{ Can't load a new plot at this time. }
-		IfFailure( Event , Source );
-
 	end else begin
 		{ First, find the file name of the plot file to look for. }
 		FName := ExtractWord( Event );
@@ -3219,24 +3273,9 @@ begin
 			FName := '';
 		end;
 
-		{ Secondly, confirm the file name. }
-		Arc := LoadGearPattern( FName , Series_Directory );
-
-		if Arc <> Nil then begin
-			{ Insert the arc, calling IfSuccess or IfFailure. }
-			if Source^.G = GG_Story then begin
-				LoadOK := InsertPlot( Adv , Source , Arc , GB , CurrentPCRenown( GB ) );
-			end else begin
-				LoadOK := InsertPlot( Adv , Adv , Arc , GB , CurrentPCRenown( GB ) );
-			end;
-
-			if LoadOK then begin
-				SetTrigger( GB , 'UPDATE' );
-				IfSuccess( Event );
-			end else begin
-				IfFailure( Event , Source );
-			end;
-
+		if AS_ContentInsertion( GB , Source , FName ) then begin
+			SetTrigger( GB , 'UPDATE' );
+			IfSuccess( Event );
 		end else begin
 			{ File was not loaded successfully. }
 			IfFailure( Event , Source );
@@ -3257,63 +3296,6 @@ begin
 	UpdatePlots( GB , Threat );
 
 	SetTrigger( GB , 'UPDATE' );
-end;
-
-Function AS_StoryInsertion( GB: GameBoardPtr; Source: GearPtr; FName: String ): Boolean;
-	{ Attempt to load and initialize the requested story. }
-var
-	Adv,Story: GearPtr;
-begin
-	Story := LoadGearPattern( FName , Series_Directory );
-
-	if Story <> Nil then begin
-		{ Sub in the first element, if needed. }
-		if Source^.G = GG_Faction then begin
-			SetNAtt( Story^.NA , NAG_ElementID , 1 , Source^.S );
-			SetSAtt( Story^.SA , 'ELEMENT1 <F>' );
-			Adv := Source;
-		end else if Source^.G = GG_Scene then begin
-			SetNAtt( Story^.NA , NAG_ElementID , 1 , Source^.S );
-			SetSAtt( Story^.SA , 'ELEMENT1 <S>' );
-			Adv := GG_LocateAdventure( GB , Source );
-		end else if Source^.G = GG_Story then begin
-			Adv := Source;
-		end else begin
-			Adv := GG_LocateAdventure( GB , Source );
-		end;
-
-		if InsertStory( Adv , Story , GB ) then begin
-			AS_StoryInsertion := True;
-		end else begin
-			AS_StoryInsertion := False;
-		end;
-
-	end else begin
-		{ File was not loaded successfully. }
-		AS_StoryInsertion := False;
-	end;
-end;
-
-Procedure ProcessStartStory( var Event: String; GB: GameBoardPtr; Source: GearPtr );
-	{ A new story gear is about to be loaded. }
-var
-	FName: String;
-begin
-	{ First, find the file name of the plot file to look for. }
-	FName := ExtractWord( Event );
-	if Source <> Nil then begin
-		FName := AS_GetString( Source , FName );
-	end else begin
-		FName := '';
-	end;
-
-	{ Call the above procedure to see if it works or not. }
-	if AS_StoryInsertion( GB , Source , FName ) then begin
-		SetTrigger( GB , 'UPDATE' );
-		IfSuccess( Event );
-	end else begin
-		IfFailure( Event , Source );
-	end;
 end;
 
 Procedure ProcessCheckComponents( GB: GameBoardPtr; Source: GearPtr );
