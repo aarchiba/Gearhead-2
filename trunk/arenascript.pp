@@ -524,7 +524,7 @@ var
 	RV: LongInt;
 begin
 	{ Calculate the base reward value. }
-	RV := Calculate_Threat_Points( Renown , 100 ) div 80 * Percent div 100;
+	RV := Calculate_Threat_Points( Renown + 10 , 100 ) div 80 * Percent div 100;
 	if RV < Min_Reward_Value then RV := Min_Reward_Value;
 
 	{ Modify this for the PC's talents. }
