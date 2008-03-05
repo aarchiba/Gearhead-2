@@ -1,4 +1,5 @@
 % ArenaScript Value Macros
+RandomTheme <d8>	% returns a random mecha theme
 PartyScore <GrabCurrentScene GNAtt NAG_Narrative NAS_PartyPoints>
 CurrentPPScore <GrabStory GNAtt NAG_XXRan NAS_PPVictory>
 CitizensTeam <GrabTeamName Citizens GS>
@@ -111,6 +112,7 @@ Shopping <SkRoll 21>
 FacVar <GrabFaction ? GNAtt NAG_ScriptVar ?>
 PCFacXP <GrabFaction PCFac GNAtt NAG_Experience NAS_FacXP>
 PCFacLevel <GrabAdventure GNAtt NAG_Experience NAS_FacLevel>
+PCRewardLevel <GrabAdventure GNAtt NAG_Experience NAS_RewardLevel>
 FacXPNeeded <FXPNeeded PCFacLevel>
 DynaRenown <GrabCurrentScene GNAtt 21 4>
 DynaStrength <GrabCurrentScene GNAtt 21 5>
@@ -154,6 +156,7 @@ NAS_Credits <2>
 NAS_TotalXP <0>
 NAS_FacXP <3>
 NAS_FacLevel <4>
+NAS_RewardLevel <5>
 NAS_CID <0>
 NAS_FactionID <2>
 NAS_X <0>

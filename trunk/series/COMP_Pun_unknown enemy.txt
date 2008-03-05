@@ -2,6 +2,53 @@
 %%	+Pun	An unknown enemy attacks
 
 Plot
+	name <Horton Hears a Zaku-II>
+	desc <The PC can meet someone who has seen mecha outside.>
+	requires <#A +Pun +T-->
+	Size 1
+
+	% E1 is a local, public scene
+	% E2 is the trucker who saw the whotsit
+	% E3 is an environs scene
+	% E4 is the encounter to be placed there
+	element1 <Scene !Near -7 public>
+	element2 <Character LABOR !Near -7 NeverFail>
+	NeverFail2 <Trucker>
+	place2 <1 pass>
+	element3 <Scene Environs !Near -7>
+	element4 <Prefab>
+	Place4 <3>
+
+	start <ifNPCDead %2% LoseComp 0 .next>
+	.next <+T-- +F-->
+
+	sub
+		Persona 2
+		rumor <%name2% saw something odd.>
+		*greeting <*IHaveInformation GoExplain>
+		GoExplain <NewChat Say %id%01 StoryNote %id%02 AddChat %id%01 AddChat %id%02 NTBWinComp %4% .next>
+		.next <+Ten +F-->
+		result%id%01 <NewChat Say %id%03>
+		result%id%02 <NewChat Say %id%04 AlterContext .worse>
+		.worse <+Ffi>
+		Msg%id%01 <While driving around, I saw something weird. It was a group of mecha, but they didn't look like locals... they looked like they were up to no good.>
+		Msg%id%02 <%name2% saw some scary looking mecha in %name3%.>
+		Msg%id%03 <Be careful. They didn't look like they were the type to take prisoners.>
+		Msg%id%04 <I'm telling you exactly what I saw! Don't blame me when those meks come and kick your ass...>
+		Prompt%id%01 <Thanks for telling me.>
+		Prompt%id%01_1 <I'll have to go see about that.>
+		Prompt%id%01_2 <Hmm... this could be important.>
+		Prompt%id%02 <Are you sure you weren't imagining things?>
+		Prompt%id%02_1 <You haven't been drinking, have you?>
+		Prompt%id%02_2 <That doesn't sound too likely.>
+	end
+	inv
+		STC ENCOUNTER-WANDER
+		name <%name2%'s Tip>
+		EncounterMove 25
+	end
+
+Plot
 	name <So That's Who You Work For>
 	desc <You learn who the enemy NPC has been working for.>
 	requires <#A +Pun +Ten E:++ F:-->
@@ -253,7 +300,7 @@ Plot
 		result4 <NewChat Say 7 AddChat 7 AddChat 6>
 		result5 <NewChat Say 8 History 10 StoryNote 9  AddEasygoing 10  Goto GoEasyWin>
 		GoEasyWin <FreezeNPC %6% &SetTargetNPC %6% &SetTargetItem %4%  NegateComp 0 .easygoing>
-		.easygoing <+Pla +Tlt +Fin>
+		.easygoing <+Pla +Tgt +Fin>
 		result6 <Goto result5>
 		result7 <Goto result1>
 		Msg1 <The animals who destroyed this temple must be punished.>

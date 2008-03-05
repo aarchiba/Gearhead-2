@@ -128,12 +128,12 @@ implementation
 uses action,arenacfe,ability,gearutil,ghchars,gearparser,ghmodule,backpack,
      ghprop,ghweapon,grabgear,interact,menugear,playwright,rpgdice,vidinfo,
      services,texutil,ui4gh,wmonster,vidmap,narration,description,skilluse,
-	ghintrinsic,movement,minigame;
+	ghintrinsic,movement,minigame,customization;
 {$ELSE}
 uses action,arenacfe,ability,gearutil,ghchars,gearparser,ghmodule,backpack,
      ghprop,ghweapon,grabgear,interact,menugear,playwright,rpgdice,glinfo,
      services,texutil,ui4gh,wmonster,glgfx,glmap,narration,description,skilluse,
-	ghintrinsic,movement,minigame;
+	ghintrinsic,movement,minigame,customization;
 {$ENDIF}
 
 const
@@ -2760,44 +2760,8 @@ end;
 Procedure ProcessMechaPrize( var Event: String; GB: GameBoardPtr; Source: GearPtr );
 	{ The player has just won a mecha. Cool! }
 var
-	FName: String;
-	MList,Mek,PC: GearPtr;
-begin
-	{ ERROR CHECK - We need the gameboard to exist!!! }
-	if GB = Nil then Exit;
-
-	{ First, find the file name of the mecha file to look for. }
-	FName := ExtractWord( Event );
-	if Source <> Nil then begin
-		FName := AS_GetString( Source , FName );
-	end else begin
-		FName := '';
-	end;
-
-	MList := LoadGearPattern( FName , Design_Directory );
-
-	{ Next confirm that something was loaded. }
-	if MList <> Nil then begin
-		{ Something was loaded. Yay! Pick one of the gears }
-		{ at random, clone it, stick it on the game board, }
-		{ and get rid of the list we loaded. }
-		Mek := CloneGear( SelectRandomGear( MList ) );
-		DisposeGear( MList );
-
-		SetSATt( Mek^.SA , 'SDL_COLORS <' + standard_lot_colors[ Random( num_standard_schemes ) ] + '>' );
-
-		SetNAtt( Mek^.NA , NAG_Location , NAS_Team , NAV_DefPlayerTeam );
-		DeployMek( GB , Mek , False );
-		PC := GG_LocatePC( GB );
-		if FindPilotsMecha( GB^.Meks , PC ) = Nil then AssociatePilotMek( GB^.Meks , PC , Mek );
-	end;
-end;
-
-Procedure ProcessRandomMecha( var Event: String; GB: GameBoardPtr; Source: GearPtr );
-	{ The player has just won a mecha. Cool! }
-var
 	Factions,FName,msg: String;
-	Renown: Integer;
+	Renown,Theme,ModPoints: Integer;
 	MList,Mek,PC,Adv: GearPtr;
 begin
 	{ ERROR CHECK - We need the gameboard to exist!!! }
@@ -2815,6 +2779,8 @@ begin
 		Factions := ScriptMessage( Factions , GB , Source );
 	end;
 	Renown := ScriptValue( Event , GB , Source );
+	Theme := ScriptValue( Event , GB , Source );
+	ModPoints := ScriptValue( Event , GB , Source );
 
 	{ Call the random mecha picker. }
 	FName := SelectMechaByFactionAndRenown( Factions , Renown );
@@ -2829,6 +2795,11 @@ begin
 		{ and get rid of the list we loaded. }
 		Mek := CloneGear( SelectRandomGear( MList ) );
 		DisposeGear( MList );
+
+		{ If modifications were requested, do those now. }
+		if ModPoints > 0 then begin
+			MechaMakeover( Mek , 0 , Theme , ModPoints );
+		end;
 
 		SetSATt( Mek^.SA , 'SDL_COLORS <' + standard_lot_colors[ Random( num_standard_schemes ) ] + '>' );
 
@@ -3253,13 +3224,7 @@ Procedure ProcessStartPlot( var Event: String; GB: GameBoardPtr; Source: GearPtr
 	{ For now I'm going to treat such plots as global. }
 var
 	FName: String;
-	Adv,Arc: GearPtr;
-	LoadOK: Boolean;
 begin
-	{ Error check - We need the ADVENTURE gear for this!!! }
-	Adv := FindRoot( GB^.Scene );
-	if ( Adv = Nil ) or ( Adv^.G <> GG_Adventure ) then Exit;
-
 	if ( Source <> Nil ) and ( Source^.G = GG_Story ) and ( NumberOfPlots( Source ) >= Max_Plots_Per_Story ) then begin
 		{ Can't load a new plot at this time. }
 		IfFailure( Event , Source );
@@ -4039,7 +4004,6 @@ begin
 		else if cmd = 'TREPUTATION' then ProcessTReputation( Event , GB , Source )
 		else if cmd = 'XPV' then ProcessXPV( Event , GB , Source )
 		else if cmd = 'MECHAPRIZE' then ProcessMechaPrize( Event , GB , Source )
-		else if cmd = 'RANDOMMECHA' then ProcessRandomMecha( Event , GB , Source )
 		else if cmd = 'NEWD' then ProcessNewD( Event , GB , Source )
 		else if cmd = 'WMECHA' then ProcessWMecha( Event , GB , Source )
 		else if cmd = 'WMONSTER' then ProcessWMonster( Event , GB , Source )

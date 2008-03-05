@@ -99,6 +99,7 @@ Const
 	NAS_Credits = 2;
 	NAS_FacXP = 3;
 	NAS_FacLevel = 4;
+	NAS_RewardLevel = 5;	{ The maximum faction reward which has been claimed. }
 	NAS_Skill_XP_Base = 100;	{ For skill-specific XP awards. }
 					{ S = 100 + Skill Index }
 

@@ -90,7 +90,7 @@ Content
 		*.%id%_GoBrushOff <*IAmBusy&OnPhone>
 		*.%id%_GoIntro <*PressConferenceGreeting&AboutItem .%id%_GoTell &TargetItem>
 		.%id%_GoTell <NewChat Say %id%01 StoryNote %id%02 AddChat %id%01 AddChat %id%02 &SetTargetNPC %3% WinComp 0 .%id%_Next>
-		.%id%_Next <+Tlt +Fin>
+		.%id%_Next <+Tgt +Fin>
 		result%id%01 <NewChat Say %id%03>
 		result%id%02 <NewChat Say %id%04 AddChat %id%01>
 		Msg%id%01 <If you're hoping to find where the \ITEM &TargetItem , you should probably speak with Professor %name3% . It's been said that \SPR %3% is one of the leading experts on it.>

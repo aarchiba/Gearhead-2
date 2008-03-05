@@ -106,7 +106,8 @@
 	LOADD [script line label]	Load a dynamic scene
 	LOSECOMP [sceneid] [changes]	Lose current component, load next
 	MAGICMAP		Makes all tiles on current map visible
-	MECHAPRIZE [script line label]	Give PC a mecha
+	MECHAPRIZE [faction list label] [renown] [theme] [modpoints]
+		Give PC a mecha appropriate to factions, renown, theme, and modification points.
 	MEMO [idnum]		Store reminder for PC in source gear
 	MONOLOGUE [cid] [msg id]	The requested NPC will speak a single line outside of conversation
 	MORETEXT [script line label]	Display text file from disk

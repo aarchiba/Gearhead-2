@@ -350,7 +350,7 @@ Content
 		Result4 <NewChat Say 7  AddCheerful -d10  SetQuestStatus %qid% %id%  SetQuestStatus %qid1% %id1%  QMemo %qid% 2>
 		Result5 <NewChat Say 8  SetQuestStatus %qid% %id%  SetQuestStatus %qid1% %id1%  QMemo %qid% 2>
 		Msg1 <As you probably know, we're still rebuilding from the damage we suffered in the disaster. I'm in charge of reconstruction efforts in \SCENE %s3% .>
-		Msg2 <%name1% is in charge of the reconstruction of \SCENE %s3% . Unfortunately, the one of the projects has hit a problem.>
+		Msg2 <%name1% is in charge of the reconstruction of \SCENE %s3% . Unfortunately, one of the projects has hit a problem.>
 		Msg3 <Do you have any good news for me about the reconstruction work?>
 		Msg4 <This is just what we need; hasn't \SCENE %s3% suffered enough?>
 		Msg5 <I hear that you've solved our construction problem. Congratulations.>

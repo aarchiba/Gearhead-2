@@ -1,4 +1,56 @@
 Plot
+	name <Conference Was Moved>
+	requires <#W +Tsh>
+	desc <The event has been moved. No-one told the PC.>
+
+	% E1 is the scene where this component will take place
+	% E2 is the NPC that the PC will speak with
+	% E3 is the town for the next episode
+	% E4 is a metascene within that town
+	element1 <Grab 6>
+	element2 <Character Citizen !Near -7>
+	Place2 <1 (Citizens) pass>
+	Element3 <Scene !Far -7 !Comrade -7 Town>
+	element4 <MetaScene !Near 3 *Building NeverFail>
+
+	start <ifNPCDead %1% &SetCompScene 0 SMemo 0 WinEpisode %3% 0 .next>
+	.next <+T-- +F-->
+
+	sub
+		Persona 2
+		special <UNLISTED>
+		rumor <%name2% is the head of the cleaning crew at %name1%.>
+		greeting <NewChat Say %id%01 SMemo %id%02 History %id%03 &SetCompScene 0 WinEpisode %3% %4% .next>
+		.next <>
+		Msg%id%01 <The event they were going to have here has been moved to %name4% in %name3%. Unless you're a member of the cleaning crew, I'm afraid that you'll have to go home.>
+		Msg%id%02 <The event at %name1% was moved to %name4% in %name3%.>
+		Msg%id%03 <The event at %name1% was moved to %name3%.>
+
+		MetaScene 1
+		desig <MS_PRESENTATION>
+		%% This is a press conference or similar media event
+		ClubMap
+		MapWidth 25
+		MapHeight 25
+		type <BUILDING PUBLIC>
+		special <AddExit>
+		nu1 <if= T1 0 Return>
+		sub
+			Team 1
+
+			Team 2
+			name <Civilian>
+			setally 1
+			Passive
+
+			room
+			name <Foyer>
+			desig <EntranceGrid>
+		end
+	end
+
+
+Plot
 	name <Should Go See Friend>
 	requires <#W +T-->
 	desc <You've completed this mission. Now you can socialize.>
@@ -10,7 +62,7 @@ Plot
 	Element2 <Building Public !Near 1>
 	Element3 <NewNPC 0 2 PCFriend>
 
-	start <if= SceneID &EpisodeScene if= P1 0 P= 1 1 Alert 1 Alert 2 SMemo 3 History 4 &SetTargetNPC %3% WinEpisode %2% .next>
+	start <if= SceneID &EpisodeScene if= P1 0 P= 1 1 Alert 1 Alert 2 SMemo 3 History 4 &SetTargetNPC %3% WinEpisode %1% %2% .next>
 	.next <+Tgt +F-->
 	Msg1 <Things appear to be resolved in \SCENE &EpisodeScene , for the time being.>
 	Msg2 <While you have some free time, you feel that you should head to %name1% and visit your friend %name3%.>
@@ -41,7 +93,7 @@ Plot
 	sub
 		Persona 2
 		rumor <%name2% has seen %name4%.>
-		Greeting <NewChat Say 1 StoryNote 2 WinEpisode %3% .next>
+		Greeting <NewChat Say 1 StoryNote 2 WinEpisode %3% 0 .next>
 		.next <+T-- +F-->
 		Msg1 <You missed all the excitement. A little while ago %name4% came through here, and it was terrifying! Fortunately, \SPR %4% 's gone to %name3% now.>
 		Msg2 <You learned from %name2% that %name4% went to %name3%.>
@@ -74,7 +126,7 @@ Plot
 		*Greeting <*LancemateWantsToTalk GoNow GoLater>
 		GoNow <NewChat Say %id%01 Goto GoEndEpisode>
 		GoLater <NewChat Say %id%04 Goto GoEndEpisode>
-		GoEndEpisode <SMemo %id%02 History %id%03 &SetCompScene %4% &SetTargetNPC %2% WinEpisode %3% .next>
+		GoEndEpisode <SMemo %id%02 History %id%03 &SetTargetNPC %2% WinEpisode %3% %4% .next>
 		.next <+Tgt +Fmi>
 		Msg%id%01 <I've been contacted by %name2% at %name3%. We've got a mission to do for \FACTION ChatNPCFac over there.>
 		Msg%id%02 <%name1% told you that \SPR %1% had been contacted by %name2%. You've been asked to go to %name3% to do a mission for \FACTION ChatNPCFac .>
@@ -104,7 +156,7 @@ Plot
 	sub
 		Persona 2
 		*greeting <*DidYouGetEmail GoExplain>
-		GoExplain <PCFriend %2% NewChat Say 1 StoryNote 2 WinEpisode %3% .next>
+		GoExplain <PCFriend %2% NewChat Say 1 StoryNote 2 WinEpisode %3% 0 .next>
 		.next <+T-- +F-->
 		Msg1 <I'd like to thank you for all you've done for \SCENE RootSceneID . You know, they say that there have been unexplained mecha attacks in %name3% recently, too. Maybe you could help them as well.>
 		Msg2 <%name2% told you that %name3% has also been under attack.>
@@ -112,7 +164,7 @@ Plot
 
 Plot
 	name <Target Went Elsewhere>
-	requires <#W (+Tlt|+Tgt|+Tht|+Tpt) T:++>
+	requires <#W (+Tgt|+Tht|+Tpt) T:++>
 	desc <The PC will be told where the target went.>
 
 	% E1 is the target
@@ -128,8 +180,8 @@ Plot
 		Persona 2
 		rumor <%name2% was speaking with %name1% recently.>
 		*greeting <*LookingForNPC %1% GoSuccess GoFail>
-		GoSuccess <NewChat Say 1 StoryNote 2   WinEpisode %3% .next>
-		GoFail <NewChat Say 3 StoryNote 2   WinEpisode %3% .next>
+		GoSuccess <NewChat Say 1 StoryNote 2   WinEpisode %3% 0 .next>
+		GoFail <NewChat Say 3 StoryNote 2   WinEpisode %3% 0 .next>
 		.next <>
 		Msg1 <I'm afraid that you've just missed \OPR %1% ; \SPR %1% 's just left for %name3%.>
 		Msg2 <%name2% told you that %name1% went to %name3%.>

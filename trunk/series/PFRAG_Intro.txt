@@ -143,8 +143,8 @@ Persona
 requires <*MENTOR_ExQuest>
 % Vid01 = Introduction counter
 START <if= V%id%01 0 else .%id%_GoCheck V= %id%01 1 NewChat Say %id%01 AddChat %id%01 AddChat %id%02>
-.%id%_GoCheck <if= V%id%01 1 else .%id%_GoComplete ifG PCRep 6 60 else .%id%_GoFail NewChat Say %id%06 V= %id%01 2 mechaprize .%id%_mek>
-.%id%_mek <Vadel.txt>
+.%id%_GoCheck <if= V%id%01 1 else .%id%_GoComplete ifG PCRep 6 60 else .%id%_GoFail NewChat Say %id%06 V= %id%01 2 randommecha .%id%_mek 75>
+.%id%_mek <GENERAL>
 .%id%_GoComplete <NewChat Say %id%02>
 .%id%_GoFail <NewChat Say %id%03 AddChat %1% AddChat %2%>
 result%id%01 <NewChat Say %id%04 AddChat %1% AddChat %2%>

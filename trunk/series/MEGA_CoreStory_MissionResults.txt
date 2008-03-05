@@ -190,7 +190,7 @@ Content
 		.%id%_GoSearchNPC <NewChat Say %id%01 SMemo %id%02 History %id%03 &SetTargetNPC %2% WinComp 0 .%id%_Win>
 		*.%id%_GoNPCGone <*MissionWasSuccess&Reward .%id%_GoEnd &AllyFac &EnemyFac>
 		.%id%_GoEnd <SMemo 0 WinComp 0 .%id%_end>
-		.%id%_win <+Tlt +Frt>
+		.%id%_win <+Tgt +Frt>
 		.%id%_end <+T-- +F-->
 		Msg%id%01 <Good work on that mission. You should probably try to find that person you rescued; I'll bet \SPR %2% will want to reward you.>
 		Msg%id%01_1 <I'm quite satisfied with the results of that last mission, but I'm quite sure there's someone else who will want to thank you as well. Have you spoken to %name2% since getting back? I think you should.>
@@ -223,7 +223,7 @@ Content
 	sub
 		Persona 1
 		greeting <if= PlotStatus %id% else %pop% NewChat Say %id%01 AddChat %id%01 AddChat %id%02>
-		.%id%_win <+Tlt +Fin>
+		.%id%_win <+Tgt +Fin>
 		.%id%_meh <+T-- +F-->
 		result%id%01 <ifNPCOK %2% else .%id%_GoTargetDead NewChat Say %id%02 &SetTargetNPC %2% WinComp 0 .%id%_win CashPrize Reward StoryDL 200 AddReact d10 SMemo %id%04>
 		.%id%_GoTargetDead <NewChat Say %id%03 SMemo 0 WinComp 0 .%id%_meh CashPrize Threat StoryDL 100 300>
@@ -276,7 +276,7 @@ Content
 		.%id%_GoEnd <SMemo 0  NTBLoseComp 0 .%id%_loss>
 		.%id%_loss <+T-- +F-->
 		.%id%_GoContinue <SMemo %id%05  &SetTargetNPC %2% LoseComp 0 .%id%_find>
-		.%id%_find <+Tlt +Fin>
+		.%id%_find <+Tgt +Fin>
 
 		result%id%01 <ifNPCDead %2% else .%id%_GoE2Find NewChat Say %id%02 Goto .%id%_GoEnd>
 		.%id%_GoE2Find <NewChat Say %id%03  Goto .%id%_GoContinue>

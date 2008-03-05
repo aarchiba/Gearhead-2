@@ -36,7 +36,7 @@ Content
 		*.%id%_GoWillResist <*IDisagreeYouDie na>
 		.%id%_GoSurrender <L= 2 2 Print %id%02 FreezeNPC %1% PCEnemy %1% ifNPCOK %3% else .%id%_GoE3Died StoryNote %id%03 Print %id%04 FreezeNPC %3% &SetTargetNPC %3% WinComp 0 .%id%_win>
 		.%id%_GoE3Died <StoryNote %id%05 WinComp 0 .%id%_loss>
-		.%id%_win <+Tlt +Frt>
+		.%id%_win <+Tgt +Frt>
 		.%id%_loss <+T-- +F-->
 		result%id%01 <ifConversation HardSkillTar StoryDL else .%id%_GoWillResist FreezeNPC %3% EndChat Say %id%06 XPV 100>
 		result%id%02 <ifIntimidation HardSkillTar StoryDL else .%id%_GoWillResist EndChat Say %id%07 AddChat %id%03>
@@ -69,7 +69,7 @@ Content
 		Surrender%1% <ForceChat %1%>
 		Faint%1% <L= 2 2 ifNPCOK %3% else GoE3Died StoryNote 4 Print 5 FreezeNPC %3% &SetTargetNPC %3% WinComp 0 .win>
 		GoE3Died <StoryNote 6 WinComp 0 .loss>
-		.win <+Tlt +Frt>
+		.win <+Tgt +Frt>
 		Msg1 <As you enter %name1%'s hideout, you see that \SPR %1% has a hostage.>
 		Msg2 <Please, help me get away from here!>
 		Msg3 <You failed to save %name3% from %name1%.>

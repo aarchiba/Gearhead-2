@@ -11,12 +11,14 @@ Plot
 	Place2 <1 (Citizens) pass>
 	Element3 <Scene !Far -7 !Comrade -7 Town>
 
-	start <ifNPCDead %1% &SetCompScene 0 LoseEpisode %3% .next>
+	start <ifNPCDead %1% &SetCompScene 0 LoseEpisode %3% 0 .next>
 	.next <+T-- +F-->
 
 	sub
 		Persona 2
-		greeting <NewChat Say %id%01 SMemo 0 History %id%02 &SetCompScene 0 LoseEpisode %3% .next>
+		special <UNLISTED>
+		rumor <%name2% is the head of the cleaning crew at %name1%.>
+		greeting <NewChat Say %id%01 SMemo 0 History %id%02 &SetCompScene 0 LoseEpisode %3% 0 .next>
 		.next <+T-- +F-->
 		Msg%id%01 <The event they were going to have here was cancelled. Unless you're a member of the cleaning crew, I'm afraid that you'll have to go home.>
 		Msg%id%02 <The event at %name1% was cancelled.>
@@ -56,15 +58,15 @@ Plot
 	Element2 <Scene !Far -7 !Comrade -7 Town>
 	Element3 <Grab 5>
 
-	start <ifNPCDead %1% &SetCompScene 0  LoseEpisode %2% .next>
+	start <ifNPCDead %1% &SetCompScene 0  LoseEpisode %2% 0 .next>
 	.next <>
 
 	sub
 		Persona 1
 		rumor <%name1% might know where %name3% went.>
 		*greeting <*LookingForNPC %3% GoSuccess GoFail>
-		GoSuccess <NewChat Say 1 StoryNote 2   &SetCompScene 0  LoseEpisode %2% .next>
-		GoFail <NewChat Say 3 StoryNote 2   &SetCompScene 0  LoseEpisode %2% .next>
+		GoSuccess <NewChat Say 1 StoryNote 2   LoseEpisode %2% 0 .next>
+		GoFail <NewChat Say 3 StoryNote 2   LoseEpisode %2% 0 .next>
 		.next <>
 		Msg1 <As far as I know, %name3% was in some kind of trouble, so \SPR %3% decided to get out of town. I don't know where \SPR %3% went.>
 		Msg2 <%name1% told you that %name3% has left \SCENE &EpisodeScene .>
@@ -73,7 +75,7 @@ Plot
 
 Plot
 	name <Target is Not Here>
-	requires <#L (+Tgt|+Tlt)>
+	requires <#L +Tgt>
 	desc <The target has moved on to another city.>
 
 	% E1 is the informant
@@ -84,16 +86,16 @@ Plot
 	Element3 <Grab 5>
 	Place3 </>
 
-	start <ifNPCDead %1% &SetCompScene 0 LoseEpisode %2% .next>
-	.next <+Tlt>
+	start <ifNPCDead %1% &SetCompScene 0 LoseEpisode %2% 0 .next>
+	.next <>
 
 	sub
 		Persona 1
 		rumor <%name1% spoke with %name3% a short time ago.>
 		*greeting <*LookingForNPC %3% GoSuccess GoFail>
-		GoSuccess <NewChat Say 1 StoryNote 2   &SetCompScene 0  LoseEpisode %2% .next>
-		GoFail <NewChat Say 3 StoryNote 2   &SetCompScene 0  LoseEpisode %2% .next>
-		.next <+Tlt>
+		GoSuccess <NewChat Say 1 StoryNote 2   LoseEpisode %2% 0 .next>
+		GoFail <NewChat Say 3 StoryNote 2   LoseEpisode %2% 0 .next>
+		.next <>
 		Msg1 <Oh, %name3% isn't here anymore; \SPR %3% had to leave town on some kind of bvsiness. I don't know where \SPR %3% went.>
 		Msg2 <%name1% told you that %name3% has left \SCENE &EpisodeScene .>
 		Msg3 <If you're looking for %name3% then you're out of luck- \SPR %3% 's gone somewhere on business. Don't expect me to tell you where, because I don't even know.>
@@ -113,12 +115,12 @@ Plot
 	Place2 <1 (Citizens) pass>
 	Element3 <Scene !Far -7 !Comrade -7 Town>
 
-	start <ifNPCDead %1% LoseEpisode %3% .next>
+	start <ifNPCDead %1% LoseEpisode %3% 0 .next>
 	.next <+T-- +F-->
 
 	sub
 		Persona 2
-		greeting <NewChat Say %id%01 SMemo 0 History %id%02 LoseEpisode %3% .next>
+		greeting <NewChat Say %id%01 SMemo 0 History %id%02 LoseEpisode %3% 0 .next>
 		.next <+T-- +F-->
 		Msg%id%01 <I'm afraid that your services are no longer required, \PC ... besides, things seem to be settling down in \SCENE &EpisodeScene now.>
 		Msg%id%02 <%name1% said that you were no longer needed in \SCENE &EpisodeScene .>
@@ -135,7 +137,7 @@ Plot
 	% Element1 is the new city
 	Element1 <Scene !Far -7 !Ally -7 Town>
 
-	update <SMemo 0 LoseEpisode %1% .next>
+	update <SMemo 0 LoseEpisode %1% 0 .next>
 	.next <+T-- +F-->
 
 
@@ -151,15 +153,15 @@ Plot
 	Element2 <Scene !Far -7 !Comrade -7 Town>
 	Element3 <Grab 5>
 
-	start <ifNPCDead %1% LoseEpisode %2% .next>
+	start <ifNPCDead %1% LoseEpisode %2% 0 .next>
 	.next <>
 
 	sub
 		Persona 1
 		rumor <%name1% might know where %name3% went.>
 		*greeting <*LookingForNPC %3% GoSuccess GoFail>
-		GoSuccess <NewChat Say 1 StoryNote 2   LoseEpisode %2% .next>
-		GoFail <NewChat Say 3 StoryNote 2   LoseEpisode %2% .next>
+		GoSuccess <NewChat Say 1 StoryNote 2   LoseEpisode %2% 0 .next>
+		GoFail <NewChat Say 3 StoryNote 2   LoseEpisode %2% 0 .next>
 		.next <>
 		Msg1 <Yeah, %name3% was in here a while back to get \PPR %3% mecha repaired. As far as I know \SPR %3% 's left town now, but I don't know where \SPR %3% went.>
 		Msg2 <%name1% told you that %name3% has left town.>

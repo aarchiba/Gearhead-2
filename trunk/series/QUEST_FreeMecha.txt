@@ -8,7 +8,9 @@
 %% If there's an NPC associated with this quest, he should be placed in the
 %% Cavalier's Club, so the PC can find him easily.
 %%
-%% The free mecha should be generated using renown 15.
+%% The free mecha should be generated using renown 15. In the case of having
+%% to recover the mecha from a dungeon, a custom mecha with 2 modification
+%% points may be given.
 
 Content
 	name <Warship Wreckage>
@@ -41,7 +43,7 @@ Content
 
 		Elevator
 		name <Mecha Bay>
-		use <if= QuestStatus %qid% 0 else GoBeenBefore ifYesNo 1 2 3 SetQuestStatus %qid% -1 RandomMecha .mektype 15>
+		use <if= QuestStatus %qid% 0 else GoBeenBefore ifYesNo 1 2 3 SetQuestStatus %qid% -1 MechaPrize .mektype 15 2 2>
 		.mektype <SOLAR AEGIS SILKN ROCKE CRIHN>
 		GoBeenBefore <Print 4>
 		Msg1 <You find a mecha bay. It appears to be operational.>
@@ -125,7 +127,7 @@ Content
 
 		Elevator
 		name <Mecha Bay>
-		use <if= QuestStatus %qid% 0 else GoBeenBefore ifYesNo 1 2 3 SetQuestStatus %qid% -1 RandomMecha .mektype 15>
+		use <if= QuestStatus %qid% 0 else GoBeenBefore ifYesNo 1 2 3 SetQuestStatus %qid% -1 MechaPrize .mektype 15 4 2>
 		.mektype <GENERAL MUGLE>
 		GoBeenBefore <Print 4>
 		Msg1 <You find an old mecha left behind when the mine closed.>

@@ -139,7 +139,7 @@
 
 	Persona
 	requires <*ChallengeArenaWin>
-	START <NewChat Say %id%01   RandomMecha .%id%_MekFac ArenaThreat %2%   Goto %3%>
+	START <NewChat Say %id%01   CustomMecha .%id%_MekFac ArenaThreat %2%   Goto %3%>
 	.%id%_MekFac <PDASS>
 	Msg%id%01 <In recognition of your victory, I'm glad to present you with a brand new mecha. Come back tomorrow for another match.>
 	Msg%id%01_20 <You have defeated \PERSONA %1% . As a reward, you've earned a brand new Duelist League mecha. There will be another match tomorrow.>

@@ -105,13 +105,16 @@ Each episode is made up of several components.
 GLOBAL DESCRIPTORS
 	These describe the arc of the plot between episodes
 	+P??	Propp State
-	+B??	Background State
-	+G??	PC's Goal
-
+	+C??	Personal Story
 LOCAL DESCRIPTORS
 	These describe the arc of the plot within an episode
 	+T??	PC's Task
 	+F??	Task Flavor
+BACKGROUND DESCRIPTORS
+	These describe the PC's background and motivation
+	+B??	Background State
+	+G??	PC's Goal
+
 
 +P??	Propp State
 	Describes the overall course of the story
@@ -176,12 +179,11 @@ LOCAL DESCRIPTORS
 	+Glo	Love
 
 +T??	Task
-	Describes the PC's current short-term mission.
+	Describes the PC's current short-term goal.
 	+T--	No task.
 	+T01	Introduction. The first task given.
 	+Tgt	Goto target for conversation
 	+Tht	The PC goes on a manhunt for target, who is actively avoiding him
-	+Tlt	Look for target to speak with him; the target is not actively avoiding the PC
 	+Tsh	PC will attend a party/conference
 	+Tpt	PC will protect the target
 	+Ten	Go to Encounter -> often to fight...

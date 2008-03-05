@@ -14,7 +14,7 @@
 %% prize is all that the PC can get.
 %%
 %%  PARAM 1 = The NPC to give the reward.
-%%            This NPC will belong to the faction rewarding the PC.
+%%            This NPC must belong to the faction rewarding the PC.
 
 Content
 	name <Generic Reward>
@@ -26,11 +26,13 @@ Content
 	sub
 		Persona 1
 		% V%id%01 = Mecha rating calculator
-		greeting <XPV 100 EndPlot ifG 9 PCFacLevel else .%id%_GoMinorPrize ifG PCRenown * 10 PCFacLevel else .%id%_GoMinorPrize Goto .%id%_GoBigPrize>
+		greeting <PCRewardLevel+ 1 XPV 100 EndPlot ifG 9 PCRewardLevel else .%id%_GoMinorPrize ifG PCRenown * 10 PCRewardLevel else .%id%_GoMinorPrize Goto .%id%_GoBigPrize>
 		*.%id%_GoMinorPrize <*PROMOTION_Minor_Reward>
-		.%id%_GoBigPrize <NewChat Say %id%01   V= %id%01 * 11 PCFacLevel V+ %id%01 12   RandomMecha .%id%_fac V%id%01>
+		% Generate a mecha of the requested renown level with a random theme and
+		% rewardlevel * 2 modification points.
+		.%id%_GoBigPrize <NewChat Say %id%01   V= %id%01 * 11 PCRewardLevel V+ %id%01 12   MechaPrize .%id%_fac V%id%01 RandomTheme * 2 PCRewardLevel>
 		.%id%_fac <GENERAL \FACTION_DESIG ChatNPCFac>
-		Msg%id%01 <You have been promoted to the rank of \Rank . Here is a new mecha in recognition of your service to \FACTION ChatNPCFac .>
+		Msg%id%01 <You have been promoted to the rank of \FacRank ChatNPCFac PCRewardLevel . Here is a new mecha in recognition of your service to \FACTION ChatNPCFac .>
 		Msg%id%01_1 <>
 		CMsg%id%01_1 <ifNPCSociable Accept>
 		Msg%id%01_2 <>

@@ -498,8 +498,8 @@
 	result%id%01 <StoryNote %id%04 Goto %1%>
 	result%id%02 <NewChat Say %id%02 AddChat %id%03 AddChat %id%04>
 	result%id%03 <StoryNote %id%04 Goto %1%>
-	result%id%04 <NewChat Say %id%03 mechaprize .%id%_mek  StoryNote %id%04 Goto GoR1Exit>
-	.%id%_mek <BuruBuru.txt>
+	result%id%04 <NewChat Say %id%03 randommecha .%id%_mek StoryDL  StoryNote %id%04 Goto GoR1Exit>
+	.%id%_mek <GENERAL>
 	Msg%id%01 <Our sensors have picked up a group of unknown mecha operating just outside the city. I need you to search \SCENE %3% and, if they prove hostile, eliminate them.>
 	Msg%id%01_1 <You may have heard rumors that a group of unknown mecha were spotted near the city. Well, those aren't just rumors... I need for you to search \SCENE %3% and see if you can find them. Should they prove to be hostile, it's up to you to stop them.>
 	CMsg%id%01_1 <ifNPCSociable Accept>
@@ -518,7 +518,7 @@
 	CMsg%id%02_10 <ifG StoryDL PCRenown Accept>
 	Msg%id%02_20 <We won't know until somebody investigates in person. I'm not entirely sure you're ready for a mission of this type, but it's a great chance for you to prove yourself to \NARRATIVE 3 .>
 	CMsg%id%02_20 <ifG PCRenown StoryDL Accept>
-	Msg%id%03 <That won't do at all. Here, take this Buru-Buru. It's a bit worn but should serve your purposes.>
+	Msg%id%03 <That won't do at all. Here, take this mecha. It's a bit worn but should serve your purposes.>
 	Msg%id%04 <\CHATNPC sent you to investigate unidentified mecha in \SCENE %3% .>
 	Prompt%id%01 <I'll get to work right away.>
 	Prompt%id%01_1 <I'm on the job.>
