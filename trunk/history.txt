@@ -1,6 +1,9 @@
 0.500	March 5 2008
 - Faction promotion rewards now work
+- Episode breaks should now be working
 - +Tlt task changed to special case of +Tgt
+- Added *:FreeMecha quest to the Cavalier's Club
+- *DUNGEON_X content split into DECOR, THREAT, and REWARD
 - MechaPrize updated; may now give customized mecha (arenascript.pp)
 - StartStory, StartPlot now work correctly (arenascript.pp)
 - Fixed NPC spontaneous crash in space bug (aibrain.pp)
@@ -10,8 +13,6 @@
 - Dungeon challenge level doesn't rise so quickly (navigate.pp)
 - Fixed a number of serious bugs with RandomLoot (gearparser.pp)
 - Fixed XNPCDesc "in use" bug (interact.pp)
-- Added *:FreeMecha quest to the Cavalier's Club
-- *DUNGEON_X content split into DECOR, THREAT, and REWARD
 - BV doesn't cause higher base energy cost for weapons (gearutil.pp)
 - SF:0 beam weapons have higher energy cost (gearutil.pp)
 - Mecha engines have lower energy capacity (gearutil.pp)

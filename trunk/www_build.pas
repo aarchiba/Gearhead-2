@@ -32,7 +32,7 @@ var
 	MechaDesc,MD: SAttPtr;
 	PageID: Integer;
 	F: Text;
-	msg,prev_id,next_id: String;
+	msg,prev_id,next_id,mecha_name: String;
 	GHVersion: String;
 
 begin
