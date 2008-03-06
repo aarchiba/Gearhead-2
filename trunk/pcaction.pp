@@ -395,7 +395,7 @@ begin
 		if ( MT^.G = GG_MetaTerrain ) and ( MT^.Stat[ STAT_MetaVisibility ] > 0 ) and ( Range( MT , P.X , P.Y ) <= 1 ) then begin
 			{ Roll the PC's INVESTIGATION skill. If it beats }
 			{ the terrain's concealment score, reveal it. }
-			if SkillRoll( Mek , NAS_Investigation , MT^.Stat[ STAT_MetaVisibility ] , 0 , False ) > MT^.Stat[ STAT_MetaVisibility ] then begin
+			if SkillRoll( Mek , NAS_Investigation , MT^.Stat[ STAT_MetaVisibility ] , 0 , False , True ) > MT^.Stat[ STAT_MetaVisibility ] then begin
 				MT^.Stat[ STAT_MetaVisibility ] := 0;
 				T := 'REVEAL';
 				TriggerGearScript( GB , MT , T );
@@ -929,7 +929,7 @@ begin
 		if SkTarget < 1 then begin
 			DialogMsg( ReplaceHash( MsgString( 'DOMINATE_Fail' ) , GearName( Target ) ) );
 		end else begin
-			SkRoll := SkillRoll( PC , 40 , SkTarget , 0 , False );
+			SkRoll := SkillRoll( PC , 40 , SkTarget , 0 , False , True );
 
 			if ( SkRoll > SkTarget ) and ( LancematesPresent( GB ) < PartyLancemateSlots( PC ) ) then begin
 				DialogMsg( ReplaceHash( MsgString( 'DOMINATE_OK' ) , GearName( Target ) ) );
@@ -1042,7 +1042,7 @@ begin
 	end else begin
 		{ Time to start the actual stealing of stuff. }
 		SkTarget := Target^.Stat[ STAT_Perception ] + 5;
-		SkRoll := SkillRoll( PC , NAS_PickPockets , Target^.Stat[ STAT_Perception ] + 5 , 0 , True );
+		SkRoll := SkillRoll( PC , NAS_PickPockets , Target^.Stat[ STAT_Perception ] + 5 , 0 , True , True );
 
 		if SkRoll > SkTarget then begin
 			{ The PC will now steal something. }

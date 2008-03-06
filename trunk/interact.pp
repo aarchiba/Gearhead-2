@@ -672,12 +672,12 @@ begin
 	SkTarget := 5 + Abs( NAttValue( PC^.NA , NAG_ReactionScore , Persona ) ) div 4;
 
 	{ Start by making a social interaction roll for the PC. }
-	SkRoll := SkillRoll( PC , NAS_Conversation , SkTarget , 0 , False );
+	SkRoll := SkillRoll( PC , NAS_Conversation , SkTarget , 0 , False , False );
 
 	{ Apply flirtation bonus to the skill roll, if appropriate. }
 	{ The bonus only applies if the PC has ranks in flirtation or is a Jack of all Trades. }
 	if IsSexy( PC , NPC ) and HasSkill( PC , NAS_Flirtation ) then begin
-		SkRoll := SkRoll + SkillRoll( PC , NAS_Flirtation , SkTarget , 0 , False );
+		SkRoll := SkRoll + SkillRoll( PC , NAS_Flirtation , SkTarget , 0 , False , False );
 	end;
 
 	{ Initialize TRAIT to random. These things will be needed later. }
@@ -736,6 +736,14 @@ begin
 		MOS := 1 + ( SkRoll - SkTarget ) div Chat_MOS_Measure;
 		if Persona > 0 then begin
 			if NAttValue( PC^.NA , NAG_ReactionScore , Persona ) < MaxReactBonus then AddNAtt( PC^.NA , NAG_ReactionScore , Persona , MOS );
+
+			{ If we've passed a certain threshold, the PC can gain some experience. }
+			if ReactionScore( GB^.Scene , PC , NPC ) > NAttValue( NPC^.NA , NAG_Personal , NAS_InteractXPStep ) then begin
+				DoleExperience( PC , 1 );
+				DoleSkillExperience( PC , NAS_Conversation , 1 );
+				if HasSkill( PC , NAS_Flirtation ) then DoleSkillExperience( PC , NAS_Flirtation , 2 );
+				AddNAtt( NPC^.NA , NAG_Personal , NAS_InteractXPStep , 5 );
+			end;
 		end;
 
 	end else if SkRoll < ( SkTarget div 2 ) then begin

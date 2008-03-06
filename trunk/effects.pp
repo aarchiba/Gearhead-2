@@ -716,7 +716,7 @@ begin
 		{ Make the skill roll + Shield Bonus }
 		SkillComment( GearName( TMaster ) + ' to block with ' + GearName( DefGear ) + ' [' + SgnStr( DefGear^.Stat[ STAT_ShieldBonus ] ) + ']' );
 
-		DefRoll := SkillRoll( TMaster , DefSkill , SkRoll , DefGear^.Stat[ STAT_ShieldBonus ] , False );
+		DefRoll := SkillRoll( TMaster , DefSkill , SkRoll , DefGear^.Stat[ STAT_ShieldBonus ] , False , True );
 
 		{ If the parry was successful, there will be some after-effects. }
 		if DefRoll >= SkRoll then begin
@@ -783,7 +783,7 @@ begin
 		DefSkill := AttackSkillNeeded( DefGear );
 
 		SkillComment( GearName( TMaster ) + ' to parry with ' + GearName( DefGear ) + ' [' + SgnStr( DefGear^.Stat[ STAT_Accuracy ] ) + ']' );
-		DefRoll := SkillRoll( TMaster , DefSkill , SkRoll , Parry_Bonus + DefGear^.Stat[ STAT_Accuracy ] , False );
+		DefRoll := SkillRoll( TMaster , DefSkill , SkRoll , Parry_Bonus + DefGear^.Stat[ STAT_Accuracy ] , False , True );
 
 		{ Give some skill-specific experience points. }
 		DoleSkillExperience( TMaster , DefSkill , XPA_SK_Basic );
@@ -853,7 +853,7 @@ begin
 		DefSkill := AttackSkillNeeded( DefGear );
 
 		SkillComment( GearName( TMaster ) + ' to intercept with ' + GearName( DefGear ) + ' [' + SgnStr( DefGear^.Stat[ STAT_Accuracy ] + DefGear^.Stat[ STAT_BurstValue ] ) + ']' );
-		DefRoll := SkillRoll( TMaster , DefSkill, SkRoll , DefGear^.V + DefGear^.Stat[ STAT_Accuracy ] + DefGear^.Stat[ STAT_BurstValue ] , False );
+		DefRoll := SkillRoll( TMaster , DefSkill, SkRoll , DefGear^.V + DefGear^.Stat[ STAT_Accuracy ] + DefGear^.Stat[ STAT_BurstValue ] , False , True );
 
 		{ Give some skill-specific experience points. }
 		DoleSkillExperience( TMaster , DefSkill , XPA_SK_Basic );
@@ -884,7 +884,7 @@ begin
 	if DefGear <> Nil then begin
 		{ Make an attack roll to block. }
 		SkillComment( GearName( TMaster ) + ' to ECM with ' + GearName( DefGear ) + ' [' + SgnStr( DefGear^.V ) + ']' );
-		DefRoll := SkillRoll( TMaster , 17 , SkRoll , DefGear^.V - 5 , False );
+		DefRoll := SkillRoll( TMaster , 17 , SkRoll , DefGear^.V - 5 , False , True );
 
 		{ Give some skill-specific experience points. }
 		DoleSkillExperience( TMaster , 17 , XPA_SK_Basic );
@@ -912,7 +912,7 @@ begin
 	{ Return the resultant defense roll. }
 	DoleSkillExperience( TMaster , RSkill , XPA_SK_Basic );
 
-	AttemptResist := SkillRoll( TMaster , RSkill , SkRoll , 0 , False );
+	AttemptResist := SkillRoll( TMaster , RSkill , SkRoll , 0 , False , True );
 end;
 
 Function AttemptDodge( TMaster: GearPtr; SkRoll: Integer ): Integer;
@@ -938,7 +938,7 @@ begin
 		DodgeSkill := 10;
 	end;
 	DoleSkillExperience( TMaster , DodgeSkill , XPA_SK_Basic );
-	AttemptDodge := SkillRoll( TMaster , DodgeSkill , SkRoll , SkMod , False );
+	AttemptDodge := SkillRoll( TMaster , DodgeSkill , SkRoll , SkMod , False , True );
 end;
 
 Function AttemptAcrobatics( TMaster: GearPtr; SkRoll: Integer ): Integer;
@@ -973,7 +973,7 @@ begin
 	{ If it's possible, do the acrobatics attempt. }
 	if CanUseAcrobatics then begin
 		{ Make an attack roll to block. }
-		DefRoll := SkillRoll( TMaster , NAS_Acrobatics , SkRoll , SkMod , False );
+		DefRoll := SkillRoll( TMaster , NAS_Acrobatics , SkRoll , SkMod , False , True );
 	end;
 
 	{ Return the resultant defense roll. }
@@ -1071,7 +1071,7 @@ begin
 	{ Can only do this if it's a character being attacked, the }
 	{ talent is know, the character isn't tired... }
 	if AStringHasBString( FX , FX_CanBlock ) and ( DR.HiRoll < SkRoll ) and ( TMaster^.G = GG_CHaracter ) and HasTalent( TMaster , NAS_HapKiDo ) and ( CurrentStamina( TMaster ) > 0 ) then begin
-		DefRoll := SkillRoll( TMaster , 9 , SkRoll , 0 , False );
+		DefRoll := SkillRoll( TMaster , 9 , SkRoll , 0 , False , True );
 		AddStaminaDown( TMaster , 1 );
 		if DefRoll > DR.HiRoll then begin
 			DR.HiRoll := DefRoll;
@@ -1084,7 +1084,7 @@ begin
 	{ talent is know, and they're moving at full speed, and the }
 	{ pilot has stamina points left... }
 	if AStringHasBString( FX , FX_CanDodge ) and ( DR.HiRoll < SkRoll ) and ( TMaster^.G = GG_Mecha ) and HasTalent( TMaster , NAS_StuntDriving ) and ( NAttValue( TMaster^.NA , NAG_Action , NAS_MoveAction ) = NAV_FullSpeed ) and ( CurrentStamina( TMaster ) > 0 ) then begin
-		DefRoll := SkillRoll( TMaster , 5 , SkRoll , 0 , False );
+		DefRoll := SkillRoll( TMaster , 5 , SkRoll , 0 , False , True );
 		AddStaminaDown( TMaster , 1 );
 		if DefRoll > DR.HiRoll then begin
 			DR.HiRoll := DefRoll;
@@ -1397,7 +1397,7 @@ begin
 
 	{ Make the skill roll. }
 	if ER.Originator <> Nil then begin
-		AtRoll := SkillRoll( ER.Originator , AtSkill , BasicDefenseValue( TMaster ) + 2 , CalcTotalModifiers( gb , ER.Weapon , Target , AtOp , AtDesc ) + ER.FXMod , False );
+		AtRoll := SkillRoll( ER.Originator , AtSkill , BasicDefenseValue( TMaster ) + 2 , CalcTotalModifiers( gb , ER.Weapon , Target , AtOp , AtDesc ) + ER.FXMod , False , True );
 		SkillComment( CTM_Modifiers );
 	end else begin
 		if AtSkill < 5 then AtSkill := 5;
@@ -1514,7 +1514,7 @@ begin
 			{ If the high defense roll was lower than the Critical }
 			{ Hit Minimum Target number, raise it. }
 			if CritTar < CritHitMinTar then CritTar := CritHitMinTar;
-			CritHit := SkillRoll( ER.Originator , CritSkill , CritTar , 0 , False );
+			CritHit := SkillRoll( ER.Originator , CritSkill , CritTar , 0 , False , True );
 
 			if CritHit > CritTar then begin
 				{ Note that the MOSMeasure is doubled for Critical Hit skill use, since this is kinda like bonus MOS. }
@@ -1627,7 +1627,7 @@ begin
 
 		{ Make the skill roll. }
 		if ( AtSkill <> 0 ) and ( ER.Originator <> Nil ) then begin
-			AtRoll := SkillRoll( ER.Originator , AtSkill , 0 , ER.FXMod , False );
+			AtRoll := SkillRoll( ER.Originator , AtSkill , 0 , ER.FXMod , False , True );
 		end else begin
 			if AtSkill < 5 then AtSkill := 5;
 			AtRoll := RollStep( AtSkill );
@@ -1695,7 +1695,7 @@ begin
 	if GearActive( Target ) and ( Target^.G = GG_Mecha ) then begin
 		{ Make the skill roll. }
 		if ( AtSkill <> 0 ) and ( ER.Originator <> Nil ) then begin
-			AtRoll := SkillRoll( ER.Originator , AtSkill , 0 , ER.FXMod , False );
+			AtRoll := SkillRoll( ER.Originator , AtSkill , 0 , ER.FXMod , False , True );
 		end else begin
 			if AtSkill < 5 then AtSkill := 5;
 			AtRoll := RollStep( AtSkill );

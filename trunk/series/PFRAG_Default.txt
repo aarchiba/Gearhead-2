@@ -1013,16 +1013,49 @@ Prompt%id%03_2 <Probably fight somebody. No idea who yet.>
 	Prompt%id%03_1 <Fine. What is it you want?>
 
 % TYPE: *AreYouHereAboutJob
-%		&Mecha	it's a mecha mission
-%		&Chara	it's a personal scale combat mission
+%		&Mecha		it's a mecha mission
+%		&Chara		it's a personal scale combat mission
 %		&Investigation 	it's an investigative mission
+%		&Recruit 	it's some kind of recruitment drive
 %	The NPC has a job to be done, has supposedly announced it via news or email,
 %	and will now greet the PC.
 %   PARAM1: Exit script label
 
 	Persona
+	requires <*AreYouHereAboutJob &Recruit>
+	Start <NewChat Say %id%01 AddChat %id%01>
+	result%id%01 <Goto %1%>
+	Msg%id%01 <You must be here for the position we're offering, right?>
+	Msg%id%01_1 <>
+	CMsg%id%01_1 <ifNPCSociable Accept>
+	Msg%id%01_2 <I guess you're here about that position, right?>
+	CMsg%id%01_2 <ifNPCShy Accept>
+	Msg%id%01_3 <>
+	CMsg%id%01_3 <ifNPCEasygoing Accept>
+	Msg%id%01_4 <>
+	CMsg%id%01_4 <ifNPCPassionate Accept>
+	Msg%id%01_5 <>
+	CMsg%id%01_5 <ifNPCCheerful Accept>
+	Msg%id%01_6 <>
+	CMsg%id%01_6 <ifNPCMelancholy Accept>
+	Prompt%id%01 <That's right.>
+	Prompt%id%01_1 <You're absolutely right.>
+	CPrompt%id%01_1 <ifPCSociable Accept>
+	Prompt%id%01_2 <Maybe.>
+	CPrompt%id%01_2 <ifPCShy Accept>
+	Prompt%id%01_3 <I guess so.>
+	CPrompt%id%01_3 <ifPCEasygoing Accept>
+	Prompt%id%01_4 <That depends on the details.>
+	CPrompt%id%01_4 <ifPCPassionate Accept>
+	Prompt%id%01_5 <It's your lucky day.>
+	CPrompt%id%01_5 <ifPCCheerful Accept>
+	Prompt%id%01_6 <I'll let you know after I hear the details.>
+	CPrompt%id%01_6 <ifPCMelancholy Accept>
+
+	Persona
 	requires <*AreYouHereAboutJob &Chara>
 	Start <NewChat Say %id%01 AddChat %id%01>
+	result%id%01 <Goto %1%>
 	Msg%id%01 <I have a job available for someone with good personal combat skills.>
 	Msg%id%01_1 <I guess you heard that I'm looking for a cavalier. I have a mission available, one that is going to require someone with good personal combat skills.>
 	CMsg%id%01_1 <ifNPCSociable Accept>
@@ -1190,15 +1223,17 @@ Prompt%id%03_2 <Probably fight somebody. No idea who yet.>
 %  PARAM1: Faction ID
 	Persona
 	requires <*FACTION_JOIN_ACCEPT>
-	START <NewChat Say %id%01 RandomMecha .%id%_mecha PCRenown XPV 200 CashPrize 150000 SetPCFac %1%>
+	START <NewChat Say %id%01 RandomMecha .%id%_mecha PCRenown XPV 200 CashPrize 150000 SetPCFac %1% History %id%02>
 	.%id%_mecha <GENERAL \FACTION_DESIG %1%>
 	Msg%id%01 <Great! To start with, you'll recieve a basic mecha and an equipment allowance. Welcome to \FACTION %1% .>
+	Msg%id%02 <You joined \FACTION %1% .>
 
 	Persona
 	requires <*FACTION_JOIN_ACCEPT SILKN>
-	START <NewChat Say %id%01 randommecha .%id%_mecha PCRenown XPV 200 CashPrize 150000 SetPCFac %1%>
+	START <NewChat Say %id%01 randommecha .%id%_mecha PCRenown XPV 200 CashPrize 150000 SetPCFac %1% History %id%02>
 	.%id%_mecha <GENERAL SILKN>
 	Msg%id%01 <Welcome to the force. You'll need a mecha, of course... Most of our recruits learn how to fly in a Trailblazer. Now get out there and see if there are any missions waiting.>
+	Msg%id%02 <You joined \FACTION %1% .>
 
 
 % TYPE: *FACTION_JOIN_OFFER

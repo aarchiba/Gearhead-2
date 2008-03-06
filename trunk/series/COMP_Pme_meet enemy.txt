@@ -2,6 +2,59 @@
 %%	+Pme	PC meets an enemy pilot under somewhat peaceful circumstances
 
 Plot
+	name <Recruiting Drive>
+	Size 1
+	desc <An enemy of the enemy will try to recruit the PC.>
+	requires <#A +T-- +Pme E:++ P:-->
+
+	% E1 is an enemy of the enemy character in the episode city
+	% E2 is the faction that E1 belongs to
+	% E3 is a scene for a meeting
+	% E4 is the enemy character's faction
+	% E5 is a second character to approach for a mission
+	% E6 is a scene for the next mission
+	Element1 <Character !Near -7 !Enemy -1 -Enemy !Okay -7>
+	Place1 <3 (Citizens) pass>
+	Element2 <Faction !Comrade 1>
+	Element3 <Scene Building Public !Near -7 !Okay 1>
+	Element4 <Faction !Comrade -1>
+	Element5 <Character !Near 3 !Comrade 2 Neverfail>
+	Place5 </>
+	Element6 <Scene Building Public !Near -7 !Okay 1>
+
+	start <ifNPCDead %1% LoseComp 0 .loss>
+	.loss <+T-->
+
+	sub
+		Persona 1
+		rumor <%name1% is recruiting people to oppose %name4%.>
+		*greeting <*AreYouHereAboutJob&Recruit GoExplain>
+		GoExplain <NewChat Say 1 AddChat 1 AddChat 2 AddChat 3 AddChat 4>
+		GoEnd <SMemo 4  &SetTargetNPC %5% WinComp %6% .next>
+		.next <+Tgt +Fmi>
+		result1 <NewChat Say 2 History 3 CashPrize Reward StoryDL 200 XPV 100 SetPCFac %2% &SetAllyFac %2% Goto GoEnd>
+		result2 <NewChat Say 5 History 6 Goto GoEnd>
+		result3 <NewChat Say 7 History 6 Goto GoEnd>
+		result4 <NewChat Say 7 &SetAllyFac PCFac FacXP+ PCFac 1 History 6 Goto GoEnd>
+		Msg1 <We at %name2% are looking for some new recruits to oppose the recent operations of %name4%. Are you willing to take a stand and join us?>
+		Msg2 <Great! It's important that %name4% be stopped, before they gain any more power. Here's a signing bonus. You should head over to %name6% as soon as you can; %name5% needs someone for a mission.>
+		Msg3 <You joined %name2% to fight %name4%.>
+		Msg4 <%name1% said that %name5% in %name6% might have a mission for you.>
+		Msg5_1 <That's too bad. Still, if you're looking for work, %name5% in %name6% needs a pilot for an upcoming mission. Tell \OPR %5% that I sent you and you'll be accepted for sure.>
+		CMsg5_1 <ifG React 15 Accept>
+		Msg5_2 <No big loss. Still, if you're looking for work, we need a pilot for an upcoming mission. Go talk to %name5% at %name6% if you're interested.>
+		CMsg5_2 <ifG 16 React Accept>
+		Msg6 <You refused an offer by %name1% to join %name2%.>
+		Msg7 <We won't refuse any help, not with %name4% continuing to gain power. Go see %name5% at %name6%; I believe \SPR %5% has a mission you could do.>
+		Prompt1 <I am.>
+		Prompt2 <No, definitely not.>
+		Prompt3 <I'll help, but I'm not joining anything.>
+		CPrompt3 <if= PCFac 0 Accept>
+		Prompt4 <I'll help, but I've already got a job.>
+		CPrompt4 <if# PCFac 0 Accept>
+	end
+
+Plot
 	name <Loyalty Check>
 	size 2
 	desc <PC questioned by authorities; revealed there have been attacks lately.>

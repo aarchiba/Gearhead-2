@@ -1013,7 +1013,7 @@ begin
 	end;
 	if WreckTarget < 5 then WreckTarget := 5;
 
-	SkRoll := SkillRoll( TruePC , NAS_MechaEngineering , WreckTarget , 0 , True );
+	SkRoll := SkillRoll( TruePC , NAS_MechaEngineering , WreckTarget , 0 , True , True );
 
 	if GB <> Nil then begin
 		AddMentalDown( TruePC , 1 );
@@ -1215,7 +1215,7 @@ begin
 
 	if GB <> Nil then WaitAMinute( GB , TruePC , ReactionTime( TruePC ) * 5 );
 
-	SkRoll := SkillRoll( TruePC , NAS_MechaEngineering , WreckTarget , 0 , True );
+	SkRoll := SkillRoll( TruePC , NAS_MechaEngineering , WreckTarget , 0 , True , True );
 	if SkRoll >= WreckTarget then begin
 		DialogMsg( ReplaceHash( MsgString( 'INSTALL_OK' ) , GearName( Item ) ) );
 		{ Install the item. }

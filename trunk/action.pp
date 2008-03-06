@@ -54,7 +54,7 @@ const
 var
 	Destroyed_Parts_List: SAttPtr;
 
-Function SkillRoll( PC: GearPtr; Skill,SkTar,SkMod: Integer; CasualUse: Boolean ): Integer;
+Function SkillRoll( PC: GearPtr; Skill,SkTar,SkMod: Integer; CasualUse,GainXP: Boolean ): Integer;
 Function CheckLOS( GB: GameBoardPtr; Observer,Target: GearPtr ): Boolean;
 Procedure VisionCheck( GB: GameBoardPtr; Mek: GearPtr );
 
@@ -97,7 +97,7 @@ const
 
 
 
-Function SkillRoll( PC: GearPtr; Skill,SkTar,SkMod: Integer; CasualUse: Boolean ): Integer;
+Function SkillRoll( PC: GearPtr; Skill,SkTar,SkMod: Integer; CasualUse,GainXP: Boolean ): Integer;
 	{ Attempt to make a skill roll. }
 	{ Skill = The skill to use. }
 	{ SkTar = The target number to try and beat. }
@@ -107,8 +107,8 @@ Function SkillRoll( PC: GearPtr; Skill,SkTar,SkMod: Integer; CasualUse: Boolean 
 const
 	Basic_Skill_Award: Array [1..NumSkill] of Byte = (
 		5,5,5,5,7,	4,4,4,5,5,
-		1,2,2,10,2,	2,2,2,1,2,
-		2,2,2,2,2,	2,2,7,7,2,
+		1,2,2,10,2,	2,2,2,10,2,
+		2,2,2,2,1,	2,10,7,7,2,
 		2,7,2,7,2,	5,7,2,2,15,
 		10,7,5
 	);
@@ -172,7 +172,7 @@ begin
 	Pilot := LocatePilot( PC );
 	{ Only give this XP if the PC actually has the skill in question. This is }
 	{ nessecary for game balance reasons. }
-	if ( SkRoll >= SkTar ) and ( SkTar >= ( SkRank div 2 ) ) and ( Pilot <> Nil ) and ( Skill >= 1 ) and ( Skill <= NumSkill ) then begin
+	if GainXP and ( SkRoll >= SkTar ) and ( SkTar >= ( SkRank div 2 ) ) and ( Pilot <> Nil ) and ( Skill >= 1 ) and ( Skill <= NumSkill ) then begin
 		DoleSkillExperience( PC , Skill , Basic_Skill_Award[ Skill ] );
 		if ( SkTar > ( SkRank * 2 div 3 ) ) and ( NAttValue( Pilot^.NA , NAG_Skill , Skill ) > 0 ) then begin
 			DoleSkillExperience( PC , Skill , XPA_SK_Basic );
@@ -230,14 +230,12 @@ begin
 			if not ArcCheck( P1.X , P1.Y , NAttValue( Observer^.NA , NAG_Location , NAS_D ) , P2.X , P2.Y , ARC_F90 ) then begin
 				{ Make the awareness roll. }
 				T := TargetStealth;
-				Roll := SkillRoll( Observer , 11 , T , 0 , False );
+				Roll := SkillRoll( Observer , 11 , T , 0 , False , AreEnemies( GB , Observer , Target ) );
 
-				if SkillRoll( Target , 25 , Roll , 0 , False ) > Roll then begin
+				if SkillRoll( Target , 25 , Roll , 0 , False , AreEnemies( GB , Observer , Target ) ) > Roll then begin
 					it := False;
-					if AreEnemies( GB , Target , Observer ) then DoleSkillExperience( Target , 25 , 1 );
 				end else begin
 					it := True;
-					if AreEnemies( GB , Target , Observer ) then DoleSkillExperience( Observer , 11 , 1 );
 				end;
 
 			end else begin
@@ -252,17 +250,15 @@ begin
 	end else begin
 		{ Make the awareness roll. }
 		T := O + TargetStealth;
-		Roll := SkillRoll( Observer , 11 , T , 0 , False );
+		Roll := SkillRoll( Observer , 11 , T , 0 , False , AreEnemies( GB , Observer , Target ) );
 
 		if Roll > T then begin
 			{ The target might get a STEALTH save now. }
 			if ( NAttValue( Target^.NA , NAG_Action , NAS_MoveAction ) <> NAV_FullSpeed ) and HasSkill( Target , 25 ) then begin
-				if SkillRoll( Target , 25 , Roll , 5 , False ) > Roll then begin
+				if SkillRoll( Target , 25 , Roll , 5 , False , AreEnemies( GB , Observer , Target ) ) > Roll then begin
 					it := False;
-					if AreEnemies( GB , Target , Observer ) then DoleSkillExperience( Target , 25 , 1 );
 				end else begin
 					it := True;
-					if AreEnemies( GB , Target , Observer ) then DoleSkillExperience( Observer , 11 , 1 );
 				end;
 			end else begin
 				it := True;
