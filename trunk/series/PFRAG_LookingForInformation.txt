@@ -97,6 +97,7 @@ Prompt%id%01 <I'm looking for the \ITEM %1% .>
 
 
 % TYPE: *LookingForNPC
+%		&NoFailure	It's not possible to fail the test
 %	The PC is looking for a NPC. In this fragment, he'll be able to interview
 %	the NPC and hopefully learn something.
 %   PARAM1: Identity of NPC

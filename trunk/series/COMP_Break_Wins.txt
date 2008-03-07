@@ -183,7 +183,7 @@ Plot
 		GoSuccess <NewChat Say 1 StoryNote 2   WinEpisode %3% 0 .next>
 		GoFail <NewChat Say 3 StoryNote 2   WinEpisode %3% 0 .next>
 		.next <>
-		Msg1 <I'm afraid that you've just missed \OPR %1% ; \SPR %1% 's just left for %name3%.>
+		Msg1 <I'm afraid that you've missed \OPR %1% ; \SPR %1% 's just left for %name3%.>
 		Msg2 <%name2% told you that %name1% went to %name3%.>
 		Msg3 <Well, you're out of luck. %name1% isn't in \SCENE RootSceneID any more... as far as I know, \SPR %1% 's gone to %name3%.>
 	end

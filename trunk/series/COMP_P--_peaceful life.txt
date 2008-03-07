@@ -3,9 +3,43 @@
 %%  Peaceful Life components
 
 Plot
+	name <Mysterious Seeker>
+	desc <Someone else is also looking for your target.>
+	requires <#A +Tgt (T:ACADE|T:MEDIA) S:-- (F:CORPO|F:CRIME|F:POLIT) (+P--|+Pme)>
+
+	% E1 is a public scene for this component.
+	% E2 is a member of the enemy faction
+	% E3 is the person being sought
+	Element1 <Scene Public !Near -7>
+	Element2 <Character Wangtta !Comrade -2 NeverFail>
+	Place2 <1 (Citizens) Pass>
+	NeverFail2 <Spy>
+	Element3 <Grab 5>
+	Place3 </>
+
+	start <ifNPCDead %2% LoseComp 0 .next>
+	.next <>
+
+	sub
+		Persona 2
+		rumor <%name2% has been asking suspicious questions about %name3%.>
+		greeting <NewChat Say 1 AddChat 1 AddChat 2>
+		GoEnd <StoryNote 4 WinComp 0 .next>
+		.next <+Tpt>
+		result1 <NewChat Say 2 Goto GoEnd>
+		result2 <NewChat Say 3 Goto GoEnd>
+		Msg1 <Hey, you wouldn't happen to know where %name3% is, would you?>
+		Msg2 <You are? Er... well, forget that I asked anything, then. I'm not looking for %name3% myself... and \FACTION &EnemyFac aren't either.>
+		Msg3 <Um... well, it's certainly not because I was sent here by \FACTION &EnemyFac . Definitely not.>
+		Msg4 <You met a shady character who was looking for %name3%.>
+		Prompt1 <I'm looking for \OPR %3% myself.>
+		Prompt2 <Why do you want to find \OPR %3% ?>
+	end
+
+Plot
 	name <Destroyed Spaceship>
 	desc <The PC can rescue someone from pirates, or just loot the wreckage.>
-	requires <+Ten +P-- ~F:CRIHN ~E:CRIHN -P:CRIHN>
+	requires <#A +Ten +P-- ~F:CRIHN ~E:CRIHN -P:CRIHN>
 	Size 5
 
 	% E1 is the encounter for this component
