@@ -59,6 +59,38 @@ Content
 %%   Dungeon threats. Little things to make life more dangerous for hapless adventurers.
 
 Content
+	name <Big Bug>
+	requires <*DUNGEON_THREAT !Ne Condemned>
+	element1 <Prefab>
+	teamdata1 <sd enemy>
+	start <if= V%id%01 0 else %pop% V= %id%01 1 ifAwareness 10 else %pop% Print %id%01 Goto %pop%>
+	msg%id%01 <This place looks dirty.>
+	inv
+		Monster Giant Roach
+		% Less dangerous than usual
+		skill 8 2
+		skill 9 2
+		skill 10 1
+	end
+
+Content
+	name <Roach Motel>
+	requires <*DUNGEON_THREAT !Lo Condemned>
+	element1 <Prefab>
+	teamdata1 <sd enemy>
+	element2 <Prefab>
+	teamdata2 <sd enemy>
+	element3 <Prefab>
+	teamdata3 <sd enemy>
+	start <if= V%id%01 0 else %pop% V= %id%01 1 ifAwareness 10 else %pop% Print %id%01 Goto %pop%>
+	msg%id%01 <This place looks absolutely filthy.>
+	inv
+		Monster Giant Roach
+		Monster Giant Roach
+		Monster Giant Roach
+	end
+
+Content
 	name <Mining Robot>
 	requires <*DUNGEON_THREAT !Ne (mine|cave)>
 	element1 <Prefab>

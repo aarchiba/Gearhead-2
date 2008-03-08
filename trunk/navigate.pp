@@ -1650,6 +1650,39 @@ begin
 	DisposeGear( ScenePrototypeList );
 end;
 
+Procedure VerifySceneExits( LList: GearPtr );
+	{ Check all of the exits you can find. If any of them are negative, this is a bad thing. }
+	{ Fix the problem by pointing them to their parent scene. }
+	Function GetScene( S: GearPtr ): GearPtr;
+		{ Locate the scene that's the most recent ancestor of S. }
+	begin
+		while ( S <> Nil ) and ( S^.G <> GG_Scene ) do S := S^.Parent;
+		GetScene := S;
+	end;
+var
+	Scene: GearPtr;
+begin
+	while LList <> Nil do begin
+		if ( LList^.G = GG_MetaTerrain ) and ( LList^.Stat[ STAT_Destination ] < 0 ) then begin
+			{ This metaterrain is in violation. Fix it. }
+			Scene := GetScene( LList );
+			if ( Scene <> Nil ) and ( Scene^.Parent <> Nil ) then begin
+				LList^.Stat[ STAT_Destination ] := Scene^.Parent^.S;
+				if LList^.Stat[ STAT_Destination ] < 1 then begin
+					DialogMsg( 'ERROR: Invalid SceneID for ' + GearName( LList ) + '.' );
+					LList^.Stat[ STAT_Destination ] := 0;
+				end;
+			end else begin
+				DialogMsg( 'ERROR: Parent scene not found for ' + GearName( LList ) + '.' );
+			end;
+		end;
+		VerifySceneExits( LList^.SubCom );
+		VerifySceneExits( LList^.InvCom );
+		LList := LList^.Next;
+	end;
+
+end;
+
 Procedure StartCampaign( PC: GearPtr );
 	{ Start a new RPG campaign. }
 	{ - Load the atlas files, then assemble them into an adventure. }
@@ -1778,6 +1811,9 @@ begin
 
 	{ Insert the static adventure quests. }
 	InitializeAdventureContent( Camp^.Source , S );
+
+	{ Verify that the exits have been handled correctly. }
+	VerifySceneExits( Camp^.Source );
 
 	{ Locate the Cavalier Club. This is to be the starting location. }
 	{ Being the first location entered by the PC, the Cavalier Club has }
