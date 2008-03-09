@@ -3,6 +3,10 @@
 %%	+Pla	PC learns of the existence of an artifact
 
 Plot
+	name <Item is Found>
+	desc <>
+
+Plot
 	name <You have to get through me first>
 	desc <A friend of the person you're looking for will duel you.>
 	requires <#A +Pla +Tgt S:-- I:++ (T:ACADE|T:FAITH)>

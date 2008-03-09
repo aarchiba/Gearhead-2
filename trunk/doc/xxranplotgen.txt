@@ -122,21 +122,21 @@ BACKGROUND DESCRIPTORS
 
 	+Pme	PC meets an enemy pilot
 	+Pun	An unknown enemy attacks for unknown reasons
-	+Psh	PC is shanghaied into working for faction
-	+Pla	PC learns of the existence of an artifact
-
-	+Pst	An important item (TI) is stolen by E/EF
-	+Pre	E's plan/alleigance to EF is revealed
-	+Ptr	PC must travel to dangerous area/enemy territory
-	+Pex	EF reveals E is renegade; helps PC oppose him
-	+Pbs	TF revealed to be using PC as pawn
-	+Ptc	PC turns against TF, is branded as traitor
-	+Puw	E/EF develops ultimate weapon
-	+Pfi	PC finds TI
-	+Ptl	PC reaches TI too late
-	+Pre	PC is called back home
-	+Pat	E attacks TF using TI
-	+Pa2	EF attacks TF
+	+Psh	PC is shanghaied into working for faction	Can leave at !Lo
+	+Pla	PC learns of the existence of an artifact	Can leave at !Lo
+	+P	EF attempting to subvert PF
+	+P	PC obtains the target item
+	+P	Enemy obtains the target item
+	+Pew	Enemy working on new weapon program		Can leave at !Md
+	+P	PF working on new weapon program
+	+P	Under open attack by EF
+	+P	Bring the fight to EF
+	+P	EF reveals E is renegade; will help PC oppose him
+	+P	Peace negotiations with enemy
+	+P	PC is branded as a traitor
+	+P	There are traitors within PF
+	+P	You've been a pawn, manipulated so far
+	+P	EF unveils new superweapons
 
 +C??	Character State
 	Describes the current state of the PC's life
@@ -187,10 +187,9 @@ BACKGROUND DESCRIPTORS
 	+Tsh	PC will attend a party/conference
 	+Tpt	PC will protect the target
 	+Ten	Go to Encounter -> often to fight...
-
 	+Tgs	PC will go to a certain scene - often to gather information or something
-	+Tgj	Guard Job - PC must go to scene and protect it from something
 
+	+Tgj	Guard Job - PC must go to scene and protect it from something
 	+Tga	PC will go to the Amore NPC for conversation/date/whatever
 
 +F??	Task Flavor

@@ -291,8 +291,8 @@ Plot
 		greeting <ifNPCOK &ExID else GoChat if= L11 2 else GoIsVictim NewChat Say 1 AddChat 1 AddChat 2>
 		GoIsVictim <NewChat Say 2 AddChat 3 AddChat 4 AddChat 5>
 		GoChat <NewChat SayAnything>
-		GoDriveAway <Print 11 XPV 100 History 12 SMemo 13 &SetEnemyNPC ChatNPCID FreezeNPC ChatNPCID MoveNPC &ExID %4% WinComp 0 .next>
-		GoBigFail <EndChat Say 14 Print 11 History 12 SMemo 13 &SetEnemyNPC ChatNPCID FreezeNPC ChatNPCID MoveNPC &ExID %4% LoseComp 0 .next>
+		GoDriveAway <Print 11 XPV 100 History 12 SMemo 13 &SetTargetNPC &ExID &SetEnemyNPC ChatNPCID FreezeNPC ChatNPCID FreezeNPC &ExID WinComp 0 .next>
+		GoBigFail <EndChat Say 14 Print 11 History 12 SMemo 13 &SetTargetNPC &ExID &SetEnemyNPC ChatNPCID FreezeNPC ChatNPCID FreezeNPC &ExID LoseComp 0 .next>
 		.next <+Tpt +F-->
 		result1 <NewChat Say 3 AddChat 6 AddChat 7 AddChat 8 AddChat 9>
 		result2 <NewChat Say 4>
@@ -350,8 +350,8 @@ Plot
 		greeting <ifNPCOK &ExID else GoChat if= L11 3 else GoIsVictim NewChat Say 1 AddChat 1 AddChat 2>
 		GoIsVictim <NewChat Say 2 AddChat 3 AddChat 4 AddChat 5>
 		GoChat <NewChat SayAnything>
-		GoDriveAway <Print 11 XPV 100 History 12 SMemo 13 &SetEnemyNPC ChatNPCID FreezeNPC ChatNPCID MoveNPC &ExID %4% WinComp 0 .next>
-		GoBigFail <EndChat Say 14 Print 11 History 12 SMemo 13 &SetEnemyNPC ChatNPCID FreezeNPC ChatNPCID MoveNPC &ExID %4% LoseComp 0 .next>
+		GoDriveAway <Print 11 XPV 100 History 12 SMemo 13 &SetTargetNPC &ExID &SetEnemyNPC ChatNPCID FreezeNPC ChatNPCID FreezeNPC &ExID WinComp 0 .next>
+		GoBigFail <EndChat Say 14 Print 11 History 12 SMemo 13 &SetTargetNPC &ExID &SetEnemyNPC ChatNPCID FreezeNPC ChatNPCID FreezeNPC &ExID LoseComp 0 .next>
 		.next <+Tpt +F-->
 		result1 <NewChat Say 3 AddChat 6 AddChat 7 AddChat 8 AddChat 9>
 		result2 <NewChat Say 4>

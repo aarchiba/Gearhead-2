@@ -19,6 +19,46 @@
 %	STAT_XRP_TargetItem = 8;		{ I: }
 
 Plot
+	name <They're Out There!>
+	desc <Research will reveal an encounter to investigate.>
+	requires <+Tgs (+F--|+Fin|+Fmi) S:++>
+	Size 1
+
+	% Element1 is the scene being investigated
+	% Element2 is the pilot who saw the thing
+	% Element3 is an outdoors scene
+	% Element4 is an encounter to place there
+	Element1 <Grab 6>
+	Element2 <Character HasMecha !Near -7 -ENEMY NeverFail>
+	NeverFail2 <Mecha Pilot>
+	Element3 <Scene Outdoors !Near -7>
+	Element4 <Prefab>
+	Place4 <3>
+
+	start <ifNPCDead %2% LoseComp 0 .loss>
+	.loss <+T-- +F-->
+
+	sub
+		Persona 2
+		special <UNLISTED>
+		rumor <%name2% got beaten up in %name3%.>
+		*greeting <*IHaveInformation GoReveal na>
+		GoReveal <NewChat Say 1 StoryNote 2 WinComp %4% .next>
+		.next <+Ten +Ffi>
+		Msg1 <While traveling through %name3% I was attacked by mecha. I don't know who they are, but I was lucky to escape with my life.>
+		Msg2 <%name2% told you that he had been attacked in %name3%.>
+
+		STC MS_CAFE
+		SetID 1
+	end
+	inv
+		STC ENCOUNTER-WANDER
+		name <%name2%'s Tip>
+		EncounterMove 25
+	end
+
+
+Plot
 	name <Partner Job Lead>
 	desc <Your partner has a message for you.>
 	requires <#A +T-- R:++>
