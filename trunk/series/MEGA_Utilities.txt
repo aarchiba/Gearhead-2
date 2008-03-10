@@ -7,6 +7,17 @@
 %%
 
 %%
+%% *UTIL_BlankState
+%%
+%%  For when you need a PlotState, but don't need anything to happen.
+%%
+
+Content
+	name <Blank State>
+	requires <*UTIL_BlankState>
+
+
+%%
 %% *UTIL_WinMission
 %%
 %%  The player has won this mission, and will be paid by the NPC according to the agreed upon

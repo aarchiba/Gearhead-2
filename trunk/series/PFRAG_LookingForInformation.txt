@@ -81,6 +81,32 @@ CPrompt%id%01_5 <ifPCCheerful Accept>
 Prompt%id%01_6 <Let me hear it.>
 CPrompt%id%01_6 <ifPCMelancholy Accept>
 
+% TYPE: *LookingForScene
+%	The PC is looking for a scene. In this fragment, he'll be able to interview
+%	the NPC and hopefully learn something. If the NPC refuses to tell, this PFrag
+%	will terminate here.
+%   PARAM1: Identity of Scene
+%   PARAM2: Success Exit Label (no message printed here)
+
+Persona
+requires <*LookingForScene>
+START <NewChat Say %id%01 AddChat %id%01>
+Result%id%01 <Goto %2%>
+Msg%id%01 <Yes, may I help you?>
+Msg%id%01_1 <>
+CMsg%id%01_1 <ifNPCSociable Accept>
+Msg%id%01_2 <What?>
+CMsg%id%01_2 <ifNPCShy Accept>
+Msg%id%01_3 <Oh, hi. Are you looking for someone?>
+CMsg%id%01_3 <ifNPCEasygoing Accept>
+Msg%id%01_4 <>
+CMsg%id%01_4 <ifNPCPassionate Accept>
+Msg%id%01_5 <>
+CMsg%id%01_5 <ifNPCCheerful Accept>
+Msg%id%01_6 <What do you want?>
+CMsg%id%01_6 <ifNPCMelancholy Accept>
+Prompt%id%01 <I'm looking for \SCENE %1% .>
+
 % TYPE: *LookingForItem
 %	The PC is looking for an item. In this fragment, he'll be able to interview
 %	the NPC and hopefully learn something. If the NPC refuses to tell, this PFrag
