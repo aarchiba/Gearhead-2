@@ -1718,8 +1718,27 @@ end;
 
 Procedure EndPlot( GB: GameBoardPtr; Adv,Plot: GearPtr );
 	{ This plot is over... }
+	Procedure DelinkAndPutAway( var LList: GearPtr );
+		{ Delink and put away everything you find that needs }
+		{ to be saved in this list. }
+	var
+		M,M2: GearPtr;
+	begin
+		M := LList;
+		while M <> Nil do begin
+			DelinkAndPutAway( M^.InvCom );
+			DelinkAndPutAway( M^.SubCom );
+			M2 := M^.Next;
+			if NAttValue( M^.NA , NAG_ParaLocation , NAS_OriginalHome ) <> 0 then begin
+				if StdPlot_Debug then DialogMsg( 'EndPlot: Putting away ' + GearName( M ) + '.' );
+				DelinkGear( LList , M );
+				PutAwayGlobal( GB , M );
+			end;
+			M := M2;
+		end;
+	end;
 var
-	P2,P3,M,M2: GearPtr;
+	P2,P3: GearPtr;
 begin
 	{ Deal with metascenes and other things that need to be cleaned up. }
 	P2 := Plot^.SubCom;
@@ -1739,15 +1758,8 @@ begin
 
 			end else begin
 				{ Search for global gears in the invcom, storing them as needed. }
-				M := P2^.InvCom;
-				while M <> Nil do begin
-					M2 := M^.Next;
-					if NAttValue( M^.NA , NAG_ParaLocation , NAS_OriginalHome ) <> 0 then begin
-						DelinkGear( P2^.InvCom , M );
-						PutAwayGlobal( GB , M );
-					end;
-					M := M2;
-				end;
+				DelinkAndPutAway( P2^.InvCom );
+				DelinkAndPutAway( P2^.SubCom );
 				DeleteFrozenLocation( GearName( P2 ) , GB^.Camp^.Maps );
 			end;
 

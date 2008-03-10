@@ -1063,6 +1063,16 @@ update <if= PlotStatus %id% else GoHide SetStat STAT_MetaVisibility 0  Goto GoSe
 EncounterMove 50
 
 Encounter
+desig <CORE-ACTIVATABLE>
+% It becomes active when its NAG_QuestInfo/NAS_QEncActive attribute is nonzero.
+update <ifThisQEncActive else GoHide  SetStat STAT_MetaVisibility 0  ShowEncounter Goto GoSetOrders>
+% Sets this encounter's orders to Passive
+GoSetOrders <GrabSource GSetNAtt NAG_EpisodeData NAS_Orders 3>
+Attack <  >
+EncounterMove 0
+ENCOUNTER_NonCombat
+
+Encounter
 desig <ENCOUNTER-SEEKPC>
 % Sets this encounter's orders to Seek & Destroy
 GoSetOrders <GrabSource GSetNAtt NAG_EpisodeData NAS_Orders 0>

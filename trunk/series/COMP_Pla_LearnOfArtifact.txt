@@ -1,10 +1,109 @@
 %% COMP_Pla.txt
 %%
 %%	+Pla	PC learns of the existence of an artifact
+%%
+%%	This state can end at !Lo or above.
+%%
 
 Plot
-	name <Item is Found>
-	desc <>
+	name <I know where it is: Spaceship>
+	desc <The PC has found the item he's been looking for.>
+	requires <#A +Pla +Tgt +Fin S:++ I:++ -!Ne -I:TL_Md -I:TL_Hi -I:TL_Ex>
+	Size 4
+
+	% E1 is the scene for the meeting
+	% E2 is the NPC being sought
+	% E3 is an environs scene where the dungeon can be placed
+	% E4 is the dungeon scene itself
+	% E5 is the item
+	Element1 <Grab 6>
+	Element2 <Grab 5>
+	Place2 <1 pass>
+	Element3 <Scene Environs Space !Near -7>
+	Element4 <Prefab>
+	Place4 <3>
+	Element5 <Grab 8>
+	Place5 <4>
+
+	% As long as we're still at the first phase, the NPC's death will end the plot.
+	start <if= PlotStatus 0 ifNPCDead %2%  LoseComp 0 .changes>
+	.changes <+T-- +F-->
+
+	% SubPlot1 is the entrance unlocker
+	% SubPlot2 is the consequence of recovering the item
+	SubPlot1 <*CS_RevealEncounter&Derelict 5 4>
+	SubPlot2 <*CS_Pla_GetItem&Derelict 5>
+
+	sub
+		Persona 2
+		greeting <if# PlotStatus 0 else GoAsk NewChat SayAnything>
+		*GoAsk <*LookingForItem %3% GoExplain>
+		GoExplain <NewChat Say %id%01 SMemo %id%02 History %id%03 SetPlotStatus %id1% AddChat %id%01 AddChat %id%02>
+
+		Msg%id%01 <It's believed that the %name5% is near here. It was being transported on a spaceship that was, unfortunately, destroyed by pirates. It can probably be found in the wreckage.>
+		Msg%id%02 <%name2% revealed that the %name5% may be on the wreck of a spaceship somewhere nearby.>
+		Msg%id%03 <%name2% revealed that the %name5% was nearby.>
+
+		Prompt%id%01 <Thanks for the info.>
+		Prompt%id%02 <Do you know where this wreck might be?>
+
+
+		MetaScene 4
+		% L1 = Grab Item counter
+
+		special <NOEXIT>
+		type <DUNGEON ruin derelict>
+		content1 <Some 2 50 Sub *DUNGEON_THREAT>
+		content2 <Some 1 30 Sub *DUNGEON_DECOR>
+		content3 <Some 1  5 Sub *DUNGEON_REWARD>
+		content4 <Some 1 35 Sub *TREASUREROOM_WRECK>
+		mapwidth 49
+		mapheight 49
+		MonkeyMap
+		LockedDoorChance 35
+		SecretDoorChance 20
+		IndustrialTiles
+
+		NeededCells 5
+
+		start <Print 1>
+		msg1 <You enter %name4%.>
+
+		% Upon getting the item, start the consequences going
+		get%5% <if= L1 0 L= 1 1 SetPlotStatus %id2%>
+
+		% If the item is destroyed, that's gonna have consequences too.
+		end <ifItemDestroyed %5% if= L1 0 L= 1 1 SetPlotStatus %id2%>
+
+		sub
+			Team 1
+			SetEnemy 2
+
+			Team 2
+			name <Monster>
+			type <Fungus Exorg Ruin PreZero>
+			SetEnemy 1
+			Deploy <if= V1 0 V= 1 1 MonsterUp 2 StoryDL>
+
+			room
+			special <STARTHERE>
+			minimap <......###..#1#...........>
+			sub
+				Elevator
+				Destination -1
+				MiniMapComponent 1
+				use <Print 1 Return>
+			end
+
+			room
+			minimap <......###..#1#..#=#......>
+			desig <HOME 5>
+		end
+	end
+	inv
+		STC CORE-ACTIVATABLE
+		name <Derelict Cruiser>
+	end
 
 Plot
 	name <You have to get through me first>

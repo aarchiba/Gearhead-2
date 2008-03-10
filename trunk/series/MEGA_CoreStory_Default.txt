@@ -1,4 +1,29 @@
 %%
+%% *CS_Pla_GetItemConsequences
+%%
+%% In the +Pla plot state, the PC is about to come into posession of the
+%% target item. This subplot will add some consequences for this; Note that
+%% this may also be triggered if the target item is destroyed or otherwise
+%% lost. Make sure you check for that, too.
+%%
+%% PARAM1: The item obtained.
+%%
+
+
+%%
+%% *CS_RevealEncounter Content
+%%	&Derelict	The encounter in question is a wrecked ship
+%%
+%% There's something out there. The PC knows about it, but doesn't know where
+%% it is.
+%%
+%% PARAM1: The MetaScene being sought
+%% PARAM2: The outdoors scene where the encounter is
+%%
+
+
+
+%%
 %% *CS_DelayedVictory Content
 %% *CS_DelayedNegation Content
 %%
