@@ -1,4 +1,31 @@
 %%
+%% *CS_Win_Vs_Prototype
+%%
+%% The PC has won a mission against a prototype weapon.
+%%
+%% Param1: The Mission-giver
+
+Content
+	name <We Need More Information>
+	desc <The PC will be sent to consult a scientist.>
+	requires <*CS_Win_Vs_Prototype>
+
+	% E1 is the mission giver
+	% E2 is a scientist
+	Element2 <Character Scientist Renowned !Okay 1 Neverfail>
+	NeverFail2 <Scientist>
+	Place2 </>
+
+	start <if= PlotStatus %id% else %pop% ifNPCDead %1% SMemo 0 WinComp 0 .%id%_loss>
+	.%id%_loss <+T-- +F-->
+
+	sub
+		Persona 1
+		greeting <if= PlotStatus %id% else %pop% >
+
+	end
+
+%%
 %% *CS_Win_Then_Guard
 %%
 %% The PC has won a mission, but learned that the enemy are planning to strike

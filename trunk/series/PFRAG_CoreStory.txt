@@ -290,6 +290,34 @@
 %   PARAM3: the location where the encounter will take place
 
 	Persona
+	requires <*CORE_BasicJob +Pew F:++>
+	START <NewChat Say %id%01 AddChat %id%01 AddChat %id%02>
+	result%id%01 <SMemo %id%02 History %id%03 Goto %1%>
+	result%id%02 <SMemo 0 Goto %2%>
+	Msg%id%01 <It seems that \FACTION &EnemyFac is testing some new weapon systems in this area. Your job is to locate the research team and destroy their prototype.>
+	Msg%id%01_1 <>
+	CMsg%id%01_1 <ifNPCSociable Accept>
+	Msg%id%01_2 <>
+	CMsg%id%01_2 <ifNPCShy Accept>
+	Msg%id%01_3 <>
+	CMsg%id%01_3 <ifNPCEasygoing Accept>
+	Msg%id%01_4 <>
+	CMsg%id%01_4 <ifNPCPassionate Accept>
+	Msg%id%01_5 <>
+	CMsg%id%01_5 <ifNPCCheerful Accept>
+	Msg%id%01_6 <>
+	CMsg%id%01_6 <ifNPCMelancholy Accept>
+	Msg%id%02 <\CHATNPC told you that \FACTION &EnemyFac are testing weapons nearby. You must locate and destroy their research mission in \SCENE %3% .>
+	Msg%id%03 <\CHATNPC told you that \FACTION &EnemyFac were testing weapons nearby.>
+	Prompt%id%01 <I'll be back when I'm done.>
+	Prompt%id%01_1 <>
+	Prompt%id%01_2 <>
+	Prompt%id%02 <Sounds dangerous. I don't want to.>
+	CPrompt%id%02 <if# PCFac ChatNPCFac Accept>
+	Prompt%id%02_1 <>
+	Prompt%id%02_2 <>
+
+	Persona
 	requires <*CORE_BasicJob +P-->
 	START <NewChat Say %id%01 AddChat %id%01 AddChat %id%02>
 	result%id%01 <StoryNote %id%02 Goto %1%>

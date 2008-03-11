@@ -749,6 +749,86 @@ Plot
 		STC CORE-MECHAENCOUNTER
 	end
 
+%%  ****************************************
+%%  ***   +Pew  Enemy  Weapon  Program   ***
+%%  ****************************************
+
+
+Content
+	name <Experimental Weapon>
+	Size 7
+	desc <You encounter an experimental weapon.>
+	requires <*CS_MechaEncounter +Pew (!Ne|!Lo)>
+
+	% E1: The Mission Provider
+	% E2: The outdoor scene where the fight will take place
+	% E3 is the combat scene
+	Element3 <Prefab>
+	Place3 <2>
+
+	% SubPlot1 = Win the battle, get a reward
+	% SubPlot2 = Lose the battle, get scorned
+	SubPlot1 <*CS_CAWinMission 1>
+	SubPlot2 <*CS_CALoseMission 1>
+
+	sub
+		MetaScene 3 2
+		% L1 = Encounter Over Counter
+		% L2 = Initialization Counter
+		MapWidth 30
+		MapHeight 30
+
+		Start <if= L2 0 L= 2 1 Alert 1>
+		nu1 <if= T1 0   Return   if= V1 0 V= 1 1   SMemo 2 History 4 SetPlotStatus %id2%>
+		nu2 <if= T2 0   if= V1 0 V= 1 1            SMemo 2 History 3 XPV 100   AddRenown 1  Salvage   SetPlotStatus %id1%>
+
+		Msg1 <The enemy mecha appear to be escorting an experimental weapon. You should probably be careful.>
+		Msg2 <You should report back to %name1% about the experimental weapon you just fought.>
+		Msg3 <You destroyed an experimental wave cannon.>
+		Msg4 <You failed to destroy an experimental wave cannon.>
+
+		sub
+			team 1
+			SetEnemy 2
+			ParaX 5
+			ParaY 5
+
+			team 2
+			SetEnemy 1
+			Deploy <SetSelfFaction &EnemyFac   WMecha 2 StoryDL 100>
+			ParaX 25
+			ParaY 25
+		end
+		inv
+			CombatProp 20
+			SetTeam 2
+			name <Experimental Weapon>
+			sdl_sprite <prop_turret1.png>
+			roguechar <&>
+			Scale 2
+			Skill 6 7
+			Skill 10 7
+			Skill 12 2
+			sub
+				Turret
+				size 8
+				armor 8
+				sub
+					BeamGun 5
+					name <Wave Cannon>
+					Range 10
+					type <HYPER>
+				end
+				PowerSource 10
+			end
+		end
+	end
+	inv
+		STC CORE-MECHAENCOUNTER
+	end
+
+
+
 %%  *******************
 %%  ***   GENERAL   ***
 %%  *******************

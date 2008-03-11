@@ -30,7 +30,7 @@ Content
 		Persona 2
 		special <UNLISTED NOESCAPE>
 		greeting <EndChat Say 1 AddChat 1>
-		result1 <EndChat Say 2 StoryNote 3 Print 4 WinComp 0 .next  SavePos Dynamic 2 StoryDL 100 .nu1 .nu2 DynaFaction &EnemyFac>
+		result1 <EndChat Say 2 StoryNote 3 Print 4 &SetTargetItem 0 WinComp 0 .next  SavePos Dynamic 2 StoryDL 100 .nu1 .nu2 DynaFaction &EnemyFac>
 		.next <+Pew +T-- +F-->
 		.nu1 <if= T1 0  Return   if= L2 0  L= 2 1  AddRenown -5>
 		.nu2 <if= T2 0           if= L2 0  L= 2 1  XPV 100  AddRenown 1   Return>

@@ -10,7 +10,6 @@ Plot
 	desc <The PC has found the item he's been looking for.>
 	requires <#A +Pla +Tgt +Fin S:++ I:++ -!Ne -I:TL_Md -I:TL_Hi -I:TL_Ex>
 	Size 4
-name <DEBUG>
 
 	% E1 is the scene for the meeting
 	% E2 is the NPC being sought
@@ -38,11 +37,11 @@ name <DEBUG>
 	sub
 		Persona 2
 		greeting <if# PlotStatus 0 else GoAsk NewChat SayAnything>
-		*GoAsk <*LookingForItem %3% GoExplain>
+		*GoAsk <*LookingForItem %5% GoExplain>
 		GoExplain <NewChat Say %id%01 SMemo %id%02 History %id%03 SetPlotStatus %id1% AddChat %id%01 AddChat %id%02>
 		result%id%01 <NewChat Say %id%04>
 		result%id%02 <NewChat Say %id%05>
-		Msg%id%01 <It's believed that the %name5% is near here. It was being transported on a spaceship that was, unfortunately, destroyed by pirates. It can probably be found in the wreckage.>
+		Msg%id%01 <It's believed that the %name5% is near here. It was being transported on a spaceship that was, unfortunately, destroyed by pirates. Some believe that it still exists within the wreckage.>
 		Msg%id%02 <%name2% revealed that the %name5% may be on the wreck of a spaceship somewhere nearby.>
 		Msg%id%03 <%name2% revealed that the %name5% was nearby.>
 		Msg%id%04 <You're welcome. Be careful, though- I don't think you're the only one looking for the %name5%.>
@@ -72,16 +71,16 @@ name <DEBUG>
 		NeededCells 5
 
 		start <Print 1>
-		msg1 <You enter %name4%.>
 
 		% Upon getting the item, start the consequences going
-		get%5% <if= L1 0 L= 1 1 SetPlotStatus %id2% History 1>
+		get%5% <if= L1 0 L= 1 1 SetPlotStatus %id2% History 2>
 
 		% If the item is destroyed, that's gonna have consequences too.
-		end <ifItemDestroyed %5% if= L1 0 L= 1 1 SetPlotStatus %id2% History 2>
+		end <ifItemDestroyed %5% if= L1 0 L= 1 1 SetPlotStatus %id2% History 3>
 
-		Msg1 <You recovered the %name5%.>
-		Msg2 <You destroyed the %name5%.>
+		msg1 <You enter %name4%.>
+		Msg2 <You recovered the %name5%.>
+		Msg3 <You destroyed the %name5%.>
 
 		sub
 			Team 1
