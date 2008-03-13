@@ -14,16 +14,125 @@ Content
 	% E2 is a scientist
 	Element2 <Character Scientist Renowned !Okay 1 Neverfail>
 	NeverFail2 <Scientist>
-	Place2 </>
 
 	start <if= PlotStatus %id% else %pop% ifNPCDead %1% SMemo 0 WinComp 0 .%id%_loss>
 	.%id%_loss <+T-- +F-->
 
 	sub
 		Persona 1
-		greeting <if= PlotStatus %id% else %pop% >
-
+		greeting <if= PlotStatus %id% else %pop% CashPrize Reward StoryDL 500 ifNPCOK %2% else .%id%_GoJustEnd NewChat Say %id%01 StoryNote %id%02 AddChat %id%01 FreezeNPC %2% &SetTargetNPC %2% WinComp 0 .%id%_next>
+		.%id%_next <+Tgt +Fin>
+		*.%id%_GoJustEnd <*MissionWasSuccess&Reward .%id%_GoEnd &AllyFac &EnemyFac>
+		.%id%_GoEnd <SMemo 0 NTBWinComp 0 .%id%_end>
+		.%id%_End <+T-- +F-->
+		result%id%01 <NewChat Say %id%03>
+		Msg%id%01 <Good work, \PC . If we're going to stop this weapon program, we're going to need more information. The famous scientist %name2% is in town now; maybe \SPR %2% could be persuaded to help.>
+		Msg%id%02 <%name1% sent you to find %name2% for information about the weapon program.>
+		Msg%id%03 <I'm not sure, but I don't expect that \SPR %2% 'll be too hard to find.>
+		Msg%id%03_10 <I don't know, but it's important that we find \OPR %2% before \PERSONA &EnemyNPC does.>
+		CMsg%id%03_10 <ifNPCOK &EnemyNPC Accept>
+		Msg%id%03_20 <Good question. I only hope that we can find \OPR %2% before \FACTION &EnemyFac does.>
+		CMsg%id%03_20 <ifFactionExists &EnemyFac Accept>
+		Prompt%id%01 <Where can I find %name2%?>
+		Prompt%id%01_1 <Any idea where I can find \OPR %2% ?>
 	end
+
+Content
+	name <They Have Another>
+	desc <There's another experimental weapon out there.>
+	requires <*CS_Win_Vs_Prototype>
+
+	% E1 is the mission giver
+	% E2 is an environs scene in which to place the encounter
+	% E3 is the encounter
+	Element2 <Scene Environs !Near -7>
+	Element3 <Prefab>
+	Place3 <2>
+
+	start <if= PlotStatus %id% else %pop% ifNPCDead %1% SMemo 0 WinComp 0 .%id%_loss>
+	.%id%_loss <+T-- +F-->
+
+	sub
+		Persona 1
+		greeting <if= PlotStatus %id% else %pop%  NewChat Say %id%01 StoryNote %id%02 CashPrize Reward StoryDL 500 WinComp %3% .%id%_next>
+		.%id%_next <+Ten +Ffi>
+		Msg%id%01 <You did it. Unfortunately, that might not be the only research crew they have out there.>
+		Msg%id%02 <%name1% revealed that there could be more experimental weapons nearby.>
+	end
+	inv
+		STC ENCOUNTER-WANDER
+		name <Experimental Weapon>
+		EncounterMove 25
+	end
+
+
+%%
+%% *CS_Lose_Vs_Prototype
+%%
+%% The PC has lost a mission against a prototype weapon.
+%%
+%% Param1: The Mission-giver
+
+Content
+	name <It's Still Out There>
+	desc <Since the player lost, the enemy research team is still out there.>
+	requires <*CS_Lose_Vs_Prototype>
+
+	% E1 is the mission giver
+	% E2 is an environs scene in which to place the encounter
+	% E3 is the encounter
+	Element2 <Scene Environs !Near -7>
+	Element3 <Prefab>
+	Place3 <2>
+
+	start <if= PlotStatus %id% else %pop% ifNPCDead %1% SMemo 0 LoseComp 0 .%id%_loss>
+	.%id%_loss <+T-- +F-->
+
+	sub
+		Persona 1
+		greeting <if= PlotStatus %id% else %pop%  NewChat Say %id%01 StoryNote %id%02 LoseComp %3% .%id%_next>
+		.%id%_next <+Ten +Ffi>
+		Msg%id%01 <You failed... and that means the experimental weapon could still be out there, somewhere...>
+		Msg%id%02 <%name1% reminded you that the experimental weapon could still be out there.>
+	end
+	inv
+		STC ENCOUNTER-WANDER
+		name <Experimental Weapon>
+		EncounterMove 25
+	end
+
+Content
+	name <We REALLY Need More Information>
+	desc <The PC will be sent to consult a scientist.>
+	requires <*CS_Lose_Vs_Prototype>
+
+	% E1 is the mission giver
+	% E2 is a scientist
+	Element2 <Character Scientist Renowned !Okay 1 Neverfail>
+	NeverFail2 <Scientist>
+
+	start <if= PlotStatus %id% else %pop% ifNPCDead %1% SMemo 0 LoseComp 0 .%id%_loss>
+	.%id%_loss <+T-- +F-->
+
+	sub
+		Persona 1
+		greeting <if= PlotStatus %id% else %pop% ifNPCOK %2% else .%id%_GoJustEnd NewChat Say %id%01  AddChat %id%01 AddChat %id%02 AddChat %id%03>
+		*.%id%_GoJustEnd <*MissionWasFailure .%id%_GoTrivialEnd &AllyFac &EnemyFac>
+		.%id%_GoTrivialEnd <SMemo 0 NTBLoseComp 0 .%id%_loss>
+		.%id%_loss <+T-- +F-->
+		.%id%_GoEnd <NewChat Say %id%02 StoryNote %id%03 FreezeNPC %2% &SetTargetNPC %2% LoseComp 0 .%id%_next>
+		.%id%_next <+Tgt +Fin>
+		result%id%01 <AddCheerful -d10   Goto .%id%_GoEnd>
+		result%id%02 <AddEasygoing -d10  Goto .%id%_GoEnd>
+		result%id%03 <AddEasygoing d10   Goto .%id%_GoEnd>
+		Msg%id%01 <The mission was a complete failure. What happened out there, \PC ?>
+		Msg%id%02 <It's clear that we aren't going to defeat this weapon program if we don't know anything about it. I understand that the famous scientist %name2% is in town; maybe if you find \OPR %2% , you can learn something useful.>
+		Msg%id%03 <%name1% sent you to consult %name2% about the weapon program.>
+		Prompt%id%01 <The new weapon was too powerful.>
+		Prompt%id%02 <I wasn't ready for battle, that's all.>
+		Prompt%id%03 <Well, I survived. That's the main thing.>
+	end
+
 
 %%
 %% *CS_Win_Then_Guard

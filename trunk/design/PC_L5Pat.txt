@@ -303,6 +303,39 @@ Legality 25
 %  ***  BEAM  GUNS  ***
 %  ********************
 
+BeamGun 3
+name <Light Laser Pistol>
+Desig <Brash G1>
+desc <A small, low power laser weapon.>
+category <WEAPON MISSILE>
+factions <MAQUI FCOMS RISHI BOHEM>
+Mass -2
+Range 3
+Speed 3
+legality -5
+inv
+	PowerSource 1
+	name <Super Cell 25>
+	mass -1
+end
+
+BeamGun 5
+Name <Laser Pistol>
+desig <VK-16>
+desc <A pistol housing a small but powerful laser generator.>
+category <WEAPON MISSILE>
+factions <MAQUI FCOMS RISHI BOHEM HOELL>
+Mass -4
+Range 3
+Acc 1
+Speed 5
+legality 5
+inv
+	PowerSource 2
+	name <Power Cell 50>
+end
+
+
 BeamGun 4
 Name <Stun Pistol>
 Desig <L12>

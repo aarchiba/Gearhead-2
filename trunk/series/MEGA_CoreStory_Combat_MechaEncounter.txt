@@ -768,8 +768,8 @@ Content
 
 	% SubPlot1 = Win the battle, get a reward
 	% SubPlot2 = Lose the battle, get scorned
-	SubPlot1 <*CS_CAWinMission 1>
-	SubPlot2 <*CS_CALoseMission 1>
+	SubPlot1 <*CS_Win_Vs_Prototype 1>
+	SubPlot2 <*CS_Lose_Vs_Prototype 1>
 
 	sub
 		MetaScene 3 2
@@ -837,7 +837,7 @@ Content
 	name <Delay Him While I Go>
 	size 5
 	desc <You fight some henchmen, while your enemy rushes to attack some place.>
-	requires <*CS_MechaEncounter  E:++ (+Pun|+Pla)>
+	requires <*CS_MechaEncounter  E:++ (+Pun|+Pla|+Pew)>
 
 	% E1: The Mission Provider
 	% E2: The outdoor scene where the fight will take place
