@@ -59,14 +59,15 @@ Plot
 	% E2 is a public building in that city
 	% E3 is a friend who lives there
 	Element1 <Scene !Far -7 !Comrade -7 Town>
-	Element2 <Building Public !Near 1>
+	Element2 <Scene Building Public !Near 1>
 	Element3 <NewNPC 0 2 PCFriend>
+	Place3 <2>
 
-	start <if= SceneID &EpisodeScene if= P1 0 P= 1 1 Alert 1 Alert 2 SMemo 3 History 4 &SetTargetNPC %3% WinEpisode %1% %2% .next>
+	start <if= SceneID &EpisodeScene if= P1 0 P= 1 1 Alert 1 Alert 2 SMemo 3 History 4 &SetTargetNPC %3% WinEpisode %1% 0 .next>
 	.next <+Tgt +F-->
 	Msg1 <Things appear to be resolved in \SCENE &EpisodeScene , for the time being.>
 	Msg2 <While you have some free time, you feel that you should head to %name1% and visit your friend %name3%.>
-	Msg3 <You are going to visit your friend %name3% in %name1%; \SPR %3% can probably be found at %name2%.>
+	Msg3 <You are going to visit your friend %name3% in %name1%.>
 	Msg4 <You decided to visit your friend %name3% in %name1%.>
 
 Plot
