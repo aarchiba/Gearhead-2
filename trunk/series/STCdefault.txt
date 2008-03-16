@@ -1073,6 +1073,35 @@ EncounterMove 0
 ENCOUNTER_NonCombat
 
 Encounter
+desig <CORE-ACTIVATABLE-STATIONARY-DEFENDED>
+% It becomes active when its NAG_QuestInfo/NAS_QEncActive attribute is nonzero.
+%
+% The first time the PC tries to enter, he will be attacked. Afterwards he may enter
+% the location normally. The fight uses %threat% for its difficulty rating.
+%
+% The attacking faction will be the core story enemy faction, and the encounter
+% threat level will be the StoryDL.
+%%
+%%  V1 =  Have defeated mecha counter
+%%
+%% %  Dynamic Combat Info
+%% %    V2 = Initialization Counter
+%% %    V3 = Destination Scene
+%%
+update <ifThisQEncActive else GoHide  SetStat STAT_MetaVisibility 0  ShowEncounter  Goto GoSetOrders>
+% Sets this encounter's orders to Passive
+GoSetOrders <GrabSource GSetNAtt NAG_EpisodeData NAS_Orders 3>
+Attack <  >
+use <ifG StatVal STAT_MetaVisibility -1  if# V1 0 else GoStartCombat  Print -1 Exit Destination>
+GoStartCombat <Alert 1 SavePos Dynamic 2 StoryDL 100 .nu1 .nu2 ComposeD Msg1 .Msg1 DynaVar= 3 Destination  DynaFaction &EnemyFac>
+.nu1 <if= T1 0  Return  SeekGate L3   if= L2 0  L= 2 1  AddRenown -5>
+.nu2 <if= T2 0           if= L2 0  L= 2 1  XPV 100  AddRenown 1   EncounterVar= L3 1 1  Alert 1  Exit L3>
+.msg1 <You have defeated the mecha.>
+Msg1 <You are attacked by mecha as you approach \SCENE Destination !>
+EncounterMove 0
+ENCOUNTER_NonCombat
+
+Encounter
 desig <ENCOUNTER-SEEKPC>
 % Sets this encounter's orders to Seek & Destroy
 GoSetOrders <GrabSource GSetNAtt NAG_EpisodeData NAS_Orders 0>

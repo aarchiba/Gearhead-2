@@ -114,6 +114,17 @@ Content
 %%  ***   +Pew  Enemy  Weapon  Program   ***
 %%  ****************************************
 
+Content
+	name <They're Kidnapping Scientists>
+	desc <The enemy faction has been kidnapping scientists.>
+	requires <*CS_ThanksForRescue +Pew (T:ACADE|T:CORPO) (F:AEGIS|F:CRIME)>
+
+	% E1 is the character who's been rescued
+	% E2 is an environs scene
+	% E3 is the encounter for the secret research base
+
+	start <if= PlotStatus %id% else %pop% ifNPCDead %1% LoseComp 0 .%id%_loss>
+	.%id%_loss <+T-->
 
 
 %%  *********************************

@@ -319,6 +319,11 @@ begin
 
 	{ We have the context. Create the shopping list. }
 	ShoppingList := CreateComponentList( Sub_Plot_List , Context );
+	if XXRan_Debug and ( Slot^.G = GG_Story ) then begin
+		if NumNAtts( ShoppingList ) < 5 then begin
+			DialogMsg( '[DEBUG] Only ' + BStr( NumNatts( ShoppingList ) ) + ' components for "' + Context + '".' );
+		end;
+	end;
 
 	{ Based on this shopping list, search for applocable subplots and attempt to }
 	{ fit them into the adventure. }
