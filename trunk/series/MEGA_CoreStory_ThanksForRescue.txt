@@ -122,10 +122,39 @@ Content
 	% E1 is the character who's been rescued
 	% E2 is an environs scene
 	% E3 is the encounter for the secret research base
+	% E4 is the enemy faction
+	Element2 <Scene Environs !Near 1>
+	Element3 <Prefab>
+	Place3 <2>
+	Element4 <Grab 2>
 
 	start <if= PlotStatus %id% else %pop% ifNPCDead %1% LoseComp 0 .%id%_loss>
 	.%id%_loss <+T-->
 
+	% SubPlot1 is the base metascene
+	% SubPlot2 is the activation subplot
+	SubPlot1 <*CS_RaidEnemyBase&Research 3>
+	SubPlot2 <*CS_RevealEncounter&EnemyBase&Research 3 2>
+
+	sub
+		Persona 1
+		Greeting <if= PlotStatus %id% else %pop% goto .%id%_GoThanks>
+		*.%id%_GoThanks <*ThanksForRescue .%id%_GoTell>
+		.%id%_GoTell <NewChat Say %id%01 SMemo %id%02 History %id%03 AddChat %id%01 AddChat %id%02 SetPlotStatus %id2%>
+		result%id%01 <NewChat Say %id%04>
+		result%id%02 <NewChat Say %id%05>
+		Msg%id%01 <I had heard rumors that %name4% are kidnapping scientists, but I never imagined that I'd get first hand confirmation of this fact. They must have a research base nearby.>
+		Msg%id%02 <You learned from %name1% that %name4% is kidnapping scientists to aid in their weapons program. They apparently have a research base nearby.>
+		Msg%id%03 <You learned from %name1% that %name4% was kidnapping scientists.>
+		Msg%id%04 <No, sorry, I don't... though I'm sure they can't be running an operation like this in perfect secrecy.>
+		Msg%id%05 <Supposedly they're working on a new weapons program. I guess they need more researchers... or test subjects.>
+		Prompt%id%01 <Any idea where that base might be?>
+		Prompt%id%02 <Why are they doing this?>
+	end
+	inv
+		STC CORE-ACTIVATABLE-STATIONARY-DEFENDED
+		name <%name4% Research Base>
+	end
 
 %%  *********************************
 %%  ***   +C--  Nothing Special   ***

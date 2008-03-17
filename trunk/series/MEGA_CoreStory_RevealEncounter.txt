@@ -1,0 +1,104 @@
+%%
+%% *CS_RevealEncounter Content
+%%	&Derelict	The encounter in question is a wrecked ship
+%%	&EnemyBase	It's an enemy base
+%%	&Research	It's a laboratory or research station of some kind
+%%
+%% There's something out there. The PC knows about it, but doesn't know where
+%% it is.
+%%
+%% PARAM1: The MetaScene being sought
+%% PARAM2: The outdoors scene where the encounter is
+%%
+
+%%  ********************************
+%%  ***   +P--  Peaceful  Life   ***
+%%  ********************************
+
+%%  *****************************************
+%%  ***   +Pme	PC meets an enemy pilot   ***
+%%  *****************************************
+
+
+%%  *****************************************
+%%  ***   +Pun  Unknown  Enemy  Attacks   ***
+%%  *****************************************
+
+
+%%  ***********************************************************
+%%  ***   +Psh	PC is shanghaied into working for faction   ***
+%%  ***********************************************************
+
+
+%%  *************************************
+%%  ***   +Pla  Learn  of  Artifact   ***
+%%  *************************************
+
+
+%%  ****************************************
+%%  ***   +Pew  Enemy  Weapon  Program   ***
+%%  ****************************************
+
+
+%%  *********************************
+%%  ***   +C--  Nothing Special   ***
+%%  *********************************
+
+
+%%  *******************
+%%  ***   GENERAL   ***
+%%  *******************
+
+
+
+Plot
+	name <Pilot Saw It>
+	requires <*CS_RevealEncounter -!Ne>
+	desc <A pilot saw the location the PC is looking for. Duel him for the answer!>
+
+	% E1 is the metascene being sought
+	% E2 is the outdoors scene where it is
+	% E3 is a public scene for the NPC
+	% E4 is the NPC
+	% E5 is an outdoors scene for the duel
+	Element3 <Scene Public !Near -7>
+	Element4 <Character HasMecha Passionate !Near -7>
+	Place4 <3 sd ally>
+	Element5 <Scene Environs !Near -7>
+
+	% SubPlot1 is the duel itself
+	% SubPlot2 is a blank plot state
+	SubPlot1 <*CS_Duel&NoDerailment 4 3 5>
+	SubPlot2 <*UTIL_BlankState>
+
+	% As long as we're still at the first phase, the NPC's death will end the plot.
+	start <if= PlotStatus %id% else %pop% ifNPCDead %4% LoseComp 0 .%id%_changes>
+	.%id%_changes <+T-- +F-->
+
+	% Duel Results
+	.%id1%_%plotid%_GoWin <Monologue %4% %id%01 SMemo %id%02 ShowEntrance %1% SetPlotStatus %id2%>
+	.%id1%_%plotid%_GoLose <Monologue %4% %id%03 SMemo 0 LoseComp 0 .%id%_loss>
+	.%id%_loss <+T-- +F-->
+
+	Msg%id%01 <You won... I'll show you where %name1% is in %name2%.>
+	Msg%id%02 <%name3% revealed that %name1% is at %name2%.>
+	Msg%id%03 <You lost... %name1% is all mine!>
+
+	sub
+		Persona 4
+		rumor%id% <%name4% has been to %name1%.>
+		greeting <if# PlotStatus %id% else GoExplain NewChat SayAnything>
+		*GoExplain <*LookingForScene %1% GoChallenge>
+		GoChallenge <NewChat Say 1 AddChat 1 AddChat 2>
+		result1 <EndChat Say 2 SMemo 3 History 4 SetPlotStatus %id1%>
+		result2 <NewChat Say 5 SMemo 6 History 7 XPV 100 AddSociable d10 ShowEntrance %1% SetPlotStatus %id2% PCFriend %4%>
+		Msg1 <I've been there. I never found anything... but if you're interested in it, I must have missed something. How about this? Let's duel for the information. If you win, I tell you where to find %name1%, and if I win you tell me what's there.>
+		Msg2 <Great! Meet me in %name5% and we can start.>
+		Msg3 <You agreed to duel %name4% to learn the location of %name1%; \SPR %4% 's waiting for you in %name5%.>
+		Msg4 <You agreed to duel %name4% to learn the location of %name1%.>
+		Msg5 <Woah- that's a deal too good to pass up. You can find %name1% in %name2%; let me upload the info to your navcomp.>
+		Prompt1 <It's a deal.>
+		Prompt2 <Here's a better idea: tell me, and I'll give you my number.>
+		CPrompt2 <ifChatNPCSexy ifFlirtation SkillTar StoryDL Accept>
+	end
+
