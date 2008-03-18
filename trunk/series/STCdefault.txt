@@ -1009,6 +1009,25 @@ sub
 	Content <Some 5 45 Here *URBAN_X>
 end
 
+MetaScene
+BoxMap
+desig <MS_EmptyBuilding>
+MapWidth 13
+MapHeight 13
+special <AddExit>
+nu1 <if= T1 0 Return>
+sub
+	Team 1
+
+	Team 2
+	name <Civilian>
+	setally 1 3
+	Passive
+
+	Team 3
+	name <Guards>
+	SetAlly 1 2
+end
 
 
 % **********************

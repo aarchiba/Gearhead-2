@@ -123,7 +123,7 @@ Content
 	% E2 is an environs scene
 	% E3 is the encounter for the secret research base
 	% E4 is the enemy faction
-	Element2 <Scene Environs !Near 1>
+	Element2 <Scene Environs !Near -7>
 	Element3 <Prefab>
 	Place3 <2>
 	Element4 <Grab 2>
@@ -153,7 +153,7 @@ Content
 	end
 	inv
 		STC CORE-ACTIVATABLE-STATIONARY-DEFENDED
-		name <%name4% Research Base>
+		name <Secret Research Base>
 	end
 
 %%  *********************************
