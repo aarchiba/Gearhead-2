@@ -3,6 +3,30 @@
 %%  Peaceful Life components
 
 Plot
+	name <The Police Are Hiring>
+	desc <The PC will be offered a job by a police officer.>
+	requires <#A (+P--|+Pme|+Pun) +T-- F:CRIME ~P:-->
+
+	% E1 is the scene where this component will take place
+	% E2 is the NPC that the PC will speak with
+	% E3 is the enemy faction
+	element1 <Scene Building Public !Okay -3 !Near -7>
+	element2 <Character Police !Near -7 !Okay -7 !Enemy -2 -ArchEnemy>
+	Place2 <1 (Guards) SD>
+	element3 <Grab 2>
+
+	% All this plot does is activate the mission subplot
+	update <if= PlotStatus 0  SetPlotStatus %id1%>
+
+	%% SubPlot1 is the mission to be offered
+	SubPlot1 <*CS_GiveMission 2>
+
+	sub
+		Persona 2
+		rumor%id1% <%name2% in %name1% has been fighting %name3%.>
+	end
+
+Plot
 	name <Mysterious Seeker>
 	desc <Someone else is also looking for your target.>
 	requires <#A +Tgt (T:ACADE|T:MEDIA) S:-- (F:CORPO|F:CRIME|F:POLIT) (+P--|+Pme)>

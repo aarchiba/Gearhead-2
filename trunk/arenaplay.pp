@@ -104,6 +104,9 @@ begin
 
 	end else if ( NAttValue( Mek^.NA , NAG_Location , NAS_Team ) = 1 ) or ControlByPlayer then begin
 		{ It's a player mek. }
+{$IFDEF ASCII}
+		FocusOn( Mek );
+{$ENDIF}
 		GetPlayerInput( Mek , Camp );
 	end else begin
 		{ it's a computer mek. }
