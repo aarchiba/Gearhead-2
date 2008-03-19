@@ -93,6 +93,87 @@ Content
 %%  *******************
 
 Plot
+	name <Fifth Column>
+	requires <*CS_RevealEncounter &EnemyBase F:++>
+	desc <Your friend on the other side will help you out.>
+	Size 1
+
+	% E1 is the metascene being sought
+	% E2 is the outdoors scene where it is
+	% E3 is a public scene for the NPC
+	% E4 is the NPC
+	Element3 <Scene Public !Near -7 !Okay -2>
+	Element4 <Character Friend !Global !Ally -2>
+	Place4 <3 (Citizens) pass ally>
+
+	% SubPlot1 is a blank plot state.
+	SubPlot1 <*UTIL_BlankState>
+
+	% P%id%01 = EMail Counter
+	% As long as we're still at this phase, the NPC's death will end the plot.
+	start <if= PlotStatus %id% else %pop% ifNPCDead %4% LoseComp 0 .%id%_changes>
+	.%id%_changes <+T-- +F-->
+
+	5Min <if= PlotStatus %id% else %pop% if= P%id%01 0 if= d4 3 P= %id%01 1 Email %id%01>
+
+	Msg%id%01 <%name4%@ \SCENE &EpisodeScene :// Come see me in %name3%; I've got some important information for you.>
+
+	sub
+		Persona 4
+		rumor%id% <there's a mysterious person hanging out at %name3%.>
+		greeting <if# PlotStatus %id% else .%id%_GoGreet NewChat SayAnything>
+		*.%id%_GoGreet <*IHaveInformation&AboutScene .%id%_GoReveal %1%>
+		.%id%_GoReveal <NewChat Say %id%01 SMemo %id%02 History %id%03 ShowEntrance %1% SetPlotStatus %id1% AddChat %id%01 AddChat %id%02>
+		result%id%01 <NewChat Say %id%04>
+		result%id%02 <NewChat Say %id%05 AddCheerful -d4>
+		Msg%id%01 <I'm risking a lot telling you this, but... the secret base belonging to \FACTION &EnemyFac ? You'll find it in %name2%. Here, these navpoints will lead you straight to it.>
+		Msg%id%01_1 <I shouldn't tell you this, but... the secret base you're looking for? It's here in %name2%. I'll give you the coordinates.>
+		Msg%id%01_2 <This could get me in trouble with \FACTION &EnemyFac , but I thought you should know... Their secret base is in %name2%. I can upload the coordinates to your navcomp.>
+		Msg%id%02 <Your friend %name4% told you the location of %name1% in %name2%.>
+		Msg%id%03 <Your friend %name4% revealed the location of the base.>
+		Msg%id%04 <You're welcome. Good luck out there, OK?>
+		Msg%id%04_1 <Hey, that's what friends are for.>
+		CMsg%id%04_1 <ifNPCSociable Accept>
+		Msg%id%04_2 <Don't mention it. No, seriously, don't mention it...>
+		CMsg%id%04_2 <ifNPCShy Accept>
+		Msg%id%04_3 <Hey, no problem.>
+		CMsg%id%04_3 <ifNPCEasygoing Accept>
+		Msg%id%04_4 <Just promise me that you'll make it count, okay?>
+		CMsg%id%04_4 <ifNPCPassionate Accept>
+		Msg%id%04_5 <I'm sure you'll have a chance to repay the favor, someday. Good luck.>
+		CMsg%id%04_5 <ifNPCCheerful Accept>
+		Msg%id%04_6 <If word gets out that I passed on this information, I'm toast. Just make sure you make this count.>
+		CMsg%id%04_6 <ifNPCMelancholy Accept>
+		Msg%id%04_7 <I only wish I could be more help.>
+		CMsg%id%04_7 <ifNPCHeroic Accept>
+		Msg%id%04_8 <Don't worry, nothing is ever freely given. I expect this kindness of mine to be fully repaid at some point in the future.>
+		CMsg%id%04_8 <ifNPCVillainous Accept>
+		Msg%id%04_9 <Honestly, I just want to see you humiliate \PERSONA &EnemyNPC . Get over there and give \OPR &EnemyNPC hell!>
+		CMsg%id%04_9 <ifNPCOK &EnemyNPC Accept>
+		Msg%id%05 <I have my reasons. Look, \PC , you should get going...>
+		Msg%id%05_1 <I think we both know why. Good luck out there, \PC .>
+		CMsg%id%05_1 <ifNPCSociable Accept>
+		Msg%id%05_2 <I'd rather not say. Do your best with the information, \PC .>
+		CMsg%id%05_2 <ifNPCShy Accept>
+		Msg%id%05_3 <Does it really matter? Good luck storming the base, \PC .>
+		CMsg%id%05_3 <ifNPCEasygoing Accept>
+		Msg%id%05_4 <I can't just sit idly by and do nothing, can I? I've done what I had to do, now you do what you have to...>
+		CMsg%id%05_4 <ifNPCPassionate Accept>
+		Msg%id%05_5 <Don't sweat it. I know that you'd do the same for me.>
+		CMsg%id%05_5 <ifNPCCheerful Accept>
+		Msg%id%05_6 <We mustn't talk about that... You should go. If they see us together, it would be very dangerous.>
+		CMsg%id%05_6 <ifNPCMelancholy Accept>
+		Msg%id%05_7 <We both know that what \FACTION &EnemyFac is doing is wrong... I only hope that together we can steer them back to rightness.>
+		CMsg%id%05_7 <ifNPCHeroic Accept>
+		Msg%id%05_8 <Let's just say that when you sweep in to destroy everything, I'll be waiting to pick up the pieces. We both have much to gain.>
+		CMsg%id%05_8 <ifNPCVillainous Accept>
+		Msg%id%05_9 <Mostly, it's just that I want to see \PERSONA &EnemyNPC defeated.>
+		CMsg%id%05_9 <ifNPCOK &EnemyNPC Accept>
+		Prompt%id%01 <Thanks. This will be a great help.>
+		Prompt%id%02 <Why are you doing this?>
+	end
+
+Plot
 	name <All-Knowing Smuggler>
 	requires <*CS_RevealEncounter>
 	desc <There's a smuggler who can tell you how to get where you're going.>

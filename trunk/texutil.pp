@@ -416,7 +416,11 @@ begin
 	end;
 
 	if IT and ( N >= 0 ) then begin
-		StringMatchWeight := ( N * N div 2 ) - N + 2;
+		if N < 4 then begin
+			StringMatchWeight := N + 1;
+		end else begin
+			StringMatchWeight := ( N * N div 2 ) - N + 2;
+		end;
 	end else begin
 		StringMatchWeight := 0;
 	end;
