@@ -552,6 +552,69 @@ Content
 %%
 
 Content
+	name <Lack of Evidence>
+	desc <The PC captured the target, but they had to let him go.>
+	requires <*CS_Win_RevealEnemyNPC 1:POLIC ~2:THIEF +P-- E:-->
+
+	% E1 is the mission-giver
+	% E2 is the target
+	% E3 is a nearby public scene
+	Element3 <Scene Public !Near -7 !Okay 2>
+
+	start <if= PlotStatus %id% else %pop% ifNPCDead %1% SMemo 0 WinComp 0 .%id%_loss>
+	.%id%_loss <+T-- +F-->
+
+	sub
+		Persona 1
+		greeting <if= PlotStatus %id% else %pop% ifNPCOK %2% else .%id%_GoDullWin NewChat Say %id%01 CashPrize Reward StoryDL 500 StoryNote %id%02 &SetEnemyNPC %2% FreezeNPC %2% WinComp 0 .%id%_Win AddChat %id%01 AddChat %id%02>
+		*.%id%_GoDullWin <*MissionWasSuccess&Reward .%id%_GoDullEnd &AllyFac &EnemyFac>
+		.%id%_GoDullEnd <CashPrize Reward StoryDL 500 SMemo 0 NTBWinComp 0 .%id%_dullwin>
+		.%id%_dullwin <+T-- +F-->
+		.%id%_Win <+T-- +F-- +Pme>
+		result%id%01 <AddCheerful -d8   NewChat Say %id%03>
+		result%id%02 <AddLawful 1       NewChat Say %id%04 SMemo %id%05 &SetCompScene %3% AlterContext .%id%_info>
+		.%id%_info <+Tgs +Fin>
+		Msg%id%01 <We picked up %name2% right after your fight, but I'm afraid I have some bad news. We had to release \OPR %2% right away; according to the judge, we don't have enough evidence to hold \OPR %2% .>
+		Msg%id%01_1 <Good work against %name2%, \PC . Unfortunately, we weren't able to hold \OPR %2% for long... we don't have enough evidence yet to make a solid case.>
+		Msg%id%02 <%name2% was released due to a lack of evidence.>
+		Msg%id%03 <Yes, I know, but there's nothing we can do about it.>
+		Msg%id%03_1 <The law must be applied impartially, even to those who break it. Once we start making exceptions the whole thing falls apart like a house of cards.>
+		CMsg%id%03_1 <ifNPCLawful Accept>
+		Msg%id%03_2 <Without law, there is nothing but chaos. It may be flawed, but the law is the only tool we have to maintain a civilized society.>
+		CMsg%id%03_2 <ifNPCHeroic Accept>
+		Msg%id%04 <You do that. I've heard that \SPR %2% is often seen at %name3%; maybe you could find some information there.>
+		Msg%id%04_1 <You could try looking at %name3%; that was apparently one of %name2%'s favorite haunts. Maybe you could turn up some information.>
+		Msg%id%05 <%name1% suggested you could find evidence of %name2%'s crimes at %name3%.>
+		Prompt%id%01 <That's not fair!>
+		Prompt%id%01_1 <You see, this is why law just doesn't work.>
+		Prompt%id%02 <Leave it to me. I'll find the evidence.>
+		Prompt%id%02_1 <I'll keep my eye on \OPR %2% .>
+	end
+
+Content
+	name <Mr.Big is Big>
+	desc <The PC will learn that the person he just fought is merely a cog in the wheel.>
+	requires <*CS_Win_RevealEnemyNPC (1:POLIC|2:THIEF) E:-->
+
+	% E1 is the mission-giver
+	% E2 is the target
+	% E3 is the PC's new enemy
+	Element3 <NewNPC -2 -7 Criminal Villainous>
+	Place3 </>
+
+	start <if= PlotStatus %id% else %pop% ifNPCDead %1% SMemo 0 WinComp 0 .%id%_loss>
+	.%id%_loss <+T-- +F-->
+
+	sub
+		Persona 1
+		greeting <if= PlotStatus %id% else %pop% CashPrize Reward StoryDL 500 StoryNote %id%02 &SetEnemyNPC %3% NTBWinComp 0 .%id%_win ifNPCOK %2% FreezeNPC %2% PCEnemy %2%>
+		.%id%_win <+T-- +F-->
+		Msg%id%01 <Good job, \PC . You might be interested to learn that we've discovered %name2% was working for someone called %name3%.>
+		Msg%id%01_1 <Good work capturing %name2% , \PC , but we've learned that the real brains behind the operation is someone named %name3%.>
+		Msg%id%02 <You learned that %name2% was working for %name3%.>
+	end
+
+Content
 	name <Begin the Manhunt>
 	desc <The PC will begin a manhunt for the enemy NPC.>
 	requires <*CS_Win_RevealEnemyNPC (C:POLIC|P:POLIC|2:THIEF|E:++)>
@@ -591,7 +654,10 @@ Content
 
 	sub
 		Persona 1
-		greeting <if= PlotStatus %id% else %pop% ifNPCOK %2% else .%id%_GoReportSuccess &SetEnemyNPC %2% NewChat Say %id%01 Goto .%id%_GoEnd>
+		greeting <if= PlotStatus %id% else %pop% ifNPCOK %2% else .%id%_GoDullWin &SetEnemyNPC %2% NewChat Say %id%01 Goto .%id%_GoEnd>
+		*.%id%_GoDullWin <*MissionWasSuccess&Reward .%id%_GoDullEnd &AllyFac &EnemyFac>
+		.%id%_GoDullEnd <CashPrize Reward StoryDL 500 SMemo 0 NTBWinComp 0 .%id%_dullwin>
+		.%id%_dullwin <+T-- +F-->
 		.%id%_GoEnd <CashPrize Reward StoryDL 500 SMemo 0 NTBWinComp 0 .%id%_win>
 		.%id%_win <+T-- +F-->
 		Msg%id%01 <Good work out there, \PC . I think we should try to find out more about this mysterious pilot, %name2%.>

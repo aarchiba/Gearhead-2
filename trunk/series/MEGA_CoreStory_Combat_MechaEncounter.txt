@@ -15,6 +15,111 @@
 %%  ********************************
 
 Content
+	name <Lone Pirate>
+	size 5
+	desc <The PC will fight a lone pirate.>
+	requires <*CS_MechaEncounter +P-- E:-- F:CRIME>
+
+	% E1 is the mission provider
+	% E2 is the outdoor scene where the fight will take place
+	% E3 is the combat scene
+	% E4 is the pirate
+	Element3 <Prefab>
+	Place3 <2>
+	Element4 <Prefab>
+	Place4 </>
+
+	% SubPlot1 = Win the battle, get a reward
+	% SubPlot2 = Lose the battle, get scorned
+	SubPlot1 <*CS_Win_RevealEnemyNPC 1 4>
+	SubPlot2 <*CS_Loss_RevealEnemyNPC 1 4>
+
+	% V%id%01 = Initialization Counter
+	update <if= PlotStatus %id% else %pop% if= V%id%01 0 V= %id%01 1   NPCLevel %4% StoryDL MoveNPC %4% %3% SetNPCTeam %4% 2 SetNPCFaction %4% &EnemyFac>
+
+	sub
+		MetaScene 3 2
+		% L1 = Encounter Over Counter
+		% L2 = Initialization Counter
+		MapWidth 30
+		MapHeight 30
+
+		Start <if= L2 0 L= 2 1   ForceChat %4%>
+		nu1 <if= T1 0  Return   if= L1 0 L= 1 1   SMemo 1 History 2   ForceChat %4%  SetPlotStatus %id2%>
+		nu2 <if= T2 0           if= L1 0 L= 1 2   SMemo 1 History 3   AddRenown 1  Salvage  XPV 100  SetPlotStatus %id1%   ifNPCOK %4%    ForceChat %4%>
+
+		Msg1 <You should report back to %name1% about your battle with %name4%.>
+		Msg2 <You were defeated by the pirate %name4%.>
+		Msg3 <You defeated the pirate %name4% in battle.>
+
+		sub
+			team 1
+			SetEnemy 2
+			ParaX 5
+			ParaY 5
+
+			team 2
+			name <Enemies>
+			SetEnemy 1
+			ParaX 25
+			ParaY 25
+		end
+
+		Persona 4
+		special <UNLISTED NOESCAPE>
+		greeting <if= L1 2 else GoCheckLoss Goto GoWinSpeech>
+		*GoWinSpeech <*GetYouNextTime>
+		GoCheckLoss <if= L1 1 else GoThreat  Goto GoLoseSpeech>
+		*GoLoseSpeech <*YouLose>
+		GoThreat <EndChat Say 1 AddChat 1 AddChat 2>
+		*GoFight <*THEME_EXPO&ENEMY na>
+		result1 <ifG T-3 0 else GoFight EndChat Say 2 AddChat 3 AddChat 4>
+		result2 <EndChat Say 3 L= 1 1 AddRenown -10 SMemo 4 History 5 SetPlotStatus %id2% Return>
+		result3 <EndChat Say 6 AddChat 5>
+		result4 <EndChat Say 7 L= 1 1 AddHeroic 1 AddRenown -5 SMemo 4 History 8 SetPlotStatus %id2% Return>
+		result5 <Goto GoFight>
+		Msg1 <Hm, what's this? You don't look like you have anything worth stealing.>
+		Msg1_1 <Who's there? I don't recognize that mecha, so I don't know if you're friend or foe, and you definitely don't look like you have anything worth stealing. I'd advise you to simply leave this place before any trouble starts.>
+		CMsg1_1 <ifNPCSociable Accept>
+		Msg1_2 <Whoever you are, get out of here. I'm waiting for bigger fish.>
+		CMsg1_2 <ifNPCShy Accept>
+		Msg1_3 <>
+		CMsg1_3 <ifNPCEasygoing Accept>
+		Msg1_4 <Arr!!! Don't you know where you are? You've crossed paths with the dread pirate %name4%! I ought to keelhaul you just for daring to approach, but if you promise to leave now I might just let you live.>
+		CMsg1_4 <ifNPCPassionate Accept>
+		Msg1_5 <Avast, prepare to be boarded! Wait a minute... it's nothing but a poor downtrodden cavalier with nothing worth stealing. Go on, you can leave. I've lost all interest in you.>
+		CMsg1_5 <ifNPCCheerful Accept>
+		Msg1_6 <Who's there? Nothing but a worthless young pilot in a can of junk that's not even worth stealing... Take my advice and get away from here while you're still able.>
+		CMsg1_6 <ifNPCMelancholy Accept>
+		Msg1_7 <>
+		CMsg1_7 <ifNPCHeroic Accept>
+		Msg2 <Wait, you have me at a slight numerical disadvantage. Surely you're not going to face me like this?>
+		Msg2_1 <Wait, this is hardly a fair fight, I'm all alone and you have friends.>
+		Msg3 <You do that. I'll wait here for some better pickings.>
+		Msg4 <You should report back to %name1% about your non-battle with %name4%.>
+		Msg5 <You fled from battle against the pirate %name4%.>
+		Msg6 <You've got me there. Well, we might as well begin.>
+		Msg6_1 <It's true, isn't it? Well, I guess we should start.>
+		Msg7 <You are truly an honorable fighter, \PC . Normally I wouldn't like that but this time it's to my advantage. I'm quite sure that we'll meet again...>
+		Msg8 <You declined facing %name4% because it wasn't a fair fight.>
+		Prompt1 <%name1% sent me to capture you.>
+		Prompt1_1 <%name1% sent me to arrest you.>
+		Prompt2 <Sorry, I'll just go away now.>
+		Prompt2_1 <Sorry to bother you, I'll just go away...>
+		Prompt3 <As if you'd care if you had the advantage.>
+		Prompt3_1 <Would you care if you had the advantage?>
+		Prompt4 <You're right. Let's continue this another day.>
+		Prompt4_1 <Good point. Let's continue this some other time.>
+		Prompt5 <[Continue]>
+	end
+	inv
+		STC CORE-MECHAENCOUNTER
+
+		NPC Pirate
+		job_desig <THIEF>
+	end
+
+Content
 	name <Thief on the Run>
 	size 5
 	desc <The PC has been sent to fight his friend! He may either continue with the fight, or join his friend on the dark side.>
