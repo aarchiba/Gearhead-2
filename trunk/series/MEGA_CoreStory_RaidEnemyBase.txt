@@ -117,11 +117,11 @@ Content
 
 			room
 			% If the PC can locate and steal the experimental mecha, that's a win too.
-			minimap <...........#2............>
+			minimap <...........#3............>
 			sub
 				Elevator
 				name <Mecha Bay>
-				MiniMapComponent 2
+				MiniMapComponent 3
 				% V1 = Usage Counter
 				use <if= V1 0 else GoBeenBefore ifYesNo 1 2 3 V= 1 1 MechaPrize .mektype L4 RandomTheme * 4 d4 Return StoryNote 5 if= L1 0 WinComp 0 .next L= 1 1>
 				.next <+T-- +F-->
