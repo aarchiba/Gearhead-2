@@ -272,6 +272,34 @@ Content
 %%
 
 Content
+	name <He Has A Mission For You>
+	desc <The person that the PC just rescued has a mission for him.>
+	requires <*CS_Win_UnexpectedMeeting 2:ALLY>
+
+	% E1 is the mission-giver
+	% E2 is the NPC previously met
+	% E3 is a public scene nearby
+	Element3 <Scene Public !Near -7 !Okay 2>
+
+	start <if= PlotStatus %id% else %pop% ifNPCDead %1%  SMemo 0 WinComp 0 .%id%_loss>
+	.%id%_loss <+T-- +F-->
+
+	sub
+		Persona 1
+		greeting <if= PlotStatus %id% else %pop% CashPrize Reward StoryDL 300  ifNPCOK %2% else .%id%_GoTrivial  NewChat Say %id%01  StoryNote %id%02  &SetTargetNPC %2% WinComp %3% .%id%_next>
+		.%id%_next <+Tgt +Fmi>
+		*.%id%_GoTrivial <*MissionWasSuccess&Reward .%id%_GoTrivialEnd &AllyFac &EnemyFac>
+		.%id%_GoTrivialEnd <SMemo 0  NTBWinComp 0 .%id%_trivialend>
+		.%id%_trivialend <+T-- +F-->
+		Msg%id%01 <Good work, \PC . I've been in contact with %name2% ... apparently \SPR %2% has a mission for you at %name3%. You should head over there right away.>
+		Msg%id%01_1 <Good job on that mission. By the way, someone named %name2% called. It seems that \SPR %2% has a mission for you from \FACTION NPCFac %2% . You can find \OPR %2% at %name3% .>
+		CMsg%id%01_1 <if# NPCFac %2% 0 Accept>
+		Msg%id%01_2 <I hear that you and %name2% had quite a good time out there. Apparently \SPR %2% has another job for you to do; you can meet \OPR %2% at %name3%.>
+		Msg%id%02 <%name1% sent you to meet %name2% at %name3% for a mission.>
+	end
+
+
+Content
 	name <You Work Well Together>
 	desc <The PC will be teamed up with the person he just met.>
 	requires <*CS_Win_UnexpectedMeeting R:-- 1:ALLY -2:ENEMY (+C--|+Cro) (1:CORPO|1:TRADE|1:LABOR|1:POLIT) (2:CORPO|2:LABOR)>
@@ -607,7 +635,7 @@ Content
 
 	sub
 		Persona 1
-		greeting <if= PlotStatus %id% else %pop% CashPrize Reward StoryDL 500 StoryNote %id%02 &SetEnemyNPC %3% NTBWinComp 0 .%id%_win ifNPCOK %2% FreezeNPC %2% PCEnemy %2%>
+		greeting <if= PlotStatus %id% else %pop% CashPrize Reward StoryDL 500 NewChat Say %id%01 StoryNote %id%02 &SetEnemyNPC %3% NTBWinComp 0 .%id%_win ifNPCOK %2% FreezeNPC %2% PCEnemy %2%>
 		.%id%_win <+T-- +F-->
 		Msg%id%01 <Good job, \PC . You might be interested to learn that we've discovered %name2% was working for someone called %name3%.>
 		Msg%id%01_1 <Good work capturing %name2% , \PC , but we've learned that the real brains behind the operation is someone named %name3%.>

@@ -427,7 +427,7 @@
 	Prompt%id%01 <I'll get right on it.>
 
 	Persona
-	requires <*CORE_BasicJob (CORPO|TRADE) ~"ArchAlly" (+P--|+Pme|+Pun) Common>
+	requires <*CORE_BasicJob ("CORPO"|"TRADE") ~"ArchAlly" (+P--|+Pme|+Pun) Common>
 	START <NewChat Say %id%01 AddChat %id%01 AddChat %id%02>
 	Result%id%01 <StoryNote %id%02 Goto %1%>
 	result%id%02 <SMemo 0 Goto %2%>

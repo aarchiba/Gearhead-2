@@ -15,6 +15,90 @@
 %%  ********************************
 
 Content
+	name <Vs Bandits>
+	size 6
+	desc <Find a member of your faction fighting other mecha; can help out.>
+	requires <*CS_MechaEncounter (+P--|+Pme) P:CORPO P:ALLY>
+
+	% E1: The Mission Provider
+	% E2: The outdoor scene where the fight will take place
+	% E3 is the combat scene
+	% E4 is the home scene of the character to help
+	% E5 is the character itself
+	% E6 is an enemy faction
+	Element3 <Prefab>
+	Place3 <2>
+	element4 <Scene Building Public !Near -7 !XClude -2>
+	element5 <Character HasMecha !Comrade -3 Neverfail>
+	NeverFail5 <Mecha Pilot>
+	Place5 <4 (Citizens) Pass>
+	element6 <Faction Crime !Enemy -3 !Okay -2>
+
+	% V%id%01 = Initialization Counter
+
+	update <if= V%id%01 0 else %pop% V= %id%01 1   MoveNPC %5% %3%  SetNPCTeam %5% 3  NPCLevel %5% StoryDL  Goto %pop%>
+
+	% SubPlot1 = Win the battle, now find NPC
+	% SubPlot2 = Lose the battle, get scorned
+	SubPlot1 <*CS_Win_UnexpectedMeeting&Rescue 1 5>
+	SubPlot2 <*CS_Loss_UnexpectedMeeting&Rescue 1 5>
+
+	sub
+		MetaScene 3 2
+		% L1 = Encounter Over Counter
+		% L2 = Initialization Counter
+		MapWidth 30
+		MapHeight 30
+
+		% L1 = Match Over counter
+		% L2 = Initialization Counter
+
+		Start <if= L2 0 L= 2 1 ForceChat %5%>
+		% If the NPC dies, this scenario ends in a loss.
+		Faint%5% <L= 1 1  SMemo 4  History 1  SetPlotStatus %id2%>
+		% If the PC defeats all of T2 before the NPC dies, it's a win.
+		nu1 <if= T1 0   Return   if= V1 0 V= 1 1               SMemo 4  History 1   SetPlotStatus %id2%>
+		nu2 <if= T2 0   if= V1 0 V= 1 1   XPV 100  AddRenown 1   Alert 3 RunAway %5% SMemo 4 History 2 SetPlotStatus %id1%>
+		Msg1 <You failed to protect %name5% 's convoy from bandits.>
+		Msg2 <You saved %name5% 's convoy from bandits.>
+		Msg3 <As the battle ends, %name5% 's convoy moves off.>
+		Msg4 <You should go to \SCENE NPCScene %1% to tell %name1% about %name5%.>
+
+		sub
+			team 1
+			SetAlly 3
+			SetEnemy 2
+			ParaX 5
+			ParaY 10
+
+			team 2
+			SetEnemy 1
+			Deploy <SetSelfFaction %6%   WMecha 2 StoryDL 150>
+			ParaX 25
+			ParaY 25
+
+			team 3
+			SetAlly 1
+			SetEnemy 2
+			ParaX 10
+			ParaY 5
+		end
+
+		Persona 5
+		special <Unlisted>
+		greeting <if= PlotStatus %id% else GoChat if# V1 0 else GoFirst EndChat Say 1>
+		GoChat <NewChat SayAnything>
+		GoFirst <EndChat Say %id%01 AddChat %id%01>
+		*result%id%01 <*LetsDefeatThem %6%>
+		Msg%id%01 <This is %name5% of \FACTION &AllyFac . Our convoy is being attacked by bandits; I could use some backup.>
+		Prompt%id%01 <I'm on the way.>
+		Prompt%id%01_1 <I'll be right there.>
+	end
+	inv
+		STC CORE-MECHAENCOUNTER
+	end
+
+Content
 	name <Lone Pirate>
 	size 5
 	desc <The PC will fight a lone pirate.>
@@ -1057,7 +1141,7 @@ Content
 
 			team 2
 			SetEnemy 1
-			Deploy <SetSelfFaction &EnemyFac   WMecha 2 StoryDL 130>
+			Deploy <SetSelfFaction &EnemyFac   WMecha 2 StoryDL 150>
 			ParaX 25
 			ParaY 25
 
