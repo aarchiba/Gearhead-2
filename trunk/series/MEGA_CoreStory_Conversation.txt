@@ -545,6 +545,50 @@ Content
 %%  ***   +Pme  Meet  Enemy   ***
 %%  *****************************
 
+Plot
+	name <Did you hear about EnemyNPC?>
+	desc <A mutual friend will provide some information about E1.>
+	requires <*CS_Conversation +Pme 1:FRIEND -E:-->
+	Size 1
+
+	% E1 is the information source
+	% E2 is a scene where N1 was apparently seen
+	% E3 is the enemy NPC
+	Element2 <Scene Public !Near -7>
+	Element3 <Grab 1>
+	Place3 </>
+
+	start <if= PlotStatus %id% else %pop% ifNPCDead %1% LoseComp 0 .%id%_loss>
+	.%id%_loss <+T-- +F-->
+
+	sub
+		Persona 1
+		greeting <if= PlotStatus %id% else %pop% Goto .%id%_GoGreet>
+		*.%id%_GoGreet <*HowAreYou .%id%_GoAsk>
+		.%id%_GoAsk <NewChat Say %id%01 AddChat %id%01 AddChat %id%02 AddChat %id%03>
+		.%id%_GoEnd <StoryNote %id%03 NTBWinComp %2% .%id%_win>
+		.%id%_win <+Tgs +Fin>
+		result%id%01 <NewChat Say %id%02 AddChat %id%04 AddChat %id%05 Goto .%id%_GoEnd>
+		result%id%02 <NewChat AddCheerful -d10  Say %id%04 AddChat %id%04 AddChat %id%05 Goto .%id%_GoEnd>
+		result%id%03 <NewChat Say %id%05 AddChat %id%04 AddChat %id%05 Goto .%id%_GoEnd>
+		result%id%04 <NewChat Say %id%06>
+		result%id%05 <NewChat Say %id%07 AddSociable -d10>
+		Msg%id%01 <Have you been speaking to %name3% recently? I'm afraid that \SPR %3% 's getting involved with some serious business...>
+		Msg%id%02 <I was speaking with \OPR %3% at %name2% just a short while ago, and \SPR %3% seemed very conflicted. Did the two of you have a fight?>
+		Msg%id%03 <%name1% said that \SPR %1% had seen %name3% at %name2%.>
+		Msg%id%04 <I know you don't mean that. Look, the three of us have known one another for a long time. When I saw %name3% at %name2%, \SPR %3% seemed really upset. Did the two of you have a fight or something?>
+		Msg%id%05 <Right now? No, not really... I saw \OPR %3% at %name2% earlier. \PC , what's going on? Did the two of you have a fight or something?>
+		Msg%id%06 <I see. Well, remember that the two of you are still friends, whatever else may happen.>
+		Msg%id%07 <That's the same response I got from \OPR %3% . Whatever else happens between the two of you, remember that you're still friends.>
+		Prompt%id%01 <Yes. I know all about that.>
+		Prompt%id%02 <%name3% can die, for all I care.>
+		CPrompt%id%02 <IFNPCARCHENEMY %3% Accept>
+		Prompt%id%03 <Wait, do you know where \SPR %3% is?>
+		Prompt%id%04 <Yes, we did.>
+		Prompt%id%04_1 <%name3% is working for \FACTION &EnemyFac .>
+		CPrompt%id%04_1 <ifFactionExists &EnemyFac Accept>
+		Prompt%id%05 <I'd rather not talk about it.>
+	end
 
 %%  *****************************************
 %%  ***   +Pun  Unknown  Enemy  Attacks   ***

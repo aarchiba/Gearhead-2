@@ -1,0 +1,47 @@
+%% COMP_Cme_MentoringPartner.txt
+%%
+%%  PC assigned to mentor Partner components
+
+%%  ********************************
+%%  ***   +P--  Peaceful  Life   ***
+%%  ********************************
+
+
+%%  *****************************************
+%%  ***   +Pme	PC meets an enemy pilot   ***
+%%  *****************************************
+
+
+%%  *****************************************
+%%  ***   +Pun  Unknown  Enemy  Attacks   ***
+%%  *****************************************
+
+
+%%  ***********************************************************
+%%  ***   +Psh	PC is shanghaied into working for faction   ***
+%%  ***********************************************************
+
+
+%%  *************************************
+%%  ***   +Pla  Learn  of  Artifact   ***
+%%  *************************************
+
+
+%%  ****************************************
+%%  ***   +Pew  Enemy  Weapon  Program   ***
+%%  ****************************************
+
+
+%%  *******************
+%%  ***   DEFAULT   ***
+%%  *******************
+
+Plot
+	name <You Have Failed>
+	desc <If set to reform someone, and that someone has died, the PC will feel bad.>
+	requires <+Cre E:-- Common Common Common>
+
+	update <LoseComp &CompScene .next>
+	.next <+Cfa>
+
+
