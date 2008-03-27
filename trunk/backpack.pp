@@ -62,6 +62,7 @@ Procedure MechaPartEditor( GB: GameBoardPtr; var LList: GearPtr; PC,Mek: GearPtr
 
 Procedure MechaPartBrowser( Mek: GearPtr; RDP: RedrawProcedureType );
 Procedure MysteryPartBrowser( Mek: GearPtr; RDP: RedrawProcedureType );
+Procedure BrowseDesignFile( List: GearPtr; RDP: RedrawProcedureType );
 
 Procedure FHQ_ThisWargearWasSelected( GB: GameBoardPtr; var LList: GearPtr; PC,M: GearPtr; BasicRedrawer: RedrawProcedureType );
 
@@ -75,12 +76,12 @@ implementation
 uses ability,action,arenacfe,arenascript,gearutil,ghchars,ghholder,
      ghmodule,ghprop,ghswag,interact,menugear,rpgdice,skilluse,texutil,
      vidmap,vidmenus,description,ghweapon,ui4gh,vidinfo,narration,
-     ghintrinsic,effects,targetui,ghsensor;
+     ghintrinsic,effects,targetui,ghsensor,customization;
 {$ELSE}
 uses ability,action,arenacfe,arenascript,gearutil,ghchars,ghholder,
      ghmodule,ghprop,ghswag,interact,menugear,rpgdice,skilluse,texutil,
      glmap,glmenus,description,ghweapon,glinfo,narration,
-     ghintrinsic,effects,ui4gh,targetui,ghsensor;
+     ghintrinsic,effects,ui4gh,targetui,ghsensor,customization;
 {$ENDIF}
 
 var
@@ -2050,6 +2051,41 @@ begin
 	SelectMenu( RPM , @MysteryBrowserRedraw );
 	DisposeRPGMenu( RPM );
 end;
+
+Procedure BrowseDesignFile( List: GearPtr; RDP: RedrawProcedureType );
+	{ Choose one of the sibling gears from LIST and display its properties. }
+var
+	BrowseMenu: RPGMenuPtr;
+	Part: GearPtr;
+	N: Integer;
+begin
+	{ Create the menu. }
+	BrowseMenu := CreateRPGMenu( MenuItem , MenuSelect , ZONE_FieldHQMenu );
+
+	{ Add each of the gears to the menu. }
+	BuildSiblingMenu( BrowseMenu , List );
+	RPMSortAlpha( BrowseMenu );
+	AddRPGMenuItem( BrowseMenu , '  Cancel' , -1 );
+
+	repeat
+		MPB_Redraw := RDP;
+		BP_Source := List;
+		BP_SeekSibs := True;
+		BP_ActiveMenu := BrowseMenu;
+
+		{ Select a gear. }
+		N := SelectMenu( BrowseMenu, @PartBrowserRedraw );
+
+		if N > -1 then begin
+			Part := RetrieveGearSib( List , N );
+			MechaPartBrowser( Part , RDP );
+			if Part^.G = GG_Theme then CheckTheme( Part );
+		end;
+	until N = -1;
+
+	DisposeRPGMenu( BrowseMenu );
+end;
+
 
 Procedure FHQ_Transfer( var LList: GearPtr; PC,Item: GearPtr );
 	{ An item has been selected. Allow it to be transferred to }

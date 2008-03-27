@@ -2499,35 +2499,6 @@ begin
 	end;
 end;
 
-Procedure BrowseMapContents( List: GearPtr );
-	{ Choose one of the sibling gears from LIST and display its properties. }
-var
-	BrowseMenu: RPGMenuPtr;
-	Part: GearPtr;
-	N: Integer;
-begin
-	{ Create the menu. }
-	BrowseMenu := CreateRPGMenu( MenuItem , MenuSelect , ZONE_Menu );
-
-	{ Add each of the gears to the menu. }
-	BuildSiblingMenu( BrowseMenu , List );
-	RPMSortAlpha( BrowseMenu );
-	AddRPGMenuItem( BrowseMenu , '  Cancel' , -1 );
-
-	repeat
-		{ Select a gear. }
-		N := SelectMenu( BrowseMenu, @PCActionRedraw );
-
-		if N > -1 then begin
-			Part := RetrieveGearSib( List , N );
-			MechaPartBrowser( Part , @PCActionRedraw );
-		end;
-	until N = -1;
-
-	DisposeRPGMenu( BrowseMenu );
-end;
-
-
 Procedure RLPlayerInput( Mek: GearPtr; Camp: CampaignPtr );
 	{ Allow the PC to control the action as per normal in a RL }
 	{ game- move using the arrow keys, use other keys for everything }
@@ -2723,12 +2694,14 @@ begin
 			end else if KP = 'P' then begin
 				ForcePlot( Camp^.GB , Mek , Camp^.GB^.Scene );
 			end else if ( KP = '!' ) and ( Camp^.GB^.Scene <> Nil ) then begin
-				MechaPartBrowser( FindRoot( Camp^.GB^.Scene ) , @PCActionRedraw );
+				BrowseDesignFile( FindRoot( Camp^.GB^.Scene )^.InvCom , @PCActionRedraw );
+			end else if ( KP = '$' ) and ( Camp^.GB^.Scene <> Nil ) then begin
+				BrowseDesignFile( FindRoot( Camp^.GB^.Scene )^.SubCom , @PCActionRedraw );
 			end else if ( KP = '^' ) and ( Camp^.GB^.Scene <> Nil ) then begin
 				SpitContents( Camp^.GB^.meks );
 
 			end else if KP = '*' then begin
-				BrowseMapContents( Camp^.GB^.Meks );
+				BrowseDesignFile( Camp^.GB^.Meks , @PCActionRedraw );
 
 			end else if KP = '@' then begin
 				ShowRep( Mek );

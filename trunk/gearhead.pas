@@ -30,10 +30,10 @@ program gearhead;
 
 {$IFDEF ASCII}
 uses 	gears,vidgfx,navigate,vidmap,randmaps,locale,arenaplay,ghchars,gearutil,gearparser,
-	ability,chargen,vidmenus,backpack,ui4gh,gh2arena,menugear,customization;
+	ability,chargen,vidmenus,backpack,ui4gh,gh2arena,menugear;
 {$ELSE}
 uses 	gears,glgfx,navigate,glmap,randmaps,locale,arenaplay,ghchars,gearutil,gearparser,
-	ability,chargen,glmenus,backpack,gh2arena,menugear,customization,ui4gh;
+	ability,chargen,glmenus,backpack,gh2arena,menugear,ui4gh;
 {$ENDIF}
 
 const
@@ -111,36 +111,6 @@ begin
 	DisposeRPGMenu( RPM );
 end;
 
-Procedure BrowseDesignFile( List: GearPtr );
-	{ Choose one of the sibling gears from LIST and display its properties. }
-var
-	BrowseMenu: RPGMenuPtr;
-	Part: GearPtr;
-	N: Integer;
-begin
-	{ Create the menu. }
-	BrowseMenu := CreateRPGMenu( MenuItem , MenuSelect , ZONE_Menu );
-
-	{ Add each of the gears to the menu. }
-	BuildSiblingMenu( BrowseMenu , List );
-	RPMSortAlpha( BrowseMenu );
-	AddRPGMenuItem( BrowseMenu , '  Cancel' , -1 );
-
-	repeat
-		{ Select a gear. }
-		N := SelectMenu( BrowseMenu, @RedrawOpening );
-
-		if N > -1 then begin
-			Part := RetrieveGearSib( List , N );
-			MechaPartBrowser( Part , @RedrawOpening );
-			if Part^.G = GG_Theme then CheckTheme( Part );
-		end;
-	until N = -1;
-
-	DisposeRPGMenu( BrowseMenu );
-end;
-
-
 Procedure DesignDirBrowser;
 	{ Browse the mecha files on disk. }
 	{ NOTE: This procedure must be called from the Arena opening menu, so that }
@@ -167,7 +137,7 @@ begin
 				end else begin
 					{ Multiple mecha in this file. Better write another }
 					{ procedure... }
-					BrowseDesignFile( Part );
+					BrowseDesignFile( Part , @RedrawOpening );
 				end;
 				DisposeGear( Part );
 			end;
@@ -203,7 +173,7 @@ begin
 				end else begin
 					{ Multiple mecha in this file. Better write another }
 					{ procedure... }
-					BrowseDesignFile( Part );
+					BrowseDesignFile( Part , @RedrawOpening );
 				end;
 				DisposeGear( Part );
 			end;
