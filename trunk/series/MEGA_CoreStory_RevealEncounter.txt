@@ -93,6 +93,42 @@ Content
 %%  *******************
 
 Plot
+	name <Ask and you shall receive>
+	requires <*CS_RevealEncounter !Ne>
+	desc <Simply ask for the information and you will be given it.>
+	Size 1
+
+	% E1 is the metascene being sought
+	% E2 is the outdoors scene where it is
+	% E3 is a public scene for the NPC
+	% E4 is the NPC
+	Element3 <Scene Public !Near -7>
+	Element4 <Character HasMecha Sociable -ArchAlly !Near -7>
+	Place4 <3 sd ally>
+
+	% SubPlot1 is a blank plot state
+	SubPlot1 <*UTIL_BlankState>
+
+	% As long as we're still at this phase, the NPC's death will end the plot.
+	start <if= PlotStatus %id% else %pop% ifNPCDead %4% LoseComp 0 .%id%_changes>
+	.%id%_changes <+T-- +F-->
+
+	sub
+		Persona 4
+		rumor%id% <%name4% knows about all kinds of strange places.>
+		greeting <if# PlotStatus %id% else GoExplain NewChat SayAnything>
+		*GoExplain <*LookingForScene %1% GoGive>
+		GoGive <NewChat Say 1 SMemo 2 History 3 ShowEntrance %1% SetPlotStatus %id1%>
+		Msg1 <It's said that %name1% can be found in %name2%. I've never been there myself, but it should be easy enough to find.>
+		Msg1_1 <Oh, that? As far as I know you can find it in %name2%. Here, I'll sketch you a quick map. Good luck.>
+		CMsg1_1 <ifG React d20 Accept>
+		Msg1_2 <You mean, you don't even know that? Typical. You can find %name1% in %name2%, of course.>
+		CMsg1_2 <ifG 1 React Accept>
+		Msg2 <%name4% told you that %name1% can be found in %name2%.>
+		Msg3 <You learned from %name4% where to find %name1%.>
+	end
+
+Plot
 	name <Fifth Column>
 	requires <*CS_RevealEncounter &EnemyBase F:++>
 	desc <Your friend on the other side will help you out.>

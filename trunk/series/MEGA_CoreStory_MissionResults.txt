@@ -635,11 +635,18 @@ Content
 
 	sub
 		Persona 1
-		greeting <if= PlotStatus %id% else %pop% CashPrize Reward StoryDL 500 NewChat Say %id%01 StoryNote %id%02 &SetEnemyNPC %3% NTBWinComp 0 .%id%_win ifNPCOK %2% FreezeNPC %2% PCEnemy %2%>
+		greeting <if= PlotStatus %id% else %pop% CashPrize Reward StoryDL 500 NewChat Say %id%01 StoryNote %id%02 AddChat %id%01 &SetEnemyNPC %3% NTBWinComp 0 .%id%_win ifNPCOK %2% FreezeNPC %2% PCEnemy %2%>
 		.%id%_win <+T-- +F-->
+		result%id%01 <NewChat Say %id%03>
 		Msg%id%01 <Good job, \PC . You might be interested to learn that we've discovered %name2% was working for someone called %name3%.>
 		Msg%id%01_1 <Good work capturing %name2% , \PC , but we've learned that the real brains behind the operation is someone named %name3%.>
 		Msg%id%02 <You learned that %name2% was working for %name3%.>
+		Msg%id%03 <Not much, unfortunately. All we know is that \SPR %3% 's a new figure in the underworld, and is gaining power fast.>
+		Msg%id%03_10 <We know that \SPR %3% has worked for \FACTION &EnemyFac in the past. Other than that, I couldn't even give you a physical description.>
+		CMsg%id%03_10 <ifFactionExists &EnemyFac Accept>
+		Prompt%id%01 <What do we know about %name3%?>
+		Prompt%id%01_1 <Can you tell me anything about %name3%?>
+		Prompt%id%01_2 <What can you tell me about %name3%?>
 	end
 
 Content
