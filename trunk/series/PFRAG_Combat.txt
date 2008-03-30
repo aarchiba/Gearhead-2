@@ -1,5 +1,41 @@
 %%% COMBAT PERSONA FRAGMENTS
 
+% TYPE: *WelcomeToMyLair
+%	The PC has found the NPC's hideout, and combat is immanent.
+%    PARAM1: Exit label
+
+	Persona
+	requires <*WelcomeToMyLair>
+	% v%id%01 = Single Use Counter
+	START <if= v%id%01 0 else %1% V= %id%01 1 EndChat Say %id%01 AddChat %id%01>
+	result%id%01 <Goto %1%>
+	Msg%id%01 <Welcome to my lair. It must have been difficult for you to get in, but not nearly difficult enough...>
+	Msg%id%01_1 <>
+	CMsg%id%01_1 <ifNPCSociable Accept>
+	Msg%id%01_2 <>
+	CMsg%id%01_2 <ifNPCShy Accept>
+	Msg%id%01_3 <>
+	CMsg%id%01_3 <ifNPCCheerful Accept>
+	Msg%id%01_4 <>
+	CMsg%id%01_4 <ifNPCMelancholy Accept>
+	Msg%id%01_5 <>
+	CMsg%id%01_5 <ifNPCEasygoing Accept>
+	Msg%id%01_6 <>
+	CMsg%id%01_6 <ifNPCPassionate Accept>
+	Prompt%id%01 <Let's settle this.>
+	Prompt%id%01_1 <Nice place you've got here, \CHATNPC .>
+	CPrompt%id%01_1 <ifPCCheerful Accept>
+	Prompt%id%01_2 <I'm not surprised that you'd live in a dump like this.>
+	CPrompt%id%01_2 <ifPCMelancholy Accept>
+	Prompt%id%01_3 <>
+	CPrompt%id%01_3 <ifPCEasygoing Accept>
+	Prompt%id%01_4 <>
+	CPrompt%id%01_4 <ifPCPassionate Accept>
+	Prompt%id%01_5 <>
+	CPrompt%id%01_5 <ifPCSociable Accept>
+	Prompt%id%01_6 <>
+	CPrompt%id%01_6 <ifPCShy Accept>
+
 % TYPE: *WaitingForDuel
 %	The NPC is waiting for the PC to come fight him.
 %    PARAM1: Duel location

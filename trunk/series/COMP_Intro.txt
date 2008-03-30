@@ -750,7 +750,7 @@ Plot
 		%   bits are in place: the introduction, the question, the story info, and the
 		%   advice.
 		% V1 = Have given story info.
-		greeting <&SetEnemyFac %4%   StoryNote 2  NTBWinComp 0 .next  if= V1 1 else GoGreeting Goto GoAdvice>
+		greeting <&SetEnemyFac %4%   SMemo 2 History 3  NTBWinComp 0 .next  if= V1 1 else GoGreeting Goto GoAdvice>
 		.next <+T-- +F-->
 		*GoGreeting <*INTRO_Introduction GoAskQuestion>
 		*GoAskQuestion <*INTRO_Question GoStoryInfo>
@@ -770,6 +770,7 @@ Plot
 		Msg1_6 <>
 		CMsg1_6 <ifNPCMelancholy Accept>
 		Msg2 <Lately there have been many robberies by %name4% .>
+		Msg3 <There had been many robberies by %name4% .>
 		Prompt1 <Any advice in case I happen to meet them?>
 		Prompt1_1 <Do you have any advice in case I run into them?>
 	end

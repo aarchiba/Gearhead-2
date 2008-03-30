@@ -14,8 +14,110 @@
 %%  ********************************
 
 Content
-	name <Unlawful Alliance>
-	desc <You find that the criminals you've been fighting were hired by an enemy corporation.>
+	name <Shanghai Surprise>
+	desc <You find the enemy base, and get an offer you can't refuse.>
+	requires <*CS_RaidEnemyBase (+P--|+Pme) E:++ F:CRIME (P:--|P:CORPO|P:MILIT)>
+	size 6
+
+	% E1 is the base itself
+	% E2 is your enemy
+	% E3 is a member of the enemy faction
+	% E4 is a public scene
+	Element2 <Grab 1>
+	Place2 <1 (Enemies) SD Enemy>
+	Element3 <Character !Comrade -2 !Global Neverfail>
+	NeverFail3 <Pirate>
+	Place3 </>
+	Element4 <Scene Building Public !Okay 3 !Near -7>
+
+	% P%id%01 = Initialization Counter
+	update <if= p%id%01 0 else %pop% P= %id%01 1 NPCLevel %2% StoryDL Goto %pop%>
+
+	sub
+		MetaScene 1
+		mapwidth 17
+		mapheight 17
+		BoxMap
+
+		% L1 = Initialization Counter
+		% L2 = Victory Counter
+
+		content <Fill Sub *HIDEOUT_X na>
+
+		start <if= L1 0 else GoBeenBefore L= 1 1 ForceChat %2% StoryNote 6>
+		GoBeenBefore <Print 1>
+
+		surrender%2% <L= 2 1 Monologue %2% 2 StoryNote 3 XPV 100 FreezeNPC %2% Retreat 2 WinComp 0 .surrender>
+		nu1 <if= T1 0 Return if= L2 0 L= 2 1 StoryNote 4 LoseComp 0 .loss>
+		nu2 <if= T2 0        if= L2 0 L= 2 1 StoryNote 5 XPV 100 WinComp 0 .next>
+		.surrender <+Pun +T-- +F-->
+		.loss <+Pun +T-- +F-->
+		.next <+T-- +F-->
+
+		msg1 <You enter the enemy base.>
+		msg2 <Alright, you win this round... but I'll tell you now, once our plan goes into effect you'll wish you had joined \FACTION &EnemyFac when you had the chance.>
+		msg3 <%name2% warned that you'd regret not joining \FACTION &EnemyFac .>
+		msg4 <You refused %name2%'s offer, and was defeated in combat.>
+		msg5 <You refused %name2%'s offer and defeated \OPR %2% in combat.>
+		msg6 <At the enemy base, %name2% asked you to join \FACTION &EnemyFac .>
+
+		sub
+			Team 1
+			SetEnemy 2
+
+			Team 2
+			name <Enemies>
+			type <SYNTH ROBOT CRIMINAL>
+			Deploy <if= V1 0 V= 1 1 WMonster 2 StoryDL 150>
+			SetEnemy 1
+
+			room
+			special <STARTHERE>
+			minimap <............2............>
+			sub
+				TrapDoor
+				Destination -1
+				MiniMapComponent 2
+				use <Print 1 Return if= L2 0 L= 2 1 Monologue %2% 101 StoryNote 102 FreezeNPC %2% LoseComp 0 .next>
+				.next <+Pun +T-- +F-->
+				msg101 <You're a fool, \PC . When the next part of our plan goes into effect you'll regret not accepting my offer.>
+				msg102 <%name2% warned that you'd regret not joining \FACTION &EnemyFac .>
+			end
+		end
+
+		Persona 2
+		special <UNLISTED NOESCAPE>
+		*greeting <*WelcomeToMyLair GoQuestion1>
+		GoQuestion1 <EndChat Say 1 AddChat 1 AddChat 2>
+		GoQuestion2 <EndChat Say 2 AddChat 3 AddChat 4 AddChat 5>
+		GoQuestion3 <EndChat Say 6 AddChat 6 AddChat 7>
+		GoJoinFac <EndChat Say 5 FreezeNPC %2% Retreat 2 L= 2 1 CustomMecha .mek StoryDL SMemo 3  History 4  XPV 100  AddLawful -2   &SetAllyFac &EnemyFac  &SetEnemyFac 0  StoreOldFaction SetPCFac &AllyFac &SetEnemyNPC 0  &SetTargetNPC %3% WinComp %4% .join>
+		.join <+Tgt +Fmi +Psh>
+		.mek <GENERAL \FACTION_DESIG &EnemyFac>
+		result1 <AddCheerful d4   Goto GoQuestion2>
+		result2 <AddSociable d4   Goto GoQuestion2>
+		result3 <Goto GoJoinFac>
+		result4 <FacXP+ PCFac 1   Goto GoQuestion3>
+		result5 <AddLawful 1      Goto GoQuestion3>
+		result6 <Goto GoJoinFac>
+		result7 <EndChat Say 7>
+		Msg1 <I'm quite impressed with your skills. Tell me, \PC , are you happy with your current job? Are they paying you the sort of money we both know you're worth?>
+		Msg2 <I'm willing to offer you a post with \FACTION &EnemyFac . Once you sign on you're going to be an outlaw, but the hours are flexible, the supervision minimal, and the pay however much you can steal. I think it'd be good for you.>
+		Msg3 <You accepted %name2%'s offer to join \FACTION &EnemyFac ; \SPR %2% told you to visit %name3% in %name4% for your first mission.>
+		Msg4 <You accepted %name2%'s offer.>
+		Msg5 <Ah, it's good to see that you're willing to listen to reason. Welcome to \FACTION &EnemyFac ; this new mecha marks you as one of us, now. You should head over to %name4% and talk with %name3%; I hear that \SPR %3% 's got some work for you.>
+		Msg6 <You should think long and hard about this decision before you say something you'll regret. Take a look around- you're outnumbered and outgunned. If you're not going to join our gang we'll have to deal with you like any other trespasser.>
+		Msg7 <That's a shame. Here I was looking forward to working with you, but I'm going to have to bury you instead.>
+		Prompt1 <I have no complaints.>
+		Prompt2 <I could do better, but... What are you getting at?>
+		Prompt3 <I can be a pirate? Cool! I'm in!>
+		Prompt4 <No way. My loyalty is to \FACTION PCFac .>
+		CPrompt4 <ifFactionExists PCFac Accept>
+		Prompt5 <Forget it. I'm not a criminal.>
+		Prompt6 <Did I say no? I meant yes.>
+		Prompt7 <You won't change my mind. I'm not joining.>
+	end
+
 
 %%  *****************************************
 %%  ***   +Pme	PC meets an enemy pilot   ***

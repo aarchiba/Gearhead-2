@@ -386,12 +386,17 @@ var
 					Inc( NumMatches );
 				end;
 			end;
-			CheckAlongPath( P^.SubCom );
-			if P^.G <> GG_MetaScene then CheckAlongPath( P^.InvCom );
+			{ Don't check the contents of the content set- if it hasn't yet been added to the }
+			{ adventure, we don't want it. }
+			{ Also, don't check the contents of metascenes- either they're already involved in }
+			{ a plot or they're off-limits. }
+			if ( P^.G <> GG_ContentSet ) and ( P^.G <> GG_MetaScene ) then begin
+				CheckAlongPath( P^.SubCom );
+				CheckAlongPath( P^.InvCom );
+			end;
 			P := P^.Next;
 		end;
 	end;
-
 begin
 	{ Step one- size the array. We have a good estimate for how many characters are in the adventure in }
 	{ the MaxCID value. }

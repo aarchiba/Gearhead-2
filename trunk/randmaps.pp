@@ -2458,20 +2458,31 @@ begin
 
 end;
 
-Function CreateContentList( Scene: GearPtr; Context: String ): GearPtr;
+Function CreateContentList( Scene: GearPtr; const Context: String ): NAttPtr;
 	{ Create a list holding all content that might be chosen for the specified context. }
+	{ This list is in the regular format of component lists- the G and S values both }
+	{ indicate a component index, and V indicates the component match weight. In this case }
+	{ a positive index indicates regular random scene content, while a negative index }
+	{ indicates unique scene content. }
+const
+	standard_content_multiplier = 5; { Standard, non-unique content is more likely to show up }
+					{ than the unique stuff. This multiplier tells by how much. }
 var
-	it,C,C2: GearPtr;
+	it: NAttPtr;	{ The list we're generating. }
+	C: GearPtr;
+	N,MW: Integer;	{ A counter, and the current match weight. }
 begin
 	{ First, harvest the content from the standard list. }
 	it := Nil;
 	C := random_scene_content;
+	N := 1;
 	while C <> nil do begin
-		if StringMatchWeight( Context , SAttValue( C^.SA , 'REQUIRES' ) ) > 0 then begin
-			C2 := CloneGear( C );
-			AppendGear( it , C2 );
-			SetSAtt( C2^.SA , 'CONTEXT <' + Context + '>' );
+		MW := StringMatchWeight( Context , SAttValue( C^.SA , 'REQUIRES' ) );
+		if MW > 0 then begin
+			{ Regular scene content gets a multiplier to match weight. }
+			SetNAtt( it , N , N , MW * standard_content_multiplier );
 		end;
+		Inc( N );
 		C := C^.Next;
 	end;
 
@@ -2480,12 +2491,13 @@ begin
 		C := SeekCurrentLevelGear( FindRoot( Scene )^.InvCom , GG_ContentSet , 0 );
 		if C <> Nil then begin
 			C := C^.InvCom;
+			N := -1;
 			while C <> nil do begin
-				if ( StringMatchWeight( Context , SAttValue( C^.SA , 'REQUIRES' ) ) > 0 ) then begin
-					C2 := CloneGear( C );
-					AppendGear( it , C2 );
-					SetSAtt( C2^.SA , 'CONTEXT <' + Context + '>' );
+				MW := StringMatchWeight( Context , SAttValue( C^.SA , 'REQUIRES' ) );
+				if MW > 0 then begin
+					SetNAtt( it , N , N , MW );
 				end;
+				Dec( N );
 				C := C^.Next;
 			end;
 		end;
@@ -2493,7 +2505,54 @@ begin
 	CreateContentList := it;
 end;
 
+Function ChooseSceneContent( Scene: GearPtr; var ShoppingList: NAttPtr; const Context: String ): GearPtr;
+	{ Given this shopping list, select a component for inclusion in SCENE. }
+	{ Positive indicies indicate regular scene content while negative indicies indicate }
+	{ unique content. }
+	{ Return a clone of the selected content, marked with the supplied context. }
+var
+	it: NAttPtr;
+	N: Integer;
+	C,UniCon: GearPtr;
+begin
+	if ShoppingList = Nil then Exit( Nil );
 
+	{ Step one- select one of the shopping list entries. }
+	it := RandomComponentListEntry( ShoppingList );
+
+	{ If this list entry is positive, select the component from random_scene_content. }
+	{ Otherwise, select the component from the unique scene content collection. }
+	N := it^.S;
+	RemoveNAtt( ShoppingList , it );
+	if N > 0 then begin
+		C := RetrieveGearSib( random_scene_content , N );
+	end else if N < 0 then begin
+		if Scene <> Nil then begin
+			UniCon := SeekCurrentLevelGear( FindRoot( Scene )^.InvCom , GG_ContentSet , 0 );
+			if UniCon <> Nil then begin
+				C := RetrieveGearSib( UniCon^.InvCom , Abs( N ) );
+			end else begin
+				DialogMsg( 'ERROR: Unique Content not found in ChooseSceneContent.' );
+				C := Nil;
+			end;
+		end else begin
+			DialogMsg( 'ERROR: Scene not found in ChooseSceneContent.' );
+			C := Nil;
+		end;
+	end else begin
+		{ Error- we shouldn't get a zero here. }
+		DialogMsg( 'ERROR: Zero generated in ChooseSceneContent.' );
+		C := Nil;
+	end;
+
+	{ We now have a pointer to the prototype for this content. Clone it, set its }
+	{ context attribute, and return it. }
+	if C <> Nil then begin
+		C := CloneGear( C );
+		SetSAtt( C^.SA , 'CONTEXT <' + Context + '>' );
+	end;
+	ChooseSceneContent := C;
+end;
 
 Function AddContent( CType: String; GB: GameboardPtr; Source,Zone: GearPtr; P: String; var Cells: SAttPtr; SCheck,STerr: Integer ): Boolean;
 	{ Add some random content to this map feature. }
@@ -2512,7 +2571,8 @@ Function AddContent( CType: String; GB: GameboardPtr; Source,Zone: GearPtr; P: S
 	{ Cells, SCheck, and STerr are variables needed when adding a new map feature. }
 var
 	AllOK: Boolean;
-	CList,C,C2: GearPtr;
+	CList: NAttPtr;
+	C,C2: GearPtr;
 	ContentID: LongInt;
 begin
 	{ Create the list of potential components. }
@@ -2525,18 +2585,13 @@ begin
 	{ Attempt to add it. If addition fails, try another component. Keep going }
 	{ until either a component has been added or we've run out of possibilities. }
 	repeat
-		C := FindNextComponent( CList , CType );
+		C := ChooseSceneContent( GB^.Scene , CList , CType );
 		{ ERROR CHECK }
 		if C = Nil then begin
-{$IFDEF DEBUG}
 			DialogMsg( 'ERROR: FindNextComponent returned Nil, but CList not empty.' );
 			DialogMsg( 'CType:' + CType );
-			DialogMsg( 'NumCom:' + BStr( NumSiblingGears( CList ) ) + ' Top:' + GearName( CList ) );
-{$ENDIF}
-
 			break;
 		end;
-		DelinkGear( CList , C );
 
 		AllOK := ContentInitOkay( C , Zone , Source , P , GB , Cells , SCheck , STerr );
 
@@ -2560,7 +2615,7 @@ begin
 	end;
 
 	{ Get rid of any remaining components. }
-	DisposeGear( CList );
+	DisposeNAtt( CList );
 
 	AddContent := AllOK;
 end;
@@ -2570,7 +2625,8 @@ Procedure AddUniqueContentSequence( CType: String; GB: GameboardPtr; Source,MF: 
 	{ of content and not add anything more than once. }
 var
 	AllOK: Boolean;
-	Zone,CList,C,C2: GearPtr;
+	CList: NAttPtr;
+	Zone,C,C2: GearPtr;
 	ContentID: LongInt;
 	T: Integer;
 begin
@@ -2595,8 +2651,7 @@ begin
 		{ Attempt to add it. If addition fails, try another component. Keep going }
 		{ until either a component has been added or we've run out of possibilities. }
 		repeat
-			C := FindNextComponent( CList , CType );
-			DelinkGear( CList , C );
+			C := ChooseSceneContent( GB^.Scene , CList , CType );
 
 			AllOK := ContentInitOkay( C , Zone , Source , P , GB , Cells , SCheck , STerr );
 
@@ -2622,7 +2677,7 @@ begin
 	end; { for t... }
 
 	{ Get rid of any remaining components. }
-	DisposeGear( CList );
+	DisposeNAtt( CList );
 end;
 
 Procedure AddFeatureContent( GB: GameBoardPtr; MF: GearPtr;  var Cells: SAttPtr; SCheck,STerr: Integer );

@@ -115,7 +115,7 @@ Content
 	SubPlot2 <*CS_RevealEncounter&EnemyBase 3 2>
 
 	sub
-		Persona 3
+		Persona 1
 		greeting <if= PlotStatus %id% else %pop% Goto .%id%_GoGreet>
 		*.%id%_GoGreet <*DestructionGreeting .%id%_GoGiveMission &EnemyFac>
 		.%id%_GoGiveMission <NewChat Say %id%01 AddChat %id%01 AddChat %id%02>
@@ -127,8 +127,8 @@ Content
 		Msg%id%02_10 <It was that bandit \PERSONA &EnemyNPC ! I'm not the only one who's been robbed lately; \SPR &EnemyNPC must have a secret hideout somewhere near here, I'm sure of it.>
 		CMsg%id%02_10 <ifNPCOK &EnemyNPC Accept>
 		Msg%id%03 <Well, it means that I won't have any cash to hire you for a mission, if that's what you're after. These bandits must be stopped... they must have a secret hideout somewhere in this town.>
-		Msg%id%04 <%name3% was robbed; \SPR %3% thinks the robbers have a secret hideout nearby.>
-		Msg%id%05 <%name3% was robbed; \SPR %3% claimed there must be a hideout nearby.>
+		Msg%id%04 <%name1% was robbed; \SPR %1% thinks the robbers have a secret hideout nearby.>
+		Msg%id%05 <%name1% was robbed; \SPR %1% claimed there must be a hideout nearby.>
 		Prompt%id%01 <Calm down. Can you tell me about the thief?>
 		Prompt%id%02 <Too bad. How does this affect me?>
 	end

@@ -63,8 +63,8 @@ CASH+ <GrabPCPilot  GAddNAtt NAG_Experience NAS_Credits ?>
 ADDREACT <GrabPCPilot GAddNAtt NAG_ReactionScore ChatNPCID ?>
 ADDNPCREACT <GrabPCPilot GAddNAtt NAG_ReactionScore ? ?>
 SAVEPOS <GrabCurrentScene GSetNAtt NAG_ParaLocation NAS_X PCX  GSetNAtt NAG_ParaLocation NAS_Y PCY>
-SETPCFAC <GrabPCPilot GSetNAtt NAG_Personal NAS_FactionID ?  GrabAdventure GSetNAtt NAG_Personal NAS_FactionID ! ClearFacXP>
-CLEARFACXP <GrabPCPilot GSetNAtt NAG_Experience NAS_FacXP 0 GSetNAtt NAG_Experience NAS_FacLevel 0>
+SETPCFAC <GrabPCPilot GSetNAtt NAG_Personal NAS_FactionID ?  GrabAdventure GSetNAtt NAG_Personal NAS_FactionID ! GrabFaction ! GSetNAtt NAG_Relationship 0 0 ClearFacXP>
+CLEARFACXP <GrabPCPilot GSetNAtt NAG_Experience NAS_FacXP 0>
 SETNPCFACTION <GrabNPC ? GSetNAtt NAG_Personal NAS_FactionID ?>
 SETSCENEFACTION <GrabScene ? GSetNAtt NAG_Personal NAS_FactionID ?>
 SetNPCTeam <GrabNPC ? GSetNAtt NAG_Location NAS_Team ?>

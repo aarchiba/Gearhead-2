@@ -427,9 +427,9 @@
 	Prompt%id%01 <I'll get right on it.>
 
 	Persona
-	requires <*CORE_BasicJob ("CORPO"|"TRADE") ~"ArchAlly" (+P--|+Pme|+Pun) Common>
+	requires <*CORE_BasicJob ("CORPO"|"TRADE"|"LABOR") ~"ArchAlly" (+P--|+Pme|+Pun) Common>
 	START <NewChat Say %id%01 AddChat %id%01 AddChat %id%02>
-	Result%id%01 <StoryNote %id%02 Goto %1%>
+	Result%id%01 <SMemo %id%02 StoryNote %id%03 Goto %1%>
 	result%id%02 <SMemo 0 Goto %2%>
 	msg%id%01 <Recently some of our investments have been attacked by mecha. We've been tracking one of the groups responsible to \SCENE %3% . I need you to engage them, and if possible find out who they're working for.>
 	msg%id%01_1 <You may have heard that one of our factories was recently attacked by mecha. The criminals responsible are most likely hiding somewhere in \SCENE %3% ; what I need you to do is go there, locate them, and if possible find out who they're working for.>
@@ -444,7 +444,8 @@
 	Cmsg%id%01_5 <ifNPCCheerful Accept>
 	msg%id%01_6 <The recent string of mecha attacks has cost our company far too much... One of the groups involved has been traced to \SCENE %3% . Your job is to intercept and eliminate them.>
 	Cmsg%id%01_6 <ifNPCMelancholy Accept>
-	msg%id%02 <\CHATNPC asked you to find the mecha in \SCENE %3% who have been attacking company investments.>
+	msg%id%02 <\CHATNPC asked you to find the mecha in \SCENE %3% which have been attacking company investments.>
+	msg%id%03 <You were sent to find the mecha which had been attacking company investments.>
 	Prompt%id%01 <I'll get right on it.>
 	Prompt%id%01_1 <Just leave it to me.>
 	Prompt%id%01_2 <Don't worry, I'll find them.>

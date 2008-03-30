@@ -150,6 +150,7 @@ Procedure ApplyCyberware( PC,Cyber: GearPtr );
 Function NotAnAnimal( Master: GearPtr ): Boolean;
 
 Function CreateComponentList( MasterList: GearPtr; const Context: String ): NAttPtr;
+Function RandomComponentListEntry( ShoppingList: NAttPtr ): NAttPtr;
 Function SelectComponentFromList( MasterList: GearPtr; var ShoppingList: NAttPtr ): GearPtr;
 
 Function FindNextComponent( CList: GearPtr; const plot_desc: String ): GearPtr;
@@ -2897,11 +2898,9 @@ begin
 	CreateComponentList := ShoppingList;
 end;
 
-Function SelectComponentFromList( MasterList: GearPtr; var ShoppingList: NAttPtr ): GearPtr;
-	{ Given a list of numeric attributes holding the selection weights of all legal }
-	{ components from MasterList, select one of those components and return a pointer }
-	{ to its entry in MasterList. }
-	{ Afterwards remove the selected component's entry from the shopping list. }
+Function RandomComponentListEntry( ShoppingList: NAttPtr ): NAttPtr;
+	{ We've been handed a shopping list. Select one of the elements from this }
+	{ list randomly based on the weight of the V values. }
 var
 	N: Integer;
 	C,It: NAttPtr;
@@ -2926,6 +2925,25 @@ begin
 		if ( N < 0 ) and ( it = Nil ) then it := C;
 		C := C^.Next;
 	end;
+
+	{ Return the entry we found. }
+	RandomComponentListEntry := it;
+end;
+
+Function SelectComponentFromList( MasterList: GearPtr; var ShoppingList: NAttPtr ): GearPtr;
+	{ Given a list of numeric attributes holding the selection weights of all legal }
+	{ components from MasterList, select one of those components and return a pointer }
+	{ to its entry in MasterList. }
+	{ Afterwards remove the selected component's entry from the shopping list. }
+var
+	N: Integer;
+	It: NAttPtr;
+begin
+	{ Error check- no point in working with an empty list. }
+	if ShoppingList = Nil then Exit( Nil );
+
+	{ Step one- pick an entry. }
+	it := RandomComponentListEntry( ShoppingList );
 
 	{ Remove IT from the list, and return the gear it points to. }
 	{ Store the index before deleting IT. }

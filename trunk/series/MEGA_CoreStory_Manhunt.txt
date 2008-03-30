@@ -14,6 +14,38 @@
 %%
 
 Content
+	name <Tell Me About The Base>
+	desc <The target will tell you about an enemy base nearby.>
+Zrequires <*CS_ManHunt_Confrontation (+Fin|+F--) ~1:MILIT>
+	Size 1
+
+	% E1 is the NPC being sought
+	% E2 is his scene
+	% E3 is an outdoors scene for the enemy base
+	% E4 is an encounter for the enemy base
+	Element3 <Scene Outdoors !Near -7>
+	Element4 <Prefab>
+	Place4 <3>
+
+	start <if= PlotStatus %id% else %pop% ifNPCDead %1% LoseComp 0 .%id%_loss>
+	.%id%_loss <+T-- +F-->
+
+	sub
+		Persona 1
+		special <UNLISTED>
+		greeting <if= PlotStatus %id% else %pop% goto .%id%_GoGreet>
+		*.%id%_GoGreet <*WhatDoYouWantWithMe&Information .%id%_GoTell>
+		.%id%_GoTell <>
+
+		STC MS_EmptyBuilding
+		SetID 2
+	end
+	inv
+		STC CORE-ACTIVATABLE-STATIONARY-DEFENDED
+		name <the Secret Base>
+	end
+
+Content
 	name <Target Has Hostage>
 	desc <That target you've been chasing has a hostage.>
 	requires <*CS_ManHunt_Confrontation (+Far|+Ffi) 2:META>

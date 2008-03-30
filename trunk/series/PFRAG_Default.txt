@@ -1,5 +1,43 @@
 % Persona Fragment File
 
+% TYPE: *WhatDoYouWantWithMe
+%		&Information	We want information... information...
+%	The PC has barged in on someone, who is feeling understandably defensive.
+%   PARAM1: Exit Label
+
+	Persona
+	requires <*WhatDoYouWantWithMe>
+	% V%id%01 = One time only counter
+	START <if= v%id%01 0 else %1% V= %id%01 1 NewChat Say %id%01 AddChat %id%01>
+	result%id%01 <Goto %1%>
+	Msg%id%01 <How did you get in here? What do you want with me?>
+	Msg%id%01_1 <>
+	CMsg%id%01_1 <ifNPCSociable Accept>
+	Msg%id%01_2 <>
+	CMsg%id%01_2 <ifNPCShy Accept>
+	Msg%id%01_3 <>
+	CMsg%id%01_3 <ifNPCEasygoing Accept>
+	Msg%id%01_4 <>
+	CMsg%id%01_4 <ifNPCPassionate Accept>
+	Msg%id%01_5 <>
+	CMsg%id%01_5 <ifNPCCheerful Accept>
+	Msg%id%01_6 <>
+	CMsg%id%01_6 <ifNPCMelancholy Accept>
+	Prompt%id%01 <Calm down and you'll find out.>
+	Prompt%id%01_1 <>
+	CPrompt%id%01_1 <ifPCSociable Accept>
+	Prompt%id%01_2 <>
+	CPrompt%id%01_2 <ifPCShy Accept>
+	Prompt%id%01_3 <>
+	CPrompt%id%01_3 <ifPCEasygoing Accept>
+	Prompt%id%01_4 <>
+	CPrompt%id%01_4 <ifPCPassionate Accept>
+	Prompt%id%01_5 <>
+	CPrompt%id%01_5 <ifPCCheerful Accept>
+	Prompt%id%01_6 <>
+	CPrompt%id%01_6 <ifPCMelancholy Accept>
+
+
 % TYPE: *PROMOTION_Minor_Reward
 %	The PC doesn't have enough renown (or some other reputation) for the good
 %	promotion reward, so instead he's going to get a relatively minor cash
