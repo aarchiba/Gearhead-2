@@ -407,7 +407,7 @@ Skill 42 10
 
 Arch Privateer
 statline 13 15 15 12 13 14 9 9
-chardesc Criminal Heroic
+chardesc Criminal
 Combatant
 job_desig <MILIT>
 skill 1 8
@@ -429,6 +429,7 @@ Arch Knight
 %% One of the defenders of the L5 Alliance
 statline 16 13 15 14 10 10 10 11
 chardesc lawful heroic
+SetFaction 3
 Combatant
 job_desig <MILIT>
 skill 1 10

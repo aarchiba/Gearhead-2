@@ -61,17 +61,17 @@ sub
 	special <ADDEXIT>
 	MallMap
 	MapWidth 30
-	MapHeight 30
+	MapHeight 20
 
 	start <Print 1>
 	Msg1 <You enter Maquise Shopping Center.>
 
-	NeededCells 9
+	NeededCells 6
 
 	Content1 <Some 1 100 Sub *GENERAL_SHOP      na>
 	Content2 <Some 1 100 Sub *RESTAURANT        na>
-	Content3 <Some 2 100 Sub *WEAPON_SHOP       na>
-	Content4 <Some 2 100 Sub *ARMOR_SHOP        na>
+	Content3 <Some 1 100 Sub *WEAPON_SHOP       na>
+	Content4 <Some 1 100 Sub *ARMOR_SHOP        na>
 	Content5 <Some 1 100 Sub *ELECTRONICS_SHOP  na>
 	Content6 <Some 1 100 Sub *MECHA_SHOP        na>
 	Content9 <Fill Sub *SHOP_RANDOM             na>
@@ -372,11 +372,6 @@ sub
 			SetTeam 3
 			SetFaction 9
 			MiniMapComponent 2
-
-			NPC Police Officer
-			SetTeam 3
-			SetFaction 9
-			MiniMapComponent 3
 		end
 
 		room
@@ -784,17 +779,12 @@ sub
 
 			room
 			name <Garrison>
-			minimap <2....1..............#...#>
+			minimap <.....1..............#...#>
 			inv
 				NPC Police Officer
 				SetTeam 3
 				SetFaction 9
 				MiniMapComponent 1
-
-				NPC Police Officer
-				SetTeam 3
-				SetFaction 9
-				MiniMapComponent 2
 			end
 
 			room
@@ -817,7 +807,7 @@ sub
 			SetTeam 3
 			SetFaction 9
 
-			NPC Mecha Pilot
+			NPC Knight
 			SetTeam 3
 			SetFaction 3
 		end
@@ -1381,8 +1371,8 @@ sub
 		GoCheckChallenge <if= L2 0 ForceChat L3>
 		Msg1 <You enter the lounge area of Cayley Steelworks.>
 
-		NeededCells 4
-		content1 <Some 1  65 Sub *WEAPON_SHOP   na>
+		NeededCells 3
+		content1 <Some 1  75 Sub *WEAPON_SHOP   na>
 		content2 <Some 1  35 Sub *SHOP_RANDOM   na>
 		content3 <Some 1 100 Sub *BAR_SERVICE   na>
 		content9 <Fill Sub *CLUB_X na>
@@ -1774,16 +1764,16 @@ sub
 	entrance <*Building>
 	special <ADDEXIT>
 	MallMap
-	MapWidth 36
-	MapHeight 20
+	MapWidth 30
+	MapHeight 18
 
 	start <Print 1>
 	Msg1 <You enter the Cesena Arms Market.>
 
-	NeededCells 8
+	NeededCells 5
 	Content3 <Some 2 100 Sub *WEAPON_SHOP     na>
-	Content4 <Some 2 100 Sub *ARMOR_SHOP      na>
-	Content6 <Some 2 100 Sub *MECHA_SHOP      na>
+	Content4 <Some 1 100 Sub *ARMOR_SHOP      na>
+	Content6 <Some 1 100 Sub *MECHA_SHOP      na>
 	Content9 <Fill Sub *SHOP_RANDOM           na>
 	sub
 		team 1
@@ -1967,17 +1957,18 @@ sub
 	entrance <*DEPARTMENTSTORE>
 	special <ADDEXIT>
 	MallMap
-	MapWidth 30
+	MapWidth 20
 	MapHeight 15
 
 	start <Print 1>
 	Msg1 <You enter the Cesena Mall.>
 
 	NeededCells 4
-	Content1 <Some 2  99 Sub *GENERAL_SHOP>
+	Content1 <Some 1 100 Sub *GENERAL_SHOP>
 	Content2 <Some 1 100 Sub *RESTAURANT>
 	Content3 <Some 1 100 Sub *ELECTRONICS_SHOP  na>
-	Content4 <Fill Sub *SHOP_RANDOM>
+	Content4 <Some 1 100 Sub *MECHA_SHOP>
+	Content9 <Fill Sub *SHOP_RANDOM>
 	sub
 		team 1
 
@@ -2082,11 +2073,6 @@ sub
 			SetTeam 3
 			SetFaction 9
 			MiniMapComponent 2
-
-			NPC Police Officer
-			SetTeam 3
-			SetFaction 9
-			MiniMapComponent 3
 		end
 
 		room
@@ -2151,6 +2137,11 @@ sub
 		desig <EntranceGrid>
 		Content <Some 4 50 Here *URBAN_X>
 		Content2 <Some 1 100 Here *ANTI_ATTACK_SECURITY 2>
+		inv
+			NPC Knight
+			SetTeam 3
+			SetFaction 3
+		end
 
 		room
 		minimap <############1###...##...#>
@@ -2330,13 +2321,12 @@ sub
 	start <Print 1>
 	Msg1 <You enter the Commerce Tower, L1.>
 
-	NeededCells 7
+	NeededCells 6
 
-	Content1 <Some 2 100 Sub *GENERAL_SHOP      na>
+	Content1 <Some 1 100 Sub *GENERAL_SHOP      na>
 	Content2 <Some 1 100 Sub *RESTAURANT        na>
 	Content4 <Some 2 100 Sub *ARMOR_SHOP        na>
 	Content5 <Some 1 100 Sub *ELECTRONICS_SHOP  na>
-	Content7 <Some 1 100 Sub *SPECIAL_SHOP      na>
 	Content9 <Fill Sub *SHOP_RANDOM             na>
 
 	sub
@@ -2376,11 +2366,11 @@ sub
 		start <Print 1>
 		Msg1 <You enter the Commerce Tower, L2.>
 
-		NeededCells 7
+		NeededCells 5
 
-		Content3 <Some 3 100 Sub *WEAPON_SHOP       na>
+		Content3 <Some 2 100 Sub *WEAPON_SHOP       na>
 		Content4 <Some 1 100 Sub *ARMOR_SHOP        na>
-		Content6 <Some 2 100 Sub *MECHA_SHOP        na>
+		Content6 <Some 1 100 Sub *MECHA_SHOP        na>
 		Content7 <Some 1 100 Sub *SPECIAL_SHOP      na>
 		Content9 <Fill Sub *SHOP_RANDOM             na>
 
@@ -2423,12 +2413,12 @@ sub
 	start <Print 1>
 	Msg1 <You enter Xianzai Market.>
 
-	NeededCells 6
+	NeededCells 4
 
 	Content1 <Some 1 100 Sub *GENERAL_SHOP      na>
 	Content2 <Some 1 100 Sub *RESTAURANT        na>
 	Content5 <Some 1 100 Sub *ELECTRONICS_SHOP  na>
-	Content7 <Some 3 100 Sub *SPECIAL_SHOP      na>
+	Content7 <Some 1 100 Sub *SPECIAL_SHOP      na>
 	Content9 <Fill Sub *SHOP_RANDOM             na>
 
 	sub
@@ -2649,11 +2639,6 @@ sub
 			SetTeam 3
 			SetFaction 9
 			MiniMapComponent 1
-
-			NPC Police Officer
-			SetTeam 3
-			SetFaction 9
-			MiniMapComponent 2
 		end
 
 		room
@@ -2941,7 +2926,7 @@ sub
 		start <Print 1>
 		Msg1 <You enter the Valhalla Arena Hall.>
 
-		NeededCells 3
+		NeededCells 2
 		Content1 <Some 1 100 Sub *PDARENA_MECHANIC_SHOP  na>
 		Content3 <Fill       Sub *PDARENA_MISC           na>
 
@@ -3141,13 +3126,13 @@ sub
 	entrance <*DEPARTMENTSTORE>
 	special <ADDEXIT>
 	MallMap
-	MapWidth 30
+	MapWidth 20
 	MapHeight 15
 
 	start <Print 1>
 	Msg1 <You enter Vitae Mart.>
 
-	NeededCells 5
+	NeededCells 4
 
 	Content1 <Some 1 100 Sub *GENERAL_SHOP      na>
 	Content2 <Some 1 100 Sub *RESTAURANT        na>
@@ -3363,10 +3348,9 @@ sub
 	start <Print 1>
 	Msg1 <You enter the Fuchal Market.>
 
-	NeededCells 5
+	NeededCells 4
 	Content3 <Some 1 100 Sub *WEAPON_SHOP     na>
 	Content4 <Some 1 100 Sub *ARMOR_SHOP      na>
-	Content6 <Some 1 100 Sub *SPECIAL_SHOP    na>
 	Content7 <Some 1 100 Sub *GENERAL_SHOP    na>
 	Content8 <Some 1 100 Sub *RESTAURANT      na>
 	Content9 <Fill Sub *SHOP_RANDOM           na>
@@ -3436,10 +3420,9 @@ sub
 	Msg1 <You enter Taste Island.>
 
 	NeededCells 4
-	Content1 <Some 1  99 Sub *GENERAL_SHOP>
+	Content1 <Some 1 100 Sub *GENERAL_SHOP>
 	Content2 <Some 2 100 Sub *RESTAURANT>
 	Content3 <Some 1 100 Sub *BAR_SERVICE  na>
-	Content4 <Some 1 100 Sub *ELECTRONICS_SHOP  na>
 	Content5 <Fill Sub *SHOP_RANDOM>
 	sub
 		team 1
@@ -3506,9 +3489,9 @@ sub
 			SetFaction 9
 			MiniMapComponent 1
 
-			NPC Police Officer
+			NPC Knight
 			SetTeam 3
-			SetFaction 9
+			SetFaction 3
 			MiniMapComponent 2
 		end
 
@@ -3529,7 +3512,7 @@ sub
 	entrance <*SpacePort>
 	special <ADDEXIT>
 	ClubMap
-	MapWidth 30
+	MapWidth 20
 	MapHeight 21
 
 	start <Print 1>
@@ -3686,13 +3669,13 @@ sub
 	entrance <*DEPARTMENTSTORE>
 	special <ADDEXIT>
 	MallMap
-	MapWidth 35
+	MapWidth 30
 	MapHeight 30
 
 	start <Print 1>
 	Msg1 <You enter Kosaka Core Market.>
 
-	NeededCells 8
+	NeededCells 6
 
 	Content1 <Some 1 100 Sub *GENERAL_SHOP      na>
 	Content2 <Some 1 100 Sub *RESTAURANT        na>
@@ -4003,7 +3986,7 @@ sub
 	start <Print 1>
 	Msg1 <You enter MUGL Mechanical.>
 
-	NeededCells 3
+	NeededCells 2
 	Content2 <Fill Sub *CORP_PUBLIC>
 
 	5Min <ifTeamHostile 3  MonsterUp 3 d20>
@@ -4131,9 +4114,8 @@ sub
 			SetFaction 11
 			job <Diplomat>
 
-			NPC Mecha Pilot
+			NPC Rocket Star
 			SetTeam 3
-			SetFaction 14
 			MiniMapComponent 2
 		end
 	end
@@ -4273,7 +4255,7 @@ sub
 
 	NeededCells 3
 	Content1 <Some 1 100 Sub *MECHANIC_SHOP>
-	Content2 <Some 2  90 Sub *MECHA_SHOP>
+	Content2 <Some 2  80 Sub *MECHA_SHOP>
 	Content3 <Fill Sub *GARAGE_X>
 	sub
 		team 1
@@ -4512,6 +4494,11 @@ sub
 			SetTeam 3
 			SetFaction 9
 			MiniMapComponent 1
+
+			NPC MEcha Pilot
+			SetTeam 3
+			SetFaction 10
+			MiniMapComponent 3
 		end
 
 		room
@@ -4659,7 +4646,7 @@ sub
 	entrance <*DEPARTMENTSTORE>
 	special <ADDEXIT>
 	MallMap
-	MapWidth 24
+	MapWidth 22
 	MapHeight 17
 
 	start <Print 1>
@@ -4972,11 +4959,6 @@ sub
 			SetTeam 3
 			SetFaction 9
 			MiniMapComponent 2
-
-			NPC Police Officer
-			SetTeam 3
-			SetFaction 9
-			MiniMapComponent 3
 		end
 
 		room
@@ -4992,11 +4974,6 @@ sub
 			SetTeam 3
 			SetFaction 10
 			MiniMapComponent 2
-
-			NPC Mecha Pilot
-			SetTeam 3
-			SetFaction 10
-			MiniMapComponent 3
 		end
 
 
@@ -5509,7 +5486,7 @@ sub
 
 			NeededCells 3
 			Content1 <Some 2 100 Sub *BLACKMARKET_SHOP na>
-			Content2 <Some 2 100 Sub *MECHA_SHOP na>
+			Content2 <Some 1 100 Sub *MECHA_SHOP na>
 			Content3 <Fill Sub *BLACKMARKET_X na>
 
 			Start <if= L1 0 else GoBeenBefore L= 1 1 Alert 2>
@@ -5663,16 +5640,16 @@ sub
 	entrance <*Building>
 	special <ADDEXIT>
 	MallMap
-	MapWidth 36
+	MapWidth 26
 	MapHeight 20
 
 	start <Print 1>
 	Msg1 <You enter Style Maker.>
 
-	NeededCells 8
+	NeededCells 5
 	Content3 <Some 2 100 Sub *WEAPON_SHOP     na>
-	Content4 <Some 2 100 Sub *ARMOR_SHOP      na>
-	Content6 <Some 2 100 Sub *MECHA_SHOP      na>
+	Content4 <Some 1 100 Sub *ARMOR_SHOP      na>
+	Content6 <Some 1 100 Sub *MECHA_SHOP      na>
 	Content9 <Fill Sub *SHOP_RANDOM           na>
 	sub
 		team 1
@@ -6162,19 +6139,19 @@ sub
 	entrance <*Building>
 	special <ADDEXIT>
 	MallMap
-	MapWidth 36
+	MapWidth 30
 	MapHeight 20
 
 	start <Print 1>
 	Msg1 <You enter the Tech Outlet.>
 
-	NeededCells 10
+	NeededCells 7
 	Content1 <Some 1  40 Sub *GARAGE_X          na>
 	Content2 <Some 1 100 Sub *WEAPON_SHOP       na>
 	Content3 <Some 1 100 Sub *ARMOR_SHOP        na>
 	Content4 <Some 1 100 Sub *MECHA_SHOP        na>
 	Content5 <Some 1 100 Sub *GENERAL_SHOP      na>
-	Content6 <Some 2 100 Sub *ELECTRONICS_SHOP  na>
+	Content6 <Some 1 100 Sub *ELECTRONICS_SHOP  na>
 	Content7 <Some 1 100 Sub *GALSP_TO_Content  na>
 
 	Content9 <Fill Sub *SHOP_RANDOM             na>
@@ -6281,11 +6258,6 @@ sub
 			SetTeam 3
 			SetFaction 9
 			MiniMapComponent 2
-
-			NPC Police Officer
-			SetTeam 3
-			SetFaction 9
-			MiniMapComponent 3
 		end
 
 		room
