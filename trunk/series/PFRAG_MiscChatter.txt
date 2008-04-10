@@ -22,6 +22,23 @@
 	Msg%id%01_6 <Nothing much ever changes here. At least, not for the better...>
 	CMsg%id%01_6 <ifNPCMelancholy Accept>
 
+	Persona
+	requires <*MISC_CHATTER Rishi>
+	START <NewChat if= V%id%01 1 else .%id%_GoSpecial if# d3 1 else .%id%_GoSpecial SayAnything>
+	.%id%_GoSpecial <V= %id%01 1 Say %id%01>
+	Msg%id%01 <What kind of weather do they have scheduled for next week?>
+	Msg%id%01_1 <>
+	CMsg%id%01_1 <ifNPCSociable Accept>
+	Msg%id%01_2 <>
+	CMsg%id%01_2 <ifNPCShy Accept>
+	Msg%id%01_3 <>
+	CMsg%id%01_3 <ifNPCCheerful Accept>
+	Msg%id%01_4 <It's easy for the other spinners to talk about peace with the outliers- they aren't the ones being attacked!>
+	CMsg%id%01_4 <ifNPCMelancholy Accept>
+	Msg%id%01_5 <I'd like to visit Luna some day, but they say that getting a visa is nearly impossible.>
+	CMsg%id%01_5 <ifNPCEasygoing Accept>
+	Msg%id%01_6 <I hear that pirates attacked another freighter. They should know that the Rocket Stars are only going to pay them back tenfold.>
+	CMsg%id%01_6 <ifNPCPassionate Accept>
 
 	Persona
 	requires <*MISC_CHATTER Maqui>

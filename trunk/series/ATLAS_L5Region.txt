@@ -4617,9 +4617,9 @@ Scene 0 3
 	world <L5 Region>
 	desc <Emerald Spinner was constructed as an interplanetary banking center. It is home to the Free Commerce States economic strategy department.>
 	special <NOEXIT SHOWALL SOLO TOWNMECHA>
-	type <city town spinner target outdoors urban destination hometown safe financial>
+	type <city town spinner target outdoors urban destination hometown safe financial rich>
 	habitat <SPACE.URBAN>
-	personatype <city spinner>
+	personatype <city spinner rich>
 	MegaCityMap
 
 	entrance <*COLONY-1>
@@ -6420,6 +6420,315 @@ sub
 
 
 % End of Galconde Spinner...
+end
+
+%%
+%%   ***************************
+%%   ***   RISHIRI SPINNER   ***
+%%   ***************************
+%%
+
+Scene 0 3
+	mapwidth 30
+	mapheight 10
+	name <Rishiri Spinner>
+	XPos 14
+	YPos 45
+
+	Tolerance 0
+
+	world <L5 Region>
+	desc <Rishiri Spinner is a major trading port and capital of the Rishiri Dominion.>
+	special <NOEXIT SHOWALL SOLO TOWNMECHA>
+	type <city town spinner target outdoors urban destination hometown capitol>
+	habitat <SPACE.URBAN>
+	personatype <city capitol spinner>
+	MegaCityMap
+
+	entrance <*COLONY-1>
+
+	% V1 = Message Counter
+
+	SetFaction 11
+	factions <RISHI ROCKE L5LAW>
+
+	desig <RISSP>
+	context <SPACE>
+
+	Quest1 <*:LocalQuest>
+
+	start <if= V1 0 else GoSecondTime V= 1 1 Alert 1 Print 2>
+	GoSecondTime <Print 2>
+	Msg1 <The gleaming towers of Rishiri Spinner reflect the considerable wealth of this city.>
+	Msg2 <You enter Rishiri Spinner.>
+
+sub
+	Scene
+	name <Arcadia Mall>
+	type <building mall public legit meeting>
+	entrance <*DEPARTMENTSTORE>
+	special <ADDEXIT>
+	MallMap
+	MapWidth 30
+	MapHeight 20
+
+	start <Print 1>
+	Msg1 <You enter Arcadia Mall.>
+
+	NeededCells 6
+
+	Content1 <Some 1 100 Sub *GENERAL_SHOP      na>
+	Content2 <Some 1 100 Sub *RESTAURANT        na>
+	Content3 <Some 1 100 Sub *WEAPON_SHOP       na>
+	Content4 <Some 1 100 Sub *ARMOR_SHOP        na>
+	Content5 <Some 1 100 Sub *ELECTRONICS_SHOP  na>
+	Content6 <Some 1 100 Sub *MECHA_SHOP        na>
+	Content9 <Fill Sub *SHOP_RANDOM             na>
+
+	sub
+		team 1
+
+		team 2
+		name <Citizens>
+		SetAlly 1
+		Passive
+
+		team 3
+		name <Guards>
+		SetAlly 2
+
+		room
+		name <Foyer>
+		desig <EntranceGrid>
+		Content <Some 5 50 Here *URBAN_X>
+		Content2 <Some 1 100 Here *ANTI_ATTACK_SECURITY 2>
+	end
+
+	Scene
+	name <Rishiri Hospital>
+	type <Building hospital public legit>
+	entrance <*Hospital>
+	special <ADDEXIT>
+	MallMap
+	MapWidth 20
+	MapHeight 10
+
+	NeededCells 2
+	Content <Some 1 100 Sub *Doctor>
+	Content2 <Fill Sub *HOSPITAL_X>
+
+	start <Print 1>
+	Msg1 <You enter Rishiri Hospital.>
+
+	sub
+		team 1
+
+		team 2
+		name <Citizens>
+		SetAlly 1
+		Passive
+
+		team 3
+		name <Guards>
+		SetAlly 2
+
+		room
+		desig <EntranceGrid>
+		Content <Some 2 30 Here *URBAN_X>
+		Content2 <Some 1 100 Here *ANTI_ATTACK_SECURITY 2>
+	end
+
+	Scene
+	name <Space Force Service>
+	type <building garage public>
+	entrance <*Garage>
+	special <ADDEXIT>
+	MallMap
+	IndustrialTiles
+	MapWidth 19
+	MapHeight 12
+
+	start <Print 1>
+	Msg1 <You enter Space Force Service.>
+
+	NeededCells 3
+	Content1 <Some 1 100 Sub *MECHANIC_SHOP>
+	Content2 <Some 1 100 Sub *MECHA_SHOP        na>
+	Content3 <Fill Sub *GARAGE_X>
+	sub
+		team 1
+
+		team 2
+		name <Citizens>
+		SetAlly 1
+		Passive
+
+		team 3
+		name <Guards>
+		SetAlly 2
+
+		room
+		name <Foyer>
+		desig <EntranceGrid>
+		Content <Some 3 30 Here *URBAN_X>
+		Content2 <Some 1 100 Here *ANTI_ATTACK_SECURITY 2>
+	end
+
+	Scene
+	name <Rishiri Center>
+	type <building government public legit>
+	entrance <*Building>
+	special <ADDEXIT>
+	SetFaction 11
+	ClubMap
+	PalaceParkTiles
+	MapWidth 30
+	MapHeight 21
+
+	start <Print 1>
+	Msg1 <You enter Rishiri Center.>
+
+	NeededCells 2
+	Content1 <Some 1 100 Sub *GOV_MILITARY  na>
+	Content2 <Fill       Sub *GOV_MISC      na>
+
+	sub
+		team 1
+
+		team 2
+		name <Citizens>
+		SetAlly 1
+		Passive
+
+		team 3
+		name <Guards>
+		SetAlly 1
+
+		room
+		name <Foyer>
+		desig <EntranceGrid>
+		Content <Some 3 45 Here *URBAN_X>
+		Content2 <Some 1 100 Here *ANTI_ATTACK_SECURITY 2>
+
+		room
+		name <Garrison>
+		minimap <2...31..............#...#>
+		inv
+			NPC Police Officer
+			SetTeam 3
+			SetFaction 9
+			MiniMapComponent 1
+
+			NPC Police Officer
+			SetTeam 3
+			SetFaction 9
+			MiniMapComponent 2
+		end
+
+		room
+		name <Garrison>
+		minimap <2...31..............#...#>
+		inv
+			NPC Soldier
+			SetTeam 3
+			SetFaction 11
+			MiniMapComponent 1
+
+			NPC Soldier
+			SetTeam 3
+			SetFaction 11
+			MiniMapComponent 2
+		end
+
+
+		room
+		name <Main Office>
+		minimap <2....1..............#&+&#>
+		inv
+			NPC Politician
+			job <Technocrat>
+			SetTeam 2
+			SetFaction 11
+			MiniMapComponent 1
+
+			NPC Mecha Pilot
+			job <Admiral>
+			SetTeam 3
+			SetFaction 11
+			MiniMapComponent 2
+			%% This leader will have a quest.
+			quest <*:NPCQuest>
+		end
+	end
+
+	Scene
+	name <Rishiri Spaceport>
+	type <building shuttle spaceport legit public>
+	entrance <*SpacePort>
+	special <ADDEXIT>
+	ClubMap
+	MapWidth 24
+	MapHeight 21
+
+	start <Print 1>
+	Msg1 <You enter Rishiri Spaceport.>
+
+	NeededCells 3
+	Content1 <Some 1 100 Sub *SHUTTLESERVICE  na>
+	Content2 <Some 1 100 Sub *RESTAURANT      na>
+	Content3 <Some 1 100 Sub *MECHANIC_SHOP   na>
+	Content5 <Fill Sub *SPACEPORT_X>
+
+	sub
+		team 1
+
+		team 2
+		name <Citizens>
+		SetAlly 1
+		Passive
+
+		team 3
+		name <Guards>
+		SetAlly 2
+
+		room
+		name <Foyer>
+		desig <EntranceGrid>
+		Content <Some 4 50 Here *URBAN_X>
+		Content2 <Some 1 100 Here *ANTI_ATTACK_SECURITY 2>
+
+		room
+		minimap <############1###...##...#>
+		sub
+			STC AIRLOCK-1
+			MiniMapComponent 1
+			destination <Rishiri Station Exterior>
+		end
+
+		Scene 0 3
+		name <Rishiri Station Exterior>
+		type <Environs Outdoors Space>
+		special <ShowAll Solo>
+		terrain <SPACE>
+		MapWidth 30
+		MapHeight 30
+		SpaceMap
+		nu1 <if= T1 0 Exit WorldID>
+		Microgravity
+		Vacuum
+		SpaceBackdrop
+
+		inv
+			STC COLONY-1
+			name <Rishiri Spinner>
+			Destination -1
+			XPos 15
+			YPos 15
+		end
+
+	end
+
+% End of Rishiri Spinner...
 end
 
 
