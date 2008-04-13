@@ -738,6 +738,16 @@ Plot
 %%  ***   +Pew  Enemy  Weapon  Program   ***
 %%  ****************************************
 
+Content
+	name <They've Hired A Mad>
+	desc <The enemy faction has hired a mad scientist to help with their weapons program.>
+	requires <*CS_Conversation +Pew (1:ACADE|1:CORPO|1:CRAFT) F:++>
+	Size 1
+
+	% E1 is the person being spoken to
+
+	start <if= PlotStatus %id% else %pop% ifNPCDead %1% LoseComp 0 .%id%_loss>
+	.%id%_loss <+T-- +F-->
 
 
 %%  *******************
