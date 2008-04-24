@@ -52,6 +52,8 @@ Const
 	NAS_PlotPointCompleted = 4;
 	NAS_ComponentID = 5;	{ Each component is assigned an ID number. }
 				{ This number is only unique within the scope of the story. }
+	NAS_EpisodeNumber = 6;	{ How many episodes have been completed? }
+	NAS_LastEpisodeNoted = 7;	{ What was the last episode to get a history note? }
 
 	NAG_ElementID = -9;	{ Used to store ID numbers for plot/story elements. }
 

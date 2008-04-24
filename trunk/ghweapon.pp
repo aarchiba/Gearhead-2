@@ -177,12 +177,12 @@ Const
 	{ Determines how hard it is to get rid of this status }
 	{ effect once you have it. Use 0 for a perminant status, or }
 	{ -1 for a set rate of diminishment. }
-		12, -1, 0, 0, 0,
+		12, -1, -1, -1, 5,
 		0, 0, 0, 0, 0,
 		0, 0, 0, 0, 0,
 		0, 0, 10, 4, 20,
 		0,0,0,0,0,
-		5, 5, -1
+		-1, 5, -1
 	);
 	SX_RepSkill: Array [1..Num_Status_FX] of Byte = (
 	{ This tells what repair skill is needed to heal the status effect, or 0 for none. }

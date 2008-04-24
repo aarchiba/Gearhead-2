@@ -408,6 +408,56 @@ Plot
 	end
 
 Plot
+	name <Parking Ticket Blues>
+	desc <The PC's friend needs to pay off some fines.>
+	requires <#A +Tgt S:-- T:THIEF T:FRIEND>
+	Size 3
+
+	% E1 is the character being sought.
+	% E2 is the police officer who's looking for him.
+	% E3 is a scene for the meeting
+	Element1 <Grab 5>
+	Place1 </>
+	Element2 <Character !Near -7 POLIC>
+	Element3 <Scene !Near -7 Building Public !Okay 1>
+
+	start <if= PlotStatus 0 ifNPCDead %3% NegateComp 0 na>
+
+	sub
+		Persona 3
+		rumor <%name3% has been looking for %name1%.>
+		% V1 = Fine Counter
+		greeting <if= V1 0 else GoTell Goto GoCheckFirst>
+		GoCheckFirst <*LookingForNPC&NoFailure %1% GoTell GoTell>
+		GoTell <V= 1 Threat StoryDL 5 NewChat Say 1 StoryNote 2 AddChat 1 AddChat 2 AddChat 3 AddChat 4>
+		GoReveal <StoryNote 10 WinComp %3% na>
+		result1 <NewChat Say 3 AddChat 5 AddChat 4>
+		result2 <ifConversation SkillTar &StoryDL else GoR2Fail NewChat Say 4 Goto GoReveal>
+		GoR2Fail <NewChat Say 5 AddChat 1 AddChat 3 AddChat 4>
+		result3 <AddHeroic -1 NewChat Say 6 StoryNote 7 &SetTargetNPC 0 NegateComp %3% .negate>
+		.negate <+Tgs +Fmi>
+		result4 <NewChat Say 8>
+		result5 <NewChat Say 9 Cash+ -V1 Goto GoReveal>
+		Msg1 <%name1% is in hiding. I know this because I'm the one looking for \OPR %1% ; \SPR %1% 's got $ \VAL v1 worth of unpaid fines, and if I don't get that money then \SPR %1% 's going straight to the lockup.>
+		Msg2 <You learned from %name3% that %name1% has many unpaid fines.>
+		Msg3 <It would be kind of unorthodox, but as long as the fines get paid it's not my business to judge. That's be the judges.>
+		Msg4 <Well, if you say it's important, I'll give %name1% some more time to raise the money... as long as \SPR %1% doesn't do anything illegal to raise it. Now that the heat is off you'll probably be able to find \OPR %1% at %name3% again.>
+		Msg5 <Nothing is more important than upholding the law. I'm afraid I can't let up one bit.>
+		Msg6 <Nope. I can't say that I do... though you might want to check at %name3%. I hear there's a lot going on over there.>
+		Msg7 <After abandoning %name1%, %name2% suggested you find a job at %name3%.>
+		Msg8 <Maybe while you're gone, %name1% will come back and pay the fines... I doubt it though.>
+		Msg9 <There we go. Now that the fines are paid I expect you'll be able to find %name1% at %name3% again.>
+		Msg10 <%name2% told you that %name1% could likely be found at %name3%.>
+		Prompt1 <What about if I paid the fines?>
+		CPrompt1 <ifG PC$ V1 Accept>
+		Prompt2 <Look, could you cut \OPR %1% a little slack? It's important.>
+		CPrompt2 <ifChatNPCAlly Accept>
+		Prompt3 <Forget about %name1%, then. Do you know any job leads?>
+		Prompt4 <I'll be back later.>
+		Prompt5 <Here you go. [Give Money]>
+	end
+
+Plot
 	name <Degenerate Lookfer: Perm>
 	desc <The PC needs to find an NPC for some reason. After speaking with an NPC, the search changes to +Tgt.>
 	requires <#A +Tgt S:-->
@@ -466,22 +516,357 @@ Plot
 		Msg2 <%name3% told you that %name1% was at %name4%.>
 	end
 
-Plot
-	name <Basic Manhunt>
-	desc <You're on the trail of a criminal.>
-	requires <#A +Tht>
+Content
+	name <I Won't Be An Easy Fight>
+	desc <Your target, basically a noncom character, claims he won't be an easy fight.>
+	requires <#A +Tht (+Ffi|+Fin) S:META (T:ACADE|T:CRAFT|T:MEDIA|T:MEDIC|T:POLIT|T:TRADE) F:++ -T:ENEMY>
+	Size 5
 
-	% E1 is the character being sought.
+	% E1 is the target
+	% E2 is the scene
+	% E3 is an outdoors scene for the enemy base
+	% E4 is an encounter for the enemy base
 	Element1 <Grab 5>
+	Place1 <2 (Enemies) SD>
+	Element2 <Grab 6>
+	Element3 <Scene Environs !Near -7>
+	Element4 <Prefab>
+	Place4 <3>
 
-	% SubPlot1 is the hideout hider
-	%  This subplot should lead on to the conclusion
-	SubPlot1 <*CS_Manhunt_Search 1>
+	update <if= PlotStatus 0 SetPlotStatus %id% NPCLevel %1% StoryDL>
 
-	% All the update does is start the manhunt going...
-	update <if= PlotStatus 0 SetPlotStatus %id1%>
+	% SubPlot1 is the enemy base
+	SubPlot1 <*CS_RaidEnemyBase&Research 4>
+
+	sub
+		Persona 1
+		special <Unlisted>
+		greeting <ifChatNPCSurrendered else .%id%_GoAsk Goto .%id%_GoSurrender>
+		*.%id%_GoAsk <*WhatDoYouWantWithMe&Information .%id%_GoRefuse>
+		.%id%_GoRefuse <EndChat Say %id%01 AddChat %id%01 AddChat %id%02>
+		.%id%_GoSurrender <EndChat Say %id%03 SMemo %id%04 History %id%05 ShowEntrance %4% SetPlotStatus %id1% FreezeNPC %1% XPV 100>
+		result%id%01 <EndChat Say %id%02>
+		result%id%02 <ifIntimidation HardSkillTar StoryDL else .%id%_GoR2Fail Goto .%id%_GoSurrender>
+		.%id%_GoR2Fail <AddRenown -1 EndChat Say %id%06>
+		Msg%id%01 <Don't expect me to roll over and surrender just because I don't look like a fighter. I can hold my own against you, no problem.>
+		Msg%id%02 <You'll see what I'm capable of!>
+		Msg%id%03 <Alright, I surrender! I was hired by \FACTION &EnemyFac to work at their base in %name3%. You can take your problems to them; I want no further part in this...>
+		Msg%id%04 <%name1% revealed that \FACTION &EnemyFac has a secret base in %name3%.>
+		Msg%id%05 <%name1% revealed that \FACTION &EnemyFac had a secret base.>
+		Msg%id%06 <I wish I could say that the feeling was mutual!>
+		Prompt%id%01 <Good enough. Let's do it.>
+		Prompt%id%02 <Don't be stupid. I don't want to kill you.>
+
+		MetaScene 2
+		BoxMap
+		MapWidth 13
+		MapHeight 13
+		special <AddExit>
+		% V1 = Initialization Counter
+		% V3 = Kill E1 Counter
+		start <Print 1 if= V1 0 V= 1 1 ForceChat %1%>
+		FAINT%1% <if= V3 0 V= 3 1 History 2>
+		nu1 <if= T1 0 Return if= PlotStatus %id% StoryNote 1 LoseComp 0 .next>
+		.next <+T-- +F-->
+
+		Msg1 <You didn't learn anything from %name1%'s hideout.>
+		Msg2 <You killed %name1% in personal combat.>
+		sub
+			Team 1
+			SetEnemy 2
+
+			Team 2
+			name <Enemies>
+			setEnemy 1
+		end
+		inv
+			STC Computer-1
+			% If the PC kills the NPC, he can get the info from this computer.
+			MiniMapComponent 2
+			use <if= PlotStatus %id% else GoNoNeed ifNPCDead %1% else GoNPCAlive Print 1>
+			clue37 <if= PlotStatus %id% else GoNoNeed ifNPCDead %1% else GoNPCAlive ifInvestigation SkillTar StoryDL else GoFail Alert 2 Goto GoReveal>
+			clue32 <if= PlotStatus %id% else GoNoNeed ifNPCDead %1% else GoNPCAlive ifCodeBreaking SkillTar StoryDL else GoFail Alert 3 Goto GoReveal>
+			GoNPCAlive <Print 4>
+			GoNoNeed <Print 5>
+			GoFail <Print 6>
+			GoReveal <SMemo 7 History 8 XPV 100 ShowEntrance %4% SetPlotStatus %id1%>
+			Msg1 <You could probably learn some things from this computer, if only you knew how.>
+			Msg2 <In the front drawer of the computer desk you find some handwritten notes indicating that \FACTION &EnemyFac has a base in %name3%.>
+			Msg3 <You hack into this computer and learn that \FACTION &EnemyFac has a base in %name3%.>
+			Msg4 <You really don't have time to be playing with this computer while %name1% is still around.>
+			Msg5 <There's nothing else you can learn from this computer.>
+			Msg6 <You fail to learn anything from this computer.>
+			Msg7 <You learned from %name1%'s computer that \FACTION &EnemyFac has a base in %name3%.>
+			Msg8 <You learned from %name1%'s computer that \FACTION &EnemyFac had a base in %name3%.>
+		end
+	end
+	inv
+		STC CORE-ACTIVATABLE-STATIONARY-DEFENDED
+		name <the Secret Base>
+	end
 
 
+Content
+	name <Robot Monster>
+	desc <That target you've been chasing left a robot monster for you. How thoughtful.>
+	requires <#A +Tht S:META E:-- (T:ACADE|T:CORPO|T:CRAFT)>
+	size 5
+
+	% E1 is the target
+	% E2 is the scene
+	% E3 is the robot monster
+	Element1 <Grab 5>
+	Place1 </>
+	Element2 <Grab 6>
+	Element3 <Prefab>
+	Place3 <2 (Monster) sd>
+
+	update <if= PlotStatus 0 SetPlotStatus %id% ItemLevel %3% StoryDL>
+
+	sub
+		MetaScene 2
+		special <NOEXIT>
+		BoxMap
+		MapWidth 21
+		MapHeight 16
+
+		% L1 = Initialization Counter
+		% L2 = Victory Counter
+		start <Print 1 if= L1 0 L= 1 1 Monologue %1% 2 Monologue %1% 4 &SetEnemyNPC %1% StoryNote 3>
+		nu1 <if= T1 0 Return if= L2 0 L= 2 1 LoseComp 0 .next>
+		nu2 <if= T2 0 if= L2 0 L= 2 1 Monologue %1% 5 Print 6 XPV 100 WinComp 0 .next>
+		.next <+T-- +F-->
+
+		Msg1 <You enter %name1%'s hideout.>
+		Msg2 <You've done well in finding my hideout, \PC . I hope you won't be disappointed that I'm no longer there.>
+		Msg3 <You found %name1%'s hideout, but \SPR %1% left a robot monster for you.>
+		Msg4 <I've left a special present behind for you. I haven't given him a name yet, but maybe you can think up one in the final minutes you have left to live.>
+		Msg5 <Fascinating. I'll have to use you to test all of my new weapons from now on.>
+		Msg6 <You hear a click sound from the trapdoor.>
+
+		sub
+			Team 1
+			SetEnemy 2
+
+			Team 2
+			name <Monster>
+			SetEnemy 1
+
+			room
+			special <STARTHERE>
+			minimap <............2............>
+			sub
+				TrapDoor
+				Destination -1
+				MiniMapComponent 2
+				use <if# L2 0 else GoLocked Print 1 Return>
+				GoLocked <Print 101>
+				msg101 <This trapdoor is barred from the other side. There's no way to get out.>
+			end
+		end
+	end
+	inv
+		Monster Androbot
+		name <Robot Monster>
+	end
+
+Content
+	name <Target Has Hostage>
+	desc <That target you've been chasing has a hostage.>
+	requires <#A +Tht S:META (+Far|+Ffi) (T:MEDIC|T:THIEF|T:ADVEN)>
+	Size 6
+
+	% E3 is the hostage
+	Element1 <Grab 5>
+	Place1 <2 (Citizens) pass>
+	Element2 <Grab 6>
+	Element3 <NewNPC -3 -7>
+	Place3 <2 (Citizens) pass>
+
+	update <if= PlotStatus 0 SetPlotStatus %id% NPCLevel %1% StoryDL>
+
+	sub
+		Persona 1
+		% The person being sought... may be forced to surrender.
+		Special <UNLISTED>
+		greeting <if= PlotStatus %id% else .%id%_GoChat ifChatNPCSurrendered else .%id%_GoFirstTime Goto .%id%_GoWillSurrender>
+		.%id%_GoChat <NewChat SayAnything>
+		.%id%_GoFirstTime <if= L2 0 else .%id%_GoGreet SoloAttack %1% L= 2 1 Goto .%id%_GoGreet>
+		.%id%_GoGreet <EndChat Say %id%01 AddChat %id%01 AddChat %id%02>
+		*.%id%_GoWillSurrender <*ISurrender&Arrest .%id%_GoSurrender>
+		*.%id%_GoWillResist <*IDisagreeYouDie na>
+		.%id%_GoSurrender <L= 2 2 Print %id%02 FreezeNPC %1% PCEnemy %1% ifNPCOK %3% else .%id%_GoE3Died StoryNote %id%03 Print %id%04 FreezeNPC %3% &SetTargetNPC %3% WinComp 0 .%id%_win>
+		.%id%_GoE3Died <StoryNote %id%05 WinComp 0 .%id%_loss>
+		.%id%_win <+Tgt +Frt>
+		.%id%_loss <+T-- +F-->
+		result%id%01 <ifConversation HardSkillTar StoryDL else .%id%_GoWillResist FreezeNPC %3% EndChat Say %id%06 XPV 100>
+		result%id%02 <ifIntimidation HardSkillTar StoryDL else .%id%_GoWillResist EndChat Say %id%07 AddChat %id%03>
+		result%id%03 <Goto .%id%_GoWillSurrender>
+		Msg%id%01_10 <Why do you have to make this difficult, \PC ? I didn't want to hurt anyone today but it seems that you're tying my hands...>
+		CMsg%id%01_10 <ifChatNPCKnown Accept>
+		Msg%id%01_20 <You're getting involved in something you don't understand. %name3% and I have unfinished business.>
+		CMsg%id%01_20 <ifChatNPCUnknown Accept>
+		Msg%id%02 <%name1% is captured.>
+		Msg%id%03 <You rescued %name3% from %name1%.>
+		Msg%id%04 <%name3% slips away and disappears...>
+		Msg%id%05 <You captured %name1%, but not soon enough to save %name3%.>
+		Msg%id%06 <I'll let %name3% go, all right, but I've got no interest in talking...>
+		Msg%id%07 <Wait, I've got a hostage, you can't attack me now!>
+		Prompt%id%01 <Let %name3% go and we can talk.>
+		Prompt%id%01_1 <You don't need a hostage; let %name3% go.>
+		Prompt%id%01_2 <I want you to release %name3%.>
+		Prompt%id%02 <Give up now before I'm forced to kill you.>
+		Prompt%id%02_1 <You have one chance to surrender, then you die.>
+		Prompt%id%02_2 <It's over, %name1%. Give up.>
+		Prompt%id%03 <Do I look like I care?>
+
+		Metascene 2
+		% Contains scripts for the scene.
+		% L1 = Initialization Counter
+		% L2 = Have started fight (1), have ended fight (2)
+		start <if= L1 0 L= 1 1 Alert 1 Monologue %3% 2 ForceChat %1%>
+		end <if= L2 1 FreezeNPC %1% PCEnemy %1% DeleteNPC %3% StoryNote 3 LoseComp 0 .loss>
+		.loss <+T-- +F-->
+		Surrender%1% <ForceChat %1%>
+		Faint%1% <L= 2 2 ifNPCOK %3% else GoE3Died StoryNote 4 Print 5 FreezeNPC %3% &SetTargetNPC %3% WinComp 0 .win>
+		GoE3Died <StoryNote 6 WinComp 0 .loss>
+		.win <+Tgt +Frt>
+		Msg1 <As you enter %name1%'s hideout, you see that \SPR %1% has a hostage.>
+		Msg2 <Please, help me get away from here!>
+		Msg3 <You failed to save %name3% from %name1%.>
+		Msg4 <You rescued %name3% from %name1%.>
+		Msg5 <In the chaos of battle, %name3% slips away and disappears...>
+		Msg6 <You defeated %name1%, but not soon enough to save %name3%.>
+
+		sub
+			Team 1
+			SetAlly 3
+			SetEnemy -1
+
+			Team 3
+			name <Citizens>
+			SetEnemy -1
+			SetAlly 1
+			Passive
+		end
+	end
+
+Content
+	name <Target becomes Enemy>
+	desc <That target you've been chasing? Surprise! He's your new enemy!>
+	requires <#A +Tht S:++ (+Far|+Ffi) E:-- ~+P-->
+	Size 1
+
+	% E1 is the target
+	% E2 is the scene
+	% E3 is the note left for the PC
+	Element1 <Grab 5>
+	Place1 </>
+	Element2 <Grab 6>
+	Element3 <Prefab>
+	Place3 <2>
+
+	start <if= SceneID %2% Alert 1 History 2 &SetEnemyNPC %1% &SetTargetNPC 0 WinComp 0 .%id%_Next>
+	.%id%_Next <+T-- +F-->
+
+	Msg1 <There's no sign of %name1% here; \SPR %1% must have known you were coming.>
+	Msg2 <%name1% evaded your attempt to capture \OPR %1% .>
+
+	sub
+		STC MS_EmptyBuilding
+		SetID 2
+	end
+	inv
+		Treasure 1
+		name <Note>
+		desc <Don't bother looking for me. From now on, I'll be looking for you instead. - %name1%>
+	end
+
+
+Plot
+	name <Tell Me About The Base>
+	desc <The target will tell you about an enemy base nearby.>
+	requires <#A +Tht S:++ (+Fin|+F--) ~1:MILIT>
+	Size 1
+
+	% E1 is the NPC being sought
+	% E2 is his scene
+	% E3 is an outdoors scene for the enemy base
+	% E4 is an encounter for the enemy base
+	Element1 <Grab 5>
+	Place1 <2 (Citizens) Pass>
+	Element2 <Grab 6>
+	Element3 <Scene Outdoors !Near -7>
+	Element4 <Prefab>
+	Place4 <3>
+
+	start <ifNPCDead %1% LoseComp 0 .%id%_loss>
+	.%id%_loss <+T-- +F-->
+
+	% SubPlot1 is the enemy base
+	SubPlot1 <*CS_RaidEnemyBase 4>
+
+	sub
+		Persona 1
+		special <UNLISTED>
+		*greeting <*WhatDoYouWantWithMe&Information .%id%_GoTell>
+		.%id%_GoTell <NewChat Say %id%01 AddChat %id%01 AddChat %id%02 SMemo %id%02 History %id%03 ShowEntrance %4% SetPlotSTatus %id1%>
+		result%id%01 <NewChat Say %id%04 AddCheerful d10>
+		result%id%02 <EndChat Say %id%05 FreezeNPC %1% PCEnemy %1% SkillXP 28 100 AddCheerful -d10>
+		Msg%id%01 <I don't know much of anything... There's a base nearby and they hired me to do a few jobs, but I didn't hear anything.>
+		Msg%id%01_1 <I don't know anything, really! I came here to work at a secret base and I did a couple of missions but I don't even know what the purpose was!>
+		Msg%id%02 <%name1% told you that there is a secret base in %name3%.>
+		Msg%id%03 <%name1% told you that there was a secret base nearby.>
+		Msg%id%04 <Just make sure no-one finds out we were talking... that could be very bad for my health.>
+		Msg%id%05 <Next time we meet, hopefully it'll be on more equal terms. Goodbye, \PC ...>
+		Prompt%id%01 <You've been most helpful.>
+		Prompt%id%01_1 <Thanks. That's all I need to know.>
+		Prompt%id%02 <That's it? Get out of here before I lose my temper.>
+		Prompt%id%02_1 <If I thought you were lying now, I'd kill you.>
+
+		STC MS_EmptyBuilding
+		SetID 2
+	end
+	inv
+		STC CORE-ACTIVATABLE-STATIONARY-DEFENDED
+		name <the Secret Base>
+	end
+
+
+Plot
+	name <Basic Hideout>
+	requires <#A +Tht S:-->
+	desc <A NPC will tell the PC where to find the target's hideout>
+	Size 2
+
+	% E1 is the character being sought
+	% E2 is an urban scene, for placing the encounter
+	% E3 is the encounter/metascene for the hideout
+	% E4 is a character who can tell the PC where the hideout is.
+	Element1 <Grab 5>
+	Place1 </>
+	Element2 <Scene Urban !Near -7>
+	Element3 <Prefab>
+	Place3 <2>
+	Element4 <Character !Near -7 !Okay 1>
+
+	% If the person with the knowledge dies, do we give up? Of course not! Keep ahead in
+	% the same course as before.
+	Start <if= PlotStatus 0  ifNPCDead %4% LoseComp 0 na>
+sub
+	Persona 4
+	rumor <%name4% knows where %name1% is.>
+	*greeting <*LookingForNPC %1% GoSuccess GoFailure>
+	GoSuccess <NewChat Say 1 SMemo 2 WinComp %3% na>
+	*GoFailure <*BrushOff&Questioning>
+	Msg1 <I'll tell you- %name1% used to have a hideout in %name2%. If you're looking for \OPR %1% , that's the first place I'd check.>
+	Msg2 <%name4% told you that %name1%'s hideout can be found in %name2%.>
+end
+inv
+	STC ENCOUNTER-DUEL
+	name <%name1%'s Hideout>
+	ENCOUNTER_Hostile
+end
 
 Plot
 	name <Basic Challenge>

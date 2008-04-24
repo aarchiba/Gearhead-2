@@ -287,6 +287,62 @@ Content
 %%  *******************
 
 Content
+	name <Mobile Base>
+	desc <You're searching for the base, but it's gone... in its place a new enemy.>
+	requires <*CS_RaidEnemyBase E:-- F:MILIT +Pew>
+	Size 8
+
+	% E1 is the base itself
+	% E2 is the new enemy
+	Element2 <NewNPC -2 -7>
+	Place2 </>
+
+	% V%id%01 = Initialization Counter
+	update <if= PlotStatus %id% else %pop% if= V%id%01 0 V= %id%01 1   MoveNPC %2% %1% SetNPCTeam %2% 2 NPCLevel %2% StoryDL>
+
+	sub
+		MetaScene 1 2
+		% L1 = Encounter Over Counter
+		% L2 = Initialization Counter
+		MapWidth 30
+		MapHeight 30
+
+		Start <if= L2 0 L= 2 1   StoryNote 1   ForceChat %2%    &SetEnemyNPC %2%>
+		nu1 <if= T1 0   Return   if= V1 0 V= 1 1   LoseComp 0 .next>
+		nu2 <if= T2 0   if= V1 0 V= 1 1   XPV 100  SALVAGE   WinComp 0 .next>
+		.next <+T-- +F-->
+
+		Msg1 <You were too late to find the base, but fought %name2% instead.>
+
+		sub
+			team 1
+			SetEnemy 2
+			ParaX 5
+			ParaY 5
+
+			team 2
+			SetEnemy 1
+			Deploy <SetSelfFaction &EnemyFac   WMecha 2 StoryDL 100>
+			ParaX 25
+			ParaY 25
+		end
+
+		Persona 2
+		special <UNLISTED>
+		GREETING <EndChat Say 1 AddChat 1 AddChat 2>
+		result1 <EndChat Say 2   AddChat 3   AddEasygoing -d6>
+		result2 <EndChat Say 3   AddChat 3   AddEasygoing  d6>
+		*result3 <*THEME_EXPO&ENEMY na>
+		Msg1 <So, you must be \PC . I'm sorry to disappoint you but our mobile base is no longer here. It wouldn't make very much sense to keep it in one place, now would it?>
+		Msg2 <I'm sorry, but do I really look that stupid? There's nothing for you to do here now, but since I know you're going to keep looking I can't very well let you get away.>
+		Msg3 <I'm glad to hear it. I'd hate to have left you feeling unfulfilled on our first meeting.>
+		Prompt1 <Tell me where you've moved it!>
+		Prompt2 <That's fine. I'd just as soon fight you.>
+		Prompt3 <[Continue]>
+	end
+
+
+Content
 	name <You Just Missed Him!>
 	desc <You've arrived at the base too late to stop your arch-enemy from launching for a mission.>
 	requires <*CS_RaidEnemyBase E:++ (F:MILIT|F:CORPO|F:--) -L:ENEMY>

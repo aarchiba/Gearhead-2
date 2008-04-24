@@ -44,6 +44,7 @@ SelfSkill= <GrabSource GSetNAtt NAG_Skill ? ?>
 PCSkill+ <GrabPCPilot GAddNAtt NAG_Skill ? ?>
 PCSTAT+ <GrabPCPilot GAddStat ? ?>
 PCSTAT= <GrabPCPilot GSetStat ? ?>
+NPCSTAT= <GrabNPC ? GSetStat ? ?>
 PCENEMY <GrabNPC ?  GSetNAtt NAG_Relationship 0 NAV_ArchEnemy>
 PCFENEMY <GrabFaction ?  GSetNAtt NAG_Relationship 0 NAV_ArchEnemy>
 PCALLY <GrabNPC ?  GSetNAtt NAG_Relationship 0 NAV_ArchAlly>
@@ -68,6 +69,7 @@ CLEARFACXP <GrabPCPilot GSetNAtt NAG_Experience NAS_FacXP 0>
 SETNPCFACTION <GrabNPC ? GSetNAtt NAG_Personal NAS_FactionID ?>
 SETSCENEFACTION <GrabScene ? GSetNAtt NAG_Personal NAS_FactionID ?>
 SetNPCTeam <GrabNPC ? GSetNAtt NAG_Location NAS_Team ?>
+SetItemTeam <GrabItem ? GSetNAtt NAG_Location NAS_Team ?>
 SetChatNPCTeam <GrabChatNPC GSetNAtt NAG_Location NAS_Team ?>
 DELETENPC <GrabNPC ?  DeleteGG>
 KILLNPC <GrabNPC ? GAddNAtt 12 0 9999 Trigger NU NPCTeam ! Trigger FAINT !>
@@ -82,6 +84,7 @@ NPCLevel <GrabNPC ? GSkillLevel ?>
 ItemLevel <GrabItem ? GSkillLevel ?>	% Can be used for monsters.
 ConGen <GrabNPC ? GSetNAtt 3 0 1 GAddNAtt 3 0 -PCGender> % set NPC opposite gender of PC
 IsoGen <GrabNPC ? GSetNAtt 3 0 PCGender>                 % set NPC same gender as PC
+IsoAge <GrabNPC ? GSetNAtt 3 0 PCDAge>
 DynaItem <GrabItem ? DynaGG 0>
 DynaItemTeam <GrabItem ? DynaGG ?>
 MOVEITEM <GrabItem ?  MoveGG ?>
@@ -102,9 +105,12 @@ IFItemDESTROYED <GrabItem ? ifGDead>
 IFSCENEEXISTS <GrabScene ? IFGOK>
 IFFACTIONEXISTS <GrabFaction ? IFGOK>
 IFNPCSEXY <GrabNPC ? IfGSexy>
+IFNPCKNOWN <GrabNPC ? ifG GNAtt NAG_Personal NAS_NumConversation 0>
+IFNPCUNKNOWN <GrabNPC ? if= GNAtt NAG_Personal NAS_NumConversation 0>
 IFCHATNPCSEXY <GrabChatNPC IfGSexy>
 IFCHATNPCKNOWN <GrabChatNPC ifG GNAtt NAG_Personal NAS_NumConversation 0>
 IFCHATNPCUNKNOWN <GrabChatNPC if= GNAtt NAG_Personal NAS_NumConversation 0>
+IFNPCALLY <GrabNPC ? ifGArchAlly>
 IFCHATNPCALLY <GrabChatNPC ifGArchAlly>
 IFCHATNPCCANJOINLANCE <GrabChatNPC ifGCanJoinLance>
 IFFACTIONENEMY <GrabFaction ? ifGArchEnemy>
@@ -197,8 +203,8 @@ LoseComp <N= 6 ? NextComp ?>
 NTBLoseComp <&SetTargetNPC ChatNPCID LoseComp ? ?>
 NTBNegateComp <&SetTargetNPC ChatNPCID NegateComp ? ?>
 StoryDL= <GrabStory GSetNAtt NAG_XXRan 1 ?>
-WinEpisode <XPV 200   N= 7 ? N= 6 ? GrabStory GAddNAtt -7 1 6 GAddNAtt -7 2 1 GSetNAtt -7 3 0 GSetNAtt -7 4 0 NextComp ?>
-LoseEpisode <N= 7 ? N= 6 ? GrabStory                  GAddNAtt -7 2 1 GSetNAtt -7 3 0 GSetNAtt -7 4 0 NextComp ?>
+WinEpisode <XPV 200   N= 7 ? N= 6 ? GrabStory GAddNAtt -7 1 6 GAddNAtt -7 2 1 GAddNAtt -7 6 1 GSetNAtt -7 3 0 GSetNAtt -7 4 0 NextComp ?>
+LoseEpisode <N= 7 ? N= 6 ? GrabStory                  GAddNAtt -7 2 1 GAddNAtt -7 6 1 GSetNAtt -7 3 0 GSetNAtt -7 4 0 NextComp ?>
 IfFacReward     <GrabFaction ? if# GNAtt NAG_FacReward ? 0>
 IfAccessArmory  <GrabFaction LocalFaction if# GNAtt NAG_FacReward 1 0>
 IfNotAccessArmory  <GrabFaction LocalFaction if= GNAtt NAG_FacReward 1 0>

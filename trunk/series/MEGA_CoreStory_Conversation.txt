@@ -739,15 +739,151 @@ Plot
 %%  ****************************************
 
 Content
+	name <Enemy Plans For Sale>
+	desc <This thief has plans for sale, but the PC can ask for something better.>
+
+Content
 	name <They've Hired A Mad>
 	desc <The enemy faction has hired a mad scientist to help with their weapons program.>
-	requires <*CS_Conversation +Pew (1:ACADE|1:CORPO|1:CRAFT) F:++>
+	requires <*CS_Conversation +Pew (1:ACADE|1:MEDIC|1:CORPO|1:CRAFT) F:++>
 	Size 1
 
 	% E1 is the person being spoken to
+	% E2 is the mad scientist
+	Element2 <NPC (ACADE|MEDIC) Villainous Neverfail !Global>
+	NeverFail2 <Scientist>
+	Place2 </>
 
 	start <if= PlotStatus %id% else %pop% ifNPCDead %1% LoseComp 0 .%id%_loss>
 	.%id%_loss <+T-- +F-->
+
+	sub
+		Persona 1
+		greeting <if= PlotStatus %id% else %pop% ifChatNPCKnown else .%id%_GoIHaveInfo Goto .%id%_GoGreet>
+		*.%id%_GoGreet <*HowAreYou .%id%_GoIHaveInfo>
+		*.%id%_GoIHaveInfo <*IHaveInformation&AboutFaction .%id%_GoExplain &EnemyFac>
+		.%id%_GoExplain <NewChat Say %id%01 StoryNote %id%02 AddChat %id%01 AddChat %id%02 &SetTargetNPC %2% WinComp 0 .%id%_next>
+		.%id%_next <+Tht +Ffi>
+		result%id%01 <NewChat Say %id%03 AddCHat %id%03>
+		result%id%02 <NewChat Say %id%04 AddChat %id%03>
+		result%id%03 <NewChat Say %id%05>
+		Msg%id%01 <I've heard that \FACTION &EnemyFac hired %name2% to work on their weapons program. Apparently \SPR %2% 's in town now doing some kind of experiment.>
+		Msg%id%02 <%name1% told you that \FACTION &EnemyFac hired %name2% to develop experimental weapons.>
+		Msg%id%03 <You're right about that. I shiver to think of what %name2% will come up with now that \SPR %2% has someone to fund \PPR %2% experiments.>
+		Msg%id%04 <%name2% is... I suppose it would be easiest to describe \OPR %2% as a mad scientist. Brilliant, but somewhat deranged, and utterly devoid of morals.>
+		Msg%id%05 <Who can say? You tell me the scarier thought- that they don't know what %name2% is capable of, or that they do?>
+		Prompt%id%01 <They hired %name2%? That can't be good.>
+		CPrompt%id%01 <ifNPCKnown %2% Accept>
+		Prompt%id%02 <Who's %name2%?>
+		CPrompt%id%02 <ifNPCUnknown %2% Accept>
+		Prompt%id%03 <Does \FACTION &EnemyFac know what it's getting into?>
+	end
+
+%%  ***********************************
+%%  ***   +Cme  Mentoring Partner   ***
+%%  ***********************************
+
+Content
+	name <Don't you ever relax?>
+	desc <The lancemate will ask the PC if he ever relaxes. The PC will have a chance to pick up a love interest.>
+	requires <*CS_Conversation +Cme A:-- 1:FRIEND ~+Glo>
+
+	% E1 is the friend
+	% E2 is the lancemate
+	% E3 is a nearby public scene
+	% E4 is a mutual acquantance, of an opposite gender
+	Element2 <Grab 4>
+	Element3 <Scene Public !Near -7>
+	Element4 <NewNPC -3 -7 PCFriend>
+	Place4 </>
+
+	% P%id%01 = Initialization Counter
+	% P%id%02 = Lancemate Conversation Counter
+	update <if= PlotStatus %id% else %pop% if= v%id%01 0 V= %id%01 1 ConGen %4% NPCStat= %4% 8 16 IsoAge %4%>
+
+	start <if= PlotStatus %id% else %pop% ifNPCDead %1% LoseComp 0 .%id%_loss>
+	.%id%_loss <+T-- +F-->
+
+	5min <if= PlotStatus %id% else %pop% if= V%id%02 0 if= RootSceneID &EpisodeScene if= d5 1 ifNPCOK %2% ForceChat %2%>
+
+	sub
+		Persona 1
+		greeting <if= PlotStatus %id% else %pop%  Goto .%id%_GoGreet>
+		*.%id%_GoGreet <*HowAreYou .%id%_GoReveal>
+		.%id%_GoReveal <NewChat Say %id%01 AddChat %id%01 AddChat %id%02>
+		.%id%_GoQuit <ifNPCOK %2% else .%id%_GoNoPartner Monologue %2% %id%07 Monologue %2% %id%08 NewChat Say %id%09 StoryNote %id%10 &RemovePartnerNPC PCAlly %2% FreezeNPC %2% WinComp 0 .%id%_IQuit>
+		.%id%_GoNoPartner <NewChat Say %id%11 StoryNote %id%12 AddRenown -10 WinComp 0 .%id%_IQuit>
+		.%id%_IQuit <+T-- +F-- +Cfa>
+		result%id%01 <NewChat Say %id%02 AddChat %id%03 AddChat %id%04 AddChat %id%05>
+		result%id%02 <NewChat Say %id%03 AddChat %id%04 AddChat %id%06 AddChat %id%07 AddChat %id%08>
+		result%id%03 <NewChat Say %id%04 SMemo %id%05 History %id%06 &SetAmoreNPC %4% WinComp %3% .%id%_Meeting>
+		.%id%_Meeting <+Clo +Tga +F-->
+		result%id%04 <Goto .%id%_GoQuit>
+		result%id%05 <NewChat Say %id%13 AddChat %id%06 AddCHat %id%07 AddCHat %id%08>
+		result%id%06 <Monologue %2% %id%14 Monologue %2% %id%15 Monologue %2% %id%16 NewChat Say %id%17 AddChat %id%09 StoryNote %id%18 &RemovePartnerNPC PCAlly %2% &SetAmoreNPC %2% FreezeNPC %2% WinComp 0 .%id%_Meeting>
+		result%id%07 <NewChat Say %id%19 AddChat %id%10 AddChat %id%11>
+		result%id%08 <Goto .%id%_GoQuit>
+		result%id%09 <NewChat Say %id%20>
+		result%id%10 <NewChat Say %id%21 StoryNote %id%22 &SetAmoreNPC %1% AddReact d20  WinComp 0 .%id%_NoDate>
+		.%id%_Meeting <+Clo +T-- +F-->
+		result%id%11 <NewChat Say %id%23 SMemo %id%05 History %id%06 &SetAmoreNPC %4% WinComp %3% .%id%_Meeting>
+		Msg%id%01 <You'll never guess who I was talking to the other day- %name4%. Of course \SPR %4% asked how you were doing. I found out that \SPR %4% 's not seeing anyone, in case you're still crushing on \OPR %4% .>
+		Msg%id%02 <I certainly did. What do you think, are you going to try to hook up with \OPR %4% again?>
+		Msg%id%03 <It certainly seems like \SPR %4% 's still interested in you, so... what changed? Have you fallen in love with someone else?>
+		Msg%id%04 <That's the spirit! I think you might be able to catch \OPR %4% at %name3%; get over there and make a fool of yourself!>
+		Msg%id%05 <%name1% revealed that your old flame %name4% might be at %name3%.>
+		Msg%id%06 <%name1% revealed that your old flame %name4% was at %name3%.>
+		Msg%id%07 <That's it! That's the final straw!>
+		Msg%id%08 <\PC , you might be a great cavalier but you're a stump of a teacher. I've decided to quit this game while I still have a life left to be enjoyed.>
+		Msg%id%09 <Well, that was dramatic...>
+		Msg%id%10 <%name2% quit your lance in order to better enjoy life.>
+		Msg%id%11 <I hope you can find someone to be with, someday. It can't be good being alone all the time.>
+		Msg%id%12 <%name1% commented on what a lonely life you must have without %name2%.>
+		Msg%id%13 <Really? Well, go on, tell me... Who is it?>
+		Msg%id%14 <WHAT!?!?!?>
+		Msg%id%15 <This is sudden... I don't know how I feel about this... How long have you felt that way?>
+		Msg%id%16 <I have to go away and sort out my feelings... Goodbye \PC .>
+		Msg%id%17 <Well, that was dramatic... What are you going to do now?>
+		Msg%id%18 <You revealed your romantic feelings for %name2% , who promptly ran off.>
+		Msg%id%19 <Me? Do you really mean that?>
+		Msg%id%20 <You do that... and when you find \OPR %2% , don't let \OPR %2% get away like %name4% did.>
+		Msg%id%21 <That's so cool! Maybe we can have a date, someday. I'll let you know when I'm free.>
+		Msg%id%22 <You revealed your romantic feelings for %name1%.>
+		Msg%id%23 <That's a relief. Anyhow, you should be able to catch %name4% at %name3%. I'm sure \SPR %4% 'll be happy to see you.>
+		Prompt%id%01 <Wow. Did you give \OPR %4% my thrunet pass?>
+		Prompt%id%02 <That was a long time ago. Things have changed.>
+		Prompt%id%03 <I'm going to try.>
+		Prompt%id%04 <No. I'm better off on my own.>
+		Prompt%id%05 <No. I've fallen in love with someone else.>
+		Prompt%id%06 <I think I love %name2%.>
+		CPrompt%id%06 <ifNPCSexy %2% ifNPCOK %2% Accept>
+		Prompt%id%07 <I think I love you.>
+		CPrompt%id%07 <ifChatNPCSexy Accept>
+		Prompt%id%08 <I'm in love with myself. Only myself.>
+		Prompt%id%09 <I'll go look for \OPR %2% , I guess.>
+		Prompt%id%10 <I really mean that.>
+		Prompt%id%11 <Nah, I'm just messing with you.>
+
+		Persona 2
+		% V1 = Have completed talk.
+		greeting <if= PlotStatus %id% else %pop% P= %id%02 1 if= V1 0 else .%id%_GoChat Goto .%id%_GoAskPermission>
+		.%id%_GoChat <NewChat SayAnything>
+		*.%id%_GoAskPermission <*LancemateWantsToTalk .%id%_GoNow .%id%_GoLater>
+		.%id%_GoNow <NewChat Say %id%01 AddChat %id%01 AddChat %id%02 AddChat %id%03>
+		.%id%_GoLater <NewChat Say %id%02 AddChat %id%01 AddChat %id%02 AddChat %id%03>
+		result%id%01 <NewChat Say %id%03 V= 1 1>
+		result%id%02 <NewChat Say %id%04 AddCheerful  d8   V= 1 1>
+		result%id%03 <NewChat Say %id%05 AddCheerful -d10  V= 1 1>
+		Msg%id%01 <Do you ever, you know, take any time off? It seems to me that you're always on duty. You never just sit back and enjoy life.>
+		Msg%id%02 <This is exactly the kind of thing I wanted to talk about. You're always on duty. You never take any time off to enjoy life!>
+		Msg%id%03 <I know, but still it won't do any good if you work yourself to death.>
+		Msg%id%04 <Maybe you think you do but from where I'm standing it doesn't look like it. You really need some time off.>
+		Msg%id%05 <I thought at first that I had a lot to learn from you. At times, you should learn something from me as well.>
+		Prompt%id%01 <%name2%, the work I do is very important!>
+		Prompt%id%02 <What do you mean? I goof off all the time.>
+		Prompt%id%03 <Frivolity is for the weak. You'd do well to remember that.>
+	end
+
 
 
 %%  *******************

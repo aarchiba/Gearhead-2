@@ -10,6 +10,8 @@
 	NAtt -7 1 5
 	% Starting episode completion goal is 6...
 	NAtt -7 2 6
+	% Starting episode number is 1...
+	NAtt -7 6 1
 
 	start <if= V1 0 V= 1 1 goto update>
 	update <CheckComponents>
@@ -22,6 +24,7 @@
 	&SetAllyFac <N= 3 ?>
 	&AllyFac <N3>
 	&SetPartnerNPC <N= 4 ? AddTempLancemate !>
+	&RemovePartnerNPC <RemoveTempLancemate N4 N= 4 0>
 	&PartnerNPC <N4>
 	&SetTargetNPC <N= 5 ?>
 	&TargetNPC <N5>

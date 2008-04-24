@@ -1036,7 +1036,7 @@ Content
 	Element3 <Prefab>
 	Place3 <2>
 	Element4 <Grab 1>
-	Element5 <Scene Building Public !Enemy -2>
+	Element5 <Scene Building Public !Enemy -2 !Near -7>
 
 	% SubPlot1 = Win the battle, get a reward
 	% SubPlot2 = Lose the battle, get scorned
@@ -1052,8 +1052,8 @@ Content
 
 		Start <if= L2 0 L= 2 1   ifNPCOK %4% else GoNoE4 Monologue %4% 1 History 2>
 		GoNoE4 <Alert 3 History 4>
-		nu1 <if= T1 0  Return   if= L1 0 L= 1 1   SMemo 5>
-		nu2 <if= T2 0           if= L1 0 L= 1 2   SMemo 5   AddRenown 1   XPV 100   Salvage>
+		nu1 <if= T1 0  Return   if= L1 0 L= 1 1   SMemo 5   SetPlotStatus %id2%>
+		nu2 <if= T2 0           if= L1 0 L= 1 2   SMemo 5   AddRenown 1   XPV 100   Salvage  SetPlotStatus %id1%>
 
 		Msg1 <Men, keep \PC occupied. I have urgent business in %name5%.>
 		Msg2 <You fought %name4%'s men, while \SPR %4% left to attack %name5%.>

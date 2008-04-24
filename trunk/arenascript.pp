@@ -1058,6 +1058,11 @@ begin
 						Dest^.Stat[ STAT_MapGenerator ] := TileTerrain( GB , NAttValue( Src^.NA , NAG_Location , NAS_X ) , NAttValue( Src^.NA , NAG_Location , NAS_Y ) );
 						{ If this will make the encounter a space map, set the map-scroll tag. }
 						if Dest^.Stat[ STAT_MapGenerator ] = TERRAIN_Space then Dest^.Stat[ STAT_SpaceMap ] := 1;
+					end else begin
+						{ Copy the current scene's map generator and hope for the best. }
+						Dest^.Stat[ STAT_MapGenerator ] := GB^.Scene^.Stat[ STAT_MapGenerator ];
+						{ If this will make the encounter a space map, set the map-scroll tag. }
+						if Dest^.Stat[ STAT_MapGenerator ] = TERRAIN_Space then Dest^.Stat[ STAT_SpaceMap ] := 1;
 					end;
 
 					{ Also copy over the tileset + backdrop. }
@@ -3266,6 +3271,8 @@ end;
 Procedure ProcessCheckComponents( GB: GameBoardPtr; Source: GearPtr );
 	{ Check to see if this source needs to load a new component. If so, }
 	{ then do that. }
+var
+	Adv: GearPtr;
 begin
 	{ If we have a source, and that source has its "LoadNextComponent" value set, }
 	{ then we have work to do here... }
@@ -3273,6 +3280,14 @@ begin
 		PrepareNewComponent( Source , GB );
 
 		SetNAtt( Source^.NA , NAG_XXRAN , NAS_LoadNextComponent , 1 );
+
+		{ Check to see whether or not the episode number has increased. }
+		if NAttValue( Source^.NA , NAG_XXRAN , NAS_EpisodeNumber ) > NAttValue( Source^.NA , NAG_XXRAN , NAS_LastEpisodeNoted ) then begin
+			SetNAtt( Source^.NA , NAG_XXRAN , NAS_LastEpisodeNoted , NAttValue( Source^.NA , NAG_XXRAN , NAS_EpisodeNumber ) );
+			Adv := GG_LocateAdventure( GB , Source );
+			AddSAtt( Adv^.SA , 'HISTORY' , '...' );
+			AddSAtt( Adv^.SA , 'HISTORY' , ReplaceHash( MsgString( 'HISTORY_NEWEPISODE' ) , BStr( NAttValue( Source^.NA , NAG_XXRAN , NAS_EpisodeNumber ) ) ) );
+		end;
 	end;
 end;
 
