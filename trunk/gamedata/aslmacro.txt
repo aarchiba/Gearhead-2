@@ -84,7 +84,7 @@ NPCLevel <GrabNPC ? GSkillLevel ?>
 ItemLevel <GrabItem ? GSkillLevel ?>	% Can be used for monsters.
 ConGen <GrabNPC ? GSetNAtt 3 0 1 GAddNAtt 3 0 -PCGender> % set NPC opposite gender of PC
 IsoGen <GrabNPC ? GSetNAtt 3 0 PCGender>                 % set NPC same gender as PC
-IsoAge <GrabNPC ? GSetNAtt 3 0 PCDAge>
+IsoAge <GrabNPC ? GSetNAtt NAG_CharDescription NAS_DAge PCDAge>
 DynaItem <GrabItem ? DynaGG 0>
 DynaItemTeam <GrabItem ? DynaGG ?>
 MOVEITEM <GrabItem ?  MoveGG ?>

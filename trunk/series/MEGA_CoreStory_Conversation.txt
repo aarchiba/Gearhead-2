@@ -787,6 +787,7 @@ Content
 	name <Don't you ever relax?>
 	desc <The lancemate will ask the PC if he ever relaxes. The PC will have a chance to pick up a love interest.>
 	requires <*CS_Conversation +Cme A:-- 1:FRIEND ~+Glo>
+	Size 1
 
 	% E1 is the friend
 	% E2 is the lancemate
@@ -825,7 +826,7 @@ Content
 		result%id%08 <Goto .%id%_GoQuit>
 		result%id%09 <NewChat Say %id%20>
 		result%id%10 <NewChat Say %id%21 StoryNote %id%22 &SetAmoreNPC %1% AddReact d20  WinComp 0 .%id%_NoDate>
-		.%id%_Meeting <+Clo +T-- +F-->
+		.%id%_NoDate <+Clo +T-- +F-->
 		result%id%11 <NewChat Say %id%23 SMemo %id%05 History %id%06 &SetAmoreNPC %4% WinComp %3% .%id%_Meeting>
 		Msg%id%01 <You'll never guess who I was talking to the other day- %name4%. Of course \SPR %4% asked how you were doing. I found out that \SPR %4% 's not seeing anyone, in case you're still crushing on \OPR %4% .>
 		Msg%id%02 <I certainly did. What do you think, are you going to try to hook up with \OPR %4% again?>
@@ -857,7 +858,7 @@ Content
 		Prompt%id%05 <No. I've fallen in love with someone else.>
 		Prompt%id%06 <I think I love %name2%.>
 		CPrompt%id%06 <ifNPCSexy %2% ifNPCOK %2% Accept>
-		Prompt%id%07 <I think I love you.>
+		Prompt%id%07 <Honestly, you're the one I've always wanted.>
 		CPrompt%id%07 <ifChatNPCSexy Accept>
 		Prompt%id%08 <I'm in love with myself. Only myself.>
 		Prompt%id%09 <I'll go look for \OPR %2% , I guess.>
@@ -877,7 +878,7 @@ Content
 		Msg%id%01 <Do you ever, you know, take any time off? It seems to me that you're always on duty. You never just sit back and enjoy life.>
 		Msg%id%02 <This is exactly the kind of thing I wanted to talk about. You're always on duty. You never take any time off to enjoy life!>
 		Msg%id%03 <I know, but still it won't do any good if you work yourself to death.>
-		Msg%id%04 <Maybe you think you do but from where I'm standing it doesn't look like it. You really need some time off.>
+		Msg%id%04 <Maybe you think you do but from where I'm standing it doesn't look like it. You really need to loosen up.>
 		Msg%id%05 <I thought at first that I had a lot to learn from you. At times, you should learn something from me as well.>
 		Prompt%id%01 <%name2%, the work I do is very important!>
 		Prompt%id%02 <What do you mean? I goof off all the time.>

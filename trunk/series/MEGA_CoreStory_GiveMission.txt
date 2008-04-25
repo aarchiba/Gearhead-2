@@ -58,6 +58,57 @@ Content
 	end
 
 Content
+	name <Shared Enemy>
+	desc <The PC isn't a member of the mission-giver's faction, but they have a shared enemy.>
+	requires <*CS_GiveMission -1:PCFAC ~1:ALLY (1:MILIT|1:POLIT|1:CORPO|1:ADVEN|1:POLIC|1:LABOR|1:TRADE) F:++>
+
+	% E1 is the NPC that the PC will speak with
+	% E2 is the outdoors location where the encounter will be placed
+	% E3 is the faction that the NPC belongs to which is also an enemy of the enemy faction
+
+	element2 <Scene Environs !Near -7>
+	element3 <Faction !Comrade 1 !Enemy -2>
+
+	start <if= PlotStatus %id% else %pop% ifNPCDead %1% LoseComp 0 .%id%_loss>
+	.%id%_loss <+T-->
+
+	%% SubPlot1 is the combat encounter itself
+	SubPlot1 <*CS_MechaEncounter 1 2>
+
+	sub
+		Persona 1
+		greeting <if# PlotStatus %id% else .%id%_GoOfferMission if# PlotStatus %id1% else .%id%_GoRemind Goto %pop%>
+		.%id%_GoOfferMission <ifChatNPCUnknown else .%id%_GoKnownGreeting ifChatNPCAlly else .%id%_GoUnknownGreeting Goto .%id%_GoKnownGreeting>
+		*.%id%_GoRemind <*MechaMissionReminder %2%>
+		*.%id%_GoKnownGreeting <*IHaveAJobForYou .%id%_GoBriefing>
+		*.%id%_GoUnknownGreeting <*AreYouHereAboutJob&Mecha .%id%_GoBriefing>
+		.%id%_GoBriefing <NewChat Say %id%01 AddChat %id%01 AddChat %id%02>
+		*.%id%_GoAccept <*GoodLuckOnMission .%id%_GoR1Exit ChatNPCFac &EnemyFac>
+		.%id%_GoR1Exit <SetPlotStatus %id1%>
+		result%id%01 <Goto .%id%_GoAccept>
+		result%id%02 <AddEasygoing -d10   Goto .%id%_GoAccept>
+		Msg%id%01 <We at %name3% have been keeping up with your fight against \FACTION &EnemyFac . A lance of theirs has been spotted in %name2%; I'd like to hire you to intercept and destroy it.>
+		Msg%id%01_1 <>
+		CMsg%id%01_1 <ifNPCSociable Accept>
+		Msg%id%01_2 <>
+		CMsg%id%01_2 <ifNPCShy Accept>
+		Msg%id%01_3 <>
+		CMsg%id%01_3 <ifNPCEasygoing Accept>
+		Msg%id%01_4 <>
+		CMsg%id%01_4 <ifNPCPassionate Accept>
+		Msg%id%01_5 <>
+		CMsg%id%01_5 <ifNPCCheerful Accept>
+		Msg%id%01_6 <>
+		CMsg%id%01_6 <ifNPCMelancholy Accept>
+		Prompt%id%01 <I'll be back when I'm done.>
+		Prompt%id%01_1 <>
+		Prompt%id%01_2 <>
+		Prompt%id%02 <I'll expect to be well paid, of course.>
+		Prompt%id%02_1 <>
+		Prompt%id%02_2 <>
+	end
+
+Content
 	name <Basic Fighting Mission>
 	desc <The PC will be asked to go fight some mecha.>
 	requires <*CS_GiveMission (+P--|+Pme|+Pun|+Psh|+Pew) (1:MILIT|1:POLIT|1:CORPO|1:ADVEN|1:POLIC) ~F:MILIT ~P:MILIT>
@@ -161,6 +212,8 @@ Content
 %%  ****************************************
 %%  ***   +Pew  Enemy  Weapon  Program   ***
 %%  ****************************************
+
+
 
 %%  ************************************
 %%  ***   +Cme  Mentoring  Partner   ***

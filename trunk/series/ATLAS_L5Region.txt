@@ -6464,7 +6464,7 @@ Scene 0 3
 
 sub
 	Scene
-	name <Arcadia Mall>
+	name <Contra Dextra Avenue>
 	type <building mall public legit meeting>
 	entrance <*DEPARTMENTSTORE>
 	special <ADDEXIT>
@@ -6473,7 +6473,7 @@ sub
 	MapHeight 20
 
 	start <Print 1>
-	Msg1 <You enter Arcadia Mall.>
+	Msg1 <You enter Contra Dextra Avenue.>
 
 	NeededCells 6
 
@@ -6505,7 +6505,7 @@ sub
 	end
 
 	Scene
-	name <Rishiri Hospital>
+	name <Arcadia Hospital>
 	type <Building hospital public legit>
 	entrance <*Hospital>
 	special <ADDEXIT>
@@ -6518,7 +6518,7 @@ sub
 	Content2 <Fill Sub *HOSPITAL_X>
 
 	start <Print 1>
-	Msg1 <You enter Rishiri Hospital.>
+	Msg1 <You enter Arcadia Hospital.>
 
 	sub
 		team 1
@@ -6634,9 +6634,9 @@ sub
 			SetFaction 11
 			MiniMapComponent 1
 
-			NPC Soldier
+			NPC Mecha Pilot
 			SetTeam 3
-			SetFaction 11
+			SetFaction 16
 			MiniMapComponent 2
 		end
 
