@@ -84,7 +84,7 @@ Content
 		*.%id%_GoUnknownGreeting <*AreYouHereAboutJob&Mecha .%id%_GoBriefing>
 		.%id%_GoBriefing <NewChat Say %id%01 AddChat %id%01 AddChat %id%02>
 		*.%id%_GoAccept <*GoodLuckOnMission .%id%_GoR1Exit ChatNPCFac &EnemyFac>
-		.%id%_GoR1Exit <SetPlotStatus %id1%>
+		.%id%_GoR1Exit <StoryNote %id%02 SetPlotStatus %id1%>
 		result%id%01 <Goto .%id%_GoAccept>
 		result%id%02 <AddEasygoing -d10   Goto .%id%_GoAccept>
 		Msg%id%01 <We at %name3% have been keeping up with your fight against \FACTION &EnemyFac . A lance of theirs has been spotted in %name2%; I'd like to hire you to intercept and destroy it.>
@@ -100,6 +100,7 @@ Content
 		CMsg%id%01_5 <ifNPCCheerful Accept>
 		Msg%id%01_6 <>
 		CMsg%id%01_6 <ifNPCMelancholy Accept>
+		Msg%id%02 <%name1% hired you to fight \FACTION &EnemyFac in %name2%.>
 		Prompt%id%01 <I'll be back when I'm done.>
 		Prompt%id%01_1 <>
 		Prompt%id%01_2 <>
@@ -213,6 +214,45 @@ Content
 %%  ***   +Pew  Enemy  Weapon  Program   ***
 %%  ****************************************
 
+Content
+	name <Aegis Research Ship>
+	desc <Aegis has been making research flights to Earth. Intercept their spaceship.>
+	Zrequires <*CS_GiveMission +Pew (F:AEGIS|F:AEGSF) -!Ne -!Lo>
+
+	% E1 is the NPC that the PC will speak with
+	% E2 is the outdoors location where the encounter will be placed
+	element2 <Scene Space Environs !Near -7>
+
+	start <if= PlotStatus %id% else %pop% ifNPCDead %1% LoseComp 0 .%id%_loss>
+	.%id%_loss <+T-->
+
+	%% SubPlot1 is the combat encounter itself
+	SubPlot1 <*CS_InterceptShip 1 2>
+
+	sub
+		Persona 1
+		greeting <if# PlotStatus %id% else .%id%_GoOfferMission if# PlotStatus %id1% else .%id%_GoRemind Goto %pop%>
+		.%id%_GoOfferMission <ifChatNPCUnknown else .%id%_GoKnownGreeting ifChatNPCAlly else .%id%_GoUnknownGreeting Goto .%id%_GoKnownGreeting>
+		*.%id%_GoRemind <*MechaMissionReminder %2%>
+		*.%id%_GoKnownGreeting <*IHaveAJobForYou .%id%_GoBriefing>
+		*.%id%_GoUnknownGreeting <*AreYouHereAboutJob&Mecha .%id%_GoBriefing>
+		.%id%_GoBriefing <EndChat Say %id%01 AddChat %id%01>
+		*.%id%_GoAccept <*GoodLuckOnMission .%id%_GoR1Exit ChatNPCFac &EnemyFac>
+		.%id%_GoR1Exit <SetPlotStatus %id1%>
+		result%id%01 <NewChat Say %id%02 AddChat %id%02 AddChat %id%03>
+		result%id%02 <Goto .%id%_GoAccept>
+		Msg%id%01 <>
+		Msg%id%01_1 <>
+		Msg%id%01_2 <>
+		Msg%id%02 <>
+		Prompt%id%01 <[Continue]>
+		Prompt%id%02 <I'll expect to be well paid, of course.>
+		Prompt%id%02_1 <>
+		Prompt%id%02_2 <>
+		Prompt%id%03 <Actually, I don't think I want this job.>
+		Prompt%id%03_1 <>
+		Prompt%id%03_2 <>
+	end
 
 
 %%  ************************************

@@ -1,3 +1,17 @@
+%% *CS_InterceptShip Content
+%%
+%% The PC is sent to intercept an enemy ship traveling through the local area.
+%% It probably won't be necessary to destroy it- just the guards surrounding it.
+%%
+%% The parent plot sets the plot status to this layer's ID when ready.
+%% This subplot is responsible for loading its own conclusion.
+%%
+%% Param1: The Mission Provider
+%% Param2: The outdoor scene where the fight will take place
+%%
+
+
+
 %% *CS_InvisibleEncounter Content
 %%
 %% The PC is sent to locate and fight some mecha. Unlike the regular
