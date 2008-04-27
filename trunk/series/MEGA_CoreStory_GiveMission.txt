@@ -227,7 +227,7 @@ Content
 	.%id%_loss <+T-->
 
 	%% SubPlot1 is the combat encounter itself
-	SubPlot1 <*CS_InterceptShip 1 2>
+	SubPlot1 <*CS_InterceptShip&Research 1 2>
 
 	sub
 		Persona 1
@@ -238,18 +238,26 @@ Content
 		*.%id%_GoUnknownGreeting <*AreYouHereAboutJob&Mecha .%id%_GoBriefing>
 		.%id%_GoBriefing <EndChat Say %id%01 AddChat %id%01>
 		*.%id%_GoAccept <*GoodLuckOnMission .%id%_GoR1Exit ChatNPCFac &EnemyFac>
-		.%id%_GoR1Exit <SetPlotStatus %id1%>
+		.%id%_GoR1Exit <StoryNote %id%03 SetPlotStatus %id1%>
+		*.%id%_GoDeny <*RejectMission .%id%_GoR2Exit>
+		.%id%_GoR2Exit <LoseComp 0 .%id%_changes>
+		.%id%_changes <+T-- +F-->
 		result%id%01 <NewChat Say %id%02 AddChat %id%02 AddChat %id%03>
 		result%id%02 <Goto .%id%_GoAccept>
-		Msg%id%01 <>
+		result%id%03 <Goto .%id%_GoDeny>
+		Msg%id%01 <Aegis Overlord has restarted their bioweapon program. They've expanded their operations on Earth, searching for genetic material and lost technology.>
 		Msg%id%01_1 <>
 		Msg%id%01_2 <>
-		Msg%id%02 <>
+		Msg%id%02 <One of their research ships has been spotted moving through %name2%. Your task is to locate this ship and make sure it doesn't get back to Luna.>
+		Msg%id%02_1 <>
+		Msg%id%02_2 <>
+		Msg%id%03 <%name1% hired you to intercept an Aegis research ship in %name2%.>
 		Prompt%id%01 <[Continue]>
-		Prompt%id%02 <I'll expect to be well paid, of course.>
+		Prompt%id%02 <I'll get out there right away.>
 		Prompt%id%02_1 <>
 		Prompt%id%02_2 <>
 		Prompt%id%03 <Actually, I don't think I want this job.>
+		CPrompt%id%03 <if# PCFac ChatNPCFac Accept>
 		Prompt%id%03_1 <>
 		Prompt%id%03_2 <>
 	end
