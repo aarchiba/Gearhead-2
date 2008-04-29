@@ -37,7 +37,7 @@ const
 	LoAlt = -3;
 	HiAlt = 5;
 
-	Num_Prop_Meshes = 9;
+	Num_Prop_Meshes = 13;
 
 var
 	tile_x,tile_y,tile_z: LongInt;	{ Tile where the mouse pointer is pointing. }
@@ -1351,7 +1351,7 @@ begin
 	{ rotate to the correct angle. }
 	glPushMatrix();
 	glTranslatef( 0.5 , 0 , 0.5 );
-	glRotatef( NAttValue( P^.NA , NAG_Location , NAS_D ) * 45 - 90 , 0 , 1 , 0 );
+	glRotatef( 90 - NAttValue( P^.NA , NAG_Location , NAS_D ) * 45 , 0 , 1 , 0 );
 
 	glEnable( GL_Lighting );
 	glEnable( GL_Light1 );

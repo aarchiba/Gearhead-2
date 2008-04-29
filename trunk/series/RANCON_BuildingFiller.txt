@@ -161,16 +161,34 @@ Content
 Content
 	%% Empty Room. All others can be based off this one.
 	requires <*HOTEL_X>
-	minimap <....................##+##>
+	minimap <#####.#21..+...##...##+##>
 	ZONE_SPECIAL <NoGO>
+	element1 <Prefab>
+	element2 <Prefab>
+	inv
+		STC BED-1
+		PDir 2
+
+		STC ENDTABLE-1
+		PDir 2
+	end
 
 Content
 	%% Locked Room, but otherwise empty. All others can be based off this one.
 	requires <*HOTEL_X>
-	minimap <....................##=##>
+	minimap <#####.#21..+...##...##=##>
 	ZONE_SPECIAL <NoGO>
+	element1 <Prefab>
+	element2 <Prefab>
 	Sub
 		STC OneShotDoor
+	end
+	inv
+		STC BED-1
+		PDir 2
+
+		STC ENDTABLE-1
+		PDir 2
 	end
 
 Content
@@ -411,6 +429,27 @@ Content
 Content
 	requires <*HOSPITAL_X>
 	Content <Required *DOCTOR - Local>
+
+Content
+	requires <*HOSPITAL_X>
+	minimap <1...3.....2...4.....##+##>
+	element1 <Prefab>
+	element2 <Prefab>
+	element3 <Prefab>
+	element4 <Prefab>
+	inv
+		STC BED-1
+		PDir 0
+
+		STC BED-1
+		PDir 0
+
+		STC BED-1
+		PDir 4
+
+		STC BED-1
+		PDir 4
+	end
 
 Content
 	requires <*HOSPITAL_X>

@@ -68,7 +68,7 @@ Content
 Content
 	requires <*DECOR_FOR_SHOP Legit>
 	minimap <1#...=#.............&---&>
-	get%1% <if= L%id%01 0 L= %id%01 1 AddLawful -2  SetItemStolen %1%  ifNPCCanSeePC %param% Print %id%01  PCEnemy %param% AddRenown -1>
+	get%1% <if= L%id%01 0 L= %id%01 1 AddLawful -2  SetItemStolen %1%  ifNPCCanSeePC %param% Monologue %param% %id%01  PCEnemy %param% AddRenown -1>
 	element1 <Prefab>
 	Msg%id%01 <[ \PERSONA %param% ]: Hey! Don't touch my stuff!>
 	Msg%id%01_1 <[ \PERSONA %param% ]: Keep your paws off the merchandise!>
@@ -97,87 +97,193 @@ Content
 		PDir 2
 	end
 
+%% *DECOR_FOR_GENERAL_SHOP CONTENT
+%%   Contains a layout for a shop and maybe some props.
+
+Content
+	requires <*DECOR_FOR_GENERAL_SHOP>
+	minimap <12345...............&---&STUFF>
+	element1 <Prefab>
+	element2 <Prefab>
+	element3 <Prefab>
+	element4 <Prefab>
+	element5 <Prefab>
+	inv
+		STC CRATE-AMMO
+		PDir 1
+
+		STC SHOPDISPLAY-ARMOR-1
+		PDir 2
+
+		STC SHOPDISPLAY-WEAPONS-1
+		PDir 2
+
+		STC MANNEKIN-F
+		PDir 3
+
+		STC TV
+		PDir 2
+	end
+
+Content
+	requires <*DECOR_FOR_GENERAL_SHOP>
+	minimap <12345...............&---&STUFF>
+	element1 <Prefab>
+	element2 <Prefab>
+	element3 <Prefab>
+	element4 <Prefab>
+	element5 <Prefab>
+	inv
+		STC VENDING-1
+		PDir 1
+
+		STC MANNEKIN-F
+		PDir 2
+
+		STC MANNEKIN-M
+		PDir 2
+
+		STC SHOPDISPLAY-WEAPONS-2
+		PDir 2
+
+		STC SHOPDISPLAY-ARMOR-1
+		PDir 2
+	end
+
+
 %% *DECOR_FOR_WEAPON_SHOP CONTENT
 %%   Contains a layout for a shop and maybe some props.
 
 Content
 	requires <*DECOR_FOR_WEAPON_SHOP>
-	minimap <.............1......&---&>
-	inv
-		STC MECHAMODEL-1
-		PDir 3
-	end
-
-Content
-	requires <*DECOR_FOR_WEAPON_SHOP>
-	minimap <...............1...2&---&>
+	minimap <12345...............&---&ARMS!>
 	element1 <Prefab>
 	element2 <Prefab>
+	element3 <Prefab>
+	element4 <Prefab>
+	element5 <Prefab>
 	inv
-		STC MECHAMODEL-1
+		STC SHOPDISPLAY-WEAPONS-2
+		PDir 2
+
+		STC CRATE-AMMO
+		PDir 3
+
+		STC SHOPDISPLAY-WEAPONS-1
+		PDir 2
+
+		STC CRATE-AMMO
 		PDir 1
-		STC MECHAMODEL-1
+
+		STC SHOPDISPLAY-WEAPONS-3
+		PDir 2
+	end
+
+Content
+	requires <*DECOR_FOR_WEAPON_SHOP>
+	minimap <12345...............&---&GUNS!>
+	element1 <Prefab>
+	element2 <Prefab>
+	element3 <Prefab>
+	element4 <Prefab>
+	element5 <Prefab>
+	inv
+		STC VIDEOGAME-1
+		PDir 2
+
+		STC CRATE-AMMO
+		PDir 2
+
+		STC SHOPDISPLAY-WEAPONS-3
+		PDir 2
+
+		STC SHOPDISPLAY-WEAPONS-1
+		PDir 2
+
+		STC CRATE-AMMO
 		PDir 3
 	end
 
 Content
 	requires <*DECOR_FOR_WEAPON_SHOP>
-	content <Required *DECOR_FOR_SHOP %param% Local>
+	minimap <12345...............&---&ARMS=>
+	element1 <Prefab>
+	element2 <Prefab>
+	element3 <Prefab>
+	element4 <Prefab>
+	element5 <Prefab>
+	inv
+		STC SHOPDISPLAY-WEAPONS-3
+		PDir 2
+
+		STC SHOPDISPLAY-WEAPONS-1
+		PDir 2
+
+		STC SHOPDISPLAY-WEAPONS-2
+		PDir 2
+
+		STC SHOPDISPLAY-WEAPONS-1
+		PDir 2
+
+		STC SHOPDISPLAY-WEAPONS-2
+		PDir 2
+	end
+
+
 
 %% *DECOR_FOR_ARMOR_SHOP CONTENT
 %%   Contains a layout for a shop and maybe some props.
 
 Content
 	requires <*DECOR_FOR_ARMOR_SHOP>
-	minimap <...............1...2&---&>
+	minimap <12345...............&---&ARMOR>
 	element1 <Prefab>
 	element2 <Prefab>
+	element3 <Prefab>
+	element4 <Prefab>
+	element5 <Prefab>
 	inv
 		STC MANNEKIN-M
 		PDir 1
+
+		STC SHOPDISPLAY-ARMOR-1
+		PDir 2
+
+		STC SHOPDISPLAY-ARMOR-2
+		PDir 2
+
+		STC SHOPDISPLAY-ARMOR-1
+		PDir 2
+
 		STC MANNEKIN-F
 		PDir 3
 	end
 
 Content
 	requires <*DECOR_FOR_ARMOR_SHOP>
-	minimap <...............1...2&---&>
+	minimap <12345...............&---&ARMOR>
 	element1 <Prefab>
 	element2 <Prefab>
+	element3 <Prefab>
+	element4 <Prefab>
+	element5 <Prefab>
 	inv
 		STC MANNEKIN-F
 		PDir 1
-		STC MANNEKIN-M
-		PDir 3
-	end
 
-Content
-	requires <*DECOR_FOR_ARMOR_SHOP>
-	minimap <...............1...2&---&>
-	element1 <Prefab>
-	element2 <Prefab>
-	inv
 		STC MANNEKIN-M
-		PDir 1
-		STC MANNEKIN-M
-		PDir 3
-	end
+		PDir 2
 
-Content
-	requires <*DECOR_FOR_ARMOR_SHOP>
-	minimap <...............1...2&---&>
-	element1 <Prefab>
-	element2 <Prefab>
-	inv
 		STC MANNEKIN-F
-		PDir 1
+		PDir 2
+
+		STC MANNEKIN-M
+		PDir 2
+
 		STC MANNEKIN-F
 		PDir 3
 	end
 
-Content
-	requires <*DECOR_FOR_ARMOR_SHOP>
-	content <Required *DECOR_FOR_SHOP %param% Local>
 
 
 %% *SPECIAL_SHOP CONTENT
@@ -718,7 +824,7 @@ Content
 
 Content
 	requires <*GENERAL_SHOP>
-	content <Required *DECOR_FOR_SHOP %1% Local>
+	content <Required *DECOR_FOR_GENERAL_SHOP %1% Local>
 	element1 <Prefab>
 	team1 <Citizens>
 	teamdata1 <ally pass>
@@ -736,7 +842,7 @@ Content
 
 Content
 	requires <*GENERAL_SHOP>
-	content <Required *DECOR_FOR_SHOP %1% Local>
+	content <Required *DECOR_FOR_GENERAL_SHOP %1% Local>
 	element1 <Prefab>
 	team1 <Citizens>
 	teamdata1 <ally pass>
@@ -752,7 +858,7 @@ Content
 
 Content
 	requires <*GENERAL_SHOP>
-	content <Required *DECOR_FOR_SHOP %1% Local>
+	content <Required *DECOR_FOR_GENERAL_SHOP %1% Local>
 	element1 <Prefab>
 	team1 <Citizens>
 	teamdata1 <ally pass>
@@ -770,7 +876,7 @@ Content
 
 Content
 	requires <*GENERAL_SHOP Sleazy>
-	content <Required *DECOR_FOR_SHOP %1% Local>
+	content <Required *DECOR_FOR_GENERAL_SHOP %1% Local>
 	element1 <Prefab>
 	team1 <Citizens>
 	teamdata1 <ally pass>
@@ -935,7 +1041,7 @@ Content
 
 Content
 	requires <*ARMOR_SHOP (MAQUI|FCOMS|RISHI|BOHEM) -HOELL ~MUGLE -COMET>
-	content <Required *DECOR_FOR_SHOP %1% Local>
+	content <Required *DECOR_FOR_ARMOR_SHOP %1% Local>
 	element1 <Prefab>
 	team1 <Citizens>
 	teamdata1 <ally pass>
@@ -1122,12 +1228,65 @@ Content
 	end
 
 
+%% *DECOR_FOR_HOSPITAL CONTENT
+
+Content
+	requires <*DECOR_FOR_HOSPITAL>
+	minimap <12..................#&+&#>
+	element1 <Prefab>
+	element2 <Prefab>
+	inv
+		STC BED-1
+		PDir 2
+
+		STC ENDTABLE-1
+		PDir 2
+	end
+
+Content
+	requires <*DECOR_FOR_HOSPITAL>
+	minimap <1...52...63...74...8#&+&#>
+	element1 <Prefab>
+	element2 <Prefab>
+	element3 <Prefab>
+	element4 <Prefab>
+	element5 <Prefab>
+	element6 <Prefab>
+	element7 <Prefab>
+	element8 <Prefab>
+	inv
+		STC BED-1
+		PDir 0
+
+		STC ENDTABLE-1
+		PDir 0
+
+		STC BED-1
+		PDir 0
+
+		STC ENDTABLE-1
+		PDir 0
+
+		STC BED-1
+		PDir 4
+
+		STC ENDTABLE-1
+		PDir 4
+
+		STC BED-1
+		PDir 4
+
+		STC ENDTABLE-1
+		PDir 4
+	end
+
+
 
 %% *DOCTOR CONTENT
 %%   Contains a doctor
 Content
-	requires <*DOCTOR City>
-	minimap <............1.......##+##>
+	requires <*DOCTOR City ~Rich>
+	content <Required *DECOR_FOR_HOSPITAL %1% Local>
 	element1 <Prefab>
 	team1 <Citizens>
 	teamdata1 <ally pass>
@@ -1143,7 +1302,7 @@ Content
 
 Content
 	requires <*DOCTOR ~City ~Village>
-	minimap <............1.......##+##>
+	content <Required *DECOR_FOR_HOSPITAL %1% Local>
 	element1 <Prefab>
 	team1 <Citizens>
 	teamdata1 <ally pass>

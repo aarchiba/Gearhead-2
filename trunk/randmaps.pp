@@ -1884,6 +1884,7 @@ var
 	X,Y,MMX,MMY,T,ED: Integer;
 	GBP: Point;
 	Palette: Array [5..8] of Integer;
+	PlacedItems: Array [0..4,0..4] of GearPtr;
 	E: GearPtr;
 begin
 	if Length( MapDesc ) < 25 then exit;
@@ -1893,6 +1894,9 @@ begin
 	if Palette[ STAT_MFBorder ] = 0 then Palette[ STAT_MFBorder ] := TERRAIN_Wall;
 	if Palette[ STAT_MFMarble ] = 0 then Palette[ STAT_MFMarble ] := TERRAIN_OpenGround;
 	if Palette[ STAT_MFSpecial ] = 0 then Palette[ STAT_MFSpecial ] := TERRAIN_GlassWall;
+
+	{ Clear the PlacedItems array. }
+	for X := 0 to 4 do for Y := 0 to 4 do PlacedItems[ X , Y ] := Nil;
 
 	X := MF^.Stat[ STAT_XPos ];
 	if MF^.Stat[ STAT_MFWidth ] > 6 then begin
@@ -1941,12 +1945,39 @@ begin
 		T := NAttValue( E^.NA , NAG_ComponentDesc , NAS_ELementID );
 		MMX := Pos( BStr( T ) , MapDesc ) - 1;
 		GBP := MiniMapPosToRegularPos( MMX mod 5 , MMX div 5 , D );
+		PlacedItems[ GBP.X , GBP.Y ] := E;
 		GBP.X := GBP.X + X;
 		GBP.Y := GBP.Y + Y;
 		ED := ( NAttValue( E^.NA , NAG_ParaLocation , NAS_D ) + D * 2 ) mod 8;
 		SetNAtt( E^.NA , NAG_Location , NAS_X , GBP.X );
 		SetNAtt( E^.NA , NAG_Location , NAS_Y , GBP.Y );
 		SetNAtt( E^.NA , NAG_Location , NAS_D , ED );
+	end;
+
+	{ Finally, render the SECRET MESSAGE, just like Groo the Wanderer but way more obvious. }
+	{ If a message is tagged onto the end of the minimap, render this using the various }
+	{ placed item's ROGUECHAR attributes. This way, in ASCII mode, the shops should spell }
+	{ out what they sell. }
+	if Length( MapDesc ) >= 30 then begin
+		{ The message appears in the top line of the minimap. This is going to change based on }
+		{ the direction of rendering. }
+		if ( D = 0 ) or ( D = 2 ) then begin
+			if D = 0 then Y := 0
+			else Y := 4;
+			for X := 0 to 4 do begin
+				if PlacedItems[ X , Y ] <> Nil then begin
+					SetSAtt( PlacedItems[ X , Y ]^.SA , 'roguechar <' + MapDesc[ 26 + X ] + '>' );
+				end;
+			end;
+		end else begin
+			if D = 3 then X := 0
+			else X := 4;
+			for Y := 0 to 4 do begin
+				if PlacedItems[ X , Y ] <> Nil then begin
+					SetSAtt( PlacedItems[ X , Y ]^.SA , 'roguechar <' + MapDesc[ 26 + Y ] + '>' );
+				end;
+			end;
+		end;
 	end;
 end;
 

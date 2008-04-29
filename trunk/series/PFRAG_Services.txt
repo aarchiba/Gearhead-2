@@ -141,8 +141,8 @@
 	START <NewChat Say %id%01 AddChat %id%01 AddChat %id%02>
 	result%id%01 <EndChat Say %id%02 shop .%id%_wares Goto %1%>
 	result%id%02 <Goto %1%>
-	.%id%_wares <ELECTRONICS>
-	KEYWORDS <ELECTRONICS>
+	.%id%_wares <ELECTRONICS SOFTWARE>
+	KEYWORDS <ELECTRONICS SOFTWARE>
 	Msg%id%01 <I sell all manner of electronics. Whatever kind of gadget you need, you'll find it here.>
 	Msg%id%02 <You can never go wrong by upgrading your current system.>
 	Prompt%id%01 <Let me see what you have.>
@@ -177,8 +177,8 @@
 	START <NewChat Say %id%01 AddChat %id%01 AddChat %id%02>
 	result%id%01 <EndChat Say %id%02 shop .%id%_wares Goto %1%>
 	result%id%02 <Goto %1%>
-	.%id%_wares <ELECTRONICS ENTERTAINMENT>
-	KEYWORDS <ELECTRONICS ENTERTAINMENT>
+	.%id%_wares <ELECTRONICS ENTERTAINMENT SOFTWARE>
+	KEYWORDS <ELECTRONICS ENTERTAINMENT SOFTWARE>
 	Msg%id%01 <Welcome to \ChatNPC 's software and game source. We have computers, games, and electronic devices.>
 	Msg%id%02 <If it looks like fun, it probably is!>
 	Prompt%id%01 <I'll take a look at your gear.>

@@ -86,6 +86,10 @@ const
 		MESH_ShipCurve = 7;
 		MESH_ShipTower = 8;
 		MESH_ShipEngine = 9;
+		MESH_ShopShelf = 10;
+		MESH_Crate = 11;
+		MESH_EndTable = 12;
+		MESH_Bed = 13;
 
 
 	NAG_MTAppearance = 19;		{ Holds some appearance info for metaterrain }

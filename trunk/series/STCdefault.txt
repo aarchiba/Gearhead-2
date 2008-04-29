@@ -425,26 +425,82 @@ desig <ELEVATOR_TO_NOWHERE>
 use <Print 1>
 Msg1 <This elevator doesn't respond.>
 
-Prop 10
-name <Mannekin>
-desig <MANNEKIN-M>
-roguechar <M>
-SDL_Sprite <cha_m_bounty hunter.png>
-SDL_Colors <244 216 28  201 205 229  181 185 207>
+	Prop 10
+	name <Mannekin>
+	desig <MANNEKIN-M>
+	roguechar <M>
+	SDL_Sprite <cha_m_bounty hunter.png>
+	SDL_Colors <244 216 28  201 205 229  181 185 207>
 
-Prop 10
-name <Mannekin>
-desig <MANNEKIN-F>
-roguechar <M>
-SDL_Sprite <cha_f_bounty hunter.png>
-SDL_Colors <244 216 28  201 205 229  181 185 207>
+	Prop 10
+	name <Mannekin>
+	desig <MANNEKIN-F>
+	roguechar <M>
+	SDL_Sprite <cha_f_bounty hunter.png>
+	SDL_Colors <244 216 28  201 205 229  181 185 207>
 
-Prop 10
-name <Mecha Model>
-desig <MECHAMODEL-1>
-roguechar <M>
-SDL_Sprite <btr_savin.png>
-SDL_Colors <135 141 101  155 161 121  50 90 170>
+	Prop 10
+	name <Mecha Model>
+	desig <MECHAMODEL-1>
+	roguechar <M>
+	SDL_Sprite <btr_savin.png>
+	SDL_Colors <244 216 28  201 205 229  181 185 207>
+
+	Prop 15
+	name <Bed>
+	desig <BED-1>
+	roguechar <_>
+	Mesh 13
+	SDL_SPRITE <tex_bed.png>
+
+	Prop 5
+	name <Ammo Crate>
+	desig <CRATE-AMMO>
+	Mesh 11
+	SDL_SPRITE <tex_crate.png>
+	Frame 0
+
+	Prop 10
+	name <Weapon Display>
+	desig <SHOPDISPLAY-WEAPONS-1>
+	Mesh 10
+	SDL_SPRITE <tex_store_shelves.png>
+	Frame 1
+
+	Prop 10
+	name <Weapon Display>
+	desig <SHOPDISPLAY-WEAPONS-2>
+	Mesh 10
+	SDL_SPRITE <tex_store_shelves.png>
+	Frame 2
+
+	Prop 10
+	name <Weapon Display>
+	desig <SHOPDISPLAY-WEAPONS-3>
+	Mesh 10
+	SDL_SPRITE <tex_store_shelves.png>
+	Frame 3
+
+	Prop 10
+	name <Armor Display>
+	desig <SHOPDISPLAY-ARMOR-1>
+	Mesh 10
+	SDL_SPRITE <tex_store_shelves.png>
+	Frame 6
+
+	Prop 10
+	name <Armor Display>
+	desig <SHOPDISPLAY-ARMOR-2>
+	Mesh 10
+	SDL_SPRITE <tex_store_shelves.png>
+	Frame 7
+
+	Prop 5
+	name <End Table>
+	desig <ENDTABLE-1>
+	Mesh 12
+	SDL_SPRITE <tex_endtable.png>
+	Frame 0
 
 Prop 4
 name <Box>

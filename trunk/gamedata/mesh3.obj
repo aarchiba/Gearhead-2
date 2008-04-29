@@ -1,20 +1,20 @@
 #
 # Homemade .obj file. This is a standup video game cabinet. Here's hoping it works.
 #
-v -0.2 0.0 0.2
-v 0.2 0.0 0.2
 v -0.2 0.0 -0.2
 v 0.2 0.0 -0.2
-v -0.2 0.4 -0.2
-v 0.2 0.4 -0.2
-v -0.2 0.5 -0.1
-v 0.2 0.5 -0.1
-v -0.2 0.62 -0.2
-v 0.2 0.62 -0.2
-v -0.2 0.65 0.2
-v -0.2 0.68 -0.2
-v 0.2 0.68 -0.2
-v 0.2 0.65 0.2
+v -0.2 0.0 0.2
+v 0.2 0.0 0.2
+v -0.2 0.4 0.2
+v 0.2 0.4 0.2
+v -0.2 0.5 0.1
+v 0.2 0.5 0.1
+v -0.2 0.62 0.2
+v 0.2 0.62 0.2
+v -0.2 0.65 -0.2
+v -0.2 0.68 0.2
+v 0.2 0.68 0.2
+v 0.2 0.65 -0.2
 # Texture coordinates
 # The textures on the side of the cabinet look strange, but as near as I can
 # figure that's because of OpenGL and not because there's anything wrong here.
