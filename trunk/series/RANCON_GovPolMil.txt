@@ -57,7 +57,7 @@ Content
 	content <REQUIRED *RESTAURANT na Local>
 
 Content
-	requires <*GOV_MISC>
+	requires <*GOV_MISC Common>
 	content <REQUIRED *GOV_MILITARY na Local>
 
 Content
@@ -128,7 +128,7 @@ Content
 
 Content
 	% Privateers detachment
-	requires <*GOV_MILITARY (MAQUI|FCOMS) ~Sleazy>
+	requires <*GOV_MILITARY (MAQUI|FCOMS) ~Sleazy -Legit>
 	minimap <.....1..............#...#>
 
 	Element1 <Prefab>
@@ -148,7 +148,7 @@ Content
 
 Content
 	% Silver Knights detachment
-	requires <*GOV_MILITARY MAQUI ~Legit>
+	requires <*GOV_MILITARY MAQUI ~Legit -Sleazy>
 	minimap <.....1..............#...#>
 
 	Element1 <Prefab>
@@ -182,6 +182,26 @@ Content
 	inv
 		NPC Rocket Star
 	end
+
+Content
+	% Space Force detachment
+	requires <*GOV_MILITARY RISHI -ROCKE>
+	minimap <.....1..............#...#>
+
+	Element1 <Prefab>
+	team1 <Guards>
+	teamdesc1 <SD>
+
+	sub
+		Persona 1
+		*greeting <*NiceToMeetYou GoMiscTalk>
+		*GoMiscTalk <*MISC_CHATTER>
+	end
+	inv
+		NPC Mecha Pilot
+		SetFaction 16
+	end
+
 
 Content
 	% FComS detachment

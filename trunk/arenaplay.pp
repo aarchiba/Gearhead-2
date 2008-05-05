@@ -727,7 +727,7 @@ begin
 	while it <> Nil do begin
 		it2 := it^.Next;
 
-		{ Check to see if this is a character. }
+		{ Check to see if this is metaterrain. }
 		if ( it^.G = GG_MetaTerrain ) then begin
 			DelinkGear( Scene^.InvCom , it );
 			DeployMek( Camp^.gb , it , True );

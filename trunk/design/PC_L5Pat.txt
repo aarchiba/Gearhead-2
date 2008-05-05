@@ -411,7 +411,7 @@ HeadArmor 2
 name <Light Space Helm>
 desc <A light spacesuit helm with integrated rebreather.>
 Category <CLOTHING SPACE>
-Factions <MAQUI FCOMS RISHI CRIHN>
+Factions <MAQUI FCOMS RISHI CRIHN BOHEM>
 SDL_PORTRAIT <item_lightspacehelm.png>
 Mass -2
 Legality -25
@@ -422,12 +422,25 @@ HeadArmor 4
 name <Heavy Space Helm>
 desc <An armored spacesuit helm with integrated rebreather.>
 Category <CLOTHING ARMOR SPACE>
-Factions <MAQUI FCOMS RISHI CRIHN>
+Factions <MAQUI FCOMS RISHI CRIHN BOHEM>
 SDL_PORTRAIT <item_spacehelm.png>
 Mass -6
 Legality -15
 Sealed
 Hardened
+
+HeadArmor 5
+name <Combat Space Helm>
+desc <An armored spacesuit helm with integrated rebreather and objective-storage system.>
+Category <CLOTHING ARMOR SPACE>
+Factions <MAQUI FCOMS RISHI CRIHN BOHEM>
+SDL_PORTRAIT <item_spacehelm.png>
+Mass -8
+Legality -5
+Sealed
+Hardened
+memo
+
 
 Set
 name <Flight Suit [set]>
@@ -1202,7 +1215,7 @@ name <Ceram Armor [set]>
 desc <A strong armor plate made from the light ceram material.>
 Category <ARMOR>
 Factions <MAQUI>
-legality -5
+legality 0
 inv
 	BodyArmor 6
 	Name <Ceram Breastplate>
@@ -1258,42 +1271,6 @@ inv
 	legality -5
 	Hardened
 end
-
-BodyArmor 6
-Name <Ceram Breastplate>
-desc <A strong armor plate made from the light ceram material.>
-Category <ARMOR>
-Factions <MAQUI>
-Mass -10
-legality -5
-Hardened
-
-HeadArmor 4
-Name <Ceram Helmet>
-desc <A strong helmet made from the light ceram material.>
-Category <ARMOR>
-Factions <MAQUI>
-Mass -6
-legality -5
-Hardened
-
-ArmArmor 4
-Name <Ceram Plate Sleeve>
-desc <A strong sleeve made from the light ceram material.>
-Category <ARMOR>
-Factions <MAQUI>
-Mass -7
-legality -5
-Hardened
-
-LegArmor 4
-Name <Ceram Plate Legging>
-desc <Strong legging made from the light ceram material.>
-Category <ARMOR>
-Factions <MAQUI>
-Mass -7
-legality -5
-Hardened
 
 ArmArmor 7
 Name <Boarding Claw>

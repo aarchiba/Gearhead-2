@@ -122,7 +122,7 @@ Content
 	end
 
 Content
-	requires <*NPC_GUARD Static (Maqui|FCOMS) ~Sleazy Public>
+	requires <*NPC_GUARD Static (Maqui|FCOMS) ~Sleazy -Legit Public>
 	element1 <Prefab>
 	team1 <guards>
 	teamdata1 <pass>
@@ -166,7 +166,7 @@ Content
 	end
 
 Content
-	requires <*NPC_GUARD Static Maqui Legit Public ~Government>
+	requires <*NPC_GUARD Static Maqui ~Legit -Sleazy Public ~Government>
 	element1 <Prefab>
 	team1 <guards>
 	teamdata1 <pass>
@@ -412,6 +412,36 @@ Content
 	end
 	inv
 		NPC Pirate
+	end
+
+Content
+	requires <*URBAN_X L5PAT Sleazy ~Lawless>
+	element1 <Prefab>
+	team1 <guards>
+	teamdata1 <pass>
+	sub
+		Persona 1
+		*greeting <*NiceToMeetYou GoMiscTalk>
+		*GoMiscTalk <*MISC_CHATTER>
+	end
+	inv
+		NPC Pirate
+		SetFaction 8
+	end
+
+Content
+	requires <*URBAN_X L5PAT Sleazy ~Dangerous>
+	element1 <Prefab>
+	team1 <guards>
+	teamdata1 <pass>
+	sub
+		Persona 1
+		*greeting <*NiceToMeetYou GoMiscTalk>
+		*GoMiscTalk <*MISC_CHATTER>
+	end
+	inv
+		NPC Pirate
+		SetFaction 15
 	end
 
 Content

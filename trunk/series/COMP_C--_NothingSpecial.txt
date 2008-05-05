@@ -66,8 +66,10 @@ Content
 		.join <+Cme +T-- +F-->
 		result5 <NewChat Say 9 Storynote 10 WinComp %4% .refuse>
 		.refuse <+Ten +Ffi>
-		result6 <NewChat Say 11 StoryNote 12 &SetAmoreNPC %2% WinComp 0 .love>
+		result6 <NewChat Say 11 AddChat 7 AddChat 8>
+		result7 <Say 12 StoryNote 13 &SetAmoreNPC %2% WinComp 0 .love>
 		.love <+Clo +T-- +F-->
+		result8 <NewChat Say 14 StoryNote 15 &SetPartnerNPC %2% WinComp 0 .join>
 		Msg1 <No, wait, this has to do with %name3%. Just hear me out...>
 		Msg2 <%name3% is responsible for the death of my brother. I plan to track \OPR %3% down and see justice done... but to do that, I'm going to need your help.>
 		Msg3 <%name2% revealed that %name3% killed \PPR %2% brother.>
@@ -78,8 +80,11 @@ Content
 		Msg8 <Come speak with me in %name1%; what I have to say is too important for over the phone.>
 		Msg9 <I see. Well, if you won't let me join you, I can at least do my best to help you defeat %name3% yourself... I've heard that \PPR %3% mecha has been seen in %name4%. Maybe you can find \OPR %3% there.>
 		Msg10 <You learned that %name3%'s mecha has been seen in %name4%.>
-		Msg11 <I believe you can... I believe you will, \PC . Please be careful. I don't want %name3% to hurt you too.>
-		Msg12 <You promised to defeat %name3% for %name2%.>
+		Msg11 <Why are you trying to protect me? You don't even know me.>
+		Msg12 <Alright, I'll trust you... I'm counting on you to stop %name3%, but please be careful. I don't want you to get hurt either.>
+		Msg13 <You promised to defeat %name3% for %name2%.>
+		Msg14 <In that case, you shouldn't mind if I tag along on your adventure. I won't get in your way.>
+		Msg15 <%name2% pledged to follow you so \SPR %2% can help defeat %name3%.>
 		Prompt1 <[Continue]>
 		Prompt2 <What can I do?>
 		Prompt3 <Take my advice- just stay far away from %name3%.>
@@ -87,6 +92,8 @@ Content
 		Prompt5 <I don't need a sidekick. They tend to die.>
 		Prompt6 <Please, don't get involved. I'll stop %name3% for you.>
 		CPrompt6 <ifChatNPCSexy if= &AmoreNPC 0 ifG React d10 Accept>
+		Prompt7 <If you get killed I never will. I don't want you to get hurt.>
+		Prompt8 <Good point. I guess I don't really care.>
 	end
 
 

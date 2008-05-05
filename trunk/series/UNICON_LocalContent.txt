@@ -7,6 +7,132 @@
 %%
 %% NAME: *[city designation]_[building name abbreviated]_[content type]
 
+%% *RISSP_SFHQ_Content
+%%	Content for the Space Force HQ. Includes a recruiter for the Rishiri Dominion and an
+%%	Aegis mecha shop.
+
+Content
+	requires <*RISSP_SFHQ_Content>
+	minimap <............1.......#&+&#>
+	element1 <Prefab>
+	team1 <Citizens>
+	teamdata1 <ally pass>
+
+	sub
+		Persona 1
+		special <NOPLOTS>
+		greeting <if# ChatNPCFac 0 else GoCheckEligibility if= PCFac ChatNPCFac else GoCheckFaction Goto GoTrain>
+		*GoTrain <*SKILL_TRAINING GoGoodbye>
+		*GoCheckEligibility <*ENEMY_CHECK GoCheckFaction ChatNPCFac GoNil>
+		GoCheckFaction <NewChat Say 1 AddChat 1 AddChat 2>
+		*GoJoin <*FACTION_JOIN_ACCEPT ChatNPCFac>
+		result1 <ifG PCRenown 19 else GoR1Fail NewChat Say 3 AddChat 4 AddChat 5>
+		GoR1Fail <NewChat Say 4>
+		result2 <NewChat Say 2 AddChat 1 AddChat 3>
+		*result3 <*GoodBye>
+		result4 <Goto GoJoin>
+		result5 <Goto result3>
+		Msg1 <The Rishiri Space Force is looking for skilled volunteers. We are creating a brand new mecha brigade to defend our colonies against all threats.>
+		Msg2 <In a sense they are, yes, but the Rocket Stars are a mercenary force. The Rishiri Space Force will be a traditional militiary under the direct control of the technocracy.>
+		Msg3 <Hm. Looking over your resume, it seems that you do have the necessary skills. I can offer you a position in the forces right away.>
+		Msg4 <I'm sorry, but I'm afraid that you don't quite have the skills we're looking for. Feel free to reapply later, though.>
+		Prompt1 <I'd like to apply.>
+		CPrompt1 <if= PCFac 0 Accept>
+		Prompt2 <Aren't the Rocket Stars Rishiri's defenders?>
+		Prompt3 <Well, good luck with that.>
+		Prompt4 <Sign me up.>
+		Prompt5 <No thanks, I just wanted to see if I qualified.>
+	end
+	inv
+		NPC Mecha Pilot
+		SetFaction 11
+	end
+
+Content
+	requires <*RISSP_SFHQ_Content>
+	minimap <............1.......#---#>
+	element1 <Prefab>
+	team1 <Citizens>
+	teamdata1 <ally pass>
+
+	sub
+		Persona 1
+		special <NOPLOTS>
+		greeting <if# PCFac 11 else GoOpenShop if# PCFac 4 else GoOpenShop if# PCFac 16 else GoOpenShop NewChat Say 1>
+		GoOpenShop <NewChat Say 2 AddChat 1 AddChat 2>
+		result1 <EndChat Say 3 Shop .wares Goto result2>
+		.wares <MECHA MEXTRA>
+		*result2 <*GoodBye>
+		Msg1 <This shop is for members of the Rishiri Space Force only. Sorry.>
+		Msg2 <The Aegis Council has pledged its support to Rishiri Spinner. I have a selection of military supplies from Luna for distribution to the Rishiri Space Force.>
+		Msg3 <Lunar mecha are made from high grade ceramics. You won't find this kind of technology anywhere else in the solar system.>
+		Prompt1 <Let me take a look.>
+		Prompt2 <Thanks, but I prefer to buy local.>
+	end
+	inv
+		NPC Shopkeeper
+		SetFaction 4
+		skill 15 10
+	end
+
+
+%% *RISSP_L5AE_Content
+%%	The ambassador for the Aegis embassy in Rishiri Spinner
+
+Content
+	requires <*RISSP_L5AE_Content>
+	minimap <............1.......#&+&#>
+	element1 <Prefab>
+	team1 <Citizens>
+	teamdata1 <ally pass>
+	sub
+		Persona 1
+		special <NOPLOTS>
+		*greeting <*NiceToMeetYou GoTalk>
+		GoTalk <NewChat Say 1 AddChat 1 AddChat 2 EraseSpecial>
+		result1 <NewChat Say 2 AddChat 3 AddChat 4>
+		result2 <NewChat Say 3 AddChat 5 AddChat 4>
+		result3 <NewChat Say 4 AddChat 6 AddChat 7>
+		result4 <NewChat Say 5 AddChat 8 AddChat 2 AddChat 9 AddChat 10>
+		result5 <NewChat Say 6 AddChat 11 AddChat 7>
+		result6 <NewChat Say 7 AddChat 12>
+		result7 <Goto result4>
+		result8 <Goto result1>
+		result9 <NewChat Say 8 AddChat 12>
+		*result10 <*GoodBye>
+		result11 <NewChat Say 9 AddChat 12>
+		result12 <Goto result4>
+		Msg1 <I am the representative of Aegis Overlord in the L5 region. The government of Luna pledges its full support for the city of Rishiri and all of the spinner colonies.>
+		Msg2 <Many kinds. There is a lot of trade between Luna and L5. We have an ongoing technological exchange with Galconde Spinner. In addition, we provide military support in the form of the Aegis Space Force.>
+		Msg3 <Luna is the oldest federation in the solar system, having existed since before the fall of Pax Europa. The colonies of Luna are united peacefully under Aegis Overlord. We are eager to share our knowledge and experience with other worlds.>
+		Msg4 <They are certainly misguided in their alliance with Earth, but their citizens should not be made to suffer for the faults of their leaders. Aegis Overlord wishes them no ill.>
+		Msg5 <What else do you wish to know?>
+		Msg6 <That it was damaged by a meteor strike and rebuilt by Aegis Overlord? Yes, that is true. No expense was spared to restore the dome to its original glory.>
+		Msg7 <Crihna Rock had no citizens; it was not a legitimate political entity. Besides, Aegis had nothing to do with its destruction. That decision was made by Admiral Haarast himself.>
+		Msg8 <It's a remarkable city, as fine as any on Luna. I've told Merdon many times that he has the gravity turned up a bit too high but he apparently thinks I'm joking.>
+		Msg9 <That's very odd. If Tycho Madang were truly destroyed by Aegis forces, surely it would be impossible to keep something like that a secret. I'd advise you to not believe all the anti-Lunar propaganda being spread by Earth.>
+		Prompt1 <What kind of support are you talking about?>
+		Prompt2 <Tell me a bit about Luna.>
+		Prompt3 <What about the L5 Alliance?>
+		Prompt4 <How nice.>
+		Prompt4_1 <Good for you.>
+		Prompt5 <Is it true what they say about Tycho Madang?>
+		Prompt6 <Were the citizens of Crihna Rock misguided too?>
+		Prompt7 <I see. Let's talk about something else.>
+		Prompt7_1 <Aha. Let's talk about something else.>
+		Prompt8 <What kind of support do you give to L5?>
+		Prompt9 <How do you like Rishiri Spinner?>
+		Prompt10 <That's all for now.>
+		Prompt11 <Actually, I heard that it was destroyed by Aegis.>
+		Prompt12 <I have another question.>
+	end
+	inv
+		NPC Politician
+		job <Ambassador>
+		SetFaction 4
+	end
+
+
 %% *GALSP_NI_Content
 %%	NPCs and stuff for the Nova Initiative in Galconde Spinner
 

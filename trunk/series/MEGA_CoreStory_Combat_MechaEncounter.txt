@@ -1016,6 +1016,135 @@ Content
 		STC CORE-MECHAENCOUNTER
 	end
 
+%%  *************************************
+%%  ***   +Clo  Woo  Love  Interest   ***
+%%  *************************************
+
+Content
+	name <Love in Trouble>
+	size 6
+	desc <Find your love interest fighting other mecha; can help out. Win and get a relationship upgrade.>
+	requires <*CS_MechaEncounter +Clo A:++ (A:ADVEN|A:MILIT|A:LABOR) -A:Friend -A:Ally -A:Lover>
+
+	% E1: The Mission Provider
+	% E2: The outdoor scene where the fight will take place
+	% E3 is the combat scene
+	% E4 is the home scene of the character to help
+	% E5 is the character itself
+	Element3 <Prefab>
+	Place3 <2>
+	element4 <Scene Building Public !Near -7 !XClude -2>
+	element5 <Grab 9>
+	Place5 <4 (Citizens) Pass>
+
+	% V%id%01 = Initialization Counter
+
+	update <if= V%id%01 0 else %pop% V= %id%01 1   MoveNPC %5% %3%  SetNPCTeam %5% 3  NPCLevel %5% StoryDL  Goto %pop%>
+
+	% SubPlot1 = Win the battle, now find NPC
+	% SubPlot2 = Lose the battle, get scorned
+	SubPlot1 <*CS_Win_RescueLoveInterest 1 5>
+	SubPlot2 <*CS_Loss_RescueLoveInterest 1 5>
+
+	sub
+		MetaScene 3 2
+		% L1 = Encounter Over Counter
+		% L2 = Initialization Counter
+		MapWidth 30
+		MapHeight 30
+
+		% L1 = Match Over counter
+		% L2 = Initialization Counter
+
+		Start <if= L2 0 L= 2 1 ForceChat %5% History 1>
+		% If the NPC dies, this scenario ends in a loss.
+		Faint%5% <L= 1 1  SMemo 2  History 3  SetPlotStatus %id2%>
+
+		% If the PC defeats all of T2 before the NPC dies, it's a win.
+		nu1 <if= T1 0   Return   if= V1 0 V= 1 1               SMemo 2  History 4   SetPlotStatus %id2%>
+		nu2 <if= T2 0   if= V1 0 V= 1 1   XPV 100  AddRenown 1   Alert 5 FreezeNPC %5% PCFriend %5% SMemo 2 History 6 SetPlotStatus %id1%>
+
+		Msg1 <You found %name5% being attacked by mecha.>
+		Msg2 <You should report back to %name1% about the mission.>
+		Msg3 <You failed to protect %name5%, and \SPR %5% died.>
+		Msg4 <You failed to protect %name5%.>
+		Msg5 <As the battle ends, %name5% races off.>
+		Msg6 <You defeated the mecha which were attacking %name5%.>
+
+		sub
+			team 1
+			SetAlly 3
+			SetEnemy 2
+			ParaX 5
+			ParaY 10
+
+			team 2
+			SetEnemy 1
+			Deploy <SetSelfFaction &EnemyFac   WMecha 2 StoryDL 150>
+			ParaX 25
+			ParaY 25
+
+			team 3
+			SetAlly 1
+			SetEnemy 2
+			ParaX 10
+			ParaY 5
+		end
+
+		Persona 5
+		special <Unlisted>
+		% V%id%01 = Introduction counter
+		greeting <if= PlotStatus %id% else %pop% if# V%id%01 0 else GoFirst EndChat Say %id%01>
+		GoFirst <EndChat Say %id%02 AddChat %id%01 AddChat %id%02 V= %id%01 1>
+		result%id%01 <EndChat Say %id%03>
+		result%id%02 <EndChat Say %id%04>
+		Msg%id%01 <Shouldn't we concentrate on fighting right now?>
+		Msg%id%02 <\PC , am I ever glad to see you! I'm being attacked...>
+		Msg%id%02_1 <>
+		CMsg%id%02_1 <ifNPCSociable Accept>
+		Msg%id%02_2 <>
+		CMsg%id%02_2 <ifNPCShy Accept>
+		Msg%id%02_3 <>
+		CMsg%id%02_3 <ifNPCEasygoing Accept>
+		Msg%id%02_4 <>
+		CMsg%id%02_4 <ifNPCPassionate Accept>
+		Msg%id%02_5 <>
+		CMsg%id%02_5 <ifNPCCheerful Accept>
+		Msg%id%02_6 <>
+		CMsg%id%02_6 <ifNPCMelancholy Accept>
+		Msg%id%03 <I was just out here minding my own business, and they appeared out of nowhere. Let's get out of this mess first and we can talk about why later.>
+		Msg%id%03_1 <>
+		CMsg%id%03_1 <ifNPCSociable Accept>
+		Msg%id%03_2 <>
+		CMsg%id%03_2 <ifNPCShy Accept>
+		Msg%id%03_3 <>
+		CMsg%id%03_3 <ifNPCEasygoing Accept>
+		Msg%id%03_4 <>
+		CMsg%id%03_4 <ifNPCPassionate Accept>
+		Msg%id%03_5 <>
+		CMsg%id%03_5 <ifNPCCheerful Accept>
+		Msg%id%03_6 <>
+		CMsg%id%03_6 <ifNPCMelancholy Accept>
+		Msg%id%04 <I knew that you wouldn't let me down. Let's do it!>
+		Msg%id%04_1 <>
+		CMsg%id%04_1 <ifNPCSociable Accept>
+		Msg%id%04_2 <>
+		CMsg%id%04_2 <ifNPCShy Accept>
+		Msg%id%04_3 <>
+		CMsg%id%04_3 <ifNPCEasygoing Accept>
+		Msg%id%04_4 <>
+		CMsg%id%04_4 <ifNPCPassionate Accept>
+		Msg%id%04_5 <>
+		CMsg%id%04_5 <ifNPCCheerful Accept>
+		Msg%id%04_6 <>
+		CMsg%id%04_6 <ifNPCMelancholy Accept>
+		Prompt%id%01 <How did you get into this mess?>
+		Prompt%id%02 <Don't worry, I'm on the way!>
+	end
+	inv
+		STC CORE-MECHAENCOUNTER
+	end
+
 
 
 %%  *******************

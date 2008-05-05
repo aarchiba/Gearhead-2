@@ -55,13 +55,13 @@ inv
 	Mesh 9
 	XPos 0
 	YPos 1
-	Dir 4
+	Dir 0
 
 	STC SS-CANNON-1
 	SetTeam 2
 	XPos 0
 	YPos 2
-	Dir 0
+	Dir 4
 
 
 	Prop 20
@@ -71,7 +71,7 @@ inv
 	Mesh 8
 	XPos 1
 	YPos 1
-	Dir 4
+	Dir 0
 
 	Prop 20
 	name <Hull>
@@ -80,7 +80,7 @@ inv
 	Mesh 5
 	XPos 2
 	YPos 1
-	Dir 0
+	Dir 4
 
 	Prop 20
 	name <Hull>
@@ -89,7 +89,7 @@ inv
 	Mesh 6
 	XPos 3
 	YPos 1
-	Dir 4
+	Dir 0
 
 
 	Prop 20
@@ -114,7 +114,7 @@ inv
 	SetTeam 2
 	XPos 3
 	YPos 2
-	Dir 4
+	Dir 0
 end
 
 %% *FORTRESS Props
@@ -138,6 +138,7 @@ Height 1
 inv
 	STC TURRET-2
 	SetTeam 2
+	Dir 4
 
 	STC Bunker-1
 	SetTeam 1
@@ -146,7 +147,7 @@ inv
 	STC TURRET-2
 	SetTeam 2
 	XPos 2
-	Dir 4
+	Dir 0
 end
 
 SuperProp
@@ -157,6 +158,7 @@ inv
 	STC TURRET-2
 	SetTeam 2
 	YPos 1
+	Dir 4
 
 	STC TURRET-2
 	SetTeam 2
@@ -172,7 +174,7 @@ inv
 	SetTeam 2
 	XPos 2
 	YPos 1
-	Dir 4
+	Dir 0
 
 	STC TURRET-2
 	SetTeam 2

@@ -108,6 +108,33 @@ begin
 	GameMsg( CHAT_Message , ZONE_ShopMsg , InfoHiLight );
 end;
 
+Procedure SellStuffRedraw;
+	{ Redraw the screen for whatever service is going to go on. }
+var
+	N: Integer;
+	Part: GearPtr;
+begin
+	CombatDisplay( SERV_GB );
+	SetupServicesDisplay;
+
+	if ( SERV_Info <> Nil ) and ( Serv_Menu <> Nil ) then begin
+		N := CurrentMenuItemValue( SERV_Menu );
+		if N > 0 then begin
+			Part := LocateGearByNumber( SERV_Info , N );
+			if Part <> Nil then begin
+				BrowserInterfaceInfo( Part , ZONE_ItemsInfo );
+			end;
+		end;
+	end else if Serv_Info <> Nil then begin
+		BrowserInterfaceInfo( SERV_Info , ZONE_ItemsInfo );
+	end;
+
+	if SERV_NPC <> Nil then NPCPersonalInfo( SERV_NPC , ZONE_ShopCaption );
+
+	CMessage( '$' + BStr( NAttValue( SERV_PC^.NA , NAG_Experience , NAS_Credits ) ) , ZONE_ItemsPCInfo , InfoHilight );
+	GameMsg( CHAT_Message , ZONE_ShopMsg , InfoHiLight );
+end;
+
 Procedure ServicesBackpackRedraw;
 	{ A redrawer for the backpack, as accessed from services. }
 	{ Just do the combat display and call it even. }
@@ -325,6 +352,8 @@ begin
 	msg := ReplaceHash( msg , GearName( Part ) );
 
 	CHAT_Message := Msg;
+	SERV_Menu := Nil;
+	SERV_Info := Part;
 	N := SelectMenu( YNMenu , @ServiceRedraw );
 
 	if N = 1 then begin
@@ -352,6 +381,7 @@ begin
 	end;
 
 	DisposeRPGMenu( YNMenu );
+	SERV_Info := Nil;
 
 	SellGear := N = 1;
 end;
@@ -1127,6 +1157,103 @@ begin
 	DisposeRPGMenu( RPM );
 end;
 
+Procedure SellStuff( GB: GameBoardPtr; PCInv,PCChar,NPC: GearPtr; const Categories: String );
+	{ The player wants to sell some items to this NPC. }
+	{ PCInv points to the team-1 gear whose inventory is to be sold. }
+	{ PCChar points to the actual player character. }
+var
+	RPM: RPGMenuPtr;
+	MI,N: Integer;
+	Part : GearPtr;
+begin
+	MI := 1;
+	repeat
+		{ Create the menu. }
+		RPM := CreateRPGMenu( MenuItem , MenuSelect , ZONE_ShopMenu );
+		RPM^.Mode := RPMNoCleanup;
+		BuildInventoryMenu( RPM , PCInv );
+		AddRPGMenuItem( RPM , MsgString( 'SERVICES_Exit' ) , -1 );
+
+		SetItemByPosition( RPM , MI );
+
+		{ Get a choice from the menu, then record the current item }
+		{ number. }
+
+		SERV_Menu := RPM;
+		SERV_Info := PCInv;
+
+		N := SelectMenu( RPM , @SellStuffRedraw );
+
+		MI := RPM^.SelectItem;
+
+		{ Dispose of the menu. }
+		DisposeRPGMenu( RPM );
+
+		{ If N is positive, prompt to sell that item. }
+		if N > -1 then begin
+			Part := LocateGearByNumber( PCInv , N );
+			SellGear( Part^.Parent^.InvCom , Part , PCChar , NPC , Categories );
+		end;
+
+	until N = -1;
+	SERV_Menu := Nil;
+	SERV_Info := Nil;
+end;
+
+
+Procedure ThisMechaWasSelected( GB: GameBoardPtr; MekNum: Integer; PC,NPC: GearPtr );
+	{ Do all the standard shopping options with this mecha. }
+	{ IMPORTANT: A mecha can only be sold if it's not currently on the map! }
+	{ Otherwise, the PC could potentially sell himself if in the cockpit... }
+var
+	RPM: RPGMenuPtr;
+	Mek: GearPtr;
+	N: Integer;
+begin
+	{ Find the mecha. }
+	Mek := RetrieveGearSib( GB^.Meks , MekNum );
+
+	repeat
+		{ Create the menu. }
+		RPM := CreateRPGMenu( MenuItem , MenuSelect , ZONE_ShopMenu );
+
+		{ Add options, depending on the mek. }
+		if not OnTheMap( GB , Mek ) then AddRPGMenuItem( RPM , MsgString( 'SERVICES_Sell' ) + GearName( Mek ) , 1 );
+		if TotalRepairableDamage( Mek , 15 ) > 0 then AddRPGMenuItem( RPM , MsgString( 'SERVICES_OSRSP15' ) + ' [$' + BStr( RepairMasterCost( Mek , 15 ) ) + ']' , 2 );
+		AddRPGMenuItem( RPM , MsgString( 'SERVICES_SellMekInv' ) , 4 );
+		AddRPGMenuItem( RPM , MsgString( 'SERVICES_BrowseParts' ) , 3 );
+		AddRPGMenuItem( RPM , MsgString( 'SERVICES_Exit' ) , -1 );
+
+		SERV_Menu := Nil;
+		SERV_Info := Mek;
+		N := SelectMenu( RPM , @ServiceRedraw );
+
+		DisposeRPGMenu( RPM );
+
+		if N = 1 then begin
+			{ Sell the mecha. }
+			if SellGear( GB^.Meks , Mek , PC , NPC , '' ) then N := -1;
+
+		end else if N = 2 then begin
+			{ Repair the mecha. }
+			RepairOneFrontEnd( GB , Mek , PC , NPC , 15 );
+
+		end else if N = 3 then begin
+			{ Use the parts browser. }
+
+			MechaPartBrowser( Mek , @ServiceRedraw );
+
+
+		end else if N = 4 then begin
+			{ Sell items. }
+			SellStuff( GB , Mek , PC , NPC , '' );
+
+		end;
+
+	until N = -1;
+	SERV_Info := Nil;
+end;
+
 Function CreateMechaMenu( GB: GameBoardPtr ): RPGMenuPtr;
 	{ Create a menu listing all the Team1 meks on the board. }
 var
@@ -1159,96 +1286,6 @@ begin
 	CreateMechaMenu := RPM;
 end;
 
-Procedure SellStuff( GB: GameBoardPtr; PCInv,PCChar,NPC: GearPtr; const Categories: String );
-	{ The player wants to sell some items to this NPC. }
-	{ PCInv points to the team-1 gear whose inventory is to be sold. }
-	{ PCChar points to the actual player character. }
-var
-	RPM: RPGMenuPtr;
-	MI,N: Integer;
-	Part : GearPtr;
-begin
-	MI := 1;
-	repeat
-		{ Create the menu. }
-		RPM := CreateRPGMenu( MenuItem , MenuSelect , ZONE_ShopMenu );
-		RPM^.Mode := RPMNoCleanup;
-		BuildInventoryMenu( RPM , PCInv );
-		AddRPGMenuItem( RPM , MsgString( 'SERVICES_Exit' ) , -1 );
-
-		SetItemByPosition( RPM , MI );
-
-		{ Get a choice from the menu, then record the current item }
-		{ number. }
-
-		N := SelectMenu( RPM , @ServiceRedraw );
-
-		MI := RPM^.SelectItem;
-
-		{ Dispose of the menu. }
-		DisposeRPGMenu( RPM );
-
-		{ If N is positive, prompt to sell that item. }
-		if N > -1 then begin
-			Part := LocateGearByNumber( PCInv , N );
-			SellGear( Part^.Parent^.InvCom , Part , PCChar , NPC , Categories );
-		end;
-
-	until N = -1;
-end;
-
-
-Procedure ThisMechaWasSelected( GB: GameBoardPtr; MekNum: Integer; PC,NPC: GearPtr );
-	{ Do all the standard shopping options with this mecha. }
-	{ IMPORTANT: A mecha can only be sold if it's not currently on the map! }
-	{ Otherwise, the PC could potentially sell himself if in the cockpit... }
-var
-	RPM: RPGMenuPtr;
-	Mek: GearPtr;
-	N: Integer;
-begin
-	{ Find the mecha. }
-	Mek := RetrieveGearSib( GB^.Meks , MekNum );
-
-	repeat
-		{ Create the menu. }
-		RPM := CreateRPGMenu( MenuItem , MenuSelect , ZONE_ShopMenu );
-
-		{ Add options, depending on the mek. }
-		if not OnTheMap( GB , Mek ) then AddRPGMenuItem( RPM , MsgString( 'SERVICES_Sell' ) + GearName( Mek ) , 1 );
-		if TotalRepairableDamage( Mek , 15 ) > 0 then AddRPGMenuItem( RPM , MsgString( 'SERVICES_OSRSP15' ) + ' [$' + BStr( RepairMasterCost( Mek , 15 ) ) + ']' , 2 );
-		AddRPGMenuItem( RPM , MsgString( 'SERVICES_SellMekInv' ) , 4 );
-		AddRPGMenuItem( RPM , MsgString( 'SERVICES_BrowseParts' ) , 3 );
-		AddRPGMenuItem( RPM , MsgString( 'SERVICES_Exit' ) , -1 );
-
-
-		N := SelectMenu( RPM , @ServiceRedraw );
-
-		DisposeRPGMenu( RPM );
-
-		if N = 1 then begin
-			{ Sell the mecha. }
-			if SellGear( GB^.Meks , Mek , PC , NPC , '' ) then N := -1;
-
-		end else if N = 2 then begin
-			{ Repair the mecha. }
-			RepairOneFrontEnd( GB , Mek , PC , NPC , 15 );
-
-		end else if N = 3 then begin
-			{ Use the parts browser. }
-
-			MechaPartBrowser( Mek , @ServiceRedraw );
-
-
-		end else if N = 4 then begin
-			{ Sell items. }
-			SellStuff( GB , Mek , PC , NPC , '' );
-
-		end;
-
-	until N = -1;
-end;
-
 Procedure BrowseMecha( GB: GameBoardPtr; PC,NPC: GearPtr );
 	{ The Player is going to take a look through his mecha list, maybe }
 	{ sell some of them, maybe repair some of them... }
@@ -1262,6 +1299,8 @@ begin
 
 		{ Select an item from the menu, then get rid of the menu. }
 
+		SERV_Info := GB^.Meks;
+		SERV_Menu := RPM;
 		N := SelectMenu( RPM , @ServiceRedraw );
 
 		DisposeRPGMenu( RPM );
@@ -1271,6 +1310,8 @@ begin
 			ThisMechaWasSelected( GB , N , PC , NPC );
 		end;
 	until N = -1;
+	SERV_Info := Nil;
+	SERV_Menu := Nil;
 end;
 
 Procedure InstallCyberware( GB: GameBoardPtr; PC , NPC: GearPtr );

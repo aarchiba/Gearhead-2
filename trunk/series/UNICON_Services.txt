@@ -78,10 +78,10 @@ Content
 		chardesc Male Shy Spiritual Cheerful
 
 		STC VIDEOGAME-1
-		PDir 0
+		PDir 4
 
 		STC VIDEOGAME-3
-		PDir 4
+		PDir 0
 	end
 
 %% *BLACKMARKET_SHOP CONTENT
@@ -182,19 +182,20 @@ Content
 	Element5 <Prefab>
 	inv
 		STC VIDEOGAME-5
-		PDir 0
+		PDir 4
 
 		STC VIDEOGAME-3
-		PDir 4
-
-		STC VIDEOGAME-4
 		PDir 0
 
-		STC VIDEOGAME-2
+		STC VIDEOGAME-4
 		PDir 4
+
+		STC VIDEOGAME-2
+		PDir 0
 
 		Prop 10
 		name <Karaoke King>
+		PDir 2
 		Mesh 3
 		sdl_sprite <tex_electronics.png>
 		roguechar <&>

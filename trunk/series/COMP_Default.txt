@@ -19,9 +19,32 @@
 %	STAT_XRP_TargetItem = 8;		{ I: }
 
 Plot
+	name <Generic Battle Encounter>
+	desc <You go out looking for a fight, and you find a fight.>
+	requires <#A +Ten +Ffi E:++>
+	Size 8
+
+	% Element1 is the encounter
+	% Element2 is the enemy NPC
+	Element1 <Grab 6>
+	Element2 <Grab 1>
+	Place2 <1 sd enemy (Enemies)>
+
+	update <if= v%id%01 0 v= %id%01 1 NPCLevel %2% StoryDL>
+
+	sub
+		Metascene 1 2
+
+
+		Persona 2
+		special <UNLISTED>
+
+	end
+
+Plot
 	name <They're Out There!>
 	desc <Research will reveal an encounter to investigate.>
-	requires <+Tgs (+F--|+Fin|+Fmi) S:++>
+	requires <#A +Tgs (+F--|+Fin|+Fmi) S:++>
 	Size 1
 
 	% Element1 is the scene being investigated

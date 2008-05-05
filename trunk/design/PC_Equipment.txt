@@ -898,53 +898,6 @@ Mass -3
 legality -15
 
 Set
-name <Flak Suit [set]>
-desc <Light armor designed to protect against shrapnel.>
-Category <ARMOR>
-Factions <GENERAL>
-legality -10
-inv
-	BodyArmor 3
-	Name <Flak Jacket>
-	desc <This jacket is designed to protect against shrapnel.>
-	Category <ARMOR>
-	Factions <GENERAL>
-	legality -10
-
-	ArmArmor 3
-	Name <Flak Sleeve>
-	desc <Arm armor made from a combination of tough cloths and armor plates.>
-	Category <ARMOR>
-	Factions <GENERAL>
-	Mass -3
-	legality -5
-
-	LegArmor 3
-	Name <Flak Legging>
-	desc <Leg armor made from a combination of tough cloths and armor plates.>
-	Category <ARMOR>
-	Factions <GENERAL>
-	Mass -3
-	legality -5
-
-	ArmArmor 3
-	Name <Flak Sleeve>
-	desc <Arm armor made from a combination of tough cloths and armor plates.>
-	Category <ARMOR>
-	Factions <GENERAL>
-	Mass -3
-	legality -5
-
-	LegArmor 3
-	Name <Flak Legging>
-	desc <Leg armor made from a combination of tough cloths and armor plates.>
-	Category <ARMOR>
-	Factions <GENERAL>
-	Mass -3
-	legality -5
-end
-
-Set
 name <Pilot Suit [set]>
 desc <A light spacesuit used by the Pro Duelist Association.>
 Category <CLOTHING SPACE>
@@ -1064,53 +1017,6 @@ Factions <GENERAL>
 Mass -1
 legality -5
 
-Set
-name <Mesh Suit [set]>
-desc <Armor crafted from alternating layers of ceramic and polymer.>
-Category <ARMOR>
-Factions <GENERAL>
-legality -5
-inv
-	BodyArmor 5
-	Name <Mesh Jacket>
-	desc <Armor crafted from alternating layers of ceramic and polymer.>
-	Category <ARMOR>
-	Factions <GENERAL>
-	legality -5
-
-	ArmArmor 5
-	Name <Mesh Sleeve>
-	desc <Armor crafted from alternating layers of ceramic and polymer.>
-	Category <ARMOR>
-	Factions <GENERAL>
-	mass -2
-	legality -5
-
-	ArmArmor 5
-	Name <Mesh Sleeve>
-	desc <Armor crafted from alternating layers of ceramic and polymer.>
-	Category <ARMOR>
-	Factions <GENERAL>
-	mass -2
-	legality -5
-
-	LegArmor 5
-	Name <Mesh Legging>
-	desc <Armor crafted from alternating layers of ceramic and polymer.>
-	Category <ARMOR>
-	Factions <GENERAL>
-	mass -2
-	legality -5
-
-	LegArmor 5
-	Name <Mesh Legging>
-	desc <Armor crafted from alternating layers of ceramic and polymer.>
-	Category <ARMOR>
-	Factions <GENERAL>
-	mass -2
-	legality -5
-end
-
 BodyArmor 5
 Name <Hazard Vest>
 desc <Armor used by rescuers traversing hazardous situations.>
@@ -1118,124 +1024,6 @@ Category <ARMOR>
 Factions <GENERAL>
 Mass -1
 legality -5
-
-Set
-name <Plate Armor [set]>
-desc <Armor composed of ceramic plates.>
-Category <ARMOR>
-Factions <GENERAL>
-inv
-	BodyArmor 4
-	Name <Breastplate>
-	desc <A solid plate of body armor.>
-	Category <ARMOR>
-	Factions <GENERAL>
-	Mass -6
-	legality -5
-
-	ArmArmor 3
-	Name <Plate Sleeve>
-	desc <Arm armor composed of a solid plate.>
-	Category <ARMOR>
-	Factions <GENERAL>
-	Mass -4
-	legality -5
-
-	LegArmor 3
-	Name <Plate Legging>
-	desc <Legging composed of a solid plate.>
-	Category <ARMOR>
-	Factions <GENERAL>
-	Mass -4
-	legality -5
-
-	ArmArmor 3
-	Name <Plate Sleeve>
-	desc <Arm armor composed of a solid plate.>
-	Category <ARMOR>
-	Factions <GENERAL>
-	Mass -4
-	legality -5
-
-	LegArmor 3
-	Name <Plate Legging>
-	desc <Legging composed of a solid plate.>
-	Category <ARMOR>
-	Factions <GENERAL>
-	Mass -4
-	legality -5
-end
-
-Set
-name <Blast Suit [set]>
-desc <This suit is designed to resist explosions.>
-Category <ARMOR>
-Factions <GENERAL>
-legality -10
-inv
-	HeadArmor 4
-	Name <Blast Helmet>
-	SDL_PORTRAIT <item_blasthelmet.png>
-	desc <Helmet used to resist blasts and explosions.>
-	Category <ARMOR>
-	Factions <GENERAL>
-	Mass -5
-	legality -10
-
-	BodyArmor 6
-	Name <Blast Suit>
-	desc <This suit is designed to resist explosions.>
-	SDL_PORTRAIT <item_blastarmor.png>
-	Category <ARMOR>
-	Factions <GENERAL>
-	Mass 1
-	legality -10
-
-	ArmArmor 4
-	Name <Blast Sleeve>
-	desc <Sleeve used to resist blasts and explosions.>
-	SDL_PORTRAIT <item_blastsleeve.png>
-	Category <ARMOR>
-	Factions <GENERAL>
-	Mass -5
-	legality -10
-
-	LegArmor 4
-	Name <Blast Legging>
-	desc <Leg armor used to resist blasts and explosions.>
-	SDL_PORTRAIT <item_blastlegging.png>
-	Category <ARMOR>
-	Factions <GENERAL>
-	Mass -5
-	legality -10
-
-	ArmArmor 4
-	Name <Blast Sleeve>
-	desc <Sleeve used to resist blasts and explosions.>
-	SDL_PORTRAIT <item_blastsleeve.png>
-	Category <ARMOR>
-	Factions <GENERAL>
-	Mass -5
-	legality -10
-
-	LegArmor 4
-	Name <Blast Legging>
-	desc <Leg armor used to resist blasts and explosions.>
-	SDL_PORTRAIT <item_blastlegging.png>
-	Category <ARMOR>
-	Factions <GENERAL>
-	Mass -5
-	legality -10
-end
-
-HeadArmor 1
-Name <Field Cap>
-desc <A lightweight cap.>
-Category <CLOTHING>
-Factions <GENERAL>
-SDL_PORTRAIT <item_fieldcap.png>
-Mass -1
-legality -20
 
 HeadArmor 2
 Name <Sports Helmet>
@@ -1264,27 +1052,6 @@ SDL_PORTRAIT <item_lighthelmet.png>
 Mass -5
 Memo
 legality -10
-
-HeadArmor 3
-Name <Recce Helmet>
-desc <Helmet used in reconnaissance missions, capable of transmitting and receiving data.>
-Category <ARMOR>
-Factions <GENERAL>
-SDL_PORTRAIT <item_lighthelmet.png>
-Mass -5
-Memo
-Phone
-legality -5
-
-HeadArmor 5
-Name <Heavy Combat Helmet>
-desc <A helmet typically used in heavy combat situations. It contains an integrated objective-storage system.>
-Category <ARMOR>
-Factions <GENERAL>
-SDL_PORTRAIT <item_lighthelmet.png>
-Mass -7
-Memo
-legality -5
 
 ArmArmor 1
 Name <Elbow Pad>

@@ -499,18 +499,18 @@
 	START <NewChat Say %id%01 AddChat %id%01 AddChat %id%02>
 	result%id%01 <StoryNote %id%02 Goto %1%>
 	result%id%02 <SMemo 0 Goto %2%>
-	Msg%id%01 <We've been tracking a group of mecha in \SCENE E3 . I need you to locate them and determine whether or not they're hostile.>
+	Msg%id%01 <We've been tracking a group of mecha in \SCENE %3% . I need you to locate them and determine whether or not they're hostile.>
 	Msg%id%01_1 <There's been a group of unknown mecha operating just outside the city. I want you to identify them, and if they prove hostile engage in combat.>
 	CMsg%id%01_1 <ifNPCSociable Accept>
-	Msg%id%01_2 <A group of possibly hostile mecha has been detected in \SCENE E3 . I need you to intercept them.>
+	Msg%id%01_2 <A group of possibly hostile mecha has been detected in \SCENE %3% . I need you to intercept them.>
 	CMsg%id%01_2 <ifNPCShy Accept>
-	Msg%id%01_3 <There have been some odd sensor readings from \SCENE E3 , possibly indicating a group of unauthorized mecha. I need you to explore the area and see if you can find what's going on.>
+	Msg%id%01_3 <There have been some odd sensor readings from \SCENE %3% , possibly indicating a group of unauthorized mecha. I need you to explore the area and see if you can find what's going on.>
 	CMsg%id%01_3 <ifNPCEasygoing Accept>
-	Msg%id%01_4 <A team of unauthorized mecha has been getting too close to our holdings in \SCENE E3 . What I need you to do is locate them and put a stop to it.>
+	Msg%id%01_4 <A team of unauthorized mecha has been getting too close to our holdings in \SCENE %3% . What I need you to do is locate them and put a stop to it.>
 	CMsg%id%01_4 <ifNPCPassionate Accept>
-	Msg%id%01_5 <There are some mecha in \SCENE E3 that I need investigated. Intercept them for me and you'll earn a big reward.>
+	Msg%id%01_5 <There are some mecha in \SCENE %3% that I need investigated. Intercept them for me and you'll earn a big reward.>
 	CMsg%id%01_5 <ifNPCCheerful Accept>
-	Msg%id%01_6 <A group of unauthorized mecha has been spotted in \SCENE E3 ... these may be the same pilots responsible for those attacks earlier. I need for you to run an intercept mission.>
+	Msg%id%01_6 <A group of unauthorized mecha has been spotted in \SCENE %3% ... these may be the same pilots responsible for those attacks earlier. I need for you to run an intercept mission.>
 	CMsg%id%01_6 <ifNPCMelancholy Accept>
 	Msg%id%02 <\CHATNPC hired you to investigate mecha in \SCENE %3% .>
 	Prompt%id%01 <I'll get to work right away.>

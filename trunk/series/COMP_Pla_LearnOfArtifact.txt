@@ -6,6 +6,68 @@
 %%
 
 Plot
+	name <They're Looking For Item>
+	desc <The PC will get a mission, and find who's looking for the item>
+	requires <#A +Pla +T-- F:-- I:++>
+	Size 1
+
+	% E1 is a faction that's an enemy of the PC
+	% E2 is a local character with a mecha that's an enemy of the faction
+	% E3 is an outdoors scene for a combat encounter
+	Element1 <Faction ArchEnemy !Okay -1 !XClude -3>
+	Element2 <Character HasMecha !Enemy 1 !Okay -3>
+	Element3 <Scene Environs !Near -7>
+
+	% V1 = Email Indicator
+
+	% As long as we're still at the first phase, the NPC's death will end the plot.
+	start <if= PlotStatus 0 ifNPCDead %2%  LoseComp 0 .changes>
+	.changes <+T-- +F-->
+
+	5Min <if= PlotStatus 0 if= V1 0 if= d20 1 ifG PCCharm d30 V= 1 1 EMail 1>
+
+	% SubPlot1 is the combat encounter
+	SubPlot1 <*CS_MechaEncounter 2 3>
+
+	Msg1 <%name2%@ \SCENE NPCScene %2% :// I've got a mission that may be of personal interest to you.>
+
+	sub
+		Persona 2
+		rumor <%name2% wants you to help fight %name1%.>
+		% V1 = History counter
+		greeting <if# PlotStatus 0 else .%id%_GoOfferMission if# PlotStatus %id1% else .%id%_GoRemind NewChat SayAnything>
+		.%id%_GoOfferMission <ifChatNPCUnknown else .%id%_GoKnownGreeting ifChatNPCAlly else .%id%_GoUnknownGreeting Goto .%id%_GoKnownGreeting>
+		*.%id%_GoRemind <*MechaMissionReminder %2%>
+		*.%id%_GoKnownGreeting <*IHaveAJobForYou .%id%_GoBriefing>
+		*.%id%_GoUnknownGreeting <*AreYouHereAboutJob&Mecha .%id%_GoBriefing>
+		*.%id%_GoAccept <*GoodLuckOnMission .%id%_GoR1Exit ChatNPCFac &EnemyFac>
+		.%id%_GoR1Exit <StoryNote 4 SetPlotStatus %id1%>
+		*.%id%_GoDeny <*RejectMission .%id%_GoR2Exit>
+		.%id%_GoR2Exit <LoseComp 0 .%id%_changes>
+		.%id%_changes <+T-- +F-->
+		.%id%_GoBriefing <NewChat Say 1 AddChat 1 if= V1 0 V= 1 1 History 2 &SetEnemyFac %1%>
+		result1 <NewChat Say 3 AddChat 2 AddChat 3 AddChat 4>
+		result2 <Goto .%id%_GoAccept>
+		result3 <Goto .%id%_GoAccept>
+		result4 <Goto .%id%_GoDeny>
+		Msg1_10 <It's been discovered that %name1% is searching for the \ITEM &TargetItem . They've hired a cavalier named \PERSONA &EnemyNPC to find it for them.>
+		CMsg1_10 <ifNPCOK &EnemyNPC Accept>
+		Msg1_20 <It's been discovered that %name1% is searching for the \ITEM &TargetItem . They've sent a recon lance to search for it near here.>
+		CMsg1_20 <ifNPCDead &EnemyNPC Accept>
+		Msg2 <%name2% revealed that %name1% hired \PERSONA &EnemyNPC to find the \ITEM &TargetItem .>
+		CMsg2_10 <ifNPCOK &EnemyNPC Accept>
+		Msg2_20 <%name2% revealed that %name1% was searching for the \ITEM &TargetItem .>
+		CMsg2_20 <ifNPCDead &EnemyNPC Accept>
+		Msg3 <Mecha from %name1% have been sighted in %name3%. I'd like to hire you to locate and eliminate them.>
+		Msg4 <%name2% hired you to intercept a recon team from %name1% in %name3%.>
+		Prompt1 <Hey, I'm looking for that too.>
+		Prompt2 <No problem. I'll be back when I'm done.>
+		Prompt3 <As long as you have the money, I'll do whatever you want.>
+		Prompt4 <Sorry, but I've got more important things to do.>
+		CPrompt4 <if# PCFac ChatNPCFac Accept>
+	end
+
+Plot
 	name <I know where it is: Spaceship>
 	desc <The PC has found the item he's been looking for.>
 	requires <#A +Pla +Tgt +Fin S:++ I:++ -!Ne -I:TL_Md -I:TL_Hi -I:TL_Ex>

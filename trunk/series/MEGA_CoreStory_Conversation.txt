@@ -892,6 +892,28 @@ Content
 %%  *******************
 
 Plot
+	name <I have a lead for you>
+	desc <This police officer has information for you>
+	requires <*CS_Conversation 1:POLIC E:THIEF>
+	Size 1
+	% E1 is the person with the information
+	% E2 is the sleazy scene where the PC can find information
+	Element2 <Scene Sleazy !Near -7>
+
+	start <if= PlotStatus %id% else %pop% ifNPCDead %1% LoseComp 0 .%id%_loss>
+	.%id%_loss <+T-- +F-->
+
+	sub
+		Persona 1
+		greeting <if= PlotStatus %id% else %pop% Goto .%id%_GoIntro>
+		*.%id%_GoIntro <*IHearYouAreFightingNPC &EnemyNPC .%id%_GoReveal>
+		.%id%_GoReveal <NewChat Say %id%01 StoryNote %id%02 &SetTargetNPC 0 WinComp %2% .%id%_next>
+		.%id%_next <+Tgs +Fin>
+		Msg%id%01 <Well, there's some talk that \SPR &EnemyNPC 's been in town recently. If you're interested, I'd reccomend that you ask around at %name2%. That's the best place to turn up information.>
+		Msg%id%02 <%name1% suggested that you ask about \PERSONA &EnemyNPC at %name2%.>
+	end
+
+Plot
 	name <Dream Quest>
 	desc <This monk will send the PC on a quest.>
 	requires <*CS_Conversation 1:FAITH>

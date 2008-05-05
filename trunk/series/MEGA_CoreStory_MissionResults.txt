@@ -1,4 +1,111 @@
 %%
+%% *CS_Win_RescueLoveInterest
+%%
+%% The PC has rescued the love interest NPC from some terrible fate. Yahoo.
+%%
+%% Param1: The Mission-Giver
+%% Param2: The love interest
+
+Content
+	name <Someone Left a Gift>
+	desc <The love interest left a gift for the PC.>
+	requires <*CS_Win_RescueLoveInterest>
+
+	% E1 is the mission-giver
+	% E2 is the love interest
+	% E3 is the gift
+	% E4 is the scene for the next meeting
+	Element3 <Prefab>
+	Element4 <Scene Public Meeting !Near -7>
+
+	start <if= PlotStatus %id% else %pop% ifNPCDead %1% SMemo 0 WinComp 0 .%id%_loss>
+	.%id%_loss <+T-- +F-->
+
+	update <if= PlotStatus %id% else %pop% if= v%id%01 0 FreezeNPC %2% v= %id%01 1>
+
+	sub
+		Persona 1
+		greeting <if= PlotStatus %id% else %pop% NewChat Say %id%01 SMemo %id%02 History %id%03 CashPrize Reward StoryDL 500 GiveItem %3% WinComp %4% .%id%_win>
+		.%id%_win <+Tga +Fft>
+		Msg%id%01 <Good work on that mission. You must have done well, because while you were out someone came by and dropped off these chocolates for you; \SPR %2% asked me to ask you to meet \OPR %2% later at %name4%.>
+		Msg%id%02 <Someone gave %name1% a box of chocolates for you, and left a message that you should meet \OPR %2% at %name4% later.>
+		Msg%id%03 <After the mission, you received chocolates and a request to meet at %name4%.>
+	end
+	inv
+		Food 15
+		Name <Box of Chocolates>
+		FoodMorale 5
+		desc <Some delicious chocolates from a special admirer.>
+		Category <FOOD>
+	end
+
+%%
+%% *CS_Loss_RescueLoveInterest
+%%
+%% The PC failed to rescue the love interest NPC from some terrible fate. Bummer.
+%%
+%% Param1: The Mission-Giver
+%% Param2: The love interest
+
+Content
+	name <Love Is Captured>
+	desc <You failed to rescue your love interest, so she's been kidnapped.>
+	requires <*CS_Loss_RescueLoveInterest (+C--|+Cro|+Cps|+Cme|+Clo)>
+
+	start <if= PlotStatus %id% else %pop% ifNPCDead %1% SMemo 0 WinComp 0 .%id%_loss>
+	.%id%_loss <+T-- +F-->
+
+	update <if= PlotStatus %id% else %pop% if= v%id%01 0 FreezeNPC %2% v= %id%01 1>
+
+	sub
+		Persona 1
+		greeting <if= PlotStatus %id% else %pop% ifNPCOK %2% else .%id%_GoJustEnd Goto .%id%_GoKidnapped>
+		*.%id%_GoJustEnd <*MissionWasFailure .%id%_GoEnd &AllyFac &EnemyFac>
+		.%id%_GoEnd <SMemo 0 AddRenown -10 AddCheerful -10  NTBLoseComp 0 .%id%_deadloss>
+		.%id%_deadloss <+Cfa +Bld +T-- +F-->
+		.%id%_GoKidnapped <NewChat Say %id%01 StoryNote %id%02  NTBLoseComp 0 .%id%_kidnapped>
+		.%id%_kidnapped <+Clk +T-- +F-->
+		Msg%id%01 <The mission was a failure. Even worse, we've learned that the enemy has captured someone named %name2%.>
+		Msg%id%02 <After you failed to protect \OPR %2% , %name2% was captured by the enemy.>
+	end
+
+%%
+%% *CS_Win_CaptureEnemyShip
+%%
+%% The PC has captured an enemy ship. Good for her.
+%%
+%% Param1: The Mission-giver
+
+Content
+	name <They Launched A Mission>
+	desc <Even though the ship was captured, enemy mecha are still out there.>
+	requires <*CS_Win_CaptureEnemyShip>
+
+	% E1 is the mission giver
+	% E2 is an environs scene in which to place the encounter
+	% E3 is the encounter
+	Element2 <Scene Environs !Near -7>
+	Element3 <Prefab>
+	Place3 <2>
+
+	start <if= PlotStatus %id% else %pop% ifNPCDead %1% SMemo 0 WinComp 0 .%id%_loss>
+	.%id%_loss <+T-- +F-->
+
+	sub
+		Persona 1
+		greeting <if= PlotStatus %id% else %pop%  NewChat Say %id%01 StoryNote %id%02 CashPrize Reward StoryDL 500 WinComp %3% .%id%_next>
+		.%id%_next <+Ten +Ffi>
+		Msg%id%01 <The enemy ship has been captured, but one of their lances managed to escape. We believe they are hiding in %name3%; it's possible that they're performing whatever mission brought them here in the first place.>
+		Msg%id%02 <%name1% revealed that mecha from the ship escaped to %name3%.>
+	end
+	inv
+		STC ENCOUNTER-WANDER
+		name <Enemy Mecha>
+		EncounterMove 25
+	end
+
+
+%%
 %% *CS_Win_Vs_Prototype
 %%
 %% The PC has won a mission against a prototype weapon.
@@ -56,7 +163,7 @@ Content
 		Persona 1
 		greeting <if= PlotStatus %id% else %pop%  NewChat Say %id%01 StoryNote %id%02 CashPrize Reward StoryDL 500 WinComp %3% .%id%_next>
 		.%id%_next <+Ten +Ffi>
-		Msg%id%01 <You did it. Unfortunately, that might not be the only research crew they have out there.>
+		Msg%id%01 <You did it. Unfortunately, that might not be the only research crew they have out there. Reports have come in about another weapon in %name2%.>
 		Msg%id%02 <%name1% revealed that there could be more experimental weapons nearby.>
 	end
 	inv
@@ -826,7 +933,7 @@ Content
 
 	sub
 		Persona 1
-		greeting <if= PlotStatus %id% else %pop% ifNPCOK %2% else .%id%_GoReportSuccess  NewChat Say %id%01 SMemo %id%02 Goto .%id%_GoEnd>
+		greeting <if= PlotStatus %id% else %pop% ifNPCOK %2% else .%id%_GoReportSuccess  NewChat Say %id%01 SMemo %id%02 History %id%03 Goto .%id%_GoEnd>
 		*.%id%_GoReportSuccess <*MissionWasSuccess&Reward .%id%_GoMeh &AllyFac &EnemyFac>
 		.%id%_GoEnd <CashPrize Reward StoryDL 500 &SetTargetNPC %2% WinComp %3% .%id%_win>
 		.%id%_win <+Tgt +Fmi>
@@ -846,6 +953,7 @@ Content
 		Msg%id%01_6 <>
 		CMsg%id%01_6 <ifNPCMelancholy Accept>
 		Msg%id%02 <%name1% sent you to %name2% at %name3% for another mission.>
+		Msg%id%03 <%name1% sent you to %name2% for another mission.>
 	end
 
 Content
@@ -864,7 +972,7 @@ Content
 
 	sub
 		Persona 1
-		greeting <if= PlotStatus %id% else %pop% SMemo 0  ifNPCOK %2% else .%id%_GoReportSuccess  if# ChatNPCFac 0 else .%id%_GoReportSuccess NewChat Say %id%01 SMemo %id%02 Goto .%id%_GoEnd>
+		greeting <if= PlotStatus %id% else %pop% SMemo 0  ifNPCOK %2% else .%id%_GoReportSuccess  if# ChatNPCFac 0 else .%id%_GoReportSuccess NewChat Say %id%01 SMemo %id%02 History %id%03 Goto .%id%_GoEnd>
 		*.%id%_GoReportSuccess <*MissionWasSuccess&Reward .%id%_GoMeh &AllyFac &EnemyFac>
 		.%id%_GoEnd <CashPrize Reward StoryDL 500 &SetTargetNPC %2% WinComp %3% .%id%_win>
 		.%id%_win <+Tgt +Fmi>
@@ -884,6 +992,7 @@ Content
 		Msg%id%01_6 <>
 		CMsg%id%01_6 <ifNPCMelancholy Accept>
 		Msg%id%02 <%name1% sent you to %name2% at %name3% for another mission.>
+		Msg%id%03 <%name1% sent you to %name2% for another mission.>
 	end
 
 Content

@@ -123,13 +123,15 @@ BACKGROUND DESCRIPTORS
 
 	+Pme	PC meets an enemy pilot
 	+Pun	An unknown enemy attacks for unknown reasons
-	+Psh	PC is shanghaied into working for faction	Can leave at !Lo
+	+Psh	PC is shanghaied into working for faction
 	+Psm	A stalemate between the PC and the enemy
-	+Pla	PC learns of the existence of an artifact	Can leave at !Lo
+	+Pla	PC learns of the existence of an artifact
+
 	+P	EF attempting to subvert PF
 	+P	PC obtains the target item
 	+P	Enemy obtains the target item
-	+Pew	Enemy working on new weapon program		Can leave at !Md
+	+Pew	Enemy working on new weapon program		Can enter at !Lo
+
 	+P	PF working on new weapon program
 	+P	Under open attack by EF
 	+P	Bring the fight to EF
@@ -148,6 +150,7 @@ BACKGROUND DESCRIPTORS
 	+Cps	Partner has a secret (R:++)
 	+Cme	PC is acting as mentor to partner (R:++)
 	+Clo	Wooing a love interest
+	+Clk	Love interest has been kidnapped
 	+Cre	PC attempts to reform enemy
 	+Cfa	The PC has to live down a failure
 	+Csu	PC has achieved minor personal success
@@ -205,4 +208,6 @@ BACKGROUND DESCRIPTORS
 	+Fpa	It's going to be a party (+Tsh)
 	+Fcc	It's a corporate conference (+Tsh)
 	+Far	To arrest the target (+Tht)
+
+	+Fap	To apologize to the target (+Tgt,+Tga)
 

@@ -1179,10 +1179,11 @@ ENCOUNTER_NonCombat
 Encounter
 desig <CORE-ENEMYSHIP-ENCOUNTER>
 % The first time the PC tries to enter, he will be attacked. Afterwards he may enter
-% the location normally. The fight uses %threat% for its difficulty rating.
+% the location normally.
 %
 % The attacking faction will be the core story enemy faction, and the encounter
 % threat level will be the StoryDL.
+% This encounter appears when PlotStatus = %id%
 %%
 %%  V1 =  Have defeated mecha counter
 %%
@@ -1194,12 +1195,18 @@ update <if= PlotStatus %id% else GoHide SetStat STAT_MetaVisibility 0  ShowEncou
 % Sets this encounter's orders to Passive
 GoSetOrders <GrabSource GSetNAtt NAG_EpisodeData NAS_Orders 3>
 Attack <  >
-use <ifG StatVal STAT_MetaVisibility -1  if# V1 0 else GoStartCombat  Print -1 Exit Destination>
-GoStartCombat <Alert 1 SavePos Dynamic 2 StoryDL 100 .nu1 .nu2 ComposeD Msg1 .Msg1 DynaVar= 3 Destination  DynaFaction &EnemyFac>
+use <ifG StatVal STAT_MetaVisibility -1  if# V1 0 else GoMaybeCombat  Print 5 Exit Destination>
+GoMaybeCombat <ifStealth SkillTar StoryDL else GoAutoCombat ifYesNo 2 3 4 else GoStartCombat XPV 100 V= 1 1 AddSociable -d6 Print 5 Exit Destination>
+GoAutoCombat <Alert 1 Goto GoStartCombat>
+GoStartCombat <SavePos Dynamic 2 StoryDL 100 .nu1 .nu2 ComposeD Msg1 .Msg1 DynaVar= 3 Destination  DynaFaction &EnemyFac>
 .nu1 <if= T1 0  Return  SeekGate L3   if= L2 0  L= 2 1  AddRenown -5>
 .nu2 <if= T2 0           if= L2 0  L= 2 1  XPV 100  AddRenown 1   EncounterVar= L3 1 1  Alert 1  Exit L3>
 .msg1 <You have defeated the mecha.>
-Msg1 <You are attacked by mecha as you approach \SCENE Destination !>
+Msg1 <As you approach the enemy ship, you are intercepted by its defenders!>
+Msg2 <This ship is being defended by a lance of mecha. You feel confident that you can easily slip past them.>
+Msg3 <Go straight for the ship.>
+Msg4 <Attack the defenders.>
+Msg5 <You approach the enemy ship.>
 EncounterMove 30
 
 Encounter

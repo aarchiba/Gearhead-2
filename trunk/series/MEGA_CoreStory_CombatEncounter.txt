@@ -11,6 +11,73 @@
 %% Param2: The outdoor scene where the fight will take place
 %%
 
+Content
+	name <Force Surrender>
+	size 6
+	desc <If you can destroy all the defenders, you can force this ship to surrender.>
+	requires <*CS_InterceptShip>
+
+	% E1: The Mission Provider
+	% E2: The outdoor scene where the fight will take place
+	% E3 is the combat scene
+	Element3 <Prefab>
+	Place3 <2>
+
+	% SubPlot1 = Win the battle, get a reward
+	% SubPlot2 = Lose the battle, get scorned
+	SubPlot1 <*CS_Win_CaptureEnemyShip 1>
+	SubPlot2 <*CS_CALoseMission 1>
+
+	sub
+		MetaScene 3 2
+		% L1 = Encounter Over Counter
+		% L2 = Initialization Counter
+		MapWidth 50
+		MapHeight 50
+
+		Start <if= L2 0 L= 2 1  Alert 1>
+		nu1 <if= T1 0   Return   if= V1 0 V= 1 1   SMemo 5 History 3 SetPlotStatus %id2%>
+		nu2 <if= T2 0   if= V1 0 V= 1 1   XPV 100  AddRenown 1   Alert 2 SMemo 5 History 4 SALVAGE   Return SetPlotStatus %id1%>
+
+		Msg1 <This ship is being defended by several mecha. If you destroy the defenders, you should be able to force the ship to surrender.>
+		Msg2 <You have captured the enemy vessel.>
+		Msg3 <You failed to capture the enemy ship.>
+		Msg4 <You captured the enemy ship.>
+		Msg5 <You should report back to %name1% about the enemy ship.>
+
+		sub
+			team 1
+			SetEnemy 2 3
+			ParaX 45
+			ParaY 25
+
+			team 2
+			SetEnemy 1
+			SetAlly 3
+			Deploy <SetSelfFaction &EnemyFac   WMecha 2 StoryDL 100>
+			home <Enemy Zone>
+
+			team 3
+			SetEnemy 1
+			SetAlly 2
+
+			rect
+			name <Enemy Zone>
+			special <SUBZONE>
+			width 12
+			height 12
+			MFX 1
+			MFY 19
+			sub
+				SuperProp
+				requires <*Battleship>
+				SetTeam 3
+			end
+		end
+	end
+	inv
+		STC CORE-ENEMYSHIP-ENCOUNTER
+	end
 
 
 %% *CS_InvisibleEncounter Content

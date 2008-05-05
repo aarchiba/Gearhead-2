@@ -5783,7 +5783,7 @@ sub
 		name <Rocket Penthouse>
 		type <building private military>
 		special <NOEXIT>
-		SetFaction 3
+		SetFaction 14
 		PalaceParkTiles
 		ClubMap
 		MapWidth 25
@@ -6438,7 +6438,7 @@ Scene 0 3
 	Tolerance 0
 
 	world <L5 Region>
-	desc <Rishiri Spinner is a major trading port and capital of the Rishiri Dominion.>
+	desc <Rishiri Spinner is a major trading port and protector of the Rishiri Dominion.>
 	special <NOEXIT SHOWALL SOLO TOWNMECHA>
 	type <city town spinner target outdoors urban destination hometown capitol>
 	habitat <SPACE.URBAN>
@@ -6459,7 +6459,7 @@ Scene 0 3
 
 	start <if= V1 0 else GoSecondTime V= 1 1 Alert 1 Print 2>
 	GoSecondTime <Print 2>
-	Msg1 <The gleaming towers of Rishiri Spinner reflect the considerable wealth of this city.>
+	Msg1 <The gleaming towers of Rishiri Spinner reflect the dizzying heights of human achievement. The citizens of this city strive to be the best in all things.>
 	Msg2 <You enter Rishiri Spinner.>
 
 sub
@@ -6572,6 +6572,63 @@ sub
 		desig <EntranceGrid>
 		Content <Some 3 30 Here *URBAN_X>
 		Content2 <Some 1 100 Here *ANTI_ATTACK_SECURITY 2>
+
+		room
+		special <NOGO>
+		minimap <############1###...##...#>
+		inv
+			Elevator
+			name <Space Force HQ>
+			MiniMapComponent 1
+		end
+
+		Scene
+		name <Space Force HQ>
+		type <building private military>
+		special <NOEXIT>
+		SetFaction 11
+		ClubMap
+		IndustrialTiles
+		MapWidth 20
+		MapHeight 20
+
+		NeededCells 2
+
+		5Min <ifTeamHostile 3  MonsterUp 3 d20>
+
+		start <Print 1>
+		Msg1 <You enter the Space Force HeadQuarters.>
+
+		Content1 <Variety 2 2 Sub *RISSP_SFHQ_Content>
+		Content2 <Fill       Sub *GOV_MILITARY      na>
+
+		sub
+			team 1
+
+			team 2
+			name <Citizens>
+			SetAlly 1 3
+			Passive
+
+			Team 3
+			name <Guards>
+			type <Guard Robot>
+			SetAlly 1 2
+
+			room
+			name <Foyer>
+			desig <EntranceGrid>
+			Content <Some 1 100 Here *ANTI_ATTACK_SECURITY 2>
+			sub
+				room
+				minimap <......###..#1#...........>
+				inv
+					Elevator
+					MiniMapComponent 1
+					Destination -1
+				end
+			end
+		end
 	end
 
 	Scene
@@ -6647,12 +6704,18 @@ sub
 		inv
 			NPC Politician
 			job <Technocrat>
+			name <Merdon>
+			chardesc Male Lawful Shy Melancholy
+			Age 26
 			SetTeam 2
 			SetFaction 11
 			MiniMapComponent 1
 
 			NPC Mecha Pilot
 			job <Admiral>
+			name <Haarast>
+			chardesc Male Lawful Villainous Passionate Sociable Pragmatic
+			Age 41
 			SetTeam 3
 			SetFaction 11
 			MiniMapComponent 2
@@ -6727,6 +6790,59 @@ sub
 		end
 
 	end
+
+	Scene
+	name <the Aegis L5 Embassy>
+	type <building government public legit>
+	entrance <*Building>
+	special <ADDEXIT>
+	SetFaction 11
+	MallMap
+	PalaceParkTiles
+	MapWidth 20
+	MapHeight 15
+
+	start <Print 1>
+	Msg1 <You enter the Aegis Embassy.>
+
+	NeededCells 1
+	Content1 <Some 1 100 Sub *RISSP_L5AE_Content  na>
+	Content2 <Fill       Sub *GOV_MISC      na>
+
+	sub
+		team 1
+
+		team 2
+		name <Citizens>
+		SetAlly 1
+		Passive
+
+		team 3
+		name <Guards>
+		SetAlly 1
+
+		room
+		name <Foyer>
+		desig <EntranceGrid>
+		Content <Some 3 45 Here *URBAN_X>
+		Content2 <Some 1 100 Here *ANTI_ATTACK_SECURITY 2>
+
+		room
+		name <Garrison>
+		minimap <2...31..............#...#>
+		inv
+			NPC Soldier
+			SetTeam 3
+			SetFaction 4
+			MiniMapComponent 1
+
+			NPC Mecha Pilot
+			SetTeam 3
+			SetFaction 16
+			MiniMapComponent 2
+		end
+	end
+
 
 % End of Rishiri Spinner...
 end
