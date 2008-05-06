@@ -15,7 +15,7 @@ Plot
 	% E2 is a local character with a mecha that's an enemy of the faction
 	% E3 is an outdoors scene for a combat encounter
 	Element1 <Faction ArchEnemy !Okay -1 !XClude -3>
-	Element2 <Character HasMecha !Enemy 1 !Okay -3>
+	Element2 <Character HasMecha !Enemy 1 !Okay -3 !Near -7>
 	Element3 <Scene Environs !Near -7>
 
 	% V1 = Email Indicator
