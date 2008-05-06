@@ -21,7 +21,7 @@
 Plot
 	name <Generic Battle Encounter>
 	desc <You go out looking for a fight, and you find a fight.>
-	requires <#A +Ten +Ffi E:++>
+	requires <#A +Ten (+Ffi|+F--) E:++>
 	Size 8
 
 	% Element1 is the encounter
@@ -34,11 +34,43 @@ Plot
 
 	sub
 		Metascene 1 2
+		% L1 = Encounter Over Counter
+		% L2 = Initialization Counter
+		MapWidth 30
+		MapHeight 30
 
+		% L1 = Match Over counter
+		% L2 = Initialization Counter
+
+		Start <if= L2 0 L= 2 1 ForceChat %2%>
+		nu1 <if= T1 0   Return   if= V1 0 V= 1 1               StoryNote 1   LoseComp 0 .changes>
+		nu2 <if= T2 0   if= V1 0 V= 1 1   XPV 100  AddRenown 1   Alert 2  Salvage StoryNote 3  WinComp 0 .changes>
+		.changes <+T-- +F-->
+
+		Msg1 <You encountered %name2%, but lost the battle.>
+		Msg2 <You have defeated %name2%'s lance.>
+		Msg3 <You encountered %name2% and defeated \OPR %2% in battle.>
+
+		sub
+			team 1
+			SetEnemy 2
+			ParaX 5
+			ParaY 10
+
+			team 2
+			name <Enemies>
+			SetEnemy 1
+			Deploy <SetSelfFaction &EnemyFac   WMecha 2 StoryDL 100>
+			ParaX 25
+			ParaY 25
+		end
 
 		Persona 2
 		special <UNLISTED>
-
+		greeting <ifChatNPCKnown else GoFirstMeeting Goto GoAlreadyMet>
+		*GoFirstMeeting <*BattleIntroduction GoThemeExpo>
+		*GoAlreadyMet <*BattleChallenge GoThemeExpo GoThemeExpo>
+		*GoThemeExpo <*Theme_Expo&Enemy>
 	end
 
 Plot
@@ -54,6 +86,7 @@ Plot
 	Element1 <Grab 6>
 	Element2 <Character HasMecha !Near -7 -ENEMY NeverFail>
 	NeverFail2 <Mecha Pilot>
+	Place2 <1 pass ally (Citizens)>
 	Element3 <Scene Outdoors !Near -7>
 	Element4 <Prefab>
 	Place4 <3>
@@ -84,7 +117,7 @@ Plot
 Plot
 	name <Partner Job Lead>
 	desc <Your partner has a message for you.>
-	requires <#A +T-- R:++>
+	requires <#A +T-- R:++ -R:NOFAC>
 
 	% Element1 is the partner
 	% Element2 is the episode town
@@ -92,7 +125,7 @@ Plot
 	% Element4 is a scene for the meeting
 	Element1 <Grab 4>
 	Element2 <Grab 7>
-	Element3 <Character !Ally 1 !Near 2>
+	Element3 <Character !Ally 1 !Okay -3 !Near 2>
 	Element4 <Scene Building Public !Near 2 !Okay 3>
 
 	% P1 = Have unlocked conversation by visiting destination scene
@@ -447,8 +480,8 @@ Plot
 	start <if= PlotStatus 0 ifNPCDead %3% NegateComp 0 na>
 
 	sub
-		Persona 3
-		rumor <%name3% has been looking for %name1%.>
+		Persona 2
+		rumor <%name2% has been looking for %name1%.>
 		% V1 = Fine Counter
 		greeting <if= V1 0 else GoTell Goto GoCheckFirst>
 		GoCheckFirst <*LookingForNPC&NoFailure %1% GoTell GoTell>
@@ -462,7 +495,7 @@ Plot
 		result4 <NewChat Say 8>
 		result5 <NewChat Say 9 Cash+ -V1 Goto GoReveal>
 		Msg1 <%name1% is in hiding. I know this because I'm the one looking for \OPR %1% ; \SPR %1% 's got $ \VAL v1 worth of unpaid fines, and if I don't get that money then \SPR %1% 's going straight to the lockup.>
-		Msg2 <You learned from %name3% that %name1% has many unpaid fines.>
+		Msg2 <You learned from %name2% that %name1% has many unpaid fines.>
 		Msg3 <It would be kind of unorthodox, but as long as the fines get paid it's not my business to judge. That's be the judges.>
 		Msg4 <Well, if you say it's important, I'll give %name1% some more time to raise the money... as long as \SPR %1% doesn't do anything illegal to raise it. Now that the heat is off you'll probably be able to find \OPR %1% at %name3% again.>
 		Msg5 <Nothing is more important than upholding the law. I'm afraid I can't let up one bit.>

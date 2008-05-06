@@ -149,7 +149,7 @@ Plot
 Plot
 	name <I will not be stopped!>
 	desc <The PC will make a new enemy. Hooray!>
-	requires <+Ten (+P--|+Pun|+Pla) E:-->
+	requires <#A +Ten (+P--|+Pun|+Pla) E:-->
 	Size 5
 
 	% E1 is the encounter for this component
@@ -196,7 +196,7 @@ Plot
 Plot
 	name <Proving Ground>
 	desc <The PC can help a pilot, and get a job.>
-	requires <+Ten (!Ne|!Lo) (+F--|+Ffi) (+P--|+Pun) P:-- -L:ENEMY>
+	requires <#A +Ten (!Ne|!Lo) (+F--|+Ffi) (+P--|+Pun) P:-- -L:ENEMY>
 	Size 4
 
 	% E1 is the encounter for this component
@@ -275,7 +275,7 @@ Plot
 Plot
 	name <Lover's Quarrel>
 	desc <An ex-boyfriend and ex-girlfriend are argueing at the party.>
-	requires <+Tsh (+P--|+Pun|+Pla) E:-- ~+Fpa ~+Glo>
+	requires <#A +Tsh (+P--|+Pun|+Pla) E:-- ~+Fpa ~+Glo>
 	Size 3
 
 	% E1 is the scene where this component will take place
@@ -430,7 +430,7 @@ Plot
 Plot
 	name <Recruiting Drive>
 	desc <Recruiters from two corporate factions are at the conference; maybe the PC will be recruited.>
-	requires <+Tsh (+P--|+Pme|+Pla) P:-- F:-- (C:CORPO|C:LABOR|C:CRAFT|C:TRADE) ~+Fcc>
+	requires <#A +Tsh (+P--|+Pme|+Pla) P:-- F:-- (C:CORPO|C:LABOR|C:CRAFT|C:TRADE) ~+Fcc>
 	Size 1
 
 	% E1 is the scene where this component will take place
@@ -563,7 +563,7 @@ Plot
 Plot
 	name <Meet Enemy Fighter>
 	desc <PC meets a rival corporate pilot at the convention, and will be challenged to duel.>
-	requires <+Tsh +P-- E:-- (F:--|F:CORPO) ~+Fcc>
+	requires <#A +Tsh +P-- E:-- (F:--|F:CORPO) ~+Fcc>
 	Size 1
 
 	% E1 is the scene where this component will take place

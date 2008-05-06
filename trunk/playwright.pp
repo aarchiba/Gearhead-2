@@ -1213,6 +1213,9 @@ begin
 		if F <> Nil then begin
 			{ If this faction is also the PC's faction, add a PCFAC tag. }
 			if F^.S = NAttValue( FindRoot( Adv )^.NA , NAG_Personal , NAS_FactionID ) then Context := Context + ' ' + palette_entry_code + ':PCFAC';
+		end else begin
+			{ No faction was found. }
+			Context := Context + ' ' + palette_entry_code + ':NOFAC';
 		end;
 
 		{ If Part is a character, add relationship info. Unless the }

@@ -134,8 +134,11 @@ begin
 
 		end else begin
 			{ Neutral team. Color = Brown. }
-			color := NeutralBrown;
-
+			if G^.G = GG_Prop then begin
+				color := LightGray;
+			end else begin
+				color := NeutralBrown;
+			end;
 		end;
 	end;
 	TeamColor := Color;

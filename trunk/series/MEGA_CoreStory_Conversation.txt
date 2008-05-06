@@ -50,8 +50,9 @@ Content
 
 	sub
 		Persona 1
-		greeting <if= PlotStatus %id% else %pop% Goto .%id%_GoGreet>
+		greeting <if= PlotStatus %id% else %pop% ifChatNPCInPlay else .%id%_GoNotHere Goto .%id%_GoGreet>
 		% v%id%01 = First Reputation Counter
+		*.%id%_GoNotHere <*NotByPhone>
 		*.%id%_GoGreet <*HowAreYou .%id%_GoAsk>
 		.%id%_GoAsk <NewChat Say %id%01 AddChat %id%01 AddChat %id%02 AlterContext .%id%_UnknownEnemy>
 		.%id%_UnknownEnemy <+Pun>
@@ -594,6 +595,66 @@ Plot
 %%  ***   +Pun  Unknown  Enemy  Attacks   ***
 %%  *****************************************
 
+Content
+	name <What do you think?>
+	desc <The PC will be asked for his opinion about these recent attacks.>
+	requires <*CS_Conversation +Pun +F-- F:-- (C:POLIT|C:MEDIA|C:TRADE|+Gpe|+Gkn) ~1:MEDIA ~1:POLIT>
+	Size 1
+
+	% E1 is the NPC being spoken to
+	% E2 is a public scene to investigate
+	% E3 is an environs scene to go to
+	% E4 is an encounter there
+	% E5 is a character for a mission
+	Element2 <Scene Public Meeting !Near -7>
+	Element3 <Scene Environs !Near -7>
+	Element4 <Prefab>
+	Place4 <3>
+	Element5 <Character HasMecha !XClude -1 !Okay -3 -ArchEnemy !Near -7>
+
+	start <if= PlotStatus %id% else %pop% ifNPCDead %1% LoseComp 0 .%id%_loss>
+	.%id%_loss <+T-- +F-->
+
+	sub
+		Persona 1
+		% v%id%01 = Reputation Counter
+		greeting <if= PlotStatus %id% else %pop% ifChatNPCUnknown else .%id%_GoKnownGreeting if= ChatNPCRelationship 0 else .%id%_GoKnownGreeting Goto .%id%_GoUnknownGreeting>
+		*.%id%_GoKnownGreeting <*HowAreYou .%id%_GoTalk>
+		*.%id%_GoUnknownGreeting <*NiceToMeetYou .%id%_GoTalk>
+		.%id%_GoTalk <NewChat Say %id%01 AddChat %id%01 AddChat %id%02 AddChat %id%03>
+		result%id%01 <NewChat Say %id%02 AddChat %id%04 AddChat %id%05 AddChat %id%06>
+		result%id%02 <NewChat Say %id%03 AddChat %id%04 AddChat %id%05 AddChat %id%06 if= v%id%01 0 v= %id%01 1 AddSociable -d10>
+		result%id%03 <NewChat Say %id%04 AddChat %id%04 AddChat %id%05 AddChat %id%06 if= v%id%01 0 v= %id%01 1 AddSociable  d10>
+		result%id%04 <NewChat Say %id%05 StoryNote %id%06 WinComp %2% .%id%_SearchInfo>
+		.%id%_SearchInfo <+Tgs +Fin>
+		result%id%05 <NewChat Say %id%05 StoryNote %id%07 WinComp %4% .%id%_Patrol>
+		.%id%_Patrol <+Tgs +F-->
+		result%id%06 <NewChat Say %id%08 StoryNote %id%09 &SetTargetNPC %5% WinComp 0 .%id%_NoPlan AddRenown -1>
+		.%id%_NoPlan <+Tgt +Fmi>
+		Msg%id%01 <I was wondering what you think of the unexplained mecha attacks we've been having recently.>
+		Msg%id%02 <Really? That's not what I've heard. They say that you're pretty deeply involved with this yourself. What's your plan of action?>
+		Msg%id%03 <Sounds mysterious. So, do you have a plan for dealing with this threat?>
+		Msg%id%04 <\PERSONA &EnemyNPC , you say? This could be serious. So, do you have a plan for dealing with this problem?>
+		Msg%id%05 <Sounds good. I hope you can solve this mess before things get out of hand.>
+		Msg%id%06 <You told %name1% that you were going to search %name2% for information.>
+		Msg%id%07 <You told %name1% that you were going to patrol %name3% for enemies.>
+		Msg%id%08 <Seriously? Well, if you ever get tired of wandering around aimlessly, you could always try to find %name5% and ask for a mission. I don't know if that would help but it couldn't hurt.>
+		Msg%id%09 <%name1% suggested that you see %name5% about a mission.>
+		Prompt%id%01 <I honestly don't know anything.>
+		Prompt%id%02 <Sorry, but that's classified information.>
+		Prompt%id%03 <I know that \PERSONA &EnemyNPC is involved, somehow.>
+		CPrompt%id%03 <ifNPCOK &EnemyNPC Accept>
+		Prompt%id%04 <I'm going to search %name2% for information.>
+		Prompt%id%05 <I'm going to patrol %name3% for hostile mecha.>
+		Prompt%id%06 <Plan? I don't need a plan.>
+	end
+	inv
+		STC ENCOUNTER-WANDER
+		name <Mysterious Mecha>
+		EncounterMove 25
+	end
+
+
 Plot
 	name <They're After an Item>
 	desc <The PC will learn that the attacking enemy is searching for an item.>
@@ -739,10 +800,6 @@ Plot
 %%  ****************************************
 
 Content
-	name <Enemy Plans For Sale>
-	desc <This thief has plans for sale, but the PC can ask for something better.>
-
-Content
 	name <They've Hired A Mad>
 	desc <The enemy faction has hired a mad scientist to help with their weapons program.>
 	requires <*CS_Conversation +Pew (1:ACADE|1:MEDIC|1:CORPO|1:CRAFT) F:++>
@@ -777,6 +834,56 @@ Content
 		Prompt%id%02 <Who's %name2%?>
 		CPrompt%id%02 <ifNPCUnknown %2% Accept>
 		Prompt%id%03 <Does \FACTION &EnemyFac know what it's getting into?>
+	end
+
+%%  **********************************
+%%  ***   +C--  Nothing  Special   ***
+%%  **********************************
+
+Content
+	name <Let's Go!>
+	desc <Your friend wants to join your lance.>
+	requires <*CS_Conversation +C-- R:-- 1:FRIEND>
+	Size 1
+
+	% E1 is the friend in question
+
+	% v%id%01 = InitiaFlization Counter
+	update <if= PlotStatus %id% else %pop% if= v%id%01 0 v= %id%01 1 NPCLevel %1% StoryDL>
+
+	start <if= PlotStatus %id% else %pop% ifNPCDead %1% LoseComp 0 .%id%_loss>
+	.%id%_loss <+T-- +-->
+
+	sub
+		Persona 1
+		greeting <if= PlotStatus %id% else %pop% ifChatNPCInPlay else .%id%_GoNotHere Goto .%id%_GoGreet>
+		*.%id%_GoNotHere <*NotByPhone>
+		*.%id%_GoGreet <*HowAreYou .%id%_GoInform>
+		.%id%_GoInform <NewChat Say %id%01 AddChat %id%01 AddChat %id%02>
+		.%id%_GoJoin <&SetPartnerNPC %1% WinComp 0 .%id%_next StoryNote %id%02 Goto .%id%_GoJoinSpeech>
+		.%id%_next <+T-- +F-- +Cme>
+		*.%id%_GoJoinSpeech <*WelcomeToLance>
+		result%id%01 <Goto .%id%_GoJoin>
+		result%id%02 <NewChat Say %id%03 AddChat %id%03 AddChat %id%04>
+		result%id%03 <Goto .%id%_GoJoin>
+		result%id%04 <NewChat Say %id%04 AddChat %id%05 AddChat %id%06 AddChat %id%07>
+		result%id%05 <Goto .%id%_GoJoin>
+		result%id%06 <NewChat Say %id%05 StoryNote %id%06 NTBLoseComp 0 .%id%_refuse AddCheerful -d10>
+		.%id%_refuse <+T-- +F-->
+		result%id%07 <NewChat Say %id%05 StoryNote %id%06 NTBLoseComp 0 .%id%_refuse>
+		Msg%id%01 <Well, I'm all ready to go. Shall we head off?>
+		Msg%id%02 <Your friend %name1% joined you on your adventure.>
+		msg%id%03 <I'm going to join you on your adventure, of course. You didn't think you were going to get away without me, did you?>
+		msg%id%04 <What are you saying? You don't want me to come along and help you?>
+		Msg%id%05 <You're mean, \PC . Let's see how you like it when I'm not around to help you.>
+		Msg%id%06 <You refused to let %name1% join your adventure.>
+		Prompt%id%01 <Yes, let's do that.>
+		Prompt%id%02 <Wait, what are you talking about?>
+		Prompt%id%03 <No, I guess I didn't. Come on, then.>
+		Prompt%id%04 <Well, I was hoping that I would...>
+		Prompt%id%05 <Um... fine, if you really want, you can come.>
+		Prompt%id%06 <That's exactly what I'm saying.>
+		Prompt%id%07 <I just don't want you to get hurt.>
 	end
 
 %%  ***********************************

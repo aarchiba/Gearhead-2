@@ -2,6 +2,93 @@
 %%	+Pun	An unknown enemy attacks
 
 Plot
+	name <Friend On Patrol>
+	desc <Your friend is on patrol.>
+	requires <#A +Pun +Tgt (+Fin|+F--|+Fch) (T:FRIEND|T:ALLY|T:LOVER|T:FAMILY) (T:MILIT|T:ADVEN|T:LABOR|T:POLIC) S:-->
+	size 4
+
+	% E1 is a local environs scene
+	% E2 is a metascene to place there
+	% E3 is the friend
+	% E4 is a scene to meet at later
+	Element1 <Scene Environs !Near -7>
+	Element2 <Prefab>
+	Place2 <1>
+	Element3 <Grab 5>
+	Place3 <2 sd ally (Friend)>
+	Element4 <Scene (Meeting|Mall) Public !Near -7>
+
+	update <if= PlotStatus 0   SetPlotStatus %id%   NPCLevel %3% StoryDL>
+
+	% SubPlot1 is what happens if the PC aids the NPC.
+	SubPlot1 <*CS_ThanksForAssist 3>
+
+	sub
+		MetaScene 2 2
+		% L1 = Encounter Over Counter
+		% L2 = Initialization Counter
+		MapWidth 30
+		MapHeight 30
+
+		% L1 = Match Over counter
+		% L2 = Initialization Counter
+
+		Start <if= L2 0 L= 2 1 ForceChat %3% StoryNote 1>
+		% If the NPC dies, this scenario ends in a loss.
+		Faint%3% <L= 1 1  StoryNote 2  LoseComp 0 .loss>
+		.loss <+T-- +F-->
+
+		% If the PC defeats all of T2 before the NPC dies, it's a win.
+		nu1 <if= T1 0   Return   if= V1 0 V= 1 1               StoryNote 3   LoseComp 0 .loss>
+
+		nu2 <if= T2 0   if= V1 0 V= 1 1   XPV 100  AddRenown 1   Alert 4 MoveNPC %3% %4% SMemo 5 History 6 SetPlotStatus %id1%>
+
+		Msg1 <You found %name3% being attacked by mecha.>
+		Msg2 <%name3% was killed in battle, and you were powerless to stop it.>
+		Msg3 <You failed to help %name3% win the battle.>
+		Msg4 <With the enemy mecha defeated, %name3% races off for %name4%.>
+		Msg5 <You helped %name3% defeat some hostile mecha. You can speak with \OPR %3% at %name4% now.>
+		Msg6 <You helped %name3% to win the battle.>
+
+		sub
+			team 1
+			SetAlly 3
+			SetEnemy 2
+			ParaX 5
+			ParaY 10
+
+			team 2
+			SetEnemy 1 3
+			Deploy <SetSelfFaction &EnemyFac   WMecha 2 StoryDL 120>
+			ParaX 25
+			ParaY 25
+
+			team 3
+			name <Friend>
+			SetAlly 1
+			SetEnemy 2
+			ParaX 10
+			ParaY 5
+		end
+
+		Persona 3
+		special <Unlisted>
+		% V%id%01 = Introduction counter
+		rumor%id% <%name3%'s mecha hasn't returned from %name1%.>
+		greeting <if= PlotStatus %id% else GoChat if= V%id%01 1 else GoFirst Goto GoChat>
+		GoChat <NewChat SayAnything>
+		GoFirst <V= %id%01 1 EndChat Say %id%01 AddChat %id%01>
+		*result%id%01 <*LetsDefeatThem &EnemyFac>
+		Msg%id%01 <\PC , I could use a little help over here. I was out on patrol and got attacked by these thugs.>
+		Prompt%id%01 <Don't worry, I've got your back.>
+	end
+	inv
+		STC ENCOUNTER-WANDER
+		name <%name3%'s Mecha>
+		EncounterMove 75
+	end
+
+Plot
 	name <Horton Hears a Zaku-II>
 	desc <The PC can meet someone who has seen mecha outside.>
 	requires <#A +Pun +T-->

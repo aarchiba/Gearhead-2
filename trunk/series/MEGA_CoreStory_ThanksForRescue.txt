@@ -199,8 +199,6 @@ Content
 		Prompt%id%04 <Probably.>
 	end
 
-
-
 %%  *******************
 %%  ***   GENERAL   ***
 %%  *******************
@@ -208,7 +206,7 @@ Content
 Content
 	name <Let Me Join You>
 	desc <The NPC wants revenge against the enemy character, himself.>
-	requires <*CS_ThanksForRescue &FromCSEnemy>
+	requires <*CS_ThanksForRescue &FromCSEnemy R:-->
 
 	% E1 is the character who's been rescued
 
@@ -224,7 +222,7 @@ Content
 		.%id%_GoJoin <PCAlly %1%  Goto .%id%_GoOffer>
 		.%id%_GoOffer <NewChat Say %id%01 AddChat %id%01 AddChat %id%02 AddChat %id%03>
 
-		result%id%01 <ChatNPCJoinLance   StoryNote %id%02  Goto .%id%_GoWelcome>
+		result%id%01 <&SetPartnerNPC %1%   StoryNote %id%02  Goto .%id%_GoWelcome>
 		*.%id%_GoWelcome <*WelcomeToLance>
 		result%id%02 <NewChat Say %id%03>
 		result%id%03 <NewChat Say %id%03 if= ChatNPCRelationship NAV_ArchAlly  ifChatNPCSexy  ifFlirtation SkillTar StoryDL PCLover %1%>
@@ -306,8 +304,8 @@ Content
 
 Content
 	name <Thanks for the Help>
-	desc <The PC has rescued someone, who now wants to join the lance.>
-	requires <*CS_ThanksForRescue -1:Ally -1:Enemy ~+Glo A:-->
+	desc <The PC has rescued someone, who now wants to get connected to the core story.>
+	requires <*CS_ThanksForRescue -1:Ally -1:Enemy ~+Glo A:-- R:-->
 
 	%% E1 is the NPC that the PC rescued
 
@@ -321,7 +319,7 @@ Content
 		.%id%_GoOffer <PCFriend %1% ifG React d10 else .%id%_GoNoOffer ifG PCCharm 10 else .%id%_GoNoOffer NewChat Say %id%01 AddChat %id%01 AddChat %id%02 AddChat %id%03>
 		.%id%_GoNoOffer <ifChatNPCSexy else .%id%_GoCashAward ifFlirtation SkillTar StoryDL else .%id%_GoCashAward ifG React d10 else .%id%_GoCashAward NewChat Say %id%08 AddChat %id%06 AddChat %id%07>
 		.%id%_GoCashAward <NewChat Say %id%07  StoryNote %id%05 CashPrize Reward StoryDL 150 NTBWinComp 0 .%id%_next>
-		result%id%01 <NewChat Say %id%02 StoryNote %id%03 PCAlly %1% WinComp 0 .%id%_next>
+		result%id%01 <NewChat Say %id%02 StoryNote %id%03 PCAlly %1% &SetPartnerNPC %1% WinComp 0 .%id%_next>
 		.%id%_next <+T-- +F-->
 		result%id%02 <NewChat Say %id%04 StoryNote %id%05 CashPrize Reward StoryDL 150 NTBWinComp 0 .%id%_next>
 		result%id%03 <NewChat Say %id%06 AddChat %id%04 AddChat %id%05>

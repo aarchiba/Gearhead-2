@@ -1,4 +1,26 @@
 Plot
+	name <Wreckage Message>
+	requires <#W +Ten>
+	desc <Go to the encounter, find something in the wreckage.>
+
+	% E1 is the encounter
+	% E2 is the next city to go to
+	Element1 <Grab 6>
+	Element2 <Scene !Far -7 !Ally -7 Town>
+
+	start <ShowEntrance %1%>
+
+	sub
+		MetaScene 1 2
+		MapWidth 30
+		MapHeight 30
+		start <Alert 1 StoryNote 2 WinEpisode %2% 0 .next>
+		.next <+T-- +F-->
+		Msg1 <You find signs of a recent battle here. Among the wreckage, you see a part marked by a garage in %name2%.>
+		Msg2 <You found a clue leading you to %name2%.>
+	end
+
+Plot
 	name <Conference Was Moved>
 	requires <#W +Tsh>
 	desc <The event has been moved. No-one told the PC.>
@@ -175,6 +197,8 @@ Plot
 	Element2 <Character !Near -7 !Okay 1>
 	Element3 <Scene !Far -7 !Comrade -7 Town>
 
+	% v%id%01 = Initialization
+	update <if= v%id%01 0 v= %id%01 1 FreezeNPC %1%>
 	start <ifNPCDead %2% LoseComp 0 na>
 
 	sub

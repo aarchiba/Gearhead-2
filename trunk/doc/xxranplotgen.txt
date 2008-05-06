@@ -69,6 +69,9 @@ In addition, the designation of the element's faction is included if appropriate
 If the element is an enemy of the PC, an "ENEMY" tag is included. If the element is
 an ally of the PC, an "ALLY" tag is included.
 
+If the element has the same faction as the PC, "PCFAC" is included.
+If the element has no faction, "NOFAC" is included.
+
 If the element is a NPC, the relationship is also included. This may be one of "FAMILY",
 "LOVER", or "FRIEND".
 

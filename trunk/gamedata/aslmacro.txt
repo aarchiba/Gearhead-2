@@ -247,6 +247,7 @@ IfChatNPCSurrendered <GrabChatNPC if= GNAtt NAG_EpisodeData NAS_SurrenderStatus 
 UnSurrender <GrabNPC ? GSetNAtt NAG_EpisodeData NAS_SurrenderStatus 0>
 ReAttack <GrabNPC ? GSetNAtt NAG_EpisodeData NAS_SurrenderStatus 2>
 ShowEncounter <GrabSource GSetNAtt NAG_EpisodeData NAS_EncVis ComTime GAddNAtt NAG_EpisodeData NAS_EncVis 86400>
+ShowEntrance <GrabEntrance ? GSetNAtt NAG_EpisodeData NAS_EncVis ComTime GAddNAtt NAG_EpisodeData NAS_EncVis 86400>
 ifEncounterVisible <GrabSource ifG GNatt NAG_EpisodeData NAS_EncVis ComTime>
 AddDatePoint <GrabSource GAddNAtt NAG_Narrative NAS_DatePoints 1>
 SetQuestStatus <GrabAdventure GSetNAtt NAG_QuestStatus ? ? Trigger0 Update>

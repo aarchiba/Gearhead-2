@@ -23,6 +23,37 @@
 %%  ***   +Pun  Unknown  Enemy  Attacks   ***
 %%  *****************************************
 
+Content
+	name <Your enemy is... the Red Mask Raiders.>
+	desc <The PC will learn that the unknown enemy is the red mask raiders.>
+	requires <*CS_Revelation +Pun F:-- (L:MAQUI|L:FCOMS|L:RISHI|L:BOHEM|L:CRIHN|L:PRIVA) ~P:FCOMS ~P:CRIHN>
+
+	% Element1 is the NPC
+	% Element2 is the new enemy faction
+	% Element3 is a place to go for more information
+	Element2 <Faction REDMA !Xclude -3 !Okay -1 -ArchAlly>
+	Element3 <Scene Public Sleazy !Near -7>
+
+	start <if= PlotStatus %id% else %pop% ifNPCDead %1% LoseComp 0 .%id%_loss>
+	.%id%_loss <+T-- +F-->
+
+	sub
+		Persona 1
+		greeting <if= PlotStatus %id% else %pop% Goto .%id%_GoGreet>
+		*.%id%_GoGreet <*RevealSecret .%id%_GoInit>
+		.%id%_GoInit <NewChat Say %id%01 AddChat %id%01 AddChat %id%02 &SetEnemyFac %2%>
+		result%id%01 <NewChat Say %id%02 SMemo %id%03 History %id%04 WinComp %3% .%id%_fight>
+		.%id%_fight <+Tgs +Ffi>
+		result%id%02 <NewChat Say %id%05 SMemo %id%03 History %id%04 WinComp %3% .%id%_info>
+		.%id%_info <+Tgs +Fin>
+		Msg%id%01 <The mysterious enemy who's been attacking everything? It's the Red Mask Raiders.>
+		Msg%id%02 <I heard some pirates talking about it at %name3%. That's probably the best place to go if you want more information, but be careful- it could be dangerous.>
+		Msg%id%03 <%name1% revealed that the Red Mask Raiders are behind the recent spate of mecha attacks; \SPR %1% suggested you visit %name3% for more information.>
+		Msg%id%04 <%name1% revealed that the Red Mask Raiders were behind the mecha attacks.>
+		Msg%id%05 <Given what I know about the Raiders, I'd have to guess that this comes down to either money or revenge. Possibly both. I've heard that there are a lot of pirates at %name3%; maybe you can learn more there.>
+		Prompt%id%01 <How do you know that?>
+		Prompt%id%02 <What do they want?>
+	end
 
 %%  *************************************
 %%  ***   +Pla  Learn  of  Artifact   ***
