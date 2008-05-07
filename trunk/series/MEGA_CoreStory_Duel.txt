@@ -213,7 +213,7 @@ Content
 		.loss <+T-- +F-->
 		nu2 <if= T2 0           if= L1 0 L= 1 2   ifYesNo 4 5 6 else GoLeaveE1ToDie MoveNPC %1% %6%  Print 3 SMemo 7 History 8   AddRenown 1   XPV 100   SetPlotStatus %id1%>
 		% If E1 is left to die, there's a chance he'll survive and become the PC's enemy.
-		GoLeaveE1ToDie <SMemo 0 History 9 WinComp 0 .win   XPV 100  AddHeroic -2  if= d2 1 else GoDeleteE1 PCEnemy %1% L= 3 StoryDL L+ 3 d40 LevelNPC %1% L3>
+		GoLeaveE1ToDie <SMemo 0 History 9 WinComp 0 .win   XPV 100  AddHeroic -2  if= d2 1 else GoDeleteE1 PCEnemy %1% L= 3 StoryDL L+ 3 d40 NPCLevel %1% L3>
 		GoDeleteE1 <DeleteNPC %1%>
 		.win <+T-- +F-->
 

@@ -33,8 +33,8 @@ Content
 		Greeting <if= PlotStatus %id% else %pop% Goto .%id%_GoGreet>
 		*.%id%_GoGreet <*ThanksForRescue .%id%_GoReveal>
 		.%id%_GoReveal <if# PCFac ChatNPCFac else .%id%_GoOrder if# 0 ChatNPCFac else .%id%_GoOrder NewChat Say %id%01 AddChat %id%01 AddChat %id%02 if= V%id%01 0 V= %id%01 1 AddReact 10>
-		.%id%_GoOrder <NewChat Say %id%06 SMemo %id%03 &SetTargetNPC %1%  AlterContext .%id%_Changes  SetPlotStatus %id1%  FacXP+ ChatNPCFac 5>
-		result%id%01 <NewChat Say %id%02 SMemo %id%03 History %id%04 XPV 100 &SetTargetNPC %1% SetPCFaction ChatNPCFac &SetAllyFac ChatNPCFac AlterContext .%id%_Changes2 SetPlotStatus %id1%>
+		.%id%_GoOrder <NewChat Say %id%06 SMemo %id%03 &SetTargetNPC %1%  AlterContext .%id%_Changes  &SetCompScene %2% SetPlotStatus %id1%  FacXP+ ChatNPCFac 5>
+		result%id%01 <NewChat Say %id%02 SMemo %id%03 History %id%04 XPV 100 &SetTargetNPC %1% SetPCFac ChatNPCFac &SetAllyFac ChatNPCFac AlterContext .%id%_Changes2 &SetCompScene %2% SetPlotStatus %id1%>
 		result%id%02 <NewChat Say %id%05 SMemo %id%03 &SetTargetNPC %1%  AlterContext .%id%_Changes  SetPlotStatus %id1%  ifG ChatNPCHeroism -1 PCFriend %1%>
 		.%id%_Changes <+Tgt +Fmi>
 		.%id%_Changes2 <+Tgt +Fmi +Cro>
@@ -72,12 +72,12 @@ Content
 		result%id%03 <NewChat Say %id%05 AddChat %id%05>
 		result%id%04 <NewChat Say %id%06 AddChat %id%05>
 		result%id%05 <NewChat Say %id%07>
-		Msg%id%01 <If it wasn't for you, I might not even be here right now.>
-		Msg%id%02 <They're probably after me because they think I know where the %name2% is.>
+		Msg%id%01 <If it wasn't for you, I might not even be here right now. I'm just glad that it's over.>
+		Msg%id%02 <They're probably after me because they think I know where the %name2% is. \ITEM_DESC %2% I'm looking for it, you see, but I haven't found anything yet.>
 		Msg%id%03 <You learned about the %name2% from %name1%.>
-		Msg%id%04 <That's the problem, you see. Right now I'm searching for the %name2%. Once I find it I'll have plenty of cash, but until that time I'm frankly broke.>
-		Msg%id%05 <I thought there'd be some clue as to its location around here.>
-		Msg%id%06 <The %name2% is worth more than just money. \ITEM_DESC %2% \ITEM_USAGE %2%>
+		Msg%id%04 <That's the problem, you see. Right now I'm searching for the %name2%. \ITEM_DESC %2% Once I find it I'll have plenty of cash, but until that time I'm frankly broke.>
+		Msg%id%05 <\ITEM_HISTORY %2% I thought there'd be some clue as to its location around here.>
+		Msg%id%06 <The %name2% is worth more than just money. \ITEM_USAGE %2%>
 		Msg%id%07 <I had planned on continuing my search, but this brush with death has made me reconsider. I just might take up chess.>
 		Prompt%id%01 <Do you know why they were after you?>
 		Prompt%id%01_1 <Any idea why those guys were after you?>

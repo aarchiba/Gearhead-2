@@ -8,16 +8,6 @@
 %  - The alleigance of the current location with either the PC's faction
 %    or the palette enemy faction
 
-% The palette entries are:
-%	STAT_XRP_EnemyChar = 1;			{ E: }
-%	STAT_XRP_EnemyFac = 2;			{ F: }
-%	STAT_XRP_PCFac = 3;			{ P: }
-%	STAT_XRP_PlotStateNPC = 4;		{ M: }
-%	STAT_XRP_TargetNPC = 5;			{ T: }
-%	STAT_XRP_ComponentScene = 6;		{ S: }
-%	STAT_XRP_EpisodeScene = 7;		{ L: }
-%	STAT_XRP_TargetItem = 8;		{ I: }
-
 Plot
 	name <Generic Battle Encounter>
 	desc <You go out looking for a fight, and you find a fight.>

@@ -722,7 +722,7 @@
 	.%id%_GoNotHere <NewChat Say %id%04>
 	Keywords <FOOD RESTAURANT>
 	result%id%02 <Goto %1%>
-	result%id%02 <Goto result%id%01>
+	result%id%03 <Goto result%id%01>
 	Msg%id%01 <Welcome to \ChatNPC 's Kitchen. I serve only the freshest organic produce shipped directly from Earth. Try one of my entrees for only $250.>
 	Msg%id%02 <Please enjoy your meal.>
 	Msg%id%03 <I'm sorry, but importing foods from Earth is expensive. I can't afford to give this away for free.>

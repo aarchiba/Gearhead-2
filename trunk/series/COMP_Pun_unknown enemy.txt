@@ -118,9 +118,9 @@ Plot
 		result%id%01 <NewChat Say %id%03>
 		result%id%02 <NewChat Say %id%04 AlterContext .worse>
 		.worse <+Ffi>
-		Msg%id%01 <While driving around, I saw something weird. It was a group of mecha, but they didn't look like locals... they looked like they were up to no good.>
+		Msg%id%01 <While driving around in %name3%, I saw something weird. It was a group of mecha, but they didn't look like locals... they looked like they were up to no good.>
 		Msg%id%02 <%name2% saw some scary looking mecha in %name3%.>
-		Msg%id%03 <Be careful. They didn't look like they were the type to take prisoners.>
+		Msg%id%03 <Be careful out there. Those mecha didn't look like they were the type to take prisoners.>
 		Msg%id%04 <I'm telling you exactly what I saw! Don't blame me when those meks come and kick your ass...>
 		Prompt%id%01 <Thanks for telling me.>
 		Prompt%id%01_1 <I'll have to go see about that.>

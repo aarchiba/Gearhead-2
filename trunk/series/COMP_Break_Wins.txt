@@ -71,6 +71,42 @@ Plot
 		end
 	end
 
+Plot
+	name <Should Go Get Job>
+	requires <#W +T-- P:++ ~+Gmo>
+	desc <You've completed this mission. Now you can socialize.>
+
+	% E1 is an ally of the target faction
+	% E2 is the next scene to visit
+	Element1 <Character !Ally -3 !Far -7>
+	Element2 <Scene !Near 1 !Okay -7 Town>
+
+	start <ifScene .desc if= P1 0 P= 1 1 Alert 1 Alert 2 SMemo 3 History 4 &SetTargetNPC %1%  WinEpisode %2% 0 .next>
+	.desc <Outdoors>
+	.next <+Tgt +Fmi>
+	Msg1 <Things appear to be resolved in \SCENE &EpisodeScene , for the time being.>
+	Msg2 <With nothing else to do here, you might as well head over to %name2% to see if %name1% has any work for you.>
+	Msg3 <You are going to visit %name1% in %name2% to see if \SPR %1% has a mission for you.>
+	Msg4 <You decided to go look for work in %name2%.>
+
+Plot
+	name <Should Go See Ally>
+	requires <#W +T-->
+	desc <You've completed this mission. Now you can socialize.>
+
+	% E1 is your ally
+	% E2 is the next scene to visit
+	Element1 <Character PCFac !Far -7>
+	Element2 <Scene !Near 1 !Okay -7 Town>
+
+	start <if= SceneID &EpisodeScene if= P1 0 P= 1 1 Alert 1 Alert 2 SMemo 3 History 4 &SetTargetNPC %1% ifG d100 RReact %1% else GoSocial WinEpisode %2% 0 .next>
+	.next <+Tgt +Fmi>
+	GoSocial <WinEpisode %2% 0 .social>
+	.next <+Tgt +F-->
+	Msg1 <Things appear to be resolved in \SCENE &EpisodeScene , for the time being.>
+	Msg2 <Perhaps %name1% of \FACTION PCFac will be able to shed some light on this situation. You decide to visit %name2% and find out.>
+	Msg3 <You are going to visit your ally %name1% in %name2%.>
+	Msg4 <You decided to visit your ally %name1% in %name2%.>
 
 Plot
 	name <Should Go See Friend>

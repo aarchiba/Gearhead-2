@@ -67,7 +67,7 @@ Content
 		result5 <NewChat Say 9 Storynote 10 WinComp %4% .refuse>
 		.refuse <+Ten +Ffi>
 		result6 <NewChat Say 11 AddChat 7 AddChat 8>
-		result7 <Say 12 StoryNote 13 &SetAmoreNPC %2% WinComp 0 .love>
+		result7 <NewChat Say 12 StoryNote 13 &SetAmoreNPC %2% WinComp 0 .love>
 		.love <+Clo +T-- +F-->
 		result8 <NewChat Say 14 StoryNote 15 &SetPartnerNPC %2% WinComp 0 .join>
 		Msg1 <No, wait, this has to do with %name3%. Just hear me out...>
