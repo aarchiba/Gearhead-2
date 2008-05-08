@@ -76,7 +76,7 @@ Content
 		greeting <if= PlotStatus %id% else %pop% Goto .%id%_GoGreet>
 		*.%id%_GoGreet <*RevealSecret .%id%_GoInit>
 		.%id%_GoInit <NewChat Say %id%01 SMemo %id%02 History %id%03 WinComp %2% .%id%_next>
-		.%id%_next <+Tsh +Fin>
+		.%id%_next <+Tgs +Fin>
 		Msg%id%01 <There's going to be a conference about the \ITEM &TargetItem at %name2% soon. It's by invitation only, but you shouldn't have any problems sneaking in.>
 		Msg%id%02 <%name1% told you that there's going to be a conference about the \ITEM &TargetItem at %name2%.>
 		Msg%id%03 <%name1% told you about the conference at %name2%.>

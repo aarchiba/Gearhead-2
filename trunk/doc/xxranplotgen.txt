@@ -192,7 +192,6 @@ BACKGROUND DESCRIPTORS
 	+T01	Introduction. The first task given.
 	+Tgt	Goto target for conversation
 	+Tht	The PC goes on a manhunt for target, who is actively avoiding him
-	+Tsh	PC will attend a party/conference
 	+Tpt	PC will protect the target
 	+Ten	Go to Encounter -> often to fight...
 	+Tgs	PC will go to a certain scene - often to gather information or something
@@ -208,8 +207,8 @@ BACKGROUND DESCRIPTORS
 	+Ffi	Fight! probably...
 	+Frt	PC has Rescued Target
 	+Fch	PC will challenge NPC to a duel
-	+Fpa	It's going to be a party (+Tsh)
-	+Fcc	It's a corporate conference (+Tsh)
+	+Fpa	It's going to be a party (+Tgs)
+	+Fcc	It's a corporate conference (+Tgs)
 	+Far	To arrest the target (+Tht)
 
 	+Fap	To apologize to the target (+Tgt,+Tga)

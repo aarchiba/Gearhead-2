@@ -999,6 +999,59 @@ Content
 %%  *******************
 
 Plot
+	name <My Help Doesn't Come Cheap>
+	desc <You can get information, if you're willing to pay for it.>
+	requires <*CS_Conversation +Fin -1:FRIEND -1:ALLY -1:LOVER -1:FAMILY ~1:ENEMY ~1:CORPO>
+	Size 3
+
+	% E1 is the person with the information
+
+	start <if= PlotStatus %id% else %pop% ifNPCDead %1% LoseComp 0 .%id%_loss>
+	.%id%_loss <+T-- +F-->
+
+	% SubPlot1 is the secret to be revealed
+	SubPlot1 <*CS_Revelation&Friendly 1>
+
+	sub
+		Persona 1
+		% V%id%01 = Asking Price
+		greeting <if= PlotStatus %id% else %pop% Goto .%id%_GoIntro>
+		*.%id%_GoIntro <*IHaveInformation .%id%_GoSetMoney na>
+		.%id%_GoSetMoney <if= v%id%01 0 else .%id%_GoReveal V= %id%01 Threat StoryDL 5 StoryNote %id%02 Goto .%id%_GoReveal>
+		.%id%_GoReveal <NewChat Say %id%01 AddChat %id%01 AddChat %id%02 AddChat %id%03 AddChat %id%04 AddChat %id%05>
+
+		result%id%01 <EndChat Say %id%03 AddChat %id%06 SetPlotStatus %id1%>
+		result%id%02 <EndChat Say %id%04 AddChat %id%06 AddEasygoing -d10 AddHeroic -1 SetPlotStatus %id1%>
+		result%id%03 <EndChat Say %id%05 AddChat %id%06 AddEasygoing -d10 AddSociable d8 SetPlotStatus %id1%>
+		result%id%04 <NewChat Say %id%06 AddChat %id%01 AddChat %id%05 AddChat %id%07>
+		result%id%05 <NewChat Say %id%07>
+		result%id%06 <Goto .%id1%_GoInit>
+		result%id%07 <NewChat Say %id%08 StoryNote %id%09 AddRenown -5 LoseComp 0 .%id%_lose>
+		.%id%_lose <+T-- +F-->
+
+		Msg%id%01 <This kind of secret doesn't come cheap, you understand. I'm asking $ \VAL v%id%01 for the information.>
+		Msg%id%02 <%name1% offered to sell you information for $ \VAL v%id%01 .>
+		Msg%id%03 <Ah, thank you very much.>
+		Msg%id%04 <You know, when you put it like that, I think I like living better than I would have liked the money...>
+		Msg%id%05 <Really? Well, um, I'll give you a freebie this time, just this once...>
+		msg%id%06 <Are you sure that's a risk you're willing to take? This is very important...>
+		msg%id%07 <You do that.>
+		msg%id%08 <Suit yourself. I won't be held responsible for the consequences of your ignorance.>
+		msg%id%09 <You refused to buy the information from %name1%.>
+
+		Prompt%id%01 <Sounds fair. [Give Money]>
+		CPrompt%id%01 <ifG PC$ v%id%01 Accept>
+		Prompt%id%02 <How about, you tell me the info, and you can live.>
+		CPrompt%id%02 <ifIntimidation HardSkillTar StoryDL Accept>
+		Prompt%id%03 <I'm sure we can find... other arrangements.>
+		CPrompt%id%03 <ifChatNPCSexy ifFlirtation SkillTar StoryDL Accept>
+		Prompt%id%04 <Maybe I don't want your information.>
+		Prompt%id%05 <I'll be back when I have the money.>
+		Prompt%id%06 <[Continue]>
+		Prompt%id%07 <I'm sure. I don't need this info.>
+	end
+
+Plot
 	name <I have a lead for you>
 	desc <This police officer has information for you>
 	requires <*CS_Conversation 1:POLIC E:THIEF>

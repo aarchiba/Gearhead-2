@@ -605,7 +605,7 @@
 	Prompt%id%04_2 <Look, just forget about it.>
 
 	Persona
-	requires <*NiceToMeetYou +Tsh>
+	requires <*NiceToMeetYou +Tgs +Fcc>
 	% requires that this happen with a sociable NPC at a corporate schmoozing event.
 	START <ifCHatNPCUnknown else %1% NewChat Say %id%01 AddChat %ID%01 AddChat %id%02>
 	result%id%01 <Reputation 3  d4   Goto %1%>

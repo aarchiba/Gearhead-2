@@ -275,7 +275,7 @@ Plot
 Plot
 	name <Lover's Quarrel>
 	desc <An ex-boyfriend and ex-girlfriend are argueing at the party.>
-	requires <#A +Tsh (+P--|+Pun|+Pla) E:-- ~+Fpa ~+Glo>
+	requires <#A +Tgs (+P--|+Pun|+Pla) E:-- ~+Fpa ~+Glo>
 	Size 3
 
 	% E1 is the scene where this component will take place
@@ -430,7 +430,7 @@ Plot
 Plot
 	name <Recruiting Drive>
 	desc <Recruiters from two corporate factions are at the conference; maybe the PC will be recruited.>
-	requires <#A +Tsh (+P--|+Pme|+Pla) P:-- F:-- (C:CORPO|C:LABOR|C:CRAFT|C:TRADE) ~+Fcc>
+	requires <#A +Tgs (+P--|+Pme|+Pla) P:-- F:-- (C:CORPO|C:LABOR|C:CRAFT|C:TRADE) ~+Fcc ~+Fmi -+Ffi>
 	Size 1
 
 	% E1 is the scene where this component will take place
@@ -563,7 +563,7 @@ Plot
 Plot
 	name <Meet Enemy Fighter>
 	desc <PC meets a rival corporate pilot at the convention, and will be challenged to duel.>
-	requires <#A +Tsh +P-- E:-- (F:--|F:CORPO) ~+Fcc>
+	requires <#A +Tgs (+Fcc|+Fpa|+Ffi) +P-- E:-- (F:--|F:CORPO)>
 	Size 1
 
 	% E1 is the scene where this component will take place

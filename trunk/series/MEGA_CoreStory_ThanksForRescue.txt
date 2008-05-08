@@ -204,6 +204,42 @@ Content
 %%  *******************
 
 Content
+	name <I'll tell you a secret>
+	desc <In thanks for rescuing him, the NPC will reveal a secret.>
+	requires <*CS_ThanksForRescue ~+Gkn ~C:POLIT ~C:MEDIA ~C:ACADE>
+
+	% E1 is the character who's been rescued
+
+	start <if= PlotStatus %id% else %pop% ifNPCDead %1% LoseComp 0 .%id%_loss>
+	.%id%_loss <+T-->
+
+	% SubPlot1 is the secret itself
+	SubPlot1 <*CS_Revelation&Friendly 1>
+
+	sub
+		Persona 1
+		Greeting <if= PlotStatus %id% else %pop% goto .%id%_GoThanks>
+		*.%id%_GoThanks <*ThanksForRescue .%id%_GoReward>
+		.%id%_GoReward <NewChat Say %id%01 AddChat %id%01>
+		result%id%01 <Goto .%id1%_GoInit>
+		Msg%id%01 <In thanks for your help, I've got some information that you might find useful.>
+		Msg%id%01_1 <>
+		CMsg%id%01_1 <ifNPCSociable Accept>
+		Msg%id%01_2 <>
+		CMsg%id%01_2 <ifNPCShy Accept>
+		Msg%id%01_3 <>
+		CMsg%id%01_3 <ifNPCEasygoing Accept>
+		Msg%id%01_4 <>
+		CMsg%id%01_4 <ifNPCPassionate Accept>
+		Msg%id%01_5 <>
+		CMsg%id%01_5 <ifNPCCheerful Accept>
+		Msg%id%01_6 <>
+		CMsg%id%01_6 <ifNPCMelancholy Accept>
+		Prompt%id%01 <Let me hear it.>
+		Prompt%id%01_1 <Great. What is it?>
+		Prompt%id%01_2 <Information is always handy.>
+	end
+Content
 	name <Let Me Join You>
 	desc <The NPC wants revenge against the enemy character, himself.>
 	requires <*CS_ThanksForRescue &FromCSEnemy R:-->

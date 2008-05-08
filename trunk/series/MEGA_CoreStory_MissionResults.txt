@@ -584,9 +584,14 @@ Plot
 	% E3 is the next NPC to meet about a mission
 	% E3 is the scene for the next mission
 	% E4 is the local government faction
+	% E5 is a local outdoors scene
+	% E6 is an encounter to place there
 	element2 <Character !Near -7 !Ally -7>
 	element3 <MetaScene !Near -7 *Building NeverFail>
-	element4 <Faction Government !Comrade -7>
+	element4 <Faction Government !Comrade -7 !Ally 1>
+	element5 <Scene Outdoors !Near -7>
+	element6 <Prefab>
+	Place6 <5>
 
 	start <if= PlotStatus %id% else %pop% ifNPCDead %1% LoseComp 0 .%id%_loss>
 	.%id%_loss <+T-->
@@ -601,9 +606,8 @@ Plot
 		result%id%01 <ifNPCOK %2% else .%id%_GoNoMission NewChat Say %id%03 &SetTargetNPC %2% &SetAllyFac %4% History %id%05 StoryNote %id%02 WinComp %3% .%id%_changes>
 		.%id%_changes <+Tgt +Fmi>
 		.%id%_GoNoMission <NewChat Say %id%04 &SetAllyFac %4% StoryNote %id%05 WinComp 0 .%id%_changes2>
-		*result%id%02 <*RejectMission .%id%_GoR2Exit>
-		.%id%_GoR2Exit <StoryNote %id%06 WinComp 0 .%id%_changes2>
-		.%id%_changes2 <+T-->
+		result%id%02 <NewChat Say %id%08 SMemo %id%06 History %id%07 WinComp %6% .%id%_changes2>
+		.%id%_changes2 <+Ten +Ffi>
 		result%id%03 <Goto .%id%_GoNewMission>
 		Msg%id%01 <We still don't know where these invaders are coming from, nor what they want. You know, %name4% could use a good pilot like you to help face this threat.>
 		Msg%id%01_1 <>
@@ -622,10 +626,22 @@ Plot
 		Msg%id%03 <In that case you should go to %name3% and speak with %name2%. I believe \SPR E2 has something you could help with.>
 		Msg%id%04 <That's good to hear. Go rest up, and get your stuff repaired. There's no telling when we could be attacked again.>
 		Msg%id%05 <You accepted %name1%'s request to help defend %name4%.>
-		Msg%id%06 <You declined %name1%'s request to help defend %name4%.>
+		Msg%id%06 <%name1% warned you that there are likely to be more mecha attacks in %name4%.>
+		Msg%id%07 <%name1% warned you that there were likely to be more mecha attacks.>
+		Msg%id%08 <I understand. I only worry that there will be more attacks, and we might not be able to stop them.>
 		Prompt%id%01 <It would be an honor to help.>
+		Prompt%id%01_1 <I'd be honored to help.>
+		Prompt%id%01_2 <As long as the city needs me, I'm here.>
 		Prompt%id%02 <Sorry, I'm not signing up for anyone's war.>
+		Prompt%id%02_1 <Sorry, but this is as involved as I plan to get.>
+		Prompt%id%02_2 <Sorry, but I've got my own problems to deal with.>
 		Prompt%id%03 <Thank you.>
+		Prompt%id%03 <Thanks.>
+	end
+	inv
+		Encounter
+		name <Mysterious Attackers>
+		EncounterMove 25
 	end
 
 
