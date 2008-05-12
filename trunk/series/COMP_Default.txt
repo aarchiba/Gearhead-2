@@ -50,7 +50,7 @@ Plot
 		.duel <+Tgt +Fch>
 		result%id%03 <AlterContext .alterlove  NewChat Say %id%03 StoryNote %id%04 WinComp %2% .party>
 		.alterlove <+Glo>
-		result%id%03 <AlterContext .alterpeace  NewChat Say %id%03 StoryNote %id%04 WinComp %2% .party>
+		result%id%04 <AlterContext .alterpeace  NewChat Say %id%03 StoryNote %id%04 WinComp %2% .party>
 		.alterpeace <+Gpe>
 		Msg%id%01 <That's fine. It wasn't too important... ask me again later.>
 		Msg%id%02 <\PC , why are we doing this? What is it that made you want to be a cavalier?>

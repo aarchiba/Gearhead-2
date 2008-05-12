@@ -53,6 +53,7 @@ Acc 1
 Speed 8
 Mass -10
 desc <A pole arm with a large ornate blade at each end.>
+sdl_portrait <item_doublelance.png>
 category <WEAPON MELEE>
 factions <HOELL PRIVA>
 Legality 5
@@ -64,7 +65,7 @@ Acc 1
 Speed 5
 Mass -8
 desc <A ceremonial weapon of the Silver Knights.>
-sdl_portrait <item_longsword.png>
+sdl_portrait <item_silversword.png>
 category <WEAPON MELEE>
 factions <SILKN>
 
@@ -75,6 +76,7 @@ Acc 1
 Speed 5
 Mass -8
 desc <A ceremonial weapon of the Silver Knights.>
+sdl_portrait <item_silversword.png>
 category <WEAPON MELEE>
 factions <SILKN>
 
@@ -114,6 +116,7 @@ Gun 6
 Name <Assault Rifle>
 desig <Tyb 2-4>
 desc <A low caliber bullpup assault rifle manufactured in Theles Spinner.>
+sdl_portrait <item_compactrifle.png>
 caliber <5mm auto>
 category <WEAPON MISSILE>
 factions <FCOMS>
@@ -161,6 +164,7 @@ desig <VT2-X>
 category <WEAPON MISSILE>
 Factions <MAQUI L5LAW>
 desc <A light magnetic rifle often used by security forces.>
+sdl_portrait <item_autogun.png>
 caliber <2mm ferrous>
 Acc 1
 Range 5
@@ -184,6 +188,7 @@ Type <SWARM>
 category <WEAPON MISSILE>
 factions <MAQUI>
 desc <A magnetic cannon that fires tiny slivers of metal at extreme velocity.>
+sdl_portrait <item_combatrifle.png>
 caliber <2mm ferrous>
 Mass -8
 Acc 1
@@ -207,6 +212,7 @@ desc <A low velocity single firing pistol. Fires solid metal slugs.>
 category <WEAPON MISSILE>
 factions <MAQUI FCOMS>
 caliber <6mm pistol>
+sdl_portrait <item_miscpistol2.png>
 Mass -2
 Range 3
 Acc 2
@@ -269,6 +275,7 @@ desig <IG-28>
 caliber <22mm cone>
 category <WEAPON MISSILE CONTRABAND>
 factions <MAQUI FCOMS RISHI CRIHN>
+sdl_sprite <item_bigrifle.png>
 Range 8
 Legality 10
 sub
@@ -307,6 +314,7 @@ BeamGun 3
 name <Light Laser Pistol>
 Desig <Brash G1>
 desc <A small, low power laser weapon.>
+sdl_portrait <item_miscpistol3.png>
 category <WEAPON MISSILE>
 factions <MAQUI FCOMS RISHI BOHEM>
 Mass -2
@@ -323,6 +331,7 @@ BeamGun 5
 Name <Laser Pistol>
 desig <VK-16>
 desc <A pistol housing a small but powerful laser generator.>
+sdl_portrait <item_laserpistol.png>
 category <WEAPON MISSILE>
 factions <MAQUI FCOMS RISHI BOHEM HOELL>
 Mass -4

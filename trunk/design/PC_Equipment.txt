@@ -368,6 +368,7 @@ Gun 5
 Name <Long Rifle>
 desig <L60>
 desc <The long rifled barrel of this firearm can increase the spin of its bullets, thus increasing its range without decreasing the gun's durability.>
+sdl_portrait <item_longrifle.png>
 category <WEAPON MISSILE>
 factions <GENERAL>
 caliber <5mm rifle>
@@ -387,6 +388,7 @@ Gun 6
 Name <Hunting Rifle>
 desig <L55>
 desc <A rifle designed for hunting animals.>
+sdl_portrait <item_huntingrifle.png>
 category <WEAPON MISSILE>
 factions <GENERAL>
 caliber <5mm rifle>
@@ -405,6 +407,7 @@ Gun 6
 Name <Combat Rifle>
 desig <Laver-2>
 desc <A single firing rifle.>
+sdl_portrait <item_combatrifle.png>
 caliber <5mm rifle>
 category <WEAPON MISSILE>
 factions <GENERAL>
@@ -497,24 +500,10 @@ end
 %  ***  BEAM  GUNS  ***
 %  ********************
 
-BeamGun 5
-Name <Laser Pistol>
-desc <A pistol housing a small but powerful laser generator.>
-category <WEAPON MISSILE>
-factions <GENERAL>
-Mass -4
-Range 3
-Acc 1
-Speed 5
-legality 5
-inv
-	PowerSource 2
-	name <Power Cell 50>
-end
-
 BeamGun 10
 Name <Laser Rifle>
 desc <An advanced combat rifle, powered by a laser generator.>
+sdl_portrait <item_laserrifle.png>
 category <WEAPON MISSILE>
 factions <GENERAL>
 Range 5
@@ -884,6 +873,7 @@ Type <ARMORPIERCING SWARM>
 BodyArmor 1
 Name <Leather Jacket>
 desc <A comfortable leather jacket with a zipper down the front.>
+sdl_portrait <item_leatherjacket.png>
 Category <CLOTHING>
 Factions <GENERAL>
 Mass 3
@@ -1012,6 +1002,7 @@ end
 BodyArmor 2
 Name <Security Vest>
 desc <A standard vest issued to security guards.>
+sdl_portrait <item_securityvest.png>
 Category <ARMOR>
 Factions <GENERAL>
 Mass -1
@@ -1020,6 +1011,7 @@ legality -5
 BodyArmor 5
 Name <Hazard Vest>
 desc <Armor used by rescuers traversing hazardous situations.>
+sdl_portrait <item_securityvest.png>
 Category <ARMOR>
 Factions <GENERAL>
 Mass -1
@@ -1151,6 +1143,7 @@ Factions <GENERAL>
 Shield 5
 Name <Riot Shield>
 desc <A light and transparent polymer shield used by crowd control forces.>
+sdl_portrait <item_riotshield.png>
 Category <SHIELD>
 Factions <GENERAL>
 DefBonus 2
@@ -1209,6 +1202,7 @@ Mass -1
 Treasure
 name <Mobile Phone>
 desc <A handheld communication device.>
+sdl_portrait <item_phone.png>
 Category <ELECTRONICS COMMUNICATIONS>
 Factions <GENERAL>
 Memo
@@ -1220,6 +1214,7 @@ Treasure
 Mass 1
 name <Personal Communicator>
 desc <A handheld communication device.>
+sdl_portrait <item_phone.png>
 Category <ELECTRONICS COMMUNICATIONS>
 Factions <GENERAL>
 Memo
@@ -1780,6 +1775,7 @@ Mass 1
 Instrument 2
 name <Violin>
 desc <A stringed instrument.>
+sdl_portrait <item_violin.png>
 Category <INSTRUMENT>
 Factions <GENERAL>
 Legality -50
