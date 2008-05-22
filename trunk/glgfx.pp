@@ -326,7 +326,7 @@ begin
         { Always lock the surface before getting it's Pixels. }
         SDL_LockSurface(Game_Screen);
         
-        if Revert_Safer_Slower then
+        if Revert_Slower_Safer then
         begin
         	
                 { Instead of using glPixelZoom(1, -1), just revert
