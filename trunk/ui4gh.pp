@@ -120,6 +120,8 @@ const
 {$ENDIF}
 	ScreenColumns: Byte = 80;
 
+	Revert_Slower_Safer: Boolean = False;
+
 	XXRan_Debug: Boolean = False;
 	StdPlot_Debug: Boolean = False;
 
@@ -516,6 +518,9 @@ begin
 				end else if cmd = 'NO_SPLASH_SCREEN_AT_START' then begin
 					Splash_Screen_At_Start := False;
 
+				end else if cmd = 'REVERT_SLOWER_SAFER' then begin
+					Revert_Slower_Safer := True;
+
 				end else if cmd = 'GIMMEGIMMECHOICE' then begin
 					XXRan_Wizard := True;
 				end else if cmd = 'XXRANDEBUG' then begin
@@ -603,6 +608,7 @@ begin
 	AddBoolean( 'MINIMAL_SCREEN_REFRESH' , Minimal_Screen_Refresh );
 	AddBoolean( 'USE_SOFTWARE_SURFACE' , Use_Software_Surface );
 	AddBoolean( 'NO_SPLASH_SCREEN_AT_START' , not Splash_Screen_At_Start );
+	AddBoolean( 'REVERT_SLOWER_SAFER' , Revert_Slower_Safer );
 
 	{ The "secret options" come at the end. These tokens only get }
 	{ included if they're already set. }

@@ -310,6 +310,9 @@ Procedure DoFlip;
 	{ The normal SDL_Flip command isn't used here. Instead, we'll be using }
 	{ this custom routine to stick Game_Screen on top of the OpenGL rendering }
 	{ and then flip the actual display. }
+var
+	I: Integer;
+	P: Pointer;
 begin
 	glMatrixMode( GL_Projection );
 	glLoadIdentity;
@@ -317,12 +320,33 @@ begin
 	gluOrtho2d( 0.0 , screenwidth , 0.0 , screenheight );
 	glMatrixMode( GL_ModelView );
 	glLoadIdentity;
-	glRasterPos2i( 0 , screenheight );
-	glPixelZoom( 1.0 , -1.0 );
-	glEnable( GL_BLEND );
 
-	glDrawPixels( Game_Screen^.W , Game_Screen^.H , GL_RGBA , GL_Unsigned_Byte , Game_Screen^.Pixels );
+        glEnable( GL_BLEND );
 
+        { Always lock the surface before getting it's Pixels. }
+        SDL_LockSurface(Game_Screen);
+        
+        if Revert_Safer_Slower then
+        begin
+        	
+                { Instead of using glPixelZoom(1, -1), just revert
+                  the surface by drawing it row-by-row. }
+                P := Game_Screen^.Pixels;
+                for I := 1 to Game_Screen^.H do
+                begin
+                	glRasterPos2i( 0 ,  Game_Screen^.H - I );
+                	glDrawPixels( Game_Screen^.W , 1 , GL_RGBA , GL_Unsigned_Byte , P );
+			PtrUInt(P) := PtrUInt(P) + Game_Screen^.Pitch;
+                end;
+                	
+        end else
+        begin        
+		glRasterPos2i( 0 , screenheight );
+		glPixelZoom( 1.0 , -1.0 );
+ 		glDrawPixels( Game_Screen^.W , Game_Screen^.H , GL_RGBA , GL_Unsigned_Byte , Game_Screen^.Pixels );
+        end;
+
+        SDL_UnlockSurface(Game_Screen);
 	SDL_gl_SwapBuffers;
 end;
 

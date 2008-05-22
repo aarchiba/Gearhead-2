@@ -1,13 +1,3 @@
-***
-Important Note- The Windows version appears to have troubles if you are
-running BitTorrent or iTunes at startup. It appears to run fine if you
-start these programs after GH2 finishes loading. Thanks to Erathoniel
-for the info.
-***
-If the program crashes at startup, try editing the config file (gearhead.cfg)
-and enable "NO_SPLASH_SCREEN_AT_START".
-***
-
 Welcome to GearHead-2. Although this game is in an early stage of development,
 comments and bug reports are welcome. Take a look around at what's being done
 and let me know if you think I'm on the right track.
@@ -28,6 +18,9 @@ here: http://sourceforge.net/projects/jedi-sdl/
 
 Just type "ppc386 gearhead" and the program should compile.
 To get the ASCII version, type "ppc386 -dASCII gearhead".
+
+If you get a blue screen and no graphics, try uncommenting Revert_Slower_Safer
+in gearhead.cfg.
 
 I hope you have fun with the program.
 

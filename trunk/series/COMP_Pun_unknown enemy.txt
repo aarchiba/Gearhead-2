@@ -119,9 +119,25 @@ Plot
 		result%id%02 <NewChat Say %id%04 AlterContext .worse>
 		.worse <+Ffi>
 		Msg%id%01 <While driving around in %name3%, I saw something weird. It was a group of mecha, but they didn't look like locals... they looked like they were up to no good.>
+		Msg%id%01_1 <You have to understand that this is a first hand account. I saw it myself... While driving through %name3% I came across a lance of strange mecha. They weren't from around here. They looked dangerous.>
+		CMsg%id%01_1 <ifNPCSociable Accept>
+		Msg%id%01_2 <There are some scary mecha lurking in %name3% . I saw them myself, you know.>
+		CMsg%id%01_2 <ifNPCShy Accept>
+		Msg%id%01_3 <This might be important or it might not be. I was driving through %name3% a while back and came across a group of mecha that looked like they wanted to kick my arse. They might have, if I hadn't gotten out.>
+		CMsg%id%01_3 <ifNPCEasygoing Accept>
+		Msg%id%01_4 <Those mecha you've been fighting? I've seen them! They were in %name3%. I nearly got attacked, but I got out of there because I was coming in for repairs anyhow.>
+		CMsg%id%01_4 <ifNPCPassionate Accept>
+		Msg%id%01_5 <I saw something really interesting while driving through %name3%. It was a group of strange mecha. They weren't the type you normally see around here. It's a lucky thing that they didn't notice me.>
+		CMsg%id%01_5 <ifNPCCheerful Accept>
+		Msg%id%01_6 <Let me tell you, I could have been killed. While driving around in %name3% I saw some strange mecha. Strange, dangerous mecha.>
+		CMsg%id%01_6 <ifNPCMelancholy Accept>
 		Msg%id%02 <%name2% saw some scary looking mecha in %name3%.>
 		Msg%id%03 <Be careful out there. Those mecha didn't look like they were the type to take prisoners.>
+		Msg%id%03_1 <I hope you find what you're looking for.>
+		Msg%id%03_2 <Don't forget to mention me when you write your memoirs.>
 		Msg%id%04 <I'm telling you exactly what I saw! Don't blame me when those meks come and kick your ass...>
+		Msg%id%04_1 <I'm just telling you what I saw. It's up to you what to do with this information.>
+		Msg%id%04_2 <You don't believe me? Fine. When those mecha find you, you'll be sorry.>
 		Prompt%id%01 <Thanks for telling me.>
 		Prompt%id%01_1 <I'll have to go see about that.>
 		Prompt%id%01_2 <Hmm... this could be important.>
