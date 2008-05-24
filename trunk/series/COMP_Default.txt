@@ -9,6 +9,69 @@
 %    or the palette enemy faction
 
 Plot
+	name <Bad Party>
+	desc <We're going to a bad party. Actually, meet a bored arena pilot and go duel.>
+	requires <#A +Tgs +Fpa ~+Gpo>
+	Size 1
+
+	% Element1 is the scene where this will take place
+	% Element2 is the bored arena pilot
+	% Element3 is an environs scene for the duel
+	Element1 <Grab 6>
+	Element2 <Character HasMecha PDAss !Near -7 Neverfail>
+	NeverFail2 <Arena Pilot>
+	Place2 <1 (Citizens) pass>
+	Element3 <Scene Environs !Near -7>
+
+	% SubPlot1 is the duel itself
+	% SubPlot2 is the path if the PC wins the duel
+	% SubPlot3 is the path if the PC loses the duel
+	SubPlot1 <*CS_Duel 2 1 3>
+	SubPlot2 <*CS_WinDuelVs 2>
+	SubPlot3 <*CS_LoseDuelVs 2>
+
+	% V1 = Initialization Counter
+	% V2 = Partner Observation
+	% As long as we're still at the first phase, the NPC's death will end the plot.
+	start <if= PlotStatus 0 ifNPCDead %2% else GoCheckScene LoseComp 0 .changes>
+	GoCheckScene <if= SceneID %1% ifNPCOK &PartnerNPC if= V2 0  Monologue &PartnerNPC 3 V= 2 1>
+	.changes <+T-- +F-->
+
+	% V1 = Initialization Counter
+	update <if= v1 0 V= 1 1 NPCLevel %2% StoryDL>
+
+	% Branch activators
+	.%id1%_%plotid%_GoWin <ifNPCOK %2% else GoE2Died SMemo 1 SetPlotStatus %id2%>
+	.%id1%_%plotid%_GoLose <SMemo 2 SetPlotStatus %id3%>
+	GoE2Died <SMemo 0 WinComp 0 .changes>
+
+	Msg1 <You bested %name2% in a duel; \SPR %2% is waiting for you at %name1%.>
+	Msg2 <You were defeated by %name2% in a duel; \SPR %2% is waiting for you at %name1%.>
+	Msg3 <Look over there... %name2% doesn't look like \SPR %2% 's enjoying the party.>
+	Msg3_1 <Say, isn't that %name2% the famous arena pilot? I wonder if we can get an autograph... or a duel.>
+
+	sub
+		Persona 2
+		greeting <if= PlotStatus 0 else GoChat Goto GoFirstTime>
+		*GoChat <*MISC_CHATTER>
+		GoFirstTime <NewChat Say 1 AddChat 1 AddChat 2>
+		result1 <StoryNote 2 SetPlotStatus %id1% Goto GoAcceptChallenge>
+		*GoAcceptChallenge <*IAcceptYourChallenge %3%>
+		result2 <NewChat Say 3 StoryNote 4 LoseComp 0 .next>
+		.next <+T-- +F-->
+		Msg1 <Are you as bored with this party as I am? Why don't we leave this place and go find some real action... I mean a duel, of course.>
+		Msg2 <At the party, %name2% challenged you to a duel in %name3%.>
+		Msg3 <Is that so? I'm afraid to say that you've just blown the one chance you had for something interesting.>
+		Msg4 <At the party, %name2% challenged you to a duel but you refused.>
+		Prompt1 <Let's do it.>
+		Prompt2 <Sorry, I don't want to.>
+
+		STC MS_CAFE
+		SetID 1
+	end
+
+
+Plot
 	name <What's the point?>
 	desc <Your partner will ask what happens next.>
 	requires <#A +T-- R:++ +G-->

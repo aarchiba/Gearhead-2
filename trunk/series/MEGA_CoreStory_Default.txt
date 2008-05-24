@@ -314,6 +314,29 @@ Content
 %%
 
 Content
+	name <Have a Revelation>
+	desc <The NPC will give the PC some info in thanks.>
+	requires <*CS_WinDuelVs>
+
+	% E1 is the NPC
+
+	start <if= PlotStatus %id% else %pop% ifNPCDead %1% SMemo 0 WinComp 0 .%id%_loss>
+	.%id%_loss <+T-- +F-->
+
+	% SubPlot1 is the revelation
+	SubPlot1 <*CS_Revelation 1>
+
+	sub
+		Persona 1
+		greeting <if= PlotStatus %id% else %pop% EndChat Say %id%01 AddChat %id%01>
+		result%id%01 <Goto .%id1%_GoInit>
+		Msg%id%01 <Hey, because you won our duel, I'll let you in on a secret.>
+		Msg%id%01_1 <That was a good fight. Because you won, I'll tell you this secret.>
+		Msg%id%01_2 <We didn't make a wager before the fight, but since you won I'll tell you a secret.>
+		Prompt%id%01 <[Continue]>
+	end
+
+Content
 	name <The Sore Loser>
 	desc <The NPC can't believe he lost; in fact, he will become CS Enemy.>
 	requires <*CS_WinDuelVs E:-- -1:ALLY -1:PDASS ~1:ENEMY>
@@ -346,7 +369,7 @@ Content
 Content
 	name <You should go see MILIT...>
 	desc <The NPC will reccomend that the PC go ask someone about a job.>
-	requires <*CS_WinDuelVs -7:ENEMY -C:THIEF>
+	requires <*CS_WinDuelVs -L:ENEMY -C:THIEF>
 
 	% E1 is the NPC.
 	% E2 is the person to see about the job
