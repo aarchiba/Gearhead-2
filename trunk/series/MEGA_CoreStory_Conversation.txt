@@ -325,7 +325,7 @@ Plot
 		Prompt%id%01 <Where did you get something like that?>
 		Prompt%id%02 <Cool! Let me see it.>
 		Prompt%id%03 <Alright, here you go. [pay money]>
-		CPrompt%id%03 <ifG PC$ V1 Accept>
+		CPrompt%id%03 <ifG PC$ V%id%01 Accept>
 		Prompt%id%04 <I'm not interested.>
 		Prompt%id%05 <Couldn't you just give it to me?>
 		CPrompt%id%05 <ifG PCEgo 14 Accept>
@@ -728,6 +728,12 @@ Plot
 		Prompt%id%02 <Any idea where %name2% might be?>
 		Prompt%id%03 <I'm wondering that too.>
 	end
+
+%%  *****************************
+%%  ***   +Psh  Conscripted   ***
+%%  *****************************
+
+
 
 %%  *************************************
 %%  ***   +Pla  Learn  of  Artifact   ***
