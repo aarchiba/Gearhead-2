@@ -69,7 +69,7 @@
 	requires <*NiceToMeetYou HasMecha>
 	Start <ifChatNPCUnknown else %1% NewChat Say %id%01 AddChat %id%01 AddChat %id%02 AddChat %id%03>
 	result%id%01 <AddSociable d10 Goto %1%>
-	result%id%02 <ifG PCRenown ChatNPCRenown else .%id%_GoR2TryCon ifG PCRenown d50 else .%id%_GoR2TryCon AddReact d10 Say %id%02 AddChat %id%04 AddChat %id%05>
+	result%id%02 <ifG PCRenown ChatNPCRenown else .%id%_GoR2TryCon ifG PCRenown d50 else .%id%_GoR2TryCon AddReact d10 NewChat Say %id%02 AddChat %id%04 AddChat %id%05>
 	.%id%_GoR2TryCon <ifConversation ChatNPCEgo else .%id%_GoR2Fail NewChat Say %id%04  AddRenown 1 AddReact d10 AddChat %id%04 AddChat %id%05>
 	.%id%_GoR2Fail <AddEasygoing -d10 NewChat Say %id%03  AddChat %id%04 AddChat %id%05>
 	result%id%03 <AddSociable -d10 Goto %1%>

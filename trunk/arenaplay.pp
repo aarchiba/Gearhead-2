@@ -410,6 +410,10 @@ begin
 				end;
 
 				GetMekInput( M , Camp , IsPlayerMek );
+				if ( Calltime <= NAttValue( M^.NA , NAG_Action , NAS_CallTime ) ) and not IsPlayerMek then begin
+					{ This model is apparently wasting time, somehow. }
+					SetNAtt( M^.NA , NAG_Action , NAS_CallTime , Camp^.GB^.ComTime + 1);
+				end;
 			end else begin
 				SetNAtt( M^.NA , NAG_Action , NAS_CallTime , Camp^.GB^.ComTime + 60);
 			end;
@@ -500,7 +504,9 @@ begin
 				team := NAttValue( M^.NA , NAG_Location , NAS_Team );
 				if ( Team = NAV_DefPlayerTeam ) or ( Team = NAV_LancemateTeam ) then begin
 					if NotDestroyed( M ) and OnTheMap( Camp^.GB , M ) then begin
-						if CanTakeTurn( Camp^.GB , M ) and ( NAttValue( M^.NA , NAG_Action , NAS_CallTime ) < ( Camp^.GB^.ComTime + TacticsRoundLength - 1 ) ) then FoundPCToAct := True;
+						if CanTakeTurn( Camp^.GB , M ) and ( NAttValue( M^.NA , NAG_Action , NAS_CallTime ) < ( Camp^.GB^.ComTime + TacticsRoundLength - 1 ) ) then begin
+							FoundPCToAct := True;
+						end;
 						TacticsTurn( Camp , M , True );
 					end;
 				end;
@@ -514,7 +520,7 @@ begin
 			M := Camp^.GB^.Meks;
 			while M <> Nil do begin
 				team := NAttValue( M^.NA , NAG_Location , NAS_Team );
-				if ( Team <> NAV_DefPlayerTeam ) and ( Team <> NAV_LancemateTeam ) then begin
+				if ( Team <> NAV_DefPlayerTeam ) and ( Team <> NAV_LancemateTeam ) and ( Team <> 0 ) then begin
 					if NotDestroyed( M ) and OnTheMap( Camp^.GB , M ) then begin
 						TacticsTurn( Camp , M , False );
 					end;

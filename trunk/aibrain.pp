@@ -1644,10 +1644,12 @@ begin
 		ShiftGears( GB , Mek , False );
 	end;
 
-	{ If MEK is actually a mecha, and it's significantly damaged, }
-	{ maybe the pilot would rather eject than continue fighting. }
 	if Mek^.G = GG_Prop then begin
 		GetPropInput( GB , Mek );
+
+	end else if not IsMasterGear( Mek ) then begin
+		{ If this is not a master gear, just wait. }
+		SetNAtt( Mek^.NA , NAG_Action , NAS_CallTime , GB^.ComTime + ClicksPerRound );
 
 	end else begin
 
