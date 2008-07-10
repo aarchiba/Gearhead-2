@@ -186,6 +186,11 @@ BACKGROUND DESCRIPTORS
 	+Gkn	Knowledge
 	+Glo	Love
 
++H??	Hanging Thread
+	Describes an event which the PC has hanging over his head
+	+H--	How's it hanging? It isn't.
+	+Has	Assassination attempt will be made against the PC.
+
 +T??	Task
 	Describes the PC's current short-term goal.
 	+T--	No task.
@@ -212,4 +217,24 @@ BACKGROUND DESCRIPTORS
 	+Far	To arrest the target (+Tht)
 
 	+Fap	To apologize to the target (+Tgt,+Tga)
+
+Character Arc Descriptors
+
+[c].A.??	NPC Character Arc/Motivation
+	[c].A.--	Unknown quantity
+	[c].A.me	Mercenary. NPC is in it for the money.
+	[c].A.pr	Professional. NPC seeks to be the best at his job.
+	[c].A.gg	Greater Good. NPC believers self to be working for greater good.
+	[c].A.se	Seeker. The NPC is seeking the truth.
+	[c].A.re	Revenge.
+	[c].A.ch	Change. The NPC seeks to change his current situation.
+
+[c].R.??	Relationship with PC
+	[c].R.--	Unknown quantity
+	[c].R.jr	NPC is PC's junior/subordinate/student
+	[c].R.sr	NPC is PC's senior/superior/mentor
+	[c].R.se	NPC is keeping a secret from the PC
+	[c].R.re	NPC respects the PC as an equal
+	[c].R.gr	NPC has a grudge against the PC
+
 

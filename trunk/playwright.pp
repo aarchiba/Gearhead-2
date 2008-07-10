@@ -1184,6 +1184,10 @@ end;
 
 Procedure AddGearXRContext( GB: GameBoardPtr; Adv,Part: GearPtr; var Context: String; palette_entry_code: Char );
 	{ Add the context information for PART to CONTEXT. }
+const
+	Num_XXR_CharacterArcs = 6;
+	Num_XXR_Relationships = 5;
+
 var
 	F: GearPtr;
 	msg,m2: String;

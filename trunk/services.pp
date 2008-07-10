@@ -565,9 +565,16 @@ begin
 		Spent := NAttValue( Mag^.NA , NAG_WeaponModifier , NAS_AmmoSpent );
 		if Spent > 0 then begin
 			it := ( ComponentValue( Mag , True , True ) * Spent ) div Mag^.Stat[ STAT_AmmoPresent ];
-			if it < 1 then it := 1;
+			if it < 5 then it := 5;
 		end;
 	end;
+
+	if it > 0 then begin
+		{ Reduce the reload cost by a factor of 5- apparently, magazines are really expensive. }
+		it := it div 5;
+		if it < 1 then it := 1;
+	end;
+
 	ReloadMagazineCost := it;
 end;
 

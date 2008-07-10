@@ -434,7 +434,7 @@ Content
 	sub
 		Persona 1
 		*greeting <*NiceToMeetYou GoCheckEnemy>
-		*GoCheckEnemy <*ENEMY_CHECK GoShop 3 GoIsEnemy>
+		*GoCheckEnemy <*ENEMY_CHECK GoShop ChatNPCFac GoIsEnemy>
 		GoIsEnemy <PCEnemy SelfCID>
 		GoShop <if= PCFac ChatNPCFac else GoMinorShop NewChat Say 3 AddChat 3 AddChat 2>
 		GoMinorShop <NewChat Say 1 AddChat 1 AddChat 2>
