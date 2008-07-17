@@ -121,11 +121,17 @@ BACKGROUND DESCRIPTORS
 
 
 +P??	Propp State
-	Describes the overall course of the story
+=P??	Propp Advancement
+	Describes the overall course of the story. The Advancement descriptor describes which
+	stage of this propp state the player is currently at.
 	+P--	Peaceful life
 
 	+Pme	PC meets an enemy pilot
-	+Pun	An unknown enemy attacks for unknown reasons
+	+Pun	Under Attack
+		=P00	Have not yet encountered enemy
+		=P01	Must do recon against enemy
+		=P02	Must defend against enemy attack
+		=P03	Must perform counteroffensive
 	+Psh	PC is shanghaied into working for faction
 	+Psm	A stalemate between the PC and the enemy
 	+Pla	PC learns of the existence of an artifact

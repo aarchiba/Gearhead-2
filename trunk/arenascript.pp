@@ -3291,19 +3291,34 @@ begin
 	end;
 end;
 
+Procedure AlterStoryDescriptors( Story: GearPtr; var Changes: String );
+	{ Alter the story descriptors based on the provided changes. If the +P Propp state is changed, }
+	{ reset the story's ProppAdvancement attribute. }
+	{ Note that CHANGES will be utterly destroyed by the AlterDescriptors call below. }
+var
+	Base: String;
+begin
+	{ Start by checking if there's a change to the Propp state. }
+	if AStringHasBString( Changes , '+P' ) then begin
+		SetNAtt( STory^.NA , NAG_XXRan , NAS_ProppAdvancement , 0 );
+	end;
+
+	Base := SAttValue( Story^.SA , 'CONTEXT' );
+	AlterDescriptors( Base , Changes );
+	SetSAtt( Story^.SA , 'CONTEXT <' + Base + '>' );
+end;
+
 Procedure ProcessGAlterContext( var Event: String; GB: GameBoardPtr; Source: GearPtr );
 	{ Alter the context by the changes string provided. }
 var
 	Story: GearPtr;
-	Changes,Base: String;
+	Changes: String;
 begin
 	Story := Grabbed_Gear;
 	Changes := ExtractWord( Event );
 	Changes := SAttValue( Source^.SA , Changes );
 	if Story <> Nil then begin
-		Base := SAttValue( Story^.SA , 'CONTEXT' );
-		AlterDescriptors( Base , Changes );
-		SetSAtt( Story^.SA , 'CONTEXT <' + Base + '>' );
+		AlterStoryDescriptors( Story , Changes );
 	end;
 end;
 
@@ -3311,7 +3326,7 @@ Procedure ProcessNextComp( var Event: String; GB: GameBoardPtr; Source: GearPtr 
 	{ Prepare things for the next component to be loaded. }
 var
 	Story: GearPtr;
-	Base,Changes: String;
+	Changes: String;
 begin
 	Story := StoryMaster( GB , Source );
 	Changes := ExtractWord( Event );
@@ -3324,9 +3339,8 @@ begin
 	AddNAtt( Story^.NA , NAG_XXRan , NAS_PlotPointCompleted , PlotMaster( GB , Source )^.V );
 
 	if ( Story <> Nil ) and ( GB <> Nil ) then begin
-		Base := SAttValue( Story^.SA , 'CONTEXT' );
-		AlterDescriptors( Base , Changes );
-		SetSAtt( Story^.SA , 'CONTEXT <' + Base + '>' );
+		AlterStoryDescriptors( Story , Changes );
+
 		SetNAtt( Story^.NA , NAG_XXRAN , NAS_LoadNextComponent , 0 );
 
 		{ Set this component for possible deletion. }

@@ -531,7 +531,8 @@ end;
 
 Procedure AlterDescriptors( var Original,Change: String );
 	{ Alter the XRan descriptors held in ORIGINAL, based on the changes }
-	{ requested by CHANGE. }
+	{ requested by CHANGE. Note that the contents of CHANGE will be utterly destrouyed }
+	{ by this process. }
 var
 	cmd: String;
 	N: Integer;

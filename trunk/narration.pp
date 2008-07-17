@@ -55,6 +55,11 @@ Const
 	NAS_EpisodeNumber = 6;	{ How many episodes have been completed? }
 	NAS_LastEpisodeNoted = 7;	{ What was the last episode to get a history note? }
 
+	NAS_ProppAdvancement = 8;	{ How many subgoals of the propp state has the PC completed? }
+
+	NAS_XXChar_Motivation = 101;
+	NAS_XXChar_Attitude = 102;
+
 	NAG_ElementID = -9;	{ Used to store ID numbers for plot/story elements. }
 
 	Num_Plot_Elements = 20;	{ Maximum number of plot elements }
