@@ -118,7 +118,7 @@ end;
 
 Procedure CreatePlotPlaceholder( Slot , Shard: GearPtr );
 	{ Create a new plot gear to hold all of SHARD's elements, and store it }
-	{ in SLOT. IT will be marked with SHARD's PlotID, and this marking will be }
+	{ in SLOT. IT will be marked with a PlotID of -1, and this marking will be }
 	{ used to dispose of all the placeholders after assembly. }
 var
 	it: GearPtr;
@@ -128,7 +128,7 @@ begin
 	it := NewGear( Slot );
 	InsertInvCom( Slot , It );
 	it^.G := GG_Plot;
-	SetNAtt( it^.NA , NAG_Narrative , NAS_PlotID , NAttValue( Shard^.NA , NAG_Narrative , NAS_PlotID ) );
+	SetNAtt( it^.NA , NAG_Narrative , NAS_PlotID , -1 );
 	for t := 1 to Num_Plot_Elements do begin
 		EID := ElementID( Shard , T );
 		if EID <> 0 then begin
@@ -138,21 +138,21 @@ begin
 	end;
 end;
 
-Procedure DeletePlotPlaceholders( Slot: GearPtr; PlotID: LongInt );
+Procedure DeletePlotPlaceholders( Slot: GearPtr );
 	{ Delete all the plot placeholders. They should be invcoms of SLOT, }
-	{ and be marked with the listed PlotID. }
+	{ and be marked with a PlotID of -1. }
 var
 	PP,PP2: GearPtr;
 begin
 	PP := Slot^.InvCom;
 	while PP <> Nil do begin
 		PP2 := PP^.Next;
-		if NAttValue( PP^.NA , NAG_Narrative , NAS_PlotID ) = PlotID then RemoveGear( Slot^.InvCom , PP );
+		if NAttValue( PP^.NA , NAG_Narrative , NAS_PlotID ) = -1 then RemoveGear( Slot^.InvCom , PP );
 		PP := PP2;
 	end;
 end;
 
-Function AddSubPlot( GB: GameBoardPtr; Scope,Slot,Plot0: GearPtr; SPReq: String; EsSoFar, PlotID, LayerID: LongInt; DoDebug: Boolean ): GearPtr; Forward;
+Function AddSubPlot( GB: GameBoardPtr; Scope,Slot,Plot0: GearPtr; SPReq: String; EsSoFar, LayerID, SubPlotSlot: LongInt; DoDebug: Boolean ): GearPtr; Forward;
 
 Function InitShard( GB: GameBoardPtr; Scope,Slot,Shard: GearPtr; EsSoFar,PlotID,LayerID,Threat: LongInt; const ParamIn: ElementTable; DoDebug: Boolean ): GearPtr;
 	{ SHARD is a plot fragment candidate. Attempt to add it to the Slot. }
@@ -234,8 +234,7 @@ begin
 					SPReq := SAttValue( Shard^.SA , 'SUBPLOT' + BStr( T ) );
 					if SPReq <> '' then begin
 						SPID := NewLayerID( Slot );
-						SetNAtt( Shard^.NA , NAG_SubPlotLayerID , T , SPID );
-						SubPlot := AddSubPlot( GB , Scope , Slot , Shard , SPReq , NumElem , PlotID , SPID , DoDebug );
+						SubPlot := AddSubPlot( GB , Scope , Slot , Shard , SPReq , NumElem , SPID , T , DoDebug );
 						if SubPlot <> Nil then begin
 							{ A subplot was correctly installed. Add it to the list. }
 							AppendGear( SPList , SubPlot );
@@ -284,10 +283,10 @@ begin
 	end;
 end;
 
-Function AddSubPlot( GB: GameBoardPtr; Scope,Slot,Plot0: GearPtr; SPReq: String; EsSoFar, PlotID, LayerID: LongInt; DoDebug: Boolean ): GearPtr;
+Function AddSubPlot( GB: GameBoardPtr; Scope,Slot,Plot0: GearPtr; SPReq: String; EsSoFar, LayerID, SubPlotSlot: LongInt; DoDebug: Boolean ): GearPtr;
 	{ A request has been issued for a subplot. Search through the plot }
 	{ component list and see if there's anything that matches our criteria. }
-	{ Plot0 must not be Nil. }
+	{ Plot0 = the plot requesting the subplot. It must not be Nil. }
 var
 	ShoppingList: NAttPtr;
 	Context,EDesc,SPContext: String;
@@ -295,12 +294,24 @@ var
 	T,E: Integer;
 	Shard: GearPtr;
 	NotFoundMatch: Boolean;
+	PlotID: LongInt;
+	IsBranchPlot: Boolean;
 begin
 	{ Start by determining the context. }
 	Context := ExtractWord( SPReq );
 	if Slot^.G = GG_Story then Context := Context + ' ' + StoryContext( GB , Slot );
 	SPContext := SAttValue( Plot0^.SA , 'SPContext' );
 	if SPContext <> '' then Context := Context + ' ' + SPContext;
+
+	{ Determine whether this is a regular subplot or a branch plot that will start its own narrative thread. }
+	IsBranchPlot := ( Length( Context ) > 2 ) and ( Context[2] = ':' );
+	{ This will determine whether we inherit the PlotID from Plot0, or generate a new one. }
+	if IsBranchPlot then PlotID := NewPlotID( FindRoot( Slot ) )
+	else PlotID := NAttValue( Plot0^.NA , NAG_Narrative , NAS_PlotID );
+
+	{ Store the details for this subplot in Plot0. }
+	SetNAtt( Plot0^.NA , NAG_SubPlotLayerID , SubPlotSlot , LayerID );
+	SetNAtt( Plot0^.NA , NAG_SubPlotPlotID , SubPlotSlot , PlotID );
 
 	{ Determine the parameters to be sent, and add context info for them. }
 	ClearElementTable( ParamList );
@@ -475,6 +486,8 @@ begin
 		MainPersona := LoadNewSTC( 'PERSONA_BLANK' );
 		InsertSubCom( MainPlot , MainPersona );
 		SetSAtt( MainPersona^.SA , 'SPECIAL <' + SAttValue( Persona^.SA , 'SPECIAL' ) + '>' );
+		{ Store the PlotID of this layer, since it's the first to provide a persona for this NPC. }
+		SetNAtt( MainPersona^.NA , NAG_Narrative , NAS_PlotID , NAttValue( SubPlot^.NA , NAG_Narrative , NAS_PlotID ) );
 		MainPersona^.S := MPIndex;
 	end;
 
@@ -563,7 +576,7 @@ begin
 end;
 
 
-Function AssembleMegaPlot( Slot , SPList: GearPtr; PlotID: LongInt ): GearPtr;
+Function AssembleMegaPlot( Slot , SPList: GearPtr ): GearPtr;
 	{ SPList is a list of subplots. Assemble them into a single coherent megaplot. }
 	{ The first item in the list is the base plot- all other plots get added to it. }
 	{ - Delete all placeholder stubs from SLOT }
@@ -581,11 +594,12 @@ Function AssembleMegaPlot( Slot , SPList: GearPtr; PlotID: LongInt ): GearPtr;
 	begin
 		{ Begin creating. }
 		Dictionary := Nil;
-		SetSAtt( Dictionary , '%plotid% <' + BStr( PlotID ) + '>' );
+		SetSAtt( Dictionary , '%plotid% <' + BStr( NAttValue( SubPlot^.NA , NAG_Narrative , NAS_PlotID ) ) + '>' );
 		SetSAtt( Dictionary , '%id% <' + BStr( NAttValue( SubPlot^.NA , NAG_Narrative , NAS_PlotLayer ) ) + '>' );
 		SetSAtt( Dictionary , '%threat% <' + BStr( NAttValue( SubPlot^.NA , NAG_Narrative , NAS_PlotDifficulcy ) ) + '>' );
 		for t := 1 to Num_Sub_Plots do begin
 			SetSAtt( Dictionary , '%id' + BStr( T ) + '% <' + Bstr( NAttValue( SubPlot^.NA , NAG_SubPlotLayerID , T ) ) + '>' );
+			SetSAtt( Dictionary , '%plotid' + BStr( T ) + '% <' + Bstr( NAttValue( SubPlot^.NA , NAG_SubPlotPlotID , T ) ) + '>' );
 		end;
 		for t := 1 to Num_Plot_Elements do begin
 			{ If dealing with the main plot, do substitutions for the Element Indicies now. }
@@ -602,7 +616,7 @@ var
 	MasterPlot,SubPlot: GearPtr;
 begin
 	{ Delete the placeholders. }
-	DeletePlotPlaceholders( Slot , PlotID );
+	DeletePlotPlaceholders( Slot );
 
 	{ Extract the master plot. It should be the first one in the list. }
 	MasterPlot := SPList;
@@ -790,7 +804,7 @@ begin
 
 	{ Now that we have the list, assemble it. }
 	if SPList <> Nil then begin
-		Plot := AssembleMegaPlot( Slot , SPList , PlotID );
+		Plot := AssembleMegaPlot( Slot , SPList );
 		DeployPlot( GB , Slot , Plot );
 	end;
 

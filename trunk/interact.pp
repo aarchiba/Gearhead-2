@@ -440,9 +440,9 @@ var
 		end;
 
 		{ Finally add the plot rumor. }
-		if ( P^.G = GG_Plot ) or ( ( P^.Parent <> Nil ) and ( P^.Parent^.G = GG_Plot ) ) then begin
-			if P^.G = GG_Plot then Plot := P else Plot := P^.Parent;
-			Level := NAttValue( Plot^.NA , NAG_Narrative , NAS_PlotState );
+		if ( P^.G = GG_Persona ) and ( P^.Parent <> Nil ) and ( P^.Parent^.G = GG_Plot ) then begin
+			Plot := P^.Parent;
+			Level := NAttValue( Plot^.NA , NAG_PlotStatus , NAttValue( P^.NA , NAG_Narrative , NAS_PlotID ) );
 			Rumor := SAttValue( P^.SA , 'RUMOR' + BStr( Level ) );
 			if Rumor <> '' then StoreSAtt( InfoList , MadLibString( RLI_List ) + ' ' + Rumor );
 		end;

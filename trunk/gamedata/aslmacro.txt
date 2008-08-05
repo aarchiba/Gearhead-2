@@ -251,7 +251,7 @@ ShowEntrance <GrabEntrance ? GSetNAtt NAG_EpisodeData NAS_EncVis ComTime GAddNAt
 ifEncounterVisible <GrabSource ifG GNatt NAG_EpisodeData NAS_EncVis ComTime>
 AddDatePoint <GrabSource GAddNAtt NAG_Narrative NAS_DatePoints 1>
 SetQuestStatus <GrabAdventure GSetNAtt NAG_QuestStatus ? ? Trigger0 Update>
-SetPlotStatus <GrabPlot GSetNAtt NAG_Narrative NAS_PlotState ? Trigger0 Update>
+SetPlotStatus <GrabPlot GSetNAtt NAG_PlotStatus ? ? Trigger0 Update>
 AddTempLancemate <GrabNPC ? GSetNAtt NAG_CharDescription NAS_CharType NAV_TempLancemate GJoinLance>
 ChatNPCJoinLance <GrabChatNPC GJoinLance>
 RemoveTempLancemate <GrabNPC ? GSetNAtt NAG_CharDescription NAS_CharType 0 GQuitLance>

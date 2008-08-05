@@ -1,3 +1,8 @@
+- PlotStatus, SetPlotStatus require PlotID as parameter (aslmacro.txt,asvmacro.txt)
+- Plots may now have multiple narrative threads at the same time (mpbuilder.pp)
+- Propp state now includes an advancement counter (playwright.pp)
+- Lancemate status indicated in NPC's element context (playwright.pp)
+- Added motivation and attitude for core story NPCs (playwright.pp)
 - Reloading ammo should now cost a lot less (services.pp)
 - Inanimate objects will just wait (aibrain.pp)
 - Fixed an infinite loop in the tactics procedure (arenaplay.pp)

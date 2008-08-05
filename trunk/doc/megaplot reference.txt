@@ -1,4 +1,29 @@
-A megaplot is a plot with extras.
+A megaplot is a plot with extras. Actually, it's a plot constructed from
+multiple components.
+
+***********************
+*** Plot Components ***
+***********************
+
+Plots are constructed from components. The root component will be a plot file;
+from here, additional components can be recursively requested to build a tree
+structure of narrative nodes. Each node should represent a state that the plot
+can be in.
+
+Each node is given its own LayerID. This ID is used for the node's message
+and variable namespace.
+
+*************************
+*** Narrative Threads ***
+*************************
+
+A narrative thread is a series of events constructed from plot components.
+Only one node in a thread should be active at any given time.
+
+Each narrative thread has its own PlotID.
+
+NPCs are attached to the thread which first defines a persona for them; personal
+rumors can only be keyed to LayerIDs belonging to this thread.
 
 *************************
 ** Requesting SubPlots **
@@ -14,6 +39,10 @@ be defined, and they all must be numbered.
 If this plot is based on a story, the story context will be used.
 The element context for all parameters will be used.
 
+If the second character of the SubPlot Type is a colon, this subplot
+will be a side plot with its own PlotID. In this way it's possible for a
+single plot to have multiple narrative threads running at once.
+
 *************************
 ** Replacement Strings **
 *************************
@@ -24,6 +53,7 @@ The element context for all parameters will be used.
 %1%..%10%	The element IDs
 %name1%..%name10%	The element names
 %id1%..%id8%	Layer IDs of subplots
+%plotid1%..%plotid8%	Plot IDs of subplots
 %e1%..%e10%	Element Index of subplot element
 
 *************************
@@ -46,18 +76,11 @@ If being moved to a metascene, if there's a map feature with the designation
 there as mini map component 1. Note that the Index here refers to the master plot
 index, not the subplot index; use %e1%..%e10% to set it.
 
+Note that elements moved in this way are moved when the plot is initialized,
+not when the appropriate node is triggered. If you want to move a NPC at a specific
+point during the plot you'll need to do this manually.
 
 
-- Better self-initialization
-	- Elements moved to correct locations
-	- Replacement strings
-- Automatically handled time limits
-- Key character indication/cleanup on death
-- Plot extensions
-	- Extensions may add further extensions recursively
-- Plot state, rumors can be keyed to current state
-- May add metascenes, and merge additional MS info
-	- Map features may be indicated as element home
 
 Design Flow
 

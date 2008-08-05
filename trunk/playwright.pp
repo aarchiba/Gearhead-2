@@ -1185,12 +1185,18 @@ end;
 Procedure AddGearXRContext( GB: GameBoardPtr; Adv,Part: GearPtr; var Context: String; palette_entry_code: Char );
 	{ Add the context information for PART to CONTEXT. }
 const
-	Num_XXR_CharacterArcs = 6;
-	Num_XXR_Relationships = 5;
-
+	Num_XXR_Motivations = 6;
+	Num_XXR_Attitudes = 5;
+	XXR_Motivation: Array [1..Num_XXR_Motivations] of String[3] = (
+		'mer', 'pro', 'ggd', 'see', 'rev', 'cha'
+	);
+	XXR_Attitude: Array [1..Num_XXR_Attitudes] of String[3] = (
+		'jr_', 'sr_', 'sec', 'equ', 'gru'
+	);
 var
 	F: GearPtr;
 	msg,m2: String;
+	T: Integer;
 begin
 	if Part <> Nil then begin
 		Context := Context + ' ' + palette_entry_code + ':++';
@@ -1232,6 +1238,21 @@ begin
 			end;
 			m2 := SAttValue( Part^.SA , 'JOB_DESIG' );
 			if m2 <> '' then Context := Context + ' ' + palette_entry_code + ':' + m2;
+
+			{ If the part is a lancemate, add that info. }
+			if NAttValue( Part^.NA , NAG_Location , NAS_Team ) = NAV_LancemateTeam then begin
+				Context := Context + ' ' + palette_entry_code + ':LANCE';
+			end;
+
+			{ Add the character arc and attitude values. }
+			T := NAttValue( Part^.NA , NAG_XXRan , NAS_XXChar_Motivation );
+			if ( T > 0 ) and ( T <= Num_XXR_Motivations ) then Context := Context + ' ' + palette_entry_code + ':M.' + XXR_Motivation[ t ]
+			else Context := Context + ' ' + palette_entry_code + ':M.---';
+
+			T := NAttValue( Part^.NA , NAG_XXRan , NAS_XXChar_Attitude );
+			if ( T > 0 ) and ( T <= Num_XXR_Attitudes ) then Context := Context + ' ' + palette_entry_code + ':A.' + XXR_Attitude[ t ]
+			else Context := Context + ' ' + palette_entry_code + ':A.---';
+
 		end else if Part^.G = GG_Scene then begin
 			m2 := SAttValue( Part^.SA , 'TERRAIN' );
 			if m2 <> '' then Context := Context + ' ' + palette_entry_code + ':' + m2;

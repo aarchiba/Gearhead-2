@@ -20,6 +20,27 @@
 %% across a number of plot states. See below for the state-specific missions.
 
 Content
+	name <Find and Defeat>
+	desc <The PC has to find a group of enemies, and then defeat them.>
+	requires <ZZZ>
+
+	% E1 is the NPC who will be giving the mission.
+
+
+	% SubPlot1 is the encounter itself.
+
+	Mission
+	contains winning subplots
+		Encounter
+		upon completing encounter, calls %id%_win or %id%_loss
+			Easy Find - Active on prev_id
+			Hard Find - Active on prev_id
+			Advantage - Active on prev_id
+			upon completing any of these things, call %prev_id%_reveal or %prev_id%_advantage
+			if the Hard Find is permanently lost, call %prev_id%_loss
+
+
+Content
 	name <Protect Scientist>
 	desc <The PC will be sent to protect a scientist.>
 	requires <*CS_GiveMission I:++ (+P--|+Pla) P:++>

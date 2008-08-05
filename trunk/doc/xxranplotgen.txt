@@ -73,7 +73,8 @@ If the element has the same faction as the PC, "PCFAC" is included.
 If the element has no faction, "NOFAC" is included.
 
 If the element is a NPC, the relationship is also included. This may be one of "FAMILY",
-"LOVER", or "FRIEND".
+"LOVER", or "FRIEND". If the element is a lancemate and currently in the party, "LANCE" will
+be included.
 
 If the element is a scene, its terrain SAtt will also be included: "SPACE", "WATER", "GROUND"
 
@@ -226,21 +227,21 @@ BACKGROUND DESCRIPTORS
 
 Character Arc Descriptors
 
-[c].A.??	NPC Character Arc/Motivation
-	[c].A.--	Unknown quantity
-	[c].A.me	Mercenary. NPC is in it for the money.
-	[c].A.pr	Professional. NPC seeks to be the best at his job.
-	[c].A.gg	Greater Good. NPC believers self to be working for greater good.
-	[c].A.se	Seeker. The NPC is seeking the truth.
-	[c].A.re	Revenge.
-	[c].A.ch	Change. The NPC seeks to change his current situation.
+[c]:A.???	NPC Character Arc/Motivation
+	[c]:M.---	Unknown quantity
+	[c]:M.mer	Mercenary. NPC is in it for the money.
+	[c]:M.pro	Professional. NPC seeks to further the aims of his/her faction.
+	[c]:M.ggd	Greater Good. NPC believers self to be working for greater good.
+	[c]:M.see	Seeker. The NPC is seeking the truth.
+	[c]:M.rev	Revenge.
+	[c]:M.cha	Change. The NPC seeks to change his current situation.
 
-[c].R.??	Relationship with PC
-	[c].R.--	Unknown quantity
-	[c].R.jr	NPC is PC's junior/subordinate/student
-	[c].R.sr	NPC is PC's senior/superior/mentor
-	[c].R.se	NPC is keeping a secret from the PC
-	[c].R.re	NPC respects the PC as an equal
-	[c].R.gr	NPC has a grudge against the PC
+[c]:R.???	Attitude towards PC
+	[c]:A.---	Unknown quantity
+	[c]:A.jr_	NPC is PC's junior/subordinate/student
+	[c]:A.sr_	NPC is PC's senior/superior/mentor
+	[c]:A.sec	NPC is keeping a secret from the PC
+	[c]:A.equ	NPC respects the PC as an equal
+	[c]:A.gru	NPC has a grudge against the PC
 
 
