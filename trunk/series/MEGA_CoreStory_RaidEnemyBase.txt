@@ -298,7 +298,7 @@ Content
 	Place2 </>
 
 	% V%id%01 = Initialization Counter
-	update <if= PlotStatus %id% else %pop% if= V%id%01 0 V= %id%01 1   MoveNPC %2% %1% SetNPCTeam %2% 2 NPCLevel %2% StoryDL>
+	update <if= PlotStatus %plotid% %id% else %pop% if= V%id%01 0 V= %id%01 1   MoveNPC %2% %1% SetNPCTeam %2% 2 NPCLevel %2% StoryDL>
 
 	sub
 		MetaScene 1 2
@@ -356,7 +356,7 @@ Content
 	Element3 <MetaScene !Near -7 *Building NeverFail>
 
 	% P%id%01 = Initialization Counter
-	update <if= PlotStatus %id% else %pop% if= p%id%01 0 P= %id%01 1 NPCLevel %2% StoryDL SetNPCFaction %2% &EnemyFac>
+	update <if= PlotStatus %plotid% %id% else %pop% if= p%id%01 0 P= %id%01 1 NPCLevel %2% StoryDL SetNPCFaction %2% &EnemyFac>
 
 	sub
 		MetaScene 1

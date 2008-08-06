@@ -143,7 +143,7 @@ Plot
 	%		0: PC joins EnemyFac if he loses
 	%		1: PC pays $100000 if he loses
 	%		2: No bad effect if PC loses
-	start <if= PlotStatus 0 ifNPCDead %4% LoseComp 0 .next>
+	start <if= PlotStatus %plotid% 0 ifNPCDead %4% LoseComp 0 .next>
 	.next <+T-- +F-->
 
 	% SubPlot1 is the duel
@@ -154,8 +154,8 @@ Plot
 	SubPlot3 <*ForcedInduction 4 2>
 
 	% Needed scripts for the duel
-	.%id1%_%plotid%_GoWin <FreezeNPC %4% &SetEnemyNPC %4% StoryNote 1 SetPlotStatus %id2%>
-	.%id1%_%plotid%_GoLose <if= P%id%01 0 else GoCheckCash ifPCOK else GoPCDown &SetEnemyNPC 0 &SetEnemyFac 0 SetPlotStatus %id3%>
+	.%id1%_%plotid%_GoWin <FreezeNPC %4% &SetEnemyNPC %4% StoryNote 1 SetPlotStatus %plotid% %id2%>
+	.%id1%_%plotid%_GoLose <if= P%id%01 0 else GoCheckCash ifPCOK else GoPCDown &SetEnemyNPC 0 &SetEnemyFac 0 SetPlotStatus %plotid% %id3%>
 	GoPCDown <FreezeNPC %4% StoryNote 2 LoseComp 0 .next>
 	GoCheckCash <FreezeNPC %4% if= P%id%01 1 else GoNoBadEffect ifG PC$ 99999 else GoNotEnough cash+ -100000 Goto GoNoBadEffect>
 	GoNotEnough <cash+ -PC$   AddRenown -5   Goto GoNoBadEffect>
@@ -169,19 +169,19 @@ Plot
 		Persona 4
 		rumor0 <%name4% from %name2% has been spotted in %name3%.>
 		% V1 = Have spoken before
-		greeting <if= PlotStatus 0 else GoChat if= V1 1 else GoFirstTime NewChat Say 17 AddChat 1 AddChat 2 AddChat 3>
+		greeting <if= PlotStatus %plotid% 0 else GoChat if= V1 1 else GoFirstTime NewChat Say 17 AddChat 1 AddChat 2 AddChat 3>
 		*GoFirstTime <*IWantToTalkAboutNPC %1% GoMakeDeal>
 		*GoChat <*MISC_CHATTER>
 		GoMakeDeal <NewChat V= 1 1 Say 1 SMemo 2 AddChat 1 AddChat 2 AddChat 3>
 		result1 <NewChat Say 3 AddChat 4 AddChat 5 AddChat 6 AddChat 7>
-		result2 <EndChat Say 4 StoryNote 5 &SetEnemyNPC 0 &SetEnemyFac 0 SetPlotStatus %id3%>
+		result2 <EndChat Say 4 StoryNote 5 &SetEnemyNPC 0 &SetEnemyFac 0 SetPlotStatus %plotid% %id3%>
 		result3 <NewChat Say 6 StoryNote 7 &SetEnemyNPC %4% FreezeNPC %4% NegateComp 0 .negate>
 		.negate <+T-- +P-->
-		result4 <EndChat Say 8 SMemo 9 History 10 SetPlotStatus %id1%>
-		result5 <ifG PC$ 99999 else GoR5NoMoney ifConversation SkillTar StoryDL else GoR5Fail EndChat Say 8 SMemo 11 History 10 P= 1 1 SetPlotStatus %id1%>
+		result4 <EndChat Say 8 SMemo 9 History 10 SetPlotStatus %plotid% %id1%>
+		result5 <ifG PC$ 99999 else GoR5NoMoney ifConversation SkillTar StoryDL else GoR5Fail EndChat Say 8 SMemo 11 History 10 P= 1 1 SetPlotStatus %plotid% %id1%>
 		GoR5Fail <NewChat Say 12 AddChat 4 AddChat 6 AddChat 7>
 		GoR5NoMoney <NewChat Say 13 AddChat 4 AddChat 6 AddChat 7>
-		result6 <EndChat Say 14 SMemo 15 History 10 P= 1 2 SetPlotStatus %id1%>
+		result6 <EndChat Say 14 SMemo 15 History 10 P= 1 2 SetPlotStatus %plotid% %id1%>
 		result7 <NewChat Say 16>
 		Msg1 <I recruited %name1% for %name2% a little while ago. I think \SPR %1% 'll make a good addition to our forces... From the sound of your voice, I take it that you are not happy about this?>
 		Msg2 <%name4% recruited %name1% for %name2% ; \SPR %4% can be found at %name3%.>

@@ -55,12 +55,12 @@ Content
 	Element3 <MetaScene !Near -7 *Building NeverFail>
 	Element4 <Grab 8>
 
-	start <if= PlotStatus %id% else %pop% ifNPCDead %1% LoseComp 0 .%id%_loss>
+	start <if= PlotStatus %plotid% %id% else %pop% ifNPCDead %1% LoseComp 0 .%id%_loss>
 	.%id%_loss <+T-->
 
 	sub
 		Persona 1
-		greeting <if= PlotStatus %id% else %pop% ifChatNPCUnknown else .%id%_GoKnownGreeting ifChatNPCAlly else .%id%_GoUnknownGreeting Goto .%id%_GoKnownGreeting>
+		greeting <if= PlotStatus %plotid% %id% else %pop% ifChatNPCUnknown else .%id%_GoKnownGreeting ifChatNPCAlly else .%id%_GoUnknownGreeting Goto .%id%_GoKnownGreeting>
 		*.%id%_GoKnownGreeting <*IHaveAJobForYou .%id%_GoBriefing>
 		*.%id%_GoUnknownGreeting <*AreYouHereAboutJob .%id%_GoBriefing>
 		.%id%_GoBriefing <NewChat Say %id%01 AddChat %id%01 AddChat %id%02>
@@ -90,7 +90,7 @@ Content
 	element2 <Scene Environs !Near -7>
 	element3 <Faction !Comrade 1 !Enemy -2>
 
-	start <if= PlotStatus %id% else %pop% ifNPCDead %1% LoseComp 0 .%id%_loss>
+	start <if= PlotStatus %plotid% %id% else %pop% ifNPCDead %1% LoseComp 0 .%id%_loss>
 	.%id%_loss <+T-->
 
 	%% SubPlot1 is the combat encounter itself
@@ -98,14 +98,14 @@ Content
 
 	sub
 		Persona 1
-		greeting <if# PlotStatus %id% else .%id%_GoOfferMission if# PlotStatus %id1% else .%id%_GoRemind Goto %pop%>
+		greeting <if# PlotStatus %plotid% %id% else .%id%_GoOfferMission if# PlotStatus %plotid% %id1% else .%id%_GoRemind Goto %pop%>
 		.%id%_GoOfferMission <ifChatNPCUnknown else .%id%_GoKnownGreeting ifChatNPCAlly else .%id%_GoUnknownGreeting Goto .%id%_GoKnownGreeting>
 		*.%id%_GoRemind <*MechaMissionReminder %2%>
 		*.%id%_GoKnownGreeting <*IHaveAJobForYou .%id%_GoBriefing>
 		*.%id%_GoUnknownGreeting <*AreYouHereAboutJob&Mecha .%id%_GoBriefing>
 		.%id%_GoBriefing <NewChat Say %id%01 AddChat %id%01 AddChat %id%02>
 		*.%id%_GoAccept <*GoodLuckOnMission .%id%_GoR1Exit ChatNPCFac &EnemyFac>
-		.%id%_GoR1Exit <StoryNote %id%02 SetPlotStatus %id1%>
+		.%id%_GoR1Exit <StoryNote %id%02 SetPlotStatus %plotid% %id1%>
 		result%id%01 <Goto .%id%_GoAccept>
 		result%id%02 <AddEasygoing -d10   Goto .%id%_GoAccept>
 		Msg%id%01 <We at %name3% have been keeping up with your fight against \FACTION &EnemyFac . A lance of theirs has been spotted in %name2%; I'd like to hire you to intercept and destroy it.>
@@ -140,7 +140,7 @@ Content
 
 	element2 <Scene Environs !Near -7>
 
-	start <if= PlotStatus %id% else %pop% ifNPCDead %1% LoseComp 0 .%id%_loss>
+	start <if= PlotStatus %plotid% %id% else %pop% ifNPCDead %1% LoseComp 0 .%id%_loss>
 	.%id%_loss <+T-->
 
 	%% SubPlot1 is the combat encounter itself
@@ -149,14 +149,14 @@ Content
 	sub
 		Persona 1
 		rumor0 <%name1% needs a cavalier for some kind of mission.>
-		greeting <if# PlotStatus %id% else .%id%_GoOfferMission if# PlotStatus %id1% else .%id%_GoRemind Goto %pop%>
+		greeting <if# PlotStatus %plotid% %id% else .%id%_GoOfferMission if# PlotStatus %plotid% %id1% else .%id%_GoRemind Goto %pop%>
 		.%id%_GoOfferMission <ifChatNPCUnknown else .%id%_GoKnownGreeting ifChatNPCAlly else .%id%_GoUnknownGreeting Goto .%id%_GoKnownGreeting>
 		*.%id%_GoRemind <*MechaMissionReminder %2%>
 		*.%id%_GoKnownGreeting <*IHaveAJobForYou .%id%_GoBriefing>
 		*.%id%_GoUnknownGreeting <*AreYouHereAboutJob&Mecha .%id%_GoBriefing>
 		*.%id%_GoBriefing <*CORE_BasicJob .%id%_GoAccept .%id%_GoDeny %2%>
 		*.%id%_GoAccept <*GoodLuckOnMission .%id%_GoR1Exit ChatNPCFac &EnemyFac>
-		.%id%_GoR1Exit <SetPlotStatus %id1%>
+		.%id%_GoR1Exit <SetPlotStatus %plotid% %id1%>
 		*.%id%_GoDeny <*RejectMission .%id%_GoR2Exit>
 		.%id%_GoR2Exit <LoseComp 0 .%id%_changes>
 		.%id%_changes <+T-- +F-->
@@ -179,7 +179,7 @@ Content
 	Element3 <Prefab>
 	Place3 <2>
 
-	start <if= PlotStatus %id% else %pop% ifNPCDead %1% LoseComp 0 .%id%_loss>
+	start <if= PlotStatus %plotid% %id% else %pop% ifNPCDead %1% LoseComp 0 .%id%_loss>
 	.%id%_loss <+T-- +F-->
 
 	% SubPlot1 is the base metascene
@@ -189,10 +189,10 @@ Content
 
 	sub
 		Persona 1
-		greeting <if= PlotStatus %id% else %pop% Goto .%id%_GoGreet>
+		greeting <if= PlotStatus %plotid% %id% else %pop% Goto .%id%_GoGreet>
 		*.%id%_GoGreet <*DestructionGreeting .%id%_GoGiveMission &EnemyFac>
 		.%id%_GoGiveMission <NewChat Say %id%01 AddChat %id%01 AddChat %id%02>
-		.%id%_GoActivateBase <SMemo %id%04 History %id%05 SetPlotStatus %id2%>
+		.%id%_GoActivateBase <SMemo %id%04 History %id%05 SetPlotStatus %plotid% %id2%>
 		result%id%01 <NewChat Say %id%02 Goto .%id%_GoActivateBase>
 		result%id%02 <NewChat Say %id%03  AddCheerful -d10  Goto .%id%_GoActivateBase>
 		Msg%id%01 <I've just been robbed! This is terrible... they've taken everything.>
@@ -244,7 +244,7 @@ Content
 	% E2 is the outdoors location where the encounter will be placed
 	element2 <Scene Space Environs !Near -7>
 
-	start <if= PlotStatus %id% else %pop% ifNPCDead %1% LoseComp 0 .%id%_loss>
+	start <if= PlotStatus %plotid% %id% else %pop% ifNPCDead %1% LoseComp 0 .%id%_loss>
 	.%id%_loss <+T-->
 
 	%% SubPlot1 is the combat encounter itself
@@ -252,14 +252,14 @@ Content
 
 	sub
 		Persona 1
-		greeting <if# PlotStatus %id% else .%id%_GoOfferMission if# PlotStatus %id1% else .%id%_GoRemind Goto %pop%>
+		greeting <if# PlotStatus %plotid% %id% else .%id%_GoOfferMission if# PlotStatus %plotid% %id1% else .%id%_GoRemind Goto %pop%>
 		.%id%_GoOfferMission <ifChatNPCUnknown else .%id%_GoKnownGreeting ifChatNPCAlly else .%id%_GoUnknownGreeting Goto .%id%_GoKnownGreeting>
 		*.%id%_GoRemind <*MechaMissionReminder %2%>
 		*.%id%_GoKnownGreeting <*IHaveAJobForYou .%id%_GoBriefing>
 		*.%id%_GoUnknownGreeting <*AreYouHereAboutJob&Mecha .%id%_GoBriefing>
 		.%id%_GoBriefing <EndChat Say %id%01 AddChat %id%01>
 		*.%id%_GoAccept <*GoodLuckOnMission .%id%_GoR1Exit ChatNPCFac &EnemyFac>
-		.%id%_GoR1Exit <StoryNote %id%03 SetPlotStatus %id1%>
+		.%id%_GoR1Exit <StoryNote %id%03 SetPlotStatus %plotid% %id1%>
 		*.%id%_GoDeny <*RejectMission .%id%_GoR2Exit>
 		.%id%_GoR2Exit <LoseComp 0 .%id%_changes>
 		.%id%_changes <+T-- +F-->
@@ -299,7 +299,7 @@ Content
 	element2 <Scene Environs !Near -7>
 	element3 <Grab 4>
 
-	start <if= PlotStatus %id% else %pop% ifNPCDead %1% LoseComp 0 .%id%_loss>
+	start <if= PlotStatus %plotid% %id% else %pop% ifNPCDead %1% LoseComp 0 .%id%_loss>
 	.%id%_loss <+T-->
 
 	%% SubPlot1 is the combat encounter itself
@@ -308,12 +308,12 @@ Content
 	sub
 		Persona 1
 		rumor0 <%name1% needs a cavalier for some kind of mission.>
-		greeting <if# PlotStatus %id% else .%id%_GoOfferMission if# PlotStatus %id1% else .%id%_GoRemind Goto %pop%>
+		greeting <if# PlotStatus %plotid% %id% else .%id%_GoOfferMission if# PlotStatus %plotid% %id1% else .%id%_GoRemind Goto %pop%>
 		.%id%_GoOfferMission <NewChat Say %id%01 AddChat %id%01>
 		*.%id%_GoRemind <*MechaMissionReminder %2%>
 		*.%id%_GoBriefing <*CORE_BasicJob .%id%_GoAccept .%id%_GoDeny %2%>
 		*.%id%_GoAccept <*GoodLuckOnMission .%id%_GoR1Exit ChatNPCFac &EnemyFac>
-		.%id%_GoR1Exit <SetPlotStatus %id1%>
+		.%id%_GoR1Exit <SetPlotStatus %plotid% %id1%>
 		*.%id%_GoDeny <*RejectMission .%id%_GoR2Exit>
 		.%id%_GoR2Exit <LoseComp 0 .%id%_changes>
 		.%id%_changes <+T-- +F-->

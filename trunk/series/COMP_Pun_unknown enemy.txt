@@ -18,7 +18,7 @@ Plot
 	Place3 <2 sd ally (Friend)>
 	Element4 <Scene (Meeting|Mall) Public !Near -7>
 
-	update <if= PlotStatus 0   SetPlotStatus %id%   NPCLevel %3% StoryDL>
+	update <if= PlotStatus %plotid% 0   SetPlotStatus %plotid% %id%   NPCLevel %3% StoryDL>
 
 	% SubPlot1 is what happens if the PC aids the NPC.
 	SubPlot1 <*CS_ThanksForAssist 3>
@@ -41,7 +41,7 @@ Plot
 		% If the PC defeats all of T2 before the NPC dies, it's a win.
 		nu1 <if= T1 0   Return   if= V1 0 V= 1 1               StoryNote 3   LoseComp 0 .loss>
 
-		nu2 <if= T2 0   if= V1 0 V= 1 1   XPV 100  AddRenown 1   Alert 4 MoveNPC %3% %4% SMemo 5 History 6 SetPlotStatus %id1%>
+		nu2 <if= T2 0   if= V1 0 V= 1 1   XPV 100  AddRenown 1   Alert 4 MoveNPC %3% %4% SMemo 5 History 6 SetPlotStatus %plotid% %id1%>
 
 		Msg1 <You found %name3% being attacked by mecha.>
 		Msg2 <%name3% was killed in battle, and you were powerless to stop it.>
@@ -75,7 +75,7 @@ Plot
 		special <Unlisted>
 		% V%id%01 = Introduction counter
 		rumor%id% <%name3%'s mecha hasn't returned from %name1%.>
-		greeting <if= PlotStatus %id% else GoChat if= V%id%01 1 else GoFirst Goto GoChat>
+		greeting <if= PlotStatus %plotid% %id% else GoChat if= V%id%01 1 else GoFirst Goto GoChat>
 		GoChat <NewChat SayAnything>
 		GoFirst <V= %id%01 1 EndChat Say %id%01 AddChat %id%01>
 		*result%id%01 <*LetsDefeatThem &EnemyFac>
@@ -300,7 +300,7 @@ Plot
 
 	% All this plot does is move the NPC, post some news,
 	% and activate the mission subplot
-	update <if= PlotStatus 0  News 1  ActivateMeme %3% %1%  SetPlotStatus %id1%>
+	update <if= PlotStatus %plotid% 0  News 1  ActivateMeme %3% %1%  SetPlotStatus %plotid% %id1%>
 
 	%% SubPlot1 is the mission to be offered
 	SubPlot1 <*CS_GiveMission 2>
@@ -352,7 +352,7 @@ Plot
 
 	% P1 = Initialization Counter
 
-	start <if= PlotStatus 0 ifNPCOK E3 else GoLose>
+	start <if= PlotStatus %plotid% 0 ifNPCOK E3 else GoLose>
 	GoLose <LoseComp 0 .loss>
 	.loss <+T-- +F-->
 
@@ -392,12 +392,12 @@ Plot
 
 		Persona 3
 		% The persona of the monk to give the mission...
-		greeting <if# PlotStatus 0 else GoStartPlot NewChat SayAnything>
+		greeting <if# PlotStatus %plotid% 0 else GoStartPlot NewChat SayAnything>
 		*GoStartPlot <*DestructionGreeting GoTellStory &EnemyFac>
 		GoTellStory <NewChat ifNPCPassionate else GoEasyStory Say 1 AddChat 1 AddChat 2>
 		GoEasyStory <Say 2 AddChat 3 AddChat 4>
 		result1 <NewChat Say 3 History 10 SMemo 4 History 11  AddEasygoing -10 Goto GoPassionateWin>
-		GoPassionateWin <&SetTargetItem %4% SetPlotStatus %id1%>
+		GoPassionateWin <&SetTargetItem %4% SetPlotStatus %plotid% %id1%>
 		result2 <NewChat Say 5 AddChat 1 AddChat 3>
 		result3 <NewChat Say 6 AddChat 4 AddChat 5>
 		result4 <NewChat Say 7 AddChat 7 AddChat 6>

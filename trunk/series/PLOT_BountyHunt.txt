@@ -18,16 +18,16 @@ Plot
 
 	update <ifNPCOK %1% else GoDelete if= P1 0 else GoCheckTime P= 1 ComTime P+ 1 86400 NPCLevel %2% %threat%>
 	Start <ifNPCOK %1% else GoDelete ifG V1 0 Goto GoCheckTime>
-	GoCheckTime <ifG ComTime V1  if= PlotStatus 0   Goto GoDelete>
+	GoCheckTime <ifG ComTime V1  if= PlotStatus %plotid% 0   Goto GoDelete>
 	GoDelete <DeleteNPC %2% EndPlot>
-	CleanUp <if= PlotStatus 0   Goto GoDelete>
+	CleanUp <if= PlotStatus %plotid% 0   Goto GoDelete>
 
 sub
 	Persona 1
 	rumor0 <%name1% is offering a bounty for a wanted thief.>
 	% V1 = Cash reward offered/Initialization counter
 	% V2 = Dead reward; smaller than the live award
-	greeting <if= PlotStatus %id1% else GoFirstTime  if= P%id1%01 -1 else GoCheckWin Goto GoMissionFailure>
+	greeting <if= PlotStatus %plotid% %id1% else GoFirstTime  if= P%id1%01 -1 else GoCheckWin Goto GoMissionFailure>
 	*GoMissionFailure <*TargetEscaped GoEnd na>
 	GoCheckWin <if= P%id1%01 1 else GoCheckDeath  CashPrize V1  AddRenown 1 AddLawful 1 AddReact d4 Goto GoWinMission>
 	*GoWinMission <*HaveCapturedTarget GoEnd na>
@@ -39,7 +39,7 @@ sub
 	*GoCheckSkill <*GenericMissionTest&Chara  GoMissionBriefing GoEnd GoRejectMission na na %threat%>
 	*GoRejectMission <*RejectMission GoEnd>
 	GoEnd <DeleteNPC %2%  EndPlot>
-	GoMissionBriefing <V= 1 Reward %threat% 250  V= 2 Reward %threat% 75   NewChat Say 1   SetPlotStatus %id1% Memo 2 P+ 1 20000>
+	GoMissionBriefing <V= 1 Reward %threat% 250  V= 2 Reward %threat% 75   NewChat Say 1   SetPlotStatus %plotid% %id1% Memo 2 P+ 1 20000>
 
 	Msg1 <I need you to locate and aprehend a thief named %name2%. Bring \OPR %2% in alive and you'll earn $ \VAL V1 .>
 	Msg2 <%name1% hired you to capture %name2%, a wanted thief.>

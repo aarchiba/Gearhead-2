@@ -47,8 +47,8 @@ Content
 	Element4 <Scene Environs !Near -7>
 
 	% P1 = Initialization Counter
-	update <if= PlotStatus 0 if= P1 0 P= 1 1 NPCLevel %2% StoryDL>
-	start <if= PlotStatus 0 ifNPCDead %2% LoseComp 0 .next>
+	update <if= PlotStatus %plotid% 0 if= P1 0 P= 1 1 NPCLevel %2% StoryDL>
+	start <if= PlotStatus %plotid% 0 ifNPCDead %2% LoseComp 0 .next>
 	.next <+T-- +F-->
 
 	sub

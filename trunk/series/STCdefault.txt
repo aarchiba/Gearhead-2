@@ -1110,7 +1110,7 @@ desig <PLOT-MECHAMISSION-WANDER>
 %  E1 must be the mission-giver
 GoSetOrders <GrabSource GSetNAtt NAG_EpisodeData NAS_Orders 3>
 name <%name1%'s Mission>
-update <if= PlotStatus %id% else GoHide SetStat STAT_MetaVisibility 0  ShowEncounter Goto GoSetOrders>
+update <if= PlotStatus %plotid% %id% else GoHide SetStat STAT_MetaVisibility 0  ShowEncounter Goto GoSetOrders>
 EncounterMove 50
 
 Encounter
@@ -1118,7 +1118,7 @@ desig <CORE-MECHAENCOUNTER>
 % Sets this encounter's orders to Passive
 GoSetOrders <GrabSource GSetNAtt NAG_EpisodeData NAS_Orders 3>
 name <%name1%'s Mission>
-update <if= PlotStatus %id% else GoHide SetStat STAT_MetaVisibility 0  ShowEncounter Goto GoSetOrders>
+update <if= PlotStatus %plotid% %id% else GoHide SetStat STAT_MetaVisibility 0  ShowEncounter Goto GoSetOrders>
 EncounterMove 50
 
 Encounter
@@ -1126,7 +1126,7 @@ desig <CORE-INVISIBLEENCOUNTER>
 % Sets this encounter's orders to Passive
 GoSetOrders <GrabSource GSetNAtt NAG_EpisodeData NAS_Orders 3>
 name <Hostile Mecha>
-update <if= PlotStatus %id% else GoHide SetStat STAT_MetaVisibility 0  Goto GoSetOrders>
+update <if= PlotStatus %plotid% %id% else GoHide SetStat STAT_MetaVisibility 0  Goto GoSetOrders>
 EncounterMove 50
 
 Encounter
@@ -1134,7 +1134,7 @@ desig <CORE-MECHAAMBUSH>
 % Sets this encounter's orders to Seek & Destroy
 GoSetOrders <GrabSource GSetNAtt NAG_EpisodeData NAS_Orders 0>
 name <Hostile Mecha>
-update <if= PlotStatus %id% else GoHide SetStat STAT_MetaVisibility 0  Goto GoSetOrders>
+update <if= PlotStatus %plotid% %id% else GoHide SetStat STAT_MetaVisibility 0  Goto GoSetOrders>
 EncounterMove 50
 
 Encounter
@@ -1183,7 +1183,7 @@ desig <CORE-ENEMYSHIP-ENCOUNTER>
 %
 % The attacking faction will be the core story enemy faction, and the encounter
 % threat level will be the StoryDL.
-% This encounter appears when PlotStatus = %id%
+% This encounter appears when PlotStatus %plotid% = %id%
 %%
 %%  V1 =  Have defeated mecha counter
 %%
@@ -1191,7 +1191,7 @@ desig <CORE-ENEMYSHIP-ENCOUNTER>
 %% %    V2 = Initialization Counter
 %% %    V3 = Destination Scene
 %%
-update <if= PlotStatus %id% else GoHide SetStat STAT_MetaVisibility 0  ShowEncounter Goto GoSetOrders>
+update <if= PlotStatus %plotid% %id% else GoHide SetStat STAT_MetaVisibility 0  ShowEncounter Goto GoSetOrders>
 % Sets this encounter's orders to Passive
 GoSetOrders <GrabSource GSetNAtt NAG_EpisodeData NAS_Orders 3>
 Attack <  >

@@ -29,8 +29,8 @@ Content
 
 	% P%id%01 = Time Limit
 	% P%id%02 = Have entered combat
-	update <if= PlotStatus %id% else %pop% if= p%id%01 0 P= %id%01 ComTime P+ %id%01 86400>
-	start <if= PlotStatus %id% else %pop% ifG ComTime P%id%01 if= P%id%02 0 SetPlotStatus %id3%>
+	update <if= PlotStatus %plotid% %id% else %pop% if= p%id%01 0 P= %id%01 ComTime P+ %id%01 86400>
+	start <if= PlotStatus %plotid% %id% else %pop% ifG ComTime P%id%01 if= P%id%02 0 SetPlotStatus %plotid% %id3%>
 
 	% SubPlot1 = Win the battle, get a reward
 	% SubPlot2 = Lose the battle, get scorned
@@ -46,8 +46,8 @@ Content
 		MapHeight 30
 
 		Start <if= P%id%02 0  P= %id%02 1>
-		nu1 <if= T1 0   Return   if= V1 0 V= 1 1   addrenown -5                        Memo 1   SetPlotStatus %id2%>
-		nu2 <if= T2 0   if= V1 0 V= 1 1            XPV 100   AddRenown 1  AddLawful 1  Memo 2   SetPlotStatus %id1%>
+		nu1 <if= T1 0   Return   if= V1 0 V= 1 1   addrenown -5                        Memo 1   SetPlotStatus %plotid% %id2%>
+		nu2 <if= T2 0   if= V1 0 V= 1 1            XPV 100   AddRenown 1  AddLawful 1  Memo 2   SetPlotStatus %plotid% %id1%>
 
 		Msg1 <You lost %name1%'s mission.>
 		Msg2 <You successfully completed %name1%'s mission.>
@@ -82,8 +82,8 @@ Content
 
 	% P%id%01 = Time Limit
 	% P%id%02 = Have entered combat
-	update <if= PlotStatus %id% else %pop% if= p%id%01 0 P= %id%01 ComTime P+ %id%01 86400>
-	start <if= PlotStatus %id% else %pop% ifG ComTime P%id%01 if= P%id%02 0 SetPlotStatus %id3%>
+	update <if= PlotStatus %plotid% %id% else %pop% if= p%id%01 0 P= %id%01 ComTime P+ %id%01 86400>
+	start <if= PlotStatus %plotid% %id% else %pop% ifG ComTime P%id%01 if= P%id%02 0 SetPlotStatus %plotid% %id3%>
 
 	% SubPlot1 = Win the battle, get a reward
 	% SubPlot2 = Lose the battle, get scorned
@@ -105,8 +105,8 @@ Content
 		SpaceBackdrop
 
 		Start <if= P%id%02 0  P= %id%02 1 Alert 3>
-		nu1 <if= T1 0   Return   if= V1 0 V= 1 1   addrenown -5                        Memo 1   SetPlotStatus %id2%>
-		nu2 <if= T2 0   if= V1 0 V= 1 1            XPV 100   AddRenown 1  AddLawful 1  Memo 2   SetPlotStatus %id1%>
+		nu1 <if= T1 0   Return   if= V1 0 V= 1 1   addrenown -5                        Memo 1   SetPlotStatus %plotid% %id2%>
+		nu2 <if= T2 0   if= V1 0 V= 1 1            XPV 100   AddRenown 1  AddLawful 1  Memo 2   SetPlotStatus %plotid% %id1%>
 
 		Msg1 <You lost %name1%'s mission.>
 		Msg2 <You successfully completed %name1%'s mission.>
@@ -144,8 +144,8 @@ Content
 
 	% P%id%01 = Time Limit
 	% P%id%02 = Have entered combat
-	update <if= PlotStatus %id% else %pop% if= p%id%01 0 P= %id%01 ComTime P+ %id%01 86400>
-	start <if= PlotStatus %id% else %pop% ifG ComTime P%id%01 if= P%id%02 0 SetPlotStatus %id3%>
+	update <if= PlotStatus %plotid% %id% else %pop% if= p%id%01 0 P= %id%01 ComTime P+ %id%01 86400>
+	start <if= PlotStatus %plotid% %id% else %pop% ifG ComTime P%id%01 if= P%id%02 0 SetPlotStatus %plotid% %id3%>
 
 	% SubPlot1 = Win the battle, get a reward
 	% SubPlot2 = Lose the battle, get scorned
@@ -161,8 +161,8 @@ Content
 		MapHeight 30
 
 		Start <if= P%id%02 0  P= %id%02 1>
-		nu1 <if= T1 0   Return   if= V1 0 V= 1 1   addrenown -5                        Memo 1   SetPlotStatus %id2%>
-		nu2 <if= T2 0   if= V1 0 V= 1 1            XPV 100   AddRenown 1  AddLawful 1  Memo 2   SetPlotStatus %id1%>
+		nu1 <if= T1 0   Return   if= V1 0 V= 1 1   addrenown -5                        Memo 1   SetPlotStatus %plotid% %id2%>
+		nu2 <if= T2 0   if= V1 0 V= 1 1            XPV 100   AddRenown 1  AddLawful 1  Memo 2   SetPlotStatus %plotid% %id1%>
 
 		Msg1 <You lost %name1%'s mission.>
 		Msg2 <You successfully completed %name1%'s mission.>

@@ -13,7 +13,7 @@ Plot
 
 	% Element1 is the NPC to meet
 
-	start <if= PlotStatus %id% else %pop% ifNPCDead %1% LoseComp 0 .%id%_loss>
+	start <if= PlotStatus %plotid% %id% else %pop% ifNPCDead %1% LoseComp 0 .%id%_loss>
 	.%id%_loss <+T-- +F-->
 
 	% SubPlot1 is a revelation
@@ -21,7 +21,7 @@ Plot
 
 	sub
 		Persona 1
-		greeting <if= PlotStatus %id% else %pop% NewChat Say %id%01 AddChat %id%01>
+		greeting <if= PlotStatus %plotid% %id% else %pop% NewChat Say %id%01 AddChat %id%01>
 		result%id%01 <Goto %id1%_GoInit>
 		Msg%id%01 <Thanks for your help back there. You know, I've got some information that you just might find useful.>
 		Msg%id%01_1 <>
@@ -66,7 +66,7 @@ Content
 
 	% P%id%01 = Message counter
 
-	start <if= PlotStatus %id% else %pop% ifScene .%id%_Scene if= P%id%01 0 P= %id%01 1 ForceChat %2%>
+	start <if= PlotStatus %plotid% %id% else %pop% ifScene .%id%_Scene if= P%id%01 0 P= %id%01 1 ForceChat %2%>
 	.%id%_Scene <OUTDOORS>
 
 	sub
@@ -102,8 +102,8 @@ Content
 	requires <*CS_DelayedNegation>
 
 	% P%id%01 = Time Limit
-	update <if= PlotStatus %id% else %pop% if= P%id%01 0 P= %id%01 ComTime P+ %id%01 7200 P+ %id%01 d86400>
-	hour <if= PlotStatus %id% else %pop% ifG ComTime P%id%01 NegateComp &CompScene na>
+	update <if= PlotStatus %plotid% %id% else %pop% if= P%id%01 0 P= %id%01 ComTime P+ %id%01 7200 P+ %id%01 d86400>
+	hour <if= PlotStatus %plotid% %id% else %pop% ifG ComTime P%id%01 NegateComp &CompScene na>
 
 Content
 	name <Default Delay>
@@ -111,8 +111,8 @@ Content
 	requires <*CS_DelayedVictory>
 
 	% P%id%01 = Time Limit
-	update <if= PlotStatus %id% else %pop% if= P%id%01 0 P= %id%01 ComTime P+ %id%01 7200 P+ %id%01 d86400>
-	hour <if= PlotStatus %id% else %pop% ifG ComTime P%id%01 WinComp &CompScene na>
+	update <if= PlotStatus %plotid% %id% else %pop% if= P%id%01 0 P= %id%01 ComTime P+ %id%01 7200 P+ %id%01 d86400>
+	hour <if= PlotStatus %plotid% %id% else %pop% ifG ComTime P%id%01 WinComp &CompScene na>
 
 
 %%
@@ -138,9 +138,9 @@ Content
 	Element3 <Scene Building Public !NEar -7>
 
 	% p%id%01 = Initialization Counter
-	start <if= PlotStatus %id% else %pop% ifNPCDead %1% LoseComp 0 .%id%_Next>
+	start <if= PlotStatus %plotid% %id% else %pop% ifNPCDead %1% LoseComp 0 .%id%_Next>
 	.%id%_Next <+T-- +G-->
-	update <if= PlotStatus %id% else %pop% if= P%id%01 0 P= %id%01 1 MoveAndPacifyNPC %1% %3% SetNPCFaction %1% 0 Email %id%01>
+	update <if= PlotStatus %plotid% %id% else %pop% if= P%id%01 0 P= %id%01 1 MoveAndPacifyNPC %1% %3% SetNPCFaction %1% 0 Email %id%01>
 
 	Msg%id%01_1 <%name1%@ \NARRATIVE 7 :// I've received bad news from %name2%... come meet me in %name3%.>
 	Msg%id%01_2 <%name1%@ \NARRATIVE 7 :// I've got some bad news. Come see me in %name3%.>
@@ -148,7 +148,7 @@ Content
 
 	sub
 		Persona 1
-		greeting <if= PlotStatus %id% else %pop% NewChat Say %id%01 NTBWinComp 0 .%id%_next StoryNote %id%03 AddChat %id%01 AddChat %id%02>
+		greeting <if= PlotStatus %plotid% %id% else %pop% NewChat Say %id%01 NTBWinComp 0 .%id%_next StoryNote %id%03 AddChat %id%01 AddChat %id%02>
 		.%id%_next <+T-- +F-->
 		result%id%01 <NewChat Say %id%02  AddCheerful d6>
 		result%id%02 <NewChat Say %id%02>
@@ -206,14 +206,14 @@ Content
 
 	% v%id%01 = Initialization/Conversation Counter
 
-	update <if= PlotStatus %id% else %pop% if= v%id%01 0 V= %id%01 1 Exit %3% MoveAndPacifyNPC %1% %3% MoveNPC %4% %3%>
+	update <if= PlotStatus %plotid% %id% else %pop% if= v%id%01 0 V= %id%01 1 Exit %3% MoveAndPacifyNPC %1% %3% MoveNPC %4% %3%>
 
 	start <if= v%id%01 1 else %pop% Alert %id%01 ForceChat %1% V= %id%01 2 Goto %pop%>
 	Msg%id%01 <You are taken to %name3%.>
 
 	sub
 		Persona 1
-		greeting <if= PlotStatus %id% else %pop%  &SetAllyFac %2% StoreOldFaction SetPCFac %2% &SetTargetNPC %4% NegateComp %3% .%id%_next  StoryNote %id%02 Goto .%id%_GoGreet>
+		greeting <if= PlotStatus %plotid% %id% else %pop%  &SetAllyFac %2% StoreOldFaction SetPCFac %2% &SetTargetNPC %4% NegateComp %3% .%id%_next  StoryNote %id%02 Goto .%id%_GoGreet>
 		*.%id%_GoGreet <*CS_ForcedInduction_Greeting .%id%_GoBrief %2%>
 		.%id%_next <+Tgt +Fmi +Psh>
 		.%id%_GoBrief <ifNPCOK %4% else .%id%_GoScrapMission NewChat Say %id%01 SMemo %id%04>
@@ -239,7 +239,7 @@ Content
 
 	% v%id%01 = Initialization/Conversation Counter
 
-	update <if= PlotStatus %id% else %pop% if= v%id%01 0 V= %id%01 1 Exit %3% MoveAndPacifyNPC %1% %3%>
+	update <if= PlotStatus %plotid% %id% else %pop% if= v%id%01 0 V= %id%01 1 Exit %3% MoveAndPacifyNPC %1% %3%>
 
 	start <if= v%id%01 1 else %pop% Alert %id%01 ForceChat %1% V= %id%01 2 Goto %pop%>
 	Msg%id%01 <You are taken to %name3%.>
@@ -249,7 +249,7 @@ Content
 
 	sub
 		Persona 1
-		greeting <if= PlotStatus %id% else %pop%  &SetAllyFac %2% StoreOldFaction SetPCFac %2% &SetCompScene 0 AlterCOntext .%id%_next SetPlotStatus %id1%  StoryNote %id%02 Goto .%id%_GoGreet>
+		greeting <if= PlotStatus %plotid% %id% else %pop%  &SetAllyFac %2% StoreOldFaction SetPCFac %2% &SetCompScene 0 AlterCOntext .%id%_next SetPlotStatus %plotid% %id1%  StoryNote %id%02 Goto .%id%_GoGreet>
 		*.%id%_GoGreet <*CS_ForcedInduction_Greeting .%id%_GoBrief %2%>
 		.%id%_next <+T-- +F-- +Psh>
 		.%id%_GoBrief <NewChat Say %id%01>
@@ -274,7 +274,7 @@ Content
 
 	% v%id%01 = Initialization/Conversation Counter
 
-	update <if= PlotStatus %id% else %pop% if= v%id%01 0 V= %id%01 1 Exit %4% MoveAndPacifyNPC %1% %4%>
+	update <if= PlotStatus %plotid% %id% else %pop% if= v%id%01 0 V= %id%01 1 Exit %4% MoveAndPacifyNPC %1% %4%>
 
 	start <if= v%id%01 1 else %pop% Alert %id%01 ForceChat %1%  V= %id%01 2  Goto %pop%>
 	Msg%id%01 <You are taken to a secret base of %name2%.>
@@ -284,7 +284,7 @@ Content
 
 	sub
 		Persona 1
-		greeting <if= PlotStatus %id% else %pop%  &SetAllyFac %2% StoreOldFaction SetPCFac %2% &SetCompScene 0 AlterCOntext .%id%_next SetPlotStatus %id1%  StoryNote %id%02 Goto .%id%_GoGreet>
+		greeting <if= PlotStatus %plotid% %id% else %pop%  &SetAllyFac %2% StoreOldFaction SetPCFac %2% &SetCompScene 0 AlterCOntext .%id%_next SetPlotStatus %plotid% %id1%  StoryNote %id%02 Goto .%id%_GoGreet>
 		*.%id%_GoGreet <*CS_ForcedInduction_Greeting .%id%_GoBrief %2%>
 		.%id%_next <+T-- +F-- +Psh>
 		.%id%_GoBrief <NewChat Say %id%01>
@@ -299,7 +299,7 @@ Content
 	inv
 		STC ENCOUNTER-WANDER
 		name <Secret Base>
-		update <if= PlotStatus %id% else GoHide SetStat STAT_MetaVisibility 0  Goto GoSetOrders>
+		update <if= PlotStatus %plotid% %id% else GoHide SetStat STAT_MetaVisibility 0  Goto GoSetOrders>
 	end
 
 %%
@@ -320,7 +320,7 @@ Content
 
 	% E1 is the NPC
 
-	start <if= PlotStatus %id% else %pop% ifNPCDead %1% SMemo 0 WinComp 0 .%id%_loss>
+	start <if= PlotStatus %plotid% %id% else %pop% ifNPCDead %1% SMemo 0 WinComp 0 .%id%_loss>
 	.%id%_loss <+T-- +F-->
 
 	% SubPlot1 is the revelation
@@ -328,7 +328,7 @@ Content
 
 	sub
 		Persona 1
-		greeting <if= PlotStatus %id% else %pop% EndChat Say %id%01 AddChat %id%01>
+		greeting <if= PlotStatus %plotid% %id% else %pop% EndChat Say %id%01 AddChat %id%01>
 		result%id%01 <Goto .%id1%_GoInit>
 		Msg%id%01 <Hey, because you won our duel, I'll let you in on a secret.>
 		Msg%id%01_1 <That was a good fight. Because you won, I'll tell you this secret.>
@@ -343,12 +343,12 @@ Content
 
 	% E1 is the NPC.
 
-	start <if= PlotStatus %id% else %pop% ifNPCDead %1% SMemo 0 WinComp 0 .%id%_loss>
+	start <if= PlotStatus %plotid% %id% else %pop% ifNPCDead %1% SMemo 0 WinComp 0 .%id%_loss>
 	.%id%_loss <+T-- +F-->
 
 	sub
 		Persona 1
-		greeting <if= PlotStatus %id% else %pop%  NewChat Say %id%01 FreezeNPC %1% StoryNote %id%02 &SetEnemyNPC %1% WinComp 0 .%id%_win ifNPCPassionate PCEnemy %1%>
+		greeting <if= PlotStatus %plotid% %id% else %pop%  NewChat Say %id%01 FreezeNPC %1% StoryNote %id%02 &SetEnemyNPC %1% WinComp 0 .%id%_win ifNPCPassionate PCEnemy %1%>
 		.%id%_win <+T-- +F-->
 		Msg%id%01 <I can't accept losing the duel to you... From this point on I'm going to train hard, then someday I'll be back and I'll defeat you!>
 		Msg%id%01_1 <People are already talking about how you defeated me... I can't accept that! You may have won this time, but I promise you that the next time we meet I will be the victor!>
@@ -377,12 +377,12 @@ Content
 	Element2 <Character "MILIT" !Near -7 !Ally -7 !Okay -3 !Okay 1>
 	Element3 <Scene Building Public !Near -7 !Ally 2>
 
-	start <if= PlotStatus %id% else %pop% ifNPCDead %1% SMemo 0 WinComp 0 .%id%_loss>
+	start <if= PlotStatus %plotid% %id% else %pop% ifNPCDead %1% SMemo 0 WinComp 0 .%id%_loss>
 	.%id%_loss <+T-- +F-->
 
 	sub
 		Persona 1
-		greeting <if= PlotStatus %id% else %pop% ifNPCOK %2% else .%id%_GoE2Died NewChat Say %id%01 SMemo %id%02 &SetTargetNPC %2% WinComp %3% .%id%_win>
+		greeting <if= PlotStatus %plotid% %id% else %pop% ifNPCOK %2% else .%id%_GoE2Died NewChat Say %id%01 SMemo %id%02 &SetTargetNPC %2% WinComp %3% .%id%_win>
 		.%id%_GoE2Died <NewChat Say %id%03 SMemo 0 WinComp 0 .%id%_draw>
 		.%id%_win <+Tgt +Fmi>
 		.%id%_draw <+T-- +F-->
@@ -425,12 +425,12 @@ Content
 	Element2 <Character !Ally -7 !Near -7>
 	Element3 <Scene Building Public !Near -7 !Okay 2>
 
-	start <if= PlotStatus %id% else %pop% ifNPCDead %1% SMemo 0 LoseComp 0 .%id%_loss>
+	start <if= PlotStatus %plotid% %id% else %pop% ifNPCDead %1% SMemo 0 LoseComp 0 .%id%_loss>
 	.%id%_loss <+T-- +F-->
 
 	sub
 		Persona 1
-		greeting <if= PlotStatus %id% else %pop% ifNPCOK %2% else .%id%_GoTrivial NewChat Say %id%01 SMemo %id%02 History %id%03 &SetTargetNPC %2% LoseComp %3% .%id%_changes>
+		greeting <if= PlotStatus %plotid% %id% else %pop% ifNPCOK %2% else .%id%_GoTrivial NewChat Say %id%01 SMemo %id%02 History %id%03 &SetTargetNPC %2% LoseComp %3% .%id%_changes>
 		.%id%_GoTrivial <NewChat Say %id%04 SMemo 0 NTBLoseComp 0 .%id%_loss>
 		.%id%_changes <+Tgt +Fmi>
 		.%id%_loss <+T-- +F-->
@@ -447,12 +447,12 @@ Content
 
 	% E1 is the NPC.
 
-	start <if= PlotStatus %id% else %pop% ifNPCDead %1% SMemo 0 LoseComp 0 .%id%_loss>
+	start <if= PlotStatus %plotid% %id% else %pop% ifNPCDead %1% SMemo 0 LoseComp 0 .%id%_loss>
 	.%id%_loss <+T-- +F-->
 
 	sub
 		Persona 1
-		greeting <if= PlotStatus %id% else %pop% NewChat Say %id%01 SMemo 0 NTBLoseComp 0 .%id%_changes>
+		greeting <if= PlotStatus %plotid% %id% else %pop% NewChat Say %id%01 SMemo 0 NTBLoseComp 0 .%id%_changes>
 		.%id%_changes <+T-- +F-->
 		Msg%id%01 <You lost the duel. Good for me.>
 	end

@@ -25,12 +25,12 @@ Plot
 
 	% P1 = Time Limit
 	% P2 = Email Indicator
-	start <if= PlotStatus 0 ifNPCOK %3% else GoDelete ifG ComTime P1 EndPlot>
+	start <if= PlotStatus %plotid% 0 ifNPCOK %3% else GoDelete ifG ComTime P1 EndPlot>
 	GoDelete <EndPlot>
-	update <if= PlotStatus 0 if= P1 0 P= 1 ComTime P+ 1 86400>
+	update <if= PlotStatus %plotid% 0 if= P1 0 P= 1 ComTime P+ 1 86400>
 
 	% Insert email here
-	5min <if= PlotStatus 0 if= P2 0  if= PCFac NPCFac %3%  if= d20 1  ifG PCCharm d40  Email 1 P= 2 1>
+	5min <if= PlotStatus %plotid% 0 if= P2 0  if= PCFac NPCFac %3%  if= d20 1  ifG PCCharm d40  Email 1 P= 2 1>
 	Msg1   <%name3%@ \SCENE NPCSCene %3% :// Hey \RANK , I've got a mission for you in %name1%.>
 	Msg1_1 <%name3%@ \SCENE NPCSCene %3% :// Report to \SCENE NPCScene %3% for a mission at once.>
 	Msg1_2 <%name3%@ \SCENE NPCSCene %3% :// Your services are required by %name2%. Come see me for mission briefing.>
@@ -39,9 +39,9 @@ Plot
 	sub
 		Persona 3
 		rumor0 <%name3% needs a mecha pilot for an upcoming combat mission.>
-		greeting <if= PlotStatus %id1% else GoCheckOffer Goto GoRemind>
+		greeting <if= PlotStatus %plotid% %id1% else GoCheckOffer Goto GoRemind>
 		*GoRemind <*MechaMissionReminder %4%>
-		GoCheckOffer <if# PlotStatus 0 else GoCheckEnemy NewChat SayAnything>
+		GoCheckOffer <if# PlotStatus %plotid% 0 else GoCheckEnemy NewChat SayAnything>
 		*GoCheckEnemy <*ENEMY_CHECK GoCheckEmail ChatNPCFac GoEnd>
 		GoCheckEmail <if= P2 1 else GoCheckMember Goto GoGotEmail>
 		*GoGotEmail <*DidYouGetEmail GoMissionBriefing>
@@ -53,7 +53,7 @@ Plot
 		GoEnd <EndPlot>
 		GoMissionBriefing <NewChat Say 1  AddChat 1 AddChat 2>
 		*result1 <*GoodLuckOnMission&NoEnemyFac GoR1Final ChatNPCFac na>
-		GoR1Final <Memo 2 SetPlotStatus %id1%>
+		GoR1Final <Memo 2 SetPlotStatus %plotid% %id1%>
 		result2 <Goto GoRejectMission>
 		Msg1 <Some intruders have broken through our defense perimeter. They must be stopped. This mission is worth $ \VAL Reward %threat% PayRate plus salvage rights.>
 		Msg1_1 <Our scouts have located a group of intruders in %name4% . Your job, if you accept it, will be to locate these intruders and engage them in combat. Win, and you'll earn $ \VAL Reward %threat% PayRate plus full salvage rights.>

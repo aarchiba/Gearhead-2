@@ -33,13 +33,13 @@ Content
 	% E3 is a scene where the NPC will suggest they gather information
 	Element3 <Scene Public !Near -7>
 
-	start <if= PlotStatus %id% else %pop% ifNPCDead %2% LoseComp 0 .%id%_Loss>
+	start <if= PlotStatus %plotid% %id% else %pop% ifNPCDead %2% LoseComp 0 .%id%_Loss>
 	.%id%_Loss <+T-- +F-->
 
 	sub
 		Persona 2
 		%% V%id%01 = Question Counter
-		greeting <if= PlotStatus %id% else %pop% ifChatNPCInPlay else .%id%_GoBrushOff Goto .%id%_GoIntro>
+		greeting <if= PlotStatus %plotid% %id% else %pop% ifChatNPCInPlay else .%id%_GoBrushOff Goto .%id%_GoIntro>
 		*.%id%_GoBrushOff <*IAmBusy&OnPhone>
 		*.%id%_GoIntro <*PressConferenceGreeting&AboutItem .%id%_GoTell &TargetItem>
 		.%id%_GoTell <if= v%id%01 0 else .%id%_GoOffer NewChat Say %id%01 AddChat %id%01 AddChat %id%02 AddChat %id%03 AddChat %id%04>
@@ -80,13 +80,13 @@ Content
 	Element3 <Prefab>
 
 	% v%id%01 = Initialization counter
-	update <if= PlotStatus %id% else %pop% v= %id%01 1 FreezeNPC %3%>
-	start <if= PlotStatus %id% else %pop% ifNPCDead %2% LoseComp 0 .%id%_Loss>
+	update <if= PlotStatus %plotid% %id% else %pop% v= %id%01 1 FreezeNPC %3%>
+	start <if= PlotStatus %plotid% %id% else %pop% ifNPCDead %2% LoseComp 0 .%id%_Loss>
 	.%id%_Loss <+T-- +F-->
 
 	sub
 		Persona 2
-		greeting <if= PlotStatus %id% else %pop% ifChatNPCInPlay else .%id%_GoBrushOff Goto .%id%_GoIntro>
+		greeting <if= PlotStatus %plotid% %id% else %pop% ifChatNPCInPlay else .%id%_GoBrushOff Goto .%id%_GoIntro>
 		*.%id%_GoBrushOff <*IAmBusy&OnPhone>
 		*.%id%_GoIntro <*PressConferenceGreeting&AboutItem .%id%_GoTell &TargetItem>
 		.%id%_GoTell <NewChat Say %id%01 StoryNote %id%02 AddChat %id%01 AddChat %id%02 &SetTargetNPC %3% WinComp 0 .%id%_Next>

@@ -55,10 +55,10 @@ Content
 
 		Start <if= L2 0 L= 2 1 ForceChat %5%>
 		% If the NPC dies, this scenario ends in a loss.
-		Faint%5% <L= 1 1  SMemo 4  History 1  SetPlotStatus %id2%>
+		Faint%5% <L= 1 1  SMemo 4  History 1  SetPlotStatus %plotid% %id2%>
 		% If the PC defeats all of T2 before the NPC dies, it's a win.
-		nu1 <if= T1 0   Return   if= V1 0 V= 1 1               SMemo 4  History 1   SetPlotStatus %id2%>
-		nu2 <if= T2 0   if= V1 0 V= 1 1   XPV 100  AddRenown 1   Alert 3 RunAway %5% SMemo 4 History 2 SetPlotStatus %id1%>
+		nu1 <if= T1 0   Return   if= V1 0 V= 1 1               SMemo 4  History 1   SetPlotStatus %plotid% %id2%>
+		nu2 <if= T2 0   if= V1 0 V= 1 1   XPV 100  AddRenown 1   Alert 3 RunAway %5% SMemo 4 History 2 SetPlotStatus %plotid% %id1%>
 		Msg1 <You failed to protect %name5% 's convoy from bandits.>
 		Msg2 <You saved %name5% 's convoy from bandits.>
 		Msg3 <As the battle ends, %name5% 's convoy moves off.>
@@ -86,7 +86,7 @@ Content
 
 		Persona 5
 		special <Unlisted>
-		greeting <if= PlotStatus %id% else GoChat if# V1 0 else GoFirst EndChat Say 1>
+		greeting <if= PlotStatus %plotid% %id% else GoChat if# V1 0 else GoFirst EndChat Say 1>
 		GoChat <NewChat SayAnything>
 		GoFirst <EndChat Say %id%01 AddChat %id%01>
 		*result%id%01 <*LetsDefeatThem %6%>
@@ -119,7 +119,7 @@ Content
 	SubPlot2 <*CS_Loss_RevealEnemyNPC 1 4>
 
 	% V%id%01 = Initialization Counter
-	update <if= PlotStatus %id% else %pop% if= V%id%01 0 V= %id%01 1   NPCLevel %4% StoryDL MoveNPC %4% %3% SetNPCTeam %4% 2 SetNPCFaction %4% &EnemyFac>
+	update <if= PlotStatus %plotid% %id% else %pop% if= V%id%01 0 V= %id%01 1   NPCLevel %4% StoryDL MoveNPC %4% %3% SetNPCTeam %4% 2 SetNPCFaction %4% &EnemyFac>
 
 	sub
 		MetaScene 3 2
@@ -129,8 +129,8 @@ Content
 		MapHeight 30
 
 		Start <if= L2 0 L= 2 1   ForceChat %4%>
-		nu1 <if= T1 0  Return   if= L1 0 L= 1 1   SMemo 1 History 2   ForceChat %4%  SetPlotStatus %id2%>
-		nu2 <if= T2 0           if= L1 0 L= 1 2   SMemo 1 History 3   AddRenown 1  Salvage  XPV 100  SetPlotStatus %id1%   ifNPCOK %4%    ForceChat %4%>
+		nu1 <if= T1 0  Return   if= L1 0 L= 1 1   SMemo 1 History 2   ForceChat %4%  SetPlotStatus %plotid% %id2%>
+		nu2 <if= T2 0           if= L1 0 L= 1 2   SMemo 1 History 3   AddRenown 1  Salvage  XPV 100  SetPlotStatus %plotid% %id1%   ifNPCOK %4%    ForceChat %4%>
 
 		Msg1 <You should report back to %name1% about your battle with %name4%.>
 		Msg2 <You were defeated by the pirate %name4%.>
@@ -158,9 +158,9 @@ Content
 		GoThreat <EndChat Say 1 AddChat 1 AddChat 2>
 		*GoFight <*THEME_EXPO&ENEMY na>
 		result1 <ifG T-3 0 else GoFight EndChat Say 2 AddChat 3 AddChat 4>
-		result2 <EndChat Say 3 L= 1 1 AddRenown -10 SMemo 4 History 5 SetPlotStatus %id2% Return>
+		result2 <EndChat Say 3 L= 1 1 AddRenown -10 SMemo 4 History 5 SetPlotStatus %plotid% %id2% Return>
 		result3 <EndChat Say 6 AddChat 5>
-		result4 <EndChat Say 7 L= 1 1 AddHeroic 1 AddRenown -5 SMemo 4 History 8 SetPlotStatus %id2% Return>
+		result4 <EndChat Say 7 L= 1 1 AddHeroic 1 AddRenown -5 SMemo 4 History 8 SetPlotStatus %plotid% %id2% Return>
 		result5 <Goto GoFight>
 		Msg1 <Hm, what's this? You don't look like you have anything worth stealing.>
 		Msg1_1 <Who's there? I don't recognize that mecha, so I don't know if you're friend or foe, and you definitely don't look like you have anything worth stealing. I'd advise you to simply leave this place before any trouble starts.>
@@ -229,7 +229,7 @@ Content
 	SubPlot2 <*CS_Loss_ToUnknownEnemy 1>
 
 	% V%id%01 = Initialization Counter
-	update <if= PlotStatus %id% else %pop% if= V%id%01 0 V= %id%01 1   NPCLevel %4% StoryDL>
+	update <if= PlotStatus %plotid% %id% else %pop% if= V%id%01 0 V= %id%01 1   NPCLevel %4% StoryDL>
 
 	sub
 		MetaScene 3 2
@@ -239,8 +239,8 @@ Content
 		MapHeight 30
 
 		Start <if= L2 0 L= 2 1   ForceChat %4% StoryNote 1>
-		nu1 <if= T1 0   Return   if= V1 0 V= 1 1   SMemo 2 SetPlotStatus %id2%>
-		nu2 <if= T2 0   if= V1 0 V= 1 1   XPV 100  AddRenown 1   SALVAGE  SMemo 3   SetPlotStatus %id1%>
+		nu1 <if= T1 0   Return   if= V1 0 V= 1 1   SMemo 2 SetPlotStatus %plotid% %id2%>
+		nu2 <if= T2 0   if= V1 0 V= 1 1   XPV 100  AddRenown 1   SALVAGE  SMemo 3   SetPlotStatus %plotid% %id1%>
 
 		Msg1 <You discovered that your opponent was your friend %name4%.>
 		Msg2 <You were defeated by %name4%. You should return to \SCENE NPCScene %1% and tell %name1%.>
@@ -311,8 +311,8 @@ Content
 		MapHeight 30
 
 		Start <if= L2 0 L= 2 1 History 2 SMemo 3 AlterContext .next>
-		nu1 <if= T1 0   Return   if= V1 0 V= 1 1   SetPlotStatus %id2%>
-		nu2 <if= T2 0   if= V1 0 V= 1 1   XPV 100  AddRenown 1   SALVAGE   Alert 1 SetPlotStatus %id1%>
+		nu1 <if= T1 0   Return   if= V1 0 V= 1 1   SetPlotStatus %plotid% %id2%>
+		nu2 <if= T2 0   if= V1 0 V= 1 1   XPV 100  AddRenown 1   SALVAGE   Alert 1 SetPlotStatus %plotid% %id1%>
 		Msg1 <It's clear that \FACTION &EnemyFac are up to something.>
 		Msg2 <You fought a group of mecha from \Faction &EnemyFac .>
 		Msg3 <You fought a group of mecha from \Faction &EnemyFac . You should report back to %name1%.>
@@ -360,8 +360,8 @@ Content
 		MapHeight 30
 
 		Start <if= L2 0 L= 2 1 History 2 SMemo 3 AlterContext .next>
-		nu1 <if= T1 0   Return   if= V1 0 V= 1 1   SetPlotStatus %id2%>
-		nu2 <if= T2 0   if= V1 0 V= 1 1   XPV 100  AddRenown 1   SALVAGE   Alert 1 SetPlotStatus %id1%>
+		nu1 <if= T1 0   Return   if= V1 0 V= 1 1   SetPlotStatus %plotid% %id2%>
+		nu2 <if= T2 0   if= V1 0 V= 1 1   XPV 100  AddRenown 1   SALVAGE   Alert 1 SetPlotStatus %plotid% %id1%>
 		Msg1 <This may have been the first wave of an invasion force!>
 		Msg2 <You fought a group of unknown mecha.>
 		Msg3 <You fought a group of unknown mecha. You should report back to %name1%.>
@@ -413,8 +413,8 @@ Content
 		MapHeight 30
 
 		Start <if= L2 0 L= 2 1 SMemo 3 History 2 &SetEnemyFac %3% PCFEnemy %3%>
-		nu1 <if= T1 0   Return   if= V1 0 V= 1 1   SetPlotStatus %id2%>
-		nu2 <if= T2 0   if= V1 0 V= 1 1   XPV 100  AddRenown 1   SALVAGE   Alert 1 SetPlotStatus %id1%>
+		nu1 <if= T1 0   Return   if= V1 0 V= 1 1   SetPlotStatus %plotid% %id2%>
+		nu2 <if= T2 0   if= V1 0 V= 1 1   XPV 100  AddRenown 1   SALVAGE   Alert 1 SetPlotStatus %plotid% %id1%>
 		Msg1 <There can be no doubt: these mecha were sent by \FACTION &EnemyFac .>
 		Msg2 <You fought a group of mecha from %name3%.>
 		Msg3 <You fought a group of mecha from %name3%. You should report back to %name1%.>
@@ -452,7 +452,7 @@ Content
 	Place4 <3 sd enemy>
 
 	% V%id%01 = Initialization Counter
-	update <if= PlotStatus %id% else %pop% if= V%id%01 0 V= %id%01 1   FreezeNPC %4%   MoveNPC %4% %3% SetNPCTeam %4% 2 NPCLevel %4% StoryDL>
+	update <if= PlotStatus %plotid% %id% else %pop% if= V%id%01 0 V= %id%01 1   FreezeNPC %4%   MoveNPC %4% %3% SetNPCTeam %4% 2 NPCLevel %4% StoryDL>
 
 	% SubPlot1 = Win the battle, get a reward
 	% SubPlot2 = Lose the battle, get scorned
@@ -467,8 +467,8 @@ Content
 		MapHeight 30
 
 		Start <if= L2 0 L= 2 1   SMemo 3 History 2   ForceChat %4%    AlterContext .next>
-		nu1 <if= T1 0   Return   if= V1 0 V= 1 1   SetPlotStatus %id2%>
-		nu2 <if= T2 0   if= V1 0 V= 1 1   XPV 100  AddRenown 1   SALVAGE   Alert 1 SetPlotStatus %id1%>
+		nu1 <if= T1 0   Return   if= V1 0 V= 1 1   SetPlotStatus %plotid% %id2%>
+		nu2 <if= T2 0   if= V1 0 V= 1 1   XPV 100  AddRenown 1   SALVAGE   Alert 1 SetPlotStatus %plotid% %id1%>
 		Msg1 <Who sent these mecha, and what do they want?>
 		Msg2 <You fought a group of mecha led by %name4%.>
 		Msg3 <You fought a group of mecha led by %name4%. You should report back to %name1%.>
@@ -508,7 +508,7 @@ Content
 	requires <*CS_MechaEncounter   +Pme E:++>
 
 	% V%id%01 = Initialization
-	update <if= PlotStatus %id% else %pop% if= V%id%01 0 V= %id%01 1 NPCLevel %4% StoryDL>
+	update <if= PlotStatus %plotid% %id% else %pop% if= V%id%01 0 V= %id%01 1 NPCLevel %4% StoryDL>
 
 	% E1: The Mission Provider
 	% E2: The outdoor scene where the fight will take place
@@ -535,9 +535,9 @@ Content
 
 		Start <if= L2 0 L= 2 1   ForceChat %4%  AlterContext .next>
 		Faint%4% <if= L1 0  Goto GoDie>
-		GoDie <L= 1 2  L= 3 1   FreezeNPC %4%   SMemo 5  History 4    SetPlotStatus %id1%>
-		nu1 <if= T1 0  Return   if= L1 0 L= 1 1   SMemo 5  History 2     ForceChat %4%  SetPlotStatus %id2%>
-		nu2 <if= T2 0           if= L1 0 L= 1 2   SMemo 5  History 3   AddRenown 1   XPV 100   SALVAGE     ifNPCOK %4% else GoDie  ForceChat %4%  SetPlotStatus %id1%>
+		GoDie <L= 1 2  L= 3 1   FreezeNPC %4%   SMemo 5  History 4    SetPlotStatus %plotid% %id1%>
+		nu1 <if= T1 0  Return   if= L1 0 L= 1 1   SMemo 5  History 2     ForceChat %4%  SetPlotStatus %plotid% %id2%>
+		nu2 <if= T2 0           if= L1 0 L= 1 2   SMemo 5  History 3   AddRenown 1   XPV 100   SALVAGE     ifNPCOK %4% else GoDie  ForceChat %4%  SetPlotStatus %plotid% %id1%>
 		End <if# L3 0 Print 1>
 
 		.next <+Pun>
@@ -606,7 +606,7 @@ Content
 		MapHeight 30
 
 		Start <if= L2 0 L= 2 1   ifNPCOK %4% else GoE4Died ForceChat %4%>
-		GoE4Died <Alert 4 Retreat 2 SetPlotStatus %id1%>
+		GoE4Died <Alert 4 Retreat 2 SetPlotStatus %plotid% %id1%>
 		nu1 <if= T1 0  Return   if= L1 0 L= 1 1   SMemo 1 History 2   ForceChat %4%>
 		nu2 <if= T2 0           if= L1 0 L= 1 2   SMemo 1 History 3   AddRenown 1   XPV 100   Salvage   ForceChat %4%>
 
@@ -630,9 +630,9 @@ Content
 
 		Persona 4
 		special <UNLISTED>
-		greeting <PCFEnemy &EnemyFac   if= L1 2 else GoCheckLoss SetPlotStatus %id1% Goto GoWinSpeech>
+		greeting <PCFEnemy &EnemyFac   if= L1 2 else GoCheckLoss SetPlotStatus %plotid% %id1% Goto GoWinSpeech>
 		GoWinSpeech <EndChat Say 2>
-		GoCheckLoss <if= L1 1 else GoThreat SetPlotStatus %id2% Goto GoLoseSpeech>
+		GoCheckLoss <if= L1 1 else GoThreat SetPlotStatus %plotid% %id2% Goto GoLoseSpeech>
 		*GoLoseSpeech <*YouLose>
 		*GoThreat <*BattleChallenge GoFight na>
 		GoFight <EndChat Say 1>
@@ -675,7 +675,7 @@ Plot
 	requires <*CS_MechaEncounter   E:++ +Pun ~!Lo -!Ne -E:ALLY>
 
 	% V%id%01 = Initialization Counter
-	update <if= PlotStatus %id% else %pop% if= V%id%01 0 V= %id%01 1   NPCLevel %4% StoryDL>
+	update <if= PlotStatus %plotid% %id% else %pop% if= V%id%01 0 V= %id%01 1   NPCLevel %4% StoryDL>
 
 	% E1: The Mission Provider
 	% E2: The outdoor scene where the fight will take place
@@ -701,9 +701,9 @@ Plot
 
 		Start <if= L2 0 L= 2 1   ForceChat %4%>
 		Faint%4% <if= L1 0 Goto GoDie>
-		GoDie <L= 1 2  L= 3 1   FreezeNPC %4%   StoryNote 4   SetPlotStatus %id1%>
-		nu1 <if= T1 0  Return   if= L1 0 L= 1 1   StoryNote 2   SetPlotStatus %id2%   ForceChat %4%>
-		nu2 <if= T2 0           if= L1 0 L= 1 2   StoryNote 3   AddRenown 1   XPV 100   Salvage   ifNPCOK %4% else GoDie   SetPlotStatus %id1%   ForceChat %4%>
+		GoDie <L= 1 2  L= 3 1   FreezeNPC %4%   StoryNote 4   SetPlotStatus %plotid% %id1%>
+		nu1 <if= T1 0  Return   if= L1 0 L= 1 1   StoryNote 2   SetPlotStatus %plotid% %id2%   ForceChat %4%>
+		nu2 <if= T2 0           if= L1 0 L= 1 2   StoryNote 3   AddRenown 1   XPV 100   Salvage   ifNPCOK %4% else GoDie   SetPlotStatus %plotid% %id1%   ForceChat %4%>
 		End <if# L3 0 Print 1>
 
 		Msg1 <%name4%'s cockpit is empty. Could \SPR %4% have escaped?>
@@ -763,8 +763,8 @@ Content
 		MapHeight 30
 
 		Start <if= L2 0 L= 2 1 SMemo 1 History 2>
-		nu1 <if= T1 0   Return   if= V1 0 V= 1 1   SetPlotStatus %id2%>
-		nu2 <if= T2 0   if= V1 0 V= 1 1            XPV 100   AddRenown 1  Salvage   SetPlotStatus %id1%>
+		nu1 <if= T1 0   Return   if= V1 0 V= 1 1   SetPlotStatus %plotid% %id2%>
+		nu2 <if= T2 0   if= V1 0 V= 1 1            XPV 100   AddRenown 1  Salvage   SetPlotStatus %plotid% %id1%>
 
 		Msg1 <After fighting some mysterious mecha you should report back to %name1%.>
 		Msg2 <You fought a group of mysterious mecha.>
@@ -820,9 +820,9 @@ Plot
 
 		Start <if= L2 0 L= 2 1   ForceChat %4%     PCFEnemy &EnemyFac>
 		Faint%4% <if= L1 0  Goto GoDie>
-		GoDie <L= 1 2  L= 3 1   FreezeNPC %4%   SMemo 5 History 4     SetPlotStatus %id1%>
-		nu1 <if= T1 0  Return   if= L1 0 L= 1 1   SMemo 5 History 2      ForceChat %4%  SetPlotStatus %id2%>
-		nu2 <if= T2 0           if= L1 0 L= 1 2   SMemo 5 History 3   AddRenown 1  Salvage   ifNPCOK %4% else GoDie  XPV 100    ForceChat %4%  SetPlotStatus %id1%>
+		GoDie <L= 1 2  L= 3 1   FreezeNPC %4%   SMemo 5 History 4     SetPlotStatus %plotid% %id1%>
+		nu1 <if= T1 0  Return   if= L1 0 L= 1 1   SMemo 5 History 2      ForceChat %4%  SetPlotStatus %plotid% %id2%>
+		nu2 <if= T2 0           if= L1 0 L= 1 2   SMemo 5 History 3   AddRenown 1  Salvage   ifNPCOK %4% else GoDie  XPV 100    ForceChat %4%  SetPlotStatus %plotid% %id1%>
 		End <if# L3 0 Print 1>
 
 		Msg1 <%name4%'s cockpit is empty. Could \SPR %4% have escaped?>
@@ -896,9 +896,9 @@ Plot
 
 		Start <if= L2 0 L= 2 1   ForceChat %4%     PCFEnemy &EnemyFac>
 		Faint%4% <if= L1 0  Goto GoDie>
-		GoDie <L= 1 2  L= 3 1   FreezeNPC %4%   SMemo 3 History 2     SetPlotStatus %id1%>
-		nu1 <if= T1 0  Return   if= L1 0 L= 1 1   SMemo 3 History 2      ForceChat %4%  SetPlotStatus %id2%>
-		nu2 <if= T2 0           if= L1 0 L= 1 2   SMemo 3 History 2   AddRenown 1  Salvage   ifNPCOK %4% else GoDie  XPV 100    ForceChat %4%  SetPlotStatus %id1%>
+		GoDie <L= 1 2  L= 3 1   FreezeNPC %4%   SMemo 3 History 2     SetPlotStatus %plotid% %id1%>
+		nu1 <if= T1 0  Return   if= L1 0 L= 1 1   SMemo 3 History 2      ForceChat %4%  SetPlotStatus %plotid% %id2%>
+		nu2 <if= T2 0           if= L1 0 L= 1 2   SMemo 3 History 2   AddRenown 1  Salvage   ifNPCOK %4% else GoDie  XPV 100    ForceChat %4%  SetPlotStatus %plotid% %id1%>
 		End <if# L3 0 Print 1>
 
 		Msg1 <%name4%'s cockpit is empty. Could \SPR %4% have escaped?>
@@ -968,8 +968,8 @@ Content
 		MapHeight 30
 
 		Start <if= L2 0 L= 2 1 Alert 1>
-		nu1 <if= T1 0   Return   if= V1 0 V= 1 1   SMemo 2 History 4 SetPlotStatus %id2%>
-		nu2 <if= T2 0   if= V1 0 V= 1 1            SMemo 2 History 3 XPV 100   AddRenown 1  Salvage   SetPlotStatus %id1%>
+		nu1 <if= T1 0   Return   if= V1 0 V= 1 1   SMemo 2 History 4 SetPlotStatus %plotid% %id2%>
+		nu2 <if= T2 0   if= V1 0 V= 1 1            SMemo 2 History 3 XPV 100   AddRenown 1  Salvage   SetPlotStatus %plotid% %id1%>
 
 		Msg1 <The enemy mecha appear to be escorting an experimental weapon. You should probably be careful.>
 		Msg2 <You should report back to %name1% about the experimental weapon you just fought.>
@@ -1058,11 +1058,11 @@ Content
 
 		Start <if= L2 0 L= 2 1 ForceChat %5% History 1>
 		% If the NPC dies, this scenario ends in a loss.
-		Faint%5% <L= 1 1  SMemo 2  History 3  SetPlotStatus %id2%>
+		Faint%5% <L= 1 1  SMemo 2  History 3  SetPlotStatus %plotid% %id2%>
 
 		% If the PC defeats all of T2 before the NPC dies, it's a win.
-		nu1 <if= T1 0   Return   if= V1 0 V= 1 1               SMemo 2  History 4   SetPlotStatus %id2%>
-		nu2 <if= T2 0   if= V1 0 V= 1 1   XPV 100  AddRenown 1   Alert 5 FreezeNPC %5% PCFriend %5% SMemo 2 History 6 SetPlotStatus %id1%>
+		nu1 <if= T1 0   Return   if= V1 0 V= 1 1               SMemo 2  History 4   SetPlotStatus %plotid% %id2%>
+		nu2 <if= T2 0   if= V1 0 V= 1 1   XPV 100  AddRenown 1   Alert 5 FreezeNPC %5% PCFriend %5% SMemo 2 History 6 SetPlotStatus %plotid% %id1%>
 
 		Msg1 <You found %name5% being attacked by mecha.>
 		Msg2 <You should report back to %name1% about the mission.>
@@ -1094,7 +1094,7 @@ Content
 		Persona 5
 		special <Unlisted>
 		% V%id%01 = Introduction counter
-		greeting <if= PlotStatus %id% else %pop% if# V%id%01 0 else GoFirst EndChat Say %id%01>
+		greeting <if= PlotStatus %plotid% %id% else %pop% if# V%id%01 0 else GoFirst EndChat Say %id%01>
 		GoFirst <EndChat Say %id%02 AddChat %id%01 AddChat %id%02 V= %id%01 1>
 		result%id%01 <EndChat Say %id%03>
 		result%id%02 <EndChat Say %id%04>
@@ -1181,8 +1181,8 @@ Content
 
 		Start <if= L2 0 L= 2 1   ifNPCOK %4% else GoNoE4 Monologue %4% 1 History 2>
 		GoNoE4 <Alert 3 History 4>
-		nu1 <if= T1 0  Return   if= L1 0 L= 1 1   SMemo 5   SetPlotStatus %id2%>
-		nu2 <if= T2 0           if= L1 0 L= 1 2   SMemo 5   AddRenown 1   XPV 100   Salvage  SetPlotStatus %id1%>
+		nu1 <if= T1 0  Return   if= L1 0 L= 1 1   SMemo 5   SetPlotStatus %plotid% %id2%>
+		nu2 <if= T2 0           if= L1 0 L= 1 2   SMemo 5   AddRenown 1   XPV 100   Salvage  SetPlotStatus %plotid% %id1%>
 
 		Msg1 <Men, keep \PC occupied. I have urgent business in %name5%.>
 		Msg2 <You fought %name4%'s men, while \SPR %4% left to attack %name5%.>
@@ -1250,10 +1250,10 @@ Content
 
 		Start <if= L2 0 L= 2 1 ForceChat %5%>
 		% If the NPC dies, this scenario ends in a loss.
-		Faint%5% <L= 1 1  SMemo 5  History 1  SetPlotStatus %id2%>
+		Faint%5% <L= 1 1  SMemo 5  History 1  SetPlotStatus %plotid% %id2%>
 		% If the PC defeats all of T2 before the NPC dies, it's a win.
-		nu1 <if= T1 0   Return   if= V1 0 V= 1 1               SMemo 5  History 1   SetPlotStatus %id2%>
-		nu2 <if= T2 0   if= V1 0 V= 1 1   XPV 100  AddRenown 1   Alert 3 RunAway %5% SMemo 5 History 2 SetPlotStatus %id1%>
+		nu1 <if= T1 0   Return   if= V1 0 V= 1 1               SMemo 5  History 1   SetPlotStatus %plotid% %id2%>
+		nu2 <if= T2 0   if= V1 0 V= 1 1   XPV 100  AddRenown 1   Alert 3 RunAway %5% SMemo 5 History 2 SetPlotStatus %plotid% %id1%>
 		Msg1 <You found %name5% being attacked by mecha, but failed to help.>
 		Msg2 <You rescued %name5% from hostile mecha.>
 		Msg2_1 <You rescued %name5% from \FACTION &EnemyFac .>
@@ -1283,7 +1283,7 @@ Content
 
 		Persona 5
 		special <Unlisted>
-		greeting <if= PlotStatus %id% else GoChat if# V1 0 else GoFirst EndChat Say 1>
+		greeting <if= PlotStatus %plotid% %id% else GoChat if# V1 0 else GoFirst EndChat Say 1>
 		*GoFirst <*HelpMeVsMecha GoAccept GoDeny>
 		GoAccept <V= 1 1 EndChat Say 2 AddHeroic 1 AddReact d10>
 		GoDeny <V= 1 1 EndChat Say 3 AddRenown -1>

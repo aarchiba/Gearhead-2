@@ -21,10 +21,10 @@ Plot
 	% V1 = Email Indicator
 
 	% As long as we're still at the first phase, the NPC's death will end the plot.
-	start <if= PlotStatus 0 ifNPCDead %2%  LoseComp 0 .changes>
+	start <if= PlotStatus %plotid% 0 ifNPCDead %2%  LoseComp 0 .changes>
 	.changes <+T-- +F-->
 
-	5Min <if= PlotStatus 0 if= V1 0 if= d20 1 ifG PCCharm d30 V= 1 1 EMail 1>
+	5Min <if= PlotStatus %plotid% 0 if= V1 0 if= d20 1 ifG PCCharm d30 V= 1 1 EMail 1>
 
 	% SubPlot1 is the combat encounter
 	SubPlot1 <*CS_MechaEncounter 2 3>
@@ -35,13 +35,13 @@ Plot
 		Persona 2
 		rumor <%name2% wants you to help fight %name1%.>
 		% V1 = History counter
-		greeting <if# PlotStatus 0 else .%id%_GoOfferMission if# PlotStatus %id1% else .%id%_GoRemind NewChat SayAnything>
+		greeting <if# PlotStatus %plotid% 0 else .%id%_GoOfferMission if# PlotStatus %plotid% %id1% else .%id%_GoRemind NewChat SayAnything>
 		.%id%_GoOfferMission <ifChatNPCUnknown else .%id%_GoKnownGreeting ifChatNPCAlly else .%id%_GoUnknownGreeting Goto .%id%_GoKnownGreeting>
 		*.%id%_GoRemind <*MechaMissionReminder %2%>
 		*.%id%_GoKnownGreeting <*IHaveAJobForYou .%id%_GoBriefing>
 		*.%id%_GoUnknownGreeting <*AreYouHereAboutJob&Mecha .%id%_GoBriefing>
 		*.%id%_GoAccept <*GoodLuckOnMission .%id%_GoR1Exit ChatNPCFac &EnemyFac>
-		.%id%_GoR1Exit <StoryNote 4 SetPlotStatus %id1%>
+		.%id%_GoR1Exit <StoryNote 4 SetPlotStatus %plotid% %id1%>
 		*.%id%_GoDeny <*RejectMission .%id%_GoR2Exit>
 		.%id%_GoR2Exit <LoseComp 0 .%id%_changes>
 		.%id%_changes <+T-- +F-->
@@ -88,7 +88,7 @@ Plot
 	Place5 <4>
 
 	% As long as we're still at the first phase, the NPC's death will end the plot.
-	start <if= PlotStatus 0 ifNPCDead %2%  LoseComp 0 .changes>
+	start <if= PlotStatus %plotid% 0 ifNPCDead %2%  LoseComp 0 .changes>
 	.changes <+T-- +F-->
 
 	% SubPlot1 is the entrance unlocker
@@ -98,9 +98,9 @@ Plot
 
 	sub
 		Persona 2
-		greeting <if# PlotStatus 0 else GoAsk NewChat SayAnything>
+		greeting <if# PlotStatus %plotid% 0 else GoAsk NewChat SayAnything>
 		*GoAsk <*LookingForItem %5% GoExplain>
-		GoExplain <NewChat Say %id%01 SMemo %id%02 History %id%03 SetPlotStatus %id1% AddChat %id%01 AddChat %id%02>
+		GoExplain <NewChat Say %id%01 SMemo %id%02 History %id%03 SetPlotStatus %plotid% %id1% AddChat %id%01 AddChat %id%02>
 		result%id%01 <NewChat Say %id%04>
 		result%id%02 <NewChat Say %id%05>
 		Msg%id%01 <It's believed that the %name5% is near here. It was being transported on a spaceship that was, unfortunately, destroyed by pirates. Some believe that it still exists within the wreckage.>
@@ -135,10 +135,10 @@ Plot
 		start <Print 1>
 
 		% Upon getting the item, start the consequences going
-		get%5% <if= L1 0 L= 1 1 SetPlotStatus %id2% History 2>
+		get%5% <if= L1 0 L= 1 1 SetPlotStatus %plotid% %id2% History 2>
 
 		% If the item is destroyed, that's gonna have consequences too.
-		end <ifItemDestroyed %5% if= L1 0 L= 1 1 SetPlotStatus %id2% History 3>
+		end <ifItemDestroyed %5% if= L1 0 L= 1 1 SetPlotStatus %plotid% %id2% History 3>
 
 		msg1 <You enter %name4%.>
 		Msg2 <You recovered the %name5%.>
@@ -196,7 +196,7 @@ Plot
 	SubPlot1 <*CS_Duel&NoDerailment 3 1 4>
 
 	% As long as we're still at the first phase, the NPC's death will end the plot.
-	start <if= PlotStatus 0 ifNPCDead %2% LoseComp 0 .changes>
+	start <if= PlotStatus %plotid% 0 ifNPCDead %2% LoseComp 0 .changes>
 	.changes <+Tpt +F-->
 
 	% Duel Results
@@ -214,11 +214,11 @@ Plot
 		Persona 3
 		rumor0 <%name3% is a good friend of %name2%.>
 		% V1 = Have attempted bluff
-		greeting <if= PlotStatus 0 else GoChat Goto GoGreet>
+		greeting <if= PlotStatus %plotid% 0 else GoChat Goto GoGreet>
 		GoChat <NewChat SayAnything>
 		*GoGreet <*LookingForNPC&NoFailure %2% GoExplain GoExplain>
 		GoExplain <NewChat Say 1 AddChat 1 AddChat 2>
-		GoStartDuel <EndChat Say 12 History 13 SMemo 14 SetPlotStatus %id1%>
+		GoStartDuel <EndChat Say 12 History 13 SMemo 14 SetPlotStatus %plotid% %id1%>
 		result1 <NewChat Say 2 AddChat 3 AddChat 4 AddChat 5>
 		result2 <if= V1 0 else GoR2Fail AddLawful -1 V= 1 1 ifConversation HardSkillTar StoryDL else GoR2Fail Goto GoR2Pass>
 		GoR2Pass <NewChat Say 3 History 4 SMemo 5 XPV 100 WinComp %5% .win_visit>
@@ -271,7 +271,7 @@ Plot
 	Place3 <1 (Citizens) pass>
 
 	% All this plot does is move the NPC and activate the mission subplot
-	update <if= PlotStatus 0 News 1 SetPlotStatus %id1%>
+	update <if= PlotStatus %plotid% 0 News 1 SetPlotStatus %plotid% %id1%>
 
 	%% SubPlot1 is the press conference
 	SubPlot1 <*CS_PressConference 1 3>

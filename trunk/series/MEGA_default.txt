@@ -41,7 +41,7 @@ Content
 	Element5 <Character !Near 2>
 
 	% If this subplot has been activated, check to make sure the informant is OK.
-	Start <if= PlotStatus %id% else %pop% if= P%id%11 0 else %pop% ifNPCDead %5% else %pop% P= %id%01 -1 Goto %pop%>
+	Start <if= PlotStatus %plotid% %id% else %pop% if= P%id%11 0 else %pop% ifNPCDead %5% else %pop% P= %id%01 -1 Goto %pop%>
 
 sub
 	Persona 1
@@ -56,7 +56,7 @@ sub
 
 	Persona 5
 	rumor%id% <%name5% might know where %name1% is.>
-	greeting <if= PlotStatus %id% else GoChat if= P%id%11 0 else GoChat Goto GoGetInfo>
+	greeting <if= PlotStatus %plotid% %id% else GoChat if= P%id%11 0 else GoChat Goto GoGetInfo>
 	*GoChat <*IAmBusy>
 	*GoGetInfo <*LookingForNPC %1% GoSuccess GoFailure>
 	GoSuccess <NewChat Say 1 P= %id%11 1 Memo 2>
@@ -120,7 +120,7 @@ Content
 	Element5 <Character !Near 2 Criminal>
 
 	% If this subplot has been activated, check to make sure the informant is OK.
-	Start <if= PlotStatus %id% else %pop% if= P%id%11 0 else %pop% ifNPCDead %5% else %pop% P= %id%01 -1 Goto %pop%>
+	Start <if= PlotStatus %plotid% %id% else %pop% if= P%id%11 0 else %pop% ifNPCDead %5% else %pop% P= %id%01 -1 Goto %pop%>
 
 sub
 	Persona 1
@@ -135,7 +135,7 @@ sub
 
 	Persona 5
 	rumor%id% <%name5% has had dealings with %name1% in the past.>
-	greeting <if= PlotStatus %id% else GoChat if= P%id%11 0 else GoChat Goto GoGetInfo>
+	greeting <if= PlotStatus %plotid% %id% else GoChat if= P%id%11 0 else GoChat Goto GoGetInfo>
 	*GoChat <*IAmBusy>
 	*GoGetInfo <*LookingForNPC %1% GoSuccess GoFailure>
 	GoSuccess <NewChat Say 1 P= %id%11 1 Memo 2>
@@ -230,7 +230,7 @@ end
 inv
 	STC ENCOUNTER-WANDER
 	name <%name1%'s Mecha>
-	update <if= PlotStatus %id% else GoHide  if= P%id%11 0 else GoHide SetStat STAT_MetaVisibility 0  Goto GoSetOrders>
+	update <if= PlotStatus %plotid% %id% else GoHide  if= P%id%11 0 else GoHide SetStat STAT_MetaVisibility 0  Goto GoSetOrders>
 	ENCOUNTER_Hostile
 end
 

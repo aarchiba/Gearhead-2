@@ -34,12 +34,12 @@ Content
 	Element2 <Faction REDMA !Xclude -3 !Okay -1 -ArchAlly>
 	Element3 <Scene Public Sleazy !Near -7>
 
-	start <if= PlotStatus %id% else %pop% ifNPCDead %1% LoseComp 0 .%id%_loss>
+	start <if= PlotStatus %plotid% %id% else %pop% ifNPCDead %1% LoseComp 0 .%id%_loss>
 	.%id%_loss <+T-- +F-->
 
 	sub
 		Persona 1
-		greeting <if= PlotStatus %id% else %pop% Goto .%id%_GoGreet>
+		greeting <if= PlotStatus %plotid% %id% else %pop% Goto .%id%_GoGreet>
 		*.%id%_GoGreet <*RevealSecret .%id%_GoInit>
 		.%id%_GoInit <NewChat Say %id%01 AddChat %id%01 AddChat %id%02 &SetEnemyFac %2%>
 		result%id%01 <NewChat Say %id%02 SMemo %id%03 History %id%04 WinComp %3% .%id%_fight>
@@ -68,12 +68,12 @@ Content
 	% Element2 is a metascene
 	Element2 <MetaScene !Near -7 *Building NeverFail>
 
-	start <if= PlotStatus %id% else %pop% ifNPCDead %1% LoseComp 0 .%id%_loss>
+	start <if= PlotStatus %plotid% %id% else %pop% ifNPCDead %1% LoseComp 0 .%id%_loss>
 	.%id%_loss <+T-- +F-->
 
 	sub
 		Persona 1
-		greeting <if= PlotStatus %id% else %pop% Goto .%id%_GoGreet>
+		greeting <if= PlotStatus %plotid% %id% else %pop% Goto .%id%_GoGreet>
 		*.%id%_GoGreet <*RevealSecret .%id%_GoInit>
 		.%id%_GoInit <NewChat Say %id%01 SMemo %id%02 History %id%03 WinComp %2% .%id%_next>
 		.%id%_next <+Tgs +Fin>
@@ -99,12 +99,12 @@ Content
 	Element3 <Grab 1>
 	Place3 </>
 
-	start <if= PlotStatus %id% else %pop% ifNPCDead %1% LoseComp 0 .%id%_loss>
+	start <if= PlotStatus %plotid% %id% else %pop% ifNPCDead %1% LoseComp 0 .%id%_loss>
 	.%id%_loss <+T-- +F-->
 
 	sub
 		Persona 1
-		greeting <if= PlotStatus %id% else %pop% Goto .%id%_GoGreet>
+		greeting <if= PlotStatus %plotid% %id% else %pop% Goto .%id%_GoGreet>
 		*.%id%_GoGreet <*RevealSecret .%id%_GoInit>
 		.%id%_GoInit <NewChat Say %id%01 StoryNote %id%02  SetNPCFaction %2% &EnemyFac &SetTargetNPC %2% WinComp 0 .%id%_next>
 		.%id%_next <+Tht +Fin>
@@ -132,12 +132,12 @@ Content
 	Element4 <Grab 1>
 	Place4 </>
 
-	start <if= PlotStatus %id% else %pop% ifNPCDead %1% LoseComp 0 .%id%_loss>
+	start <if= PlotStatus %plotid% %id% else %pop% ifNPCDead %1% LoseComp 0 .%id%_loss>
 	.%id%_loss <+T-- +F-->
 
 	sub
 		Persona 1
-		greeting <if= PlotStatus %id% else %pop% Goto .%id%_GoGreet>
+		greeting <if= PlotStatus %plotid% %id% else %pop% Goto .%id%_GoGreet>
 		*.%id%_GoGreet <*RevealSecret .%id%_GoInit>
 		.%id%_GoInit <NewChat Say %id%01 StoryNote %id%02  WinComp %3% .%id%_next>
 		.%id%_next <+Ten +Ffi>

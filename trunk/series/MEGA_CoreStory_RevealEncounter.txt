@@ -55,10 +55,10 @@ Content
 
 	% P%id%01 = Initialization Counter
 
-	Update <if= PlotStatus %id% else %pop% if= p%id%01 0 else %pop% News %id%01 P= %id%01 1>
+	Update <if= PlotStatus %plotid% %id% else %pop% if= p%id%01 0 else %pop% News %id%01 P= %id%01 1>
 
 	% As long as in this phase, the NPC's death will end the plot.
-	start <if= PlotStatus %id% else %pop% ifNPCDead %4% LoseComp 0 .%id%_changes>
+	start <if= PlotStatus %plotid% %id% else %pop% ifNPCDead %4% LoseComp 0 .%id%_changes>
 	.%id%_changes <+T-- +F-->
 
 	Msg%id%01_1 <%name3% in \SCENE &EpisodeScene has been attacked by unknown forces. Eyewitnesses claim that a giant monster was involved.>
@@ -70,10 +70,10 @@ Content
 	sub
 		Persona 4
 		special <Unlisted>
-		greeting <if# PlotStatus %id% else .%id%_GoGreet NewChat SayAnything>
+		greeting <if# PlotStatus %plotid% %id% else .%id%_GoGreet NewChat SayAnything>
 		*.%id%_GoGreet <*DestructionGreeting .%id%_GoTellStory &EnemyFac>
 		.%id%_GoTellStory <NewChat Say %id%01  AddCHat %id%01>
-		result%id%01 <NewChat Say %id%02 SMemo %id%03 ShowEntrance %1% SetPlotStatus %id1%>
+		result%id%01 <NewChat Say %id%02 SMemo %id%03 ShowEntrance %1% SetPlotStatus %plotid% %id1%>
 		Msg%id%01 <We were attacked by... something. I've never seen anything like it before. It certainly wasn't a standard mecha. Our fighters didn't stand a chance.>
 		Msg%id%02 <Our recon team traced it to some place in %name2%, but after that it disappeared. They probably have a hidden base nearby. I only hope they aren't planning any more attacks.>
 		Msg%id%03 <You learned from %name4% that the experimental weapon fled to %name2%.>
@@ -110,15 +110,15 @@ Plot
 	SubPlot1 <*UTIL_BlankState>
 
 	% As long as we're still at this phase, the NPC's death will end the plot.
-	start <if= PlotStatus %id% else %pop% ifNPCDead %4% LoseComp 0 .%id%_changes>
+	start <if= PlotStatus %plotid% %id% else %pop% ifNPCDead %4% LoseComp 0 .%id%_changes>
 	.%id%_changes <+T-- +F-->
 
 	sub
 		Persona 4
 		rumor%id% <%name4% knows about all kinds of strange places.>
-		greeting <if# PlotStatus %id% else GoExplain NewChat SayAnything>
+		greeting <if# PlotStatus %plotid% %id% else GoExplain NewChat SayAnything>
 		*GoExplain <*LookingForScene %1% GoGive>
-		GoGive <NewChat Say 1 SMemo 2 History 3 ShowEntrance %1% SetPlotStatus %id1%>
+		GoGive <NewChat Say 1 SMemo 2 History 3 ShowEntrance %1% SetPlotStatus %plotid% %id1%>
 		Msg1 <It's said that %name1% can be found in %name2%. I've never been there myself, but it should be easy enough to find.>
 		Msg1_1 <Oh, that? As far as I know you can find it in %name2%. Here, I'll sketch you a quick map. Good luck.>
 		CMsg1_1 <ifG React d20 Accept>
@@ -147,19 +147,19 @@ Plot
 
 	% P%id%01 = EMail Counter
 	% As long as we're still at this phase, the NPC's death will end the plot.
-	start <if= PlotStatus %id% else %pop% ifNPCDead %4% LoseComp 0 .%id%_changes>
+	start <if= PlotStatus %plotid% %id% else %pop% ifNPCDead %4% LoseComp 0 .%id%_changes>
 	.%id%_changes <+T-- +F-->
 
-	5Min <if= PlotStatus %id% else %pop% if= P%id%01 0 if= d4 3 P= %id%01 1 Email %id%01>
+	5Min <if= PlotStatus %plotid% %id% else %pop% if= P%id%01 0 if= d4 3 P= %id%01 1 Email %id%01>
 
 	Msg%id%01 <%name4%@ \SCENE &EpisodeScene :// Come see me in %name3%; I've got some important information for you.>
 
 	sub
 		Persona 4
 		rumor%id% <there's a mysterious person hanging out at %name3%.>
-		greeting <if# PlotStatus %id% else .%id%_GoGreet NewChat SayAnything>
+		greeting <if# PlotStatus %plotid% %id% else .%id%_GoGreet NewChat SayAnything>
 		*.%id%_GoGreet <*IHaveInformation&AboutScene .%id%_GoReveal %1%>
-		.%id%_GoReveal <NewChat Say %id%01 SMemo %id%02 History %id%03 ShowEntrance %1% SetPlotStatus %id1% AddChat %id%01 AddChat %id%02>
+		.%id%_GoReveal <NewChat Say %id%01 SMemo %id%02 History %id%03 ShowEntrance %1% SetPlotStatus %plotid% %id1% AddChat %id%01 AddChat %id%02>
 		result%id%01 <NewChat Say %id%04>
 		result%id%02 <NewChat Say %id%05 AddCheerful -d4>
 		Msg%id%01 <I'm risking a lot telling you this, but... the secret base belonging to \FACTION &EnemyFac ? You'll find it in %name2%. Here, these navpoints will lead you straight to it.>
@@ -232,12 +232,12 @@ Plot
 	SubPlot2 <*UTIL_BlankState>
 
 	% As long as we're still at this phase, the NPC's death will end the plot.
-	start <if= PlotStatus %id% else %pop% ifNPCDead %4% LoseComp 0 .%id%_changes>
+	start <if= PlotStatus %plotid% %id% else %pop% ifNPCDead %4% LoseComp 0 .%id%_changes>
 	.%id%_changes <+T-- +F-->
 
 	% Duel Results
-	.%id1%_%plotid%_GoWin <Monologue %4% %id%01 SMemo %id%02 ShowEntrance %1% SetPlotStatus %id2%>
-	.%id1%_%plotid%_GoLose <Monologue %4% %id%03 SMemo %id%04 MoveNPC %4% %3% SetPlotStatus %id%>
+	.%id1%_%plotid%_GoWin <Monologue %4% %id%01 SMemo %id%02 ShowEntrance %1% SetPlotStatus %plotid% %id2%>
+	.%id1%_%plotid%_GoLose <Monologue %4% %id%03 SMemo %id%04 MoveNPC %4% %3% SetPlotStatus %plotid% %id%>
 	.%id%_loss <+T-- +F-->
 
 	Msg%id%01 <You won... I'll upload the details for %name1% to your navcomp.>
@@ -250,15 +250,15 @@ Plot
 		rumor%id% <%name4% knows where to find just about everything in this town.>
 		% V1 = Have previously dueled
 		% V2 = Price for revealing location
-		greeting <if# PlotStatus %id% else GoExplain NewChat SayAnything>
+		greeting <if# PlotStatus %plotid% %id% else GoExplain NewChat SayAnything>
 		*GoExplain <*LookingForScene %1% GoSetPrice>
 		GoSetPrice <if= V2 0 else GoOffer V= 2 Threat StoryDL 5 Goto GoOffer>
 		GoOffer <NewChat Say 1 SMemo 2 AddChat 1 AddChat 2 AddChat 3>
-		result1 <NewChat Say 3 History 4 Cash+ -V2 ShowEntrance %1% SetPlotStatus %id2%>
+		result1 <NewChat Say 3 History 4 Cash+ -V2 ShowEntrance %1% SetPlotStatus %plotid% %id2%>
 		result2 <NewChat Say 5 AddChat 4 AddChat 5 AddChat 6>
 		result3 <NewChat Say 6>
-		result4 <NewChat Say 7 SMemo 8 History 9 V= 1 1 V= 2 * 2 V2 SetPlotStatus %id1%>
-		result5 <NewChat Say 10 SMemo 8 History 9 V= 1 1 V= 2 * 3 V2 SetPlotStatus %id1%>
+		result4 <NewChat Say 7 SMemo 8 History 9 V= 1 1 V= 2 * 2 V2 SetPlotStatus %plotid% %id1%>
+		result5 <NewChat Say 10 SMemo 8 History 9 V= 1 1 V= 2 * 3 V2 SetPlotStatus %plotid% %id1%>
 		result6 <NewChat Say 11 AddChat 1>
 		Msg1 <I know where %name1% is. I could tell you, but information doesn't come cheap... It's going to cost you $ \VAL V2 to find out.>
 		Msg2 <%name4% offered to tell you where %name1% is, in exchange for $ \VAL V2 .>
@@ -308,11 +308,11 @@ Plot
 	SubPlot2 <*UTIL_BlankState>
 
 	% As long as we're still at the first phase, the NPC's death will end the plot.
-	start <if= PlotStatus %id% else %pop% ifNPCDead %4% LoseComp 0 .%id%_changes>
+	start <if= PlotStatus %plotid% %id% else %pop% ifNPCDead %4% LoseComp 0 .%id%_changes>
 	.%id%_changes <+T-- +F-->
 
 	% Duel Results
-	.%id1%_%plotid%_GoWin <Monologue %4% %id%01 SMemo %id%02 ShowEntrance %1% SetPlotStatus %id2%>
+	.%id1%_%plotid%_GoWin <Monologue %4% %id%01 SMemo %id%02 ShowEntrance %1% SetPlotStatus %plotid% %id2%>
 	.%id1%_%plotid%_GoLose <Monologue %4% %id%03 SMemo 0 LoseComp 0 .%id%_loss>
 	.%id%_loss <+T-- +F-->
 
@@ -323,11 +323,11 @@ Plot
 	sub
 		Persona 4
 		rumor%id% <%name4% has been to %name1%.>
-		greeting <if# PlotStatus %id% else GoExplain NewChat SayAnything>
+		greeting <if# PlotStatus %plotid% %id% else GoExplain NewChat SayAnything>
 		*GoExplain <*LookingForScene %1% GoChallenge>
 		GoChallenge <NewChat Say 1 AddChat 1 AddChat 2>
-		result1 <EndChat Say 2 SMemo 3 History 4 SetPlotStatus %id1%>
-		result2 <NewChat Say 5 SMemo 6 History 7 XPV 100 AddSociable d10 ShowEntrance %1% SetPlotStatus %id2% PCFriend %4%>
+		result1 <EndChat Say 2 SMemo 3 History 4 SetPlotStatus %plotid% %id1%>
+		result2 <NewChat Say 5 SMemo 6 History 7 XPV 100 AddSociable d10 ShowEntrance %1% SetPlotStatus %plotid% %id2% PCFriend %4%>
 		Msg1 <I've been there. I never found anything... but if you're interested in it, I must have missed something. How about this? Let's duel for the information. If you win, I tell you where to find %name1%, and if I win you tell me what's there.>
 		Msg2 <Great! Meet me in %name5% and we can start.>
 		Msg3 <You agreed to duel %name4% to learn the location of %name1%; \SPR %4% 's waiting for you in %name5%.>

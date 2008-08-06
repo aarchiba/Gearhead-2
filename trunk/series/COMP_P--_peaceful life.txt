@@ -16,7 +16,7 @@ Plot
 	element3 <Grab 2>
 
 	% All this plot does is activate the mission subplot
-	update <if= PlotStatus 0  SetPlotStatus %id1%>
+	update <if= PlotStatus %plotid% 0  SetPlotStatus %plotid% %id1%>
 
 	%% SubPlot1 is the mission to be offered
 	SubPlot1 <*CS_GiveMission 2>
@@ -95,7 +95,7 @@ Plot
 		nu1 <if= T1 0   Return   if= V1 0 V= 1 1   LoseComp 0 .loss>
 		.loss <+Pun +T-- +F-->
 		nu2 <if= T2 0   if= V1 0 V= 1 1   AddRenown 1   SALVAGE   ifYesNo 2 3 4 else GoRansack Goto GoRescue>
-		GoRescue  <Print 5 StoryNote 6 XPV 100 AddHeroic 1 MoveNPC %2% %5% Exit %5% SetPlotStatus %id1%>
+		GoRescue  <Print 5 StoryNote 6 XPV 100 AddHeroic 1 MoveNPC %2% %5% Exit %5% SetPlotStatus %plotid% %id1%>
 		GoRansack <Print 8 StoryNote 9 GiveItem %3% CashPrize Reward StoryDL 500 XPV 100 AddHeroic -1 PCEnemy %2% if= &EnemyNPC 0 else GoEndRansack &SetEnemyNPC %2% Goto GoEndRansack>
 		GoEndRansack <WinComp 0 .ransack>
 		.ransack <+Pla +T-- +F-->
@@ -468,7 +468,7 @@ Plot
 		% V2 = Signing Bonus
 		&RecFac <%3%>
 		&AltFac <%4%>
-		greeting <if= PlotStatus 0 else GoChat Goto GoCheckFirst>
+		greeting <if= PlotStatus %plotid% 0 else GoChat Goto GoCheckFirst>
 		GoChat <NewChat SayAnything>
 		GoCheckFirst <IFFACTIONENEMY &RecFac else GoOfferJoin NewChat Say 1 StoryNote 2 &SetEnemyFac &RecFac WinComp 0 .make_enemy>
 		GoOfferJoin <NewChat Say 3 AddChat 1 AddChat 2 AddChat 3 AddChat 4 P= 5 1>
@@ -477,7 +477,7 @@ Plot
 		result2 <NewChat Say 5 StoryNote 6 &SetEnemyFac &RecFac WinComp 0 .make_enemy>
 		result3 <NewChat Say 7>
 		result4 <NewChat Say 8 SMemo 0 &SetAllyFac PCFac WinComp 0 .make_enemy>
-		result5 <NewChat Say 9 StoryNote 10 &SetAllyFac &RecFac  RandomMecha .meks V1  CashPrize V2  XPV 200  AlterContext .make_enemy SetPlotStatus %id1%>
+		result5 <NewChat Say 9 StoryNote 10 &SetAllyFac &RecFac  RandomMecha .meks V1  CashPrize V2  XPV 200  AlterContext .make_enemy SetPlotStatus %plotid% %id1%>
 		.meks <GENERAL \FACTION_DESIG &RecFac>
 		result6 <NewChat Say 11 AddChat 2 AddChat 3 AddChat 5 V+ 1 10 V= 2 * 2 V2  &SetEnemyFac &AltFac>
 		Msg1 <The evil plans of %name3% will soon come to fruition! Oh, wait, you're not the human resources director... forget I said that.>
@@ -515,7 +515,7 @@ Plot
 		% V2 = Signing Bonus
 		&RecFac <%4%>
 		&AltFac <%3%>
-		greeting <if= PlotStatus 0 else GoChat Goto GoCheckFirst>
+		greeting <if= PlotStatus %plotid% 0 else GoChat Goto GoCheckFirst>
 		GoChat <NewChat SayAnything>
 		GoCheckFirst <IFFACTIONENEMY &RecFac else GoOfferJoin NewChat Say 1 StoryNote 2 &SetEnemyFac &RecFac WinComp 0 .make_enemy>
 		GoOfferJoin <NewChat Say 3 AddChat 1 AddChat 2 AddChat 3 AddChat 4 P= 7 1>
@@ -524,7 +524,7 @@ Plot
 		result2 <NewChat Say 5 StoryNote 6 &SetEnemyFac &RecFac WinComp 0 .make_enemy>
 		result3 <NewChat Say 7>
 		result4 <NewChat Say 8 SMemo 0 &SetAllyFac PCFac WinComp 0 .make_enemy>
-		result5 <NewChat Say 9 StoryNote 10 &SetAllyFac &RecFac  RandomMecha .meks V1  CashPrize V2  XPV 200  AlterContext .make_enemy SetPlotStatus %id1%>
+		result5 <NewChat Say 9 StoryNote 10 &SetAllyFac &RecFac  RandomMecha .meks V1  CashPrize V2  XPV 200  AlterContext .make_enemy SetPlotStatus %plotid% %id1%>
 		.meks <GENERAL \FACTION_DESIG &RecFac>
 		result6 <NewChat Say 11 AddChat 2 AddChat 3 AddChat 5 V+ 1 10 V= 2 * 2 V2  &SetEnemyFac &AltFac>
 		Msg1 <The evil plans of %name4% will soon come to fruition! Oh, wait, you're not the human resources director... forget I said that.>
@@ -578,7 +578,7 @@ Plot
 	Place4 <3 Pass>
 	element5 <Scene Urban !Near -7>
 
-	start <if= PlotStatus 0 ifNPCDead %4% LoseComp 0 .next>
+	start <if= PlotStatus %plotid% 0 ifNPCDead %4% LoseComp 0 .next>
 	.next <+T-- +F-->
 
 	% V1 = Initialization Counter
@@ -600,10 +600,10 @@ Plot
 		Persona 4
 		special <UNLISTED>
 		rumor <%name4% has been looking for someone to challenge.>
-		Greeting <if# plotStatus 0 else GoGreet NewChat SayAnything>
+		Greeting <if# PlotStatus %plotid% 0 else GoGreet NewChat SayAnything>
 		*GoGreet <*NiceToMeetYou GoChallenge>
 		GoChallenge <NewChat say 1 AddChat 1 AddChat 2>
-		GoAcceptChallenge <StoryNote 3 SetPlotStatus %id1%>
+		GoAcceptChallenge <StoryNote 3 SetPlotStatus %plotid% %id1%>
 		result1 <NewChat Say 2 Goto GoAcceptChallenge>
 		result2 <NewChat Say 4 AddChat 3 AddChat 4>
 		result3 <Goto result1>
@@ -680,7 +680,7 @@ Plot
 	Element3 <Scene Urban !Near -7>
 
 	% V1 = Initialization Counter
-	start <if= PlotStatus 0 ifNPCOK %2% else GoDelete if= V1 1 if= SceneID %1% Alert 1 SMemo 3 V= 1 2>
+	start <if= PlotStatus %plotid% 0 ifNPCOK %2% else GoDelete if= V1 1 if= SceneID %1% Alert 1 SMemo 3 V= 1 2>
 	GoDelete <LoseComp 0 .loss>
 	.loss <+T-- +F-->
 
@@ -697,8 +697,8 @@ Plot
 		Persona 2
 		rumor0 <%name2% is the new security head at %name1%.>
 		special <UNLISTED>
-		Greeting <if= PlotStatus %id1% else GoCheckFirst NewChat Say 10>
-		GoCheckFirst <if= PlotStatus 0 else GoChat Goto GoGreet>
+		Greeting <if= PlotStatus %plotid% %id1% else GoCheckFirst NewChat Say 10>
+		GoCheckFirst <if= PlotStatus %plotid% 0 else GoChat Goto GoGreet>
 		*GoGreet <*DestructionGreeting GoGiveMission &EnemyFac>
 		*GoChat <*MISC_CHATTER>
 		&TheCompany <SceneFac %1%>
@@ -710,7 +710,7 @@ Plot
 		.mek <GENERAL>
 		GoR4Fail <NewChat Say 8 SMemo 5 LoseComp 0 .next>
 		*result5 <*GoodLuckOnMission GoStartMission &TheCompany &EnemyFac>
-		GoStartMission <SMemo 9 History 6 SetPlotStatus %id1%>
+		GoStartMission <SMemo 9 History 6 SetPlotStatus %plotid% %id1%>
 		.next <+T-- +Pun>
 		Msg1 <We've been robbed! It was \FACTION &EnemyFac , I'm sure of it... Their mecha blew through the back wall and carried off our data core!>
 		Msg2 <The bandits can't have gotten very far... If you search the nearby area I'm sure you'll be able to find them.>
@@ -758,7 +758,7 @@ Plot
 	SubPlot2 <*CS_ThanksForRescue 2>
 
 	% Needed Scripts
-	.%id1%_%plotid%_GoWin <ifNPCOK %2% else GoJustEnd Alert 4 StoryNote 2 SetPlotStatus %id2%>
+	.%id1%_%plotid%_GoWin <ifNPCOK %2% else GoJustEnd Alert 4 StoryNote 2 SetPlotStatus %plotid% %id2%>
 	.%id1%_%plotid%_GoLose <ifNPCOK %2% else GoJustEnd Alert 3 StoryNote 1 DeleteNPC %2% Goto GoJustEnd>
 	GoJustEnd <LoseComp 0 .loss>
 	.loss <+T-- +Pun>
@@ -780,10 +780,10 @@ Plot
 		special <AddExit>
 		Content <Some 5 25 Sub *CLUB_X>
 
-		5Min <if= PlotStatus 0 else GoBomb if= L1 0 V+ 2 1 ifG V2 1 if= d2 1 Goto GoStartBombing>
-		GoStartBombing <SetPlotStatus %id1% AirRaidSiren Alert 1 StoryNote 2 Bomb  AlterContext .next  L= 1 1>
-		Faint%2% <if= PlotStatus 0 Goto GoStartBombing>
-		GoBomb <if= PlotStatus %id% Print 3 Bomb>
+		5Min <if= PlotStatus %plotid% 0 else GoBomb if= L1 0 V+ 2 1 ifG V2 1 if= d2 1 Goto GoStartBombing>
+		GoStartBombing <SetPlotStatus %plotid% %id1% AirRaidSiren Alert 1 StoryNote 2 Bomb  AlterContext .next  L= 1 1>
+		Faint%2% <if= PlotStatus %plotid% 0 Goto GoStartBombing>
+		GoBomb <if= PlotStatus %plotid% %id% Print 3 Bomb>
 		nu1 <if= T1 0 Return>
 		.next <+Pun>
 		Msg1 <Unexpectantly, the building is attacked by mecha!>
@@ -805,13 +805,13 @@ Plot
 
 		Persona 2
 		special <UNLISTED>
-		greeting <if= PlotStatus %id1% else GoCheckFirstMeeting EndChat Say 4>
-		GoCheckFirstMeeting <if= PlotStatus 0 else GoChat Goto GoFirstMeeting>
+		greeting <if= PlotStatus %plotid% %id1% else GoCheckFirstMeeting EndChat Say 4>
+		GoCheckFirstMeeting <if= PlotStatus %plotid% 0 else GoChat Goto GoFirstMeeting>
 		*GoFirstMeeting <*HowAreYou GoMessage>
 		GoMessage <NewChat Say 1 AddChat 1 AddChat 2>
 		*GoChat <*MISC_CHATTER>
 		result1 <AddEasygoing d6 Goto result2>
-		result2 <Alert 5  EndChat Say 2  AirRaidSiren StoryNote 3 SetPlotStatus %id1% AlterContext .next  L= 1 1>
+		result2 <Alert 5  EndChat Say 2  AirRaidSiren StoryNote 3 SetPlotStatus %plotid% %id1% AlterContext .next  L= 1 1>
 		.next <+Pun>
 		Msg1 <Say, do you hear anything?>
 		Msg2 <We have to get out of here!>
@@ -925,11 +925,11 @@ Plot
 	update <if= v1 0 V= 1 1 NPCLevel %2% StoryDL>
 
 	% As long as we're still at the first phase, the NPC's death will end the plot.
-	start <if= PlotStatus 0 ifNPCDead %2% LoseComp 0 .changes>
+	start <if= PlotStatus %plotid% 0 ifNPCDead %2% LoseComp 0 .changes>
 	.changes <+T-- +F-->
 
-	.%id1%_%plotid%_GoWin <ifNPCOK %2% else GoE2Died SMemo 1 SetPlotStatus %id2%>
-	.%id1%_%plotid%_GoLose <SMemo 2 SetPlotStatus %id3%>
+	.%id1%_%plotid%_GoWin <ifNPCOK %2% else GoE2Died SMemo 1 SetPlotStatus %plotid% %id2%>
+	.%id1%_%plotid%_GoLose <SMemo 2 SetPlotStatus %plotid% %id3%>
 	GoE2Died <SMemo 0 WinComp 0 .changes>
 
 	Msg1 <You bested %name2% in a duel; \SPR %2% is waiting for you at %name1%.>
@@ -937,11 +937,11 @@ Plot
 
 	sub
 		Persona 2
-		greeting <if= PlotStatus 0 else GoChat Goto GoGreet>
+		greeting <if= PlotStatus %plotid% 0 else GoChat Goto GoGreet>
 		*GoChat <*MISC_CHATTER>
 		*GoGreet <*HowAreYou GoChallenge>
 		GoChallenge <NewChat Say 1 AddChat 1 AddChat 2>
-		result1 <NewChat Say 2  StoryNote 4 SetPlotStatus %id1%>
+		result1 <NewChat Say 2  StoryNote 4 SetPlotStatus %plotid% %id1%>
 		result2 <NewChat Say 3 AddChat 3 AddChat 4 AddChat 5
 		result3 <NewChat Say 5 SMemo 7 &SetTargetNPC %5% NegateComp %4% .gojob>
 		.gojob <+Tgt +Fmi>

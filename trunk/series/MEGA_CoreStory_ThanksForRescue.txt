@@ -22,7 +22,7 @@ Content
 	% E2 is a local building allied with the NPC
 	Element2 <Scene Building Public !Ally 1>
 
-	start <if= PlotStatus %id% else %pop% ifNPCDead %1% LoseComp 0 .%id%_loss>
+	start <if= PlotStatus %plotid% %id% else %pop% ifNPCDead %1% LoseComp 0 .%id%_loss>
 	.%id%_loss <+T-->
 
 	SubPlot1 <*CS_DelayedVictory>
@@ -30,12 +30,12 @@ Content
 	sub
 		Persona 1
 		% v%id%01 = React bonus counter
-		Greeting <if= PlotStatus %id% else %pop% Goto .%id%_GoGreet>
+		Greeting <if= PlotStatus %plotid% %id% else %pop% Goto .%id%_GoGreet>
 		*.%id%_GoGreet <*ThanksForRescue .%id%_GoReveal>
 		.%id%_GoReveal <if# PCFac ChatNPCFac else .%id%_GoOrder if# 0 ChatNPCFac else .%id%_GoOrder NewChat Say %id%01 AddChat %id%01 AddChat %id%02 if= V%id%01 0 V= %id%01 1 AddReact 10>
-		.%id%_GoOrder <NewChat Say %id%06 SMemo %id%03 &SetTargetNPC %1%  AlterContext .%id%_Changes  &SetCompScene %2% SetPlotStatus %id1%  FacXP+ ChatNPCFac 5>
-		result%id%01 <NewChat Say %id%02 SMemo %id%03 History %id%04 XPV 100 &SetTargetNPC %1% SetPCFac ChatNPCFac &SetAllyFac ChatNPCFac AlterContext .%id%_Changes2 &SetCompScene %2% SetPlotStatus %id1%>
-		result%id%02 <NewChat Say %id%05 SMemo %id%03 &SetTargetNPC %1%  AlterContext .%id%_Changes  SetPlotStatus %id1%  ifG ChatNPCHeroism -1 PCFriend %1%>
+		.%id%_GoOrder <NewChat Say %id%06 SMemo %id%03 &SetTargetNPC %1%  AlterContext .%id%_Changes  &SetCompScene %2% SetPlotStatus %plotid% %id1%  FacXP+ ChatNPCFac 5>
+		result%id%01 <NewChat Say %id%02 SMemo %id%03 History %id%04 XPV 100 &SetTargetNPC %1% SetPCFac ChatNPCFac &SetAllyFac ChatNPCFac AlterContext .%id%_Changes2 &SetCompScene %2% SetPlotStatus %plotid% %id1%>
+		result%id%02 <NewChat Say %id%05 SMemo %id%03 &SetTargetNPC %1%  AlterContext .%id%_Changes  SetPlotStatus %plotid% %id1%  ifG ChatNPCHeroism -1 PCFriend %1%>
 		.%id%_Changes <+Tgt +Fmi>
 		.%id%_Changes2 <+Tgt +Fmi +Cro>
 		Msg%id%01 <I want you to know that \FACTION ChatNPCFac could use you on our side. I'd like for you to come and work for us.>
@@ -57,12 +57,12 @@ Content
 	% E2 is the artifact that E1 was seeking
 	element2 <Artifact Item PreZero>
 
-	start <if= PlotStatus %id% else %pop% ifNPCDead %1% LoseComp 0 .%id%_loss>
+	start <if= PlotStatus %plotid% %id% else %pop% ifNPCDead %1% LoseComp 0 .%id%_loss>
 	.%id%_loss <+T-->
 
 	sub
 		Persona 1
-		Greeting <if= PlotStatus %id% else %pop% Goto .%id%_GoGreet>
+		Greeting <if= PlotStatus %plotid% %id% else %pop% Goto .%id%_GoGreet>
 		*.%id%_GoGreet <*ThanksForRescue .%id%_GoReveal>
 		.%id%_GoReveal <NewChat Say %id%01 AddChat %id%01 AddChat %id%02>
 		.%id%_GoWin <StoryNote %id%03 &SetTargetItem %2% FreezeItem %2% NTBWinComp 0 .%id%_next>
@@ -128,7 +128,7 @@ Content
 	Place3 <2>
 	Element4 <Grab 2>
 
-	start <if= PlotStatus %id% else %pop% ifNPCDead %1% LoseComp 0 .%id%_loss>
+	start <if= PlotStatus %plotid% %id% else %pop% ifNPCDead %1% LoseComp 0 .%id%_loss>
 	.%id%_loss <+T-->
 
 	% SubPlot1 is the base metascene
@@ -138,9 +138,9 @@ Content
 
 	sub
 		Persona 1
-		Greeting <if= PlotStatus %id% else %pop% goto .%id%_GoThanks>
+		Greeting <if= PlotStatus %plotid% %id% else %pop% goto .%id%_GoThanks>
 		*.%id%_GoThanks <*ThanksForRescue .%id%_GoTell>
-		.%id%_GoTell <NewChat Say %id%01 SMemo %id%02 History %id%03 AddChat %id%01 AddChat %id%02 SetPlotStatus %id2%>
+		.%id%_GoTell <NewChat Say %id%01 SMemo %id%02 History %id%03 AddChat %id%01 AddChat %id%02 SetPlotStatus %plotid% %id2%>
 		result%id%01 <NewChat Say %id%04>
 		result%id%02 <NewChat Say %id%05>
 		Msg%id%01 <I had heard rumors that %name4% are kidnapping scientists, but I never imagined that I'd get first hand confirmation of this fact. They must have a research base nearby.>
@@ -167,13 +167,13 @@ Content
 
 	% E1 is the character who's been rescued
 	% P%id%01 = Initialization Counter
-	update <if= PlotStatus %id% else %pop% if= P%id%01 0 P= %id%01 1 NPCLevel %1% StoryDL>
-	start <if= PlotStatus %id% else %pop% ifNPCDead %1% LoseComp 0 .%id%_loss>
+	update <if= PlotStatus %plotid% %id% else %pop% if= P%id%01 0 P= %id%01 1 NPCLevel %1% StoryDL>
+	start <if= PlotStatus %plotid% %id% else %pop% ifNPCDead %1% LoseComp 0 .%id%_loss>
 	.%id%_loss <+T-->
 
 	sub
 		Persona 1
-		Greeting <if= PlotStatus %id% else %pop% goto .%id%_GoThanks>
+		Greeting <if= PlotStatus %plotid% %id% else %pop% goto .%id%_GoThanks>
 		*.%id%_GoThanks <*ThanksForRescue .%id%_GoAsk>
 		.%id%_GoAsk <NewChat Say %id%01 AddChat %id%01 AddChat %id%02>
 		result%id%01 <NewChat Say %id%02 StoryNote %id%03 &SetTargetNPC 0 &SetPartnerNPC %1% WinComp 0 .%id%_Join>
@@ -210,7 +210,7 @@ Content
 
 	% E1 is the character who's been rescued
 
-	start <if= PlotStatus %id% else %pop% ifNPCDead %1% LoseComp 0 .%id%_loss>
+	start <if= PlotStatus %plotid% %id% else %pop% ifNPCDead %1% LoseComp 0 .%id%_loss>
 	.%id%_loss <+T-->
 
 	% SubPlot1 is the secret itself
@@ -218,7 +218,7 @@ Content
 
 	sub
 		Persona 1
-		Greeting <if= PlotStatus %id% else %pop% goto .%id%_GoThanks>
+		Greeting <if= PlotStatus %plotid% %id% else %pop% goto .%id%_GoThanks>
 		*.%id%_GoThanks <*ThanksForRescue .%id%_GoReward>
 		.%id%_GoReward <NewChat Say %id%01 AddChat %id%01>
 		result%id%01 <Goto .%id1%_GoInit>
@@ -246,12 +246,12 @@ Content
 
 	% E1 is the character who's been rescued
 
-	start <if= PlotStatus %id% else %pop% ifNPCDead %1% LoseComp 0 .%id%_loss>
+	start <if= PlotStatus %plotid% %id% else %pop% ifNPCDead %1% LoseComp 0 .%id%_loss>
 	.%id%_loss <+T-->
 
 	sub
 		Persona 1
-		Greeting <if= PlotStatus %id% else %pop% NTBWinComp 0 .%id%_Next goto .%id%_GoThanks>
+		Greeting <if= PlotStatus %plotid% %id% else %pop% NTBWinComp 0 .%id%_Next goto .%id%_GoThanks>
 		.%id%_Next <+T-- +F-->
 		*.%id%_GoThanks <*ThanksForRescue .%id%_GoReward>
 		.%id%_GoReward <ifG ChatNPCRelationship NAV_Friend else .%id%_GoJoin  Goto .%id%_GoOffer>
@@ -307,13 +307,13 @@ Content
 	NeverFail3 <Mecha Pilot>
 
 	% P1 = Initialization Counter
-	start <if= PlotStatus %id% else %pop% ifNPCDead %1% LoseComp 0 .%id%_loss>
+	start <if= PlotStatus %plotid% %id% else %pop% ifNPCDead %1% LoseComp 0 .%id%_loss>
 	.%id%_loss <+T-->
 
 	sub
 		Persona 1
 		% V1 = Can only get reward once
-		Greeting <if= PlotStatus %id% else %pop% goto .%id%_GoThanks>
+		Greeting <if= PlotStatus %plotid% %id% else %pop% goto .%id%_GoThanks>
 		*.%id%_GoThanks <*ThanksForRescue .%id%_GoReward>
 		.%id%_GoReward <if= V%id%01 0 else .%id%_GoBriefing V= %id%01 1 CashPrize Reward StoryDL 200 NewChat Say %id%01 AddChat %id%01 AddChat %id%02>
 		.%id%_GoBriefing <ifNPCOK %3% else .%id%_GoE3Dead NewChat Say %id%02 StoryNote %id%03 &SetTargetNPC %3%  WinComp NPCScene %3% .%id%_changes>
@@ -345,12 +345,12 @@ Content
 
 	%% E1 is the NPC that the PC rescued
 
-	start <if= PlotStatus %id% else %pop% ifNPCDead %1% LoseComp 0 .loss>
+	start <if= PlotStatus %plotid% %id% else %pop% ifNPCDead %1% LoseComp 0 .loss>
 	.loss <+T-- +F-->
 
 	sub
 		Persona 1
-		greeting <if= PlotStatus %id% else %pop% Goto .%id%_GoStart>
+		greeting <if= PlotStatus %plotid% %id% else %pop% Goto .%id%_GoStart>
 		*.%id%_GoStart <*ThanksForRescue .%id%_GoOffer>
 		.%id%_GoOffer <PCFriend %1% ifG React d10 else .%id%_GoNoOffer ifG PCCharm 10 else .%id%_GoNoOffer NewChat Say %id%01 AddChat %id%01 AddChat %id%02 AddChat %id%03>
 		.%id%_GoNoOffer <ifChatNPCSexy else .%id%_GoCashAward ifFlirtation SkillTar StoryDL else .%id%_GoCashAward ifG React d10 else .%id%_GoCashAward NewChat Say %id%08 AddChat %id%06 AddChat %id%07>

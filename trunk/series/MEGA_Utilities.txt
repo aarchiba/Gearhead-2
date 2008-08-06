@@ -33,11 +33,11 @@ Content
 
 	% E1 is the mission-giving NPC.
 
-	start <if= PlotStatus %id% else %pop% ifNPCDead %1% EndPlot>
+	start <if= PlotStatus %plotid% %id% else %pop% ifNPCDead %1% EndPlot>
 
 	sub
 		Persona 1
-		greeting <if= PlotStatus %id% else %pop%  Goto .%id%_GoWinMission>
+		greeting <if= PlotStatus %plotid% %id% else %pop%  Goto .%id%_GoWinMission>
 		*.%id%_GoWinMission <*MissionWasSuccess&Reward&Mecha .%id%_GoEnd ChatNPCFac na>
 		.%id%_GoEnd <CashPrize Reward %threat% PayRate    FacXP+ ChatNPCFac 1   EndPlot>
 	end
@@ -56,13 +56,13 @@ Content
 	% E1 is the mission-giving NPC.
 
 	% P%id%01 = Time Limit
-	start <if= PlotStatus %id% else %pop% ifNPCOK %1% else .%id%_GoEnd ifG ComTime P%id%01 EndPlot>
+	start <if= PlotStatus %plotid% %id% else %pop% ifNPCOK %1% else .%id%_GoEnd ifG ComTime P%id%01 EndPlot>
 	.%id%_GoEnd <EndPlot>
-	update <if= PlotStatus %id% else %pop% if= p%id%01 0 P= %id%01 ComTime P+ %id%01 43200>
+	update <if= PlotStatus %plotid% %id% else %pop% if= p%id%01 0 P= %id%01 ComTime P+ %id%01 43200>
 
 	sub
 		Persona 1
-		greeting <if= PlotStatus %id% else %pop%  Goto .%id%_GoLostMission>
+		greeting <if= PlotStatus %plotid% %id% else %pop%  Goto .%id%_GoLostMission>
 		*.%id%_GoLostMission <*MissionWasFailure&Mecha .%id%_GoEnd ChatNPCFac na>
 		.%id%_GoEnd <EndPlot>
 	end
@@ -81,16 +81,16 @@ Content
 	% E1 is the mission-giving NPC.
 
 	% P%id%01 = Time Limit
-	start <if= PlotStatus %id% else %pop% ifNPCOK %1% else .%id%_GoEnd ifG ComTime P%id%01 EndPlot>
+	start <if= PlotStatus %plotid% %id% else %pop% ifNPCOK %1% else .%id%_GoEnd ifG ComTime P%id%01 EndPlot>
 	.%id%_GoEnd <EndPlot>
-	update <if= PlotStatus %id% else %pop% if= p%id%01 0 P= %id%01 ComTime P+ %id%01 21600 EMail %id%01>
+	update <if= PlotStatus %plotid% %id% else %pop% if= p%id%01 0 P= %id%01 ComTime P+ %id%01 21600 EMail %id%01>
 
 	Msg%id%01_1 <%name1% @ \SCENE NPCScene %1% :// Your mission has been cancelled.>
 	Msg%id%01_2 <%name1% @ \SCENE NPCScene %1% :// Your mission has been aborted.>
 
 	sub
 		Persona 1
-		greeting <if= PlotStatus %id% else %pop%  NewChat Say %id%01 EndPlot>
+		greeting <if= PlotStatus %plotid% %id% else %pop%  NewChat Say %id%01 EndPlot>
 		Msg%id%01 <I'm afraid that you took too long on that mission. It's over now.>
 	end
 

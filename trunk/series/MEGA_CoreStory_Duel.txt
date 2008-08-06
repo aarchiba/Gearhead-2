@@ -41,11 +41,11 @@ Content
 	Place4 <%e3%>
 
 	% P%id%01 = Initialization Counter
-	update <if= PlotStatus %id% else %pop% if= P%id%01 0 MoveNPC %1% %4% SetNPCTeam %1% 2 NPCLevel %1% StoryDL P= %id%01 1>
+	update <if= PlotStatus %plotid% %id% else %pop% if= P%id%01 0 MoveNPC %1% %4% SetNPCTeam %1% 2 NPCLevel %1% StoryDL P= %id%01 1>
 
 	sub
 		Persona 1
-		greeting <if= PlotStatus %id% else %pop%  ifChatNPCInPlay else .%id%_GoNotInPlay Goto .%id%_GoChallenge>
+		greeting <if= PlotStatus %plotid% %id% else %pop%  ifChatNPCInPlay else .%id%_GoNotInPlay Goto .%id%_GoChallenge>
 		*.%id%_GoChallenge <*ArenaChallenge .%id%_GoThemeInfo>
 		*.%id%_GoThemeInfo <*THEME_EXPO&Enemy NA>
 		*.%id%_GoNotInPlay <*WaitingForDuel %3%>
@@ -90,7 +90,7 @@ Content
 	inv
 		STC ENCOUNTER-DUEL
 		name <%name1%'s Mecha>
-		update <if= PlotStatus %id% else GoHide ShowEncounter SetStat STAT_MetaVisibility 0  Goto GoSetOrders>
+		update <if= PlotStatus %plotid% %id% else GoHide ShowEncounter SetStat STAT_MetaVisibility 0  Goto GoSetOrders>
 	end
 
 Content
@@ -107,12 +107,12 @@ Content
 	Place4 <%e3%>
 
 	% P%id%01 = Initialization Counter
-	update <if= PlotStatus %id% else %pop% if= P%id%01 0 MoveNPC %1% %4% SetNPCTeam %1% 2 NPCLevel %1% StoryDL P= %id%01 1>
+	update <if= PlotStatus %plotid% %id% else %pop% if= P%id%01 0 MoveNPC %1% %4% SetNPCTeam %1% 2 NPCLevel %1% StoryDL P= %id%01 1>
 
 	sub
 		Persona 1
 		rumor%id% <%name1% plays by Martian rules.>
-		greeting <if= PlotStatus %id% else %pop%  ifChatNPCInPlay else .%id%_GoNotInPlay Goto .%id%_GoChallenge>
+		greeting <if= PlotStatus %plotid% %id% else %pop%  ifChatNPCInPlay else .%id%_GoNotInPlay Goto .%id%_GoChallenge>
 		*.%id%_GoNotInPlay <*WaitingForDuel %3%>
 		.%id%_GoChallenge <EndChat Say %id%01 AddChat %id%01 AddChat %id%02>
 
@@ -169,7 +169,7 @@ Content
 	inv
 		STC ENCOUNTER-DUEL
 		name <%name1%'s Mecha>
-		update <if= PlotStatus %id% else GoHide ShowEncounter SetStat STAT_MetaVisibility 0  Goto GoSetOrders>
+		update <if= PlotStatus %plotid% %id% else GoHide ShowEncounter SetStat STAT_MetaVisibility 0  Goto GoSetOrders>
 	end
 
 Content
@@ -192,7 +192,7 @@ Content
 	% P%id%01 = Initialization Counter
 	% P%id%02 = Initialization Counter
 
-	update <if= PlotStatus %id% else %pop%  if=  P%id%01 0  P= %id%01 1  FreezeNPC %1% MoveNPC %5% %4% SetNPCTeam %5% 2 P= %id%02 StoryDL P+ %id%02 10 NPCLevel %5% P%id%02>
+	update <if= PlotStatus %plotid% %id% else %pop%  if=  P%id%01 0  P= %id%01 1  FreezeNPC %1% MoveNPC %5% %4% SetNPCTeam %5% 2 P= %id%02 StoryDL P+ %id%02 10 NPCLevel %5% P%id%02>
 
 	% SubPlot1 = If you managed to rescue E1...
 	SubPlot1 <*CS_ThanksForRescue&FromCSEnemy 1>
@@ -211,7 +211,7 @@ Content
 		.alter <+Pun>
 		nu1 <if= T1 0  Return   if= L1 0 L= 1 1   DeleteNPC %1%    LoseComp 0 .loss>
 		.loss <+T-- +F-->
-		nu2 <if= T2 0           if= L1 0 L= 1 2   ifYesNo 4 5 6 else GoLeaveE1ToDie MoveNPC %1% %6%  Print 3 SMemo 7 History 8   AddRenown 1   XPV 100   SetPlotStatus %id1%>
+		nu2 <if= T2 0           if= L1 0 L= 1 2   ifYesNo 4 5 6 else GoLeaveE1ToDie MoveNPC %1% %6%  Print 3 SMemo 7 History 8   AddRenown 1   XPV 100   SetPlotStatus %plotid% %id1%>
 		% If E1 is left to die, there's a chance he'll survive and become the PC's enemy.
 		GoLeaveE1ToDie <SMemo 0 History 9 WinComp 0 .win   XPV 100  AddHeroic -2  if= d2 1 else GoDeleteE1 PCEnemy %1% L= 3 StoryDL L+ 3 d40 NPCLevel %1% L3>
 		GoDeleteE1 <DeleteNPC %1%>
@@ -246,7 +246,7 @@ Content
 		special <UNLISTED NOESCAPE>
 		greeting <EndChat Say 1 AddChat 1>
 		result1 <EndChat Say 2 AddChat 2 AddChat 3 AddChat 4>
-		result2 <ifConversation HardSkillTar StoryDL else GoR2Fail EndChat Say 4 Print 9 MoveNPC %1% %6%  Exit %6%  SMemo 5  History 6   AddRenown 1  AddHeroic 1  AddReact -d20  SetPlotStatus %id1%>
+		result2 <ifConversation HardSkillTar StoryDL else GoR2Fail EndChat Say 4 Print 9 MoveNPC %1% %6%  Exit %6%  SMemo 5  History 6   AddRenown 1  AddHeroic 1  AddReact -d20  SetPlotStatus %plotid% %id1%>
 		GoR2Fail <EndChat Say 3 AddChat 5>
 		result3 <EndChat Say 7 AddChat 5>
 		result4 <EndChat Say 8 AddChat 5>
@@ -271,7 +271,7 @@ Content
 	inv
 		STC ENCOUNTER-DUEL
 		name <%name1%'s Mecha>
-		update <if= PlotStatus %id% else GoHide ShowEncounter SetStat STAT_MetaVisibility 0  Goto GoSetOrders>
+		update <if= PlotStatus %plotid% %id% else GoHide ShowEncounter SetStat STAT_MetaVisibility 0  Goto GoSetOrders>
 
 		NPC Mecha Pilot
 		chardesc Villainous Renowned
@@ -299,7 +299,7 @@ Content
 	% P%id%01 = Initialization Counter
 	% P%id%02 = E7's original home
 
-	update <if= PlotStatus %id% else %pop%  if=  P%id%01 0  P= %id%01 1  MoveNPC %1% %6%  SetNPCTeam %1% 3  NPCLevel %1% StoryDL   P= %id%02 NPCScene %7% FreezeNPC %7%>
+	update <if= PlotStatus %plotid% %id% else %pop%  if=  P%id%01 0  P= %id%01 1  MoveNPC %1% %6%  SetNPCTeam %1% 3  NPCLevel %1% StoryDL   P= %id%02 NPCScene %7% FreezeNPC %7%>
 
 	% SubPlot1 = The Induction
 	subplot1 <*ForcedInduction 7 4>
@@ -345,7 +345,7 @@ Content
 		end
 
 		Persona 1
-		greeting <if= PlotStatus %id% else %pop% Goto GoBusy   EndChat Say %id%01>
+		greeting <if= PlotStatus %plotid% %id% else %pop% Goto GoBusy   EndChat Say %id%01>
 		Msg%id%01 <Not a good time to be talking right now...>
 
 		Persona 7
@@ -360,7 +360,7 @@ Content
 		result4 <EndChat Say 5 StoryNote 6 AddLawful -10 AlterContext .attack &SetEnemyFac %5%>
 		.attack <+Pun>
 		result5 <Goto result2>
-		result6 <EndChat Say 7 StoryNote 6 AddLawful d6 SetPlotStatus %id1%>
+		result6 <EndChat Say 7 StoryNote 6 AddLawful d6 SetPlotStatus %plotid% %id1%>
 		result7 <Goto result4>
 		result8 <Goto result2>
 		result9 <EndChat Say 8 AddChat 2>
@@ -389,7 +389,7 @@ Content
 	inv
 		STC ENCOUNTER-DUEL
 		name <%name1%'s Mecha>
-		update <if= PlotStatus %id% else GoHide ShowEncounter SetStat STAT_MetaVisibility 0  Goto GoSetOrders>
+		update <if= PlotStatus %plotid% %id% else GoHide ShowEncounter SetStat STAT_MetaVisibility 0  Goto GoSetOrders>
 	end
 
 Content
@@ -414,7 +414,7 @@ Content
 	% P%id%01 = Initialization Counter
 	% P%id%02 = Duel target skill level calculator
 
-	update <if= PlotStatus %id% else %pop%  if=  P%id%01 0  P= %id%01 1  MoveNPC %1% %6%  SetNPCTeam %1% 3  V= %id%02 StoryDL  V+ %id%02 d5  NPCLevel %1% V%id%02 Goto %pop%>
+	update <if= PlotStatus %plotid% %id% else %pop%  if=  P%id%01 0  P= %id%01 1  MoveNPC %1% %6%  SetNPCTeam %1% 3  V= %id%02 StoryDL  V+ %id%02 d5  NPCLevel %1% V%id%02 Goto %pop%>
 
 	sub
 		MetaScene 6 2
@@ -457,7 +457,7 @@ Content
 
 		Persona 1
 		% V%id%01 = Have spoken already
-		greeting <if= PlotStatus %id% else %pop% if= V%id%01 1 else .%id%_GoFirstTime EndChat Say %id%01>
+		greeting <if= PlotStatus %plotid% %id% else %pop% if= V%id%01 1 else .%id%_GoFirstTime EndChat Say %id%01>
 		.%id%_GoFirstTime <ifChatNPCInPlay else .%id%_GoWaiting EndChat Say %id%02 AddChat %id%01 AddChat %id%02 AddChat %id%03 V= %id%01 1>
 		*.%id%_GoWaiting <*WaitingForDuel %3%>
 		result%id%01 <EndChat Say %id%03 AddHeroic 1        PCFriend %1% &SetAllyFac %5% &SetEnemyFac %4% PCFEnemy %4%>
@@ -494,7 +494,7 @@ Content
 	inv
 		STC ENCOUNTER-DUEL
 		name <%name1%'s Mecha>
-		update <if= PlotStatus %id% else GoHide ShowEncounter SetStat STAT_MetaVisibility 0  Goto GoSetOrders>
+		update <if= PlotStatus %plotid% %id% else GoHide ShowEncounter SetStat STAT_MetaVisibility 0  Goto GoSetOrders>
 	end
 
 
@@ -512,11 +512,11 @@ Content
 	Place4 <%e3%>
 
 	% P%id%01 = Initialization Counter
-	update <if= PlotStatus %id% else %pop% if= P%id%01 0 MoveNPC %1% %4% SetNPCTeam %1% 2 NPCLevel %1% StoryDL P= %id%01 1>
+	update <if= PlotStatus %plotid% %id% else %pop% if= P%id%01 0 MoveNPC %1% %4% SetNPCTeam %1% 2 NPCLevel %1% StoryDL P= %id%01 1>
 
 	sub
 		Persona 1
-		greeting <if= PlotStatus %id% else %pop%  ifChatNPCInPlay else .%id%_GoNotInPlay Goto .%id%_GoChallenge>
+		greeting <if= PlotStatus %plotid% %id% else %pop%  ifChatNPCInPlay else .%id%_GoNotInPlay Goto .%id%_GoChallenge>
 		*.%id%_GoChallenge <*ArenaChallenge .%id%_GoThemeInfo>
 		*.%id%_GoThemeInfo <*THEME_EXPO&Enemy NA>
 		*.%id%_GoNotInPlay <*WaitingForDuel %3%>
@@ -554,6 +554,6 @@ Content
 	inv
 		STC ENCOUNTER-DUEL
 		name <%name1%'s Mecha>
-		update <if= PlotStatus %id% else GoHide ShowEncounter SetStat STAT_MetaVisibility 0  Goto GoSetOrders>
+		update <if= PlotStatus %plotid% %id% else GoHide ShowEncounter SetStat STAT_MetaVisibility 0  Goto GoSetOrders>
 	end
 

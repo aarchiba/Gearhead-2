@@ -36,8 +36,8 @@ Content
 		MapHeight 50
 
 		Start <if= L2 0 L= 2 1  Alert 1>
-		nu1 <if= T1 0   Return   if= V1 0 V= 1 1   SMemo 5 History 3 SetPlotStatus %id2%>
-		nu2 <if= T2 0   if= V1 0 V= 1 1   XPV 100  AddRenown 1   Alert 2 SMemo 5 History 4 SALVAGE   Return SetPlotStatus %id1%>
+		nu1 <if= T1 0   Return   if= V1 0 V= 1 1   SMemo 5 History 3 SetPlotStatus %plotid% %id2%>
+		nu2 <if= T2 0   if= V1 0 V= 1 1   XPV 100  AddRenown 1   Alert 2 SMemo 5 History 4 SALVAGE   Return SetPlotStatus %plotid% %id1%>
 
 		Msg1 <This ship is being defended by several mecha. If you destroy the defenders, you should be able to force the ship to surrender.>
 		Msg2 <You have captured the enemy vessel.>
@@ -170,12 +170,12 @@ Plot
 
 	% v%id%01 = Initialization Counter
 
-	update <if= PlotStatus %id% else %pop% if= v%id%01 0 V= %id%01 1 NPCLevel %2% StoryDL MoveNPC %2% %3% SetNPCTeam %2% 2>
+	update <if= PlotStatus %plotid% %id% else %pop% if= v%id%01 0 V= %id%01 1 NPCLevel %2% StoryDL MoveNPC %2% %3% SetNPCTeam %2% 2>
 
 	sub
 		Persona 2
 		special <UNLISTED>
-		greeting <if= PlotStatus %id% else %pop% if= L1 2 else GoCheckLoss Goto GoWinSpeech>
+		greeting <if= PlotStatus %plotid% %id% else %pop% if= L1 2 else GoCheckLoss Goto GoWinSpeech>
 		*GoWinSpeech <*GetYouNextTime>
 		GoCheckLoss <if= L1 1 else GoThreat Goto GoLoseSpeech>
 		*GoLoseSpeech <*YouLose>
@@ -238,7 +238,7 @@ Plot
 	Element2 <Prefab>
 	Place2 <1>
 
-	Start <if= PlotStatus %id% else %pop% if= SceneID %1% else %pop% Alert %id%01 Exit %2% Goto %pop%>
+	Start <if= PlotStatus %plotid% %id% else %pop% if= SceneID %1% else %pop% Alert %id%01 Exit %2% Goto %pop%>
 	Msg%id%01 <You are suddenly attacked by mecha!>
 
 	sub
@@ -268,7 +268,7 @@ Plot
 		STC ENCOUNTER-SEEKPC
 		EncounterMove 100
 		name <Surprise Ambush>
-		update <if= PlotStatus %id% else GoHide SetSelfX PCX SetSelfY PCY Goto GoSetOrders>
+		update <if= PlotStatus %plotid% %id% else GoHide SetSelfX PCX SetSelfY PCY Goto GoSetOrders>
 	end
 
 %% *CS_MechaRetribution Content
@@ -308,8 +308,8 @@ Content
 		MapHeight 30
 
 		Start <if= L2 0 L= 2 1 SMemo 1 History 2>
-		nu1 <if= T1 0   Return   if= V1 0 V= 1 1   SetPlotStatus %id2%>
-		nu2 <if= T2 0   if= V1 0 V= 1 1            XPV 100   AddRenown 1  Salvage   SetPlotStatus %id1%>
+		nu1 <if= T1 0   Return   if= V1 0 V= 1 1   SetPlotStatus %plotid% %id2%>
+		nu2 <if= T2 0   if= V1 0 V= 1 1            XPV 100   AddRenown 1  Salvage   SetPlotStatus %plotid% %id1%>
 
 		Msg1 <After fighting some mysterious mecha you should report back to %name1%.>
 		Msg2 <You fought a group of mysterious mecha.>

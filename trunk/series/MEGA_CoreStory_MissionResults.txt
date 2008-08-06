@@ -18,14 +18,14 @@ Content
 	Element3 <Prefab>
 	Element4 <Scene Public Meeting !Near -7>
 
-	start <if= PlotStatus %id% else %pop% ifNPCDead %1% SMemo 0 WinComp 0 .%id%_loss>
+	start <if= PlotStatus %plotid% %id% else %pop% ifNPCDead %1% SMemo 0 WinComp 0 .%id%_loss>
 	.%id%_loss <+T-- +F-->
 
-	update <if= PlotStatus %id% else %pop% if= v%id%01 0 FreezeNPC %2% v= %id%01 1>
+	update <if= PlotStatus %plotid% %id% else %pop% if= v%id%01 0 FreezeNPC %2% v= %id%01 1>
 
 	sub
 		Persona 1
-		greeting <if= PlotStatus %id% else %pop% NewChat Say %id%01 SMemo %id%02 History %id%03 CashPrize Reward StoryDL 500 GiveItem %3% WinComp %4% .%id%_win>
+		greeting <if= PlotStatus %plotid% %id% else %pop% NewChat Say %id%01 SMemo %id%02 History %id%03 CashPrize Reward StoryDL 500 GiveItem %3% WinComp %4% .%id%_win>
 		.%id%_win <+Tga +Fft>
 		Msg%id%01 <Good work on that mission. You must have done well, because while you were out someone came by and dropped off these chocolates for you; \SPR %2% asked me to ask you to meet \OPR %2% later at %name4%.>
 		Msg%id%02 <Someone gave %name1% a box of chocolates for you, and left a message that you should meet \OPR %2% at %name4% later.>
@@ -52,14 +52,14 @@ Content
 	desc <You failed to rescue your love interest, so she's been kidnapped.>
 	requires <*CS_Loss_RescueLoveInterest (+C--|+Cro|+Cps|+Cme|+Clo)>
 
-	start <if= PlotStatus %id% else %pop% ifNPCDead %1% SMemo 0 WinComp 0 .%id%_loss>
+	start <if= PlotStatus %plotid% %id% else %pop% ifNPCDead %1% SMemo 0 WinComp 0 .%id%_loss>
 	.%id%_loss <+T-- +F-->
 
-	update <if= PlotStatus %id% else %pop% if= v%id%01 0 FreezeNPC %2% v= %id%01 1>
+	update <if= PlotStatus %plotid% %id% else %pop% if= v%id%01 0 FreezeNPC %2% v= %id%01 1>
 
 	sub
 		Persona 1
-		greeting <if= PlotStatus %id% else %pop% ifNPCOK %2% else .%id%_GoJustEnd Goto .%id%_GoKidnapped>
+		greeting <if= PlotStatus %plotid% %id% else %pop% ifNPCOK %2% else .%id%_GoJustEnd Goto .%id%_GoKidnapped>
 		*.%id%_GoJustEnd <*MissionWasFailure .%id%_GoEnd &AllyFac &EnemyFac>
 		.%id%_GoEnd <SMemo 0 AddRenown -10 AddCheerful -10  NTBLoseComp 0 .%id%_deadloss>
 		.%id%_deadloss <+Cfa +Bld +T-- +F-->
@@ -88,12 +88,12 @@ Content
 	Element3 <Prefab>
 	Place3 <2>
 
-	start <if= PlotStatus %id% else %pop% ifNPCDead %1% SMemo 0 WinComp 0 .%id%_loss>
+	start <if= PlotStatus %plotid% %id% else %pop% ifNPCDead %1% SMemo 0 WinComp 0 .%id%_loss>
 	.%id%_loss <+T-- +F-->
 
 	sub
 		Persona 1
-		greeting <if= PlotStatus %id% else %pop%  NewChat Say %id%01 StoryNote %id%02 CashPrize Reward StoryDL 500 WinComp %3% .%id%_next>
+		greeting <if= PlotStatus %plotid% %id% else %pop%  NewChat Say %id%01 StoryNote %id%02 CashPrize Reward StoryDL 500 WinComp %3% .%id%_next>
 		.%id%_next <+Ten +Ffi>
 		Msg%id%01 <The enemy ship has been captured, but one of their lances managed to escape. We believe they are hiding in %name3%; it's possible that they're performing whatever mission brought them here in the first place.>
 		Msg%id%02 <%name1% revealed that mecha from the ship escaped to %name3%.>
@@ -122,12 +122,12 @@ Content
 	Element2 <Character Scientist Renowned !Okay 1 Neverfail>
 	NeverFail2 <Scientist>
 
-	start <if= PlotStatus %id% else %pop% ifNPCDead %1% SMemo 0 WinComp 0 .%id%_loss>
+	start <if= PlotStatus %plotid% %id% else %pop% ifNPCDead %1% SMemo 0 WinComp 0 .%id%_loss>
 	.%id%_loss <+T-- +F-->
 
 	sub
 		Persona 1
-		greeting <if= PlotStatus %id% else %pop% CashPrize Reward StoryDL 500 ifNPCOK %2% else .%id%_GoJustEnd NewChat Say %id%01 StoryNote %id%02 AddChat %id%01 FreezeNPC %2% &SetTargetNPC %2% WinComp 0 .%id%_next>
+		greeting <if= PlotStatus %plotid% %id% else %pop% CashPrize Reward StoryDL 500 ifNPCOK %2% else .%id%_GoJustEnd NewChat Say %id%01 StoryNote %id%02 AddChat %id%01 FreezeNPC %2% &SetTargetNPC %2% WinComp 0 .%id%_next>
 		.%id%_next <+Tgt +Fin>
 		*.%id%_GoJustEnd <*MissionWasSuccess&Reward .%id%_GoEnd &AllyFac &EnemyFac>
 		.%id%_GoEnd <SMemo 0 NTBWinComp 0 .%id%_end>
@@ -156,12 +156,12 @@ Content
 	Element3 <Prefab>
 	Place3 <2>
 
-	start <if= PlotStatus %id% else %pop% ifNPCDead %1% SMemo 0 WinComp 0 .%id%_loss>
+	start <if= PlotStatus %plotid% %id% else %pop% ifNPCDead %1% SMemo 0 WinComp 0 .%id%_loss>
 	.%id%_loss <+T-- +F-->
 
 	sub
 		Persona 1
-		greeting <if= PlotStatus %id% else %pop%  NewChat Say %id%01 StoryNote %id%02 CashPrize Reward StoryDL 500 WinComp %3% .%id%_next>
+		greeting <if= PlotStatus %plotid% %id% else %pop%  NewChat Say %id%01 StoryNote %id%02 CashPrize Reward StoryDL 500 WinComp %3% .%id%_next>
 		.%id%_next <+Ten +Ffi>
 		Msg%id%01 <You did it. Unfortunately, that might not be the only research crew they have out there. Reports have come in about another weapon in %name2%.>
 		Msg%id%02 <%name1% revealed that there could be more experimental weapons nearby.>
@@ -192,12 +192,12 @@ Content
 	Element3 <Prefab>
 	Place3 <2>
 
-	start <if= PlotStatus %id% else %pop% ifNPCDead %1% SMemo 0 LoseComp 0 .%id%_loss>
+	start <if= PlotStatus %plotid% %id% else %pop% ifNPCDead %1% SMemo 0 LoseComp 0 .%id%_loss>
 	.%id%_loss <+T-- +F-->
 
 	sub
 		Persona 1
-		greeting <if= PlotStatus %id% else %pop%  NewChat Say %id%01 StoryNote %id%02 LoseComp %3% .%id%_next>
+		greeting <if= PlotStatus %plotid% %id% else %pop%  NewChat Say %id%01 StoryNote %id%02 LoseComp %3% .%id%_next>
 		.%id%_next <+Ten +Ffi>
 		Msg%id%01 <You failed... and that means the experimental weapon could still be out there, somewhere...>
 		Msg%id%02 <%name1% reminded you that the experimental weapon could still be out there.>
@@ -218,12 +218,12 @@ Content
 	Element2 <Character Scientist Renowned !Okay 1 Neverfail>
 	NeverFail2 <Scientist>
 
-	start <if= PlotStatus %id% else %pop% ifNPCDead %1% SMemo 0 LoseComp 0 .%id%_loss>
+	start <if= PlotStatus %plotid% %id% else %pop% ifNPCDead %1% SMemo 0 LoseComp 0 .%id%_loss>
 	.%id%_loss <+T-- +F-->
 
 	sub
 		Persona 1
-		greeting <if= PlotStatus %id% else %pop% ifNPCOK %2% else .%id%_GoJustEnd NewChat Say %id%01  AddChat %id%01 AddChat %id%02 AddChat %id%03>
+		greeting <if= PlotStatus %plotid% %id% else %pop% ifNPCOK %2% else .%id%_GoJustEnd NewChat Say %id%01  AddChat %id%01 AddChat %id%02 AddChat %id%03>
 		*.%id%_GoJustEnd <*MissionWasFailure .%id%_GoTrivialEnd &AllyFac &EnemyFac>
 		.%id%_GoTrivialEnd <SMemo 0 NTBLoseComp 0 .%id%_loss>
 		.%id%_loss <+T-- +F-->
@@ -258,13 +258,13 @@ Content
 	% E1 is the NPC.
 	% E2 is the target scene.
 
-	start <if= PlotStatus %id% else %pop% ifNPCDead %1% SMemo %id%01 WinComp %2% .%id%_loss>
+	start <if= PlotStatus %plotid% %id% else %pop% ifNPCDead %1% SMemo %id%01 WinComp %2% .%id%_loss>
 	.%id%_loss <+Tgj +Ffi>
 	Msg%id%01 <Your enemies are planning to attack %name2%.>
 
 	sub
 		Persona 1
-		greeting <if= PlotStatus %id% else %pop% gOTO .%id%_GoReportSuccess>
+		greeting <if= PlotStatus %plotid% %id% else %pop% gOTO .%id%_GoReportSuccess>
 		.%id%_GoReportSuccess <NewChat Say %id%01 SMemo %id%02 CashPrize Reward StoryDL 500 WinComp %2% .%id%_win>
 		.%id%_win <+Tgj +Ffi>
 		Msg%id%01 <Good job. Now, you should head over to %name2% right away, before the attack starts.>
@@ -288,13 +288,13 @@ Content
 	% E1 is the NPC.
 	% E2 is the target scene.
 
-	start <if= PlotStatus %id% else %pop% ifNPCDead %1% SMemo %id%01 LoseComp %2% .%id%_loss>
+	start <if= PlotStatus %plotid% %id% else %pop% ifNPCDead %1% SMemo %id%01 LoseComp %2% .%id%_loss>
 	.%id%_loss <+Tgj +Ffi>
 	Msg%id%01 <Your enemies are planning to attack %name2%.>
 
 	sub
 		Persona 1
-		greeting <if= PlotStatus %id% else %pop% gOTO .%id%_GoReportFailure>
+		greeting <if= PlotStatus %plotid% %id% else %pop% gOTO .%id%_GoReportFailure>
 		.%id%_GoReportFailure <NewChat Say %id%01 SMemo %id%02 LoseComp %2% .%id%_loss>
 		.%id%_loss <+Tgj +Ffi>
 		Msg%id%01 <You failed to stop those mecha, but it might not be too late to save %name2%.>
@@ -321,12 +321,12 @@ Content
 	Element2 <Character !Near -7 !Okay -3 !Xclude -2 !Okay 1>
 	Element3 <Scene Building Public !Okay 2>
 
-	start <if= PlotStatus %id% else %pop% ifNPCDead %1% SMemo 0 WinComp 0 .%id%_loss>
+	start <if= PlotStatus %plotid% %id% else %pop% ifNPCDead %1% SMemo 0 WinComp 0 .%id%_loss>
 	.%id%_loss <+T-- +F-->
 
 	sub
 		Persona 1
-		greeting <if= PlotStatus %id% else %pop% NewChat Say %id%01 AddChat %id%01 AddChat %id%02 SMemo 0 Goto .%id%_GoEnd>
+		greeting <if= PlotStatus %plotid% %id% else %pop% NewChat Say %id%01 AddChat %id%01 AddChat %id%02 SMemo 0 Goto .%id%_GoEnd>
 		.%id%_GoEnd <CashPrize Reward StoryDL 500 SMemo 0 NTBWinComp 0 .%id%_win>
 		.%id%_win <+T-- +F-->
 		Result%id%01 <ifNPCOK %2% else .%id%_GoFail NewChat Say %id%02 StoryNote %id%03 &SetTargetNPC %2% &SetCompScene %3% AlterContext .%id%_GoHelp>
@@ -352,12 +352,12 @@ Content
 
 	% E1 is the NPC.
 
-	start <if= PlotStatus %id% else %pop% ifNPCDead %1% SMemo 0 WinComp 0 .%id%_loss>
+	start <if= PlotStatus %plotid% %id% else %pop% ifNPCDead %1% SMemo 0 WinComp 0 .%id%_loss>
 	.%id%_loss <+T-- +F-->
 
 	sub
 		Persona 1
-		greeting <if= PlotStatus %id% else %pop% NewChat Say %id%01 SMemo 0 Goto .%id%_GoEnd>
+		greeting <if= PlotStatus %plotid% %id% else %pop% NewChat Say %id%01 SMemo 0 Goto .%id%_GoEnd>
 		.%id%_GoEnd <CashPrize Reward StoryDL 500 SMemo 0 NTBWinComp 0 .%id%_win>
 		.%id%_win <+T-- +F-->
 		Msg%id%01 <They have been punished. Thanks for your help.>
@@ -388,12 +388,12 @@ Content
 	% E3 is a public scene nearby
 	Element3 <Scene Public !Near -7 !Okay 2>
 
-	start <if= PlotStatus %id% else %pop% ifNPCDead %1%  SMemo 0 WinComp 0 .%id%_loss>
+	start <if= PlotStatus %plotid% %id% else %pop% ifNPCDead %1%  SMemo 0 WinComp 0 .%id%_loss>
 	.%id%_loss <+T-- +F-->
 
 	sub
 		Persona 1
-		greeting <if= PlotStatus %id% else %pop% CashPrize Reward StoryDL 300  ifNPCOK %2% else .%id%_GoTrivial  NewChat Say %id%01  StoryNote %id%02  &SetTargetNPC %2% WinComp %3% .%id%_next>
+		greeting <if= PlotStatus %plotid% %id% else %pop% CashPrize Reward StoryDL 300  ifNPCOK %2% else .%id%_GoTrivial  NewChat Say %id%01  StoryNote %id%02  &SetTargetNPC %2% WinComp %3% .%id%_next>
 		.%id%_next <+Tgt +Fmi>
 		*.%id%_GoTrivial <*MissionWasSuccess&Reward .%id%_GoTrivialEnd &AllyFac &EnemyFac>
 		.%id%_GoTrivialEnd <SMemo 0  NTBWinComp 0 .%id%_trivialend>
@@ -415,14 +415,14 @@ Content
 	% E2 is the NPC previously met
 
 	% V%id%01 = Initialization counter
-	update <if= PlotStatus %id% else %pop% if= v%id%01 0 else %pop% MoveNPC %2% NPCScene %1% V= %id%01 1>
+	update <if= PlotStatus %plotid% %id% else %pop% if= v%id%01 0 else %pop% MoveNPC %2% NPCScene %1% V= %id%01 1>
 
-	start <if= PlotStatus %id% else %pop% ifNPCDead %1%  SMemo 0 WinComp 0 .%id%_loss>
+	start <if= PlotStatus %plotid% %id% else %pop% ifNPCDead %1%  SMemo 0 WinComp 0 .%id%_loss>
 	.%id%_loss <+T-- +F-->
 
 	sub
 		Persona 1
-		greeting <if= PlotStatus %id% else %pop% ifNPCOK %2% else .%id%_GoTrivial ifCHatNPCInPlay else .%id%_GoNotHere NewChat Say %id%01  AddChat %id%01  AddChat %id%02>
+		greeting <if= PlotStatus %plotid% %id% else %pop% ifNPCOK %2% else .%id%_GoTrivial ifCHatNPCInPlay else .%id%_GoNotHere NewChat Say %id%01  AddChat %id%01  AddChat %id%02>
 		*.%id%_GoTrivial <*MissionWasSuccess&Reward .%id%_GoEnd &AllyFac &EnemyFac>
 		.%id%_GoEnd <CashPrize Reward StoryDL 300  SMemo 0  NTBWinComp 0 .%id%_end>
 		.%id%_GoNotHere <NewChat Say %id%02>
@@ -439,7 +439,7 @@ Content
 		Prompt%id%02 <That's not something I'd want to do again.>
 
 		Persona 2
-		greeting <if= PlotStatus %id% else %pop% NewChat Say %id%01>
+		greeting <if= PlotStatus %plotid% %id% else %pop% NewChat Say %id%01>
 		Msg%id%01 <You should go speak with %name1% now.>
 	end
 
@@ -452,12 +452,12 @@ Content
 	% E1 is the mission-giver.
 	% E2 is the NPC previously met
 
-	start <if= PlotStatus %id% else %pop% ifNPCDead %1%  SMemo 0 WinComp 0 .%id%_loss>
+	start <if= PlotStatus %plotid% %id% else %pop% ifNPCDead %1%  SMemo 0 WinComp 0 .%id%_loss>
 	.%id%_loss <+T-- +F-->
 
 	sub
 		Persona 1
-		greeting <if= PlotStatus %id% else %pop% CashPrize Reward StoryDL 300 ifNPCOK %2% else .%id%_GoNPCGone Goto .%id%_GoSearchNPC>
+		greeting <if= PlotStatus %plotid% %id% else %pop% CashPrize Reward StoryDL 300 ifNPCOK %2% else .%id%_GoNPCGone Goto .%id%_GoSearchNPC>
 		.%id%_GoSearchNPC <NewChat Say %id%01 SMemo %id%02 History %id%03 &SetTargetNPC %2% WinComp 0 .%id%_Win>
 		*.%id%_GoNPCGone <*MissionWasSuccess&Reward .%id%_GoEnd &AllyFac &EnemyFac>
 		.%id%_GoEnd <SMemo 0 WinComp 0 .%id%_end>
@@ -488,12 +488,12 @@ Content
 	% E1 is the mission-giver.
 	% E2 is the NPC previously met
 
-	start <if= PlotStatus %id% else %pop% ifNPCDead %1%  SMemo 0 WinComp 0 .%id%_loss>
+	start <if= PlotStatus %plotid% %id% else %pop% ifNPCDead %1%  SMemo 0 WinComp 0 .%id%_loss>
 	.%id%_loss <+T-- +F-->
 
 	sub
 		Persona 1
-		greeting <if= PlotStatus %id% else %pop% NewChat Say %id%01 AddChat %id%01 AddChat %id%02>
+		greeting <if= PlotStatus %plotid% %id% else %pop% NewChat Say %id%01 AddChat %id%01 AddChat %id%02>
 		.%id%_win <+Tgt +Fin>
 		.%id%_meh <+T-- +F-->
 		result%id%01 <ifNPCOK %2% else .%id%_GoTargetDead NewChat Say %id%02 &SetTargetNPC %2% WinComp 0 .%id%_win CashPrize Reward StoryDL 200 AddReact d10 SMemo %id%04>
@@ -537,12 +537,12 @@ Content
 	% E1 is the mission-giver.
 	% E2 is the NPC who was lost
 
-	start <if= PlotStatus %id% else %pop% ifNPCDead %1% LoseComp 0 .%id%_loss>
+	start <if= PlotStatus %plotid% %id% else %pop% ifNPCDead %1% LoseComp 0 .%id%_loss>
 	.%id%_loss <+T-- +F-->
 
 	sub
 		Persona 1
-		greeting <if= PlotStatus %id% else %pop%  NewChat Say %id%01 AddChat %id%01  AddChat %id%02>
+		greeting <if= PlotStatus %plotid% %id% else %pop%  NewChat Say %id%01 AddChat %id%01  AddChat %id%02>
 
 		.%id%_GoEnd <SMemo 0  NTBLoseComp 0 .%id%_loss>
 		.%id%_loss <+T-- +F-->
@@ -593,13 +593,13 @@ Plot
 	element6 <Prefab>
 	Place6 <5>
 
-	start <if= PlotStatus %id% else %pop% ifNPCDead %1% LoseComp 0 .%id%_loss>
+	start <if= PlotStatus %plotid% %id% else %pop% ifNPCDead %1% LoseComp 0 .%id%_loss>
 	.%id%_loss <+T-->
 
 	sub
 		Persona 1
 		% V%id%01 = Have given reward
-		greeting <if= PlotSTatus %id% else %pop% if= V%id%01 0 else .%id%_GoNewMission CashPrize Reward StoryDL 500 V= %id%01 1 Goto .%id%_GoGetReward>
+		greeting <if= PlotStatus %plotid% %id% else %pop% if= V%id%01 0 else .%id%_GoNewMission CashPrize Reward StoryDL 500 V= %id%01 1 Goto .%id%_GoGetReward>
 		*.%id%_GoGetReward <*MissionWasSuccess&Reward .%id%_GoRewardOp N3 N2>
 		.%id%_GoRewardOp <AddChat %id%03>
 		.%id%_GoNewMission <NewChat Say %id%01 AddChat %id%01 AddChat %id%02>
@@ -663,12 +663,12 @@ Content
 
 	% E1 is the NPC.
 
-	start <if= PlotStatus %id% else %pop% ifNPCDead %1% LoseComp 0 .%id%_loss>
+	start <if= PlotStatus %plotid% %id% else %pop% ifNPCDead %1% LoseComp 0 .%id%_loss>
 	.%id%_loss <+T-- +F-->
 
 	sub
 		Persona 1
-		greeting <if= PlotStatus %id% else %pop% NewChat Say %id%01 SMemo 0 NTBLoseComp 0 .%id%_loss>
+		greeting <if= PlotStatus %plotid% %id% else %pop% NewChat Say %id%01 SMemo 0 NTBLoseComp 0 .%id%_loss>
 		.%id%_loss <+T-- +F-->
 		Msg%id%01 <You have failed in the mission. Unless we can learn what our enemy is after, we have no chance of success.>
 		Msg%id%01_1 <We have lost, and even worse we don't know the purpose behind these attacks.>
@@ -712,12 +712,12 @@ Content
 	% E3 is a nearby public scene
 	Element3 <Scene Public !Near -7 !Okay 2>
 
-	start <if= PlotStatus %id% else %pop% ifNPCDead %1% SMemo 0 WinComp 0 .%id%_loss>
+	start <if= PlotStatus %plotid% %id% else %pop% ifNPCDead %1% SMemo 0 WinComp 0 .%id%_loss>
 	.%id%_loss <+T-- +F-->
 
 	sub
 		Persona 1
-		greeting <if= PlotStatus %id% else %pop% ifNPCOK %2% else .%id%_GoDullWin NewChat Say %id%01 CashPrize Reward StoryDL 500 StoryNote %id%02 &SetEnemyNPC %2% FreezeNPC %2% WinComp 0 .%id%_Win AddChat %id%01 AddChat %id%02>
+		greeting <if= PlotStatus %plotid% %id% else %pop% ifNPCOK %2% else .%id%_GoDullWin NewChat Say %id%01 CashPrize Reward StoryDL 500 StoryNote %id%02 &SetEnemyNPC %2% FreezeNPC %2% WinComp 0 .%id%_Win AddChat %id%01 AddChat %id%02>
 		*.%id%_GoDullWin <*MissionWasSuccess&Reward .%id%_GoDullEnd &AllyFac &EnemyFac>
 		.%id%_GoDullEnd <CashPrize Reward StoryDL 500 SMemo 0 NTBWinComp 0 .%id%_dullwin>
 		.%id%_dullwin <+T-- +F-->
@@ -753,12 +753,12 @@ Content
 	Element3 <NewNPC -2 -7 Criminal Villainous>
 	Place3 </>
 
-	start <if= PlotStatus %id% else %pop% ifNPCDead %1% SMemo 0 WinComp 0 .%id%_loss>
+	start <if= PlotStatus %plotid% %id% else %pop% ifNPCDead %1% SMemo 0 WinComp 0 .%id%_loss>
 	.%id%_loss <+T-- +F-->
 
 	sub
 		Persona 1
-		greeting <if= PlotStatus %id% else %pop% CashPrize Reward StoryDL 500 NewChat Say %id%01 StoryNote %id%02 AddChat %id%01 &SetEnemyNPC %3% NTBWinComp 0 .%id%_win ifNPCOK %2% FreezeNPC %2% PCEnemy %2%>
+		greeting <if= PlotStatus %plotid% %id% else %pop% CashPrize Reward StoryDL 500 NewChat Say %id%01 StoryNote %id%02 AddChat %id%01 &SetEnemyNPC %3% NTBWinComp 0 .%id%_win ifNPCOK %2% FreezeNPC %2% PCEnemy %2%>
 		.%id%_win <+T-- +F-->
 		result%id%01 <NewChat Say %id%03>
 		Msg%id%01 <Good job, \PC . You might be interested to learn that we've discovered %name2% was working for someone called %name3%.>
@@ -780,12 +780,12 @@ Content
 	% E1 is the mission-giver.
 	% E2 is the target.
 
-	start <if= PlotStatus %id% else %pop% ifNPCDead %1% SMemo 0 WinComp 0 .%id%_loss>
+	start <if= PlotStatus %plotid% %id% else %pop% ifNPCDead %1% SMemo 0 WinComp 0 .%id%_loss>
 	.%id%_loss <+T-- +F-->
 
 	sub
 		Persona 1
-		greeting <if= PlotStatus %id% else %pop% gOTO .%id%_GoReportSuccess>
+		greeting <if= PlotStatus %plotid% %id% else %pop% gOTO .%id%_GoReportSuccess>
 		.%id%_GoReportSuccess <NewChat Say %id%01 AddChat %id%01 Goto .%id%_GoEnd>
 		.%id%_GoEnd <CashPrize Reward StoryDL 500 ifNPCOK %2% else .%id%_GoTrivialEnd SMemo %id%02  &SetTargetNPC %2%  WinComp 0 .%id%_win>
 		.%id%_GoTrivialEnd <SMemo 0  NTBWinComp 0 .%id%_meh>
@@ -807,12 +807,12 @@ Content
 	% E1 is the mission-giver.
 	% E2 is the target.
 
-	start <if= PlotStatus %id% else %pop% ifNPCDead %1% SMemo 0 WinComp 0 .%id%_loss>
+	start <if= PlotStatus %plotid% %id% else %pop% ifNPCDead %1% SMemo 0 WinComp 0 .%id%_loss>
 	.%id%_loss <+T-- +F-->
 
 	sub
 		Persona 1
-		greeting <if= PlotStatus %id% else %pop% ifNPCOK %2% else .%id%_GoDullWin &SetEnemyNPC %2% NewChat Say %id%01 Goto .%id%_GoEnd>
+		greeting <if= PlotStatus %plotid% %id% else %pop% ifNPCOK %2% else .%id%_GoDullWin &SetEnemyNPC %2% NewChat Say %id%01 Goto .%id%_GoEnd>
 		*.%id%_GoDullWin <*MissionWasSuccess&Reward .%id%_GoDullEnd &AllyFac &EnemyFac>
 		.%id%_GoDullEnd <CashPrize Reward StoryDL 500 SMemo 0 NTBWinComp 0 .%id%_dullwin>
 		.%id%_dullwin <+T-- +F-->
@@ -842,12 +842,12 @@ Content
 	% E1 is the mission-giver.
 	% E2 is the target.
 
-	start <if= PlotStatus %id% else %pop% ifNPCDead %1% SMemo 0 LOseComp 0 .%id%_loss>
+	start <if= PlotStatus %plotid% %id% else %pop% ifNPCDead %1% SMemo 0 LOseComp 0 .%id%_loss>
 	.%id%_loss <+T-- +F-->
 
 	sub
 		Persona 1
-		greeting <if= PlotStatus %id% else %pop% gOTO .%id%_GoReportFailure>
+		greeting <if= PlotStatus %plotid% %id% else %pop% gOTO .%id%_GoReportFailure>
 		.%id%_GoReportFailure <NewChat Say %id%01 AddChat %id%01 SMemo 0  NTBLoseComp 0 .%id%_loss>
 		.%id%_hunt <+Tht +Far>
 		.%id%_loss <+T-- +F-->
@@ -866,12 +866,12 @@ Content
 
 	% E1 is the NPC.
 
-	start <if= PlotStatus %id% else %pop% ifNPCDead %1% LoseComp 0 .%id%_loss>
+	start <if= PlotStatus %plotid% %id% else %pop% ifNPCDead %1% LoseComp 0 .%id%_loss>
 	.%id%_loss <+T-- +F-->
 
 	sub
 		Persona 1
-		greeting <if= PlotStatus %id% else %pop% gOTO .%id%_GoReportLoss>
+		greeting <if= PlotStatus %plotid% %id% else %pop% gOTO .%id%_GoReportLoss>
 		*.%id%_GoReportLoss <*MissionWasFailure .%id%_GoEnd &AllyFac &EnemyFac>
 		.%id%_GoEnd <SMemo 0 NTBLoseComp 0 .%id%_loss ifNPCOK %2% &SetEnemyNPC %2%>
 		.%id%_loss <+T-- +F-->
@@ -904,12 +904,12 @@ Content
 	Element3 <Prefab>
 	Place3 <2>
 
-	start <if= PlotStatus %id% else %pop% ifNPCDead %1% SMemo 0 WinComp 0 .%id%_loss>
+	start <if= PlotStatus %plotid% %id% else %pop% ifNPCDead %1% SMemo 0 WinComp 0 .%id%_loss>
 	.%id%_loss <+T-- +F-->
 
 	sub
 		Persona 1
-		greeting <if= PlotStatus %id% else %pop% gOTO .%id%_GoReportSuccess>
+		greeting <if= PlotStatus %plotid% %id% else %pop% gOTO .%id%_GoReportSuccess>
 		.%id%_GoReportSuccess <NewChat Say %id%01 StoryNote %id%02 CashPrize Reward StoryDL 500 WinComp %3% .%id%_win>
 		.%id%_win <+Ten +Ffi>
 		Msg%id%01 <The mission was a success... but that might not be the end of it. There have been reports that more enemy mecha have been spotted in %name2%.>
@@ -944,12 +944,12 @@ Content
 	Element2 <Character !Near -7 !Comrade 1>
 	Element3 <Scene Building Public !Near -7 !Okay 2>
 
-	start <if= PlotStatus %id% else %pop% ifNPCDead %1% SMemo 0 WinComp 0 .%id%_loss>
+	start <if= PlotStatus %plotid% %id% else %pop% ifNPCDead %1% SMemo 0 WinComp 0 .%id%_loss>
 	.%id%_loss <+T-- +F-->
 
 	sub
 		Persona 1
-		greeting <if= PlotStatus %id% else %pop% ifNPCOK %2% else .%id%_GoReportSuccess  NewChat Say %id%01 SMemo %id%02 History %id%03 Goto .%id%_GoEnd>
+		greeting <if= PlotStatus %plotid% %id% else %pop% ifNPCOK %2% else .%id%_GoReportSuccess  NewChat Say %id%01 SMemo %id%02 History %id%03 Goto .%id%_GoEnd>
 		*.%id%_GoReportSuccess <*MissionWasSuccess&Reward .%id%_GoMeh &AllyFac &EnemyFac>
 		.%id%_GoEnd <CashPrize Reward StoryDL 500 &SetTargetNPC %2% WinComp %3% .%id%_win>
 		.%id%_win <+Tgt +Fmi>
@@ -983,12 +983,12 @@ Content
 	Element2 <Character !Near -7 !Ally 1 !Okay -3>
 	Element3 <Scene Building Public !Near -7 !Okay 2>
 
-	start <if= PlotStatus %id% else %pop% ifNPCDead %1% SMemo 0 WinComp 0 .%id%_loss>
+	start <if= PlotStatus %plotid% %id% else %pop% ifNPCDead %1% SMemo 0 WinComp 0 .%id%_loss>
 	.%id%_loss <+T-- +F-->
 
 	sub
 		Persona 1
-		greeting <if= PlotStatus %id% else %pop% SMemo 0  ifNPCOK %2% else .%id%_GoReportSuccess  if# ChatNPCFac 0 else .%id%_GoReportSuccess NewChat Say %id%01 SMemo %id%02 History %id%03 Goto .%id%_GoEnd>
+		greeting <if= PlotStatus %plotid% %id% else %pop% SMemo 0  ifNPCOK %2% else .%id%_GoReportSuccess  if# ChatNPCFac 0 else .%id%_GoReportSuccess NewChat Say %id%01 SMemo %id%02 History %id%03 Goto .%id%_GoEnd>
 		*.%id%_GoReportSuccess <*MissionWasSuccess&Reward .%id%_GoMeh &AllyFac &EnemyFac>
 		.%id%_GoEnd <CashPrize Reward StoryDL 500 &SetTargetNPC %2% WinComp %3% .%id%_win>
 		.%id%_win <+Tgt +Fmi>
@@ -1018,12 +1018,12 @@ Content
 
 	% E1 is the NPC.
 
-	start <if= PlotStatus %id% else %pop% ifNPCDead %1% SMemo 0 WinComp 0 .%id%_loss>
+	start <if= PlotStatus %plotid% %id% else %pop% ifNPCDead %1% SMemo 0 WinComp 0 .%id%_loss>
 	.%id%_loss <+T-- +F-->
 
 	sub
 		Persona 1
-		greeting <if= PlotStatus %id% else %pop% gOTO .%id%_GoReportSuccess>
+		greeting <if= PlotStatus %plotid% %id% else %pop% gOTO .%id%_GoReportSuccess>
 		*.%id%_GoReportSuccess <*MissionWasSuccess&Reward .%id%_GoEnd &AllyFac &EnemyFac>
 		.%id%_GoEnd <CashPrize Reward StoryDL 500 SMemo 0 NTBWinComp 0 .%id%_win>
 		.%id%_win <+T-- +F-->
@@ -1051,12 +1051,12 @@ Content
 
 	% E1 is the NPC.
 
-	start <if= PlotStatus %id% else %pop% ifNPCDead %1% LoseComp 0 .%id%_loss>
+	start <if= PlotStatus %plotid% %id% else %pop% ifNPCDead %1% LoseComp 0 .%id%_loss>
 	.%id%_loss <+T-- +F-->
 
 	sub
 		Persona 1
-		greeting <if= PlotStatus %id% else %pop% gOTO .%id%_GoReportLoss>
+		greeting <if= PlotStatus %plotid% %id% else %pop% gOTO .%id%_GoReportLoss>
 		*.%id%_GoReportLoss <*MissionWasFailure .%id%_GoEnd &AllyFac &EnemyFac>
 		.%id%_GoEnd <SMemo 0 NTBLoseComp 0 .%id%_loss>
 		.%id%_loss <+T-- +F-->
