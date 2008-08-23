@@ -157,7 +157,6 @@ BACKGROUND DESCRIPTORS
 	+C--	Just going along with the flow
 
 	+Cro	PC is a rookie member of faction
-	+Cps	Partner has a secret (R:++)
 	+Cme	PC is acting as mentor to partner (R:++)
 	+Clo	Wooing a love interest
 	+Clk	Love interest has been kidnapped
@@ -196,6 +195,9 @@ BACKGROUND DESCRIPTORS
 +H??	Hanging Thread
 	Describes an event which the PC has hanging over his head
 	+H--	How's it hanging? It isn't.
+	+Hwn	Defeated a new enemy's plan without having met him.
+	+Hln	Defeated by a new enemy without having met him.
+
 	+Has	Assassination attempt will be made against the PC.
 
 +T??	Task
@@ -227,16 +229,16 @@ BACKGROUND DESCRIPTORS
 
 Character Arc Descriptors
 
-[c]:A.???	NPC Character Arc/Motivation
+[c]:M.???	NPC Character Arc/Motivation
 	[c]:M.---	Unknown quantity
 	[c]:M.mer	Mercenary. NPC is in it for the money.
-	[c]:M.pro	Professional. NPC seeks to further the aims of his/her faction.
+	[c]:M.pro	Professional. NPC seeks to further the aims of their faction.
 	[c]:M.ggd	Greater Good. NPC believers self to be working for greater good.
-	[c]:M.see	Seeker. The NPC is seeking the truth.
+	[c]:M.see	Seeker. The NPC still hasn't found what they're looking for.
 	[c]:M.rev	Revenge.
 	[c]:M.cha	Change. The NPC seeks to change his current situation.
 
-[c]:R.???	Attitude towards PC
+[c]:A.???	Attitude towards PC
 	[c]:A.---	Unknown quantity
 	[c]:A.jr_	NPC is PC's junior/subordinate/student
 	[c]:A.sr_	NPC is PC's senior/superior/mentor

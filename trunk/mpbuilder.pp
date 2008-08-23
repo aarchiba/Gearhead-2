@@ -1,4 +1,5 @@
 unit mpbuilder;
+	{ MEGA PLOT ASSEMBLE! It's like a Voltron of narrative content! }
 	{ This unit contains the functions and procedures for creating }
 	{ big amalgamations of components. }
 {
@@ -54,6 +55,7 @@ Const
 
 Var
 	Sub_Plot_List: GearPtr;
+	standard_trigger_list: SAttPtr;
 
 Procedure ComponentMenuRedraw;
 	{ The redraw for the component selector below. }
@@ -575,6 +577,22 @@ begin
 	end;
 end;
 
+Function IsStandardTrigger( const S_Head: String ): Boolean;
+	{ Return TRUE if S_Head is one of the standard triggers, or FALSE if it }
+	{ isn't. }
+var
+	ST: SAttPtr;
+	MatchFound: Boolean;
+begin
+	{ Go through the list of standard triggers; stop when we find a match. }
+	ST := standard_trigger_list;
+	MatchFound := False;
+	while ( ST <> Nil ) and not MatchFound do begin
+		if HeadMatchesString( ST^.Info , S_Head ) then MatchFound := True;
+		ST := ST^.Next;
+	end;
+	IsStandardTrigger := MatchFound;
+end;
 
 Function AssembleMegaPlot( Slot , SPList: GearPtr ): GearPtr;
 	{ SPList is a list of subplots. Assemble them into a single coherent megaplot. }
@@ -582,9 +600,35 @@ Function AssembleMegaPlot( Slot , SPList: GearPtr ): GearPtr;
 	{ - Delete all placeholder stubs from SLOT }
 	{ - Process each fragment in turn. }
 	{   - Delink from list }
+	{   - Sequester the standard scripts }
 	{   - Do string substitutions }
 	{   - Combine plots }
 	{ - Insert the finished plot into slot }
+	Procedure PrepStandardScripts( SubPlot: GearPtr );
+		{ A subplot's standard scripts (those attached to basic game triggers, as }
+		{ listed in ASLRef.txt) will only be called when the subplot is active. }
+	var
+		sline: SAttPtr;	{ our counter for moving through the list. }
+		s_Head,s_Script: String;
+	begin
+		sline := SubPlot^.SA;
+		while sline <> Nil do begin
+			S_Head := RetrieveAPreamble( sline^.Info ); 
+			if IsStandardTrigger( S_Head ) then begin
+				{ This is a standard script. It needs to be moved to a new location, }
+				{ and this original line needs to be replace with a redirect. }
+				{ First, get the script info. }
+				S_Script := RetrieveAString( sline^.Info );
+
+				{ Next, install the redirect. }
+				sline^.info := S_Head + ' <if= PlotStatus %plotid% %id% else %pop% LTrigger .%id%_' + S_Head + ' Goto %pop%>';
+
+				{ Finally, place the original script in its new home. }
+				SetSAtt( SubPlot^.SA , '.%id%_' + S_Head + ' <' + S_Script + '>' );
+			end;
+			sline := sline^.next;
+		end;
+	end;
 	Procedure DoStringSubstitutions( SubPlot: GearPtr );
 		{ Do the string substitutions for this subplot. Basically, }
 		{ create the dictionary and pass it on to the substituter. }
@@ -629,6 +673,10 @@ begin
 		SubPlot := SPList;
 		DelinkGear( SPList , SubPlot );
 		AddSAtt( MasterPlot^.SA , 'SUBPLOT_NAME' , GearName( SubPlot ) );
+
+		{ Do the substitutions for standard triggers here. }
+		PrepStandardScripts( SubPlot );
+
 		DoStringSubstitutions( SubPlot );
 		CombinePlots( MasterPlot, SubPlot );
 		DisposeGear( SubPlot );
@@ -849,10 +897,12 @@ end;
 initialization
 	{ Load the list of subplots from disk. }
 	Sub_Plot_List := LoadRandomSceneContent( 'MEGA_*.txt' , series_directory );
+	standard_trigger_list := LoadStringList( Data_Directory + 'standard_triggers.txt' );
 	InitPlaceStrings();
 
 finalization
 	{ Dispose of the list of subplots. }
 	DisposeGear( Sub_Plot_List );
+	DisposeSAtt( standard_trigger_list );
 
 end.

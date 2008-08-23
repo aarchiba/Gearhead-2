@@ -19,136 +19,40 @@
 %% Use this section for truly default missions, or for missions which have wide application
 %% across a number of plot states. See below for the state-specific missions.
 
-Content
-	name <Find and Defeat>
-	desc <The PC has to find a group of enemies, and then defeat them.>
-	requires <ZZZ>
 
-	% E1 is the NPC who will be giving the mission.
-
-
-	% SubPlot1 is the encounter itself.
-
-	Mission
-	contains winning subplots
-		Encounter
-		upon completing encounter, calls %id%_win or %id%_loss
-			Easy Find - Active on prev_id
-			Hard Find - Active on prev_id
-			Advantage - Active on prev_id
-			upon completing any of these things, call %prev_id%_reveal or %prev_id%_advantage
-			if the Hard Find is permanently lost, call %prev_id%_loss
-
-
-Content
-	name <Protect Scientist>
-	desc <The PC will be sent to protect a scientist.>
-	requires <*CS_GiveMission I:++ (+P--|+Pla) P:++>
-
-	% E1 is the NPC that the PC will speak with
-	% E2 is the NPC that the PC has to guard
-	% E3 is the scene where the NPC currently is
-	% E4 is the item
-	Element2 <Character ACADE !Near -7 NeverFail>
-	NeverFail2 <Professor>
-	Place2 </>
-	Element3 <MetaScene !Near -7 *Building NeverFail>
-	Element4 <Grab 8>
-
-	start <if= PlotStatus %plotid% %id% else %pop% ifNPCDead %1% LoseComp 0 .%id%_loss>
-	.%id%_loss <+T-->
-
-	sub
-		Persona 1
-		greeting <if= PlotStatus %plotid% %id% else %pop% ifChatNPCUnknown else .%id%_GoKnownGreeting ifChatNPCAlly else .%id%_GoUnknownGreeting Goto .%id%_GoKnownGreeting>
-		*.%id%_GoKnownGreeting <*IHaveAJobForYou .%id%_GoBriefing>
-		*.%id%_GoUnknownGreeting <*AreYouHereAboutJob .%id%_GoBriefing>
-		.%id%_GoBriefing <NewChat Say %id%01 AddChat %id%01 AddChat %id%02>
-		*result%id%01 <*GoodLuckOnMission&Advance .%id%_GoR1Exit ChatNPCFac &EnemyFac>
-		.%id%_GoR1Exit <SMemo %id%02 History %id%03 CashPrize Reward StoryDL 100 &SetTargetNPC %2% WinComp %3% .%id%_next>
-		.%id%_next <+Tpt +Fin>
-		*result%id%02 <*RejectMission .%id%_GoR2Exit>
-		.%id%_GoR2Exit <SMemo 0 LoseComp 0 .%id%_reject>
-		.%id%_reject <+T-- +F-->
-		Msg%id%01 <%name2% has been researching the %name4%, and because of this may be in danger. I want you to protect \OPR %2% and hopefully find out some of what \SPR %2% knows. You will be paid in advance for this mission.>
-		Msg%id%02 <%name1% sent you to %name3% to protect %name2%, who has been researching the %name4%.>
-		Msg%id%03 <%name1% sent you to protect %name2%, who had been researching the %name4%.>
-		Prompt%id%01 <For advance pay, I'll do anything.>
-		Prompt%id%02 <I'm not here to be anyone's babysitter.>
-		CPrompt%id%02 <if# PCFac ChatNPCFac Accept>
-	end
-
-Content
-	name <Shared Enemy>
-	desc <The PC isn't a member of the mission-giver's faction, but they have a shared enemy.>
-	requires <*CS_GiveMission -1:PCFAC ~1:ALLY (1:MILIT|1:POLIT|1:CORPO|1:ADVEN|1:POLIC|1:LABOR|1:TRADE) F:++>
-
-	% E1 is the NPC that the PC will speak with
-	% E2 is the outdoors location where the encounter will be placed
-	% E3 is the faction that the NPC belongs to which is also an enemy of the enemy faction
-
-	element2 <Scene Environs !Near -7>
-	element3 <Faction !Comrade 1 !Enemy -2>
-
-	start <if= PlotStatus %plotid% %id% else %pop% ifNPCDead %1% LoseComp 0 .%id%_loss>
-	.%id%_loss <+T-->
-
-	%% SubPlot1 is the combat encounter itself
-	SubPlot1 <*CS_MechaEncounter 1 2>
-
-	sub
-		Persona 1
-		greeting <if# PlotStatus %plotid% %id% else .%id%_GoOfferMission if# PlotStatus %plotid% %id1% else .%id%_GoRemind Goto %pop%>
-		.%id%_GoOfferMission <ifChatNPCUnknown else .%id%_GoKnownGreeting ifChatNPCAlly else .%id%_GoUnknownGreeting Goto .%id%_GoKnownGreeting>
-		*.%id%_GoRemind <*MechaMissionReminder %2%>
-		*.%id%_GoKnownGreeting <*IHaveAJobForYou .%id%_GoBriefing>
-		*.%id%_GoUnknownGreeting <*AreYouHereAboutJob&Mecha .%id%_GoBriefing>
-		.%id%_GoBriefing <NewChat Say %id%01 AddChat %id%01 AddChat %id%02>
-		*.%id%_GoAccept <*GoodLuckOnMission .%id%_GoR1Exit ChatNPCFac &EnemyFac>
-		.%id%_GoR1Exit <StoryNote %id%02 SetPlotStatus %plotid% %id1%>
-		result%id%01 <Goto .%id%_GoAccept>
-		result%id%02 <AddEasygoing -d10   Goto .%id%_GoAccept>
-		Msg%id%01 <We at %name3% have been keeping up with your fight against \FACTION &EnemyFac . A lance of theirs has been spotted in %name2%; I'd like to hire you to intercept and destroy it.>
-		Msg%id%01_1 <>
-		CMsg%id%01_1 <ifNPCSociable Accept>
-		Msg%id%01_2 <>
-		CMsg%id%01_2 <ifNPCShy Accept>
-		Msg%id%01_3 <>
-		CMsg%id%01_3 <ifNPCEasygoing Accept>
-		Msg%id%01_4 <>
-		CMsg%id%01_4 <ifNPCPassionate Accept>
-		Msg%id%01_5 <>
-		CMsg%id%01_5 <ifNPCCheerful Accept>
-		Msg%id%01_6 <>
-		CMsg%id%01_6 <ifNPCMelancholy Accept>
-		Msg%id%02 <%name1% hired you to fight \FACTION &EnemyFac in %name2%.>
-		Prompt%id%01 <I'll be back when I'm done.>
-		Prompt%id%01_1 <>
-		Prompt%id%01_2 <>
-		Prompt%id%02 <I'll expect to be well paid, of course.>
-		Prompt%id%02_1 <>
-		Prompt%id%02_2 <>
-	end
+%% Seto's Bride
 
 Content
 	name <Basic Fighting Mission>
 	desc <The PC will be asked to go fight some mecha.>
-	requires <*CS_GiveMission (+P--|+Pme|+Pun|+Psh|+Pew) (1:MILIT|1:POLIT|1:CORPO|1:ADVEN|1:POLIC) ~F:MILIT ~P:MILIT>
+	requires <*CS_GiveMission>
 
 	% E1 is the NPC that the PC will speak with
 	% E2 is the outdoors location where the encounter will be placed
+	% E3 is the encounter to be found
 
 	element2 <Scene Environs !Near -7>
+	element3 <Prefab>
+	place3 <2>
 
-	start <if= PlotStatus %plotid% %id% else %pop% ifNPCDead %1% LoseComp 0 .%id%_loss>
+	% Fail Conditions:
+	% - Mission giver dies before encounter is activated
+
+	end <if= PlotStatus %plotid% %id% else %pop% if= PlotStatus %plotid1% 0 else %pop% ifNPCDead %1% else %pop% LoseComp 0 .%id%_loss>
 	.%id%_loss <+T-->
 
+	.%id1%_%plotid1%_GoWin <SetPlotStatus %plotid3% %id3%>
+	.%id1%_%plotid1%_GoLoss <SetPlotStatus %plotid4% %id4%>
+
+
 	%% SubPlot1 is the combat encounter itself
-	SubPlot1 <*CS_MechaEncounter 1 2>
+	%% SubPlot2 is the encounter revealation
+	%% SubPlot3 is the winning condition
+	%% SubPlot4 is the loss condition
+	SubPlot1 <*:CS_MechaEncounter 2 3>
 
 	sub
 		Persona 1
-		rumor0 <%name1% needs a cavalier for some kind of mission.>
 		greeting <if# PlotStatus %plotid% %id% else .%id%_GoOfferMission if# PlotStatus %plotid% %id1% else .%id%_GoRemind Goto %pop%>
 		.%id%_GoOfferMission <ifChatNPCUnknown else .%id%_GoKnownGreeting ifChatNPCAlly else .%id%_GoUnknownGreeting Goto .%id%_GoKnownGreeting>
 		*.%id%_GoRemind <*MechaMissionReminder %2%>
@@ -156,10 +60,14 @@ Content
 		*.%id%_GoUnknownGreeting <*AreYouHereAboutJob&Mecha .%id%_GoBriefing>
 		*.%id%_GoBriefing <*CORE_BasicJob .%id%_GoAccept .%id%_GoDeny %2%>
 		*.%id%_GoAccept <*GoodLuckOnMission .%id%_GoR1Exit ChatNPCFac &EnemyFac>
-		.%id%_GoR1Exit <SetPlotStatus %plotid% %id1%>
+		.%id%_GoR1Exit <SetPlotStatus %plotid1% %id1%>
 		*.%id%_GoDeny <*RejectMission .%id%_GoR2Exit>
 		.%id%_GoR2Exit <LoseComp 0 .%id%_changes>
 		.%id%_changes <+T-- +F-->
+	end
+	inv
+		stc CORE-ACTIVATABLE
+		name <%name1%'s Mission>
 	end
 
 
@@ -167,48 +75,6 @@ Content
 %%  ***   +P--  Peaceful  Life   ***
 %%  ********************************
 
-Content
-	name <They must have a base nearby>
-	requires <*CS_GiveMission (+P--|+Pme) (1:LABOR|1:CRAFT|1:TRADE|1:CORPO) (E:THIEF|E:CRIME)>
-	desc <This character has been robbed by the enemy NPC; the thieves must have a secret base nearby.>
-
-	% E1 is the NPC that the PC will speak with
-	% E2 is an outdoors scene for the base
-	% E3 is the metascene for the base itself
-	Element2 <Scene Outdoors !Near -7>
-	Element3 <Prefab>
-	Place3 <2>
-
-	start <if= PlotStatus %plotid% %id% else %pop% ifNPCDead %1% LoseComp 0 .%id%_loss>
-	.%id%_loss <+T-- +F-->
-
-	% SubPlot1 is the base metascene
-	% SubPlot2 is the activation subplot
-	SubPlot1 <*CS_RaidEnemyBase 3>
-	SubPlot2 <*CS_RevealEncounter&EnemyBase 3 2>
-
-	sub
-		Persona 1
-		greeting <if= PlotStatus %plotid% %id% else %pop% Goto .%id%_GoGreet>
-		*.%id%_GoGreet <*DestructionGreeting .%id%_GoGiveMission &EnemyFac>
-		.%id%_GoGiveMission <NewChat Say %id%01 AddChat %id%01 AddChat %id%02>
-		.%id%_GoActivateBase <SMemo %id%04 History %id%05 SetPlotStatus %plotid% %id2%>
-		result%id%01 <NewChat Say %id%02 Goto .%id%_GoActivateBase>
-		result%id%02 <NewChat Say %id%03  AddCheerful -d10  Goto .%id%_GoActivateBase>
-		Msg%id%01 <I've just been robbed! This is terrible... they've taken everything.>
-		Msg%id%02 <I don't know who it was; do I look like the kind of person who mingles with scum like that? I'm not the only person to be robbed lately; these bandits must have a hideout nearby!>
-		Msg%id%02_10 <It was that bandit \PERSONA &EnemyNPC ! I'm not the only one who's been robbed lately; \SPR &EnemyNPC must have a secret hideout somewhere near here, I'm sure of it.>
-		CMsg%id%02_10 <ifNPCOK &EnemyNPC Accept>
-		Msg%id%03 <Well, it means that I won't have any cash to hire you for a mission, if that's what you're after. These bandits must be stopped... they must have a secret hideout somewhere in this town.>
-		Msg%id%04 <%name1% was robbed; \SPR %1% thinks the robbers have a secret hideout nearby.>
-		Msg%id%05 <%name1% was robbed; \SPR %1% claimed there must be a hideout nearby.>
-		Prompt%id%01 <Calm down. Can you tell me about the thief?>
-		Prompt%id%02 <Too bad. How does this affect me?>
-	end
-	inv
-		STC CORE-ACTIVATABLE-STATIONARY-DEFENDED
-		name <the Secret Hideout>
-	end
 
 
 %%  *****************************************
@@ -235,90 +101,10 @@ Content
 %%  ***   +Pew  Enemy  Weapon  Program   ***
 %%  ****************************************
 
-Content
-	name <Aegis Research Ship>
-	desc <Aegis has been making research flights to Earth. Intercept their spaceship.>
-	Zrequires <*CS_GiveMission +Pew (F:AEGIS|F:AEGSF) -!Ne -!Lo>
-
-	% E1 is the NPC that the PC will speak with
-	% E2 is the outdoors location where the encounter will be placed
-	element2 <Scene Space Environs !Near -7>
-
-	start <if= PlotStatus %plotid% %id% else %pop% ifNPCDead %1% LoseComp 0 .%id%_loss>
-	.%id%_loss <+T-->
-
-	%% SubPlot1 is the combat encounter itself
-	SubPlot1 <*CS_InterceptShip&Research 1 2>
-
-	sub
-		Persona 1
-		greeting <if# PlotStatus %plotid% %id% else .%id%_GoOfferMission if# PlotStatus %plotid% %id1% else .%id%_GoRemind Goto %pop%>
-		.%id%_GoOfferMission <ifChatNPCUnknown else .%id%_GoKnownGreeting ifChatNPCAlly else .%id%_GoUnknownGreeting Goto .%id%_GoKnownGreeting>
-		*.%id%_GoRemind <*MechaMissionReminder %2%>
-		*.%id%_GoKnownGreeting <*IHaveAJobForYou .%id%_GoBriefing>
-		*.%id%_GoUnknownGreeting <*AreYouHereAboutJob&Mecha .%id%_GoBriefing>
-		.%id%_GoBriefing <EndChat Say %id%01 AddChat %id%01>
-		*.%id%_GoAccept <*GoodLuckOnMission .%id%_GoR1Exit ChatNPCFac &EnemyFac>
-		.%id%_GoR1Exit <StoryNote %id%03 SetPlotStatus %plotid% %id1%>
-		*.%id%_GoDeny <*RejectMission .%id%_GoR2Exit>
-		.%id%_GoR2Exit <LoseComp 0 .%id%_changes>
-		.%id%_changes <+T-- +F-->
-		result%id%01 <NewChat Say %id%02 AddChat %id%02 AddChat %id%03>
-		result%id%02 <Goto .%id%_GoAccept>
-		result%id%03 <Goto .%id%_GoDeny>
-		Msg%id%01 <Aegis Overlord has restarted their bioweapon program. They've expanded their operations on Earth, searching for genetic material and lost technology.>
-		Msg%id%01_1 <>
-		Msg%id%01_2 <>
-		Msg%id%02 <One of their research ships has been spotted moving through %name2%. Your task is to locate this ship and make sure it doesn't get back to Luna.>
-		Msg%id%02_1 <>
-		Msg%id%02_2 <>
-		Msg%id%03 <%name1% hired you to intercept an Aegis research ship in %name2%.>
-		Prompt%id%01 <[Continue]>
-		Prompt%id%02 <I'll get out there right away.>
-		Prompt%id%02_1 <>
-		Prompt%id%02_2 <>
-		Prompt%id%03 <Actually, I don't think I want this job.>
-		CPrompt%id%03 <if# PCFac ChatNPCFac Accept>
-		Prompt%id%03_1 <>
-		Prompt%id%03_2 <>
-	end
 
 
 %%  ************************************
 %%  ***   +Cme  Mentoring  Partner   ***
 %%  ************************************
 
-Content
-	name <Training Mission>
-	desc <The PC will be sent on a combat mission, for his partner's sake.>
-	requires <*CS_GiveMission +Cme R:++ 1:Ally (1:MILIT|1:ADVEN|1:CORPO) ~R:PCFAC>
-
-	% E1 is the NPC that the PC will speak with
-	% E2 is the outdoors location where the encounter will be placed
-	% E3 is the partner
-	element2 <Scene Environs !Near -7>
-	element3 <Grab 4>
-
-	start <if= PlotStatus %plotid% %id% else %pop% ifNPCDead %1% LoseComp 0 .%id%_loss>
-	.%id%_loss <+T-->
-
-	%% SubPlot1 is the combat encounter itself
-	SubPlot1 <*CS_MechaEncounter 1 2>
-
-	sub
-		Persona 1
-		rumor0 <%name1% needs a cavalier for some kind of mission.>
-		greeting <if# PlotStatus %plotid% %id% else .%id%_GoOfferMission if# PlotStatus %plotid% %id1% else .%id%_GoRemind Goto %pop%>
-		.%id%_GoOfferMission <NewChat Say %id%01 AddChat %id%01>
-		*.%id%_GoRemind <*MechaMissionReminder %2%>
-		*.%id%_GoBriefing <*CORE_BasicJob .%id%_GoAccept .%id%_GoDeny %2%>
-		*.%id%_GoAccept <*GoodLuckOnMission .%id%_GoR1Exit ChatNPCFac &EnemyFac>
-		.%id%_GoR1Exit <SetPlotStatus %plotid% %id1%>
-		*.%id%_GoDeny <*RejectMission .%id%_GoR2Exit>
-		.%id%_GoR2Exit <LoseComp 0 .%id%_changes>
-		.%id%_changes <+T-- +F-->
-		Result%id%01 <Goto .%id%_GoBriefing>
-		Msg%id%01 <I think that %name3% could use some practice, so I've lined up a combat mission for the two of you.>
-		Prompt%id%01 <Give me the details.>
-	end
 

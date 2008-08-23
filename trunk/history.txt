@@ -1,3 +1,9 @@
+- Added LTrigger ASL command (arenascript.pp)
+- Changed the way megaplots incorporate subplot scripts (mpbuilder.pp)
+- ?Mx and ?Px changed to ?Mecha and ?Pilot (arenascript.pp)
+- Changed Monologue to GMonologue (arenascript.pp)
+
+0.504	August 21 2008
 - PlotStatus, SetPlotStatus require PlotID as parameter (aslmacro.txt,asvmacro.txt)
 - Plots may now have multiple narrative threads at the same time (mpbuilder.pp)
 - Propp state now includes an advancement counter (playwright.pp)

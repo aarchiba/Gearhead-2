@@ -13,6 +13,10 @@ can be in.
 Each node is given its own LayerID. This ID is used for the node's message
 and variable namespace.
 
+The standard triggers of a subplot (START, UPDATE, etc) will only be called
+when the subplot is active. This doesn't apply to the base plot, only the
+subplots.
+
 *************************
 *** Narrative Threads ***
 *************************

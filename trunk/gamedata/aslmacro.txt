@@ -252,6 +252,11 @@ ifEncounterVisible <GrabSource ifG GNatt NAG_EpisodeData NAS_EncVis ComTime>
 AddDatePoint <GrabSource GAddNAtt NAG_Narrative NAS_DatePoints 1>
 SetQuestStatus <GrabAdventure GSetNAtt NAG_QuestStatus ? ? Trigger0 Update>
 SetPlotStatus <GrabPlot GSetNAtt NAG_PlotStatus ? ? Trigger0 Update>
+CancelSubPlot <GrabPlot GSetNAtt NAG_PlotStatus ? -3 Trigger0 Update>
+WinSubPlot <GrabPlot GSetNAtt NAG_PlotStatus ? -1 Trigger0 Update>
+LoseSubPlot <GrabPlot GSetNAtt NAG_PlotStatus ? -2 Trigger0 Update>
+IfSubPlotWon <GrabPlot if= GNAtt NAG_PlotStatus ? -1>
+IfSubPlotLost <GrabPlot if= GNAtt NAG_PlotStatus ? -2>
 AddTempLancemate <GrabNPC ? GSetNAtt NAG_CharDescription NAS_CharType NAV_TempLancemate GJoinLance>
 ChatNPCJoinLance <GrabChatNPC GJoinLance>
 RemoveTempLancemate <GrabNPC ? GSetNAtt NAG_CharDescription NAS_CharType 0 GQuitLance>
@@ -296,3 +301,7 @@ StoreOldFaction <GrabAdventure GSetNAtt NAG_Personal NAS_OldFaction PCFac>
 ClearOriginalHome <GrabNPC ? GSetNAtt NAG_ParaLocation NAS_OriginalHome 0>
 ChatLMFollow <GrabChatNPC GSetNAtt 5 10 5>
 SetDestination <GrabSource GSetStat 4 ?>
+SetXXRMotivation <GrabNPC ? GSetNAtt NAG_XXRan 101 ?>
+SetXXRAttitude <GrabNPC ? GSetNAtt NAG_XXRan 102 ?>
+Monologue <GrabNPC ? GMonologue ?>
+TeamMonologue <GrabLocal ?Pilot ? GMonologue ?>

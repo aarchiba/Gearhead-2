@@ -147,6 +147,7 @@ var
 	script_macros,value_macros,Default_Scene_Scripts: SAttPtr;
 	ASRD_GameBoard: GameBoardPtr;
 	ASRD_MemoMessage: String;
+	local_triggers: SAttPtr;
 
 Procedure ArenaScriptReDraw;
 	{ Redraw the combat screen for some menu usage. }
@@ -561,14 +562,14 @@ Procedure InitiateMacro( GB: GameBoardPtr; Source: GearPtr; var Event: String; P
 	function NeededParameters( cmd: String ): Integer;
 		{ Return the number of parameters needed by this function. }
 	const
-		NumStandardFunctions = 13;
+		NumStandardFunctions = 15;
 		StdFunName: Array [1..NumStandardFunctions] of string = (
-			'-', 'GNATT', 'GSTAT',
+			'-', 'GNATT', 'GSTAT', '?PILOT', '?MECHA',
 			'SKROLL', 'THREAT', 'REWARD', 'ESCENE', 'RANGE',
 			'FXPNEEDED','*','MAPTILE','PCSKILLVAL','CONCERT'
 		);
 		StdFunParam: Array [1..NumStandardFunctions] of byte = (
-			1,2,1,
+			1,2,1,1,1,
 			1,2,2,1,2,
 			1,2,2,1,2
 		);
@@ -947,16 +948,13 @@ begin
 		InitiateMacro( GB , scene , Event , SAttValue( Value_Macros , S2 ) );
 		SV := ScriptValue( Event , gb , scene );
 
-	end else if ( SMsg[1] = '?' ) and ( gb <> Nil ) then begin
-		{ Return a randomly picked gear from the game board. }
-		DeleteFirstChar( SMsg );
-		if UpCase(SMsg[1]) = 'M' then begin
-			DeleteFirstChar( SMsg );
-			SV := FindRandomMekID( GB , ScriptValue( SMsg , gb , scene ) );
-		end else begin
-			DeleteFirstChar( SMsg );
-			SV := FindRandomPilotID( GB , ScriptValue( SMsg , gb , scene ) );
-		end;
+	end else if ( SMsg = '?PILOT' ) then begin
+		VCode := ScriptValue( Event , GB , Scene );
+		SV := FindRandomPilotID( GB , VCode );
+
+	end else if ( SMsg = '?MECHA' ) then begin
+		VCode := ScriptValue( Event , GB , Scene );
+		SV := FindRandomMekID( GB , VCode );
 
 	end else if ( SMsg[1] = 'T' ) and ( gb <> Nil ) then begin
 		{ Return the number of gears on the provided team. }
@@ -1484,23 +1482,22 @@ begin
 	end;
 end;
 
-Procedure ProcessMonologue( var Event: String; GB: GameBoardPtr; Source: GearPtr );
+Procedure ProcessGMonologue( var Event: String; GB: GameBoardPtr; Source: GearPtr );
 	{ An NPC is about to say something. }
 var
-	cid,id: Integer;	{ Character ID, Message ID }
-	NPC: GearPtr;
+	id: Integer;	{ Message ID }
 	msg: String;
 begin
 	{ Find the two needed numeric valies. }
-	cid := ScriptValue( Event , GB , Source );
 	id := ScriptValue( Event , GB , Source );
 
 	{ Locate the NPC and the message. }
-	NPC := GG_LocateNPC( CID , GB , Source );
-	msg := NPCScriptMessage( 'msg' + BStr( id ) , GB , NPC , Source );
-	if ( msg <> '' ) and ( NPC <> Nil ) then begin
-		Monologue( GB , NPC , msg );
-		{ The monologue will do its own output. }
+	if Grabbed_Gear <> Nil then begin
+		msg := NPCScriptMessage( 'msg' + BStr( id ) , GB , Grabbed_Gear , Source );
+		if ( msg <> '' ) then begin
+			Monologue( GB , Grabbed_Gear , msg );
+			{ The monologue will do its own output. }
+		end;
 	end;
 end;
 
@@ -3606,6 +3603,20 @@ begin
 	end;
 end;
 
+Procedure ProcessLTrigger( var Event: String; GB: GameBoardPtr; Source: GearPtr );
+	{ A new trigger will be placed in the local trigger queue. }
+var
+	BaseTrigger: String;
+begin
+	{ Find out the trigger's details. }
+	BaseTrigger := ExtractWord( Event );
+
+	if GB <> Nil then begin
+		StoreSAtt( local_triggers , BaseTrigger );
+	end;
+end;
+
+
 Procedure ProcessTransform( var Event: String; GB: GameBoardPtr; Source: GearPtr );
 	{ Alter the appearance of the SOURCE gear. }
 var
@@ -3978,7 +3989,7 @@ begin
 		else if cmd = 'RETURN' then ProcessReturn( GB )
 		else if cmd = 'PRINT' then ProcessPrint( Event , GB , Source )
 		else if cmd = 'ALERT' then ProcessAlert( Event , GB , Source )
-		else if cmd = 'MONOLOGUE' then ProcessMonologue( Event , GB , Source )
+		else if cmd = 'GMONOLOGUE' then ProcessGMonologue( Event , GB , Source )
 		else if cmd = 'ADDDEBRIEFING' then ProcessAddDebriefing( Event , GB , Source )
 		else if cmd = 'MEMO' then ProcessMemo( Event , GB , Source )
 		else if cmd = 'SMEMO' then ProcessSMemo( Event , GB , Source )
@@ -4053,6 +4064,7 @@ begin
 		else if cmd = 'SEEKGATE' then ProcessSeekGate( Event , GB , Source )
 		else if cmd = 'TRIGGER' then ProcessTrigger( Event , GB , Source )
 		else if cmd = 'TRIGGER0' then ProcessTrigger0( Event , GB , Source )
+		else if cmd = 'LTRIGGER' then ProcessLTrigger( Event , GB , Source )
 		else if cmd = 'UPDATEPROPS' then ProcessUpdateProps( GB )
 		else if cmd = 'MORETEXT' then ProcessMoreText( Event , GB , Source )
 		else if cmd = 'MOREMEMO' then ProcessMoreMemo( Event , GB )
@@ -4401,6 +4413,8 @@ Function CheckTriggerAlongPath( var T: String; GB: GameBoardPtr; Plot: GearPtr; 
 var
 	P2: GearPtr;
 	it,I2: Boolean;
+	LT: SAttPtr;	{ Local Trigger counter }
+	LT_tmp: STring;	{ The content of the local trigger currently being processed. }
 begin
 	it := False;
 	while ( Plot <> Nil ) and ( T <> '' ) do begin
@@ -4409,8 +4423,20 @@ begin
 			{ FACTIONs and STORYs can hold active plots in their InvCom. }
 			if ( Plot^.G = GG_Faction ) or ( Plot^.G = GG_Story ) or ( Plot^.G = GG_Adventure ) then CheckTriggerAlongPath( T , GB , Plot^.InvCom , CheckAll);
 
+			{ Initialize the list of local triggers. }
+			if local_triggers <> Nil then DisposeSATt( local_triggers );
+
+			{ Check the trigger against this gear's scripts. }
 			I2 := TriggerGearScript( GB , Plot , T );
 			it := it or I2;
+
+			{ If any local triggers were tripped, call them now. }
+			while local_triggers <> Nil do begin
+				LT := local_triggers;
+				LT_Tmp := LT^.Info;
+				RemoveSAtt( local_triggers , LT );
+				TriggerGearScript( GB , Plot , LT_Tmp );
+			end;
 
 			{ The trigger above might have changed the }
 			{ structure, so reset P2. }
@@ -4571,7 +4597,7 @@ initialization
 	Default_Scene_Scripts := LoadStringList( Data_Directory + 'scene.txt' );
 
 	lancemate_tactics_persona := LoadFile( 'lmtactics.txt' , Data_Directory );
-
+	local_triggers := Nil;
 
 finalization
 	if SCRIPT_DynamicEncounter <> Nil then begin
@@ -4581,4 +4607,5 @@ finalization
 	DisposeSAtt( Value_Macros );
 	DisposeSAtt( Default_Scene_Scripts );
 	DisposeGear( lancemate_tactics_persona );
+	if local_triggers <> Nil then DisposeSATt( local_triggers );
 end.

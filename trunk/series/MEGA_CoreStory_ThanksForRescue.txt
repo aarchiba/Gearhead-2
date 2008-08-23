@@ -20,7 +20,7 @@ Content
 
 	% E1 is the NPC who was rescued
 	% E2 is a local building allied with the NPC
-	Element2 <Scene Building Public !Ally 1>
+	Element2 <Scene Building Public !Ally 1 !Near -7>
 
 	start <if= PlotStatus %plotid% %id% else %pop% ifNPCDead %1% LoseComp 0 .%id%_loss>
 	.%id%_loss <+T-->

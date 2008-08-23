@@ -1,4 +1,6 @@
 1. TRIGGERS
+		* If adding a new trigger which may be linked to a plot, don't forget
+		  to add it to gamedata/standard_triggers.txt
 
 	5MIN			Generated every five minutes
 	ALARM			Called when something sets off alarm
@@ -9,8 +11,6 @@
 	ENCGOAL[scene ID]	An encounter has reached its target square
 	END			Trigger placed when scene ends
 	EWM[scene number]	Objection Check: Enter via world map
-	FACWIN[faction ID]	Faction has won a story
-	FACLOSE[faction ID]	Faction has lost a story
 	FAINT[cid]		Model with Character ID has been destroyed
 	FIRE!			Trigger set when a fire starts on map
 	GET[ID Number]		Get item which has Narrative ID
@@ -25,7 +25,6 @@
 	PCATTACK		PC has fired a weapon
 	QUARTER			Generated every 6 hours (1/4 of a day)
 	RESULT[number]		Called when interact menu item selected
-	RETURN			Called when a remnant plot is activated
 	REVEAL			Called when hidden metaterrain is discovered
 	START			First trigger placed when scene entered
 	SURRENDER[cid]		Model with Character ID has surrendered
@@ -105,6 +104,7 @@
 	L+ [idnum] [value]	Add local variable
 	LOADD [script line label]	Load a dynamic scene
 	LOSECOMP [sceneid] [changes]	Lose current component, load next
+	LTRIGGER [tag]		Set a local trigger, calling some other script in same gear
 	MAGICMAP		Makes all tiles on current map visible
 	MECHAPRIZE [faction list label] [renown] [theme] [modpoints]
 		Give PC a mecha appropriate to factions, renown, theme, and modification points.
@@ -163,13 +163,15 @@
 	XRANPLOT [label]	Load plot using experimental Extra Randomness
 
 3. BASIC FUNCTIONS
+		*Remember when adding a new function to arenascript.pp to update the
+		 macro initializer.
 
 	&[label]		Calls a local macro, stored either in the current gear,
 				the plot, or the story. Local macros are defined exactly
 				as regular macros are. Think of them as procedures and
 				functions for ASL.
-	?M[team number]		Random mecha UID
-	?P[team number]		Random pilot UID
+	?Mecha [team number]	Random mecha UID
+	?Pilot [team number]	Random pilot UID
 	@[gear ID]		UID of root-level gear
 	* [A] [B]		Returns A * B
 	CHATNPCID		CID of interact NPC
@@ -254,6 +256,7 @@
 	GALTERCONTEXT [label]	Alters the story context string by the changes provided
 	GIVEGG			Gives the grabbed (physical) gear to PC
 	GMENTAL			The grabbed gear will waitaminute and 1MP
+	GMONOLOGUE [msg id]	The grabbed gear will speak a single line outside of conversation
 	GMORALEDMG [Morale]	Adds morale damage to the grabbed gear
 	GNEWPART [label]	Adds new item, monster, NPC to game board
 	GOPENINV		Allows PC to trade items with grabbed gear
@@ -279,6 +282,8 @@
 	MOVEGG [Scene ID]	Moves the grabbed (physical) gear
 
 7. GRABBED GEAR FUNCTIONS
+		*Remember when adding a new function to arenascript.pp to update the
+		 macro initializer.
 	GNatt [G] [S]
 	GS			Grabbed gear S descriptor
 	GSCENE			Scene ID of the grabbed gear
