@@ -1,4 +1,217 @@
 %%
+%% *:CS_RevealEncounter_Raiders Content
+%%
+%% There are some hostile mecha out there which are aligned with the
+%% enemy faction/enemy NPC.
+%%
+%% When the PC has located the encounter, this subplot will make it visible
+%% with SetEncounterActive and conclude with WinSubPlot. Revealing the entrance
+%% in this subplot will typically give the PC 100XP.
+%%
+%% PARAM1: The outdoors scene where the encounter is
+%% PARAM2: The MetaScene being sought
+%%
+
+Content
+	name <Rowdy Raider>
+	desc <The PC will meet one of the raiders, and may gain some information.>
+	requires <*:CS_RevealEncounter_Raiders>
+	Size 2
+
+	% E1 is the outdoor scene where the encounter is
+	% E2 is the MetaScene being sought
+	% E3 is a local scene for the rowdy raider
+	% E4 is the rowdy raider
+	% E5 is the dataslate that may provide a clue
+	Element3 <Scene Public !Near -7>
+	Element4 <Prefab>
+	Place4 </>
+	Element5 <Prefab>
+	Place5 <4>
+
+	%% FAIL CONDITIONS:
+	%% - If Item E5 is destroyed and E4 is dead, this subplot will fail.
+
+	% p%id%01 = Initialization Counter
+	% p%id%02 = Message Counter
+	start <ifNPCDead %4% else .%id%_GoCheckEntrance ifItemDestroyed %5% LoseSubPlot %plotid%>
+	update <if= p%id%01 0   p= %id%01 1   NPCLevel %4% StoryDL   MoveAndPacifyNPC %4% %3%>
+	.%id%_GoCheckEntrance <if= P%id%02 0 if= SceneID %3%   ifUAwareness 4   Alert %id%01   P= %id%02 1>
+
+	Surrender%4% <if= PlotStatus %plotid% %id% Monologue %4% %id%02 StoryNote %id%03 Print %id%04 FreezeNPC %4% PCEnemy %4% XPV 100  &%id%_RevealEncounter>
+
+	&%id%_RevealEncounter <SetEncounterActive %2% WinSubPlot %plotid%>
+
+	Msg%id%01 <As you enter %name3%, you notice %name4% looking at an electronic device which \SPR %4% quickly puts away.>
+	Msg%id%02 <Alright, I give up... You'll find the mecha you're looking for in %name1%.>
+	Msg%id%03 <You defeated %name4%, who revealed that the raiders are in %name1%.>
+	Msg%id%04 <%name4% leaves the area.>
+
+	% SubPlot1 is what happens if E4 leaves the area.
+	SubPlot1 <*TrailRaiderToBase 1 2 4>
+
+	sub
+		Persona 4
+		rumor%id% <there's a rowdy mecha pilot hanging out at %name3%.>
+		special <UNLISTED>
+		greeting <if= PlotStatus %plotid% %id% else GoChat NewChat Say %id%01 AddChat %id%01 AddChat %id%02 AddChat %id%03>
+		GoChat <NewChat SayAnything>
+		GoThreat <NewChat Say %id%02 AddChat %id%04 AddChat %id%05>
+		GoJobOffer <NewChat Say %id%04 AddCHat %id%09 AddChat %id%10>
+		GoRaiderFlees <Print %id%06 History %id%07 SMemo %id%16 SetPlotStatus %plotid1% %id1%>
+		GoStartFight <EndChat Say %id%09 SoloAttack %4%>
+		result%id%01 <ifConversation hardSkillTar StoryDL else GoThreat  NewChat Say %id%03 AddChat %id%06 AddChat %id%07 AddChat %id%08>
+		result%id%02 <ifConversation SkillTar StoryDL else GoThreat      Goto GoJobOffer>
+		result%id%03 <EndCHat Say %id%05 Goto GoRaiderFlees>
+		result%id%04 <EndCHat Say %id%08 Goto GoRaiderFlees>
+		result%id%05 <AddEasygoing -d10  ifIntimidation HardSkillTar StoryDL else GoStartFight NewChat Say %id%10 StoryNote %id%11 XPV 100 &%id%_RevealEncounter>
+		result%id%06 <Goto GoThreat>
+		result%id%07 <Goto GoJobOffer>
+		result%id%08 <EndCHat Say %id%12 Goto GoRaiderFlees>
+		result%id%09 <ifG React d8 else GoThreat      NewChat Say %id%13 StoryNote %id%14 XPV 100 &%id%_RevealEncounter>
+		result%id%10 <EndCHat Say %id%15 Goto GoRaiderFlees>
+		Msg%id%01 <Yeah, what do you want?>
+		Msg%id%02 <Bad things happen to people who ask too many questions around here. I'd suggest you get out of my face before bad things happen to you.>
+		Msg%id%03 <Could be. Why do you care?>
+		Msg%id%04 <I don't know... I'm not the one who makes that kind of decision. You'd have to talk to the boss.>
+		Msg%id%05 <If you don't have anything to say then keep away from me.>
+		Msg%id%06 <%name4% leaves the area.>
+		Msg%id%07 <%name4% left before you could learn where the raiders are.>
+		Msg%id%08 <Not if I keep an eye on you first... or something. I'm outta here.>
+		Msg%id%09 <You're gonna die!>
+		Msg%id%10 <Hey, no need for that... if you're seriously looking for them, the team I'm signed on with is assembling at %name1%. As for me, I'm gonna go somewhere very far away...>
+		Msg%id%11 <You intimidated %name4% into revealing that the raiders are at %name1%.>
+		Msg%id%12 <You've got a lot of nerve... some day that's gonna end up getting you killed.>
+		Msg%id%13 <They're gathering in %name1% right now. I should probably get going myself but I'm still a little drunk... Yeah, just tell them %name4% sent you.>
+		Msg%id%14 <You fooled %name4% into revealing that the raiders are at %name1%.>
+		Msg%id%15 <Yeah, well, I gotta go. We've got a big mission coming up... There's gonna be a real big boom.>
+		Msg%id%16 <%name4% left before you could learn where the raiders are, but you may still be able to find \OPR %4% nearby.>
+		Prompt%id%01 <I know that you're with the raiders.>
+		Prompt%id%02 <I'm looking for work; you know of anything?>
+		CPrompt%id%02 <ifG PCKnowledge 14 Accept>
+		Prompt%id%03 <Nothing...>
+		Prompt%id%04 <I'll be keeping an eye on you, %name4%.>
+		Prompt%id%05 <You think I'm scared? Come on, let's settle this now.>
+		Prompt%id%06 <Tell me where I can find them.>
+		Prompt%id%07 <I was hoping to get a job with them.>
+		Prompt%id%08 <I intend to destroy them.>
+		Prompt%id%09 <Alright. Where can I find this boss?>
+		Prompt%id%10 <Never mind, then.>
+	end
+	inv
+		NPC Mecha Pilot
+		Knowledge 7
+		Body 15
+
+		Computer 1
+		name <Raider's Dataslate>
+		desc <A dataslate obtained from a rowdy raider.>
+		Category <ELECTRONICS COMPUTER COMMUNICATIONS>
+		SDL_PORTRAIT <item_databook.png>
+		Memo
+		Email
+		Mass -1
+		use <if= PlotStatus %plotid% %id% else GoNoUse Alert 1 StoryNote 2 &%id%_RevealEncounter  ifNPCOK %4% XPV 100>
+		clue32 <goto use>
+		clue37 <goto use>
+		GoNoUse <Print 3>
+		Msg1 <According to a map saved on this dataslate, the raiders are hiding in %name1%.>
+		Msg2 <You learned from a dataslate that the raiders are in %name1%.>
+		Msg3 <You no longer have any use for this item.>
+	end
+
+%%
+%% *TrailRaiderToBase Content
+%%
+%%	The PC must follow an enemy pilot to their base.
+%%
+%% When the PC has located the encounter, this subplot will make it visible
+%% with SetEncounterActive and conclude with WinSubPlot. Revealing the entrance
+%% in this subplot will typically not give the PC any XP. Bummer.
+%%
+%% PARAM1: The outdoors scene where the encounter is
+%% PARAM2: The MetaScene being sought
+%% PARAM3: The raider being trailed
+%%
+
+Content
+	name <Speed Match>
+	desc <The PC will find the raider's buddies, who he must defeat quickly to follow the raider.>
+	requires <*TrailRaiderToBase>
+	Size 2
+
+	% E1 is the outdoor scene where the encounter is
+	% E2 is the MetaScene being sought
+	% E3 is the raider being trailed.
+	% E4 is a new encounter for the speed match
+	% E5 is a meme to tell the PC about it
+	Element4 <Prefab>
+	Place4 <1>
+	Element5 <Prefab>
+
+	% p%id%01 = Initialization Counter
+	update <if= p%id%01 0 p= %id%01 1   FreezeNPC %3%>
+
+	sub
+		MetaScene 4 2
+		% L1 = Encounter Over Counter
+		% L2 = Initialization Counter; resets each time
+		% L3 = Storynote 
+		% L4 = Time Limit
+		% L5 = Number of tries
+		MapWidth 30
+		MapHeight 30
+
+		% The time limit is two minutes, plus an additional minute for each
+		% previous attempt.
+		Start <if= L2 0 L= 2 1   L= 1 0   Monologue %3% 1  Alert 2 L= 4 ComTime L+ 4 120 L+ 4 * 60 L5  L+ 5 1  if= L3 0 L= 3 1 SMemo 3>
+		nu1 <if= T1 0   Return>
+		nu2 <if= T2 0   Return  if= V1 0   V= 1 1   ifG L4 ComTime else GoTooLate Alert 4 StoryNote 5   SetEncounterActive %2% SeekGate %2% WinSubPlot %plotid%>
+		GoTooLate <Alert 6  AddRenown -1>
+		end <L= 2 0>
+
+		Msg1_1 <Look- it's that cavalier who's been following me. You guys deal with it; I've got to get back to base.>
+		Msg1_2 <>
+		Msg1_3 <>
+		Msg1_4 <>
+		Msg1_5 <>
+		Msg2 <If you can defeat %name3%'s lancemates quickly, you should be able to trail \OPR %3% to the base.>
+		Msg3 <You encountered %name3% and \PPR %3% lancemates in %name1%.>
+		Msg4 <You catch up with %name3%, and follow \OPR %3% to the raider's base.>
+		Msg5 <You trailed %name3% to the raider's base in %name1%.>
+		Msg6 <After defeating the henchmen, you attempt to follow %name3% but are too late to find \OPR %3% .>
+
+		sub
+			team 1
+			SetEnemy 2
+			ParaX 5
+			ParaY 5
+
+			team 2
+			SetEnemy 1
+			Deploy <if= PlotStatus %plotid% %id% SetSelfFaction &EnemyFac   WMecha 2 StoryDL 80>
+			ParaX 25
+			ParaY 25
+		end
+	end
+	inv
+		Encounter
+		name <%name3%'s Lance>
+		% V1 = Recharge Counter
+		% This encounter will appear once every 5 hours, as long as this is the active subplot.
+		update <if= PlotStatus %plotid% %id% else GoHide ifG ComTime V1 else GoHide SetStat STAT_MetaVisibility 0  Goto GoSetOrders>
+		GoSetOrders <GrabSource GSetNAtt NAG_EpisodeData NAS_Orders 3>
+		use <ifG StatVal STAT_MetaVisibility -1  V= 1 ComTime V+ 1 18000  Print -1 Exit Destination>
+		GoAutoAttack <V= 1 ComTime V+ 1 18000  Alert -2 Exit Destination>
+		GoAvoidAttack <V= 1 ComTime V+ 1 7200  Print -6 AddSociable -1 UpdateProps>
+
+		Meme
+		MaxMemeViews 1
+		msg <I heard that %name3%'s lance has been cruising around in %name1%. I wonder what they're up to...>
+		msg_1 <There've been some raiders spotted in %name1%, but nobody seems to know what they're up to.>
+	end
+
+%%
 %% *CS_RevealEncounter Content
 %%	&Derelict	The encounter in question is a wrecked ship
 %%	&EnemyBase	It's an enemy base

@@ -37,8 +37,10 @@ Content
 
 	% Fail Conditions:
 	% - Mission giver dies before encounter is activated
+	% - Revalation subplot fails
 
-	end <if= PlotStatus %plotid% %id% else %pop% if= PlotStatus %plotid1% 0 else %pop% ifNPCDead %1% else %pop% LoseComp 0 .%id%_loss>
+	end <if= PlotStatus %plotid1% 0 else .%id%_GoCheckReveal ifNPCDead %1% else %pop% LoseComp 0 .%id%_loss>
+	.%id%_GoCheckReveal <ifSubPlotLost %plotid2% LoseComp 0 .%id%_loss>
 	.%id%_loss <+T-->
 
 	.%id1%_%plotid1%_GoWin <SetPlotStatus %plotid3% %id3%>
@@ -49,18 +51,21 @@ Content
 	%% SubPlot2 is the encounter revealation
 	%% SubPlot3 is the winning condition
 	%% SubPlot4 is the loss condition
-	SubPlot1 <*:CS_MechaEncounter 2 3>
+	SubPlot1 <*:CS_MechaEncounter&Raiders 2 3>
+	SubPlot2 <*:CS_RevealEncounter_Raiders 2 3>
+	SubPlot3 <*CS_CAWinMission 1>
+	SubPlot4 <*CS_CALoseMission 1>
 
 	sub
 		Persona 1
-		greeting <if# PlotStatus %plotid% %id% else .%id%_GoOfferMission if# PlotStatus %plotid% %id1% else .%id%_GoRemind Goto %pop%>
+		greeting <if= PlotStatus %plotid1% 0 else .%id%_GoRemind if# PlotStatus %plotid% %id% else .%id%_GoOfferMission Goto %pop%>
 		.%id%_GoOfferMission <ifChatNPCUnknown else .%id%_GoKnownGreeting ifChatNPCAlly else .%id%_GoUnknownGreeting Goto .%id%_GoKnownGreeting>
 		*.%id%_GoRemind <*MechaMissionReminder %2%>
 		*.%id%_GoKnownGreeting <*IHaveAJobForYou .%id%_GoBriefing>
 		*.%id%_GoUnknownGreeting <*AreYouHereAboutJob&Mecha .%id%_GoBriefing>
 		*.%id%_GoBriefing <*CORE_BasicJob .%id%_GoAccept .%id%_GoDeny %2%>
 		*.%id%_GoAccept <*GoodLuckOnMission .%id%_GoR1Exit ChatNPCFac &EnemyFac>
-		.%id%_GoR1Exit <SetPlotStatus %plotid1% %id1%>
+		.%id%_GoR1Exit <SetPlotStatus %plotid1% %id1%  SetPlotStatus %plotid2% %id2%>
 		*.%id%_GoDeny <*RejectMission .%id%_GoR2Exit>
 		.%id%_GoR2Exit <LoseComp 0 .%id%_changes>
 		.%id%_changes <+T-- +F-->

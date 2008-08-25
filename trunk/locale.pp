@@ -3263,7 +3263,7 @@ Procedure DeployMek( GB: GameBoardPtr; Mek: GearPtr; PutOnMap: Boolean );
 		end;
 	end;
 var
-	Team: GearPtr;
+	Team,Pilot: GearPtr;
 	P: Point;
 begin
 	if ( GB = Nil ) or ( Mek = Nil ) then Exit;
@@ -3304,6 +3304,11 @@ begin
 
 	{ Assign a unique ID for this model. }
 	SetNAtt( mek^.NA , NAG_EpisodeData, NAS_UID, MaxIdTag( GB^.Meks , NAG_EpisodeData, NAS_UID ) + 1 );
+	if mek^.G = GG_Mecha then begin
+		{ The pilot also needs a UID. }
+		Pilot := LocatePilot( mek );
+		if Pilot <> Nil then SetNAtt( pilot^.NA , NAG_EpisodeData, NAS_UID, NAttValue( mek^.NA , NAG_EpisodeData , NAS_UID ) + 1 );
+	end;
 
 	{ Stick mek on board. }
 	Mek^.Next := gb^.Meks;

@@ -1,4 +1,70 @@
 %%
+%% *CS_CAWinMission Content
+%%	&RevealEF	The enemy faction has been revealed
+%%
+%% Catch-all win mission component.
+%% The PC has won a mission provided by the NPC. Note that the mission should not
+%% have altered the state of the story; therefore, this reward is free to do so
+%% itself.
+%%
+%% The parent plot sets the plot status to this layer's ID when ready.
+%%
+%% Param1: The Mission-giver
+%%
+
+Content
+	name <Here, have some money>
+	desc <The NPC will pay the PC for the job.>
+	requires <*CS_CAWinMission>
+
+	% E1 is the NPC.
+
+	start <ifNPCDead %1% SMemo 0 WinComp 0 .%id%_loss>
+	.%id%_loss <+T-- +F-->
+
+	sub
+		Persona 1
+		greeting <if= PlotStatus %plotid% %id% else %pop% gOTO .%id%_GoReportSuccess>
+		*.%id%_GoReportSuccess <*MissionWasSuccess&Reward .%id%_GoEnd &AllyFac &EnemyFac>
+		.%id%_GoEnd <CashPrize Reward StoryDL 500 SMemo 0 NTBWinComp 0 .%id%_win>
+		.%id%_win <+T-- +F-->
+	end
+
+
+%%
+%% *CS_CALoseMission Content
+%%	&RevealEF	The enemy faction has been revealed
+%%
+%% Catch-all lose mission component.
+%% The PC has lost a mission provided by the NPC. Note that the mission should not
+%% have altered the state of the story; therefore, this reward is free to do so
+%% itself.
+%%
+%% The parent plot sets the plot status to this layer's ID when ready.
+%%
+%% Param1: The Mission-giver
+%%
+
+Content
+	name <Default Loss>
+	desc <The NPC will debrief the PC on the loss.>
+	requires <*CS_CALoseMission>
+
+	% E1 is the NPC.
+
+	start <ifNPCDead %1% LoseComp 0 .%id%_loss>
+	.%id%_loss <+T-- +F-->
+
+	sub
+		Persona 1
+		greeting <if= PlotStatus %plotid% %id% else %pop% gOTO .%id%_GoReportLoss>
+		*.%id%_GoReportLoss <*MissionWasFailure .%id%_GoEnd &AllyFac &EnemyFac>
+		.%id%_GoEnd <SMemo 0 NTBLoseComp 0 .%id%_loss>
+		.%id%_loss <+T-- +F-->
+	end
+
+
+%%
 %% *CS_Win_RescueLoveInterest
 %%
 %% The PC has rescued the love interest NPC from some terrible fate. Yahoo.
@@ -878,187 +944,4 @@ Content
 	end
 
 
-%%
-%% *CS_CAWinMission Content
-%%	&RevealEF	The enemy faction has been revealed
-%%
-%% Catch-all win mission component.
-%% The PC has won a mission provided by the NPC. Note that the mission should not
-%% have altered the state of the story; therefore, this reward is free to do so
-%% itself.
-%%
-%% The parent plot sets the plot status to this layer's ID when ready.
-%%
-%% Param1: The Mission-giver
-%%
-
-Content
-	name <There's more of them out there>
-	desc <The NPC will pay the PC for the job, and reveal the presence of more stuff.>
-	requires <*CS_CAWinMission>
-
-	% E1 is the NPC.
-	% E2 is an environs scene
-	% E3 an encounter for the next scene
-	Element2 <Scene Environs !Near -7>
-	Element3 <Prefab>
-	Place3 <2>
-
-	start <if= PlotStatus %plotid% %id% else %pop% ifNPCDead %1% SMemo 0 WinComp 0 .%id%_loss>
-	.%id%_loss <+T-- +F-->
-
-	sub
-		Persona 1
-		greeting <if= PlotStatus %plotid% %id% else %pop% gOTO .%id%_GoReportSuccess>
-		.%id%_GoReportSuccess <NewChat Say %id%01 StoryNote %id%02 CashPrize Reward StoryDL 500 WinComp %3% .%id%_win>
-		.%id%_win <+Ten +Ffi>
-		Msg%id%01 <The mission was a success... but that might not be the end of it. There have been reports that more enemy mecha have been spotted in %name2%.>
-		Msg%id%01_1 <>
-		CMsg%id%01_1 <ifNPCSociable Accept>
-		Msg%id%01_2 <>
-		CMsg%id%01_2 <ifNPCShy Accept>
-		Msg%id%01_3 <>
-		CMsg%id%01_3 <ifNPCEasygoing Accept>
-		Msg%id%01_4 <>
-		CMsg%id%01_4 <ifNPCPassionate Accept>
-		Msg%id%01_5 <>
-		CMsg%id%01_5 <ifNPCCheerful Accept>
-		Msg%id%01_6 <>
-		CMsg%id%01_6 <ifNPCMelancholy Accept>
-		Msg%id%02 <You learned that more enemy mecha were seen in %name2%.>
-	end
-	inv
-		STC ENCOUNTER
-		name <Enemy Mecha?>
-		EncounterMove 50
-	end
-
-Content
-	name <You Have Another Mission>
-	desc <The NPC will pay the PC, then direct him to another mission.>
-	requires <*CS_CAWinMission 1:PCFAC>
-
-	% E1 is the NPC.
-	% E2 is another NPC the PC can speak with
-	% E3 is a scene for the meeting
-	Element2 <Character !Near -7 !Comrade 1>
-	Element3 <Scene Building Public !Near -7 !Okay 2>
-
-	start <if= PlotStatus %plotid% %id% else %pop% ifNPCDead %1% SMemo 0 WinComp 0 .%id%_loss>
-	.%id%_loss <+T-- +F-->
-
-	sub
-		Persona 1
-		greeting <if= PlotStatus %plotid% %id% else %pop% ifNPCOK %2% else .%id%_GoReportSuccess  NewChat Say %id%01 SMemo %id%02 History %id%03 Goto .%id%_GoEnd>
-		*.%id%_GoReportSuccess <*MissionWasSuccess&Reward .%id%_GoMeh &AllyFac &EnemyFac>
-		.%id%_GoEnd <CashPrize Reward StoryDL 500 &SetTargetNPC %2% WinComp %3% .%id%_win>
-		.%id%_win <+Tgt +Fmi>
-		.%id%_GoMeh <CashPrize Reward StoryDL 500 NTBWinComp 0 .%id%_meh>
-		.%id%_meh <+T-- +F-->
-		Msg%id%01 <Good job on that mission. I think %name2% has some more work for you; you should go meet \OPR %2% at %name3%.>
-		Msg%id%01_1 <>
-		CMsg%id%01_1 <ifNPCSociable Accept>
-		Msg%id%01_2 <>
-		CMsg%id%01_2 <ifNPCShy Accept>
-		Msg%id%01_3 <>
-		CMsg%id%01_3 <ifNPCEasygoing Accept>
-		Msg%id%01_4 <>
-		CMsg%id%01_4 <ifNPCPassionate Accept>
-		Msg%id%01_5 <>
-		CMsg%id%01_5 <ifNPCCheerful Accept>
-		Msg%id%01_6 <>
-		CMsg%id%01_6 <ifNPCMelancholy Accept>
-		Msg%id%02 <%name1% sent you to %name2% at %name3% for another mission.>
-		Msg%id%03 <%name1% sent you to %name2% for another mission.>
-	end
-
-Content
-	name <Pass the Buck>
-	desc <The NPC will send the PC to talk with someone else.>
-	requires <*CS_CAWinMission>
-
-	% E1 is the NPC.
-	% E2 is another NPC the PC can speak with
-	% E3 is a scene for the meeting
-	Element2 <Character !Near -7 !Ally 1 !Okay -3>
-	Element3 <Scene Building Public !Near -7 !Okay 2>
-
-	start <if= PlotStatus %plotid% %id% else %pop% ifNPCDead %1% SMemo 0 WinComp 0 .%id%_loss>
-	.%id%_loss <+T-- +F-->
-
-	sub
-		Persona 1
-		greeting <if= PlotStatus %plotid% %id% else %pop% SMemo 0  ifNPCOK %2% else .%id%_GoReportSuccess  if# ChatNPCFac 0 else .%id%_GoReportSuccess NewChat Say %id%01 SMemo %id%02 History %id%03 Goto .%id%_GoEnd>
-		*.%id%_GoReportSuccess <*MissionWasSuccess&Reward .%id%_GoMeh &AllyFac &EnemyFac>
-		.%id%_GoEnd <CashPrize Reward StoryDL 500 &SetTargetNPC %2% WinComp %3% .%id%_win>
-		.%id%_win <+Tgt +Fmi>
-		.%id%_GoMeh <CashPrize Reward StoryDL 500 NTBWinComp 0 .%id%_meh>
-		.%id%_meh <+T-- +F-->
-		Msg%id%01 <Good work, \PC . If you want to see this through, I believe %name2% at %name3% has another mission you could help with.>
-		Msg%id%01_1 <Thanks \PC . We're going to need a lot of help to fight this problem... I believe %name2% at %name3% is looking for someone to run another mission, if you're interested.>
-		CMsg%id%01_1 <ifNPCSociable Accept>
-		Msg%id%01_2 <Good job. %name2% at %name3% has another mission for you, if you're interested.>
-		CMsg%id%01_2 <ifNPCShy Accept>
-		Msg%id%01_3 <Back for your pay, I see. I believe %name2% at %name3% has another mission if you're planning to continue this.>
-		CMsg%id%01_3 <ifNPCEasygoing Accept>
-		Msg%id%01_4 <One battle's over, but we're a long way from the end yet... %name2% could use some help over at %name3% , if you're up for another mission.>
-		CMsg%id%01_4 <ifNPCPassionate Accept>
-		Msg%id%01_5 <>
-		CMsg%id%01_5 <ifNPCCheerful Accept>
-		Msg%id%01_6 <>
-		CMsg%id%01_6 <ifNPCMelancholy Accept>
-		Msg%id%02 <%name1% sent you to %name2% at %name3% for another mission.>
-		Msg%id%03 <%name1% sent you to %name2% for another mission.>
-	end
-
-Content
-	name <Here, have some money>
-	desc <The NPC will pay the PC for the job.>
-	requires <*CS_CAWinMission>
-
-	% E1 is the NPC.
-
-	start <if= PlotStatus %plotid% %id% else %pop% ifNPCDead %1% SMemo 0 WinComp 0 .%id%_loss>
-	.%id%_loss <+T-- +F-->
-
-	sub
-		Persona 1
-		greeting <if= PlotStatus %plotid% %id% else %pop% gOTO .%id%_GoReportSuccess>
-		*.%id%_GoReportSuccess <*MissionWasSuccess&Reward .%id%_GoEnd &AllyFac &EnemyFac>
-		.%id%_GoEnd <CashPrize Reward StoryDL 500 SMemo 0 NTBWinComp 0 .%id%_win>
-		.%id%_win <+T-- +F-->
-	end
-
-
-%%
-%% *CS_CALoseMission Content
-%%	&RevealEF	The enemy faction has been revealed
-%%
-%% Catch-all lose mission component.
-%% The PC has lost a mission provided by the NPC. Note that the mission should not
-%% have altered the state of the story; therefore, this reward is free to do so
-%% itself.
-%%
-%% The parent plot sets the plot status to this layer's ID when ready.
-%%
-%% Param1: The Mission-giver
-%%
-
-Content
-	name <Default Loss>
-	desc <The NPC will debrief the PC on the loss.>
-	requires <*CS_CALoseMission>
-
-	% E1 is the NPC.
-
-	start <if= PlotStatus %plotid% %id% else %pop% ifNPCDead %1% LoseComp 0 .%id%_loss>
-	.%id%_loss <+T-- +F-->
-
-	sub
-		Persona 1
-		greeting <if= PlotStatus %plotid% %id% else %pop% gOTO .%id%_GoReportLoss>
-		*.%id%_GoReportLoss <*MissionWasFailure .%id%_GoEnd &AllyFac &EnemyFac>
-		.%id%_GoEnd <SMemo 0 NTBLoseComp 0 .%id%_loss>
-		.%id%_loss <+T-- +F-->
-	end
 

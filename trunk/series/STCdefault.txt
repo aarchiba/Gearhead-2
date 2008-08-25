@@ -1145,7 +1145,6 @@ update <ifThisQEncActive else GoHide  SetStat STAT_MetaVisibility 0  ShowEncount
 GoSetOrders <GrabSource GSetNAtt NAG_EpisodeData NAS_Orders 3>
 Attack <  >
 EncounterMove 0
-ENCOUNTER_NonCombat
 
 Encounter
 desig <CORE-ACTIVATABLE-STATIONARY-DEFENDED>

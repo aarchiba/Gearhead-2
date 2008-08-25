@@ -582,7 +582,9 @@ begin
 
 		{ Designate both mecha and pilot as temporary. }
 		SetNAtt( Mek^.NA , NAG_EpisodeData , NAS_Temporary , 1 );
-		if Pilot <> Nil then SetNAtt( Pilot^.NA , NAG_EpisodeData , NAS_Temporary , 1 );
+		if Pilot <> Nil then begin
+			SetNAtt( Pilot^.NA , NAG_EpisodeData , NAS_Temporary , 1 );
+		end;
 
 		{ Place it on the map. }
 		DeployMek( GB , Mek , True );

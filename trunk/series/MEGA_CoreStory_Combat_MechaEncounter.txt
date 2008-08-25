@@ -8,8 +8,9 @@
 %% The parent plot sets the plot status to this layer's ID when ready.
 %%
 %% When this subplot concludes, it sets one of the following triggers:
-%%  .%plotid%_%id%_GoWin
-%%  .%plotid%_%id%_GoLoss
+%%  .%id%_%plotid%_GoWin
+%%  .%id%_%plotid%_GoLoss
+%% It will also hide the encounter with SetEncounterInactive.
 %%
 %%  Param1: The outdoors scene where the encounter will be placed
 %%  Param2: The encounter to be used as the entrance
@@ -51,7 +52,7 @@
 
 Content
 	name <Learn of Enemy Leader>
-	size 5
+	size 6
 	desc <Fight some raiders; learn the identity of their leader, who isn't present.>
 	requires <*:CS_MechaEncounter &Raiders E:-- +H-->
 
@@ -75,8 +76,9 @@ Content
 		MapHeight 30
 
 		Start <if= L2 0 L= 2 1   Alert 1  TeamMonologue 2 2  StoryNote 3   &SetEnemyNPC %3%  CancelSubPlot %plotid1%>
-		nu1 <if= T1 0   Return   if= V1 0 V= 1 1   Alert 4 LoseSubPlot %plotid%  AlterContext .loss>
-		nu2 <if= T2 0   if= V1 0 V= 1 1   XPV 100  AddRenown 1   SALVAGE   Alert 5 WinSubPlot %plotid% AlterContext .win>
+		nu1 <if= T1 0   Return   if= V1 0 V= 1 1   Alert 4   Trigger0 .%id%_%plotid%_GoLoss   AlterContext .loss>
+		nu2 <if= T2 0   if= V1 0 V= 1 1   XPV 100  AddRenown 1   SALVAGE   Alert 5   Trigger0 .%id%_%plotid%_GoWin   AlterContext .win>
+		end <SetEncounterInactive %2%>
 		.loss <+Hln>
 		.win <+Hwn>
 
@@ -98,7 +100,7 @@ Content
 
 			team 2
 			SetEnemy 1
-			Deploy <SetSelfFaction &EnemyFac   WMecha 2 StoryDL 100>
+			Deploy <if= PlotStatus %plotid% %id% SetSelfFaction &EnemyFac   WMecha 2 StoryDL 150>
 			ParaX 25
 			ParaY 25
 		end

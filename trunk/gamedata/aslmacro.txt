@@ -28,7 +28,8 @@ NPCVar+ <GrabNPC ? GAddNAtt NAG_ScriptVar ? ?>
 SceneVar= <GrabScene ? GSetNAtt NAG_ScriptVar ? ?>
 SceneVar+ <GrabScene ? GAddNAtt NAG_ScriptVar ? ?>
 EncounterVar= <GrabEntrance ?  GSetNAtt NAG_ScriptVar ? ?>
-ShowEntrance <GrabEntrance ? GSetNAtt NAG_QuestInfo NAS_QEncActive 1>
+SetEncounterActive <GrabEntrance ? GSetNAtt NAG_QuestInfo NAS_QEncActive 1>
+SetEncounterInactive <GrabEntrance ? GSetNAtt NAG_QuestInfo NAS_QEncActive 0>
 SetQEncActive <GrabItem ? GSetNAtt NAG_QuestInfo NAS_QEncActive 1>
 SetQEncInactive <GrabItem ? GSetNAtt NAG_QuestInfo NAS_QEncActive 0>
 SetSelfQEncInactive <GrabSource GSetNAtt NAG_QuestInfo NAS_QEncActive 0>
