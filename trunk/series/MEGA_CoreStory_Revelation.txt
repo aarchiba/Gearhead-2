@@ -117,36 +117,4 @@ Content
 		job_desig <ADVEN>
 	end
 
-Content
-	name <Your Enemy's Been Sighted>
-	desc <The NPC will reveal an encounter.>
-	requires <*CS_Revelation E:++ -1:ENEMY>
-
-	% Element1 is the NPC
-	% Element2 is a local outdoors scene
-	% Element3 is an encounter to place there
-	% Element4 is the enemy NPC
-	Element2 <Scene Outdoors !Near -7>
-	Element3 <Prefab>
-	Place3 <2>
-	Element4 <Grab 1>
-	Place4 </>
-
-	start <if= PlotStatus %plotid% %id% else %pop% ifNPCDead %1% LoseComp 0 .%id%_loss>
-	.%id%_loss <+T-- +F-->
-
-	sub
-		Persona 1
-		greeting <if= PlotStatus %plotid% %id% else %pop% Goto .%id%_GoGreet>
-		*.%id%_GoGreet <*RevealSecret .%id%_GoInit>
-		.%id%_GoInit <NewChat Say %id%01 StoryNote %id%02  WinComp %3% .%id%_next>
-		.%id%_next <+Ten +Ffi>
-		Msg%id%01 <%name4%'s mecha has been seen in %name2%. I can't say what \SPR %4% 's doing there, but you might want to go investigate.>
-		Msg%id%02 <%name1% told you that %name4% had been seen in %name2%.>
-	end
-	inv
-		STC ENCOUNTER-WANDER
-		name <Mysterious Mecha>
-		EncounterMove 25
-	end
 

@@ -2,14 +2,82 @@
 %% *:CS_GainAdvantageVsMecha Content
 %%
 %%  &Reinforcements	The advantage may take the form of reinforcements
+%%		.%id%_%plotid%_GoReinforcements
 %%
 %%  Before a combat encounter, the PC may be able to gain an advantage
 %%  over his enemies. Note that this advantage can be as capricious as you
 %%  like- it's not guaranteed to any PC, and may be dependant upon special
 %%  skills or reputations.
 %%
+%%  If this subplot is won, a trigger associated with the exact advantage
+%%  gained should be called. If a nonstandard advantage is gained, no such
+%%  trigger need be called.
 
 Content
-	name <Stub For Now>
+	name <Beaten Gladiator>
 	requires <*:GainAdvantageVsMecha &Reinforcements>
+	desc <Meet a mercenary who lost to the raiders; may be able to gain his support.>
+
+	% E1 is a garage
+	% E2 is the mercenary you can find there
+	% E3 is a location for the duel
+	Element1 <Scene Public Garage !Near -7>
+	Element2 <Prefab>
+	Place2 <1 SD ally>
+	Element3 <Scene Environs !Near -7>
+
+	% P%id%01 = Initialization Counter
+	start <ifNPCDead %2% LoseSubPlot %plotid%>
+	update <if= p%id%01 0 p= %id%01 1 NPCLevel %2% StoryDL>
+
+	.%id1%_%plotid1%_GoWin <ifNPCOK %2% else .%id1%_%plotid1%_GoLose  Monologue %2% %id%01  History %id%02  Trigger0 .%id%_%plotid%_GoReinforcements  WinSubPlot %plotid%>
+	.%id1%_%plotid1%_GoLose <LoseSubPlot %plotid%>
+
+	Msg%id%01 <You sure showed me. My lancemates will be there to help you fight the raiders.>
+	Msg%id%02 <You convinced %name2% to help in the upcoming battle.>
+
+	% SubPlot1 is the duel
+	SubPlot1 <*CS_Duel&NoDerailment 2 1 3>
+
+	sub
+		Persona 2
+		rumor%id% <%name2% was recently defeated by the raiders.>
+		greeting <ifSubPlotWon %plotid% else GoCheckOffer NewChat Say %id%01>
+		GoCheckOffer <if= PlotStatus %plotid% %id% else GoChat Goto GoGreet>
+		*GoGreet <*YouCouldUseHelp GoMakeOffer>
+		GoMakeOffer <NewChat Say %id%02 AddCHat %id%01 AddChat %id%02 AddChat %id%03>
+		GoChat <NewChat SayAnything>
+		result%id%01 <NewChat Say %id%03 LoseSubPlot %plotid%>
+		result%id%02 <NewChat Say %id%04 AddChat %id%01 AddChat %id%03>
+		result%id%03 <NewChat Say %id%05 AddChat %id%04 AddChat %id%05 AddChat %id%06>
+		result%id%04 <NewChat Say %id%06 LoseSubPlot %plotid%>
+		result%id%05 <NewChat Say %id%07 AddChat %id%07 AddChat %id%08>
+		result%id%06 <NewChat Say %id%08 History %id%09  XPV 100  Trigger0 .%id%_%plotid%_GoReinforcements  WinSubPlot %plotid%>
+		result%id%07 <SetPlotStatus %plotid% %id1% Goto .%id%_GoAcceptChallenge>
+		*.%id%_GoAcceptChallenge <*IAcceptYourChallenge %3%>
+		result%id%08 <NewChat Say %id%10 LoseSubPlot %plotid%>
+		Msg%id%01 <My lance will be there to help you out. Me, I gotta buy a new mek.>
+		Msg%id%02 <Those raiders you're going up against? I fought them myself a while back, but didn't do so well. Take my advice and stay well clear of them. You'll live longer.>
+		Msg%id%03 <You're welcome... though somehow I don't think you're going to be following it.>
+		Msg%id%04 <Well, I don't know where you can find them now, if that's what you're talking about...>
+		Msg%id%05 <Hold on there. You have no idea how tough these guys are. I seriously doubt that you're strong enough to tip the balance in favor of me and my lance.>
+		Msg%id%06 <Good luck with that. If you survive, I'll buy you a drink.>
+		Msg%id%07 <You're really serious about this, huh? Well, I'm willing to beat you if you're fool enough to meet me...>
+		Msg%id%08 <Yes, I guess it would be... Look, my mecha's still being repaired, but my lancemates are ready to go. When you face the raiders they'll be there at your side.>
+		Msg%id%09 <You convinced %name2% to help in the upcoming battle.>
+		Msg%id%10 <Good... you're finally learning. Personally, I think I'm going to quit this mercenary racket and get into something safe like accounting or lion taming.>
+		Prompt%id%01 <Thanks for the advice.>
+		Prompt%id%02 <Do you know where I can find them?>
+		Prompt%id%03 <Why don't we team up and defeat them together?>
+		Prompt%id%04 <Fine. I'll defeat them by myself.>
+		Prompt%id%05 <I'll prove it to you... in a duel!>
+		Prompt%id%06 <Maybe not, but wouldn't it be fun to try?>
+		CPrompt%id%06 <ifChatNPCSexy ifFlirtation HardSkillTar &StoryDL Accept>
+		Prompt%id%07 <Let's do it.>
+		Prompt%id%08 <Sorry, on second thought it's not such a good idea.>
+	end
+	inv
+		NPC Mercenary
+	end
+
 

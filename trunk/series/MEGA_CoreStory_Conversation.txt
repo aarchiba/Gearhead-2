@@ -1079,36 +1079,5 @@ Plot
 		Msg%id%02 <%name1% suggested that you ask about \PERSONA &EnemyNPC at %name2%.>
 	end
 
-Plot
-	name <Dream Quest>
-	desc <This monk will send the PC on a quest.>
-	requires <*CS_Conversation 1:FAITH>
-	Size 1
-
-	% E1 is the person with the information
-	% E2 is the outdoor scene where the PC will be sent
-	% E3 is an encounter to be placed there
-	Element2 <Scene Outdoors !Near -7>
-	Element3 <Prefab>
-	Place3 <2>
-
-	start <if= PlotStatus %plotid% %id% else %pop% ifNPCDead %1% LoseComp 0 .%id%_loss>
-	.%id%_loss <+T-- +F-->
-
-	sub
-		Persona 1
-		greeting <if= PlotStatus %plotid% %id% else %pop% Goto .%id%_GoIntro>
-		*.%id%_GoIntro <*IHaveInformation .%id%_GoExplain na>
-		.%id%_GoExplain <NewChat Say %id%01 StoryNote %id%02 WinComp %3% .%id%_win>
-		.%id%_win <+Ten +F-->
-		Msg%id%01 <You have already quested long and far. I have a feeling that you should go to %name2%... it is there that your destiny awaits.>
-		Msg%id%02 <%name1% advised you to seek your destiny in %name2%.>
-	end
-	inv
-		Encounter
-		Name <Fated Encounter>
-		EncounterMove 25
-	end
-
 
 

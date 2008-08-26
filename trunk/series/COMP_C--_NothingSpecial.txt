@@ -65,7 +65,7 @@ Content
 		result4 <NewChat Say 6 StoryNote 7 &SetPartnerNPC %2% &AddPartnerToLance SetXXRMotivation XXR_M_Revenge SetXXRAttitude XXR_A_IsJunior WinComp 0 .join>
 		.join <+T-- +F-->
 		result5 <NewChat Say 9 Storynote 10 WinComp %4% .refuse>
-		.refuse <+Ten +Ffi>
+		.refuse <+T-- +F-->
 		result6 <NewChat Say 11 AddChat 7 AddChat 8>
 		result7 <NewChat Say 12 StoryNote 13 &SetAmoreNPC %2% SetXXRMotivation XXR_M_Revenge SetXXRAttitude XXR_A_IsJunior WinComp 0 .love>
 		.love <+T-- +F-->
@@ -78,7 +78,7 @@ Content
 		Msg6 <Great! I promise, I'll be the best student ever.>
 		Msg7 <You agreed to train %name2% so \SPR %2% can fight %name3%.>
 		Msg8 <Come speak with me in %name1%; what I have to say is too important for over the phone.>
-		Msg9 <I see. Well, if you won't let me join you, I can at least do my best to help you defeat %name3% yourself... I've heard that \PPR %3% mecha has been seen in %name4%. Maybe you can find \OPR %3% there.>
+		Msg9 <I see.>
 		Msg10 <You learned that %name3%'s mecha has been seen in %name4%.>
 		Msg11 <Why are you trying to protect me? You don't even know me.>
 		Msg12 <Alright, I'll trust you... I'm counting on you to stop %name3%, but please be careful. I don't want you to get hurt either.>

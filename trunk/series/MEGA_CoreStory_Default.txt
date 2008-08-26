@@ -314,59 +314,6 @@ Content
 %%
 
 Content
-	name <Have a Revelation>
-	desc <The NPC will give the PC some info in thanks.>
-	requires <*CS_WinDuelVs>
-
-	% E1 is the NPC
-
-	start <if= PlotStatus %plotid% %id% else %pop% ifNPCDead %1% SMemo 0 WinComp 0 .%id%_loss>
-	.%id%_loss <+T-- +F-->
-
-	% SubPlot1 is the revelation
-	SubPlot1 <*CS_Revelation 1>
-
-	sub
-		Persona 1
-		greeting <if= PlotStatus %plotid% %id% else %pop% EndChat Say %id%01 AddChat %id%01>
-		result%id%01 <Goto .%id1%_GoInit>
-		Msg%id%01 <Hey, because you won our duel, I'll let you in on a secret.>
-		Msg%id%01_1 <That was a good fight. Because you won, I'll tell you this secret.>
-		Msg%id%01_2 <We didn't make a wager before the fight, but since you won I'll tell you a secret.>
-		Prompt%id%01 <[Continue]>
-	end
-
-Content
-	name <The Sore Loser>
-	desc <The NPC can't believe he lost; in fact, he will become CS Enemy.>
-	requires <*CS_WinDuelVs E:-- -1:ALLY -1:PDASS ~1:ENEMY>
-
-	% E1 is the NPC.
-
-	start <if= PlotStatus %plotid% %id% else %pop% ifNPCDead %1% SMemo 0 WinComp 0 .%id%_loss>
-	.%id%_loss <+T-- +F-->
-
-	sub
-		Persona 1
-		greeting <if= PlotStatus %plotid% %id% else %pop%  NewChat Say %id%01 FreezeNPC %1% StoryNote %id%02 &SetEnemyNPC %1% WinComp 0 .%id%_win ifNPCPassionate PCEnemy %1%>
-		.%id%_win <+T-- +F-->
-		Msg%id%01 <I can't accept losing the duel to you... From this point on I'm going to train hard, then someday I'll be back and I'll defeat you!>
-		Msg%id%01_1 <People are already talking about how you defeated me... I can't accept that! You may have won this time, but I promise you that the next time we meet I will be the victor!>
-		CMsg%id%01_1 <ifNPCSociable Accept>
-		Msg%id%01_2 <Enjoy your victory, for now. I promise you that it won't last long.>
-		CMsg%id%01_2 <ifNPCShy Accept>
-		Msg%id%01_3 <Things used to be going so well... I can't accept being defeated by you, and I won't. We'll face each other again, sometime.>
-		CMsg%id%01_3 <ifNPCEasygoing Accept>
-		Msg%id%01_4 <You cheater! That's the only way you could have possibly beaten me... From this moment on, I pledge to destroy you. Sleep with one eye open \PC .>
-		CMsg%id%01_4 <ifNPCPassionate Accept>
-		Msg%id%01_5 <What, you've come here to rub your victory in my face? Get lost... the next time we meet won't be nearly so pleasant for you as today was.>
-		CMsg%id%01_5 <ifNPCCheerful Accept>
-		Msg%id%01_6 <You ruined everything! How did you beat me? You must have cheated... From this day forth I dedicate my life to making yours miserable. Don't think I'll ever forget what you've done.>
-		CMsg%id%01_6 <ifNPCMelancholy Accept>
-		Msg%id%02 <%name1% swore revenge on you for beating \OPR %1% in a duel.>
-	end
-
-Content
 	name <You should go see MILIT...>
 	desc <The NPC will reccomend that the PC go ask someone about a job.>
 	requires <*CS_WinDuelVs -L:ENEMY -C:THIEF>

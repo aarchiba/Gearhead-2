@@ -1,26 +1,4 @@
 Plot
-	name <Wreckage Message>
-	requires <#L +Ten>
-	desc <Go to the encounter, find something in the wreckage.>
-
-	% E1 is the encounter
-	% E2 is the next city to go to
-	Element1 <Grab 6>
-	Element2 <Scene !Far -7 !Comrade -7 Town>
-
-	start <ShowEntrance %1%>
-
-	sub
-		MetaScene 1 2
-		MapWidth 30
-		MapHeight 30
-		start <Alert 1 StoryNote 2 LoseEpisode %2% 0 .next>
-		.next <+T-- +F-->
-		Msg1 <You find signs of a recent battle here, but no clue as to who was fighting or where they went.>
-		Msg2 <Your investigation led to a dead end.>
-	end
-
-Plot
 	name <Conference Was Moved>
 	requires <#L +Tgs (+Fpa|+Fcc)>
 	desc <The event has been moved. No-one told the PC.>

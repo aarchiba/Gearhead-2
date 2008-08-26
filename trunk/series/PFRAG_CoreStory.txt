@@ -7,6 +7,46 @@
 %% In addition, some of these fragments are tied to specific components, and may not
 %% be readily reusable in other components.
 
+% TYPE: *CS_BasicFightingMission
+%	The PC is being given a basic fighting mission. In this mission, the PC will be
+%	told to go fight some raiders- mecha aligned with the enemy PC/faction.
+%	If the PC is a member of the mission-giver's faction, refusal is impossible.
+%   NOTE: This component is responsible for setting the StoryNote
+%	Generally, a note will be stored for accepting the mission, but not for rejecting
+%	the mission.
+%   PARAM1: Accept Mission Exit Label
+%   PARAM2: Reject Mission Exit Label (Note: Not all missions may be rejected!)
+%	(Also note: If this component features another ending, neither exit may
+%	 be called)
+
+	Persona
+	requires <*CS_BasicFightingMission>
+	START <NewChat Say %id%01 AddChat %id%01 AddChat %id%02>
+	result%id%01 <StoryNote %id%02 Goto %1%>
+	result%id%02 <SMemo 0 Goto %2%>
+	Msg%id%01 <We've been tracking a group of mecha near town. I need you to locate them and determine whether or not they're hostile.>
+	Msg%id%01_1 <There's been a group of unknown mecha operating just outside the city. I want you to locate them, and if they prove hostile engage in combat.>
+	CMsg%id%01_1 <ifNPCSociable Accept>
+	Msg%id%01_2 <A group of possibly hostile mecha has been detected in town. I need you to intercept them.>
+	CMsg%id%01_2 <ifNPCShy Accept>
+	Msg%id%01_3 <There have been some odd sensor readings from nearby, possibly indicating a group of unauthorized mecha. I need you to explore the area and see if you can find what's going on.>
+	CMsg%id%01_3 <ifNPCEasygoing Accept>
+	Msg%id%01_4 <A team of raiders has been getting too close to our territory. What I need you to do is locate them and put a stop to it.>
+	CMsg%id%01_4 <ifNPCPassionate Accept>
+	Msg%id%01_5 <There are some mecha in town that I need investigated. Intercept them for me and you'll earn a big reward.>
+	CMsg%id%01_5 <ifNPCCheerful Accept>
+	Msg%id%01_6 <A group of unauthorized mecha has been spotted in town... these may be the same pilots responsible for those attacks earlier. I need for you to run an intercept mission.>
+	CMsg%id%01_6 <ifNPCMelancholy Accept>
+	Msg%id%02 <\CHATNPC hired you to locate and engage a group of raiders.>
+	Prompt%id%01 <I'll get to work right away.>
+	Prompt%id%01_1 <Alright. I'm on the case.>
+	Prompt%id%01_2 <I'll be back when I have something to report.>
+	Prompt%id%02 <I'm not interested.>
+	CPrompt%id%02 <if# PCFac ChatNPCFac Accept>
+	Prompt%id%02_1 <Sorry, but I don't want this job.>
+	Prompt%id%02_2 <Find someone else for this mission.>
+
+
 % TYPE: *CS_ForcedInduction_Greeting
 %	The PC has just been shangheid into joining a faction.
 %   PARAM1: Exit label (no message printed here)

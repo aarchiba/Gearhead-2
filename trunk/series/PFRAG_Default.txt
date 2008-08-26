@@ -1,5 +1,22 @@
 % Persona Fragment File
 
+% TYPE: *YouCouldUseHelp
+%	The NPC has heard that the PC can use some help; usually followed by
+%	either an offer of help or taunting.
+%
+%  Param1: Exit Label
+
+	Persona
+	requires <*YouCouldUseHelp>
+	% v%id%01 = One time use counter
+	START <if= v%id%01 0 else %1% v= %id%01 1 NewChat Say %id%01 AddChat %id%01 AddChat %id%02>
+	result%id%01 <Goto %1%>
+	result%id%02 <Goto %1%>
+	Msg%id%01 <Hey \PC , I hear that you could use some help.>
+	Prompt%id%01 <I'm doing fine by myself.>
+	Prompt%id%02 <Yeah, that's right... why?>
+
+
 % TYPE: *NotByPhone
 %	The NPC can't speak on the phone; the PC should visit in person.
 
@@ -250,6 +267,15 @@
 	requires <*ISurrender>
 	START <NewChat Say %id%01 Goto %1%>
 	Msg%id%01 <I give up! Just don't kill me...>
+
+% TYPE: *GenericMissionReminder
+%	The NPC will remind the PC to go do something... I dunno what.
+
+	Persona
+	requires <*GenericMissionReminder>
+	START <NewChat Say %id%01>
+	Msg%id%01 <Come talk to me again after you've completed the mission.>
+
 
 % TYPE: *MechaMissionReminder
 %	The NPC will remind the PC to go fight/investigate some mecha

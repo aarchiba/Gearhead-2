@@ -1,4 +1,36 @@
 %%
+%% *CS_MootMission Content
+%%
+%% The mission has become unwinnable, somehow. This counts as a loss, but at least
+%% the NPC involved will be kind enough to explain what's happening.
+%%
+%% Param1: The Mission-giver
+%%
+
+Content
+	name <Default Moot>
+	desc <The NPC will debrief the PC on the loss.>
+	requires <*CS_MootMission>
+
+	% E1 is the NPC.
+
+	% p%id%01 = Email Counter
+	start <ifNPCDead %1% SMemo 0 LoseComp 0 .%id%_loss>
+	.%id%_loss <+T-- +F-->
+	update <if= p%id%01 0 P= %id%01 1 EMail %id%01>
+
+	Msg%id%01_1 <%name1% @ \SCENE NPCScene %1% :// Your mission has been cancelled.>
+	Msg%id%01_2 <%name1% @ \SCENE NPCScene %1% :// Your mission has been aborted.>
+
+	sub
+		Persona 1
+		greeting <if= PlotStatus %plotid% %id% else %pop% NewChat Say %id%01 SMemo 0 NTBLoseComp 0 .%id%_loss>
+		.%id%_loss <+T-- +F-->
+		Msg%id%01 <I'm afraid that you took too long on that mission. It's over now.>
+	end
+
+
+%%
 %% *CS_CAWinMission Content
 %%	&RevealEF	The enemy faction has been revealed
 %%
@@ -142,34 +174,6 @@ Content
 %%
 %% Param1: The Mission-giver
 
-Content
-	name <They Launched A Mission>
-	desc <Even though the ship was captured, enemy mecha are still out there.>
-	requires <*CS_Win_CaptureEnemyShip>
-
-	% E1 is the mission giver
-	% E2 is an environs scene in which to place the encounter
-	% E3 is the encounter
-	Element2 <Scene Environs !Near -7>
-	Element3 <Prefab>
-	Place3 <2>
-
-	start <if= PlotStatus %plotid% %id% else %pop% ifNPCDead %1% SMemo 0 WinComp 0 .%id%_loss>
-	.%id%_loss <+T-- +F-->
-
-	sub
-		Persona 1
-		greeting <if= PlotStatus %plotid% %id% else %pop%  NewChat Say %id%01 StoryNote %id%02 CashPrize Reward StoryDL 500 WinComp %3% .%id%_next>
-		.%id%_next <+Ten +Ffi>
-		Msg%id%01 <The enemy ship has been captured, but one of their lances managed to escape. We believe they are hiding in %name3%; it's possible that they're performing whatever mission brought them here in the first place.>
-		Msg%id%02 <%name1% revealed that mecha from the ship escaped to %name3%.>
-	end
-	inv
-		STC ENCOUNTER-WANDER
-		name <Enemy Mecha>
-		EncounterMove 25
-	end
-
 
 %%
 %% *CS_Win_Vs_Prototype
@@ -210,33 +214,6 @@ Content
 		Prompt%id%01_1 <Any idea where I can find \OPR %2% ?>
 	end
 
-Content
-	name <They Have Another>
-	desc <There's another experimental weapon out there.>
-	requires <*CS_Win_Vs_Prototype>
-
-	% E1 is the mission giver
-	% E2 is an environs scene in which to place the encounter
-	% E3 is the encounter
-	Element2 <Scene Environs !Near -7>
-	Element3 <Prefab>
-	Place3 <2>
-
-	start <if= PlotStatus %plotid% %id% else %pop% ifNPCDead %1% SMemo 0 WinComp 0 .%id%_loss>
-	.%id%_loss <+T-- +F-->
-
-	sub
-		Persona 1
-		greeting <if= PlotStatus %plotid% %id% else %pop%  NewChat Say %id%01 StoryNote %id%02 CashPrize Reward StoryDL 500 WinComp %3% .%id%_next>
-		.%id%_next <+Ten +Ffi>
-		Msg%id%01 <You did it. Unfortunately, that might not be the only research crew they have out there. Reports have come in about another weapon in %name2%.>
-		Msg%id%02 <%name1% revealed that there could be more experimental weapons nearby.>
-	end
-	inv
-		STC ENCOUNTER-WANDER
-		name <Experimental Weapon>
-		EncounterMove 25
-	end
 
 
 %%
@@ -245,34 +222,6 @@ Content
 %% The PC has lost a mission against a prototype weapon.
 %%
 %% Param1: The Mission-giver
-
-Content
-	name <It's Still Out There>
-	desc <Since the player lost, the enemy research team is still out there.>
-	requires <*CS_Lose_Vs_Prototype>
-
-	% E1 is the mission giver
-	% E2 is an environs scene in which to place the encounter
-	% E3 is the encounter
-	Element2 <Scene Environs !Near -7>
-	Element3 <Prefab>
-	Place3 <2>
-
-	start <if= PlotStatus %plotid% %id% else %pop% ifNPCDead %1% SMemo 0 LoseComp 0 .%id%_loss>
-	.%id%_loss <+T-- +F-->
-
-	sub
-		Persona 1
-		greeting <if= PlotStatus %plotid% %id% else %pop%  NewChat Say %id%01 StoryNote %id%02 LoseComp %3% .%id%_next>
-		.%id%_next <+Ten +Ffi>
-		Msg%id%01 <You failed... and that means the experimental weapon could still be out there, somewhere...>
-		Msg%id%02 <%name1% reminded you that the experimental weapon could still be out there.>
-	end
-	inv
-		STC ENCOUNTER-WANDER
-		name <Experimental Weapon>
-		EncounterMove 25
-	end
 
 Content
 	name <We REALLY Need More Information>
@@ -640,75 +589,6 @@ Content
 %%
 %% Param1: The Mission-giver
 %%
-
-Plot
-	name <City in Trouble>
-	desc <PC asked to help defend against the unknown enemy.>
-	requires <*CS_Win_ToUnknownEnemy (P:--|P:CORPO|P:PDASS) (F:MILIT|F:CRIME|F:--) (1:POLIT|1:POLIC|1:MILIT) -L:ENEMY>
-
-	% E1 is the target NPC.
-	% E3 is the next NPC to meet about a mission
-	% E3 is the scene for the next mission
-	% E4 is the local government faction
-	% E5 is a local outdoors scene
-	% E6 is an encounter to place there
-	element2 <Character !Near -7 !Ally -7>
-	element3 <MetaScene !Near -7 *Building NeverFail>
-	element4 <Faction Government !Comrade -7 !Ally 1>
-	element5 <Scene Outdoors !Near -7>
-	element6 <Prefab>
-	Place6 <5>
-
-	start <if= PlotStatus %plotid% %id% else %pop% ifNPCDead %1% LoseComp 0 .%id%_loss>
-	.%id%_loss <+T-->
-
-	sub
-		Persona 1
-		% V%id%01 = Have given reward
-		greeting <if= PlotStatus %plotid% %id% else %pop% if= V%id%01 0 else .%id%_GoNewMission CashPrize Reward StoryDL 500 V= %id%01 1 Goto .%id%_GoGetReward>
-		*.%id%_GoGetReward <*MissionWasSuccess&Reward .%id%_GoRewardOp N3 N2>
-		.%id%_GoRewardOp <AddChat %id%03>
-		.%id%_GoNewMission <NewChat Say %id%01 AddChat %id%01 AddChat %id%02>
-		result%id%01 <ifNPCOK %2% else .%id%_GoNoMission NewChat Say %id%03 &SetTargetNPC %2% &SetAllyFac %4% History %id%05 StoryNote %id%02 WinComp %3% .%id%_changes>
-		.%id%_changes <+Tgt +Fmi>
-		.%id%_GoNoMission <NewChat Say %id%04 &SetAllyFac %4% StoryNote %id%05 WinComp 0 .%id%_changes2>
-		result%id%02 <NewChat Say %id%08 SMemo %id%06 History %id%07 WinComp %6% .%id%_changes2>
-		.%id%_changes2 <+Ten +Ffi>
-		result%id%03 <Goto .%id%_GoNewMission>
-		Msg%id%01 <We still don't know where these invaders are coming from, nor what they want. You know, %name4% could use a good pilot like you to help face this threat.>
-		Msg%id%01_1 <>
-		CMsg%id%01_1 <ifNPCSociable Accept>
-		Msg%id%01_2 <>
-		CMsg%id%01_2 <ifNPCShy Accept>
-		Msg%id%01_3 <>
-		CMsg%id%01_3 <ifNPCEasygoing Accept>
-		Msg%id%01_4 <>
-		CMsg%id%01_4 <ifNPCPassionate Accept>
-		Msg%id%01_5 <>
-		CMsg%id%01_5 <ifNPCCheerful Accept>
-		Msg%id%01_6 <>
-		CMsg%id%01_6 <ifNPCMelancholy Accept>
-		Msg%id%02 <%name1% sent you to speak with %name2% in %name3%.>
-		Msg%id%03 <In that case you should go to %name3% and speak with %name2%. I believe \SPR E2 has something you could help with.>
-		Msg%id%04 <That's good to hear. Go rest up, and get your stuff repaired. There's no telling when we could be attacked again.>
-		Msg%id%05 <You accepted %name1%'s request to help defend %name4%.>
-		Msg%id%06 <%name1% warned you that there are likely to be more mecha attacks in %name4%.>
-		Msg%id%07 <%name1% warned you that there were likely to be more mecha attacks.>
-		Msg%id%08 <I understand. I only worry that there will be more attacks, and we might not be able to stop them.>
-		Prompt%id%01 <It would be an honor to help.>
-		Prompt%id%01_1 <I'd be honored to help.>
-		Prompt%id%01_2 <As long as the city needs me, I'm here.>
-		Prompt%id%02 <Sorry, I'm not signing up for anyone's war.>
-		Prompt%id%02_1 <Sorry, but this is as involved as I plan to get.>
-		Prompt%id%02_2 <Sorry, but I've got my own problems to deal with.>
-		Prompt%id%03 <Thank you.>
-		Prompt%id%03 <Thanks.>
-	end
-	inv
-		Encounter
-		name <Mysterious Attackers>
-		EncounterMove 25
-	end
 
 
 %%

@@ -9,6 +9,94 @@
 %    or the palette enemy faction
 
 Plot
+	name <Party Contact>
+	desc <At the party, the PC can get a job from someone.>
+	requires <#A +Tgs (+Fpa|+Fcc) ~+Gmo>
+	Size 1
+
+	% Element1 is the scene where this will take place
+	% Element2 is a local public scene
+	% Element3 is the NPC who will offer the mission
+	% Element4 is the bodyguard
+	% Element5 is an environs scene for the duel
+	Element1 <Grab 6>
+	Element2 <Scene Public Meeting !Near -7>
+	Element3 <Prefab>
+	Place3 <2 pass ally>
+	Element4 <Prefab>
+	Place4 <2 SD Ally>
+	Element5 <Scene Environs !Near -7>
+
+	% P%id%01 = Duel victory counter; 1=Win,-1=Loss
+	end <ifNPCDead %3% LoseComp 0 .loss>
+	.loss <+T-- +F-->
+
+	.%id1%_%plotid1%_GoWin  <SMemo %id%01  p= %id%01  1>
+	.%id1%_%plotid1%_GoLose <SMemo %id%01  p= %id%01 -1>
+
+	Msg%id%01 <You should go tell %name3% at %name1% about your duel with %name4%.>
+
+	% SubPlot1 is the duel with the bodyguard
+	SubPlot1 <*CS_Duel&NoDerailment 4 1 5>
+
+	sub
+		Persona 3
+		greeting <if= p%id%01 1 else GoCheckLoss NewChat Say %id%01 SMemo %id%02 History %id%03 Goto GoGetMission>
+		GoGetMission <&SetTargetNPC %3% MoveNPC %4% %2% WinComp %2% .%id%_next>
+		.%id%_next <+Tgt +Fmi>
+		GoCheckLoss <if= p%id%01 -1 else GoCheckStatus NewChat Say %id%04 SMemo %id%02 History %id%03 AddChat %id%01 &SetTargetNPC %3% MoveNPC %4% %2% LoseComp %2% .%id%_next>
+		GoCheckStatus <if# PlotStatus %plotid% 0 else GoIntro NewChat Say %id%05>
+		*GoIntro <*NiceToMeetYou GoOffer>
+		GoOffer <NewChat Say %id%06 AddChat %id%02 AddChat %id%03>
+
+		result%id%01 <NewChat Say %id%07>
+		result%id%02 <ifNPCOK %4% else .%id%_GoNoTest NewChat Say %id%08 AddChat %id%04 AddChat %id%05>
+		.%id%_GoNoTest <NewChat Say %id%09 SMemo %id%02 History %id%03 &SetTargetNPC %3% NegateComp %2% .%id%_next>
+		result%id%03 <NewChat Say %id%10 SMemo 0 NegateComp 0 .%id%_refuse>
+		.%id%_refuse <+T-- +F-->
+		result%id%04 <NewChat Say %id%11 SMemo %id%12 History %id%13 SetPlotStatus %plotid% %id1%>
+		result%id%05 <Goto result%id%03>
+
+		Msg%id%01 <I knew you looked like a winner. Come see me at %name2% later on and I'll have that mission for you.>
+		Msg%id%02 <You should go meet %name3% at %name2% for a mission.>
+		Msg%id%03 <After impressing \OPR %3% , %name3% offered you a job.>
+		Msg%id%04 <Very good. I wasn't sure I was going to see you again. Come see me at %name2% later on and I'll try to find a mission for you.>
+		Msg%id%05 <Come back to see me after you've fought %name4% in %name5%.>
+		Msg%id%06 <You're not a cavalier are you? I've been looking for someone to run a couple of missions for me. Of course, I'd have to test your abilities before offering you the job...>
+		Msg%id%07 <I know... but you came back to report after a humiliating defeat. That kind of diligence can be very useful. I'll see you at %name2%.>
+		Msg%id%08 <See my bodyguard %name4% over there? I want you to go with \OPR %4% to %name5%; there, you'll be tested on your mecha combat skills. If I am impressed with your performance then the job is yours.>
+		Msg%id%09 <I suppose a test isn't strictly necessary... Come see me in %name2% and I'll give you a mission.>
+		Msg%id%10 <That's too bad.>
+		Msg%id%11 <Wonderful. Come back here when you've finished the duel.>
+		Msg%id%12 <%name3% sent you to duel %name4% in %name5%. If you win, \SPR %3% will give you a job.>
+		Msg%id%13 <You agreed to duel %name4% to prove your abilities to %name3%.>
+
+		Prompt%id%01 <But... I lost the duel!>
+		Prompt%id%02 <What kind of test are you talking about?>
+		Prompt%id%03 <Sorry, I'm not interested.>
+		Prompt%id%04 <It's a deal.>
+		Prompt%id%05 <No way. %name4% scares me.>
+
+		Persona 4
+		greeting <NewChat Say 1>
+		msg1 <Go see %name3% if you've got any business.>
+
+		STC MS_SOCIAL
+		SetID 1
+	end
+	inv
+		NPC Shopkeeper
+		statline 10 9 12 13 14 16 15 16
+		chardesc renowned
+		job <Investor>
+
+		NPC Soldier
+		job <Bodyguard>
+		job_desig <ADVEN>
+		chardesc shy passionate melancholy
+	end
+
+Plot
 	name <Bad Party>
 	desc <We're going to a bad party. Actually, meet a bored arena pilot and go duel.>
 	requires <#A +Tgs +Fpa ~+Gpo>
@@ -128,102 +216,7 @@ Plot
 		Prompt%id%03 <Cavaliers are sexy. I like that.>
 		Prompt%id%04 <I want to make a real difference in the world.>
 	end
-	
 
-Plot
-	name <Generic Battle Encounter>
-	desc <You go out looking for a fight, and you find a fight.>
-	requires <#A +Ten (+Ffi|+F--) E:++>
-	Size 8
-
-	% Element1 is the encounter
-	% Element2 is the enemy NPC
-	Element1 <Grab 6>
-	Element2 <Grab 1>
-	Place2 <1 sd enemy (Enemies)>
-
-	update <if= v%id%01 0 v= %id%01 1 NPCLevel %2% StoryDL>
-
-	sub
-		Metascene 1 2
-		% L1 = Encounter Over Counter
-		% L2 = Initialization Counter
-		MapWidth 30
-		MapHeight 30
-
-		% L1 = Match Over counter
-		% L2 = Initialization Counter
-
-		Start <if= L2 0 L= 2 1 ForceChat %2%>
-		nu1 <if= T1 0   Return   if= V1 0 V= 1 1               StoryNote 1   LoseComp 0 .changes>
-		nu2 <if= T2 0   if= V1 0 V= 1 1   XPV 100  AddRenown 1   Alert 2  Salvage StoryNote 3  WinComp 0 .changes>
-		.changes <+T-- +F-->
-
-		Msg1 <You encountered %name2%, but lost the battle.>
-		Msg2 <You have defeated %name2%'s lance.>
-		Msg3 <You encountered %name2% and defeated \OPR %2% in battle.>
-
-		sub
-			team 1
-			SetEnemy 2
-			ParaX 5
-			ParaY 10
-
-			team 2
-			name <Enemies>
-			SetEnemy 1
-			Deploy <SetSelfFaction &EnemyFac   WMecha 2 StoryDL 100>
-			ParaX 25
-			ParaY 25
-		end
-
-		Persona 2
-		special <UNLISTED>
-		greeting <ifChatNPCKnown else GoFirstMeeting Goto GoAlreadyMet>
-		*GoFirstMeeting <*BattleIntroduction GoThemeExpo>
-		*GoAlreadyMet <*BattleChallenge GoThemeExpo GoThemeExpo>
-		*GoThemeExpo <*Theme_Expo&Enemy>
-	end
-
-Plot
-	name <They're Out There!>
-	desc <Research will reveal an encounter to investigate.>
-	requires <#A +Tgs (+F--|+Fin|+Fmi) S:++>
-	Size 1
-
-	% Element1 is the scene being investigated
-	% Element2 is the pilot who saw the thing
-	% Element3 is an outdoors scene
-	% Element4 is an encounter to place there
-	Element1 <Grab 6>
-	Element2 <Character HasMecha !Near -7 -ENEMY NeverFail>
-	NeverFail2 <Mecha Pilot>
-	Place2 <1 pass ally (Citizens)>
-	Element3 <Scene Outdoors !Near -7>
-	Element4 <Prefab>
-	Place4 <3>
-
-	start <ifNPCDead %2% LoseComp 0 .loss>
-	.loss <+T-- +F-->
-
-	sub
-		Persona 2
-		special <UNLISTED>
-		rumor <%name2% got beaten up in %name3%.>
-		*greeting <*IHaveInformation GoReveal na>
-		GoReveal <NewChat Say 1 StoryNote 2 WinComp %4% .next>
-		.next <+Ten +Ffi>
-		Msg1 <While traveling through %name3% I was attacked by mecha. I don't know who they are, but I was lucky to escape with my life.>
-		Msg2 <%name2% told you that he had been attacked in %name3%.>
-
-		STC MS_CAFE
-		SetID 1
-	end
-	inv
-		STC ENCOUNTER-WANDER
-		name <%name2%'s Tip>
-		EncounterMove 25
-	end
 
 Plot
 	name <Partner Arrange Duel>
