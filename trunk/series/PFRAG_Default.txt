@@ -336,7 +336,7 @@
 	Msg%id%01 <You think you're good enough to face me? Meet me in \Scene %1% and we'll find out.>
 	Msg%id%01_1 <I accept your challenge. We should arrange a place... how about I meet you in \SCENE %1% later on today? You should prepare your mecha first, of course. I'll see you there.>
 	CMsg%id%01_1 <ifNPCSociable Accept>
-	Msg%id%01_2 <Alright. Meet me in \Scene %1%.>
+	Msg%id%01_2 <Alright. Meet me in \Scene %1% .>
 	CMsg%id%01_2 <ifNPCShy Accept>
 	Msg%id%01_3 <A duel? I can agree to that. Go get yourself prepared and meet me in \Scene %1% whenever you're ready.>
 	CMsg%id%01_3 <ifNPCEasygoing Accept>

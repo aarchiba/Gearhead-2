@@ -22,17 +22,19 @@ Plot
 	Element1 <Grab 6>
 	Element2 <Scene Public Meeting !Near -7>
 	Element3 <Prefab>
-	Place3 <2 pass ally>
+	Place3 <1 pass ally>
 	Element4 <Prefab>
-	Place4 <2 SD Ally>
+	Place4 <1 SD Ally>
 	Element5 <Scene Environs !Near -7>
 
 	% P%id%01 = Duel victory counter; 1=Win,-1=Loss
+	% P%id%02 = Loss Timer
+	start <if% P%id%02 0 ifG ComTime P%id%02 SMemo 0 LoseComp 0 .loss>
 	end <ifNPCDead %3% LoseComp 0 .loss>
 	.loss <+T-- +F-->
 
-	.%id1%_%plotid1%_GoWin  <SMemo %id%01  p= %id%01  1>
-	.%id1%_%plotid1%_GoLose <SMemo %id%01  p= %id%01 -1>
+	.%id1%_%plotid1%_GoWin  <SMemo %id%01  p= %id%01  1  FreezeNPC %4%>
+	.%id1%_%plotid1%_GoLose <SMemo %id%01  p= %id%01 -1  FreezeNPC %4%   P= %id%02 ComTime P+ %id%02 86400 P+ %id%02 d7200>
 
 	Msg%id%01 <You should go tell %name3% at %name1% about your duel with %name4%.>
 
@@ -93,7 +95,7 @@ Plot
 		NPC Soldier
 		job <Bodyguard>
 		job_desig <ADVEN>
-		chardesc shy passionate melancholy
+		chardesc shy
 	end
 
 Plot

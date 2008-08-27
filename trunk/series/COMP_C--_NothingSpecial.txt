@@ -69,7 +69,7 @@ Content
 		result6 <NewChat Say 11 AddChat 7 AddChat 8>
 		result7 <NewChat Say 12 StoryNote 13 &SetAmoreNPC %2% SetXXRMotivation XXR_M_Revenge SetXXRAttitude XXR_A_IsJunior WinComp 0 .love>
 		.love <+T-- +F-->
-		result8 <NewChat Say 14 StoryNote 15 &SetPartnerNPC %2% WinComp 0 .join>
+		result8 <NewChat Say 14 StoryNote 15 &SetPartnerNPC %2% &AddPartnerToLance SetXXRMotivation XXR_M_Revenge SetXXRAttitude XXR_A_IsJunior WinComp 0 .join>
 		Msg1 <No, wait, this has to do with %name3%. Just hear me out...>
 		Msg2 <%name3% is responsible for the death of my brother. I plan to track \OPR %3% down and see justice done... but to do that, I'm going to need your help.>
 		Msg3 <%name2% revealed that %name3% killed \PPR %2% brother.>

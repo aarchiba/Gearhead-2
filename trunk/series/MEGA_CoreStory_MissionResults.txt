@@ -145,27 +145,6 @@ Content
 %% Param1: The Mission-Giver
 %% Param2: The love interest
 
-Content
-	name <Love Is Captured>
-	desc <You failed to rescue your love interest, so she's been kidnapped.>
-	requires <*CS_Loss_RescueLoveInterest (+C--|+Cro|+Cps|+Cme|+Clo)>
-
-	start <if= PlotStatus %plotid% %id% else %pop% ifNPCDead %1% SMemo 0 WinComp 0 .%id%_loss>
-	.%id%_loss <+T-- +F-->
-
-	update <if= PlotStatus %plotid% %id% else %pop% if= v%id%01 0 FreezeNPC %2% v= %id%01 1>
-
-	sub
-		Persona 1
-		greeting <if= PlotStatus %plotid% %id% else %pop% ifNPCOK %2% else .%id%_GoJustEnd Goto .%id%_GoKidnapped>
-		*.%id%_GoJustEnd <*MissionWasFailure .%id%_GoEnd &AllyFac &EnemyFac>
-		.%id%_GoEnd <SMemo 0 AddRenown -10 AddCheerful -10  NTBLoseComp 0 .%id%_deadloss>
-		.%id%_deadloss <+Cfa +Bld +T-- +F-->
-		.%id%_GoKidnapped <NewChat Say %id%01 StoryNote %id%02  NTBLoseComp 0 .%id%_kidnapped>
-		.%id%_kidnapped <+Clk +T-- +F-->
-		Msg%id%01 <The mission was a failure. Even worse, we've learned that the enemy has captured someone named %name2%.>
-		Msg%id%02 <After you failed to protect \OPR %2% , %name2% was captured by the enemy.>
-	end
 
 %%
 %% *CS_Win_CaptureEnemyShip
@@ -442,8 +421,8 @@ Content
 		.%id%_GoEnd <CashPrize Reward StoryDL 300  SMemo 0  NTBWinComp 0 .%id%_end>
 		.%id%_GoNotHere <NewChat Say %id%02>
 		.%id%_end <+T-- +F-->
-		Result%id%01 <NewChat Say %id%03 StoryNote %id%04 &SetPartnerNPC %2%  CashPrize Reward StoryDL 300  NTBWinComp 0 .%id%_GetPartner>
-		.%id%_GetPartner <+T-- +F-- +Cme>
+		Result%id%01 <NewChat Say %id%03 StoryNote %id%04 &SetPartnerNPC %2% &AddPartnerToLance SetXXRAttitude XXR_A_IsJunior  CashPrize Reward StoryDL 300  NTBWinComp 0 .%id%_GetPartner>
+		.%id%_GetPartner <+T-- +F-->
 		Result%id%02 <NewChat Say %id%05 SMemo 0           AddSociable -d10   Goto .%id%_GoEnd>
 		Msg%id%01 <Good work out there, \PC . I hear that you met %name2% during the mission. How did you enjoy working together?>
 		Msg%id%02 <Come to \SCENE NPCScene %1% and we can talk there.>

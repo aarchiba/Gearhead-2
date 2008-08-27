@@ -440,7 +440,7 @@ var
 		end;
 
 		{ Finally add the plot rumor. }
-		if ( P^.G = GG_Persona ) and ( P^.Parent <> Nil ) and ( P^.Parent^.G = GG_Plot ) then begin
+		if (( P^.G = GG_Persona ) or ( P^.G = GG_MetaScene )) and ( P^.Parent <> Nil ) and ( P^.Parent^.G = GG_Plot ) then begin
 			Plot := P^.Parent;
 			Level := NAttValue( Plot^.NA , NAG_PlotStatus , NAttValue( P^.NA , NAG_Narrative , NAS_PlotID ) );
 			Rumor := SAttValue( P^.SA , 'RUMOR' + BStr( Level ) );

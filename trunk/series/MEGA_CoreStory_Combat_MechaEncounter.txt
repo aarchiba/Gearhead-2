@@ -1,6 +1,6 @@
 %% *:CS_MechaEncounter Content
 %%
-%%	&Raiders	The enemies are raiders of some sort
+%%	&Raiders	The enemies are raiders aligned with the enemy NPC/Faction
 %%
 %% This is the basic building block of any adventure- a mecha fight scene.
 %% This component will likely alter the context of the core story.
@@ -49,6 +49,69 @@
 %%  *******************
 %%  ***   GENERAL   ***
 %%  *******************
+
+Content
+	name <You Can't Stop Me>
+	size 2
+	desc <Enemy NPC taunts PC, then leaves to complete some mission.>
+	requires <*:CS_MechaEncounter E:++ E:A.--- (+Hwn|+Hln)>
+
+	% E1 is the outdoors scene where this encounter will be placed
+	% E2 is the metascene to be used for this encounter
+	% E3 is the enemy
+	Element3 <Grab 1>
+	Place3 </>
+
+	% This subplot must propgate the effects of its own subplot backwards to
+	% the parent plot. Yahoo.
+	.%id1%_%plotid1%_GoWin  <Trigger0 .%id%_%plotid%_GoWin>
+	.%id1%_%plotid1%_GoLoss <Trigger0 .%id%_%plotid%_GoLoss>
+
+	% SubPlot1 = The enemy mission you have to stop
+	SubPlot1 <*:CS_StopNPCMission&IsEnemyNPC&Secondary 3>
+
+	sub
+		Persona 3
+		special <Unlisted>
+		greeting <if= PlotStatus %plotid% %id% else GoChat EndChat Say %id%01 AddCHat %id%01>
+		GoChat <NewChat SayAnything>
+		result%id%01 <EndCHat Say %id%02 Print %id%03>
+		Msg%id%01 <\PC , so we finally meet. I am %name3%. I understand that you gave my men some trouble back there.>
+		Msg%id%02 <I'd advise you to not meddle in my affairs again. I've got a mission to complete and no insignificant worm like yourself is going to stand in my way. Here's a small taste of what you can expect should we happen to meet again.>
+		Msg%id%03 <%name3% leaves the area.>
+		Prompt%id%01 <No, I gave them a lot of trouble.>
+
+		MetaScene 2 2
+		% L1 = Encounter Over Counter
+		% L2 = Initialization Counter
+		MapWidth 30
+		MapHeight 30
+
+		% Whether you win or lose this fight isn't important. Of course, there are some benefits
+		% to winning... The timer starts from the conclusion of the fight, because I can be just
+		% as cruel to my NPCs as I am to the PC.
+		Start <if= L2 0 L= 2 1   ForceChat %3%  StoryNote 1   SetXXRAttitude %3% XXR_A_IsSenior  AlterContext .next>
+		.next <+H-->
+		nu1 <if= T1 0   Return   if= V1 0 V= 1 1   AddRenown -1  SetPlotStatus %plotid1% %id1%>
+		nu2 <if= T2 0   if= V1 0 V= 1 1   XPV 100  AddRenown 1   SALVAGE   Alert 2   SetPlotStatus %plotid1% %id1%>
+		end <SetEncounterInactive %2% CancelSubPlot %plotid%>
+
+		Msg1 <You fought %name3%'s lancemates, while \SPR %3% left to complete a mission.>
+		Msg2 <You defeated %name3%'s lancemates, but where did \SPR %3% go?>
+
+		sub
+			team 1
+			SetEnemy 2
+			ParaX 5
+			ParaY 5
+
+			team 2
+			SetEnemy 1
+			Deploy <if= PlotStatus %plotid% %id% SetSelfFaction &EnemyFac   WMecha 2 StoryDL 100>
+			ParaX 25
+			ParaY 25
+		end
+	end
 
 Content
 	name <Learn of Enemy Leader>

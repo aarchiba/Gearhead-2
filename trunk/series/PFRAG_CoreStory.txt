@@ -408,7 +408,7 @@
 	CPrompt%id%05 <if# PCFac ChatNPCFac Accept>
 
 	Persona
-	requires <*CORE_BasicJob +Cme ArchAlly>
+	requires <*CORE_BasicJob R:A.jr_ ArchAlly>
 	START <NewChat Say %id%01 AddChat %id%01 AddChat %id%02>
 	Result%id%01 <StoryNote %id%02 Goto %1%>
 	result%id%02 <SMemo 0 Goto %2%>

@@ -1,4 +1,179 @@
 %%
+%% *:CS_DiscoverNPCMission Content
+%%	&EnemyNPC		The NPC in question is the core story enemy NPC
+%%	&DestroyFactory		The mission is to destroy a factory
+%%
+%% An NPC is going on some kind of mission which the PC has to stop. In order
+%% to do this he's going to have to find out what the mission is, then where
+%% it is.
+%%
+%% When the PC has located the encounter, this subplot will make it visible
+%% with SetEncounterActive and conclude with WinSubPlot. Revealing the entrance
+%% in this subplot will typically give the PC 100XP.
+%%
+%% PARAM1: The outdoors scene where the encounter is
+%% PARAM2: The MetaScene being sought
+%% PARAM3: The NPC doing the mission
+%%
+
+Content
+	name <Henchmen know things about stuff>
+	desc <Fight henchmen to gain a clue.>
+	requires <*:CS_DiscoverNPCMission &EnemyNPC>
+	Size 5
+
+	% E1 is the outdoors scene where the encounter is
+	% E2 is the metascene being sought
+	% E3 is the NPC doing the mission
+	% E4 is an environs scene
+	% E5 is a combat encounter against the henchmen
+	% E6 is a clue that can be obtained from the wreckage
+	Element4 <Scene Environs !Near -7>
+	Element5 <Prefab>
+	Place5 <4>
+	Element6 <Prefab>
+	Place6 </>
+
+	% SubPlot1 is the clue identification utility, in case the PC can't do it himself
+	SubPlot1 <*CS_AnalyzeClue_LeadToNPC 1 2 3 6>
+
+	sub
+		MetaScene 5 2
+		rumor%id% <%name3%'s henchmen have been spotted in %name4%.>
+		MapWidth 30
+		MapHeight 30
+
+		% L1 = Encounter Over Counter
+		% L2 = Initialization Counter
+
+		Start <if= L2 0 L= 2 1   L= 1 0   Alert 1>
+		nu1 <if= T1 0   Return   if= V1 0 V= 1 1   AddRenown -1>
+		nu2 <if= T2 0   if= V1 0 V= 1 1   Alert 2  History 3   GiveItem %6%   SetPlotStatus %plotid1% %id1%>
+		end <L= 2 0>
+
+		Msg1 <You face some of %name3%'s lancemates. Maybe you'll be able to find out about \PPR %3% plans from them.>
+		Msg2 <After the battle, you find a diary in the cockpit of one of the defeated mecha.>
+		Msg3 <You obtained a diary from your enemy's henchman.>
+
+		sub
+			team 1
+			SetEnemy 2
+			ParaX 5
+			ParaY 5
+
+			team 2
+			SetEnemy 1
+			Deploy <if= PlotStatus %plotid% %id% SetSelfFaction &EnemyFac   WMecha 2 StoryDL 100>
+			ParaX 25
+			ParaY 25
+		end
+
+	end
+	inv
+		Encounter
+		name <%name3%'s Henchmen>
+		% V1 = Recharge Counter
+		% This encounter will appear once every 3 hours, as long as this is the active subplot.
+		update <if= PlotStatus %plotid% %id% else GoHide ifG ComTime V1 else GoHide SetStat STAT_MetaVisibility 0  Goto GoSetOrders>
+		GoSetOrders <GrabSource GSetNAtt NAG_EpisodeData NAS_Orders 3>
+		use <ifG StatVal STAT_MetaVisibility -1  V= 1 ComTime V+ 1 10800  Print -1 Exit Destination>
+		GoAutoAttack <V= 1 ComTime V+ 1 10800  Alert -2 Exit Destination>
+		GoAvoidAttack <V= 1 ComTime V+ 1 3600  Print -6 AddSociable -1 UpdateProps>
+
+		Treasure 1
+		name <Henchman's Diary>
+		desc <An old fashioned paper diary obtained from the mecha of your enemy's henchman.>
+		use <Alert 1>
+		GoNoUse <Print 2>
+		clue14 <Alert 7>
+		clue29 <Alert 7>
+		clue32 <if= PlotStatus %plotid% %id1% else GoNoUse ifCodeBreaking HardSkillTar &StoryDL else GoFail  Alert 3 Goto GoReveal>
+		clue34 <Alert 7>
+		clue37 <if= PlotStatus %plotid% %id1% else GoNoUse ifInvestigation SkillTar &StoryDL else GoFail     Alert 4 Goto GoReveal>
+		GoReveal <StoryNote 5 SetEncounterActive %2% WinSubPlot %plotid% XPV 100>
+		GoFail <Alert 6>
+		Msg1 <This diary tells all the mundane details of being a henchman. Still, you're certain that there must be a clue in it somewhere.>
+		Msg2 <This diary isn't much use to you anymore.>
+		Msg3 <You discover a secret code used by the henchman to record his missions. Apparently, his next mission is going to take place in %name1%.>
+		Msg4 <You piece together clues from the diary, and conclude that the henchman's next mission is going to take place in %name1%.>
+		Msg5 <You learned from the diary that %name3% is headed for %name1%.>
+		Msg6 <You don't learn anything from the diary.>
+		Msg7 <You don't think you can learn anything from the diary with this skill.>
+	end
+
+%%
+%% *CS_AnalyzeClue_LeadToNPC Content
+%%
+%% The PC has a clue. Maybe he can't figure it out himself. So, he can bring
+%% it to someone who can. Unfortunately, doing so is going to cost both money
+%% and time.
+%%
+%% In this case, analyzing the clue will lead to the whereabouts of a NPC.
+%% When the PC has located the encounter, this subplot will make it visible
+%% with SetEncounterActive and conclude with WinSubPlot.
+%%
+%% PARAM1: The outdoors scene where the encounter is
+%% PARAM2: The MetaScene being sought
+%% PARAM3: The NPC being sought
+%% PARAM4: The clue-bearing item
+%%
+
+Content
+	name <CSI Wannabe>
+	desc <You can give the item to a forensic investigator to identify it.>
+	requires <*CS_AnalyzeClue_LeadToNPC>
+	size 1
+
+	% E1 is the outdoor scene where the encounter is
+	% E2 is the metascene being sought
+	% E3 is the NPC being sought
+	% E4 is the item to be identified
+	% E5 is a public scene for the meeting
+	% E6 is the investigator
+	element5 <Scene Public !Near -7 -Sleazy>
+	element6 <Character Forensic Investigator !Near 5 NeverFail>
+	NeverFail6 <Forensic Investigator>
+	Place6 <5 pass ally>
+
+	%% FAIL CONDITIONS:
+	%% - If E4 is destroyed
+
+	end <ifItemDestroyed %4% LoseSubPlot %plotid%>
+
+	sub
+		Persona 6
+		rumor%id% <%name6% does a bit of freelance forensic work.>
+		% v%id%01 = Clue processing time
+		% v%id%02 = First time counter/Identification Cost
+		greeting <if= PlotStatus %plotid% %id% else GoChat ifChatNPCInPlay else GoNotHere ifItemOK %4% else GoChat ifG v%id%01 0 else GoGreet ifG ComTime v%id%01 else GoNotYet NewChat Say %id%01 AddCHat %id%01>
+		GoNotHere <NewChat Say %id%11>
+		GoNotYet <NewChat Say %id%02>
+		GoChat <NewChat SayAnything>
+		GoGreet <if= v%id%02 0 else GoMakeOffer V= %id%02 Threat StoryDL 3 NewChat Say %id%03 AddChat %id%02>
+		GoMakeOffer <NewChat Say %id%05 AddCHat %id%03 AddCHat %id%04>
+		result%id%01 <NewChat Say %id%06 StoryNote %id%07 SetEncounterActive %2% WinSubPlot %plotid% DeleteItem %4%>
+		result%id%02 <NewChat Say %id%04 AddCHat %id%03 AddCHat %id%04>
+		result%id%03 <NewChat Say %id%08 FreezeItem %4% Cash+ -v%id%02 StoryNote %id%09 V= %id%01 ComTime V+ %id%01 3600 V+ %id%01 d7200 V+ %id%01 d7200>
+		result%id%04 <NewChat Say %id%10>
+		Msg%id%01 <Aha, you're back. I've got the results from your %name4% right here.>
+		Msg%id%02 <I'm still working on that %name4%. Come back later.>
+		Msg%id%03 <Yes, is there something I could help you with?>
+		Msg%id%04 <Hmmm. I'd have to examine it thoroughly... Forensic work isn't cheap, you realize. If you want me to investigate this item it's going to cost $ \VAL V%id%02 .>
+		Msg%id%05 <Hello again. If you want me to investigate your %name4% it's going to cost $ \VAL V%id%02 .>
+		Msg%id%06 <I've learned that someone named %name3% can be found at %name1%. I certainly hope that this information is of use to you.>
+		Msg%id%07 <You learned that %name3% can be found in %name1%.>
+		Msg%id%08 <Great. Come back here in a few hours and I'll tell you what I've learned.>
+		Msg%id%09 <You gave the %name4% to %name6% for investigation.>
+		Msg%id%10 <I'll be waiting.>
+		Msg%id%11 <Sorry, I can't talk right now. If you've got an item for me to examine why don't you bring it to %name5%?>
+		Prompt%id%01 <Well, what can you tell me about it?>
+		Prompt%id%02 <What can you tell me about this %name4%?>
+		Prompt%id%03 <Here you go. [Give item and money]>
+		CPrompt%id%03 <ifG PC$ v%id%02 Accept>
+		Prompt%id%04 <I'll be back later.>
+	end
+
+%%
 %% *:CS_RevealEncounter_Raiders Content
 %%
 %% There are some hostile mecha out there which are aligned with the
@@ -153,6 +328,9 @@ Content
 	update <if= p%id%01 0 p= %id%01 1   FreezeNPC %3%>
 
 	sub
+		Persona 3
+		rumor%id% <%name3% has been spotted in %name1%.>
+
 		MetaScene 4 2
 		% L1 = Encounter Over Counter
 		% L2 = Initialization Counter; resets each time
@@ -162,9 +340,9 @@ Content
 		MapWidth 30
 		MapHeight 30
 
-		% The time limit is two minutes, plus an additional minute for each
+		% The time limit is five minutes, plus an additional minute for each
 		% previous attempt.
-		Start <if= L2 0 L= 2 1   L= 1 0   Monologue %3% 1  Alert 2 L= 4 ComTime L+ 4 120 L+ 4 * 60 L5  L+ 5 1  if= L3 0 L= 3 1 SMemo 3>
+		Start <if= L2 0 L= 2 1   L= 1 0   Monologue %3% 1  Alert 2 L= 4 ComTime L+ 4 300 L+ 4 * 60 L5  L+ 5 1  if= L3 0 L= 3 1 SMemo 3>
 		nu1 <if= T1 0   Return>
 		nu2 <if= T2 0   Return  if= V1 0   V= 1 1   ifG L4 ComTime else GoTooLate Alert 4 StoryNote 5   SetEncounterActive %2% SeekGate %2% WinSubPlot %plotid%>
 		GoTooLate <Alert 6  AddRenown -1>

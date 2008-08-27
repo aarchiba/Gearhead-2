@@ -1,0 +1,126 @@
+%% *:CS_StopNPCMission Content
+%%
+%%	&IsEnemyNPC	The character to be stopped is the enemy NPC
+%%	&Secondary	Is a secondary combat; disallow this tag if making
+%%			major context changes
+%%
+%% Somebody is going on a mission. It's the PC's job to locate that
+%% person and stop them from completing the mission. Most of these
+%% components are timed- if the PC doesn't discover and halt the mission
+%% in time, it counts as a loss.
+%%
+%% This subplot may alter the story context.
+%%
+%% When this subplot concludes, it sets one of the following triggers:
+%%  .%id%_%plotid%_GoWin
+%%  .%id%_%plotid%_GoLoss
+%% It will also hide the encounter with SetEncounterInactive.
+%%
+%%  Param1: The NPC to be stopped
+%%
+
+Content
+	name <Factory Attack>
+	desc <The NPC is going to launch an attack against a factory, but won't participate himself.>
+	requires <*:CS_StopNPCMission ~&IsEnemyNPC (!Ne|!Lo)>
+	Size 8
+
+	% E1 is the NPC launching the attack
+	% E2 is an urban scene for placing the factory
+	% E3 is the metascene for the mission
+	Element2 <Scene Urban !Near -7>
+	Element3 <Prefab>
+	Place3 <2>
+
+	%% FAIL CONDITIONS
+	%% - The DiscoverNPCMission subplot fails
+	%% - The timer runs out before combat is entered
+
+	% p%id%01 = Initialization Counter
+	% p%id%02 = Timer (24 to 30 hours)
+	% p%id%03 = Reinforcements Counter
+
+	% At initialization, set the timer and activate the two subplots.
+	update <if= p%id%01 0 p= %id%01 1 p= %id%02 ComTime P+ %id%02 86400 P+ %id%02 d21600 SetPlotStatus %plotid1% %id1% SetPlotStatus %plotid2% %id2%>
+	HalfHour <if# p%id%02 0 ifG ComTime p%id%02  CancelSubPlot %plotid1%  CancelSubPlot %plotid2%  LoseSubPlot %plotid% Trigger0 .%id%_%plotid%_GoLoss  History %id%01 if= RootSceneID &EpisodeScene else .%id%_GoDistant Alert %id%02>
+	.%id%_GoDistant <Alert %id%03>
+
+	end <ifSubPlotLost %plotid1% CancelSubPlot %plotid2% P= %id%02 -1 Goto HalfHour>
+
+	.%id2%_%plotid2%_GoReinforcements <P= %id%03 1>
+
+	Msg%id%01 <You were too late to prevent %name1% from destroying a factory.>
+	Msg%id%02 <\SCENE &EpisodeScene is rocked as %name1%'s lance destroys its target.>
+	Msg%id%03 <You feel a great disturbance in \SCENE &EpisodeScene .>
+
+	% SubPlot1 is the DiscoverNPCMission task
+	% SubPlot2 is the GainAdvantage_VsNPC task
+	SubPlot1 <*:CS_DiscoverNPCMission&EnemyNPC&DestroyFactory 2 3 1>
+	SubPlot2 <*:GainAdvantageVsMecha&Reinforcements>
+
+	sub
+		MetaScene 3 2
+		% L1 = Initialization Counter
+		% L2 = Victory Counter
+		MapWidth 50
+		MapHeight 50
+
+		CityBlockMap
+		terrain <GROUND>
+
+		% At startup, clear the timer so the mission doesn't timeout while the PC is defending
+		% the factory. That would just be silly.
+		Start <if= L1 0  Alert 1  L= 1 1 P= %id%02 0>
+		nu1 <if= T1 0 Return if= L2 0 L= 2 1 Goto GoLoseMission>
+		nu2 <if= T2 0 if= T4 0 if= L2 0 L= 2 1 Salvage ifG T3 0 else GoLoseMission Goto GoWinMission>
+		GoLoseMission <Alert 2             Trigger0 .%id%_%plotid%_GoLoss  LoseSubPlot %plotid%>
+		GoWinMission  <Alert 3   XPV 100   Trigger0 .%id%_%plotid%_GoWin   WinSubPlot %plotid%>
+
+		end <SetEncounterInactive %3%>
+
+		Msg1 <You arrive just in time to defend the factory against %name1%'s forces. Fortunately, %name1% doesn't appear to be present.>
+		Msg2 <You did not manage to save the factory.>
+		Msg3 <You defended the factory against %name1%'s forces.>
+
+		sub
+			Team 1
+			SetEnemy 2
+			SetAlly 3 4
+			ParaX 7
+			ParaY 7
+
+			Team 2
+			SetEnemy 1 3 4
+			Deploy <if= PlotStatus %plotid% %id%  SetSelfFaction &EnemyFac WMecha 2 ArenaRenown 200>
+			ParaX 45
+			ParaY 45
+
+			Team 3
+			SetEnemy 2
+			SetAlly 1 4
+
+			team 4
+			setally 1 3
+			setenemy 2
+			Deploy <if= PlotStatus %plotid% %id%  if# P%id%03 0   WMecha 4 StoryDL 80>
+			ParaX 25
+			ParaY 7
+
+
+			rect
+			name <The Factory>
+			desig <NW>
+			sub
+				SuperProp
+				requires <*Fortress>
+				SetTeam 3
+			end
+		end
+
+	end
+	inv
+		stc CORE-ACTIVATABLE
+		name <%name1%'s Goal>
+	end
+
+

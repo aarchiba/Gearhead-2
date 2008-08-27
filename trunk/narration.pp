@@ -62,7 +62,7 @@ Const
 
 	NAG_ElementID = -9;	{ Used to store ID numbers for plot/story elements. }
 
-	Num_Plot_Elements = 20;	{ Maximum number of plot elements }
+	Num_Plot_Elements = 30;	{ Maximum number of plot elements }
 
 	NAG_QuestInfo = -12;	{ These NAGs deal with set quests; see the adventure compiler }
 				{ in navigate.pp for more info. }

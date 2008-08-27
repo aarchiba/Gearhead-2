@@ -1699,26 +1699,32 @@ begin
 				ExtractWord( desc );
 				N := ExtractValue( desc );
 				desc := SAttValue( Slot^.SA , 'ELEMENT' + BStr( N ) );
-				{ Only copy over the first character of the element description, }
-				{ since that's all we need, and also because copying a PREFAB tag }
-				{ may result in story elements being unnessecarily deleted. }
-				SetSAtt( Plot^.SA , 'ELEMENT' + BStr( T ) + ' <' + desc[1] + '>' );
-				SetNAtt( Plot^.NA , NAG_ElementID , T , ElementID( Slot , N ) );
 
-				{ If this gear is a character, better see whether or not }
-				{ it is already involved in a plot. }
-				if ( ElementID( Plot , T ) <> 0 ) and ( UpCase( Desc[1] ) = 'C' ) then begin
-					{ Clear the Plot's stat for now, to keep it from }
-					{ being returned by SeekPlotElement. }
-					N := ElementID( Plot , T );
-					SetNAtt( Plot^.NA , NAG_ElementID , T , 0 );
+				if Desc = '' then begin
+					DialogMsg( 'ERROR: ' + GearName( Plot ) + ' tried to grab empty element ' + BStr( N ) + ' from ' + GearName( Slot ) );
+					EverythingOK := False;
+				end else begin
+					{ Only copy over the first character of the element description, }
+					{ since that's all we need, and also because copying a PREFAB tag }
+					{ may result in story elements being unnessecarily deleted. }
+					SetSAtt( Plot^.SA , 'ELEMENT' + BStr( T ) + ' <' + desc[1] + '>' );
+					SetNAtt( Plot^.NA , NAG_ElementID , T , ElementID( Slot , N ) );
 
-					P2 := FindPersonaPlot( FindRoot( Slot ) , N );
-					if P2 <> Nil then begin
-						EverythingOK := False;
+					{ If this gear is a character, better see whether or not }
+					{ it is already involved in a plot. }
+					if ( ElementID( Plot , T ) <> 0 ) and ( UpCase( Desc[1] ) = 'C' ) then begin
+						{ Clear the Plot's stat for now, to keep it from }
+						{ being returned by SeekPlotElement. }
+						N := ElementID( Plot , T );
+						SetNAtt( Plot^.NA , NAG_ElementID , T , 0 );
+
+						P2 := FindPersonaPlot( FindRoot( Slot ) , N );
+						if P2 <> Nil then begin
+							EverythingOK := False;
+						end;
+
+						SetNAtt( Plot^.NA , NAG_ElementID , T , N );
 					end;
-
-					SetNAtt( Plot^.NA , NAG_ElementID , T , N );
 				end;
 			end;
 		end;

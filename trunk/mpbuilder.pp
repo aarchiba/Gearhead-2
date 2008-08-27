@@ -514,6 +514,10 @@ begin
 		{ No main scene- delink, move, and relabel this one. }
 		DelinkGear( SubPlot^.SubCom , MS );
 		InsertSubCom( MainPlot , MS );
+
+		{ Store the PlotID of this layer, since it's the first to provide details for this metascene. }
+		SetNAtt( MS^.NA , NAG_Narrative , NAS_PlotID , NAttValue( SubPlot^.NA , NAG_Narrative , NAS_PlotID ) );
+
 		MS^.S := MPIndex;
 	end else begin
 		{ Combine the two scenes together. }

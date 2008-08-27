@@ -58,9 +58,9 @@ Content
 		.%id%_UnknownEnemy <+Pun>
 		result%id%01 <NewChat Say %id%02    AddCHat %id%03 AddChat %id%04 AddChat %id%05    if= V%id%01 0 V= %id%01 1 AddCheerful d6>
 		result%id%02 <NewChat Say %id%03    AddCHat %id%03 AddChat %id%04 AddChat %id%05    if= V%id%01 0 V= %id%01 1 AddCheerful -d6>
-		result%id%03 <NewChat Say %id%04   SMemo %id%05  History %id%06   &SetPartnerNPC %1% &SetTargetNPC %3% &SetAllyFac %2% SetPCFac %2% XPV 150 WinComp %5% .%id%_next>
-		result%id%04 <NewChat Say %id%07   StoryNote %id%05   &SetPartnerNPC %1% &SetTargetNPC %3%  WinComp %5% .%id%_next>
-		.%id%_next <+Tgt +Fmi +Cme>
+		result%id%03 <NewChat Say %id%04   SMemo %id%05  History %id%06   &SetPartnerNPC %1% &AddPartnerToLance SetXXRMotivation XXR_M_Professional SetXXRAttitude XXR_A_IsJunior  &SetTargetNPC %3% &SetAllyFac %2% SetPCFac %2% XPV 150 WinComp %5% .%id%_next>
+		result%id%04 <NewChat Say %id%07   StoryNote %id%05   &SetPartnerNPC %1% &AddPartnerToLance SetXXRAttitude XXR_A_IsJunior &SetTargetNPC %3%  WinComp %5% .%id%_next>
+		.%id%_next <+Tgt +Fmi>
 		result%id%05 <NewChat Say %id%08 AddChat %id%06 AddChat %id%07>
 		result%id%06 <EndChat Say %id%09 SMemo 0 History %id%10 FreezeNPC %1% LoseComp 0 .%id%_loss>
 		.%id%_loss <+T-- +F-->
@@ -130,61 +130,6 @@ Content
 		Prompt%id%05 <I hope \FACTION PCFac won't be attacked next.>
 		CPrompt%id%05 <if# PCFac 0 Accept>
 		Prompt%id%06 <Alright, I'll do it.>
-	end
-
-Content
-	name <Witless Protection>
-	desc <Your friend announces that he's going into hiding because of a loan shark.>
-	requires <*CS_Conversation (+P--|+Pun) E:-- 1:Friend -1:Enemy ~C:POLIC ~C:THIEF ~1:THIEF ~+Gmo>
-
-	Size 1
-
-	% Element1 is the NPC to meet
-	% Element2 is the loan shark looking for him
-	element2 <Prefab>
-	place2 </>
-
-	start <if= PlotStatus %plotid% %id% else %pop% ifNPCDead %1% LoseComp 0 .%id%_loss>
-	.%id%_loss <+T-- +F-->
-
-	sub
-		Persona 1
-		special <UNLISTED>
-		% V%id%01 = Reputation Counter
-		greeting <if= PlotStatus %plotid% %id% else %pop% Goto .%id%_GoGreet>
-		*.%id%_GoGreet <*HowAreYou .%id%_GoPose>
-		*.%id%_GoPose <*IHaveSomethingToTellYou .%id%_GoMessage>
-		.%id%_GoMessage <NewChat Say %id%01 AddChat %id%01 AddChat %id%02 AddChat %id%03>
-		.%id%_GoProtect <History %id%02 SMemo %id%07  &SetEnemyNPC %2%  &SetTargetNPC %1%  WinComp 0 .%id%_changes  FreezeNPC %1%>
-		.%id%_changes <+Tpt +F-->
-		.%id%_GoHunt <History %id%02 SMemo %id%09  &SetTargetNPC %2%  WinComp 0 .%id%_changes2  FreezeNPC %1%>
-		.%id%_changes2 <+Tht +Far>
-		result%id%01 <NewChat Say %id%03 AddChat %id%04 AddChat %id%05>
-		result%id%02 <NewChat Say %id%04 AddChat %id%04 AddChat %id%05   if= V%id%01 0 V= %id%01 1   AddCheerful  d8>
-		result%id%03 <NewChat Say %id%05 AddChat %id%04 AddChat %id%05   if= V%id%01 0 V= %id%01 1   AddCheerful -d8>
-		result%id%04 <EndChat Say %id%06 Print %id%10   AddHeroic 1   Goto .%id%_GoProtect>
-		result%id%05 <EndChat Say %id%08 Print %id%10                 Goto .%id%_GoHunt>
-		Msg%id%01 <I'm in a lot of trouble. A while back I really needed money, so I did some things I probably shouldn't have. Now %name2% is calling back my debt and I can't afford to pay.>
-		Msg%id%02 <Your friend %name1% revealed that the crime lord %name2% wants \OPR %1% dead.>
-		Msg%id%03 <Yeah. I didn't realize how serious things were getting until it was too late. Look, \PC , I need to get out of town for a while. I'm going into hiding until %name2% forgets about me.>
-		Msg%id%04 <I can't ask you to do that. %name2% won't be satisfied until I'm dead. The only thing I can do is to go into hiding.>
-		Msg%id%05 <I know, I know, but I think I can learn that lesson without having to die for it. Look, \PC , I need to get out of town for a while. I'm going into hiding until %name2% forgets about me.>
-		Msg%id%06 <It's too dangerous. Don't try to find me... I'll be alright on my own.>
-		Msg%id%07 <%name1% revealed that the crime lord %name2% wants \OPR %1% dead. You promised to protect \OPR %1% .>
-		Msg%id%08 <I hope you can do that... and I hope that we can see each other again, someday...>
-		Msg%id%09 <%name1% revealed that the crime lord %name2% wants \OPR %1% dead. You promised to defeat %name2% before \SPR %1% can harm %name1% .>
-		Msg%id%10 <%name1% leaves the building.>
-		Prompt%id%01 <Isn't %name2% the crime lord of \SCENE RootSceneID ?>
-		Prompt%id%02 <Don't worry. I can protect you.>
-		Prompt%id%03 <That was a stupid thing to do.>
-		Prompt%id%04 <Please, let me be your bodyguard.>
-		Prompt%id%05 <I'll find %name2% before \SPR %2% can hurt you.>
-	end
-	inv
-		NPC Thief
-		chardesc Criminal Villainous
-		job <Crime Lord>
-		Combatant
 	end
 
 
@@ -342,205 +287,6 @@ Plot
 	end
 
 
-Plot
-	name <Best Buds Forever?>
-	desc <The PC and his friend turn out to be enemies. Bummer.>
-	requires <*CS_Conversation +P-- E:-- 1:Friend 1:Enemy P:++ Common Common>
-	Size 1
-
-	% Element1 is the NPC to meet
-
-	start <if= PlotStatus %plotid% %id% else %pop% ifNPCDead %1% LoseComp 0 .%id%_loss>
-	.%id%_loss <+T-- +F-->
-
-	sub
-		Persona 1
-		special <UNLISTED NOESCAPE>
-		greeting <if= PlotStatus %plotid% %id% else %pop% Goto .%id%_GoGreet>
-		*.%id%_GoGreet <*HowAreYou .%id%_GoCheckSituation>
-		% At the beginning of the conversation, make sure that things are still as we need them
-		.%id%_GoCheckSituation <&SetAllyFac PCFac iffactionenemy ChatNPCFac else .%id%_GoAbort if# PCFac 0 else .%id%_GoAbort Goto .%id%_GoPose>
-		.%id%_GoAbort <NewChat Say %id%01 SMemo 0 WinComp 0 .%id%_abort>
-		.%id%_abort <+T-- +F-->
-		.%id%_GoPose <EndChat Say %id%02 AddChat %id%01 AddChat %id%02 AddChat %id%03>
-		.%id%_next <+Pme +T-- +F-->
-		.%id%_GoPhase2 <EndChat Say %id%04 AddChat %id%04 AddChat %id%05>
-		Result%id%01 <AddEasygoing d10    Goto .%id%_GoPhase2>
-		Result%id%02 <AddCheerful d10     Goto .%id%_GoPhase2>
-		Result%id%03 <AddEasygoing -d10   Goto .%id%_GoPhase2>
-		result%id%04 <EndChat Say %id%05  &SetEnemyNPC %1% &SetEnemyFac ChatNPCFac FreezeNPC %1% StoryNote %id%03 WinComp 0 .%id%_next>
-		result%id%05 <AddEasygoing -d6    Goto result%id%04>
-		Msg%id%01 <We've had some differences in the past, but I'd like to wish you the best of luck in your adventuring career.>
-		Msg%id%02 <Now that you're a member of \FACTION PCFac , technically we're going to be enemies. I can't say I'm looking forward to facing you in combat.>
-		Msg%id%03 <Because you joined \FACTION PCFac , your friend %name1% became an enemy.>
-		Msg%id%04 <I don't know why you decided to join \FACTION PCFac , anyhow... It's going to lead to nothing but trouble.>
-		Msg%id%05 <I wish you the best of luck, \PC , and hope that we are never forced to fight one another...>
-		Prompt%id%01 <I guess I didn't think of that.>
-		Prompt%id%01_1 <These things happen.>
-		Prompt%id%02 <Don't worry, we'll still be friends.>
-		Prompt%id%02_1 <I won't let it come between us.>
-		Prompt%id%03 <This'll give us a chance to finally settle our rivalry.>
-		Prompt%id%03_1 <At last we'll be able to settle our rivalry.>
-		Prompt%id%04 <You just say that because you're in \FACTION ChatNPCFac .>
-		Prompt%id%04_1 <Did \FACTION ChatNPCFac tell you to say that?>
-		Prompt%id%05 <I have to do what I have to do.>
-		Prompt%id%05_1 <This is my destiny. You wouldn't understand.>
-	end
-
-Content
-	name <Surprise Announcement>
-	desc <Your friend announces that he's joined Aegis Overlord.>
-	requires <*CS_Conversation +P-- E:-- (L:MAQUI|L:FCOMS) 1:Friend -1:Enemy ~P:MILIT ~+Gpe -P:AEGIS>
-
-	Size 1
-
-	% Element1 is the NPC to meet
-	% Element2 is Aegis Overlord
-	element2 <Faction Aegis>
-
-	start <if= PlotStatus %plotid% %id% else %pop% ifNPCDead %1% LoseComp 0 .%id%_loss>
-	.%id%_loss <+T-- +F-->
-
-	% P%id%01 = Initialization Counter
-	update <if= PlotStatus %plotid% %id% else %pop% if= P%id%01 0 P= %id%01 1 SetNPCFaction %1% %2%>
-
-	sub
-		Persona 1
-		special <UNLISTED>
-		greeting <if= PlotStatus %plotid% %id% else %pop% Goto .%id%_GoGreet>
-		*.%id%_GoGreet <*HowAreYou .%id%_GoPose>
-		*.%id%_GoPose <*IHaveSomethingToTellYou .%id%_GoMessage>
-		.%id%_GoMessage <NewChat Say %id%01 AddChat %id%01 AddChat %id%02 AddChat %id%03 Goto .%id%_GoWin>
-
-		.%id%_GoWin <StoryNote %id%08  &SetEnemyNPC %1% &SetEnemyFac %2%  WinComp 0 .%id%_changes  FreezeNPC %1% NPCLevel %1% StoryDL>
-		.%id%_changes <+T-- +Pme>
-
-		result%id%01 <NewChat  AddSociable d10   Say %id%02   AddChat %id%04 AddChat %id%05 AddChat %id%06>
-		result%id%02 <NewChat  AddReact -d6      Say %id%03   AddChat %id%04 AddChat %id%05 AddChat %id%06>
-		result%id%03 <NewChat                    Say %id%04   AddChat %id%04 AddChat %id%05 AddChat %id%06>
-		result%id%04 <EndChat Say %id%05   AddCheerful -d6>
-		result%id%05 <EndChat Say %id%06   AddReact d8>
-		result%id%06 <EndChat Say %id%07   AddHeroic 1>
-
-		Msg%id%01 <As you know, my family is originally from Luna... Well, I've decided to return there and sign up with the Aegis Mecha Corps. I know what you must think, but you must realize only Aegis can guide Luna into the future.>
-		Msg%id%01_1 <>
-		CMsg%id%01_1 <ifNPCSociable Accept>
-		Msg%id%01_2 <I'm going back to Luna. That's where my family is from. It's for the best... I'm going to join the military.>
-		CMsg%id%01_2 <ifNPCShy Accept>
-		Msg%id%01_3 <>
-		CMsg%id%01_3 <ifNPCCheerful Accept>
-		Msg%id%01_4 <>
-		CMsg%id%01_4 <ifNPCMelancholy Accept>
-		Msg%id%01_5 <>
-		CMsg%id%01_5 <ifNPCEasygoing Accept>
-		Msg%id%01_6 <>
-		CMsg%id%01_6 <ifNPCPassionate Accept>
-		Msg%id%01_7 <My family is originally from Luna. My homeworld needs me... There's a lot of problems there now. Strong leadership is needed to unite the people and rebuild the colonies. That's why I've decided to join the Aegis Mecha Corps.>
-		CMsg%id%01_7 <ifNPCHeroic Accept>
-		Msg%id%01_8 <I think I told you once that my family's from Luna... Well, I've decided to go back there and join Aegis Overlord. Soon Luna will be the greatest superpower in the solar system, and I want to be a part of that.>
-		CMsg%id%01_8 <ifNPCVillainous Accept>
-
-		Msg%id%02 <I have to. It is my destiny, as one of Lunar blood. The Unification War threatened to destroy society. Only Aegis can unite Luna and restore civilization to the birthworld.>
-		Msg%id%02_1 <This isn't about me. It's about Luna, my fellow citizens there... Aegis is the only power with enough strength to unify and protect the colonies. That's why I have to join them.>
-		CMsg%id%02_1 <ifNPCSociable Accept>
-		Msg%id%02_2 <Everybody dies sometime.>
-		CMsg%id%02_2 <ifNPCShy Accept>
-		Msg%id%02_3 <Don't be so morbid... I have no intention of dying. Why can't you be happy for me?>
-		CMsg%id%02_3 <ifNPCCheerful Accept>
-		Msg%id%02_4 <Death holds no fear for me... What is important isn't the length of one's life but what one accomplishes in it.>
-		CMsg%id%02_4 <ifNPCMelancholy Accept>
-		Msg%id%02_5 <And if I stayed here I could be killed accidentally crossing the street. I'm not going to worry about it.>
-		CMsg%id%02_5 <ifNPCEasygoing Accept>
-		Msg%id%02_6 <To sit idly by and do nothing would be worse than death. I choose to do something important with my life, and Aegis is the best means to that goal.>
-		CMsg%id%02_6 <ifNPCPassionate Accept>
-		Msg%id%02_7 <My life means nothing next to the lives of my fellow Lunar citizens. Aegis is the only faction with enough power to unite and protect Luna. Although I don't agree with everything they've done, joining them is the best thing I can do.>
-		CMsg%id%02_7 <ifNPCHeroic Accept>
-		Msg%id%02_8 <In a few years it'll be dangerous to not be a part of Luna. Aegis Overlord is quickly gaining power. Soon, not even Earth will be able to stand against it.>
-		CMsg%id%02_8 <ifNPCVillainous Accept>
-
-		Msg%id%03 <You don't understand what really happens on Luna, all you know are the lies spread by the media. Aegis Overlord is the true inheritor of Pax Europa. They are the only force powerful enough to unite and protect Luna.>
-		Msg%id%03_1 <I've weighed all the facts and decided that Aegis is the only power with the strength to unite and defend Luna from all of its enemies, both external and internal. You should be more supportive of your friends.>
-		CMsg%id%03_1 <ifNPCSociable Accept>
-		Msg%id%03_2 <You obviously don't know anything about what really happens on Luna. Don't believe the Alliance propaganda.>
-		CMsg%id%03_2 <ifNPCShy Accept>
-		Msg%id%03_3 <They're not as bad as the Alliance propaganda makes out. Really, if you knew what was really happening on Luna right now you'd agree with me.>
-		CMsg%id%03_3 <ifNPCCheerful Accept>
-		Msg%id%03_4 <They are... but on Luna, they're the only ones with the power to unite and protect all the colonies. In order to serve my homeworld I have no choice but to join Aegis.>
-		CMsg%id%03_4 <ifNPCMelancholy Accept>
-		Msg%id%03_5 <It's easy to criticize things when you don't know all the facts. Everything Aegis has done has been to protect its citizens.>
-		CMsg%id%03_5 <ifNPCEasygoing Accept>
-		Msg%id%03_6 <All governments sometimes have to do harsh things to protect their citizens. Name me one country that hasn't... Aegis is no different than the L5 Alliance, and if truth be told is a whole lot better than the Federation of Earth.>
-		CMsg%id%03_6 <ifNPCPassionate Accept>
-		Msg%id%03_7 <There have been some... mistakes. I admit that. But in the end, Aegis is the only force capable of uniting and protecting Luna. Joining them is the right thing to do.>
-		CMsg%id%03_7 <ifNPCHeroic Accept>
-		Msg%id%03_8 <Oh, please. Morality is a lie designed to protect the weak. In the real world it's the powerful who survive. It's better to live than to die, isn't it? I don't intend to throw my future away.>
-		CMsg%id%03_8 <ifNPCVillainous Accept>
-
-		Msg%id%04 <I'm very excited about it! Aegis has done so many wonderful things for Luna... They ended the Unification War, established peace, and even made the interdome trains run on time.>
-		Msg%id%04_1 <>
-		CMsg%id%04_1 <ifNPCSociable Accept>
-		Msg%id%04_2 <>
-		CMsg%id%04_2 <ifNPCShy Accept>
-		Msg%id%04_3 <>
-		CMsg%id%04_3 <ifNPCCheerful Accept>
-		Msg%id%04_4 <>
-		CMsg%id%04_4 <ifNPCMelancholy Accept>
-		Msg%id%04_5 <>
-		CMsg%id%04_5 <ifNPCEasygoing Accept>
-		Msg%id%04_6 <>
-		CMsg%id%04_6 <ifNPCPassionate Accept>
-		Msg%id%04_7 <>
-		CMsg%id%04_7 <ifNPCHeroic Accept>
-		Msg%id%04_8 <>
-		CMsg%id%04_8 <ifNPCVillainous Accept>
-
-		Msg%id%05 <I did think of that... My friends in the colonies mean a lot to me, but in the case of war I must stand by Luna. Goodbye \PC .>
-		Msg%id%05_1 <>
-		CMsg%id%05_1 <ifNPCSociable Accept>
-		Msg%id%05_2 <>
-		CMsg%id%05_2 <ifNPCShy Accept>
-		Msg%id%05_3 <>
-		CMsg%id%05_3 <ifNPCCheerful Accept>
-		Msg%id%05_4 <>
-		CMsg%id%05_4 <ifNPCMelancholy Accept>
-		Msg%id%05_5 <>
-		CMsg%id%05_5 <ifNPCEasygoing Accept>
-		Msg%id%05_6 <>
-		CMsg%id%05_6 <ifNPCPassionate Accept>
-		Msg%id%05_7 <>
-		CMsg%id%05_7 <ifNPCHeroic Accept>
-		Msg%id%05_8 <>
-		CMsg%id%05_8 <ifNPCVillainous Accept>
-
-		Msg%id%06 <And I wish you luck, as well... I'm sure that we'll meet again someday.>
-		Msg%id%06_1 <>
-		CMsg%id%06_1 <ifNPCSociable Accept>
-		Msg%id%06_2 <>
-		CMsg%id%06_2 <ifNPCShy Accept>
-		Msg%id%06_3 <>
-		CMsg%id%06_3 <ifNPCCheerful Accept>
-		Msg%id%06_4 <>
-		CMsg%id%06_4 <ifNPCMelancholy Accept>
-		Msg%id%06_5 <>
-		CMsg%id%06_5 <ifNPCEasygoing Accept>
-		Msg%id%06_6 <>
-		CMsg%id%06_6 <ifNPCPassionate Accept>
-		Msg%id%06_7 <>
-		CMsg%id%06_7 <ifNPCHeroic Accept>
-		Msg%id%06_8 <>
-		CMsg%id%06_8 <ifNPCVillainous Accept>
-		Msg%id%07 <I can see that it was useless to even talk with you. Goodbye, \PC ... If ever we meet again it will likely be in battle.>
-		Msg%id%07_1 <You just don't understand... Goodbye, \PC .>
-		Msg%id%08 <Your friend \ELEMENT 2 revealed that \SPR E2 joined Aegis Overlord.>
-		Prompt%id%01 <It's too dangerous! You can't do this!>
-		Prompt%id%02 <Aegis are despotic thugs. How can you serve them?>
-		Prompt%id%03 <Well... That's a surprise...>
-		Prompt%id%04 <You realize this means we may end up enemies.>
-		Prompt%id%05 <I wish you the best of luck, old friend.>
-		Prompt%id%06 <Never forget Tycho Madang.>
-		CPrompt%id%06 <ifG PCKnowledge 15 Accept>
-
-	end
 
 %%  *****************************
 %%  ***   +Pme  Meet  Enemy   ***
@@ -866,8 +612,8 @@ Content
 		*.%id%_GoNotHere <*NotByPhone>
 		*.%id%_GoGreet <*HowAreYou .%id%_GoInform>
 		.%id%_GoInform <NewChat Say %id%01 AddChat %id%01 AddChat %id%02>
-		.%id%_GoJoin <&SetPartnerNPC %1% WinComp 0 .%id%_next StoryNote %id%02 Goto .%id%_GoJoinSpeech>
-		.%id%_next <+T-- +F-- +Cme>
+		.%id%_GoJoin <&SetPartnerNPC %1% &AddPartnerToLance SetXXRAttitude XXR_A_IsJunior   WinComp 0 .%id%_next StoryNote %id%02 Goto .%id%_GoJoinSpeech>
+		.%id%_next <+T-- +F-->
 		*.%id%_GoJoinSpeech <*WelcomeToLance>
 		result%id%01 <Goto .%id%_GoJoin>
 		result%id%02 <NewChat Say %id%03 AddChat %id%03 AddChat %id%04>
@@ -892,117 +638,78 @@ Content
 		Prompt%id%07 <I just don't want you to get hurt.>
 	end
 
-%%  ***********************************
-%%  ***   +Cme  Mentoring Partner   ***
-%%  ***********************************
-
-Content
-	name <Don't you ever relax?>
-	desc <The lancemate will ask the PC if he ever relaxes. The PC will have a chance to pick up a love interest.>
-	requires <*CS_Conversation +Cme A:-- 1:FRIEND ~+Glo>
-	Size 1
-
-	% E1 is the friend
-	% E2 is the lancemate
-	% E3 is a nearby public scene
-	% E4 is a mutual acquantance, of an opposite gender
-	Element2 <Grab 4>
-	Element3 <Scene Public !Near -7>
-	Element4 <NewNPC -3 -7 PCFriend>
-	Place4 </>
-
-	% P%id%01 = Initialization Counter
-	% P%id%02 = Lancemate Conversation Counter
-	update <if= PlotStatus %plotid% %id% else %pop% if= v%id%01 0 V= %id%01 1 ConGen %4% NPCStat= %4% 8 16 IsoAge %4%>
-
-	start <if= PlotStatus %plotid% %id% else %pop% ifNPCDead %1% LoseComp 0 .%id%_loss>
-	.%id%_loss <+T-- +F-->
-
-	5min <if= PlotStatus %plotid% %id% else %pop% if= V%id%02 0 if= RootSceneID &EpisodeScene if= d5 1 ifNPCOK %2% ForceChat %2%>
-
-	sub
-		Persona 1
-		greeting <if= PlotStatus %plotid% %id% else %pop%  Goto .%id%_GoGreet>
-		*.%id%_GoGreet <*HowAreYou .%id%_GoReveal>
-		.%id%_GoReveal <NewChat Say %id%01 AddChat %id%01 AddChat %id%02>
-		.%id%_GoQuit <ifNPCOK %2% else .%id%_GoNoPartner Monologue %2% %id%07 Monologue %2% %id%08 NewChat Say %id%09 StoryNote %id%10 &RemovePartnerNPC PCAlly %2% FreezeNPC %2% WinComp 0 .%id%_IQuit>
-		.%id%_GoNoPartner <NewChat Say %id%11 StoryNote %id%12 AddRenown -10 WinComp 0 .%id%_IQuit>
-		.%id%_IQuit <+T-- +F-- +Cfa>
-		result%id%01 <NewChat Say %id%02 AddChat %id%03 AddChat %id%04 AddChat %id%05>
-		result%id%02 <NewChat Say %id%03 AddChat %id%04 AddChat %id%06 AddChat %id%07 AddChat %id%08>
-		result%id%03 <NewChat Say %id%04 SMemo %id%05 History %id%06 &SetAmoreNPC %4% WinComp %3% .%id%_Meeting>
-		.%id%_Meeting <+Clo +Tga +F-->
-		result%id%04 <Goto .%id%_GoQuit>
-		result%id%05 <NewChat Say %id%13 AddChat %id%06 AddCHat %id%07 AddCHat %id%08>
-		result%id%06 <Monologue %2% %id%14 Monologue %2% %id%15 Monologue %2% %id%16 NewChat Say %id%17 AddChat %id%09 StoryNote %id%18 &RemovePartnerNPC PCAlly %2% &SetAmoreNPC %2% FreezeNPC %2% WinComp 0 .%id%_Meeting>
-		result%id%07 <NewChat Say %id%19 AddChat %id%10 AddChat %id%11>
-		result%id%08 <Goto .%id%_GoQuit>
-		result%id%09 <NewChat Say %id%20>
-		result%id%10 <NewChat Say %id%21 StoryNote %id%22 &SetAmoreNPC %1% AddReact d20  WinComp 0 .%id%_NoDate>
-		.%id%_NoDate <+Clo +T-- +F-->
-		result%id%11 <NewChat Say %id%23 SMemo %id%05 History %id%06 &SetAmoreNPC %4% WinComp %3% .%id%_Meeting>
-		Msg%id%01 <You'll never guess who I was talking to the other day- %name4%. Of course \SPR %4% asked how you were doing. I found out that \SPR %4% 's not seeing anyone, in case you're still crushing on \OPR %4% .>
-		Msg%id%02 <I certainly did. What do you think, are you going to try to hook up with \OPR %4% again?>
-		Msg%id%03 <It certainly seems like \SPR %4% 's still interested in you, so... what changed? Have you fallen in love with someone else?>
-		Msg%id%04 <That's the spirit! I think you might be able to catch \OPR %4% at %name3%; get over there and make a fool of yourself!>
-		Msg%id%05 <%name1% revealed that your old flame %name4% might be at %name3%.>
-		Msg%id%06 <%name1% revealed that your old flame %name4% was at %name3%.>
-		Msg%id%07 <That's it! That's the final straw!>
-		Msg%id%08 <\PC , you might be a great cavalier but you're a stump of a teacher. I've decided to quit this game while I still have a life left to be enjoyed.>
-		Msg%id%09 <Well, that was dramatic...>
-		Msg%id%10 <%name2% quit your lance in order to better enjoy life.>
-		Msg%id%11 <I hope you can find someone to be with, someday. It can't be good being alone all the time.>
-		Msg%id%12 <%name1% commented on what a lonely life you must have without %name2%.>
-		Msg%id%13 <Really? Well, go on, tell me... Who is it?>
-		Msg%id%14 <WHAT!?!?!?>
-		Msg%id%15 <This is sudden... I don't know how I feel about this... How long have you felt that way?>
-		Msg%id%16 <I have to go away and sort out my feelings... Goodbye \PC .>
-		Msg%id%17 <Well, that was dramatic... What are you going to do now?>
-		Msg%id%18 <You revealed your romantic feelings for %name2% , who promptly ran off.>
-		Msg%id%19 <Me? Do you really mean that?>
-		Msg%id%20 <You do that... and when you find \OPR %2% , don't let \OPR %2% get away like %name4% did.>
-		Msg%id%21 <That's so cool! Maybe we can have a date, someday. I'll let you know when I'm free.>
-		Msg%id%22 <You revealed your romantic feelings for %name1%.>
-		Msg%id%23 <That's a relief. Anyhow, you should be able to catch %name4% at %name3%. I'm sure \SPR %4% 'll be happy to see you.>
-		Prompt%id%01 <Wow. Did you give \OPR %4% my thrunet pass?>
-		Prompt%id%02 <That was a long time ago. Things have changed.>
-		Prompt%id%03 <I'm going to try.>
-		Prompt%id%04 <No. I'm better off on my own.>
-		Prompt%id%05 <No. I've fallen in love with someone else.>
-		Prompt%id%06 <I think I love %name2%.>
-		CPrompt%id%06 <ifNPCSexy %2% ifNPCOK %2% Accept>
-		Prompt%id%07 <Honestly, you're the one I've always wanted.>
-		CPrompt%id%07 <ifChatNPCSexy Accept>
-		Prompt%id%08 <I'm in love with myself. Only myself.>
-		Prompt%id%09 <I'll go look for \OPR %2% , I guess.>
-		Prompt%id%10 <I really mean that.>
-		Prompt%id%11 <Nah, I'm just messing with you.>
-
-		Persona 2
-		% V1 = Have completed talk.
-		greeting <if= PlotStatus %plotid% %id% else %pop% P= %id%02 1 if= V1 0 else .%id%_GoChat Goto .%id%_GoAskPermission>
-		.%id%_GoChat <NewChat SayAnything>
-		*.%id%_GoAskPermission <*LancemateWantsToTalk .%id%_GoNow .%id%_GoLater>
-		.%id%_GoNow <NewChat Say %id%01 AddChat %id%01 AddChat %id%02 AddChat %id%03>
-		.%id%_GoLater <NewChat Say %id%02 AddChat %id%01 AddChat %id%02 AddChat %id%03>
-		result%id%01 <NewChat Say %id%03 V= 1 1>
-		result%id%02 <NewChat Say %id%04 AddCheerful  d8   V= 1 1>
-		result%id%03 <NewChat Say %id%05 AddCheerful -d10  V= 1 1>
-		Msg%id%01 <Do you ever, you know, take any time off? It seems to me that you're always on duty. You never just sit back and enjoy life.>
-		Msg%id%02 <This is exactly the kind of thing I wanted to talk about. You're always on duty. You never take any time off to enjoy life!>
-		Msg%id%03 <I know, but still it won't do any good if you work yourself to death.>
-		Msg%id%04 <Maybe you think you do but from where I'm standing it doesn't look like it. You really need to loosen up.>
-		Msg%id%05 <I thought at first that I had a lot to learn from you. At times, you should learn something from me as well.>
-		Prompt%id%01 <%name2%, the work I do is very important!>
-		Prompt%id%02 <What do you mean? I goof off all the time.>
-		Prompt%id%03 <Frivolity is for the weak. You'd do well to remember that.>
-	end
-
 
 
 %%  *******************
 %%  ***   DEFAULT   ***
 %%  *******************
+
+Content
+	name <Big Scoop about Enemy NPC>
+	desc <The media person you're talking to wants to know about the enemy's mission in town.>
+	requires <*CS_Conversation 1:MEDIA ~1:FRIEND E:++>
+
+	% E1 is the person being spoken to
+	% E2 is the outdoors location where the encounter will be placed
+	% E3 is the encounter to be found
+	element2 <Scene Environs !Near -7>
+	element3 <Prefab>
+	place3 <2>
+
+	% Fail Conditions:
+	% - Mission giver dies before encounter is activated
+	% - Revalation subplot fails
+	end <if= PlotStatus %plotid1% 0 else .%id%_GoCheckReveal ifNPCDead %1% else %pop% LoseComp 0 .%id%_loss>
+	.%id%_GoCheckReveal <ifSubPlotLost %plotid2% SMemo %id%02 SetPlotStatus 5>
+	.%id%_loss <+T-->
+
+	.%id1%_%plotid1%_GoWin <SetPlotStatus %plotid3% %id3%     SMemo %id%01>
+	.%id1%_%plotid1%_GoLoss <SetPlotStatus %plotid4% %id4%    SMemo %id%02>
+
+	Msg%id%01 <You won the mission. You should go report to %name1% at \SCENE NPCScene %1% .>
+	Msg%id%02 <You lost the mission. You should go report to %name1% at \SCENE NPCScene %1% .>
+
+	%% SubPlot1 is the combat encounter itself
+	%% SubPlot2 is the encounter revealation
+	%% SubPlot3 is the winning condition
+	%% SubPlot4 is the loss condition
+	%% SubPlot5 is the unwinnable condition
+	SubPlot1 <*:CS_MechaEncounter 2 3>
+	SubPlot2 <*:CS_RevealEncounter_Raiders 2 3>
+	SubPlot3 <*CS_CAWinMission 1>
+	SubPlot4 <*CS_CALoseMission 1>
+	SubPlot5 <*CS_MootMission 1>
+
+	sub
+		Persona 1
+		greeting <if= PlotStatus %plotid1% 0 else .%id%_GoRemind if# PlotStatus %plotid% %id% else .%id%_GoOfferMission Goto %pop%>
+		.%id%_GoRemind <NewChat Say %id%06>
+		*.%id%_GoOfferMission <*IHearYouAreFightingNPC &EnemyNPC .%id%_GoBriefing>
+		.%id%_GoBriefing <NewChat Say %id%01 AddChat %id%01 AddChat %id%02 AddChat %id%03>
+		*.%id%_GoDeny <*RejectMission .%id%_GoR2Exit>
+		.%id%_GoR2Exit <AddHeroic -1 AddSociable -d10 AddRenown -3 LoseComp 0 .%id%_changes>
+		.%id%_changes <+T-- +F-->
+		result%id%01 <NewChat Say %id%02 AddCHat %id%04 AddChat %id%05>
+		result%id%02 <NewCHat Say %id%03 StoryNote %id%04  SetPlotStatus %plotid1% %id1%  SetPlotStatus %plotid2% %id2%>
+		result%id%03 <NewChat Say %id%05 AddCHat %id%04 AddChat %id%05>
+		result%id%04 <goto result%id%02>
+		result%id%05 <goto .%id%_GoDeny>
+		Msg%id%01 <Well, \PERSONA &EnemyNPC is apparently in town on a mission. I know the two of you have fought in the past, so I was hoping you'd be willing to help me find out what \SPR &EnemyNPC 's up to.>
+		Msg%id%02 <As a cavalier \SPR &EnemyNPC always seems to leave a trail of destruction in \PPR &EnemyNPC wake; \PPR &EnemyNPC presence in \SCENE &EpisodeScene could be a major news story. If we could help save some lives so much the better.>
+		Msg%id%03 <Great! Come back and see me when you've uncovered what \PERSONA &EnemyNPC is doing.>
+		Msg%id%04 <You agreed to help %name1% research \PERSONA &EnemyNPC for a news story.>
+		Msg%id%05 <Just listen, okay? \PERSONA &EnemyNPC is up to something and if we don't find out what it could be a major disaster. I really need your help with this.>
+		Msg%id%06 <I don't think the entire story has been uncovered yet. Come back when it has been.>
+		Prompt%id%01 <Why do you care about \PERSONA &EnemyNPC ?>
+		Prompt%id%02 <Alright, I'll help you.>
+		Prompt%id%03 <Sorry, I'm trying to stay far away from \OPR &EnemyNPC .>
+		Prompt%id%04 <I'll see what I can turn up.>
+		Prompt%id%05 <Sounds rough, but it's not my problem.>
+	end
+	inv
+		stc CORE-ACTIVATABLE
+		name <%name1%'s Mission>
+	end
 
 Plot
 	name <My Help Doesn't Come Cheap>
