@@ -28,7 +28,7 @@
 Content
 	name <In The Army Now>
 	desc <The NPC is joining the army; maybe the PC can join as well!>
-	requires <*CS_Conversation +P-- +F-- +C-- P:-- R:-- (1:Friend|1:Family|1:Lover) -L:ENEMY ~+Gpe>
+	requires <*CS_Conversation +P-- +F-- P:-- R:-- (1:Friend|1:Family|1:Lover) (1:MILIT|1:ADVEN|1:LABOR) -L:ENEMY ~+Gpe>
 	Size 1
 
 	% Element1 is the NPC to meet
@@ -676,8 +676,8 @@ Content
 	%% SubPlot5 is the unwinnable condition
 	SubPlot1 <*:CS_MechaEncounter 2 3>
 	SubPlot2 <*:CS_RevealEncounter_Raiders 2 3>
-	SubPlot3 <*CS_CAWinMission 1>
-	SubPlot4 <*CS_CALoseMission 1>
+	SubPlot3 <*CS_WinTask 1>
+	SubPlot4 <*CS_LoseTask 1>
 	SubPlot5 <*CS_MootMission 1>
 
 	sub

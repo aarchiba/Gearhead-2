@@ -70,7 +70,7 @@ Content
 
 		% At startup, clear the timer so the mission doesn't timeout while the PC is defending
 		% the factory. That would just be silly.
-		Start <if= L1 0  Alert 1  L= 1 1 P= %id%02 0>
+		Start <if= L1 0  Alert 1  L= 1 1 P= %id%02 0  if# P%id%03 0 Alert 4>
 		nu1 <if= T1 0 Return if= L2 0 L= 2 1 Goto GoLoseMission>
 		nu2 <if= T2 0 if= T4 0 if= L2 0 L= 2 1 Salvage ifG T3 0 else GoLoseMission Goto GoWinMission>
 		GoLoseMission <Alert 2             Trigger0 .%id%_%plotid%_GoLoss  LoseSubPlot %plotid%>
@@ -81,6 +81,7 @@ Content
 		Msg1 <You arrive just in time to defend the factory against %name1%'s forces. Fortunately, %name1% doesn't appear to be present.>
 		Msg2 <You did not manage to save the factory.>
 		Msg3 <You defended the factory against %name1%'s forces.>
+		Msg4 <Your reinforcements are here, as promised.>
 
 		sub
 			Team 1
