@@ -58,8 +58,8 @@ Content
 		.%id%_UnknownEnemy <+Pun>
 		result%id%01 <NewChat Say %id%02    AddCHat %id%03 AddChat %id%04 AddChat %id%05    if= V%id%01 0 V= %id%01 1 AddCheerful d6>
 		result%id%02 <NewChat Say %id%03    AddCHat %id%03 AddChat %id%04 AddChat %id%05    if= V%id%01 0 V= %id%01 1 AddCheerful -d6>
-		result%id%03 <NewChat Say %id%04   SMemo %id%05  History %id%06   &SetPartnerNPC %1% &AddPartnerToLance SetXXRMotivation XXR_M_Professional SetXXRAttitude XXR_A_IsJunior  &SetTargetNPC %3% &SetAllyFac %2% SetPCFac %2% XPV 150 WinComp %5% .%id%_next>
-		result%id%04 <NewChat Say %id%07   StoryNote %id%05   &SetPartnerNPC %1% &AddPartnerToLance SetXXRAttitude XXR_A_IsJunior &SetTargetNPC %3%  WinComp %5% .%id%_next>
+		result%id%03 <NewChat Say %id%04   SMemo %id%05  History %id%06   &SetPartnerNPC %1% &AddPartnerToLance SetXXRMotivation %1% XXR_M_Professional SetXXRAttitude %1% XXR_A_IsJunior  &SetTargetNPC %3% &SetAllyFac %2% SetPCFac %2% XPV 150 WinComp %5% .%id%_next>
+		result%id%04 <NewChat Say %id%07   StoryNote %id%05   &SetPartnerNPC %1% &AddPartnerToLance SetXXRAttitude %1% XXR_A_IsJunior &SetTargetNPC %3%  WinComp %5% .%id%_next>
 		.%id%_next <+Tgt +Fmi>
 		result%id%05 <NewChat Say %id%08 AddChat %id%06 AddChat %id%07>
 		result%id%06 <EndChat Say %id%09 SMemo 0 History %id%10 FreezeNPC %1% LoseComp 0 .%id%_loss>
@@ -612,7 +612,7 @@ Content
 		*.%id%_GoNotHere <*NotByPhone>
 		*.%id%_GoGreet <*HowAreYou .%id%_GoInform>
 		.%id%_GoInform <NewChat Say %id%01 AddChat %id%01 AddChat %id%02>
-		.%id%_GoJoin <&SetPartnerNPC %1% &AddPartnerToLance SetXXRAttitude XXR_A_IsJunior   WinComp 0 .%id%_next StoryNote %id%02 Goto .%id%_GoJoinSpeech>
+		.%id%_GoJoin <&SetPartnerNPC %1% &AddPartnerToLance SetXXRAttitude %1% XXR_A_IsJunior   WinComp 0 .%id%_next StoryNote %id%02 Goto .%id%_GoJoinSpeech>
 		.%id%_next <+T-- +F-->
 		*.%id%_GoJoinSpeech <*WelcomeToLance>
 		result%id%01 <Goto .%id%_GoJoin>

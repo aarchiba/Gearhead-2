@@ -176,7 +176,7 @@ Content
 		Greeting <if= PlotStatus %plotid% %id% else %pop% goto .%id%_GoThanks>
 		*.%id%_GoThanks <*ThanksForRescue .%id%_GoAsk>
 		.%id%_GoAsk <NewChat Say %id%01 AddChat %id%01 AddChat %id%02>
-		result%id%01 <NewChat Say %id%02 StoryNote %id%03 &SetTargetNPC 0 &SetPartnerNPC %1% &AddPartnerToLance SetXXRAttitude XXR_A_HasSecret WinComp 0 .%id%_Join>
+		result%id%01 <NewChat Say %id%02 StoryNote %id%03 &SetTargetNPC 0 &SetPartnerNPC %1% &AddPartnerToLance SetXXRAttitude %1% XXR_A_HasSecret WinComp 0 .%id%_Join>
 		.%id%_Join <+T-- +F-->
 		result%id%02 <NewChat Say %id%04 AddChat %id%03 AddCHat %id%04>
 		result%id%03 <NewChat Say %id%05 StoryNote %id%06 &SetTargetNPC 0 &SetAmoreNPC %1% WinComp 0 .%id%_Love>

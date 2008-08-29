@@ -1,0 +1,58 @@
+%% *:CS_GatherInformation Content
+%%
+%% In this component, the PC will be able to gain some information via a difficult source.
+%% This component will almost certainly change the story context.
+%%
+%% The Param1 NPC must have a persona which calls the following script:
+%%   .%id%_GoInform
+%% This script tells the PC about the situation, setting up the rest of this
+%% subplot. The SubPlotID must be set separately.
+%%
+%% When this subplot concludes, it sets one of the following triggers:
+%%  .%id%_%plotid%_GoWin
+%%  .%id%_%plotid%_GoLoss
+%%
+%%  Param1: The NPC who will tell the PC about the situation.
+%%          After introducing the component, this NPC will serve no further purpose
+%%          in this narrative thread.
+%%
+
+Content
+	name <Ex-Lover vs Ex-Partner>
+	desc <The enemy's ex-lover is on the run from the enemy's ex-partner.>
+	requires <*:CS_GatherInformation E:A.sr_ E:M.--->
+	Size 7
+
+	%% The centerpiece of this component is an encounter in which the PC can help
+	%% defend the ex-lover against the ex-partner. It should be possible, if the PC
+	%% plays the cards right, for the encounter to be won without a shot being
+	%% fired.
+
+	% E1 is the person who tells the PC.
+	% E2 is the ex-lover
+	% E3 is the ex-partner
+	% E4 is an outdoors scene for the duel
+	% E5 is the encounter for the duel
+	% E6 is E3's secret which may be revealed
+	Element2 <NewNPC  0 -7>
+	Place2 </>
+	Element3 <NewNPC -2 -7>
+	Place3 </>
+	Element4 <Scene Outdoors !Near -7>
+	Element5 <Prefab>
+	Place5 <4>
+	Element6 <Prefab>
+
+	sub
+		MetaScene 5 2
+
+	end
+	inv
+		stc CORE-ACTIVATABLE
+		name <%name2% and %name3%>
+
+		Secret
+
+	end
+
+

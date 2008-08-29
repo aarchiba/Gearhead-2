@@ -319,10 +319,8 @@ Content
 	% E2 is the MetaScene being sought
 	% E3 is the raider being trailed.
 	% E4 is a new encounter for the speed match
-	% E5 is a meme to tell the PC about it
 	Element4 <Prefab>
 	Place4 <1>
-	Element5 <Prefab>
 
 	% p%id%01 = Initialization Counter
 	update <if= p%id%01 0 p= %id%01 1   FreezeNPC %3%>
@@ -382,11 +380,6 @@ Content
 		use <ifG StatVal STAT_MetaVisibility -1  V= 1 ComTime V+ 1 18000  Print -1 Exit Destination>
 		GoAutoAttack <V= 1 ComTime V+ 1 18000  Alert -2 Exit Destination>
 		GoAvoidAttack <V= 1 ComTime V+ 1 7200  Print -6 AddSociable -1 UpdateProps>
-
-		Meme
-		MaxMemeViews 1
-		msg <I heard that %name3%'s lance has been cruising around in %name1%. I wonder what they're up to...>
-		msg_1 <There've been some raiders spotted in %name1%, but nobody seems to know what they're up to.>
 	end
 
 %%
