@@ -645,6 +645,63 @@ Content
 %%  *******************
 
 Content
+	name <Help Me With This Mission>
+	desc <The person the PC is speaking with needs help on a mission.>
+	requires <*CS_Conversation +F-- (1:FRIEND|1:PCFAC) (1:MILIT|1:ADVEN) -1:ENEMY>
+
+	% E1 is the person being spoken to.
+	% E2 is the outdoors location where the encounter will be placed
+	% E3 is the encounter to be found
+	element2 <Scene Environs !Near -7>
+	element3 <Prefab>
+	place3 <2>
+
+	% Fail Conditions:
+	% - Mission giver dies before encounter is activated
+	% - Revalation subplot fails
+	end <if= PlotStatus %plotid1% 0 else .%id%_GoCheckReveal ifNPCDead %1% else %pop% LoseComp 0 .%id%_loss>
+	.%id%_GoCheckReveal <ifSubPlotLost %plotid2% SMemo %id%02 SetPlotStatus 5>
+	.%id%_loss <+T-->
+
+	.%id1%_%plotid1%_GoWin <SetPlotStatus %plotid3% %id3%     SMemo %id%01>
+	.%id1%_%plotid1%_GoLoss <SetPlotStatus %plotid4% %id4%    SMemo %id%02>
+
+	Msg%id%01 <You won the mission. You should go report to %name1% at \SCENE NPCScene %1% .>
+	Msg%id%02 <You lost the mission. You should go report to %name1% at \SCENE NPCScene %1% .>
+
+	%% SubPlot1 is the combat encounter itself
+	%% SubPlot2 is the encounter revealation
+	%% SubPlot3 is the winning condition
+	%% SubPlot4 is the loss condition
+	%% SubPlot5 is the unwinnable condition
+	SubPlot1 <*:CS_MechaEncounter&Raiders 2 3>
+	SubPlot2 <*:CS_RevealEncounter_Raiders 2 3>
+	SubPlot3 <*CS_WinTask 1>
+	SubPlot4 <*CS_LoseTask 1>
+	SubPlot5 <*CS_MootMission 1>
+
+	sub
+		Persona 1
+		greeting <if= PlotStatus %plotid1% 0 else .%id%_GoRemind if# PlotStatus %plotid% %id% else .%id%_GoGreet Goto %pop%>
+		*.%id%_GoGreet <*HowAreYou .%id%_GoOfferMission>
+		*.%id%_GoRemind <*GenericMissionReminder>
+		.%id%_GoOfferMission <NewChat Say %id%01 AddCHat %id%01 AddChat %id%02>
+		result%id%01 <AddReact d10 AddEasygoing d10   goto result%id%02>
+		result%id%02 <NewChat Say %id%02 History %id%03 SMemo %id%04 SetPlotStatus %plotid1% %id1%  SetPlotStatus %plotid2% %id2%>
+		Msg%id%01 <I was wondering if you could help me with something. There's a mission I'm supposed to be doing now, but I've got a terrible cold. If you could do it instead, I'd be really grateful.>
+		Msg%id%02 <Thank you so much! Let me tell you about the mission, then- I was supposed to engage a group of raiders, but since getting sick I've lost track of them. You'll have to find out where they are and engage their mecha.>
+		Msg%id%03 <You agreed to do a mission for %name1%, who is sick.>
+		Msg%id%04 <You agreed to locate and defeat a group of raiders for %name1%, who is sick.>
+		Prompt%id%01 <Of course I can help you.>
+		Prompt%id%02 <You better have a pretty good reward waiting when I get back.>
+
+	end
+	inv
+		stc CORE-ACTIVATABLE
+		name <%name1%'s Mission>
+	end
+
+Content
 	name <Big Scoop about Enemy NPC>
 	desc <The media person you're talking to wants to know about the enemy's mission in town.>
 	requires <*CS_Conversation 1:MEDIA ~1:FRIEND E:++>
