@@ -43,6 +43,13 @@ Content
 	Place5 <4>
 	Element6 <Prefab>
 
+	%% SubPlot1 is the LocateDuel task
+	%% SubPlot2 is the GainAdvantageVsNPC one
+	%% SubPlot3 is the ability to learn E3's secret
+	SubPlot1 <*:CS_LocateDuel 4 5 2 3>
+	SubPlot2 <*:CS_GainAdvantageVsNPC 3>
+	SubPlot3 <*:CS_LearnSecretAboutNPC 3 6>
+
 	sub
 		MetaScene 5 2
 
@@ -52,7 +59,7 @@ Content
 		name <%name2% and %name3%>
 
 		Secret
-
+		Msg <%name3% hates %name2% because \SPR %3% was secretly in love with \PERSONA &EnemyNPC .>
 	end
 
 

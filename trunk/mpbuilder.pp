@@ -130,6 +130,7 @@ begin
 	it := NewGear( Slot );
 	InsertInvCom( Slot , It );
 	it^.G := GG_Plot;
+	SetSAtt( it^.SA , 'name <Placeholder>' );
 	SetNAtt( it^.NA , NAG_Narrative , NAS_PlotID , -1 );
 	for t := 1 to Num_Plot_Elements do begin
 		EID := ElementID( Shard , T );

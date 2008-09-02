@@ -1,4 +1,18 @@
 %%
+%% *:CS_LocateDuel Content
+%%
+%% Two NPCs are about to fight. The PC needs to find them; this could be to
+%% aid one NPC against the other, to stop the fight, or just to watch. Who knows?
+%%
+%% PARAM1: The outdoors scene where the encounter is
+%% PARAM2: The MetaScene being sought
+%% PARAM3: The presumed ally in the fight
+%% PARAM4: The presumed antagonist in the fight
+%%
+
+
+
+%%
 %% *:CS_DiscoverNPCMission Content
 %%	&EnemyNPC		The NPC in question is the core story enemy NPC
 %%	&DestroyFactory		The mission is to destroy a factory

@@ -701,6 +701,8 @@ begin
 			{ Memes automatically get frozen. }
 			if E^.G = GG_Meme then begin
 				Place := '/';
+			end else if E^.G = GG_Secret then begin
+				Place := '';
 			end else begin
 				Place := SAttValue( Plot^.SA , 'PLACE' + BStr( N ) );
 			end;

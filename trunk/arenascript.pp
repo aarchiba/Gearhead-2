@@ -1285,6 +1285,13 @@ begin
 				if Part <> Nil then W := SAttValue( Part^.SA , 'ITEM_USAGE' )
 				else W := 'ERROR: can''t find ITEM_DESC for item ' + BStr( ID );
 
+			end else if W = '\SECRET' then begin
+				{ Insert a plot secret here. }
+				ID := ScriptValue( S0 , GB , Scene );
+				Part := GG_LocateItem( ID , GB , Scene );
+				if Part <> Nil then W := ScriptMessage( 'msg' , GB , Part )
+				else W := 'ERROR: can''t find MSG for secret ' + BStr( ID );
+
 			end else if W = '\FACTION' then begin
 				{ Insert the name of a specified faction. }
 				ID := ScriptValue( S0 , GB , Scene );

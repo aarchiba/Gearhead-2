@@ -102,7 +102,7 @@ Content
 	requires <*CS_DelayedNegation>
 
 	% P%id%01 = Time Limit
-	update <if= PlotStatus %plotid% %id% else %pop% if= P%id%01 0 P= %id%01 ComTime P+ %id%01 7200 P+ %id%01 d86400>
+	update <if= PlotStatus %plotid% %id% else %pop% if= P%id%01 0 P= %id%01 ComTime P+ %id%01 7200 P+ %id%01 d7200>
 	hour <if= PlotStatus %plotid% %id% else %pop% ifG ComTime P%id%01 NegateComp &CompScene na>
 
 Content
@@ -111,7 +111,7 @@ Content
 	requires <*CS_DelayedVictory>
 
 	% P%id%01 = Time Limit
-	update <if= PlotStatus %plotid% %id% else %pop% if= P%id%01 0 P= %id%01 ComTime P+ %id%01 7200 P+ %id%01 d86400>
+	update <if= PlotStatus %plotid% %id% else %pop% if= P%id%01 0 P= %id%01 ComTime P+ %id%01 7200 P+ %id%01 d7200>
 	hour <if= PlotStatus %plotid% %id% else %pop% ifG ComTime P%id%01 WinComp &CompScene na>
 
 

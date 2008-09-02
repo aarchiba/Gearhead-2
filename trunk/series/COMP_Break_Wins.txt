@@ -4,22 +4,25 @@ Plot
 	desc <The event has been moved. No-one told the PC.>
 
 	% E1 is the scene where this component will take place
-	% E2 is the NPC that the PC will speak with
+	% E2 is a public scene in the current city
 	% E3 is the town for the next episode
 	% E4 is a metascene within that town
+	% E5 is the NPC that the PC will speak with
 	element1 <Grab 6>
-	element2 <Character Citizen !Near -7>
-	Place2 <1 (Citizens) pass>
+	element2 <Scene Public !Near -7>
 	Element3 <Scene !Far -7 !Comrade -7 Town>
 	element4 <MetaScene !Near 3 *Building NeverFail>
+	element5 <Character Citizen !Near 2 NeverFail>
+	NeverFail5 <Citizen>
+	Place5 <1 (Citizens) pass>
 
-	start <ifNPCDead %1% &SetCompScene 0 SMemo 0 WinEpisode %3% 0 .next>
+	start <ifNPCDead %5% &SetCompScene 0 SMemo 0 WinEpisode %3% 0 .next>
 	.next <+T-- +F-->
 
 	sub
-		Persona 2
+		Persona 5
 		special <UNLISTED>
-		rumor <%name2% is the head of the cleaning crew at %name1%.>
+		rumor <%name5% is the head of the cleaning crew at %name1%.>
 		greeting <NewChat Say %id%01 SMemo %id%02 History %id%03 &SetCompScene 0 WinEpisode %3% %4% .next>
 		.next <>
 		Msg%id%01 <The event they were going to have here has been moved to %name4% in %name3%. Unless you're a member of the cleaning crew, I'm afraid that you'll have to go home.>

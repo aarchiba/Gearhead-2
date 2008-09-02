@@ -35,6 +35,7 @@ Const
 	{ In general, negative G scores denote abstract things. }
 	{ Vitual gears are not subject to most game rules, range }
 	{ checking, and whatnot. }
+	GG_Secret = -21;	{ A secret, which may be revealed by story events. }
 	GG_CityMood = -20;
 	GG_Theme = -19;
 	GG_Meme = -18;		{ A collection of things the PC will be told, until timeout or all messages delivered. }

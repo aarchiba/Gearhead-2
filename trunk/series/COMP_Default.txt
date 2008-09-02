@@ -29,7 +29,7 @@ Plot
 
 	% P%id%01 = Duel victory counter; 1=Win,-1=Loss
 	% P%id%02 = Loss Timer
-	start <if% P%id%02 0 ifG ComTime P%id%02 SMemo 0 LoseComp 0 .loss>
+	start <if# P%id%02 0 ifG ComTime P%id%02 SMemo 0 LoseComp 0 .loss>
 	end <ifNPCDead %3% LoseComp 0 .loss>
 	.loss <+T-- +F-->
 

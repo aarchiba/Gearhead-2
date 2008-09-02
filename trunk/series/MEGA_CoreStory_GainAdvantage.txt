@@ -1,4 +1,25 @@
 %%
+%% *:CS_GainAdvantageVsNPC Content
+%%
+%%  &Reinforcements	The advantage may take the form of reinforcements
+%%		.%id%_%plotid%_GoReinforcements
+%%  &Decimation		The advantage may take the form of reducing enemy forces
+%%		.%id%_%plotid%_GoDecimation
+%%
+%% The PC may seek advantage against a certain NPC.
+%%
+%%  If this subplot is won, a trigger associated with the exact advantage
+%%  gained should be called. If a nonstandard advantage is gained, no such
+%%  trigger need be called.
+%%
+%% PARAM1: The NPC being opposed
+%%
+
+
+
+
+
+%%
 %% *:CS_GainAdvantageVsMecha Content
 %%
 %%  &Reinforcements	The advantage may take the form of reinforcements
