@@ -383,8 +383,8 @@
 	Persona
 	requires <*YoureUnderArrest>
 	START <NewChat Say %id%01 AddChat %id%01 AddChat %id%02>
-	result%id%01 <ifIntimidation SkillTar %1% else %3% Goto %2%>
-	result%id%02 <ifConversation SkillTar %1% else %3% Goto %2%>
+	result%id%01 <ifIntimidation HardSkillTar %1% else %3% Goto %2%>
+	result%id%02 <ifConversation HardSkillTar %1% else %3% Goto %2%>
 	Msg%id%01 <You can't arrest me now... there are so many things I have yet to do...>
 	Msg%id%01_1 <>
 	CMsg%id%01_1 <ifNPCSociable Accept>

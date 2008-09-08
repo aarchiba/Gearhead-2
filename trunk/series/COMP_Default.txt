@@ -9,6 +9,75 @@
 %    or the palette enemy faction
 
 Plot
+	name <Protect Me For Info>
+	desc <The person you sought seeks protection from your enemy.>
+	requires <#A +Tht +Fin -T:ENEMY F:++ T:NOFAC T:A.--- S:++ R:-->
+	Size 2
+
+	% Element1 is the hideout
+	% Element2 is the NPC
+	% Element3 is the enemy faction
+	% Element4 is a public scene, in case the PC rejects E2's offer
+	Element1 <Grab 6>
+	Element2 <Grab 5>
+	Place2 <1 (Citizens) pass>
+	Element3 <Grab 2>
+	Element4 <Scene Public !Near -7>
+
+	%% P1 = Initialization Counter
+
+	% If the NPC dies, this plot counts as a loss.
+	start <ifNPCDead %2% History 1 LoseComp 0 .loss>
+	.loss <+T-- +F-->
+
+	update <if= P1 0 P= 1 1 NPCLevel %2% StoryDL  SetXXRAttitude %2% XXR_A_HasSecret>
+
+	Msg1 <%name2% died before you could learn anything.>
+
+	sub
+		Persona 2
+		special <UNLISTED>
+		*greeting <*WhatDoYouWantWithMe&Information GoCheckAlignment>
+		% Please forgive the messy numbering here. As a root plot, the messages and prompts don't
+		% strictly need the %id% in front, but I have a cold and am confused in the head so the
+		% messages use 1-99 and the prompts use %id%01-%id%99.
+		GoCheckAlignment <if= v1 0 else GoMakeOffer NewChat Say 1 AddChat %id%01 AddChat %id%02 AddChat %id%03 AddChat %id%04>
+		GoMakeOffer <V= 1 1 NewChat Say 2 AddChat %id%05 AddCHat %id%06>
+		GoJoinLance <&SetPartnerNPC %2% &AddPartnerToLance &SetTargetNPC 0 WinComp %4% .next>
+		.next <+Tgs +Fin>
+		result%id%01 <AddSociable   d6   Goto GoMakeOffer>
+		result%id%02 <Goto GoMakeOffer>
+		result%id%03 <AddLawful 1        Goto GoMakeOffer>
+		result%id%04 <AddSociable -d10   Goto GoMakeOffer>
+		result%id%05 <NewCHat Say 3 SMemo 4 History 5 Goto GoJoinLance>
+		result%id%06 <NewChat Say 6 AddChat %id%07 AddChat %id%08>
+		result%id%07 <NewChat Say 7 SMemo 4 History 8 Goto GoJoinLance>
+		result%id%08 <NewChat Say 9 StoryNote 4 WinComp %4% .next>
+		Msg1 <So you're looking for information, huh? How do I know you're not with %name3%?>
+		Msg2 <Fair enough. Look, I'm sure there's some reason why %name3% is after me, but I don't know anything. At least I don't think I do.>
+		Msg3 <You know, I'm not entirely defenseless by myself... but I suppose that I could use some help. Alright then, let's go together! I hear that there's something interesting going on at %name4%; maybe we could learn something.>
+		Msg4 <%name2% suggested that you might learn something at %name4%.>
+		Msg5 <%name2% joined your lance for protection from %name3%.>
+		Msg6 <What's that supposed to mean!? I've held my own against %name3%, haven't I?>
+		Msg7 <I will! That'll show you! I can even prove that I know something you don't- some members of %name3% have been seen at %name4% recently. If we go there, maybe we can learn something.>
+		Msg8 <%name2% joined your lance to help fight %name3%.>
+		Msg9 <I know that some of them have recently been seen at %name4%. Maybe if you head over there right away you can get rid of some of that ignorance!>
+		Prompt%id%01 <If I was with %name3% you'd already be dead.>
+		CPrompt%id%01 <if# PCFac %3% Accept>
+		Prompt%id%02 <Relax, I'm fighting against %name3%.>
+		Prompt%id%03 <Actually, I am with %name3%, but I'm a good one.>
+		CPrompt%id%03 <if= PCFac %3% Accept>
+		Prompt%id%04 <You don't know that.>
+		Prompt%id%05 <I could protect you from them.>
+		Prompt%id%06 <You're useless.>
+		Prompt%id%07 <Want to prove it? Join me, let's fight them together.>
+		Prompt%id%08 <You don't know anything about %name3%.>
+
+		STC MS_EmptyBuilding
+		SetID 1
+	end
+
+Plot
 	name <Party Contact>
 	desc <At the party, the PC can get a job from someone.>
 	requires <#A +Tgs (+Fpa|+Fcc) ~+Gmo>
@@ -848,10 +917,11 @@ Content
 
 		% L1 = Initialization Counter
 		% L2 = Victory Counter
-		start <Print 1 if= L1 0 L= 1 1 Monologue %1% 2 Monologue %1% 4 &SetEnemyNPC %1% StoryNote 3>
-		nu1 <if= T1 0 Return if= L2 0 L= 2 1 LoseComp 0 .next>
-		nu2 <if= T2 0 if= L2 0 L= 2 1 Monologue %1% 5 Print 6 XPV 100 WinComp 0 .next>
-		.next <+T-- +F-->
+		start <Print 1 if= L1 0 L= 1 1 Monologue %1% 2 Monologue %1% 4 &SetEnemyNPC %1%   StoryNote 3>
+		nu1 <if= T1 0 Return if= L2 0 L= 2 1 LoseComp 0 .loss>
+		nu2 <if= T2 0 if= L2 0 L= 2 1 Monologue %1% 5 Print 6 XPV 100 WinComp 0 .win>
+		.win  <+T-- +F-- +Hwn>
+		.loss <+T-- +F-- +Hln>
 
 		Msg1 <You enter %name1%'s hideout.>
 		Msg2 <You've done well in finding my hideout, \PC . I hope you won't be disappointed that I'm no longer there.>
@@ -982,7 +1052,7 @@ Content
 	Element3 <Prefab>
 	Place3 <2>
 
-	start <if= SceneID %2% Alert 1 History 2 &SetEnemyNPC %1% &SetTargetNPC 0 WinComp 0 .%id%_Next>
+	start <if= SceneID %2% Alert 1 History 2 &SetEnemyNPC %1%  SetXXRAttitude %3% XXR_A_IsSenior   &SetTargetNPC 0 WinComp 0 .%id%_Next>
 	.%id%_Next <+T-- +F-->
 
 	Msg1 <There's no sign of %name1% here; \SPR %1% must have known you were coming.>

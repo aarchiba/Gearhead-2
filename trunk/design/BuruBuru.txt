@@ -90,6 +90,106 @@ end
 
 Battroid 5
 Name <Buru Buru>
+Desig <SAN-X12 Assault>
+type <GROUND SPACE>
+factions <GENERAL>
+SDL_Sprite <btr_buruburu.png>
+SDL_PORTRAIT <item_buruburu.png>
+desc <A variant on the ubiquitous BuruBuru. This version is optimized for short range fighting.>
+Legality -15
+
+sub
+Head
+	Armor 4
+	mass 1
+	sub
+		Sensor 4
+
+		STC LAS-3
+		type <INTERCEPT>
+		Integral
+	end
+
+Torso
+	Armor 4
+	mass 1
+	sub
+		CPit
+		Armor 2
+
+		Mount
+		name <Collar Mount>
+		inv
+			MLauncher 6
+			sub
+				STC LR-1
+				Magazine 60
+			end
+		end
+
+		HeavyActuator 3
+	end
+
+Arm
+	Name <Right Arm>
+	Armor 4
+	sub
+		Hand
+		inv
+			Gun 6
+			Name <Repeater Cannon>
+			Caliber <90mm Shells>
+			range 5
+			BV 1
+			sub
+				Ammo 6
+				Caliber <90mm Shells>
+				Magazine 30
+			end
+		end
+		HeavyActuator 1
+
+		Melee 1
+		Name <Shoulder Spike>
+		Acc 1
+	end
+
+Arm
+	Name <Left Arm>
+	Armor 4
+	sub
+		Hand
+		inv
+			Melee 8
+			Name <War-Hammer>
+		end
+
+		STC MAC-2
+
+		HeavyActuator 1
+	end
+
+Leg
+	Name <Right Leg>
+	mass 1
+	Armor 4
+	sub
+		HoverJet 4
+	end
+
+Leg
+	Name <Left Leg>
+	mass 1
+	Armor 4
+	sub
+		HoverJet 4
+	end
+end
+
+
+
+Battroid 5
+Name <Buru Buru>
 Desig <SAN-X9sk StarWarrior>
 type <GROUND SPACE>
 factions <MAQUI SILKN>
@@ -485,3 +585,190 @@ Leg
 	end
 end
 
+
+Battroid 5
+Name <Buru Buru>
+Desig <SAN-X9c Urban>
+type <GROUND SPACE>
+factions <GENERAL>
+SDL_Sprite <btr_buruburu.png>
+SDL_PORTRAIT <item_buruburu.png>
+desc <A variant on the BuruBuru design. This version features a shield and improved short range weapons.>
+Legality -15
+
+sub
+Head
+	Armor 4
+	mass 2
+	sub
+		Sensor 4
+
+		STC LAS-3
+		type <INTERCEPT>
+		Integral
+	end
+
+Torso
+	Armor 4
+	mass 3
+	sub
+		CPit
+		Armor 2
+
+		Mount
+		name <Collar Mount>
+		inv
+			MLauncher 4
+			sub
+				STC SWM-2
+				Magazine 20
+			end
+		end
+	end
+
+Arm
+	Name <Right Arm>
+	mass 3
+	Armor 4
+	sub
+		Hand
+		inv
+			Gun 6
+			Name <Repeater Cannon>
+			Caliber <90mm Shells>
+			range 5
+			BV 1
+			sub
+				Ammo 6
+				Caliber <90mm Shells>
+				Magazine 30
+			end
+		end
+	end
+
+Arm
+	Name <Left Arm>
+	mass 3
+	Armor 4
+	sub
+		Hand
+		inv
+			Melee 5
+			Name <Axe>
+			Acc 1
+		end
+
+	end
+	inv
+		Shield 5
+		name <Metro Shield>
+		DefBonus 1
+		sub
+			STC MAC-2
+		end
+	end
+
+Leg
+	Name <Right Leg>
+	mass 3
+	Armor 4
+	sub
+		HoverJet 4
+	end
+
+Leg
+	Name <Left Leg>
+	mass 3
+	Armor 4
+	sub
+		HoverJet 4
+	end
+end
+%% End Urban Buru Buru
+
+
+
+Battroid 5
+Name <Buru Buru>
+Desig <SAN-X9g Heavyfoot>
+type <GROUND SPACE>
+factions <GENERAL>
+SDL_Sprite <btr_buruburu.png>
+SDL_PORTRAIT <item_buruburu.png>
+desc <A variant on the BuruBuru design. This version is equipped with a powerful gauss cannon.>
+Legality -15
+
+sub
+Head
+	Armor 4
+	mass 2
+	sub
+		Sensor 4
+
+		STC LAS-3
+		type <INTERCEPT>
+		Integral
+	end
+
+Torso
+	Armor 4
+	mass 3
+	sub
+		CPit
+		Armor 2
+
+		Mount
+		name <Collar Mount>
+		inv
+			MLauncher 4
+			sub
+				STC SWM-2
+				Magazine 20
+			end
+		end
+	end
+
+Arm
+	Name <Right Arm>
+	mass 3
+	Armor 4
+	sub
+		Hand
+		inv
+			STC GR-24
+		end
+	end
+
+Arm
+	Name <Left Arm>
+	mass 3
+	Armor 4
+	sub
+		Hand
+	end
+	inv
+		Shield 3
+		name <Gun Buckler>
+		DefBonus -1
+		sub
+			STC MAC-2
+		end
+	end
+
+Leg
+	Name <Right Leg>
+	mass 3
+	Armor 4
+	sub
+		HoverJet 4
+	end
+
+Leg
+	Name <Left Leg>
+	mass 3
+	Armor 4
+	sub
+		HoverJet 4
+	end
+end
+%% End Heavyfoot Buru Buru

@@ -1,6 +1,8 @@
 %% *:CS_MechaEncounter Content
 %%
 %%	&Raiders	The enemies are raiders aligned with the enemy NPC/Faction
+%%	&NoAlterElements	This encounter should not alter the story elements
+%%	&NoAlterState		This encounter should not alter the story state (+P,+C,+G,+B)
 %%
 %% This is the basic building block of any adventure- a mecha fight scene.
 %% This component will likely alter the context of the core story.
@@ -117,7 +119,7 @@ Content
 	name <Learn of Enemy Leader>
 	size 6
 	desc <Fight some raiders; learn the identity of their leader, who isn't present.>
-	requires <*:CS_MechaEncounter &Raiders E:-- +H-->
+	requires <*:CS_MechaEncounter &Raiders -&NoAlterElements E:-- +H-->
 
 	% E1 is the outdoors scene where this encounter will be placed
 	% E2 is the metascene to be used for this encounter

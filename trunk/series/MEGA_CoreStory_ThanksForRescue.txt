@@ -345,8 +345,11 @@ Content
 
 	%% E1 is the NPC that the PC rescued
 
-	start <if= PlotStatus %plotid% %id% else %pop% ifNPCDead %1% LoseComp 0 .loss>
+	% p%id%01 = Initialization Counter
+
+	start <ifNPCDead %1% LoseComp 0 .loss>
 	.loss <+T-- +F-->
+	update <if= P%id%01 0 p= %id%01 1 NPCLevel %1% StoryDL>
 
 	sub
 		Persona 1

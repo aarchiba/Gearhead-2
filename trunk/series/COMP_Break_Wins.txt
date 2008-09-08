@@ -55,7 +55,7 @@ Plot
 Plot
 	name <Should Go Get Job>
 	requires <#W +T-- P:++ ~+Gmo>
-	desc <You've completed this mission. Now you can socialize.>
+	desc <You've completed this mission. Now you can get another one.>
 
 	% E1 is an ally of the target faction
 	% E2 is the next scene to visit
@@ -203,8 +203,36 @@ Plot
 	end
 
 Plot
+	name <Meet Me ELsewhere>
+	requires <#W (+Tgt|+Tht|+Tpt) T:++ S:++>
+	desc <The PC will be told to meet the target elsewhere.>
+
+	% E1 is the target
+	% E2 is the informant
+	% E3 is the new city
+	Element1 <Grab 5>
+	Element2 <Character !Near -7 !Okay 1>
+	Element3 <Scene !Far -7 !Comrade -7 Town>
+
+	% v%id%01 = Initialization
+	update <if= v%id%01 0 v= %id%01 1 FreezeNPC %1%>
+	start <ifNPCDead %2% LoseComp 0 na>
+
+	sub
+		Persona 2
+		rumor <%name2% was speaking with %name1% recently.>
+		*greeting <*LookingForNPC %1% GoSuccess GoFail>
+		GoSuccess <NewChat Say 1 StoryNote 2   WinEpisode %3% 0 .next>
+		GoFail <NewChat Say 3 StoryNote 2   WinEpisode %3% 0 .next>
+		.next <>
+		Msg1 <I'm afraid that you've missed \OPR %1% ; \SPR %1% 's just left for %name3%.>
+		Msg2 <%name2% told you that %name1% went to %name3%.>
+		Msg3 <Well, you're out of luck. %name1% isn't in \SCENE RootSceneID any more... as far as I know, \SPR %1% 's gone to %name3%.>
+	end
+
+Plot
 	name <Target Went Elsewhere>
-	requires <#W (+Tgt|+Tht|+Tpt) T:++>
+	requires <#W (+Tgt|+Tht|+Tpt) T:++ S:-->
 	desc <The PC will be told where the target went.>
 
 	% E1 is the target

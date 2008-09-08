@@ -223,6 +223,7 @@ sub
 		team 2
 		name <Enemies>
 		SetEnemy 1
+		update <SetSelfFaction NPCFac %1%   WMecha 2 %threat% 100>
 		ParaX 25
 		ParaY 25
 	end

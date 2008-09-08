@@ -66,8 +66,8 @@ Content
 		special <ARENA SOLO>
 
 		Start <if= L2 0 L= 2 1   Alert 1 ForceChat %1%>
-		nu1 <if= T1 0  Return   if= L1 0 L= 1 1   MoveNPC %1% %2%  StoryNote 4  Print 2   Trigger0 .%id%_%plotid%_GoLose>
-		nu2 <if= T2 0           if= L1 0 L= 1 2   MoveNPC %1% %2%  StoryNote 5  Print 2 AddRenown 1   XPV 100   Trigger0 .%id%_%plotid%_GoWin>
+		nu1 <if= T1 0  Return   if= L1 0 L= 1 1   MoveNPC %1% %2%  History 4  Print 2   Trigger0 .%id%_%plotid%_GoLose>
+		nu2 <if= T2 0           if= L1 0 L= 1 2   MoveNPC %1% %2%  History 5  Print 2 AddRenown 1   XPV 100   Trigger0 .%id%_%plotid%_GoWin>
 
 		Msg1 <%name1% found a large asteroid to fight on>
 		Msg2 <%name1% returns to %name2%.>
@@ -145,8 +145,8 @@ Content
 		special <ARENA>
 
 		Start <if= L2 0 L= 2 1   ForceChat %1%>
-		nu1 <if= T1 0  Return   if= L1 0 L= 1 1   MoveNPC %1% %2%  StoryNote 4  Print 2   Trigger0 .%id%_%plotid%_GoLose>
-		nu2 <if= T2 0           if= L1 0 L= 1 2   MoveNPC %1% %2%  StoryNote 5  Print 2 AddRenown 1   XPV 100  Salvage   Trigger0 .%id%_%plotid%_GoWin>
+		nu1 <if= T1 0  Return   if= L1 0 L= 1 1   MoveNPC %1% %2%  History 4  Print 2   Trigger0 .%id%_%plotid%_GoLose>
+		nu2 <if= T2 0           if= L1 0 L= 1 2   MoveNPC %1% %2%  History 5  Print 2 AddRenown 1   XPV 100  Salvage   Trigger0 .%id%_%plotid%_GoWin>
 
 		Msg2 <%name1% returns to %name2%.>
 		Msg4 <You were defeated by %name1% and \PPR %1% lancemates in a duel.>
@@ -531,8 +531,8 @@ Content
 		special <ARENA SOLO>
 
 		Start <if= L2 0 L= 2 1   ForceChat %1%>
-		nu1 <if= T1 0  Return   if= L1 0 L= 1 1   MoveNPC %1% %2%  StoryNote 4  Print 2   Trigger0 .%id%_%plotid%_GoLose>
-		nu2 <if= T2 0           if= L1 0 L= 1 2   MoveNPC %1% %2%  StoryNote 5  Print 2 AddRenown 1   XPV 100   Trigger0 .%id%_%plotid%_GoWin>
+		nu1 <if= T1 0  Return   if= L1 0 L= 1 1   MoveNPC %1% %2%  History 4  Print 2   Trigger0 .%id%_%plotid%_GoLose>
+		nu2 <if= T2 0           if= L1 0 L= 1 2   MoveNPC %1% %2%  History 5  Print 2 AddRenown 1   XPV 100   Trigger0 .%id%_%plotid%_GoWin>
 
 		Msg2 <%name1% returns to %name2%.>
 		Msg4 <You were defeated by %name1% in a duel.>

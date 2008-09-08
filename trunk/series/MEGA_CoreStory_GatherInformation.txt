@@ -34,6 +34,7 @@ Content
 	% E4 is an outdoors scene for the duel
 	% E5 is the encounter for the duel
 	% E6 is E3's secret which may be revealed
+	% E7 is the enemy, which must be grabbed because it's going to get modified
 	Element2 <NewNPC  0 -7>
 	Place2 </>
 	Element3 <NewNPC -2 -7>
@@ -42,6 +43,8 @@ Content
 	Element5 <Prefab>
 	Place5 <4>
 	Element6 <Prefab>
+	Element7 <Grab 1>
+	Place7 </>
 
 	%% SubPlot1 is the LocateDuel task
 	%% SubPlot2 is the GainAdvantageVsNPC one
@@ -59,7 +62,7 @@ Content
 		name <%name2% and %name3%>
 
 		Secret
-		Msg <%name3% hates %name2% because \SPR %3% was secretly in love with \PERSONA &EnemyNPC .>
+		Msg <%name3% hates %name2% because \SPR %3% was secretly in love with %name7%.>
 	end
 
 
