@@ -7,6 +7,21 @@
 %% In addition, some of these fragments are tied to specific components, and may not
 %% be readily reusable in other components.
 
+% TYPE: *CS_ExplainEnemyNature
+%		&Lover		The NPC explaining is the enemy's lover (or ex)
+%	The PC will be told something about the enemy's personality. Use the E:A.???
+%	and E:M.??? tags to determine the current state. This component is responsible
+%	for the storynote.
+%   PARAM1: Exit Label; may add prompts afterwards
+
+	Persona
+	% Enemy is a professional, seeking perfection in combat
+	requires <*CS_ExplainEnemyNature (E:M.---|E:M.mer)>
+	START <EndChat Say %id%01 StoryNote %id%02 SetXXRMotivation &EnemyNPC XXR_M_Professional Goto %1%>
+	Msg%id%01 <You might think that \PERSONA &EnemyNPC is a simple mercenary, but you'd be wrong. Actually \SPR &EnemyNPC uses conflict as a tool for personal growth; \SPR &EnemyNPC seeks perfection in all things.>
+	Msg%id%02 <You learned from \ChatNPC that \PERSONA &EnemyNPC seeks perfection through combat.>
+
+
 % TYPE: *CS_BasicFightingMission
 %	The PC is being given a basic fighting mission. In this mission, the PC will be
 %	told to go fight some raiders- mecha aligned with the enemy PC/faction.
@@ -153,168 +168,6 @@
 	result%id%01 <Goto %1%>
 	Msg%id%01 <Hello again \PC . We seem to keep bumping into each other... This time, though, will most probably be our last meeting.>
 	Prompt%id%01 <You think you can take me? Come on.>
-
-
-% TYPE: *CORE_D_CE_Questioning
-%	The PC will get to intimidate some of the office workers. Yay!
-%   PARAM1: Successful interrogation exit label
-
-	Persona
-	requires <*CORE_D_CE_Questioning>
-	% v%id%01 = Have successfully interrogated
-	START <if= v%id%01 0 else %1% NewChat Say %id%01  AddChat %id%01 AddChat %id%02>
-	result%id%01 <ifConversation SkillTar StoryDL else .%id%_GoFail   V= %id%01 1   Goto %1%>
-	result%id%02 <ifIntimidation SkillTar StoryDL else .%id%_GoFail   V= %id%01 1   Goto %1%>
-	.%id%_GoFail <NewChat Say %id%02>
-	Msg%id%01 <Yes, may I help you? I'm pretty busy right now.>
-	Msg%id%02 <Sorry, I don't know anything about that. I can't help you.>
-	Prompt%id%01 <Have you noticed anything unusual here lately?>
-	Prompt%id%02 <I'm looking for a spy. You know anything about that?>
-
-
-
-% TYPE: *CORE_D_CE_DeBriefing
-%	This is the debriefing for the Corporate Espionage mission. Basically, the NPC
-%	will ask if the PC has solved the case yet, and the PC will have a chance to say
-%	"yes" or "no".
-
-	Persona
-	requires <*CORE_D_CE_DeBriefing>
-	START <NewChat Say %id%01 AddChat %id%01 AddCHat %id%02 AddCHat %id%03>
-	result%id%01 <NewChat Say %id%02>
-	result%id%02 <if= V%id%01 1 else .%id%_GoR2Reward NewChat Say %id%03>
-	.%id%_GoR2Reward <NewChat Say %id%04 V= %id%01 1 XPV 50 AddRenown 1>
-	result%id%03 <NewChat Say %id%05>
-	Msg%id%01 <So, did you find the spy?>
-	Msg%id%02 <Well, keep looking. He must be around here somewhere.>
-	Msg%id%03 <Wait, you already told me that... You should probably head back to the HQ and let them know what happened.>
-	Msg%id%04 <So that's how it is... I expect the bosses will be very interested to hear what happened. Thanks for the good work.>
-	Msg%id%05 <I see. Well, I guess there's nothing else we can do here.>
-	Prompt%id%01 <No, not yet I didn't.>
-	Prompt%id%02 <Let me tell you all about it.>
-	CPrompt%id%02 <ifG L1 0 Accept>
-	Prompt%id%03 <Let me tell you all about it.>
-	CPrompt%id%03 <ifG 0 L1 Accept>
-
-
-% TYPE: *CORE_D_CE_Briefing
-%	This is the briefing for the Corporate Espionage mission.
-
-	Persona
-	requires <*CORE_D_CE_Briefing>
-	START <NewChat Say %id%01 SMemo %id%02>
-	Msg%id%01 <There was a break-in here recently, and it seemed to be an inside job. That means someone has been collaborating with the enemy... I need you to search around, and see if you can find out who.>
-	Msg%id%02 <\ChatNPC asked you to find the double agent at \ELEMENT 1 .>
-
-% TYPE: *CORE_GuardJob
-%	The PC will be given a default +Tgs mission. The exact text involved
-%	is going to depend upon the propp state and who the mission-giver is.
-%   NOTE: This component is responsible for setting the StoryNote
-%	Generally, a note will be stored for accepting the mission, but not for rejecting
-%	the mission.
-%   PARAM1: Accept Mission Exit Label
-%   PARAM2: Reject Mission Exit Label (Note: Not all missions may be rejected!)
-%	(Also note: If this component features another ending, neither exit may
-%	 be called)
-%   E3 is the scene to be guarded by the PC
-
-	Persona
-	% V%id%01 = Reputation counter
-	requires <*CORE_GuardJob (+P--|+Pme) ~F:-- ~T:CORPO Common>
-	START <NewChat Say %id%01 AddChat %id%01 AddChat %id%02 AddChat %id%03>
-	result%id%01 <if= v%id%01 0 else result%id%02 V= %id%01 1 AddEasygoing -d6  NewChat Say %id%03 AddChat %id%04 AddChat %id%03>
-	result%id%02 <StoryNote %id%02  Goto %1%>
-	result%id%03 <StoryNote %id%04  Goto %2%>
-	result%id%04 <StoryNote %id%02  Goto %1%>
-	Msg%id%01 <This isn't a very exciting job, I'm afraid. I need you to do guard duty at \SCENE E3 .>
-	Msg%id%01_1 <>
-	CMsg%id%01_1 <ifNPCSociable Accept>
-	Msg%id%01_2 <You should report to \SCENE E3 for guard duty.>
-	CMsg%id%01_2 <ifNPCShy Accept>
-	Msg%id%01_3 <I need you to perform guard duty at \SCENE E3 . This should be a nice easy assignment... You might want to bring a novel along, in case you get bored.>
-	CMsg%id%01_3 <ifNPCEasygoing Accept>
-	Msg%id%01_4 <>
-	CMsg%id%01_4 <ifNPCPassionate Accept>
-	Msg%id%01_5 <Congratulations, you've been selected for the absolute easiest job on offer. All you have to do is clock in some guard duty at \ELEMENT 3 .>
-	CMsg%id%01_5 <ifNPCCheerful Accept>
-	Msg%id%01_6 <>
-	CMsg%id%01_6 <ifNPCMelancholy Accept>
-	Msg%id%02 <\ELEMENT 2 sent you to guard \ELEMENT 3 .>
-	Msg%id%03 <I know, you can't wait to get into mecha combat, but if you do well on this job maybe I'll be able to find something else for you to do.>
-	Msg%id%03_1 <I've heard about your combat skills, but there's a lot more to this job than just fighting. Some of it involves long pointless stretches of boredom... but enough about that. Look, if you do your best here, I'll see if I can find a better followup assignment.>
-	CMsg%id%03_1 <ifNPCSociable Accept>
-	Msg%id%03_2 <I'm not in the mood to argue over this.>
-	CMsg%id%03_2 <ifNPCShy Accept>
-	Msg%id%03_3 <Don't think of this as a boring mission... instead, think of it as a chance to catch up on your reading.>
-	CMsg%id%03_3 <ifNPCEasygoing Accept>
-	Msg%id%03_4 <You want to get straight into the action, I see... I can respect that. Unfortunately the boring things need to be done as well.>
-	CMsg%id%03_4 <ifNPCPassionate Accept>
-	Msg%id%03_5 <Cheer up. You could get lucky and \ELEMENT 3 will be attacked. In any case, do well on this assignment and your next one will be better.>
-	CMsg%id%03_5 <ifNPCCheerful Accept>
-	Msg%id%03_6 <Sounds like you'd almost be happy if \ELEMENT 3 got attacked while you're guarding... Do well on this mission and I'll try to make your next job more exciting.>
-	CMsg%id%03_6 <ifNPCMelancholy Accept>
-	Msg%id%04 <You rejected a job offer from \ELEMENT 2 .>
-	prompt%id%01 <Aww, I want a combat mission.>
-	prompt%id%01_1 <I don't want to guard, I want to blow things up!>
-	prompt%id%02 <I'll get there right away.>
-	prompt%id%02_1 <I'm on the way!>
-	prompt%id%03 <No way. If I wanted to be bored I'd play solitaire.>
-	cprompt%id%03 <if# PCFac ChatNPCFac Accept>
-	prompt%id%04 <Okay, I'll do it.>
-	prompt%id%04_1 <Alright. I'll guard your dumb building.>
-
-	Persona
-	requires <*CORE_GuardJob (T:CORPO) F:CRIME (+P--|+Pme|+Pun) Common>
-	% v%id%01 = Trait bonus counter
-	START <NewChat Say %id%01 AddChat %id%01 AddChat %id%02>
-	result%id%01 <StoryNote %id%02 Goto %1%>
-	result%id%02 <NewChat Say %id%03 AddChat %id%03 AddChat %id%04 if= v%id%01 0 V= %id%01 1 AddEasygoing -d8>
-	result%id%03 <StoryNote %id%02 Goto %1%>
-	result%id%04 <Goto %2%>
-	Msg%id%01 <We have some new information: \NARRATIVE 2 is apparently planning to rob \ELEMENT 3 . If we have any hope of stopping them, I need you to get over there right away.>
-	Msg%id%02 <You learned that \ELEMENT 3 was about to be robbed by \NARRATIVE 2 .>
-	Msg%id%03 <You mean, aside from the money?>
-	Prompt%id%01 <I'll go there as soon as possible.>
-	Prompt%id%02 <What's in it for me?>
-	CPrompt%id%02 <if# PCFac ChatNPCFac Accept>
-	Prompt%id%03 <Alright, money sounds good.>
-	Prompt%id%04 <Forget it. I'm out of here.>
-
-	Persona
-	requires <*CORE_GuardJob T:CORPO F:CORPO (+P--|+Pme|+Pun) Common>
-	START <NewChat Say %id%01 AddChat %id%01 AddChat %id%02>
-	result%id%01 <NewChat Say %id%03 AddChat %id%03 AddChat %id%04>
-	result%id%02 <NewChat Say %id%04 AddChat %id%03 AddChat %id%04>
-	result%id%03 <StoryNote %id%02 Goto %1%>
-	result%id%04 <FacXP+ &AllyFac -5 ifNPCVillainous else %2% PCEnemy ChatNPCID Goto %2%>
-	Msg%id%01 <Lately several of our businesses have been attacked by mecha. We can't be sure, but it's thought that \NARRATIVE 2 is responsible.>
-	Msg%id%02 <\ELEMENT 2 asked you to guard \ELEMENT 3 against a possible attack from \NARRATIVE 2 .>
-	Msg%id%03 <I need someone to guard \ELEMENT 3 , and if possible search for evidence of \NARRATIVE 2 's involvement.>
-	Msg%id%04 <Wait! I need someone for guard duty at \ELEMENT 3 . If you could just do this, I promise there'd be a substantial reward afterwards.>
-	Prompt%id%01 <What do you want me to do?>
-	Prompt%id%01_1 <Tell me what you need done.>
-	Prompt%id%02 <Look, this really doesn't interest me.>
-	CPrompt%id%02 <if# PCFac &AllyFac Accept>
-	Prompt%id%03 <I'll get over there right away.>
-	Prompt%id%03_1 <I'm on the case!>
-	Prompt%id%04 <Sorry, I've got better things to do.>
-	Prompt%id%04_1 <You can guard the building by yourself.>
-
-	Persona
-	requires <*CORE_GuardJob T:POLIC F:CRIME Common>
-	START <NewChat Say %id%01 AddChat %id%01>
-	result%id%01 <StoryNote %id%02 Goto %1%>
-	Msg%id%01 <It seems like the next target of \NARRATIVE 2 is going to be \ELEMENT 3 .>
-	Msg%id%02 <\ELEMENT 2 asked you to guard \ELEMENT 3 against \NARRATIVE 2 .>
-	Prompt%id%01 <I'll get over there right away.>
-
-	Persona
-	requires <*CORE_GuardJob>
-	START <NewChat Say %id%01 AddChat %id%01>
-	result%id%01 <StoryNote %id%02 Goto %1%>
-	Msg%id%01 <I need you to guard \ELEMENT 3 .>
-	Msg%id%02 <\ELEMENT 2 asked you to guard \ELEMENT 3 .>
-	Prompt%id%01 <I'll get over there right away.>
 
 
 % TYPE: *CORE_BasicJob

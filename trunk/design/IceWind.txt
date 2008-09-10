@@ -4,6 +4,7 @@ Desig <CBG-87b>
 type <GROUND SPACE>
 factions <GENERAL>
 desc <A light general purpose mecha. This is one of the oldest models in the series still in service.>
+SDL_Portrait <item_icewind.png>
 sub
 Head
 	Size 1
@@ -30,6 +31,7 @@ Torso
 Arm
 	Name <Right Arm>
 	Armor 3
+	Size 2
 	sub
 		Hand
 		inv
@@ -44,8 +46,8 @@ Arm
 			Gun 1
 			Name <Sliver Gun>
 			Acc -1
-			Range 3
-			BV 5
+			Range 5
+			BV 4
 			caliber <8mm sliver>
 			sub
 				Ammo 1
@@ -58,6 +60,7 @@ Arm
 Arm
 	Name <Left Arm>
 	Armor 3
+	Size 2
 	sub
 		Hand
 
@@ -78,6 +81,13 @@ Leg
 
 		Mount
 		Name <Right Leg Mount>
+		inv
+			MLauncher 2
+			sub
+				STC LR-1
+				Magazine 20
+			end
+		end
 	end
 	inv
 		LegArmor 2
@@ -93,6 +103,13 @@ Leg
 
 		Mount
 		Name <Left Leg Mount>
+		inv
+			MLauncher 2
+			sub
+				STC LR-1
+				Magazine 20
+			end
+		end
 	end
 	inv
 		LegArmor 2
@@ -107,6 +124,7 @@ Desig <CBG-88d>
 type <GROUND SPACE>
 factions <GENERAL>
 desc <A light general purpose mecha.>
+SDL_Portrait <item_icewind.png>
 sub
 Head
 	Size 1
@@ -134,6 +152,7 @@ Torso
 Arm
 	Name <Right Arm>
 	Armor 3
+	Size 2
 	sub
 		Hand
 		inv
@@ -141,7 +160,7 @@ Arm
 			Name <Rail Rifle>
 			caliber <30mm ferrous>
 			Acc 1
-			Range 5
+			Range 6
 			Speed 3
 			sub
 				Ammo 8
@@ -164,6 +183,7 @@ Arm
 Arm
 	Name <Left Arm>
 	Armor 3
+	Size 2
 	sub
 		Hand
 

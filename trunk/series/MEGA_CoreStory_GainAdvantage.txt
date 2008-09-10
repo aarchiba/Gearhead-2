@@ -15,9 +15,90 @@
 %% PARAM1: The NPC being opposed
 %%
 
+Content
+	name <The lance is elsewhere>
+	desc <The PC can fight the NPC's lance separately.>
+	requires <*:CS_GainAdvantageVsNPC &Decimation>
 
+	% E1 is the NPC being sought
+	% E2 is a public scene, needed for NEVERFAIL
+	% E3 is a mechanic
+	% E4 is an outdoors scene
+	% E5 is an encounter where the PC can fight the lance
+	Element2 <Scene Public Garage !Near -7>
+	Element3 <Character Mechanic !Near 2 Neverfail>
+	NeverFail3 <Mechanic>
+	Element4 <Scene Outdoors !Near -7>
+	Element5 <Prefab>
+	Place5 <4>
 
+	% P%id%01 = Have revealed encounter
 
+	start <if= p%id%01 0 ifNPCDead %3% LoseSubPlot %plotid%>
+
+	sub
+		Persona 3
+		rumor%id% <%name3% serviced %name1%'s mecha.>
+		% V1 = Info Price
+		greeting <if= PlotStatus %plotid% %id% else GoRepair if= p%id%01 0 else GoRepair Goto GoIntro>
+		*GoIntro <*IHearYouAreFightingNPC %1% GoExplain>
+		GoExplain <v= 1 Threat StoryDL 1 NewChat Say 1 AddChat 1 AddChat 2 AddChat 3>
+		*GoRepair <*SERVICE_MECHANIC GoBye>
+		*GoBye <*GoodBye>
+		result1 <NewChat Say 2 History 3 Cash+ -v1 p= %id%01 1 SetEncounterActive %5%>
+		result2 <NewChat Say 4>
+		result3 <NewChat Say 5 AddChat 1 AddChat 2 AddChat 4>
+		result4 <NewChat Say 6 History 3 p= %id%01 1 SetEncounterActive %5%>
+		Msg1 <It just so happens that I know where %name1%'s lancemates are right now. I don't know where \SPR %1% is, but surely fighting \PPR %1% allies separately is worth something. If you want the info it's going to cost $ \VAL v1 .>
+		Msg2 <You'll be able to find them in %name4%. It's been a pleasure doing business with you.>
+		Msg3 <You learned from %name3% that %name1%'s allies could be found in %name4%.>
+		Msg4 <Don't think too long; I can't say how much longer my info is going to be current.>
+		Msg5 <If you must know, it's because I repaired their mecha and %name1% ran off without paying the bill. I've got a bit of a score to settle.>
+		Msg6 <Good question. I'll get far more satisfaction from seeing %name1% defeated than by recouping my losses... \PPR %1% mecha are supposed to be hanging out in %name4%. Go get them.>
+		Prompt1 <It's a deal. [Give money]>
+		CPrompt1 <ifG PC$ v1 Accept>
+		Prompt2 <I'll think about it.>
+		Prompt3 <Why are you telling me this?>
+		CPrompt3 <ifInvestigation SkillTar StoryDL Accept>
+		Prompt4 <In that case, why are you keeping it a secret?>
+		CPrompt4 <ifConversation SkillTar StoryDL Accept>
+
+		MetaScene 5 2
+		% This encounter will only be available once; if the PC fails to defeat the
+		% henchmen the first time, there will be no second chance.
+		MapWidth 30
+		MapHeight 30
+
+		% L1 = Encounter Over Counter
+		% L2 = Initialization Counter
+
+		Start <if= L2 0 L= 2 1   L= 1 0   Alert 1>
+		nu1 <if= T1 0   Return   if= V1 0 V= 1 1   AddRenown -1  LoseSubPlot %plotid%>
+		nu2 <if= T2 0   if= V1 0 V= 1 1   Alert 2  History 3     XPV 100   WinSubPlot %plotid%   Trigger0 .%id%_%plotid%_GoDecimation>
+		end <SetEncounterInactive %5%>
+
+		Msg1 <You locate some of %name1%'s henchmen.>
+		Msg2 <You have defeated the henchmen. %name1%'s forces must now be considerably weakened.>
+		Msg3 <You defeated a group of %name1%'s henchmen, weakening \PPR %4% forces.>
+
+		sub
+			team 1
+			SetEnemy 2
+			ParaX 5
+			ParaY 5
+
+			team 2
+			SetEnemy 1
+			Deploy <if= PlotStatus %plotid% %id% SetSelfFaction &EnemyFac   WMecha 2 StoryDL 100>
+			ParaX 25
+			ParaY 25
+		end
+
+	end
+	inv
+		stc CORE-ACTIVATABLE
+		name <%name1%'s Henchmen>
+	end
 
 %%
 %% *:CS_GainAdvantageVsMecha Content
