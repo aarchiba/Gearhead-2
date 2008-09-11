@@ -46,13 +46,23 @@ Content
 	Element7 <Grab 1>
 	Place7 </>
 
+	% FAIL CONDITIONS
+	% - LocateDuel fails
+
 	% P%id%01 = Initialization Counter
 	% P%id%02 = Decimation Counter
 	% P%id%03 = Learn Secret Counter
 	% P%id%04 = Have won the encounter
-	update <if= p%id%01 0 p= %id%01 1 NPCLevel %2% StoryDL NPCLevel %3% StoryDL MoveNPC %2% %5% SetNPCTeam %2% 3 MoveNPC %3% %5% SetNPCTeam %3% 2>
+
+	% At initialization, move and level both of the characters, then activate
+	% the three subplots.
+	update <if= p%id%01 0 p= %id%01 1 NPCLevel %2% StoryDL NPCLevel %3% StoryDL MoveNPC %2% %5% SetNPCTeam %2% 3 MoveNPC %3% %5% SetNPCTeam %3% 2 SetPlotStatus %plotid1% %id1% SetPlotStatus %plotid2% %id2% SetPlotStatus %plotid3% %id3%>
+	start <ifSubPlotLost %plotid1% CancelSubPlot %plotid2% CancelSubPlot %plotid3% History %id%01 LoseSubPlot %plotid% Trigger0 .%id%_%plotid%_GoLoss>
+
 	.%id2%_%plotid2%_GoDecimation <P= %id%02 1>
 	.%id3%_%plotid3%_GoLearnSecret <P= %id%03 1>
+
+	Msg%id%01 <You failed to protect %name2% from %name3%.>
 
 	%% SubPlot1 is the LocateDuel task
 	%% SubPlot2 is the GainAdvantageVsNPC one
@@ -130,13 +140,14 @@ Content
 
 		Start <if= L2 0 L= 2 1   L= 1 0   Alert 1 Monologue %2% 2 ForceChat %3% CancelSubPlot %plotid2% CancelSubPlot %plotid3%>
 		nu1 <if= T1 0   Return   if= V1 0 V= 1 1   Goto GoLose>
-		nu2 <if= T2 0   if= V1 0 V= 1 1   ifG T3 0 else GoLose  P= %id%04 1 ForceChat %2%>
+		nu2 <if= T2 0   if= V1 0 V= 1 1   ifG T3 0 else GoLose  P= %id%04 1 History 4 ForceChat %2%>
 		GoLose <Alert 3 StoryNote 3 AddRenown -1  Trigger0 .%id%_%plotid%_GoLoss LoseSubPlot %plotid% ifNPCOK %3% PCEnemy %3%>
 		end <SetEncounterInactive %5%>
 
 		Msg1 <You find %name3% about to attack %name2%.>
 		Msg2 <Help! I'm being attacked!>
 		Msg3 <You failed to protect %name2% from %name3%.>
+		Msg4 <You defeated %name3%.>
 
 		sub
 			team 1

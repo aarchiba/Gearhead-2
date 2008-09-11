@@ -10,8 +10,34 @@
 %% should be enterable from either setting the PlotID and starting a conversation or from
 %% branching within a conversation.
 %%
+%% This subplot ends the plot.
+%%
 %% Param1 = The NPC to make the revelation
 %%
+
+Content
+	name <Revelation: Gather Information>
+	desc <This revelation leads directly into a Gather Information subplot.>
+	requires <*CS_Revelation>
+
+	% E1 is the NPC making the revelation.
+
+	start <ifNPCDead %1% LoseComp 0 .%id%_end>
+	.%id%_end <+T-- +F-->
+
+	.%id1%_%plotid1%_GoWin  <WinComp 0 .%id%_end>
+	.%id1%_%plotid1%_GoLoss <LoseComp 0 .%id%_end>
+
+	% SubPlot1 is the Gather Information subplot.
+	SubPlot1 <*:CS_GatherInformation 1>
+
+	sub
+		Persona 1
+		greeting <if= PlotStatus %plotid% %id% else %pop% Goto .%id%_GoGreet>
+		*.%id%_GoGreet <*RevealSecret .%id%_GoInit>
+		.%id%_GoInit <WinSubPlot %plotid% SetPlotStatus %plotid1% %id1% Goto .%id1%_GoInform>
+	end
+
 
 
 %%  ********************************
@@ -34,7 +60,7 @@ Content
 	Element2 <Faction REDMA !Xclude -3 !Okay -1 -ArchAlly>
 	Element3 <Scene Public Sleazy !Near -7>
 
-	start <if= PlotStatus %plotid% %id% else %pop% ifNPCDead %1% LoseComp 0 .%id%_loss>
+	start <ifNPCDead %1% LoseComp 0 .%id%_loss>
 	.%id%_loss <+T-- +F-->
 
 	sub
