@@ -1,5 +1,13 @@
 % Persona Fragment File
 
+% TYPE: *HurryBackWithMoney
+%	The NPC is offering some kind of service. The PC can't afford it right now.
+
+	Persona
+	requires <*HurryBackWithMoney>
+	START <NewChat Say %id%01>
+	Msg%id%01 <Hurry back when you have the money.>
+
 % TYPE: *YouCouldUseHelp
 %	The NPC has heard that the PC can use some help; usually followed by
 %	either an offer of help or taunting.

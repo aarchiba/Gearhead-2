@@ -64,6 +64,38 @@ Prompt%id%01 <That's right.>
 %           If no subtype is specified, you can use "na" for this.
 
 Persona
+requires <*IHaveInformation &AboutNPC>
+%% V%id%01 = Have already given spiel
+START <if= V%id%01 0 else %1% V= %id%01 1 NewChat Say %id%01 AddChat %id%01>
+Result%id%01 <Goto %1%>
+Msg%id%01_1 <I've heard that you've been asking about \PERSONA %2% . I know some things about \OPR %2% that might be useful to you.>
+CMsg%id%01_1 <ifNPCSociable Accept>
+Msg%id%01_2 <Hey, I've got some info about \PERSONA %2% .>
+CMsg%id%01_2 <ifNPCShy Accept>
+Msg%id%01_3 <>
+CMsg%id%01_3 <ifNPCEasygoing Accept>
+Msg%id%01_4 <>
+CMsg%id%01_4 <ifNPCPassionate Accept>
+Msg%id%01_5 <>
+CMsg%id%01_5 <ifNPCCheerful Accept>
+Msg%id%01_6 <>
+CMsg%id%01_6 <ifNPCMelancholy Accept>
+Prompt%id%01 <You don't say?>
+Prompt%id%01_1 <Really? This I've got to hear.>
+CPrompt%id%01_1 <ifPCSociable Accept>
+Prompt%id%01_2 <Hurry up with it, then.>
+CPrompt%id%01_2 <ifPCShy Accept>
+Prompt%id%01_3 <Cool. What do you know?>
+CPrompt%id%01_3 <ifPCEasygoing Accept>
+Prompt%id%01_4 <This had better be worth my time.>
+CPrompt%id%01_4 <ifPCPassionate Accept>
+Prompt%id%01_5 <Fantastic. Go on.>
+CPrompt%id%01_5 <ifPCCheerful Accept>
+Prompt%id%01_6 <I'm going to regret asking about this, aren't I?>
+CPrompt%id%01_6 <ifPCMelancholy Accept>
+
+
+Persona
 requires <*IHaveInformation "friend">
 %% V%id%01 = Have already given spiel
 START <if= V%id%01 0 else %1% V= %id%01 1 NewChat Say %id%01 AddChat %id%01>
