@@ -51,6 +51,8 @@ const
 	EMR_Crash = -1;		{ If either of these are returned from movement, }
 				{ you should do a check to resolve crashes and charges. }
 
+	SA_Explosion = 'EXPLOSION';
+
 var
 	Destroyed_Parts_List: SAttPtr;
 
@@ -76,10 +78,10 @@ implementation
 
 {$IFDEF ASCII}
 uses 	ability,gearutil,ghchars,ghmodule,ghweapon,movement,rpgdice,texutil,
-	math,vidgfx,ui4gh,ghintrinsic,ghsensor,ghprop;
+	math,vidgfx,ui4gh,ghintrinsic,ghsensor,ghprop,ghsupport;
 {$ELSE}
 uses 	ability,gearutil,ghchars,ghmodule,ghweapon,movement,rpgdice,texutil,
-	math,glgfx,ui4gh,ghintrinsic,ghsensor,ghprop;
+	math,glgfx,ui4gh,ghintrinsic,ghsensor,ghprop,ghsupport;
 {$ENDIF}
 
 const
@@ -501,6 +503,13 @@ var
 		end;
 	end;
 
+	Procedure CriticalEngineFailure( Part: GearPtr );
+		{ So sad; this mecha is set to go boom. }
+	begin
+		Part := FindRoot( Part );
+		if ( Part <> Nil ) and ( Part^.G = GG_Mecha ) then SetNAtt( Part^.NA , NAG_Action , NAS_WillExplode , 1 );
+	end;
+
 	Procedure ApplyDamage( Part: GearPtr; DMG: LongInt);
 		{ Add to the damage total of this part, }
 		{ then check for special effects such as eject rolls, ammo }
@@ -536,6 +545,15 @@ var
 					EjectionCheck( Part^.SubCom );
 				end else if Part^.G = GG_Ammo then begin
 					AmmoExplosion( Part );
+				end else if ( Part^.G = GG_Support ) and ( Part^.S = GS_Engine ) then begin
+					{ If the engine is destroyed, there's a chance for a catastrophic failure. }
+					if Part^.Stat[ STAT_EngineSubType ] = EST_HighPerformance then begin
+						CriticalEngineFailure( Part );
+					end else if Part^.Stat[ STAT_EngineSubType ] <> 0 then begin
+						if Random( 4 ) = 1 then CriticalEngineFailure( Part );
+					end else if Random( 100 ) = 1 then begin
+						CriticalEngineFailure( Part );
+					end;
 				end;
 			end;
 		end;
@@ -870,7 +888,7 @@ var
 	P2: GearPtr;
 	Total,T,Scale: LongInt;
 	TMaster,TPilot: GearPtr;
-	TMasterOK,TPilotOK: Boolean;
+	TMasterOK,TPilotOK,OKatStart: Boolean;
 	MobileAtStart: Boolean;
 begin
 	{ Initialize History Variables. }
@@ -887,6 +905,7 @@ begin
 	TPilot := LocatePilot( TMaster );
 	TMasterOK := ( TMaster <> TPilot ) and NotDestroyed( TMaster );
 	TPilotOK := NoTDestroyed( TPilot );
+	OKatStart := TMasterOK or TPilotOK;
 
 	MobileAtStart := CurrentMoveRate( GB^.Scene , TMaster ) > 0;
 
@@ -976,6 +995,11 @@ begin
 
 	DR.PilotDied := TPilotOK and Destroyed( TPilot );
 	DR.MechaDestroyed := TMasterOK and not GearOperational( TMaster );
+
+	{ Check for explosions here. }
+	if OkAtStart and Destroyed( TMaster ) and ( SAttValue( TMaster^.SA , SA_Explosion ) <> '' ) then begin
+		SetNAtt( TMaster^.NA , NAG_Action , NAS_WillExplode , 1 );
+	end;
 
 	if MobileAtStart and ( CurrentMoveRate( GB^.Scene , TMaster ) = 0 ) and NotDestroyed( TMaster ) then begin
 		Crash( GB , TMaster );

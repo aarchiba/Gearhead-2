@@ -156,9 +156,9 @@ ifPCMale <GrabPCPilot if= GNAtt NAG_CharDescription 0 0>
 ifPCFemale <GrabPCPilot if= GNAtt NAG_CharDescription 0 1>
 ifChatNPCMale <GrabChatNPC if= GNAtt NAG_CharDescription 0 0>
 ifChatNPCFemale <GrabChatNPC if= GNAtt NAG_CharDescription 0 1>
-ifChatNPCFriend <GrabChatNPC if= GNAtt NAG_Relationship 0 NAS_Friend>
-ifChatNPCLover <GrabChatNPC if= GNAtt NAG_Relationship 0 NAS_Lover>
-ifChatNPCFamily <GrabChatNPC if= GNAtt NAG_Relationship 0 NAS_Family>
+ifChatNPCFriend <GrabChatNPC if= GNAtt NAG_Relationship 0 NAV_Friend>
+ifChatNPCLover <GrabChatNPC if= GNAtt NAG_Relationship 0 NAV_Lover>
+ifChatNPCFamily <GrabChatNPC if= GNAtt NAG_Relationship 0 NAV_Family>
 ifNPCLancemate <GrabChatNPC if= GNAtt NAG_Location NAS_Team NAV_LancemateTeam>
 ifNPCHeroic <GrabChatNPC ifG GNAtt NAG_CharDescription -1  0>
 ifNPCVillainous <GrabChatNPC ifG 0  GNAtt NAG_CharDescription -1>
@@ -310,3 +310,4 @@ SetXXRMotivation <GrabNPC ? GSetNAtt NAG_XXRan 101 ?>
 SetXXRAttitude <GrabNPC ? GSetNAtt NAG_XXRan 102 ?>
 Monologue <GrabNPC ? GMonologue ?>
 TeamMonologue <GrabLocal ?Pilot ? GMonologue ?>
+PCMonologue <GrabPCPilot GMonologue ?>

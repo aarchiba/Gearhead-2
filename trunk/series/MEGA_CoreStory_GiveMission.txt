@@ -57,11 +57,12 @@ Content
 		*.%id%_GoKnownGreeting <*IHaveAJobForYou .%id%_GoBriefing>
 		*.%id%_GoUnknownGreeting <*AreYouHereAboutJob&Mecha .%id%_GoBriefing>
 		.%id%_GoBriefing <NewChat Say %id%01 AddChat %id%01 AddChat %id%02>
-		Result%id%01 <SetPlotStatus %plotid1% %id1% Goto .%id1%_GoInform>
+		Result%id%01 <History %id%02 SetPlotStatus %plotid1% %id1% Goto .%id1%_GoInform>
 		*Result%id%02 <*RejectMission .%id%_GoR2Exit>
 		.%id%_GoR2Exit <LoseComp 0 .%id%_changes>
 		.%id%_changes <+T-- +F-->
 		Msg%id%01 <We have a situation going on, \PC . I'd like for you to investigate it and see what you can find out.>
+		Msg%id%02 <%name1% hired you to investigate things.>
 		Prompt%id%01 <I'll do it.>
 		Prompt%id%02 <Sorry, I'm only interested in fighting.>
 		CPrompt%id%02 <if# PCFac ChatNPCFac Accept>

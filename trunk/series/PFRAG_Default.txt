@@ -795,27 +795,6 @@ Prompt%id%01 <What happened here?>
 Prompt%id%02 <This must be hard for you.>
 
 
-% TYPE: *HowWasTheMission
-%	The PC has just completed a mission. The NPC will ask how it went.
-%   PARAM1: Exit script label
-%   PARAM2: Allied Faction (optional)
-%   PARAM3: Enemy Faction (optional)
-
-Persona
-requires <*HowWasTheMission>
-START <if= V%id%01 0 else %1% V= %id%01 1 NewChat Say %id%01 AddChat %id%01 AddChat %id%02>
-Result%id%01 <AddCheerful  d4   Goto %1%>
-Result%id%02 <AddCheerful -d4   Goto %1%>
-Msg%id%01 <How did you do on the mission I assigned to you?>
-Msg%id%01_1 <What's the progress on the mission I assigned to you?>
-Msg%id%01_2 <Did you complete the mission I assigned to you?>
-Prompt%id%01 <It went well.>
-Prompt%id%01_1 <Everything went okay.>
-Prompt%id%02 <I don't want to talk about it...>
-Prompt%id%02_1 <Things didn't go so well...>
-
-
-
 % TYPE: *ThanksForRescue
 %	The NPC has been rescued by the PC and will now say thanks.
 %   PARAM1: Exit script label

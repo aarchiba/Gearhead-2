@@ -410,7 +410,7 @@ begin
 				end;
 
 				GetMekInput( M , Camp , IsPlayerMek );
-				if ( Calltime <= NAttValue( M^.NA , NAG_Action , NAS_CallTime ) ) and not IsPlayerMek then begin
+				if ( Calltime >= NAttValue( M^.NA , NAG_Action , NAS_CallTime ) ) and not IsPlayerMek then begin
 					{ This model is apparently wasting time, somehow. }
 					SetNAtt( M^.NA , NAG_Action , NAS_CallTime , Camp^.GB^.ComTime + 1);
 				end;

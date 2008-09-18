@@ -378,6 +378,7 @@ Const
 	NAS_Dodge = 10;
 	NAS_Awareness = 11;
 	NAS_Vitality = 13;
+	NAS_ElectronicWarfare = 17;
 	NAS_Conversation = 19;
 	NAS_Shopping = 21;
 	NAS_Flirtation = 27;

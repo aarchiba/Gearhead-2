@@ -12,6 +12,14 @@ name <Hull>
 Armor 4
 	sub
 		CPit
+		Armor 1
+
+		Engine 6
+		HighPerformance
+		Armor 2
+
+		Gyro
+		Armor 1
 
 		Sensor 6
 		ECM 4
@@ -19,7 +27,6 @@ Armor 4
 		Flight 5
 
 		Computer 3
-		mass -3
 		sub
 			Software 2
 			name <White Whale TarComp>
@@ -63,7 +70,7 @@ Turret
 		Range 7
 		Recharge 1
 		type <BRUTAL>
-		Mass -7
+		Mass -4
 		sub
 			Ammo 20
 			Magazine 15

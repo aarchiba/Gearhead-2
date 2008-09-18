@@ -268,65 +268,6 @@ Plot
 %%  ***   +Pun  Unknown  Enemy  Attacks   ***
 %%  *****************************************
 
-Content
-	name <What do you think?>
-	desc <The PC will be asked for his opinion about these recent attacks.>
-	requires <*CS_Conversation +Pun +F-- F:-- (C:POLIT|C:MEDIA|C:TRADE|+Gpe|+Gkn) ~1:MEDIA ~1:POLIT>
-	Size 1
-
-	% E1 is the NPC being spoken to
-	% E2 is a public scene to investigate
-	% E3 is an environs scene to go to
-	% E4 is an encounter there
-	% E5 is a character for a mission
-	Element2 <Scene Public Meeting !Near -7>
-	Element3 <Scene Environs !Near -7>
-	Element4 <Prefab>
-	Place4 <3>
-	Element5 <Character HasMecha !XClude -1 !Okay -3 -ArchEnemy !Near -7>
-
-	start <if= PlotStatus %plotid% %id% else %pop% ifNPCDead %1% LoseComp 0 .%id%_loss>
-	.%id%_loss <+T-- +F-->
-
-	sub
-		Persona 1
-		% v%id%01 = Reputation Counter
-		greeting <if= PlotStatus %plotid% %id% else %pop% ifChatNPCUnknown else .%id%_GoKnownGreeting if= ChatNPCRelationship 0 else .%id%_GoKnownGreeting Goto .%id%_GoUnknownGreeting>
-		*.%id%_GoKnownGreeting <*HowAreYou .%id%_GoTalk>
-		*.%id%_GoUnknownGreeting <*NiceToMeetYou .%id%_GoTalk>
-		.%id%_GoTalk <NewChat Say %id%01 AddChat %id%01 AddChat %id%02 AddChat %id%03>
-		result%id%01 <NewChat Say %id%02 AddChat %id%04 AddChat %id%05 AddChat %id%06>
-		result%id%02 <NewChat Say %id%03 AddChat %id%04 AddChat %id%05 AddChat %id%06 if= v%id%01 0 v= %id%01 1 AddSociable -d10>
-		result%id%03 <NewChat Say %id%04 AddChat %id%04 AddChat %id%05 AddChat %id%06 if= v%id%01 0 v= %id%01 1 AddSociable  d10>
-		result%id%04 <NewChat Say %id%05 StoryNote %id%06 WinComp %2% .%id%_SearchInfo>
-		.%id%_SearchInfo <+Tgs +Fin>
-		result%id%05 <NewChat Say %id%05 StoryNote %id%07 WinComp %4% .%id%_Patrol>
-		.%id%_Patrol <+Tgs +F-->
-		result%id%06 <NewChat Say %id%08 StoryNote %id%09 &SetTargetNPC %5% WinComp 0 .%id%_NoPlan AddRenown -1>
-		.%id%_NoPlan <+Tgt +Fmi>
-		Msg%id%01 <I was wondering what you think of the unexplained mecha attacks we've been having recently.>
-		Msg%id%02 <Really? That's not what I've heard. They say that you're pretty deeply involved with this yourself. What's your plan of action?>
-		Msg%id%03 <Sounds mysterious. So, do you have a plan for dealing with this threat?>
-		Msg%id%04 <\PERSONA &EnemyNPC , you say? This could be serious. So, do you have a plan for dealing with this problem?>
-		Msg%id%05 <Sounds good. I hope you can solve this mess before things get out of hand.>
-		Msg%id%06 <You told %name1% that you were going to search %name2% for information.>
-		Msg%id%07 <You told %name1% that you were going to patrol %name3% for enemies.>
-		Msg%id%08 <Seriously? Well, if you ever get tired of wandering around aimlessly, you could always try to find %name5% and ask for a mission. I don't know if that would help but it couldn't hurt.>
-		Msg%id%09 <%name1% suggested that you see %name5% about a mission.>
-		Prompt%id%01 <I honestly don't know anything.>
-		Prompt%id%02 <Sorry, but that's classified information.>
-		Prompt%id%03 <I know that \PERSONA &EnemyNPC is involved, somehow.>
-		CPrompt%id%03 <ifNPCOK &EnemyNPC Accept>
-		Prompt%id%04 <I'm going to search %name2% for information.>
-		Prompt%id%05 <I'm going to patrol %name3% for hostile mecha.>
-		Prompt%id%06 <Plan? I don't need a plan.>
-	end
-	inv
-		STC ENCOUNTER-WANDER
-		name <Mysterious Mecha>
-		EncounterMove 25
-	end
-
 
 Plot
 	name <They're After an Item>
@@ -572,6 +513,49 @@ Content
 %%  *******************
 
 Content
+	name <Are you out of work?>
+	desc <The person the PC is speaking with has a job lead.>
+	requires <*CS_Conversation 1:FRIEND P:-->
+
+	% E1 is the person being spoken to.
+	% E2 is a nearby person who might be offering a mission.
+	% E3 is a nearby public scene.
+	Element2 <Character (POLIT|POLIC|MILIT|CORPO) !XClude -1 !XClude -2 !Okay -3 -ArchEnemy !Near -7>
+	Element3 <Scene Building Public !Okay 2 !Near -7>
+
+	% Fail Conditions:
+	% - E1 dies
+	start <ifNPCDead %1% LoseComp 0 .%id%_loss>
+	.%id%_loss <+T-- +F-->
+
+	sub
+		Persona 1
+		greeting <if= PlotStatus %plotid% %id% else %pop% Goto .%id%_GoGreet>
+		*.%id%_GoGreet <*HowAreYou .%id%_GoOfferJob>
+		.%id%_GoOfferJob <NewChat Say %id%01 AddChat %id%01 AddChat %id%02 AddCHat %id%03>
+		.%id%_GoGiveMission <StoryNote %id%02 &SetTargetNPC %2% WinComp %3% .%id%_next>
+		.%id%_next <+Tgt +Fmi>
+		.%id%_GoE2Died <NewChat Say %id%04 StoryNote %id%06 LoseComp 0 .%id%_fail>
+		.%id%_fail <+T-- +F-->
+
+		result%id%01 <ifNPCOK %2% else .%id%_GoE2Died   NewChat Say %id%03   AddCheerful  d6   Goto .%id%_GoGiveMission>
+		result%id%02 <ifNPCOK %2% else .%id%_GoE2Died   NewChat Say %id%03   AddCheerful -d6   Goto .%id%_GoGiveMission>
+		result%id%03 <ifNPCOK %2% else .%id%_GoE2Died   NewChat Say %id%05  &SetAllyFac PCFac  Goto .%id%_GoGiveMission>
+
+		Msg%id%01 <Say, are you looking for work right now? I know that you don't have a real job, but I've got someone who might be able to set you up.>
+		Msg%id%02 <%name1% suggested that you ask %name2% at %name3% for a mission.>
+		Msg%id%03 <%name2% over at %name3% is looking for someone to do a mission. You should go talk to \OPR %2% . If I put in a good word, you're almost certain to be the one who gets the job.>
+		Msg%id%04 <Wait a minute... No, the person I was going to refer you to died a little while ago. Sorry, I've got nothing.>
+		Msg%id%05 <Really? Well good for you! Still, a little bit of work on the side never hurts. My friend %name2% is looking for someone to fill a mission over at %name3%. You should go talk to \OPR %2% .>
+		Msg%id%06 <An unexpected death prevented you from finding a job.>
+
+		Prompt%id%01 <Yeah, that'd be great!>
+		Prompt%id%02 <I resent the implications of what you're saying, but go on.>
+		Prompt%id%03 <Hey, I've got a job! I work for \FACTION PCFac !>
+		CPrompt%id%03 <if# PCFac 0 Accept>
+	end
+
+Content
 	name <Help Me With This Mission>
 	desc <The person the PC is speaking with needs help on a mission.>
 	requires <*CS_Conversation +F-- (1:FRIEND|1:PCFAC) (1:MILIT|1:ADVEN) -1:ENEMY>
@@ -621,7 +605,6 @@ Content
 		Msg%id%04 <You agreed to locate and defeat a group of raiders for %name1%, who is sick.>
 		Prompt%id%01 <Of course I can help you.>
 		Prompt%id%02 <You better have a pretty good reward waiting when I get back.>
-
 	end
 	inv
 		stc CORE-ACTIVATABLE
@@ -703,7 +686,7 @@ Plot
 
 	% E1 is the person with the information
 
-	start <if= PlotStatus %plotid% %id% else %pop% ifNPCDead %1% LoseComp 0 .%id%_loss>
+	start <ifNPCDead %1% LoseComp 0 .%id%_loss>
 	.%id%_loss <+T-- +F-->
 
 	% SubPlot1 is the secret to be revealed

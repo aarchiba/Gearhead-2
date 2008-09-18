@@ -46,7 +46,8 @@ const
 	GS_Engine = 2;
 
 	STAT_EngineSubType = 2;
-	EST_HighOutput = 1;
+	EST_HighOutput = 1;		{ Increased energy point supply }
+	EST_HighPerformance = 2;	{ Improved MV/TR, reduced energy points, may go boom }
 
 
 	{ G = GG_Cockpit }
@@ -146,6 +147,7 @@ begin
 	end else if Part^.S = GS_Engine then begin
 		case Part^.Stat[ STAT_EngineSubType ] of
 			EST_HighOutput: it := Part^.V * 1000;
+			EST_HighPerformance: it := Part^.V * 1500;
 			else it := Part^.V * 45;
 		end;
 	end else it := Part^.V * 45;

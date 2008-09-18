@@ -74,7 +74,7 @@ Content
 		nu1 <if= T1 0 Return if= L2 0 L= 2 1 Goto GoLoseMission>
 		nu2 <if= T2 0 if= T4 0 if= L2 0 L= 2 1 Salvage ifG T3 0 else GoLoseMission Goto GoWinMission>
 		GoLoseMission <Alert 2             Trigger0 .%id%_%plotid%_GoLoss  LoseSubPlot %plotid%>
-		GoWinMission  <Alert 3   XPV 100   Trigger0 .%id%_%plotid%_GoWin   WinSubPlot %plotid%>
+		GoWinMission  <Alert 3   History 5   XPV 100   Trigger0 .%id%_%plotid%_GoWin   WinSubPlot %plotid%>
 
 		end <SetEncounterInactive %3%>
 
@@ -82,6 +82,7 @@ Content
 		Msg2 <You did not manage to save the factory.>
 		Msg3 <You defended the factory against %name1%'s forces.>
 		Msg4 <Your reinforcements are here, as promised.>
+		Msg5 <You defended a factory against %name1%'s forces.>
 
 		sub
 			Team 1

@@ -1808,18 +1808,18 @@ SDL_SPRITE <monster_rat.png>
 SDL_COLORS <65 174 42 65 174 42 220 250 26>
 type <mutant>
 habitat <>
+explosion <8 DAMAGE 20 0 ArmorPiercing Brutal Haywire Blast 2>
 statline 8 1 9 8 6 5 2 2
 MonsterTV 27
 skill 8 3
+skill 10 1
 sub
 head
 	sub
-		Melee 9
-		name <Self-Destruct>
+		Melee 3
+		name <Bite>
 		Acc 1
-		recharge 5
-		mass -15
-		type <ArmorPiercing Brutal Blast 3>
+		recharge 3
 	end
 torso
 leg

@@ -937,7 +937,9 @@ end;
 
 Procedure ResolveAfterEffects( GB: GameBoardPtr );
 	{ Check the gameboard for mecha which have either crashed or charged. }
-	{ Search for charges first, crashes second. }
+	{ 1. Charge }
+	{ 2. Explosions }
+	{ 3. Crashes }
 var
 	FakeGB: GameBoardPtr;
 	Mek,Target: GearPtr;
@@ -964,6 +966,25 @@ begin
 
 			SetNAtt( Mek^.NA , NAG_Action , NAS_WillCharge , 0 );
 			SetNAtt( Mek^.NA , NAG_Action , NAS_ChargeSpeed , 0 );
+		end;
+		Mek := Mek^.Next;
+	end;
+
+	{ Check for explosions now. }
+	Mek := GB^.Meks;
+	while Mek <> Nil do begin
+		V := NAttValue( Mek^.NA , NAG_Action , NAS_WillExplode );
+		if V > 0 then begin
+			{ Generate a fake gameboard to be used for screen output. }
+			FakeGB := CloneMap( GB );
+
+			DoReactorExplosion( GB , Mek );
+
+			{ Report the effect of the attack. }
+			Display_Effect_History( FakeGB );
+			DisposeMapClone( FakeGB );
+
+			SetNAtt( Mek^.NA , NAG_Action , NAS_WillExplode , 0 );
 		end;
 		Mek := Mek^.Next;
 	end;

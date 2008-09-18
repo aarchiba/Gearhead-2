@@ -144,6 +144,7 @@ Procedure Explosion( GB: GameBoardPtr; X0,Y0,DC,R: Integer );
 
 Procedure DoAttack( GB: GameBoardPtr; Attacker,Target: GearPtr; X,Y,Z,AtOp: Integer);
 Procedure DoCharge( GB: GameBoardPtr; Attacker,Target: GearPtr );
+Procedure DoReactorExplosion( GB: GameBoardPtr; Victim: GearPtr );
 
 Procedure HandleEffectString( GB: GameBoardPtr; Target: GearPtr; FX_String,FX_Desc: String );
 Procedure MassEffectString( GB: GameBoardPtr; FX_String,FX_Desc: String );
@@ -2367,6 +2368,43 @@ begin
 	end;
 end;
 
+Procedure AddNonDamagingEffects( var AtAt: String; var ER: EffectRequest; ResistSkill: Integer );
+	{ Add status effects and other non-damaging effects to this effect request. }
+	{ ResistSkill is the skill number recorded in status effect checks; for attacks, this should }
+	{ be the Electronic Warfare skill, but for non-attack effects it should be a straight }
+	{ resistance target. }
+var
+	msg: String;
+	T: Integer;
+begin
+	if AStringHasBString( AtAt , AA_Name[ AA_Overload ] ) then begin
+		msg := FX_Overload + '  17 ' + FX_CANRESIST;
+		StoreSAtt( ER.FXList , msg );
+	end;
+
+	if AStringHasBString( AtAt , AA_Name[ AA_Smoke ] ) then begin
+		msg := FX_CreateSTC + ' SMOKE-1';
+		StoreSAtt( ER.FXList , msg );
+	end;
+	if AStringHasBString( AtAt , AA_Name[ AA_Gas ] ) then begin
+		msg := FX_CreateSTC + ' GAS-1';
+		StoreSAtt( ER.FXList , msg );
+	end;
+	if AStringHasBString( AtAt , AA_Name[ AA_Drone ] ) then begin
+		msg := FX_CreateSTC + ' DRONE-1';
+		StoreSAtt( ER.FXList , msg );
+	end;
+
+
+	{ Add status effects here. }
+	for t := 1 to Num_Status_FX do begin
+		if AStringHasBString( AtAt , SX_Name[ T ] ) then begin
+			{ All status effects are done using EW skill now. }
+			msg := FX_CauseStatusEffect + ' ' + BStr( T ) + ' ' + BStr( ResistSkill ) + ' ' + FX_CANRESIST;
+			StoreSAtt( ER.FXList , msg );
+		end;
+	end;
+end;
 
 Function BuildAttackRequest( Attacker: GearPtr; AtOp: Integer; var AtAt: String ): EffectRequest;
 	{ Create the effect request for this particular attack. }
@@ -2431,33 +2469,7 @@ begin
 	end;
 
 	{ Add the extra effects here. }
-	if AStringHasBString( AtAt , AA_Name[ AA_Overload ] ) then begin
-		msg := FX_Overload + '  17 ' + FX_CANRESIST;
-		StoreSAtt( ER.FXList , msg );
-	end;
-
-	if AStringHasBString( AtAt , AA_Name[ AA_Smoke ] ) then begin
-		msg := FX_CreateSTC + ' SMOKE-1';
-		StoreSAtt( ER.FXList , msg );
-	end;
-	if AStringHasBString( AtAt , AA_Name[ AA_Gas ] ) then begin
-		msg := FX_CreateSTC + ' GAS-1';
-		StoreSAtt( ER.FXList , msg );
-	end;
-	if AStringHasBString( AtAt , AA_Name[ AA_Drone ] ) then begin
-		msg := FX_CreateSTC + ' DRONE-1';
-		StoreSAtt( ER.FXList , msg );
-	end;
-
-
-	{ Add status effects here. }
-	for t := 1 to Num_Status_FX do begin
-		if AStringHasBString( AtAt , SX_Name[ T ] ) then begin
-			{ All status effects are done using EW skill now. }
-			msg := FX_CauseStatusEffect + ' ' + BStr( T ) + ' 17 ' + FX_CANRESIST;
-			StoreSAtt( ER.FXList , msg );
-		end;
-	end;
+	AddNonDamagingEffects( AtAt , ER , NAS_ElectronicWarfare );
 
 	BuildAttackRequest := ER;
 end;
@@ -2910,6 +2922,63 @@ begin
 	FinishEffectRequest( ER );
 end;
 
+Procedure DoReactorExplosion( GB: GameBoardPtr; Victim: GearPtr );
+	{ Yay! This mecha is going to blow up. It might not actually be a mecha- maybe }
+	{ it's a radioactive rat or a barrel of explosive chemicals or something else. }
+const
+	Standard_Reactor_Explosion = 'DAMAGE 15 0 BRUTAL BLAST 1 ' + FX_CanDodge;	{ Cause DAMAGE, Dodge 15 to defend, Brutal }
+var
+	FX_String: String;
+	ER: EffectRequest;
+	Area: MapStencil;
+	P: Point;
+	R: Integer;
+	msg: String;
+begin
+	InitEffectRequest( ER );
+
+	{ Determine the FX_String. This will tell us everything we need to know. }
+	FX_String := SAttValue( Victim^.SA , SA_Explosion );
+	if FX_String = '' then begin
+		{ No custom string. This must be a regular reaction explosion. }
+		FX_String := Standard_Reactor_Explosion;
+		ER.FXDice := 5 + 3 * MasterSize( Victim );
+	end else begin
+		{ Custom string. Groovy. The first value should be the intensity of the effect. }
+		ER.FXDice := ExtractValue( FX_String );
+	end;
+
+	{ Record the explosion announcement. }
+	msg := SAttValue( Victim^.SA , 'EXPLOSION_DESC' );
+	if msg = '' then msg := MsgString( 'EXPLOSION_DESC' );
+	msg := ReplaceHash( msg , GearName( Victim ) );
+	RecordAnnouncement( msg );
+	StartNewAnnouncement;
+
+	{ Store the primary effect. }
+	StoreSAtt( ER.FXList , FX_String );
+
+	{ Determine the non-damaging effects; status FX and the like. }
+	AddNonDamagingEffects( FX_String , ER , ER.FXDice );
+
+	{ Determine the blast radius. This will always be at least 1. }
+	R := BlastRadius( GB , Victim , FX_String );
+	if R < 1 then R := 1;
+
+	{ Draw the blast radius. }
+	ClearStencil( Area );
+	P := GearCurrentLocation( Victim );
+	DrawBlastEffect( GB , P.X , P.Y , MekAltitude( GB , Victim ) , R , Area );
+
+	ProcessEffect( GB , ER , Area , 0);
+
+	{ Finalize any pending announcements. }
+	FlushAnnouncements;
+
+	{ Get rid of any dynamic resources allocated. }
+	FinishEffectRequest( ER );
+end;
+
 Procedure HandleEffectString( GB: GameBoardPtr; Target: GearPtr; FX_String,FX_Desc: String );
 	{ An effect string has been triggered. Better do whatever it says. }
 var
@@ -2929,13 +2998,7 @@ begin
 	StoreSAtt( ER.FXList , FX_String );
 
 	{ Add status effects here. }
-	for t := 1 to Num_Status_FX do begin
-		if AStringHasBString( FX_String , SX_Name[ T ] ) then begin
-			{ All status effects are done using EW skill now. }
-			msg := FX_CauseStatusEffect + ' ' + BStr( T ) + ' ' + BStr( ER.FXDice ) + ' ' + FX_CANRESIST + ' ' + FX_STRING;
-			StoreSAtt( ER.FXList , msg );
-		end;
-	end;
+	AddNonDamagingEffects( FX_String , ER , ER.FXDice );
 
 	DoEffectAgainstGear( GB , ER , Target , 0 );
 
@@ -2966,13 +3029,7 @@ begin
 	StoreSAtt( ER.FXList , FX_String );
 
 	{ Add status effects here. }
-	for t := 1 to Num_Status_FX do begin
-		if AStringHasBString( FX_String , SX_Name[ T ] ) then begin
-			{ All status effects are done using EW skill now. }
-			msg := FX_CauseStatusEffect + ' ' + BStr( T ) + ' ' + BStr( ER.FXDice ) + ' ' + FX_CANRESIST + ' ' + FX_STRING;
-			StoreSAtt( ER.FXList , msg );
-		end;
-	end;
+	AddNonDamagingEffects( FX_String , ER , ER.FXDice );
 
 	{ Loop through all the models on the board, and apply the effect against them. }
 	M := GB^.Meks;

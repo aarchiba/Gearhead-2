@@ -253,7 +253,7 @@ begin
 		it := ( Part^.Stat[ STAT_Body ] + 2 ) div 3;
 		if it < 1 then it := 1
 		else if it > 10 then it := 10;
-	end;
+	end else it := 0;
 
 	MasterSize := it;
 end;
@@ -1205,6 +1205,12 @@ begin
 		{ The head bonus only applies for those forms which are cleared }
 		{ to use their heads. }
 		if InGoodModule( CPit ) and ( FindModule( CPit )^.S = GS_Head ) then Inc( MV );
+	end;
+
+	{ Seek the engine. If it's high performance, +1 to both MV and TR. }
+	CPit := SeekGear( Mek , GG_Support , GS_Engine , False );
+	if CPit <> Nil then begin
+		if CPit^.Stat[ STAT_EngineSubType ] = EST_HighPerformance then MV := MV + 1;
 	end;
 
 	BaseMVTVScore := MV;
@@ -2355,7 +2361,8 @@ begin
 		it := Part^.V * 25;
 	end else if ( Part^.G = GG_Support ) and ( Part^.S = GS_Engine ) then begin
 		it := Part^.V * 25;
-		if Part^.Stat[ STAT_EngineSubType ] = EST_HighOutput then it := it * 2;
+		if Part^.Stat[ STAT_EngineSubType ] = EST_HighOutput then it := it * 2
+		else if Part^.Stat[ STAT_EngineSubType ] = EST_HighPerformance then it := it div 2;
 	end else if Part^.G = GG_Prop then begin
 		{ Props get loads of energy. Being stationary, it's easy to add lots of }
 		{ batteries or connect them to a power source. }

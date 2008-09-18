@@ -134,6 +134,7 @@ const
 				{ The value is the UID of the target. }
 	NAS_ChargeSpeed = 13;	{ Speed at the time the charge is declared. }
 	NAS_MightGiveUp = 14;	{ The NPC will make an ejection/surrender check now. }
+	NAS_WillExplode = 15;	{ The target's gonna blow up real good. }
 
 	NAG_EnvironmentData = 22;	{ Tells things about the scene. }
 					{ Environment data is inherited by encounters and }

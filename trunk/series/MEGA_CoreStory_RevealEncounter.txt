@@ -35,11 +35,11 @@ Content
 		MapWidth 30
 		MapHeight 30
 
-		% The time limit is five minutes, plus an additional minute for each
+		% The time limit is five minutes, plus an additional two minutes for each
 		% previous attempt.
-		Start <if= L2 0 L= 2 1   L= 1 0   Monologue %4% 1  Alert 2 L= 4 ComTime L+ 4 300 L+ 4 * 60 L5  L+ 5 1  if= L3 0 L= 3 1 SMemo 3>
+		Start <if= L2 0 L= 2 1   L= 1 0   Monologue %4% 1  Alert 2 L= 4 ComTime L+ 4 300 L+ 4 * 120 L5  L+ 5 1  if= L3 0 L= 3 1 SMemo 3>
 		nu1 <if= T1 0   Return>
-		nu2 <if= T2 0   Return  if= V1 0   V= 1 1   ifG L4 ComTime else GoTooLate Alert 4 StoryNote 5   SetEncounterActive %2% SeekGate %2% WinSubPlot %plotid%>
+		nu2 <if= T2 0   Return  if= V1 0   V= 1 1   ifG L4 ComTime else GoTooLate Alert 4 StoryNote 5   SetEncounterActive %2% SeekGate %2% WinSubPlot %plotid% if= L5 1 XPV 100>
 		GoTooLate <Alert 6  AddRenown -1>
 		end <L= 2 0>
 
@@ -168,9 +168,9 @@ Content
 		GoNoUse <Print 2>
 		clue14 <Alert 7>
 		clue29 <Alert 7>
-		clue32 <if= PlotStatus %plotid% %id1% else GoNoUse ifCodeBreaking HardSkillTar &StoryDL else GoFail  Alert 3 Goto GoReveal>
+		clue32 <if= PlotStatus %plotid% %id1% else GoNoUse ifCodeBreaking HardSkillTar StoryDL else GoFail  Alert 3 Goto GoReveal>
 		clue34 <Alert 7>
-		clue37 <if= PlotStatus %plotid% %id1% else GoNoUse ifInvestigation SkillTar &StoryDL else GoFail     Alert 4 Goto GoReveal>
+		clue37 <if= PlotStatus %plotid% %id1% else GoNoUse ifInvestigation SkillTar StoryDL else GoFail     Alert 4 Goto GoReveal>
 		GoReveal <StoryNote 5 SetEncounterActive %2% WinSubPlot %plotid% XPV 100>
 		GoFail <Alert 6>
 		Msg1 <This diary tells all the mundane details of being a henchman. Still, you're certain that there must be a clue in it somewhere.>
@@ -269,7 +269,93 @@ Content
 %%
 
 Content
-	name <>
+	name <Confused Raider>
+	desc <The PC will meet one of the raiders, who is lost.>
+	requires <*:CS_RevealEncounter_Raiders>
+	Size 2
+
+	% E1 is the outdoor scene where the encounter is
+	% E2 is the MetaScene being sought
+	% E3 is a local scene for the rowdy raider
+	% E4 is the confused raider
+	Element3 <Scene Public !Near -7>
+	Element4 <Prefab>
+	Place4 </>
+
+	%% FAIL CONDITIONS:
+	%% - If E4 dies, this subplot will fail.
+
+	% p%id%01 = Initialization Counter
+	% p%id%02 = Message Counter
+	start <ifNPCDead %4% else .%id%_GoCheckEntrance LoseSubPlot %plotid%>
+	update <if= p%id%01 0   p= %id%01 1   NPCLevel %4% StoryDL   MoveAndPacifyNPC %4% %3%>
+	.%id%_GoCheckEntrance <if= P%id%02 0 if= SceneID %3%   ifUAwareness 4   Alert %id%01   P= %id%02 1>
+
+	Surrender%4% <if= PlotStatus %plotid% %id% Monologue %4% %id%02 StoryNote %id%03 Print %id%04 FreezeNPC %4% PCEnemy %4% XPV 100  SetEncounterActive %2% WinSubPlot %plotid%>
+
+	Msg%id%01 <As you enter %name3%, you notice %name4% wandering around and looking confused.>
+	Msg%id%02 <Alright, I give up... You'll find the raiders in %name1%, if you even know where that is.>
+	Msg%id%03 <You defeated %name4%, who revealed that the raiders are in %name1%.>
+	Msg%id%04 <%name4% leaves the area.>
+
+	% SubPlot1 is what happens if E4 leaves the area.
+	SubPlot1 <*TrailRaiderToBase 1 2 4>
+
+	sub
+		Persona 4
+		rumor%id% <there's a confused pilot hanging out at %name3%.>
+		special <UNLISTED>
+		greeting <if= PlotStatus %plotid% %id% else GoChat NewChat Say 1 AddChat 1 AddChat 2 AddChat 3>
+		GoChat <NewChat SayAnything>
+		GoReveal <SMemo 11 History 12 XPV 100 SetEncounterActive %2% WinSubPlot %plotid%>
+		result1 <NewChat Say 2 AddChat 4 AddChat 5>
+		result2 <Print 3 History 4 SMemo 5 SetPlotStatus %plotid1% %id1% Goto GoR2Finish>
+		*GoR2Finish <*BrushOff>
+		result3 <ifIntimidation HardSkillTar StoryDL else result2 NewChat Say 6 AddChat 6>
+		result4 <EndChat Say 7 Print 3 History 4 SMemo 5 SetPlotStatus %plotid1% %id1%>
+		result5 <ifConversation SkillTar StoryDL else GoR5Fail NewChat Say 8 AddChat 7 AddChat 8 AddChat 9>
+		GoR5Fail <EndChat Say 9 Print 3 History 4 SMemo 5 SetPlotStatus %plotid1% %id1%>
+		result6 <ifConversation SkillTar StoryDL else GoR6Fail NewChat Say 10 Goto GoReveal>
+		GoR6Fail <EndChat Say 13 Print 3 History 4 SMemo 5 SetPlotStatus %plotid1% %id1%>
+		result7 <ifConversation HardSkillTar StoryDL else GoR7Fail NewChat Say 14 Goto GoReveal>
+		GoR7Fail <EndChat Say 15 Print 3 History 4 SMemo 5 SetPlotStatus %plotid1% %id1%>
+		result8 <EndChat Say 16 Print 3 History 4 SMemo 5 SetPlotStatus %plotid1% %id1%>
+		result9 <ifFlirtation SkillTar StoryDL else GoR9Fail NewChat Say 17 ifG React d100 else GoReveal if= &AmoreNPC 0 else GoReveal ifG ChatNPCDAge -3 else GoReveal  PCLover %4% History 18  Goto GoReveal>
+		GoR9Fail <EndChat Say 19 Print 3 History 4 SMemo 5 SetPlotStatus %plotid1% %id1%>
+		Msg1 <Yes, what do you want? I'm kind of busy right now.>
+		Msg2 <Well, I really shouldn't be talking about this to anyone... I'll do fine by myself.>
+		Msg3 <%name4% leaves the area.>
+		Msg4 <%name4% left before you could learn where the raiders were.>
+		Msg5 <%name4% left before you could learn where the raiders are, but you may still be able to find \OPR %4% nearby.>
+		Msg6 <Blazes... you're looking for the raiders I'm supposed to be meeting, aren't you!? I knew I should never have signed on for this job...>
+		Msg7 <Don't worry. I know exactly what I'm doing... now, which way was the door again?>
+		Msg8 <The problem is that I'm a little bit lost. I was supposed to meet some other pilots for a mission, but I have no idea how to find them. How well do you know this area?>
+		Msg9 <I appreciate the offer, but this is really something I have to do myself. I should get going.>
+		Msg10 <Alright... you'll be able to find them in %name1%. As for me, I'm going somewhere very far away from all of this.>
+		Msg11 <You learned from %name4% that the raiders can be found in %name1%.>
+		Msg12 <You learned from %name4% that the raiders were in %name1%.>
+		Msg13 <Forget it, I'll take my chances with running.>
+		Msg14 <That's great! Here, they gave me this map but I can't make heads or tails of it. It's supposed to be someplace in %name1% but I can't see it. Really, if I can't figure it out soon, I'm not even going to bother going.>
+		Msg15 <That doesn't seem too likely. I think I'm better off on my own. Now, which way was the door...?>
+		Msg16 <Seriously? Well, never mind then... I'll find it on my own.>
+		Msg17 <Really? Well, I was told that we'd be meeting in %name1%, but if you're going with me I'm not really interested in the mission anymore...>
+		Msg18 <You flirted with %name4%.>
+		Msg19 <Ewww... In that case, I think I better find them quickly, and on my own...>
+		Prompt1 <You look like you could use some help.>
+		Prompt2 <Nothing, I just wanted to chat.>
+		Prompt3 <I'm on the lookout for suspicious characters. Seen any?>
+		Prompt4 <Suit yourself. It's dangerous out there.>
+		Prompt5 <Come on, I won't tell anyone.>
+		Prompt6 <Tell me where they are, and I'll go easy on you.>
+		Prompt7 <I know it like the back of my hand.>
+		Prompt8 <Not very well at all, actually.>
+		Prompt9 <Not that well, but I'll stick with you all the way.>
+		CPrompt9 <ifChatNPCSexy Accept>
+	end
+	inv
+		NPC Mecha Pilot
+		chardesc Young Cheerful
+	end
 
 Content
 	name <Rowdy Raider>
@@ -335,7 +421,7 @@ Content
 		Msg%id%04 <I don't know... I'm not the one who makes that kind of decision. You'd have to talk to the boss.>
 		Msg%id%05 <If you don't have anything to say then keep away from me.>
 		Msg%id%06 <%name4% leaves the area.>
-		Msg%id%07 <%name4% left before you could learn where the raiders are.>
+		Msg%id%07 <%name4% left before you could learn where the raiders were.>
 		Msg%id%08 <Not if I keep an eye on you first... or something. I'm outta here.>
 		Msg%id%09 <You're gonna die!>
 		Msg%id%10 <Hey, no need for that... if you're seriously looking for them, the team I'm signed on with is assembling at %name1%. As for me, I'm gonna go somewhere very far away...>
@@ -420,11 +506,11 @@ Content
 		MapWidth 30
 		MapHeight 30
 
-		% The time limit is five minutes, plus an additional minute for each
+		% The time limit is five minutes, plus an additional two minutes for each
 		% previous attempt.
-		Start <if= L2 0 L= 2 1   L= 1 0   Monologue %3% 1  Alert 2 L= 4 ComTime L+ 4 300 L+ 4 * 60 L5  L+ 5 1  if= L3 0 L= 3 1 SMemo 3>
+		Start <if= L2 0 L= 2 1   L= 1 0   Monologue %3% 1  Alert 2 L= 4 ComTime L+ 4 300 L+ 4 * 120 L5  L+ 5 1  if= L3 0 L= 3 1 SMemo 3>
 		nu1 <if= T1 0   Return>
-		nu2 <if= T2 0   Return  if= V1 0   V= 1 1   ifG L4 ComTime else GoTooLate Alert 4 StoryNote 5   SetEncounterActive %2% SeekGate %2% WinSubPlot %plotid%>
+		nu2 <if= T2 0   Return  if= V1 0   V= 1 1   ifG L4 ComTime else GoTooLate Alert 4 StoryNote 5   SetEncounterActive %2% SeekGate %2% WinSubPlot %plotid% if= L5 1 XPV 100>
 		GoTooLate <Alert 6  AddRenown -1>
 		end <L= 2 0>
 
