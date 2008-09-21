@@ -146,8 +146,8 @@ begin
 		it := 50;
 	end else if Part^.S = GS_Engine then begin
 		case Part^.Stat[ STAT_EngineSubType ] of
-			EST_HighOutput: it := Part^.V * 1000;
-			EST_HighPerformance: it := Part^.V * 1500;
+			EST_HighOutput: it := Part^.V * 200;
+			EST_HighPerformance: it := Part^.V * 200;
 			else it := Part^.V * 45;
 		end;
 	end else it := Part^.V * 45;

@@ -1187,13 +1187,13 @@ end;
 Procedure AddGearXRContext( GB: GameBoardPtr; Adv,Part: GearPtr; var Context: String; palette_entry_code: Char );
 	{ Add the context information for PART to CONTEXT. }
 const
-	Num_XXR_Motivations = 6;
-	Num_XXR_Attitudes = 5;
+	Num_XXR_Motivations = 8;
+	Num_XXR_Attitudes = 9;
 	XXR_Motivation: Array [1..Num_XXR_Motivations] of String[3] = (
-		'mer', 'pro', 'ggd', 'see', 'rev', 'cha'
+		'mer', 'pro', 'ggd', 'see', 'rev', 'cha', 'com', 'nih'
 	);
 	XXR_Attitude: Array [1..Num_XXR_Attitudes] of String[3] = (
-		'jr_', 'sr_', 'sec', 'equ', 'gru'
+		'jr_', 'sr_', 'sec', 'equ', 'env', 'pch', 'hat', 'mut', 'obs'
 	);
 var
 	F: GearPtr;

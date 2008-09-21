@@ -230,11 +230,13 @@ Character Arc Descriptors
 [c]:M.???	NPC Character Arc/Motivation
 	[c]:M.---	Unknown quantity
 	[c]:M.mer	Mercenary. NPC is in it for the money.
-	[c]:M.pro	Professional. NPC seeks to further the aims of their faction.
+	[c]:M.pro	Professional. NPC seeks his personal best.
+	[c]:M.com	Competitor. NPC seeks to be better than others.
 	[c]:M.ggd	Greater Good. NPC believers self to be working for greater good.
 	[c]:M.see	Seeker. The NPC still hasn't found what they're looking for.
 	[c]:M.rev	Revenge.
 	[c]:M.cha	Change. The NPC seeks to change his current situation.
+	[c]:M.nih	Nihilism. The NPC seeks destruction.
 
 [c]:A.???	Attitude towards PC
 	[c]:A.---	Unknown quantity
@@ -242,6 +244,12 @@ Character Arc Descriptors
 	[c]:A.sr_	NPC is PC's senior/superior/mentor
 	[c]:A.sec	NPC is keeping a secret from the PC
 	[c]:A.equ	NPC respects the PC as an equal
-	[c]:A.gru	NPC has a grudge against the PC
+	[c]:A.env	NPC envies the PC
+	[c]:A.pch	PC has a reason to hate the NPC
+	[c]:A.hat	NPC has a reason to hate the PC
+	[c]:A.mut	The PC and NPC have reasons to hate one another mutually
+	[c]:A.obs	NPC obsessed with the PC
+
+
 
 
