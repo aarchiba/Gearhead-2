@@ -815,7 +815,7 @@ Procedure PutAwayGear( GB: GameBoardPtr; var Mek,PCForces: GearPtr );
 	begin
 		if ( GB^.Scene = Nil ) or IsInvCom( GB^.Scene ) or ( GB^.Scene^.S < 0 ) then begin
 			ShouldBeMoved := True;
-		end else if ( GB^.Scene^.G = GG_MetaScene ) and ( Mek^.G = GG_Mecha ) then begin
+		end else if ( GB^.Scene^.G = GG_MetaScene ) then begin
 			ShouldBeMoved := True;
 		end else if Mek^.G = GG_Character then begin
 			ShouldBeMoved := True;

@@ -255,6 +255,153 @@ Content
 	end
 
 %%
+%% *:CS_RevealEncounter_NPCBase Content
+%%		&PirateShip	The base is a pirate ship. Arr!
+%%
+%% You're searching for the base/ship/hideout of a particular NPC.
+%% The name may be expressed here as "%name3%'s %name2%", for instance
+%% "Magoo's Pirate Ship" or "Bertram's Secret Base".
+%%
+%% When the PC has located the encounter, this subplot will make it visible
+%% with SetEncounterActive and conclude with WinSubPlot. Revealing the entrance
+%% in this subplot will typically give the PC 100XP.
+%%
+%% PARAM1: The outdoors scene where the encounter is
+%% PARAM2: The MetaScene being sought
+%% PARAM3: The NPC in charge of it
+%%
+
+Plot
+	name <All-Knowing Smuggler>
+	requires <*:CS_RevealEncounter_NPCBase>
+	desc <There's a smuggler who can tell you how to get where you're going.>
+	% This component has no size, even though the PC must perform a task to move on;
+	% the size will be provided by the duel subplot.
+
+	% E1 is the outdoors scene where it is
+	% E2 is the metascene being sought
+	% E3 is the NPC in charge of it
+	% E4 is the All-Knowing Smuggler
+	% E5 is an outdoors scene for the duel
+	% E6 is a public scene for the NPC
+	Element4 <Prefab>
+	Place4 <6 sd ally>
+	Element5 <Scene Environs !Near -7>
+	Element6 <Scene Public !Near -7>
+
+	% SubPlot1 is the duel itself
+	% SubPlot2 is a blank plot state
+	SubPlot1 <*CS_Duel&NoDerailment 4 6 5>
+
+	% As long as we're still at this phase, the NPC's death will end the plot.
+	start <ifNPCDead %4% LoseSubPlot %plotid%>
+
+	% Duel Results
+	.%id1%_%plotid%_GoWin <Monologue %4% %id%01  PMemo %plotid% %id%02 ShowEntrance %2% WinSubPlot %plotid%>
+	.%id1%_%plotid%_GoLose <Monologue %4% %id%03 PMemo %plotid% %id%04 MoveNPC %4% %6% SetPlotStatus %plotid% %id%>
+
+	Msg%id%01 <You won... I'll upload the details for %name3%'s %name2% to your navcomp.>
+	Msg%id%02 <%name4% revealed %name3%'s %name2%'s location in %name1%.>
+	Msg%id%03 <You lost... I'll be waiting for you at %name6%.>
+	Msg%id%04 <You lost the duel against %name4%, so now you have no choice but to pay for the information.>
+
+	sub
+		Persona 4
+		rumor%id% <%name4% knows where to find just about everything in this town.>
+		% V1 = Have previously dueled
+		% V2 = Price for revealing location
+		greeting <if# PlotStatus %plotid% %id% else GoExplain NewChat SayAnything>
+		*GoExplain <*LookingForScene %2% GoSetPrice>
+		GoSetPrice <if= V2 0 else GoOffer V= 2 Threat StoryDL 5 Goto GoOffer>
+		GoOffer <NewChat Say 1 PMemo %plotid% 2 AddChat 1 AddChat 2 AddChat 3>
+		result1 <NewChat Say 3 History 4 Cash+ -V2 ShowEntrance %2% WinSubPlot %plotid%>
+		result2 <NewChat Say 5 AddChat 4 AddChat 5 AddChat 6>
+		*result3 <*HurryBackWithMoney>
+		result4 <NewChat Say 7  PMemo %plotid% 8 History 9 V= 1 1 V= 2 * 2 V2 SetPlotStatus %plotid% %id1%>
+		result5 <NewChat Say 10 PMemo %plotid% 8 History 9 V= 1 1 V= 2 * 3 V2 SetPlotStatus %plotid% %id1%>
+		result6 <NewChat Say 11 AddChat 1>
+		Msg1 <I know where %name3%'s %name2% is. I could tell you, but information doesn't come cheap... It's going to cost you $ \VAL V2 to find out.>
+		Msg2 <%name4% offered to tell you where %name3%'s %name2% is, in exchange for $ \VAL V2 .>
+		Msg3 <Ah, it's been a pleasure taking your money. This chip holds the coordinates of %name3%'s %name2% in %name1%. You should be able to find it quite easily.>
+		Msg4 <%name4% revealed the location of %name3%'s %name2% in %name1%.>
+		Msg5 <Duel for it? What is this, a Love Magnet holiday special? I've got no reason to duel- everything to lose and nothing to gain. I've told you my price. If you don't like it then you can do without.>
+		Msg7 <Chicken? You think I'm afraid of you!? That's it, we're on. Meet me in %name5%. If you win I'll tell you where to find %name3%, but if I win you'll be paying double for the info.>
+		Msg8 <You challenged %name4% to a duel in order to learn the location of %name3%; \SPR %4% 's waiting for you in %name5%.>
+		Msg9 <You challenged %name4% to learn the location of %name3%.>
+		Msg10 <I can't refuse that. Meet me in %name5% as soon as you're ready.>
+		Msg11 <Yes, of course I am. Just come on back whenever you've got the cash and the info will be yours.>
+		Prompt1 <This is highway robbery. [Give Money]>
+		CPrompt1 <ifG PC$ V2 Accept>
+		Prompt2 <How about we duel for the info instead?>
+		CPrompt2 <if= V1 0 Accept>
+		Prompt3 <I'll be back when I have the money.>
+		Prompt4 <It's okay, I can see you're too chicken...>
+		CPrompt4 <ifTaunt SkillTar StoryDL Accept>
+		Prompt5 <If you win, I'll pay three times what you're asking now.>
+		CPrompt5 <ifG PCEgo 10 Accept>
+		Prompt6 <I guess you're right.>
+	end
+	inv
+		NPC Pirate
+		job <Smuggler>
+	end
+
+Content
+	name <Walk In On Robbery>
+	desc <The PC will walk in as a pirate robs a store.>
+	requires <*:CS_RevealEncounter_NPCBase (&PirateShip|3:THIEF|3:CRIHN|3:REDMA)>
+	Size 3
+
+	% E1 is the outdoors scene
+	% E2 is the encounter to reveal
+	% E3 is the pirate captain
+	% E4 is a shopping area in town
+	% E5 is a junior pirate to rob the joint
+	Element4 <Scene Building Public Mall !Near -7>
+	Element5 <Prefab>
+	Place5 <4 (Citizens) pass>
+
+	% p%id%01 = Message Counter
+	start <if= p%id%01 0   if= SceneID %4%   p= %id%01 1   Alert %id%01 History %id%02 ForceChat %5% FreezeNPC %5%>
+	.%id%_%plotid%_GoArrest <Alert %id%03 Alert %id%04 PCEnemy %5% PMemo %plotid% %id%05 History %id%06 XPV 100 SetEncounterActive %2% WinSubPlot %plotid%>
+
+	Msg%id%01 <As you enter the shop you bump into %name5%, who is running out the door with a large sack of stolen goods.>
+	Msg%id%02 <You walked into %name4% as %name5% was robbing it.>
+	Msg%id%03 <The guards arrive to take %name5% away.>
+	Msg%id%04 <As they leave, you notice a hand-drawn map which %name5% must have dropped. It shows a pirate ship moored in %name1%.>
+	Msg%id%05 <You learned from %name5% that %name3%'s %name2% can be found in %name1%.>
+	Msg%id%06 <You caught %name5%, and learned where to find %name3%'s %name2%.>
+
+	% SubPlot1 is the tracking subplot.
+	SubPlot1 <*TrailRaiderToBase 1 2 5>
+
+	sub
+		Persona 5
+		rumor%id% <they should hire some better security guards at %name4%.>
+		special <UNLISTED NOESCAPE>
+		greeting <if= PlotStatus %plotid% %id% else GoChat  EndChat Say 1 AddChat 1 AddChat 2 AddChat 3>
+		GoChat <NewChat SayAnything>
+		result1 <EndChat Say 2 Print 3 SMemo 4 SetPlotStatus %plotid1% %id1%>
+		result2 <Alert 5 EndChat Say 6 Trigger0 .%id%_%plotid%_GoArrest>
+		result3 <Alert 7 EndChat Say 6 Trigger0 .%id%_%plotid%_GoArrest>
+		Msg1 <Out of the way! Pirate coming through!>
+		Msg2 <Ha ha! %name3% will pay top money for this loot!>
+		Msg3 <%name5% leaves the area.>
+		Msg4 <%name5% left before you could discover where %name3%'s %name2% is, but you may still be able to find \OPR %5% nearby.>
+		Msg5 <%name5% stops dead in \PPR %5% tracks.>
+		Msg6 <Gah! I surrender!>
+		Msg7 <You wrestle %name5% to the ground and put \OPR %5% in a headlock.>
+		Prompt1 <[Get out of the way]>
+		Prompt2 <Halt, or I shoot!>
+		CPrompt2 <ifIntimidation HardSkillTar StoryDL Accept>
+		Prompt3 <[Trip %name5%]>
+		CPrompt3 <ifMartialArts HardSkillTar StoryDL Accept>
+	end
+	inv
+		NPC Pirate
+	end
+
+%%
 %% *:CS_RevealEncounter_Raiders Content
 %%
 %% There are some hostile mecha out there which are aligned with the
@@ -267,6 +414,63 @@ Content
 %% PARAM1: The outdoors scene where the encounter is
 %% PARAM2: The MetaScene being sought
 %%
+
+Content
+	name <Fifth Column>
+	desc <Your friend on the other side will help you out.>
+	requires <*:CS_RevealEncounter_Raiders F:++>
+	Size 5
+
+	% E1 is the outdoor scene where the encounter is
+	% E2 is the MetaScene being sought
+	% E3 is an encounter
+	% E4 is the PC's friend
+	Element3 <Prefab>
+	Place3 <1>
+	Element4 <Character !Global !Ally -2 (Friend|Lover|Family|ArchAlly)>
+	Place4 <3 sd ally (Friend)>
+
+	sub
+		MetaScene 3 2
+		MapWidth 10
+		MapHeight 10
+		% L1 = Initialization Counter
+		Start <if= L1 0 L= 1 1   ForceChat %4%>
+		sub
+			team 1
+			SetAlly 2
+			ParaX 4
+			ParaY 4
+
+			team 2
+			name <Friend>
+			SetAlly 1
+			ParaX 6
+			ParaY 6
+		end
+
+		Persona 4
+		rumor%id% <%name4% has been looking for you in %name1%.>
+		special <UNLISTED NOESCAPE>
+		greeting <EndChat Say 1 AddCHat 1 AddChat 2>
+		GoRevealLocation <EndChat Say 2 History 3 PMemo %plotid% 4 SetEncounterActive %2% WinSubPlot %plotid% Return SeekGate %2%>
+		result1 <AddCheerful  d6   Goto GoRevealLocation>
+		result2 <AddCheerful -d6   Goto GoRevealLocation>
+		Msg1 <Sorry to be meeting in such a bad place, \PC , but you realize it wouldn't be safe meeting with you anywhere else.>
+		Msg2 <I don't have much time to talk, but I wanted to pass on this information- the mecha you're looking for can be found nearby. I'll upload the coordinates to your navcomp. Goodbye, \PC , and good luck.>
+		Msg3 <%name4% betrayed \FACTION &EnemyFac to tell you where the raiders were.>
+		Msg4 <%name4% revealed the location of the raiders in %name1%.>
+		Prompt1 <No problem. I appreciate the risk you're taking.>
+		Prompt2 <You could've given me a hand with those guards, at least.>
+	end
+	inv
+		STC CORE-ACTIVATABLE-STATIONARY-DEFENDED
+		name <%name4%'s Mecha>
+		update <if= PlotStatus %plotid% %id% else GoHide  SetStat STAT_MetaVisibility 0  Goto GoSetOrders>
+		attack <>
+		ENCOUNTER_Combat
+	end
+
 
 Content
 	name <Confused Raider>
@@ -307,21 +511,21 @@ Content
 		special <UNLISTED>
 		greeting <if= PlotStatus %plotid% %id% else GoChat NewChat Say 1 AddChat 1 AddChat 2 AddChat 3>
 		GoChat <NewChat SayAnything>
-		GoReveal <SMemo 11 History 12 XPV 100 SetEncounterActive %2% WinSubPlot %plotid%>
+		GoReveal <PMemo %plotid% 11 History 12 XPV 100 SetEncounterActive %2% WinSubPlot %plotid%>
 		result1 <NewChat Say 2 AddChat 4 AddChat 5>
-		result2 <Print 3 History 4 SMemo 5 SetPlotStatus %plotid1% %id1% Goto GoR2Finish>
+		result2 <Print 3 History 4 PMemo %plotid% 5 SetPlotStatus %plotid1% %id1% Goto GoR2Finish>
 		*GoR2Finish <*BrushOff>
 		result3 <ifIntimidation HardSkillTar StoryDL else result2 NewChat Say 6 AddChat 6>
-		result4 <EndChat Say 7 Print 3 History 4 SMemo 5 SetPlotStatus %plotid1% %id1%>
+		result4 <EndChat Say 7 Print 3 History 4 PMemo %plotid% 5 SetPlotStatus %plotid1% %id1%>
 		result5 <ifConversation SkillTar StoryDL else GoR5Fail NewChat Say 8 AddChat 7 AddChat 8 AddChat 9>
-		GoR5Fail <EndChat Say 9 Print 3 History 4 SMemo 5 SetPlotStatus %plotid1% %id1%>
+		GoR5Fail <EndChat Say 9 Print 3 History 4 PMemo %plotid% 5 SetPlotStatus %plotid1% %id1%>
 		result6 <ifConversation SkillTar StoryDL else GoR6Fail NewChat Say 10 Goto GoReveal>
-		GoR6Fail <EndChat Say 13 Print 3 History 4 SMemo 5 SetPlotStatus %plotid1% %id1%>
+		GoR6Fail <EndChat Say 13 Print 3 History 4 PMemo %plotid% 5 SetPlotStatus %plotid1% %id1%>
 		result7 <ifConversation HardSkillTar StoryDL else GoR7Fail NewChat Say 14 Goto GoReveal>
-		GoR7Fail <EndChat Say 15 Print 3 History 4 SMemo 5 SetPlotStatus %plotid1% %id1%>
-		result8 <EndChat Say 16 Print 3 History 4 SMemo 5 SetPlotStatus %plotid1% %id1%>
+		GoR7Fail <EndChat Say 15 Print 3 History 4 PMemo %plotid% 5 SetPlotStatus %plotid1% %id1%>
+		result8 <EndChat Say 16 Print 3 History 4 PMemo %plotid% 5 SetPlotStatus %plotid1% %id1%>
 		result9 <ifFlirtation SkillTar StoryDL else GoR9Fail NewChat Say 17 ifG React d100 else GoReveal if= &AmoreNPC 0 else GoReveal ifG ChatNPCDAge -3 else GoReveal  PCLover %4% History 18  Goto GoReveal>
-		GoR9Fail <EndChat Say 19 Print 3 History 4 SMemo 5 SetPlotStatus %plotid1% %id1%>
+		GoR9Fail <EndChat Say 19 Print 3 History 4 PMemo %plotid% 5 SetPlotStatus %plotid1% %id1%>
 		Msg1 <Yes, what do you want? I'm kind of busy right now.>
 		Msg2 <Well, I really shouldn't be talking about this to anyone... I'll do fine by myself.>
 		Msg3 <%name4% leaves the area.>
@@ -403,7 +607,7 @@ Content
 		GoChat <NewChat SayAnything>
 		GoThreat <NewChat Say %id%02 AddChat %id%04 AddChat %id%05>
 		GoJobOffer <NewChat Say %id%04 AddCHat %id%09 AddChat %id%10>
-		GoRaiderFlees <Print %id%06 History %id%07 SMemo %id%16 SetPlotStatus %plotid1% %id1%>
+		GoRaiderFlees <Print %id%06 History %id%07 PMemo %plotid% %id%16 SetPlotStatus %plotid1% %id1%>
 		GoStartFight <EndChat Say %id%09 SoloAttack %4%>
 		result%id%01 <ifConversation hardSkillTar StoryDL else GoThreat  NewChat Say %id%03 AddChat %id%06 AddChat %id%07 AddChat %id%08>
 		result%id%02 <ifConversation SkillTar StoryDL else GoThreat      Goto GoJobOffer>
@@ -508,7 +712,7 @@ Content
 
 		% The time limit is five minutes, plus an additional two minutes for each
 		% previous attempt.
-		Start <if= L2 0 L= 2 1   L= 1 0   Monologue %3% 1  Alert 2 L= 4 ComTime L+ 4 300 L+ 4 * 120 L5  L+ 5 1  if= L3 0 L= 3 1 SMemo 3>
+		Start <if= L2 0 L= 2 1   L= 1 0   Monologue %3% 1  Alert 2 L= 4 ComTime L+ 4 300 L+ 4 * 120 L5  L+ 5 1  if= L3 0 L= 3 1 PMemo %plotid% 3>
 		nu1 <if= T1 0   Return>
 		nu2 <if= T2 0   Return  if= V1 0   V= 1 1   ifG L4 ComTime else GoTooLate Alert 4 StoryNote 5   SetEncounterActive %2% SeekGate %2% WinSubPlot %plotid% if= L5 1 XPV 100>
 		GoTooLate <Alert 6  AddRenown -1>
@@ -680,164 +884,6 @@ Plot
 		Msg3 <You learned from %name4% where to find %name1%.>
 	end
 
-Plot
-	name <Fifth Column>
-	requires <*CS_RevealEncounter &EnemyBase F:++>
-	desc <Your friend on the other side will help you out.>
-	Size 1
-
-	% E1 is the metascene being sought
-	% E2 is the outdoors scene where it is
-	% E3 is a public scene for the NPC
-	% E4 is the NPC
-	Element3 <Scene Public !Near -7 !Okay -2>
-	Element4 <Character Friend !Global !Ally -2>
-	Place4 <3 (Citizens) pass ally>
-
-	% SubPlot1 is a blank plot state.
-	SubPlot1 <*UTIL_BlankState>
-
-	% P%id%01 = EMail Counter
-	% As long as we're still at this phase, the NPC's death will end the plot.
-	start <if= PlotStatus %plotid% %id% else %pop% ifNPCDead %4% LoseComp 0 .%id%_changes>
-	.%id%_changes <+T-- +F-->
-
-	5Min <if= PlotStatus %plotid% %id% else %pop% if= P%id%01 0 if= d4 3 P= %id%01 1 Email %id%01>
-
-	Msg%id%01 <%name4%@ \SCENE &EpisodeScene :// Come see me in %name3%; I've got some important information for you.>
-
-	sub
-		Persona 4
-		rumor%id% <there's a mysterious person hanging out at %name3%.>
-		greeting <if# PlotStatus %plotid% %id% else .%id%_GoGreet NewChat SayAnything>
-		*.%id%_GoGreet <*IHaveInformation&AboutScene .%id%_GoReveal %1%>
-		.%id%_GoReveal <NewChat Say %id%01 SMemo %id%02 History %id%03 ShowEntrance %1% SetPlotStatus %plotid% %id1% AddChat %id%01 AddChat %id%02>
-		result%id%01 <NewChat Say %id%04>
-		result%id%02 <NewChat Say %id%05 AddCheerful -d4>
-		Msg%id%01 <I'm risking a lot telling you this, but... the secret base belonging to \FACTION &EnemyFac ? You'll find it in %name2%. Here, these navpoints will lead you straight to it.>
-		Msg%id%01_1 <I shouldn't tell you this, but... the secret base you're looking for? It's here in %name2%. I'll give you the coordinates.>
-		Msg%id%01_2 <This could get me in trouble with \FACTION &EnemyFac , but I thought you should know... Their secret base is in %name2%. I can upload the coordinates to your navcomp.>
-		Msg%id%02 <Your friend %name4% told you the location of %name1% in %name2%.>
-		Msg%id%03 <Your friend %name4% revealed the location of the base.>
-		Msg%id%04 <You're welcome. Good luck out there, OK?>
-		Msg%id%04_1 <Hey, that's what friends are for.>
-		CMsg%id%04_1 <ifNPCSociable Accept>
-		Msg%id%04_2 <Don't mention it. No, seriously, don't mention it...>
-		CMsg%id%04_2 <ifNPCShy Accept>
-		Msg%id%04_3 <Hey, no problem.>
-		CMsg%id%04_3 <ifNPCEasygoing Accept>
-		Msg%id%04_4 <Just promise me that you'll make it count, okay?>
-		CMsg%id%04_4 <ifNPCPassionate Accept>
-		Msg%id%04_5 <I'm sure you'll have a chance to repay the favor, someday. Good luck.>
-		CMsg%id%04_5 <ifNPCCheerful Accept>
-		Msg%id%04_6 <If word gets out that I passed on this information, I'm toast. Just make sure you make this count.>
-		CMsg%id%04_6 <ifNPCMelancholy Accept>
-		Msg%id%04_7 <I only wish I could be more help.>
-		CMsg%id%04_7 <ifNPCHeroic Accept>
-		Msg%id%04_8 <Don't worry, nothing is ever freely given. I expect this kindness of mine to be fully repaid at some point in the future.>
-		CMsg%id%04_8 <ifNPCVillainous Accept>
-		Msg%id%04_9 <Honestly, I just want to see you humiliate \PERSONA &EnemyNPC . Get over there and give \OPR &EnemyNPC hell!>
-		CMsg%id%04_9 <ifNPCOK &EnemyNPC Accept>
-		Msg%id%05 <I have my reasons. Look, \PC , you should get going...>
-		Msg%id%05_1 <I think we both know why. Good luck out there, \PC .>
-		CMsg%id%05_1 <ifNPCSociable Accept>
-		Msg%id%05_2 <I'd rather not say. Do your best with the information, \PC .>
-		CMsg%id%05_2 <ifNPCShy Accept>
-		Msg%id%05_3 <Does it really matter? Good luck storming the base, \PC .>
-		CMsg%id%05_3 <ifNPCEasygoing Accept>
-		Msg%id%05_4 <I can't just sit idly by and do nothing, can I? I've done what I had to do, now you do what you have to...>
-		CMsg%id%05_4 <ifNPCPassionate Accept>
-		Msg%id%05_5 <Don't sweat it. I know that you'd do the same for me.>
-		CMsg%id%05_5 <ifNPCCheerful Accept>
-		Msg%id%05_6 <We mustn't talk about that... You should go. If they see us together, it would be very dangerous.>
-		CMsg%id%05_6 <ifNPCMelancholy Accept>
-		Msg%id%05_7 <We both know that what \FACTION &EnemyFac is doing is wrong... I only hope that together we can steer them back to rightness.>
-		CMsg%id%05_7 <ifNPCHeroic Accept>
-		Msg%id%05_8 <Let's just say that when you sweep in to destroy everything, I'll be waiting to pick up the pieces. We both have much to gain.>
-		CMsg%id%05_8 <ifNPCVillainous Accept>
-		Msg%id%05_9 <Mostly, it's just that I want to see \PERSONA &EnemyNPC defeated.>
-		CMsg%id%05_9 <ifNPCOK &EnemyNPC Accept>
-		Prompt%id%01 <Thanks. This will be a great help.>
-		Prompt%id%02 <Why are you doing this?>
-	end
-
-Plot
-	name <All-Knowing Smuggler>
-	requires <*CS_RevealEncounter>
-	desc <There's a smuggler who can tell you how to get where you're going.>
-	% This component has no size, even though the PC must perform a task to move on;
-	% the size will be provided by the duel subplot.
-
-	% E1 is the metascene being sought
-	% E2 is the outdoors scene where it is
-	% E3 is a public scene for the NPC
-	% E4 is the NPC
-	% E5 is an outdoors scene for the duel
-	Element3 <Scene Public !Near -7>
-	Element4 <Prefab>
-	Place4 <3 sd ally>
-	Element5 <Scene Environs !Near -7>
-
-	% SubPlot1 is the duel itself
-	% SubPlot2 is a blank plot state
-	SubPlot1 <*CS_Duel&NoDerailment 4 3 5>
-	SubPlot2 <*UTIL_BlankState>
-
-	% As long as we're still at this phase, the NPC's death will end the plot.
-	start <if= PlotStatus %plotid% %id% else %pop% ifNPCDead %4% LoseComp 0 .%id%_changes>
-	.%id%_changes <+T-- +F-->
-
-	% Duel Results
-	.%id1%_%plotid%_GoWin <Monologue %4% %id%01 SMemo %id%02 ShowEntrance %1% SetPlotStatus %plotid% %id2%>
-	.%id1%_%plotid%_GoLose <Monologue %4% %id%03 SMemo %id%04 MoveNPC %4% %3% SetPlotStatus %plotid% %id%>
-	.%id%_loss <+T-- +F-->
-
-	Msg%id%01 <You won... I'll upload the details for %name1% to your navcomp.>
-	Msg%id%02 <%name3% revealed %name1%'s location in %name2%.>
-	Msg%id%03 <You lost... I'll be waiting for you at %name3%.>
-	Msg%id%04 <You lost the duel against %name4%, so now you have no choice but to pay for the information.>
-
-	sub
-		Persona 4
-		rumor%id% <%name4% knows where to find just about everything in this town.>
-		% V1 = Have previously dueled
-		% V2 = Price for revealing location
-		greeting <if# PlotStatus %plotid% %id% else GoExplain NewChat SayAnything>
-		*GoExplain <*LookingForScene %1% GoSetPrice>
-		GoSetPrice <if= V2 0 else GoOffer V= 2 Threat StoryDL 5 Goto GoOffer>
-		GoOffer <NewChat Say 1 SMemo 2 AddChat 1 AddChat 2 AddChat 3>
-		result1 <NewChat Say 3 History 4 Cash+ -V2 ShowEntrance %1% SetPlotStatus %plotid% %id2%>
-		result2 <NewChat Say 5 AddChat 4 AddChat 5 AddChat 6>
-		result3 <NewChat Say 6>
-		result4 <NewChat Say 7 SMemo 8 History 9 V= 1 1 V= 2 * 2 V2 SetPlotStatus %plotid% %id1%>
-		result5 <NewChat Say 10 SMemo 8 History 9 V= 1 1 V= 2 * 3 V2 SetPlotStatus %plotid% %id1%>
-		result6 <NewChat Say 11 AddChat 1>
-		Msg1 <I know where %name1% is. I could tell you, but information doesn't come cheap... It's going to cost you $ \VAL V2 to find out.>
-		Msg2 <%name4% offered to tell you where %name1% is, in exchange for $ \VAL V2 .>
-		Msg3 <Ah, it's been a pleasure taking your money. This chip holds the coordinates of %name1% in %name2%. You should be able to find it quite easily.>
-		Msg4 <%name3% revealed %name1%'s location in %name2%.>
-		Msg5 <Duel for it? What is this, a Love Magnet holiday special? I've got no reason to duel- everything to lose and nothing to gain. I've told you my price. If you don't like it then you can do without.>
-		Msg6 <Try to make it quick; I've got bills to pay.>
-		Msg7 <Chicken? You think I'm afraid of you!? That's it, we're on. Meet me in %name5%. If you win I'll tell you where to find %name1%, but if I win you'll be paying double for the info.>
-		Msg8 <You challenged %name4% to a duel in order to learn the location of %name1%; \SPR %4% 's waiting for you in %name5%.>
-		Msg9 <You challenged %name4% to learn the location of %name1%.>
-		Msg10 <I can't refuse that. Meet me in %name5% as soon as you're ready.>
-		Msg11 <Yes, of course I am. Just come on back whenever you've got the cash and the info will be yours.>
-		Prompt1 <This is highway robbery. [Give Money]>
-		CPrompt1 <ifG PC$ V2 Accept>
-		Prompt2 <How about we duel for the info instead?>
-		CPrompt2 <if= V1 0 Accept>
-		Prompt3 <I'll be back when I have the money.>
-		Prompt4 <It's okay, I can see you're too chicken...>
-		CPrompt4 <ifTaunt SkillTar StoryDL Accept>
-		Prompt5 <If you win, I'll pay three times what you're asking now.>
-		CPrompt5 <ifG PCEgo 10 Accept>
-		Prompt6 <I guess you're right.>
-	end
-	inv
-		NPC Pirate
-		job <Smuggler>
-	end
 
 Plot
 	name <Pilot Saw It>

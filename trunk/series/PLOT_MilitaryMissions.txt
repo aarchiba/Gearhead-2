@@ -78,3 +78,80 @@ Plot
 		Prompt2_2 <Sorry, but I don't want this mission.>
 	end
 
+Plot
+	name <Versus Military Patrol Job>
+	% The versus patrol job is a fight against an enemy faction.
+	% This job gives salvage. This job will earn the PC the enemity
+	% of the faction being opposed.
+	requires <*GENERAL -!Ne>
+	PayRate 200
+
+	% E1 is the town itself
+	% E2 is a military faction allied with the city
+	% E3 is a member of that faction
+	% E4 is a scene where the encounter will take place
+	% E5 is the enemy faction
+	Element1 <Scene Town>
+	Element2 <Faction Military !Ally 1>
+	Element3 <Character !Comrade 2>
+	Element4 <Scene Environs>
+	Element5 <Faction !Enemy 2>
+
+	% SubPlot1 is the combat encounter
+	SubPlot1 <*MECHAMISSION_Versus 3 4 5>
+
+	% P1 = Time Limit
+	% P2 = Email Indicator
+	start <if= PlotStatus %plotid% 0 ifNPCOK %3% else GoDelete ifG ComTime P1 EndPlot>
+	GoDelete <EndPlot>
+	update <if= PlotStatus %plotid% 0 if= P1 0 P= 1 ComTime P+ 1 86400>
+
+	% Insert email here
+	5min <if= PlotStatus %plotid% 0 if= P2 0  if= PCFac NPCFac %3%  if= d20 1  ifG PCCharm d40  Email 1 P= 2 1>
+	Msg1   <%name3%@ \SCENE NPCSCene %3% :// Hey \RANK , I've got a mission for you in %name1%.>
+	Msg1_1 <%name3%@ \SCENE NPCSCene %3% :// Report to \SCENE NPCScene %3% for a mission at once.>
+	Msg1_2 <%name3%@ \SCENE NPCSCene %3% :// Your services are required by %name2%. Come see me for mission briefing.>
+	Msg1_3 <%name3%@ \SCENE NPCSCene %3% :// I've got a mission for you. Come to \SCENE NPCScene %3% for the briefing.>
+
+	sub
+		Persona 3
+		rumor0 <%name3% needs a mecha pilot to fight %name5%.>
+		greeting <if= PlotStatus %plotid% %id1% else GoCheckOffer Goto GoRemind>
+		*GoRemind <*MechaMissionReminder %4%>
+		GoCheckOffer <if# PlotStatus %plotid% 0 else GoCheckEnemy NewChat SayAnything>
+		*GoCheckEnemy <*ENEMY_CHECK GoCheckEmail ChatNPCFac GoEnd>
+		GoCheckEmail <if= P2 1 else GoCheckMember Goto GoGotEmail>
+		*GoGotEmail <*DidYouGetEmail GoMissionBriefing>
+		GoCheckMember <if= PCFac ChatNPCFac else GoCheckAuto  Goto GoIsMember>
+		*GoIsMember <*IHaveAJobForYou GoMissionBriefing>
+		*GoCheckAuto <*AutoMissionTest&Mecha GoMissionBriefing GoRejectMission GoCheckSkill ChatNPCFac %5%>
+		*GoCheckSkill <*GenericMissionTest&Mecha  GoMissionBriefing GoEnd GoRejectMission ChatNPCFac %5% %threat%>
+		*GoRejectMission <*RejectMission GoEnd>
+		GoEnd <EndPlot>
+		GoMissionBriefing <NewChat Say 1  AddChat 1 AddChat 2>
+		*result1 <*GoodLuckOnMission GoR1Final ChatNPCFac %5%>
+		GoR1Final <Memo 2 SetPlotStatus %plotid% %id1%>
+		result2 <Goto GoRejectMission>
+		Msg1 <Some mecha from %name5% have been spotted in %name4%. They must be driven out. Complete this mission and you'll get $ \VAL Reward %threat% PayRate plus salvage rights.>
+		Msg1_1 <You've heard that there are operatives from %name5% in the area, right? Our intel network has located their mecha team in %name4%. Your job will be to defeat them; do this and I'll give you $ \VAL Reward %threat% PayRate plus salvage rights.>
+		CMsg1_1 <ifNPCSociable Accept>
+		Msg1_2 <A lance from %name5% has been detected in %name4%. Eliminate them for $ \VAL Reward %threat% PayRate plus salvage.>
+		CMsg1_2 <ifNPCShy Accept>
+		Msg1_3 <We're having a bit of a problem with %name5%. They've got a strike team in %name4%, and I want you to make it go away. I can offer $ \VAL Reward %threat% PayRate and full salvage rights for the job.>
+		CMsg1_3 <ifNPCEasygoing Accept>
+		Msg1_4 <Those bastards at %name5% think they can just waltz on in here and get away with it. Well, they won't! I want you to go to %name4% and destroy their strike team. This job is worth $ \VAL Reward %threat% PayRate plus salvage.>
+		CMsg1_4 <ifNPCPassionate Accept>
+		Msg1_5 <I've been hoping we'd get a chance to show %name5% what we're made of, and we finally have! They've got a unit of mecha in the area. I'll hire you to defeat them for $ \VAL Reward %threat% PayRate and full salvage.>
+		CMsg1_5 <ifNPCCheerful Accept>
+		Msg1_6 <Our city is under attack from %name5%; it's vital that we stop them before anyone is killed. Their infiltrators have been traced to %name4%. Defeat them and you'll earn $ \VAL Reward %threat% PayRate plus salvage.>
+		CMsg1_6 <ifNPCMelancholy Accept>
+		Msg2 <%name3% in \SCENE NPCScene %3% hired you to fight %name5% in %name4%.>
+		Prompt1 <I'll be back when I'm finished.>
+		Prompt1_1 <No problem.>
+		Prompt1_2 <I'll get the job done.>
+		Prompt2 <You can find someone else for this job.>
+		CPrompt2 <if# PCFac ChatNPCFac Accept>
+		Prompt2_1 <This isn't my type of job.>
+		Prompt2_2 <Sorry, but I don't want this mission.>
+	end
+

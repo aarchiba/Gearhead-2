@@ -377,6 +377,7 @@ Const
 
 	NAS_Dodge = 10;
 	NAS_Awareness = 11;
+	NAS_Initiative = 12;
 	NAS_Vitality = 13;
 	NAS_ElectronicWarfare = 17;
 	NAS_Conversation = 19;

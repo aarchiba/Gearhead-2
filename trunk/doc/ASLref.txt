@@ -122,6 +122,7 @@
 	P= [idnum] [value]	Set plot variable
 	P+ [idnum] [value]	Add plot variable
 	PCENEMY [cid]		NPC will become PC's enemy
+	PMEMO [plotid] [Message Number]	Store a memo relating to this subplot
 	PRINT [idnum]		Display message in console area
 	PURGESTORY		Pass CLEANUP to and delete story plots
 	QMEMO [qid] [Message Number]	Store a memo relating to this quest

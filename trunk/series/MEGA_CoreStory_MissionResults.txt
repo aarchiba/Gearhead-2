@@ -1,9 +1,128 @@
 %%
+%% *CS_GiveEquipment Content
+%%
+%%  As a reward for something or another, the PC is being given some
+%%  upgraded hardware. This will probably be something that can't
+%%  be gotten in any other way.
+%%
+%%  Persona 1 must include a .%id%_GoGiveEquipment script.
+%%
+%%  This subplot doesn't affect the PlotStatus at all, and in fact
+%%  doesn't need its PlotID activated. It's not much more than a
+%%  glorified PFrag for handing out an item.
+%%
+%% Param1: The item-giver
+%%
+
+Content
+	name <Mecha Gun 1: Grenade Launcher>
+	requires <*CS_GiveEquipment !Ne ~1:CRAFT>
+
+	% E1 is the item-giver
+	% E2 is the item
+	Element2 <Prefab>
+
+	sub
+		Persona 1
+		.%id%_GoGiveEquipment <NewChat Say %id%01 GiveItem %2%>
+		Msg%id%01 <This mecha grenade launcher should come in handy. It's just the thing for taking out swarms of quick enemies.>
+	end
+	inv
+		Gun 9
+		name <Grenade Launcher>
+		caliber <50mm explosive cannister>
+		range 6
+		scale 2
+		sub
+			Ammo 9
+			Magazine 30
+			caliber <50mm explosive cannister>
+			type <BLAST 3 BRUTAL>
+		end
+	end
+
+Content
+	name <Mecha Gun 2: Mech Assault Rifle>
+	requires <*CS_GiveEquipment !Lo ~1:CRAFT>
+
+	% E1 is the item-giver
+	% E2 is the item
+	Element2 <Prefab>
+
+	sub
+		Persona 1
+		.%id%_GoGiveEquipment <NewChat Say %id%01 GiveItem %2%>
+		Msg%id%01 <Here's a mecha assault rifle. It's a versatile weapon that can be used in either fully auto or semiautomatic mode.>
+	end
+	inv
+		Gun 8
+		Scale 2
+		name <Mech Assault Rifle>
+		caliber <30mm caseless>
+		Range 6
+		BV 2
+		Speed 3
+		Acc 1
+		mass -5
+		sub
+			Ammo 8
+			caliber <30mm caseless>
+			Magazine 60
+			mass -6
+		end
+	end
+
+
+%%
+%% *CS_WinFetchItem Content
+%%
+%%  The PC was sent to fetch an item and has apparently gotten it.
+%%  Note that between getting the item and returning to the mission
+%%  giver the PC might have lost the item, destroyed the item, sold
+%%  the item, eaten the item, abused the item, or otherwise decided
+%%  to keep the item. If the PC gives the item to the NPC, a reward
+%%  is in order.
+%%
+%% Param1: The Mission-Giver
+%% Param2: The Item
+%%
+
+Content
+	name <Trade Item For Reward>
+	desc <The Mission-Giver will pay the PC for the item.>
+	requires <*CS_WinFetchItem>
+
+	% E1 is the NPC
+	% E2 is the item
+
+	start <ifNPCDead %1% SMemo 0 WinComp 0 .%id%_loss>
+	.%id%_loss <+T-- +F-->
+
+	sub
+		Persona 1
+		greeting <if= PlotStatus %plotid% %id% else %pop% ifChatNPCInPlay else .%id%_GoComeHere NewChat Say %id%01 AddChat %id%01 AddCHat %id%02 AddChat %id%03>
+		*.%id%_GoComeHere <*NotByPhone>
+		result%id%01 <NewChat Say %id%02>
+		*result%id%02 <*MissionWasSuccess&Reward .%id%_GoEnd &AllyFac &EnemyFac>
+		.%id%_GoEnd <CashPrize Reward StoryDL 500 SMemo 0 DeleteItem %2% NTBWinComp 0 .%id%_next>
+		.%id%_next <+T-- +F-->
+		result%id%03 <NTBLoseComp 0 .%id%_next Goto .%id%_GoLose>
+		*.%id%_GoLose <*YouLostItem>
+		Msg%id%01 <Have you found the %name2% yet?>
+		Msg%id%02 <Then come back here when you've found it!>
+		Prompt%id%01 <I'm still working on it.>
+		Prompt%id%02 <I have it right here. [Give item]>
+		CPrompt%id%02 <ifKeyItem %2% Accept>
+		Prompt%id%03 <I sort of lost the %name2%...>
+		CPrompt%id%03 <ifItemDestroyed %2% Accept>
+	end
+
+%%
 %% *CS_WinTask Content
 %%
-%% The PC didn't exactly have a mission, but someone asked him to do something
-%% and he did it. Hooray! Rewards for this subplot are likely to be more
-%% personal than the rewards for a formal mission.
+%%  The PC didn't exactly have a mission, but someone asked him to do something
+%%  and he did it. Hooray! Rewards for this subplot are likely to be more
+%%  personal than the rewards for a formal mission.
 %%
 %% Param1: The Task-giver.
 %%

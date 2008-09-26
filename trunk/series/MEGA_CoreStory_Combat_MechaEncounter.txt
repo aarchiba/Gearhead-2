@@ -14,6 +14,8 @@
 %%  .%id%_%plotid%_GoLoss
 %% It will also hide the encounter with SetEncounterInactive.
 %%
+%% This is a MAIN COURSE subplot.
+%%
 %%  Param1: The outdoors scene where the encounter will be placed
 %%  Param2: The encounter to be used as the entrance
 %%
@@ -57,6 +59,7 @@ Content
 	size 12
 	desc <PC waels on Enemy's henchmen, Enemy shows up immediately to wael on PC.>
 	requires <*:CS_MechaEncounter (E:M.pro|E:M.see) (E:A.---|E:A.sr_) -!Ne>
+	changes <E:A>
 
 	% E1 is the outdoors scene where this encounter will be placed
 	% E2 is the metascene to be used for this encounter
@@ -196,6 +199,7 @@ Content
 	size 2
 	desc <Enemy NPC taunts PC, then leaves to complete some mission.>
 	requires <*:CS_MechaEncounter E:++ E:A.--- (+Hwn|+Hln)>
+	changes <E:A>
 
 	% E1 is the outdoors scene where this encounter will be placed
 	% E2 is the metascene to be used for this encounter
@@ -259,6 +263,7 @@ Content
 	size 6
 	desc <Fight some raiders; learn the identity of their leader, who isn't present.>
 	requires <*:CS_MechaEncounter &Raiders -&NoAlterElements E:-- +H-->
+	changes <E:++ +H>
 
 	% E1 is the outdoors scene where this encounter will be placed
 	% E2 is the metascene to be used for this encounter

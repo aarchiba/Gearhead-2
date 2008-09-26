@@ -1,4 +1,78 @@
 %%
+%% *MECHAMISSION_Versus Content
+%%
+%% The PC has been sent to fight some mecha belonging to an enemy faction.
+%% This is going to result in an enemy faction being gained.
+%%
+%% This mission gives salvage.
+%%
+%% This subplot is responsible for loading its own conclusions: typically, there will be
+%% one conclusion for winning the battle, one conclusion for losing the battle, and a third
+%% conclusion for running out of time.
+%%
+%% The master plot must have a PayRate set. The master plot is also responsible for E1's
+%% mission reminder message.
+%%
+%% Param1: The NPC offering the mission
+%% Param2: The outdoors scene where the encounter will be placed
+%% Param3: The faction being fought
+
+Content
+	name <Generic Faction Enemies>
+	requires <*MECHAMISSION_Versus>
+	desc <The PC will fight some enemy mecha.>
+
+	% E1: The Mission Provider
+	% E2: The scene where the encounter will be placed
+	% E3: The faction being fought
+	% E4: The combat scene
+	Element4 <Prefab>
+	Place4 <2>
+
+	% P%id%01 = Time Limit
+	% P%id%02 = Have entered combat
+	update <if= PlotStatus %plotid% %id% else %pop% if= p%id%01 0 P= %id%01 ComTime P+ %id%01 86400>
+	start <if= PlotStatus %plotid% %id% else %pop% ifG ComTime P%id%01 if= P%id%02 0 SetPlotStatus %plotid% %id3%>
+
+	% SubPlot1 = Win the battle, get a reward
+	% SubPlot2 = Lose the battle, get scorned
+	% SubPlot3 = Run out of time, get email
+	SubPlot1 <*Util_WinMission_Basic 1>
+	SubPlot2 <*Util_LoseMission 1>
+	SubPlot3 <*Util_TimeOver 1>
+
+	sub
+		MetaScene 4 2
+		% L1 = Encounter Over Counter
+		MapWidth 30
+		MapHeight 30
+
+		Start <if= P%id%02 0   P= %id%02 1   PCFEnemy %3%>
+		nu1 <if= T1 0   Return   if= V1 0 V= 1 1   addrenown -5                     Memo 1   SetPlotStatus %plotid% %id2%>
+		nu2 <if= T2 0   if= V1 0 V= 1 1            XPV 100   AddRenown 1  Salvage   Memo 2   SetPlotStatus %plotid% %id1%>
+
+		Msg1 <You lost %name1%'s mission.>
+		Msg2 <You successfully completed %name1%'s mission.>
+
+		sub
+			team 1
+			SetEnemy 2
+			ParaX 5
+			ParaY 5
+
+			team 2
+			SetEnemy 1
+			Deploy <SetSelfFaction %3% WMecha 2 %threat% 100>
+			ParaX 25
+			ParaY 25
+		end
+	end
+	inv
+		STC PLOT-MECHAMISSION-WANDER
+	end
+
+
+%%
 %% *MECHAMISSION_Basic Content
 %%
 %% The PC has been sent to fight some mecha, but hasn't been told who he'll be fighting

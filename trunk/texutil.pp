@@ -67,6 +67,8 @@ Procedure AtoAn( var msg: String );
 Procedure AddTraits( var Trait_List: String; Traits_To_Add: String );
 
 Function QuoteString( A: String ): String;
+Procedure AddToQuoteString( var QList,QToAdd: String );
+Function NoQItemsMatch( const QList: String; var QToCheck: String ): Boolean;
 
 implementation
 
@@ -596,5 +598,36 @@ begin
 	end;
 	QuoteString := B;
 end;
+
+Procedure AddToQuoteString( var QList,QToAdd: String );
+	{ Add some traits to a quote string. Make sure that everything is separated by quotes. }
+var
+	A: String;
+begin
+	while QToAdd <> '' do begin
+		A := ExtractWord( QToAdd );
+		if A <> '' then begin
+			if QList = '' then QList := '"';
+			QList := QList + A + '"';
+		end;
+	end;
+end;
+
+Function NoQItemsMatch( const QList: String; var QToCheck: String ): Boolean;
+	{ Check to make sure that none of the words in QToCheck are present in QList. }
+	{ This procedure will completely destroy QToCheck, by the way. }
+var
+	AllOK: Boolean;
+	A: String;
+begin
+	{ Assume TRUE unless a match is found. }
+	AllOK := True;
+	while ( QToCheck <> '' ) and AllOK do begin
+		A := ExtractWord( QToCheck );
+		if ( A <> '' ) and AStringHasBString( QList , '"' + A + '"' ) then AllOK := False;
+	end;
+	NoQItemsMatch := AllOK;
+end;
+
 
 end.

@@ -203,8 +203,91 @@ Plot
 	end
 
 Plot
-	name <Meet Me ELsewhere>
-	requires <#W (+Tgt|+Tht|+Tpt) T:++ S:++>
+	name <It's Not Safe Here>
+	requires <#W (+Tgt|+Tpt) +Fin S:++ T:++>
+	desc <You seek information, but this isn't a safe place.>
+
+	% E1 is the scene where this component will take place
+	% E2 is the NPC that the PC will speak with
+	% E3 is the town for the next episode
+	% E4 is a meeting place in that town
+	element1 <Grab 6>
+	element2 <Grab 5>
+	Place2 <1 (Citizens) pass>
+	Element3 <Scene !Far -7 !Comrade -7 Town>
+	Element4 <Scene Public !Okay 2 !Near 3>
+
+	start <ifNPCDead %2% LoseComp 0 .next>
+	.next <+T-- +F-->
+
+	sub
+		Persona 2
+		greeting <NewChat Say %id%01 StoryNote %id%02 FreezeNPC %2% WinEpisode %3% %4% .next>
+		.next <>
+		Msg%id%01 <This isn't a safe place for us to discuss things. Meet me at %name4% in %name3% tomorrow and we can talk then.>
+		Msg%id%02 <%name2% asked you to meet \OPR %2% at %name4% in %name3%.>
+
+		STC MS_EmptyBuilding
+		SetID 1
+	end
+
+Plot
+	name <Mission? What mission?>
+	requires <#W +Tgt +Fmi S:++ T:++>
+	desc <Your target doesn't have a mission, but they do have a job tip.>
+
+	% E1 is the scene where this component will take place
+	% E2 is the NPC that the PC will speak with
+	% E3 is the town for the next episode
+	element1 <Grab 6>
+	element2 <Grab 5>
+	Place2 <1 (Citizens) pass>
+	Element3 <Scene !Far -7 !Comrade -7 Town>
+
+	start <ifNPCDead %2% LoseComp 0 .next>
+	.next <+T-- +F-->
+
+	sub
+		Persona 2
+		greeting <NewChat Say %id%01 StoryNote %id%02 WinEpisode %3% 0 .next>
+		.next <+T-- +F-->
+		Msg%id%01 <I'm sorry, \PC , but I don't have any work for you right now. I hear that they could use someone with your talents over in %name3%, though.>
+		Msg%id%02 <%name2% suggested you look for work in %name3%.>
+
+		STC MS_EmptyBuilding
+		SetID 1
+	end
+
+Plot
+	name <Meet Me Elsewhere>
+	requires <#W +Tgt S:++ T:++>
+	desc <You seek a target, but the target is going to somewhere else.>
+
+	% E1 is the scene where this component will take place
+	% E2 is the NPC that the PC will speak with
+	% E3 is the town for the next episode
+	element1 <Grab 6>
+	element2 <Grab 5>
+	Place2 <1 (Citizens) pass>
+	Element3 <Scene !Far -7 !Comrade -7 Town>
+
+	start <ifNPCDead %2% LoseComp 0 .next>
+	.next <+T-- +F-->
+
+	sub
+		Persona 2
+		greeting <NewChat Say %id%01 StoryNote %id%02 FreezeNPC %2% WinEpisode %3% 0 .next>
+		.next <>
+		Msg%id%01 <\PC , I've got some urgent business in %name3%. If you meet me there we can continue our conversation then.>
+		Msg%id%02 <%name2% asked you to meet \OPR %2% in %name3%.>
+
+		STC MS_EmptyBuilding
+		SetID 1
+	end
+
+Plot
+	name <Meet Them ELsewhere>
+	requires <#W (+Tht|+Tpt) T:++ S:++>
 	desc <The PC will be told to meet the target elsewhere.>
 
 	% E1 is the target
@@ -212,6 +295,7 @@ Plot
 	% E3 is the new city
 	Element1 <Grab 5>
 	Element2 <Character !Near -7 !Okay 1>
+	Place2 <1>
 	Element3 <Scene !Far -7 !Comrade -7 Town>
 
 	% v%id%01 = Initialization

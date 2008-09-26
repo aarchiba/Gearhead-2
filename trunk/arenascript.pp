@@ -170,6 +170,17 @@ var
 	MemoList,M: SAttPtr;
 	Adv: GearPtr;
 
+	Procedure HarvestPlotMemos( LList: SAttPtr );
+		{ This list may contain plot memos. How to tell? The first four }
+		{ characters will be "MEMO". It's just like harvesting the history. }
+	begin
+		while LList <> Nil do begin
+			if UpCase( Copy( LList^.Info , 1 , 4 ) ) = 'MEMO' then begin
+				StoreSAtt( MemoList , RetrieveAString( LList^.Info ) );
+			end;
+			LList := LList^.Next;
+		end;
+	end;
 	Procedure CreateMemoList( Part: GearPtr; Tag: String );
 		{ Look through all gears in the structure recursively, }
 		{ looking for MEMO string attributes to store in our list. }
@@ -178,15 +189,25 @@ var
 		QID: LongInt;
 	begin
 		while Part <> Nil do begin
-			msg := SAttValue( Part^.SA , Tag );
-			if msg <> '' then StoreSAtt( MemoList , msg );
-
-			{ This part may also have a quest-related message attached }
-			{ to it. See if that's so. }
-			QID := NAttValue( Part^.NA , NAG_QuestInfo , NAS_QuestID );
-			if ( QID <> 0 ) then begin
-				msg := SAttValue( Part^.SA , Tag + '_' + BStr( NAttValue( Adv^.NA , NAG_QuestStatus , Qid ) ) );
+			if ( tag = 'MEMO' ) and ( Part^.G = GG_Plot ) then begin
+				{ This is a plot. It may have subplot memos. These are }
+				{ memos that have the PLOTID attached to their butts. Why? }
+				{ Because I realized, somewhat late, that a plot which can }
+				{ contain multiple narrative threads really needs multiple }
+				{ memos as well. }
+				HarvestPlotMemos( Part^.SA );
+			end else begin
+				{ Not a plot. Just do the regular harvesting work, then. }
+				msg := SAttValue( Part^.SA , Tag );
 				if msg <> '' then StoreSAtt( MemoList , msg );
+
+				{ This part may also have a quest-related message attached }
+				{ to it. See if that's so. }
+				QID := NAttValue( Part^.NA , NAG_QuestInfo , NAS_QuestID );
+				if ( QID <> 0 ) then begin
+					msg := SAttValue( Part^.SA , Tag + '_' + BStr( NAttValue( Adv^.NA , NAG_QuestStatus , Qid ) ) );
+					if msg <> '' then StoreSAtt( MemoList , msg );
+				end;
 			end;
 
 			CreateMemoList( Part^.SubCom , Tag );
@@ -266,10 +287,11 @@ var
 begin
 	{ Error check first - we need the GB and the scene for this. }
 	if ( GB = Nil ) or ( GB^.Scene = Nil ) then Exit;
+	tag := UpCase( Tag );
 	MemoList := Nil;
 	Adv := FindRoot( GB^.Scene );
 	CreateMemoList( Adv , Tag );
-	if UpCase( Tag ) = 'MEMO' then AddQuestMemos;
+	if Tag = 'MEMO' then AddQuestMemos;
 
 	{ Sort the memo list. }
 	if MemoList <> Nil then SortStringList( MemoList )
@@ -1551,6 +1573,20 @@ begin
 	id := ScriptValue( Event , GB , Scene );
 	msg := FormatMemoString( GB , getTheMessage( 'msg', id , GB , Scene ) );
 	if ( Scene <> Nil ) then SetSAtt( Scene^.SA , 'MEMO <' + msg + '>' );
+end;
+
+Procedure ProcessPMemo( var Event: String; GB: GameBoardPtr; Source: GearPtr );
+	{ Locate and then store the specified message in the plot gear, }
+	{ along with an ID number. }
+var
+	id,plotid: LongInt;
+	msg: String;
+begin
+	plotid := ScriptValue( Event , GB , Source );
+	id := ScriptValue( Event , GB , Source );
+	msg := FormatMemoString( GB , getTheMessage( 'msg', id , GB , Source ) );
+	Source := PlotMaster( GB , Source );
+	if ( Source <> Nil ) then SetSAtt( Source^.SA , 'MEMO' + BStr( plotid ) + ' <' + msg + '>' );
 end;
 
 Procedure ProcessSMemo( var Event: String; GB: GameBoardPtr; Scene: GearPtr );
@@ -3999,6 +4035,7 @@ begin
 		else if cmd = 'GMONOLOGUE' then ProcessGMonologue( Event , GB , Source )
 		else if cmd = 'ADDDEBRIEFING' then ProcessAddDebriefing( Event , GB , Source )
 		else if cmd = 'MEMO' then ProcessMemo( Event , GB , Source )
+		else if cmd = 'PMEMO' then ProcessPMemo( Event , GB , Source )
 		else if cmd = 'SMEMO' then ProcessSMemo( Event , GB , Source )
 		else if cmd = 'QMEMO' then ProcessQMemo( Event , GB , Source )
 		else if cmd = 'GQSUBMEMO' then ProcessGQSubMemo( Event , GB , Source )

@@ -12,6 +12,9 @@
 %%  .%id%_%plotid%_GoWin
 %%  .%id%_%plotid%_GoLoss
 %%
+%% This is a MAIN COURSE subplot. Favored by: POLIT, MEDIA, ACADE
+%%
+%%
 %%  Param1: The NPC who will tell the PC about the situation.
 %%          After introducing the component, this NPC will serve no further purpose
 %%          in this narrative thread.
@@ -21,6 +24,7 @@ Content
 	name <Ex-Lover vs Ex-Partner>
 	desc <The enemy's ex-lover is on the run from the enemy's ex-partner.>
 	requires <*:CS_GatherInformation E:A.sr_ E:M.--->
+	changes <E:M>
 	Size 7
 
 	%% The centerpiece of this component is an encounter in which the PC can help

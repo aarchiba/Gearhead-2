@@ -16,13 +16,16 @@
 %%  .%id%_%plotid%_GoLoss
 %% It will also hide the encounter with SetEncounterInactive.
 %%
+%% This is a MAIN COURSE subplot. Favored by: POLIC
+%%
+%%
 %%  Param1: The NPC to be stopped
 %%
 
 Content
 	name <Factory Attack>
 	desc <The NPC is going to launch an attack against a factory, but won't participate himself.>
-	requires <*:CS_StopNPCMission ~&IsEnemyNPC (!Ne|!Lo)>
+	requires <*:CS_StopNPCMission ~&IsEnemyNPC (!Ne|!Lo) &Secondary>
 	Size 8
 
 	% E1 is the NPC launching the attack

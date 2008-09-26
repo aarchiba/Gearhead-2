@@ -1,9 +1,9 @@
 A megaplot is a plot with extras. Actually, it's a plot constructed from
 multiple components.
 
-***********************
-*** Plot Components ***
-***********************
+****************************
+***   PLOT  COMPONENTS   ***
+****************************
 
 Plots are constructed from components. The root component will be a plot file;
 from here, additional components can be recursively requested to build a tree
@@ -17,9 +17,10 @@ The standard triggers of a subplot (START, UPDATE, etc) will only be called
 when the subplot is active. This doesn't apply to the base plot, only the
 subplots.
 
-*************************
-*** Narrative Threads ***
-*************************
+
+******************************
+***   NARRATIVE  THREADS   ***
+******************************
 
 A narrative thread is a series of events constructed from plot components.
 Only one node in a thread should be active at any given time.
@@ -29,9 +30,10 @@ Each narrative thread has its own PlotID.
 NPCs are attached to the thread which first defines a persona for them; personal
 rumors can only be keyed to LayerIDs belonging to this thread.
 
-*************************
-** Requesting SubPlots **
-*************************
+
+********************************
+***   REQUESTING  SUBPLOTS   ***
+********************************
 
 A subplot may be requested by adding a string describing the subplot.
 
@@ -47,9 +49,10 @@ If the second character of the SubPlot Type is a colon, this subplot
 will be a side plot with its own PlotID. In this way it's possible for a
 single plot to have multiple narrative threads running at once.
 
-*************************
-** Replacement Strings **
-*************************
+
+********************************
+***   REPLACEMENT  STRINGS   ***
+********************************
 
 %plotid%	The Plot ID
 %id%		The individual layer ID of this component.
@@ -60,9 +63,31 @@ single plot to have multiple narrative threads running at once.
 %plotid1%..%plotid8%	Plot IDs of subplots
 %e1%..%e10%	Element Index of subplot element
 
-*************************
-*** Element Placement ***
-*************************
+
+***************************
+***   SUBPLOT  CHANGES  ***
+***************************
+
+Each subplot may have a CHANGES attribute defined. The megaplot structure may not
+include two components which have any change tags in common. Change tags include:
+
+  XXRan Plot Descriptors: +P, +C, +H, +B, +G
+  Element Existence: [Element Code]:++, i.e. E:++, R:++
+  NPC Motivation/Attitude: [Element Code]:M or [Element Code]:A, i.e. E:A, R:M
+
+The +T and +F plot descriptors are set by the component which ends the plot, so
+these don't need to be included in the CHANGES list. Likewise, the Target NPC
+is associated with the +T task, so T:++ doesn't need to be specified either.
+
+Use CHANGES tags to prevent two parts of the same plot from changing the same
+story element. For instance, you wouldn't want two parts of the same plot to
+assign two completely different Enemy NPCs, or to change the Propp state in
+one direction somewhere and in a completely unrelated direction somewhere else.
+
+
+******************************
+***   ELEMENT  PLACEMENT   ***
+******************************
 
 You can move elements automatically by defining a "PLACE[n]" string for them.
 

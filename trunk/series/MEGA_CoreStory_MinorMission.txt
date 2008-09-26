@@ -1,0 +1,63 @@
+%%
+%% *:CS_MinorMission Content
+%%
+%%  An NPC will give the PC a minor task; usually, this will be done
+%%  in exchange for some help or information that the NPC might provide.
+%%  Note that because the mission description is given at initialization,
+%%  these missions shouldn't involve anything that a player might want
+%%  to opt out of, such as making enemies.
+%%
+%%  If the mission is completed, this subplot will be won. If it is failed,
+%%  this subplot will be lost.
+%%
+%%  The persona for E1 requires a .%id%_GoInit script to explain the mission.
+%%
+%% PARAM1: The NPC who will be giving the mission.
+%%
+
+Content
+	name <Raiders Causing Problems>
+	requires <*:CS_MinorMission (1:CORPO|1:CRAFT|1:TRADE|1:POLIC|1:POLIT|1:LABOR)>
+	desc <There are some raiders who have been causing trouble. Go destroy them.>
+
+	% E1 is the mission-giver
+	% E2 is an outdoors scene
+	% E3 is the encounter
+	Element2 <Scene Outdoors !Near -7>
+	Element3 <Prefab>
+	Place3 <2>
+
+	sub
+		Persona 1
+		.%id%_GoInit <NewChat Say %id%01 SetPlotStatus %plotid% %id%>
+		Msg%id%01 <There are some raiders in %name2% who have been causing trouble. I'd like for you to go defeat them.>
+
+		MetaScene 3 2
+		% L1 = Encounter Over Counter
+		% L2 = Initialization Counter
+		MapWidth 50
+		MapHeight 50
+
+		nu1 <if= T1 0   Return   if= V1 0 V= 1 1    LoseSubPlot %plotid%>
+		nu2 <if= T2 0   if= V1 0 V= 1 1   Alert 1   XPV 100   SALVAGE   WinSubPlot %plotid%>
+
+		Msg1 <You have defeated the raiders. You should go report back to %name1% now.>
+
+		sub
+			team 1
+			SetEnemy 2
+			ParaX 5
+			ParaY 5
+
+			team 2
+			SetEnemy 1
+			Deploy <if= PlotStatus %plotid% %id%   WMecha 2 StoryDL 100>
+			ParaX 45
+			ParaY 45
+		end
+	end
+	inv
+		STC CORE-MECHAENCOUNTER
+	end
+
+

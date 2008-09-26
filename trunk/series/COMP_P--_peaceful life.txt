@@ -199,7 +199,7 @@ Plot
 Plot
 	name <Not Even The Police Are Safe>
 	desc <The officer you have to see for the mission? He got robbed.>
-	requires <#A +Tgt (+Fmi|+Fin) +P-- T:POLIC (F:--|F:CRIME)>
+	requires <#A +Tgt (+Fmi|+Fin) +P-- T:POLIC (F:--|F:CRIME) S:++>
 
 	% E1 is the building
 	% E2 is the police officer
@@ -322,7 +322,7 @@ Plot
 Plot
 	name <A Gentle Reminder>
 	desc <Your friend reminds you that you were supposed to attend a meeting.>
-	requires <#A +P-- +Tgt ~+F-- T:++ T:FRIEND P:++ -P:PDASS>
+	requires <#A +P-- +Tgt ~+F-- T:++ T:FRIEND P:++ -P:PDASS S:++>
 
 	%% E1 is the scene.
 	%% E2 is the friend.

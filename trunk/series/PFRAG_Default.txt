@@ -7,6 +7,9 @@
 	requires <*HurryBackWithMoney>
 	START <NewChat Say %id%01>
 	Msg%id%01 <Hurry back when you have the money.>
+	Msg%id%01_4 <Try to make it quick; I've got bills to pay.>
+	CMsg%id%01_4 <ifNPCMelancholy Accept>
+
 
 % TYPE: *YouCouldUseHelp
 %	The NPC has heard that the PC can use some help; usually followed by
@@ -44,6 +47,30 @@
 	CMsg%id%01_5 <ifNPCCheerful Accept>
 	Msg%id%01_6 <>
 	CMsg%id%01_6 <ifNPCMelancholy Accept>
+
+% TYPE: *IHearYouAreLookingForItem
+%	The NPC has heard about the PC's search for an item.
+%   PARAM1: Item ID
+%   PARAM2: Exit label
+
+	Persona
+	requires <*IHearYouAreLookingForItem>
+	START <if= v%id%01 0 else %2% V= %id%01 1 NewChat Say %id%01 AddChat %id%01>
+	result%id%01 <Goto %2%>
+	Msg%id%01 <I should have expected to see you sooner or later. Word is that you're searching for the \ITEM %1% .>
+	Msg%id%01_1 <>
+	CMsg%id%01_1 <ifNPCSociable Accept>
+	Msg%id%01_2 <>
+	CMsg%id%01_2 <ifNPCShy Accept>
+	Msg%id%01_3 <>
+	CMsg%id%01_3 <ifNPCEasygoing Accept>
+	Msg%id%01_4 <>
+	CMsg%id%01_4 <ifNPCPassionate Accept>
+	Msg%id%01_5 <>
+	CMsg%id%01_5 <ifNPCCheerful Accept>
+	Msg%id%01_6 <>
+	CMsg%id%01_6 <ifNPCMelancholy Accept>
+	Prompt%id%01 <What do you know about that?>
 
 
 % TYPE: *IHearYouAreFightingNPC

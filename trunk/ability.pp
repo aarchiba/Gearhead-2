@@ -43,7 +43,7 @@ const
 	XPA_SK_UseRepair = 3;
 
 	{ Even the slowest people will react at this base speed. }
-	Minimum_Initiative = 6;
+	Minimum_Initiative = 10;
 
 	{ PERSONAL COMMUNICATION CAPABILITIES }
 	PCC_Memo = NAS_Memo;	{ Can view adventure memos }
@@ -350,10 +350,17 @@ var
 	I,RT: Integer;
 begin
 	{ Determine the Initiative skill value for this character. }
-	I := SkillValue( Master , 12 ) + 1;
-	if ( I < Minimum_Initiative ) and ( Master^.G <> GG_Prop ) then I := Minimum_Initiative
-	else if I < 1 then I := 1;
-	RT := ( ClicksPerRound * 3 ) div I;
+	if Master^.G = GG_Prop then begin
+		I := SkillValue( Master , NAS_Initiative ) + 1;
+		if I < 1 then I := 1;
+	end else begin
+		Master := LocatePilot( Master );
+		if Master <> Nil then begin
+			I := CStat( Master , STAT_Speed ) + CharaSkillRank( Master , NAS_Initiative );
+			if ( I < Minimum_Initiative ) then I := Minimum_Initiative;
+		end else I := 1;
+	end;
+	RT := ( ClicksPerRound * 5 ) div I;
 	if RT > ClicksPerRound then RT := ClicksPerRound
 	else if RT < 2 then RT := 2;
 	ReactionTime := RT;

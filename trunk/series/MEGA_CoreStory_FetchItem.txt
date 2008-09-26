@@ -1,0 +1,255 @@
+%% *:CS_FetchItem Content
+%%		&Stolen		The item was stolen from its rightful place
+%%		&FromEnemy	The item is in the posession of your enemy
+%%
+%% In this component, the PC will be able to search for and recover a lost item.
+%%
+%% If the item is given in some way other than the PC picking it up, the GET%1%
+%%  trigger must be set.
+%% If the item becomes unrecoverable, this subplot will be lost.
+%%
+%% This is a MAIN COURSE subplot. Favored by: THIEF
+%%
+%%
+%%  Param1: The item to be searched for
+%%
+
+Content
+	name <Let's Make It A Contest>
+	desc <The Enemy decides to search for the same item as the PC>
+	requires <*:CS_FetchItem (E:A.---|E:A.jr_|E:A.equ) E:M.pro -&FromEnemy>
+	changes <E:M>
+	size 3
+
+	% When this subplot gets activated, it activates the item search and sets a time limit.
+	% If the PC can't find the item in time, the enemy takes it instead.
+	% If the time limit runs out, don't deactivate this plot right away- let the PC find the
+	% item's hiding spot, then be disappointed that it's no longer there.
+
+	% E1 is the item
+	% E2 is the PC's enemy
+	Element2 <Grab 1>
+	Place2 </>
+
+	% p%id%01 = Initialization Counter
+	% p%id%02 = Time Limit
+	% p%id%03 = Freeze Item Counter
+
+	start <if= p%id%02 0 ifScene .%id%_scenedesc if= RootSceneID &EpisodeScene p= %id%02 ComTime P+ %id%02 86400 p+ %id%02 d7200 Alert %id%01 ForceChat %2% History %id%02 SetXXRMotivation %2% XXR_M_Competitor>
+	.%id%_scenedesc <OUTDOORS>
+	update <if= p%id%01 0 p= %id%01 1 SetPlotStatus %plotid1% %id1% SetPlotStatus %plotid2% %id2%>
+	halfhour <if= p%id%03 0 if# p%id%02 0 ifG ComTime p%id%02 p= %id%03 1 ifKeyItem %1% else .%id%_GoFreezeItem>
+	.%id%_GoFreezeItem <FreezeItem %1% Trigger0 .%id1%_%plotid1%_GoItemGone  CancelSubPlot %plotid2%  LoseSubPlot %plotid%  History %id%03>
+	end <ifSubPlotLost %plotid1% CancelSubPlot %plotid2% LoseSubPlot %plotid%>
+
+	get%1% <CancelSubPlot %plotid2% WinSubPlot %plotid%>
+
+	.%id2%_%plotid2%_GoDelay <p+ %id%02 86400>
+
+	Msg%id%01 <Without warning, you are approached by %name2%.>
+	Msg%id%02 <%name2% challenged you to find the %name1% before \SPR %2% did.>
+	Msg%id%03 <%name2% found the %name1% first.>
+
+	% SubPlot1 is the Item Cozy
+	% SubPlot2 is the ability to delay the Enemy
+	SubPlot1 <*:CS_ItemCozy 1>
+	SubPlot2 <*:CS_GainAdvantageVsNPC&Delay 2>
+
+	sub
+		Persona 2
+		special <UNLISTED NOESCAPE>
+		greeting <EndChat Say 1 AddChat 1 AddChat 2>
+		GoEndConversation <EndChat Say 2 Print 3>
+		result1 <AddSociable  d4   Goto GoEndConversation>
+		result2 <AddSociable -d4   Goto GoEndConversation>
+		Msg1 <\PC ... They say that you've agreed to find the %name1%.>
+		Msg2 <How about we make this a contest? I'm going to try and find it too.>
+		Msg3 <%name2% races off.>
+		Prompt1 <That's right.>
+		Prompt2 <None of your business, %name2%.>
+	end
+
+%%
+%% *:CS_ItemCozy Content
+%%		&Stolen		The item was stolen from its rightful place
+%%
+%% We've got an item that needs to be protected from the filthy hands of the player character.
+%% Stick it in an Item Cozy and be done with it. If the item becomes unrecoverable, this
+%% subplot will be lost.
+%%
+%% Needed Scripts:
+%% .%id%_%plotid%_GoItemGone	The parent plot can trigger this script if the item is
+%% 				removed from its cozy by outside forces. If the removal
+%%				of the item won't affect the plot, this script isn't
+%%				strictly necessary.
+%%
+%%  Param1: The item to be searched for
+%%
+
+Content
+	name <Stuck on a Pirate Ship>
+	desc <The item's being held by pirates.>
+	requires <*:CS_ItemCozy ~&Stolen>
+	Size 7
+
+	% E1 is the item to be held
+	% E2 is a place for the pirate ship
+	% E3 is the pirate ship itself
+	% E4 is a local scene
+	% E5 is a pirate leader
+	% E6 is a crate for the item on board the ship
+	Place1 <6>
+	Element2 <Scene Space Environs !Near -7>
+	Element3 <Prefab>
+	Place3 <2>
+	Element4 <Scene Public -Legit !Near -7>
+	Element5 <Character Pirate HasMecha !Near 4 Neverfail -Friend -ArchAlly -Family -Lover>
+	NeverFail5 <Pirate>
+	Place5 <3 (Pirates)>
+	Element6 <Prefab>
+	Place6 <3>
+
+	% FAIL CONDITIONS:
+	% - The RevealShip subplot fails
+	% - E1 is destroyed
+
+	% P%id%01 = Initialization Counter
+	% P%id%02 = Item Gone Counter
+	% P%id%03 = Peaceful Entry Counter
+
+	update <if= p%id%01 0 else .%id%_GoCheckFail p= %id%01 1 NPCLevel %5% StoryDL  SetPlotStatus %plotid1% %id1% SetPlotStatus %plotid2% %id2%>
+	.%id%_GoCheckFail <ifSubPlotLost %plotid1% else .%id%_GoCheckDestruction  LoseSubPlot %plotid%  CancelSubPlot %plotid2%>
+	.%id%_GoCheckDestruction <ifItemDestroyed %1%   LoseSubPlot %plotid%  CancelSubPlot %plotid2%  CancelSubPlot %plotid1%>
+
+	Get%1% <if= p%id%01 1 p= %id%01 2  History %id%01 WinSubPlot %plotid%>
+	.%id%_%plotid%_GoItemGone <P= %id%02 1>
+	.%id2%_%plotid2%_GoPeacefulEntry <P= %id%03 1>
+
+	Msg%id%01 <You gained the %name1% from the pirate %name5%.>
+
+	% SubPlot1 is the RevealShip task
+	% SubPlot2 is the ability to gain peaceful entry to the ship
+	SubPlot1 <*:CS_RevealEncounter_NPCBase&PirateShip 2 3 5>
+	SubPlot2 <*:CS_PeacefulEntry_NPCBase&PirateShip 3 5>
+
+	sub
+		MetaScene 3
+		rumor%id% <the %name1% has been taken by the pirate %name5%.>
+		mapwidth 35
+		mapheight 35
+		MonkeyMap
+		LockedDoorChance 30
+		SecretDoorChance 5
+		IndustrialTiles
+
+		NeededCells 3
+
+		% L1 = Initialization Counter
+		% L2 = Have been given item
+		% L3 = Have been threatened once
+		start <if= L1 0 else GoCheckGone L= 1 1 CancelSubPlot %plotid2% Goto GoCheckGone>
+		GoCheckGone <if= p%id%02 1 else GoCheckPeace ifNPCOK %5%  TeamNeutral 2 TeamNeutral 3 ForceChat %5%>
+		GoCheckPeace <if= p%id%03 1 else GoCheckThreat TeamNeutral 2 TeamNeutral 3 ForceChat %5%>
+		GoCheckThreat <if= L3 0 L= 3 1 ifNPCOK %5% Monologue %5% 2>
+
+		PCAttack <if= P%id%03 1 Goto GoTripAlarm>
+		Get%1% <if= L2 0 if= P%id%03 1 ifStealth SkillTar StoryDL else GoTripAlarm>
+		GoTripAlarm <Alert 1 p= %id%03 0 TeamAttack 2 TeamAttack 3 MonsterUp 3 d10>
+
+		Msg1 <Suddenly, an alarm sounds!>
+		Msg2 <We've been boarded! To arms, kill the intruders!>
+
+		sub
+			Team 1
+			SetEnemy 2 3
+
+			Team 2
+			name <Pirates>
+			SetEnemy 1
+			SetAlly 3
+
+			Team 3
+			name <Guards>
+			type <SYNTH ROBOT CRIMINAL>
+			SetEnemy 1
+			SetAlly 2
+			Deploy <if= V1 0 V= 1 1 MonsterUp 3 StoryDL>
+
+			room
+			special <STARTHERE>
+			desig <HOME %e5%>
+			minimap <1...........2............>
+			sub
+				TrapDoor
+				Destination -1
+				MiniMapComponent 2
+				use <Print 1 Return>
+			end
+
+			room
+			desig <HOME %e6%>
+			minimap <......###..#1=..###......>
+		end
+
+		Persona 5
+		special <UNLISTED>
+		&HighOffer <Threat StoryDL 24>
+		&MidOffer <Threat StoryDL 12>
+		&LowOffer <Threat StoryDL 6>
+		greeting <if= PlotStatus %plotid% %id% else GoChat if# p%id%02 0 else GoCheckSurrender EndChat Say 1 TeamNeutral 2 TeamNeutral 3>
+		GoCheckSurrender <ifChatNPCSurrendered else GoGreet EndChat Say 2 L= 2 1 GiveItem %1% XPV 100 TeamNeutral 2 TeamNeutral 3>
+		*GoGreet <*IHearYouAreLookingForItem %1% GoExplain>
+		GoChat <NewChat SayAnything>
+		GoExplain <NewChat Say 3 AddChat 1 AddChat 2 AddChat 3>
+		GoStartFight <TeamAttack 2 TeamAttack 3 P= %id%03 0>
+		GoBuyItem <NewChat Say 9 L= 2 1 GiveItem %1% XPV 100>
+		GoBuyFail <EndChat Say 10 Goto GoStartFight>
+		GoWinContest <NewChat Say 12 L= 2 1 GiveItem %1% XPV 100>
+		GoLoseContest <EndChat Say 13 Goto GoStartFight>
+		result1 <ifConversation SkillTar StoryDL else GoR1Fail NewChat Say 5 AddChat 4 AddChat 5 AddChat 6 AddChat 7>
+		GoR1Fail <NewChat Say 4 AddChat 2 AddCHat 3 AddChat 7>
+		result2 <ifIntimidation HardSkillTar StoryDL else GoR2Fail NewChat Say 6 AddChat 4 AddChat 5 AddChat 6 AddChat 7 AddChat 8>
+		GoR2Fail <EndCHat Say 7 Goto GoStartFight>
+		result3 <NewChat Say 8 AddChat 9 AddChat 7>
+		result4 <Cash+ -&HighOffer Goto GoBuyItem>
+		result5 <ifShopping SkillTar StoryDL else GoBuyFail Cash+ -&MidOffer Goto GoBuyItem>
+		result6 <ifShopping HardSkillTar StoryDL else GoBuyFail Cash+ -&LowOffer Goto GoBuyItem>
+		*result7 <*GoodBye>
+		result8 <EndChat Say 11 Goto GoStartFight>
+		*result9 <*InsultContest GoWinContest GoLoseContest StoryDL>
+		Msg1 <I'm afraid that you're too late. The %name1% is no longer in my possession.>
+		Msg2 <I surrender! Here, you can have this %name1%.>
+		Msg3 <I have the %name1% here in my possession, but I'm not ready to part with it just yet.>
+		Msg4 <I told you, I'm not ready to part with it yet. No offers.>
+		Msg5 <Hmm. You do realize that your offer would have to be very high, don't you? How much are you willing to offer?>
+		Msg6 <You have a lot of nerve, threatening a pirate in \PPR %5% own lair. I'll tell you what, though- if you can make a decent offer, I may be willing to part with the %name1%.>
+		Msg7 <You dare threaten me on board my own ship? You are the one who is going to die!>
+		Msg8 <Challenge me? Ha! You don't even know the proper way to challenge a pirate, why should I listen to you?>
+		Msg9 <I find your offer most acceptable. Here is the %name1%; do with it as you will.>
+		Msg10 <Do you take me for a fool? That offer was an insult, and nobody insults %name5% and lives!>
+		Msg11 <Ah, someone who likes to get straight to the point. Shall we get started, then?>
+		Msg12 <Arr, your insult has wounded me to the core. Here, the %name1% is yours; from now on I won't be able to even look at it without reliving the shame.>
+		Msg13 <Your insult was an insult to insults everywhere! Prepare to defend yourself!>
+		Prompt1 <I can make you an offer for it.>
+		Prompt2 <Hand it over if you don't want to die.>
+		Prompt3 <I'll challenge you for it.>
+		Prompt4 <I'll give you $ \VAL &HighOffer .>
+		CPrompt4 <ifG PC$ &HighOffer Accept>
+		Prompt5 <I'll give you $ \VAL &MidOffer .>
+		CPrompt5 <ifG PC$ &MidOffer Accept>
+		Prompt6 <I'll give you $ \VAL &LowOffer .>
+		CPrompt6 <ifG PC$ &LowOffer Accept>
+		Prompt7 <Let me think about this for a bit.>
+		Prompt8 <No deal, I'd rather fight.>
+		Prompt9 <You have no idea what I don't know!>
+	end
+	inv
+		STC CORE-ACTIVATABLE-STATIONARY-DEFENDED
+		name <Pirate Ship>
+		GoStartCombat <Alert 1 SavePos Dynamic 2 StoryDL 100 .nu1 .nu2 ComposeD Msg1 .Msg1 DynaVar= 3 Destination  DynaFaction NPCFac %5%>
+		Msg1 <You are attacked by mecha as you approach the pirate ship!>
+
+		STC Safe
+		name <Booty Locker>
+	end
+

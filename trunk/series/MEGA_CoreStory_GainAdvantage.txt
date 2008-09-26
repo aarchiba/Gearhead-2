@@ -1,10 +1,104 @@
 %%
+%% *:CS_PeacefulEntry_NPCBase Content
+%%		&PirateShip	The base is a pirate ship. Arr!
+%%
+%% The PC will be able to gain peaceful entry to an otherwise hostile location.
+%%
+%% Upon completing this task, the following trigger will be set:
+%%       .%id%_%plotid%_GoPeacefulEntry
+%%
+%% PARAM1: The base in question
+%% PARAM2: The NPC in charge
+%%
+
+Content
+	name <Do What You Want Cause A Pirate Is Free>
+	desc <The PC can gain entry by posing as a pirate.>
+	requires <*:CS_PeacefulEntry_NPCBase &PirateShip>
+
+	% E1 is the pirate ship
+	% E2 is the pirate captain
+	% E3 is a local public scene
+	% E4 is a pirate recruiter
+	% E5 is a scene for the duel
+	Element3 <Scene Public -Legit !Near -7>
+	Element4 <Prefab>
+	Place4 <3 SD Ally>
+	Element5 <Scene Environs !Near -7>
+
+	% P%id%01 = Initialization Counter
+
+	% This subplot will fail if E4 dies
+	start <ifNPCDead %4% LoseSubPlot %plotid%>
+	update <if= p%id%01 0 p= %id%01 1 NPCLevel %4% StoryDL>
+
+	.%id1%_%plotid1%_GoWin <WinSubPlot %plotid% Trigger0 .%id%_%plotid%_GoPeacefulEntry  History %id%01  ifNPCOK %4% Monologue %4% %id%02>
+	.%id1%_%plotid1%_GoLose <LoseSubPlot %plotid% Monologue %4% %id%03>
+
+	Msg%id%01 <You earned a meeting with %name2% by defeating %name4%.>
+	Msg%id%02 <Well, I guess you've earned that meeting. All you have to do is find %name2%'s ship... Sorry I can't help you with that, but it's hard to keep track of where \SPR %2% is.>
+	Msg%id%03 <I'm afraid that you're not quite up to the standard that we're looking for. Don't call us, we'll call you.>
+
+	% SubPlot1 is a duel with E4
+	SubPlot1 <*CS_Duel&NoDerailment 4 3 5>
+
+	sub
+		Persona 4
+		rumor%id% <%name2% has been recruiting for new pirates at %name3%.>
+		&Bribe <Threat StoryDL 5>
+		greeting <if= PlotStatus %plotid% %id% else GoChat Goto GoIntro>
+		GoChat <NewChat SayAnything>
+		*GoIntro <*IWantToTalkAboutNPC %2% GoExplain>
+		GoExplain <NewChat Say 1 AddChat 1 AddChat 2 AddChat 3>
+		GoMakeOffer <NewChat Say 2 AddChat 4 AddChat 5 AddChat 6>
+		result1 <ifPCCriminal else GoR1Fail Goto GoMakeOffer>
+		GoR1Fail <NewChat Say 3 AddChat 7 AddChat 8>
+		result2 <NewChat Say 4 AddChat 9 AddChat 10>
+		result3 <AddLawful 1   EndChat Say 5   LoseSubPlot %plotid%>
+		result4 <EndCHat Say 6 SetPlotStatus %plotid1% %id1%>
+		result5 <NewChat Say 7 LoseSubPlot %plotid%>
+		result6 <NewChat Say 8 History 9 WinSubPlot %plotid% Trigger0 .%id%_%plotid%_GoPeacefulEntry XPV 100 cash+ -&Bribe>
+		result7 <ifConversation SkillTar StoryDL else GoR7Fail AddLawful -1 Goto GoMakeOffer>
+		GoR7Fail <NewChat Say 10 LoseSubPlot %plotid%>
+		result8 <Goto result5>
+		result9 <Goto result1>
+		result10 <Goto result3>
+		Msg1 <Ah, you must be here about the job. It is true that %name2% is looking for some new shipmates.>
+		Msg2 <You should know that before you can even get an interview, you're going to have to prove your combat skills.>
+		Msg3 <I don't know... You don't seem to be the kind of person we're looking for. Are you sure that you're really interested in this position?>
+		Msg4 <Why do you want to know?>
+		Msg5 <Look, I don't want to get involved in any feud between you and %name2%, I'm just working under contract here. Leave me out of it.>
+		Msg6 <Great! Meet me in %name5% and I'll see how you measure up.>
+		Msg7 <That's too bad. Well, I better get back to work. I'll see you around.>
+		Msg8 <Why yes, I believe we can do that... I mean, you've got to be a good pilot to get your hands on this kind of money, right? I'll tell %name2% that you're coming in for an interview... well, if I can figure out where \SPR %2% is now, that is.>
+		Msg9 <You bribed %name4% to arrange a meeting with %name2%.>
+		Msg10 <Well, I'm not. Try gaining a bit more criminal experience before applying for this kind of job again.>
+		Prompt1 <Tell me more about joining \PPR %2% crew.>
+		Prompt2 <Do you know where I can find \OPR %2% ?>
+		Prompt3 <I'm not here to join; I plan to destroy %name2%!>
+		Prompt4 <No problem. Let's get this test started.>
+		Prompt5 <On second thought, maybe I don't want to join.>
+		Prompt6 <How about we skip the test? [Offer $ \VAL &Bribe ]>
+		CPrompt6 <ifG PC$ &Bribe ifShopping SkillTar StoryDL Accept>
+		Prompt7 <I'm certain.>
+		Prompt8 <I don't know...>
+		Prompt9 <I'm hoping to get a job, of course.>
+		Prompt10 <I'm going to fight \OPR %2% , of course.>
+	end
+	inv
+		NPC Pirate
+		chardesc young sociable
+	end
+
+%%
 %% *:CS_GainAdvantageVsNPC Content
 %%
 %%  &Reinforcements	The advantage may take the form of reinforcements
 %%		.%id%_%plotid%_GoReinforcements
 %%  &Decimation		The advantage may take the form of reducing enemy forces
 %%		.%id%_%plotid%_GoDecimation
+%%  &Delay		The advantage may take the form of delaying the enemy
+%%		.%id%_%plotid%_GoDelay
 %%
 %% The PC may seek advantage against a certain NPC.
 %%
@@ -14,6 +108,47 @@
 %%
 %% PARAM1: The NPC being opposed
 %%
+
+Content
+	name <Mechanic's Gift>
+	desc <The PC may be given an experimental weapon. Or something.>
+	requires <*:CS_GainAdvantageVsNPC>
+
+	% E1 is the NPC being sought
+	% E2 is a local mechanic
+	Element2 <Character Mechanic -ArchEnemy !Xclude 1 !Near -7>
+
+	start <ifNPCDead %2% LoseSubPlot %plotid%>
+
+	% SubPlot1 is the PC's task
+	% SubPlot2 is the PC's reward
+	SubPlot1 <*:CS_MinorMission 2>
+	SubPlot2 <*CS_GiveEquipment 2>
+
+	sub
+		Persona 2
+		rumor%id% <%name2% might be able to help you against %name1%.>
+		greeting <if= PlotStatus %plotid% %id% else GoOpenShop ifSubPlotWon %plotid1% else GoCheckLoss NewChat Say 1 AddChat 1>
+		GoCheckLoss <ifSubPlotLost %plotid1% else GoCheckProgress LoseSubPlot %plotid% Goto GoLoseMission>
+		*GoLoseMission <*MissionWasFailure na na na>
+		GoCheckProgress <if# PlotStatus %plotid1% 0 else GoGreet Goto GoRemind>
+		*GoRemind <*GenericMissionReminder>
+		*GoGreet <*IHearYouAreFightingNPC %1% GoExplain>
+		*GoOpenShop <*SERVICE_MECHANIC GoBye>
+		*GoBye <*GOODBYE>
+		GoExplain <NewChat Say 2 AddChat 2 AddChat 3>
+		result1 <WinSubPlot %plotid% History 3 Goto .%id2%_GoGiveEquipment>
+		result2 <Goto .%id1%_GoInit>
+		*Result3 <*RejectMission .%id%_GoR3Exit>
+		.%id%_GoR3Exit <LoseSubPlot %plotid%>
+		Msg1 <I see that you've completed my task. Well done.>
+		Msg2 <I'd like to help you out against \OPR %1% , but before giving my help I need to make sure you actually stand a fighting chance. If you could do a small favor for me that would verify things nicely.>
+		Msg3 <%name2% gave you some new equipment to use against %name1%.>
+		Prompt1 <Now, about that reward..?>
+		Prompt2 <Alright. What do you need done?>
+		Prompt3 <Sorry. I've got no time for this.>
+	end
+
 
 Content
 	name <The lance is elsewhere>
@@ -107,6 +242,8 @@ Content
 %%		.%id%_%plotid%_GoDecimation
 %%  &Reinforcements	The advantage may take the form of reinforcements
 %%		.%id%_%plotid%_GoReinforcements
+%%  &Delay		The advantage may take the form of delaying the enemy
+%%		.%id%_%plotid%_GoDelay
 %%
 %%  Before a combat encounter, the PC may be able to gain an advantage
 %%  over his enemies. Note that this advantage can be as capricious as you

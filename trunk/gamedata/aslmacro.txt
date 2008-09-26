@@ -92,7 +92,7 @@ DynaItemTeam <GrabItem ? DynaGG ?>
 MOVEITEM <GrabItem ?  MoveGG ?>
 FREEZENPC <GrabNPC ? MoveGG 0>
 FREEZEITEM <GrabItem ? MoveGG 0>
-GIVEITEM <GrabItem ?  GiveGG>
+GIVEITEM <GrabItem ?  GiveGG Trigger GET !>
 IFSELFOK <GrabSource ifGOK>
 IFNPCOK <GrabNPC ?  IfGOK>
 IFNPCDEAD <GrabNPC ? ifGDead>
@@ -131,6 +131,7 @@ GSD <GSetNAtt NAG_EpisodeData NAS_Orders 0>
 GTargetPC <GSetNAtt NAG_EpisodeData NAS_Target PCUID>
 GQuickShot <GSetNAtt NAG_Action NAS_CallTime 0>
 MonsterUP <GrabTeam ? GAddStat STAT_WMonster ?>
+MonsterOFF <GrabTeam ? GSetStat STAT_WMonster 0>
 NPCgoPC <GrabNPC ? GrabRoot GSetNAtt NAG_EpisodeData NAS_Orders 5 GSetNAtt NAG_EpisodeData 3 PCUID>
 UIDgoPC <GrabLocal ?  GSetNAtt NAG_EpisodeData NAS_Orders 5 GSetNAtt NAG_EpisodeData 3 PCUID>
 UIDSeekEdge <GrabLocal ?  GSetNAtt NAG_EpisodeData NAS_Orders 2 GSetNAtt NAG_EpisodeData 3 ?>
@@ -246,6 +247,8 @@ IfMechaRepair <ifSkillTest 15 ?>
 IfTaunt <ifSkillTest 42 ?>
 IfMedicine <ifSkillTest 16 ?>
 IfBiotech <ifSkillTest 22 ?>
+IfShopping <ifSkillTest 21 ?>
+IfMartialArts <ifSkillTest 9 ?>
 SeekEntrance <SeekGate ParentSceneID ?>
 IfNPCSurrendered <GrabNPC ? if= GNAtt NAG_EpisodeData NAS_SurrenderStatus NAV_NowSurrendered>
 IfChatNPCSurrendered <GrabChatNPC if= GNAtt NAG_EpisodeData NAS_SurrenderStatus NAV_NowSurrendered>

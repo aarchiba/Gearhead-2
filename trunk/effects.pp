@@ -2411,7 +2411,6 @@ Function BuildAttackRequest( Attacker: GearPtr; AtOp: Integer; var AtAt: String 
 var
 	ER: EffectRequest;
 	msg: String;
-	T: Integer;
 begin
 	InitEffectRequest( ER );
 
@@ -2983,8 +2982,6 @@ Procedure HandleEffectString( GB: GameBoardPtr; Target: GearPtr; FX_String,FX_De
 	{ An effect string has been triggered. Better do whatever it says. }
 var
 	ER: EffectRequest;
-	msg: String;
-	T: Integer;
 begin
 	{ Clear the effect history and generate the effect request. }
 	ClearAttackHistory;
@@ -3013,8 +3010,6 @@ Procedure MassEffectString( GB: GameBoardPtr; FX_String,FX_Desc: String );
 	{ Do an effect against every last model on the board. Wow. }
 var
 	ER: EffectRequest;
-	msg: String;
-	T: Integer;
 	M: GearPtr;
 begin
 	{ Initialize the effect request. }

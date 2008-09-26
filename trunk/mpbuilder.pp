@@ -56,6 +56,7 @@ Const
 Var
 	Sub_Plot_List: GearPtr;
 	standard_trigger_list: SAttPtr;
+	changes_used_so_far: String;
 
 Procedure ComponentMenuRedraw;
 	{ The redraw for the component selector below. }
@@ -178,12 +179,20 @@ var
 	T,NumParam,NumElem: Integer;
 	I,SubPlot,SPList: GearPtr;
 	SPID: LongInt;
-	SPReq: String;
+	SPReq,original_changes: String;
 begin
 	{ Assign the values to this shard. }
 	SetNAtt( Shard^.NA , NAG_Narrative , NAS_PlotID , PlotID );
 	SetNAtt( Shard^.NA , NAG_Narrative , NAS_PlotLayer , LayerID );
 	SetNAtt( Shard^.NA , NAG_Narrative , NAS_PlotDifficulcy , Threat );
+
+	{ Record the original changes_used_so_far string; if things go sour in this procedure, }
+	{ we're going to have to restore it. }
+	original_changes := changes_used_so_far;
+
+	{ Add the changes from this shard. }
+	SPReq := SAttValue( Shard^.SA , 'CHANGES' );
+	if SPReq <> '' then AddToQuoteString( changes_used_so_far , SPReq );
 
 	{ Start by copying over all provided parameters. }
 	{ Also count the number of parameters passed; it could be useful. }
@@ -281,6 +290,9 @@ begin
 		SetNAtt( Shard^.NA , NAG_Narrative , NAS_NumSPElementsUsed , NumElem - EsSoFar );
 		InitShard := Shard;
 	end else begin
+		{ Initialization failed. Delete the existing subplots and restore the }
+		{ changes_used_so_far list. }
+		changes_used_so_far := original_changes;
 		DisposeGear( SPList );
 		InitShard := Nil;
 	end;
@@ -292,7 +304,7 @@ Function AddSubPlot( GB: GameBoardPtr; Scope,Slot,Plot0: GearPtr; SPReq: String;
 	{ Plot0 = the plot requesting the subplot. It must not be Nil. }
 var
 	ShoppingList: NAttPtr;
-	Context,EDesc,SPContext: String;
+	Context,EDesc,SPContext,changes_list: String;
 	ParamList: ElementTable;
 	T,E: Integer;
 	Shard: GearPtr;
@@ -354,11 +366,19 @@ begin
 			Shard := CloneGear( SelectComponentFromList( Sub_Plot_List , ShoppingList ) );
 		end;
 		if Shard <> Nil then begin
-			{ See if we can add this one to the list. If not, it will be }
-			{ deleted by InitShard. }
-			if SPContext <> '' then SetSAtt( Shard^.SA , 'SPCONTEXT <' + SPContext + '>' );
-			Shard := InitShard( GB , Scope , Slot , Shard , EsSoFar , PlotID , LayerID , NAttValue( Plot0^.NA , NAG_Narrative , NAS_PlotDifficulcy ) , ParamList , DoDebug );
-			if Shard <> Nil then NotFoundMatch := False;
+			{ Make sure this candidate doesn't violate our changes_used_so_far list. }
+			changes_list := SAttValue( Shard^.SA , 'CHANGES' );
+			if ( changes_list = '' ) or NoQItemsMatch( changes_used_so_far , changes_list ) then begin
+				{ See if we can add this one to the list. If not, it will be }
+				{ deleted by InitShard. }
+				if SPContext <> '' then SetSAtt( Shard^.SA , 'SPCONTEXT <' + SPContext + '>' );
+				Shard := InitShard( GB , Scope , Slot , Shard , EsSoFar , PlotID , LayerID , NAttValue( Plot0^.NA , NAG_Narrative , NAS_PlotDifficulcy ) , ParamList , DoDebug );
+				if Shard <> Nil then NotFoundMatch := False;
+			end else begin
+				{ This shard wants to change something we've already changed elsewhere }
+				{ in this plot. Better not include it; things could get weird. }
+				DisposeGear( Shard );
+			end;
 		end;
 	end;
 
@@ -851,6 +871,8 @@ begin
 	PlotID := NewPlotID( FindRoot( Slot ) );
 	SetNAtt( Slot^.NA , NAG_Narrative , NAS_MaxPlotLayer , 0 );
 	LayerID := NewLayerID( Slot );
+
+	changes_used_so_far := '';
 
 	ClearElementTable( FakeParams );
 	SPList := InitShard( GB , Scope , Slot , Plot , 0 , PlotID , LayerID , Threat , FakeParams , ( GearName( Plot ) = 'DEBUG' ) );

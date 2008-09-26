@@ -1,4 +1,6 @@
-EXTRA EXTRA RANDOM PLOT GENERATION
+**************************************************
+***   EXTRA  EXTRA  RANDOM  PLOT  GENERATION   ***
+**************************************************
 
 First there was random plot generation. Then there was extra-random plot generation.
 So, what do I name the improved plot generator for GH2? Extra-extra-random plot
@@ -32,7 +34,9 @@ DIFFICULCY LEVEL: EXTREME, HIGH, MEDIUM, LOW, NEGLIGIBLE
   !Ex, !Hi, !Md, !Lo, !Ne
 
 
-NON-XXRAN PLOT CONTEXTS
+*************************************
+***   NON-XXRAN  PLOT  CONTEXTS   ***
+*************************************
 
 The core story will have the descriptors below. A non-core story can have its own
 label defined in a context SAtt. This may be used to limit certain persona fragments
@@ -42,7 +46,10 @@ This label must start with a "=", may be as long as you want (as long as it's un
 and may have several sections divided by underscores. For instance, the label "=MIL_DEFAULT"
 can be used by the MILitary story DEFAULT or any of its plots.
 
-XXRAN PALETTE
+
+**************************
+***   XXRAN  PALETTE   ***
+**************************
 
 Every story that uses the xxran commands should have a standard set of elements. This
 is so components can share elements between them, and also so that components can be
@@ -94,7 +101,9 @@ The job group of the PC is included as C:<job>. The available job designations a
 See series\CG_JOBS_* for a complete and up-to-date list.
 
 
-PLOT DESCRIPTORS
+****************************
+***   PLOT  DESCRIPTORS  ***
+****************************
 
 The first two characters of a plot descriptor are its type. Only one label
 of a given type may be used in a single description. If a second label of
@@ -108,11 +117,12 @@ The story is made up of episodes. Each episode takes place in a single city.
 Each episode is made up of several components.
 
 GLOBAL DESCRIPTORS
-	These describe the arc of the plot between episodes
+	These describe the arc of the plot between plots
 	+P??	Propp State
 	+C??	Personal Story
+	+H??	Hanging Thread
 LOCAL DESCRIPTORS
-	These describe the arc of the plot within an episode
+	These describe the arc of the plot within a plot
 	+T??	PC's Task
 	+F??	Task Flavor
 BACKGROUND DESCRIPTORS

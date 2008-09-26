@@ -23,9 +23,64 @@
 %% Seto's Bride
 
 Content
+	name <Basic Fetch Mission>
+	desc <The PC will be asked to go fetch an item.>
+	requires <*CS_GiveMission ~C:THIEF>
+
+	% E1 is the NPC that the PC will speak with
+	% E2 is the item to fetch
+	Element2 <Prefab>
+
+	% Fail Conditions:
+	% - Mission giver dies before encounter is activated
+	% - Fetch subplot fails
+
+	end <if= PlotStatus %plotid1% 0 else .%id%_GoCheckReveal ifNPCDead %1% else %pop% LoseComp 0 .%id%_loss>
+	.%id%_GoCheckReveal <ifSubPlotLost %plotid1% SMemo %id%01 SetPlotStatus %plotid3% %id3%>
+	.%id%_loss <+T-->
+
+	% Upon getting the item, set the win subplot.
+	Get%2% <SetPlotStatus %plotid2% %id2%>
+
+	Msg%id%01 <You failed to recover the datachip. You should go report to %name1% at \SCENE NPCScene %1% .>
+
+
+	%% SubPlot1 is Fetch Item
+	%% SubPlot2 is the winning condition
+	%% SubPlot3 is the loss condition
+	SubPlot1 <*:CS_FetchItem 2>
+	SubPlot2 <*CS_WinFetchItem 1 2>
+	SubPlot3 <*CS_CALoseMission 1>
+
+	sub
+		Persona 1
+		greeting <if= PlotStatus %plotid1% 0 else .%id%_GoRemind if# PlotStatus %plotid% %id% else .%id%_GoOfferMission Goto %pop%>
+		.%id%_GoOfferMission <ifChatNPCUnknown else .%id%_GoKnownGreeting ifChatNPCAlly else .%id%_GoUnknownGreeting Goto .%id%_GoKnownGreeting>
+		*.%id%_GoRemind <*GenericMissionReminder>
+		*.%id%_GoKnownGreeting <*IHaveAJobForYou .%id%_GoBriefing>
+		*.%id%_GoUnknownGreeting <*AreYouHereAboutJob .%id%_GoBriefing>
+		.%id%_GoBriefing <NewChat Say %id%01 AddChat %id%01 AddChat %id%02>
+		*result%id%01 <*GoodLuckOnMission .%id%_GoR1Exit ChatNPCFac na>
+		.%id%_GoR1Exit <StoryNote %id%02 SetPlotStatus %plotid1% %id1%>
+		*Result%id%02 <*RejectMission .%id%_GoR2Exit>
+		.%id%_GoR2Exit <LoseComp 0 .%id%_changes>
+		.%id%_changes <+T-- +F-->
+		Msg%id%01 <We've lost some very sensitive information in the form of a datachip. I need for you to locate this chip and return it to me.>
+		Msg%id%02 <%name1% hired you to recover a lost datachip.>
+		Prompt%id%01 <I'll be back when I have it.>
+		Prompt%id%02 <Sorry, I'm only interested in fighting.>
+		CPrompt%id%02 <if# PCFac ChatNPCFac Accept>
+	end
+	inv
+		Treasure 5
+		name <Datachip>
+		desc <A mysterious datachip. Who knows what it contains?>
+	end
+
+Content
 	name <Basic Investigation Mission>
 	desc <The PC will be asked to gain some information.>
-	requires <*CS_GiveMission>
+	requires <*CS_GiveMission ~C:POLIT ~C:ACADE ~C:MEDIA>
 
 	% E1 is the NPC that the PC will speak with
 
@@ -71,7 +126,7 @@ Content
 Content
 	name <Basic Fighting Mission>
 	desc <The PC will be asked to go fight some mecha.>
-	requires <*CS_GiveMission>
+	requires <*CS_GiveMission ~C:MILIT>
 
 	% E1 is the NPC that the PC will speak with
 	% E2 is the outdoors location where the encounter will be placed
