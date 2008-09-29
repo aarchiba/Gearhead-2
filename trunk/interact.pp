@@ -873,6 +873,7 @@ begin
 		NAV_Lover: it := it + ' LOVER';
 		NAV_Family: it := it + ' FAMILY';
 		NAV_Friend: it := it + ' FRIEND';
+		NAV_ArchAlly: it := it + ' LANCEMATE';
 	end;
 	if IsArchAlly( Adv, NPC ) then it := it + ' ARCHALLY';
 

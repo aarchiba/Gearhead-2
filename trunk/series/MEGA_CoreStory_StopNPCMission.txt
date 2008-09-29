@@ -23,6 +23,111 @@
 %%
 
 Content
+	name <A Little Help From Your Friends>
+	desc <The NPC reacts badly to a loss, but fortunately you have backup.>
+	requires <*:CS_StopNPCMission &IsEnemyNPC E:A.equ (E:M.com|E:M.ggd)>
+	changes <E:A>
+	Size 5
+
+	% E1 is the NPC launching this attack
+	% E2 is an outdoors scene for the encounters
+	% E3 is an encounter for the supposed mission- the PC completes this one first
+	% E4 is the encounter for the ambush- after the PC wins E3
+	% E5 is a friend/lover/ally to come to the rescue
+	% E6 is a second one
+	Place1 </>
+	Element2 <Scene Outdoors !Near -7>
+	Element3 <Prefab>
+	Place3 <2>
+	Element4 <Prefab>
+	Place4 <2>
+	Element5 <Character (Friend|Lover|Family|Lancemate) HasMecha !Global>
+	Place5 <4 (Allies) sd ally>
+	Element6 <Character (Friend|Lover|Family|Lancemate|PCFAC) HasMecha !Global>
+	Place6 <4 (Allies) sd ally>
+
+	% P%id%01 = Initialization Counter
+
+	% At initialization, activate all the subplots and level the NPCs.
+	update <if= p%id%01 0 p= %id%01 1 NPCLevel %5% StoryDL NPCLevel %6% StoryDL  SetPlotStatus %plotid1% %id1%  SetPlotStatus %plotid2% %id2%>
+
+	% Upon the Mecha Encounter subplot being won, this subplot's ambush will be activated.
+	% If the sub-encounter is lost, this plot is lost without needing an ambush.
+	.%id1%_%plotid1%_GoWin <SetEncounterActive %4%>
+	.%id1%_%plotid1%_GoLoss <Trigger0 .%id%_%plotid%_GoLoss LoseSubPlot %plotid%>
+
+	% SubPlot1 is the combat encounter that serves as the supposed mission
+	% SubPlot2 is the locate encounter thingamabob
+	SubPlot1 <*:CS_MechaEncounter&Secondary&Raiders 2 3>
+	SubPlot2 <*:CS_DiscoverNPCMission&EnemyNPC&GatheringForces 2 3 1>
+
+	sub
+		Persona 1
+		special <UNLISTED NOESCAPE>
+		greeting <EndChat Say 1 AddChat 1 AddChat 2>
+		GoEndConversation <EndChat Say 2>
+		result1 <AddSociable -d8   Goto GoEndConversation>
+		result2 <AddSociable  d8   Goto GoEndConversation>
+		Msg1 <You!!! I had this perfectly planned out, why did your friends have to come along and ruin it!?>
+		Msg2 <I have to go, but my lance should still be able to defeat you! Men, don't allow any of them to escape!>
+		Prompt1 <Don't look at me. I'm just as surprised as you are.>
+		Prompt2 <Hey, I can't help it if I'm popular.>
+
+		Metascene 4 2
+		% L1 = Encounter Over Counter
+		% L2 = Initialization Counter
+		MapWidth 50
+		MapHeight 50
+
+		start <if= L2 0 L= 2 1  Alert 1 Monologue %1% 2 Monologue %5% 3 Monologue %1% 4 Monologue %6% 5 ForceChat %1% History 6 SetXXRAttitude %1% XXR_A_EnviesPC>
+		end <SetEncounterInactive %4%>
+
+		nu1 <if= T1 0   Return   if= L1 0 L= 1 1  History 7                     Trigger0 .%id%_%plotid%_GoLoss   LoseSubPlot %plotid%>
+		nu2 <if= T2 0   if= L1 0 L= 1 1   Alert 8 History 9  XPV 100  SALVAGE   Trigger0 .%id%_%plotid%_GoWin    WinSubPlot %plotid%>
+
+		Msg1 <Without warning, you are ambushed by %name1%!>
+		Msg2 <You can't win, \PC . As you can see I have predicted your every move.>
+		Msg3 <Yeah, but you didn't predict that \PC would have backup!>
+		Msg4 <Huh!? What in the name of vector sigma are you doing here?>
+		Msg5 <We're here to defeat you once and for all. Don't worry, \PC , we can handle these creeps.>
+		Msg6 <You were ambushed by %name1%, but %name5% and %name6% came to your aid.>
+		Msg7 <Despite their help you were defeated.>
+		Msg8 <%name1%'s lance has been defeated.>
+		Msg9 <With their help you defeated %name1%'s lance.>
+
+		sub
+			team 1
+			SetEnemy 2
+			SetAlly 3
+			ParaX 5
+			ParaY 10
+
+			team 2
+			SetEnemy 1 3
+			Deploy <if= PlotStatus %plotid% %id%  SetSelfFaction &EnemyFac  WMecha 2 StoryDL 100>
+			ParaX 45
+			ParaY 45
+
+			team 3
+			name <Allies>
+			SetAlly 1
+			SetEnemy 2
+			ParaX 10
+			ParaY 5
+		end
+	end
+	inv
+		stc CORE-ACTIVATABLE
+		name <%name1%'s Forces>
+
+		STC ENCOUNTER-SEEKPC
+		EncounterMove 100
+		name <Surprise Ambush>
+		update <ifThisQEncActive else GoHide  SetStat STAT_MetaVisibility 0 SetSelfX PCX SetSelfY PCY Goto GoSetOrders>
+	end
+
+
+Content
 	name <Factory Attack>
 	desc <The NPC is going to launch an attack against a factory, but won't participate himself.>
 	requires <*:CS_StopNPCMission ~&IsEnemyNPC (!Ne|!Lo) &Secondary>

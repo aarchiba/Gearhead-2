@@ -1352,7 +1352,11 @@ begin
 			end else if W = '\OPR' then begin
 				{ Object Pronoun }
 				ID := ScriptValue( S0 , GB , Scene );
-				Part := GG_LocateNPC( ID , GB , Scene );
+				if ID = 0 then begin
+					Part := LocatePilot( GG_LocatePC( GB ) );
+				end else begin
+					Part := GG_LocateNPC( ID , GB , Scene );
+				end;
 				if Part <> Nil then begin
 					W := MsgString( 'OPR_' + BStr( NAttValue( Part^.NA , NAG_CharDescription , NAS_Gender ) ) );
 				end else begin
@@ -1362,7 +1366,11 @@ begin
 			end else if W = '\SPR' then begin
 				{ Object Pronoun }
 				ID := ScriptValue( S0 , GB , Scene );
-				Part := GG_LocateNPC( ID , GB , Scene );
+				if ID = 0 then begin
+					Part := LocatePilot( GG_LocatePC( GB ) );
+				end else begin
+					Part := GG_LocateNPC( ID , GB , Scene );
+				end;
 				if Part <> Nil then begin
 					W := MsgString( 'SPR_' + BStr( NAttValue( Part^.NA , NAG_CharDescription , NAS_Gender ) ) );
 				end else begin
@@ -1372,7 +1380,11 @@ begin
 			end else if W = '\PPR' then begin
 				{ Object Pronoun }
 				ID := ScriptValue( S0 , GB , Scene );
-				Part := GG_LocateNPC( ID , GB , Scene );
+				if ID = 0 then begin
+					Part := LocatePilot( GG_LocatePC( GB ) );
+				end else begin
+					Part := GG_LocateNPC( ID , GB , Scene );
+				end;
 				if Part <> Nil then begin
 					W := MsgString( 'PPR_' + BStr( NAttValue( Part^.NA , NAG_CharDescription , NAS_Gender ) ) );
 				end else begin
