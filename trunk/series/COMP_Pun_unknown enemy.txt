@@ -92,7 +92,7 @@ Plot
 Plot
 	name <Pirate War>
 	desc <The thief you're looking for knows about the pirate war.>
-	requires <#A +Tht (+Far|+Ffi|+F--) +Pun T:++ F:-- -T:ENEMY -P:CRIHN (T:THIEF|T:CRIHN|T:REDMA) (L:FCOMS|L:MAQUI|L:RISHI|L:CRIHN|L:BOHEM|L:REDMA) ~C:THEIF ~+Gmo>
+	requires <#A +Tgt (+Far|+Ffi|+F--) +Pun T:++ F:-- -T:ENEMY -P:CRIHN (T:THIEF|T:CRIHN|T:REDMA) (L:FCOMS|L:MAQUI|L:RISHI|L:CRIHN|L:BOHEM|L:REDMA) ~C:THEIF ~+Gmo>
 	size 6
 
 	% E1 is an environs scene where the pirates are hanging out
@@ -124,7 +124,7 @@ Plot
 		Start <if= L2 0 L= 2 1   StoryNote 1   ForceChat %5%    &SetEnemyFac %3%>
 		nu1 <if= T1 0   Return   if= V1 0 V= 1 1                                   LoseComp 0 .next>
 		nu2 <if= T2 0            if= V1 0 V= 1 1   XPV 100  AddRenown 1   SALVAGE   WinComp 0 .next ifNPCOK %5% PCEnemy %5%>
-		.next <+Tht +Fin>
+		.next <+Tgt +Fin>
 		Msg1 <You learned from %name5% that %name6% has a secret that the pirates are fighting to get.>
 
 		sub

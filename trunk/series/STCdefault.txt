@@ -1417,6 +1417,154 @@ GoStartCombat <V= 1 0  SavePos Dynamic 2 V2 100 .nu1 .nu2 ComposeD Msg1 .Msg1 Dy
 .msg1 <You have defeated the mecha.>
 EncounterMove 50
 
+% ***   SUPERWEAPON  PARTS   ***
+% ******************************
+
+CombatProp 10
+name <Weapon Platform>
+Desig <SW-WEDGE-0>
+SDL_SPRITE <tex_spaceship_body.png>
+Mesh 7
+Scale 2
+Skill 6 8
+Skill 12 8
+Skill 17 10
+sub
+	Turret
+	size 3
+	armor 3
+	sub
+		BeamGun 2
+		Scale 2
+		name <Particle Cannon>
+		type <OVERLOAD ANTIAIR>
+		Range 6
+		ACC 1
+		Recharge 4
+	end
+end
+
+CombatProp 15
+name <Weapon Platform>
+Desig <SW-WEDGE-1>
+SDL_SPRITE <tex_spaceship_body.png>
+Mesh 7
+Scale 2
+Skill 6 10
+Skill 12 10
+Skill 17 14
+Skill 18 9
+sub
+	Turret
+	size 3
+	armor 3
+	sub
+		BeamGun 4
+		Scale 2
+		name <Particle Cannon>
+		type <OVERLOAD ANTIAIR>
+		Range 8
+		ACC 1
+		Recharge 4
+	end
+end
+
+CombatProp 20
+name <Weapon Platform>
+Desig <SW-WEDGE-2>
+SDL_SPRITE <tex_spaceship_body.png>
+Mesh 7
+Scale 2
+Skill 6 12
+Skill 12 12
+Skill 17 18
+Skill 18 12
+sub
+	Turret
+	size 3
+	armor 3
+	sub
+		BeamGun 4
+		Scale 2
+		name <Particle Cannon>
+		type <OVERLOAD ANTIAIR>
+		Range 8
+		ACC 1
+		Recharge 4
+	end
+end
+
+CombatProp 25
+name <Weapon Tower>
+Desig <SW-TOWER-1>
+SDL_SPRITE <tex_spaceship_body.png>
+Mesh 8
+Scale 2
+Skill 6 16
+Skill 12 10
+Skill 17 18
+sub
+	Turret
+	size 5
+	armor 5
+	sub
+		BeamGun 6
+		Scale 2
+		name <MegaBeam>
+		type <HYPER>
+		Range 6
+		Recharge 1
+	end
+end
+
+CombatProp 20
+name <Missile Launcher>
+Desig <SW-SLAB-1>
+SDL_SPRITE <tex_spaceship_body.png>
+Mesh 6
+Scale 2
+Skill 7 14
+Skill 12 6
+Skill 17 18
+sub
+	Turret
+	size 5
+	armor 5
+	sub
+		MLauncher 16
+		sub
+			Rockets 2
+			name <Defense Missiles>
+			Range 8
+			Magazine 80
+			type <SWARM BRUTAL>
+		end
+	end
+end
+
+CombatProp 20
+name <Missile Launcher>
+Desig <SW-SLAB-2>
+SDL_SPRITE <tex_spaceship_body.png>
+Mesh 5
+Scale 2
+Skill 6 14
+Skill 12 6
+Skill 17 18
+sub
+	Turret
+	size 5
+	armor 5
+	sub
+		BeamGun 4
+		Scale 2
+		name <Particle Cannon>
+		type <OVERLOAD ANTIAIR>
+		Range 8
+		ACC 1
+		Recharge 4
+	end
+end
 
 
 % *************************

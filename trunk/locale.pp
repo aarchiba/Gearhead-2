@@ -216,7 +216,7 @@ Const
 		MMPass: ( True , True , True , True , False );
 		Obscurement: 1;
 		Altitude: 1;
-		DMG: 18; Destroyed: 40;
+		DMG: 18; Destroyed: 22;
 		Flammable: True;
 		),
 	(	{Wall}
@@ -224,7 +224,7 @@ Const
 		MMPass: ( True , True , True , True , False );
 		Obscurement: 1;
 		Altitude: 6;
-		DMG: 26; Destroyed: 40;
+		DMG: 26; Destroyed: 22;
 		Flammable: True;
 		),
 	(	{Floor}
@@ -316,7 +316,7 @@ Const
 		MMPass: ( True , True , True , True , False );
 		Obscurement: 1;
 		Altitude: 2;
-		DMG: 12; Destroyed: 40;
+		DMG: 12; Destroyed: 22;
 		Flammable: True;
 		),
 	(	{Medium Building}
@@ -324,7 +324,7 @@ Const
 		MMPass: ( True , True , True , True , False );
 		Obscurement: 1;
 		Altitude: 3;
-		DMG: 16; Destroyed: 40;
+		DMG: 16; Destroyed: 22;
 		Flammable: True;
 		),
 
@@ -334,7 +334,7 @@ Const
 		MMPass: ( True , True , True , True , False );
 		Obscurement: 1;
 		Altitude: 6;
-		DMG: 7; Destroyed: 40;
+		DMG: 7; Destroyed: 22;
 		Flammable: False;
 		),
 	(	{Very Low Building}
@@ -342,7 +342,7 @@ Const
 		MMPass: ( True , True , True , True , False );
 		Obscurement: 1;
 		Altitude: 1;
-		DMG: 12; Destroyed: 40;
+		DMG: 10; Destroyed: 22;
 		Flammable: True;
 		)
 

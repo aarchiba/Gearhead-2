@@ -328,7 +328,7 @@ Plot
 		.%id%_GoExplain <NewChat Say %id%01 AddChat %id%01 AddChat %id%03>
 
 		Result%id%01 <NewChat Say %id%02 SMemo %id%03 History %id%04 AddChat %id%02 FreezeNPC %2% &SetTargetNPC %2% WinComp 0 .%id%_next>
-		.%id%_next <+Tht +Fin>
+		.%id%_next <+Tgt +Fin>
 		Result%id%02 <NewChat Say %id%06>
 		Result%id%03 <NewChat Say %id%05 SMemo %id%03 History %id%04 AddChat %id%02 FreezeNPC %2% &SetTargetNPC %2% WinComp 0 .%id%_next>
 
@@ -372,7 +372,7 @@ Plot
 		greeting <if= PlotStatus %plotid% %id% else %pop% Goto .%id%_GoIntro>
 		*.%id%_GoIntro <*LookingForItem &TargetItem .%id%_GoExplain>
 		.%id%_GoExplain <NewChat Say %id%01 StoryNote %id%02 AddChat %id%01 &SetTargetNPC %2% WinComp 0 .%id%_win>
-		.%id%_win <+Tpt +Fin>
+		.%id%_win <+Tgt +Fin>
 		result%id%01 <NewChat Say %id%03>
 		Msg%id%01 <I don't know about that myself, but %name2% does... unfortunately, \SPR %2% 's currently in hiding. There are many others who seek knowledge of the \ITEM &TargetItem . Some of them are dangerous.>
 		Msg%id%02 <You learned that %name2% is hiding from people who seek the \ITEM &TargetItem .>
@@ -419,42 +419,6 @@ Plot
 %%  ***   +Pew  Enemy  Weapon  Program   ***
 %%  ****************************************
 
-Content
-	name <They've Hired A Mad>
-	desc <The enemy faction has hired a mad scientist to help with their weapons program.>
-	requires <*CS_Conversation +Pew (1:ACADE|1:MEDIC|1:CORPO|1:CRAFT) F:++>
-	Size 1
-
-	% E1 is the person being spoken to
-	% E2 is the mad scientist
-	Element2 <NPC (ACADE|MEDIC) Villainous Neverfail !Global>
-	NeverFail2 <Scientist>
-	Place2 </>
-
-	start <if= PlotStatus %plotid% %id% else %pop% ifNPCDead %1% LoseComp 0 .%id%_loss>
-	.%id%_loss <+T-- +F-->
-
-	sub
-		Persona 1
-		greeting <if= PlotStatus %plotid% %id% else %pop% ifChatNPCKnown else .%id%_GoIHaveInfo Goto .%id%_GoGreet>
-		*.%id%_GoGreet <*HowAreYou .%id%_GoIHaveInfo>
-		*.%id%_GoIHaveInfo <*IHaveInformation&AboutFaction .%id%_GoExplain &EnemyFac>
-		.%id%_GoExplain <NewChat Say %id%01 StoryNote %id%02 AddChat %id%01 AddChat %id%02 &SetTargetNPC %2% WinComp 0 .%id%_next>
-		.%id%_next <+Tht +Ffi>
-		result%id%01 <NewChat Say %id%03 AddCHat %id%03>
-		result%id%02 <NewChat Say %id%04 AddChat %id%03>
-		result%id%03 <NewChat Say %id%05>
-		Msg%id%01 <I've heard that \FACTION &EnemyFac hired %name2% to work on their weapons program. Apparently \SPR %2% 's in town now doing some kind of experiment.>
-		Msg%id%02 <%name1% told you that \FACTION &EnemyFac hired %name2% to develop experimental weapons.>
-		Msg%id%03 <You're right about that. I shiver to think of what %name2% will come up with now that \SPR %2% has someone to fund \PPR %2% experiments.>
-		Msg%id%04 <%name2% is... I suppose it would be easiest to describe \OPR %2% as a mad scientist. Brilliant, but somewhat deranged, and utterly devoid of morals.>
-		Msg%id%05 <Who can say? You tell me the scarier thought- that they don't know what %name2% is capable of, or that they do?>
-		Prompt%id%01 <They hired %name2%? That can't be good.>
-		CPrompt%id%01 <ifNPCKnown %2% Accept>
-		Prompt%id%02 <Who's %name2%?>
-		CPrompt%id%02 <ifNPCUnknown %2% Accept>
-		Prompt%id%03 <Does \FACTION &EnemyFac know what it's getting into?>
-	end
 
 %%  **********************************
 %%  ***   +C--  Nothing  Special   ***
@@ -511,6 +475,54 @@ Content
 %%  *******************
 %%  ***   DEFAULT   ***
 %%  *******************
+
+Content
+	name <Enemy's a Bastard>
+	desc <The person the PC is speaking with has fought with Enemy.>
+	requires <*CS_Conversation +F-- (1:FRIEND|1:FAMILY|1:LOVER|1:ALLY|1:PCFAC) (1:MILIT|1:ADVEN|1:CORPO|1:LABOR|1:POLIC) -1:ENEMY E:++ ~+Gre>
+
+	% E1 is the person being spoken to.
+	% E2 is the enemy
+	element2 <Grab 1>
+
+	% Fail Conditions:
+	% - Mission giver dies before encounter is activated
+	end <if= PlotStatus %plotid1% 0 ifNPCDead %1% LoseComp 0 .%id%_loss>
+	.%id%_loss <+T-->
+
+	.%id1%_%plotid1%_GoWin <SetPlotStatus %plotid2% %id2%     SMemo %id%01>
+	.%id1%_%plotid1%_GoLoss <SetPlotStatus %plotid3% %id3%    SMemo %id%02>
+
+	Msg%id%01 <You defeated %name2%. You should go tell %name1% at \SCENE NPCScene %1% .>
+	Msg%id%02 <You lost to %name2%. You should go tell %name1% at \SCENE NPCScene %1% .>
+
+	%% SubPlot1 is the Stop Mission task
+	%% SubPlot2 is the winning condition
+	%% SubPlot3 is the loss condition
+	SubPlot1 <*:CS_StopNPCMission&IsEnemyNPC 2>
+	SubPlot2 <*CS_WinTask 1>
+	SubPlot3 <*CS_LoseTask 1>
+
+	sub
+		Persona 1
+		greeting <if= PlotStatus %plotid1% 0 else .%id%_GoRemind if# PlotStatus %plotid% %id% else .%id%_GoGreet Goto %pop%>
+		*.%id%_GoGreet <*IHearYouAreFightingNPC %2% .%id%_GoOfferMission>
+		*.%id%_GoRemind <*GenericMissionReminder>
+		.%id%_GoOfferMission <NewChat Say %id%01 AddCHat %id%01 AddChat %id%02 AddChat %id%03>
+		result%id%01 <AddEasygoing -d10   goto result%id%02>
+		result%id%02 <NewChat Say %id%02 History %id%03 SMemo %id%04 SetPlotStatus %plotid1% %id1%>
+		*result%id%03 <*RejectMission .%id%_GoR3Exit>
+		.%id%_GoR3Exit <AddReact -10   AddRenown -10   NTBLoseComp 0 .%id%_changes>
+		.%id%_changes <+T-- +F-->
+		Msg%id%01 <You should know that \SPR %2% 's in town on a mission even as we speak. I tried to fight \OPR %2% myself, but got beaten pretty bad. If you could find \OPR %2% and avenge my poor departed mecha I'd be ever so grateful.>
+		Msg%id%02 <Thanks. Come back and let me know when you've beaten \OPR %2% .>
+		Msg%id%03 <%name1% was defeated by %name2%. You agreed to help \OPR %1% get revenge.>
+		Msg%id%04 <You agreed to locate and defeat %name2% for %name1%, who had previously been defeated by \OPR %2% .>
+		Prompt%id%01 <I've been hoping for a chance to fight %name2%.>
+		Prompt%id%02 <Don't worry, I won't let your honor go unavenged.>
+		Prompt%id%03 <Sorry, but I'd much rather avoid %name2%...>
+	end
+
 
 Content
 	name <Are you out of work?>
@@ -570,7 +582,7 @@ Content
 	% Fail Conditions:
 	% - Mission giver dies before encounter is activated
 	% - Revalation subplot fails
-	end <if= PlotStatus %plotid1% 0 else .%id%_GoCheckReveal ifNPCDead %1% else %pop% LoseComp 0 .%id%_loss>
+	end <if= PlotStatus %plotid1% 0 else .%id%_GoCheckReveal ifNPCDead %1%  LoseComp 0 .%id%_loss>
 	.%id%_GoCheckReveal <ifSubPlotLost %plotid2% SMemo %id%02 SetPlotStatus 5>
 	.%id%_loss <+T-->
 

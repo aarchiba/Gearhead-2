@@ -112,35 +112,4 @@ Content
 %%  ***   DEFAULT   ***
 %%  *******************
 
-Content
-	name <Henchman In Town>
-	desc <The NPC will your enemy's henchman is in town.>
-	requires <*CS_Revelation E:++ -1:ENEMY>
-
-	% Element1 is the NPC
-	% Element2 is the henchman
-	% Element3 is the enemy NPC
-	Element2 <Prefab>
-	Place2 </>
-	Element3 <Grab 1>
-	Place3 </>
-
-	start <if= PlotStatus %plotid% %id% else %pop% ifNPCDead %1% LoseComp 0 .%id%_loss>
-	.%id%_loss <+T-- +F-->
-
-	sub
-		Persona 1
-		greeting <if= PlotStatus %plotid% %id% else %pop% Goto .%id%_GoGreet>
-		*.%id%_GoGreet <*RevealSecret .%id%_GoInit>
-		.%id%_GoInit <NewChat Say %id%01 StoryNote %id%02  SetNPCFaction %2% &EnemyFac &SetTargetNPC %2% WinComp 0 .%id%_next>
-		.%id%_next <+Tht +Fin>
-		Msg%id%01 <One of %name3%'s henchmen, named %name2%, has been sent here on a mission. If you could find \OPR %2% you might be able to learn what %name3% is up to.>
-		Msg%id%02 <%name1% told you that %name3% sent %name2% here on a mission.>
-	end
-	inv
-		NPC Soldier
-		job <Henchman>
-		job_desig <ADVEN>
-	end
-
 

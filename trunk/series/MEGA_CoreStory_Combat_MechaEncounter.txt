@@ -33,6 +33,89 @@
 %%  ***   +Pun  Unknown  Enemy  Attacks   ***
 %%  *****************************************
 
+Content
+	name <Defend The Prototype>
+	size 10
+	desc <You find your enemies transporting a prototype weapon.>
+	requires <*:CS_MechaEncounter +Pun -!Ne>
+	changes <+P>
+
+	% E1 is the outdoors scene where this encounter will be placed
+	% E2 is the metascene to be used for this encounter
+
+	% P%id%01 = Initialization Counter
+	% P%id%02 = Have gained decimation
+	update <if= V%id%01 0 V= %id%01 1   SetPlotStatus %plotid1% %id1%>
+
+	.%id1%_%plotid1%_GoDecimation     <P= %id%02 1>
+
+	% SubPlot1 = Gain Advantage vs Raiders
+	SubPlot1 <*:CS_GainAdvantageVsMecha&Decimation>
+
+	sub
+		MetaScene 2 2
+		% L1 = Encounter Over Counter
+		% L2 = Initialization Counter
+		MapWidth 50
+		MapHeight 50
+
+		Start <if= L2 0 L= 2 1   Alert 1  TeamMonologue 2 2   AlterContext .changes   CancelSubPlot %plotid1%>
+		.changes <+Pew>
+		nu1 <if= T1 0   Return   if= L1 0  L= 1 1  ifG T3 0 else GoWinMission Goto GoLoseMission>
+		nu2 <if= T2 0   if= T3 0   if= L1 0   L= 1 1  Goto GoWinMission>
+		nu3 <if= T2 0   if= T3 0   if= L1 0   L= 1 1  Goto GoWinMission>
+		GoWinMission  <Alert 4 History 5   XPV 100  SALVAGE  AddRenown 1   Trigger0 .%id%_%plotid%_GoWin   WinSubPlot %plotid%>
+		GoLoseMission <Alert 6 History 7                                   Trigger0 .%id%_%plotid%_GoLose  LoseSubPlot %plotid%>
+		end <SetEncounterInactive %2%>
+
+		Msg1 <You locate your enemies. They appear to be escorting a large vehicle of some type.>
+		Msg2_1 <Defend the prototype! It must be protected, at all costs!>
+		Msg2_2 <>
+		Msg2_3 <>
+		Msg3 <You discovered that your enemy was working for %name3%.>
+		Msg4 <The prototype weapon has been destroyed. You wonder how many more of these things they might be working on.>
+		Msg5 <You fought and destroyed an experimental weapon.>
+		Msg6 <You shudder to think what will happen if this prototype should enter general production.>
+		Msg7 <You failed to destroy an experimental weapon.>
+
+		sub
+			team 1
+			SetEnemy 2 3
+			ParaX 5
+			ParaY 10
+
+			team 2
+			name <Mecha Forces>
+			SetEnemy 1
+			SetAlly 3
+			Deploy <if= PlotStatus %plotid% %id% SetSelfFaction &EnemyFac   if= p%id%02 0 else GoSmallDeploy WMecha 2 StoryDL 120>
+			GoSmallDeploy <WMecha 2 StoryDL 70>
+			ParaX 40
+			ParaY 40
+
+			Team 3
+			name <Prototype>
+			SetAlly 2
+			SetEnemy 1
+			ParaX 45
+			ParaY 45
+
+			rect
+			name <Enemy Zone>
+			special <SubZone>
+			width 5
+			height 5
+			MFX 40
+			MFY 40
+			sub
+				SuperProp
+				requires <*Superweapon>
+				SetTeam 3
+			end
+
+		end
+	end
+
 
 %%  *************************************
 %%  ***   +Pla  Learn  of  Artifact   ***
@@ -54,6 +137,70 @@
 %%  *******************
 
 Content
+	name <Enemy Faction Revealed>
+	size 6
+	desc <Fight some mecha and find out who they work for.>
+	requires <*:CS_MechaEncounter &Raiders F:-- +Pun (!Ne|!Lo|&Secondary)>
+	changes <F:++>
+
+	% E1 is the outdoors scene where this encounter will be placed
+	% E2 is the metascene to be used for this encounter
+	% E3 is the new enemy faction
+	Element3 <Faction ArchEnemy !Okay -1 !XClude -3>
+
+	% P%id%01 = Initialization Counter
+	% P%id%02 = Have gained reinforcements
+	% P%id%03 = Have gained decimation
+	update <if= V%id%01 0 V= %id%01 1   SetPlotStatus %plotid1% %id1%>
+
+	.%id1%_%plotid1%_GoReinforcements <P= %id%02 1>
+	.%id1%_%plotid1%_GoDecimation     <P= %id%03 1>
+
+	% SubPlot1 = Gain Advantage vs Raiders
+	SubPlot1 <*:CS_GainAdvantageVsMecha&Reinforcements&Decimation>
+
+	sub
+		MetaScene 2 2
+		% L1 = Encounter Over Counter
+		% L2 = Initialization Counter
+		MapWidth 50
+		MapHeight 50
+
+		Start <if= L2 0 L= 2 1   Alert 1  History 2 &SetEnemyFac %3% CancelSubPlot %plotid1% if# P%id%02 0 Alert 3>
+		nu1 <if= T1 0   Return   if= V1 0 V= 1 1 Alert 4 Trigger0 .%id%_%plotid%_GoLoss LoseSubPlot %plotid%>
+		nu2 <if= T2 0   if= V1 0 V= 1 1   XPV 100  AddRenown 1   SALVAGE   Alert 5   Trigger0 .%id%_%plotid%_GoWin WinSubPlot %plotid%>
+		end <SetEncounterInactive %2%>
+
+		Msg1 <You locate the raiders.>
+		Msg2 <You discovered that your enemy was working for %name3%.>
+		Msg3 <Your reinforcements are here, as promised.>
+		Msg4 <You were defeated by the raiders. There can be no doubt that they are working for %name3%.>
+		Msg5 <You have defeated the raiders. There can be no doubt that they are working for %name3%.>
+
+		sub
+			team 1
+			setally 3
+			SetEnemy 2
+			ParaX 5
+			ParaY 10
+
+			team 2
+			SetEnemy 1 3
+			Deploy <if= PlotStatus %plotid% %id% SetSelfFaction %3%   if= p%id%03 0 else GoSmallDeploy WMecha 2 StoryDL 150>
+			GoSmallDeploy <WMecha 2 StoryDL 90>
+			ParaX 45
+			ParaY 45
+
+			team 3
+			setally 1
+			setenemy 2
+			Deploy <if= PlotStatus %plotid% %id%  if# P%id%02 0   WMecha 3 StoryDL 60>
+			ParaX 10
+			ParaY 5
+		end
+	end
+
+Content
 	name <Henchmen Battle>
 	size 6
 	desc <Fight some henchmen of the enemy NPC.>
@@ -71,7 +218,7 @@ Content
 	.%id1%_%plotid1%_GoDecimation     <P= %id%03 1>
 
 	% SubPlot1 = Gain Advantage vs Raiders
-	SubPlot1 <*:GainAdvantageVsMecha&Reinforcements&Decimation>
+	SubPlot1 <*:CS_GainAdvantageVsMecha&Reinforcements&Decimation>
 
 	sub
 		MetaScene 2 2
@@ -342,7 +489,7 @@ Content
 	.%id1%_%plotid1%_GoReinforcements <P= %id%02 1>
 
 	% SubPlot1 = Gain Advantage vs Raiders
-	SubPlot1 <*:GainAdvantageVsMecha&Reinforcements>
+	SubPlot1 <*:CS_GainAdvantageVsMecha&Reinforcements>
 
 	sub
 		MetaScene 2 2

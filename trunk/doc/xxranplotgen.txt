@@ -213,8 +213,6 @@ BACKGROUND DESCRIPTORS
 	+T--	No task.
 	+T01	Introduction. The first task given.
 	+Tgt	Goto target for conversation
-	+Tht	The PC goes on a manhunt for target, who is actively avoiding him
-	+Tpt	PC will protect the target
 	+Tgs	PC will go to a certain scene - often to gather information or something
 
 	+Ten	Go to Encounter -> often to fight...
@@ -232,6 +230,7 @@ BACKGROUND DESCRIPTORS
 	+Fpa	It's going to be a party (+Tgs)
 	+Fcc	It's a corporate conference (+Tgs)
 	+Far	To arrest the target (+Tht)
+	+Fpr	To protect the target
 
 	+Fap	To apologize to the target (+Tgt,+Tga)
 

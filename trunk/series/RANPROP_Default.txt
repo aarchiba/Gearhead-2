@@ -8,6 +8,296 @@
 %  requires <*Fortress>
 %
 
+%% *SUPERWEAPON Props
+%%
+%%	These props represent artillery pieces or otherwise big honking experimental
+%%	weapons.
+%%
+%%	No SuperWeapon should be larger than 5x5.
+%%
+%% Team 1 = Default Team
+
+SuperProp
+requires <*SUPERWEAPON !Ne>
+Width 2
+Height 2
+inv
+	STC SW-WEDGE-0
+	SetTeam 1
+	XPos 0
+	YPos 0
+	Dir 4
+
+	STC SW-WEDGE-0
+	SetTeam 1
+	XPos 1
+	YPos 0
+	Dir 6
+
+	STC SW-WEDGE-0
+	SetTeam 1
+	XPos 0
+	YPos 1
+	Dir 2
+
+	STC SW-WEDGE-0
+	SetTeam 1
+	XPos 1
+	YPos 1
+	Dir 0
+end
+
+SuperProp
+requires <*SUPERWEAPON !Lo>
+Width 2
+Height 2
+inv
+	STC SW-WEDGE-1
+	SetTeam 1
+	XPos 0
+	YPos 0
+	Dir 4
+
+	STC SW-WEDGE-1
+	SetTeam 1
+	XPos 1
+	YPos 0
+	Dir 6
+
+	STC SW-WEDGE-1
+	SetTeam 1
+	XPos 0
+	YPos 1
+	Dir 2
+
+	STC SW-WEDGE-1
+	SetTeam 1
+	XPos 1
+	YPos 1
+	Dir 0
+end
+
+SuperProp
+requires <*SUPERWEAPON !Md>
+Width 2
+Height 2
+inv
+	STC SW-WEDGE-2
+	SetTeam 1
+	XPos 0
+	YPos 0
+	Dir 4
+
+	STC SW-WEDGE-2
+	SetTeam 1
+	XPos 1
+	YPos 0
+	Dir 6
+
+	STC SW-WEDGE-2
+	SetTeam 1
+	XPos 0
+	YPos 1
+	Dir 2
+
+	STC SW-WEDGE-2
+	SetTeam 1
+	XPos 1
+	YPos 1
+	Dir 0
+end
+
+SuperProp
+requires <*SUPERWEAPON !Hi>
+Width 3
+Height 3
+inv
+	STC SW-WEDGE-2
+	SetTeam 1
+	XPos 0
+	YPos 0
+	Dir 4
+
+	STC SW-WEDGE-2
+	SetTeam 1
+	XPos 2
+	YPos 0
+	Dir 6
+
+	STC SW-TOWER-1
+	SetTeam 1
+	XPos 1
+	YPos 1
+	Dir 0
+
+	STC SW-WEDGE-2
+	SetTeam 1
+	XPos 0
+	YPos 2
+	Dir 2
+
+	STC SW-WEDGE-2
+	SetTeam 1
+	XPos 2
+	YPos 2
+	Dir 0
+
+	STC SW-SLAB-1
+	SetTeam 1
+	XPos 1
+	YPos 0
+	Dir 6
+
+	STC SW-SLAB-1
+	SetTeam 1
+	XPos 1
+	YPos 2
+	Dir 2
+
+	STC SW-SLAB-1
+	SetTeam 1
+	XPos 0
+	YPos 1
+	Dir 4
+
+	STC SW-SLAB-1
+	SetTeam 1
+	XPos 2
+	YPos 1
+	Dir 0
+end
+
+SuperProp
+requires <*SUPERWEAPON !Ex>
+Width 5
+Height 5
+
+inv
+	STC SW-SLAB-2
+	SetTeam 1
+	XPos 1
+	YPos 1
+
+	STC SW-SLAB-2
+	SetTeam 1
+	XPos 2
+	YPos 2
+
+	STC SW-SLAB-2
+	SetTeam 1
+	XPos 3
+	YPos 3
+
+	STC SW-SLAB-2
+	SetTeam 1
+	XPos 1
+	YPos 3
+
+	STC SW-SLAB-2
+	SetTeam 1
+	XPos 3
+	YPos 1
+
+	STC SW-WEDGE-2
+	SetTeam 1
+	XPos 1
+	YPos 0
+	Dir 4
+
+	STC SW-WEDGE-2
+	SetTeam 1
+	XPos 0
+	YPos 1
+	Dir 4
+
+	STC SW-WEDGE-2
+	SetTeam 1
+	XPos 3
+	YPos 0
+	Dir 6
+
+	STC SW-WEDGE-2
+	SetTeam 1
+	XPos 4
+	YPos 1
+	Dir 6
+
+	STC SW-WEDGE-2
+	SetTeam 1
+	XPos 0
+	YPos 3
+	Dir 2
+
+	STC SW-WEDGE-2
+	SetTeam 1
+	XPos 1
+	YPos 4
+	Dir 2
+
+	STC SW-WEDGE-2
+	SetTeam 1
+	XPos 4
+	YPos 3
+	Dir 0
+
+	STC SW-WEDGE-2
+	SetTeam 1
+	XPos 3
+	YPos 4
+	Dir 0
+
+	STC SW-TOWER-1
+	SetTeam 1
+	XPos 2
+	YPos 1
+	Dir 6
+
+	STC SW-TOWER-1
+	SetTeam 1
+	XPos 2
+	YPos 3
+	Dir 2
+
+	STC SW-TOWER-1
+	SetTeam 1
+	XPos 1
+	YPos 2
+	Dir 4
+
+	STC SW-TOWER-1
+	SetTeam 1
+	XPos 3
+	YPos 2
+	Dir 0
+
+	STC SW-SLAB-1
+	SetTeam 1
+	XPos 2
+	YPos 0
+	Dir 6
+
+	STC SW-SLAB-1
+	SetTeam 1
+	XPos 2
+	YPos 4
+	Dir 2
+
+	STC SW-SLAB-1
+	SetTeam 1
+	XPos 0
+	YPos 2
+	Dir 4
+
+	STC SW-SLAB-1
+	SetTeam 1
+	XPos 4
+	YPos 2
+	Dir 0
+end
+
+
+
+
 %% *BATTLESHIP Props
 %% Team 1 = Crew
 %% Team 2 = Weapons

@@ -355,8 +355,10 @@ Procedure GivePartToPC( var LList: GearPtr; Part, PC: GearPtr );
 	{ the FieldHQ Wargear Explorer. }
 	{ The part should be delinked already. }
 var
-	P2: GearPtr;
+	P2,Pilot: GearPtr;
 begin
+	if PC^.G = GG_Mecha then Pilot := LocatePilot( PC )
+	else Pilot := Nil;
 	if ( Part^.G = GG_Set ) then begin
 		while Part^.SubCom <> Nil do begin
 			P2 := Part^.SubCom;
@@ -368,6 +370,8 @@ begin
 			DelinkGear( Part^.InvCom , P2 );
 			GivePartToPC( LList , P2 , PC );
 		end;
+	end else if ( Pilot <> Nil ) and IsLegalInvCom( Pilot , Part ) then begin
+		InsertInvCom( Pilot , Part );
 	end else if ( PC <> Nil ) and IsLegalInvCom( PC , Part ) then begin
 		InsertInvCom( PC , Part );
 	end else begin

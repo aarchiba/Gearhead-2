@@ -5,14 +5,5 @@
 %% The enemy is developing a new weapon program. The PC will supposedly oppose this, in
 %% some way.
 
-Plot
-	name <Join us; we can protect you>
-	desc <This NPC is being harassed by an enemy fighter; may be convinced to aid the PC.>
-	Zrequires <(+Tgt|+Tpt) (+F--|+Fmi|+Fin) +Pew (T:ACADE|T:CORPO) E:-- -T:ALLY -T:ENEMY S:++>
-	Size 1
-
-	% Element1 is the scene for the meeting
-	% Element2 is the NPC that the PC was sent to meet
-	% Element3 is the PC's new enemy
 
 

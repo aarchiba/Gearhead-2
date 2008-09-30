@@ -99,7 +99,7 @@ Plot
 	% E3 is a friend who lives there
 	Element1 <Scene !Far -7 !Comrade -7 Town>
 	Element2 <Scene Building Public !Near 1>
-	Element3 <NewNPC 0 2 PCFriend>
+	Element3 <Character Friend !Near 2 NeverFail>
 	Place3 <2>
 
 	start <if= SceneID &EpisodeScene if= P1 0 P= 1 1 Alert 1 Alert 2 SMemo 3 History 4 &SetTargetNPC %3% WinEpisode %1% 0 .next>
@@ -108,6 +108,21 @@ Plot
 	Msg2 <While you have some free time, you feel that you should head to %name1% and visit your friend %name3%.>
 	Msg3 <You are going to visit your friend %name3% in %name1%.>
 	Msg4 <You decided to visit your friend %name3% in %name1%.>
+
+Plot
+	name <Should Go Fight Faction>
+	requires <#W +T-- F:++>
+	desc <You've completed this mission. Now you can go somewhere else.>
+
+	% E1 is the next scene to visit
+	Element1 <Scene !Far -7 !Comrade -7 !XClude -2 Town>
+
+	start <if= SceneID &EpisodeScene if= P1 0 P= 1 1 Alert 1 Alert 2 SMemo 3 History 4   WinEpisode %1% 0 .next>
+	.next <+T-- +F-->
+	Msg1 <Things appear to be resolved in \SCENE &EpisodeScene , for the time being.>
+	Msg2 <You've heard rumors that \FACTION &EnemyFac has been operating in %name1%. Maybe that's where you should go next.>
+	Msg3 <You heard that \FACTION &EnemyFac has been operating in %name1%.>
+	Msg4 <You heard that \FACTION &EnemyFac was operating in %name1%.>
 
 Plot
 	name <Enemy Has Moved>
@@ -204,7 +219,7 @@ Plot
 
 Plot
 	name <It's Not Safe Here>
-	requires <#W (+Tgt|+Tpt) +Fin S:++ T:++>
+	requires <#W +Tgt +Fin S:++ T:++>
 	desc <You seek information, but this isn't a safe place.>
 
 	% E1 is the scene where this component will take place
@@ -285,38 +300,10 @@ Plot
 		SetID 1
 	end
 
-Plot
-	name <Meet Them ELsewhere>
-	requires <#W (+Tht|+Tpt) T:++ S:++>
-	desc <The PC will be told to meet the target elsewhere.>
-
-	% E1 is the target
-	% E2 is the informant
-	% E3 is the new city
-	Element1 <Grab 5>
-	Element2 <Character !Near -7 !Okay 1>
-	Place2 <1>
-	Element3 <Scene !Far -7 !Comrade -7 Town>
-
-	% v%id%01 = Initialization
-	update <if= v%id%01 0 v= %id%01 1 FreezeNPC %1%>
-	start <ifNPCDead %2% LoseComp 0 na>
-
-	sub
-		Persona 2
-		rumor <%name2% was speaking with %name1% recently.>
-		*greeting <*LookingForNPC %1% GoSuccess GoFail>
-		GoSuccess <NewChat Say 1 StoryNote 2   WinEpisode %3% 0 .next>
-		GoFail <NewChat Say 3 StoryNote 2   WinEpisode %3% 0 .next>
-		.next <>
-		Msg1 <I'm afraid that you've missed \OPR %1% ; \SPR %1% 's just left for %name3%.>
-		Msg2 <%name2% told you that %name1% went to %name3%.>
-		Msg3 <Well, you're out of luck. %name1% isn't in \SCENE RootSceneID any more... as far as I know, \SPR %1% 's gone to %name3%.>
-	end
 
 Plot
 	name <Target Went Elsewhere>
-	requires <#W (+Tgt|+Tht|+Tpt) T:++ S:-->
+	requires <#W +Tgt T:++ S:-->
 	desc <The PC will be told where the target went.>
 
 	% E1 is the target

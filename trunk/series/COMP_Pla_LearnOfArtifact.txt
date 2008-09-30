@@ -115,7 +115,7 @@ Plot
 Plot
 	name <You have to get through me first>
 	desc <A friend of the person you're looking for will duel you.>
-	requires <#A +Pla +Tgt S:-- I:++ (T:ACADE|T:FAITH)>
+	requires <#A +Pla +Tgt -+Fpr S:-- I:++ (T:ACADE|T:FAITH)>
 
 	% E1 is a public scene for the NPC to wait at
 	% E2 is the NPC being sought
@@ -135,13 +135,13 @@ Plot
 
 	% As long as we're still at the first phase, the NPC's death will end the plot.
 	start <if= PlotStatus %plotid% 0 ifNPCDead %2% LoseComp 0 .changes>
-	.changes <+Tpt +F-->
+	.changes <+Tgt +Fpr>
 
 	% Duel Results
 	.%id1%_%plotid%_GoWin <Monologue %3% 1 SMemo 2 WinComp %5% .win>
 	.win <>
 	.%id1%_%plotid%_GoLose <Monologue %3% 3 StoryNote 4 LoseComp 0 .loss>
-	.loss <+Tpt>
+	.loss <+Tgt +Fpr>
 
 	Msg1 <I concede... %name2% can be found at %name5%.>
 	Msg2 <%name3% revealed that %name2% is at %name5%.>
@@ -165,7 +165,7 @@ Plot
 		result3 <NewChat Say 7 AddChat 4 AddChat 5>
 		result4 <NewChat Say 8 AddChat 6 AddChat 7 AddChat 8>
 		result5 <NewChat Say 9 History 10 SMemo 11 WinComp %5% .win_protect>
-		.win_protect <+Tpt>
+		.win_protect <+Tgt +Fpr>
 		result6 <AddLawful 1 Goto GoStartDuel>
 		result7 <AddCheerful d10 Goto GoStartDuel>
 		result8 <AddEassygoing -d10 Goto GoStartDuel>

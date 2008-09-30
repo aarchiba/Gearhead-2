@@ -1109,11 +1109,14 @@ begin
 		if EKind[1] = 'C' then begin
 			{ This element is a CHARACTER. Create one. }
 			job := SAttValue( Plot^.SA , 'NEVERFAIL' + BStr( N ) );
-			if job = '' then job := 'MECHA PILOT';
-			Element := LoadNewNPC( job , True );
+			if job = '' then Element := RandomNPC( Adventure , 0 , RealSceneID( FindRootScene( GB , GB^.Scene ) ) )
+			else Element := LoadNewNPC( job , True );
 			if Element = Nil then Element := LoadNewNPC( 'MECHA PILOT' , True );
 			SetSAtt( Element^.SA , 'job <' + job + '>' );
 			SetSAtt( Element^.SA , 'TEAMDATA <Pass>' );
+
+			{ Customize the character. }
+			ApplyChardesc( Element , Desc );
 
 			{ Store the NPC's ID in the plot. }
 			ID := NewCID( Adventure );
