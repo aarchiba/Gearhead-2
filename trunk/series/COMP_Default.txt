@@ -9,6 +9,82 @@
 %    or the palette enemy faction
 
 Plot
+	name <The Enemy of my Enemy is my Spoiler>
+	desc <Get a hint from the enemy of your enemy>
+	requires <#A +T-- F:++>
+
+	% E1 is an enemy faction that's also an enemy of your enemy
+	% E2 is a public scene in town
+	% E3 is a member of E1
+	% E4 is an environs scene for the meeting
+	% E5 is the meeting encounter itself
+	Element1 <Faction ArchEnemy !Enemy -2>
+	Element2 <Scene Public !Near -7 !Okay 1>
+	Element3 <Character HasMecha !Comrade 1 !Global NeverFail>
+	Place3 <2 sd ally>
+	Element4 <Scene Environs !Near -7>
+	Element5 <Prefab>
+	Place5 <4>
+
+	%% FAIL CONDITIONS:
+	%% - E3 dies before the revelation
+	start <ifG PlotStatus %plotid% -1 ifNPCDead %3% LoseComp 0 .next>
+	.next <+T-- +F-->
+
+	.%id1%_%plotid1%_GoWin  <SMemo 0   WinComp 0 .next>
+	.%id1%_%plotid1%_GoLoss <SMemo 0   LoseComp 0 .next>
+
+	%% SubPlot1 is the secret to be revealed
+	SubPlot1 <*:CS_GatherInformation&AboutEnemy 3>
+
+	sub
+		Persona 3
+		rumor0 <%name3% has been hoping to speak with you about your common enemy.>
+		greeting <if= PlotStatus %plotid% %id% else GoFirstTime ifChatNPCInPlay else GoNotHere Goto GoReveal>
+		GoNotHere <EndChat Say 1>
+		*GoReveal <*RevealSecret GoStartSQ1>
+		GoStartSQ1 <SetPlotStatus %plotid1% %id1% SetPlotStatus %plotid% -1 Goto .%id1%_GoInform>
+		GoFirstTime <if= PlotStatus %plotid% 0 else GoChat Goto GoGreet>
+		GoChat <NewChat SayAnything>
+		*GoGreet <*IHaveInformation&AboutFaction GoExplain &EnemyFac>
+		GoExplain <NewChat Say 2 SMemo 3 History 4 AddChat 1 AddChat 2 SetPlotStatus %plotid% %id% MoveNPC %3% %5% SetNPCTeam %3% 2>
+		*result1 <*GoodBye>
+		result2 <EndChat Say 5>
+		Msg1 <It's too dangerous to talk over the phone. Come meet me in %name4%.>
+		Msg2 <This isn't a good place to be discussing things. The agents of \FACTION &EnemyFac could be anywhere. Come meet me in %name4% later on and I'll tell you what I know.>
+		Msg3 <%name3% of %name1% offered to tell you a secret about \FACTION &EnemyFac . You are to meet \OPR %3% later in %name4%.>
+		Msg4 <%name3% of %name1% offered to tell you a secret about \FACTION &EnemyFac .>
+		Msg5 <I am not doing this to aid you; my sole intention to oppose \FACTION &EnemyFac .>
+		Prompt1_1 <I'll be there.>
+		Prompt1_2 <I'll see you there.>
+		Prompt2_1 <Why are you helping me?>
+		Prompt2_2 <How do I know I can trust you?>
+
+		MetaScene 5 2
+		MapWidth 10
+		MapHeight 10
+		% L1 = Initialization Counter
+		Start <if= L1 0 L= 1 1   ForceChat %3%>
+		sub
+			team 1
+			SetAlly 2
+			ParaX 4
+			ParaY 4
+
+			team 2
+			SetAlly 1
+			ParaX 6
+			ParaY 6
+		end
+	end
+	inv
+		STC CORE-ACTIVATABLE-STATIONARY-DEFENDED
+		name <%name3%'s Mecha>
+		update <if= PlotStatus %plotid% %id% else GoHide  SetStat STAT_MetaVisibility 0  ShowEncounter  Goto GoSetOrders>
+		Msg1 <%name3% must have been followed by \FACTION &EnemyFac . You are attacked by mecha as you approach \PPR %3% position.>
+	end
+
+Plot
 	name <Protect me from Enemy!>
 	desc <The target will tell you that the Enemy is doing something.>
 	requires <#A +Tgt +Fpr T:++ E:++ S:++>
