@@ -121,7 +121,7 @@ end;
 
 Procedure CreatePlotPlaceholder( Slot , Shard: GearPtr );
 	{ Create a new plot gear to hold all of SHARD's elements, and store it }
-	{ in SLOT. IT will be marked with a PlotID of -1, and this marking will be }
+	{ in SLOT. IT will be marked with a PlotID of -(plotid), and this marking will be }
 	{ used to dispose of all the placeholders after assembly. }
 var
 	it: GearPtr;
@@ -132,7 +132,7 @@ begin
 	InsertInvCom( Slot , It );
 	it^.G := GG_Plot;
 	SetSAtt( it^.SA , 'name <Placeholder>' );
-	SetNAtt( it^.NA , NAG_Narrative , NAS_PlotID , -1 );
+	SetNAtt( it^.NA , NAG_Narrative , NAS_PlotID , -NAttValue( Shard^.NA , NAG_Narrative , NAS_PlotID ) );
 	for t := 1 to Num_Plot_Elements do begin
 		EID := ElementID( Shard , T );
 		if EID <> 0 then begin
@@ -142,16 +142,33 @@ begin
 	end;
 end;
 
+Procedure DeleteSpecificPlaceholder( Slot,Shard: GearPtr );
+	{ Delete the placeholder belonging specifically to this shard. }
+var
+	p,p2: GearPtr;
+	plotid: LongInt;
+begin
+	plotid := -NAttValue( Shard^.NA , NAG_Narrative , NAS_PlotID );
+	P := Slot^.InvCom;
+	while P <> Nil do begin
+		P2 := P^.Next;
+		if NAttValue( P^.NA , NAG_Narrative , NAS_PlotID ) = PlotID then begin
+			RemoveGear( Slot^.InvCom , P );
+		end;
+		P := P2;
+	end;
+end;
+
 Procedure DeletePlotPlaceholders( Slot: GearPtr );
 	{ Delete all the plot placeholders. They should be invcoms of SLOT, }
-	{ and be marked with a PlotID of -1. }
+	{ and be marked with negative PlotIDs. }
 var
 	PP,PP2: GearPtr;
 begin
 	PP := Slot^.InvCom;
 	while PP <> Nil do begin
 		PP2 := PP^.Next;
-		if NAttValue( PP^.NA , NAG_Narrative , NAS_PlotID ) = -1 then RemoveGear( Slot^.InvCom , PP );
+		if NAttValue( PP^.NA , NAG_Narrative , NAS_PlotID ) < 0 then RemoveGear( Slot^.InvCom , PP );
 		PP := PP2;
 	end;
 end;
@@ -174,6 +191,17 @@ Function InitShard( GB: GameBoardPtr; Scope,Slot,Shard: GearPtr; EsSoFar,PlotID,
 	{   from selecting characters or items used here. }
 	{ - Return the shard list }
 	{ If installation fails, SHARD will be deleted and NIL will be returned. }
+	Procedure DisposeSPList( SPList: GearPtr );
+		{ Delete this subplot list, taking with it any associated placeholders. }
+	var
+		SP: GearPtr;
+	begin
+		while SPList <> Nil do begin
+			DeleteSpecificPlaceholder( Slot , SPList );
+			SP := SPList;
+			RemoveGear( SPList , SP );
+		end;
+	end;
 var
 	InitOK: Boolean;
 	T,NumParam,NumElem: Integer;
@@ -293,7 +321,7 @@ begin
 		{ Initialization failed. Delete the existing subplots and restore the }
 		{ changes_used_so_far list. }
 		changes_used_so_far := original_changes;
-		DisposeGear( SPList );
+		DisposeSPList( SPList );
 		InitShard := Nil;
 	end;
 end;

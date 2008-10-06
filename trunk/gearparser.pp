@@ -943,13 +943,13 @@ begin
 				AddNAtt( NPC^.NA , NAG_CharDescription , NAS_DAge , ( Random( 15 ) + RollStep( 5 ) ) );
 			end;
 
-		end else if CCD_Cmd = 'PCFRIEND' then begin
+		end else if CCD_Cmd = 'FRIEND' then begin
 			SetNAtt( NPC^.NA , NAG_Relationship , 0 , NAV_Friend );
-		end else if CCD_Cmd = 'PCFAMILY' then begin
+		end else if CCD_Cmd = 'FAMILY' then begin
 			SetNAtt( NPC^.NA , NAG_Relationship , 0 , NAV_Family );
-		end else if CCD_Cmd = 'PCLOVER' then begin
+		end else if CCD_Cmd = 'LOVER' then begin
 			SetNAtt( NPC^.NA , NAG_Relationship , 0 , NAV_Lover );
-		end else if CCD_Cmd = 'PCENEMY' then begin
+		end else if CCD_Cmd = 'ARCHENEMY' then begin
 			SetNAtt( NPC^.NA , NAG_Relationship , 0 , NAV_ArchEnemy );
 
 		end;

@@ -4621,7 +4621,7 @@ begin
 		if R <> Nil then begin
 			DelinkGear( Rescue_List , R );
 			SetNAtt( R^.NA , NAG_ElementID , 1 , GB^.Scene^.S );
-			if InsertPlot( FindRoot( GB^.Scene ) , FindRoot( GB^.Scene ) , R , GB , CurrentPCRenown( GB ) ) then begin
+			if InsertPlot( FindRootScene( GB , GB^.Scene ) , FindRoot( GB^.Scene ) , R , GB , CurrentPCRenown( GB ) ) then begin
 				{ Start by printing a message, since the time taken by the }
 				{ rescue scenario is likely to cause a noticeable delay. }
 				DialogMsg( MsgString( 'JustAMinute' ) );

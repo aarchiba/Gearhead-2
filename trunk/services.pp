@@ -1903,7 +1903,7 @@ Procedure ShuttleService( GB: GameBoardPtr; PC,NPC: GearPtr );
 		end;
 	end;
 const
-	MaxShuttleRange = 15;
+	MaxShuttleRange = 150;
 var
 	World,City,Fac,Entrance: GearPtr;
 	X0,Y0,N,Cost: LongInt;
@@ -1936,11 +1936,8 @@ begin
 		if ( City <> FindRootScene( GB , GB^.Scene ) ) and ( ( Fac = Nil ) or ( NAttValue( Fac^.NA , NAG_FactionScore , GetFactionID( City ) ) >= 0 ) ) then begin
 			{ Do the range check. }
 			Entrance := FindLocalGate( World , City^.S );
-			if ( Entrance = Nil ) or ( WorldMapRange( World , NAttValue( Entrance^.NA , NAG_Location , NAS_X ) , NAttValue( Entrance^.NA , NAG_Location , NAS_Y ) , X0 , Y0 ) <= MaxShuttleRange ) then begin
-				{ Do the type check. }
-				if AStringHasBString( SAttValue( City^.SA , 'TYPE' ) , 'DESTINATION' ) then begin
-					AddRPGMenuItem( RPM , GearName( City ) + ' ($' + BStr( TravelCost( World, Entrance , X0 , Y0 ) ) + ')' , City^.S , SAttValue( City^.SA , 'DESC' ) );
-				end;
+			if AStringHasBString( SAttValue( City^.SA , 'TYPE' ) , 'DESTINATION' ) then begin
+				AddRPGMenuItem( RPM , GearName( City ) + ' ($' + BStr( TravelCost( World, Entrance , X0 , Y0 ) ) + ')' , City^.S , SAttValue( City^.SA , 'DESC' ) );
 			end;
 		end;
 
@@ -1967,7 +1964,9 @@ begin
 				GB^.QuitTheGame := True;
 				GB^.ReturnCode := N;
 				AddNAtt( PC^.NA , NAG_Experience , NAS_Credits , -Cost );
+				SetNAtt( PC^.NA , NAG_Condition , NAS_Hunger , 0 );
 				QuickTime( GB , Cost * 10 );
+				SetNAtt( PC^.NA , NAG_Condition , NAS_Hunger , 0 );
 			end else begin
 				{ Not enough cash to buy... }
 				CHAT_Message := MsgString( 'BUYNOCASH' + BStr( Random( 4 ) + 1 ) );

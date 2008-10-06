@@ -2,6 +2,24 @@
 %% told vaguely what's going on in the game world.
 
 Plot
+	name <NeverFail Check>
+	requires <#A +T01>
+
+	element1 <Scene !Near -7 cavclub>
+	Element2 <Character Friend NeverFail>
+	Place2 <1 pass>
+
+	% P1 = Forcechat counter
+	update <if= P1 0 P= 1 1 ForceChat %2%>
+
+	sub
+		Persona 2
+		greeting <NewChat Say 1>
+		Msg1 <This character has been brought to you by NeverFail.>
+	end
+
+
+Plot
 	name <Exclusive Party>
 	Size 0
 	desc <You've been invited to an exclusive party.>
@@ -11,7 +29,7 @@ Plot
 	% E2 is your friend
 	% E3 is the location of the party
 	element1 <Scene !Near -7 cavclub>
-	element2 <NewNPC -3 -7 PCFriend>
+	element2 <NewNPC -3 -7 Friend>
 	place2 <1 pass>
 	element3 <MetaScene !Near -7 *Building NeverFail>
 
@@ -69,7 +87,7 @@ Plot
 	element1 <MetaScene !Near -7 *Building NeverFail>
 	element2 <Scene Government !Near -7>
 	element3 <Scene !Near -7 cavclub>
-	element4 <NewNPC -3 -7 PCFriend>
+	element4 <NewNPC -3 -7 Friend>
 	place4 <3 pass>
 	element5 <Character !Near 2 !Comrade -7 NeverFail>
 	NeverFail5 <Politician>
@@ -124,7 +142,7 @@ Plot
 	% E2 is your friend
 	% E3 is the location of the new building
 	element1 <Scene !Near -7 cavclub>
-	element2 <NewNPC -3 -7 PCFriend>
+	element2 <NewNPC -3 -7 Friend>
 	place2 <1 pass>
 	element3 <MetaScene !Near -7 *Building NeverFail>
 
@@ -174,7 +192,7 @@ Plot
 	% E2 is your friend
 	% E3 is the location of the trade show
 	element1 <Scene !Near -7 cavclub>
-	element2 <NewNPC -3 -7 PCFriend>
+	element2 <NewNPC -3 -7 Friend>
 	place2 <1 pass>
 	element3 <MetaScene !Near -7 *Building NeverFail>
 
@@ -232,7 +250,7 @@ Plot
 	element1 <MetaScene !Near -7 *Building NeverFail>
 	element2 <Character !Comrade -3 !Near -7>
 	element3 <Scene !Near -7 cavclub>
-	element4 <NewNPC -3 -7 PCFriend>
+	element4 <NewNPC -3 -7 Friend>
 	place4 <3 pass>
 	element5 <Grab 3>
 	element6 <Faction Corporate !Enemy 5>
@@ -285,7 +303,7 @@ Plot
 	% E2 is your friend
 	% E3 is the "scapegoat" faction- may or may not actually be the one doing the damage
 	element1 <Scene !Near -7 cavclub>
-	element2 <NewNPC -3 -7 PCFriend>
+	element2 <NewNPC -3 -7 Friend>
 	place2 <1 pass>
 	element3 <Faction !Enemy -7>
 
@@ -352,7 +370,7 @@ Plot
 	element1 <MetaScene !Near -7 *Building NeverFail>
 	element2 <Character !Comrade -3 !Near -7>
 	element3 <Scene !Near -7 cavclub>
-	element4 <NewNPC -3 -7 PCFriend>
+	element4 <NewNPC -3 -7 Friend>
 	place4 <3 pass>
 	element5 <Grab 3>
 
@@ -410,9 +428,9 @@ Plot
 	element1 <MetaScene !Near -7 *Building NeverFail>
 	element2 <Scene !Near -7 building public>
 	element3 <Scene !Near -7 cavclub>
-	element4 <NewNPC -3 -7 PCFriend>
+	element4 <NewNPC -3 -7 Friend>
 	place4 <3 pass>
-	element5 <NewNPC 0 -7 PCFriend>
+	element5 <NewNPC 0 -7 Friend>
 	place5 <2 Pass>
 
 	% P1 = Forcechat counter
@@ -483,7 +501,7 @@ Plot
 	element1 <MetaScene !Near -7 *Building NeverFail>
 	element2 <Scene !Near -7 building public>
 	element3 <Scene !Near -7 cavclub>
-	element4 <NewNPC -3 -7 PCFriend>
+	element4 <NewNPC -3 -7 Friend>
 	place4 <3 pass>
 	element5 <Prefab>
 	place5 <2 Pass>
@@ -539,7 +557,7 @@ Plot
 	% E3 is the local police faction
 	% E4 is the crime faction currently rampaging
 	element1 <Scene !Near -7 cavclub>
-	element2 <NewNPC -3 -7 PCFriend>
+	element2 <NewNPC -3 -7 Friend>
 	place2 <1 pass>
 	element3 <Faction Police !Ally -7>
 	element4 <Faction Crime !Enemy 3>
@@ -595,9 +613,9 @@ Plot
 	element1 <MetaScene !Near -7 *Building NeverFail>
 	element2 <Scene !Near -7 building public>
 	element3 <Scene !Near -7 cavclub>
-	element4 <NewNPC -3 -7 PCFriend>
+	element4 <NewNPC -3 -7 Friend>
 	place4 <3 pass>
-	element5 <NewNPC -3 -7 PCFriend>
+	element5 <NewNPC -3 -7 Friend>
 	place5 <2 Pass>
 
 	% P1 = Forcechat counter
