@@ -1360,19 +1360,6 @@ end;
 Procedure TradeFrontend( GB: GameBoardPtr; PC , Item, LList: GearPtr );
 	{ Assign ITEM to a different master. Move it from the }
 	{ general inventory of PC into its new home. }
-	Function TeamMateName( M: GearPtr ): String;
-		{ Return the name of this team-mate. If the team-mate is a mecha, }
-		{ also return the name of its pilot if appropriate. }
-	var
-		msg,pname: String;
-	begin
-		msg := FullGearName( M );
-		if M^.G = GG_Mecha then begin
-			pname := SAttValue( M^.SA , 'pilot' );
-			if pname <> '' then msg := msg + ' (' + pname + ')';
-		end;
-		TeamMateName := msg;
-	end;
 var
 	TI_Menu: RPGMenuPtr;
 	M: GearPtr;

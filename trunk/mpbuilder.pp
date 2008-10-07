@@ -805,7 +805,7 @@ begin
 
 				{ Try to find the associated scene now. }
 				if Dest <> Nil then begin
-					Dest := FindActualScene( GB , FindGearScene( Dest , GB ) );
+					Dest := FindActualScene( GB , FindSceneID( Dest , GB ) );
 				end;
 			end;
 

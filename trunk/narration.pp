@@ -144,6 +144,7 @@ Const
 		NAS_CoreMissionEnemy = 4;	{ Enemy for the core story. }
 
 
+Function FindSceneID( Part: GearPtr; GB: GameBoardPtr ): Integer;
 
 Function SeekFaction( Scene: GearPtr; ID: Integer ): GearPtr;
 Function GetFactionID( Part: GearPtr ): Integer;
@@ -214,7 +215,36 @@ const
 	FROZEN_MAP_CONTINUE = 1;
 	FROZEN_MAP_SENTINEL = -1;
 
+Function FindSceneID( Part: GearPtr; GB: GameBoardPtr ): Integer;
+	{ Find the scene number of this gear. Return 0 if no scene }
+	{ can be found which contains it. Return the metascene ID }
+	{ if the scene is a metascene. }
+var
+	it: Integer;
+	Scene: GearPtr;
+begin
+	it := 0;
 
+	if Part <> Nil then begin
+		{ Move upwards through the tree until either we }
+		{ find a scene gear or root level. }
+		Scene := Part;
+		while ( Scene <> Nil ) and not IsAScene( Scene ) do begin
+			Scene := Scene^.Parent;
+		end;
+
+		{ If we didn't find the scene, maybe this gear is on the gameboard. }
+		if Scene = Nil then begin
+			if IsFoundAlongTrack( GB^.Meks , FindRoot( Part ) ) then Scene := GB^.Scene;
+		end;
+
+		if Scene <> Nil then begin
+			it := RealSceneID( Scene );
+		end;
+	end;
+
+	FindSceneID := it;
+end;
 
 Function SeekFaction( Scene: GearPtr; ID: Integer ): GearPtr;
 	{ Look for a faction corresponding to the provided ID number. }
@@ -653,7 +683,7 @@ var
 	E: GearPtr;
 begin
 	E := SeekPlotElement( Adv, Plot, N , GB );
-	ElementLocation := FindGearScene( E , GB );
+	ElementLocation := FindSceneID( E , GB );
 end;
 
 Function ElementFaction( Adv,Plot: GearPtr; N: Integer; GB: GameBoardPtr ): Integer;
@@ -1041,13 +1071,14 @@ Procedure DelinkGearForMovement( GB: GameBoardPtr; GearToBeMoved: GearPtr );
 	{ Delink the provided gear in preparation for movement to somewhere else. }
 var
 	Scene,Master: GearPtr;
-	TID: Integer;
+	SceneID,TID: Integer;
 begin
 	if NAttValue( GearToBeMoved^.NA , NAG_ParaLocation , NAS_OriginalHome ) = 0 then begin
-		Scene := FindActualScene( GB , FindGearScene( GearToBeMoved , GB ) );
+		SceneID := FindSceneID( GearToBeMoved , GB );
+		Scene := FindActualScene( GB , SceneID );
 		TID := NAttValue( GearToBeMoved^.NA , NAG_Location , NAS_Team );
 
-		if SCene <> Nil then begin
+		if ( SceneID > 0 ) and ( SCene <> Nil ) then begin
 			{ Record team description. }
 			SetSATt( GearToBeMoved^.SA , 'TEAMDATA <' + TeamDescription( Scene, LocateTeam( Scene , TID ) ) + '>' );
 

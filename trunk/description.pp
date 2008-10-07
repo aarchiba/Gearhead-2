@@ -39,6 +39,7 @@ Function JobAgeGenderDesc( NPC: GearPtr ): String;
 Function SkillDescription( N: Integer ): String;
 
 Function MechaPilotName( Mek: GearPtr ): String;
+Function TeamMateName( M: GearPtr ): String;
 
 
 implementation
@@ -574,5 +575,20 @@ begin
 	end;
 	MechaPilotName := msg;
 end;
+
+Function TeamMateName( M: GearPtr ): String;
+	{ Return the name of this team-mate. If the team-mate is a mecha, }
+	{ also return the name of its pilot if appropriate. }
+var
+	msg,pname: String;
+begin
+	msg := FullGearName( M );
+	if M^.G = GG_Mecha then begin
+		pname := SAttValue( M^.SA , 'pilot' );
+		if pname <> '' then msg := msg + ' (' + pname + ')';
+	end;
+	TeamMateName := msg;
+end;
+
 
 end.

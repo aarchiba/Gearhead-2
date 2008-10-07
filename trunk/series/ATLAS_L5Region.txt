@@ -5478,16 +5478,19 @@ sub
 			Scene
 			name <Hovel Market>
 			type <building Sleazy Dangerous BlackMarket>
+			Tolerance 20
+			special <NOEXIT UNREGULATED>
 			mapwidth 15
-			mapheight 24
+			mapheight 15
 			MallMap
 
 			entrance <*GoUp>
 
 			NeededCells 3
-			Content1 <Some 2 100 Sub *BLACKMARKET_SHOP na>
+			Content1 <Some 1 100 Sub *BLACKMARKET_SHOP na>
 			Content2 <Some 1 100 Sub *MECHA_SHOP na>
-			Content3 <Fill Sub *BLACKMARKET_X na>
+			Content3 <Some 1 100 Sub *WEAPON_SHOP na>
+			Content4 <Fill Sub *BLACKMARKET_X na>
 
 			Start <if= L1 0 else GoBeenBefore L= 1 1 Alert 2>
 			GoBeenBefore <Print 1>

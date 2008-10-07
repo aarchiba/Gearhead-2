@@ -830,7 +830,7 @@ begin
 	end else if ( SMsg = 'GSCENE' ) then begin
 		{ Get the sceneID of the grabbed gear. }
 		if ( Grabbed_Gear <> Nil ) then begin
-			SV := FindGearScene( Grabbed_Gear , GB );
+			SV := FindSceneID( Grabbed_Gear , GB );
 		end;
 
 	end else if ( SMsg = 'WORLDID' ) then begin
@@ -1342,8 +1342,17 @@ begin
 				W := GearName( LocatePilot( GG_LocatePC( GB ) ) );
 
 			end else if W = '\CHATNPC' then begin
-				{ The name of the Chat PC. }
+				{ The name of the Chat NPC. }
 				W := GearName( I_NPC );
+
+			end else if W = '\CHATNPCMECHA' then begin
+				{ The name of the Chat NPC's mecha. }
+				Part := FindRoot( I_NPC );
+				if ( Part <> Nil ) and ( Part^.G = GG_Mecha ) then begin
+					W := FullGearName( Part );
+				end else begin
+					W := MsgString( 'MECHA' );
+				end;
 
 			end else if W = '\SOURCE' then begin
 				{ The name of the PC. }
@@ -2637,13 +2646,13 @@ Procedure CantOpenBusiness( var Event: String; GB: GameBoardPtr );
 	{ The business can't be opened. Print an error message and }
 	{ cancel the rest of the event. }
 var
-	Scene: GearPtr;
+	Scene: Integer;
 	msg: String;
 begin
 	Event := '';
-	Scene := FindActualScene( GB , FindGearScene( I_NPC , GB ) );
-	if Scene <> Nil then begin
-		msg := ReplaceHash( msgString( 'CantOpenShop_WithScene' ) , GearName( Scene ) );
+	Scene := FindSceneID( I_NPC , GB );
+	if Scene <> 0 then begin
+		msg := ReplaceHash( msgString( 'CantOpenShop_WithScene' ) , SceneName( GB , Scene ) );
 	end else begin
 		msg := msgString( 'CantOpenShop' );
 	end;
@@ -4162,7 +4171,7 @@ Procedure HandleWhereAreYou( GB: GameBoardPtr );
 var
 	SID: Integer;
 begin
-	SID := FindGearScene( I_NPC , GB );
+	SID := FindSceneID( I_NPC , GB );
 	if SID <> 0 then begin
 		CHAT_Message := ReplaceHash( MsgString( 'WHEREAREYOU_IAMHERE' ) , SceneName( GB , SID ) );
 	end else begin

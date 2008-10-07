@@ -814,9 +814,9 @@ Content
 		Msg6 <Very good. Next, which type of stock would you like to invest in? It's probably best to stick with low risk stocks unless you know what you're doing.>
 		Msg7_1 <Very well. I have you confirmed for a $ \VAL &InvestmentCost V1 investment in a low risk stock. Come back tomorrow to see how your stock is doing.>
 		CMsg7_1 <if= V5 0 Accept>
-		Msg7_2 <Very well. I have you confirmed for a $ \VAL &InvestmentCost V1 investment in a low risk stock. Come back tomorrow to see how your stock is doing.>
+		Msg7_2 <Very well. I have you confirmed for a $ \VAL &InvestmentCost V1 investment in a medium risk stock. Come back tomorrow to see how your stock is doing.>
 		CMsg7_2 <if= V5 1 Accept>
-		Msg7_3 <Very well. I have you confirmed for a $ \VAL &InvestmentCost V1 investment in a low risk stock. Come back tomorrow to see how your stock is doing.>
+		Msg7_3 <Very well. I have you confirmed for a $ \VAL &InvestmentCost V1 investment in a high risk stock. Come back tomorrow to see how your stock is doing.>
 		CMsg7_3 <if= V5 2 Accept>
 		Msg8_1 <You invested $ \VAL &InvestmentCost V1 in a low risk stock with %name1%.>
 		CMsg8_1 <if= V5 0 Accept>

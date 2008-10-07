@@ -293,11 +293,11 @@ begin
 
 			if ( Q = 'N' ) and ( Plot <> Nil ) then begin
 				{ L1 must equal L2. }
-				it := it and ( FindRootScene( GB , FindActualScene( GB , FindGearScene( Part , GB ) ) ) = FindRootScene( GB , FindActualScene( GB , FindGearScene( GetFSE( ExtractValue( Desc ) ) , GB ) ) ) );
+				it := it and ( FindRootScene( GB , FindActualScene( GB , FindSceneID( Part , GB ) ) ) = FindRootScene( GB , FindActualScene( GB , FindSceneID( GetFSE( ExtractValue( Desc ) ) , GB ) ) ) );
 
 			end else if ( Q = 'F' ) and ( Plot <> Nil ) then begin
 				{ L1 must not equal L2. }
-				it := it and ( FindRootScene( GB , FindActualScene( GB , FindGearScene( Part , GB ) ) ) <> FindRootScene( GB , FindActualScene( GB , FindGearScene( GetFSE( ExtractValue( Desc ) ) , GB ) ) ) );
+				it := it and ( FindRootScene( GB , FindActualScene( GB , FindSceneID( Part , GB ) ) ) <> FindRootScene( GB , FindActualScene( GB , FindSceneID( GetFSE( ExtractValue( Desc ) ) , GB ) ) ) );
 
 			end else if Q = 'M' then begin
 				{ MEMBER. This part must belong to the }
@@ -741,7 +741,7 @@ begin
 
 					{ Try to find the associated scene now. }
 					if Dest <> Nil then begin
-						Dest := FindActualScene( GB , FindGearScene( Dest , GB ) );
+						Dest := FindActualScene( GB , FindSceneID( Dest , GB ) );
 					end;
 				end;
 
@@ -1080,7 +1080,7 @@ begin
 		Destination := GetFSE( ID );
 
 		if ( Destination <> Nil ) and ( Destination^.G <> GG_MetaScene ) then begin
-			Destination := FindActualScene( GB , FindGearScene( Destination , GB ) );
+			Destination := FindActualScene( GB , FindSceneID( Destination , GB ) );
 		end;
 	end else begin
 		Destination := Nil;
@@ -1491,7 +1491,7 @@ begin
 			{ Store the entrance of the metascene. We'll need it later. }
 			Entrance := FindSceneEntrance( Adventure , GB , ElementID( Plot , M^.S ) );
 			if Entrance <> Nil then begin
-				SetNAtt( M^.NA , NAG_Narrative , NAS_EntranceScene , FindGearScene( Entrance , GB ) );
+				SetNAtt( M^.NA , NAG_Narrative , NAS_EntranceScene , FindSceneID( Entrance , GB ) );
 			end;
 
 			{ Prep the local personas. }

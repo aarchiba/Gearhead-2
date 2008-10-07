@@ -488,7 +488,7 @@ begin
 	{ it's gonna take some work to find out what that is. }
 	if GB^.Scene^.G = GG_MetaScene then begin
 		OS := FindSceneEntrance( FindRoot( GB^.Scene ) , GB , RealSceneID( GB^.Scene ) );
-		if OS <> Nil then Entry^.Stat[ STAT_Destination ] := FindGearScene( OS , GB );
+		if OS <> Nil then Entry^.Stat[ STAT_Destination ] := FindSceneID( OS , GB );
 	end else if IsInvCom( GB^.Scene ) then begin
 		Entry^.Stat[ STAT_Destination ] := GB^.Scene^.S;
 	end else begin
@@ -884,6 +884,18 @@ begin
 			P.Y := P.Y + 4;
 		end else begin
 			P.Y := P.Y + 4 + Random( 5 );
+		end;
+	end;
+
+	{ The far line must be composed of LineTerr, otherwise there might be }
+	{ some buildings which are inaccessible. }
+	if WideX then begin
+		For X := X0 to ( X0 + W - 1 ) do begin
+			SetTerrain( GB , X , Y0 + H - 1 , LineTerr );
+		end;
+	end else begin
+		For Y := Y0 to ( Y0 + H - 1 ) do begin
+			SetTerrain( GB , X0 + W - 1 , Y , LineTerr );
 		end;
 	end;
 

@@ -22,6 +22,7 @@
 %%  6. Mad Scientist
 %%  7. Beauty
 %%  8. Dark
+%%  9. Dragon
 
 Theme 1
 	name <Pyromaniac>
@@ -802,7 +803,7 @@ Theme 2
 
 Theme 3
 	name <Sophisticated>
-	requires <GENERAL>
+	requires <GENERAL ~[18]>
 	%% A sophisticated pilot takes great pride in his skill. Excessive displays
 	%% of force are seen as vulgar; it is by the pilot's superior skill that
 	%% enemies are defeated. None of these weapons use rapid fire or area effects;
@@ -1592,7 +1593,7 @@ Theme 5
 	%% Jhon Silver & Parrot look
 	%% Cutlass & Pistol! Arrr!
 	%% Lots of haywire and overload status effects, to cripple the opposition
-	requires <(Criminal|CRIHN) ~THIEF ~Pirate>
+	requires <(Criminal|CRIHN|REDMA|PRIVA) ~THIEF ~Pirate>
 
 	CUSTOMIZATION_ADJECTIVE_0 <Jolly>
 	CUSTOMIZATION_ADJECTIVE_1 <Dread>
@@ -2866,7 +2867,7 @@ Theme 8
 	name <Dark>
 	% Finally, it's the emo theme. Expect a lot of scythes, some hellfire,
 	% and possibly a vampire reference or two.
-	requires <Melancholy>
+	requires <Melancholy ~Passionate>
 
 	CUSTOMIZATION_ADJECTIVE_0 <Dark>
 	CUSTOMIZATION_ADJECTIVE_1 <Gothic>
@@ -3081,16 +3082,37 @@ Theme 8
 		MLauncher 1
 		Scale 2
 		sub
-			STC FBM-8
-			name <Hellstorm Rockets>
-			magazine 1
+			STC SWM-2
+			name <Pestilence Missiles>
+			type <DISINTEGRATE SWARM>
+			magazine 5
+		end
+
+		MLauncher 4
+		Scale 2
+		sub
+			STC SWM-2
+			name <Pestilence Missiles>
+			type <DISINTEGRATE SWARM>
+			magazine 20
 		end
 
 		MLauncher 8
 		Scale 2
 		sub
-			STC AAM-8
-			magazine 10
+			STC SWM-2
+			name <Pestilence Missiles>
+			type <DISINTEGRATE SWARM>
+			magazine 40
+		end
+
+		MLauncher 12
+		Scale 2
+		sub
+			STC SWM-2
+			name <Pestilence Missiles>
+			type <DISINTEGRATE SWARM>
+			magazine 60
 		end
 
 		MLauncher 2
@@ -3109,12 +3131,11 @@ Theme 8
 			magazine 3
 		end
 
-		MLauncher 4
-		Scale 2
+		MLauncher 3
+		scale 2
 		sub
-			STC FBM-8
-			name <Hellstorm Rockets>
-			magazine 5
+			STC THM-12
+			magazine 2
 		end
 
 		MLauncher 10
@@ -3131,25 +3152,11 @@ Theme 8
 			magazine 10
 		end
 
-		MLauncher 15
-		scale 2
-		sub
-			STC THM-12
-			magazine 12
-		end
-
 		MLauncher 20
 		scale 2
 		sub
 			STC THM-12
 			magazine 16
-		end
-
-		MLauncher 24
-		scale 2
-		sub
-			STC THM-12
-			magazine 20
 		end
 
 
@@ -3239,3 +3246,402 @@ Theme 8
 		Type <DISINTEGRATE EXTEND>
 		Mass -12
 	end
+	%% End 8.DARK
+
+Theme 9
+	name <Dragon>
+	% The Dragon is an ancient symbol of power. Many of these weapons have the BURN attribute,
+	% but unlike Pyromania the Dragon is a sophisticated fighter. There will also be a smattering
+	% of kung fu weapons because for some reason whenever a mecha has a dragon theme it's also
+	% got a kung fu theme. Hey, I don't make these rules, I just call them like I see them.
+	% Dragon is favored by monks, adventurers, and egoists
+	requires <(FAITH|ADVEN|Ego) ~[1] ~[4] ~[18]>
+
+	CUSTOMIZATION_ADJECTIVE_0 <Ancient>
+	CUSTOMIZATION_ADJECTIVE_1 <Fearsome>
+	CUSTOMIZATION_ADJECTIVE_2 <Shaolin>
+	CUSTOMIZATION_ADJECTIVE_3 <Emperor>
+	CUSTOMIZATION_ADJECTIVE_4 <God>
+	CUSTOMIZATION_NOUN_0 <Dragon>
+	CUSTOMIZATION_NOUN_1 <Drake>
+	CUSTOMIZATION_NOUN_2 <Wyvern>
+	CUSTOMIZATION_NOUN_3 <Serpent>
+	CUSTOMIZATION_NOUN_4 <Wyrm>
+
+	inv
+		%% Melee Weapons
+		Melee 6
+		name <Dragon's Talon>
+		Scale 2
+		type <ARMORPIERCING>
+
+		Melee 10
+		name <Staff>
+		Scale 2
+		Acc 1
+		Mass -3
+		type <EXTEND>
+
+		Melee 8
+		name <Chain Whip>
+		Scale 2
+		mass -4
+		type <EXTEND FLAIL>
+
+		Melee 16
+		name <Qiang>
+		Scale 2
+		Acc 1
+		Speed 1
+		mass -7
+		type <EXTEND ARMORPIERCING>
+
+		Melee 15
+		name <Dao>
+		Scale 2
+		Acc 1
+		Speed 3
+		mass -7
+		type <ARMORPIERCING>
+
+		Melee 20
+		name <Guan Dao>
+		Scale 2
+		Acc 2
+		Speed 2
+		mass -8
+		type <EXTEND ARMORPIERCING>
+
+		Melee 14
+		name <Sheng Bao>
+		Scale 2
+		Speed 3
+		type <EXTEND FLAIL ARMORPIERCING>
+		mass -8
+
+		Melee 23
+		name <Ao Qin Trident>
+		Scale 2
+		Speed 1
+		type <EXTEND THROWN RETURN ARMORPIERCING>
+		mass -8
+
+		Melee 14
+		name <Meteor Hammer>
+		Scale 2
+		Speed 3
+		type <EXTEND FLAIL BURN ARMORPIERCING>
+		mass -8
+
+		Melee 18
+		name <Dragon's Fist>
+		Scale 2
+		Speed 3
+		type <EXTEND FLAIL BURN ARMORPIERCING>
+		mass -10
+
+		% Small Guns
+		Gun 4
+		name <Flare Gun>
+		caliber <20mm caseless>
+		Range 5
+		scale 2
+		sub
+			Ammo 4
+			Magazine 60
+			caliber <20mm caseless>
+			type <BURN>
+		end
+
+		Gun 5
+		Scale 2
+		name <Shouchong>
+		caliber <15mm ferrous>
+		range 6
+		Acc 2
+		Mass -1
+		sub
+			Ammo 5
+			Magazine 20
+			caliber <15mm ferrous>
+			type <OVERLOAD>
+		end
+
+		STC LAS-5
+
+		Gun 8
+		Name <Tu Huo Qiang>
+		Scale 2
+		Acc 1
+		Range 8
+		caliber <30mm Self-Propelled>
+		sub
+			Ammo 8
+			Type <Burn>
+			Magazine 30
+			caliber <30mm Self-Propelled>
+		end
+
+		Gun 5
+		Name <Fist of Heaven>
+		Scale 2
+		Acc 1
+		Range 7
+		caliber <50cm Nuclear>
+		Recharge 3
+		sub
+			Ammo 5
+			Type <HYPER>
+			Magazine 30
+			caliber <50cm Nuclear>
+		end
+
+		Gun 8
+		name <Dragon Cannon>
+		caliber <Chemical>
+		type <Line>
+		range 5
+		Acc 1
+		Speed 3
+		scale 2
+		sub
+			Ammo 8
+			Magazine 60
+			caliber <Chemical>
+			type <BURN BRUTAL>
+		end
+
+		BeamGun 8
+		name <Dragon's Gaze>
+		Scale 2
+		Range 6
+		Acc 1
+		Recharge 3
+
+		Gun 7
+		Scale 2
+		name <Zhuge Nu>
+		caliber <20mm ferrous bolt>
+		Range 7
+		BV 3
+		type <ARMORPIERCING>
+		sub
+			Ammo 7
+			caliber <20mm ferrous bolt>
+			Magazine 100
+		end
+
+		Gun 5
+		Name <Flaming Doom>
+		Scale 2
+		Range 5
+		caliber <Chemical>
+		type <HYPER>
+		sub
+			Ammo 5
+			Magazine 24
+			caliber <Chemical>
+			type <BURN BRUTAL>
+		end
+
+		Gun 10
+		Name <Soul Striker>
+		Scale 2
+		Acc 2
+		Range 7
+		caliber <60cm Nuclear>
+		mass -6
+		Recharge 3
+		sub
+			Ammo 10
+			Type <ARMORPIERCING HYPER>
+			Magazine 24
+			caliber <60cm Nuclear>
+		end
+
+		%% Big Guns
+		Gun 12
+		Scale 2
+		name <Venom Cannon>
+		caliber <50mm caustic shells>
+		Range 6
+		Acc -1
+		Recharge 1
+		sub
+			Ammo 12
+			Magazine 16
+			caliber <50mm caustic shells>
+		end
+
+		STC GR-12
+		name <King Cannon>
+
+		Gun 14
+		Scale 2
+		name <Heavy Fire Bomber>
+		caliber <50mm self-propelled>
+		Range 6
+		Recharge 1
+		sub
+			Ammo 14
+			Magazine 12
+			caliber <50mm self-propelled>
+			type <BLAST 2>
+		end
+
+		BeamGun 11
+		Scale 2
+		name <Lightning Cannon>
+		type <OVERLOAD>
+		Range 5
+		Recharge 1
+		Acc -2
+
+		STC GR-24
+		name <Emperor Cannon>
+
+		BeamGun 12
+		name <Dragon's Wrath>
+		scale 2
+		range 6
+		Acc -1
+
+		Gun 13
+		name <Heavy Dragon Cannon>
+		caliber <Chemical>
+		type <Line>
+		range 5
+		Acc 1
+		Speed 2
+		scale 2
+		sub
+			Ammo 13
+			Magazine 60
+			caliber <Chemical>
+			type <BURN BRUTAL>
+		end
+
+		BeamGun 15
+		name <Dragon's Judgement>
+		scale 2
+		range 7
+
+		Gun 14
+		name <Meteor Cannon>
+		caliber <70mm self-propelled>
+		range 6
+		scale 2
+		type <SWARM>
+		BV 2
+		Acc 2
+		Speed 1
+		sub
+			Ammo 14
+			Magazine 24
+			caliber <70mm self-propelled>
+			type <BLAST 2 BURN BRUTAL>
+		end
+
+		Gun 21
+		name <Soul Furnace>
+		caliber <80cm nuclear>
+		range 8
+		scale 2
+		Acc 1
+		sub
+			Ammo 21
+			Magazine 20
+			caliber <80cm nuclear>
+			type <HYPER>
+		end
+
+		%% Missile Launchers
+		MLauncher 2
+		Scale 2
+		sub
+			STC ICM-5
+			magazine 4
+		end
+
+		MLauncher 4
+		Scale 2
+		sub
+			STC ICM-5
+			magazine 8
+		end
+
+		MLauncher 6
+		Scale 2
+		sub
+			STC ICM-5
+			magazine 12
+		end
+
+		MLauncher 12
+		Scale 2
+		sub
+			STC ICM-5
+			magazine 24
+		end
+
+		MLauncher 18
+		Scale 2
+		sub
+			STC ICM-5
+			magazine 36
+		end
+
+		MLauncher 24
+		Scale 2
+		sub
+			STC ICM-5
+			magazine 48
+		end
+
+		MLauncher 1
+		Scale 2
+		sub
+			Rockets 9
+			name <Dragon Fang Missiles>
+			Acc 1
+			range 6
+			type <HYPER BURN>
+			magazine 1
+		end
+
+		MLauncher 3
+		Scale 2
+		sub
+			Rockets 9
+			name <Dragon Fang Missiles>
+			Acc 1
+			range 6
+			type <HYPER BURN>
+			magazine 3
+		end
+
+		MLauncher 4
+		Scale 2
+		sub
+			Rockets 9
+			name <Dragon Fang Missiles>
+			Acc 1
+			range 6
+			type <HYPER BURN>
+			magazine 4
+		end
+
+		MLauncher 5
+		Scale 2
+		sub
+			Rockets 9
+			name <Dragon Fang Missiles>
+			Acc 1
+			range 6
+			type <HYPER BURN>
+			magazine 5
+		end
+	end
+	%% End 9.DRAGON
+
+

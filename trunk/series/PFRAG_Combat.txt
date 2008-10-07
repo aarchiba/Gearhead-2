@@ -191,6 +191,7 @@ Persona
 	Msg%id%01 <We'll send them to oblivion.>
 
 
+
 % TYPE: *LetsStartPatrol
 %	The PC has joined a patrol, and combat is about to begin.
 %   PARAM1: Exit label
@@ -254,6 +255,17 @@ Persona
 %
 %  PARAM1: Exit label
 %
+	Persona
+	%% Themeless Expo- just give the name of the NPC's mecha.
+	requires <*THEME_EXPO>
+	Start <EndChat Say %id%01 Goto %1%>
+	Msg%id%01 <Now you'll see the full power of my \ChatNPCMecha !>
+
+	Persona
+	%% Themeless Expo- just give the name of the NPC's mecha.
+	requires <*THEME_EXPO &Enemy>
+	Start <EndChat Say %id%01 Goto %1%>
+	Msg%id%01 <You don't stand a chance against my \ChatNPCMecha !>
 
 	Persona
 	%% Pyromaniac Theme
@@ -350,6 +362,18 @@ Persona
 	requires <*THEME_EXPO [MT8] &ENEMY>
 	Start <EndChat Say %id%01 Goto %1%>
 	Msg%id%01 <Do you fear death? Soon you will embrace it.>
+
+	Persona
+	%% Dragon Theme
+	requires <*THEME_EXPO [MT9]>
+	Start <EndChat Say %id%01 Goto %1%>
+	Msg%id%01 <No mortal can resist the power of the dragon!>
+
+	Persona
+	%% Dragon Theme
+	requires <*THEME_EXPO [MT9] &ENEMY>
+	Start <EndChat Say %id%01 Goto %1%>
+	Msg%id%01 <I shall devour your soul!>
 
 
 % TYPE: *BattleIntroduction

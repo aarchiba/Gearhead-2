@@ -342,11 +342,11 @@ begin
 		N := 1;
 		while M <> Nil do begin
 			if ( NAttValue( M^.NA , NAG_Location , NAS_Team ) = NAV_LancemateTeam ) then begin
-				AddRPGMenuItem( RPM , GearName( M ) , N );
+				AddRPGMenuItem( RPM , TeamMateName( M ) , N );
 			end else if ( NAttValue( M^.NA , NAG_CharDescription , NAS_CharType ) = NAV_CTLancemate ) and ( NAttValue( M^.NA , NAG_Personal , NAS_CID ) = 0 ) Then begin
-				AddRPGMenuItem( RPM , GearName( M ) , N );
+				AddRPGMenuItem( RPM , TeamMateName( M ) , N );
 			end else if ( M^.G <> GG_Character ) and ( NAttValue( M^.NA , NAG_Location , NAS_Team ) = NAV_DefPlayerTeam ) then begin
-				AddRPGMenuItem( RPM , GearName( M ) , N );
+				AddRPGMenuItem( RPM , TeamMateName( M ) , N );
 			end;
 			M := M^.Next;
 			Inc( N );
