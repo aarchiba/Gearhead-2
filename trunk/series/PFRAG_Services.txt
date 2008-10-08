@@ -2,6 +2,21 @@
 %  Someone is gonna sell stuff to the PC.
 %  PARAM1: Exit script label
 
+% TYPE: *SHOP_ESSENTIALS
+
+	Persona
+	requires <*SHOP_ESSENTIALS>
+	START <NewChat Say %id%01 AddChat %id%01 AddChat %id%02>
+	result%id%01 <EndChat Say %id%02 shop .%id%_wares Goto %1%>
+	result%id%02 <Goto %1%>
+	.%id%_wares <ESSENTIAL>
+	KEYWORDS <ESSENTIAL>
+	Msg%id%01 <There are a number of items that every cavalier needs. I've gathered all of these essentials in one place. How would you like to see my wares?>
+	Msg%id%02 <If you can't find what you're looking for today, remember that it might be here tomorrow.>
+	Prompt%id%01 <I'll take a look.>
+	Prompt%id%02 <I've already got everything I need.>
+
+
 % TYPE: *SHOP_SPECIALIST
 
 	Persona

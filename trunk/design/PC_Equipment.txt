@@ -30,7 +30,7 @@ Name <Knife>
 Type <THROWN>
 desc <A simple knife.>
 sdl_portrait <item_knife.png>
-category <WEAPON MELEE TOOL>
+category <WEAPON MELEE TOOL ESSENTIAL>
 factions <GENERAL>
 legality -10
 Acc 1
@@ -157,7 +157,7 @@ Mass -5
 Melee 7
 Name <Longsword>
 desc <A long-bladed sword capable of causing large amounts of damage through its swing velocity.>
-category <WEAPON MELEE>
+category <WEAPON MELEE ESSENTIAL>
 factions <GENERAL>
 SDL_PORTRAIT <item_longsword.png>
 legality 5
@@ -221,7 +221,7 @@ Type <RETURN THROWN>
 Mass -1
 Speed 1
 desc <A throwing club that should return to its user, if thrown correctly.>
-category <WEAPON THROWN ODDITIES>
+category <WEAPON THROWN ODDITIES ESSENTIAL>
 factions <GENERAL SPORTS>
 SDL_PORTRAIT <item_boomerang.png>
 legality 0
@@ -369,7 +369,7 @@ Name <Long Rifle>
 desig <L60>
 desc <The long rifled barrel of this firearm can increase the spin of its bullets, thus increasing its range without decreasing the gun's durability.>
 sdl_portrait <item_longrifle.png>
-category <WEAPON MISSILE>
+category <WEAPON MISSILE ESSENTIAL>
 factions <GENERAL>
 caliber <5mm rifle>
 Mass -1
@@ -429,7 +429,7 @@ Gun 12
 name <Shotgun>
 desc <>
 caliber <18mm shell>
-category <WEAPON MISSILE>
+category <WEAPON MISSILE ESSENTIAL>
 factions <GENERAL>
 SDL_PORTRAIT <item_shotgun.png>
 mass -4
@@ -547,7 +547,7 @@ Range 2
 GunAddOn 0
 Name <Red Dot Sight>
 desc <A low-powered targeting laser.>
-Category <ACCESSORY>
+Category <ACCESSORY ESSENTIAL>
 Factions <GENERAL>
 Acc 1
 
@@ -813,7 +813,7 @@ Grenade 12
 Name <Frag Grenade>
 desc <This grenade is packed with shrapnel.>
 sdl_portrait <item_grenade.png>
-Category <WEAPON GRENADE>
+Category <WEAPON GRENADE ESSENTIAL>
 Factions <GENERAL>
 Type <BLAST 3>
 
@@ -959,7 +959,7 @@ Set
 name <Corporate Uniform [set]>
 desc <A lightly armored corporate uniform.>
 Category <ARMOR CLOTHING>
-Factions <COMET HOELL MUGL>
+Factions <COMET HOELL MUGLE>
 legality -25
 inv
 	BodyArmor 1
@@ -1130,14 +1130,14 @@ legality -5
 Shield 4
 Name <Small Shield>
 desc <A small, but sturdy shield.>
-Category <SHIELD>
+Category <SHIELD ESSENTIAL>
 Factions <GENERAL>
 DefBonus -2
 
 Shield 6
 Name <Large Shield>
 desc <This shield can deflect attacks from multiple heights easily.>
-Category <SHIELD>
+Category <SHIELD ESSENTIAL>
 Factions <GENERAL>
 
 Shield 5
@@ -1203,7 +1203,7 @@ Treasure
 name <Mobile Phone>
 desc <A handheld communication device.>
 sdl_portrait <item_phone.png>
-Category <ELECTRONICS COMMUNICATIONS>
+Category <ELECTRONICS COMMUNICATIONS ESSENTIAL>
 Factions <GENERAL>
 Memo
 Email
@@ -1215,7 +1215,7 @@ Mass 1
 name <Personal Communicator>
 desc <A handheld communication device.>
 sdl_portrait <item_phone.png>
-Category <ELECTRONICS COMMUNICATIONS>
+Category <ELECTRONICS COMMUNICATIONS ESSENTIAL>
 Factions <GENERAL>
 Memo
 Email
@@ -1744,7 +1744,7 @@ Legality -50
 Instrument 0
 name <Tambourine>
 desc <A simple instrument.>
-Category <TOOL INSTRUMENT>
+Category <TOOL INSTRUMENT ESSENTIAL>
 Factions <GENERAL>
 Legality -50
 
@@ -1767,7 +1767,7 @@ Mass 1
 Instrument 1
 name <Keyboard>
 desc <A popular instrument for aspiring muscians.>
-Category <TOOL INSTRUMENT>
+Category <TOOL INSTRUMENT ESSENTIAL>
 Factions <GENERAL>
 Legality -50
 Mass 1
@@ -1822,28 +1822,29 @@ Legality -50
 LockPick 0
 name <Locksmith Toolkit>
 desc <A variety of interfaces for repairing or circumventing locks.>
-Category <TOOL Contraband>
-faction <GENERAL>
+Category <TOOL ESSENTIAL>
+factions <GENERAL>
+Legality -5
 
 LockPick 1
 name <Basic Lockpick>
 desc <A tool used to circumvent security devices.>
-Category <TOOL CONTRABAND>
-Faction <GENERAL>
+Category <TOOL CONTRABAND ESSENTIAL>
+Factions <GENERAL>
 Legality 5
 
 LockPick 2
 name <Advanced Lockpick>
 desc <A tool used to circumvent security devices.>
 Category <TOOL CONTRABAND>
-Faction <GENERAL>
+Factions <GENERAL>
 Legality 15
 
 ScienceTool 3
 name <MultiScanner>
 desc <A multi-purporse sensor unit, with an integrated computer and power source. It is somewhat cumbersome to use.>
 Category <TOOL SCIENCE>
-Faction <GENERAL>
+Factions <GENERAL>
 Legality -10
 sub
 	Computer 2
@@ -1861,7 +1862,7 @@ end
 FirstAidFuel 30
 Name <Sticky Band>
 desc <This can bind wounds.>
-Category <MEDICINE>
+Category <MEDICINE ESSENTIAL>
 Factions <GENERAL>
 SDL_PORTRAIT <item_medicine.png>
 Mass 1
@@ -1922,7 +1923,7 @@ legality -50
 GenRepairFuel 75
 Name <Duct Tape>
 desc <Silvery adhesive tape generally used for binding sheets of metal.>
-Category <TOOL>
+Category <TOOL ESSENTIAL>
 Factions <GENERAL>
 Mass 1
 legality -50
@@ -1954,7 +1955,7 @@ legality -50
 MechaRepairFuel 100
 Name <Sheet Metal>
 desc <Plain ol' sheet of metal.>
-Category <TOOL>
+Category <TOOL ESSENTIAL>
 Factions <GENERAL>
 Mass 2
 legality -50
@@ -2002,7 +2003,7 @@ legality -10
 MediceneFuel 50
 Name <Sutures>
 desc <Sterilised string used to bind open wounds and, in less fortunate circumstances, reattach limbs.>
-Category <MEDICINE>
+Category <MEDICINE ESSENTIAL>
 Factions <GENERAL>
 SDL_PORTRAIT <item_medicine.png>
 Mass 1
@@ -2020,7 +2021,7 @@ legality -50
 BiotechFuel 500
 Name <Biotech Lab Set>
 desc <This contains the equipment needed to perform biotech experiments.>
-Category <SCIENCE>
+Category <SCIENCE ESSENTIAL>
 Factions <GENERAL>
 Mass 1
 legality 0
@@ -2034,7 +2035,7 @@ Name <Adventuring Ration>
 FoodMorale -2
 Mass -3
 desc <It's not delicious, but it'll keep you alive.>
-Category <FOOD>
+Category <FOOD ESSENTIAL>
 Factions <GENERAL>
 SDL_PORTRAIT <item_ration.png>
 legality -50
@@ -2053,7 +2054,7 @@ Name <Deluxe Ration>
 Mass -3
 FoodMorale 1
 desc <Contains nuts, chocolate and other high-calorie foods. Used by the military in particularly harsh conditions.>
-Category <FOOD>
+Category <FOOD ESSENTIAL>
 Factions <GENERAL>
 SDL_PORTRAIT <item_ration.png>
 legality -50
@@ -2153,7 +2154,7 @@ FoodQuantity 5
 Effect <7 HEALING 20>
 FoodXValue 375
 desc <This medicine promotes rapid cellular regeneration, and can instantly heal many injuries.>
-Category <MEDICINE>
+Category <MEDICINE ESSENTIAL>
 Factions <GENERAL>
 SDL_PORTRAIT <item_pills.png>
 legality -10
@@ -2189,7 +2190,7 @@ FoodQuantity 5
 Effect <0 Cure 1>
 FoodXValue 600
 desc <A broad spectrum antivenom effective against most organic and synthetic poisons.>
-Category <MEDICINE>
+Category <MEDICINE ESSENTIAL>
 Factions <GENERAL>
 SDL_PORTRAIT <item_pills.png>
 legality -10

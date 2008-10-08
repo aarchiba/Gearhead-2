@@ -1914,6 +1914,7 @@ begin
 		StoreXXRanHistory( C );
 	end else begin
 		DialogMsg( 'Plot deadend in ' + GearName( Story ) + ': ' + plot_desc );
+		DialogMsg( 'Send above information to "pyrrho12@yahoo.ca". Together, we can stomp out deadends.' );
 	end;
 
 	if DeleteAllComps then DisposeGear( All_Comps );

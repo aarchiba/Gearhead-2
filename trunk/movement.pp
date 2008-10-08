@@ -75,17 +75,18 @@ const
 
 
 	{ This next array correlates thrust points with movement systems. }
-	MSysXMode: Array [1..NumMoveSys,3..NumMoveMode] of Integer = (
-	{	SKIM	FLY	SPACE	}
-	(	0,	0,	0	),	{ Wheels }
-	(	0,	0,	0	),	{ Tracks }
-	(	93,	13,	87	),	{ Hover Jets }
-	(	0,	113,	93	),	{ Flight Jets }
-	(	100,	100,	87	),	{ Arc Jets }
-	(	7,	7,	13	),	{ Overchargers }
-	(	0,	0,	93	),	{ Space Flight }
-	(	0,	0,	0	)	{ Heavy Actuator }
+	MSysXMode: Array [1..NumMoveSys,3..NumMoveMode+1] of Integer = (
+	{	SKIM	FLY	SPACE	OVER	}
+	(	0,	0,	0,	0	),	{ Wheels }
+	(	0,	0,	0,	0	),	{ Tracks }
+	(	85,	11,	79,	0	),	{ Hover Jets }
+	(	0,	102,	85,	0	),	{ Flight Jets }
+	(	90,	90,	79,	0	),	{ Arc Jets }
+	(	7,	7,	11,	140	),	{ Overchargers }
+	(	0,	0,	90,	0	),	{ Space Flight }
+	(	0,	0,	0,	0	)	{ Heavy Actuator }
 	);
+	THRUST_Overchargers = NumMoveMode + 1;
 
 	MinWalkSpeed = 20;
 	MinFlightSpeed = 150;	{ Minimum needed speed for true flight. }
@@ -105,8 +106,6 @@ const
 
 	Thrust_Per_Wing = 80;	{ Thrust per wing point for critters. }
 	CharaThrustPerWing = 90;	{ Skim thrust per wing point. }
-
-	Overcharge_Thrust = 155;
 
 	NAS_MoveAction = 1;	{ Stop, Cruise, Flank Speed, Turn }
 		NAV_Stop = 0;
@@ -174,7 +173,7 @@ Function CountThrustPoints( Master: GearPtr; MM,Scale: Integer ): LongInt;
 	{ Count the number of thrust points for movemode MM that this }
 	{ master gear has. }
 var
-	it: LongInt;
+	it,BaseTP: LongInt;
 	Bitz: GearPtr;
 begin
 	{ Initialize the count to 0. }
@@ -187,7 +186,14 @@ begin
 		{ If this gear is itself a movement system, add its }
 		{ thrust points to the total. }
 		if ( Master^.G = GG_MoveSys ) and ( Scale = Master^.Scale ) then begin
-			it := it + MSysXMode[ Master^.S , MM ] * Master^.V;
+			BaseTP := MSysXMode[ Master^.S , MM ] * Master^.V;
+			{ Movement systems mounted in legs and wings get a thrust point }
+			{ bonus- 10% and 25% respectively. }
+			if ( Master^.Parent <> Nil ) and ( Master^.Parent^.G = GG_Module ) then begin
+				if Master^.Parent^.S = GS_Wing then BaseTP := ( BaseTP * 5 ) div 4
+				else if Master^.Parent^.S = GS_Leg then BaseTP := ( BaseTP * 11 ) div 10
+			end;
+			it := it + BaseTP;
 		end;
 
 		{ Check sub-components. }
@@ -384,7 +390,8 @@ function CalcFly( Scene, Mek: GearPtr; TrueSpeed: Boolean ): Integer;
 	{ mecha, or to FALSE if you want its projected speed (needed }
 	{ to calculate jumpjet time- see below. }
 var
-	mass,thrust,spd,WingPoints: Integer;
+	mass,thrust,t2,spd,WingPoints: Integer;
+	IsAVacuum: Boolean;
 begin
 	if Mek^.G = GG_Mecha then begin
 		{ Calculate the mass... }
@@ -393,14 +400,24 @@ begin
 		mass := GearMass( Mek ) + 25;
 	end;
 
+	IsAVacuum := ( not ( Scene = Nil ) ) and ( NAttValue( Scene^.NA , NAG_EnvironmentData , NAS_Atmosphere ) = NAV_Vacuum );
+
 	{ Calculate the number of thrust points. This is equal to }
 	{ the number of active hover jets times the thrust per jet }
 	{ constant. }
 	thrust := CountThrustPoints( mek , MM_Fly , mek^.Scale );
 
+	{ In a vacuum, space flight can substitute for regular flight. Why? Because otherwise you'd }
+	{ have the case where a space flying mecha would encounter enemies on an asteroid and immediately }
+	{ get grounded. }
+	if IsAVacuum then begin
+		t2 := CountThrustPoints( mek , MM_Space , mek^.Scale );
+		if t2 > thrust then thrust := t2;
+	end;
+
 	{ Count the number of wing points present. }
 	{ If there aren't enough, give a penalty to thrust. }
-	if ( Scene = Nil ) or ( NAttValue( Scene^.NA , NAG_EnvironmentData , NAS_Atmosphere ) <> NAV_Vacuum ) then begin
+	if not IsAVacuum then begin
 		WingPoints := CountActivePoints( Mek , GG_Module , GS_Wing );
 		if WingPoints < MasterSize( mek ) then begin
 			thrust := thrust div 2;
@@ -418,7 +435,7 @@ begin
 		{ If this is a mecha, modify thrust points based }
 		{ upon the type of mecha we're dealing with. }
 		case mek^.S of
-		GS_AeroFighter: if WingPoints > MasterSize( Mek ) then Thrust := Thrust * 2;
+		GS_AeroFighter: if WingPoints > MasterSize( Mek ) then Thrust := Thrust * 2 else Thrust := ( Thrust * 5 ) div 4;
 		GS_HoverFighter,GS_GerWalk: Thrust := ( Thrust * 5 ) div 4;
 		GS_Ornithoid: begin
 				if WingPoints > MasterSize( Mek ) then Thrust := ( Thrust * 3 ) div 2;
@@ -496,8 +513,8 @@ var
 	mass,thrust,it,T,SF: Integer;
 begin
 	mass := GearMass( Master );
-	thrust := CountActivePoints( Master , GG_MoveSys , GS_Overchargers );
-	it := ( thrust * Overcharge_Thrust * 10 ) div mass;
+	thrust := CountThrustPoints( Master , THRUST_Overchargers , Master^.Scale );
+	it := ( thrust * 10 ) div mass;
 
 	{ If the speed is too high, scale it back a bit. }
 	for t := 1 to 10 do begin

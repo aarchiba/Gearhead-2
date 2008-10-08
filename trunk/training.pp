@@ -145,9 +145,6 @@ Procedure DoTraining( GB: GameBoardPtr; PC: GearPtr; RD: RedrawProcedureType );
 		{ advancement, or FALSE if it is not. In order to be }
 		{ advanced a stat must have sufficient skills at the }
 		{ sufficient level. }
-		{ To improve a skill N times, the PC must know (N+1) skills }
-		{ based on that stat, and they all must be at least of }
-		{ rank (N+5). }
 	var
 		CIV, T: Integer;	{ Current Improvement Value. }
 		min_rank,num_required: Integer;
@@ -158,7 +155,7 @@ Procedure DoTraining( GB: GameBoardPtr; PC: GearPtr; RD: RedrawProcedureType );
 
 		for t := 1 to NumSkill do begin
 			if ( SkillMan[ T ].Stat = N ) and ( NAttValue( PC^.NA , NAG_Skill , T ) >= min_rank ) then begin
-				num_required := num_required - ( NAttValue( PC^.NA , NAG_Skill , T ) div min_rank );
+				num_required := num_required - ( ( NAttValue( PC^.NA , NAG_Skill , T ) - min_rank + 3 ) div 3 );
 			end;
 		end;
 

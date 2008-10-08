@@ -118,8 +118,8 @@ desig <Tyb 2-4>
 desc <A low caliber bullpup assault rifle manufactured in Theles Spinner.>
 sdl_portrait <item_compactrifle.png>
 caliber <5mm auto>
-category <WEAPON MISSILE>
-factions <FCOMS>
+category <WEAPON MISSILE ESSENTIAL>
+factions <FCOMS RISHI BOHEM MAQUI>
 legality 5
 Mass -3
 Range 6
@@ -315,7 +315,7 @@ name <Light Laser Pistol>
 Desig <Brash G1>
 desc <A small, low power laser weapon.>
 sdl_portrait <item_miscpistol3.png>
-category <WEAPON MISSILE>
+category <WEAPON MISSILE ESSENTIAL>
 factions <MAQUI FCOMS RISHI BOHEM>
 Mass -2
 Range 3
@@ -454,7 +454,7 @@ memo
 Set
 name <Flight Suit [set]>
 desc <A light spacesuit.>
-Category <CLOTHING SPACE>
+Category <CLOTHING SPACE ESSENTIAL>
 Factions <MAQUI FCOMS RISHI CRIHN>
 Legality -25
 inv
@@ -917,7 +917,7 @@ end
 Set
 name <Combat Spacesuit [set]>
 desc <An armored spacesuit.>
-Category <ARMOR SPACE>
+Category <ARMOR SPACE ESSENTIAL>
 Factions <MAQUI FCOMS RISHI ROCKE>
 Legality 10
 inv
@@ -1036,7 +1036,7 @@ end
 Set
 name <Space Suit [set]>
 desc <A regular spacesuit.>
-Category <ARMOR CLOTHING SPACE>
+Category <ARMOR CLOTHING SPACE ESSENTIAL>
 Factions <MAQUI BOHEM CRIHN PRIVA FCOMS RISHI COMET HOELL MUGLE>
 Legality -15
 inv
@@ -1223,7 +1223,7 @@ Set
 name <Ceram Armor [set]>
 desc <A strong armor plate made from the light ceram material.>
 Category <ARMOR>
-Factions <MAQUI>
+Factions <MAQUI FCOMS RISHI>
 legality 0
 inv
 	BodyArmor 6
@@ -1306,7 +1306,7 @@ Shield 6
 Name <Ceram Shield>
 desc <A large shield made from ceram polymer.>
 Category <SHIELD>
-Factions <MAQUI>
+Factions <MAQUI FCOMS RISHI BOHEM>
 DefBonus 1
 mass -5
 legality -5
@@ -1316,7 +1316,7 @@ Shield 4
 Name <Ceram Buckler>
 desc <A small shield made from ceram polymer.>
 Category <SHIELD>
-Factions <MAQUI>
+Factions <MAQUI FCOMS RISHI BOHEM>
 DefBonus -2
 mass -1
 legality -5
@@ -1349,7 +1349,7 @@ Mass -4
 Name <Beef Tubesteak>
 desc <Cloned beef grown in zero gravity for superior texture and flavor.>
 Category <FOOD>
-Factions <MAQUI>
+Factions <MAQUI FCOMS RISHI BOHEM>
 legality -50
 
 Food 45
@@ -1357,7 +1357,7 @@ Mass -4
 Name <Turkey Tubesteak>
 desc <Cloned turkey meat grown in zero gravity for superior texture and flavor.>
 Category <FOOD>
-Factions <MAQUI>
+Factions <MAQUI FCOMS RISHI BOHEM>
 legality -50
 
 Food 45
@@ -1365,7 +1365,7 @@ Mass -4
 Name <Bacon Tubesteak>
 desc <Cloned bacon loaf grown in zero gravity for superior texture and flavor.>
 Category <FOOD>
-Factions <MAQUI>
+Factions <MAQUI FCOMS RISHI BOHEM>
 legality -50
 
 

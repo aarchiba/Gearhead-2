@@ -13,9 +13,9 @@
 	START <NewChat Say %id%01 AddChat %id%01 AddChat %id%02>
 	result%id%01 <EndChat Say %id%02 shop .%id%_wares Goto %1%>
 	result%id%02 <Goto %1%>
-	.%id%_wares <WEAPON CLOTHING FOOD ELECTRONICS>
-	KEYWORDS <WEAPON CLOTHING FOOD ELECTRONICS>
-	Msg%id%01 <This shop has a good selection of basic adventuring equipment.>
+	.%id%_wares <ESSENTIAL>
+	KEYWORDS <WEAPON CLOTHING FOOD ELECTRONICS ESSENTIAL>
+	Msg%id%01 <This shop has a good selection of essential adventuring equipment.>
 	Msg%id%02 <Here's what I have in stock. My inventory changes all the time so you'll want to check back often.>
 	Prompt%id%01 <Let me see what you've got.>
 	Prompt%id%02 <Sorry, I don't need anything right now.>

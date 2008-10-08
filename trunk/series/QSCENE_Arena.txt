@@ -26,17 +26,13 @@ Scene 0 2
 	name <the Rocket Arena>
 	requires <*Arena_RocketArena>
 
-	CaveMap
 	RockyTiles
 	Vacuum
 	SpaceBackdrop
-	MapWidth 50
-	MapHeight 50
 	terrain <GROUND>
 	type <Arena>
 	special <SHOWALL SOLO ARENA NOPILLAGE>
-	MapWidth 50
-	MapHeight 50
+	map <MAP_RocketArena.txt>
 
 	start <if= SelfArenaState NAV_AS_Ready else GoCheckBattle          Alert 1   SetSelfArenaState NAV_AS_Battle SetSelfArenaRecharge if# SelfChallengerID 0 ForceChat SelfChallengerID>
 	GoCheckBattle <if= SelfArenaState NAV_AS_Battle else GoBoringStart Print 2>
@@ -59,6 +55,8 @@ sub
 	name <Player Team>
 	home <Player Start Point>
 	SetEnemy 2
+	ParaX 7
+	ParaY 7
 
 	Team 2
 	name <Enemies>
@@ -66,16 +64,8 @@ sub
 	SetFaction 5
 	SetEnemy 1
 	Deploy <if= SelfArenaState NAV_AS_Ready ifG SelfArenaForces 0 WMecha 2 SelfArenaThreat SelfArenaForces>
-
-	Rect
-	name <Player Start Point>
-	Width 7
-	Height 7
-
-	Rect
-	name <Enemy Start Point>
-	Width 7
-	Height 7
+	ParaX 34
+	ParaY 34
 end
 
 

@@ -813,6 +813,13 @@ var
 begin
 	{ First, determine what the unscaled price is. }
 	Cost := GearCost( I );
+
+	{ If I is a set, cost will be the average of all items in the set. }
+	if I^.G = GG_Set then begin
+		N := NumSiblingGears( I^.SubCom ) + NumSiblingGears( I^.InvCom );
+		if N > 0 then Cost := Cost div N;
+	end;
+
 	N := I^.Scale;
 	{ SF:1 items are 10x more expensive than SF:0 items. After that }
 	{ it costs x5 per scale factor. }

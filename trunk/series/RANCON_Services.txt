@@ -298,22 +298,6 @@ Content
 	content <Required *VIDEOARCADE na Local>
 
 Content
-	requires <*SPECIAL_SHOP Common>
-	content <Required *DECOR_FOR_SHOP %1% Local>
-	element1 <Prefab>
-	team1 <Citizens>
-	teamdata1 <ally pass>
-	sub
-		Persona 1
-		*greeting <*NiceToMeetYou GoShop>
-		*GoShop <*SERVICE_DOCTOR GoBye>
-		*GoBye <*GOODBYE>
-	end
-	inv
-		NPC Doctor
-	end
-
-Content
 	requires <*SPECIAL_SHOP City>
 	content <Required *DECOR_FOR_SHOP %1% Local>
 	element1 <Prefab>
@@ -331,7 +315,7 @@ Content
 	end
 
 Content
-	requires <*SPECIAL_SHOP Common>
+	requires <*SPECIAL_SHOP>
 	content <Required *DECOR_FOR_SHOP %1% Local>
 	element1 <Prefab>
 	sub
@@ -379,6 +363,22 @@ Content
 	end
 
 Content
+	requires <*SPECIAL_SHOP>
+	content <Required *DECOR_FOR_GENERAL_SHOP %1% Local>
+	element1 <Prefab>
+	team1 <Citizens>
+	teamdata1 <ally pass>
+	sub
+		Persona 1
+		*greeting <*NiceToMeetYou GoShop>
+		*GoShop <*SHOP_ESSENTIALS GoBye>
+		*GoBye <*GOODBYE>
+	end
+	inv
+		NPC Shopkeeper
+	end
+
+Content
 	requires <*SPECIAL_SHOP Common>
 	content <Required *DECOR_FOR_SHOP %1% Local>
 	element1 <Prefab>
@@ -397,7 +397,7 @@ Content
 	end
 
 Content
-	requires <*SPECIAL_SHOP Common>
+	requires <*SPECIAL_SHOP>
 	minimap <#...#............1..&---&>
 	element1 <Prefab>
 	team1 <Citizens>
