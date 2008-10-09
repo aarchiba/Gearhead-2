@@ -13,10 +13,9 @@ Head
 	Armor 3
 	Mass -1
 	sub
-		Sensor 6
-		mass -1
+		Sensor 5
 
-		ECM 4
+		ECM 2
 	end
 
 Torso
@@ -59,7 +58,7 @@ Arm
 		Mount
 		name <Right Arm Mount>
 		inv
-			EMelee 4
+			EMelee 3
 			name <Beam Bayonet>
 		end
 	end

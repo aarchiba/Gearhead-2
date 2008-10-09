@@ -64,7 +64,7 @@ torso
 		Armor 2
 		mass -1
 
-		Engine 7
+		Engine 6
 		Armor 2
 		mass -1
 
@@ -166,7 +166,10 @@ Leg
 			end
 		end
 
-		Flight 7
+		Flight 3
+
+		PowerSource 4
+		mass -4
 	end
 
 Leg
@@ -185,7 +188,10 @@ Leg
 			end
 		end
 
-		Flight 7
+		Flight 3
+
+		PowerSource 4
+		mass -4
 	end
 
 end
