@@ -2,24 +2,6 @@
 %% told vaguely what's going on in the game world.
 
 Plot
-	name <NeverFail Check>
-	requires <#A +T01>
-
-	element1 <Scene !Near -7 cavclub>
-	Element2 <Character Friend NeverFail>
-	Place2 <1 pass>
-
-	% P1 = Forcechat counter
-	update <if= P1 0 P= 1 1 ForceChat %2%>
-
-	sub
-		Persona 2
-		greeting <NewChat Say 1>
-		Msg1 <This character has been brought to you by NeverFail.>
-	end
-
-
-Plot
 	name <Exclusive Party>
 	Size 0
 	desc <You've been invited to an exclusive party.>

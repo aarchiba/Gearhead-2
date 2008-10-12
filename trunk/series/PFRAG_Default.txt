@@ -304,6 +304,15 @@
 	START <NewChat Say %id%01 Goto %1%>
 	Msg%id%01 <I give up! Just don't kill me...>
 
+% TYPE: *ComeBackWhenYouKnowSomething
+%	The NPC will remind the PC to go learn something... I dunno what.
+
+	Persona
+	requires <*ComeBackWhenYouKnowSomething>
+	START <NewChat Say %id%01>
+	Msg%id%01 <Come back when you learn something.>
+
+
 % TYPE: *GenericMissionReminder
 %	The NPC will remind the PC to go do something... I dunno what.
 

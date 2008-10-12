@@ -427,3 +427,218 @@ Leg
 	end
 end
 
+
+Battroid 7
+Name <Gladius>
+Desig <RIG-03a2>
+SDL_Sprite <btr_savin.png>
+SDL_Portrait <item_savin.png>
+Desc <A limited edition replica of the NT157 Robot Warriors grand prize, which fought against Typhon.>
+TYPE <GROUND SPACE>
+FACTIONS <PDASS>
+
+Sub
+Head
+	Armor 5
+	Size 5
+	Mass -6
+	sub
+		Sensor 6
+		mass -1
+
+		STC VC-5
+		Type <INTERCEPT>
+		Name <Vulcan Interceptor>
+
+		PowerSource 2
+		mass -2
+	end
+	inv
+		HeadArmor 4
+		Mass -5
+	end
+
+Torso
+	Armor 7
+	Mass -8
+	sub
+		Sensor 1
+
+		CPit
+		Armor 2
+		Mass -1
+
+		Computer 6
+		mass -6
+		sub
+			Software 3
+			name <Range Zero Targeting System>
+			S_TRBoost
+			S_BoostScale 2
+
+			Software 3
+			name <ZeroG Movement System>
+			S_MVBoost
+			S_BoostScale 2
+		end
+
+
+		Gyro
+		Armor 2
+		Mass -1
+
+		Engine 7
+		HighPerformance
+		Armor 2
+		Mass -1
+
+		STC MAC-4
+		mass -3
+
+		HeavyActuator 2
+		mass -1
+
+		ArcJet 3
+
+		ECM 6
+	end
+	inv
+		BodyArmor 6
+		Mass -8
+		sub
+			ArcJet 3
+		end
+	end
+
+Arm
+	Name <Right Arm>
+	Size 6
+	Armor 5
+	Mass -7
+	sub
+		Hand
+		Name <Right Hand>
+		inv
+			Melee 16
+			name <Bronze Axe>
+			desc <This replica axe has a bronze finish instead of the original gold.>
+			Acc 1
+			type <Thrown Return Armorpiercing Haywire>
+			Mass -10
+		end
+
+		Mount
+		Name <Right Arm Mount>
+		inv
+			STC LAS-10
+			name <Monster Slayer>
+			Range 5
+			type <Armorpiercing>
+		end
+
+		HeavyActuator 3
+		mass -2
+
+		PowerSource 2
+		mass -2
+	end
+	inv
+		ArmArmor 5
+		Mass -6
+		sub
+			MLauncher 3
+			sub
+				STC ICM-5
+				magazine 6
+			end
+		end
+	end
+
+Arm
+	Name <Left Arm>
+	Size 6
+	Armor 5
+	Mass -7
+	sub
+		Hand
+		Name <Left Hand>
+
+		Mount
+		Name <Left Arm Mount>
+
+		HeavyActuator 3
+		mass -2
+
+		PowerSource 2
+		mass -2
+	end
+	inv
+		ArmArmor 5
+		Mass -6
+		sub
+			MLauncher 3
+			sub
+				STC ICM-5
+				magazine 6
+			end
+		end
+
+		EShield 5
+		DefBonus 2
+		name <Fire Shield>
+	end
+
+Leg
+	Name <Right Leg>
+	Armor 7
+	Mass -8
+	sub
+		Mount
+		Name <Right Leg Mount>
+		inv
+			MLauncher 10
+			sub
+				STC SWM-5
+				type <SWARM ARMORPIERCING>
+				Magazine 20
+			end
+		end
+
+		ArcJet 7
+	end
+	inv
+		LegArmor 5
+		Mass -5
+		sub
+			ArcJet 3
+		end
+	end
+
+Leg
+	Name <Left Leg>
+	Armor 7
+	Mass -8
+	sub
+		Mount
+		Name <Left Leg Mount>
+		inv
+			MLauncher 10
+			sub
+				STC SWM-5
+				type <SWARM ARMORPIERCING>
+				Magazine 20
+			end
+		end
+
+		ArcJet 7
+	end
+	inv
+		LegArmor 5
+		Mass -5
+		sub
+			ArcJet 3
+		end
+	end
+end
+
+

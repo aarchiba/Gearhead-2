@@ -237,7 +237,7 @@ Content
 	% - Mission giver dies before encounter is activated
 	% - Revalation subplot fails
 
-	end <if= PlotStatus %plotid1% 0 else .%id%_GoCheckReveal ifNPCDead %1% else %pop% LoseComp 0 .%id%_loss>
+	end <if= PlotStatus %plotid1% 0 else .%id%_GoCheckReveal ifNPCDead %1% LoseComp 0 .%id%_loss>
 	.%id%_GoCheckReveal <ifSubPlotLost %plotid2% SMemo %id%02 SetPlotStatus %plotid5% %id5%>
 	.%id%_loss <+T-->
 
