@@ -557,3 +557,50 @@ Content
 		update <if= PlotStatus %plotid% %id% else GoHide ShowEncounter SetStat STAT_MetaVisibility 0  Goto GoSetOrders>
 	end
 
+%%
+%% *:CS_TournamentMatch Content
+%%
+%%  There's apparently a tournament going on. The PC will be able to challenge a NPC
+%%  to a duel, which will be handled by the above subplot type.
+%%
+%% NEEDED SCRIPTS: To deal with the ending, the parent plot must define two
+%% scripts:
+%% 	.%id%_%plotid%_GoWin
+%% 	.%id%_%plotid%_GoLose
+%%
+%% PARAM1: The NPC to be challenged
+%% PARAM2: The home scene for this NPC
+
+Content
+	name <Basic Tournament Match>
+	desc <You're going to challenge some guy.>
+	requires <*:CS_TournamentMatch>
+
+	% E1 is the NPC to be challenged
+	% E2 is the home scene for the NPC
+	% E3 is a location for the duel.
+	Element3 <Scene Environs !Near -7>
+
+	% As long as we're still at the first phase, the NPC's death will end the plot.
+	start <if= PlotStatus %plotid% %id% ifNPCDead %1% Goto .%id1%_%plotid%_GoLose>
+
+	% Resolution Scripts
+	.%id1%_%plotid%_GoWin  <WinSubPlot %plotid%   Trigger0 .%id%_%plotid%_GoWin>
+	.%id1%_%plotid%_GoLose <LoseSubPlot %plotid%  Trigger0 .%id%_%plotid%_GoLose>
+
+	% SubPlot1 is the duel itself
+	SubPlot1 <*CS_Duel&NoDerailment 1 2 3>
+
+	sub
+		Persona 1
+		greeting <if= PlotStatus %plotid% %id% else %pop% Goto GoFirstTime>
+		*GoFirstTime <*PCChallengeNPC GoMakeChallenge GoWussOut>
+		GoMakeChallenge <History %id%01 PMemo %plotid% %id%01 SetPlotStatus %plotid1% %id1% Goto GoAcceptChallenge>
+		*GoAcceptChallenge <*IAcceptYourChallenge %3%>
+		*GoWussOut <*GodImBored>
+		Msg%id%01 <You challenged %name1% to a duel in %name3%.>
+	end
+
+
+
+

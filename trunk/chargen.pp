@@ -52,6 +52,9 @@ uses 	gearutil,ghchars,texutil,ui4gh,vidgfx,vidinfo,vidmenus,description,gearpar
 	ability,wmonster,dos,locale,menugear;
 {$ENDIF}
 
+type
+	SkillArray = Array [1..NumSkill] of Integer;
+
 var
 	RCPC: GearPtr;
 	RCPromptMessage,RCDescMessage,RCCaption: String;
@@ -741,7 +744,7 @@ var
 	Job_Desig: String;
 	T,BL: Integer;	{ BL = BaseLine, determined by job. }
 begin
-	{ Start by determining the baseline stats for this caharacter. Those are going }
+	{ Start by determining the baseline stats for this character. Those are going }
 	{ to depend upon the job designation. }
 	Job_Desig := SAttValue( PC^.SA , 'JOB_DESIG' );
 	BL := 0;
@@ -765,12 +768,30 @@ begin
 	if StatPt > 0 then RollStats( PC , StatPt );
 end;
 
+Procedure SpendSkillPointsRandomly( PC: GearPtr; var PCSkills: SkillArray; SkillPt: Integer );
+	{ Spend all remaining skill points randomly. Maybe purchase some new skills, }
+	{ if appropriate. At the end of the process, leftover skill points will be }
+	{ converted to XP at a rate of 100XP per skill point. }
+	{ The SkillArray will not be combined back into the PC; the calling procedure }
+	{ must do that itself. }
+var
+	tries: Integer;
+begin
+	tries := 0;
+	while ( SkillPt > 0 ) and ( Tries < 10000 ) do begin
+
+		Inc( Tries );
+	end;
+
+	{ Convert remaining skill points into experience points. }
+	if SkillPt > 0 then AddNAtt( PC^.NA , NAG_Experience , NAS_TotalXP , SkillPt * 100 );
+end;
 
 Procedure AllocateSkillPoints( PC: GearPtr; SkillPt: Integer );
 	{ Distribute the listed number of points out to the PC. }
 var
 	RPM: RPGMenuPtr;
-	PCSkills: Array [1..NumSkill] of Integer;
+	PCSkills: SkillArray;
 	T,SkNum: Integer;
 	Function SkillSelectorMsg( N: Integer ): String;
 	var

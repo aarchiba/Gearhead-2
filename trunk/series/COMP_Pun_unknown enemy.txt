@@ -2,6 +2,101 @@
 %%	+Pun	An unknown enemy attacks
 
 Plot
+	name <Champion Tournament>
+	desc <The technocracy is holding a tournament to locate a champion.>
+	requires <#A +Pun +T-- F:-- (P:--|P:PDASS) (L:MAQUI|L:RISHI|L:FCOMS) -L:ENEMY>
+	changes <P:>
+
+	% E1 is a local public scene
+	% E2 is the politician to do the judging
+	% E3 is Contestant 1
+	% E4 is Contestant 2
+	% E5 is Contestant 3
+	% E6 is a metascene for the conclusion
+	element1 <Scene Public !Okay -7 !Near -7 (Meeting|Garage)>
+	element2 <Character POLIT !Near -7 !Comrade -7 NeverFail>
+	NeverFail2 <Politician>
+	Place2 <1 (Citizens) pass ally>
+	element3 <NewNPC -7 -7>
+	place3 <1 (Guards) sd ally>
+	element4 <NewNPC  0 -7>
+	place4 <1 (Guards) sd ally>
+	element5 <NewNPC  0 -7>
+	place5 <1 (Guards) sd ally>
+	element6 <MetaScene !Near -7 *Building NeverFail>
+
+	%% FAIL CONDITIONS:
+	%%  - E2 Dies
+
+	% P%id%01 = Win Counter
+	% P%id%02 = Match Counter
+
+	update <if= PlotStatus %plotid% 0 SetPlotStatus %plotid% %id% News %id%01>
+	end <if= PlotStatus %plotid% %id% ifNPCDead %2% LoseComp 0 .%id%_next>
+	.%id%_next <+T-- +F-->
+
+	%% Each tournament win will increase the win counter; each completed match
+	%% will increase the match counter.
+	.%id1%_%plotid1%_GoWin  <P+ %id%02 1 P+ %id%01 1>
+	.%id1%_%plotid1%_GoLose <P+ %id%02 1>
+	.%id2%_%plotid2%_GoWin  <P+ %id%02 1 P+ %id%01 1>
+	.%id2%_%plotid2%_GoLose <P+ %id%02 1>
+	.%id3%_%plotid3%_GoWin  <P+ %id%02 1 P+ %id%01 1>
+	.%id3%_%plotid3%_GoLose <P+ %id%02 1>
+
+	Msg%id%01 <A mecha tournament is being held at %name1% in \Scene &EpisodeScene . Interested parties are asked to contact %name2%.>
+
+
+	% SubPlot1 is E3's Duel
+	% SubPlot2 is E4's Duel
+	% SubPlot3 is E5's Duel
+	SubPlot1 <*:CS_TournamentMatch 3 1>
+	SubPlot2 <*:CS_TournamentMatch 4 1>
+	SubPlot3 <*:CS_TournamentMatch 5 1>
+
+	sub
+		Persona 2
+		rumor%id% <%name2% is running a mecha contest for the technocracy.>
+		% V%id%01 = Have started the tournament
+		greeting <if= PlotStatus %plotid% %id% else GoChat if= v%id%01 1 else GoFirstTime ifG P%id%02 2 else GoInProgress if= P%id%01 3 else GoCheckMinorWin  Goto GoMajorWin>
+		GoEndWin <StoryNote 2 &SetTargetNPC %2% WinComp %6% .win>
+		.win <+Tgt +Fmi>
+		GoMajorWin <NewChat Say 1 History 3  CustomMecha .mek StoryDL  Goto GoEndWin>
+		.mek <GENERAL \FACTION_DESIG ChatNPCFac>
+		GoCheckMinorWin <ifG P%id%01 0 else GoLoseTournament  NewChat Say 4 Goto GoEndWin>
+		GoLoseTournament <NewChat Say 5 SMemo 0 History 6 NTBLoseComp 0 .loss>
+		.loss <+T-- +F-->
+		GoChat <NewChat SayAnything>
+		GoInProgress <NewChat Say 7>
+		*GoFirstTime <*AreYouHereAboutJob&Recruit GoExplain>
+		GoExplain <NewChat Say 8 AddChat 1 AddChat 2 AddChat 3 &SetAllyFac ChatNPCFac>
+		result1 <NewChat Say 9 SMemo 10 History 11 V= %id%01 1  SetPlotStatus %plotid1% %id1%  SetPlotStatus %plotid2% %id2%  SetPlotStatus %plotid3% %id3%>
+		result2 <AddSociable -d8 Goto result1>
+		result3 <NewChat Say 12 AddChat 4 AddChat 5>
+		result4 <AddPragmatic d8 Goto result1>
+		*result5 <*RejectMission GoR5End>
+		GoR5End <AddHeroic -2 AddSociable -d10   SMemo 0 History 13 NTBLoseComp 0 .loss>
+		Msg1 <Congratulations, you are the winner of our tournament! In recognition of your prowress, I'm happy to present you with this custom mecha. Come see me at %name6% later on and I may have some work for you.>
+		Msg2 <%name2% asked you to meet \OPR %2% at %name6% later on for a mission.>
+		Msg3 <You placed first in the tournament, earning a custom mecha.>
+		Msg4 <You didn't win the tournament, but you didn't do too badly either. Come see me at %name6% later on, if you're interested. I just might have a mission for you.>
+		Msg5 <I'm afraid that you came in last.>
+		Msg6 <You lost the tournament, coming in dead last.>
+		Msg7 <The tournament is still in progress. Come back here after you've challenged %name3%, %name4%, and %name5%.>
+		Msg8 <The technocracy is holding a mecha tournament in order to locate a champion for \SCENE &EpisodeScene . There are numerous prizes and other benefits on offer.>
+		Msg9 <Welcome on board. You will be competing against three other pilots: %name3%, %name4%, and %name5%. Go challenge them, then come see me when you're finished. If you are the winner I will have a prize waiting.>
+		Msg10 <You entered a mecha tournament sponsored by %name2% of \FACTION ChatNPCFac . Your opponets are %name3%, %name4%, and %name5%.>
+		Msg11 <You entered a mecha tournament sponsored by %name2% of \FACTION ChatNPCFac .>
+		Msg12 <That law may be suspended in special cases. Recently there has been a string of unexplained mecha attacks; holding a tournament like this is the most efficient way to attract pilots and identify those who are strong enough to help.>
+		Msg13 <You refused to help \SCENE &EpisodeScene against the mysterious attackers.>
+		Prompt1 <Sign me up!>
+		Prompt2 <I'm no champion, but I like prizes!>
+		Prompt3 <Wait, I thought dueling was illegal around here?>
+		Prompt4 <Sounds reasonable. I'm in.>
+		Prompt5 <I'm not interested in your tournament, or in helping.>
+	end
+
+Plot
 	name <Friend On Patrol>
 	desc <Your friend is on patrol.>
 	requires <#A +Pun +Tgt (+Fin|+F--|+Fch) (T:FRIEND|T:ALLY|T:LOVER|T:FAMILY) (T:MILIT|T:ADVEN|T:LABOR|T:POLIC) S:-->
