@@ -236,7 +236,7 @@ Plot
 Plot
 	name <Party Contact>
 	desc <At the party, the PC can get a job from someone.>
-	requires <#A +Tgs (+Fpa|+Fcc) ~+Gmo>
+	requires <#A +Tgs (+Fpa|+Fcc) (P:--|P:PDASS|P:CORPO) ~+Gmo>
 	Size 1
 
 	% Element1 is the scene where this will take place
@@ -436,7 +436,7 @@ Plot
 		Msg%id%04 <%name1% suggested that you crash a party at %name2%.>
 		Msg%id%05 <Money is very important. Hey, I heard that %name3% is looking to hire someone over at %name2%. Let's go over there and see if we can get the job.>
 		Msg%id%06 <%name1% suggested that you go ask %name3% for a mission at %name2%.>
-		Msg%id%07 <Neat. Well, the way to become the best is by challenging other pilots... I've heard that %name4% has been spoiling for a fight recently. Let's go to %name2% and ask \OPE %4% for a duel.>
+		Msg%id%07 <Neat. Well, the way to become the best is by challenging other pilots... I've heard that %name4% has been spoiling for a fight recently. Let's go to %name2% and ask \OPR %4% for a duel.>
 		Msg%id%08 <%name1% suggested that you challenge %name4% at %name2%.>
 		Prompt%id%01 <I'm in it for the money.>
 		Prompt%id%02 <I just want to be the best pilot ever.>

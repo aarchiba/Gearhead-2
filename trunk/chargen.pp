@@ -768,23 +768,161 @@ begin
 	if StatPt > 0 then RollStats( PC , StatPt );
 end;
 
+Procedure ClearSkillArray( var PCSkills: SkillArray );
+	{ Clear the skill array. Seems simple enough. }
+var
+	T: Integer;
+begin
+	{ Zero out the base skill values. }
+	for t := 1 to NumSkill do begin
+		PCSkills[ T ] := 0;
+	end;
+end;
+
+Function CGPCHasSkill( PC: GearPtr; const PCSkills: SkillArray; Skill: Integer ): Boolean;
+	{ Return TRUE if the character being generated has this skill, or FALSE otherwise. }
+begin
+	CGPCHasSkill := ( NAttValue( PC^.NA , NAG_Skill , Skill ) > 0 ) or ( PCSkills[ Skill ] > 0 );
+end;
+
+Function NumPickedSkills( PC: GearPtr; const PCSkills: SkillArray ): Integer;
+	{ Return the number of skills this character knows. }
+var
+	SkT,NPS: Integer;
+begin
+	NPS := 0;
+	for SkT := 1 to NumSkill do begin
+		if CGPCHasSkill( PC , PCSkills , SkT ) then Inc( NPS );
+	end;
+	NumPickedSkills := NPS;
+end;
+
+Function CanIncreaseSkill( SkillVal, SkillPt: Integer ): Boolean;
+	{ Return TRUE if this skill value can be increased given the remaining number of }
+	{ skill points, or FALSE if it can't be. }
+	{ To increase a skill by one rank, one must spend SkillVal skill points. }
+	{ For instance, to increase a skill from Rank 3 to Rank 4 one would have to }
+	{ spend 3 skill points. }
+begin
+	CanIncreaseSkill := ( SkillVal < MaxStartingSkill ) and ( SkillPt >= SkillVal ) and ( SkillPt > 0 );
+end;
+
+Procedure CGImproveSkill( var PCSkills: SkillArray; Skill: Integer; var SkillPt: Integer );
+	{ Improve this skill, reducing SkillPt by the appropriate amount. }
+begin
+	if PCSkills[ Skill ] = 0 then begin
+		Dec( SkillPt );
+	end else begin
+		SkillPt := SkillPt - PCSkills[ Skill ];
+	end;
+	Inc( PCSkills[ Skill ] );
+end;
+
 Procedure SpendSkillPointsRandomly( PC: GearPtr; var PCSkills: SkillArray; SkillPt: Integer );
 	{ Spend all remaining skill points randomly. Maybe purchase some new skills, }
 	{ if appropriate. At the end of the process, leftover skill points will be }
 	{ converted to XP at a rate of 100XP per skill point. }
 	{ The SkillArray will not be combined back into the PC; the calling procedure }
 	{ must do that itself. }
+	Function NumIncreasableSkills: Integer;
+		{ Return the number of known skills which may be increased given the number }
+		{ of free skill points. }
+	var
+		Skill,Total: Integer;
+	begin
+		Total := 0;
+		For Skill := 1 to NumSkill do if CGPCHasSkill( PC , PCSkills , Skill ) and CanIncreaseSkill( PCSkills[ Skill ] , SkillPt ) then Inc( Total );
+		NumIncreasableSkills := Total;
+	end;
+	Function NumFreeSkillSlots: Integer;
+		{ Return the number of free skill slots. }
+		{ Note that this procedure assumes that all characters will want to learn }
+		{ the ten basic combat skills, so the skill slots equal the number of regular }
+		{ skill slots minus ten minus the number of noncombat skills known. }
+	var
+		SkT,NPS: Integer;
+	begin
+		NPS := 0;
+		for SkT := 11 to NumSkill do begin
+			if CGPCHasSkill( PC , PCSkills , SkT ) then Inc( NPS );
+		end;
+
+		NumFreeSkillSlots := NumberOfSkillSlots( PC ) - 10 - NPS;
+	end;
+	Procedure AddNewSkill;
+		{ Try to add a new skill to this PC. }
+		{ Usually we'll add one of the generic skills that absolutely any character }
+		{ might know, but sometimes we'll go all freaky and give out something like }
+		{ Biotech or Acrobatics. }
+	const
+		NumBeginnerSkills = 18;
+		BeginnerSkills: Array [1..NumBeginnerSkills] of Byte = (
+			11, 12, 13, 15, 17,
+			18, 19, 20, 21, 23,
+			25, 26, 27, 28, 30,
+			33, 36, 42
+		);
+	var
+		Skill: Integer;
+	begin
+		if Random( 8 ) = 1 then begin
+			Skill := Random( NumSkill ) + 1;
+		end else begin
+			Skill := BeginnerSkills[ Random( NumBeginnerSkills ) + 1 ];
+		end;
+		if not CGPCHasSkill( PC , PCSkills , Skill ) then begin
+			CGImproveSkill( PCSkills , Skill , SkillPt );
+		end;
+	end;
+	Procedure ImproveExistingSkill( N: Integer );
+		{ Improve the N'th improvable skill known by this PC. }
+	var
+		Skill: Integer;
+	begin
+		Skill := 1;
+		while ( Skill <= NumSkill ) and ( N > 0 ) do begin
+			if CGPCHasSkill( PC , PCSkills , Skill ) and CanIncreaseSkill( PCSkills[ Skill ] , SkillPt ) then begin
+				Dec( N );
+				if N = 0 then begin
+					CGImproveSkill( PCSkills , Skill , SkillPt );
+				end;
+			end;
+			Inc( Skill );
+		end;
+	end;
 var
-	tries: Integer;
+	tries,NumSkill,NumSlot: Integer;
 begin
 	tries := 0;
 	while ( SkillPt > 0 ) and ( Tries < 10000 ) do begin
+
+		NumSkill := NumIncreasableSkills;
+		NumSlot := NumFreeSkillSlots;
+
+		if ( NumSlot > ( Random( 50 ) + 1 ) ) then begin
+			{ Add a new skill. }
+			AddNewSkill;
+		end else if NumSkill > 0 then begin
+			{ Improve an existing skill. }
+			ImproveExistingSkill( Random( NumSkill ) + 1 );
+		end else begin
+			{ Add a new skill. }
+			AddNewSkill;
+		end;
 
 		Inc( Tries );
 	end;
 
 	{ Convert remaining skill points into experience points. }
 	if SkillPt > 0 then AddNAtt( PC^.NA , NAG_Experience , NAS_TotalXP , SkillPt * 100 );
+end;
+
+Procedure RecordSkills( PC: GearPtr; const PCSkills: SkillArray );
+	{ Record the purchased skills in the PC record. }
+var
+	T: Integer;
+begin
+	for T := 1 to NumSkill do AddNAtt( PC^.NA , NAG_Skill , T , PCSkills[T] );
 end;
 
 Procedure AllocateSkillPoints( PC: GearPtr; SkillPt: Integer );
@@ -806,21 +944,8 @@ var
 		msg := msg + BStr( NAttValue( PC^.NA , NAG_Skill , N ) + PCSkills[ N ] );
 		SkillSelectorMsg := msg;
 	end;
-	Function NumPickedSkills: Integer;
-	var
-		SkT,NPS: Integer;
-	begin
-		NPS := 0;
-		for SkT := 1 to NumSkill do begin
-			if ( NAttValue( PC^.NA , NAG_Skill , SkT ) > 0 ) or ( PCSkills[ Skt ] > 0 ) then Inc( NPS );
-		end;
-		NumPickedSkills := NPS;
-	end;
 begin
-	{ Zero out the base skill values. }
-	for t := 1 to NumSkill do begin
-		PCSkills[ T ] := 0;
-	end;
+	ClearSkillArray( PCSkills );
 
 	{ Create the menu & set up the display. }
 	RPM := CreateRPGMenu( MenuItem , MenuSelect , ZONE_CharGenMenu );
@@ -861,13 +986,8 @@ begin
 			SkNum := RPMLocateByPosition(RPM , RPM^.selectitem )^.value;
 
 			{ Only increase if the skill < 10... }
-			if ( SkNum > 0 ) and ( SkNum <= NumSkill ) and ( PCSkills[ SkNum ] < MaxStartingSkill ) and ( SkillPt >= PCSkills[ SkNum ] ) then begin
-				if PCSkills[ SkNum ] = 0 then begin
-					Dec( SkillPt );
-				end else begin
-					SkillPt := SkillPt - PCSkills[ SkNum ];
-				end;
-				Inc( PCSkills[ SkNum ] );
+			if ( SkNum > 0 ) and ( SkNum <= NumSkill ) and CanIncreaseSkill( PCSkills[ SkNum ] , SkillPt ) then begin
+				CGImproveSkill( PCSkills, SkNum , SkillPt );
 
 				{ Replace the message line. }
 				RPMLocateByPosition(RPM , RPM^.selectitem )^.msg := SkillSelectorMsg( SkNum );
@@ -895,26 +1015,22 @@ begin
 
 	until T = -2;
 
-	{ Copy temporary values into the PC record. }
-	for T := 1 to NumSkill do AddNAtt( PC^.NA , NAG_Skill , T , PCSkills[T] );
+	{ Spend remaining skill points randomly. }
+	if SkillPt > 0 then SpendSkillPointsRandomly( PC , PCSkills , SkillPt );
 
-	{ Convert remaining skill points into experience points. }
-	if SkillPt > 0 then AddNAtt( PC^.NA , NAG_Experience , NAS_TotalXP , SkillPt * 100 );
+	{ Copy temporary values into the PC record. }
+	RecordSkills( PC , PCSkills );
 
 	{ Get rid of the menu. }
 	DisposeRPGMenu( RPM );
 end;
 
-Procedure RandomSkillPoints( PC: GearPtr; SkillPt: Integer );
+Procedure RandomSkillPoints( PC: GearPtr; SkillPt: Integer; IsNPC: Boolean );
 	{ Allocate out some sensible skill points to hopefully keep this beginning character }
 	{ alive. }
+	{ Step One: Decide on primary skills for this character. }
+	{ Step Two: Pass remaining points on to the random skill allocator. }
 const
-	NumBeginnerSkills = 13;
-	BeginnerSkills: Array [1..NumBeginnerSkills] of Byte = (
-		11, 12, 13, 14, 15,
-		18, 20, 21, 23, 25,
-		26, 30, 33
-	);
 	PointsForLevel: Array [1..5] of Byte = (
 		1,2,4,7,11
 	);
@@ -927,56 +1043,65 @@ const
 		CheckLevel := L;
 	end;
 var
-	t,L,tries,X1,X2: Integer;
+	t,L,X1,X2: Integer;
+	PCSkills: SkillArray;
 begin
+	ClearSkillArray( PCSkills );
+
 	{ First give decent Mecha Piloting and Dodge scores. }
-	t := Random( 2 ) + 4;
-	AddNatt( PC^.NA , NAG_Skill , 5 , T );
+	t := CheckLevel( Random( 2 ) + 4 );
+	PCSkills[ 5 ] := T;
 	SkillPt := SkillPt - PointsForLevel[ t ];
 
-	t := Random( 2 ) + 4;
-	AddNatt( PC^.NA , NAG_Skill , 10 , T );
+	t := CheckLevel( Random( 2 ) + 4 );
+	PCSkills[ 10 ] := T;
 	SkillPt := SkillPt - PointsForLevel[ t ];
 
-	{ Give some Conversation. }
-	t := Random( 3 ) + 1;
-	AddNatt( PC^.NA , NAG_Skill , 19 , T );
-	SkillPt := SkillPt - PointsForLevel[ t ];
+	{ Give the guaranteed skill. }
+	{ PCs automatically get Conversation. NPCs automatically get Weight Lifting. }
+	{ Why weight lifting? Because the random equipment generator thinks nothing of }
+	{ giving twin gatling guns to a 98lb hacker, that's why. }
+	t := CheckLevel( Random( 3 ) + 1 );
+	if IsNPC then begin
+		PCSkills[ NAS_WeightLifting ] := T;
+		SkillPt := SkillPt - PointsForLevel[ t ];
+	end else begin
+		PCSkills[ NAS_Conversation ] := T;
+		SkillPt := SkillPt - PointsForLevel[ t ];
+	end;
 
 	{ Add combat skills. }
 	{ The default character will get three decent combat skills for }
-	{ mecha and another three for personal. }
+	{ mecha and one for personal. }
 	{ To make this work, we select one skill from each group for exclusion, }
 	{ and provide points to the other three. }
+	{ The single combat skill will most likely be either Small Arms or Armed Combat. }
 	X1 := Random( 4 ) + 1;
-	X2 := Random( 4 ) + 1;
+	if Random( 4 ) <> 1 then begin
+		{ This equation will give either 1 or 3- Small Arms or Armed Combat. }
+		X2 := 2 * Random( 2 ) + 1;
+	end else begin
+		X2 := Random( 4 ) + 1;
+	end;
 	for t := 1 to 4 do begin
 		if T <> X1 then begin
-			L := CheckLevel( 2 + Random( 4 ) );
-			AddNAtt( PC^.NA , NAG_Skill , T , L );
+			L := CheckLevel( 2 + Random( 2 ) );
+			PCSkills[ T ] := L;
 			if L > 0 then SkillPt := SkillPt - PointsForLevel[ L ];
 		end;
 
-		if T <> X2 then begin
-			L := CheckLevel( 2 + Random( 3 ) );
-			AddNAtt( PC^.NA , NAG_Skill , T + 5 , L );
+		if T = X2 then begin
+			L := CheckLevel( 3 + Random( 2 ) );
+			PCSkills[ T + 5 ] := L;
 			if L > 0 then SkillPt := SkillPt - PointsForLevel[ L ];
 		end;
 	end;
 
-	{ Add miscellaneous skills. }
-	tries := 500;
-	while ( SkillPt > 0 ) and ( tries > 0 ) do begin
-		Dec( tries );
-		t := BeginnerSkills[ Random( NumBeginnerSkills ) + 1 ];
-		if NAttValue( PC^.NA , NAG_Skill , T ) <= 1 then begin
-			L := CheckLevel( 3 + Random( 3 ) );
-			AddNAtt( PC^.NA , NAG_Skill , T , L );
-			SkillPt := SkillPt - PointsForLevel[ L ];
-		end;
-	end;
+	{ Spend remaining skill points randomly. }
+	if SkillPt > 0 then SpendSkillPointsRandomly( PC , PCSkills , SkillPt );
 
-	if SkillPt > 0 then AddNAtt( PC^.NA , NAG_Experience , NAS_TotalXP , SkillPt * 100 );
+	{ Copy temporary values into the PC record. }
+	RecordSkills( PC , PCSkills );
 end;
 
 Procedure SelectATalent( PC: GearPtr );
@@ -1006,6 +1131,41 @@ begin
 	ApplyTalent( PC , T );
 end;
 
+Procedure SelectRandomTalent( PC: GearPtr );
+	{ Select one of the generic talents for this PC. }
+begin
+	{ If the PC has high Martial Arts skill, assign either Kung Fu or Hap Ki Do. }
+	if CanLearnTalent( PC , NAS_KungFu ) and ( Random( 3 ) <> 1 ) then begin
+		ApplyTalent( PC , NAS_KungFu );
+	end else if CanLearnTalent( PC , NAS_HapKiDo ) then begin
+		ApplyTalent( PC , NAS_HapKiDo );
+	end else if CanLearnTalent( PC , NAS_Ninjitsu ) and ( Random( 2 ) <> 1 ) then begin
+		ApplyTalent( PC , NAS_Ninjitsu );
+	end else if CanLearnTalent( PC , NAS_HardAsNails ) and ( Random( 2 ) <> 1 ) then begin
+		ApplyTalent( PC , NAS_HardAsNails );
+	end else if CanLearnTalent( PC , NAS_Camaraderie ) and ( Random( 2 ) <> 1 ) then begin
+		ApplyTalent( PC , NAS_Camaraderie );
+	end else if CanLearnTalent( PC , NAS_JackOfAll ) and ( Random( 2 ) <> 1 ) then begin
+		ApplyTalent( PC , NAS_JackOfAll );
+	end else if CanLearnTalent( PC , NAS_Sniper ) and ( Random( 2 ) <> 1 ) then begin
+		ApplyTalent( PC , NAS_Sniper );
+	end else if CanLearnTalent( PC , NAS_AnimalTrainer ) and ( Random( 2 ) <> 1 ) then begin
+		ApplyTalent( PC , NAS_AnimalTrainer );
+	end else if CanLearnTalent( PC , NAS_BusinessSense ) and ( Random( 2 ) <> 1 ) then begin
+		ApplyTalent( PC , NAS_BusinessSense );
+	end else if CanLearnTalent( PC , NAS_StuntDriving ) and ( Random( 3 ) <> 1 ) then begin
+		ApplyTalent( PC , NAS_StuntDriving );
+	end else if CanLearnTalent( PC , NAS_Bishounen ) and ( NAttValue( PC^.NA , NAG_Skill , NAS_Flirtation ) > 0 ) and ( Random( 2 ) <> 1 ) then begin
+		ApplyTalent( PC , NAS_Bishounen );
+
+	{ At the very end, if no other talents can be learned, apply one of the two }
+	{ generic talents which don't have any pre-requisites. }
+	end else if Random( 2 ) = 1 then begin
+		ApplyTalent( PC , NAS_Savant );
+	end else begin
+		ApplyTalent( PC , NAS_Idealist );
+	end;
+end;
 
 Procedure SelectMecha( PC: GearPtr; CanEdit: Boolean );
 	{ Select a mecha for the PC to start with. }
@@ -1399,14 +1559,14 @@ begin
 		AllocateSkillPoints( PC , SkillPt );
 		CharacterDisplay( PC , Nil );
 	end else begin
-		RandomSkillPoints( PC , SkillPt );
+		RandomSkillPoints( PC , SkillPt , False );
 	end;
 
 	{ Select a talent. }
 	if M = MODE_Regular then begin
 		SelectATalent( PC );
 	end else begin
-		AddNAtt( PC^.NA , NAG_Experience , NAS_TotalXP , 800 );
+		SelectRandomTalent( PC );
 	end;
 
 	SelectMecha( PC , M = MODE_Regular );
@@ -1475,7 +1635,7 @@ begin
 
 	{ Allocate stats and skills. }
 	EasyStatPoints( NPC , 100 );
-	RandomSkillPoints( NPC , 50 );
+	RandomSkillPoints( NPC , 50 , True );
 
 	{ Set this NPC as a combatant. }
 	SetNAtt( NPC^.NA , NAG_CharDescription , NAS_IsCombatant , 1 );

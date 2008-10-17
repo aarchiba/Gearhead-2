@@ -25,7 +25,7 @@
 Content
 	name <Enemy is working for enemy faction: Stop Them!>
 	desc <The PC will be asked to go stop the Enemy from doing something for an enemy faction.>
-	requires <*CS_GiveMission ~C:POLIC E:++ F:-->
+	requires <*CS_GiveMission ~C:POLIC E:++ F:-- -1:PDASS>
 	changes <F:++>
 
 	% E1 is the NPC that the PC will speak with
@@ -77,7 +77,7 @@ Content
 Content
 	name <Basic Stop Enemy Mission>
 	desc <The PC will be asked to go stop the Enemy from doing something.>
-	requires <*CS_GiveMission ~C:POLIC E:++>
+	requires <*CS_GiveMission ~C:POLIC E:++ -1:PDASS>
 
 	% E1 is the NPC that the PC will speak with
 	% E2 is the Enemy NPC
@@ -122,7 +122,7 @@ Content
 Content
 	name <Basic Fetch Mission>
 	desc <The PC will be asked to go fetch an item.>
-	requires <*CS_GiveMission ~C:THIEF>
+	requires <*CS_GiveMission ~C:THIEF -1:PDASS>
 
 	% E1 is the NPC that the PC will speak with
 	% E2 is the item to fetch
@@ -177,7 +177,7 @@ Content
 Content
 	name <Basic Investigation Mission>
 	desc <The PC will be asked to gain some information.>
-	requires <*CS_GiveMission ~C:POLIT ~C:ACADE ~C:MEDIA>
+	requires <*CS_GiveMission ~C:POLIT ~C:ACADE ~C:MEDIA -1:PDASS>
 
 	% E1 is the NPC that the PC will speak with
 
@@ -223,7 +223,7 @@ Content
 Content
 	name <Basic Fighting Mission>
 	desc <The PC will be asked to go fight some mecha.>
-	requires <*CS_GiveMission ~C:MILIT>
+	requires <*CS_GiveMission ~C:MILIT -1:PDASS>
 
 	% E1 is the NPC that the PC will speak with
 	% E2 is the outdoors location where the encounter will be placed
