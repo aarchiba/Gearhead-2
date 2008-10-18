@@ -108,7 +108,7 @@ Speed 3
 Melee 5
 Name <Pick>
 desc <A tool for digging. Also a passable weapon.>
-category <MELEE TOOL>
+category <MINING TOOL>
 factions <GENERAL>
 SDL_PORTRAIT <item_pick.png>
 legality -10
@@ -160,7 +160,7 @@ desc <A long-bladed sword capable of causing large amounts of damage through its
 category <WEAPON MELEE ESSENTIAL>
 factions <GENERAL>
 SDL_PORTRAIT <item_longsword.png>
-legality 5
+legality -5
 Acc 1
 Speed 4
 Mass -4
@@ -234,7 +234,7 @@ desc <A primitive melee weapon. It features a wide cutting blade at the end.>
 category <WEAPON MELEE>
 factions <GENERAL>
 SDL_PORTRAIT <item_poleaxe.png>
-legality 10
+legality 5
 
 Melee 17
 Name <Scythe>
@@ -245,13 +245,13 @@ desc <A primitive melee weapon. Originally used to harvest crops, but these mode
 category <WEAPON MELEE>
 factions <GENERAL>
 SDL_PORTRAIT <item_scythe.png>
-legality 10
+legality 5
 
 EMelee 19
 Name <Chainsaw>
 Type <BRUTAL>
 SDL_PORTRAIT <item_chainsaw.png>
-Mass -6
+Mass 12
 Acc -1
 desc <An energy-cell powered cutting tool. Particularly suited for cutting through materials.>
 category <MELEE TOOL>
@@ -263,12 +263,29 @@ inv
 	name <Power Cell 100>
 end
 
+EMelee 19
+Name <Combat Chainsaw>
+Type <BRUTAL>
+SDL_PORTRAIT <item_chainsaw.png>
+Mass 8
+Acc 1
+Speed 3
+desc <An energy-cell powered cutting tool. Particularly suited for cutting through materials.>
+category <MELEE TOOL>
+factions <GENERAL>
+legality 15
+inv
+	PowerSource 4
+	mass -1
+	name <Power Cell 100>
+end
+
 EMelee 14
 Name <Chainsword>
 Type <BRUTAL>
 SDL_PORTRAIT <item_chainsaw.png>
 legality 10
-Mass -10
+Mass 3
 Acc 1
 Speed 4
 desc <A sword with a spinning chainsaw for a blade. A trigger on the hilt controls the chain itself.>

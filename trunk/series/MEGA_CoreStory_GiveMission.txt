@@ -23,6 +23,42 @@
 %% Seto's Bride
 
 Content
+	name <Go Duel Someone>
+	desc <The PC will be sent to go duel someone.>
+	requires <*CS_GiveMission 1:PDASS>
+
+	% E1 is the NPC the PC will speak with
+	% E2 is a local public scene
+	% E3 is a new NPC for the PC to duel
+	Element2 <Scene Public (Building|Meeting|Garage) !Near -7>
+	Element3 <NewNPC 2 -7>
+	Place3 </>
+
+	end <ifNPCDead %1%   DeleteNPC %3%  LoseComp 0 .%id%_loss>
+	.%id%_loss <+T-->
+
+	sub
+		Persona 1
+		greeting <if= PlotStatus %plotid% %id% else %pop%  Goto .%id%_GoGreet>
+		*.%id%_GoGreet <*HowAreYou .%id%_GoBriefing>
+		.%id%_GoBriefing <NewChat Say %id%01 AddChat %id%01 AddChat %id%02>
+		result%id%01 <NewChat Say %id%02 History %id%03 SMemo %id%04 &SetTargetNPC %3% WinComp %2% .%id%_accept>
+		.%id%_accept <+Tgt +Fch>
+		result%id%02 <NewChat Say %id%05 History %id%06 SMemo 0   NTBLoseComp 0 .%id%_refuse>
+		.%id%_refuse <+T-- +F-->
+		Msg%id%01 <Say, how would you like to take part in a duel? I know someone who's been looking for an opponent.>
+		Msg%id%02 <Great. You should be able to find %name3% over at %name2%. Good luck, \PC .>
+		Msg%id%03 <%name1% suggested that you challenge %name3% to a duel.>
+		Msg%id%04 <%name1% suggested that you challenge %name3% to a duel. You can find \OPR %3% in %name2%.>
+		Msg%id%05 <Really? That's too bad.>
+		Msg%id%06 <You refused %name1%'s offer to set you up with a duel.>
+		Prompt%id%01 <I'd like that.>
+		Prompt%id%02 <Sorry, I'm not interested.>
+		CPrompt%id%02 <if# PCFac ChatNPCFac Accept>
+	end
+
+
+Content
 	name <Enemy is working for enemy faction: Stop Them!>
 	desc <The PC will be asked to go stop the Enemy from doing something for an enemy faction.>
 	requires <*CS_GiveMission ~C:POLIC E:++ F:-- -1:PDASS>
