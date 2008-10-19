@@ -241,6 +241,7 @@ begin
 				AddNAtt( PC^.NA , NAG_Experience , NAS_Credits , -Cost );
 
 				CHAT_Message := MsgString( 'BUYREPLY' + BStr( Random( 4 ) + 1 ) );
+				if NPC <> Nil then DoleSkillExperience( NPC , 21 , ( ( Round( Ln( Cost ) ) * 5 ) div ( Part^.Scale * 2 + 1 ) ) + 1 );
 
 				DialogMSG( 'You have purchased ' + GearName( Part ) + '.' );
 

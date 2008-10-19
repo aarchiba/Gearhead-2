@@ -1956,14 +1956,18 @@ begin
 		InsertInvCom( GB^.Scene , E );
 		T := NAttValue( E^.NA , NAG_ComponentDesc , NAS_ELementID );
 		MMX := Pos( BStr( T ) , MapDesc ) - 1;
-		GBP := MiniMapPosToRegularPos( MMX mod 5 , MMX div 5 , D );
-		PlacedItems[ GBP.X , GBP.Y ] := E;
-		GBP.X := GBP.X + X;
-		GBP.Y := GBP.Y + Y;
-		ED := ( NAttValue( E^.NA , NAG_ParaLocation , NAS_D ) + D * 2 ) mod 8;
-		SetNAtt( E^.NA , NAG_Location , NAS_X , GBP.X );
-		SetNAtt( E^.NA , NAG_Location , NAS_Y , GBP.Y );
-		SetNAtt( E^.NA , NAG_Location , NAS_D , ED );
+		if ( MMX < 0 ) or ( MMX > 24 ) then begin
+			DialogMsg( 'ERROR: ' + GearName( E ) + ' ' + BStr( T ) + '/' + BStr( MMX ) + ' ' + MapDesc );
+		end else begin
+			GBP := MiniMapPosToRegularPos( MMX mod 5 , MMX div 5 , D );
+			PlacedItems[ GBP.X , GBP.Y ] := E;
+			GBP.X := GBP.X + X;
+			GBP.Y := GBP.Y + Y;
+			ED := ( NAttValue( E^.NA , NAG_ParaLocation , NAS_D ) + D * 2 ) mod 8;
+			SetNAtt( E^.NA , NAG_Location , NAS_X , GBP.X );
+			SetNAtt( E^.NA , NAG_Location , NAS_Y , GBP.Y );
+			SetNAtt( E^.NA , NAG_Location , NAS_D , ED );
+		end;
 	end;
 
 	{ Finally, render the SECRET MESSAGE, just like Groo the Wanderer but way more obvious. }
