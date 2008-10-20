@@ -270,7 +270,7 @@ Plot
 	% SubPlot1 contains the ambush battle
 	% SubPlot2 contains the victory, if the PC defeats the enemies
 	SubPlot1 <*CS_AmbushEncounter 3>
-	SubPlot2 <*CS_ThanksForRescue 2>
+	SubPlot2 <*CS_ThanksForRescue&FromCSEnemy 2>
 
 	% Needed Scripts
 	.%id1%_%plotid%_GoWin <ifNPCOK %2% else GoJustEnd Alert 4 StoryNote 2 SetPlotStatus %plotid% %id2%>
