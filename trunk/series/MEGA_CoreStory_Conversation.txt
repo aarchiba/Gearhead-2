@@ -383,38 +383,6 @@ Plot
 		NPC Monk
 	end
 
-Plot
-	name <Someone Else Looking>
-	desc <The PC will be informed of his new rival.>
-	requires <*CS_Conversation +Pla +Fin E:-- ~1:ACADE ~1:THIEF I:++>
-	Size 1
-
-	% E1 is the person with the information
-	% E2 is the new rival
-	Element2 <NewNPC -2 -7>
-
-	start <if= PlotStatus %plotid% %id% else %pop% ifNPCDead %1% LoseComp 0 .%id%_loss>
-	.%id%_loss <+T-- +F-->
-
-	sub
-		Persona 1
-		% V%id%01, V%id%02 = Question indicators
-		greeting <if= PlotStatus %plotid% %id% else %pop% Goto .%id%_GoIntro>
-		*.%id%_GoIntro <*LookingForItem &TargetItem .%id%_GoExplain>
-		.%id%_GoExplain <NewChat Say %id%01 StoryNote %id%02 AddChat %id%01 AddChat %id%02 FreezeNPC %2% &SetEnemyNPC %2% WinComp 0 .%id%_win>
-		.%id%_win <+T-- +F-->
-		Result%id%01 <NewChat Say %id%03 V= %id%01 1 AddChat %id%02>
-		Result%id%02 <NewChat Say %id%04 V= %id%02 1 AddChat %id%01>
-		Msg%id%01 <Who isn't looking for the \ITEM &TargetItem ? I just had someone named %name2% in earlier asking about it, though at least you have more manners than \OPR %2% .>
-		Msg%id%02 <%name1% revealed that %name2% is also looking for the \ITEM &TargetItem .>
-		Msg%id%03 <If I knew that don't you think I'd have it for myself? My advice, forget about the \ITEM &TargetItem . Go look for something easy to find, like the Argoseyer or the Holy Grail.>
-		Msg%id%04 <I don't know, I'm just glad \SPR %2% left without killing me. Why, you're not a friend of \OPR %2% are you?>
-		Prompt%id%01 <Tell me where the \ITEM &TargetItem is.>
-		CPrompt%id%01 <if= v%id%01 0 Accept>
-		Prompt%id%02 <Where did %name2% go?>
-		CPrompt%id%02 <if= v%id%02 0 Accept>
-	end
-
 %%  ****************************************
 %%  ***   +Pew  Enemy  Weapon  Program   ***
 %%  ****************************************
@@ -475,6 +443,101 @@ Content
 %%  *******************
 %%  ***   DEFAULT   ***
 %%  *******************
+
+Content
+	name <Help With This Case>
+	desc <The PC will be asked to help the NPC with an investigation.>
+	requires <*CS_Conversation 1:POLIC ~C:POLIC ~C:MEDIA ~C:THIEF ~+Gkn -1:ENEMY>
+
+	% E1 is the NPC that the PC will speak with
+
+	% Fail Conditions:
+	% - Mission giver dies before mission is activated
+
+	end <if= PlotStatus %plotid1% 0  ifNPCDead %1% LoseComp 0 .%id%_loss>
+	.%id%_loss <+T-->
+
+	.%id1%_%plotid1%_GoWin <SetPlotStatus %plotid2% %id2%     SMemo %id%01>
+	.%id1%_%plotid1%_GoLoss <SetPlotStatus %plotid3% %id3%    SMemo %id%02>
+
+	Msg%id%01 <You have completed the investigation. You should go tell %name1% at \SCENE NPCScene %1% all about it.>
+	Msg%id%02 <You have failed in your investigation. You should go tell %name1% at \SCENE NPCScene %1% .>
+
+
+	%% SubPlot1 is Gather Information
+	%% SubPlot2 is the winning condition
+	%% SubPlot3 is the loss condition
+	SubPlot1 <*:CS_GatherInformation 1>
+	SubPlot2 <*CS_WinTask 1>
+	SubPlot3 <*CS_LoseTask 1>
+
+	sub
+		Persona 1
+		greeting <if= PlotStatus %plotid1% 0 else .%id%_GoRemind if# PlotStatus %plotid% %id% else .%id%_GoOfferMission Goto %pop%>
+		*.%id%_GoOfferMission <*HowAreYou .%id%_GoBriefing>
+		*.%id%_GoRemind <*GenericMissionReminder>
+		.%id%_GoBriefing <NewChat Say %id%01 AddChat %id%01 AddChat %id%02>
+		Result%id%01 <History %id%02 SetPlotStatus %plotid1% %id1% Goto .%id1%_GoInform>
+		*Result%id%02 <*RejectMission .%id%_GoR2Exit>
+		.%id%_GoR2Exit <AddLawful -1 LoseComp 0 .%id%_changes>
+		.%id%_changes <+T-- +F-->
+		Msg%id%01 <I was wondering if you could help me with an investigation we're conducting. I could use someone to do a bit of the fieldwork; there's a lead that I need followed up, and don't have the manpower for.>
+		Msg%id%02 <%name1% asked you to help \OPR %1% investigate a case.>
+		Prompt%id%01 <Alright. Tell me what you know so far.>
+		Prompt%id%02 <Work for the cops? No way.>
+		CPrompt%id%02 <if# PCFac ChatNPCFac Accept>
+	end
+
+
+Content
+	name <Help With This Story>
+	desc <The PC will be asked to help the NPC with a news story.>
+	requires <*CS_Conversation 1:MEDIA ~C:MEDIA ~+Gkn>
+
+	% E1 is the NPC that the PC will speak with
+
+	% Fail Conditions:
+	% - Mission giver dies before mission is activated
+
+	end <if= PlotStatus %plotid1% 0  ifNPCDead %1% LoseComp 0 .%id%_loss>
+	.%id%_loss <+T-->
+
+	.%id1%_%plotid1%_GoWin <SetPlotStatus %plotid2% %id2%     SMemo %id%01>
+	.%id1%_%plotid1%_GoLoss <SetPlotStatus %plotid3% %id3%    SMemo %id%02>
+
+	Msg%id%01 <You won the mission. You should go tell %name1% at \SCENE NPCScene %1% all about it.>
+	Msg%id%02 <You lost the mission. You should go tell %name1% at \SCENE NPCScene %1% .>
+
+
+	%% SubPlot1 is Gather Information
+	%% SubPlot2 is the winning condition
+	%% SubPlot3 is the loss condition
+	SubPlot1 <*:CS_GatherInformation 1>
+	SubPlot2 <*CS_WinTask 1>
+	SubPlot3 <*CS_LoseTask 1>
+
+	sub
+		Persona 1
+		greeting <if= PlotStatus %plotid1% 0 else .%id%_GoRemind if# PlotStatus %plotid% %id% else .%id%_GoOfferMission Goto %pop%>
+		.%id%_GoOfferMission <ifChatNPCUnknown else .%id%_GoKnownGreeting ifChatNPCAlly else .%id%_GoUnknownGreeting Goto .%id%_GoKnownGreeting>
+		*.%id%_GoRemind <*GenericMissionReminder>
+		*.%id%_GoKnownGreeting <*HowAreYou .%id%_GoBriefing>
+		*.%id%_GoUnknownGreeting <*AreYouHereAboutJob&Investigation .%id%_GoBriefing>
+		.%id%_GoBriefing <NewChat Say %id%01 AddChat %id%01 AddChat %id%02>
+		Result%id%01 <EndChat Say %id%03 AddChat %id%03>
+		*Result%id%02 <*RejectMission .%id%_GoR2Exit>
+		.%id%_GoR2Exit <LoseComp 0 .%id%_changes>
+		.%id%_changes <+T-- +F-->
+		Result%id%03 <History %id%02 SetPlotStatus %plotid1% %id1% Goto .%id1%_GoInform>
+		Msg%id%01 <I was wondering if you could help me with something. I'm investigating a news story, but I could use someone with a bit more adventure-cred to help with the research.>
+		Msg%id%02 <%name1% asked you to help \OPR %1% investigate a news story.>
+		Msg%id%03 <Thanks! Let me tell you what I know so far...>
+		Prompt%id%01 <I'll see what I can do.>
+		Prompt%id%02 <Sorry, I'm only interested in fighting.>
+		CPrompt%id%02 <if# PCFac ChatNPCFac Accept>
+		Prompt%id%03 <[Continue]>
+	end
+
 
 Content
 	name <Enemy's a Bastard>

@@ -154,7 +154,7 @@ Plot
 	SubPlot3 <*ForcedInduction 4 2>
 
 	% Needed scripts for the duel
-	.%id1%_%plotid%_GoWin <FreezeNPC %4% &SetEnemyNPC %4% StoryNote 1 SetPlotStatus %plotid% %id2%>
+	.%id1%_%plotid%_GoWin <FreezeNPC %4% &SetEnemyNPC %4% SetXXRAttitude %4% XXR_A_IsSenior StoryNote 1 SetPlotStatus %plotid% %id2%>
 	.%id1%_%plotid%_GoLose <if= P%id%01 0 else GoCheckCash ifPCOK else GoPCDown &SetEnemyNPC 0 &SetEnemyFac 0 SetPlotStatus %plotid% %id3%>
 	GoPCDown <FreezeNPC %4% StoryNote 2 LoseComp 0 .next>
 	GoCheckCash <FreezeNPC %4% if= P%id%01 1 else GoNoBadEffect ifG PC$ 99999 else GoNotEnough cash+ -100000 Goto GoNoBadEffect>
@@ -175,7 +175,7 @@ Plot
 		GoMakeDeal <NewChat V= 1 1 Say 1 SMemo 2 AddChat 1 AddChat 2 AddChat 3>
 		result1 <NewChat Say 3 AddChat 4 AddChat 5 AddChat 6 AddChat 7>
 		result2 <EndChat Say 4 StoryNote 5 &SetEnemyNPC 0 &SetEnemyFac 0 SetPlotStatus %plotid% %id3%>
-		result3 <NewChat Say 6 StoryNote 7 &SetEnemyNPC %4% FreezeNPC %4% NegateComp 0 .negate>
+		result3 <NewChat Say 6 StoryNote 7 &SetEnemyNPC %4% SetXXRAttitude %4% XXR_A_IsSenior FreezeNPC %4% NegateComp 0 .negate>
 		.negate <+T-- +P-->
 		result4 <EndChat Say 8 SMemo 9 History 10 SetPlotStatus %plotid% %id1%>
 		result5 <ifG PC$ 99999 else GoR5NoMoney ifConversation SkillTar StoryDL else GoR5Fail EndChat Say 8 SMemo 11 History 10 P= 1 1 SetPlotStatus %plotid% %id1%>

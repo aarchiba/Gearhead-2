@@ -1076,7 +1076,7 @@ sub
 	Team 1
 
 	Team 2
-	name <Civilian>
+	name <Citizens>
 	setally 1 3
 	Passive
 
@@ -1407,7 +1407,7 @@ Special <NoMSID>
 update <if# V1 0 else GoHide ifG ComTime V1 else GoHide  SetStat STAT_MetaVisibility 0  Goto GoSetOrders>
 GoSetOrders <GrabSource GSetNAtt NAG_EpisodeData NAS_Orders 3>
 use <ifG StatVal STAT_MetaVisibility -1  Print -1  Goto GoStartCombat>
-ATTACK <ifG StatVal STAT_MetaVisibility -1    ifUStealth 15 else GoAutoAttack ifYesNo -3 -4 -5 else GoAvoidAttack Goto GoAutoAttack>
+ATTACK <ifG StatVal STAT_MetaVisibility -1   ifG PCScale 0    ifUStealth 15 else GoAutoAttack ifYesNo -3 -4 -5 else GoAvoidAttack Goto GoAutoAttack>
 GoAutoAttack <Alert -2 Goto GoStartCombat>
 GoAvoidAttack <Print -6 AddSociable -1>
 % In the dynamic scene, L1 = This encounter's NID

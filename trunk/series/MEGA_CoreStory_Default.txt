@@ -1,4 +1,72 @@
 %%
+%% *:CS_DiscoverNPCKidnappedByCSE
+%%	&NotReally	It wasn't really a kidnapping, or some other misunderstanding
+%%
+%% A very specific subplot. The NPC you're searching for has been kidnapped
+%% by the core story enemy... or apparently so, anyhow.
+%%
+%% When this subplot concludes, the following trigger must be set:
+%%		.%id%_%plotid%_GoDiscover
+%%
+%% PARAM1: The scene where the NPC supposedly is
+%% PARAM2: The NPC being sought
+%%
+
+Plot
+	name <Enemy Team Was Just Here>
+	desc <Upon searching for NPC, you learn that they've disappeared. Then you get attacked.>
+	requires <*:CS_DiscoverNPCKidnappedByCSE>
+	Size 3
+
+	% E1 is the scene where the NPC supposedly is
+	% E2 is the NPC being sought
+	% E3 is a character in E1 who can tell the PC that E2 has left
+	Element3 <Character Lawful !Near -7 NoMecha !Okay 2 NEVERFAIL>
+	Place3 <1 (Citizens) pass ally>
+
+	% This plot cannot fail. E3 isn't actually important. You don't even need to win
+	% the fight against the core story enemy.
+	% Entering the location primes the attack; exiting to the city map executes the attack.
+	% The attack will be handled with a dynamic encounter.
+
+	% p%id%01 = Attack Primed
+	START <if= p%id%01 1 else .%id%_GoCheckPrimer ifScene .%id%_desc Goto .%id%_GoStartAttack>
+	.%id%_desc <Outdoors>
+	.%id%_GoCheckPrimer <if= SceneID %1% p= %id%01 1>
+	.%id%_GoStartAttack <Alert %id%01 PMemo %id% %id%02 History %id%03 SavePos Dynamic 2 StoryDL 100 .%id%_nu1 .%id%_nu2  DynaFaction &EnemyFac WinSubPlot %plotid% Trigger0 .%id%_%plotid%_GoDiscover>
+	.%id%_nu1 <if= T1 0 Return>
+	.%id%_nu2 <if= T2 0 if= L1 0 L= 1 1 XPV 100 Salvage>
+
+	Msg%id%01_1 <As you leave the building, you are suddenly attacked! These mecha must be connected with the disappearance of %name2%.>
+	CMsg%id%01_1 <if= &EnemyFac 0 ifNPCDead &EnemyNPC Accept>
+	Msg%id%01_2 <As you leave the building, you are suddenly attacked by \PERSONA &EnemyNPC 's henchmen! It's clear that they must be responsible for the disappearance of %name2%.>
+	CMsg%id%01_2 <if= &EnemyFac 0 ifNPCOK &EnemyNPC Accept>
+	Msg%id%01_3 <As you leave the building, you are suddenly attacked! It's clear that \FACTION &EnemyFac must have something to do with the disappearance of %name2%.>
+	CMsg%id%01_3 <if# &EnemyFac 0 Accept>
+	Msg%id%02_1 <You learned that %name2% has been kidnapped.>
+	CMsg%id%02_1 <if= &EnemyFac 0 ifNPCDead &EnemyNPC Accept>
+	Msg%id%02_2 <You learned that %name2% has been kidnapped by \PERSONA &EnemyNPC .>
+	CMsg%id%02_2 <if= &EnemyFac 0 ifNPCOK &EnemyNPC Accept>
+	Msg%id%02_3 <You learned that %name2% has been kidnapped by \FACTION &EnemyFac .>
+	CMsg%id%02_3 <if# &EnemyFac 0 Accept>
+	Msg%id%03_1 <You learned that %name2% had been kidnapped.>
+	CMsg%id%03_1 <if= &EnemyFac 0 ifNPCDead &EnemyNPC Accept>
+	Msg%id%03_2 <You learned that %name2% had been kidnapped by \PERSONA &EnemyNPC .>
+	CMsg%id%03_2 <if= &EnemyFac 0 ifNPCOK &EnemyNPC Accept>
+	Msg%id%03_3 <You learned that %name2% had been kidnapped by \FACTION &EnemyFac .>
+	CMsg%id%03_3 <if# &EnemyFac 0 Accept>
+
+	sub
+		Persona 3
+		greeting <if= PlotStatus %plotid% %id% else GoChat Goto GoGreet>
+		GoChat <NewChat SayAnything>
+		*GoGreet <*LookingForNPC&NoFailure %2% GoExplain GoExplain>
+		GoExplain <NewChat Say 1 PMemo %id% 2>
+		Msg1 <%name2% was here earlier, but I saw \OPR %2% talking to some big guys and they left in a hurry. Is \SPR %2% in any trouble?>
+		Msg2 <You learned that %name2% has been kidnapped.>
+	end
+
+%%
 %% *CS_ThanksForAssist
 %%
 %% The PC didn't exactly rescue this NPC, but he did assist.
@@ -302,105 +370,4 @@ Content
 		update <if= PlotStatus %plotid% %id% else GoHide SetStat STAT_MetaVisibility 0  Goto GoSetOrders>
 	end
 
-%%
-%% *CS_WinDuelVs Content
-%%
-%%
-%% The PC has won a duel against the NPC.
-%%
-%% The parent plot sets the plot status to this layer's ID when ready.
-%%
-%% Param1: The Challenger
-%%
-
-Content
-	name <You should go see MILIT...>
-	desc <The NPC will reccomend that the PC go ask someone about a job.>
-	requires <*CS_WinDuelVs -L:ENEMY -C:THIEF>
-
-	% E1 is the NPC.
-	% E2 is the person to see about the job
-	% E3 is a public scene for the meeting.
-	Element2 <Character "MILIT" !Near -7 !Ally -7 !Okay -3 !Okay 1>
-	Element3 <Scene Building Public !Near -7 !Ally 2>
-
-	start <if= PlotStatus %plotid% %id% else %pop% ifNPCDead %1% SMemo 0 WinComp 0 .%id%_loss>
-	.%id%_loss <+T-- +F-->
-
-	sub
-		Persona 1
-		greeting <if= PlotStatus %plotid% %id% else %pop% ifNPCOK %2% else .%id%_GoE2Died NewChat Say %id%01 SMemo %id%02 &SetTargetNPC %2% WinComp %3% .%id%_win>
-		.%id%_GoE2Died <NewChat Say %id%03 SMemo 0 WinComp 0 .%id%_draw>
-		.%id%_win <+Tgt +Fmi>
-		.%id%_draw <+T-- +F-->
-		Msg%id%01 <You beat me. You should go talk with %name2% in %name3%; I hear that \SPR %2% 's looking for a good pilot.>
-		Msg%id%01_1 <You won our duel. A fighter with your talents could really go places... I hear that %name2% is looking for a pilot over at %name3%. You should go talk with \OPR %2% .>
-		CMsg%id%01_1 <ifNPCSociable Accept>
-		Msg%id%01_2 <Good match. I've got a tip for you- %name2% in %name3% is looking for a mecha pilot. You should definitely check it out.>
-		CMsg%id%01_2 <ifNPCShy Accept>
-		Msg%id%01_3 <You did half decent out there, I thought. If you're interested I know of a job opening. %name2% in %name3% needs a pilot. Tell \OPR %2% I sent you.>
-		CMsg%id%01_3 <ifNPCEasygoing Accept>
-		Msg%id%01_4 <You've shown me the true art of fighting. I was going to go to %name3% and do a mission for %name2% , but you should go instead. You've proven yourself the better pilot.>
-		CMsg%id%01_4 <ifNPCPassionate Accept>
-		Msg%id%01_5 <That was a great fight. I've got a tip for you- %name2% in %name3% is looking for a pilot. You've proven yourself capable, I think you could get the job.>
-		CMsg%id%01_5 <ifNPCCheerful Accept>
-		Msg%id%01_6 <I can't believe I lost to you... I was supposed to run a mission for %name2% at %name3% today, but now that my mecha's in the shop I can't. If you wanted you could go take the mission yourself.>
-		CMsg%id%01_6 <ifNPCMelancholy Accept>
-		Msg%id%02 <%name1% reccomended that you go ask %name2% in %name3% for a mission.>
-		Msg%id%03 <You won the duel. Congratulations.>
-	end
-
-%%
-%% *CS_LoseDuelVs Content
-%%
-%%
-%% The PC has lost a duel against the NPC.
-%%
-%% The parent plot sets the plot status to this layer's ID when ready.
-%%
-%% Param1: The Challenger
-%%
-
-Content
-	name <Job Advice>
-	desc <The NPC will suggest the PC go ask someone for a job.>
-	requires <*CS_LoseDuelVs ~1:FRIEND ~1:PDASS ~P:-- -L:ENEMY>
-
-	% E1 is the NPC.
-	% E2 is the person to ask about the job.
-	% E3 is a scene for the meeting.
-	Element2 <Character !Ally -7 !Near -7>
-	Element3 <Scene Building Public !Near -7 !Okay 2>
-
-	start <if= PlotStatus %plotid% %id% else %pop% ifNPCDead %1% SMemo 0 LoseComp 0 .%id%_loss>
-	.%id%_loss <+T-- +F-->
-
-	sub
-		Persona 1
-		greeting <if= PlotStatus %plotid% %id% else %pop% ifNPCOK %2% else .%id%_GoTrivial NewChat Say %id%01 SMemo %id%02 History %id%03 &SetTargetNPC %2% LoseComp %3% .%id%_changes>
-		.%id%_GoTrivial <NewChat Say %id%04 SMemo 0 NTBLoseComp 0 .%id%_loss>
-		.%id%_changes <+Tgt +Fmi>
-		.%id%_loss <+T-- +F-->
-		Msg%id%01 <Hey, don't be disappointed about losing, you tried your best. Here's something that might cheer you up- I hear that %name2% is looking to hire a cavalier. If you get over to %name3% right away maybe you could get the job.>
-		Msg%id%02 <After beating you in a duel, %name1% reccomended that you ask %name2% at %name3% for a job.>
-		Msg%id%03 <%name1% reccomended that you ask %name2% for a job.>
-		Msg%id%04 <You lost the duel. Good for me.>
-	end
-
-Content
-	name <Ha ha!>
-	desc <The NPC will just chide the PC, then end the plot.>
-	requires <*CS_LoseDuelVs>
-
-	% E1 is the NPC.
-
-	start <if= PlotStatus %plotid% %id% else %pop% ifNPCDead %1% SMemo 0 LoseComp 0 .%id%_loss>
-	.%id%_loss <+T-- +F-->
-
-	sub
-		Persona 1
-		greeting <if= PlotStatus %plotid% %id% else %pop% NewChat Say %id%01 SMemo 0 NTBLoseComp 0 .%id%_changes>
-		.%id%_changes <+T-- +F-->
-		Msg%id%01 <You lost the duel. Good for me.>
-	end
 

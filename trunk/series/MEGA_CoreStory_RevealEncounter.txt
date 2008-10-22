@@ -171,7 +171,7 @@ Content
 		clue29 <Alert 7>
 		clue32 <if= PlotStatus %plotid% %id1% else GoNoUse ifCodeBreaking HardSkillTar StoryDL else GoFail  Alert 3 Goto GoReveal>
 		clue34 <Alert 7>
-		clue37 <if= PlotStatus %plotid% %id1% else GoNoUse ifInvestigation SkillTar StoryDL else GoFail     Alert 4 Goto GoReveal>
+		clue37 <if= PlotStatus %plotid% %id1% else GoNoUse ifInsight SkillTar StoryDL else GoFail     Alert 4 Goto GoReveal>
 		GoReveal <StoryNote 5 SetEncounterActive %2% WinSubPlot %plotid% XPV 100>
 		GoFail <Alert 6>
 		Msg1 <This diary tells all the mundane details of being a henchman. Still, you're certain that there must be a clue in it somewhere.>
@@ -258,6 +258,7 @@ Content
 %%
 %% *:CS_RevealEncounter_NPCBase Content
 %%		&PirateShip	The base is a pirate ship. Arr!
+%%		&EnemyNPC	The NPC being sought is the core story enemy.
 %%
 %% You're searching for the base/ship/hideout of a particular NPC.
 %% The name may be expressed here as "%name3%'s %name2%", for instance
@@ -271,6 +272,81 @@ Content
 %% PARAM2: The MetaScene being sought
 %% PARAM3: The NPC in charge of it
 %%
+
+Content
+	name <Paparazzi's Delight>
+	desc <You encounter a small group of henchmen, and can track them to base.>
+	%% Exactly like Ranger's Delight below, but here you're tracking a specific person.
+	requires <*:CS_RevealEncounter_NPCBase>
+	Size 5
+
+	% E1 is the outdoor scene where the encounter is
+	% E2 is the MetaScene being sought
+	% E3 is the NPC being sought
+	% E4 is an encounter
+	Element4 <Prefab>
+	Place4 <1>
+
+	% P%id%01 = Initialization Counter
+	% P%id%02 = Tracking Difficulcy Number
+
+	% This particular subplot can't fail. Acers!
+
+	update <if= P%id%01 0 P= %id%01 1 P= %id%02 SkillTar StoryDL>
+	&%id%_RevealEncounter <SetEncounterActive %2% WinSubPlot %plotid%>
+
+	sub
+		MetaScene 4 2
+		rumor%id% <%name3%'s henchmen have been seen in %name1%.>
+
+		% V1 = Encounter Over Counter
+		% V2 = Number of failed attempts to track
+		MapWidth 50
+		MapHeight 50
+
+		% Once the PC has defeated all the raiders, they get an Awareness roll to determine
+		% the location of their main force.
+
+		nu1 <if= T1 0   Return>
+		nu2 <if= T2 0   if= V1 0   V= 1 1   ifUAwareness p%id%02 else GoTrackFailed Alert 1 PMemo %id% 2 History 2 &%id%_RevealEncounter Return SeekGate %2% if= L2 0 XPV 100>
+		GoTrackFailed <Alert 3   L+ 2 1  P+ %id%02 -2 P+ %id%02 -d6   Return>
+
+		end <V= 1 0>
+
+		Msg1 <After defeating %name3%'s henchmen, you manage to track their movements back to \PPR %3% %name2%.>
+		Msg2 <You tracked %name3%'s henchmen to %name1%.>
+		Msg3 <You have defeated the henchmen, but still have no idea where %name3% is.>
+
+		sub
+			team 1
+			SetEnemy 2
+			ParaX 5
+			ParaY 5
+
+			team 2
+			SetEnemy 1
+			Deploy <if= PlotStatus %plotid% %id% SetSelfFaction &EnemyFac   WMecha 2 StoryDL 100>
+			ParaX 25
+			ParaY 25
+		end
+	end
+	inv
+		STC CORE-INVISIBLEENCOUNTER
+		name <Henchmen>
+		%% If the PC manages a stealth roll upon approaching this encounter, the
+		%% raiders may be followed back to their base instead of being fought.
+		%% V1 = Timer; will only attack once every 3 hours
+		update <if= PlotStatus %plotid% %id% else GoHide ifG ComTime V1 else GoHide SetStat STAT_MetaVisibility 0  Goto GoSetOrders>
+		use <ifG StatVal STAT_MetaVisibility -1    ifUStealth SkillTar StoryDL else GoAutoAttack   ifYesNo 1 2 3 else GoAutoAttack Goto GoTrack>
+		attack <ifG StatVal STAT_MetaVisibility -1  ifG PCScale 0    ifUStealth SkillTar StoryDL else GoAutoAttack ifYesNo 1 2 3 else GoAutoAttack Goto GoTrack>
+		GoAutoAttack <V= 1 ComTime V+ 1 10800   Alert -2 Exit Destination>
+		GoTrack <Alert 4 PMemo %id% 5 History 5 XPV 100 &%id%_RevealEncounter Exit %1% SeekGate %2%>
+		Msg1 <You encounter a small group of %name3% 's henchmen.>
+		Msg2 <Trail them.>
+		Msg3 <Approach them.>
+		Msg4 <You track %name3%'s henchmen to \PRP %3% %name2%.>
+		Msg5 <You tracked %name3%'s henchmen to %name1%.>
+	end
 
 Plot
 	name <All-Knowing Smuggler>
@@ -415,6 +491,80 @@ Content
 %% PARAM1: The outdoors scene where the encounter is
 %% PARAM2: The MetaScene being sought
 %%
+
+Content
+	name <Ranger's Delight>
+	desc <You encounter a small group of raiders, and can track them to base.>
+	%% How you track someone in space I'm not really sure. Minovsky particles?
+	requires <*:CS_RevealEncounter_Raiders>
+	Size 5
+
+	% E1 is the outdoor scene where the encounter is
+	% E2 is the MetaScene being sought
+	% E3 is an encounter
+	Element3 <Prefab>
+	Place3 <1>
+
+	% P%id%01 = Initialization Counter
+	% P%id%02 = Tracking Difficulcy Number
+
+	% This particular subplot can't fail. Acers!
+
+	update <if= P%id%01 0 P= %id%01 1 P= %id%02 SkillTar StoryDL>
+	&%id%_RevealEncounter <SetEncounterActive %2% WinSubPlot %plotid%>
+
+	sub
+		MetaScene 3 2
+		rumor%id% <some raiders have been seen in %name1%.>
+
+		% V1 = Encounter Over Counter
+		% V2 = Number of failed attempts to track
+		MapWidth 50
+		MapHeight 50
+
+		% Once the PC has defeated all the raiders, they get an Awareness roll to determine
+		% the location of their main force.
+
+		nu1 <if= T1 0   Return>
+		nu2 <if= T2 0   if= V1 0   V= 1 1   ifUAwareness p%id%02 else GoTrackFailed Alert 1 PMemo %id% 2 History 2 &%id%_RevealEncounter Return SeekGate %2% if= L2 0 XPV 100>
+		GoTrackFailed <Alert 3   L+ 2 1  P+ %id%02 -2 P+ %id%02 -d6   Return>
+
+		end <V= 1 0>
+
+		Msg1 <After defeating the raiders, you manage to track their movements back to a point in %name1%.>
+		Msg2 <You tracked the raiders to %name1%.>
+		Msg3 <You have defeated the raiders, but still have no idea where they're coming from.>
+
+		sub
+			team 1
+			SetEnemy 2
+			ParaX 5
+			ParaY 5
+
+			team 2
+			SetEnemy 1
+			Deploy <if= PlotStatus %plotid% %id% SetSelfFaction &EnemyFac   WMecha 2 StoryDL 100>
+			ParaX 25
+			ParaY 25
+		end
+	end
+	inv
+		STC CORE-INVISIBLEENCOUNTER
+		name <Raiders>
+		%% If the PC manages a stealth roll upon approaching this encounter, the
+		%% raiders may be followed back to their base instead of being fought.
+		%% V1 = Timer; will only attack once every 3 hours
+		update <if= PlotStatus %plotid% %id% else GoHide ifG ComTime V1 else GoHide SetStat STAT_MetaVisibility 0  Goto GoSetOrders>
+		use <ifG StatVal STAT_MetaVisibility -1    ifUStealth SkillTar StoryDL else GoAutoAttack   ifYesNo 1 2 3 else GoAutoAttack Goto GoTrack>
+		attack <ifG StatVal STAT_MetaVisibility -1  ifG PCScale 0    ifUStealth SkillTar StoryDL else GoAutoAttack ifYesNo 1 2 3 else GoAutoAttack Goto GoTrack>
+		GoAutoAttack <V= 1 ComTime V+ 1 10800   Alert -2 Exit Destination>
+		GoTrack <Alert 4 PMemo %id% 5 History 5 XPV 100 &%id%_RevealEncounter Exit %1% SeekGate %2%>
+		Msg1 <You encounter a small group of raiders. This obviously isn't their main force.>
+		Msg2 <Trail them.>
+		Msg3 <Approach them.>
+		Msg4 <You track the raiders to a meeting point in %name1%.>
+		Msg5 <You tracked the raiders to %name1%.>
+	end
 
 Content
 	name <Fifth Column>

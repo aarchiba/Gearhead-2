@@ -9,6 +9,76 @@
 %    or the palette enemy faction
 
 Plot
+	name <They Say You're Tough>
+	Size 1
+	desc <You will be challenged to a duel.>
+	requires <#A +Tgt (+F--|+Fch) (T:ADVEN|T:PDASS) (C:ADVEN|P:PDASS) -1:FRIEND -1:LOVER -1:FAMILY ~+Gpo ~+Gfa>
+
+	% E1 is the scene where the meeting will take place.
+	% E2 is the pilot being met.
+	% E3 is a location for the duel.
+	Element1 <Grab 6>
+	Element2 <Grab 5>
+	Place2 <1 (Citizens) pass>
+	Element3 <Scene Environs !Near -7>
+
+	% SubPlot1 is the duel itself
+	% SubPlot2 is the path if the PC wins the duel
+	% SubPlot3 is the path if the PC loses the duel
+	SubPlot1 <*CS_Duel 2 1 3>
+	SubPlot2 <*CS_WinDuelVs 2>
+	SubPlot3 <*CS_LoseDuelVs 2>
+
+	% V1 = Initialization Counter
+	update <if= v1 0 V= 1 1 NPCLevel %2% StoryDL>
+
+	% As long as we're still at the first phase, the NPC's death will end the plot.
+	start <if= PlotStatus %plotid% 0 ifNPCDead %2% LoseComp 0 .changes>
+	.changes <+T-- +F-->
+
+	.%id1%_%plotid%_GoWin <ifNPCOK %2% else GoE2Died SMemo 1 SetPlotStatus %plotid% %id2%>
+	.%id1%_%plotid%_GoLose <SMemo 2 SetPlotStatus %plotid% %id3%>
+	GoE2Died <SMemo 0 WinComp 0 .changes>
+
+	Msg1 <You bested %name2% in a duel; \SPR %2% is waiting for you at %name1%.>
+	Msg2 <You were defeated by %name2% in a duel; \SPR %2% is waiting for you at %name1%.>
+
+	sub
+		Persona 2
+		greeting <if= PlotStatus %plotid% 0 else GoChat Goto GoGreet>
+		GoChat <NewChat SayAnything>
+		*GoGreet <*TheySayYoureTough GoChallenge>
+		GoChallenge <NewChat Say 1 AddChat 1 AddChat 2>
+		result1 <EndCHat Say 2 History 3 SMemo 4 SetPlotStatus %plotid1% %id1%>
+		result2 <NewChat Say 5 AddRenown -10  History 6 SMemo 0 LoseComp 0 .loss>
+		.loss <+T-- +F-->
+		Msg1 <I'd like to find out for myself. I challenge you to a duel- what do you say, me and you in %name3% right now?>
+		Msg1_1 <>
+		CMsg1_1 <ifNPCSociable Accept>
+		Msg1_2 <>
+		CMsg1_2 <ifNPCShy Accept>
+		Msg1_3 <>
+		CMsg1_3 <ifNPCEasygoing Accept>
+		Msg1_4 <>
+		CMsg1_4 <ifNPCPassionate Accept>
+		Msg1_5 <>
+		CMsg1_5 <ifNPCCheerful Accept>
+		Msg1_6 <>
+		CMsg1_6 <ifNPCMelancholy Accept>
+		Msg2 <Cool. Meet me in %name3% whenever you're ready.>
+		Msg3 <%name2% challenged you to a mecha duel.>
+		Msg4 <%name2% challenged you to a mecha duel. You should go meet \OPR %2% in %name3% when you're ready.>
+		Msg5 <You're chickening out? That's not cool at all.>
+		Msg6 <%name2% challenged you to a mecha duel, but you refused.>
+		Prompt1 <You're on. Let's do it.>
+		Prompt2 <Sorry, but I've got more important things to do.>
+
+		STC MS_CAFE
+		SetID 1
+	end
+
+
+Plot
 	name <Conference Corporate Mission: L5 Region>
 	desc <Go to a conference, find someone who's hiring.>
 	requires <#A +Tgs (+Fcc|+Fmi|+F--) (P:--|P:CORPO) (L:MAQUI|L:FCOMS|L:RISHI)>

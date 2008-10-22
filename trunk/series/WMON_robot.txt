@@ -219,17 +219,17 @@ torso
 	recharge 1
 	mount
 		inv
-			gear 4 2 6
+			Gun 6
 			name <Assault Rifle>
 			mass -2
-			stat 1 7
-			stat 2 -1
-			stat 4 3
+			Range 7
+			Acc -1
+			Speed 3
 			caliber <6mm Rifle>
 			sub
 				% Ammunition
-				gear 5 2 6
-				stat 8 40
+				Ammo 6
+				Magazine 40
 				caliber <6mm Rifle>
 			end
 		end

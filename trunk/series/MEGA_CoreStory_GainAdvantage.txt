@@ -194,7 +194,7 @@ Content
 		CPrompt1 <ifG PC$ v1 Accept>
 		Prompt2 <I'll think about it.>
 		Prompt3 <Why are you telling me this?>
-		CPrompt3 <ifInvestigation SkillTar StoryDL Accept>
+		CPrompt3 <ifInsight SkillTar StoryDL Accept>
 		Prompt4 <In that case, why are you keeping it a secret?>
 		CPrompt4 <ifConversation SkillTar StoryDL Accept>
 
@@ -311,7 +311,7 @@ Content
 	% E1 is a garage
 	% E2 is the mercenary you can find there
 	% E3 is a location for the duel
-	Element1 <Scene Public Garage !Near -7>
+	Element1 <Scene Public (Garage|Spaceport) !Near -7>
 	Element2 <Prefab>
 	Place2 <1 SD ally>
 	Element3 <Scene Environs !Near -7>

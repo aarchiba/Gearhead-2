@@ -22,6 +22,147 @@
 %%
 
 Content
+	name <The Enemy's Decision>
+	desc <Your enemy consults their mentor; the PC of course thinks it's a kidnapping>
+	requires <*:CS_GatherInformation E:A.env (E:M.---|E:M.mer|E:M.com)>
+	changes <E:M>
+	Size 5
+
+	% E1 is the person who tells the PC
+	% E2 is an environs scene for the enemy base
+	% E3 is the base itself
+	% E4 is a local public scene for the mentor's home
+	% E5 is the mentor
+	% E6 is the enemy
+	% E7 is a secret
+	Element2 <Scene Environs !Near -7>
+	Element3 <Prefab>
+	Place3 <2>
+	Element4 <Scene Building Public !Near -7 !Okay -3>
+	Element5 <NewNPC 4 4 Old Old Old Heroic Renowned>
+	Place5 <3 (Citizens) pass>
+	Element6 <Grab 1>
+	Place6 <3 (Guards) sd>
+	Element7 <Prefab>
+
+	%% FAIL CONDITIONS:
+	%% - DiscoverNPCisMissing Fails
+	%% - Reveal NPC Base Fails
+
+	% P%id%01 = Initialization Counter
+	% P%id%02 = Have learned secret
+
+	update <if= p%id%01 0 p= %id%01 1 SetPlotStatus %plotid1% %id1% SetPlotStatus %plotid3% %id3%>
+	start <ifSubPlotLost %plotid1% else .%id%_GoCheckSP2   Goto .%id%_GoLoseMission>
+	.%id%_GoCheckSP2 <ifSubPlotLost %plotid2%   Goto .%id%_GoLoseMission>
+	.%id%_GoLoseMission <CancelSubPlot %plotid3%  LoseSubPlot %plotid% Trigger0 .%id%_%plotid%_GoLoss>
+
+	.%id1%_%plotid1%_GoDiscover <SetPlotStatus %plotid2% %id2%>
+	.%id3%_%plotid3%_GoLearnSecret <P= %id%02 1>
+
+	% SubPlot1 is the revelation that the NPC is missing
+	% SubPlot2 is the Reveal NPC Base task
+	% SubPlot3 is the secret revelation
+	SubPlot1 <*:CS_DiscoverNPCKidnappedByCSE&NotReally 4 5>
+	SubPlot2 <*:CS_RevealEncounter_NPCBase&EnemyNPC 2 3 6>
+	SubPlot3 <*:CS_LearnSecretAboutNPC 7 5>
+
+	sub
+		Persona 1
+		.%id%_GoInform <NewChat Say %id%01 SMemo %id%02 History %id%03>
+		Msg%id%01 <%name6% has recently been in contact with the famous mecha trainer %name5%. I don't know what kind of history those two have, but you can ask \OPR %5% about it at %name4%.>
+		Msg%id%02 <You learned that %name6% was recently in contact with %name5%; \SPR %5% can be found at %name4%.>
+		Msg%id%03 <You learned that %name6% was in town to see %name5%.>
+
+		STC MS_EmptyBuilding
+		SetID 3
+		start <if= L1 0 L= 1 1 ForceChat %6%>
+		end <MoveNPC %5% %4%>
+
+		Persona 5
+		special <UNLISTED>
+		greeting <if= V1 0 else GoBeenBefore NewChat Say 2 V= 1 1 AddCHat 1 AddChat 2>
+		GoBeenBefore <NewChat Say 1>
+		result1 <NewChat Say 3 AddChat 3>
+		result2 <NewChat Say 4 AddChat 3>
+		result3 <NewChat Say 5 AddChat 4>
+		result4 <EndChat Say 6 History 7 Print 8 Time 3600   SkillXP 1 100   SkillXP 2 100   SkillXP 3 100   SkillXP 4 100   SkillXP 5 100>
+		Msg1 <Don't worry about me. I can get home by myself.>
+		Msg2 <Sorry for causing all this fuss... %name6% always did have a problem with subtlety. Thanks for trying to rescue me, anyhow, even if I didn't really need it.>
+		Msg3 <Ever since \SPR %6% was my student \SPR %6% 's been like that. I think \SPR %6% isn't very happy with the direction \PPR %6% life has taken; \SPR %6% came to me for advice.>
+		Msg4 <Oh, no, not at all. %name6% is a former student of mine; \SPR %6% just came to see me for some advice. I think \SPR %6% isn't very happy with the direction \PPR %6% life has taken.>
+		Msg5 <I told \OPR %6% that \SPR %6% has to do what \SPR %6% thinks is right. I just hope that I managed to instill in \OPR %6% a good sense of right and wrong...>
+		Msg6 <Well, I retired a while back, but I've still got a few tricks up my sleeve. Let me show you what I know about mecha combat.>
+		Msg7 <%name5% taught you a few things about mecha combat.>
+		Msg8 <You train with %name5% for a short time.>
+		Prompt1 <What is %name6%'s problem, anyhow?>
+		Prompt2 <Are you okay? Did %name6% hurt you?>
+		Prompt3 <What kind of advice did you give \OPR %6% ?>
+		Prompt4 <Do you think you could spare some time to teach me?>
+
+		Persona 6
+		special <UNLISTED NOESCAPE>
+		greeting <EndChat Say 1 AddChat 1 AddChat 2 AddChat 3>
+		GoNormalEnding <History 5 History 6 Goto GoEnd>
+		GoGoodEnding <PCFriend %6% History 5 History 11 Goto GoEnd>
+		GoEnd <Print 4 FreezeNPC %6%   SetXXRMotivation %6% XXR_M_Seeker   ForceChat %5%   WinSubPlot %plotid% Trigger0 .%id%_%plotid%_GoWin>
+		result1 <EndChat Say 2 Goto GoNormalEnding>
+		result2 <EndChat Say 3 AddEasygoing -d10   Goto GoNormalEnding>
+		result3 <EndChat Say 7 AddChat 4 AddChat 5 AddChat 6>
+		result4 <ifTaunt SkillTar StoryDL else GoR4Fail EndChat Say 8 Goto GoGoodEnding>
+		GoR4Fail <EndChat Say 9 Goto GoNormalEnding>
+		result5 <EndChat Say 10 Goto GoGoodEnding>
+		result6 <EndChat Say 10 Goto GoGoodEnding>
+		Msg1 <\PC ... You are a persistent one, I'll give you that. Unfortunately I am in no mood to fight just now.>
+		Msg1_1 <Ah, I heard that there was someone looking for me. I should have guessed that it would be you... I'm afraid that I really must be going, I'm in no mood to kill you right now.>
+		CMsg1_1 <ifNPCSociable Accept>
+		Msg1_2 <What do you want? I'm in no mood for a fight today.>
+		CMsg1_2 <ifNPCShy Accept>
+		Msg1_3 <Look at who just wandered in here. Couldn't you have waited a few minutes until after I'd gone? I'm in no mood to fight you today.>
+		CMsg1_3 <ifNPCEasygoing Accept>
+		Msg1_4 <You!!! What are you doing here!? I would kill you for intruding on my business, but my work here is finished, and I'm in no mood to dirty my blade with your blood...>
+		CMsg1_4 <ifNPCPassionate Accept>
+		Msg1_5 <Well, look at this. If I were in any mood to fight right now this would be my lucky day.>
+		CMsg1_5 <ifNPCCheerful Accept>
+		Msg1_6 <What now!? Oh, it's you... why must you continue to accost me, even when I'm having a day off? Get lost. I'm in no mood to fight.>
+		CMsg1_6 <ifNPCMelancholy Accept>
+		Msg2 <You think that I've harmed %name5%? You really are ignorant. I have no more time to waste on you, \PC . Until we meet again...>
+		Msg2_1 <What, can't you see \OPR %5% standing over there? Really, this is stupid, even for you. Goodbye \PC ... the next time we meet, it will be in battle.>
+		Msg2_2 <Why don't you ask \OPR %5% yourself? I've had enough of your foolishness, \PC ... Next time we meet, it'll be the last time.>
+		Msg3 <You seem to be laboring under the delusion that you have some say in the matter. Don't worry, though... the next time we meet, I promise to finish you.>
+		Msg3_1 <The only one who is going is me. Goodbye, \PC .>
+		Msg3_2 <Don't worry, I promise a great battle the next time we meet. Goodbye, \PC .>
+		Msg4 <%name6% leaves the area.>
+		Msg5 <You learned that %name6% didn't actually kidnap %name5%.>
+		Msg6 <Instead, \SPR %6% sought \PPR %6% former mentor to ask for advice.>
+		Msg7 <You could say that's the reason I'm here. What do you know about it?>
+		Msg8 <Hah! Maybe, just maybe you're right about that... I'm still better than you, though. Until we meet again, \PC .>
+		Msg9 <You know nothing. The next time we meet, \PC , I will end this... I promise.>
+		Msg10 <You may be right about that, \PC . If things were different then perhaps we need not be enemies... but destiny is formed by the choices we make, and this is where we are. Until we meet again...>
+		Msg11 <%name6% expressed regret that the two of you were enemies.>
+		Prompt1 <Tell me what you did with %name5%.>
+		Prompt1_1 <What did you do with %name5%?>
+		Prompt2 <I never have that problem. Let's go!>
+		Prompt2_1 <I don't care about your mood. Let's go!>
+		Prompt3 <Are you in the mood to talk?>
+		CPrompt3 <if= P%id%02 1 if= ChatNPCRelationship 0 ifG ChatNPCHeroism -1 Accept>
+		Prompt4 <I know that you're better at talking than fighting.>
+		Prompt5 <I know that it's never too late to change.>
+		CPrompt5 <ifConversation SkillTar StoryDL Accept>
+		Prompt6 <I know that you've made some bad decisions.>
+		CPrompt6 <ifInsight SkillTar StoryDL Accept>
+	end
+	inv
+		STC CORE-ACTIVATABLE-STATIONARY-DEFENDED
+		name <Secret Base>
+		% Since this is the main combat of this episode, make it a harder than usual.
+		GoStartCombat <Alert 1 SavePos Dynamic 2 StoryDL 150 .nu1 .nu2 ComposeD Msg1 .Msg1 DynaVar= 3 Destination  DynaFaction &EnemyFac>
+
+		Secret
+		Msg <%name5% used to be %name6%'s teacher. I think \SPR %5% was always disappointed in the path %name6% chose.>
+	end
+
+Content
 	name <Ex-Lover vs Ex-Partner>
 	desc <The enemy's ex-lover is on the run from the enemy's ex-partner.>
 	requires <*:CS_GatherInformation E:A.sr_ E:M.--->
@@ -128,7 +269,7 @@ Content
 		Prompt4 <Pathetic. You think loving %name7% gives you a license to kill?>
 		CPrompt4 <ifIntimidation SkillTar StoryDL Accept>
 		Prompt5 <%name7% doesn't even know about this, does \SPR %7% ?>
-		CPrompt5 <ifInvestigation SkillTar StoryDL Accept>
+		CPrompt5 <ifInsight SkillTar StoryDL Accept>
 		Prompt6 <Well then, I'm going to protect %name2%. Let's fight.>
 		Prompt7 <Killing %name2% won't make \OPR %7% love you.>
 		Prompt8 <I can see it's useless to even try talking with you.>

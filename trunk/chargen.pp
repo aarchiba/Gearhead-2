@@ -855,12 +855,12 @@ Procedure SpendSkillPointsRandomly( PC: GearPtr; var PCSkills: SkillArray; Skill
 		{ might know, but sometimes we'll go all freaky and give out something like }
 		{ Biotech or Acrobatics. }
 	const
-		NumBeginnerSkills = 18;
+		NumBeginnerSkills = 19;
 		BeginnerSkills: Array [1..NumBeginnerSkills] of Byte = (
 			11, 12, 13, 15, 17,
 			18, 19, 20, 21, 23,
 			25, 26, 27, 28, 30,
-			33, 36, 42
+			33, 36, 37, 42
 		);
 	var
 		Skill: Integer;

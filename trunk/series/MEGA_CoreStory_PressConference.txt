@@ -51,7 +51,7 @@ Content
 		result%id%04 <Goto .%id%_GoOffer>
 		result%id%05 <NewChat Say %id%03 History %id%04 SMemo %id%05 NPCLevel %2% StoryDL &SetPartnerNPC %2% &AddPartnerToLance SetXXRAttitude %2% XXR_A_IsEqual WinComp %3% .%id%_WinComp>
 		.%id%_WinComp <+Tgs +Fin>
-		result%id%06 <NewChat Say %id%06 History %id%07 SMemo 0 NTBLoseComp 0 .%id%_LoseComp ifNPCDead &EnemyNPC &SetEnemyNPC %2% FreezeNPC %2%>
+		result%id%06 <NewChat Say %id%06 History %id%07 SMemo 0 NTBLoseComp 0 .%id%_LoseComp ifNPCDead &EnemyNPC &SetEnemyNPC %2% SetXXRAttitude %2% XXR_A_IsSenior FreezeNPC %2%>
 		.%id%_LoseComp <+T-- +F-->
 		Msg%id%01 <Tell me, \PC ... Why is it that you're interested in the \ITEM &TargetItem ?>
 		Msg%id%02 <It seems we have some common interests. I propose that we join forces. Working together, it will be much easier to find the \ITEM &TargetItem .>

@@ -207,7 +207,7 @@ Content
 
 		special <SOLO ARENA>
 
-		Start <if= L2 0 L= 2 1   StoryNote 1  Alert 10  ForceChat %5%    &SetEnemyNPC %5%   AlterContext .alter>
+		Start <if= L2 0 L= 2 1   StoryNote 1  Alert 10  ForceChat %5%    &SetEnemyNPC %5%   SetXXRAttitude %5% XXR_A_IsSenior  AlterContext .alter>
 		.alter <+Pun>
 		nu1 <if= T1 0  Return   if= L1 0 L= 1 1   DeleteNPC %1%    LoseComp 0 .loss>
 		.loss <+T-- +F-->

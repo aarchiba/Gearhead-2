@@ -1,5 +1,33 @@
 % Persona Fragment File
 
+% TYPE: *TheySayYoureTough
+%	The NPC has heard that the PC is tough. Maybe a challenge is going to take
+%	place, or some kind of toughness-deflating advice will be given.
+%
+%  PARAM1: Exit Label
+
+	Persona
+	requires <*TheySayYoureTough>
+	START <if= v%id%01 0 else %2% V= %id%01 1 NewChat Say %id%01 AddChat %id%01 AddChat %id%02>
+	result%id%01 <AddEasygoing  d8   Goto %1%>
+	result%id%02 <AddEasygoing -d8   Goto %1%>
+	Msg%id%01 <Hey, \PC . They say that you're a pretty tough pilot.>
+	Msg%id%01_1 <>
+	CMsg%id%01_1 <ifNPCSociable Accept>
+	Msg%id%01_2 <>
+	CMsg%id%01_2 <ifNPCShy Accept>
+	Msg%id%01_3 <>
+	CMsg%id%01_3 <ifNPCEasygoing Accept>
+	Msg%id%01_4 <>
+	CMsg%id%01_4 <ifNPCPassionate Accept>
+	Msg%id%01_5 <>
+	CMsg%id%01_5 <ifNPCCheerful Accept>
+	Msg%id%01_6 <>
+	CMsg%id%01_6 <ifNPCMelancholy Accept>
+	Prompt%id%01 <Really? Thanks, I guess...>
+	Prompt%id%02 <That's right. Don't piss me off.>
+
+
 % TYPE: *HurryBackWithMoney
 %	The NPC is offering some kind of service. The PC can't afford it right now.
 

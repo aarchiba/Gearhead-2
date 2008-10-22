@@ -60,7 +60,7 @@ use <ifG V1 -1 else GoSolved  Mental       V= 2 25 V+ 2 -V1 V+ 1 1 ifUScience   
 Clue29 <Goto use>
 Clue32 <ifG V1 -1 else GoSolved   Mental   V= 2 25 V+ 2 -V1 V+ 1 1 ifUCodeBreaking  V2 else GoLose   Goto GoWin>
 Clue34 <Print 4>
-Clue37 <ifG V1 -1 else GoSolved   Mental   V= 2 25 V+ 2 -V1 V+ 1 1 ifUInvestigation V2 else GoLose   Goto GoWin>
+Clue37 <ifG V1 -1 else GoSolved   Mental   V= 2 25 V+ 2 -V1 V+ 1 1 ifUInsight V2 else GoLose   Goto GoWin>
 GoSolved <Print 1>
 GoLose <V+ 3 1 ifG V3 d100 else GoJustLose Print 3 V= 3 0 PCMoraleDmg 10>
 GoJustLose <Print 2>
