@@ -512,7 +512,12 @@ Function OverchargeBonus( Master: GearPtr ): Integer;
 var
 	mass,thrust,it,T,SF: Integer;
 begin
-	mass := GearMass( Master );
+	if Master^.G = GG_Mecha then begin
+		{ Calculate the mass... }
+		mass := GearMass( Master );
+	end else begin
+		mass := GearMass( Master ) + 25;
+	end;
 	thrust := CountThrustPoints( Master , THRUST_Overchargers , Master^.Scale );
 	it := ( thrust * 10 ) div mass;
 
