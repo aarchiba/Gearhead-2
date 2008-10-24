@@ -92,7 +92,7 @@ desc <A very old chemical pistol. This weapon is said to have been owned by a fa
 ITEM_DESC <It's an archaic style pistol dating to before the age of superpowers.>
 ITEM_HISTORY <This pistol was owned by a succession of police officers, each of whom died in the line of duty.>
 ITEM_USAGE <Supposedly it was a very powerful weapon in its day.>
-caliber <.45 Archaic>
+caliber <.45 Revolver>
 requires <ITEM PREZERO !Ne>
 SDL_PORTRAIT <item_peacemakerrevolver.png>
 Context <TL_Ne>
@@ -104,7 +104,7 @@ Fudge 500
 sub
 	Ammo 8
 	name <Revolver Cartridge>
-	caliber <.45 Archaic>
+	caliber <.45 Revolver>
 	magazine 6
 end
 

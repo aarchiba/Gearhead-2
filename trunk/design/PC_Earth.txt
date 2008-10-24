@@ -1,3 +1,74 @@
+%  ************************
+%  ***  MELEE  WEAPONS  ***
+%  ************************
+
+Melee 6
+Name <Hand Axe>
+desc <A small axe, light enough to be wielded with one hand.>
+Type <THROWN>
+category <WEAPON MELEE TOOL>
+factions <FEDER>
+SDL_PORTRAIT <item_woodaxe.png>
+legality -10
+Speed 3
+
+Melee 10
+Name <Battle Axe>
+desc <A large axe, balanced for combat.>
+category <WEAPON MELEE>
+factions <FEDER>
+SDL_PORTRAIT <item_battleaxe.png>
+legality 5
+% Battle-axes aren't illegal, but you'll be more likely to find one in a rowdy area...
+Mass -2
+
+Melee 4
+Name <Mace>
+desc <A steel club.>
+category <WEAPON MELEE>
+factions <FEDER>
+SDL_PORTRAIT <item_mace.png>
+legality 5
+Speed 3
+Mass 2
+
+Melee 7
+Name <War Hammer>
+desc <A big hammer weighted for combat.>
+category <WEAPON MELEE>
+factions <FEDER>
+SDL_PORTRAIT <item_warhammer.png>
+legality 0
+
+Melee 8
+Name <Javelin>
+Type <THROWN>
+Mass -3
+speed 3
+desc <A primitive melee weapon, composed of a long shaft tipped with a metal piercing blade.>
+category <SPORTS THROWN>
+factions <FEDER>
+SDL_PORTRAIT <item_javelin.png>
+
+Melee 10
+Name <Spear>
+Type <EXTEND THROWN>
+Mass -3
+desc <A primitive melee weapon, composed of a long shaft tipped with a metal piercing blade.>
+category <WEAPON MELEE THROWN>
+factions <FEDER>
+SDL_PORTRAIT <item_spear.png>
+legality 5
+
+Melee 15
+Name <Pole-Axe>
+Type <EXTEND>
+Mass -7
+desc <A primitive melee weapon. It features a wide cutting blade at the end.>
+category <WEAPON MELEE>
+factions <FEDER>
+SDL_PORTRAIT <item_poleaxe.png>
+legality 5
 
 
 %  ***************

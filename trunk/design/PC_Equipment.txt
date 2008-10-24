@@ -10,7 +10,7 @@
 %%   -10 :	Tools that can be used as weapons
 %%    -5 :	Tasers and other non-deadly weapons
 %%     0 :	Most adventuring equipment
-%%     5 :	Handguns
+%%     5 :	Advanced Weapons
 %%    10 :	Heavy Weapons, Combat Armor
 %%    25 :	Contraband in most places
 %%    50 :	GARU serum, Hunter-X pods
@@ -35,6 +35,20 @@ factions <GENERAL>
 legality -10
 Acc 1
 Speed 5
+
+Tool 15 1
+name <Spanner>
+desc <A hefty wrench for working on mecha. It also makes a passable weapon.>
+factions <GENERAL>
+category <WEAPON MELEE TOOL>
+legality -15
+sub
+	Melee 7
+	name <Spanner Head>
+	Speed 3
+	Mass -3
+end
+
 
 Tool 14 1
 Name <Survival Knife>
@@ -90,20 +104,10 @@ desc <A curved short sword.>
 sdl_portrait <item_cutlass.png>
 category <WEAPON MELEE>
 factions <GENERAL>
-legality 0
+legality -5
 Acc 1
 Speed 4
 Mass -2
-
-Melee 6
-Name <Hand Axe>
-desc <A small axe, light enough to be wielded with one hand.>
-Type <THROWN>
-category <WEAPON MELEE TOOL>
-factions <GENERAL>
-SDL_PORTRAIT <item_woodaxe.png>
-legality -10
-Speed 3
 
 Melee 5
 Name <Pick>
@@ -123,37 +127,6 @@ factions <GENERAL>
 SDL_PORTRAIT <item_cricketbat.png>
 legality -15
 
-Melee 10
-Name <Battle Axe>
-desc <A large axe, balanced for combat.>
-category <WEAPON MELEE>
-factions <GENERAL>
-SDL_PORTRAIT <item_battleaxe.png>
-legality 5
-% Battle-axes aren't illegal, but you'll be more likely to find one in a rowdy area...
-Mass -2
-
-Melee 4
-Name <Mace>
-desc <A steel club.>
-category <WEAPON MELEE>
-factions <GENERAL>
-SDL_PORTRAIT <item_mace.png>
-legality 5
-Speed 3
-Mass 2
-
-Melee 8
-Name <Katana>
-desc <A long sword emphasising sharpness, based on the ancient PreZero Japanese design.>
-category <WEAPON MELEE NINJA>
-factions <GENERAL>
-SDL_PORTRAIT <item_katana.png>
-legality 5
-Acc 2
-Speed 4
-Mass -5
-
 Melee 7
 Name <Longsword>
 desc <A long-bladed sword capable of causing large amounts of damage through its swing velocity.>
@@ -163,11 +136,23 @@ SDL_PORTRAIT <item_longsword.png>
 legality -5
 Acc 1
 Speed 4
-Mass -4
+Mass -3
+
+Melee 8
+Name <Katana>
+desc <A long sword emphasising sharpness, based on the ancient PreZero Japanese design.>
+category <WEAPON MELEE NINJA>
+factions <GENERAL>
+SDL_PORTRAIT <item_katana.png>
+legality 0
+Acc 2
+Speed 4
+Mass -5
 
 Melee 5
 Name <Rapier>
 desc <A light dueling sword with a thin blade. Designed for stabbing and lunging.>
+type <ARMORPIERCING>
 category <WEAPON MELEE>
 factions <GENERAL>
 SDL_PORTRAIT <item_rapier.png>
@@ -176,44 +161,17 @@ Acc 3
 Speed 5
 Mass -3
 
-Melee 7
-Name <War Hammer>
-desc <A big hammer weighted for combat.>
-category <WEAPON MELEE>
-factions <GENERAL>
-SDL_PORTRAIT <item_warhammer.png>
-legality 0
-
-Melee 8
-Name <Javelin>
-Type <THROWN>
-Mass -3
-speed 3
-desc <A primitive melee weapon, composed of a long shaft tipped with a metal piercing blade.>
-category <SPORTS THROWN>
-factions <GENERAL>
-SDL_PORTRAIT <item_javelin.png>
-
-Melee 10
-Name <Spear>
-Type <EXTEND THROWN>
-Mass -3
-desc <A primitive melee weapon, composed of a long shaft tipped with a metal piercing blade.>
-category <WEAPON MELEE THROWN>
-factions <GENERAL>
-SDL_PORTRAIT <item_spear.png>
-legality 5
-
 Melee 9
 Name <Trident>
 Type <EXTEND THROWN>
 Acc 1
-Mass -3
+Mass -4
+Speed 3
 desc <A primitive melee weapon, consisting of a long handle and a pronged head.>
 category <WEAPON MELEE THROWN EXOTIC>
 factions <GENERAL>
 SDL_PORTRAIT <item_trident.png>
-legality 5
+legality 0
 
 Melee 2
 Name <Boomerang>
@@ -224,17 +182,7 @@ desc <A throwing club that should return to its user, if thrown correctly.>
 category <WEAPON THROWN ODDITIES ESSENTIAL>
 factions <GENERAL SPORTS>
 SDL_PORTRAIT <item_boomerang.png>
-legality 0
-
-Melee 15
-Name <Pole-Axe>
-Type <EXTEND>
-Mass -7
-desc <A primitive melee weapon. It features a wide cutting blade at the end.>
-category <WEAPON MELEE>
-factions <GENERAL>
-SDL_PORTRAIT <item_poleaxe.png>
-legality 5
+legality -10
 
 Melee 17
 Name <Scythe>
@@ -325,9 +273,9 @@ Melee 10
 Name <MonoSword>
 Type <ARMORPIERCING>
 Acc 1
-legality 10
+legality 5
 Speed 6
-Mass -8
+Mass -6
 desc <A ceram sword with a monomolecularly sharp edge.>
 sdl_portrait <item_longsword.png>
 category <WEAPON MELEE>
@@ -351,7 +299,7 @@ Type <EXTEND FLAIL>
 desc <A long flexible lash used for hitting people.>
 category <WEAPON MELEE>
 factions <GENERAL>
-legality 0
+legality -10
 SDL_PORTRAIT <item_whip.png>
 
 EMelee 3
@@ -412,6 +360,7 @@ caliber <5mm rifle>
 Range 7
 Acc 1
 Magazine 30
+Legality -5
 sub
 	Ammo 8
 	name <5mm Rifle Clip>
@@ -428,7 +377,7 @@ sdl_portrait <item_combatrifle.png>
 caliber <5mm rifle>
 category <WEAPON MISSILE>
 factions <GENERAL>
-legality 5
+legality 0
 Mass -3
 Range 6
 Speed 5
@@ -437,6 +386,29 @@ sub
 	name <5mm Rifle Clip>
 	caliber <5mm rifle>
 	magazine 40
+	category <AMMO>
+	factions <GENERAL>
+	SDL_PORTRAIT <item_ammoclip.png>
+end
+
+Gun 6
+Name <Assault Rifle>
+desig <FS Vaken>
+desc <A rapid-firing chemical rifle.>
+sdl_portrait <item_combatrifle.png>
+caliber <5mm rifle>
+category <WEAPON MISSILE>
+factions <GENERAL>
+legality 5
+Mass -4
+Range 6
+Speed 4
+BV 2
+sub
+	Ammo 8
+	name <5mm Rifle Clip>
+	caliber <5mm rifle>
+	magazine 60
 	category <AMMO>
 	factions <GENERAL>
 	SDL_PORTRAIT <item_ammoclip.png>
@@ -462,7 +434,7 @@ sub
 	magazine 16
 	category <AMMO>
 	factions <GENERAL>
-	SDL_PORTRAIT <item_ammoclip.png>
+	SDL_PORTRAIT <item_shellsammo.png>
 end
 
 Gun 15
@@ -485,7 +457,7 @@ sub
 	magazine 32
 	category <AMMO>
 	factions <GENERAL>
-	SDL_PORTRAIT <item_ammoclip.png>
+	SDL_PORTRAIT <item_shellsammo.png>
 end
 
 Gun 12
@@ -509,7 +481,27 @@ sub
 	magazine 24
 	category <AMMO>
 	factions <GENERAL>
-	SDL_PORTRAIT <item_ammoclip.png>
+	SDL_PORTRAIT <item_shellsammo.png>
+end
+
+Gun 5
+Name <Revolver>
+desc <A low velocity single firing chemically powered pistol.>
+Mass -3
+Range 3
+caliber <.32 Revolver>
+category <WEAPON MISSILE ANTIQUE>
+factions <GENERAL>
+SDL_PORTRAIT <item_peacemakerrevolver.png>
+Legality -15
+sub
+	Ammo 5
+	name <Revolver Cylinder>
+	desc <A departure from the traditional cartridge, this clip comes in the form of a cylinder with the bullets preloaded.>
+	Magazine 6
+	category <AMMO>
+	factions <GENERAL>
+	caliber <.32 Revolver>
 end
 
 
@@ -517,9 +509,10 @@ end
 %  ***  BEAM  GUNS  ***
 %  ********************
 
-BeamGun 10
+BeamGun 8
 Name <Laser Rifle>
-desc <An advanced combat rifle, powered by a laser generator.>
+desig <Zokk-33>
+desc <A popular and dependable laser rifle used throughout the solar system.>
 sdl_portrait <item_laserrifle.png>
 category <WEAPON MISSILE>
 factions <GENERAL>
@@ -527,6 +520,7 @@ Range 5
 Mass -6
 Acc 1
 Speed 3
+Legality 5
 inv
 	PowerSource 4
 	name <Power Cell 100>
@@ -1067,6 +1061,7 @@ Name <Elbow Pad>
 desc <Protects elbows from grazes and other accidents.>
 Category <CLOTHING SPORTS>
 Factions <GENERAL>
+sdl_Portrait <item_elbowpad.png>
 Mass -1
 legality -25
 
@@ -1075,6 +1070,7 @@ Name <Knee Pad>
 desc <Protects knees from grazes and other accidents.>
 Category <CLOTHING SPORTS>
 Factions <GENERAL>
+sdl_Portrait <item_elbowpad.png>
 Mass -1
 legality -25
 
@@ -1083,6 +1079,7 @@ Name <Heavy Elbow Pad>
 desc <Elbow pad that protects some of the forearm as well.>
 Category <CLOTHING SPORTS>
 Factions <GENERAL>
+sdl_Portrait <item_elbowpad.png>
 Mass -3
 legality -20
 
@@ -1091,6 +1088,7 @@ Name <Heavy Knee Pad>
 desc <Knee pad that protects part of the shins as well.>
 Category <CLOTHING SPORTS>
 Factions <GENERAL>
+sdl_Portrait <item_elbowpad.png>
 Mass -3
 legality -20
 
@@ -1279,6 +1277,7 @@ name <Data Visor>
 Desc <A wearable computer incorporated into goggles. Includes a rechargable power source.>
 Category <ELECTRONICS COMPUTER>
 Factions <GENERAL>
+SDL_PORTRAIT <item_datavisor.png>
 Memo
 legality -15
 sub
@@ -1786,6 +1785,7 @@ name <Keyboard>
 desc <A popular instrument for aspiring muscians.>
 Category <TOOL INSTRUMENT ESSENTIAL>
 Factions <GENERAL>
+sdl_portrait <item_keyboard.png>
 Legality -50
 Mass 1
 
@@ -1835,6 +1835,7 @@ desc <Just the thing to make you look like an authentic detective!>
 Category <TOOL SCIENCE ODDITIES>
 Factions <GENERAL>
 Legality -50
+SDL_PORTRAIT <item_magnifyingglass.png>
 
 LockPick 0
 name <Locksmith Toolkit>
