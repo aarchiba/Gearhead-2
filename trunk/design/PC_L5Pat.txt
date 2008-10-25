@@ -394,6 +394,23 @@ inv
 	mass -2
 end
 
+BeamGun 14
+Name <Laser Cannon>
+desig <T51>
+desc <A rapid firing light laser cannon.>
+sdl_portrait <>
+category <WEAPON MISSILE>
+factions <GENERAL>
+Range 7
+Mass -8
+Acc 1
+Speed 4
+Legality 10
+inv
+	PowerSource 4
+	name <Power Cell 100>
+	mass -2
+end
 
 
 %  ***************************
