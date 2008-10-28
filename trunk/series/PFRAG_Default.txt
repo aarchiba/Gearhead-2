@@ -1,5 +1,55 @@
 % Persona Fragment File
 
+% TYPE: *IWillDestroyYou
+%
+%	This NPC is swearing to destroy the PC. This is not a normal run of the mill death threat, either-
+%	no, this NPC will literally go to the ends of the universe in their quest for revenge.
+
+	Persona
+	requires <*IWillDestroyYou>
+	START <EndChat Say %id%01>
+	result%id%01 <Goto %1%>
+	Msg%id%01 <From this day forth it will be my sole purpose in life to give you pain, to repay you for what you have given me. I will hunt you down and destroy everything you love. By the end you will beg me for death.>
+	Msg%id%01_1 <>
+	CMsg%id%01_1 <ifNPCSociable Accept>
+	Msg%id%01_2 <>
+	CMsg%id%01_2 <ifNPCShy Accept>
+	Msg%id%01_3 <>
+	CMsg%id%01_3 <ifNPCEasygoing Accept>
+	Msg%id%01_4 <>
+	CMsg%id%01_4 <ifNPCPassionate Accept>
+	Msg%id%01_5 <>
+	CMsg%id%01_5 <ifNPCCheerful Accept>
+	Msg%id%01_6 <>
+	CMsg%id%01_6 <ifNPCMelancholy Accept>
+
+
+% TYPE: *YouWentThroughALotOfTrouble
+%			&IsEnemy	The NPC is an enemy of the PC.
+%	The PC has gone through a lot of trouble to meet this NPC.
+%
+%  PARAM1: Exit Label
+
+	Persona
+	requires <*YouWentThroughALotOfTrouble>
+	START <if= v%id%01 0 else %1% V= %id%01 1 EndChat Say %id%01 AddChat %id%01>
+	result%id%01 <Goto %1%>
+	Msg%id%01 <Well, you certainly went through a lot of trouble to find me. I hope it'll be worth it.>
+	Msg%id%01_1 <>
+	CMsg%id%01_1 <ifNPCSociable Accept>
+	Msg%id%01_2 <>
+	CMsg%id%01_2 <ifNPCShy Accept>
+	Msg%id%01_3 <>
+	CMsg%id%01_3 <ifNPCEasygoing Accept>
+	Msg%id%01_4 <>
+	CMsg%id%01_4 <ifNPCPassionate Accept>
+	Msg%id%01_5 <>
+	CMsg%id%01_5 <ifNPCCheerful Accept>
+	Msg%id%01_6 <>
+	CMsg%id%01_6 <ifNPCMelancholy Accept>
+	Prompt%id%01 <[Continue]>
+
+
 % TYPE: *TheySayYoureTough
 %	The NPC has heard that the PC is tough. Maybe a challenge is going to take
 %	place, or some kind of toughness-deflating advice will be given.
@@ -8,7 +58,7 @@
 
 	Persona
 	requires <*TheySayYoureTough>
-	START <if= v%id%01 0 else %2% V= %id%01 1 NewChat Say %id%01 AddChat %id%01 AddChat %id%02>
+	START <if= v%id%01 0 else %1% V= %id%01 1 NewChat Say %id%01 AddChat %id%01 AddChat %id%02>
 	result%id%01 <AddEasygoing  d8   Goto %1%>
 	result%id%02 <AddEasygoing -d8   Goto %1%>
 	Msg%id%01 <Hey, \PC . They say that you're a pretty tough pilot.>

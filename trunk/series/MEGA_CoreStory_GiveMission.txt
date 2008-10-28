@@ -173,9 +173,10 @@ Content
 	.%id%_loss <+T-->
 
 	% Upon getting the item, set the win subplot.
-	Get%2% <SetPlotStatus %plotid2% %id2%>
+	Get%2% <SMemo %id%02  SetPlotStatus %plotid2% %id2%>
 
 	Msg%id%01 <You failed to recover the datachip. You should go report to %name1% at \SCENE NPCScene %1% .>
+	Msg%id%02 <You should return the datachip to %name1% at \SCENE NPCScene %1% .>
 
 
 	%% SubPlot1 is Fetch Item

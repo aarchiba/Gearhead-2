@@ -17,9 +17,9 @@
 	update <CheckComponents>
 	reset_core_story <GrabSource GSetNAtt -7 0 0 Goto update>
 
-	&SetEnemyNPC <N= 1 ?>
+	&SetEnemyNPC <N= 1 ? SetNPCFaction ! N2>
 	&EnemyNPC <N1>
-	&SetEnemyFac <N= 2 ?>
+	&SetEnemyFac <N= 2 ? SetNPCFaction N1 !>
 	&EnemyFac <N2>
 	&SetAllyFac <N= 3 ?>
 	&AllyFac <N3>
@@ -31,7 +31,7 @@
 	&SetTargetNPC <N= 5 ?>
 	&TargetNPC <N5>
 	&SetCompScene <N= 6 ?>
-	%% Note that "SetNextScene" is not normally called, since it's done
+	%% Note that "SetCompScene" is not normally called, since it's done
 	%% already by NextComp.
 	&CompScene <N6>
 	&EpisodeScene <N7>
@@ -41,23 +41,27 @@
 	&AmoreNPC <N9>
 	&AddAmoreToLance <AddTempLancemate N9>
 	&RemoveAmoreFromLance <RemoveTempLancemate N9>
+	&SetHangingNPC <N= 10 ?>
+	&HangingNPC <N10>
 
 	element1 <C>
-	palette_entry_code1 <E>
+	palette_entry_code1  <E>
 	element2 <F>
-	palette_entry_code2 <F>
+	palette_entry_code2  <F>
 	element3 <F>
-	palette_entry_code3 <P>
+	palette_entry_code3  <P>
 	element4 <C>
-	palette_entry_code4 <R>
+	palette_entry_code4  <R>
 	element5 <C>
-	palette_entry_code5 <T>
+	palette_entry_code5  <T>
 	element6 <S>
-	palette_entry_code6 <S>
+	palette_entry_code6  <S>
 	element7 <S>
-	palette_entry_code7 <L>
+	palette_entry_code7  <L>
 	element8 <I>
-	palette_entry_code8 <I>
+	palette_entry_code8  <I>
 	element9 <C>
-	palette_entry_code9 <A>
+	palette_entry_code9  <A>
+	element10 <C>
+	palette_entry_code10 <H>
 

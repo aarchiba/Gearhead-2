@@ -15,6 +15,257 @@
 %%
 
 Content
+	name <BFF Deathtrap>
+	desc <The Enemy's BFF lays a trap for the PC>
+	requires <*:CS_FetchItem (E:M.see|E:M.pro|E:M.ggd) E:A.env +H--  -!Ne -!Lo>
+	changes <E:A +H>
+	size 9
+
+	%% In a brilliant act of railroading the player, it's possible in this episode
+	%% for the enemy NPC to change sides and become an ally... but if that happens,
+	%% the BFF becomes the new enemy, and the BeanPole campaign continues with
+	%% a new antagonist. Karl Villaneuva would be proud of me.
+
+	% E1 is the item that was taken
+	% E2 is an environs scene for the base
+	% E3 is the secret base
+	% E4 is the Enemy's BFF
+	% E5 is the Enemy- no scene set here; that will be done in subplot below.
+	% E6 is the secret about BFF and Enemy
+	% E7 is a container for the item
+	Place1 <7>
+	Element2 <Scene Environs !Near -7>
+	Element3 <Prefab>
+	Place3 <2>
+	Element4 <NewNPC -2 -7 Villainous>
+	Place4 <3 SD Enemy (BFF)>
+	Element5 <Grab 1>
+	Element6 <Prefab>
+	Element7 <Prefab>
+	Place7 <3>
+
+	% Upon being activated, this subplot activates the DiscoverNPCHasItem subplot. When that
+	% subplot is completed, it activates both the RevealEncounter and LearnSecret ones.
+	% Learning the secret activates the potential meeting with the Enemy NPC.
+
+	% P%id%01 = Have learned secret
+	% P%id%02 = Initialization Counter
+	% P%id%03 = Have been inside the mobile base - triggers the conclusion event
+	% P%id%04 = Have gotten the item
+	% P%id%05 = Have primed Ending #2
+
+	%% FAIL CONDITIONS
+	%% - DiscoverNPCHasItem fails
+	%% - RevealEncounter fails
+	%% - E1 is destroyed
+
+	% There are two endings: the normal one in which E4 dies, and the special one
+	% in which E4 has a falling out with E5. If the PC hasn't gotten the item by
+	% the time the mobile base blows up, this episode counts as a loss.
+	start <if= p%id%03 1   if= SceneID %2%   if= p%id%04 0 else .%id%_GoWinSP LoseSubPlot %plotid% Goto .%id%_GoConclude>
+	.%id%_GoWinSP <WinSubPlot %plotid% Goto .%id%_GoConclude>
+	.%id%_GoConclude <Alert %id%01 History %id%02 if= p%id%05 0 else .%id%_GoBetterEnding ForceChat %5%   SetXXRAttitude %5% XXR_A_HatesPC   History %id%03 FreezeNPC %5%>
+	.%id%_GoBetterEnding <Monologue %4% %id%04 Monologue %5% %id%05 Monologue %4% %id%06 Monologue %4% %id%07   History %id%08 History %id%09  SetXXRAttitude %4% XXR_A_HatesPC  FreezeNPC %4% FreezeNPC %5% &SetEnemyNPC %4% &SetHangingNPC %5% AlterContext .%id%_secondending  Alert %id%10   XPV 100>
+	.%id%_secondending <+Hed>
+
+	end <ifSubPlotLost %plotid1% else .%id%_GoCheckSP2   Goto .%id%_GoLoseMission>
+	.%id%_GoCheckSP2 <ifSubPlotLost %plotid2% else .%id%_GoCheckE1   Goto .%id%_GoLoseMission>
+	.%id%_GoCheckE1 <ifItemDestroyed %1%   Goto .%id%_GoLoseMission>
+	.%id%_GoLoseMission <CancelSubPlot %plotid3%  CancelSubPlot %plotid4%  LoseSubPlot %plotid% Trigger0 .%id%_%plotid%_GoLoss>
+	update <if= p%id%02 0 p= %id%02 1 SetPlotStatus %plotid1% %id1% NPCLevel %4% StoryDL NPCLevel %5% StoryDL>
+	Get%1% <P= %id%04 1>
+
+	% The LearnSecret will only be activated if the PC and Enemy aren't arch-enemies.
+	.%id1%_%plotid1%_GoDiscover <SetPlotStatus %plotid2% %id2%  ifG NPCRelationship %5% -1 SetPlotStatus %plotid3% %id3%>
+	.%id3%_%plotid3%_GoLearnSecret <if= p%id%01 0 p= %id%01 1 SetPlotStatus %plotid4% %id4%>
+
+	Msg%id%01 <You escape from %name4%'s mobile base just moments before it explodes.>
+	Msg%id%02 <You escaped from %name4%'s mobile base right before it exploded.>
+	Msg%id%03 <%name5% swore revenge against you for killing \PPR %5% friend %name4%.>
+	Msg%id%04 <No! How could you escape my perfect deathtrap? It appears that I'll have to finish you the old fashioned way...>
+	Msg%id%05 <Leave \OPR 0 alone, %name4%. My battle with \PC doesn't concern you.>
+	Msg%id%06 <How can you say that!? Don't you realize that I'm doing this for you? \PC has corrupted you, hasn't \SPR 0 ?>
+	Msg%id%07 <Don't think I'll forgive you, \PC . >
+	Msg%id%08 <%name5% saved you from \PPR %5% friend %name4%.>
+	Msg%id%09 <%name4% swore revenge against you for ruining their friendship.>
+	Msg%id%10 <%name5% and %name4% race off, presumably to settle their differences.>
+
+	% SubPlot1 is where the PC learns that BFF has the item.
+	% SubPlot2 is the PC's attempt to locate BFF.
+	% SubPlot3 is a secret about BFF, revealing connection to the enemy.
+	% SubPlot4 is the PC's difficult meeting with the Enemy.
+	SubPlot1 <*:CS_DiscoverNPCHasItem 4 1>
+	SubPlot2 <*:CS_RevealEncounter_NPCBase 2 3 4>
+	SubPlot3 <*:CS_LearnSecretAboutNPC 6 4>
+	SubPlot4 <*:CS_DifficultMeeting&IsEnemy&Protected 5>
+
+	sub
+		MetaScene 3
+		%% If the PC gets killed here or if the self destruct sequence concludes,
+		%% it's game over, man. No rescue from this scene.
+		special <NOEXIT NORESCUE>
+		mapwidth 35
+		mapheight 35
+		MonkeyMap
+		LockedDoorChance 10
+		SecretDoorChance 5
+		IndustrialTiles
+
+		%% L1 = Can use main exit
+		%% L2 = Self-Destruct Timer
+		%% L3 = Have announced self-destruct
+
+		% Destruction will occur within two hours. Yeah, it doesn't sound all that dangerous, but
+		% game time is compressed.
+		start <if= p%id%03 0 P= %id%03 1   History 8   L= 2 ComTime L+ 2 7200  if= p%id%05 0 else GoBranch2  Monologue %4% 1>
+		end <SetEncounterInactive %3%>
+
+		% In Branch2, E4 isn't physically present and so will announce the self-destruct right away.
+		GoBranch2 <Monologue %4% 1 Monologue %4% 2 Monologue %4% 3>
+
+		% Killing E4 or causing them to surrender will reveal the self-destruct sequence.
+		FAINT%4% <if= L3 0 L= 3 1 Alert 4>
+		SURRENDER%4% <if= L3 0 L= 3 1 Monologue %4% 5>
+
+		% The destruction timer is below.
+		5Min <ifG ComTime L2 Alert 6 History 7 Bomb Bomb Bomb KillPC>
+
+		Msg1 <Welcome, \PC . I knew that the %name1% would draw you into my trap... now, it's time for you to die.>
+		Msg2 <I've activated the self-destruct sequence of this mobile base. Oh, and I've also sealed the airlocks, so escape is quite impossible.>
+		Msg3 <Goodbye.>
+		Msg4 <As %name4% falls, you suddenly notice an ominous ticking noise coming from the intercom.>
+		Msg5 <You haven't won- I've activated the base's self destruct sequence. If I have to die then I'm taking you with me.>
+		Msg6 <Suddenly, the base explodes around you!!!>
+		Msg7 <You did not escape %name4%'s base before the explosion.>
+		Msg8 <%name4% was using the %name1% as bait to lure you into a trap.>
+
+		sub
+			Team 1
+			SetEnemy 2 3 4
+
+			Team 2
+			name <Guards>
+			type <SYNTH ROBOT>
+			Deploy <if= V1 0 V= 1 1 MonsterUp 2 StoryDL>
+			SetEnemy 1
+			SetAlly 3 4
+
+			Team 3
+			name <BFF>
+			SetEnemy 1
+			SetAlly 2 4
+
+			Team 4
+			name <Body Guards>
+			home <Entrance>
+			type <SYNTH ROBOT>
+			Deploy <if= V1 0 V= 1 1 WMonster 3 StoryDL 30>
+			SetEnemy 1
+			SetAlly 3 2
+
+			room
+			name <Entrance>
+			special <STARTHERE>
+			desig <HOME %e4%>
+			minimap <1...........2............>
+			sub
+				TrapDoor
+				%% The trapdoor can't be used until it's unlocked from the computer terminal
+				%% in the room with the safe. Fortunately, there's another exit.
+				Destination -1
+				MiniMapComponent 2
+				use <if# L1 0 else GoLocked Print 1 Return>
+				%% Unlocking the trapdoor with CodeBreaking is difficult, but not impossible.
+				CLUE32 <if= L1 0 else GoNotLocked Mental ifCodeBreaking 20 else GoNoUnlock Print 6 XPV 100 L= 1 1 ReAttack %4%>
+				Msg4 <You aren't skilled enough to pick this lock.>
+			end
+
+			room
+			desig <HOME %e7%>
+			minimap <............1............>
+
+			room
+			minimap <............1............>
+			inv
+				STC COMPUTER-1
+				%% If E4 surrendered, opening the trap door will cause them to attack again.
+				MiniMapComponent 1
+				use <if= L1 0 else GoBeenBefore Alert 1 L= 1 1 ReAttack %4%>
+				GoBeenBefore <Print 2>
+				Msg1 <Using this computer, you open the airlock.>
+				Msg2 <You have already >
+			end
+
+			room
+			% The PC can steal E4's mecha and escape.
+			sub
+				Elevator
+				name <Mecha Bay>
+				MiniMapComponent 1
+				% V1 = Usage Counter
+				use <ifYesNo 1 2 3 V= 1 1 CustomMecha .mektype StoryDL Return StoryNote 4>
+				.mektype <GENERAL \FACTION_DESIG &EnemyFac>
+				Msg1 <You find an elevator to the pod containing %name4%'s mecha.>
+				Msg2 <Escape with it.>
+				Msg3 <Leave it alone.>
+			end
+		end
+
+		Persona 4
+		special <UNLISTED>
+		%% The only chance the PC will get to freely speak with E4 is if they fight
+		%% and E4 surrenders. Therefore, there is no reason to have a big complicated
+		%% persona here. Sweet.
+		greeting <EndChat Say 1>
+		Msg1_1 <You may have beaten me, but we will die together.>
+		Msg1_2 <I will die too, but at least I've completed my mission.>
+
+		Persona 5
+		special <UNLISTED NOESCAPE>
+		%% There are two possible conversations- the Difficult Meeting one and the Regular Ending one.
+		greeting <if= p%id%03 0 else GoEndingConv Goto GoMeetingConv>
+		GoEndingConv <EndChat Say 1 AddChat 1 AddChat 2 PCEnemy %5%>
+		*GoMeetingConv <*YouWentThroughALotOfTrouble GoExplain>
+		GoExplain <WinSubPlot %plotid4% EndChat Say 2 AddChat 3 AddChat 4>
+		*result1 <*IWillDestroyYou>
+		result2 <AddEasygoing -d10 Goto result1>
+		result3 <EndChat Say 3 AddChat 5>
+		result4 <EndChat Say 4 AddChat 6>
+		result5 <EndChat Say 5 AddCHat 7 AddChat 8 AddChat 9>
+		result6 <Goto result5>
+		result7 <EndChat Say 6>
+		result8 <EndChat Say 7 P= %id%05 1  FreezeNPC %4%>
+		result9 <Goto result8>
+		Msg1 <Murderer! When I got a distress call from %name4% I should have known that you were the one responsible... How dare you attack my friends!? This fight is between you and me.>
+		Msg2 <So, what it it? You must have had a very good reason to come looking for me.>
+		Msg3 <%name4% is a friend of mine; \SPR %4% 's a bit unstable, but a superb pilot and a cunning tactician. Look, do you have a point?>
+		Msg4 <The %name1%? I don't have it. Why are you bothering me about this?>
+		Msg5 <Okay. And why do I care?>
+		Msg6 <I don't know either. Thank you for this colossal waste of time.>
+		Msg7 <Hmm. I'll tell you what, I'll ask %name4% what's going on. Don't count on anything, though, because \SPR %4% can be really headstrong.>
+		Prompt1 <It's not like that! You don't understand.>
+		Prompt2 <That's right, and I'm going to kill you next.>
+		Prompt3 <Do you know someone called %name4%?>
+		Prompt4 <I'm looking for the %name1%.>
+		Prompt5 <I think \SPR %4% has a %name1% that I'm looking for.>
+		Prompt6 <I think it's in the possession of %name4%.>
+		Prompt7 <I don't know.>
+		Prompt8 <I think %name4% is using the %name1% to lure me.>
+		CPrompt8 <ifInsight HardSkillTar StoryDL Accept>
+		Prompt9 <I thought you could act as mediator, or something.>
+		CPrompt9 <ifG ChatNPCRelationship 0 Accept>
+	end
+	inv
+		STC CORE-ACTIVATABLE-STATIONARY-DEFENDED
+		name <Mobile Base>
+
+		Secret
+		Msg <%name4% is good friends with %name5%, but \SPR %4% tends to be a bit overprotective... some would say obsessive.>
+
+		STC Safe
+	end
+
+Content
 	name <Let's Make It A Contest>
 	desc <The Enemy decides to search for the same item as the PC>
 	requires <*:CS_FetchItem (E:A.---|E:A.jr_|E:A.equ) E:M.pro -&FromEnemy>

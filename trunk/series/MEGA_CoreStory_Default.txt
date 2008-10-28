@@ -1,4 +1,121 @@
 %%
+%% *:CS_DifficultMeeting
+%%	&IsEnemy	The NPC to be met is an enemy
+%%	&Protected	The NPC shouldn't get killed, by the PC or anything else
+%%
+%% The PC needs to meet with someone, but arranging a meeting is difficult.
+%% Hence the name of the component. Duh. This subplot will set a PLACE for
+%% the relevant NPC and may or may not start a conversation with FORCECHAT,
+%% but will not contain the NPC's persona or make any other assumptions
+%% about what's going on.
+%%
+%% One note about the persona: The conversation should start with an acknowledgment
+%% that the PC was looking for E1.
+%%
+%% The parent subplot should disable this subplot when the conversation is over.
+%%
+%% PARAM1: The NPC the PC is seeking
+%%
+
+Content
+	name <I wouldn't need to do this if you had a cell phone>
+	desc <The PC can fight E1's henchmen; afterwards E1 contacts the PC>
+	requires <*:CS_DifficultMeeting &IsEnemy>
+	Size 5
+
+	% E1 is the NPC that the PC is seeking
+	% E2 is an outdoors scene for the combat
+	% E3 is the combat encounter itself
+	Place1 </>
+	Element2 <Scene Outdoors !Near -7>
+	Element3 <Prefab>
+	Place3 <2>
+
+	sub
+		MetaScene 3 2
+		rumor%id% <%name1% is doing something in %name2%.>
+
+		% V1 = Encounter Over Counter
+		% V2 = Initialization Counter
+		MapWidth 50
+		MapHeight 50
+
+		% Defeat the henchmen, and E1 shows up. Get defeated by them, and lose your chance
+		% forever.
+		start <if= L2 0 L= 2 1 TeamMonologue 2 1>
+		nu1 <if= T1 0   Return  if= V1 0 V= 1 1 LoseSubPlot %plotid%>
+		nu2 <if= T2 0   if= V1 0   V= 1 1   Alert 2 XPV 100  ForceChat %1%>
+
+		Msg1 <Look, it's \PC ! >
+		Msg2 <You have defeated all of %name1%'s henchmen. That ought to get \PPR %1% attention.>
+
+		sub
+			team 1
+			SetEnemy 2
+			ParaX 5
+			ParaY 5
+
+			team 2
+			SetEnemy 1
+			Deploy <if= PlotStatus %plotid% %id% SetSelfFaction NPCFac %1%   WMecha 2 StoryDL 100>
+			ParaX 45
+			ParaY 45
+		end
+	end
+	inv
+		STC CORE-INVISIBLEENCOUNTER
+		name <%name1%'s Henchmen>
+		EncounterMove 20
+	end
+
+
+%%
+%% *:CS_DiscoverNPCHasItem
+%%	&NotReally	The NPC doesn't actually have it
+%%
+%% In this subplot, the PC will learn that an item being sought is in the possession
+%% of a certain NPC.
+%%
+%% When this subplot concludes, the following trigger must be set:
+%%		.%id%_%plotid%_GoDiscover
+%%
+%% PARAM1: The NPC who has it
+%% PARAM2: The item being sought
+%%
+
+Content
+	name <Trivial DNHI>
+	desc <Ask an NPC, get told who has it. Boring, but quick to write.>
+	requires <*:CS_DiscoverNPCHasItem>
+	Size 1
+
+	% E1 is the NPC with the item
+	% E2 is the item
+	% E3 is a local public scene
+	% E4 is an NPC who knows something about it
+	Element3 <Scene Building Public !Near -7>
+	Element4 <Character Knowledge !Near 3 -ENEMY NEVERFAIL>
+	NEVERFAIL4 <Professor>
+
+	% FAIL CONDITIONS
+	% - E4 dies before revealing the secret
+	start <ifNPCDead %4% LoseSubPlot %plotid%>
+
+	sub
+		Persona 4
+		rumor%id% <%name4% knows something about the %name2%.>
+		greeting <if= PlotStatus %plotid% %id% else GoChat Goto GoGreet>
+		GoChat <NewChat SayAnything>
+		*GoGreet <*LookingForItem %2% GoExplain>
+		GoExplain <NewChat Say 1 SMemo 2 History 3   WinSubPlot %plotid% Trigger0 .%id%_%plotid%_GoDiscover>
+		Msg1_1 <As far as I know, the %name2% is currently in the possession of %name1%. More than this I couldn't say.>
+		Msg1_2 <The last I heard, %name1% is the one who has the %name2%. I'm afraid that I really don't know anything else.>
+		Msg1_3 <They say that the %name2% is being held by someone called %name1%. Maybe this information can be of use to you.>
+		Msg2 <You learned from %name4% that %name1% is in possession of the %name2%.>
+		Msg3 <You learned that %name1% had the %name2%.>
+	end
+
+%%
 %% *:CS_DiscoverNPCKidnappedByCSE
 %%	&NotReally	It wasn't really a kidnapping, or some other misunderstanding
 %%

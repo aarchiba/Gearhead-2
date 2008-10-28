@@ -1,0 +1,146 @@
+Battroid 3
+Name <Gaunt>
+SDL_Sprite <>
+SDL_Portrait <>
+Desig <RMA-01>
+desc <A light striker used by the Red Mask Raiders.>
+TYPE <GROUND SPACE>
+FACTIONS <REDMA>
+
+sub
+Head
+	size 2
+	Armor 3
+	Mass -1
+	sub
+		Sensor 5
+
+		ECM 3
+	end
+
+Torso
+	Armor 4
+	Mass -1
+	sub
+		CPit
+		Armor 1
+
+		Mount
+		name <Torso Mount>
+		inv
+			MLauncher 4
+			sub
+				STC AAM-8
+				Magazine 5
+			end
+		end
+
+		Computer 2
+		mass -2
+		sub
+			Software 1
+			name <C132 Reflex Control>
+			S_MVBoost
+			S_BoostScale 2
+
+			Software 1
+			name <C133 Firing Interface>
+			S_TRBoost
+			S_BoostScale 2
+		end
+
+		Engine
+		HighPerformance
+	end
+
+Arm
+	name <Right Arm>
+	Size 2
+	Armor 3
+	Mass -1
+	sub
+		Hand
+		name <Right Hand>
+		inv
+			Gun 5
+			name <Night Rifle>
+			caliber <25mm ferrous>
+			Range 5
+			BV 4
+			mass -4
+			sub
+				Ammo 5
+				caliber <25mm ferrous>
+				Magazine 100
+				mass -8
+			end
+
+		end
+
+		Mount
+		name <Right Arm Mount>
+		inv
+			EMelee 5
+			name <Plasma Torch>
+		end
+	end
+
+Arm
+	name <Left Arm>
+	Size 2
+	Armor 3
+	Mass -1
+	sub
+		Hand
+		name <Left Hand>
+		inv
+
+		end
+
+		Mount
+		name <Left Arm Mount>
+		inv
+
+		end
+	end
+	inv
+		Shield 3
+		DefBonus 2
+	end
+
+Wing
+	name <Right Wing>
+	Armor 3
+	mass -1
+	sub
+		Flight 2
+		OverCharger 2
+	end
+
+Wing
+	name <Left Wing>
+	Armor 3
+	mass -1
+	sub
+		Flight 2
+		OverCharger 2
+	end
+
+Leg
+	name <Right Leg>
+	Armor 3
+	Mass -1
+	sub
+		Flight 4
+	end
+
+Leg
+	name <Left Leg>
+	Armor 3
+	Mass -1
+	sub
+		Flight 4
+	end
+
+end
+

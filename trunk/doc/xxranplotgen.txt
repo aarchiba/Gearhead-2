@@ -65,6 +65,7 @@ selected quickly without doing full element searches. The standard palette entri
 7. Root location of current episode (L:)
 8. Target Item (I:)
 9. Amore NPC (A:)
+10. Hanging Thread NPC (H:)
 
 These labels are followed by "++" if the element exists, or "--" if the element doesn't.
 In addition, the desig and context strings for each element are included. For instance,
@@ -205,6 +206,7 @@ BACKGROUND DESCRIPTORS
 	+H--	How's it hanging? It isn't.
 	+Hwn	Defeated a new enemy's plan without having met him.
 	+Hln	Defeated by a new enemy without having met him.
+	+Hed	Enemy has defected (H:++)
 
 	+Has	Assassination attempt will be made against the PC.
 

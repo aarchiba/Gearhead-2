@@ -326,8 +326,8 @@ Content
 			team 2
 			SetEnemy 1
 			Deploy <if= PlotStatus %plotid% %id% SetSelfFaction &EnemyFac   WMecha 2 StoryDL 100>
-			ParaX 25
-			ParaY 25
+			ParaX 45
+			ParaY 45
 		end
 	end
 	inv
@@ -374,7 +374,7 @@ Plot
 	start <ifNPCDead %4% LoseSubPlot %plotid%>
 
 	% Duel Results
-	.%id1%_%plotid%_GoWin <Monologue %4% %id%01  PMemo %plotid% %id%02 ShowEntrance %2% WinSubPlot %plotid%>
+	.%id1%_%plotid%_GoWin <Monologue %4% %id%01  PMemo %plotid% %id%02 SetEncounterActive %2% WinSubPlot %plotid%>
 	.%id1%_%plotid%_GoLose <Monologue %4% %id%03 PMemo %plotid% %id%04 MoveNPC %4% %6% SetPlotStatus %plotid% %id%>
 
 	Msg%id%01 <You won... I'll upload the details for %name3%'s %name2% to your navcomp.>
@@ -391,7 +391,7 @@ Plot
 		*GoExplain <*LookingForScene %2% GoSetPrice>
 		GoSetPrice <if= V2 0 else GoOffer V= 2 Threat StoryDL 5 Goto GoOffer>
 		GoOffer <NewChat Say 1 PMemo %plotid% 2 AddChat 1 AddChat 2 AddChat 3>
-		result1 <NewChat Say 3 History 4 Cash+ -V2 ShowEntrance %2% WinSubPlot %plotid%>
+		result1 <NewChat Say 3 History 4 Cash+ -V2 SetEncounterActive %2% WinSubPlot %plotid%  PMemo %plotid% 4>
 		result2 <NewChat Say 5 AddChat 4 AddChat 5 AddChat 6>
 		*result3 <*HurryBackWithMoney>
 		result4 <NewChat Say 7  PMemo %plotid% 8 History 9 V= 1 1 V= 2 * 2 V2 SetPlotStatus %plotid% %id1%>
@@ -544,8 +544,8 @@ Content
 			team 2
 			SetEnemy 1
 			Deploy <if= PlotStatus %plotid% %id% SetSelfFaction &EnemyFac   WMecha 2 StoryDL 100>
-			ParaX 25
-			ParaY 25
+			ParaX 45
+			ParaY 45
 		end
 	end
 	inv
