@@ -82,6 +82,7 @@ MOVEANDPACIFYNPC <GrabNPC ? MoveAndPacifyGG ?>
 DEPLOYNPC <GrabNPC ? DeployGG ?>
 DynaNPC <GrabNPC ? DynaGG ?>
 NPCLevel <GrabNPC ? GSkillLevel ?>
+SelfLevel <GrabSource GSkillLevel ?>
 ItemLevel <GrabItem ? GSkillLevel ?>	% Can be used for monsters.
 ConGen <GrabNPC ? GSetNAtt 3 0 1 GAddNAtt 3 0 -PCGender> % set NPC opposite gender of PC
 IsoGen <GrabNPC ? GSetNAtt 3 0 PCGender>                 % set NPC same gender as PC

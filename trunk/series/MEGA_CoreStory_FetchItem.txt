@@ -65,7 +65,7 @@ Content
 	start <if= p%id%03 1   if= SceneID %2%   if= p%id%04 0 else .%id%_GoWinSP LoseSubPlot %plotid% Goto .%id%_GoConclude>
 	.%id%_GoWinSP <WinSubPlot %plotid% Goto .%id%_GoConclude>
 	.%id%_GoConclude <Alert %id%01 History %id%02 if= p%id%05 0 else .%id%_GoBetterEnding ForceChat %5%   SetXXRAttitude %5% XXR_A_HatesPC   History %id%03 FreezeNPC %5%>
-	.%id%_GoBetterEnding <Monologue %4% %id%04 Monologue %5% %id%05 Monologue %4% %id%06 Monologue %4% %id%07   History %id%08 History %id%09  SetXXRAttitude %4% XXR_A_HatesPC  FreezeNPC %4% FreezeNPC %5% &SetEnemyNPC %4% &SetHangingNPC %5% AlterContext .%id%_secondending  Alert %id%10   XPV 100>
+	.%id%_GoBetterEnding <Monologue %4% %id%04 Monologue %5% %id%05 Monologue %4% %id%06 Monologue %4% %id%07   History %id%08 History %id%09  SetXXRAttitude %4% XXR_A_HatesPC  FreezeNPC %4% FreezeNPC %5% &SetEnemyNPC %4% &SetHangingNPC %5%  AlterContext .%id%_secondending  Alert %id%10   XPV 100>
 	.%id%_secondending <+Hed>
 
 	end <ifSubPlotLost %plotid1% else .%id%_GoCheckSP2   Goto .%id%_GoLoseMission>

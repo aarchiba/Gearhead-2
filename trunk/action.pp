@@ -268,6 +268,9 @@ begin
 		end else it := False;
 	end;
 
+	{ If the spotter is BLINDED, there's a 2/3 chance that the LOS check will fail. }
+	if HasStatus( Observer , NAS_Blinded ) and ( Random( 3 ) <> 1 ) then it := False;
+
 	CheckLOS := it;
 end;
 

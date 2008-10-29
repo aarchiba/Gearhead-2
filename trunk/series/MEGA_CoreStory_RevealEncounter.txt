@@ -172,7 +172,7 @@ Content
 		clue32 <if= PlotStatus %plotid% %id1% else GoNoUse ifCodeBreaking HardSkillTar StoryDL else GoFail  Alert 3 Goto GoReveal>
 		clue34 <Alert 7>
 		clue37 <if= PlotStatus %plotid% %id1% else GoNoUse ifInsight SkillTar StoryDL else GoFail     Alert 4 Goto GoReveal>
-		GoReveal <StoryNote 5 SetEncounterActive %2% WinSubPlot %plotid% XPV 100>
+		GoReveal <History 5 PMemo %plotid% 5 SetEncounterActive %2% WinSubPlot %plotid% XPV 100>
 		GoFail <Alert 6>
 		Msg1 <This diary tells all the mundane details of being a henchman. Still, you're certain that there must be a clue in it somewhere.>
 		Msg2 <This diary isn't much use to you anymore.>
@@ -646,12 +646,13 @@ Content
 	update <if= p%id%01 0   p= %id%01 1   NPCLevel %4% StoryDL   MoveAndPacifyNPC %4% %3%>
 	.%id%_GoCheckEntrance <if= P%id%02 0 if= SceneID %3%   ifUAwareness 4   Alert %id%01   P= %id%02 1>
 
-	Surrender%4% <if= PlotStatus %plotid% %id% Monologue %4% %id%02 StoryNote %id%03 Print %id%04 FreezeNPC %4% PCEnemy %4% XPV 100  SetEncounterActive %2% WinSubPlot %plotid%>
+	Surrender%4% <if= PlotStatus %plotid% %id% Monologue %4% %id%02 PMemo %plotid% %id%03 History %id%05 Print %id%04 FreezeNPC %4% PCEnemy %4% XPV 100  SetEncounterActive %2% WinSubPlot %plotid%>
 
 	Msg%id%01 <As you enter %name3%, you notice %name4% wandering around and looking confused.>
 	Msg%id%02 <Alright, I give up... You'll find the raiders in %name1%, if you even know where that is.>
 	Msg%id%03 <You defeated %name4%, who revealed that the raiders are in %name1%.>
 	Msg%id%04 <%name4% leaves the area.>
+	Msg%id%05 <You defeated %name4%, who revealed that the raiders were in %name1%.>
 
 	% SubPlot1 is what happens if E4 leaves the area.
 	SubPlot1 <*TrailRaiderToBase 1 2 4>
@@ -738,7 +739,7 @@ Content
 	update <if= p%id%01 0   p= %id%01 1   NPCLevel %4% StoryDL   MoveAndPacifyNPC %4% %3%>
 	.%id%_GoCheckEntrance <if= P%id%02 0 if= SceneID %3%   ifUAwareness 4   Alert %id%01   P= %id%02 1>
 
-	Surrender%4% <if= PlotStatus %plotid% %id% Monologue %4% %id%02 StoryNote %id%03 Print %id%04 FreezeNPC %4% PCEnemy %4% XPV 100  &%id%_RevealEncounter>
+	Surrender%4% <if= PlotStatus %plotid% %id% Monologue %4% %id%02 PMemo %plotid% %id%03 History %id%05 Print %id%04 FreezeNPC %4% PCEnemy %4% XPV 100  &%id%_RevealEncounter>
 
 	&%id%_RevealEncounter <SetEncounterActive %2% WinSubPlot %plotid%>
 
@@ -746,6 +747,7 @@ Content
 	Msg%id%02 <Alright, I give up... You'll find the mecha you're looking for in %name1%.>
 	Msg%id%03 <You defeated %name4%, who revealed that the raiders are in %name1%.>
 	Msg%id%04 <%name4% leaves the area.>
+	Msg%id%05 <You defeated %name4%, who revealed that the raiders were in %name1%.>
 
 	% SubPlot1 is what happens if E4 leaves the area.
 	SubPlot1 <*TrailRaiderToBase 1 2 4>
@@ -865,7 +867,7 @@ Content
 		% previous attempt.
 		Start <if= L2 0 L= 2 1   L= 1 0   Monologue %3% 1  Alert 2 L= 4 ComTime L+ 4 300 L+ 4 * 120 L5  L+ 5 1  if= L3 0 L= 3 1 PMemo %plotid% 3>
 		nu1 <if= T1 0   Return>
-		nu2 <if= T2 0   Return  if= V1 0   V= 1 1   ifG L4 ComTime else GoTooLate Alert 4 StoryNote 5   SetEncounterActive %2% SeekGate %2% WinSubPlot %plotid% if= L5 1 XPV 100>
+		nu2 <if= T2 0   Return  if= V1 0   V= 1 1   ifG L4 ComTime else GoTooLate Alert 4 History 5 PMemo %plotid% 5   SetEncounterActive %2% SeekGate %2% WinSubPlot %plotid% if= L5 1 XPV 100>
 		GoTooLate <Alert 6  AddRenown -1>
 		end <L= 2 0>
 

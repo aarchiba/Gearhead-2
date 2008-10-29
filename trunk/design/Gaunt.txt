@@ -1,4 +1,4 @@
-Battroid 3
+Battroid 2
 Name <Gaunt>
 SDL_Sprite <>
 SDL_Portrait <>
@@ -9,8 +9,8 @@ FACTIONS <REDMA>
 
 sub
 Head
-	size 2
-	Armor 3
+	size 1
+	Armor 2
 	Mass -1
 	sub
 		Sensor 5
@@ -19,7 +19,7 @@ Head
 	end
 
 Torso
-	Armor 4
+	Armor 3
 	Mass -1
 	sub
 		CPit
@@ -35,28 +35,13 @@ Torso
 			end
 		end
 
-		Computer 2
-		mass -2
-		sub
-			Software 1
-			name <C132 Reflex Control>
-			S_MVBoost
-			S_BoostScale 2
-
-			Software 1
-			name <C133 Firing Interface>
-			S_TRBoost
-			S_BoostScale 2
-		end
-
 		Engine
 		HighPerformance
 	end
 
 Arm
 	name <Right Arm>
-	Size 2
-	Armor 3
+	Armor 2
 	Mass -1
 	sub
 		Hand
@@ -64,15 +49,25 @@ Arm
 		inv
 			Gun 5
 			name <Night Rifle>
-			caliber <25mm ferrous>
+			caliber <25mm self-propelled>
 			Range 5
 			BV 4
 			mass -4
 			sub
 				Ammo 5
-				caliber <25mm ferrous>
+				caliber <25mm self-propelled>
 				Magazine 100
 				mass -8
+
+				MLauncher 1
+				Integral
+				sub
+					Rockets 1
+					name <Night Missiles>
+					magazine 6
+					range 6
+					type <SWARM BLIND>
+				end
 			end
 
 		end
@@ -87,8 +82,7 @@ Arm
 
 Arm
 	name <Left Arm>
-	Size 2
-	Armor 3
+	Armor 2
 	Mass -1
 	sub
 		Hand
@@ -104,13 +98,14 @@ Arm
 		end
 	end
 	inv
-		Shield 3
+		Shield 1
 		DefBonus 2
 	end
 
 Wing
 	name <Right Wing>
-	Armor 3
+	Size 3
+	Armor 2
 	mass -1
 	sub
 		Flight 2
@@ -119,7 +114,8 @@ Wing
 
 Wing
 	name <Left Wing>
-	Armor 3
+	Size 3
+	Armor 2
 	mass -1
 	sub
 		Flight 2
@@ -131,7 +127,7 @@ Leg
 	Armor 3
 	Mass -1
 	sub
-		Flight 4
+		Flight 3
 	end
 
 Leg
@@ -139,7 +135,7 @@ Leg
 	Armor 3
 	Mass -1
 	sub
-		Flight 4
+		Flight 3
 	end
 
 end

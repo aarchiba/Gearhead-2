@@ -1328,6 +1328,11 @@ begin
 			else if SPD > Attacker^.Stat[STAT_Range] * 2 then AddModifier( 'range' ,  - LongRangePenalty );
 		end;
 
+		{ Apply the blindness penalty. }
+		if HasStatus( AMaster , NAS_Blinded ) and ( SPD > 0 ) then begin
+			AddModifier( 'blind' ,  - SPD );
+		end;
+
 		{ Add altitude modifier. Attacking an airborne mecha is more difficult, }
 		{ unless the ANTIAIR attribute is had. If the attacker is higher than the }
 		{ defender there's a slight bonus there as well. }

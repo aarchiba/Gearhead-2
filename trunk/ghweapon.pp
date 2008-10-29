@@ -149,7 +149,7 @@ Const
 	{ ***   STATUS  EFFECT  DATA   *** }
 	{ ******************************** }
 	NAG_StatusEffect = 14;
-	Num_Status_FX = 28;
+	Num_Status_FX = 29;
 	{ When adding a new status effect, remember to update the display }
 	{ bits in xxxinfo.pp and also messages.txt. }
 
@@ -164,6 +164,7 @@ Const
 	NAS_Enraged = 26;
 	NAS_Flummoxed = 27;
 	NAS_Disintegrating = 28;
+	NAS_Blinded = 29;
 
 	SX_Name: Array [1..Num_Status_FX] of String = (
 		'POISON','BURN','REGEN','STONE','HAYWIRE',
@@ -171,7 +172,7 @@ Const
 		'Anemia', 'Irrational Anger', 'Neural Lag', 'Major Neural Failure', 'Cerebrospinal Shock',
 		'Toxic Leakage', 'Shutdown', 'RUST', 'STUN', 'SICKNESS',
 		'Half-Blinded', 'Spinal Injury', 'Torn Ligaments', 'Crushed Bones', 'Heart Injury',
-		'ENRAGE', 'FLUMMOX', 'DISINTEGRATE'
+		'ENRAGE', 'FLUMMOX', 'DISINTEGRATE', 'BLIND'
 	);
 	SX_ResistTarget: Array [1..Num_Status_FX] of SmallInt = (
 	{ Determines how hard it is to get rid of this status }
@@ -182,7 +183,7 @@ Const
 		0, 0, 0, 0, 0,
 		0, 0, 10, 4, 20,
 		0,0,0,0,0,
-		-1, 5, -1
+		-1, 5, -1, -1
 	);
 	SX_RepSkill: Array [1..Num_Status_FX] of Byte = (
 	{ This tells what repair skill is needed to heal the status effect, or 0 for none. }
@@ -191,7 +192,7 @@ Const
 		16,16,16,16,16,
 		16,16,15,20,16,
 		0,0,0,0,0,
-		0,0,15
+		0,0,15,0
 	);
 	SX_RepCost: Array [1..Num_Status_FX] of Integer = (
 	{ This tells how many repair points to remove FX. }
@@ -200,7 +201,7 @@ Const
 		150,500,1500,2000,3000,
 		4500,10000,100,1,20,
 		0,0,0,0,0,
-		0,0,100
+		0,0,100,0
 	);
 	SX_Cost: Array [1..Num_Status_FX] of Byte = (
 	{ This tells how much a weapon with this status effect costs. }
@@ -209,7 +210,7 @@ Const
 		10,10,10,10,10,
 		10,10,95,12,15,
 		10,10,10,10,10,
-		10,10,65
+		10,10,65,20
 	);
 	SX_Vunerability: Array [1..Num_Status_FX,0..NumMaterial] of Boolean = (
 	{ tells what materials are affected by this status effect. }
@@ -240,7 +241,8 @@ Const
 		( False, False , False ),	{ Perminant Injury }
 		( True, False, False ),		{ Enraged }
 		( True, False, False ),		{ Flummoxed }
-		( TRUE , FALSE, FALSE )		{ Disintegration }
+		( TRUE , FALSE, FALSE ),	{ Disintegration }
+		( TRUE , TRUE , TRUE )		{ Blinded }
 	);
 	SX_Effect_String: Array [1..Num_Status_FX] of String = (
 		'1 DAMAGE 12 0  ARMORIGNORE CANRESIST',	{ Poison }
@@ -258,7 +260,8 @@ Const
 		'',	{ Sickness }
 		'','','','','',	{ Perminant injuries }
 		'','',		{ Enraged, Flummoxed }
-		'5 DAMAGE 0 0  ARMORPIERCING BRUTAL'	{ Disintegration }
+		'5 DAMAGE 0 0  ARMORPIERCING BRUTAL',	{ Disintegration }
+		''	{ Blinded }
 	);
 	SX_StatMod: Array [1..Num_Status_FX , 1..NumGearStats ] of SmallInt = (
 		( 0, 0, 0, 0, 0, 0, 0, 0),	{ Poison }
@@ -288,7 +291,8 @@ Const
 		(-2,-5,-2, 0, 0,-2, 0, 0),	{ Heart Problem }
 		( 2, 0, 2, 2, 0, 5, 0, 0),	{ Enraged }
 		(-2, 0,-2,-2,-2,-2,-2,-5),	{ Flummoxed }
-		( 0, 0, 0, 0, 0, 0, 0, 0)	{ Disintegration }
+		( 0, 0, 0, 0, 0, 0, 0, 0),	{ Disintegration }
+		( 0, 0,0,-10, 0, 0, 0, 0)	{ Blinded }
 	);
 
 	GS_General_AO = 0;	{ These constants describe what kind of weapon }
