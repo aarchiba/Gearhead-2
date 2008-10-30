@@ -3127,7 +3127,7 @@ begin
 
 	{ Set the default map generator of the Dynamic Encounter based on the position of }
 	{ the PC. }
-	Src := GG_LocatePC( GB );
+	Src := FindRoot( GG_LocatePC( GB ) );
 	if ( Src <> Nil ) then begin
 		SCRIPT_DynamicEncounter^.Stat[ STAT_MapGenerator ] := TileTerrain( GB , NAttValue( Src^.NA , NAG_Location , NAS_X ) , NAttValue( Src^.NA , NAG_Location , NAS_Y ) );
 		{ If this will make the encounter a space map, set the map-scroll tag. }

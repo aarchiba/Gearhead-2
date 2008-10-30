@@ -184,6 +184,78 @@ Content
 	end
 
 %%
+%% *CS_AnalyzeClue_LeadToItem Content
+%%
+%% The PC has a clue. Maybe he can't figure it out himself. So, he can bring
+%% it to someone who can. Unfortunately, doing so is going to cost both money
+%% and time.
+%%
+%% In this case, analyzing the clue will lead to the whereabouts of an item.
+%% When the PC has located the encounter, this subplot will make it visible
+%% with SetEncounterActive and conclude with WinSubPlot.
+%%
+%% PARAM1: The outdoors scene where the encounter is
+%% PARAM2: The MetaScene being sought
+%% PARAM3: The item being sought
+%% PARAM4: The clue-bearing item
+%%
+
+Content
+	name <Mr Interesting>
+	desc <You can give the item to a professor to identify it.>
+	requires <*CS_AnalyzeClue_LeadToItem>
+	size 1
+
+	% E1 is the outdoor scene where the encounter is
+	% E2 is the metascene being sought
+	% E3 is the item being sought
+	% E4 is the item to be identified
+	% E5 is a public scene for the meeting
+	% E6 is the investigator
+	element5 <Scene Public !Near -7 -Sleazy>
+	element6 <Character ACADE !Near 5 NeverFail>
+	NeverFail6 <Professor>
+	Place6 <5 pass ally>
+
+	%% FAIL CONDITIONS:
+	%% - If E4 is destroyed
+
+	end <ifItemDestroyed %4% LoseSubPlot %plotid%>
+
+	sub
+		Persona 6
+		rumor%id% <%name6% knows a lot about old artifacts.>
+		% v%id%01 = Clue processing time
+		% v%id%02 = First time counter/Identification Cost
+		greeting <if= PlotStatus %plotid% %id% else GoChat ifChatNPCInPlay else GoNotHere ifItemOK %4% else GoChat ifG v%id%01 0 else GoGreet ifG ComTime v%id%01 else GoNotYet NewChat Say %id%01 AddCHat %id%01>
+		GoNotHere <NewChat Say %id%11>
+		GoNotYet <NewChat Say %id%02>
+		GoChat <NewChat SayAnything>
+		GoGreet <if= v%id%02 0 else GoMakeOffer V= %id%02 Threat StoryDL 3 NewChat Say %id%03 AddChat %id%02>
+		GoMakeOffer <NewChat Say %id%05 AddCHat %id%03 AddCHat %id%04>
+		result%id%01 <NewChat Say %id%06 StoryNote %id%07 SetEncounterActive %2% WinSubPlot %plotid% DeleteItem %4%>
+		result%id%02 <NewChat Say %id%04 AddCHat %id%03 AddCHat %id%04>
+		result%id%03 <NewChat Say %id%08 FreezeItem %4% Cash+ -v%id%02 StoryNote %id%09 V= %id%01 ComTime V+ %id%01 3600 V+ %id%01 d7200 V+ %id%01 d7200>
+		result%id%04 <NewChat Say %id%10>
+		Msg%id%01 <Aha, you're back. I've got the results from your %name4% right here.>
+		Msg%id%02 <I'm still working on that %name4%. Come back later.>
+		Msg%id%03 <Yes, is there something I could help you with?>
+		Msg%id%04 <Hmmm. I'd have to examine it thoroughly... This sort of work isn't cheap, you realize. If you want me to investigate this item it's going to cost $ \VAL V%id%02 .>
+		Msg%id%05 <Hello again. If you want me to investigate your %name4% it's going to cost $ \VAL V%id%02 .>
+		Msg%id%06 <I've learned that something called the %name3% can be found in a %name2% at %name1%. I certainly hope that this information is of use to you.>
+		Msg%id%07 <You learned that the %name3% can be found in %name1%.>
+		Msg%id%08 <Great. Come back here in a few hours and I'll tell you what I've learned.>
+		Msg%id%09 <You gave the %name4% to %name6% for investigation.>
+		Msg%id%10 <I'll be waiting.>
+		Msg%id%11 <Sorry, I can't talk right now. If you've got an item for me to examine why don't you bring it to %name5%?>
+		Prompt%id%01 <Well, what can you tell me about it?>
+		Prompt%id%02 <What can you tell me about this %name4%?>
+		Prompt%id%03 <Here you go. [Give item and money]>
+		CPrompt%id%03 <ifG PC$ v%id%02 Accept>
+		Prompt%id%04 <I'll be back later.>
+	end
+
+%%
 %% *CS_AnalyzeClue_LeadToNPC Content
 %%
 %% The PC has a clue. Maybe he can't figure it out himself. So, he can bring
@@ -254,6 +326,109 @@ Content
 		CPrompt%id%03 <ifG PC$ v%id%02 Accept>
 		Prompt%id%04 <I'll be back later.>
 	end
+
+%%
+%% *:CS_RevealEncounter_ItemDungeon Content
+%%		&Derelict	The dungeon is a wrecked spaceship
+%%
+%% You're searching for a dungeon which contains a certain item. The
+%% name of the location may be expressed as "a %name2%" or "the %name2%".
+%%
+%% When the PC has located the encounter, this subplot will make it visible
+%% with SetEncounterActive and conclude with WinSubPlot. Revealing the entrance
+%% in this subplot will typically give the PC 100XP.
+%%
+%% PARAM1: The outdoors scene where the encounter is
+%% PARAM2: The MetaScene being sought
+%% PARAM3: The item contained within
+%%
+
+Content
+	name <A bottle of rum, anyone?>
+	desc <There are pirates looking for the item. Defeat them to gain their map.>
+	requires <*:CS_RevealEncounter_ItemDungeon ~&Derelict>
+	Size 5
+
+	% E1 is the outdoor scene where the encounter is
+	% E2 is the MetaScene being sought
+	% E3 is the item being sought
+	% E4 is an encounter
+	% E5 is the treasure map
+	Element4 <Prefab>
+	Place4 <1>
+	Element5 <Prefab>
+
+	% SubPlot1 is the clue identification utility, in case the PC can't do it himself
+	SubPlot1 <*CS_AnalyzeClue_LeadToItem 1 2 3 5>
+
+	sub
+		MetaScene 4 2
+		rumor%id% <there are some pirates in %name1% who are also looking for the %name3%.>
+
+		% V1 = Encounter Over Counter
+		MapWidth 50
+		MapHeight 50
+
+		% L1 = Encounter Over Counter
+		% L2 = Initialization Counter
+
+		Start <if= L2 0 L= 2 1 L= 1 0   TeamMonologue 2 1>
+		nu1 <if= T1 0   Return>
+		nu2 <if= T2 0   if= L1 0   L= 1 1   Salvage  Alert 2  History 3   GiveItem %5%   SetPlotStatus %plotid1% %id1%>
+
+		end <L= 2 0>
+
+		Msg1_1 <Arr! You're here after our treasure map, aren't you!? You can't have it!>
+		Msg1_2 <>
+		Msg1_3 <>
+		Msg2 <After the battle, you find a treasure map in the cockpit of one of the defeated mecha.>
+		Msg3 <You obtained a treasure map from a group of pirates.>
+
+		sub
+			team 1
+			SetEnemy 2
+			ParaX 5
+			ParaY 5
+
+			team 2
+			SetEnemy 1
+			Deploy <if= PlotStatus %plotid% %id%    WMecha 2 StoryDL 100>
+			ParaX 45
+			ParaY 45
+		end
+	end
+	inv
+		STC CORE-INVISIBLEENCOUNTER
+		name <Treasure Hunters>
+		% V1 = Recharge Counter
+		% This encounter will appear once every 5 hours, as long as this is the active subplot.
+		update <if= PlotStatus %plotid% %id% else GoHide ifG ComTime V1 else GoHide SetStat STAT_MetaVisibility 0  Goto GoSetOrders>
+		GoSetOrders <GrabSource GSetNAtt NAG_EpisodeData NAS_Orders 3>
+		use <ifG StatVal STAT_MetaVisibility -1  V= 1 ComTime V+ 1 18000  Print -1 Exit Destination>
+		GoAutoAttack <V= 1 ComTime V+ 1 18000  Alert -2 Exit Destination>
+		GoAvoidAttack <V= 1 ComTime V+ 1 7200  Print -6 AddSociable -1 UpdateProps>
+
+		Treasure 1
+		name <Treasure Map>
+		desc <An old fashioned holographic map obtained from a gang of pirates.>
+		use <if= PlotStatus %plotid% %id1% else GoNoUse Alert 1>
+		GoNoUse <Print 2>
+		clue14 <if= PlotStatus %plotid% %id1% else GoNoUse ifSurvival SkillTar StoryDL else GoFail  Alert 3 Goto GoReveal>
+		clue29 <if= PlotStatus %plotid% %id1% else GoNoUse ifScience SkillTar StoryDL else GoFail   Alert 4 Goto GoReveal>
+		clue32 <Alert 7>
+		clue34 <Alert 7>
+		clue37 <Alert 7>
+		GoReveal <History 5 PMemo %plotid% 5 SetEncounterActive %2% WinSubPlot %plotid% XPV 100>
+		GoFail <Alert 6>
+		Msg1 <You're going to need specialized knowledge to decipher this map.>
+		Msg2 <This map isn't much use to you anymore.>
+		Msg3 <You examine the map and locate a point of interest in %name1%.>
+		Msg4 <You decipher the coordinate system used by this map, and locate a point of interest in %name1%.>
+		Msg5 <You learned from the map that the %name3% is in %name1%.>
+		Msg6 <You don't learn anything from the map.>
+		Msg7 <You don't think you can learn anything from the map with this skill.>
+	end
+
 
 %%
 %% *:CS_RevealEncounter_NPCBase Content

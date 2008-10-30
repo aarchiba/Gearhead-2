@@ -323,6 +323,7 @@ Content
 %%
 %% *:CS_ItemCozy Content
 %%		&Stolen		The item was stolen from its rightful place
+%%		&Abandoned	The item is abandoned, not in anyone's possession
 %%
 %% We've got an item that needs to be protected from the filthy hands of the player character.
 %% Stick it in an Item Cozy and be done with it. If the item becomes unrecoverable, this
@@ -338,9 +339,102 @@ Content
 %%
 
 Content
+	name <Cozy Derelict Spaceship>
+	desc <The item lies abandoned on a wrecked spaceship.>
+	requires <*:CS_ItemCozy ~&Abandoned>
+	Size 5
+
+	% E1 is the item to be held
+	% E2 is the endless void of space
+	% E3 is the derelict itself
+	% E4 is a crate for the item on board the ship
+	Place1 <4>
+	Element2 <Scene Space Environs !Near -7>
+	Element3 <Prefab>
+	Place3 <2>
+	Element4 <Prefab>
+	Place4 <3>
+
+	% P%id%01 = Initialization Counter
+
+	% FAIL CONDITIONS:
+	% - The RevealDungeon subplot fails
+	% - E1 is destroyed
+
+	update <if= P%id%01 0 P= %id%01 1 SetPlotStatus %plotid1% %id1%>
+
+	end <ifItemOK %1% else .%id%_GoFail ifSubPlotLost %plotid1% Goto .%id%_GoFail>
+	.%id%_GoFail <LoseSubPlot %plotid%>
+
+	Get%1% <if= p%id%01 1 p= %id%01 2  History %id%01 WinSubPlot %plotid%>
+
+	Msg%id%01 <You recovered the %name1% from a derelict spaceship.>
+
+	% SubPlot1 is the RevealDungeon task
+	SubPlot1 <*:CS_RevealEncounter_ItemDungeon&Derelict 2 3 1>
+
+	sub
+		MetaScene 3
+		rumor%id% <the %name1% was lost when the spaceship carrying it was destroyed.>
+		type <Dungeon Derelict>
+		mapwidth 50
+		mapheight 50
+		MonkeyMap
+		% Suffocation effect...
+		Vacuum
+		LockedDoorChance 10
+		SecretDoorChance 10
+		IndustrialTiles
+
+		NeededCells 3
+
+		% L1 = Initialization Counter
+		% L2 = Have been given item
+		% L3 = Have been threatened once
+		start <Print 1>
+
+		Msg1 <You enter the derelict spaceship where the %name1% might be found.>
+
+		content1 <Some 1 70 Sub *DUNGEON_THREAT>
+		content2 <Some 1 40 Sub *DUNGEON_DECOR>
+		content3 <Some 1 50 Sub *DUNGEON_REWARD>
+
+		sub
+			Team 1
+			SetEnemy 2
+
+			Team 2
+			name <Monster>
+			type <Fungus Exorg Ruin PreZero>
+			Deploy <if= V1 0 V= 1 1 MonsterUp 2 StoryDL>
+			SetEnemy 1
+
+			room
+			special <STARTHERE>
+			minimap <............2............>
+			sub
+				TrapDoor
+				Destination -1
+				MiniMapComponent 2
+				use <Print 1 Return>
+			end
+
+			room
+			desig <HOME %e4%>
+			minimap <......###..#1=..###......>
+		end
+	end
+	inv
+		STC CORE-ACTIVATABLE
+		name <Derelict Spaceship>
+
+		STC Safe
+	end
+
+Content
 	name <Stuck on a Pirate Ship>
 	desc <The item's being held by pirates.>
-	requires <*:CS_ItemCozy ~&Stolen>
+	requires <*:CS_ItemCozy ~&Stolen -&Abandoned>
 	Size 7
 
 	% E1 is the item to be held

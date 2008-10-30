@@ -393,9 +393,9 @@ begin
 		{ If this terrain matches our basic criteria, }
 		{ we'll perform the next few tests. }
 		if ( MT^.G = GG_MetaTerrain ) and ( MT^.Stat[ STAT_MetaVisibility ] > 0 ) and ( Range( MT , P.X , P.Y ) <= 1 ) then begin
-			{ Roll the PC's INVESTIGATION skill. If it beats }
+			{ Roll the PC's AWARENESS skill. If it beats }
 			{ the terrain's concealment score, reveal it. }
-			if SkillRoll( Mek , NAS_Investigation , MT^.Stat[ STAT_MetaVisibility ] , 0 , False , True ) > MT^.Stat[ STAT_MetaVisibility ] then begin
+			if SkillRoll( Mek , NAS_Awareness , MT^.Stat[ STAT_MetaVisibility ] , 0 , False , True ) > MT^.Stat[ STAT_MetaVisibility ] then begin
 				MT^.Stat[ STAT_MetaVisibility ] := 0;
 				T := 'REVEAL';
 				TriggerGearScript( GB , MT , T );

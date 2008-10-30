@@ -1,4 +1,9 @@
-- Added Gaunt, Eggman mecha
+0.520	October 30 2008
+- Added Century, Gladius, Hariseng, Fenris, Secutor, Thorshammer, Gaunt, Eggman mecha
+- Added Dragon theme
+- Master plot plotstatus-keyed rumors should now work (mpbuilder.pp)
+- Fixed problem with dynamic encounter map generator (arenascript.pp)
+- Fixed some problems with long strings (texutil.pp)
 - Added BLIND status effect (ghweapon.pp)
 - Added Hanging NPC core story element (corestorystub.txt)
 - Fixed a crashing bug with overcharger bonus (movement.pp)
@@ -9,7 +14,6 @@
 - Basic mode PCs get random talents (chargen.pp)
 - Random character generator should provide better skills (chargen.pp)
 - Added faction/mecha analysis program (mekcheck.pas)
-- Added Century, Gladius, Hariseng, Fenris, Secutor, Thorshammer mecha
 - Added ESSENTIAL item category
 - For store placement, sets use average value of items (services.pp)
 - Now easier to improve stats with limited skills (training.pp)
@@ -19,7 +23,6 @@
 - Rocket Arena now gets predefined map
 - NPC equipment can be locally availiable (arenaplay.pp)
 - Added \ChatNPCMecha message formatting string (arenascript.pp)
-- Added Dragon theme
 - Hovel Market has a guaranteed weapon shop (ATLAS_L5Region.txt)
 - Fixed the "NPC in door" message bug (narration.pp)
 - No buildings should be unreachable on city map (randmaps.pp)

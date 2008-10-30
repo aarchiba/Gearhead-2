@@ -17,7 +17,7 @@
 
 Content
 	name <Raiders Causing Problems>
-	requires <*:CS_MinorMission (1:CORPO|1:CRAFT|1:TRADE|1:POLIC|1:POLIT|1:LABOR)>
+	requires <*:CS_MinorMission (1:CORPO|1:CRAFT|1:TRADE|1:POLIC|1:POLIT|1:LABOR|1:ADVEN|1:MILIT)>
 	desc <There are some raiders who have been causing trouble. Go destroy them.>
 
 	% E1 is the mission-giver
@@ -29,8 +29,9 @@ Content
 
 	sub
 		Persona 1
-		.%id%_GoInit <NewChat Say %id%01 SetPlotStatus %plotid% %id%>
+		.%id%_GoInit <NewChat Say %id%01 PMemo %plotid% %id%02 SetPlotStatus %plotid% %id%>
 		Msg%id%01 <There are some raiders in %name2% who have been causing trouble. I'd like for you to go defeat them.>
+		Msg%id%02 <%name1% asked you to defeat some raiders in %name2%.>
 
 		MetaScene 3 2
 		% L1 = Encounter Over Counter
@@ -39,9 +40,10 @@ Content
 		MapHeight 50
 
 		nu1 <if= T1 0   Return   if= V1 0 V= 1 1    LoseSubPlot %plotid%>
-		nu2 <if= T2 0   if= V1 0 V= 1 1   Alert 1   XPV 100   SALVAGE   WinSubPlot %plotid%>
+		nu2 <if= T2 0   if= V1 0 V= 1 1   Alert 1   XPV 100   SALVAGE   PMemo %plotid% 2 WinSubPlot %plotid%>
 
 		Msg1 <You have defeated the raiders. You should go report back to %name1% now.>
+		Msg2 <You defeated the raiders for %name1%.>
 
 		sub
 			team 1

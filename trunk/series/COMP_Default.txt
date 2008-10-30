@@ -9,6 +9,65 @@
 %    or the palette enemy faction
 
 Plot
+	name <I have information for trade>
+	Size 1
+	desc <An NPC has information for you, but you have to do something first...>
+	requires <#A +Tgs (+Fin|+F--) S:++ ~+Gkn>
+
+	% E1 is the scene where the meeting will take place.
+	% E2 is a public scene
+	% E3 is the pilot being met.
+	Element1 <Grab 6>
+	Element2 <Scene Public (Building|Meeting) !Near -7>
+	Element3 <Character ADVEN -ENEMY !Near 2 NeverFail>
+	Place3 <1 sd ally (Guards)>
+
+	% P%id%01 = Initialization Counter
+
+	%% FAIL CONDITIONS:
+	%% - E3 dies before the Gather Information started
+
+	update <if= P%id%01 0 P= %id%01 1 SetPlotStatus %plotid% %id%>
+	end <if= PlotStatus %plotid2% 0 ifNPCDead %3% LoseComp 0 .next>
+
+	.%id2%_%plotid2%_GoWin <WinComp 0 .next>
+	.%id2%_%plotid2%_GoLoss <LoseComp 0 .next>
+	.next <+T-- +F-->
+
+	% SubPlot1 is the Minor Mission
+	% SubPlot2 is the Gather Information
+	SubPlot1 <*:CS_MinorMission 3>
+	SubPlot2 <*:CS_GatherInformation 3>
+
+	sub
+		Persona 3
+		rumor%id% <%name3% at %name1% knows something. I just know it.>
+		greeting <if= PlotStatus %plotid% %id% else GoChat ifSubPlotWon %plotid1% else GoCheckLoss Goto GoReveal>
+		*GoReveal <*RevealSecret GoStartGI>
+		GoStartGI <History 3 WinSubPlot %plotid% PMemo %plotid1% 0 SetPlotStatus %plotid2% %id2% Goto .%id2%_GoInform>
+		GoCheckLoss <ifSubPlotLost %plotid1% else GoCheckProgress History 4 SMemo 0 NTBLoseComp 0 .next Goto GoLoss>
+		*GoLoss <*MissionWasFailure na na na>
+		GoChat <NewChat SayAnything>
+		GoCheckProgress <if# PlotStatus %plotid1% 0 else GoFirstTime Goto GoRemind>
+		*GoRemind <*GenericMissionReminder>
+		*GoFirstTime <*IHaveInformation GoMakeOffer na>
+		GoMakeOffer <NewChat Say 1 AddChat 1 AddChat 2>
+		result1 <History 2 Goto .%id1%_GoInit>
+		*result2 <*RejectMission .%id%_GoR2Exit>
+		.%id%_GoR2Exit <SMemo 0 NTBLoseComp 0 .next>
+		.next <+T-- +F-->
+		Msg1 <Before I let you in on the secret, I need you to do a little something for me.>
+		Msg2 <%name3% offered to tell you a secret, in exchange for a favor.>
+		Msg3 <You completed %name3%'s task and learned the secret.>
+		Msg4 <You failed at %name3%'s task.>
+		Prompt1 <No problem. What do you need?>
+		Prompt2 <Sorry, but I don't think it's worth it.>
+
+		STC MS_CAFE
+		SetID 1
+	end
+
+Plot
 	name <They Say You're Tough>
 	Size 1
 	desc <You will be challenged to a duel.>

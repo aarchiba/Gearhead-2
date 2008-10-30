@@ -511,7 +511,7 @@ begin
 	repeat
 		N := Pos( pat , UpCase( msg ) );
 		if N <> 0 then begin
-			msg := Copy( msg , 1 , N - 1 ) + S + Copy( msg , N + Length( pat ) , 255 );
+			msg := Copy( msg , 1 , N - 1 ) + S + Copy( msg , N + Length( pat ) , Length( msg ) );
 		end;
 	until N = 0;
 end;
@@ -524,7 +524,7 @@ var
 begin
 	N := Pos( '#' , msg );
 	if N <> 0 then begin
-		msg_out := Copy( msg , 1 , N - 1 ) + S + Copy( msg , N + 1 , 255 );
+		msg_out := Copy( msg , 1 , N - 1 ) + S + Copy( msg , N + 1 , Length( msg ) );
 	end else begin
                 msg_out := msg;
 	end;
@@ -544,7 +544,7 @@ begin
 		if cmd <> '' then begin
 			N := Pos( Copy( cmd , 1 , 2 ) , Original );
 			if N > 0 then begin
-				Original := Copy( Original , 1 , N - 1 ) + cmd + Copy( Original , N + Length( cmd ) , 255 );
+				Original := Copy( Original , 1 , N - 1 ) + cmd + Copy( Original , N + Length( cmd ) , Length( Original ) );
 			end else begin
 				Original := Original + ' ' + cmd;
 			end;

@@ -22,6 +22,66 @@
 %%
 
 Content
+	name <Do Not Want!>
+	desc <The PC beats the NPC to the core story item, but the Enemy pulls a LOLcat.>
+	requires <*:CS_GatherInformation +Pla I:++ E:++ F:++ -!Ne -I:TL_Md -I:TL_Hi -I:TL_Ex>
+	changes <+P>
+	Size 4
+
+	% E1 is the person who tells the PC about it
+	% E2 is the item
+	% E3 is the enemy NPC
+	Element2 <Grab 8>
+	Element3 <Grab 1>
+	Place3 </>
+
+	% P%id%01 = Have gotten item/Have lost item
+	% P%id%02 = Initialization Counter
+
+	%% FAIL CONDITIONS:
+	%% - ItemCozy fails
+
+	%% If the PC has retrieved the item, entering an outdoors scene will trigger the ending
+	%% conversation with the enemy.
+	start <if# p%id%01 0 ifScene .%id%_scene Alert %id%01 ForceChat %3%>
+	.%id%_scene <Outdoors>
+
+	update <if= p%id%02 0 p= %id%02 1 SetPlotStatus %plotid1% %id1%>
+	end <ifSubPlotLost %plotid1%  P= %id%01 -1>
+	Get%2% <P= %id%01 1>
+
+	Msg%id%01 <As you leave, you are approached by %name3% and \PPR %3% lance.>
+
+	% SubPlot1 is the Item Cozy
+	subplot1 <*:CS_ItemCozy&Abandoned 2>
+
+	sub
+		Persona 1
+		.%id%_GoInform <NewChat Say %id%01 SMemo %id%02 History %id%03>
+		Msg%id%01 <It's believed that the %name2% is near here. In fact, %name3% is searching for it at this very moment.>
+		Msg%id%02 <%name1% revealed that %name3% is in town searching for the %name2%.>
+		Msg%id%03 <%name1% revealed that the %name2% was nearby.>
+
+		Persona 3
+		special <UNLISTED NOESCAPE>
+		greeting <EndChat Say 1 AddChat 1 AddChat 2>
+		result1 <EndChat Say 2 StoryNote 3 Print 4 &SetTargetItem 0           WinSubPlot %plotid%   Trigger0 .%id%_%plotid%_GoWin   AlterContext .next  SavePos  Dynamic 2 StoryDL 100 .nu1 .nu2  DynaFaction &EnemyFac>
+		result2 <EndChat Say 2 History 5 StoryNote 3 Print 4 &SetTargetItem 0 LoseSubPlot %plotid%  Trigger0 .%id%_%plotid%_GoLoss  AlterContext .next  SavePos  Dynamic 2 StoryDL 100 .nu1 .nu2  DynaFaction &EnemyFac>
+		.next <+Pew>
+		.nu1 <if= T1 0  Return   if= L2 0  L= 2 1  AddRenown -5>
+		.nu2 <if= T2 0           if= L2 0  L= 2 1  XPV 100  AddRenown 1  Salvage   Return>
+		Msg1 <\PC , I should have expected to find you here. Well, it hardly matters- you're too late to stop me.>
+		Msg2 <It wasn't the %name2% that I was after- it was the computer in that place which was the real prize. This information will be a great help to our new weapons program. Unfortunately, you will not live to see the glorious rise of \FACTION &EnemyFac !>
+		Msg3 <%name3% revealed that \FACTION &EnemyFac were working on a new weapons program.>
+		Msg4 <You are attacked by %name3%'s men.>
+		Msg5 <You failed to prevent %name3% from locating the %name2%.>
+		Prompt1 <Too late? I beat you to the %name2%!>
+		CPrompt1 <if= P%id%01 1 Accept>
+		Prompt2 <I can still get the %name2% back from you!>
+		CPrompt2 <if= P%id%01 -1 Accept>
+	end
+
+Content
 	name <The Enemy's Decision>
 	desc <Your enemy consults their mentor; the PC of course thinks it's a kidnapping>
 	requires <*:CS_GatherInformation E:A.env (E:M.---|E:M.mer|E:M.com)>

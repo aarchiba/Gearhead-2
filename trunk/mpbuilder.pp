@@ -709,6 +709,20 @@ Function AssembleMegaPlot( Slot , SPList: GearPtr ): GearPtr;
 		InitListStrings( SubPlot , Dictionary );
 		DisposeSAtt( Dictionary );
 	end;
+	Procedure InitMPSubs( MasterPlot: GearPtr );
+		{ All personas and metascenes must be marked with the PlotID }
+		{ of the subplot wot spawned 'em. }
+	var
+		LList: GearPtr;
+	begin
+		LList := MasterPlot^.SubCom;
+		while LList <> Nil do begin
+			if ( LList^.G = GG_Persona ) or ( LList^.G = GG_MetaScene ) then begin
+				SetNAtt( LList^.NA , NAG_Narrative , NAS_PlotID , NAttValue( MasterPlot^.NA , NAG_Narrative , NAS_PlotID ) );
+			end;
+			LList := LList^.Next;
+		end;
+	end;
 var
 	MasterPlot,SubPlot: GearPtr;
 begin
@@ -719,6 +733,7 @@ begin
 	MasterPlot := SPList;
 	DelinkGear( SPList , MasterPlot );
 	DoStringSubstitutions( MasterPlot );
+	InitMPSubs( MasterPlot );
 	InsertInvCom( Slot , MasterPlot );
 
 	{ Keep processing until we run out of subplots. }
