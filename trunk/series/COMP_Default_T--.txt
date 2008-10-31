@@ -1,0 +1,434 @@
+Plot
+	name <Civil Defense Mission>
+	desc <The city government is hiring.>
+	requires <#A +T-- P:-- -L:ENEMY ~C:ADVEN>
+
+	% E1 is the scene where this component will take place
+	% E2 is the government faction, or a faction allied with it
+	% E3 is the NPC that the PC will speak with
+	element1 <Scene Building Public !Okay -7 !Near -7>
+	element2 <Faction !Ally -7 -ENEMY>
+	element3 <Character !Near 1 !Comrade 2 NeverFail>
+	NeverFail3 <Bureaucrat>
+	Place3 <1 (Citizens) pass>
+
+	% All this plot does is move the NPC, post some news,
+	% and activate the mission subplot
+	update <if= PlotStatus %plotid% 0 if= RootSceneID &EpisodeScene  News 1  SetPlotStatus %plotid% %id1%>
+
+	%% SubPlot1 is the mission to be offered
+	SubPlot1 <*CS_GiveMission 3>
+
+	Msg1_1  <%name3% of \NARRATIVE 7 seeks cavaliers for civil defense mission. Interested parties should apply at %name1%.>
+	Msg1_2  <Looking for work? Huge revards available in \NARRATIVE 7 . Contact %name3% at %name1% for more details.>
+	Msg1_3  <\NARRATIVE 7 needs cavaliers. %name3% is holding job interviews at %name1%.>
+	Msg1_4  <Shortage of cavaliers in \NARRATIVE 7 . %name3% offering prime rates for upcoming missions.>
+	Msg1_5  <Cavaliers flock to \NARRATIVE 7 , where %name3% of %name2% is offering huge mission bonuses.>
+
+	inv
+		Persona 3
+		rumor%id1% <%name3% needs someone to run a mission for the city. I hear it's important.>
+		Greeting <NewChat SayAnything>
+	end
+
+Plot
+	name <Lead: Politics>
+	desc <A politician will call about something.>
+	requires <#A +T-- C:POLIT -L:ENEMY>
+
+	% E1 is the scene where this component will take place
+	% E2 is the NPC that the PC will speak with
+	element1 <Scene Building Public !Near -7>
+	element2 <Character !Near 1 POLIT NeverFail -ArchEnemy>
+	NeverFail2 <Bureaucrat>
+	Place2 <1 (Citizens) pass>
+
+	% All this plot does is move the NPC, send an email,
+	% and activate the mission subplot
+	5min <if= PlotStatus %plotid% 0  if= RootSceneID &EpisodeScene V+ 1 1 ifG v1 d6 EMail 1  SetPlotStatus %plotid% %id1%>
+
+	start <if= PlotStatus %plotid% 0 ifNPCDead %2% LoseComp 0 .next>
+	.next <+T-- +F-->
+
+	%% SubPlot1 is the conversation to be had
+	SubPlot1 <*CS_Conversation 2>
+
+	Msg1_1  <%name2%@ \NARRATIVE 7 :// There are matters I want to discuss. Meet me at %name1%.>
+	Msg1_2  <%name2%@ \NARRATIVE 7 :// I have some information for you. Meet me at %name1%.>
+	Msg1_3  <%name2%@ \NARRATIVE 7 :// I could use a consultation at %name1%. Drop by when you have time.>
+	Msg1_4  <%name2%@ \NARRATIVE 7 :// Stop by for a consultation. I'll be at %name1%.>
+	Msg1_5  <%name2%@ \NARRATIVE 7 :// Come by %name1% when you get the chance; there are issues we need to discuss.>
+
+Plot
+	name <Lead: Media>
+	desc <A media personality will call about something.>
+	requires <#A +T-- C:MEDIA>
+
+	% E1 is the scene where this component will take place
+	% E2 is the NPC that the PC will speak with
+	element1 <Scene Building Public !Near -7>
+	element2 <Character !Near 1 MEDIA NeverFail>
+	NeverFail2 <Journalist>
+	Place2 <1 (Citizens) pass>
+
+	% All this plot does is move the NPC, send an email,
+	% and activate the mission subplot
+	5min <if= PlotStatus %plotid% 0  if= RootSceneID &EpisodeScene V+ 1 1 ifG v1 d6 EMail 1  SetPlotStatus %plotid% %id1%>
+
+	start <if= PlotStatus %plotid% 0 ifNPCDead %2% LoseComp 0 .next>
+	.next <+T-- +F-->
+
+	%% SubPlot1 is the mission to be offered
+	SubPlot1 <*CS_Conversation 2>
+
+	Msg1_1  <%name2%@ \NARRATIVE 7 :// I have a lead for you, \PC . Come meet me at %name1%.>
+	Msg1_2  <%name2%@ \NARRATIVE 7 :// Looking for a story? Come see me at %name1%.>
+	Msg1_3  <%name2%@ \NARRATIVE 7 :// Hey, let's do lunch at %name1%.>
+	Msg1_4  <%name2%@ \NARRATIVE 7 :// I've got an angle to pitch to you. Come see me at %name1%.>
+	Msg1_5  <%name2%@ \NARRATIVE 7 :// Have you tried %name1% yet? Meet me there, it's fabulous.>
+
+Plot
+	name <Basic Friend Contact>
+	desc <The PC's friend will call about something.>
+	requires <#A +T-->
+
+	% E1 is the scene where this component will take place
+	% E2 is the NPC that the PC will speak with
+	element1 <Scene Building Public !Near -7>
+	element2 <Character !Near -7 !Okay 1 Friend>
+	Place2 <1 (Citizens) pass>
+
+	% All this plot does is move the NPC, send an email,
+	% and activate the mission subplot
+	5min <if= PlotStatus %plotid% 0  if= RootSceneID &EpisodeScene V+ 1 1 ifG v1 d6 EMail 1  SetPlotStatus %plotid% %id1%>
+
+	start <if= PlotStatus %plotid% 0 ifNPCDead %2% LoseComp 0 .next>
+	.next <+T-- +F-->
+
+	%% SubPlot1 is the mission to be offered
+	SubPlot1 <*CS_Conversation 2>
+
+	Msg1_1  <%name2%@ \NARRATIVE 7 :// Hey \PC , when you have the time come see me at %name1%>
+	Msg1_2  <%name2%@ \NARRATIVE 7 :// I'll be at %name1% for a while. Drop by and we can have a chat.>
+	Msg1_3  <%name2%@ \NARRATIVE 7 :// If you're not busy, I'd like to meet with you at %name1%.>
+	Msg1_4  <%name2%@ \NARRATIVE 7 :// There are things we need to discuss. Meet me at %name1%.>
+	Msg1_5  <%name2%@ \NARRATIVE 7 :// \PC , come meet me at %name1%. I'll be waiting there.>
+
+Plot
+	name <Basic Ally Mission>
+	desc <The PC will be offered a job by an ally.>
+	requires <#A +T-- P:++>
+
+	% E1 is the scene where this component will take place
+	% E2 is the NPC that the PC will speak with
+	element1 <Scene Building Public !Okay -3 !Near -7>
+	element2 <Character !Near -7 !Okay -3 !XClude -2 ArchAlly>
+	Place2 <1 (Citizens) pass>
+
+	% All this plot does is move the NPC, send an email,
+	% and activate the mission subplot
+	5min <if= PlotStatus %plotid% 0  if= RootSceneID &EpisodeScene V+ 1 1 ifG v1 d6 EMail 1  SetPlotStatus %plotid% %id1%>
+
+	start <if= PlotStatus %plotid% 0 ifNPCDead %2% LoseComp 0 .next>
+	.next <+T-- +F-->
+
+	%% SubPlot1 is the mission to be offered
+	SubPlot1 <*CS_GiveMission 2>
+
+	Msg1_1  <%name2%@ \NARRATIVE 7 :// Hey, I've got a very special assignment for you. Meet me in %name1%.>
+	Msg1_2  <%name2%@ \NARRATIVE 7 :// I have something for you to do at %name1%. This is sort of important.>
+	Msg1_3  <%name2%@ \NARRATIVE 7 :// I have a mission specifically for you. Come see me at %name1%.>
+	Msg1_4  <%name2%@ \NARRATIVE 7 :// When you're finished with the email spam come see me at %name1%. I've got a mission for you.>
+	Msg1_5  <%name2%@ \NARRATIVE 7 :// Hey \PC , I have something here that may be of personal interest to you. Come meet me at %name1%.>
+
+Plot
+	name <Basic Government Mission>
+	desc <The PC will be offered a job by the government.>
+	requires <#A +T-- (P:MILIT|P:POLIT|P:POLIC) -P:ENEMY -L:ENEMY ~L:ALLY>
+
+	% E1 is the scene where this component will take place
+	% E2 is a government faction
+	% E3 is a member thereof
+	element1 <Scene Building Public !Okay -3 !Near -7>
+	element2 <Faction Government !Ally -3 !Okay -7 !XClude -2>
+	element3 <Character !Near 1 !Comrade 2 NeverFail>
+	Place3 <1 (Citizens) pass>
+	NeverFail3 <Bureaucrat>
+
+	% All this plot does is move the NPC, send an email,
+	% and activate the mission subplot
+	5min <if= PlotStatus %plotid% 0  if= RootSceneID &EpisodeScene V+ 1 1 ifG v1 d6 EMail 1  SetPlotStatus %plotid% %id1%>
+
+	start <if= PlotStatus %plotid% 0 ifNPCDead %3% LoseComp 0 .next>
+	.next <+T-- +F-->
+
+	%% SubPlot1 is the mission to be offered
+	SubPlot1 <*CS_GiveMission 3>
+
+	Msg1_1  <%name3%@ \NARRATIVE 7 :// Your services are required by %name2%. Meet me at %name1%.>
+	Msg1_2  <%name3%@ \NARRATIVE 7 :// You have some work from %name2%. I'll be waiting for you here at %name1%.>
+	Msg1_3  <%name3%@ \NARRATIVE 7 :// I have a mission for you from %name2%. Call me, or come to %name1%.>
+	Msg1_4  <%name3%@ \NARRATIVE 7 :// \PC - I've got some work for you to do. Come to %name1% for the briefing.>
+	Msg1_5  <%name3%@ \NARRATIVE 7 :// Your presence is requested in %name1%.>
+
+
+Plot
+	name <Basic Friendly Mission>
+	desc <The PC will be offered a job by a faction member.>
+	requires <#A +T-- P:++ -P:ENEMY>
+
+	% E1 is the scene where this component will take place
+	% E2 is the NPC that the PC will speak with
+	element1 <Scene Building Public !Okay -3 !Near -7>
+	element2 <Character !Near 1 !Comrade -3 NeverFail>
+	Place2 <1 (Guards) SD>
+	NeverFail2 <Mecha Pilot>
+
+	% All this plot does is move the NPC, send an email,
+	% and activate the mission subplot
+	5min <if= PlotStatus %plotid% 0  if= RootSceneID &EpisodeScene V+ 1 1 ifG v1 d6 EMail 1  SetPlotStatus %plotid% %id1%>
+
+	start <if= PlotStatus %plotid% 0 ifNPCDead %2% LoseComp 0 .next>
+	.next <+T-- +F-->
+
+	%% SubPlot1 is the mission to be offered
+	SubPlot1 <*CS_GiveMission 2>
+
+	Msg1_1  <%name2%@ \NARRATIVE 7 :// I've got a job for you. Report to %name1% as soon as possible.>
+	Msg1_2  <%name2%@ \NARRATIVE 7 :// You have some work from \NARRATIVE 3 . I'll be waiting for you here at %name1%.>
+	Msg1_3  <%name2%@ \NARRATIVE 7 :// I have a mission for you from \NARRATIVE 3 . Call me, or come to %name1%.>
+	Msg1_4  <%name2%@ \NARRATIVE 7 :// \PC - I've got some work for you to do. Come to %name1% for the briefing.>
+	Msg1_5  <%name2%@ \NARRATIVE 7 :// Your presence is required in %name1%.>
+
+
+Plot
+	name <The Enemy of my Enemy is my Spoiler>
+	desc <Get a hint from the enemy of your enemy>
+	requires <#A +T-- F:++>
+
+	% E1 is an enemy faction that's also an enemy of your enemy
+	% E2 is a public scene in town
+	% E3 is a member of E1
+	% E4 is an environs scene for the meeting
+	% E5 is the meeting encounter itself
+	Element1 <Faction ArchEnemy !Enemy -2>
+	Element2 <Scene Public !Near -7 !Okay 1>
+	Element3 <Character HasMecha !Comrade 1 !Global NeverFail>
+	Place3 <2 sd ally>
+	Element4 <Scene Environs !Near -7>
+	Element5 <Prefab>
+	Place5 <4>
+
+	%% FAIL CONDITIONS:
+	%% - E3 dies before the revelation
+	start <ifG PlotStatus %plotid% -1 ifNPCDead %3% LoseComp 0 .next>
+	.next <+T-- +F-->
+
+	.%id1%_%plotid1%_GoWin  <SMemo 0   WinComp 0 .next>
+	.%id1%_%plotid1%_GoLoss <SMemo 0   LoseComp 0 .next>
+
+	%% SubPlot1 is the secret to be revealed
+	SubPlot1 <*:CS_GatherInformation&AboutEnemy 3>
+
+	sub
+		Persona 3
+		rumor0 <%name3% has been hoping to speak with you about your common enemy.>
+		greeting <if= PlotStatus %plotid% %id% else GoFirstTime ifChatNPCInPlay else GoNotHere Goto GoReveal>
+		GoNotHere <EndChat Say 1>
+		*GoReveal <*RevealSecret GoStartSQ1>
+		GoStartSQ1 <SetPlotStatus %plotid1% %id1% SetPlotStatus %plotid% -1 Goto .%id1%_GoInform>
+		GoFirstTime <if= PlotStatus %plotid% 0 else GoChat Goto GoGreet>
+		GoChat <NewChat SayAnything>
+		*GoGreet <*IHaveInformation&AboutFaction GoExplain &EnemyFac>
+		GoExplain <NewChat Say 2 SMemo 3 History 4 AddChat 1 AddChat 2 SetPlotStatus %plotid% %id% MoveNPC %3% %5% SetNPCTeam %3% 2>
+		*result1 <*GoodBye>
+		result2 <EndChat Say 5>
+		Msg1 <It's too dangerous to talk over the phone. Come meet me in %name4%.>
+		Msg2 <This isn't a good place to be discussing things. The agents of \FACTION &EnemyFac could be anywhere. Come meet me in %name4% later on and I'll tell you what I know.>
+		Msg3 <%name3% of %name1% offered to tell you a secret about \FACTION &EnemyFac . You are to meet \OPR %3% later in %name4%.>
+		Msg4 <%name3% of %name1% offered to tell you a secret about \FACTION &EnemyFac .>
+		Msg5 <I am not doing this to aid you; my sole intention to oppose \FACTION &EnemyFac .>
+		Prompt1_1 <I'll be there.>
+		Prompt1_2 <I'll see you there.>
+		Prompt2_1 <Why are you helping me?>
+		Prompt2_2 <How do I know I can trust you?>
+
+		MetaScene 5 2
+		MapWidth 10
+		MapHeight 10
+		% L1 = Initialization Counter
+		Start <if= L1 0 L= 1 1   ForceChat %3%>
+		sub
+			team 1
+			SetAlly 2
+			ParaX 4
+			ParaY 4
+
+			team 2
+			SetAlly 1
+			ParaX 6
+			ParaY 6
+		end
+	end
+	inv
+		STC CORE-ACTIVATABLE-STATIONARY-DEFENDED
+		name <%name3%'s Mecha>
+		update <if= PlotStatus %plotid% %id% else GoHide  SetStat STAT_MetaVisibility 0  ShowEncounter  Goto GoSetOrders>
+		Msg1 <%name3% must have been followed by \FACTION &EnemyFac . You are attacked by mecha as you approach \PPR %3% position.>
+	end
+
+Plot
+	name <What's the point?>
+	desc <Your partner will ask what happens next.>
+	requires <#A +T-- R:++ +G-->
+	Size 1
+
+	% Element1 is the partner
+	% Element2 is a local metascene- useful for many things
+	% Element3 is a character to ask for a job (+Gmo)
+	% Element4 is a character to challenge to a duel (+Gpo)
+	Element1 <Grab 4>
+	Element2 <MetaScene !Near -7 *Building NeverFail>
+	Element3 <Character HasMecha !Okay 1 !Okay -3 !Xclude -2 !Near -7 -ArchEnemy>
+	Element4 <Character HasMecha !Okay 1 !Near -7>
+
+	% P1 = Have unlocked conversation by visiting destination scene
+	start <ifNPCOK %1% else GoEndPlot ifScene .scenetype if= RootSceneID &EpisodeScene if= P1 0     P= 1 1  ForceChat %1% SMemo 1>
+	.scenetype <outdoors>
+	GoEndPlot <StoryNote 2 AddRenown -10   LoseComp 0 .loss>
+	.loss <+Bad>
+
+	Msg1 <%name1% wants to speak with you about something.>
+	Msg2 <%name1% died.>
+
+	sub
+		Persona 1
+		% V1 = First Reputation Counter
+		% V2 = Skill to improve
+		greeting <if= P1 0 else GoReveal NewChat SayAnything>
+		*GoReveal <*LancemateWantsToTalk GoNow GoLater>
+		GoLater <EndChat Say %id%01>
+		GoNow <NewChat Say %id%02 AddChat %id%01 AddChat %id%02 AddChat %id%03 AddChat %id%04>
+		GoNoMeeting <NewChat Say %id%03 StoryNote %id%04 WinComp %2% .party>
+		.party <+Tgs +Fpa>
+		result%id%01 <AlterContext .altermoney  ifNPCOK %3% else GoNoMeeting NewChat Say %id%05 StoryNote %id%06 &SetTargetNPC %3% WinComp %2% .mission>
+		.altermoney <+Gmo>
+		.mission <+Tgt +Fmi>
+		result%id%02 <AlterContext .alterpower  ifNPCOK %4% else GoNoMeeting NewChat Say %id%07 StoryNote %id%08 &SetTargetNPC %4% WinComp %2% .duel>
+		.alterpower <+Gpo>
+		.duel <+Tgt +Fch>
+		result%id%03 <AlterContext .alterlove  NewChat Say %id%03 StoryNote %id%04 WinComp %2% .party>
+		.alterlove <+Glo>
+		result%id%04 <AlterContext .alterpeace  NewChat Say %id%03 StoryNote %id%04 WinComp %2% .party>
+		.alterpeace <+Gpe>
+		Msg%id%01 <That's fine. It wasn't too important... ask me again later.>
+		Msg%id%02 <\PC , why are we doing this? What is it that made you want to be a cavalier?>
+		Msg%id%03 <So that's it. You see, I heard that there's going to be a party at %name2% soon and a lot of cavaliers are going to be there. I wanted to get into the proper mindset before we crash the joint.>
+		Msg%id%04 <%name1% suggested that you crash a party at %name2%.>
+		Msg%id%05 <Money is very important. Hey, I heard that %name3% is looking to hire someone over at %name2%. Let's go over there and see if we can get the job.>
+		Msg%id%06 <%name1% suggested that you go ask %name3% for a mission at %name2%.>
+		Msg%id%07 <Neat. Well, the way to become the best is by challenging other pilots... I've heard that %name4% has been spoiling for a fight recently. Let's go to %name2% and ask \OPR %4% for a duel.>
+		Msg%id%08 <%name1% suggested that you challenge %name4% at %name2%.>
+		Prompt%id%01 <I'm in it for the money.>
+		Prompt%id%02 <I just want to be the best pilot ever.>
+		Prompt%id%03 <Cavaliers are sexy. I like that.>
+		Prompt%id%04 <I want to make a real difference in the world.>
+	end
+
+
+Plot
+	name <Partner Arrange Duel>
+	desc <Your partner has arranged a duel between you and someone else.>
+	requires <#A +T-- R:PDASS>
+
+	% Element1 is the partner
+	% Element2 is the person to ask for a duel
+	% Element3 is a scene for the meeting
+	Element1 <Grab 4>
+	Element2 <Character HasMecha !Okay 1 !Near -7>
+	Element3 <Scene Building Public !Near -7 !Okay 2>
+
+	% P1 = Have unlocked conversation by visiting destination scene
+	start <ifNPCOK %1% else GoEndPlot ifScene .scenetype if= RootSceneID &EpisodeScene if= P1 0     P= 1 1  ForceChat %1% SMemo 1>
+	.scenetype <outdoors>
+	GoEndPlot <StoryNote 2 AddRenown -10   LoseComp 0 .loss>
+	.loss <+Bad>
+
+	Msg1 <%name1% wants to speak with you about something.>
+	Msg2 <%name1% died.>
+
+	sub
+		Persona 1
+		% V1 = First Reputation Counter
+		% V2 = Skill to improve
+		greeting <if= P1 0 else GoReveal NewChat SayAnything>
+		*GoReveal <*LancemateWantsToTalk GoNow GoLater>
+		GoNow <ifNPCOK %2% else GoE2Died NewChat Say %id%01 AddChat %id%01 AddChat %id%02 AddChat %id%03>
+		GoE2Died <NewChat Say %id%02 StoryNote %id%03 WinComp %3% .dead>
+		.dead <+Tgs +Fin>
+		GoLater <EndChat Say %id%04>
+		result%id%01 <NewChat Say %id%05 SMemo %id%06 History %id%07 &SetTargetNPC %2% WinComp %3% .duel>
+		.duel <+Tgt +Fch>
+		result%id%02 <NewChat Say %id%08 StoryNote %id%03 WinComp %3% .dead>
+		result%id%03 <NewChat Say %id%09 AddChat %id%04 AddChat %id%05>
+		result%id%04 <goto result%id%01>
+		result%id%05 <goto result%id%02>
+		msg%id%01 <Since we're not doing anything right now, I was wondering if you'd be interested in a duel with %name2%. I'm pretty sure that \SPR %2% 'd be willing.>
+		Msg%id%02 <I heard a rumor that there's something going on at %name3%. I think we should go check it out.>
+		Msg%id%03 <%name1% suggested that you look for information at %name3%.>
+		Msg%id%04 <Don't forget to ask me about it later, then.>
+		Msg%id%05 <Great! We can meet \OPR %2% at %name3%. Let's get over there right away.>
+		Msg%id%06 <%name1% suggested that you challenge %name2% to a duel. You can meet \OPR %2% at %name3%.>
+		Msg%id%07 <%name1% suggested that you challenge %name2% to a duel.>
+		Msg%id%08 <Whatever you say, \PC . Look, when you get tired of doing whatever important work it is that you're doing, I think we should head over to %name3%. I've heard rumors that something's going on there.>
+		Msg%id%09 <Well, it might be fun. You'll get some experience out of it. Does a mecha pilot really need a reason?>
+		Prompt%id%01 <Alright, that sounds like fun.>
+		Prompt%id%02 <No way. I've got better things to do.>
+		Prompt%id%03 <Why would I want to do that?>
+		Prompt%id%04 <Fine. Let's go do it.>
+		Prompt%id%05 <That's not a convincing argument.>
+	end
+
+Plot
+	name <Partner Job Lead>
+	desc <Your partner has a message for you.>
+	requires <#A +T-- R:++ -R:NOFAC -R:PDASS>
+
+	% Element1 is the partner
+	% Element2 is the episode town
+	% Element3 is the person to ask for a mission
+	% Element4 is a scene for the meeting
+	Element1 <Grab 4>
+	Element2 <Grab 7>
+	Element3 <Character !Ally 1 !Okay -3 !Near 2>
+	Element4 <Scene Building Public !Near 2 !Okay 3>
+
+	% P1 = Have unlocked conversation by visiting destination scene
+	start <ifNPCOK %1% else GoEndPlot if= SceneID %2% if= P1 0     P= 1 1  ForceChat %1% SMemo 1>
+	GoEndPlot <StoryNote 2 AddRenown -10   LoseComp 0 .loss>
+	.loss <+Cfa +Bad>
+
+	Msg1 <%name1% wants to speak with you about something.>
+	Msg2 <%name1% died.>
+
+	sub
+		Persona 1
+		% V1 = First Reputation Counter
+		% V2 = Skill to improve
+		greeting <if= P1 0 else GoReveal NewChat SayAnything>
+		*GoReveal <*LancemateWantsToTalk GoNow GoLater>
+		GoNow <NewChat Say %id%01 SMemo %id%03 AddChat %id%01 ifNPCOK %3% else GoE3Died &SetTargetNPC %3% WinComp %4% .next>
+		.next <+Tgt +Fmi>
+		GoE3Died <WinComp %4% .dead>
+		.dead <+Tgs +Fin>
+		GoLater <EndChat Say %id%02>
+		result%id%01 <NewChat Say %id%04 SMemo %id%05>
+		Msg%id%01 <I got a call from %name3%. We've been asked to go to %name4% for a mission.>
+		Msg%id%02 <Fine. Ask me about it later, then.>
+		Msg%id%03 <You should meet %name3% at %name4% for a mission.>
+		Msg%id%04 <Really? Well, maybe we should head over there and see if we can find any information, anyhow.>
+		Msg%id%05 <You should search %name4% for information.>
+		Prompt%id%01 <Didn't you hear? %name3% is dead.>
+		CPrompt%id%01 <ifNPCDead %3% Accept>
+	end
+

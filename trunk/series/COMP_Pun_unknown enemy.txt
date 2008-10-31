@@ -265,7 +265,7 @@ Plot
 	% E2 is the NPC that the PC will speak with
 	% E3 is the meme, for extra coverage
 	element1 <Scene Building Public !Ally -7 !Near -7>
-	element2 <Character POLIT !Near -7 !Comrade -7 NeverFail>
+	element2 <Character POLIT !Near 1 !Comrade -7 NeverFail>
 	NeverFail2 <Politician>
 	Place2 <1 (Citizens) pass>
 	Element3 <Prefab>
