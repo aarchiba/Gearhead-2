@@ -9,6 +9,33 @@
 %    or the palette enemy faction
 
 Plot
+	name <Right Place For a Mission>
+	desc <The city government is hiring.>
+	requires <#A +Tgs (+Fmi|+Fin|+F--) S:PERM -L:ENEMY ~C:ADVEN>
+
+	% E1 is the scene where this component will take place
+	% E2 is the government faction, or a faction allied with it
+	% E3 is the NPC that the PC will speak with
+	element1 <Grab 6>
+	element2 <Faction !Ally -7 !Okay 1 -ENEMY>
+	element3 <Character !Near 1 !Comrade 2 NeverFail>
+	NeverFail3 <Bureaucrat>
+	Place3 <1 (Citizens) pass>
+
+	% All this plot does is move the NPC, post some news,
+	% and activate the mission subplot
+	update <if= PlotStatus %plotid% 0   SetPlotStatus %plotid% %id1%>
+
+	%% SubPlot1 is the mission to be offered
+	SubPlot1 <*CS_GiveMission 3>
+
+	inv
+		Persona 3
+		rumor%id1% <%name3% is at %name1% looking for a cavalier. It seems pretty important.>
+		Greeting <NewChat SayAnything>
+	end
+
+Plot
 	name <I have information for trade>
 	Size 1
 	desc <An NPC has information for you, but you have to do something first...>

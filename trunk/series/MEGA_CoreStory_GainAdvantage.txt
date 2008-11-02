@@ -311,7 +311,7 @@ Content
 	% E1 is a garage
 	% E2 is the mercenary you can find there
 	% E3 is a location for the duel
-	Element1 <Scene Public (Garage|Spaceport) !Near -7>
+	Element1 <Scene Public (Garage|Spaceport|Residence) !Near -7>
 	Element2 <Prefab>
 	Place2 <1 SD ally>
 	Element3 <Scene Environs !Near -7>
