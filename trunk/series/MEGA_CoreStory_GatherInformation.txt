@@ -312,7 +312,7 @@ Content
 		result4 <EndChat Say 3 AddChat 7 AddChat 8>
 		result5 <Goto result4>
 		result6 <Goto GoThemeInfo>
-		result7 <ifConversation SkillTar &StoryDL else GoR7Fail EndCHat Say 4 Print 5 StoryNote 6 Retreat 2 FreezeNPC %3% PCEnemy %3%  L= 1 1   P= %id%04 1 ForceChat %2%>
+		result7 <ifConversation SkillTar StoryDL else GoR7Fail EndCHat Say 4 Print 5 StoryNote 6 Retreat 2 FreezeNPC %3% PCEnemy %3%  L= 1 1   P= %id%04 1 ForceChat %2%>
 		GoR7Fail <EndCHat Say 7>
 		result8 <Goto GoThemeInfo>
 		Msg1 <\PC , I should have expected to see you here. I suppose you plan on defending %name2%?>

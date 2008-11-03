@@ -594,7 +594,7 @@ Plot
 		GoTell <V= 1 Threat StoryDL 5 NewChat Say 1 StoryNote 2 AddChat 1 AddChat 2 AddChat 3 AddChat 4>
 		GoReveal <StoryNote 10 WinComp %3% na>
 		result1 <NewChat Say 3 AddChat 5 AddChat 4>
-		result2 <ifConversation SkillTar &StoryDL else GoR2Fail NewChat Say 4 Goto GoReveal>
+		result2 <ifConversation SkillTar StoryDL else GoR2Fail NewChat Say 4 Goto GoReveal>
 		GoR2Fail <NewChat Say 5 AddChat 1 AddChat 3 AddChat 4>
 		result3 <AddHeroic -1 NewChat Say 6 StoryNote 7 &SetTargetNPC 0 NegateComp %3% .negate>
 		.negate <+Tgs +Fmi>

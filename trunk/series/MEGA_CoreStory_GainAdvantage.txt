@@ -255,6 +255,62 @@ Content
 %%  trigger need be called.
 
 Content
+	name <Corporate Sponsorship>
+	desc <A corporation will offer to sponsor the PC.>
+	requires <*:CS_GainAdvantageVsMecha (F:--|F:CRIME|F:CORPO) (P:--|P:PDASS)>
+	changes <P:>
+
+	% E1 is a public scene
+	% E2 is the corporate character to make the offer
+	% E3 is the faction involved
+	Element1 <Scene Public (Meeting|Mall|Garage) !Near -7 !XClude -2>
+	Element2 <Character Corporate !XClude -2 -ENEMY !Near -7>
+	Place2 <1 (Citizens) pass ally>
+	Element3 <Faction Corporate !Comrade 2>
+
+	% P%id%01 = email indicator
+
+	% If E2 dies, this subplot concludes
+	start <ifNPCDead %2% LoseSubPlot %plotid%>
+	5min <if= p%id%01 0 if= d4 1 email %id%01 p= %id%01 1>
+
+	Msg%id%01_1 <%name2%@ \NARRATIVE 7 :// How would you like to earn more? Of course, we all do.>
+	Msg%id%01_2 <%name2%@ \NARRATIVE 7 :// I have an offer for you from %name3%. Come see me at %name1%.>
+	Msg%id%01_3 <%name2%@ \NARRATIVE 7 :// My employer wishes to offer you a sponsorship deal. Come visit me at %name1%.>
+
+	sub
+		Persona 2
+		rumor%id% <%name3% has also been vexed by the raiders you're fighting.>
+		% V1 = Custom Mecha
+		greeting <if# plotstatus %plotid% %id% else GoGreet NewChat SayAnything>
+		*GoGreet <*DidYouGetEmail GoBriefing>
+		GoBriefing <P= %id%01 1 NewChat Say 1 AddCHat 1 AddChat 2 pmemo %plotid% 2>
+		result1 <NewChat Say 3 AddChat 3 AddChat 4 AddChat 5 AddChat 6>
+		result2 <NewChat Say 3 AddChat 3 AddChat 4 AddChat 5 AddChat 6>
+		result3 <NewChat Say 5 History 6 pmemo %plotid% 0  &SetAllyFac %3% CashPrize 100000 RandomMecha .mek StoryDL WinSubPlot %plotid%>
+		.mek <GENERAL \FACTION_DESIG %3%>
+		result4 <NewChat Say 7 pmemo %plotid% 0 LoseSubPlot %plotid%>
+		result5 <NewChat Say 8 History 6 pmemo %plotid% 0  &SetAllyFac %3% CashPrize 100000 CustomMecha .mek StoryDL WinSubPlot %plotid%>
+		result6 <NewChat Say 9>
+		Msg1 <We at %name3% would like to sponsor your adventure. You will be provided with funds and equipment; in exchange, all we ask is that you display our company logo and take part in a few promotional events.>
+		Msg2 <%name2% offered you a sponsorship deal with %name3%. You have not yet given \OPR %2% an answer.>
+		Msg3 <To start with, how about $100,000 and a brand new mecha? As I said, you are under no obligation except to display our logo.>
+		Msg4 <You would not technically be working for us. We merely want to purchase the right to use your image in our marketing. Sign on now, and I can offer you $100,000 plus a brand new mecha.>
+		Msg5 <You've made a good decision. Welcome to the team, \PC .>
+		Msg6 <You accepted a sponsorship deal from %name3%.>
+		Msg7 <That's too bad. Still, the next time you're looking for a new mecha, remember %name3%.>
+		Msg8 <You're a shrewd negotiator... I think you'll fit in here just fine. Welcome to the team, \PC .>
+		Msg9 <Don't think too much. I can't say how long this offer will remain open.>
+		Prompt1 <What kind of funds and equipment are we talking about?>
+		Prompt2 <I don't want to work for a corporation.>
+		Prompt3 <Sounds good to me. I'll do it!>
+		Prompt4 <Thanks, but no thanks.>
+		Prompt5 <Make it a custom mecha and you have a deal.>
+		CPrompt5 <ifShopping SkillTar StoryDL Accept>
+		Prompt6 <I'll think about it.>
+	end
+
+Content
 	name <Divided they fall>
 	desc <The PC can fight the NPC's lance separately.>
 	requires <*:CS_GainAdvantageVsMecha &Decimation>
