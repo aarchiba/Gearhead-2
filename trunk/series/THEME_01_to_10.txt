@@ -23,6 +23,7 @@
 %%  7. Beauty
 %%  8. Dark
 %%  9. Dragon
+%% 10. Ninja
 
 Theme 1
 	name <Pyromaniac>
@@ -30,7 +31,7 @@ Theme 1
 	% fire based. Many of them have the BURN or BRUTAL tags as well. These weapons are
 	% not subtle, nor are they effective at long range, but they get the job done.
 	% Pyromania is favored by those who specialize in Artillery and Electronic Warfare
-	requires <GENERAL ~[3] ~[17]>
+	requires <GENERAL ~[2] ~[17]>
 
 	CUSTOMIZATION_ADJECTIVE_0 <Flash>
 	CUSTOMIZATION_ADJECTIVE_1 <Fire>
@@ -450,7 +451,7 @@ Theme 1
 
 Theme 2
 	name <Soldier>
-	requires <(MILIT|BODY)>
+	requires <(MILIT|BODY) ~[1]>
 	%% A career warrior, the soldier's weapons are tough and versatile.
 	%% Most of these weapons should be inspired by contemporary military equipment.
 
@@ -803,7 +804,7 @@ Theme 2
 
 Theme 3
 	name <Sophisticated>
-	requires <GENERAL ~[18]>
+	requires <GENERAL ~[5] ~[18]>
 	%% A sophisticated pilot takes great pride in his skill. Excessive displays
 	%% of force are seen as vulgar; it is by the pilot's superior skill that
 	%% enemies are defeated. None of these weapons use rapid fire or area effects;
@@ -2876,7 +2877,7 @@ Theme 8
 	CUSTOMIZATION_ADJECTIVE_4 <Tragic>
 	CUSTOMIZATION_NOUN_0 <Reaper>
 	CUSTOMIZATION_NOUN_1 <Hell>
-	CUSTOMIZATION_NOUN_2 <Shadow>
+	CUSTOMIZATION_NOUN_2 <Shade>
 	CUSTOMIZATION_NOUN_3 <Night>
 	CUSTOMIZATION_NOUN_4 <Death>
 
@@ -3644,4 +3645,474 @@ Theme 9
 	end
 	%% End 9.DRAGON
 
+Theme 10
+	name <Ninja>
+	% Ninjas are everywhere. It's true. This one is favored by stealthy characters- that is
+	% to say, those who are thieves or those who are shy. Many of the Ninja's ranged weapons
+	% are designed for disabling their targets, so they can be more easily dispatched with
+	% the melee weapons.
+	requires <(THIEF|Shy|[25]) ~[3] ~[4] ~[12]>
+
+	CUSTOMIZATION_ADJECTIVE_0 <Real>
+	CUSTOMIZATION_ADJECTIVE_1 <Shadow>
+	CUSTOMIZATION_ADJECTIVE_2 <Iga>
+	CUSTOMIZATION_ADJECTIVE_3 <Secret>
+	CUSTOMIZATION_ADJECTIVE_4 <Koga>
+	CUSTOMIZATION_NOUN_0 <Ninja>
+	CUSTOMIZATION_NOUN_1 <Shinobi>
+	CUSTOMIZATION_NOUN_2 <Power>
+	CUSTOMIZATION_NOUN_3 <Assassin>
+	CUSTOMIZATION_NOUN_4 <Kunoichi>
+
+	inv
+		%% Small Guns
+		Gun 6
+		name <Ambush Pistol>
+		caliber <25mm caseless>
+		Range 4
+		scale 2
+		sub
+			Ammo 6
+			Magazine 20
+			caliber <25mm caseless>
+		end
+
+		Gun 4
+		Scale 2
+		name <Dartgun>
+		caliber <15mm ferrous needle>
+		desc <This light railgun fires electrically charged needles, potentially disabling the target's control system.>
+		range 7
+		Acc 1
+		Speed 2
+		Mass -1
+		sub
+			Ammo 4
+			Magazine 20
+			caliber <15mm ferrous needle>
+			type <HAYWIRE>
+		end
+
+		Gun 9
+		name <Ink Rifle>
+		caliber <Chemical>
+		range 6
+		speed 3
+		scale 2
+		type <SCATTER>
+		sub
+			Ammo 9
+			Magazine 20
+			caliber <Chemical>
+			type <BLIND OVERLOAD>
+		end
+
+		Gun 5
+		name <Shuriken Rifle>
+		caliber <220mm ferrous disc>
+		scale 2
+		speed 3
+		Range 6
+		type <ARMORPIERCING>
+		mass -3
+		sub
+			Ammo 5
+			caliber <220mm ferrous disc>
+			Magazine 30
+		end
+
+		Gun 8
+		name <Dust Rifle>
+		caliber <Corrosive Dust>
+		range 5
+		scale 2
+		Acc 1
+		type <SCATTER>
+		sub
+			Ammo 8
+			Magazine 20
+			caliber <Corrosive Dust>
+			type <BLIND RUST>
+		end
+
+		Gun 6
+		Scale 2
+		name <Assassin Dartgun>
+		caliber <15mm phase disruptor>
+		range 7
+		Acc 1
+		Speed 3
+		Mass -1
+		type <ARMORPIERCING>
+		sub
+			Ammo 6
+			Magazine 20
+			caliber <15mm phase disruptor>
+			type <DISINTEGRATE>
+
+			STC SML-5
+			mass -2
+			Integral
+		end
+
+		Gun 9
+		name <Ink Sprayer>
+		caliber <Chemical>
+		range 5
+		speed 3
+		scale 2
+		type <LINE BRUTAL>
+		sub
+			Ammo 9
+			Magazine 20
+			caliber <Chemical>
+			type <BLIND OVERLOAD>
+		end
+
+		Gun 10
+		name <Flash Rifle>
+		caliber <50mm explosive cannister>
+		range 7
+		scale 2
+		speed 3
+		sub
+			Ammo 10
+			Magazine 20
+			caliber <50mm explosive cannister>
+			type <BLAST 3 BRUTAL BLIND>
+			mass -5
+		end
+
+		Gun 5
+		name <Shuriken Storm>
+		caliber <220mm ferrous disc>
+		scale 2
+		speed 3
+		Range 6
+		type <ARMORPIERCING>
+		BV 3
+		mass -6
+		sub
+			Ammo 5
+			caliber <220mm ferrous disc>
+			Magazine 60
+
+			STC SML-5
+			mass -2
+			Integral
+		end
+
+		Gun 10
+		name <Shadow Killer>
+		caliber <220mm ferrous disc>
+		scale 2
+		speed 4
+		Range 7
+		Acc 3
+		type <ARMORPIERCING>
+		mass -3
+		sub
+			Ammo 10
+			caliber <220mm ferrous disc>
+			Magazine 30
+
+			STC SML-5
+			mass -2
+			Integral
+		end
+
+
+		%% Big Guns
+		Gun 15
+		Scale 2
+		name <Ambush Cannon>
+		caliber <80mm shell>
+		Range 3
+		Recharge 1
+		sub
+			Ammo 15
+			Magazine 10
+			caliber <80mm shell>
+		end
+
+		STC GR-12
+		name <Assassination Cannon>
+
+		Gun 11
+		name <Flash Bomber>
+		scale 2
+		caliber <100mm cannister>
+		Range 6
+		Recharge 1
+		sub
+			Ammo 11
+			Magazine 10
+			caliber <100mm cannister>
+			type <BLAST 2 BLIND>
+		end
+
+		Gun 15
+		Scale 2
+		name <Shuriken Cannon>
+		caliber <220mm ferrous disc>
+		Range 6
+		mass -3
+		sub
+			Ammo 15
+			caliber <220mm ferrous disc>
+			mass -1
+			Magazine 30
+		end
+
+		BeamGun 11
+		name <Photon Strobe>
+		scale 2
+		acc -2
+		range 4
+		recharge 1
+		type <BLIND>
+
+		Gun 15
+		Scale 2
+		name <Shuriken Storm Cannon>
+		caliber <220mm ferrous disc>
+		Range 6
+		mass -3
+		BV 1
+		sub
+			Ammo 15
+			caliber <220mm ferrous disc>
+			mass -1
+			Magazine 30
+		end
+
+		Gun 15
+		Scale 2
+		name <Heavy Shuriken Cannon>
+		caliber <220mm ferrous disc>
+		Range 7
+		mass -3
+		type <ARMORPIERCING>
+		sub
+			Ammo 15
+			caliber <220mm ferrous disc>
+			mass -1
+			Magazine 30
+		end
+
+		Gun 15
+		Scale 2
+		name <Heavy Storm Cannon>
+		caliber <220mm ferrous disc>
+		Range 7
+		mass -3
+		BV 2
+		sub
+			Ammo 15
+			caliber <220mm ferrous disc>
+			mass -2
+			Magazine 60
+		end
+
+		Gun 16
+		name <Ink Cannon>
+		caliber <Chemical>
+		range 7
+		scale 2
+		type <BLAST 2>
+		sub
+			Ammo 16
+			Magazine 30
+			caliber <Chemical>
+			type <BLIND OVERLOAD>
+		end
+
+		Gun 12
+		name <Rain of Death>
+		scale 2
+		caliber <20mm ferrous needle>
+		Range 6
+		mass -2
+		BV 3
+		type <SWARM>
+		sub
+			Ammo 12
+			Magazine 100
+			caliber <20mm ferrous needle>
+			type <HAYWIRE>
+			mass -3
+		end
+
+		%% Melee Weapons
+		Melee 6
+		name <Sai>
+		mass -4
+		scale 2
+
+		Melee 7
+		name <Kama>
+		type <ARMORPIERCING>
+		mass -4
+		scale 2
+
+		Melee 7
+		name <Nunchakus>
+		type <FLAIL>
+		speed 3
+		mass -4
+		scale 2
+
+		Melee 9
+		name <Shikoro Blade>
+		type <ARMORPIERCING BRUTAL>
+		mass -3
+		Acc -1
+		speed 3
+		scale 2
+
+		Melee 5
+		name <Shuriken>
+		type <ARMORPIERCING THROWN RETURN>
+		mass -3
+		speed 3
+		scale 2
+
+		Melee 14
+		name <Chigiriki>
+		type <EXTEND FLAIL>
+		Speed 3
+		Acc 1
+		mass -6
+		scale 2
+
+		Melee 12
+		name <Ninjato>
+		type <ARMORPIERCING>
+		Speed 4
+		Acc 3
+		mass -8
+		Scale 2
+		sub
+			STC SML-5
+			mass -3
+			Integral
+		end
+
+		Melee 7
+		name <Flame Shuriken>
+		type <ARMORPIERCING BURN THROWN RETURN>
+		mass -5
+		speed 3
+		scale 2
+
+		Melee 10
+		name <Kusari-Gama>
+		type <THROWN RETURN FLAIL>
+		Speed 3
+		acc 1
+		mass -6
+		scale 2
+
+		Melee 10
+		name <Raijin Shuriken>
+		type <ARMORPIERCING HAYWIRE THROWN RETURN>
+		mass -8
+		speed 3
+		scale 2
+
+
+		%% Missile Launchers
+		MLauncher 2
+		scale 2
+		sub
+			STC SWM-2
+			name <Flash Bombs>
+			type <SWARM BLIND>
+			Magazine 10
+		end
+
+		MLauncher 4
+		scale 2
+		sub
+			STC SWM-2
+			name <Flash Bombs>
+			type <SWARM BLIND>
+			Magazine 20
+		end
+
+		MLauncher 6
+		scale 2
+		sub
+			STC SWM-2
+			name <Flash Bombs>
+			type <SWARM BLIND>
+			Magazine 30
+		end
+
+		MLauncher 8
+		scale 2
+		sub
+			STC SWM-2
+			name <Flash Bombs>
+			type <SWARM BLIND>
+			Magazine 40
+		end
+
+		MLauncher 8
+		scale 2
+		sub
+			STC SWM-5
+			name <Raijin Bombs>
+			type <SWARM BLIND OVERLOAD>
+			Magazine 16
+		end
+
+		MLauncher 10
+		scale 2
+		sub
+			STC SWM-5
+			name <Raijin Bombs>
+			type <SWARM BLIND OVERLOAD>
+			Magazine 20
+		end
+
+		MLauncher 12
+		scale 2
+		sub
+			STC SWM-5
+			name <Raijin Bombs>
+			type <SWARM BLIND OVERLOAD>
+			Magazine 24
+		end
+
+		MLauncher 4
+		scale 2
+		sub
+			Rockets 20
+			name <Ultimate Metsubushi>
+			type <BLAST 2 BRUTAL BLIND OVERLOAD>
+			range 8
+			magazine 2
+		end
+
+		MLauncher 20
+		scale 2
+		sub
+			STC SWM-5
+			name <Raijin Bombs>
+			type <SWARM BLIND OVERLOAD>
+			Magazine 40
+		end
+
+		MLauncher 6
+		scale 2
+		sub
+			Rockets 20
+			name <Ultimate Metsubushi>
+			type <BLAST 2 BRUTAL BLIND OVERLOAD>
+			range 8
+			magazine 3
+		end
+	end
+	%% End 10.Ninja
 

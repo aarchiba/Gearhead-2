@@ -190,6 +190,18 @@ Persona
 	Start <EndChat Say %id%01>
 	Msg%id%01 <We'll send them to oblivion.>
 
+Persona
+	%% Dragon Version
+	requires <*LetsDefeatThem [MT9]>
+	Start <EndChat Say %id%01>
+	Msg%id%01 <Now they'll see what real power is!>
+
+Persona
+	%% Ninja Version
+	requires <*LetsDefeatThem [MT10]>
+	Start <EndChat Say %id%01>
+	Msg%id%01 <You take them from the front, I'll sneak around to the back.>
+
 
 
 % TYPE: *LetsStartPatrol
@@ -374,6 +386,18 @@ Persona
 	requires <*THEME_EXPO [MT9] &ENEMY>
 	Start <EndChat Say %id%01 Goto %1%>
 	Msg%id%01 <I shall devour your soul!>
+
+	Persona
+	%% Ninja Theme
+	requires <*THEME_EXPO [MT10]>
+	Start <EndChat Say %id%01 Goto %1%>
+	Msg%id%01 <Beware the shadows. Soon you will learn.>
+
+	Persona
+	%% Ninja Theme
+	requires <*THEME_EXPO [MT10] &ENEMY>
+	Start <EndChat Say %id%01 Goto %1%>
+	Msg%id%01 <You won't even see your death approaching.>
 
 
 % TYPE: *BattleIntroduction
