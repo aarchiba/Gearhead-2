@@ -1,0 +1,352 @@
+%
+% MECHA THEMES
+%
+% Each theme needs a unique ID number.
+%
+% In the theme's InvCom, store all the equipment that this theme might install in
+% other mecha.
+
+% Context of the specialist skill is indicated by "[skill number]". For instance,
+% a Mecha Artillery specialist would be indicated by "[3]".
+
+% All themes must have:
+%   CUSTOMIZATION_ADJECTIVE_0 .. CUSTOMIZATION_ADJECTIVE_4
+%   CUSTOMIZATION_NOUN_0 .. CUSTOMIZATION_NOUN_4
+
+%% Contents
+%%  11. Lightning
+%%  12. 
+
+Theme 11
+	name <Lightning>
+	% All of these weapons have a lightning or thunder theme. Many of them
+	% will feature the Overload or Haywire effects, and most of them should
+	% have a relatively high speed.
+	requires <GENERAL ~[1] ~Speed>
+
+	CUSTOMIZATION_ADJECTIVE_0 <Electric>
+	CUSTOMIZATION_ADJECTIVE_1 <Shocking>
+	CUSTOMIZATION_ADJECTIVE_2 <Lightning>
+	CUSTOMIZATION_ADJECTIVE_3 <Gigavolt>
+	CUSTOMIZATION_ADJECTIVE_4 <Ion>
+	CUSTOMIZATION_NOUN_0 <Thunder>
+	CUSTOMIZATION_NOUN_1 <Thor>
+	CUSTOMIZATION_NOUN_2 <Zeus>
+	CUSTOMIZATION_NOUN_3 <Bolt>
+	CUSTOMIZATION_NOUN_4 <Storm>
+
+	inv
+		%% Big Guns
+		Gun 11
+		Scale 2
+		name <Storm Bomber>
+		caliber <50mm self-propelled>
+		Range 5
+		Recharge 1
+		sub
+			Ammo 11
+			Magazine 12
+			caliber <50mm self-propelled>
+			type <BLAST 1>
+		end
+
+		Gun 12
+		Scale 2
+		name <Polaris Cannon>
+		caliber <40mm caseless>
+		Range 5
+		Recharge 2
+		sub
+			Ammo 12
+			Magazine 30
+			caliber <40mm caseless>
+		end
+
+		Gun 12
+		Scale 2
+		name <Thunder Bringer>
+		caliber <65mm shell>
+		Range 6
+		Recharge 3
+		acc -2
+		sub
+			Ammo 12
+			Magazine 25
+			caliber <65mm shell>
+		end
+
+		Gun 12
+		Scale 2
+		name <Thunderbolt Cannon>
+		caliber <70mm ferrous>
+		Range 7
+		Recharge 2
+		sub
+			Ammo 12
+			Magazine 16
+			caliber <70mm ferrous>
+			type <HAYWIRE>
+		end
+
+		Gun 14
+		name <Storm Cannon>
+		caliber <72mm capacitor>
+		range 9
+		scale 2
+		speed 1
+		sub
+			Ammo 14
+			Magazine 16
+			caliber <72mm capacitor>
+			type <BLAST 3 OVERLOAD>
+		end
+
+		Gun 16
+		Scale 2
+		name <Thor Cannon>
+		caliber <50mm ferrous>
+		Range 7
+		Speed 4
+		sub
+			Ammo 16
+			caliber <50mm ferrous>
+			mass -10
+			Magazine 60
+		end
+
+		Beamgun 11
+		name <Heavy Electrolaser>
+		scale 2
+		range 7
+
+		Beamgun 12
+		name <Jove Cannon>
+		desc <This cannon fires a stream of charged particles, hopefully disrupting the electrical systems of its target.>
+		scale 2
+		range 5
+		type <HAYWIRE>
+
+		STC PAR-13
+
+		STC PAR-13
+		mass -3
+
+		%% Melee Weapons
+		Melee 5
+		name <Thunder Knife>
+		scale 2
+		type <HAYWIRE>
+		mass -2
+
+		Melee 8
+		name <Thunder Rod>
+		scale 2
+		type <HAYWIRE>
+		mass -4
+
+		Melee 8
+		name <Thunder Mace>
+		scale 2
+		type <BRUTAL HAYWIRE>
+
+		Melee 12
+		name <Thunder Sword>
+		scale 2
+		type <HAYWIRE>
+		Speed 3
+		mass -6
+
+		Melee 11
+		name <Thunder Hammer>
+		scale 2
+		type <BRUTAL HAYWIRE>
+		Speed 3
+		mass -4
+
+		Melee 13
+		name <Thunder Axe>
+		scale 2
+		type <EXTEND BRUTAL HAYWIRE>
+		Speed 3
+		mass -7
+
+		Melee 15
+		name <Thunder Lash>
+		scale 2
+		type <EXTEND FLAIL HAYWIRE>
+		Acc -2
+		Speed 3
+		mass -9
+
+		Melee 10
+		name <Lightning Bolt>
+		scale 2
+		type <EXTEND THROWN RETURN HAYWIRE>
+		speed 3
+		mass -6
+
+		Melee 16
+		name <Thor's Hammer>
+		scale 2
+		type <THROWN RETURN BRUTAL>
+		Speed 3
+		mass -7
+
+		Melee 18
+		name <Gungnir>
+		scale 2
+		type <EXTEND ARMORPIERCING HAYWIRE>
+		Acc 5
+		Speed 3
+		mass -10
+
+
+		%% Missiles
+		MLauncher 2
+		scale 2
+		sub
+			STC SCRM-1
+			magazine 20
+		end
+
+		MLauncher 4
+		scale 2
+		sub
+			STC SCRM-1
+			magazine 40
+		end
+
+		MLauncher 10
+		scale 2
+		sub
+			STC SCRM-1
+			magazine 100
+		end
+
+		MLauncher 12
+		scale 2
+		sub
+			STC SCRM-1
+			magazine 120
+		end
+
+		MLauncher 18
+		scale 2
+		sub
+			STC SCRM-1
+			magazine 180
+		end
+
+		MLauncher 24
+		scale 2
+		sub
+			STC SCRM-1
+			magazine 240
+		end
+
+		MLauncher 4
+		scale 2
+		sub
+			STC INM-18
+			name <Mjolnir Missiles>
+			magazine 2
+		end
+
+		MLauncher 15
+		scale 2
+		sub
+			STC INM-18
+			name <Mjolnir Missiles>
+			magazine 8
+		end
+
+		MLauncher 18
+		scale 2
+		sub
+			STC INM-18
+			name <Mjolnir Missiles>
+			magazine 10
+		end
+
+		MLauncher 23
+		scale 2
+		sub
+			STC INM-18
+			name <Mjolnir Missiles>
+			magazine 12
+		end
+
+		%% Small Guns
+		BeamGun 2
+		Scale 2
+		name <Particle Pistol>
+		type <OVERLOAD>
+		Range 3
+		Recharge 2
+
+		BeamGun 2
+		Scale 2
+		name <Lightning Pistol>
+		type <OVERLOAD>
+		Range 4
+		Recharge 3
+
+		Gun 5
+		Scale 2
+		name <Thunderbolt Rifle>
+		caliber <15mm ferrous needle>
+		desc <This light railgun fires electrically charged needles, potentially disabling the target's control system.>
+		range 6
+		Acc 1
+		Speed 4
+		Mass -1
+		sub
+			Ammo 5
+			Magazine 20
+			caliber <15mm ferrous needle>
+			type <HAYWIRE>
+		end
+
+		Beamgun 4
+		name <Electrolaser>
+		scale 2
+		range 7
+		Acc 1
+
+		STC PAR-2
+
+		STC PAR-2
+		name <Lightning Cannon>
+		speed 4
+
+		Gun 9
+		name <Storm Caller>
+		caliber <58mm capacitor>
+		range 9
+		scale 2
+		speed 4
+		sub
+			Ammo 9
+			Magazine 24
+			caliber <58mm capacitor>
+			type <BLAST 3 OVERLOAD>
+		end
+
+		STC PAR-6
+
+		BeamGun 9
+		name <Jove Rifle>
+		desc <This cannon fires a stream of charged particles, hopefully disrupting the electrical systems of its target.>
+		scale 2
+		range 5
+		Speed 3
+		mass -1
+		type <HAYWIRE>
+
+		STC PAR-6
+		name <Heavy Lightning Cannon>
+		speed 3
+	end
+	%% End 11.Lightning
+
+

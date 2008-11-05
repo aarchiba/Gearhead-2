@@ -14,16 +14,16 @@
 %   CUSTOMIZATION_NOUN_0 .. CUSTOMIZATION_NOUN_4
 
 %% Contents
-%%  1. Pyromaniac
-%%  2. Soldier
-%%  3. Sophisticated
-%%  4. Industrial
-%%  5. Pirate
-%%  6. Mad Scientist
-%%  7. Beauty
-%%  8. Dark
-%%  9. Dragon
-%% 10. Ninja
+%%   1. Pyromaniac
+%%   2. Soldier
+%%   3. Sophisticated
+%%   4. Industrial
+%%   5. Pirate
+%%   6. Mad Scientist
+%%   7. Beauty
+%%   8. Dark
+%%   9. Dragon
+%%  10. Ninja
 
 Theme 1
 	name <Pyromaniac>
@@ -31,7 +31,7 @@ Theme 1
 	% fire based. Many of them have the BURN or BRUTAL tags as well. These weapons are
 	% not subtle, nor are they effective at long range, but they get the job done.
 	% Pyromania is favored by those who specialize in Artillery and Electronic Warfare
-	requires <GENERAL ~[2] ~[17]>
+	requires <GENERAL ~[2] ~[17] ~Passionate>
 
 	CUSTOMIZATION_ADJECTIVE_0 <Flash>
 	CUSTOMIZATION_ADJECTIVE_1 <Fire>
@@ -451,7 +451,7 @@ Theme 1
 
 Theme 2
 	name <Soldier>
-	requires <(MILIT|BODY) ~[1]>
+	requires <GENERAL ~MILIT ~Body ~[1]>
 	%% A career warrior, the soldier's weapons are tough and versatile.
 	%% Most of these weapons should be inspired by contemporary military equipment.
 
@@ -2690,10 +2690,10 @@ Theme 7
 		end
 
 		%% Missile Launchers
-		MLauncher 2
+		MLauncher 3
 		Scale 2
 		sub
-			STC SPKM-2
+			STC SPKM-3
 			Magazine 10
 		end
 
@@ -2705,10 +2705,10 @@ Theme 7
 			Magazine 10
 		end
 
-		MLauncher 4
+		MLauncher 6
 		Scale 2
 		sub
-			STC SPKM-2
+			STC SPKM-3
 			Magazine 20
 		end
 
@@ -2745,20 +2745,25 @@ Theme 7
 			range 7
 		end
 
-		MLauncher 20
+		MLauncher 24
 		Scale 2
 		sub
 			STC ICM-5
 			name <Star Flares>
-			Magazine 40
+			Magazine 48
 		end
 
-		MLauncher 20
+		MLauncher 13
 		Scale 2
 		sub
-			STC SPKM-2
-			Magazine 100
+			Rockets 1
+			name <Fairy Missile>
+			Magazine 128
+			Acc 1
+			Range 5
+			type <SWARM BRUTAL OVERLOAD HAYWIRE>
 		end
+
 
 		MLauncher 5
 		Scale 2

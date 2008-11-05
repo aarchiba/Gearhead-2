@@ -184,6 +184,23 @@
 	Range 7
 	Magazine 1
 
+	Rockets 1
+	name <Scrambler Missiles>
+	desig <SCRM-1>
+	Scale 2
+	type <HAYWIRE SWARM>
+	range 6
+	Magazine 1
+
+	Rockets 18
+	name <Incapacitator Missiles>
+	desig <INM-18>
+	Scale 2
+	Acc 2
+	type <OVERLOAD ARMORPIERCING ANTIAIR>
+	range 8
+	Magazine 1
+
 	Rockets 4
 	name <Haywire Missiles>
 	desig <HWM-4>
@@ -202,19 +219,20 @@
 	range 8
 
 
-	Rockets 4
+	Rockets 9
 	name <Plasma Missiles>
-	desig <PLM-4>
+	desig <PLM-9>
 	Scale 2
 	type <BLAST 2 BRUTAL>
 	Range 6
 	Magazine 1
 
-	Rockets 2
+	Rockets 3
 	name <Sparkle Missiles>
 	Scale 2
-	desig <SPKM-2>
-	type <BLAST 2 OVERLOAD>
+	desig <SPKM-3>
+	type <SWARM OVERLOAD>
+	Acc 1
 	Range 7
 	Magazine 1
 
@@ -308,15 +326,6 @@
 	Magazine 1
 	type <SWARM ARMORPIERCING HAYWIRE>
 
-		BeamGun 7
-		name <Jove Rifle>
-		desig <JR-7>
-		desc <This cannon fires a stream of charged particles, hopefully disrupting the electrical systems of its target.>
-		scale 2
-		range 5
-		Speed 3
-		mass -1
-		type <HAYWIRE>
 
 
 
