@@ -23,6 +23,40 @@
 %%
 
 Content
+	name <Mecha Encounters are the foundation of our democracy>
+	desc <Call a mecha encounter, but by another way>
+	requires <*:CS_StopNPCMission &Secondary &IsEnemyNPC>
+
+	% E1 is the NPC to be stopped
+	% E2 is an outdoors scene
+	% E3 is an encounter for the mecha encounter
+	Element2 <Scene Outdoors !Near -7>
+	Element3 <Prefab>
+	Place3 <2>
+
+	%% FAIL CONDITIONS
+	%% - DiscoverNPCMission fails
+
+	% P%id%01 = Initialization Counter
+	update <if= P%id%01 0 P= %id%01 1 SetPlotStatus %plotid1% %id1% SetPlotStatus %plotid2% %id2%>
+	end <ifSubPlotLost %plotid2% LoseSubPlot %plotid% LoseSubPlot %plotid1% Trigger0 .%id%_%plotid%_GoLoss>
+
+	% Pass the results of the mecha encounter backwards to whatever subplot called this one.
+	.%id1%_%plotid1%_GoWin  <WinSubPlot %plotid%  Trigger0 .%id%_%plotid%_GoWin>
+	.%id1%_%plotid1%_GoLoss <LoseSubPlot %plotid% Trigger0 .%id%_%plotid%_GoLoss>
+
+	% SubPlot1 is the mecha encounter
+	% SubPlot2 is the DiscoverNPCMission task
+	SubPlot1 <*:CS_MechaEncounter&Raiders&Secondary 2 3>
+	SubPlot2 <*:CS_DiscoverNPCMission&EnemyNPC&GatheringForces 2 3 1>
+
+	inv
+		stc CORE-ACTIVATABLE
+		name <%name1%'s Forces>
+	end
+
+
+Content
 	name <A Little Help From Your Friends>
 	desc <The NPC reacts badly to a loss, but fortunately you have backup.>
 	requires <*:CS_StopNPCMission &IsEnemyNPC E:A.equ (E:M.com|E:M.ggd)>

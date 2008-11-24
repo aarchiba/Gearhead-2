@@ -188,7 +188,7 @@ Content
 	Get%1% <ifNotAccessArmory if= L%id%01 0 L= %id%01 1 SetItemStolen %1% AddLawful -5 if= L%param% 0  Alert %id%01>
 	Msg%id%01 <Suddenly an alarm sounds!>
 	inv
-		BodyArmor 6
+		HeadArmor 6
 		name <Kumi Helmet>
 		desc <Experimental armor made from a superlight biotech protein.>
 		mass -11
@@ -212,7 +212,7 @@ Content
 	Get%1% <ifNotAccessArmory if= L%id%01 0 L= %id%01 1 SetItemStolen %1% AddLawful -5 if= L%param% 0  Alert %id%01>
 	Msg%id%01 <Suddenly an alarm sounds!>
 	inv
-		BodyArmor 7
+		ArmArmor 7
 		name <Kumi Sleeve>
 		desc <Experimental armor made from a superlight biotech protein.>
 		mass -12
@@ -224,7 +224,7 @@ Content
 	Get%1% <ifNotAccessArmory if= L%id%01 0 L= %id%01 1 SetItemStolen %1% AddLawful -5 if= L%param% 0  Alert %id%01>
 	Msg%id%01 <Suddenly an alarm sounds!>
 	inv
-		BodyArmor 7
+		LegArmor 7
 		name <Kumi Legging>
 		desc <Experimental armor made from a superlight biotech protein.>
 		mass -12

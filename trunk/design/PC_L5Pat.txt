@@ -316,6 +316,34 @@ factions <MAQUI FCOMS RISHI CRIHN>
 Magazine 12
 Legality 25
 
+Gun 24
+name <Bazooka>
+desc <A shoulder-mounted rocket launcher>
+desig <Raketen Mk6>
+caliber <60mm rocket>
+category <WEAPON MISSILE CONTRABAND>
+factions <MAQUI FCOMS RISHI CRIHN BOHEM REDMA PRIVA>
+sdl_sprite <>
+Range 9
+acc -1
+Speed 2
+Legality 10
+mass -14
+sub
+	Ammo 24
+	name <Raketen Clip>
+	caliber <60mm rocket>
+	type <BLAST 3 BRUTAL>
+	Magazine 12
+end
+
+Ammo 24
+name <Raketen Clip [AP]>
+caliber <60mm rocket>
+type <ARMORPIERCING>
+Magazine 24
+Legality 10
+
 
 
 %  ********************

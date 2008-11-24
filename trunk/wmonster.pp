@@ -629,7 +629,7 @@ begin
 	else Terrain_Type := 'GROUND';
 
 	{ Determine the maximum and minimum mecha costs. }
-	Maximum_Cost := OptimalMechaValue( Renown ) * 3;
+	Maximum_Cost := OptimalMechaValue( Renown ) * 4;
 	if Maximum_Cost < Min_Max_Cost then Maximum_Cost := Min_Max_Cost;
 	Minimum_Cost := Maximum_Cost div 3;
 	if Minimum_Cost > Max_Min_Cost then Minimum_Cost := Max_Min_Cost;
