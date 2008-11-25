@@ -1601,7 +1601,7 @@ begin
 	{ If SCENE is a part of Camp\Source, the map needs to be saved. }
 	{ Otherwise dispose of the map and the scene together. }
 	if ( FindGearIndex( Camp^.Source , Camp^.GB^.Scene ) <> -1 ) then begin
-		if ( SAttValue( Camp^.GB^.Scene^.SA , 'NAME' ) <> '' ) then begin
+		if ( SAttValue( Camp^.GB^.Scene^.SA , 'NAME' ) <> '' ) and not AStringHasBString( SAttValue( Camp^.GB^.Scene^.SA , 'SPECIAL' ) , SPECIAL_Unchartable ) then begin
 			FreezeLocation( GearName( Scene ) , Camp^.GB , Camp^.Maps );
 		end;
 		Camp^.gb^.Scene := Nil;

@@ -683,7 +683,7 @@ var
 	begin
 		while LList <> Nil do begin
 			if NAttValue( LList^.NA , NAG_Narrative , NAS_RandomLoot ) > 0 then begin
-				LootValue := Calculate_Threat_Points( Threat , 2 + Random( 4 ) );
+				LootValue := Calculate_Threat_Points( Threat , 10 + Random( 15 ) );
 				SetNAtt( LList^.NA , NAG_Narrative , NAS_RandomLoot , LootValue );
 			end;
 			ScaleRandomTreasure( LList^.SubCom , Threat );

@@ -47,6 +47,8 @@ const
 
 	SPECIAL_ShowAll = 'SHOWALL';
 	SPECIAL_ConvertDoors = 'CELL';
+	SPECIAL_Unchartable = 'UNCHARTABLE';
+
 
 	DW_Horizontal = 1;
 	DW_Vertical = 2;
@@ -2919,7 +2921,7 @@ begin
 
 		{ Next, add the random content. This will likely add more }
 		{ map features. }
-		AddFeatureContent( GB, MF, Cells, Select_Check,Select_Terrain );
+		if not AStringHasBString( SAttValue( MF^.SA , 'SPECIAL' ) , SPECIAL_Unchartable ) then AddFeatureContent( GB, MF, Cells, Select_Check,Select_Terrain );
 
 		{ Finally, do the rendering. }
 		SubFeature := MF^.SubCom;

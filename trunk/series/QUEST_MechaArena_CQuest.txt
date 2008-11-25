@@ -9,6 +9,38 @@
 %%
 
 Content
+	name <Military Trainer>
+	% The challenger can train the PC in mecha combat skills
+	requires <*CHALLENGER_SUBQUEST 1:MILIT -!Ne -!Lo>
+
+	% E1 is the challenger
+sub
+	Persona 1
+	% V%id%01 = Have accepted offer
+	greeting <if# v%id%01 1 else .%id%_GoSchool if= QuestStatus %qid% %id% else %pop% SetQuestStatus %qid% -1  ifG React 0 else .%id%_GoFail NewChat Say %id%01 AddChat %id%01 AddChat %id%02>
+	.%id%_GoSchool <ifG React 0 else .%id%_GoChat NewChat Say %id%02 AddChat %id%03 AddChat %id%04>
+	*.%id%_GoFail <*IConcedeDefeat&Battle>
+	.%id%_GoChat <NewChat SayAnything>
+	*.%id%_GoBye <*GoodBye>
+	.%id%_Skills <1 2 3 4 5>
+	result%id%01 <EndChat V= %id%01 1 Say %id%03 History %id%04 School .%id%_Skills Goto .%id%_GoBye>
+	result%id%02 <EndChat Say %id%05 AddReact -10>
+	result%id%03 <EndChat Say %id%06 School .%id%_Skills Goto .%id%_GoBye>
+	result%id%04 <NewChat Say %id%07>
+	Msg%id%01 <You did really well out there, but if you don't mind me saying there are still a few things for you to learn. How'd you like for me to teach you some things about mecha combat?>
+	Msg%id%02 <Hello soldier. Are you ready to begin training?>
+	Msg%id%03 <That's what I wanted to hear. If you want to be a great pilot, you're going to have to train relentlessly. Let's get started right away.>
+	Msg%id%04 <%name1% offered to train you in mecha combat.>
+	Msg%id%05 <No offense intended, you did beat me after all. The only question is whether or not you're going to beat the next guy.>
+	Msg%id%06 <Let's get to it, then! Hup-to!>
+	Msg%id%07 <You'll never make it in the army with that kind of attitude. You seem to be doing pretty good as a cavalier, though...>
+	Prompt%id%01 <I'd like that. Thanks>
+	Prompt%id%02 <Learn from you? What, is that a joke?>
+	Prompt%id%03 <Yes sir!>
+	Prompt%id%04 <Not today, I'm afraid.>
+end
+
+Content
 	name <Friendship>
 	% The challenger will likely become friends with the PC.
 	requires <*CHALLENGER_SUBQUEST>
@@ -38,8 +70,7 @@ Content
 	name <Mentor/Ally>
 	% The challenger will likely become either a mentor or ally to the PC,
 	% depending on their relative ages.
-	requires <*CHALLENGER_SUBQUEST (1:ADVEN|1:MILIT)>
-	special <REUSABLE>
+	requires <*CHALLENGER_SUBQUEST (1:ADVEN|1:MILIT) -!Ne -!Lo>
 
 	% E1 is the challenger
 sub

@@ -27,6 +27,7 @@ Content
 	sub
 		MetaScene 5 2
 		rumor%id% <%name4% has been searching for %name3% in %name1%.>
+		special <UNCHARTABLE>
 		% L1 = Encounter Over Counter
 		% L2 = Initialization Counter; resets each time
 		% L3 = Storynote 
@@ -122,6 +123,7 @@ Content
 	sub
 		MetaScene 5 2
 		rumor%id% <%name3%'s henchmen have been spotted in %name4%.>
+		special <UNCHARTABLE>
 		MapWidth 30
 		MapHeight 30
 
@@ -364,6 +366,7 @@ Content
 	sub
 		MetaScene 4 2
 		rumor%id% <there are some pirates in %name1% who are also looking for the %name3%.>
+		special <UNCHARTABLE>
 
 		% V1 = Encounter Over Counter
 		MapWidth 50
@@ -473,6 +476,7 @@ Content
 	sub
 		MetaScene 4 2
 		rumor%id% <%name3%'s henchmen have been seen in %name1%.>
+		special <UNCHARTABLE>
 
 		% V1 = Encounter Over Counter
 		% V2 = Number of failed attempts to track
@@ -691,6 +695,7 @@ Content
 	sub
 		MetaScene 3 2
 		rumor%id% <some raiders have been seen in %name1%.>
+		special <UNCHARTABLE>
 
 		% V1 = Encounter Over Counter
 		% V2 = Number of failed attempts to track
@@ -1030,6 +1035,7 @@ Content
 	sub
 		MetaScene 4 2
 		rumor%id% <%name3% has been spotted in %name1%.>
+		special <UNCHARTABLE>
 		% L1 = Encounter Over Counter
 		% L2 = Initialization Counter; resets each time
 		% L3 = Storynote 

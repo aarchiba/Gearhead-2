@@ -370,6 +370,7 @@ Content
 		end
 
 		MetaScene 6 2
+		special <UNCHARTABLE>
 		% L2 = Initialization Counter
 		MapWidth 50
 		MapHeight 50
@@ -389,23 +390,24 @@ Content
 			ParaY 25
 
 			team 2
-			name <Left Flank>
+			name <From the Top>
 			SetEnemy 1
 			SetAlly 3
 			Deploy <if= PlotStatus %plotid% %id% SetSelfFaction &EnemyFac   WMecha 2 StoryDL 60>
-			ParaX 5
-			ParaY 20
+			ParaX 20
+			ParaY 5
 
 			team 3
-			name <Right Flank>
+			name <From the Bottom>
 			SetEnemy 1
 			SetAlly 2
 			Deploy <if= PlotStatus %plotid% %id% SetSelfFaction &EnemyFac   WMecha 3 StoryDL 60>
-			ParaX 45
-			ParaY 30
+			ParaX 30
+			ParaY 45
 		end
 
 		MetaScene 7 2
+		special <UNCHARTABLE>
 		% L2 = Initialization Counter
 		MapWidth 50
 		MapHeight 50
@@ -443,6 +445,7 @@ Content
 
 
 		MetaScene 8 2
+		special <UNCHARTABLE>
 		% L2 = Initialization Counter
 		MapWidth 50
 		MapHeight 50

@@ -1504,8 +1504,7 @@ begin
 			end;
 		end;
 
-		if HasAttackAttribute( AtDesc , AA_ArmorPiercing ) then MOS := MOS + 2
-		else if HasAttackAttribute( AtDesc , AA_ArmorIgnore ) then MOS := MOS + 12;
+		if HasAttackAttribute( AtDesc , AA_ArmorIgnore ) then MOS := MOS + 12;
 
 		{ If called shots are illegal right now, reduce MOS }
 		{ by 2 to represent the general lack of precision. }
@@ -1523,14 +1522,12 @@ begin
 			CritHit := SkillRoll( ER.Originator , CritSkill , CritTar , 0 , False , True );
 
 			if CritHit > CritTar then begin
-				{ Note that the MOSMeasure is doubled for Critical Hit skill use, since this is kinda like bonus MOS. }
-				{ Also note that this bonus does apply to non-master targets. }
 				MOS := MOS + ( ( CritHit - CritTar ) div MOSMeasure ) + 1;
 			end;
 
 			{ If the originator has Spot Weakness skill, modify damage for that. }
 			if HasSkill( ER.Originator , 18 ) then begin
-				if HasTalent( ER.Originator , NAS_Sniper ) then begin
+				if HasTalent( ER.Originator , NAS_Sniper ) and ( ER.Weapon <> Nil ) and ( ER.Weapon^.G = GG_Weapon ) and (( ER.Weapon^.S = GS_Ballistic ) or ( ER.Weapon^.S = GS_BeamGun )) then begin
 					ER.FXDice := ER.FXDice + SkillRank( ER.Originator , 18 );
 				end else begin
 					ER.FXDice := ER.FXDice + ( SkillRank( ER.Originator , 18 ) div 2 );
@@ -1542,6 +1539,12 @@ begin
 			if HasTalent( ER.Originator , NAS_Anatomist ) and ( NAttValue( Target^.NA , NAG_GearOps , NAS_Material ) = NAV_Meat ) then begin
 				MOS := MOS + 1;
 			end;
+		end;
+
+		{ If the weapon has the ARMORPIERCING attribute, its MOS will always be at least 2. }
+		if HasAttackAttribute( AtDesc , AA_ArmorPiercing ) then begin
+			if MOS < 2 then MOS := 2
+			else MOS := MOS + 1;
 		end;
 
 		{ Modify MOS for the "HARD AS NAILS", "HULL DOWN" talents. }

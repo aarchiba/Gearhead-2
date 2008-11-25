@@ -1158,6 +1158,88 @@ end
 %%
 
 Content
+	name <PC vs Evan>
+	requires <*:MECHA_ARENA_CHALLENGE (!Hi|!Ex)>
+	% E1 is the arena manager
+	% E2 is the arena proper
+	% E3 is the challenger
+	Element3 <Prefab>
+	Scene3 <Building Public>
+	Team3 <Citizens>
+	TeamData3 <Ally Pass>
+
+	Quest1 <*CHALLENGER_SUBQUEST 3>
+
+sub
+	Persona 1
+	Greeting <if= QuestStatus %qid% %id% else %pop%  if= ArenaState %2% NAV_AS_Win else .%id%_GoCheckLoss SetQuestStatus %qid% %id1% if# ArenaWins %2% 10 else GoBigWin Goto .%id%_GoArenaWin>
+	*.%id%_GoCheckLoss <*ChallengerStatusReport %3% %2% .%id%_GoNPCDied>
+	.%id%_GoInit <ifNPCOK %3% else .%id%_GoNPCDied NewChat Say %id%01 SetQuestStatus %qid% %id%  NPCSubQMemo %3% %id% %id%02  AddChat %id%01>
+	%% Just in case the NPC who we're supposed to fight has died somehow, just set up a normal fight.
+	*.%id%_GoNPCDied <*YourChallengerDied %2% %qid%>
+	*.%id%_GoArenaWin <*ChallengeArenaWin %3% %2% .%id%_GoConclude>
+	.%id%_GoConclude <ResetArena %2%>
+	Result%id%01 <NewChat Say %id%03>
+	Msg%id%01 <Your next opponent is a mecha pilot called Evan. Maybe you haven't heard of him before; he's new to the arena scene, but has tons of experience as a fighter. You can find him at \SCENE %s3% .>
+	Msg%id%02 <%name1% sent you to battle %name3% in arena combat; \SPR %3% can be found in \SCENE %s3% .>
+	Msg%id%03 <He served with the Federation Defense Force for around twenty years. Evan was part of the garrison assigned to Wujung when Typhon broke free; he lost his family that day, and nearly lost his life.>
+	Prompt%id%01 <What kind of experience are we talking about?>
+
+	Persona 3
+	% V1 = First time chat counter
+	Greeting <if= QuestStatus %qid% %id% else GoNoMatch  if= ArenaState %2% NAV_AS_Battle else GoCheckStatus Goto GoTrashTalk>
+	GoTrashTalk <EndChat Say 7 AddChat 4 AddChat 5>
+	GoCheckStatus <if= ArenaState %2% NAV_AS_Ready else GoCheckWin EndChat Say 1>
+	GoCheckWin <if= ArenaState %2% NAV_AS_Win else GoCheckChallenge ifNPCOK %1% else GoManagerDied NewChat Say 2>
+	GoManagerDied <NewChat Say 3 SetQuestStatus %qid% -1 ResetArena %2%>
+	GoCheckChallenge <ResetArena %2% ifG ComTime ArenaRecharge %2% else GoLater if= V1 1 else GoFirstTime NewChat Say 4 AddChat 1 AddChat 2>
+	GoFirstTime <NewChat Say 5 V= 1 1 AddCHat 1 AddChat 2 AddChat 3>
+	*GoLater <*ChallengeMeLater>
+	*GoNoMatch <*NiceToMeetYou GoChat>
+	*GoChat <*MISC_CHATTER>
+	GoStartCombat <SetChallengerID %2% %3% SetChallengerHome %2% %s3% MoveNPC %3% %2% PrepArena %2% 0 SetNPCTeam %3% 2>
+	*result1 <*MeetMeAtArena %2% GoStartCombat>
+	result2 <EndChat Say 6 Goto GoStartCombat>
+	result3 <EndChat Say 9 Goto GoStartCombat>
+	result4 <EndChat Say 8>
+	result5 <Goto result4>
+	Msg1 <I'm waiting for you in \SCENE %2% .>
+	Msg2 <I did my best... I have no reason for regret. Go tell %name1% that you won.>
+	Msg3 <Too bad about what happened to %name1%...>
+	Msg4 <I've been waiting. Let's go.>
+	Msg5 <So you're my challenger. Let's go to the arena.>
+	Msg6 <Time doesn't wait, you know. I'll meet you at the arena.>
+	Msg7 <If you could live life over again, would it make any difference or would you make the same mistakes as the first time? Are we cursed by fate to live as we do?>
+	Msg8 <You don't know it, but the winner of this match has already been decided.>
+	Msg9 <There's noting to talk about. I'll meet you at the arena.>
+	Prompt1 <Alright, let's do that.>
+	Prompt2 <Could you give me some time to get ready first?>
+	Prompt3 <Wait, I'd like to talk for a bit first.>
+	Prompt4 <Enough philosophizing, let's fight!>
+	Prompt5 <People make their own fate.>
+end
+inv
+	NPC Soldier
+	name <Evan>
+	chardesc Male Shy Melancholy Spiritual
+	SDL_PORTRAIT <>
+	SDL_COLORS <>
+	statline 14 16 14 15 9 15 11 9
+	Age 21
+	SetTheme 2
+	SetSpecSkill 2
+	SetFaction 5
+	Skill 13 10
+	Skill 17 10
+	Skill 18 10
+	Skill 28 10
+	Skill 36 10
+	Talent 8
+	Talent 24
+end
+
+
+Content
 	name <PC vs Caher>
 	% Caher qualified for Robot Warriors; I'd say that ranks him as high level.
 	requires <*:MECHA_ARENA_CHALLENGE (!Hi|!Ex)>
@@ -1189,10 +1271,10 @@ sub
 	*.%id%_GoArenaWin <*ChallengeArenaWin %3% %2% .%id%_GoConclude>
 	.%id%_GoConclude <ResetArena %2%>
 	Result%id%01 <NewChat Say %id%02>
-	Msg%id%01 <You have a special challenger for the next battle. Her name is Vanda; you can find her at \SCENE %s3% .>
+	Msg%id%01 <Your next challenger is Caher. He started as a recon pilot on Mars, but has since become a rising star on the dueling scene. Hoeller Industries just signed him to a sponsorship deal.>
 	Msg%id%02 <%name1% sent you to battle %name3% in arena combat; \SPR %3% can be found in \SCENE %s3% .>
-	Msg%id%02 <She's an extremely talented fighter. Her specialty is flame weapons. Although she's good at just about everything, she's particularly deadly in close combat. Watch out.>
-	Prompt%id%01 <What can you tell me about this Vanda?>
+	Msg%id%02 <Caher's a bit flaky, but a fantastic pilot. He's an expert at stealth. If you let him out of your sight that might be the last mistake you'll ever make.>
+	Prompt%id%01 <Any advice for me?>
 
 	Persona 3
 	% V1 = Have been told to wait before
@@ -1477,7 +1559,7 @@ inv
 	StatLine 17 14 15 14 10 15 16 24
 	SDL_Portrait <por_m_bishonen(-C-).png>
 	SDL_Colors <166 47 32 255 212 195 245 215 150>
-	SetTheme 7
+	SetTheme 9
 	SetSpecSkill 1
 	Skill 12 10
 	Skill 19 10

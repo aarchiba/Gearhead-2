@@ -31,7 +31,7 @@ Scene 0 2
 	SpaceBackdrop
 	terrain <GROUND>
 	type <Arena>
-	special <SHOWALL SOLO ARENA NOPILLAGE>
+	special <SHOWALL SOLO ARENA NOPILLAGE UNCHARTABLE>
 	map <MAP_RocketArena.txt>
 
 	start <if= SelfArenaState NAV_AS_Ready else GoCheckBattle          Alert 1   SetSelfArenaState NAV_AS_Battle SetSelfArenaRecharge if# SelfChallengerID 0 ForceChat SelfChallengerID>
@@ -77,7 +77,7 @@ Scene 0 2
 	MapHeight 50
 
 	type <Arena>
-	special <SHOWALL SOLO ARENA NOPILLAGE>
+	special <SHOWALL SOLO ARENA NOPILLAGE UNCHARTABLE>
 	terrain <GROUND>
 
 	start <if= SelfArenaState NAV_AS_Ready else GoCheckBattle          Alert 1   SetSelfArenaState NAV_AS_Battle SetSelfArenaRecharge if# SelfChallengerID 0 ForceChat SelfChallengerID>
@@ -125,7 +125,7 @@ Scene 0 2
 	SpaceBackdrop
 
 	type <Arena>
-	special <SHOWALL SOLO ARENA NOPILLAGE>
+	special <SHOWALL SOLO ARENA NOPILLAGE UNCHARTABLE>
 	terrain <GROUND>
 
 	start <if= SelfArenaState NAV_AS_Ready else GoCheckBattle          Alert 1   SetSelfArenaState NAV_AS_Battle SetSelfArenaRecharge if# SelfChallengerID 0 ForceChat SelfChallengerID>
@@ -174,7 +174,7 @@ Scene 0 2
 	MapHeight 50
 	terrain <SPACE>
 	type <Arena>
-	special <SHOWALL SOLO ARENA NOPILLAGE>
+	special <SHOWALL SOLO ARENA NOPILLAGE UNCHARTABLE>
 	MapWidth 50
 	MapHeight 50
 
@@ -262,7 +262,7 @@ Scene 0 2
 	MapHeight 50
 
 	type <Arena>
-	special <SHOWALL SOLO ARENA NOPILLAGE>
+	special <SHOWALL SOLO ARENA NOPILLAGE UNCHARTABLE>
 	terrain <GROUND>
 
 	start <if= SelfArenaState NAV_AS_Ready else GoCheckBattle          Alert 1   SetSelfArenaState NAV_AS_Battle SetSelfArenaRecharge if# SelfChallengerID 0 ForceChat SelfChallengerID>
@@ -311,7 +311,7 @@ Scene
 	MapWidth 32
 	MapHeight 32
 	terrain <GROUND>
-	special <SHOWALL SOLO ARENA NOPILLAGE>
+	special <SHOWALL SOLO ARENA NOPILLAGE UNCHARTABLE>
 
 	start <if= SelfArenaState NAV_AS_Ready else GoCheckBattle          Alert 1   SetSelfArenaState NAV_AS_Battle SetSelfArenaRecharge if# SelfChallengerID 0 ForceChat SelfChallengerID>
 	GoCheckBattle <if= SelfArenaState NAV_AS_Battle else GoBoringStart Print 2>
