@@ -449,6 +449,73 @@ inv
 	Talent 8
 end
 
+Content
+	name <PC vs Zako>
+	requires <*:MECHA_ARENA_CHALLENGE (!Ne|!Lo)>
+
+	% E1 is the arena manager
+	% E2 is the arena proper
+	% E3 is the challenger
+	Element3 <Prefab>
+	Scene3 <Building Public !Okay 3>
+	Team3 <Citizens>
+	TeamData3 <Ally Pass>
+
+	Quest1 <*CHALLENGER_SUBQUEST 3>
+
+sub
+	Persona 1
+	Greeting <if= QuestStatus %qid% %id% else %pop%  if= ArenaState %2% NAV_AS_Win else .%id%_GoCheckLoss SetQuestStatus %qid% %id1% if# ArenaWins %2% 10 else GoBigWin Goto .%id%_GoArenaWin>
+	*.%id%_GoCheckLoss <*ChallengerStatusReport %3% %2% .%id%_GoNPCDied>
+	.%id%_GoInit <ifNPCOK %3% else .%id%_GoNPCDied NewChat Say %id%01 SetQuestStatus %qid% %id%  NPCSubQMemo %3% %id% %id%02  AddChat %id%01>
+	%% Just in case the NPC who we're supposed to fight has died somehow, just set up a normal fight.
+	*.%id%_GoNPCDied <*YourChallengerDied %2% %qid%>
+	*.%id%_GoArenaWin <*ChallengeArenaWin %3% %2% .%id%_GoConclude>
+	.%id%_GoConclude <ResetArena %2%>
+	Result%id%01 <NewChat Say %id%03>
+	Msg%id%01 <For the next match, you'll be fighting a young pilot named Zako. You can find \OPR %3% at \SCENE %s3% .>
+	Msg%id%02 <%name1% sent you to battle %name3% in arena combat; \SPR %3% can be found in \SCENE %s3% .>
+	Msg%id%03 <Not as good as she thinks she is, but that doesn't mean you should let your guard down. Zako seeks power at any cost. She's not above using dirty tricks to win a match.>
+	Prompt%id%01 <Zako, huh? Is she any good?>
+
+	Persona 3
+	% V1 = First time chat counter
+	Greeting <if= QuestStatus %qid% %id% else GoNoMatch  if= ArenaState %2% NAV_AS_Battle else GoCheckStatus Goto GoTrashTalk>
+	*GoTrashTalk <*ArenaChallenge GoThemeInfo>
+	*GoThemeInfo <*THEME_EXPO&Enemy NA>
+	GoCheckStatus <if= ArenaState %2% NAV_AS_Ready else GoCheckWin EndChat Say 1>
+	GoCheckWin <if= ArenaState %2% NAV_AS_Win else GoCheckChallenge ifNPCOK %1% else GoManagerDied NewChat Say 2>
+	GoManagerDied <NewChat Say 3 SetQuestStatus %qid% -1 ResetArena %2%>
+	GoCheckChallenge <ResetArena %2% ifG ComTime ArenaRecharge %2% else GoLater if= V1 1 else GoFirstTime NewChat Say 4 AddChat 1 AddChat 2>
+	GoFirstTime <NewChat Say 5 V= 1 1 AddCHat 1 AddChat 2>
+	*GoLater <*ChallengeMeLater>
+	*GoNoMatch <*NiceToMeetYou GoChat>
+	*GoChat <*MISC_CHATTER>
+	GoStartCombat <SetChallengerID %2% %3% SetChallengerHome %2% %s3% MoveNPC %3% %2% PrepArena %2% 0 SetNPCTeam %3% 2>
+	*result1 <*MeetMeAtArena %2% GoStartCombat>
+	*result2 <*RejectChallenge>
+	Msg1 <Where are you? I'm waiting...>
+	Msg2 <No fair! Let's go best two out of three...>
+	Msg3 <%name1% died. It's a pity that we won't be able to have that match.>
+	Msg4 <I'm ready to go trash you now. How about we get this fight started?>
+	Msg5 <Look at this- the next victim for my already impressive list of kills. %name1% told me you were coming. Do you wanna get this fight started right away?>
+	Prompt1 <Let's go to the arena.>
+	Prompt2 <Sorry, but I need some time to prepare.>
+end
+inv
+	NPC Arena Pilot
+	name <Zako>
+	job <Mecha Pilot>
+	CharDesc Female Cheerful Easygoing Villainous
+	Age -1
+	StatLine 16 10 14 11 12 14 10 13
+	SDL_Portrait <por_f_mechpilot(--Y).png>
+	SDL_Colors <36 46 22 199 188 162 168 153 230>
+	SetTheme 12
+	SetSpecSkill 4
+	Skill 18 10
+	Skill 25 10
+end
 
 %%
 %% Mid Range Compeditors

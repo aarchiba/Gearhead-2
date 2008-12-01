@@ -23,11 +23,89 @@
 %%  ***   +P--  Peaceful  Life   ***
 %%  ********************************
 
+Content
+	name <Capture Weapons Shipment>
+	size 7
+	desc <Capture an enemy cruiser, learn they're working on a weapons program.>
+	requires <*:CS_MechaEncounter &Raiders (+P--|+Pun) -!Ne -!Lo>
+	changes <+P>
+
+	% E1 is the outdoors scene where this encounter will be placed
+	% E2 is the metascene to be used for this encounter
+
+	% P%id%01 = Initialization Counter
+	% P%id%03 = Have gained decimation
+	update <if= V%id%01 0 V= %id%01 1   SetPlotStatus %plotid1% %id1%>
+
+	.%id1%_%plotid1%_GoDecimation     <P= %id%03 1>
+
+	% SubPlot1 = Gain Advantage vs Raiders
+	SubPlot1 <*:CS_GainAdvantageVsMecha&Decimation>
+
+	sub
+		MetaScene 2 2
+		% L1 = Encounter Over Counter
+		% L2 = Initialization Counter
+		MapWidth 50
+		MapHeight 50
+
+		Start <if= L2 0 L= 2 1   Alert 1  CancelSubPlot %plotid1%>
+		nu1 <if= T1 0   Return   if= V1 0 V= 1 1 Alert 2 History 3 Trigger0 .%id%_%plotid%_GoLoss LoseSubPlot %plotid%>
+		nu2 <if= T2 0   ifG T3 0 else GoCheckWin  Alert 4 WMecha 2 StoryDL 70>
+		GoCheckWin <if= V1 0 V= 1 1   ifG T4 0 else GoLoseEncounter XPV 100  AddRenown 1   Alert 5 History 6 CustomMecha .mek StoryDL AlterContext .changes   Trigger0 .%id%_%plotid%_GoWin WinSubPlot %plotid%>
+		.mek <GENERAL \FACTION_DESIG &EnemyFac>
+		.changes <+Pew>
+		GoLoseEncounter <Alert 2 History 3 Trigger0 .%id%_%plotid%_GoLoss LoseSubPlot %plotid%>
+		end <SetEncounterInactive %2%>
+
+		Msg1 <You discover your enemies escorting a cruiser. If you capture the vessel by disabling its weapons and engines, you can find out what they're transporting.>
+		Msg2 <You failed to capture the enemy vessel.>
+		Msg3 <You encountered an enemy cruiser, but failed to capture it.>
+		Msg4 <Reinforcements arrive!>
+		Msg5 <You capture the enemy vessel. You find that they were transporting a prototype mecha.>
+		Msg6 <You captured an enemy vessel and their prototype mecha.>
+
+		sub
+			team 1
+			SetEnemy 2 3
+			ParaX 45
+			ParaY 25
+
+			team 2
+			SetEnemy 1
+			SetAlly 3
+			Deploy <if= PlotStatus %plotid% %id% SetSelfFaction &EnemyFac   if= p%id%03 0 else GoSmallDeploy WMecha 2 StoryDL 150>
+			GoSmallDeploy <WMecha 2 StoryDL 70>
+			home <Enemy Zone>
+
+			team 3
+			setenemy 1
+			setally 2
+
+			team 4
+			name <Neutral Bitz>
+
+			rect
+			name <Enemy Zone>
+			special <SubZone>
+			width 12
+			height 12
+			MFX 1
+			MFY 19
+			sub
+				SuperProp
+				requires <*Cruiser>
+				Team1 4
+				Team2 3
+				Team3 3
+			end
+		end
+	end
+
 
 %%  ****************************
 %%  ***   +Pme  Meet Enemy   ***
 %%  ****************************
-
 
 %%  *****************************************
 %%  ***   +Pun  Unknown  Enemy  Attacks   ***
@@ -295,7 +373,7 @@ Content
 
 Content
 	name <Revenge Road>
-	size 6
+	size 12
 	desc <The Enemy has mobilized all forces to destroy the PC.>
 	requires <*:CS_MechaEncounter E:++ E:A.hat (E:M.---|E:M.com|E:M.see) -&Secondary>
 	changes <E:M>
@@ -375,12 +453,12 @@ Content
 		MapWidth 50
 		MapHeight 50
 
-		Start <if= L2 0 L= 2 1 Alert 1>
+		Start <if= L2 0 L= 2 1>
 		nu1 <if= T1 0   Return if= L2 1 L= 2 2 AddRenown -1>
-		nu2 <if= T2 0   if= L2 1 L= 2 2 Alert 2 Return>
+		nu2 <if= T2 0 if= T3 0   if= L2 1 L= 2 2 Alert 2 Return>
+		nu3 <if= T2 0 if= T3 0   if= L2 1 L= 2 2 Alert 2 Return>
 		end <L= 2 0>
 
-		Msg1 <You are attacked by a group of %name3%'s henchmen.>
 		Msg2 <You have defeated this group of %name3%'s henchmen, but there will be more coming soon.>
 
 		sub
@@ -412,12 +490,12 @@ Content
 		MapWidth 50
 		MapHeight 50
 
-		Start <if= L2 0 L= 2 1 Alert 1>
+		Start <if= L2 0 L= 2 1>
 		nu1 <if= T1 0   Return if= L2 1 L= 2 2 AddRenown -1>
-		nu2 <if= T2 0   if= L2 1 L= 2 2 Alert 2 Return>
+		nu2 <if= T2 0 if= T3 0   if= L2 1 L= 2 2 Alert 2 Return>
+		nu3 <if= T2 0 if= T3 0   if= L2 1 L= 2 2 Alert 2 Return>
 		end <L= 2 0>
 
-		Msg1 <You are attacked by a group of %name3%'s henchmen.>
 		Msg2 <You have defeated this group of %name3%'s henchmen, but there will be more coming soon.>
 
 		sub
@@ -450,12 +528,12 @@ Content
 		MapWidth 50
 		MapHeight 50
 
-		Start <if= L2 0 L= 2 1 Alert 1>
+		Start <if= L2 0 L= 2 1>
 		nu1 <if= T1 0   Return if= L2 1 L= 2 2 AddRenown -1>
-		nu2 <if= T2 0   if= L2 1 L= 2 2 Alert 2 Return>
+		nu2 <if= T2 0 if= T3 0   if= L2 1 L= 2 2 Alert 2 Return>
+		nu3 <if= T2 0 if= T3 0   if= L2 1 L= 2 2 Alert 2 Return>
 		end <L= 2 0>
 
-		Msg1 <You are attacked by a group of %name3%'s henchmen.>
 		Msg2 <You have defeated this group of %name3%'s henchmen, but there will be more coming soon.>
 
 		sub
@@ -487,7 +565,7 @@ Content
 		name <%name3%'s Henchmen>
 		% V1 = Recharge counter
 		update <if= PlotStatus %plotid% %id% else GoHide if# p%id%01 0 else GoHide ifG ComTime V1 else GoHide SetStat STAT_MetaVisibility 0   Goto GoSetOrders>
-		EncounterMove 50
+		EncounterMove 20
 		use <ifG StatVal STAT_MetaVisibility -1  Print -1   V= 1 ComTime   V+ 1 10800   Exit Destination>
 		ATTACK <ifG StatVal STAT_MetaVisibility -1   ifG PCScale 0    V= 1 ComTime   V+ 1 10800   ifUStealth SkillTar StoryDL else GoAutoAttack   ifYesNo -3 -4 -5 else GoAvoidAttack Goto GoAutoAttack>
 		Msg-2 <You are suddenly attacked by %name3%'s henchmen!>
@@ -496,7 +574,7 @@ Content
 		name <%name3%'s Henchmen>
 		% V1 = Recharge counter
 		update <if= PlotStatus %plotid% %id% else GoHide if# p%id%01 0 else GoHide ifG ComTime V1 else GoHide SetStat STAT_MetaVisibility 0   Goto GoSetOrders>
-		EncounterMove 50
+		EncounterMove 20
 		use <ifG StatVal STAT_MetaVisibility -1  Print -1   V= 1 ComTime   V+ 1 10800   Exit Destination>
 		ATTACK <ifG StatVal STAT_MetaVisibility -1   ifG PCScale 0    V= 1 ComTime   V+ 1 10800   ifUStealth SkillTar StoryDL else GoAutoAttack   ifYesNo -3 -4 -5 else GoAvoidAttack Goto GoAutoAttack>
 		Msg-2 <You are suddenly attacked by %name3%'s henchmen!>
@@ -505,7 +583,7 @@ Content
 		name <%name3%'s Henchmen>
 		% V1 = Recharge counter
 		update <if= PlotStatus %plotid% %id% else GoHide if# p%id%01 0 else GoHide ifG ComTime V1 else GoHide SetStat STAT_MetaVisibility 0  Goto GoSetOrders>
-		EncounterMove 50
+		EncounterMove 20
 		use <ifG StatVal STAT_MetaVisibility -1  Print -1   V= 1 ComTime   V+ 1 10800   Exit Destination>
 		ATTACK <ifG StatVal STAT_MetaVisibility -1   ifG PCScale 0    V= 1 ComTime   V+ 1 10800   ifUStealth SkillTar StoryDL else GoAutoAttack   ifYesNo -3 -4 -5 else GoAvoidAttack Goto GoAutoAttack>
 		Msg-2 <You are suddenly attacked by %name3%'s henchmen!>

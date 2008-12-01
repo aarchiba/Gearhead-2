@@ -100,6 +100,107 @@ Content
 %%
 
 Content
+	name <Calling all Mooks>
+	desc <Your enemies are recruiting; the recruiter can tell you where they are.>
+	requires <*:CS_DiscoverNPCMission &GatheringForces>
+	Size 1
+
+	% E1 is the outdoors scene where the encounter is
+	% E2 is the metascene being sought
+	% E3 is the NPC doing the mission
+	% E4 is a public scene
+	% E5 is the recruiter
+	% E6 is a possible new recruit
+	Element4 <Scene Public !Near -7 !Okay 3>
+	Element5 <Character Mercenary !Okay 3 !Near 4 Neverfail -FRIEND -FAMILY -ALLY -LOVER>
+	NeverFail5 <Mercenary>
+	Place5 <4 sd ally (Guards)>
+	Element6 <NewNPC -2 -7 Shy>
+	Place6 <4 sd ally (Guards)>
+
+	%% FAIL CONDITIONS:
+	%% - E5 dies
+
+	% P%id%01 = Initialization Counter
+	% P%id%02 = Have spoken to E5 already (1)/Have intimidated E6 out of contest (2)
+	end <ifSubPlotLost %plotid1% FreezeNPC %6%>
+	start <ifNPCDead %5% LoseSubPlot %plotid%>
+	update <if= P%id%01 0 P= %id%01 1 NPCLevel %6% StoryDL>
+
+	% SubPlot1 = The duel with E6
+	% SubPlot2 = Trail E6 to base
+	SubPlot1 <*:CS_TournamentMatch 6 4>
+	SubPlot2 <*TrailRaiderToBase 1 2 6>
+
+	sub
+		Persona 5
+		rumor%id% <%name5% has been recruiting some pilots for %name3%.>
+		% V%id%01 = First time counter
+		greeting <if= plotstatus %plotid% %id% else %pop% ifSubPlotLost %plotid1% else .%id%_GoCheckProgress NewChat Say %id%08 PMemo %plotid% %id%09 SetPlotStatus %plotid2% %id2%>
+		.%id%_GoCheckProgress <if= v%id%01 0 else .%id%_GoExplain Goto .%id%_GoGreet>
+		.%id%_GoGreet <if= v%id%01 0 else .%id%_GoExplain NewChat Say %id%11 AddChat %id%07 v= %id%01 1>
+		.%id%_GoExplain <NewChat Say %id%01 AddChat %id%01 AddChat %id%02 AddChat %id%03 AddChat %id%04 AddChat %id%05 AddChat %id%06   if= p%id%02 0 P= %id%02 1>
+		.%id%_GoReveal <History %id%02 PMemo %plotid% %id%03 SetEncounterActive %2% WinSubPlot %plotid% XPV 100>
+		result%id%01 <NewChat Say %id%04 History %id%05 PMemo %plotid% %id%05 SetPlotStatus %plotid1% %id1%>
+		result%id%02 <NewChat Say %id%06 Goto .%id%_GoReveal>
+		result%id%03 <NewChat Say %id%07 Goto .%id%_GoReveal>
+		result%id%04 <NewChat Say %id%07 Goto .%id%_GoReveal>
+		result%id%05 <NewChat Say %id%10 PMemo %plotid% %id%09 SetPlotStatus %plotid2% %id2%>
+		*result%id%06 <*GoodBye>
+		result%id%07 <Goto .%id%_GoExplain>
+		Msg%id%01 <I'm afraid that I don't have any more positions to offer; %name3% has all the pilots \SPR %3% needs. %name6% got the last contract.>
+		Msg%id%02 <You learned that %name3% could be found in %name1%.>
+		Msg%id%03 <You learned from %name5% that %name3% can be found in %name1%.>
+		Msg%id%04 <If you think you're so good, why don't you challenge \OPR %6% ?>
+		Msg%id%05 <%name5% suggested that you challenge %name6% for a chance to get close to %name3%.>
+		Msg%id%06 <Huh, I guess you are pretty tough after all. You'll make a find addition to %name3%'s team; they're meeting in %name1% right now.>
+		Msg%id%07 <Seriously? Ashes... Well, we do need one more pilot, so if you want the job you can find %name3% in %name1%.>
+		Msg%id%08 <%name6% has left to meet up with %name3%. My work here is done.>
+		Msg%id%09 <%name6% has gone to meet up with %name3%, but with any luck you'll be able to find \OPR %6% first.>
+		Msg%id%10 <Hey, I don't want to get involved with any of that, I'm just a simple talent scout... and besides, as I said my work is already done.>
+		Msg%id%11 <Hi. I guess you're here about that job, right?>
+		Prompt%id%01 <You can't be serious. I'm way tougher than %name6%!>
+		CPrompt%id%01 <if= PlotStatus %plotid1% 0  if# p%id%02 2  Accept>
+		Prompt%id%02 <I just beat %name6% in a duel. Hire me instead.>
+		CPrompt%id%02 <ifSubPlotWon %plotid1% Accept>
+		Prompt%id%03 <There's a problem- %name6% is dead.>
+		CPrompt%id%03 <ifNPCDead %6% Accept>
+		Prompt%id%04 <%name6% just chickened out. Hire me instead.>
+		CPrompt%id%04 <if= p%id%02 2  Accept>
+		Prompt%id%05 <I'm not here for a job; I'm here to find %name3%.>
+		Prompt%id%06 <So I see. I'll have to have a chat with this %name6%.>
+		Prompt%id%07 <You could say that.>
+
+		Persona 6
+		greeting <if= plotstatus %plotid% %id% else %pop% if= P%id%02 1 else %pop% NewChat Say %id%01 AddChat %id%01 AddChat %id%02 AddChat %id%03>
+		result%id%01 <NewChat Say %id%02 AddChat %id%04 AddChat %id%05 AddChat %id%06>
+		result%id%02 <NewChat Say %id%03>
+		*result%id%03 <*GoodBye>
+		result%id%04 <ifG PCRenown StoryDL else .%id%_GoR4Fail ifIntimidation SkillTar StoryDL else .%id%_GoR4Fail NewChat Say %id%04 PMemo %plotid% %id%05 P= %id%02 2>
+		.%id%_GoR4Fail <EndChat Say %id%06>
+		result%id%05 <NewChat Say %id%07 AddChat %id%07>
+		result%id%06 <Goto result%id%03>
+		result%id%07 <NewChat Say %id%08 PMemo %plotid% %id%05 P= %id%02 2>
+		Msg%id%01 <Yeah, what do you want?>
+		Msg%id%02 <Could be. What do you care?>
+		Msg%id%03 <%name5% is the one to talk to about that. I don't know anything.>
+		Msg%id%04 <Wait, you're the one we're being hired to fight? I think I better start looking into that early retirement plan %name5% mentioned...>
+		Msg%id%05 <You scared %name6% into quitting %name3%'s lance. %name5% will probably want to know.>
+		Msg%id%06 <Big deal. According to %name5% we've hired enough pilots to deal with any possible threat.>
+		Msg%id%07 <Brave? Yeah, I guess so... what do you mean by that?>
+		Msg%id%08 <Now that you meantion it, it is kind of suspicious that \SPR %3% 's hiring so many new lancemates at once... Maybe I should get out while the going is good.>
+		Prompt%id%01 <I hear you're working for %name3%.>
+		Prompt%id%02 <I'm looking for a job, actually.>
+		Prompt%id%03 <Nothing...>
+		Prompt%id%04 <I intend to defeat %name3%.>
+		Prompt%id%05 <You must be awfully brave...>
+		CPrompt%id%05 <IfInsight SkillTar StoryDL Accept>
+		Prompt%id%06 <No reason.>
+		Prompt%id%07 <It's just that %name3%'s henchmen usually end up dead.>
+
+	end
+
+Content
 	name <Henchmen know things about stuff>
 	desc <Fight henchmen to gain a clue.>
 	requires <*:CS_DiscoverNPCMission &EnemyNPC>

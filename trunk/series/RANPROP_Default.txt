@@ -296,6 +296,135 @@ inv
 end
 
 
+%% *CRUISER Props
+%% Team 1 = Crew
+%% Team 2 = Weapons
+%% Team 3 = Propulsion
+%%  Less well armed than a battleship, cruisers typically need to be captured or defended
+%%  rather than destroyed.
+
+SuperProp
+requires <*CRUISER>
+%	 /
+%	=#>
+%	 T##>
+%	=#>
+%	 \
+Width 5
+Height 5
+inv
+	Prop 10
+	name <Engine>
+	SDL_SPRITE <tex_spaceship_engine.png>
+	SetTeam 3
+	Mesh 9
+	XPos 0
+	YPos 1
+	Dir 0
+
+	Prop 10
+	name <Engine>
+	SDL_SPRITE <tex_spaceship_engine.png>
+	SetTeam 3
+	Mesh 9
+	XPos 0
+	YPos 3
+	Dir 0
+
+	Prop 10
+	name <Hull>
+	SetTeam 1
+	SDL_SPRITE <tex_spaceship_body.png>
+	Mesh 5
+	XPos 1
+	YPos 1
+	Dir 6
+
+	Prop 10
+	name <Hull>
+	SetTeam 1
+	SDL_SPRITE <tex_spaceship_body.png>
+	Mesh 5
+	XPos 1
+	YPos 3
+	Dir 6
+
+	Prop 10
+	name <Bridge>
+	SDL_SPRITE <tex_spaceship_body.png>
+	SetTeam 1
+	Mesh 8
+	XPos 1
+	YPos 2
+	Dir 0
+
+	Prop 10
+	name <Hull>
+	SetTeam 1
+	SDL_SPRITE <tex_spaceship_body.png>
+	Mesh 5
+	XPos 2
+	YPos 2
+	Dir 6
+
+	Prop 10
+	name <Hull>
+	SetTeam 1
+	SDL_SPRITE <tex_spaceship_body.png>
+	Mesh 5
+	XPos 3
+	YPos 2
+	Dir 6
+
+	Prop 10
+	name <Hull>
+	SDL_SPRITE <tex_spaceship_body.png>
+	SetTeam 1
+	Mesh 6
+	XPos 2
+	YPos 3
+	Dir 0
+
+	Prop 10
+	name <Hull>
+	SDL_SPRITE <tex_spaceship_body.png>
+	SetTeam 1
+	Mesh 6
+	XPos 2
+	YPos 1
+	Dir 0
+
+	Prop 10
+	name <Hull>
+	SDL_SPRITE <tex_spaceship_body.png>
+	SetTeam 1
+	Mesh 6
+	XPos 4
+	YPos 2
+	Dir 0
+
+	Prop 10
+	name <Hull>
+	SDL_SPRITE <tex_spaceship_body.png>
+	SetTeam 1
+	Mesh 6
+	XPos 0
+	YPos 2
+	Dir 4
+
+	STC SS-CANNON-1
+	SetTeam 2
+	XPos 1
+	YPos 0
+	Dir 4
+
+	STC SS-CANNON-1
+	SetTeam 2
+	XPos 1
+	YPos 4
+	Dir 
+end
+
 
 
 %% *BATTLESHIP Props
