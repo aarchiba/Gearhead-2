@@ -1,8 +1,8 @@
 %% *:CS_StopNPCMission Content
 %%
 %%	&IsEnemyNPC	The character to be stopped is the enemy NPC
-%%	&Secondary	Is a secondary combat; disallow this tag if making
-%%			major context changes
+%%	&Secondary	Is a secondary combat; disallow this tag if calling
+%%			a second main course subplot
 %%
 %% Somebody is going on a mission. It's the PC's job to locate that
 %% person and stop them from completing the mission. Most of these
@@ -21,6 +21,133 @@
 %%
 %%  Param1: The NPC to be stopped
 %%
+
+Content
+	name <Friends are fair game>
+	desc <The enemy NPC kidnaps one of the PC's friends to torture for information.>
+	requires <*:CS_StopNPCMission &IsEnemyNPC E:A.hat (E:M.---|E:M.mer|E:M.com|E:M.rev|E:M.nih) +H-- -!Ne>
+	changes <E:A +H>
+	Size 8
+
+	% E1 is the NPC to be stopped
+	% E2 is an urban scene for the base
+	% E3 is the base
+	% E4 is the friend
+	% E5 is the friend's stand-in, a VICTIM prop
+	% E6 is a local hospital scene
+	% E7 is the secret
+	Element2 <Scene Urban !Near -7>
+	Element3 <Prefab>
+	Place3 <2>
+	Element4 <Character (Friend|Family|Lover)  !Xclude 1  !Global>
+	Place4 </>
+	Element5 <Prefab>
+	Place5 <3>
+	Element6 <Scene Hospital !Near -7>
+	Element7 <Prefab>
+
+	%% FAIL CONDITIONS
+	%% - TellSecret fails
+	%% - RevealEncounter fails
+
+	% P%id%01 = Initialization Counter
+	% P%id%02 = Time Limit
+
+	start <ifSubPlotLost %plotid1% else .%id%_GoCheckSP2   LoseSubPlot %plotid%   Trigger0 .%id%_%plotid%_GoLoss>
+	.%id%_GoCheckSP2 <ifSubPlotLost %plotid2% DeleteNPC %4% History %id%01    LoseSubPlot %plotid%   Trigger0 .%id%_%plotid%_GoLoss>
+
+	% At first, start the Tell Secret subplot.
+	update <if= p%id%01 0 p= %id%01 1 SetPlotStatus %plotid1% %id1%>
+
+	% When the secret is revealed set the timer and start the Reveal Base subplot.
+	% Oh, and change the attitude to mutual hatred. Can't forget that.
+	.%id1%_%plotid1%_GoLearnSecret <if= p%id%02 0 P= %id%02 ComTime P+ %id%02 86400  SetPlotStatus %plotid2% %id2%  SMemo %id%02 History %id%03 SetXXRAttitude %1% XXR_A_MutualHate PCEnemy %1%>
+
+	Msg%id%01 <You failed to rescue %name4%.>
+	Msg%id%02 <%name1% has kidnapped %name4%; \SPR %1% is likely planning to torture \OPR %4% for information about you.>
+	Msg%id%03 <You learned that %name1% kidnapped %name4%.>
+
+	% SubPlot1 is the FindSecret: this one starts the timer and the rest of the plot.
+	% SubPlot2 is the locate base task
+	SubPlot1 <*:CS_TellSecretAboutNPC&LearnPlans&IsEnemy 7 1>
+	SubPlot2 <*:CS_RevealEncounter_NPCBase&EnemyNPC&Kidnapping 2 3 1>
+
+	sub
+		MetaScene 3
+		mapwidth 35
+		mapheight 35
+		MonkeyMap
+		LockedDoorChance 10
+		SecretDoorChance 5
+		IndustrialTiles
+
+		NeededCells 3
+
+		% L1 = Friend has died
+
+		start <Print 1>
+		end <if# L1 0 else GoCheckWin   History 2   LoseSubPlot %plotid%   Trigger0 .%id%_%plotid%_GoLoss   DeleteNPC %4%  SetEncounterInactive %3%>
+		GoCheckWin <ifSubPlotWon %plotid%   SetEncounterInactive %3%>
+
+		Msg1 <You enter %name1%'s base.>
+		Msg2 <You didn't arrive quickly enough to save %name4%.>
+
+		sub
+			Team 1
+			SetEnemy 2 3
+
+			Team 2
+			name <Guards>
+			type <SYNTH ROBOT MILITARY>
+			SetEnemy 1
+			Deploy <if= V1 0 V= 1 1 MonsterUp 2 StoryDL>
+
+			Team 3
+			name <First Monsters>
+			home <Entry Grid>
+			type <SYNTH ROBOT MILITARY>
+			SetEnemy 1
+			Deploy <if= V1 0 V= 1 1 WMonster 3 StoryDL 100>
+
+			room
+			name <Entry Grid>
+			special <STARTHERE>
+			sub
+				TrapDoor
+				Destination -1
+				use <Print 1 Return>
+			end
+
+			room
+			desig <HOME %e5%>
+			minimap <......###..#1=..###......>
+		end
+
+		Persona 4
+		special <UNLISTED>
+		greeting <EndChat Say 1>
+		Msg1 <I don't feel well enough to talk just yet.>
+	end
+	inv
+		STC CORE-ACTIVATABLE-STATIONARY-DEFENDED
+		name <Secret Base>
+
+		STC VICTIM
+		name <%name4%>
+		use <ifG P%id%02 ComTime else GoFriendDied Goto GoSaveFriend>
+		GoFriendDied <Alert 1 L= 1 1>
+		Clue16 <Goto GoSaveFriend>
+		Pass -100
+		GoSaveFriend <Alert 2 History 3 XPV 100 Return MoveNPC %4% %6%  &SetHangingNPC %4% AlterContext .next WinSubPlot %plotid% Trigger0 .%id%_%plotid%_GoWin>
+		.next <+Hrt>
+		Msg1 <You've arrived too late. %name4% shows no sign of life.>
+		Msg2 <You tend to %name4%'s wounds and quickly bring \OPR %4% to the hospital.>
+		Msg3 <You rescued %name4% from %name1%'s base.>
+
+		Secret
+		Msg <%name1% has captured %name4%. As far as I know, it's because \SPR %1% wants to learn about your weaknesses.>
+	end
+
 
 Content
 	name <Mecha Encounters are the foundation of our democracy>

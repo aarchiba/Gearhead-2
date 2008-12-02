@@ -372,6 +372,105 @@ Content
 %%  *******************
 
 Content
+	name <Turning Point>
+	size 5
+	desc <Meet your former enemy fighting your current enemy and maybe become allies.>
+	requires <*:CS_MechaEncounter F:++ +Hed H:++ ~H:FRIEND ~H:LOVER ~H:FAMILY -H:ALLY>
+	changes <+H>
+
+	% E1 is the outdoors scene where this encounter will be placed
+	% E2 is the metascene to be used for this encounter
+	% E3 is the former enemy
+	% E4 is a local public scene
+	Element3 <Grab 10>
+	Place3 <2 (Former Enemy) sd ally>
+	Element4 <Scene Public (Meeting|Bar|Garage) !Near -7>
+
+	% P%id%01 = Initialization Counter
+	% P%id%02 = Have gained reinforcements
+	% P%id%03 = Have gained decimation
+	% At initialization, set the NPC's level and clear its faction.
+	update <if= p%id%01 0 p= %id%01 1 NPCLevel %3% StoryDL SetNPCFaction %3% 0   SetPlotStatus %plotid1% %id1%>
+
+	% Set either reinforcements or decimation here
+	.%id1%_%plotid1%_GoReinforcements <P= %id%02 1>
+	.%id1%_%plotid1%_GoDecimation     <P= %id%03 1>
+
+	% SubPlot1 = Gain Advantage vs Raiders
+	SubPlot1 <*:CS_GainAdvantageVsMecha&Reinforcements&Decimation>
+
+	sub
+		MetaScene 2 2
+		% L1 = Encounter Over Counter
+		% L2 = Initialization Counter
+		MapWidth 50
+		MapHeight 50
+
+		Start <if= L2 0 L= 2 1  AlterContext .context  &SetHangingNPC 0   Alert 1 History 2 ForceChat %3%  CancelSubPlot %plotid1%>
+		.context <+H-->
+		nu1 <if= T1 0   Return   if= V1 0 V= 1 1   LoseSubPlot %plotid%   Trigger0 .%id1%_%plotid1%_GoLoss  DeleteNPC %3%>
+		nu2 <if= T2 0   if= V1 0 V= 1 1   XPV 100  AddRenown 1   SALVAGE   Trigger0 .%id%_%plotid%_GoWin WinSubPlot %plotid% ifNPCInPlay %3% else GoDeleteE3 PCAlly %3% Monologue %3% 3 MoveAndPacifyNPC %3% %4% History 4>
+		GoDeleteE3 <DeleteNPC %3%>
+		end <SetEncounterInactive %2%>
+
+		Msg1 <You find %name3% fighting off a lance of mecha from \FACTION &EnemyFac .>
+		Msg2 <You helped %name3% fight \FACTION &EnemyFac .>
+		Msg3 <Thanks for the assist. I'll be at %name4% if you ever happen to need my help.>
+		Msg4 <%name3% pledged to help you defeat \PPR %3% former allies.>
+
+		sub
+			team 1
+			SetEnemy 2
+			SetAlly 3
+			ParaX 5
+			ParaY 5
+
+			team 2
+			SetEnemy 1 3
+			Deploy <if= PlotStatus %plotid% %id% SetSelfFaction &EnemyFac   if= p%id%03 0 else GoSmallDeploy WMecha 2 StoryDL 220>
+			GoSmallDeploy <WMecha 2 StoryDL 120>
+			ParaX 30
+			ParaY 30
+
+			team 3
+			name <Former Enemy>
+			Deploy <if= PlotStatus %plotid% %id% if= P%id%02 1   WMecha 3 StoryDL 100>
+			SetEnemy 2
+			SetAlly 1
+			ParaX 45
+			ParaY 45
+		end
+
+		Persona 3
+		special <UNLISTED>
+		% V%id%01 = Can only get this conversation once
+		greeting <if= PlotStatus %plotid% %id% else %pop% if= v%id%01 0 else %pop% v= %id%01 1 EndChat Say %id%01 AddChat %id%01 AddChat %id%02>
+		*result%id%01 <*LetsDefeatThem>
+		*result%id%02 <*THEME_EXPO&Ally .%id%_GoEndR2>
+		.%id%_GoEndR2 <AddCheerful -d10>
+		Msg%id%01 <As you can see, my former allies are not too happy about my resignation. I guess that means we're on the same side now, \PC ... If you'll have me, I'll join with you to fight them.>
+		Msg%id%01_1 <>
+		CMsg%id%01_1 <ifCHatNPCSociable Accept>
+		Msg%id%01_2 <>
+		CMsg%id%01_2 <ifCHatNPCShy Accept>
+		Msg%id%01_3 <>
+		CMsg%id%01_3 <ifCHatNPCEasygoing Accept>
+		Msg%id%01_4 <>
+		CMsg%id%01_4 <ifCHatNPCPassionate Accept>
+		Msg%id%01_5 <>
+		CMsg%id%01_5 <ifCHatNPCCheerful Accept>
+		Msg%id%01_6 <>
+		CMsg%id%01_6 <ifCHatNPCMelancholy Accept>
+		Prompt%id%01 <About time you came around to this side.>
+		Prompt%id%01_1 <I always knew you were too smart for \FACTION &EnemyFac .>
+		Prompt%id%01_2 <Sounds good to me. Shall we kick some ass?>
+		Prompt%id%02 <I can't forgive you, but I hate \FACTION &EnemyFac more.>
+		Prompt%id%02_1 <I'll help you this time, but don't expect forgiveness.>
+		Prompt%id%02_2 <>
+	end
+
+
+Content
 	name <Revenge Road>
 	size 12
 	desc <The Enemy has mobilized all forces to destroy the PC.>

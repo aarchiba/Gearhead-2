@@ -551,6 +551,12 @@ BM_SpacePort
 roguechar <P>
 
 MetaTerrain 0 0
+desig <VICTIM>
+name <Body>
+roguechar <!>
+SDL_SPRITE <prop_body.png>
+
+MetaTerrain 0 0
 desig <COLONY-1>
 roguechar <*>
 SDL_SPRITE <prop_colony.png>

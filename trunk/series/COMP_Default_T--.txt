@@ -1,4 +1,29 @@
 Plot
+	name <Hanging Rescue Reward>
+	desc <The PC rescued someone previously, now it's a good time for a reward.>
+	requires <#A +T-- +Hrt H:++ -L:ENEMY Common>
+	changes <+H>
+	Size 1
+
+	% E1 is the scene where the meeting will take place.
+	% E2 is the person who was rescued.
+	Element1 <Scene Public (Meeting|Mall) !Near -7 !Okay -10>
+	Element2 <Grab 10>
+	Place2 <1 (Citizens) pass>
+
+	% All the update does is start the rescue reward going...
+	update <if= PlotStatus %plotid% 0 if= RootSceneID &EpisodeScene email 1 AlterContext .changes &SetHangingNPC 0 SetPlotStatus %plotid1% %id1%>
+	.changes <+H-->
+
+	Msg1_1 <%name2%@ \SCENE &EpisodeScene :// I never got to thank you properly for saving me. Drop by %name1% and I will.>
+	Msg1_2 <%name2%@ \SCENE &EpisodeScene :// I really owe you one; come see me at %name1% when you get the chance.>
+	Msg1_3 <%name2%@ \SCENE &EpisodeScene :// I'd like to speak with you. Come meet me at %name1%.>
+
+	% The subplot contains the reaction/reward.
+	SubPlot1 <*CS_ThanksForRescue 2>
+
+
+Plot
 	name <Civil Defense Mission>
 	desc <The city government is hiring.>
 	requires <#A +T-- P:-- -L:ENEMY ~C:ADVEN>
