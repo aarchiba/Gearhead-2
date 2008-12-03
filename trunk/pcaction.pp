@@ -1175,7 +1175,7 @@ begin
 
 		pID := SelectMenu( RPM , @PCMenuRedraw );
 
-		if PID <> -1 then begin
+		if ( PID <> -1 ) and ( RetrieveGearSib( Standard_Plots , PID )^.G = GG_Plot ) then begin
 			Plot := CloneGear( RetrieveGearSib( Standard_Plots , PID ) );
 			SetSAtt( Plot^.SA , 'name <DEBUG>' );
 

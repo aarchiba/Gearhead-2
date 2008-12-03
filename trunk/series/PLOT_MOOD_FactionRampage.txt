@@ -1,0 +1,86 @@
+%%
+%% *FactionRampage Plots
+%%
+%% Mood Spec:
+%%  E1 is the rampaging faction
+%%
+%% A faction is running amok in this city. The player is likely to get
+%% attacked by them, whether they're enemies or not... The exact reason
+%% for this mood should be explained by the calling plot.
+%%
+
+Plot
+	name <A Test of Moods>
+
+	ELEMENT1 <Prefab>
+	ELEMENT2 <Scene Town>
+	Element3 <Faction !Enemy 2>
+
+	update <SetMood %1% %2% EndPlot>
+
+	inv
+		Mood 5
+		MoodTimeLimit 7200
+		name <Faction Rampage Test>
+		plot_type <*FactionRampage>
+
+		Element1 <Grab 3>
+
+		Update <if= v1 0 V= 1 1 Print 1 XPV %me_1% News 1>
+		Msg1 <Breaking news: %me_name1% rampage in %city%!>
+
+	end
+
+Plot
+	name <Rampaging Rampagers>
+	desc <Some mecha from the rampaging faction may attack the PC.>
+	requires <*FactionRampage>
+
+	% E1 is an outdoors scene
+	% E2 is an encounter to place there
+	% E3 is the faction that's rampaging
+	Element1 <Scene Outdoors>
+	Element2 <Prefab>
+	Place2 <1>
+	Element3 <Grab 1>
+
+	% P1 = Time Limit/Initialization Counter
+	start <if# P1 0 ifG ComTime P1 EndPlot>
+	update <if= P1 0 P= 1 ComTime P+ 1 21600>
+
+	sub
+		MetaScene 2 2
+		% L1 = Encounter Over Counter
+		% L2 = Initialization Counter
+		MapWidth 50
+		MapHeight 50
+
+		start <if= L2 0 L= 2 1 Alert 1>
+		nu1 <if= T1 0   Return   if= V1 0 V= 1 1    AddRenown -2        EndPlot>
+		nu2 <if= T2 0   if= V1 0 V= 1 1   AddRenown 1 Alert 2   XPV 100   SALVAGE   EndPlot>
+
+		Msg1 <You are attacked by some mecha from %name3%!>
+		Msg2 <You have defeated the mecha.>
+
+		sub
+			team 1
+			SetEnemy 2
+			ParaX 5
+			ParaY 5
+
+			team 2
+			SetEnemy 1
+			Deploy <SetSelfFaction %3% WMecha 2 %threat% 100>
+			ParaX 45
+			ParaY 45
+		end
+
+	end
+	inv
+		STC ENCOUNTER-WANDER
+		name <Rampagers>
+		EncounterMove 20
+	end
+
+
+

@@ -28,6 +28,7 @@ interface
 
 uses gears,locale;
 
+Procedure ReplaceStrings( Part: GearPtr; Dictionary: SAttPtr );
 Function ComponentMenu( CList: GearPtr; var ShoppingList: NAttPtr ): GearPtr;
 Function InitMegaPlot( GB: GameBoardPtr; Scope,Slot,Plot: GearPtr; Threat: Integer ): GearPtr;
 

@@ -2893,7 +2893,7 @@ Procedure ProcessDeleteGG( GB: GameBoardPtr; var Source: GearPtr );
 	{ Delete the grabbed gear. }
 	{ Only physical gears can be deleted in this way. }
 begin
-	if ( Grabbed_Gear <> Nil ) and ( Grabbed_Gear^.G >= 0 ) then begin
+	if ( Grabbed_Gear <> Nil ) and (( Grabbed_Gear^.G >= 0 ) or ( Grabbed_Gear^.G = GG_CityMood )) then begin
 		{ Make sure we aren't currently using the grabbed gear. }
 		if ( IntMenu <> Nil ) and ( I_NPC = Grabbed_Gear ) then begin
 			ProcessEndChat;
@@ -3311,6 +3311,33 @@ begin
 			{ File was not loaded successfully. }
 			IfFailure( Event , Source );
 		end;
+	end;
+end;
+
+Procedure ProcessSetMood( var Event: String; GB: GameBoardPtr; Source: GearPtr );
+	{ A CityMood is about to be unleashed on the game world. }
+var
+	ID: LongInt;
+	Mood,City: GearPtr;
+begin
+	{ First, find the mood and the city. }
+	ID := ScriptValue( Event , GB , Source );
+	Mood := GG_LocateItem( ID , GB , Source );
+
+	ID := ScriptValue( Event , GB , Source );
+	City := FindRootScene( GB , FindActualScene( GB , ID ) );
+
+	{ Call the above procedure to see if it works or not. }
+	if ( Mood <> Nil ) and ( City <> Nil ) then begin
+		DelinkGearForMovement( GB , Mood );
+		if InsertMood( City , Mood , GB ) then begin
+			SetTrigger( GB , 'UPDATE' );
+			IfSuccess( Event );
+		end else begin
+			IfFailure( Event , Source );
+		end;
+	end else begin
+		IfFailure( Event , Source );
 	end;
 end;
 
@@ -4115,6 +4142,7 @@ begin
 		else if cmd = 'STARTPLOT' then ProcessStartPlot( Event , GB , Source )
 		else if cmd = 'UPDATEPLOTS' then ProcessUpdatePlots( Trigger , Event , GB , Source )
 		else if cmd = 'STARTSTORY' then ProcessStartStory( Event , GB , Source )
+		else if cmd = 'SETMOOD' then ProcessSetMood( Event , GB , Source )
 		else if cmd = 'CHECKCOMPONENTS' then ProcessCheckComponents( GB , Source )
 		else if cmd = 'NEXTCOMP' then ProcessNextComp( Event , GB , Source )
 		else if cmd = 'GALTERCONTEXT' then ProcessGAlterContext( Event , GB , Source )

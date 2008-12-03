@@ -1705,6 +1705,10 @@ begin
 
 	Camp := NewCampaign;
 	Camp^.Source := LoadFile( 'adventurestub.txt' , Series_Directory );
+
+	{ The Adventure source needs to store the PC's faction. }
+	SetNAtt( Camp^.Source^.NA , NAG_Personal , NAS_FactionID , NAttValue( TruePC^.NA , NAG_Personal , NAS_FactionID ) );
+
 	Atlas := AggregatePattern( 'ATLAS_*.txt' , Series_Directory );
 
 	{ Insert the factions into the adventure. }

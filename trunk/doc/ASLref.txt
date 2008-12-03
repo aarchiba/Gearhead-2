@@ -140,6 +140,7 @@
 	SEEKGATE [scene ID]	Player will enter next map at entry of specified scene
 			***IMPORTANT*** Only works if called after Exit, Return, etc
 	SEEKTERR [terrain type]		Set where PC will enter next scene
+	SETMOOD [Mood NID] [City]	Activates a prefab mood
 	SETSCENEFACTION [scene ID] [faction ID]
 	SHOP [wares identifier]
 	SHUTTLE			Start the intercity shuttle service

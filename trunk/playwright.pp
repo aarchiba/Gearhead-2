@@ -68,6 +68,7 @@ Function DifficulcyContext( Threat: Integer ): String;
 Function InsertStory( Slot,Story: GearPtr; GB: GameBoardPtr ): Boolean;
 Function InsertSubPlot( Scope,Slot,SubPlot: GearPtr; GB: GameBoardPtr ): Boolean;
 Function InsertPlot( Scope,Slot,Plot: GearPtr; GB: GameBoardPtr; Threat: Integer ): Boolean;
+Function InsertMood( City,Mood: GearPtr; GB: GameBoardPtr ): Boolean;
 
 Function InsertRSC( Source,Frag: GearPtr; GB: GameBoardPtr ): Boolean;
 Procedure EndPlot( GB: GameBoardPtr; Adv,Plot: GearPtr );
@@ -78,6 +79,7 @@ Function PrepareQuestFragment( City,Frag: GearPtr; DoDebug: Boolean ): Boolean;
 Function InsertArenaMission( Source,Mission: GearPtr; ThreatAtGeneration: Integer ): Boolean;
 
 Procedure UpdatePlots( GB: GameBoardPtr; Renown: Integer );
+Procedure UpdateMoods( GB: GameBoardPtr );
 
 
 implementation
@@ -701,7 +703,7 @@ begin
 			{ Memes automatically get frozen. }
 			if E^.G = GG_Meme then begin
 				Place := '/';
-			end else if E^.G = GG_Secret then begin
+			end else if ( E^.G = GG_Secret ) or ( E^.G = GG_CityMood ) then begin
 				Place := '';
 			end else begin
 				Place := SAttValue( Plot^.SA , 'PLACE' + BStr( N ) );
@@ -1195,12 +1197,12 @@ Procedure AddGearXRContext( GB: GameBoardPtr; Adv,Part: GearPtr; var Context: St
 	{ Add the context information for PART to CONTEXT. }
 const
 	Num_XXR_Motivations = 8;
-	Num_XXR_Attitudes = 9;
+	Num_XXR_Attitudes = 10;
 	XXR_Motivation: Array [1..Num_XXR_Motivations] of String[3] = (
 		'mer', 'pro', 'ggd', 'see', 'rev', 'cha', 'com', 'nih'
 	);
 	XXR_Attitude: Array [1..Num_XXR_Attitudes] of String[3] = (
-		'jr_', 'sr_', 'sec', 'equ', 'env', 'pch', 'hat', 'mut', 'obs'
+		'jr_', 'sr_', 'sec', 'equ', 'env',   'pch', 'hat', 'mut', 'obs', 'tha'
 	);
 var
 	F: GearPtr;
@@ -1548,6 +1550,47 @@ begin
 	end;
 end;
 
+Procedure InitPrefabMoods( Slot, Plot: GearPtr );
+	{ Moods can grab elements from either the plot that spawned them or the story }
+	{ that spawned the plot. Do that now. }
+var
+	LList,Grab_Source: GearPtr;
+	t,N: LongInt;
+	desc: String;
+begin
+	LList := Plot^.InvCom;
+	while LList <> Nil do begin
+		if LList^.G = GG_CityMood then begin
+			for t := 1 to Num_Plot_Elements do begin
+				{ If an element grab is requested, process that now. }
+				desc := SAttValue( LList^.SA , 'ELEMENT' + BStr( T ) );
+				if ( desc <> '' ) and ( UpCase( desc[1] ) = 'G' ) then begin
+					ExtractWord( desc );
+					N := ExtractValue( desc );
+
+					{ If we got a positive value, grab from the plot. Otherwise grab from }
+					{ the presumed story. }
+					if N > 0 then Grab_Source := Plot
+					else Grab_Source := Slot;
+
+					desc := SAttValue( Grab_Source^.SA , 'ELEMENT' + BStr( N ) );
+
+					if Desc = '' then begin
+						DialogMsg( 'ERROR: ' + GearName( LList ) + ' tried to grab empty element ' + BStr( N ) + ' from ' + GearName( Grab_Source ) );
+					end else begin
+						{ Only copy over the first character of the element description, }
+						{ since that's all we need, and also because copying a PREFAB tag }
+						{ may result in story elements being unnessecarily deleted. }
+						SetSAtt( LList^.SA , 'ELEMENT' + BStr( T ) + ' <' + desc[1] + '>' );
+						SetNAtt( LList^.NA , NAG_ElementID , T , ElementID( Grab_Source , N ) );
+					end;
+				end;
+			end; { For t ... }
+		end;
+		LList := LList^.Next;
+	end;
+end;
+
 Function MatchPlotToAdventure( Scope,Slot,Plot: GearPtr; GB: GameBoardPtr; DoFullInit,MovePrefabs,Debug: Boolean ): Boolean;
 	{ This PLOT gear is meant to be inserted into this SLOT gear. }
 	{ Perform the insertion, select unselected elements, and make sure }
@@ -1591,6 +1634,8 @@ begin
 		for t := 1 to Num_Plot_Elements do begin
 			Fast_Seek_Element[ 0 , t ] := SeekPlotElement( Adventure , Scope , T , GB );
 		end;
+		{ The parent of the mood should be the city it's installed in. This is what we want as }
+		{ our scope. }
 		Scope := Scope^.Parent;
 	end;
 
@@ -1639,9 +1684,12 @@ begin
 		{ Quest content doesn't get initialized here- that gets done later. }
 		if DoFullInit then InitPlot( Adventure , Plot , GB );
 
-		{ Actually, quest content does get its treasures initialized here. }
+		{ Actually, quest content does get its treasures initialized here... }
 		InitRandomLoot( Plot^.InvCom );
 		InitRandomLoot( Plot^.SubCom );
+
+		{ ...and, now that I think about it, prefab moods should grab their elements now. }
+		InitPrefabMoods( Slot , Plot );
 
 		{ Also store the names of all known elements. They might come in handy later. }
 		for t := 1 to Num_Plot_Elements do begin
@@ -1758,6 +1806,42 @@ Function InsertPlot( Scope,Slot,Plot: GearPtr; GB: GameBoardPtr; Threat: Integer
 	{ If SLOT is a story, copy over grabbed elements and so on. }
 begin
 	InsertPlot := InitMegaPlot( GB , Scope , Slot , Plot , Threat ) <> Nil;
+end;
+
+Function InsertMood( City,Mood: GearPtr; GB: GameBoardPtr ): Boolean;
+	{ This function will insert a mood into the adventure and move it to its correct place. }
+var
+	AllOK: Boolean;
+	TimeLimit: LongInt;
+	Trigger: String;
+	Dictionary: SAttPtr;
+begin
+	AllOK := MatchPlotToAdventure( City , City , Mood , GB , False , False , False );
+
+	if AllOK then begin
+		DelinkGear( City^.InvCom , Mood );
+		InsertSubCom( City , Mood );
+
+		{ Set the time limit, if appropriate. }
+		TimeLimit := NAttValue( Mood^.NA , NAG_MoodData , NAS_MoodTimeLimit );
+		if TimeLimit > 0 then SetNAtt( Mood^.NA , NAG_MoodData , NAS_MoodTimeLimit , TimeLimit + GB^.ComTime );
+
+		{ Do string substitutions- %name1%..%name20%, %city% }
+		Dictionary := Nil;
+		SetSAtt( Dictionary , '%city% <' + GearName( City ) + '>' );
+		for TimeLimit := 1 to Num_Plot_Elements do begin
+			SetSAtt( Dictionary , '%me_' + BStr( TimeLimit ) + '% <' + BStr( ElementID( Mood, TimeLimit ) ) + '>' );
+			SetSAtt( Dictionary , '%me_name' + BStr( TimeLimit ) + '% <' + SAttValue( Mood^.SA , 'NAME_' + BStr( TimeLimit ) ) + '>' );
+		end;
+		ReplaceStrings( Mood , Dictionary );
+		DisposeSAtt( Dictionary );
+
+		{ Run the mood's initialization code. }
+		Trigger := 'UPDATE';
+		TriggerGearScript( GB , Mood , Trigger );
+	end;
+
+	InsertMood := AllOK;
 end;
 
 Function InsertRSC( Source,Frag: GearPtr; GB: GameBoardPtr ): Boolean;
@@ -2108,12 +2192,21 @@ var
 		if plot_cmd = '' then plot_cmd := '*GENERAL';
 		plot_cmd := plot_cmd + Context;
 
+		{ If the controller is a mood, add details of its first 9 elements. }
+		if Controller^.G = GG_CityMood then begin
+			for N := 1 to 9 do begin
+				{ If this element represents to a palette entry, add its info }
+				{ to the context. }
+				if SAttValue( Controller^.SA , 'ELEMENT' + BStr( N ) ) <> '' then AddElementContext( GB , Controller , plot_cmd , BStr( N )[1] , N );
+			end;
+		end;
+
 		{ Next, create a list of those plots which match the plot_cmd. }
 		ShoppingList := Nil;
 		Plot := Standard_Plots;
 		N := 1;
 		while Plot <> Nil do begin
-			if StringMatchWeight( plot_cmd , SAttValue( Plot^.SA , 'REQUIRES' ) ) > 0 then begin
+			if ( Plot^.G = GG_Plot ) and ( StringMatchWeight( plot_cmd , SAttValue( Plot^.SA , 'REQUIRES' ) ) > 0 ) then begin
 				SetNAtt( ShoppingList , N , N , 5 );
 			end;
 			Plot := Plot^.Next;
@@ -2196,8 +2289,47 @@ Procedure UpdateMoods( GB: GameBoardPtr );
 	{ Check through all the towns in the current world. Check the time limits on all }
 	{ moods found, removing those that have expired. If a town has no mood attached, }
 	{ consider attaching one. }
-begin
+	Procedure UpdateMoodsForScene( Scene: GearPtr );
+		{ Check to see if this scene has any moods. Delete those moods which }
+		{ have outlived their usefulness. If no moods were found, consider }
+		{ adding one. }
+	var
+		Mood,M2: GearPtr;
+		MoodFound: Boolean;
+		TimeLimit: LongInt;
+	begin
+		{ No mood found yet- we haven't started searching! }
+		MoodFound := False;
 
+		{ Look through all the moods in this scene and decide what to do with them. }
+		Mood := Scene^.SubCom;
+		while Mood <> Nil do begin
+			M2 := Mood^.Next;
+			if Mood^.G = GG_CityMood then begin
+				{ Check the time limit now. }
+				TimeLimit := NAttValue( Mood^.NA , NAG_MoodData , NAS_MoodTimeLimit );
+				if ( TimeLimit > 0 ) and ( TimeLimit < GB^.ComTime ) then begin
+					RemoveGear( Scene^.SubCom , Mood );
+				end;
+
+				{ Even if this mood is getting deleted, we don't want to load }
+				{ a new one right away, so set MOODFOUND to TRUE. }
+				MoodFound := True;
+			end;
+			Mood := M2;
+		end;
+	end;
+var
+	World, Scene: GearPtr;
+begin
+	World := FindWorld( GB , GB^.Scene );
+	if World <> Nil then begin
+		Scene := World^.SubCom;
+		while Scene <> Nil do begin
+			UpdateMoodsForScene( Scene );
+			Scene := Scene^.Next;
+		end;
+	end;
 end;
 
 initialization

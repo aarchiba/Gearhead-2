@@ -98,6 +98,9 @@ Const
 		NAS_MaxMemeViews = 2;	{ How many times should this meme be viewed? Due to the peculiarities of }
 					{ the system, the default score (0) is equivalent to 1. }
 
+	NAG_MoodData = -23;	{ Used to record certain things about moods. }
+		NAS_MoodTimeLimit = 1;	{ The time at which this mood will be deleted. }
+
 
 	{ PLOT ELEMENTS }
 	{ A plot or a story can have up to 8 elements associated with it. The type of }

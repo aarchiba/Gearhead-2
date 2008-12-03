@@ -164,13 +164,72 @@ Content
 %%  *******************
 
 Content
+	name <If You Wanna Be My Lover>
+	desc <You better take me home... and be of an appropriate gender, of course.>
+	requires <*CS_ThanksForRescue ~+Glo A:-- (1:FRIEND|1:PCFAC) -1:FAMILY (1:A.---|1:A.jr_|1:A.sr_)>
+
+	% E1 is the character who's been rescued
+
+	% P%id%01 = Initialization Counter
+
+	% If E1 dies, that's a bad thing.
+	start <ifNPCDead %1% SMemo 0 LoseComp 0 .%id%_loss>
+	.%id%_loss <+T-->
+	update <if= P%id%01 0 P= %id%01 1 NPCLevel %1% StoryDL>
+
+	sub
+		Persona 1
+		Greeting <if= PlotStatus %plotid% %id% else %pop% goto .%id%_GoThanks>
+		*.%id%_GoThanks <*ThanksForRescue .%id%_GoReward>
+		.%id%_GoReward <&SetTargetNPC 0 SetXXRAttitude %1% XXR_A_Thankful   ifChatNPCSexy else .%id%_GoMinorReward NewChat Say %id%01 AddChat %id%01 AddChat %id%02>
+		.%id%_GoMinorReward <NewChat Say %id%02 History %id%03 SMemo 0 PCAlly %1% WinComp 0 .%id%_next>
+		.%id%_next <+T-->
+		result%id%01 <NewChat Say %id%04 History %id%05 PCLover %1% &SetAmoreNPC %1% SMemo 0 WinComp 0 .%id%_next>
+		result%id%02 <NewChat Say %id%06 History %id%03 PCAlly %1%                   SMemo 0 WinComp 0 .%id%_next>
+		Msg%id%01 <To repay you for rescuing me, I was thinking that maybe we could go out on a date sometime.>
+		Msg%id%01_1 <>
+		CMsg%id%01_1 <ifNPCSociable Accept>
+		Msg%id%01_2 <I don't really know how to say this, but... would you like to go out sometime? I don't know where...>
+		CMsg%id%01_2 <ifNPCShy Accept>
+		Msg%id%01_3 <Say, I know this is sudden, but would you like to go to dinner sometime? I guess I don't have any other way to repay you for your help, but we could do that.>
+		CMsg%id%01_3 <ifNPCEasygoing Accept>
+		Msg%id%01_4 <To thank you for everything, I have decided that I will allow you to date me. You should realize that this is a great honor.>
+		CMsg%id%01_4 <ifNPCPassionate Accept>
+		Msg%id%01_5 <>
+		CMsg%id%01_5 <ifNPCCheerful Accept>
+		Msg%id%01_6 <Well, I don't really have any way of thanking you, but I thought maybe I could take you out on a date sometime? I mean, if you're interested... I'd understand if you weren't...>
+		CMsg%id%01_6 <ifNPCMelancholy Accept>
+		Msg%id%02 <Someday I'd like to help you on a mission. Thanks again, \PC .>
+		Msg%id%02_1 <>
+		CMsg%id%02_1 <ifNPCSociable Accept>
+		Msg%id%02_2 <>
+		CMsg%id%02_2 <ifNPCShy Accept>
+		Msg%id%02_3 <>
+		CMsg%id%02_3 <ifNPCEasygoing Accept>
+		Msg%id%02_4 <>
+		CMsg%id%02_4 <ifNPCPassionate Accept>
+		Msg%id%02_5 <>
+		CMsg%id%02_5 <ifNPCCheerful Accept>
+		Msg%id%02_6 <Maybe someday I'll be able to help you on a mission, instead of just being a burden... Thanks again, \PC .>
+		CMsg%id%02_6 <ifNPCMelancholy Accept>
+		Msg%id%03 <In thanks for your help, %name1% became your ally.>
+		Msg%id%04 <Really? Great! I can harldy wait.>
+		Msg%id%05 <In thanks for your help, %name1% offered to take you on a date.>
+		Msg%id%06 <No problem. Still, maybe someday I'll be able to help in your adventure, somehow...>
+		Prompt%id%01_1 <I'd like that a lot.>
+		Prompt%id%01_2 <That sounds good to me.>
+		Prompt%id%02_1 <Sorry, but I'd really rather not.>
+		Prompt%id%02_2 <Why don't we just be friends?>
+	end
+
+Content
 	name <I'll tell you a secret>
 	desc <In thanks for rescuing him, the NPC will reveal a secret.>
 	requires <*CS_ThanksForRescue ~+Gkn ~C:POLIT ~C:MEDIA ~C:ACADE>
 
 	% E1 is the character who's been rescued
 
-	start <if= PlotStatus %plotid% %id% else %pop% ifNPCDead %1% LoseComp 0 .%id%_loss>
+	start <ifNPCDead %1% LoseComp 0 .%id%_loss>
 	.%id%_loss <+T-->
 
 	% SubPlot1 is the secret itself

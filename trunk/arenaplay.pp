@@ -733,6 +733,10 @@ begin
 	{ Add some random monsters, if appropriate. }
 	RestockRandomMonsters( Camp^.GB );
 
+	{ Update the moods. }
+	UpdateMoods( Camp^.GB );
+
+
 	{ Do some graphics initializing, if needed. }
 {$IFNDEF ASCII}
 	InitGraphicsForScene( Camp^.GB );
