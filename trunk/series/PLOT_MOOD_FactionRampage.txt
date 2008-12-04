@@ -10,28 +10,6 @@
 %%
 
 Plot
-	name <A Test of Moods>
-
-	ELEMENT1 <Prefab>
-	ELEMENT2 <Scene Town>
-	Element3 <Faction !Enemy 2>
-
-	update <SetMood %1% %2% EndPlot>
-
-	inv
-		Mood 5
-		MoodTimeLimit 7200
-		name <Faction Rampage Test>
-		plot_type <*FactionRampage>
-
-		Element1 <Grab 3>
-
-		Update <if= v1 0 V= 1 1 Print 1 XPV %me_1% News 1>
-		Msg1 <Breaking news: %me_name1% rampage in %city%!>
-
-	end
-
-Plot
 	name <Rampaging Rampagers>
 	desc <Some mecha from the rampaging faction may attack the PC.>
 	requires <*FactionRampage>

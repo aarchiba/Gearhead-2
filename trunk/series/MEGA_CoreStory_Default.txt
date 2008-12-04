@@ -1,4 +1,84 @@
 %%
+%% *:CS_SubBossRoadblock
+%%
+%% This is an odd little utility component. In order for something to happen,
+%% the PC will need to locate and defeat a certain NPC. The battle will happen
+%% in an invisible wandering encounter; at the start of the fight, the NPC will
+%% contact the PC.
+%%
+%% If the PC loses the battle, no problem: the fight will repeat every 3-5 hours
+%% until the PC wins. If the boss NPC dies, this counts as a win even if the PC
+%% doesn't finish off the lancemates.
+%%
+%% NOTE: THIS SUBPLOT DOES NOT INCLUDE A PERSONA FOR THE NPC! It's up to the
+%%  parent plot to provide that.
+%%
+%% When this subplot concludes, it sets the following trigger:
+%%  .%id%_%plotid%_GoWin
+%%
+%% PARAM1: The outdoors scene for the encounter
+%% PARAM2: The NPC to be met
+%%
+
+Content
+	name <Default Roadblock>
+	desc <Fight the sub-boss and some lancemates.>
+	requires <*:CS_SubBossRoadblock>
+	Size 6
+
+	% E1 is the outdoors scene for the encounter
+	% E2 is the NPC to be met
+	% E3 is the encounter itself
+	Element3 <Prefab>
+	Place3 <1>
+
+	% P%id%01 = Initialization Counter
+	update <if= P%id%01 0 P= %id%01 1 NPCLevel %2% StoryDL MoveNPC %2% %3% SetNPCTeam %2% 2>
+
+	sub
+		MetaScene 3 2
+		rumor%id% <%name2% has been seen in %name1%.>
+		special <UNCHARTABLE>
+		% L1 = Encounter Over Counter
+		% L2 = Initialization Counter; resets each time
+		MapWidth 50
+		MapHeight 50
+
+		Start <if= L2 0 L= 2 1   L= 1 0   ForceChat %2%>
+		nu1 <if= T1 0   Return  if= L1 0   L= 1 1   AddRenown -3>
+		nu2 <if= T2 0   if= L1 0   L= 1 1   Goto GoVictory>
+		Faint%2% <L= 1 1 Goto GoVictory>
+		GoVictory <XPV 100 History 1 Trigger0 .%id%_%plotid%_GoWin WinSubPlot %plotid%>
+		end <L= 2 0>
+		Msg1 <You defeated %name2% in mecha combat.>
+
+		sub
+			team 1
+			SetEnemy 2
+			ParaX 5
+			ParaY 5
+
+			team 2
+			SetEnemy 1
+			Deploy <if= PlotStatus %plotid% %id% SetSelfFaction NPCFac %2%   WMecha 2 StoryDL 60>
+			ParaX 45
+			ParaY 45
+		end
+	end
+	inv
+		Encounter
+		name <%name2%'s Lance>
+		% V1 = Recharge Counter
+		% This encounter will appear once every 3-5 hours, as long as this is the active subplot.
+		update <if= PlotStatus %plotid% %id% else GoHide if# V1 0 else GoSetTimer ifG ComTime V1 else GoHide SetStat STAT_MetaVisibility 0  Goto GoSetOrders>
+		GoSetTimer <V= 1 ComTime V+ 1 1800 Goto GoHide>
+		GoSetOrders <GrabSource GSetNAtt NAG_EpisodeData NAS_Orders 3>
+		use <ifG StatVal STAT_MetaVisibility -1  V= 1 ComTime V+ 1 10800 V+ 1 d7200  Print -1 Exit Destination>
+		GoAutoAttack <V= 1 ComTime V+ 1 10800 V+ 1 d7200  Alert -2 Exit Destination>
+		GoAvoidAttack <V= 1 ComTime V+ 1 7200 V+ 1 d3600  Print -6 AddSociable -1 UpdateProps>
+	end
+
+%%
 %% *:CS_DifficultMeeting
 %%	&IsEnemy	The NPC to be met is an enemy
 %%	&Protected	The NPC shouldn't get killed, by the PC or anything else

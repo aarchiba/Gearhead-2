@@ -41,7 +41,7 @@ Content
 	Place4 <%e3%>
 
 	% P%id%01 = Initialization Counter
-	update <if= PlotStatus %plotid% %id% else %pop% if= P%id%01 0 MoveNPC %1% %4% SetNPCTeam %1% 2 NPCLevel %1% StoryDL P= %id%01 1>
+	update <if= P%id%01 0 MoveNPC %1% %4% SetNPCTeam %1% 2 NPCLevel %1% StoryDL P= %id%01 1>
 
 	sub
 		Persona 1

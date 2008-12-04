@@ -1171,6 +1171,15 @@ Attack <  >
 EncounterMove 0
 
 Encounter
+desig <CORE-ACTIVATABLE-INVISIBLE>
+% It becomes active when its NAG_QuestInfo/NAS_QEncActive attribute is nonzero.
+update <ifThisQEncActive else GoHide  SetStat STAT_MetaVisibility 0  Goto GoSetOrders>
+% Sets this encounter's orders to Passive
+GoSetOrders <GrabSource GSetNAtt NAG_EpisodeData NAS_Orders 3>
+Attack <  >
+EncounterMove 0
+
+Encounter
 desig <CORE-ACTIVATABLE-STATIONARY-DEFENDED>
 % It becomes active when its NAG_QuestInfo/NAS_QEncActive attribute is nonzero.
 %

@@ -372,6 +372,122 @@ Content
 %%  *******************
 
 Content
+	name <I Have Become Death>
+	size 12
+	desc <Your enemy no longer cares, and so won't hold back any longer.>
+	Zrequires <*:CS_MechaEncounter E:++ F:++ E:M.rev (E:A.hat|E:A.mut|E:A.obs|E:A.env|E:A.---|E:A.jr_|E:A.sr_) !Hi -&Secondary>
+	changes <E:M>
+
+	% E1 is the outdoors scene where this encounter will be placed
+	% E2 is the "kicker" encounter- the one which starts the main plot
+	% E3 is the enemy
+	% E4 is the urban scene for the encounters to follow
+	% E5 is the final battle scene
+	% E6 is the Enemy's lieutenant
+	% E7 is the third in command
+	% E8 is the fourth
+	% E9 is the *FactionRampage mood which accompanies this episode
+	% E10 is an enemy of the enemy faction needed for narrative purposes
+	Element3 <Grab 1>
+	Place3 </>
+	Element4 <Scene Urban !Near -7>
+	Element5 <Prefab>
+	Place5 <4>
+	Element6 <Character Villainous HasMecha !Comrade -2 !Global NeverFail>
+	NeverFail6 <Mecha Pilot>
+	Place6 </>
+	Element7 <NewNPC -2 -7 Passionate>
+	Place7 </>
+	Element8 <Character Heroic HasMecha !Comrade -2 !Global NeverFail>
+	Place8 </>
+	Element9 <Prefab>
+	Element10 <Faction !Enemy -2>
+
+	% P%id%01 = Initialization Counter
+	% P%id%02 = Have gained reinforcements
+	% P%id%03 = Have gained decimation
+	% P%id%04 = Completed first combat
+
+	update <if= P%id%01 0 P= %id%01 1 SetNPCFaction %6% &EnemyFac SetNPCFaction %7% &EnemyFac SetNPCFaction %8% &EnemyFac>
+
+	% Set either reinforcements or decimation here
+	.%id3%_%plotid3%_GoReinforcements <P= %id%02 1>
+	.%id3%_%plotid3%_GoDecimation     <P= %id%03 1>
+
+	.%id1%_%plotid1%_GoWin <SetPlotStatus %plotid2% %id2%  ifNPCOK %8% MoveNPC %8% %5% SetNPCTeam %8% 2>
+	.%id2%_%plotid2%_GoWin <SetPlotStatus %plotid3% %id3% SetEncounterActive %5%  ifNPCOK %7% MoveNPC %7% %5% SetNPCTeam %7% 2>
+
+	% SubPlot1 is the first substage boss battle
+	% SubPlot2 is the second substage boss battle
+	% SubPlot3 is the ability to gain an advantage in the final battle
+	SubPlot1 <*:CS_SubBossRoadblock 4 8>
+	SubPlot2 <*:CS_SubBossRoadblock 4 7>
+	SubPlot3 <*:CS_GainAdvantageVsNPC&Decimation&Reinforcements 6>
+
+	sub
+		MetaScene 2 2
+		% L1 = Encounter Over Counter
+		% L2 = Initialization Counter
+		MapWidth 30
+		MapHeight 30
+
+		Start <if= L2 0 L= 2 1 Alert 1 Monologue %3% 2 Monologue %6% 3  History 4  SetXXRMotivation %3% XXR_M_Nihilism   SetNPCRep %3% 1 -100   SetMood %9% &EpisodeScene>
+		nu1 <if= T1 0   Return   if= V1 0 V= 1 1                           Monologue %6% 7  Goto GoBeginRoadblock>
+		nu2 <if= T2 0   if= V1 0 V= 1 1   AddRenown 1   SALVAGE   Monologue %6% 8 Monologue %7% 9 Monologue %8% 10  XPV 100 P= %id%04 1 Return  Goto GoBeginRoadblock>
+		end <SetEncounterInactive %2%>
+		GoBeginRoadblock <SMemo 5 History 6 SetPlotStatus %plotid1% %id1%>
+
+		Msg1 <You arrive at the end of a battle between %name3% and %name10%.>
+		Msg2 <You missed the action, \PC . My work here is finished. %name6%, I will leave you to mop up the rest. I don't care how many civilians you have to kill.>
+		Msg3 <It'll be my pleasure, captain. \SCENE &EpisodeScene will know that it belongs to \FACTION &EnemyFac !>
+		Msg4 <%name3% ordered \PPR %3% lieutenant %name6% to raze \SCENE &EpisodeScene .>
+		Msg5 <%name3% left \PPR %3% lieutenant to raze \SCENE &EpisodeScene . %name6% ordered %name7% and %name8% to hunt you down.>
+		Msg6 <%name6% assigned %name7% and %name8% to hunt you down.>
+		Msg7 <Don't think you can get away. I'll assign %name7% and %name8% to make sure you don't survive.>
+		Msg8 <You're stronger than you look, but don't think you're safe just yet. I'll send %name7% and %name8% to hunt you down.>
+		Msg9 <Finally, an opponent who might be worth my talents.>
+		Msg10 <I don't know... are we really doing the right thing here?>
+
+		sub
+			team 1
+			SetEnemy 2
+			ParaX 5
+			ParaY 5
+
+			team 2
+			SetEnemy 1
+			Deploy <if= PlotStatus %plotid% %id% SetSelfFaction &EnemyFac   WMecha 2 StoryDL 100>
+			ParaX 25
+			ParaY 25
+		end
+
+		MetaScene 5 2
+
+		Persona 6
+		special <UNLISTED>
+
+		Persona 7
+		special <UNLISTED>
+
+		Persona 8
+		special <UNLISTED>
+
+	end
+	inv
+		stc CORE-ACTIVATABLE
+		name <%name6%'s Lance>
+
+		Mood 5
+		name <"I Have Become Death" Mood>
+		plot_type <*FactionRampage>
+		Element1 <Grab -2>
+		Update <if= v1 0 V= 1 1   News 1>
+		Msg1_1 <%city% is under siege as %name3%'s personal forces take control.>
+		Msg1_2 <Mecha from \FACTION &EnemyFac take control of %city% under the orders of %name3%.>
+		Msg1_3 <>
+	end
+
+Content
 	name <Turning Point>
 	size 5
 	desc <Meet your former enemy fighting your current enemy and maybe become allies.>
