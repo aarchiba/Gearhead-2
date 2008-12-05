@@ -77,6 +77,7 @@ KILLNPC <GrabNPC ? GAddNAtt 12 0 9999 Trigger NU NPCTeam ! Trigger FAINT !>
 KILLPC <GrabPC GAddNAtt 12 0 9999 Trigger0 NU1>
 DELETEITEM <GrabItem ?  DeleteGG>
 KILLMOOD <GrabItem ?  DeleteGG>
+SetMoodTimeLimit <GrabItem ? GSetNAtt -23 1 ComTime GAddNAtt -23 1 ?>
 DeleteSelf <GrabSource DeleteGG>
 MOVENPC <GrabNPC ?  MoveGG ?>
 MOVEANDPACIFYNPC <GrabNPC ? MoveAndPacifyGG ?>

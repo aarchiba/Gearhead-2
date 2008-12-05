@@ -1572,6 +1572,7 @@ begin
 					{ the presumed story. }
 					if N > 0 then Grab_Source := Plot
 					else Grab_Source := Slot;
+					N := Abs( N );
 
 					desc := SAttValue( Grab_Source^.SA , 'ELEMENT' + BStr( N ) );
 
@@ -1953,6 +1954,7 @@ begin
 
 	{ Either load a regular plot (marked with a #A tag) or one of the two }
 	{ episode resolution plots (#w and #l for wins and losses, respectively). }
+	{ If it's time for the conclusion, load a #C plot instead. }
 	if ( NAttValue( Story^.NA , NAG_XXRan , NAS_PlotPointCompleted ) > NAttValue( Story^.NA , NAG_XXRan , NAS_PlotPointGoal ) ) and TaskCanConclude then begin
 		if NAttValue( Story^.NA , NAG_XXRan , NAS_PlotPointVictory ) >= NAttValue( Story^.NA , NAG_XXRan , NAS_PlotPointGoal ) then begin
 			{ This episode was "won". }
@@ -1961,6 +1963,8 @@ begin
 			{ This episode was "lost". }
 			plot_desc := '#L ' + plot_desc;
 		end;
+	end else if NAttValue( Story^.NA , NAG_XXRan , NAS_DifficulcyLevel ) > 80 then begin
+		plot_desc := '#C ' + plot_desc;
 	end else begin
 		plot_desc := '#A ' + plot_desc;
 	end;

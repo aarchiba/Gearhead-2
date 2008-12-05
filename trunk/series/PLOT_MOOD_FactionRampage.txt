@@ -34,7 +34,7 @@ Plot
 		MapHeight 50
 
 		start <if= L2 0 L= 2 1 Alert 1>
-		nu1 <if= T1 0   Return   if= V1 0 V= 1 1    AddRenown -2        EndPlot>
+		nu1 <if= T1 0   Return   if= V1 0 V= 1 1    AddRenown -1        EndPlot>
 		nu2 <if= T2 0   if= V1 0 V= 1 1   AddRenown 1 Alert 2   XPV 100   SALVAGE   EndPlot>
 
 		Msg1 <You are attacked by some mecha from %name3%!>

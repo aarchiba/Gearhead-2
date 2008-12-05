@@ -1,3 +1,5 @@
+
+
 %%
 %% *:CS_LocateDuel Content
 %%
@@ -429,6 +431,22 @@ Content
 		CPrompt%id%03 <ifG PC$ v%id%02 Accept>
 		Prompt%id%04 <I'll be back later.>
 	end
+
+%%
+%% *:CS_RevealEncounter_AttackTarget Content
+%%
+%% You're searching for the target of a given faction. They're apparently
+%% going to attack something, for some reason.
+%%
+%% When the PC has located the encounter, this subplot will make it visible
+%% with SetEncounterActive and conclude with WinSubPlot. Revealing the entrance
+%% in this subplot will typically give the PC 100XP.
+%%
+%% PARAM1: The outdoors scene where the encounter is
+%% PARAM2: The MetaScene being sought
+%% PARAM3: The faction launching the attack
+%%
+
 
 %%
 %% *:CS_RevealEncounter_ItemDungeon Content

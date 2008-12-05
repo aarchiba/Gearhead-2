@@ -13,6 +13,9 @@
 %% NOTE: THIS SUBPLOT DOES NOT INCLUDE A PERSONA FOR THE NPC! It's up to the
 %%  parent plot to provide that.
 %%
+%% NOTE: THIS SUBPLOT DOES NOT SET A HISTORY NOTE! Again, that's up to the
+%%  parent.
+%%
 %% When this subplot concludes, it sets the following trigger:
 %%  .%id%_%plotid%_GoWin
 %%
@@ -48,9 +51,8 @@ Content
 		nu1 <if= T1 0   Return  if= L1 0   L= 1 1   AddRenown -3>
 		nu2 <if= T2 0   if= L1 0   L= 1 1   Goto GoVictory>
 		Faint%2% <L= 1 1 Goto GoVictory>
-		GoVictory <XPV 100 History 1 Trigger0 .%id%_%plotid%_GoWin WinSubPlot %plotid%>
+		GoVictory <XPV 100 Trigger0 .%id%_%plotid%_GoWin WinSubPlot %plotid%>
 		end <L= 2 0>
-		Msg1 <You defeated %name2% in mecha combat.>
 
 		sub
 			team 1

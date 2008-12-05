@@ -258,6 +258,29 @@ Persona
 	Prompt%id%02 <Sorry, I can't help you right now.>
 	Prompt%id%02_1 <I'm in no condition to help at the moment.>
 
+% TYPE: *Back_For_More
+%
+%	The PC fought this enemy previously and presumably lost; now they're
+%	back for more.
+%
+
+	Persona
+	requires <*Back_For_More>
+	Start <EndChat Say %id%01>
+	Msg%id%01 <Back for more, \PC ? I'll defeat you this time as easily as I did the last.>
+	Msg%id%01_1 <>
+	CMsg%id%01_1 <ifNPCSociable Accept>
+	Msg%id%01_2 <>
+	CMsg%id%01_2 <ifNPCShy Accept>
+	Msg%id%01_3 <>
+	CMsg%id%01_3 <ifNPCEasygoing Accept>
+	Msg%id%01_4 <>
+	CMsg%id%01_4 <ifNPCPassionate Accept>
+	Msg%id%01_5 <>
+	CMsg%id%01_5 <ifNPCCheerful Accept>
+	Msg%id%01_6 <>
+	CMsg%id%01_6 <ifNPCMelancholy Accept>
+
 
 % TYPE: *THEME_EXPO
 %		&Ally	NPC will be fighting alongside PC
@@ -272,6 +295,18 @@ Persona
 	requires <*THEME_EXPO>
 	Start <EndChat Say %id%01 Goto %1%>
 	Msg%id%01 <Now you'll see the full power of my \ChatNPCMecha !>
+	Msg%id%01_1 <>
+	CMsg%id%01_1 <ifNPCSociable Accept>
+	Msg%id%01_2 <>
+	CMsg%id%01_2 <ifNPCShy Accept>
+	Msg%id%01_3 <>
+	CMsg%id%01_3 <ifNPCEasygoing Accept>
+	Msg%id%01_4 <>
+	CMsg%id%01_4 <ifNPCPassionate Accept>
+	Msg%id%01_5 <>
+	CMsg%id%01_5 <ifNPCCheerful Accept>
+	Msg%id%01_6 <>
+	CMsg%id%01_6 <ifNPCMelancholy Accept>
 
 	Persona
 	%% Themeless Expo- just give the name of the NPC's mecha.

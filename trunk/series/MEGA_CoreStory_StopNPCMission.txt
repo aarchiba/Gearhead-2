@@ -23,6 +23,69 @@
 %%
 
 Content
+	name <Testing Destiny>
+	desc <The enemy believes that the PC is their soul-foe, destined to destroy one another for eternity.>
+	requires <*:CS_StopNPCMission &IsEnemyNPC (E:A.hat|E:A.mut) (E:M.---|E:M.rev|E:M.nih) F:++ -!Ne -!Lo -&Secondary>
+	changes <E:A>
+	Size 10
+
+	% E1 is the NPC to be stopped
+	% E2 is an outdoors scene for the first McGuffin encounter
+	% E3 is the McGuffin encounter
+	% E4 is the enemy faction
+	Place1 </>
+	Element2 <Scene Outdoors !Near -7>
+	Element3 <Prefab>
+	Place3 <2>
+	Element4 <Grab 2>
+
+	% P%id%01 = Initialization Counter
+
+	%% FAIL CONDITIONS:
+	%% - Reveal Encounter (SP2) fails
+	%% - Either of the two combats are lost
+
+	% At the beginning, activate the McGuiffin encounter and its locator.
+	update <if= P%id%01 0 P= %id%01 1 SetPlotStatus %plotid1% %id1% SetPlotStatus %plotid2% %id2%>
+	end <ifSubPlotLost %plotid2% CancelSubPlot %plotid1% Goto .%id%_GoLoseMission>
+	.%id%_GoLoseMission <LoseSubPlot %plotid% Trigger0 .%id%_%plotid%_GoLoss>
+
+	% Failure in either of the sub-missions results in the failure of the main mission.
+	.%id1%_%plotid1%_GoLoss <Goto .%id%_GoLoseMission>
+	.%id2%_%plotid2%_GoLoss <Goto .%id%_GoLoseMission>
+
+	.%id1%_%plotid1%_GoWin <ForceChat %1% SMemo %id%01 History %id%02 SetXXRAttitude %1% XXR_A_Obsession   SetPlotStatus %plotid3% %id3%>
+	.%id2%_%plotid2%_GoWin <Monologue %1% %id%03 History %id%04                                            WinSubPlot %plotid% Trigger0 .%id%_%plotid%_GoWin>
+
+	Msg%id%01 <%name1% challenged you to stop \OPR %1% from attacking a location in town; \SPR %1% did not appear to be acting rationally.>
+	Msg%id%02 <%name1% challenged you to stop \OPR %1% .>
+	Msg%id%03 <Just as I thought... You really are my soul-foe. We are destined to die in each other's arms, just as we have countless times through eternity... But do not despair. Our final battle approaches shortly.>
+	Msg%id%04 <%name1% claimed that you are soul-foes, destined to kill one another.>
+
+	% SubPlot1 is a McGuffin combat encounter used to set up the rest of the plot
+	% SubPlot2 is the task to reveal the above encounter
+	% SubPlot3 is the attack the PC must prevent
+	SubPlot1 <*:CS_MechaEncounter&Secondary 2 3>
+	SubPlot2 <*:CS_DiscoverNPCMission&EnemyNPC 2 3 1>
+	SubPlot3 <*:CS_StopAttack 4>
+
+	sub
+		Persona 1
+		special <UNLISTED>
+		greeting <if= PlotStatus %plotid% %id% else %pop% EndChat Say %id%01 AddChat %id%01 AddChat %id%02>
+		result%id%01 <EndChat Say %id%02>
+		result%id%02 <EndChat Say %id%02>
+		Msg%id%01 <I knew that this diversion would bring you here, \PC ... Do you believe in destiny? I've designed a test so that we can find out whether or not it exists.>
+		Msg%id%02 <In just a few short hours I intend to destroy something, something very big. If you are fated to be my soul-foe then you will prove yourself to me. If you die trying, well, it was never meant to be...>
+		Prompt%id%01 <Shut up, I'm in no mood for your games.>
+		Prompt%id%02 <What the blazes are you talking about!?>
+	end
+	inv
+		stc CORE-ACTIVATABLE
+		name <%name1%'s Lance>
+	end
+
+Content
 	name <Friends are fair game>
 	desc <The enemy NPC kidnaps one of the PC's friends to torture for information.>
 	requires <*:CS_StopNPCMission &IsEnemyNPC E:A.hat (E:M.---|E:M.mer|E:M.com|E:M.rev|E:M.nih) +H-- -!Ne>
@@ -392,6 +455,131 @@ Content
 	inv
 		stc CORE-ACTIVATABLE
 		name <%name1%'s Goal>
+	end
+
+
+%%
+%% *:CS_StopAttack Content
+%%
+%%	&IsEnemyFac	The faction to be stopped is the core story enemy
+%%
+%% A faction is planning to attack something. The PC will have 24 hours to find
+%% out what and prevent the attack. This is kind of like the above subplot type
+%% but involves a faction rather than an NPC and is not a main course. Generally,
+%% this subplot will be invoked when a threat is discovered, and may well form
+%% the primary combat for an episode.
+%%
+%% When this subplot concludes, it sets one of the following triggers:
+%%  .%id%_%plotid%_GoWin
+%%  .%id%_%plotid%_GoLoss
+%%
+%% PARAM1: The faction behind the attack
+%%
+
+Content
+	name <Blow Up Your Factory>
+	desc <The faction is going to launch an attack against a factory.>
+	requires <*:CS_StopAttack>
+	Size 8
+
+	% E1 is the faction launching the attack
+	% E2 is an urban scene for placing the factory
+	% E3 is the metascene for the mission
+	Element2 <Scene Urban !Near -7>
+	Element3 <Prefab>
+	Place3 <2>
+
+	%% FAIL CONDITIONS
+	%% - The DiscoverNPCMission subplot fails
+	%% - The timer runs out before combat is entered
+
+	% p%id%01 = Initialization Counter
+	% p%id%02 = Timer (24 to 30 hours)
+	% p%id%03 = Reinforcements Counter
+
+	% At initialization, set the timer and activate the two subplots.
+	update <if= p%id%01 0 p= %id%01 1 p= %id%02 ComTime P+ %id%02 86400 P+ %id%02 d21600 SetPlotStatus %plotid1% %id1% SetPlotStatus %plotid2% %id2%>
+	HalfHour <if# p%id%02 0 ifG ComTime p%id%02  CancelSubPlot %plotid1%  CancelSubPlot %plotid2%  LoseSubPlot %plotid% Trigger0 .%id%_%plotid%_GoLoss  History %id%01 if= RootSceneID &EpisodeScene else .%id%_GoDistant Alert %id%02>
+	.%id%_GoDistant <Alert %id%03>
+
+	end <ifSubPlotLost %plotid1% CancelSubPlot %plotid2% P= %id%02 -1 Goto HalfHour>
+
+	.%id2%_%plotid2%_GoReinforcements <P= %id%03 1>
+
+	Msg%id%01 <You were too late to prevent %name1% from destroying a factory.>
+	Msg%id%02 <\SCENE &EpisodeScene is rocked as mecha from %name1% destroy their target.>
+	Msg%id%03 <You feel a great disturbance in \SCENE &EpisodeScene .>
+
+	% SubPlot1 is the DiscoverNPCMission task
+	% SubPlot2 is the GainAdvantage_VsNPC task
+	SubPlot1 <*:CS_RevealEncounter_AttackTarget 2 3 1>
+	SubPlot2 <*:CS_GainAdvantageVsMecha&Reinforcements>
+
+	sub
+		MetaScene 3 2
+		% L1 = Initialization Counter
+		% L2 = Victory Counter
+		MapWidth 50
+		MapHeight 50
+
+		CityBlockMap
+		terrain <GROUND>
+
+		% At startup, clear the timer so the mission doesn't timeout while the PC is defending
+		% the factory. That would just be silly.
+		Start <if= L1 0  Alert 1  L= 1 1 P= %id%02 0  if# P%id%03 0 Alert 4>
+		nu1 <if= T1 0 Return if= L2 0 L= 2 1 Goto GoLoseMission>
+		nu2 <if= T2 0 if= L2 0 L= 2 1 Salvage ifG T3 0 else GoLoseMission Goto GoWinMission>
+		GoLoseMission <Alert 2   History 2             Trigger0 .%id%_%plotid%_GoLoss  LoseSubPlot %plotid%>
+		GoWinMission  <Alert 3   History 5   XPV 100   Trigger0 .%id%_%plotid%_GoWin   WinSubPlot %plotid%>
+
+		end <SetEncounterInactive %3%>
+
+		Msg1 <You arrive just in time to defend the factory against %name1%.>
+		Msg2 <You did not manage to save the factory %name1% attacked.>
+		Msg3 <You defended the factory against %name1%.>
+		Msg4 <Your reinforcements are here, as promised.>
+		Msg5 <You defended a factory against %name1%.>
+
+		sub
+			Team 1
+			SetEnemy 2
+			SetAlly 3 4
+			ParaX 7
+			ParaY 7
+
+			Team 2
+			SetEnemy 1 3 4
+			Deploy <if= PlotStatus %plotid% %id%  SetSelfFaction &EnemyFac WMecha 2 ArenaRenown 200>
+			ParaX 45
+			ParaY 45
+
+			Team 3
+			SetEnemy 2
+			SetAlly 1 4
+
+			team 4
+			setally 1 3
+			setenemy 2
+			Deploy <if= PlotStatus %plotid% %id%  if# P%id%03 0   WMecha 4 StoryDL 80>
+			ParaX 25
+			ParaY 7
+
+
+			rect
+			name <The Factory>
+			desig <NW>
+			sub
+				SuperProp
+				requires <*Fortress>
+				SetTeam 3
+			end
+		end
+
+	end
+	inv
+		stc CORE-ACTIVATABLE
+		name <Attack Target>
 	end
 
 

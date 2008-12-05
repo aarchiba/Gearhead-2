@@ -1937,7 +1937,7 @@ Procedure ProcessSayAnything( GB: GameBoardPtr );
 		M := City^.SubCom;
 		while M <> Nil do begin
 			M2 := M^.Next;
-			if ( NAttValue( M^.NA , NAG_MemeData , NAS_MemeTimeLimit ) > 0 ) and ( NAttValue( M^.NA , NAG_MemeData , NAS_MemeTimeLimit ) < GB^.ComTime ) then begin
+			if ( M^.G = GG_Meme ) and ( NAttValue( M^.NA , NAG_MemeData , NAS_MemeTimeLimit ) > 0 ) and ( NAttValue( M^.NA , NAG_MemeData , NAS_MemeTimeLimit ) < GB^.ComTime ) then begin
 				RemoveGear( City^.SubCom , M );
 			end;
 			M := M2;
@@ -1953,7 +1953,7 @@ Procedure ProcessSayAnything( GB: GameBoardPtr );
 		M := City^.SubCom;
 		N := 0;
 		while M <> Nil do begin
-			if M^.G = GG_Meme then Inc( N );
+			if ( M^.G = GG_Meme ) or ( M^.G = GG_CityMood ) then Inc( N );
 			M := M^.Next;
 		end;
 		NumMeme := N;
@@ -1966,7 +1966,7 @@ Procedure ProcessSayAnything( GB: GameBoardPtr );
 		S := City^.SubCom;
 		M := Nil;
 		while ( S <> Nil ) and ( N > 0 ) do begin
-			if S^.G = GG_Meme then begin
+			if ( S^.G = GG_Meme ) or ( S^.G = GG_CityMood ) then begin
 				Dec( N );
 				if N = 0 then M := S;
 			end;
@@ -1995,7 +1995,7 @@ begin
 			{ A message was successfully extracted from this meme. Increment the }
 			{ message counter and maybe delete it. }
 			AddNAtt( Meme^.NA , NAG_MemeData , NAS_NumViews , 1 );
-			if NAttValue( Meme^.NA , NAG_MemeData , NAS_NumViews ) >= NAttValue( Meme^.NA , NAG_MemeData , NAS_MaxMemeViews ) then begin
+			if ( Meme^.G = GG_Meme ) and ( NAttValue( Meme^.NA , NAG_MemeData , NAS_NumViews ) >= NAttValue( Meme^.NA , NAG_MemeData , NAS_MaxMemeViews ) ) then begin
 				RemoveGear( City^.SubCom , Meme );
 			end;
 		end;

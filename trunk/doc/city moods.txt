@@ -28,5 +28,7 @@ String Substitutions:
 	%me_name1% ... %me_name20%	Mood element names
 	%me_1% ... %me_20%		Mood Element IDs
 
-
+Moods also function as memes for the cities in which they are installed. To do this,
+include a MSG <> block in the mood. Make sure to include a good variety of phrases
+since unlike regular memes, moods don't have a maximum view limit.
 

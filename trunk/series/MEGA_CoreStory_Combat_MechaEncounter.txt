@@ -373,10 +373,10 @@ Content
 
 Content
 	name <I Have Become Death>
-	size 12
+	size 9
 	desc <Your enemy no longer cares, and so won't hold back any longer.>
-	Zrequires <*:CS_MechaEncounter E:++ F:++ E:M.rev (E:A.hat|E:A.mut|E:A.obs|E:A.env|E:A.---|E:A.jr_|E:A.sr_) !Hi -&Secondary>
-	changes <E:M>
+	requires <*:CS_MechaEncounter E:++ F:++ E:M.rev (E:A.hat|E:A.mut|E:A.obs|E:A.env|E:A.---|E:A.jr_|E:A.sr_) !Hi -&Secondary>
+	changes <E:M R:++>
 
 	% E1 is the outdoors scene where this encounter will be placed
 	% E2 is the "kicker" encounter- the one which starts the main plot
@@ -395,7 +395,7 @@ Content
 	Place5 <4>
 	Element6 <Character Villainous HasMecha !Comrade -2 !Global NeverFail>
 	NeverFail6 <Mecha Pilot>
-	Place6 </>
+	Place6 <5 (Enemies) SD enemy>
 	Element7 <NewNPC -2 -7 Passionate>
 	Place7 </>
 	Element8 <Character Heroic HasMecha !Comrade -2 !Global NeverFail>
@@ -407,6 +407,8 @@ Content
 	% P%id%02 = Have gained reinforcements
 	% P%id%03 = Have gained decimation
 	% P%id%04 = Completed first combat
+	% P%id%05 = E8 backed out of fight
+	% P%id%06 = E7 backed out of (final) fight
 
 	update <if= P%id%01 0 P= %id%01 1 SetNPCFaction %6% &EnemyFac SetNPCFaction %7% &EnemyFac SetNPCFaction %8% &EnemyFac>
 
@@ -414,8 +416,13 @@ Content
 	.%id3%_%plotid3%_GoReinforcements <P= %id%02 1>
 	.%id3%_%plotid3%_GoDecimation     <P= %id%03 1>
 
-	.%id1%_%plotid1%_GoWin <SetPlotStatus %plotid2% %id2%  ifNPCOK %8% MoveNPC %8% %5% SetNPCTeam %8% 2>
-	.%id2%_%plotid2%_GoWin <SetPlotStatus %plotid3% %id3% SetEncounterActive %5%  ifNPCOK %7% MoveNPC %7% %5% SetNPCTeam %7% 2>
+	.%id1%_%plotid1%_GoWin <SetPlotStatus %plotid2% %id2%  SMemo %id%01     if= P%id%05 0 History %id%03     ifNPCOK %8% MoveNPC %8% %5% SetNPCTeam %8% 2>
+	.%id2%_%plotid2%_GoWin <SetPlotStatus %plotid3% %id3%  Alert %id%02 SMemo %id%02 History %id%04 SetEncounterActive %5%  ifNPCOK %7% if= P%id%06 0 MoveNPC %7% %5% SetNPCTeam %7% 2>
+
+	Msg%id%01 <You have defeated %name8%, but %name7% is still out there looking for you.>
+	Msg%id%02 <You have defeated both %name8% and %name7%. Now it's time to bring the fight to %name6%.>
+	Msg%id%03 <You defeated %name8% in mecha combat.>
+	Msg%id%04 <You defeated %name7% in mecha combat.>
 
 	% SubPlot1 is the first substage boss battle
 	% SubPlot2 is the second substage boss battle
@@ -462,16 +469,105 @@ Content
 		end
 
 		MetaScene 5 2
+		%  This is the final battle against E6 and the surviving henchmen. It's likely to be
+		%  very tough, so hopefully the PC has gained the advantage or removed some of the
+		%  henchmen.
+		% L1 = Encounter Over Counter
+		% L2 = Initialization Counter
+		MapWidth 50
+		MapHeight 50
+
+		Start <if= L2 0 L= 2 1  ForceChat %6%>
+		nu1 <if= T1 0   Return   if= V1 0 V= 1 1 AddRenown -5 History 1 SetMoodTimeLimit %9% 86400 LoseSubPlot %plotid%   Trigger0 .%id1%_%plotid1%_GoLoss>
+		nu2 <if= T2 0   if= V1 0 V= 1 1   Alert 2 History 3   XPV 100  SALVAGE  KillMood %9%   AddRenown 1   Trigger0 .%id%_%plotid%_GoWin   WinSubPlot %plotid%>
+		end <SetEncounterInactive %5%>
+
+		Msg1 <You were defeated in combat by %name6%'s lance.>
+		Msg2 <With %name6% defeated, %name3%'s followers will be forced to leave \SCENE &EpisodeScene and peace will return.>
+		Msg3 <You defeated %name6%'s lance, driving them from \SCENE &EpisodeScene .>
+
+		sub
+			team 1
+			SetEnemy 2
+			SetAlly 3
+			ParaX 5
+			ParaY 5
+
+			team 2
+			name <Enemies>
+			SetEnemy 1 3
+			Deploy <if= PlotStatus %plotid% %id% SetSelfFaction &EnemyFac   if= P%id%03 0 else GoSmallDeploy WMecha 2 StoryDL 100>
+			GoSmallDeploy <WMecha 2 StoryDL 25>
+			ParaX 45
+			ParaY 45
+
+			team 3
+			name <Reinforcements>
+			SetEnemy 2
+			SetAlly 1
+			Deploy <if# P%id%02 0   WMecha 2 StoryDL 100>
+			ParaX 10
+			ParaY 10
+		end
 
 		Persona 6
 		special <UNLISTED>
+		greeting <if= PlotStatus %plotid% %id% else %pop% EndChat Say %id%01 AddChat %id%01>
+		*result%id%01 <*THEME_EXPO&Enemy na>
+		Msg%id%01 <You managed to escape both %name7% and %name8%... that's quite impressive. Unfortunately it will be of no use to you now.>
+		Prompt%id%01 <I'll do the same to you.>
 
 		Persona 7
 		special <UNLISTED>
+		% V%id%01 = Have fought before
+		%  If the PC completed the first combat and heard E7 speak, it might be
+		%  possible to convince them to not fight now.
+		greeting <if= PlotStatus %plotid% %id% else %pop% if= v%id%01 0 else .%id%_GoSecondTime EndChat Say %id%01 AddChat %id%01 AddChat %id%02 V= %id%01 1>
+		*.%id%_GoSecondTime <*Back_For_More>
+		*result%id%01 <*THEME_EXPO&Enemy na>
+		result%id%02 <EndChat Say %id%02 P= %id%06 1 AddChat %id%03>
+		result%id%03 <Goto result%id%01>
+		Msg%id%01 <So there you are... I heard what you did to %name8%, but I assure you that I won't be nearly so easy to beat.>
+		Msg%id%02 <%name6% isn't the boss of me! I don't have to listen to \OPR %6%... it's just that right now I want to kick your ass of my own free will!>
+		Prompt%id%01 <We'll find out soon enough.>
+		Prompt%id%02 <If you're so tough, then why aren't you %name3%'s second?>
+		CPrompt%id%02 <if# P%id%04 0 ifInsight SkillTar StoryDL Accept>
+		Prompt%id%03 <[Continue]>
 
 		Persona 8
 		special <UNLISTED>
-
+		% V%id%01 = Have fought before
+		%  If the PC completed the first combat and heard E8 speak, it might be
+		%  possible to convince them to not fight now.
+		greeting <if= PlotStatus %plotid% %id% else %pop% if= P%id%05 0 else %pop% if= v%id%01 0 else .%id%_GoSecondTime EndChat Say %id%01 AddChat %id%01 AddChat %id%02 V= %id%01 1>
+		*.%id%_GoSecondTime <*Back_For_More>
+		*.%id%_GoArgumentFail <*IDisagreeYouDie>
+		.%id%_GoArgumentWin <Retreat 2 P= %id%05 1>
+		.%id%_GoArgumentMeh <EndChat Say %id%04 History %id%07 PCFriend %8% Goto .%id%_GoArgumentWin>
+		.%id%_GoJoinLance <EndChat Say %id%05 History %id%06 &SetPartnerNPC %8% &AddPartnerToLance SetXXRMotivation %8% XXR_M_GreaterGood Goto .%id%_GoArgumentWin>
+		*result%id%01 <*THEME_EXPO&Enemy na>
+		result%id%02 <EndChat Say %id%02 AddChat %id%03 AddChat %id%04 AddChat %id%05>
+		result%id%03 <ifPCHeroic else .%id%_GoArgumentFail ifConversation SkillTar StoryDL else .%id%_GoArgumentFail EndChat Say %id%03 AddChat %id%06 AddChat %id%07>
+		result%id%04 <Goto result%id%01>
+		result%id%05 <ifConversation SkillTar StoryDL else .%id%_GoArgumentFail EndChat Say %id%04 PCFriend %8% History %id%07 Goto .%id%_GoArgumentWin>
+		result%id%06 <ifG PCHeroism d50 else .%id%_GoArgumentMeh Goto .%id%_GoJoinLance>
+		result%id%07 <ifG ChatNPCHeroism d50 else .%id%_GoArgumentMeh Goto .%id%_GoJoinLance>
+		Msg%id%01 <I've caught you! %name6% ordered me to defeat you, so I can't allow you to escape!>
+		Msg%id%02 <What else can I do? I may not like what %name3%'s doing to \SCENE &EpisodeScene , but I must remain loyal to \FACTION &EnemyFac .>
+		Msg%id%03 <But... but what about my friends? Is this really the right thing to do?>
+		Msg%id%04 <You're right... I won't fight you, but I can't betray my friends either. Goodbye \PC .>
+		Msg%id%05 <I think... I think you're right. I'll help you to defeat %name3%.>
+		Msg%id%06 <You convinced %name8% to join your side.>
+		Msg%id%07 <You convinced %name8% to abandon the fight.>
+		Prompt%id%01 <Let's get this over with.>
+		Prompt%id%02 <You don't have to do this, you know.>
+		CPrompt%id%02 <if# P%id%04 0 Accept>
+		Prompt%id%03 <Forget about them, and join my team instead!>
+		CPrompt%id%03 <ifNPCDead &PartnerNPC Accept>
+		Prompt%id%04 <Die by my hand, then.>
+		Prompt%id%05 <You know what you're doing is wrong.>
+		Prompt%id%06 <%name3% must be stopped, for everyone's sake.>
+		Prompt%id%07 <Do whatever you think is right.>
 	end
 	inv
 		stc CORE-ACTIVATABLE
@@ -482,9 +578,16 @@ Content
 		plot_type <*FactionRampage>
 		Element1 <Grab -2>
 		Update <if= v1 0 V= 1 1   News 1>
-		Msg1_1 <%city% is under siege as %name3%'s personal forces take control.>
+		Msg1_1 <%city% under siege as %name3%'s personal forces take control.>
 		Msg1_2 <Mecha from \FACTION &EnemyFac take control of %city% under the orders of %name3%.>
-		Msg1_3 <>
+		Msg1_3 <%name3% has begun a purge of \PPR %3% enemies from %city%; authorities powerless to stop the destruction.>
+		% Meme Messages
+		Msg_1 <When will the trouble with %me_name1% end?>
+		CMsg_1 <if# ChatNPCFac %me_1% Accept>
+		Msg_2 <Someone really ought to do something about %me_name1%... They must be stopped!>
+		CMsg_2 <if# ChatNPCFac %me_1% Accept>
+		Msg_3 <What did %city% do to deserve this? Those jerks from %me_name1% are acting like they own the place.>
+		CMsg_3 <if# ChatNPCFac %me_1% Accept>
 	end
 
 Content

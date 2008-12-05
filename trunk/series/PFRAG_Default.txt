@@ -358,12 +358,12 @@
 
 	Persona
 	requires <*IDisagreeYouDie &Arrest>
-	START <NewChat Say %id%01 Goto %1%>
+	START <EndChat Say %id%01 Goto %1%>
 	Msg%id%01 <I'm not ready to go yet... I think I'll kill you instead!>
 
 	Persona
 	requires <*IDisagreeYouDie>
-	START <NewChat Say %id%01 Goto %1%>
+	START <EndChat Say %id%01 Goto %1%>
 	Msg%id%01 <I don't think so. Instead, I think I'll kill you...>
 
 
