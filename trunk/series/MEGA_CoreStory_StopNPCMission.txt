@@ -55,7 +55,7 @@ Content
 	.%id2%_%plotid2%_GoLoss <Goto .%id%_GoLoseMission>
 
 	.%id1%_%plotid1%_GoWin <ForceChat %1% SMemo %id%01 History %id%02 SetXXRAttitude %1% XXR_A_Obsession   SetPlotStatus %plotid3% %id3%>
-	.%id2%_%plotid2%_GoWin <Monologue %1% %id%03 History %id%04                                            WinSubPlot %plotid% Trigger0 .%id%_%plotid%_GoWin>
+	.%id3%_%plotid3%_GoWin <Monologue %1% %id%03 History %id%04                                            WinSubPlot %plotid% Trigger0 .%id%_%plotid%_GoWin>
 
 	Msg%id%01 <%name1% challenged you to stop \OPR %1% from attacking a location in town; \SPR %1% did not appear to be acting rationally.>
 	Msg%id%02 <%name1% challenged you to stop \OPR %1% .>
@@ -425,7 +425,7 @@ Content
 
 			Team 2
 			SetEnemy 1 3 4
-			Deploy <if= PlotStatus %plotid% %id%  SetSelfFaction &EnemyFac WMecha 2 ArenaRenown 200>
+			Deploy <if= PlotStatus %plotid% %id%  SetSelfFaction &EnemyFac WMecha 2 StoryDL 200>
 			ParaX 45
 			ParaY 45
 
@@ -550,7 +550,7 @@ Content
 
 			Team 2
 			SetEnemy 1 3 4
-			Deploy <if= PlotStatus %plotid% %id%  SetSelfFaction &EnemyFac WMecha 2 ArenaRenown 200>
+			Deploy <if= PlotStatus %plotid% %id%  SetSelfFaction &EnemyFac WMecha 2 StoryDL 200>
 			ParaX 45
 			ParaY 45
 

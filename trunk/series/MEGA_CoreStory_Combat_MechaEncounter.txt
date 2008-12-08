@@ -908,6 +908,76 @@ Content
 	end
 
 Content
+	name <E-Member Battle>
+	size 6
+	desc <Fight a member of the enemy faction.>
+	requires <*:CS_MechaEncounter ~&Raiders F:++ &Secondary -!Ne -!Lo>
+
+	% E1 is the outdoors scene where this encounter will be placed
+	% E2 is the metascene to be used for this encounter
+	% E3 is the enemy fighter
+	Element3 <Character HasMecha !Global !Comrade -2>
+	Place3 <2 (Enemies) sd enemy>
+
+	% P%id%01 = Initialization Counter
+	% P%id%02 = Have gained reinforcements
+	% P%id%03 = Have gained decimation
+	update <if= V%id%01 0 V= %id%01 1   SetPlotStatus %plotid1% %id1% NPCLevel %3% StoryDL>
+
+	.%id1%_%plotid1%_GoReinforcements <P= %id%02 1>
+	.%id1%_%plotid1%_GoDecimation     <P= %id%03 1>
+
+	% SubPlot1 = Gain Advantage vs Raiders
+	SubPlot1 <*:CS_GainAdvantageVsMecha&Reinforcements&Decimation>
+
+	sub
+		MetaScene 2 2
+		% L1 = Encounter Over Counter
+		% L2 = Initialization Counter
+		MapWidth 50
+		MapHeight 50
+
+		Start <if= L2 0 L= 2 1   Alert 4 ForceChat %3%  History 1 CancelSubPlot %plotid1% if# P%id%02 0 Alert 2>
+		nu1 <if= T1 0   Return   if= V1 0 V= 1 1         Trigger0 .%id%_%plotid%_GoLoss LoseSubPlot %plotid%>
+		nu2 <if= T2 0   if= V1 0 V= 1 1   XPV 100  AddRenown 1   SALVAGE   Alert 3   Trigger0 .%id%_%plotid%_GoWin WinSubPlot %plotid%>
+		end <SetEncounterInactive %2%>
+
+		Msg1 <You fought %name3% of \FACTION &EnemyFac .>
+		Msg2 <Your reinforcements are here, as promised.>
+		Msg3 <You have defeated %name3%'s lance.>
+		Msg4 <You face a mecha force led by %name3% of \FACTION &EnemyFac .>
+
+		sub
+			team 1
+			setally 3
+			SetEnemy 2
+			ParaX 5
+			ParaY 10
+
+			team 2
+			name <Enemies>
+			SetEnemy 1 3
+			Deploy <if= PlotStatus %plotid% %id% SetSelfFaction &EnemyFac   if= p%id%03 0 else GoSmallDeploy WMecha 2 StoryDL 80>
+			GoSmallDeploy <WMecha 2 StoryDL 40>
+			ParaX 45
+			ParaY 45
+
+			team 3
+			setally 1
+			setenemy 2
+			Deploy <if= PlotStatus %plotid% %id%  if# P%id%02 0   WMecha 3 StoryDL 60>
+			ParaX 10
+			ParaY 5
+		end
+
+		Persona 3
+		special <UNLISTED>
+		greeting <if= PlotStatus %plotid% %id% else %pop% Goto GoGreet>
+		*GoGreet <*BattleChallenge GoThemeExpo na>
+		*GoThemeExpo <*THEME_EXPO&Enemy na>
+	end
+
+Content
 	name <Henchmen Battle>
 	size 6
 	desc <Fight some henchmen of the enemy NPC.>

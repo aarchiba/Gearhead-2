@@ -686,7 +686,7 @@ Persona
 	Prompt%id%04 <[More]>
 
 	Persona
-	requires <*BattleChallenge ~=MIL_DEFAULT ~Shy>
+	requires <*BattleChallenge ~Shy>
 	Start <EndChat   Say %id%01   AddChat %id%01>
 	Result%id%01 <Goto %1%>
 	Msg%id%01 <I don't care what you're doing here, but you will now feel my wrath.>

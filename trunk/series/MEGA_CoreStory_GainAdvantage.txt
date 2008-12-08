@@ -255,6 +255,51 @@ Content
 %%  trigger need be called.
 
 Content
+	name <Mercenary Fighters>
+	desc <A NPC can be hired to help the PC>
+	requires <*:CS_GainAdvantageVsMecha &Reinforcements -!Ne>
+
+	% E1 is a public scene
+	% E2 is a mercenary
+	Element1 <Scene Public !Near -7>
+	Element2 <Character (Mercenary|ADVEN) !XClude -2 !Okay -3 -ENEMY !Near 1 NeverFail>
+	NeverFail2 <Mercenary>
+
+	% If E2 dies, this subplot concludes
+	start <ifNPCDead %2% LoseSubPlot %plotid%>
+
+	sub
+		Persona 2
+		rumor%id% <%name2% is willing to help you, for the right price.>
+		% V1 = Asking Price
+		% V2 = Sale Price
+		greeting <if= PlotStatus %plotid% %id% else %pop% if= V1 0 else GoMakeOffer V= 1 Threat StoryDL 2 V= 2 Threat StoryDL 1 Goto GoGreet>
+		*GoGreet <*YouCouldUseHelp GoMakeOffer>
+		GoMakeOffer <NewChat Say 1 AddChat 1 AddChat 2 AddChat 3 AddChat 4>
+		result1 <NewChat Say 2 History 3 Cash+ -V1 WinSubPlot %plotid% Trigger0 .%id%_%plotid%_GoReinforcements>
+		*result2 <*HurryBackWithMoney>
+		result3 <NewChat Say 4 AddChat 5 AddChat 6>
+		result4 <NewChat Say 5 AddChat 5 AddChat 6>
+		result5 <NewChat Say 2 History 3 Cash+ -V2 WinSubPlot %plotid% Trigger0 .%id%_%plotid%_GoReinforcements>
+		result6 <Goto result2>
+		Msg1 <I can arrange some support for you in the upcoming battle, but you'll have to cover expenses. It's going to cost $ \VAL V1 if you want it.>
+		Msg2 <Thanks. Your reinforcements will meet you at the battlefield.>
+		Msg3 <You hired some reinforcements from %name2%.>
+		Msg4 <You really know how to drive a hard bargain. Alright, I'll provide support for just $ \VAL V2 .>
+		Msg5 <Geez, \PC , us mercenaries have to eat too, you know. Still, I guess that's not too bad... I'll provide support for just $ \VAL V2 , but you owe me one.>
+		Prompt1 <That sounds fair. [Give Money]>
+		CPrompt1 <ifG PC$ V1 Accept>
+		Prompt2 <I'll think about it.>
+		Prompt3 <I won't pay more than $ \VAL V2 .>
+		CPrompt3 <ifShopping SkillTar StoryDL ifG PC$ V2 Accept>
+		Prompt4 <Come on %name2%, you know I can't afford that.>
+		CPrompt4 <ifG ChatNPCRelationship 0 Accept>
+		Prompt5 <Here you go. [Give Money]>
+		CPrompt5 <ifG PC$ V2 Accept>
+		Prompt6 <I'll be back later.>
+	end
+
+Content
 	name <Corporate Sponsorship>
 	desc <A corporation will offer to sponsor the PC.>
 	requires <*:CS_GainAdvantageVsMecha (F:--|F:CRIME|F:CORPO) (P:--|P:PDASS)>

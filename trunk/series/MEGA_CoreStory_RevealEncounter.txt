@@ -447,6 +447,85 @@ Content
 %% PARAM3: The faction launching the attack
 %%
 
+Content
+	name <Full Metal Interrogation>
+	desc <Encounter a lance associated with the faction and negotiate or fight for the answer.>
+	requires <*:CS_RevealEncounter_AttackTarget -!Ne -!Lo>
+	size 6
+
+	% E1 is the outdoor scene where the encounter is
+	% E2 is the metascene being sought
+	% E3 is the faction launching the attack
+	% E4 is a different outdoor scene for this subplot
+	% E5 is the combat encounter
+	% E6 is a member of E3 who will be questioned
+	Element4 <Scene Outdoors !Near -7>
+	Element5 <Prefab>
+	Place5 <4>
+	Element6 <Character HasMecha !Comrade 3 !Global -Lawful>
+	Place6 <5 (Enemies) SD enemy>
+
+	% P%id%01 = Initialization Counter
+	update <if= p%id%01 0 P= %id%01 1  NPCLevel %6% StoryDL>
+
+	% SubPlot1 is the TrailRaider subplot, in case the PC doesn't win here.
+	SubPlot1 <*TrailRaiderToBase 1 2 6>
+
+	sub
+		MetaScene 5 2
+		rumor%id% <a lance from %name3% has been spotted in %name4%.>
+
+		% V1 = Encounter Over Counter
+		MapWidth 50
+		MapHeight 50
+
+		% L1 = Encounter Over Counter
+		% L2 = Initialization Counter
+
+		Start <if= L2 0 L= 2 1 L= 1 0   ForceChat %6%>
+		nu1 <if= T1 0   Return if= L1 0 L= 1 1  Alert 1 PMemo %plotid% 2           SetPlotStatus %plotid1% %id1%>
+		nu2 <if= T2 0   if= L1 0   L= 1 1   Salvage  Monologue %6% 5   Goto GoRevealEncounter>
+		Faint%6% <L= 1 1   ifG T2 0 else GoNobodyLeft   Alert 6 TMonologue 2 7   Retreat 2   Goto GoRevealEncounter>
+		GoNobodyLeft <Alert 8   Goto GoRevealEncounter>
+		GoRevealEncounter <PMemo %plotid% 3   History 4   XPV 100   WinSubPlot %plotid%   SetEncounterActive %2%>
+
+		Msg1 <%name6% leaves to rendezvous with the attack group. If you hurry, you might still have time to catch them.>
+		Msg2 <%name6% is somewhere out there meeting with the attack group from %name3%. If you hurry, you might still have time to catch them.>
+		Msg3 <You learned that mecha from %name3% are going to attack a target in %name1%.>
+		Msg4 <You learned that the target was in %name1%.>
+		Msg5 <You win, I surrender! The target we're after is in %name1%, but there's no way you'll be able to stop us in time...>
+		Msg6 <Upon seeing their commander struck down, the remaining pilots from %name3% quickly surrender.>
+		Msg7 <Don't hurt us! Look, the target we're after is in %name1%, but there's no way you'll be able to get there in time...>
+		Msg8 <You find a datacard in %name6%'s cockpit identifying the location of their target in %name1%.>
+
+		sub
+			team 1
+			SetEnemy 2
+			ParaX 5
+			ParaY 5
+
+			team 2
+			name <Enemies>
+			SetEnemy 1
+			Deploy <if= PlotStatus %plotid% %id% SetSelfFaction %3%  WMecha 2 StoryDL 50>
+			ParaX 45
+			ParaY 45
+		end
+
+		Persona 6
+		special <UNLISTED>
+		greeting <if= PlotStatus %plotid% %id% else %pop% EndChat Say %id%01 AddChat %id%01>
+		result%id%01 <EndChat Say %id%02>
+		Msg%id%01 <\PC , I was warned that you'd try to interfere in the plans of %name3%.>
+		Msg%id%02 <You'll find out over my dead body!>
+		Prompt%id%01 <Tell me where you're planning to attack.>
+	end
+	inv
+		STC CORE-INVISIBLEENCOUNTER
+		name <Suspicious Mecha>
+	end
+
+
 
 %%
 %% *:CS_RevealEncounter_ItemDungeon Content
