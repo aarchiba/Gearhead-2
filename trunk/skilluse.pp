@@ -342,7 +342,7 @@ begin
 	Leftover := 0;
 	while ( tries < Repair_Max_Tries ) and ( DP > 0 ) and ( CurrentMental( PC ) > 0 ) do begin
 		SkTar := Repair_Skill_Target;
-		RP := SkillROll( PC , Skill , SkTar , 0 , True , True );
+		RP := SkillROll( GB , PC , Skill , SkTar , 0 , True , True );
 		RP := RP - SkTar;
 		if RP > MaxRP then begin
 			RP := MaxRP;
@@ -434,7 +434,7 @@ begin
 			Penalty := NAttValue( M^.NA , NAG_Personal , NAS_PerformancePenalty );
 			if Target < 10 then Target := 10;
 
-			SkRoll := SkillRoll( PC , NAS_Performance , Target + Penalty , 0 , True , True );
+			SkRoll := SkillRoll( GB , PC , NAS_Performance , Target + Penalty , 0 , True , True );
 			if SkRoll > ( Target + Penalty ) then begin
 				Inc( N );
 				if SkRoll > ( Target * 2 ) then Inc( N );

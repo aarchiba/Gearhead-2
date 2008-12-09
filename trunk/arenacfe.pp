@@ -1055,12 +1055,12 @@ var
 	msg: String;
 	T: Integer;
 begin
-	DefRoll := SkillRoll( Target , NAS_Resistance , 0 , 0 , False , True );
+	DefRoll := SkillRoll( GB , Target , NAS_Resistance , 0 , 0 , False , True );
 	AddMentalDown( Attacker , 3 );
 	if ( Target^.G = GG_Character ) and MightSurrender( GB , Target ) then begin
 		AtSkill := SelectTactic;
 		msg := GetTauntString( Attacker , 'CHAT_VA.FORCESURRENDER.' + BStr( AtSkill ) );
-		AtRoll :=  SkillRoll( Attacker , AtSkill , DefRoll , -NAttValue( Target^.NA , NAG_EpisodeData , NAS_TauntResistance ) , False , True );
+		AtRoll :=  SkillRoll( GB , Attacker , AtSkill , DefRoll , -NAttValue( Target^.NA , NAG_EpisodeData , NAS_TauntResistance ) , False , True );
 		AddNAtt( Target^.NA , NAG_EpisodeData , NAS_TauntResistance , 1 + Random(3) );
 		Monologue( GB , Attacker , msg );
 
@@ -1076,7 +1076,7 @@ begin
 	end else if ( target^.G = GG_Mecha ) and ( NAttValue( Attacker^.NA , NAG_Location, NAS_Team ) = NAV_DefPlayerTeam ) and MightEject( Target ) and ( NAttValue( Target^.NA , NAG_EpisodeData , NAS_TauntResistance ) = 0 ) then begin
 		AtSkill := SelectTactic;
 		msg := GetTauntString( Attacker , 'CHAT_VA.FORCEEJECT.' + BStr( AtSkill ) );
-		AtRoll :=  SkillRoll( Attacker , AtSkill , DefRoll , -5 , False , True );
+		AtRoll :=  SkillRoll( GB , Attacker , AtSkill , DefRoll , -5 , False , True );
 		SetNAtt( Target^.NA , NAG_EpisodeData , NAS_TauntResistance , 1 );
 		Monologue( GB , Attacker , msg );
 
@@ -1090,7 +1090,7 @@ begin
 		end;
 
 	end else begin
-		AtRoll :=  SkillRoll( Attacker , NAS_Taunt , DefRoll , 0 , False , True );
+		AtRoll :=  SkillRoll( GB , Attacker , NAS_Taunt , DefRoll , 0 , False , True );
 		msg := GetTauntString( Attacker , 'CHAT_VA.ATTACK' );
 		Monologue( GB , Attacker , msg );
 

@@ -4,6 +4,52 @@
 
 
 	Content
+	name <Recruitable Thief>
+	requires <*URBAN_X Public Static ~Sleazy -Legit>
+
+	%% A thief who might be recruitable as a lancemate.
+
+	element1 <Prefab>
+	team1 <citizens>
+	teamdata1 <pass>
+
+	sub
+		Persona 1
+		rumor <%name1% is a freelance countersecurity consultant. That's a fancy way to say thief.>
+		% V1 = Have made offer
+		% V2 = Hiring Price
+		*Greeting <*NiceToMeetYou GoCheckMember>
+		GoCheckMember <if# V1 0 else GoCheckEnemy NewChat SayAnything>
+		GoCheckEnemy <IFCHATNPCARCHENEMY else GoOffer EraseRumor Goto GoChat>
+		GoOffer <ifChatNPCCanJoinLance else GoPine ifG PCRenown ChatNPCRenown else GoPine ifG React 15 else GoPine V= 2 Threat ChatNPCRenown 7 NewChat Say 1 AddChat 1 AddChat 2 AddChat 3>
+		*GoPine <*GodImBored>
+		result1 <PCAlly %1% History 2 Cash+ -V2 ChatNPCJoinLance V= 1 1 EraseRumor Goto GoWelcome>
+		*GoWelcome <*WelcomeToLance>
+		result2 <NewChat Say 3 V= 1 1 EraseRumor AddSociable -d10>
+		result3 <NewChat Say 4 AddChat 4 AddChat 5>
+		result4 <NewChat Say 5>
+		result5 <Goto result1>
+		Msg1 <I can't help but notice that you are someone who may be in need of my services. I am a freelance countersecurity consultant; for the low price of $ \VAL V2 you can add my considerable skills to your lance.>
+		Msg2 <You hired countersecurity expert %name1%.>
+		Msg3 <Understood, it will never be mentioned again.>
+		Msg4 <There are specialties which all cavaliers need but which few take the time to practice. I am an expert at opening locked doors discretely, circumventing security devices, and elsewise finding things which other people would rather go unfound.>
+		Msg5 <Take all the time you need. It's not like I have anything better to do than hang around here.>
+		Prompt1 <It's a deal. [Give money]>
+		CPrompt1 <ifG PC$ V2 Accept>
+		Prompt2 <I'm not interested.>
+		Prompt3 <What kind of skills are you talking about?>
+		Prompt4 <I'll think about it.>
+		Prompt5 <Sounds good. You're in. [Give money]>
+		CPrompt5 <ifG PC$ V2 Accept>
+	end
+	inv
+		NPC Thief
+		Combatant
+		chardesc sociable pragmatic
+	end
+
+
+	Content
 	name <Recruitable Random>
 	requires <*URBAN_X Public Static>
 	%% A completely random NPC who might be recruitable as a lancemate.
@@ -113,7 +159,7 @@
 	end
 
 	Content
-	requires <*URBAN_X Sleazy Static>
+	requires <*URBAN_X Sleazy Static ~Dangerous>
 	% This bandit will attack the PC. If the PC manages to subdue him,
 	% he'll join as a lancemate.
 	name <Recruitable Bandit>

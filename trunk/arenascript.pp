@@ -899,7 +899,7 @@ begin
 		{ Return a skill roll from the PC. }
 		VCode := ScriptValue( Event , GB , Scene );
 		if ( VCode >= 1 ) and ( VCode <= NumSkill ) then begin
-			SV := SkillRoll( GG_LocatePC( GB ) , VCode , 0 , 0 , IsSafeArea( GB ) , True );
+			SV := SkillRoll( GB , GG_LocatePC( GB ) , VCode , 0 , 0 , IsSafeArea( GB ) , True );
 		end else SV := 0;
 		PC := GG_LocatePC( GB );
 		if PC <> Nil then DoleSkillExperience( PC , VCode , 5 );
@@ -2456,7 +2456,7 @@ begin
 	if ( Source <> Nil ) and ( SkRank <= NAttValue( Source^.NA , NAG_SkillCounter , Skill ) ) then begin
 		IfFailure( Event , Source );
 	end else begin
-		SkRoll := SkillRoll( PC , Skill , SkTar , 0 , IsSafeArea( GB ) , True );
+		SkRoll := SkillRoll( GB , PC , Skill , SkTar , 0 , IsSafeArea( GB ) , True );
 		if ( SkRoll >= SkTar ) then begin
 			IfSuccess( Event );
 		end else begin
@@ -2473,7 +2473,7 @@ var
 begin
 	Skill := ScriptValue( Event , GB , Source );
 	SkTar := ScriptValue( Event , GB , Source );
-	SkRoll := SkillRoll( GG_LocatePC( GB ) , Skill , SkTar , 0 , IsSafeArea( GB ) , True );
+	SkRoll := SkillRoll( GB , GG_LocatePC( GB ) , Skill , SkTar , 0 , IsSafeArea( GB ) , True );
 	if SkRoll >= SkTar then begin
 		IfSuccess( Event );
 	end else begin

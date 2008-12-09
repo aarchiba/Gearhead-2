@@ -138,7 +138,7 @@ var
 			if AL[t].Mood > 0 then begin
 				MobTarget := SkTarget + Audience_X_Song[ AL[t].Trait , SongTrait ] + Abs( AL[t].Mood - 3 );
 				if MobTarget < 5 then MobTarget := 5;
-				SkRoll := SkillRoll( PC , NAS_Performance , MobTarget , 0 , True , True );
+				SkRoll := SkillRoll( GB , PC , NAS_Performance , MobTarget , 0 , True , True );
 				if SkRoll > MobTarget then begin
 					if AL[t].Mood < Num_Audience_Moods then Inc( AL[t].Mood );
 				end else if SkRoll <= ( MobTarget div 2 ) then begin

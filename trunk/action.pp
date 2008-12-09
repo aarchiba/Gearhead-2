@@ -56,7 +56,7 @@ const
 var
 	Destroyed_Parts_List: SAttPtr;
 
-Function SkillRoll( PC: GearPtr; Skill,SkTar,SkMod: Integer; CasualUse,GainXP: Boolean ): Integer;
+Function SkillRoll( GB: GameBoardPtr; PC: GearPtr; Skill,SkTar,SkMod: Integer; CasualUse,GainXP: Boolean ): Integer;
 Function CheckLOS( GB: GameBoardPtr; Observer,Target: GearPtr ): Boolean;
 Procedure VisionCheck( GB: GameBoardPtr; Mek: GearPtr );
 
@@ -99,7 +99,7 @@ const
 
 
 
-Function SkillRoll( PC: GearPtr; Skill,SkTar,SkMod: Integer; CasualUse,GainXP: Boolean ): Integer;
+Function SkillRoll( GB: GameBoardPtr; PC: GearPtr; Skill,SkTar,SkMod: Integer; CasualUse,GainXP: Boolean ): Integer;
 	{ Attempt to make a skill roll. }
 	{ Skill = The skill to use. }
 	{ SkTar = The target number to try and beat. }
@@ -122,7 +122,12 @@ var
 begin
 	{ Determine the base skill value, and initialize the message. }
 	msg := PilotName( PC ) + ' rolls ' + MSgString( 'SKILLNAME_' + BStr( Skill ) );
-	SkRank := SkillValue( PC , Skill );
+	if CasualUse then begin
+		SkRank := TeamSkill( GB , NAV_DefPlayerTeam , Skill );
+	end else begin
+		SkRank := SkillValue( PC , Skill );
+	end;
+
 	msg := msg + '[' + BStr( SkRank );
 	if SkMod <> 0 then msg := msg + SgnStr( SkMod );
 	msg := msg + ']';
@@ -232,9 +237,9 @@ begin
 			if not ArcCheck( P1.X , P1.Y , NAttValue( Observer^.NA , NAG_Location , NAS_D ) , P2.X , P2.Y , ARC_F90 ) then begin
 				{ Make the awareness roll. }
 				T := TargetStealth;
-				Roll := SkillRoll( Observer , 11 , T , 0 , False , AreEnemies( GB , Observer , Target ) );
+				Roll := SkillRoll( GB , Observer , 11 , T , 0 , False , AreEnemies( GB , Observer , Target ) );
 
-				if SkillRoll( Target , 25 , Roll , 0 , False , AreEnemies( GB , Observer , Target ) ) > Roll then begin
+				if SkillRoll( GB , Target , 25 , Roll , 0 , False , AreEnemies( GB , Observer , Target ) ) > Roll then begin
 					it := False;
 				end else begin
 					it := True;
@@ -252,12 +257,12 @@ begin
 	end else begin
 		{ Make the awareness roll. }
 		T := O + TargetStealth;
-		Roll := SkillRoll( Observer , 11 , T , 0 , False , AreEnemies( GB , Observer , Target ) );
+		Roll := SkillRoll( GB , Observer , 11 , T , 0 , False , AreEnemies( GB , Observer , Target ) );
 
 		if Roll > T then begin
 			{ The target might get a STEALTH save now. }
 			if ( NAttValue( Target^.NA , NAG_Action , NAS_MoveAction ) <> NAV_FullSpeed ) and HasSkill( Target , 25 ) then begin
-				if SkillRoll( Target , 25 , Roll , 5 , False , AreEnemies( GB , Observer , Target ) ) > Roll then begin
+				if SkillRoll( GB , Target , 25 , Roll , 5 , False , AreEnemies( GB , Observer , Target ) ) > Roll then begin
 					it := False;
 				end else begin
 					it := True;

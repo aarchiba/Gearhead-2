@@ -672,12 +672,12 @@ begin
 	SkTarget := 5 + Abs( NAttValue( PC^.NA , NAG_ReactionScore , Persona ) ) div 4;
 
 	{ Start by making a social interaction roll for the PC. }
-	SkRoll := SkillRoll( PC , NAS_Conversation , SkTarget , 0 , False , False );
+	SkRoll := SkillRoll( GB , PC , NAS_Conversation , SkTarget , 0 , False , False );
 
 	{ Apply flirtation bonus to the skill roll, if appropriate. }
 	{ The bonus only applies if the PC has ranks in flirtation or is a Jack of all Trades. }
 	if IsSexy( PC , NPC ) and HasSkill( PC , NAS_Flirtation ) then begin
-		SkRoll := SkRoll + SkillRoll( PC , NAS_Flirtation , SkTarget , 0 , False , False );
+		SkRoll := SkRoll + SkillRoll( GB , PC , NAS_Flirtation , SkTarget , 0 , False , False );
 	end;
 
 	{ Initialize TRAIT to random. These things will be needed later. }
