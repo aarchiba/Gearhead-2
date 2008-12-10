@@ -8,6 +8,57 @@
 %  - The alleigance of the current location with either the PC's faction
 %    or the palette enemy faction
 
+%%
+%% #C Conclusion
+%%
+%%  All conclusions start the same: with a stub. This plot doesn't do anything by
+%%  itself, but sets the mood and invokes the subplots.
+%%
+
+Plot
+	name <Conclusion Stub>
+	desc <This stub just holds all the conclusion subplots and sets the mood.>
+	requires <#C>
+
+	% Element1 is the mood for the conclusion
+	Element1 <Prefab>
+
+	% Everything starts when the PC enters the episode scene.
+	start <if= PlotStatus %plotid% 0 if= RootSceneID &EpisodeScene  Alert %id%01  SetPlotStatus %plotid1% %id1% SetPlotStatus %plotid2% %id2% SetPlotStatus %plotid3% %id3% SetPlotStatus %plotid4% %id4%  SetMood %1% &EpisodeScene>
+
+	Msg%id%01 <As you enter \SCENE &EpisodeScene , you experience a distinct feeling of dread. Something big is about to happen here.>
+
+	% SubPlot1 is the confrontation lead-in
+	%     This will handle the arch-enemy
+	% SubPlot2 is the rally defenses subplot-
+	%     This will be determined by the +T task.
+	% SubPlot3 is the partner's subplot
+	% SubPlot4 is the love interest's subplot
+
+	SubPlot1 <*CS_END_Buildup 1>
+
+	inv
+		Mood 5
+		name <Conclusion Mood>
+		plot_type <*FactionRampage>
+		Element1 <Grab -2>
+		Update <if= v1 0 V= 1 1   News 1>
+		Msg1_1 <%city% under siege as %name3%'s personal forces take control.>
+		Msg1_2 <Mecha from \FACTION &EnemyFac take control of %city% under the orders of %name3%.>
+		Msg1_3 <%name3% has begun a purge of \PPR %3% enemies from %city%; authorities powerless to stop the destruction.>
+		% Meme Messages
+		Msg_1 <When will the trouble with %me_name1% end?>
+		CMsg_1 <if# ChatNPCFac %me_1% Accept>
+		Msg_2 <Someone really ought to do something about %me_name1%... They must be stopped!>
+		CMsg_2 <if# ChatNPCFac %me_1% Accept>
+		Msg_3 <What did %city% do to deserve this? Those jerks from %me_name1% are acting like they own the place.>
+		CMsg_3 <if# ChatNPCFac %me_1% Accept>
+	end
+
+%%
+%% #A Plots
+%%
+
 Plot
 	name <Right Place For a Mission>
 	desc <The city government is hiring.>

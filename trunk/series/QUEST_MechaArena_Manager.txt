@@ -64,7 +64,7 @@ Content
 		GoStartQuest <SetQuestStatus %qid% %id% SetArenaThreat %2% 10>
 
 		GoOfferFight <NewChat Say 1 AddChat 1 AddChat 2>
-		GoBigWin <NewChat Say 2 History 3 XPV 500 SetQuestStatus %qid% -1 MechaPrize .mektype 72 RandomTheme 12  CashPrize Reward ArenaThreat %2% 500 Goto GoResetArena>
+		GoBigWin <NewChat Say 2 History 3 XPV 500 SetQuestStatus %qid% -1 MechaPrize .mektype 80 RandomTheme 12  CashPrize Reward ArenaThreat %2% 1000 Goto GoResetArena>
 		.mektype <ROCKE RISHI>
 		*GoPreQuest <*NiceToMeetYou GoArenaIntro>
 		GoArenaIntro <NewChat Say 4 AddChat 3 AddChat 4>
@@ -146,8 +146,8 @@ Content
 
 		GoOfferFight <NewChat Say 1 AddChat 1 AddChat 2>
 		% Remember, there's a lot of fiddly bits for the big win.
-		GoBigWin <NewChat Say 2 History 3 XPV 100 SetQuestStatus %qid% -1   MechaPrize .mektype 100 RandomTheme 16   Goto GoResetArena>
-		.mektype <PDASS COMET HOELL>
+		GoBigWin <NewChat Say 2 History 3 XPV 500 SetQuestStatus %qid% -1   MechaPrize .mektype 100 RandomTheme 16  CashPrize Reward ArenaThreat %2% 5000   Goto GoResetArena>
+		.mektype <PDASS COMET HOELL MUGLE FCOMS MAQUI RISHI>
 		*GoPreQuest <*NiceToMeetYou GoArenaIntro>
 		GoArenaIntro <NewChat Say 4 AddChat 3 AddChat 4>
 
@@ -255,7 +255,7 @@ Content
 
 		GoOfferFight <NewChat Say 1 AddChat 1 AddChat 2>
 		% Remember, there's a lot of fiddly bits for the big win.
-		GoBigWin <NewChat Say 7 History 8 XPV 100 SetQuestStatus %qid% -1 MechaPrize .mektype 72 4 12 Goto GoResetArena>
+		GoBigWin <NewChat Say 7 History 8 XPV 500 SetQuestStatus %qid% -1 MechaPrize .mektype 72 4 12 Goto GoResetArena>
 		.mektype <PDASS REGEX KETTE BIOCO FEDDE>
 		*GoPreQuest <*NiceToMeetYou GoArenaIntro>
 		GoArenaIntro <NewChat Say 2 AddChat 3 AddChat 4>

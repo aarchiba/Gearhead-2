@@ -2,10 +2,48 @@
 %%   Things you might find in a city. Generic content for cafes, parks,
 %%   shopping malls, waiting rooms, and so on. Mostly just NPCs.
 
+	Content
+	name <Recruitable Mechanic>
+	requires <*URBAN_X Public Static (Garage|Arena) ~Meeting>
+
+	%% A mechanic/engineer who might be recruitable as a lancemate.
+
+	element1 <Prefab>
+	team1 <citizens>
+	teamdata1 <pass>
+
+	sub
+		Persona 1
+		rumor <%name1% plans to earn some money to open a garage.>
+		% V1 = Have made offer
+		% V2 = Hiring Price
+		*Greeting <*NiceToMeetYou GoCheckMember>
+		GoCheckMember <if# V1 0 else GoCheckEnemy NewChat SayAnything>
+		GoCheckEnemy <IFCHATNPCARCHENEMY else GoOffer EraseRumor Goto GoChat>
+		GoOffer <ifChatNPCCanJoinLance else GoPine ifG PCRenown ChatNPCRenown else GoPine ifG React 15 else GoPine V= 2 Threat ChatNPCRenown 7 NewChat Say 1 AddChat 1 AddChat 2 AddChat 3>
+		*GoPine <*GodImBored>
+		result1 <PCAlly %1% History 2 Cash+ -V2 ChatNPCJoinLance V= 1 1 EraseRumor Goto GoWelcome>
+		*GoWelcome <*WelcomeToLance>
+		result2 <NewChat Say 3 V= 1 1 EraseRumor AddSociable -d10>
+		*result3 <*HurryBackWithMoney>
+		Msg1 <Every good pilot needs a tech to back \OPR 0 up. I'm looking to join a lance so I can save up money to open my own garage. If you're interested, my hiring rate is $ \VAL V2 .>
+		Msg2 <You hired %name1% the mechanic.>
+		Msg3 <You can never have as many tech skills as you need.>
+		Prompt1 <Alright, I could use a tech. [Give money]>
+		CPrompt1 <ifG PC$ V2 Accept>
+		Prompt2 <I've already got all the tech skills I need.>
+		Prompt3 <I'll be back sometime when I have money.>
+	end
+	inv
+		NPC Mechanic
+		Combatant
+		Skill 31 10
+	end
+
 
 	Content
 	name <Recruitable Thief>
-	requires <*URBAN_X Public Static ~Sleazy -Legit>
+	requires <*URBAN_X Public Static ~Meeting -Legit>
 
 	%% A thief who might be recruitable as a lancemate.
 

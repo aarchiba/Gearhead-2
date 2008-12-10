@@ -1,0 +1,25 @@
+%%
+%% *CS_END_Buildup
+%%
+%%  This is the beginning of the end. The buildup serves as the introduction to the
+%%  conclusion, and also as the RevealEncounter for it.
+%%
+%%  Note that this subplot passes the Enemy NPC on to the final battle, so if redemption
+%%  is going to happen it's going to happen right here. If the PC entered the conclusion
+%%  without an enemy NPC, a new enemy must be created for the final battle and introduced
+%%  right here.
+%%
+%%  PARAM1: The conclusion mood
+%%
+
+Content
+	name <Putting the plan into action>
+	desc <The enemy NPC will inform the PC that their plans are going into action starting now.>
+	requires <*CS_END_Buildup E:++>
+
+
+
+
+
+
+
