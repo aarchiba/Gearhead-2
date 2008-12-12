@@ -221,6 +221,7 @@ GiveFacReward <GrabFaction ? GSetNAtt NAG_FacReward ? 1>
 Alarm <Trigger0 ALARM>
 IfTeamCanSeePC <GrabPC ifTeamCanSeeGG ?>
 IfNPCCanSeePC <GrabPC ifTeamCanSeeGG NPCTeam ?>
+ifPCCanSeeLocal <GrabLocal ? IfTeamCanSeeGG 1>
 StoryNote <SMemo ? History !>
 GateQSubMemo <GrabEntrance ? GQSubMemo ? ?>
 ItemQSubMemo <GrabItem ? GQSubMemo ? ?>

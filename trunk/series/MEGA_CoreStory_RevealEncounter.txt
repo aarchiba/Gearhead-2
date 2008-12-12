@@ -804,7 +804,7 @@ Plot
 Content
 	name <Walk In On Robbery>
 	desc <The PC will walk in as a pirate robs a store.>
-	requires <*:CS_RevealEncounter_NPCBase (&PirateShip|3:THIEF|3:CRIHN|3:REDMA)>
+	requires <*:CS_RevealEncounter_NPCBase (&PirateShip|3:THIEF|3:CRIHN|3:REDMA) -!Hi -!Ex>
 	Size 3
 
 	% E1 is the outdoors scene

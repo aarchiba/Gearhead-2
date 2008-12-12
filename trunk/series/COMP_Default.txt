@@ -12,30 +12,39 @@
 %% #C Conclusion
 %%
 %%  All conclusions start the same: with a stub. This plot doesn't do anything by
-%%  itself, but sets the mood and invokes the subplots.
+%%  itself, but sets the mood and invokes the following subplots:
+%%      *CS_END_Intro
+%%      *:CS_END_RallyDefenses
+%%
+%%  It must have the following macros defined:
+%%      &RallyDefenses
+%%      &ifDefensesRallied
 %%
 
 Plot
 	name <Conclusion Stub>
 	desc <This stub just holds all the conclusion subplots and sets the mood.>
-	requires <#C>
+	requires <#C F:++>
 
 	% Element1 is the mood for the conclusion
 	Element1 <Prefab>
 
+	% P%id%01 = Defense Counter
+
 	% Everything starts when the PC enters the episode scene.
 	start <if= PlotStatus %plotid% 0 if= RootSceneID &EpisodeScene  Alert %id%01  SetPlotStatus %plotid1% %id1% SetPlotStatus %plotid2% %id2% SetPlotStatus %plotid3% %id3% SetPlotStatus %plotid4% %id4%  SetMood %1% &EpisodeScene>
 
+	&RallyDefenses <P= %id%01 1>
+	&ifDefensesRallied <if= P%id%01 1>
+
 	Msg%id%01 <As you enter \SCENE &EpisodeScene , you experience a distinct feeling of dread. Something big is about to happen here.>
 
-	% SubPlot1 is the confrontation lead-in
-	%     This will handle the arch-enemy
+	% SubPlot1 is the confrontation intro
+	%     This will handle the arch-enemy and load the other subplots
 	% SubPlot2 is the rally defenses subplot-
 	%     This will be determined by the +T task.
-	% SubPlot3 is the partner's subplot
-	% SubPlot4 is the love interest's subplot
-
-	SubPlot1 <*CS_END_Buildup 1>
+	SubPlot1 <*CS_END_Intro 1>
+	SubPlot2 <*:CS_END_RallyDefenses>
 
 	inv
 		Mood 5

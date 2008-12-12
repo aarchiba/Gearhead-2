@@ -620,6 +620,14 @@ Desig <COMPUTER-1>
 roguechar <!>
 SDL_SPRITE <prop_computer1.png>
 
+MetaTerrain 0 0
+name <COMPUTER>
+Desig <COMPUTER-INDESTRUCTIBLE>
+roguechar <!>
+SDL_SPRITE <prop_computer1.png>
+Altitude 1
+Pass -100
+
 Prop 15
 name <Bio-Tank>
 desig <BIOTANK>
@@ -1144,6 +1152,14 @@ GoSetOrders <GrabSource GSetNAtt NAG_EpisodeData NAS_Orders 3>
 name <%name1%'s Mission>
 update <if= PlotStatus %plotid% %id% else GoHide SetStat STAT_MetaVisibility 0  ShowEncounter Goto GoSetOrders>
 EncounterMove 50
+
+Encounter
+desig <CORE-STATIONARY>
+update <if= PlotStatus %plotid% %id% else GoHide SetStat STAT_MetaVisibility 0  ShowEncounter Goto GoSetOrders>
+% Sets this encounter's orders to Passive
+GoSetOrders <GrabSource GSetNAtt NAG_EpisodeData NAS_Orders 3>
+attack < >
+EncounterMove 0
 
 Encounter
 desig <CORE-INVISIBLEENCOUNTER>

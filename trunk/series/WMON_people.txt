@@ -7,6 +7,131 @@
 
 %  STATS  REF BOD SPD PER CFT EGO KNO CHA
 
+Arch HW Soldier
+statline 11 11 11 11 9 9 9 9
+MonsterTV 70
+roguechar <G>
+sdl_sprite <cha_m_guardian.png>
+sdl_colors <120 90 90 255 212 195 244 216 28>
+type <Guard>
+habitat <>
+skill 6 4
+skill 7 4
+skill 8 4
+skill 9 4
+skill 10 5
+Sealed
+sub
+head
+armor 3
+torso
+armor 3
+arm
+armor 3
+sub
+	hand
+	inv
+		Gun 24
+		name <Bazooka>
+		desc <A shoulder-mounted rocket launcher>
+		desig <Raketen Mk6>
+		caliber <60mm rocket>
+		category <WEAPON MISSILE CONTRABAND>
+		sdl_sprite <>
+		Range 9
+		acc -1
+		Speed 2
+		Legality 10
+		mass -14
+		sub
+			Ammo 24
+			name <Raketen Clip>
+			caliber <60mm rocket>
+			type <BLAST 3 BRUTAL>
+			Magazine 12
+		end
+	end
+end
+arm
+armor 3
+sub
+	hand
+end
+inv
+	Shield 4
+	DefBonus 2
+	name <Riot Shield>
+end
+leg
+armor 3
+leg
+armor 3
+end
+
+Arch Soldier
+statline 11 11 11 11 9 9 9 9
+MonsterTV 62
+roguechar <G>
+sdl_sprite <cha_m_guardian.png>
+sdl_colors <90 120 90 255 212 195 244 216 28>
+type <Guard>
+habitat <>
+skill 6 4
+skill 7 4
+skill 8 4
+skill 9 4
+skill 10 5
+Sealed
+sub
+head
+armor 3
+torso
+armor 3
+arm
+armor 3
+sub
+	hand
+	inv
+		Gun 6
+		Name <Assault Rifle>
+		desig <FS Vaken>
+		desc <A rapid-firing chemical rifle.>
+		sdl_portrait <item_combatrifle.png>
+		caliber <5mm rifle>
+		category <WEAPON MISSILE>
+		factions <GENERAL>
+		legality 5
+		Mass -4
+		Range 6
+		Speed 4
+		BV 2
+		sub
+			Ammo 8
+			name <5mm Rifle Clip>
+			caliber <5mm rifle>
+			magazine 60
+			category <AMMO>
+			factions <GENERAL>
+			SDL_PORTRAIT <item_ammoclip.png>
+		end
+	end
+end
+arm
+armor 3
+sub
+	hand
+end
+inv
+	Shield 4
+	DefBonus 2
+	name <Riot Shield>
+end
+leg
+armor 3
+leg
+armor 3
+end
+
 Arch Security Guard
 statline 9 9 9 9 8 8 8 8
 MonsterTV 48
@@ -70,7 +195,7 @@ statline 9 9 9 9 8 8 8 8
 MonsterTV 21
 roguechar <G>
 sdl_sprite <cha_m_soldier.png>
-sdl_colors <90 90 100 255 212 195 150 120 90>
+sdl_colors <90 90 90 255 212 195 150 120 90>
 type <Guard>
 habitat <>
 CHAT_ATTACK1 <What's all this about!?>
