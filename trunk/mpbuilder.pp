@@ -37,10 +37,10 @@ implementation
 
 {$IFDEF ASCII}
 uses narration,playwright,texutil,gearutil,gearparser,ghchars,randmaps,vidgfx,
-	ui4gh,vidmenus;
+	ui4gh,vidmenus,wmonster;
 {$ELSE}
 uses narration,playwright,texutil,gearutil,gearparser,ghchars,randmaps,glgfx,
-	ui4gh,glmenus;
+	ui4gh,glmenus,wmonster;
 {$ENDIF}
 
 Type
@@ -867,7 +867,7 @@ begin
 					end;
 
 					if Dest = GB^.Scene then begin
-						DeployMek( GB , Element , True );
+						EquipThenDeploy( GB , Element , True );
 					end else begin
 						InsertInvCom( Dest , Element );
 					end;

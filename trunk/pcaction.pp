@@ -209,7 +209,7 @@ begin
 				{ Then copy the new body to the map. }
 				M := CloneGear( M2 );
 				{ Insert M into the map. }
-				DeployMek( GB , M , True );
+				DeployGear( GB , M , True );
 
 				DialogMsg( ReplaceHash( ReplaceHash( MsgString( 'AUTOTRAIN_EVOLVE' ) , GearName( NPC ) ) , GearName( M ) ) );
 
@@ -833,7 +833,7 @@ begin
 		SetNAtt( Robot^.NA , NAG_Location , NAS_Team , NAV_LancemateTeam );
 		SetNAtt( Robot^.NA , NAG_Relationship , 0 , NAV_ArchAlly );
 		SetNAtt( Robot^.NA , NAG_CharDescription , NAS_CharType , NAV_CTLancemate );
-		DeployMek( GB , Robot , True );
+		DeployGear( GB , Robot , True );
 
 		if LancematesPresent( GB ) > PartyLancemateSlots( PC ) then RemoveLancemate( GB , Robot );
 
@@ -1812,9 +1812,9 @@ begin
 				if IsSafeArea( GB ) and not MovementBlocked( Pilot , GB , P.X ,P.Y , P.X , P.Y ) then begin
 					SetNAtt( Pilot^.NA , NAG_Location , NAS_X , P.X );
 					SetNAtt( Pilot^.NA , NAG_Location , NAS_Y , P.Y );
-					DeployMek( GB , Pilot , True );
+					DeployGear( GB , Pilot , True );
 				end else begin
-					DeployMek( GB , Pilot , False );
+					DeployGear( GB , Pilot , False );
 				end;
 			end;
 

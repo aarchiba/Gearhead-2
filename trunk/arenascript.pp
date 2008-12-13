@@ -2870,7 +2870,7 @@ begin
 		SetSATt( Mek^.SA , 'SDL_COLORS <' + standard_lot_colors[ Random( num_standard_schemes ) ] + '>' );
 
 		SetNAtt( Mek^.NA , NAG_Location , NAS_Team , NAV_DefPlayerTeam );
-		DeployMek( GB , Mek , False );
+		DeployGear( GB , Mek , False );
 
 		if ( Adv <> Nil ) and ( Adv^.S = GS_ArenaCampaign ) and ( GB <> Nil ) and ( GB^.Scene <> Nil ) then begin
 			{ This is Arena mode. Store the mecha announcement for the }
@@ -2999,7 +2999,7 @@ begin
 		SetNAtt( Grabbed_Gear^.NA , NAG_Location , NAS_Team , TID );
 
 		{ Stick it on the map, and maybe do a redraw. }
-		DeployMek( GB , Grabbed_Gear , True );
+		EquipThenDeploy( GB , Grabbed_Gear , True );
 	end;
 end;
 
@@ -3079,7 +3079,7 @@ begin
 			SetSAtt( Grabbed_Gear^.SA , 'DESIG <>' );
 
 			{ Deploy the item. }
-			DeployMek( GB , Grabbed_Gear , False );
+			EquipThenDeploy( GB , Grabbed_Gear , False );
 		end;
 
 		{ Any further processing must be done by other commands. }
@@ -3500,7 +3500,7 @@ begin
 			{ This is a salvagable part. To start with, remove its pilot(s). }
 			repeat
 				M2 := ExtractPilot( Mek );
-				if M2 <> Nil then DeployMek( GB , M2 , False );
+				if M2 <> Nil then DeployGear( GB , M2 , False );
 			until M2 = Nil;
 
 			{ Apply emergency repair to it. }
@@ -4222,7 +4222,7 @@ begin
 		Mecha := SelectNPCMecha( GB , GB^.Scene , NPC );
 		if Mecha <> Nil then begin
 			SetNAtt( Mecha^.NA , NAG_Location , NAS_Team , NAV_DefPlayerTeam );
-			DeployMek( GB , Mecha , False );
+			DeployGear( GB , Mecha , False );
 			AssociatePilotMek( GB^.Meks , NPC , Mecha );
 			SetNAtt( NPC^.NA , NAG_Narrative , NAS_GaveLMMecha , 1 );
 		end;

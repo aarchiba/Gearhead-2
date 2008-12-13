@@ -834,7 +834,7 @@ begin
 			Msg := GetTauntString( Pilot , 'CHAT_EJECT' );
 			Monologue( GB , Pilot , Msg );
 			DialogMsg( ReplaceHash( MsgString( 'EJECT_AI' ) , GearName( Pilot ) ) );
-			DeployMek( GB , Pilot , False );
+			DeployGear( GB , Pilot , False );
 		end;
 	until Pilot = Nil;
 end;

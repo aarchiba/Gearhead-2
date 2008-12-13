@@ -86,10 +86,10 @@ implementation
 
 {$IFDEF ASCII}
 uses 	ui4gh,rpgdice,vidgfx,texutil,gearutil,interact,ability,gearparser,ghchars,narration,ghprop,
-	vidmenus,arenascript,mpbuilder,chargen;
+	vidmenus,arenascript,mpbuilder,chargen,wmonster;
 {$ELSE}
 uses 	ui4gh,rpgdice,glgfx,texutil,gearutil,interact,ability,gearparser,ghchars,narration,ghprop,
-	glmenus,arenascript,mpbuilder,chargen;
+	glmenus,arenascript,mpbuilder,chargen,wmonster;
 {$ENDIF}
 
 Type
@@ -786,7 +786,7 @@ begin
 						{ we'll want to deploy this element right away. }
 						{ Otherwise just shove it in the invcoms. }
 						if Dest = GB^.Scene then begin
-							DeployMek( GB , E , True );
+							EquipThenDeploy( GB , E , True );
 						end else begin
 							InsertInvCom( Dest , E );
 						end;
@@ -1171,7 +1171,7 @@ begin
 		if Element <> Nil then begin
 			if Destination <> Nil then begin
 				if GB^.Scene = Destination then begin
-					DeployMek( GB , Element , True );
+					EquipThenDeploy( GB , Element , True );
 				end else begin
 					InsertInvCom( Destination , Element );
 				end;

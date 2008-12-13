@@ -1843,7 +1843,7 @@ begin
 						end else if IsSubCom( Mek ) then begin
 							DelinkGear( Mek^.Parent^.SubCom , Mek );
 						end;
-						DeployMek( GB , Mek , False );
+						DeployGear( GB , Mek , False );
 						Chat_Message := MsgString( 'SERVICES_MoveDone' + BStr( Random( 3 ) + 1 ) );
 
 					end else begin

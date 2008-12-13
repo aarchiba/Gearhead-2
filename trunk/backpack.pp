@@ -322,7 +322,7 @@ Procedure GatherFieldHQ( GB: GameBoardPtr );
 
 			if ( M^.G >= 0 ) and ( NAttValue( M^.NA , NAG_Location , NAS_Team ) = NAV_DefPlayerTeam ) then begin
 				DelinkGear( S^.InvCom , M );
-				DeployMek( GB , M , False );
+				DeployGear( GB , M , False );
 			end;
 
 			M := M2;

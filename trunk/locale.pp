@@ -642,7 +642,7 @@ Procedure RevealMek( GB: GameBoardPtr; Mek,Spotter: GearPtr );
 Procedure CheckVisibleArea( GB: GameBoardPtr; Mek: GearPtr );
 
 Function LocateMekByUID( GB: GameBoardPtr; UID: Integer ): GearPtr;
-Procedure DeployMek( GB: GameBoardPtr; Mek: GearPtr; PutOnMap: Boolean );
+Procedure DeployGear( GB: GameBoardPtr; Mek: GearPtr; PutOnMap: Boolean );
 
 Function WorldWrapsX( World: GearPtr ): Boolean;
 Function WorldWrapsY( World: GearPtr ): Boolean;
@@ -3242,7 +3242,7 @@ begin
 	LocateMekByUID := SeekGearByIDTag( GB^.Meks , NAG_EpisodeData , NAS_UID , UID );
 end;
 
-Procedure DeployMek( GB: GameBoardPtr; Mek: GearPtr; PutOnMap: Boolean );
+Procedure DeployGear( GB: GameBoardPtr; Mek: GearPtr; PutOnMap: Boolean );
 	{ Stick the provided MEK onto the game board. Assign a UID, }
 	{ and set the default orders for MEK's team. }
 	{ PRECONDITION: Mek must be unlinked. }
