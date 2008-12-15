@@ -202,13 +202,100 @@ Content
 
 	sub
 		MetaScene 4 2
-		rumor%id% <%name4% has been looking for you in %name2%.>
+		rumor%id% <%name2%'s ship is in %name3%. This could mean the end of everything.>
 		special <UNCHARTABLE>
 		% L1 = Encounter Over Counter
 		% L2 = Initialization Counter; resets each time
+		% L3 = Second deployment happened
+		% L4 = Enemy NPC died
 		MapWidth 50
 		MapHeight 50
 
+		Start <if= L2 0 L= 2 1 L= 1 0   if= L3 0 else GoFightEnemy Alert 1   Trigger0 RollCall>
+		GoFightEnemy <ForceChat %2%>
+		nu1 <if= T1 0   Return if= L1 0 L= 1 1 if= L4 0 else GoIncompleteVictory AddRenown -20>
+		GoIncompleteVictory <>
+		nu2 <if= T2 0   ifG T3 0  Alert 2 WMecha 2 StoryDL 100>
+		nu3 <if= T3 0   if= L3 0   L= 3 1   Alert 4  DeployNPC %2% 5  WMecha 5 StoryDL 100 ForceChat %2%>
+		nu5 <if= T5 0   if= L3 1  if= L1 0  L= 1 1  Alert 3>
+		Faint%2% <L= 4 1>
+		end <L= 2 0>
+
+		Msg1 <You face %name2%'s battleship.>
+		Msg2 <Reinforcements arrive!>
+		Msg3 <You defeated %name2% once and for all!>
+		Msg4 <As the battleship crumbles, %name2% launches.>
+
+		sub
+			team 1
+			SetAlly 4
+			SetEnemy 2 3 5
+			ParaX 45
+			ParaY 25
+
+			team 2
+			name <Enemies>
+			SetEnemy 1 4
+			SetAlly 3 5
+			Deploy <if= PlotStatus %plotid% %id% SetSelfFaction &EnemyFac   WMecha 2 StoryDL 200>
+			home <Enemy Zone>
+
+			team 3
+			name <Battleship>
+			setenemy 1 4
+			setally 2 5
+
+			team 4
+			name <Allies>
+			setenemy 2 3 5
+			setally 1
+			Deploy <if= PlotStatus %plotid% %id% &ifDefensesRallied   SetSelfFaction &AllyFac   WMecha 4 StoryDL 200>
+			home <Ally Zone>
+
+			team 5
+			name <Big Boss>
+			home <Ship Zone>
+			Deploy <SetSelfFaction &EnemyFac if= L3 1   WMecha 5 StoryDL 200>
+			setenemy 1 4
+			setally 2 3
+
+			rect
+			name <Enemy Zone>
+			special <SubZone>
+			width 5
+			Height 48
+			MFX 1
+			MFY 2
+
+			rect
+			name <Ally Zone>
+			special <SubZone>
+			width 5
+			Height 48
+			MFX 45
+			MFY 2
+			Content1 <Some 1 100 Here *CS_END_Final_Allies na>
+
+			rect
+			name <Ship Zone>
+			special <SubZone>
+			width 12
+			height 12
+			MFX 6
+			MFY 19
+			sub
+				SuperProp
+				requires <*BattleShip>
+				SetTeam 3
+			end
+		end
+
+		Persona 2
+		special <UNLISTED>
+		greeting <if= PlotStatus %plotid% %id% else %pop% if= v%id%01 0 else .%id%_GoSecondTime V= %id%01 1 Goto .%id%_GoGreet>
+		*.%id%_GoSecondTime <*Back_For_More>
+		*.%id%_GoGreet <*BattleChallenge .%id%_GoThemeExpo na>
+		*.%id%_GoThemeExpo <*THEME_EXPO&Enemy na>
 	end
 
 %%
@@ -262,8 +349,8 @@ Content
 		Start <if= L2 0 L= 2 1   L= 1 0   ForceChat %4%>
 		nu1 <if= T1 0   Return  if= L1 0   L= 1 1   AddRenown -3>
 		nu2 <if= T2 0   if= L1 0   L= 1 1   Goto GoVictory>
-		Faint%4% <L= 1 1 Goto GoVictory>
-		GoVictory <StoryNote 1 XPV 200 Trigger0 .%id%_%plotid%_GoWin WinSubPlot %plotid% ifNPCOK %4% MoveNPC %4% %1% SetNPCTeam %4% 2>
+		Faint%4% <if= L1 0 L= 1 1 Goto GoVictory>
+		GoVictory <StoryNote 1 XPV 200 Salvage Trigger0 .%id%_%plotid%_GoWin WinSubPlot %plotid% ifNPCOK %4% MoveNPC %4% %1% SetNPCTeam %4% 2>
 		end <L= 2 0>
 
 		Msg1 <You defeated %name4%'s lance.>
@@ -333,8 +420,8 @@ Content
 		Start <if= L2 0 L= 2 1   L= 1 0   ForceChat %4%>
 		nu1 <if= T1 0   Return  if= L1 0   L= 1 1   AddRenown -3>
 		nu2 <if= T2 0   if= L1 0   L= 1 1   Goto GoVictory>
-		Faint%4% <L= 1 1 Goto GoVictory>
-		GoVictory <StoryNote 1 XPV 100 Trigger0 .%id%_%plotid%_GoWin WinSubPlot %plotid% ifNPCOK %4% MoveNPC %4% %1% SetNPCTeam %4% 2>
+		Faint%4% <if= L1 0 L= 1 1 Goto GoVictory>
+		GoVictory <StoryNote 1 XPV 200 Salvage Trigger0 .%id%_%plotid%_GoWin WinSubPlot %plotid% ifNPCOK %4% MoveNPC %4% %1% SetNPCTeam %4% 2>
 		end <L= 2 0>
 
 		Msg1 <You defeated %name4%'s lance.>

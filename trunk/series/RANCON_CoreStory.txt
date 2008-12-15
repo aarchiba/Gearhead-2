@@ -8,4 +8,23 @@
 %% be readily reusable in other components.
 %%
 
+%%
+%% *CS_END_Final_Allies Content
+%%
+%%  The final battle is starting. Load some allies to help the PC. All of these
+%%  NPCs should say something upon receiving the RollCall trigger.
+%%
+
+Content
+	name <Faction Ally>
+	requires <*CS_END_Final_Allies P:++>
+
+	Element1 <Character !Comrade -3 HasMecha>
+	Team1 <Allies>
+	TeamData1 <SD Ally>
+
+	RollCall <if= L%id%01 0 else %pop% L= %id%01 1 Monologue %1% %id%01 Goto %pop%>
+
+	Msg%id%01 <%name1% , reporting for \FACTION &AllyFac !>
+
 
