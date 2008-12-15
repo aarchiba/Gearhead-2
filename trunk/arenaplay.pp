@@ -123,11 +123,7 @@ Procedure CheckMapScroll( GB: GameBoardPtr );
 		{ Return TRUE if PART is an active participant in the battle for }
 		{ purposes of map scrolling. }
 	begin
-{		if ( Part^.G = GG_Prop ) then begin
-			IsActiveParticipant := GearOperational( Part );
-		end else begin}
-			IsActiveParticipant := GearActive( Part );
-{		end;}
+		IsActiveParticipant := GearActive( Part );
 	end;
 	Function GetDelta( axis,a,b: Integer ): Integer;
 		{ Determine whether or not the map should be scrolled along this }
@@ -197,9 +193,9 @@ begin
 		{ the first mecha moved caused this condition. }
 		if not KeepPlayingSC( Camp^.GB ) then break;
 
-		if IsMasterGear( M ) then begin
+		if IsMasterGear( M ) and OnTheMap( Camp^.GB , M ) then begin
 			{ Check for actions in progress. }
-			if NotDestroyed( M ) and OnTheMap( Camp^.GB , M ) then begin
+			if NotDestroyed( M ) then begin
 				ETA := NAttValue( M^.NA , NAG_Action , NAS_MoveETA );
 				if ETA <= Camp^.GB^.ComTime then begin
 					ProcessMovement( Camp^.GB , M );
@@ -211,7 +207,7 @@ begin
 			end;
 
 			{ Check for input. }
-			if GearActive( M ) and OnTheMap( Camp^.GB , M ) then begin
+			if GearActive( M ) then begin
 				ETA := NAttValue( M^.NA , NAG_Action , NAS_CallTime );
 				if ETA <= Camp^.GB^.ComTime then begin
 					GetMekInput( M , Camp , False );

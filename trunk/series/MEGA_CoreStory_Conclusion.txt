@@ -214,12 +214,14 @@ Content
 		Start <if= L2 0 L= 2 1 L= 1 0   if= L3 0 else GoFightEnemy Alert 1   Trigger0 RollCall>
 		GoFightEnemy <ForceChat %2%>
 		nu1 <if= T1 0   Return if= L1 0 L= 1 1 if= L4 0 else GoIncompleteVictory AddRenown -20>
-		GoIncompleteVictory <>
-		nu2 <if= T2 0   ifG T3 0  Alert 2 WMecha 2 StoryDL 100>
+		nu2 <if= T2 0   if= L3 0 else nu5   ifG T3 0  Alert 2 WMecha 2 StoryDL 100>
 		nu3 <if= T3 0   if= L3 0   L= 3 1   Alert 4  DeployNPC %2% 5  WMecha 5 StoryDL 100 ForceChat %2%>
-		nu5 <if= T5 0   if= L3 1  if= L1 0  L= 1 1  Alert 3>
+		nu5 <if= T5 0   if= L3 1  if= T2 0  if= L1 0  L= 1 1  Goto GoVictory>
 		Faint%2% <L= 4 1>
 		end <L= 2 0>
+
+		GoIncompleteVictory <>
+		GoVictory <Alert 3>
 
 		Msg1 <You face %name2%'s battleship.>
 		Msg2 <Reinforcements arrive!>
@@ -237,7 +239,7 @@ Content
 			name <Enemies>
 			SetEnemy 1 4
 			SetAlly 3 5
-			Deploy <if= PlotStatus %plotid% %id% SetSelfFaction &EnemyFac   WMecha 2 StoryDL 200>
+			Deploy <if= PlotStatus %plotid% %id% SetSelfFaction &EnemyFac   WMecha 2 StoryDL 300>
 			home <Enemy Zone>
 
 			team 3
@@ -266,6 +268,7 @@ Content
 			Height 48
 			MFX 1
 			MFY 2
+			Content1 <Some 2 100 Here *CS_END_Final_Enemies na>
 
 			rect
 			name <Ally Zone>
@@ -274,7 +277,7 @@ Content
 			Height 48
 			MFX 45
 			MFY 2
-			Content1 <Some 1 100 Here *CS_END_Final_Allies na>
+			Content1 <Some 3 100 Here *CS_END_Final_Allies na>
 
 			rect
 			name <Ship Zone>

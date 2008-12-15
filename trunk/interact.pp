@@ -868,13 +868,14 @@ begin
 	it := NPCTraitDesc( NPC );
 	it := it + ' ' + SAttValue( NPC^.SA , 'JOB_DESIG' );
 
-	if IsArchEnemy( Adv, NPC ) then it := it + ' ARCHENEMY';
 	Case NAttValue( NPC^.NA , NAG_Relationship , 0 ) of
+		NAV_ArchEnemy: it := it + ' NEMESIS';
 		NAV_Lover: it := it + ' LOVER';
 		NAV_Family: it := it + ' FAMILY';
 		NAV_Friend: it := it + ' FRIEND';
 		NAV_ArchAlly: it := it + ' LANCEMATE';
 	end;
+	if IsArchEnemy( Adv, NPC ) then it := it + ' ARCHENEMY';
 	if IsArchAlly( Adv, NPC ) then it := it + ' ARCHALLY';
 
 	CID := NAttValue( NPC^.NA , NAG_Personal , NAS_CID );

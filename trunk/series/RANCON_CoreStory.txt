@@ -16,15 +16,109 @@
 %%
 
 Content
-	name <Faction Ally>
+	name <Core Ally>
 	requires <*CS_END_Final_Allies P:++>
 
-	Element1 <Character !Comrade -3 HasMecha>
+	Element1 <Character !Comrade -3 HasMecha !Global>
 	Team1 <Allies>
 	TeamData1 <SD Ally>
 
-	RollCall <if= L%id%01 0 else %pop% L= %id%01 1 Monologue %1% %id%01 Goto %pop%>
+	RollCall <if= L%id%01 0 else %pop% L= %id%01 1 Monologue %1% %id%01 NPCLevel %1% StoryDL Goto %pop%>
 
 	Msg%id%01 <%name1% , reporting for \FACTION &AllyFac !>
+
+Content
+	name <Faction Ally>
+	requires <*CS_END_Final_Allies>
+
+	Element1 <Faction PCFac>
+	Element2 <Character !Comrade 1 !Okay -3 HasMecha !Global>
+	Team2 <Allies>
+	TeamData2 <SD Ally>
+
+	RollCall <if= L%id%01 0 else %pop% L= %id%01 1 Monologue %2% %id%01 NPCLevel %2% StoryDL Goto %pop%>
+
+	Msg%id%01 <%name2% , reporting for %name1%!>
+
+Content
+	name <Personal Ally>
+	requires <*CS_END_Final_Allies>
+
+	Element1 <Character LANCEMATE HasMecha !Global>
+	Team1 <Allies>
+	TeamData1 <SD Ally>
+
+	RollCall <if= L%id%01 0 else %pop% L= %id%01 1 Monologue %1% %id%01 NPCLevel %1% StoryDL Goto %pop%>
+
+	Msg%id%01 <I'm ready to provide backup.>
+
+Content
+	name <Personal Friend>
+	requires <*CS_END_Final_Allies>
+
+	Element1 <Character FRIEND HasMecha !Global>
+	Team1 <Allies>
+	TeamData1 <SD Ally>
+
+	RollCall <if= L%id%01 0 else %pop% L= %id%01 1 Monologue %1% %id%01 NPCLevel %1% StoryDL Goto %pop%>
+
+	Msg%id%01 <I'm ready to provide backup.>
+
+Content
+	name <I'd love to provide backup>
+	requires <*CS_END_Final_Allies>
+
+	Element1 <Character LOVER HasMecha !Global>
+	Team1 <Allies>
+	TeamData1 <SD Ally>
+
+	RollCall <if= L%id%01 0 else %pop% L= %id%01 1 Monologue %1% %id%01 NPCLevel %1% StoryDL Goto %pop%>
+
+	Msg%id%01 <I'm ready to provide backup.>
+
+Content
+	name <Family Backup>
+	requires <*CS_END_Final_Allies>
+
+	Element1 <Character FAMILY HasMecha !Global>
+	Team1 <Allies>
+	TeamData1 <SD Ally>
+
+	RollCall <if= L%id%01 0 else %pop% L= %id%01 1 Monologue %1% %id%01 NPCLevel %1% StoryDL Goto %pop%>
+
+	Msg%id%01 <I'm ready to provide backup.>
+
+
+%%
+%% *CS_END_Final_Enemies Content
+%%
+%%  The final battle is starting. Load some enemy NPCs to fight. All of these
+%%  NPCs should say something upon receiving the RollCall trigger.
+%%
+
+Content
+	name <Faction Enemy>
+	requires <*CS_END_Final_Enemies F:++>
+
+	Element1 <Character !Comrade -2 HasMecha !Global>
+	Team1 <Enemies>
+	TeamData1 <SD Enemy>
+
+	RollCall <if= L%id%01 0 else %pop% L= %id%01 1 Monologue %1% %id%01 NPCLevel %1% StoryDL Goto %pop%>
+
+	Msg%id%01 <You cannot hope to win... \FACTION &EnemyFac will not be defeated!>
+
+Content
+	name <Personal Enemy>
+	requires <*CS_END_Final_Enemies>
+
+	Element1 <Character !Okay -2 NEMESIS !Global>
+	Team1 <Enemies>
+	TeamData1 <SD Enemy>
+
+	RollCall <if= L%id%01 0 else %pop% L= %id%01 1 Monologue %1% %id%01 NPCLevel %1% StoryDL Goto %pop%>
+
+	Msg%id%01 <I've waited a long time for the chance to finish you off... You wouldn't expect me to turn it down, would you?>
+
 
 

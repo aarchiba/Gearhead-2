@@ -458,6 +458,8 @@ var
 					if ERoll > EMod then begin
 						{ Delink the chaacter, then attach as a sibling of the master gear. }
 						DelinkGear( Part^.Parent^.SubCom , Part );
+						SetNAtt( Part^.NA , NAG_Location , NAS_X , 0 );
+						SetNAtt( Part^.NA , NAG_Location , NAS_Y , 0 );
 						Part^.Next := Master^.Next;
 						Master^.Next := Part;
 
