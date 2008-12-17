@@ -5,6 +5,79 @@
 %%
 
 %%
+%% *CS_END_FinalBattle_Greeting
+%%
+%%  The final battle has started, and the Enemy has just appeared. This is the greeting
+%%  for the PC.
+%%
+%%  PARAM1: Exit Label, presumably to THEME_EXPO
+%%
+
+Persona
+	requires <*CS_END_FinalBattle_Greeting (2:A.hat|2:A.mut|2:A.pch)>
+	START <EndChat Say %id%01 AddChat %id%01>
+	Result%id%01 <Goto %1%>
+	Msg%id%01 <How convenient. Here you are, \PC , standing before me at my moment of power. It saves me the trouble of having to hunt you down later on.>
+	Msg%id%01_1 <>
+	Msg%id%01_2 <>
+	Prompt%id%01_1 <Let's settle this.>
+	Prompt%id%01_2 <>
+
+Persona
+	requires <*CS_END_FinalBattle_Greeting 2:A.obs>
+	START <EndChat Say %id%01 AddChat %id%01>
+	Result%id%01 <Goto %1%>
+	Msg%id%01 <I knew you'd come, \PC ! I wouldn't want you to miss my ascent to power, and your descent into hell!>
+	Msg%id%01_1 <>
+	Msg%id%01_2 <>
+	Prompt%id%01_1 <It's time to end this, \CHATNPC .>
+	Prompt%id%01_2 <I'm here. And I'm going to end this, now.>
+
+Persona
+	requires <*CS_END_FinalBattle_Greeting 2:M.nih>
+	START <EndChat Say %id%01 AddChat %id%01>
+	Result%id%01 <Goto %1%>
+	Msg%id%01 <Today a new god of death is born, and \PPR ChatNPCID name is \ChatNPC ! You will be among the first to taste my power.>
+	Msg%id%01_1 <>
+	Msg%id%01_2 <>
+	Prompt%id%01_1 <The only one who's going to die here is you.>
+	Prompt%id%01_2 <Wow, you really have lost it.>
+
+Persona
+	requires <*CS_END_FinalBattle_Greeting "Villainous">
+	START <EndChat Say %id%01 AddChat %id%01 AddChat %id%02>
+	Result%id%01 <Goto %1%>
+	Result%id%02 <Goto %1%>
+	Msg%id%01 <Well look at this. I haven't started to fight yet, but already you're bleeding... Should I be quick and put you out of your misery, or shall I play with you a while first?>
+	Msg%id%01_1 <>
+	Msg%id%01_2 <>
+	Prompt%id%01_1 <By the end, you'll look way worse than me.>
+	Prompt%id%01_2 <I hope you're not afraid of blood, 'cause you're about to see plenty.>
+	Prompt%id%02_1 <Enough talking. Let's end this.>
+	Prompt%id%02_2 <Are you here to talk or to fight? Let's go.>
+
+Persona
+	requires <*CS_END_FinalBattle_Greeting>
+	START <EndChat Say %id%01 AddChat %id%01>
+	Result%id%01 <Goto %1%>
+	Msg%id%01 <This battle has gone on for long enough. It's time that I end it once and for all, by ending your life...>
+	Msg%id%01_1 <>
+	CMsg%id%01_1 <ifNPCSociable Accept>
+	Msg%id%01_2 <>
+	CMsg%id%01_2 <ifNPCShy Accept>
+	Msg%id%01_3 <>
+	CMsg%id%01_3 <ifNPCEasygoing Accept>
+	Msg%id%01_4 <>
+	CMsg%id%01_4 <ifNPCPassionate Accept>
+	Msg%id%01_5 <>
+	CMsg%id%01_5 <ifNPCCheerful Accept>
+	Msg%id%01_6 <>
+	CMsg%id%01_6 <ifNPCMelancholy Accept>
+	Prompt%id%01_1 <Let's do this.>
+	Prompt%id%01_2 <You're free to try.>
+
+
+%%
 %% *CS_END_Intro_Greeting
 %%
 %%  The PC has just stumbled into the Enemy's plans, and the Enemy will greet the PC.

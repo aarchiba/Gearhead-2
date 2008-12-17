@@ -356,11 +356,12 @@ begin
 	OptimalMechaValue := it;
 end;
 
-Function PurchaseForces( ShoppingList: SAttPtr; Renown,Strength: Integer ): GearPtr;
+Function PurchaseForces( ShoppingList: SAttPtr; Renown,Strength: Integer; Fac: GearPtr ): GearPtr;
 	{ Pick a number of random meks. Add pilots to these meks. }
 	{ The expected PC skill level is measured by RENOWN. The difficulty of the }
 	{ encounter is measured by STRENGTH, which is a percentage with 100 representing }
 	{ an average fight. }
+	{ FAC is the faction these mecha belong to. }
 	{ Within this procedure it is assumed that 7 points of renown translate to one }
 	{ point of skill. That isn't necessarily true at the high and low ends of the spectrum, }
 	{ but it's a good heuristic. }
@@ -444,6 +445,7 @@ var
 	StrCost: LongInt;	{ The number of strength points this mecha will cost. }
 
 	Lvl,Bonus: LongInt;		{ Pilot level. }
+	CTheme,CPoints: Integer;	{ Customization theme and points. }
 	Mek,MList,CP,Pilot: GearPtr;
 begin
 	{ Initialize our list to Nil. }
@@ -458,12 +460,28 @@ begin
 		{ Select a mek at random. }
 		{ Load & Clone the mek. }
 		Mek := ObtainMekFromFile( SelectNextMecha );
+
 		{ Determine its cash value. }
 		MPV := GearValue( Mek );
 
 		{ From this, we may determine its base STRENGTH value. }
 		StrCost := ( MPV * BasicGruntCost ) div OptimalValue;
 		if StrCost < 5 then StrCost := 5;
+
+		{ If we have a lot of STRENGTH, and are at a sufficiently high RENOWN, consider }
+		{ making this mecha a custom model. }
+		if ( Strength > ( 150 + Random( 300 ) - Renown ) ) and ( StrCost < Random( 40 ) ) and ( Renown > ( 60 + Random( 50 ) ) ) then begin
+			{ Encountering a custom mecha in the RPG campaign is like finding }
+			{ a shiny pokemon, except actually useful. }
+			if Fac <> Nil then CTheme := NAttValue( Fac^.NA , NAG_Narrative , NAS_DefaultFacTheme )
+			else CTheme := 0;
+
+			CPoints := 2 + Random( 2 );
+			if StrCost < 25 then CPoints := CPoints + Random( 4 );
+
+			StrCost := StrCost + CPoints * 3;
+			MechaMakeover( Mek , Random( 3 ) + 1 , CTheme , CPoints );
+		end;
 
 		{ Select a pilot skill level. }
 		{ Base pilot level is 20 beneath the PC's renown. }
@@ -532,7 +550,7 @@ var
 	SList: SAttPtr;
 	MList,Mek,Pilot: GearPtr;
 	desc,fdesc: String;
-	team,fac,rscene: GearPtr;
+	team,fac,LFac,rscene: GearPtr;
 	MaxMekShare,MPV: LongInt;
 begin
 	{ First, generate the mecha description. }
@@ -553,8 +571,8 @@ begin
 		if Fac = Nil then begin
 			rscene := FindRootScene( GB , GB^.Scene );
 			if rscene <> Nil then begin
-				Fac := SeekFaction( GB^.Scene , NAttValue( RScene^.NA , NAG_Personal , NAS_FactionID ) );
-				if Fac <> Nil then fdesc := fdesc + ' ' + SAttValue( Fac^.SA , 'DESIG' );
+				LFac := SeekFaction( GB^.Scene , NAttValue( RScene^.NA , NAG_Personal , NAS_FactionID ) );
+				if LFac <> Nil then fdesc := fdesc + ' ' + SAttValue( LFac^.SA , 'DESIG' );
 			end;
 		end;
 	end;
@@ -567,7 +585,7 @@ begin
 	SList := GenerateMechaList( MPV , fdesc , desc );
 
 	{ Generate the mecha list. }
-	MList := PurchaseForces( SList , Renown , Strength );
+	MList := PurchaseForces( SList , Renown , Strength , Fac );
 
 	{ Get rid of the shopping list. }
 	DisposeSAtt( SList );
@@ -600,6 +618,29 @@ Function SelectNPCMecha( GB: GameBoardPtr; Scene,NPC: GearPtr ): GearPtr;
 	{ Select a mecha for the provided NPC. }
 	{ This mecha must match the NPC's faction, renown, and must also be legal for }
 	{ this game board. }
+	Function SelectMechaByValue( LList: GearPtr ): GearPtr;
+		{ We now have a list of mecha. Select one of them from the list, with }
+		{ emphasis given to the most expensive one there. }
+	var
+		m,mek: GearPtr;
+		Total: Int64;
+	begin
+		m := LList;
+		mek := Nil;
+		Total := 0;
+		while M <> nil do begin
+			Total := Total + GearValue( M );
+			m := m^.next;
+		end;
+		Total := Random( Total );
+		m := LList;
+		while ( Total >= 0 ) and ( m <> Nil ) do begin
+			Total := Total - GearValue( M );
+			if Total < 0 then Mek := M;
+			M := M^.Next;
+		end;
+		SelectMechaByValue := mek;
+	end;
 const
 	Min_Max_Cost = 400000;
 	Max_Min_Cost = 1000000;
@@ -672,7 +713,7 @@ begin
 	{ By now, we should have a mecha list full of candidates. If not, we better load }
 	{ something generic and junky. }
 	if MechaList <> Nil then begin
-		M := SelectRandomGear( MechaList );
+		M := SelectMechaByValue( MechaList );
 		DelinkGear( MechaList , M );
 		DisposeGear( MechaList );
 	end else begin

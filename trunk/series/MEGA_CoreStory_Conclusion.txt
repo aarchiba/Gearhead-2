@@ -203,7 +203,7 @@ Content
 	sub
 		MetaScene 4 2
 		rumor%id% <%name2%'s ship is in %name3%. This could mean the end of everything.>
-		special <UNCHARTABLE>
+		special <UNCHARTABLE NORESCUE>
 		% L1 = Encounter Over Counter
 		% L2 = Initialization Counter; resets each time
 		% L3 = Second deployment happened
@@ -251,7 +251,7 @@ Content
 			name <Allies>
 			setenemy 2 3 5
 			setally 1
-			Deploy <if= PlotStatus %plotid% %id% &ifDefensesRallied   SetSelfFaction &AllyFac   WMecha 4 StoryDL 200>
+			Deploy <if= PlotStatus %plotid% %id% &ifDefensesRallied   SetSelfFaction &AllyFac   WMecha 4 StoryDL 250>
 			home <Ally Zone>
 
 			team 5
@@ -297,7 +297,7 @@ Content
 		special <UNLISTED>
 		greeting <if= PlotStatus %plotid% %id% else %pop% if= v%id%01 0 else .%id%_GoSecondTime V= %id%01 1 Goto .%id%_GoGreet>
 		*.%id%_GoSecondTime <*Back_For_More>
-		*.%id%_GoGreet <*BattleChallenge .%id%_GoThemeExpo na>
+		*.%id%_GoGreet <*CS_END_FinalBattle_Greeting .%id%_GoThemeExpo>
 		*.%id%_GoThemeExpo <*THEME_EXPO&Enemy na>
 	end
 

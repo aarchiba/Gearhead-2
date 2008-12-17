@@ -454,8 +454,13 @@ var
 	end;
 begin
 	{ Start by locating the parts list. }
-	{ The actual parts we want will be invcoms of this gear. }
-	PartsBox := SeekCurrentLevelGear( Mecha_Theme_List , Mecha_Theme_List^.G , Theme );
+	{ If Theme = 0 then select a random theme. }
+	if Theme = 0 then begin
+		PartsBox := SelectRandomGear( Mecha_Theme_List );
+	end else begin
+		{ The actual parts we want will be invcoms of this gear. }
+		PartsBox := SeekCurrentLevelGear( Mecha_Theme_List , Mecha_Theme_List^.G , Theme );
+	end;
 
 	if PartsBox = Nil then begin
 		Exit;

@@ -119,6 +119,7 @@ var
 	SA: SAttPtr;
 	SkRank,SkRoll: Integer;
 	Pilot,SW: GearPtr;
+	IsNPC: Boolean;
 begin
 	{ Determine the base skill value, and initialize the message. }
 	msg := PilotName( PC ) + ' rolls ' + MSgString( 'SKILLNAME_' + BStr( Skill ) );
@@ -127,6 +128,9 @@ begin
 	end else begin
 		SkRank := SkillValue( PC , Skill );
 	end;
+
+	{ Record whether or not this is a NPC. }
+	IsNPC := NAttValue( PC^.NA , NAG_Location , NAS_Team ) <> NAV_DefPlayerTeam;
 
 	msg := msg + '[' + BStr( SkRank );
 	if SkMod <> 0 then msg := msg + SgnStr( SkMod );
@@ -177,13 +181,26 @@ begin
 
 	{ If the roll was a success, give some skill XP. }
 	Pilot := LocatePilot( PC );
-	{ Only give this XP if the PC actually has the skill in question. This is }
+	{   Only give this XP if the PC actually has the skill in question. This is }
 	{ nessecary for game balance reasons. }
-	if GainXP and ( SkRoll >= SkTar ) and ( SkTar >= ( SkRank div 2 ) ) and ( Pilot <> Nil ) and ( Skill >= 1 ) and ( Skill <= NumSkill ) then begin
-		DoleSkillExperience( PC , Skill , Basic_Skill_Award[ Skill ] );
-		if ( SkTar > ( SkRank * 2 div 3 ) ) and ( NAttValue( Pilot^.NA , NAG_Skill , Skill ) > 0 ) then begin
-			DoleSkillExperience( PC , Skill , XPA_SK_Basic );
-			DoleExperience( PC , Basic_Skill_Award[ Skill ] );
+	{   NPCs get more skill XP for skill rolls than PCs do. This is because they're likely }
+	{ to be making far fewer skill rolls. }
+	if GainXP and ( Skill >= 1 ) and ( Skill <= NumSkill ) and ( Pilot <> Nil ) then begin
+		if ( SkRoll >= SkTar ) and ( SkTar >= ( SkRank div 2 ) ) then begin
+			if IsNPC then begin
+				DoleSkillExperience( PC , Skill , Basic_Skill_Award[ Skill ] * 2 );
+				DoleExperience( PC , Basic_Skill_Award[ Skill ] );
+				if ( SkTar > ( SkRank * 2 div 3 ) ) and ( NAttValue( Pilot^.NA , NAG_Skill , Skill ) > 0 ) then begin
+					DoleSkillExperience( PC , Skill , XPA_SK_Basic * 3 );
+					DoleExperience( PC , Basic_Skill_Award[ Skill ] );
+				end;
+			end else begin
+				DoleSkillExperience( PC , Skill , Basic_Skill_Award[ Skill ] );
+				if ( SkTar > ( SkRank * 2 div 3 ) ) and ( NAttValue( Pilot^.NA , NAG_Skill , Skill ) > 0 ) then begin
+					DoleSkillExperience( PC , Skill , XPA_SK_Basic );
+					DoleExperience( PC , Basic_Skill_Award[ Skill ] );
+				end;
+			end;
 		end;
 	end;
 

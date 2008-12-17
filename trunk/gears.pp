@@ -162,6 +162,9 @@ Const
 	NAS_ControllerID = 29;		{ Used for attaching plots to scenes and moods. }
 	NAS_MaxControllerID = 30;	{ Used for generating new controller IDs as needed. }
 
+	NAS_DefaultFacTheme = 31;	{ Used to set the default theme for a faction; in high level }
+					{ encounters, mook mecha can get upgraded with this theme. }
+
 	{ The following are used by the randmaps unit... }
 	NAS_LockedDoorChance = 101;
 	NAS_SecretDoorChance = 102;
