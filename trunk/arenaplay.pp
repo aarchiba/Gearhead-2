@@ -193,9 +193,9 @@ begin
 		{ the first mecha moved caused this condition. }
 		if not KeepPlayingSC( Camp^.GB ) then break;
 
-		if IsMasterGear( M ) and OnTheMap( Camp^.GB , M ) then begin
+		if IsMasterGear( M ) then begin
 			{ Check for actions in progress. }
-			if NotDestroyed( M ) then begin
+			if NotDestroyed( M ) and OnTheMap( Camp^.GB , M ) then begin
 				ETA := NAttValue( M^.NA , NAG_Action , NAS_MoveETA );
 				if ETA <= Camp^.GB^.ComTime then begin
 					ProcessMovement( Camp^.GB , M );
@@ -207,7 +207,7 @@ begin
 			end;
 
 			{ Check for input. }
-			if GearActive( M ) then begin
+			if GearActive( M ) and OnTheMap( Camp^.GB , M ) then begin
 				ETA := NAttValue( M^.NA , NAG_Action , NAS_CallTime );
 				if ETA <= Camp^.GB^.ComTime then begin
 					GetMekInput( M , Camp , False );
@@ -217,7 +217,7 @@ begin
 			end;
 
 			{ Check for drift. }
-			if NAttValue( M^.NA , NAG_Action , NAS_DriftSpeed ) > 0 then begin
+			if ( NAttValue( M^.NA , NAG_Action , NAS_DriftSpeed ) > 0 ) and OnTheMap( Camp^.GB , M ) then begin
 				ETA := NAttValue( M^.NA , NAG_Action , NAS_DriftETA );
 				if ETA <= Camp^.GB^.ComTime then begin
 					DoDrift( Camp^.GB , M );

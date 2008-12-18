@@ -173,6 +173,7 @@ Content
 		name <Final Battle>
 	end
 
+
 %%
 %% *CS_END_FinalBattle
 %%
@@ -200,6 +201,11 @@ Content
 	% P%id%01 = Initialization Counter
 	update <if= p%id%01 0 P= %id%01 1 NPCLevel %2% 90>
 
+	% SubPlot1 is the Propp ending
+	% SubPlot2 is the Enemy's ending
+	subplot1 <*:CS_END_ENDING_Propp 2>
+	subplot2 <*:CS_END_ENDING_Enemy 2>
+
 	sub
 		MetaScene 4 2
 		rumor%id% <%name2%'s ship is in %name3%. This could mean the end of everything.>
@@ -213,20 +219,20 @@ Content
 
 		Start <if= L2 0 L= 2 1 L= 1 0   if= L3 0 else GoFightEnemy Alert 1   Trigger0 RollCall>
 		GoFightEnemy <ForceChat %2%>
-		nu1 <if= T1 0   Return if= L1 0 L= 1 1 if= L4 0 else GoIncompleteVictory AddRenown -20>
+		nu1 <if= T1 0   Return if= L1 0 L= 1 1 if= L4 0 else GoPartial AddRenown -20>
 		nu2 <if= T2 0   if= L3 0 else nu5   ifG T3 0  Alert 2 WMecha 2 StoryDL 100>
-		nu3 <if= T3 0   if= L3 0   L= 3 1   Alert 4  DeployNPC %2% 5  WMecha 5 StoryDL 100 ForceChat %2%>
+		nu3 <if= T3 0   if= L3 0   L= 3 1   Alert 3  DeployNPC %2% 5  WMecha 5 StoryDL 100 ForceChat %2%>
 		nu5 <if= T5 0   if= L3 1  if= T2 0  if= L1 0  L= 1 1  Goto GoVictory>
 		Faint%2% <L= 4 1>
 		end <L= 2 0>
 
-		GoIncompleteVictory <>
-		GoVictory <Alert 3>
+		GoPartial <&ENDING_Propp_Partial &ENDING_Enemy_Partial XPV 500 Goto GoEndStory>
+		GoVictory <&ENDING_Propp_Complete &ENDING_Enemy_Complete XPV 1000 Goto GoEndStory>
+		GoEndStory <EndPlot EndStory Victory>
 
 		Msg1 <You face %name2%'s battleship.>
 		Msg2 <Reinforcements arrive!>
-		Msg3 <You defeated %name2% once and for all!>
-		Msg4 <As the battleship crumbles, %name2% launches.>
+		Msg3 <As the battleship explodes, %name2% launches.>
 
 		sub
 			team 1

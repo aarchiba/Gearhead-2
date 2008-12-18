@@ -1,0 +1,60 @@
+%%
+%% *:CS_END_ENDING Content
+%%
+%%  These are not proper subplots. They are merely containers for
+%%  macros which get called when the player wins the final battle.
+%%
+%%  Each macro should show an alert, and it should probably add something
+%%  to the history list as well.
+%%
+
+%%
+%% *:CS_END_ENDING_Propp
+%%
+%%  The Propp ending tells what happens regarding
+%%  the +P story state and the enemy/ally factions.
+%%
+%%  It needs the following macros:
+%%   &ENDING_Propp_Complete	( for kicking the enemy's arse soundly )
+%%   &ENDING_Propp_Partial	( defeated NPC, but failed other objectives )
+%%
+%%  PARAM1: The Enemy NPC
+%%
+
+Content
+	name <Life can return to peace>
+	requires <*:CS_END_ENDING_Propp (+P--|+Pun|+Pme)>
+
+	&ENDING_Propp_Complete <Alert %id%01 History %id%02>
+	&ENDING_Propp_Partial <Alert %id%03 History %id%04>
+
+	Msg%id%01 <>
+	Msg%id%02 <>
+	Msg%id%03 <>
+	Msg%id%04 <>
+
+
+%%
+%% *:CS_END_ENDING_Enemy
+%%
+%%  This ending tells what happens to the enemy NPC after the battle. If the NPC
+%%  is dead, there may still be something to tell.
+%%
+%%  It needs the following macros:
+%%   &ENDING_Enemy_Complete	( for kicking the enemy's arse soundly )
+%%   &ENDING_Enemy_Partial	( for being semi-victorious )
+%%
+%%  PARAM1: The Enemy NPC
+%%
+
+Content
+	requires <*:CS_END_ENDING_Enemy>
+
+	&ENDING_Propp_Complete <Alert %id%01 History %id%02>
+	&ENDING_Propp_Partial <Alert %id%03 History %id%04>
+
+	Msg%id%01 <>
+	Msg%id%02 <>
+	Msg%id%03 <>
+	Msg%id%04 <>
+
