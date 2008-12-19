@@ -23,6 +23,7 @@ LOCALFACTION <GrabCurrentScene   GNAtt NAG_Personal NAS_FactionID>
 Destination <StatVal 4>
 Visibility <StatVal 5>
 PCFac <GrabAdventure  GNAtt NAG_Personal NAS_FactionID>
+OldFac <GrabAdventure  GNAtt NAG_Personal NAS_OldFaction>
 PCDamage <GrabPCPilot GNAtt NAG_Damage NAS_StrucDamage>
 NPCFac <GrabNPC ?  GNAtt NAG_Personal NAS_FactionID>
 ChatNPCFac <GrabChatNPC  GNAtt NAG_Personal NAS_FactionID>

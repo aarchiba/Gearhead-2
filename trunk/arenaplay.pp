@@ -801,8 +801,9 @@ begin
 		StripNAtt( Mek , NAG_Action );
 		StripNAtt( Mek , NAG_EpisodeData );
 
-		{ Get rid of FLUMMOX and BURN conditions. }
+		{ Get rid of FLUMMOX, BURN, and BLIND conditions. }
 		SetNAtt( Mek^.NA , NAG_StatusEffect , NAS_Burn , 0 );
+		SetNAtt( Mek^.NA , NAG_StatusEffect , NAS_Blinded , 0 );
 		SetNAtt( Mek^.NA , NAG_StatusEffect , NAS_Flummoxed , 0 );
 
 		{ Store the mecha in the PCForces list. }
@@ -816,8 +817,9 @@ begin
 		StripNAtt( Mek , NAG_Action );
 		StripNAtt( Mek , NAG_EpisodeData );
 
-		{ Get rid of FLUMMOX and BURN conditions. }
+		{ Get rid of FLUMMOX, BURN, and BLIND conditions. }
 		SetNAtt( Mek^.NA , NAG_StatusEffect , NAS_Burn , 0 );
+		SetNAtt( Mek^.NA , NAG_StatusEffect , NAS_Blinded , 0 );
 		SetNAtt( Mek^.NA , NAG_StatusEffect , NAS_Flummoxed , 0 );
 
 		{ Make sure to record that this is a lancemate, if appropriate. }

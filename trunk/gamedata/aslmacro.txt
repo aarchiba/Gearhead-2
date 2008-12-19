@@ -310,6 +310,7 @@ Jump <Exit ? GrabScene ! GSetNAtt NAG_Narrative NAS_ReturnTo SceneID>
 SetSelfX <GrabSource GSetNAtt NAG_Location NAS_X ?>
 SetSelfY <GrabSource GSetNAtt NAG_Location NAS_Y ?>
 StoreOldFaction <GrabAdventure GSetNAtt NAG_Personal NAS_OldFaction PCFac>
+RestoreOldFaction <SetPCFac OldFac>
 ClearOriginalHome <GrabNPC ? GSetNAtt NAG_ParaLocation NAS_OriginalHome 0>
 ChatLMFollow <GrabChatNPC GSetNAtt 5 10 5>
 SetDestination <GrabSource GSetStat 4 ?>

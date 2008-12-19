@@ -22,16 +22,66 @@
 %%
 
 Content
+	name <CRIHN: Terror Averted>
+	requires <*:CS_END_ENDING_Propp -+Psh F:CRIHN (P:--|P:POLIT|P:MILIT|P:POLIC)>
+
+	&ENDING_Propp_Complete <Alert %id%01 History %id%01>
+	&ENDING_Propp_Partial <Alert %id%02 History %id%02>
+
+	Msg%id%01 <Their forces decimated, the Blades of Crihna are forced to withdraw. It will take many years before they can once again field such a massive force.>
+	Msg%id%01_1 <With %name1% out of the way, less fanatical captains rise to power and the Blades of Crihna begin to move away from the path of vengeance.>
+	CMsg%id%01_1 <ifNPCDead %1% Accept>
+	Msg%id%02 <Their defeat today just makes the Blades of Crihna even more desperate for revenge. Thousands more will die before a lasting peace is reached.>
+
+Content
+	name <REDMA: Ambitions Quashed>
+	requires <*:CS_END_ENDING_Propp -+Psh F:REDMA>
+
+	&ENDING_Propp_Complete <Alert %id%01 History %id%01>
+	&ENDING_Propp_Partial <Alert %id%02 History %id%02>
+
+	Msg%id%01 <Their ambitions quashed, it will be years before the Red Mask Raiders are once again a threat to the security of the L5 colonies.>
+	Msg%id%01_1 <With %name1% dead, \PPR %1% lieutenants war amongst themselves and inadvertently decimate the last of the Red Mask forces. It will be years before they are a serious threat again.>
+	CMsg%id%01_1 <ifNPCDead %1% Accept>
+	Msg%id%02 <Though they are no longer a major threat, the surviving forces of the Red Mask Raiders continue to provide plenty of work for freelance mecha pilots such as yourself.>
+	Msg%id%02_1 <With %name1% dead, the surviving lieutenants stake out territories and start a pirate war. Hundreds more will die before they are finally eliminated.>
+	CMsg%id%02_1 <ifNPCDead %1% Accept>
+
+Content
+	name <MUGLE: Haiho in the big time>
+	requires <*:CS_END_ENDING_Propp -+Psh P:MUGLE ~F:CORPO>
+
+	&ENDING_Propp_Complete <Alert %id%01 History %id%01>
+	&ENDING_Propp_Partial <Alert %id%02 History %id%02>
+
+	Msg%id%01 <Having proved itself in battle, the MUGL Enterprises mecha division is finally recognized as one of the premier design houses in the solar system.>
+	Msg%id%02 <Due to your performance in the battle, MUGL Enterprises offers you a permanent position in their marketing department. You politely decline.>
+
+Content
 	name <Life can return to peace>
-	requires <*:CS_END_ENDING_Propp (+P--|+Pun|+Pme)>
+	requires <*:CS_END_ENDING_Propp -+Psh F:++>
 
-	&ENDING_Propp_Complete <Alert %id%01 History %id%02>
-	&ENDING_Propp_Partial <Alert %id%03 History %id%04>
+	&ENDING_Propp_Complete <Alert %id%01 History %id%01>
+	&ENDING_Propp_Partial <Alert %id%02 History %id%02>
 
-	Msg%id%01 <>
-	Msg%id%02 <>
-	Msg%id%03 <>
-	Msg%id%04 <>
+	Msg%id%01 <With \FACTION &EnemyFac defeated, life slowly returns to normal. \SCENE &EpisodeScene begins the process of rebuilding from the battle.>
+	Msg%id%02 <With \FACTION &EnemyFac still active, you resolve to spend the rest of your life fighting them. \SCENE &EpisodeScene begins the slow process of rebuilding.>
+
+Content
+	name <Freedom at last>
+	requires <*:CS_END_ENDING_Propp +Psh P:++>
+
+	&ENDING_Propp_Complete <Alert %id%01 History %id%01  RestoreOldFaction>
+	&ENDING_Propp_Partial <Alert %id%02 History %id%02>
+
+	Msg%id%01_1 <Your task completed, you leave \FACTION &AllyFac and return to \FACTION OldFac .>
+	CMsg%id%01_1 <if# OldFac 0 Accept>
+	Msg%id%01_2 <Your task completed, you are free to leave \FACTION &AllyFac and return to your previous life.>
+	CMsg%id%01_2 <if= OldFac 0 Accept>
+	Msg%id%02_1 <Your task yet incomplete, you pledge to remain with \FACTION &AllyFac until \FACTION &EnemyFac can be defeated once and for all.>
+	CMsg%id%02_1 <if# &EnemyFac 0 Accept>
+	Msg%id%02_2 <Your task yet incomplete, you realize that you will never be free to leave \FACTION &AllyFac .>
+	CMsg%id%02_2 <if= &EnemyFac 0 Accept>
 
 
 %%
@@ -48,13 +98,33 @@ Content
 %%
 
 Content
+	requires <*:CS_END_ENDING_Enemy F:REDMA>
+
+	&ENDING_Enemy_Complete <Alert %id%01 History %id%01>
+	&ENDING_Enemy_Partial <Alert %id%02 History %id%02>
+
+	Msg%id%01_1 <Having failed her one too many times, Queen Madas marks %name1% for death; \SPR %1% spends the rest of \PPR %1% life in hiding.>
+	CMsg%id%01_1 <ifNPCOK %1% Accept>
+	Msg%id%01_2 <When Queen Madas hears that you killed %name1%, she puts a price on your head. None of the assassins she sends succeed.>
+	CMsg%id%01_2 <ifNPCDead %1% Accept>
+	Msg%id%02_1 <Following this defeat, %name1% spends the rest of \PPR %1% life trying to regain the favor of Queen Madas; \SPR %1% doesn't succeed.>
+	CMsg%id%02_1 <ifNPCOK %1% Accept>
+	Msg%id%02_2 <%name1% becomes even more popular in death than \SPR %1% was while alive. Wayward teens across the solar system idolize \OPR %1% as the ultimate example of the "live fast, die young, blow lots of things up" pirate lifestyle.>
+	CMsg%id%02_2 <ifNPCDead %1% Accept>
+
+
+Content
 	requires <*:CS_END_ENDING_Enemy>
 
-	&ENDING_Propp_Complete <Alert %id%01 History %id%02>
-	&ENDING_Propp_Partial <Alert %id%03 History %id%04>
+	&ENDING_Enemy_Complete <Alert %id%01 History %id%01>
+	&ENDING_Enemy_Partial <Alert %id%02 History %id%02>
 
-	Msg%id%01 <>
-	Msg%id%02 <>
-	Msg%id%03 <>
-	Msg%id%04 <>
+	Msg%id%01_1 <Humiliated by \PPR %1% defeat, %name1% sinks into obscurity and is never heard from again.>
+	CMsg%id%01_1 <ifNPCOK %1% Accept>
+	Msg%id%01_2 <Having been thoroughly defeated, %name1%'s name is quickly forgotten by all but \PPR %1% most fervent supporters.>
+	CMsg%id%01_2 <ifNPCDead %1% Accept>
+	Msg%id%02_1 <%name1% never forgives you for this defeat, and returns to plague you numerous times in the years to come.>
+	CMsg%id%02_1 <ifNPCOK %1% Accept>
+	Msg%id%02_2 <%name1% is revered as a martyr by \PPR %1% followers. Fortunately, they never again gain the level of power that they once had.>
+	CMsg%id%02_2 <ifNPCDead %1% Accept>
 

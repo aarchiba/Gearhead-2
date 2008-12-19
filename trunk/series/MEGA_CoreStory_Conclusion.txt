@@ -182,6 +182,8 @@ Content
 %%  The enemy mecha forces must be Team 2, since any minibosses previously defeated
 %%  will be added to this team.
 %%
+%%  NOTE: This component must kill the mood or at least give it a time limit.
+%%
 %%  PARAM1: The mood
 %%  PARAM2: The enemy NPC
 %%  PARAM3: The outdoor scene where the battle will take place
@@ -226,13 +228,18 @@ Content
 		Faint%2% <L= 4 1>
 		end <L= 2 0>
 
-		GoPartial <&ENDING_Propp_Partial &ENDING_Enemy_Partial XPV 500 Goto GoEndStory>
-		GoVictory <&ENDING_Propp_Complete &ENDING_Enemy_Complete XPV 1000 Goto GoEndStory>
+		GoPartial <Alert 4  &ENDING_Propp_Partial &ENDING_Enemy_Partial XPV 500 Goto GoEndStory     SetMoodTimeLimit %1% 86400>
+		GoVictory <Alert 5  &ENDING_Propp_Complete &ENDING_Enemy_Complete XPV 1000 Goto GoEndStory  KillMood %1%>
 		GoEndStory <EndPlot EndStory Victory>
 
 		Msg1 <You face %name2%'s battleship.>
 		Msg2 <Reinforcements arrive!>
 		Msg3 <As the battleship explodes, %name2% launches.>
+		Msg4 <With %name2% dead, \PPR %2% forces slowly begin to disperse.>
+		Msg5_1 <You have completely defeated %name2%'s forces.>
+		CMsg5_1 <if= &EnemyFac 0 Accept>
+		Msg5_2 <You have completely destroyed %name2%'s forces, and with them \FACTION &EnemyFac 's plans for domination.>
+		CMsg5_2 <if# &EnemyFac 0 Accept>
 
 		sub
 			team 1
