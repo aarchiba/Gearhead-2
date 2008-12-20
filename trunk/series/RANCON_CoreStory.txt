@@ -53,7 +53,7 @@ Content
 	Msg%id%01 <This is %name1% reporting for duty, \RANK .>
 	Msg%id%01_1 <They say that you're the one in charge of this mess, \RANK . I await your orders.>
 	CMsg%id%01_1 <ifNPCSociable Accept>
-	Msg%id%01_2 <%name1% reporting for \FACTION %1% .>
+	Msg%id%01_2 <%name2% reporting for %name1%.>
 	CMsg%id%01_2 <ifNPCShy Accept>
 	Msg%id%01_3 <Hey, you didn't think that \FACTION %1% would let you take on this fight alone, did you? I've got your back, \RANK .>
 	CMsg%id%01_3 <ifNPCEasygoing Accept>

@@ -63,6 +63,9 @@ const
 	Non_Weapon_MOS_Penalty = 2;	{ Non-weapons are less effective against armor. }
 					{ This mostly applies to modules. }
 
+	DodgeMeleePenalty = 5;		{ It's hard to dodge melee attacks; parry or block instead. }
+					{ Note that this doesn't usually apply to thrown weapons. }
+
 	FlyingPenalty = 3;	{ Penalty for firing at an airborne unit without AntiAir weapon. }
 	HighGroundBonus = 1;	{ Bonus for firing at a target lower than self. }
 
@@ -916,7 +919,7 @@ begin
 	AttemptResist := SkillRoll( GB , TMaster , RSkill , SkRoll , 0 , False , True );
 end;
 
-Function AttemptDodge( GB: GameBoardPtr; TMaster: GearPtr; SkRoll: Integer ): Integer;
+Function AttemptDodge( GB: GameBoardPtr; TMaster,Attacker: GearPtr; SkRoll: Integer ): Integer;
 	{ TMaster will attempt to dodge. }
 var
 	DodgeSkill,SkMod: Integer;
@@ -938,6 +941,13 @@ begin
 		{ Characters use Dodge. }
 		DodgeSkill := 10;
 	end;
+
+	{ Adjust the modifier for melee attacks. These are hard to dodge, but should }
+	{ be blocked or parried instead. }
+	if ( Attacker <> Nil ) and ( ( Attacker^.G = GG_Module ) or (( Attacker^.G = GG_Weapon ) and (( Attacker^.S = GS_Melee ) or ( Attacker^.S = GS_EMelee )) ) ) and ( Range( GB , TMaster , FindRoot( Attacker ) ) <= 2 ) then begin
+		SkMod := SkMod - DodgeMeleePenalty;
+	end;
+
 	DoleSkillExperience( TMaster , DodgeSkill , XPA_SK_Basic );
 	AttemptDodge := SkillRoll( GB , TMaster , DodgeSkill , SkRoll , SkMod , False , True );
 end;
@@ -1009,7 +1019,7 @@ begin
 	{ Make the dodge roll, then dole appropriate experience. }
 	DR.HiRoll := 0;
 	if AStringHasBString( FX , FX_CanDodge ) then begin
-		DR.HiRoll := AttemptDodge( GB , TMaster , SkRoll );
+		DR.HiRoll := AttemptDodge( GB , TMaster , Attacker , SkRoll );
 		DR.HiRollType := GS_Dodge;
 	end;
 
@@ -1368,7 +1378,7 @@ Function PAG_CauseDamage( GB: GameBoardPtr; AtDesc: String; ER: EffectRequest; T
 	{ Return TRUE if the attack hit and further effects should continue, }
 	{ or FALSE if the attack missed. }
 var
-	AtSkill,CritSkill,AtRoll,MOS,NumberOfHits,CritTar,CritHit,T: Integer;
+	AtSkill,CritSkill,AtRoll,ModMOSMeasure,MOS,NumberOfHits,CritTar,CritHit,T: Integer;
 	TPilot,TMaster: GearPtr;
 	DefRep: DefenseReport;
 	DR: DamageRec;
@@ -1431,8 +1441,13 @@ begin
 		{ The attack hit. }
 
 		{ Determine base margin of success. This will be modified later. }
+		{ First, determine the modified MOSMeasure. }
+		ModMOSMeasure := BasicDefenseValue( TMaster ) div 3;
+		if ModMOSMeasure < MOSMeasure then ModMOSMeasure := MOSMeasure;
+
+		{ Next, based on the hit roll, determine base MOS. }
 		if IsMasterGear( TMaster ) and ( TMaster^.G <> GG_Prop ) then begin
-			MOS := ( AtRoll - DefRep.HiRoll ) div MOSMeasure;
+			MOS := ( AtRoll - DefRep.HiRoll ) div ModMOSMeasure;
 		end else if HasTalent( ER.Originator , NAS_GateCrasher ) then begin
 			MOS := 3;
 		end else begin
@@ -1522,7 +1537,7 @@ begin
 			CritHit := SkillRoll( GB , ER.Originator , CritSkill , CritTar , 0 , False , True );
 
 			if CritHit > CritTar then begin
-				MOS := MOS + ( ( CritHit - CritTar ) div MOSMeasure ) + 1;
+				MOS := MOS + ( ( CritHit - CritTar ) div ModMOSMeasure ) + 1;
 			end;
 
 			{ If the originator has Spot Weakness skill, modify damage for that. }

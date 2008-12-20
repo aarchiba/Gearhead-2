@@ -1,5 +1,36 @@
 %%
-%% *:CS_END_ENDING Content
+%% *:CS_END_TheEnd
+%%
+%%  Upon activation this subplot calls all the *CS_END_ENDING macros.
+%%  This subplot should be supply two macros: &EndCompleteVictory and
+%%  &EndPartialVictory.
+%%
+%%  PARAM1: The Enemy NPC
+%%
+
+Content
+	name <Game Conclusion Stub>
+	requires <*:CS_END_TheEnd>
+	% This ending mechanism is a bit kludgier looking than I'd like, but it works.
+
+	% P%id%01 = Complete or partial victory achieved
+	% P%id%02 = Can only win the game once counter
+
+	&EndCompleteVictory <SetPlotStatus %plotid% %id% P= %id%01 1>
+	&EndPartialVictory <SetPlotStatus %plotid% %id% P= %id%01 -1>
+	update <if= P%id%02 0 P= %id%02 1 if= p%id%01 1 else .%id%_GoPartialVictory Goto .%id%_GoCompleteVictory>
+
+	.%id%_GoPartialVictory  <&ENDING_Propp_Partial  &ENDING_Enemy_Partial   XPV 500   Goto .%id%_GoEndStory>
+	.%id%_GoCompleteVictory <&ENDING_Propp_Complete &ENDING_Enemy_Complete  XPV 1000  Goto .%id%_GoEndStory>
+	.%id%_GoEndStory <EndPlot EndStory Victory>
+
+	% SubPlot1 is the Propp state ending
+	% SubPlot2 is the Enemy NPC ending
+	subplot1 <*CS_END_ENDING_Propp 1>
+	subplot2 <*CS_END_ENDING_Enemy 1>
+
+%%
+%% *CS_END_ENDING Content
 %%
 %%  These are not proper subplots. They are merely containers for
 %%  macros which get called when the player wins the final battle.
@@ -8,8 +39,9 @@
 %%  to the history list as well.
 %%
 
+
 %%
-%% *:CS_END_ENDING_Propp
+%% *CS_END_ENDING_Propp
 %%
 %%  The Propp ending tells what happens regarding
 %%  the +P story state and the enemy/ally factions.
@@ -23,7 +55,7 @@
 
 Content
 	name <CRIHN: Terror Averted>
-	requires <*:CS_END_ENDING_Propp -+Psh F:CRIHN (P:--|P:POLIT|P:MILIT|P:POLIC)>
+	requires <*CS_END_ENDING_Propp -+Psh F:CRIHN (P:--|P:POLIT|P:MILIT|P:POLIC)>
 
 	&ENDING_Propp_Complete <Alert %id%01 History %id%01>
 	&ENDING_Propp_Partial <Alert %id%02 History %id%02>
@@ -35,7 +67,7 @@ Content
 
 Content
 	name <REDMA: Ambitions Quashed>
-	requires <*:CS_END_ENDING_Propp -+Psh F:REDMA>
+	requires <*CS_END_ENDING_Propp -+Psh F:REDMA>
 
 	&ENDING_Propp_Complete <Alert %id%01 History %id%01>
 	&ENDING_Propp_Partial <Alert %id%02 History %id%02>
@@ -49,7 +81,7 @@ Content
 
 Content
 	name <MUGLE: Haiho in the big time>
-	requires <*:CS_END_ENDING_Propp -+Psh P:MUGLE ~F:CORPO>
+	requires <*CS_END_ENDING_Propp -+Psh P:MUGLE ~F:CORPO>
 
 	&ENDING_Propp_Complete <Alert %id%01 History %id%01>
 	&ENDING_Propp_Partial <Alert %id%02 History %id%02>
@@ -59,7 +91,7 @@ Content
 
 Content
 	name <Life can return to peace>
-	requires <*:CS_END_ENDING_Propp -+Psh F:++>
+	requires <*CS_END_ENDING_Propp -+Psh F:++>
 
 	&ENDING_Propp_Complete <Alert %id%01 History %id%01>
 	&ENDING_Propp_Partial <Alert %id%02 History %id%02>
@@ -69,7 +101,7 @@ Content
 
 Content
 	name <Freedom at last>
-	requires <*:CS_END_ENDING_Propp +Psh P:++>
+	requires <*CS_END_ENDING_Propp +Psh P:++>
 
 	&ENDING_Propp_Complete <Alert %id%01 History %id%01  RestoreOldFaction>
 	&ENDING_Propp_Partial <Alert %id%02 History %id%02>
@@ -85,7 +117,7 @@ Content
 
 
 %%
-%% *:CS_END_ENDING_Enemy
+%% *CS_END_ENDING_Enemy
 %%
 %%  This ending tells what happens to the enemy NPC after the battle. If the NPC
 %%  is dead, there may still be something to tell.
@@ -98,7 +130,7 @@ Content
 %%
 
 Content
-	requires <*:CS_END_ENDING_Enemy F:REDMA>
+	requires <*CS_END_ENDING_Enemy F:REDMA>
 
 	&ENDING_Enemy_Complete <Alert %id%01 History %id%01>
 	&ENDING_Enemy_Partial <Alert %id%02 History %id%02>
@@ -114,7 +146,7 @@ Content
 
 
 Content
-	requires <*:CS_END_ENDING_Enemy>
+	requires <*CS_END_ENDING_Enemy>
 
 	&ENDING_Enemy_Complete <Alert %id%01 History %id%01>
 	&ENDING_Enemy_Partial <Alert %id%02 History %id%02>

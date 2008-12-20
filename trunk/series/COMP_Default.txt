@@ -44,13 +44,6 @@ Plot
 	% SubPlot2 is the rally defenses subplot-
 	%     This will be determined by the +T task.
 	SubPlot1 <*CS_END_Intro 1>
-
-element2 <Grab 1>
-element3 <Scene Environs !Near -7>
-element4 <Prefab>
-place4 <3>
-SubPlot1 <*CS_END_FinalBattle 1 2 3 4>
-
 	SubPlot2 <*:CS_END_RallyDefenses>
 
 	inv
@@ -69,11 +62,6 @@ SubPlot1 <*CS_END_FinalBattle 1 2 3 4>
 		CMsg_2 <if# ChatNPCFac %me_1% Accept>
 		Msg_3 <What did %city% do to deserve this? Those jerks from %me_name1% are acting like they own the place.>
 		CMsg_3 <if# ChatNPCFac %me_1% Accept>
-
-STC CORE-STATIONARY
-name <Final Battle>
-update <&RallyDefenses SetStat STAT_MetaVisibility 0  ShowEncounter Goto GoSetOrders>
-
 	end
 
 %%

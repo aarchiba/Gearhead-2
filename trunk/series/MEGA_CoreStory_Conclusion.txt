@@ -169,7 +169,7 @@ Content
 	SubPlot4 <*CS_END_FinalBattle 1 2 3 4>
 
 	inv
-		STC CORE-ACTIVATABLE-STATIONARY-DEFENDED
+		STC CORE-ACTIVATABLE
 		name <Final Battle>
 	end
 
@@ -203,10 +203,8 @@ Content
 	% P%id%01 = Initialization Counter
 	update <if= p%id%01 0 P= %id%01 1 NPCLevel %2% 90>
 
-	% SubPlot1 is the Propp ending
-	% SubPlot2 is the Enemy's ending
-	subplot1 <*:CS_END_ENDING_Propp 2>
-	subplot2 <*:CS_END_ENDING_Enemy 2>
+	% SubPlot1 is the ending stub; activate this subplot to start the ending.
+	subplot1 <*:CS_END_TheEnd 2>
 
 	sub
 		MetaScene 4 2
@@ -228,9 +226,8 @@ Content
 		Faint%2% <L= 4 1>
 		end <L= 2 0>
 
-		GoPartial <Alert 4  &ENDING_Propp_Partial &ENDING_Enemy_Partial XPV 500 Goto GoEndStory     SetMoodTimeLimit %1% 86400>
-		GoVictory <Alert 5  &ENDING_Propp_Complete &ENDING_Enemy_Complete XPV 1000 Goto GoEndStory  KillMood %1%>
-		GoEndStory <EndPlot EndStory Victory>
+		GoPartial <Alert 4  History 4   &EndPartialVictory      SetMoodTimeLimit %1% 86400>
+		GoVictory <Alert 5  History 5   &EndCompleteVictory     KillMood %1%>
 
 		Msg1 <You face %name2%'s battleship.>
 		Msg2 <Reinforcements arrive!>
