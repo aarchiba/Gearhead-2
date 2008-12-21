@@ -32,12 +32,13 @@ Plot
 	% P%id%01 = Defense Counter
 
 	% Everything starts when the PC enters the episode scene.
-	start <if= PlotStatus %plotid% 0 if= RootSceneID &EpisodeScene  Alert %id%01  SetPlotStatus %plotid1% %id1% SetPlotStatus %plotid2% %id2% SetPlotStatus %plotid3% %id3% SetPlotStatus %plotid4% %id4%  SetMood %1% &EpisodeScene>
+	start <if= PlotStatus %plotid% 0 if= RootSceneID &EpisodeScene  Alert %id%01 History %id%02  SetPlotStatus %plotid1% %id1% SetPlotStatus %plotid2% %id2% SetPlotStatus %plotid3% %id3% SetPlotStatus %plotid4% %id4%  SetMood %1% &EpisodeScene>
 
 	&RallyDefenses <P= %id%01 1>
 	&ifDefensesRallied <if= P%id%01 1>
 
 	Msg%id%01 <As you enter \SCENE &EpisodeScene , you experience a distinct feeling of dread. Something big is about to happen here.>
+	Msg%id%02 <You found \SCENE &EpisodeScene under the control of \FACTION &EnemyFac .>
 
 	% SubPlot1 is the confrontation intro
 	%     This will handle the arch-enemy and load the other subplots

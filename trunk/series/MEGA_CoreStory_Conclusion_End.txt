@@ -130,6 +130,7 @@ Content
 %%
 
 Content
+	name <REDMA: The Queen is Displeased>
 	requires <*CS_END_ENDING_Enemy F:REDMA>
 
 	&ENDING_Enemy_Complete <Alert %id%01 History %id%01>
@@ -142,6 +143,22 @@ Content
 	Msg%id%02_1 <Following this defeat, %name1% spends the rest of \PPR %1% life trying to regain the favor of Queen Madas; \SPR %1% doesn't succeed.>
 	CMsg%id%02_1 <ifNPCOK %1% Accept>
 	Msg%id%02_2 <%name1% becomes even more popular in death than \SPR %1% was while alive. Wayward teens across the solar system idolize \OPR %1% as the ultimate example of the "live fast, die young, blow lots of things up" pirate lifestyle.>
+	CMsg%id%02_2 <ifNPCDead %1% Accept>
+
+Content
+	name <Justice is Served>
+	requires <*CS_END_ENDING_Enemy (C:POLIC|P:POLIC) (E:THIEF|F:CRIME)>
+
+	&ENDING_Enemy_Complete <Alert %id%01 History %id%01>
+	&ENDING_Enemy_Partial <Alert %id%02 History %id%02>
+
+	Msg%id%01_1 <Following the battle, %name1% is arrested and sentenced to three consecutive life terms.>
+	CMsg%id%01_1 <ifNPCOK %1% Accept>
+	Msg%id%01_2 <%name1% died in battle, thereby saving taxpayers the cost of a lengthy investigation and trial.>
+	CMsg%id%01_2 <ifNPCDead %1% Accept>
+	Msg%id%02_1 <%name1% slips away after the battle and avoids arrest; \SPR %1% returns to plague you several times over the years.>
+	CMsg%id%02_1 <ifNPCOK %1% Accept>
+	Msg%id%02_2 <Even though %name1% died in the battle, you feel that justice was not truly served.>
 	CMsg%id%02_2 <ifNPCDead %1% Accept>
 
 

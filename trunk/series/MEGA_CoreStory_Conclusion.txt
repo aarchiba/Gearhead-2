@@ -226,8 +226,8 @@ Content
 		Faint%2% <L= 4 1>
 		end <L= 2 0>
 
-		GoPartial <Alert 4  History 4   &EndPartialVictory      SetMoodTimeLimit %1% 86400>
-		GoVictory <Alert 5  History 5   &EndCompleteVictory     KillMood %1%>
+		GoPartial <Alert 4  History 4   &EndPartialVictory      SetMoodTimeLimit %1% 86400   SetEncounterInactive %4%>
+		GoVictory <Alert 5  History 5   &EndCompleteVictory     KillMood %1%                 SetEncounterInactive %4%>
 
 		Msg1 <You face %name2%'s battleship.>
 		Msg2 <Reinforcements arrive!>
