@@ -1,4 +1,59 @@
 Plot
+name <Sprite Comic 4>
+	requires <>
+
+Element1 <Scene Environs>
+Element2 <Prefab>
+Place2 <1>
+
+
+
+sub
+	MetaScene 2 0
+	MapWidth 13
+	MapHeight 13
+
+	BoxMap
+	IndustrialTiles
+
+	sub
+		Team 1
+		ParaX 5
+		ParaY 5
+
+		Team 2
+
+	end
+	inv
+		STC DisplayCase-1
+		XPos 7
+		YPos 7
+		use <Return>
+
+		MONSTER Dog
+		SDL_COLORS <157 172 183 122 88 193 250 0 0>
+		SetTeam 2
+		update <GrabSource GSetNAtt 5 10 5 GSetNAtt NAG_CharDescription NAS_CharType NAV_TempLancemate GJoinLance>
+
+		NPC Bounty Hunter
+		SDL_Colors <122 88 198 255 212 195 208 34 51>
+		chardesc female
+		SetTeam 2
+		update <GrabSource GSetNAtt 5 10 5 GSetNAtt NAG_CharDescription NAS_CharType NAV_TempLancemate GJoinLance>
+	end
+
+end
+inv
+	Encounter
+	EncounterMove 0
+	update <ShowEncounter SetStat STAT_MetaVisibility 0  Goto GoSetOrders>
+	ATTACK <  >
+end
+
+
+
+
+Plot
 name <Local Defense>
 	requires <*GENERAL>
 

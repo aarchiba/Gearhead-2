@@ -17,7 +17,7 @@
 
 Content
 	name <Core Ally>
-	requires <*CS_END_Final_Allies -P:-->
+	requires <*CS_END_Final_Allies P:++>
 
 	Element1 <Character !Comrade -3 HasMecha !Global>
 	Team1 <Allies>
@@ -41,7 +41,7 @@ Content
 
 Content
 	name <Faction Ally>
-	requires <*CS_END_Final_Allies>
+	requires <*CS_END_Final_Allies ~P:PCFAC>
 
 	Element1 <Faction PCFac>
 	Element2 <Character !Comrade 1 !Okay -3 HasMecha !Global>
@@ -66,7 +66,7 @@ Content
 
 Content
 	name <Personal Ally>
-	requires <*CS_END_Final_Allies>
+	requires <*CS_END_Final_Allies Common>
 
 	Element1 <Character LANCEMATE HasMecha !Global>
 	Team1 <Allies>
@@ -90,7 +90,7 @@ Content
 
 Content
 	name <Personal Friend>
-	requires <*CS_END_Final_Allies>
+	requires <*CS_END_Final_Allies Common>
 
 	Element1 <Character FRIEND HasMecha !Global>
 	Team1 <Allies>
@@ -114,7 +114,7 @@ Content
 
 Content
 	name <I'd love to provide backup>
-	requires <*CS_END_Final_Allies>
+	requires <*CS_END_Final_Allies Common>
 
 	Element1 <Character LOVER HasMecha !Global>
 	Team1 <Allies>
