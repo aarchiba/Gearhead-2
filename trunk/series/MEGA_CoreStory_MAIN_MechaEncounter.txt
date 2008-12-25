@@ -1343,7 +1343,7 @@ Content
 	name <You Can't Stop Me>
 	size 2
 	desc <Enemy NPC taunts PC, then leaves to complete some mission.>
-	requires <*:CS_MechaEncounter E:++ E:A.--- (+Hwn|+Hln) -&Secondary>
+	requires <*:CS_MechaEncounter E:++ E:A.nme -&Secondary>
 	changes <E:A>
 
 	% E1 is the outdoors scene where this encounter will be placed
@@ -1380,8 +1380,7 @@ Content
 		% Whether you win or lose this fight isn't important. Of course, there are some benefits
 		% to winning... The timer starts from the conclusion of the fight, because I can be just
 		% as cruel to my NPCs as I am to the PC.
-		Start <if= L2 0 L= 2 1   ForceChat %3%  StoryNote 1   SetXXRAttitude %3% XXR_A_IsSenior  AlterContext .next>
-		.next <+H-->
+		Start <if= L2 0 L= 2 1   ForceChat %3%  StoryNote 1   SetXXRAttitude %3% XXR_A_IsSenior>
 		nu1 <if= T1 0   Return   if= V1 0 V= 1 1   AddRenown -1  SetPlotStatus %plotid1% %id1%>
 		nu2 <if= T2 0   if= V1 0 V= 1 1   XPV 100  AddRenown 1   SALVAGE   Alert 2   SetPlotStatus %plotid1% %id1%>
 		end <SetEncounterInactive %2% CancelSubPlot %plotid%>
@@ -1407,8 +1406,8 @@ Content
 	name <Learn of Enemy Leader>
 	size 6
 	desc <Fight some raiders; learn the identity of their leader, who isn't present.>
-	requires <*:CS_MechaEncounter &Raiders E:-- +H-->
-	changes <E:++ +H>
+	requires <*:CS_MechaEncounter &Raiders E:-->
+	changes <E:++>
 
 	% E1 is the outdoors scene where this encounter will be placed
 	% E2 is the metascene to be used for this encounter
@@ -1432,12 +1431,10 @@ Content
 		MapWidth 50
 		MapHeight 50
 
-		Start <if= L2 0 L= 2 1   Alert 1  TeamMonologue 2 2  StoryNote 3   &SetEnemyNPC %3%  CancelSubPlot %plotid1% if# P%id%02 0 Alert 6>
-		nu1 <if= T1 0   Return   if= V1 0 V= 1 1   Alert 4   Trigger0 .%id%_%plotid%_GoLoss   AlterContext .loss>
-		nu2 <if= T2 0   if= V1 0 V= 1 1   XPV 100  AddRenown 1   SALVAGE   Alert 5   Trigger0 .%id%_%plotid%_GoWin   AlterContext .win>
+		Start <if= L2 0 L= 2 1   Alert 1  TeamMonologue 2 2   SetXXRAttitude %3% XXR_A_NeverMet  StoryNote 3   &SetEnemyNPC %3%  CancelSubPlot %plotid1% if# P%id%02 0 Alert 6>
+		nu1 <if= T1 0   Return   if= V1 0 V= 1 1   Alert 4   Trigger0 .%id%_%plotid%_GoLoss>
+		nu2 <if= T2 0   if= V1 0 V= 1 1   XPV 100  AddRenown 1   SALVAGE   Alert 5   Trigger0 .%id%_%plotid%_GoWin>
 		end <SetEncounterInactive %2%>
-		.loss <+Hln>
-		.win <+Hwn>
 
 		Msg1 <You locate the group of raiders that you've been searching for.>
 		Msg2_1 <Huh, who's this? Another challenger for %name3%, I guess... \SPR %3% 's not here right now, but the rest of us should be able to handle you just fine.>
