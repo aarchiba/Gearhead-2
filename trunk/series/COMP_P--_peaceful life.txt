@@ -3,6 +3,86 @@
 %%  Peaceful Life components
 
 Plot
+	name <The Greatest Threat>
+	desc <A commander will assess the threats faced by this town.>
+	requires <#A +Tgs (+Fcc|+Fpa) +P-- F:-- -L:ENEMY ~L:ALLY ~+Gpe ~+Gpo>
+	Size 1
+
+	% E1 is the scene where the speech will take place
+	% E2 is a public scene
+	% E3 is a military faction allied with the city
+	% E4 is a pilot associated with that faction
+	% E5 is an enemy of the military faction
+	% E6 is a police faction allied with the city
+	% E7 is an enemy of the police faction
+	Element1 <Grab 6>
+	Element2 <Scene Public !Near -7 !Okay -7>
+	Element3 <Faction Military !Ally -7 -ArchEnemy>
+	Element4 <Character HasMecha Passionate !Comrade 2 !Near 2 NeverFail -Friend -Lover -Family -ArchEnemy -Lancemate>
+	NeverFail4 <Mecha Pilot>
+	Place4 <1 (Citizens) SD ally>
+	Element5 <Faction !Enemy 3 !XClude -3 !XClude -7 -Crime>
+	Element6 <Faction Police !Ally -7>
+	Element7 <Faction Crime !Enemy 6 !XClude -3>
+
+	% P1 = Entry message Counter
+
+	start <if= SceneID %1% if= P1 0 P= 1 1 Alert 1 Monologue %4% 2 History 3>
+	% If E4 dies, this plot fails.
+	end <ifNPCDead %4% LoseComp 0 .next>
+	.next <+T-- +F-->
+
+	Msg1 <You walk into %name1% just as %name4% is finishing up a speech.>
+	Msg2 <So let no reasonable person deny, the greatest danger to \SCENE &EpisodeScene in this modern age is caused by %name5%.>
+	Msg3 <You arrived at %name1% just as %name4% was finishing \PPR %4% speech.>
+
+	sub
+		Persona 4
+		%% V1 = Have agreed or disagreed
+		greeting <if= V1 0 else GoSecondTime NewChat Say 1 AddChat 1 AddChat 2  SetXXRAttitude %4% XXR_A_IsSenior>
+		GoSecondTime <NewChat Say 5 AddChat 7 AddChat 8>
+		result1 <EndChat Say 2 &SetEnemyFac %5% History 3 V= 1 1 AddChat 3>
+		result2 <NewChat Say 4 AddChat 4 AddChat 5 AddChat 6>
+		result3 <Goto GoSecondTime>
+		result4 <EndChat Say 6 &SetEnemyFac %5% History 3 V= 1 1 AddChat 3>
+		result5 <EndChat Say 7 &SetEnemyFac %7% History 8 V= 1 1 AddChat 9>
+		result6 <EndChat Say 9 History 10 V= 1 1 AddChat 9>
+		result7 <EndChat Say 11 History 12 SMemo 13 &SetTargetNPC %4% WinComp %2% .getmission>
+		.getmission <+Tgt +Fmi>
+		*result8 <*RejectMission GoR8Conclude>
+		GoR8Conclude <History 14 SMemo 0 &SetTargetNPC %4% WinComp %2% .nomission>
+		.nomission <+T-- +F-->
+		result9 <NewChat Say 15 AddChat 7 AddChat 8>
+		Msg1_1 <You seem like a good, level-headed citizen; a fellow cavalier, from the look of it. Tell me, what do you think of the speech I gave?>
+		Msg2 <You see? I've been trying to explain to these know-nothing parlour generals about %name5%, but they just don't understand. It takes someone with real field experience to see the danger they pose!>
+		Msg3 <You agreed with %name4% that %name5% is a major threat.>
+		Msg4 <I was just telling these people about the danger posed by %name5%. Wouldn't you agree that they're the greatest threat facing our fine city at this time?>
+		Msg5 <How would you like a job? I may have a combat mission for someone like you...>
+		Msg6 <Exactly! But try to explain that to these know-nothing parlour generals... They don't believe we're in mortal peril at all!>
+		Msg7 <Oh really? You must read too many tabloid newsites... When our day of reconing comes, and it is coming, the threat's gonna be a military force, not any half-baked hooligans.>
+		Msg8 <You told %name4% that %name5% is a major threat.>
+		Msg9 <Ha! If you really think that, then you're living in a fantasy world... This universe is filled with people who only live to kill us and take our stuff! You either deal with that, or you can die. Your choice.>
+		Msg10 <You told %name4% that there were no major threats to \SCENE &EpisodeScene .>
+		Msg11 <Great! Meet me at %name2% later on and I'll give you the details then.>
+		Msg12 <%name4% offered you a mission, which you accepted.>
+		Msg13 <%name4% offered you a mission. You should meet \OPR %4% at %name2%.>
+		Msg14 <%name4% offered you a mission, which you refused.>
+		Msg15 <The only cure for ignorance like yours is a healthy dose of reality. I could send you on a mission so you can see the danger we're in first hand.>
+		Prompt1 <Um, yeah, I agree completely.>
+		Prompt2 <Could you go over the main points one more time?>
+		Prompt3 <[Continue]>
+		Prompt4 <Yes, absolutely. They must be stopped at all costs!>
+		Prompt5 <No; the real danger comes from %name7%.>
+		Prompt6 <Honestly, I don't think we have much to worry about.>
+		Prompt7 <I'd like that a lot.>
+		Prompt8 <Thanks, but no thanks.>
+		Prompt9 <[Continue]>
+
+		STC MS_PRESENTATION
+		SetID 1
+	end
+
+Plot
 	name <The Police Are Hiring>
 	desc <The PC will be offered a job by a police officer.>
 	requires <#A (+P--|+Pme|+Pun) +T-- F:CRIME ~P:-->

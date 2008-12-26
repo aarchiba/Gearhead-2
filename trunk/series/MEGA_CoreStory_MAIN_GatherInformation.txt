@@ -225,7 +225,7 @@ Content
 Content
 	name <Ex-Lover vs Ex-Partner>
 	desc <The enemy's ex-lover is on the run from the enemy's ex-partner.>
-	requires <*:CS_GatherInformation E:A.sr_ E:M.--->
+	requires <*:CS_GatherInformation E:A.sr_ (E:M.---|E:M.mer)>
 	changes <E:M>
 	Size 7
 

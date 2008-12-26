@@ -53,6 +53,25 @@ Plot
 	end
 
 Plot
+	name <Should Go Look for Work>
+	requires <#W +T-- P:++ ~P:CORPO -P:CRIME>
+	desc <You've completed this mission. Now you can get another one.>
+
+	% E1 is a scene belonging to the ally faction
+	% E2 is the town it's in
+	Element1 <Scene Public !Ally -3 !Far -7>
+	Element2 <Scene !Near 1 !Okay -7 Town>
+
+	start <ifScene .desc if= P1 0 P= 1 1 Alert 1 Alert 2 SMemo 3 History 4 WinEpisode %2% %1% .next>
+	.desc <Outdoors>
+	.next <+Tgs +Fmi>
+	Msg1 <Things appear to be resolved in \SCENE &EpisodeScene , for the time being.>
+	Msg2 <With nothing else to do here, you decide to visit %name1% in %name2% and see if they have any work for you.>
+	Msg3 <You are going to %name1% in %name2% to see if they have a mission for you.>
+	Msg4 <You decided to go look for work in %name2%.>
+
+
+Plot
 	name <Should Go Get Job>
 	requires <#W +T-- P:++ ~+Gmo>
 	desc <You've completed this mission. Now you can get another one.>
@@ -68,7 +87,7 @@ Plot
 	Msg1 <Things appear to be resolved in \SCENE &EpisodeScene , for the time being.>
 	Msg2 <With nothing else to do here, you might as well head over to %name2% to see if %name1% has any work for you.>
 	Msg3 <You are going to visit %name1% in %name2% to see if \SPR %1% has a mission for you.>
-	Msg4 <You decided to go look for work in %name2%.>
+	Msg4 <You decided to go ask %name1% for a mission.>
 
 Plot
 	name <Should Go See Ally>

@@ -871,6 +871,38 @@ Content
 %%
 
 Content
+<<<<<<< .mine
+	name <Ask and ye shall receive>
+	desc <Someone knows where the raiders are, and will tell you without any fuss.>
+	%% No XP award for this component, because it's trivial.
+	requires <*:CS_RevealEncounter_Raiders !Ne>
+	Size 2
+
+	% E1 is the outdoor scene where the encounter is
+	% E2 is the MetaScene being sought
+	% E3 is a local public scene
+	% E4 is a trucker or adventurer who can tell where the raiders are.
+	Element3 <Scene Public !Near -7>
+	Element4 <Character (Trucker|ADVEN) HasMecha !Near 3 !XClude -2 !Okay -3 -ArchEnemy NeverFail>
+	NeverFail4 <Trucker>
+
+	%% FAIL CONDITIONS:
+	%%  - E4 dies before revealing the secret
+
+	start <ifNPCDead %4% LoseSubPlot %plotid%>
+
+	sub
+		Persona 4
+		rumor%id% <%name4% had a run-in with some mysterious mecha a little while ago.>
+		greeting <if# PlotStatus %plotid% %id% else GoGreet NewChat SayAnything>
+		*GoGreet <*IHaveInformation GoSpiel na>
+		GoSpiel <NewChat Say 1 PMemo %plotid% 2 SetEncounterActive %2% WinSubPlot %plotid%>
+		Msg1 <When I was traveling through %name1% recently I was attacked by raiders. I think they were the same mecha you're looking for, and if you hurry back you might be able to find them.>
+		Msg2 <%name4% told you that the raiders are in %name1%.>
+	end
+
+Content
+=======
 	name <Ask and ye shall receive>
 	desc <Someone knows where the raiders are, and will tell you without any fuss.>
 	%% No XP award for this component, because it's trivial.
@@ -900,6 +932,7 @@ Content
 	end
 
 Content
+>>>>>>> .r412
 	name <Ranger's Delight>
 	desc <You encounter a small group of raiders, and can track them to base.>
 	%% How you track someone in space I'm not really sure. Minovsky particles?

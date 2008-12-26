@@ -372,6 +372,92 @@ Content
 %%  *******************
 
 Content
+	name <MUGL, You Useless Morons>
+	size 10
+	desc <Your enemy, frustrated with MUGL Enterprises's incompotence, leaves them for a different corp.>
+	requires <*:CS_MechaEncounter F:MUGLE (P:--|P:CORPO) (E:M.---|E:M.mer) -E:A.nme (!Ne|!Lo)>
+	%% MUGL Enterprises isn't a particularly good villain... or, should I say, not a particularly intimidating
+	%% villain. I mean, how would you feel if Sanrio were trying to kill you? Actually, that does sound pretty
+	%% terrifying... In any case this component will help to cement their reputation as the newest and to-date
+	%% least respected of the L5 mecha corporations.
+	changes <F: E:M>
+
+	% E1 is the outdoors scene where this encounter will be placed
+	% E2 is the encounter
+	% E3 is the enemy NPC
+	% E4 is the faction which gave the NPC the better offer
+	% E5 is a local public scene
+	% E6 is another MUGL pilot who E3 is assisting, supposedly
+	Element3 <Grab 1>
+	Place3 <2 (Enemies) sd enemy>
+	% The new enemy faction should be an enemy to both the PC and to MUGL.
+	Element4 <Faction ArchEnemy !XClude -2 !XClude -3 Corporate>
+	Element5 <Scene Public !Near -7 !Okay -2>
+	Element6 <Character HasMecha Cheerful !Comrade -2 !Near 5 NeverFail>
+	NeverFail6 <Mecha Pilot>
+	Place6 <2 (Enemies) sd enemy>
+
+	% P%id%01 = Initialization Counter
+	% P%id%02 = Have gained decimation
+	update <if= V%id%01 0 V= %id%01 1   SetPlotStatus %plotid1% %id1% NPCLevel %3% StoryDL NPCLevel %6% StoryDL>
+
+	% Gaining the decimation advantage means that E6 won't show up to the battle.
+	.%id1%_%plotid1%_GoDecimation     <P= %id%02 1  MoveAndPacifyNPC %6% 5>
+
+	% SubPlot1 = Gain Advantage vs Raiders
+	SubPlot1 <*:CS_GainAdvantageVsMecha&Decimation>
+
+	sub
+		MetaScene 2 2
+		% L1 = Encounter Over Counter
+		% L2 = Initialization Counter
+		% L3 = Enemy Died/Plot Immunity Counter
+		MapWidth 50
+		MapHeight 50
+
+		Start <if= L2 0 L= 2 1   CancelSubPlot %plotid1%  Alert 1 Monologue %3% 2 if= P%id%02 0 else GoDecimated Monologue %6% 3 Monologue %3% 4 History 5>
+		GoDecimated <Monologue %3% 6 History 7>
+		nu1 <if= T1 0   Return   if= V1 0 V= 1 1         Trigger0 .%id%_%plotid%_GoLoss LoseSubPlot %plotid% if# L3 0 Monologue %3% 8 Monologue %3% 9 Goto GoSetAttitude>
+		nu2 <if= T2 0   if= V1 0 V= 1 1   XPV 100  AddRenown 1   SALVAGE   Trigger0 .%id%_%plotid%_GoWin WinSubPlot %plotid%  Alert 11  if= L3 0 else GoE3DiedEnd  if# P%id%02 0 else GoE3AliveEnd  ifNPCOK %6% else GoE3AliveEnd Monologue %6% 12 History 15  Goto GoE3AliveEnd>
+		GoE3AliveEnd <Monologue %3% 13 Monologue %3% 9 Goto GoSetAttitude>
+		GoE3DiedEnd <Alert 14 Goto GoSetAttitude>
+		Faint%3% <L= 3 1 FreezeNPC %3%>
+		end <SetEncounterInactive %2%>
+		GoSetAttitude <History 10   SetXXRMotivation %3% XXR_M_Mercenary>
+
+		Msg1 <You face a lance of mecha from MUGL Enterprises led by %name3%.>
+		Msg2_1 <Hello again, \PC . I thought you'd try to interfere with %name6%'s mission, so I came here to help out.>
+		Msg3 <Yeah! No-one messes with the Bunny and gets away with it!>
+		Msg4 <Just shut up and fight, %name6%.>
+		Msg5 <You fought a group of mecha led by %name3% and %name6%.>
+		Msg6 <Now, where the blazes is %name6%...?>
+		Msg7 <You fought %name3%, who was supposed to be helping %name6%.>
+		Msg8 <That crappy MUGL mecha nearly killed me! How is anyone supposed to work with substandard equipment like this!?>
+		Msg9_1 <I quit! MUGL Enterprises can kiss my arse, I'm gonna go accept that offer at %name4%!>
+		Msg10 <%name3% quit MUGL to go work for %name4%.>
+		Msg11 <You have defeated all of the MUGL mecha.>
+		Msg12 <Hey %name3%, I'm here to start our mission now! Sorry I'm a bit late... ashes, what happened!?>
+		Msg13_1 <That's it! I've had it with this two-bit cartoon rabbit company! How do they expect us to win in garbage mecha like this!?>
+		Msg14 <You are surprised to find the cockpit of %name3%'s mecha empty, except for a completed job application for %name4%.>
+		Msg15 <%name6% arrived too late to help %name3%.>
+
+		sub
+			team 1
+			SetEnemy 2
+			ParaX 5
+			ParaY 5
+
+			team 2
+			name <Enemies>
+			SetEnemy 1
+			Deploy <if= PlotStatus %plotid% %id% SetSelfFaction &EnemyFac   WMecha 2 StoryDL 40>
+			ParaX 45
+			ParaY 45
+		end
+	end
+
+
+Content
 	name <I Have Become Death>
 	size 9
 	desc <Your enemy no longer cares, and so won't hold back any longer.>
