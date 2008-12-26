@@ -25,20 +25,26 @@ unit training;
 
 interface
 
+uses gears,locale,
 {$IFDEF ASCII}
-uses gears,locale,vidgfx;
+	vidgfx;
 {$ELSE}
-uses gears,locale,glgfx;
+{$IFDEF CUTE}
+	cutegfx;
+{$ELSE}
+	glgfx;
+{$ENDIF}
 {$ENDIF}
 
 Procedure DoTraining( GB: GameBoardPtr; PC: GearPtr; RD: RedrawProcedureType );
 
 implementation
 
+uses	ghchars,gearutil,texutil,ability,description,ui4gh,
 {$IFDEF ASCII}
-uses	ghchars,gearutil,texutil,vidmenus,vidinfo,ability,description,ui4gh;
+	vidmenus,vidinfo
 {$ELSE}
-uses	ghchars,gearutil,texutil,glmenus,glinfo,ability,description,ui4gh;
+	glmenus,glinfo;
 {$ENDIF}
 
 var

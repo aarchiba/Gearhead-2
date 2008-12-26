@@ -28,12 +28,16 @@ program gearhead;
 {$ENDIF}
 {$ENDIF}
 
+uses 	gears,navigate,randmaps,locale,arenaplay,ghchars,gearutil,gearparser,
+	ability,chargen,backpack,ui4gh,gh2arena,menugear,
 {$IFDEF ASCII}
-uses 	gears,vidgfx,navigate,vidmap,randmaps,locale,arenaplay,ghchars,gearutil,gearparser,
-	ability,chargen,vidmenus,backpack,ui4gh,gh2arena,menugear;
+	vidgfx,vidmap,vidmenus;
 {$ELSE}
-uses 	gears,glgfx,navigate,glmap,randmaps,locale,arenaplay,ghchars,gearutil,gearparser,
-	ability,chargen,glmenus,backpack,gh2arena,menugear,ui4gh;
+{$IFDEF CUTE}
+	cutegfx,cutemap,glmenus;
+{$ELSE}
+	glgfx,glmap,glmenus;
+{$ENDIF}
 {$ENDIF}
 
 const

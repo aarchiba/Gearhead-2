@@ -31,10 +31,15 @@ Function DoConcert( GB: GameBoardPtr; PC: GearPtr; AudienceSize,SkTarget: Intege
 
 implementation
 
+uses	arenacfe,action,ghchars,texutil,ui4gh,
 {$IFDEF ASCII}
-uses	vidgfx,vidmenus,vidinfo,arenacfe,action,ghchars,texutil,ui4gh;
+	vidgfx,vidmenus,vidinfo;
 {$ELSE}
-uses	glgfx,glmenus,glinfo,arenacfe,action,ghchars,texutil,ui4gh;
+{$IFDEF CUTE}
+	cutegfx,glmenus,glinfo;
+{$ELSE}
+	glgfx,glmenus,glinfo;
+{$ENDIF}
 {$ENDIF}
 
 var

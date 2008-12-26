@@ -36,20 +36,19 @@ Function WorldMapMain( Camp: CampaignPtr ): Integer;
 
 implementation
 
-{$IFDEF ASCII}
 uses ability,action,aibrain,arenacfe,arenascript,backpack,
      effects,gearutil,targetui,ghchars,gearparser,
      ghprop,ghswag,ghweapon,interact,menugear,movement,
      playwright,rpgdice,skilluse,texutil,ui4gh,grabgear,
-     vidgfx,vidmap,vidmenus,narration,description,vidinfo,
-     ghintrinsic,training,ghsensor;
+     narration,description,ghintrinsic,training,ghsensor,
+{$IFDEF ASCII}
+	vidgfx,vidmap,vidmenus,vidinfo;
 {$ELSE}
-uses ability,action,aibrain,arenacfe,arenascript,backpack,
-     effects,gearutil,targetui,ghchars,gearparser,
-     ghprop,ghswag,ghweapon,interact,menugear,movement,
-     playwright,rpgdice,skilluse,texutil,ui4gh,sdl,grabgear,
-     glgfx,glmap,glmenus,narration,description,glinfo,
-     ghintrinsic,training,ghsensor;
+{$IFDEF CUTE}
+	cutegfx,cutemap,glmenus,glinfo,sdl;
+{$ELSE}
+	glgfx,glmap,glmenus,glinfo,sdl;
+{$ENDIF}
 {$ENDIF}
 
 const
@@ -1420,7 +1419,11 @@ begin
 	until N = -1;
 
 {$IFNDEF ASCII}
+{$IFDEF CUTE}
+
+{$ELSE}
 	CleanTexList;
+{$ENDIF}
 {$ENDIF}
 	DisposeRPGMenu( RPM );
 	CombatDisplay( GB );
@@ -2529,6 +2532,32 @@ begin
 			KP := RPGKey;
 
 {$IFNDEF ASCII}
+{$IFDEF CUTE}
+			if KP = KeyMap[ KMC_SouthWest ].KCode then begin
+				RLWalker( Camp^.GB , Mek , 1 , PC_Should_Run );
+				GotMove := True;
+			end else if KP = KeyMap[ KMC_South ].KCode then begin
+				RLWalker( Camp^.GB , Mek , 2 , PC_Should_Run );
+				GotMove := True;
+			end else if KP = KeyMap[ KMC_SouthEast ].KCode then begin
+				RLWalker( Camp^.GB , Mek , 3 , PC_Should_Run );
+				GotMove := True;
+			end else if KP = KeyMap[ KMC_West ].KCode then begin
+				RLWalker( Camp^.GB , Mek , 4 , PC_Should_Run );
+				GotMove := True;
+			end else if KP = KeyMap[ KMC_East ].KCode then begin
+				RLWalker( Camp^.GB , Mek , 6 , PC_Should_Run );
+				GotMove := True;
+			end else if KP = KeyMap[ KMC_NorthWest ].KCode then begin
+				RLWalker( Camp^.GB , Mek , 7 , PC_Should_Run );
+				GotMove := True;
+			end else if KP = KeyMap[ KMC_North ].KCode then begin
+				RLWalker( Camp^.GB , Mek , 8 , PC_Should_Run );
+				GotMove := True;
+			end else if KP = KeyMap[ KMC_NorthEast ].KCode then begin
+				RLWalker( Camp^.GB , Mek , 9 , PC_Should_Run );
+				GotMove := True;
+{$ELSE}
 			if ( kp = KeyMap[ KMC_North ].KCode ) and ( RK_KeyState[ SDLK_Up ] = 1 ) and not Use_Isometric_Mode then begin
 				RLWalker( Camp^.GB , Mek , Reverse_RL_D[ NAttValue( Mek^.NA , NAG_Location , NAS_D ) ] , PC_Should_Run or ( RK_KeyState[ SDLK_RSHIFT ] = 1 ) or ( RK_KeyState[ SDLK_LSHIFT ] = 1 ) );
 				GotMove := True;
@@ -2561,7 +2590,7 @@ begin
 			end else if Use_Isometric_Mode and ( KP = KeyMap[ KMC_NorthEast ].KCode ) then begin
 				RLWalker( Camp^.GB , Mek , Reverse_RL_D[ ( 7 + DirOffset[ origin_d ] + 6 + Iso_Dir_Offset ) mod 8 ] , PC_Should_Run or ( RK_KeyState[ SDLK_RSHIFT ] = 1 ) or ( RK_KeyState[ SDLK_LSHIFT ] = 1 ) );
 				GotMove := True;
-
+{$ENDIF}
 {$ELSE}
 			if KP = KeyMap[ KMC_SouthWest ].KCode then begin
 				RLWalker( Camp^.GB , Mek , 1 , PC_Should_Run );

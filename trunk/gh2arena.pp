@@ -32,10 +32,15 @@ unit gh2arena;
 
 interface
 
+uses gears,locale,
 {$IFDEF ASCII}
-uses gears,locale,vidgfx;
+	vidgfx;
 {$ELSE}
-uses gears,locale,glgfx;
+{$IFDEF CUTE}
+	cutegfx;
+{$ELSE}
+	glgfx;
+{$ENDIF}
 {$ENDIF}
 
 const
@@ -60,16 +65,18 @@ Procedure RestoreArenaCampaign( RDP: RedrawProcedureType );
 
 implementation
 
+uses arenaplay,arenascript,interact,gearutil,narration,texutil,ghprop,rpgdice,ability,
+     ghchars,ghweapon,movement,ui4gh,gearparser,playwright,randmaps,wmonster,
+	pcaction,menugear,navigate,services,skilluse,training,backpack,chargen,
+	description,
 {$IFDEF ASCII}
-uses arenaplay,arenascript,interact,gearutil,narration,texutil,ghprop,rpgdice,ability,
-     ghchars,ghweapon,movement,ui4gh,vidmap,vidmenus,gearparser,playwright,randmaps,wmonster,
-	vidinfo,pcaction,menugear,navigate,services,skilluse,training,backpack,chargen,
-	description;
+	vidinfo,vidmap,vidmenus;
 {$ELSE}
-uses arenaplay,arenascript,interact,gearutil,narration,texutil,ghprop,rpgdice,ability,
-     ghchars,ghweapon,movement,ui4gh,glmap,glmenus,gearparser,playwright,randmaps,wmonster,
-	glinfo,pcaction,menugear,navigate,services,skilluse,training,backpack,chargen,
-	description;
+{$IFDEF CUTE}
+	cutemap,glmenus,glinfo;
+{$ELSE}
+	glmap,glmenus,glinfo;
+{$ENDIF}
 {$ENDIF}
 
 Const

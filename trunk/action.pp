@@ -76,12 +76,16 @@ Procedure WaitAMinute( GB: GameBoardPtr; Mek: GearPtr; D: Integer );
 
 implementation
 
+uses 	ability,gearutil,ghchars,ghmodule,ghweapon,movement,rpgdice,texutil,
+	math,ui4gh,ghintrinsic,ghsensor,ghprop,ghsupport,
 {$IFDEF ASCII}
-uses 	ability,gearutil,ghchars,ghmodule,ghweapon,movement,rpgdice,texutil,
-	math,vidgfx,ui4gh,ghintrinsic,ghsensor,ghprop,ghsupport;
+	vidgfx;
 {$ELSE}
-uses 	ability,gearutil,ghchars,ghmodule,ghweapon,movement,rpgdice,texutil,
-	math,glgfx,ui4gh,ghintrinsic,ghsensor,ghprop,ghsupport;
+{$IFDEF CUTE}
+	cutegfx;
+{$ELSE}
+	glgfx;
+{$ENDIF}
 {$ENDIF}
 
 const

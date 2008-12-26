@@ -44,12 +44,16 @@ Function RandomNPC( Adv: GearPtr; Fac,Hometown: Integer ): GearPtr;
 
 implementation
 
-{$IFNDEF ASCII}
-uses 	gearutil,ghchars,texutil,ui4gh,glgfx,glinfo,glmenus,description,gearparser,playwright,
-	ability,wmonster,dos,locale,menugear;
+uses 	gearutil,ghchars,texutil,ui4gh,description,gearparser,playwright,
+	ability,wmonster,dos,locale,menugear,
+{$IFDEF ASCII}
+	vidgfx,vidinfo,vidmenus;
 {$ELSE}
-uses 	gearutil,ghchars,texutil,ui4gh,vidgfx,vidinfo,vidmenus,description,gearparser,playwright,
-	ability,wmonster,dos,locale,menugear;
+{$IFDEF CUTE}
+	cutegfx,glinfo,glmenus;
+{$ELSE}
+	glgfx,glinfo,glmenus;
+{$ENDIF}
 {$ENDIF}
 
 type
@@ -1421,7 +1425,11 @@ begin
 
 	repeat
 {$IFNDEF ASCII}
+{$IFDEF CUTE}
+
+{$ELSE}
 		CleanTexList;
+{$ENDIF}
 {$ENDIF}
 		SetSAtt( PC^.SA , 'SDL_PORTRAIT <' + RetrieveSAtt( PList , P )^.Info + '>' );
 		N := SelectMenu( RPM , @RandCharRedraw );

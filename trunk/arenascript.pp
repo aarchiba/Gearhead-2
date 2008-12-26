@@ -36,10 +36,11 @@ unit arenascript;
 
 interface
 
+uses gears,locale,
 {$IFDEF ASCII}
-uses gears,locale,vidmenus,vidgfx;
+	vidmenus,vidgfx;
 {$ELSE}
-uses gears,locale,glmenus,sdl;
+	glmenus,sdl;
 {$ENDIF}
 
 const
@@ -124,16 +125,18 @@ Function StartRescueScenario( GB: GameBoardPtr; PC: GearPtr; Context: String ): 
 
 implementation
 
+uses action,arenacfe,ability,gearutil,ghchars,gearparser,ghmodule,backpack,
+     ghprop,ghweapon,grabgear,interact,menugear,playwright,rpgdice,
+     services,texutil,ui4gh,wmonster,narration,description,skilluse,
+	ghintrinsic,movement,minigame,customization,
 {$IFDEF ASCII}
-uses action,arenacfe,ability,gearutil,ghchars,gearparser,ghmodule,backpack,
-     ghprop,ghweapon,grabgear,interact,menugear,playwright,rpgdice,vidinfo,
-     services,texutil,ui4gh,wmonster,vidmap,narration,description,skilluse,
-	ghintrinsic,movement,minigame,customization;
+	vidmap,vidinfo;
 {$ELSE}
-uses action,arenacfe,ability,gearutil,ghchars,gearparser,ghmodule,backpack,
-     ghprop,ghweapon,grabgear,interact,menugear,playwright,rpgdice,glinfo,
-     services,texutil,ui4gh,wmonster,glgfx,glmap,narration,description,skilluse,
-	ghintrinsic,movement,minigame,customization;
+{$IFDEF CUTE}
+	cutegfx,cutemap,glinfo;
+{$ELSE}
+	glgfx,glmap,glinfo;
+{$ENDIF}
 {$ENDIF}
 
 const

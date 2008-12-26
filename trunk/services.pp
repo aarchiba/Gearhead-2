@@ -62,16 +62,18 @@ Procedure ShuttleService( GB: GameBoardPtr; PC,NPC: GearPtr );
 
 implementation
 
+uses ability,arenacfe,backpack,gearutil,ghchars,ghmodule,gearparser,
+     ghswag,ghweapon,interact,menugear,rpgdice,skilluse,texutil,
+     description,narration,ui4gh,ghprop,
+     customization,
 {$IFDEF ASCII}
-uses ability,arenacfe,backpack,gearutil,ghchars,ghmodule,gearparser,
-     ghswag,ghweapon,interact,menugear,rpgdice,skilluse,texutil,vidgfx,
-     vidmap,vidmenus,description,vidinfo,narration,ui4gh,ghprop,
-     customization;
+	vidgfx,vidmap,vidmenus,vidinfo;
 {$ELSE}
-uses ability,arenacfe,backpack,gearutil,ghchars,ghmodule,gearparser,
-     ghswag,ghweapon,interact,menugear,rpgdice,skilluse,texutil,glgfx,
-     glmap,glmenus,description,glinfo,narration,ghprop,customization,
-	ui4gh;
+{$IFDEF CUTE}
+	cutegfx,cutemap,glmenus,glinfo;
+{$ELSE}
+	glgfx,glmap,glmenus,glinfo;
+{$ENDIF}
 {$ENDIF}
 
 Const

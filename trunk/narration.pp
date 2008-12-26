@@ -208,10 +208,15 @@ Function KeepPlayingSC( GB: GameBoardPtr ): Boolean;
 
 implementation
 
+uses texutil,rpgdice,ghchars,gearutil,ability,menugear,ghprop,ghweapon,
 {$IFDEF ASCII}
-uses texutil,rpgdice,ghchars,gearutil,ability,menugear,ghprop,vidgfx,ghweapon;
+	vidgfx;
 {$ELSE}
-uses texutil,rpgdice,ghchars,gearutil,ability,menugear,ghprop,glgfx,ghweapon;
+{$IFDEF CUTE}
+	cutegfx;
+{$ELSE}
+	glgfx;
+{$ENDIF}
 {$ENDIF}
 
 const

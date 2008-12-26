@@ -24,10 +24,11 @@ unit menugear;
 
 interface
 
+uses gears,locale,
 {$IFDEF ASCII}
-uses gears,locale,vidmenus;
+	vidmenus;
 {$ELSE}
-uses gears,locale,glmenus;
+	glmenus;
 {$ENDIF}
 
 Procedure BuildGearMenu( RPM: RPGMenuPtr; Master: GearPtr; G: Integer; IncludeDestroyed: Boolean );

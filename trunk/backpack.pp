@@ -25,10 +25,15 @@ unit backpack;
 
 interface
 
+uses gears,locale,
 {$IFDEF ASCII}
-uses gears,locale,vidgfx;
+	vidgfx;
 {$ELSE}
-uses gears,locale,glgfx;
+{$IFDEF CUTE}
+	cutegfx;
+{$ELSE}
+	glgfx;
+{$ENDIF}
 {$ENDIF}
 
 const
@@ -72,16 +77,18 @@ Procedure StartPerforming( GB: GameBoardPtr; PC: GearPtr );
 
 implementation
 
+uses ability,action,arenacfe,arenascript,gearutil,ghchars,ghholder,
+     ghmodule,ghprop,ghswag,interact,menugear,rpgdice,skilluse,texutil,
+     description,ghweapon,ui4gh,narration,
+     ghintrinsic,effects,targetui,ghsensor,customization,
 {$IFDEF ASCII}
-uses ability,action,arenacfe,arenascript,gearutil,ghchars,ghholder,
-     ghmodule,ghprop,ghswag,interact,menugear,rpgdice,skilluse,texutil,
-     vidmap,vidmenus,description,ghweapon,ui4gh,vidinfo,narration,
-     ghintrinsic,effects,targetui,ghsensor,customization;
+	vidmap,vidmenus,vidinfo;
 {$ELSE}
-uses ability,action,arenacfe,arenascript,gearutil,ghchars,ghholder,
-     ghmodule,ghprop,ghswag,interact,menugear,rpgdice,skilluse,texutil,
-     glmap,glmenus,description,ghweapon,glinfo,narration,
-     ghintrinsic,effects,ui4gh,targetui,ghsensor,customization;
+{$IFDEF CUTE}
+	cutemap,glmenus,glinfo;
+{$ELSE}
+	glmap,glmenus,glinfo;
+{$ENDIF}
 {$ENDIF}
 
 var
@@ -2192,7 +2199,11 @@ begin
 
 	until N < 0;
 {$IFNDEF ASCII}
+{$IFDEF CUTE}
+
+{$ELSE}
 	CleanTexList;
+{$ENDIF}
 {$ENDIF}
 end;
 

@@ -27,7 +27,13 @@ unit glmenus;
 
 interface
 
-uses SDL,SDL_TTF,dos,glgfx,texutil,ui4gh;
+uses SDL,SDL_TTF,dos,texutil,ui4gh,
+{$IFDEF CUTE}
+	cutegfx;
+{$ELSE}
+	glgfx;
+{$ENDIF}
+
 
 const
 	{These two constants are used to tell the SELECT procedure whether or not}

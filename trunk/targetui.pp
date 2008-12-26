@@ -24,10 +24,15 @@ unit targetui;
 
 interface
 
+uses gears,locale,
 {$IFDEF ASCII}
-uses gears,locale,vidgfx;
+	vidgfx;
 {$ELSE}
-uses gears,locale,glgfx;
+{$IFDEF CUTE}
+	cutegfx;
+{$ELSE}
+	glgfx;
+{$ENDIF}
 {$ENDIF}
 
 
@@ -49,12 +54,16 @@ Function DirKey( ReDrawer: RedrawProcedureType ): Integer;
 
 implementation
 
+uses ability,gearutil,ghweapon,menugear,texutil,ui4gh,ghsensor,
+     arenacfe,description,backpack,
 {$IFDEF ASCII}
-uses ability,gearutil,ghweapon,menugear,texutil,ui4gh,ghsensor,
-     vidmap,vidmenus,arenacfe,description,vidinfo,backpack;
+	vidmap,vidmenus,vidinfo;
 {$ELSE}
-uses ability,gearutil,ghweapon,menugear,texutil,ui4gh,ghsensor,
-     glmap,glmenus,arenacfe,description,glinfo,backpack;
+{$IFDEF CUTE}
+	cutemap,glmenus,glinfo;
+{$ELSE}
+	glmap,glmenus,glinfo;
+{$ENDIF}
 {$ENDIF}
 
 var
@@ -406,7 +415,11 @@ var
 	Procedure RepositionCursor( D: Integer );
 	begin
 {$IFNDEF ASCII}
+{$IFDEF CUTE}
+
+{$ELSE}
 		D := ( D + DirOffset[ origin_d ] + 6 ) mod 8;
+{$ENDIF}
 {$ENDIF}
 		if OnTheMap( GB , X + AngDir[ D , 1 ] , Y + AngDir[ D , 2 ] ) then begin
 			X := X + AngDir[ D , 1 ];
@@ -648,7 +661,11 @@ begin
 	until D <> -2;
 
 {$IFNDEF ASCII}
+{$IFDEF CUTE}
+
+{$ELSE}
 	if D <> -1 then D := ( D + DirOffset[ origin_d ] + 6 ) mod 8;
+{$ENDIF}
 {$ENDIF}
 
 	DirKey := D;

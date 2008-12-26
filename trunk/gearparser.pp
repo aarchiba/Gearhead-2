@@ -69,7 +69,11 @@ implementation
 {$IFDEF ASCII}
 uses vidgfx;
 {$ELSE}
+{$IFDEF CUTE}
+uses cutegfx;
+{$ELSE}
 uses glgfx;
+{$ENDIF}
 {$ENDIF}
 
 Const

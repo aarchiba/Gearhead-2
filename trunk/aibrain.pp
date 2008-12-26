@@ -46,14 +46,17 @@ Function MOVE_MODEL_TOWARDS_SPOT( Mek: GearPtr; GB: GameBoardPtr; GX,GY: Integer
 
 implementation
 
+uses ability,action,arenacfe,effects,movement,gearutil,
+     ghchars,ghmodule,ghweapon,gearparser,ghprop,interact,rpgdice,skilluse,
+     texutil,ui4gh,grabgear,arenascript,
 {$IFDEF ASCII}
-uses ability,action,arenacfe,effects,movement,gearutil,
-     ghchars,ghmodule,ghweapon,gearparser,ghprop,interact,rpgdice,skilluse,
-     texutil,ui4gh,vidmap,vidgfx,grabgear,arenascript;
+	vidgfx,vidmap;
 {$ELSE}
-uses ability,action,arenacfe,effects,movement,gearutil,
-     ghchars,ghmodule,ghweapon,gearparser,ghprop,interact,rpgdice,skilluse,
-     texutil,ui4gh,glmap,glgfx,grabgear,arenascript;
+{$IFDEF CUTE}
+	cutemap,cutegfx;
+{$ELSE}
+	glmap,glgfx;
+{$ENDIF}
 {$ENDIF}
 
 const

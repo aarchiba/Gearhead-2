@@ -35,12 +35,16 @@ Function InitMegaPlot( GB: GameBoardPtr; Scope,Slot,Plot: GearPtr; Threat: Integ
 
 implementation
 
+uses narration,playwright,texutil,gearutil,gearparser,ghchars,randmaps,
+	ui4gh,wmonster,
 {$IFDEF ASCII}
-uses narration,playwright,texutil,gearutil,gearparser,ghchars,randmaps,vidgfx,
-	ui4gh,vidmenus,wmonster;
+	vidgfx,vidmenus;
 {$ELSE}
-uses narration,playwright,texutil,gearutil,gearparser,ghchars,randmaps,glgfx,
-	ui4gh,glmenus,wmonster;
+{$IFDEF CUTE}
+	cutegfx,glmenus;
+{$ELSE}
+	glgfx,glmenus;
+{$ENDIF}
 {$ENDIF}
 
 Type

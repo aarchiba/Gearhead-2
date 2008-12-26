@@ -57,12 +57,16 @@ Procedure ResolveAfterEffects( GB: GameBoardPtr );
 
 implementation
 
+uses ability,effects,gearutil,ghchars,ghweapon,rpgdice,texutil,movement,
+     ui4gh,sysutils,description,action,
 {$IFDEF ASCII}
-uses ability,effects,gearutil,ghchars,ghweapon,rpgdice,texutil,movement,
-     vidmap,vidgfx,ui4gh,vidinfo,sysutils,description,action;
+	vidmap,vidgfx,vidinfo;
 {$ELSE}
-uses ability,effects,gearutil,ghchars,ghweapon,rpgdice,texutil,movement,
-     glgfx,glmap,ui4gh,sdl,glinfo,description,action;
+{$IFDEF CUTE}
+	cutegfx,cutemap,glinfo,sdl;
+{$ELSE}
+	glgfx,glmap,glinfo,sdl;
+{$ENDIF}
 {$ENDIF}
 
 var
@@ -140,15 +144,20 @@ var
 begin
 	msg := ReplaceHash( MsgString( 'BEGIN_TACTICS_TURN' ) , PilotName( M ) );
 {$IFNDEF ASCII}
+{$IFDEF CUTE}
+	FocusOn( M );
+{$ELSE}
 	P := GearCurrentLocation( M );
 	P.X := P.X - 1;
 	P.Y := P.Y - 1;
 	if not Use_Isometric_Mode then origin_d_target := ( ( ( NAttValue( M^.NA , NAG_Location , NAS_D ) + 4 ) * Num_Rotation_Angles ) div 8 ) mod Num_Rotation_Angles;
+{$ENDIF}
 {$ELSE}
 	FocusOn( M );
 {$ENDIF}
 	repeat
 {$IFNDEF ASCII}
+{$IFNDEF CUTE}
 		{ For OpenGL mode, we need to move the display to the new model. }
 		{ In order to prevent confusion, make this a nice smooth scroll. }
 		if Abs( P.X - Origin_X ) < Scroll_Step then Origin_X := P.X
@@ -157,6 +166,7 @@ begin
 		if Abs( P.Y - Origin_Y ) < Scroll_Step then Origin_Y := P.Y
 		else if Origin_Y > P.Y then Origin_Y := Origin_Y - Scroll_Step
 		else if Origin_Y < P.Y then Origin_Y := Origin_Y + Scroll_Step;
+{$ENDIF}
 {$ENDIF}
 		CombatDisplay( GB );
 		InfoBox( ZONE_Caption );

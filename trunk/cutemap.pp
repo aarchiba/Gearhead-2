@@ -312,8 +312,16 @@ begin
 				MyDest.Y := 200 + Row * 40;
 
 				Terr := TileTerrain( GB , X , Y );
-				DrawSprite( Terrain_Sprite , MyDest , 0 );
+				case Terr of
 
+				TERRAIN_WALL:	begin
+						DrawSprite( Terrain_Sprite , MyDest , 9 );
+						MyDest.Y := MyDest.Y - 20;
+						DrawSprite( Terrain_Sprite , MyDest , 9 );
+						end;
+				TERRAIN_FLOOR:	DrawSprite( Terrain_Sprite , MyDest , 5 );
+				else DrawSprite( Terrain_Sprite , MyDest , 0 );
+				end;
 			end;
 		end;
 	end;

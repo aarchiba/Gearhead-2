@@ -34,17 +34,20 @@ Function ScenePlayer( Camp: CampaignPtr ; Scene: GearPtr; var PCForces: GearPtr 
 
 implementation
 
+uses ability,aibrain,arenacfe,arenascript,backpack,gearutil,ghmodule,ghholder,
+     ghchars,ghprop,ghweapon,grabgear,menugear,movement,pcaction,
+     playwright,randmaps,rpgdice,skilluse,texutil,ui4gh,wmonster,
+     action,narration,gearparser,customization,
 {$IFDEF ASCII}
-uses ability,aibrain,arenacfe,arenascript,backpack,gearutil,ghmodule,ghholder,
-     ghchars,ghprop,ghweapon,grabgear,menugear,movement,pcaction,
-     playwright,randmaps,rpgdice,skilluse,texutil,ui4gh,wmonster,
-     vidmap,vidgfx,action,narration,gearparser,customization;
+	vidmap,vidgfx;
 {$ELSE}
-uses ability,aibrain,arenacfe,arenascript,backpack,gearutil,ghmodule,ghholder,
-     ghchars,ghprop,ghweapon,grabgear,menugear,movement,pcaction,
-     playwright,randmaps,rpgdice,skilluse,texutil,ui4gh,wmonster,
-     glmap,glgfx,action,narration,gearparser,customization;
+{$IFDEF CUTE}
+	cutemap,cutegfx;
+{$ELSE}
+	glmap,glgfx;
 {$ENDIF}
+{$ENDIF}
+
 const
 	DEBUG_ON: Boolean = False;
 

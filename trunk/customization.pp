@@ -44,12 +44,16 @@ Procedure CheckTheme( Theme: GearPtr );
 
 implementation
 
+uses 	ghchars,gearutil,gearparser,ghintrinsic,effects,ghweapon,ability,ui4gh,
+	texutil,rpgdice,
 {$IFDEF ASCII}
-uses 	ghchars,gearutil,gearparser,ghintrinsic,effects,ghweapon,ability,vidgfx,ui4gh,
-	texutil,rpgdice;
+	vidgfx;
 {$ELSE}
-uses 	ghchars,gearutil,gearparser,ghintrinsic,effects,ghweapon,ability,glgfx,ui4gh,
-	texutil,rpgdice;
+{$IFDEF CUTE}
+	cutegfx;
+{$ELSE}
+	glgfx;
+{$ENDIF}
 {$ENDIF}
 
 Function MechaModPoints( NPC: GearPtr ): Integer;

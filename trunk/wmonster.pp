@@ -45,12 +45,16 @@ Procedure EquipThenDeploy( GB: GameBoardPtr; NPC: GearPtr; PutOnMap: Boolean );
 
 implementation
 
+uses dos,ability,action,gearutil,ghchars,gearparser,texutil,narration,movement,
+	customization,ghweapon,ghmodule,ghholder,
 {$IFDEF ASCII}
-uses dos,ability,action,gearutil,ghchars,gearparser,texutil,vidmap,narration,vidgfx,movement,
-	customization,ghweapon,ghmodule,ghholder;
+	vidmap,vidgfx;
 {$ELSE}
-uses dos,ability,action,gearutil,ghchars,gearparser,texutil,glmap,narration,glgfx,movement,
-	customization,ghweapon,ghmodule,ghholder;
+{$IFDEF CUTE}
+	cutemap,cutegfx;
+{$ELSE}
+	glmap,glgfx;
+{$ENDIF}
 {$ENDIF}
 
 Function MatchWeight( S, M: String ): Integer;

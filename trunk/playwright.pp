@@ -84,12 +84,16 @@ Procedure UpdateMoods( GB: GameBoardPtr );
 
 implementation
 
+uses 	ui4gh,rpgdice,texutil,gearutil,interact,ability,gearparser,ghchars,narration,ghprop,
+	arenascript,mpbuilder,chargen,wmonster,
 {$IFDEF ASCII}
-uses 	ui4gh,rpgdice,vidgfx,texutil,gearutil,interact,ability,gearparser,ghchars,narration,ghprop,
-	vidmenus,arenascript,mpbuilder,chargen,wmonster;
+	vidgfx,vidmenus;
 {$ELSE}
-uses 	ui4gh,rpgdice,glgfx,texutil,gearutil,interact,ability,gearparser,ghchars,narration,ghprop,
-	glmenus,arenascript,mpbuilder,chargen,wmonster;
+{$IFDEF CUTE}
+	cutegfx,glmenus;
+{$ELSE}
+	glgfx,glmenus;
+{$ENDIF}
 {$ENDIF}
 
 Type

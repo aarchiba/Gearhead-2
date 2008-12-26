@@ -87,10 +87,15 @@ function RandomMap( Scene: GearPtr ): GameBoardPtr;
 
 implementation
 
+uses gearutil,ghprop,rpgdice,texutil,gearparser,narration,ui4gh,arenascript,ghchars,sysutils,ability,
 {$IFDEF ASCII}
-uses gearutil,ghprop,rpgdice,texutil,vidgfx,gearparser,narration,ui4gh,arenascript,ghchars,sysutils,ability;
+	vidgfx;
 {$ELSE}
-uses gearutil,ghprop,rpgdice,texutil,glgfx,gearparser,narration,ui4gh,arenascript,ghchars,sysutils,ability;
+{$IFDEF CUTE}
+	cutegfx;
+{$ELSE}
+	glgfx;
+{$ENDIF}
 {$ENDIF}
 
 var

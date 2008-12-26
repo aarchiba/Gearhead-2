@@ -26,10 +26,15 @@ unit navigate;
 
 interface
 
+uses gears,locale,backpack,
 {$IFDEF ASCII}
-uses gears,locale,vidgfx,backpack;
+	vidgfx;
 {$ELSE}
-uses gears,locale,glgfx,backpack;
+{$IFDEF CUTE}
+	cutegfx;
+{$ELSE}
+	glgfx;
+{$ENDIF}
 {$ENDIF}
 
 Const
@@ -45,12 +50,16 @@ Procedure RestoreCampaign( RDP: RedrawProcedureType );
 
 implementation
 
+uses arenaplay,arenascript,interact,gearutil,narration,texutil,ghprop,rpgdice,ability,
+     ghchars,ghweapon,movement,ui4gh,gearparser,playwright,randmaps,
 {$IFDEF ASCII}
-uses arenaplay,arenascript,interact,gearutil,narration,texutil,ghprop,rpgdice,ability,
-     ghchars,ghweapon,movement,ui4gh,vidmap,vidmenus,gearparser,playwright,randmaps;
+	vidmap,vidmenus;
 {$ELSE}
-uses arenaplay,arenascript,interact,gearutil,narration,texutil,ghprop,rpgdice,ability,
-     ghchars,ghweapon,movement,ui4gh,glmap,glmenus,gearparser,playwright,randmaps;
+{$IFDEF CUTE}
+	cutemap,glmenus;
+{$ELSE}
+	glmap,glmenus;
+{$ENDIF}
 {$ENDIF}
 
 var

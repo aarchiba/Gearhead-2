@@ -25,7 +25,12 @@ unit glinfo;
 
 interface
 
-uses sdl,locale,gears,glgfx,minitype;
+uses sdl,locale,gears,minitype,
+{$IFDEF CUTE}
+	cutegfx;
+{$ELSE}
+	glgfx;
+{$ENDIF}
 
 Procedure DisplayModelStatus( GB: GameBoardPtr; M: GearPtr;  MyDest: TSDL_Rect );
 Procedure QuickModelStatus( GB: GameBoardPtr; M: GearPtr );
@@ -51,8 +56,13 @@ Procedure ConcertStatus( PC: GearPtr; AL: AudienceList );
 implementation
 
 uses 	sdl_ttf,description,texutil,gearutil,
-	ghmodule,ghchars,ghweapon,movement,ability,glmap,
-	narration,ui4gh;
+	ghmodule,ghchars,ghweapon,movement,ability,
+	narration,ui4gh,
+{$IFDEF CUTE}
+	cutemap;
+{$ELSE}
+	glmap;
+{$ENDIF}
 
 const
 	StatusPerfect:TSDL_Color =	( r:  0; g:255; b: 65 );

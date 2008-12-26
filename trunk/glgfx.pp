@@ -27,6 +27,9 @@ unit glgfx;
 {$IFDEF ASCII}
 Interrupt compilation now.
 {$ENDIF}
+{$IFDEF CUTE}
+Do the same.
+{$ENDIF}
 
 interface
 
