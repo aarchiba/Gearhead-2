@@ -637,6 +637,50 @@
 	Prompt%id%01 <I'd like to train.>
 	Prompt%id%02 <I'm just here to chat.>
 
+	Persona
+	requires <*SKILL_TRAINING POLIT Common>
+	START <NewChat Say %id%01 AddChat %id%01 AddChat %id%02>
+	result%id%01 <EndChat Say %id%02 School .%id%_skills Goto %1%>
+	result%id%02 <Goto %1%>
+	.%id%_skills <1 2 3 4 5 6 7 8 9 10 11 19 28 37 39>
+	Msg%id%01 <To be successful in politics you need to be both charismatic and observant. As a cavalier, you should probably also know how to pilot a mecha.>
+	Msg%id%02 <Money spent on training is never lost, though you may need to wait some time to see the effects.>
+	Prompt%id%01 <I'd like to train.>
+	Prompt%id%02 <I'm just here to chat.>
+
+	Persona
+	requires <*SKILL_TRAINING CORPO Common>
+	START <NewChat Say %id%01 AddChat %id%01 AddChat %id%02>
+	result%id%01 <EndChat Say %id%02 School .%id%_skills Goto %1%>
+	result%id%02 <Goto %1%>
+	.%id%_skills <1 2 3 4 5 6 7 8 9 10 15 21 31 23 38>
+	Msg%id%01 <To get ahead in this company you're going to need an edge; I can help you to achieve that.>
+	Msg%id%02 <Remember, the money you spend here is never wasted, unlike the money they spend in the R&D department.>
+	Prompt%id%01 <Let's train.>
+	Prompt%id%02 <Thanks, but I don't need any help right now.>
+
+	Persona
+	requires <*SKILL_TRAINING POLIC Common>
+	START <NewChat Say %id%01 AddChat %id%01 AddChat %id%02>
+	result%id%01 <EndChat Say %id%02 School .%id%_skills Goto %1%>
+	result%id%02 <Goto %1%>
+	.%id%_skills <1 2 3 4 5 6 7 8 9 10 19 29 32 36 37>
+	Msg%id%01 <As an officer of the law, you're going to need a wide variety of skills.>
+	Msg%id%02 <So, what do you want to study?>
+	Prompt%id%01 <I'm ready to learn.>
+	Prompt%id%02 <Sorry, I've got no time for training today.>
+
+	Persona
+	requires <*SKILL_TRAINING (MILIT|ADVEN) Common>
+	START <NewChat Say %id%01 AddChat %id%01 AddChat %id%02>
+	result%id%01 <EndChat Say %id%02 School .%id%_skills Goto %1%>
+	result%id%02 <Goto %1%>
+	.%id%_skills <1 2 3 4 5 6 7 8 9 10 12 13 17 18 36>
+	Msg%id%01 <To be a successful warrior you need to master many skills.>
+	Msg%id%02 <We'll begin your training slowly, then move on to the more dangerous lessons once you've proven yourself.>
+	Prompt%id%01 <Show me how to do it.>
+	Prompt%id%02 <Thanks, but I'm already a master.>
+
 
 % TYPE: *SERVICE_MECHANIC
 %  PARAM1: Exit script label

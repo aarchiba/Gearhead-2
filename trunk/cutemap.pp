@@ -255,6 +255,7 @@ var
 	Frame: Integer;
 	M: GearPtr;
 	MyDest: TSDL_Rect;
+	Spr: SensibleSpritePtr;
 begin
 	{ How to find out the proper mouse location- while drawing each sprite, do a check with the }
 	{ map coordinates. If we get a second match later on, that supercedes the previous match obviously, }
@@ -321,6 +322,12 @@ begin
 						end;
 				TERRAIN_FLOOR:	DrawSprite( Terrain_Sprite , MyDest , 5 );
 				else DrawSprite( Terrain_Sprite , MyDest , 0 );
+				end;
+
+				if ( Row = 0 ) and ( Column = 0 ) then begin
+					MyDest.Y := MyDest.Y - 20;
+					Spr := LocateSprite( 'c_btr_buruburu.png' , '66 121 119 190 190 190 0 205 0' , 50 , 120 );
+					DrawSprite( Spr , MyDest , 0 );
 				end;
 			end;
 		end;

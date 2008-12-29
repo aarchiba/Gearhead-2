@@ -2,10 +2,122 @@
 %%	+Pun	An unknown enemy attacks
 
 Plot
+	name <Don't Know How To Party>
+	desc <Holding a party while unknown enemies gather? Not a great idea.>
+	requires <#A +Pun +Tgs +Fpa S:++ A:-- ~+Glo>
+	changes <A:++>
+	Size 1
+
+	% E1 is the scene for the party
+	% E2 is the urban scene where the attack will take place
+	% E3 is a local public scene for character generation purposes
+	% E4 is a potential love interest of the PC
+	% E5 is the host of the party
+	% E6 is an encounter for the combat to follow
+	Element1 <Grab 6>
+	Element2 <Scene Urban !Near -7>
+	Element3 <Scene Public !Near -7>
+	Element4 <NewNPC -3 3>
+	Place4 <1 pass ally>
+	Element5 <Character (MEDIA|POLIT|CORPO) Sociable Renowned !Near 3 NeverFail>
+	Place5 <1 pass ally>
+	Element6 <Prefab>
+	Place6 <2>
+
+	% P%id%01 = Initialization Counter
+	% P%id%02 = First time message counter
+	% P%id%03 = Freeze E4 Counter
+
+	% The potential love interest will be of the opposite gender of the PC and charming.
+	update <if= P%id%01 0 P= %id%01 1 ConGen %4% NPCStat= %4% 8 14 NPCStat+ %4% 8 d6>
+
+	start <if= p%id%02 0 if= SceneID %1% p= %id%02 1 Alert %id%01 Monologue %5% %id%02 ifNPCInPlay &PartnerNPC Monologue &PartnerNPC %id%03>
+	end <if# PlotStatus %plotid1% 0 if= P%id%03 0 P= %id%03 1 FreezeNPC %4%>
+
+	% If E4 dies somehow, the attack starts automatically.
+	Faint%4% <if= PlotStatus %plotid1% 0 Alert %id%04 StoryNote %id%05 AirRaidSiren Bomb SetPlotStatus %plotid1% %id1%>
+
+	%% Win or lose the ambush encounter- this activates the main combat and freezes E4
+	.%id1%_%plotid1%_GoWin <Alert %id%06 SMemo %id%07  History %id%09  SetPlotStatus %plotid2% %id2% SetPlotStatus %plotid3% %id3%  WinSubPlot %plotid%>
+	.%id1%_%plotid1%_GoLose <Alert %id%08 SMemo %id%07 History %id%09  SetPlotStatus %plotid2% %id2% SetPlotStatus %plotid3% %id3%  LoseSubPlot %plotid%>
+
+	%% Win or lose the main combat
+	.%id2%_%plotid2%_GoWin <SetXXRAttitude %4% XXR_A_Thankful   WinComp 0 .next>
+	.%id2%_%plotid2%_GoLose <SetXXRAttitude %4% XXR_A_IsSenior  LoseComp 0 .next>
+	.next <+T-- +F-->
+
+	Msg%id%01 <As you enter the party, you see the host %name5% greeting the guests.>
+	Msg%id%02 <Welcome, everyone. I ask you to leave the troubles of the outside world behind, and tonight let us simply enjoy ourselves.>
+	Msg%id%03_1 <Hey \PC , is that girl over there giving you the eye? You should go talk with her.>
+	CMsg%id%03_1 <ifPCMale Accept>
+	Msg%id%03_2 <Hey \PC , is that guy over there giving you the eye? You should go talk with him.>
+	CMsg%id%03_2 <ifPCFemale Accept>
+	Msg%id%04 <Suddenly, the building is rocked by explosions! A mecha battle has started just outside.>
+	Msg%id%05 <The party you were attending was attacked by mecha.>
+	Msg%id%06 <You have defeated these mecha, but it seems clear that they were only part of a larger force. The others must still be around here someplace.>
+	Msg%id%07 <Some raiders remain in town to complete their mission.>
+	Msg%id%08 <The remaining mecha escape, but you know that they won't be leaving \SCENE &EpisodeScene until they've completed their mission.>
+	Msg%id%09 <You couldn't stop all of the raiders.>
+
+	% SubPlot1 is the Ambush Encounter
+	% SubPlot2 is the main combat
+	% SubPlot3 is the reveal encounter for the main combat
+	SubPlot1 <*CS_AmbushEncounter 2>
+	SubPlot2 <*:CS_MechaEncounter&Raiders 2 6>
+	SubPlot3 <*:CS_RevealEncounter_Raiders 2 6>
+
+	sub
+		Persona 4
+		special <UNLISTED>
+		greeting <if# PlotStatus %plotid1% 0 else GoGreet EndChat Say 1>
+		*GoGreet <*NiceToMeetYou&NoTrivial GoAsk>
+		GoAsk <NewChat Say 2 AddChat 1 AddChat 2 AddChat 3>
+		GoStartAttack <Alert 3 StoryNote 4 EndChat Say 5 AirRaidSiren SetPlotStatus %plotid1% %id1% &SetAmoreNPC %4%>
+		result1 <PCLover %4% Goto GoStartAttack>
+		result2 <PCLover %4% Goto GoStartAttack>
+		result3 <AddSociable -d10   Goto GoStartAttack>
+		Msg1 <I'd love to talk more, but the building is under attack!>
+		Msg2 <So, as long as we're here, how would you like to dance?>
+		Msg3 <Suddenly, the building is rocked by explosions! A mecha battle has started just outside.>
+		Msg4 <While talking with %name4%, a mecha battle started outside the party.>
+		Msg5 <Look, we're under attack! We better get out of here.>
+		Prompt1 <I'd love to.>
+		Prompt2 <I don't like to dance, but I'll talk for a while.>
+		Prompt3 <Nah. I'm just going to go home.>
+
+		Persona 5
+		special <UNLISTED>
+		% V1 = Have asked question
+		greeting <if= PlotStatus %plotid1% 0 else GoAttackStarted  Goto GoGreet>
+		GoAttackStarted <NewChat Say 1 AddCHat 1>
+		*GoGreet <*HowAreYou GoAsk>
+		GoAsk <if= V1 0 else GoState NewChat Say 2 AddChat 2 AddChat 3>
+		GoState <NewChat Say 4>
+		result1 <NewChat Say 3>
+		result2 <NewChat Say 4 V= 1 1 AddCheerful d10>
+		result3 <NewChat Say 4 V= 1 1 AddCheerful -d8>
+		Msg1 <What kind of barbarian would attack a party like this? Honestly, what is the world coming to?>
+		Msg2 <So, what do you think of my party? Are you having a good time?>
+		Msg3 <No, I'm sorry, I didn't... I'm sure \SPR %4% got home safely, though.>
+		Msg4 <At trying times, such as those we now face, it's important to take a moment and appreciate life.>
+		Prompt1 <You didn't see what happened to %name4%, did you?>
+		CPrompt1 <ifG 0 PlotStatus %plotid% ifNPCOK %4% Accept>
+		Prompt2 <It's very nice, thank you.>
+		Prompt3 <This is hardly a good time for a party, with raiders at the gate.>
+
+		STC MS_SOCIAL
+		SetID 1
+	end
+	inv
+		stc CORE-ACTIVATABLE
+		name <Party Crashers>
+	end
+
+Plot
 	name <Champion Tournament>
 	desc <The technocracy is holding a tournament to locate a champion.>
 	requires <#A +Pun +T-- F:-- (P:--|P:PDASS) (L:MAQUI|L:RISHI|L:FCOMS) -L:ENEMY>
-	changes <P:>
+	changes <P:++>
 
 	% E1 is a local public scene
 	% E2 is the politician to do the judging

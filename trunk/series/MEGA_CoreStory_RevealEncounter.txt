@@ -871,7 +871,6 @@ Content
 %%
 
 Content
-<<<<<<< .mine
 	name <Ask and ye shall receive>
 	desc <Someone knows where the raiders are, and will tell you without any fuss.>
 	%% No XP award for this component, because it's trivial.
@@ -902,37 +901,6 @@ Content
 	end
 
 Content
-=======
-	name <Ask and ye shall receive>
-	desc <Someone knows where the raiders are, and will tell you without any fuss.>
-	%% No XP award for this component, because it's trivial.
-	requires <*:CS_RevealEncounter_Raiders !Ne>
-	Size 2
-
-	% E1 is the outdoor scene where the encounter is
-	% E2 is the MetaScene being sought
-	% E3 is a local public scene
-	% E4 is a trucker or adventurer who can tell where the raiders are.
-	Element3 <Scene Public !Near -7>
-	Element4 <Character (Trucker|ADVEN) HasMecha !Near 3 !XClude -2 !Okay -3 -ArchEnemy NeverFail>
-	NeverFail4 <Trucker>
-
-	%% FAIL CONDITIONS:
-	%%  - E4 dies before revealing the secret
-
-	start <ifNPCDead %4% LoseSubPlot %plotid%>
-
-	sub
-		Persona 4
-		rumor%id% <%name4% had a run-in with some mysterious mecha a little while ago.>
-		*greeting <*IHaveInformation GoSpiel na>
-		GoSpiel <NewChat Say 1 PMemo %plotid% 2 SetEncounterActive %2% WinSubPlot %plotid%>
-		Msg1 <When I was traveling through %name1% recently I was attacked by raiders. I think they were the same mecha you're looking for, and if you hurry back you might be able to find them.>
-		Msg2 <%name4% told you that the raiders are in %name1%.>
-	end
-
-Content
->>>>>>> .r412
 	name <Ranger's Delight>
 	desc <You encounter a small group of raiders, and can track them to base.>
 	%% How you track someone in space I'm not really sure. Minovsky particles?
@@ -1152,6 +1120,7 @@ Content
 	inv
 		NPC Mecha Pilot
 		chardesc Young Cheerful
+		job_desig <MOOK_>
 	end
 
 Content
@@ -1214,35 +1183,60 @@ Content
 		result%id%09 <ifG React d8 else GoThreat      NewChat Say %id%13 StoryNote %id%14 XPV 100 &%id%_RevealEncounter>
 		result%id%10 <EndCHat Say %id%15 Goto GoRaiderFlees>
 		Msg%id%01 <Yeah, what do you want?>
+		Msg%id%01_1 <Go ahead, spit it out. What do you want?>
+		Msg%id%01_2 <Is there a reason why you're staring at me like that?>
 		Msg%id%02 <Bad things happen to people who ask too many questions around here. I'd suggest you get out of my face before bad things happen to you.>
+		Msg%id%02_1 <Let me give you some advice- people who ask questions about my employer end up dead, and that goes double for people who piss me off while doing it.>
+		Msg%id%02_2 <You're asking about dangerous things. I suggest you take this friendly warning and get the blazes out of my face.>
 		Msg%id%03 <Could be. Why do you care?>
+		Msg%id%03_1 <Sounds possible. Why are you so interested?>
+		Msg%id%03_2 <May be. So what?>
 		Msg%id%04 <I don't know... I'm not the one who makes that kind of decision. You'd have to talk to the boss.>
+		Msg%id%04_1 <You'd have to ask the boss about that. I don't make any hiring decisions... or any decisions at all, really.>
 		Msg%id%05 <If you don't have anything to say then keep away from me.>
+		Msg%id%05_1 <If you've got nothing to say then keep it to yourself, jerk.>
 		Msg%id%06 <%name4% leaves the area.>
 		Msg%id%07 <%name4% left before you could learn where the raiders were.>
 		Msg%id%08 <Not if I keep an eye on you first... or something. I'm outta here.>
+		Msg%id%08_1 <Not if I see you coming. Later.>
 		Msg%id%09 <You're gonna die!>
 		Msg%id%10 <Hey, no need for that... if you're seriously looking for them, the team I'm signed on with is assembling at %name1%. As for me, I'm gonna go somewhere very far away...>
+		Msg%id%10_1 <Did I say I wanted a fight? I was just talking, you know, rhetorically. The gang I'm signed on with is meeting at %name1%... just don't let them know that I'm the one who told.>
 		Msg%id%11 <You intimidated %name4% into revealing that the raiders are at %name1%.>
 		Msg%id%12 <You've got a lot of nerve... some day that's gonna end up getting you killed.>
+		Msg%id%12_1 <You're either very brave or very stupid. My money's on stupid.>
 		Msg%id%13 <They're gathering in %name1% right now. I should probably get going myself but I'm still a little drunk... Yeah, just tell them %name4% sent you.>
+		Msg%id%13_1 <You should be able to find the whole gang in %name1%. Don't worry about the interview- the written part's a bit tricky but overall it's a breeze.>
+		Msg%id%13_2 <We're supposed to meet up in %name1%. I'm gonna be a little bit late, myself, but when you get there you can tell the other guys that I'm on the way.>
 		Msg%id%14 <You fooled %name4% into revealing that the raiders are at %name1%.>
 		Msg%id%15 <Yeah, well, I gotta go. We've got a big mission coming up... There's gonna be a real big boom.>
+		Msg%id%15_1 <Whatever, I've gotta go meet up with the lance. We've got a big mission underway.>
 		Msg%id%16 <%name4% left before you could learn where the raiders are, but you may still be able to find \OPR %4% nearby.>
 		Prompt%id%01 <I know that you're with the raiders.>
+		Prompt%id%01_1 <They say you work for the raiders.>
 		Prompt%id%02 <I'm looking for work; you know of anything?>
-		CPrompt%id%02 <ifG PCKnowledge 14 Accept>
+		CPrompt%id%02 <ifInsight SkillTar StoryDL Accept>
+		Prompt%id%02_1 <I've been looking for a job. Do you know of anything?>
 		Prompt%id%03 <Nothing...>
+		Prompt%id%03_1 <Never mind...>
 		Prompt%id%04 <I'll be keeping an eye on you, %name4%.>
+		Prompt%id%04_1 <You haven't seen the last of me, yet...>
 		Prompt%id%05 <You think I'm scared? Come on, let's settle this now.>
+		Prompt%id%05_1 <If you're so eager to die we can settle this now.>
 		Prompt%id%06 <Tell me where I can find them.>
+		Prompt%id%06_1 <Tell me where I can find your boss.>
 		Prompt%id%07 <I was hoping to get a job with them.>
+		Prompt%id%07_1 <Honestly, I was hoping to sign up with them myself.>
 		Prompt%id%08 <I intend to destroy them.>
+		Prompt%id%08_1 <I'm going to destroy them.>
 		Prompt%id%09 <Alright. Where can I find this boss?>
+		Prompt%id%09_1 <So where would I find this boss?>
 		Prompt%id%10 <Never mind, then.>
+		Prompt%id%10_1 <Never mind.>
 	end
 	inv
 		NPC Mecha Pilot
+		job_desig <MOOK_>
 		Knowledge 7
 		Body 15
 

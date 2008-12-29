@@ -1,4 +1,5 @@
 % TYPE: *NiceToMeetYou
+%	&NoTrivial - A conversation must be involved, don't just jump to %1%
 %  The PC is meeting someone presumably for the first time.
 %  PARAM1: Exit script label
 
@@ -179,11 +180,11 @@
 
 
 	Persona
-	requires <*NiceToMeetYou ~Shy>
+	requires <*NiceToMeetYou ~Shy -&NoTrivial>
 	START <Goto %1%>
 
 	Persona
-	requires <*NiceToMeetYou Shopkeeper Heroic Ego>
+	requires <*NiceToMeetYou Shopkeeper Heroic Ego -&NoTrivial>
 	Start <if= V%id%01 0 else %1% ifG 0 PCRep 1 else %1% NewChat Say %id%01 AddChat %id%01 AddChat %id%02>
 	result%id%01 <ifIntimidation NPCEgo ChatNPCID else .%id%_GoFail NewChat Say %id%04 AddChat %id%03>
 	.%id%_GoFail <NewChat Say %id%03>
@@ -212,7 +213,7 @@
 	Prompt%id%02_1 <Everybody dies sometime.>
 
 	Persona
-	requires <*NiceToMeetYou Executive>
+	requires <*NiceToMeetYou Executive -&NoTrivial>
 	Start <ifCHatNPCUnknown else %1% if# 0 ChatNPCFac else %1% NewChat Say %id%01 AddChat %id%01 AddChat %id%02 AddChat %id%03>
 	result%id%01 <Goto %1%>
 	result%id%02 <AddSociable -d6  Goto %1%>
@@ -423,7 +424,7 @@
 	Prompt%id%04_1 <Wish I could say the same...>
 
 	Persona
-	requires <*NiceToMeetYou Villainous>
+	requires <*NiceToMeetYou Villainous -&NoTrivial>
 	START <if= V%id%01 0 else .%id%_GoSecond V= %id%01 1 EndChat Say %id%01>
 	.%id%_GoSecond <if= V%id%01 1 else %1% V= %id%01 2 EndChat Say %id%02 AddChat %id%01>
 	result%id%01 <Goto %1%>
@@ -432,7 +433,7 @@
 	Prompt%id%01 <[more]>
 
 	Persona
-	requires <*NiceToMeetYou ShopKeeper Young>
+	requires <*NiceToMeetYou ShopKeeper Young -&NoTrivial>
 	START <if= V%id%01 0 else %1% V= %id%01 1 EndChat Say %id%01 AddChat %ID%01>
 	result%id%01 <Goto %1%>
 	Msg%id%01 <Welcome to my store. Sorry about the mess... We're just moving in, so things are a bit cluttered.>

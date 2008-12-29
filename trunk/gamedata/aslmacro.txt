@@ -46,6 +46,7 @@ PCSkill+ <GrabPCPilot GAddNAtt NAG_Skill ? ?>
 PCSTAT+ <GrabPCPilot GAddStat ? ?>
 PCSTAT= <GrabPCPilot GSetStat ? ?>
 NPCSTAT= <GrabNPC ? GSetStat ? ?>
+NPCSTAT+ <GrabNPC ? GAddStat ? ?>
 PCENEMY <GrabNPC ?  GSetNAtt NAG_Relationship 0 NAV_ArchEnemy>
 PCFENEMY <GrabFaction ?  GSetNAtt NAG_Relationship 0 NAV_ArchEnemy>
 PCALLY <GrabNPC ?  GSetNAtt NAG_Relationship 0 NAV_ArchAlly>

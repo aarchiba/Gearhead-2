@@ -255,6 +255,92 @@ Content
 %%  trigger need be called.
 
 Content
+	name <I Got Better>
+	desc <A NPC will offer the PC some help.>
+	requires <*:CS_GainAdvantageVsMecha &Reinforcements (!Ne|!Lo)>
+
+	% E1 is a hospital
+	% E2 is a mercenary
+	% E3 is the doctor
+	Element1 <Scene Hospital !Near -7>
+	Element2 <Character (Mercenary|ADVEN|MILIT) !XClude -2 !Okay -3 -ENEMY !Near 1 NeverFail>
+	NeverFail2 <Mercenary>
+	Place2 <1 SD ally>
+	Element3 <Character MEDIC !Near 1 NeverFail>
+	NeverFail3 <Doctor>
+	Place3 <1 pass ally>
+
+	% P%id%01 = Have spoken to E2
+
+	% If either E2 or E3 dies, this subplot concludes
+	start <ifNPCOK %2% else .%id%_GoLoseAdvantage ifNPCOK %3% else .%id%_GoLoseAdvantage>
+	.%id%_GoLoseAdvantage <LoseSubPlot %plotid%>
+
+	sub
+		Persona 2
+		rumor%id% <%name2% is resting in the hospital after a nasty fight.>
+		% V1 = Have revealed solution to E2
+		greeting <if= V1 1 else GoCheckQuest NewChat Say 5>
+		GoCheckQuest <ifG p%id%01 0 else GoCheckChat NewChat Say 6 AddChat 3>
+		GoCheckChat <if# PlotStatus %plotid% %id% else GoFirstTime NewChat SayAnything>
+		*GoFirstTime <*YouCouldUseHelp GoMakeOffer>
+		GoMakeOffer <NewChat Say 1 AddChat 1 AddChat 2>
+		result1 <NewChat Say 2 PMemo %plotid% 3 P= %id%01 1 >
+		result2 <NewChat Say 4>
+		result3 <NewChat Say 7 V= 1 1>
+		Msg1 <Well, I wish I could help you, since it's those raiders you're after who put me in the hospital.>
+		Msg2 <I'm not allowed to leave the hospital until I'm better... That's what %name3% says, anyways. The doctors have even locked up my mecha so I can't try to escape!>
+		Msg3 <%name2% would like to help you against the raiders, but can't leave the hospital until %name3% says \SPR %2% 's better.>
+		Msg4 <Yeah, me too... I've got to get back to work so I can start paying off my hospital bills.>
+		Msg5 <Good luck against the raiders! I'll be rooting for you from my hospital bed.>
+		Msg6 <I wish I could help you, but it looks like I'll be stuck here for a while.>
+		Msg7 <Really? That's great! When you find those raiders, give them an extra kick for me!>
+		Prompt1 <Why can't you help me?>
+		Prompt2 <Well, I hope you feel better soon.>
+		Prompt3 <%name3% says \SPR %3% can find me some reinforcements.>
+		CPrompt3 <if= P%id%01 2 Accept>
+
+		Persona 3
+		% V4 = Have tried Prompt4
+		% V6 = Have tried Prompt6
+		greeting <if= p%id%01 1 else GoOpenShop if= PlotStatus %plotid% %id% else GoOpenShop  NewChat Say 1 AddChat 1 AddChat 2 AddCHat 3>
+		*GoOpenShop <*SERVICE_DOCTOR GoBye>
+		*GoBye <*GOODBYE>
+		result1 <ifConversation SkillTar StoryDL else GoR1Fail NewChat Say 2 AddChat 4 AddChat 5 AddChat 6>
+		GoR1Fail <NewChat Say 3>
+		result2 <NewChat Say 4 AddCHat 7>
+		result3 <EndChat Say 5 shop .%id%_wares Goto GoBye>
+		.%id%_wares <MEDICINE>
+		result4 <NewChat Say 6 V= 4 1 AddChat 5 AddChat 6>
+		result5 <NewChat Say 7 AddChat 8>
+		result6 <NewChat Say 8 V= 6 1 AddChat 4 AddChat 5>
+		result7 <NewChat Say 9 History 10 PMemo %plotid% 0 P= %id%01 2 WinSubPlot %plotid% Trigger0 .%id%_%plotid%_GoReinforcements>
+		result8 <Goto result7>
+		Msg1 <Hello, welcome to %name1% . How may I be of assistance?>
+		Msg2 <Oh no, \SPR %2% hasn't recruited you the cause as well, has \SPR %2% ? %name2% needs some rest, and \SPR %2% 's not going to get it out there running around in a giant robot.>
+		Msg3 <%name2%? I don't want to hear it! All week \SPR %2% 's had people in here bugging me to let \OPR %2% go. It didn't work then and it's not going to work now!>
+		Msg4 <Why, yes, we have been treating a lot of pilots... There's a gang of raiders in town and they've defeated everyone they've met so far.>
+		Msg5 <Tell me where it hurts, and I'll tell you if we can fix it.>
+		Msg6 <%name2% is covered by insurance; \SPR %2% can stay here for as long as we think it's necessary.>
+		Msg7 <Aha, I think I know the raiders you're talking about. We've had a lot of pilots come in who got beaten by them. If I got in contact with some of them, I'm sure they'd be more than willing to help you out.>
+		Msg8 <Because \SPR %2% won't take a rest at home, \SPR %2% 'll be out there looking for fights instead! I wouldn't have locked up %name2%'s equipment if I thought I could trust \OPR %2% .>
+		Msg9 <Just leave everything to me. When you finally track down those raiders, you'll have a bunch of pilots hungry for revenge on your side.>
+		Msg10 <You obtained help from some pilots previously defeated by the raiders.>
+		Prompt1 <I'd like to talk about %name2%'s release.>
+		CPrompt1 <ifNPCOK %2% Accept>
+		Prompt2 <Tell me, have you had a lot of pilots in recently?>
+		CPrompt2 <ifInsight SkillTar StoryDL Accept>
+		Prompt3 <I need some medical help.>
+		Prompt4 <%name2% needs to earn money to pay \PPR %2% bills.>
+		CPrompt4 <if= V4 0 Accept>
+		Prompt5 <I need \PPR %2% help to fight some raiders.>
+		Prompt6 <Why can't \SPR %2% take a rest at home?>
+		CPrompt6 <if= V6 0 Accept>
+		Prompt7 <Think you could put me in contact with some of these pilots?>
+		Prompt8 <That'd be great!>
+	end
+
+Content
 	name <Mercenary Fighters>
 	desc <A NPC can be hired to help the PC>
 	requires <*:CS_GainAdvantageVsMecha &Reinforcements -!Ne>
@@ -303,7 +389,7 @@ Content
 	name <Corporate Sponsorship>
 	desc <A corporation will offer to sponsor the PC.>
 	requires <*:CS_GainAdvantageVsMecha (F:--|F:CRIME|F:CORPO) (P:--|P:PDASS)>
-	changes <P:>
+	changes <P:++>
 
 	% E1 is a public scene
 	% E2 is the corporate character to make the offer

@@ -740,7 +740,7 @@ Content
 		*GoOfferQuest <*ENEMY_CHECK GoRealOffer 9 na>
 		% If the PC has accepted the job offer from E2, giving the Bac-Bomb to E2 will be
 		% a bit of a letdown.
-		GoRealOffer <if= QuestStatus %qid% %id% else GoPlainOffer NewChat Say 4 AddChat 4>
+		GoRealOffer <if= QuestStatus %qid% %id% else GoPlainOffer NewChat Say 4 AddChat 4 AddChat 8>
 		GoPlainOffer <NewChat Say 6 AddChat 5 AddChat 6>
 		result1 <FreezeNPC %1% PCEnemy %1% History 2 DeleteItem %5% AddLawful 1 Goto .%id2%_GoInit>
 		result2 <NewChat Say 3>
@@ -750,6 +750,7 @@ Content
 		result5 <NewChat Say 7 QMemo %qid% 8 V= 1 1 SetQuestStatus %qid% %id% AddChat 7>
 		result6 <NewChat Say 9>
 		result7 <NewChat Say 10>
+		result8 <NewChat Say 11>
 		Msg1 <Have you collected any evidence against %name1% yet?>
 		Msg2 <You helped %name2% stop %name1% from attacking CometBurger HQ.>
 		Msg3 <Well then, see what you can manage.>
@@ -760,16 +761,19 @@ Content
 		Msg8 <%name2% sent you to find evidence that %name1% in \SCENE %s1% is planning an attack against CoometBurger.>
 		Msg9 <Good. It's nice to know that we have the trust of the public.>
 		Msg10 <Reports indicate that \OPR %1% can be found at \SCENE %s1% . Good luck.>
+		Msg11 <Great! Come to the CometBurger building so I can examine it myself.>
 		Prompt1 <I have \PPR %1% Bac-Bomb right here.>
 		CPrompt1 <ifKeyItem %5% ifChatNPCInPlay Accept>
 		Prompt2 <Still working on that.>
 		Prompt3 <I think the evidence has been destroyed.>
 		CPrompt3 <ifItemDestroyed %5% Accept>
 		Prompt4 <I have some evidence. [give Bac-Bomb]>
-		CPrompt4 <ifKeyItem %5% ifChatNPCInPlay Accept>
+		CPrompt4 <ifKeyItem %5% if= SceneID %s2% Accept>
 		Prompt5 <Is there anything i could do to help?>
 		Prompt6 <I'm not too worried about it.>
 		Prompt7 <Where can I find %name1%?>
+		Prompt8 <I have some evidence.>
+		CPrompt8 <ifKeyItem %5% if# SceneID %s2% Accept>
 
 		MetaScene 1
 		start <if= QuestStatus %qid% %id% else %pop% ifNPCDead %1% else %pop% ifNPCDead %2% else %pop% SetQuestStatus %qid% -2 Goto %pop%>

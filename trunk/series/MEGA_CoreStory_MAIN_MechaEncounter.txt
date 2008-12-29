@@ -24,6 +24,95 @@
 %%  ********************************
 
 Content
+	name <Plague of Bandits>
+	size 8
+	desc <Defend an allied cruiser from bandits; find out this has been happening quite often.>
+	requires <*:CS_MechaEncounter +P-- (P:CORPO|F:CRIME)>
+	changes <+P>
+
+	% E1 is the outdoors scene where this encounter will be placed
+	% E2 is the metascene to be used for this encounter
+	% E3 is a local public scene
+	% E4 is a trucker to be used in the exposition
+	Element3 <Scene Public !Near -7>
+	Element4 <Character Trucker !Okay -3 !XClude -2 !Near 3 NeverFail>
+	NeverFail4 <Trucker>
+	Place4 </>
+
+	% P%id%01 = Initialization Counter
+	% P%id%02 = Have gained reinforcements
+	% P%id%03 = Have gained decimation
+	update <if= V%id%01 0 V= %id%01 1   SetPlotStatus %plotid1% %id1%>
+
+	.%id1%_%plotid1%_GoReinforcements <P= %id%02 1>
+	.%id1%_%plotid1%_GoDecimation     <P= %id%03 1>
+
+	% SubPlot1 = Gain Advantage vs Raiders
+	SubPlot1 <*:CS_GainAdvantageVsMecha&Decimation&Reinforcements>
+
+	sub
+		MetaScene 2 2
+		% L1 = Encounter Over Counter
+		% L2 = Initialization Counter
+		MapWidth 50
+		MapHeight 50
+
+		Start <if= L2 0 L= 2 1   Alert 1  History 2  Monologue %4% 7  AlterContext .changes  CancelSubPlot %plotid1% if# P%id%02 0 Alert 6>
+		.changes <+Pun>
+		nu1 <if= T1 0   Return   if= V1 0 V= 1 1 Alert 3 History 4 Trigger0 .%id%_%plotid%_GoLoss LoseSubPlot %plotid%>
+		nu2 <if= T2 0   if= V1 0 V= 1 1 ifG T3 0 else GoLoseMission  Alert 5  XPV 100  Salvage  Return  Trigger0 .%id%_%plotid%_GoWin WinSubPlot %plotid%>
+		GoLoseMission <Alert 4 History 4 Trigger0 .%id%_%plotid%_GoLoss LoseSubPlot %plotid%>
+		end <SetEncounterInactive %2%   MoveNPC %4% %3%>
+		Msg1 <You find a cargo ship under attack by bandits. Its captain, %name4%, contacts you.>
+		Msg2 <You found a cargo ship under attack by bandits.>
+		Msg3 <Without your protection, the cargo ship quickly falls to the bandits.>
+		Msg4 <You failed to protect the cargo ship.>
+		Msg5 <With the bandits gone, %name4% continues safely to \PPR %4% destination.>
+		Msg6 <Your reinforcements are here, as promised.>
+		Msg7 <I could use some help dealing with these raiders- it seems that lately we've been getting far more attacks than usual.>
+
+		sub
+			team 1
+			SetEnemy 2
+			SetAlly 3 4
+			ParaX 15
+			ParaY 25
+
+			team 2
+			SetEnemy 1 3 4
+			Deploy <if= PlotStatus %plotid% %id% SetSelfFaction &EnemyFac   if= p%id%03 0 else GoSmallDeploy WMecha 2 StoryDL 180>
+			GoSmallDeploy <WMecha 2 StoryDL 100>
+			ParaX 45
+			ParaY 25
+
+			team 3
+			name <Cruiser Team>
+			setenemy 2
+			setally 1 4
+
+			team 4
+			name <Allies>
+			setenemy 2
+			setally 1 3
+			home <Cruiser Zone>
+			Deploy <if= PlotStatus %plotid% %id% if# p%id%02 0  WMecha 4 StoryDL 80>
+
+			rect
+			name <Cruiser Zone>
+			special <SubZone>
+			width 12
+			height 12
+			MFX 1
+			MFY 19
+			sub
+				SuperProp
+				requires <*Cruiser>
+				SetTeam 3
+			end
+		end
+	end
+
+Content
 	name <Capture Weapons Shipment>
 	size 7
 	desc <Capture an enemy cruiser, learn they're working on a weapons program.>
@@ -380,7 +469,7 @@ Content
 	%% villain. I mean, how would you feel if Sanrio were trying to kill you? Actually, that does sound pretty
 	%% terrifying... In any case this component will help to cement their reputation as the newest and to-date
 	%% least respected of the L5 mecha corporations.
-	changes <F: E:M>
+	changes <F:++ E:M>
 
 	% E1 is the outdoors scene where this encounter will be placed
 	% E2 is the encounter
@@ -1068,7 +1157,7 @@ Content
 	size 8
 	desc <Your enemy has been hired by a pirate captain.>
 	requires <*:CS_MechaEncounter E:++ F:-- -!Ne (L:FCOMS|L:MAQUI|L:RISHI) ~E:THIEF ~E:M.mer ~C:POLIC ~P:POLIC ~P:SILKN ~P:ROCKE>
-	changes <F:>
+	changes <F:++>
 
 	% E1 is the outdoors scene where this encounter will be placed
 	% E2 is the metascene to be used for this encounter

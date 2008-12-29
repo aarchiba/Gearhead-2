@@ -304,10 +304,188 @@ end
 %%  rather than destroyed.
 
 SuperProp
-requires <*CRUISER>
+requires <*CRUISER !Ne>
+% =#>
+Width 3
+Height 1
+inv
+	Prop 10
+	name <Engine>
+	SDL_SPRITE <tex_spaceship_engine.png>
+	SetTeam 3
+	Mesh 9
+	XPos 0
+	YPos 0
+	Dir 0
+
+	Prop 10
+	name <Hull>
+	SetTeam 1
+	SDL_SPRITE <tex_spaceship_body.png>
+	Mesh 5
+	XPos 1
+	YPos 0
+
+	STC SS-CANNON-0
+	SetTeam 2
+	XPos 2
+	YPos 0
+	Mesh 6
+	Dir 0
+end
+
+SuperProp
+requires <*CRUISER !Lo>
+%  /
+% =##>
+%  \
+Width 4
+Height 3
+inv
+	Prop 10
+	name <Engine>
+	SDL_SPRITE <tex_spaceship_engine.png>
+	SetTeam 3
+	Mesh 9
+	XPos 0
+	YPos 1
+	Dir 0
+
+	Prop 10
+	name <Hull>
+	SetTeam 1
+	SDL_SPRITE <tex_spaceship_body.png>
+	Mesh 5
+	XPos 1
+	YPos 1
+
+	Prop 10
+	name <Hull>
+	SetTeam 1
+	SDL_SPRITE <tex_spaceship_body.png>
+	Mesh 5
+	XPos 2
+	YPos 1
+
+	Prop 10
+	name <Hull>
+	SDL_SPRITE <tex_spaceship_body.png>
+	SetTeam 1
+	XPos 3
+	YPos 1
+	Mesh 6
+	Dir 0
+
+	STC SS-CANNON-0
+	SetTeam 2
+	XPos 1
+	YPos 0
+	Dir 4
+
+	STC SS-CANNON-0
+	SetTeam 2
+	XPos 1
+	YPos 2
+	Dir 
+end
+
+SuperProp
+requires <*CRUISER !Md>
+% =#>
+% <t#>
+% =#>
+Width 4
+Height 3
+inv
+	Prop 10
+	name <Engine>
+	SDL_SPRITE <tex_spaceship_engine.png>
+	SetTeam 3
+	Mesh 9
+	XPos 0
+	YPos 0
+	Dir 0
+
+	Prop 10
+	name <Engine>
+	SDL_SPRITE <tex_spaceship_engine.png>
+	SetTeam 3
+	Mesh 9
+	XPos 0
+	YPos 2
+	Dir 0
+
+	Prop 10
+	name <Hull>
+	SetTeam 1
+	SDL_SPRITE <tex_spaceship_body.png>
+	Mesh 5
+	XPos 1
+	YPos 0
+
+	Prop 10
+	name <Hull>
+	SetTeam 1
+	SDL_SPRITE <tex_spaceship_body.png>
+	Mesh 5
+	XPos 2
+	YPos 1
+
+	Prop 10
+	name <Hull>
+	SetTeam 1
+	SDL_SPRITE <tex_spaceship_body.png>
+	Mesh 5
+	XPos 1
+	YPos 2
+
+	Prop 10
+	name <Bridge>
+	SetTeam 1
+	SDL_SPRITE <tex_spaceship_body.png>
+	Mesh 8
+	XPos 1
+	YPos 1
+
+	Prop 10
+	name <Hull>
+	SDL_SPRITE <tex_spaceship_body.png>
+	SetTeam 1
+	XPos 3
+	YPos 1
+	Mesh 6
+	Dir 0
+
+	Prop 10
+	name <Hull>
+	SDL_SPRITE <tex_spaceship_body.png>
+	SetTeam 1
+	XPos 0
+	YPos 1
+	Mesh 6
+	Dir 4
+
+	STC SS-CANNON-0
+	SetTeam 2
+	Mesh 6
+	XPos 2
+	YPos 0
+	Dir 0
+
+	STC SS-CANNON-0
+	SetTeam 2
+	Mesh 6
+	XPos 2
+	YPos 2
+	Dir 0
+end
+
+
+SuperProp
+requires <*CRUISER -!ne -!lo -!md>
 %	 /
 %	=#>
-%	 T##>
+%	<T##>
 %	=#>
 %	 \
 Width 5
@@ -422,7 +600,7 @@ inv
 	SetTeam 2
 	XPos 1
 	YPos 4
-	Dir 
+	Dir 0
 end
 
 

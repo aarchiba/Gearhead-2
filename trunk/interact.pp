@@ -887,7 +887,8 @@ begin
 
 	FID := NAttValue( NPC^.NA , NAG_Personal , NAS_FactionID );
 	Fac := SeekFaction( Adv , FID );
-	if Fac <> Nil then it := it + ' ' + SATtValue( Fac^.SA , 'DESIG' ) + ' ' + SATtValue( Fac^.SA , 'CONTEXT' );
+	if Fac <> Nil then it := it + ' ' + SATtValue( Fac^.SA , 'DESIG' ) + ' ' + SATtValue( Fac^.SA , 'CONTEXT' )
+	else it := it + ' NOFAC';
 	if ( FID <> 0 ) and ( FID = NAttValue( Adv^.NA , NAG_Personal , NAS_FactionID ) ) then it := it + ' PCFAC';
 
 	it := QuoteString( it );

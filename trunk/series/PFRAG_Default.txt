@@ -1435,14 +1435,14 @@ Prompt%id%03_2 <Probably fight somebody. No idea who yet.>
 %  PARAM1: Faction ID
 	Persona
 	requires <*FACTION_JOIN_ACCEPT>
-	START <NewChat Say %id%01 RandomMecha .%id%_mecha PCRenown XPV 200 CashPrize 150000 SetPCFac %1% History %id%02>
+	START <NewChat Say %id%01 RandomMecha .%id%_mecha 10 XPV 100 CashPrize 150000 SetPCFac %1% History %id%02>
 	.%id%_mecha <GENERAL \FACTION_DESIG %1%>
 	Msg%id%01 <Great! To start with, you'll recieve a basic mecha and an equipment allowance. Welcome to \FACTION %1% .>
 	Msg%id%02 <You joined \FACTION %1% .>
 
 	Persona
 	requires <*FACTION_JOIN_ACCEPT SILKN>
-	START <NewChat Say %id%01 randommecha .%id%_mecha PCRenown XPV 200 CashPrize 150000 SetPCFac %1% History %id%02>
+	START <NewChat Say %id%01 randommecha .%id%_mecha 10 XPV 100 CashPrize 150000 SetPCFac %1% History %id%02>
 	.%id%_mecha <GENERAL SILKN>
 	Msg%id%01 <Welcome to the force. You'll need a mecha, of course... Most of our recruits learn how to fly in a Trailblazer. Now get out there and see if there are any missions waiting.>
 	Msg%id%02 <You joined \FACTION %1% .>
@@ -1473,21 +1473,27 @@ Prompt%id%03_2 <Probably fight somebody. No idea who yet.>
 %  PARAM2: Faction to maybe join
 	Persona
 	requires <*FACTION_ENTRANCE_EXAM>
-	START <ifG PCRenown 19  else .%id%_GoFail     ifG React 0 else .%id%_GoFail     Goto %1%>
+	START <ifG PCRenown 9  else .%id%_GoFail     ifG React 0 else .%id%_GoFail     Goto %1%>
 	.%id%_GoFail <NewChat Say %id%01>
 	Msg%id%01 <We're looking for some talented recruits. Unfortunately, there's nobody like that around here...>
 
 	Persona
 	requires <*FACTION_ENTRANCE_EXAM SILKN>
-	START <ifG PCRenown 20  else .%id%_GoFail     ifG PCRep 1 1  else .%id%_GoFail  ifG PCRep 2 -1  else .%id%_GoFail   Goto %1%>
+	START <ifG PCRenown 10  else .%id%_GoFail     ifG PCRep 1 1  else .%id%_GoFail  ifG PCRep 2 -1  else .%id%_GoFail   Goto %1%>
 	.%id%_GoFail <NewChat Say %id%01>
 	Msg%id%01 <There are many who want to join the Silver Knights, but only those of both the highest ability and purest virtue are accepted.>
 
 	Persona
-	requires <*FACTION_ENTRANCE_EXAM Corporate>
-	START <V= %id%01 PCRep 6 V+ %id%01 React ifG PCRep 6 0  else .%id%_GoFail     ifG V%id%01 50 else .%id%_GoFail     Goto %1%>
+	requires <*FACTION_ENTRANCE_EXAM POLIC>
+	START <ifG PCLaw 10  else .%id%_GoFail     ifG PCRenown 1  else .%id%_GoFail     Goto %1%>
 	.%id%_GoFail <NewChat Say %id%01>
-	Msg%id%01 <I've been asked to find some new recruits for \FACTION %2% .>
+	Msg%id%01 <To serve the law is the highest calling a person can choose.>
+
+	Persona
+	requires <*FACTION_ENTRANCE_EXAM CORPO>
+	START <V= %id%01 PCRenown V+ %id%01 React     ifG V%id%01 25 else .%id%_GoFail     Goto %1%>
+	.%id%_GoFail <NewChat Say %id%01>
+	Msg%id%01 <I've been asked to find some new recruits for \FACTION %2% . Unfortunately, I can't find anyone I like.>
 
 
 % TYPE: *ENEMY_CHECK

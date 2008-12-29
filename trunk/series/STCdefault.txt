@@ -1623,6 +1623,31 @@ end
 % ***  SPACESHIP PARTS  ***
 % *************************
 
+CombatProp 10
+name <Cannon Mount>
+Desig <SS-CANNON-0>
+SDL_SPRITE <tex_spaceship_body.png>
+Mesh 7
+Scale 2
+Skill 6 10
+Skill 12 9
+Skill 17 15
+Skill 18 10
+sub
+	Turret
+	size 3
+	armor 3
+	sub
+		BeamGun 2
+		Scale 2
+		name <Particle Cannon>
+		type <OVERLOAD ANTIAIR>
+		Range 7
+		ACC 1
+		Recharge 4
+	end
+end
+
 CombatProp 15
 name <Cannon Mount>
 Desig <SS-CANNON-1>

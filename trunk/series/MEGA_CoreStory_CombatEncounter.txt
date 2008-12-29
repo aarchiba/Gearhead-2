@@ -243,6 +243,7 @@ Plot
 
 	sub
 		MetaScene 2 2
+		rumor%id% <there's been fighting in %name1%.>
 		% L1 = Encounter Over Counter
 		% L2 = Initialization Counter
 		MapWidth 30
