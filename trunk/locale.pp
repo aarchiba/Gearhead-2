@@ -368,12 +368,35 @@ Const
 	LOCALE_CollectTriggers: Boolean = True;
 
 	TERRAIN_OpenGround = 1;
+	TERRAIN_LightFOrest = 2;
+	TERRAIN_HeavyForest = 3;
+	TERRAIN_L1_Water = 4;
+	TERRAIN_Rubble = 5;
+
+	TERRAIN_Pavement = 6;
+	TERRAIN_Swamp = 7;
+	TERRAIN_L1_Hill = 8;
+	TERRAIN_L2_Hill = 9;
+	TERRAIN_L3_Hill = 10;
+
+	TERRAIN_RoughGround = 11;
+	TERRAIN_LowWall = 12;
 	TERRAIN_Wall = 13;
 	TERRAIN_Floor = 14;
 	TERRAIN_Threshold = 15;
+
+	TERRAIN_Carpet = 16;
+	TERRAIN_L2_Water = 17;
+	TERRAIN_L3_Water = 18;
+	TERRAIN_WoodenFloor = 19;
+	TERRAIN_WoodenWall = 20;
+
+	TERRAIN_TileFloor = 21;
+	TERRAIN_Wreckage = 22;
 	TERRAIN_Space = 23;
 	TERRAIN_MediumBuilding = 24;
 	TERRAIN_HighBuilding = 25;
+
 	TERRAIN_GlassWall = 26;
 	TERRAIN_LowBuilding = 27;
 

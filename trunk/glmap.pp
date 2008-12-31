@@ -64,6 +64,7 @@ var
 
 	Focused_On_Mek: GearPtr;
 
+Function ScreenDirToMapDir( D: Integer ): Integer;
 
 Function SpriteColor( GB: GameBoardPtr; M: GearPtr ): String;
 
@@ -137,6 +138,12 @@ var
 	Camera_Crane_Height: Array [LowZoom..HiZoom] of GLFloat;
 	Current_Tileset: Integer;
 	Current_Backdrop: GLUInt;
+
+Function ScreenDirToMapDir( D: Integer ): Integer;
+	{ Convert the requested screen direction to a map direction. }
+begin
+	ScreenDirToMapDir := ( D + DirOffset[ origin_d ] + 6 ) mod 8;
+end;
 
 Procedure DrawTree( Tree_Tex: Integer; H: GLFloat );
 	{ Draw a tree with its base centered on the origin. }

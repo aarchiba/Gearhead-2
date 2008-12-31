@@ -873,8 +873,46 @@ Plot
 	end
 
 Plot
+	name <Incidental Phone Job Offer>
+	desc <The PC has to talk with someone; here it is!>
+	requires <#A +Tgt (+F--|+Fmi) T:PCFAC S:-->
+
+	% E1 is the scene where this component will take place
+	% E2 is the NPC that the PC will speak with
+	element1 <Scene Building Public !Near -7 !Okay -5>
+	element2 <Grab 5>
+	Place2 <1 (Citizens) pass>
+
+	% All this plot does is move the NPC and activate the conversation subplot
+	update <if= PlotStatus %plotid% 0 SetPlotStatus %plotid% %id1%>
+
+	%% SubPlot1 is the mission to be had
+	SubPlot1 <*CS_GiveMission 2>
+
+Plot
+	name <Incidental Job Offer>
+	desc <The PC is going to see someone for no particular reason, and they have a mission.>
+	requires <#A +Tgt +F-- T:PCFAC S:++>
+
+	% E1 is the scene where this component will take place
+	% E2 is the NPC that the PC will speak with
+	element1 <Grab 6>
+	element2 <Grab 5>
+	Place2 <1 (Citizens) pass>
+
+	% All this plot does is move the NPC and activate the mission subplot
+	update <if= PlotStatus %plotid% 0 SetPlotStatus %plotid% %id1%>
+
+	%% SubPlot1 is the mission to be offered
+	SubPlot1 <*CS_GiveMission 2>
+
+	sub
+		STC MS_OFFICE
+		SetID 1
+	end
+
+Plot
 	name <Phone Conversation>
-name <DEBUG>
 	desc <The PC has to talk with someone; here it is!>
 	requires <#A +Tgt (+F--|+Fin) S:-- Common>
 

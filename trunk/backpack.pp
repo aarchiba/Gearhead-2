@@ -2200,7 +2200,7 @@ begin
 	until N < 0;
 {$IFNDEF ASCII}
 {$IFDEF CUTE}
-
+	CleanSpriteList;
 {$ELSE}
 	CleanTexList;
 {$ENDIF}

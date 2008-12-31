@@ -1426,7 +1426,7 @@ begin
 	repeat
 {$IFNDEF ASCII}
 {$IFDEF CUTE}
-
+		CleanSpriteList;
 {$ELSE}
 		CleanTexList;
 {$ENDIF}

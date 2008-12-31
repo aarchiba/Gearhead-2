@@ -42,10 +42,12 @@ var
 
 	Model_Map: Array [1..MaxMapWidth,1..MaxMapWidth,LoAlt..( HiAlt + 1 )] of GearPtr;
 
-	Terrain_Sprite,Strong_Hit_Sprite,Weak_Hit_Sprite,Parry_Sprite,Miss_Sprite: SensibleSpritePtr;
+	Terrain_Sprite,Strong_Hit_Sprite,Weak_Hit_Sprite,Parry_Sprite,Miss_Sprite,Shadow_Sprite: SensibleSpritePtr;
 
 	Focused_On_Mek: GearPtr;
 
+
+Function ScreenDirToMapDir( D: Integer ): Integer;
 
 Function SpriteColor( GB: GameBoardPtr; M: GearPtr ): String;
 
@@ -70,16 +72,22 @@ implementation
 
 uses ghmecha,ghchars,gearutil,ability,ghprop,effects,narration,ui4gh;
 
+type
+	Cute_Map_Cel_Description = Record
+		Sprite: SensibleSpritePtr;
+		F: Integer;	{ The frame to be displayed. }
+	end;
+
 const
 	Strong_Hit_Sprite_Name = 'blast64.png';
 	Weak_Hit_Sprite_Name = 'nodamage64.png';
 	Parry_Sprite_Name = 'misc_parry.png';
 	Miss_Sprite_Name = 'misc_miss.png';
 
-	Default_Prop_Sprite_Name = 'prop_box_low.png';
-	Items_Sprite_Name = 'default_items.png';
+	Default_Prop_Sprite_Name = 'c_cha_m_citizen.png';
+	Items_Sprite_Name = 'c_default_items.png';
 	Default_Wreckage = 1;
-	Default_Dead_Thing = 5;
+	Default_Dead_Thing = 2;
 
 	WallBrown: TSDL_Color = ( R: 76; G: 64; B: 51 );
 	DoorBlue: TSDL_Color = ( R: 0; G: 128; B: 128 );
@@ -111,9 +119,53 @@ const
 	{ Terrain texture 22 is open for expansion }
 	TT_Water = 23;
 
+	NumCMCelLayers = 7;		{ Total number of cel layers. }
+	NumBasicCelLayers = 6;		{ Number of cel layers set by RenderMap. }
+
+	CMC_Terrain = 1;
+	CMC_Shadow = 2;
+	CMC_MShadow = 3;
+	CMC_Destroyed = 4;
+	CMC_Items = 5;
+	CMC_Master = 6;
+	CMC_Effects = 7;
+
 var
-	Mini_Map_Sprite,World_Terrain: SensibleSpritePtr;
+	Mini_Map_Sprite,World_Terrain,Items_Sprite: SensibleSpritePtr;
 	Current_Tileset: Integer;
+
+	CM_Cels: Array [ 1..MaxMapWidth, 1..MaxMapWidth, LoAlt..HiAlt, 0..NumCMCelLayers ] of Cute_Map_Cel_Description;
+	CM_ModelNames: Array [ 1..MaxMapWidth, 1..MaxMapWidth, LoAlt..HiAlt ] of String;
+
+Function ScreenDirToMapDir( D: Integer ): Integer;
+	{ Convert the requested screen direction to a map direction. }
+begin
+	ScreenDirToMapDir := ( D + Origin_D * 2 ) mod 8;
+end;
+
+Procedure ClearCMCelLayer( L: Integer );
+	{ Clear sprite descriptions from the provided overlay layer. }
+var
+	X,Y,Z: Integer;
+begin
+	for X := 1 to MaxMapWidth do begin
+		for Y := 1 to MaxMapWidth do begin
+			for Z := LoAlt to HiAlt do begin
+				CM_Cels[ X , Y , Z , L ].Sprite := Nil;
+			end;
+		end;
+	end;
+end;
+
+Procedure AddCMCel( GB: GameBoardPtr; X,Y,Z,L: Integer; SS: SensibleSpritePtr; Frame: Integer );
+	{ Add an overlay image safely to the display. }
+begin
+	if not OnTheMap( GB , X , Y ) then Exit;
+	if ( Z < LoAlt ) or ( Z > HiAlt ) then Exit;
+	if ( L < 0 ) or ( L > NumCMCelLayers ) then Exit;
+	CM_Cels[ X , Y , Z , L ].Sprite := SS;
+	CM_Cels[ X , Y , Z , L ].F := Frame;
+end;
 
 
 Function SpriteName( M: GearPtr ): String;
@@ -122,19 +174,19 @@ Function SpriteName( M: GearPtr ): String;
 	{ attribute so we won't need to do this calculation later. }
 const
 	FORM_DEFAULT: Array [1..NumForm] of String = (
-	'btr_buruburu.png','zoa_scylla.png','ghu_ultari.png',
-	'ara_kojedo.png', 'aer_wraith.png', 'orn_wasp.png',
-	'ger_harpy.png', 'aer_bluebird.png', 'gca_rover.png'
+	'c_btr_buruburu.png','c_btr_buruburu.png','c_btr_buruburu.png',
+	'c_btr_buruburu.png', 'c_btr_buruburu.png', 'c_btr_buruburu.png',
+	'c_btr_buruburu.png', 'c_btr_buruburu.png', 'c_btr_buruburu.png'
 	);
-	DefaultMaleSpriteName = 'cha_m_citizen.png';
-	DefaultFemaleSpriteName = 'cha_f_citizen.png';
-	DefaultMaleSpriteHead = 'cha_m_';
-	DefaultFemaleSpriteHead = 'cha_f_';
+	DefaultMaleSpriteName = 'c_cha_m_citizen.png';
+	DefaultFemaleSpriteName = 'c_cha_f_citizen.png';
+	DefaultMaleSpriteHead = 'c_cha_m_';
+	DefaultFemaleSpriteHead = 'c_cha_f_';
 var
 	it: String;
 	FList: SAttPtr;
 begin
-	it := SAttValue( M^.SA , 'SDL_SPRITE' );
+	it := SAttValue( M^.SA , 'CUTE_SPRITE' );
 	if it = '' then begin
 		if M^.G = GG_Character then begin
 			if NAttValue( M^.NA , NAG_CharDescription , NAS_Gender ) = NAV_Male then begin
@@ -161,7 +213,7 @@ begin
 		end else begin
 			it := Items_Sprite_Name;
 		end;
-		SetSAtt( M^.SA , 'SDL_SPRITE <' + it + '>' );
+		SetSAtt( M^.SA , 'CUTE_SPRITE <' + it + '>' );
 	end;
 	SpriteName := it;
 end;
@@ -242,6 +294,107 @@ end;
 Procedure RenderMap( GB: GameBoardPtr );
 	{ Render the location stored in G_Map, along with all items and characters on it. }
 	{ Also save the position of the mouse pointer, in world coordinates. }
+
+	{ I'm going to use the GH1 method for doing this- create a list of cels first containing all the }
+	{ terrain, mecha, and effects to be displayed. Then, render them. There's something I don't like }
+	{ about this method but I don't remember what, and it seems to be more efficient than searching }
+	{ through the list of models once per tile once per elevation level. }
+
+
+	Procedure AddShadow( X,Y,Z: Integer );
+		{ For this shadow, we're only concerned about three blocks- the one directly to the left (which }
+		{ I'll label #1), the one to the left and above (#2), and the one directly above (#3). You can }
+		{ find the right shadow frame by adding +1 if #1 is a wall, +2 if #2 is a wall, and +4 if #3 is }
+		{ a wall. The case where #1 and #3 are occupied is the same as if all three tiles were occupied. }
+		{ Here's a picture: }
+		{    2 3 }
+		{    1 x <-- X is the target tile. }
+		const
+			{ Because of the variable camera angle, which totally sucks when you're trying to }
+			{ do something like this QUICKLY, use the following constants to find the relative }
+			{ locations of tiles 1, 2, and 3. If I had the time I could probably find a clever }
+			{ way to do this, but didn't some famous programmer once say that cleverness is the }
+			{ root of all evil? }
+			Camera_Angle_X_Adjustment: Array [0..3,1..3] of SmallInt = (
+				( -1 , -1 ,  0 ),
+				(  0 , -1 , -1 ),
+				(  1 ,  1 ,  0 ),
+				(  0 ,  1 ,  1 )
+			);
+			Camera_Angle_Y_Adjustment: Array [0..3,1..3] of SmallInt = (
+				(  0 , -1 , -1 ),
+				(  1 ,  1 ,  0 ),
+				(  0 ,  1 ,  1 ),
+				( -1 , -1 ,  0 )
+			);
+		Function IsHigher( X2,Y2: Integer ): Boolean;
+		var
+			Terr,H2: Integer;
+		begin
+			if OnTheMap( GB , X2 , Y2 ) then begin
+				terr := TileTerrain( GB , X2 , Y2 );
+				if ( terr <> TERRAIN_LowBuilding ) and ( terr <> TERRAIN_MediumBuilding ) and ( terr <> TERRAIN_HighBuilding ) then begin
+					H2 := TerrMan[ terr ].Altitude;
+					IsHigher := H2 > Z;
+				end else begin
+					IsHigher := False;
+				end;
+			end else begin
+				IsHigher := False;
+			end;
+		end;
+	var
+		Total: Integer;
+	begin
+		Total := 0;
+		if IsHigher( X + Camera_Angle_X_Adjustment[ origin_d , 1 ] , Y + Camera_Angle_Y_Adjustment[ origin_d , 1 ] ) then Total := Total + 1;
+		if IsHigher( X + Camera_Angle_X_Adjustment[ origin_d , 2 ] , Y + Camera_Angle_Y_Adjustment[ origin_d , 2 ] ) then Total := Total + 2;
+		if IsHigher( X + Camera_Angle_X_Adjustment[ origin_d , 3 ] , Y + Camera_Angle_Y_Adjustment[ origin_d , 3 ] ) then Total := Total + 4;
+		if Total = 7 then Total := 5;
+		if Total > 0 then AddCMCel( GB , X , Y , Z , CMC_Shadow , Shadow_Sprite , Total - 1 );
+	end;
+	Procedure AddBasicTerrainCel( X,Y,F: Integer );
+		{ Add a basic terrain cel. This is just a plain cel from the terrain sprite }
+		{ with an undersea column beneath. }
+	begin
+		AddCMCel( GB , X , Y , LoAlt , CMC_Terrain , Terrain_Sprite , 11 );
+		AddCMCel( GB , X , Y ,  0 , CMC_Terrain , Terrain_Sprite ,  F );
+		AddShadow( X,Y,0 );
+	end;
+	Procedure AddBasicWallCel( X,Y,F: Integer );
+		{ Add a basic wall cel using F. }
+	begin
+		AddCMCel( GB , X , Y , LoAlt , CMC_Terrain , Terrain_Sprite , 11 );
+		AddCMCel( GB , X , Y ,  0 , CMC_Terrain , Terrain_Sprite ,  F );
+		AddCMCel( GB , X , Y ,  1 , CMC_Terrain , Terrain_Sprite ,  F );
+	end;
+	Procedure AddBasicHillCel( X,Y,F,H: Integer );
+		{ Add a basic hill cel. Actually, this is a whole pile of cels. }
+	var
+		T: Integer;
+	begin
+		AddCMCel( GB , X , Y , LoAlt , CMC_Terrain , Terrain_Sprite , 11 );
+		for t := 0 to H do AddCMCel( GB , X , Y ,  T , CMC_Terrain , Terrain_Sprite ,  F );
+		AddShadow( X,Y,H );
+	end;
+	Function AlmostSeen( X1 , Y1: Integer ): Boolean;
+		{ Tell whether or not to show the edge of visibility symbol here. We'll }
+		{ show it if this tile is unseen, and is adjacent to a seen tile that's not a wall. }
+	var
+		IsAlmostSeen: Boolean;
+		D,X2,Y2: Integer;
+	begin
+		IsAlmostSeen := False;
+		For D := 0 to 7 do begin
+			X2 := X1 + AngDir[ D , 1 ];
+			Y2 := Y1 + AngDir[ D , 2 ];
+			if OnTheMap( GB , X2 , Y2 ) and TileVisible( GB , X2 , Y2 ) and ( TerrMan[ TileTerrain( GB , X2 , Y2 ) ].Altitude < 6 ) then begin
+				IsAlmostSeen := True;
+				Break;
+			end;
+		end;
+		AlmostSeen := IsAlmostSeen;
+	end;
 const
 	Row_D: Array [0..3,0..1] of Integer = (
 	(0,1),(-1,0),(0,-1),(1,0)
@@ -251,10 +404,10 @@ const
 	);
 var
 	X,Y,Z,X0,Y0,MaxR,MaxC,Row,Column,Terr: Integer;
-	SX,SY: LongInt;
+	SX,SY,H: LongInt;
 	Frame: Integer;
 	M: GearPtr;
-	MyDest: TSDL_Rect;
+	MyDest,TexDest: TSDL_Rect;
 	Spr: SensibleSpritePtr;
 begin
 	{ How to find out the proper mouse location- while drawing each sprite, do a check with the }
@@ -263,18 +416,120 @@ begin
 
 	ClrScreen;
 
-	{ Start by clearing the model map. }
+	{ Clear the basic cels- the ones that the map renderer has access to. There will be additional }
+	{ layers which the map renderer shouldn't touch. }
+	for X := 1 to NumBasicCelLayers do ClearCMCelLayer( X );
+
+	{ Fill out the basic terrain cels, and while we're here clear the model map. }
+
 	for X := 1 to GB^.Map_Width do begin
 		for Y := 1 to GB^.Map_Height do begin
+			if TileVisible( GB , X , Y ) then begin
+				Terr := TileTerrain( GB , X , Y );
+				case Terr of
+				TERRAIN_OpenGround: 	AddBasicTerrainCel( X , Y , 0 );
+
+				TERRAIN_Pavement: 	AddBasicTerrainCel( X , Y , 2 );
+				TERRAIN_Swamp: 		AddBasicTerrainCel( X , Y , 3 );
+				TERRAIN_L1_Hill:	AddBasicHillCel( X , Y , 0 , 1 );
+				TERRAIN_L2_Hill:	AddBasicHillCel( X , Y , 0 , 2 );
+				TERRAIN_L3_Hill:	AddBasicHillCel( X , Y , 0 , 3 );
+				TERRAIN_RoughGround:	AddBasicTerrainCel( X , Y , 4 );
+				TERRAIN_LowWall:	AddBasicHillCel( X , Y , 5 , 1 );
+				TERRAIN_Wall:		AddBasicWallCel( X , Y , 5 );
+				TERRAIN_Floor:		AddBasicTerrainCel( X , Y , 12 );
+				TERRAIN_Threshold:	AddBasicTerrainCel( X , Y , 12 );
+				TERRAIN_Carpet:		AddBasicTerrainCel( X , Y , 6 );
+
+				TERRAIN_WoodenFloor:	AddBasicTerrainCel( X , Y , 7 );
+				TERRAIN_WoodenWall:	AddBasicWallCel( X , Y , 8 );
+
+				TERRAIN_TileFloor:	AddBasicTerrainCel( X , Y , 12 );
+
+				TERRAIN_GlassWall:	AddBasicWallCel( X , Y , 9 );
+
+				else AddBasicTerrainCel( X , Y , 0 );
+				end;
+			end else begin
+				if AlmostSeen( X , Y ) then AddCMCel( GB , X , Y , 0 , CMC_Terrain , Terrain_Sprite , 13 );
+			end;
+
+			{ Clear the model map here. }
 			for z := LoAlt to ( HiAlt + 1 ) do begin
 				model_map[ X , Y , z ] := Nil;
+				if Names_Above_Heads then CM_ModelNames[ X , Y , Z ] := '';
 			end;
 		end;
 	end;
 
-	{ Fill out the model map with the largest models in each tile, and also the item map, wreckage map, }
-	{ smoke map, and fire map. }
+	{ Next add the characters, mecha, and items to the list. }
+	M := GB^.Meks;
+	while M <> Nil do begin
+		if OnTheMap( GB , M ) and MekVisible( GB , M ) then begin
+			X := NAttValue( M^.NA , NAG_Location , NAS_X );
+			Y := NAttValue( M^.NA , NAG_Location , NAS_Y );
+			Z := MekAltitude( GB , M );
 
+			if ( M^.G = GG_Prop ) and ( M^.Stat[ STAT_PropMesh ] <> 0 ) then begin
+				{ Insert prop-drawing code here. }
+
+
+				if OnTheMap( GB , X , Y ) and ( Z >= LoAlt ) and ( Z <= HiAlt ) then begin
+					model_map[ X , Y , Z ] := M;
+					if Names_Above_Heads then CM_ModelNames[ X , Y , Z ] := GearName( M );
+				end;
+
+			end else if Destroyed( M ) then begin
+				{ Insert wreckage-drawing code here. }
+				if M^.G = GG_Character then begin
+					AddCMCel( GB , X , Y , Z , CMC_Destroyed , Items_Sprite , Default_Dead_Thing );
+				end else begin
+					AddCMCel( GB , X , Y , Z , CMC_Destroyed , Items_Sprite , Default_Wreckage );
+				end;
+
+			end else if IsMasterGear( M ) then begin
+				{ Insert sprite-drawing code here. }
+				AddCMCel( 	GB , X , Y , Z , CMC_Master ,
+						LocateSprite( SpriteName( M ) , SpriteColor( GB , M ) , 50 , 120 ) ,
+						( Animation_Phase div 5 ) mod 2
+				);
+
+				AddCMCel( 	GB , X , Y , Z , CMC_MShadow , Shadow_Sprite , 6 );
+
+				if OnTheMap( GB , X , Y ) and ( Z >= LoAlt ) and ( Z <= HiAlt ) then begin
+					model_map[ X , Y , Z ] := M;
+					if Names_Above_Heads then CM_ModelNames[ X , Y , Z ] := PilotName( M );
+				end;
+
+			end else if M^.G = GG_MetaTerrain then begin
+				{ Insert MetaTerrain-drawing code here. }
+
+				case M^.S of
+				GS_MetaDoor:		if M^.Stat[ STAT_Pass ] = -100 then 
+							else ;
+				GS_MetaStairsUp:	;
+				GS_MetaStairsDown:	;
+				GS_MetaTrapdoor:	;
+				GS_MetaElevator:	;
+				GS_MetaBuilding:	;
+				GS_MetaEncounter:	;
+				GS_MetaCloud:		;
+				GS_MetaFire:		;
+				else ;
+				end;
+
+			end else begin
+				{ Draw the yellow-striped box. }
+				AddCMCel( GB , X , Y , Z , CMC_Items , Items_Sprite , 0 );
+			end;
+		end;
+
+		M := M^.Next;
+	end;
+
+	if Focused_On_Mek <> Nil then begin
+
+	end;
 
 	{ Depending on the view direction, set the cursor. }
 	{ 0 is normal rotation, each +1 rotates the map counterclockwise by 90 degrees. }
@@ -301,7 +556,7 @@ begin
 	end;
 
 	{ Go through the rows and columns of our screen display. }
-	for Row := -7 to 7 do begin
+	for Row := -7 to 8 do begin
 		{ Draw the terrain for this row. }
 		for Column := -8 to 8 do begin
 			{ Calculate the map position for this row,column combo. }
@@ -310,24 +565,22 @@ begin
 
 			if OnTheMap( GB , X , Y ) then begin
 				MyDest.X := 380 + Column * 50;
-				MyDest.Y := 200 + Row * 40;
+				MyDest.Y := 200 + Row * 40 - 20 * LoAlt;
 
-				Terr := TileTerrain( GB , X , Y );
-				case Terr of
-
-				TERRAIN_WALL:	begin
-						DrawSprite( Terrain_Sprite , MyDest , 9 );
-						MyDest.Y := MyDest.Y - 20;
-						DrawSprite( Terrain_Sprite , MyDest , 9 );
+				for Z := LoAlt to HiAlt do begin
+					For Frame := 1 to NumCMCelLayers do begin
+						if CM_Cels[ X , Y , Z , Frame ].Sprite <> Nil then begin
+							DrawSprite( CM_Cels[ X , Y , Z , Frame ].Sprite , MyDest , CM_Cels[ X , Y , Z , Frame ].F );
 						end;
-				TERRAIN_FLOOR:	DrawSprite( Terrain_Sprite , MyDest , 5 );
-				else DrawSprite( Terrain_Sprite , MyDest , 0 );
-				end;
+					end;
 
-				if ( Row = 0 ) and ( Column = 0 ) then begin
+					if Names_Above_Heads and ( CM_ModelNames[ X , Y , Z ] <> '' ) then begin
+						TexDest := MyDest;
+						TexDest.X := MyDest.X + 25;
+						TexDest.Y := MyDest.Y + 15;
+						QuickTextC( CM_ModelNames[ X , Y , Z ] , TexDest , StdWhite , Small_Font );
+					end;
 					MyDest.Y := MyDest.Y - 20;
-					Spr := LocateSprite( 'c_btr_buruburu.png' , '66 121 119 190 190 190 0 205 0' , 50 , 120 );
-					DrawSprite( Spr , MyDest , 0 );
 				end;
 			end;
 		end;
@@ -346,8 +599,8 @@ Procedure FocusOn( Mek: GearPtr );
 	{ Focus on the provided mecha. }
 begin
 	if Mek <> Nil then begin
-		origin_x := NAttValue( Mek^.NA , NAG_Location , NAS_X ) - 1;
-		origin_y := NAttValue( Mek^.NA , NAG_Location , NAS_Y ) - 1;
+		origin_x := NAttValue( Mek^.NA , NAG_Location , NAS_X );
+		origin_y := NAttValue( Mek^.NA , NAG_Location , NAS_Y );
 	end;
 	Focused_On_Mek := Mek;
 end;
@@ -357,8 +610,8 @@ Procedure IndicateTile( GB: GameBoardPtr; X , Y , Z: Integer );
 begin
 	ClearOverlays;
 	if OnTheMap( GB , X , Y ) and ( Z >= LoAlt ) and ( Z <= HiAlt ) then begin
-		origin_x := x - 1;
-		origin_y := y - 1;
+		origin_x := x;
+		origin_y := y;
 		Underlays[ X , Y , Z ] := 1;
 	end;
 end;
@@ -659,6 +912,8 @@ initialization
 	World_Terrain := LocateSprite( 'world_terrain.png' , 64 , 64 );
 
 	Terrain_Sprite := LocateSprite( 'cute_terrain.png' , 50 , 120 );
+	Shadow_Sprite := LocateSprite( 'c_shadows.png' , 50 , 120 );
+	Items_Sprite := LocateSprite( Items_Sprite_Name , 50 , 120 );
 
 	Strong_Hit_Sprite := LocateSprite( Strong_Hit_Sprite_Name , 64, 64 );
 	Weak_Hit_Sprite := LocateSprite( Weak_Hit_Sprite_Name , 64, 64 );

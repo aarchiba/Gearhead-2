@@ -414,13 +414,9 @@ var
 	A: Char;
 	Procedure RepositionCursor( D: Integer );
 	begin
-{$IFNDEF ASCII}
-{$IFDEF CUTE}
+		{ Convert the screen direction to a map direction. }
+		D := ScreenDirToMapDir( D );
 
-{$ELSE}
-		D := ( D + DirOffset[ origin_d ] + 6 ) mod 8;
-{$ENDIF}
-{$ENDIF}
 		if OnTheMap( GB , X + AngDir[ D , 1 ] , Y + AngDir[ D , 2 ] ) then begin
 			X := X + AngDir[ D , 1 ];
 			Y := Y + AngDir[ D , 2 ];
@@ -660,13 +656,7 @@ begin
 		end;
 	until D <> -2;
 
-{$IFNDEF ASCII}
-{$IFDEF CUTE}
-
-{$ELSE}
-	if D <> -1 then D := ( D + DirOffset[ origin_d ] + 6 ) mod 8;
-{$ENDIF}
-{$ENDIF}
+	if D <> -1 then D := ScreenDirToMapDir( D );
 
 	DirKey := D;
 end;

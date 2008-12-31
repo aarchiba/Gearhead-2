@@ -29,6 +29,8 @@ var
 	Origin_X,Origin_Y: Integer;
 	Focused_On_Mek: GearPtr;
 
+Function ScreenDirToMapDir( D: Integer ): Integer;
+
 Procedure RenderMap( GB: GameBoardPtr );
 Procedure FocusOn( Mek: GearPtr );
 
@@ -102,6 +104,15 @@ Type
 var
 	Overlays: Array [1..MaxMapWidth,1..MaxMapWidth] of OverlayCell;
 	Indicate_X,Indicate_Y: Integer;
+
+
+Function ScreenDirToMapDir( D: Integer ): Integer;
+	{ Convert the requested screen direction to a map direction. }
+	{ For ASCII mode, this is trivially easy. }
+begin
+	ScreenDirToMapDir := D;
+end;
+
 
 Function TeamColor( GB: GameBoardPtr; G: GearPtr ): Byte;
 	{ Select a good color based upon the team this }

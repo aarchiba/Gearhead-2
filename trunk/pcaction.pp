@@ -1420,7 +1420,7 @@ begin
 
 {$IFNDEF ASCII}
 {$IFDEF CUTE}
-
+	CleanSpriteList;
 {$ELSE}
 	CleanTexList;
 {$ENDIF}
@@ -2534,28 +2534,28 @@ begin
 {$IFNDEF ASCII}
 {$IFDEF CUTE}
 			if KP = KeyMap[ KMC_SouthWest ].KCode then begin
-				RLWalker( Camp^.GB , Mek , 1 , PC_Should_Run );
+				RLWalker( Camp^.GB , Mek , Reverse_RL_D[ ScreenDirToMapDir( 3 ) ] , PC_Should_Run );
 				GotMove := True;
 			end else if KP = KeyMap[ KMC_South ].KCode then begin
-				RLWalker( Camp^.GB , Mek , 2 , PC_Should_Run );
+				RLWalker( Camp^.GB , Mek , Reverse_RL_D[ ScreenDirToMapDir( 2 ) ] , PC_Should_Run );
 				GotMove := True;
 			end else if KP = KeyMap[ KMC_SouthEast ].KCode then begin
-				RLWalker( Camp^.GB , Mek , 3 , PC_Should_Run );
+				RLWalker( Camp^.GB , Mek , Reverse_RL_D[ ScreenDirToMapDir( 1 ) ] , PC_Should_Run );
 				GotMove := True;
 			end else if KP = KeyMap[ KMC_West ].KCode then begin
-				RLWalker( Camp^.GB , Mek , 4 , PC_Should_Run );
+				RLWalker( Camp^.GB , Mek , Reverse_RL_D[ ScreenDirToMapDir( 4 ) ] , PC_Should_Run );
 				GotMove := True;
 			end else if KP = KeyMap[ KMC_East ].KCode then begin
-				RLWalker( Camp^.GB , Mek , 6 , PC_Should_Run );
+				RLWalker( Camp^.GB , Mek , Reverse_RL_D[ ScreenDirToMapDir( 0 ) ] , PC_Should_Run );
 				GotMove := True;
 			end else if KP = KeyMap[ KMC_NorthWest ].KCode then begin
-				RLWalker( Camp^.GB , Mek , 7 , PC_Should_Run );
+				RLWalker( Camp^.GB , Mek , Reverse_RL_D[ ScreenDirToMapDir( 5 ) ] , PC_Should_Run );
 				GotMove := True;
 			end else if KP = KeyMap[ KMC_North ].KCode then begin
-				RLWalker( Camp^.GB , Mek , 8 , PC_Should_Run );
+				RLWalker( Camp^.GB , Mek , Reverse_RL_D[ ScreenDirToMapDir( 6 ) ] , PC_Should_Run );
 				GotMove := True;
 			end else if KP = KeyMap[ KMC_NorthEast ].KCode then begin
-				RLWalker( Camp^.GB , Mek , 9 , PC_Should_Run );
+				RLWalker( Camp^.GB , Mek , Reverse_RL_D[ ScreenDirToMapDir( 7 ) ] , PC_Should_Run );
 				GotMove := True;
 {$ELSE}
 			if ( kp = KeyMap[ KMC_North ].KCode ) and ( RK_KeyState[ SDLK_Up ] = 1 ) and not Use_Isometric_Mode then begin

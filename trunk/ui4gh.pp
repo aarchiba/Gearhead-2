@@ -521,6 +521,9 @@ begin
 				end else if cmd = 'REVERT_SLOWER_SAFER' then begin
 					Revert_Slower_Safer := True;
 
+				end else if cmd = 'NAMESON' then begin
+					Names_Above_Heads := True;
+
 				end else if cmd = 'GIMMEGIMMECHOICE' then begin
 					XXRan_Wizard := True;
 				end else if cmd = 'XXRANDEBUG' then begin
@@ -609,6 +612,7 @@ begin
 	AddBoolean( 'USE_SOFTWARE_SURFACE' , Use_Software_Surface );
 	AddBoolean( 'NO_SPLASH_SCREEN_AT_START' , not Splash_Screen_At_Start );
 	AddBoolean( 'REVERT_SLOWER_SAFER' , Revert_Slower_Safer );
+	AddBoolean( 'NAMESON' , Names_Above_Heads );
 
 	{ The "secret options" come at the end. These tokens only get }
 	{ included if they're already set. }

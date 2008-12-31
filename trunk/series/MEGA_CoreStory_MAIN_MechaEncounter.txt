@@ -461,6 +461,108 @@ Content
 %%  *******************
 
 Content
+	name <Edie Brickell Never Hurt Anyone>
+	size 5
+	desc <The Bohemian Collective distances itself from your enemy.>
+	requires <*:CS_MechaEncounter F:BOHEM E:++ -&Secondary -!Ne ~!Md ~!Hi>
+	% The Bohemian Collective, being largely an anarchic group of live-and-let-live leave-me-aloneist
+	% libertarians/libertines, doesn't make a very good enemy. Honestly, I can see pissing one or two
+	% of them off, or maybe even three or four, but the entire faction? You made them agree on something?
+	% Impossible. If a splinter group wants to kill you, they're probably just posers. Or pirates.
+	changes <F:++>
+
+	% E1 is the outdoors scene where this encounter will take place
+	% E2 is the encounter
+	% E3 is an envoy from the Dusty Ring
+	% E4 is a pirate faction to be the new enemy
+	% E5 is a pirate/mook of the Enemy NPC
+	Element3 <Prefab>
+	Place3 <2 (Envoy) sd ally>
+	Element4 <Faction (REDMA|CRIHN) -ArchAlly !XClude -3>
+	Element5 <Prefab>
+
+	% P%id%01 = Initialization Counter
+
+	update <if= P%id%01 0 P= %id%01 1 NPCLevel %3% StoryDL SetNPCFaction %5% %4%>
+
+	% This subplot must propgate the effects of its own subplot backwards to
+	% the parent plot.
+	.%id1%_%plotid1%_GoWin  <WinSubPlot %plotid%  Trigger0 .%id%_%plotid%_GoWin>
+	.%id1%_%plotid1%_GoLoss <LoseSubPlot %plotid% Trigger0 .%id%_%plotid%_GoLoss>
+
+	% SubPlot1 is the Stop E5 mission
+	SubPlot1 <*:CS_StopNPCMission&Secondary 5>
+
+	sub
+		MetaScene 2 2
+		% L1 = Encounter Over Counter
+		% L2 = Initialization Counter
+		MapWidth 50
+		MapHeight 50
+
+		Start <if= L2 0 L= 2 1   Alert 1   History 2   &SetEnemyFac %4%   ForceChat %3%>
+		nu1 <if= T1 0   Return   if= V1 0 V= 1 1         Trigger0 .%id%_%plotid%_GoLoss LoseSubPlot %plotid%>
+		nu2 <if= T2 0   if= V1 0 V= 1 1   XPV 100  AddRenown 1   SALVAGE   Monologue %3% 3 Retreat 3 History 4 SMemo 5  SetPlotStatus %plotid1% %id1%>
+		end <SetEncounterInactive %2% FreezeNPC %3%>
+
+		Msg1 <You find a lance of Bohemian mecha fighting some pirates.>
+		Msg2 <%name3% revealed that \PERSONA &EnemyNPC was a pirate, not a bohemian.>
+		Msg3_1 <\PERSONA &EnemyNPC 's number one fighter %name5% is here on a mission. Stop \OPR %5% , and many lives will be spared. We will meet again.>
+		CMsg3_1 <ifNPCOK %3% Accept>
+		Msg3_2 <\PERSONA &EnemyNPC ... \PPR &EnemyNPC henchman... you must stop %name5%... we... we will meet again...>
+		CMsg3_2 <ifNPCDead %3% Accept>
+		Msg4 <You learned that \PERSONA &EnemyNPC 's henchman %name5% was in town on a mission.>
+		Msg5 <%name3% told you that \PERSONA &EnemyNPC works for %name4%, and \PPR &EnemyNPC henchman %name5% is in town on a mission.>
+
+		sub
+			team 1
+			setally 3
+			SetEnemy 2
+			ParaX 5
+			ParaY 5
+
+			team 2
+			name <Pirates>
+			SetEnemy 1 3
+			Deploy <if= PlotStatus %plotid% %id% SetSelfFaction %4%   WMecha 2 StoryDL 150>
+			GoSmallDeploy <WMecha 2 StoryDL 90>
+			ParaX 25
+			ParaY 45
+
+			team 3
+			name <Envoy>
+			setally 1
+			setenemy 2
+			Deploy <if= PlotStatus %plotid% %id%  SetSelfFaction 12  WMecha 3 StoryDL 60>
+			ParaX 45
+			ParaY 5
+		end
+
+		Persona 3
+		special <UNLISTED NOESCAPE>
+		greeting <EndChat Say 1 AddChat 1 AddChat 2>
+		result1 <EndChat Say 2 AddChat 3>
+		result2 <EndChat Say 3 AddChat 3>
+		result3 <EndChat Say 4>
+		Msg1 <Hold your fire, I come to you bearing a message from the dusty ring! The Bohemian Collective is not your enemy. We seek only peace with the people of \SCENE &EpisodeScene .>
+		Msg2 <\PERSONA &EnemyNPC does not represent us; in fact, \SPR &EnemyNPC has long been a member of %name4%, and it is they who have directed \PPR &EnemyNPC actions against you.>
+		Msg3 <I see that \PERSONA &EnemyNPC has been busy spreading lies. You should know that \SPR &EnemyNPC is not a member of the collective, but instead a pirate with %name4%. It is them that you should be fighting.>
+		Msg4 <I have additional information which may help you decide, but first we should deal with \PERSONA &EnemyNPC 's henchmen.>
+		Prompt1 <Tell that to \PERSONA &EnemyNPC !>
+		Prompt2 <You really think I'm going to believe that?>
+		Prompt3 <How do I know I can trust you?>
+	end
+	inv
+		NPC Explorer
+		chardesc Old
+		SetFaction 12
+
+		NPC Pirate
+		chardesc Young
+		job_desig <MOOK_>
+	end
+
+Content
 	name <MUGL, You Useless Morons>
 	size 10
 	desc <Your enemy, frustrated with MUGL Enterprises's incompotence, leaves them for a different corp.>

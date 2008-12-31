@@ -232,6 +232,8 @@ procedure DrawSprite( Spr: SensibleSpritePtr; MyCanvas: PSDL_Surface; MyDest: TS
 function LocateSprite( const Name, Color: String; W,H: Integer ): SensibleSpritePtr;
 function LocateSprite( const Name: String; W,H: Integer ): SensibleSpritePtr;
 
+Procedure CleanSpriteList;
+
 function RPGKey: Char;
 
 
@@ -669,6 +671,23 @@ begin
 	LocateSprite := LocateSprite( Name , '' , W , H );
 end;
 
+Procedure CleanSpriteList;
+	{ Go through the sprite list and remove those sprites we aren't likely to }
+	{ need immediately... i.e., erase those ones which have a COLOR string defined. }
+var
+	S,S2: SensibleSpritePtr;
+begin
+	S := Game_Sprites;
+	while S <> Nil do begin
+		S2 := S^.Next;
+
+		if S^.Color <> '' then begin
+			RemoveSprite( S );
+		end;
+
+		S := S2;
+	end;
+end;
 
 function RPGKey: Char;
 	{ Read a readable key from the keyboard and return its ASCII value. }
