@@ -70,6 +70,85 @@ Plot
 %%
 
 Plot
+	name <What are you going to do about all the pirates?>
+	desc <The corps are waiting for the government to act.>
+	requires <#A +Tgs (+Fcc|+Fmi) (P:POLIT|P:MILIT|P:POLIC) F:-->
+	changes <F:++>
+
+	% E1 is the scene where this component will take place.
+	% E2 is a government faction allied with the ally fac
+	% E3 is a police faction allied with the government
+	% E4 is a crime faction which is an enemy of the police
+	% E5 is a corporate faction which is an enemy of the criminals
+	% E6 is a member of said corporate faction
+	% E7 is an outdoors scene for a combat encounter
+	% E8 is the encounter itself
+	element1 <Grab 6>
+	element2 <Faction Government !Ally -3 !Okay -7>
+	element3 <Faction Police !Ally 2 !Okay -3>
+	Element4 <Faction Crime !Enemy 3 !Xclude -3>
+	Element5 <Faction Corporate !Enemy 4 !Okay -3 !Okay 2>
+	Element6 <Character !Comrade 5 !Global>
+	Place6 <1 (Citizens) pass ally>
+	Element7 <Scene Outdoors !Near -7>
+	Element8 <Prefab>
+	Place8 <7>
+
+	% Fail Conditions:
+	% - Mission giver dies before encounter is activated
+	% - Revalation subplot fails
+
+	update <if= PlotStatus %plotid% 0 SetPlotStatus %plotid% %id%>
+	end <if= PlotStatus %plotid1% 0 else .%id%_GoCheckReveal ifNPCDead %6% LoseComp 0 .%id%_loss>
+	.%id%_GoCheckReveal <ifSubPlotLost %plotid2% SMemo %id%02 SetPlotStatus %plotid5% %id5%>
+	.%id%_loss <+T-- +F-->
+
+	.%id1%_%plotid1%_GoWin <SetPlotStatus %plotid3% %id3%     SMemo %id%01>
+	.%id1%_%plotid1%_GoLoss <SetPlotStatus %plotid4% %id4%    SMemo %id%02>
+
+	Msg%id%01 <You won the mission. You should go see %name6% at %name1% about the reward.>
+	Msg%id%02 <You lost the mission. You should go report to %name6% at %name1% .>
+
+	%% SubPlot1 is the combat encounter itself
+	%% SubPlot2 is the encounter revealation
+	%% SubPlot3 is the winning condition
+	%% SubPlot4 is the loss condition
+	%% SubPlot5 is the unwinnable condition
+	SubPlot1 <*:CS_MechaEncounter&Raiders 7 8>
+	SubPlot2 <*:CS_RevealEncounter_Raiders 7 8>
+	SubPlot3 <*CS_CAWinMission 6>
+	SubPlot4 <*CS_CALoseMission 6>
+	SubPlot5 <*CS_MootMission 6>
+
+	sub
+		Persona 6
+		rumor%id% <%name6% is hoping to speak with someone from the government.>
+		greeting <if= PlotStatus %plotid1% 0 else .%id%_GoRemind if# PlotStatus %plotid% %id% else .%id%_GoGreet NewChat SayAnything>
+		*.%id%_GoRemind <*GenericMissionReminder>
+		*.%id%_GoGreet <*GreetThenDiscuss .%id%_GoOfferMission>
+		.%id%_GoOfferMission <NewChat Say %id%01 AddCHat %id%01 AddCHat %id%02>
+		result%id%01 <NewChat Say %id%02 AddChat %id%03>
+		result%id%02 <NewChat Say %id%03 AddChat %id%03>
+		result%id%03 <NewChat Say %id%04 SMemo %id%05 History %id%06 &SetEnemyFac %4% SetPlotStatus %plotid1% %id1% SetPlotStatus %plotid2% %id2%>
+		Msg%id%01 <What do the people at \FACTION &AllyFac plan to do about %name4%? This isn't just a problem for %name5%, but for everyone. Something must be done immediately!>
+		Msg%id%02 <The problem is that they're disrupting our shipping lanes, stealing millions of dollars worth of product, and the government is just standing by! Why, right now they've got a lance of raiders in town.>
+		Msg%id%03 <Oh really? Then how can you explain the fact that they've got a lance of raiders in town at this very minute? The government needs to put more money into law enforcement.>
+		Msg%id%04 <It's about time that somebody did.>
+		Msg%id%05 <You agreed to take care of some raiders from %name4% for %name6%.>
+		Msg%id%06 <%name6% told you that raiders from %name4% were in town.>
+		Prompt%id%01 <I don't know... what exactly is the problem?>
+		Prompt%id%02 <Rest assured that we're doing everything we can.>
+		Prompt%id%03 <Raiders, you say? I'll look into that for you.>
+
+		STC MS_SOCIAL
+		SetID 1
+	end
+	inv
+		stc CORE-ACTIVATABLE
+		name <%name6%'s Mission>
+	end
+
+Plot
 	name <Right Place For a Mission>
 	desc <The city government is hiring.>
 	requires <#A +Tgs (+Fmi|+Fin|+F--) S:PERM -L:ENEMY ~C:ADVEN>

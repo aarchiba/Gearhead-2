@@ -2850,9 +2850,13 @@ Function MoveOnWorld( GB: GameBoardPtr; Mek: GearPtr; var X,Y: Integer; D: Integ
 		it,T: Integer;
 	begin
 		it := BaseMoveRate( GB^.Scene , Mek , MM );
-		for t := 1 to Mek^.Scale do it := it * 2;
-		it := GB^.Scale * 3600 div it;
-		if it < 1 then it := 1;
+		if it > 0 then begin
+			for t := 1 to Mek^.Scale do it := it * 2;
+			it := GB^.Scale * 3600 div it;
+			if it < 1 then it := 1;
+		end else begin
+			it := 0;
+		end;
 		WorldMapMoveRate := it;
 	end;
 var

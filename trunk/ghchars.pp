@@ -534,6 +534,10 @@ var
 begin
 	{Error check- make sure we have a character here.}
 	if PC^.G <> GG_Character then Exit(0);
+
+	{ If CBod is less than the BODY stat, use the BODY stat. }
+	if CBod < PC^.STAT[ STAT_Body ] then CBod := PC^.STAT[ STAT_Body ];
+
 	HP := ( CBod + 5 ) div 2;
 
 	{ Add the Vitality skill. }

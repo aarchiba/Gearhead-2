@@ -84,7 +84,7 @@ Content
 Content
 	name <The Enemy's Decision>
 	desc <Your enemy consults their mentor; the PC of course thinks it's a kidnapping>
-	requires <*:CS_GatherInformation E:A.env (E:M.---|E:M.mer|E:M.com)>
+	requires <*:CS_GatherInformation E:A.env (E:M.---|E:M.mer|E:M.com) ~&AboutEnemy>
 	changes <E:M>
 	Size 5
 
@@ -225,7 +225,7 @@ Content
 Content
 	name <Ex-Lover vs Ex-Partner>
 	desc <The enemy's ex-lover is on the run from the enemy's ex-partner.>
-	requires <*:CS_GatherInformation E:A.sr_ (E:M.---|E:M.mer)>
+	requires <*:CS_GatherInformation E:A.sr_ (E:M.---|E:M.mer) ~&AboutEnemy>
 	changes <E:M>
 	Size 7
 

@@ -687,6 +687,36 @@ Content
 		name <%name1%'s Mission>
 	end
 
+Plot
+	name <You want a hint? I've got a hint.>
+	desc <This friend has some information.>
+	requires <*CS_Conversation (1:FRIEND|1:FAMILY|1:LOVER) ~+Gkn>
+	Size 1
+
+	% E1 is the person with the information
+
+	start <ifNPCDead %1% SMemo 0 LoseComp 0 .%id%_end>
+
+	% This subplot must handle the callback from the Gather Information task.
+	.%id1%_%plotid1%_GoWin <SMemo 0 WinComp 0 .%id%_end>
+	.%id1%_%plotid1%_GoLoss <SMemo 0 LoseComp 0 .%id%_end>
+	.%id%_end <+T-- +F-->
+
+	% SubPlot1 is the GatherInformation task.
+	SubPlot1 <*:CS_GatherInformation 1>
+
+	sub
+		Persona 1
+		greeting <if= PlotStatus %plotid% %id% else %pop% Goto .%id%_GoIntro>
+		*.%id%_GoIntro <*HowAreYou .%id%_GoReveal>
+		.%id%_GoReveal <NewChat Say %id%01 AddChat %id%01>
+		result%id%01 <SetPlotStatus %plotid1% %id1% WinSubPlot %plotid% Goto .%id1%_GoInform>
+		Msg%id%01 <I've got some information that may be useful to you. I don't know... it's got to do with all the stuff you've been doing lately.>
+		Prompt%id%01_1 <Go on, tell me about it.>
+		Prompt%id%01_2 <What have you learned?>
+	end
+
+
 Content
 	name <Big Scoop about Enemy NPC>
 	desc <The media person you're talking to wants to know about the enemy's mission in town.>

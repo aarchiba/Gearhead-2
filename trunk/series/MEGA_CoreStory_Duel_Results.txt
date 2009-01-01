@@ -10,6 +10,26 @@
 %%
 
 Content
+	name <Job Hint>
+	desc <The NPC will suggest that the PC look for a mission somewhere.>
+	requires <*CS_WinDuelVs>
+
+	% E1 is the NPC.
+	% E2 is a public scene where jobs are apparently plentiful
+	Element2 <Scene Public !Near -7 !Okay 1 !Okay -3 !XClude -2>
+
+	start <ifNPCDead %1% SMemo 0 WinComp 0 .%id%_loss>
+	.%id%_loss <+T-- +F-->
+
+	sub
+		Persona 1
+		greeting <if= PlotStatus %plotid% %id% else %pop% NewChat Say %id%01 StoryNote %id%02 NTBWinComp %2% .%id%_next>
+		.%id%_next <+Tgs +Fmi>
+		Msg%id%01 <Good match, \PC . Because you beat me I'll let you in on a little secret- if you're looking for work, you should really go check out %name2%.>
+		Msg%id%02 <%name1% suggested that you go look for work in %name2%.>
+	end
+
+Content
 	name <You should go see MILIT...>
 	desc <The NPC will reccomend that the PC go ask someone about a job.>
 	requires <*CS_WinDuelVs -L:ENEMY -C:THIEF>
@@ -20,7 +40,7 @@ Content
 	Element2 <Character "MILIT" !Near -7 !Ally -7 !Okay -3 !Okay 1>
 	Element3 <Scene Building Public !Near -7 !Ally 2>
 
-	start <if= PlotStatus %plotid% %id% else %pop% ifNPCDead %1% SMemo 0 WinComp 0 .%id%_loss>
+	start <ifNPCDead %1% SMemo 0 WinComp 0 .%id%_loss>
 	.%id%_loss <+T-- +F-->
 
 	sub

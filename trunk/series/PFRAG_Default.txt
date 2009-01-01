@@ -102,8 +102,24 @@
 	result%id%01 <Goto %1%>
 	result%id%02 <Goto %1%>
 	Msg%id%01 <Hey \PC , I hear that you could use some help.>
+	Msg%id%01_1 <>
+	CMsg%id%01_1 <ifNPCSociable Accept>
+	Msg%id%01_2 <>
+	CMsg%id%01_2 <ifNPCShy Accept>
+	Msg%id%01_3 <>
+	CMsg%id%01_3 <ifNPCEasygoing Accept>
+	Msg%id%01_4 <>
+	CMsg%id%01_4 <ifNPCPassionate Accept>
+	Msg%id%01_5 <>
+	CMsg%id%01_5 <ifNPCCheerful Accept>
+	Msg%id%01_6 <>
+	CMsg%id%01_6 <ifNPCMelancholy Accept>
 	Prompt%id%01 <I'm doing fine by myself.>
+	Prompt%id%01_1 <>
+	Prompt%id%01_2 <>
 	Prompt%id%02 <Yeah, that's right... why?>
+	Prompt%id%02_1 <>
+	Prompt%id%02_2 <>
 
 
 % TYPE: *NotByPhone
