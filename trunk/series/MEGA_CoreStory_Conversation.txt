@@ -687,11 +687,101 @@ Content
 		name <%name1%'s Mission>
 	end
 
-Plot
+Content
+	name <Go See The Trade Show>
+	desc <You'll be told about a trade show in town.>
+	requires <*CS_Conversation (1:LABOR|1:TRADE|1:CRAFT) (1:FRIEND|1:PCFAC|+Fin)>
+	Size 1
+
+	% Element1 is the NPC to meet
+	% Element2 is a location for the trade show
+	element2 <MetaScene !Near -7 *Building NeverFail>
+
+	start <if= PlotStatus %plotid% %id% else %pop% ifNPCDead %1% LoseComp 0 .%id%_loss>
+	.%id%_loss <+T-- +F-->
+
+	sub
+		Persona 1
+		greeting <if= PlotStatus %plotid% %id% else %pop% Goto .%id%_GoGreet>
+		*.%id%_GoGreet <*HowAreYou .%id%_GoInform>
+		.%id%_GoInform <NewChat Say %id%01 StoryNote %id%02 AddCHat %id%01 AddCHat %id%02 WinComp %2% .%id%_win>
+		.%id%_win <+Tgs +Fcc>
+		result%id%01 <NewChat Say %id%03>
+		result%id%02 <NewChat Say %id%04 AddCheerful -d8>
+		Msg%id%01 <If you're looking for something to do while in \SCENE &EPisodeScene , you could go check out the trade show they're having at %name2%.>
+		Msg%id%02 <%name1% told you about a trade show at %name2%.>
+		Msg%id%03 <I hear that they're going to premiere some new mecha variants there.>
+		Msg%id%04 <Hey, life isn't all about blowing stuff up you know. Some of it is about snarfing free food while other people try to sell you things to blow stuff up with.>
+		Prompt%id%01 <Thanks. I may do that.>
+		Prompt%id%02 <Oh yeah, that sounds real interesting...>
+	end
+
+Content
+	name <Treasure Hunter, Subcontracted>
+	desc <Your thief friend needs an item obtained.>
+	requires <*CS_Conversation -+Fin (1:THIEF|1:REDMA|1:CRIHN) (1:FRIEND|1:ALLY|1:LOVER|1:FAMILY)>
+
+	% Element1 is the NPC to meet
+	% Element2 is the item to retrieve
+	Element2 <Prefab>
+
+	% Fail Conditions:
+	% - Mission giver dies before encounter is activated
+	% - Fetch subplot fails
+
+	end <if= PlotStatus %plotid1% 0 else .%id%_GoCheckReveal ifNPCDead %1% else %pop% LoseComp 0 .%id%_loss>
+	.%id%_GoCheckReveal <ifSubPlotLost %plotid1% SMemo %id%01 SetPlotStatus %plotid3% %id3%>
+	.%id%_loss <+T-->
+
+	% Upon getting the item, set the win subplot.
+	Get%2% <SMemo %id%02  SetPlotStatus %plotid2% %id2%>
+
+	Msg%id%01 <You failed to recover the datachip. You should go report to %name1% at \SCENE NPCScene %1% .>
+	Msg%id%02 <You should return the datachip to %name1% at \SCENE NPCScene %1% .>
+
+	% SubPlot1 is the FetchItem task
+	% SubPlot2 is the reward
+	% SubPlot3 is the loss condition
+	SubPlot1 <*:CS_FetchItem 2>
+	SubPlot2 <*CS_WinFetchItem 1 2>
+	SubPlot3 <*CS_LoseTask 1>
+
+	sub
+		Persona 1
+		greeting <if= PlotStatus %plotid1% 0 else .%id%_GoRemind if# PlotStatus %plotid% %id% else .%id%_GoGreet Goto %pop%>
+		*.%id%_GoGreet <*HowAreYou .%id%_OfferMission>
+		.%id%_OfferMission <NewChat Say %id%01 AddChat %id%01 AddChat %id%02>
+		*.%id%_GoRemind <*GenericMissionReminder>
+		result%id%01 <NewChat Say %id%02 AddChat %id%03 AddChat %id%04>
+		result%id%02 <NewChat Say %id%03 AddChat %id%03 AddChat %id%04>
+		result%id%03 <NewChat Say %id%04 SetPlotStatus %plotid1% %id1% StoryNote %id%05>
+		result%id%04 <NewChat Say %id%06 History %id%07 SMemo 0 AddReact -10   NTBLoseComp 0 .%id%_refuse>
+		.%id%_refuse <+T-- +F-->
+		Msg%id%01 <I was wondering if you could help me with something... I've been asked by a certain collector to retrieve a very rare item which is apparently in \SCENE &EpisodeScene .>
+		Msg%id%02 <Exactly. I would, of course, compensate you for your trouble. What do you say? Do we have a deal?>
+		Msg%id%03 <No, of course not, this item was lost a long time ago. That means it's up for grabs for whoever finds it first. What do you say, can you help me out?>
+		Msg%id%04 <Great! The item I'm searching for is a Bing Vase. There was apparently one lost here a while back; come see me after you find it.>
+		Msg%id%05 <%name1% asked you to help \OPR %1% locate a Bing Vase.>
+		Msg%id%06 <Crap... I hate having to do work by myself. I guess I don't have any choice now.>
+		Msg%id%07 <You refused to help %name1% retrieve an item.>
+		Prompt%id%01 <And you'd like me to get it for you?>
+		Prompt%id%02 <I hope you're not suggesting I do anything illegal.>
+		CPrompt%id%02 <ifPCLawful Accept>
+		Prompt%id%03 <I'll be back when I have it.>
+		Prompt%id%04 <Sorry, you'll have to do this yourself.>
+	end
+	inv
+		Treasure
+		name <Bing Vase>
+		desc <A prezero vase decorated with pictures of a cartoon penguin. It must be worth a fortune.>
+		fudge 10000
+		StolenGoods
+	end
+
+Content
 	name <You want a hint? I've got a hint.>
 	desc <This friend has some information.>
 	requires <*CS_Conversation (1:FRIEND|1:FAMILY|1:LOVER) ~+Gkn>
-	Size 1
 
 	% E1 is the person with the information
 

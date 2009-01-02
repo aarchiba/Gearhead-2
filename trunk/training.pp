@@ -42,7 +42,7 @@ implementation
 
 uses	ghchars,gearutil,texutil,ability,description,ui4gh,
 {$IFDEF ASCII}
-	vidmenus,vidinfo
+	vidmenus,vidinfo;
 {$ELSE}
 	glmenus,glinfo;
 {$ENDIF}

@@ -395,6 +395,16 @@ Procedure RenderMap( GB: GameBoardPtr );
 		end;
 		AlmostSeen := IsAlmostSeen;
 	end;
+	Function WallSprite( X,Y: Integer ): Integer;
+		{ Return the appropriate wall sprite for this tile: use either the vertical }
+		{ wall or the horizontal wall. }
+	begin
+		{ Calculate the location of the tile directly above this one. }
+		X := X + AngDir[ ScreenDirToMapDir( 6 ) , 1 ];
+		Y := Y + AngDir[ ScreenDirToMapDir( 6 ) , 2 ];
+		if OnTheMap( GB , X , Y ) and ( TerrMan[ TileTerrain( GB , X , Y ) ].Altitude > 5 ) then WallSprite := 16
+		else WallSprite := 14;
+	end;
 const
 	Row_D: Array [0..3,0..1] of Integer = (
 	(0,1),(-1,0),(0,-1),(1,0)
@@ -505,8 +515,8 @@ begin
 				{ Insert MetaTerrain-drawing code here. }
 
 				case M^.S of
-				GS_MetaDoor:		if M^.Stat[ STAT_Pass ] = -100 then 
-							else ;
+				GS_MetaDoor:		if M^.Stat[ STAT_Pass ] = -100 then AddCMCel( GB , X , Y ,  1 , CMC_Terrain , Terrain_Sprite , WallSprite( X , Y ) )
+							else AddCMCel( GB , X , Y ,  1 , CMC_Terrain , Terrain_Sprite , WallSprite( X , Y ) + 1 );
 				GS_MetaStairsUp:	;
 				GS_MetaStairsDown:	;
 				GS_MetaTrapdoor:	;
