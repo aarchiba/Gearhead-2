@@ -521,7 +521,7 @@ var
 		{ Only installed ammo can explode. This may seem silly, and it }
 		{ probably is, but otherwise carrying replacement clips is }
 		{ asking for certain death. }
-		if not IsSubCom( Part ) then exit;
+		if IsExternalPart( FindRoot( Part ) , Part ) then exit;
 
 		{ First calculate the number of shots in the magazine. }
 		{ If it is empty, no ammo explosion will take place. }

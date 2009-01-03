@@ -249,6 +249,9 @@ Procedure Add_Mek_Animation( GB: GameBoardPtr; Target: GearPtr; CMD: Integer );
 var
 	P: Point;
 begin
+	{ Only add animations for visible mecha. }
+	if not MekVisible( GB , M ) then Exit;
+
 	{ Find the location of the target, and just pass that on to }
 	{ the point animation procedure above. }
 	Target := FindRoot( Target );
@@ -1160,15 +1163,8 @@ var
 	end;
 	Function NotIntegralWeapon( Part: GearPtr ): Boolean;
 		{ Return TRUE if part is an invcom or the descendant of an invcom. }
-	var
-		IsIW: Boolean;	{ Is integral weapon. }
 	begin
-		IsIW := True;
-		while IsIW and ( Part^.Parent <> Nil ) do begin
-			if IsInvCom( Part ) then IsIW := False;
-			Part := Part^.Parent;
-		end;
-		NotIntegralWeapon := Not IsIW;
+		NotIntegralWeapon := IsExternalPart( AMaster , Part );
 	end;
 	Function WeaponWeightModifier: Integer;
 		{ Return the targeting modifier caused by the weight of this weapon. }

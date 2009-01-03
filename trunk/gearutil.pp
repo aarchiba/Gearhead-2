@@ -159,6 +159,8 @@ Function NumberOfSkillSlots( PC: GearPtr ): Integer;
 Function TooManySkillsPenalty( PC: GearPtr; N: Integer ): Integer;
 Function SkillAdvCost( PC: GearPtr; CurrentLevel: Integer ): LongInt;
 
+Function IsExternalPart( Master,Part: GearPtr ): Boolean;
+
 
 implementation
 
@@ -3029,6 +3031,20 @@ begin
 	end;
 
 	SkillAdvCost := SAC;
+end;
+
+Function IsExternalPart( Master,Part: GearPtr ): Boolean;
+	{ Return TRUE if Part is an invcom or a descendant of an invcom. }
+var
+	IsXP: Boolean;
+begin
+	{ Assume FALSE until proven TRUE. }
+	IsXP := False;
+	while ( Part <> Nil ) and ( Part <> Master ) and not IsXP do begin
+		if IsInvCom( Part ) then IsXP := True;
+		Part := Part^.Parent;
+	end;
+	IsExternalPart := IsXP;
 end;
 
 

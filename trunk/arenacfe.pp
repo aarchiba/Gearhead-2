@@ -452,7 +452,7 @@ var
 begin
 	M := GB^.Meks;
 	while M <> Nil do begin
-		if GearActive( M ) then begin
+		if GearActive( M ) and OnTheMap( GB , M ) then begin
 			FX := M^.NA;
 			while FX <> Nil do begin
 				FX2 := FX^.Next;
@@ -960,7 +960,7 @@ begin
 	Mek := GB^.Meks;
 	while Mek <> Nil do begin
 		V := NAttValue( Mek^.NA , NAG_Action , NAS_WillCharge );
-		if V <> 0 then begin
+		if GearActive( Mek ) and ( V <> 0 ) then begin
 			Target := LocateMekByUID( GB , V );
 
 			if ( Target <> Nil ) and NotDestroyed( Target ) then begin

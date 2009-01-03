@@ -119,16 +119,17 @@ const
 	{ Terrain texture 22 is open for expansion }
 	TT_Water = 23;
 
-	NumCMCelLayers = 7;		{ Total number of cel layers. }
-	NumBasicCelLayers = 6;		{ Number of cel layers set by RenderMap. }
+	NumCMCelLayers = 8;		{ Total number of cel layers. }
+	NumBasicCelLayers = 7;		{ Number of cel layers set by RenderMap. }
 
 	CMC_Terrain = 1;
 	CMC_Shadow = 2;
-	CMC_MShadow = 3;
-	CMC_Destroyed = 4;
-	CMC_Items = 5;
-	CMC_Master = 6;
-	CMC_Effects = 7;
+	CMC_MetaTerrain = 3;
+	CMC_MShadow = 4;
+	CMC_Destroyed = 5;
+	CMC_Items = 6;
+	CMC_Master = 7;
+	CMC_Effects = 8;
 
 var
 	Mini_Map_Sprite,World_Terrain,Items_Sprite: SensibleSpritePtr;
@@ -395,15 +396,15 @@ Procedure RenderMap( GB: GameBoardPtr );
 		end;
 		AlmostSeen := IsAlmostSeen;
 	end;
-	Function WallSprite( X,Y: Integer ): Integer;
-		{ Return the appropriate wall sprite for this tile: use either the vertical }
-		{ wall or the horizontal wall. }
+	Function DoorSprite( X,Y: Integer ): Integer;
+		{ Return the appropriate door sprite for this tile: use either the vertical }
+		{ door or the horizontal door. }
 	begin
 		{ Calculate the location of the tile directly above this one. }
 		X := X + AngDir[ ScreenDirToMapDir( 6 ) , 1 ];
 		Y := Y + AngDir[ ScreenDirToMapDir( 6 ) , 2 ];
-		if OnTheMap( GB , X , Y ) and ( TerrMan[ TileTerrain( GB , X , Y ) ].Altitude > 5 ) then WallSprite := 16
-		else WallSprite := 14;
+		if OnTheMap( GB , X , Y ) and ( TerrMan[ TileTerrain( GB , X , Y ) ].Altitude > 5 ) then DoorSprite := 16
+		else DoorSprite := 14;
 	end;
 const
 	Row_D: Array [0..3,0..1] of Integer = (
@@ -515,8 +516,8 @@ begin
 				{ Insert MetaTerrain-drawing code here. }
 
 				case M^.S of
-				GS_MetaDoor:		if M^.Stat[ STAT_Pass ] = -100 then AddCMCel( GB , X , Y ,  1 , CMC_Terrain , Terrain_Sprite , WallSprite( X , Y ) )
-							else AddCMCel( GB , X , Y ,  1 , CMC_Terrain , Terrain_Sprite , WallSprite( X , Y ) + 1 );
+				GS_MetaDoor:		if M^.Stat[ STAT_Pass ] = -100 then AddCMCel( GB , X , Y ,  0 , CMC_MetaTerrain , Terrain_Sprite , DoorSprite( X , Y ) )
+							else AddCMCel( GB , X , Y ,  0 , CMC_MetaTerrain , Terrain_Sprite , DoorSprite( X , Y ) + 1 );
 				GS_MetaStairsUp:	;
 				GS_MetaStairsDown:	;
 				GS_MetaTrapdoor:	;

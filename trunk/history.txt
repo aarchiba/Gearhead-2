@@ -1,3 +1,7 @@
+- Status effects only affect models which are on the map (arenacfe.pp)
+- Subweapons of inventory items won't have ammo explosions (action.pp)
+- Hidden units won't be revealed by damaging effects (effects.pp)
+- Destroyed mecha should not be able to charge (arenacfe.pp)
 - Should not lose HP from hunger or morale (ghchars.pp)
 - Fixed crash when world map travel impossible (pcaction.pp)
 - Close combat attacks apply full Spot Weakness rank to damage (effects.pp)
