@@ -32,7 +32,7 @@ Content
 	% P%id%01 = Time Limit
 	% P%id%02 = Have entered combat
 	update <if= PlotStatus %plotid% %id% else %pop% if= p%id%01 0 P= %id%01 ComTime P+ %id%01 86400>
-	start <if= PlotStatus %plotid% %id% else %pop% ifG ComTime P%id%01 if= P%id%02 0 SetPlotStatus %plotid% %id3%>
+	start <if= PlotStatus %plotid% %id% else %pop% ifG ComTime P%id%01 ifG p%id%01 0 if= P%id%02 0 SetPlotStatus %plotid% %id3%>
 
 	% SubPlot1 = Win the battle, get a reward
 	% SubPlot2 = Lose the battle, get scorned
@@ -104,7 +104,7 @@ Content
 	% P%id%01 = Time Limit
 	% P%id%02 = Have entered combat
 	update <if= PlotStatus %plotid% %id% else %pop% if= p%id%01 0 P= %id%01 ComTime P+ %id%01 86400>
-	start <if= PlotStatus %plotid% %id% else %pop% ifG ComTime P%id%01 if= P%id%02 0 SetPlotStatus %plotid% %id3%>
+	start <if= PlotStatus %plotid% %id% else %pop% ifG ComTime P%id%01 ifG p%id%01 0 if= P%id%02 0 SetPlotStatus %plotid% %id3%>
 
 	% SubPlot1 = Win the battle, get a reward
 	% SubPlot2 = Lose the battle, get scorned
@@ -157,7 +157,7 @@ Content
 	% P%id%01 = Time Limit
 	% P%id%02 = Have entered combat
 	update <if= PlotStatus %plotid% %id% else %pop% if= p%id%01 0 P= %id%01 ComTime P+ %id%01 86400>
-	start <if= PlotStatus %plotid% %id% else %pop% ifG ComTime P%id%01 if= P%id%02 0 SetPlotStatus %plotid% %id3%>
+	start <if= PlotStatus %plotid% %id% else %pop% ifG ComTime P%id%01 ifG p%id%01 0 if= P%id%02 0 SetPlotStatus %plotid% %id3%>
 
 	% SubPlot1 = Win the battle, get a reward
 	% SubPlot2 = Lose the battle, get scorned
@@ -219,7 +219,7 @@ Content
 	% P%id%01 = Time Limit
 	% P%id%02 = Have entered combat
 	update <if= PlotStatus %plotid% %id% else %pop% if= p%id%01 0 P= %id%01 ComTime P+ %id%01 86400>
-	start <if= PlotStatus %plotid% %id% else %pop% ifG ComTime P%id%01 if= P%id%02 0 SetPlotStatus %plotid% %id3%>
+	start <if= PlotStatus %plotid% %id% else %pop% ifG ComTime P%id%01 ifG p%id%01 0 if= P%id%02 0 SetPlotStatus %plotid% %id3%>
 
 	% SubPlot1 = Win the battle, get a reward
 	% SubPlot2 = Lose the battle, get scorned

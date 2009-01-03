@@ -250,7 +250,7 @@ var
 	P: Point;
 begin
 	{ Only add animations for visible mecha. }
-	if not MekVisible( GB , M ) then Exit;
+	if not MekVisible( GB , Target ) then Exit;
 
 	{ Find the location of the target, and just pass that on to }
 	{ the point animation procedure above. }

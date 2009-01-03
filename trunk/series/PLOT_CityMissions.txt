@@ -28,7 +28,7 @@ Plot
 	update <if= PlotStatus %plotid% 0 if= P1 0 P= 1 ComTime P+ 1 86400>
 
 	% Insert email here
-	5min <if= PlotStatus %plotid% 0 if= P2 0  if= PCFac NPCFac %2%  if= d20 1  ifG PCCharm d40  Email 1 P= 2 1>
+	5min <if= PlotStatus %plotid% 0 if= RootSceneID %1% if= P2 0  if= PCFac NPCFac %2%  if= d20 1  ifG PCCharm d40  Email 1 P= 2 1>
 	Msg1   <%name2%@ \SCENE NPCSCene %2% :// Hey \RANK , I've got a mission for you in %name1%.>
 	Msg1_1 <%name2%@ \SCENE NPCSCene %2% :// Report to \SCENE EScene 2 for a mission at once.>
 	Msg1_2 <%name2%@ \SCENE NPCSCene %2% :// Your services are required by \FACTION NPCFac E2 . Come see me for mission briefing.>
@@ -53,7 +53,7 @@ Plot
 		*result1 <*GoodLuckOnMission&NoEnemyFac GoR1Final ChatNPCFac na>
 		GoR1Final <Memo 2 SetPlotStatus %plotid% %id1%>
 		result2 <Goto GoRejectMission>
-		Msg1 <A lance of unauthorized mecha has been spotted outside the city. Track them down and you'll get $ \VAL Reward %threat% PayRate plus salvage.>
+		Msg1 <A lance of unauthorized mecha has been spotted in %name3%. Defeat them and you'll get $ \VAL Reward %threat% PayRate plus salvage.>
 		Msg1_1 <>
 		CMsg1_1 <ifNPCSociable Accept>
 		Msg1_2 <>
