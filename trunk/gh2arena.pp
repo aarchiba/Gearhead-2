@@ -428,8 +428,8 @@ Procedure ArenaReloadMaster( HQCamp: CampaignPtr; PC: GearPtr );
 	{ Reload the mecha, and make the unit PAY!!! Money, that is. }
 	{ Bullets aren't free. }
 begin
-	AddNAtt( HQCamp^.Source^.NA , NAG_Experience , NAS_Credits , -ReloadMasterCost( PC ) );
-	DoReloadMaster( PC );
+	AddNAtt( HQCamp^.Source^.NA , NAG_Experience , NAS_Credits , -ReloadMasterCost( PC , Reload_All_Weapons ) );
+	DoReloadMaster( PC , Reload_All_Weapons );
 end;
 
 Function ExpectedMissionReward( HQCamp: CampaignPtr; Scene: GearPtr ): LongInt;
@@ -902,7 +902,7 @@ begin
 	{ Third pass- reload all weapons. }
 	PC := PCForces;
 	while PC <> Nil do begin
-		Cost := ReloadMasterCost( PC );
+		Cost := ReloadMasterCost( PC , Reload_All_Weapons );
 		if ( Cost > 0 ) and ( HQCash( HQCamp ) >= Cost ) then begin
 			ArenaReloadMaster( HQCamp , PC );
 		end;
@@ -926,7 +926,7 @@ begin
 		if POK = 100 then POK := 99;
 		msg := msg + ' (%' + BStr( POK ) + ')';
 	end;
-	if ReloadMasterCost( M ) > 0 then msg := msg + ' -ammo-';
+	if ReloadMasterCost( M , Reload_All_Weapons ) > 0 then msg := msg + ' -ammo-';
 end;
 
 Function AHQMechaName( HQCamp: CampaignPtr; Mek: GearPtr ): String;
@@ -1354,7 +1354,7 @@ begin
 			AddRPGMenuItem( RPM , ReplaceHash( MsgSTring( 'ARENA_RepairUnit' ) , GearName( PC ) ) + ' ($' + BStr( Cost ) + ')' , 2 );
 		end;
 
-		Cost := ReloadMasterCost( PC );
+		Cost := ReloadMasterCost( PC , Reload_All_Weapons );
 		if ( Cost > 0 ) and ( Cost <= HQCash( HQCamp ) ) then begin
 			AddRPGMenuItem( RPM , ReplaceHash( MsgSTring( 'ARENA_ReloadUnit' ) , GearName( PC ) ) + ' ($' + BStr( Cost ) + ')' , 3 );
 		end;
@@ -1448,7 +1448,7 @@ begin
 			AddRPGMenuItem( RPM , ReplaceHash( MsgSTring( 'ARENA_RepairUnit' ) , GearName( Part ) ) + ' ($' + BStr( Cost ) + ')' , 2 );
 		end;
 
-		Cost := ReloadMasterCost( Part );
+		Cost := ReloadMasterCost( Part , Reload_All_Weapons );
 		if ( Cost > 0 ) and ( Cost <= HQCash( HQCamp ) ) then begin
 			AddRPGMenuItem( RPM , ReplaceHash( MsgSTring( 'ARENA_ReloadUnit' ) , GearName( Part ) ) + ' ($' + BStr( Cost ) + ')' , 3 );
 		end;
@@ -1648,7 +1648,7 @@ begin
 			AddRPGMenuItem( RPM , ReplaceHash( MsgSTring( 'ARENA_RepairUnit' ) , GearName( PC ) ) + ' ($' + BStr( Cost ) + ')' , 2 );
 		end;
 
-		Cost := ReloadMasterCost( PC );
+		Cost := ReloadMasterCost( PC , Reload_All_Weapons );
 		if ( Cost > 0 ) and ( Cost <= HQCash( HQCamp ) ) then begin
 			AddRPGMenuItem( RPM , ReplaceHash( MsgSTring( 'ARENA_ReloadUnit' ) , GearName( PC ) ) + ' ($' + BStr( Cost ) + ')' , 3 );
 		end;

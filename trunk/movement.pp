@@ -140,10 +140,19 @@ const
 					{ dynamic scenes. }
 		Num_Environment_Variables = 2;
 		NAS_Gravity = 1;
-			NAV_Earthlike = 0;	{ Default for all values. }
+			NAV_Earthlike = 0;	{ Default for all variables. }
 			NAV_Microgravity = 1;
 		NAS_Atmosphere = 2;
 			NAV_Vacuum = 1;
+
+	Num_Environment_Types = 3;
+		ENV_Ground = 1;
+		ENV_Space = 2;
+		ENV_Inside = 3;
+
+	Environment_Idents: Array [1..Num_Environment_Types] of string = (
+		'GROUND', 'SPACE', 'INSIDE'
+	);
 
 
 function BaseMoveRate( Scene, Master: GearPtr ; MoveMode: Integer ): Integer;
@@ -157,6 +166,8 @@ Function MoveLegal( Scene, Mek: GEarPtr; MoveMode,MoveAction: Integer; COmTime: 
 Function MoveLegal( Scene, Mek: GEarPtr; MoveAction: Integer; COmTime: LongInt ): Boolean;
 
 Function HasAtLeastOneValidMovemode( Mek: GearPtr ): Boolean;
+
+Function MekCanEnterScene( Mek,Scene: GearPtr ): Boolean;
 
 implementation
 
@@ -794,6 +805,43 @@ begin
 		if BaseMoveRate( Nil, Mek , T ) > 0 then ItDoes := True;
 	end;
 	HasAtLeastOneValidMovemode := ItDoes;
+end;
+
+Function MekCanEnterScene( Mek,Scene: GearPtr ): Boolean;
+	{ Depending on what type of scene SCENE is, check to make sure that the }
+	{ mecha in question has at least one valid movemode. }
+const
+	Env_Legal_Movemode: Array [1..Num_Environment_Types,1..NumMoveMode] of Boolean = (
+		( True, True, True, True, False ),	{ Ground }
+		( False, False, False, False, True ),	{ Space }
+		( True, True, True, False, False )	{ Inside }
+	);
+var
+	e_ident: String;
+	E,T: Integer;
+	CanMove: Boolean;
+begin
+	{ Start by determining this scene's environment type. }
+	e_ident := UpCase( SAttValue( Scene^.SA , 'TERRAIN' ) );
+
+	{ Initialize E to 1, which is the default value. }
+	E := 1;
+	for T := 1 to Num_Environment_Types do begin
+		if e_ident = Environment_Idents[ t ] then E := T;
+	end;
+
+	{ Now that we have an environment, check to make sure this mecha can }
+	{ function there. Assume FALSE until proven TRUE. }
+	CanMove := False;
+	for t := 1 to NumMoveMode do begin
+		if Env_Legal_Movemode[ E , T ] then begin
+			if BaseMoveRate( Scene , Mek , T ) > 0 then begin
+				CanMove := True;
+				Break;
+			end;
+		end;
+	end;
+	MekCanEnterScene := CanMove;
 end;
 
 end.

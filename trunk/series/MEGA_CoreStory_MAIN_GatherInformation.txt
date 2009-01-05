@@ -22,6 +22,37 @@
 %%
 
 Content
+	name <They're searching for something.>
+	desc <Your enemy is in town searching for something.>
+	Zrequires <*:CS_GatherInformation +Pun (E:++|F:++)>
+	changes <+P>
+	Size 5
+
+	% E1 is the person who tells the PC about it
+	% E2 is the item being sought
+	% E3 is an urban scene where the enemies will search
+	% E4 is the basement where you'll find your enemies
+	Element2 <Artifact>
+	Place2 </>
+	Element3 <Scene Urban !Near -7>
+	Element4 <Prefab>
+	Place4 <3>
+
+	sub
+		Persona 1
+		.%id%_GoInform <NewChat Say %id%01 SMemo %id%02 History %id%03>
+		Msg%id%01 <>
+		Msg%id%02 <>
+		Msg%id%03 <You learned that your enemies were in town looking for something.>
+
+
+	end
+	inv
+
+	end
+
+
+Content
 	name <Do Not Want!>
 	desc <The PC beats the NPC to the core story item, but the Enemy pulls a LOLcat.>
 	requires <*:CS_GatherInformation +Pla I:++ E:++ F:++ -!Ne -I:TL_Md -I:TL_Hi -I:TL_Ex>

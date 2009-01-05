@@ -289,7 +289,7 @@ Plot
 	sub
 		Persona 1
 		greeting <if= PlotStatus %plotid% %id% else %pop% NewChat Say %id%01 AddChat %id%01>
-		result%id%01 <Goto %id1%_GoInit>
+		result%id%01 <Goto .%id1%_GoInit>
 		Msg%id%01 <Thanks for your help back there. You know, I've got some information that you just might find useful.>
 		Msg%id%01_1 <>
 		CMsg%id%01_1 <ifNPCSociable Accept>

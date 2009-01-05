@@ -49,8 +49,8 @@ var
 		{ willing to take. When it reaches 0, the NPC says goodbye. }
 
 Function RepairMasterCost( Master: GearPtr; Skill: Integer ): LongInt;
-Function ReloadMasterCost( M: GearPtr ): LongInt;
-Procedure DoReloadMaster( M: GearPtr );
+Function ReloadMasterCost( M: GearPtr; ReloadGeneralInv: Boolean ): LongInt;
+Procedure DoReloadMaster( M: GearPtr; ReloadGeneralInv: Boolean );
 
 
 procedure PurchaseGear( GB: GameBoardPtr; PC,NPC,Part: GearPtr );
@@ -581,7 +581,7 @@ begin
 	ReloadMagazineCost := it;
 end;
 
-Function ReloadMasterCost( M: GearPtr ): LongInt;
+Function ReloadMasterCost( M: GearPtr; ReloadGeneralInv: Boolean ): LongInt;
 	{ Return the cost of refilling all magazines held by M. }
 var
 	Part: GearPtr;
@@ -591,14 +591,14 @@ begin
 
 	Part := M^.SubCom;
 	while Part <> Nil do begin
-		it := it + ReloadMasterCost( Part );
+		it := it + ReloadMasterCost( Part , ReloadGeneralInv );
 		Part := Part^.Next;
 	end;
 
-	if Reload_All_Weapons or not IsMasterGear( M ) then begin
+	if ReloadGeneralInv or not IsMasterGear( M ) then begin
 		Part := M^.InvCom;
 		while Part <> Nil do begin
-			it := it + ReloadMasterCost( Part );
+			it := it + ReloadMasterCost( Part , ReloadGeneralInv );
 			Part := Part^.Next;
 		end;
 	end;
@@ -606,7 +606,7 @@ begin
 	ReloadMasterCost := it;
 end;
 
-Procedure DoReloadMaster( M: GearPtr );
+Procedure DoReloadMaster( M: GearPtr; ReloadGeneralInv: Boolean );
 	{ Clear all ammo usage by M. }
 var
 	Part: GearPtr;
@@ -617,19 +617,19 @@ begin
 	{ Check SubComs and InvComs. }
 	Part := M^.SubCom;
 	while Part <> Nil do begin
-		DoReloadMaster( Part );
+		DoReloadMaster( Part , ReloadGeneralInv );
 		Part := Part^.Next;
 	end;
-	if Reload_All_Weapons or not IsMasterGear( M ) then begin
+	if ReloadGeneralInv or not IsMasterGear( M ) then begin
 		Part := M^.InvCom;
 		while Part <> Nil do begin
-			DoReloadMaster( Part );
+			DoReloadMaster( Part , ReloadGeneralInv );
 			Part := Part^.Next;
 		end;
 	end;
 end;
 
-Function ReloadCharsCost( GB: GameBoardPtr; PC,NPC: GearPtr ): LongInt;
+Function ReloadCharsCost( GB: GameBoardPtr; PC,NPC: GearPtr; ReloadGeneralInv: Boolean ): LongInt;
 	{ Calculate the cost of reloading every PC's ammunition. }
 var
 	it: LongInt;
@@ -639,7 +639,7 @@ begin
 	Part := GB^.Meks;
 	while Part <> Nil do begin
 		if ( ( NATtVAlue( Part^.NA , NAG_Location , NAS_Team ) = NAV_DefPlayerTeam ) or ( NAttValue( Part^.NA , NAG_Location , NAS_Team ) = NAV_LancemateTeam ) ) and ( Part^.G = GG_Character ) then begin
-			it := it + ReloadMasterCost( Part );
+			it := it + ReloadMasterCost( Part , ReloadGeneralInv );
 		end;
 		Part := Part^.Next;
 	end;
@@ -650,18 +650,18 @@ begin
 	ReloadCharsCost := it;
 end;
 
-Procedure DoReloadChars( GB: GameBoardPtr; PC,NPC: GearPtr );
+Procedure DoReloadChars( GB: GameBoardPtr; PC,NPC: GearPtr; ReloadGeneralInv: Boolean );
 	{ Calculate the cost of reloading every PC's ammunition. }
 var
 	COst: LongInt;
 	Part: GearPtr;
 begin
-	Cost := ReloadCharsCost( GB , PC , NPC );
+	Cost := ReloadCharsCost( GB , PC , NPC , ReloadGeneralInv );
 	if Cost <= NAttValue( PC^.NA , NAG_Experience , NAS_Credits ) then begin
 		Part := GB^.Meks;
 		while Part <> Nil do begin
 			if ( ( NATtVAlue( Part^.NA , NAG_Location , NAS_Team ) = NAV_DefPlayerTeam ) or ( NAttValue( Part^.NA , NAG_Location , NAS_Team ) = NAV_LancemateTeam ) ) and ( Part^.G = GG_Character ) then begin
-				DoReloadMaster( Part );
+				DoReloadMaster( Part , ReloadGeneralInv );
 			end;
 			Part := Part^.Next;
 		end;
@@ -679,7 +679,7 @@ begin
 	end;
 end;
 
-Function ReloadMechaCost( GB: GameBoardPtr; PC,NPC: GearPtr ): LongInt;
+Function ReloadMechaCost( GB: GameBoardPtr; PC,NPC: GearPtr; ReloadGeneralInv: Boolean ): LongInt;
 	{ Calculate the cost of reloading every mek's ammunition. }
 var
 	it: LongInt;
@@ -689,7 +689,7 @@ begin
 	Part := GB^.Meks;
 	while Part <> Nil do begin
 		if ( NATtVAlue( Part^.NA , NAG_Location , NAS_Team ) = NAV_DefPlayerTeam ) and ( Part^.G = GG_Mecha ) then begin
-			it := it + ReloadMasterCost( Part );
+			it := it + ReloadMasterCost( Part , ReloadGeneralInv );
 		end;
 		Part := Part^.Next;
 	end;
@@ -700,18 +700,18 @@ begin
 	ReloadMechaCost := it;
 end;
 
-Procedure DoReloadMecha( GB: GameBoardPtr; PC,NPC: GearPtr );
+Procedure DoReloadMecha( GB: GameBoardPtr; PC,NPC: GearPtr; ReloadGeneralInv: Boolean );
 	{ Calculate the cost of reloading every PC's ammunition. }
 var
 	COst: LongInt;
 	Part: GearPtr;
 begin
-	Cost := ReloadMechaCost( GB , PC , NPC );
+	Cost := ReloadMechaCost( GB , PC , NPC , ReloadGeneralInv );
 	if Cost <= NAttValue( PC^.NA , NAG_Experience , NAS_Credits ) then begin
 		Part := GB^.Meks;
 		while Part <> Nil do begin
 			if ( NATtVAlue( Part^.NA , NAG_Location , NAS_Team ) = NAV_DefPlayerTeam ) and ( Part^.G = GG_Mecha ) then begin
-				DoReloadMaster( Part );
+				DoReloadMaster( Part , ReloadGeneralInv );
 			end;
 			Part := Part^.Next;
 		end;
@@ -1551,7 +1551,7 @@ var
 	RPM: RPGMenuPtr;
 	Wares: GearPtr;
 	N: Integer;
-	Cost: LongInt;
+	Cost,C1,C2: LongInt;
 begin
 	SERV_GB := GB;
 	SERV_NPC := NPC;
@@ -1586,8 +1586,18 @@ begin
 
 		{ If the shopkeeper knows Basic Repair, allow Reload Chars. }
 		{ If the shopkeeper knows Mecha Repair, allow reload mecha. }
-		if ( ReloadCharsCost( GB , PC , NPC ) > 0 ) and ( NAttValue( NPC^.NA , NAG_Skill , 23 ) > 0 ) then AddRPGMenuItem( RPM , MsgString( 'SERVICES_ReloadCharsPrompt' ) + ' [$' + BStr( ReloadCharsCost( GB , PC , NPC ) ) + ']' , -4 );
-		if ( ReloadMechaCost( GB , PC , NPC ) > 0 ) and ( NAttValue( NPC^.NA , NAG_Skill , 15 ) > 0 ) then AddRPGMenuItem( RPM , MsgString( 'SERVICES_ReloadMeksPrompt' ) + ' [$' + BStr( ReloadMechaCost( GB , PC , NPC ) ) + ']' , -3 );
+		if NAttValue( NPC^.NA , NAG_Skill , 23 ) > 0 then begin
+			C1 := ReloadCharsCost( GB , PC , NPC , False );
+			C2 := ReloadCharsCost( GB , PC , NPC , True );
+			if ( C1 > 0 ) then AddRPGMenuItem( RPM , MsgString( 'SERVICES_ReloadCharsPrompt' ) + ' [$' + BStr( C1 ) + ']' , -4 );
+			if C2 > C1 then AddRPGMenuItem( RPM , MsgString( 'SERVICES_ReloadChars+Prompt' ) + ' [$' + BStr( C2 ) + ']' , -11 );
+		end;
+		if NAttValue( NPC^.NA , NAG_Skill , 15 ) > 0 then begin
+			C1 := ReloadMechaCost( GB , PC , NPC , False );
+			C2 := ReloadMechaCost( GB , PC , NPC , True );
+			if ( C1 > 0 ) then AddRPGMenuItem( RPM , MsgString( 'SERVICES_ReloadMeksPrompt' ) + ' [$' + BStr( C1 ) + ']' , -3 );
+			if C2 > C1 then AddRPGMenuItem( RPM , MsgString( 'SERVICES_ReloadMeks+Prompt' ) + ' [$' + BStr( C2 ) + ']' , -10 );
+		end;
 
 		{ Also if the shopkeeper knows Basic Repair, allow recharging of batteries. }
 		if ( RechargeCost( GB , PC , NPC ) > 0 ) and ( NAttValue( NPC^.NA , NAG_Skill , 23 ) > 0 ) then AddRPGMenuItem( RPM , MsgString( 'SERVICES_RechargePrompt' ) + ' [$' + BStr( RechargeCost( GB , PC , NPC ) ) + ']' , -9 );
@@ -1618,9 +1628,9 @@ begin
 		end else if N = -2 then begin
 			BrowseMecha( GB , PC , NPC );
 		end else if N = -3 then begin
-			DoReloadMecha( GB , PC , NPC );
+			DoReloadMecha( GB , PC , NPC , False );
 		end else if N = -4 then begin
-			DoReloadChars( GB , PC , NPC );
+			DoReloadChars( GB , PC , NPC , False );
 		end else if N = -5 then begin
 			SellStuff( GB , PC , PC , NPC , Stuff );
 		end else if N = -6 then begin
@@ -1632,6 +1642,11 @@ begin
 			ExpressDelivery( GB , PC , NPC );
 		end else if N = -9 then begin
 			DoRecharge( GB , PC , NPC );
+
+		end else if N = -10 then begin
+			DoReloadMecha( GB , PC , NPC , True );
+		end else if N = -11 then begin
+			DoReloadChars( GB , PC , NPC , True );
 		end;
 
 	until N = -1;

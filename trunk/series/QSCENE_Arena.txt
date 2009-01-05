@@ -29,7 +29,7 @@ Scene 0 2
 	RockyTiles
 	Vacuum
 	SpaceBackdrop
-	terrain <GROUND>
+	terrain <INSIDE>
 	type <Arena>
 	special <SHOWALL SOLO ARENA NOPILLAGE UNCHARTABLE>
 	map <MAP_RocketArena.txt>
@@ -218,7 +218,7 @@ Scene 0 2
 	BoxMap
 	MapWidth 17
 	MapHeight 12
-	terrain <GROUND>
+	terrain <INSIDE>
 	special <SHOWALL SOLO ARENA NOPILLAGE>
 
 	start <if= SelfArenaState NAV_AS_Ready else GoCheckBattle          Alert 1   SetSelfArenaState NAV_AS_Battle SetSelfArenaRecharge if# SelfChallengerID 0 ForceChat SelfChallengerID>

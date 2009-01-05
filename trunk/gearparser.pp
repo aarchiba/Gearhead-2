@@ -26,7 +26,7 @@ unit gearparser;
 
 interface
 
-uses dos,rpgdice,texutil,gears,ghmecha,ghmodule,ghchars,ghweapon,ghsupport,gearutil,locale,interact,ability,ui4gh,ghholder;
+uses dos,rpgdice,texutil,gears,ghmecha,ghmodule,ghchars,ghweapon,ghsupport,gearutil,locale,interact,ability,ui4gh,ghholder,movement;
 
 Const
 	SLOT_Next = 0;
@@ -190,21 +190,16 @@ Function SelectMechaByFactionAndRenown( Factions: String; Renown: Integer ): Str
 		{ requirements. There must be mecha capable of travelling in }
 		{ all terrain types, there must be at least one mecha matching }
 		{ the NPC's faction. }
-	const
-		Num_Terr_Specs = 2;
-		Terr_Spec_Name: Array [1..Num_Terr_Specs] of string = (
-		'GROUND', 'SPACE'
-		);
 	var
 		M: GearPtr;
 		T,N: Integer;
 		Total: Int64;
 		FacFound: Boolean;
 		TerrType: String;
-		Terr_Spec_Found: Array [1..Num_Terr_Specs] of Boolean;
+		Terr_Spec_Found: Array [1..Num_Environment_Types] of Boolean;
 	begin
 		{ Initialize the Terr_Spec_Found array }
-		for t := 1 to Num_Terr_Specs do Terr_Spec_Found[t] := False;
+		for t := 1 to Num_Environment_Types do Terr_Spec_Found[t] := False;
 		Total := 0;
 		N := 0;
 		FacFound := False;
@@ -218,8 +213,8 @@ Function SelectMechaByFactionAndRenown( Factions: String; Renown: Integer ): Str
 				if PartAtLeastOneMatch( SAttValue( M^.SA , 'FACTIONS' ) , Factions ) then FacFound := True;
 
 				TerrType := SAttValue( M^.SA , 'TYPE' );
-				for t := 1 to Num_Terr_Specs do begin
-					if AStringHasBString( TerrType , Terr_Spec_Name[ t ] ) then Terr_Spec_Found[ t ] := True;
+				for t := 1 to Num_Environment_Types do begin
+					if AStringHasBString( TerrType , Environment_Idents[ t ] ) then Terr_Spec_Found[ t ] := True;
 				end;
 
 				Inc( N );
@@ -228,7 +223,7 @@ Function SelectMechaByFactionAndRenown( Factions: String; Renown: Integer ): Str
 		end;
 
 		{ Check to see if all the terrain types were found. }
-		for t := 1 to Num_Terr_Specs do if not Terr_Spec_Found[t] then FacFound := False;
+		for t := 1 to Num_Environment_Types do if not Terr_Spec_Found[t] then FacFound := False;
 
 		if FacFound and ( N > 0 ) then begin
 			MechaFileMatchWeight := Total div N;

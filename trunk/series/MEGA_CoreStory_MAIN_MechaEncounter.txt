@@ -296,7 +296,7 @@ Content
 		nu2 <if= T2 0   if= T3 0   if= L1 0   L= 1 1  Goto GoWinMission>
 		nu3 <if= T2 0   if= T3 0   if= L1 0   L= 1 1  Goto GoWinMission>
 		GoWinMission  <Alert 4 History 5   XPV 100  SALVAGE  AddRenown 1   Trigger0 .%id%_%plotid%_GoWin   WinSubPlot %plotid%>
-		GoLoseMission <Alert 6 History 7                                   Trigger0 .%id%_%plotid%_GoLose  LoseSubPlot %plotid%>
+		GoLoseMission <Alert 6 History 7                                   Trigger0 .%id%_%plotid%_GoLoss  LoseSubPlot %plotid%>
 		end <SetEncounterInactive %2%>
 
 		Msg1 <You locate your enemies. They appear to be escorting a large vehicle of some type.>
@@ -390,7 +390,7 @@ Content
 		nu2 <if= T2 0   if= T3 0   if= L1 0   L= 1 1  Goto GoWinMission>
 		nu3 <if= T2 0   if= T3 0   if= L1 0   L= 1 1  Goto GoWinMission>
 		GoWinMission  <Alert 4 History 5   XPV 100  SALVAGE  AddRenown 1   Trigger0 .%id%_%plotid%_GoWin   WinSubPlot %plotid%>
-		GoLoseMission <Alert 6 History 7                                   Trigger0 .%id%_%plotid%_GoLose  LoseSubPlot %plotid%>
+		GoLoseMission <Alert 6 History 7                                   Trigger0 .%id%_%plotid%_GoLoss  LoseSubPlot %plotid%>
 		end <SetEncounterInactive %2%>
 
 		Msg1 <You locate the raiders. They appear to be escorting a large vehicle of some type.>
