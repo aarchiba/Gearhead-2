@@ -414,11 +414,11 @@ Elevator
 % V1 = First time menu check
 name <Airlock>
 desig <AIRLOCK-1>
-use <ifG PCMeks 0 else GoNoMeks if= V1 1 else GoFirstTime Goto GoExit>
+use <ifMechaCanEnterScene Destination else GoNoEnter if= V1 1 else GoFirstTime Goto GoExit>
 GoFirstTime <ifYesNo 2 3 4 Goto GoExit>
 GoExit <V= 1 1 Print 5 Exit Destination>
-GoNoMeks <Print 1>
-Msg1 <This is the elevator to the airlocks.>
+GoNoEnter <Print 1>
+Msg1 <This is the elevator to the airlocks. You need a spaceworthy mecha to go here.>
 Msg2 <This is the elevator to the airlocks. Would you like to launch into space?>
 Msg3 <Yes please.>
 Msg4 <No thanks.>

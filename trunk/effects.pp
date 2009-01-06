@@ -1826,6 +1826,7 @@ begin
 			Smoke^.Stat[ STAT_CloudDuration ] := RollStep( 5 );
 			SetNAtt( Smoke^.NA , NAG_Location , NAS_X , X );
 			SetNAtt( Smoke^.NA , NAG_Location , NAS_Y , Y );
+			SetNAtt( Smoke^.NA , NAG_EpisodeData , NAS_Temporary , 1 );
 		end;
 	end;
 	if ( Random( 3 ) = 1 ) and TerrMan[ TileTerrain( GB,X,Y ) ].Flammable and (( GB^.Scene = Nil ) or ( NAttValue( GB^.Scene^.NA , NAG_EnvironmentData , NAS_Atmosphere ) <> NAV_Vacuum )) then begin
@@ -1835,6 +1836,7 @@ begin
 			AppendGear( GB^.Meks , Smoke );
 			SetNAtt( Smoke^.NA , NAG_Location , NAS_X , X );
 			SetNAtt( Smoke^.NA , NAG_Location , NAS_Y , Y );
+			SetNAtt( Smoke^.NA , NAG_EpisodeData , NAS_Temporary , 1 );
 		end;
 		SetTrigger( GB , 'FIRE!' );
 	end;
@@ -1915,6 +1917,7 @@ begin
 		SetNAtt( Item^.NA , NAG_Skill , 6 , EF.FXDice div 2 );
 		SetNAtt( Item^.NA , NAG_Skill , 10 , ( EF.FXDice + 1 ) div 2 );
 		SetNAtt( Item^.NA , NAG_Location , NAS_Team , Team );
+
 		GearUp( Item );
 	end else if ( EF.Weapon <> Nil ) and ( Item^.G = GG_MetaTerrain ) and ( Item^.S = GS_MetaCloud ) then begin
 		Item^.Stat[ STAT_CloudDuration ] := EF.FXDice * 5;
@@ -1924,6 +1927,7 @@ begin
 	SetNAtt( item^.NA , NAG_Location , NAS_X , X );
 	SetNAtt( item^.NA , NAG_Location , NAS_Y , Y );
 	SetNAtt( item^.NA , NAG_Location , NAS_D , Random( 8 ) );
+	SetNAtt( Item^.NA , NAG_EpisodeData , NAS_Temporary , 1 );
 	AppendGear( GB^.Meks , item );
 	SetNAtt( item^.NA , NAG_EpisodeData, NAS_UID, MaxIdTag( GB^.Meks , NAG_EpisodeData, NAS_UID ) + 1 );
 end;

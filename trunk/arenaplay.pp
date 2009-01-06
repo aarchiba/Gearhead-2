@@ -564,15 +564,11 @@ Procedure PreparePCForces( GB: GameBoardPtr; var PCForces: GearPtr );
 	Function IsValidForScene( Mek: GearPtr ): Boolean;
 		{ Return TRUE if this mecha is valid for this scene, or FALSE otherwise. }
 	begin
-		if ( GB^.Scene <> Nil ) and AStringHasBString( SAttValue( GB^.Scene^.SA , 'SPECIAL' ) , 'TownMecha' ) then begin
-			IsValidForScene := ( BaseMoveRate( GB^.Scene , Mek , MM_Walk ) > 0 ) or ( BaseMoveRate( GB^.Scene , Mek , MM_Roll ) > 0 ) or ( BaseMoveRate( GB^.Scene , Mek , MM_Skim ) > 0 ) or ( BaseMoveRate( GB^.Scene , Mek , MM_Fly ) > 100 );
-		end else begin
-			{ If no check is specified, this mecha is automatically valid. }
-			IsValidForScene := True;
-		end;
+		IsValidForScene := MekCanEnterScene( Mek , GB^.Scene );
 	end;
 var
 	PCT,PC2,PCMek: GearPtr;
+	msg: String;
 begin
 	{ Pass One - Set PC Team for all units. }
 	PCT := PCForces;
@@ -596,19 +592,26 @@ begin
 		{ the map, check to see if he/she has a mecha to get into. }
 		if ( PCT^.G = GG_Character ) and ( PCT^.Scale < GB^.Scale ) then begin
 			PCMek := FindPilotsMecha( PCForces , PCT );
-			if ( PCMek <> Nil ) and ( PCMek^.Scale <= GB^.Scale ) and HasAtLeastOneValidMovemode( PCMek ) and IsValidForScene( PCMek ) then begin
-				{ A mek has been found. Insert the pilot into it. }
-				DelinkGear( PCForces , PCT );
+			if ( PCMek <> Nil ) and ( PCMek^.Scale <= GB^.Scale ) and HasAtLeastOneValidMovemode( PCMek ) then begin
+				if IsValidForScene( PCMek ) then begin
+					{ A mek has been found. Insert the pilot into it. }
+					DelinkGear( PCForces , PCT );
 
-				{ If the pilot is a lancemate, so is the mecha. }
-				if NAttValue( PCT^.NA , NAG_CharDescription , NAS_CharType ) <> NAV_CTPrimary then begin
-					SetNAtt( PCMek^.NA , NAG_Location , NAS_Team , NAV_LancemateTeam );
-				end;
-				if not BoardMecha( PCMek , PCT ) then begin
-					{ The pilot couldn't board the mecha for whatever reason. }
-					{ Stick the pilot back in the list, at the beginning. }
-					PCT^.Next := PCForces;
-					PCForces := PCT;
+					{ If the pilot is a lancemate, so is the mecha. }
+					if NAttValue( PCT^.NA , NAG_CharDescription , NAS_CharType ) <> NAV_CTPrimary then begin
+						SetNAtt( PCMek^.NA , NAG_Location , NAS_Team , NAV_LancemateTeam );
+					end;
+					if not BoardMecha( PCMek , PCT ) then begin
+						{ The pilot couldn't board the mecha for whatever reason. }
+						{ Stick the pilot back in the list, at the beginning. }
+						PCT^.Next := PCForces;
+						PCForces := PCT;
+					end;
+				end else begin
+					{ This mecha isn't valid for the scene. Post a note. }
+					msg := ReplaceHash( MsgString( 'PrepPCF_InvalidMecha' ) , GearName( PCT ) );
+					msg := ReplaceHash( msg , GearName( PCMek ) );
+					DialogMsg( msg );
 				end;
 			end;
 		end;
@@ -686,7 +689,6 @@ begin
 
 	{ Get the PC Forces ready for deployment. }
 	PreparePCForces( Camp^.GB , PCForces );
-{	PrepareNPCForces( Camp^.GB , Scene );}
 
 	{ Stick the metaterrain on the map, since the PC position may well be }
 	{ determined by this. }

@@ -2235,6 +2235,29 @@ begin
 	end;
 end;
 
+Procedure ProcessIfMechaCanEnterScene( var Event: String; GB: GameBoardPtr; Source: GearPtr );
+	{ Return true if the Grabbed_Gear is on the map and operational. }
+	{ Return false otherwise. }
+var
+	PC,Mek,Scene: GearPtr;
+	SceneID: Integer;
+begin
+	{ Locate the PC, the PC's mecha, and the target scene. }
+	PC := FindRoot( GG_LocatePC( GB ) );
+	if ( PC <> Nil ) then begin
+		if PC^.G = GG_Mecha then Mek := PC
+		else Mek := FindPilotsMecha( GB^.Meks , PC );
+	end;
+	SceneID := ScriptValue( Event , GB , Source );
+	Scene := FindActualScene( GB , SceneID );
+
+	if ( PC <> Nil ) and ( Mek <> Nil ) and ( Scene <> Nil ) and NotDestroyed( Mek ) and MekCanEnterScene( Mek , Scene ) then begin
+		IfSuccess( Event );
+	end else begin
+		IfFailure( Event , Source );
+	end;
+end;
+
 
 Procedure ProcessIfTeamCanSeeGG( var Event: String; gb: GameBoardPtr; Source: GearPtr );
 	{ If the grabbed gear can be seen by the requested team, return TRUE. }
@@ -4106,6 +4129,7 @@ begin
 		else if cmd = 'IFGARCHALLY' then ProcessIfGArchAlly( Event , GB , Source )
 		else if cmd = 'IFGHASSKILL' then ProcessIfGHasSkill( Event , GB , Source )
 		else if cmd = 'IFGCANJOINLANCE' then ProcessIfGCanJoinLance( Event , GB , Source )
+		else if cmd = 'IFMECHACANENTERSCENE' then ProcessIfMechaCanEnterScene( Event , GB , Source )
 		else if cmd = 'IFTEAMCANSEEGG' then ProcessIfTeamCanSeeGG( Event , GB , Source )
 		else if cmd = 'IFFACTION' then ProcessIfFaction( Event , GB , Source )
 		else if cmd = 'IFSCENE' then ProcessIfScene( Event , GB , Source )

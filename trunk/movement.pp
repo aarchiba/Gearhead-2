@@ -822,12 +822,13 @@ var
 	CanMove: Boolean;
 begin
 	{ Start by determining this scene's environment type. }
-	e_ident := UpCase( SAttValue( Scene^.SA , 'TERRAIN' ) );
-
 	{ Initialize E to 1, which is the default value. }
 	E := 1;
-	for T := 1 to Num_Environment_Types do begin
-		if e_ident = Environment_Idents[ t ] then E := T;
+	if Scene <> Nil then begin
+		e_ident := UpCase( SAttValue( Scene^.SA , 'TERRAIN' ) );
+		for T := 1 to Num_Environment_Types do begin
+			if e_ident = Environment_Idents[ t ] then E := T;
+		end;
 	end;
 
 	{ Now that we have an environment, check to make sure this mecha can }

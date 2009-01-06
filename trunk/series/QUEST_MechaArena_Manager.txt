@@ -194,6 +194,9 @@ Content
 				Elevator
 				name <To Arena>
 				desig <ENTRANCE %s2%>
+				use <ifMechaCanEnterScene Destination else GoNoEnter  Print 1 Exit Destination>
+				GoNoEnter <Print 101>
+				Msg101 <You need a landworthy mecha to enter the arena.>
 				MiniMapComponent 2
 			end
 		end

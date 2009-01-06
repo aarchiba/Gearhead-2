@@ -1774,12 +1774,21 @@ var
 	N: Integer;
 	CurrentCity,World: GearPtr;
 { PROCEDURES BLOCK }
+	Function FXMRootScene( Part: GearPtr ): GearPtr;
+		{ Find the root scene of this part, assuming it's in a regular scene and not }
+		{ on the gameboard or anywhere strange. }
+	begin
+		while ( Part <> Nil ) and not ( ( Part^.Parent <> Nil ) and ( Part^.Parent^.G <> GG_Scene ) ) do begin
+			Part := Part^.Parent;
+		end;
+		FXMRootScene := Part;
+	end;
 	Procedure CheckAlongPath( Part: GearPtr; AddToMenu: Boolean );
 		{ CHeck along the path specified. }
 	begin
 		while Part <> Nil do begin
 			Inc(N);
-			if ( NAttValue( Part^.NA , NAG_Location , NAS_Team ) = NAV_DefPlayerTeam ) and AddToMenu then AddRPGMenuItem( RPM , FullGearName( Part ) + ' (' + GearName( FindRootScene( GB , Part ) ) + ')' , N );
+			if ( NAttValue( Part^.NA , NAG_Location , NAS_Team ) = NAV_DefPlayerTeam ) and AddToMenu then AddRPGMenuItem( RPM , FullGearName( Part ) + ' (' + GearName( FXMRootScene( Part ) ) + ')' , N );
 			if Part = CurrentCity then begin
 				{ Don't add parts from the current location. }
 				CheckAlongPath( Part^.InvCom , False );
