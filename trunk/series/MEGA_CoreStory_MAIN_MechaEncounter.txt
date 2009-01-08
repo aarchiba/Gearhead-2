@@ -652,7 +652,7 @@ Content
 	name <I Have Become Death>
 	size 9
 	desc <Your enemy no longer cares, and so won't hold back any longer.>
-	requires <*:CS_MechaEncounter E:++ F:++ E:M.rev (E:A.hat|E:A.mut|E:A.obs|E:A.env|E:A.---|E:A.jr_|E:A.sr_) !Hi -&Secondary>
+	requires <*:CS_MechaEncounter E:++ F:++ (E:M.---|E:M.rev) (E:A.hat|E:A.mut|E:A.obs|E:A.env|E:A.---|E:A.jr_|E:A.sr_) !Hi -&Secondary>
 	changes <E:M R:++>
 
 	% E1 is the outdoors scene where this encounter will be placed

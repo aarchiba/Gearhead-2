@@ -24,38 +24,41 @@
 Content
 	name <They're searching for something.>
 	desc <Your enemy is in town searching for something.>
-	Zrequires <*:CS_GatherInformation +Pun (E:++|F:++)>
-	changes <+P>
+	Zrequires <*:CS_GatherInformation +Pun (E:++|F:++) I:-->
+	changes <+P I:++>
 	Size 5
 
 	% E1 is the person who tells the PC about it
 	% E2 is the item being sought
 	% E3 is an urban scene where the enemies will search
 	% E4 is the basement where you'll find your enemies
+	% E5 is a replacement enemy, in case your current enemy is dead at the time of revelation
 	Element2 <Artifact>
 	Place2 </>
 	Element3 <Scene Urban !Near -7>
 	Element4 <Prefab>
 	Place4 <3>
 
+	% SubPlot1 is the locate enemy target task
+	SubPlot1 <*:CS_RevealEncounter_Raiders&ReconMission 3 4>
+
 	sub
 		Persona 1
-		.%id%_GoInform <NewChat Say %id%01 SMemo %id%02 History %id%03>
-		Msg%id%01_1 <>
+		.%id%_GoInform <NewChat Say %id%01 StoryNote %id%02>
+		Msg%id%01_1 <\PERSONA &EnemyNPC is in town... \SPR &EnemyNPC 's searching for something. I don't know what it is, but it must be pretty important.>
 		CMsg%id%01_1 <ifNPCOK &EnemyNPC Accept>
-		Msg%id%01_2 <>
+		Msg%id%01_2 <There's a search team from \FACTION &ENemyFac in town looking for something. I don't know what it is, but it must be pretty important.>
 		CMsg%id%01_2 <if# 0 &EnemyFac ifNPCDead &EnemyNPC Accept>
-		Msg%id%01_3 <>
+		Msg%id%01_3 <Your enemies are in town searching for something. I don't know what it is, but it must be pretty important.>
 		CMsg%id%01_3 <if= 0 &EnemyFac ifNPCDead &EnemyNPC Accept>
+		Msg%id%02 <You learned that your enemies were in town looking for something.>
 
-		Msg%id%02 <>
-		Msg%id%03 <You learned that your enemies were in town looking for something.>
-
+		Metascene 4
 
 	end
 	inv
 		STC CORE-ACTIVATABLE-STATIONARY-DEFENDED
-		name <>
+		name <Abandoned Building>
 	end
 
 

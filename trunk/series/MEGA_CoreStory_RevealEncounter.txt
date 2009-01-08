@@ -433,7 +433,9 @@ Content
 	end
 
 %%
-%% *:CS_RevealEncounter_AttackTarget Content
+%% *:CS_RevealEncounter_FactionTarget Content
+%%	&IsEnemy	The faction in question is an enemy
+%%	&OfAttack	The target is going to be attacked
 %%
 %% You're searching for the target of a given faction. They're apparently
 %% going to attack something, for some reason.
@@ -450,7 +452,7 @@ Content
 Content
 	name <Full Metal Interrogation>
 	desc <Encounter a lance associated with the faction and negotiate or fight for the answer.>
-	requires <*:CS_RevealEncounter_AttackTarget -!Ne -!Lo>
+	requires <*:CS_RevealEncounter_FactionTarget &IsEnemy &OfAttack -!Ne -!Lo>
 	size 6
 
 	% E1 is the outdoor scene where the encounter is
@@ -858,6 +860,7 @@ Content
 
 %%
 %% *:CS_RevealEncounter_Raiders Content
+%%	&ReconMission	The enemies are doing reconnaisance of some type
 %%
 %% There are some hostile mecha out there which are aligned with the
 %% enemy faction/enemy NPC.
@@ -869,6 +872,7 @@ Content
 %% PARAM1: The outdoors scene where the encounter is
 %% PARAM2: The MetaScene being sought
 %%
+
 
 Content
 	name <Ask and ye shall receive>

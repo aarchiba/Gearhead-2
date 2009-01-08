@@ -623,7 +623,7 @@ Content
 
 	% SubPlot1 is the DiscoverNPCMission task
 	% SubPlot2 is the GainAdvantage_VsNPC task
-	SubPlot1 <*:CS_RevealEncounter_AttackTarget 2 3 1>
+	SubPlot1 <*:CS_RevealEncounter_FactionTarget&IsEnemy&OfAttack 2 3 1>
 	SubPlot2 <*:CS_GainAdvantageVsMecha&Reinforcements>
 
 	sub

@@ -138,12 +138,14 @@ const
 	NAG_EnvironmentData = 22;	{ Tells things about the scene. }
 					{ Environment data is inherited by encounters and }
 					{ dynamic scenes. }
-		Num_Environment_Variables = 2;
+		Num_Environment_Variables = 3;
 		NAS_Gravity = 1;
 			NAV_Earthlike = 0;	{ Default for all variables. }
 			NAV_Microgravity = 1;
 		NAS_Atmosphere = 2;
 			NAV_Vacuum = 1;
+		NAS_Ceiling = 3;
+			NAV_HasCeiling = 1;
 
 	Num_Environment_Types = 3;
 		ENV_Ground = 1;
@@ -399,11 +401,16 @@ function CalcFly( Scene, Mek: GearPtr; TrueSpeed: Boolean ): Integer;
 	{ Calculate the base flight speed for this mecha. }
 	{ Set TRUESPEED to TRUE if you want the actual speed of the }
 	{ mecha, or to FALSE if you want its projected speed (needed }
-	{ to calculate jumpjet time- see below. }
+	{ to calculate jumpjet time- see below). }
 var
 	mass,thrust,t2,spd,WingPoints: Integer;
 	IsAVacuum: Boolean;
 begin
+	{ Ceiling check- if this scene has a ceiling, no-one's flying anywhere. }
+	if ( Scene <> Nil ) and ( NAttValue( Scene^.NA , NAG_EnvironmentData , NAS_Ceiling ) = NAV_HasCeiling ) then begin
+		Exit( 0 );
+	end;
+
 	if Mek^.G = GG_Mecha then begin
 		{ Calculate the mass... }
 		mass := GearMass( Mek );

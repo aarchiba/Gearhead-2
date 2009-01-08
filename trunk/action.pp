@@ -195,13 +195,13 @@ begin
 				DoleSkillExperience( PC , Skill , Basic_Skill_Award[ Skill ] * 2 );
 				DoleExperience( PC , Basic_Skill_Award[ Skill ] );
 				if ( SkTar > ( SkRank * 2 div 3 ) ) and ( NAttValue( Pilot^.NA , NAG_Skill , Skill ) > 0 ) then begin
-					DoleSkillExperience( PC , Skill , XPA_SK_Basic * 3 );
+					DoleSkillExperience( PC , Skill , XPA_SK_Basic * 3 + SkTar );
 					DoleExperience( PC , Basic_Skill_Award[ Skill ] );
 				end;
 			end else begin
 				DoleSkillExperience( PC , Skill , Basic_Skill_Award[ Skill ] );
 				if ( SkTar > ( SkRank * 2 div 3 ) ) and ( NAttValue( Pilot^.NA , NAG_Skill , Skill ) > 0 ) then begin
-					DoleSkillExperience( PC , Skill , XPA_SK_Basic );
+					DoleSkillExperience( PC , Skill , XPA_SK_Basic + SkTar );
 					DoleExperience( PC , Basic_Skill_Award[ Skill ] );
 				end;
 			end;

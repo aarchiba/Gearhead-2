@@ -255,6 +255,38 @@ Content
 %%  trigger need be called.
 
 Content
+	name <Let's Join Together>
+	desc <If the PC proves themself, an NPC will offer to join forces.>
+	Zrequires <*:CS_GainAdvantageVsMecha R:-- F:++ -!Ne>
+	changes <R:++>
+	Size 4
+
+	% E1 is an outdoors scene
+	% E2 is an encounter for this battle
+	% E3 is an enemy of your enemy
+	Element1 <Scene Outdoors !Near -7>
+	Element2 <Prefab>
+	Place2 <1>
+	Element3 <Character HasMecha -ArchEnemy !Enemy -2 !Near -7>
+	Place3 <2 (Allies) sd ally>
+
+	% P%id%01 = Initialization Counter
+
+	update <if= P%id%01 0 P= %id%01 1 NPCLevel %3% StoryDL>
+
+	sub
+		MetaScene 2 2
+		rumor%id% <%name3% hasn't returned from patrolling %name1%.>
+
+		Persona 3
+
+	end
+	inv
+		STC CORE-INVISIBLEENCOUNTER
+		name <%name3%'s Mecha>
+	end
+
+Content
 	name <I Got Better>
 	desc <A NPC will offer the PC some help.>
 	requires <*:CS_GainAdvantageVsMecha &Reinforcements (!Ne|!Lo)>
