@@ -21,11 +21,23 @@
 %%          in this narrative thread.
 %%
 
+%%  ********************************
+%%  ***   +P--  Peaceful  Life   ***
+%%  ********************************
+
+%%  ****************************
+%%  ***   +Pme  Meet Enemy   ***
+%%  ****************************
+
+%%  *****************************************
+%%  ***   +Pun  Unknown  Enemy  Attacks   ***
+%%  *****************************************
+
 Content
 	name <They're searching for something.>
 	desc <Your enemy is in town searching for something.>
-	Zrequires <*:CS_GatherInformation +Pun (E:++|F:++) I:-->
-	changes <+P I:++>
+	requires <*:CS_GatherInformation +Pun (E:++|F:++) I:-->
+	changes <+P I:++ E:++>
 	Size 5
 
 	% E1 is the person who tells the PC about it
@@ -38,6 +50,16 @@ Content
 	Element3 <Scene Urban !Near -7>
 	Element4 <Prefab>
 	Place4 <3>
+	Element5 <NewNPC -2 0>
+	Place5 </>
+
+	%% FAIL CONDITIONS:
+	%% - The RevealEncounter task fails
+
+	% P%id%01 = Initialization Counter
+
+	update <if= P%id%01 0 P= %id%01 1 SetPlotStatus %plotid1% %id1%>
+	end <ifSubPlotLost %plotid1%  LoseSubPlot %plotid%  Trigger0 .%id%_%plotid%_GoLoss>
 
 	% SubPlot1 is the locate enemy target task
 	SubPlot1 <*:CS_RevealEncounter_Raiders&ReconMission 3 4>
@@ -54,13 +76,65 @@ Content
 		Msg%id%02 <You learned that your enemies were in town looking for something.>
 
 		Metascene 4
+		type <Dungeon Building Basement>
+		mapwidth 50
+		mapheight 50
+		MonkeyMap
+		LockedDoorChance 0
+		SecretDoorChance 10
 
+		NeededCells 3
+
+		% L1 = Initialization Counter
+		start <if= L1 0 else GoBeenBefore L= 1 1 Alert 1 Alert 2 ifNPCOK &EnemyNPC else GoReplaceEnemy DeleteNPC %5% Goto GoMonologue>
+		GoReplaceEnemy <&SetEnemyNPC %5% SetXXRAttitude %5% XXR_A_NeverMet Goto GoMonologue>
+		GoMonologue <Monologue &EnemyNPC 3 &SetTargetItem %2% History 4 WinSubPlot %plotid% Trigger0 .%id%_%plotid%_GoWin>
+		GoBeenBefore <Print 5>
+
+		end <SetEncounterInactive %4%>
+
+		Msg1 <You enter the abandoned building. All of a sudden, the floor gives way and you tumble into the basement!>
+		Msg2 <As you lie there amid the wreckage and dust you hear faint voices from the upper level.>
+		Msg3 <The %name2% isn't here. Tell the others to move out- we will continue our search elsewhere.>
+		Msg4 <You learned that \PERSONA &EnemyNPC was looking for the %name2%.>
+		Msg5 <You enter the abandoned basement.>
+
+		content1 <Some 1 70 Sub *DUNGEON_THREAT>
+		content2 <Some 1 40 Sub *DUNGEON_DECOR>
+		content3 <Some 1 80 Sub *DUNGEON_REWARD>
+
+		sub
+			Team 1
+			SetEnemy 2
+
+			Team 2
+			name <Monster>
+			type <Ruin Vermin City>
+			Deploy <if= V1 0 V= 1 1 MonsterUp 2 StoryDL>
+			SetEnemy 1
+
+			room
+			special <STARTHERE>
+			MarbleType 22
+
+			room
+			minimap <............2............>
+			sub
+				StairsUp
+				Destination -1
+				MiniMapComponent 2
+				use <Print 1 XPV 100 Return>
+			end
+		end
 	end
 	inv
 		STC CORE-ACTIVATABLE-STATIONARY-DEFENDED
 		name <Abandoned Building>
 	end
 
+%%  *************************************
+%%  ***   +Pla  Learn  of  Artifact   ***
+%%  *************************************
 
 Content
 	name <Do Not Want!>
@@ -121,6 +195,14 @@ Content
 		Prompt2 <I can still get the %name2% back from you!>
 		CPrompt2 <if= P%id%01 -1 Accept>
 	end
+
+%%  ****************************************
+%%  ***   +Pew  Enemy  Weapon  Program   ***
+%%  ****************************************
+
+%%  *******************
+%%  ***   GENERAL   ***
+%%  *******************
 
 Content
 	name <The Enemy's Decision>

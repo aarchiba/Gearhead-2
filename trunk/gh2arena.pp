@@ -1333,6 +1333,14 @@ Procedure ViewMecha( HQCamp: CampaignPtr; PC: GearPtr );
 		end;
 		PCSaveCampaign( HQCamp , Nil , False );
 	end;
+	Procedure RenameMecha;
+		{ Rename this mecha. Very easy. }
+	var
+		name: String;
+	begin
+		name := GetStringFromUser( ReplaceHash( MsgString( 'FHQ_Rename_Prompt' ) , GearName( PC ) ) , @ViewSourceMechaRedraw );
+		if name <> '' then SetSAtt( PC^.SA , 'name <' + name + '>' );
+	end;
 var
 	RPM: RPGMenuPtr;
 	N: Integer;
@@ -1346,6 +1354,10 @@ begin
 
 		AddRPGMenuItem( RPM , MsgString( 'ARENA_VMEK_AssignPilot' ) , 1 );
 		AddRPGMenuItem( RPM , MsgString( 'ARENA_VMEK_ViewInventory' ) , 5 );
+
+		AddRPGMenuItem( RPM , MsgString( 'FHQ_Rename' ) , 7 );
+
+
 		if HasSkill( HQCamp^.Source , NAS_MechaEngineering ) then AddRPGMenuItem( RPM , MsgString( 'ARENA_VMEK_EditParts' ) , 6 );
 		AddRPGMenuItem( RPM , MsgString( 'ARENA_VMEK_SellMecha' ) + ' ($' + BStr( SalePrice ) + ')' , -2 );
 		if PC^.InvCom <> Nil then AddRPGMenuItem( RPM , MsgString( 'ARENA_VMEK_SellMechaInv' ) + ' ($' + BStr( InventoryValue ) + ')' , 4 );
@@ -1374,6 +1386,7 @@ begin
 				end;
 			5:	ArenaHQBackpack( HQCamp^.Source , PC , @BasicArenaRedraw );
 			6:	MechaPartEditor( Nil , HQCamp^.Source^.SubCom , HQCamp^.Source , PC , @BasicArenaRedraw );
+			7:	RenameMecha;
 			-2:	SellMecha( SalePrice );
 		end;
 	until N < 0;

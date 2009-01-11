@@ -2229,7 +2229,7 @@ Content
 		% V1 = Intimidation recharge counter
 		% V2 = Conversation recharge counter
 		greeting <ifG NPCVar %2% 1 2 else GoCheckMission ifNPCArchEnemy %2% else GoOpenStore NewChat Say 17>
-		GoCheckMission <if= SceneID %s2% else GoHangUp ifNPCOK %1% else GoBreakQuest if= QuestStatus %qid% %id% else GoGreeting  ifG NPCVar %2% 0 else GoConfrontation Say 18 AddChat 12 AddChat 13>
+		GoCheckMission <if= SceneID %s2% else GoHangUp ifNPCOK %1% else GoBreakQuest if= QuestStatus %qid% %id% else GoGreeting  ifG NPCVar %2% 1 0 else GoConfrontation Say 18 AddChat 12 AddChat 13>
 		GoConfrontation <NewChat Say 1 AddChat 1 AddChat 2 AddChat 3>
 		GoBreakQuest <SetQuestStatus %qid% -2 Goto GoGreeting>
 		GoHangUp <NewChat Say 19>

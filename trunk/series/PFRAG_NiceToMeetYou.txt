@@ -425,7 +425,7 @@
 
 	Persona
 	requires <*NiceToMeetYou Villainous -&NoTrivial>
-	START <if= V%id%01 0 else .%id%_GoSecond V= %id%01 1 EndChat Say %id%01>
+	START <ifChatNPCInPlay else %1% if= V%id%01 0 else .%id%_GoSecond V= %id%01 1 EndChat Say %id%01>
 	.%id%_GoSecond <if= V%id%01 1 else %1% V= %id%01 2 EndChat Say %id%02 AddChat %id%01>
 	result%id%01 <Goto %1%>
 	Msg%id%01 <Can't you see I'm talking on my mobile? Go away.>

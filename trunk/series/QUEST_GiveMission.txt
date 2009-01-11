@@ -178,7 +178,7 @@ Content
 		Special <NoMSID>
 		% V1 = Visibility Clock.
 		%      If ComTime > V1 and QuestStatus %qid% = %id%, encounter is active
-		update <if= QuestStatus %qid% %id% else GoHide ifG ComTime V1 else GoHide  SetStat STAT_MetaVisibility 0  Goto GoSetOrders>
+		update <if= QuestStatus %qid% %id% else GoHide ifG ComTime V1 else GoHide  SetStat STAT_MetaVisibility 0  ShowEncounter Goto GoSetOrders>
 		GoSetOrders <GrabSource GSetNAtt NAG_EpisodeData NAS_Orders 3>
 		use <ifG StatVal STAT_MetaVisibility -1  Print -1  Goto GoStartCombat>
 		ATTACK <ifG StatVal STAT_MetaVisibility -1    ifUStealth 15 else GoAutoAttack ifYesNo -3 -4 -5 else GoAvoidAttack Goto GoAutoAttack>
@@ -220,7 +220,7 @@ Content
 		Special <NoMSID>
 		% V1 = Visibility Clock.
 		%      If ComTime > V1 and QuestStatus %qid% = %id%, encounter is active
-		update <if= QuestStatus %qid% %id% else GoHide ifG ComTime V1 else GoHide  SetStat STAT_MetaVisibility 0  Goto GoSetOrders>
+		update <if= QuestStatus %qid% %id% else GoHide ifG ComTime V1 else GoHide  SetStat STAT_MetaVisibility 0  ShowEncounter  Goto GoSetOrders>
 		GoSetOrders <GrabSource GSetNAtt NAG_EpisodeData NAS_Orders 3>
 		use <ifG StatVal STAT_MetaVisibility -1  Print -1  Goto GoStartCombat>
 		ATTACK <ifG StatVal STAT_MetaVisibility -1    ifUStealth 15 else GoAutoAttack ifYesNo -3 -4 -5 else GoAvoidAttack Goto GoAutoAttack>
@@ -262,7 +262,7 @@ Content
 		Special <NoMSID>
 		% V1 = Visibility Clock.
 		%      If ComTime > V1 and QuestStatus %qid% = %id%, encounter is active
-		update <if= QuestStatus %qid% %id% else GoHide ifG ComTime V1 else GoHide  SetStat STAT_MetaVisibility 0  Goto GoSetOrders>
+		update <if= QuestStatus %qid% %id% else GoHide ifG ComTime V1 else GoHide  SetStat STAT_MetaVisibility 0  ShowEncounter  Goto GoSetOrders>
 		GoSetOrders <GrabSource GSetNAtt NAG_EpisodeData NAS_Orders 3>
 		use <ifG StatVal STAT_MetaVisibility -1  Print -1  Goto GoStartCombat>
 		ATTACK <ifG StatVal STAT_MetaVisibility -1    ifUStealth 15 else GoAutoAttack ifYesNo -3 -4 -5 else GoAvoidAttack Goto GoAutoAttack>

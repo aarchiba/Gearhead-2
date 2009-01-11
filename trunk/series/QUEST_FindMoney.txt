@@ -533,6 +533,7 @@ Content
 		% This entrance will only be visible while the quest is active;
 		% afterwards it should disappear forever.
 		update <if= QuestStatus %qid% %id% else GoHide  if= SceneVar %s2% 2 0 else GoHide Goto GoSetVisible>
+		Attack <ifG StatVal STAT_MetaVisibility -1  ifG PCScale 0 ifG PCRenown %threat% Print -2 Exit Destination>
 	end
 
 Content

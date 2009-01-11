@@ -1806,7 +1806,7 @@ begin
 
 		if ( GB <> Nil ) and ( SATtValue( Item^.SA , 'USE' ) <> '' ) then AddRPGMenuItem( TIWS_Menu , ReplaceHash( MsgString( 'BACKPACK_UseItemScript' ) , GearName( Item ) ) , -11 );
 
-		if Item^.G = GG_Ammo then AddRPGMenuItem( TIWS_Menu , MsgString( 'BACKPACK_LoadAmmo' ) , -5 );
+		if ( Item^.G = GG_Ammo ) and IsInvCom( Item ) then AddRPGMenuItem( TIWS_Menu , MsgString( 'BACKPACK_LoadAmmo' ) , -5 );
 		if IsInvCom( Item ) then begin
 			if Item^.Parent = PC then begin
 				AddRPGMenuItem( TIWS_Menu , ReplaceHash( MsgString( 'BACKPACK_EquipItem' ) , GearName( Item ) ) , -2 );

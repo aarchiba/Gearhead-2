@@ -1997,6 +1997,7 @@ Content
 		STC QUEST-ENCOUNTER-ACTIVE-STATIONARY
 		name <Dust Cloud>
 		desig <ENTRANCE %s1%>
+		ATTACK <ifG StatVal STAT_MetaVisibility -1   ifG PCScale 0 ifG PCRenown %threat%    Print -2 Exit Destination>
 	end
 
 

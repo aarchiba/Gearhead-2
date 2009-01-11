@@ -570,7 +570,7 @@ begin
 	it := SAttValue( Source^.SA , cmd );
 	if it = '' then begin
 		Plot := PlotMaster( GB , Source );
-		it := SAttValue( Plot^.SA , cmd );
+		if Plot <> Nil then it := SAttValue( Plot^.SA , cmd );
 		if it = '' then begin
 			Plot := StoryMaster( GB , Source );
 			if Plot <> Nil then it := SAttValue( Plot^.SA , cmd );

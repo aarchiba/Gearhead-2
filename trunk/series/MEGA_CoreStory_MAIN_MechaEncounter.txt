@@ -1312,7 +1312,7 @@ Content
 			team 2
 			name <Enemies>
 			SetEnemy 1 3
-			Deploy <if= PlotStatus %plotid% %id% SetSelfFaction &EnemyFac   if= p%id%03 0 else GoSmallDeploy WMecha 2 StoryDL 100>
+			Deploy <if= PlotStatus %plotid% %id% SetSelfFaction %3%   if= p%id%03 0 else GoSmallDeploy WMecha 2 StoryDL 100>
 			GoSmallDeploy <WMecha 2 StoryDL 60>
 			ParaX 45
 			ParaY 45
