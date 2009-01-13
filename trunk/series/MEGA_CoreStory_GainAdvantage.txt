@@ -110,6 +110,53 @@ Content
 %%
 
 Content
+	name <Enemy's Enemy's Gift>
+	desc <Someone else in town is fighting the same enemy.>
+	requires <*:CS_GainAdvantageVsNPC>
+
+	start <ifNPCDead %2% LoseSubPlot %plotid%>
+
+	% E1 is the NPC being sought
+	% E2 is a local public scene
+	% E3 is an enemy of E1
+	Element2 <Scene Public !Near -7>
+	Element3 <Character HasMecha -ArchEnemy !Enemy 1 !Okay -7 !Global NeverFail>
+	NeverFail3 <Bounty Hunter>
+	Place3 <2 SD Ally (Guards)>
+
+	% SubPlot1 is the PC's task
+	% SubPlot2 is the PC's reward
+	SubPlot1 <*:CS_MinorMission 3>
+	SubPlot2 <*CS_GiveEquipment 3>
+
+	sub
+		Persona 3
+		rumor%id% <%name3% has also been fighting %name1%.>
+		greeting <if= PlotStatus %plotid% %id% else %pop% ifSubPlotWon %plotid1% else GoCheckLoss EndChat Say 1 AddChat 1>
+		GoCheckLoss <ifSubPlotLost %plotid1% else GoCheckProgress LoseSubPlot %plotid% Goto GoLoseMission>
+		*GoLoseMission <*MissionWasFailure na na na>
+		GoCheckProgress <if# PlotStatus %plotid1% 0 else GoGreet Goto GoRemind>
+		*GoRemind <*GenericMissionReminder>
+		*GoGreet <*IHearYouAreFightingNPC %1% GoExplain>
+		GoExplain <NewChat Say 2 AddChat 2 AddChat 3>
+		result1 <WinSubPlot %plotid% History 4 Goto .%id2%_GoGiveEquipment>
+		result2 <Goto .%id1%_GoInit>
+		result3 <NewChat Say 3 AddChat 4 AddChat 5>
+		*Result4 <*RejectMission .%id%_GoR4Exit>
+		.%id%_GoR4Exit <AddSociable -d6   LoseSubPlot %plotid%>
+		result5 <Goto .%id1%_GoInit>
+		Msg1 <You did a good job out there, \PC . Now it's time for your reward...>
+		Msg2 <%name1% is my enemy as well; if you were to prove yourself worthy, I could aid you in the fight against \OPR %1% .>
+		Msg3 <I'm not about to give my help to anybody who comes along. I just want to make sure you stand a fighting chance against %name1% is all.>
+		Msg4 <%name3% gave you some new equipment to use against %name1%.>
+		Prompt1 <[Continue]>
+		Prompt2 <How would I go about doing that?>
+		Prompt3 <I've got nothing to prove to you.>
+		Prompt4 <Forget it, I don't need any help.>
+		Prompt5 <Sounds reasonable. What do you want me to do?>
+	end
+
+Content
 	name <Mechanic's Gift>
 	desc <The PC may be given an experimental weapon. Or something.>
 	requires <*:CS_GainAdvantageVsNPC>

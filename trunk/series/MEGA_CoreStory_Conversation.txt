@@ -849,6 +849,58 @@ Content
 	end
 
 Content
+	name <My Watch Is Missing!>
+	desc <The PC will be asked to go fetch a lost watch.>
+	requires <*CS_Conversation (1:FRIEND|1:FAMILY|1:LOVER) -1:ADVEN -!Md -!Hi -!Ex>
+
+	% E1 is the NPC that the PC will speak with
+	% E2 is the item to fetch
+	Element2 <Prefab>
+
+	% Fail Conditions:
+	% - Mission giver dies before encounter is activated
+	% - Fetch subplot fails
+
+	end <if= PlotStatus %plotid1% 0 else .%id%_GoCheckReveal ifNPCDead %1% else %pop% LoseComp 0 .%id%_loss>
+	.%id%_GoCheckReveal <ifSubPlotLost %plotid1% SMemo %id%01 SetPlotStatus %plotid3% %id3%>
+	.%id%_loss <+T-->
+
+	% Upon getting the item, set the win subplot.
+	Get%2% <SMemo %id%02  SetPlotStatus %plotid2% %id2%>
+
+	Msg%id%01 <You failed to recover the watch. You should go tell %name1% at \SCENE NPCScene %1% .>
+	Msg%id%02 <You should return the watch to %name1% at \SCENE NPCScene %1% .>
+
+	%% SubPlot1 is Fetch Item
+	%% SubPlot2 is the winning condition
+	%% SubPlot3 is the loss condition
+	SubPlot1 <*:CS_FetchItem 2>
+	SubPlot2 <*CS_WinFetchItem 1 2>
+	SubPlot3 <*CS_LoseTask 1>
+
+	sub
+		Persona 1
+		greeting <if= PlotStatus %plotid1% 0 else .%id%_GoRemind if# PlotStatus %plotid% %id% else .%id%_GoOfferMission Goto %pop%>
+		*.%id%_GoOfferMission <*HowAreYou .%id%_GoBriefing>
+		*.%id%_GoRemind <*GenericMissionReminder>
+		.%id%_GoBriefing <NewChat Say %id%01 AddChat %id%01 AddChat %id%02>
+		.%id%_GoStartMission <StoryNote %id%02 SetPlotStatus %plotid1% %id1%>
+		result%id%01 <NewChat Say %id%03 Goto .%id%_GoStartMission>
+		result%id%02 <NewChat Say %id%04 AddEasygoing -d4 Goto .%id%_GoStartMission>
+		Msg%id%01 <I was wondering if you could help me with something. My watch went missing, I think maybe it got stolen. Could you see if you can find it?>
+		Msg%id%02 <%name1% asked you to help find \PPR %1% watch.>
+		Msg%id%03 <Thanks! I knew I could depend on you.>
+		Msg%id%04 <Oh, as if you've got something better to do. Don't worry, I'll be sure to reward you if you find it. I know how important pavlovian reinforcement is to you adventurers.>
+		Prompt%id%01 <I'll let you know if I do.>
+		Prompt%id%02 <This is hardly a fitting use of my mad cavalier skills.>
+	end
+	inv
+		Treasure 5
+		name <Watch>
+		desc <%name1%'s watch. It's not even all that nice, really.>
+	end
+
+Content
 	name <You want a hint? I've got a hint.>
 	desc <This friend has some information.>
 	requires <*CS_Conversation (1:FRIEND|1:FAMILY|1:LOVER) ~+Gkn>

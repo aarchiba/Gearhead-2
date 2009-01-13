@@ -1,4 +1,74 @@
 Plot
+	name <Stolen Blueprints>
+	desc <A local scientist has just had the plans for their latest invention stolen.>
+	requires <#A +T-- ~C:POLIC>
+	Size 1
+
+	% E1 is a scene for the scientist
+	% E2 is the scientist
+	% E3 is the stolen plans
+	Element1 <Scene Public (university|laboratory) !Near -7>
+	Element2 <Character ACADE !Near 1 -ArchEnemy NeverFail>
+	NeverFail2 <Scientist>
+	Place2 <1 (Citizens) pass>
+	Element3 <Prefab>
+
+	% Fail Conditions:
+	% - Mission giver dies before encounter is activated
+	% - Fetch subplot fails
+
+	% P%id%01 = Initialization Counter
+
+	update <if= P%id%01 0 P= %id%01 1 SetPlotStatus %plotid% %id%>
+
+	end <if= PlotStatus %plotid1% 0 else .%id%_GoCheckReveal ifNPCDead %2%  LoseComp 0 .%id%_loss>
+	.%id%_GoCheckReveal <ifSubPlotLost %plotid1% SMemo %id%01 SetPlotStatus %plotid3% %id3%>
+	.%id%_loss <+T-->
+
+	% Upon getting the item, set the win subplot.
+	Get%3% <SMemo %id%02  SetPlotStatus %plotid2% %id2%>
+
+	Msg%id%01 <You failed to recover the blueprint. You should go report to %name2% at %name1%.>
+	Msg%id%02 <You should return the blueprint to %name2% at %name1%.>
+
+	%% SubPlot1 is Fetch Item
+	%% SubPlot2 is the winning condition
+	%% SubPlot3 is the loss condition
+	SubPlot1 <*:CS_FetchItem&Stolen 3>
+	SubPlot2 <*CS_WinFetchItem 2 3>
+	SubPlot3 <*CS_CALoseMission 2>
+
+	sub
+		Persona 2
+		rumor%id% <%name2% lost something of great importance.>
+		greeting <if= PlotStatus %plotid1% 0 else .%id%_GoRemind Goto .%id%_GoGreet>
+		.%id%_GoOfferMission <ifChatNPCUnknown else .%id%_GoKnownGreeting ifChatNPCAlly else .%id%_GoUnknownGreeting Goto .%id%_GoKnownGreeting>
+		*.%id%_GoRemind <*GenericMissionReminder>
+		*.%id%_GoGreet <*INeedYourHelp .%id%_GoBriefing .%id%_GoRefuse>
+		.%id%_GoBriefing <NewChat Say %id%01 AddChat %id%01 AddChat %id%02>
+		.%id%_GoRefuse <NewChat Say %id%03 AddChat %id%01 AddChat %id%02>
+		*result%id%01 <*GoodLuckOnMission .%id%_GoR1Exit ChatNPCFac na>
+		.%id%_GoR1Exit <StoryNote %id%02 SetPlotStatus %plotid1% %id1%>
+		*Result%id%02 <*RejectMission .%id%_GoR2Exit>
+		.%id%_GoR2Exit <LoseComp 0 .%id%_changes>
+		.%id%_changes <+T-- +F-->
+		Msg%id%01 <Some very important blueprints have been stolen from my lab. I'd like for you to check around, and see if you can find out where they are... You will be rewarded for finding them, of course.>
+		Msg%id%02 <%name2% hired you to recover \PPR %2% stolen blueprints.>
+		Msg%id%03 <Wait! I can afford to pay you, double your normal rate... Some very important blueprints have been stolen from my office. I need you to find them and return them to me.>
+		Prompt%id%01 <Alright, I think I can do that.>
+		Prompt%id%02 <This isn't my kind of job.>
+		CPrompt%id%02 <if# PCFac ChatNPCFac Accept>
+	end
+	inv
+		Treasure 5
+		name <Blueprint>
+		desc <Plans to build some kind of incomprehensible machine.>
+		clue29 <Print 1>
+		Msg1 <You really hope that someone's going to edit these plans before publication, because right now you can't make heads or tails of them.>
+	end
+
+
+Plot
 	name <Hanging Rescue Reward>
 	desc <The PC rescued someone previously, now it's a good time for a reward.>
 	requires <#A +T-- +Hrt H:++ -L:ENEMY Common>

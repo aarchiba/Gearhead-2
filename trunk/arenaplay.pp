@@ -215,6 +215,9 @@ begin
 				if ETA <= Camp^.GB^.ComTime then begin
 					GetMekInput( M , Camp , False );
 					if ( NAttValue( M^.NA , NAG_Location , NAS_Team ) = NAV_DefPlayerTeam ) then PCActed := True;
+				end else if ( NAttValue( M^.NA , NAG_Location , NAS_Team ) = NAV_DefPlayerTeam ) and ( ETA = ( Camp^.GB^.ComTime + 1 ) ) then begin
+					{ We're going to update the display next second; don't bother doing it now. }
+					PCActed := True;
 				end;
 
 			end;

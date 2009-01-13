@@ -334,7 +334,7 @@ Const
 			meksys: 0;
 			ToolNeeded: TOOL_None;
 			Usage: 0;			),
-		(	{Investigation}
+		(	{Insight}
 			stat: STAT_Perception;
 			meksys: 0;
 			ToolNeeded: TOOL_None;

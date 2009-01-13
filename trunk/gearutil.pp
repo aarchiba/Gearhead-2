@@ -1511,7 +1511,7 @@ var
 	it: GearPtr;
 begin
 	it := Nil;
-	while LList <> Nil do begin
+	while ( LList <> Nil ) and ( it = Nil ) do begin
 		if LList^.G = G then it := LList;
 		if ( it = Nil ) then it := SeekGearByG( LList^.SubCom , G );
 		if ( it = Nil ) then it := SeekGearByG( LList^.InvCom , G );

@@ -460,6 +460,17 @@ Lawfulness -5
 Pragmatism 10
 
 Job
+name <Smuggler>
+desig <THIEF>
+requires <tradehub>
+% Conversation, Shopping, Stealth
+skill 19
+skill 21
+skill 25
+Lawfulness -5
+Sociability 10
+
+Job
 name <Pirate>
 desig <THIEF>
 requires <(SPINNER|ASTEROID)>
@@ -499,4 +510,12 @@ requires <GENERAL>
 Skill 21
 Skill 23
 
+Job
+name <Trader>
+desig <TRADE>
+requires <tradehub>
+% Conversation, Shopping
+skill 19
+skill 21
+Sociability 10
 

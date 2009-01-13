@@ -16,8 +16,63 @@
 %%
 
 Content
+	name <Clean the station>
+	requires <*:CS_MinorMission>
+	desc <The PC will be sent to clean out a microstation.>
+	Size 4
+
+	% E1 is the mission-giver
+	% E2 is a space or asteroid environs scene
+	% E3 is the encounter
+	Element2 <Scene Environs Space !Near -7>
+	Element3 <Prefab>
+	Place3 <2>
+
+	sub
+		Persona 1
+		.%id%_GoInit <NewChat Say %id%01 PMemo %plotid% %id%02 SetPlotStatus %plotid% %id%>
+		Msg%id%01 <There's an agricultural microstation outside of \SCENE RootSceneID that's been infested with fungus. I need for you to go there and clean it out.>
+		Msg%id%02 <%name1% asked you to clear out an agricultural microstation.>
+
+		MetaScene 3
+		special <SHOWALL>
+		boxmap
+		MapWidth 17
+		MapHeight 17
+		special <AddExit>
+
+		FloorType 1
+
+		nu2 <if= T2 0   if= V1 0 V= 1 1   Alert 1   XPV 100   PMemo %plotid% 2 WinSubPlot %plotid%>
+		Msg1 <You have exterminated the last of the vermin.>
+
+		sub
+			Team 1
+			SetEnemy 2
+
+			Team 2
+			name <Fun Guys>
+			SetEnemy 1
+			Deploy <WMonster 2 StoryDL 100>
+			type <Fungus Vermin>
+
+			Forest
+			Forest
+			Forest
+			Forest
+			Forest
+		end
+	end
+	inv
+		STC CORE-STATIONARY
+		name <Agricultural Microstation>
+	end
+
+
+
+Content
 	name <Raiders Causing Problems>
-	requires <*:CS_MinorMission (1:CORPO|1:CRAFT|1:TRADE|1:POLIC|1:POLIT|1:LABOR|1:ADVEN|1:MILIT)>
+	requires <*:CS_MinorMission (1:ADVEN|1:CORPO|1:CRAFT|1:LABOR|1:MILIT|1:POLIC|1:POLIT|1:TRADE|1:MOOK_)>
 	desc <There are some raiders who have been causing trouble. Go destroy them.>
 	Size 4
 

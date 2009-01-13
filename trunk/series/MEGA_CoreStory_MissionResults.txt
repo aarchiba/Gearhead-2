@@ -15,6 +15,20 @@
 %%
 
 Content
+	name <New Mecha>
+	requires <*CS_GiveEquipment>
+
+	% E1 is the item-giver
+
+	sub
+		Persona 1
+		% V%id%01 = Threat Counter
+		.%id%_GoGiveEquipment <NewChat Say %id%01 V= %id%01 StoryDL V+ %id%01 d10  RandomMecha .%id%_Factions V%id%01>
+		Msg%id%01 <You can never own too many mecha. Here, you can have this one. May it never be shot out from under you.>
+		.%id%_Factions <GENERAL \FACTION_DESIG RootSceneFac \FACTION_DESIG ChatNPCFac>
+	end
+
+Content
 	name <Mecha Gun 1: Grenade Launcher>
 	requires <*CS_GiveEquipment !Ne ~1:CRAFT>
 

@@ -968,6 +968,44 @@ begin
 	UnequipItem( GB , LList , PC , Item );
 end;
 
+Procedure EjectAmmo( GB: GameBoardPtr; var LList: GearPtr; PC , Item: GearPtr );
+	{ Remove all ammo from this item. }
+	Procedure RemoveThisAmmo( Ammo: GearPtr );
+		{ Remove ammo from wherever it is, then give it to the PC. }
+		{ Ammo must be a subcom!!! }
+	begin
+		{ First, delink Ammo from its parent. }
+		DelinkGear( Ammo^.Parent^.SubCom , Ammo );
+
+		{ Next, link Ammo into the general inventory, if possible. }
+		GivePartToPC( LList , Ammo , PC );
+
+		DialogMsg( ReplaceHash( MsgString( 'BACKPACK_Do_EjectAmmo' ) , GearName( Ammo ) ) );
+	end;
+	Procedure CheckForAmmoToEject( IList: GearPtr );
+		{ Check this list for ammo to eject, and also all subcoms. }
+	var
+		I2: GearPtr;
+	begin
+		while IList <> Nil do begin
+			I2 := IList^.Next;
+
+			if IList^.G = GG_Ammo then begin
+				RemoveThisAmmo( IList );
+			end else begin
+				CheckForAmmoToEject( IList^.SubCom );
+			end;
+
+			IList := I2;
+		end;
+	end;
+begin
+	{ Start the search going. }
+	CheckForAmmoToEject( Item^.SubCom );
+
+	{ Unequipping takes time. }
+	if GB <> Nil then WaitAMinute( GB , PC , ReactionTime( PC ) );
+end;
 
 Function CanBeExtracted( Item: GearPtr ): Boolean;
 	{ Return TRUE if the listed part can be extracted from a mecha, }
@@ -1807,6 +1845,7 @@ begin
 		if ( GB <> Nil ) and ( SATtValue( Item^.SA , 'USE' ) <> '' ) then AddRPGMenuItem( TIWS_Menu , ReplaceHash( MsgString( 'BACKPACK_UseItemScript' ) , GearName( Item ) ) , -11 );
 
 		if ( Item^.G = GG_Ammo ) and IsInvCom( Item ) then AddRPGMenuItem( TIWS_Menu , MsgString( 'BACKPACK_LoadAmmo' ) , -5 );
+
 		if IsInvCom( Item ) then begin
 			if Item^.Parent = PC then begin
 				AddRPGMenuItem( TIWS_Menu , ReplaceHash( MsgString( 'BACKPACK_EquipItem' ) , GearName( Item ) ) , -2 );
@@ -1821,6 +1860,9 @@ begin
 		end else if ( FindMaster( Item ) <> Nil ) and ( FindMaster( Item )^.G = GG_Mecha ) and CanBeExtracted( Item ) then begin
 			AddRPGMenuItem( TIWS_Menu , MsgString( 'BACKPACK_Remove' ) + GearName( Item ) , -7 );
 		end;
+
+		if ( SeekGearByG( Item^.SubCom , GG_Ammo ) <> Nil ) and not IsMasterGear( Item ) then AddRPGMenuItem( TIWS_Menu , MsgString( 'BACKPACK_EjectAmmo' ) , 4 );
+
 		if GB <> Nil then AddRepairOptions( TIWS_Menu , TruePC , Item );
 		if ( Item^.G = GG_Weapon ) or ( ( Item^.G = GG_Ammo ) and ( Item^.S = GS_Grenade ) ) then begin
 			AddRPGMenuItem( TIWS_Menu, ReplaceHash( MsgString( 'BACKPACK_QF' + BStr( NAttValue( Item^.NA, NAG_WeaponModifier, NAS_QuickFire ) ) ), GearName( Item ) ), 2 );
@@ -1846,6 +1888,7 @@ begin
 			DoFieldRepair( GB , TruePC , Item , N-100 );
 		end else begin
 			case N of
+				4: EjectAmmo( GB , LList , PC , Item );
 				3: SetNAtt( Item^.NA , NAG_WeaponModifier , NAS_SafetySwitch , 1 - NAttValue( Item^.NA , NAG_WeaponModifier , NAS_SafetySwitch ) );
 				2: SwitchQuickFire( Item );
 				1: UseSkillOnItem( GB , TruePC , Item );

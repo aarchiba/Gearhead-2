@@ -15,6 +15,123 @@
 %%
 
 Content
+	name <New Enemy Wants It>
+	desc <The item you're looking for was stolen for a new enemy.>
+	requires <*:CS_FetchItem E:-->
+	changes <E:++>
+	Size 5
+
+	% E1 is the item that was taken
+	% E2 is an environs scene
+	% E3 is a base for the thief
+	% E4 is the thief who took it
+	% E5 is the new enemy NPC
+	Place1 <4>
+	Element2 <Scene Outdoors !Near -7>
+	Element3 <Prefab>
+	Place3 <2>
+	Element4 <Prefab>
+	Place4 <3 (Thief)>
+	Element5 <NewNPC -2 0>
+	Place5 </>
+
+	%% FAIL CONDITIONS
+	%% - DiscoverNPCHasItem fails
+	%% - RevealEncounter fails
+	%% - E1 is destroyed
+
+	% P%id%01 = Initialization Counter
+	% P%id%02 = Get item history counter
+
+	update <if= P%id%01 0 P= %id%01 1 SetPlotStatus %plotid1% %id1% NPCLevel %4% StoryDL>
+
+	get%1% <WinSubPlot %plotid% if= P%id%02 0 P= %id%02 1 History %id%01>
+
+	.%id1%_%plotid1%_GoDiscover <SetPlotStatus %plotid2% %id2%>
+
+	end <ifSubPlotLost %plotid1% else .%id%_GoCheckSP2   LoseSubPlot %plotid%>
+	.%id%_GoCheckSP2 <ifSubPlotLost %plotid2% else .%id%_GoCheckE1   LoseSubPlot %plotid%>
+	.%id%_GoCheckE1 <ifItemDestroyed %1%   LoseSubPlot %plotid%>
+
+	Msg%id%01 <You recovered the %name1% from %name4%.>
+
+	% SubPlot1 is where the PC learns that the thief has the item.
+	% SubPlot2 is the PC's attempt to locate the thief.
+	SubPlot1 <*:CS_DiscoverNPCHasItem 4 1>
+	SubPlot2 <*:CS_RevealEncounter_NPCBase 2 3 4>
+
+	sub
+		MetaScene 3
+		boxmap
+		MapWidth 13
+		MapHeight 13
+		special <AddExit>
+
+		start <if= V1 0 V= 1 1 ForceChat %4%>
+		end <if# PlotStatus %plotid% %id% else GoLoseEpisode SetEncounterInactive %3% FreezeNPC %4%>
+		GoLoseEpisode <History 1 SetEncounterInactive %3% FreezeNPC %4% LoseSubPlot %plotid%>
+
+		Msg1 <You failed to recover the %name1% from %name4%.>
+
+		sub
+			Team 1
+
+			Team 2
+			name <Thief>
+		end
+
+		Persona 4
+		special <UNLISTED>
+		% V1 = First time counter
+		&HighPrice <Threat StoryDL 21>
+		&MedPrice <Threat StoryDL 20>
+		&LowPrice <Threat StoryDL 5>
+		greeting <ifChatNPCSurrendered else GoCheckAggro IfItemOK %1% Else GoDestroyed EndCHat Say 1 ifKeyItem %1% else GoGiveNow>
+		GoGiveNow <Print 3 GiveItem %1%>
+		GoDestroyed <EndChat Say 2>
+		GoCheckAggro <ifSubPlotWon %plotid% else GoGreet EndCHat Say 4 TeamAttack 2 PCEnemy %4%>
+		GoGreet <if= V1 0 else GoBeenBefore V= 1 1 History 6 &SetEnemyNPC %5% SetXXRAttitude %5% XXR_A_NeverMet Goto GoBeenBefore>
+		GoBeenBefore <NewChat Say 5 AddChat 1 AddChat 2 AddChat 3>
+		result1 <ifIntimidation HardSkillTar StoryDL else GoR1Fail EndChat Say 8 GiveItem %1% FreezeNPC %4% PCEnemy %4%>
+		GoR1Fail <EndChat Say 7 TeamAttack 2>
+		result2 <NewChat Say 9 AddChat 4 AddChat 5 AddChat 6 AddChat 7>
+		result3 <NewChat Say 10>
+		result4 <ifShopping 3 else GoR4Fail cash+ -&HighPrice EndChat Say 11 GiveItem %1% FreezeNPC %4%>
+		GoR4Fail <EndCHat Say 12 TeamAttack 2>
+		result5 <ifShopping HardSkillTar StoryDL else GoR4Fail ifIntimidation SkillTar StoryDL else GoR4Fail cash+ -&LowPrice EndChat Say 11 GiveItem %1% FreezeNPC %4%>
+		result6 <Goto result1>
+		result7 <Goto result3>
+		Msg1 <You win! Just take the %name1% and leave!>
+		Msg2 <You've destroyed the %name1%! It's useless to us both now...>
+		Msg3 <%name4% gives you the %name1%.>
+		Msg4 <Hey wait a minute... where's my %name1%!?>
+		Msg5 <They said that you were looking for this %name1%... Well, I hate to disappoint you, but I stole this for %name5% and I never disappoint such an important customer.>
+		Msg6 <%name4% stole the %name1% for someone named %name5%.>
+		Msg7 <If that's how you feel, I'm afraid I can't let you live!>
+		Msg8 <I guess I'd rather live than keep my perfect reputation... Here's the %name1%, just don't tell anyone you got it from me.>
+		Msg9 <%name5% said I'd get $ \VAL &MedPrice for it, but as I said it's not even an issue because I make it a policy to never disappoint a customer. It's not for sale.>
+		Msg10 <Give you some time!? Look, I'm getting ready to go... just get out of here and stop bothering me.>
+		Msg11 <Congratulations, you're my new customer! Here's the %name1%; I gotta go...>
+		Msg12 <I told you, it's not for sale! I can see there's only one way I'm every going to be rid of you...>
+		Prompt1 <I'm afraid that I can't let you keep it.>
+		Prompt2 <How much are you asking for it?>
+		Prompt3 <Wait, I need some time to think about this.>
+		Prompt4 <I'll pay you $ \VAL &HighPrice for it.>
+		CPrompt4 <ifG PC$ &HighPrice Accept>
+		Prompt5 <I'll pay you $ \VAL &LowPrice for it.>
+		CPrompt5 <ifG PC$ &LowPrice Accept>
+		Prompt6 <Looks like I'll have to take it from you, then.>
+		Prompt7 <Maybe I can gather some more money.>
+	end
+	inv
+		STC CORE-ACTIVATABLE-STATIONARY-DEFENDED
+		name <Hideout>
+
+		NPC Thief
+		job_desig <MOOK_>
+	end
+
+Content
 	name <BFF Deathtrap>
 	desc <The Enemy's BFF lays a trap for the PC>
 	requires <*:CS_FetchItem (E:M.see|E:M.pro|E:M.ggd) E:A.env +H--  -!Ne -!Lo>

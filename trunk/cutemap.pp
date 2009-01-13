@@ -184,7 +184,7 @@ const
 	DefaultMaleSpriteHead = 'c_cha_m_';
 	DefaultFemaleSpriteHead = 'c_cha_f_';
 var
-	it: String;
+	it,fname: String;
 	FList: SAttPtr;
 begin
 	it := SAttValue( M^.SA , 'CUTE_SPRITE' );
@@ -195,16 +195,24 @@ begin
 			end else begin
 				it := DefaultFemaleSpriteHead;
 			end;
-			it := it + SAttValue( M^.SA , 'JOB' ) + '.*';
-			FList := CreateFileList( Graphics_Directory + it );
+			fname := it + SAttValue( M^.SA , 'JOB' ) + '.*';
+			FList := CreateFileList( Graphics_Directory + fname );
 			if FList <> Nil then begin
 				it := SelectRandomSAtt( FList )^.Info;
 				DisposeSAtt( FList );
 			end else begin
-				if NAttValue( M^.NA , NAG_CharDescription , NAS_Gender ) = NAV_Male then begin
-					it := DefaultMaleSpriteName;
+				fname := it + SAttValue( M^.SA , 'JOB_DESIG' ) + '.*';
+
+				FList := CreateFileList( Graphics_Directory + fname );
+				if FList <> Nil then begin
+					it := SelectRandomSAtt( FList )^.Info;
+					DisposeSAtt( FList );
 				end else begin
-					it := DefaultFemaleSpriteName;
+					if NAttValue( M^.NA , NAG_CharDescription , NAS_Gender ) = NAV_Male then begin
+						it := DefaultMaleSpriteName;
+					end else begin
+						it := DefaultFemaleSpriteName;
+					end;
 				end;
 			end;
 		end else if ( M^.G = GG_Mecha ) and ( M^.S >= 0 ) and ( M^.S < NumForm ) then begin
@@ -923,7 +931,9 @@ initialization
 	World_Terrain := LocateSprite( 'world_terrain.png' , 64 , 64 );
 
 	Terrain_Sprite := LocateSprite( 'cute_terrain.png' , 50 , 120 );
-	Shadow_Sprite := LocateSprite( 'c_shadows.png' , 50 , 120 );
+
+	Shadow_Sprite := LocateSprite( 'c_shadows_noalpha.png' , 50 , 120 );
+
 	Items_Sprite := LocateSprite( Items_Sprite_Name , 50 , 120 );
 
 	Strong_Hit_Sprite := LocateSprite( Strong_Hit_Sprite_Name , 64, 64 );

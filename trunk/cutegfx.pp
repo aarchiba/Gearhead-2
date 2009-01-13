@@ -556,6 +556,11 @@ begin
 				it^.img := tmp;
 			end;
 
+			{ Convert to the screen mode. }
+			{ This will make blitting far quicker. }
+			tmp := SDL_ConvertSurface( it^.Img , Game_Screen^.Format , SDL_SRCCOLORKEY );
+			SDL_FreeSurface( it^.Img );
+			it^.Img := TMP;
 		end;
 
 		Dispose( fname );
