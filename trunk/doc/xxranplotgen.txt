@@ -147,6 +147,7 @@ BACKGROUND DESCRIPTORS
 	stage of this propp state the player is currently at.
 	+P--	Peaceful life
 
+	*** THE SETUP ***
 	+Pme	PC meets an enemy pilot
 	+Pun	Under Attack
 		=P00	Have not yet encountered enemy
@@ -162,7 +163,14 @@ BACKGROUND DESCRIPTORS
 	+P	Enemy obtains the target item
 	+Pew	Enemy working on new weapon program		Can enter at !Lo
 
-	+P	PF working on new weapon program
+	*** THE REACTION ***
+	+P	PF begins defensive program
+	+P	PF begins offensive program
+	+P	PC switches sides
+	+P	Attempting Diplomacy
+
+	*** THE COUNTER-REACTION ***
+
 	+P	Under open attack by EF
 	+P	Bring the fight to EF
 	+P	EF reveals E is renegade; will help PC oppose him
