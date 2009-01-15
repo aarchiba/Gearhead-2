@@ -155,7 +155,8 @@ begin
 
 	{ Add the faction context. }
 	C := SeekFaction( FindRoot( Scene ) , NAttValue( Scene^.NA , NAG_Personal , NAS_FactionID ) );
-	if C <> Nil then AddTraits( CType , SAttValue( C^.SA , 'DESIG' ) );
+	if C <> Nil then AddTraits( CType , SAttValue( C^.SA , 'DESIG' ) )
+	else AddTraits( CType , 'NOFAC' );
 
 	{ Next add the data for the city we're located in, its faction, and the }
 	{ world that it's located in. }
@@ -1201,12 +1202,13 @@ Procedure AddGearXRContext( GB: GameBoardPtr; Adv,Part: GearPtr; var Context: St
 	{ Add the context information for PART to CONTEXT. }
 const
 	Num_XXR_Motivations = 8;
-	Num_XXR_Attitudes = 11;
+	Num_XXR_Attitudes = 12;
 	XXR_Motivation: Array [1..Num_XXR_Motivations] of String[3] = (
 		'mer', 'pro', 'ggd', 'see', 'rev', 'cha', 'com', 'nih'
 	);
 	XXR_Attitude: Array [1..Num_XXR_Attitudes] of String[3] = (
-		'jr_', 'sr_', 'sec', 'equ', 'env',   'pch', 'hat', 'mut', 'obs', 'tha', 'nme'
+		'jr_', 'sr_', 'sec', 'equ', 'env',   'pch', 'hat', 'mut', 'obs', 'tha',
+		'nme', 'ant'
 	);
 var
 	F: GearPtr;

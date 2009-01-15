@@ -61,7 +61,7 @@ sub
 	*GoGetInfo <*LookingForNPC %1% GoSuccess GoFailure>
 	GoSuccess <NewChat Say 1 P= %id%11 1 Memo 2>
 	*GoFailure <*BrushOff&Questioning>
-	Msg1 <%name1% has a microstation in %name3%. I used to do suply runs to \OPR %1% . If you're looking for \OPR %1% , that's the first place I'd check.>
+	Msg1 <%name1% has a microstation in %name3%. I used to do supply runs to \OPR %1% . If you're looking for \OPR %1% , that's the first place I'd check.>
 	Msg2 <%name5% told you that %name1%'s microstation can be found in %name3%.>
 
 	MetaScene 4

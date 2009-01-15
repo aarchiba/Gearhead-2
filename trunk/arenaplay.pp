@@ -627,7 +627,7 @@ end;
 Function NonRecoveryScene( GB: GameBoardPtr ): Boolean;
 	{ Return TRUE if this scene isn't a good location for recovery. }
 begin
-	NonRecoveryScene := ( GB^.Scene = Nil ) or ( not AStringHasBString( SAttValue( GB^.Scene^.SA , 'TYPE' ) , 'TOWN' ) );
+	NonRecoveryScene := ( GB^.Scene = Nil ) or ( not AStringHasBString( SAttValue( GB^.Scene^.SA , 'TYPE' ) , 'PUBLIC' ) );
 end;
 
 Function ShouldDeployLancemate( GB: GameBoardPtr; LM , Scene: GearPtr ): Boolean;

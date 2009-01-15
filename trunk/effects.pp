@@ -69,7 +69,7 @@ const
 	FlyingPenalty = 3;	{ Penalty for firing at an airborne unit without AntiAir weapon. }
 	HighGroundBonus = 1;	{ Bonus for firing at a target lower than self. }
 
-	CritHitMinTar = 10;	{ Minimum target number for Spot Weakness rolls. }
+	CritHitMinTar = 5;	{ Minimum target number for Spot Weakness rolls. }
 	LongRangePenalty = 3;
 	ShortRangeBonus = 2;
 
@@ -1541,10 +1541,9 @@ begin
 				if HasTalent( ER.Originator , NAS_Sniper ) and ( ER.Weapon <> Nil ) and ( ER.Weapon^.G = GG_Weapon ) and (( ER.Weapon^.S = GS_Ballistic ) or ( ER.Weapon^.S = GS_BeamGun )) then begin
 					ER.FXDice := ER.FXDice + SkillRank( ER.Originator , 18 );
 				end else if ( ER.Weapon <> Nil ) and (( ER.Weapon^.G <> GG_Weapon ) or ( ER.Weapon^.S = GS_EMelee ) or ( ER.Weapon^.S = GS_Melee )) then begin
-					{ Close combat attacks also get the full bonus. }
-					ER.FXDice := ER.FXDice + SkillRank( ER.Originator , 18 );
-				end else begin
 					ER.FXDice := ER.FXDice + ( SkillRank( ER.Originator , 18 ) div 2 );
+				end else begin
+					ER.FXDice := ER.FXDice + ( SkillRank( ER.Originator , 18 ) div 5 );
 				end;
 			end;
 

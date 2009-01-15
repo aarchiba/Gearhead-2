@@ -2056,8 +2056,8 @@ Content
 		result11 <NewChat Say 14>
 		result12 <AddCheerful d10 Goto result7>
 		result13 <AddCheerful d10 Goto result8>
-		result14 <NewChat Say 15 AddReact 15  NPCVar= %2% 1 1 Cash+ -5000000 XPV 100 AddRenown 1>
-		result15 <NewChat Say 17 AddReact d8  NPCVar= %2% 1 1                XPV 100>
+		result14 <NewChat Say 15 History 21 AddReact 15  NPCVar= %2% 1 1 Cash+ -5000000 XPV 100 AddRenown 1>
+		result15 <NewChat Say 17 History 21 AddReact d8  NPCVar= %2% 1 1                XPV 100>
 		result16 <EndChat Say 19 shop .wares Goto GoGoodbye>
 		.wares <MECHA MEXTRA>
 		result17 <Goto GoChat>
@@ -2081,6 +2081,7 @@ Content
 		Msg18 <Welcome to %name2%'s custom mecha shop. Thank you again for helping this dream to come true!>
 		Msg19 <I have a number of mecha for sale, some of which I've customized myself. I also have some replacement parts in case you'd like to try your hand at mecha engineering.>
 		Msg20 <%name2% in \SCENE %s1% wants to open a mecha customization shop, but needs money to buy the equipment.>
+		Msg21 <You helped Rishtan open his customization shop in \SCENE RootSceneID .>
 		Prompt1 <What is it that you do down here?>
 		Prompt2 <I just wanted to chat.>
 		Prompt3 <I need to get my mecha repaired.>

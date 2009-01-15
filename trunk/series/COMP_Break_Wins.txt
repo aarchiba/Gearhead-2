@@ -129,6 +129,23 @@ Plot
 	Msg4 <You decided to visit your friend %name3% in %name1%.>
 
 Plot
+	name <Partner: Should Go Fight Faction>
+	requires <#W +T-- R:LANCE (R:M.rev|R:M.ggd) F:++>
+	desc <You've completed this mission. Now you can go somewhere else.>
+
+	% E1 is the next scene to visit
+	Element1 <Scene !Far -7 !Comrade -7 !XClude -2 Town>
+
+	start <if= SceneID &EpisodeScene if= P1 0 P= 1 1 ifNPCOK &PartnerNPC else GoPartnerGone Monologue &PartnerNPC 5  SMemo 3 History 4   WinEpisode %1% 0 .next>
+	GoPartnerGone <Alert 1 Alert 2 SMemo 3 History 4   WinEpisode %1% 0 .next>
+	.next <+T-- +F-->
+	Msg1 <Things appear to be resolved in \SCENE &EpisodeScene , for the time being.>
+	Msg2 <You've heard rumors that \FACTION &EnemyFac has been operating in %name1%. Maybe that's where you should go next.>
+	Msg3 <You heard that \FACTION &EnemyFac has been operating in %name1%.>
+	Msg4 <You heard that \FACTION &EnemyFac was operating in %name1%.>
+	Msg5 <They say that \FACTION &EnemyFac has been active in %name1%. That's where we should go to continue the battle.>
+
+Plot
 	name <Should Go Fight Faction>
 	requires <#W +T-- F:++>
 	desc <You've completed this mission. Now you can go somewhere else.>

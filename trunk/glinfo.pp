@@ -82,6 +82,7 @@ const
 	OtherFX_Sprite_Name = 'otherfx.png';
 
 	default_item_portrait = 'item_box.png';
+	default_mecha_portrait = 'item_noimage.png';
 
 var
 	CZone,CDest: TSDL_Rect;		{ Current Zone, Current Destination }
@@ -1000,7 +1001,10 @@ begin
 		InfoImageName := PortraitName( Part );
 	end else begin
 		name := SAttValue( Part^.SA , 'SDL_PORTRAIT' );
-		if name = '' then name := default_item_portrait;
+		if name = '' then begin
+			if Part^.G = GG_Mecha then name := default_mecha_portrait
+			else name := default_item_portrait;
+		end;
 		InfoImageName := name;
 	end;
 end;

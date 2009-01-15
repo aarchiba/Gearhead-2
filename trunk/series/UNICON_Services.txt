@@ -2,7 +2,7 @@
 %%   Contains a mechanic and/or mecha shop.
 
 Content
-	requires <*MECHANIC_SHOP (MAQUI|FCOMS) -HOELL -MUGLE ~COMET>
+	requires <*MECHANIC_SHOP (MAQUI|FCOMS) (NOFAC|COMET)>
 	content <Required *DECOR_FOR_SHOP %1% Local>
 	element1 <Prefab>
 	team1 <Citizens>
