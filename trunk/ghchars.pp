@@ -136,7 +136,6 @@ Const
 	USAGE_Robotics = 4;	{ Ditto. }
 	USAGE_DominateAnimal = 5;	{ Yet another unique skill. }
 	USAGE_PickPockets = 6;		{ The same. }
-	USAGE_Taunt = 7;		{ See a pattern yet? }
 
 	TOOL_None = 0;
 	TOOL_Performance = 1;
@@ -365,7 +364,7 @@ Const
 			stat: STAT_Charm;
 			meksys: 0;
 			ToolNeeded: TOOL_None;
-			Usage: USAGE_Taunt;		),
+			Usage: 0;			),
 		(	{Acrobatics}
 			stat: STAT_Speed;
 			meksys: MS_Maneuver;

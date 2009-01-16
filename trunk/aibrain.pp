@@ -168,7 +168,7 @@ Function CanSpeakWithTarget( GB: GameBoardPtr; PC,NPC: GearPtr ): Boolean;
 	{ Return TRUE if the PC can speak with the target without breaking out the }
 	{ telephone, or FALSE otherwise. }
 begin
-	CanSpeakWithTarget := ( Range( GB , FindRoot( PC ) , FindRoot( NPC ) ) < 5 );
+	CanSpeakWithTarget := ( Range( GB , FindRoot( PC ) , FindRoot( NPC ) ) < 6 );
 end;
 
 Function HotTileBlocksLOS( GB: GameBoardPtr; X , Y , MM: Integer ): Boolean;
@@ -1436,34 +1436,6 @@ var
 			CheckOptimumRange( Mek^.SubCom );
 		end;
 	end;
-	Function DoVerbalAttack: Boolean;
-		{ This NPC is going to insult someone, possibly the PC or maybe even }
-		{ someone else. }
-	var
-		Target,TL: GearPtr;
-	begin
-		{ First, check to see whether or not this character is capable }
-		{ of launching a verbal attack. }
-		if HasSkill( Mek , NAS_Taunt ) and ( CurrentMental( Mek ) > 4 ) then begin
-			{ Locate a target for the abuse. }
-			Target := Nil;
-			TL := GB^.Meks;
-			while TL <> Nil do begin
-				if AreEnemies( GB , Mek , TL ) and OnTheMap( GB , TL ) and CanSpeakWithTarget( GB , Mek , TL ) and GearActive( TL ) and NotAnAnimal( TL ) and MekCanSeeTarget( GB , Mek , TL ) then begin
-					if Target = Nil then Target := TL
-					else if Range( gb , Target , Mek ) > Range( gb , TL , Mek ) then Target := TL;
-				end;
-				TL := TL^.Next;
-			end;
-			if Target <> Nil then begin
-				VerbalAttack( GB , Mek , Target );
-				SetNAtt( Mek^.NA , NAG_EpisodeData , NAS_ChatterRecharge , GB^.ComTime + 250 );
-				DoVerbalAttack := True;
-			end else DoVerbalAttack := False;
-		end else begin
-			DoVerbalAttack := False;
-		end;
-	end;
 begin
 	{ First, move towards the enemy, if necessary. }
 	if Random( 3 ) = 1 then begin
@@ -1486,10 +1458,7 @@ begin
 	end else begin
 		{ Not doing anything special... Might as well launch a verbal attack. }
 		if ( GB^.ComTime > NAttValue( Mek^.NA , NAG_EpisodeData , NAS_ChatterRecharge ) ) then begin
-			{ Either do a proper Verbal Attack or just say something obnoxious. }
-			if not DoVerbalAttack then begin
-				if Random( 50 ) = 1 then SayCombatTaunt( GB , Mek , 'CHAT_ATTACK' );
-			end;
+			if Random( 50 ) = 1 then SayCombatTaunt( GB , Mek , 'CHAT_ATTACK' );
 		end;
 	end;
 

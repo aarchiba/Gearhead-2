@@ -51,7 +51,9 @@ Procedure AI_Eject( Mek: GearPtr; GB: GameBoardPtr );
 Procedure AI_Surrender( GB: GameBoardPtr; Mek: GearPtr );
 Function MightSurrender( GB: GameBoardPtr; NPC: GearPtr ): Boolean;
 
-Procedure VerbalAttack( GB: GameBoardPtr; Attacker,Target: GearPtr );
+Procedure DoTaunt( GB: GameBoardPtr; Attacker,Target: GearPtr );
+
+Procedure DoVerbalAttack( GB: GameBoardPtr; Attacker,Target: GearPtr );
 
 Procedure ResolveAfterEffects( GB: GameBoardPtr );
 
@@ -1039,7 +1041,39 @@ begin
 	end;	
 end;
 
-Procedure VerbalAttack( GB: GameBoardPtr; Attacker,Target: GearPtr );
+Procedure DoTaunt( GB: GameBoardPtr; Attacker,Target: GearPtr );
+	{ ATTACKER is going to taunt TARGET, whose mother probably smells of elderberries. }
+var
+	AtSkill,AtRoll,DefRoll: Integer;
+	msg: String;
+	T: Integer;
+begin
+	DefRoll := SkillRoll( GB , Target , NAS_Resistance , 0 , 0 , False , True );
+	AddMentalDown( Attacker , 1 );
+
+	AtRoll :=  SkillRoll( GB , Attacker , NAS_Taunt , DefRoll , 0 , False , True );
+	msg := GetTauntString( Attacker , 'CHAT_VA.ATTACK' );
+	Monologue( GB , Attacker , msg );
+
+	if AtRoll > DefRoll then begin
+		msg := GetTauntString( Target , 'CHAT_VA.SUCCESS' );
+		Monologue( GB , Target , msg );
+		Target := LocatePilot( Target );
+		if Target <> Nil then begin
+			AddNAtt( Target^.NA , NAG_StatusEffect , NAS_Flummoxed , 1 + Random( 10 ) );
+			AddMoraleDmg( Target , 1 + AtRoll - DefRoll );
+		end;
+
+		{ Insulting your enemies makes you happy. }
+		AddMoraleDmg( Attacker , -( 5 + Random( 10 ) ) );
+
+	end else begin
+		msg := GetTauntString( Target , 'CHAT_VA.FAILURE' );
+		Monologue( GB , Target , msg );
+	end;
+end;
+
+Procedure DoVerbalAttack( GB: GameBoardPtr; Attacker,Target: GearPtr );
 	{ ATTACKER is going to spew abuse upon TARGET. If ATTACKER is a member of the }
 	{ PC team and TARGET is in hard shape, this attack has a chance of }
 	{ causing surrender or ejection. Note that the ATTACKER has only one chance to }
@@ -1065,9 +1099,10 @@ var
 	msg: String;
 	T: Integer;
 begin
-	DefRoll := SkillRoll( GB , Target , NAS_Resistance , 0 , 0 , False , True );
-	AddMentalDown( Attacker , 3 );
-	if ( Target^.G = GG_Character ) and MightSurrender( GB , Target ) then begin
+	if ( Target^.G = GG_Character ) then begin
+		DefRoll := SkillRoll( GB , Target , NAS_Resistance , 0 , 0 , False , True );
+		AddMentalDown( Attacker , 3 );
+
 		AtSkill := SelectTactic;
 		msg := GetTauntString( Attacker , 'CHAT_VA.FORCESURRENDER.' + BStr( AtSkill ) );
 		AtRoll :=  SkillRoll( GB , Attacker , AtSkill , DefRoll , -NAttValue( Target^.NA , NAG_EpisodeData , NAS_TauntResistance ) , False , True );
@@ -1075,19 +1110,28 @@ begin
 		Monologue( GB , Attacker , msg );
 
 		if AtRoll > DefRoll then begin
-			{ The surrender procedure will print a message, so no need to do that here. }
-			AI_Surrender( GB , target );
+			if MightSurrender( GB , Target ) then begin
+				{ The surrender procedure will print a message, so no need to do that here. }
+				AI_Surrender( GB , target );
+			end else begin
+				{ No surrender- just abuse MP and SP. }
+				AddMentalDown( Target , 1 + ( AtRoll - DefRoll ) div 3 );
+				AddStaminaDown( Target , 1 + ( AtRoll - DefRoll ) div 3 );
+			end;
 
 		end else begin
 			msg := GetTauntString( Target , 'CHAT_VA.FORCEFAILURE' );
 			Monologue( GB , Target , msg );
 		end;
 
-	end else if ( target^.G = GG_Mecha ) and ( NAttValue( Attacker^.NA , NAG_Location, NAS_Team ) = NAV_DefPlayerTeam ) and MightEject( Target ) and ( NAttValue( Target^.NA , NAG_EpisodeData , NAS_TauntResistance ) = 0 ) then begin
+	end else if ( target^.G = GG_Mecha ) and ( NAttValue( Attacker^.NA , NAG_Location, NAS_Team ) = NAV_DefPlayerTeam ) and MightEject( Target ) then begin
+		DefRoll := SkillRoll( GB , Target , NAS_Resistance , 0 , NAttValue( Target^.NA , NAG_EpisodeData , NAS_TauntResistance ) , False , True );
+		AddMentalDown( Attacker , 3 );
+
 		AtSkill := SelectTactic;
 		msg := GetTauntString( Attacker , 'CHAT_VA.FORCEEJECT.' + BStr( AtSkill ) );
 		AtRoll :=  SkillRoll( GB , Attacker , AtSkill , DefRoll , -5 , False , True );
-		SetNAtt( Target^.NA , NAG_EpisodeData , NAS_TauntResistance , 1 );
+		AddNAtt( Target^.NA , NAG_EpisodeData , NAS_TauntResistance , 1 + Random( 8 ) );
 		Monologue( GB , Attacker , msg );
 
 		if AtRoll > DefRoll then begin
@@ -1100,35 +1144,7 @@ begin
 		end;
 
 	end else begin
-		AtRoll :=  SkillRoll( GB , Attacker , NAS_Taunt , DefRoll , 0 , False , True );
-		msg := GetTauntString( Attacker , 'CHAT_VA.ATTACK' );
-		Monologue( GB , Attacker , msg );
-
-		if AtRoll > DefRoll then begin
-			msg := GetTauntString( Target , 'CHAT_VA.SUCCESS' );
-			Monologue( GB , Target , msg );
-			Target := LocatePilot( Target );
-			if Target <> Nil then begin
-				AddNAtt( Target^.NA , NAG_StatusEffect , NAS_Flummoxed , 1 + Random( 10 ) );
-				AddMoraleDmg( Target , 1 + AtRoll - DefRoll );
-
-				{ A good taunt will also drain MP and SP. }
-				if AtRoll > ( DefRoll + 2 ) then begin
-					for t := 1 to ( DefRoll + 2 - AtRoll ) do begin
-						if Random( 3 ) <> 1 then AddMentalDown( Target , 1 )
-						else AddStaminaDown( Target , 1 );
-					end;
-				end;
-			end;
-
-			{ Insulting your enemies makes you happy. }
-			AddMoraleDmg( Attacker , -( 5 + Random( 10 ) ) );
-
-		end else begin
-			msg := GetTauntString( Target , 'CHAT_VA.FAILURE' );
-			Monologue( GB , Target , msg );
-
-		end;
+		DoTaunt( GB , Attacker , Target );
 	end;
 end;
 

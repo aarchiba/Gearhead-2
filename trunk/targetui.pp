@@ -294,8 +294,17 @@ begin
 	end;
 end;
 
-Function FindNextTarget( GB: GameBoardPtr; Origin: GearPtr ): GearPtr;
+Function FindNextTarget( GB: GameBoardPtr; Origin: GearPtr; MustBeEnemy: Boolean ): GearPtr;
 	{ ORIGIN is looking for a new target. Return the next visible enemy found. }
+	Function TargetIsValid( M: GearPtr ): Boolean;
+		{ Return TRUE if this model is of a type that we're looking for. }
+	begin
+		if MustBeEnemy then begin
+			TargetIsValid := AreEnemies( GB , Origin , M );
+		end else begin
+			TargetIsValid := IsMasterGear( M );
+		end;
+	end;
 var
 	M,NextTarget,FirstTarget: GearPtr;
 	PickNext: Boolean;
@@ -310,7 +319,7 @@ begin
 	FirstTarget := Nil;
 	while M <> Nil do begin
 		{ If M fits our target criteria, check it to see what's going on. }
-		if OnTheMap( GB , M ) and AreEnemies( GB , Origin , M ) and GearOperational( M ) and MekCanSeeTarget( GB , Origin , M ) and ( NAttValue( M^.NA , NAG_EpisodeData , NAS_SurrenderStatus ) <> NAV_NowSurrendered ) then begin
+		if OnTheMap( GB , M ) and TargetIsValid( M ) and GearOperational( M ) and MekCanSeeTarget( GB , Origin , M ) and ( NAttValue( M^.NA , NAG_EpisodeData , NAS_SurrenderStatus ) <> NAV_NowSurrendered ) then begin
 			{ If M is the target we started with, set the flag to pick the next }
 			{ target encountered. }
 			if M = LOOKER_LastGearSelected then begin
@@ -485,8 +494,8 @@ begin
 				LOOKER_Weapon := FindNextWeapon( GB , LOOKER_Origin , LOOKER_Weapon , Range( LOOKER_Origin , X , Y ) );
 			end;
 
-		end else if ( A = KeyMap[ KMC_SwitchTarget ].KCode ) and ( LOOKER_Weapon <> Nil ) and ( LOOKER_Origin <> Nil ) then begin
-			LOOKER_Gear := FindNextTarget( GB , LOOKER_Origin );
+		end else if ( A = KeyMap[ KMC_SwitchTarget ].KCode ) and ( LOOKER_Origin <> Nil ) then begin
+			LOOKER_Gear := FindNextTarget( GB , LOOKER_Origin , LOOKER_Weapon <> Nil );
 			if LOOKER_Gear <> Nil then begin
 				X := NATtValue( LOOKER_Gear^.NA , NAG_Location , NAS_X );
 				Y := NATtValue( LOOKER_Gear^.NA , NAG_Location , NAS_Y );

@@ -489,9 +489,11 @@ Procedure PCDoVerbalAttack( GB: GameBoardPtr; PC,NPC: GearPtr );
 	{ isn't possible, then explain why. }
 begin
 	NPC := LocatePilot( NPC );
-	if ( NPC <> Nil ) and CanSpeakWithTarget( GB , PC , NPC ) then begin
+	if CurrentMental( PC ) < 1 then begin
+		DialogMsg( MsgSTring( 'VERBALATTACK_NoMP' ) );
+	end else if ( NPC <> Nil ) and CanSpeakWithTarget( GB , PC , NPC ) then begin
 		if AreEnemies( GB , PC , NPC ) then begin
-			VerbalAttack( GB , PC , FindRoot( NPC ) );
+			DoVerbalAttack( GB , PC , FindRoot( NPC ) );
 			{ When the PC taunts an enemy, it takes an action. }
 			SetNAtt( PC^.NA , NAG_Action , NAS_CallTime , GB^.ComTime + ReactionTime( PC ) );
 		end else begin
@@ -567,17 +569,6 @@ begin
 	DialogMsg( MsgSTring( 'TALKING_Prompt' ) );
 	if LookAround( GB , PC ) then begin
 		DoTalkingWithNPC( GB , PC , LOOKER_Gear , False );
-	end else begin
-		DialogMsg( MsgString( 'Cancelled' ) );
-	end;
-end;
-
-Procedure PCTaunt( GB: GameBoardPtr; PC: GearPtr );
-	{ PC wants to do some talking. Select an NPC, then let 'er rip. }
-begin
-	DialogMsg( MsgSTring( 'TAUNT_Prompt' ) );
-	if LookAround( GB , PC ) then begin
-		PCDoVerbalAttack( GB , PC , LOOKER_Gear );
 	end else begin
 		DialogMsg( MsgString( 'Cancelled' ) );
 	end;
@@ -1147,8 +1138,6 @@ begin
 			DominateAnimal( GB , PC );
 		end else if SkillMan[ N ].Usage = USAGE_PickPockets then begin
 			PickPockets( GB , PC );
-		end else if SkillMan[ N ].Usage = USAGE_Taunt then begin
-			PCTaunt( GB , PC );
 		end;
 
 	end else begin

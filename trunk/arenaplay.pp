@@ -175,6 +175,43 @@ begin
 	end;
 end;
 
+Procedure MaybeDoTaunt( GB: GameBoardPtr; Mek: GearPtr );
+	{ Mek might do a taunt against one of its enemies. This is how we resolve }
+	{ things: First, check for a target. If a target is found, taunt it. }
+	{ Whether a target was found or not, set the taunt recharge. }
+	Function FindTauntTarget: GearPtr;
+		{ Locate a target for taunting. }
+	var
+		Target,TL: GearPtr;
+	begin
+		Target := Nil;
+		TL := GB^.Meks;
+		while TL <> Nil do begin
+			if AreEnemies( GB , Mek , TL ) and OnTheMap( GB , TL ) and CanSpeakWithTarget( GB , Mek , TL ) and GearActive( TL ) and NotAnAnimal( TL ) and MekCanSeeTarget( GB , Mek , TL ) then begin
+				if Target = Nil then Target := TL
+				else if Range( gb , Target , Mek ) > Range( gb , TL , Mek ) then Target := TL;
+			end;
+			TL := TL^.Next;
+		end;
+		FindTauntTarget := Target;
+	end;
+
+var
+	Target: GearPtr;
+begin
+	if CurrentMental( Mek ) > 1 then begin
+		Target := FindTauntTarget;
+		if Target <> Nil then begin
+			DoTaunt( GB , Mek , Target );
+			SetNAtt( Mek^.NA , NAG_EpisodeData , NAS_ChatterRecharge , GB^.ComTime + 121 + Random( 180 ) )
+		end else begin
+			SetNAtt( Mek^.NA , NAG_EpisodeData , NAS_ChatterRecharge , GB^.ComTime + 1 + Random( 30 ) )
+		end;
+	end else begin
+		SetNAtt( Mek^.NA , NAG_EpisodeData , NAS_ChatterRecharge , GB^.ComTime + 61 + Random( 120 ) )
+	end;
+end;
+
 Procedure CheckMeks( Camp: CampaignPtr );
 	{ Check through all the meks in this scenario. If it's time }
 	{ for one to move according to its ETA, call the movement }
@@ -234,6 +271,14 @@ begin
 				end;
 			end;
 
+			{ Check for taunting and other acts of opportunity. }
+			if ( Camp^.GB^.ComTime > NAttValue( M^.NA , NAG_EpisodeData , NAS_ChatterRecharge ) ) then begin
+				if HasSkill( M , NAS_Taunt ) then begin
+					MaybeDoTaunt( Camp^.GB , M );
+				end else begin
+					SetNAtt( M^.NA , NAG_EpisodeData , NAS_ChatterRecharge , Camp^.GB^.ComTime + 300 );
+				end;
+			end;
 		end; { if IsMasterGear then... }
 
 		M := M^.Next;
