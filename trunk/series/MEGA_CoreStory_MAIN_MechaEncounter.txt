@@ -850,7 +850,7 @@ Content
 		stc CORE-ACTIVATABLE
 		name <%name6%'s Lance>
 
-		Mood 5
+		Mood 3
 		name <"I Have Become Death" Mood>
 		plot_type <*FactionRampage>
 		Element1 <Grab -2>
@@ -980,17 +980,14 @@ Content
 	% E5 is an urban scene
 	% E6 is Seeker #1
 	% E7 is Seeker #2
-	% E8 is Seeker #3
 	Element3 <Grab 1>
 	Place3 </>
 	Element4 <Scene Environs !Near -7>
 	Element5 <Scene Urban !Near -7>
 	Element6 <Prefab>
-	Place6 <1>
+	Place6 <4>
 	Element7 <Prefab>
-	Place7 <4>
-	Element8 <Prefab>
-	Place8 <5>
+	Place7 <5>
 
 	% P%id%01 = Have activated henchmen
 
@@ -1066,7 +1063,7 @@ Content
 			name <From the Top>
 			SetEnemy 1
 			SetAlly 3
-			Deploy <if= PlotStatus %plotid% %id% SetSelfFaction &EnemyFac   WMecha 2 StoryDL 60>
+			Deploy <if= PlotStatus %plotid% %id% SetSelfFaction &EnemyFac   WMecha 2 StoryDL 50>
 			ParaX 20
 			ParaY 5
 
@@ -1074,7 +1071,7 @@ Content
 			name <From the Bottom>
 			SetEnemy 1
 			SetAlly 2
-			Deploy <if= PlotStatus %plotid% %id% SetSelfFaction &EnemyFac   WMecha 3 StoryDL 60>
+			Deploy <if= PlotStatus %plotid% %id% SetSelfFaction &EnemyFac   WMecha 3 StoryDL 50>
 			ParaX 30
 			ParaY 45
 		end
@@ -1103,7 +1100,7 @@ Content
 			name <Left Flank>
 			SetEnemy 1
 			SetAlly 3
-			Deploy <if= PlotStatus %plotid% %id% SetSelfFaction &EnemyFac   WMecha 2 StoryDL 60>
+			Deploy <if= PlotStatus %plotid% %id% SetSelfFaction &EnemyFac   WMecha 2 StoryDL 50>
 			ParaX 5
 			ParaY 20
 
@@ -1111,45 +1108,7 @@ Content
 			name <Right Flank>
 			SetEnemy 1
 			SetAlly 2
-			Deploy <if= PlotStatus %plotid% %id% SetSelfFaction &EnemyFac   WMecha 3 StoryDL 60>
-			ParaX 45
-			ParaY 30
-		end
-
-
-		MetaScene 8 2
-		special <UNCHARTABLE>
-		% L2 = Initialization Counter
-		MapWidth 50
-		MapHeight 50
-
-		Start <if= L2 0 L= 2 1>
-		nu1 <if= T1 0   Return if= L2 1 L= 2 2 AddRenown -1>
-		nu2 <if= T2 0 if= T3 0   if= L2 1 L= 2 2 Alert 2 Return>
-		nu3 <if= T2 0 if= T3 0   if= L2 1 L= 2 2 Alert 2 Return>
-		end <L= 2 0>
-
-		Msg2 <You have defeated this group of %name3%'s henchmen, but there will be more coming soon.>
-
-		sub
-			team 1
-			SetEnemy 2 3
-			ParaX 25
-			ParaY 25
-
-			team 2
-			name <Left Flank>
-			SetEnemy 1
-			SetAlly 3
-			Deploy <if= PlotStatus %plotid% %id% SetSelfFaction &EnemyFac   WMecha 2 StoryDL 60>
-			ParaX 5
-			ParaY 20
-
-			team 3
-			name <Right Flank>
-			SetEnemy 1
-			SetAlly 2
-			Deploy <if= PlotStatus %plotid% %id% SetSelfFaction &EnemyFac   WMecha 3 StoryDL 60>
+			Deploy <if= PlotStatus %plotid% %id% SetSelfFaction &EnemyFac   WMecha 3 StoryDL 50>
 			ParaX 45
 			ParaY 30
 		end
@@ -1157,7 +1116,7 @@ Content
 	end
 	inv
 		Encounter
-		name <%name3%'s Henchmen>
+		name <Henchmen>
 		% V1 = Recharge counter
 		update <if= PlotStatus %plotid% %id% else GoHide if# p%id%01 0 else GoHide ifG ComTime V1 else GoHide SetStat STAT_MetaVisibility 0   Goto GoSetOrders>
 		EncounterMove 20
@@ -1166,18 +1125,9 @@ Content
 		Msg-2 <You are suddenly attacked by %name3%'s henchmen!>
 
 		Encounter
-		name <%name3%'s Henchmen>
+		name <Henchmen>
 		% V1 = Recharge counter
 		update <if= PlotStatus %plotid% %id% else GoHide if# p%id%01 0 else GoHide ifG ComTime V1 else GoHide SetStat STAT_MetaVisibility 0   Goto GoSetOrders>
-		EncounterMove 20
-		use <ifG StatVal STAT_MetaVisibility -1  Print -1   V= 1 ComTime   V+ 1 10800   Exit Destination>
-		ATTACK <ifG StatVal STAT_MetaVisibility -1   ifG PCScale 0    V= 1 ComTime   V+ 1 10800   ifUStealth SkillTar StoryDL else GoAutoAttack   ifYesNo -3 -4 -5 else GoAvoidAttack Goto GoAutoAttack>
-		Msg-2 <You are suddenly attacked by %name3%'s henchmen!>
-
-		Encounter
-		name <%name3%'s Henchmen>
-		% V1 = Recharge counter
-		update <if= PlotStatus %plotid% %id% else GoHide if# p%id%01 0 else GoHide ifG ComTime V1 else GoHide SetStat STAT_MetaVisibility 0  Goto GoSetOrders>
 		EncounterMove 20
 		use <ifG StatVal STAT_MetaVisibility -1  Print -1   V= 1 ComTime   V+ 1 10800   Exit Destination>
 		ATTACK <ifG StatVal STAT_MetaVisibility -1   ifG PCScale 0    V= 1 ComTime   V+ 1 10800   ifUStealth SkillTar StoryDL else GoAutoAttack   ifYesNo -3 -4 -5 else GoAvoidAttack Goto GoAutoAttack>
