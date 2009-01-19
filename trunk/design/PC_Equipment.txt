@@ -2556,7 +2556,7 @@ name <DIY BuruBuru Kit>
 desc <A must for mecha enthusiasts. This set contains all the parts needed to construct a BuruBuru mecha.>
 factions <GENERAL>
 Category <MECHA TOOL>
-scale 1
+scale 2
 Legality -20
 inv
 	Battroid 5
@@ -2582,6 +2582,7 @@ inv
 	end
 
 	Head
+	size 5
 	Armor 4
 	mass 3
 	scale 2
@@ -2594,6 +2595,7 @@ inv
 
 
 	Arm
+	size 5
 	Name <Right Arm>
 	mass 3
 	Armor 4
@@ -2603,6 +2605,7 @@ inv
 	end
 
 	Arm
+	size 5
 	Name <Left Arm>
 	mass 3
 	Armor 4
@@ -2612,6 +2615,7 @@ inv
 	end
 
 	Leg
+	size 5
 	Name <Right Leg>
 	mass 3
 	Armor 4
@@ -2621,6 +2625,7 @@ inv
 	end
 
 	Leg
+	size 5
 	Name <Left Leg>
 	mass 3
 	Armor 4

@@ -922,7 +922,7 @@ begin
 	AttemptResist := SkillRoll( GB , TMaster , RSkill , SkRoll , 0 , False , True );
 end;
 
-Function AttemptDodge( GB: GameBoardPtr; TMaster,Attacker: GearPtr; SkRoll: Integer ): Integer;
+Function AttemptDodge( GB: GameBoardPtr; TMaster,Attacker: GearPtr; SkRoll: Integer; const FX: String ): Integer;
 	{ TMaster will attempt to dodge. }
 var
 	DodgeSkill,SkMod: Integer;
@@ -947,7 +947,7 @@ begin
 
 	{ Adjust the modifier for melee attacks. These are hard to dodge, but should }
 	{ be blocked or parried instead. }
-	if ( Attacker <> Nil ) and ( ( Attacker^.G = GG_Module ) or (( Attacker^.G = GG_Weapon ) and (( Attacker^.S = GS_Melee ) or ( Attacker^.S = GS_EMelee )) ) ) and ( Range( GB , TMaster , FindRoot( Attacker ) ) <= 2 ) then begin
+	if ( Attacker <> Nil ) and ( ( Attacker^.G = GG_Module ) or (( Attacker^.G = GG_Weapon ) and (( Attacker^.S = GS_Melee ) or ( Attacker^.S = GS_EMelee )) ) ) and AStringHasBString( FX , 'WasThrown' ) then begin
 		SkMod := SkMod - DodgeMeleePenalty;
 	end;
 
@@ -1022,7 +1022,7 @@ begin
 	{ Make the dodge roll, then dole appropriate experience. }
 	DR.HiRoll := 0;
 	if AStringHasBString( FX , FX_CanDodge ) then begin
-		DR.HiRoll := AttemptDodge( GB , TMaster , Attacker , SkRoll );
+		DR.HiRoll := AttemptDodge( GB , TMaster , Attacker , SkRoll , FX );
 		DR.HiRollType := GS_Dodge;
 	end;
 
@@ -1380,6 +1380,28 @@ var
 	DR: DamageRec;
 	msg: String;
 	DP: SAttPtr;	{ Destroyed Part }
+	Function MeleeNumberOfHits( UnarmedCombat: Boolean ): Integer;
+		{ Melee weapons and modules can cause multiple hits. Make an Initiative }
+		{ roll to find out how many. ModMOSMeasure and DefRep.HiDefRoll must be }
+		{ initialized already. }
+	var
+		InitRoll,NumH: Integer;
+	begin
+		{ Start by making the skill roll. }
+		InitRoll := SkillRoll( GB , ER.Originator , NAS_Initiative , DefRep.HiRoll , 0 , False , True );
+		if InitRoll > DefRep.HiRoll then begin
+			if UnarmedCombat then begin
+				NumH := 1 + Random( 2 + (( InitRoll - DefRep.HiRoll ) div ModMOSMeasure ) );
+			end else begin
+				NumH := 1 + Random( 2 + (( InitRoll - DefRep.HiRoll ) div ( ModMOSMeasure + 1 ) ) );
+			end;
+		end else begin
+			NumH := 1;
+		end;
+		if ( Random( AtRoll ) > DefRep.HiRoll ) then Inc( NumH );
+		if AStringHasBString( AtDesc , 'WasThrown' ) and ( NumH > 2 ) then NumH := 2;
+		MeleeNumberOfHits := NumH;
+	end;
 begin
 	{ Error check- if the damage is to be applied to a metaterrain gear with }
 	{ a damage score of 0, just exit. There's nothing to be done here. }
@@ -1468,34 +1490,13 @@ begin
 							if NumberOfHits > (AtOp + 1) then NumberOfHits := AtOp + 1;
 						end;
 					end;
-				end else if ( ER.Weapon^.S = GS_Melee ) then begin
+				end else if ( ER.Weapon^.S = GS_Melee ) or ( ER.Weapon^.S = GS_EMelee ) then begin
 					{ Close combat weapons can trade a high MOS for multiple hits. }
-					if MOS > 6 then begin
-						NumberOfHits := NumberOfHits + MOS - 6;
-						MOS := 6;
-					end;
-					while ( MOS > 0 ) and ( Random(5) = 1 ) do begin
-						Inc( NumberOfHits );
-						Dec( MOS );
-					end;
-				end else if ( ER.Weapon^.S = GS_EMelee ) then begin
-					{ Close combat weapons can trade a high MOS for multiple hits. }
-					while ( MOS > 0 ) and ( Random(6) = 1 ) do begin
-						Inc( NumberOfHits );
-						Dec( MOS );
-					end;
+					NumberOfHits := MeleeNumberOfHits( False );
 				end;
 			end else if ER.Weapon^.G = GG_Module then begin
 				{ Fighting attacks have a higher chance of scoring }
-				{ multiple hits on a good roll. }
-				if MOS > 6 then begin
-					NumberOfHits := NumberOfHits + MOS - 6;
-					MOS := 6;
-				end;
-				while ( MOS > 2 ) and ( Random(4) <> 1 ) do begin
-					Inc( NumberOfHits );
-					Dec( MOS );
-				end;
+				NumberOfHits := MeleeNumberOfHits( True );
 
 				{ Modify the MOS for KungFu. }
 				{ This will be modified again later for being a nonweapon... }
@@ -2234,16 +2235,16 @@ Procedure FunkyMartialArts( var ER: EffectRequest; var AtAt: String; var ATOp: I
 	{ This attack may well get some special bonuses. }
 const
 	NumFMABase = 10;
-	Num_Funky_Things = 13;
+	Num_Funky_Things = 14;
 	FT_Cost: Array [1..Num_Funky_Things] of Byte = (
-		2, 2, 3, 5, 3,
-		3, 4, 2, 1, 3,
-		1, 2, 1
+		3, 3, 4, 8, 4,
+		4, 4, 3, 1, 3,
+		1, 2, 1, 5
 	);
 	FT_AA: Array [1..Num_Funky_Things] of String[15] = (
 	'','','SCATTER','HYPER','ARMORPIERCING',
 	'BRUTAL','STONE','HAYWIRE','STUN','FLAIL',
-	'', '', ''
+	'', '', '','BURN'
 	);
 	FT_Heroic = 1;
 	FT_Zen = 2;
@@ -2258,6 +2259,7 @@ const
 	FT_Tragic = 11;
 	FT_Passion = 12;
 	FT_Accurate = 13;
+	FT_Burn = 14;
 var
 	SkRk,TP: Integer;
 	Adjective,Noun: SAttPtr;
@@ -2322,8 +2324,8 @@ begin
 		exit;
 	end;
 
-	{ The attacker must have a martial arts skill of at least 5 to benefit. }
-	SkRk := NAttValue( ER.Originator^.NA , NAG_Skill , 9 ) - 4;
+	{ The attacker must have a martial arts skill of at least 6 to benefit. }
+	SkRk := NAttValue( ER.Originator^.NA , NAG_Skill , 9 ) - 5;
 	if SkRk < 1 then begin
 		if NAttValue( ER.Originator^.NA , NAG_GearOps , NAS_Material ) = NAV_Meat then AtOp := -1;
 		Exit;
@@ -2431,7 +2433,7 @@ begin
 	end;
 end;
 
-Function BuildAttackRequest( Attacker: GearPtr; AtOp: Integer; var AtAt: String ): EffectRequest;
+Function BuildAttackRequest( GB: GameBoardPtr; Attacker: GearPtr; AtOp,X,Y: Integer; var AtAt: String ): EffectRequest;
 	{ Create the effect request for this particular attack. }
 var
 	ER: EffectRequest;
@@ -2456,6 +2458,11 @@ begin
 
 	if ( Attacker^.G = GG_Module ) and ( ER.Originator^.G = GG_Character ) and ( AtOp = 0 ) then FunkyMartialArts( ER , AtAt , AtOp );
 	if HasAttackAttribute( AtAt , AA_Experimental ) then ExperimentifyAttack( ER , AtAt , AtOp );
+
+	{ If the weapon must be thrown, make a note of that here. }
+	if MustBeThrown( GB , FindRoot( Attacker ) , Attacker , X , Y ) then begin
+		AtAt := AtAt + ' WasThrown';
+	end;
 
 	if not NonDamagingAttack( AtAt ) then begin
 		{ This is not a NonDamaging effect. So, the first command in the }
@@ -2793,7 +2800,7 @@ begin
 	{ Clear the attack history and build the effect request. }
 	ClearAttackHistory;
 	AtAt := WeaponAttackAttributes( Attacker );
-	ER := BuildAttackRequest( Attacker , AtOp , AtAt );
+	ER := BuildAttackRequest( GB , Attacker , AtOp , X , Y , AtAt );
 
 	{ Add a divider to the skill roll history. }
 	SkillCommentDivider;

@@ -170,7 +170,7 @@ Content
 			home <Entry Grid>
 			type <SYNTH ROBOT MILITARY>
 			SetEnemy 1
-			Deploy <if= V1 0 V= 1 1 WMonster 3 StoryDL 100>
+			Deploy <if= V1 0 V= 1 1 WMonster 3 StoryDL 50>
 
 			room
 			name <Entry Grid>

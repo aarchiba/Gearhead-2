@@ -5,7 +5,7 @@
 
 Content
 	name <Treasure Hulk>
-	requires <*:LocalQuest Spinner>
+	requires <*:LocalQuest Spinner -!Ne>
 	desc <There's a floating mass of wrecks outside the station created by robomonster Aigaion.>
 
 	% E1 is the dungeon
@@ -32,7 +32,9 @@ Content
 				desig <ENTRANCE %s2%>
 				use <if= V1 1 else GoFirstTime Goto GoExit>
 				MiniMapComponent 2
-				Msg2 <This airlock leads back to the surface of the asteroid. Do you want to leave?>
+				Msg2 <This airlock leads to the outside of the wreckage. You wonder if it's a good idea to leave by a different door than you entered.>
+				Msg3 <Go out.>
+				Msg4 <Stay here.>
 			end
 		end
 
@@ -45,7 +47,7 @@ Content
 		GoBeenBefore <Print 2>
 
 		nu1 <if= T1 0 exit %s3% SeekGate L2 L+ 4 1>
-		nu2 <if= T2 0 if= L3 0 L= 3 1 Alert 3 History 4 XPV 100 SetQuestStatus %qid% %id1% ifG d4 L4 Alert 5 RandomMecha .fac %threat%>
+		nu2 <if= T2 0 if= L3 0 L= 3 1 Alert 3 History 4 XPV 100 SetQuestStatus %qid% %id1%  Alert 5 RandomMecha .fac 80>
 		.fac <RISHI FCOMS MAQUI BOHEM SOLAR AEGIS CRIHN GENERAL>
 
 		Msg1 <As you lift off from the surface of the asteroid, you are confronted by an enormous robot.>
@@ -106,7 +108,7 @@ Content
 				BeamGun 16
 				name <Plasma Beam>
 				Recharge 1
-				type <SCATTER>
+				type <SCATTER BRUTAL>
 				range 5
 
 				SpaceFlight 5
@@ -1659,6 +1661,14 @@ Content
 			minimap <..............1.....#---#>
 			special <SHAREDPALETTE>
 			desig <HOME>
+		end
+
+		MetaScene 2
+		sub
+			room
+			special <SHAREDPALETTE>
+			desig <HOME>
+			minimap <............1............>
 		end
 	end
 	inv

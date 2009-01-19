@@ -411,6 +411,14 @@ Content
 		Prompt2 <Where's the tomb? I'll dig it up!>
 		Prompt3 <Tell me where to find this tomb.>
 		Prompt4 <I want to hear about that tomb again.>
+
+		MetaScene 2
+		sub
+			room
+			minimap <######...##.1.##...###+##>
+			special <SHAREDPALETTE>
+			desig <HOME>
+		end
 	end
 	inv
 		TrapDoor

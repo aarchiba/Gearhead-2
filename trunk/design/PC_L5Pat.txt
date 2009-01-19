@@ -215,6 +215,31 @@ sub
 	SDL_PORTRAIT <item_ammoclip.png>
 end
 
+Gun 4
+Name <Heavy Pin Rifle>
+desig <VT5>
+Type <SWARM ARMORPIERCING>
+category <WEAPON MISSILE>
+factions <MAQUI FCOMS RISHI>
+desc <A magnetic cannon that fires tiny slivers of metal at extreme velocity.>
+sdl_portrait <item_combatrifle.png>
+caliber <2mm ferrous>
+Mass -8
+Acc 1
+Range 9
+BV 8
+Speed 4
+legality 10
+sub
+	Ammo 4
+	name <2mm Ferrous Clip>
+	caliber <2mm ferrous>
+	magazine 450
+	mass -4
+	SDL_PORTRAIT <item_ammoclip.png>
+end
+
+
 Gun 5
 Name <Slug Pistol>
 desig <Hounder>
@@ -382,6 +407,43 @@ legality 0
 inv
 	PowerSource 2
 	name <Power Cell 50>
+end
+
+BeamGun 7
+Name <Heavy Laser Pistol>
+desig <COR-9>
+desc <A pistol housing a small but powerful laser generator.>
+sdl_portrait <item_laserpistol.png>
+category <WEAPON MISSILE>
+factions <MAQUI FCOMS RISHI BOHEM HOELL>
+type <ARMORPIERCING>
+Mass -6
+Range 3
+Acc 1
+Speed 5
+legality 5
+inv
+	PowerSource 2
+	name <Power Cell 50>
+end
+
+BeamGun 9
+Name <Plasma Rifle>
+desig <Hawke>
+desc <A portable plasma rifle.>
+sdl_portrait <item_laserrifle.png>
+category <WEAPON MISSILE>
+factions <MAQUI FCOMS RISHI BOHEM>
+type <BRUTAL>
+Range 5
+Mass -6
+Acc 1
+Speed 3
+Legality 10
+inv
+	PowerSource 4
+	name <Power Cell 100>
+	mass -2
 end
 
 

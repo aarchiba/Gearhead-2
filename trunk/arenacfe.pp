@@ -1044,7 +1044,7 @@ end;
 Procedure DoTaunt( GB: GameBoardPtr; Attacker,Target: GearPtr );
 	{ ATTACKER is going to taunt TARGET, whose mother probably smells of elderberries. }
 var
-	AtSkill,AtRoll,DefRoll: Integer;
+	AtSkill,AtRoll,DefRoll,CounterRoll: Integer;
 	msg: String;
 	T: Integer;
 begin
@@ -1055,7 +1055,22 @@ begin
 	msg := GetTauntString( Attacker , 'CHAT_VA.ATTACK' );
 	Monologue( GB , Attacker , msg );
 
-	if AtRoll > DefRoll then begin
+	CounterRoll := SkillRoll( GB , Target , NAS_Resistance , AtRoll , 0 , False , True );
+
+	if CounterRoll > AtRoll then begin
+		msg := GetTauntString( Target , 'CHAT_VA.RIPOSTE' );
+		Monologue( GB , Target , msg );
+		Attacker := LocatePilot( Attacker );
+		if Attacker <> Nil then begin
+			AddNAtt( Attacker^.NA , NAG_StatusEffect , NAS_Flummoxed , 1 + Random( 10 ) );
+			AddMoraleDmg( Attacker , 1 + AtRoll - DefRoll );
+			AddMentalDown( Attacker , 1 + Random( 4 ) );
+		end;
+
+		{ Countering a verbal attack sets the Target's recharge. }
+		SetNAtt( Target^.NA , NAG_EpisodeData , NAS_ChatterRecharge , GB^.ComTime + 91 + Random( 120 ) )
+
+	end else if AtRoll > DefRoll then begin
 		msg := GetTauntString( Target , 'CHAT_VA.SUCCESS' );
 		Monologue( GB , Target , msg );
 		Target := LocatePilot( Target );

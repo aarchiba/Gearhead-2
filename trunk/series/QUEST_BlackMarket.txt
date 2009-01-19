@@ -148,6 +148,7 @@ Content
 Content
 	name <Space Market>
 	requires <*:ENT_BlackMarket Spinner>
+	special <REUSABLE>
 
 	%% The black market is located in space; the PC will have to fight
 	%% some pirates in order to get in.
@@ -157,51 +158,33 @@ Content
 	% E3 is the entrance to that scene.
 	Scene1 <Key>
 
-	Scene2 <New *BLANK.Space.Mecha>
-
-	Element3 <Prefab>
-	Scene3 <Space Environs>
+	Element2 <Prefab>
+	Scene2 <Space Environs>
 
 	sub
 		MetaScene 1
 		start <if= QuestStatus %qid% 0 else %pop% SetQuestStatus %qid% -1 Goto %pop%>
-
-		MetaScene 2
-		% L2 = Reward counter
-		start <if= V2 0 else GoWonBefore  Alert 2 Print 2>
-		GoWonBefore <>
-		nu1 <if= t1 0 Return>
-		nu2 <if= t2 0 if= L2 0 L= 2 1 Print 1 XPV 100>
-		Msg1 <That was the last of the pirates.>
-		Msg2 <As you approach the spaceship, you are attacked by pirates!>
-		sub
-			Team 1
-			name <Player Team>
-			SetEnemy 2
-
-			Team 2
-			name <Enemy Team>
-			SetEnemy 1
-			SetFaction 8
-			Deploy <if= L2 0 WMecha 2 %threat% 100>
-		end
-		inv
-			stc DERELICT-1
-			name <Shady Microstation>
-			desig <Entrance %s1%>
-			use <if= L2 0 else GoReallyUse Print 2>
-			GoReallyUse <Print 1 Exit StatVal 4>
-			Msg2 <You can't enter the station while there are pirates trying to kill you!>
-		end
-
 	end
 	inv
-		STC QUEST-ENCOUNTER-STATIONARY
+		Encounter
 		name <Suspicious Vessel>
 		rumor0 <there's a pirate meeting point outside the station.>
-		desig <entrance %s2%>
+		Special <NoMSID>
+		desig <entrance %s1%>
+		%% V1 = Have defeated guards
 		% After entering the store, this encounter will be perminantly visible.
 		update <SetStat STAT_MetaVisibility 0  if# QuestStatus %qid% 0 else GoSetOrders ShowEncounter Goto GoSetOrders>
+		% Sets this encounter's orders to Passive
+		GoSetOrders <GrabSource GSetNAtt NAG_EpisodeData NAS_Orders 3>
+		Attack <if= V1 0 ifG StatVal STAT_MetaVisibility -1  ifG PCScale 0 ifG PCRenown %threat% Goto GoStartCombat>
+		use <ifG StatVal STAT_MetaVisibility -1  if# V1 0 else GoStartCombat  Print -1 Exit Destination>
+		GoStartCombat <Alert 1 SavePos Dynamic 2 %threat% 100 .nu1 .nu2 ComposeD Msg1 .Msg1 DynaVar= 3 Destination  DynaFaction &EnemyFac>
+		.nu1 <if= T1 0  Return  SeekGate L3   if= L2 0  L= 2 1  AddRenown -5>
+		.nu2 <if= T2 0           if= L2 0  L= 2 1  XPV 100  AddRenown 1   EncounterVar= L3 1 1  Alert 1  Exit L3>
+		.msg1 <After defeating the mecha, you find the suspicious vessel they were guarding.>
+		Msg1 <You are suddenly attacked by mecha!>
+		EncounterMove 0
+		ENCOUNTER_NonCombat
 	end
 
 Content

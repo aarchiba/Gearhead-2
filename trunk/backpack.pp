@@ -1007,6 +1007,46 @@ begin
 	if GB <> Nil then WaitAMinute( GB , PC , ReactionTime( PC ) );
 end;
 
+Procedure EjectSoftware( GB: GameBoardPtr; var LList: GearPtr; PC , Item: GearPtr );
+	{ Remove all software from this item. }
+	Procedure RemoveThisSoftware( Soft: GearPtr );
+		{ Remove Soft from wherever it is, then give it to the PC. }
+		{ Soft must be a subcom!!! }
+	begin
+		{ First, delink Soft from its parent. }
+		DelinkGear( Soft^.Parent^.SubCom , Soft );
+
+		{ Next, link Ammo into the general inventory, if possible. }
+		GivePartToPC( LList , Soft , PC );
+
+		DialogMsg( ReplaceHash( MsgString( 'BACKPACK_Do_EjectSoftware' ) , GearName( Soft ) ) );
+	end;
+	Procedure CheckForSoftwareToEject( IList: GearPtr );
+		{ Check this list for software to eject, and also all subcoms. }
+	var
+		I2: GearPtr;
+	begin
+		while IList <> Nil do begin
+			I2 := IList^.Next;
+
+			if IList^.G = GG_Software then begin
+				RemoveThisSoftware( IList );
+			end else begin
+				CheckForSoftwareToEject( IList^.SubCom );
+			end;
+
+			IList := I2;
+		end;
+	end;
+begin
+	{ Start the search going. }
+	CheckForSoftwareToEject( Item^.SubCom );
+
+	{ Unequipping takes time. }
+	if GB <> Nil then WaitAMinute( GB , PC , ReactionTime( PC ) );
+end;
+
+
 Function CanBeExtracted( Item: GearPtr ): Boolean;
 	{ Return TRUE if the listed part can be extracted from a mecha, }
 	{ or FALSE if it cannot normally be extracted. }
@@ -1861,7 +1901,8 @@ begin
 			AddRPGMenuItem( TIWS_Menu , MsgString( 'BACKPACK_Remove' ) + GearName( Item ) , -7 );
 		end;
 
-		if ( SeekGearByG( Item^.SubCom , GG_Ammo ) <> Nil ) and not IsMasterGear( Item ) then AddRPGMenuItem( TIWS_Menu , MsgString( 'BACKPACK_EjectAmmo' ) , 4 );
+		if ( SeekSubsByG( Item^.SubCom , GG_Ammo ) <> Nil ) and not IsMasterGear( Item ) then AddRPGMenuItem( TIWS_Menu , MsgString( 'BACKPACK_EjectAmmo' ) , 4 );
+		if ( SeekSubsByG( Item^.SubCom , GG_Software ) <> Nil ) and not IsMasterGear( Item ) then AddRPGMenuItem( TIWS_Menu , MsgString( 'BACKPACK_EjectSoftware' ) , 5 );
 
 		if GB <> Nil then AddRepairOptions( TIWS_Menu , TruePC , Item );
 		if ( Item^.G = GG_Weapon ) or ( ( Item^.G = GG_Ammo ) and ( Item^.S = GS_Grenade ) ) then begin
@@ -1888,6 +1929,7 @@ begin
 			DoFieldRepair( GB , TruePC , Item , N-100 );
 		end else begin
 			case N of
+				5: EjectSoftware( GB , LList , PC , Item );
 				4: EjectAmmo( GB , LList , PC , Item );
 				3: SetNAtt( Item^.NA , NAG_WeaponModifier , NAS_SafetySwitch , 1 - NAttValue( Item^.NA , NAG_WeaponModifier , NAS_SafetySwitch ) );
 				2: SwitchQuickFire( Item );

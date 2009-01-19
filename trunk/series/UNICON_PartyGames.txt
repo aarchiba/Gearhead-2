@@ -33,7 +33,7 @@ Content
 		result7 <NewChat Say 7>
 		result8 <Goto result1>
 		result9 <EndChat Say 8 AddReact -d5>
-		result10 <Time 300  ifFlirtation hardskilltar %param% else GoR1Fail  L= %id%01 -1 AddPartyPoint PCFriend %1% Goto GoDanceWell>
+		result10 <Time 300  ifFlirtation hardskilltar %param% else GoR10Fail  L= %id%01 -1 AddPartyPoint PCFriend %1% Goto GoDanceWell>
 		*GoDanceWell <*YouDanceWell>
 		*GoR10Fail <*YouDanceTerribly>
 		Msg1 <This party needs something. I know, how would you like to dance with me?>
@@ -112,7 +112,7 @@ Content
 		Result1 <EndChat Say 13 AddChat 10>
 		Result2 <NewChat Say 4>
 		Result3 <NewChat Say 5 AddReact -d5 AddChat 8 AddCHat 9>
-		result4 <ifConversation skilltar %param% else GoR4Fail  Say 12 L= %id%01 -1 AddPartyPoint>
+		result4 <ifConversation skilltar %param% else GoR4Fail  NewChat Say 12 L= %id%01 -1 AddPartyPoint>
 		GoR4Fail <NewChat Say 10>
 		result5 <NewChat Say 6>
 		Result6 <Goto Result1>

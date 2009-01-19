@@ -1930,9 +1930,10 @@ begin
 
 			{ If the PC and an encounter share the same space, the ATTACK script }
 			{ is triggered. }
-			if ( Abs( Enc_Pos.X - PC_Pos.X ) <= 1 ) and ( Abs( Enc_Pos.Y - PC_Pos.Y ) <= 1 ) and ( ( NAttValue( M^.NA , NAG_Narrative , NAS_ScriptActivatedTimer ) + 5 ) < GB^.ComTime ) then begin
+			if ( Abs( Enc_Pos.X - PC_Pos.X ) <= 1 ) and ( Abs( Enc_Pos.Y - PC_Pos.Y ) <= 1 ) and ( ( NAttValue( M^.NA , NAG_Narrative , NAS_ScriptActivatedTimer ) + 5 ) < GB^.ComTime ) and (( GB^.Scene = Nil ) or ( NAttValue( GB^.Scene^.NA , NAG_SceneData , NAS_EncounterRecharge ) < GB^.ComTime )) then begin
 				trigger := 'ATTACK';
 				TriggerGearScript( GB , M , trigger );
+				if GB^.Scene <> Nil then SetNAtt( GB^.Scene^.NA , NAG_SceneData , NAS_EncounterRecharge , GB^.ComTime + Standard_Encounter_Recharge );
 				{ Only one encounter script can be triggered per iteration. }
 				break;
 			end else if ( HM > 0 ) and ( HotMap[ HM , Enc_Pos.X , Enc_Pos.Y ] = 0 ) then begin

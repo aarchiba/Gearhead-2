@@ -250,7 +250,8 @@ begin
 		if Part^.S = GS_Body then Part^.V := Part^.Parent^.V
 		else if Part^.V > ( Part^.Parent^.V + 1 ) then Part^.V := ( Part^.Parent^.V + 1 );
 	end;
-	if Part^.V > 10 then Part^.V := 10;
+	if Part^.V > 10 then Part^.V := 10
+	else if Part^.V < 1 then Part^.V := 1;
 
 	{ Check Stats }
 	{ Stat 1 - Armor }

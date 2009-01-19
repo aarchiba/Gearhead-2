@@ -187,7 +187,7 @@ Procedure MaybeDoTaunt( GB: GameBoardPtr; Mek: GearPtr );
 		Target := Nil;
 		TL := GB^.Meks;
 		while TL <> Nil do begin
-			if AreEnemies( GB , Mek , TL ) and OnTheMap( GB , TL ) and CanSpeakWithTarget( GB , Mek , TL ) and GearActive( TL ) and NotAnAnimal( TL ) and MekCanSeeTarget( GB , Mek , TL ) then begin
+			if AreEnemies( GB , Mek , TL ) and OnTheMap( GB , TL ) and CanSpeakWithTarget( GB , Mek , TL ) and GearActive( TL ) and NotAnAnimal( TL ) and ( TL^.G <> GG_Prop ) and MekCanSeeTarget( GB , Mek , TL ) then begin
 				if Target = Nil then Target := TL
 				else if Range( gb , Target , Mek ) > Range( gb , TL , Mek ) then Target := TL;
 			end;
@@ -794,6 +794,9 @@ begin
 
 		it := it2;
 	end;
+
+	{ Set the encounter recharge, so the PC doesn't get ambushed right away. }
+	SetNAtt( Scene^.NA , NAG_SceneData , NAS_EncounterRecharge , Camp^.GB^.ComTime + Standard_Encounter_Recharge );
 
 	{ Finally, deploy any temp forces and perform initialization requested by teams. }
 	PrepareTeams( Camp^.GB );

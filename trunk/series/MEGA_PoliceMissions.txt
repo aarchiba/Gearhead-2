@@ -48,7 +48,7 @@ Content
 		MapHeight 30
 
 		Start <if= P%id%02 0  P= %id%02 1   PCFEnemy %3%>
-		nu1 <if= T1 0   Return   if= V1 0 V= 1 1   addrenown -5                        Memo 1   Alert 2   SetPlotStatus %plotid% %id2%>
+		nu1 <if= T1 0   Return   if= V1 0 V= 1 1   addrenown -5                        Memo 1   Alert 1   SetPlotStatus %plotid% %id2%>
 		nu2 <if= T2 0   if= V1 0 V= 1 1            XPV 100   AddRenown 1  AddLawful 1  Memo 2   Alert 2   SetPlotStatus %plotid% %id1%>
 
 		Msg1 <You lost %name1%'s mission.>

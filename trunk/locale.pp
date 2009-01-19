@@ -109,6 +109,9 @@ Const
 	NAS_DynaRenown = 4;	{ These two attributes record the enemy force renown/strength }
 	NAS_DynaStrength = 5;	{ for a dynamic scene. }
 
+	NAS_EncounterRecharge = 6;	{ Holds a time limit by which encounters can attack the PC. }
+		Standard_Encounter_Recharge = 90;
+
 	NAG_MissionReport = 23;		{ Holds data that will be erased the next time this mecha is deployed. }
 		NAS_WasSalvaged = 1;	{ If nonzero, this gear was salvaged. }
 

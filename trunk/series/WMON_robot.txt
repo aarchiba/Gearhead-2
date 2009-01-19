@@ -6,7 +6,7 @@
 
 Arch Androbot
 statline 12 19 12 13 12 12 12 1
-MonsterTV 70
+MonsterTV 60
 roguechar <R>
 sdl_sprite <monster_androbot.png>
 sdl_colors <157 172 183 162 153 235 230 0 0>
@@ -110,17 +110,18 @@ Msg2 <You take apart the Sentinel, but don't find anything useful.>
 Msg3 <You've already disassembled this robot.>
 Msg4 <You salvage some spare parts from this robot.>
 % End Science block.
-skill 6 5
-skill 7 5
-skill 10 5
-skill 12 5
+skill 6 7
+skill 7 7
+skill 10 7
+skill 12 7
 skill 13 10
 skill 26 10
 skill 30 10
 skill 33 35
 sub
 turret
-armor 5
+armor 6
+Hardened
 sub
 	mount
 	inv
@@ -137,10 +138,11 @@ sub
 end
 turret
 armor 5
+Hardened
 sub
 	mount
 	inv
-		gear 4 3 12
+		gear 4 3 16
 		name <Plasma Cannon>
 		desig <Antique>
 		type <SCATTER BRUTAL>
@@ -158,10 +160,11 @@ sub
 end
 turret
 armor 5
+Hardened
 sub
 	mount
 	inv
-		gear 4 3 12
+		gear 4 3 16
 		name <Plasma Cannon>
 		desig <Antique>
 		type <SCATTER BRUTAL>
@@ -178,7 +181,8 @@ sub
 	end
 end
 torso
-armor 5
+armor 7
+Hardened
 sub
 	Tracks 10
 	PowerSource 25
