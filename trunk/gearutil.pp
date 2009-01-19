@@ -1916,11 +1916,6 @@ var
 			if Master^.G = GG_Character then begin
 				D := D + ( CStat( Master, STAT_Body ) - 10 ) div 2;
 
-				{ Martial Arts attacks get a bonus based on skill level. }
-				if Attacker^.G = GG_Module then begin
-					D := D + ( CharaSkillRank( Master , 9 ) - 1 ) div 2;
-				end;
-
 				if D < 1 then D := 1;
 			end else if Master^.G = GG_Mecha then begin
 				D := D + ( Master^.V - 1 ) div 2;

@@ -56,6 +56,7 @@ const
 var
 	Destroyed_Parts_List: SAttPtr;
 
+Procedure GiveSkillRollXPAward( Pilot: GearPtr; Skill,SkRoll,SkTar: Integer );
 Function SkillRoll( GB: GameBoardPtr; PC: GearPtr; Skill,SkTar,SkMod: Integer; CasualUse,GainXP: Boolean ): Integer;
 Function CheckLOS( GB: GameBoardPtr; Observer,Target: GearPtr ): Boolean;
 Procedure VisionCheck( GB: GameBoardPtr; Mek: GearPtr );
@@ -101,6 +102,48 @@ const
 
 	Stealth_Per_Scale = 4;		{ If scale different from map, get stealth bonus/penalty }
 
+Procedure GiveSkillRollXPAward( Pilot: GearPtr; Skill,SkRoll,SkTar: Integer );
+	{ Give a skill XP award. The size of the award is going to depend on the }
+	{ relation betwee SkRoll and SkTar. }
+const
+	Basic_Skill_Award_Multiplier: Array [1..NumSkill] of Byte = (
+		1,1,1,1,1,	2,2,2,2,2,
+		1,1,1,5,1,	1,1,1,5,1,
+		1,1,1,1,1,	1,5,3,3,1,
+		1,3,1,3,1,	2,3,1,1,10,
+		7,1,1
+	);
+	MaxTarLevel = 12;
+	Skill_Award_By_Level: Array [1..12] of Integer = (
+		1,2,3,4,5,
+		8,13,21,34,55,
+		89,144
+	);
+var
+	TarLevel: Integer;	{ Just how tough was this target? }
+	SkRank: Integer;	{ Skill rank. }
+begin
+	Pilot := LocatePilot( Pilot );
+	if ( Pilot <> Nil ) and ( Skill >= 1 ) and ( Skill <= NumSkill ) and ( SkRoll >= SkTar ) then begin
+		{ Determine the TarLevel. This will tell how much XP to give. }
+		TarLevel := SkTar - 8;
+		if TarLevel < 1 then TarLevel := 1
+		else if TarLevel > MaxTarLevel then TarLevel := MaxTarLevel;
+
+		{ Determine the Pilot's skill rank. This will be needed later. }
+		SkRank := NAttValue( Pilot^.NA , NAG_Skill , Skill );
+
+		{ The expereince award can't exceed one level beyond the skill rank. }
+		if TarLevel > ( SkRank + 1 ) then TarLevel := SkRank + 1;
+
+		if ( SkTar > SkRank ) and ( SkRank > 0 ) then begin
+			DoleSkillExperience( Pilot , Skill , Skill_Award_By_Level[ TarLevel ] * Basic_Skill_Award_Multiplier[ Skill ] );
+			DoleExperience( Pilot , Skill_Award_By_Level[ TarLevel ] );
+		end else if ( SkTar > ( SkRank div 2 ) ) then begin
+			DoleSkillExperience( Pilot , Skill , ( Skill_Award_By_Level[ TarLevel ] + 1 ) div 2 );
+		end;
+	end;
+end;
 
 
 Function SkillRoll( GB: GameBoardPtr; PC: GearPtr; Skill,SkTar,SkMod: Integer; CasualUse,GainXP: Boolean ): Integer;
@@ -110,20 +153,11 @@ Function SkillRoll( GB: GameBoardPtr; PC: GearPtr; Skill,SkTar,SkMod: Integer; C
 	{ SkMod = The modifier to the skill roll. }
 	{ CasualUse = TRUE if the PC can use things in his backpack and use the team's }
 	{     help, or FALSE otherwise. }
-const
-	Basic_Skill_Award: Array [1..NumSkill] of Byte = (
-		5,5,5,5,7,	4,4,4,5,5,
-		1,2,2,10,2,	2,2,2,10,2,
-		2,2,2,2,1,	2,10,7,7,2,
-		2,7,2,7,2,	5,7,2,2,15,
-		10,7,5
-	);
 var
 	msg: String;
 	SA: SAttPtr;
 	SkRank,SkRoll: Integer;
 	Pilot,SW: GearPtr;
-	IsNPC: Boolean;
 begin
 	{ Determine the base skill value, and initialize the message. }
 	msg := PilotName( PC ) + ' rolls ' + MSgString( 'SKILLNAME_' + BStr( Skill ) );
@@ -132,9 +166,6 @@ begin
 	end else begin
 		SkRank := SkillValue( PC , Skill );
 	end;
-
-	{ Record whether or not this is a NPC. }
-	IsNPC := NAttValue( PC^.NA , NAG_Location , NAS_Team ) <> NAV_DefPlayerTeam;
 
 	msg := msg + '[' + BStr( SkRank );
 	if SkMod <> 0 then msg := msg + SgnStr( SkMod );
@@ -185,27 +216,8 @@ begin
 
 	{ If the roll was a success, give some skill XP. }
 	Pilot := LocatePilot( PC );
-	{   Only give this XP if the PC actually has the skill in question. This is }
-	{ nessecary for game balance reasons. }
-	{   NPCs get more skill XP for skill rolls than PCs do. This is because they're likely }
-	{ to be making far fewer skill rolls. }
-	if GainXP and ( Skill >= 1 ) and ( Skill <= NumSkill ) and ( Pilot <> Nil ) then begin
-		if ( SkRoll >= SkTar ) and ( SkTar >= ( SkRank div 2 ) ) then begin
-			if IsNPC then begin
-				DoleSkillExperience( PC , Skill , Basic_Skill_Award[ Skill ] * 2 );
-				DoleExperience( PC , Basic_Skill_Award[ Skill ] );
-				if ( SkTar > ( SkRank * 2 div 3 ) ) and ( NAttValue( Pilot^.NA , NAG_Skill , Skill ) > 0 ) then begin
-					DoleSkillExperience( PC , Skill , XPA_SK_Basic * 3 + SkTar );
-					DoleExperience( PC , Basic_Skill_Award[ Skill ] );
-				end;
-			end else begin
-				DoleSkillExperience( PC , Skill , Basic_Skill_Award[ Skill ] );
-				if ( SkTar > ( SkRank * 2 div 3 ) ) and ( NAttValue( Pilot^.NA , NAG_Skill , Skill ) > 0 ) then begin
-					DoleSkillExperience( PC , Skill , XPA_SK_Basic + SkTar );
-					DoleExperience( PC , Basic_Skill_Award[ Skill ] );
-				end;
-			end;
-		end;
+	if GainXP and ( Pilot <> Nil ) then begin
+		GiveSkillRollXPAward( Pilot , Skill , SkRoll , SkTar );
 	end;
 
 	{ Return the result. }

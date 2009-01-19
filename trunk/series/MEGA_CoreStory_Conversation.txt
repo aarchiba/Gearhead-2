@@ -849,6 +849,58 @@ Content
 	end
 
 Content
+	name <Stolen Heirloom>
+	desc <The PC will be asked to go fetch a family heirloom.>
+	requires <*CS_Conversation (1:FRIEND|1:FAMILY|1:LOVER) -!Ne -!Lo>
+
+	% E1 is the NPC that the PC will speak with
+	% E2 is the item to fetch
+	Element2 <Prefab>
+
+	% Fail Conditions:
+	% - Mission giver dies before encounter is activated
+	% - Fetch subplot fails
+
+	end <if= PlotStatus %plotid1% 0 else .%id%_GoCheckReveal ifNPCDead %1% else %pop% LoseComp 0 .%id%_loss>
+	.%id%_GoCheckReveal <ifSubPlotLost %plotid1% SMemo %id%01 SetPlotStatus %plotid3% %id3%>
+	.%id%_loss <+T-->
+
+	% Upon getting the item, set the win subplot.
+	Get%2% <SMemo %id%02  SetPlotStatus %plotid2% %id2%>
+
+	Msg%id%01 <You failed to recover the watch. You should go tell %name1% at \SCENE NPCScene %1% .>
+	Msg%id%02 <You should return the watch to %name1% at \SCENE NPCScene %1% .>
+
+	%% SubPlot1 is Fetch Item
+	%% SubPlot2 is the winning condition
+	%% SubPlot3 is the loss condition
+	SubPlot1 <*:CS_FetchItem&Stolen 2>
+	SubPlot2 <*CS_WinFetchItem 1 2>
+	SubPlot3 <*CS_LoseTask 1>
+
+	sub
+		Persona 1
+		greeting <if= PlotStatus %plotid1% 0 else .%id%_GoRemind if# PlotStatus %plotid% %id% else .%id%_GoOfferMission Goto %pop%>
+		*.%id%_GoOfferMission <*HowAreYou .%id%_GoBriefing>
+		*.%id%_GoRemind <*GenericMissionReminder>
+		.%id%_GoBriefing <NewChat Say %id%01 AddChat %id%01 AddChat %id%02>
+		.%id%_GoStartMission <StoryNote %id%02 SetPlotStatus %plotid1% %id1%>
+		result%id%01 <NewChat Say %id%03 Goto .%id%_GoStartMission>
+		result%id%02 <NewChat Say %id%04 AddEasygoing -d4 Goto .%id%_GoStartMission>
+		Msg%id%01 <I've got some terrible news- an ancient family heirloom which was entrusted to me has gone missing. I think it was stolen... when everybody else finds out, I'm going to be in a lot of trouble.>
+		Msg%id%02 <You offered to help find %name1%'s stolen family heirloom.>
+		Msg%id%03 <You think you can do that? Alright, it's not as if I have anything to lose... Let me know what you turn up.>
+		Msg%id%04 <Are you volunteering to find it? Great! I knew I could depend on you, \PC ... Let me know what you turn up.>
+		Prompt%id%01 <Don't worry, I'll see if I can find it for you.>
+		Prompt%id%02 <You need better security. Nobody ever steals stuff from me.>
+	end
+	inv
+		Treasure
+		name <Grandma's Vase>
+		desc <%name1%'s family heirloom. You decide against checking to see what's inside.>
+	end
+
+Content
 	name <My Watch Is Missing!>
 	desc <The PC will be asked to go fetch a lost watch.>
 	requires <*CS_Conversation (1:FRIEND|1:FAMILY|1:LOVER) -1:ADVEN -!Md -!Hi -!Ex>

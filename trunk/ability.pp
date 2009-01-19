@@ -33,7 +33,7 @@ uses ui4gh,rpgdice,texutil,gears,gearutil,movement,ghintrinsic;
 const
 	XPA_AttackHit = 2;
 	XPA_PerMOS = 3;
-	XPA_DestroyMaster = 45;
+	XPA_DestroyMaster = 75;
 	XPA_DestroyThing = 1;
 	XPA_AvoidAttack = 3;
 	XPA_GoodRepairJob = 4;

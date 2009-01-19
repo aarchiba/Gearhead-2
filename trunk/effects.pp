@@ -1380,26 +1380,35 @@ var
 	DR: DamageRec;
 	msg: String;
 	DP: SAttPtr;	{ Destroyed Part }
-	Function MeleeNumberOfHits( UnarmedCombat: Boolean ): Integer;
+	Function MeleeNumberOfHits: Integer;
 		{ Melee weapons and modules can cause multiple hits. Make an Initiative }
 		{ roll to find out how many. ModMOSMeasure and DefRep.HiDefRoll must be }
 		{ initialized already. }
+	const
+		Base_Number_Of_Attacks_Denominator = 3;	{ I gave this const a long name to make my CS prof proud. }
 	var
-		InitRoll,NumH: Integer;
+		InitRoll,BonusNumH,NumH: Integer;
 	begin
-		{ Start by making the skill roll. }
+		{ Start by determining the maximum number of bonus attacks that this character can }
+		{ have, based on skill rank. }
+		BonusNumH := 1 + ( SkillRank( ER.Originator , AtSkill ) div Base_Number_Of_Attacks_Denominator );
+
+		{ Like BV weapons, this number of hits is limited by the attack roll. }
+		if BonusNumH > ( AtRoll - DefRep.HiRoll + 1 ) then BonusNumH := ( AtRoll - DefRep.HiRoll + 1 );
+		if BonusNumH < 1 then BonusNumH := 1;
+
+		{ Make an Initiative roll to maybe increase the number of hits. }
 		InitRoll := SkillRoll( GB , ER.Originator , NAS_Initiative , DefRep.HiRoll , 0 , False , True );
 		if InitRoll > DefRep.HiRoll then begin
-			if UnarmedCombat then begin
-				NumH := 1 + Random( 2 + (( InitRoll - DefRep.HiRoll ) div ModMOSMeasure ) );
-			end else begin
-				NumH := 1 + Random( 2 + (( InitRoll - DefRep.HiRoll ) div ( ModMOSMeasure + 1 ) ) );
-			end;
+			NumH := 2 + (( InitRoll - DefRep.HiRoll ) div ( ModMOSMeasure * 2 ));
 		end else begin
 			NumH := 1;
 		end;
-		if ( Random( AtRoll ) > DefRep.HiRoll ) then Inc( NumH );
+
+		NumH := NumH + Random( BonusNumH );
+
 		if AStringHasBString( AtDesc , 'WasThrown' ) and ( NumH > 2 ) then NumH := 2;
+
 		MeleeNumberOfHits := NumH;
 	end;
 begin
@@ -1431,7 +1440,8 @@ begin
 
 	{ Make the skill roll. }
 	if ER.Originator <> Nil then begin
-		AtRoll := SkillRoll( GB , ER.Originator , AtSkill , BasicDefenseValue( TMaster ) + 2 , CalcTotalModifiers( gb , ER.Weapon , Target , AtOp , AtDesc ) + ER.FXMod , False , True );
+		{ Don't award any XP yet- we don't know how well the attack went. }
+		AtRoll := SkillRoll( GB , ER.Originator , AtSkill , BasicDefenseValue( TMaster ) + 2 , CalcTotalModifiers( gb , ER.Weapon , Target , AtOp , AtDesc ) + ER.FXMod , False , False );
 		SkillComment( CTM_Modifiers );
 	end else begin
 		if AtSkill < 5 then AtSkill := 5;
@@ -1448,8 +1458,8 @@ begin
 		if AtRoll < 1 then AtRoll := 1;
 		T := DefRep.HiRoll;
 		while T >= AtRoll do begin
-			T := T div 2;
-			ER.FXDice := ER.FXDice * 2 div 3;
+			T := T - MOSMeasure;
+			ER.FXDice := ER.FXDice div 2;
 		end;
 		if ER.FXDice < 1 then DefRep.HiRoll := AtRoll + 1
 		else DefRep.HiRoll := AtRoll - 1;
@@ -1457,6 +1467,9 @@ begin
 
 	if ( AtRoll > DefRep.HiRoll ) then begin
 		{ The attack hit. }
+
+		{ Dole the experience award for the roll now, since we didn't do it earlier. }
+		GiveSkillRollXPAward( TMaster , AtSkill , AtRoll , DefRep.HiRoll );
 
 		{ Determine base margin of success. This will be modified later. }
 		{ First, determine the modified MOSMeasure. }
@@ -1492,27 +1505,17 @@ begin
 					end;
 				end else if ( ER.Weapon^.S = GS_Melee ) or ( ER.Weapon^.S = GS_EMelee ) then begin
 					{ Close combat weapons can trade a high MOS for multiple hits. }
-					NumberOfHits := MeleeNumberOfHits( False );
+					NumberOfHits := MeleeNumberOfHits;
 				end;
 			end else if ER.Weapon^.G = GG_Module then begin
 				{ Fighting attacks have a higher chance of scoring }
-				NumberOfHits := MeleeNumberOfHits( True );
+				NumberOfHits := MeleeNumberOfHits;
+
+				MOS := MOS - Non_Weapon_MOS_Penalty;
 
 				{ Modify the MOS for KungFu. }
 				{ This will be modified again later for being a nonweapon... }
 				if HasTalent( ER.Originator , NAS_KungFu ) then MOS := MOS + Non_Weapon_MOS_Penalty + 1;
-			end;
-	
-			{ Modify MOS and DC for non-weapons and EMWs. }
-			if ER.Weapon^.G <> GG_Weapon then begin
-				MOS := MOS - Non_Weapon_MOS_Penalty;
-				if MOS < 0 then begin
-					ER.FXDice := ER.FXDice + MOS;
-					if ER.FXDice < 1 then ER.FXDice := 1;
-				end;
-
-			end else if ( ER.Weapon^.G = GG_Weapon ) and ( ER.Weapon^.S = GS_EMelee ) then begin
-				MOS := MOS + 2;
 			end;
 		end;
 
@@ -1560,6 +1563,18 @@ begin
 			if MOS < 2 then MOS := 2
 			else MOS := MOS + 1;
 		end;
+
+		{ If dealing with an energy weapon, MOS has a minimum value. }
+		if ( ER.Weapon <> Nil ) and ( ER.Weapon^.G = GG_Weapon ) then begin
+			if ER.Weapon^.S = GS_EMelee then begin
+				if MOS < 2 then MOS := 2
+				else MOS := MOS + 1;
+			end else if ( ER.Weapon^.S = GS_BeamGun ) and ( ER.Weapon^.Scale > 0 ) then begin
+				if MOS < 1 then MOS := 1
+				else MOS := MOS + 1;
+			end;
+		end;
+
 
 		{ Modify MOS for the "HARD AS NAILS", "HULL DOWN" talents. }
 		if ( TMaster^.G = GG_Character ) and HasTalent( TMaster , NAS_HardAsNails ) then MOS := MOS - 2;
@@ -2391,7 +2406,6 @@ begin
 
 		DisposeSAtt( Adjective );
 		DisposeSAtt( Noun );
-
 	end;
 end;
 
