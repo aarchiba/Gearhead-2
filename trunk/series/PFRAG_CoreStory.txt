@@ -7,19 +7,6 @@
 %% In addition, some of these fragments are tied to specific components, and may not
 %% be readily reusable in other components.
 
-% TYPE: *CS_ExplainEnemyNature
-%		&Lover		The NPC explaining is the enemy's lover (or ex)
-%	The PC will be told something about the enemy's personality. Use the E:A.???
-%	and E:M.??? tags to determine the current state. This component is responsible
-%	for the storynote.
-%   PARAM1: Exit Label; may add prompts afterwards
-
-	Persona
-	% Enemy is a professional, seeking perfection in combat
-	requires <*CS_ExplainEnemyNature (E:M.---|E:M.mer)>
-	START <EndChat Say %id%01 StoryNote %id%02 SetXXRMotivation &EnemyNPC XXR_M_Professional Goto %1%>
-	Msg%id%01 <You might think that \PERSONA &EnemyNPC is a simple mercenary, but you'd be wrong. Actually \SPR &EnemyNPC uses conflict as a tool for personal growth; \SPR &EnemyNPC seeks perfection in all things.>
-	Msg%id%02 <You learned from \ChatNPC that \PERSONA &EnemyNPC seeks perfection through combat.>
 
 % TYPE: *CS_BasicStopEnemyMission
 %	The PC is being given a basic stop enemy mission. In this mission, the PC will be

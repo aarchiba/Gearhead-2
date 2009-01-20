@@ -215,7 +215,8 @@ Content
 		% L1 = Initialization Counter
 		start <if= L1 0 else GoBeenBefore L= 1 1 Alert 1 Alert 2 ifNPCOK &EnemyNPC else GoReplaceEnemy DeleteNPC %5% Goto GoMonologue>
 		GoReplaceEnemy <&SetEnemyNPC %5% SetXXRAttitude %5% XXR_A_NeverMet Goto GoMonologue>
-		GoMonologue <Monologue &EnemyNPC 3 &SetTargetItem %2% History 4 WinSubPlot %plotid% Trigger0 .%id%_%plotid%_GoWin>
+		GoMonologue <Monologue &EnemyNPC 3 &SetTargetItem %2% AlterContext .next History 4 WinSubPlot %plotid% Trigger0 .%id%_%plotid%_GoWin>
+		.next <+Pla>
 		GoBeenBefore <Print 5>
 
 		end <SetEncounterInactive %4%>
@@ -540,11 +541,13 @@ Content
 		greeting <if= p%id%04 1 else GoNotNow  EndChat Say 2 AddCHat 1>
 		GoNotNow <EndChat Say 1>
 		GoWin <AddChat 2 XPV 100   WinSubPlot %plotid%   Trigger0 .%id%_%plotid%_GoWin>
-		*result1 <*CS_ExplainEnemyNature&Lover GoWin>
+		result1 <EndChat Say %id%01 StoryNote %id%02 SetXXRMotivation &EnemyNPC XXR_M_Professional Goto GoWin>
 		result2 <EndChat Say 3 PCAlly %2% FreezeNPC %2%>
 		Msg1 <We shouldn't be talking now; we're in the middle of combat!>
 		Msg2 <Thank you! I couldn't have defeated %name3% without your help.>
 		Msg3 <No, that's why \SPR %7% broke up with me. I appreciate your help, \PC . Maybe someday I'll be able to return the favor.>
+		Msg%id%01 <You might think that \PERSONA &EnemyNPC is a simple mercenary, but you'd be wrong. Actually \SPR &EnemyNPC uses conflict as a tool for personal growth; \SPR &EnemyNPC seeks perfection in all things.>
+		Msg%id%02 <You learned from \ChatNPC that \PERSONA &EnemyNPC seeks perfection through combat.>
 		Prompt1 <No problem. I was hoping you could tell me about %name7%.>
 		Prompt2 <Is that why you broke up with \OPR %7% ?>
 

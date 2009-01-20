@@ -115,6 +115,7 @@ Content
 
 	% P%id%01 = Initialization Counter
 	% P%id%02 = Time Limit
+	% P%id%03 = Gain peaceful entry counter
 
 	start <ifSubPlotLost %plotid1% else .%id%_GoCheckSP2   LoseSubPlot %plotid%   Trigger0 .%id%_%plotid%_GoLoss>
 	.%id%_GoCheckSP2 <ifSubPlotLost %plotid2% DeleteNPC %4% History %id%01    LoseSubPlot %plotid%   Trigger0 .%id%_%plotid%_GoLoss>
@@ -124,7 +125,10 @@ Content
 
 	% When the secret is revealed set the timer and start the Reveal Base subplot.
 	% Oh, and change the attitude to mutual hatred. Can't forget that.
-	.%id1%_%plotid1%_GoLearnSecret <if= p%id%02 0 P= %id%02 ComTime P+ %id%02 86400  SetPlotStatus %plotid2% %id2%  SMemo %id%02 History %id%03 SetXXRAttitude %1% XXR_A_MutualHate PCEnemy %1%>
+	.%id1%_%plotid1%_GoLearnSecret <if= p%id%02 0 P= %id%02 ComTime P+ %id%02 86400  SetPlotStatus %plotid2% %id2%  SetPlotStatus %plotid3% %id3%  SMemo %id%02 History %id%03 SetXXRAttitude %1% XXR_A_MutualHate PCEnemy %1%>
+
+	% If the PC gains peaceful entry, that's a good thing.
+	.%id3%_%plotid3%_GoPeacefulEntry <P= %id%03 1>
 
 	Msg%id%01 <You failed to rescue %name4%.>
 	Msg%id%02 <%name1% has kidnapped %name4%; \SPR %1% is likely planning to torture \OPR %4% for information about you.>
@@ -132,8 +136,10 @@ Content
 
 	% SubPlot1 is the FindSecret: this one starts the timer and the rest of the plot.
 	% SubPlot2 is the locate base task
+	% SubPlot3 is the peaceful entry task
 	SubPlot1 <*:CS_TellSecretAboutNPC&LearnPlans&IsEnemy 7 1>
 	SubPlot2 <*:CS_RevealEncounter_NPCBase&EnemyNPC&Kidnapping 2 3 1>
+	SubPlot3 <*:CS_PeacefulEntry_NPCBase 3 1>
 
 	sub
 		MetaScene 3
@@ -148,12 +154,17 @@ Content
 
 		% L1 = Friend has died
 
-		start <Print 1>
+		start <Print 1 CancelSubPlot %plotid3% ifG P%id%03 0 TeamNeutral 2>
 		end <if# L1 0 else GoCheckWin   History 2   LoseSubPlot %plotid%   Trigger0 .%id%_%plotid%_GoLoss   DeleteNPC %4%  SetEncounterInactive %3%>
 		GoCheckWin <ifSubPlotWon %plotid%   SetEncounterInactive %3%>
 
+		% If the PC attacks at all after gaining peaceful entry, the guards will become
+		% hostile again.
+		PCAttack <ifG P%id%03 0 P= %id%03 0 Alert 3 TeamAttack 2>
+
 		Msg1 <You enter %name1%'s base.>
 		Msg2 <You didn't arrive quickly enough to save %name4%.>
+		Msg3 <Suddenly, an alarm sounds!>
 
 		sub
 			Team 1
@@ -170,7 +181,7 @@ Content
 			home <Entry Grid>
 			type <SYNTH ROBOT MILITARY>
 			SetEnemy 1
-			Deploy <if= V1 0 V= 1 1 WMonster 3 StoryDL 50>
+			Deploy <if= V1 0 if= P%id%03 0 V= 1 1 WMonster 3 StoryDL 50>
 
 			room
 			name <Entry Grid>

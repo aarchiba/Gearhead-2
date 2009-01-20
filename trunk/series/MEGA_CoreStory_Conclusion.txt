@@ -31,19 +31,24 @@ Content
 	Place4 <3>
 
 	% P%id%01 = Initialization Counter
+	% P%id%02 = Peaceful Entry Counter
 
 	% At startup, activate the RevealEncounter task.
-	update <if= p%id%01 0 p= %id%01 1 SetPlotStatus %plotid4% %id4%>
+	update <if= p%id%01 0 p= %id%01 1 SetPlotStatus %plotid4% %id4% SetPlotStatus %plotid5% %id5%>
+
+	.%id5%_%plotid5%_GoPeacefulEntry <P= %id%02 1>
 
 	% SubPlot1 is the final battle buildup
 	%     This serves the purpose of a RevealEncounter task for the last fight
 	% SubPlot2 is the partner's subplot
 	% SubPlot3 is the love interest's subplot
 	% SubPlot4 is the RevealEncounter for the Enemy's base
+	% SubPlot5 is the peaceful entry for the Enemy's base
 	SubPlot1 <*CS_END_Buildup 1 2>
 	SubPlot2 <*:CS_END_Partner_Arc>
 	SubPlot3 <*:CS_END_LoveInterest_Arc>
 	SubPlot4 <*:CS_RevealEncounter_NPCBase&EnemyNPC 3 4 2>
+	SubPlot5 <*:CS_PeacefulEntry_NPCBase 4 2>
 
 	sub
 		MetaScene 4
@@ -60,13 +65,16 @@ Content
 		% L3 = Computer UID
 		% L4 = History Message
 
-		start <Print 1 if= L4 0 L= 4 1 History 3>
+		start <Print 1 if= L4 0 L= 4 1 History 3 CancelSubPlot %plotid5% if# P%id%02 0 TeamNeutral 2 TeamNeutral 3>
 		end <if# L1 0 SetEncounterInactive %4%>
 		tmove1 <if= L2 0 ifPCCanSeeLocal L3 L= 2 1 Alert 2>
+
+		PCAttack <ifTeamNotHostile 2 TeamAttack 2 TeamAttack 3 TeamAttack 4 Alert 4>
 
 		Msg1 <You enter %name2%'s command bunker.>
 		Msg2 <You spot an important-looking computer terminal.>
 		Msg3 <You raided %name2%'s command bunker.>
+		Msg4 <Suddenly, an alarm goes off!>
 
 		sub
 			Team 1
@@ -91,7 +99,7 @@ Content
 			name <Last Encounter>
 			home <Goal>
 			type <SYNTH ROBOT GUARD>
-			Deploy <if= V1 0 V= 1 1 WMonster 4 StoryDL 50>
+			Deploy <if= V1 0 V= 1 1 if= P%id%02 0 WMonster 4 StoryDL 50>
 			SetEnemy 1
 			SetAlly 2 3
 
@@ -209,7 +217,7 @@ Content
 	sub
 		MetaScene 4 2
 		rumor%id% <%name2%'s ship is in %name3%. This could mean the end of everything.>
-		special <UNCHARTABLE NORESCUE>
+		special <NORESCUE>
 		% L1 = Encounter Over Counter
 		% L2 = Initialization Counter; resets each time
 		% L3 = Second deployment happened

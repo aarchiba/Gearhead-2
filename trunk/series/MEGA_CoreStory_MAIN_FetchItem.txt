@@ -15,6 +15,146 @@
 %%
 
 Content
+	name <Corporate Collection>
+	desc <The item you're looking for is held by a collector.>
+	requires <*:CS_FetchItem P:-- +H-- ~C:THIEF -C:POLIC>
+	changes <+H P:++>
+	Size 5
+
+	% E1 is the item that was taken
+	% E2 is an urban scene for the mansion
+	% E3 is the mansion itself
+	% E4 is a local corporate sort
+	% E5 is the faction E4 belongs to
+	% E6 is a container for the item
+	Place1 <6>
+	Element2 <Scene Urban !Near -7>
+	Element3 <Prefab>
+	Place3 <2>
+	Element4 <Character Corporate -NOFAC !Near -7>
+	Place4 </>
+	Element5 <Faction Corporate !Comrade 4 !XClude -2 -ArchEnemy>
+	Element6 <Prefab>
+	Place6 <3>
+
+	%% FAIL CONDITIONS
+	%% - DiscoverNPCHasItem fails
+	%% - RevealEncounter fails
+	%% - E1 is destroyed
+
+	% P%id%01 = Initialization Counter
+	% P%id%02 = History message counter
+	% P%id%03 = Peaceful Entry Counter
+
+	update <if= P%id%01 0 P= %id%01 1 SetPlotStatus %plotid1% %id1% SetXXRAttitude %4% XXR_A_IsSenior>
+
+	get%1% <WinSubPlot %plotid% if= P%id%02 0 P= %id%02 1 History %id%01>
+
+	.%id1%_%plotid1%_GoDiscover <SetPlotStatus %plotid2% %id2%  SetPlotStatus %plotid3% %id3%>
+	.%id3%_%plotid3%_GoPeacefulEntry <P= %id%03 1>
+
+	end <ifSubPlotLost %plotid1% else .%id%_GoCheckSP2   LoseSubPlot %plotid%>
+	.%id%_GoCheckSP2 <ifSubPlotLost %plotid2% else .%id%_GoCheckE1   LoseSubPlot %plotid%>
+	.%id%_GoCheckE1 <ifItemDestroyed %1%   LoseSubPlot %plotid%>
+
+	Msg%id%01 <You recovered the %name1% from %name4%.>
+
+	% SubPlot1 is where the PC learns that the corporate character has the item.
+	% SubPlot2 is the PC's attempt to locate the mansion.
+	% SubPlot3 is the free entry task
+	SubPlot1 <*:CS_DiscoverNPCHasItem 4 1>
+	SubPlot2 <*:CS_RevealEncounter_NPCBase 2 3 4>
+	SubPlot3 <*:CS_PeacefulEntry_NPCBase 3 4>
+
+	sub
+		MetaScene 3
+		type <building basement mansion>
+		mapwidth 35
+		mapheight 35
+		MonkeyMap
+		LockedDoorChance 10
+		SecretDoorChance 10
+		FloorType 16
+		WallType 20
+
+		PalaceParkTiles
+
+		NeededCells 3
+
+		% L1 = Have spoken to E4
+		% L2 = Have set alarm
+
+		start <Print 1  CancelSubPlot %plotid3%  if# P%id%03 0 TeamNeutral 2>
+		end <if# plotstatus %plotid% %id% SetEncounterInactive %2%>
+
+		get%1% <if= L1 0 L= 1 1 Alert 3 ForceChat %4%>
+		PCAttack <ifTeamNotHostile 2 TeamAttack 2 Alert 2>
+
+		Msg1 <You enter %name4%'s mansion.>
+		Msg2 <Suddenly, an alarm goes off!>
+		Msg3 <As you take the %name1%, suddenly a viewscreen turns on. You are addressed by the owner of the mansion.>
+
+		content3 <Some 3 30 Sub *DUNGEON_REWARD>
+
+		sub
+			Team 1
+			SetEnemy 2
+
+			Team 2
+			name <Monster>
+			type <Guard Robot>
+			Deploy <if= V1 0 V= 1 1 MonsterUp 2 StoryDL>
+			SetEnemy 1
+
+			room
+			special <STARTHERE SHAREDPALETTE>
+			minimap <............2............>
+			sub
+				TrapDoor
+				Destination -1
+				MiniMapComponent 2
+				use <Print 1 Return>
+			end
+
+			room
+			special <SHAREDPALETTE>
+			desig <HOME %e6%>
+			minimap <............1............>
+		end
+
+		Persona 4
+		special <NOESCAPE UNLISTED>
+		greeting <EndChat Say %id%01 AddChat %id%01 AddChat %id%02>
+		.%id%_GoAcceptOffer <TeamNeutral 2 History %id%05 &SetAllyFac %5% &SetHangingNPC %4% AlterContext .%id%_accept if= PCFac 0 SetPCFac %5%>
+		.%id%_accept <+Hmi>
+		result%id%01 <EndChat Say %id%02 AddChat %id%03 AddChat %id%04>
+		result%id%02 <EndChat Say %id%03 AddEasygoing d10  Goto .%id%_GoAcceptOffer>
+		result%id%03 <EndChat Say %id%04  Goto .%id%_GoAcceptOffer>
+		result%id%04 <EndChat Say %id%06  AddEasygoing -d10  History %id%07  &SetHangingNPC %4% TeamAttack 2 MonsterUp 2 d10 AlterContext .%id%_refuse>
+		.%id%_refuse <+Hre>
+		Msg%id%01 <Well done \PC . I didn't expect this %name1% to attract so much attention, but it apparently means quite a lot to you.>
+		Msg%id%01_1 <Amazing. When I obtained this %name1% I didn't think it was particularly important... Judging by your efforts, though, it appears that you think otherwise.>
+		Msg%id%02 <I have no intention of taking it back, all I want is to talk for a while. You know, %name5% could use someone with your determination and skills. Come work for me and this indiscretion will be forgiven.>
+		Msg%id%03 <Don't worry about it. I can tell that you want to make amends for breaking into my home, so I'll go easy on you. Come work for me at %name5% and all will be forgiven. You can keep the %name1% as kind of a signing bonus.>
+		Msg%id%04 <Very good. I'll contact you later on when there's something I need done.>
+		Msg%id%05 <%name4% let you keep it, in exchange for joining %name5%.>
+		Msg%id%06 <How very disappointing. I trust you will understand that this isn't an insult that I can simply forget, no? Until we meet again...>
+		Msg%id%07 <%name4% swore revenge against you.>
+		Prompt%id%01 <If you want it back you'll have to fight me.>
+		Prompt%id%01_1 <That's right, and it's mine now!>
+		Prompt%id%02 <Sorry, I'll just put it back where I found it...>
+		Prompt%id%02_1 <Is this your house? I'm so sorry...>
+		Prompt%id%03 <You're offering me a job? Alright, I accept.>
+		Prompt%id%04 <No deal. My freedom isn't up for trade.>
+	end
+	inv
+		STC CORE-ACTIVATABLE-STATIONARY-DEFENDED
+		name <Mansion>
+
+		STC DISPLAYCASE-USABLE
+	end
+
+Content
 	name <New Enemy Wants It>
 	desc <The item you're looking for was stolen for a new enemy.>
 	requires <*:CS_FetchItem E:-->

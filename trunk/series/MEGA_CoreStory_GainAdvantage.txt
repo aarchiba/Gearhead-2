@@ -12,6 +12,75 @@
 %%
 
 Content
+	name <You can buy anything these days.>
+	desc <An NPC will sell the PC the passcode for the base.>
+	requires <*:CS_PeacefulEntry_NPCBase>
+
+	% E1 is the location in question
+	% E2 is the NPC in charge of the base
+	% E3 is a local public scene
+	% E4 is the info merchant
+	% E5 is a datakey that can be stolen from the merchant
+	Element3 <Scene Public !Near -7>
+	Element4 <Character Criminal -NEMESIS !Xclude -2 !Near 3 NeverFail>
+	NeverFail4 <Thief>
+	Place4 <3 (Citizens) pass ally>
+	Element5 <Prefab>
+	Place5 <4>
+
+	% This subplot will fail if E5 is destroyed
+	start <ifItemDestroyed %5% LoseSubPlot %plotid%>
+
+	Get%5% <Alert %id%01 History %id%02 DeleteItem %5% XPV 100 Trigger0 .%id%_%plotid%_GoPeacefulEntry WinSubPlot %plotid%>
+
+	Msg%id%01 <The codes on this key will allow you to enter %name2%'s %name1%.>
+	Msg%id%02 <You found the key to %name2%'s %name1%.>
+
+	sub
+		Persona 4
+		rumor%id% <%name4% has been to %name2%'s %name1%.>
+		%% V%id%01 = Asking Price
+		%% V%id%02 = Stupid Question Counter
+		greeting <if= PlotStatus %plotid% %id% else %pop% Goto .%id%_GoGreet>
+		*.%id%_GoGreet <*IHearYouAreFightingNPC %2% .%id%_GoOffer>
+		.%id%_GoOffer <V= %id%01 Threat StoryDL 7 NewChat Say %id%01 AddChat %id%01 AddChat %id%02 AddChat %id%03>
+		result%id%01 <EndChat Say %id%02 History %id%03 Cash+ -V%id%01 DeleteItem %5% Trigger0 .%id%_%plotid%_GoPeacefulEntry WinSubPlot %plotid%>
+		*result%id%02 <*HurryBackWithMoney>
+		result%id%03 <NewChat Say %id%04 AddChat %id%01 AddChat %id%02 V= %id%02 1>
+		Msg%id%01 <You see this data key right here? It contains the security code for %name2%'s %name1%, and it can be yours for the low low price of $ \VAL V%id%01 .>
+		Msg%id%01_1 <%name2% is paranoid about security, but \PPR %2% %name1% has a fatal flaw- this key, which contains all of its security codes. If you want it I can sell it to you for a mere $ \VAL V%id%01 .>
+		CMsg%id%01_1 <ifNPCSociable Accept>
+		Msg%id%01_2 <This data key I'm holding contains the security code for %name2%'s %name1%. It can be yours for $ \VAL V%id%01 .>
+		CMsg%id%01_2 <ifNPCShy Accept>
+		Msg%id%01_3 <If you're planning to storm %name2%'s %name1%, this security key will make things much easier. If you're interested I'm willing to part with it for $ \VAL V%id%01 .>
+		CMsg%id%01_3 <ifNPCEasygoing Accept>
+		Msg%id%01_4 <If you want to get into %name2%'s %name1%, there's only one way you're gonna do it- this security key. I'll sell it to you for $ \VAL V%id%01 .>
+		CMsg%id%01_4 <ifNPCPassionate Accept>
+		Msg%id%01_5 <I've got something here that you're just going to love- the security key for %name2%'s %name1%. If you want to have it, it's going to be $ \VAL V%id%01 .>
+		CMsg%id%01_5 <ifNPCCheerful Accept>
+		Msg%id%01_6 <%name2%'s %name1% is heavily guarded, and they don't take prisoners... unless, of course, you have the codes on this key. I'll sell it to you for $ \VAL V%id%01 .>
+		CMsg%id%01_6 <ifNPCMelancholy Accept>
+		Msg%id%02 <Here you go. This should give you free access to the %name1%... just don't do anything stupid while you're in there and everything should be okay.>
+		Msg%id%02_1 <It's been a pleasure doing business with you. This code will get you into the %name1% safely, but I make no promises about what happens after that.>
+		Msg%id%02_2 <Thank you very much. The code will allow you to enter the %name1%, but it's up to you what happens inside.>
+		Msg%id%03 <You bought the security codes to %name2%'s %name1%.>
+		Msg%id%04 <No way. If you're willing to duel for this info then you apparently don't need it too badly.>
+		Msg%id%04_1 <No deal. The only way you're getting this key is by paying for it.>
+		Prompt%id%01 <It's a deal. [Give Money]>
+		CPrompt%id%01 <ifG PC$ V%id%01 Accept>
+		Prompt%id%01_1 <This better be worth it. [Give Money]>
+		Prompt%id%02 <I'll think about your offer.>
+		Prompt%id%02_1 <Maybe I'll come back for that later.>
+		Prompt%id%03 <Why don't we duel for the key?>
+		CPrompt%id%03 <if= V%id%02 0 Accept>
+		Prompt%id%03_1 <I tell you what- I'll duel you for it!>
+	end
+	inv
+		Treasure 5
+		name <Datakey>
+	end
+
+Content
 	name <Do What You Want Cause A Pirate Is Free>
 	desc <The PC can gain entry by posing as a pirate.>
 	requires <*:CS_PeacefulEntry_NPCBase &PirateShip>

@@ -106,13 +106,13 @@ Procedure GiveSkillRollXPAward( Pilot: GearPtr; Skill,SkRoll,SkTar: Integer );
 	{ Give a skill XP award. The size of the award is going to depend on the }
 	{ relation betwee SkRoll and SkTar. }
 const
-	Basic_Skill_Award_Multiplier: Array [1..NumSkill] of Byte = (
+{	Basic_Skill_Award_Multiplier: Array [1..NumSkill] of Byte = (
 		1,1,1,1,1,	2,2,2,2,2,
 		1,1,1,5,1,	1,1,1,5,1,
 		1,1,1,1,1,	1,5,3,3,1,
 		1,3,1,3,1,	2,3,1,1,10,
 		7,1,1
-	);
+	);}
 	MaxTarLevel = 12;
 	Skill_Award_By_Level: Array [1..12] of Integer = (
 		1,2,3,4,5,
@@ -126,7 +126,7 @@ begin
 	Pilot := LocatePilot( Pilot );
 	if ( Pilot <> Nil ) and ( Skill >= 1 ) and ( Skill <= NumSkill ) and ( SkRoll >= SkTar ) then begin
 		{ Determine the TarLevel. This will tell how much XP to give. }
-		TarLevel := SkTar - 8;
+		TarLevel := ( SkTar - 10 ) div 2;
 		if TarLevel < 1 then TarLevel := 1
 		else if TarLevel > MaxTarLevel then TarLevel := MaxTarLevel;
 
@@ -137,7 +137,7 @@ begin
 		if TarLevel > ( SkRank + 1 ) then TarLevel := SkRank + 1;
 
 		if ( SkTar > SkRank ) and ( SkRank > 0 ) then begin
-			DoleSkillExperience( Pilot , Skill , Skill_Award_By_Level[ TarLevel ] * Basic_Skill_Award_Multiplier[ Skill ] );
+			DoleSkillExperience( Pilot , Skill , Skill_Award_By_Level[ TarLevel ] );
 			DoleExperience( Pilot , Skill_Award_By_Level[ TarLevel ] );
 		end else if ( SkTar > ( SkRank div 2 ) ) then begin
 			DoleSkillExperience( Pilot , Skill , ( Skill_Award_By_Level[ TarLevel ] + 1 ) div 2 );

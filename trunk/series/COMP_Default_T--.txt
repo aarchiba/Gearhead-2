@@ -1,4 +1,53 @@
 Plot
+	name <Hanging Job Offer: Allied Building>
+	desc <The PC has to see someone about a job; here it is!>
+	requires <#A +T-- +Hmi H:++ -H:NOFAC Common Common>
+
+	% E1 is a scene for this job offer
+	% E2 is the NPC that the PC will speak with
+	element1 <Scene Building Public !Near -7 !Ally -10>
+	element2 <Grab 10>
+	Place2 <1 (Citizens) pass>
+
+	% All this plot does is move the NPC and activate the mission subplot
+	update <if= PlotStatus %plotid% 0 AlterContext .next &SetHangingNPC 0 email 1 SetPlotStatus %plotid% %id1%>
+	.next <+H-->
+
+	Msg1_1 <%name2%@%name1%:// I've got that mission I promised you. Come see me at %name1%.>
+	Msg1_2 <%name2%@%name1%:// It's time for that mission I told you about earlier. Come give me a call.>
+	Msg1_3 <%name2%@%name1%:// I've got a job for you now. This is important.>
+	Msg1_4 <%name2%@%name1%:// Ready for that mission? Come talk to me about it.>
+	Msg1_5 <%name2%@%name1%:// I've got some work for you. This is very important.>
+
+	%% SubPlot1 is the mission to be offered
+	SubPlot1 <*CS_GiveMission 2>
+
+Plot
+	name <Hanging Job Offer>
+	desc <The PC has to see someone about a job; here it is!>
+	requires <#A +T-- +Hmi H:++ ~H:NOFAC Common>
+
+	% E1 is a scene for this job offer
+	% E2 is the NPC that the PC will speak with
+	element1 <Scene Building Public !Near -7 !Okay -10>
+	element2 <Grab 10>
+	Place2 <1 (Citizens) pass>
+
+	% All this plot does is move the NPC and activate the mission subplot
+	update <if= PlotStatus %plotid% 0 AlterContext .next &SetHangingNPC 0 email 1 SetPlotStatus %plotid% %id1%>
+	.next <+H-->
+
+	Msg1_1 <%name2%@%name1%:// I've got that mission I promised you. Come see me at %name1%.>
+	Msg1_2 <%name2%@%name1%:// It's time for that mission I told you about earlier. Come give me a call.>
+	Msg1_3 <%name2%@%name1%:// I've got a job for you now. This is important.>
+	Msg1_4 <%name2%@%name1%:// Ready for that mission? Come talk to me about it.>
+	Msg1_5 <%name2%@%name1%:// I've got some work for you. This is very important.>
+
+	%% SubPlot1 is the mission to be offered
+	SubPlot1 <*CS_GiveMission 2>
+
+
+Plot
 	name <Stolen Blueprints>
 	desc <A local scientist has just had the plans for their latest invention stolen.>
 	requires <#A +T-- ~C:POLIC>

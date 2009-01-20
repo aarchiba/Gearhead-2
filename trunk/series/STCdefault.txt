@@ -532,6 +532,23 @@ desig <DISPLAYCASE-1>
 roguechar <=>
 SDL_SPRITE <prop_displaycase.png>
 
+Prop 5
+name <Display Case>
+desig <DISPLAYCASE-USABLE>
+roguechar <=>
+SDL_SPRITE <prop_displaycase.png>
+use <if= StatVal STAT_Lock 0 else GoLocked Print -5 OpenInv>
+GoLocked <Print -4>
+CLUE32 <if# StatVal STAT_Lock 0 else GoNotLocked Mental ifCodeBreaking StatVal STAT_Lock else GoNoUnlock Print -1 SetStat STAT_Lock 0>
+GoNoUnlock <Print -2>
+GoNotLocked <Print -3>
+Msg-1 <You unlock the display case.>
+Msg-2 <You cannot unlock this display case at your current skill level.>
+Msg-3 <This display case isn't locked.>
+Msg-4 <The display case is locked.>
+Msg-5 <You open the display case.>
+
+
 Metaterrain 0 0
 desig <HIDDEN_ENTRANCE>
 Stat 5 -1

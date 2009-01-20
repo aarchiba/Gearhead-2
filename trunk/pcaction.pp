@@ -515,6 +515,7 @@ begin
 	NPC := LocatePilot( NPC );
 	if ( NPC <> Nil ) and GearOperational( NPC ) and AreEnemies( GB , NPC , PC ) and NotAnAnimal( NPC ) and IsFoundAlongTrack( GB^.Meks , NPC ) and ( NATtValue( NPC^.NA , NAG_EpisodeData , NAS_SurrenderStatus ) <> NAV_NowSurrendered ) then begin
 		PCDoVerbalAttack( GB , PC , NPC );
+		WaitAMinute( GB , PC , ReactionTime( PC ) );
 
 	end else if ( NPC <> Nil ) and GearOperational( NPC ) then begin
 		if ByTelephone or CanSpeakWithTarget( GB , PC , NPC ) then begin
@@ -552,6 +553,8 @@ begin
 					DialogMsg( ReplaceHash( MsgSTring( 'TALKING_RefuseSoft' ) , GearName( NPC ) ) );
 
 				end;
+
+				WaitAMinute( GB , PC , ReactionTime( PC ) );
 			end else begin
 				DialogMsg( MsgSTring( 'TALKING_NoReply' ) );
 			end;
