@@ -258,7 +258,41 @@ Plot
 		SetID 1
 	end
 
+Plot
+	name <Conference Corporate Mission: Enemy of my Enemy>
+	desc <Go to a conference, find someone who's hiring.>
+	requires <#A +Tgs (+Fcc|+Fmi|+F--) -P:CORPO F:++>
+	Size 1
 
+	% E1 is the scene where this component will take place
+	% E2 is the corporate faction that's hiring
+	% E3 is a local public scene for generating a new NPC
+	% E4 is the NPC who will give the mission
+	% E5 is the enemy faction - needed for the rumor
+	element1 <Grab 6>
+	Element2 <Faction Corporate -ArchEnemy !Okay -3 !Enemy -2>
+	element3 <Scene Building Public !Near -7 !Okay 2>
+	element4 <Character !Comrade 2 !Near 3 NeverFail>
+	NeverFail4 <Corporate Executive>
+	Place4 <1 (Citizens) pass>
+	Element5 <Grab 2>
+
+	% This plot updates when the PC enters the location
+	start <if= PlotStatus %plotid% 0 ifNPCOK %4% else GoNPCDied if= SceneID %1%  SetPlotStatus %plotid% %id1%>
+	GoNPCDied <LoseComp 0 .next>
+	.next <>
+
+	%% SubPlot1 is the mission to be offered
+	SubPlot1 <*CS_GiveMission 4>
+
+	sub
+		Persona 4
+		rumor%id1% <%name4% has been having problems with %name5%.>
+		greeting <NewChat SayAnything>
+
+		STC MS_OFFICE
+		SetID 1
+	end
 
 Plot
 	name <Conference Corporate Mission: L5 Region>
@@ -288,6 +322,7 @@ Plot
 	sub
 		Persona 4
 		rumor%id1% <%name4% is looking to hire someone for %name2%.>
+		greeting <NewChat SayAnything>
 
 		STC MS_OFFICE
 		SetID 1

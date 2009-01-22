@@ -215,6 +215,30 @@
 	Prompt%id%02 <Maybe I'll come back later.>
 
 	Persona
+	requires <*SHOP_MECHA Sociable>
+	START <NewChat Say %id%01 AddChat %id%01 AddChat %id%02>
+	result%id%01 <EndChat Say %id%02 shop .%id%_wares Goto %1%>
+	result%id%02 <Goto %1%>
+	.%id%_wares <MECHA MEK_ARM>
+	KEYWORDS <MECHA MEK_ARM>
+	Msg%id%01 <A mecha is more than just a tool- it's also a fashion statement. Take a look at my selection of mecha and mecha armor, and design your own look.>
+	Msg%id%02 <Remember that the more expensive a mecha is, the cooler it is.>
+	Prompt%id%01 <Alright. Show me what you have.>
+	Prompt%id%02 <I don't really need a new mecha just yet.>
+
+	Persona
+	requires <*SHOP_MECHA Shy>
+	START <NewChat Say %id%01 AddChat %id%01 AddChat %id%02>
+	result%id%01 <EndChat Say %id%02 shop .%id%_wares Goto %1%>
+	result%id%02 <Goto %1%>
+	.%id%_wares <MECHA MEXTRA>
+	KEYWORDS <MECHA MEXTRA>
+	Msg%id%01 <I stock mecha and mecha parts.>
+	Msg%id%02 <Sure. You can see everything here.>
+	Prompt%id%01 <Let me see what you have.>
+	Prompt%id%02 <Sorry, I don't need anything.>
+
+	Persona
 	requires <*SHOP_MECHA Easygoing>
 	START <NewChat Say %id%01 AddChat %id%01 AddChat %id%02>
 	result%id%01 <EndChat Say %id%02 shop .%id%_wares Goto %1%>
@@ -227,12 +251,48 @@
 	Prompt%id%02 <I'm not interested.>
 
 	Persona
+	requires <*SHOP_MECHA Passionate>
+	START <NewChat Say %id%01 AddChat %id%01 AddChat %id%02>
+	result%id%01 <EndChat Say %id%02 shop .%id%_wares Goto %1%>
+	result%id%02 <Goto %1%>
+	.%id%_wares <MECHA>
+	KEYWORDS <MECHA>
+	Msg%id%01 <This is a mecha shop. I've got all kinds of steel beasts just waiting for a new home.>
+	Msg%id%02 <The most important thing a cavalier can have is \PPR 0 mecha. It's your ride, your power, and sometimes your only friend...>
+	Prompt%id%01 <I could use a new mecha.>
+	Prompt%id%02 <I don't need anything right now.>
+
+	Persona
+	requires <*SHOP_MECHA Cheerful>
+	START <NewChat Say %id%01 AddChat %id%01 AddChat %id%02>
+	result%id%01 <EndChat Say %id%02 shop .%id%_wares Goto %1%>
+	result%id%02 <Goto %1%>
+	.%id%_wares <MECHA MEK_WEP>
+	KEYWORDS <MECHA MEK_WEP>
+	Msg%id%01 <Here at \ChatNPC 's Mecha Mart you get more bang for your buck- literally! I carry a fine selection of mecha and mecha weapons.>
+	Msg%id%02 <Remember, for all this week I'm offering complimentary gum with each purchase.>
+	Prompt%id%01 <Show me the goods.>
+	Prompt%id%02 <There's nothing here I want.>
+
+	Persona
+	requires <*SHOP_MECHA Melancholy>
+	START <NewChat Say %id%01 AddChat %id%01 AddChat %id%02>
+	result%id%01 <EndChat Say %id%02 shop .%id%_wares Goto %1%>
+	result%id%02 <Goto %1%>
+	.%id%_wares <MECHA>
+	KEYWORDS <MECHA>
+	Msg%id%01 <I stock a variety of mecha, both locally produced and imported.>
+	Msg%id%02 <The one constant in the life of a cavalier is that no matter how good you are, you're going to need a replacement mecha someday. I guess you could say that your misfortune is my business.>
+	Prompt%id%01 <I'd like to see what you have.>
+	Prompt%id%02 <Maybe I'll be back later...>
+
+	Persona
 	requires <*SHOP_MECHA Pragmatic>
 	START <NewChat Say %id%01 AddChat %id%01 AddChat %id%02>
 	result%id%01 <EndChat Say %id%02 shop .%id%_wares Goto %1%>
 	result%id%02 <Goto %1%>
-	.%id%_wares <MECHA MEXTRA>
-	KEYWORDS <MECHA MEXTRA>
+	.%id%_wares <MECHA MEK_ENG>
+	KEYWORDS <MECHA MEK_ENG>
 	Msg%id%01 <I have a variety of mecha, and also spare parts for customizing your steed.>
 	Msg%id%02 <Take your time looking through the stock.>
 	Prompt%id%01 <Show me what you have.>
@@ -410,8 +470,8 @@
 	START <NewChat Say %id%01 AddChat %id%01 AddChat %id%02>
 	result%id%01 <EndChat Say %id%02 shop .%id%_wares Goto %1%>
 	result%id%02 <Goto %1%>
-	.%id%_wares <WEAPON Mecha Mextra>
-	KEYWORDS <WEAPON Mecha Mextra>
+	.%id%_wares <WEAPON Mecha Mek_Wep>
+	KEYWORDS <WEAPON Mecha Mek_Wep>
 	Msg%id%01 <When the going gets tough, what you need is more firepower! We have all kinds of personal and battlefield armaments.>
 	Msg%id%02 <Remember, bigger is better.>
 	Prompt%id%01 <I'd like to see your wares.>
@@ -441,6 +501,18 @@
 	Msg%id%02 <We don't carry any accessories, but when you can blow a hole in a titanium wall what more do you need?>
 	Prompt%id%01 <Let me have a look.>
 	Prompt%id%02 <Maybe I'll come back later.>
+
+	Persona
+	requires <*SHOP_WEAPON Pragmatic>
+	START <NewChat Say %id%01 AddChat %id%01 AddChat %id%02>
+	result%id%01 <EndChat Say %id%02 shop .%id%_wares Goto %1%>
+	result%id%02 <Goto %1%>
+	.%id%_wares <WEAPON Mek_Wep>
+	KEYWORDS <WEAPON Mek_Wep>
+	Msg%id%01 <I stock all kinds of weapons- both those for personal use, and those you can install on your mecha.>
+	Msg%id%02 <Remember, don't try to lift the hundred ton hammer by yourself.>
+	Prompt%id%01 <Let me see what you have.>
+	Prompt%id%02 <Sorry, but I'm looking for something else.>
 
 	Persona
 	requires <*SHOP_WEAPON Spiritual ~FAITH>
@@ -706,6 +778,28 @@
 	Msg%id%02 <Let me know what I can do for you.>
 	Prompt%id%01 <I need your services.>
 	Prompt%id%02 <Thanks, but I don't need anything now.>
+
+	Persona
+	requires <*SERVICE_MECHANIC PASSIONATE>
+	START <NewChat Say %id%01 AddChat %id%01 AddChat %id%02>
+	result%id%01 <EndChat Say %id%02 shop .%id%_wares Goto %1%>
+	result%id%02 <Goto %1%>
+	.%id%_wares <MEK_ENG MEK_UP>
+	Msg%id%01 <We offer full repair services, and also offer a selection of mecha upgrades for the serious pilot.>
+	Msg%id%02 <Remember, you can never spend too much money on your mecha. Never.>
+	Prompt%id%01 <I'd like to see what you have.>
+	Prompt%id%02 <Sorry, I don't need any service.>
+
+	Persona
+	requires <*SERVICE_MECHANIC SPIRITUAL>
+	START <NewChat Say %id%01 AddChat %id%01 AddChat %id%02>
+	result%id%01 <EndChat Say %id%02 shop .%id%_wares Goto %1%>
+	result%id%02 <Goto %1%>
+	.%id%_wares <MEXTRA>
+	Msg%id%01 <A mecha is more than just a machine- it's an extension of the pilot. I offer repair services and a selection of upgrade parts.>
+	Msg%id%02 <Take care of your ride, and it'll take care of you.>
+	Prompt%id%01 <I need some of that.>
+	Prompt%id%02 <There's nothing I need right now.>
 
 
 % TYPE: *SERVICE_BARTENDER

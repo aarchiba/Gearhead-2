@@ -272,7 +272,7 @@ begin
 			end;
 
 			{ Check for taunting and other acts of opportunity. }
-			if ( Camp^.GB^.ComTime > NAttValue( M^.NA , NAG_EpisodeData , NAS_ChatterRecharge ) ) then begin
+			if ( Camp^.GB^.ComTime > NAttValue( M^.NA , NAG_EpisodeData , NAS_ChatterRecharge ) ) and GearActive( M ) then begin
 				if HasSkill( M , NAS_Taunt ) then begin
 					MaybeDoTaunt( Camp^.GB , M );
 				end else begin

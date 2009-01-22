@@ -420,9 +420,8 @@ begin
 	GearMaxDamage := it;
 end;
 
-Function GearMaxArmor(Part: GearPtr): Integer;
-	{Calculate how much armor protection PART has. This should}
-	{include both intrinsic armor and equipped armor.}
+Function UnscaledMaxArmor( Part: GearPtr ): Integer;
+	{ Calculate the unscaled armor value of this part. }
 var
 	M: GearPtr;
 	it: Integer;
@@ -449,7 +448,18 @@ begin
 			if  M^.S = GS_GroundHugger then it := it + 2
 			else if  M^.S = GS_Arachnoid then it := it + 1;
 		end;
+	end;
+	UnscaledMaxArmor := it;
+end;
 
+Function GearMaxArmor(Part: GearPtr): Integer;
+	{ Calculate how much armor protection PART has. This doesn't }
+	{ include any external equipped armor.}
+var
+	it: Integer;
+begin
+	it := UnscaledMaxArmor( Part );
+	if ( it > 0 ) and ( Part <> Nil ) then begin
 		{Modify it for scale.}
 		it := ScaleDP( it , Part^.Scale , NAV_Metal );
 	end;

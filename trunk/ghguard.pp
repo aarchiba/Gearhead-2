@@ -40,7 +40,6 @@ uses texutil,gears,ghmodule,ghchars,ghmecha,ui4gh;
 	{ G = GG_Harness }
 	{ S = Module Fit }
 	{ V = Complexity }
-	{ Stats = Stat modifiers, measured in tenths of a point }
 
 const
 	STAT_ShieldBonus = 1;	{ Bonus to defense roll when using this shield. }

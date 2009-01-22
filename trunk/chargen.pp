@@ -569,6 +569,7 @@ begin
 		{ This job can maybe have a faction assigned. }
 		LegalFactionList := CreateFactionList( SAttValue( PC^.SA , 'HOMETOWN_FACTIONS' ) , Job );
 
+
 		if CanEdit then begin
 			{ Create the menus. }
 			RPM := CreateRPGMenu( MenuItem , MenuSelect , ZONE_CharGenMenu );

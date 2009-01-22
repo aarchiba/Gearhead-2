@@ -2069,7 +2069,7 @@ Content
 		result14 <NewChat Say 15 History 21 AddReact 15  NPCVar= %2% 1 1 Cash+ -5000000 XPV 100 AddRenown 1>
 		result15 <NewChat Say 17 History 21 AddReact d8  NPCVar= %2% 1 1                XPV 100>
 		result16 <EndChat Say 19 shop .wares Goto GoGoodbye>
-		.wares <MECHA MEXTRA>
+		.wares <MECHA MEK_ENG>
 		result17 <Goto GoChat>
 		Msg1 <What are you doing down here? This is a place of business, not a social club.>
 		Msg2 <So you're back again. I hope you've got a good reason for bothering me this time.>
