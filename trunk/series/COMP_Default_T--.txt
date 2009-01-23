@@ -576,3 +576,69 @@ Plot
 		CPrompt%id%01 <ifNPCDead %3% Accept>
 	end
 
+Content
+	name <My Enemy is Your Enemy>
+	desc <An NPC will ask the PC to train him, so that he can get revenge against the enemy NPC.>
+	requires <#A +T-- E:++ ~E:ENEMY -E:FRIEND R:-- ~C:ADVEN ~+Gpo (!Ne|!Lo)>
+	Size 1
+
+	% E1 is a public scene in town
+	% E2 is the new NPC
+	% E3 is the mutual enemy
+	% E4 is a outdoors scene
+	Element1 <Scene Building Public !Near -7>
+	Element2 <NewNPC 0 -7>
+	Place2 <1 (Citizens) ally pass>
+	Element3 <Grab 1>
+	Element4 <Scene Environs !Near -7>
+
+	% P1 = Initialization Counter
+	update <if= PlotStatus %plotid% 0 if= P1 0 P= 1 1 NPCLevel %2% StoryDL>
+	start <if= PlotStatus %plotid% 0 ifNPCDead %2% LoseComp 0 .next>
+	.next <+T-- +F-->
+
+	sub
+		Persona 2
+		rumor0 <%name2% wants to speak with you about %name3%.>
+		Greeting <ifChatNPCInPlay else GoComeHere Goto GoAskHelp>
+		GoComeHere <NewChat Say 8>
+		*GoAskHelp <*INeedYourHelp&PCSpecifically GoListen GoRefuse>
+		GoRefuse <EndChat Say 1 AddChat 1>
+		GoListen <NewChat Say 2 StoryNote 3 AddChat 2 AddChat 3>
+		result1 <Goto GoListen>
+		result2 <NewChat Say 4 AddChat 4 AddChat 5 AddChat 6>
+		result3 <NewChat Say 5 AddChat 4 AddChat 5 AddChat 6>
+		result4 <NewChat Say 6 StoryNote 7 &SetPartnerNPC %2% &AddPartnerToLance SetXXRMotivation %2% XXR_M_Revenge SetXXRAttitude %2% XXR_A_IsJunior WinComp 0 .join>
+		.join <+T-- +F-->
+		result5 <NewChat Say 9 Storynote 10 WinComp %4% .refuse>
+		.refuse <+T-- +F-->
+		result6 <NewChat Say 11 AddChat 7 AddChat 8>
+		result7 <NewChat Say 12 StoryNote 13 &SetAmoreNPC %2% SetXXRMotivation %2% XXR_M_Revenge SetXXRAttitude %2% XXR_A_IsJunior WinComp 0 .love>
+		.love <+T-- +F-->
+		result8 <NewChat Say 14 StoryNote 15 &SetPartnerNPC %2% &AddPartnerToLance SetXXRMotivation %2% XXR_M_Revenge SetXXRAttitude %2% XXR_A_IsJunior WinComp 0 .join>
+		Msg1 <No, wait, this has to do with %name3%. Just hear me out...>
+		Msg2 <%name3% is responsible for the death of my brother. I plan to track \OPR %3% down and see justice done... but to do that, I'm going to need your help.>
+		Msg3 <%name2% revealed that %name3% killed \PPR %2% brother.>
+		Msg4 <I want you to train me. Teach me how to fight so that I can defeat %name3%. In the meantime, I'll help you as much as I can... I know how to pilot a mecha, and I can cook a little.>
+		Msg5 <I can't do that. I know that I don't stand a chance against %name3% now, but if you were to train me... Teach me how to fight so that I can defeat \OPR %3% .>
+		Msg6 <Great! I promise, I'll be the best student ever.>
+		Msg7 <You agreed to train %name2% so \SPR %2% can fight %name3%.>
+		Msg8 <Come speak with me in %name1%; what I have to say is too important for over the phone.>
+		Msg9 <I see.>
+		Msg10 <You learned that %name3%'s mecha has been seen in %name4%.>
+		Msg11 <Why are you trying to protect me? You don't even know me.>
+		Msg12 <Alright, I'll trust you... I'm counting on you to stop %name3%, but please be careful. I don't want you to get hurt either.>
+		Msg13 <You promised to defeat %name3% for %name2%.>
+		Msg14 <In that case, you shouldn't mind if I tag along on your adventure. I won't get in your way.>
+		Msg15 <%name2% pledged to follow you so \SPR %2% can help defeat %name3%.>
+		Prompt1 <[Continue]>
+		Prompt2 <What can I do?>
+		Prompt3 <Take my advice- just stay far away from %name3%.>
+		Prompt4 <Alright. I'll train you.>
+		Prompt5 <I don't need a sidekick. They tend to die.>
+		Prompt6 <Please, don't get involved. I'll stop %name3% for you.>
+		CPrompt6 <ifChatNPCSexy if= &AmoreNPC 0 ifG React d10 Accept>
+		Prompt7 <If you get killed I never will. I don't want you to get hurt.>
+		Prompt8 <Good point. I guess I don't really care.>
+	end
+

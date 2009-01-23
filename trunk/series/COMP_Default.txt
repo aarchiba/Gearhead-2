@@ -71,6 +71,77 @@ Plot
 
 
 Plot
+	name <Missing Prototype>
+	desc <A prototype sprocket has gone missing from the trade show. Go find it!>
+	requires <#A +Tgs +Fcc>
+	Size 1
+
+	% E1 is a scene for the conference
+	% E2 is the presenter
+	% E3 is the stolen item
+	Element1 <Grab 6>
+	Element2 <Character (ACADE|TRADE|CORPO) !Near -7 -ArchEnemy>
+	Place2 <1 (Citizens) pass>
+	Element3 <Prefab>
+
+	% Fail Conditions:
+	% - Mission giver dies before encounter is activated
+	% - Fetch subplot fails
+
+	% P%id%01 = Initialization Counter
+	% P%id%02 = Partner Monologue
+
+	update <if= P%id%01 0 P= %id%01 1 SetPlotStatus %plotid% %id%>
+	start <if= SceneID %1% if= P%id%02 0 P= %id%02 1 ifNPCOK &PartnerNPC Monologue &PartnerNPC %id%03>
+	end <if= PlotStatus %plotid1% 0 else .%id%_GoCheckReveal ifNPCDead %2%  LoseComp 0 .%id%_loss>
+	.%id%_GoCheckReveal <ifSubPlotLost %plotid1% SMemo %id%01 SetPlotStatus %plotid3% %id3%>
+	.%id%_loss <+T-->
+
+	% Upon getting the item, set the win subplot.
+	Get%3% <SMemo %id%02  SetPlotStatus %plotid2% %id2%>
+
+	Msg%id%01 <You failed to recover the sprocket. You should go report to %name2% at %name1%.>
+	Msg%id%02 <You should return the sprocket to %name2% at %name1%.>
+	Msg%id%03 <Look over there- %name2% seems to be really nervous about something.>
+
+	%% SubPlot1 is Fetch Item
+	%% SubPlot2 is the winning condition
+	%% SubPlot3 is the loss condition
+	SubPlot1 <*:CS_FetchItem&Stolen 3>
+	SubPlot2 <*CS_WinFetchItem 2 3>
+	SubPlot3 <*CS_CALoseMission 2>
+
+	sub
+		Persona 2
+		rumor%id% <%name2% lost something really important.>
+		greeting <if= PlotStatus %plotid1% 0 else .%id%_GoRemind Goto .%id%_GoGreet>
+		.%id%_GoOfferMission <ifChatNPCUnknown else .%id%_GoKnownGreeting ifChatNPCAlly else .%id%_GoUnknownGreeting Goto .%id%_GoKnownGreeting>
+		*.%id%_GoRemind <*GenericMissionReminder>
+		*.%id%_GoGreet <*INeedYourHelp .%id%_GoBriefing .%id%_GoRefuse>
+		.%id%_GoBriefing <NewChat Say %id%01 AddChat %id%01 AddChat %id%02>
+		.%id%_GoRefuse <NewChat Say %id%03 AddChat %id%01 AddChat %id%02>
+		*result%id%01 <*GoodLuckOnMission .%id%_GoR1Exit ChatNPCFac na>
+		.%id%_GoR1Exit <StoryNote %id%02 SetPlotStatus %plotid1% %id1%>
+		*Result%id%02 <*RejectMission .%id%_GoR2Exit>
+		.%id%_GoR2Exit <LoseComp 0 .%id%_changes>
+		.%id%_changes <+T-- +F-->
+		Msg%id%01 <This is terrible- I've been working on a prototype sprocket which I was going to debut at this conference, but it's gone missing! Someone must have stolen it... Can you help me find it?>
+		Msg%id%02 <%name2% hired you to recover \PPR %2% prototype sprocket.>
+		Msg%id%03 <Just listen for a moment! I've been working on a prototype sprocket which I plan to debut at this conference, but it's gone missing. Someone must have stolen it! Won't you help me find it?>
+		Prompt%id%01 <No problem, as long as the pay is good.>
+		Prompt%id%02 <You'll have to find someone else, I'm afraid.>
+		CPrompt%id%02 <if# PCFac ChatNPCFac Accept>
+
+		STC MS_PRESENTATION
+		SetID 1
+	end
+	inv
+		Treasure 5
+		name <Sprocket>
+		desc <A prototype sprocket.>
+	end
+
+Plot
 	name <What are you going to do about all the pirates?>
 	desc <The corps are waiting for the government to act.>
 	requires <#A +Tgs (+Fcc|+Fmi) (P:POLIT|P:MILIT|P:POLIC) F:-->

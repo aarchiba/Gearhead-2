@@ -41,7 +41,7 @@ uses 	gears,navigate,randmaps,locale,arenaplay,ghchars,gearutil,gearparser,
 {$ENDIF}
 
 const
-	Version = '0.532';
+	Version = '0.533';
 
 Procedure RedrawOpening;
 	{ The opening menu redraw procedure. }

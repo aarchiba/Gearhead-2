@@ -2007,7 +2007,7 @@ Content
 		STC QUEST-ENCOUNTER-ACTIVE-STATIONARY
 		name <Dust Cloud>
 		desig <ENTRANCE %s1%>
-		ATTACK <ifG StatVal STAT_MetaVisibility -1   ifG PCScale 0 ifG PCRenown %threat%    Print -2 Exit Destination>
+		ATTACK <ifG StatVal STAT_MetaVisibility -1   ifG PCScale 0 ifG PCRenown %threat%    if= SceneVar %s1% 2 0     Print -2 Exit Destination>
 	end
 
 
