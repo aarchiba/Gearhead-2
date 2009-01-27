@@ -3555,7 +3555,7 @@ begin
 				SetNAtt( Mek^.NA , NAG_MissionReport , NAS_WasSalvaged , 1 );
 			end else if CanScavenge then begin
 				M2 := SelectRandomGear( Mek^.SubCom );
-				if NotDestroyed( M2 ) and CanBeExtracted( M2 ) and ( RollStep( SkillValue( PC , 15 ) ) > 12 ) then begin
+				if NotDestroyed( M2 ) and CanBeExtracted( M2 ) and ( SkillRoll( GB , PC , 15 , 7 , 0 , True , True ) > 7 ) then begin
 					DelinkGear( Mek^.SubCom , M2 );
 					SetNAtt( M2^.NA , NAG_Location , NAS_Team , NAV_DefPlayerTeam );
 					AppendGear( GB^.Meks , M2 );

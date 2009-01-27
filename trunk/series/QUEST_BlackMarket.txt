@@ -178,7 +178,7 @@ Content
 		GoSetOrders <GrabSource GSetNAtt NAG_EpisodeData NAS_Orders 3>
 		Attack <if= V1 0 ifG StatVal STAT_MetaVisibility -1  ifG PCScale 0 ifG PCRenown %threat% Goto GoStartCombat>
 		use <ifG StatVal STAT_MetaVisibility -1  if# V1 0 else GoStartCombat  Print -1 Exit Destination>
-		GoStartCombat <Alert 1 SavePos Dynamic 2 %threat% 100 .nu1 .nu2 ComposeD Msg1 .Msg1 DynaVar= 3 Destination  DynaFaction &EnemyFac>
+		GoStartCombat <Alert 1 SavePos Dynamic 2 %threat% 100 .nu1 .nu2 ComposeD Msg1 .Msg1 DynaVar= 3 Destination  DynaFaction 15>
 		.nu1 <if= T1 0  Return  SeekGate L3   if= L2 0  L= 2 1  AddRenown -5>
 		.nu2 <if= T2 0           if= L2 0  L= 2 1  XPV 100  AddRenown 1   EncounterVar= L3 1 1  Alert 1  Exit L3>
 		.msg1 <After defeating the mecha, you find the suspicious vessel they were guarding.>

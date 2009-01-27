@@ -332,7 +332,8 @@ Content
 		rumor%id% <%name6% knows a lot about old artifacts.>
 		% v%id%01 = Clue processing time
 		% v%id%02 = First time counter/Identification Cost
-		greeting <if= PlotStatus %plotid% %id% else GoChat ifChatNPCInPlay else GoNotHere ifItemOK %4% else GoChat ifG v%id%01 0 else GoGreet ifG ComTime v%id%01 else GoNotYet NewChat Say %id%01 AddCHat %id%01>
+		greeting <if= PlotStatus %plotid% %id% else GoChat ifG v%id%01 0 else GoCheckFirst ifG ComTime v%id%01 else GoNotYet NewChat Say %id%01 AddCHat %id%01>
+		GoCheckFirst <ifChatNPCInPlay else GoNotHere ifItemOK %4% else GoChat Goto GoGreet>
 		GoNotHere <NewChat Say %id%11>
 		GoNotYet <NewChat Say %id%02>
 		GoChat <NewChat SayAnything>
@@ -404,7 +405,8 @@ Content
 		rumor%id% <%name6% does a bit of freelance forensic work.>
 		% v%id%01 = Clue processing time
 		% v%id%02 = First time counter/Identification Cost
-		greeting <if= PlotStatus %plotid% %id% else GoChat ifChatNPCInPlay else GoNotHere ifItemOK %4% else GoChat ifG v%id%01 0 else GoGreet ifG ComTime v%id%01 else GoNotYet NewChat Say %id%01 AddCHat %id%01>
+		greeting <if= PlotStatus %plotid% %id% else GoChat ifG v%id%01 0 else GoCheckFirst ifG ComTime v%id%01 else GoNotYet NewChat Say %id%01 AddCHat %id%01>
+		GoCheckFirst <ifChatNPCInPlay else GoNotHere ifItemOK %4% else GoChat Goto GoGreet>
 		GoNotHere <NewChat Say %id%11>
 		GoNotYet <NewChat Say %id%02>
 		GoChat <NewChat SayAnything>

@@ -272,14 +272,14 @@ begin
 		{ Check for tools. }
 		if SkillMan[ Skill ].ToolNeeded <> TOOL_None then begin
 			{ If the tool is mandatory, it doesn't matter if it's been equipped or not. }
-			Tool := SeekGear( Master , GG_Tool , Skill , True );
+			Tool := SeekItem( Master , GG_Tool , Skill , True );
 			if Tool <> Nil then begin
 				SkMod := SkMod + Tool^.V;
 			end else begin
 				SkMod := SkMod - 5;
 			end;
 		end else begin
-			Tool := SeekGear( master , GG_Tool , Skill , False );
+			Tool := SeekItem( Master , GG_Tool , Skill , False );
 			if Tool <> Nil then begin
 				SkMod := SkMod + Tool^.V;
 			end;
@@ -451,7 +451,7 @@ Function DoleSkillExperience( Mek: GearPtr; Skill,XPV: LongInt ): Boolean;
 var
 	P: GearPtr;	{ The pilot, in theory. }
 	SkLvl: Integer;
-	it: Boolean;
+	it,DidIncrease: Boolean;
 begin
 	P := LocatePilot( Mek );
 	it := False;	{ Assume FALSE unless shown otherwise. }
@@ -459,14 +459,19 @@ begin
 		AddNAtt( P^.NA , NAG_Experience , NAS_Skill_XP_Base + Skill , XPV );
 
 		{ Check to see if enough skill-specific XPs have been earned to advance the skill. }
-		SkLvl := NAttValue( P^.NA , NAG_Skill , Skill );
-		if ( NATTValue( P^.NA , NAG_Experience , NAS_Skill_XP_Base + Skill ) >= SkillAdvCost( Nil , SkLvl ) ) and ( ( NAttValue( P^.NA , NAG_Skill , Skill ) > 0 ) or Direct_Skill_Learning ) then begin
-			{ Set IT to true, advance the skill, and decrease the }
-			{ number of skill-specific XPs the character has. }
-			it := True;
-			AddNAtt( P^.NA , NAG_Experience , NAS_Skill_XP_Base + Skill , -SkillAdvCost( Nil , SkLvl ) );
-			AddNAtt( P^.NA , NAG_Skill , Skill , 1 );
-		end;
+		repeat
+			SkLvl := NAttValue( P^.NA , NAG_Skill , Skill );
+			{ Assume FALSE unless proven TRUE. }
+			DidIncrease := False;
+			if ( NATTValue( P^.NA , NAG_Experience , NAS_Skill_XP_Base + Skill ) >= SkillAdvCost( Nil , SkLvl ) ) and ( ( NAttValue( P^.NA , NAG_Skill , Skill ) > 0 ) or Direct_Skill_Learning ) then begin
+				{ Set IT to true, advance the skill, and decrease the }
+				{ number of skill-specific XPs the character has. }
+				it := True;
+				DidIncrease := True;
+				AddNAtt( P^.NA , NAG_Experience , NAS_Skill_XP_Base + Skill , -SkillAdvCost( Nil , SkLvl ) );
+				AddNAtt( P^.NA , NAG_Skill , Skill , 1 );
+			end;
+		until not DidIncrease;
 	end;
 
 	{ Return the boolean value. }

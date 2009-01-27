@@ -203,7 +203,7 @@ Content
 		%% a number of times, he will be crowned the Karaoke King
 		%% and get a bonus to Performance.
 		% V1 = Recharge Timer
-		% V2 = Difficulcy rating
+		% V2 = difficulty rating
 		% V3 = Concert result recorder
 		% V4 = Win big prize
 		use <ifG PC$ 99 else GoCantAfford if= V4 0 else GoBeat ifG Comtime V1 else GoDoNotWant ifYesNo 1 2 3 Cash+ -100 V= 1 ComTime V+ 1 80000 V+ 1 d100000 Goto GoPlayGame>
@@ -232,7 +232,7 @@ Content
 		CMsg8_1 <ifPCMale Accept>
 		Msg8_2 <You were already crowned the Karaoke Queen.>
 		CMsg8_2 <ifPCFemale Accept>
-		Msg9 <You scored \VAL V3 points. Adjusting difficulcy level.>
+		Msg9 <You scored \VAL V3 points. Adjusting difficulty level.>
 		Msg10 <You scored \VAL V3 points. That's quite respectable.>
 		Msg11 <You scored \VAL V3 points. You ought to be ashamed.>
 		Msg12 <You begin to sing.>

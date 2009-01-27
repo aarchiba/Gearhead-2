@@ -929,6 +929,26 @@ Function ShouldSurrender( GB: GameBoardPtr; NPC: GearPtr ): Boolean;
 	{ an enemy of Team1, the NPC has not previously surrendered, the NPC is not an }
 	{ animal, }
 	{ ...and Team1 can manage an intimidation roll. }
+	{ Surrender will be automatic if 50% of a target's limbs are destroyed. }
+	Function BlackKnightSituation: Boolean;
+		{ The Black Knight situation happens when 50% or more of a target's limbs are }
+		{ disabled. Any rational person would surrender then. It's not just a flesh wound. }
+	var
+		limb: GearPtr;
+		total,d_total: Integer;
+	begin
+		total := 0;
+		d_total := 0;
+		limb := NPC^.SubCom;
+		while limb <> Nil do begin
+			if Limb^.G = GG_Module then begin
+				inc( Total );
+				if Destroyed( Limb ) then Inc( D_total );
+			end;
+			limb := limb^.Next;
+		end;
+		BlackKnightSituation := ( Total > 0 ) and ( D_total >= ( Total div 2 ) );
+	end;
 var
 	SkRank,NPC_Stamina,Dmg,PrevDmg: Integer;
 begin
@@ -937,7 +957,9 @@ begin
 	if NPC_Stamina = 0 then Dmg := Dmg - 5;
 	PrevDmg := 100 - NAttValue( NPC^.NA , NAG_EpisodeData , NAS_PrevDamage );
 	SetNAtt( NPC^.NA , NAG_EpisodeData , NAS_PrevDamage , 100 - DMG );
-	if ( DMG < PrevDmg ) and MightSurrender( GB , NPC ) then begin
+	if BlackKnightSituation then begin
+		ShouldSurrender := True;
+	end else if ( DMG < PrevDmg ) and MightSurrender( GB , NPC ) then begin
 		SkRank := TeamSkill( GB , NAV_DefPlayerTeam , NAS_Intimidation );
 		PrevDmg := GearCurrentDamage( NPC );
 		if PrevDmg < 10 then SkRank := SkRank + 15 - PrevDmg;
