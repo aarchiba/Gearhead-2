@@ -126,7 +126,7 @@ begin
 	Pilot := LocatePilot( Pilot );
 	if ( Pilot <> Nil ) and ( Skill >= 1 ) and ( Skill <= NumSkill ) and ( SkRoll >= SkTar ) then begin
 		{ Determine the TarLevel. This will tell how much XP to give. }
-		TarLevel := ( SkTar - 10 ) div 2;
+		TarLevel := ( SkTar + 2 ) div 3;
 		if TarLevel < 1 then TarLevel := 1
 		else if TarLevel > MaxTarLevel then TarLevel := MaxTarLevel;
 
@@ -137,10 +137,11 @@ begin
 		if TarLevel > ( SkRank + 1 ) then TarLevel := SkRank + 1;
 
 		if ( SkTar > SkRank ) and ( SkRank > 0 ) then begin
-			DoleSkillExperience( Pilot , Skill , Skill_Award_By_Level[ TarLevel ] );
+			DoleSkillExperience( Pilot , Skill , Skill_Award_By_Level[ TarLevel ] * 2 );
 			DoleExperience( Pilot , Skill_Award_By_Level[ TarLevel ] );
 		end else if ( SkTar > ( SkRank div 2 ) ) then begin
-			DoleSkillExperience( Pilot , Skill , ( Skill_Award_By_Level[ TarLevel ] + 1 ) div 2 );
+			DoleSkillExperience( Pilot , Skill , Skill_Award_By_Level[ TarLevel ] );
+			if SkRank > 0 then DoleExperience( Pilot , 1 );
 		end;
 	end;
 end;

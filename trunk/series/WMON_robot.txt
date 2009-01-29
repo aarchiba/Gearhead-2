@@ -223,19 +223,7 @@ torso
 	recharge 1
 	mount
 		inv
-			Gun 6
-			name <Assault Rifle>
-			mass -2
-			Range 7
-			Acc -1
-			Speed 3
-			caliber <6mm Rifle>
-			sub
-				% Ammunition
-				Ammo 6
-				Magazine 40
-				caliber <6mm Rifle>
-			end
+			item FS Vaken Assault Rifle
 		end
 	end
 end
@@ -422,21 +410,7 @@ torso
 	sub
 		mount
 		inv
-			Gun 2
-			name <Autogun>
-			desc <A small caliber low velocity automatic rifle.>
-			caliber <5mm auto>
-			Mass -3
-			Range 5
-			Acc 1
-			Speed 5
-			BV 5
-			sub
-				Ammo 2
-				name <5mm Automatic Clip>
-				caliber <5mm auto>
-				magazine 90
-			end
+			item AK19 Autogun
 		end
 	end
 leg

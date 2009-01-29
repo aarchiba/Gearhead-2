@@ -61,6 +61,7 @@ Function LoadSingleMecha( FName,DName: String ): GearPtr;
 Function LoadNewMonster( MonsterName: String ): GearPtr;
 Function LoadNewNPC( NPCName: String; RandomizeNPCs: Boolean ): GearPtr;
 Function LoadNewSTC( Desig: String ): GearPtr;
+Function LoadNewItem( FullName: String ): GearPtr;
 
 Procedure RandomLoot( Box: GearPtr; SRP: LongInt; const l_type,l_factions: String );
 
@@ -886,6 +887,32 @@ begin
 	META_InsertPartIntoIt( STC_Part );
 end;
 
+Procedure CMD_Item;
+	{ Search for & then duplicate one of the design file }
+	{ items, inserting it in the gear-under-construction at }
+	{ the standard insertion point. }
+var
+	STC_Part: GearPtr;
+begin
+	{ Item cannot be the first gear in a list!!! }
+	if it = Nil then Exit;
+
+	{ Clone the item record first. }
+	{ Exit the procedure if no appropriate item can be found. }
+	DeleteWhiteSpace( TheLine );
+	STC_Part := LoadNewItem( TheLine );
+	if STC_Part = Nil then begin
+		Exit;
+	end;
+
+	{ Get rid of the item name, so the parser doesn't try }
+	{ interpreting it as a series of commands. }
+	TheLine := '';
+
+	{ Stick the item somewhere appropriate. }
+	META_InsertPartIntoIt( STC_Part );
+end;
+
 Procedure CMD_Scale;
 	{ Sets the scale field for the current gear. }
 var
@@ -986,6 +1013,7 @@ begin
 				else	if CMD = 'CHARDESC' then CMD_CharDesc
 				else	if CMD = 'MONSTER' then CMD_Monster
 				else	if CMD = 'STC' then CMD_STC
+				else	if CMD = 'ITEM' then CMD_ITEM
 				else	CheckMacros( CmD );
 			end;
 		end;
@@ -1225,23 +1253,19 @@ begin
 	LoadNewSTC := Item;
 end;
 
-Procedure LoadArchetypes;
-	{ Load the default, archetypal gears which may be used in the }
-	{ construction of other gears. This includes NPC archetypes and }
-	{ so forth. }
+Function LoadNewItem( FullName: String ): GearPtr;
+	{ This function will check the standard items list }
+	{ for a gear with the provided full name. }
 var
-	F: Text;
+	Item: GearPtr;
 begin
-	{ Open and load the archetypes. }
-	Assign( F , Archetypes_File );
-	Reset( F );
-	Archetypes_List := ReadGear( F , False );
-	Close( F );
+	{ Attempt to load the item from the standard items file. }
+	if Standard_Equipment_List = Nil then Exit( Nil );
 
-	Assign( F , STC_Item_File );
-	Reset( F );
-	STC_Item_List := ReadGear( F , True );
-	Close( F );
+	Item := CloneGear( SeekSibByFullName( Standard_Equipment_List , FullName ) );
+
+	{ Return the finished product. }
+	LoadNewItem := Item;
 end;
 
 Procedure RandomLoot( Box: GearPtr; SRP: LongInt; const l_type,l_factions: String );
@@ -1320,12 +1344,31 @@ begin
 	end;
 end;
 
+Procedure LoadArchetypes;
+	{ Load the default, archetypal gears which may be used in the }
+	{ construction of other gears. This includes NPC archetypes and }
+	{ so forth. }
+var
+	F: Text;
+begin
+	{ Open and load the archetypes. }
+	Assign( F , Archetypes_File );
+	Reset( F );
+	Archetypes_List := ReadGear( F , False );
+	Close( F );
+
+	Assign( F , STC_Item_File );
+	Reset( F );
+	STC_Item_List := ReadGear( F , True );
+	Close( F );
+end;
+
+
 initialization
 	Parser_Macros := LoadStringList( Parser_Macro_File );
-	WMonList := AggregatePattern( Monsters_File_Pattern , Series_Directory );
-	Standard_Equipment_List := AggregatePattern( PC_Equipment_Pattern , Design_Directory );
-
 	LoadArchetypes;
+	Standard_Equipment_List := AggregatePattern( PC_Equipment_Pattern , Design_Directory );
+	WMonList := AggregatePattern( Monsters_File_Pattern , Series_Directory );
 
 	Factions_List := AggregatePattern( 'FACTIONS_*.txt' , Series_Directory );
 	Mecha_Theme_List := AggregatePattern( 'THEME_*.txt' , Series_Directory );

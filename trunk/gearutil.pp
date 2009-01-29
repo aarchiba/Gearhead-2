@@ -93,6 +93,7 @@ Function GearCost( Master: GearPtr ): LongInt;
 Function GearValue( Master: GearPtr ): LongInt;
 
 function SeekGearByName( LList: GearPtr; Name: String ): GearPtr;
+function SeekSibByFullName( LList: GearPtr; Name: String ): GearPtr;
 function SeekChildByName( Parent: GearPtr; Name: String ): GearPtr;
 function SeekGearByDesig( LList: GearPtr; Name: String ): GearPtr;
 function SeekGearByIDTag( LList: GearPtr; G,S,V: LongInt ): GearPtr;
@@ -1465,6 +1466,21 @@ begin
 		LList := LList^.Next;
 	end;
 	SeekGearByName := it;
+end;
+
+function SeekSibByFullName( LList: GearPtr; Name: String ): GearPtr;
+	{ Seek a gear with the provided full name. If no such gear is }
+	{ found, return NIL. }
+var
+	it: GearPtr;
+begin
+	it := Nil;
+	Name := UpCase( Name );
+	while ( LList <> Nil ) and ( it = Nil ) do begin
+		if UpCase( FullGearName( LList ) ) = Name then it := LList;
+		LList := LList^.Next;
+	end;
+	SeekSibByFullName := it;
 end;
 
 function SeekChildByName( Parent: GearPtr; Name: String ): GearPtr;

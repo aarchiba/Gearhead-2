@@ -31,25 +31,7 @@ armor 3
 sub
 	hand
 	inv
-		Gun 24
-		name <Bazooka>
-		desc <A shoulder-mounted rocket launcher>
-		desig <Raketen Mk6>
-		caliber <60mm rocket>
-		category <WEAPON MISSILE CONTRABAND>
-		sdl_sprite <>
-		Range 9
-		acc -1
-		Speed 2
-		Legality 10
-		mass -14
-		sub
-			Ammo 24
-			name <Raketen Clip>
-			caliber <60mm rocket>
-			type <BLAST 3 BRUTAL>
-			Magazine 12
-		end
+		item Raketen Mk6 Bazooka
 	end
 end
 arm
@@ -58,9 +40,7 @@ sub
 	hand
 end
 inv
-	Shield 4
-	DefBonus 2
-	name <Riot Shield>
+	item Riot Shield
 end
 leg
 armor 3
@@ -92,28 +72,7 @@ armor 3
 sub
 	hand
 	inv
-		Gun 6
-		Name <Assault Rifle>
-		desig <FS Vaken>
-		desc <A rapid-firing chemical rifle.>
-		sdl_portrait <item_combatrifle.png>
-		caliber <5mm rifle>
-		category <WEAPON MISSILE>
-		factions <GENERAL>
-		legality 5
-		Mass -4
-		Range 6
-		Speed 4
-		BV 2
-		sub
-			Ammo 8
-			name <5mm Rifle Clip>
-			caliber <5mm rifle>
-			magazine 60
-			category <AMMO>
-			factions <GENERAL>
-			SDL_PORTRAIT <item_ammoclip.png>
-		end
+		item FS Vaken Assault Rifle
 	end
 end
 arm
@@ -122,9 +81,7 @@ sub
 	hand
 end
 inv
-	Shield 4
-	DefBonus 2
-	name <Riot Shield>
+	item Riot Shield
 end
 leg
 armor 3
@@ -155,26 +112,7 @@ arm
 sub
 	hand
 	inv
-		Gun 12
-		name <Shotgun>
-		desc <A primitive firearm.>
-
-		caliber <18mm shell>
-		category <>
-		factions <>
-		mass -4
-		Range 5
-		Acc 1
-		Recharge 3
-		sub
-			Ammo 15
-			name <18mm Shotgun Clip>
-			caliber <18mm shell>
-			type <SCATTER>
-			magazine 10
-			category <>
-			factions <>
-		end
+		item Shotgun
 	end
 end
 arm
@@ -376,25 +314,7 @@ armor 1
 sub
 	Hand
 	inv
-		Gun 12
-		name <Shotgun>
-		desc <A primitive firearm.>
-		caliber <18mm shell>
-		category <>
-		factions <>
-		mass -4
-		Range 5
-		Acc 1
-		Recharge 3
-		sub
-			Ammo 15
-			name <18mm Shotgun Clip>
-			caliber <18mm shell>
-			type <SCATTER>
-			magazine 10
-			category <>
-			factions <>
-		end
+		item Shotgun
 	end
 end
 arm
@@ -431,25 +351,7 @@ arm
 sub
 	hand
 	inv
-		Gun 12
-		name <Shotgun>
-		desc <A primitive firearm.>
-		caliber <18mm shell>
-		category <>
-		factions <>
-		mass -4
-		Range 5
-		Acc 1
-		Recharge 3
-		sub
-			Ammo 15
-			name <18mm Shotgun Clip>
-			caliber <18mm shell>
-			type <SCATTER>
-			magazine 10
-			category <>
-			factions <>
-		end
+		item Shotgun
 	end
 end
 arm
@@ -483,11 +385,7 @@ arm
 sub
 	hand
 	inv
-		gear 4 0 3
-		name <Steel Pipe>
-		mass 2
-		stat 2 -2
-		stat 3 3
+		Item Steel Pipe
 	end
 end
 arm
@@ -555,25 +453,7 @@ arm
 	sub
 		Hand
 		inv
-			Gun 12
-			name <Shotgun>
-			desc <A primitive firearm.>
-			caliber <18mm shell>
-			category <>
-			factions <>
-			mass -4
-			Range 5
-			Acc 1
-			Recharge 3
-			sub
-				Ammo 15
-				name <18mm Shotgun Clip>
-				caliber <18mm shell>
-				type <SCATTER>
-				magazine 10
-				category <>
-				factions <>
-			end
+			item Shotgun
 		end
 	end
 arm

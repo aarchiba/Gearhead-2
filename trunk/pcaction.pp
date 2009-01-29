@@ -2485,6 +2485,22 @@ begin
 	end;
 end;
 
+Procedure ShowSkillXP( PC: GearPtr );
+	{ Show how much skill experience this PC has. }
+var
+	T,XP: LongInt;
+begin
+	PC := LocatePilot( PC );
+	if PC <> Nil then begin
+		for t := 1 to NumSkill do begin
+			XP := NAttValue( PC^.NA , NAG_Experience , NAS_Skill_XP_Base + T );
+			if XP > 0 then begin
+				DialogMsg( MsgString( 'SkillName_' + BStr( T ) ) + ': ' + BStr( XP ) + '/' + BStr( SkillAdvCost( PC , NAttValue( PC^.NA , NAG_Skill , T ) ) ) );
+			end;
+		end;
+	end;
+end;
+
 Procedure SpitContents( M: GearPtr );
 	{ Just list all the siblings in this list.}
 begin
@@ -2726,6 +2742,9 @@ begin
 
 			end else if KP = '@' then begin
 				ShowRep( Mek );
+
+			end else if KP = '~' then begin
+				ShowSkillXP( Mek );
 
 			end else if KP = '#' then begin
 				DirectScript( Camp^.GB );
