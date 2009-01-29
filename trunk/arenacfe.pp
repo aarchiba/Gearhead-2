@@ -879,11 +879,17 @@ begin
 	MightEject := GearActive( Mek ) and ( ( PercentDamaged( Mek ) < 75 ) or not HasAtLeastOneValidMovemode( Mek ) );
 end;
 
+Function CapableOfSurrender( GB: GameBoardPtr; NPC: GearPtr ): Boolean;
+	{ This model might surrender, sometime, under some circumstances, not necessarily these. }
+begin
+	CapableOfSurrender := GearActive( NPC ) and AreEnemies(GB,NAttValue(NPC^.NA,NAG_Location,NAS_Team),NAV_DefPlayerTeam) and (NAttValue(NPC^.NA,NAG_EpisodeData,NAS_SurrenderStatus) = 0) and NotAnAnimal( NPC );
+end;
+
 Function MightSurrender( GB: GameBoardPtr; NPC: GearPtr ): Boolean;
 	{ Return TRUE if it's possible that NPC might surrender given its }
 	{ current situation, or FALSE otherwise. }
 begin
-	MightSurrender := GearActive( NPC ) and (( CurrentStamina(NPC) = 0 ) or ( GearCurrentDamage( NPC ) < Random( 6 ) )) and AreEnemies(GB,NAttValue(NPC^.NA,NAG_Location,NAS_Team),NAV_DefPlayerTeam) and (NAttValue(NPC^.NA,NAG_EpisodeData,NAS_SurrenderStatus) = 0) and NotAnAnimal( NPC );
+	MightSurrender := CapableOfSurrender( GB , NPC ) and (( CurrentStamina(NPC) = 0 ) or ( GearCurrentDamage( NPC ) < Random( 6 ) ));
 end;
 
 Function ShouldEject( Mek: GearPtr; GB: GameBoardPtr ): Boolean;
@@ -952,12 +958,14 @@ Function ShouldSurrender( GB: GameBoardPtr; NPC: GearPtr ): Boolean;
 var
 	SkRank,NPC_Stamina,Dmg,PrevDmg: Integer;
 begin
+	if Destroyed( NPC ) then Exit( False );
+
 	Dmg := PercentDamaged( NPC );
 	NPC_Stamina := CurrentStamina(NPC);
 	if NPC_Stamina = 0 then Dmg := Dmg - 5;
 	PrevDmg := 100 - NAttValue( NPC^.NA , NAG_EpisodeData , NAS_PrevDamage );
 	SetNAtt( NPC^.NA , NAG_EpisodeData , NAS_PrevDamage , 100 - DMG );
-	if BlackKnightSituation then begin
+	if BlackKnightSituation and CapableOfSurrender( GB , NPC ) then begin
 		ShouldSurrender := True;
 	end else if ( DMG < PrevDmg ) and MightSurrender( GB , NPC ) then begin
 		SkRank := TeamSkill( GB , NAV_DefPlayerTeam , NAS_Intimidation );

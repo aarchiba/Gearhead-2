@@ -392,10 +392,15 @@ Plot
 %%  ***   +C--  Nothing  Special   ***
 %%  **********************************
 
+
+%%  *******************
+%%  ***   DEFAULT   ***
+%%  *******************
+
 Content
 	name <Let's Go!>
 	desc <Your friend wants to join your lance.>
-	requires <*CS_Conversation +C-- R:-- 1:FRIEND>
+	requires <*CS_Conversation R:-- 1:FRIEND>
 	Size 1
 
 	% E1 is the friend in question
@@ -438,12 +443,6 @@ Content
 		Prompt%id%07 <I just don't want you to get hurt.>
 	end
 
-
-
-%%  *******************
-%%  ***   DEFAULT   ***
-%%  *******************
-
 Content
 	name <Your Enemy is Wanted>
 	desc <The person the PC is speaking with needs help on a mission.>
@@ -460,7 +459,7 @@ Content
 	% - Mission giver dies before encounter is activated
 	% - Revalation subplot fails
 	end <if= PlotStatus %plotid1% 0 else .%id%_GoCheckReveal ifNPCDead %1%  LoseComp 0 .%id%_loss>
-	.%id%_GoCheckReveal <ifSubPlotLost %plotid2% SMemo %id%02 SetPlotStatus 5>
+	.%id%_GoCheckReveal <ifSubPlotLost %plotid2% SMemo %id%02 SetPlotStatus %id5%>
 	.%id%_loss <+T-->
 
 	.%id1%_%plotid1%_GoWin <SetPlotStatus %plotid3% %id3%     SMemo %id%01>
@@ -512,6 +511,73 @@ Content
 	inv
 		stc CORE-ACTIVATABLE
 		name <%name1%'s Mission>
+	end
+
+Content
+	name <Many People Are Getting Hurt>
+	desc <The PC's enemy has been causing lots of damage. Won't the PC do something to help?>
+	requires <*CS_Conversation 1:MEDIC -1:ENEMY (F:CRIME|F:--)>
+
+	% E1 is the person being spoken to.
+	% E2 is the outdoors location where the encounter will be placed
+	% E3 is the encounter to be found
+	% E4 is a government building, in case the PC really wants a reward
+	element2 <Scene Environs !Near -7>
+	element3 <Prefab>
+	place3 <2>
+	element4 <Scene Public !Ally -7 !Near -7 !Okay -3 !XClude -2 -ENEMY>
+
+	% Fail Conditions:
+	% - Mission giver dies before encounter is activated
+	% - Revalation subplot fails
+	end <if= PlotStatus %plotid1% 0 else .%id%_GoCheckReveal ifNPCDead %1%  LoseComp 0 .%id%_loss>
+	.%id%_GoCheckReveal <ifSubPlotLost %plotid2% SMemo %id%02 SetPlotStatus %id5%>
+	.%id%_loss <+T-->
+
+	.%id1%_%plotid1%_GoWin <SetPlotStatus %plotid3% %id3%     SMemo %id%01>
+	.%id1%_%plotid1%_GoLoss <SetPlotStatus %plotid4% %id4%    SMemo %id%02>
+
+	Msg%id%01 <You defeated the raiders. You should go tell %name1% at \SCENE NPCScene %1% .>
+	Msg%id%02 <You were defeated by the raiders. You should go tell %name1% at \SCENE NPCScene %1% .>
+
+	%% SubPlot1 is the combat encounter itself
+	%% SubPlot2 is the encounter revealation
+	%% SubPlot3 is the winning condition
+	%% SubPlot4 is the loss condition
+	%% SubPlot5 is the unwinnable condition
+	SubPlot1 <*:CS_MechaEncounter&Raiders 2 3>
+	SubPlot2 <*:CS_RevealEncounter_Raiders 2 3>
+	SubPlot3 <*CS_WinTask&NoReward 1>
+	SubPlot4 <*CS_LoseTask 1>
+	SubPlot5 <*CS_MootMission 1>
+
+	sub
+		Persona 1
+		greeting <if= PlotStatus %plotid1% 0 else .%id%_GoRemind if# PlotStatus %plotid% %id% else .%id%_GoGreet Goto %pop%>
+		*.%id%_GoGreet <*HowAreYou .%id%_GoOfferMission>
+		*.%id%_GoRemind <*GenericMissionReminder>
+		.%id%_GoOfferMission <NewChat Say %id%01 AddCHat %id%01 AddChat %id%02>
+		result%id%01 <NewChat Say %id%02 AddChat %id%03 AddChat %id%04>
+		result%id%02 <NewChat Say %id%03 SMemo %id%04 History %id%05 NegateComp %4% .%id%_negate>
+		.%id%_negate <+Tgs +Fmi>
+		result%id%03 <NewChat Say %id%06 AddHeroic 1 StoryNote %id%07 SetPlotStatus %plotid1% %id1%  SetPlotStatus %plotid2% %id2%>
+		result%id%04 <NewChat Say %id%08 SMemo %id%04 History %id%05 NegateComp %4% .%id%_negate>
+		Msg%id%01 <Lately I've been treating way too many pilots. There are some raiders in town, and they've been hurting lots of people. Someone ought to put a stop to it.>
+		Msg%id%02 <You'd be willing to do that? I don't know if there's any reward being offered, and I certainly can't afford to offer one myself, but this problem needs to be addressed fast...>
+		Msg%id%03 <I really don't know. You could probably find out at %name4%, I'd imagine.>
+		Msg%id%04 <%name1% told you that there are some raiders in town. There might be a reward for defeating them; you should be able to find out at %name4%.>
+		Msg%id%05 <%name1% suggested there might be a reward for defeating some raiders.>
+		Msg%id%06 <That's really noble of you. I'm sorry that I can't tell you much about the raiders, but if you ask around I'm sure you can learn something.>
+		Msg%id%07 <You promised %name1% that you'd defeat the raiders in town.>
+		Msg%id%08 <I understand. You should go ask around at %name4% to see if anyone's offering a reward. That'd be the best place to check, I think.>
+		Prompt%id%01 <Tell you what, I'll see what I can do.>
+		Prompt%id%02 <Is there any reward for stopping them?>
+		Prompt%id%03 <No problem. It's my pleasure to help.>
+		Prompt%id%04 <Sorry, I don't work for free.>
+	end
+	inv
+		stc CORE-ACTIVATABLE
+		name <Raiders>
 	end
 
 Content
@@ -717,7 +783,7 @@ Content
 	% - Mission giver dies before encounter is activated
 	% - Revalation subplot fails
 	end <if= PlotStatus %plotid1% 0 else .%id%_GoCheckReveal ifNPCDead %1%  LoseComp 0 .%id%_loss>
-	.%id%_GoCheckReveal <ifSubPlotLost %plotid2% SMemo %id%02 SetPlotStatus 5>
+	.%id%_GoCheckReveal <ifSubPlotLost %plotid2% SMemo %id%02 SetPlotStatus %id5%>
 	.%id%_loss <+T-->
 
 	.%id1%_%plotid1%_GoWin <SetPlotStatus %plotid3% %id3%     SMemo %id%01>
@@ -997,7 +1063,7 @@ Content
 	% - Mission giver dies before encounter is activated
 	% - Revalation subplot fails
 	end <if= PlotStatus %plotid1% 0 else .%id%_GoCheckReveal ifNPCDead %1% else %pop% LoseComp 0 .%id%_loss>
-	.%id%_GoCheckReveal <ifSubPlotLost %plotid2% SMemo %id%02 SetPlotStatus 5>
+	.%id%_GoCheckReveal <ifSubPlotLost %plotid2% SMemo %id%02 SetPlotStatus %id5%>
 	.%id%_loss <+T-->
 
 	.%id1%_%plotid1%_GoWin <SetPlotStatus %plotid3% %id3%     SMemo %id%01>

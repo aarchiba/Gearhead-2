@@ -410,6 +410,16 @@
 %  ***  PROPS  ***
 %  ***************
 
+Rubble
+name <Rubble>
+desig <RUBBLE-1>
+sdl_sprite <prop_rubble.png>
+
+Rubble 0
+name <Rubble>
+desig <RUBBLE-INDESTRUCTIBLE>
+sdl_sprite <prop_rubble.png>
+
 Elevator
 % V1 = First time menu check
 name <Airlock>
@@ -1156,7 +1166,6 @@ MapWidth 13
 MapHeight 13
 special <AddExit>
 nu1 <if= T1 0 Return>
-Content <Some 1 100 Here *ANTI_ATTACK_SECURITY 2>
 sub
 	Team 1
 

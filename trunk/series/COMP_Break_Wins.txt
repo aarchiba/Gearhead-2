@@ -161,6 +161,23 @@ Plot
 	Msg4 <You heard that \FACTION &EnemyFac was operating in %name1%.>
 
 Plot
+	name <Missions Aplenty>
+	requires <#W +Tgs +Fmi>
+	desc <You will see a flyer advertising missions, elsewhere.>
+
+	% E1 is the target scene
+	% E2 is the next city to visit
+	Element1 <Grab 6>
+	Element2 <Scene !Far -7 !Ally -7 !Okay -3 !XClude -2 Town>
+
+	start <if= SceneID %1% if= P1 0 P= 1 1 Alert 1 Alert 2 SMemo 3 History 4   WinEpisode %2% 0 .next>
+	.next <+T-- +F-->
+	Msg1 <As you enter %name1%, you spot a flyer that someone discarded on the floor.>
+	Msg2 <The flyer lists a number of cavalier jobs being offered in %name2%. You decide that it might be a good idea to go there and look for work.>
+	Msg3 <You heard that there are plenty of cavalier jobs in %name2%.>
+	Msg4 <You decided to look for work in %name2%.>
+
+Plot
 	name <Enemy Has Moved>
 	requires <#W +Tgs E:++>
 	desc <You will learn that your enemy has gone to another city.>

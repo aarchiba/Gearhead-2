@@ -81,7 +81,6 @@ Procedure CheckGearRange( Part: GearPtr );
 
 Function SeekGear( Master: GearPtr; G,S: Integer; CheckInv: Boolean ): GearPtr;
 Function SeekGear( Master: GearPtr; G,S: Integer ): GearPtr;
-Function SeekItem( Master: GearPtr; G,S: Integer; CheckGeneralInv: Boolean ): GearPtr;
 
 Function SeekCurrentLevelGear( Master: GearPtr; G,S: Integer ): GearPtr;
 Function SeekSoftware( Mek: GearPtr; SW_Type,SW_Param: Integer; CasualUse: Boolean ): GearPtr;
@@ -128,7 +127,7 @@ Procedure SpendEnergy( Master: GearPtr; EP: Integer );
 
 
 Function SeekActiveIntrinsic( Master: GearPtr; G,S: Integer ): GearPtr;
-Function SeekNDPart( Master: GearPtr; G,S: Integer ): GearPtr;
+Function SeekItem( Master: GearPtr; G,S: Integer; CheckGeneralInv: Boolean ): GearPtr;
 Function MechaManeuver( Mek: GearPtr ): Integer;
 Function MechaTargeting( Mek: GearPtr ): Integer;
 Function MechaSensorRating( Mek: GearPtr ): Integer;
@@ -1111,57 +1110,6 @@ Function SeekGear( Master: GearPtr; G,S: Integer ): GearPtr;
 	{ well as the subcomponents. }
 begin
 	SeekGear := SeekGear( Master , G , S , True );
-end;
-
-Function SeekItem( Master: GearPtr; G,S: Integer; CheckGeneralInv: Boolean ): GearPtr;
-	{ Search through all the subcoms and invcoms of MASTER and }
-	{ find a part which matches G,S. If more than one applicable }
-	{ part is found, return the part with the highest V field... }
-	{ Unless it's repairfuel, in which case return the one with the lowest V. }
-	{ If no such part is found, return Nil. }
-{ FUNCTIONS BLOCK }
-	Function CompGears( P1,P2: GearPtr ): GearPtr;
-		{ Given two gears, P1 and P2, return the gear with }
-		{ the higest V field. }
-	var
-		it: GearPtr;
-	begin
-		it := Nil;
-		if P1 = Nil then it := P2
-		else if P2 = Nil then it := P1
-		else if G = GG_RepairFuel then begin
-			if P1^.V < P2^.V then it := P1
-			else it := P2;
-		end else begin
-			if P1^.V > P2^.V then it := P1
-			else it := P2;
-		end;
-		CompGears := it;
-	end;
-
-	Function SeekPartAlongTrack( P: GearPtr ): GearPtr;
-		{ Search this line of sibling components for a part }
-		{ which matches G , S. }
-	var
-		it: GearPtr;
-	begin
-		it := Nil;
-		while P <> Nil do begin
-			if ( P^.G = G ) and ( P^.S = S ) then begin
-				it := CompGears( it , P );
-			end;
-			it := CompGears( SeekPartAlongTrack( P^.SubCom ) , it );
-			it := CompGears( it , SeekPartAlongTrack( P^.InvCom ) );
-			P := P^.Next;
-		end;
-		SeekPartAlongTrack := it;
-	end;
-
-begin
-	if CheckGeneralInv then
-		SeekItem := CompGears( SeekPartAlongTrack( Master^.InvCom ) , SeekPartAlongTrack( Master^.SubCom ) )
-	else
-		SeekItem := SeekPartAlongTrack( Master^.SubCom );
 end;
 
 Function SeekCurrentLevelGear( Master: GearPtr; G,S: Integer ): GearPtr;
@@ -2600,7 +2548,7 @@ begin
 	SeekActiveIntrinsic := SeekPartAlongTrack( Master^.SubCom );
 end;
 
-Function SeekNDPart( Master: GearPtr; G,S: Integer ): GearPtr;
+Function SeekItem( Master: GearPtr; G,S: Integer; CheckGeneralInv: Boolean ): GearPtr;
 	{ Locate a component matching G,S. The component must be working, }
 	{ but otherwise can be located anywhere in the PART tree. }
 	{ This procedure doesn't even care about scale... We just want }
@@ -2641,7 +2589,11 @@ Function SeekNDPart( Master: GearPtr; G,S: Integer ): GearPtr;
 	end;
 	
 begin
-	SeekNDPart := CompGears( SeekPartAlongTrack( Master^.SubCom ) , SeekPartAlongTrack( Master^.InvCom ) );
+	if CheckGeneralInv then begin
+		SeekItem := CompGears( SeekPartAlongTrack( Master^.SubCom ) , SeekPartAlongTrack( Master^.InvCom ) );
+	end else begin
+		SeekItem := SeekPartAlongTrack( Master^.SubCom );
+	end;
 end;
 
 Function MechaManeuver( Mek: GearPtr ): Integer;

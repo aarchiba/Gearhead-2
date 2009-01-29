@@ -1,4 +1,17 @@
 Plot
+	name <No Jobs Here>
+	requires <#L +Tgs (+Fmi|+Fin|+F--)>
+
+	% E1 is the target scene
+	% E2 is the next city to visit
+	Element1 <Grab 6>
+	Element2 <Scene !Far -7 !Comrade -7 Town>
+
+	start <if= SceneID %1% if= P1 0 P= 1 1 Alert 1 SMemo 0   LoseEpisode %2% 0 .next>
+	.next <+T-- +F-->
+	Msg1 <As you enter %name1%, you realize that you're not going to find anything of interest here. It's time to move on.>
+
+Plot
 	name <Conference Was Moved>
 	requires <#L +Tgs (+Fpa|+Fcc)>
 	desc <The event has been moved. No-one told the PC.>

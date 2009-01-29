@@ -134,6 +134,7 @@ Content
 %%
 %% *CS_WinTask Content
 %%	&Protection	The PC protected the NPC from some threat, real or imagined
+%%	&NoReward	The PC came into this task knowing there'd be no reward
 %%
 %%  The PC didn't exactly have a mission, but someone asked him to do something
 %%  and he did it. Hooray! Rewards for this subplot are likely to be more
@@ -141,6 +142,38 @@ Content
 %%
 %% Param1: The Task-giver.
 %%
+
+Content
+	name <If you want a paying job...>
+	desc <The NPC will send the PC somewhere to find a paying mission.>
+	requires <*CS_WinTask &NoReward>
+
+	% E1 is the NPC.
+	% E2 is a scene to search
+	Element2 <Scene (Building|Meeting) Public !Near -7 !Okay -3 !XClude -2>
+
+	start <ifNPCDead %1% SMemo 0 WinComp 0 .%id%_loss>
+	.%id%_loss <+T-- +F-->
+
+	sub
+		Persona 1
+		greeting <if= PlotStatus %plotid% %id% else %pop% NewChat Say %id%01 StoryNote %id%02 WinComp %2% .%id%_win>
+		.%id%_win <+Tgs +Fmi>
+		Msg%id%01 <Wow, you're great! If you'd like to get a paying job next time, you should look for work at %name2%... that's what I've heard, anyhow.>
+		Msg%id%01_1 <>
+		CMsg%id%01_1 <ifNPCSociable Accept>
+		Msg%id%01_2 <>
+		CMsg%id%01_2 <ifNPCShy Accept>
+		Msg%id%01_3 <>
+		CMsg%id%01_3 <ifNPCEasygoing Accept>
+		Msg%id%01_4 <>
+		CMsg%id%01_4 <ifNPCPassionate Accept>
+		Msg%id%01_5 <>
+		CMsg%id%01_5 <ifNPCCheerful Accept>
+		Msg%id%01_6 <>
+		CMsg%id%01_6 <ifNPCMelancholy Accept>
+		Msg%id%02 <%name1% suggested you look for work at %name2%.>
+	end
 
 Content
 	name <I'll Help You Out>
@@ -178,7 +211,7 @@ Content
 Content
 	name <Here, have some money>
 	desc <The NPC will pay the PC for the job.>
-	requires <*CS_WinTask -1:FRIEND>
+	requires <*CS_WinTask -1:FRIEND -&NoReward>
 
 	% E1 is the NPC.
 

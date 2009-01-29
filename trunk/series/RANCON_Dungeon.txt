@@ -375,7 +375,7 @@ Content
 	end
 
 Content
-	name <Box of Jewels>
+	name <Box of Jewels 1>
 	requires <*DUNGEON_REWARD !Ne (Mine|Cave)>
 	element1 <Prefab>
 	minimap <............1............>
@@ -387,7 +387,7 @@ Content
 	end
 
 Content
-	name <Box of Jewels>
+	name <Box of Jewels 2>
 	requires <*DUNGEON_REWARD !Lo (Mine|Cave)>
 	element1 <Prefab>
 	minimap <............1............>
@@ -399,7 +399,7 @@ Content
 	end
 
 Content
-	name <Box of Jewels>
+	name <Box of Jewels 3>
 	requires <*DUNGEON_REWARD !Md (Mine|Cave)>
 	element1 <Prefab>
 	minimap <............1............>
@@ -411,7 +411,7 @@ Content
 	end
 
 Content
-	name <Box of Jewels>
+	name <Box of Jewels 4>
 	requires <*DUNGEON_REWARD !Hi (Mine|Cave)>
 	element1 <Prefab>
 	minimap <............1............>
@@ -423,7 +423,7 @@ Content
 	end
 
 Content
-	name <Box of Jewels>
+	name <Box of Jewels 5>
 	requires <*DUNGEON_REWARD !Ex (Mine|Cave)>
 	element1 <Prefab>
 	minimap <............1............>
@@ -519,6 +519,111 @@ Content
 %% *DUNGEON_DECOR CONTENT
 %%   Dungeon Extras. Little bits of personality for dungeon levels, or things which aren't
 %%   usable by all characters, or reward/threat combos.
+
+Content
+	name <Treasure Rock 1>
+	requires <*DUNGEON_DECOR !Ne (asteroid|mine|cave)>
+	element1 <Prefab>
+	minimap < ... .......1....... ... >
+	inv
+		STC RUBBLE-INDESTRUCTIBLE
+		% V1 = Have "unlocked" the rock
+		use <if= V1 1 else GoBlocked Goto GoOpen>
+		GoBlocked <Print 1>
+		clue29 <if= V1 0 else GoOpen ifScience 3 else GoSciFail V= 1 1 Goto GoOpen>
+		GoOpen <Print 2 OpenInv>
+		GoSciFail <Print 3>
+		Msg1 <It's a rock.>
+		Msg2 <You examine the mineral composition of this rock...>
+		Msg3 <You examine the mineral composition of this rock, but don't find anything interesting.>
+		RandomLoot 10000
+		Loot_Category <GEMSTONE MINERAL>
+		Loot_Factions <GENERAL>
+	end
+
+Content
+	name <Treasure Rock 2>
+	requires <*DUNGEON_DECOR !Lo (asteroid|mine|cave)>
+	element1 <Prefab>
+	minimap < ... .......1....... ... >
+	inv
+		STC RUBBLE-INDESTRUCTIBLE
+		% V1 = Have "unlocked" the rock
+		use <if= V1 1 else GoBlocked Goto GoOpen>
+		GoBlocked <Print 1>
+		clue29 <if= V1 0 else GoOpen ifScience 6 else GoSciFail V= 1 1 Goto GoOpen>
+		GoOpen <Print 2 OpenInv>
+		GoSciFail <Print 3>
+		Msg1 <It's a rock.>
+		Msg2 <You examine the mineral composition of this rock...>
+		Msg3 <You examine the mineral composition of this rock, but don't find anything interesting.>
+		RandomLoot 36000
+		Loot_Category <GEMSTONE MINERAL>
+		Loot_Factions <GENERAL>
+	end
+
+Content
+	name <Treasure Rock 3>
+	requires <*DUNGEON_DECOR !Md (asteroid|mine|cave)>
+	element1 <Prefab>
+	minimap < ... .......1....... ... >
+	inv
+		STC RUBBLE-INDESTRUCTIBLE
+		% V1 = Have "unlocked" the rock
+		use <if= V1 1 else GoBlocked Goto GoOpen>
+		GoBlocked <Print 1>
+		clue29 <if= V1 0 else GoOpen ifScience 9 else GoSciFail V= 1 1 Goto GoOpen>
+		GoOpen <Print 2 OpenInv>
+		GoSciFail <Print 3>
+		Msg1 <It's a rock.>
+		Msg2 <You examine the mineral composition of this rock...>
+		Msg3 <You examine the mineral composition of this rock, but don't find anything interesting.>
+		RandomLoot 180000
+		Loot_Category <GEMSTONE MINERAL>
+		Loot_Factions <GENERAL>
+	end
+
+Content
+	name <Treasure Rock 4>
+	requires <*DUNGEON_DECOR !Hi (asteroid|mine|cave)>
+	element1 <Prefab>
+	minimap < ... .......1....... ... >
+	inv
+		STC RUBBLE-INDESTRUCTIBLE
+		% V1 = Have "unlocked" the rock
+		use <if= V1 1 else GoBlocked Goto GoOpen>
+		GoBlocked <Print 1>
+		clue29 <if= V1 0 else GoOpen ifScience 12 else GoSciFail V= 1 1 Goto GoOpen>
+		GoOpen <Print 2 OpenInv>
+		GoSciFail <Print 3>
+		Msg1 <It's a rock.>
+		Msg2 <You examine the mineral composition of this rock...>
+		Msg3 <You examine the mineral composition of this rock, but don't find anything interesting.>
+		RandomLoot 900000
+		Loot_Category <GEMSTONE MINERAL>
+		Loot_Factions <GENERAL>
+	end
+
+Content
+	name <Treasure Rock 5>
+	requires <*DUNGEON_DECOR !Ex (asteroid|mine|cave)>
+	element1 <Prefab>
+	minimap < ... .......1....... ... >
+	inv
+		STC RUBBLE-INDESTRUCTIBLE
+		% V1 = Have "unlocked" the rock
+		use <if= V1 1 else GoBlocked Goto GoOpen>
+		GoBlocked <Print 1>
+		clue29 <if= V1 0 else GoOpen ifScience 15 else GoSciFail V= 1 1 Goto GoOpen>
+		GoOpen <Print 2 OpenInv>
+		GoSciFail <Print 3>
+		Msg1 <It's a rock.>
+		Msg2 <You examine the mineral composition of this rock...>
+		Msg3 <You examine the mineral composition of this rock, but don't find anything interesting.>
+		RandomLoot 4500000
+		Loot_Category <GEMSTONE MINERAL>
+		Loot_Factions <GENERAL>
+	end
 
 Content
 	name <Urban Survivalist>

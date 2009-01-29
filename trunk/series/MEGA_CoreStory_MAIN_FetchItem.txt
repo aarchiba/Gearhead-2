@@ -596,6 +596,116 @@ Content
 %%
 
 Content
+	name <Held by Thief>
+	desc <A thief has it. Negotiate, barter, or fight for it. Or just steal it back.>
+	requires <*:CS_ItemCozy ~&Stolen>
+	Size 5
+
+	% E1 is the item to be found
+	% E2 is an outdoors scene
+	% E3 is the thief's hideout
+	% E4 is a local public scene, for NeverFail
+	% E5 is a thief
+	Place1 <5>
+	Element2 <Scene Outdoors !Near -7>
+	Element3 <Prefab>
+	Place3 <2>
+	Element4 <Scene Building Public !Near -7 -LEGIT>
+	Element5 <Character THIEF !Near 4 !XClude -2 NeverFail>
+	NeverFail5 <Thief>
+	Place5 <3 (Guards) sd>
+
+	% P%id%01 = Initialization Counter
+	% P%id%02 = Item has been lost
+
+	% FAIL CONDITIONS:
+	% - The NPC Has Item subplot fails
+	% - The Reveal NPC Base subplot fails
+	% - E1 is destroyed
+
+	update <if= P%id%01 0 P= %id%01 1 SetPlotStatus %plotid1% %id1% NPCLevel %5% StoryDL>
+
+	end <ifItemOK %1% else .%id%_GoFail ifSubPlotLost %plotid1% else .%id%_GoCheckSP2 Goto .%id%_GoFail>
+	.%id%_GoCheckSP2 <ifSubPlotLost %plotid2% Goto .%id%_GoFail>
+	.%id%_GoFail <LoseSubPlot %plotid%>
+
+	Get%1% <if= p%id%01 1 p= %id%01 2  History %id%01 WinSubPlot %plotid%>
+
+	.%id%_%plotid%_GoItemGone <P= %id%02 1>
+
+	.%id1%_%plotid1%_GoDiscover <SetPlotStatus %plotid2% %id2%>
+
+	Msg%id%01 <You recovered the %name1% from %name5%.>
+
+	% SubPlot1 is where the PC learns that the corporate character has the item.
+	% SubPlot2 is the PC's attempt to locate the mansion.
+	SubPlot1 <*:CS_DiscoverNPCHasItem 5 1>
+	SubPlot2 <*:CS_RevealEncounter_NPCBase 2 3 5>
+
+	sub
+		Persona 5
+		special <UNLISTED>
+		% V%id%01 = NPC was known beforehand
+		% V%id%02 = First time counter
+		&HiPrice <Threat StoryDL 3>
+		&LowPrice <Threat StoryDL 1>
+		greeting <if= PlotStatus %plotid% %id% else %pop% if= P%id%02 1 else GoCheckSurrender NewChat Say 1 LoseSubPlot %plotid% MoveAndPacifyNPC %5% %4%>
+		GoCheckSurrender <ifChatNPCSurrendered else GoCheckKnown ifItemOK %1% else GoItemDestroyed EndChat Say 2 GiveItem %1% MoveAndPacifyNPC %5% %4%>
+		GoItemDestroyed <EndChat Say 3 LoseSubPlot %plotid% MoveAndPacifyNPC %5% %4%>
+		GoCheckKnown <if= V%id%02 0 else GoGreet V= %id%02 1 ifChatNPCKnown else GoGreet V= %id%01 1 Goto GoGreet>
+		*GoGreet <*IHearYouAreLookingForItem %1% GoMakeOffer>
+		GoMakeOffer <NewChat Say 4 AddChat 1 AddChat 2 AddChat 3 AddChat 4 AddChat 5 AddChat 6 AddChat 7>
+		result1 <NewChat Say 5 GiveItem %1% Cash+ -&HiPrice XPV 100>
+		result2 <NewChat Say 6 GiveItem %1% Cash+ -&LowPrice XPV 100>
+		*result3 <*HurryBackWithMoney>
+		result4 <NewChat Say 7 GiveItem %1% AddRenown -2 XPV 100>
+		result5 <AddEasygoing -d10 ifIntimidation HardSkillTar StoryDL else GoR5Fail NewChat Say 8 GiveItem %1% AddRenown 1 XPV 100>
+		GoR5Fail <EndChat Say 9 SoloAttack %5%>
+		result6 <NewChat Say 10 GiveItem %1% PCFriend %5% XPV 100>
+		result7 <NewChat Say 11 AddSociable d10 AddReact 10 GiveItem %1%  XPV 100 AddChat 8 AddChat 9>
+		result8 <NewChat Say 12 History 13 ifNPCDead &AmoreNPC else GoR8NoAmore &SetAmoreNPC %5%>
+		GoR8NoAmore <if= ChatNPCRelationship 0 PCLover %5%>
+		*result9 <*GoodBye>
+		Msg1 <I'm afraid that you've arrvived too late- I no longer have the %name1%.>
+		Msg2 <You win... Here, take the %name1%, and leave me alone...>
+		Msg3 <You've destroyed the %name1%... it's no use to either one of us now.>
+		Msg4 <I've got your %name1% right here, and I'm willing to let you have it for $ \VAL &HiPrice .>
+		Msg5 <Well that was easy... would you like a receipt to go with that?>
+		Msg6 <Hmph. It's less than I was expecting, but it's better than nothing. Here's your %name1%.>
+		Msg7 <Oh stop begging. Alright, I believe you, you can have the %name1%.>
+		Msg8 <Why yes, that is a good deal... Here, take the %name1%, and just leave me alone...>
+		Msg9 <It's bad form to come into my place of business and start making threats, especially threats that you can't back up...>
+		Msg10 <Buddies, you say? Yeah, I guess we are... Since you really seem to need it I'll let you have the %name1% for free, but some day I might come to call back this favor.>
+		Msg11 <Oh wow... you mean I can call you? Here, the %name1% is yours, with my compliments...>
+		Msg12 <I'll do that, definitely.>
+		Msg13 <You gave %name5% your number, and asked \OPR %5% to call.>
+		Prompt1 <It's a deal. Here you go. [Give Money]>
+		CPrompt1 <ifG PC$ &HiPrice Accept>
+		Prompt2 <I won't pay a cent more than $ \VAL &LowPrice . [Give Money]>
+		CPrompt2 <ifShopping SkillTar StoryDL ifG PC$ &LowPrice Accept>
+		Prompt3 <I need to think about this for a while.>
+		Prompt4 <Come on, %name5%, I really need that %name1%.>
+		CPrompt4 <ifG ChatNPCRelationship 0 Accept>
+		Prompt5 <Here's a deal: give me the %name1% and you can live.>
+		CPrompt5 <ifG 1 ChatNPCRelationship Accept>
+		Prompt6 <Come on, %name5%, I thought we were buddies.>
+		CPrompt6 <if= ChatNPCRelationship 0 ifG React 50 if= V%id%01 1 Accept>
+		Prompt7 <Instead of money, would you trade it for my phone number?>
+		CPrompt7 <ifChatNPCSexy ifFlirtation SkillTar StoryDL Accept>
+		Prompt8 <Call me anytime. I mean it.>
+		Prompt9 <Thanks. I'll be seeing you around.>
+
+		STC MS_EmptyBuilding
+		SetID 3
+	end
+	inv
+		STC CORE-ACTIVATABLE-STATIONARY-DEFENDED
+		name <Hideout>
+		GoStartCombat <Alert 1 SavePos Dynamic 2 StoryDL 100 .nu1 .nu2 ComposeD Msg1 .Msg1 DynaVar= 3 Destination  DynaFaction NPCFac %5%>
+		Msg1 <You are attacked by guards as you approach %name5%'s hideout!>
+	end
+
+Content
 	name <Cozy Derelict Spaceship>
 	desc <The item lies abandoned on a wrecked spaceship.>
 	requires <*:CS_ItemCozy ~&Abandoned>
