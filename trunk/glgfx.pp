@@ -232,7 +232,6 @@ var
 	Last_Clock_Update: QWord;
 	Animation_Phase: Integer;
 	Mouse_X, Mouse_Y: LongInt;
-	Game_Messages: SAttPtr;
 	Cursor_Sprite: SensibleSpritePtr;
 	Console_History: SAttPtr;
 
@@ -275,7 +274,7 @@ Function IsMoreKey( A: Char ): Boolean;
 Procedure MoreKey;
 Function TextLength( F: PTTF_Font; msg: String ): LongInt;
 
-{Function MsgString( key: String ): String;}
+Procedure ClearExtendedBorder( Dest: TSDL_Rect );
 
 Function GetStringFromUser( Prompt: String; ReDrawer: RedrawProcedureType ): String;
 
@@ -620,6 +619,13 @@ begin
 				SDL_FreeSurface( it^.Img );
 				it^.img := tmp;
 			end;
+
+			{ Convert to the screen mode. }
+			{ This will make blitting far quicker. }
+			{ Disabled because it messes up textures. }
+{			tmp := SDL_ConvertSurface( it^.Img , Game_Screen^.Format , SDL_SRCCOLORKEY );
+			SDL_FreeSurface( it^.Img );
+			it^.Img := TMP; }
 
 		end;
 
@@ -1177,12 +1183,6 @@ begin
 	until IsMoreKey( A );
 end;
 
-Function MsgString( key: String ): String;
-	{ Return one of the standard messages. }
-begin
-	MsgString := SAttValue( Game_Messages , key );
-end;
-
 Procedure ClearExtendedBorder( Dest: TSDL_Rect );
 	{ Draw the inner box for border displays. }
 begin
@@ -1555,8 +1555,6 @@ initialization
 	glEnable( GL_BLEND );
 	glBlendFunc( GL_SRC_ALPHA , GL_ONE_MINUS_SRC_ALPHA );
 
-	Game_Messages := LoadStringList( Standard_Message_File );
-
 	TTF_Init;
 
 	Game_Font := TTF_OpenFont( Graphics_Directory + 'VeraBd.ttf' , FontSize );
@@ -1585,8 +1583,6 @@ finalization
 	TTF_CloseFont( Game_Font );
 	TTF_CloseFont( Small_Font );
 	TTF_Quit;
-
-	DisposeSAtt( Game_Messages );
 
 	SDL_FreeSurface( Game_Screen );
 	SDL_Quit;

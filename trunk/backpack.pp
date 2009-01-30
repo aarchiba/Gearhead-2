@@ -45,8 +45,10 @@ Procedure GatherFieldHQ( GB: GameBoardPtr );
 Procedure GivePartToPC( var LList: GearPtr; Part, PC: GearPtr );
 Procedure GivePartToPC( GB: GameBoardPtr; Part, PC: GearPtr );
 
+{$IFNDEF ASCII}
 Procedure SelectColors( M: GearPtr; Redrawer: RedrawProcedureType );
 Procedure SelectSprite( M: GearPtr; Redrawer: RedrawProcedureType );
+{$ENDIF}
 
 Function SelectRobotParts( GB: GameBoardPtr; PC: GearPtr ): GearPtr;
 
@@ -84,6 +86,7 @@ uses ability,action,arenacfe,arenascript,gearutil,ghchars,ghholder,
 {$IFDEF ASCII}
 	vidmap,vidmenus,vidinfo;
 {$ELSE}
+	colormenu,
 {$IFDEF CUTE}
 	cutemap,glmenus,glinfo;
 {$ELSE}
@@ -397,76 +400,26 @@ begin
 	GivePartToPC( GB^.Meks , Part , PC );
 end;
 
+{$IFNDEF ASCII}
 Procedure SelectColors( M: GearPtr; Redrawer: RedrawProcedureType );
 	{ The player wants to change the colors for this part. Make it so. }
 	{ The menu will be placed in the Menu area; assume the redrawer will }
 	{ show whatever changes are made here. }
 var
-	RPM,CMenu: RPGMenuPtr;
-	N,T,T2: Integer;
-	ColorList,C: SAttPtr;
-	oldcolor,msg,newcolor: String;
+	portraitname,oldcolor,newcolor: String;
 begin
-	RPM := CreateRPGMenu( MenuItem , MenuSelect , ZONE_Menu );
+	portraitname := InfoImageName( M );
+	oldcolor := SAttValue( M^.SA , 'SDL_Colors' );
+
 	if M^.G = GG_Character then begin
-		AddRPGMenuItem( RPM , MsgString( 'EDITCOLOR_1' ) , 1 );
-		AddRPGMenuItem( RPM , MsgString( 'EDITCOLOR_2' ) , 2 );
-		AddRPGMenuItem( RPM , MsgString( 'EDITCOLOR_3' ) , 3 );
+		newcolor := SelectColorPalette( colormenu_mode_character , portraitname , oldcolor , 100 , 150 , Redrawer );
+	end else if M^.G = GG_Mecha then begin
+		newcolor := SelectColorPalette( colormenu_mode_mecha , portraitname , oldcolor , 100 , 150 , Redrawer );
 	end else begin
-		AddRPGMenuItem( RPM , MsgString( 'EDITCOLOR_4' ) , 4 );
-		AddRPGMenuItem( RPM , MsgString( 'EDITCOLOR_5' ) , 5 );
-		AddRPGMenuItem( RPM , MsgString( 'EDITCOLOR_6' ) , 6 );
+		newcolor := SelectColorPalette( colormenu_mode_allcolors , portraitname , oldcolor , 100 , 150 , Redrawer );
 	end;
-	AddRPGMenuItem( RPM , MsgString( 'EXIT' ) , -1 );
 
-	ColorList := LoadStringList( Data_Directory + 'sdl_colors.txt' );
-
-	repeat
-		N := SelectMenu( RPM , Redrawer );
-		if N > -1 then begin
-			{ Create the list of colors. }
-			CMenu := CreateRPGMenu( MenuItem , MenuSelect , ZONE_Menu );
-			C := ColorList;
-			T := 1;
-			while C <> Nil do begin
-				if ( Length( C^.Info ) > 6 ) and ( C^.Info[ N ] = '+' ) then begin
-					AddRPGMenuItem( CMenu , Copy( RetrieveAPreamble( C^.Info ) , 7 , 255 ) , T );
-				end;
-				C := C^.Next;
-				Inc( T );
-			end;
-			if CMenu^.NumItem > 0 then begin
-				RPMSortAlpha( CMenu );
-				T := SelectMenu( CMenu , Redrawer );
-			end else begin
-				T := -1;
-			end;
-			DisposeRPGMenu( CMenu );
-			if T > 0 then begin
-				C := RetrieveSAtt( ColorList , t );
-				msg := RetrieveAString( C^.Info );
-
-				oldcolor := SAttValue( M^.SA , 'SDL_COLORS' );
-				newcolor := '';
-				for t := 0 to 2 do begin
-					if t = ( (N-1) mod 3 ) then begin
-						for t2 := 1 to 3 do begin
-							newcolor := newcolor + ' ' + BStr( ExtractValue( msg ) );
-							ExtractValue( oldcolor );
-						end;
-					end else begin
-						for t2 := 1 to 3 do begin
-							newcolor := newcolor + ' ' + BStr( ExtractValue( oldcolor ) );
-						end;
-					end;
-				end;
-				SetSAtt( M^.SA , 'SDL_COLORS <' + newcolor + '>' );
-			end;
-		end;
-	until N = -1;
-
-	DisposeRPGMenu( RPM );
-	DisposeSATt( ColorList );
+	SetSAtt( M^.SA , 'SDL_Colors <' + newcolor + '>' );
 end;
 
 Procedure SelectSprite( M: GearPtr; Redrawer: RedrawProcedureType );
@@ -493,6 +446,7 @@ begin
 
 	DisposeRPGMenu( RPM );
 end;
+{$ENDIF}
 
 Function SelectRobotParts( GB: GameBoardPtr; PC: GearPtr ): GearPtr;
 	{ Select up to 10 parts to build a robot with. }

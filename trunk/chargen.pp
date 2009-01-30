@@ -49,6 +49,7 @@ uses 	gearutil,ghchars,texutil,ui4gh,description,gearparser,playwright,
 {$IFDEF ASCII}
 	vidgfx,vidinfo,vidmenus;
 {$ELSE}
+	colormenu,
 {$IFDEF CUTE}
 	cutegfx,glinfo,glmenus;
 {$ELSE}
@@ -1324,81 +1325,20 @@ begin
 	DoTraitType( Goal_List );
 end;
 
+{$IFNDEF ASCII}
 Procedure SelectColors( PC: GearPtr; CanEdit: Boolean );
 	{ Select colors for this character. }
 var
-	ColorList: SAttPtr;
-	Procedure FillMenu( RPM: RPGMenuPtr; N: Integer );
-		{ Fill the menu with colors legal for the requested color slot. }
-		{ The three slots are Clothes(1), Skin(2), and Hair(3). }
-	var
-		C: SAttPtr;
-		T: Integer;
-	begin
-		C := ColorList;
-		T := 1;
-		while C <> Nil do begin
-			if ( Length( C^.Info ) > 6 ) and ( C^.Info[ N ] = '+' ) then begin
-				AddRPGMenuItem( RPM , Copy( RetrieveAPreamble( C^.Info ) , 7 , 255 ) , T );
-			end;
-			C := C^.Next;
-			Inc( T );
-		end;
-		RPMSortAlpha( RPM );
-	end;
-	Function RandomMenuSelection( RPM: RPGMenuPtr ): Integer;
-		{ Return the ID of a random selection from this menu. }
-	begin
-		RandomMenuSelection := RPMLocateByPosition( RPM , Random( RPM^.NumItem ) + 1 )^.value;
-	end;
-	Function SelectColor( RPM: RPGMenuPtr ): String;
-		{ Select a color from the menu. }
-	var
-		N: Integer;
-		C: SAttPtr;
-	begin
-		if CanEdit then begin
-			N := SelectMenu( RPM , @RandCharRedraw );
-			if N = -1 then N := RandomMenuSelection( RPM );
-		end else N := RandomMenuSelection( RPM );
-		C := RetrieveSAtt( ColorList , N );
-		SelectColor := RetrieveAString( C^.Info );
-	end;
-var
-	RPM: RPGMenuPtr;
 	sdl_colors: String;
 begin
-	ColorList := LoadStringList( Data_Directory + 'sdl_colors.txt' );
-	sdl_colors := '';
-
 	RCDescMessage := '';
 	RCPromptMessage := MsgString( 'RANDCHAR_SelectColorsPrompt' );
 
-	{ Select skin color. }
-	RPM := CreateRPGMenu( MenuItem , MenuSelect , ZONE_CharGenMenu );
-	FillMenu( RPM , 2 );
-	RCCaption := MsgString( 'RANDCHAR_SelectSkin' );
-	sdl_colors := SelectColor( RPM );
-	DisposeRPGMenu( RPM );
-
-	{ Select hair color. }
-	RPM := CreateRPGMenu( MenuItem , MenuSelect , ZONE_CharGenMenu );
-	FillMenu( RPM , 3 );
-	RCCaption := MsgString( 'RANDCHAR_SelectHair' );
-	sdl_colors := sdl_colors + ' ' + SelectColor( RPM );
-	DisposeRPGMenu( RPM );
-
-	{ Select clothing color. }
-	RPM := CreateRPGMenu( MenuItem , MenuSelect , ZONE_CharGenMenu );
-	FillMenu( RPM , 1 );
-	RCCaption := MsgString( 'RANDCHAR_SelectClothes' );
-	sdl_colors := SelectColor( RPM ) + ' ' + sdl_colors;
-	DisposeRPGMenu( RPM );
+	if CanEdit then sdl_colors := SelectColorPalette( colormenu_mode_character, SAttValue( PC^.SA , 'SDL_PORTRAIT' ), SAttValue( PC^.SA , 'SDL_COLORS' ), 100, 150, @RandCharRedraw )
+	else sdl_colors := RandomColorString( CS_Clothing ) + ' ' + RandomColorString( CS_Skin ) + ' ' + RandomColorString( CS_Hair );
 
 	{ Record the colors. }
 	SetSAtt( PC^.SA , 'SDL_Colors <' + sdl_colors + '>' );
-
-	DisposeSATt( ColorList );
 end;
 
 Procedure SelectSprite( PC: GearPtr );
@@ -1425,12 +1365,10 @@ begin
 	P := 1;
 
 	repeat
-{$IFNDEF ASCII}
 {$IFDEF CUTE}
 		CleanSpriteList;
 {$ELSE}
 		CleanTexList;
-{$ENDIF}
 {$ENDIF}
 		SetSAtt( PC^.SA , 'SDL_PORTRAIT <' + RetrieveSAtt( PList , P )^.Info + '>' );
 		N := SelectMenu( RPM , @RandCharRedraw );
@@ -1446,6 +1384,7 @@ begin
 	DisposeSAtt( PList );
 	DisposeRPGMenu( RPM );
 end;
+{$ENDIF}
 
 Procedure ReputationCompensation( PC: GearPtr );
 	{ If the PC starts the game as Wangtta, Villainous, or Criminal, better }
@@ -1590,11 +1529,10 @@ begin
 	{ If this has happened, give the PC some XP and cash to compensate. }
 	ReputationCompensation( PC );
 
-	SelectColors( PC , M = MODE_Regular );
-
 {$IFNDEF ASCII}
 	{ In SDLMode, before selecting a name, finalize the portrait. }
 	SelectSprite( PC );
+	SelectColors( PC , M = MODE_Regular );
 {$ENDIF}
 
 	{ Select a name. }

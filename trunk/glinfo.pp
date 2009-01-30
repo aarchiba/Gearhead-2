@@ -32,6 +32,8 @@ uses sdl,locale,gears,minitype,
 	glgfx;
 {$ENDIF}
 
+Function InfoImageName( Part: GearPtr ): String;
+
 Procedure DisplayModelStatus( GB: GameBoardPtr; M: GearPtr;  MyDest: TSDL_Rect );
 Procedure QuickModelStatus( GB: GameBoardPtr; M: GearPtr );
 

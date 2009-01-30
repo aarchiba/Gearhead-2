@@ -210,7 +210,6 @@ var
 	Last_Clock_Update: QWord;
 	Animation_Phase: Integer;
 	Mouse_X, Mouse_Y: LongInt;
-	Game_Messages: SAttPtr;
 	Cursor_Sprite: SensibleSpritePtr;
 	Console_History: SAttPtr;
 
@@ -256,6 +255,8 @@ Procedure MoreText( LList: SAttPtr; FirstLine: Integer );
 
 Procedure RedrawConsole;
 Procedure DialogMSG(msg: string);
+
+Procedure ClearExtendedBorder( Dest: TSDL_Rect );
 
 Procedure DrawBPBorder;
 Procedure DrawGetItemBorder;
@@ -949,12 +950,6 @@ begin
 	until IsMoreKey( A );
 end;
 
-Function MsgString( key: String ): String;
-	{ Return one of the standard messages. }
-begin
-	MsgString := SAttValue( Game_Messages , key );
-end;
-
 Procedure ClearExtendedBorder( Dest: TSDL_Rect );
 	{ Draw the inner box for border displays. }
 begin
@@ -1305,8 +1300,6 @@ initialization
         SDL_EnableUNICODE( 1 );
 	SDL_EnableKeyRepeat( KEY_REPEAT_DELAY , KEY_REPEAT_INTERVAL );
 
-	Game_Messages := LoadStringList( Standard_Message_File );
-
 	TTF_Init;
 
 	Game_Font := TTF_OpenFont( Graphics_Directory + 'VeraBd.ttf' , FontSize );
@@ -1332,8 +1325,6 @@ finalization
 	TTF_CloseFont( Game_Font );
 	TTF_CloseFont( Small_Font );
 	TTF_Quit;
-
-	DisposeSAtt( Game_Messages );
 
 	SDL_FreeSurface( Game_Screen );
 	SDL_Quit;

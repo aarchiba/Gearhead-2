@@ -70,7 +70,7 @@ Procedure InitGraphicsForScene( GB: GameBoardPtr );
 
 implementation
 
-uses ghmecha,ghchars,gearutil,ability,ghprop,effects,narration,ui4gh;
+uses ghmecha,ghchars,gearutil,ability,ghprop,effects,narration,ui4gh,colormenu;
 
 type
 	Cute_Map_Cel_Description = Record
@@ -230,16 +230,7 @@ end;
 Function SpriteColor( GB: GameBoardPtr; M: GearPtr ): String;
 	{ Determine the color string for this model. }
 const
-	NumSkinColor = 8;
-	SkinColor: Array [0..NumSkinColor-1] of String = (
-	'142 62 39','150 112 89','252 212 195','255 212 195','252 212 195',
-	'252 212 195', '252 212 195', '142 62 39'
-	);
-	NumHairColor = 10;
-	HairColor: Array [0..NumHairColor-1] of String = (
-	'128 56 35','55 50 50','234 180 88','166 47 32','75 200 212',
-	'75 212 100', '220 120 50', '170 20 150', '20 0 80', '123 63 0'
-	);
+	neutral_clothing_color = '140 130 120';
 var
 	it: String;
 	T: Integer;
@@ -250,8 +241,8 @@ begin
 	{ color has been stored in SDL_COLORS assume no color is needed. }
 	if ( it = '' ) and ( M^.G <> GG_Prop ) and ( M^.G <> GG_MetaTerrain ) and ( GB = Nil ) then begin
 		if M^.G = GG_Character then begin
-			it := '100 100 100';
-			it := it + ' ' + SkinColor[ Random(NumSkinColor) ] + ' ' + HairColor[ Random(NumHairColor) ];
+			it := neutral_clothing_color;
+			it := it + ' ' + RandomColorString( CS_Skin ) + ' ' + RandomColorString( CS_Hair );
 		end else begin
 			it := '175 175 171 100 100 120 0 200 200';
 		end;
@@ -276,10 +267,10 @@ begin
 					end else if AreAllies( GB , T , NAV_DefPlayerTeam ) then begin
 						it := '150 150 150';
 					end else begin
-						it := '100 100 100';
+						it := neutral_clothing_color;
 					end;
 				end;
-				it := it + ' ' + SkinColor[ Random(NumSkinColor) ] + ' ' + HairColor[ Random(NumHairColor) ];
+				it := it + ' ' + RandomColorString( CS_Skin ) + ' ' + RandomColorString( CS_Hair );
 			end else begin
 				if Faction <> Nil then it := SAttValue( Faction^.SA , 'mecha_colors' );
 				if it = '' then begin
