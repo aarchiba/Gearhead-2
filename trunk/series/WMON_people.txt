@@ -120,9 +120,7 @@ sub
 	hand
 end
 inv
-	Shield 4
-	DefBonus 2
-	name <Riot Shield>
+	item Riot Shield
 end
 leg
 leg
@@ -469,7 +467,7 @@ end
 
 Arch Bandit
 statline 13 13 14 12 8 8 8 8
-MonsterTV 35
+MonsterTV 42
 roguechar <B>
 type <Criminal>
 habitat <>
@@ -499,9 +497,7 @@ arm
 	sub
 		Hand
 		inv
-			gear 4 0 6
-			name <Hand Axe>
-			scale 0
+			item Hand Axe
 		end
 	end
 leg

@@ -1929,8 +1929,8 @@ head
 		stat 3 1
 	end
 torso
-	inv
-		PowerSource 20
+	sub
+		PowerSource 10
 		name <Electro-Gland>
 	end
 leg
@@ -1943,7 +1943,7 @@ leg
 	name <Left Rear Leg>
 tail
 	sub
-		gear 4 3 2
+		BeamGun 2
 		name <Lightning Bolt>
 		Range 2
 		Recharge 3

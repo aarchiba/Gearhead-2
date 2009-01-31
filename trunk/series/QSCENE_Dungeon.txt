@@ -10,8 +10,8 @@ Scene
 	type <DUNGEON Industrial>
 	dentrance <*GoUp>
 	content1 <Some 1 40 Sub *DUNGEON_THREAT>
-	content2 <Some 1 30 Sub *DUNGEON_DECOR>
-	content3 <Some 1 20 Sub *DUNGEON_REWARD>
+	content2 <Some 1 45 Sub *DUNGEON_DECOR>
+	content3 <Some 1 30 Sub *DUNGEON_REWARD>
 	mapwidth 35
 	mapheight 35
 	MonkeyMap
@@ -51,8 +51,8 @@ Scene
 	type <DUNGEON building condemned>
 	dentrance <*GoUp>
 	content1 <Some 1 40 Sub *DUNGEON_THREAT>
-	content2 <Some 1 30 Sub *DUNGEON_DECOR>
-	content3 <Some 1 20 Sub *DUNGEON_REWARD>
+	content2 <Some 1 45 Sub *DUNGEON_DECOR>
+	content3 <Some 1 30 Sub *DUNGEON_REWARD>
 	mapwidth 30
 	mapheight 30
 	MonkeyMap
@@ -91,8 +91,8 @@ Scene
 	type <DUNGEON sewer>
 	dentrance <*GoDown>
 	content1 <Some 1 50 Sub *DUNGEON_THREAT>
-	content2 <Some 1 30 Sub *DUNGEON_DECOR>
-	content3 <Some 1 10 Sub *DUNGEON_REWARD>
+	content2 <Some 1 45 Sub *DUNGEON_DECOR>
+	content3 <Some 1 20 Sub *DUNGEON_REWARD>
 	mapwidth 30
 	mapheight 30
 	MonkeyMap
@@ -132,8 +132,8 @@ Scene
 	type <DUNGEON Catacombs>
 	dentrance <*GoDown>
 	content1 <Some 1 40 Sub *DUNGEON_THREAT>
-	content2 <Some 1 30 Sub *DUNGEON_DECOR>
-	content3 <Some 1 20 Sub *DUNGEON_REWARD>
+	content2 <Some 1 45 Sub *DUNGEON_DECOR>
+	content3 <Some 1 30 Sub *DUNGEON_REWARD>
 	mapwidth 30
 	mapheight 30
 	MonkeyMap
@@ -173,9 +173,9 @@ Scene
 	special <NOEXIT>
 	type <DUNGEON building basement>
 	dentrance <*GoDown>
-	content1 <Some 1 30 Sub *DUNGEON_THREAT>
-	content2 <Some 1 40 Sub *DUNGEON_DECOR>
-	content3 <Some 1 20 Sub *DUNGEON_REWARD>
+	content1 <Some 1 35 Sub *DUNGEON_THREAT>
+	content2 <Some 1 50 Sub *DUNGEON_DECOR>
+	content3 <Some 1 30 Sub *DUNGEON_REWARD>
 	mapwidth 30
 	mapheight 30
 	MonkeyMap
@@ -215,10 +215,10 @@ Scene
 	type <DUNGEON ruin derelict>
 	terrain <SPACE>
 	dentrance <*GoDown>
-	content1 <Some 2 50 Sub *DUNGEON_THREAT>
-	content2 <Some 1 30 Sub *DUNGEON_DECOR>
+	content1 <Some 2 60 Sub *DUNGEON_THREAT>
+	content2 <Some 1 45 Sub *DUNGEON_DECOR>
 	content3 <Some 1  5 Sub *DUNGEON_REWARD>
-	content4 <Some 1 35 Sub *TREASUREROOM_WRECK>
+	content4 <Some 1 40 Sub *TREASUREROOM_WRECK>
 	% Suffocation effect...
 	Vacuum
 	mapwidth 49
@@ -261,8 +261,8 @@ Scene
 	terrain <SPACE>
 	dentrance <*GoDown>
 	content1 <Some 1 40 Sub *DUNGEON_THREAT>
-	content2 <Some 1 30 Sub *DUNGEON_DECOR>
-	content3 <Some 1 20 Sub *DUNGEON_REWARD>
+	content2 <Some 1 45 Sub *DUNGEON_DECOR>
+	content3 <Some 1 30 Sub *DUNGEON_REWARD>
 	% Suffocation effect...
 	Vacuum
 	mapwidth 35
@@ -306,8 +306,8 @@ Scene
 	habitat <SPACE.ASTER>
 	dentrance <*GoDown>
 	content1 <Some 1 40 Sub *DUNGEON_THREAT>
-	content2 <Some 1 30 Sub *DUNGEON_DECOR>
-	content3 <Some 1 20 Sub *DUNGEON_REWARD>
+	content2 <Some 1 45 Sub *DUNGEON_DECOR>
+	content3 <Some 1 30 Sub *DUNGEON_REWARD>
 	% Suffocation effect...
 	Vacuum
 	Ceiling
@@ -349,8 +349,8 @@ Scene
 	habitat <SPACE.ASTER>
 	dentrance <*GoDown>
 	content1 <Some 1 40 Sub *DUNGEON_THREAT>
-	content2 <Some 1 30 Sub *DUNGEON_DECOR>
-	content3 <Some 1 20 Sub *DUNGEON_REWARD>
+	content2 <Some 1 45 Sub *DUNGEON_DECOR>
+	content3 <Some 1 30 Sub *DUNGEON_REWARD>
 	% Suffocation effect...
 	Vacuum
 	mapwidth 30

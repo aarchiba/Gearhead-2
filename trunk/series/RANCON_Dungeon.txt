@@ -521,6 +521,135 @@ Content
 %%   usable by all characters, or reward/threat combos.
 
 Content
+	name <Pile of Filth: Red Herring>
+	requires <*DUNGEON_DECOR (sewer|condemned)>
+	element1 <Prefab>
+	minimap < ... .......1....... ... >
+	inv
+		STC RUBBLE-INDESTRUCTIBLE
+		name <Filth>
+		use <if= V1 0 else GoOpen ifYesNo 1 2 3 V= 1 1 ifResistance 5 else GoMakeSick Print 4>
+		GoMakeSick <PCSick Print 5>
+		GoOpen <Print 6>
+		Msg1 <You stand before a pile of filth.>
+		Msg2 <Rummage through it.>
+		Msg3 <Leave it alone.>
+		Msg4 <You find nothing.>
+		Msg5 <You find nothing, but you think you're going to be sick.>
+		Msg6 <You don't want to touch that again.>
+	end
+
+Content
+	name <Pile of Filth 1>
+	requires <*DUNGEON_DECOR !Ne (sewer|condemned)>
+	element1 <Prefab>
+	minimap < ... .......1....... ... >
+	inv
+		STC RUBBLE-INDESTRUCTIBLE
+		name <Filth>
+		% V1 = Have "unlocked" the goodies
+		use <if= V1 0 else GoOpen ifYesNo 1 2 3 V= 1 1 ifResistance 10 else GoMakeSick Goto GoOpen>
+		GoMakeSick <Print 4 PCSick OpenInv>
+		GoOpen <Print 5 OpenInv>
+		Msg1 <You stand before a pile of filth.>
+		Msg2 <Rummage through it.>
+		Msg3 <Leave it alone.>
+		Msg4 <You find some things, but you think you're going to be sick.>
+		Msg5 <You rummage through the filth.>
+		RandomLoot 9000
+		Loot_Category <TREASURE>
+		Loot_Factions <GENERAL>
+	end
+
+Content
+	name <Pile of Filth 2>
+	requires <*DUNGEON_DECOR !Lo (sewer|condemned)>
+	element1 <Prefab>
+	minimap < ... .......1....... ... >
+	inv
+		STC RUBBLE-INDESTRUCTIBLE
+		name <Filth>
+		% V1 = Have "unlocked" the goodies
+		use <if= V1 0 else GoOpen ifYesNo 1 2 3 V= 1 1 ifResistance 10 else GoMakeSick Goto GoOpen>
+		GoMakeSick <Print 4 PCSick OpenInv>
+		GoOpen <Print 5 OpenInv>
+		Msg1 <You stand before a pile of filth.>
+		Msg2 <Rummage through it.>
+		Msg3 <Leave it alone.>
+		Msg4 <You find some things, but you think you're going to be sick.>
+		Msg5 <You rummage through the filth.>
+		RandomLoot 33000
+		Loot_Category <TREASURE>
+		Loot_Factions <GENERAL>
+	end
+
+Content
+	name <Pile of Filth 3>
+	requires <*DUNGEON_DECOR !Md (sewer|condemned)>
+	element1 <Prefab>
+	minimap < ... .......1....... ... >
+	inv
+		STC RUBBLE-INDESTRUCTIBLE
+		name <Filth>
+		% V1 = Have "unlocked" the goodies
+		use <if= V1 0 else GoOpen ifYesNo 1 2 3 V= 1 1 ifResistance 10 else GoMakeSick Goto GoOpen>
+		GoMakeSick <Print 4 PCSick OpenInv>
+		GoOpen <Print 5 OpenInv>
+		Msg1 <You stand before a pile of filth.>
+		Msg2 <Rummage through it.>
+		Msg3 <Leave it alone.>
+		Msg4 <You find some things, but you think you're going to be sick.>
+		Msg5 <You rummage through the filth.>
+		RandomLoot 160000
+		Loot_Category <TREASURE>
+		Loot_Factions <GENERAL>
+	end
+
+Content
+	name <Pile of Filth 4>
+	requires <*DUNGEON_DECOR !Hi (sewer|condemned)>
+	element1 <Prefab>
+	minimap < ... .......1....... ... >
+	inv
+		STC RUBBLE-INDESTRUCTIBLE
+		name <Filth>
+		% V1 = Have "unlocked" the goodies
+		use <if= V1 0 else GoOpen ifYesNo 1 2 3 V= 1 1 ifResistance 13 else GoMakeSick Goto GoOpen>
+		GoMakeSick <Print 4 PCSick OpenInv>
+		GoOpen <Print 5 OpenInv>
+		Msg1 <You stand before a pile of filth.>
+		Msg2 <Rummage through it.>
+		Msg3 <Leave it alone.>
+		Msg4 <You find some things, but you think you're going to be sick.>
+		Msg5 <You rummage through the filth.>
+		RandomLoot 810000
+		Loot_Category <TREASURE>
+		Loot_Factions <GENERAL>
+	end
+
+Content
+	name <Pile of Filth 5>
+	requires <*DUNGEON_DECOR !Ex (sewer|condemned)>
+	element1 <Prefab>
+	minimap < ... .......1....... ... >
+	inv
+		STC RUBBLE-INDESTRUCTIBLE
+		name <Filth>
+		% V1 = Have "unlocked" the goodies
+		use <if= V1 0 else GoOpen ifYesNo 1 2 3 V= 1 1 ifResistance 16 else GoMakeSick Goto GoOpen>
+		GoMakeSick <Print 4 PCSick OpenInv>
+		GoOpen <Print 5 OpenInv>
+		Msg1 <You stand before a pile of filth.>
+		Msg2 <Rummage through it.>
+		Msg3 <Leave it alone.>
+		Msg4 <You find some things, but you think you're going to be sick.>
+		Msg5 <You rummage through the filth.>
+		RandomLoot 4050000
+		Loot_Category <TREASURE>
+		Loot_Factions <GENERAL>
+	end
+
+Content
 	name <Treasure Rock 1>
 	requires <*DUNGEON_DECOR !Ne (asteroid|mine|cave)>
 	element1 <Prefab>
@@ -844,6 +973,7 @@ Content
 
 
 %% *DUNGEON_GOAL CONTENT
+%%  - When sold, the dungeon goal content should be enough to buy a cheap level-appropriate mecha.
 
 Content
 	requires <*DUNGEON_GOAL !Ne>
@@ -851,7 +981,7 @@ Content
 	minimap <............1............>
 	inv
 		STC Crate
-		RandomLoot 20000
+		RandomLoot 1000000
 		Loot_Category <TREASURE>
 		Loot_Factions <GENERAL>
 	end
@@ -862,7 +992,7 @@ Content
 	minimap <............1............>
 	inv
 		STC Crate
-		RandomLoot 100000
+		RandomLoot 2000000
 		Loot_Category <TREASURE>
 		Loot_Factions <GENERAL>
 	end
@@ -874,7 +1004,7 @@ Content
 	minimap <............1............>
 	inv
 		STC Crate
-		RandomLoot 500000
+		RandomLoot 4000000
 		Loot_Category <TREASURE>
 		Loot_Factions <GENERAL>
 	end
@@ -886,7 +1016,7 @@ Content
 	minimap <............1............>
 	inv
 		STC Crate
-		RandomLoot 1000000
+		RandomLoot 8000000
 		Loot_Category <TREASURE>
 		Loot_Factions <GENERAL>
 	end
@@ -898,7 +1028,7 @@ Content
 	minimap <............1............>
 	inv
 		STC Crate
-		RandomLoot 5000000
+		RandomLoot 16000000
 		Loot_Category <TREASURE>
 		Loot_Factions <GENERAL>
 	end

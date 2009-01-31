@@ -12,6 +12,7 @@ S= <GrabStory              GSetNAtt NAG_ScriptVar ? ?>
 S+ <GrabStory              GAddNAtt NAG_ScriptVar ? ?>
 N= <GrabStory              GSetNAtt NAG_ElementID ? ?>
 rcs <Trigger0 RESET_CORE_STORY>
+PCSick <GrabPCPilot GSetNAtt 14 20 10>
 SetTeamFaction <GrabTeam ? GSetNAtt NAG_Personal NAS_FactionID ?>
 SetSelfFaction <GrabSource GSetNAtt NAG_Personal NAS_FactionID ?>
 SetSelfTeam <GrabSource GSetNAtt NAG_Location NAS_Team ?>
@@ -254,6 +255,7 @@ IfMedicine <ifSkillTest 16 ?>
 IfBiotech <ifSkillTest 22 ?>
 IfShopping <ifSkillTest 21 ?>
 IfMartialArts <ifSkillTest 9 ?>
+IfResistance <ifSkillTest 36 ?>
 SeekEntrance <SeekGate ParentSceneID ?>
 IfNPCSurrendered <GrabNPC ? if= GNAtt NAG_EpisodeData NAS_SurrenderStatus NAV_NowSurrendered>
 IfChatNPCSurrendered <GrabChatNPC if= GNAtt NAG_EpisodeData NAS_SurrenderStatus NAV_NowSurrendered>
