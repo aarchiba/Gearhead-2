@@ -3412,11 +3412,6 @@ Procedure AlterStoryDescriptors( Story: GearPtr; var Changes: String );
 var
 	Base: String;
 begin
-	{ Start by checking if there's a change to the Propp state. }
-	if AStringHasBString( Changes , '+P' ) then begin
-		SetNAtt( STory^.NA , NAG_XXRan , NAS_ProppAdvancement , 0 );
-	end;
-
 	Base := SAttValue( Story^.SA , 'CONTEXT' );
 	AlterDescriptors( Base , Changes );
 	SetSAtt( Story^.SA , 'CONTEXT <' + Base + '>' );

@@ -112,7 +112,7 @@ arm
 sub
 	hand
 	inv
-		item Shotgun
+		item Laver-2 Combat Rifle
 	end
 end
 arm
@@ -141,7 +141,7 @@ skill 6 1
 skill 7 1
 skill 8 1
 skill 9 1
-skill 10 2
+skill 10 1
 Sealed
 sub
 head
@@ -149,6 +149,9 @@ torso
 arm
 sub
 	hand
+	inv
+		item Brash G1 Light Laser Pistol
+	end
 end
 arm
 sub
@@ -498,6 +501,8 @@ arm
 		Hand
 		inv
 			item Hand Axe
+			desig <Bandit>
+			type <>
 		end
 	end
 leg

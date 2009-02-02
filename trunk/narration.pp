@@ -55,8 +55,6 @@ Const
 	NAS_EpisodeNumber = 6;	{ How many episodes have been completed? }
 	NAS_LastEpisodeNoted = 7;	{ What was the last episode to get a history note? }
 
-	NAS_ProppAdvancement = 8;	{ How many subgoals of the propp state has the PC completed? }
-
 	NAS_XXChar_Motivation = 101;
 	NAS_XXChar_Attitude = 102;
 

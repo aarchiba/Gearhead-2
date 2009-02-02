@@ -1339,9 +1339,6 @@ begin
 	{ Get the basic context. }
 	it := SAttValue( Story^.SA , 'CONTEXT' );
 
-	{ Add a descriptor for the Propp Advancement. }
-	it := it + ' =P' + WideStr( NAttValue( Story^.NA , NAG_XXRan , NAS_ProppAdvancement ) , 2 );
-
 	{ Add a description for the difficulcy rating. }
 	it := it + ' ' + DifficulcyContext( NAttValue( Story^.NA , NAG_XXRan , NAS_DifficulcyLevel ) );
 

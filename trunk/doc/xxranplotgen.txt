@@ -142,7 +142,6 @@ BACKGROUND DESCRIPTORS
 
 
 +P??	Propp State
-=P??	Propp Advancement
 	Describes the overall course of the story. The Advancement descriptor describes which
 	stage of this propp state the player is currently at.
 	+P--	Peaceful life
@@ -150,10 +149,6 @@ BACKGROUND DESCRIPTORS
 	*** THE SETUP ***
 	+Pme	PC meets an enemy pilot
 	+Pun	Under Attack
-		=P00	Have not yet encountered enemy
-		=P01	Must do recon against enemy
-		=P02	Must defend against enemy attack
-		=P03	Must perform counteroffensive
 	+Psh	PC is shanghaied into working for faction
 	+P	A stalemate between the PC and the enemy
 	+Pla	PC learns of the existence of an artifact
@@ -226,8 +221,8 @@ BACKGROUND DESCRIPTORS
 	+Hrt	Have rescued someone (H:++)
 	+Hmi	Someone will offer you a mission (H:++)
 	+Hre	Someone will try to get revenge (H:++)
-	+Hra	Have rescued Amore NPC
 
+	+Hra	Have rescued Amore NPC
 	+Has	Assassination attempt will be made against the PC.
 
 +T??	Task
