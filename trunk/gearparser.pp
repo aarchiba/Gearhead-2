@@ -43,6 +43,7 @@ var
 	Factions_List: GearPtr;
 	Mecha_Theme_List: GearPtr;
 
+Function SkillRankForRenown( Renown: Integer ): Integer;
 Procedure SetSkillsAtLevel( NPC: GearPtr; Lvl: Integer );
 Function SelectMechaByFactionAndRenown( Factions: String; Renown: Integer ): String;
 Procedure IndividualizeNPC( NPC: GearPtr );
@@ -141,9 +142,8 @@ begin
 	else DialogMsg( 'ERROR: No theme found for ' + SkList );
 end;
 
-Procedure SetSkillsAtLevel( NPC: GearPtr; Lvl: Integer );
-	{ Set all of this NPC's skills to an appropriate value for }
-	{ the requested level. }
+Function SkillRankForRenown( Renown: Integer ): Integer;
+	{ Given this renown score, return an appropriate skill rank. }
 const
 	NumSkillLevel = 15;
 	NeededRenown: Array [2..NumSkillLevel] of Integer = (
@@ -151,6 +151,17 @@ const
 	21, 28, 35, 43, 52,
 	62, 73, 85, 98, 112
 	);
+var
+	SkLvl: Integer;
+begin
+	SkLvl := NumSkillLevel;
+	while ( SkLvl > 1 ) and ( NeededRenown[ SkLvl ] > Renown ) do Dec( SkLvl );
+	SkillRankForRenown := SkLvl;
+end;
+
+Procedure SetSkillsAtLevel( NPC: GearPtr; Lvl: Integer );
+	{ Set all of this NPC's skills to an appropriate value for }
+	{ the requested level. }
 var
 	SkLvl: Integer;
 	Skill: NAttPtr;
@@ -163,8 +174,7 @@ begin
 	end;
 
 	{ Determine the value to set all skills to. }
-	SkLvl := NumSkillLevel;
-	while ( SkLvl > 1 ) and ( NeededRenown[ SkLvl ] > Lvl ) do Dec( SkLvl );
+	SkLvl := SkillRankForRenown( lvl );
 
 	{ Go through the skills and set them. }
 	Skill := NPC^.NA;

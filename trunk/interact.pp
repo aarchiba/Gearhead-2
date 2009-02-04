@@ -88,6 +88,7 @@ Function GenerateEnemyHook( Scene,PC,NPC: GearPtr; Desc: String ): GearPtr;
 Function GenerateAllyHook( Scene,PC,NPC: GearPtr ): GearPtr;
 
 Function LancematesPresent( GB: GameBoardPtr ): Integer;
+Function PetsPresent( GB: GameBoardPtr; CountRobots: Boolean ): Integer;
 
 Function FindLocalNPCByKeyWord( GB: GameBoardPtr; KW: String ): GearPtr;
 
@@ -1073,10 +1074,31 @@ begin
 end;
 
 Function LancematesPresent( GB: GameBoardPtr ): Integer;
-	{ Return the number of points worth of lancemates present. }
-	{ This will determine whether or not the PC can recruit more. }
-	{ Check for Team-3 gears; add +2 to the total for each mecha or }
-	{ person, +1 to the total for each other master. }
+	{ Return the number of free lancemates present. A free lancemate is one who: }
+	{ - is human (no pets) }
+	{ - isn't a temp lancemate }
+var
+	M,NPC: GearPtr;
+	N: Integer;
+begin
+	M := GB^.Meks;
+	N := 0;
+	while M <> Nil do begin
+		if ( NAttValue( M^.NA , NAG_Location , NAS_Team ) = NAV_LancemateTeam ) and GearActive( M ) then begin
+			NPC := LocatePilot( M );
+			if ( NPC <> Nil ) and ( NAttValue( NPC^.NA , NAG_Personal , NAS_CID ) <> 0 ) and ( NAttValue( NPC^.NA , NAG_CharDescription , NAS_CharType ) <> NAV_TempLancemate ) then begin
+				Inc( N );
+			end;
+		end;
+		M := M^.Next;
+	end;
+	LancematesPresent := N;
+end;
+
+Function PetsPresent( GB: GameBoardPtr; CountRobots: Boolean ): Integer;
+	{ Count the number of pets on the lancemate team. If COUNTROBOTS is true, }
+	{ only count those pets made out of metal. Otherwise, only count those pets }
+	{ not made out of metal. }
 var
 	M: GearPtr;
 	N: Integer;
@@ -1084,16 +1106,16 @@ begin
 	M := GB^.Meks;
 	N := 0;
 	while M <> Nil do begin
-		if ( NAttValue( M^.NA , NAG_Location , NAS_Team ) = NAV_LancemateTeam ) and GearActive( M ) then begin
-			if ( M^.G = GG_Mecha ) or ( NAttValue( M^.NA , NAG_Personal , NAS_CID ) <> 0 ) then begin
-				N := N + 2;
-			end else begin
-				N := N + 1;
+		if ( NAttValue( M^.NA , NAG_Location , NAS_Team ) = NAV_LancemateTeam ) and ( M^.G = GG_Character ) and ( NAttValue( M^.NA , NAG_Personal , NAS_CID ) = 0 ) then begin
+			if CountRobots and ( NAttValue( M^.NA , NAG_GearOps , NAS_Material ) = NAV_Metal ) then begin
+				Inc( N );
+			end else if ( NAttValue( M^.NA , NAG_GearOps , NAS_Material ) = NAV_Metal ) and not CountRobots then begin
+				Inc( N );
 			end;
 		end;
 		M := M^.Next;
 	end;
-	LancematesPresent := N;
+	PetsPresent := N;
 end;
 
 Function FindLocalNPCByKeyWord( GB: GameBoardPtr; KW: String ): GearPtr;

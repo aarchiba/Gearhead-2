@@ -112,6 +112,10 @@ Const
 	NAS_EncounterRecharge = 6;	{ Holds a time limit by which encounters can attack the PC. }
 		Standard_Encounter_Recharge = 90;
 
+	NAS_PartyControlMethod = 7;	{ What control method is currently being used- tactics or clock? }
+		NAV_ClockMode = 1;	{ This gets set when a scene is entered and cleared when the scene }
+		NAV_TacticsMode = 2;	{ is exited. }
+
 	NAG_MissionReport = 23;		{ Holds data that will be erased the next time this mecha is deployed. }
 		NAS_WasSalvaged = 1;	{ If nonzero, this gear was salvaged. }
 

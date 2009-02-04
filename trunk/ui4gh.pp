@@ -32,6 +32,7 @@ uses gears,texutil,dos;
 type
 	KeyMapDesc = Record
 		CmdName,CmdDesc: String;
+		isacommand: Boolean;		{ Return TRUE if this key is a command. }
 		KCode: Char;
 	end;
 
@@ -126,169 +127,222 @@ const
 	StdPlot_Debug: Boolean = False;
 
 
-	NumMappedKeys = 49;
+	NumMappedKeys = 50;
 	KeyMap: Array [1..NumMappedKeys] of KeyMapDesc = (
 	(	CmdName: 'NormSpeed';
 		CmdDesc: 'Travel foreword at normal speed.';
+		IsACommand: True;
 		KCode: '=';	),
 	(	CmdName: 'FullSpeed';
 		CmdDesc: 'Travel foreword at maximum speed';
+		IsACommand: True;
 		KCode: '+';	),
 	(	CmdName: 'TurnLeft';
 		CmdDesc: 'Turn to the left.';
+		IsACommand: True;
 		KCode: '[';	),
 	(	CmdName: 'TurnRight';
 		CmdDesc: 'Turn to the right.';
+		IsACommand: True;
 		KCode: ']';	),
 	(	CmdName: 'Stop';
 		CmdDesc: 'Stop moving, wait in place.';
+		IsACommand: True;
 		KCode: '5';	),
 
 	(	CmdName: 'Dir-SouthWest';
 		CmdDesc: 'Move southwest.';
+		IsACommand: True;
 		KCode: RPK_DownLeft;	),
 	(	CmdName: 'Dir-South';
 		CmdDesc: 'Move south.';
+		IsACommand: True;
 		KCode: RPK_Down;	),
 	(	CmdName: 'Dir-SouthEast';
 		CmdDesc: 'Move southeast.';
+		IsACommand: True;
 		KCode: RPK_DownRight;	),
 	(	CmdName: 'Dir-West';
 		CmdDesc: 'Move west.';
+		IsACommand: True;
 		KCode: RPK_Left;	),
 	(	CmdName: 'Dir-East';
 		CmdDesc: 'Move east.';
+		IsACommand: True;
 		KCode: RPK_Right;	),
 
 	(	CmdName: 'Dir-NorthWest';
 		CmdDesc: 'Move northwest.';
+		IsACommand: True;
 		KCode: RPK_UpLeft;	),
 	(	CmdName: 'Dir-North';
 		CmdDesc: 'Move north.';
+		IsACommand: True;
 		KCode: RPK_Up;	),
 	(	CmdName: 'Dir-NorthEast';
 		CmdDesc: 'Move northeast.';
+		IsACommand: True;
 		KCode: RPK_UpRight;	),
 	(	CmdName: 'ShiftGears';
 		CmdDesc: 'Change movement mode.';
+		IsACommand: True;
 		KCode: '.';	),
 	(	CmdName: 'Look';
 		CmdDesc: 'Look around the map.';
+		IsACommand: True;
 		KCode: 'l';	),
 
 	(	CmdName: 'AttackMenu';
 		CmdDesc: 'Access the attack menu.';
+		IsACommand: True;
 		KCode: 'A';	),
 	(	CmdName: 'QuitGame';
 		CmdDesc: 'Exit the game.';
+		IsACommand: True;
 		KCode: 'Q';	),
 	(	CmdName: 'Talk';
 		CmdDesc: 'Initiate conversation with a NPC.';
+		IsACommand: True;
 		KCode: 't';	),
 	(	CmdName: 'Help';
 		CmdDesc: 'View these helpful messages.';
+		IsACommand: True;
 		KCode: 'h';	),
 	(	CmdName: 'SwitchWeapon';
 		CmdDesc: 'Change the active weapon while selecting a target.';
+		IsACommand: True;
 		KCode: '.';	),
 
 	(	CmdName: 'CalledShot';
 		CmdDesc: 'Toggle the Called Shot option while selecting a target.';
+		IsACommand: False;
 		KCode: '/';	),
 	(	CmdName: 'Get';
 		CmdDesc: 'Pick up an item lying on the ground.';
+		IsACommand: True;
 		KCode: ',';	),
 	(	CmdName: 'Inventory';
 		CmdDesc: 'Access all carried items.';
+		IsACommand: True;
 		KCode: 'i';	),
 	(	CmdName: 'Equipment';
 		CmdDesc: 'Access all equipped items.';
+		IsACommand: True;
 		KCode: 'e';	),
 	(	CmdName: 'Enter';
 		CmdDesc: 'Use a stairway or portal.';
+		IsACommand: True;
 		KCode: '>';	),
 
 	{ Commands 26 - 30 }
 	(	CmdName: 'PartBrowser';
 		CmdDesc: 'Examine the individual components of your PC.';
+		IsACommand: True;
 		KCode: 'B';	),
 	(	CmdName: 'LearnSkills';
 		CmdDesc: 'Spend accumulated experience points.';
+		IsACommand: True;
 		KCode: 'L';	),
 	(	CmdName: 'Attack';
 		CmdDesc: 'Perform an attack.';
+		IsACommand: True;
 		KCode: 'a';	),
 	(	CmdName: 'SelectMecha';
 		CmdDesc: 'Choose the mecha that will be used by this PC in combat.';
+		IsACommand: True;
 		KCode: 'M';	),
 	(	CmdName: 'UseScenery';
 		CmdDesc: 'Activate a stationary item, such as a door or a computer.';
+		IsACommand: True;
 		KCode: 'u';	),
 
 	{ Commands 31 - 35 }
 	(	CmdName: 'Messages';
 		CmdDesc: 'Review all current adventure memos, email, and news.';
+		IsACommand: True;
 		KCode: 'm';	),
 	(	CmdName: 'SaveGame';
 		CmdDesc: 'Write the game data to disk, so you can come back and waste time later.';
+		IsACommand: True;
 		KCode: 'X';	),
 	(	CmdName: 'Enter2';
 		CmdDesc: 'Use a stairway or portal.';
+		IsACommand: True;
 		KCode: '<';	),
 	(	CmdName: 'CharInfo';
 		CmdDesc: 'View detailed information about your character, access option menus.';
+		IsACommand: True;
 		KCode: 'C';	),
 	(	CmdName: 'ApplySkill';
 		CmdDesc: 'Select and use a skill that the PC knows.';
+		IsACommand: True;
 		KCode: 's';	),
 
 	{ Commands 36 - 40 }
 	(	CmdName: 'Eject';
 		CmdDesc: 'Eject from your mecha and abandon it on the field.';
+		IsACommand: True;
 		KCode: 'E';	),
 	(	CmdName: 'Rest';
 		CmdDesc: 'Take a break for one hour of game time.';
+		IsACommand: True;
 		KCode: 'Z';	),
 	(	CmdName: 'History';
 		CmdDesc: 'Display past messages.';
+		IsACommand: True;
 		KCode: 'V';	),
 	(	CmdName: 'FieldHQ';
 		CmdDesc: 'Examine and edit your personal wargear.';
+		IsACommand: True;
 		KCode: 'H';	),
 	(	CmdName: 'Search';
 		CmdDesc: 'Check the area for enemies and secrets.';
+		IsACommand: True;
 		KCode: 'S';	),
 
 	{ Commands 41 - 45 }
 	(	CmdName: 'Telephone';
 		CmdDesc: 'Place a telephone call to a local NPC.';
+		IsACommand: True;
 		KCode: 'T';	),
 	(	CmdName: 'SwitchBV';
 		CmdDesc: 'Switch the Burst Fire option while selecting a target.';
+		IsACommand: False;
 		KCode: '>';	),
 	(	CmdName: 'Reverse';
 		CmdDesc: 'Travel backward at normal speed.';
+		IsACommand: True;
 		KCode: '-';	),
 	(	CmdName: 'SwitchTarget';
 		CmdDesc: 'Switch to next visible enemy when selecting a target.';
+		IsACommand: False;
 		KCode: ';';	),
 	(	CmdName: 'RunToggle';
 		CmdDesc: 'Toggle running on or off.';
+		IsACommand: True;
 		KCode: 'r';	),
 
 	{ Commands 46 - 50 }
 	(	CmdName: 'WallToggle';
 		CmdDesc: 'Toggle short walls in graphical mode.';
+		IsACommand: True;
 		KCode: 'W';	),
 	(	CmdName: 'QuickFire';
 		CmdDesc: 'Single-key automatic targeting attack.';
+		IsACommand: True;
 		KCode: 'f'; ),
 	(	CmdName: 'RollHistory';
 		CmdDesc: 'View the skill roll history.';
+		IsACommand: True;
 		KCode: 'R'; ),
 	(	CmdName: 'ExamineTarget';
 		CmdDesc: 'Examine a target closely.';
-		KCode: '?'; )
+		IsACommand: False;
+		KCode: '?'; ),
+	(	CmdName: 'PartyMode';
+		CmdDesc: 'Toggle between clock mode and tactics mode.';
+		IsACommand: True;
+		KCode: 'P'; )
 
 	);
 
@@ -342,6 +396,7 @@ const
 	KMC_QuickFire = 47;
 	KMC_RollHistory = 48;
 	KMC_ExamineTarget = 49;
+	KMC_PartyMode = 50;
 
 	Direct_Skill_Learning: Boolean = False;
 

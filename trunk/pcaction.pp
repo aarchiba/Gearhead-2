@@ -125,8 +125,18 @@ end;
 
 Procedure FHQ_Rejoin( GB: GameBoardPtr; PC,NPC: GearPtr );
 	{ NPC will rejoin the party if there's enough room. }
+var
+	CanJoin: Boolean;
 begin
-	if LancematesPresent( GB ) < PartyLancemateSlots( PC ) then begin
+	{ Depending on whether the NPC in question is a robot or a pet, different procedures }
+	{ must be called. }
+	if NAttValue( NPC^.NA , NAG_GearOps , NAS_Material ) = NAV_Metal then begin
+		CanJoin := PetsPresent( GB , True ) < PartyRobotSlots( PC );
+	end else begin
+		CanJoin := PetsPresent( GB , False ) < PartyPetSlots( PC );
+	end;
+
+	if CanJoin then begin
 		DialogMsg( ReplaceHash( MsgString( 'REJOIN_OK' ) , GearName( NPC ) ) );
 		AddLancemate( GB , NPC );
 	end else begin
@@ -828,7 +838,7 @@ begin
 		SetNAtt( Robot^.NA , NAG_CharDescription , NAS_CharType , NAV_CTLancemate );
 		DeployGear( GB , Robot , True );
 
-		if LancematesPresent( GB ) > PartyLancemateSlots( PC ) then RemoveLancemate( GB , Robot );
+		if PetsPresent( GB , True ) > PartyRobotSlots( PC ) then RemoveLancemate( GB , Robot );
 
 		if NAttValue( Robot^.NA , NAG_Personal , NAS_CID ) = 0 then begin
 			DialogMsg( ReplaceHash( MsgString( 'BUILD_ROBOT_SUCCESS' ) , GearName( Robot ) ) );
@@ -924,7 +934,7 @@ begin
 		end else begin
 			SkRoll := SkillRoll( GB , PC , 40 , SkTarget , 0 , False , True );
 
-			if ( SkRoll > SkTarget ) and ( LancematesPresent( GB ) < PartyLancemateSlots( PC ) ) then begin
+			if ( SkRoll > SkTarget ) and ( PetsPresent( GB , False ) < PartyPetSlots( PC ) ) then begin
 				DialogMsg( ReplaceHash( MsgString( 'DOMINATE_OK' ) , GearName( Target ) ) );
 				AddLancemate( GB , Target );
 				SetNAtt( Target^.NA , NAG_CharDescription , NAS_CharType , NAV_CTLancemate );
@@ -944,7 +954,7 @@ begin
 	end else begin
 		{ This animal is an ex-member of the party. It'll come back fairly }
 		{ peacefully, as long as there's room. }
-		if LancematesPresent( GB ) < PartyLancemateSlots( PC ) then begin
+		if PetsPresent( GB , False ) < PartyPetSlots( PC ) then begin
 			DialogMsg( ReplaceHash( MsgString( 'DOMINATE_OK' ) , GearName( Target ) ) );
 			AddLancemate( GB , Target );
 		end else begin
@@ -2278,6 +2288,334 @@ begin
 	DisposeRPGMenu( RPM );
 end;
 
+Procedure ShowRep( PC: GearPtr );
+	{ Display all of the PC's reputations. }
+	{ This is a debugging command. }
+var
+	T,N: Integer;
+begin
+	PC := LocatePilot( PC );
+	if PC <> Nil then begin
+		for t := 1 to 7 do begin
+			N := NAttValue( PC^.NA , NAG_CharDescription , -T );
+			if N <> 0 then DialogMsg( PersonalityTraitDesc( T , N ) + ' (' + BStr( Abs( N ) ) + ')' );
+		end;
+	end;
+end;
+
+Procedure DirectScript( GB: GameBoardPtr );
+	{ CHEAT COMMAND! Directly invoke an ASL script. }
+var
+	event: String;
+begin
+	event := GetStringFromUser( 'DEBUG CODE 45123' , @PCActionRedraw );
+
+	if event <> '' then begin
+		CombatDisplay( GB );
+		InvokeEvent( event , GB , GB^.Scene , event );
+	end else begin
+		CombatDisplay( GB );
+	end;
+end;
+
+Procedure PCRunToggle;
+	{ If the PC is running, switch to walking. If he's walking, switch to running. }
+begin
+	PC_SHOULD_RUN := not PC_SHOULD_RUN;
+	if PC_SHOULD_RUN then begin
+		DialogMsg( MsgString( 'RUN_ON' ) );
+	end else begin
+		DialogMsg( MsgString( 'RUN_OFF' ) );
+	end;
+end;
+
+Procedure DoQuickFire( GB: GameBoardPtr; Mek: GearPtr );
+	{ QUICKFIRE: The central function! }
+	{ Enacts a QuickFire action. If the player has chosen a weapon to QuickFire with, }
+	{ they will aim for the nearest enemy in range, and attack with that weapon. }
+	{ Excellent for guns, and works okay with thrown/melee weapons, since it only }
+	{ considers attack range, not throw range, and thus doesn't throw needlessly. }
+	{ QuickFire tries to stick with the player's target, but will automatically }
+	{ retarget if necessary. }
+		{ GB: The game board upon which the Mek will QuickFire }
+		{ Mek: The entity that will attack the nearest enemy in range }
+var
+	QFWpn: GearPtr;		{ The QuickFire weapon }
+	T: GearPtr;			{ Enemy target }
+	AtOp: Integer;		{ Default attack options }
+begin
+	QFWpn := FindQuickFireWeapon( GB , Mek );
+	
+	if ( QFWpn = Nil ) or ( FindMaster( QFWpn ) <> FindRoot( QFWpn ) ) then begin
+		{ Couldn't find a suitable QuickFire weapon }
+		DialogMsg( MsgString( 'QUICKFIRE_NoWeapon' ) );
+		Exit;
+	end;
+	
+	{ Check that weapon is ready }
+	if not ReadyToFire( GB, Mek, QFWpn ) then begin
+		DialogMsg( ReplaceHash( MsgString( 'ATA_NotReady' ) , GearName( QFWpn ) ) );
+		Exit;
+	end;
+	
+	{ Obtain target }
+	T := LocateMekByUID( GB , NAttValue( Mek^.NA , NAG_EpisodeData , NAS_Target ) );
+	AtOp := DefaultAtOp( QFWpn );
+
+	if ( T = Nil ) or not GearActive( T ) then T := SeekTarget( GB, Mek );
+	
+	{ Big targeting conditional. We fight our target, or we retarget and fight that instead. }
+	if ( T <> Nil ) and ( Range( GB, Mek, T ) <= WeaponRange( GB, QFWpn ) ) and GearActive( T ) and MekCanSeeTarget( GB, Mek, T ) then begin
+
+		{ We can fire at our last target }
+		if RangeArcCheck( GB, Mek, QFWpn, T ) then begin
+			AttackerFrontEnd( GB, Mek, QFWpn, T, AtOp );
+		end else begin
+			SetNAtt( Mek^.NA , NAG_Location , NAS_SmartCount , -5 );
+			SetNAtt( Mek^.NA , NAG_EpisodeData , NAS_Target , NAttValue( T^.NA , NAG_EpisodeData , NAS_UID ) );
+			SetNAtt( Mek^.NA , NAG_Location , NAS_SmartAction , NAV_SmartAttack );
+			SetNAtt( Mek^.NA , NAG_Location , NAS_SmartWeapon , FindGearIndex( Mek , QFWpn ) );
+			SetNAtt( Mek^.NA , NAG_Location , NAS_SmartTarget , 0 );
+			RLSmartAttack( GB , Mek );
+		end;
+		
+	end else begin
+		DialogMsg( MsgString( 'QUICKFIRE_NoEnemies' ) );
+		Exit;		
+	end;
+end;
+
+Procedure SwitchPartyMode( GB: GameBoardPtr );
+	{ Switch the party mode currently being used: either Clock or Tactics. }
+	{ If the current mode is Tactics, you can't switch back to Clock unless this is }
+	{ a safe area. If switching to tactics mode, be sure to set the TacticsTurnStart }
+	{ attribute. }
+var
+	mode: Integer;
+begin
+	{ Error check- can only switch modes when we have a scene. }
+	if ( GB = Nil ) or ( GB^.Scene = Nil ) then Exit;
+
+	mode := NAttValue( GB^.Scene^.NA , NAG_SceneData , NAS_PartyControlMethod );
+
+	if mode = NAV_ClockMode then begin
+		{ Switch to tactics mode. }
+		DialogMsg( MsgString( 'SwitchPartyMode_GoTactics' ) );
+		SetNAtt( GB^.Scene^.NA , NAG_SceneData , NAS_PartyControlMethod , NAV_TacticsMode );
+		SetNAtt( GB^.Scene^.NA , NAG_SceneData , NAS_TacticsTurnStart , GB^.ComTime );
+	end else begin
+		{ Set the mode to clock mode. }
+		if IsSafeArea( GB ) then begin
+			{ It's safe to perform the switch. }
+			DialogMsg( MsgString( 'SwitchPartyMode_GoClock' ) );
+			SetNAtt( GB^.Scene^.NA , NAG_SceneData , NAS_PartyControlMethod , NAV_ClockMode );
+		end else begin
+			DialogMsg( MsgString( 'SwitchPartyMode_Fail' ) );
+		end;
+	end;
+end;
+
+
+
+Procedure ShowSkillXP( PC: GearPtr );
+	{ Show how much skill experience this PC has. }
+var
+	T,XP: LongInt;
+begin
+	PC := LocatePilot( PC );
+	if PC <> Nil then begin
+		for t := 1 to NumSkill do begin
+			XP := NAttValue( PC^.NA , NAG_Experience , NAS_Skill_XP_Base + T );
+			if XP > 0 then begin
+				DialogMsg( MsgString( 'SkillName_' + BStr( T ) ) + ': ' + BStr( XP ) + '/' + BStr( SkillAdvCost( PC , NAttValue( PC^.NA , NAG_Skill , T ) ) ) );
+			end;
+		end;
+	end;
+end;
+
+Procedure SpitContents( M: GearPtr );
+	{ Just list all the siblings in this list.}
+begin
+	while M <> Nil do begin
+		dialogmsg( GearName( M ) + '  ' + BStr( NAttValue( M^.NA , NAG_Location , NAS_X ) ) + ',' + BStr( NAttValue( M^.NA , NAG_Location , NAS_Y ) ) );
+		M := M^.Next;
+	end;
+end;
+
+Function PCA_CommandProcessor( Mek: GearPtr; Camp: CampaignPtr; KCode: Integer; IsPC: Boolean ): Boolean;
+	{ Process this command. KCode is one of the standard key codes; it may have been }
+	{ modified by the calling procedure, i.e. holding shift turns "walk" into "run". }
+	{ Branch to the appropriate procedure; return TRUE if the PC has acted, or FALSE }
+	{ if the PC hasn't. }
+	{ IsPC will be true if MEK is a member of the player team, and false if MEK is a }
+	{ lancemate or other such indirectly controlled model. If the requested action isn't }
+	{ legal for a lancemate then an error message will be printed here. }
+var
+	GotMove: Boolean;
+begin
+	GotMove := False;
+{$IFNDEF ASCII}
+	if KCode = KMC_SouthWest then begin
+		RLWalker( Camp^.GB , Mek , Reverse_RL_D[ ScreenDirToMapDir( 3 ) ] , PC_Should_Run or ( RK_KeyState[ SDLK_RSHIFT ] = 1 ) or ( RK_KeyState[ SDLK_LSHIFT ] = 1 ) );
+		GotMove := True;
+	end else if KCode = KMC_South then begin
+		RLWalker( Camp^.GB , Mek , Reverse_RL_D[ ScreenDirToMapDir( 2 ) ] , PC_Should_Run or ( RK_KeyState[ SDLK_RSHIFT ] = 1 ) or ( RK_KeyState[ SDLK_LSHIFT ] = 1 ) );
+		GotMove := True;
+	end else if KCode = KMC_SouthEast then begin
+		RLWalker( Camp^.GB , Mek , Reverse_RL_D[ ScreenDirToMapDir( 1 ) ] , PC_Should_Run or ( RK_KeyState[ SDLK_RSHIFT ] = 1 ) or ( RK_KeyState[ SDLK_LSHIFT ] = 1 ) );
+		GotMove := True;
+	end else if KCode = KMC_West then begin
+		RLWalker( Camp^.GB , Mek , Reverse_RL_D[ ScreenDirToMapDir( 4 ) ] , PC_Should_Run or ( RK_KeyState[ SDLK_RSHIFT ] = 1 ) or ( RK_KeyState[ SDLK_LSHIFT ] = 1 ) );
+		GotMove := True;
+	end else if KCode = KMC_East then begin
+		RLWalker( Camp^.GB , Mek , Reverse_RL_D[ ScreenDirToMapDir( 0 ) ] , PC_Should_Run or ( RK_KeyState[ SDLK_RSHIFT ] = 1 ) or ( RK_KeyState[ SDLK_LSHIFT ] = 1 ) );
+		GotMove := True;
+	end else if KCode = KMC_NorthWest then begin
+		RLWalker( Camp^.GB , Mek , Reverse_RL_D[ ScreenDirToMapDir( 5 ) ] , PC_Should_Run or ( RK_KeyState[ SDLK_RSHIFT ] = 1 ) or ( RK_KeyState[ SDLK_LSHIFT ] = 1 ) );
+		GotMove := True;
+	end else if KCode = KMC_North then begin
+		RLWalker( Camp^.GB , Mek , Reverse_RL_D[ ScreenDirToMapDir( 6 ) ] , PC_Should_Run or ( RK_KeyState[ SDLK_RSHIFT ] = 1 ) or ( RK_KeyState[ SDLK_LSHIFT ] = 1 ) );
+		GotMove := True;
+	end else if KCode = KMC_NorthEast then begin
+		RLWalker( Camp^.GB , Mek , Reverse_RL_D[ ScreenDirToMapDir( 7 ) ] , PC_Should_Run or ( RK_KeyState[ SDLK_RSHIFT ] = 1 ) or ( RK_KeyState[ SDLK_LSHIFT ] = 1 ) );
+		GotMove := True;
+{$ELSE}
+	if KCode = KMC_SouthWest then begin
+		RLWalker( Camp^.GB , Mek , Reverse_RL_D[ ScreenDirToMapDir( 3 ) ] , PC_Should_Run );
+		GotMove := True;
+	end else if KCode = KMC_South then begin
+		RLWalker( Camp^.GB , Mek , Reverse_RL_D[ ScreenDirToMapDir( 2 ) ] , PC_Should_Run );
+		GotMove := True;
+	end else if KCode = KMC_SouthEast then begin
+		RLWalker( Camp^.GB , Mek , Reverse_RL_D[ ScreenDirToMapDir( 1 ) ] , PC_Should_Run );
+		GotMove := True;
+	end else if KCode = KMC_West then begin
+		RLWalker( Camp^.GB , Mek , Reverse_RL_D[ ScreenDirToMapDir( 4 ) ] , PC_Should_Run );
+		GotMove := True;
+	end else if KCode = KMC_East then begin
+		RLWalker( Camp^.GB , Mek , Reverse_RL_D[ ScreenDirToMapDir( 0 ) ] , PC_Should_Run );
+		GotMove := True;
+	end else if KCode = KMC_NorthWest then begin
+		RLWalker( Camp^.GB , Mek , Reverse_RL_D[ ScreenDirToMapDir( 5 ) ] , PC_Should_Run );
+		GotMove := True;
+	end else if KCode = KMC_North then begin
+		RLWalker( Camp^.GB , Mek , Reverse_RL_D[ ScreenDirToMapDir( 6 ) ] , PC_Should_Run );
+		GotMove := True;
+	end else if KCode = KMC_NorthEast then begin
+		RLWalker( Camp^.GB , Mek , Reverse_RL_D[ ScreenDirToMapDir( 7 ) ] , PC_Should_Run );
+		GotMove := True;
+{$ENDIF}
+
+	end else if KCode = KMC_NormSpeed then begin
+		RLWalker( Camp^.GB , Mek , Reverse_RL_D[ NAttValue( Mek^.NA , NAG_Location , NAS_D ) ] , False );
+		GotMove := True;
+	end else if KCode = KMC_TurnLeft then begin
+		PrepAction( Camp^.GB , Mek , NAV_TurnLeft );
+	end else if KCode = KMC_TurnRight then begin
+		PrepAction( Camp^.GB , Mek , NAV_TurnRight );
+	end else if KCode = KMC_FullSpeed then begin
+		RLWalker( Camp^.GB , Mek , Reverse_RL_D[ NAttValue( Mek^.NA , NAG_Location , NAS_D ) ] , True );
+		GotMove := True;
+	end else if KCode = KMC_Reverse then begin
+		PrepAction( Camp^.GB , Mek , NAV_Reverse );
+	end else if KCode = KMC_Stop then begin
+		PrepAction( Camp^.GB , Mek , NAV_Stop );
+
+	end else if KCode = KMC_ShiftGears then begin
+		ShiftGears( Camp^.GB , Mek , TRUE );
+	end else if KCode = KMC_ExamineMap then begin
+		LookAround( Camp^.GB , Mek );
+	end else if KCode = KMC_AttackMenu then begin
+		DoPlayerAttack( Mek , Camp^.GB );
+	end else if KCode = KMC_Attack then begin
+		RLQuickAttack( Camp^.GB , Mek );
+	end else if KCode = KMC_QuitGame then begin
+		Camp^.GB^.QuitTheGame := True;
+
+	end else if KCode = KMC_Talk then begin
+		PCTalk( Camp^.GB , Mek );
+
+	end else if KCode = KMC_Telephone then begin
+		PCTelephone( Camp^.GB , Mek );
+
+	end else if KCode = KMC_Help then begin
+		PCRLHelp( Camp^.GB );
+
+	end else if KCode = KMC_Get then begin
+		PCGetItem( Camp^.GB , Mek );
+
+	end else if KCode = KMC_Inventory then begin
+		PCBackpackMenu( Camp^.GB , Mek , True );
+	end else if KCode = KMC_Equipment then begin
+		PCBackpackMenu( Camp^.GB , Mek , False );
+
+	end else if ( KCode = KMC_Enter ) or ( KCode = KMC_Enter2 ) then begin
+		PCEnter( Camp^.GB , Mek );
+
+	end else if KCode = KMC_PartBrowser then begin
+		MechaPartBrowser( Mek , @PCActionRedraw );
+
+	end else if KCode = KMC_LearnSkills then begin
+		PCACTIONRD_GB := Camp^.GB;
+		DoTraining( Camp^.GB , Mek , @PCActionRedraw );
+
+	end else if KCode = KMC_SelectMecha then begin
+		DoSelectPCMek( Camp^.GB , Mek );
+
+	end else if KCode = KMC_SaveGame then begin
+		PCSaveCampaign( Camp , Mek , True );
+
+	end else if KCode = KMC_CharInfo then begin
+		PCViewChar( Camp^.GB , Mek );
+
+	end else if KCode = KMC_ApplySkill then begin
+		PCActivateSkill( Camp^.GB , Mek );
+
+	end else if KCode = KMC_Eject then begin
+		DoEjection( Camp^.GB , Mek );
+
+	end else if KCode = KMC_Rest then begin
+		DoRest( Camp^.GB , Mek );
+
+	end else if KCode = KMC_History then begin
+		DisplayConsoleHistory( Camp^.GB );
+
+	end else if KCode = KMC_FieldHQ then begin
+		PCFieldHQ( Camp^.GB , Mek );
+
+	end else if KCode = KMC_ViewMemo then begin
+		MemoBrowser( Camp^.GB , Mek );
+
+	end else if KCode = KMC_UseProp then begin
+		PCUseProp( Camp^.GB , Mek );
+
+	end else if KCode = KMC_Search then begin
+		PCSearch( Camp^.GB , Mek );
+
+	end else if KCode = KMC_RunToggle then begin
+		PCRunToggle;
+
+	end else if KCode = KMC_QuickFire then begin
+		DoQuickFire( Camp^.GB, Mek );
+
+	end else if KCode = KMC_RollHistory then begin
+		MoreText( Skill_Roll_History , MoreHighFirstLine( Skill_Roll_History ) );
+
+	end else if KCode = KMC_PartyMode then begin
+		SwitchPartyMode( Camp^.GB );
+		GotMove := True;
+
+{$IFNDEF ASCII}
+	end else if KCode = KMC_WallToggle then begin
+		Use_Tall_Walls := not Use_Tall_Walls;
+{	end else if ( KCode = RPK_RightButton ) and Mouse_Active then begin
+		GameOptionMenu( Mek , Camp^.GB );}
+{$ENDIF}
+
+	end;
+	PCA_CommandProcessor := GotMove;
+end;
+
 Procedure MenuPlayerInput( Mek: GearPtr; GB: GameBoardPtr );
 	{ This mek belongs to the player. Get input. }
 var
@@ -2388,126 +2726,20 @@ begin
 
 end;
 
-Procedure ShowRep( PC: GearPtr );
-	{ Display all of the PC's reputations. }
-	{ This is a debugging command. }
+
+Function KeyToKeyCode( KP: Char ): Integer;
+	{ Return the key code represented by this key press. }
 var
-	T,N: Integer;
+	t,kcode: Integer;
 begin
-	PC := LocatePilot( PC );
-	if PC <> Nil then begin
-		for t := 1 to 7 do begin
-			N := NAttValue( PC^.NA , NAG_CharDescription , -T );
-			if N <> 0 then DialogMsg( PersonalityTraitDesc( T , N ) + ' (' + BStr( Abs( N ) ) + ')' );
+	kcode := 0;
+	for t := 1 to NumMappedKeys do begin
+		if KeyMap[t].IsACommand and ( KeyMap[t].kcode = KP ) then begin
+			kcode := t;
+			Break;
 		end;
 	end;
-end;
-
-Procedure DirectScript( GB: GameBoardPtr );
-	{ CHEAT COMMAND! Directly invoke an ASL script. }
-var
-	event: String;
-begin
-	event := GetStringFromUser( 'DEBUG CODE 45123' , @PCActionRedraw );
-
-	if event <> '' then begin
-		CombatDisplay( GB );
-		InvokeEvent( event , GB , GB^.Scene , event );
-	end else begin
-		CombatDisplay( GB );
-	end;
-end;
-
-Procedure PCRunToggle;
-	{ If the PC is running, switch to walking. If he's walking, switch to running. }
-begin
-	PC_SHOULD_RUN := not PC_SHOULD_RUN;
-	if PC_SHOULD_RUN then begin
-		DialogMsg( MsgString( 'RUN_ON' ) );
-	end else begin
-		DialogMsg( MsgString( 'RUN_OFF' ) );
-	end;
-end;
-
-Procedure DoQuickFire( GB: GameBoardPtr; Mek: GearPtr );
-	{ QUICKFIRE: The central function! }
-	{ Enacts a QuickFire action. If the player has chosen a weapon to QuickFire with, }
-	{ they will aim for the nearest enemy in range, and attack with that weapon. }
-	{ Excellent for guns, and works okay with thrown/melee weapons, since it only }
-	{ considers attack range, not throw range, and thus doesn't throw needlessly. }
-	{ QuickFire tries to stick with the player's target, but will automatically }
-	{ retarget if necessary. }
-		{ GB: The game board upon which the Mek will QuickFire }
-		{ Mek: The entity that will attack the nearest enemy in range }
-var
-	QFWpn: GearPtr;		{ The QuickFire weapon }
-	T: GearPtr;			{ Enemy target }
-	AtOp: Integer;		{ Default attack options }
-begin
-	QFWpn := FindQuickFireWeapon( GB , Mek );
-	
-	if ( QFWpn = Nil ) or ( FindMaster( QFWpn ) <> FindRoot( QFWpn ) ) then begin
-		{ Couldn't find a suitable QuickFire weapon }
-		DialogMsg( MsgString( 'QUICKFIRE_NoWeapon' ) );
-		Exit;
-	end;
-	
-	{ Check that weapon is ready }
-	if not ReadyToFire( GB, Mek, QFWpn ) then begin
-		DialogMsg( ReplaceHash( MsgString( 'ATA_NotReady' ) , GearName( QFWpn ) ) );
-		Exit;
-	end;
-	
-	{ Obtain target }
-	T := LocateMekByUID( GB , NAttValue( Mek^.NA , NAG_EpisodeData , NAS_Target ) );
-	AtOp := DefaultAtOp( QFWpn );
-
-	if ( T = Nil ) or not GearActive( T ) then T := SeekTarget( GB, Mek );
-	
-	{ Big targeting conditional. We fight our target, or we retarget and fight that instead. }
-	if ( T <> Nil ) and ( Range( GB, Mek, T ) <= WeaponRange( GB, QFWpn ) ) and GearActive( T ) and MekCanSeeTarget( GB, Mek, T ) then begin
-
-		{ We can fire at our last target }
-		if RangeArcCheck( GB, Mek, QFWpn, T ) then begin
-			AttackerFrontEnd( GB, Mek, QFWpn, T, AtOp );
-		end else begin
-			SetNAtt( Mek^.NA , NAG_Location , NAS_SmartCount , -5 );
-			SetNAtt( Mek^.NA , NAG_EpisodeData , NAS_Target , NAttValue( T^.NA , NAG_EpisodeData , NAS_UID ) );
-			SetNAtt( Mek^.NA , NAG_Location , NAS_SmartAction , NAV_SmartAttack );
-			SetNAtt( Mek^.NA , NAG_Location , NAS_SmartWeapon , FindGearIndex( Mek , QFWpn ) );
-			SetNAtt( Mek^.NA , NAG_Location , NAS_SmartTarget , 0 );
-			RLSmartAttack( GB , Mek );
-		end;
-		
-	end else begin
-		DialogMsg( MsgString( 'QUICKFIRE_NoEnemies' ) );
-		Exit;		
-	end;
-end;
-
-Procedure ShowSkillXP( PC: GearPtr );
-	{ Show how much skill experience this PC has. }
-var
-	T,XP: LongInt;
-begin
-	PC := LocatePilot( PC );
-	if PC <> Nil then begin
-		for t := 1 to NumSkill do begin
-			XP := NAttValue( PC^.NA , NAG_Experience , NAS_Skill_XP_Base + T );
-			if XP > 0 then begin
-				DialogMsg( MsgString( 'SkillName_' + BStr( T ) ) + ': ' + BStr( XP ) + '/' + BStr( SkillAdvCost( PC , NAttValue( PC^.NA , NAG_Skill , T ) ) ) );
-			end;
-		end;
-	end;
-end;
-
-Procedure SpitContents( M: GearPtr );
-	{ Just list all the siblings in this list.}
-begin
-	while M <> Nil do begin
-		dialogmsg( GearName( M ) + '  ' + BStr( NAttValue( M^.NA , NAG_Location , NAS_X ) ) + ',' + BStr( NAttValue( M^.NA , NAG_Location , NAS_Y ) ) );
-		M := M^.Next;
-	end;
+	KeyToKeyCode := kcode;
 end;
 
 Procedure RLPlayerInput( Mek: GearPtr; Camp: CampaignPtr );
@@ -2516,6 +2748,7 @@ Procedure RLPlayerInput( Mek: GearPtr; Camp: CampaignPtr );
 	{ else. }
 var
 	KP: Char;	{ Key Pressed }
+	KCode: Integer;
 	GotMove: Boolean;
 	Mobile: Boolean;
 begin
@@ -2539,196 +2772,29 @@ begin
 			{ Input the action. }
 			KP := RPGKey;
 
+			KCode := KeyToKeyCode( KP );
+
 {$IFNDEF ASCII}
-{$IFDEF CUTE}
-			if KP = KeyMap[ KMC_SouthWest ].KCode then begin
-				RLWalker( Camp^.GB , Mek , Reverse_RL_D[ ScreenDirToMapDir( 3 ) ] , PC_Should_Run );
-				GotMove := True;
-			end else if KP = KeyMap[ KMC_South ].KCode then begin
-				RLWalker( Camp^.GB , Mek , Reverse_RL_D[ ScreenDirToMapDir( 2 ) ] , PC_Should_Run );
-				GotMove := True;
-			end else if KP = KeyMap[ KMC_SouthEast ].KCode then begin
-				RLWalker( Camp^.GB , Mek , Reverse_RL_D[ ScreenDirToMapDir( 1 ) ] , PC_Should_Run );
-				GotMove := True;
-			end else if KP = KeyMap[ KMC_West ].KCode then begin
-				RLWalker( Camp^.GB , Mek , Reverse_RL_D[ ScreenDirToMapDir( 4 ) ] , PC_Should_Run );
-				GotMove := True;
-			end else if KP = KeyMap[ KMC_East ].KCode then begin
-				RLWalker( Camp^.GB , Mek , Reverse_RL_D[ ScreenDirToMapDir( 0 ) ] , PC_Should_Run );
-				GotMove := True;
-			end else if KP = KeyMap[ KMC_NorthWest ].KCode then begin
-				RLWalker( Camp^.GB , Mek , Reverse_RL_D[ ScreenDirToMapDir( 5 ) ] , PC_Should_Run );
-				GotMove := True;
-			end else if KP = KeyMap[ KMC_North ].KCode then begin
-				RLWalker( Camp^.GB , Mek , Reverse_RL_D[ ScreenDirToMapDir( 6 ) ] , PC_Should_Run );
-				GotMove := True;
-			end else if KP = KeyMap[ KMC_NorthEast ].KCode then begin
-				RLWalker( Camp^.GB , Mek , Reverse_RL_D[ ScreenDirToMapDir( 7 ) ] , PC_Should_Run );
-				GotMove := True;
-{$ELSE}
-			if ( kp = KeyMap[ KMC_North ].KCode ) and ( RK_KeyState[ SDLK_Up ] = 1 ) and not Use_Isometric_Mode then begin
-				RLWalker( Camp^.GB , Mek , Reverse_RL_D[ NAttValue( Mek^.NA , NAG_Location , NAS_D ) ] , PC_Should_Run or ( RK_KeyState[ SDLK_RSHIFT ] = 1 ) or ( RK_KeyState[ SDLK_LSHIFT ] = 1 ) );
-				GotMove := True;
+{$IFNDEF CUTE}
+			if ( kcode = KMC_North ) and not Use_Isometric_Mode then begin
+				if PC_Should_Run or ( RK_KeyState[ SDLK_RSHIFT ] = 1 ) or ( RK_KeyState[ SDLK_LSHIFT ] = 1 ) then begin
+					KCode := KMC_FullSpeed;
+				end else begin
+					kcode := KMC_NormSpeed;
+				end;
 			end else if ( KP = KeyMap[ KMC_West ].KCode ) and not Use_Isometric_Mode then begin
-				PrepAction( Camp^.GB , Mek , NAV_TurnLeft );
+				KCode := KMC_TurnLeft;
 			end else if ( KP = KeyMap[ KMC_East ].KCode ) and not Use_Isometric_Mode then begin
-				PrepAction( Camp^.GB , Mek , NAV_TurnRight );
-
-			end else if Use_Isometric_Mode and ( KP = KeyMap[ KMC_SouthWest ].KCode ) then begin
-				RLWalker( Camp^.GB , Mek , Reverse_RL_D[ ( 3 + DirOffset[ origin_d ] + 6 + Iso_Dir_Offset ) mod 8 ] , PC_Should_Run or ( RK_KeyState[ SDLK_RSHIFT ] = 1 ) or ( RK_KeyState[ SDLK_LSHIFT ] = 1 ) );
-				GotMove := True;
-			end else if Use_Isometric_Mode and ( KP = KeyMap[ KMC_South ].KCode ) then begin
-				RLWalker( Camp^.GB , Mek , Reverse_RL_D[ ( 2 + DirOffset[ origin_d ] + 6 + Iso_Dir_Offset ) mod 8 ] , PC_Should_Run or ( RK_KeyState[ SDLK_RSHIFT ] = 1 ) or ( RK_KeyState[ SDLK_LSHIFT ] = 1 ) );
-				GotMove := True;
-			end else if Use_Isometric_Mode and ( KP = KeyMap[ KMC_SouthEast ].KCode ) then begin
-				RLWalker( Camp^.GB , Mek , Reverse_RL_D[ ( 1 + DirOffset[ origin_d ] + 6 + Iso_Dir_Offset ) mod 8 ] , PC_Should_Run or ( RK_KeyState[ SDLK_RSHIFT ] = 1 ) or ( RK_KeyState[ SDLK_LSHIFT ] = 1 ) );
-				GotMove := True;
-			end else if Use_Isometric_Mode and ( KP = KeyMap[ KMC_West ].KCode ) then begin
-				RLWalker( Camp^.GB , Mek , Reverse_RL_D[ ( 4 + DirOffset[ origin_d ] + 6 + Iso_Dir_Offset ) mod 8 ] , PC_Should_Run or ( RK_KeyState[ SDLK_RSHIFT ] = 1 ) or ( RK_KeyState[ SDLK_LSHIFT ] = 1 ) );
-				GotMove := True;
-			end else if Use_Isometric_Mode and ( KP = KeyMap[ KMC_East ].KCode ) then begin
-				RLWalker( Camp^.GB , Mek , Reverse_RL_D[ ( 0 + DirOffset[ origin_d ] + 6 + Iso_Dir_Offset ) mod 8 ] , PC_Should_Run or ( RK_KeyState[ SDLK_RSHIFT ] = 1 ) or ( RK_KeyState[ SDLK_LSHIFT ] = 1 ) );
-				GotMove := True;
-			end else if Use_Isometric_Mode and ( KP = KeyMap[ KMC_NorthWest ].KCode ) then begin
-				RLWalker( Camp^.GB , Mek , Reverse_RL_D[ ( 5 + DirOffset[ origin_d ] + 6 + Iso_Dir_Offset ) mod 8 ] , PC_Should_Run or ( RK_KeyState[ SDLK_RSHIFT ] = 1 ) or ( RK_KeyState[ SDLK_LSHIFT ] = 1 ) );
-				GotMove := True;
-			end else if Use_Isometric_Mode and ( KP = KeyMap[ KMC_North ].KCode ) then begin
-				RLWalker( Camp^.GB , Mek , Reverse_RL_D[ ( 6 + DirOffset[ origin_d ] + 6 + Iso_Dir_Offset ) mod 8 ] , PC_Should_Run or ( RK_KeyState[ SDLK_RSHIFT ] = 1 ) or ( RK_KeyState[ SDLK_LSHIFT ] = 1 ) );
-				GotMove := True;
-			end else if Use_Isometric_Mode and ( KP = KeyMap[ KMC_NorthEast ].KCode ) then begin
-				RLWalker( Camp^.GB , Mek , Reverse_RL_D[ ( 7 + DirOffset[ origin_d ] + 6 + Iso_Dir_Offset ) mod 8 ] , PC_Should_Run or ( RK_KeyState[ SDLK_RSHIFT ] = 1 ) or ( RK_KeyState[ SDLK_LSHIFT ] = 1 ) );
-				GotMove := True;
+				KCode := KMC_TurnRight;
+			end;
 {$ENDIF}
-{$ELSE}
-			if KP = KeyMap[ KMC_SouthWest ].KCode then begin
-				RLWalker( Camp^.GB , Mek , 1 , PC_Should_Run );
-				GotMove := True;
-			end else if KP = KeyMap[ KMC_South ].KCode then begin
-				RLWalker( Camp^.GB , Mek , 2 , PC_Should_Run );
-				GotMove := True;
-			end else if KP = KeyMap[ KMC_SouthEast ].KCode then begin
-				RLWalker( Camp^.GB , Mek , 3 , PC_Should_Run );
-				GotMove := True;
-			end else if KP = KeyMap[ KMC_West ].KCode then begin
-				RLWalker( Camp^.GB , Mek , 4 , PC_Should_Run );
-				GotMove := True;
-			end else if KP = KeyMap[ KMC_East ].KCode then begin
-				RLWalker( Camp^.GB , Mek , 6 , PC_Should_Run );
-				GotMove := True;
-			end else if KP = KeyMap[ KMC_NorthWest ].KCode then begin
-				RLWalker( Camp^.GB , Mek , 7 , PC_Should_Run );
-				GotMove := True;
-			end else if KP = KeyMap[ KMC_North ].KCode then begin
-				RLWalker( Camp^.GB , Mek , 8 , PC_Should_Run );
-				GotMove := True;
-			end else if KP = KeyMap[ KMC_NorthEast ].KCode then begin
-				RLWalker( Camp^.GB , Mek , 9 , PC_Should_Run );
-				GotMove := True;
-{$ENDIF}
-			end else if KP = KeyMap[ KMC_NormSpeed ].KCode then begin
-				RLWalker( Camp^.GB , Mek , Reverse_RL_D[ NAttValue( Mek^.NA , NAG_Location , NAS_D ) ] , False );
-				GotMove := True;
-			end else if ( KP = KeyMap[ KMC_TurnLeft ].KCode ) then begin
-				PrepAction( Camp^.GB , Mek , NAV_TurnLeft );
-			end else if ( KP = KeyMap[ KMC_TurnRight ].KCode ) then begin
-				PrepAction( Camp^.GB , Mek , NAV_TurnRight );
-			end else if KP = KeyMap[ KMC_FullSpeed ].KCode then begin
-				RLWalker( Camp^.GB , Mek , Reverse_RL_D[ NAttValue( Mek^.NA , NAG_Location , NAS_D ) ] , True );
-				GotMove := True;
-			end else if KP = KeyMap[ KMC_Reverse ].KCode then begin
-				PrepAction( Camp^.GB , Mek , NAV_Reverse );
-			end else if KP = KeyMap[ KMC_Stop ].KCode then begin
-				PrepAction( Camp^.GB , Mek , NAV_Stop );
-
-			end else if KP = KeyMap[ KMC_ShiftGears ].KCode then begin
-				ShiftGears( Camp^.GB , Mek , TRUE );
-			end else if KP = KeyMap[ KMC_ExamineMap ].KCode then begin
-				LookAround( Camp^.GB , Mek );
-			end else if KP = KeyMap[ KMC_AttackMenu ].KCode then begin
-				DoPlayerAttack( Mek , Camp^.GB );
-			end else if KP = KeyMap[ KMC_Attack ].KCode then begin
-				RLQuickAttack( Camp^.GB , Mek );
-			end else if KP = KeyMap[ KMC_QuitGame ].KCode then begin
-				Camp^.GB^.QuitTheGame := True;
-
-			end else if KP = KeyMap[ KMC_Talk ].KCode then begin
-				PCTalk( Camp^.GB , Mek );
-
-			end else if KP = KeyMap[ KMC_Telephone ].KCode then begin
-				PCTelephone( Camp^.GB , Mek );
-
-			end else if KP = KeyMap[ KMC_Help ].KCode then begin
-				PCRLHelp( Camp^.GB );
-
-			end else if KP = KeyMap[ KMC_Get ].KCode then begin
-				PCGetItem( Camp^.GB , Mek );
-
-			end else if KP = KeyMap[ KMC_Inventory ].KCode then begin
-				PCBackpackMenu( Camp^.GB , Mek , True );
-			end else if KP = KeyMap[ KMC_Equipment ].KCode then begin
-				PCBackpackMenu( Camp^.GB , Mek , False );
-
-			end else if ( KP = KeyMap[ KMC_Enter ].KCode ) or ( KP = KeyMap[ KMC_Enter2 ].KCode ) then begin
-				PCEnter( Camp^.GB , Mek );
-
-			end else if KP = KeyMap[ KMC_PartBrowser ].KCode then begin
-				MechaPartBrowser( Mek , @PCActionRedraw );
-
-			end else if KP = KeyMap[ KMC_LearnSkills ].KCode then begin
-				PCACTIONRD_GB := Camp^.GB;
-				DoTraining( Camp^.GB , Mek , @PCActionRedraw );
-
-			end else if KP = KeyMap[ KMC_SelectMecha ].KCode then begin
-				DoSelectPCMek( Camp^.GB , Mek );
-
-			end else if KP = KeyMap[ KMC_SaveGame ].KCode then begin
-				PCSaveCampaign( Camp , Mek , True );
-
-			end else if KP = KeyMap[ KMC_CharInfo ].KCode then begin
-				PCViewChar( Camp^.GB , Mek );
-
-			end else if KP = KeyMap[ KMC_ApplySkill ].KCode then begin
-				PCActivateSkill( Camp^.GB , Mek );
-
-			end else if KP = KeyMap[ KMC_Eject ].KCode then begin
-				DoEjection( Camp^.GB , Mek );
-
-			end else if KP = KeyMap[ KMC_Rest ].KCode then begin
-				DoRest( Camp^.GB , Mek );
-
-			end else if KP = KeyMap[ KMC_History ].KCode then begin
-				DisplayConsoleHistory( Camp^.GB );
-
-			end else if KP = KeyMap[ KMC_FieldHQ ].KCode then begin
-				PCFieldHQ( Camp^.GB , Mek );
-
-			end else if KP = KeyMap[ KMC_ViewMemo ].KCode then begin
-				MemoBrowser( Camp^.GB , Mek );
-
-			end else if KP = KeyMap[ KMC_UseProp ].KCode then begin
-				PCUseProp( Camp^.GB , Mek );
-
-			end else if KP = KeyMap[ KMC_Search ].KCode then begin
-				PCSearch( Camp^.GB , Mek );
-
-			end else if KP = KeyMap[ KMC_RunToggle ].KCode then begin
-				PCRunToggle;
-
-			end else if KP = KeyMap[ KMC_WallToggle ].KCode then begin
-				Use_Tall_Walls := not Use_Tall_Walls;
-
-			end else if KP = KeyMap[ KMC_QuickFire ].KCode then begin
-				DoQuickFire( Camp^.GB, Mek );
-
-			end else if KP = KeyMap[ KMC_RollHistory ].KCode then begin
-				MoreText( Skill_Roll_History , MoreHighFirstLine( Skill_Roll_History ) );
-
-{$IFNDEF ASCII}
-			end else if ( KP = RPK_RightButton ) and Mouse_Active then begin
-				GameOptionMenu( Mek , Camp^.GB );
 {$ENDIF}
 
-			end else if KP = 'P' then begin
+			if KCode > 0 then begin
+				{ We got a command. Process it. }
+				GotMove := PCA_CommandProcessor( Mek, Camp, KCode, True );
+
+			end else if KP = '}' then begin
 				ForcePlot( Camp^.GB , Mek , Camp^.GB^.Scene );
 			end else if ( KP = '!' ) and ( Camp^.GB^.Scene <> Nil ) then begin
 				BrowseDesignFile( FindRoot( Camp^.GB^.Scene )^.InvCom , @PCActionRedraw );

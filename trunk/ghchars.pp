@@ -388,13 +388,15 @@ Const
 	NAS_Performance = 35;
 	NAS_Resistance = 36;
 	NAS_Investigation = 37;
+	NAS_Robotics = 38;
 	NAS_Leadership = 39;
+	NAS_DominateAnimal = 40;
 	NAS_PickPockets = 41;
 	NAS_Taunt = 42;
 	NAS_Acrobatics = 43;
 
 	NAG_Talent = 16;
-	NumTalent = 30;
+	NumTalent = 31;
 
 	NAS_StrengthOfFaith = 1;
 	NAS_BodyBuilder = 2;
@@ -426,6 +428,7 @@ Const
 	NAS_Sniper = 28;
 	NAS_Innovation = 29;
 	NAS_Camaraderie = 30;
+	NAS_Entourage = 31;
 
 	{ Talent pre-requisites are described as follows: The first }
 	{ coordinate lists the skill (if positive) or stat (if negative) }
@@ -439,7 +442,8 @@ Const
 	( -8 , 15 ) , ( -6 , 15 ) , ( 5 , 5 ) , ( 5 , 5 ) , ( 5 , 5 ),
 	( 15 , 5 ), ( 0 , 0 ), ( 21 , 5 ), ( 40 , 5 ), (-STAT_Craft,15),
 	( 20 , 5 ), ( -13 , -25 ), ( 25 , 5 ), ( 17 , 5 ), ( -12 , -25 ),
-	( 24 , 5 ), ( -2 , 15 ), ( 18 , 5 ), ( NAS_MechaEngineering , 10 ), ( NAS_Conversation , 5 )
+	( 24 , 5 ), ( -2 , 15 ), ( 18 , 5 ), ( NAS_MechaEngineering , 10 ), ( NAS_Conversation , 5 ),
+	( NAS_Leadership , 5 )
 	);
 
 

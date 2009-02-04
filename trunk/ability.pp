@@ -135,7 +135,8 @@ Function HasTalent( PC: GearPtr; T: Integer ): Boolean;
 Function HasIntrinsic( PC: GearPtr; I: Integer; CasualUse: Boolean ): Boolean;
 
 Function IsEnviroSealed( PC: GearPtr ): Boolean;
-Function PartyLancemateSlots( PC: GearPtr ): Integer;
+Function PartyPetSlots( PC: GearPtr ): Integer;
+Function PartyRobotSlots( PC: GearPtr ): Integer;
 
 Function SkillRank( PC: GearPtr; Skill: Integer ): Integer;
 Function HasSkill( PC: GearPtr; Skill: Integer ): Boolean;
@@ -791,14 +792,20 @@ begin
 	end;
 end;
 
-Function PartyLancemateSlots( PC: GearPtr ): Integer;
-	{ Return however many lancemates the PC can have. }
-	{ A human lancemate who can pilot a mecha costs 2 points; a pet costs 1 point. }
-	{ How to tell which from which? Human lancemates have CIDs; pets don't. }
+Function PartyPetSlots( PC: GearPtr ): Integer;
+	{ Return however many pets the PC can have. }
 begin
 	PC := LocatePilot( PC );
 	if PC = Nil then Exit( 0 );
-	PartyLancemateSlots := ( PC^.Stat[ STAT_Charm ] + NAttValue( PC^.NA , NAG_Skill , NAS_Leadership ) + ( NAttValue( PC^.NA , NAG_CharDescription , NAS_Renowned ) div 10 ) ) div 4;
+	PartyPetSlots := 1 + ( NAttValue( PC^.NA , NAG_Skill , NAS_DominateAnimal ) div 3 );
+end;
+
+Function PartyRobotSlots( PC: GearPtr ): Integer;
+	{ Return how many robots the PC can have. }
+begin
+	PC := LocatePilot( PC );
+	if PC = Nil then Exit( 0 );
+	PartyRobotSlots := 1 + ( NAttValue( PC^.NA , NAG_Skill , NAS_Robotics ) div 3 );
 end;
 
 Function HasSkill( PC: GearPtr; Skill: Integer ): Boolean;

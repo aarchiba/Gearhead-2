@@ -364,16 +364,26 @@ begin
 	end;
 end;
 
+Function NumLancemateSlots( PC: GearPtr ): Integer;
+	{ Return the number of freely-selected lancemates this PC can have. }
+begin
+	if HasTalent( PC , NAS_Entourage ) then begin
+		NumLancemateSlots := 2;
+	end else begin
+		NumLancemateSlots := 1;
+	end;
+end;
+
 Function CanJoinLance( GB: GameBoardPtr; PC,NPC: GearPtr ): Boolean;
 	{ Return TRUE if NPC can join the lance right now, or FALSE otherwise. }
 var
 	LMP,ERen: Integer;	{ Lancemate Points needed, Effective Renown }
 	CanJoin: Boolean;
 begin
-	LMP := LancematesPresent( GB ) + 2;
+	LMP := LancematesPresent( GB );
 	ERen := NAttValue( PC^.NA , NAG_CharDescription , NAS_Renowned );
 	if ERen < 15 then ERen := 15;
-	ERen := ERen + CStat( PC , STAT_Charm ) + SkillRank( PC , NAS_Leadership );
+	ERen := ERen + SkillRank( PC , NAS_Leadership );
 	CanJoin := True;
 	if ( NPC = Nil ) or ( NPC^.G <> GG_Character ) then begin
 		CanJoin := False;
@@ -388,7 +398,7 @@ begin
 		CanJoin := False;
 	end else if ( GB <> Nil ) and ( GB^.Scene <> Nil ) and ( NAttValue( NPC^.NA , NAG_QuestInfo , NAS_QuestID ) <> 0 ) and ( NAttValue( FindROot( GB^.Scene )^.NA , NAG_QuestStatus , NAttValue( NPC^.NA , NAG_QuestInfo , NAS_QuestID ) ) >= 0 ) then begin
 		CanJoin := False;
-	end else if LMP > PartyLancemateSlots( PC ) then begin
+	end else if LMP > NumLancemateSlots( PC ) then begin
 		CanJoin := False;
 	end;
 	CanJoinLance := CanJoin;
@@ -3851,39 +3861,68 @@ end;
 
 Procedure ProcessXPV( var Event: String; GB: GameBoardPtr; Source: GearPtr );
 	{ Give some experience points to all PCs and lancemates. }
+	Procedure DoRapidLeveling( NPC: GearPtr; OptRank: Integer );
+		{ Search through this NPC's skills. If you find one that is lower }
+		{ than acceptable for the provided Renown, increase it. }
+	var
+		SpecSkill,Skill,N,SkRank: Integer;
+		CanGetBonus: Array [1..NumSkill] of Boolean;
+	begin
+		{ Locate the pilot. If no pilot, then exit. }
+		NPC := LocatePilot( NPC );
+		if NPC = Nil then Exit;
+
+		{ Determine the specialist skill of this model. }
+		SpecSkill := NAttValue( NPC^.NA , NAG_Personal , NAS_SpecialistSkill );
+
+		{ Count how many skills could use a level-up. }
+		N := 0;
+		for Skill := 1 to NumSkill do begin
+			{ If this is the specialist skill, it can go one higher. }
+			SkRank := SkillRank( NPC , Skill );
+			if Skill = SpecSkill then Dec( SkRank );
+			if SkRank < OptRank then begin
+				Inc( N );
+				CanGetBonus[ Skill ] := True;
+			end else CanGetBonus[ Skill ] := False;
+		end;
+
+		{ If any skills need boosting, select one at random and do that now. }
+		if N > 0 then begin
+			{ Select one skill at random }
+			N := Random( N );
+
+			{ Find it, and give a +1 bonus. }
+			for Skill := 1 to NumSkill do begin
+				if CanGetBonus[ Skill ] then begin
+					Dec( N );
+					if N = -1 then begin
+						AddNAtt( NPC^.NA , NAG_Skill , Skill , 1 );
+						Break;
+					end;
+				end;
+			end;
+		end;
+	end;
 var
-	XP,T,N,Ld: LongInt;
+	XP,T,Renown,OptRank: LongInt;
 	M,PC: GearPtr;
 begin
 	{ Find out how much to give. }
 	XP := ScriptValue( Event , GB , Source );
 
+	{ Locate the PC, and find the Leadership score. }
+	PC := LocatePilot( GG_LocatePC( GB ) );
+	if PC <> Nil then begin
+		Renown := NAttValue( PC^.NA , NAG_CharDescription , NAS_Renowned ) - 20 + SkillRank( PC , NAS_Leadership ) * 3;
+	end else begin
+		Renown := 0;
+	end;
+
+	OptRank := SkillRankForRenown( Renown );
+
 	{ Search for models to give XP to. }
-	{ Do the first pass to count them, the second pass to award them. }
 	if GB <> Nil then begin
-		N := 0;
-		Ld := 0;
-		M := GB^.Meks;
-		while M <> Nil do begin
-			T := NAttValue( M^.NA , NAG_Location , NAS_Team );
-			if ( T = NAV_DefPlayerTeam ) then begin
-				{ At this time, also record the LEADERSHIP rating. }
-				PC := LocatePilot( M );
-				if ( PC <> Nil ) and ( NAttValue( PC^.NA , NAG_Skill , 39 ) > Ld ) then Ld := NAttValue( PC^.NA , NAG_Skill , 39 );
-				if GearActive( M ) then Inc( N );
-			end else if ( T = NAV_LancemateTeam ) and OnTheMap( GB , M ) and GearActive( M ) then begin
-				Inc( N );
-			end;
-			M := M^.Next;
-		end;
-
-		{ Based on the number of characters found, modify the XP award downwards. }
-		if ( N > 1 ) and ( N > (( Ld + 1 ) div 2 ) ) then begin
-			XP := XP div ( N - (( Ld + 1 ) div 2 ) );
-			if XP < 1 then XP := 1;
-		end;
-
-		{ On the second pass actually give the XP. }
 		M := GB^.Meks;
 		while M <> Nil do begin
 			T := NAttValue( M^.NA , NAG_Location , NAS_Team );
@@ -3891,6 +3930,9 @@ begin
 				DoleExperience( M , XP );
 			end else if ( T = NAV_LancemateTeam ) and OnTheMap( GB , M ) then begin
 				DoleExperience( M , XP );
+
+				{ Do the rapid leveling now. }
+				DoRapidLeveling( M , OptRank );
 			end;
 			M := M^.Next;
 		end;
@@ -4267,10 +4309,10 @@ begin
 		CHAT_Message := MsgString( 'JOIN_JOIN' );
 		AddLancemate( GB , I_NPC );
 	end else begin
-		LMP := LancematesPresent( GB ) + 2;
+		LMP := LancematesPresent( GB );
 		if ReactionScore( GB^.Scene , I_PC , I_NPC ) < 25 then begin
 			CHAT_Message := MsgString( 'JOIN_REFUSE' );
-		end else if LMP > PartyLancemateSlots( I_PC ) then begin
+		end else if LMP > NumLancemateSlots( I_PC ) then begin
 			CHAT_Message := MsgString( 'JOIN_NOPOINT' );
 		end else begin
 			CHAT_Message := MsgString( 'JOIN_BUSY' );

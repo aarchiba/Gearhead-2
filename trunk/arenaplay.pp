@@ -315,24 +315,30 @@ begin
 	if M <> Nil then FocusOn( M );
 end;
 
+Function CurrentControlMode( GB: GameBoardPtr ): Integer;
+	{ Return the control mode currently being used. }
+begin
+	{ If no GameBoard or scene found, return NAV_Clock }
+	if ( GB = Nil ) or ( GB^.Scene = Nil ) then begin
+		CurrentControlMode := NAV_ClockMode;
+	end else begin
+		{ We have a scene. Return the stored value. }
+		CurrentControlMode := NAttValue( GB^.Scene^.NA , NAG_SceneData , NAS_PartyControlMethod );
+	end;
+end;
+
+
+
 Procedure CombatMain( Camp: CampaignPtr );
 	{ This is the main meat-and-potatoes combat procedure. }
 	{ Actually, it's pretty simple. All the difficult work is }
 	{ done by the procedures it calls. }
-	{ This function returns 1 if the player won, -1 if the computer }
-	{ won, and 0 if the game ended in a draw. }
+	{ Man, I can't believe how many outdated comments I have lying around here. }
+	{ If you read something which seems prima facae absurd, it's probably a leftover }
+	{ from ages long past. }
 var
-	T: String;
 	FX_String,FX_Desc: String;
 begin
-	{ To start with, do a vision check for everyone, }
-	{ then set up the display. }
-	UniversalVisionCheck( Camp^.GB );
-	CombatDisplay( Camp^.GB );
-
-	{ Set the gameboard's pointer to the campaign. }
-	Camp^.GB^.Camp := Camp;
-
 	{ Get rid of the old AI pathfinding maps. }
 	ClearHotMaps;
 
@@ -353,26 +359,9 @@ begin
 		FX_Desc   := '';
 	end;
 
-	{ Set the STARTGAME trigger, and update all props. }
-	SetTrigger( Camp^.GB , TRIGGER_StartGame );
-	T := 'UPDATE';
-	CheckTriggerAlongPath( T , Camp^.GB , Camp^.GB^.Meks , True );
-
-	{ Add some random monsters, if appropriate. }
-	RestockRandomMonsters( Camp^.GB );
-
-	{ Update the moods. }
-	UpdateMoods( Camp^.GB );
-
-
-	{ Do some graphics initializing, if needed. }
-{$IFNDEF ASCII}
-	InitGraphicsForScene( Camp^.GB );
-{$ENDIF}
-
 	{Start main combat loop here.}
-	{Keep going until there's only one side left.}
-	while KeepPlayingSC( Camp^.GB ) do begin
+	{Keep going until we're told to quit.}
+	while KeepPlayingSC( Camp^.GB ) and ( CurrentControlMode( Camp^.GB ) = NAV_ClockMode ) do begin
 		AdvanceGameClock( Camp^.GB , False );
 
 		{ Once every 10 minutes, roll for random monsters. }
@@ -402,10 +391,6 @@ begin
 
 	{end main combat loop.}
 	end;
-
-	{ Handle the last pending triggers. }
-	SetTrigger( Camp^.GB , TRIGGER_EndGame );
-	HandleTriggers( Camp^.GB );
 end;
 
 Function CanTakeTurn( GB: GameBoardPtr; M: GearPtr ): Boolean;
@@ -477,7 +462,7 @@ begin
 		{ Handle triggers now. }
 		HandleTriggers( Camp^.GB );
 
-	until ( Camp^.GB^.ComTime >= EndTime ) or ( not OnTheMap( Camp^.GB , M ) ) or Destroyed( M ) or ( not KeepPlayingSC( Camp^.GB ) );
+	until ( Camp^.GB^.ComTime >= EndTime ) or ( not OnTheMap( Camp^.GB , M ) ) or Destroyed( M ) or ( not KeepPlayingSC( Camp^.GB ) ) or ( CurrentControlMode( Camp^.GB ) <> NAV_TacticsMode );
 
 	{ At the end, reset the comtime. }
 	Camp^.GB^.ComTime := BeginTime;
@@ -496,19 +481,11 @@ Procedure TacticsMain( Camp: CampaignPtr );
 	{ for that one particular model for a stretch of 60 seconds. }
 	{ PRECONDITION: Camp^.GB^.Scene <> Nil }
 var
-	T: String;
 	M: GearPtr;
 	Team: Integer;
 	FoundPCToAct: Boolean;
 	FX_String,FX_Desc: String;
 begin
-	{ To start with, do a vision check for everyone, }
-	{ then set up the display. }
-	UniversalVisionCheck( Camp^.GB );
-
-	{ Set the gameboard's pointer to the campaign. }
-	Camp^.GB^.Camp := Camp;
-
 	{ Get rid of the old AI pathfinding maps. }
 	ClearHotMaps;
 
@@ -529,22 +506,9 @@ begin
 		FX_Desc   := '';
 	end;
 
-	{ Set the STARTGAME trigger, and update all props. }
-	SetTrigger( Camp^.GB , TRIGGER_StartGame );
-	T := 'UPDATE';
-	CheckTriggerAlongPath( T , Camp^.GB , Camp^.GB^.Meks , True );
-
-	{ Add some random monsters, if appropriate. }
-	RestockRandomMonsters( Camp^.GB );
-
-	{ Do some graphics initializing, if needed. }
-{$IFNDEF ASCII}
-	InitGraphicsForScene( Camp^.GB );
-{$ENDIF}
-
 	{Start main combat loop here.}
-	{Keep going until there's only one side left.}
-	while KeepPlayingSC( Camp^.GB ) do begin
+	{Keep going until we're told to quit.}
+	while KeepPlayingSC( Camp^.GB ) and ( CurrentControlMode( Camp^.GB ) = NAV_TacticsMode ) do begin
 
 		HandleTriggers( Camp^.GB );
 
@@ -565,10 +529,10 @@ begin
 				end;
 				M := M^.Next;
 			end;
-		until ( not FoundPCToAct );
+		until ( not FoundPCToAct ) or ( CurrentControlMode( Camp^.GB ) <> NAV_TacticsMode );
 
 		{ Handle the enemy mecha next, as long as the game hasn't been quit. }
-		if KeepPlayingSC( Camp^.GB ) then begin
+		if KeepPlayingSC( Camp^.GB ) and ( CurrentControlMode( Camp^.GB ) = NAV_TacticsMode ) then begin
 			{ Handle NPC mecha }
 			M := Camp^.GB^.Meks;
 			while M <> Nil do begin
@@ -596,10 +560,6 @@ begin
 			if ( ( Camp^.GB^.ComTime div TacticsRoundLength ) mod 10 ) = 0 then RestockRandomMonsters( Camp^.GB );
 		end;
 	end;
-
-	{ Handle the last pending triggers. }
-	SetTrigger( Camp^.GB , TRIGGER_EndGame );
-	HandleTriggers( Camp^.GB );
 end;
 
 
@@ -1167,23 +1127,68 @@ Function RealScenePlayer( Camp: CampaignPtr ; Scene: GearPtr; var PCForces: Gear
 	{ the SCENE gear be defined. }
 var
 	N: Integer;
+	T: String;
 begin
 	DeployJJang( Camp , Scene , PCForces );
 
 	{ Once everything is deployed, save the campaign. }
 	if DoAutoSave then PCSaveCampaign( Camp , GG_LocatePC( Camp^.GB ) , False );
 
-	if ( Camp^.Source <> Nil ) and ( Camp^.Source^.G = GG_Adventure ) then begin
-		if Camp^.Source^.S = GS_ArenaCampaign then begin
-			if Arena_Use_Tactics then TacticsMain( Camp )
-			else CombatMain( Camp );
+	if CurrentControlMode( Camp^.GB ) = 0 then begin
+		if ( Camp^.Source <> Nil ) and ( Camp^.Source^.G = GG_Adventure ) then begin
+			if Camp^.Source^.S = GS_ArenaCampaign then begin
+				if Arena_Use_Tactics then SetNAtt( Camp^.GB^.Scene^.NA , NAG_SceneData , NAS_PartyControlMethod , NAV_TacticsMode )
+				else SetNAtt( Camp^.GB^.Scene^.NA , NAG_SceneData , NAS_PartyControlMethod , NAV_ClockMode );
+			end else begin
+				if RPG_Use_Tactics then SetNAtt( Camp^.GB^.Scene^.NA , NAG_SceneData , NAS_PartyControlMethod , NAV_TacticsMode )
+				else SetNAtt( Camp^.GB^.Scene^.NA , NAG_SceneData , NAS_PartyControlMethod , NAV_ClockMode );
+			end;
 		end else begin
-			if RPG_Use_Tactics then TacticsMain( Camp )
-			else CombatMain( Camp );
+			SetNAtt( Camp^.GB^.Scene^.NA , NAG_SceneData , NAS_PartyControlMethod , NAV_ClockMode );
 		end;
-	end else begin
-		CombatMain( Camp );
 	end;
+
+	{ Perform some initialization. }
+	{ To start with, do a vision check for everyone, }
+	{ then set up the display. }
+	UniversalVisionCheck( Camp^.GB );
+	CombatDisplay( Camp^.GB );
+
+	{ Set the gameboard's pointer to the campaign. }
+	Camp^.GB^.Camp := Camp;
+
+	{ Set the STARTGAME trigger, and update all props. }
+	SetTrigger( Camp^.GB , TRIGGER_StartGame );
+	T := 'UPDATE';
+	CheckTriggerAlongPath( T , Camp^.GB , Camp^.GB^.Meks , True );
+
+	{ Add some random monsters, if appropriate. }
+	RestockRandomMonsters( Camp^.GB );
+
+	{ Update the moods. }
+	UpdateMoods( Camp^.GB );
+
+	{ Do some graphics initializing, if needed. }
+{$IFNDEF ASCII}
+	InitGraphicsForScene( Camp^.GB );
+{$ENDIF}
+
+
+	{ Now that everything is set, keep playing until we get the signal to quit. }
+	Repeat
+		if CurrentControlMode( Camp^.GB ) = NAV_ClockMode then begin
+			CombatMain( Camp );
+		end else begin
+			TacticsMain( Camp );
+		end;
+	until not KeepPlayingSC( Camp^.GB );
+
+	{ Handle the last pending triggers. }
+	SetTrigger( Camp^.GB , TRIGGER_EndGame );
+	HandleTriggers( Camp^.GB );
+
+	{ Clear the control mode. }
+	if ( Camp^.GB <> Nil ) and ( Camp^.GB^.Scene <> Nil ) then SetNAtt( Camp^.GB^.Scene^.NA , NAG_SceneData , NAS_PartyControlMethod , 0 );
 
 	PCForces := DelinkJJang( Camp^.gb );
 
