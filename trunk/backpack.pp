@@ -50,8 +50,6 @@ Procedure SelectColors( M: GearPtr; Redrawer: RedrawProcedureType );
 Procedure SelectSprite( M: GearPtr; Redrawer: RedrawProcedureType );
 {$ENDIF}
 
-Function SelectRobotParts( GB: GameBoardPtr; PC: GearPtr ): GearPtr;
-
 Procedure DoFieldRepair( GB: GameBoardPtr; PC , Item: GearPtr; Skill: Integer );
 
 Function Handless( Mek: GearPtr ): Boolean;
@@ -234,12 +232,6 @@ begin
 	DrawGetItemBorder;
 end;
 
-
-Procedure RobotPartRedraw;
-	{ Redraw procedure for the robot part selector. }
-begin
-	if BP_GB <> Nil then CombatDisplay( BP_GB );
-end;
 
 Procedure ThisWargearRedraw;
 	{ A specific item was selected, and its location stored in BP_Source. }
@@ -447,56 +439,6 @@ begin
 	DisposeRPGMenu( RPM );
 end;
 {$ENDIF}
-
-Function SelectRobotParts( GB: GameBoardPtr; PC: GearPtr ): GearPtr;
-	{ Select up to 10 parts to build a robot with. }
-	{ Delink them from the INVENTORY and return them as a list. }
-var
-	Ingredients,Part,P2: GearPtr;
-	RPM: RPGMenuPtr;
-	N: Integer;
-begin
-	BP_GB := GB;
-
-	Ingredients := Nil;
-	repeat
-		RPM := CreateRPGMenu( MenuItem , MenuSelect , ZONE_InvMenu );
-		RPM^.Mode := RPMNoCleanup;
-
-		Part := PC^.InvCom;
-		N := 1;
-		while Part <> Nil do begin
-			if ( Part^.G = GG_Weapon ) or ( Part^.G = GG_Shield ) or ( Part^.G = GG_ExArmor ) or ( Part^.G = GG_Sensor ) then begin
-				AddRPGMenuItem( RPM , GearName( Part ) , N );
-			end else if ( Part^.G = GG_RepairFuel ) and ( ( Part^.S = 15 ) or ( Part^.S = 23 ) ) then begin
-				AddRPGMenuItem( RPM , GearName( Part ) , N );
-			end;
-			Part := Part^.Next;
-			Inc( N );
-		end;
-		RPMSortAlpha( RPM );
-		AlphaKeyMenu( RPM );
-		AddRPGMenuItem( RPM , MsgString( 'EXIT' ) , -1 );
-
-		N := SelectMenu( RPM , @RobotPartRedraw );
-		DisposeRPGMenu( RPM );
-
-		if N > -1 then begin
-			Part := RetrieveGearSib( PC^.InvCom , N );
-			DelinkGear( PC^.InvCom , Part );
-			while Part^.InvCom <> Nil do begin
-				P2 := Part^.InvCom;
-				DelinkGear( Part^.InvCom , P2 );
-				InsertInvCom( PC , P2 );
-			end;
-			AppendGear( Ingredients , Part );
-		end;
-
-	until ( NumSiblingGears( Ingredients ) > 9 ) or ( N = -1 );
-
-	SelectRobotParts := Ingredients;
-end;
-
 
 Procedure AddRepairOptions( RPM: RPGMenuPtr; PC,Item: GearPtr );
 	{ Check the object in question, then add options to the }

@@ -37,7 +37,7 @@ Function WorldMapMain( Camp: CampaignPtr ): Integer;
 implementation
 
 uses ability,action,aibrain,arenacfe,arenascript,backpack,
-     effects,gearutil,targetui,ghchars,gearparser,
+     effects,gearutil,targetui,ghchars,gearparser,robotics,
      ghprop,ghswag,ghweapon,interact,menugear,movement,
      playwright,rpgdice,skilluse,texutil,ui4gh,grabgear,
      narration,description,ghintrinsic,training,ghsensor,
@@ -795,63 +795,6 @@ begin
 		DoFieldRepair( GB , PC , FindRoot( Target ) , Skill );
 	end else begin
 		if not ActivatePropAtSpot( GB , PC , P.X , P.Y , 'CLUE' + BStr( Skill ) ) then DialogMsg( MsgString( 'PCREPAIR_NoDamageDone' ) );
-	end;
-end;
-
-
-Procedure BuildRobot( GB: GameBoardPtr; PC: GearPtr );
-	{ Start performing on a musical instrument. First this procedure }
-	{ will seek the best instrument currently held, then it will set }
-	{ up the continuous action. }
-var
-	Ingredients,Robot: GearPtr;
-	T: Integer;
-begin
-	if CurrentMental( PC ) < 1 then begin
-		DialogMsg( MsgString( 'BUILD_ROBOT_TOO_TIRED' ) );
-		Exit;
-	end else if not IsSafeArea( GB ) then begin
-		DialogMsg( MsgString( 'BUILD_ROBOT_NOT_SAFE' ) );
-		Exit;
-	end;
-
-	PC := LocatePilot( PC );
-	DialogMsg( MsgString( 'BUILD_ROBOT_START' ) );
-	Ingredients := SelectRobotParts( GB , PC );
-
-	CombatDisplay( GB );
-
-
-
-	{ If no ingredients were selected, no robot will be built. }
-	if Ingredients = Nil then begin
-		DialogMsg( MsgString( 'BUILD_ROBOT_NO_PARTS' ) );
-		Exit;
-	end;
-
-	Robot := UseRobotics( GB , PC , Ingredients );
-	if Robot = Nil then begin
-		DialogMsg( MsgString( 'BUILD_ROBOT_FAILED' ) );
-	end else begin
-		SetNAtt( Robot^.NA , NAG_Location , NAS_Team , NAV_LancemateTeam );
-		SetNAtt( Robot^.NA , NAG_Relationship , 0 , NAV_ArchAlly );
-		SetNAtt( Robot^.NA , NAG_CharDescription , NAS_CharType , NAV_CTLancemate );
-		DeployGear( GB , Robot , True );
-
-		if PetsPresent( GB , True ) > PartyRobotSlots( PC ) then RemoveLancemate( GB , Robot );
-
-		if NAttValue( Robot^.NA , NAG_Personal , NAS_CID ) = 0 then begin
-			DialogMsg( ReplaceHash( MsgString( 'BUILD_ROBOT_SUCCESS' ) , GearName( Robot ) ) );
-		end else begin
-			DialogMsg( ReplaceHash( MsgString( 'BUILD_ROBOT_SENTIENT' ) , GearName( Robot ) ) );
-		end;
-
-		{ Give the PC a rundown on the new robot's skills. }
-		for t := 1 to Num_Robot_Skill do begin
-			if NAttValue( Robot^.NA , NAG_Skill , Robot_Skill[ T ] ) > 0 then begin
-				DialogMsg( ReplaceHash( ReplaceHash( MsgString( 'BUILD_ROBOT_SKILL' ) , GearName( Robot ) ) , MsgString( 'SKILLNAME_' + BStr( Robot_Skill[ t ] ) ) ) );
-			end;
-		end;
 	end;
 end;
 
