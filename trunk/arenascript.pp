@@ -96,6 +96,7 @@ var
 
 
 Procedure SetLancemateOrders( GB: GameBoardPtr );
+Function NumLancemateSlots( PC: GearPtr ): Integer;
 
 Procedure BrowseMemoType( GB: GameBoardPtr; Tag: String );
 

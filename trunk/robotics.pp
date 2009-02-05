@@ -299,12 +299,13 @@ begin
 
 	{ Create the menu. Determine which forms the PC can choose from. }
 	Robotics_Menu := CreateRPGMenu( MenuItem , MenuSelect , ZONE_InvMenu );
+	Robotics_Instructions := MsgString( 'Robotics_SelectForm_Directions' );
 
 	N := 1;
 	Rob := Robotic_Forms;
 
 	while Rob <> Nil do begin
-		if ( BuildPointsNeeded( Rob ) > BP ) and ( ArmorPointsNeeded( Rob ) > AP ) and ( ComputerPointsNeeded( Rob ) > CP ) and ( PowerPointsNeeded( Rob ) > PP ) and ( R_SkillLevelNeeded( Rob ) > SkRank ) then begin
+		if ( BuildPointsNeeded( Rob ) <= BP ) and ( ArmorPointsNeeded( Rob ) <= AP ) and ( ComputerPointsNeeded( Rob ) <= CP ) and ( PowerPointsNeeded( Rob ) <= PP ) and ( R_SkillLevelNeeded( Rob ) <= SkRank ) then begin
 			{ This robot can be built. We have the technology. }
 			AddRPGMenuItem( Robotics_Menu , GearName( Rob ) , N );
 		end;
@@ -416,7 +417,7 @@ begin
 		if SkRoll <= Form^.Stat[ T ] then begin
 			BP := BP - ( Form^.Stat[ T ] - SkRoll ) * 15;
 		end else if ( SkRoll > 10 ) and ( ( T <> STAT_Charm ) or ( Form^.Stat[ T ] > 1 ) ) then begin
-			Form^.Stat[ T ] := Form^.Stat[ T ] + ( SkRoll - 9 ) div 2;
+			Form^.Stat[ T ] := Form^.Stat[ T ] + Random( ( SkRoll - 7 ) div 2 );
 		end;
 	end;
 
@@ -431,7 +432,13 @@ begin
 		{ Record ArmorVal before spending AP. }
 		ArmorVal := AP div 3 + 1;
 		while AP > 0 do begin
-
+			if Random( 3 ) = 1 then begin
+				AddNAtt( Form^.NA , NAG_Skill , NAS_Vitality , 1 );
+				AP := AP - ( NAttValue( Form^.NA , NAG_Skill , NAS_Vitality ) + 1 );
+			end else begin
+				Inc( Form^.Stat[ STAT_Body ] );
+				AP := AP - 5;
+			end;
 		end;
 
 
