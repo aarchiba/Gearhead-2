@@ -163,6 +163,20 @@ begin
 	GameMsg( Robotics_Info , ZONE_EqpMenu , InfoHilight );
 end;
 
+Function IsGoodRobotPart( Part: GearPtr ): Boolean;
+	{ Return TRUE if this part can be installed in a robot, or FALSE otherwise. }
+begin
+	if ( Part^.G = GG_Weapon ) or ( Part^.G = GG_Shield ) or ( Part^.G = GG_ExArmor ) or ( Part^.G = GG_Computer ) or ( Part^.G = GG_Powersource ) then begin
+		IsGoodRobotPart := True;
+	end else if ( Part^.G = GG_RepairFuel ) then begin
+		IsGoodRobotPart := ( ( Part^.S = 15 ) or ( Part^.S = 23 ) );
+	end else if Part^.G = GG_Harness then begin
+		IsGoodRobotPart := ( R_ComputerPoints( Part^.SubCom ) > 0 ) or ( R_PowerPoints( Part^.SubCom ) > 0 );
+	end else begin
+		IsGoodRobotPart := False;
+	end;
+end;
+
 Function SelectRobotParts( GB: GameBoardPtr; PC: GearPtr ): GearPtr;
 	{ Select up to 10 parts to build a robot with. }
 	{ Delink them from the INVENTORY and return them as a list. }
@@ -186,9 +200,7 @@ begin
 		Part := PC^.InvCom;
 		N := 1;
 		while Part <> Nil do begin
-			if ( Part^.G = GG_Weapon ) or ( Part^.G = GG_Shield ) or ( Part^.G = GG_ExArmor ) or ( Part^.G = GG_Computer ) or ( Part^.G = GG_Powersource ) then begin
-				AddRPGMenuItem( Robotics_Menu , GearName( Part ) , N );
-			end else if ( Part^.G = GG_RepairFuel ) and ( ( Part^.S = 15 ) or ( Part^.S = 23 ) ) then begin
+			if IsGoodRobotPart( Part ) then begin
 				AddRPGMenuItem( Robotics_Menu , GearName( Part ) , N );
 			end;
 			Part := Part^.Next;
@@ -428,19 +440,47 @@ begin
 
 
 		{ Spend any remaining BP, AP, CP, and PP on perks. }
-
 		{ Record ArmorVal before spending AP. }
-		ArmorVal := AP div 3 + 1;
+		ArmorVal := AP div 5 + 1;
 		while AP > 0 do begin
 			if Random( 3 ) = 1 then begin
 				AddNAtt( Form^.NA , NAG_Skill , NAS_Vitality , 1 );
-				AP := AP - ( NAttValue( Form^.NA , NAG_Skill , NAS_Vitality ) + 1 );
+				AP := AP - ( NAttValue( Form^.NA , NAG_Skill , NAS_Vitality ) + 2 );
 			end else begin
 				Inc( Form^.Stat[ STAT_Body ] );
 				AP := AP - 5;
 			end;
 		end;
 
+		while CP > 0 do begin
+			if Random( 10 ) = 1 then begin
+				{ Add a new skill. }
+				AddNAtt( Form^.NA , NAG_Skill , Robot_Skill[ Random( Num_RObot_Skill ) + 1 ] , 1 );
+				CP := CP - 2;
+			end else if Random( 3 ) = 1 then begin
+				Inc( Form^.Stat[ STAT_Perception ] );
+				CP := CP - 3;
+			end else if Random( 2 ) = 1 then begin
+				Inc( Form^.Stat[ STAT_Craft ] );
+				CP := CP - 3;
+			end else begin
+				Inc( Form^.Stat[ STAT_Knowledge ] );
+				CP := CP - 3;
+			end;
+		end;
+
+		while PP > 0 do begin
+			if Random( 3 ) = 1 then begin
+				Inc( Form^.Stat[ STAT_Reflexes ] );
+				PP := PP - 5;
+			end else if Random( 2 ) = 1 then begin
+				Inc( Form^.Stat[ STAT_Speed ] );
+				PP := PP - 4;
+			end else begin
+				Inc( Form^.Stat[ STAT_Ego ] );
+				PP := PP - 4;
+			end;
+		end;
 
 		{ Initialize the limbs- set size and armor value. }
 		Part := Form^.SubCom;
