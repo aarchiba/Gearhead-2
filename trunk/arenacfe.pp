@@ -1073,12 +1073,16 @@ end;
 
 Procedure DoTaunt( GB: GameBoardPtr; Attacker,Target: GearPtr );
 	{ ATTACKER is going to taunt TARGET, whose mother probably smells of elderberries. }
+const
+	MinTauntTarget = 5;
 var
-	AtSkill,AtRoll,DefRoll,CounterRoll: Integer;
+	AtRoll,DefRoll,CounterRoll: Integer;
 	msg: String;
-	T: Integer;
 begin
+	{ Make the defense roll. Since most characters don't have the Taunt skill }
+	{ there's a minimum target number of 5. }
 	DefRoll := SkillRoll( GB , Target , NAS_Resistance , 0 , 0 , False , True );
+	if DefRoll < MinTauntTarget then DefRoll := MinTauntTarget;
 	AddMentalDown( Attacker , 1 );
 
 	AtRoll :=  SkillRoll( GB , Attacker , NAS_Taunt , DefRoll , 0 , False , True );
@@ -1098,7 +1102,9 @@ begin
 		end;
 
 		{ Countering a verbal attack sets the Target's recharge. }
-		SetNAtt( Target^.NA , NAG_EpisodeData , NAS_ChatterRecharge , GB^.ComTime + 91 + Random( 120 ) )
+		{ It also makes sure that the attacker won't try a taunt again for 5 minutes. }
+		SetNAtt( Target^.NA , NAG_EpisodeData , NAS_ChatterRecharge , GB^.ComTime + 91 + Random( 120 ) );
+		SetNAtt( Attacker^.NA , NAG_EpisodeData , NAS_ChatterRecharge , GB^.ComTime + 300 + Random( 120 ) )
 
 	end else if AtRoll > DefRoll then begin
 		msg := GetTauntString( Target , 'CHAT_VA.SUCCESS' );
@@ -1115,6 +1121,8 @@ begin
 	end else begin
 		msg := GetTauntString( Target , 'CHAT_VA.FAILURE' );
 		Monologue( GB , Target , msg );
+		{ A failure delays the next taunt for at least five minutes. }
+		SetNAtt( Attacker^.NA , NAG_EpisodeData , NAS_ChatterRecharge , GB^.ComTime + 300 + Random( 120 ) )
 	end;
 end;
 
@@ -1142,7 +1150,6 @@ Procedure DoVerbalAttack( GB: GameBoardPtr; Attacker,Target: GearPtr );
 var
 	AtSkill,AtRoll,DefRoll: Integer;
 	msg: String;
-	T: Integer;
 begin
 	if ( Target^.G = GG_Character ) then begin
 		DefRoll := SkillRoll( GB , Target , NAS_Resistance , 0 , 0 , False , True );

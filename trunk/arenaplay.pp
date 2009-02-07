@@ -202,13 +202,15 @@ begin
 	if CurrentMental( Mek ) > 1 then begin
 		Target := FindTauntTarget;
 		if Target <> Nil then begin
+			{ Set the recharge before doing the taunt, since the DoTaunt procedure }
+			{ may set a different recharge time depending on what happens there. }
+			SetNAtt( Mek^.NA , NAG_EpisodeData , NAS_ChatterRecharge , GB^.ComTime + 121 + Random( 180 ) );
 			DoTaunt( GB , Mek , Target );
-			SetNAtt( Mek^.NA , NAG_EpisodeData , NAS_ChatterRecharge , GB^.ComTime + 121 + Random( 180 ) )
 		end else begin
-			SetNAtt( Mek^.NA , NAG_EpisodeData , NAS_ChatterRecharge , GB^.ComTime + 1 + Random( 30 ) )
+			SetNAtt( Mek^.NA , NAG_EpisodeData , NAS_ChatterRecharge , GB^.ComTime + 1 + Random( 30 ) );
 		end;
 	end else begin
-		SetNAtt( Mek^.NA , NAG_EpisodeData , NAS_ChatterRecharge , GB^.ComTime + 61 + Random( 120 ) )
+		SetNAtt( Mek^.NA , NAG_EpisodeData , NAS_ChatterRecharge , GB^.ComTime + 61 + Random( 120 ) );
 	end;
 end;
 

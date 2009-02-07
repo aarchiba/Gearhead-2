@@ -539,7 +539,7 @@ begin
 	MainPersona := SeekCurrentLevelGear( MainPlot^.SubCom , GG_Persona , MPIndex );
 	if MainPersona = Nil then begin
 		{ No main persona- create one. }
-		MainPersona := LoadNewSTC( 'PERSONA_BLANK' );
+		MainPersona := LoadNewSTC( 'PERSONA_REVERT' );
 		InsertSubCom( MainPlot , MainPersona );
 		SetSAtt( MainPersona^.SA , 'SPECIAL <' + SAttValue( Persona^.SA , 'SPECIAL' ) + '>' );
 		{ Store the PlotID of this layer, since it's the first to provide a persona for this NPC. }

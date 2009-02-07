@@ -135,7 +135,6 @@ begin
 	R_PowerPoints := BP;
 end;
 
-
 Procedure RobotPartRedraw;
 	{ Redraw procedure for the robot part selector. }
 var
@@ -191,10 +190,10 @@ begin
 	repeat
 		Robotics_Menu := CreateRPGMenu( MenuItem , MenuSelect , ZONE_InvMenu );
 
-		Robotics_Info := 'Build Points: ' + BStr( R_BuildPoints( Robotics_Parts ) ) + ' ' + #13 +
-			' Armor Points: ' + BStr( R_ArmorPoints( Robotics_Parts ) ) + ' ' + #13 +
-			' Computer Points: ' + BStr( R_ComputerPoints( Robotics_Parts ) ) + ' ' + #13 +
-			' Power Points: ' + BStr( R_PowerPoints( Robotics_Parts ) );
+		Robotics_Info := MsgString( 'ROBOTICS_BP' ) + BStr( R_BuildPoints( Robotics_Parts ) ) + #13 + ' ' +
+			MsgString( 'ROBOTICS_AP' ) + BStr( R_ArmorPoints( Robotics_Parts ) ) + #13 + ' ' +
+			MsgString( 'ROBOTICS_CP' ) + BStr( R_ComputerPoints( Robotics_Parts ) ) + #13 + ' ' +
+			MsgString( 'ROBOTICS_PP' ) + BStr( R_PowerPoints( Robotics_Parts ) );
 		Robotics_Source := PC^.InvCom;
 
 		Part := PC^.InvCom;

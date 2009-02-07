@@ -88,6 +88,7 @@ var
 	IntMenu: RPGMenuPtr;	{ Interaction Menu }
 	I_PC,I_NPC: GearPtr;	{ Pointers to the PC & NPC Chara gears }
 	I_Rumors: SAttPtr;	{ List of rumors. }
+	I_Persona: GearPtr;	{ The conversation currently being used. }
 
 	Grabbed_Gear: GearPtr;	{ This gear can be acted upon by }
 				{ generic commands. }
@@ -115,7 +116,7 @@ Procedure InvokeEvent( Event: String; GB: GameBoardPtr; Source: GearPtr; var Tri
 Procedure AddLancemate( GB: GameBoardPtr; NPC: GearPtr );
 Procedure RemoveLancemate( GB: GameBoardPtr; NPC: GearPtr );
 
-Procedure HandleInteract( GB: GameBoardPtr; PC,NPC,Interact: GearPtr );
+Procedure HandleInteract( GB: GameBoardPtr; PC,NPC,Persona: GearPtr );
 Function TriggerGearScript( GB: GameBoardPtr; Source: GearPtr; var Trigger: String ): Boolean;
 Function CheckTriggerAlongPath( var T: String; GB: GameBoardPtr; Plot: GearPtr; CheckAll: Boolean ): Boolean;
 Procedure HandleTriggers( GB: GameBoardPtr );
@@ -2646,6 +2647,39 @@ begin
 	end;
 end;
 
+Procedure RevertPersona( var Event: String; GB: GameBoardPtr; var Source: GearPtr );
+	{ We don't wanna use this persona anymore. Attempt to locate }
+	{ I_NPC's original persona, and start the GREETING event. }
+var
+	Adv,Persona2: GearPtr;
+begin
+	{ Error check- if there's no defined NPC, }
+	{ we can't very well be expected to locate a persona. }
+	if ( I_NPC = Nil ) or ( Source = Nil ) or ( Source^.G <> GG_Persona ) then begin
+		Event := '';
+		Exit;
+	end;
+
+	{ Locate the adventure and hopefully the persona. }
+	Adv := GG_LocateAdventure( GB , Source );
+	if Adv <> Nil then begin
+		Persona2 := SeekGear( Adv , GG_Persona , NAttValue( I_NPC^.NA , NAG_Personal , NAS_CID ) , False );
+
+		if ( Persona2 <> Nil ) and ( Persona2 <> Source ) then begin
+			{ Change the event script to the requested line. }
+			Event := AS_GetString( Persona2 , 'GREETING' );
+			I_Persona := Persona2;
+			Source := Persona2;
+		end else begin
+			{ A different persona wasn't found. Do nothing. }
+			Event := 'NewChat SayAnything';
+		end;
+	end else begin
+		{ The adventure wasn't found. Do nothing. }
+		Event := 'NewChat SayAnything';
+	end;
+end;
+
 Procedure ProcessGoto( var Event: String; Source: GearPtr );
 	{ Attempt to jump to a different line of the script. }
 	{ If no line label is provided, or if the label can't be }
@@ -4188,6 +4222,7 @@ begin
 		else if cmd = 'ACCEPT' then ProcessAccept( Trigger )
 		else if cmd = 'NEWCHAT' then ProcessNewChat( GB )
 		else if cmd = 'ENDCHAT' then ProcessEndChat
+		else if cmd = 'REVERTPERSONA' then RevertPersona( Event , GB , Source )
 		else if cmd = 'GOTO' then ProcessGoto( Event , Source )
 		else if cmd = 'ADDCHAT' then ProcessAddChat( Event , GB , Source )
 		else if cmd = 'SEEKTERR' then ProcessSeekTerr( Event , GB , Source )
@@ -4372,7 +4407,7 @@ begin
 	end;
 end;
 
-Procedure HandleInteract( GB: GameBoardPtr; PC,NPC,Interact: GearPtr );
+Procedure HandleInteract( GB: GameBoardPtr; PC,NPC,Persona: GearPtr );
 	{ The player has just entered a conversation. }
 	{ HOW THIS WORKS: The interaction menu is built by an ASL script. }
 	{ the player selects one of the provided responses, which will }
@@ -4390,13 +4425,17 @@ begin
 
 	{ If this persona has been marked as "NoEscape", make sure the PC }
 	{ can't quit the conversation just by pressing ESC. }
-	if ( Interact <> Nil ) and ASTringHasBString( SAttValue( Interact^.SA , 'SPECIAL' ) , 'NOESCAPE' ) then IntMenu^.Mode := RPMNoCancel;
+	if ( Persona <> Nil ) and ASTringHasBString( SAttValue( Persona^.SA , 'SPECIAL' ) , 'NOESCAPE' ) then IntMenu^.Mode := RPMNoCancel;
 
 	{ Initialize interaction variables. }
 	I_PC := PC;
 	I_NPC := NPC;
 	I_Rumors := CreateRumorList( GB , PC , NPC );
 	ASRD_GameBoard := GB;
+
+	{ Since the conversation can be switched by REVERTPERSONA and maybe some other }
+	{ effects, from this point onwards use I_PERSONA rather than PERSONA. }
+	I_Persona := Persona;
 
 	{ Add a divider to the skill roll history. }
 	SkillCommentDivider;
@@ -4417,21 +4456,21 @@ begin
 	if N > 12 then FreeRumors := FreeRumors + Random( N - 11 );
 
 	{ Invoke the greeting event. }
-	if ( NAttValue( NPC^.NA , NAG_Location , NAS_Team ) = NAV_LancemateTeam ) and ( NAttValue( NPC^.NA , NAG_Chardescription , NAS_CharType ) <> NAV_TempLancemate ) and (( Interact = Nil ) or (( Interact^.Parent <> Nil ) and ( Interact^.Parent^.G = GG_Scene ))) then begin
+	if ( NAttValue( NPC^.NA , NAG_Location , NAS_Team ) = NAV_LancemateTeam ) and ( NAttValue( NPC^.NA , NAG_Chardescription , NAS_CharType ) <> NAV_TempLancemate ) and (( Persona = Nil ) or (( Persona^.Parent <> Nil ) and ( Persona^.Parent^.G = GG_Scene ))) then begin
 		{ Lancemates won't use their local personas while part of the lance. }
 		{ Hence the mother of all conditionals above... }
-		Interact := lancemate_tactics_persona;
+		I_PERSONA := lancemate_tactics_persona;
 	end;
 
-	if Interact <> Nil then begin
-		IntScr := AS_GetString( Interact , 'GREETING' );
+	if I_Persona <> Nil then begin
+		IntScr := AS_GetString( I_Persona , 'GREETING' );
 	end else begin
 		{ If there is no standard greeting, set the event to }
 		{ build the default interaction menu. }
 		IntScr := 'SAYANYTHING NEWCHAT';
 	end;
 	T := 'Greeting';
-	InvokeEvent( IntScr , GB , Interact , T );
+	InvokeEvent( IntScr , GB , I_Persona , T );
 
 	repeat
 		{ Print the NPC description. }
@@ -4452,8 +4491,8 @@ begin
 			{ One of the placed options have been triggered. }
 			{ Attempt to find the appropriate script to }
 			{ invoke. }
-			IntScr := AS_GetString( Interact , 'RESULT' + BStr( N ) );
-			InvokeEvent( IntScr , GB , Interact , T );
+			IntScr := AS_GetString( I_Persona , 'RESULT' + BStr( N ) );
+			InvokeEvent( IntScr , GB , I_Persona , T );
 
 		{ It wasn't a scripted response chosen. }
 		{ Handle one of the standard options. }
@@ -4489,12 +4528,11 @@ begin
 		AddReputation( PC , 3 , 1 );
 	end;
 
-	{ Check - If this persona gear is the child of a gear whose type }
-	{ is GG_ABSOLUTELYNOTHING, chances are that it used to be a plot }
-	{ but it's been advanced by the conversation. Delete it. }
-	if Interact <> Nil then begin
-		Interact := FindRoot( Interact );
-		PruneNothings( Interact );
+	{ After the conversation is over, prune any ABSOLUTELYNOTHINGs that may }
+	{ have popped up. }
+	if Persona <> Nil then begin
+		Persona := FindRoot( Persona );
+		PruneNothings( Persona );
 	end;
 
 	{ Set the ReTalk value. }

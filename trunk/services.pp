@@ -53,7 +53,6 @@ Function ReloadMasterCost( M: GearPtr; ReloadGeneralInv: Boolean ): LongInt;
 Procedure DoReloadMaster( M: GearPtr; ReloadGeneralInv: Boolean );
 
 
-procedure PurchaseGear( GB: GameBoardPtr; PC,NPC,Part: GearPtr );
 Procedure OpenShop( GB: GameBoardPtr; PC,NPC: GearPtr; Stuff: String );
 Procedure OpenSchool( GB: GameBoardPtr; PC,NPC: GearPtr; Stuff: String );
 Procedure ExpressDelivery( GB: GameBoardPtr; PC,NPC: GearPtr );
@@ -206,10 +205,101 @@ begin
 	end;
 end;
 
-procedure PurchaseGear( GB: GameBoardPtr; PC,NPC,Part: GearPtr );
-	{ The unit may or may not want to buy PART. }
+Function ShopTolerance( GB: GameBoardPtr; NPC: GearPtr ): Integer;
+	{ Tolerance measures the legality/illegality of items. This function }
+	{ returns the maximum legality level stocked by this shopkeeper. }
+var
+	Scene: GearPtr;
+	Tolerance: Integer;
+begin
+	if ( GB <> Nil ) and ( GB^.Scene <> Nil ) then begin
+		Scene := FindRootScene( GB , GB^.Scene );
+		if AStringHasBSTring( SAttValue( GB^.Scene^.SA , 'SPECIAL' ) , 'UNREGULATED' ) then begin
+			Tolerance := NAttValue( GB^.Scene^.NA , NAG_GearOps , NAS_Legality );
+		end else begin
+			Tolerance := NAttValue( Scene^.NA , NAG_GearOps , NAS_Legality );
+		end;
+
+		{ Criminal shopkeepers have a higher than normal tolerance. }
+		if NAttValue( NPC^.NA , NAG_CharDescription , NAS_Lawful ) < 0 then begin
+			Tolerance := Tolerance - ( NAttValue( NPC^.NA , NAG_CharDescription , NAS_Lawful ) div 2 ) + 5;
+		end;
+	end else begin
+		Tolerance := 0;
+	end;
+	ShopTolerance := Tolerance;
+end;
+
+procedure BuyAmmoClips( GB: GameBoardPtr; PC,NPC,Weapon: GearPtr );
+	{ Allow spare clips to be purchased for this weapon. }
+	{ If possible, add some special clip types. }
+var
+	AmmoList: GearPtr;
+	Procedure AddAmmoToList( Proto: GearPtr );
+		{ Create a clone of this ammunition and add it to the list. }
+		{ If appropriate, add some ammo variants. We will assume for the }
+		{ purpose of this procedure that no item will ever have multiple }
+		{ ammo clips of the same type; i.e. you would not have a 5mm rifle }
+		{ which also had an integrated 5mm rifle built into it. If you }
+		{ design a weapon like that you are a truly terrible person, and }
+		{ I wash my hands of you. }
+	var
+		A: GearPtr;
+	begin
+		A := CloneGear( Proto );
+		AppendGear( AmmoList , A );
+	end;
+	Procedure LookForAmmo( LList: GearPtr );
+		{ Search along this linked list looking for ammo. If you find }
+		{ any, copy it and add it to the list. Then, add any ammo varieties }
+		{ allowed by the shopkeeper's skill level and tolerance. }
+	begin
+		while LList <> Nil do begin
+			if LList^.G = GG_Ammo then begin
+				AddAmmoToList( LList );
+			end;
+
+			LookForAmmo( LList^.SubCom );
+			LList := LList^.Next;
+		end;
+	end;
+var
+	ShopMenu: RPGMenuPtr;
+	Ammo: GearPtr;
+	N: Integer;
+begin
+	{ Step One: Create the list of ammo. }
+	AmmoList := Nil;
+	LookForAmmo( Weapon^.SubCom );
+
+	{ Step Two: Create the shopping menu. }
+	ShopMenu := CreateRPGMenu( MenuItem , MenuSelect , ZONE_ShopMenu );
+	N := 1;
+	Ammo := AmmoList;
+	while Ammo <> Nil do begin
+		AddRPGMenuItem( ShopMenu , GearName( Ammo ) + ' ($' + BStr( GearCost( Ammo ) ) + ')' , N );
+
+		Inc( N );
+		Ammo := Ammo^.Next;
+	end;
+	RPMSortAlpha( ShopMenu );
+	AlphaKeyMenu( ShopMenu );
+	AddRPGMenuItem( ShopMenu , MsgString( 'EXIT' ) , -1 );
+
+	{ Step Three: Keep shopping until the PC selects exit. }
+
+
+	{ Upon exiting, dispose of the ammo list. }
+	DisposeRPGMenu( ShopMenu );
+	DisposeGear( AmmoList );
+end;
+
+procedure PurchaseGearMenu( GB: GameBoardPtr; PC,NPC,Part: GearPtr );
+	{ The PC may or may not want to buy PART. }
 	{ Show the price of this gear, and ask whether or not the }
 	{ player wants to make this purchase. }
+	{ If this item contains any SF:0 ammunition, offer to sell some }
+	{ backup clips as well. }
 var
 	YNMenu: RPGMenuPtr;
 	Cost: LongInt;
@@ -221,6 +311,7 @@ begin
 	YNMenu := CreateRPGMenu( MenuItem , MenuSelect , ZONE_ShopMenu );
 	AddRPGMenuItem( YNMenu , 'Buy ' + GearName( Part ) + ' ($' + BStr( Cost ) + ')' , 1 );
 	if ( Part^.SubCom <> Nil ) or ( Part^.InvCom <> Nil ) then AddRPGMenuItem( YNMenu , MsgString( 'SERVICES_BrowseParts' ) , 2 );
+	if ( SeekSubsByG( Part^.SubCom , GG_Ammo ) <> Nil ) and ( Part^.Scale = 0 ) then AddRPGMenuItem( YNMenu , MsgString( 'SERVICES_BuyClips' ) , 3 );
 	AddRPGMenuItem( YNMenu , 'Search Again' , -1 );
 
 	msg := MSgString( 'BuyPROMPT' + Bstr( Random( 4 ) + 1 ) );
@@ -230,6 +321,8 @@ begin
 	CHAT_Message := Msg;
 
 	repeat
+		Serv_Info := Part;
+		Serv_Menu := Nil;
 		N := SelectMenu( YNMenu , @ServiceRedraw );
 
 		if N = 1 then begin
@@ -258,6 +351,10 @@ begin
 		end else if N = 2 then begin
 
 			MechaPartBrowser( Part , @ServiceRedraw );
+
+		end else if N = 3 then begin
+
+			BuyAmmoClips( GB , PC , NPC , Part )
 
 		end else if N = -1 then begin
 			CHAT_Message := MsgString( 'BUYCANCEL' + BStr( Random( 4 ) + 1 ) );
@@ -915,41 +1012,6 @@ begin
 	NotGoodWares := NGW;
 end;
 
-Procedure AddAmmo( var Wares: GearPtr; Part: GearPtr );
-	{ Browse through PART. If you find any guns or missile launchers, }
-	{ clone its ammunition & add it to WARES. }
-var
-	A,A2: GearPtr;
-begin
-	while Part <> Nil do begin
-		{ Spare magazines shouldn't be as common as the weapons }
-		{ themselves, so only add ammo for this weapon on a }
-		{ random chance. }
-		if ( Part^.G = GG_Weapon ) and ( Random( 3 ) = 1 ) then begin
-			if ( Part^.S = GS_Ballistic ) or ( Part^.S = GS_Missile ) then begin
-				A := Part^.SubCom;
-				while A <> nil do begin
-					if A^.G = GG_Ammo then begin
-						{ Clone this gear, and stick it in the list. }
-						A2 := CloneGear( A );
-						SetSAtt( A2^.SA , 'FACTIONS <' + SAttValue( Part^.SA , 'FACTIONS' ) );
-						SetSAtt( A2^.SA , 'CATEGORY <AMMO>' );
-						A2^.Next := Wares;
-						Wares := A2;
-					end;
-					A := A^.Next;
-				end;
-			end;
-		end;
-
-		{ Recursively check sub-components. }
-		AddAmmo( Wares , Part^.SubCom );
-		AddAmmo( Wares , Part^.InvCom );
-
-		Part := Part^.Next;
-	end;
-end;
-
 Procedure AddSomeMeks( GB: GameBoardPtr; NPC: GearPtr; var Wares: GearPtr );
 	{ WARES is the inventory list of a shop. Let's add ~10 mecha files }
 	{ to the list. }
@@ -1029,32 +1091,13 @@ begin
 	{ wares afterwards. }
 	Wares := AggregatePattern( PC_Equipment_Pattern , Design_Directory );
 
-	{ Pass Two - Add extra ammo clips for all projectile and }
-	{ missile weapons. }
-	AddAmmo( Wares , Wares );
-
 	{ If this is a mecha shop, also load some mecha files. }
 	if AStringHasBString( Stuff , 'MECHA' ) then begin
 		AddSomeMeks( GB , NPC , Wares );
 	end;
 
 	{ Calculate the shopkeeper's tolerance. }
-	if ( GB <> Nil ) and ( GB^.Scene <> Nil ) then begin
-		Scene := FindRootScene( GB , GB^.Scene );
-		if AStringHasBSTring( SAttValue( GB^.Scene^.SA , 'SPECIAL' ) , 'UNREGULATED' ) then begin
-			Tolerance := NAttValue( GB^.Scene^.NA , NAG_GearOps , NAS_Legality );
-		end else begin
-			Tolerance := NAttValue( Scene^.NA , NAG_GearOps , NAS_Legality );
-		end;
-
-		{ Criminal shopkeepers have a higher than normal tolerance. }
-		if NAttValue( NPC^.NA , NAG_CharDescription , NAS_Lawful ) < 0 then begin
-			Tolerance := Tolerance - ( NAttValue( NPC^.NA , NAG_CharDescription , NAS_Lawful ) div 2 ) + 5;
-		end;
-	end else begin
-		Tolerance := 0;
-	end;
-
+	Tolerance := ShopTolerance( GB , NPC );
 
 	{ Do filtering here. }
 	I := Wares;
@@ -1159,7 +1202,7 @@ begin
 		N := SelectMenu( RPM , @ServiceRedraw );
 
 		if N > 0 then begin
-			PurchaseGear( GB , PC , NPC , RetrieveGearSib( Wares , N ) );
+			PurchaseGearMenu( GB , PC , NPC , RetrieveGearSib( Wares , N ) );
 		end;
 
 	until N = -1;

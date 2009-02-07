@@ -280,7 +280,7 @@ var
 				end;
 			end else begin
 				{ If not adding a deeper level, add DungeonGoal content. }
-				AddSAtt( S^.SA , 'CONTENT' , ReplaceHash( dungeon_goal_content_string , BSTr( NAttValue( S^.NA , NAG_Narrative , NAS_DungeonLevel ) * 10 ) ) )
+				AddSAtt( S^.SA , 'CONTENT' , ReplaceHash( dungeon_goal_content_string , BSTr( NAttValue( S^.NA , NAG_Narrative , NAS_DungeonLevel ) * 10 + 15 ) ) )
 			end;
 
 			{ Name the dungeon. }

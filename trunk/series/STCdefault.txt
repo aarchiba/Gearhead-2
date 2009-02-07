@@ -1816,6 +1816,10 @@ Persona
 desig <PERSONA_BLANK>
 greeting <NewChat SayAnything>
 
+Persona
+%% A persona which should revert back to the original.
+desig <PERSONA_REVERT>
+greeting <RevertPersona>
 
 
 

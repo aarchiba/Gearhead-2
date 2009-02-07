@@ -412,6 +412,8 @@ const
 	Column_D: Array [0..3,0..1] of Integer = (
 	(1,0),(0,1),(-1,0),(0,-1)
 	);
+
+	Layer_Height = 18;
 var
 	X,Y,Z,X0,Y0,MaxR,MaxC,Row,Column,Terr: Integer;
 	SX,SY,H: LongInt;
@@ -590,7 +592,7 @@ begin
 						TexDest.Y := MyDest.Y + 15;
 						QuickTextC( CM_ModelNames[ X , Y , Z ] , TexDest , StdWhite , Small_Font );
 					end;
-					MyDest.Y := MyDest.Y - 20;
+					MyDest.Y := MyDest.Y - Layer_Height;
 				end;
 			end;
 		end;
