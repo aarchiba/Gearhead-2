@@ -463,6 +463,8 @@ BUYREPLY1 <Enjoy your purchase.>
 BUYREPLY2 <May it serve you well.>
 BUYREPLY3 <Here you go.>
 BUYREPLY4 <It's been a pleasure doing business with you.>
+BUY_YOUHAVEBOUGHT <You have purchased #.>
+BUY_CANTAFFORD <You don't have enough money to buy #.>
 BUYCANCEL1 <Maybe there's something else that you'd like.>
 BUYCANCEL2 <Have a look around, you may find something that suits you better.>
 BUYCANCEL3 <You don't like it? That's fine, I have more...>
@@ -483,6 +485,7 @@ SELLCANCEL1 <Oh, well. Maybe next time.>
 SELLCANCEL2 <Do you have anything else for me to look at?>
 SELLCANCEL3 <You won't find a better price anywhere else.>
 SELLCANCEL4 <Let's move on to something else.>
+SELL_YOUHAVESOLD <You have sold # for $#.>
 YouFind$ <You find $#.>
 PHONE_NotFound <No person named # can be found in the local dialing area.>
 PHONE_Prompt <You get out your telephone.>

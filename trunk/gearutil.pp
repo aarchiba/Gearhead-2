@@ -767,6 +767,10 @@ begin
 		else if Equip^.G = GG_MetaTerrain then IsLegalInvcom := False
 		else IsLegalInvcom := True;
 
+	end else if Equip^.Scale > Parent^.Scale then begin
+		{ Gears cannot equip items of a higher scale than themselves. }
+		IsLegalInvCom := False;
+
 	end else if AStringHasBString( SAttValue( Equip^.SA , 'TYPE' ) , 'CYBER' ) then begin
 		{ Gears marked as "cyber" can only be internally mounted. }
 		IsLegalInvcom := False;

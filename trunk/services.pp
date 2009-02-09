@@ -267,6 +267,7 @@ var
 	ShopMenu: RPGMenuPtr;
 	Ammo: GearPtr;
 	N: Integer;
+	Cost: LongInt;
 begin
 	{ Step One: Create the list of ammo. }
 	AmmoList := Nil;
@@ -287,7 +288,37 @@ begin
 	AddRPGMenuItem( ShopMenu , MsgString( 'EXIT' ) , -1 );
 
 	{ Step Three: Keep shopping until the PC selects exit. }
+	repeat
+		N := SelectMenu( ShopMenu , @ServiceRedraw );
 
+		if N > 0 then begin
+			Ammo := RetrieveGearSib( AmmoList , N );
+			Cost := PurchasePrice( PC , NPC , Ammo );
+
+			if NAttValue( PC^.NA , NAG_Experience , NAS_Credits ) >= Cost then begin
+				{ Copy the gear, then stick it in inventory. }
+				Ammo := CloneGear( Ammo );
+
+				GivePartToPC( GB , Ammo , PC );
+
+				{ Reduce the buyer's cash by the cost of the gear. }
+				AddNAtt( PC^.NA , NAG_Experience , NAS_Credits , -Cost );
+
+				CHAT_Message := MsgString( 'BUYREPLY' + BStr( Random( 4 ) + 1 ) );
+				if NPC <> Nil then DoleSkillExperience( NPC , 21 , ( ( Round( Ln( Cost ) * 100 ) ) div ( Ammo^.Scale * 2 + 1 ) ) + 1 );
+
+				DialogMSG( ReplaceHash( MsgString( 'BUY_YOUHAVEBOUGHT' ) , GearName( Ammo ) ) );
+
+				{ Give some XP to the PC's SHOPPING skill. }
+				ShoppingXP( PC , Ammo );
+			end else begin
+				{ Not enough cash to buy... }
+				DialogMSG( ReplaceHash( MsgString( 'BUY_CANTAFFORD' ) , GearName( Ammo ) ) );
+				CHAT_Message := MsgString( 'BUYNOCASH' + BStr( Random( 4 ) + 1 ) );
+			end;
+		end;
+
+	until N = -1;
 
 	{ Upon exiting, dispose of the ammo list. }
 	DisposeRPGMenu( ShopMenu );
@@ -338,13 +369,13 @@ begin
 				CHAT_Message := MsgString( 'BUYREPLY' + BStr( Random( 4 ) + 1 ) );
 				if NPC <> Nil then DoleSkillExperience( NPC , 21 , ( ( Round( Ln( Cost ) * 100 ) ) div ( Part^.Scale * 2 + 1 ) ) + 1 );
 
-				DialogMSG( 'You have purchased ' + GearName( Part ) + '.' );
+				DialogMSG( ReplaceHash( MsgString( 'BUY_YOUHAVEBOUGHT' ) , GearName( Part ) ) );
 
 				{ Give some XP to the PC's SHOPPING skill. }
 				ShoppingXP( PC , Part );
 			end else begin
 				{ Not enough cash to buy... }
-				DialogMSG( 'You don''t have enough money to buy ' + GearName( Part ) + '.' );
+				DialogMSG( ReplaceHash( MsgString( 'BUY_CANTAFFORD' ) , GearName( Part ) ) );
 				CHAT_Message := MsgString( 'BUYNOCASH' + BStr( Random( 4 ) + 1 ) );
 
 			end;
@@ -463,7 +494,10 @@ begin
 
 		CHAT_Message := MSgString( 'SELLREPLY' + Bstr( Random( 4 ) + 1 ) );
 
-		DialogMSG( 'You have sold ' + GearName( Part ) + ' for $' + BStr( Cost ) + '.' );
+		msg := MSgString( 'SELL_YOUHAVESOLD' );
+		msg := ReplaceHash( msg , GearName( Part ) );
+		msg := ReplaceHash( msg , BStr( Cost ) );
+		DialogMSG( msg );
 
 		{ If the item was stolen, trash the PC's reputation here. }
 		if WasStolen then begin
