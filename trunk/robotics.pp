@@ -517,6 +517,21 @@ begin
 	end else begin
 		{ Robot construction has failed. }
 		DisposeGear( Form );
+
+		{ As a cold consolation to the PC, give back repair fuel equal to about 80% }
+		{ of the build points put into the robot. }
+		BP := ( R_BuildPoints( Ingredients ) * 4 ) div 5;
+		if BP > 30000 then BP := 30000
+		else if BP < 1 then BP := 1;
+		Part := LoadNewSTC( 'SPAREPARTS-1' );
+		if Part <> Nil then begin
+			if IsLegalInvCom( PC , Part ) then begin
+				Part^.V := BP;
+				InsertInvCom( PC , Part );
+			end else begin
+				DisposeGear( Part );
+			end;
+		end;
 	end;
 
 	{ Advance time by the required amount. }

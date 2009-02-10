@@ -81,21 +81,6 @@ begin
 	end;
 end;
 
-Function Confused( Mek: GearPtr ): Boolean;
-	{ Return true if either the pilot or the mecha is either }
-	{ HAYWIRE or STONED. }
-var
-	Pilot: GearPtr;
-begin
-	if Mek^.G = GG_Mecha then begin
-		Pilot := LocatePilot( Mek );
-	end else begin
-		Pilot := Nil;
-	end;
-
-	Confused := HasStatus( Mek , NAS_Haywire ) or HasStatus( Mek , NAS_Stoned ) or HasStatus( Pilot , NAS_Haywire ) or HasStatus( Pilot , NAS_Stoned );
-end;
-
 Procedure GetMekInput( Mek: GearPtr; Camp: CampaignPtr; ControlByPlayer: Boolean );
 	{ Decide what the mek in question is gonna do next. }
 begin
@@ -107,6 +92,10 @@ begin
 	if Confused( Mek ) and ( Random( 2 ) = 1 ) then begin
 		ConfusedInput( Mek , Camp^.GB );
 
+{	end else if ( NAttValue( Mek^.NA , NAG_Location , NAS_SmartAction ) <> 0 ) and ( CurrentMoveRate( Camp^.GB^.Scene , Mek ) > 0 ) then begin
+		{ This model is performing a continuous action. Go handle that. }
+		RLSmartAction( Camp^.GB , Mek );
+}
 	end else if ( NAttValue( Mek^.NA , NAG_Location , NAS_Team ) = 1 ) or ControlByPlayer then begin
 		{ It's a player mek. }
 {$IFDEF ASCII}
@@ -780,7 +769,7 @@ begin
 	ShouldDeleteDestroyed := not AStringHasBString( SAttValue( Mek^.SA , 'TYPE' ) , SAtt_Artifact );
 end;
 
-Procedure PutAwayGear( GB: GameBoardPtr; var Mek,PCForces: GearPtr );
+Procedure PutAwayGear( Camp: CampaignPtr; var Mek,PCForces: GearPtr );
 	{ The game is over. Put MEK wherever it belongs. }
 	function ShouldBeMoved: Boolean;
 		{ MEK is a member of the player team. }
@@ -789,9 +778,9 @@ Procedure PutAwayGear( GB: GameBoardPtr; var Mek,PCForces: GearPtr );
 		{ PC's chosen mecha, or if the current scene is dynamic }
 		{ or a metascene. Got all that? }
 	begin
-		if ( GB^.Scene = Nil ) or IsInvCom( GB^.Scene ) or ( GB^.Scene^.S < 0 ) then begin
+		if ( Camp^.GB^.Scene = Nil ) or IsInvCom( Camp^.GB^.Scene ) or ( Camp^.GB^.Scene^.S < 0 ) then begin
 			ShouldBeMoved := True;
-		end else if ( GB^.Scene^.G = GG_MetaScene ) then begin
+		end else if ( Camp^.GB^.Scene^.G = GG_MetaScene ) then begin
 			ShouldBeMoved := True;
 		end else if Mek^.G = GG_Character then begin
 			ShouldBeMoved := True;
@@ -806,11 +795,16 @@ begin
 		Exit;
 	end else if ( Mek^.G = GG_MetaTerrain ) and ( Mek^.S = GS_MetaFire ) then begin
 		DisposeGear( Mek );
-	end else if ( Mek^.G = GG_MetaTerrain ) and ( Mek^.S = GS_MetaEncounter ) and ( Mek^.Stat[ STAT_Destination ] < 0 ) and MetaSceneNotInUse( GB^.Camp^.Source , Mek^.Stat[ STAT_Destination ] ) then begin
+	end else if ( Mek^.G = GG_MetaTerrain ) and ( Mek^.S = GS_MetaEncounter ) and ( Mek^.Stat[ STAT_Destination ] < 0 ) and MetaSceneNotInUse( Camp^.Source , Mek^.Stat[ STAT_Destination ] ) then begin
+		DisposeGear( Mek );
+	end else if Destroyed( Mek ) and ShouldDeleteDestroyed( Camp^.GB , Mek ) then begin
+		{ If Mek is a character and not an animal, update the Death counter. }
+		if ( Mek^.G = GG_Character ) and NotAnAnimal( Mek ) and ( Camp^.Source <> Nil ) then begin
+			RecordFatality( Camp , Mek );
+		end;
+
 		DisposeGear( Mek );
 	end else if NAttValue( Mek^.NA , NAG_EpisodeData , NAS_Temporary ) <> 0 then begin
-		DisposeGear( Mek );
-	end else if Destroyed( Mek ) and ShouldDeleteDestroyed( GB , Mek ) then begin
 		DisposeGear( Mek );
 	end else if ( NAttValue( Mek^.NA , NAG_Location , NAS_Team ) = NAV_DefPlayerTeam ) and ShouldBeMoved then begin
 		{ Strip the location & visibility info. }
@@ -854,13 +848,13 @@ begin
 		StripNAtt( Mek , NAG_EpisodeData );
 		StripNAtt( Mek , NAG_Condition );
 
-		if GB^.Scene <> Nil then begin
-			if IsGlobalGear( Mek ) and IsInvCom( GB^.Scene ) then begin
+		if Camp^.GB^.Scene <> Nil then begin
+			if IsGlobalGear( Mek ) and IsInvCom( Camp^.GB^.Scene ) then begin
 				StripNAtt( Mek , NAG_Location );
 				StripNAtt( Mek , NAG_Damage );
-				PutAwayGlobal( GB , Mek );
+				PutAwayGlobal( Camp^.GB , Mek );
 			end else begin
-				InsertInvCom( GB^.Scene , Mek );
+				InsertInvCom( Camp^.GB^.Scene , Mek );
 			end;
 		end else begin
 			DisposeGear( Mek );
@@ -1044,7 +1038,7 @@ begin
 	end;
 end;
 
-Function DelinkJJang( GB: GameBoardPtr ): GearPtr;
+Function DelinkJJang( Camp: CampaignPtr ): GearPtr;
 	{ Delink all the components of the scenario, filing them away }
 	{ for fututure use. Return a pointer to the surviving PC forces. }
 var
@@ -1056,13 +1050,13 @@ begin
 	{ A team will be deleted if it has no members, if it isn't the }
 	{ player team or the neutral team, and if it has no wandering }
 	{ monsters allocated. }
-	DeleteObsoleteTeams( GB );
+	DeleteObsoleteTeams( Camp^.GB );
 	if DEBUG_ON then DialogMsg( 'Team update complete.' );
 
 	{ Step one-and-a-half: If this is a dynamic scene, and is safe, and pillaging }
 	{ is enabled, then pillage away! }
-	if IsInvCom( GB^.Scene ) and IsSafeArea( GB ) and Pillage_On then begin
-		DoPillaging( GB );
+	if IsInvCom( Camp^.GB^.Scene ) and IsSafeArea( Camp^.GB ) and Pillage_On then begin
+		DoPillaging( Camp^.GB );
 	end;
 
 	{ Step two - Remove all models from game board. }
@@ -1070,14 +1064,14 @@ begin
 	PCForces := Nil;
 
 	{ Prepare the PCForces for delinkage. }
-	PreparePCForDelink( GB );
+	PreparePCForDelink( Camp^.GB );
 
 	{ Keep processing while there's gears to process. }
-	while GB^.Meks <> Nil do begin
+	while Camp^.GB^.Meks <> Nil do begin
 		{ Delink the first gear from the list. }
-		Mek := GB^.Meks;
+		Mek := Camp^.GB^.Meks;
 		Pilot := Nil;
-		DelinkGear( GB^.Meks , Mek );
+		DelinkGear( Camp^.GB^.Meks , Mek );
 
 		{ Decide what to do with this gear. }
 		{ - If a mecha or disembodied module, remove its pilots. }
@@ -1089,13 +1083,13 @@ begin
 			repeat
 				Pilot := ExtractPilot( Mek );
 				if Pilot <> Nil then begin
-					PutAwayGear( GB , Pilot , PCForces );
+					PutAwayGear( Camp , Pilot , PCForces );
 				end;
 			until Pilot = Nil;
 		end;
 
 		{ Send MEK to its destination. }
-		PutAwayGear( GB , Mek , PCForces );
+		PutAwayGear( Camp , Mek , PCForces );
 
 	end;
 
@@ -1113,7 +1107,7 @@ begin
 
 	it := WorldMapMain( Camp );
 
-	PCForces := DelinkJJang( Camp^.GB );
+	PCForces := DelinkJJang( Camp );
 
 	{ Save the final ComTime in the Campaign. }
 	Camp^.ComTime := Camp^.GB^.ComTime;
@@ -1192,7 +1186,7 @@ begin
 	{ Clear the control mode. }
 	if ( Camp^.GB <> Nil ) and ( Camp^.GB^.Scene <> Nil ) then SetNAtt( Camp^.GB^.Scene^.NA , NAG_SceneData , NAS_PartyControlMethod , 0 );
 
-	PCForces := DelinkJJang( Camp^.gb );
+	PCForces := DelinkJJang( Camp );
 
 	{ Save the final ComTime in the Campaign. }
 	Camp^.ComTime := Camp^.GB^.ComTime;

@@ -172,6 +172,16 @@ Const
 	{ The following may be used by various scenarios... }
 	NAS_VictimsRecovered = 201;
 
+	{ The following record how many people died over the course of the adventure... }
+	Num_Fatality_Types = 5;
+	Fatality_Base = 300;
+	NAS_TotalFatalities = 301;	{ How many people died, total. }
+	NAS_FamilyFatalities = 302;
+	NAS_FriendFatalities = 303;
+	NAS_LoverFatalities = 304;
+	NAS_LancemateFatalities = 305;
+
+
 	MassPerMV = 15;		{ Amount of mass per MV , TR modifier. }
 
 	NAG_Display = 13;

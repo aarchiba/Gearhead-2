@@ -96,7 +96,10 @@ function SeekGearByName( LList: GearPtr; Name: String ): GearPtr;
 function SeekSibByFullName( LList: GearPtr; Name: String ): GearPtr;
 function SeekChildByName( Parent: GearPtr; Name: String ): GearPtr;
 function SeekGearByDesig( LList: GearPtr; Name: String ): GearPtr;
+
 function SeekGearByIDTag( LList: GearPtr; G,S,V: LongInt ): GearPtr;
+function CountGearsByIDTag( LList: GearPtr; G,S,V: LongInt ): LongInt;
+
 function SeekGearByG( LList: GearPtr; G: Integer ): GearPtr;
 function SeekSubsByG( LList: GearPtr; G: Integer ): GearPtr;
 function MaxIDTag( LList: GearPtr; G,S: Integer ): LongInt;
@@ -1535,6 +1538,22 @@ begin
 	end;
 	SeekGearByIDTag := it;
 end;
+
+function CountGearsByIDTag( LList: GearPtr; G,S,V: LongInt ): LongInt;
+	{ Count the number of non-destroyed gears which posess this ID tag. }
+var
+	N: LongInt;
+begin
+	N := 0;
+	while LList <> Nil do begin
+		if ( NAttValue( LList^.NA , G , S ) = V ) and NotDestroyed( LList ) then Inc( N );
+		N := N + CountGearsByIDTag( LList^.SubCom , G , S , V );
+		N := N + CountGearsByIDTag( LList^.InvCom , G , S , V );
+		LList := LList^.Next;
+	end;
+	CountGearsByIDTag := N;
+end;
+
 
 function SeekGearByG( LList: GearPtr; G: Integer ): GearPtr;
 	{ Seek a gear with the provided general type. }

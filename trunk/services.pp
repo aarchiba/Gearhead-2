@@ -83,6 +83,7 @@ var
 	SERV_GB: GameBoardPtr;
 	SERV_PC,SERV_NPC,SERV_Info: GearPtr;
 	SERV_Menu: RPGMenuPtr;
+	Standard_Caliber_List: GearPtr;
 
 
 Procedure ServiceRedraw;
@@ -235,6 +236,28 @@ procedure BuyAmmoClips( GB: GameBoardPtr; PC,NPC,Weapon: GearPtr );
 	{ If possible, add some special clip types. }
 var
 	AmmoList: GearPtr;
+	Tolerance: Integer;
+	Function HasUniqueType( Ammo: GearPtr ): Boolean;
+		{ Return TRUE if Ammo has a TYPE attribute tag which WEAPON lacks. }
+	var
+		WType,AType,msg: String;
+		UTypeFound: Boolean;
+	begin
+		WType := WeaponAttackAttributes( Weapon );
+		AType := SAttValue( Ammo^.SA , 'TYPE' );
+
+		{ If you've got an ammo that does nothing and normal ammo that does something, }
+		{ that ammo counts as having a unique type. }
+		if ( AType = '' ) and ( WType <> '' ) then Exit( True );
+
+		UTypeFound := False;
+		while ( AType <> '' ) and not UTypeFound do begin
+			msg := ExtractWord( AType );
+			if not AStringHasBString( WType , msg ) then UTypeFound := True;
+		end;
+
+		HasUniqueType := UTypeFound;
+	end;
 	Procedure AddAmmoToList( Proto: GearPtr );
 		{ Create a clone of this ammunition and add it to the list. }
 		{ If appropriate, add some ammo variants. We will assume for the }
@@ -244,10 +267,26 @@ var
 		{ design a weapon like that you are a truly terrible person, and }
 		{ I wash my hands of you. }
 	var
-		A: GearPtr;
+		A,ATmp,AVar,VarList: GearPtr;
 	begin
 		A := CloneGear( Proto );
 		AppendGear( AmmoList , A );
+
+		{ Depending on the caliber of this ammo, and the shopkeeper's stats, }
+		{ maybe add some variants. }
+		VarList := SeekGearByName( Standard_Caliber_List , SAttValue( A^.SA , 'CALIBER' ) );
+		if VarList <> Nil then begin
+			AVar := VarList^.SubCom;
+			while AVar <> Nil do begin
+				if ( NAttValue( AVar^.NA , NAG_GearOps , NAS_Legality ) <= Tolerance ) and HasUniqueType( AVar ) then begin
+					ATmp := CloneGear( A );
+					SetSAtt( ATmp^.SA , 'name <' + GearName( A ) + ' (' + GearName( AVar ) + ')>' );
+					SetSAtt( ATmp^.SA , 'type <' + SAttValue( AVar^.SA , 'TYPE' ) + '>' );
+					AppendGear( AmmoList , ATmp );
+				end;
+				AVar := AVar^.Next;
+			end;
+		end;
 	end;
 	Procedure LookForAmmo( LList: GearPtr );
 		{ Search along this linked list looking for ammo. If you find }
@@ -271,6 +310,7 @@ var
 begin
 	{ Step One: Create the list of ammo. }
 	AmmoList := Nil;
+	Tolerance := ShopTolerance( GB , NPC );
 	LookForAmmo( Weapon^.SubCom );
 
 	{ Step Two: Create the shopping menu. }
@@ -278,7 +318,7 @@ begin
 	N := 1;
 	Ammo := AmmoList;
 	while Ammo <> Nil do begin
-		AddRPGMenuItem( ShopMenu , GearName( Ammo ) + ' ($' + BStr( GearCost( Ammo ) ) + ')' , N );
+		AddRPGMenuItem( ShopMenu , GearName( Ammo ) + ' ($' + BStr( PurchasePrice( PC , NPC , Ammo ) ) + ')' , N );
 
 		Inc( N );
 		Ammo := Ammo^.Next;
@@ -289,6 +329,8 @@ begin
 
 	{ Step Three: Keep shopping until the PC selects exit. }
 	repeat
+		SERV_Info := AmmoList;
+		SERV_Menu := ShopMenu;
 		N := SelectMenu( ShopMenu , @ServiceRedraw );
 
 		if N > 0 then begin
@@ -391,7 +433,7 @@ begin
 			CHAT_Message := MsgString( 'BUYCANCEL' + BStr( Random( 4 ) + 1 ) );
 
 		end;
-	until N <> 2;
+	until ( N <> 2 ) and ( N <> 3 );
 
 	DisposeRPGMenu( YNMenu );
 end;
@@ -1106,7 +1148,7 @@ end;
 Function CreateWaresList( GB: GameBoardPtr; NPC: GearPtr; Stuff: String ): GearPtr;
 	{ Fabricate the list of items this NPC has for sale. }
 var
-	Scene,Wares,I,I2: GearPtr;	{ List of items for sale. }
+	Wares,I,I2: GearPtr;	{ List of items for sale. }
 	NPCSeed,NPCRestock,Tolerance: LongInt;
 	TotalSP,MaxSP: Integer;
 begin
@@ -1183,9 +1225,6 @@ begin
 	RPM := CreateRPGMenu( MenuItem , MenuSelect , ZONE_ShopMenu );
 	I := Wares;
 
-	SERV_Menu := RPM;
-	SERV_Info := Wares;
-
 	N := 1;
 	while I <> Nil do begin
 		msg := FullGearName( I );
@@ -1232,6 +1271,9 @@ begin
 	RPM^.Mode := RPMNoCleanup;
 
 	Repeat
+		SERV_Menu := RPM;
+		SERV_Info := Wares;
+
 		{ Display the trading stats. }
 		N := SelectMenu( RPM , @ServiceRedraw );
 
@@ -2090,5 +2132,11 @@ end;
 initialization
 	SERV_GB := Nil;
 	SERV_NPC := Nil;
+
+	Standard_Caliber_List := AggregatePattern( 'CALIBER_*.txt' , Data_Directory );
+
+
+finalization
+	DisposeGear( Standard_Caliber_List );
 
 end.

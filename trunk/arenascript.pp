@@ -1707,6 +1707,10 @@ Procedure ProcessVictory( GB: GameBoardPtr );
 const
 	InvStr = '+';
 	SubStr = '>';
+	Num_Significant_Relationships = 5;
+	Significant_Relationship: Array [1..Num_Significant_Relationships] of Integer = (
+		NAV_ArchEnemy, NAV_ArchAlly, NAV_Friend, NAV_Family, NAV_Lover
+	);
 var
 	VList,SA: SAttPtr;
 	PC,Fac,Adv: GearPtr;
@@ -1744,6 +1748,7 @@ begin
 
 	{ Locate the PC, add PC-specific information. }
 	PC := LocatePilot( GG_LocatePC( GB ) );
+	Adv := FindRoot( GB^.Scene );
 	if PC <> Nil then begin
 		{ Store the  name. }
 		fname := GearName( PC );
@@ -1789,6 +1794,28 @@ begin
 			StoreSAtt( VList , msg );
 			StoreSAtt( VList , ' ' );
 		end;
+
+		{ Store the relationships and fatalities. }
+		if Adv <> Nil then begin
+			for t := 1 to Num_Significant_Relationships do begin
+				V := CountGearsByIDTag( Adv , NAG_Relationship , 0 , Significant_Relationship[ t ] ) + CountGearsByIDTag( GB^.Meks , NAG_Relationship , 0 , Significant_Relationship[ t ] );
+				if V > 1 then begin
+					StoreSAtt( VList , ReplaceHash( MsgSTring( 'HISTORY_RELATIONS_' + BStr( T ) ) , BStr( V ) ) );
+				end else if V = 1 then begin
+					StoreSAtt( VList , MsgSTring( 'HISTORY_RELATION_' + BStr( T ) ) );
+				end;
+			end;
+
+			for t := 1 to Num_Fatality_Types do begin
+				V := NAttValue( Adv^.NA , NAG_Narrative , Fatality_Base + T );
+				if V > 1 then begin
+					StoreSAtt( VList , ReplaceHash( MsgSTring( 'HISTORY_FATALITIES_' + BStr( T ) ) , BStr( V ) ) );
+				end else if V = 1 then begin
+					StoreSAtt( VList , MsgSTring( 'HISTORY_FATALITY_' + BStr( T ) ) );
+				end;
+			end;
+		end;
+		StoreSAtt( VList , ' ' );
 
 		{ Store the personality traits. }
 		for t := 1 to Num_Personality_Traits do begin
@@ -1836,7 +1863,6 @@ begin
 		fname := 'out';
 	end;
 
-	Adv := FindRoot( GB^.Scene );
 	if Adv <> Nil then begin
 		{ Once the PC wins, unlock the adventure. }
 		Adv^.V := 1;

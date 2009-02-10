@@ -321,13 +321,6 @@ end
 %  ***  BALLISTIC  WEAPONS  ***
 %  ****************************
 
-Ammo 8
-name <5mm Rifle Clip>
-caliber <5mm rifle>
-magazine 30
-category <AMMO>
-factions <GENERAL>
-SDL_PORTRAIT <item_ammoclip.png>
 
 Gun 5
 Name <Long Rifle>
@@ -489,7 +482,7 @@ Name <Revolver>
 desc <A low velocity single firing chemically powered pistol.>
 Mass -3
 Range 3
-caliber <.32 Revolver>
+caliber <.32 revolver>
 category <WEAPON MISSILE ANTIQUE>
 factions <GENERAL>
 SDL_PORTRAIT <item_peacemakerrevolver.png>
@@ -501,7 +494,7 @@ sub
 	Magazine 6
 	category <AMMO>
 	factions <GENERAL>
-	caliber <.32 Revolver>
+	caliber <.32 revolver>
 end
 
 
@@ -637,7 +630,7 @@ Category <ACCESSORY>
 Factions <GENERAL>
 Magazine 1
 Type <BLAST 6 TOXIN>
-legality 15
+legality 50
 
 HeavyAddOn 0
 Name <Laser Guidance System>
@@ -809,7 +802,7 @@ sdl_portrait <item_grenade.png>
 Category <WEAPON GRENADE>
 Factions <GENERAL>
 Type <BLAST 5 TOXIN>
-legality 25
+legality 50
 
 Grenade 16
 Name <Plasma Grenade>

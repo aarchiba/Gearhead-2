@@ -95,33 +95,6 @@ factions <SILKN>
 %  ***  BALLISTIC  WEAPONS  ***
 %  ****************************
 
-Ammo 8
-name <5mm Automatic Clip>
-caliber <5mm auto>
-magazine 40
-category <AMMO>
-factions <COMET>
-legality -10
-SDL_PORTRAIT <item_ammoclip.png>
-
-Ammo 8
-name <6mm Pistol Clip>
-caliber <6mm pistol>
-magazine 15
-category <AMMO>
-factions <MAQUI>
-legality -10
-SDL_PORTRAIT <item_ammoclip.png>
-
-Ammo 4
-name <2mm Ferrous Clip>
-caliber <2mm ferrous>
-magazine 450
-category <AMMO>
-factions <MAQUI>
-mass -4
-SDL_PORTRAIT <item_ammoclip.png>
-
 Gun 6
 Name <Assault Rifle>
 desig <Tyb 2-4>
@@ -323,24 +296,6 @@ sub
 	Magazine 20
 end
 
-Ammo 15
-name <Cone Rifle Clip [HE]>
-caliber <22mm cone>
-type <Blast 2 BRUTAL>
-category <AMMO CONTRABAND>
-factions <MAQUI FCOMS RISHI CRIHN>
-Magazine 12
-Legality 10
-
-Ammo 15
-name <Cone Rifle Clip [Miasma]>
-caliber <22mm cone>
-type <BLAST 2 GAS>
-category <AMMO CONTRABAND>
-factions <MAQUI FCOMS RISHI CRIHN>
-Magazine 12
-Legality 25
-
 Gun 24
 name <Bazooka>
 desc <A shoulder-mounted rocket launcher>
@@ -361,13 +316,6 @@ sub
 	type <BLAST 3 BRUTAL>
 	Magazine 12
 end
-
-Ammo 24
-name <Raketen Clip [AP]>
-caliber <60mm rocket>
-type <ARMORPIERCING>
-Magazine 24
-Legality 10
 
 
 

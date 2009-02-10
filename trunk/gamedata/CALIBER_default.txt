@@ -1,0 +1,190 @@
+%%
+%% CALIBER INFO
+%%
+%% This file contains descriptions for custom ammunition types. It's divided
+%% into sets based on caliber type. Each set will contain custom ammo stubs
+%% with different TYPE strings.
+%%
+
+	Set
+	name <5mm rifle>
+	% Used all over for a wide variety of weapons
+	sub
+		Ammo
+		name <AP>
+		type <ArmorPiercing>
+
+		Ammo
+		name <Flechette>
+		type <Scatter>
+
+		Ammo
+		name <Incendiary>
+		type <Burn>
+		Legality 5
+
+		Ammo
+		name <EMP>
+		type <Scatter Haywire>
+		Legality 10
+
+		Ammo
+		name <Assassin>
+		type <Poison>
+		Legality 20
+
+		Ammo
+		name <Rubber>
+		type <NonLethal>
+		Legality -15
+	end
+
+	Set
+	name <5mm auto>
+	% Common in the L5 Region
+	sub
+		Ammo
+		name <AP>
+		type <ArmorPiercing>
+
+		Ammo
+		name <Flechette>
+		type <Scatter>
+
+		Ammo
+		name <Incendiary>
+		type <Burn>
+		Legality 5
+
+		Ammo
+		name <Rubber>
+		type <NonLethal>
+		Legality -15
+	end
+
+	Set
+	name <18mm shell>
+	% Shotgun shells
+	sub
+		Ammo
+		name <Solid>
+		Legality -15
+
+		Ammo
+		name <Incendiary>
+		type <Burn Line>
+		Legality 15
+
+		Ammo
+		name <Shard>
+		type <Brutal Scatter>
+		Legality 10
+
+		Ammo
+		name <Explosive>
+		type <Blast 2>
+		Legality 20
+
+		Ammo
+		name <Bio>
+		type <SICKNESS POISON>
+		Legality 35
+	end
+
+	Set
+	name <.32 revolver>
+	% Primitive missile weapon
+	sub
+		Ammo
+		name <AP>
+		type <ArmorPiercing>
+
+		Ammo
+		name <HE>
+		type <Blast 1 Brutal>
+		Legality 10
+
+		Ammo
+		name <Rubber>
+		type <NonLethal>
+		Legality -15
+	end
+
+	Set
+	name <Crystalline Shard>
+	% Used by the Glitter Pistol and Glitter Cannon in the L5 Region
+	sub
+		Ammo
+		name <Tox>
+		type <Scatter Poison>
+		Legality 20
+	end
+
+	Set
+	name <2mm ferrous>
+	% Used by man-pac railguns, like the Pin Rifle
+	sub
+		Ammo
+		name <Carbide>
+		type <ArmorPiercing>
+		Legality 5
+	end
+
+	Set
+	name <6mm pistol>
+	% Commonly used by handguns
+	sub
+		Ammo
+		name <AP>
+		type <ArmorPiercing>
+
+		Ammo
+		name <Rubber>
+		type <NonLethal>
+		Legality -15
+
+		Ammo
+		name <Flechette>
+		type <Scatter>
+
+		Ammo
+		name <Incendiary>
+		type <Burn>
+		Legality 5
+
+		Ammo
+		name <Assassin>
+		type <Poison>
+		Legality 20
+	end
+
+	Set
+	name <22mm cone>
+	% Cone Rifle
+	sub
+		Ammo
+		name <HE>
+		type <Blast 1 Brutal>
+		Legality 10
+
+		Ammo
+		name <Miasma>
+		type <Blast 2 Toxin>
+		Legality 50
+	end
+
+	Set
+	name <60mm rocket>
+	% Bazooka
+	sub
+		Ammo
+		name <Buster>
+		type <Armorpiercing>
+
+		Ammo
+		name <Plasma>
+		type <Blast 4 Brutal>
+		Legality 25
+	end
+
+

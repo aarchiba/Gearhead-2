@@ -36,8 +36,8 @@
 	START <NewChat Say %id%01 AddChat %id%01 AddChat %id%02>
 	result%id%01 <EndChat Say %id%02 shop .%id%_wares Goto %1%>
 	result%id%02 <Goto %1%>
-	.%id%_wares <ACCESSORY THROWN AMMo GRENADE>
-	KEYWORDS <ACCESSORY THROWN AMMo GRENADE>
+	.%id%_wares <ACCESSORY THROWN GRENADE>
+	KEYWORDS <ACCESSORY THROWN GRENADE>
 	Msg%id%01 <This is an accessory shop. Take a look, I'm sure you'll find something you just gotta have!>
 	Msg%id%02 <Prices should be marked on everything. I'll be over here if you need any help.>
 	Prompt%id%01 <Show me what you've got.>
@@ -433,8 +433,8 @@
 	START <NewChat Say %id%01 AddChat %id%01 AddChat %id%02>
 	result%id%01 <EndChat Say %id%02 shop .%id%_wares Goto %1%>
 	result%id%02 <Goto %1%>
-	.%id%_wares <WEAPON AMMO ACCESSORY>
-	KEYWORDS <WEAPON AMMO ACCESSORY>
+	.%id%_wares <WEAPON ACCESSORY>
+	KEYWORDS <WEAPON ACCESSORY>
 	Msg%id%01 <I have the latest weapons and accessories.>
 	Msg%id%02 <Take a look around. If you have any questions, I should be able to answer them.>
 	Prompt%id%01 <I'd like to see your wares.>
@@ -446,8 +446,8 @@
 	START <NewChat Say %id%01 AddChat %id%01 AddChat %id%02>
 	result%id%01 <EndChat Say %id%02 shop .%id%_wares Goto %1%>
 	result%id%02 <Goto %1%>
-	.%id%_wares <MISSILE AMMo GRENADE>
-	KEYWORDS <MISSILE AMMo GRENADE>
+	.%id%_wares <MISSILE GRENADE>
+	KEYWORDS <MISSILE GRENADE>
 	Msg%id%01 <This is \ChatNPC 's Guns. We sell rifles, pistols, assault weapons and the ammo for them.>
 	Msg%id%02 <Take a look through all of our killing tools.>
 	Prompt%id%01 <I'd like to buy a gun.>
@@ -458,8 +458,8 @@
 	START <NewChat Say %id%01 AddChat %id%01 AddChat %id%02>
 	result%id%01 <EndChat Say %id%02 shop .%id%_wares Goto %1%>
 	result%id%02 <Goto %1%>
-	.%id%_wares <WEAPON AMMO>
-	KEYWORDS <WEAPON AMMo>
+	.%id%_wares <WEAPON>
+	KEYWORDS <WEAPON>
 	Msg%id%01 <At this store we sell weapons and ammo. That's two things every cavalier needs.>
 	Msg%id%02 <Look through the racks, see if we have anything you like.>
 	Prompt%id%01 <Let me see what you've got.>
@@ -482,9 +482,9 @@
 	START <NewChat Say %id%01 AddChat %id%01 AddChat %id%02>
 	result%id%01 <EndChat Say %id%02 shop .%id%_wares Goto %1%>
 	result%id%02 <Goto %1%>
-	.%id%_wares <WEAPON AMMO GRENADE>
-	KEYWORDS <WEAPON AMMO GRENADE>
-	Msg%id%01 <This is \ChatNPC 's Armaments. I carry a full range of guns, weapons, ammunition, and grenades.>
+	.%id%_wares <WEAPON GRENADE>
+	KEYWORDS <WEAPON GRENADE>
+	Msg%id%01 <This is \ChatNPC 's Armaments. I carry a full range of guns, weapons, and grenades.>
 	Msg%id%02 <Thanks to my distributor connections, you'll find that the selection of products here is second to none!>
 	Prompt%id%01 <I'd like to buy some weapons.>
 	Prompt%id%02 <Maybe I'll come here later.>
@@ -562,7 +562,7 @@
 	result%id%01 <ifPCCriminal else .%id%_GoR1Fail EndChat Say %id%02 shop .%id%_wares Goto %1%>
 	.%id%_GoR1Fail <EndChat Say %id%03 shop .%id%_badwares Goto %1%>
 	result%id%02 <Goto %1%>
-	.%id%_wares <WEAPON AMMO GRENADE ARMOR CLOTHING SHIELD MEDICINE CYBERWARE ELECTRONICS TOOL FOOD CONTRABAND>
+	.%id%_wares <WEAPON GRENADE ARMOR CLOTHING SHIELD MEDICINE CYBERWARE ELECTRONICS TOOL FOOD CONTRABAND>
 	.%id%_badwares <TOOL FOOD>
 	KEYWORDS <BLACK MARKET>
 	Msg%id%01 <I have a fine selection of tools for the adventuring professional, if you catch my drift.>
@@ -591,8 +591,8 @@
 	START <NewChat Say %id%01 AddChat %id%01 AddChat %id%02>
 	result%id%01 <EndChat Say %id%02 shop .%id%_wares Goto %1%>
 	result%id%02 <Goto %1%>
-	.%id%_wares <MISSILE AMMO GRENADE TOOL CLOTHING FOOD MEDICINE ELECTRONICS>
-	KEYWORDS <MISSILE AMMO GRENADE TOOL CLOTHING FOOD MEDICINE ELECTRONICS>
+	.%id%_wares <MISSILE GRENADE TOOL CLOTHING FOOD MEDICINE ELECTRONICS>
+	KEYWORDS <MISSILE GRENADE TOOL CLOTHING FOOD MEDICINE ELECTRONICS>
 	Msg%id%01 <I have a fine selection of adventuring equipment.>
 	Msg%id%02 <You should be able to find anything you need. If not, we can get it in stock later.>
 	Prompt%id%01 <Let me see what you've got.>

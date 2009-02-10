@@ -670,6 +670,7 @@ Content
 	sub
 		Persona 1
 		% V1 = Have given quest
+		% V2 = Have offered quest over the phone
 		rumor0 <%name1% has a vendetta against Comet Burger.>
 		KeyWorrds <TERRORIST>
 		greeting <if# QuestStatus %qid% %id% else GoDoQuest if# QuestStatus %qid% 0 else GoDoQuest Goto GoNoQuest>
@@ -677,7 +678,8 @@ Content
 		GoNoQuest <NewChat Say 17>
 		% If the PC has accepted the job offer from E2, getting the job offer here will
 		% be more difficult.
-		GoOfferQuest <ifItemOK %5% else GoRuinQuest if= QuestStatus %qid% %id% else GoPlainOffer NewChat Say 13 AddChat 12 AddChat 13>
+		GoOfferQuest <ifItemOK %5% else GoRuinQuest if= V2 0 else GoAutoOffer if= QuestStatus %qid% %id% else GoPlainOffer NewChat Say 13 AddChat 12 AddChat 13>
+		GoAutoOffer <NewChat Say 19 AddChat 7 AddChat 8 AddChat 9>
 		GoPlainOffer <NewChat Say 5 AddChat 5 AddChat 6>
 		GoRuinQuest <SetQuestStatus %id% -2 NewChat SayAnything>
 		result1 <EndChat Say 2 AddChat 4>
@@ -688,7 +690,7 @@ Content
 		result5 <EndChat Say 6>
 		result6 <NewChat Say 7 AddChat 7 AddChat 8 AddChat 9>
 		result7 <ifChatNPCInPlay else GoR7NotHere NewChat Say 8 QMemo %qid% 9 V= 1 1 SetQuestStatus %qid% %id% GiveItem %5%>
-		GoR7NotHere <NewChat Say 18>
+		GoR7NotHere <NewChat Say 18 V= 2 1>
 		result8 <NewChat Say 10>
 		result9 <NewChat Say 11 AddChat 10 AddChat 11>
 		result10 <Goto result7>
@@ -715,6 +717,7 @@ Content
 		Msg16 <I'm not telling you my plan... You might be one of them!>
 		Msg17 <The price we pay for good food is eternal vigilance and sometimes violence.>
 		Msg18 <Come see me in \SCENE %s1% then. I can't do everything over the phone!>
+		Msg19 <Are you ready to help me unleash culinary justice upon the abomination that is CometBurger!?>
 		Prompt1 <It has been done.>
 		CPrompt1 <if= ItemScene %5% %s4% Accept>
 		Prompt2 <Uh, no, not yet.>

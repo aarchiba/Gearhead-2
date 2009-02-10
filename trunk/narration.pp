@@ -203,10 +203,11 @@ Procedure DelinkGearForMovement( GB: GameBoardPtr; GearToBeMoved: GearPtr );
 
 Function KeepPlayingSC( GB: GameBoardPtr ): Boolean;
 
+Procedure RecordFatality( Camp: CampaignPtr; NPC: GearPtr );
 
 implementation
 
-uses texutil,rpgdice,ghchars,gearutil,ability,menugear,ghprop,ghweapon,
+uses texutil,rpgdice,ghchars,gearutil,ability,menugear,ghprop,ghweapon,interact,
 {$IFDEF ASCII}
 	vidgfx;
 {$ELSE}
@@ -1144,5 +1145,23 @@ begin
 	end;
 end;
 
+Procedure RecordFatality( Camp: CampaignPtr; NPC: GearPtr );
+	{ This character has died, and is about to be removed from the campaign. }
+	{ Record the death, and also record any special things about this NPC. }
+var
+	Relationship: Integer;
+begin
+	AddNAtt( Camp^.Source^.NA , NAG_Narrative , NAS_TotalFatalities , 1 );
+	Relationship := NAttValue( NPC^.NA , NAG_Relationship , 0 );
+	case Relationship of
+		NAV_Family: 	AddNAtt( Camp^.Source^.NA , NAG_Narrative , NAS_FamilyFatalities , 1 );
+		NAV_Lover: 	AddNAtt( Camp^.Source^.NA , NAG_Narrative , NAS_LoverFatalities , 1 );
+		NAV_Friend:	AddNAtt( Camp^.Source^.NA , NAG_Narrative , NAS_FriendFatalities , 1 );
+	end;
+	Relationship := NAttValue( NPC^.NA , NAG_Location , NAS_Team );
+	if ( Relationship = NAV_DefPlayerTeam ) or ( Relationship = NAV_LancemateTeam ) then begin
+		AddNAtt( Camp^.Source^.NA , NAG_Narrative , NAS_LancemateFatalities , 1 );
+	end;
+end;
 
 end.

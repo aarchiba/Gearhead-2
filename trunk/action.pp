@@ -48,13 +48,15 @@ const
 
 	{ *** ENACT MOVEMENT RESULTS *** }
 	EMR_Blocked = -2;	{ May indicate a charge... }
-	EMR_Crash = -1;		{ If either of these are returned from movement, }
+	EMR_Crash = 2;		{ If either of these are returned from movement, }
 				{ you should do a check to resolve crashes and charges. }
 
 	SA_Explosion = 'EXPLOSION';
 
 var
 	Destroyed_Parts_List: SAttPtr;
+
+Function Confused( Mek: GearPtr ): Boolean;
 
 Procedure GiveSkillRollXPAward( Pilot: GearPtr; Skill,SkRoll,SkTar: Integer );
 Function SkillRoll( GB: GameBoardPtr; PC: GearPtr; Skill,SkTar,SkMod: Integer; CasualUse,GainXP: Boolean ): Integer;
@@ -101,6 +103,21 @@ const
 
 
 	Stealth_Per_Scale = 4;		{ If scale different from map, get stealth bonus/penalty }
+
+Function Confused( Mek: GearPtr ): Boolean;
+	{ Return true if either the pilot or the mecha is either }
+	{ HAYWIRE or STONED. }
+var
+	Pilot: GearPtr;
+begin
+	if Mek^.G = GG_Mecha then begin
+		Pilot := LocatePilot( Mek );
+	end else begin
+		Pilot := Nil;
+	end;
+
+	Confused := HasStatus( Mek , NAS_Haywire ) or HasStatus( Mek , NAS_Stoned ) or HasStatus( Pilot , NAS_Haywire ) or HasStatus( Pilot , NAS_Stoned );
+end;
 
 Procedure GiveSkillRollXPAward( Pilot: GearPtr; Skill,SkRoll,SkTar: Integer );
 	{ Give a skill XP award. The size of the award is going to depend on the }
@@ -1234,6 +1251,16 @@ begin
 	{ Find out the gear's destination. }
 	P := GearDestination( Mek );
 
+	{ Set ETA for next move. }
+	SetNAtt( Mek^.NA , NAG_Action , NAS_MoveETA , GB^.ComTime + CalcMoveTime( Mek , GB ) );
+	SetNAtt( Mek^.NA , NAG_Action , NAS_MoveStart , GB^.ComTime );
+
+	{ If the destination isn't on the map, and this model isn't a player model, and it is in control }
+	{ of its actions, and it's not running away, disallow the move. }
+	if ( not OnTheMap( GB , P.X , P.Y ) ) and ( not Confused( Mek ) ) and ( NAttValue( Mek^.NA , NAG_Location , NAS_Team ) <> NAV_DefPlayerTeam ) and ( NAttValue( Mek^.NA , NAG_EpisodeData , NAS_Orders ) <> NAV_RunAway ) then begin
+		Exit;
+	end;
+
 	{ Set the mek's position to its new value. }
 	SetNAtt( Mek^.NA , NAG_Location , NAS_X , P.X );
 	SetNAtt( Mek^.NA , NAG_Location , NAS_Y , P.Y );
@@ -1250,11 +1277,6 @@ begin
 	if ( Mek^.G = GG_Character ) and ( NAttValue( Mek^.NA , NAG_Action , NAS_MoveAction ) = NAV_FullSpeed ) then begin
 		AddStaminaDown( Mek , 1 );
 	end;
-
-	{ Set ETA for next move. }
-	SetNAtt( Mek^.NA , NAG_Action , NAS_MoveETA , GB^.ComTime + CalcMoveTime( Mek , GB ) );
-{	SetNAtt( Mek^.NA , NAG_Action , NAS_CallTime , GB^.ComTime + 1 );}
-	SetNAtt( Mek^.NA , NAG_Action , NAS_MoveStart , GB^.ComTime );
 end;
 
 Procedure DoTurn( Mek: GearPtr; GB: GameBoardPtr );
