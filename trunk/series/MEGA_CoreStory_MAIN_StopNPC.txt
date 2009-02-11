@@ -466,10 +466,8 @@ Content
 		stc CORE-ACTIVATABLE
 		name <%name1%'s Forces>
 
-		STC ENCOUNTER-SEEKPC
-		EncounterMove 100
+		STC CORE-MECHAAMBUSH-ACTIVATABLE
 		name <Surprise Ambush>
-		update <ifThisQEncActive else GoHide  SetStat STAT_MetaVisibility 0 SetSelfX PCX SetSelfY PCY Goto GoSetOrders>
 	end
 
 

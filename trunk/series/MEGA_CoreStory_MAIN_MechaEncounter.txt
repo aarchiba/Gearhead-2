@@ -1644,10 +1644,8 @@ Content
 
 	end
 	inv
-		STC ENCOUNTER-SEEKPC
-		EncounterMove 100
+		STC CORE-MECHAAMBUSH-ACTIVATABLE
 		name <Surprise Ambush>
-		update <ifThisQEncActive else GoHide  SetStat STAT_MetaVisibility 0 SetSelfX PCX SetSelfY PCY Goto GoSetOrders>
 
 		Secret
 		Msg <%name4% has been watching you; \SPR %4% 's not going to let you get away this time.>

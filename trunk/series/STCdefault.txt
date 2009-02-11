@@ -1233,11 +1233,20 @@ EncounterMove 50
 
 Encounter
 desig <CORE-MECHAAMBUSH>
-% Sets this encounter's orders to Seek & Destroy
+% This encounter attacks as soon as the PC enters the scene.
 GoSetOrders <GrabSource GSetNAtt NAG_EpisodeData NAS_Orders 0>
 name <Hostile Mecha>
-update <if= PlotStatus %plotid% %id% else GoHide SetStat STAT_MetaVisibility 0  Goto GoSetOrders>
-EncounterMove 50
+update <if= PlotStatus %plotid% %id% else GoHide SetStat STAT_MetaVisibility 0  SetSelfX PCX SetSelfY PCY  ClearEncounterRecharge  Goto GoSetOrders>
+EncounterMove 100
+
+Encounter
+desig <CORE-MECHAAMBUSH-ACTIVATABLE>
+% This encounter attacks as soon as the PC enters the scene.
+GoSetOrders <GrabSource GSetNAtt NAG_EpisodeData NAS_Orders 0>
+name <Hostile Mecha>
+update <ifThisQEncActive else GoHide SetStat STAT_MetaVisibility 0  SetSelfX PCX SetSelfY PCY  ClearEncounterRecharge  Goto GoSetOrders>
+EncounterMove 100
+
 
 Encounter
 desig <CORE-ACTIVATABLE>

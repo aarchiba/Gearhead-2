@@ -322,3 +322,4 @@ SetXXRAttitude <GrabNPC ? GSetNAtt NAG_XXRan 102 ?>
 Monologue <GrabNPC ? GMonologue ?>
 TeamMonologue <GrabLocal ?Pilot ? GMonologue ?>
 PCMonologue <GrabPCPilot GMonologue ?>
+ClearEncounterRecharge <GrabCurrentScene GSetNAtt 21 6 0>

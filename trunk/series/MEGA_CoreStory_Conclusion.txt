@@ -352,8 +352,9 @@ Content
 	Element2 <Scene Outdoors !Near -7>
 	Element3 <Prefab>
 	Place3 <2>
-	Element4 <Character !Comrade -2 !Global HasMecha>
+	Element4 <Character !Comrade -2 !Global HasMecha NeverFail>
 	Place4 <3 (Enemies) SD enemy>
+	NeverFail4 <Mecha Pilot>
 
 	% P%id%01 = Initialization Counter
 	update <if= P%id%01 0 P= %id%01 1 NPCLevel %4% 82>

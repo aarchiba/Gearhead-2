@@ -2311,7 +2311,7 @@ begin
 		if TerrMod < -50 then TerrMod := -50;
 	end else begin
 		{ Attempting to move off the map }
-		{ takes 3x as long as normal movement. }
+		{ takes 2x as long as normal movement. }
 		TerrMod := 200;
 
 	end;
