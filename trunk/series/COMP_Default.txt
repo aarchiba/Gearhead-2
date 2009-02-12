@@ -221,6 +221,58 @@ Plot
 	end
 
 Plot
+	name <Bounty Hunter Mission>
+	desc <A bounty hunter is hiring.>
+	requires <#A +Tgs (+Fmi|+F--) E:++ (E:THIEF|F:CRIME)>
+
+	% E1 is the scene where this component will take place
+	% E2 is a local public scene
+	% E3 is the NPC that the PC will speak with
+	% E4 is your enemy
+	element1 <Grab 6>
+	element2 <Scene Public !Near -7>
+	element3 <Character Bounty Hunter -ENEMY !Near 2 NeverFail>
+	NeverFail3 <Bounty Hunter>
+	Place3 <1 (Guards) SD>
+	element4 <Grab 1>
+
+	% Fail Conditions:
+	% - Mission giver dies before encounter is activated
+	end <if= PlotStatus %plotid1% 0 ifNPCDead %3% LoseComp 0 .%id%_loss>
+	.%id%_loss <+T-->
+
+	.%id1%_%plotid1%_GoWin <SetPlotStatus %plotid2% %id2%     SMemo %id%01>
+	.%id1%_%plotid1%_GoLoss <SetPlotStatus %plotid3% %id3%    SMemo %id%02>
+
+	Msg%id%01 <You defeated %name4%. You should go tell %name3% at %name1%.>
+	Msg%id%02 <You lost to %name4%. You should go tell %name3% at %name1%.>
+
+	%% SubPlot1 is the Stop Mission task
+	%% SubPlot2 is the winning condition
+	%% SubPlot3 is the loss condition
+	SubPlot1 <*:CS_StopNPCMission&IsEnemyNPC 4>
+	SubPlot2 <*CS_CAWinMission 3>
+	SubPlot3 <*CS_CALoseMission 3>
+
+	sub
+		Persona 3
+		greeting <if= PlotStatus %plotid1% 0 else .%id%_GoRemind if# PlotStatus %plotid% 0 else .%id%_GoGreet NewChat SayAnything>
+		*.%id%_GoGreet <*IHearYouAreFightingNPC %2% .%id%_GoOfferMission>
+		*.%id%_GoRemind <*GenericMissionReminder>
+		.%id%_GoOfferMission <NewChat Say %id%01 AddCHat %id%01 AddChat %id%02>
+		result%id%01 <NewChat Say %id%02 History %id%03 SMemo %id%04 SetPlotStatus %plotid1% %id1%>
+		*result%id%02 <*RejectMission .%id%_GoR2Exit>
+		.%id%_GoR2Exit <AddReact -10   AddRenown -10   NTBLoseComp 0 .%id%_changes>
+		.%id%_changes <+T-- +F-->
+		Msg%id%01 <I need a cavalier for an upcoming mission against \OPR %4% . We don't know what \SPR %4% 's up to, but whatever it is it can't be good. If you want, I can let you have the job.>
+		Msg%id%02 <Thanks. Come back and let me know when you've beaten \OPR %4% .>
+		Msg%id%03 <%name3% hired you to discover %name4%'s plan and put a stop to it.>
+		Msg%id%04 <You agreed to stop %name4%'s mission for %name3%.>
+		Prompt%id%01 <Alright, I can do that.>
+		Prompt%id%02 <Forget it. I'm done with %name4%.>
+	end
+
+Plot
 	name <Good Thing You Showed Up>
 	desc <An ally faction is hiring.>
 	requires <#A +Tgs (+Fmi|+Fin|+F--) P:++>

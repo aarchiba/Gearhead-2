@@ -1147,12 +1147,16 @@ Procedure DoVerbalAttack( GB: GameBoardPtr; Attacker,Target: GearPtr );
 			SelectTactic := NAS_Conversation;
 		end;
 	end;
+const
+	MinSurrenderDefRoll = 5;
+	MinEjectDefRoll = 10;
 var
 	AtSkill,AtRoll,DefRoll: Integer;
 	msg: String;
 begin
 	if ( Target^.G = GG_Character ) then begin
 		DefRoll := SkillRoll( GB , Target , NAS_Resistance , 0 , 0 , False , True );
+		if DefRoll < MinSurrenderDefRoll then DefRoll := MinSurrenderDefRoll;
 		AddMentalDown( Attacker , 3 );
 
 		AtSkill := SelectTactic;
@@ -1178,6 +1182,7 @@ begin
 
 	end else if ( target^.G = GG_Mecha ) and ( NAttValue( Attacker^.NA , NAG_Location, NAS_Team ) = NAV_DefPlayerTeam ) and MightEject( Target ) then begin
 		DefRoll := SkillRoll( GB , Target , NAS_Resistance , 0 , NAttValue( Target^.NA , NAG_EpisodeData , NAS_TauntResistance ) , False , True );
+		if DefRoll < MinEjectDefRoll then DefRoll := MinEjectDefRoll;
 		AddMentalDown( Attacker , 3 );
 
 		AtSkill := SelectTactic;

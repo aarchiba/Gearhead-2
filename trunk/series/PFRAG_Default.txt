@@ -1519,7 +1519,14 @@ Prompt%id%03_2 <Probably fight somebody. No idea who yet.>
 %  PARAM2: Faction to check enemity of
 %  PARAM3: Exit script label if faction enemy
 	Persona
-	requires <*ENEMY_CHECK>
+	requires <*ENEMY_CHECK (friend|family|lover)>
+	START <ifFactionEnemy %2% else %1% NewChat Say %id%01  Goto %3%>
+	Msg%id%01 <\PC , this isn't a good time for you to be seen here...>
+	Msg%id%01_1 <You shouldn't be here... I'm on a mission for \FACTION %2% .>
+	Msg%id%01_2 <This isn't a good time.>
+
+	Persona
+	requires <*ENEMY_CHECK -friend -family -lover>
 	START <ifFactionEnemy %2% else %1% EndChat Say %id%01  Goto %3%>
 	Msg%id%01 <You've got a lot of nerve showing up here at a time like this...>
 	Msg%id%01_1 <You shouldn't be here...>
@@ -1527,12 +1534,12 @@ Prompt%id%03_2 <Probably fight somebody. No idea who yet.>
 
 
 	Persona
-	requires <*ENEMY_CHECK>
+	requires <*ENEMY_CHECK -friend -family -lover>
 	START <ifFactionEnemy %2% else %1% EndChat Say %id%01  Goto %3%>
 	Msg%id%01 <You aren't welcome here. You should get out before I call the guards.>
 
 	Persona
-	requires <*ENEMY_CHECK Sociable>
+	requires <*ENEMY_CHECK Sociable -friend -family -lover>
 	START <ifFactionEnemy %2% else %1% NewChat Say %id%01  Goto %3%>
 	Msg%id%01 <You aren't welcome here. I suggest that you leave.>
 
