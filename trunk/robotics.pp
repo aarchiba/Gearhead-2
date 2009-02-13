@@ -162,10 +162,20 @@ begin
 	GameMsg( Robotics_Info , ZONE_EqpMenu , InfoHilight );
 end;
 
+Function IngredientsDesc( Ingredients: GearPtr ): String;
+	{ Return a string describing the build points gained from this list of }
+	{ ingredients. }
+begin
+	IngredientsDesc := MsgString( 'ROBOTICS_BP' ) + BStr( R_BuildPoints( Ingredients ) ) + #13 + ' ' +
+		MsgString( 'ROBOTICS_AP' ) + BStr( R_ArmorPoints( Ingredients ) ) + #13 + ' ' +
+		MsgString( 'ROBOTICS_CP' ) + BStr( R_ComputerPoints( Ingredients ) ) + #13 + ' ' +
+		MsgString( 'ROBOTICS_PP' ) + BStr( R_PowerPoints( Ingredients ) );
+end;
+
 Function IsGoodRobotPart( Part: GearPtr ): Boolean;
 	{ Return TRUE if this part can be installed in a robot, or FALSE otherwise. }
 begin
-	if ( Part^.G = GG_Weapon ) or ( Part^.G = GG_Shield ) or ( Part^.G = GG_ExArmor ) or ( Part^.G = GG_Computer ) or ( Part^.G = GG_Powersource ) then begin
+	if ( Part^.G = GG_Weapon ) or ( Part^.G = GG_Shield ) or ( Part^.G = GG_ExArmor ) or ( Part^.G = GG_Computer ) or ( Part^.G = GG_Powersource ) or ( Part^.G = GG_Tool ) then begin
 		IsGoodRobotPart := True;
 	end else if ( Part^.G = GG_RepairFuel ) then begin
 		IsGoodRobotPart := ( ( Part^.S = 15 ) or ( Part^.S = 23 ) );
@@ -190,10 +200,7 @@ begin
 	repeat
 		Robotics_Menu := CreateRPGMenu( MenuItem , MenuSelect , ZONE_InvMenu );
 
-		Robotics_Info := MsgString( 'ROBOTICS_BP' ) + BStr( R_BuildPoints( Robotics_Parts ) ) + #13 + ' ' +
-			MsgString( 'ROBOTICS_AP' ) + BStr( R_ArmorPoints( Robotics_Parts ) ) + #13 + ' ' +
-			MsgString( 'ROBOTICS_CP' ) + BStr( R_ComputerPoints( Robotics_Parts ) ) + #13 + ' ' +
-			MsgString( 'ROBOTICS_PP' ) + BStr( R_PowerPoints( Robotics_Parts ) );
+		Robotics_Info := IngredientsDesc( Robotics_Parts );
 		Robotics_Source := PC^.InvCom;
 
 		Part := PC^.InvCom;
@@ -331,6 +338,7 @@ begin
 
 	{ We now have a menu. Select a form. }
 	Robotics_Source := Robotic_Forms;
+	Robotics_Info := IngredientsDesc( Ingredients );
 	N := SelectMenu( Robotics_Menu , @RobotPartRedraw );
 	DisposeRPGMenu( Robotics_Menu );
 

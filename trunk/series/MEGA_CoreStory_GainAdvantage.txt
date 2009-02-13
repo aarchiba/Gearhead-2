@@ -511,8 +511,7 @@ Content
 		% V4 = Have tried Prompt4
 		% V6 = Have tried Prompt6
 		greeting <if= p%id%01 1 else GoOpenShop if= PlotStatus %plotid% %id% else GoOpenShop  NewChat Say 1 AddChat 1 AddChat 2 AddCHat 3>
-		*GoOpenShop <*SERVICE_DOCTOR GoBye>
-		*GoBye <*GOODBYE>
+		GoOpenShop <RevertPersona>
 		result1 <ifConversation SkillTar StoryDL else GoR1Fail NewChat Say 2 AddChat 4 AddChat 5 AddChat 6>
 		GoR1Fail <NewChat Say 3>
 		result2 <NewChat Say 4 AddCHat 7>

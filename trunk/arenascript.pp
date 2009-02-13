@@ -1237,6 +1237,39 @@ begin
 	end;
 end;
 
+Function PlotHintString( GB: GameBoardPtr; Source: GearPtr; N: LongInt ): String;
+	{ Determine hint string N for this plot. }
+	Function GenericHintString: String;
+		{ We can't find a valid hint string for this plot. Just return }
+		{ some generic advice. }
+	begin
+		GenericHintString := MsgString( 'GENERIC_HINT_STRING_' + BStr( Random( 6 ) + 1 ) );
+	end;
+var
+	Plot: GearPtr;
+	IsFound: Boolean;
+	msg: String;
+begin
+	{ Find the plot. We need it if we are to proceed. }
+	Plot := PlotMaster( GB , Source );
+	if Plot = Nil then Exit( GenericHintString );
+
+	{ Start looking for the correct message. }
+	repeat
+		msg := ScriptMessage( 'HINT_' + BStr( N ) , GB , Plot );
+		DeleteWhiteSpace( msg );
+		IsFound := True;
+		if ( Length( msg ) > 1 ) and ( msg[1] = ':' ) then begin
+			{ This is a redirect. }
+			DeleteFirstChar( msg );
+			N := ExtractValue( msg );
+			IsFound := False;
+		end;
+	until IsFound;
+	if msg = '' then PlotHintString := GenericHintString
+	else PlotHintString := msg;
+end;
+
 Procedure FormatMessageString( var msg: String; gb: GameBoardPtr; Scene: GearPtr );
 	{ There are a number of formatting commands which may be used }
 	{ in an arenascript message string. }
@@ -1294,6 +1327,11 @@ begin
 				ID := ScriptValue( S0 , GB , Scene );
 				Part := GG_LocateNPC( ID , GB , Scene );
 				W := GEarName( Part );
+
+			end else if W = '\HINT' then begin
+				{ Insert the name of a specified plot element. }
+				ID := ScriptValue( S0 , GB , Scene );
+				W := PlotHintString( GB , Scene , ID );
 
 			end else if W = '\ITEM' then begin
 				{ Insert the name of a specified item. }
@@ -3941,8 +3979,8 @@ Procedure ProcessXPV( var Event: String; GB: GameBoardPtr; Source: GearPtr );
 		for Skill := 1 to NumSkill do begin
 			{ If this is the specialist skill, it can go one higher. }
 			SkRank := SkillRank( NPC , Skill );
-			if Skill = SpecSkill then Dec( SkRank );
-			if SkRank < OptRank then begin
+			if ( Skill = SpecSkill ) and ( SkRank > 1 ) then Dec( SkRank );
+			if ( SkRank > 0 ) and ( SkRank < OptRank ) then begin
 				Inc( N );
 				CanGetBonus[ Skill ] := True;
 			end else CanGetBonus[ Skill ] := False;

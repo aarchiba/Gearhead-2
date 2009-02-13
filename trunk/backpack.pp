@@ -1746,6 +1746,7 @@ Procedure StartPerforming( GB: GameBoardPtr; PC: GearPtr );
 begin
 	if ( PC = Nil ) or ( PC^.G <> GG_Character ) then Exit;
 
+
 	SetNAtt( PC^.NA , NAG_Location , NAS_SmartCount , 4 );
 	SetNAtt( PC^.NA , NAG_Location , NAS_SmartAction , NAV_UseSkill );
 	SetNAtt( PC^.NA , NAG_Location , NAS_SmartSkill , NAS_Performance );

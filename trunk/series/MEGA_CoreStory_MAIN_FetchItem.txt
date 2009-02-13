@@ -37,6 +37,8 @@ Content
 	Element6 <Prefab>
 	Place6 <3>
 
+	HINT_%plotid% <:%plotid1%>
+
 	%% FAIL CONDITIONS
 	%% - DiscoverNPCHasItem fails
 	%% - RevealEncounter fails
@@ -175,6 +177,8 @@ Content
 	Element5 <NewNPC -2 0>
 	Place5 </>
 
+	HINT_%plotid% <:%plotid1%>
+
 	%% FAIL CONDITIONS
 	%% - DiscoverNPCHasItem fails
 	%% - RevealEncounter fails
@@ -300,6 +304,8 @@ Content
 	Element6 <Prefab>
 	Element7 <Prefab>
 	Place7 <3>
+
+	HINT_%plotid% <:%plotid1%>
 
 	% Upon being activated, this subplot activates the DiscoverNPCHasItem subplot. When that
 	% subplot is completed, it activates both the RevealEncounter and LearnSecret ones.
@@ -539,6 +545,8 @@ Content
 	Element2 <Grab 1>
 	Place2 </>
 
+	HINT_%plotid% <:%plotid1%>
+
 	% p%id%01 = Initialization Counter
 	% p%id%02 = Time Limit
 	% p%id%03 = Freeze Item Counter
@@ -614,6 +622,8 @@ Content
 	Element5 <Character THIEF !Near 4 !XClude -2 NeverFail>
 	NeverFail5 <Thief>
 	Place5 <3 (Guards) sd>
+
+	HINT_%plotid% <:%plotid1%>
 
 	% P%id%01 = Initialization Counter
 	% P%id%02 = Item has been lost
@@ -722,6 +732,8 @@ Content
 	Element4 <Prefab>
 	Place4 <3>
 
+	HINT_%plotid% <:%plotid1%>
+
 	% P%id%01 = Initialization Counter
 
 	% FAIL CONDITIONS:
@@ -820,6 +832,8 @@ Content
 	Place5 <3 (Pirates)>
 	Element6 <Prefab>
 	Place6 <3>
+
+	HINT_%plotid% <:%plotid1%>
 
 	% FAIL CONDITIONS:
 	% - The RevealShip subplot fails

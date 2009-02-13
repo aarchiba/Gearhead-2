@@ -187,7 +187,8 @@ Content
 
 	sub
 		Persona 1
-		greeting <if= PlotStatus %plotid% %id% else %pop% NewChat Say %id%01 AddChat %id%01 AddCHat %id%02 AddChat %id%03>
+		greeting <if= PlotStatus %plotid% %id% else %pop% ifChatNPCInPlay else .%id%_GoComeHere NewChat Say %id%01 AddChat %id%01 AddCHat %id%02 AddChat %id%03>
+		.%id%_GoComeHere <NewChat Say %id%07>
 		.%id%_GoBecomeAlly <PCAlly %1% NPCLevel %1% StoryDL History %id%05 SMemo 0 NTBWinComp 0 .%id%_win>
 		.%id%_win <+T-- +F-->
 		result%id%01 <History %id%02 NPCLevel %1% StoryDL &SetPartnerNPC %1% &AddPartnerToLance SMemo 0 NTBWinComp 0 .%id%_win Goto .%id%_GoJoinLance>
@@ -201,6 +202,7 @@ Content
 		Msg%id%04 <I see. Well, if you ever need me, you know where you can find me.>
 		Msg%id%05 <In thanks for your help, %name1% offered to join your lance.>
 		Msg%id%06 <OK. I'll be waiting.>
+		Msg%id%07 <Come see me at \SCENE NPCScene %1% .>
 		Prompt%id%01 <Sure, I'd love to have you as part of the lance.>
 		CPrompt%id%01 <ifNPCDead &PartnerNPC Accept>
 		Prompt%id%02 <Sorry, but I've already got a partner.>

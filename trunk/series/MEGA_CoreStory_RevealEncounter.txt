@@ -26,6 +26,8 @@ Content
 	Element5 <Prefab>
 	Place5 <1>
 
+	HINT_%plotid% <There's been fighting reported in %name1%.>
+
 	sub
 		MetaScene 5 2
 		rumor%id% <%name4% has been searching for %name3% in %name1%.>
@@ -119,6 +121,9 @@ Content
 	Place5 <4 sd ally (Guards)>
 	Element6 <NewNPC -2 -7 Shy>
 	Place6 <4 sd ally (Guards)>
+
+	% The Hint
+	HINT_%plotid% <You might want to start at %name4%.>
 
 	%% FAIL CONDITIONS:
 	%% - E5 dies
@@ -219,6 +224,9 @@ Content
 	Place5 <4>
 	Element6 <Prefab>
 	Place6 </>
+
+	% The Hint
+	HINT_%plotid% <%name3%'s allies have been seen in %name4%.>
 
 	% SubPlot1 is the clue identification utility, in case the PC can't do it himself
 	SubPlot1 <*CS_AnalyzeClue_LeadToNPC 1 2 3 6>
@@ -469,6 +477,9 @@ Content
 	Element6 <Character HasMecha !Comrade 3 !Global -Lawful>
 	Place6 <5 (Enemies) SD enemy>
 
+	% The Hint
+	HINT_%plotid% <There have been some suspicious mecha in %name4%.>
+
 	% P%id%01 = Initialization Counter
 	update <if= p%id%01 0 P= %id%01 1  NPCLevel %6% StoryDL>
 
@@ -561,6 +572,9 @@ Content
 	Element4 <Prefab>
 	Place4 <1>
 	Element5 <Prefab>
+
+	% The Hint
+	HINT_%plotid% <Some pirates in %name1% have also been looking for the %name5%.>
 
 	% SubPlot1 is the clue identification utility, in case the PC can't do it himself
 	SubPlot1 <*CS_AnalyzeClue_LeadToItem 1 2 3 5>
@@ -668,6 +682,9 @@ Content
 	Element4 <Prefab>
 	Place4 <1>
 
+	% The Hint
+	HINT_%plotid% <%name3%'s men have been seen in %name1%.>
+
 	% P%id%01 = Initialization Counter
 	% P%id%02 = Tracking Difficulcy Number
 
@@ -748,6 +765,9 @@ Plot
 	Element5 <Scene Environs !Near -7>
 	Element6 <Scene Public !Near -7>
 
+	% The Hint
+	HINT_%plotid% <You might want to check out %name6%.>
+
 	% SubPlot1 is the duel itself
 	% SubPlot2 is a blank plot state
 	SubPlot1 <*CS_Duel&NoDerailment 4 6 5>
@@ -820,6 +840,9 @@ Content
 	Element5 <Prefab>
 	Place5 <4 (Citizens) pass>
 
+	% The Hint
+	HINT_%plotid% <They say %name3% is planning a robbery.>
+
 	% p%id%01 = Message Counter
 	start <if= p%id%01 0   if= SceneID %4%   p= %id%01 1   Alert %id%01 History %id%02 ForceChat %5% FreezeNPC %5%>
 	.%id%_%plotid%_GoArrest <Alert %id%03 Alert %id%04 PCEnemy %5% PMemo %plotid% %id%05 History %id%06 XPV 100 SetEncounterActive %2% WinSubPlot %plotid%>
@@ -891,6 +914,9 @@ Content
 	Element4 <Character (Trucker|ADVEN) HasMecha !Near 3 !XClude -2 !Okay -3 -ArchEnemy NeverFail>
 	NeverFail4 <Trucker>
 
+	% The Hint
+	HINT_%plotid% <You might want to ask %name4% about this.>
+
 	%% FAIL CONDITIONS:
 	%%  - E4 dies before revealing the secret
 
@@ -918,6 +944,9 @@ Content
 	% E3 is an encounter
 	Element3 <Prefab>
 	Place3 <1>
+
+	% The Hint
+	HINT_%plotid% <The raiders were most recently spotted in %name1%.>
 
 	% P%id%01 = Initialization Counter
 	% P%id%02 = Tracking Difficulcy Number
@@ -996,6 +1025,9 @@ Content
 	Element4 <Character !Global !Ally -2 (Friend|Lover|Family|ArchAlly)>
 	Place4 <3 sd ally (Friend)>
 
+	% The Hint
+	HINT_%plotid% <You might want to start in %name1%.>
+
 	sub
 		MetaScene 3 2
 		MapWidth 10
@@ -1051,6 +1083,9 @@ Content
 	Element3 <Scene Public !Near -7>
 	Element4 <Prefab>
 	Place4 </>
+
+	% The Hint
+	HINT_%plotid% <You might want to start at %name3%.>
 
 	%% FAIL CONDITIONS:
 	%% - If E4 dies, this subplot will fail.
@@ -1145,6 +1180,9 @@ Content
 	Place4 </>
 	Element5 <Prefab>
 	Place5 <4>
+
+	% The Hint
+	HINT_%plotid% <You might want to start at %name3%.>
 
 	%% FAIL CONDITIONS:
 	%% - If Item E5 is destroyed and E4 is dead, this subplot will fail.

@@ -487,7 +487,7 @@ Content
 		.%id%_GoOfferMission <NewChat Say %id%01 AddCHat %id%01 AddChat %id%02>
 		result%id%01 <goto result%id%02>
 		result%id%02 <History %id%03 SMemo %id%04 SetPlotStatus %plotid1% %id1%  SetPlotStatus %plotid2% %id2% Goto .%id%_GoAccept>
-		*.%id%_GoAccept <*GoodLuckOnMission na ChatNPCFac &EnemyFac>
+		*.%id%_GoAccept <*GoodLuckPlusHint na %plotid2%>
 		Msg%id%01_1 <Your old nemesis \PERSONA &EnemyNPC is in town, and \SPR &EnemyNPC 's causing trouble. If you could locate and defeat \OPR &EnemyNPC there'd be a reward in it for you.>
 		CMsg%id%01_1 <ifNPCOK &EnemyNPC Accept>
 		Msg%id%01_2 <I know that you've tangled with \FACTION &EnemyFac before; they've got some raiders in town, and there's a reward for anyone who can locate and stop them.>
@@ -714,7 +714,7 @@ Content
 		.%id%_GoR3Exit <AddReact -10   AddRenown -10   NTBLoseComp 0 .%id%_changes>
 		.%id%_changes <+T-- +F-->
 		Msg%id%01 <You should know that \SPR %2% 's in town on a mission even as we speak. I tried to fight \OPR %2% myself, but got beaten pretty bad. If you could find \OPR %2% and avenge my poor departed mecha I'd be ever so grateful.>
-		Msg%id%02 <Thanks. Come back and let me know when you've beaten \OPR %2% .>
+		Msg%id%02 <Thanks. \HINT %plotid1% Come back and let me know when you've beaten \OPR %2% .>
 		Msg%id%03 <%name1% was defeated by %name2%. You agreed to help \OPR %1% get revenge.>
 		Msg%id%04 <You agreed to locate and defeat %name2% for %name1%, who had previously been defeated by \OPR %2% .>
 		Prompt%id%01 <I've been hoping for a chance to fight %name2%.>
@@ -812,7 +812,7 @@ Content
 		result%id%01 <AddReact d10 AddEasygoing d10   goto result%id%02>
 		result%id%02 <NewChat Say %id%02 History %id%03 SMemo %id%04 SetPlotStatus %plotid1% %id1%  SetPlotStatus %plotid2% %id2%>
 		Msg%id%01 <I was wondering if you could help me with something. There's a mission I'm supposed to be doing now, but I've got a terrible cold. If you could do it instead, I'd be really grateful.>
-		Msg%id%02 <Thank you so much! Let me tell you about the mission, then- I was supposed to engage a group of raiders, but since getting sick I've lost track of them. You'll have to find out where they are and engage their mecha.>
+		Msg%id%02 <Thank you so much! Let me tell you about the mission, then- I was supposed to engage a group of raiders, but since getting sick I've lost track of them. \HINT %plotid2%>
 		Msg%id%03 <You agreed to do a mission for %name1%, who is sick.>
 		Msg%id%04 <You agreed to locate and defeat a group of raiders for %name1%, who is sick.>
 		Prompt%id%01 <Of course I can help you.>
@@ -896,7 +896,7 @@ Content
 		Msg%id%01 <I was wondering if you could help me with something... I've been asked by a certain collector to retrieve a very rare item which is apparently in \SCENE &EpisodeScene .>
 		Msg%id%02 <Exactly. I would, of course, compensate you for your trouble. What do you say? Do we have a deal?>
 		Msg%id%03 <No, of course not, this item was lost a long time ago. That means it's up for grabs for whoever finds it first. What do you say, can you help me out?>
-		Msg%id%04 <Great! The item I'm searching for is a Bing Vase. There was apparently one lost here a while back; come see me after you find it.>
+		Msg%id%04 <Great! The item I'm searching for is a Bing Vase. There was apparently one lost here a while back. \HINT %plotid1%>
 		Msg%id%05 <%name1% asked you to help \OPR %1% locate a Bing Vase.>
 		Msg%id%06 <Crap... I hate having to do work by myself. I guess I don't have any choice now.>
 		Msg%id%07 <You refused to help %name1% retrieve an item.>
@@ -955,8 +955,8 @@ Content
 		result%id%02 <NewChat Say %id%04 AddEasygoing -d4 Goto .%id%_GoStartMission>
 		Msg%id%01 <I've got some terrible news- an ancient family heirloom which was entrusted to me has gone missing. I think it was stolen... when everybody else finds out, I'm going to be in a lot of trouble.>
 		Msg%id%02 <You offered to help find %name1%'s stolen family heirloom.>
-		Msg%id%03 <You think you can do that? Alright, it's not as if I have anything to lose... Let me know what you turn up.>
-		Msg%id%04 <Are you volunteering to find it? Great! I knew I could depend on you, \PC ... Let me know what you turn up.>
+		Msg%id%03 <You think you can do that? Alright, it's not as if I have anything to lose... \HINT %plotid1% Let me know what you turn up.>
+		Msg%id%04 <Are you volunteering to find it? Great! I knew I could depend on you, \PC ... \HINT %plotid1% Let me know what you turn up.>
 		Prompt%id%01 <Don't worry, I'll see if I can find it for you.>
 		Prompt%id%02 <You need better security. Nobody ever steals stuff from me.>
 	end
@@ -1007,7 +1007,7 @@ Content
 		result%id%02 <NewChat Say %id%04 AddEasygoing -d4 Goto .%id%_GoStartMission>
 		Msg%id%01 <I was wondering if you could help me with something. My watch went missing, I think maybe it got stolen. Could you see if you can find it?>
 		Msg%id%02 <%name1% asked you to help find \PPR %1% watch.>
-		Msg%id%03 <Thanks! I knew I could depend on you.>
+		Msg%id%03 <Thanks! I knew I could depend on you. \HINT %plotid1%>
 		Msg%id%04 <Oh, as if you've got something better to do. Don't worry, I'll be sure to reward you if you find it. I know how important pavlovian reinforcement is to you adventurers.>
 		Prompt%id%01 <I'll let you know if I do.>
 		Prompt%id%02 <This is hardly a fitting use of my mad cavalier skills.>
@@ -1099,7 +1099,7 @@ Content
 		result%id%05 <goto .%id%_GoDeny>
 		Msg%id%01 <Well, \PERSONA &EnemyNPC is apparently in town on a mission. I know the two of you have fought in the past, so I was hoping you'd be willing to help me find out what \SPR &EnemyNPC 's up to.>
 		Msg%id%02 <As a cavalier \SPR &EnemyNPC always seems to leave a trail of destruction in \PPR &EnemyNPC wake; \PPR &EnemyNPC presence in \SCENE &EpisodeScene could be a major news story. If we could help save some lives so much the better.>
-		Msg%id%03 <Great! Come back and see me when you've uncovered what \PERSONA &EnemyNPC is doing.>
+		Msg%id%03 <Great! Come back and see me when you've uncovered what \PERSONA &EnemyNPC is doing. \HINT %plotid2%>
 		Msg%id%04 <You agreed to help %name1% research \PERSONA &EnemyNPC for a news story.>
 		Msg%id%05 <Just listen, okay? \PERSONA &EnemyNPC is up to something and if we don't find out what it could be a major disaster. I really need your help with this.>
 		Msg%id%06 <I don't think the entire story has been uncovered yet. Come back when it has been.>

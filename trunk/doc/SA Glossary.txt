@@ -64,6 +64,14 @@ region of that world.
 	SPACE
 	URBAN, ASTER
 
+HINT_%plotid%
+	Contains a hint associated with a subplot. When the PC is given a mission
+they may also be given a hint. If a given hint begins with a colon, it will redirect
+the hint search to a different subplot. For instance:
+		HINT_%plotid% <:%plotid1%>
+	When the hint for %plotid% is called, actually it will be the hint for %plotid1%
+which will be shown.
+
 KEYWORDS
 	Lists keywords by which the PC can telephone somebody.
 	The keywords include all the categories sold by the NPC (see above),

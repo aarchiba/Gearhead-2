@@ -98,7 +98,7 @@ Content
 		*.%id%_GoRemind <*GenericMissionReminder>
 		*.%id%_GoKnownGreeting <*IHaveAJobForYou .%id%_GoBriefing>
 		*.%id%_GoUnknownGreeting <*AreYouHereAboutJob&Mecha .%id%_GoBriefing>
-		*.%id%_GoAccept <*GoodLuckOnMission .%id%_GoR1Exit ChatNPCFac &EnemyFac>
+		*.%id%_GoAccept <*GoodLuckPlusHint .%id%_GoR1Exit %plotid1%>>
 		.%id%_GoR1Exit <SetPlotStatus %plotid1% %id1%>
 		.%id%_GoBriefing <NewChat Say %id%01 AddChat %id%01 AddChat %id%02 &SetEnemyFac %3% SetNPCFaction %2% %3%>
 		result%id%01 <SMemo %id%02 History %id%03 Goto .%id%_GoAccept>
@@ -148,7 +148,7 @@ Content
 		*.%id%_GoKnownGreeting <*IHaveAJobForYou .%id%_GoBriefing>
 		*.%id%_GoUnknownGreeting <*AreYouHereAboutJob&Mecha .%id%_GoBriefing>
 		*.%id%_GoBriefing <*CS_BasicStopEnemyMission .%id%_GoAccept .%id%_GoDeny>
-		*.%id%_GoAccept <*GoodLuckOnMission .%id%_GoR1Exit ChatNPCFac &EnemyFac>
+		*.%id%_GoAccept <*GoodLuckPlusHint .%id%_GoR1Exit %plotid1%>
 		.%id%_GoR1Exit <SetPlotStatus %plotid1% %id1%>
 		*.%id%_GoDeny <*RejectMission .%id%_GoR2Exit>
 		.%id%_GoR2Exit <LoseComp 0 .%id%_changes>
@@ -195,7 +195,7 @@ Content
 		*.%id%_GoKnownGreeting <*IHaveAJobForYou .%id%_GoBriefing>
 		*.%id%_GoUnknownGreeting <*AreYouHereAboutJob .%id%_GoBriefing>
 		.%id%_GoBriefing <NewChat Say %id%01 AddChat %id%01 AddChat %id%02>
-		*result%id%01 <*GoodLuckOnMission .%id%_GoR1Exit ChatNPCFac na>
+		*result%id%01 <*GoodLuckPlusHint .%id%_GoR1Exit %plotid1%>
 		.%id%_GoR1Exit <StoryNote %id%02 SetPlotStatus %plotid1% %id1%>
 		*Result%id%02 <*RejectMission .%id%_GoR2Exit>
 		.%id%_GoR2Exit <LoseComp 0 .%id%_changes>
@@ -305,7 +305,7 @@ Content
 		*.%id%_GoKnownGreeting <*IHaveAJobForYou .%id%_GoBriefing>
 		*.%id%_GoUnknownGreeting <*AreYouHereAboutJob&Mecha .%id%_GoBriefing>
 		*.%id%_GoBriefing <*CS_BasicFightingMission .%id%_GoAccept .%id%_GoDeny>
-		*.%id%_GoAccept <*GoodLuckOnMission .%id%_GoR1Exit ChatNPCFac &EnemyFac>
+		*.%id%_GoAccept <*GoodLuckPlusHint .%id%_GoR1Exit %plotid2%>
 		.%id%_GoR1Exit <SetPlotStatus %plotid1% %id1%  SetPlotStatus %plotid2% %id2%>
 		*.%id%_GoDeny <*RejectMission .%id%_GoR2Exit>
 		.%id%_GoR2Exit <LoseComp 0 .%id%_changes>
@@ -349,8 +349,5 @@ Content
 
 
 
-%%  ************************************
-%%  ***   +Cme  Mentoring  Partner   ***
-%%  ************************************
 
 

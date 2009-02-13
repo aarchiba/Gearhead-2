@@ -461,6 +461,99 @@ Content
 %%  *******************
 
 Content
+	name <I'm Not Distressed>
+	size 5
+	desc <Your love interest is under attack, but will prove self to you.>
+	requires <*:CS_MechaEncounter +H-- A:++ (A:LABOR|A:CRAFT|A:FAITH|A:CORPO|A:TRADE|A:ADVEN) (A:A.tha|A:A.jr_|A:A.---) -A:ENEMY ~+Glo>
+	changes <A:A +H>
+
+	% E1 is the outdoors scene where this encounter will take place
+	% E2 is the encounter
+	% E3 is the love interest
+	element3 <Grab 9>
+	Place3 <2 (Lover) sd ally>
+
+	% P%id%01 = Initialization Counter
+	% P%id%03 = Have gained decimation
+	update <if= P%id%01 0 P= %id%01 1 NPCLevel %3% StoryDL SetPlotStatus %plotid1% %id1%>
+
+	% Set decimation here
+	.%id1%_%plotid1%_GoDecimation     <P= %id%03 1>
+
+	% SubPlot1 = Gain Advantage vs Raiders
+	SubPlot1 <*:CS_GainAdvantageVsMecha&Decimation>
+
+	sub
+		MetaScene 2 2
+		% L1 = Encounter Over Counter
+		% L2 = Initialization Counter
+		MapWidth 50
+		MapHeight 50
+
+		Start <if= L2 0 L= 2 1  Alert 1 History 2 ForceChat %3%  CancelSubPlot %plotid1%>
+		nu1 <if= T1 0   Return   if= V1 0 V= 1 1   LoseSubPlot %plotid%   Trigger0 .%id1%_%plotid1%_GoLoss  Goto GoSetEnvy>
+		nu2 <if= T2 0   if= V1 0 V= 1 1   XPV 100  AddRenown 1   SALVAGE   Trigger0 .%id%_%plotid%_GoWin WinSubPlot %plotid% ifNPCInPlay %3% else GoSetEnvy  Monologue %3% 3 FreezeNPC %3% Print 6 SetXXRAttitude %3% XXR_A_IsEqual  History 4 AlterContext .next>
+		.next <+Hra>
+		GoSetEnvy <ifNPCOK %3% SetXXRAttitude %3% XXR_A_EnviesPC History 5>
+		end <SetEncounterInactive %2%>
+
+		Msg1 <You find %name3% fighting off a lance of mecha from \FACTION &EnemyFac .>
+		Msg2 <You helped %name3% fight \FACTION &EnemyFac .>
+		Msg3 <Hey, I'd say that we make a pretty good team. I'll see you around \PC .>
+		Msg4 <Together you defeated all of the enemies.>
+		Msg5 <You failed to protect %name3% from the mecha.>
+		Msg6 <%name3% returns to \PPR %3% convoy.>
+
+		sub
+			team 1
+			SetEnemy 2
+			SetAlly 3
+			ParaX 5
+			ParaY 5
+
+			team 2
+			SetEnemy 1 3
+			Deploy <if= PlotStatus %plotid% %id% SetSelfFaction &EnemyFac   if= p%id%03 0 else GoSmallDeploy WMecha 2 StoryDL 220>
+			GoSmallDeploy <WMecha 2 StoryDL 120>
+			ParaX 30
+			ParaY 30
+
+			team 3
+			name <Lover>
+			SetEnemy 2
+			SetAlly 1
+			ParaX 45
+			ParaY 45
+		end
+
+		Persona 3
+		special <UNLISTED>
+		% V%id%01 = Can only get this conversation once
+		greeting <if= PlotStatus %plotid% %id% else %pop% if= v%id%01 0 else %pop% v= %id%01 1 EndChat Say %id%01 AddChat %id%01 AddChat %id%02>
+		*result%id%01 <*LetsDefeatThem>
+		result%id%02 <EndChat Say %id%02 AddReact -10>
+		Msg%id%01 <Am I ever glad to see you! A convoy I was escorting just got attacked. I could use some backup.>
+		Msg%id%01_1 <\PC ! You certainly know the right time to show up... A convoy that I was escorting got attacked by these mecha. I could use some help to finish them off.>
+		CMsg%id%01_1 <ifNPCSociable Accept>
+		Msg%id%01_2 <Imagine seeing you here. My convoy is under attack.>
+		CMsg%id%01_2 <ifNPCShy Accept>
+		Msg%id%01_3 <Oh, hi there! This isn't really a great time to see you, or maybe it's the perfect time, but my convoy is under attack...>
+		CMsg%id%01_3 <ifNPCEasygoing Accept>
+		Msg%id%01_4 <You sure know how to make a dramatic entrance! Look at this- these mecha had the nerve to attack the convoy I was guarding.>
+		CMsg%id%01_4 <ifNPCPassionate Accept>
+		Msg%id%01_5 <Well this is a lucky break... \PC , the convoy I'm guarding is under attack. I could use some backup.>
+		CMsg%id%01_5 <ifNPCCheerful Accept>
+		Msg%id%01_6 <Just when it seemed like this was going to be a bad day, here you are. The convoy I was guarding just got attacked.>
+		CMsg%id%01_6 <ifNPCMelancholy Accept>
+		Msg%id%02 <You think I'm completely helpless out here? Come on, let's see who the better pilot is!>
+		Prompt%id%01 <I'll help you take them.>
+		Prompt%id%01_1 <They won't stand a chance against both of us together.>
+		Prompt%id%02 <Get out of here- I can take them myself.>
+		Prompt%id%02_1 <This is too dangerous for you- leave it to me.>
+	end
+
+
+Content
 	name <Edie Brickell Never Hurt Anyone>
 	size 5
 	desc <The Bohemian Collective distances itself from your enemy.>
@@ -946,17 +1039,17 @@ Content
 		.%id%_GoEndR2 <AddCheerful -d10>
 		Msg%id%01 <As you can see, my former allies are not too happy about my resignation. I guess that means we're on the same side now, \PC ... If you'll have me, I'll join with you to fight them.>
 		Msg%id%01_1 <>
-		CMsg%id%01_1 <ifCHatNPCSociable Accept>
+		CMsg%id%01_1 <ifNPCSociable Accept>
 		Msg%id%01_2 <>
-		CMsg%id%01_2 <ifCHatNPCShy Accept>
+		CMsg%id%01_2 <ifNPCShy Accept>
 		Msg%id%01_3 <>
-		CMsg%id%01_3 <ifCHatNPCEasygoing Accept>
+		CMsg%id%01_3 <ifNPCEasygoing Accept>
 		Msg%id%01_4 <>
-		CMsg%id%01_4 <ifCHatNPCPassionate Accept>
+		CMsg%id%01_4 <ifNPCPassionate Accept>
 		Msg%id%01_5 <>
-		CMsg%id%01_5 <ifCHatNPCCheerful Accept>
+		CMsg%id%01_5 <ifNPCCheerful Accept>
 		Msg%id%01_6 <>
-		CMsg%id%01_6 <ifCHatNPCMelancholy Accept>
+		CMsg%id%01_6 <ifNPCMelancholy Accept>
 		Prompt%id%01 <About time you came around to this side.>
 		Prompt%id%01_1 <I always knew you were too smart for \FACTION &EnemyFac .>
 		Prompt%id%01_2 <Sounds good to me. Shall we kick some ass?>

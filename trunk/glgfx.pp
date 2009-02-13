@@ -421,56 +421,64 @@ begin
 	ScaleColorValue := V;
 end;
 
-{Procedure MakeSwapBitmap( MyImage: PSDL_Surface; RSwap,YSwap,GSwap: PSDL_Color );
+{Function MakeSwapBitmap( MyImage: PSDL_Surface; RSwap,YSwap,GSwap: PSDL_Color ): PSDL_Surface;
 	In theory, this procedure would be an improved version of MakeSwapBitmap.
 	In reality it causes the game to crash. I don't know why, but just in case
 	I can ever get it to work, I hereby preserve it in commented form.
 var
+	MyImage2: PSDL_Surface;
 	X,Y: Integer;
 	Pix: UInt32;
 	R,G,B,R2,G2,B2: UInt8;
 begin
-	for X := 1 to MyImage^.W do begin
-		for Y := 1 to MyImage^.H do begin
-			SDL_LockSurface( MyImage );
-			Pix := SDL_GetPixel( MyImage , X , Y );
-			SDL_UnlockSurface( MyImage );
+	MyImage2 := SDL_ConvertSurface( MyImage , MyImage^.Format , SDL_SRCCOLORKEY );
+	SDL_FillRect( MyImage2 , Nil , SDL_MapRGB( MyImage2^.Format , 0 , 0 , 255 ) );
+	SDL_SetColorKey( MyImage2 , SDL_SRCCOLORKEY or SDL_RLEACCEL , SDL_MapRGB( MyImage2^.Format , 0 , 0, 255 ) );
 
-			SDL_GetRGB( Pix , MyImage^.Format , @R , @G , @B );
+	SDL_BlitSurface( MyImage2 , Nil , MyImage2 , Nil );
+
+	for X := 1 to MyImage^.W do begin
+		for Y := 1 to MyImage2^.H do begin
+			SDL_LockSurface( MyImage2 );
+			Pix := SDL_GetPixel( MyImage2 , X , Y );
+			SDL_UnlockSurface( MyImage2 );
+
+			SDL_GetRGB( Pix , MyImage2^.Format , @R , @G , @B );
 
 			if ( R > 0 ) and ( G = 0 ) and ( B = 0 ) then begin
 				{ This is a red pixel. Do the swap. }
 				R2 := ( R * RSwap^.R ) div 255;
 				G2 := ( R * RSwap^.G ) div 255;
 				B2 := ( R * RSwap^.B ) div 255;
-				Pix := SDL_MapRGB( MyImage^.Format , R2 , G2 , B2 );
-				SDL_LockSurface( MyImage );
-				SDL_PutPixel( MyImage , X , Y , Pix );
-				SDL_UnlockSurface( MyImage );
+				Pix := SDL_MapRGB( MyImage2^.Format , R2 , G2 , B2 );
+				SDL_LockSurface( MyImage2 );
+				SDL_PutPixel( MyImage2 , X , Y , Pix );
+				SDL_UnlockSurface( MyImage2 );
 			end else if ( R = G ) and ( R > 0 ) and ( B = 0 ) then begin
 				{ This is a yellow pixel. Do the swap. }
 				R2 := ( R * YSwap^.R ) div 255;
 				G2 := ( R * YSwap^.G ) div 255;
 				B2 := ( R * YSwap^.B ) div 255;
-				Pix := SDL_MapRGB( MyImage^.Format , R2 , G2 , B2 );
-				SDL_LockSurface( MyImage );
-				SDL_PutPixel( MyImage , X , Y , Pix );
-				SDL_UnlockSurface( MyImage );
+				Pix := SDL_MapRGB( MyImage2^.Format , R2 , G2 , B2 );
+				SDL_LockSurface( MyImage2 );
+				SDL_PutPixel( MyImage2 , X , Y , Pix );
+				SDL_UnlockSurface( MyImage2 );
 
 			end else if ( R = 0 ) and ( G > 0 ) and ( B = 0 ) then begin
 				{ This is a green pixel. Do the swap. }
 				R2 := ( G * GSwap^.R ) div 255;
 				G2 := ( G * GSwap^.G ) div 255;
 				B2 := ( G * GSwap^.B ) div 255;
-				Pix := SDL_MapRGB( MyImage^.Format , R2 , G2 , B2 );
-				SDL_LockSurface( MyImage );
-				SDL_PutPixel( MyImage , X , Y , Pix );
-				SDL_UnlockSurface( MyImage );
+				Pix := SDL_MapRGB( MyImage2^.Format , R2 , G2 , B2 );
+				SDL_LockSurface( MyImage2 );
+				SDL_PutPixel( MyImage2 , X , Y , Pix );
+				SDL_UnlockSurface( MyImage2 );
 
 			end;
 
 		end;
 	end;
+	MakeSwapBitmap := MyImage2;
 end;}
 
 

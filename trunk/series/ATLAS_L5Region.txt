@@ -5331,12 +5331,11 @@ sub
 		room
 		minimap <......###..#1#..#=#......>
 		special <SHAREDPALETTE>
-		inv
+		sub
 			StairsUp
 			MiniMapComponent 1
-			name <the Robot Mill>
-		end
-		sub
+			name <The Robot Mill>
+
 			Door
 			use <if= v1 0 else GoJustUse ifYesNo 101 102 103 else GoLeaveDoor V= 1 1 Goto GoJustUse>
 			GoJustUse <ifG -99 MetaPass else GoCloseDoor  if= StatVal STAT_Lock 0 else GoDoorLocked Print 1  SetStat STAT_Pass 0  Transform 1>

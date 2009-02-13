@@ -1004,6 +1004,27 @@ Prompt%id%03 <I have some training to do.>
 Prompt%id%03_1 <I'm off to look for adventure.>
 Prompt%id%03_2 <Probably fight somebody. No idea who yet.>
 
+% TYPE: *GoodLuckPlusHint
+%	The NPC will wish the PC luck on the mission, and also provide a hint.
+%   PARAM1: Exit script label
+%   PARAM2: Hint PlotID
+
+	Persona
+	requires <*GoodLuckPlusHint>
+	Start <NewChat  Say %id%01  Goto %1%>
+	Msg%id%01 <\HINT %2% Good luck on the mission.>
+	Msg%id%01_1 <\HINT %2% Report back here once you've completed everything.>
+	CMsg%id%01_1 <ifNPCSociable Accept>
+	Msg%id%01_2 <\HINT %2% Good luck.>
+	CMsg%id%01_2 <ifNPCShy Accept>
+	Msg%id%01_3 <\HINT %2% Have fun out there.>
+	CMsg%id%01_3 <ifNPCCheerful Accept>
+	Msg%id%01_4 <\HINT %2% Try not to get yourself killed.>
+	CMsg%id%01_4 <ifNPCMelancholy Accept>
+	Msg%id%01_5 <\HINT %2% Hopefully this won't be too hard of a job...>
+	CMsg%id%01_5 <ifNPCEasygoing Accept>
+	Msg%id%01_6 <\HINT %2% Go kick some ass!>
+	CMsg%id%01_6 <ifNPCPassionate Accept>
 
 
 % TYPE: *GoodLuckOnMission

@@ -39,6 +39,8 @@ Content
 	Place3 <2>
 	Element4 <Grab 2>
 
+	HINT_%plotid% <:%plotid2%>
+
 	% P%id%01 = Initialization Counter
 
 	%% FAIL CONDITIONS:
@@ -108,6 +110,8 @@ Content
 	Place5 <3>
 	Element6 <Scene Hospital !Near -7>
 	Element7 <Prefab>
+
+	HINT_%plotid% <:%plotid1%>
 
 	%% FAIL CONDITIONS
 	%% - TellSecret fails
@@ -235,6 +239,8 @@ Content
 	Element3 <Prefab>
 	Place3 <2>
 
+	HINT_%plotid% <:%plotid2%>
+
 	%% FAIL CONDITIONS
 	%% - DiscoverNPCMission fails
 
@@ -268,6 +274,8 @@ Content
 	Element2 <Scene Urban !Near -7>
 	Element3 <Prefab>
 	Place3 <2>
+
+	HINT_%plotid% <:%plotid1%>
 
 	%% FAIL CONDITIONS
 	%% - The DiscoverNPCMission subplot fails
@@ -392,6 +400,8 @@ Content
 	Element6 <Character (Friend|Lover|Family|Lancemate|PCFAC) HasMecha !Global>
 	Place6 <4 (Allies) sd ally>
 
+	HINT_%plotid% <:%plotid2%>
+
 	% P%id%01 = Initialization Counter
 
 	% At initialization, activate all the subplots and level the NPCs.
@@ -483,6 +493,8 @@ Content
 	Element2 <Scene Urban !Near -7>
 	Element3 <Prefab>
 	Place3 <2>
+
+	HINT_%plotid% <:%plotid1%>
 
 	%% FAIL CONDITIONS
 	%% - The DiscoverNPCMission subplot fails
