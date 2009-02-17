@@ -1677,7 +1677,7 @@ Content
 	sub
 		Persona 1
 		.%id%_GoInit <NewChat Say %id%01 RandomMecha .%id%_factions %threat%  SetQuestStatus %qid% -1>
-		.%id%_factions <GENERAL PDASS>
+		.%id%_factions <GENERAL PDASS \FACTION_DESIG ChatNPCFac>
 		Msg%id%01 <Because you've been such a big help to my business, I'd like for you to have this company mecha. It's got my logo printed on the sides.>
 		Msg%id%01_1 <For helping me with my business, I got something for you. It's a new mecha. I know that cavaliers always need new mecha... I hope you don't mind, but I had my logo painted onto the side of it. That way it's a business expense.>
 		CMsg%id%01_1 <ifNPCSociable Accept>
@@ -1780,7 +1780,7 @@ Content
 		Greeting <if= QuestStatus %qid% %id% else %pop% ifChatNPCArchEnemy else GoNotEnemy SetQuestStatus %qid% -2 Goto .%id%_GoBlowOff>
 		*%id%_GoBlowOff <*BrushOff>
 		GoNotEnemy <NewChat Say %id%05 AddChat %id%03 AddChat %id%04 AddChat %id%05 AddChat %id%06>
-		.%id%_GoInit <SetQuestStatus %qid% %id% Goto GoOfferQuest NewChat Say %id%01 AddChat %id%01 AddChat %id%02 CashPrize Threat %threat% 100 150 QMemo %qid% %id%02>
+		.%id%_GoInit <SetQuestStatus %qid% %id%   NewChat Say %id%01 AddChat %id%01 AddChat %id%02 CashPrize Threat %threat% 100 150 QMemo %qid% %id%02>
 		result%id%01 <NewChat Say %id%03>
 		result%id%02 <NewChat Say %id%04 SetQuestStatus %qid% -2>
 		result%id%03 <SetQuestStatus %qid% -2  Goto .%id%_GoR7Final>
@@ -1811,7 +1811,7 @@ Content
 	inv
 		Treasure
 		name <Heart of Gold>
-		Fudge 10000
+		Fudge 1000000
 		desc <A golden lump shaped vaguely like a heart. Some might call it art.>
 		Mass 7
 	end

@@ -192,7 +192,7 @@ Plot
 		result2 <NewChat Say 5 StoryNote 6 &SetEnemyFac &RecFac WinComp 0 .make_enemy>
 		result3 <NewChat Say 7>
 		result4 <NewChat Say 8 SMemo 0 &SetAllyFac PCFac WinComp 0 .make_enemy>
-		result5 <NewChat Say 9 StoryNote 10 &SetAllyFac &RecFac  RandomMecha .meks V1  CashPrize V2  XPV 200  AlterContext .make_enemy SetPlotStatus %plotid% %id1%>
+		result5 <NewChat Say 9 StoryNote 10 &SetAllyFac &RecFac  SetPCFac &RecFac  RandomMecha .meks V1  CashPrize V2  XPV 200  AlterContext .make_enemy SetPlotStatus %plotid% %id1%>
 		.meks <GENERAL \FACTION_DESIG &RecFac>
 		result6 <NewChat Say 11 AddChat 2 AddChat 3 AddChat 5 V+ 1 10 V= 2 * 2 V2  &SetEnemyFac &AltFac>
 		Msg1 <The evil plans of %name3% will soon come to fruition! Oh, wait, you're not the human resources director... forget I said that.>
@@ -239,7 +239,7 @@ Plot
 		result2 <NewChat Say 5 StoryNote 6 &SetEnemyFac &RecFac WinComp 0 .make_enemy>
 		result3 <NewChat Say 7>
 		result4 <NewChat Say 8 SMemo 0 &SetAllyFac PCFac WinComp 0 .make_enemy>
-		result5 <NewChat Say 9 StoryNote 10 &SetAllyFac &RecFac  RandomMecha .meks V1  CashPrize V2  XPV 200  AlterContext .make_enemy SetPlotStatus %plotid% %id1%>
+		result5 <NewChat Say 9 StoryNote 10 &SetAllyFac &RecFac  SetPCFac &RecFac  RandomMecha .meks V1  CashPrize V2  XPV 200  AlterContext .make_enemy SetPlotStatus %plotid% %id1%>
 		.meks <GENERAL \FACTION_DESIG &RecFac>
 		result6 <NewChat Say 11 AddChat 2 AddChat 3 AddChat 5 V+ 1 10 V= 2 * 2 V2  &SetEnemyFac &AltFac>
 		Msg1 <The evil plans of %name4% will soon come to fruition! Oh, wait, you're not the human resources director... forget I said that.>

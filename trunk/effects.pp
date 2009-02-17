@@ -1398,7 +1398,7 @@ var
 		if BonusNumH < 1 then BonusNumH := 1;
 
 		{ Make an Initiative roll to maybe increase the number of hits. }
-		InitRoll := SkillRoll( GB , ER.Originator , NAS_Initiative , DefRep.HiRoll , 0 , False , GearOperational( TMaster ) );
+		InitRoll := SkillRoll( GB , ER.Originator , NAS_Initiative , DefRep.HiRoll , 0 , False , GearOperational( TMaster ) and IsMasterGear( TMaster ) );
 		if InitRoll > DefRep.HiRoll then begin
 			NumH := 2 + (( InitRoll - DefRep.HiRoll ) div ( ModMOSMeasure * 2 ));
 		end else begin
@@ -1469,7 +1469,7 @@ begin
 		{ The attack hit. }
 
 		{ Dole the experience award for the roll now, since we didn't do it earlier. }
-		if GearOperational( TMaster ) and ( ER.Originator <> Nil ) then GiveSkillRollXPAward( ER.Originator , AtSkill , AtRoll , DefRep.HiRoll );
+		if GearOperational( TMaster ) and IsMasterGear( TMaster ) and ( ER.Originator <> Nil ) then GiveSkillRollXPAward( ER.Originator , AtSkill , AtRoll , DefRep.HiRoll );
 
 		{ Determine base margin of success. This will be modified later. }
 		{ First, determine the modified MOSMeasure. }
@@ -1534,7 +1534,7 @@ begin
 			{ If the high defense roll was lower than the Critical }
 			{ Hit Minimum Target number, raise it. }
 			if CritTar < CritHitMinTar then CritTar := CritHitMinTar;
-			CritHit := SkillRoll( GB , ER.Originator , CritSkill , CritTar , 0 , False , GearOperational( TMaster ) );
+			CritHit := SkillRoll( GB , ER.Originator , CritSkill , CritTar , 0 , False , GearOperational( TMaster ) and IsMasterGear( TMaster ) );
 
 			if CritHit > CritTar then begin
 				MOS := MOS + ( ( CritHit - CritTar ) div ModMOSMeasure ) + 1;
@@ -1665,7 +1665,7 @@ begin
 
 		{ Make the skill roll. }
 		if ( AtSkill <> 0 ) and ( ER.Originator <> Nil ) then begin
-			AtRoll := SkillRoll( GB , ER.Originator , AtSkill , 0 , ER.FXMod , False , GearOperational( Target ) );
+			AtRoll := SkillRoll( GB , ER.Originator , AtSkill , 0 , ER.FXMod , False , GearOperational( Target ) and IsMasterGear( Target ) );
 		end else begin
 			if AtSkill < 5 then AtSkill := 5;
 			AtRoll := RollStep( AtSkill );
@@ -1733,7 +1733,7 @@ begin
 	if GearActive( Target ) and ( Target^.G = GG_Mecha ) then begin
 		{ Make the skill roll. }
 		if ( AtSkill <> 0 ) and ( ER.Originator <> Nil ) then begin
-			AtRoll := SkillRoll( GB , ER.Originator , AtSkill , 0 , ER.FXMod , False , GearOperational( Target ) );
+			AtRoll := SkillRoll( GB , ER.Originator , AtSkill , 0 , ER.FXMod , False , GearOperational( Target ) and IsMasterGear( Target ) );
 		end else begin
 			if AtSkill < 5 then AtSkill := 5;
 			AtRoll := RollStep( AtSkill );

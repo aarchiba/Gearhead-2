@@ -1237,8 +1237,22 @@ begin
 	end;
 end;
 
+Function FormatMemoString( GB: GameBoardPtr; const Msg: String ): String;
+	{ Add the name of the city to the memo. }
+var
+	RootScene: GearPtr;
+begin
+	RootScene := FindRootScene( GB , GB^.Scene );
+	if ( RootScene <> Nil ) and ( msg <> '' ) then begin
+		FormatMemoString := GearName( RootScene ) + ': ' + msg;
+	end else begin
+		FormatMemoString := msg;
+	end;
+end;
+
 Function PlotHintString( GB: GameBoardPtr; Source: GearPtr; N: LongInt ): String;
 	{ Determine hint string N for this plot. }
+	{ Also store a rumor memo. }
 	Function GenericHintString: String;
 		{ We can't find a valid hint string for this plot. Just return }
 		{ some generic advice. }
@@ -1248,7 +1262,7 @@ Function PlotHintString( GB: GameBoardPtr; Source: GearPtr; N: LongInt ): String
 var
 	Plot: GearPtr;
 	IsFound: Boolean;
-	msg: String;
+	msg,memo_msg: String;
 begin
 	{ Find the plot. We need it if we are to proceed. }
 	Plot := PlotMaster( GB , Source );
@@ -1267,7 +1281,15 @@ begin
 		end;
 	until IsFound;
 	if msg = '' then PlotHintString := GenericHintString
-	else PlotHintString := msg;
+	else begin
+		{ We found a hint. Save the plot memo. }
+		if ( Plot <> Nil ) and ( I_NPC <> Nil ) then begin
+			memo_msg := ReplaceHash( MsgString( 'PLOT_HINT_MEMO' ) , GearName( I_NPC ) );
+			memo_msg := FormatMemoString( GB , ReplaceHash( memo_msg , msg ) );
+			SetSAtt( Plot^.SA , 'MEMO' + BStr( N ) + ' <' + memo_msg + '>' );
+		end;
+		PlotHintString := msg;
+	end;
 end;
 
 Procedure FormatMessageString( var msg: String; gb: GameBoardPtr; Scene: GearPtr );
@@ -1622,19 +1644,6 @@ begin
 	msg := NPCScriptMessage( 'msg' + BStr( id ) , GB , NPC , Source );
 	if ( msg <> '' ) and ( GB <> Nil ) and ( GB^.Scene <> Nil ) then begin
 		SetSAtt( GB^.Scene^.SA , ARENAREPORT_Personal + ' <' + BStr( cid ) + ' ' + msg + '>' );
-	end;
-end;
-
-Function FormatMemoString( GB: GameBoardPtr; const Msg: String ): String;
-	{ Add the name of the city to the memo. }
-var
-	RootScene: GearPtr;
-begin
-	RootScene := FindRootScene( GB , GB^.Scene );
-	if ( RootScene <> Nil ) and ( msg <> '' ) then begin
-		FormatMemoString := GearName( RootScene ) + ': ' + msg;
-	end else begin
-		FormatMemoString := msg;
 	end;
 end;
 
@@ -4079,6 +4088,15 @@ Procedure ProcessGJoinLance( GB: GameBoardPtr );
 	{ The grabbed gear will quit the lance. }
 begin
 	if Grabbed_Gear <> Nil then begin
+		{ If the Grabbed_Gear is not in play, move it to the current scene. }
+		if not IsFoundAlongTrack( GB^.Meks , FindRoot( Grabbed_Gear ) ) then begin
+			DelinkGearForMovement( GB , Grabbed_Gear );
+			SetNAtt( Grabbed_Gear^.NA , NAG_Location , NAS_Team , NAV_LancemateTeam );
+
+			{ Stick it on the map. }
+			EquipThenDeploy( GB , Grabbed_Gear , True );
+		end;
+
 		AddLancemate( GB , Grabbed_Gear );
 	end;
 end;

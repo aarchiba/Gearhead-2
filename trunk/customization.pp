@@ -338,7 +338,7 @@ var
 			ASkill1,ASkill2: Integer;
 		begin
 			while LList <> Nil do begin
-				if ( LList^.G = GG_Weapon ) and ( NAttValue( LList^.NA , NAG_EpisodeData , NAS_WeaponUpgrades ) <> -1 ) and not PartHasIntrinsic( LList , NAS_Integral ) then begin
+				if ( LList^.G = GG_Weapon ) and ( NAttValue( LList^.NA , NAG_EpisodeData , NAS_WeaponUpgrades ) <> -1 ) and ( not PartHasIntrinsic( LList , NAS_Integral ) ) then begin
 					if Best = Nil then begin
 						{ Better to have some weapon than no weapon. }
 						Best := LList;
