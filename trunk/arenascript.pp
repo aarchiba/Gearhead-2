@@ -1772,7 +1772,7 @@ var
 		while Part <> Nil do begin
 			if ( Part^.G <> GG_AbsolutelyNothing ) then begin
 				StoreSAtt( VList , tabpos + prefix + GearName( Part ) );
-				msg := ExtendedDescription( Part );
+				msg := ExtendedDescription( GB , Part );
 				if msg <> '' then StoreSAtt( VList , tabpos + ' ' + msg );
 			end;
 			if Part^.G <> GG_Cockpit then begin

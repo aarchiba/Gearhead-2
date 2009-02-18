@@ -29,8 +29,8 @@ interface
 
 uses texutil,ui4gh,gears,gearutil,movement,locale;
 
-Function WeaponDescription( Weapon: GearPtr ): String;
-Function ExtendedDescription( Part: GearPtr ): String;
+Function WeaponDescription( GB: GameBoardPtr; Weapon: GearPtr ): String;
+Function ExtendedDescription( GB: GameBoardPtr; Part: GearPtr ): String;
 
 Function MechaDescription( Mek: GearPtr ): String;
 
@@ -58,7 +58,7 @@ begin
 	end;
 end;
 
-Function WeaponDescription( Weapon: GearPtr ): String;
+Function WeaponDescription( GB: GameBoardPtr; Weapon: GearPtr ): String;
 	{ Create a description for this weapon. }
 var
 	Master,Ammo: GearPtr;
@@ -88,14 +88,7 @@ begin
 		AA := WeaponAttackAttributes( Weapon );
 
 		if (Weapon^.S = GS_Ballistic) or (Weapon^.S = GS_BeamGun) then begin
-			T := ScaleRange( Weapon^.Stat[STAT_Range] , Weapon^.Scale );
-			if HasAttackAttribute( AA , AA_LineAttack ) then begin
-				desc := desc + ' RNG:' + BStr( T ) + '-' + BStr( T * 2 );
-			end else begin
-				desc := desc + ' RNG:' + BStr( T ) + '-' + BStr( T * 2 ) + '-' + BStr( T * 3 );
-			end;
-		end else if ( Weapon^.S = GS_Missile ) and ( Ammo <> Nil ) then begin
-			T := ScaleRange( Ammo^.Stat[STAT_Range] , Ammo^.Scale );
+			T := ScaleRange( WeaponRange( GB , Weapon ) , Weapon^.Scale );
 			if HasAttackAttribute( AA , AA_LineAttack ) then begin
 				desc := desc + ' RNG:' + BStr( T ) + '-' + BStr( T * 2 );
 			end else begin
@@ -352,7 +345,7 @@ begin
 	CharaDescription := msg;
 end;
 
-Function ExtendedDescription( Part: GearPtr ): String;
+Function ExtendedDescription( GB: GameBoardPtr; Part: GearPtr ): String;
 	{ Provide an extended description telling all about the }
 	{ attributes of this particular item. }
 var
@@ -365,13 +358,13 @@ begin
 	{ Start examining the part. }
 	it := '';
 	if ( Part^.G = GG_Weapon ) then begin
-		it := WeaponDescription( Part );
+		it := WeaponDescription( GB , Part );
 	end else if Part^.G = GG_Mecha then begin
 		it := MechaDescription( Part );
 	end else if Part^.G = GG_RepairFuel then begin
 		it := RepairFuelDescription( Part );
 	end else if ( Part^.G = GG_Ammo ) then begin
-		it := WeaponDescription( Part );
+		it := WeaponDescription( GB , Part );
 	end else if Part^.G = GG_MoveSys then begin
 		it := MoveSysDescription( Part );
 	end else if Part^.G = GG_Modifier then begin
@@ -383,7 +376,7 @@ begin
 
 		SC := Part^.SubCom;
 		while ( SC <> Nil ) do begin
-			it := it + '; ' + ExtendedDescription( SC );
+			it := it + '; ' + ExtendedDescription( GB , SC );
 			SC := SC^.Next;
 		end;
 
@@ -398,7 +391,7 @@ begin
 
 		SC := Part^.SubCom;
 		while ( SC <> Nil ) do begin
-			it := it + '; ' + ExtendedDescription( SC );
+			it := it + '; ' + ExtendedDescription( GB , SC );
 			SC := SC^.Next;
 		end;
 
@@ -407,7 +400,7 @@ begin
 
 		SC := Part^.SubCom;
 		while ( SC <> Nil ) do begin
-			it := it + '; ' + ExtendedDescription( SC );
+			it := it + '; ' + ExtendedDescription( GB , SC );
 			SC := SC^.Next;
 		end;
 
@@ -416,7 +409,7 @@ begin
 
 		SC := Part^.SubCom;
 		while ( SC <> Nil ) do begin
-			it := it + '; ' + ExtendedDescription( SC );
+			it := it + '; ' + ExtendedDescription( GB , SC );
 			SC := SC^.Next;
 		end;
 
@@ -426,8 +419,8 @@ begin
 	end else if Part^.G <> GG_Module then begin
 		SC := Part^.SubCom;
 		while ( SC <> Nil ) do begin
-			if it = '' then it := ExtendedDescription( SC )
-			else it := it + '; ' + ExtendedDescription( SC );
+			if it = '' then it := ExtendedDescription( GB , SC )
+			else it := it + '; ' + ExtendedDescription( GB , SC );
 			SC := SC^.Next;
 		end;
 	end;

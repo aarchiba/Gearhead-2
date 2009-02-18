@@ -121,7 +121,7 @@ Content
 
 		Result%id%01 <EndChat Say %id%06 AddCHat %id%03>
 		Result%id%02 <NewChat Say %id%07>
-		Result%id%03 <Alert %id%08 V= %id%01 ComTime V+ %id%01 86400 V= %id%04 10 V+ %id%04 d5  V= %id%03 Concert V%id%04 SkillTar %threat%  ifG V%id%03 75 else .%id%_GoLoseMission Goto .%id%_GoWinMission>
+		Result%id%03 <Alert %id%08 V= %id%01 ComTime V+ %id%01 86400 V= %id%04 10 V+ %id%04 d5  V= %id%03 Concert V%id%04 HardSkillTar %threat%  ifG V%id%03 75 else .%id%_GoLoseMission Goto .%id%_GoWinMission>
 
 		Msg%id%01 <You've earned the right to play at Athera Garden. Simply let me know when you desire to perform, and I will make all the arrangements.>
 		Msg%id%02 <This is it... you've proven yourself worthy. It's finally time for you to play at Athera Garden. Simply let me know when you desire to perform, and I will make all the arrangements.>
@@ -258,7 +258,7 @@ Content
 		Result6 <Goto GoShop>
 		Result7 <Goto Result1>
 		Result8 <Goto Result2>
-		Result9 <V= 1 ComTime V+ 1 86400 V= 2 Concert 3 SkillTar %threat%  ifG V2 50 else GoLoseMission Goto GoWinMission>
+		Result9 <V= 1 ComTime V+ 1 86400 V= 2 Concert 3 HardSkillTar %threat%  ifG V2 50 else GoLoseMission Goto GoWinMission>
 		Msg1 <If you're ready now, everything's all set up for the promotion event.>
 		Msg2 <I'm not ready to start the next promotion. You can come back tomorrow for that.>
 		Msg3 <Great! Let me tell you what I want. You just need to stand outside of my store and sing. I've got a portable music platform that you'll be able to plug your instruments into. If my customers increase, I'll give you a cut of the profits.>
@@ -342,7 +342,7 @@ Content
 		Result3 <AddReact d10 NewChat Say 9 AddChat 1 AddChat 2>
 		Result4 <AddCheerful -d6  NewChat Say 10 AddChat 1 AddChat 2>
 		Result5 <Cash+ -10000  V+ 4 -d20  AddReact 10  NewChat Say 11 AddChat 1 AddChat 2>
-		Result6 <V= 1 ComTime V+ 1 86400 V= 2 Concert d6 SkillTar V4  ifG V2 50 else GoLoseMission Goto GoWinMission>
+		Result6 <V= 1 ComTime V+ 1 86400 V= 2 Concert d6 HardSkillTar V4  ifG V2 50 else GoLoseMission Goto GoWinMission>
 
 		Msg1 <Oh, \PC , I was waiting for you. Are you ready to start the show?>
 		Msg2 <We'll hold another show tomorrow. You can come back then.>
@@ -422,7 +422,7 @@ Content
 		Result1 <EndChat Say 8 AddChat 4>
 		Result2 <NewChat Say 9>
 		Result3 <Goto GoExplain>
-		Result4 <V= 1 ComTime V+ 1 86400 V= 2 Concert d8 SkillTar %threat%  ifG V2 50 else GoLoseMission Goto GoWinMission>
+		Result4 <V= 1 ComTime V+ 1 86400 V= 2 Concert d8 HardSkillTar %threat%  ifG V2 50 else GoLoseMission Goto GoWinMission>
 
 		Msg1 <It's the \PC ! Club's full, we're all just waiting on the music. You ready?>
 		Msg2 <The next show doesn't start until tomorrow. Don't be late... or early, either.>
@@ -506,7 +506,7 @@ Content
 
 		Result1 <EndChat Say 7 AddChat 3>
 		Result2 <NewChat Say 8>
-		Result3 <V= 1 ComTime V+ 1 86400 V= 4 5 V+ 4 d8 V= 2 Concert V4 SkillTar %threat%  ifG V2 50 else GoLoseMission Goto GoWinMission>
+		Result3 <V= 1 ComTime V+ 1 86400 V= 4 5 V+ 4 d8 V= 2 Concert V4 HardSkillTar %threat%  ifG V2 50 else GoLoseMission Goto GoWinMission>
 
 		Msg1 <Welcome back. Are you ready to perform now?>
 		Msg2 <There's an open slot in the schedule that you can take tomorrow. Come back then and I'll fit you in.>

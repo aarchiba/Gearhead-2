@@ -374,6 +374,7 @@ Const
 
 	);
 
+	NAS_MartialArts = 9;
 	NAS_Dodge = 10;
 	NAS_Awareness = 11;
 	NAS_Initiative = 12;
@@ -552,7 +553,7 @@ end;
 Function RandomName: String;
 	{Generate a random name for a character.}
 Const
-	NumSyllables = 120;
+	NumSyllables = 126;
 	SyllableList: Array [1..NumSyllables] of String [5] = (
 		'Jo','Sep','Hew','It','Seo','Eun','Suk','Ki','Kang','Cho',
 		'Ai','Bo','Ca','Des','El','Fas','Gun','Ho','Ia','Jes',
@@ -565,34 +566,62 @@ Const
 		'Tek','Ubu','Roi','Har','Old','Pin','Ter','Red','Ex','Al',
 		'Alt','Rod','Mia','How','Phi','Aft','Aus','Tin','Her','Ge',
 		'Hawk','Eye','Ger','Ru','Od','Jin','Un','Hyo','Leo','Star',
-		'Buck','Ers','Rog','Eva','Ova','Oni','Ami','Ga','Cyn','Mai'
-
+		'Buck','Ers','Rog','Eva','Ova','Oni','Ami','Ga','Cyn','Mai',
+		'Na','Mel','Gha','Mek','Kat','Ser'
 	);
 
-	NumVowels = 6;
-	VowelList: Array [1..NumVowels] of String [2] = (
-		'A','E','I','O','U','Y'
+	NumVowels = 11;
+	VowelList: Array [1..NumVowels] of Char = (
+		'A','E','I','O','U','Y','A','E','I','O',
+		'U'
 	);
 
-	NumConsonants = 21;
-	ConsonantList: Array [1..NumConsonants] of String [2] = (
+	NumConsonants = 33;
+	ConsonantList: Array [1..NumConsonants] of Char = (
 		'B','C','D','F','G','H','J','K','L','M','N',
-		'P','Q','R','S','T','V','W','X','Y','Z'
+		'P','Q','R','S','T','V','W','X','Y','Z','T',
+		'N','S','H','R','D','L','C','M','P','B','G'
 	);
 
-	Function Syl: String;
+	Function Syl( IsFirst: Boolean ): String;
 	begin
-		if Random(16) = 3 then
+		if Random(20) = 1 then
 			Syl := VowelList[Random(NumVowels)+1]
-		else if Random(20) = 2 then begin
+		else if Random( 4 ) <> 1 then begin
+			{ Create a three-letter syllable. }
+			if IsFirst then begin
+				if Random( 2 ) = 1 then begin
+					{ Begin with a vowel- use VCC, as reccomended by Joshua Smyth }
+					Syl := VowelList[Random(NumVowels)+1] + LowerCase( ConsonantList[Random(NumConsonants)+1] ) + LowerCase( ConsonantList[Random(NumConsonants)+1] );
+				end else if Random( 10 ) = 1 then begin
+					Syl := ConsonantList[Random(NumConsonants)+1] + LowerCase( VowelList[Random(NumVowels)+1] ) + LowerCase( VowelList[Random(NumVowels)+1] ) + LowerCase( ConsonantList[Random(NumConsonants)+1] );
+				end else begin
+					{ Begin with a consonant- use CVC, again reccomended by Joshua Smyth }
+					Syl := ConsonantList[Random(NumConsonants)+1] + LowerCase( VowelList[Random(NumVowels)+1] ) + LowerCase( ConsonantList[Random(NumConsonants)+1] );
+				end;
+			end else begin
+				if Random( 5 ) = 1 then begin
+					{ Begin with a consonant- use CVC, again reccomended by Joshua Smyth }
+					Syl := ConsonantList[Random(NumConsonants)+1] + LowerCase( VowelList[Random(NumVowels)+1] ) + LowerCase( ConsonantList[Random(NumConsonants)+1] );
+				end else if Random( 4 ) = 1 then begin
+					Syl := VowelList[Random(NumVowels)+1] + LowerCase( ConsonantList[Random(NumConsonants)+1] ) + LowerCase( VowelList[Random(NumVowels)+1] );
+				end else if Random( 3 ) = 1 then begin
+					Syl := ConsonantList[Random(NumConsonants)+1] + LowerCase( VowelList[Random(NumVowels)+1] );
+				end else if Random( 2 ) = 1 then begin
+					Syl := VowelList[Random(NumVowels)+1] + LowerCase( ConsonantList[Random(NumConsonants)+1] );
+				end else begin
+					Syl := VowelList[Random(NumVowels)+1] + LowerCase( ConsonantList[Random(NumConsonants)+1] ) + LowerCase( ConsonantList[Random(NumConsonants)+1] );
+				end;
+			end;
+		end else if Random( 7 ) = 2 then begin
 			if Random(3) = 1 then
 				Syl := ConsonantList[Random(NumConsonants)+1] + LowerCase( VowelList[Random(NumVowels)+1] )
 			else if Random(2) = 1 then
 				Syl := VowelList[Random(NumVowels)+1] + LowerCase( ConsonantList[Random(NumConsonants)+1] )
 			else if Random(2) = 1 then
-				Syl := ConsonantList[Random(NumConsonants)+1] + LowerCase( VowelList[Random(NumVowels)+1] + ConsonantList[Random(NumConsonants)+1] )
+				Syl := ConsonantList[Random(NumConsonants)+1] + LowerCase( VowelList[Random(NumVowels)+1] ) + LowerCase( ConsonantList[Random(NumConsonants)+1] )
 			else
-				Syl := VowelList[Random(NumVowels)+1] + LowerCase( ConsonantList[Random(NumConsonants)+1] + VowelList[Random(NumVowels)+1] );
+				Syl := VowelList[Random(NumVowels)+1] + LowerCase( ConsonantList[Random(NumConsonants)+1] ) + LowerCase( VowelList[Random(NumVowels)+1] );
 		end else
 			Syl := SyllableList[Random(NumSyllables)+1];
 	end;
@@ -601,20 +630,25 @@ var
 begin
 	{A basic name is two syllables stuck together.}
 	if Random(100) <> 5 then
-		it := Syl + LowerCase(Syl)
+		it := Syl( True ) + LowerCase(Syl( False ) )
 	else
-		it := Syl;
+		it := Syl( True );
 
 	{Uncommon names may have 3 syllables.}
 	if ( Random(8) > Length(it) ) then
-		it := it + LowerCase(Syl)
+		it := it + LowerCase(Syl( False ) )
 	else if Random(30) = 1 then
-		it := it + LowerCase(Syl);
+		it := it + LowerCase(Syl( False ) );
 
 	{Short names may have a second part. This isn't common.}
-	if (Length(it) < 9) and (Random(16) = 7) then begin
-		it := it + ' ' + Syl;
-		if Random(3) <> 1 then it := it + LowerCase(Syl);
+	if ( Length( it ) < 3 ) and ( Random( 30 ) <> 1 ) then begin
+		it := it + ' ' + Syl( True ) + LowerCase(Syl( False ) )
+	end else if ( Length( it ) < 5 ) and ( Random( 3 ) <> 1 ) then begin
+		it := it + ' ' + Syl( True );
+		if Random(4) <> 1 then it := it + LowerCase(Syl( False ) );
+	end else if (Length(it) < ( 7 + Random( 5 ) ) ) and (Random(3) = 1) then begin
+		it := it + ' ' + Syl( True );
+		if Random(3) <> 1 then it := it + LowerCase(Syl( False ) );
 	end;
 
 	{ Random chance of random anime designation. }

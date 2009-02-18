@@ -152,7 +152,7 @@ begin
 		if N > 0 then begin
 			Part := RetrieveGearSib( Robotics_Source , N );
 			if Part <> Nil then begin
-				BrowserInterfaceInfo( Part , ZONE_ItemsInfo );
+				BrowserInterfaceInfo( Robotics_GB , Part , ZONE_ItemsInfo );
 			end;
 		end;
 	end;

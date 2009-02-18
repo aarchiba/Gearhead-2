@@ -2121,7 +2121,7 @@ Content
 		GoMakeSwitch <ifYesNo 2 3 4 else GoRunAway Alert 5 DeleteItem %6% NPCVar= %3% 1 1 XPV 100 DeleteItem %4%>
 		Msg1 <The smuggler's ship darts away too quickly for you to approach.>
 		Msg2 <You are approached by a smuggler. Do you send over the crate?>
-		Msg3 <Send if over.>
+		Msg3 <Send it over.>
 		msg4 <Keep it.>
 		Msg5 <The smuggler's ship retrieves the crate and darts away.>
 
@@ -2154,30 +2154,6 @@ Content
 		desc <A container for storing things at extremely low temperatures. It is often used to transport living material.>
 	end
 
-Content
-	name <Destroy Pirate Base>
-	requires <*Success1 .AgainstPirates BRANCHES (1:MILIT|1:POLIC|1:POLIT|1:CORPO)>
-
-	% E1 is the character who will offer the mission
-	% E2 is the local police faction
-	% E3 is the pirate faction to be defeated
-	Element2 <Faction Police !Ally 1>
-	Element3 <Faction Crime !Enemy 2>
-	Scene3 <New *DestroyBase>
-
-	Quest1 <*SUCCESS1.FinishMission 1>
-
-	Sub
-		Persona 1
-		Greeting <if= QuestStatus %qid% %id% else %pop%  NewChat Say %id%02 AddChat %id%01>
-		.%id%_GoInit <NewChat Say %id%01   CashPrize Reward %threat% 100   SetQuestStatus %qid% %id% QMemo %qid% %id%03>
-		Result%id%01 <Goto .%id1%_GoInit>
-		Msg%id%01 <Good job... very good. The pirates must have a base somewhere around here. If we could destroy that, their attacks would be stopped for good.>
-		Msg%id%02 <Our forces are still looking for the pirate base. Never fear, it will be located and destroyed soon.>
-		Msg%id%03 <%name1% thinks there is a pirate base somewhere near \SCENE RootSceneID .>
-		Prompt%id%01 <I've destroyed the pirate base myself.>
-		CPrompt%id%01 <if= SceneVar %3% 1 1 Accept>
-	end
 
 
 Content

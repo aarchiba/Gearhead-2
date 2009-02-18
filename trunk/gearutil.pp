@@ -1966,6 +1966,11 @@ var
 			if Master^.G = GG_Character then begin
 				D := D + ( CStat( Master, STAT_Body ) - 10 ) div 2;
 
+				{ Martial Arts attacks get a bonus based on skill level. }
+				if Attacker^.G = GG_Module then begin
+					D := D + ( CharaSkillRank( Master , NAS_MartialArts ) - 1 ) div 2;
+				end;
+
 				if D < 1 then D := 1;
 			end else if Master^.G = GG_Mecha then begin
 				D := D + ( Master^.V - 1 ) div 2;
@@ -3046,7 +3051,11 @@ Function NumberOfSkillSlots( PC: GearPtr ): Integer;
 var
 	N: Integer;
 begin
-	N := ( ( PC^.Stat[ STAT_Knowledge ] * 6 ) div  5 + 5 );
+	if PC^.Stat[ STAT_Knowledge ] < 11 then begin
+		N := PC^.Stat[ STAT_Knowledge ] + 10;
+	end else begin
+		N := PC^.Stat[ STAT_Knowledge ] div 3 + 18;
+	end;
 	if NAttValue( PC^.NA , NAG_Talent , NAS_Savant ) <> 0 then N := N + 5;
 	NumberOfSkillSlots := N;
 end;

@@ -94,7 +94,7 @@ begin
 	if ( PCACTIONRD_Menu <> Nil ) and ( PCACTIONRD_Source <> Nil ) then begin
 		Part := RetrieveGearSib( PCACTIONRD_Source , CurrentMenuItemValue( PCACTIONRD_Menu ) );
 		if Part <> Nil then begin
-			BrowserInterfaceInfo( Part , ZONE_ItemsInfo );
+			BrowserInterfaceInfo( PCACTIONRD_GB , Part , ZONE_ItemsInfo );
 		end;
 	end;
 end;
@@ -1670,7 +1670,7 @@ begin
 		end else begin
 			{ This weapon _is_ ready to fire. Give it a spiffy }
 			{ description. }
-			MI^.desc := GearName( Weapon ) + ' ' + WeaponDescription( Weapon );
+			MI^.desc := GearName( Weapon ) + ' ' + WeaponDescription( GB , Weapon );
 		end;
 
 		MI := MI2;

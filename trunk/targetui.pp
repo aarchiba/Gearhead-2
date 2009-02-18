@@ -141,7 +141,7 @@ begin
 	GameMSG( msg , ZONE_RightInfo , InfoGreen );
 
 	InfoBox( ZONE_LeftInfo );
-	GameMsg( GearName( Looker_Weapon ) + ' ' + WeaponDescription( LOOKER_Weapon ) , ZONE_LeftInfo , InfoGreen );
+	GameMsg( GearName( Looker_Weapon ) + ' ' + WeaponDescription( LOOKER_GB , LOOKER_Weapon ) , ZONE_LeftInfo , InfoGreen );
 end;
 
 Function CreateTileMechaMenu( GB: GameBoardPtr; X,Y: Integer; ShowAll: Boolean ): RPGMenuPtr;

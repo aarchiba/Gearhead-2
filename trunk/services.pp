@@ -97,11 +97,11 @@ begin
 	if ( SERV_Info <> Nil ) and ( Serv_Menu <> Nil ) then begin
 		Part := RetrieveGearSib( SERV_Info , CurrentMenuItemValue( SERV_Menu ) );
 		if Part <> Nil then begin
-			BrowserInterfaceInfo( Part , ZONE_ItemsInfo );
+			BrowserInterfaceInfo( SERV_GB , Part , ZONE_ItemsInfo );
 
 		end;
 	end else if Serv_Info <> Nil then begin
-		BrowserInterfaceInfo( SERV_Info , ZONE_ItemsInfo );
+		BrowserInterfaceInfo( SERV_GB , SERV_Info , ZONE_ItemsInfo );
 	end;
 
 	if SERV_NPC <> Nil then NPCPersonalInfo( SERV_NPC , ZONE_ShopCaption );
@@ -124,11 +124,11 @@ begin
 		if N > 0 then begin
 			Part := LocateGearByNumber( SERV_Info , N );
 			if Part <> Nil then begin
-				BrowserInterfaceInfo( Part , ZONE_ItemsInfo );
+				BrowserInterfaceInfo( SERV_GB , Part , ZONE_ItemsInfo );
 			end;
 		end;
 	end else if Serv_Info <> Nil then begin
-		BrowserInterfaceInfo( SERV_Info , ZONE_ItemsInfo );
+		BrowserInterfaceInfo( SERV_GB , SERV_Info , ZONE_ItemsInfo );
 	end;
 
 	if SERV_NPC <> Nil then NPCPersonalInfo( SERV_NPC , ZONE_ShopCaption );

@@ -42,13 +42,10 @@ Procedure DisplayInteractStatus( GB: GameBoardPtr; NPC: GearPtr; React,Endurance
 Procedure CharacterDisplay( PC: GearPtr; GB: GameBoardPtr );
 Procedure InjuryViewer( PC: GearPtr; redraw: RedrawProcedureType );
 
-Procedure BrowserInterfaceInfo( Part: GearPtr; Z: TSDL_Rect );
+Procedure BrowserInterfaceInfo( GB: GameBoardPtr; Part: GearPtr; Z: TSDL_Rect );
 Procedure BrowserInterfaceMystery( Part: GearPtr; Z: TSDL_Rect );
 
 Procedure DoMonologueDisplay( GB: GameBoardPtr; NPC: GearPtr; msg: String );
-
-
-Procedure BasicGearInfo( Part: GearPtr; Z: TSDL_Rect );
 
 Procedure ArenaTeamInfo( Source: GearPtr; Z: TSDL_Rect );
 Procedure TacticsTimeInfo( GB: GameBoardPtr );
@@ -1011,7 +1008,7 @@ begin
 	end;
 end;
 
-Procedure BrowserInterfaceInfo( Part: GearPtr; Z: TSDL_Rect );
+Procedure BrowserInterfaceInfo( GB: GameBoardPtr; Part: GearPtr; Z: TSDL_Rect );
 	{ Display the "Browser Interface" info for this part. This information }
 	{ includes the mass, damage, stats, picture (in gfx mode), extended description }
 	{ and regular description. }
@@ -1046,7 +1043,7 @@ begin
 	MyDest.Y := Z.Y + 155;
 
 	{ Display the extended description. }
-	msg := ExtendedDescription( Part );
+	msg := ExtendedDescription( GB , Part );
 	if msg <> '' then begin
 		MyText := PrettyPrint( msg , Z.W , InfoGreen , True );
 		if MyText <> Nil then begin
@@ -1100,55 +1097,6 @@ begin
 
 	{ Restore the clip zone. }
 	SDL_SetClipRect( Game_Screen , Nil );
-end;
-
-
-Procedure BasicGearInfo( Part: GearPtr; Z: TSDL_Rect );
-	{ Display the basic information for this gear. }
-	{ Currently this procedure is not used. Maybe it will be some day. }
-	{ I'm not deleting it yet just in case I ever need it. }
-var
-	N: Integer;
-	msg: String;
-	MyDest: TSDL_Rect;
-begin
-	SetInfoZone( Z );
-	AI_Title( GearName( Part ) , InfoHiLight );
-
-	{ Display the part's armor rating. }
-	N := GearCurrentArmor( Part );
-	if N > 0 then msg := '[' + BStr( N )
-	else msg := '[-';
-	msg := msg + '] ';
-	MyDest.X := Z.X + 5;
-	MyDest.Y := Z.Y + TTF_FontLineSkip( Game_Font );
-	QuickText( Msg , MyDest , ArmorColor( Part ) , game_font );
-
-	MyDest.X := MyDest.X + TextLength( Game_Font , msg + ' ' );
-
-	{ Display the part's damage rating. }
-	N := GearCurrentDamage( Part );
-	if N > 0 then msg := BStr( N )
-	else msg := '-';
-	QuickText( Msg , MyDest , HitsColor( Part ) , game_font );
-
-	MyDest.X := MyDest.X + TextLength( Game_Font , msg + ' ' );
-	QuickText( 'DP' , MyDest , NeutralGrey , game_font );
-
-	{ Display the mass. }
-	N := GearMass( Part );
-	MyDest.X := Z.X + Z.W - 5;
-	if N > 0 then QuickTextRJ( MassString( Part ) , MyDest , NeutralGrey , game_font );
-
-	{ Display the extended description. }
-	msg := ExtendedDescription( Part );
-	if msg <> '' then begin
-		MyDest.X := Z.X;
-		MyDest.Y := Z.Y + TTF_FontLineSkip( Game_Font ) * 2;
-		MyDest.W := Z.W;
-		MyDest.H := Z.H - TTF_FontLineSkip( Game_Font ) * 2;
-		GameMsg( msg , MyDest , NeutralGrey );
-	end;
 end;
 
 Procedure ArenaTeamInfo( Source: GearPtr; Z: TSDL_Rect );

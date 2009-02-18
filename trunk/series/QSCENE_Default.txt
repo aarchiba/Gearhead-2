@@ -730,64 +730,6 @@ Scene 0 2
 
 	QUEST_entrance <*ENT_SpaceSecret>
 
-%%
-%%  *DestroyBase Content
-%%
-%% The PC will be facing off against some kind of base, which must be destroyed.
-%% Obviously there will be some defenders. May recieve a faction as the base's
-%% alliegance.
-%%
-%% After the encounter, a local variable will be set:
-%% if L1=1, the PC won the encounter
-%% if L1=2, A win is impossible or the situation has changed
-
-Scene 0 2
-	name <# Base>
-	requires <*DestroyBase "SPINNER">
-	type <Space>
-	special <ShowAll>
-	terrain <SPACE>
-
-	SpaceMap
-	SpaceScroll
-	Microgravity
-	Vacuum
-	SpaceBackdrop
-
-	MapWidth 50
-	MapHeight 50
-
-	QUEST_entrance <*ENT_SpaceSecret>
-
-	% V1 = Victory Indicator
-
-	Start <if# %scenefac% 0 if= PCFac %scenefac% Print 2>
-
-	Nu3 <if= T3 0  if= V1 0     Print 1   XPV 100   V= 1 1   PCFEnemy %scenefac%>
-
-	Msg1 <The base has been destroyed!>
-	Msg2 <As a member of \FACTION %scenefac% , you are not confronted by the guards.>
-
-	sub
-		Team 1
-		SetEnemy 2 3
-
-		Team 2
-		name <Enemies>
-		% If the PC is a member of the base's faction, he can approach it
-		% without being stopped.
-		Deploy <if= L1 0 if# PCFac 0 else GoRealDeploy if= PCFac %scenefac% else GoRealDeploy>
-		GoRealDeploy <SetSelfFaction %scenefac%  WMecha 2 %threat% 200>
-		SetEnemy 1
-
-		Team 3
-		name <Scenery>
-		SetEnemy 1
-	end
-	inv
-		STC Microstation
-		SetTeam 3
-	end
 
 %%
 %% *MechaShowdown Content

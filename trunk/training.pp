@@ -476,7 +476,7 @@ Procedure DoTraining( GB: GameBoardPtr; PC: GearPtr; RD: RedrawProcedureType );
 		S := PC^.SubCom;
 		while S <> Nil do begin
 			if AStringHasBString( SAttValue( S^.SA , 'TYPE' ) , 'CYBER' ) then begin
-				AddRPGMenuItem( TMenu , GearName( S ) , 0 , ExtendedDescription( S ) + ' (' + SAttValue( S^.SA , 'CYBERSLOT' ) + ')' );
+				AddRPGMenuItem( TMenu , GearName( S ) , 0 , ExtendedDescription( GB , S ) + ' (' + SAttValue( S^.SA , 'CYBERSLOT' ) + ')' );
 			end;
 			S := S^.Next;
 		end;

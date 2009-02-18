@@ -170,7 +170,7 @@ begin
 		if N > 0 then begin
 			Part := RetrieveGearSib( ADR_Source , N );
 			if Part <> Nil then begin
-				BrowserInterfaceInfo( Part , ZONE_ArenaInfo );
+				BrowserInterfaceInfo( Nil , Part , ZONE_ArenaInfo );
 			end;
 		end;
 	end;
@@ -190,7 +190,7 @@ begin
 		if N > 0 then begin
 			Part := RetrieveGearSib( ADR_Source , N );
 			if Part <> Nil then begin
-				BrowserInterfaceInfo( Part , ZONE_ArenaInfo );
+				BrowserInterfaceInfo( Nil , Part , ZONE_ArenaInfo );
 			end;
 		end;
 	end;
@@ -203,7 +203,7 @@ begin
 	if ADR_MechaMenu <> Nil then DisplayMenu( ADR_MechaMenu , Nil );
 	if ADR_HQCamp <> Nil then ArenaTeamInfo( ADR_HQCamp^.Source , ZONE_PCStatus );
 	if ADR_Source <> Nil then begin
-		BrowserInterfaceInfo( ADR_Source , ZONE_ArenaInfo );
+		BrowserInterfaceInfo( Nil , ADR_Source , ZONE_ArenaInfo );
 	end;
 end;
 
@@ -214,7 +214,7 @@ begin
 	if ADR_PilotMenu <> Nil then DisplayMenu( ADR_PilotMenu , Nil );
 	if ADR_HQCamp <> Nil then ArenaTeamInfo( ADR_HQCamp^.Source , ZONE_PCStatus );
 	if ADR_Source <> Nil then begin
-		BrowserInterfaceInfo( ADR_Source , ZONE_ArenaInfo );
+		BrowserInterfaceInfo( Nil , ADR_Source , ZONE_ArenaInfo );
 	end;
 end;
 
@@ -239,7 +239,7 @@ begin
 		if N > 0 then begin
 			Part := RetrieveGearSib( ADR_Source , N );
 			if Part <> Nil then begin
-				BrowserInterfaceInfo( Part , ZONE_ItemsInfo );
+				BrowserInterfaceInfo( Nil , Part , ZONE_ItemsInfo );
 			end;
 		end;
 	end;
@@ -257,7 +257,7 @@ begin
 		if N > 0 then begin
 			Part := RetrieveGearSib( ADR_Source , N );
 			if Part <> Nil then begin
-				BrowserInterfaceInfo( Part , ZONE_ArenaInfo );
+				BrowserInterfaceInfo( Nil , Part , ZONE_ArenaInfo );
 			end;
 		end;
 	end;
@@ -268,7 +268,7 @@ Procedure ViewSourceRedraw;
 begin
 	BasicArenaRedraw;
 	if ADR_Source <> Nil then begin
-		BrowserInterfaceInfo( ADR_Source , ZONE_ArenaInfo );
+		BrowserInterfaceInfo( Nil , ADR_Source , ZONE_ArenaInfo );
 	end;
 end;
 
@@ -278,7 +278,7 @@ begin
 	BasicArenaRedraw;
 	SetupFHQDisplay;
 	if ADR_Source <> Nil then begin
-		BrowserInterfaceInfo( ADR_Source , ZONE_ItemsInfo );
+		BrowserInterfaceInfo( Nil , ADR_Source , ZONE_ItemsInfo );
 	end;
 end;
 

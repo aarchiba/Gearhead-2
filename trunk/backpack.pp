@@ -171,7 +171,7 @@ begin
 			if BP_SeekSibs then Part := RetrieveGearSib( BP_Source , N )
 			else Part := LocateGearByNumber( BP_Source , N );
 			if Part <> Nil then begin
-				BrowserInterfaceInfo( Part , ZONE_ItemsInfo );
+				BrowserInterfaceInfo( BP_GB , Part , ZONE_ItemsInfo );
 			end;
 		end;
 	end;
@@ -185,7 +185,7 @@ Procedure InstallRedraw;
 begin
 	BP_Redraw;
 	DrawBPBorder;
-	BrowserInterfaceInfo( BP_Source , ZONE_ItemsInfo );
+	BrowserInterfaceInfo( BP_GB , BP_Source , ZONE_ItemsInfo );
 	if EqpRPM <> Nil then begin
 		DisplayMenu( EqpRPM , Nil );
 	end;
@@ -207,7 +207,7 @@ begin
 			if BP_SeekSibs then Part := RetrieveGearSib( BP_Source , N )
 			else Part := LocateGearByNumber( BP_Source , N );
 			if Part <> Nil then begin
-				BrowserInterfaceInfo( Part , ZONE_ItemsInfo );
+				BrowserInterfaceInfo( BP_GB , Part , ZONE_ItemsInfo );
 			end;
 		end;
 	end;
@@ -219,7 +219,7 @@ begin
 	BP_Redraw;
 	DrawBPBorder;
 	GameMsg( MsgString( 'BACKPACK_Directions' ) , ZONE_BackpackInstructions , InfoHilight );
-	if BP_Source <> Nil then BrowserInterfaceInfo( BP_Source , ZONE_ItemsInfo );
+	if BP_Source <> Nil then BrowserInterfaceInfo( BP_GB , BP_Source , ZONE_ItemsInfo );
 
 	if EqpRPM <> Nil then begin
 		DisplayMenu( EqpRPM , Nil );
@@ -238,7 +238,7 @@ Procedure ThisWargearRedraw;
 begin
 	BP_Redraw;
 	SetupFHQDisplay;
-	if BP_Source <> Nil then BrowserInterfaceInfo( BP_Source , ZONE_ItemsInfo );
+	if BP_Source <> Nil then BrowserInterfaceInfo( BP_GB , BP_Source , ZONE_ItemsInfo );
 end;
 
 Procedure MechaPartEditorRedraw;
@@ -252,7 +252,7 @@ begin
 		if BP_SeekSibs then Part := RetrieveGearSib( BP_Source , CurrentMenuItemValue( BP_ActiveMenu ) )
 		else Part := LocateGearByNumber( BP_Source , CurrentMenuItemValue( BP_ActiveMenu ) );
 		if Part <> Nil then begin
-			BrowserInterfaceInfo( Part , ZONE_ItemsInfo );
+			BrowserInterfaceInfo( BP_GB , Part , ZONE_ItemsInfo );
 		end;
 	end;
 end;
@@ -268,7 +268,7 @@ begin
 		if BP_SeekSibs then Part := RetrieveGearSib( BP_Source , CurrentMenuItemValue( BP_ActiveMenu ) )
 		else Part := LocateGearByNumber( BP_Source , CurrentMenuItemValue( BP_ActiveMenu ) );
 		if Part <> Nil then begin
-			BrowserInterfaceInfo( Part , ZONE_ItemsInfo );
+			BrowserInterfaceInfo( BP_GB , Part , ZONE_ItemsInfo );
 		end;
 	end;
 end;
@@ -302,7 +302,7 @@ begin
 		if N > 0 then begin
 			Part := RetrieveGearSib( BP_Source^.InvCom , N );
 			if Part <> Nil then begin
-				BrowserInterfaceInfo( Part , ZONE_ItemsInfo );
+				BrowserInterfaceInfo( BP_GB , Part , ZONE_ItemsInfo );
 			end;
 		end;
 	end;
@@ -1414,7 +1414,7 @@ begin
 	if ( BP_ActiveMenu <> Nil ) and ( BP_Source <> Nil ) then begin
 		Part := RetrieveGearSib( BP_Source , CurrentMenuItemValue( BP_ActiveMenu ) );
 		if Part <> Nil then begin
-			BrowserInterfaceInfo( Part , ZONE_ItemsInfo );
+			BrowserInterfaceInfo( BP_GB , Part , ZONE_ItemsInfo );
 		end;
 	end;
 end;

@@ -38,7 +38,7 @@ Procedure DisplayInteractStatus( GB: GameBoardPtr; NPC: GearPtr; React,Endurance
 Procedure CharacterDisplay( PC: GearPtr; GB: GameBoardPtr );
 Procedure InjuryViewer( PC: GearPtr; redraw: RedrawProcedureType );
 
-Procedure BrowserInterfaceInfo( Part: GearPtr; Z: VGFX_Zone );
+Procedure BrowserInterfaceInfo( GB: GameBoardPtr; Part: GearPtr; Z: VGFX_Zone );
 Procedure BrowserInterfaceMystery( Part: GearPtr; Z: VGFX_Zone );
 
 Procedure ArenaTeamInfo( Source: GearPtr; Z: VGFX_Zone );
@@ -735,7 +735,7 @@ begin
 	MoreKey;
 end;
 
-Procedure BrowserInterfaceInfo( Part: GearPtr; Z: VGFX_Zone );
+Procedure BrowserInterfaceInfo( GB: GameBoardPtr; Part: GearPtr; Z: VGFX_Zone );
 	{ Display the basic information for this gear. }
 var
 	MyDest: VGFX_Rect;
@@ -807,7 +807,7 @@ begin
 	MyDest.H := MyDest.H - 3;
 
 	{ See if there is an extended description. }
-	msg := ExtendedDescription( Part );
+	msg := ExtendedDescription( GB , Part );
 	if msg <> '' then begin
 		GameMsg( msg , MyDest , Green );
 		MyDest.Y := vg_y + 2;
