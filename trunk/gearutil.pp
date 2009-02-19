@@ -1968,7 +1968,7 @@ var
 
 				{ Martial Arts attacks get a bonus based on skill level. }
 				if Attacker^.G = GG_Module then begin
-					D := D + ( CharaSkillRank( Master , NAS_MartialArts ) - 1 ) div 2;
+					D := D + ( CharaSkillRank( Master , NAS_MartialArts ) + 1 ) div 2;
 				end;
 
 				if D < 1 then D := 1;

@@ -2334,13 +2334,13 @@ var
 	end;
 begin
 	{ First, make sure we have an originator, and that it's a character. }
-	if ( ER.Originator = Nil ) or ( ER.Originator^.G <> GG_Character ) then begin
+	if ( ER.Originator = Nil ) or ( ER.Originator^.G <> GG_Character ) or ( not NotAnAnimal( ER.Originator ) ) then begin
 		AtOp := 0;
 		exit;
 	end;
 
-	{ The attacker must have a martial arts skill of at least 6 to benefit. }
-	SkRk := NAttValue( ER.Originator^.NA , NAG_Skill , 9 ) - 5;
+	{ The attacker must have a martial arts skill of at least 5 to benefit. }
+	SkRk := NAttValue( ER.Originator^.NA , NAG_Skill , 9 ) - 4;
 	if SkRk < 1 then begin
 		if NAttValue( ER.Originator^.NA , NAG_GearOps , NAS_Material ) = NAV_Meat then AtOp := -1;
 		Exit;
@@ -2350,7 +2350,7 @@ begin
 	for TP := 1 to Num_Funky_Things do FTTaken[TP] := False;
 
 	{ TP is Technique Points. }
-	TP := Random( SkRk + 1 );
+	TP := SkRk;
 
 	if CurrentMental( ER.Originator ) > ( 10 + Random( 20 ) ) then begin
 		TP := TP + Random( 3 ) + 1;
