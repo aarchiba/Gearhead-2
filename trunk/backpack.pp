@@ -1717,31 +1717,39 @@ Procedure PCDoPerformance( GB: GameBoardPtr; PC: GearPtr );
 	{ reactions the PC scores. The PC might also earn money, if the }
 	{ public response is positive enough. }
 var
+	Target: GearPtr;
 	Success: LongInt;
 	msg: String;
 begin
-	{ Call the performance procedure to find out how well the }
-	{ player has done. }
-	Success := UsePerformance( GB , PC );
-
+	{ Select a target for this performance. }
+	Target := SelectPerformanceTarget( GB , PC );
 	msg := ReplaceHash( MsgString( 'PERFORMANCE_Base' ) , GearName( PC ) );
 
-	{ Print an appropriate message. }
-	if Success > 0 then begin
-		{ Good show! The PC made some money as a busker. }
-		msg := msg + ' ' + ReplaceHash( MsgString( 'PERFORMANCE_DidWell' + BStr( Random( 3 ) ) ) , BStr( Success ) );
-	end else if Success < 0 then begin
-		{ The PC flopped. No money made, and possibly damage }
-		{ to his reputation. }
-		msg := msg + ' ' + MsgString( 'PERFORMANCE_Horrible' + BStr( Random( 3 ) ) );
+	{ If we have a target, then perform. }
+	if Target <> Nil then begin
+		{ Call the performance procedure to find out how well the }
+		{ player has done. }
+		Success := UsePerformance( GB , PC , Target );
+
+		{ Print an appropriate message. }
+		if Success > 0 then begin
+			{ Good show! The PC made some money as a busker. }
+			msg := msg + ' ' + ReplaceHash( MsgString( 'PERFORMANCE_DidWell' + BStr( Random( 3 ) ) ) , BStr( Success ) );
+		end else if Success < 0 then begin
+			{ The PC flopped. No money made, and possibly damage }
+			{ to his reputation. }
+			msg := msg + ' ' + MsgString( 'PERFORMANCE_Horrible' + BStr( Random( 3 ) ) );
+		end;
+	end else begin
+		msg := msg + ' ' + MsgString( 'PERFORMANCE_NoAudience' );
+		SetNAtt( PC^.NA , NAG_Location , NAS_SmartAction , 0 );
 	end;
 
 	DialogMsg( msg );
 end;
 
 Procedure StartPerforming( GB: GameBoardPtr; PC: GearPtr );
-	{ Start performing on a musical instrument. First this procedure }
-	{ will seek the best instrument currently held, then it will set }
+	{ Start performing on a musical instrument. This procedure will set }
 	{ up the continuous action. }
 begin
 	if ( PC = Nil ) or ( PC^.G <> GG_Character ) then Exit;

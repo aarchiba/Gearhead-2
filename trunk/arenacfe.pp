@@ -1138,7 +1138,8 @@ Procedure DoVerbalAttack( GB: GameBoardPtr; Attacker,Target: GearPtr );
 	var
 		Con_Rank,Int_Rank: Integer;
 	begin
-		Con_Rank := SkillValue( Attacker , NAS_Conversation );
+		Con_Rank := SkillValue( Attacker , NAS_Conversation ) - 5;
+		if Con_Rank < 0 then Con_Rank := 0;
 		Int_Rank := SkillValue( Attacker , NAS_Intimidation );
 
 		if Random( Int_Rank + Con_Rank ) < Int_Rank then begin
@@ -1161,7 +1162,11 @@ begin
 
 		AtSkill := SelectTactic;
 		msg := GetTauntString( Attacker , 'CHAT_VA.FORCESURRENDER.' + BStr( AtSkill ) );
-		AtRoll :=  SkillRoll( GB , Attacker , AtSkill , DefRoll , -NAttValue( Target^.NA , NAG_EpisodeData , NAS_TauntResistance ) , False , True );
+		if AtSkill = NAS_Conversation then begin
+			AtRoll :=  SkillRoll( GB , Attacker , AtSkill , DefRoll , -5 - NAttValue( Target^.NA , NAG_EpisodeData , NAS_TauntResistance ) , False , True );
+		end else begin
+			AtRoll :=  SkillRoll( GB , Attacker , AtSkill , DefRoll , -NAttValue( Target^.NA , NAG_EpisodeData , NAS_TauntResistance ) , False , True );
+		end;
 		AddNAtt( Target^.NA , NAG_EpisodeData , NAS_TauntResistance , 1 + Random(3) );
 		Monologue( GB , Attacker , msg );
 
@@ -1187,7 +1192,12 @@ begin
 
 		AtSkill := SelectTactic;
 		msg := GetTauntString( Attacker , 'CHAT_VA.FORCEEJECT.' + BStr( AtSkill ) );
-		AtRoll :=  SkillRoll( GB , Attacker , AtSkill , DefRoll , -5 , False , True );
+		if AtSkill = NAS_Conversation then begin
+			AtRoll :=  SkillRoll( GB , Attacker , AtSkill , DefRoll , -10 , False , True );
+		end else begin
+			AtRoll :=  SkillRoll( GB , Attacker , AtSkill , DefRoll , -5 , False , True );
+		end;
+
 		AddNAtt( Target^.NA , NAG_EpisodeData , NAS_TauntResistance , 1 + Random( 8 ) );
 		Monologue( GB , Attacker , msg );
 

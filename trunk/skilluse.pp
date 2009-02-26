@@ -47,7 +47,8 @@ Procedure ApplyEmergencyRepairPoints( Target: GearPtr; Skill: Integer; var RP: L
 Function UseRepairSkill( GB: GameBoardPtr; PC,Target: GearPtr; Skill: Integer ): LongInt;
 Procedure DoCompleteRepair( Target: GearPtr );
 
-Function UsePerformance( GB: GameBoardPtr; PC: GearPtr ): LongInt;
+Function SelectPerformanceTarget( GB: GameBoardPtr; PC: GearPtr ): GearPtr;
+Function UsePerformance( GB: GameBoardPtr; PC,NPC: GearPtr ): LongInt;
 
 
 implementation
@@ -385,23 +386,51 @@ begin
 	end;
 end;
 
-Function UsePerformance( GB: GameBoardPtr; PC: GearPtr ): LongInt;
-	{ The PC is about to use a performance skill. }
-	{ As a result, the following things may happen: }
-	{ - Earn money through tips. }
-	{ - Set "APPLAUSE" triggers for positive reactions. }
-	{ - Modify Morale up or down. }
-	{ - Earn skill experience for performance. }
-	{ - Lose Mental and Stamina from the act of playing. }
-	{ Return -1 for a bad performance, 0 for a mediocre performance, }
-	{ and a positive number if the PC made any tips. }
+Function PerformSkillTar( NPC: GearPtr ): Integer;
+	{ Return the performance skill target for this particular NPC. }
+begin
+	PerformSkillTar := CStat( NPC , STAT_Ego ) + NAttValue( NPC^.NA , NAG_Personal , NAS_PerformancePenalty );
+end;
+
+Function SelectPerformanceTarget( GB: GameBoardPtr; PC: GearPtr ): GearPtr;
+	{ Search through the map and locate someone who has not yet responded to }
+	{ the PC's music today. If nobody is found, return NIL. }
 const
 	PerformanceRange = 8;
+var
+	M,it: GearPtr;
+	team: Integer;
+begin
+	{ Start looking through the gameboard. }
+	M := GB^.Meks;
+	it := Nil;
+	while M <> Nil do begin
+		team := NAttValue( M^.NA , NAG_Location , NAS_Team );
+		if ( M^.G = GG_Character ) and ( team <> NAV_DefPlayerTeam ) and ( team <> NAV_LancemateTeam ) and ( M <> PC ) and ( Range( GB , M , PC ) <= PerformanceRange ) and OnTheMap( GB , M ) and GearActive( M ) and ( not AreEnemies( GB , M , PC ) ) and NotAnAnimal( M ) and ( NAttValue( M^.NA , NAG_Personal , NAS_CashOnHandRestock ) <= GB^.ComTime ) then begin
+			{ This is a potential target. Check to see if its skill target is lower }
+			{ than that of the current candidate. }
+			if it = Nil then begin
+				it := M;
+			end else if PerformSkillTar( M ) < PerformSkillTar( it ) then begin
+				it := M;
+			end;
+		end;
+		M := M^.Next;
+	end;
+	SelectPerformanceTarget := it;
+end;
+
+Function UsePerformance( GB: GameBoardPtr; PC,NPC: GearPtr ): LongInt;
+	{ The PC is about to use a performance skill. }
+	{  1) Select a nearby non-lancemate NPC }
+	{  2) Make a performance roll }
+	{  3) Profit }
+	{ Return -1 for a bad performance, 0 for a mediocre performance, }
+	{ and a positive number if the PC made any tips. }
 var
 	SkRoll,SkRank,Target,Penalty: Integer;	{ Skill roll target }
 	N: Integer;		{ Number of successes }
 	Cash: LongInt;
-	M: GearPtr;
 begin
 	{ Reduce stamina and mental now. }
 	{ Performing is both mentally and physically exhausting. }
@@ -411,53 +440,35 @@ begin
 		AddMentalDown( PC , 1 );
 	end;
 
-	{ Check through the audience. For the purpose of this game, }
-	{ the audience counts as every nonhostile NPC within [UseRange] tiles. }
-	N := 0;
 	Cash := 0;
 
-	M := GB^.Meks;
-	while M <> Nil do begin
-		{ If M is a character, not the PC, and is active, }
-		{ and is not hostile towards the PC, and is in range, }
-		{ check its reaction to the performance. }
-		if ( M^.G = GG_Character ) and ( M <> PC ) and ( Range( GB , M , PC ) <= PerformanceRange ) and OnTheMap( GB , M ) and GearActive( M ) and ( not AreEnemies( GB , M , PC ) ) then begin
-			{ Calculate the target number. }
-			Target := CStat( M , STAT_Ego );
-			Penalty := NAttValue( M^.NA , NAG_Personal , NAS_PerformancePenalty );
-			if Target < 10 then Target := 10;
+	Target := PerformSkillTar( NPC );
+	if Target < 5 then Target := 5;
 
-			SkRoll := SkillRoll( GB , PC , NAS_Performance , Target + Penalty , 0 , True , True );
-			if SkRoll > ( Target + Penalty ) then begin
-				Inc( N );
-				if SkRoll > ( Target * 2 ) then Inc( N );
-				if Random( 2 ) = 1 then AddNAtt( M^.NA , NAG_Personal , NAS_PerformancePenalty , 1 );
-				SetTrigger( GB , TRIGGER_Applause );
-			end else if ( SkRoll + PersonalityCompatability( PC , M ) ) < ( Target div 3 ) then begin
-				Dec( N );
-			end;
-		end;
+	{ Set the recharge timer for this target. }
+	SetNAtt( NPC^.NA , NAG_Personal , NAS_CashOnHandRestock , GB^.ComTime + 43200 + Random( 86400 ) );
 
-		M := M^.Next;
-	end;
+	{ Add to the performance resistance. }
+	if Random( 2 ) = 1 then AddNAtt( NPC^.NA , NAG_Personal , NAS_PerformancePenalty , 1 );
 
-	{ If the PC earned any money from busking, add that here. }
-	if ( N >= 2 ) then begin
-		DoleExperience( PC , N div 2 );
+	SkRoll := SkillRoll( GB , PC , NAS_Performance , Target , 0 , True , False );
+	if SkRoll > Target then begin
+		DoleSkillExperience( PC , NAS_Performance , Target );
 
-		{ Modify N for a low reputation. }
-		if NAttValue( PC^.NA , NAG_CharDescription , NAS_Renowned ) < 1 then Dec( N );
-		Dec( N );
-		if ( CurrentMental( PC ) > 0 ) and ( CurrentStamina( PC ) > 0 ) then begin
+		if SkRoll > ( Target + 5 ) then begin
+			{ On a good roll, the PC earns some money. }
 			SkRank := SkillRank( PC , NAS_Performance ) + 1;
+			N := SkRoll - Target - 5;
 			if N > SkRank then N := SkRank
 			else if N < 1 then N := 1;
 			Cash := SkillAdvCost( Nil , N ) div 10;
 			AddNAtt( PC^.NA , NAG_Experience , NAS_Credits , Cash );
 		end;
 
-	end else if ( N < 0 ) then begin
-		{ The PC did pretty badly. }
+		{ Set the applause trigger. }
+		SetTrigger( GB , TRIGGER_Applause );
+
+	end else if ( SkRoll + PersonalityCompatability( PC , NPC ) - 5 ) < Target then begin
 		AddMoraleDmg( PC , Rollstep( 1 ) );
 		Cash := -1;
 	end;

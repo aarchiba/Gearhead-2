@@ -979,7 +979,7 @@ begin
 	if Target = Nil then begin
 		DialogMsg( MsgString( 'PICKPOCKET_NotFound' ) );
 		Exit;
-	end else if ( NAttValue( Target^.NA , NAG_Personal , NAS_PickPocketRestock ) > GB^.ComTime ) and ( Target^.InvCom = Nil ) then begin
+	end else if ( NAttValue( Target^.NA , NAG_Personal , NAS_CashOnHandRestock ) > GB^.ComTime ) and ( Target^.InvCom = Nil ) then begin
 		{ If the victim has nothing to steal, then the PC can't very well steal it, }
 		{ can he? }
 		DialogMsg( ReplaceHash( MsgString( 'PICKPOCKET_EMPTY' ) , GearName( Target ) ) );
@@ -1034,7 +1034,7 @@ begin
 		AddReputation( PC , 2 , -2 );
 
 		{ Also set the recharge time. }
-		SetNAtt( Target^.NA , NAG_Personal , NAS_PickPocketRestock , GB^.ComTime + 43200 + Random( 86400 ) );
+		SetNAtt( Target^.NA , NAG_Personal , NAS_CashOnHandRestock , GB^.ComTime + 43200 + Random( 86400 ) );
 	end;
 
 	{ Stealing things takes concentration and time. }

@@ -463,7 +463,7 @@ Const
 		{ minutes. }
 	NAS_RandSeed = 3;	{ Individual seed for shopkeepers. }
 	NAS_RestockTime = 4;
-	NAS_PickPocketRestock = 5;	{ Recharge time for picking pockets. }
+	NAS_CashOnHandRestock = 5;	{ Recharge time for picking pockets. }
 
 	{ TACTICS SETTINGS }
 	NAS_OptMax = 6;

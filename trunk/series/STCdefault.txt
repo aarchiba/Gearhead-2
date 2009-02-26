@@ -2,26 +2,6 @@
 % ***   STC  Standard  Item  Descriptions   ***
 % *********************************************
 
-Scene
-BoxMap
-desig <SCENE_EmptyBuilding>
-MapWidth 32
-MapHeight 32
-nu1 <if= T1 0 Return>
-sub
-	Team 1
-
-	Team 2
-	name <Citizens>
-	setally 1 3
-	Passive
-
-	Team 3
-	name <Guards>
-	SetAlly 1 2
-end
-
-
 	Gun 5
 	name <Smoke Launcher>
 	desig <SML-5>
@@ -1851,4 +1831,24 @@ desig <PERSONA_REVERT>
 greeting <RevertPersona>
 
 
+% Etc...
+
+Scene
+BoxMap
+desig <SCENE_EmptyBuilding>
+MapWidth 32
+MapHeight 32
+nu1 <if= T1 0 Return>
+sub
+	Team 1
+
+	Team 2
+	name <Citizens>
+	setally 1 3
+	Passive
+
+	Team 3
+	name <Guards>
+	SetAlly 1 2
+end
 

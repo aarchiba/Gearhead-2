@@ -2350,12 +2350,8 @@ begin
 	for TP := 1 to Num_Funky_Things do FTTaken[TP] := False;
 
 	{ TP is Technique Points. }
-	TP := SkRk;
+	TP := SkRk + Random( 3 );
 
-	if CurrentMental( ER.Originator ) > ( 10 + Random( 20 ) ) then begin
-		TP := TP + Random( 3 ) + 1;
-		AddMentalDown( ER.Originator , 1 );
-	end;
 
 	{ If any technique points were gained, put them to good use here. }
 	{ Technique points can buy attack improvements: attack attributes, various bonuses, }

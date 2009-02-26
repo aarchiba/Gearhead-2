@@ -57,6 +57,8 @@ begin
 		Total := Total + Dmg;
 
 		{ Delete the damage from both attacker and target. }
+		StripNAtt( FindRoot( Attacker ) , NAG_Condition );
+		StripNAtt( FindRoot( Target ) , NAG_Condition );
 		StripNAtt( FindRoot( Attacker ) , NAG_Damage );
 		StripNAtt( FindRoot( Target ) , NAG_Damage );
 		StripNAtt( FindRoot( Attacker ) , NAG_WeaponModifier );
