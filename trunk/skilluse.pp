@@ -388,8 +388,12 @@ end;
 
 Function PerformSkillTar( NPC: GearPtr ): Integer;
 	{ Return the performance skill target for this particular NPC. }
+var
+	it: Integer;
 begin
-	PerformSkillTar := CStat( NPC , STAT_Ego ) + NAttValue( NPC^.NA , NAG_Personal , NAS_PerformancePenalty );
+	it := CStat( NPC , STAT_Ego ) + NAttValue( NPC^.NA , NAG_Personal , NAS_PerformancePenalty ) - 5;
+	if it < 5 then it := 5;
+	PerformSkillTar := it;
 end;
 
 Function SelectPerformanceTarget( GB: GameBoardPtr; PC: GearPtr ): GearPtr;

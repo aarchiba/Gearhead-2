@@ -285,12 +285,12 @@ begin
 			P1 := GearCurrentLocation( Observer );
 			P2 := GearCurrentLocation( Target );
 
-			if not ArcCheck( P1.X , P1.Y , NAttValue( Observer^.NA , NAG_Location , NAS_D ) , P2.X , P2.Y , ARC_F90 ) then begin
+			if not ArcCheck( P1.X , P1.Y , NAttValue( Observer^.NA , NAG_Location , NAS_D ) , P2.X , P2.Y , ARC_F180 ) then begin
 				{ Make the awareness roll. }
 				T := TargetStealth;
 				Roll := SkillRoll( GB , Observer , 11 , T , 0 , False , AreEnemies( GB , Observer , Target ) );
 
-				if SkillRoll( GB , Target , 25 , Roll , 0 , False , AreEnemies( GB , Observer , Target ) ) > Roll then begin
+				if SkillRoll( GB , Target , 25 , Roll , -5 , False , AreEnemies( GB , Observer , Target ) ) > Roll then begin
 					it := False;
 				end else begin
 					it := True;
