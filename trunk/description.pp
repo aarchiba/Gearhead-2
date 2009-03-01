@@ -88,7 +88,7 @@ begin
 		AA := WeaponAttackAttributes( Weapon );
 
 		if (Weapon^.S = GS_Ballistic) or (Weapon^.S = GS_BeamGun) then begin
-			T := ScaleRange( WeaponRange( GB , Weapon ) , Weapon^.Scale );
+			T := ScaleRange( WeaponRange( Nil , Weapon ) , Weapon^.Scale );
 			if HasAttackAttribute( AA , AA_LineAttack ) then begin
 				desc := desc + ' RNG:' + BStr( T ) + '-' + BStr( T * 2 );
 			end else begin
