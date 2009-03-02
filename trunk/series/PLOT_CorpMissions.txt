@@ -10,7 +10,7 @@ Plot
 	% E2 is the corporate faction that E1 belongs to
 	% E3 is a scene where the encounter will take place
 	% E4 is the town- needed for email check
-	Element1 <Character Corporate>
+	Element1 <Character Corporate RECHARGED>
 	element2 <Faction Corporate !Comrade 1>
 	Element3 <Scene Environs>
 	Element4 <Scene Town>
@@ -87,7 +87,7 @@ Plot
 	% E3 is a scene where the encounter will take place
 	% E4 is the enemy faction
 	% E5 is the town, needed for email check
-	Element1 <Character Corporate>
+	Element1 <Character Corporate RECHARGED>
 	element2 <Faction Corporate !Comrade 1>
 	Element3 <Scene Environs>
 	Element4 <Faction Crime !Enemy 2>
@@ -112,7 +112,7 @@ Plot
 
 	sub
 		Persona 1
-		rumor0 <%name1% needs a mecha pilot to fight %name4% for %name2%.>
+		rumor0 <%name1% needs a pilot to fight %name4% for %name2%.>
 		greeting <if= PlotStatus %plotid% %id1% else GoCheckOffer Goto GoRemind>
 		*GoRemind <*MechaMissionReminder %3%>
 		GoCheckOffer <if# PlotStatus %plotid% 0 else GoCheckEnemy NewChat SayAnything>

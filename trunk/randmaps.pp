@@ -2751,6 +2751,7 @@ begin
 	if ( GB = Nil ) or ( GB^.Scene = Nil ) then Exit;
 
 	{ Locate the source. }
+	{ This will either be the adventure or, in the case of a story-linked metascene, a story. }
 	Source := GB^.Scene;
 	while ( Source <> Nil ) and ( Source^.G <> GG_Adventure ) and ( Source^.G <> GG_Story ) do Source := Source^.Parent;
 	if Source = Nil then Exit;

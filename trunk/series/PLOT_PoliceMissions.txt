@@ -11,7 +11,7 @@ Plot
 	% E2 is a character who will offer the mission
 	% E3 is a scene where the encounter will take place
 	Element1 <Scene Town>
-	Element2 <Character POLIC !Ally 1>
+	Element2 <Character POLIC !Ally 1 RECHARGED>
 	Element3 <Scene Environs>
 
 	% SubPlot1 is the combat encounter
@@ -86,7 +86,7 @@ Plot
 	% E3 is a scene where the encounter will take place
 	% E4 is the enemy faction
 	Element1 <Scene Town>
-	Element2 <Character POLIC !Ally 1>
+	Element2 <Character POLIC !Ally 1 RECHARGED>
 	Element3 <Scene Environs>
 	Element4 <Faction !Enemy 2>
 

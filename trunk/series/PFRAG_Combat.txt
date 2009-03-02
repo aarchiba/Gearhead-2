@@ -1,5 +1,59 @@
 %%% COMBAT PERSONA FRAGMENTS
 
+% TYPE: *HereToHelpFight
+%	This NPC is here to aid the PC in an upcoming battle. The PC can choose to send
+%	them away. Of course, they might not listen...
+%    PARAM1: Accept Aid (no message printed here)
+%    PARAM2: Reject Aid (no message printed here)
+%    PARAM3: Reject Rejection (message printed here)
+
+	Persona
+	requires <*HereToHelpFight>
+	START <EndCHat Say %id%01 AddChat %id%01 AddChat %id%02>
+	result%id%01 <Goto %1%>
+	result%id%02 <Goto %2%>
+	Msg%id%01 <Hey \PC , it looks like you could use some help. I'm here to provide backup.>
+	Msg%id%01_1 <I heard you were on a mission around these parts. Why don't I help you out; after all, there's always room for more guns.>
+	CMsg%id%01_1 <ifNPCSociable Accept>
+	Msg%id%01_2 <Hey. I've come to help you.>
+	CMsg%id%01_2 <ifNPCShy Accept>
+	Msg%id%01_3 <Hey \PC , how'd you like some backup for this fight? I'm all ready to go!>
+	CMsg%id%01_3 <ifNPCCheerful Accept>
+	Msg%id%01_4 <What kind of a mess have you gotten yourself into? It's a good thing I showed up to help you out.>
+	CMsg%id%01_4 <ifNPCMelancholy Accept>
+	Msg%id%01_5 <Hey \PC . I was cruising through the neighborhood and saw you here, so I figured I might as well help.>
+	CMsg%id%01_5 <ifNPCEasygoing Accept>
+	Msg%id%01_6 <\PC ! I'm here to assist you in this battle... Let's blow some ash up!>
+	CMsg%id%01_6 <ifNPCPassionate Accept>
+	Prompt%id%01 <Thanks; between the two of us, this should be no problem.>
+	Prompt%id%01_1 <Great! Let's do it.>
+	Prompt%id%01_2 <It'll be an honor to fight at your side.>
+	Prompt%id%02 <Get out of here, \CHATNPC - it's too dangerous.>
+	Prompt%id%02_1 <I don't need any help.>
+	Prompt%id%02_2 <You'd just get in my way- go home.>
+
+% TYPE: *RejectAid
+%	The PC has rejected the NPC's aid.
+%    PARAM1: Exit label
+
+	Persona
+	requires <*RejectAid>
+	START <EndChat Say %id%01 Goto %1%>
+	result%id%01 <Goto %1%>
+	Msg%id%01 <Alright, I'll trust you to do this on your own... Good luck, \PC .>
+	Msg%id%01_1 <You can't do everything by yourself, you know... But I suppose I can't stop you from trying.>
+	CMsg%id%01_1 <ifNPCSociable Accept>
+	Msg%id%01_2 <Good luck.>
+	CMsg%id%01_2 <ifNPCShy Accept>
+	Msg%id%01_3 <Awww, but I wanted to have some fun too! Oh well... I'll honor your wishes.>
+	CMsg%id%01_3 <ifNPCCheerful Accept>
+	Msg%id%01_4 <I came all the way out here for this and you reject me? Fine, see if I ever offer you my help again...>
+	CMsg%id%01_4 <ifNPCMelancholy Accept>
+	Msg%id%01_5 <No problem. You just do whatever you like.>
+	CMsg%id%01_5 <ifNPCEasygoing Accept>
+	Msg%id%01_6 <What's the matter, you're afraid of a little competition? Fine, I've got no problem with watching you fail.>
+	CMsg%id%01_6 <ifNPCPassionate Accept>
+
 % TYPE: *WelcomeToMyLair
 %	The PC has found the NPC's hideout, and combat is immanent.
 %    PARAM1: Exit label
@@ -305,7 +359,7 @@ Persona
 	CMsg%id%01_4 <ifNPCPassionate Accept>
 	Msg%id%01_5 <>
 	CMsg%id%01_5 <ifNPCCheerful Accept>
-	Msg%id%01_6 <>
+	Msg%id%01_6 <My \ChatNPCMecha will destroy you...>
 	CMsg%id%01_6 <ifNPCMelancholy Accept>
 
 	Persona

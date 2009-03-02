@@ -33,12 +33,18 @@ Plot
 		MapWidth 50
 		MapHeight 50
 
+		SetFaction 3
+
 		start <if= L2 0 L= 2 1 Alert 1>
 		nu1 <if= T1 0   Return   if= V1 0 V= 1 1    AddRenown -1        EndPlot>
 		nu2 <if= T2 0   if= V1 0 V= 1 1   AddRenown 1 Alert 2   XPV 100   SALVAGE   EndPlot>
 
 		Msg1 <You are attacked by some mecha from %name3%!>
 		Msg2 <You have defeated the mecha.>
+
+		% Random scene content- there's a small chance that an enemy or an ally will show up.
+		Content1 <Some 1 5 Sub *CRC_Nemesis   na>
+		Content2 <Some 1 2 Sub *CRC_Backup    na>
 
 		sub
 			team 1

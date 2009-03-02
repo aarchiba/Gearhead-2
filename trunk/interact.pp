@@ -82,7 +82,7 @@ function DoChatting( GB: GameBoardPtr; var Rumors: SAttPtr; PC,NPC: GearPtr; Var
 
 Function IsArchEnemy( Adv,NPC: GearPtr ): Boolean;
 Function IsArchAlly( Adv,NPC: GearPtr ): Boolean;
-Function XNPCDesc( Adv,NPC: GearPtr ): String;
+Function XNPCDesc( GB: GameBoardPtr; Adv,NPC: GearPtr ): String;
 
 Function GenerateEnemyHook( Scene,PC,NPC: GearPtr; Desc: String ): GearPtr;
 Function GenerateAllyHook( Scene,PC,NPC: GearPtr ): GearPtr;
@@ -856,8 +856,9 @@ begin
 	IsArchAlly := it;
 end;
 
-Function XNPCDesc( Adv,NPC: GearPtr ): String;
+Function XNPCDesc( GB: GameBoardPtr; Adv,NPC: GearPtr ): String;
 	{ Extended NPC description. }
+	{ If GB = Nil, information about the NPC's plot recharge will not be included. }
 var
 	it: String;
 	Fac,Persona: GearPtr;
@@ -891,6 +892,12 @@ begin
 	if Fac <> Nil then it := it + ' ' + SATtValue( Fac^.SA , 'DESIG' ) + ' ' + SATtValue( Fac^.SA , 'CONTEXT' )
 	else it := it + ' NOFAC';
 	if ( FID <> 0 ) and ( FID = NAttValue( Adv^.NA , NAG_Personal , NAS_FactionID ) ) then it := it + ' PCFAC';
+
+	if GB <> Nil then begin
+		if GB^.ComTime >= NAttValue( NPC^.NA , NAG_Personal , NAS_PlotRecharge ) then begin
+			it := it + ' RECHARGED';
+		end;
+	end;
 
 	it := QuoteString( it );
 

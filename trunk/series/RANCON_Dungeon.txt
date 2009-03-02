@@ -768,6 +768,7 @@ Content
 	inv
 		NPC Soldier
 		job <Survivalist>
+		Renown 20
 		update <if= V1 0 V= 1 1 SelfLevel 20>
 
 		STC CRATE-AMMO
@@ -802,6 +803,7 @@ Content
 	inv
 		NPC Soldier
 		job <Survivalist>
+		Renown 45
 		update <if= V1 0 V= 1 1 SelfLevel 45>
 
 		STC CRATE-AMMO
@@ -836,6 +838,7 @@ Content
 	inv
 		NPC Soldier
 		job <Survivalist>
+		Renown 70
 		update <if= V1 0 V= 1 1 SelfLevel 70>
 
 		STC CRATE-AMMO
@@ -877,7 +880,7 @@ Content
 
 Content
 	name <Defense Robot (Good)>
-	requires <*DUNGEON_DECOR (Ruin|Laboratory) ~!Lo ~!Md>
+	requires <*DUNGEON_DECOR (Ruin|Laboratory|Factory) ~!Lo ~!Md>
 	minimap <......#1#..#2#..###......>
 	element1 <Prefab>
 	element2 <Prefab>
@@ -888,19 +891,24 @@ Content
 		GoRefuse <Print 105>
 		GoUsed <Print 106>
 		NPCOpenDoor < >
+		clue29 <if= V1 0 ifScience 5 else GoSkillFailed Print 107>
+		clue37 <if= V1 0 ifInsight 5 else GoSkillFailed Print 107>
+		GoSkillFailed <Print 108>
 		Msg101 <[DEFENSE ROBOT RECHARGE STATION] Lift bar to activate defense robot.>
 		Msg102 <Lift the bar.>
 		Msg103 <Leave it alone.>
 		Msg104 <You activate the defense robot.>
 		Msg105 <You leave the defense robot in the recharge station.>
 		Msg106 <You have already activated the defense robot.>
+		Msg107 <Everything seems to be working correctly here.>
+		Msg108 <You can't tell anything about this door.>
 
 		Monster Androbot
 	end
 
 Content
 	name <Defense Robot (Bad)>
-	requires <*DUNGEON_DECOR (Ruin|Laboratory) -!Ne ~!Hi ~!Ex>
+	requires <*DUNGEON_DECOR (Ruin|Laboratory|Factory) -!Ne ~!Hi ~!Ex>
 	minimap <......#1#..#2#..###......>
 	element1 <Prefab>
 	element2 <Prefab>
@@ -911,12 +919,17 @@ Content
 		GoRefuse <Print 105>
 		GoUsed <Print 106>
 		NPCOpenDoor < >
+		clue29 <if= V1 0 ifScience 5 else GoSkillFailed Print 107>
+		clue37 <if= V1 0 ifInsight 5 else GoSkillFailed Print 107>
+		GoSkillFailed <Print 108>
 		Msg101 <[DEFENSE ROBOT RECHARGE STATION] Lift bar to activate defense robot.>
 		Msg102 <Lift the bar.>
 		Msg103 <Leave it alone.>
 		Msg104 <You activate the defense robot.>
 		Msg105 <You leave the defense robot in the recharge station.>
 		Msg106 <You have already activated the defense robot.>
+		Msg107 <Something doesn't seem entirely right here...>
+		Msg108 <You can't tell anything about this door.>
 
 		Monster Androbot
 	end

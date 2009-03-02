@@ -5,7 +5,7 @@ Plot 0
 	% This is a basic concert job for performers. 
 
 	% E1 is the character to offer the job.
-	Element1 <Character Bartender>
+	Element1 <Character Bartender RECHARGED>
 
 	%% P1 = Timer/Initialization Counter
 	%% P2 = Difficulcy Rating; PC's renown at time of initialization
@@ -31,11 +31,7 @@ sub
 	GoOfferJob <NewChat Say 1 V= 1 1 Memo 5 AddChat 3 AddChat 4>
 	GoRejectJob <NewChat Say 2 EndPlot>
 	GoFailJob <NewChat Say 3   EndPlot>
-	GoNoJob <EndPlot ifChatNPCKnown else GoIntroduce Goto GoGreet>
-	*GoIntroduce <*NiceToMeetYou GoOpenShop>
-	*GoGreet <*HowAreYou GoOpenShop>
-	*GoOpenShop <*SERVICE_BARTENDER GoExit>
-	*GoExit <*GoodBye>
+	GoNoJob <EndPlot RevertPersona>
 	result1 <Goto GoOfferJob>
 	result2 <Goto GoRejectJob>
 	result3 <EndChat Say 7 AddChat 5>

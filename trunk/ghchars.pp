@@ -400,10 +400,10 @@ Const
 	NAG_Talent = 16;
 	NumTalent = 31;
 
-	NAS_StrengthOfFaith = 1;
-	NAS_BodyBuilder = 2;
-	NAS_ScientificMethod = 3;
-	NAS_Presence = 4;
+	NAS_StrengthOfFaith = 1;	{X}
+	NAS_BodyBuilder = 2;		{X}
+	NAS_ScientificMethod = 3;	{X}
+	NAS_Presence = 4;		{X}
 	NAS_KungFu = 5;
 	NAS_HapKiDo = 6;
 	NAS_Anatomist = 7;
@@ -411,16 +411,16 @@ Const
 	NAS_StuntDriving = 9;
 	NAS_Savant = 10;
 	NAS_Bishounen = 11;
-	NAS_Diplomatic = 12;
+	NAS_Diplomatic = 12;		{X}
 	NAS_BornToFly = 13;
 	NAS_SureFooted = 14;
 	NAS_RoadHog = 15;
 	NAS_Scavenger = 16;
 	NAS_Idealist = 17;
 	NAS_BusinessSense = 18;
-	NAS_AnimalTrainer = 19;
+	NAS_AnimalTrainer = 19;		{X}
 	NAS_JackOfAll = 20;
-	NAS_CombatMedic = 21;
+	NAS_CombatMedic = 21;		{X}
 	NAS_Rage = 22;
 	NAS_Ninjitsu = 23;
 	NAS_HullDown = 24;
@@ -454,13 +454,13 @@ Const
 	NAG_Personal = 5;
 
 	NAS_CID = 0;	{ Character ID }
+	NAS_ReTalk = 1;	{ Busy counter... after talking with an NPC once, }
+		{ you can't talk with that same NPC again for a few }
+		{ minutes. }
 	NAS_FactionID = 2;	{ The character's faction. }
 		{ Note that the faction ID for NPCs is stored in the }
 		{ character gear, but for the PC it is stored in both }
 		{ the character gear and the root Adventure gear. }
-	NAS_ReTalk = 1;	{ Busy counter... after talking with an NPC once, }
-		{ you can't talk with that same NPC again for a few }
-		{ minutes. }
 	NAS_RandSeed = 3;	{ Individual seed for shopkeepers. }
 	NAS_RestockTime = 4;
 	NAS_CashOnHandRestock = 5;	{ Recharge time for picking pockets. }
@@ -485,6 +485,9 @@ Const
 					{ this variable may be used to record its original value. }
 	NAS_InteractXPStep = 15;	{ The last level at which the PC was rewarded for increasing }
 					{ relations with this NPC. }
+
+	NAS_PlotRecharge = 16;	{ NPCs must recharge before offering another mission, usually. }
+
 
 	{ FACREWARD attributes tell what perks the PC has been given by a faction. }
 	{  These are stored in the faction gear rather than the PC. }

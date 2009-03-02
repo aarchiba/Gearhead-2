@@ -687,6 +687,25 @@ Function AssembleMegaPlot( Slot , SPList: GearPtr ): GearPtr;
 			sline := sline^.next;
 		end;
 	end;
+	Procedure InitMetasceneFactions( SubPlot: GearPtr );
+		{ Certain metascenes may have a faction defined. Don't use that numeric faction; }
+		{ instead, use the element being referred to. }
+	var
+		MScene: GearPtr;
+		FID: Integer;
+	begin
+		MScene := SubPlot^.SubCom;
+		while MScene <> Nil do begin
+			if MScene^.G = GG_MetaScene then begin
+				FID := NAttValue( MScene^.NA , NAG_Personal , NAS_FactionID );
+				if FID <> 0 then begin
+					SetNAtt( MScene^.NA , NAG_Personal , NAS_FactionID , ElementID( SubPlot , FID ) );
+				end;
+			end;
+
+			MScene := MScene^.Next;
+		end;
+	end;
 	Procedure DoStringSubstitutions( SubPlot: GearPtr );
 		{ Do the string substitutions for this subplot. Basically, }
 		{ create the dictionary and pass it on to the substituter. }
@@ -738,6 +757,7 @@ begin
 	MasterPlot := SPList;
 	DelinkGear( SPList , MasterPlot );
 	DoStringSubstitutions( MasterPlot );
+	InitMetasceneFactions( MasterPlot );
 	InitMPSubs( MasterPlot );
 	InsertInvCom( Slot , MasterPlot );
 
@@ -749,6 +769,8 @@ begin
 
 		{ Do the substitutions for standard triggers here. }
 		PrepStandardScripts( SubPlot );
+
+		InitMetasceneFactions( SubPlot );
 
 		DoStringSubstitutions( SubPlot );
 		CombinePlots( MasterPlot, SubPlot );
@@ -885,13 +907,14 @@ begin
 	end;
 end;
 
-Procedure DeployPlot( GB: GameBoardPtr; Slot,Plot: GearPtr );
+Procedure DeployPlot( GB: GameBoardPtr; Slot,Plot: GearPtr; Threat: Integer );
 	{ Actually add the plot to the adventure. Set it in place, move any elements as }
 	{ requested. }
 	{ - Insert persona fragments as needed }
 	{ - Deploy elements as indicated by PLACE strings }
 begin
 	PrepAllPersonas( FindRoot( Slot ) , Plot , GB , NAttValue( Slot^.NA , NAG_Narrative , NAS_MaxPlotLayer ) + 1 );
+	SetNAtt( Plot^.NA , NAG_XXRan , NAS_DifficulcyLevel , Threat );
 
 	if Plot^.G <> GG_Scene then begin
 		MoveElements( GB , Plot );
@@ -928,7 +951,7 @@ begin
 	{ Now that we have the list, assemble it. }
 	if SPList <> Nil then begin
 		Plot := AssembleMegaPlot( Slot , SPList );
-		DeployPlot( GB , Slot , Plot );
+		DeployPlot( GB , Slot , Plot , Threat );
 	end;
 
 	InitMegaPlot := SPList;

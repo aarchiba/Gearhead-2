@@ -360,7 +360,7 @@ begin
 	{ but some of them are defined relative to other elements of }
 	{ this plot. }
 
-	it := PartMatchesCriteria( XNPCDesc( Adv , NPC ) , IDesc );
+	it := PartMatchesCriteria( XNPCDesc( GB , Adv , NPC ) , IDesc );
 	if it then it := PartMatchesRelativeCriteria( Adv, Plot, NPC, GB, RDesc );
 
 	NPCMatchesDesc := it and NotAnAnimal( NPC );
@@ -1449,7 +1449,7 @@ var
 	Theme: Integer;
 begin
 	if NPC = Nil then exit( '' );
-	it := XNPCDesc( Adv , NPC );
+	it := XNPCDesc( Nil , Adv , NPC );
 	{ Add the theme here. }
 	Theme := NAttValue( NPC^.NA , NAG_Personal , NAS_MechaTheme );
 	it := it + ' [MT' + BStr( Theme ) + ']';
@@ -1458,8 +1458,9 @@ end;
 
 Procedure PrepAllPersonas( Adventure,Plot: GearPtr; GB: GameBoardPtr; MinID: Integer );
 	{ Prepare the personas of this plot. }
+	{ Also store the mission recharge time for any NPCs involved. }
 var
-	P,P2: GearPtr;
+	P,P2,NPC: GearPtr;
 	Context: String;
 begin
 	P := Plot^.SubCom;
@@ -1472,7 +1473,9 @@ begin
 	while P <> Nil do begin
 		P2 := P^.Next;
 		if P^.G = GG_Persona then begin
-			InsertPFrags( Plot , P , Context + PersonalContext( Adventure , SeekPlotElement( Adventure , Plot , P^.S , GB ) ) , MinID );
+			NPC := SeekPlotElement( Adventure , Plot , P^.S , GB );
+			if ( NPC <> Nil ) and ( GB <> Nil ) then SetNAtt( NPC^.NA , NAG_Personal , NAS_PlotRecharge , GB^.ComTime + 86400 );
+			InsertPFrags( Plot , P , Context + PersonalContext( Adventure , NPC ) , MinID );
 		end;
 		P := P2;
 	end;
@@ -1488,7 +1491,7 @@ begin
 	if ( Plot^.Parent <> Nil ) and ( Plot^.Parent^.G = GG_Story ) then begin
 		Context := StoryContext( GB , Plot^.Parent );
 	end else begin
-		Context := SAttValue( Plot^.SA , 'CONTEXT' );
+		Context := SAttValue( Plot^.SA , 'CONTEXT' ) + ' ' + DifficulcyContext( NAttValue( Plot^.NA , NAG_XXRan , NAS_DifficulcyLevel ) );
 	end;
 	M := Plot^.SubCom;
 	while M <> Nil do begin

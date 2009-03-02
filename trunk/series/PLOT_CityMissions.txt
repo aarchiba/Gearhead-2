@@ -15,7 +15,7 @@ Plot
 	% E2 is a character who will offer the mission
 	% E3 is a scene where the encounter will take place
 	Element1 <Scene Town>
-	Element2 <Character (HasMecha|POLIT) !Ally 1>
+	Element2 <Character (HasMecha|POLIT) !Ally 1 RECHARGED>
 	Element3 <Scene Environs>
 
 	% SubPlot1 is the combat encounter

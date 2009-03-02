@@ -514,16 +514,16 @@ begin
 	end;
 end;
 
-Procedure DoTalkingWIthNPC( GB: GameBoardPtr; PC,NPC: GearPtr; ByTelephone: Boolean );
+Procedure DoTalkingWIthNPC( GB: GameBoardPtr; PC,Mek: GearPtr; ByTelephone: Boolean );
 	{ Actually handle the talking with an NPC already selected. }
 var
-	Persona: GearPtr;
+	Persona,NPC: GearPtr;
 	CID: Integer;
 	React: Integer;
 	ReTalk: LongInt;
 begin
-	NPC := LocatePilot( NPC );
-	if ( NPC <> Nil ) and GearOperational( NPC ) and AreEnemies( GB , NPC , PC ) and NotAnAnimal( NPC ) and IsFoundAlongTrack( GB^.Meks , FindRoot( NPC ) ) and ( NATtValue( NPC^.NA , NAG_EpisodeData , NAS_SurrenderStatus ) <> NAV_NowSurrendered ) then begin
+	NPC := LocatePilot( Mek );
+	if ( NPC <> Nil ) and GearOperational( NPC ) and AreEnemies( GB , Mek , PC ) and NotAnAnimal( NPC ) and IsFoundAlongTrack( GB^.Meks , FindRoot( NPC ) ) and ( NATtValue( NPC^.NA , NAG_EpisodeData , NAS_SurrenderStatus ) <> NAV_NowSurrendered ) then begin
 		PCDoVerbalAttack( GB , PC , NPC );
 
 	end else if ( NPC <> Nil ) and GearOperational( NPC ) then begin

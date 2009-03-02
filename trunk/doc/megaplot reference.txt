@@ -18,6 +18,19 @@ when the subplot is active. This doesn't apply to the base plot, only the
 subplots.
 
 
+**********************
+***   METASCENES   ***
+**********************
+
+A MetaScene is a temporary scene used in a plot. It exists for as long as it is
+needed, and is deleted when the plot ends.
+
+You can define a faction for a MetaScene using SetFaction [ElementID]; to do this,
+the faction you want must be an element of the controlling subplot. If you use
+an ElementID which does not correspond to a faction unpredictable behavior may
+result.
+
+
 ******************************
 ***   NARRATIVE  THREADS   ***
 ******************************

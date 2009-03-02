@@ -134,6 +134,31 @@
 %   PARAM5: Enemy Faction	[optional]
 
 	Persona
+	requires <*AutoMissionTest ("FRIEND"|"FAMILY"|"LANCEMATE"|"LOVER") Common>
+	start <if= V%id%01 0 else %3% V= %id%02 1 ifG React 0 else %3% NewChat Say %id%01 AddChat %id%01 AddChat %id%02>
+	result%id%01 <Goto %1%>
+	result%id%02 <Goto %2%>
+	Msg%id%01 <Hey \PC , if you're not too busy I've got a mission for you.>
+	Msg%id%01_1 <Hi \PC . How would you like to run a mission for me? I've got a position availiable and thought you might be perfect for it.>
+	CMsg%id%01_1 <ifNPCSociable Accept>
+	Msg%id%01_2 <Hi. How'd you like to do a job for me?>
+	CMsg%id%01_2 <ifNPCShy Accept>
+	Msg%id%01_3 <Good to see you, \PC . How'd you like to do a mission for me? A little bit of extra cash is always good.>
+	CMsg%id%01_3 <ifNPCCheerful Accept>
+	Msg%id%01_4 <This work is going to drive me nuts... Say, maybe you could help me with a mission I've got to fill?>
+	CMsg%id%01_4 <ifNPCMelancholy Accept>
+	Msg%id%01_5 <Sorry, I can't talk now, I'm working... but maybe you can help with that. How'd you like to run a mission for me?>
+	CMsg%id%01_5 <ifNPCEasygoing Accept>
+	Msg%id%01_6 <\PC , you're just the person I need! I've got to find a pilot for an upcoming mission, and you'd be perfect for it!>
+	CMsg%id%01_6 <ifNPCPassionate Accept>
+	Prompt%id%01 <Tell me the details.>
+	Prompt%id%01_1 <I could do that. What kind of mission are we talking about?>
+	Prompt%id%01_2 <I suppose I could.>
+	Prompt%id%02 <Sorry, I'm kind of busy at the moment.>
+	Prompt%id%02_1 <Sorry, I really can't.>
+	Prompt%id%02_2 <This isn't a good time for that.>
+
+	Persona
 	requires <*AutoMissionTest =MIL_DEFAULT_DEFENSE>
 	% Because of =MIL_DEFAULT_DEFENSE, we know that %4% and %5% exist
 	% V%id%01 = Can only try the auto-test once counter

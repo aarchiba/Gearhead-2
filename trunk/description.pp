@@ -87,12 +87,12 @@ begin
 
 		AA := WeaponAttackAttributes( Weapon );
 
-		if (Weapon^.S = GS_Ballistic) or (Weapon^.S = GS_BeamGun) then begin
+		if (Weapon^.S = GS_Ballistic) or (Weapon^.S = GS_BeamGun) or ( Weapon^.S = GS_Missile ) then begin
 			T := ScaleRange( WeaponRange( Nil , Weapon ) , Weapon^.Scale );
 			if HasAttackAttribute( AA , AA_LineAttack ) then begin
-				desc := desc + ' RNG:' + BStr( T ) + '-' + BStr( T * 2 );
+				desc := desc + ' RNG:' + BStr( T div 2 ) + '-' + BStr( T );
 			end else begin
-				desc := desc + ' RNG:' + BStr( T ) + '-' + BStr( T * 2 ) + '-' + BStr( T * 3 );
+				desc := desc + ' RNG:' + BStr( T div 3 ) + '-' + BStr( ( T * 2 ) div 3 ) + '-' + BStr( T );
 			end;
 
 		end else if HasAttackAttribute( AA , AA_Extended ) then begin
