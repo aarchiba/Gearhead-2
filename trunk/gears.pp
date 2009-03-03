@@ -165,6 +165,8 @@ Const
 	NAS_DefaultFacTheme = 31;	{ Used to set the default theme for a faction; in high level }
 					{ encounters, mook mecha can get upgraded with this theme. }
 
+	NAS_MoodRecharge = 32;		{ Scenes will only attempt to load new moods once every 10 hours or so. }
+
 	{ The following are used by the randmaps unit... }
 	NAS_LockedDoorChance = 101;
 	NAS_SecretDoorChance = 102;

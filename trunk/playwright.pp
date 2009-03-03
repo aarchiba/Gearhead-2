@@ -38,7 +38,7 @@ const
 var
 	persona_fragments: GearPtr;
 	Standard_XXRan_Components: GearPtr;
-	Standard_Plots: GearPtr;
+	Standard_Plots,Standard_Moods: GearPtr;
 
 
 Procedure BuildMegalist( Dest: GearPtr; AddOn: SAttPtr );
@@ -2299,6 +2299,26 @@ Procedure UpdateMoods( GB: GameBoardPtr );
 	{ Check through all the towns in the current world. Check the time limits on all }
 	{ moods found, removing those that have expired. If a town has no mood attached, }
 	{ consider attaching one. }
+	Function SetNewMood( Scene: GearPtr ): Boolean;
+		{ Attempt to attach a new mood to this scene. Return TRUE if a mood was }
+		{ added successfully, or FALSE if it wasn't. }
+	var
+		scene_context: String;
+		Mood: GearPtr;
+		InitOK: Boolean;
+	begin
+		scene_context := SceneContext( GB , Scene );
+		Mood := FindNextComponent( Standard_Moods , scene_context );
+		InitOK := False;
+		if Mood <> Nil then begin
+			{ We don't want to use the entry from the standard mood list; }
+			{ make a clone of it that we're free to whack around. }
+			Mood := CloneGear( Mood );
+			SetNAtt( Mood^.NA , NAG_MoodData , NAS_MoodTimeLimit , 86400 + Random( 86400 ) + Random( 86400 ) );
+			InitOK := InsertMood( Scene , Mood , GB );
+		end;
+		SetNewMood := InitOK;
+	end;
 	Procedure UpdateMoodsForScene( Scene: GearPtr );
 		{ Check to see if this scene has any moods. Delete those moods which }
 		{ have outlived their usefulness. If no moods were found, consider }
@@ -2328,6 +2348,19 @@ Procedure UpdateMoods( GB: GameBoardPtr );
 			end;
 			Mood := M2;
 		end;
+
+		{ If no moods were found, maybe add a new mood. }
+		if ( not MoodFound ) and ( NAttValue( Scene^.NA , NAG_Narrative , NAS_MoodRecharge ) <= GB^.ComTime ) then begin
+			{ There's a 1 in 10 chance of loading a new mood. }
+			if Random( 10 ) = 1 then begin
+				{ Try to set a mood. }
+				{ If setting the mood fails, set the recharge timer. }
+				if not SetNewMood( Scene ) then SetNAtt( Scene^.NA , NAG_Narrative , NAS_MoodRecharge , GB^.ComTime + 15000 + Random( 14400 ) );
+			end else begin
+				{ No mood this time- try again in 6 hours or so. }
+				SetNAtt( Scene^.NA , NAG_Narrative , NAS_MoodRecharge , GB^.ComTime + 15000 + Random( 14400 ) );
+			end;
+		end;
 	end;
 var
 	World, Scene: GearPtr;
@@ -2347,10 +2380,12 @@ initialization
 	if persona_fragments = Nil then writeln( 'ERROR!!!' );
 	Standard_XXRan_Components := AggregatePattern( 'COMP_*.txt' , series_directory );
 	Standard_Plots := LoadRandomSceneContent( 'PLOT_*.txt' , series_directory );
+	Standard_Moods := AggregatePattern( 'MOOD_*.txt' , series_directory );
 
 finalization
 	DisposeGear( persona_fragments );
 	DisposeGear( Standard_XXRan_Components );
 	DisposeGear( Standard_Plots );
+	DisposeGear( Standard_Moods );
 
 end.

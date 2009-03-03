@@ -29,11 +29,26 @@ Content
 
 Content
 	name <Basic Win Mission>
-	requires <*UTIL_WinMission_Basic>
+	requires <*UTIL_WinMission>
 
 	% E1 is the mission-giving NPC.
 
-	start <if= PlotStatus %plotid% %id% else %pop% ifNPCDead %1% EndPlot>
+	start <ifNPCDead %1% EndPlot>
+
+	sub
+		Persona 1
+		greeting <if= PlotStatus %plotid% %id% else %pop%  Goto .%id%_GoWinMission>
+		*.%id%_GoWinMission <*MissionWasSuccess&Reward .%id%_GoEnd ChatNPCFac na>
+		.%id%_GoEnd <CashPrize Reward %threat% PayRate    FacXP+ ChatNPCFac 1   EndPlot>
+	end
+
+Content
+	name <Basic Win Mission>
+	requires <*UTIL_WinMission &Mecha>
+
+	% E1 is the mission-giving NPC.
+
+	start <ifNPCDead %1% EndPlot>
 
 	sub
 		Persona 1
@@ -56,9 +71,27 @@ Content
 	% E1 is the mission-giving NPC.
 
 	% P%id%01 = Time Limit
-	start <if= PlotStatus %plotid% %id% else %pop% ifNPCOK %1% else .%id%_GoEnd ifG ComTime P%id%01 EndPlot>
+	start <ifNPCOK %1% else .%id%_GoEnd ifG ComTime P%id%01 EndPlot>
 	.%id%_GoEnd <EndPlot>
-	update <if= PlotStatus %plotid% %id% else %pop% if= p%id%01 0 P= %id%01 ComTime P+ %id%01 43200>
+	update <if= p%id%01 0 P= %id%01 ComTime P+ %id%01 43200>
+
+	sub
+		Persona 1
+		greeting <if= PlotStatus %plotid% %id% else %pop%  Goto .%id%_GoLostMission>
+		*.%id%_GoLostMission <*MissionWasFailure .%id%_GoEnd ChatNPCFac na>
+		.%id%_GoEnd <EndPlot>
+	end
+
+Content
+	name <Basic Lose Mission>
+	requires <*UTIL_LoseMission &Mecha>
+
+	% E1 is the mission-giving NPC.
+
+	% P%id%01 = Time Limit
+	start <ifNPCOK %1% else .%id%_GoEnd ifG ComTime P%id%01 EndPlot>
+	.%id%_GoEnd <EndPlot>
+	update <if= p%id%01 0 P= %id%01 ComTime P+ %id%01 43200>
 
 	sub
 		Persona 1

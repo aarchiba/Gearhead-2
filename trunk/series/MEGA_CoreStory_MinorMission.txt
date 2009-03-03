@@ -45,6 +45,7 @@ Content
 
 		nu2 <if= T2 0   if= V1 0 V= 1 1   Alert 1   XPV 100   PMemo %plotid% 2 WinSubPlot %plotid%>
 		Msg1 <You have exterminated the last of the vermin.>
+		Msg2 <You have exterminated the vermin for %name1%.>
 
 		sub
 			Team 1

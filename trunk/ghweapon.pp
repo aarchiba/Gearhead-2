@@ -241,7 +241,7 @@ Const
 		( False, False , False ),	{ Perminant Injury }
 		( True, False, False ),		{ Enraged }
 		( True, False, False ),		{ Flummoxed }
-		( TRUE , FALSE, FALSE ),	{ Disintegration }
+		( TRUE , TRUE , TRUE ),		{ Disintegration }
 		( TRUE , TRUE , TRUE )		{ Blinded }
 	);
 	SX_Effect_String: Array [1..Num_Status_FX] of String = (

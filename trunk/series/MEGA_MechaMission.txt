@@ -37,8 +37,8 @@ Content
 	% SubPlot1 = Win the battle, get a reward
 	% SubPlot2 = Lose the battle, get scorned
 	% SubPlot3 = Run out of time, get email
-	SubPlot1 <*Util_WinMission_Basic 1>
-	SubPlot2 <*Util_LoseMission 1>
+	SubPlot1 <*Util_WinMission&Mecha 1>
+	SubPlot2 <*Util_LoseMission&Mecha 1>
 	SubPlot3 <*Util_TimeOver 1>
 
 	sub
@@ -125,8 +125,8 @@ Content
 	% SubPlot1 = Win the battle, get a reward
 	% SubPlot2 = Lose the battle, get scorned
 	% SubPlot3 = Run out of time, get email
-	SubPlot1 <*Util_WinMission_Basic 1>
-	SubPlot2 <*Util_LoseMission 1>
+	SubPlot1 <*Util_WinMission&Mecha 1>
+	SubPlot2 <*Util_LoseMission&Mecha 1>
 	SubPlot3 <*Util_TimeOver 1>
 
 	sub
@@ -191,8 +191,8 @@ Content
 	% SubPlot1 = Win the battle, get a reward
 	% SubPlot2 = Lose the battle, get scorned
 	% SubPlot3 = Run out of time, get email
-	SubPlot1 <*Util_WinMission_Basic 1>
-	SubPlot2 <*Util_LoseMission 1>
+	SubPlot1 <*Util_WinMission&Mecha 1>
+	SubPlot2 <*Util_LoseMission&Mecha 1>
 	SubPlot3 <*Util_TimeOver 1>
 
 	sub
@@ -266,8 +266,8 @@ Content
 	% SubPlot1 = Win the battle, get a reward
 	% SubPlot2 = Lose the battle, get scorned
 	% SubPlot3 = Run out of time, get email
-	SubPlot1 <*Util_WinMission_Basic 1>
-	SubPlot2 <*Util_LoseMission 1>
+	SubPlot1 <*Util_WinMission&Mecha 1>
+	SubPlot2 <*Util_LoseMission&Mecha 1>
 	SubPlot3 <*Util_TimeOver 1>
 
 	sub

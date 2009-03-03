@@ -1,0 +1,61 @@
+%
+% *****************
+% ***   MOODS   ***
+% *****************
+%
+%  Moods affect the plots loaded by cities. Here's a brief explanation
+%  of how they work.
+%
+%  The Mood definition takes as its parameter the number of plots which
+%  may be attached to this mood. Normally, each city can have up to ten
+%  attached plots at any one time, but a mood will increase this number
+%  by the provided amount.
+%
+%  The REQUIRES attribute is compared to a city's Scene Context to
+%  determine whether or not this mood is appropriate. The Scene Context
+%  includes the city's type, terrain, context, designation, faction
+%  designation, persona type, and world designation.
+%
+%  The Mood's TYPE attribute is added to the city's TYPE attribute.
+%
+%  The Mood's PLOT_TYPE attribute determines what sort of plots will be
+%  associated with this mood. The normal plot type is *GENERAL, but moods
+%  can use custom types.
+%
+%  Custom plots associated with a mood should be stored in a file
+%  named PLOT_MOOD_[custom label].
+%
+%  The Mood's ELEMENTs are selected just as they are for plots.
+%
+%  The UPDATE script is called when the mood is initialized. It should
+%  generally set an initialization counter and record a news message.
+%
+%  The MSG_x strings act as a meme; NPCs in the city will say these lines
+%  for as long as the mood is in effect.
+%
+%  MoodTimeLimit is set automatically for these moods; no need to define it.
+%
+%  Substitute strings:
+%    %me_X%		Element X's ID
+%    %me_nameX%		Element X's Name
+%    %city%		The city where this mood is installed
+%
+
+Mood 3
+	name <Fungal Infestation>
+	desc <This station is suffering from a fungus infestation.>
+	requires <L5PAT>
+	type <>
+	plot_type <*FUNFESTATION>
+
+	% V1 = Initialization Counter
+
+	update <if= V1 0 V= 1 1 News 1>
+	Msg1_1 <%city% is dealing with a bad fungus infestation. Citizens are advised to report any suspicious smells to the authorities.>
+	Msg1_2 <%city%'s bio-defenses overwhelmed as mutant fungi invade the colony core.>
+
+	% Meme Messages
+	Msg_1 <>
+
+
+

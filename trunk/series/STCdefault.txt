@@ -1199,6 +1199,15 @@ GoSetOrders <GrabSource GSetNAtt NAG_EpisodeData NAS_Orders 3>
 EncounterMove 50
 
 Encounter
+desig <ENCOUNTER-TELEPORT-MISSION>
+name <Teleport to Metascene>
+% This encounter is used for those cases where the PC goes directly to a metascene
+% after activating a mission. It tries to always be in the same tile as the PC, and
+% is never visible. In most cases, obviously, actual teleportation isn't involved...
+update <SetSelfX PCX SetSelfY PCY  Goto GoHide>
+EncounterMove 0
+
+Encounter
 desig <PLOT-MECHAMISSION-WANDER>
 % Sets this encounter's orders to Passive
 %  E1 must be the mission-giver
