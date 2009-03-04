@@ -545,7 +545,7 @@ var
 		{ How should an ammo explosion work? Well, roll damage for the }
 		{ ammo and add it to the OVERKILL history variable. }
 	var
-		NumShots: Integer;
+		PercentFull: Integer;
 		M: GearPtr;
 	begin
 		{ Only installed ammo can explode. This may seem silly, and it }
@@ -555,11 +555,12 @@ var
 
 		{ First calculate the number of shots in the magazine. }
 		{ If it is empty, no ammo explosion will take place. }
-		NumShots := Part^.Stat[ STAT_AmmoPresent ] - NAttValue( Part^.NA , NAG_WeaponModifier , NAS_AmmoSpent );
-		if NumShots > 0 then begin
+		if Part^.Stat[ STAT_AmmoPresent ] > 0 then PercentFull := ( ( Part^.Stat[ STAT_AmmoPresent ] - NAttValue( Part^.NA , NAG_WeaponModifier , NAS_AmmoSpent ) ) * 100 ) div Part^.Stat[ STAT_AmmoPresent ]
+		else PercentFull := 100;
+		if PercentFull > 0 then begin
 			M := FindModule( Part );
 			if ( M = Nil ) or ( M^.S <> GS_Storage ) then begin
-				DAMAGE_OverKill := DAMAGE_OverKill + RollDamage( Part^.V + NumShots , Part^.Scale );
+				DAMAGE_OverKill := DAMAGE_OverKill + RollDamage( Part^.V * PercentFull div 50 , Part^.Scale );
 			end;
 		end;
 	end;
@@ -1038,11 +1039,15 @@ begin
 	if DAMAGE_OverKill > 0 then begin
 		O_Part := FindRoot( O_Part );
 		if ( O_Part^.G = GG_Mecha ) and ( O_Part^.SubCom <> Nil ) then begin
+			{ For mecha, overkill damage goes directly to the torso. }
 			O_Part := O_Part^.SubCom;
 			while ( O_Part <> Nil ) and ( O_Part^.S <> GS_Body ) do O_Part := O_Part^.Next;
 			if O_Part <> Nil then begin
-				Total := Total + REALDamageGear( O_Part , DAMAGE_OverKill , O_MOS , Scale );
+				Total := Total + REALDamageGear( O_Part , DAMAGE_OverKill , O_MOS div 2 , Scale );
 			end;
+		end else begin
+			{ Apply damage directly to the part. }
+			Total := Total + REALDamageGear( O_Part , DAMAGE_OverKill , 0 , Scale );
 		end;
 	end;
 

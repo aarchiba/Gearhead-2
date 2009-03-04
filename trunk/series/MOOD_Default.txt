@@ -41,6 +41,33 @@
 %    %city%		The city where this mood is installed
 %
 
+Mood 5
+	name <Skirmishing>
+	desc <This city is under attack by a foreign government.>
+	requires <Target>
+	type <>
+	plot_type <*Skirmishing>
+
+	% E1 is the city proper
+	% E2 is a foreign government
+	Element1 <Scene Town>
+	Element2 <Faction Government !Enemy 1>
+
+	% V1 = Initialization Counter
+	update <if= V1 0 V= 1 1 News 1>
+	Msg1_1 <%city%'s defenses clash with mecha from %me_name2%.>
+	Msg1_2 <%me_name2% planning an invasion? %city% reports clashes with security forces.>
+	Msg1_3 <>
+	Msg1_4 <>
+	Msg1_5 <>
+
+	% Meme Messages
+	Msg_1 <>
+	Msg_2 <>
+	Msg_3 <>
+	Msg_4 <>
+	Msg_5 <>
+
 Mood 3
 	name <Fungal Infestation>
 	desc <This station is suffering from a fungus infestation.>
@@ -48,14 +75,22 @@ Mood 3
 	type <>
 	plot_type <*FUNFESTATION>
 
-	% V1 = Initialization Counter
+	% No Elements
 
+	% V1 = Initialization Counter
 	update <if= V1 0 V= 1 1 News 1>
 	Msg1_1 <%city% is dealing with a bad fungus infestation. Citizens are advised to report any suspicious smells to the authorities.>
 	Msg1_2 <%city%'s bio-defenses overwhelmed as mutant fungi invade the colony core.>
+	Msg1_3 <Exterminators sought for %city% as technocrats deal with fungal infestation.>
+	Msg1_4 <>
+	Msg1_5 <>
 
 	% Meme Messages
 	Msg_1 <>
+	Msg_2 <>
+	Msg_3 <>
+	Msg_4 <>
+	Msg_5 <>
 
 
 
