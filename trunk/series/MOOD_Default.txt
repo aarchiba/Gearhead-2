@@ -56,10 +56,10 @@ Mood 5
 	% V1 = Initialization Counter
 	update <if= V1 0 V= 1 1 News 1>
 	Msg1_1 <%city%'s defenses clash with mecha from %me_name2%.>
-	Msg1_2 <%me_name2% planning an invasion? %city% reports clashes with security forces.>
-	Msg1_3 <>
-	Msg1_4 <>
-	Msg1_5 <>
+	Msg1_2 <Could %me_name2% be planning an invasion? %city% reports clashes with security forces.>
+	Msg1_3 <Trouble in %city% as raiders from %me_name2% clash with defense force.>
+	Msg1_4 <Infiltrators from %me_name2% suspected to be operating in %city%.>
+	Msg1_5 <Official from %me_name2% denies responsibility for series of mecha attacks in %city%.>
 
 	% Meme Messages
 	Msg_1 <>

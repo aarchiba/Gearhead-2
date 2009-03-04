@@ -459,41 +459,39 @@
 %	will almost always be able to get the mission guaranteed by taking a pay hit.
 %   PARAM1: Success Exit Label	(no message)
 %   PARAM2: Failure Exit Label
-%   PARAM3: LowSuccess Exit Label (no message)
-%   PARAM4: Allied Faction	[optional]
-%   PARAM5: Enemy Faction	[optional]
+%   PARAM3: Reject Exit Label (no message)
+%   PARAM4: LowSuccess Exit Label (no message)
+%   PARAM5: Allied Faction	[optional]
+%   PARAM6: Enemy Faction	[optional]
+%   PARAM7: Difficulcy number, expressed as Renown
+
 
 	Persona
-	requires <*CivilDefenseTest =MIL_DEFAULT_DEFENSE>
-	% Because of =MIL_DEFAULT_DEFENSE, we know that factions %4% and %5% exist
+	requires <*CivilDefenseTest>
 	Start <NewChat Say %id%01 AddChat %id%01 AddChat %id%02 AddChat %id%03 AddChat %id%04>
 	.%id%_GoFail <NewChat Say %id%03 Goto %2%>
 	.%id%_GoSuccess <NewChat Say %id%04 AddChat %id%05 AddChat %id%06>
-	result%id%01 <Goto %3%>
-	result%id%02 <ifConversation 10 else .%id%_GoFail Goto .%id%_GoSuccess>
-	result%id%03 <ifIntimidation 10 else .%id%_GoFail Goto .%id%_GoSuccess>
-	result%id%04 <NewChat Say %id%02 Goto %2%>
+	result%id%01 <Goto %4%>
+	result%id%02 <ifConversation SkillTar %7% else .%id%_GoFail Goto .%id%_GoSuccess>
+	result%id%03 <ifIntimidation SkillTar %7% else .%id%_GoFail Goto .%id%_GoSuccess>
+	result%id%04 <Goto %3%>
 	result%id%05 <Goto %1%>
-	result%id%06 <Goto result%id%04>
-	Msg%id%01 <Our city is under attack from \FACTION %5% , but citizens are urged not to panic.>
-	Msg%id%01_1 <I guess you've heard by now that our city is being attacked by \FACTION %5% . Citizens are being urged to not panic, but just between you and me if you don't have any business in town you should probably leave.>
-	CMsg%id%01_1 <ifNPCSociable Accept>
-	Msg%id%01_2 <We're being attacked by \FACTION %5% .>
-	CMsg%id%01_2 <ifNPCShy Accept>
-	Msg%id%01_3 <Even though we're being attacked by \FACTION %5% , I feel confident that \FACTION %4% will be able to contain the threat.>
-	CMsg%id%01_3 <ifNPCCheerful Accept>
-	Msg%id%01_4 <I've got some bad news, I'm afraid... the city is under attack by \FACTION %5% .>
-	CMsg%id%01_4 <ifNPCMelancholy Accept>
-	Msg%id%01_5 <There are scouts from \FACTION %5% outside the city, but \FACTION %4% won't let them get inside.>
-	CMsg%id%01_5 <ifNPCEasygoing Accept>
-	Msg%id%01_6 <There are combat troops from \FACTION %5% outside the city! This could lead to a full-scale war!>
-	CMsg%id%01_6 <ifNPCPassionate Accept>
-	Msg%id%02 <Be careful. The fighting could easily spread.>
-	Msg%id%02_1 <Things are peaceful now, but the fighting outside could escalate.>
-	Msg%id%02_2 <Be careful.>
-	CMsg%id%02_2 <ifNPCShy Accept>
-	Msg%id%02_3 <Don't let your guard down.>
-	Msg%id%02_4 <Keep a lookout for \FACTION %5% . There's no telling where they'll strike next.>
+	result%id%06 <Goto %3%>
+	Msg%id%01 <Our city is under attack, but the defense force has everything under control.>
+	Msg%id%01_10 <Our city is under attack from \FACTION %6% , but citizens are urged not to panic.>
+	CMsg%id%01_10 <ifFactionExists %6% Accept>
+	Msg%id%01_11 <I guess you've heard by now that our city is being attacked by \FACTION %6% . Citizens are being urged to not panic, but just between you and me if you don't have any business in town you should probably leave.>
+	CMsg%id%01_11 <ifNPCSociable ifFactionExists %6% Accept>
+	Msg%id%01_12 <We're being attacked by \FACTION %6% .>
+	CMsg%id%01_12 <ifNPCShy ifFactionExists %6% Accept>
+	Msg%id%01_13 <Even though we're being attacked by \FACTION %6% , I feel confident that \FACTION %5% will be able to contain the threat.>
+	CMsg%id%01_13 <ifNPCCheerful ifFactionExists %6% Accept>
+	Msg%id%01_14 <I've got some bad news, I'm afraid... the city is under attack by \FACTION %6% .>
+	CMsg%id%01_14 <ifNPCMelancholy ifFactionExists %6% Accept>
+	Msg%id%01_15 <There are scouts from \FACTION %6% outside the city, but \FACTION %5% won't let them get inside.>
+	CMsg%id%01_15 <ifNPCEasygoing ifFactionExists %6% Accept>
+	Msg%id%01_16 <There are combat troops from \FACTION %6% outside the city! This could lead to a full-scale war!>
+	CMsg%id%01_16 <ifNPCPassionate ifFactionExists %6% Accept>
 	Msg%id%03 <We have all the pilots we're going to need, I'm afraid.>
 	Msg%id%03_1 <Sorry if I implied that I was looking for recruits; we have all the pilots we need for the time being.>
 	CMsg%id%03_1 <ifNPCSociable Accept>
@@ -505,12 +503,12 @@
 	CMsg%id%03_4 <ifNPCMelancholy Accept>
 	Msg%id%03_5 <I don't have any work for you to do. Maybe some other time.>
 	CMsg%id%03_5 <ifNPCEasygoing Accept>
-	Msg%id%03_6 <Are you looking for a mission from \FACTION %4% ? I'm sorry, but we only accept the best.>
+	Msg%id%03_6 <Are you looking for a mission from \FACTION %5% ? I'm sorry, but we only accept the best.>
 	CMsg%id%03_6 <ifNPCPassionate Accept>
 	Msg%id%03_7 <Why are you trying to get this mission, you don't even have a mecha! Find yourself a ride and then we can talk.>
 	CMsg%id%03_7 <if= PCMeks 0 Accept>
-	Msg%id%04 <Maybe you could help \FACTION %4% ... I have a mission available for a mecha pilot.>
-	Msg%id%04_1 <I think you just might be able to help us. You know that \FACTION %4% is coordinating the defense, but we also need a number of freelance pilots. Would you be interested in a job?>
+	Msg%id%04 <Maybe you could help \FACTION %5% ... I have a mission available for a mecha pilot.>
+	Msg%id%04_1 <I think you just might be able to help us. You know that \FACTION %5% is coordinating the defense, but we also need a number of freelance pilots. Would you be interested in a job?>
 	CMsg%id%04_1 <ifNPCSociable Accept>
 	Msg%id%04_2 <I have a mission available, if you're interested.>
 	CMsg%id%04_2 <ifNPCShy Accept>
@@ -529,7 +527,7 @@
 	CPrompt%id%02 <ifPCEasygoing Accept>
 	Prompt%id%02_1 <Do you have any missions available?>
 	Prompt%id%02_2 <What kind of missions are available?>
-	Prompt%id%03 <I could kick \FACTION %5% out of here.>
+	Prompt%id%03 <I could kick \FACTION %6% out of here.>
 	CPrompt%id%03 <ifPCPassionate Accept>
 	Prompt%id%03_1 <Eh, they're not so tough.>
 	Prompt%id%03_2 <They don't scare me.>
@@ -546,10 +544,11 @@
 	Persona
 	requires <*CivilDefenseTest ~Melancholy>
 	Start <NewChat   Say %id%01   AddChat %id%01   AddChat %id%02   AddChat %id%03  AddChat %id%04>
-	result%id%01 <Goto %3%>
-	result%id%02 <ifConversation 12 else .%id%_GoFail   Goto %1%>
-	result%id%03 <ifIntimidation 10 else .%id%_GoFail   Goto %1%>
-	.%id%_GoFail <NewChat Say %id%01 Goto %2%>
+	result%id%01 <Goto %4%>
+	result%id%02 <ifConversation SkillTar %7% else .%id%_GoFail   Goto %1%>
+	result%id%03 <AddEasygoing -d6  ifIntimidation SkillTar %7% else .%id%_GoFail   Goto %1%>
+	result%id%04 <Goto %3%>
+	.%id%_GoFail <NewChat Say %id%02 Goto %2%>
 	Msg%id%01 <If you don't have any business in town I suggest you leave. It isn't a safe time to be here.>
 	Msg%id%01_1 <What's your business in town? If it's not urgent, then you should probably come back later. It's not a safe time to be here.>
 	CMsg%id%01_1 <ifNPCSociable Accept>
@@ -559,16 +558,16 @@
 	CMsg%id%01_3 <ifNPCEasygoing Accept>
 	Msg%id%01_4 <It's a very dangerous time to be here. If you don't have urgent business in town, it would be best if you left.>
 	CMsg%id%01_4 <ifNPCPassionate Accept>
-	Msg%id%01_20 <This isn't a safe time to be in town... \FACTION %5% has troops in the area.>
-	CMsg%id%01_20 <ifFactionExists %5% Accept>
-	Msg%id%01_21 <There's something you should know. Mecha from \FACTION %5% are causing trouble near here. The fighting could spill into the city. If you value your life, you should probably leave.>
-	CMsg%id%01_21 <ifNPCSociable ifFactionExists %5% Accept>
-	Msg%id%01_22 <You should leave while you still can. Raiders from \FACTION %5% are in town.>
-	CMsg%id%01_22 <ifNPCShy ifFactionExists %5% Accept>
-	Msg%id%01_23 <I don't want to worry you, but there are raiders from \FACTION %5% near town. If you can go somewhere safer that'd probably be a good idea.>
-	CMsg%id%01_23 <ifNPCEasygoing ifFactionExists %5% Accept>
-	Msg%id%01_24 <Every minute you stay here, your life's in danger... raiders from \FACTION %5% are causing trouble.>
-	CMsg%id%01_24 <ifNPCPassionate ifFactionExists %5% Accept>
+	Msg%id%01_20 <This isn't a safe time to be in town... \FACTION %6% has troops in the area.>
+	CMsg%id%01_20 <ifFactionExists %6% Accept>
+	Msg%id%01_21 <There's something you should know. Mecha from \FACTION %6% are causing trouble near here. The fighting could spill into the city. If you value your life, you should probably leave.>
+	CMsg%id%01_21 <ifNPCSociable ifFactionExists %6% Accept>
+	Msg%id%01_22 <You should leave while you still can. Raiders from \FACTION %6% are in town.>
+	CMsg%id%01_22 <ifNPCShy ifFactionExists %6% Accept>
+	Msg%id%01_23 <I don't want to worry you, but there are raiders from \FACTION %6% near town. If you can go somewhere safer that'd probably be a good idea.>
+	CMsg%id%01_23 <ifNPCEasygoing ifFactionExists %6% Accept>
+	Msg%id%01_24 <Every minute you stay here, your life's in danger... raiders from \FACTION %6% are causing trouble.>
+	CMsg%id%01_24 <ifNPCPassionate ifFactionExists %6% Accept>
 	Msg%id%02 <It's no use... there's no way you could help.>
 	Msg%id%02_1 <I don't think so.>
 	CMsg%id%02_1 <ifNPCShy Accept>
@@ -585,31 +584,34 @@
 	Prompt%id%02_1 <Tell me exactly what's going on.>
 	Prompt%id%02_2 <I'd like to hear about this problem.>
 	Prompt%id%03 <All you need is an ace pilot like me.>
-	CPrompt%id%03 <ifPCPassionate Accept>
 	Prompt%id%03_1 <Hire me, and all your troubles will go away.>
 	Prompt%id%03_2 <Sounds like you need my services.>
+	Prompt%id%04 <Your problem, not mine.>
+	Prompt%id%04_1 <Whatever.>
+	Prompt%id%04_2 <I can look out for myself, thanks.>
 
 	Persona
 	requires <*CivilDefenseTest ~Sociable>
-	start <NewChat  Say %id%01  AddChat %id%01  AddChat %id%02>
-	result%id%01 <Goto %3%>
-	result%id%02 <AddEasygoing -d6   ifIntimidation 10 else .%id%_Go2Fail Goto %1%>
-	.%id%_Go2Fail <ifG 50 PCRenown else %1% NewChat Say %id%02 Goto %2%>
-	Msg%id%01 <Our city is in trouble. I need to locate a pilot for a civil defense mission.>
-	Msg%id%01_20 <Our city is being attacked by \FACTION %5% ! I need a skilled pilot to head them off.>
-	CMsg%id%01_20 <ifFactionExists %5% accept>
-	Msg%id%01_21 <There have been numerous reports of mecha from \FACTION %5% being spotted near the city. Our defense command is doing everything possible to investigate. The matter should be resolved shortly, with any luck.>
-	CMsg%id%01_21 <ifNPCSociable ifFactionExists %5% accept>
-	Msg%id%01_22 <There are unknown mecha near our city, possibly from \FACTION %5% . Defense teams are investigating.>
-	CMsg%id%01_22 <ifNPCShy ifFactionExists %5% accept>
-	Msg%id%01_23 <There have been sightings of \FACTION %5% mecha near town, but not to worry... Our defense force will make short work of them.>
-	CMsg%id%01_23 <ifNPCCheerful ifFactionExists %5% accept>
-	Msg%id%01_24 <This may be the beginning of the end... \FACTION %5% has deployed combat teams nearby. I need a skilled cavalier to engage them.>
-	CMsg%id%01_24 <ifNPCMelancholy ifFactionExists %5% accept>
-	Msg%id%01_25 <Mecha from \FACTION %5% sighted near town, but there's no cause for alarm. Our city defense team can handle the situation.>
-	CMsg%id%01_25 <ifNPCEasygoing ifFactionExists %5% accept>
-	Msg%id%01_26 <Those bastards from \FACTION %5% have sent a combat patrol here... They must be stopped.>
-	CMsg%id%01_26 <ifNPCPassionate ifFactionExists %5% accept>
+	start <NewChat  Say %id%01  AddChat %id%01  AddChat %id%02  AddChat %id%03>
+	result%id%01 <Goto %4%>
+	result%id%02 <ifIntimidation SkillTar %7% else .%id%_Go2Fail Goto %1%>
+	.%id%_Go2Fail <ifG %7% PCRenown else %1% NewChat Say %id%02 Goto %2%>
+	result%id%03 <Goto %3%>
+	Msg%id%01 <Our city is in trouble. I need to locate a pilot for a mission against some infiltrators.>
+	Msg%id%01_20 <Our city is being attacked by \FACTION %6% ! I need a skilled pilot to head them off.>
+	CMsg%id%01_20 <ifFactionExists %6% accept>
+	Msg%id%01_21 <There have been numerous reports of mecha from \FACTION %6% being spotted near the city. Our defense command is doing everything possible to investigate. The matter should be resolved shortly, with any luck.>
+	CMsg%id%01_21 <ifNPCSociable ifFactionExists %6% accept>
+	Msg%id%01_22 <There are unknown mecha near our city, possibly from \FACTION %6% . Defense teams are investigating.>
+	CMsg%id%01_22 <ifNPCShy ifFactionExists %6% accept>
+	Msg%id%01_23 <There have been sightings of \FACTION %6% mecha near town, but not to worry... Our defense force will make short work of them.>
+	CMsg%id%01_23 <ifNPCCheerful ifFactionExists %6% accept>
+	Msg%id%01_24 <This may be the beginning of the end... \FACTION %6% has deployed combat teams nearby. I need a skilled cavalier to engage them.>
+	CMsg%id%01_24 <ifNPCMelancholy ifFactionExists %6% accept>
+	Msg%id%01_25 <Mecha from \FACTION %6% sighted near town, but there's no cause for alarm. Our city defense team can handle the situation.>
+	CMsg%id%01_25 <ifNPCEasygoing ifFactionExists %6% accept>
+	Msg%id%01_26 <Those bastards from \FACTION %6% have sent a combat patrol here... They must be stopped.>
+	CMsg%id%01_26 <ifNPCPassionate ifFactionExists %6% accept>
 	Msg%id%02 <I don't think you're quite the type we're looking for.>
 	Msg%id%02_1 <Sorry, but I've already found someone for the mission. I'm afraid there's nothing for you to do.>
 	CMsg%id%02_1 <ifNPCSociable Accept>
@@ -629,6 +631,9 @@
 	Prompt%id%02 <If you want the best pilot, that'd be me.>
 	Prompt%id%02_1 <I'm the best, if you can afford my rates.>
 	Prompt%id%02_2 <Whatever the threat, I can handle it.>
+	Prompt%id%03 <That doesn't concern me.>
+	Prompt%id%03_1 <Big deal.>
+	Prompt%id%03_2 <They'll go away, eventually...>
 
 
 % TYPE: *JoinMyPatrolTest

@@ -2351,10 +2351,10 @@ Procedure UpdateMoods( GB: GameBoardPtr );
 
 		{ If no moods were found, maybe add a new mood. }
 		if ( not MoodFound ) and ( NAttValue( Scene^.NA , NAG_Narrative , NAS_MoodRecharge ) <= GB^.ComTime ) then begin
-			{ There's a 1 in 10 chance of loading a new mood. }
+			{ There's a chance of loading a new mood. }
 			{ NIEHH: Nothing Interesting Ever Happens Here. If the scene being examined is the }
 			{ town the PC is currently in, no new mood will be loaded. }
-			if ( Random( 10 ) = 1 ) and ( Scene <> FindRootScene( GB , GB^.Scene ) ) then begin
+			if ( ( Random( 10 ) = 1 ) or ( ( Random( 5 ) = 1 ) and ( GB^.ComTime < 10 ) ) ) and ( Scene <> FindRootScene( GB , GB^.Scene ) ) then begin
 				{ Try to set a mood. }
 				{ If setting the mood fails, set the recharge timer. }
 				if not SetNewMood( Scene ) then SetNAtt( Scene^.NA , NAG_Narrative , NAS_MoodRecharge , GB^.ComTime + 7200 + Random( 43200 ) );

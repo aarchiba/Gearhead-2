@@ -80,8 +80,7 @@ Plot
 Plot
 	name <Versus City Patrol Job>
 	% The basic patrol job is a fight against some generic enemy mecha.
-	% This job gives salvage. This job will not result in the PC making
-	% any enemies.
+	% This job gives salvage.
 	requires <*GENERAL>
 	PayRate 150
 
@@ -121,8 +120,8 @@ Plot
 		*GoGotEmail <*DidYouGetEmail GoMissionBriefing>
 		GoCheckMember <if= PCFac ChatNPCFac else GoCheckAuto  Goto GoIsMember>
 		*GoIsMember <*IHaveAJobForYou GoMissionBriefing>
-		*GoCheckAuto <*AutoMissionTest&Mecha GoMissionBriefing GoRejectMission GoCheckSkill ChatNPCFac na>
-		*GoCheckSkill <*GenericMissionTest&Mecha  GoMissionBriefing GoEnd GoRejectMission ChatNPCFac na %threat%>
+		*GoCheckAuto <*AutoMissionTest&Mecha GoMissionBriefing GoRejectMission GoCheckSkill ChatNPCFac %4%>
+		*GoCheckSkill <*GenericMissionTest&Mecha  GoMissionBriefing GoEnd GoRejectMission ChatNPCFac %4% %threat%>
 		*GoRejectMission <*RejectMission GoEnd>
 		GoEnd <EndPlot>
 		GoMissionBriefing <NewChat Say 1  AddChat 1 AddChat 2>
