@@ -121,6 +121,26 @@
 	Prompt%id%02_1 <>
 	Prompt%id%02_2 <>
 
+% TYPE: *ComeHereForIt
+%	The NPC can't give the PC something over the phone; the PC should visit in person.
+
+	Persona
+	requires <*ComeHereForIt>
+	START <EndChat Say %id%01>
+	Msg%id%01 <We can't do this over the phone. Why don't you come see me at \SCENE ChatNPCScene ?>
+	Msg%id%01_1 <>
+	CMsg%id%01_1 <ifNPCSociable Accept>
+	Msg%id%01_2 <>
+	CMsg%id%01_2 <ifNPCShy Accept>
+	Msg%id%01_3 <>
+	CMsg%id%01_3 <ifNPCEasygoing Accept>
+	Msg%id%01_4 <>
+	CMsg%id%01_4 <ifNPCPassionate Accept>
+	Msg%id%01_5 <>
+	CMsg%id%01_5 <ifNPCCheerful Accept>
+	Msg%id%01_6 <>
+	CMsg%id%01_6 <ifNPCMelancholy Accept>
+
 
 % TYPE: *NotByPhone
 %		&TooDangerous	It's dangerous to speak over the phone.

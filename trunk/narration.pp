@@ -196,6 +196,7 @@ Function RealSceneID( Scene: GearPtr ): Integer;
 Function FindActualScene( Scene: GearPtr; SID: Integer ): GearPtr;
 Function FindActualScene( GB: GameBoardPtr; SID: Integer ): GearPtr;
 Function IsAScene( S: GearPtr ): Boolean;
+Function SceneIsTemp( S: GearPtr ): Boolean;
 Function FindRootScene( GB: GameBoardPtr; S: GearPtr ): GearPtr;
 Function FindWorld( GB: GameBoardPtr; S: GearPtr ): GearPtr;
 
@@ -1048,6 +1049,14 @@ Function IsAScene( S: GearPtr ): Boolean;
 	{ Return TRUE if S is a scene or metascene, or FALSE otherwise. }
 begin
 	IsAScene := ( S <> Nil ) and ( ( S^.G = GG_Scene ) or ( S^.G = GG_MetaScene ) );
+end;
+
+Function SceneIsTemp( S: GearPtr ): Boolean;
+	{ Return TRUE if S is a temporary scene. These include: }
+	{ - Metascenes }
+	{ - Dynamic Scenes }
+begin
+	SceneIsTemp := ( S = Nil ) or ( S^.G = GG_MetaScene ) or IsInvCom( S );
 end;
 
 Function FindRootScene( GB: GameBoardPtr; S: GearPtr ): GearPtr;

@@ -371,6 +371,69 @@ Content
 %%  trigger need be called.
 
 Content
+	name <Lover's Gift>
+	desc <The love interest will give the PC a gift to help out.>
+	requires <*:CS_GainAdvantageVsMecha +Hra A:++>
+	changes <+H>
+
+	% E1 is a public scene
+	% E2 is the lover
+	Element1 <Scene Public (Building|Meeting) !Okay -9>
+	Element2 <Grab 9>
+	Place2 <1 (Citizens) pass ally>
+
+	% P%id%01 = Email Indicator
+
+	% FAIL CONDITIONS:
+	% - E2 dies
+	end <ifNPCDead %2% LoseSubPlot %plotid% AlterContext .%id%_next>
+	.%id%_next <+H-->
+
+	5min <if= P%id%01 0 if= d10 1 P= %id%01 1 email %id%01>
+
+	Msg%id%01_1 <%name2%@%name1%:// I never got the chance to thank you properly. Why don't you stop by today?>
+	Msg%id%01_2 <%name2%@%name1%:// I've been waiting to hear from you. Come on over and see me.>
+	Msg%id%01_3 <%name2%@%name1%:// I know you're really busy, but if you drop by to see me you won't regret it.>
+
+	% SubPlot1 = The gift
+	SubPlot1 <*CS_LoversGift 2>
+
+	sub
+		Persona 2
+		rumor%id% <%name2% has been waiting for you at %name1%.>
+		% V%id%01 = Reputation Counter
+		greeting <if= PlotStatus %plotid% %id% else %pop% Goto .%id%_GoGreet>
+		*.%id%_GoGreet <*ThanksForRescue .%id%_GoReveal>
+		.%id%_GoReveal <NewChat Say %id%01 AddChat %id%01 AddChat %id%02 AddChat %id%03 AlterContext .%id%_Alter>
+		.%id%_Alter <+H-->
+		result%id%01 <Goto .%id1%_GoLoversGift>
+		result%id%02 <Goto .%id1%_GoLoversGift>
+		result%id%03 <EndChat Say %id%02 AddChat %id%04 if= V%id%01 0 V= %id%01 1 AddPragmatic -15>
+		result%id%04 <Goto .%id1%_GoLoversGift>
+		Msg%id%01 <It's about time I thanked you for rescuing me. I've got something right here, and I'd like for you to have it...>
+		Msg%id%01_1 <>
+		CMsg%id%01_1 <ifNPCSociable Accept>
+		Msg%id%01_2 <>
+		CMsg%id%01_2 <ifNPCShy Accept>
+		Msg%id%01_3 <>
+		CMsg%id%01_3 <ifNPCEasygoing Accept>
+		Msg%id%01_4 <>
+		CMsg%id%01_4 <ifNPCPassionate Accept>
+		Msg%id%01_5 <>
+		CMsg%id%01_5 <ifNPCCheerful Accept>
+		Msg%id%01_6 <>
+		CMsg%id%01_6 <ifNPCMelancholy Accept>
+		Msg%id%02 <>
+		Prompt%id%01 <Wow, thanks, you didn't have to do that...>
+		Prompt%id%01_1 <Your gratitude is thanks enough.>
+		Prompt%id%02 <A gift? Let me see it!>
+		Prompt%id%02_1 <Oh yeah, I've been waiting for this...>
+		Prompt%id%03 <But... But... Shouldn't we wait until we're married!?>
+		Prompt%id%03_1 <Sorry, \ChatNPC , but I want to save myself for marriage...>
+		Prompt%id%04 <[Continue]>
+	end
+
+Content
 	name <Let's Join Together>
 	desc <If the PC proves themself, an NPC will offer to join forces.>
 	requires <*:CS_GainAdvantageVsMecha R:-- F:++ -!Ne>

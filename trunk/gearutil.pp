@@ -706,23 +706,31 @@ end;
 Function ComponentComplexity( Part: GearPtr ): Integer;
 	{ Return the basic complexity value of this part, and only }
 	{ this part. }
+var
+	CC: Integer;
 begin
 	if ( Part = Nil ) or ( Part^.G < 0 ) then begin
-		ComponentComplexity := 0;
+		CC := 0;
 	end else begin
 		case Part^.G of
-			GG_Module: 		ComponentComplexity := ModuleComplexity( Part );
-			GG_ExArmor,GG_Shield: 	ComponentComplexity := ( Part^.V + 1 ) div 2;
-			GG_Weapon: 		ComponentComplexity := WeaponComplexity( Part );
-			GG_MoveSys,GG_PowerSource: ComponentComplexity := Part^.V;
-			GG_Computer:		ComponentComplexity := Part^.V;
-			GG_Software:		ComponentComplexity := 0;
-			GG_Support:		ComponentComplexity := 0;
-			GG_Sensor:		ComponentComplexity := SensorComplexity( Part );
-			GG_Harness:		ComponentComplexity := Part^.V * 2;
-		else ComponentComplexity := 1;
+			GG_Module: 		CC := ModuleComplexity( Part );
+			GG_ExArmor,GG_Shield: 	CC := ( Part^.V + 1 ) div 2;
+			GG_Weapon: 		CC := WeaponComplexity( Part );
+			GG_MoveSys,GG_PowerSource: CC := Part^.V;
+			GG_Computer:		CC := Part^.V;
+			GG_Software:		CC := 0;
+			GG_Support:		CC := 0;
+			GG_Sensor:		CC := SensorComplexity( Part );
+			GG_Harness:		CC := Part^.V * 2;
+		else CC := 1;
 		end;
+
+		{ If the part is integral, and not a module, reduce complexity by 1 }
+		{ down to a minimum value of 1. }
+		if ( CC > 1 ) and ( Part^.G <> GG_Module ) and PartHasIntrinsic( Part , NAS_Integral ) then Dec( CC );
 	end;
+
+	ComponentComplexity := CC;
 end;
 
 Function SubComComplexity( Part: GearPtr ): Integer;

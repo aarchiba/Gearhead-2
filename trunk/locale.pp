@@ -685,7 +685,7 @@ Function IsHidden( Mek: GearPtr ): Boolean;
 implementation
 
 { Include specific GH*.pp units here. }
-uses ghweapon,ghprop,ghchars,texutil;
+uses ghweapon,ghprop,ghchars,texutil,ghmovers;
 
 Type
 	LPattern = Record	{ Location Pattern }
@@ -2074,6 +2074,7 @@ function ThrowingRange( GB: GameBoardPtr; User,Weapon: GearPtr ): Integer;
 	{ If GB=Nil, return the unscaled value. }
 var
 	rng,t: Integer;
+	HeavyActuator: Integer;
 begin
 	rng := 0;
 	if ( Weapon <> Nil ) and ( Weapon^.G = GG_Weapon ) then begin
@@ -2089,6 +2090,13 @@ begin
 	end else if ( Weapon <> Nil ) and ( Weapon^.G = GG_Ammo ) and ( Weapon^.S = GS_Grenade ) then begin
 		rng := MasterSize( User ) * 2 + 1;
 	end;
+
+	{ Throwing range may get a bonus from heavy actuators. }
+	HeavyActuator := CountActivePoints( User , GG_MoveSys , GS_HeavyActuator );
+	if HeavyActuator > 0 then begin
+		rng := rng + ( HeavyActuator div 10 );
+	end;
+
 
 	if ( Weapon <> Nil ) and ( GB <> Nil ) and ( rng > 1 ) and ( Weapon^.Scale <> GB^.Scale ) then begin
 		if Weapon^.Scale > GB^.Scale then begin

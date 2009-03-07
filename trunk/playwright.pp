@@ -376,6 +376,7 @@ var
 	NumMatches: Integer;
 	Results: Array of PWSearchResult;
 	IDesc,RDesc: String;
+	CheckGlobal: Boolean;
 
 	Procedure CheckAlongPath( P: GearPtr );
 		{ Check along this path looking for characters. If a match is found, }
@@ -414,6 +415,10 @@ begin
 	end;
 	SetLength( Results , NumMatches );
 
+	{ Determine the scope- if searching globablly, do so. }
+	CheckGlobal := AStringHasBString( Desc , '!G' );
+	if CheckGlobal then Adv := FindRoot( Adv );
+
 	{ Filter the relative description from the instrinsic description. }
 	IDesc := Desc;
 	RDesc := FilterElementDescription( IDesc );
@@ -422,13 +427,14 @@ begin
 	NumMatches := 0;
 	CheckAlongPath( Adv^.SubCom );
 	if Adv^.G = GG_Scene then CheckAlongPath( Adv^.InvCom );
-	if GB <> Nil then begin
+	{ Check the gameboard as well, as long as it's not a metascene or a temporary scene. }
+	if ( GB <> Nil ) and not SceneIsTemp( GB^.Scene ) then begin
 		CheckAlongPath( GB^.Meks );
 	end;
 
 	{ Check the invcomponents of the adventure only if global }
 	{ NPCs are allowed by the DESC string. }
-	if AStringHasBString( Desc , '!G' ) then begin
+	if CheckGlobal then begin
 		CheckAlongPath( FindRoot( Adv )^.InvCom );
 	end;
 
@@ -527,6 +533,7 @@ Function SearchForScene( Adventure , Plot: GearPtr; GB: GameBoardPtr; Desc: Stri
 var
 	NumElements: Integer;
 begin
+	if AStringHasBString( Desc , '!G' ) then Adventure := FindRoot( Adventure );
 	NumElements := NumFreeScene( Adventure , Plot , GB , Desc );
 	if NumElements > 0 then begin
 		{ Pick one of the free scenes at random. }
@@ -2200,7 +2207,7 @@ var
 		{ go with a *GENERAL plot. }
 		plot_cmd := SAttValue( Controller^.SA , 'PLOT_TYPE' );
 		if plot_cmd = '' then plot_cmd := '*GENERAL';
-		plot_cmd := plot_cmd + Context;
+		plot_cmd := plot_cmd + ' ' + Context;
 
 		{ If the controller is a mood, add details of its first 9 elements. }
 		if Controller^.G = GG_CityMood then begin

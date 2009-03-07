@@ -633,3 +633,14 @@ Plot
 		SetID 1
 	end
 
+
+%%
+%%  ERROR CORRECTORS
+%%
+
+Content
+	requires <+Hra A:-->
+	update <NegateComp &CompScene .next>
+	.next <+H-->
+
+
