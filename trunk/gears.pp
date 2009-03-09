@@ -83,6 +83,7 @@ Const
 	GG_Computer = 22;	{ Computers! }
 	GG_Software = 23;	{ Software! Goes in the computer, above. }
 	GG_Harness = 24;	{ Can strap onto some SF:0 body part. }
+	GG_Usable = 25;		{ Can be activated via the appropriate command. }
 
 	NAG_GearOps = 2;
 

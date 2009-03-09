@@ -56,11 +56,22 @@ const
 	{ STAT 1 = Armor Rating }
 	{ STAT 2 = Passenger Scale }
 
+	{ G = GG_Usable }
+	{ S = Usable Type }
+		Num_Usable_System_Types = 3;
+		GS_Transformation = 1;
+		GS_ForceField = 2;
+		GS_Holograms = 3;
+	{ V = Power Level/Parameter }
+
+
 Function CockpitBaseMass( CPit: GearPtr ): Integer;
 Procedure CheckCPitRange( CPit: GearPtr );
 Function IsLegalCPitSub( Part, Equip: GearPtr ): Boolean;
 
-
+Function UsableBaseMass( Part: GearPtr ): Integer;
+Function UsableComplexity( Part: GearPtr ): Integer;
+Procedure CheckUsableRange( Part: GearPtr );
 
 Function SupportBaseDamage( Part: GearPtr ): Integer;
 Function SupportName( Part: GearPtr ): String;
@@ -112,7 +123,47 @@ begin
 	else IsLegalCPitSub := False;
 end;
 
+Function UsableBaseMass( Part: GearPtr ): Integer;
+	{ Return the basic mass of this part. }
+begin
+	if Part^.S = GS_Transformation then begin
+		UsableBaseMass := 1;
+	end else begin
+		UsableBaseMass := Part^.V * 2;
+	end;
+end;
 
+Function UsableComplexity( Part: GearPtr ): Integer;
+	{ Return the basic complexity of this part- the number of }
+	{ slots it takes when installed in a mecha. }
+begin
+	if Part^.S = GS_Transformation then begin
+		UsableComplexity := 1;
+	end else if Part^.S = GS_ForceField then begin
+		UsableComplexity := Part^.V * 2;
+	end else begin
+		UsableComplexity := Part^.V;
+	end;
+end;
+
+Procedure CheckUsableRange( Part: GearPtr );
+	{ Check the range of this usable gear to make sure that it's all }
+	{ nice and legal. If anything is found out of the ordinary, }
+	{ change it. }
+begin
+	{ Check S- Usable Type }
+	if Part^.S < 1 then Part^.S := 1
+	else if Part^.S > Num_Usable_System_Types then Part^.S := Num_Usable_System_Types;
+
+	{ Check V- Power/Parameter }
+	if Part^.S = GS_Transformation then begin
+		if Part^.V < 0 then Part^.V := 0
+		else if Part^.V > NumForm then Part^.V := NumForm;
+	end else begin
+		if Part^.V < 1 then Part^.V := 1
+		else if Part^.V > 10 then Part^.V := 10;
+	end;
+end;
 
 Function SupportBaseDamage( Part: GearPtr ): Integer;
 	{ Return the amount of damage this system can withstand. }

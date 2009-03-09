@@ -324,6 +324,7 @@ begin
 			GG_Support:	IsLegalModuleSub := True;
 			GG_PowerSource:	IsLegalModuleSub := True;
 			GG_Computer:	IsLegalModuleSub := True;
+			GG_Usable:	IsLegalModuleSub := True;
 		else IsLegalModuleSub := False
 		end;
 	end else begin
@@ -338,6 +339,7 @@ begin
 			GG_Sensor:	IsLegalModuleSub := True;
 			GG_PowerSource:	IsLegalModuleSub := True;
 			GG_Computer:	IsLegalModuleSub := True;
+			GG_Usable:	IsLegalModuleSub := True;
 
 		else IsLegalModuleSub := False
 		end;

@@ -479,6 +479,7 @@ end
 
 Gun 5
 Name <Revolver>
+desig <Grant 6B>
 desc <A low velocity single firing chemically powered pistol.>
 Mass -3
 Range 3
@@ -489,6 +490,28 @@ SDL_PORTRAIT <item_peacemakerrevolver.png>
 Legality -15
 sub
 	Ammo 5
+	name <Revolver Cylinder>
+	desc <A departure from the traditional cartridge, this clip comes in the form of a cylinder with the bullets preloaded.>
+	Magazine 6
+	category <AMMO>
+	factions <GENERAL>
+	caliber <.32 revolver>
+end
+
+Gun 8
+Name <Revolver>
+desig <Quaker .32>
+desc <A low velocity single firing chemically powered pistol.>
+Mass -6
+Range 3
+speed 6
+caliber <.32 revolver>
+category <WEAPON MISSILE ANTIQUE>
+factions <GENERAL>
+SDL_PORTRAIT <item_peacemakerrevolver.png>
+Legality -10
+sub
+	Ammo 8
 	name <Revolver Cylinder>
 	desc <A departure from the traditional cartridge, this clip comes in the form of a cylinder with the bullets preloaded.>
 	Magazine 6

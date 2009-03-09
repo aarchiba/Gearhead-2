@@ -404,6 +404,7 @@ begin
 		GG_Computer:	it := 1;
 		GG_Software:	it := 0;
 		GG_Harness:	it := 0;
+		GG_Usable:	it := 2;
 	else it := -1;
 	end;
 
@@ -509,6 +510,7 @@ begin
 		GG_PowerSource: it := MsgString( 'BATTERYNAME' );
 		GG_Computer:	it := MsgString( 'COMPUTERNAME' );
 		GG_Software:	it := MsgString( 'SOFTWARENAME' );
+		GG_Usable:	it := MsgString( 'USABLENAME_' + BStr( Part^.S ) );
 		else it := {MsgString( 'UNKNOWNNAME' ) +} BStr( Part^.G ) + '/' + BStr( Part^.S ) + '/' + BStr( Part^.V );
 	end;
 
@@ -551,6 +553,7 @@ begin
 		GG_PowerSource:	it := Part^.V * 2;
 		GG_Computer:	it := Part^.V * 2;
 		GG_Harness:	if Part^.SubCom = Nil then it := 1 else it := 0;
+		GG_Usable:	it := UsableBaseMass( Part );
 
 	{If a component type is not listed above, it has no mass.}
 	else it := 0
@@ -722,6 +725,7 @@ begin
 			GG_Support:		CC := 0;
 			GG_Sensor:		CC := SensorComplexity( Part );
 			GG_Harness:		CC := Part^.V * 2;
+			GG_Usable:		CC := UsableComplexity( Part );
 		else CC := 1;
 		end;
 
@@ -1055,6 +1059,7 @@ begin
 	else if Part^.G = GG_Computer then CheckComputerRange( Part )
 	else if Part^.G = GG_Software then CheckSoftwareRange( Part )
 	else if Part^.G = GG_Harness then CheckHarnessRange( Part )
+	else if Part^.G = GG_Usable then CheckUsableRange( Part )
 	;
 
 	{ Next, check the children of this gear to make sure everything }
