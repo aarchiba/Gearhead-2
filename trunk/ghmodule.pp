@@ -50,6 +50,8 @@ Const
 	GS_Storage = 8;
 
 	STAT_Armor = 1;
+	STAT_PrimaryModuleForm = 2;	{ Modules, like mecha, can be transformable. }
+	STAT_VariableModuleForm = 3;	{ In the event of transformation the primary form is favored. }
 
 	{ This array tells which modules are usable by which forms. }
 	{ Some systems ( movers, sensors, cockpits ) will function no matter where they are mounted. }
@@ -109,6 +111,8 @@ Const
 
 Function BaseArmorCost( Part: GearPtr; DV: Integer ): LongInt;
 
+Procedure InitModule( Part: GearPtr );
+
 Function ModuleBaseDamage(Part: GearPtr): Integer;
 Function ModuleComplexity( Part: GearPtr ): Integer;
 Function ModuleName(Part: GearPtr): String;
@@ -148,6 +152,19 @@ begin
 	BaseArmorCost := it;
 end;
 
+Function PrimaryModuleForm( Part: GearPtr ): Integer;
+	{ Return the primary form of this module. }
+begin
+	if Part^.Stat[ STAT_PrimaryModuleForm ] <> 0 then PrimaryModuleForm := Part^.Stat[ STAT_PrimaryModuleForm ]
+	else PrimaryModuleForm := Part^.S;
+end;
+
+Procedure InitModule( Part: GearPtr );
+	{ This doesn't really do much except initialize the primary form. }
+begin
+	Part^.Stat[ STAT_PrimaryModuleForm ] := Part^.S;
+end;
+
 Function ModuleBaseDamage(Part: GearPtr): Integer;
 	{For module PART, calculate the unscaled amount of}
 	{damage that it can take before being destroyed.}
@@ -179,7 +196,7 @@ end;
 Function ModuleComplexity( Part: GearPtr ): Integer;
 	{ Return the complexity value for this part. }
 begin
-	if ( Part^.S = GS_Body ) or ( Part^.S = GS_Storage ) then begin
+	if ( Part^.S = GS_Body ) or ( ( Part^.S = GS_Storage ) and ( Part^.Stat[ STAT_VariableModuleForm ] = 0 ) ) then begin
 		ModuleComplexity := ( Part^.V + 1 ) * 2;
 	end else begin
 		ModuleComplexity := Part^.V + 1;
@@ -198,14 +215,18 @@ end;
 Function ModuleBaseMass(Part: GearPtr): Integer;
 	{For module PART, calculate the unscaled mass.}
 var
-	it: Integer;
+	form,it: Integer;
 begin
 	{Error check - make sure we actually have a Module.}
 	if Part = Nil then Exit(0);
 	if Part^.G <> GG_Module then Exit(0);
-	if (Part^.S < 1) or (Part^.S > NumModule) then Exit(0);
 
-	Case ModuleHP[Part^.S] of
+	{ The mass of a part is the maximum of its forms. }
+	if Part^.Stat[ STAT_PrimaryModuleForm ] = 0 then form := Part^.S
+	else form := Part^.Stat[ STAT_PrimaryModuleForm ];
+	if ( Part^.Stat[ STAT_VariableModuleForm ] <> 0 ) and ( ModuleHP[ Part^.Stat[ STAT_VariableModuleForm ] ] > ModuleHP[ form ] ) then form := Part^.Stat[ STAT_VariableModuleForm ];
+
+	Case ModuleHP[ form ] of
 		MHP_NoHP:			it := 0;
 		MHP_EqualSize,MHP_Halfsize:	it := Part^.V;
 		MHP_SizePlusOne:		it := Part^.V + 1;
@@ -221,11 +242,18 @@ end;
 
 Function ModuleValue( Part: GearPtr ): LongInt;
 	{ Calculate the price of this module. }
+var
+	it: LongInt;
 begin
 	{ The basic module cost is 25 per point of size plus half the }
 	{ value of the armor. Why only half? Because ExArmor is cost-penalized }
 	{ due to several intrinsic advantages. }
-	ModuleValue := 25 * Part^.V + ( BaseArmorCost( Part , Part^.Stat[ STAT_Armor ] ) div 2 );
+	it := 25 * Part^.V + ( BaseArmorCost( Part , Part^.Stat[ STAT_Armor ] ) div 2 );
+
+	{ Variable modules cost 20% more. }
+	if Part^.Stat[ STAT_VariableModuleForm ] <> 0 then it := ( it * 6 ) div 5;
+
+	ModuleValue := it;
 end;
 
 Procedure CheckModuleRange( Part: GearPtr );
@@ -262,7 +290,17 @@ begin
 	end else begin
 		if Part^.Stat[1] > 10 then Part^.Stat[1] := 10;
 	end;
-	for t := 2 to NumGearStats do Part^.Stat[ T ] := 0;
+
+	{ Stat 3 - Variable Form }
+	{ Body modules can't be variable form. }
+	if Part^.S = GS_Body then Part^.Stat[ STAT_VariableModuleForm ] := 0
+	else if Part^.Stat[ STAT_VariableModuleForm ] <> 0 then begin
+		{ If this module has a variable form, it must be a non-body module type. }
+		if Part^.Stat[ STAT_VariableModuleForm ] < 2 then Part^.Stat[ STAT_VariableModuleForm ] := 0
+		else if Part^.Stat[ STAT_VariableModuleForm ] > NumModule then Part^.Stat[ STAT_VariableModuleForm ] := 0;
+	end;
+
+	for t := 4 to NumGearStats do Part^.Stat[ T ] := 0;
 end;
 
 Function IsLegalModuleInv( Slot, Equip: GearPtr ): Boolean;
@@ -274,19 +312,19 @@ var
 begin
 	if Equip^.G = GG_Harness then begin
 		{ Harnesses fit if their type is the same as the module being checked. }
-		it := Equip^.S = Slot^.S;
-	end else if Slot^.S = GS_Arm then begin
+		it := Equip^.S = PrimaryModuleForm( Slot );
+	end else if PrimaryModuleForm( Slot ) = GS_Arm then begin
 		Case Equip^.G of
 			GG_ExArmor:	begin
-					it := Slot^.S = Equip^.S;
+					it := PrimaryModuleForm( Slot ) = Equip^.S;
 					end;
 			GG_Shield:	it := true;
 			else it := False;
 		end;
-	end else if Slot^.S = GS_Tail then begin
+	end else if PrimaryModuleForm( Slot ) = GS_Tail then begin
 		Case Equip^.G of
 			GG_ExArmor:	begin
-					it := Slot^.S = Equip^.S;
+					it := PrimaryModuleForm( Slot ) = Equip^.S;
 					end;
 			GG_Shield:	it := true;
 			else it := False;
@@ -294,7 +332,7 @@ begin
 	end else begin
 		Case Equip^.G of
 			GG_ExArmor:	begin
-					it := Slot^.S = Equip^.S;
+					it := PrimaryModuleForm( Slot ) = Equip^.S;
 					end;
 			else it := False;
 		end;

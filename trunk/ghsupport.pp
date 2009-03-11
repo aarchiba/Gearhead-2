@@ -4,6 +4,8 @@ unit ghsupport;
 
 	{ It also handles cockpits. }
 
+	{ And usables. }
+
 	{ *** RULES *** }
 	{ - Support gears may only be installed in the BODY module. }
 	{ - Every mecha needs an engine. }
@@ -72,6 +74,7 @@ Function IsLegalCPitSub( Part, Equip: GearPtr ): Boolean;
 Function UsableBaseMass( Part: GearPtr ): Integer;
 Function UsableComplexity( Part: GearPtr ): Integer;
 Procedure CheckUsableRange( Part: GearPtr );
+Function UsableValue( Part: GearPtr ): LongInt;
 
 Function SupportBaseDamage( Part: GearPtr ): Integer;
 Function SupportName( Part: GearPtr ): String;
@@ -81,6 +84,8 @@ Procedure CheckSupportRange( Part: GearPtr );
 
 
 implementation
+
+uses ghmecha;
 
 Function CockpitBaseMass( CPit: GearPtr ): Integer;
 	{Cockpits usually have no weight... unless they're}
@@ -138,7 +143,7 @@ Function UsableComplexity( Part: GearPtr ): Integer;
 	{ slots it takes when installed in a mecha. }
 begin
 	if Part^.S = GS_Transformation then begin
-		UsableComplexity := 1;
+		UsableComplexity := 2;
 	end else if Part^.S = GS_ForceField then begin
 		UsableComplexity := Part^.V * 2;
 	end else begin
@@ -162,6 +167,16 @@ begin
 	end else begin
 		if Part^.V < 1 then Part^.V := 1
 		else if Part^.V > 10 then Part^.V := 10;
+	end;
+end;
+
+Function UsableValue( Part: GearPtr ): LongInt;
+	{ Return the basic cost of this part. }
+begin
+	case Part^.S of
+		GS_Transformation:	UsableValue := 1000;
+		GS_ForceField:		UsableValue := Part^.V * Part^.V * Part^.V * 25 + Part^.V * Part^.V * 50 + Part^.V * 175;
+		GS_Holograms:		UsableValue := Part^.V * Part^.V * Part^.V * 25 + Part^.V * 75 + 750;
 	end;
 end;
 

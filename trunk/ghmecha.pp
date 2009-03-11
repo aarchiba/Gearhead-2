@@ -118,11 +118,12 @@ begin
 		{ size of the mecha by more than one, and the size }
 		{ of the BODY module must exactly match the size of }
 		{ the mecha. }
+		{ Also, the material of a module must match the material of the mecha. }
 		if Equip^.S = GS_Body then begin
-			if Equip^.V = Part^.V then IsLegalMechaSubCom := True
+			if Equip^.V = Part^.V then IsLegalMechaSubCom := ( NAttValue( Part^.NA , NAG_GearOps , NAS_Material ) = NAttValue( Equip^.NA , NAG_GearOps , NAS_Material ) )
 			else IsLegalMechaSubCom := False;
 		end else begin
-			if Equip^.V <= ( Part^.V + 1 ) then IsLegalMechaSubCom := True
+			if Equip^.V <= ( Part^.V + 1 ) then IsLegalMechaSubCom := ( NAttValue( Part^.NA , NAG_GearOps , NAS_Material ) = NAttValue( Equip^.NA , NAG_GearOps , NAS_Material ) )
 			else IsLegalMechaSubCom := False;
 		end;
 

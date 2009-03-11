@@ -1,0 +1,137 @@
+Battroid 4
+Name <Cogan>
+SDL_Sprite <>
+SDL_Portrait <>
+Desig <SDR-2A>
+desc <A variable fighter used by the Rocket Stars.>
+TYPE <GROUND SPACE INSIDE>
+FACTIONS <ROCKE>
+
+sub
+Head
+	size 2
+	Armor 3
+	Mass -1
+	VariableStorage
+	sub
+		Sensor 5
+
+		STC LAS-3
+		name <Intercept Laser>
+		type <INTERCEPT>
+		Integral
+		mass -2
+
+		ECM 2
+	end
+
+Torso
+	Armor 4
+	Mass -2
+	sub
+		CPit
+		Armor 1
+
+		BeamGun 7
+		name <Plasma Cannon>
+		range 5
+		type <BRUTAL>
+		Integral
+		mass -4
+
+		Transform:Aerofighter
+		name <Transformation System>
+		SDL_SPRITE2 <>
+		CUTE_SPRITE2 <>
+		Integral
+
+		Mount
+		name <Shoulder Mount>
+		inv
+			MLauncher 6
+			sub
+				STC SWM-2
+				Magazine 30
+			end
+		end
+
+		Flight 5
+	end
+	inv
+		BodyArmor 2
+		mass -2
+	end
+
+Arm
+	name <Right Arm>
+	Armor 3
+	size 3
+	Mass -1
+	VariableStorage
+	sub
+		Hand
+		name <Right Hand>
+		inv
+			Gun 5
+			Scale 2
+			name <Light Rocket Rifle>
+			caliber <35mm self-propelled>
+			Speed 2
+			Range 6
+			mass -3
+			BV 2
+			sub
+				Ammo 5
+				caliber <35mm self-propelled>
+				Magazine 60
+			end
+		end
+
+		Flight 3
+	end
+
+Arm
+	name <Left Arm>
+	size 3
+	Armor 3
+	Mass -1
+	VariableStorage
+	sub
+		Hand
+		name <Left Hand>
+		inv
+			EMelee 6
+			name <Beam Sword>
+		end
+
+		Flight 3
+	end
+
+Leg
+	name <Right Leg>
+	size 5
+	Armor 4
+	Mass -2
+	VariableWing
+	sub
+		Mount
+		name <Right Leg Mount>
+
+		Flight 5
+	end
+
+Leg
+	name <Left Leg>
+	Size 5
+	Armor 4
+	Mass -2
+	VariableWing
+	sub
+		Mount
+		name <Left Leg Mount>
+
+		Flight 5
+	end
+
+end
+

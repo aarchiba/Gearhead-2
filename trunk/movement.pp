@@ -157,6 +157,7 @@ const
 	);
 
 
+function FormMoveRate( Scene, Master: GearPtr ; MoveMode,MechaForm: Integer ): Integer;
 function BaseMoveRate( Scene, Master: GearPtr ; MoveMode: Integer ): Integer;
 function CurrentMoveRate( Scene, Master: GearPtr ): Integer;
 Function AdjustedMoveRate( Scene, Master: GearPtr; MoveMode, MoveOrder: Integer): Integer;
@@ -233,7 +234,7 @@ begin
 	CountThrustPoints := it;
 end;
 
-function CalcWalk( Mek: GearPtr ): Integer;
+function CalcWalk( Mek: GearPtr; Form: Integer ): Integer;
 	{ Calculate the base walking rate for this mecha. }
 const
 	ThrustPerHM = 25;
@@ -248,7 +249,7 @@ begin
 		if mass < 20 then mass := 20;
 		spd := (TMWalkSpeed - mass) div 3;
 
-		if Mek^.S = GS_Zoanoid then spd := spd + ZoaWalkBonus;
+		if Form = GS_Zoanoid then spd := spd + ZoaWalkBonus;
 
 		if spd < MinWalkSpeed then spd := MinWalkSpeed;
 
@@ -260,10 +261,6 @@ begin
 		if MinLegPoints < 2 then MinLegPoints := 2;
 
 		ActualLegPoints := CountActivePoints( Mek , GG_Module , GS_Leg );
-		if Mek^.S = GS_Zoanoid then begin
-			{ Zoanoids count legs as arms. This may come in handy for transformers. }
-			ActualLegPoints := ActualLegPoints + CountActivePoints( Mek , GG_Module , GS_Arm );
-		end;
 
 		{ Add a bonus for heavy Actuator. }
 		HM := CountActivePoints( Mek , GG_MoveSys , GS_HeavyActuator ) * ThrustPerHM;
@@ -280,10 +277,6 @@ begin
 		{walking becomes impossible.}
 		NumLegs := CountActiveParts(Mek , GG_Module , GS_Leg);
 		MaxLegs := CountTotalParts(Mek , GG_Module , GS_Leg);
-		if Mek^.S = GS_Zoanoid then begin
-			NumLegs := NumLegs + CountActiveParts(Mek , GG_Module , GS_Arm);
-			MaxLegs := MaxLegs + CountTotalParts(Mek , GG_Module , GS_Arm);
-		end;
 		if ( NumLegs * 2 ) < ( MaxLegs + 2 ) then spd := 0;
 
 		{ Finally, check the gyroscope. Mecha can't walk without one. }
@@ -315,7 +308,7 @@ begin
 	CalcWalk := spd;
 end;
 
-function CalcRoll( Mek: GearPtr ): Integer;
+function CalcRoll( Mek: GearPtr; Form: Integer ): Integer;
 	{ Calculate the base ground movement rate for this mecha. }
 var
 	mass,spd: Integer;
@@ -329,7 +322,7 @@ begin
 		spd := ( TMRollSpeed - mass ) div 3;
 		if spd < MinWalkSpeed then spd := MinWalkSpeed;
 
-		if Mek^.S = GS_GroundCar then begin
+		if Form = GS_GroundCar then begin
 			spd := ( spd * 3 ) div 2;
 		end;
 
@@ -358,7 +351,7 @@ begin
 	CalcRoll := spd;
 end;
 
-function CalcSkim( Mek: GearPtr ): Integer;
+function CalcSkim( Mek: GearPtr; Form: Integer ): Integer;
 	{ Calculate the base hovering speed for this mecha. }
 var
 	mass,thrust,spd: Integer;
@@ -397,7 +390,7 @@ begin
 	CalcSkim := spd;
 end;
 
-function CalcFly( Scene, Mek: GearPtr; TrueSpeed: Boolean ): Integer;
+function CalcFly( Scene, Mek: GearPtr; Form: Integer; TrueSpeed: Boolean ): Integer;
 	{ Calculate the base flight speed for this mecha. }
 	{ Set TRUESPEED to TRUE if you want the actual speed of the }
 	{ mecha, or to FALSE if you want its projected speed (needed }
@@ -452,7 +445,7 @@ begin
 	end else if mek^.G = GG_Mecha then begin
 		{ If this is a mecha, modify thrust points based }
 		{ upon the type of mecha we're dealing with. }
-		case mek^.S of
+		case Form of
 		GS_AeroFighter: if WingPoints > MasterSize( Mek ) then Thrust := Thrust * 2 else Thrust := ( Thrust * 5 ) div 4;
 		GS_HoverFighter,GS_GerWalk: Thrust := ( Thrust * 5 ) div 4;
 		GS_Ornithoid: begin
@@ -488,7 +481,7 @@ begin
 	CalcFly := spd;
 end;
 
-function CalcSpace( Mek: GearPtr ): Integer;
+function CalcSpace( Mek: GearPtr; Form: Integer ): Integer;
 	{ Calculate the base space flight speed for this mecha. }
 var
 	mass,thrust,spd: Integer;
@@ -505,7 +498,7 @@ begin
 	{ constant. }
 	thrust := CountThrustPoints( mek , MM_Space , mek^.Scale );
 	if Mek^.G = GG_Mecha then begin
-		case mek^.S of
+		case Form of
 			GS_AeroFighter: Thrust := Thrust * 2;
 			GS_HoverFighter,GS_GerWalk,GS_Ornithoid: Thrust := ( Thrust * 4 ) div 3;
 		end;
@@ -551,7 +544,7 @@ begin
 	OverchargeBonus := it;
 end;
 
-function BaseMoveRate( Scene, Master: GearPtr ; MoveMode: Integer ): Integer;
+function FormMoveRate( Scene, Master: GearPtr ; MoveMode,MechaForm: Integer ): Integer;
 	{Check the master gear MASTER and determine how fast it can}
 	{move using movement rate MOVEMODE. If the mecha is not}
 	{capable of using this movemode, return 0.}
@@ -566,15 +559,15 @@ begin
 	{Check to make sure the movemode is supported by the mecha's}
 	{current form.}
 	if Master^.G = GG_Mecha then begin
-		if not FormXMode[Master^.S,MoveMode] then Exit(0);
+		if not FormXMode[MechaForm,MoveMode] then Exit(0);
 	end;
 
 	case MoveMode of
-		MM_Walk:	it := CalcWalk( Master );
-		MM_Roll:	it := CalcRoll( Master );
-		MM_Skim:	it := CalcSkim( Master );
-		MM_Fly:		it := CalcFly( Scene , Master , True );
-		MM_Space:	it := CalcSpace( Master );
+		MM_Walk:	it := CalcWalk( Master , MechaForm );
+		MM_Roll:	it := CalcRoll( Master , MechaForm );
+		MM_Skim:	it := CalcSkim( Master , MechaForm );
+		MM_Fly:		it := CalcFly( Scene , Master , MechaForm , True );
+		MM_Space:	it := CalcSpace( Master , MechaForm );
 		else it := 0;
 	end;
 
@@ -590,12 +583,18 @@ begin
 	{ If the speed is higher than the mecha form speed limit, }
 	{ reduce it a bit as well. }
 	if Master^.G = GG_Mecha then begin
-		if it > FormSpeedLimit[Master^.S,MoveMode] then begin
-			it := FormSpeedLimit[Master^.S,MoveMode] + ( ( it - FormSpeedLimit[Master^.S,MoveMode] ) div 2 );
+		if it > FormSpeedLimit[MechaForm,MoveMode] then begin
+			it := FormSpeedLimit[MechaForm,MoveMode] + ( ( it - FormSpeedLimit[Master^.S,MoveMode] ) div 2 );
 		end;
 	end;
 
-	BaseMoveRate := it;
+	FormMoveRate := it;
+end;
+
+function BaseMoveRate( Scene, Master: GearPtr ; MoveMode: Integer ): Integer;
+	{ Return the basic move rate for the current form. }
+begin
+	BaseMoveRate := FormMoveRate( Scene, Master, MoveMode, Master^.S );
 end;
 
 function CurrentMoveRate( Scene, Master: GearPtr ): Integer;
@@ -737,7 +736,7 @@ Function JumpTime( Scene, Master: GearPtr ): Integer;
 var
 	it: Integer;
 begin
-	it := CalcFly( Scene , Master , False );
+	it := CalcFly( Scene , Master , Master^.S , False );
 
 	{ Zoanoids and Arachnoids cannot fly, but they jump really well. }
 	if ( Master^.G = GG_Mecha ) and (( Master^.S = GS_Zoanoid ) or ( Master^.S = GS_Arachnoid )) then begin

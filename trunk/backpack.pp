@@ -54,6 +54,7 @@ Procedure DoFieldRepair( GB: GameBoardPtr; PC , Item: GearPtr; Skill: Integer );
 
 Function Handless( Mek: GearPtr ): Boolean;
 Function CanBeExtracted( Item: GearPtr ): Boolean;
+Procedure ExtractMechaPart( var LList,Item: GearPtr );
 
 Function ShakeDown( GB: GameBoardPtr; Part: GearPtr; X,Y: Integer ): LongInt;
 Procedure PCGetItem( GB: GameBoardPtr; PC: GearPtr );
@@ -74,12 +75,14 @@ Procedure FHQ_ThisWargearWasSelected( GB: GameBoardPtr; var LList: GearPtr; PC,M
 Procedure PCDoPerformance( GB: GameBoardPtr; PC: GearPtr );
 Procedure StartPerforming( GB: GameBoardPtr; PC: GearPtr );
 
+Procedure UsableGearMenu( GB: GameBoardPtr; PC: GearPtr );
+
 
 implementation
 
 uses ability,action,arenacfe,arenascript,gearutil,ghchars,ghholder,
      ghmodule,ghprop,ghswag,interact,menugear,rpgdice,skilluse,texutil,
-     description,ghweapon,ui4gh,narration,
+     description,ghweapon,ui4gh,narration,specialsys,
      ghintrinsic,effects,targetui,ghsensor,customization,
 {$IFDEF ASCII}
 	vidmap,vidmenus,vidinfo;
@@ -974,6 +977,17 @@ begin
 	end;
 end;
 
+Procedure ExtractMechaPart( var LList,Item: GearPtr );
+	{ Remove this part from the mecha. }
+begin
+	DelinkGear( LList , Item );
+
+	{ If this is a variable form module, assume the primary form. }
+	if ( Item^.G = GG_Module ) and ( Item^.Stat[ STAT_VariableModuleForm ] <> 0 ) then begin
+		Item^.S := Item^.Stat[ STAT_PrimaryModuleForm ];
+	end;
+end;
+
 Function ExtractItem( GB: GameBoardPtr; TruePC , PC: GearPtr; var Item: GearPtr ): Boolean;
 	{ As of GH2 all attempts to extract an item will be successful. }
 	{ The only question is whether the part will be destroyed in the process, }
@@ -1010,7 +1024,7 @@ begin
 	{ to get it out. }
 	if SkRoll > WreckTarget then begin
 		{ First, delink Item from its parent. }
-		DelinkGear( Item^.Parent^.SubCom , Item );
+		ExtractMechaPart( Item^.Parent^.SubCom , Item );
 
 		{ Try to stick as invcom of parent. }
 		GivePartToPC( GB , Item , PC );
@@ -2196,6 +2210,43 @@ begin
 {$ENDIF}
 {$ENDIF}
 end;
+
+Procedure UsableGearMenu( GB: GameBoardPtr; PC: GearPtr );
+	{ The PC is about to invoke a usable gear. Take a look and see }
+	{ which effects are available, then invoke one of them. }
+var
+	RPM: RPGMenuPtr;
+	N: Integer;
+	Part: GearPtr;
+begin
+	BP_GB := GB;
+	BP_Source := PC;
+	BP_Redraw := @PlainRedraw;
+	BP_SeekSibs := False;
+
+	RPM := CreateRPGMenu( MenuItem, MenuSelect, ZONE_FieldHQMenu );
+	BuildGearMenu( RPM , PC , GG_Usable );
+	RPMSortAlpha( RPM );
+
+	AddRPGMenuItem( RPM , MsgString( 'Cancel' ) , -1 );
+
+	BP_ActiveMenu := RPM;
+
+	N := SelectMenu( RPM , @MechaPartEditorRedraw );
+	DisposeRPGMenu( RPM );
+
+	Part := LocateGearByNumber( PC , N );
+	if Part <> Nil then begin
+		if CanDoTransformation( GB , PC , Part ) then begin
+			DoTransformation( GB , PC , Part );
+DialogMsg( 'Done transforming.' );
+		end else begin
+DialogMsg( 'Can''t transform.' );
+		end;
+	end;
+end;
+
+
 
 
 end.

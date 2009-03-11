@@ -127,7 +127,7 @@ const
 	StdPlot_Debug: Boolean = False;
 
 
-	NumMappedKeys = 50;
+	NumMappedKeys = 51;
 	KeyMap: Array [1..NumMappedKeys] of KeyMapDesc = (
 	(	CmdName: 'NormSpeed';
 		CmdDesc: 'Travel foreword at normal speed.';
@@ -342,7 +342,13 @@ const
 	(	CmdName: 'PartyMode';
 		CmdDesc: 'Toggle between clock mode and tactics mode.';
 		IsACommand: True;
-		KCode: 'P'; )
+		KCode: 'P'; ),
+
+	{ Commands 51 - 55 }
+	(	CmdName: 'UseSystem';
+		CmdDesc: 'Use one of the special systems in a mecha.';
+		IsACommand: True;
+		KCode: 'U'; )
 
 	);
 
@@ -397,6 +403,7 @@ const
 	KMC_RollHistory = 48;
 	KMC_ExamineTarget = 49;
 	KMC_PartyMode = 50;
+	KMC_UseSystem = 51;
 
 	Direct_Skill_Learning: Boolean = False;
 

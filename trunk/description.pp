@@ -423,6 +423,11 @@ begin
 			else it := it + '; ' + ExtendedDescription( GB , SC );
 			SC := SC^.Next;
 		end;
+
+	end else begin
+		{ This is a module, as determined by the above clause. }
+		if Part^.Stat[ STAT_VariableModuleForm ] <> 0 then it := MsgString( 'VariableModule' );
+
 	end;
 
 	IntDesc := IntrinsicsDescription( Part );

@@ -1100,6 +1100,7 @@ begin
 	end;
 end;
 
+
 Procedure ForcePlot( GB: GameBoardPtr; PC,Scene: GearPtr );
 	{ Debugging command - forcibly loads a plot into the adventure. }
 var
@@ -2546,6 +2547,9 @@ begin
 	end else if KCode = KMC_PartyMode then begin
 		SwitchPartyMode( Camp^.GB );
 		GotMove := True;
+
+	end else if KCode = KMC_UseSystem then begin
+		UsableGearMenu( Camp^.GB , Mek );
 
 {$IFNDEF ASCII}
 	end else if KCode = KMC_WallToggle then begin

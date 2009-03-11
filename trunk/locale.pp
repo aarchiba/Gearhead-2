@@ -666,6 +666,8 @@ Function FindGearScene( Part: GearPtr; GB: GameBoardPtr ): Integer;
 Procedure WriteMap(Map: Location; var F: Text );
 Function ReadMap(var F: Text; W,H: Integer ): Location;
 
+Procedure GearDownToLowestMM( Mek: GearPtr; GB: GameBoardPtr; X,Y: Integer );
+
 Function FindDeploymentSpot( GB: GameBoardPtr; Mek: GearPtr ): Point;
 
 Procedure RevealMek( GB: GameBoardPtr; Mek,Spotter: GearPtr );
@@ -2147,10 +2149,12 @@ begin
 	MekAlt := MekAltitude( GB , Mek );
 	if TerrMan[ Terrain ].Pass <= -100 then begin
 		it := TerrMan[ Terrain ].Altitude >= MekALt;
-	end else begin
+	end else if MM <> MM_Fly then begin
 		{ If the terrain isn't an obstacle, but is two elevations }
 		{ too tall, then it counts as an obstacle. }
 		it := TerrMan[ Terrain ].Altitude > ( MekALt + 1 );
+	end else begin
+		it := False;
 	end;
 
 	{ Check the movement mode of the mek, to make sure that the }
@@ -2956,7 +2960,7 @@ begin
 	for T := 1 to NumMoveMode do begin
 		if ( BaseMoveRate( Nil , Mek , T ) > 0 ) then begin
 			SetNAtt( Mek^.NA , NAG_Action , NAS_MoveMode , T );
-			if not MovementBlocked( Mek , GB , 0 , 0 , X , Y ) then break;
+			if not IsBlockingTerrainForMM( GB, Mek, TileTerrain( GB , NAttValue( Mek^.NA , NAG_Location , NAS_X ) , NAttValue( Mek^.NA , NAG_Location , NAS_Y ) ), T ) then break;
 		end;
 	end;
 end;

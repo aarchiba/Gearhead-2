@@ -7,6 +7,7 @@ CONSTRUCTION RULES
 	INVENTORY RULES
 	*Illegal inventory for master gears must be explicitly excluded
 	*Legal inventory for other types must be explicitly defined
+	Variable form modules use invcoms of their primary form
 	Master gears may not equip:
 		MetaTerrain
 	MetaTerrain may not equip:
@@ -35,8 +36,10 @@ CONSTRUCTION RULES
 	Module/Body may have up to two holders installed
 	At most one ammunition gear per location
 	At most one power source per location
+	Variable form modules use subcoms of their primary form
 	Mecha may have as subcoms:
 		Modules, Modifiers (mecha type only)
+		Modules must use the same material as the mecha itself
 	Body Modules may have:
 		Cockpits, Weapons, MoveSys, Holders (Mount), Sensors, Support, Computers, Power Source, Usables
 	Arm Modules may have:

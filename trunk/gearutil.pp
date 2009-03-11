@@ -231,6 +231,7 @@ begin
 		GG_Weapon: InitWeapon(Part);
 		GG_Ammo: InitAmmo(Part);
 		GG_MetaTerrain: InitMetaTerrain(Part);
+		GG_Module: InitModule( Part );
 	end;
 end;
 
@@ -1353,6 +1354,7 @@ begin
 		GG_Software:	it := SoftwareValue( Part );
 		GG_Harness:	it := HarnessValue( Part );
 		GG_Mecha:	it := MechaCost( Part );
+		GG_Usable:	it := UsableValue( Part );
 
 	{If a component type is not listed above, it has no value.}
 	else it := 0
