@@ -97,6 +97,8 @@ const
 	NAS_WeaponUpgrades = 17;	{ Number of times this weapon has been upgraded. }
 					{ Used by the mecha customizer. }
 
+	NAS_SpecialActionRecharge = 18;	{ NPCs will only use special systems once a minute or so. }
+
 	AI_Type_Label: Array [0..NumAITypes] of String = (
 		'SD','GO','EDGE','PASS','RUN','FOL'
 	);

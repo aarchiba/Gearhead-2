@@ -3,9 +3,9 @@ Name <Cogan>
 SDL_Sprite <>
 SDL_Portrait <>
 Desig <SDR-2A>
-desc <A variable fighter used by the Rocket Stars.>
+desc <A variable fighter built by Hoeller Industries for the Rocket Stars.>
 TYPE <GROUND SPACE INSIDE>
-FACTIONS <ROCKE>
+FACTIONS <ROCKE HOELL>
 
 sub
 Head
@@ -48,10 +48,10 @@ Torso
 		Mount
 		name <Shoulder Mount>
 		inv
-			MLauncher 6
+			MLauncher 4
 			sub
 				STC SWM-2
-				Magazine 30
+				Magazine 20
 			end
 		end
 
@@ -78,6 +78,7 @@ Arm
 			caliber <35mm self-propelled>
 			Speed 2
 			Range 6
+			Acc 1
 			mass -3
 			BV 2
 			sub
@@ -116,6 +117,13 @@ Leg
 	sub
 		Mount
 		name <Right Leg Mount>
+		inv
+			MLauncher 2
+			sub
+				stc HWM-4
+				magazine 4
+			end
+		end
 
 		Flight 5
 	end
@@ -129,6 +137,13 @@ Leg
 	sub
 		Mount
 		name <Left Leg Mount>
+		inv
+			MLauncher 2
+			sub
+				stc HWM-4
+				magazine 4
+			end
+		end
 
 		Flight 5
 	end

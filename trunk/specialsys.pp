@@ -29,12 +29,22 @@ uses gears,locale;
 
 
 Function CanDoTransformation( GB: GameBoardPtr; mek,part: GearPtr ): Boolean;
-Procedure DoTransformation( GB: GameBoardPtr; mek,part: GearPtr );
-
+Procedure DoTransformation( GB: GameBoardPtr; mek,part: GearPtr; ForReal: Boolean );
+Function AIShouldTransform( GB: GameBoardPtr; mek,part: GearPtr ): Boolean;
 
 implementation
 
-uses movement,ghmodule;
+uses movement,ghmodule,ability,ui4gh,texutil,
+{$IFDEF ASCII}
+	vidgfx
+{$ELSE}
+{$IFDEF CUTE}
+	cutegfx
+{$ELSE}
+	glgfx
+{$ENDIF}
+{$ENDIF}
+	;
 
 Function CanDoTransformation( GB: GameBoardPtr; mek,part: GearPtr ): Boolean;
 	{ Return TRUE if the provided mecha can transform to the requested form }
@@ -42,11 +52,10 @@ Function CanDoTransformation( GB: GameBoardPtr; mek,part: GearPtr ): Boolean;
 var
 	P: Point;
 	MMFound: Boolean;
-	T,Terrain,OMM: Integer;
+	T,Terrain: Integer;
 begin
 	{ Do the transformation first. }
-	OMM := NAttValue( mek^.NA , NAG_Action , NAS_Movemode );
-	DoTransformation( GB , mek , part );
+	DoTransformation( GB , mek , part , False );
 
 	{ Assume FALSE unless shown to be true. }
 	MMFound := False;
@@ -68,12 +77,11 @@ begin
 		end;
 	end;
 
-	DoTransformation( GB , mek , part );
-	SetNAtt( mek^.NA , NAG_Action , NAS_Movemode , OMM );
+	DoTransformation( GB , mek , part , False );
 	CanDoTransformation := MMFound;
 end;
 
-Procedure DoTransformation( GB: GameBoardPtr; mek,part: GearPtr );
+Procedure DoTransformation( GB: GameBoardPtr; mek,part: GearPtr; ForReal: Boolean );
 	{ This mecha is about to do a transformation. }
 	{ The steps involved are: }
 	{ - Swap the mecha form. }
@@ -81,8 +89,10 @@ Procedure DoTransformation( GB: GameBoardPtr; mek,part: GearPtr );
 	{ - Transform limbs as needed. }
 	{ - Set a new movement mode. }
 	{ If this function is called, assume that the transformation is legal. }
+	{ If FORREAL is true this is an actual transformation; if false, we're just }
+	{ checking something out. }
 var
-	SpriteName: String;
+	SpriteName,msg: String;
 	Form: Integer;
 	TMod: GearPtr;
 begin
@@ -115,8 +125,30 @@ begin
 		TMod := TMod^.Next;
 	end;
 
-	{ Set a new movement mode. }
-	GearDownToLowestMM( Mek , GB , NAttValue( Mek^.NA , NAG_Location , NAS_X ) , NAttValue( Mek^.NA , NAG_Location , NAS_Y ) );
+	if ForReal then begin
+		{ Set a new movement mode. }
+		GearDownToLowestMM( Mek , GB , NAttValue( Mek^.NA , NAG_Location , NAS_X ) , NAttValue( Mek^.NA , NAG_Location , NAS_Y ) );
+
+		{ Set call time. }
+		SetNAtt( Mek^.NA , NAG_Action , NAS_CallTime , GB^.ComTime + ReactionTime( Mek ) );
+
+		{ Display the message. }
+		msg := MsgString( 'TRANSFORM_Announce' );
+		msg := ReplaceHash( msg , PilotName( Mek ) );
+		msg := ReplaceHash( msg , MsgString( 'FORMNAME_' + BStr( Mek^.S ) ) );
+		DialogMsg( msg );
+	end;
+end;
+
+Function AIShouldTransform( GB: GameBoardPtr; mek,part: GearPtr ): Boolean;
+	{ Given this transformation system, should the AI in question transform? }
+begin
+	if not CanDoTransformation( GB , mek , part ) then begin
+		AIShouldTransform := False;
+	end else begin
+		{ For now, let's just transform as much as possible. }
+		AIShouldTransform := True;
+	end;
 end;
 
 end.

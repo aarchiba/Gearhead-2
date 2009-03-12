@@ -46,9 +46,9 @@ Function MOVE_MODEL_TOWARDS_SPOT( Mek: GearPtr; GB: GameBoardPtr; GX,GY: Integer
 
 implementation
 
-uses ability,action,arenacfe,effects,movement,gearutil,
+uses ability,action,arenacfe,effects,movement,gearutil,specialsys,
      ghchars,ghmodule,ghweapon,gearparser,ghprop,interact,rpgdice,skilluse,
-     texutil,ui4gh,grabgear,arenascript,
+     texutil,ui4gh,grabgear,arenascript,menugear,ghsupport,
 {$IFDEF ASCII}
 	vidgfx,vidmap;
 {$ELSE}
@@ -693,11 +693,69 @@ begin
 	SelectBestWeapon := Weapon;
 end;
 
+Function SelectRandomUsable( Mek: GearPtr ): GearPtr;
+	{ Select a random usable gear from this mecha. }
+var
+	ShoppingList: NAttPtr;
+	N: Integer;
+	Procedure CheckAlongPath( LList: GearPtr );
+		{ Check along this path for usable gears. Don't check the inventory }
+		{ or along paths which have been destroyed. }
+	begin
+		while LList <> Nil do begin
+			if NotDestroyed( LList ) then begin
+				if LList^.G = GG_Usable then begin
+					Inc( N );
+					SetNAtt( ShoppingList , N , 0 , FindGearIndex( Mek , LList ) );
+				end;
+				CheckAlongPath( LList^.SubCom );
+			end;
+			LList := LList^.Next;
+		end;
+	end;
+var
+	Part: GearPtr;
+begin
+	ShoppingList := Nil;
+	N := 0;
+	CheckAlongPath( Mek^.SubCom );
+	Part := Nil;
+
+	if N > 0 then begin
+		N := NAttValue( ShoppingList , Random( N ) + 1 , 0 );
+		Part := LocateGearByNumber( Mek , N );
+	end;
+
+	DisposeNAtt( ShoppingList );
+	SelectRandomUsable := Part;
+end;
+
+Procedure AttemptSpecialAction( GB: GameBoardPtr; Mek: GearPtr );
+	{ The enemy can't attack just now. See if there's anything else }
+	{ worth doing. }
+var
+	Part: GearPtr;
+begin
+	if NAttValue( Mek^.NA , NAG_EpisodeData , NAS_SpecialActionRecharge ) > GB^.ComTime then Exit;
+
+	{ Select one of this mecha's special systems at random. }
+	Part := SelectRandomUsable( Mek );
+	if Part <> Nil then begin
+		if Part^.S = GS_Transformation then begin
+			if AIShouldTransform( GB , Mek , Part ) then begin
+				DoTransformation( GB , Mek , Part , True );
+				SetNAtt( Mek^.NA , NAG_EpisodeData , NAS_SpecialActionRecharge , GB^.ComTime + 150 + Random( 50 ) );
+			end;
+		end;
+	end;
+end;
+
 Procedure AttackTargetOfOppurtunity( GB: GameBoardPtr; Mek: GearPtr );
 	{ Look for the most oppurtune target to attack. }
 var
 	weapon: GearPtr;
 	TL,Target: GearPtr;
+	CouldAttack: Boolean;
 { *** PROCEDURES BLOCK *** }
 	procedure SeekFarWeapon( Part: GearPtr );
 		{ Find the weapon with the longest current range. }
@@ -719,6 +777,9 @@ begin
 	{ First, check to make sure that the mecha hasn't attacked }
 	{ too recently. }
 	if NAttValue( Mek^.NA , NAG_EpisodeData , NAS_InitRecharge ) > GB^.ComTime then Exit;
+
+	{ Assume FALSE unless proven TRUE. }
+	CouldAttack := False;
 
 	{ Start by finding a good weapon to fire with. }
 	{ Preference will be given to the weapon with the longest range. }
@@ -743,9 +804,15 @@ begin
 		{ biggest weapon in the arsenal. }
 		if Target <> Nil then begin
 			Weapon := SelectBestWeapon( GB , Mek , Target );
-			if Weapon <> Nil then AIAttacker( GB , Mek , Weapon , Target );
+			if Weapon <> Nil then begin
+				AIAttacker( GB , Mek , Weapon , Target );
+				CouldAttack := True;
+			end;
 		end;
 	end;
+
+	{ If we couldn't attack, attempt some other combat action, maybe. }
+	if not CouldAttack then AttemptSpecialAction( GB , Mek );
 end;
 
 Procedure Wander( Mek: GearPtr; GB: GameBoardPtr );

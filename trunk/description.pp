@@ -426,7 +426,7 @@ begin
 
 	end else begin
 		{ This is a module, as determined by the above clause. }
-		if Part^.Stat[ STAT_VariableModuleForm ] <> 0 then it := MsgString( 'VariableModule' );
+		if Part^.Stat[ STAT_VariableModuleForm ] <> 0 then it := MsgString( 'VariableModule' ) + ' ' + MsgString( 'MODULENAME_' + BStr( Part^.Stat[ STAT_PrimaryModuleForm ] ) ) + '/' + MsgString( 'MODULENAME_' + BStr( Part^.Stat[ STAT_VariableModuleForm ] ) );
 
 	end;
 

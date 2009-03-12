@@ -82,7 +82,7 @@ implementation
 
 uses ability,action,arenacfe,arenascript,gearutil,ghchars,ghholder,
      ghmodule,ghprop,ghswag,interact,menugear,rpgdice,skilluse,texutil,
-     description,ghweapon,ui4gh,narration,specialsys,
+     description,ghweapon,ui4gh,narration,specialsys,ghsupport,
      ghintrinsic,effects,targetui,ghsensor,customization,
 {$IFDEF ASCII}
 	vidmap,vidmenus,vidinfo;
@@ -2237,11 +2237,12 @@ begin
 
 	Part := LocateGearByNumber( PC , N );
 	if Part <> Nil then begin
-		if CanDoTransformation( GB , PC , Part ) then begin
-			DoTransformation( GB , PC , Part );
-DialogMsg( 'Done transforming.' );
-		end else begin
-DialogMsg( 'Can''t transform.' );
+		if Part^.S = GS_Transformation then begin
+			if CanDoTransformation( GB , PC , Part ) then begin
+				DoTransformation( GB , PC , Part , True );
+			end else begin
+				DialogMsg( MsgString( 'TRANSFORM_NotNow' ) );
+			end;
 		end;
 	end;
 end;
