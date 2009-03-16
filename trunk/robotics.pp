@@ -59,11 +59,10 @@ uses 	gearutil,ghchars,texutil,arenacfe,ability,ui4gh,menugear,
 {$ENDIF}
 
 const
-	Num_Robot_Skill = 11;
+	Num_Robot_Skill = 9;
 	Robot_Skill: Array [1..Num_Robot_Skill] of Byte = (
-		11,12,15,16,18,
-		20,23,25,29,31,
-		32
+		NAS_Awareness, NAS_Toughness, NAS_Medicine , NAS_Repair, NAS_SpotWeakness,
+		NAS_Stealth, NAS_Science, NAS_MechaEngineering, NAS_CodeBreaking
 	);
 
 var
@@ -313,7 +312,7 @@ begin
 	CP := R_ComputerPoints( Ingredients );
 	PP := R_PowerPoints( Ingredients );
 
-	SkRank := SkillRank( PC , NAS_Robotics );
+	SkRank := SkillRank( PC , NAS_Science );
 
 	{ Create the menu. Determine which forms the PC can choose from. }
 	Robotics_Menu := CreateRPGMenu( MenuItem , MenuSelect , ZONE_InvMenu );
@@ -427,8 +426,8 @@ begin
 	{ Make a skill roll for the robot stats. You only get one skill roll; }
 	{ the target number is the stat in question. If your skill roll for any }
 	{ of the stats fail, you can make up for it by spending build points. }
-	SkRoll := SkillRoll( GB , PC , NAS_Robotics , R_SkillLevelNeeded( Form ) + 5 , 0 , True , True );
-	SkRank := SkillRank( PC , NAS_Robotics );
+	SkRoll := SkillRoll( GB , PC , NAS_Science , STAT_Knowledge , R_SkillLevelNeeded( Form ) + 5 , 0 , True , True );
+	SkRank := SkillRank( PC , NAS_Science );
 
 	{ Check the skill roll against each of the form's stats. }
 	{ If we finish with non-negative build points, all is well. }
@@ -502,8 +501,7 @@ begin
 		end;
 
 		{ Set the basic skills for the robot. }
-		for t := 6 to 10 do SetNAtt( Form^.NA , NAG_Skill , T , Random( SkRank ) + 1 );
-		SetNAtt( Form^.NA , NAG_Skill , NAS_WeightLifting , 10 );
+		for t := 3 to 6 do SetNAtt( Form^.NA , NAG_Skill , T , Random( SkRank ) + 1 );
 
 		{ If this robot is self-aware, set a job and assign a CID. }
 		if Form^.Stat[ STAT_Charm ] > 1 then begin
@@ -597,7 +595,7 @@ begin
 			if NumLancemateSlots( PC ) < LancematesPresent( GB ) then RemoveLancemate( GB , Robot );
 			DialogMsg( ReplaceHash( MsgString( 'BUILD_ROBOT_SUCCESS' ) , GearName( Robot ) ) );
 		end else begin
-			if PetsPresent( GB , True ) > PartyRobotSlots( PC ) then RemoveLancemate( GB , Robot );
+			if PetsPresent( GB ) > PartyPetSlots( PC ) then RemoveLancemate( GB , Robot );
 			DialogMsg( ReplaceHash( MsgString( 'BUILD_ROBOT_SENTIENT' ) , GearName( Robot ) ) );
 		end;
 

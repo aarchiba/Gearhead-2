@@ -528,7 +528,7 @@ Content
 	inv
 		STC RUBBLE-INDESTRUCTIBLE
 		name <Filth>
-		use <if= V1 0 else GoOpen ifYesNo 1 2 3 V= 1 1 ifResistance 5 else GoMakeSick Print 4>
+		use <if= V1 0 else GoOpen ifYesNo 1 2 3 V= 1 1 ifToughness 5 else GoMakeSick Print 4>
 		GoMakeSick <PCSick Print 5>
 		GoOpen <Print 6>
 		Msg1 <You stand before a pile of filth.>
@@ -548,7 +548,7 @@ Content
 		STC RUBBLE-INDESTRUCTIBLE
 		name <Filth>
 		% V1 = Have "unlocked" the goodies
-		use <if= V1 0 else GoOpen ifYesNo 1 2 3 V= 1 1 ifResistance 10 else GoMakeSick Goto GoOpen>
+		use <if= V1 0 else GoOpen ifYesNo 1 2 3 V= 1 1 ifToughness 10 else GoMakeSick Goto GoOpen>
 		GoMakeSick <Print 4 PCSick OpenInv>
 		GoOpen <Print 5 OpenInv>
 		Msg1 <You stand before a pile of filth.>
@@ -570,7 +570,7 @@ Content
 		STC RUBBLE-INDESTRUCTIBLE
 		name <Filth>
 		% V1 = Have "unlocked" the goodies
-		use <if= V1 0 else GoOpen ifYesNo 1 2 3 V= 1 1 ifResistance 10 else GoMakeSick Goto GoOpen>
+		use <if= V1 0 else GoOpen ifYesNo 1 2 3 V= 1 1 ifToughness 10 else GoMakeSick Goto GoOpen>
 		GoMakeSick <Print 4 PCSick OpenInv>
 		GoOpen <Print 5 OpenInv>
 		Msg1 <You stand before a pile of filth.>
@@ -592,7 +592,7 @@ Content
 		STC RUBBLE-INDESTRUCTIBLE
 		name <Filth>
 		% V1 = Have "unlocked" the goodies
-		use <if= V1 0 else GoOpen ifYesNo 1 2 3 V= 1 1 ifResistance 10 else GoMakeSick Goto GoOpen>
+		use <if= V1 0 else GoOpen ifYesNo 1 2 3 V= 1 1 ifToughness 10 else GoMakeSick Goto GoOpen>
 		GoMakeSick <Print 4 PCSick OpenInv>
 		GoOpen <Print 5 OpenInv>
 		Msg1 <You stand before a pile of filth.>
@@ -614,7 +614,7 @@ Content
 		STC RUBBLE-INDESTRUCTIBLE
 		name <Filth>
 		% V1 = Have "unlocked" the goodies
-		use <if= V1 0 else GoOpen ifYesNo 1 2 3 V= 1 1 ifResistance 13 else GoMakeSick Goto GoOpen>
+		use <if= V1 0 else GoOpen ifYesNo 1 2 3 V= 1 1 ifToughness 13 else GoMakeSick Goto GoOpen>
 		GoMakeSick <Print 4 PCSick OpenInv>
 		GoOpen <Print 5 OpenInv>
 		Msg1 <You stand before a pile of filth.>
@@ -636,7 +636,7 @@ Content
 		STC RUBBLE-INDESTRUCTIBLE
 		name <Filth>
 		% V1 = Have "unlocked" the goodies
-		use <if= V1 0 else GoOpen ifYesNo 1 2 3 V= 1 1 ifResistance 16 else GoMakeSick Goto GoOpen>
+		use <if= V1 0 else GoOpen ifYesNo 1 2 3 V= 1 1 ifToughness 16 else GoMakeSick Goto GoOpen>
 		GoMakeSick <Print 4 PCSick OpenInv>
 		GoOpen <Print 5 OpenInv>
 		Msg1 <You stand before a pile of filth.>

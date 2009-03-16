@@ -250,7 +250,7 @@
 	requires <*NiceToMeetYou Charm ~Renowned>
 	Start <ifCHatNPCUnknown else %1% NewChat Say %id%01 AddChat %id%01 AddChat %id%02>
 	result%id%01 <Goto %1%>
-	result%id%02 <AddEasygoing -d4  ifG Flirtation 5 else .%id%_GoFail ifG React 0 else .%id%_GoFail AddReact 10 SkillXP 27 100  NewChat Say %id%03 AddChat %id%04>
+	result%id%02 <AddEasygoing -d4  ifConversation 5 else .%id%_GoFail ifG React 0 else .%id%_GoFail AddReact 10 SkillXP 27 100  NewChat Say %id%03 AddChat %id%04>
 	.%id%_GoFail <NewChat AddReact -5 Say %id%02 AddChat %id%03 PCMoraleDmg 10 ifG PCRenown 0 AddRenown -1>
 	result%id%03 <Goto %1%>
 	result%id%04 <Goto %1%>

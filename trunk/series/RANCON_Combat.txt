@@ -38,7 +38,7 @@ Content
 	requires <*CRC_Nemesis -!Ne -!Lo>
 
 	Element1 <.>
-	Element2 <Character HasMecha !Comrade 1 !Global>
+	Element2 <Character HasMecha !Comrade 1 !Global -NOFAC>
 	Team2 <Enemies>
 	TeamData2 <SD Enemy>
 
@@ -57,7 +57,7 @@ Content
 	requires <*CRC_Nemesis -!Ne -!Lo -!Md>
 
 	Element1 <.>
-	Element2 <Character HasMecha !Ally 1 -ArchAlly !Global>
+	Element2 <Character HasMecha !Ally 1 -ArchAlly !Global -NOFAC>
 	Team2 <Enemies>
 	TeamData2 <SD Enemy>
 

@@ -839,7 +839,7 @@ Content
 		Prompt5 <I'll buy it for $ \VAL V2 .>
 		CPrompt5 <ifG PC$ V2 Accept>
 		Prompt6 <I'll help you make a much better video, later.>
-		CPrompt6 <ifChatNPCSexy ifFlirtation SkillTar %threat% Accept>
+		CPrompt6 <ifChatNPCSexy ifConversation SkillTar %threat% Accept>
 		Prompt7 <I'll get back to you on that.>
 
 		MetaScene 1

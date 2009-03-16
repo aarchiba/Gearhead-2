@@ -47,8 +47,8 @@ Function GG_LocatePC( GB: GameBoardPtr ): GearPtr;
 	{ Attempt to find the player character. If there's more than one }
 	{ master on Team 1, return one of them. }
 var
-	Bits,PC: GearPtr;
-	LdScore,HiLd: Integer;
+	Bits,PC,Pilot: GearPtr;
+	XPScore,HiXP: Integer;
 begin
 	{ Begin the search... }
 	PC := Nil;
@@ -62,14 +62,15 @@ begin
 		Bits := GB^.Meks;
 		while ( Bits <> Nil ) do begin
 			if ( NAttValue( Bits^.NA , NAG_Location , NAS_Team ) = NAV_DefPlayerTeam ) and IsMasterGear( Bits ) and OnTheMap( GB , Bits ) and GearOperational( Bits ) then begin
-				if PC = Nil then begin
+				Pilot := LocatePilot( Bits );
+				if ( PC = Nil ) and ( Pilot <> Nil ) then begin
 					PC := Bits;
-					HiLd := SkillValue( PC , NAS_Leadership );
-				end else begin
-					LdScore := SkillValue( Bits , NAS_Leadership );
-					if LdScore > HiLd then begin
+					HiXP := NattValue( Pilot^.NA , NAG_Experience , NAS_TotalXP );
+				end else if Pilot <> Nil then begin
+					XPScore := NattValue( Pilot^.NA , NAG_Experience , NAS_TotalXP );
+					if XPScore > HiXP then begin
 						PC := Bits;
-						HiLD := LdScore;
+						HiXP := XPScore;
 					end;
 				end;
 			end;

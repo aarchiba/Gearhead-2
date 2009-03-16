@@ -185,14 +185,14 @@ Const
 		0,0,0,0,0,
 		-1, 5, -1, -1
 	);
-	SX_RepSkill: Array [1..Num_Status_FX] of Byte = (
-	{ This tells what repair skill is needed to heal the status effect, or 0 for none. }
-		16,23,0,0,15,
-		16,16,16,16,16,
-		16,16,16,16,16,
-		16,16,15,20,16,
-		0,0,0,0,0,
-		0,0,15,0
+	SX_Repairable: Array [1..Num_Status_FX] of Boolean = (
+	{ This tells whether or not the status is repairable. }
+		True,True,False,False,True,
+		True,True,True,True,True,
+		True,True,True,True,True,
+		True,True,True,True,True,
+		False,False,False,False,False,
+		False,False,True,True
 	);
 	SX_RepCost: Array [1..Num_Status_FX] of Integer = (
 	{ This tells how many repair points to remove FX. }
@@ -245,22 +245,22 @@ Const
 		( TRUE , TRUE , TRUE )		{ Blinded }
 	);
 	SX_Effect_String: Array [1..Num_Status_FX] of String = (
-		'1 DAMAGE 12 0  ARMORIGNORE CANRESIST',	{ Poison }
-		'2 DAMAGE 16 0  CANRESIST BRUTAL',	{ Burn }
-		'1 HEALING 20',	{ Regen: Heal(2) Step1 by FirstAid(20) }
+		'1 DAMAGE 12 0 0 0  ARMORIGNORE CANRESIST',	{ Poison }
+		'2 DAMAGE 16 0 0 0  CANRESIST BRUTAL',	{ Burn }
+		'1 HEALING 1',	{ Regen: Heal(2) Step1 by FirstAid(20) }
 		'',	{ Stoned }
 		'',	{ Haywire }
 		'','','','','',	{ Cyber side effects }
 		'','','','',	{ Cyber side effects }
-		'2 STATUS 4 10  CanResist',	{ Cerebrospinal Shock }
-		'2 STATUS 1 10  CanResist',	{ Toxic Leak }
-		'1 DAMAGE 10 0 ARMORIGNORE CANRESIST',	{ Shutdown }
+		'2 STATUS 4  CanResist',	{ Cerebrospinal Shock }
+		'2 STATUS 1  CanResist',	{ Toxic Leak }
+		'1 DAMAGE 10 0 0 0 ARMORIGNORE CANRESIST',	{ Shutdown }
 		'',	{ Rust }
 		'',	{ Stun }
 		'',	{ Sickness }
 		'','','','','',	{ Perminant injuries }
 		'','',		{ Enraged, Flummoxed }
-		'5 DAMAGE 0 0  ARMORPIERCING BRUTAL',	{ Disintegration }
+		'8 DAMAGE 1 0 0 0  ARMORPIERCING BRUTAL',	{ Disintegration }
 		''	{ Blinded }
 	);
 	SX_StatMod: Array [1..Num_Status_FX , 1..NumGearStats ] of SmallInt = (
@@ -343,7 +343,7 @@ Function PowerSourceCost( Part: GearPtr ): Integer;
 
 implementation
 
-uses ghintrinsic;
+uses ghintrinsic,ghchars;
 
 Function ScaleDC( DC,Scale: LongInt ): LongInt;
 	{ Take the basic, unscaled damage class DC and change it }
@@ -401,7 +401,7 @@ begin
 	if Ammo^.S = GS_Missile then begin
 		Ammo^.Stat[STAT_Range] := ( Ammo^.V + 5 ) div 2;
 	end;
-	Ammo^.Stat[ STAT_GrenadeSkill ] := 2;
+	Ammo^.Stat[ STAT_GrenadeSkill ] := NAS_MechaGunnery;
 end;
 
 Function WeaponBaseDamage( Weapon: GearPtr ): Integer;

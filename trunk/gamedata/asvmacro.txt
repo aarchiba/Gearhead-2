@@ -104,14 +104,49 @@ PlotStatus <GrabPlot  GNAtt NAG_PlotStatus ?>
 NAG_ElementID <-9>
 StatVal <GrabSource GStat ?>
 MetaPass <GrabSource GStat STAT_Pass>
-CodeBreaking <SkRoll 32>
-Conversation <SkRoll 19>
-Intimidation <SkRoll 28>
-Awareness <SkRoll 11>
-Stealth <SkRoll 25>
-Flirtation <SkRoll 27>
-Taunt <SkRoll 42>
-Shopping <SkRoll 21>
+STAT_Reflexes   <1>
+STAT_Body       <2>
+STAT_Speed      <3>
+STAT_Perception <4>
+STAT_Craft      <5>
+STAT_Ego        <6>
+STAT_Knowledge  <7>
+STAT_Charm      <8>
+NAS_MechaGunnery       <1>
+NAS_MechaFighting      <2>
+NAS_MechaPiloting      <3>
+NAS_RangedCombat       <4>
+NAS_CloseCombat        <5>
+NAS_Dodge              <6>
+NAS_Vitality           <7>
+NAS_Athletics          <8>
+NAS_Concentration      <9>
+NAS_Awareness         <10>
+NAS_Initiative        <11>
+NAS_Survival          <12>
+NAS_Repair            <13>
+NAS_Medicine          <14>
+NAS_ElectronicWarfare <15>
+NAS_SpotWeakness      <16>
+NAS_Conversation      <17>
+NAS_Shopping          <18>
+NAS_Stealth           <19>
+NAS_Intimidation      <20>
+NAS_Science           <21>
+NAS_MechaEngineering  <22>
+NAS_CodeBreaking      <23>
+NAS_Mysticism         <24>
+NAS_Performance       <25>
+NAS_Toughness         <26>
+NAS_Insight           <27>
+NAS_Taunt             <28>
+CodeBreaking <SkRoll NAS_CodeBreaking STAT_Craft>
+Conversation <SkRoll NAS_Conversation STAT_Charm>
+Intimidation <SkRoll NAS_Intimidation STAT_Ego>
+Awareness <SkRoll NAS_Awareness STAT_Perception>
+Stealth <SkRoll NAS_Stealth STAT_Speed>
+Taunt <SkRoll NAS_Taunt STAT_Charm>
+Shopping <SkRoll NAS_Shopping STAT_Charm>
 FacVar <GrabFaction ? GNAtt NAG_ScriptVar ?>
 PCFacXP <GrabFaction PCFac GNAtt NAG_Experience NAS_FacXP>
 PCFacLevel <GrabAdventure GNAtt NAG_Experience NAS_FacLevel>

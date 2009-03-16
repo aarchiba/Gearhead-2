@@ -130,11 +130,7 @@ var
 begin
 	{ Depending on whether the NPC in question is a robot or a pet, different procedures }
 	{ must be called. }
-	if NAttValue( NPC^.NA , NAG_GearOps , NAS_Material ) = NAV_Metal then begin
-		CanJoin := PetsPresent( GB , True ) < PartyRobotSlots( PC );
-	end else begin
-		CanJoin := PetsPresent( GB , False ) < PartyPetSlots( PC );
-	end;
+	CanJoin := PetsPresent( GB ) < PartyPetSlots( PC );
 
 	if CanJoin then begin
 		DialogMsg( ReplaceHash( MsgString( 'REJOIN_OK' ) , GearName( NPC ) ) );
@@ -404,7 +400,7 @@ begin
 		if ( MT^.G = GG_MetaTerrain ) and ( MT^.Stat[ STAT_MetaVisibility ] > 0 ) and ( Range( MT , P.X , P.Y ) <= 1 ) then begin
 			{ Roll the PC's AWARENESS skill. If it beats }
 			{ the terrain's concealment score, reveal it. }
-			if SkillRoll( GB , Mek , NAS_Awareness , MT^.Stat[ STAT_MetaVisibility ] , 0 , False , True ) > MT^.Stat[ STAT_MetaVisibility ] then begin
+			if SkillRoll( GB , Mek , NAS_Awareness , STAT_Perception , MT^.Stat[ STAT_MetaVisibility ] , 0 , False , True ) > MT^.Stat[ STAT_MetaVisibility ] then begin
 				MT^.Stat[ STAT_MetaVisibility ] := 0;
 				T := 'REVEAL';
 				TriggerGearScript( GB , MT , T );
@@ -546,7 +542,7 @@ begin
 
 				{ If the NPC really doesn't like the PC, }
 				{ they'll refuse to talk on principle. }
-				end else if ( ( React + RollStep( SkillValue ( PC , 28 ) ) ) < -Random( 120 ) ) or ( AreEnemies( GB , NPC , PC ) and IsFoundAlongTrack( GB^.Meks , NPC ) ) then begin
+				end else if ( ( React + RollStep( SkillValue ( PC , NAS_Conversation , STAT_Ego ) ) ) < -Random( 120 ) ) or ( AreEnemies( GB , NPC , PC ) and IsFoundAlongTrack( GB^.Meks , NPC ) ) then begin
 					DialogMsg( ReplaceHash( MsgSTring( 'TALKING_RefuseHard' ) , GearName( NPC ) ) );
 					SetNAtt( NPC^.NA , NAG_Personal , NAS_Retalk , GB^.ComTime + 1500 );
 
@@ -874,15 +870,15 @@ begin
 		if SkTarget < 1 then begin
 			DialogMsg( ReplaceHash( MsgString( 'DOMINATE_Fail' ) , GearName( Target ) ) );
 		end else begin
-			SkRoll := SkillRoll( GB , PC , 40 , SkTarget , 0 , False , True );
+			SkRoll := SkillRoll( GB , PC , NAS_Survival , STAT_Ego , SkTarget , 0 , False , True );
 
-			if ( SkRoll > SkTarget ) and ( PetsPresent( GB , False ) < PartyPetSlots( PC ) ) then begin
+			if ( SkRoll > SkTarget ) and ( PetsPresent( GB ) < PartyPetSlots( PC ) ) then begin
 				DialogMsg( ReplaceHash( MsgString( 'DOMINATE_OK' ) , GearName( Target ) ) );
 				AddLancemate( GB , Target );
 				SetNAtt( Target^.NA , NAG_CharDescription , NAS_CharType , NAV_CTLancemate );
 
-				if HasTalent( PC , NAS_AnimalTrainer ) then DoleExperience( Target , CStat( LocatePilot( PC ) , STAT_Knowledge ) * 50 );
-				DoleSkillExperience( PC , 40 , SkTarget * 2 );
+				DoleExperience( Target , CStat( LocatePilot( PC ) , STAT_Knowledge ) * 50 );
+				DoleSkillExperience( PC , NAS_Survival , SkTarget * 2 );
 				DoleExperience( PC , Target , SkTarget );
 			end else if ( SkRoll < ( SkTarget div 3 ) ) then begin
 				DialogMsg( ReplaceHash( MsgString( 'DOMINATE_Enraged' ) , GearName( Target ) ) );
@@ -896,7 +892,7 @@ begin
 	end else begin
 		{ This animal is an ex-member of the party. It'll come back fairly }
 		{ peacefully, as long as there's room. }
-		if PetsPresent( GB , False ) < PartyPetSlots( PC ) then begin
+		if PetsPresent( GB ) < PartyPetSlots( PC ) then begin
 			DialogMsg( ReplaceHash( MsgString( 'DOMINATE_OK' ) , GearName( Target ) ) );
 			AddLancemate( GB , Target );
 		end else begin
@@ -987,7 +983,7 @@ begin
 	end else begin
 		{ Time to start the actual stealing of stuff. }
 		SkTarget := Target^.Stat[ STAT_Perception ] + 5;
-		SkRoll := SkillRoll( GB ,  PC , NAS_PickPockets , Target^.Stat[ STAT_Perception ] + 5 , 0 , True , True );
+		SkRoll := SkillRoll( GB ,  PC , NAS_Stealth , STAT_Craft , Target^.Stat[ STAT_Perception ] + 5 , 0 , True , True );
 
 		if SkRoll > SkTarget then begin
 			{ The PC will now steal something. }
@@ -1013,12 +1009,12 @@ begin
 			end else begin
 				DialogMsg( ReplaceHash( MsgString( 'PICKPOCKET_CASH' ) , BStr( Cash ) ) );
 			end;
-			DoleSkillExperience( PC , NAS_PickPockets , SkTarget div 2 );
+			DoleSkillExperience( PC , NAS_Stealth , SkTarget div 2 );
 			DoleExperience( PC , Target , SkTarget );
 		end else begin
 			DialogMsg( MsgString( 'PICKPOCKET_FAIL' ) );
 			{ If the failure was bad, the Guardians may notice... }
-			DoleSkillExperience( PC , NAS_PickPockets , 1 );
+			DoleSkillExperience( PC , NAS_Stealth , 1 );
 			if SkRoll < ( SkTarget - 10 ) then begin
 				SetTrigger( GB , 'THIEF!' );
 				AddReputation( PC , 6 , -1 );

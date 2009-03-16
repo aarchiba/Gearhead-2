@@ -98,14 +98,14 @@ const
 
 	FX_CauseDamage = 'DAMAGE';
 		{ Param 1 = Attack Skill }
-		{ Param 2 = Critical Hit Skill }
+		{ Param 2 = Attack Stat }
+		{ Param 3 = Critical Hit Skill }
+		{ Param 4 = Critical Hit Stat }
 	FX_CauseStatusEffect = 'STATUS';
 		{ Param 1 = Status Number }
-		{ Param 2 = Attack Skill }
 	FX_RemoveStatusEffect = 'CURE';
 		{ Param 1 = Status Number }
 	FX_OVERLOAD = 'OVERLOAD';
-		{ Param 1 = Attack Skill }
 	FX_HEALING = 'HEALING';
 		{ PARAM 1 = Healing Type }
 	FX_CreateSTC = 'CREATESTC';
@@ -128,6 +128,7 @@ var
 
 Function ReadyToFire( GB: GameBoardPtr; User,Weapon: GearPtr ): Boolean;
 Function FindQuickFireWeapon( GB: GameBoardPtr; Master: GearPtr ): GearPtr;
+Function BasicDefenseValue( Target: GearPtr ): Integer;
 
 
 Function WeaponArcCheck( GB: GameBoardPtr; Master , Weapon: GearPtr; X,Y: Integer ): Boolean;
@@ -137,6 +138,7 @@ Function RangeArcCheck( GB: GameBoardPtr; Master , Weapon , Target: GearPtr ): B
 Function BlastRadius( GB: GameBoardPtr; Attacker: GearPtr; AList: String ): Integer;
 
 Function AttackSkillNeeded( Attacker: GearPtr ): Integer;
+Function AttackStatNeeded( Attacker: GearPtr ): Integer;
 Function Firing_Weight( Weapon: GearPtr; AtOp: Integer ): Integer;
 Function Firing_Weight_Limit( User: GearPtr ): Integer;
 Function CalcTotalModifiers( gb: GameBoardPtr; Attacker,Target: GearPtr; AtOp: Integer; AtAt: String ): Integer;
@@ -629,27 +631,18 @@ var
 	AMaster: GearPtr;
 begin
 	{ The skills for human-scale and mecha-scale are set up in }
-	{ the same order, with the mecha skills being 1 to 5 and the }
-	{ personal skills being 6 to 10. So, just find the skill number }
-	{ based on ATTACKER's type, then add +5 if the master is a }
+	{ the same order, with the mecha skills being 1 to 3 and the }
+	{ personal skills being 4 to 6. So, just find the skill number }
+	{ based on ATTACKER's type, then add +3 if the master is a }
 	{ character instead of a mecha. }
 
 
 	if Attacker^.G = GG_Weapon then begin
 		if ( Attacker^.S = GS_Melee ) or ( Attacker^.S = GS_EMelee ) then begin
 			{ Use armed combat/weapons skill. }
-			ASkill := 3;
-		end else if ( Attacker^.S = GS_Ballistic ) or ( Attacker^.S = GS_BeamGun ) then begin
-			{ Use gunnery/small arms if DC is 10 or less, }
-			{ use artillery/heavy if DC is 11 or greater. }
-			if Attacker^.V <= 10 then begin
-				ASkill := 1;
-			end else begin
-				ASkill := 2;
-			end;
+			ASkill := NAS_MechaFighting;
 		end else begin
-			{ Must be a missile launcher- use heavy/artillery skill. }
-			ASkill := 2;
+			ASkill := NAS_MechaGunnery;
 		end;
 
 	end else if Attacker^.G = GG_Ammo then begin
@@ -661,17 +654,44 @@ begin
 
 	end else begin
 		{ Not a weapon- use Fighting/Martial Arts. }
-		ASkill := 4;
+		ASkill := NAS_MechaFighting;
 	end;
 
 	{ If the master isn't a mecha, add +5 to the skill index. }
 	AMaster := FindMaster( Attacker );
 	if ( AMaster <> Nil ) and ( AMaster^.G <> GG_Mecha ) then begin
-		ASkill := ASkill + 5;
+		ASkill := ASkill + 3;
 	end;
 
 	{ Return the value we found. }
 	AttackSkillNeeded := ASkill;
+end;
+
+Function AttackStatNeeded( Attacker: GearPtr ): Integer;
+	{ Return the stat needed for this attack. }
+var
+	AtStat: Integer;
+begin
+	if Attacker^.G = GG_Weapon then begin
+		if ( Attacker^.S = GS_Missile ) then begin
+			AtStat := STAT_Perception;
+		end else if ( Attacker^.S = GS_Melee ) or ( Attacker^.S = GS_EMelee ) then begin
+			AtStat := STAT_Reflexes;
+		end else if Attacker^.V > 10 then begin
+			AtStat := STAT_Perception;
+		end else begin
+			AtStat := STAT_Reflexes;
+		end;
+	end else if Attacker^.G = GG_Ammo then begin
+		{ Grenades use Perception. }
+		AtStat := STAT_Perception;
+	end else begin
+		{ Not a weapon- use Body. }
+		AtStat := STAT_Body;
+	end;
+
+	{ Return the value we found. }
+	AttackStatNeeded := AtStat;
 end;
 
 Function AttemptShieldBlock(GB: GameBoardPtr; TMaster , Attacker: GearPtr; SkRoll: Integer ): Integer;
@@ -708,10 +728,10 @@ begin
 		{ Find the appropriate skill value. }
 		if TMaster^.G = GG_Mecha then begin
 			{ For mecha, this will be Mecha Fighting }
-			DefSkill := 4;
+			DefSkill := NAS_MechaFighting;
 		end else begin
 			{ For characters, this will be Armed Combat }
-			DefSkill := 8;
+			DefSkill := NAS_CloseCombat;
 		end;
 
 		{ Set the recharge time for the shield. }
@@ -723,7 +743,7 @@ begin
 		{ Make the skill roll + Shield Bonus }
 		SkillComment( GearName( TMaster ) + ' to block with ' + GearName( DefGear ) + ' [' + SgnStr( DefGear^.Stat[ STAT_ShieldBonus ] ) + ']' );
 
-		DefRoll := SkillRoll( GB , TMaster , DefSkill , SkRoll , DefGear^.Stat[ STAT_ShieldBonus ] , False , True );
+		DefRoll := SkillRoll( GB , TMaster , DefSkill , STAT_Speed , SkRoll , DefGear^.Stat[ STAT_ShieldBonus ] , False , True );
 
 		{ If the parry was successful, there will be some after-effects. }
 		if DefRoll >= SkRoll then begin
@@ -790,7 +810,7 @@ begin
 		DefSkill := AttackSkillNeeded( DefGear );
 
 		SkillComment( GearName( TMaster ) + ' to parry with ' + GearName( DefGear ) + ' [' + SgnStr( DefGear^.Stat[ STAT_Accuracy ] ) + ']' );
-		DefRoll := SkillRoll( GB , TMaster , DefSkill , SkRoll , Parry_Bonus + DefGear^.Stat[ STAT_Accuracy ] , False , True );
+		DefRoll := SkillRoll( GB , TMaster , DefSkill , STAT_Speed , SkRoll , Parry_Bonus + DefGear^.Stat[ STAT_Accuracy ] , False , True );
 
 		{ Give some skill-specific experience points. }
 		DoleSkillExperience( TMaster , DefSkill , XPA_SK_Basic );
@@ -860,7 +880,7 @@ begin
 		DefSkill := AttackSkillNeeded( DefGear );
 
 		SkillComment( GearName( TMaster ) + ' to intercept with ' + GearName( DefGear ) + ' [' + SgnStr( DefGear^.Stat[ STAT_Accuracy ] + DefGear^.Stat[ STAT_BurstValue ] ) + ']' );
-		DefRoll := SkillRoll( GB , TMaster , DefSkill, SkRoll , DefGear^.V + DefGear^.Stat[ STAT_Accuracy ] + DefGear^.Stat[ STAT_BurstValue ] , False , True );
+		DefRoll := SkillRoll( GB , TMaster , DefSkill, STAT_Speed , SkRoll , DefGear^.V + DefGear^.Stat[ STAT_Accuracy ] + DefGear^.Stat[ STAT_BurstValue ] , False , True );
 
 		{ Give some skill-specific experience points. }
 		DoleSkillExperience( TMaster , DefSkill , XPA_SK_Basic );
@@ -891,7 +911,7 @@ begin
 	if DefGear <> Nil then begin
 		{ Make an attack roll to block. }
 		SkillComment( GearName( TMaster ) + ' to ECM with ' + GearName( DefGear ) + ' [' + SgnStr( DefGear^.V ) + ']' );
-		DefRoll := SkillRoll( GB , TMaster , 17 , SkRoll , DefGear^.V - 5 , False , True );
+		DefRoll := SkillRoll( GB , TMaster , NAS_ElectronicWarfare , STAT_Craft , SkRoll , DefGear^.V - 5 , False , True );
 
 		{ Give some skill-specific experience points. }
 		DoleSkillExperience( TMaster , 17 , XPA_SK_Basic );
@@ -910,16 +930,16 @@ var
 begin
 	if TMaster^.G = GG_MEcha then begin
 		{ Mecha use ELECTRONIC WARFARE. }
-		RSkill := 17;
+		RSkill := NAS_ElectronicWarfare;
 	end else begin
 		{ Characters use RESISTANCE. }
-		RSkill := 36;
+		RSkill := NAS_Toughness;
 	end;
 
 	{ Return the resultant defense roll. }
 	DoleSkillExperience( TMaster , RSkill , XPA_SK_Basic );
 
-	AttemptResist := SkillRoll( GB , TMaster , RSkill , SkRoll , 0 , False , True );
+	AttemptResist := SkillRoll( GB , TMaster , RSkill , STAT_Ego , SkRoll , 0 , False , True );
 end;
 
 Function AttemptDodge( GB: GameBoardPtr; TMaster,Attacker: GearPtr; SkRoll: Integer; const FX: String ): Integer;
@@ -930,7 +950,7 @@ begin
 	SkMod := 0;
 	if TMaster^.G = GG_MEcha then begin
 		{ Mecha use Mecha Piloting. }
-		DodgeSkill := 5;
+		DodgeSkill := NAS_MechaPiloting;
 
 		{ Adjust the dodge skill value for talents. }
 		if ( NAttValue( TMaster^.NA , NAG_Action , NAS_MoveMode ) = MM_Walk ) and HasTalent( TMaster , NAS_SureFooted ) then begin
@@ -942,7 +962,7 @@ begin
 		end;
 	end else begin
 		{ Characters use Dodge. }
-		DodgeSkill := 10;
+		DodgeSkill := NAS_Dodge;
 	end;
 
 	{ Adjust the modifier for melee attacks. These are hard to dodge, but should }
@@ -952,7 +972,7 @@ begin
 	end;
 
 	DoleSkillExperience( TMaster , DodgeSkill , XPA_SK_Basic );
-	AttemptDodge := SkillRoll( GB , TMaster , DodgeSkill , SkRoll , SkMod , False , True );
+	AttemptDodge := SkillRoll( GB , TMaster , DodgeSkill , STAT_Speed , SkRoll , SkMod , False , True );
 end;
 
 Function AttemptAcrobatics( GB: GameBoardPtr; TMaster: GearPtr; SkRoll: Integer ): Integer;
@@ -987,7 +1007,7 @@ begin
 	{ If it's possible, do the acrobatics attempt. }
 	if CanUseAcrobatics then begin
 		{ Make an attack roll to block. }
-		DefRoll := SkillRoll( GB , TMaster , NAS_Acrobatics , SkRoll , SkMod , False , True );
+		DefRoll := SkillRoll( GB , TMaster , NAS_Dodge , STAT_Speed , SkRoll , SkMod , False , True );
 	end;
 
 	{ Return the resultant defense roll. }
@@ -1085,7 +1105,7 @@ begin
 	{ Can only do this if it's a character being attacked, the }
 	{ talent is know, the character isn't tired... }
 	if AStringHasBString( FX , FX_CanBlock ) and ( DR.HiRoll < SkRoll ) and ( TMaster^.G = GG_CHaracter ) and HasTalent( TMaster , NAS_HapKiDo ) and ( CurrentStamina( TMaster ) > 0 ) then begin
-		DefRoll := SkillRoll( GB , TMaster , 9 , SkRoll , 0 , False , True );
+		DefRoll := SkillRoll( GB , TMaster , NAS_CloseCombat , STAT_Speed , SkRoll , 0 , False , True );
 		AddStaminaDown( TMaster , 1 );
 		if DefRoll > DR.HiRoll then begin
 			DR.HiRoll := DefRoll;
@@ -1098,7 +1118,7 @@ begin
 	{ talent is know, and they're moving at full speed, and the }
 	{ pilot has stamina points left... }
 	if AStringHasBString( FX , FX_CanDodge ) and ( DR.HiRoll < SkRoll ) and ( TMaster^.G = GG_Mecha ) and HasTalent( TMaster , NAS_StuntDriving ) and ( NAttValue( TMaster^.NA , NAG_Action , NAS_MoveAction ) = NAV_FullSpeed ) and ( CurrentStamina( TMaster ) > 0 ) then begin
-		DefRoll := SkillRoll( GB , TMaster , 5 , SkRoll , 0 , False , True );
+		DefRoll := SkillRoll( GB , TMaster , NAS_MechaPiloting , STAT_Speed , SkRoll , 0 , False , True );
 		AddStaminaDown( TMaster , 1 );
 		if DefRoll > DR.HiRoll then begin
 			DR.HiRoll := DefRoll;
@@ -1360,9 +1380,9 @@ begin
 		{ Error! }
 		BasicDefenseValue := 0;
 	end else if Target^.G = GG_Mecha then begin
-		BasicDefenseValue := SkillValue( Target , 5 );
+		BasicDefenseValue := SkillValue( Target , NAS_MechaPiloting , STAT_Speed );
 	end else if Target^.G = GG_Character then begin
-		BasicDefenseValue := SkillValue( Target , 10 );
+		BasicDefenseValue := SkillValue( Target , NAS_Dodge , STAT_Speed );
 	end else begin
 		BasicDefenseValue := 5;
 	end;
@@ -1374,7 +1394,7 @@ Function PAG_CauseDamage( GB: GameBoardPtr; AtDesc: String; ER: EffectRequest; T
 	{ Return TRUE if the attack hit and further effects should continue, }
 	{ or FALSE if the attack missed. }
 var
-	AtSkill,CritSkill,AtRoll,ModMOSMeasure,MOS,NumberOfHits,CritTar,CritHit,T: Integer;
+	AtSkill,AtStat,CritSkill,CritStat,AtRoll,ModMOSMeasure,MOS,NumberOfHits,CritTar,CritHit,T: Integer;
 	TPilot,TMaster: GearPtr;
 	DefRep: DefenseReport;
 	DR: DamageRec;
@@ -1398,7 +1418,7 @@ var
 		if BonusNumH < 1 then BonusNumH := 1;
 
 		{ Make an Initiative roll to maybe increase the number of hits. }
-		InitRoll := SkillRoll( GB , ER.Originator , NAS_Initiative , DefRep.HiRoll , 0 , False , GearOperational( TMaster ) and IsMasterGear( TMaster ) );
+		InitRoll := SkillRoll( GB , ER.Originator , NAS_Initiative , STAT_Speed , DefRep.HiRoll , 0 , False , GearOperational( TMaster ) and IsMasterGear( TMaster ) );
 		if InitRoll > DefRep.HiRoll then begin
 			NumH := 2 + (( InitRoll - DefRep.HiRoll ) div ( ModMOSMeasure * 2 ));
 		end else begin
@@ -1418,11 +1438,12 @@ begin
 		Exit( False );
 	end;
 
-	{ The two parameters for this command are the attack skill to be used and the }
-	{ critical hit skill to be used. If the CritSkill is 0, then this attack will not use }
-	{ critical hits. }
+	{ The four parameters for this command are the attack skill, attack stat, crit hit skill, }
+	{ and crit hit stat. If the CritSkill is 0, then this attack will not use critical hits. }
 	AtSkill := ExtractValue( AtDesc );
+	AtStat := ExtractValue( AtDesc );
 	CritSkill := ExtractValue( AtDesc );
+	CritStat := ExtractValue( AtDesc );
 
 	{ Locate the pilot and the master of the target, just in case they aren't }
 	{ the pilot himself. }
@@ -1441,7 +1462,7 @@ begin
 	{ Make the skill roll. }
 	if ER.Originator <> Nil then begin
 		{ Don't award any XP yet- we don't know how well the attack went. }
-		AtRoll := SkillRoll( GB , ER.Originator , AtSkill , BasicDefenseValue( TMaster ) + 2 , CalcTotalModifiers( gb , ER.Weapon , Target , AtOp , AtDesc ) + ER.FXMod , False , False );
+		AtRoll := SkillRoll( GB , ER.Originator , AtSkill , AtStat , BasicDefenseValue( TMaster ) + 2 , CalcTotalModifiers( gb , ER.Weapon , Target , AtOp , AtDesc ) + ER.FXMod , False , False );
 		SkillComment( CTM_Modifiers );
 	end else begin
 		if AtSkill < 5 then AtSkill := 5;
@@ -1534,7 +1555,7 @@ begin
 			{ If the high defense roll was lower than the Critical }
 			{ Hit Minimum Target number, raise it. }
 			if CritTar < CritHitMinTar then CritTar := CritHitMinTar;
-			CritHit := SkillRoll( GB , ER.Originator , CritSkill , CritTar , 0 , False , GearOperational( TMaster ) and IsMasterGear( TMaster ) );
+			CritHit := SkillRoll( GB , ER.Originator , CritSkill , CritStat , CritTar , 0 , False , GearOperational( TMaster ) and IsMasterGear( TMaster ) );
 
 			if CritHit > CritTar then begin
 				MOS := MOS + ( ( CritHit - CritTar ) div ModMOSMeasure ) + 1;
@@ -1647,14 +1668,12 @@ end;
 Function PAG_CauseStatusEffect( GB: GameBoardPtr; AtDesc: String; ER: EffectRequest; Target: GearPtr ): Boolean;
 	{ Cause a status effect against this target. }
 	{ PARAM 1 : Status Number }
-	{ PARAM 2 : Attack Skill to Use }
 var
-	SFX,AtSkill,AtRoll: Integer;
+	SFX,AtRoll: Integer;
 	DefRep: DefenseReport;
 begin
 	{ Extract the parameters. }
 	SFX := ExtractValue( AtDesc );
-	AtSkill := ExtractValue( AtDesc );
 
 	{ get the root of the target. }
 	Target := FindRoot( Target );
@@ -1664,17 +1683,12 @@ begin
 	if SX_Vunerability[ SFX , NAttValue( Target^.NA , NAG_GearOps , NAS_Material ) ] then begin
 
 		{ Make the skill roll. }
-		if ( AtSkill <> 0 ) and ( ER.Originator <> Nil ) then begin
-			AtRoll := SkillRoll( GB , ER.Originator , AtSkill , 0 , ER.FXMod , False , GearOperational( Target ) and IsMasterGear( Target ) );
-		end else begin
-			if AtSkill < 5 then AtSkill := 5;
-			AtRoll := RollStep( AtSkill );
-		end;
+		AtRoll := RollStep( ER.FXDice + 2 );
 
 		{ Make the defense roll. }
 		DefRep := AttemptDefenses( GB , Target , ER.Weapon , AtRoll , AtDesc );
 		if ( DefRep.HiRoll < AtRoll ) then begin
-			AddNAtt( Target^.NA , NAG_StatusEffect , SFX , RollStep( ER.FXDice ) );
+			AddNAtt( Target^.NA , NAG_StatusEffect , SFX , 3 + Random( 4 ) );
 			RecordAnnouncement( ReplaceHash( MsgString( 'Status_Announce' + BStr( SFX ) ) , GearName( Target ) ) );
 		end;
 	end;
@@ -1722,28 +1736,21 @@ Function PAG_Overload( GB: GameBoardPtr; AtDesc: String; ER: EffectRequest; Targ
 	{ Apply overload to the target, unless it resists. }
 	{ PARAM 1 = Skill to use }
 var
-	AtSkill,AtRoll: Integer;
+	AtRoll: Integer;
 	DefRep: DefenseReport;
 begin
-	AtSkill := ExtractValue( AtDesc );
-
 	{ Can only process this effect if we have a target and a valid }
 	{ status effect to process. }
 	Target := FindRoot( Target );
 	if GearActive( Target ) and ( Target^.G = GG_Mecha ) then begin
 		{ Make the skill roll. }
-		if ( AtSkill <> 0 ) and ( ER.Originator <> Nil ) then begin
-			AtRoll := SkillRoll( GB , ER.Originator , AtSkill , 0 , ER.FXMod , False , GearOperational( Target ) and IsMasterGear( Target ) );
-		end else begin
-			if AtSkill < 5 then AtSkill := 5;
-			AtRoll := RollStep( AtSkill );
-		end;
+		AtRoll := RollStep( ER.FXDice + 2 );
 
 		{ Make the defense roll. }
 		DefRep := AttemptDefenses( GB , Target , ER.Weapon , AtRoll , AtDesc );
 
 		if AtRoll > DefRep.HiRoll then begin
-			AddNAtt( Target^.NA , NAG_Condition , NAS_PowerSpent , ER.FXDice + Random( ER.FXDice ) + ( ( AtRoll - DefRep.HiRoll ) div 3 )  + 5 );
+			AddNAtt( Target^.NA , NAG_Condition , NAS_PowerSpent , 5 + Random( 5 ) + ( ( AtRoll - DefRep.HiRoll ) div 3 ) );
 			RecordAnnouncement( ReplaceHash( MsgString( 'Status_Overload' ) , GearName( Target ) ) );
 		end else begin
 			AddNAtt( Target^.NA , NAG_Condition , NAS_PowerSpent , Random( ER.FXDice ) + 2 );
@@ -2175,7 +2182,7 @@ begin
 	DrawBlastEffect( GB , X0 , Y0 , TerrMan[ TileTerrain( GB , X0 , Y0 ) ].Altitude , R , Area );
 
 	ER.FXDice := DC;
-	StoreSAtt( ER.FXList , 'DAMAGE 10 0 BLAST 1' );
+	StoreSAtt( ER.FXList , 'DAMAGE 10 0 0 0 BLAST 1' );
 
 	ProcessEffect( GB , ER , Area , 0);
 
@@ -2405,7 +2412,7 @@ begin
 	end;
 end;
 
-Procedure AddNonDamagingEffects( var AtAt: String; var ER: EffectRequest; ResistSkill: Integer );
+Procedure AddNonDamagingEffects( var AtAt: String; var ER: EffectRequest );
 	{ Add status effects and other non-damaging effects to this effect request. }
 	{ ResistSkill is the skill number recorded in status effect checks; for attacks, this should }
 	{ be the Electronic Warfare skill, but for non-attack effects it should be a straight }
@@ -2415,7 +2422,7 @@ var
 	T: Integer;
 begin
 	if AStringHasBString( AtAt , AA_Name[ AA_Overload ] ) then begin
-		msg := FX_Overload + '  17 ' + FX_CANRESIST;
+		msg := FX_Overload + '  ' + FX_CANRESIST;
 		StoreSAtt( ER.FXList , msg );
 	end;
 
@@ -2437,7 +2444,7 @@ begin
 	for t := 1 to Num_Status_FX do begin
 		if AStringHasBString( AtAt , SX_Name[ T ] ) then begin
 			{ All status effects are done using EW skill now. }
-			msg := FX_CauseStatusEffect + ' ' + BStr( T ) + ' ' + BStr( ResistSkill ) + ' ' + FX_CANRESIST;
+			msg := FX_CauseStatusEffect + ' ' + BStr( T ) + ' ' + FX_CANRESIST;
 			StoreSAtt( ER.FXList , msg );
 		end;
 	end;
@@ -2478,10 +2485,10 @@ begin
 		{ This is not a NonDamaging effect. So, the first command in the }
 		{ effect queue should be a damage effect. }
 		{ PARAM 1 = Attack Skill }
-		msg := FX_CauseDamage + ' ' + BStr( AttackSkillNeeded( Attacker ) );
-		{ PARAM 2 = Critical Hit Skill, 0 for none }
-		if NoCalledShots( AtAt , AtOp ) then msg := msg + ' 0'
-		else msg := msg + ' 18';
+		msg := FX_CauseDamage + ' ' + BStr( AttackSkillNeeded( Attacker ) ) + ' ' + BStr( AttackStatNeeded( Attacker ) );
+		{ PARAM 3 = Critical Hit Skill, 0 for none }
+		if NoCalledShots( AtAt , AtOp ) then msg := msg + ' 0 0'
+		else msg := msg + ' ' + BStr( NAS_SpotWeakness ) + ' ' + BStr( STAT_Craft );
 
 		{ All attacks can be dodged. }
 		msg := msg + ' ' + FX_CanDodge;
@@ -2510,7 +2517,7 @@ begin
 	end;
 
 	{ Add the extra effects here. }
-	AddNonDamagingEffects( AtAt , ER , NAS_ElectronicWarfare );
+	AddNonDamagingEffects( AtAt , ER );
 
 	BuildAttackRequest := ER;
 end;
@@ -2680,7 +2687,7 @@ var
 	begin
 		Rng := Range( X0, Y0, BX , BY );
 		{ Make a skill roll to see if the blast will deviate slightly. }
-		if ( Radius > 0 ) and ( Rng > RollStep( SkillValue( FindRoot( Attacker ) , AttackSkillNeeded( Attacker ) ) ) ) then begin
+		if ( Radius > 0 ) and ( Rng > RollStep( SkillValue( FindRoot( Attacker ) , AttackSkillNeeded( Attacker ) , AttackStatNeeded( Attacker ) ) ) ) then begin
 			BX := BX + Random( Radius div 3 + 2 ) - Random( Radius div 3 + 2 );
 			BX := BX + Random( Radius div 3 + 2 ) - Random( Radius div 3 + 2 );
 		end;
@@ -2967,7 +2974,7 @@ Procedure DoReactorExplosion( GB: GameBoardPtr; Victim: GearPtr );
 	{ Yay! This mecha is going to blow up. It might not actually be a mecha- maybe }
 	{ it's a radioactive rat or a barrel of explosive chemicals or something else. }
 const
-	Standard_Reactor_Explosion = 'DAMAGE 15 0 BRUTAL BLAST 1 ' + FX_CanDodge;	{ Cause DAMAGE, Dodge 15 to defend, Brutal }
+	Standard_Reactor_Explosion = 'DAMAGE 15 0 0 0 BRUTAL BLAST 1 ' + FX_CanDodge;	{ Cause DAMAGE, Dodge 15 to defend, Brutal }
 var
 	FX_String: String;
 	ER: EffectRequest;
@@ -3000,7 +3007,7 @@ begin
 	StoreSAtt( ER.FXList , FX_String );
 
 	{ Determine the non-damaging effects; status FX and the like. }
-	AddNonDamagingEffects( FX_String , ER , ER.FXDice );
+	AddNonDamagingEffects( FX_String , ER );
 
 	{ Determine the blast radius. This will always be at least 1. }
 	R := BlastRadius( GB , Victim , FX_String );
@@ -3037,7 +3044,7 @@ begin
 	StoreSAtt( ER.FXList , FX_String );
 
 	{ Add status effects here. }
-	AddNonDamagingEffects( FX_String , ER , ER.FXDice );
+	AddNonDamagingEffects( FX_String , ER );
 
 	DoEffectAgainstGear( GB , ER , Target , 0 );
 
@@ -3066,7 +3073,7 @@ begin
 	StoreSAtt( ER.FXList , FX_String );
 
 	{ Add status effects here. }
-	AddNonDamagingEffects( FX_String , ER , ER.FXDice );
+	AddNonDamagingEffects( FX_String , ER );
 
 	{ Loop through all the models on the board, and apply the effect against them. }
 	M := GB^.Meks;

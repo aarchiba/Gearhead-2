@@ -69,7 +69,7 @@ begin
 	CharacterDisplay( TRAINING_PC , TRAINING_GB );
 	InfoBox( ZONE_Menu );
 	InfoBox( ZONE_Info );
-	CMessage( BStr( NumberOfSkills( TRAINING_PC ) ) + '/' + BStr( NumberOfSkillSlots( TRAINING_PC ) ) , ZONE_Menu1 , InfoHilight );
+	CMessage( BStr( NumberOfSpecialties( TRAINING_PC ) ) + '/' + BStr( NumberOfSkillSlots( TRAINING_PC ) ) , ZONE_Menu1 , InfoHilight );
 end;
 
 Procedure DoTraining( GB: GameBoardPtr; PC: GearPtr; RD: RedrawProcedureType );
@@ -155,7 +155,7 @@ Procedure DoTraining( GB: GameBoardPtr; PC: GearPtr; RD: RedrawProcedureType );
 		CIV, T: Integer;	{ Current Improvement Value. }
 		min_rank,num_required: Integer;
 	begin
-		CIV := NAttValue( PC^.NA , NAG_StatImprovementLevel , N );
+{		CIV := NAttValue( PC^.NA , NAG_StatImprovementLevel , N );
 		min_rank := ( CIV div 2 ) + 6;
 		num_required := ( CIV + 3 ) div 2;
 
@@ -165,7 +165,8 @@ Procedure DoTraining( GB: GameBoardPtr; PC: GearPtr; RD: RedrawProcedureType );
 			end;
 		end;
 
-		StatCanBeAdvanced := ( num_required <= 0 );
+		StatCanBeAdvanced := ( num_required <= 0 );}
+		StatCanBeAdvanced := True;
 	end;
 
 	Function OneStatCanBeAdvanced: Boolean;
@@ -326,7 +327,7 @@ Procedure DoTraining( GB: GameBoardPtr; PC: GearPtr; RD: RedrawProcedureType );
 
 			end else begin
 				{ Improve the skill, pay the XP. }
-				if NumberOfSkills( PC ) >= NumberOfSkillSlots( PC ) then begin
+				if NumberOfSpecialties( PC ) >= NumberOfSkillSlots( PC ) then begin
 					SkMenu := CreateRPGMenu( MenuItem , MenuSelect , ZONE_Menu2 );
 
 					AttachMenuDesc( SkMenu , ZONE_Info );

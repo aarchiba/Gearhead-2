@@ -1,3 +1,12 @@
+- SkRoll, IfSkillTest, IfUSkillTest parameters changed (arenascript.pp)
+- Weapons may use different stats (effects.pp)
+- Robots and animals counted together as pets (interact.pp)
+- Unused hook generators deleted (interact.pp)
+- Skills are no longer associated with a single stat (ability.pp)
+- Increased character encumberance limit (gearutil.pp)
+- Removed skill software (ghsensor.pp)
+- Pruned the skill list, added hidden skills (ghchars.pp)
+
 0.541   March 13 2009
 - The material of a module must match the material of the mecha (ghmecha.pp)
 - Added Use System command (ui4gh.pp,pcaction.pp)

@@ -59,7 +59,7 @@ var
 Function Confused( Mek: GearPtr ): Boolean;
 
 Procedure GiveSkillRollXPAward( Pilot: GearPtr; Skill,SkRoll,SkTar: Integer );
-Function SkillRoll( GB: GameBoardPtr; PC: GearPtr; Skill,SkTar,SkMod: Integer; CasualUse,GainXP: Boolean ): Integer;
+Function SkillRoll( GB: GameBoardPtr; PC: GearPtr; Skill,Stat,SkTar,SkMod: Integer; CasualUse,GainXP: Boolean ): Integer;
 Function CheckLOS( GB: GameBoardPtr; Observer,Target: GearPtr ): Boolean;
 Procedure VisionCheck( GB: GameBoardPtr; Mek: GearPtr );
 
@@ -164,7 +164,7 @@ begin
 end;
 
 
-Function SkillRoll( GB: GameBoardPtr; PC: GearPtr; Skill,SkTar,SkMod: Integer; CasualUse,GainXP: Boolean ): Integer;
+Function SkillRoll( GB: GameBoardPtr; PC: GearPtr; Skill,Stat,SkTar,SkMod: Integer; CasualUse,GainXP: Boolean ): Integer;
 	{ Attempt to make a skill roll. }
 	{ Skill = The skill to use. }
 	{ SkTar = The target number to try and beat. }
@@ -173,16 +173,15 @@ Function SkillRoll( GB: GameBoardPtr; PC: GearPtr; Skill,SkTar,SkMod: Integer; C
 	{     help, or FALSE otherwise. }
 var
 	msg: String;
-	SA: SAttPtr;
 	SkRank,SkRoll: Integer;
-	Pilot,SW: GearPtr;
+	Pilot: GearPtr;
 begin
 	{ Determine the base skill value, and initialize the message. }
 	msg := PilotName( PC ) + ' rolls ' + MSgString( 'SKILLNAME_' + BStr( Skill ) );
 	if CasualUse and ( GB <> Nil ) then begin
-		SkRank := TeamSkill( GB , NAV_DefPlayerTeam , Skill );
+		SkRank := TeamSkill( GB , NAV_DefPlayerTeam , Skill , Stat );
 	end else begin
-		SkRank := SkillValue( PC , Skill );
+		SkRank := SkillValue( PC , Skill , Stat );
 	end;
 
 	msg := msg + '[' + BStr( SkRank );
@@ -203,32 +202,11 @@ begin
 	SkRoll := RollStep( SkRank );
 	msg := msg + BStr( SkRoll );
 
-	{ If not yet a success, try adding software bonuses. }
-	if ( PC^.G <> GG_Adventure ) and ( SkRoll < SkTar ) and ( CurrentMental( PC ) > 0 ) and ( Skill >= 1 ) and ( Skill <= NumSkill ) then begin
-		SW := SeekSoftware( PC , S_SkillBoost , Skill , CasualUse );
-		if ( SW <> Nil ) and ( EnergyPoints( PC ) >= Software_Skill_Cost[ Skill ] ) then begin
-			SpendEnergy( PC , Software_Skill_Cost[ Skill ] );
-			SkMod := RollStep( SW^.V );
-			{ Most skills cost MP to boost with software all the time; passive }
-			{ skills like Awareness only cost MP when they're successful. }
-			if ( Skill <> NAS_Awareness ) or ( ( SkMod + SkRoll ) > SkTar ) then AddMentalDown( PC , 1 );
-			msg := msg + ' SW Bonus: +' + BStr( SkMod );
-			SkRoll := SkRoll + SkMod;
-			{ Also increase the SkRank, since using computers makes it }
-			{ harder to gain XP. }
-			SkRank := SkRank + SkMod;
-		end;
-	end;
-
 	{ Store the message. }
 	{ NOTE: Awareness only gets stored if it's successful. }
 	{ Otherwise the player could check the skill roll history and easily see }
 	{ that there's something hidden nearby. }
 	if ( Skill <> NAS_Awareness ) or ( SkRoll > SkTar ) then begin
-		if NumSAtts( Skill_Roll_History ) >= 100 then begin
-			SA := Skill_Roll_History;
-			RemoveSAtt( Skill_Roll_History , SA );
-		end;
 		SkillComment( Msg );
 	end;
 
@@ -272,7 +250,7 @@ begin
 	{ Encounters can only be spotted within a limited range, }
 	{ based on the observer's awareness skill. }
 	if ( Target^.G = GG_MetaTerrain ) and ( Target^.S = GS_MetaEncounter ) then begin
-		if Range( GB , Observer , Target ) > ( ( SkillValue( Observer , 11 ) + 2 ) div 2 ) then O := -1;
+		if Range( GB , Observer , Target ) > ( ( SkillValue( Observer , NAS_Awareness , STAT_Perception ) + 2 ) div 2 ) then O := -1;
 	end;
 
 	{ If there's nothing standing between the target and the spotter, }
@@ -280,7 +258,7 @@ begin
 	if ( O = 0 ) and ( Target^.G <> GG_MetaTerrain ) then begin
 		{ If the target has stealth and is outside of the spotter's front arc, }
 		{ then it gets a STEALTH roll. }
-		if ( NAttValue( Target^.NA , NAG_Action , NAS_MoveAction ) <> NAV_FullSpeed ) and HasSkill( Target , 25 ) then begin
+		if ( NAttValue( Target^.NA , NAG_Action , NAS_MoveAction ) <> NAV_FullSpeed ) and HasSkill( Target , NAS_Stealth ) then begin
 			{ Get the position of the spotter and the target. }
 			P1 := GearCurrentLocation( Observer );
 			P2 := GearCurrentLocation( Target );
@@ -288,9 +266,9 @@ begin
 			if not ArcCheck( P1.X , P1.Y , NAttValue( Observer^.NA , NAG_Location , NAS_D ) , P2.X , P2.Y , ARC_F180 ) then begin
 				{ Make the awareness roll. }
 				T := TargetStealth;
-				Roll := SkillRoll( GB , Observer , 11 , T , 0 , False , AreEnemies( GB , Observer , Target ) );
+				Roll := SkillRoll( GB , Observer , NAS_Awareness , STAT_Perception , T , 0 , False , AreEnemies( GB , Observer , Target ) );
 
-				if SkillRoll( GB , Target , 25 , Roll , -5 , False , AreEnemies( GB , Observer , Target ) ) > Roll then begin
+				if SkillRoll( GB , Target , NAS_Stealth , STAT_Speed , Roll , -5 , False , AreEnemies( GB , Observer , Target ) ) > Roll then begin
 					it := False;
 				end else begin
 					it := True;
@@ -308,12 +286,12 @@ begin
 	end else begin
 		{ Make the awareness roll. }
 		T := O + TargetStealth;
-		Roll := SkillRoll( GB , Observer , 11 , T , 0 , False , AreEnemies( GB , Observer , Target ) );
+		Roll := SkillRoll( GB , Observer , NAS_Awareness , STAT_Perception , T , 0 , False , AreEnemies( GB , Observer , Target ) );
 
 		if Roll > T then begin
 			{ The target might get a STEALTH save now. }
-			if ( NAttValue( Target^.NA , NAG_Action , NAS_MoveAction ) <> NAV_FullSpeed ) and HasSkill( Target , 25 ) then begin
-				if SkillRoll( GB , Target , 25 , Roll , 5 , False , AreEnemies( GB , Observer , Target ) ) > Roll then begin
+			if ( NAttValue( Target^.NA , NAG_Action , NAS_MoveAction ) <> NAV_FullSpeed ) and HasSkill( Target , NAS_Stealth ) then begin
+				if SkillRoll( GB , Target , NAS_Stealth , STAT_Speed , Roll , 5 , False , AreEnemies( GB , Observer , Target ) ) > Roll then begin
 					it := False;
 				end else begin
 					it := True;
@@ -437,7 +415,7 @@ var
 		end else if OK_At_Start and ( Part^.G = GG_Character ) then begin
 			{ Taking damage trains vitality... }
 			{ As long as the character survives, that is. }
-			DoleSkillExperience( Part , 13 , DMG * 2 );
+			DoleSkillExperience( FindMaster( Part ) , NAS_Vitality , DMG * 3 );
 
 			{ It also causes the afflicted to feel worse for wear. }
 			AddMoraleDmg( Part , DMG );
@@ -496,14 +474,14 @@ var
 					end;
 
 					{ Do the Skill Roll - SPEED + DODGE SKILL }
-					ERoll := RollStep( ( ( Part^.Stat[STAT_Speed] + 1 ) div 2 ) + NAttValue( Part^.NA , NAG_Skill , 10 ) );
+					ERoll := SkillRoll( GB , Part , NAS_Dodge , STAT_Speed , EMod , 0 , False, True );
 					if SafeEject then begin
-						ERoll := EMod * 5;
+						ERoll := ERoll + 20;
 					end;
 
 					if ERoll < ( EMod * 2 ) then begin
 						{ The character will eject, but takes some damage. }
-						TakeDamage( Part , RollStep(EjectDamage) );
+						TakeDamage( Part , RollDamage( EjectDamage , Part^.Scale ) );
 					end;
 
 					if ERoll > EMod then begin
@@ -1463,9 +1441,9 @@ begin
 
 		if ( Alt1 < ( Alt0 - 1 ) ) and ( NAttValue( Mek^.NA , NAG_Action , NAS_MoveMode ) <> MM_Fly ) then begin
 			if Mek^.G = GG_Mecha then begin
-				SkRoll := RollStep( SkillValue( Mek , 5 ) );
+				SkRoll := RollStep( SkillValue( Mek , NAS_MechaPiloting , STAT_Speed ) );
 			end else begin
-				SkRoll := RollStep( SkillValue( Mek , 10 ) );
+				SkRoll := RollStep( SkillValue( Mek , NAS_Dodge , STAT_Speed ) );
 			end;
 			if SkRoll < CrashTarget( Alt0 , Alt1 , Order ) then begin
 				Crash( GB , Mek );
@@ -1503,8 +1481,7 @@ begin
 
 		if MovementBlocked( Mek , GB , P1.X , P1.Y , P2.X , P2.Y ) then begin
 			SetNAtt( Mek^.NA , NAG_Action , NAS_DriftSpeed , 0 );
-{			Crash( GB , Mek );
-}		end else if OnTheMap( GB , P2.X , P2.Y ) then begin
+		end else if OnTheMap( GB , P2.X , P2.Y ) then begin
 			SetNAtt( Mek^.NA , NAG_Location , NAS_X , P2.X );
 			SetNAtt( Mek^.NA , NAG_Location , NAS_Y , P2.Y );
 			SetNAtt( Mek^.NA , NAG_Action , NAS_DriftETA , GB^.ComTime + NAttValue( Mek^.NA , NAG_Action , NAS_DriftSpeed ) );

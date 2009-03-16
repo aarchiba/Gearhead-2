@@ -53,23 +53,14 @@ const
 	STAT_SW_Type = 1;
 		S_MVBoost = 1;	{ Boosts MV score; Param is mecha scale }
 		S_TRBoost = 2;	{ Boosts TR score; Param is mecha scale }
-		S_SkillBoost = 3;	{ Boosts a skill; Param is boost amount }
-		S_SpeedComp = 4;	{ Speed Compensation Targeting Computer; Param is mecha scale }
-		S_Information = 5;	{ Contains information. Kind of a software intrinsic. }
+		S_SpeedComp = 3;	{ Speed Compensation Targeting Computer; Param is mecha scale }
+		S_Information = 4;	{ Contains information. Kind of a software intrinsic. }
 			{ Information Software must have value 1. }
 	STAT_SW_Param = 2;
 		SInfo_CreatureDex = 1;
 		SInfo_RobotDex = 2;
 		SInfo_SynthDex = 3;
 		SInfo_MechaDex = 4;
-
-	Software_Skill_Cost: Array [1..NumSkill] of Integer = (
-		25, 25, 25, 25, 35,	2, 2, 2, 2, 3,
-		1, 1, 1, 1, 1,		1,15, 4, 1, 1,
-		1, 1, 1, 1, 1,		1, 1, 1, 1, 1,
-		1, 1, 1, 1, 1,		1, 1, 1, 1, 1,
-		1, 1, 1
-	);
 
 	Num_SWInfo_Types = 4;
 	Software_Information_ZG: Array [1..Num_SWInfo_Types] of Integer = (
@@ -172,11 +163,8 @@ begin
 	if ( Part^.V < 1 ) or ( Part^.Stat[STAT_SW_Type] = S_Information ) then Part^.V := 1
 	else if Part^.V > 5 then Part^.V := 5;
 
-	{ Skill and Information software must be clamped to the right range. }
-	if Part^.Stat[ STAT_SW_Type ] = S_SkillBoost then begin
-		if Part^.Stat[ STAT_SW_Param ] < 1 then Part^.Stat[ STAT_SW_Param ] := 1
-		else if Part^.Stat[ STAT_SW_Param ] > NumSkill then Part^.Stat[ STAT_SW_Param ] := NumSkill;
-	end else if Part^.Stat[ STAT_SW_Type ] = S_Information then begin
+	{ Information software must be clamped to the right range. }
+	if Part^.Stat[ STAT_SW_Type ] = S_Information then begin
 		if Part^.Stat[ STAT_SW_Param ] < 1 then Part^.Stat[ STAT_SW_Param ] := 1
 		else if Part^.Stat[ STAT_SW_Param ] > Num_SWInfo_Types then Part^.Stat[ STAT_SW_Param ] := Num_SWInfo_Types;
 	end;
@@ -201,9 +189,6 @@ begin
 		{ meant to apply to. }
 		it := Part^.V * Part^.V * 100;
 		for t := 1 to Part^.Stat[ STAT_SW_Param ] do it := it * 5;
-	end else if ( Part^.Stat[ STAT_SW_Type ] = S_SkillBoost ) and ( Part^.Stat[ STAT_SW_Param ] >= 1 ) and ( Part^.Stat[ STAT_SW_Param ] <= NumSkill ) then begin
-		it := Part^.V * Part^.V * Software_Skill_Cost[ Part^.Stat[ STAT_SW_Param ] ] * 25 + 100;
-
 	end else if Part^.Stat[ STAT_SW_Type ] = S_SpeedComp then begin
 		it := Part^.V * Part^.V * 35;
 		for t := 1 to Part^.Stat[ STAT_SW_Param ] do it := it * 5;
@@ -233,8 +218,6 @@ begin
 		if ( Part^.Stat[ STAT_SW_Type ] = S_MVBoost ) or ( Part^.Stat[ STAT_SW_Type ] = S_TRBoost ) then begin
 			ZG := Part^.V * 2;
 			for t := 1 to Part^.Stat[ STAT_SW_Param ] do ZG := ZG * 5;
-		end else if ( Part^.Stat[ STAT_SW_Type ] = S_SkillBoost ) and ( Part^.Stat[ STAT_SW_Param ] >= 1 ) and ( Part^.Stat[ STAT_SW_Param ] <= NumSkill ) then begin
-			ZG := Part^.V * Software_Skill_Cost[ Part^.Stat[ STAT_SW_Param ] ];
 		end else if Part^.Stat[ STAT_SW_Type ] = S_SpeedComp then begin
 			ZG := Part^.V;
 			for t := 1 to Part^.Stat[ STAT_SW_Param ] do ZG := ZG * 5;

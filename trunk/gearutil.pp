@@ -1209,8 +1209,8 @@ begin
 		if HM > 2 then HM := 2;
 		GearEncumberance := MassPerMV + Mek^.V + HM;
 	end else if Mek^.G = GG_Character then begin
-		{ Encumberance value is BODY stat + 2 + WeightLifting. }
-		GearEncumberance := CStat( Mek , STAT_Body ) + 2 + CharaSkillRank( Mek , NAS_WeightLifting );
+		{ Encumberance value is BODY stat + 5. }
+		GearEncumberance := CStat( Mek , STAT_Body ) + 5 + CountActivePoints( Mek , GG_MoveSys , GS_HeavyActuator ) * 2;
 	end else begin
 		GearEncumberance := 0;
 	end;
@@ -1631,19 +1631,15 @@ Function EncumberanceLevel( PC: GearPtr ): Integer;
 	{ Return a value indicating this character's current }
 	{ encumberance level. }
 var
-	EMass,EV,HM: Integer;
+	EMass,EV: Integer;
 begin
 	EV := GearEncumberance( PC );
 	if EV < 1 then EV := 1;
 	EMass := EquipmentMass( PC ) - EV;
 
-	{ Reduce the basic mass by the character's weight lifting skill. }
+	{ For characters, allow a greater amount of "free" weight. }
 	if PC^.G = GG_Character then begin
-		{ The amount of weight beging carried gets reduced by the amount of Heavy Actuator the PC has equipped. }
-		{ This also reduces the amount of effective weight being carried. }
-		HM := CountActivePoints( PC , GG_MoveSys , GS_HeavyActuator ) * 2;
-
-		EMass := EMass - HM - CharaSkillRank( PC , NAS_WeightLifting );
+		EMass := EMass - EV;
 	end;
 
 	if EMass > 0 then begin
@@ -1983,7 +1979,7 @@ var
 
 				{ Martial Arts attacks get a bonus based on skill level. }
 				if Attacker^.G = GG_Module then begin
-					D := D + ( CharaSkillRank( Master , NAS_MartialArts ) + 1 ) div 2;
+					D := D + ( CharaSkillRank( Master , NAS_CloseCombat ) + 1 ) div 2;
 				end;
 
 				if D < 1 then D := 1;
@@ -2358,10 +2354,7 @@ end;
 
 Function CountActivePoints(Master: GearPtr; G,S: Integer): Integer;
 	{Count up the number of "active points" worth of components}
-	{which may be described by G,S. In MZ, one frequenly has to}
-	{count the number of spaces worth of legs/wheels/thrusters/etc.}
-	{This is sorta the same thing- it counts up the number of}
-	{hits, then divides that by the scaling factor, rounding up.}
+	{which may be described by G,S. }
 begin
 	CountActivePoints := CountUpSibs( Master^.SubCom , G , S , Master^.Scale );
 end;
@@ -3066,12 +3059,8 @@ Function NumberOfSkillSlots( PC: GearPtr ): Integer;
 var
 	N: Integer;
 begin
-	if PC^.Stat[ STAT_Knowledge ] < 11 then begin
-		N := PC^.Stat[ STAT_Knowledge ] + 10;
-	end else begin
-		N := PC^.Stat[ STAT_Knowledge ] div 3 + 18;
-	end;
-	if NAttValue( PC^.NA , NAG_Talent , NAS_Savant ) <> 0 then N := N + 5;
+	N := ( PC^.Stat[ STAT_Knowledge ] div 5 ) + 8;
+	if NAttValue( PC^.NA , NAG_Talent , NAS_Polymath ) <> 0 then N := N + 3;
 	NumberOfSkillSlots := N;
 end;
 
@@ -3079,7 +3068,7 @@ Function TooManySkillsPenalty( PC: GearPtr; N: Integer ): Integer;
 	{ Return the % XP penalty that this character will suffer. }
 begin
 	N := N - NumberOfSkillSlots( PC );
-	N := N * 10 - 5;
+	N := N * 25 - 10;
 	if N < 0 then N := 0;
 	TooManySkillsPenalty := N;
 end;
@@ -3113,7 +3102,7 @@ begin
 
 	{ May be adjusted upwards if PC has too many skills... }
 	if ( PC <> Nil ) and ( PC^.G = GG_Character ) then begin
-		N := TooManySkillsPenalty( PC , NumberOfSkills( PC ) );
+		N := TooManySkillsPenalty( PC , NumberOfSpecialties( PC ) );
 		if N > 0 then begin
 			SAC := ( SAC * ( 100 + N ) ) div 100;
 		end;

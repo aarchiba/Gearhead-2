@@ -719,7 +719,7 @@ Prompt%id%01 <Good thing that you don't own a mirror.>
 CPrompt%id%01 <ifTaunt SkillTar %3% Accept>
 Prompt%id%02 <Your mother!>
 Prompt%id%03 <So you're not just stupid, but blind as well?>
-CPrompt%id%03 <ifFlirtation SkillTar %3% Accept>
+CPrompt%id%03 <ifG PCCharm 10 ifConversation SkillTar %3% Accept>
 
 Persona
 requires <*InsultContest>
@@ -787,7 +787,7 @@ result%id%06 <Goto %2%>
 result%id%07 <AddReact -d5  AddEasygoing -d6  Goto %3%>
 result%id%08 <ifNPCLawful else .%id%_GoR8Win EndChat Say %id%07>
 .%id%_GoR8Win <NewChat Say %id%08 AddChat %id%11>
-result%id%09 <if= V%id%02 0 else .%id%_GoR9Fail V= %id%02 1 ifFlirtation SkillTar %1% else .%id%_GoR9Fail Goto %2%>
+result%id%09 <if= V%id%02 0 else .%id%_GoR9Fail V= %id%02 1 ifConversation SkillTar %1% else .%id%_GoR9Fail Goto %2%>
 .%id%_GoR9Fail <NewChat Say %id%09>
 result%id%10 <AddReact -d5  ifIntimidation HardSkillTar %1% else %3% Goto %2%>
 result%id%11 <Cash+ -Threat %1% 1 Goto %2%>

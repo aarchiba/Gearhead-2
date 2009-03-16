@@ -385,7 +385,7 @@ begin
 	LMP := LancematesPresent( GB );
 	ERen := NAttValue( PC^.NA , NAG_CharDescription , NAS_Renowned );
 	if ERen < 15 then ERen := 15;
-	ERen := ERen + SkillRank( PC , NAS_Leadership );
+	ERen := ERen + CStat( PC , STAT_Charm );
 	CanJoin := True;
 	if ( NPC = Nil ) or ( NPC^.G <> GG_Character ) then begin
 		CanJoin := False;
@@ -913,9 +913,13 @@ begin
 	end else if ( SMsg = 'SKROLL' ) then begin
 		{ Return a skill roll from the PC. }
 		VCode := ScriptValue( Event , GB , Scene );
+		VC2 := ScriptValue( Event , GB , Scene );
 		if ( VCode >= 1 ) and ( VCode <= NumSkill ) then begin
-			SV := SkillRoll( GB , GG_LocatePC( GB ) , VCode , 0 , 0 , IsSafeArea( GB ) , True );
-		end else SV := 0;
+			SV := SkillRoll( GB , GG_LocatePC( GB ) , VCode , VC2 , 0 , 0 , IsSafeArea( GB ) , True );
+		end else begin
+			DialogMsg( 'ERROR: Illegal Skill Roll ' + BStr( VCode ) + ': ' + Event );
+			SV := 0;
+		end;
 		PC := GG_LocatePC( GB );
 		if PC <> Nil then DoleSkillExperience( PC , VCode , 5 );
 
@@ -1894,7 +1898,6 @@ begin
 			if V > 0 then begin
 				Msg := ReplaceHash( MsgString( 'HISTORY_Skills' ) , MsgString( 'SKILLNAME_' + BStr( T ) ) );
 				Msg := ReplaceHash( msg , BStr( V ) );
-				Msg := ReplaceHash( msg , BStr( SkillValue( PC , T ) ) );
 				StoreSAtt( VList , msg );
 			end;
 		end;
@@ -2558,16 +2561,17 @@ Procedure ProcessIfSkillTest( var Event: String; GB: GameBoardPtr; Source: GearP
 	{ he's improved his skill level. }
 var
 	PC: GearPtr;
-	Skill,SkTar,SkRank,SkRoll: Integer;
+	Skill,SkStat,SkTar,SkRank,SkRoll: Integer;
 begin
 	PC := GG_LocatePC( GB );
 	Skill := ScriptValue( Event , GB , Source );
+	SkStat := ScriptValue( Event , GB , Source );
 	SkRank := SkillRank( PC , Skill ) + 1;
 	SkTar := ScriptValue( Event , GB , Source );
 	if ( Source <> Nil ) and ( SkRank <= NAttValue( Source^.NA , NAG_SkillCounter , Skill ) ) then begin
 		IfFailure( Event , Source );
 	end else begin
-		SkRoll := SkillRoll( GB , PC , Skill , SkTar , 0 , IsSafeArea( GB ) , True );
+		SkRoll := SkillRoll( GB , PC , Skill , SkStat , SkTar , 0 , IsSafeArea( GB ) , True );
 		if ( SkRoll >= SkTar ) then begin
 			IfSuccess( Event );
 		end else begin
@@ -2580,11 +2584,12 @@ end;
 Procedure ProcessIfUSkillTest( var Event: String; GB: GameBoardPtr; Source: GearPtr );
 	{ Return TRUE if the PC makes the requested skill roll, or FALSE otherwise. }
 var
-	Skill,SkTar,SkRoll: Integer;
+	Skill,SkStat,SkTar,SkRoll: Integer;
 begin
 	Skill := ScriptValue( Event , GB , Source );
+	SkStat := ScriptValue( Event , GB , Source );
 	SkTar := ScriptValue( Event , GB , Source );
-	SkRoll := SkillRoll( GB , GG_LocatePC( GB ) , Skill , SkTar , 0 , IsSafeArea( GB ) , True );
+	SkRoll := SkillRoll( GB , GG_LocatePC( GB ) , Skill , SkStat , SkTar , 0 , IsSafeArea( GB ) , True );
 	if SkRoll >= SkTar then begin
 		IfSuccess( Event );
 	end else begin
@@ -3630,7 +3635,7 @@ begin
 
 	{ Check to see if the PC has the Scavenger talent. }
 	PC := GG_LocatePC( GB );
-	CanScavenge := TeamHasTalent( GB , NAV_DefPlayerTeam , NAS_Scavenger );
+	CanScavenge := TeamHasTalent( GB , NAV_DefPlayerTeam , NAS_TechVulture );
 
 	{ Loop through every mek on the board. }
 	Mek := GB^.Meks;
@@ -3643,15 +3648,13 @@ begin
 			until M2 = Nil;
 
 			{ Apply emergency repair to it. }
-			for t := 1 to NumSkill do begin
-				if ( SkillMan[ T ].Usage = USAGE_Repair ) then begin
-					if ( TotalRepairableDamage( Mek , T ) > 0 ) and TeamHasSkill( GB , NAV_DefPlayerTeam , T ) then begin
-						{ Determine how many repair points it's possible }
-						{ to apply. }
-						RPts := RollStep( TeamSkill( GB , NAV_DefPlayerTeam , T ) ) - 15;
-						if RPts > 0 then begin
-							ApplyEmergencyRepairPoints( Mek , T , RPts );
-						end;
+			for t := 0 to NumMaterial do begin
+				if ( TotalRepairableDamage( Mek , T ) > 0 ) and TeamHasSkill( GB , NAV_DefPlayerTeam , Repair_Skill_Needed[ T ] ) then begin
+					{ Determine how many repair points it's possible }
+					{ to apply. }
+					RPts := RollStep( TeamSkill( GB , NAV_DefPlayerTeam , Repair_Skill_Needed[ T ] , STAT_Knowledge ) ) - 15;
+					if RPts > 0 then begin
+						ApplyEmergencyRepairPoints( Mek , T , RPts );
 					end;
 				end;
 			end;	{ Checking the repair skills. }
@@ -3668,7 +3671,7 @@ begin
 				SetNAtt( Mek^.NA , NAG_MissionReport , NAS_WasSalvaged , 1 );
 			end else if CanScavenge then begin
 				M2 := SelectRandomGear( Mek^.SubCom );
-				if NotDestroyed( M2 ) and CanBeExtracted( M2 ) and ( SkillRoll( GB , PC , 15 , 7 , 0 , True , True ) > 7 ) then begin
+				if NotDestroyed( M2 ) and CanBeExtracted( M2 ) and ( SkillRoll( GB , PC , NAS_Repair , STAT_Knowledge , 7 , 0 , True , True ) > 7 ) then begin
 					ExtractMechaPart( Mek^.SubCom , M2 );
 					SetNAtt( M2^.NA , NAG_Location , NAS_Team , NAV_DefPlayerTeam );
 					AppendGear( GB^.Meks , M2 );
@@ -4022,7 +4025,7 @@ begin
 	{ Locate the PC, and find the Leadership score. }
 	PC := LocatePilot( GG_LocatePC( GB ) );
 	if PC <> Nil then begin
-		Renown := NAttValue( PC^.NA , NAG_CharDescription , NAS_Renowned ) - 20 + SkillRank( PC , NAS_Leadership ) * 3;
+		Renown := NAttValue( PC^.NA , NAG_CharDescription , NAS_Renowned ) - 20;
 	end else begin
 		Renown := 0;
 	end;

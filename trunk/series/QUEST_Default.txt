@@ -138,7 +138,7 @@ Content
 		Prompt2 <I'll be back later.>
 		Prompt2_1 <Let me think about that.>
 		Prompt3 <Are you only interested in money, or...?>
-		CPrompt3 <ifChatNPCSexy ifFlirtation SkillTar %threat% Accept>
+		CPrompt3 <ifChatNPCSexy ifConversation SkillTar %threat% Accept>
 		Prompt4 <Tell me now and I let you live.>
 		CPrompt4 <ifIntimidation HardSkillTar %threat% Accept>
 
@@ -620,7 +620,7 @@ Content
 		Prompt8 <I can offer cash. [give $ \VAL &Bribe ]>
 		CPrompt8 <ifG PC$ &Bribe Accept>
 		Prompt9 <I can show you a good time.>
-		CPrompt9 <ifChatNPCSexy ifFlirtation %sktar_hard% Accept>
+		CPrompt9 <ifChatNPCSexy ifConversation %sktar_hard% Accept>
 		Prompt10 <I've got nothing...>
 
 		Metascene 2
@@ -686,7 +686,7 @@ Content
 		result7 <ifConversation %sktar% else GoR7Fail NewChat Say 11 AddChat 10 AddChat 11>
 		GoR7Fail <NewChat Say 10>
 		result8 <NewChat Say 12>
-		result9 <ifFlirtation %sktar_hard% else GoR9Fail NewChat Say 13 SetQuestSTatus %qid% -1 AddReact d12 AddHeroic -1>
+		result9 <ifConversation %sktar_hard% else GoR9Fail NewChat Say 13 SetQuestSTatus %qid% -1 AddReact d12 AddHeroic -1>
 		GoR9Fail <NewChat Say 14>
 		result10 <NewChat Say 15 Cash+ - V1 SetQuestStatus %qid% -1>
 		result11 <NewChat Say 16>
@@ -716,7 +716,7 @@ Content
 		Prompt5 <%name1% has agreed to pay the money.>
 		CPrompt5 <if= NPCVar %2% 1 2 Accept>
 		Prompt6 <Why can't you just give the mecha back?>
-		CPrompt6 <ifChatNPCSexy ifFlirtation %sktar_hard% Accept>
+		CPrompt6 <ifChatNPCSexy ifConversation %sktar_hard% Accept>
 		Prompt7 <How about I pay off the debt myself?>
 		CPrompt7 <ifG PC$ V1 Accept>
 		Prompt8 <I'll go talk with %name1% about that.>

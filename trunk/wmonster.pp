@@ -1079,9 +1079,9 @@ var
 		Limb := NPC^.SubCom;
 		NeedPW := True;
 		NeedRanged := True;
-		AC_Skill := SkillValue( NPC , 8 );
-		HW_Skill := SkillValue( NPC , 7 );
-		SA_Skill := SkillValue( NPC , 6 );
+		AC_Skill := SkillValue( NPC , NAS_CloseCombat , STAT_Reflexes );
+		HW_Skill := SkillValue( NPC , NAS_RangedCombat , STAT_Perception );
+		SA_Skill := SkillValue( NPC , NAS_RangedCombat , STAT_Reflexes );
 		while Limb <> Nil do begin
 			if ( Limb^.G = GG_Module ) and ( Limb^.S = GS_Arm ) then begin
 				Hand := SeekCurrentLevelGear( Limb^.SubCom , GG_Holder , GS_Hand );

@@ -337,7 +337,7 @@ begin
 	if Camp^.GB^.Scene <> Nil then begin
 		case NATtValue( Camp^.GB^.Scene^.NA , NAG_EnvironmentData , NAS_Atmosphere ) of
 			NAV_Vacuum: 	begin
-					FX_String := '1 DAMAGE 10 0 ArmorIgnore GasAttack NoMetal CanResist';
+					FX_String := '1 DAMAGE 10 0 0 0 ArmorIgnore GasAttack NoMetal CanResist';
 					FX_Desc   := MsgString( 'ENVIRO_VACUUM' );
 					end;
 		else 	begin
@@ -484,7 +484,7 @@ begin
 	if Camp^.GB^.Scene <> Nil then begin
 		case NATtValue( Camp^.GB^.Scene^.NA , NAG_EnvironmentData , NAS_Atmosphere ) of
 			NAV_Vacuum: 	begin
-					FX_String := '1 DAMAGE 10 0 ArmorIgnore GasAttack NoMetal CanResist';
+					FX_String := '1 DAMAGE 10 0 0 0 ArmorIgnore GasAttack NoMetal CanResist';
 					FX_Desc   := MsgString( 'ENVIRO_VACUUM' );
 					end;
 		else 	begin
@@ -879,20 +879,18 @@ begin
 		if ( team = NAV_DefPlayerTeam ) or ( team = NAV_LancemateTeam ) then begin
 			if Destroyed( PC ) then begin
 				{ Check every repair skill for applicability. }
-				for t := 1 to NumSkill do begin
-					if ( SkillMan[ T ].Usage = USAGE_Repair ) then begin
-						if ( TotalRepairableDamage( PC , T ) > 0 ) and TeamHasSkill( GB , NAV_DefPlayerTeam , T ) then begin
-							{ Determine how many repair points it's possible }
-							{ to apply. }
-							if ( PC^.G = GG_Mecha ) then begin
-								SkRk := RollStep( TeamSkill( GB , NAV_DefPlayerTeam , T ) ) - 5;
-							end else begin
-								SkRk := RollStep( TeamSkill( GB , NAV_DefPlayerTeam , T ) ) - 7;
-							end;
-							if SkRk < 0 then SkRk := 0;
-							ApplyEmergencyRepairPoints( PC , T , SkRk );
-							if PC^.G = GG_Character then SetNAtt( PC^.NA , NAG_Damage , NAS_OutOfAction , 1 );
+				for t := 0 to NumMaterial do begin
+					if ( TotalRepairableDamage( PC , T ) > 0 ) and TeamHasSkill( GB , NAV_DefPlayerTeam , Repair_Skill_Needed[ T ] ) then begin
+						{ Determine how many repair points it's possible }
+						{ to apply. }
+						if ( PC^.G = GG_Mecha ) then begin
+							SkRk := RollStep( TeamSkill( GB , NAV_DefPlayerTeam , Repair_Skill_Needed[ T ] , STAT_Knowledge ) ) - 5;
+						end else begin
+							SkRk := RollStep( TeamSkill( GB , NAV_DefPlayerTeam , Repair_Skill_Needed[ T ] , STAT_Knowledge ) ) - 7;
 						end;
+						if SkRk < 0 then SkRk := 0;
+						ApplyEmergencyRepairPoints( PC , T , SkRk );
+						if PC^.G = GG_Character then SetNAtt( PC^.NA , NAG_Damage , NAS_OutOfAction , 1 );
 					end;
 				end;	{ Checking the repair skills. }
 

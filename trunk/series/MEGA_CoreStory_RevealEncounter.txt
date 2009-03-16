@@ -1126,7 +1126,7 @@ Content
 		result7 <ifConversation HardSkillTar StoryDL else GoR7Fail NewChat Say 14 Goto GoReveal>
 		GoR7Fail <EndChat Say 15 Print 3 History 4 PMemo %plotid% 5 SetPlotStatus %plotid1% %id1%>
 		result8 <EndChat Say 16 Print 3 History 4 PMemo %plotid% 5 SetPlotStatus %plotid1% %id1%>
-		result9 <ifFlirtation SkillTar StoryDL else GoR9Fail NewChat Say 17 ifG React d100 else GoReveal if= &AmoreNPC 0 else GoReveal ifG ChatNPCDAge -3 else GoReveal  PCLover %4% History 18  Goto GoReveal>
+		result9 <ifConversation SkillTar StoryDL else GoR9Fail NewChat Say 17 ifG React d100 else GoReveal if= &AmoreNPC 0 else GoReveal ifG ChatNPCDAge -3 else GoReveal  PCLover %4% History 18  Goto GoReveal>
 		GoR9Fail <EndChat Say 19 Print 3 History 4 PMemo %plotid% 5 SetPlotStatus %plotid1% %id1%>
 		Msg1 <Yes, what do you want? I'm kind of busy right now.>
 		Msg2 <Well, I really shouldn't be talking about this to anyone... I'll do fine by myself.>

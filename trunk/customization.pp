@@ -503,7 +503,7 @@ var
 begin
 	{ Make a skill roll against the size of the mecha. If it succeeds, then }
 	{ we'll have some modification points to work with. }
-	SkRoll := RollStep( SkillValue( NPC , NAS_MechaEngineering ) ) - ( Mek^.S + 4 );
+	SkRoll := RollStep( SkillValue( NPC , NAS_MechaEngineering , STAT_Knowledge ) ) - ( Mek^.S + 4 );
 	if SkRoll > 0 then begin
 		{ Okay, we have some points. Now, pick a theme. }
 		Theme := SelectRandomGear( Mecha_Theme_List );

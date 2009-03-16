@@ -502,9 +502,8 @@ var
 	T2,T3: GearPtr;
 begin
 	{ Calculate AttSkillVal, DefSkillVal, and set AtOp to 0. }
-	if Target^.G = GG_Mecha then DefSkillVal := SkillValue( Target, 5 )
-	else DefSkillVal := SkillValue( Target, 10 );
-	AttSkillVal := SkillValue( Mek , AttackSkillNeeded( Weapon ) ) + CalcTotalModifiers( gb , Weapon , Target , 0 , WeaponAttackAttributes( Weapon ) );
+	DefSkillVal := BasicDefenseValue( FindRoot( Target ) );
+	AttSkillVal := SkillValue( Mek , AttackSkillNeeded( Weapon ), AttackStatNeeded( Weapon ) ) + CalcTotalModifiers( gb , Weapon , Target , 0 , WeaponAttackAttributes( Weapon ) );
 	AtOp := 0;
 
 	{ If the odds of hitting are good enough, the attacker may try }
@@ -615,14 +614,13 @@ var
 		{ Can your lancemates size up the abilities of a defender in a }
 		{ mecha, very far away, in heavy cover?  Sure they can! }
 		{ Just look at Piloting or Dodge, not talents, parrying, ... }
-		if Target^.G = GG_Mecha then DefSkillVal := SkillValue( Target, 5 )
-		else DefSkillVal := SkillValue( Target, 10 );
+		DefSkillVal := BasicDefenseValue( FindRoot( Target ) );
 
 		{ NOTE: the actual attack code does RollStep(SkillValue) + }
 		{ modifiers, so this is an approximation }
 		{ Missiles will have BustValue = 0.  Don't fire }
 		{ until you can see the whites of their eyes. }
-		AS := SkillValue( FindRoot(Part) , AttackSkillNeeded( Part ) );
+		AS := SkillValue( FindRoot(Part) , AttackSkillNeeded( Part ) , AttackStatNeeded( Part ) );
 		AM := CalcTotalModifiers( gb , Part , Target , Part^.Stat[ STAT_BurstValue ] , WeaponAttackAttributes( Part ) );
 		AttSkillVal := AS + AM + 5 - DefSkillVal;
 		if AttSkillVal < 0 then AttSkillVal := 0;
@@ -1224,7 +1222,7 @@ begin
 	SelectSocialTarget := Target;
 end;
 
-Procedure NPC_Flirtation( GB: GameBoardPtr; NPC , Target: GearPtr );
+{Procedure NPC_Flirtation( GB: GameBoardPtr; NPC , Target: GearPtr );
 	{ NPC will flirt with TARGET. If successful, this will cause the PC to gain }
 	{ a reaction bonus from TARGET. }
 var
@@ -1265,7 +1263,7 @@ begin
 		msg := ReplaceHash( msg , PilotName( NPC ) );
 		DialogMsg( msg );
 	end;
-end;
+end;}
 
 Procedure NPC_Chatting( GB: GameBoardPtr; NPC , Target: GearPtr );
 	{ NPC will chat with TARGET. This may reveal a rumor. }
@@ -1274,7 +1272,7 @@ var
 	msg: String;
 	Rumors: SAttPtr;
 begin
-	SkRoll := RollStep( SkillValue( NPC , 19 ) );
+	SkRoll := SkillRoll( GB , NPC , NAS_Conversation , STAT_Charm , 10 , 0 , False, True );
 	if SkRoll > 10 then begin
 		{ A rumor has been gained. }
 		rumors := CreateRumorList( GB , Nil , Target );
@@ -1341,7 +1339,7 @@ begin
 			AIRepair( GB , Mek , TGear , Tool , Abs( CORD ) );
 		end;
 
-	end else if CORD = CORD_Flirt then begin
+{	end else if CORD = CORD_Flirt then begin
 		Target := NAttValue( Mek^.NA , NAG_EpisodeData , NAS_ATarget );
 		TGear := LocateMekByUID( GB , Target );
 
@@ -1367,7 +1365,7 @@ begin
 			{ If off the map, cancel the action. }
 			SetNAtt( Mek^.NA , NAG_EpisodeData , NAS_ContinuousOrders , 0 );
 		end;
-
+}
 	end else if CORD = CORD_Chat then begin
 		Target := NAttValue( Mek^.NA , NAG_EpisodeData , NAS_ATarget );
 		TGear := LocateMekByUID( GB , Target );
@@ -1419,14 +1417,14 @@ begin
 		end;
 
 		{ If no repair skills, try flirtation or conversation. }
-		if ( CORD = 0 ) and ( NAttValue( NPC^.NA , NAG_Skill , 27 ) > Random( 10 ) ) and ( Random( 3 ) = 1 ) and IsSafeArea( GB ) then begin
+{		if ( CORD = 0 ) and ( NAttValue( NPC^.NA , NAG_Skill , 27 ) > Random( 10 ) ) and ( Random( 3 ) = 1 ) and IsSafeArea( GB ) then begin
 			TGEar := SelectSocialTarget( GB , NPC , True );
 			if TGear <> Nil then begin
 				Target := NAttValue( TGear^.NA , NAG_EpisodeData , NAS_UID );
 				CORD := CORD_Flirt;
 			end;
 		end;
-		if ( CORD = 0 ) and ( NAttValue( NPC^.NA , NAG_Skill , 19 ) > Random( 10 ) ) and ( Random( 3 ) = 1 ) and IsSafeArea( GB ) then begin
+}		if ( CORD = 0 ) and ( NAttValue( NPC^.NA , NAG_Skill , NAS_Conversation ) > Random( 10 ) ) and ( Random( 3 ) = 1 ) and IsSafeArea( GB ) then begin
 			TGEar := SelectSocialTarget( GB , NPC , False );
 			if TGear <> Nil then begin
 				Target := NAttValue( TGear^.NA , NAG_EpisodeData , NAS_UID );

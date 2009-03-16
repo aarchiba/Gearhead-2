@@ -650,8 +650,6 @@ begin
 	RPM := CreateRPGMenu( MenuItem , MenuSelect , ZONE_CharGenMenu );
 
 	RPM^.Mode := RPMNoCleanup;
-{	RCDescMessage := '';
-	RCPromptMessage := MsgString( 'RANDCHAR_ASPDesc' );}
 	RCDescMessage := MsgString( 'RANDCHAR_ASPDesc' );
 	RCPromptMessage := '';
 
@@ -787,8 +785,9 @@ end;
 
 Function CGPCHasSkill( PC: GearPtr; const PCSkills: SkillArray; Skill: Integer ): Boolean;
 	{ Return TRUE if the character being generated has this skill, or FALSE otherwise. }
+	{ Don't count the hidden skills, which everyone has. }
 begin
-	CGPCHasSkill := ( NAttValue( PC^.NA , NAG_Skill , Skill ) > 0 ) or ( PCSkills[ Skill ] > 0 );
+	CGPCHasSkill := ( not SkillMan[ Skill ].Hidden ) and ( ( NAttValue( PC^.NA , NAG_Skill , Skill ) > 0 ) or ( PCSkills[ Skill ] > 0 ) );
 end;
 
 Function NumPickedSkills( PC: GearPtr; const PCSkills: SkillArray ): Integer;
@@ -843,13 +842,13 @@ Procedure SpendSkillPointsRandomly( PC: GearPtr; var PCSkills: SkillArray; Skill
 	Function NumFreeSkillSlots: Integer;
 		{ Return the number of free skill slots. }
 		{ Note that this procedure assumes that all characters will want to learn }
-		{ the ten basic combat skills, so the skill slots equal the number of regular }
+		{ the six basic combat skills, so the skill slots equal the number of regular }
 		{ skill slots minus ten minus the number of noncombat skills known. }
 	var
 		SkT,NPS: Integer;
 	begin
 		NPS := 0;
-		for SkT := 11 to NumSkill do begin
+		for SkT := 7 to NumSkill do begin
 			if CGPCHasSkill( PC , PCSkills , SkT ) then Inc( NPS );
 		end;
 
@@ -861,12 +860,10 @@ Procedure SpendSkillPointsRandomly( PC: GearPtr; var PCSkills: SkillArray; Skill
 		{ might know, but sometimes we'll go all freaky and give out something like }
 		{ Biotech or Acrobatics. }
 	const
-		NumBeginnerSkills = 19;
+		NumBeginnerSkills = 10;
 		BeginnerSkills: Array [1..NumBeginnerSkills] of Byte = (
-			11, 12, 13, 15, 17,
-			18, 19, 20, 21, 23,
-			25, 26, 27, 28, 30,
-			33, 36, 37, 42
+			NAS_Awareness, NAS_Initiative, NAS_Repair, NAS_Medicine, NAS_ElectronicWarfare,
+			NAS_SpotWeakness, NAS_Conversation, NAS_MechaEngineering, NAS_Insight, NAS_Taunt
 		);
 	var
 		Skill: Integer;
@@ -1049,7 +1046,7 @@ const
 		CheckLevel := L;
 	end;
 var
-	t,L,X1,X2: Integer;
+	t,L: Integer;
 	PCSkills: SkillArray;
 begin
 	ClearSkillArray( PCSkills );
@@ -1064,43 +1061,19 @@ begin
 	SkillPt := SkillPt - PointsForLevel[ t ];
 
 	{ Give the guaranteed skill. }
-	{ PCs automatically get Conversation. NPCs automatically get Weight Lifting. }
-	{ Why weight lifting? Because the random equipment generator thinks nothing of }
-	{ giving twin gatling guns to a 98lb hacker, that's why. }
+	{ PCs automatically get Conversation. }
 	t := CheckLevel( Random( 3 ) + 1 );
-	if IsNPC then begin
-		PCSkills[ NAS_WeightLifting ] := T;
-		SkillPt := SkillPt - PointsForLevel[ t ];
-	end else begin
+	if not IsNPC then begin
 		PCSkills[ NAS_Conversation ] := T;
 		SkillPt := SkillPt - PointsForLevel[ t ];
 	end;
 
 	{ Add combat skills. }
-	{ The default character will get three decent combat skills for }
-	{ mecha and one for personal. }
-	{ To make this work, we select one skill from each group for exclusion, }
-	{ and provide points to the other three. }
-	{ The single combat skill will most likely be either Small Arms or Armed Combat. }
-	X1 := Random( 4 ) + 1;
-	if Random( 4 ) <> 1 then begin
-		{ This equation will give either 1 or 3- Small Arms or Armed Combat. }
-		X2 := 2 * Random( 2 ) + 1;
-	end else begin
-		X2 := Random( 4 ) + 1;
-	end;
-	for t := 1 to 4 do begin
-		if T <> X1 then begin
-			L := CheckLevel( 2 + Random( 2 ) );
-			PCSkills[ T ] := L;
-			if L > 0 then SkillPt := SkillPt - PointsForLevel[ L ];
-		end;
-
-		if T = X2 then begin
-			L := CheckLevel( 3 + Random( 2 ) );
-			PCSkills[ T + 5 ] := L;
-			if L > 0 then SkillPt := SkillPt - PointsForLevel[ L ];
-		end;
+	{ The default character will get all combat skills. }
+	for t := 1 to Num_Basic_Combat_Skills do begin
+		L := CheckLevel( 2 + Random( 2 ) );
+		PCSkills[ T ] := L;
+		if L > 0 then SkillPt := SkillPt - PointsForLevel[ L ];
 	end;
 
 	{ Spend remaining skill points randomly. }
@@ -1155,19 +1128,17 @@ begin
 		ApplyTalent( PC , NAS_JackOfAll );
 	end else if CanLearnTalent( PC , NAS_Sniper ) and ( Random( 2 ) <> 1 ) then begin
 		ApplyTalent( PC , NAS_Sniper );
-	end else if CanLearnTalent( PC , NAS_AnimalTrainer ) and ( Random( 2 ) <> 1 ) then begin
-		ApplyTalent( PC , NAS_AnimalTrainer );
 	end else if CanLearnTalent( PC , NAS_BusinessSense ) and ( Random( 2 ) <> 1 ) then begin
 		ApplyTalent( PC , NAS_BusinessSense );
 	end else if CanLearnTalent( PC , NAS_StuntDriving ) and ( Random( 3 ) <> 1 ) then begin
 		ApplyTalent( PC , NAS_StuntDriving );
-	end else if CanLearnTalent( PC , NAS_Bishounen ) and ( NAttValue( PC^.NA , NAG_Skill , NAS_Flirtation ) > 0 ) and ( Random( 2 ) <> 1 ) then begin
+	end else if CanLearnTalent( PC , NAS_Bishounen ) and ( Random( 5 ) <> 1 ) then begin
 		ApplyTalent( PC , NAS_Bishounen );
 
 	{ At the very end, if no other talents can be learned, apply one of the two }
 	{ generic talents which don't have any pre-requisites. }
-	end else if Random( 2 ) = 1 then begin
-		ApplyTalent( PC , NAS_Savant );
+	end else if ( Random( 2 ) = 1 ) and CanLearnTalent( PC , NAS_Polymath ) then begin
+		ApplyTalent( PC , NAS_Polymath );
 	end else begin
 		ApplyTalent( PC , NAS_Idealist );
 	end;

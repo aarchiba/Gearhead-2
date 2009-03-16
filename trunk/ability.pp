@@ -111,7 +111,7 @@ var
 Function LocatePilot( Mecha: GearPtr ): GearPtr;
 Function GearOperational( Mek: GearPtr ): Boolean;
 Function GearActive( Mek: GearPtr ): Boolean;
-function SkillValue( Master: GearPtr; Skill: Integer ): Integer;
+function SkillValue( Master: GearPtr; Skill,Stat: Integer ): Integer;
 function ReactionTime( Master: GearPtr ): Integer;
 function PilotName( Part: GearPtr ): String;
 
@@ -138,7 +138,6 @@ Function HasIntrinsic( PC: GearPtr; I: Integer; CasualUse: Boolean ): Boolean;
 
 Function IsEnviroSealed( PC: GearPtr ): Boolean;
 Function PartyPetSlots( PC: GearPtr ): Integer;
-Function PartyRobotSlots( PC: GearPtr ): Integer;
 
 Function SkillRank( PC: GearPtr; Skill: Integer ): Integer;
 Function HasSkill( PC: GearPtr; Skill: Integer ): Boolean;
@@ -221,7 +220,7 @@ begin
 	SkillRank := CharaSkillRank( PC , Skill );
 end;
 
-function SkillValue( Master: GearPtr; Skill: Integer ): Integer;
+function SkillValue( Master: GearPtr; Skill,Stat: Integer ): Integer;
 	{ Find MASTER's skill roll value. This is the }
 	{ skill rank + the attribute value + any modifiers }
 	{ that might apply (maneuver class, etc). }
@@ -236,7 +235,7 @@ function SkillValue( Master: GearPtr; Skill: Integer ): Integer;
 		TSkill := 0;
 		while m <> Nil do begin
 			if M^.G = GG_Character then begin
-				MSkill := SkillValue( M , Skill );
+				MSkill := SkillValue( M , Skill , Stat );
 				if MSkill > BigSkill then BigSkill := MSkill;
 				if MSkill >= 5 then TSkill := TSkill + ( MSkill div 5 );
 			end;
@@ -255,8 +254,9 @@ begin
 	{ with a master gear and not a ham sandwich or anything. }
 	if ( Master = Nil ) or Not ( IsMasterGear( Master ) or ( Master^.G = GG_Adventure ) ) then Exit( 0 );
 
-	{ Error check- make sure we have a valid skill number. }
+	{ Error check- make sure we have valid skill and stat numbers. }
 	if (Skill < 1) or (Skill > NumSkill) then Exit( 0 );
+	if ( Stat < 1 ) or ( Stat > num_character_stats ) then Exit( 0 );
 
 	{ Skill Roll Modifier starts out at 0. }
 	SkMod := 0;
@@ -265,7 +265,7 @@ begin
 		{ Since this is a character, just grab the needed }
 		{ ranks from the gear's stats and attributes. }
 		SkRk := CharaSkillRank( Master , Skill );
-		StRk := CStat( Master , SkillMan[Skill].stat );
+		StRk := CStat( Master , Stat );
 
 		C := Master;
 
@@ -310,12 +310,12 @@ begin
 		C := LocatePilot( Master );
 		if C = Nil then Exit( 0 );
 
-		SkRk := SkillValue( C , Skill) + ModifiersSkillBonus( Master , Skill );
+		SkRk := SkillValue( C , Skill , Stat ) + ModifiersSkillBonus( Master , Skill );
 		StRk := 0;
 
 		{ If this mecha has reflex control, there may be a +1 bonus to this skill. }
-		if HasMechaTrait( Master , MT_ReflexSystem ) and ( Skill < 6 ) then begin
-			if CharaSkillRank( C , Skill + 5 ) >= CharaSkillRank( C , Skill ) then Inc( SkRk );
+		if HasMechaTrait( Master , MT_ReflexSystem ) and ( Skill < 4 ) then begin
+			if CharaSkillRank( C , Skill + 3 ) >= CharaSkillRank( C , Skill ) then Inc( SkRk );
 		end;
 
 		if SkillMan[Skill].MekSys = MS_Maneuver then begin
@@ -354,7 +354,7 @@ var
 begin
 	{ Determine the Initiative skill value for this character. }
 	if Master^.G = GG_Prop then begin
-		I := SkillValue( Master , NAS_Initiative ) + 1;
+		I := SkillValue( Master , NAS_Initiative , STAT_Speed ) + 1;
 		if I < 1 then I := 1;
 	end else begin
 		Master := LocatePilot( Master );
@@ -466,7 +466,9 @@ begin
 			SkLvl := NAttValue( P^.NA , NAG_Skill , Skill );
 			{ Assume FALSE unless proven TRUE. }
 			DidIncrease := False;
-			if ( NATTValue( P^.NA , NAG_Experience , NAS_Skill_XP_Base + Skill ) >= SkillAdvCost( Nil , SkLvl ) ) and ( ( NAttValue( P^.NA , NAG_Skill , Skill ) > 0 ) or Direct_Skill_Learning ) then begin
+			{ Hidden skills can always improve from natural experience, since that's the }
+			{ only way to improve them. }
+			if ( NATTValue( P^.NA , NAG_Experience , NAS_Skill_XP_Base + Skill ) >= SkillAdvCost( Nil , SkLvl ) ) and ( ( NAttValue( P^.NA , NAG_Skill , Skill ) > 0 ) or SkillMan[ Skill ].Hidden or Direct_Skill_Learning ) then begin
 				{ Set IT to true, advance the skill, and decrease the }
 				{ number of skill-specific XPs the character has. }
 				it := True;
@@ -567,7 +569,7 @@ begin
 		{ If it's positive morale damage and CL is negative, }
 		{ make a RESISTANCE roll to avoid losing mood. }
 		if ( M > 1 ) and ( CL < 0 ) then begin
-			if RollStep( SkillValue( PC , 36 ) ) < ( M + 1 ) then begin
+			if RollStep( SkillValue( PC , NAS_Toughness , STAT_Ego ) ) < ( M + 1 ) then begin
 				CL := CL div 2;
 			end;
 		end;
@@ -642,7 +644,7 @@ begin
 				AddNAtt( PC^.NA , NAG_Condition , NAS_StaminaDown , Strain );
 
 				{ Using SP trains athletics. }
-				DoleSkillExperience( PC , 26 , Strain );
+				DoleSkillExperience( PC , NAS_Athletics , Strain );
 			end else begin
 				AddMoraleDmg( PC , Strain );
 			end;
@@ -661,7 +663,7 @@ begin
 				AddNAtt( PC^.NA , NAG_Condition , NAS_MentalDown , Strain );
 
 				{ Using MP trains concentration. }
-				DoleSkillExperience( PC , 30 , Strain );
+				DoleSkillExperience( PC , NAS_Concentration , Strain );
 			end else begin
 				AddMoraleDMG( PC , Strain );
 			end;
@@ -799,15 +801,7 @@ Function PartyPetSlots( PC: GearPtr ): Integer;
 begin
 	PC := LocatePilot( PC );
 	if PC = Nil then Exit( 0 );
-	PartyPetSlots := 1 + ( NAttValue( PC^.NA , NAG_Skill , NAS_DominateAnimal ) div 3 );
-end;
-
-Function PartyRobotSlots( PC: GearPtr ): Integer;
-	{ Return how many robots the PC can have. }
-begin
-	PC := LocatePilot( PC );
-	if PC = Nil then Exit( 0 );
-	PartyRobotSlots := 1 + ( NAttValue( PC^.NA , NAG_Skill , NAS_Robotics ) div 3 );
+	PartyPetSlots := 1 + CStat( PC , STAT_Charm ) div 4;
 end;
 
 Function HasSkill( PC: GearPtr; Skill: Integer ): Boolean;
@@ -861,6 +855,9 @@ var
 begin
 	if Level < 0 then Level := 0
 	else if Level > 300 then Level := 300;
+
+	{ This formula looks strange; it was created using some expected values and then }
+	{ deriving an equation to fit. }
 
 	{ For low level encounters, use a linear equation. }
 	if Level < 31 then begin

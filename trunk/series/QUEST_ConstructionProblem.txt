@@ -73,11 +73,11 @@ Content
 				GoLose <Print 5>
 				GoNothing <Print 2>
 				% Mecha Repair, Code Breaking and Science allow difficult skill rolls to fix the robots
-				Clue15 <if= QuestStatus %qid% %id% else GoNothing  ifMechaRepair   HardSkillTar %threat% else GoLose Goto GoWin>
+				Clue15 <if= QuestStatus %qid% %id% else GoNothing  ifRepair   SkillTar %threat% else GoLose Goto GoWin>
 				Clue29 <if= QuestStatus %qid% %id% else GoNothing  ifScience       HardSkillTar %threat% else GoLose Goto GoWin>
 				Clue32 <if= QuestStatus %qid% %id% else GoNothing  ifCodeBreaking  HardSkillTar %threat% else GoLose Goto GoWin>
 				% General Repair allows a relatively easy roll to fix the robots
-				Clue23 <if= QuestStatus %qid% %id% else GoNothing  ifGeneralRepair SkillTar %threat%     else GoLose Goto GoWin>
+				Clue23 <if= QuestStatus %qid% %id% else GoNothing  ifRepair SkillTar %threat%     else GoLose Goto GoWin>
 				Msg1 <This computer controls the robots for the construction site. The lights on its display are blinking wildly.>
 				Msg2 <This computer controls the robots for the construction site.>
 				Msg3 <You repair the computer and deactivate the malfunctioning robots.>
@@ -330,7 +330,7 @@ Content
 		Prompt5 <Let me see what I can do.>
 		Prompt6 <We don't need no stinking expert!>
 		Prompt7 <Hey, I'm an expert on quasinatural organisms.>
-		CPrompt7 <ifBiotech %sktar% Accept>
+		CPrompt7 <ifScience %sktar% Accept>
 		Prompt8 <You're probably right.>
 		Prompt9 <Nothing yet.>
 		Prompt10 <%name1% has agreed to provide extra funds.>

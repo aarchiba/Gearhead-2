@@ -701,7 +701,7 @@ Content
 		Prompt6 <Come on, %name5%, I thought we were buddies.>
 		CPrompt6 <if= ChatNPCRelationship 0 ifG React 50 if= V%id%01 1 Accept>
 		Prompt7 <Instead of money, would you trade it for my phone number?>
-		CPrompt7 <ifChatNPCSexy ifFlirtation SkillTar StoryDL Accept>
+		CPrompt7 <ifChatNPCSexy ifConversation SkillTar StoryDL Accept>
 		Prompt8 <Call me anytime. I mean it.>
 		Prompt9 <Thanks. I'll be seeing you around.>
 

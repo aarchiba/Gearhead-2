@@ -92,7 +92,7 @@
 	%% Method 1 - Conversation
 	result%id%01 <ifConversation * 2 ChatNPCEgo else %3% Goto %1%>
 	%% Method 2 - Flirtation
-	result%id%02 <ifFlirtation ChatNPCEgo else %3% Goto %1%>
+	result%id%02 <ifConversation ChatNPCEgo else %3% Goto %1%>
 	%% Method 3 - Reputation
 	result%id%03 <ifG PCRenown d65 else %3% Goto %1%>
 	%% Reject the mission
@@ -297,7 +297,7 @@
 	result%id%01 <ifConversation HardSkillTar %6% else .%id%_GoR1Lose ifG React -1 else .%id%_GoR1Lose Goto %1%>
 	.%id%_GoR1Lose <NewChat Say %id%02 Goto %2%>
 	result%id%02 <ifIntimidation SkillTar %6% else .%id%_GoR1Lose Goto %1%>
-	result%id%03 <AddEasygoing -d10  ifFlirtation HardSkillTar %6% else .%id%_GoR3Lose  ifG React 20 else .%id%_GoR3Lose  AddReact 10  NewChat Say %id%03 AddChat %id%05>
+	result%id%03 <AddEasygoing -d10  ifConversation HardSkillTar %6% else .%id%_GoR3Lose  ifG React 20 else .%id%_GoR3Lose  AddReact 10  NewChat Say %id%03 AddChat %id%05>
 	.%id%_GoR3Lose <AddReact -10  EndChat Say %id%04>
 	result%id%04 <Goto %3%>
 	result%id%05 <Goto %1%>

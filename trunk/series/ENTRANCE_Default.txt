@@ -6,7 +6,7 @@ roguechar <*>
 SDL_SPRITE <prop_colony.png>
 Frame 1
 use <if= StatVal STAT_MetaVisibility 0 ifNoObjections EWM StatVal 4 ifFactionEnemy SceneFac StatVal 4 else GoEnter Goto GoFight>
-GoFight <ifG SkRoll 11 15 else GoNoSee ifYesNo 2 3 4 else GoStartCombat Reputation 3 -d3 ifG SkRoll 25 15 else GoStealthFail Print 5 Exit StatVal 4>
+GoFight <ifG Awareness 15 else GoNoSee ifYesNo 2 3 4 else GoStartCombat Reputation 3 -d3 ifG Stealth 15 else GoStealthFail Print 5 Exit StatVal 4>
 GoNoSee <Alert 1 Goto GoStartCombat>
 GoStealthFail <Print 6 Goto GoStartCombat>
 GoStartCombat <SavePos Dynamic 2 PCRenown 200 .nu1 .nu2 DynaVar= 1 StatVal 4 DynaVar= 2 SceneID  DynaFaction SceneFac StatVal 4>

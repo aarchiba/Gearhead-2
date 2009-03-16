@@ -584,7 +584,7 @@ Function AreAllies( GB: GameBoardPtr; M1 , M2: GearPtr ): Boolean;
 Procedure DeleteObsoleteTeams( GB: GameBoardPtr );
 Function IsSafeArea( GB: GameBoardPtr ): Boolean;
 
-Function TeamSkill( GB: GameBoardPtr; Team,Skill: Integer): Integer;
+Function TeamSkill( GB: GameBoardPtr; Team,Skill,Stat: Integer): Integer;
 Function TeamHasSkill( GB: GameBoardPtr; Team,Skill: Integer): Boolean;
 Function TeamHasTalent( GB: GameBoardPtr; Team,Talent: Integer): Boolean;
 
@@ -1225,7 +1225,7 @@ begin
 	IsSafeArea := it;
 end;
 
-Function TeamSkill( GB: GameBoardPtr; Team,Skill: Integer): Integer;
+Function TeamSkill( GB: GameBoardPtr; Team,Skill,Stat: Integer): Integer;
 	{ Return the maximum skill value from the team. }
 var
 	M: GearPtr;
@@ -1241,7 +1241,7 @@ begin
 		if T2 = NAV_LancemateTeam then T2 := NAV_DefPlayerTeam;
 		if T2 = Team then begin
 			if IsMasterGear( M ) then begin
-				MSkill := SkillValue( M , Skill );
+				MSkill := SkillValue( M , Skill , Stat );
 				if MSkill > BigSkill then BigSkill := MSkill;
 				if MSkill >= 5 then TSkill := TSkill + ( MSkill div 5 );
 			end;
@@ -2633,6 +2633,9 @@ var
 begin
 	{ Error check - better not be talking about the NoTeam team... }
 	if ( Ateam = 0 ) or ( DTeam = 0 ) or ( ATeam = DTeam ) then Exit;
+
+	{ If it's the lancemate team attacking, this counts as a PC attack. }
+	if ATeam = NAV_LancemateTeam then ATeam := NAV_DefPlayerTeam;
 
 	{ If the Attacking team hasn't started as the enemy of the other team, set reputation to Chaotic. }
 	{ If the Defending team isn't out to get the attacking team, set reputation to Villainous. }

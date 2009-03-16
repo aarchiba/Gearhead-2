@@ -467,7 +467,7 @@ begin
 						{ Set rate of diminishment }
 						if Random( 2 ) = 1 then Dec( FX^.V );
 						if FX^.V = 0 then SetNAtt( M^.NA , NAG_StatusEffect , FX^.S , 0 );
-					end else if ( FX^.V > 0 ) and ( SX_ResistTarget[ FX^.S ] > 0 ) and ( RollStep( SkillValue( M , NAS_Resistance ) ) > SX_ResistTarget[ FX^.S ] ) then begin
+					end else if ( FX^.V > 0 ) and ( SX_ResistTarget[ FX^.S ] > 0 ) and ( RollStep( SkillValue( M , NAS_Toughness , STAT_Ego ) ) > SX_ResistTarget[ FX^.S ] ) then begin
 						{ Diminishment determined by RESISTANCE }
 						Dec( FX^.V );
 						if FX^.V = 0 then SetNAtt( M^.NA , NAG_StatusEffect , FX^.S , 0 );
@@ -499,7 +499,7 @@ var
 	D: Integer;	{ Disfunction # }
 begin
 	{ To start with, add up all the trauma points the PC has. }
-	TT := 0;
+{	TT := 0;
 	N := 0;
 	SC := PC^.SubCom;
 	while SC <> Nil do begin
@@ -552,7 +552,7 @@ begin
 				end;
 			end;
 		end;
-	end;
+	end;}
 end;
 
 Procedure RegenerationCheck( MList: GearPtr );
@@ -904,15 +904,15 @@ begin
 
 	{ Calculate the Intimidation and Leadership values. }
 	Intimidation := 5;
-	Leadership := TeamSkill( GB , TeamID , NAS_Leadership );
+	Leadership := TeamSkill( GB , TeamID , NAS_Intimidation , STAT_Ego );
 	if GB^.Scene <> Nil then begin
 		Team := GB^.Scene^.SubCom;
 		while Team <> Nil do begin
 			if ( Team^.S <> TeamID ) and AreAllies( GB , Team^.S , TeamID ) then begin
-				Dmg := TeamSkill( GB , Team^.S , NAS_Leadership );
+				Dmg := TeamSkill( GB , Team^.S , NAS_Intimidation , STAT_Ego );
 				if Dmg > Leadership then Leadership := Dmg;
 			end else if ( Team^.S <> TeamID ) and AreEnemies( GB , Team^.S , TeamID ) then begin
-				Dmg := TeamSkill( GB , Team^.S , NAS_Intimidation );
+				Dmg := TeamSkill( GB , Team^.S , NAS_Intimidation , STAT_Ego );
 				if Dmg > Intimidation then Intimidation := Dmg;
 			end;
 			Team := Team^.Next;
@@ -968,7 +968,7 @@ begin
 	if BlackKnightSituation and CapableOfSurrender( GB , NPC ) then begin
 		ShouldSurrender := True;
 	end else if ( DMG < PrevDmg ) and MightSurrender( GB , NPC ) then begin
-		SkRank := TeamSkill( GB , NAV_DefPlayerTeam , NAS_Intimidation );
+		SkRank := TeamSkill( GB , NAV_DefPlayerTeam , NAS_Intimidation , STAT_Ego );
 		PrevDmg := GearCurrentDamage( NPC );
 		if PrevDmg < 10 then SkRank := SkRank + 15 - PrevDmg;
 		ShouldSurrender := RollStep( SkRank ) > ( CStat( NPC , STAT_Ego ) + Dmg div 10 );
@@ -1081,15 +1081,15 @@ var
 begin
 	{ Make the defense roll. Since most characters don't have the Taunt skill }
 	{ there's a minimum target number of 5. }
-	DefRoll := SkillRoll( GB , Target , NAS_Resistance , 0 , 0 , False , True );
+	DefRoll := SkillRoll( GB , Target , NAS_Toughness , STAT_Ego , 0 , 0 , False , True );
 	if DefRoll < MinTauntTarget then DefRoll := MinTauntTarget;
 	AddMentalDown( Attacker , 1 );
 
-	AtRoll :=  SkillRoll( GB , Attacker , NAS_Taunt , DefRoll , 0 , False , True );
+	AtRoll :=  SkillRoll( GB , Attacker , NAS_Taunt , STAT_Charm , DefRoll , 0 , False , True );
 	msg := GetTauntString( Attacker , 'CHAT_VA.ATTACK' );
 	Monologue( GB , Attacker , msg );
 
-	CounterRoll := SkillRoll( GB , Target , NAS_Resistance , AtRoll , 0 , False , True );
+	CounterRoll := SkillRoll( GB , Target , NAS_Taunt , STAT_Charm , AtRoll , 0 , False , True );
 
 	if CounterRoll > AtRoll then begin
 		msg := GetTauntString( Target , 'CHAT_VA.RIPOSTE' );
@@ -1138,9 +1138,9 @@ Procedure DoVerbalAttack( GB: GameBoardPtr; Attacker,Target: GearPtr );
 	var
 		Con_Rank,Int_Rank: Integer;
 	begin
-		Con_Rank := SkillValue( Attacker , NAS_Conversation ) - 5;
+		Con_Rank := SkillValue( Attacker , NAS_Conversation , STAT_Charm ) - 5;
 		if Con_Rank < 0 then Con_Rank := 0;
-		Int_Rank := SkillValue( Attacker , NAS_Intimidation );
+		Int_Rank := SkillValue( Attacker , NAS_Intimidation , STAT_Ego );
 
 		if Random( Int_Rank + Con_Rank ) < Int_Rank then begin
 			SelectTactic := NAS_Intimidation;
@@ -1156,16 +1156,16 @@ var
 	msg: String;
 begin
 	if ( Target^.G = GG_Character ) then begin
-		DefRoll := SkillRoll( GB , Target , NAS_Resistance , 0 , 0 , False , True );
+		DefRoll := SkillRoll( GB , Target , NAS_Toughness , STAT_Ego , 0 , 0 , False , True );
 		if DefRoll < MinSurrenderDefRoll then DefRoll := MinSurrenderDefRoll;
 		AddMentalDown( Attacker , 3 );
 
 		AtSkill := SelectTactic;
 		msg := GetTauntString( Attacker , 'CHAT_VA.FORCESURRENDER.' + BStr( AtSkill ) );
 		if AtSkill = NAS_Conversation then begin
-			AtRoll :=  SkillRoll( GB , Attacker , AtSkill , DefRoll , -5 - NAttValue( Target^.NA , NAG_EpisodeData , NAS_TauntResistance ) , False , True );
+			AtRoll :=  SkillRoll( GB , Attacker , AtSkill , STAT_Charm , DefRoll , -5 - NAttValue( Target^.NA , NAG_EpisodeData , NAS_TauntResistance ) , False , True );
 		end else begin
-			AtRoll :=  SkillRoll( GB , Attacker , AtSkill , DefRoll , -NAttValue( Target^.NA , NAG_EpisodeData , NAS_TauntResistance ) , False , True );
+			AtRoll :=  SkillRoll( GB , Attacker , AtSkill , STAT_Ego , DefRoll , -NAttValue( Target^.NA , NAG_EpisodeData , NAS_TauntResistance ) , False , True );
 		end;
 		AddNAtt( Target^.NA , NAG_EpisodeData , NAS_TauntResistance , 1 + Random(3) );
 		Monologue( GB , Attacker , msg );
@@ -1186,16 +1186,16 @@ begin
 		end;
 
 	end else if ( target^.G = GG_Mecha ) and ( NAttValue( Attacker^.NA , NAG_Location, NAS_Team ) = NAV_DefPlayerTeam ) and MightEject( Target ) then begin
-		DefRoll := SkillRoll( GB , Target , NAS_Resistance , 0 , NAttValue( Target^.NA , NAG_EpisodeData , NAS_TauntResistance ) , False , True );
+		DefRoll := SkillRoll( GB , Target , NAS_Toughness , STAT_Ego , 0 , NAttValue( Target^.NA , NAG_EpisodeData , NAS_TauntResistance ) , False , True );
 		if DefRoll < MinEjectDefRoll then DefRoll := MinEjectDefRoll;
 		AddMentalDown( Attacker , 3 );
 
 		AtSkill := SelectTactic;
 		msg := GetTauntString( Attacker , 'CHAT_VA.FORCEEJECT.' + BStr( AtSkill ) );
 		if AtSkill = NAS_Conversation then begin
-			AtRoll :=  SkillRoll( GB , Attacker , AtSkill , DefRoll , -10 , False , True );
+			AtRoll :=  SkillRoll( GB , Attacker , AtSkill , STAT_Charm , DefRoll , -10 , False , True );
 		end else begin
-			AtRoll :=  SkillRoll( GB , Attacker , AtSkill , DefRoll , -5 , False , True );
+			AtRoll :=  SkillRoll( GB , Attacker , AtSkill , STAT_Ego , DefRoll , -5 , False , True );
 		end;
 
 		AddNAtt( Target^.NA , NAG_EpisodeData , NAS_TauntResistance , 1 + Random( 8 ) );

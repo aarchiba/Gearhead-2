@@ -84,11 +84,8 @@ Function IsArchEnemy( Adv,NPC: GearPtr ): Boolean;
 Function IsArchAlly( Adv,NPC: GearPtr ): Boolean;
 Function XNPCDesc( GB: GameBoardPtr; Adv,NPC: GearPtr ): String;
 
-Function GenerateEnemyHook( Scene,PC,NPC: GearPtr; Desc: String ): GearPtr;
-Function GenerateAllyHook( Scene,PC,NPC: GearPtr ): GearPtr;
-
 Function LancematesPresent( GB: GameBoardPtr ): Integer;
-Function PetsPresent( GB: GameBoardPtr; CountRobots: Boolean ): Integer;
+Function PetsPresent( GB: GameBoardPtr ): Integer;
 
 Function FindLocalNPCByKeyWord( GB: GameBoardPtr; KW: String ): GearPtr;
 
@@ -282,7 +279,7 @@ begin
 		it := it + Charm * 3 - 35;
 	end;
 
-	{ A true archenemy will never have a greater reaction score than 0. }
+	{ A nemesis will never have a greater reaction score than 0. }
 	if NAttValue( NPC^.NA , NAG_Relationship , NAttValue( PC^.NA , NAG_Personal , NAS_CID ) ) = NAV_ArchEnemy then begin
 		it := it - ArchEnemyReactionPenalty;
 		if it > 0 then it := 0;
@@ -304,7 +301,7 @@ begin
 	{ At some point in time I will make a lovely procedure that will }
 	{ create all sorts of useless chatter. Right now, I'll just return }
 	{ the following constant string. }
-	BlowOff := 'I really don''t have much time to chat today, I have a lot of things to do.';
+	BlowOff := MsgString( 'BlowOff' );
 end;
 
 function MadLibString( SList: SAttPtr ): String;
@@ -660,7 +657,7 @@ var
 	var
 		MRB: LongInt;
 	begin
-		MRB := ( SkillValue( PC , NAS_Conversation ) + CStat( PC , STAT_Charm ) ) * 2;
+		MRB := ( SkillValue( PC , NAS_Conversation , STAT_Charm ) + CStat( PC , STAT_Charm ) ) * 2;
 		MaxReactBonus := MRB;
 	end;
 begin
@@ -673,14 +670,15 @@ begin
 	SkTarget := 5 + Abs( NAttValue( PC^.NA , NAG_ReactionScore , Persona ) ) div 4;
 
 	{ Start by making a social interaction roll for the PC. }
-	SkRoll := SkillRoll( GB , PC , NAS_Conversation , SkTarget , 0 , False , False );
+	SkRoll := SkillRoll( GB , PC , NAS_Conversation , STAT_Charm , SkTarget , 0 , False , False );
 
 	{ Apply flirtation bonus to the skill roll, if appropriate. }
 	{ The bonus only applies if the PC has ranks in flirtation or is a Jack of all Trades. }
-	if IsSexy( PC , NPC ) and HasSkill( PC , NAS_Flirtation ) then begin
+{ Temporarily blocked out until Flirtation reworked... }
+{	if IsSexy( PC , NPC ) and HasSkill( PC , NAS_Flirtation ) then begin
 		SkRoll := SkRoll + SkillRoll( GB , PC , NAS_Flirtation , SkTarget , 0 , False , False );
 	end;
-
+}
 	{ Initialize TRAIT to random. These things will be needed later. }
 	if Random( 3 ) <> 1 then begin
 		Trait := SelectTraitForChatter;
@@ -726,7 +724,7 @@ begin
 			SkRoll := SkRoll div 3;
 			{ Characters with the Diplomatic talent don't count as in opposition, }
 			{ although they still do suffer the roll penalty. }
-			InOp := Not TeamHasTalent( GB , NAV_DefPlayerTeam , NAS_Diplomatic );
+			InOp := True;
 		end else begin
 			InOp := False;
 		end;
@@ -742,7 +740,6 @@ begin
 			if ReactionScore( GB^.Scene , PC , NPC ) > NAttValue( NPC^.NA , NAG_Personal , NAS_InteractXPStep ) then begin
 				DoleExperience( PC , 1 );
 				DoleSkillExperience( PC , NAS_Conversation , 1 );
-				if HasSkill( PC , NAS_Flirtation ) then DoleSkillExperience( PC , NAS_Flirtation , 2 );
 				AddNAtt( NPC^.NA , NAG_Personal , NAS_InteractXPStep , 5 );
 			end;
 		end;
@@ -904,182 +901,6 @@ begin
 	XNPCDesc := it;
 end;
 
-Function GenerateEnemyHook( Scene,PC,NPC: GearPtr; Desc: String ): GearPtr;
-	{ Return a PERSONA gear to be used by the provided NPC }
-	{ in the upcoming battle. }
-	Function RelativeMessage: String;
-		{ Provide a message based upon either the Ally/Enemy }
-		{ status of the NPC, or upon the reaction score between }
-		{ PC and NPC. }
-	var
-		R: Integer;
-	begin
-		if Random( 3 ) <> 1 then begin
-			if IsArchAlly( Scene , NPC ) then begin
-				RelativeMessage := SAttValue( Chat_Msg_List , 'EHOOK_AreAllies_' + BStr( Random( 3 ) + 1 ) );
-			end else if IsArchEnemy( Scene , NPC ) then begin
-				RelativeMessage := SAttValue( Chat_Msg_List , 'EHOOK_AreEnemies_' + BStr( Random( 3 ) + 1 ) );
-			end else begin
-				RelativeMessage := SAttValue( Chat_Msg_List , 'EHOOK_AreNeutral_' + BStr( Random( 3 ) + 1 ) );
-			end;
-		end else begin
-			R := ReactionScore( Scene, PC, NPC );
-			if R > ( 35 + Random( 50 ) ) then begin
-				RelativeMessage := SAttValue( Chat_Msg_List , 'EHOOK_Like_' + BStr( Random( 3 ) + 1 ) );
-			end else if R > ( Random( 30 ) - 10 ) then begin
-				RelativeMessage := SAttValue( Chat_Msg_List , 'EHOOK_Ehhh_' + BStr( Random( 3 ) + 1 ) );
-			end else begin
-				RelativeMessage := SAttValue( Chat_Msg_List , 'EHOOK_Hate_' + BStr( Random( 3 ) + 1 ) );
-			end;
-		end;
-	end;
-
-	Function TraitMessage( T: Integer ): String;
-	var
-		L: Integer;
-	begin
-		{ Note that a space is added to the front of the }
-		{ trait message for formatting purposes. }
-		L := NAttValue( NPC^.NA , NAG_CharDescription , -T );
-		if L > 10 then begin
-			TraitMessage := ' ' + SAttValue( Chat_Msg_List , 'EHOOK_Trait_' + BStr( T ) + '_1_' + BStr( Random( 3 ) + 1 ) );
-		end else if L < -10 then begin
-			TraitMessage := ' ' + SAttValue( Chat_Msg_List , 'EHOOK_Trait_' + BStr( T ) + '_2_' + BStr( Random( 3 ) + 1 ) );
-		end else begin
-			TraitMessage := '';
-		end;
-	end;
-
-	Function IntimidationTarget: Integer;
-		{ Determine how easily this NPC may be scared off. }
-	const
-		baseTV = 5;
-		minimumTV = 10;
-	var
-		IT,Trait: Integer;
-	begin
-		{ Difficulcy level is based on the NPC's EGO stat. }
-		it := baseTV + CStat( NPC , STAT_Ego );
-
-		{ Certain personality traits can affect the IT. }
-		{ LAWFUL characters are less likely to abandon their causes. }
-		Trait := NAttValue( NPC^.NA , NAG_CharDescription , NAS_Lawful );
-		if Trait > 10 then begin
-			it := it + ( Trait div 10 );
-		end;
-
-		{ PASSIONATE characters long for battle, }
-		{ while EASYGOING characters long for comfort. }
-		Trait := NAttValue( NPC^.NA , NAG_CharDescription , NAS_Easygoing );
-		if Trait > 25 then begin
-			it := it - ( Trait div 25 );
-		end else if Trait < -15 then begin
-			it := it + ( Abs( Trait ) div 15 );
-		end;
-
-		{ RENOWNED characters aren't easily intimidated. }
-		Trait := NAttValue( NPC^.NA , NAG_CharDescription , NAS_Renowned ) - NAttValue( PC^.NA , NAG_CharDescription , NAS_Renowned );
-		if Trait > 10 then begin
-			it := it + ( Trait div 5 );
-		end else if Trait < -15 then begin
-			it := it - ( Abs( Trait ) div 15 );
-		end;
-
-		{ If it's less than the minimum target value, }
-		{ set it to at least that much. }
-		if it < MinimumTV then it := MinimumTV;
-
-		IntimidationTarget := it;
-	end;
-
-var
-	Hook: GearPtr;
-	greeting,msg1,cmd: String;
-	N1,N2: Integer;
-begin
-	{ Create the gear for the hook. }
-	Hook := NewGear( Nil );
-	Hook^.G := GG_Persona;
-	Hook^.S := NAttValue( NPC^.NA , NAG_Personal , NAS_CID );
-	InitGear( Hook );
-
-	greeting := SAttValue( Chat_Msg_List , 'EHook_Greeting' );
-
-	{ Record the intimidation target and XPV. }
-	N1 := IntimidationTarget;
-	SetNAtt( Hook^.NA , 0 ,  999 , N1 );
-	if N1 > 0 then SetNAtt( Hook^.NA , 0 , 1000 , N1 * 50 );
-
-
-	{ Create Message 1 - the NPC's speech to the player. }
-	{ Start with a trait message. If empty, use a relative message }
-	{ instead. }
-	N1 := Random( Num_Personality_Traits ) + 1;
-	msg1 := TraitMessage( N1 );
-	if msg1 = '' then msg1 := RelativeMessage;
-
-	{ Add a second trait message which should not conflict with the }
-	{ first one. }
-	N2 := Random( Num_Personality_Traits - 1 ) + 1;
-	if N2 = N1 then Inc( N2 );
-	msg1 := msg1 + TraitMessage( N2 );
-
-	{ Define the options. }
-	desc := UpCase( desc );
-	while desc <> '' do begin
-		cmd := ExtractWord( desc );
-
-		if cmd = '+PCRA' then begin
-			{ Player can run away. Enemy will give player }
-			{ the option to leave. }
-			msg1 := msg1 + ' ' + FormatChatString( SAttValue( Chat_Msg_List , 'EHOOK_PCRA_' + BStr( Random( 5 ) + 1 ) ) );
-			greeting := greeting + ' AddChat 2';
-			SetSAtt( Hook^.SA , 'prompt2 <' + FormatChatString( SAttValue( Chat_Msg_List , 'EHOOK_P_2_' + BStr( Random( 5 ) + 1 ) ) ) + '>' );
-			SetSAtt( Hook^.SA , 'result2 <' + SAttValue( Chat_Msg_List , 'EHOOK_R_2' ) + '>' );
-			SetSAtt( Hook^.SA , 'msg3 <' + FormatChatString( SAttValue( Chat_Msg_List , 'EHOOK_Msg3_' + BStr( Random( 5 ) + 1 ) ) ) + '>' );
-
-		end else if cmd = '+ECRA' then begin
-			{ Enemy can run away. Player will have }
-			{ the option to threaten the NPC. }
-			greeting := greeting + ' AddChat 3';
-			SetSAtt( Hook^.SA , 'prompt3 <' + FormatChatString( SAttValue( Chat_Msg_List , 'EHOOK_P_3_' + BStr( Random( 5 ) + 1 ) ) ) + '>' );
-			SetSAtt( Hook^.SA , 'result3 <' + SAttValue( Chat_Msg_List , 'EHOOK_R_3' ) + '>' );
-			SetSAtt( Hook^.SA , 'msg4 <' + FormatChatString( SAttValue( Chat_Msg_List , 'EHOOK_Msg4_' + BStr( Random( 5 ) + 1 ) ) ) + '>' );
-			SetSAtt( Hook^.SA , 'msg5 <' + FormatChatString( SAttValue( Chat_Msg_List , 'EHOOK_Msg5' ) ) + '>' );
-
-		end;
-	end;
-
-	SetSAtt( Hook^.SA , 'greeting <' + greeting + '>' );
-	SetSAtt( Hook^.SA , 'msg1 <' + FormatChatString( msg1 ) + '>' );
-	SetSAtt( Hook^.SA , 'msg2 <' + FormatChatString( SAttValue( Chat_Msg_List , 'EHOOK_Msg2_' + BStr( Random( 5 ) + 1 ) ) ) + '>' );
-	SetSAtt( Hook^.SA , 'prompt1 <' + FormatChatString( SAttValue( Chat_Msg_List , 'EHOOK_P_1_' + BStr( Random( 5 ) + 1 ) ) ) + '>' );
-	SetSAtt( Hook^.SA , 'result1 <' + SAttValue( Chat_Msg_List , 'EHook_R_1' ) + '>' );
-
-	GenerateEnemyHook := Hook;
-end;
-
-Function GenerateAllyHook( Scene,PC,NPC: GearPtr ): GearPtr;
-	{ The only real purpose of this is to let the player know that }
-	{ there's another mecha on his side. }
-var
-	Hook: GearPtr;
-begin
-	{ Create the gear for the hook. }
-	Hook := NewGear( Nil );
-	Hook^.G := GG_Persona;
-	Hook^.S := NAttValue( NPC^.NA , NAG_Personal , NAS_CID );
-	InitGear( Hook );
-
-	SetSAtt( Hook^.SA , 'greeting <' + SAttValue( chat_msg_list , 'AHOOK_Greeting' ) + '>' );
-	SetSAtt( Hook^.SA , 'result1 <' + SAttValue( chat_msg_list , 'AHOOK_R_1' ) + '>' );
-	SetSAtt( Hook^.SA , 'Msg1 <' + FormatChatString( SAttValue( chat_msg_list , 'AHOOK_MSG1_' + BStr( Random( 3 ) + 1 ) ) ) + '>' );
-	SetSAtt( Hook^.SA , 'Msg2 <' + FormatChatString( SAttValue( chat_msg_list , 'AHOOK_MSG2_' + BStr( Random( 3 ) + 1 ) ) ) + '>' );
-	SetSAtt( Hook^.SA , 'Prompt1 <' + FormatChatString( SAttValue( chat_msg_list , 'AHOOK_P_1_' + BStr( Random( 5 ) + 1 ) ) ) + '>' );
-
-	GenerateAllyHook := Hook;
-end;
-
 Function LancematesPresent( GB: GameBoardPtr ): Integer;
 	{ Return the number of free lancemates present. A free lancemate is one who: }
 	{ - is human (no pets) }
@@ -1102,7 +923,7 @@ begin
 	LancematesPresent := N;
 end;
 
-Function PetsPresent( GB: GameBoardPtr; CountRobots: Boolean ): Integer;
+Function PetsPresent( GB: GameBoardPtr ): Integer;
 	{ Count the number of pets on the lancemate team. If COUNTROBOTS is true, }
 	{ only count those pets made out of metal. Otherwise, only count those pets }
 	{ not made out of metal. }
@@ -1114,11 +935,7 @@ begin
 	N := 0;
 	while M <> Nil do begin
 		if ( NAttValue( M^.NA , NAG_Location , NAS_Team ) = NAV_LancemateTeam ) and ( M^.G = GG_Character ) and ( NAttValue( M^.NA , NAG_Personal , NAS_CID ) = 0 ) then begin
-			if CountRobots and ( NAttValue( M^.NA , NAG_GearOps , NAS_Material ) = NAV_Metal ) then begin
-				Inc( N );
-			end else if ( NAttValue( M^.NA , NAG_GearOps , NAS_Material ) = NAV_Metal ) and not CountRobots then begin
-				Inc( N );
-			end;
+			Inc( N );
 		end;
 		M := M^.Next;
 	end;

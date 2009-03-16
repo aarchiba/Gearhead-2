@@ -317,7 +317,6 @@ begin
 	case Part^.Stat[ STAT_SW_Type ] of
 	S_MVBoost:	msg := msg + ReplaceHash( MsgString( 'SOFTWARE_MVBOOST_DESC' ) , Bstr( Part^.Stat[ STAT_SW_Param ] ) );
 	S_TRBoost:	msg := msg + ReplaceHash( MsgString( 'SOFTWARE_TRBOOST_DESC' ) , Bstr( Part^.Stat[ STAT_SW_Param ] ) );
-	S_SkillBoost:	msg := msg + MsgString( 'SKILLNAME_' + Bstr( Part^.Stat[ STAT_SW_Param ] ) ) + ' ' + MsgString( 'SOFTWARE_SKILLBOOST_DESC' );
 	S_SpeedComp:	msg := msg + ReplaceHash( MsgString( 'SOFTWARE_SPEEDCOMP_DESC' ) , Bstr( Part^.Stat[ STAT_SW_Param ] ) );
 	S_Information:	msg := MsgSTring( 'SOFTWARE_INFORMATION_' + Bstr( Part^.Stat[ STAT_SW_Param ] ) );
 	else msg := msg + MsgString( 'SOFTWARE_MISC_DESC' );
@@ -556,7 +555,7 @@ begin
 	{ Error check- only provide description for a legal skill }
 	{ number. Otherwise just return an empty string. }
 	if ( N >= 1 ) and ( N <= NumSkill ) then begin
-		msg := '[' + UpCase( MsgString( 'StatName_' + BStr( SkillMan[N].Stat) ) ) + '] ' + MsgString( 'SKILLDESC_' + BStr( N ) );
+		msg := MsgString( 'SKILLDESC_' + BStr( N ) );
 	end;
 	SkillDescription := msg;
 end;

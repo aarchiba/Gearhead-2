@@ -436,7 +436,7 @@ Content
 		result2 <NewChat Say 6 UnSurrender %2% SetNPCTeam %2% 2 SceneVar= %s2% 11 -2 QMemo %qid% 7 AddChat 3 AddChat 4 AddChat 5>
 		result3 <NewChat Say 8>
 		result4 <PCFriend %2% Goto result3>
-		result5 <ifChatNPCSexy else result3 ifFlirtation SkillTar %threat% else result3 PCLover %2% Goto result3>
+		result5 <ifChatNPCSexy else result3 ifConversation SkillTar %threat% else result3 PCLover %2% Goto result3>
 		result6 <EndChat Say 10 AddHeroic -5 SoloAttack %2% SceneVar= %s2% 11 0>
 		result7 <NewChat Say 11>
 		result8 <Goto .%id2%_GoInit>
@@ -598,8 +598,8 @@ Content
 		GoTrain <NewChat Say 2 AddChat 1 AddChat 2>
 		GoFail <NewChat Say 4>
 		GoWin <NewChat Say 3 Mental NPCVar= ChatNPCID 1 1  SetNPCFaction ChatNPCID NPCFac %1%>
-		result1 <ifSkillTest 6 SkillTar %threat% else GoFail Goto GoWin>
-		result2 <ifSkillTest 7 SkillTar %threat% else GoFail Goto GoWin>
+		result1 <ifSkillTest NAS_RangedCombat STAT_Reflexes SkillTar %threat% else GoFail Goto GoWin>
+		result2 <ifSkillTest NAS_RangedCombat STAT_Perception SkillTar %threat% else GoFail Goto GoWin>
 		Msg1 <I'm ready to take on all comers, thanks to you.>
 		Msg2 <I've got to work on my ranged combat skills if I want to get accepted into the sniper program.>
 		Msg3 <Hey, thanks. With your help I think I can do it.>
@@ -616,8 +616,8 @@ Content
 		GoTrain <NewChat Say 2 AddChat 1 AddChat 2>
 		GoFail <NewChat Say 4>
 		GoWin <NewChat Say 3 Mental NPCVar= ChatNPCID 1 1  SetNPCFaction ChatNPCID NPCFac %1%>
-		result1 <ifSkillTest 8 SkillTar %threat% else GoFail Goto GoWin>
-		result2 <ifSkillTest 9 SkillTar %threat% else GoFail Goto GoWin>
+		result1 <ifSkillTest NAS_CloseCombat STAT_Reflexes SkillTar %threat% else GoFail Goto GoWin>
+		result2 <ifSkillTest NAS_CloseCombat STAT_Body SkillTar %threat% else GoFail Goto GoWin>
 		Msg1 <I'm ready to deploy! Woo-hoo!>
 		Msg2 <Man, I can't wait to be finished with this training so I can get out there and taste some real combat, you know?>
 		Msg3 <You're pretty good at this. Thanks for the pointers.>
@@ -634,14 +634,14 @@ Content
 		GoTrain <NewChat Say 2 AddChat 1 AddChat 2>
 		GoFail <NewChat Say 4>
 		GoWin <NewChat Say 3 Mental NPCVar= ChatNPCID 1 1  SetNPCFaction ChatNPCID NPCFac %1%>
-		result1 <ifSkillTest 10 SkillTar %threat% else GoFail Goto GoWin>
-		result2 <ifSkillTest 36 SkillTar %threat% else GoFail Goto GoWin>
+		result1 <ifSkillTest NAS_Dodge STAT_Speed SkillTar %threat% else GoFail Goto GoWin>
+		result2 <ifSkillTest NAS_Toughness STAT_Ego SkillTar %threat% else GoFail Goto GoWin>
 		Msg1 <Thanks to you, I'm all ready to go out. Hopefully I can even come back alive.>
 		Msg2 <I signed up to help protect my home, but now that I'm getting close to the end of training I'm really worried about dying in combat...>
 		Msg3 <Thanks for those tips. I feel a bit more confident now.>
 		Msg4 <Stop. It's clear that you don't know any better than me, so listening to your advice could easily get me killed.>
 		Prompt1 <Let me teach you about Dodge.>
-		Prompt2 <Let me teach you about Resistance.>
+		Prompt2 <Let me teach you about Toughness.>
 	end
 	inv
 		NPC Soldier

@@ -150,7 +150,7 @@ var
 	ShopRk,ShopTr,R: Integer;		{ ShopRank and ShopTarget }
 begin
 	{ Determine the Shopping skill rank of the buyer. }
-	ShopRk := SkillValue( PC , 21 );
+	ShopRk := SkillValue( PC , NAS_Shopping , STAT_Charm );
 
 	{ Determine the shopping target number, which should be the EGO }
 	{ stat of the storekeeper. }
@@ -158,7 +158,7 @@ begin
 	else begin
 		{ Target is based on both the Ego of the shopkeeper }
 		{ and also on the relationship with the PC. }
-		ShopTr := NPC^.Stat[ STAT_Ego ];
+		ShopTr := CStat( NPC , STAT_Ego );
 		R := ReactionScore( Nil , PC , NPC );
 		if R > 0 then begin
 			ShopTr := ShopTr - ( R div 5 );
@@ -201,7 +201,7 @@ begin
 	{ crash the logarithm function. }
 	Price := GearCost( Part );
 	if Price < 1 then Price := 1;
-	if DoleSkillExperience( PC , 21 , Round( Ln( Price ) * 5 ) + 1 ) then begin
+	if DoleSkillExperience( PC , NAS_Shopping , Round( Ln( Price ) * 5 ) + 1 ) then begin
 		DialogMsg( MsgString( 'SHOPPING_SkillAdvance' ) );
 	end;
 end;
@@ -347,7 +347,7 @@ begin
 				AddNAtt( PC^.NA , NAG_Experience , NAS_Credits , -Cost );
 
 				CHAT_Message := MsgString( 'BUYREPLY' + BStr( Random( 4 ) + 1 ) );
-				if NPC <> Nil then DoleSkillExperience( NPC , 21 , ( ( Round( Ln( Cost ) * 100 ) ) div ( Ammo^.Scale * 2 + 1 ) ) + 1 );
+				if NPC <> Nil then DoleSkillExperience( NPC , NAS_Shopping , ( ( Round( Ln( Cost ) * 100 ) ) div ( Ammo^.Scale * 2 + 1 ) ) + 1 );
 
 				DialogMSG( ReplaceHash( MsgString( 'BUY_YOUHAVEBOUGHT' ) , GearName( Ammo ) ) );
 
@@ -409,7 +409,7 @@ begin
 				AddNAtt( PC^.NA , NAG_Experience , NAS_Credits , -Cost );
 
 				CHAT_Message := MsgString( 'BUYREPLY' + BStr( Random( 4 ) + 1 ) );
-				if NPC <> Nil then DoleSkillExperience( NPC , 21 , ( ( Round( Ln( Cost ) * 100 ) ) div ( Part^.Scale * 2 + 1 ) ) + 1 );
+				if NPC <> Nil then DoleSkillExperience( NPC , NAS_Shopping , ( ( Round( Ln( Cost ) * 100 ) ) div ( Part^.Scale * 2 + 1 ) ) + 1 );
 
 				DialogMSG( ReplaceHash( MsgString( 'BUY_YOUHAVEBOUGHT' ) , GearName( Part ) ) );
 
@@ -488,7 +488,7 @@ begin
 	end;
 
 	{ Determine shopping rank. }
-	ShopRk := SkillValue( PC , 21 );
+	ShopRk := SkillValue( PC , NAS_Shopping , STAT_Charm );
 
 	{ Determine shopping target. }
 	if ( NPC = Nil ) or ( NPC^.G <> GG_Character ) then ShopTr := 10
@@ -619,7 +619,7 @@ begin
 
 	{ Wait an amount of time, depending on the repairer's skill }
 	{ level. }
-	QuickTime( GB , AP_Minute + RollStep( 12 ) - SkillValue( Repairer , SKill ) );
+	QuickTime( GB , AP_Minute + RollStep( 12 ) - SkillValue( Repairer , SKill , STAT_Craft ) );
 end;
 
 Procedure DoRepairAll( GB: GameBoardPtr; NPC: GearPtr; Skill: Integer );
@@ -1081,7 +1081,7 @@ begin
 	if not NGW then begin
 		{ Determine the unscaled cost of this item. }
 		N := ItemShopWeight( I );
-		if RollStep( SkillValue( NPC , 21 ) ) < N then NGW := True;
+		if RollStep( SkillValue( NPC , NAS_Shopping , STAT_Charm ) ) < N then NGW := True;
 
 	end;
 
@@ -1192,7 +1192,7 @@ begin
 	{ GH2: Inventory size is determined by the NPC's shopping skill. }
 	I := Wares;
 	TotalSp := 0;
-	MaxSp := SkillValue( NPC , 21 ) * 10 + 5;
+	MaxSp := SkillValue( NPC , NAS_Shopping , STAT_Charm ) * 10 + 5;
 	while I <> Nil do begin
 		TotalSP := TotalSP + ItemShopWeight( I );
 		I := I^.Next;
@@ -1505,7 +1505,7 @@ Procedure InstallCyberware( GB: GameBoardPtr; PC , NPC: GearPtr );
 			V0 := Item^.V;
 			SkRoll := 0;
 			for t := 1 to 3 do begin
-				SkRoll := SkRoll + RollStep( SkillValue( NPC , 24 ) );
+				SkRoll := SkRoll + RollStep( SkillValue( NPC , NAS_Medicine , STAT_Knowledge ) );
 			end;
 			if SkRoll > Item^.V then begin
 				Item^.V := Item^.V - ( SkRoll - Item^.V );

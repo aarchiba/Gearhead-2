@@ -254,7 +254,7 @@ Content
 		Prompt7_2 <I've got another idea, then...>
 		Prompt8 <Yes I do.>
 		Prompt9 <I could make it completely worth your while.>
-		CPrompt9 <ifChatNPCSexy ifFlirtation Skilltar %threat% Accept>
+		CPrompt9 <ifChatNPCSexy ifConversation Skilltar %threat% Accept>
 		Prompt10 <It might be intensely painful to refuse.>
 		CPrompt10 <ifIntimidation HardSkillTar %threat% Accept>
 		Prompt11 <I have no idea.>
@@ -447,7 +447,7 @@ Content
 		*GoChat <*MISC_CHATTER>
 		result1 <SetQuestStatus %qid% -1 if= V2 0 else GoR1JustEnd NewChat Say 7 AddChat 2 AddChat 4>
 		GoR1JustEnd <NewChat Say 6>
-		result2 <if= SceneVar %s2% 3 1 else GoR2RealFail ifFlirtation skilltar %threat% else GoR2Fail ifG React 20 else GoR2Fail V= 2 1 NewChat Say 8 PCLover %2% AddChat 1 AddChat 3 AddChat 5>
+		result2 <if= SceneVar %s2% 3 1 else GoR2RealFail ifConversation skilltar %threat% else GoR2Fail ifG React 20 else GoR2Fail V= 2 1 NewChat Say 8 PCLover %2% AddChat 1 AddChat 3 AddChat 5>
 		GoR2Fail <V= 2 -1 ifG React 15 else GoR2RealFail PCFriend %2% NewChat Say 9 AddChat 1 AddChat 3 AddChat 5>
 		GoR2RealFail <V= 2 -1 NewChat Say 10 AddChat 1 AddChat 3 AddChat 5>
 		result3 <NewChat Say 11 SetQuestStatus %qid% -2  CashPrize Reward %threat% 200>

@@ -35,13 +35,14 @@ uses texutil,gears,ui4gh;
 
 Type
 	SkillDesc = Record
-		Stat: Byte;
-		MekSys: Byte;	{ Is this skill affected by a mecha stat modifier? }
+		Hidden: Boolean;	{ Is this one of the hidden skills all characters start with? }
+		MekSys: Byte;		{ Is this skill affected by a mecha stat modifier? }
 		ToolNeeded: Byte;	{ Does this skill require a tool? }
-		Usage: Byte;	{ How is this skill used? }
+		Usage: Byte;		{ How is this skill used? }
 	end;
 
 Const
+	num_character_stats = 8;
 	STAT_Reflexes	= 1;
 	STAT_Body	= 2;
 	STAT_Speed	= 3;
@@ -128,7 +129,7 @@ Const
 	{external text file, but since the application of these}
 	{skills have to be hard coded I don't see why the data}
 	{for them shouldn't be as well.}
-	NumSkill = 43;
+	NumSkill = 28;
 
 	USAGE_Repair = 1;
 	USAGE_Clue = 2;
@@ -142,295 +143,215 @@ Const
 	TOOL_CodeBreaking = 2;
 
 	SkillMan: Array [1..NumSkill] of SkillDesc = (
+		{ Skills 1 - 5 }
 		(	{Mecha Gunnery}
-			stat: STAT_Reflexes;
+			hidden: False;
 			meksys: MS_Targeting;
 			ToolNeeded: TOOL_None;
 			Usage: 0			),
-		(	{Mecha Artillery}
-			stat: STAT_Perception;
-			meksys: MS_Targeting;
-			ToolNeeded: TOOL_None;
-			Usage: 0			),
-		(	{Mecha Weapons}
-			stat: STAT_Reflexes;
-			meksys: MS_Maneuver;
-			ToolNeeded: TOOL_None;
-			Usage: 0;			),
 		(	{Mecha Fighting}
-			stat: STAT_Speed;
+			hidden: False;
 			meksys: MS_Maneuver;
 			ToolNeeded: TOOL_None;
 			Usage: 0;			),
 		(	{Mecha Piloting}
-			stat: STAT_Reflexes;
+			hidden: False;
 			meksys: MS_Maneuver;
 			ToolNeeded: TOOL_None;
 			Usage: 0;			),
+		(	{Ranged Combat}
+			hidden: False;
+			meksys: 0;
+			ToolNeeded: TOOL_None;
+			Usage: 0;			),
+		(	{Close Combat}
+			hidden: False;
+			meksys: 0;
+			ToolNeeded: TOOL_None;
+			Usage: 0;			),
 
-		(	{Small Arms}
-			stat: STAT_Reflexes;
-			meksys: 0;
-			ToolNeeded: TOOL_None;
-			Usage: 0;			),
-		(	{Heavy Weapons}
-			stat: STAT_Perception;
-			meksys: 0;
-			ToolNeeded: TOOL_None;
-			Usage: 0;			),
-		(	{Armed Combat}
-			stat: STAT_Reflexes;
-			meksys: 0;
-			ToolNeeded: TOOL_None;
-			Usage: 0;			),
-		(	{Martial Arts}
-			stat: STAT_Body;
-			meksys: 0;
-			ToolNeeded: TOOL_None;
-			Usage: 0;			),
+		{ Skills 6 - 10 }
 		(	{Dodge}
-			stat: STAT_Speed;
-			meksys: 0;
-			ToolNeeded: TOOL_None;
-			Usage: 0;			),
-
-		(	{Awareness}
-			stat: STAT_Perception;
-			meksys: MS_Sensor;
-			ToolNeeded: TOOL_None;
-			Usage: 0;			),
-		(	{Initiative}
-			stat: STAT_Speed;
+			hidden: False;
 			meksys: 0;
 			ToolNeeded: TOOL_None;
 			Usage: 0;			),
 		(	{Vitality}
-			stat: STAT_Body;
+			hidden: True;
+			meksys: 0;
+			ToolNeeded: TOOL_None;
+			Usage: 0;			),
+		(	{Athletics}
+			hidden: True;
+			meksys: 0;
+			ToolNeeded: TOOL_None;
+			Usage: 0;			),
+		(	{Concentration}
+			hidden: True;
+			meksys: 0;
+			ToolNeeded: TOOL_None;
+			Usage: 0;			),
+		(	{Awareness}
+			hidden: False;
+			meksys: MS_Sensor;
+			ToolNeeded: TOOL_None;
+			Usage: 0;			),
+
+		{ Skills 11 - 15 }
+		(	{Initiative}
+			hidden: False;
 			meksys: 0;
 			ToolNeeded: TOOL_None;
 			Usage: 0;			),
 		(	{Survival}
-			stat: STAT_Craft;
+			hidden: False;
 			meksys: 0;
 			ToolNeeded: TOOL_None;
 			Usage: USAGE_Clue;		),
-		(	{Mecha Repair}
-			stat: STAT_Craft;
+		(	{Repair}
+			hidden: False;
 			meksys: 0;
 			ToolNeeded: TOOL_None;
 			Usage: USAGE_Repair;		),
-
 		(	{Medicine}
-			stat: STAT_Knowledge;
+			hidden: False;
 			meksys: 0;
 			ToolNeeded: TOOL_None;
 			Usage: USAGE_Repair;		),
 		(	{Electronic Warfare}
-			stat: STAT_Craft;
+			hidden: False;
 			meksys: 0;
 			ToolNeeded: TOOL_None;
 			Usage: 0;			),
+
+		{ Skills 16 - 20 }
 		(	{Spot Weakness}
-			stat: STAT_Craft;
+			hidden: False;
 			meksys: MS_Sensor;
 			ToolNeeded: TOOL_None;
 			Usage: 0;			),
 		(	{Conversation}
-			stat: STAT_Charm;
+			hidden: False;
 			meksys: 0;
 			ToolNeeded: TOOL_None;
 			Usage: 0;			),
-		(	{First Aid}
-			stat: STAT_Craft;
-			meksys: 0;
-			ToolNeeded: TOOL_None;
-			Usage: USAGE_Repair;		),
-
-		{ Skills 21 - 25 }
 		(	{Shopping}
-			stat: STAT_Charm;
-			meksys: 0;
-			ToolNeeded: TOOL_None;
-			Usage: 0;			),
-		(	{Bio Technology}
-			stat: STAT_Knowledge;
-			meksys: 0;
-			ToolNeeded: TOOL_None;
-			Usage: USAGE_Repair;		),
-		(	{General Repair}
-			stat: STAT_Craft;
-			meksys: 0;
-			ToolNeeded: TOOL_None;
-			Usage: USAGE_Repair;		),
-		(	{Cybertech}
-			stat: STAT_Ego;
+			hidden: False;
 			meksys: 0;
 			ToolNeeded: TOOL_None;
 			Usage: 0;			),
 		(	{Stealth}
-			stat: STAT_Speed;
+			hidden: False;
 			meksys: MS_Maneuver;
 			ToolNeeded: TOOL_None;
 			Usage: 0;			),
-
-		{ Skills 26 - 30 }
-		(	{Athletics}
-			stat: STAT_Body;
-			meksys: 0;
-			ToolNeeded: TOOL_None;
-			Usage: 0;			),
-		(	{Flirtation}
-			stat: STAT_Charm;
-			meksys: 0;
-			ToolNeeded: TOOL_None;
-			Usage: 0;			),
 		(	{Intimidation}
-			stat: STAT_Ego;
+			hidden: False;
 			meksys: 0;
 			ToolNeeded: TOOL_None;
 			Usage: 0;			),
+
+		{ Skills 21 - 25 }
 		(	{Science}
-			stat: STAT_Knowledge;
+			hidden: False;
 			meksys: 0;
 			ToolNeeded: TOOL_None;
 			Usage: USAGE_Clue;		),
-		(	{Concentration}
-			stat: STAT_Ego;
-			meksys: 0;
-			ToolNeeded: TOOL_None;
-			Usage: 0;			),
-
-		{ Skills 31 - 35 }
 		(	{Mecha Engineering}
-			stat: STAT_Knowledge;
+			hidden: False;
 			meksys: 0;
 			ToolNeeded: TOOL_None;
 			Usage: 0;			),
 		(	{Code Breaking}
-			stat: STAT_Craft;
+			hidden: False;
 			meksys: 0;
 			ToolNeeded: TOOL_CodeBreaking;
 			Usage: USAGE_Clue;		),
-		(	{Weight Lifting}
-			stat: STAT_Body;
-			meksys: 0;
-			ToolNeeded: TOOL_None;
-			Usage: 0;			),
 		(	{Mysticism}
-			stat: STAT_Ego;
+			hidden: False;
 			meksys: 0;
 			ToolNeeded: TOOL_None;
 			Usage: USAGE_Clue;		),
 		(	{Performance}
-			stat: STAT_Charm;
+			hidden: False;
 			meksys: 0;
 			ToolNeeded: TOOL_Performance;
 			Usage: USAGE_Performance;	),
 
-		{ Skills 36 - 40 }
-		(	{Resistance}
-			stat: STAT_Ego;
+		{ Skills 26 - 30 }
+		(	{Toughness}
+			hidden: False;
 			meksys: 0;
 			ToolNeeded: TOOL_None;
 			Usage: 0;			),
 		(	{Insight}
-			stat: STAT_Perception;
+			hidden: False;
 			meksys: 0;
 			ToolNeeded: TOOL_None;
 			Usage: USAGE_Clue;		),
-		(	{Robotics}
-			stat: STAT_Knowledge;
-			meksys: 0;
-			ToolNeeded: TOOL_None;
-			Usage: USAGE_Robotics;		),
-		(	{Leadership}
-			stat: STAT_Charm;
-			meksys: 0;
-			ToolNeeded: TOOL_None;
-			Usage: 0;			),
-		(	{Dominate Animal}
-			stat: STAT_Ego;
-			meksys: 0;
-			ToolNeeded: TOOL_None;
-			Usage: USAGE_DominateAnimal;	),
-
-		{ Skills 41 - 45 }
-		(	{Pick Pockets}
-			stat: STAT_Craft;
-			meksys: 0;
-			ToolNeeded: TOOL_None;
-			Usage: USAGE_PickPockets;	),
 		(	{Taunt}
-			stat: STAT_Charm;
+			hidden: False;
 			meksys: 0;
-			ToolNeeded: TOOL_None;
-			Usage: 0;			),
-		(	{Acrobatics}
-			stat: STAT_Speed;
-			meksys: MS_Maneuver;
 			ToolNeeded: TOOL_None;
 			Usage: 0;			)
-
-
 	);
 
-	NAS_MartialArts = 9;
-	NAS_Dodge = 10;
-	NAS_Awareness = 11;
-	NAS_Initiative = 12;
-	NAS_Vitality = 13;
-	NAS_ElectronicWarfare = 17;
-	NAS_Conversation = 19;
-	NAS_Shopping = 21;
-	NAS_Biotech = 22;
-	NAS_Flirtation = 27;
-	NAS_Intimidation = 28;
-	NAS_MechaEngineering = 31;
-	NAS_WeightLifting = 33;
-	NAS_Performance = 35;
-	NAS_Resistance = 36;
-	NAS_Investigation = 37;
-	NAS_Robotics = 38;
-	NAS_Leadership = 39;
-	NAS_DominateAnimal = 40;
-	NAS_PickPockets = 41;
-	NAS_Taunt = 42;
-	NAS_Acrobatics = 43;
+	Num_Basic_Combat_Skills = 6;
+
+	NAS_MechaGunnery = 1;
+	NAS_MechaFighting = 2;
+	NAS_MechaPiloting = 3;
+	NAS_RangedCombat = 4;
+	NAS_CloseCombat = 5;
+	NAS_Dodge = 6;
+	NAS_Vitality = 7;
+	NAS_Athletics = 8;
+	NAS_Concentration = 9;
+	NAS_Awareness = 10;
+	NAS_Initiative = 11;
+	NAS_Survival = 12;
+	NAS_Repair = 13;
+	NAS_Medicine = 14;
+	NAS_ElectronicWarfare = 15;
+	NAS_SpotWeakness = 16;
+	NAS_Conversation = 17;
+	NAS_Shopping = 18;
+	NAS_Stealth = 19;
+	NAS_Intimidation = 20;
+	NAS_Science = 21;
+	NAS_MechaEngineering = 22;
+	NAS_CodeBreaking = 23;
+	NAS_Mysticism = 24;
+	NAS_Performance = 25;
+	NAS_Toughness = 26;
+	NAS_Insight = 27;
+	NAS_Taunt = 28;
 
 	NAG_Talent = 16;
-	NumTalent = 31;
+	NumTalent = 22;
 
-	NAS_StrengthOfFaith = 1;	{X}
-	NAS_BodyBuilder = 2;		{X}
-	NAS_ScientificMethod = 3;	{X}
-	NAS_Presence = 4;		{X}
-	NAS_KungFu = 5;
-	NAS_HapKiDo = 6;
-	NAS_Anatomist = 7;
-	NAS_HardAsNails = 8;
-	NAS_StuntDriving = 9;
-	NAS_Savant = 10;
-	NAS_Bishounen = 11;
-	NAS_Diplomatic = 12;		{X}
-	NAS_BornToFly = 13;
-	NAS_SureFooted = 14;
-	NAS_RoadHog = 15;
-	NAS_Scavenger = 16;
-	NAS_Idealist = 17;
-	NAS_BusinessSense = 18;
-	NAS_AnimalTrainer = 19;		{X}
-	NAS_JackOfAll = 20;
-	NAS_CombatMedic = 21;		{X}
-	NAS_Rage = 22;
-	NAS_Ninjitsu = 23;
-	NAS_HullDown = 24;
-	NAS_GateCrasher = 25;
-	NAS_Extropian = 26;
-	NAS_CyberPsycho = 27;
-	NAS_Sniper = 28;
-	NAS_Innovation = 29;
-	NAS_Camaraderie = 30;
-	NAS_Entourage = 31;
+	NAS_KungFu = 1;
+	NAS_HapKiDo = 2;
+	NAS_Anatomist = 3;
+	NAS_HardAsNails = 4;
+	NAS_StuntDriving = 5;
+	NAS_Polymath = 6;
+	NAS_Bishounen = 7;
+	NAS_BornToFly = 8;
+	NAS_SureFooted = 9;
+	NAS_RoadHog = 10;
+	NAS_TechVulture = 11;
+	NAS_Idealist = 12;
+	NAS_BusinessSense = 13;
+	NAS_JackOfAll = 14;
+	NAS_Rage = 15;
+	NAS_Ninjitsu = 16;
+	NAS_HullDown = 17;
+	NAS_GateCrasher = 18;
+	NAS_Sniper = 19;
+	NAS_Innovation = 20;
+	NAS_Camaraderie = 21;
+	NAS_Entourage = 22;
 
 	{ Talent pre-requisites are described as follows: The first }
 	{ coordinate lists the skill (if positive) or stat (if negative) }
@@ -439,13 +360,11 @@ Const
 	{ talent has no pre-requisites. }
 	{ NEW: Personality traits may be specified as -8 + Trait Number }
 	TALENT_PreReq: Array [1..NumTalent,1..2] of Integer = (
-	( 34 , 5 ) , ( 33 , 5 ) , ( 29 , 5 ) , ( 35 , 5 ), ( 9 , 5 ),
-	( 9 , 5 ) , ( 16 , 5 ) , ( 36 , 5 ) , ( -3 , 15 ) , ( 0 , 0 ),
-	( -8 , 15 ) , ( -6 , 15 ) , ( 5 , 5 ) , ( 5 , 5 ) , ( 5 , 5 ),
-	( 15 , 5 ), ( 0 , 0 ), ( 21 , 5 ), ( 40 , 5 ), (-STAT_Craft,15),
-	( 20 , 5 ), ( -13 , -25 ), ( 25 , 5 ), ( 17 , 5 ), ( -12 , -25 ),
-	( 24 , 5 ), ( -2 , 15 ), ( 18 , 5 ), ( NAS_MechaEngineering , 10 ), ( NAS_Conversation , 5 ),
-	( NAS_Leadership , 5 )
+	( NAS_CloseCombat , 5 ), ( NAS_CloseCombat , 5 ) , ( NAS_Medicine , 5 ) , ( NAS_Toughness , 5 ) , ( -STAT_Speed , 15 ) ,
+	( 0 , 0 ), ( -STAT_Charm , 15 ) , ( NAS_MechaPiloting , 5 ) , ( NAS_MechaPiloting , 5 ) , ( NAS_MechaPiloting , 5 ),
+	( NAS_Repair , 5 ), ( 0 , 0 ), ( NAS_Shopping , 5 ), (-STAT_Craft,15), ( -8 + NAS_Cheerful , -25 ),
+	( NAS_Stealth , 5 ), ( NAS_ElectronicWarfare , 5 ), ( -8 + NAS_Easygoing , -25 ), ( NAS_SpotWeakness , 5 ), ( NAS_MechaEngineering , 10 ),
+	( NAS_Conversation , 5 ), ( -8 + NAS_Renowned , 80 )
 	);
 
 
@@ -503,9 +422,8 @@ Function CharBaseDamage( PC: GearPtr; CBod,CVit: Integer ): Integer;
 Function RandomName: String;
 procedure RollStats( PC: GearPtr; Pts: Integer);
 function RandomPilot( StatPoints , SkillRank: Integer ): GearPtr;
-function RandomSoldier( StatPoints , SkillRank: Integer ): GearPtr;
 
-Function NumberOfSkills( PC: GearPtr ): Integer;
+Function NumberOfSpecialties( PC: GearPtr ): Integer;
 
 function IsLegalCharSub( Part: GearPtr ): Boolean;
 
@@ -549,7 +467,7 @@ begin
 	HP := ( CBod + 5 ) div 2;
 
 	{ Add the Vitality skill. }
-	HP := HP + CVit;
+	HP := HP + CVit + ( NAttValue( PC^.NA , NAG_Skill , NAS_Toughness ) div 2 );
 
 	CharBaseDamage := HP;
 end;
@@ -713,9 +631,10 @@ function RandomPilot( StatPoints , SkillRank: Integer ): GearPtr;
 	{ Create a totally random mecha pilot, presumably so that }
 	{ the PC pilots will have someone to thwack. }
 const
-	NumNPCPilotSpecialties = 5;
+	NumNPCPilotSpecialties = 6;
 	PS: Array [1..NumNPCPilotSpecialties] of Byte = (
-		10,12,17,18,25
+		NAS_SpotWeakness, NAS_Initiative, NAS_ElectronicWarfare, NAS_Awareness, NAS_Stealth,
+		NAS_Vitality
 	);
 var
 	NPC: GearPtr;
@@ -730,8 +649,8 @@ begin
 	{ Roll some stats for this character. }	
 	RollStats( NPC , StatPoints );
 
-	{ Set all mecha skills to equal SkillRank. }
-	for t := 1 to 5 do begin
+	{ Set all combat skills to equal SkillRank. }
+	for t := 1 to Num_Basic_Combat_Skills do begin
 		SetNAtt( NPC^.NA , NAG_Skill , T , SkillRank );
 	end;
 	{ Add a specialty. }
@@ -744,54 +663,17 @@ begin
 	RandomPilot := NPC;
 end;
 
-function RandomSoldier( StatPoints , SkillRank: Integer ): GearPtr;
-	{ Create a totally random fighter, presumably so that }
-	{ the PC fighters will have someone to thwack. }
-var
-	NPC: GearPtr;
-	T: Integer;
-const
-	NumNPCSoldierSpecialties = 5;
-	PS: Array [1..NumNPCSoldierSpecialties] of Byte = (
-		12,13,36,18,25
-	);
-begin
-	{ Generate record. }
-	NPC := NewGear( Nil );
-	if NPC = Nil then Exit( Nil );
-	InitChar( NPC );
-	NPC^.G := GG_Character;
-
-	{ Roll some stats for this character. }	
-	RollStats( NPC , StatPoints );
-
-	{ Set all personal skills to equal SkillRank. }
-	for t := 6 to 10 do begin
-		SetNAtt( NPC^.NA , NAG_Skill , T , SkillRank );
-	end;
-	{ Soldiers also get Athletics. }
-	SetNAtt( NPC^.NA , NAG_Skill , 26 , SkillRank );
-
-	{ Add a specialty. }
-	SetNAtt( NPC^.NA , NAG_Skill , PS[ Random( NumNPCSoldierSpecialties ) + 1 ] , SkillRank );
-
-	{ Generate a random name for the character. }
-	SetSAtt( NPC^.SA , 'Name <'+RandomName+'>');
-
-	{ Return a pointer to the character record. }
-	RandomSoldier := NPC;
-end;
-
-Function NumberOfSkills( PC: GearPtr ): Integer;
-	{ Return the number of skills this PC knows. }
+Function NumberOfSpecialties( PC: GearPtr ): Integer;
+	{ Return the number of skills this PC knows. Don't return the hidden skills; }
+	{ those don't count. }
 var
 	T,N: Integer;
 begin
 	N := 0;
 	for t := 1 to NumSkill do begin
-		if NAttValue( PC^.NA , NAG_Skill , T ) > 0 then Inc( N );
+		if ( not SkillMan[ t ].Hidden ) and ( NAttValue( PC^.NA , NAG_Skill , T ) > 0 ) then Inc( N );
 	end;
-	NumberOfSkills := N;
+	NumberOfSpecialties := N;
 end;
 
 function IsLegalCharSub( Part: GearPtr ): Boolean;
@@ -966,14 +848,6 @@ begin
 
 	{ Depending on the talent, do various effects. }
 	Case T of
-		NAS_StrengthOfFaith:
-			PC^.Stat[ STAT_Ego ] := PC^.Stat[ STAT_Ego ] + 2;
-		NAS_BodyBuilder:
-			PC^.Stat[ STAT_Body ] := PC^.Stat[ STAT_Body ] + 2;
-		NAS_ScientificMethod:
-			PC^.Stat[ STAT_Knowledge ] := PC^.Stat[ STAT_Knowledge ] + 2;
-		NAS_Presence:
-			PC^.Stat[ STAT_Charm ] := PC^.Stat[ STAT_Charm ] + 2;
 		NAS_Idealist:
 			ApplyIdealism( PC );
 	end;
@@ -991,7 +865,7 @@ begin
 	SP := ( PC^.Stat[ STAT_Body ] + PC^.Stat[ STAT_Ego ] + 5 ) div 2;
 
 	{ Add the Athletics skill. }
-	SP := SP + NAttValue( PC^.NA , NAG_Skill , 26 ) * 3;
+	SP := SP + NAttValue( PC^.NA , NAG_Skill , NAS_Athletics ) * 3;
 
 	CharStamina := SP;
 end;
@@ -1009,7 +883,7 @@ begin
 	MP := ( PC^.Stat[ STAT_Knowledge ] + PC^.Stat[ STAT_Ego ] + 5 ) div 2;
 
 	{ Add the Concentration skill. }
-	MP := MP + NAttValue( PC^.NA , NAG_Skill , 30 ) * 3;
+	MP := MP + NAttValue( PC^.NA , NAG_Skill , NAS_Concentration ) * 3;
 
 	CharMental := MP;
 end;

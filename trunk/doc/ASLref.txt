@@ -97,9 +97,9 @@
 	IFPERSONA [CID] <ELSE [label]>	If NPC is alive...
 	IFSAFEAREA <ELSE [label]>	If the current scene is safe...
 	IFSCENE [label] <ELSE [label]>	If current scene matches description...
-	IFSKILLTEST [Skill] [Target] <ELSE [label]>	If the PC passes a skill test...
+	IFSKILLTEST [Skill] [Stat] [Target] <ELSE [label]>	If the PC passes a skill test...
 	IFSTORYLESS <ELSE [label]>	If SOURCE has no linked story...
-	IFUSKILLTEST [Skill] [Target] <ELSE [label]>	If the PC passes a skill test... (unlimited tries)
+	IFUSKILLTEST [Skill] [Stat] [Target] <ELSE [label]>	If the PC passes a skill test... (unlimited tries)
 	IFYESNO [desc msg] ["yes" msg] ["no" msg] <ELSE [label]>
 	L= [idnum] [value]	Set local variable
 	L+ [idnum] [value]	Add local variable
@@ -212,7 +212,7 @@
 	SCENEID			ID of current scene
 	SELFUID			Source's unique ID
 	SKILLTAR [Reputation]	Scales a target number for skill rolls
-	SKROLL [Skill Number]	PC makes a skill roll
+	SKROLL [Skill Number] [Stat Number]	PC makes a skill roll
 	T[team number]		Number of active masters on team
 	THREAT [Reputation] [Percent]	Good difficulcy value for mission
 	V[idnum]		Source variable value

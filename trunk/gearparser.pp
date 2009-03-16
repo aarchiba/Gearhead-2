@@ -84,7 +84,7 @@ Const
 Procedure SelectThemeAndSpecialty( NPC: GearPtr );
 	{ Set a theme and a specialty skill for this NPC. }
 const
-	Default_Skill_List = '1 2 3 4 5 12 18 42';
+	Default_Skill_List = '1 2 3 11 15 16 26 28';
 var
 	Faction,Theme: GearPtr;
 	SkillPossibilities: Array [1..NumSkill] of Boolean;
@@ -170,7 +170,7 @@ begin
 	if IsACombatant( NPC ) and ( NAttValue( NPC^.NA , NAG_Personal , NAS_MechaTheme ) = 0 ) then begin
 		SelectThemeAndSpecialty( NPC );
 		{ Combatants automatically get all the basic combat skills. }
-		for SkLvl := 1 to 10 do SetNAtt( NPC^.NA , NAG_Skill, SkLvl , 1 );
+		for SkLvl := 1 to Num_Basic_Combat_Skills do SetNAtt( NPC^.NA , NAG_Skill, SkLvl , 1 );
 	end;
 
 	{ Determine the value to set all skills to. }

@@ -325,12 +325,12 @@ begin
 	FindMechasPilot := mpc;
 end;
 
-Function UnitSkill( HQCamp: CampaignPtr; Skill: Integer ): Integer;
+Function UnitSkill( HQCamp: CampaignPtr; Skill,SkStat: Integer ): Integer;
 	{ Return the "unit skill" value for the requested skill. Usually this }
 	{ will be the highest skill rank in the unit. }
 begin
 	{ Check through every mek on the board. }
-	UnitSkill := SkillValue( HQCamp^.Source , Skill );
+	UnitSkill := SkillValue( HQCamp^.Source , Skill , SkStat );
 end;
 
 Function ModifiedCost( HQCamp: CampaignPtr; BaseCost: LongInt; Skill: Integer ): LongInt;
@@ -340,7 +340,7 @@ Function ModifiedCost( HQCamp: CampaignPtr; BaseCost: LongInt; Skill: Integer ):
 begin
 	{ Determine the unit skill value. }
 	if ( Skill >= 1 ) and ( Skill <= NumSkill ) then begin
-		Skill := UnitSkill( HQCamp , Skill );
+		Skill := UnitSkill( HQCamp , Skill , STAT_Charm );
 	end else Skill := 0;
 
 	{ Each point of skill gives a 2% discount on the cost. }
@@ -418,7 +418,7 @@ Function HQMaxMissions( HQCamp: CampaignPtr ): Integer;
 var
 	C: Integer;
 begin
-	C := ( UnitSkill( HQCamp , NAS_Conversation ) + 4 ) div 3;
+	C := ( UnitSkill( HQCamp , NAS_Conversation , STAT_Charm ) + 4 ) div 3;
 	if C < 3 then C := 3;
 	HQMaxMissions := C;
 end;

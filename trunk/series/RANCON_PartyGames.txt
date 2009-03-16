@@ -24,8 +24,7 @@ Content
 		% V1 = Have repaired it
 		use <if= V1 0 else GoAlreadyRepaired Print 1>
 		GoAlreadyRepaired <Print 2>
-		Clue15 <ifMechaRepair HardSkillTar %param% else GoFail Goto GoWin>
-		Clue23 <ifGeneralRepair SkillTar %param% else GoFail Goto GoWin>
+		Clue23 <ifRepair SkillTar %param% else GoFail Goto GoWin>
 		Clue29 <ifScience HardSkillTar %param% else GoFail Goto GoWin>
 		GoWin <V= 1 1 L= %id%02 1 Print 3 XPV 50 WinPartyPoint>
 		GoFail <Print 4>
@@ -116,7 +115,7 @@ Content
 		GoR2Win <NewChat Say 5 Goto GoWinPoint>
 		GoR2Fail <NewChat Say 6>
 		result3 <EndChat Say 7 AddChat 4>
-		result4 <V= 4 1 ifFlirtation SkillTar %param% else GoR3Fail AddPartyPoint V= 1 1  Goto GoR3Win>
+		result4 <V= 4 1 ifDancing SkillTar %param% else GoR3Fail AddPartyPoint V= 1 1  Goto GoR3Win>
 		*GoR3Win <*YouDanceWell>
 		*GoR3Fail <*YouDanceTerribly>
 		Msg1 <It's an interesting party, don't you think?>
@@ -258,11 +257,11 @@ Content
 		GoInteract <if= V1 0 else GoChat NewChat Say 1 AddChat 1 AddChat 2 AddChat 3 AddChat 4>
 		*GoChat <*MISC_CHATTER>
 		GoWinPoint <AddPartyPoint V= 1 1>
-		result1 <ifFlirtation SkillTar %param% else GoR1Fail EndChat Say 2 AddChat 5  Goto GoWinPoint>
+		result1 <ifDancing SkillTar %param% else GoR1Fail EndChat Say 2 AddChat 5  Goto GoWinPoint>
 		GoR1Fail <NewChat Say 6 AddChat 2 AddChat 3 AddChat 4>
 		result2 <ifIntimidation SkillTar %param% else GoR2Fail  NewChat Say 3 Goto GoWinPoint>
 		GoR2Fail <NewChat Say 7 AddChat 1 AddChat 3 AddChat 4>
-		result3 <ifMechaRepair SkillTar %param% else GoR3Fail  NewChat Say 4 Goto GoWinPoint>
+		result3 <ifRepair SkillTar %param% else GoR3Fail  NewChat Say 4 Goto GoWinPoint>
 		GoR3Fail <NewChat Say 8 AddChat 2 AddChat 1 AddChat 4>
 		result4 <ifConversation HardSkillTar %param% else GoR4Fail  NewChat Say 5 Goto GoWinPoint>
 		GoR4Fail <NewChat Say 9 AddChat 2 AddChat 3 AddChat 1>

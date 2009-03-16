@@ -350,7 +350,6 @@ Computer_Desc <Class # Computer; #/# ZeG Free>
 SOFTWARE_MISC_DESC <Software>
 SOFTWARE_MVBOOST_DESC <Maneuver (SF:#)>
 SOFTWARE_TRBOOST_DESC <Targeting (SF:#)>
-SOFTWARE_SKILLBOOST_DESC <Boost>
 SOFTWARE_SPEEDCOMP_DESC <Target Speed Compensation (SF:#)>
 SOFTWARE_INFORMATION_1 <Creature Infodex>
 SOFTWARE_INFORMATION_2 <Robot Infodex>
@@ -401,68 +400,50 @@ TRAINING_NewTalent <Learn New Talent>
 TRAINING_ImproveStat <Improve Stats>
 NOFREETALENTS <You have no free talent slots.>
 CANTAFFORDTALENT <You can't afford to purchase this talent.>
-TALENT1 <Strength of Faith>
-TALENTDESC1 <You have the power of faith on your side. (+2 Ego)>
-TALENT2 <Body Builder>
-TALENTDESC2 <You are totally pumped up. (+2 Body)>
-TALENT3 <Scientific Method>
-TALENTDESC3 <Your scientific training has made you very good at discovering new things. (+2 Knowledge)>
-TALENT4 <Presence>
-TALENTDESC4 <You have mastered a commanding stage presence. (+2 Charm)>
-TALENT5 <Kung Fu>
-TALENTDESC5 <Your hands are lethal weapons. (+3 Penetration for Martial Arts attacks)>
-TALENT6 <Hap Ki Do>
-TALENTDESC6 <You are an expert at self-defense. (May block attacks using Martial Arts)>
-TALENT7 <Anatomist>
-TALENTDESC7 <Because of your anatomical knowledge, you are able to target an opponent's vital points. (+1 Penetration versus living targets)>
-TALENT8 <Hard As Nails>
-TALENTDESC8 <You don't feel pain like other folks. (All attacks against PC are at -2 Penetration)>
-TALENT9 <Stunt Driving>
-TALENTDESC9 <As long as you're going fast, you can find a way to avoid most attacks. (may reroll dodge if traveling at full speed)>
-TALENT10 <Savant>
-TALENTDESC10 <You have more skills than is normal for a person with your intelligence. (can learn 5 more skills without penalty)>
-TALENT11 <Bishounen>
-TALENTDESC11 <You are androgynously beautiful. (may use Flirtation skill with all NPCs, regardless of gender)>
-TALENT12 <Diplomatic>
-TALENTDESC12 <In conversation, you can avoid controversial topics. (may avoid reaction loss due to personality clash)>
-TALENT13 <Born To Fly>
-TALENTDESC13 <You are an expert with flying mecha. (+3 Mecha Piloting while flying or jumping)>
-TALENT14 <Sure Footed>
-TALENTDESC14 <You are an expert with walkers and zoanoids. (+2 Mecha Piloting while walking)>
-TALENT15 <Road Hog>
-TALENTDESC15 <You are an expert with cars and other wheeled vehicles. (+2 Mecha Piloting while rolling)>
-TALENT16 <Tech Vulture>
-TALENTDESC16 <When awarded salvage, you'll grab everything worth taking. (can salvage individual modules from defeated mecha)>
-TALENT17 <Idealist Blood>
-TALENTDESC17 <Your family heritage includes some genetic engineering. (+1 to three random stats)>
-TALENT18 <Business Sense>
-TALENTDESC18 <You are very good at negotiating favorable deals. (+25% to most mission cash rewards)>
-TALENT19 <Animal Trainer>
-TALENTDESC19 <You are good at teaching your pets how to do tricks. (new pets gain XP bonus)>
-TALENT20 <Jack of all Trades>
-TALENTDESC20 <You can do a little bit of everything. (may use unknown skills without -2 penalty)>
-TALENT21 <Combat Medic>
-TALENTDESC21 <You are capable of performing emergency medicine in dangerous places. (First Aid and Medicine attempts take 1/3 normal time)>
-TALENT22 <Badass>
-TALENTDESC22 <The angrier you get, the harder you fight. (Bonus to combat skills while bad morale)>
-TALENT23 <Ninjitsu>
-TALENTDESC23 <Your surprise attacks are deadly. (damage bonus when attacking unseen)>
-TALENT24 <Hull Down>
-TALENTDESC24 <As long as you aren't flying, you can position your mecha so as to prevent critical hits. (All attacks against walking or rolling mecha are at -3 Penetration)>
-TALENT25 <Gate Crasher>
-TALENTDESC25 <You're particularly good at smashing things. (+2 penetration against inanimate objects)>
-TALENT26 <Extropian>
-TALENTDESC26 <You are philosophically prepared to deal with the loss of your humanity. (may have one implant per 3 points Cybertech with no chance of disfunction)>
-TALENT27 <Cyber-Psycho>
-TALENTDESC27 <Your body is adjusted to cyberware, it's just your mind that suffers. (May avoid trauma by spending MP)>
-TALENT28 <Sniper>
-TALENTDESC28 <One shot is all you ever need. (bonus to single fire damage rolls)>
-TALENT29 <Innovation>
-TALENTDESC29 <You are a master of mecha engineering. (may install more equipment into mecha than normally possible)>
-TALENT30 <Camaraderie>
-TALENTDESC30 <Your friends all want to take part in your adventure. (May recruit friends as lancemates)>
-TALENT31 <Entourage>
-TALENTDESC31 <You can command a larger group of followers. (May take two lancemates rather than one)>
+TALENT1 <Kung Fu>
+TALENTDESC1 <Your hands are lethal weapons. (+3 Penetration for Martial Arts attacks)>
+TALENT2 <Hap Ki Do>
+TALENTDESC2 <You are an expert at self-defense. (May block attacks using Martial Arts)>
+TALENT3 <Anatomist>
+TALENTDESC3 <Because of your anatomical knowledge, you are able to target an opponent's vital points. (+1 Penetration versus living targets)>
+TALENT4 <Hard As Nails>
+TALENTDESC4 <You don't feel pain like other folks. (All attacks against PC are at -2 Penetration)>
+TALENT5 <Stunt Driving>
+TALENTDESC5 <As long as you're going fast, you can find a way to avoid most attacks. (may reroll dodge if traveling at full speed)>
+TALENT6 <Polymath>
+TALENTDESC6 <You are a master of many skills. (can learn 3 more skills without penalty)>
+TALENT7 <Bishounen>
+TALENTDESC7 <You are androgynously beautiful. (may use Flirtation skill with all NPCs, regardless of gender)>
+TALENT8 <Born To Fly>
+TALENTDESC8 <You are an expert with flying mecha. (+3 Mecha Piloting while flying or jumping)>
+TALENT9 <Sure Footed>
+TALENTDESC9 <You are an expert with walkers and zoanoids. (+2 Mecha Piloting while walking)>
+TALENT10 <Road Hog>
+TALENTDESC10 <You are an expert with cars and other wheeled vehicles. (+2 Mecha Piloting while rolling)>
+TALENT11 <Tech Vulture>
+TALENTDESC11 <When awarded salvage, you'll grab everything worth taking. (can salvage individual modules from defeated mecha)>
+TALENT12 <Idealist Blood>
+TALENTDESC12 <Your family heritage includes some genetic engineering. (+1 to three random stats)>
+TALENT13 <Business Sense>
+TALENTDESC13 <You are very good at negotiating favorable deals. (+25% to most mission cash rewards)>
+TALENT14 <Jack of all Trades>
+TALENTDESC14 <You can do a little bit of everything. (may use unknown skills without -2 penalty)>
+TALENT15 <Badass>
+TALENTDESC15 <The angrier you get, the harder you fight. (Bonus to combat skills while bad morale)>
+TALENT16 <Ninjitsu>
+TALENTDESC16 <Your surprise attacks are deadly. (damage bonus when attacking unseen)>
+TALENT17 <Hull Down>
+TALENTDESC17 <As long as you aren't flying, you can position your mecha so as to prevent critical hits. (All attacks against walking or rolling mecha are at -3 Penetration)>
+TALENT18 <Gate Crasher>
+TALENTDESC18 <You're particularly good at smashing things. (+2 penetration against inanimate objects)>
+TALENT19 <Sniper>
+TALENTDESC19 <One shot is all you ever need. (bonus to single fire damage rolls)>
+TALENT20 <Innovation>
+TALENTDESC20 <You are a master of mecha engineering. (may install more equipment into mecha than normally possible)>
+TALENT21 <Camaraderie>
+TALENTDESC21 <Your friends all want to take part in your adventure. (May recruit friends as lancemates)>
+TALENT22 <Entourage>
+TALENTDESC22 <You can command a larger group of followers. (May take two lancemates rather than one)>
 BUYPROMPT1 <I can give you this # for $#. What do you say, do we have a deal?>
 BUYPROMPT2 <This # can be yours for the low price of $#.>
 BUYPROMPT3 <The price for this # is $#. You won't find it cheaper anywhere else.>
@@ -522,7 +503,7 @@ REGEN_Hunger <# is hungry.>
 PROCESSMOVEMENT_Crash <# has crashed! # damage.>
 PROCESSMOVEMENT_Fall <# has fallen! # damage.>
 HISTORY_AnnounceVictory <*** VICTORY!!! ***>
-HISTORY_Skills <#     +#  (#)>
+HISTORY_Skills <#     +#>
 HISTORY_Traits <You are #. (#%)>
 HISTORY_Faction <You were promoted to # in #.>
 HISTORY_FATALITIES_1 <# people died during your adventure.>
@@ -622,48 +603,33 @@ STATDESC_7 <Knowledge measures your general level of education, and also your ap
 STATNAME_8 <Charm>
 STATDESC_8 <Charm measures how charismatic your character is.>
 SKILLNAME_1 <Mecha Gunnery>
-SKILLNAME_2 <Mecha Artillery>
-SKILLNAME_3 <Mecha Weapons>
-SKILLNAME_4 <Mecha Fighting>
-SKILLNAME_5 <Mecha Piloting>
-SKILLNAME_6 <Small Arms>
-SKILLNAME_7 <Heavy Weapons>
-SKILLNAME_8 <Armed Combat>
-SKILLNAME_9 <Martial Arts>
-SKILLNAME_10 <Dodge>
-SKILLNAME_11 <Awareness>
-SKILLNAME_12 <Initiative>
-SKILLNAME_13 <Vitality>
-SKILLNAME_14 <Survival>
-SKILLNAME_15 <Mecha Repair>
-SKILLNAME_16 <Medicine>
-SKILLNAME_17 <Electronic Warfare>
-SKILLNAME_18 <Spot Weakness>
-SKILLNAME_19 <Conversation>
-SKILLNAME_20 <First Aid>
-SKILLNAME_21 <Shopping>
-SKILLNAME_22 <Bio Technology>
-SKILLNAME_23 <General Repair>
-SKILLNAME_24 <Cybertech>
-SKILLNAME_25 <Stealth>
-SKILLNAME_26 <Athletics>
-SKILLNAME_27 <Flirtation>
-SKILLNAME_28 <Intimidation>
-SKILLNAME_29 <Science>
-SKILLNAME_30 <Concentration>
-SKILLNAME_31 <Mecha Engineering>
-SKILLNAME_32 <Code Breaking>
-SKILLNAME_33 <Weight Lifting>
-SKILLNAME_34 <Mysticism>
-SKILLNAME_35 <Performance>
-SKILLNAME_36 <Resistance>
-SKILLNAME_37 <Insight>
-SKILLNAME_38 <Robotics>
-SKILLNAME_39 <Leadership>
-SKILLNAME_40 <Dominate Animal>
-SKILLNAME_41 <Pick Pockets>
-SKILLNAME_42 <Taunt>
-SKILLNAME_43 <Acrobatics>
+SKILLNAME_2 <Mecha Fighting>
+SKILLNAME_3 <Mecha Piloting>
+SKILLNAME_4 <Ranged Combat>
+SKILLNAME_5 <Close Combat>
+SKILLNAME_6 <Dodge>
+SKILLNAME_7 <Vitality>
+SKILLNAME_8 <Athletics>
+SKILLNAME_9 <Concentration>
+SKILLNAME_10 <Awareness>
+SKILLNAME_11 <Initiative>
+SKILLNAME_12 <Survival>
+SKILLNAME_13 <Repair>
+SKILLNAME_14 <Medicine>
+SKILLNAME_15 <Electronic Warfare>
+SKILLNAME_16 <Spot Weakness>
+SKILLNAME_17 <Conversation>
+SKILLNAME_18 <Shopping>
+SKILLNAME_19 <Stealth>
+SKILLNAME_20 <Intimidation>
+SKILLNAME_21 <Science>
+SKILLNAME_22 <Mecha Engineering>
+SKILLNAME_23 <Code Breaking>
+SKILLNAME_24 <Mysticism>
+SKILLNAME_25 <Performance>
+SKILLNAME_26 <Toughness>
+SKILLNAME_27 <Insight>
+SKILLNAME_28 <Taunt>
 SKILLDESC_1 <Used when attacking with conventional and beam guns of Size 10 or less.>
 SKILLDESC_2 <Used when attacking with missiles and projectile weapons of Size 11 or greater.>
 SKILLDESC_3 <Used when attacking with mecha melee or energy weapons.>
@@ -1060,3 +1026,4 @@ MECHA <mecha>
 PrepPCF_InvalidMecha <# can't pilot # here.>
 TRANSFORM_Announce <# transforms to # mode.>
 TRANSFORM_NotNow <You can't transform right now.>
+BlowOff <I really don't have much time to chat today, I have a lot of things to do.>
