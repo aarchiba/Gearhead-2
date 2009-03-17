@@ -4113,15 +4113,11 @@ begin
 	Renown := ScriptValue( Event , GB , Source );
 	{ As long as we have a grabbed gear, go for it! }
 	if ( Grabbed_Gear <> Nil ) then begin
-		SetSkillsAtLevel( Grabbed_Gear , Renown );
-
-		{ The first 10 skills, the combat ones, get automatically set even if this }
-		{ NPC type doesn't normally know them. }
-		for t := 1 to 10 do SetNAtt( Grabbed_Gear^.NA , NAG_Skill , T , ( Renown div 7 ) + 3 );
-
 		{ Record the character's new renown score and mark as a combatant. }
 		SetNAtt( Grabbed_Gear^.NA , NAG_CharDescription , NAS_Renowned , Renown );
 		SetNAtt( Grabbed_Gear^.NA , NAG_CharDescription , NAS_IsCombatant , 1 );
+
+		SetSkillsAtLevel( Grabbed_Gear , Renown );
 	end;
 end;
 

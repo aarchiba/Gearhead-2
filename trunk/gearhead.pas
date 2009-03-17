@@ -48,6 +48,9 @@ Procedure RedrawOpening;
 begin
 	ClrScreen;
 	InfoBox( ZONE_Menu );
+	if Console_History <> Nil then begin
+		RedrawConsole;
+	end;
 end;
 
 
@@ -209,10 +212,6 @@ begin
 	AddRPGMenuItem( RPM , 'Quit Game' , -1 );
 
 	repeat
-		{ Get rid of the console history from previous games. }
-		DisposeSAtt( Console_History );
-		DisposeSAtt( Skill_Roll_History );
-
 		if not STARTUP_OK then DialogMsg( 'ERROR: Main game directories not found. Please check installation of the game.' );
 
 		N := SelectMenu( RPM , @RedrawOpening );
@@ -226,6 +225,10 @@ begin
 			6:	RestoreArenaCampaign( @RedrawOpening );
 			7:	StartArenaCampaign;
 		end;
+
+		{ Get rid of the console history from previous games. }
+		DisposeSAtt( Console_History );
+		DisposeSAtt( Skill_Roll_History );
 	until N = -1;
 
 	{deallocate all dynamic resources.}

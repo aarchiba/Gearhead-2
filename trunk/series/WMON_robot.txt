@@ -28,13 +28,10 @@ Msg3 <You've already disassembled this robot.>
 Msg4 <You salvage some spare parts from this robot.>
 % End Science block.
 Metal
-skill 6 4
-skill 7 4
-skill 8 5
-skill 9 4
-skill 10 3
-skill 11 5
-skill 33 30
+RangedCombat 4
+CloseCombat 5
+Dodge 3
+Awareness 5
 Sealed
 sub
 head
@@ -110,14 +107,12 @@ Msg2 <You take apart the Sentinel, but don't find anything useful.>
 Msg3 <You've already disassembled this robot.>
 Msg4 <You salvage some spare parts from this robot.>
 % End Science block.
-skill 6 7
-skill 7 7
-skill 10 7
-skill 12 7
-skill 13 10
-skill 26 10
-skill 30 10
-skill 33 35
+RangedCombat 7
+Dodge 7
+Initiative 7
+Vitality 10
+Athletics 10
+Concentration 10
 sub
 turret
 armor 6
@@ -210,9 +205,9 @@ Msg3 <You've already dismantled this robot.>
 metal
 Sealed
 MonsterTV 56
-skill 6 2
-skill 8 2
-skill 10 2
+RangedCombat 2
+CloseCombat 2
+Dodge 2
 sub
 torso
 	armor 3
@@ -248,12 +243,12 @@ Msg3 <You've already dismantled this robot.>
 metal
 Sealed
 MonsterTV 95
-skill 8 10
-skill 10 5
-skill 13 10
-skill 33 10
-Talent 8
-Talent 7
+CloseCombat 10
+Dodge 5
+Vitality 10
+% Anatomist + Hard as Nails
+Talent 3
+Talent 4
 sub
 torso
 	armor 5
@@ -292,7 +287,7 @@ Msg3 <You've already dismantled this robot.>
 metal
 Sealed
 MonsterTV 25
-skill 8 1
+CloseCombat 1
 sub
 torso
 	armor 2
@@ -329,8 +324,8 @@ Msg3 <You've already dismantled this robot.>
 metal
 Sealed
 MonsterTV 21
-skill 8 1
-skill 10 1
+CloseCombat 1
+Dodge 1
 sub
 torso
 	armor 1
@@ -364,8 +359,8 @@ Msg3 <You've already dismantled this robot.>
 metal
 Sealed
 MonsterTV 28
-skill 8 2
-skill 10 1
+CloseCombat 2
+Dodge 1
 sub
 torso
 	armor 2
@@ -401,9 +396,9 @@ statline 11 13 13 11 11 1 1 1
 metal
 Sealed
 MonsterTV 32
-skill 6 1
-skill 8 1
-skill 10 1
+RangedCombat 1
+CloseCombat 1
+Dodge 1
 sub
 torso
 	armor 2

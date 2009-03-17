@@ -148,7 +148,7 @@ Content
 	end
 	inv
 		NPC Citizen
-		Skill 10 10
+		Combatant
 	end
 
 %%
@@ -1369,7 +1369,7 @@ Content
 	inv
 		NPC Shopkeeper
 		chardesc Criminal
-		skill 21 7
+		Shopping 7
 
 		STC DERELICT-1
 		name <Asteroid Station>
@@ -1455,7 +1455,7 @@ Content
 		.%id%_GoInit <NewChat Say %id%01 SetQuestStatus %qid% -1 AddChat %id%03>
 		*.%id%_GoBye <*GOODBYE>
 		result%id%01 <EndChat Say %id%03 School .%id%_skills Goto .%id%_GoBye>
-		.%id%_skills <1 2 3 4 5 6 7 8 9 10 11 12>
+		.%id%_skills <1 2 3 4 5 6>
 		result%id%02 <NewChat Say %id%04>
 		result%id%03 <Goto result%id%01>
 		Msg%id%01 <So this is the %name2%. You've proven yourself to be a great cavalier... If you want, I could train you to be even better.>

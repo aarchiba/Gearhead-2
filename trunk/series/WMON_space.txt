@@ -15,11 +15,11 @@ sdl_colors <255 230 210 255 157 123 200 0 100>
 type <Space Exorg Asteroid>
 habitat <SPACE>
 statline 15 7 15 16 5 19 10 7
-skill 8 7
-skill 9 4
-skill 10 8
-skill 11 5
-skill 18 5
+CloseCombat 7
+RangedCombat 4
+Dodge 8
+Awareness 5
+SpotWeakness 5
 sub
 torso
 	sub
@@ -60,9 +60,8 @@ type <fungus ruin derelict>
 habitat <SPACE>
 statline 13 2 13 2 1 1 1 1
 MonsterTV 30
-skill 8 3
-skill 10 3
-skill 43 3
+CloseCombat 3
+Dodge 6
 sealed
 sub
 torso
@@ -83,11 +82,10 @@ type <fungus mine asteroid>
 habitat <SPACE>
 statline 10 8 10 1 1 1 1 1
 MonsterTV 40
-skill 6 2
-skill 8 4
-skill 10 5
-skill 13 4
-skill 43 3
+RangedCombat 1
+CloseCombat 4
+Dodge 5
+Vitality 4
 sealed
 sub
 torso
@@ -120,10 +118,10 @@ type <fungus mine asteroid>
 habitat <SPACE>
 statline 7 20 7 8 1 1 1 1
 MonsterTV 44
-skill 8 4
-skill 10 4
-skill 12 7
-skill 13 5
+CloseCombat 4
+Dodge 4
+Initiative 7
+Vitality 5
 sealed
 sub
 torso
@@ -180,8 +178,8 @@ type <fungus mine asteroid>
 habitat <SPACE>
 statline 7 5 8 5 1 1 1 1
 MonsterTV 25
-skill 8 3
-skill 10 5
+CloseCombat 3
+Dodge 5
 sealed
 sub
 torso
@@ -226,10 +224,10 @@ type <fungus mine asteroid>
 habitat <SPACE>
 statline 9 13 13 10 1 1 1 1
 MonsterTV 52
-skill 8 7
-skill 10 5
-skill 12 5
-skill 18 5
+CloseCombat 7
+Dodge 5
+Initiative 5
+SpotWeakness 5
 sealed
 sub
 torso
@@ -283,8 +281,8 @@ habitat <SPACE>
 statline 7 3 6 5 4 5 1 1
 MonsterTV 18
 sealed
-skill 8 3
-skill 13 1
+CloseCombat 3
+Vitality 1
 sub
 head
 	armor 2

@@ -100,10 +100,9 @@ inv
 	StatLine 14 13 17 10 16 12 11 15
 	Age -3
 	SetTheme 4
-	SetSpecSkill 5
-	Skill 12
-	Skill 19
-	Skill 23
+	SetSpecSkill 3
+	Conversation
+	Repair
 end
 
 Content
@@ -171,10 +170,10 @@ inv
 	StatLine 15 11 14 13 13 17 10 16
 	Age -1
 	SetTheme 3
-	SetSpecSkill 18
-	Skill 18
-	Skill 28
-	Skill 35
+	SetSpecSkill 16
+	SpotWeakness
+	Intimidation
+	Performance
 end
 
 
@@ -365,8 +364,6 @@ inv
 	Age -3
 	SDL_PORTRAIT <por_m_lightjacket(Y--).png>
 	SDL_COLORS <136 141 101 245 213 160 77 35 101>
-	Skill 42 3
-	Talent 10
 
 	NPC Citizen
 	name <Lehya>
@@ -375,9 +372,8 @@ inv
 	Age -1
 	SDL_PORTRAIT <por_f_smart(-P-).png>
 	SDL_COLORS <136 141 101 245 213 160 60 25 81>
-	Skill 11 7
-	Skill 29 1
-	Skill 37 1
+	Awareness
+	Insight
 end
 
 Content
@@ -444,9 +440,9 @@ inv
 	SDL_Portrait <por_m_guy6(-P-).png>
 	SDL_Colors <234 180 88 255 212 195 10 50 100>
 	SetTheme 4
-	SetSpecSkill 3
+	SetSpecSkill 2
 	SetFaction 2
-	Talent 8
+	Talent 4
 end
 
 Content
@@ -512,9 +508,9 @@ inv
 	SDL_Portrait <por_f_mechpilot(--Y).png>
 	SDL_Colors <36 46 22 199 188 162 168 153 230>
 	SetTheme 12
-	SetSpecSkill 4
-	Skill 18 10
-	Skill 25 10
+	SetSpecSkill 2
+	SpotWeakness
+	Stealth
 end
 
 %%
@@ -592,10 +588,9 @@ inv
 	SDL_Colors <64 130 109 150 112 89 103 3 45>
 	SetTheme 2
 	SetSpecSkill 1
-	Skill 11
-	Skill 17
-	Skill 25
-	Talent 23
+	ElectronicWarfare
+	Stealth
+	Talent 16
 	SetFaction 7
 end
 
@@ -667,12 +662,12 @@ inv
 	SDL_Portrait <por_m_comiccarter(OUY).png>
 	SDL_Colors <25 80 100 255 212 195 122 82 65>
 	SetTheme 2
-	SetSpecSkill 2
+	SetSpecSkill 1
 	SetFaction 5
-	Skill 11 10
-	Skill 18 1
-	Talent 24
-	Talent 15
+	Awareness
+	SpotWeakness
+	Talent 10
+	Talent 17
 end
 
 Content
@@ -754,16 +749,10 @@ inv
 	Age 6
 	SetFaction 5
 	Combatant
-	Skill 1 10
-	Skill 2 10
-	Skill 3 10
-	Skill 4 10
-	Skill 5 10
-	Skill 10 10
-	Skill 12 10
-	Skill 18 10
+	Initiative
+	SpotWeakness
 	SetTheme 4
-	SetSpecSkill 18
+	SetSpecSkill 16
 end
 
 Content
@@ -833,15 +822,10 @@ inv
 	SetFaction 5
 	Chardesc Female Sociable Easygoing Cheerful
 	Combatant
-	Skill 1 10
-	Skill 2 10
-	Skill 3 10
-	Skill 4 10
-	Skill 5 10
-	Skill 12 10
-	Skill 18 10
-	Skill 42 10
-	Talent 30
+	Initiative
+	SpotWeakness
+	Taunt
+	Talent 21
 	SetTheme 3
 	SetSpecSkill 1
 
@@ -910,20 +894,12 @@ inv
 	SetFaction 5
 	Chardesc Male Passionate Pragmatic
 	Combatant
-	Skill 1 10
-	Skill 2 10
-	Skill 3 10
-	Skill 4 10
-	Skill 5 10
-	Skill 10 10
-	Skill 15 10
-	Skill 17 10
-	Skill 18 10
-	Skill 31 10
-	Talent 3
-	Talent 29
+	ElectronicWarfare
+	SpotWeakness
+	MechaEngineering
+	Talent 20
 	SetTheme 1
-	SetSpecSkill 31
+	SetSpecSkill 22
 end
 
 Content
@@ -1060,8 +1036,8 @@ inv
 	CharDesc Male Sociable Passionate Heroic Criminal
 	Age 7
 	SetTheme 5
-	SetSpecSkill 2
-	Talent 25
+	SetSpecSkill 1
+	Talent 18
 
 	NPC Bounty Hunter
 end
@@ -1139,11 +1115,11 @@ inv
 	CharDesc Female Shy Melancholy
 	Age -1
 	SetTheme 7
-	SetSpecSkill 3
-	Skill 18 10
-	Skill 21 10
-	Skill 36 10
-	Talent 14
+	SetSpecSkill 2
+	SpotWeakness
+	Shopping
+	Toughness
+	Talent 9
 end
 
 Content
@@ -1212,11 +1188,10 @@ inv
 	chardesc Male Cheerful Heroic Easygoing
 	StatLine 15 13 15 15 13 13 10 14
 	SetTheme 2
-	SetSpecSkill 5
-	Skill 12 10
-	Skill 36 10
-	Talent 9
-	Talent 13
+	SetSpecSkill 3
+	Initiative
+	Talent 5
+	Talent 8
 end
 
 
@@ -1294,15 +1269,13 @@ inv
 	statline 14 16 14 15 9 15 11 9
 	Age 21
 	SetTheme 2
-	SetSpecSkill 2
+	SetSpecSkill 1
 	SetFaction 5
-	Skill 13 10
-	Skill 17 10
-	Skill 18 10
-	Skill 28 10
-	Skill 36 10
-	Talent 8
-	Talent 24
+	Toughness
+	ElectronicWarfare
+	SpotWeakness
+	Talent 4
+	Talent 17
 end
 
 
@@ -1441,16 +1414,14 @@ inv
 	statline 15 13 17 14 10 12 11 15
 	Age 5
 	SetTheme 3
-	SetSpecSkill 5
+	SetSpecSkill 3
 	SetFaction 7
-	Skill 11 10
-	Skill 17 10
-	Skill 18 10
-	Skill 25 10
-	Skill 27 1
-	Skill 36 10
-	Talent 23
-	Talent 28
+	Awareness
+	ElectronicWarfare
+	SpotWeakness
+	Stealth
+	Talent 16
+	Talent 19
 
 	NPC Mechanic
 	name <Vord>
@@ -1460,13 +1431,11 @@ inv
 	Age 3
 	SetFaction 5
 	statline 12 9 14 13 15 12 14 11
-	Skill 12 7
-	Skill 19 8
-	Skill 30 5
-	Skill 31 9
-	Skill 32 5
-	Skill 42 3
-	Talent 20
+	Initiative
+	Conversation
+	MechaEngineering
+	Taunt
+	Talent 14
 end
 
 Content
@@ -1550,12 +1519,10 @@ inv
 	SDL_Portrait <por_f_mechpilot(--Y).png>
 	SDL_Colors <152 61 97 255 212 195 220 80 10>
 	SetTheme 1
-	SetSpecSkill 3
-	Skill 12 1
-	Skill 17 1
-	Skill 26 5
-	Skill 43 10
-	Talent 9
+	SetSpecSkill 2
+	Initiative
+	ElectronicWarfare
+	Talent 5
 end
 
 Content
@@ -1628,13 +1595,11 @@ inv
 	SDL_Colors <166 47 32 255 212 195 245 215 150>
 	SetTheme 9
 	SetSpecSkill 1
-	Skill 12 10
-	Skill 19 10
-	Skill 35 10
-	Skill 42 10
-	Talent 4
-	Talent 11
-	Talent 12
+	Initiative
+	Conversation
+	Performance
+	Mysticism
+	Talent 7
 end
 
 Content
@@ -1707,14 +1672,13 @@ inv
 	SDL_Portrait <por_f_ladilolita(YC-).png>
 	SDL_Colors <80 80 85 255 212 195 188 199 160>
 	SetTheme 8
-	SetSpecSkill 2
-	Skill 11
-	Skill 18
-	Skill 21
-	Skill 25
-	Skill 31
-	Talent 17
-	Talent 28
+	SetSpecSkill 1
+	Awareness
+	SpotWeakness
+	Stealth
+	MechaEngineering
+	Talent 12
+	Talent 19
 end
 
 

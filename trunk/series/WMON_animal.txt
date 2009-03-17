@@ -17,10 +17,9 @@ sdl_colors <80 80 85 150 112 89 170 200 50>
 statline 13 8 10 15 8 6 2 5
 MonsterTV 52
 DomTarget 14
-skill 8 7
-skill 9 5
-skill 10 5
-skill 11 6
+CloseCombat 7
+Dodge 5
+Awareness 6
 Sealed
 sub
 head
@@ -49,10 +48,9 @@ habitat <>
 statline 12 7 9 16 8 6 2 5
 MonsterTV 30
 DomTarget 14
-skill 8 5
-skill 9 2
-skill 10 2
-skill 11 3
+CloseCombat 5
+Dodge 2
+Awareness 3
 Sealed
 sub
 head
@@ -80,11 +78,10 @@ statline 15 10 19 17 5 6 2 7
 type <AIR MOUNTAIN ANIMAL>
 habitat <>
 DomTarget 18
-skill 6 5
-skill 8 5
-skill 9 3
-skill 10 6
-skill 13 3
+RangedCombat 5
+CloseCombat 4
+Dodge 6
+Vitality 3
 sub
 head
 armor 2
@@ -144,9 +141,8 @@ statline 15 6 17 16 5 6 2 7
 type <AIR MOUNTAIN ANIMAL>
 habitat <>
 DomTarget 15
-skill 8 5
-skill 9 3
-skill 10 5
+CloseCombat 4
+Dodge 5
 sub
 head
 armor 1
@@ -184,10 +180,9 @@ Msg1 <You remove the flame gland from the beetle.>
 Msg2 <You don't manage to do much of anything with this beetle.>
 Msg3 <You've already done all you can with this beetle.>
 % End SURVIVAL block.
-skill 6 3
-skill 8 5
-skill 9 4
-skill 10 6
+RangedCombat 3
+CloseCombat 5
+Dodge 6
 sub
 torso
 	armor 5
@@ -241,9 +236,8 @@ type <BUG DESERT RUINS>
 habitat <>
 MonsterTV 35
 DomTarget 24
-skill 8 4
-skill 9 4
-skill 10 4
+CloseCombat 4
+Dodge 4
 sub
 torso
 	armor 2
@@ -280,10 +274,9 @@ type <BUG VERMIN CITY>
 habitat <URBAN>
 MonsterTV 40
 DomTarget 15
-skill 8 5
-skill 9 5
-skill 10 4
-skill 36 13
+CloseCombat 5
+Dodge 4
+Toughness 13
 sub
 torso
 	armor 2
@@ -330,10 +323,10 @@ Msg1 <You cut open the urchin and collect some meat from inside.>
 Msg2 <You cut open the urchin, and nearly get sick...>
 Msg3 <You've already gutted this urchin.>
 % End SURVIVAL block.
-skill 6 5
-skill 8 3
-skill 10 1
-skill 13 7
+RangedCombat 5
+CloseCombat 3
+Dodge 1
+Vitality 7
 sub
 torso
 	armor 6
@@ -377,11 +370,10 @@ Msg2 <You don't manage to do much of anything with this bear carcass.>
 Msg3 <You've already done all you can with this bear carcass.>
 Msg4 <You cut some meat from the bear to have later.>
 % End SURVIVAL block.
-skill 8 8
-skill 9 5
-skill 10 4
+CloseCombat 7
+Dodge 4
 % Bears have the talent HARD AS NAILS
-NAtt 16 8 1
+Talent 4
 sub
 head
 armor 3
@@ -440,14 +432,13 @@ Msg3 <You've already done all you can with this bear.>
 Msg4 <You cut some meat from the bear to have later.>
 Msg5 <You remove the heart from this bear to have later.>
 % End SURVIVAL block.
-skill 6 4
-skill 8 10
-skill 9 4
-skill 10 4
-skill 12 11
-skill 13 7
+RangedCombat 4
+CloseCombat 8
+Dodge 4
+Initiative 11
+Vitality 7
 % Bears have the talent HARD AS NAILS
-NAtt 16 8 1
+Talent 4
 sub
 head
 armor 4
@@ -510,12 +501,11 @@ DomTarget 26
 type <Animal Mutant Earth Wasteland>
 habitat <>
 statline 14 18 10 11 8 10 2 1
-skill 8 10
-skill 9 4
-skill 10 2
+CloseCombat 8
+Dodge 2
 % Bears have the talent HARD AS NAILS
-NAtt 16 8 1
-skill 13 5
+Talent 4
+Vitality 5
 sub
 head
 armor 2
@@ -571,11 +561,10 @@ Msg2 <You don't manage to do much of anything with this bear carcass.>
 Msg3 <You've already done all you can with this bear carcass.>
 Msg4 <You cut some meat from the bear to have later.>
 % End SURVIVAL block.
-skill 8 8
-skill 9 2
-skill 10 2
+CloseCombat 6
+Dodge 2
 % Bears have the talent HARD AS NAILS
-NAtt 16 8 1
+Talent 4
 sub
 head
 armor 2
@@ -617,9 +606,8 @@ habitat <>
 roguechar <m>
 sdl_sprite <monster_monkey.png>
 sdl_colors <103 3 45 245 213 160 244 216 28>
-skill 9 5
-skill 10 1
-skill 30 5
+CloseCombat 5
+Dodge 1
 sub
 head
 armor 1
@@ -646,11 +634,10 @@ DomTarget 17
 type <Reptile Jungle Exotic Mutant>
 habitat <>
 RogueChar <c>
-skill 8 3
-skill 9 4
-skill 10 3
-skill 11 5
-skill 25 15
+CloseCombat 3
+Dodge 3
+Awareness 5
+Stealth 15
 sub
 head
 armor 2
@@ -691,11 +678,10 @@ Msg1 <You skin the chameleon, recieving a pelt worth $ \VAL V1 .>
 Msg2 <You attempt to skin the chameleon, but end up just making a mess.>
 Msg3 <You've already skinned this chameleon.>
 % End SURVIVAL block.
-skill 8 3
-skill 9 1
-skill 10 1
-skill 11 5
-skill 25 15
+CloseCombat 3
+Dodge 1
+Awareness 5
+Stealth 15
 sub
 head
 armor 1
@@ -737,12 +723,10 @@ Msg1 <You cut up the lizard and save some nice steaks for later.>
 Msg2 <You attempt to cut some meat from the lizard, but can't find anything worth eating.>
 Msg3 <You've already gutted this lizard.>
 % End SURVIVAL block.
-skill 8 5
-skill 9 4
-skill 10 4
-skill 13 6
-skill 25 7
-skill 26 7
+CloseCombat 5
+Dodge 4
+Vitality 6
+Stealth 7
 sub
 head
 armor 4
@@ -784,15 +768,14 @@ Msg1 <You recover metal objects worth $ \VAL V1 from the alligator's gizzard.>
 Msg2 <You cut open the alligator's gizzard to see if it swallowed anything valuable, but find nothing.>
 Msg3 <This albino alligator has nothing else that might be useful to you.>
 % End SURVIVAL block.
-skill 8 5
-skill 9 4
-skill 10 4
-skill 13 6
-skill 18 5
-skill 25 7
-skill 26 7
-skill 30 10
-skill 36 2
+CloseCombat 5
+Dodge 4
+Vitality 6
+SpotWeakness 5
+Stealth 7
+Athletics 7
+Vitality 8
+Toughness 8
 sub
 head
 armor 7
@@ -826,12 +809,10 @@ SDL_COLORS <208 34 51 234 180 88 244 216 28>
 CHAT_ATTACK <SQUAAAK!!!>
 MonsterTV 105
 DomTarget 25
-skill 6 8
-skill 7 8
-skill 8 8
-skill 9 8
-skill 10 10
-skill 12 8
+RangedCombat 8
+CloseCombat 8
+Dodge 10
+Initiative 8
 sub
 head
 sub
@@ -888,11 +869,9 @@ genepool <PENGUIN>
 EvolveAt 12500
 MonsterTV 40
 DomTarget 15
-skill 6 5
-skill 7 5
-skill 8 5
-skill 9 3
-skill 10 3
+RangedCombat 5
+CloseCombat 5
+Dodge 3
 sub
 head
 sub
@@ -931,12 +910,11 @@ Msg4 <You cut some meat from this toad. It's very spicy!>
 % End SURVIVAL block.
 MonsterTV 56
 DomTarget 19
-skill 6 3
-skill 8 5
-skill 9 3
-skill 10 1
-skill 18 6
-skill 13 5
+RangedCombat 3
+CloseCombat 5
+Dodge 1
+SpotWeakness 6
+Vitality 5
 sub
 head
 	armor 1
@@ -988,11 +966,10 @@ Msg3 <You've already gutted this toad.>
 statline 10 16 10 7 2 2 2 2
 MonsterTV 72
 DomTarget 23
-skill 8 6
-skill 9 4
-skill 10 2
-skill 18 5
-skill 13 5
+CloseCombat 5
+Dodge 2
+SpotWeakness 5
+Vitality 5
 sub
 head
 	armor 1
@@ -1035,10 +1012,10 @@ Msg3 <You've already gutted this frog.>
 statline 8 11 10 9 2 2 2 2
 MonsterTV 35
 DomTarget 14
-skill 8 4
-skill 10 2
-skill 18 1
-skill 13 5
+CloseCombat 4
+Dodge 2
+SpotWeakness 1
+Vitality 5
 sub
 head
 	sub
@@ -1064,8 +1041,8 @@ type <Dark Swamp Water>
 habitat <>
 statline 7 8 3 4 1 1 1 1
 MonsterTV 21
-skill 8 2
-skill 12 15
+CloseCombat 2
+Initiative 15
 sub
 torso
 sub
@@ -1095,9 +1072,9 @@ Msg3 <You've already gutted this lobster.>
 statline 12 14 8 11 5 7 4 6
 MonsterTV 35
 DomTarget 15
-skill 9 4
-skill 10 2
-skill 13 3
+CloseCombat 4
+Dodge 2
+Vitality 3
 sub
 torso
 	armor 2
@@ -1131,9 +1108,9 @@ Msg4 <You remove the tough, spiky plate from the top of this lobster. It might m
 statline 13 20 9 11 5 7 4 5
 MonsterTV 52
 DomTarget 18
-skill 9 4
-skill 10 1
-skill 13 8
+CloseCombat 4
+Dodge 1
+Vitality 8
 sub
 torso
 	armor 4
@@ -1167,10 +1144,10 @@ Msg4 <You remove the tough, spiky plate from the top of this lobster. It might m
 statline 17 29 6 13 5 8 8 3
 MonsterTV 85
 DomTarget 21
-skill 6 4
-skill 9 4
-skill 10 3
-skill 13 12
+RangedCombat 4
+CloseCombat 4
+Dodge 3
+Vitality 12
 sub
 torso
 	armor 5
@@ -1201,9 +1178,8 @@ sdl_sprite <monster_eagle.png>
 sdl_colors <170 50 32 70 121 120 0 200 150>
 statline 10 2 11 7 2 3 2 2
 MonsterTV 22
-skill 8 1
-skill 9 2
-skill 10 1
+CloseCombat 1
+Dodge 1
 DomTarget 16
 sub
 head
@@ -1238,10 +1214,9 @@ Msg3 <You've already gutted this raptor.>
 statline 14 13 16 11 8 7 2 5
 DomTarget 23
 MonsterTV 52
-skill 8 4
-skill 9 4
-skill 10 2
-skill 13 2
+CloseCombat 4
+Dodge 2
+Vitality 2
 sub
 head
 	armor 1
@@ -1284,9 +1259,8 @@ Msg3 <You've already gutted this raptor.>
 statline 10 6 11 13 8 7 2 5
 DomTarget 17
 MonsterTV 25
-skill 8 2
-skill 9 2
-skill 12 2
+CloseCombat 2
+Initiative 2
 sub
 head
 	armor 1
@@ -1329,11 +1303,11 @@ Msg3 <You've already gutted this crab.>
 statline 10 15 5 9 1 1 1 1
 DomTarget 21
 MonsterTV 44
-skill 8 6
-skill 10 1
-skill 12 7
-skill 13 6
-skill 18 5
+CloseCombat 6
+Dodge 1
+Initiative 7
+Vitality 6
+SpotWeakness 5
 sub
 torso
 	armor 5
@@ -1378,10 +1352,10 @@ Msg3 <You've already gutted this crab.>
 statline 9 9 6 8 1 1 1 1
 DomTarget 13
 MonsterTV 30
-skill 8 3
-skill 12 4
-skill 13 1
-skill 18 2
+CloseCombat 3
+Initiative 4
+Vitality 1
+SpotWeakness 2
 sub
 torso
 	armor 3
@@ -1428,12 +1402,11 @@ Msg4 <You remove the heart from this dragon. It's supposed to have healing prope
 statline 15 16 16 11 4 19 2 2
 MonsterTV 85
 DomTarget 22
-skill 6 6
-skill 8 7
-skill 9 4
-skill 10 7
-skill 12 3
-skill 36 7
+RangedCombat 6
+CloseCombat 7
+Dodge 7
+Initiative 3
+Toughness 7
 sub
 head
 	armor 4
@@ -1470,9 +1443,8 @@ habitat <>
 statline 13 5 12 7 2 3 2 2
 MonsterTV 44
 DomTarget 21
-skill 8 3
-skill 9 4
-skill 10 2
+CloseCombat 3
+Dodge 2
 sub
 head
 	armor 2
@@ -1513,12 +1485,11 @@ habitat <>
 statline 12 13 12 5 2 16 2 2
 MonsterTV 36
 DomTarget 18
-skill 6 1
-skill 8 3
-skill 9 4
-skill 10 1
-skill 13 2
-skill 36 3
+RangedCombat 1
+CloseCombat 3
+Dodge 1
+Vitality 2
+Toughness 3
 sub
 head
 	armor 1
@@ -1549,10 +1520,10 @@ SDL_SPRITE <monster_jelly.png>
 SDL_COLORS <170 150 235 122 88 199 0 0 0>
 statline 11 7 10 1 1 1 1 1
 MonsterTV 64
-skill 8 6
-skill 10 3
-skill 13 8
-skill 36 4
+CloseCombat 6
+Dodge 3
+Vitality 8
+Toughness 4
 type <Water Sea Mutant>
 habitat <>
 sub
@@ -1594,12 +1565,11 @@ Msg4 <You remove the heart from this dragon rat. It's supposed to be good for yo
 statline 13 12 15 9 9 7 5 5
 MonsterTV 76
 DomTarget 20
-skill 8 7
-skill 9 3
-skill 10 8
-skill 12 4
-skill 13 10
-skill 36 7
+CloseCombat 5
+Dodge 8
+Initiative 4
+Vitality 10
+Toughness 7
 sub
 head
 	armor 3
@@ -1668,10 +1638,9 @@ Msg3 <You've already gutted this rat.>
 statline 11 7 14 8 8 6 2 2
 MonsterTV 56
 DomTarget 18
-skill 8 7
-skill 9 4
-skill 10 6
-skill 12 2
+CloseCombat 5
+Dodge 6
+Initiative 2
 sub
 head
 	armor 1
@@ -1726,11 +1695,10 @@ Msg3 <You've already gutted this rat.>
 statline 10 4 10 8 8 6 2 2
 MonsterTV 40
 DomTarget 15
-skill 8 4
-skill 9 2
-skill 10 2
-skill 12 6
-skill 13 5
+CloseCombat 3
+Dodge 2
+Initiative 6
+Vitality 5
 sub
 head
 	sub
@@ -1773,11 +1741,10 @@ Msg3 <You've already gutted this rat.>
 % End SURVIVAL block.
 statline 10 3 10 8 8 6 2 2
 MonsterTV 48
-skill 8 6
-skill 9 2
-skill 10 2
-skill 12 1
-skill 13 5
+CloseCombat 4
+Dodge 2
+Initiative 1
+Vitality 5
 sub
 head
 	sub
@@ -1808,11 +1775,11 @@ SDL_SPRITE <monster_rat.png>
 SDL_COLORS <65 174 42 65 174 42 220 250 26>
 type <mutant>
 habitat <>
-explosion <8 DAMAGE 20 0 ArmorPiercing Brutal Haywire Blast 2>
+explosion <8 DAMAGE 20 0 0 0 ArmorPiercing Brutal Haywire Blast 2>
 statline 8 1 9 8 6 5 2 2
 MonsterTV 27
-skill 8 3
-skill 10 1
+CloseCombat 3
+Dodge 1
 sub
 head
 	sub
@@ -1844,12 +1811,11 @@ habitat <>
 statline 14 10 16 10 10 9 7 13
 MonsterTV 68
 DomTarget 30
-skill 6 4
-skill 8 3
-skill 9 3
-skill 10 6
-skill 12 5
-skill 13 3
+RangedCombat 4
+CloseCombat 3
+Dodge 6
+Initiative 5
+Vitality 3
 sub
 head
 armor 1
@@ -1915,12 +1881,10 @@ Msg3 <You've already skinned this rat.>
 statline 8 4 14 8 8 6 3 9
 MonsterTV 35
 DomTarget 10
-skill 6 1
-skill 8 3
-skill 9 1
-skill 10 2
-skill 13 1
-skill 27 3
+RangedCombat 1
+CloseCombat 2
+Dodge 2
+Vitality 1
 sub
 head
 	sub
@@ -1971,10 +1935,9 @@ habitat <>
 statline 8 1 10 8 8 6 2 2
 MonsterTV 20
 DomTarget 12
-skill 8 3
-skill 9 2
-skill 10 1
-skill 12 1
+CloseCombat 2
+Dodge 1
+Initiative 1
 sub
 head
 	sub

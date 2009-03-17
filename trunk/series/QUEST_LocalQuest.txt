@@ -82,17 +82,13 @@ Content
 		sdl_colors <201 205 229 157 172 183 208 34 51>
 		Statline 11 36 13 17 15 16 21 3
 		sealed
-		skill 6
-		skill 7
-		skill 8
-		skill 9
-		skill 10
-		skill 12
-		skill 13
-		skill 17
-		skill 31
-		skill 33
-		skill 36
+		CloseCombat
+		RangedCombat
+		Dodge
+		Vitality
+		Initiative
+		ElectronicWarfare
+		Toughness
 		sub
 			torso
 			armor 5
@@ -215,9 +211,8 @@ Content
 	inv
 		NPC Student
 		statline 11 11 11 11 12 12 12 12
-		Talent 10
-		Skill 14
-		Skill 29
+		Survival
+		Science
 	end
 
 Content
@@ -311,12 +306,10 @@ Content
 		sdl_colors <105 115 85 170 160 130 80 120 150>
 		statline 13 15 12 13 10 11 7 10
 		update <ItemLevel %3% %threat%>
-		skill 6 2
-		skill 7 1
-		skill 8 5
-		skill 9 4
-		skill 10 5
-		skill 13 7
+		RangedCombat 2
+		CloseCombat 5
+		Dodge 5
+		Vitality 7
 		sub
 		head
 		torso
@@ -530,10 +523,10 @@ Content
 		Msg-2 <You are attacked by bandits!>
 
 		NPC Bandit
-		Skill 21 10
+		Shopping 10
 
 		NPC Bandit
-		Skill 21 10
+		Shopping 10
 	end
 
 
@@ -1144,7 +1137,7 @@ Content
 	end
 	inv
 		NPC Mechanic
-		Skill 31 5
+		MechaEngineering 5
 		CharDesc Easygoing
 	end
 
@@ -2149,8 +2142,8 @@ Content
 		% Actual game age = 24
 		Age 4
 		% V1 = Have arranged funding, thereby unlocking store
-		Skill 21 8
-		Skill 31 10
+		Shopping 8
+		MechaEngineering 10
 	end
 
 Content

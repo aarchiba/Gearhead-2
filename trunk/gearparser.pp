@@ -167,10 +167,14 @@ var
 	Skill: NAttPtr;
 begin
 	{ If the NPC doesn't have a specialist skill, pick a skill and theme now. }
-	if IsACombatant( NPC ) and ( NAttValue( NPC^.NA , NAG_Personal , NAS_MechaTheme ) = 0 ) then begin
-		SelectThemeAndSpecialty( NPC );
+	if IsACombatant( NPC ) then begin
+		if NAttValue( NPC^.NA , NAG_Personal , NAS_MechaTheme ) = 0 then SelectThemeAndSpecialty( NPC );
+
 		{ Combatants automatically get all the basic combat skills. }
 		for SkLvl := 1 to Num_Basic_Combat_Skills do SetNAtt( NPC^.NA , NAG_Skill, SkLvl , 1 );
+
+		{ They also get all hidden skills. }
+		for SkLvl := 1 to NumSkill do if SkillMan[ SkLvl ].Hidden then SetNAtt( NPC^.NA , NAG_Skill, SkLvl , 1 );
 	end;
 
 	{ Determine the value to set all skills to. }
@@ -553,7 +557,7 @@ begin
 
 end;
 
-Function ReadGear( var F: Text; RandomizeNPCs: Boolean ): GearPtr;
+Function ReadGear( var F: Text; RandomizeNPCs: Boolean; const ZZZFName: String ): GearPtr;
 	{F is an open file of type F.}
 	{Start reading information from the file, stopping}
 	{whenever all the info is read.}
@@ -563,7 +567,7 @@ Function ReadGear( var F: Text; RandomizeNPCs: Boolean ): GearPtr;
 const
 	NDum: GearPtr = Nil;
 var
-	TheLine,cmd: String;
+	TheLine,OriginalLine,cmd: String;
 	it,C: GearPtr;	{IT is the total list which is returned.}
 			{C is the current GEAR being worked on.}
 	dest: Byte;	{DESTination of the next GEAR to be added.}
@@ -689,6 +693,9 @@ begin
 			InstallGear( GG_Module , CM_A , MasterSize( C ) );
 
 		end;
+	end else if CM_CMD <> '' then begin
+		DialogMsg( 'ERROR: Command ' + UpCase( CM_CMD ) + ' not found in ' + ZZZFName );
+		DialogMsg( '--"' + OriginalLine + '"' );
 	end;
 end;
 
@@ -988,6 +995,7 @@ begin
 		{Read the line from disk, and delete leading whitespace.}
 		readln(F,TheLine);
 		DeleteWhiteSpace(TheLine);
+		OriginalLine := TheLine;
 
 		if ( TheLine = '' ) or ( TheLine[1] = '%' ) then begin
 			{ *** COMMENT *** }
@@ -1024,6 +1032,7 @@ begin
 				else	if CMD = 'MONSTER' then CMD_Monster
 				else	if CMD = 'STC' then CMD_STC
 				else	if CMD = 'ITEM' then CMD_ITEM
+				else	if ( CMD <> '' ) and ( CMD[1] = '%' ) then TheLine := ''
 				else	CheckMacros( CmD );
 			end;
 		end;
@@ -1063,7 +1072,7 @@ begin
 		{ Actually load the file. }
 		Assign( F , FName );
 		Reset( F );
-		it := ReadGear( F , True );
+		it := ReadGear( F , True , FName );
 		Close( F );
 	end;
 	LoadFile := it;
@@ -1143,7 +1152,7 @@ begin
 		while F <> Nil do begin
 			Assign( InFile , DName + F^.Info );
 			Reset( InFile );
-			part := ReadGear( InFile , False );
+			part := ReadGear( InFile , False , FName );
 			Close( InFile );
 
 			AppendGear( it , part );
@@ -1187,7 +1196,7 @@ begin
 	{ Open and load the archetypes. }
 	Assign( F , FName );
 	Reset( F );
-	LList := ReadGear( F , True );
+	LList := ReadGear( F , True , FName );
 	Close( F );
 
 	{ Locate the desired archetype. }
@@ -1364,12 +1373,12 @@ begin
 	{ Open and load the archetypes. }
 	Assign( F , Archetypes_File );
 	Reset( F );
-	Archetypes_List := ReadGear( F , False );
+	Archetypes_List := ReadGear( F , False , 'Archetypes' );
 	Close( F );
 
 	Assign( F , STC_Item_File );
 	Reset( F );
-	STC_Item_List := ReadGear( F , True );
+	STC_Item_List := ReadGear( F , True , 'Items' );
 	Close( F );
 end;
 

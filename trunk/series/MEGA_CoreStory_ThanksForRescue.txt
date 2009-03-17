@@ -401,7 +401,7 @@ Content
 		Prompt%id%02 <No thanks. I don't need any help.>
 		Prompt%id%02_1 <Sorry, I'm not looking for another lancemate.>
 		Prompt%id%03 <Thanks, but aren't you a bit useless?>
-		CPrompt%id%03 <if= NPCSkill E2 10 0 Accept>
+		CPrompt%id%03 <if= NPCSkill %1% NAS_Dodge 0 Accept>
 		Prompt%id%03_1 <Thanks, but you aren't much of a fighter.>
 		Prompt%id%04 <Alright. You can join me.>
 		Prompt%id%05 <I don't have time to look after you.>

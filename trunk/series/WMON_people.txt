@@ -15,11 +15,9 @@ sdl_sprite <cha_m_guardian.png>
 sdl_colors <120 90 90 255 212 195 244 216 28>
 type <Guard>
 habitat <>
-skill 6 4
-skill 7 4
-skill 8 4
-skill 9 4
-skill 10 5
+RangedCombat 4
+CloseCombat 4
+Dodge 5
 Sealed
 sub
 head
@@ -56,11 +54,9 @@ sdl_sprite <cha_m_guardian.png>
 sdl_colors <90 120 90 255 212 195 244 216 28>
 type <Guard>
 habitat <>
-skill 6 4
-skill 7 4
-skill 8 4
-skill 9 4
-skill 10 5
+RangedCombat 4
+CloseCombat 4
+Dodge 5
 Sealed
 sub
 head
@@ -99,11 +95,9 @@ type <Guard>
 habitat <>
 CHAT_ATTACK1 <What's all this about!?>
 CHAT_ATTACK2 <Halt!>
-skill 6 1
-skill 7 1
-skill 8 1
-skill 9 1
-skill 10 2
+RangedCombat 1
+CloseCombat 1
+Dodge 2
 Sealed
 sub
 head
@@ -137,11 +131,9 @@ habitat <>
 CHAT_ATTACK1 <What's all this about!?>
 CHAT_ATTACK2 <Halt!>
 CHAT_ATTACK3 <Just wait while I call my supervisor!>
-skill 6 1
-skill 7 1
-skill 8 1
-skill 9 1
-skill 10 1
+RangedCombat 1
+CloseCombat 1
+Dodge 1
 Sealed
 sub
 head
@@ -172,14 +164,13 @@ SDL_SPRITE <cha_m_assassin.png>
 SDL_COLORS <36 46 30 200 159 180 70 30 81>
 explosion <10 CREATESTC GAS-1 Blast 1>
 explosion_desc <# dissolves in a cloud of toxic gas!>
-skill 6 6
-skill 8 9
-skill 9 8
-skill 10 8
-skill 13 2
-skill 18 7
+RangedCombat 6
+CloseCombat 9
+Dodge 8
+Vitality 2
+SpotWeakness 7
 Sealed
-Talent 23
+Talent 16
 sub
 head
 armor 3
@@ -232,12 +223,11 @@ SDL_COLORS <34 37 30 200 159 180 80 28 28>
 statline 17 16 15 16 13 15 10 11
 explosion <10 CREATESTC GAS-1 Blast 1>
 explosion_desc <# dissolves in a cloud of toxic gas!>
-skill 6 6
-skill 8 9
-skill 9 8
-skill 10 7
-skill 18 4
-Talent 23
+RangedCombat 6
+CloseCombat 8
+Dodge 7
+SpotWeakness 4
+Talent 16
 Sealed
 sub
 head
@@ -295,11 +285,10 @@ roguechar <R>
 type <Criminal Devo Wasteland>
 habitat <>
 CHAT_ATTACK <Any shiny bits I can take from your corpse?>
-skill 6 4
-skill 7 4
-skill 9 6
-skill 10 4
-skill 13 2
+RangedCombat 4
+CloseCombat 6
+Dodge 4
+Vitality 2
 sealed
 sub
 head
@@ -339,11 +328,9 @@ SDL_COLORS <56 26 81 170 112 90 168 133 230>
 CHAT_ATTACK1 <Gabba gabba hey!>
 CHAT_ATTACK2 <Hey ho, let's go!>
 CHAT_ATTACK3 <I wanna be... anarchy!>
-skill 6 1
-skill 7 1
-skill 8 1
-skill 9 1
-skill 10 1
+RangedCombat 1
+CloseCombat 1
+Dodge 1
 sub
 head
 torso
@@ -373,11 +360,9 @@ habitat <>
 CHAT_ATTACK1 <Gabba gabba hey!>
 CHAT_ATTACK2 <Hey ho, let's go!>
 CHAT_ATTACK3 <I wanna be... anarchy!>
-skill 6 1
-skill 7 1
-skill 8 1
-skill 9 1
-skill 10 1
+RangedCombat 1
+CloseCombat 1
+Dodge 1
 sub
 head
 torso
@@ -407,11 +392,9 @@ SDL_COLORS <56 26 81 170 112 90 123 63 0>
 CHAT_ATTACK1 <Gabba gabba hey!>
 CHAT_ATTACK2 <Hey ho, let's go!>
 CHAT_ATTACK3 <I wanna be... anarchy!>
-skill 6 1
-skill 7 1
-skill 8 1
-skill 9 1
-skill 10 1
+RangedCombat 1
+CloseCombat 1
+Dodge 1
 sub
 head
 torso
@@ -438,11 +421,9 @@ SDL_COLORS <112 28 28 150 112 89 136 151 50>
 CHAT_ATTACK1 <Lookie here, some fresh meat!>
 CHAT_ATTACK2 <I'll cut you up real good.>
 CHAT_ATTACK3 <You're gonna die!>
-skill 6 5
-skill 7 5
-skill 8 6
-skill 9 5
-skill 10 4
+RangedCombat 5
+CloseCombat 6
+Dodge 4
 sub
 head
 	armor 1
@@ -478,11 +459,9 @@ SDL_COLORS <112 28 28 150 112 89 56 26 81>
 CHAT_ATTACK1 <Lookie here, some fresh meat!>
 CHAT_ATTACK2 <I'll cut you up real good.>
 CHAT_ATTACK3 <You're gonna die!>
-skill 6 4
-skill 7 5
-skill 8 5
-skill 9 5
-skill 10 5
+RangedCombat 5
+CloseCombat 6
+Dodge 5
 sub
 head
 	armor 1

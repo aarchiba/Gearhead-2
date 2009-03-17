@@ -275,7 +275,7 @@ Content
 		GoAutoAttack <V= 1 ComTime V+ 1 10800  Alert -2 Exit Destination>
 		GoAvoidAttack <V= 1 ComTime V+ 1 3600  Print -6 AddSociable -1 UpdateProps>
 
-		Treasure 1
+		Treasure
 		name <Henchman's Diary>
 		desc <An old fashioned paper diary obtained from the mecha of your enemy's henchman.>
 		use <Alert 1>
@@ -627,7 +627,7 @@ Content
 		GoAutoAttack <V= 1 ComTime V+ 1 18000  Alert -2 Exit Destination>
 		GoAvoidAttack <V= 1 ComTime V+ 1 7200  Print -6 AddSociable -1 UpdateProps>
 
-		Treasure 1
+		Treasure
 		name <Treasure Map>
 		desc <An old fashioned holographic map obtained from a gang of pirates.>
 		use <if= PlotStatus %plotid% %id1% else GoNoUse Alert 1>
@@ -1066,7 +1066,7 @@ Content
 		name <%name4%'s Mecha>
 		update <if= PlotStatus %plotid% %id% else GoHide  SetStat STAT_MetaVisibility 0  Goto GoSetOrders>
 		attack <>
-		ENCOUNTER_Combat
+		ENCOUNTER_Hostile
 	end
 
 

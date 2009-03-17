@@ -22,7 +22,7 @@ sub
 	*.%id%_GoFail <*IConcedeDefeat&Battle>
 	.%id%_GoChat <NewChat SayAnything>
 	*.%id%_GoBye <*GoodBye>
-	.%id%_Skills <1 2 3 4 5>
+	.%id%_Skills <1 2 3>
 	result%id%01 <EndChat V= %id%01 1 Say %id%03 History %id%04 School .%id%_Skills Goto .%id%_GoBye>
 	result%id%02 <EndChat Say %id%05 AddReact -10>
 	result%id%03 <EndChat Say %id%06 School .%id%_Skills Goto .%id%_GoBye>
@@ -82,7 +82,7 @@ sub
 	*.%id%_GoFail <*IConcedeDefeat&Battle>
 
 	result%id%01 <EndChat Say %id%05 School .%id%_Skills Goto .%id%_GoBye>
-	.%id%_Skills <1 2 3 4 5 6 7 8 9 10 18>
+	.%id%_Skills <1 2 3 4 5 6 11 15 16>
 	*.%id%_GoBye <*GoodBye>
 
 	Msg%id%01 <You're a great pilot. The next time we meet on the battlefield, I plan to be on your side.>

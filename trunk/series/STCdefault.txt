@@ -379,16 +379,16 @@
 	desig <SENTINELFCS>
 	CyberSlot <ARTILLERY>
 	type <CYBER MECHA>
-	Stat 1 2
-	Stat 2 3
+	SkillModMechaGunnery
+	SkillModAmount 2
 
 	SkillModifier 0
 	name <Self Defense Matrix>
 	desig <SELFDEFENSEMATRIX>
 	CyberSlot <FIGHTING>
 	type <CYBER MECHA>
-	Stat 1 4
-	Stat 2 1
+	SkillModMechaFighting
+	SkillModAmount 2
 
 	Food 30
 	name <Red Bear Liver>
@@ -401,8 +401,8 @@
 	Food 20
 	name <Dragon Heart>
 	desig <DRAGONHEART>
-	% Step 9 , Healing, restore Step9 damage using skill 20 (First Aid)
-	effect <9 Healing 20>
+	% Step 9 , Healing, restore Step9 damage for material 1 (Meat)
+	effect <9 Healing 1>
 	FoodXValue 2000
 	FoodMorale -2
 
@@ -1558,9 +1558,9 @@ Desig <SW-WEDGE-0>
 SDL_SPRITE <tex_spaceship_body.png>
 Mesh 7
 Scale 2
-Skill 6 8
-Skill 12 8
-Skill 17 10
+RangedCombat 8
+Initiative 8
+ElectronicWarfare 10
 sub
 	Turret
 	size 3
@@ -1582,10 +1582,10 @@ Desig <SW-WEDGE-1>
 SDL_SPRITE <tex_spaceship_body.png>
 Mesh 7
 Scale 2
-Skill 6 10
-Skill 12 10
-Skill 17 14
-Skill 18 9
+RangedCombat 10
+Initiative 10
+ElectronicWarfare 14
+SpotWeakness 9
 sub
 	Turret
 	size 3
@@ -1607,10 +1607,10 @@ Desig <SW-WEDGE-2>
 SDL_SPRITE <tex_spaceship_body.png>
 Mesh 7
 Scale 2
-Skill 6 12
-Skill 12 12
-Skill 17 18
-Skill 18 12
+RangedCombat 12
+Initiative 12
+ElectronicWarfare 18
+SpotWeakness 12
 sub
 	Turret
 	size 3
@@ -1632,9 +1632,9 @@ Desig <SW-TOWER-1>
 SDL_SPRITE <tex_spaceship_body.png>
 Mesh 8
 Scale 2
-Skill 6 16
-Skill 12 10
-Skill 17 18
+RangedCombat 16
+Initiative 10
+ElectronicWarfare 18
 sub
 	Turret
 	size 5
@@ -1655,9 +1655,9 @@ Desig <SW-SLAB-1>
 SDL_SPRITE <tex_spaceship_body.png>
 Mesh 6
 Scale 2
-Skill 7 14
-Skill 12 6
-Skill 17 18
+RangedCombat 14
+Initiative 6
+ElectronicWarfare 18
 sub
 	Turret
 	size 5
@@ -1680,9 +1680,9 @@ Desig <SW-SLAB-2>
 SDL_SPRITE <tex_spaceship_body.png>
 Mesh 5
 Scale 2
-Skill 6 14
-Skill 12 6
-Skill 17 18
+RangedCombat 14
+Initiative 6
+ElectronicWarfare 18
 sub
 	Turret
 	size 5
@@ -1709,10 +1709,10 @@ Desig <SS-CANNON-0>
 SDL_SPRITE <tex_spaceship_body.png>
 Mesh 7
 Scale 2
-Skill 6 10
-Skill 12 9
-Skill 17 15
-Skill 18 10
+RangedCombat 10
+Initiative 9
+ElectronicWarfare 15
+SpotWeakness 10
 sub
 	Turret
 	size 3
@@ -1734,10 +1734,10 @@ Desig <SS-CANNON-1>
 SDL_SPRITE <tex_spaceship_body.png>
 Mesh 7
 Scale 2
-Skill 6 12
-Skill 12 11
-Skill 17 24
-Skill 18 12
+RangedCombat 12
+Initiative 11
+ElectronicWarfare 24
+SpotWeakness 12
 sub
 	Turret
 	size 3
@@ -1764,8 +1764,8 @@ Desig <TURRET-1>
 sdl_sprite <prop_turret1.png>
 roguechar <&>
 Scale 2
-Skill 6 8
-Skill 12 10
+RangedCombat 8
+Initiative 10
 sub
 	Turret
 	size 3
@@ -1791,8 +1791,8 @@ name <Pillbox>
 Desig <TURRET-2>
 roguechar <&>
 Scale 2
-Skill 6 8
-Skill 12 10
+RangedCombat 8
+Initiative 10
 Mesh 2
 sdl_sprite <tex_building_pillbox.png>
 sub

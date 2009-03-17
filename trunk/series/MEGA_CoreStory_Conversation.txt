@@ -168,13 +168,13 @@ Plot
 		result%id%02 <NewChat Say %id%05 AddChat %id%07 AddChat %id%08>
 		% The car needs Mecha Repair (15), the videoset General Repair (23), and the
 		% computer Code Breaking (32)
-		result%id%03 <EndChat Say %id%06 V= %id%02 15 AddChat %id%09>
-		result%id%04 <EndChat Say %id%07 V= %id%02 23 AddChat %id%09>
-		result%id%05 <EndChat Say %id%08 V= %id%02 32 AddChat %id%09>
+		result%id%03 <EndChat Say %id%06 V= %id%02 NAS_Repair AddChat %id%09>
+		result%id%04 <EndChat Say %id%07 V= %id%02 NAS_Repair AddChat %id%09>
+		result%id%05 <EndChat Say %id%08 V= %id%02 NAS_CodeBreaking AddChat %id%09>
 		result%id%06 <Goto .%id%_GoGiveUp>
 		result%id%07 <Goto .%id%_GoCheckRepair>
 		result%id%08 <Goto .%id%_GoGiveUp>
-		result%id%09 <ifSkillTest V%id%02 SkillTar StoryDL else .%id%_GoRepairFailed Goto .%id%_GoRepairSucceed>
+		result%id%09 <ifSkillTest V%id%02 STAT_Craft SkillTar StoryDL else .%id%_GoRepairFailed Goto .%id%_GoRepairSucceed>
 		result%id%10 <NewChat Say %id%13 AddChat %id%03 AddChat %id%04 AddChat %id%05 AddChat %id%06>
 		result%id%11 <NewChat Say %id%14>
 		result%id%12 <NewChat Say %id%15 History %id%12>
@@ -1013,7 +1013,7 @@ Content
 		Prompt%id%02 <This is hardly a fitting use of my mad cavalier skills.>
 	end
 	inv
-		Treasure 5
+		Treasure
 		name <Watch>
 		desc <%name1%'s watch. It's not even all that nice, really.>
 	end

@@ -23,87 +23,70 @@ Job
 name <Scientist>
 desig <ACADE>
 requires <CITY>
-% BioTechnology, Science, Concentration
-Skill 22
-skill 29
-skill 30
+% Science
+Science
 Pragmatism 15
 
 Job
 name <Teacher>
 desig <ACADE>
 requires <GENERAL>
-% Awareness, Conversation, Intimidation, Science
-Skill 11
-Skill 19
-skill 28
-skill 29
+% Conversation
+Conversation
 
 Job
 name <Arena Pilot>
 desig <ADVEN>
 requires <GENERAL>
 SetFaction 5
-% Mecha Gunnery, Mecha Weapons, Mecha Fighting, Mecha Piloting, Initiative
-Skill 1
-Skill 3
-Skill 4
-Skill 5
-Skill 12
+% Mecha Gunnery, Mecha Fighting, Mecha Piloting
+MechaGunnery
+MechaFighting
+MechaPiloting
 
 Job
 name <Bounty Hunter>
 desig <ADVEN>
 requires <GENERAL>
-% Small Arms, Martial Arts, Dodge, Initiative, Intimidation
-Skill 6
-Skill 9
-Skill 10
-Skill 12
-Skill 28
+% Ranged Combat, Dodge, Intimidation
+RangedCombat
+Dodge
+Intimidation
 
 Job
 name <Explorer>
 desig <ADVEN>
 requires <GENERAL -SAFE>
-% Dodge, Awareness, Survival, First Aid
-skill 10
-skill 11
-skill 14
-skill 20
+% Awareness, Survival
+Awareness
+Survival
 Sociability -10
 
 Job
 name <Martial Artist>
 desig <ADVEN>
 requires <GENERAL>
-% Martial Arts, Dodge, Spot Weakness, Athletics
-skill 9
-skill 10
-skill 18
-skill 26
+% Close Combat, Dodge, Spot Weakness
+CloseCombat
+Dodge
+SpotWeakness
 
 Job
 name <Mercenary>
 desig <ADVEN>
 requires <TARGET>
-% Heavy Weapons, Dodge, Mecha Gunnery, Mecha Artillery, Mecha Piloting
-Skill 2
-Skill 5
-Skill 6
-Skill 7
-Skill 10
+% Dodge, Mecha Piloting
+Dodge
+MechaPiloting
 
 Job
 name <Test Pilot>
 desig <ADVEN>
 requires <Industrial>
-% Mecha Weapons, Mecha Piloting, Dodge, Vitality, Resistance
-skill 3
-skill 5
-skill 10
-skill 13
-skill 36
+% Mecha Piloting, Dodge, Toughness
+Dodge
+MechaPiloting
+Toughness
 Easygoingness -10
 
 Job
@@ -111,16 +94,15 @@ name <Banker>
 desig <CORPO>
 requires <financial>
 % Shopping
-Skill 21
+Shopping
 
 Job
 name <Corporate Executive>
 desig <CORPO>
 requires <CITY>
 special <NeedsFaction>
-% Shopping, Leadership
-Skill 21
-Skill 39
+% Shopping
+Shopping
 Easygoingness 10
 
 Job
@@ -128,201 +110,171 @@ name <Corporate Pilot>
 desig <CORPO>
 requires <CITY>
 special <NeedsFaction>
-% Mecha Gunnery, Mecha Weapons, Mecha Piloting, Electronic Warfare
-skill 1
-skill 3
-skill 5
-skill 17
+% Mecha Gunnery, Mecha Fighting, Mecha Piloting
+MechaGunnery
+MechaFighting
+MechaPiloting
 Easygoingness 5
 
 Job
 name <Architect>
 desig <CRAFT>
 requires <CITY>
-% Spot Weakness, Concentration
-Skill 18
-Skill 30
+% Spot Weakness
+SpotWeakness
 
 Job
 name <Computer Programmer>
 desig <CRAFT>
 requires <CITY>
-% Cybertech, Concentration, CodeBreaking
-skill 24
-skill 30
-skill 32
+% CodeBreaking
+CodeBreaking
 Pragmatism 5
 
 Job
 name <Engineer>
 desig <CRAFT>
 requires <Industrial>
-% Mecha Repair, General Repair, Mecha Engineering
-Skill 15
-skill 23
-skill 31
+% Repair, Mecha Engineering
+Repair
+MechaEngineering
 Pragmatism 5
 
 Job
 name <Mecha Designer>
 desig <CRAFT>
 requires <Industrial>
-% Mecha Repair, Mecha Engineering, Robotics
-Skill 15
-skill 31
-skill 38
+% Mecha Engineering, Science
+MechaEngineering
+Science
 
 Job
 name <Mechanic>
 desig <CRAFT>
 requires <GENERAL>
-% Mecha Piloting, Mecha Repair, General Repair, Concentration
-skill 5
-skill 15
-skill 23
-skill 30
+% Mecha Piloting, Mecha Repair
+MechaPiloting
+Repair
 
 Job
 name <Monk>
 desig <FAITH>
 requires <GENERAL>
-% Martial Arts, Dodge, Spot Weakness, Athletics, Mysticism
-skill 9
-skill 10
-skill 18
-skill 26
-skill 34
+% Close Combat, Dodge, Mysticism
+CloseCombat
+Dodge
+Mysticism
 Pragmatism -10
 
 Job
 name <Priest>
 desig <FAITH>
 requires <GENERAL>
-% Conversation, Mysticism, Leadership
-skill 19
-skill 34
-skill 39
+% Conversation, Mysticism
+Conversation
+Mysticism
 Pragmatism -15
 
 Job
 name <Construction Worker>
 desig <LABOR>
 requires <GENERAL>
-% Mecha Fighting, Mecha Piloting, Vitality, General Repair, Weight Lifting
-skill 4
-skill 5
-skill 13
-skill 23
-skill 33
+% Mecha Fighting, Mecha Piloting, General Repair
+MechaFighting
+MechaPiloting
+Repair
 
 Job
 name <Miner>
 desig <LABOR>
 requires <MINE>
 % Mecha Weapons, Mecha Piloting, Vitality, Weight Lifting, Resistance
-skill 3
-skill 5
-skill 13
-skill 33
-skill 36
+MechaFighting
+MechaPiloting
+Toughness
 
 Job
 name <Trucker>
 desig <LABOR>
 requires <GENERAL>
-% Mecha Piloting, Armed Combat, Mecha Repair, Conversation, General Repair
-skill 5
-skill 8
-skill 15
-skill 19
-skill 23
+% Mecha Piloting, Mecha Repair, Conversation
+MechaPiloting
+Repair
+Conversation
 
 Job
 name <Actor>
 desig <MEDIA>
 requires <CITY>
-% Conversation, Flirtation, Intimidation
-skill 19
-skill 27
-skill 28
+% Conversation
+Conversation
 Sociability 20
 
 Job
 name <Athlete>
 desig <MEDIA>
 requires <GENERAL>
-% Vitality, Athletics, Weight Lifting
-skill 13
-skill 26
-skill 33
+% Toughness
+Toughness
 
 Job
 name <Comedian>
 desig <MEDIA>
 requires <CULTURE>
-% Performance, Resistance, Taunt
-Skill 35
-Skill 36
-Skill 42
+% Performance, Taunt
+Performance
+Taunt
 Cheerfulness 15
 
 Job
 name <Dancer>
 desig <MEDIA>
 requires <CULTURE>
-% Athletics, Flirtation, Acrobatics
-Skill 26
-Skill 27
-Skill 43
+% Performance
+Performance
 
 Job
 name <Journalist>
 desig <MEDIA>
 requires <CITY>
-% Awareness, Conversation, Stealth, Investigation
-skill 11
-skill 19
-skill 25
-skill 37
+% Awareness, Conversation, Insight
+Awareness
+Conversation
+Insight
 
 Job
 name <Singer>
 desig <MEDIA>
 requires <GENERAL>
-% Conversation, Flirtation, Performance
-skill 19
-skill 27
-skill 35
+% Performance
+Performance
 Sociability 10
 
 Job
 name <Cyberdoc>
 desig <MEDIC>
 requires <CITY>
-% Medicine, Cybernetics
-Skill 16
-Skill 24
+% Medicine, Science
+Medicine
+Science
 Pragmatism 25
 
 Job
 name <Doctor>
 desig <MEDIC>
 requires <GENERAL>
-% Medicine, First Aid
-Skill 16
-Skill 20
+% Medicine
+Medicine
 Pragmatism 10
 
 Job
 name <Firefighter>
 desig <MEDIC>
 requires <GENERAL>
-% Mecha Piloting, Vitality, First Aid, Athletics, Resistance
-skill 5
-skill 13
-skill 20
-skill 26
-skill 36
+% Mecha Piloting, Medicine, Toughness
+MechaPiloting
+Medicine
+Toughness
 Heroism 2
 Renown 5
 
@@ -330,43 +282,36 @@ Job
 name <Nurse>
 desig <MEDIC>
 requires <GENERAL>
-% Medicine, Conversation, First Aid
-Skill 16
-Skill 19
-Skill 20
+% Medicine, Conversation
+Medicine
+Conversation
 
 Job
 name <Paramedic>
 desig <MEDIC>
 requires <GENERAL>
-% Mecha Piloting, First Aid, Athletics, Weight Lifting
-skill 5
-skill 20
-skill 26
-skill 33
+% Mecha Piloting, Medicine
+MechaPiloting
+Medicine
 
 Job
 name <Combat Pilot>
 desig <MILIT>
 requires <TARGET>
-% Mecha Gunnery, Artillery, Weapons, Fighting, Piloting
-Skill 1
-Skill 2
-Skill 3
-Skill 4
-Skill 5
+% Mecha Gunnery, Mecha Fighting, Mecha Piloting
+MechaGunnery
+MechaFighting
+MechaPiloting
 
 Job
 name <Knight>
 desig <MILIT>
 requires <MAQUI>
 SetFaction 3
-% Mecha Gunnery, Weapons, Fighting, Piloting, Electronic Warfare
-Skill 1
-Skill 3
-Skill 4
-Skill 5
-Skill 17
+% Mecha Piloting, Spot Weakness, Electronic Warfare
+MechaPiloting
+SpotWeakness
+ElectronicWarfare
 Lawfulness 10
 Heroism 5
 Renown 10
@@ -375,12 +320,10 @@ Job
 name <Recon Pilot>
 desig <MILIT>
 requires <VILLAGE>
-% Mecha Gunnery, Mecha Artillery, Mecha Piloting, Awareness, Stealth
-skill 1
-skill 2
-skill 5
-skill 11
-skill 25
+% Mecha Piloting, Awareness, Stealth
+MechaPiloting
+Awareness
+Stealth
 Sociability -5
 
 Job
@@ -388,21 +331,18 @@ name <Soldier>
 desig <MILIT>
 requires <TARGET>
 special <NeedsFaction>
-% Small Arms, Heavy Weapons, Armed Combat, Martial Arts, Dodge
-Skill 6
-Skill 7
-Skill 8
-Skill 9
-Skill 10
+% Close Combat, Ranged Combat, Dodge
+CloseCombat
+RangedCombat
+Dodge
 
 Job
 name <Diplomat>
 desig <POLIT>
 requires <CAPITOL>
-% Conversation, Intimidation, Leadership
-skill 19
-skill 28
-skill 39
+% Conversation, Intimidation
+Conversation
+Intimidation
 sociability 15
 
 Job
@@ -410,28 +350,25 @@ name <Lawyer>
 desig <POLIT>
 requires <CITY>
 % Conversation
-Skill 19
+Conversation
 
 Job
 name <Politician>
 desig <POLIT>
 requires <CITY>
 special <NeedsFaction>
-% Conversation, Leadership
-Skill 19
-Skill 39
+% Conversation
+Conversation
 
 Job
 name <Police Officer>
 desig <POLIC>
 requires <GENERAL>
 special <NeedsFaction>
-% Small Arms, Armed Combat, Dodge, Intimidation, Investigation
-skill 6
-skill 8
-skill 10
-skill 28
-skill 37
+% Ranged Combat, Spot Weakness, Insight
+RangedCombat
+SpotWeakness
+Insight
 Lawfulness 5
 
 Job
@@ -439,12 +376,10 @@ name <Forensic Investigator>
 desig <POLIC>
 requires <CITY>
 special <NeedsFaction>
-% Small Arms, Dodge, Conversation, Science, Investigation
-skill 6
-skill 10
-skill 19
-skill 29
-skill 37
+% Conversation, Science, Insight
+Conversation
+Science
+Insight
 Lawfulness 5
 Pragmatism 15
 
@@ -452,10 +387,9 @@ Job
 name <Hacker>
 desig <THIEF>
 requires <GENERAL>
-% Stealth, Concentration, Code Breaking
-skill 25
-skill 30
-skill 32
+% Stealth, Code Breaking
+Stealth
+CodeBreaking
 Lawfulness -5
 Pragmatism 10
 
@@ -464,9 +398,9 @@ name <Smuggler>
 desig <THIEF>
 requires <tradehub>
 % Conversation, Shopping, Stealth
-skill 19
-skill 21
-skill 25
+Conversation
+Shopping
+Stealth
 Lawfulness -5
 Sociability 10
 
@@ -474,48 +408,44 @@ Job
 name <Pirate>
 desig <THIEF>
 requires <(SPINNER|ASTEROID)>
-% Mecha Piloting, Armed Combat, Stealth, Intimidation, Taunt
-skill 5
-skill 8
-skill 25
-skill 28
-skill 42
+% Mecha Piloting, Stealth, Taunt
+MechaPiloting
+Stealth
+Taunt
 Lawfulness -5
 
 Job
 name <Spy>
 desig <THIEF>
 requires <CAPITOL>
-% Awareness, Stealth, Flirtation, Code Breaking
-Skill 11
-Skill 25
-Skill 27
-Skill 32
+% Awareness, Stealth, Code Breaking
+Awareness
+Stealth
+CodeBreaking
 Sociability -25
 
 Job
 name <Chef>
 desig <TRADE>
 requires <Cuisine>
-% Armed Combat, Shopping, Concentration
-Skill 8
-Skill 21
-Skill 30
+% Close Combat, Shopping
+CloseCombat
+Shopping
 
 Job
 name <Shopkeeper>
 desig <TRADE>
 requires <GENERAL>
 % Shopping, General Repair
-Skill 21
-Skill 23
+Shopping
+Repair
 
 Job
 name <Trader>
 desig <TRADE>
 requires <tradehub>
 % Conversation, Shopping
-skill 19
-skill 21
+Conversation
+Shopping
 Sociability 10
 

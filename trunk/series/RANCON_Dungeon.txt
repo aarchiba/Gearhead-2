@@ -68,9 +68,8 @@ Content
 	inv
 		Monster Giant Roach
 		% Less dangerous than usual
-		skill 8 2
-		skill 9 2
-		skill 10 1
+		CloseCombat 2
+		Dodge 1
 	end
 
 Content
@@ -128,8 +127,8 @@ Content
 	inv
 		Monster Armored Fungus
 		% This armored fungus is slightly easier than a regular one.
-		Skill 10 1
-		Skill 13 2
+		Dodge 1
+		Vitality 2
 	end
 
 Content
@@ -159,10 +158,10 @@ Content
 	inv
 		Monster Cleanbot
 		name <KILLER CLEANBOT>
-		Skill 8 4
-		Skill 10 4
-		Skill 13 4
-		Skill 18 2
+		CloseCombat 4
+		Dodge 4
+		Vitality 4
+		SpotWeakness 2
 	end
 
 Content

@@ -72,7 +72,7 @@ Content
 	inv
 		NPC Shopkeeper
 		SetFaction 4
-		skill 15 10
+		Repair 10
 	end
 
 
@@ -148,7 +148,7 @@ Content
 		*greeting <*NiceToMeetYou GoSchool>
 		GoSchool <NewChat Say 1 AddChat 1 AddChat 2>
 		Result1 <EndChat Say 2 School .skills Goto Result2>
-		.skills <16 22 24 29 38>
+		.skills <13 21 22>
 		*Result2 <*GoodBye>
 		Msg1 <The Nova Initiative has programs for both research and education. Our doors are open to all people with an interest in science.>
 		Msg2 <Certainly. What subject do you want to know more about?>
@@ -216,7 +216,7 @@ Content
 		.wares <MEXTRA TOOL>
 		*Result4 <*GoodBye>
 		Result5 <EndChat Say 8 School .skills Goto Result4>
-		.skills <15 18 23 31 38>
+		.skills <13 16 22>
 		Result6 <Goto result5>
 		Result7 <Goto result3>
 		Msg1 <I've been following your adventures, \PC , and I'd like to help you out. If you want I can teach you some things about mecha design.>
@@ -241,7 +241,7 @@ Content
 		name <Fabrianne>
 		CharDesc Female Heroic Lawful Sociable
 		Age 12
-		Skill 21 15
+		Shopping 15
 		SDL_Portrait <por_f_musical(J--).png>
 		SDL_Colors <80 80 85 245 213 160 168 133 230>
 	end
@@ -274,7 +274,7 @@ Content
 	end
 	inv
 		NPC CyberDoc
-		Skill 21 15
+		Shopping 15
 		name <Freedman>
 		Age 21
 		chardesc Male Pragmatic Heroic Melancholy Sociable
@@ -302,7 +302,7 @@ Content
 		GoTeach <NewChat Say 1 AddChat 1 AddChat 2>
 		GoChat <NewChat SayAnything>
 		result1 <EndChat Say 2 School .skills Goto result2>
-		.skills <11 18 19 37 39 42>
+		.skills <10 11 15>
 		*result2 <*GoodBye>
 		result3 <Goto GoTeach>
 		Msg1 <Life is a process of reinventing oneself. When you stop learning, it means you have achieved either perfection or death. I, being relatively closer to that state, know more about these things than you.>
@@ -317,7 +317,7 @@ Content
 		GoChat <NewChat SayAnything>
 		*GoEnd <*GoodBye>
 		result1 <EndChat Say 2 School .skills Goto GoEnd>
-		.skills <27 28 35 43>
+		.skills <17 25>
 		result2 <NewChat Say 3>
 		Msg1 <Welcome to the hall of Master Kynan. Do you like my song? I could teach it to you.>
 		Msg2 <Without music, a warrior's heart is filled only with death. Take this song and make it your own.>
@@ -371,7 +371,7 @@ Content
 		name <Jondi Syd>
 		job <Weaponmaster>
 		SetFaction 14
-		Skill 21 13
+		Shopping 13
 		Age 8
 		Chardesc Male Sociable Passionate Villainous
 		NonCombatant
@@ -420,7 +420,7 @@ Content
 		NPC Cyberdoc
 		name <Edeline>
 		SetFaction 14
-		Skill 21 10
+		Shopping 10
 		Age 8
 		Chardesc Female sociable passionate cheerful heroic
 	end
@@ -460,7 +460,7 @@ Content
 		NPC Mechanic
 		name <Makk>
 		SetFaction 14
-		skill 21 10
+		Shopping 10
 		SDL_PORTRAIT <>
 		SDL_COLORS <>
 		CharDesc Male Sociable Passionate Passionate Cheerful Pragmatic
@@ -576,8 +576,7 @@ Content
 		SDL_COLORS <136 141 101 255 233 225 244 216 28>
 		chardesc Male Criminal Melancholy Easygoinge
 		Age 14
-		Skill 21 15
-		Skill 24 5
+		Shopping 15
 	end
 
 %% *THESP_FR_Content
@@ -709,7 +708,7 @@ Content
 		.wares <INSTRUMENT ENTERTAINMENT>
 		*result2 <*GoodBye>
 		result3 <EndChat Say 3 School .skills Goto result2>
-		.skills <19 27 30 35 43>
+		.skills <8 17 18 25 28>
 		result4 <NewChat Say 5 AddChat 5 AddChat 6>
 		result5 <NewChat Say 6 V= 1 1 History 8 AddChat 7 AddChat 8 PCFriend %1%>
 		result6 <NewChat Say 7 V= 1 -1 History 9 AddEasygoing -d10>
@@ -740,9 +739,7 @@ Content
 		Combatant
 		Age 5
 		CharDesc Lawful Sociable Easygoing Female
-		skill 21 12
-		skill 30 10
-		skill 43 10
+		Shopping 12
 		SDL_PORTRAIT <por_f_artemis(-C-).png>
 		SDL_COLORS <168 153 230 255 212 195 112 28 28>
 	end
@@ -903,7 +900,7 @@ Content
 		Age 23
 		% He isn't lying about the pistols, check out that Lawful rep
 		CharDesc Lawful Pragmatic Passionate Male
-		skill 21 12
+		Shopping 12
 		SDL_PORTRAIT <por_m_comiccarter(OUY).png>
 		SDL_COLORS <20 90 130 150 112 89 168 153 230>
 	end
@@ -974,7 +971,7 @@ Content
 		result1 <EndChat Say 2 Shop .wares Goto GoBye>
 		.wares <WEAPON AMMO GRENADE ACCESSORY ARMOR SHIELD>
 		result2 <EndChat Say 3 School .skills Goto GoBye>
-		.skills <1 2 3 4 5 6 7 8 9 10 17 24>
+		.skills <1 2 3 4 5 6   15 16 22>
 		result3 <Goto GoBye>
 		Msg1 <Having the right equipment can make the difference between life and death. Of course, knowing how to use it is also important.>
 		Msg2 <Take a look through the armory. Let me know what you need.>
@@ -990,7 +987,7 @@ Content
 		Age 19
 		SetFaction 3
 		chardesc Passionate Shy Cheerful Lawful Heroic Female
-		skill 21 10
+		Shopping 15
 		job <Weaponmaster>
 		SDL_PORTRAIT <por_f_arleus(AAY).png>
 		SDL_COLORS <150 205 229 150 112 89 103 3 45>
@@ -1030,7 +1027,7 @@ Content
 		SDL_PORTRAIT <por_m_gamaliel(APY).png>
 		SDL_COLORS <150 205 229 123 63 0 55 25 81>
 		Age 16
-		skill 21 10
+		Shopping 15
 		SetFaction 3
 		chardesc Pragmatic Melancholy Lawful Heroic Male
 		Combatant
@@ -1050,8 +1047,17 @@ Content
 
 	sub
 		Persona 1
-		*Greeting <*NiceToMeetYou GoChat>
+		*Greeting <*NiceToMeetYou GoCheckFac>
+		GoCheckFac <if= PCFac ChatNPCFac else GoChat NewChat Say 1 AddChat 1 AddChat 2>
 		*GoChat <*MISC_CHATTER>
+		*GoBye <*GOODBYE>
+		result1 <EndChat Say 2 School .skills Goto GoBye>
+		.skills <14 21 27>
+		result2 <Goto GoBye>
+		Msg1 <Welcome, \RANK \PC . I hope that your quest is proceeding well.>
+		Msg2 <Alright, let's do that. What is it that you wish to learn?>
+		Prompt1 <I'd like to train with you.>
+		Prompt2 <I just stopped by to meditate.>
 	end
 	inv
 		NPC Knight
@@ -1061,7 +1067,7 @@ Content
 		Age 22
 		SetFaction 3
 		chardesc Spiritual Easygoing Lawful Heroic Male
-		Skill 34 10
+		Mysticism 10
 		job <Chaplain>
 		job_desig <FAITH>
 
@@ -1157,7 +1163,7 @@ Content
 		NPC Mechanic
 		name <Keefa>
 		SetFaction 3
-		skill 21 10
+		Shopping 10
 		SDL_PORTRAIT <por_f_keefa(-P-).png>
 		SDL_COLORS <150 205 229 255 215 195 152 61 97>
 		CharDesc Female Lawful Shy Easygoing Pragmatic

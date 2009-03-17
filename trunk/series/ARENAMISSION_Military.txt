@@ -219,9 +219,9 @@ ArenaMission
 		sdl_sprite <prop_turret1.png>
 		roguechar <&>
 		Scale 2
-		Skill 6 8
-		Skill 10 8
-		Skill 12 2
+		RangedCombat 8
+		Dodge 8
+		Initiative 2
 		sub
 			Turret
 			size 8

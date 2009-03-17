@@ -121,7 +121,7 @@
 	requires <*SHOP_HEALTHCLUB>
 	START <NewChat Say %id%01 AddChat %id%01 AddChat %id%02>
 	result%id%01 <EndChat Say %id%02 School .%id%_Skills Goto %1%>
-	.%id%_Skills <13 26 33>
+	.%id%_Skills <7 8 9>
 	result%id%02 <Goto %1%>
 	Msg%id%01 <This is a health club. We have all sorts of equipment for endurance, cardiovascular, and weight training.>
 	Msg%id%02 <Remember: no pain, no gain.>
@@ -134,7 +134,7 @@
 	% V%id%01 = Have visited before
 	START <NewChat Say %id%01 AddChat %id%01 AddChat %id%02 AddChat %id%03>
 	result%id%01 <EndChat Say %id%02 V= %id%01 1 School .%id%_Skills Goto %1%>
-	.%id%_Skills <13 26 33 36 43>
+	.%id%_Skills <7 8 9>
 	result%id%02 <Goto %1%>
 	result%id%03 <V= %id%01 -1   AddCheerful -d10   Goto %1%>
 	Msg%id%01_1 <Say, you're looking a bit out of shape. Have you been gaining weight? What you need is some honest exercise.>
@@ -668,7 +668,7 @@
 	START <NewChat Say %id%01 AddChat %id%01 AddChat %id%02>
 	result%id%01 <EndChat Say %id%02 school .%id%_skills Goto %1%>
 	result%id%02 <Goto %1%>
-	.%id%_skills <8 9 34>
+	.%id%_skills <5 7 24>
 	KEYWORDS <RELIGION>
 	Msg%id%01 <I have studied martial arts for years. Now, it is time to pass on my knowledge to others. I offer lessons in martial arts, armed combat, and the ways of mysticism.>
 	Msg%id%02 <There is still much for you to learn. Let us begin.>
@@ -684,8 +684,8 @@
 	KEYWORDS <MELEE RELIGION>
 	result%id%03 <EndChat ifPCSpiritual else .%id%_GoNoSpirit Say %id%03 shop .%id%_madskilz Goto %1%>
 	.%id%_GoNoSpirit <Say %id%04 school .%id%_badskilz Goto %1%>
-	.%id%_madskilz <6 8 9 10 34>
-	.%id%_badskilz <9 34>
+	.%id%_madskilz <4 5 6 11 24>
+	.%id%_badskilz <5 24>
 	Msg%id%01 <This is my dojo. If you would like to purchase a weapon I have a fine selection of blades. I also offer classes in martial arts, if that is more to your liking.>
 	Msg%id%02 <Master these blades, and you will have mastered yourself.>
 	Msg%id%03 <There is much I could teach a true adept like yourself. Come, let us practice together.>
@@ -703,7 +703,7 @@
 	START <NewChat Say %id%01 AddChat %id%01 AddChat %id%02>
 	result%id%01 <EndChat Say %id%02 School .%id%_skills Goto %1%>
 	result%id%02 <Goto %1%>
-	.%id%_skills <1 2 3 4 5 6 7 8 9 10>
+	.%id%_skills <1 2 3 4 5 6>
 	Msg%id%01 <I can teach you many things about combat.>
 	Msg%id%02 <Keep studying and you'll see improvement eventually.>
 	Prompt%id%01 <I'd like to train.>
@@ -714,7 +714,7 @@
 	START <NewChat Say %id%01 AddChat %id%01 AddChat %id%02>
 	result%id%01 <EndChat Say %id%02 School .%id%_skills Goto %1%>
 	result%id%02 <Goto %1%>
-	.%id%_skills <1 2 3 4 5 6 7 8 9 10 11 19 28 37 39>
+	.%id%_skills <1 2 3 4 5 6  10 17 27>
 	Msg%id%01 <To be successful in politics you need to be both charismatic and observant. As a cavalier, you should probably also know how to pilot a mecha.>
 	Msg%id%02 <Money spent on training is never lost, though you may need to wait some time to see the effects.>
 	Prompt%id%01 <I'd like to train.>
@@ -725,7 +725,7 @@
 	START <NewChat Say %id%01 AddChat %id%01 AddChat %id%02>
 	result%id%01 <EndChat Say %id%02 School .%id%_skills Goto %1%>
 	result%id%02 <Goto %1%>
-	.%id%_skills <1 2 3 4 5 6 7 8 9 10 15 21 31 23 38>
+	.%id%_skills <1 2 3 4 5 6   13 18 15>
 	Msg%id%01 <To get ahead in this company you're going to need an edge; I can help you to achieve that.>
 	Msg%id%02 <Remember, the money you spend here is never wasted, unlike the money they spend in the R&D department.>
 	Prompt%id%01 <Let's train.>
@@ -736,7 +736,7 @@
 	START <NewChat Say %id%01 AddChat %id%01 AddChat %id%02>
 	result%id%01 <EndChat Say %id%02 School .%id%_skills Goto %1%>
 	result%id%02 <Goto %1%>
-	.%id%_skills <1 2 3 4 5 6 7 8 9 10 19 29 32 36 37>
+	.%id%_skills <1 2 3 4 5 6   16 20 27>
 	Msg%id%01 <As an officer of the law, you're going to need a wide variety of skills.>
 	Msg%id%02 <So, what do you want to study?>
 	Prompt%id%01 <I'm ready to learn.>
@@ -747,7 +747,7 @@
 	START <NewChat Say %id%01 AddChat %id%01 AddChat %id%02>
 	result%id%01 <EndChat Say %id%02 School .%id%_skills Goto %1%>
 	result%id%02 <Goto %1%>
-	.%id%_skills <1 2 3 4 5 6 7 8 9 10 12 13 17 18 36>
+	.%id%_skills <1 2 3 4 5 6   11 16 26>
 	Msg%id%01 <To be a successful warrior you need to master many skills.>
 	Msg%id%02 <We'll begin your training slowly, then move on to the more dangerous lessons once you've proven yourself.>
 	Prompt%id%01 <Show me how to do it.>

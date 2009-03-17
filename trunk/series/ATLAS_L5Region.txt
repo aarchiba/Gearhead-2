@@ -181,7 +181,7 @@ sub
 			update <ifAccessArmory SetStat 6 0 if# StatVal 5 0 DrawTerr SelfX SelfY 19 SetStat 5 0>
 		end
 		inv
-			StairsDown 0
+			StairsDown
 			name <Comet Factory>
 			MiniMapComponent 1
 		end
@@ -1379,7 +1379,7 @@ sub
 			NPC Soldier
 			job <Bouncer>
 			home <Entry Point>
-			skill 9 9
+			Renown 20
 			name <Kodie>
 			desig <NPC_Kodie>
 			chardesc Male Passionate Sociable
@@ -1428,7 +1428,7 @@ sub
 			GoR7Works <Say 10 Cash+ -5000 Goto GoStamp>
 			result8 <Goto result1>
 			result9 <EndChat Say 16 school .skills Say 17>
-			.skills <6 7 8 9 10>
+			.skills <4 5 6>
 			result10 <NewChat Say 18>
 			Msg1 <You're with the dueling guild? The arena manager's over there in the back. Have a good fight.>
 			Msg2 <Hey, \PC , I've got this job now where I'm supposed to guard the door. We don't want any undesirables coming in to ruin our fun.>

@@ -31,7 +31,7 @@ Theme 1
 	% fire based. Many of them have the BURN or BRUTAL tags as well. These weapons are
 	% not subtle, nor are they effective at long range, but they get the job done.
 	% Pyromania is favored by those who specialize in Artillery and Electronic Warfare
-	requires <GENERAL ~[2] ~[17] ~Passionate>
+	requires <GENERAL ~[1] ~Passionate>
 
 	CUSTOMIZATION_ADJECTIVE_0 <Flash>
 	CUSTOMIZATION_ADJECTIVE_1 <Fire>
@@ -694,14 +694,14 @@ Theme 2
 		Gun 20
 		Scale 2
 		name <Naval Cannon>
-		caliber <80mm shell>
+		caliber <160mm shell>
 		Range 8
 		Acc 1
 		Speed 3
 		sub
 			Ammo 20
 			Magazine 20
-			caliber <50mm shell>
+			caliber <160mm shell>
 		end
 
 		STC RG-16
@@ -804,7 +804,7 @@ Theme 2
 
 Theme 3
 	name <Sophisticated>
-	requires <GENERAL ~[5] ~[18]>
+	requires <GENERAL ~[3] ~[16]>
 	%% A sophisticated pilot takes great pride in his skill. Excessive displays
 	%% of force are seen as vulgar; it is by the pilot's superior skill that
 	%% enemies are defeated. None of these weapons use rapid fire or area effects;
@@ -1140,7 +1140,7 @@ Theme 4
 	%% Awful range.. mostly melee.
 	%% Chains and huge tools plus yellow and black stripes.
 	%% Requires Craft and maybe Mecha repair.
-	requires <(LABOR|CRAFT|CORPO) ~[3] ~[15]>	
+	requires <(LABOR|CRAFT|CORPO) ~[2] ~[13]>	
 
 	CUSTOMIZATION_ADJECTIVE_0 <Iron>
 	CUSTOMIZATION_ADJECTIVE_1 <Steel>
@@ -2432,7 +2432,7 @@ Theme 6
   
 Theme 7
 	name <Beauty>
-	requires <(CHARM|MEDIA) Sociable ~[3] -[2]>
+	requires <(CHARM|MEDIA) Sociable ~[2] -[1]>
 	%% A collection of beautiful attacks- think the kind of thing Sailor Moon
 	%% would approve of. The Beauty warrior is mostly just concerned with
 	%% looking good.
@@ -3261,7 +3261,7 @@ Theme 9
 	% of kung fu weapons because for some reason whenever a mecha has a dragon theme it's also
 	% got a kung fu theme. Hey, I don't make these rules, I just call them like I see them.
 	% Dragon is favored by monks, adventurers, and egoists
-	requires <(FAITH|ADVEN|Ego) ~[1] ~[4] ~[18]>
+	requires <(FAITH|ADVEN|Ego) ~[1] ~[2] ~[16]>
 
 	CUSTOMIZATION_ADJECTIVE_0 <Ancient>
 	CUSTOMIZATION_ADJECTIVE_1 <Fearsome>
@@ -3656,7 +3656,7 @@ Theme 10
 	% to say, those who are thieves or those who are shy. Many of the Ninja's ranged weapons
 	% are designed for disabling their targets, so they can be more easily dispatched with
 	% the melee weapons.
-	requires <(THIEF|Shy|[25]) ~[3] ~[4] ~[12]>
+	requires <(THIEF|Shy|[19]) ~[2] ~[11]>
 
 	CUSTOMIZATION_ADJECTIVE_0 <Real>
 	CUSTOMIZATION_ADJECTIVE_1 <Shadow>
