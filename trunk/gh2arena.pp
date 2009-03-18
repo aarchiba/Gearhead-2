@@ -355,12 +355,12 @@ end;
 Function AHQRepairCost( HQCamp: CampaignPtr; Part: GearPtr ): LongInt;
 	{ Return the cash cost to repair this gear completely. }
 var
-	Skill: Integer;
+	Material: Integer;
 	Total: LongInt;
 begin
 	Total := 0;
-	for Skill := 1 to NumSkill do begin
-		if SkillMan[ Skill].Usage = USAGE_Repair then Total := Total + ModifiedCost( HQCamp , RepairMasterCost( Part , Skill ) , Skill );
+	for Material := 0 to NumMaterial do begin
+		Total := Total + ModifiedCost( HQCamp , RepairMasterCost( Part , Material ) , Repair_Skill_Needed[ Material ] );
 	end;
 	AHQRepairCost := Total;
 end;

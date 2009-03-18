@@ -11,28 +11,6 @@ const
 var
 	results: SAttPtr;
 
-Function AmountOfDamage( Part: GearPtr ): LongInt;
-
-var
-	it: LongInt;
-	SP: GearPtr;
-begin
-	it := 0;
-	if Part <> Nil then begin
-		it := it + NAttValue( Part^.NA , NAG_Damage , NAS_StrucDamage );
-		SP := Part^.SubCom;
-		while SP <> Nil do begin
-			it := it + AmountOfDamage( SP );
-			SP := SP^.Next;
-		end;
-		SP := Part^.InvCom;
-		while SP <> Nil do begin
-			it := it + AmountOfDamage( SP );
-			SP := SP^.Next;
-		end;
-	end;
-	AmountOfDamage := it;
-end;
 
 Function TestAttack( GB: GameBoardPtr; AMaster,Attacker,Target: GearPtr; SkLvl: Integer; UseSpotWeakness: Boolean ): LongInt;
 	{ Run this attack a lot of times, and return the average damage done. }

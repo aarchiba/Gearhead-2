@@ -111,6 +111,7 @@ Function ReadCGears( var F: Text ): GearPtr;
 
 Function WeaponDC( Attacker: GearPtr ): Integer;
 
+Function AmountOfDamage( Part: GearPtr; PlusArmor: Boolean ): LongInt;
 Function GearCurrentDamage(Part: GearPtr): LongInt;
 Function GearCurrentArmor(Part: GearPtr): Integer;
 Function PercentDamaged( Master: GearPtr ): Integer;
@@ -2052,6 +2053,30 @@ begin
 	WeaponDC := D;
 end;
 
+Function AmountOfDamage( Part: GearPtr; PlusArmor: Boolean ): LongInt;
+	{ Return the amount of damage this part has taken. If PlusArmor is true }
+	{ then include the armor damage; otherwise just return the structural damage. }
+var
+	it: LongInt;
+	SP: GearPtr;
+begin
+	it := 0;
+	if Part <> Nil then begin
+		it := it + NAttValue( Part^.NA , NAG_Damage , NAS_StrucDamage );
+		if PlusArmor then it := it + NAttValue( Part^.NA , NAG_Damage , NAS_ArmorDamage );
+		SP := Part^.SubCom;
+		while SP <> Nil do begin
+			it := it + AmountOfDamage( SP , PlusArmor );
+			SP := SP^.Next;
+		end;
+		SP := Part^.InvCom;
+		while SP <> Nil do begin
+			it := it + AmountOfDamage( SP , PlusArmor );
+			SP := SP^.Next;
+		end;
+	end;
+	AmountOfDamage := it;
+end;
 
 Function GearCurrentDamage(Part: GearPtr): LongInt;
 	{Calculate the current remaining damage points for}
@@ -2335,7 +2360,7 @@ begin
 					CD := GearCurrentDamage(Part);
 					it := it + ( Part^.V * CD + MD - 1 ) div MD;
 				end else begin
-					it := it + 1;
+					it := it + Part^.V;
 				end;
 
 			end;

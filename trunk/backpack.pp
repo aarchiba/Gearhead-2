@@ -467,53 +467,44 @@ Procedure DoFieldRepair( GB: GameBoardPtr; PC , Item: GearPtr; Skill: Integer );
 	{ The PC is going to use one of the repair skills. Call the }
 	{ standard procedure, then print output. }
 var
+	RMaster: GearPtr;
 	msg: String;
-	N: LongInt;
-	RepairFuel,RMaster: GearPtr;
+	Dmg0,DDmg,T: LongInt;
+	SFX_Check: Array [1..Num_Status_FX] of Boolean;
+	RepairFuelFound,NoStatusCured: Boolean;
 begin
-	{ Error check - if no repair is needed, display an appropraite }
-	{ response. }
-	if TotalRepairableDamage( Item , Skill ) < 1 then begin
-		DialogMsg( MsgString( 'PCREPAIR_NoDamageDone' ) );
-		Exit;
-	end;
+	{ Record the initial state of the repair target. }
+	Dmg0 := AmountOfDamage( Item , True );
+	for t := 1 to Num_Status_FX do SFX_Check[ t ] := HasStatus( Item , T );
 
-	{ Locate the "repair fuel". }
-	RepairFuel := SeekGear( PC , GG_RepairFuel , Skill );
-	if RepairFuel = Nil then begin
-		DialogMsg( MsgString( 'PCREPAIR_NoRepairFuel' ) );
-		Exit;
-	end;
+	RepairFuelFound := UseRepairSkill( GB , PC , Item , Skill );
+	msg := ReplaceHash( MsgString( 'PCREPAIR_UseSkill' ) , MsgString( 'SkillName_' + BStr( Skill ) ) );
+	msg := ReplaceHash( msg , GearName( Item ) );
 
-	{ Locate the root item. If this is a character, and the repair attempt }
-	{ fails, and the master is destroyed, that's a bad thing. }
-	RMaster := FindRoot( Item );
-
-	N := UseRepairSkill( GB , PC , Item , Skill );
-	msg := ReplaceHash( MsgString( 'PCREPAIR_UseSkill' + BStr( Skill ) ) , GearName( Item ) );
+	{ Report the final state of the repair target. }
+	DDmg := Dmg0 - AmountOfDamage( Item , True );
 
 	{ Inform the user of the success. }
-	if ( RMaster^.G = GG_Character ) and Destroyed( RMaster ) then begin
-		AddNAtt( RMaster^.NA , NAG_Damage , NAS_StrucDamage , 30 );
-		msg := msg + ReplaceHash( MsgString( 'PCREPAIR_DEAD' ) , GearName( RMaster ) );
-	end else if N > 0 then begin
-		msg := msg + BStr( N ) + MsgString( 'PCREPAIR_Success' + BStr( Skill ) );
-	end else begin
-		msg := msg + MsgString( 'PCREPAIR_Failure' + BStr( Skill ) );
+	if ( Item^.G = GG_Character ) and Destroyed( Item ) then begin
+		msg := msg + ' ' + ReplaceHash( MsgString( 'PCREPAIR_DEAD' ) , GearName( Item ) );
+	end else if DDmg > 0 then begin
+		msg := msg + ' ' + ReplaceHash( MsgString( 'PCREPAIR_Success' ) , BStr( DDmg ) );
 	end;
 
-	DialogMsg( msg );
-
-	{ Deplete the fuel. }
-	RepairFuel^.V := RepairFuel^.V - N;
-	if RepairFuel^.V < 1 then begin
-		DialogMsg( ReplaceHash( MsgString( 'PCREPAIR_FuelUsedUp' ) , GearName( RepairFuel ) ) );
-		if IsSubCom( RepairFuel ) then begin
-			RemoveGear( RepairFuel^.Parent^.SubCom , RepairFuel );
-		end else if IsInvCom( RepairFuel ) then begin
-			RemoveGear( RepairFuel^.Parent^.InvCom , RepairFuel );
+	{ Assume TRUE unless proven FALSE. }
+	NoStatusCured := True;
+	for t := 1 to Num_Status_FX do begin
+		if SFX_Check[ t ] and not HasStatus( Item , T ) then begin
+			{ This status effect was cured. Add it to the list. }
+			NoStatusCured := FALSE;
 		end;
 	end;
+
+	{ If no damage was healed and no status was cured, this was a big waste of time. }
+	if ( DDMg = 0 ) and NoStatusCured then msg := msg + ' ' + MsgString( 'PCREPAIR_Failure' )
+	else if NotDestroyed( Item ) and not NoStatusCured then msg := msg + ' ' + ReplaceHash( MsgString( 'STATUS_Remove' ) , GearName( Item ) );
+
+	DialogMsg( msg );
 end;
 
 Function ShakeDown( GB: GameBoardPtr; Part: GearPtr; X,Y: Integer ): LongInt;

@@ -1127,7 +1127,7 @@ var
 	N: LongInt;
 	msg: String;
 begin
-	N := UseRepairSkill( GB , NPC , Target , Skill );
+{	N := UseRepairSkill( GB , NPC , Target , Skill );
 	msg := MsgString( 'NPCREPAIR_UseSkill' );
 	msg := ReplaceHash( msg , GearName( NPC ) );
 	msg := ReplaceHash( msg , GearName( Target ) );
@@ -1149,7 +1149,7 @@ begin
 		end else if IsInvCom( RepairFuel ) then begin
 			RemoveGear( RepairFuel^.Parent^.InvCom , RepairFuel );
 		end;
-	end;
+	end;}
 end;
 
 Function SelectRepairTarget( GB: GameBoardPtr; Mek: GearPtr; Skill: Integer ): GearPtr;

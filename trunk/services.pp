@@ -48,7 +48,7 @@ var
 	I_Endurance: Integer;	{ How much of the PC's crap the NPC is }
 		{ willing to take. When it reaches 0, the NPC says goodbye. }
 
-Function RepairMasterCost( Master: GearPtr; Skill: Integer ): LongInt;
+Function RepairMasterCost( Master: GearPtr; Material: Integer ): LongInt;
 Function ReloadMasterCost( M: GearPtr; ReloadGeneralInv: Boolean ): LongInt;
 Procedure DoReloadMaster( M: GearPtr; ReloadGeneralInv: Boolean );
 
@@ -78,6 +78,11 @@ uses ability,arenacfe,backpack,gearutil,ghchars,ghmodule,gearparser,
 Const
 	CredsPerDP = 1;		{ Cost to repair 1DP of damage. }
 	MaxShopItems = 21;	{ Maximum number of items in a shop. }
+
+	{ Repair Mode Constants }
+	RM_Medical = 1;		{ Repair MEAT for SF:0 }
+	RM_GeneralRepair = 2;	{ Repair METAL and BIOTECH for SF:0 }
+	RM_MechaRepair = 3;	{ Repair METAL and BIOTECH for higher SF }
 
 var
 	SERV_GB: GameBoardPtr;
@@ -561,26 +566,35 @@ end;
 
 
 
-Function RepairMasterCost( Master: GearPtr; Skill: Integer ): LongInt;
+Function RepairMasterCost( Master: GearPtr; Material: Integer ): LongInt;
 	{ Return the expected cost of repairing every component of }
-	{ MASTER which can be handled using SKILL. }
+	{ MASTER which is made of MATERIAL. }
 var
 	it: LongInt;
 begin
-	it := TotalRepairableDamage( Master , SKill ) * CredsPerDP;
-
-	{ Since parts that could be helped by First Aid heal by themselves }
-	{ usually, the cost to treat injuries using the First Aid skill is }
-	{ substantially reduced. }
-	if ( Skill = 20 ) and ( it > 0 ) then begin
-		it := it div 2;
-		if it < 1 then it := 1;
-	end;
+	it := TotalRepairableDamage( Master , Material ) * CredsPerDP;
 
 	RepairMasterCost := it;
 end;
 
-Function RepairAllCost( GB: GameBoardPtr; Skill: Integer ): LongInt;
+Function RepairMasterByModeCost( Part: GearPtr; RepMode: Integer ): LongInt;
+	{ Determine how much it will cost to repair this master using the specified repair mode. }
+	{ If the mode doesn't affect this master, return 0. }
+var
+	Cost: LongInt;
+begin
+	Cost := 0;
+	if RepMode = RM_Medical then begin
+		Cost := RepairMasterCost( Part , NAV_Meat );
+	end else if ( RepMode = RM_GeneralRepair ) and ( Part^.Scale = 0 ) then begin
+		Cost := RepairMasterCost( Part , NAV_Metal ) + RepairMasterCost( Part , NAV_Biotech );
+	end else if ( RepMode = RM_MechaRepair ) and ( Part^.Scale > 0 ) then begin
+		Cost := RepairMasterCost( Part , NAV_Metal ) + RepairMasterCost( Part , NAV_Biotech );
+	end;
+	RepairMasterByModeCost := Cost;
+end;
+
+Function RepairAllCost( GB: GameBoardPtr; RepMode: Integer ): LongInt;
 	{ Determine the cost of repairing every item belonging to Team 1. }
 var
 	Part: GearPtr;
@@ -597,7 +611,7 @@ begin
 			{ Only repair mecha which have pilots assigned!!! }
 			{ If the PC had to patch up all that salvage every time... Brr... }
 			if ( Part^.G <> GG_Mecha ) or ( SAttValue( Part^.SA , 'PILOT' ) <> '' ) then begin
-				Cost := Cost + RepairMasterCost( Part , Skill );
+				Cost := Cost + RepairMasterByModeCost( Part , RepMode );
 			end;
 		end;
 
@@ -607,22 +621,37 @@ begin
 	RepairAllCost := Cost;
 end;
 
-Procedure DoRepairMaster( GB: GameBoardPtr; Master,Repairer: GearPtr; Skill: Integer );
+Procedure DoRepairMaster( GB: GameBoardPtr; Master,Repairer: GearPtr; Material: Integer );
 	{ Remove the damage counters from every component of MASTER which }
 	{ can be affected using the provided SKILL. }
 var
 	TRD: LongInt;
 begin
 	{ Repair this part, if appropriate. }
-	TRD := TotalRepairableDamage( Master , SKill );
-	ApplyRepairPoints( Master , Skill , TRD );
+	TRD := TotalRepairableDamage( Master , Material );
+	ApplyRepairPoints( Master , Material , TRD );
 
-	{ Wait an amount of time, depending on the repairer's skill }
-	{ level. }
-	QuickTime( GB , AP_Minute + RollStep( 12 ) - SkillValue( Repairer , SKill , STAT_Craft ) );
+	{ Wait an amount of time. }
+	QuickTime( GB , AP_Minute * 5 );
 end;
 
-Procedure DoRepairAll( GB: GameBoardPtr; NPC: GearPtr; Skill: Integer );
+Procedure DoRepairMasterByMode( GB: GameBoardPtr; Part,NPC: GearPtr; RepMode: Integer );
+	{ Determine how much it will cost to repair this master using the specified repair mode. }
+	{ If the mode doesn't affect this master, return 0. }
+begin
+	if RepMode = RM_Medical then begin
+		DoRepairMaster( GB , Part , NPC , NAV_Meat );
+	end else if ( RepMode = RM_GeneralRepair ) and ( Part^.Scale = 0 ) then begin
+		DoRepairMaster( GB , Part , NPC , NAV_Metal );
+		DoRepairMaster( GB , Part , NPC , NAV_Biotech );
+	end else if ( RepMode = RM_MechaRepair ) and ( Part^.Scale > 0 ) then begin
+		DoRepairMaster( GB , Part , NPC , NAV_Metal );
+		DoRepairMaster( GB , Part , NPC , NAV_Biotech );
+	end;
+end;
+
+
+Procedure DoRepairAll( GB: GameBoardPtr; NPC: GearPtr; RepMode: Integer );
 	{ Repair every item belonging to Team 1. }
 var
 	Part: GearPtr;
@@ -637,7 +666,7 @@ begin
 			{ Only repair mecha which have pilots assigned!!! }
 			{ If the PC had to patch up all that salvage every time... Brr... }
 			if ( Part^.G <> GG_Mecha ) or ( SAttValue( Part^.SA , 'PILOT' ) <> '' ) then begin
-				DoRepairMaster( GB , Part , NPC , Skill );
+				DoRepairMasterByMode( GB , Part , NPC , RepMode );
 			end;
 		end;
 
@@ -645,7 +674,7 @@ begin
 	end;
 end;
 
-Procedure RepairAllFrontEnd( GB: GameBoardPtr; PC, NPC: GearPtr; Skill: Integer );
+Procedure RepairAllFrontEnd( GB: GameBoardPtr; PC, NPC: GearPtr; RepMode: Integer );
 	{ Run the REPAIR ALL procedure, and charge the PC for the work done. }
 	{ If the PC doesn't have enough money to repair everything roll to }
 	{ see if the NPC will do this work for free. }
@@ -658,14 +687,14 @@ var
 begin
 	{ Determine the cost of repairing everything, and also }
 	{ the amount of cash the PC has. }
-	Cost := ScalePrice( PC , NPC , RepairAllCost( GB , Skill ) );
+	Cost := ScalePrice( PC , NPC , RepairAllCost( GB , RepMode ) );
 	Cash := NAttValue( PC^.NA, NAG_Experience , NAS_Credits );
 	R := ReactionScore( Nil , PC , NPC );
 	msg := '';
 
 	{ See whether or not the PC will be charged for this repair. }
 	{ If the NPC likes the PC well enough, the service will be free. }
-	if ( Random( 150 ) + 10 ) < R then begin
+	if ( Random( 200 ) + 10 ) < R then begin
 		{ The NPC will do the PC a favor, and do this one for free. }
 		msg := MsgString( 'SERVICES_RAFree' );
 		Cost := 0;
@@ -676,19 +705,17 @@ begin
 	end;
 
 	if Cost < Cash then begin
-		DoRepairAll( GB , NPC , Skill );
+		DoRepairAll( GB , NPC , RepMode );
 		AddNAtt( PC^.NA, NAG_Experience , NAS_Credits , -Cost );
 		if msg = '' then msg := MsgString( 'SERVICES_RADoRA' + BStr( Random( NumRepairSayings ) + 1 ) );
 	end else begin
 		msg := MsgString( 'SERVICES_RALousyBum' );
 	end;
 
-
 	CHAT_Message := msg;
-
 end;
 
-Procedure RepairOneFrontEnd( GB: GameBoardPtr; Part, PC, NPC: GearPtr; Skill: Integer );
+Procedure RepairOneFrontEnd( GB: GameBoardPtr; Part, PC, NPC: GearPtr; RepMode: Integer );
 	{ Run the REPAIR MASTER procedure, and charge the PC for the work done. }
 	{ If the PC doesn't have enough money to repair everything roll to }
 	{ see if the NPC will do this work for free. }
@@ -700,7 +727,7 @@ var
 begin
 	{ Determine the cost of repairing everything, and also }
 	{ the amount of cash the PC has. }
-	Cost := ScalePrice( PC , NPC , RepairMasterCost( PArt , Skill ) );
+	Cost := ScalePrice( PC , NPC , RepairMasterByModeCost( PArt , RepMode ) );
 	Cash := NAttValue( PC^.NA, NAG_Experience , NAS_Credits );
 	R := ReactionScore( Nil , PC , NPC );
 
@@ -717,7 +744,7 @@ begin
 	end;
 
 	if Cost < Cash then begin
-		DoRepairMaster( GB , Part , NPC , Skill );
+		DoRepairMasterByMode( GB , Part , NPC , RepMode );
 		AddNAtt( PC^.NA, NAG_Experience , NAS_Credits , -Cost );
 
 		CHAT_Message := MSgString( 'SERVICES_RADoRA' + BStr( Random( NumRepairSayings ) + 1 ) );
@@ -1342,6 +1369,7 @@ var
 	RPM: RPGMenuPtr;
 	Mek: GearPtr;
 	N: Integer;
+	Cost: LongInt;
 begin
 	{ Find the mecha. }
 	Mek := RetrieveGearSib( GB^.Meks , MekNum );
@@ -1352,7 +1380,14 @@ begin
 
 		{ Add options, depending on the mek. }
 		if not OnTheMap( GB , Mek ) then AddRPGMenuItem( RPM , MsgString( 'SERVICES_Sell' ) + GearName( Mek ) , 1 );
-		if TotalRepairableDamage( Mek , 15 ) > 0 then AddRPGMenuItem( RPM , MsgString( 'SERVICES_OSRSP15' ) + ' [$' + BStr( RepairMasterCost( Mek , 15 ) ) + ']' , 2 );
+
+
+		if ( NAttValue( NPC^.NA , NAG_Skill , NAS_Repair ) > 5 ) then begin
+			Cost := RepairMasterByModeCost( Mek , RM_MechaRepair );
+			if Cost > 0 then begin
+				AddRPGMenuItem( RPM , MsgString( 'SERVICES_DoMechaRepair' ) + ' [$' + BStr( ScalePrice( PC , NPC , Cost ) ) + ']' , 2 );
+			end;
+		end;
 		AddRPGMenuItem( RPM , MsgString( 'SERVICES_SellMekInv' ) , 4 );
 		AddRPGMenuItem( RPM , MsgString( 'SERVICES_BrowseParts' ) , 3 );
 		AddRPGMenuItem( RPM , MsgString( 'SERVICES_Exit' ) , -1 );
@@ -1369,7 +1404,7 @@ begin
 
 		end else if N = 2 then begin
 			{ Repair the mecha. }
-			RepairOneFrontEnd( GB , Mek , PC , NPC , 15 );
+			RepairOneFrontEnd( GB , Mek , PC , NPC , RM_MechaRepair );
 
 		end else if N = 3 then begin
 			{ Use the parts browser. }
@@ -1689,14 +1724,30 @@ begin
 		if Wares <> Nil then AddRPGMenuItem( RPM , 'Browse Wares' , 0 );
 
 		{ Add options for each of the repair skills. }
+		if NAttValue( NPC^.NA , NAG_Skill , NAS_Medicine ) > 0 then begin
+			Cost := RepairAllCost( GB , RM_Medical );
+			if Cost > 0 then begin
+				AddRPGMenuItem( RPM , MsgString( 'SERVICES_DoMedicalRepair' ) + ' [$' + BStr( ScalePrice( PC , NPC , Cost ) ) + ']' , RM_Medical );
+			end;
+		end;
+		if NAttValue( NPC^.NA , NAG_Skill , NAS_Repair ) > 0 then begin
+			Cost := RepairAllCost( GB , RM_GeneralRepair );
+			if Cost > 0 then begin
+				AddRPGMenuItem( RPM , MsgString( 'SERVICES_DoGeneralRepair' ) + ' [$' + BStr( ScalePrice( PC , NPC , Cost ) ) + ']' , RM_GeneralRepair );
+			end;
+
+			if NAttValue( NPC^.NA , NAG_Skill , NAS_Repair ) > 5 then begin
+				Cost := RepairAllCost( GB , RM_MechaRepair );
+				if Cost > 0 then begin
+					AddRPGMenuItem( RPM , MsgString( 'SERVICES_DoMechaRepair' ) + ' [$' + BStr( ScalePrice( PC , NPC , Cost ) ) + ']' , RM_MechaRepair );
+				end;
+			end;
+		end;
+
 		for N := 1 to NumSkill do begin
 			{ A shopkeeper can only repair items for which he has the }
 			{ required skills. }
 			if NAttValue( NPC^.NA , NAG_Skill , N ) > 0 then begin
-				Cost := RepairAllCost( GB , N );
-				if Cost > 0 then begin
-					AddRPGMenuItem( RPM , MsgString( 'SERVICES_OSRSP' + BStr( N ) ) + ' [$' + BStr( ScalePrice( PC , NPC , Cost ) ) + ']' , N );
-				end;
 			end;
 		end;
 

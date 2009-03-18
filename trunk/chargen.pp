@@ -542,8 +542,8 @@ begin
 			inc( N );
 		end;
 	end;
-	if N > 5 then N := 6;
-	AddNAtt( PC^.NA , NAG_Experience , NAS_Credits , 25000 * ( 6 - N ) );
+	if N > 3 then N := 3;
+	AddNAtt( PC^.NA , NAG_Experience , NAS_Credits , 45000 * ( 3 - N ) );
 
 	{ Copy the personality traits. }
 	for t := 1 to Num_Personality_Traits do begin
@@ -873,7 +873,7 @@ Procedure SpendSkillPointsRandomly( PC: GearPtr; var PCSkills: SkillArray; Skill
 		end else begin
 			Skill := BeginnerSkills[ Random( NumBeginnerSkills ) + 1 ];
 		end;
-		if not CGPCHasSkill( PC , PCSkills , Skill ) then begin
+		if ( not SkillMan[ Skill ].Hidden ) and ( not CGPCHasSkill( PC , PCSkills , Skill ) ) then begin
 			CGImproveSkill( PCSkills , Skill , SkillPt );
 		end;
 	end;
@@ -884,7 +884,7 @@ Procedure SpendSkillPointsRandomly( PC: GearPtr; var PCSkills: SkillArray; Skill
 	begin
 		Skill := 1;
 		while ( Skill <= NumSkill ) and ( N > 0 ) do begin
-			if CGPCHasSkill( PC , PCSkills , Skill ) and CanIncreaseSkill( PCSkills[ Skill ] , SkillPt ) then begin
+			if CGPCHasSkill( PC , PCSkills , Skill ) and CanIncreaseSkill( PCSkills[ Skill ] , SkillPt ) and ( not SkillMan[ Skill ].Hidden ) then begin
 				Dec( N );
 				if N = 0 then begin
 					CGImproveSkill( PCSkills , Skill , SkillPt );
@@ -959,7 +959,7 @@ begin
 	RCCaption := '';
 
 	for t := 1 to NumSkill do begin
-		AddRPGMenuItem( RPM , SkillSelectorMsg( T ) , T , SkillDescription( T ) );
+		if ( not SkillMan[ T ].Hidden ) then AddRPGMenuItem( RPM , SkillSelectorMsg( T ) , T , SkillDescription( T ) );
 	end;
 	RPMSortAlpha( RPM );
 	AddRPGMenuItem( RPM , MsgString( 'RANDCHAR_ASPDone' ) , -2 );
@@ -1053,11 +1053,11 @@ begin
 
 	{ First give decent Mecha Piloting and Dodge scores. }
 	t := CheckLevel( Random( 2 ) + 4 );
-	PCSkills[ 5 ] := T;
+	PCSkills[ NAS_MechaPiloting ] := T;
 	SkillPt := SkillPt - PointsForLevel[ t ];
 
 	t := CheckLevel( Random( 2 ) + 4 );
-	PCSkills[ 10 ] := T;
+	PCSkills[ NAS_Dodge ] := T;
 	SkillPt := SkillPt - PointsForLevel[ t ];
 
 	{ Give the guaranteed skill. }

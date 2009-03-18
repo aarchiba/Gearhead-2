@@ -49,7 +49,7 @@ const
 Function TotalRepairableDamage( Target: GearPtr; Material: Integer ): LongInt;
 Procedure ApplyRepairPoints( Target: GearPtr; Material: Integer; var RP: LongInt );
 Procedure ApplyEmergencyRepairPoints( Target: GearPtr; Material: Integer; var RP: LongInt );
-Function UseRepairSkill( GB: GameBoardPtr; PC,Target: GearPtr; Skill: Integer ): LongInt;
+Function UseRepairSkill( GB: GameBoardPtr; PC,Target: GearPtr; Skill: Integer ): Boolean;
 Procedure DoCompleteRepair( Target: GearPtr );
 
 Function SelectPerformanceTarget( GB: GameBoardPtr; PC: GearPtr ): GearPtr;
@@ -225,10 +225,13 @@ begin
 	end else ApplyRepairPoints( Target, Material, RP );
 end;
 
-Function UseRepairSkill( GB: GameBoardPtr; PC,Target: GearPtr; Skill: Integer ): LongInt;
+Function UseRepairSkill( GB: GameBoardPtr; PC,Target: GearPtr; Skill: Integer ): Boolean;
 	{ The PC wants to use the requested repair SKILL on TARGET. }
 	{ Roll to see how many DPs will be restored, apply these DPs }
 	{ to the TARGET, then reduce PC's MPs. }
+	{ Return TRUE if the repair process went smoothly, or FALSE if it was }
+	{ halted due to a shortage of materials. Note that this procedure will return }
+	{ TRUE in the case of a critical failure even if the PC has no repair fuel. }
 	Function Repair_Skill_Target: Integer;
 		{ Return a good skill target for repair skills. }
 		{ This will be decreased as TARGET's scale increases. }
@@ -245,59 +248,149 @@ Function UseRepairSkill( GB: GameBoardPtr; PC,Target: GearPtr; Skill: Integer ):
 		if Destroyed( Target ) then RST := RST + 5;
 		Repair_Skill_Target := RST;
 	end;
-var
-	tries,SkTar,RP,MaxRP,Leftover: LongInt;
-	DP,DP0,TotalRepaired: LongInt;
-begin
-	{ Depending upon how much damage the target has, the PC can make }
-	{ several repair attempts. }
-{	PC := LocatePilot( PC );
-	if PC = Nil then Exit( 0 );
+	Procedure SpendRepairFuel( PC: GearPtr; Material , RP: LongInt );
+		{ Spend the requested repair fuel. If any fuel is depleted, }
+		{ remove it from the inventory. }
+		Procedure SpendRFAlongTrack( LList: GearPtr );
+			{ Search for repair fuel to use, then use it. }
+		var
+			L2: GearPtr;
+		begin
+			while ( LList <> Nil ) and ( RP > 0 ) do begin
+				L2 := LList^.Next;
 
-	if GB <> Nil then begin
-		if not MoveLegal( GB^.Scene , FindRoot( PC ) , NAV_Stop , GB^.ComTime ) then Exit( 0 );
-	end;
-
-	DP := TotalRepairableDamage( Target , Skill );
-	DP0 := DP;
-	MaxRP := ( SkillRank( PC , Skill ) * ( Target^.Scale + 1 ) ) + 1;
-
-	Leftover := 0;
-	while ( tries < Repair_Max_Tries ) and ( DP > 0 ) and ( CurrentMental( PC ) > 0 ) do begin
-		SkTar := Repair_Skill_Target;
-		RP := SkillROll( GB , PC , Skill , SkTar , 0 , True , True );
-		RP := RP - SkTar;
-		if RP > MaxRP then begin
-			RP := MaxRP;
-			DoleSkillExperience( PC , Skill , XPA_SK_UseRepair );
+				if ( LList^.G = GG_RepairFuel ) and ( LList^.S = Material ) then begin
+					if RP >= LList^.V then begin
+						RP := RP - LList^.V;
+						if IsInvCom( LList ) then RemoveGear( LList^.Parent^.InvCom , LList )
+						else RemoveGear( LList^.Parent^.SubCom , LList );
+					end else begin
+						LList^.V := LList^.V - RP;
+						RP := 0;
+					end;
+				end else begin
+					SpendRFAlongTrack( LList^.SubCom );
+					SpendRFAlongTrack( LList^.InvCom );
+				end;
+				LList := L2;
+			end;
 		end;
-		if RP > 0 then begin
-			RP := RP + Leftover;
+	begin
+		PC := FindRoot( PC );
+		SpendRFAlongTrack( PC^.InvCom );
+		SpendRFAlongTrack( PC^.SubCom );
+	end;
+	Function ActivateRepair( Material: Integer; var SkRoll: Integer ): Boolean;
+		{ Activate the repair. Return the number of repair points used. }
+		{ Reduce SkRoll by this same amount. }
+		{ Return TRUE if repairfuel was found for this repair job, or FALSE }
+		{ if no repair at all could take place. }
+	var
+		RP: LongInt;
+		RepairFuel: LongInt;
+		RFFound: Boolean;
+	begin
+		RP := TotalRepairableDamage( Target , Material );
+		RFFound := False;
+		{ Locate the repair fuel. }
+		RepairFuel := CountActivePoints( PC , GG_RepairFuel , Material );
+
+		if RepairFuel > 0 then begin
+			{ The amount of damage recovered will not exceed the skill roll * 2. }
+			if RP > ( SkRoll * 2 ) then RP := ( SkRoll * 2 );
+
+			{ Nor will it exceed the amount of repair fuel. }
+			if RP > RepairFuel then RP := RepairFuel;
+
+			{ The skill roll will be reduced by the amount of damage to be repaired. }
+			SkRoll := SkRoll - ( RP div 2 );
+
+			{ Spend the repair fuel. }
+			SpendRepairFuel( PC , Material , RP );
+
+			{ Apply the repair points. }
 			ApplyRepairPoints( Target , Skill , RP );
+			RFFound := True;
+		end;
+		ActivateRepair := RFFound;
+	end;
+var
+	RP: LongInt;
+	T,tries,SkRoll,SkTar: Integer;
+	IsSafeRepair,HadRepairFuel: Boolean;
+	TMaster: GearPtr;
+begin
+	{ First, locate the PC. }
+	PC := LocatePilot( PC );
+	if PC = Nil then Exit( False );
 
-			Leftover := RP;
-		end else begin
-			Leftover := 0;
+	TMaster := FindMaster( Target );
+
+	{ Depending upon the situation, this repair will either fix some damage or all the }
+	{ damage in one go. If in a safe area and repairing a mecha which is not currently in play, }
+	{ the entire thing can be fixed. On the other hand, if in a dangerous area or working on a }
+	{ mecha which is in play, only a limited amount of DP will be restored. }
+	{ If the target is destroyed, this never counts as a safe repair. }
+	IsSafeRepair := IsSafeArea( GB ) and ( not OnTheMap( GB , FindRoot( Target ) ) ) and ( ( TMaster = Nil ) or NotDestroyed( TMaster ) );
+
+	{ Assume we have no repair fuel, unless we find some. }
+	HadRepairFuel := False;
+
+	{ Make a skill roll against the base difficulty number. This will determine the rate }
+	{ at which points may be restored. }
+	SkTar := Repair_Skill_Target;
+	SkRoll := SkillRoll( GB , PC , Skill , STAT_Craft , SkTar , 0 , IsSafeArea( GB ) , True ) - SkTar;
+
+	tries := 1;
+
+	if IsSafeRepair then begin
+		{ Safe repairs get a bonus to the repair rate, since you don't have to worry }
+		{ about people shooting at you. This bonus also helps to mitigate the effect of }
+		{ high and low skill rolls. }
+		SkRoll := SkRoll + SkillValue( PC , Skill , STAT_Craft );
+		if SkRoll < 5 then SkRoll := 5;
+
+		{ Because a safe repair will repair everything in one go, call the }
+		{ repair activator with an arbitrarily huge skillroll. }
+		for t := 0 to NumMaterial do begin
+			RP := TotalRepairableDamage( Target , T );
+			if ( Repair_Skill_Needed[ t ] = Skill ) and ( RP > 0 ) then begin
+				tries := tries + RP div SkRoll;
+				SkTar := 10000;
+				HadRepairFuel := HadRepairFuel or ActivateRepair( T , SkTar );
+			end;
 		end;
 
-		DoleSkillExperience( PC , Skill , XPA_SK_UseRepair );
-		AddMentalDown( PC , Repair_Mental_Strain );
-		Inc( Tries );
-	end;
+		{ Don't make the PC wait for longer than 10 actions. }
+		if tries > 10 then tries := 10;
 
-	{ Advance time by the required amount. }
-	if HasTalent( PC , NAS_CombatMedic ) and (( Skill = 20 ) or ( Skill = 16 )) and ( not IsSafeArea( GB ) ) then begin
-		WaitAMinute( GB , PC , ( ReactionTime( PC ) * Tries div 3 ) + 1 );
-		AddStaminaDown( PC , Tries div 2 );
+	end else if SkRoll > 0 then begin
+		{ Apply the skill roll against all legal materials. }
+		for t := 0 to NumMaterial do begin
+			RP := TotalRepairableDamage( Target , T );
+			if ( Repair_Skill_Needed[ t ] = Skill ) and ( RP > 0 ) and ( SkRoll > 0 ) then begin
+				HadRepairFuel := HadRepairFuel or ActivateRepair( T , SkRoll );
+			end;
+		end;
+
 	end else begin
-		WaitAMinute( GB , PC , ReactionTime( PC ) * Tries );
+		{ The repair attempt failed. }
+		{ If you fail to revive a dead character, there's not much else you can do. }
+		if ( TMaster <> Nil ) and ( TMaster^.G = GG_Character ) and Destroyed( TMaster ) then begin
+			AddNAtt( TMaster^.NA , NAG_Damage , NAS_StrucDamage , 30 );
+		end;
+
+		{ At this point repair fuel is a moot point, so return TRUE. }
+		HadRepairFuel := True;
 	end;
 
-	TotalRepaired := DP0 - TotalRepairableDamage( Target, Skill );
-	if TotalRepaired > 0 then DoleExperience( PC , TotalRepaired div SkillXPFactor );
+	{ Using repair takes time and concentration. }
+	WaitAMinute( GB , PC , ReactionTime( PC ) * Tries );
+	AddMentalDown( PC , Tries + Random( 3 ) );
 
-	UseRepairSkill := DP0 - TotalRepairableDamage( Target, Skill );}
+	UseRepairSkill := HadRepairFuel;
 end;
+
 
 Procedure DoCompleteRepair( Target: GearPtr );
 	{ Repair everything that can be repaired on Target. }

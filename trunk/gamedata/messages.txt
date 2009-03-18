@@ -666,11 +666,9 @@ SERVICES_RADoRA2 <I've patched things together; hopefully they'll stay in one pi
 SERVICES_RADoRA3 <There. Things ought to be working properly now.>
 SERVICES_RADoRA4 <Just a minute while I heat up the arc welder... There. All better now.>
 SERVICES_RADoRA5 <What were you doing to get in this kind of a mess!? I'll see what I can do.>
-SERVICES_OSRSP15 <Repair Mecha>
-SERVICES_OSRSP16 <Treat Illnesses>
-SERVICES_OSRSP20 <Treat Injuries>
-SERVICES_OSRSP22 <Repair Biotech Constructs>
-SERVICES_OSRSP23 <Repair Equipment>
+SERVICES_DoMechaRepair    <Repair Mecha>
+SERVICES_DoMedicalRepair  <Treat Injuries>
+SERVICES_DoGeneralRepair  <Repair Equipment>
 SERVICES_AmmoName < Clip>
 SERVICES_Exit <   [EXIT]>
 SERVICES_Sell <Sell >
@@ -689,7 +687,7 @@ SERVICES_ReloadChars+Prompt <Reload Ammunition (Full)>
 SERVICES_SellMekInv <Sell Mecha Inventory>
 SERVICES_Inventory <View Inventory>
 SERVICES_StolenDesc <The shopkeeper refuses to buy this item.>
-SERVICES_StolenResponse <Sorry, I don't deal in this kind of merchandise. You better leave before I have to call the guardians.>
+SERVICES_StolenResponse <Sorry, I don't deal in this kind of merchandise. You better leave before I have to call the police.>
 SERVICES_CybInstall <Install Cyberware>
 SERVICES_Cyber_SelectPart <Select a part that you want to implant. Remember, cybernetic parts can be replaced but they cannot be removed.>
 SERVICES_Cyber_NoPart <You don't have any cyberware items to implant! Come back when you have one.>
@@ -782,25 +780,12 @@ BACKPACK_ClueSkillPrompt <Use # on #>
 BACKPACK_CancelSkillUse < Cancel Skill Use>
 FHQ_SM4P_Prompt <Select a mecha for #.>
 FHQ_SP4M_Prompt <Select a pilot for #.>
+PCREPAIR_UseSkill <You use # on #.>
 PCREPAIR_DEAD < # is beyond your help.>
-PCREPAIR_FuelUsedUp <You used up your #.>
 PCREPAIR_NoRepairFuel <You don't have any repair supplies!>
 PCREPAIR_NoDamageDone <You can't find any damage to fix!>
-PCREPAIR_UseSkill20 <You use first aid on #. >
-PCREPAIR_Success20 < health points restored.>
-PCREPAIR_Failure20 <No health points restored.>
-PCREPAIR_UseSkill15 <You attempt to repair #. >
-PCREPAIR_Success15 < damage points restored.>
-PCREPAIR_Failure15 <No damage points restored.>
-PCREPAIR_UseSkill16 <You use medicine on #. >
-PCREPAIR_Success16 < health points restored.>
-PCREPAIR_Failure16 <You fail to accomplish any healing.>
-PCREPAIR_UseSkill22 <You use biotech on #. >
-PCREPAIR_Success22 < health points restored.>
-PCREPAIR_Failure22 <No health points restored.>
-PCREPAIR_UseSkill23 <You attempt to repair #. >
-PCREPAIR_Success23 < damage points restored.>
-PCREPAIR_Failure23 <No damage points restored.>
+PCREPAIR_Success <# damage points restored.>
+PCREPAIR_Failure <No damage points restored.>
 PCREPAIR_SelectRepairSkill <Select Repair Skill>
 PCREPAIR_PROMPT <Use repair skill in which direction?>
 NPCREPAIR_UseSkill <# tends to #.>
