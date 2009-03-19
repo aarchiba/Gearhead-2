@@ -93,10 +93,12 @@ Const
 	{ MODIFIER GEAR }
 	{ G = GG_Modifier             }
 	{ S = Modification Type       }
-	{ V = Cybernetic Trauma Value }
+	{ V = Chara/Mecha Modifier    }
 
 	GS_StatModifier = 1;
 	GS_SkillModifier = 2;
+	GV_CharaModifier = 1;
+	GV_MechaModifier = 2;
 
 	{ Only one gear with a given 'cyberslot' type should be installed }
 	{ at any given time. Attempting to install another should result }
@@ -127,7 +129,7 @@ Function IsLegalModuleSub( Slot, Equip: GearPtr ): Boolean;
 Function StatModifierCost( Part: GearPtr ): LongInt;
 Function ModifierCost( Part: GearPtr ): LongInt;
 Procedure CheckModifierRange( Part: GearPtr );
-
+Function TraumaValue( Part: GearPtr ): Integer;
 
 implementation
 
@@ -414,10 +416,6 @@ begin
 	end;
 
 	it := 0;
-	if Plusses > 5 then begin
-		it := it + ( PriceFactor * 50 * ( Plusses - 3 ) );
-		Plusses := 5;
-	end;
 	if Plusses > 0 then begin
 		it := BasePrice[ Plusses ] * PriceFactor + it;
 	end;
@@ -456,27 +454,9 @@ begin
 		it := StatModifierCost( Part );
 	end else if Part^.S = GS_SkillModifier then begin
 		Plusses := Part^.Stat[ STAT_SkillModBonus ];
-		if Plusses > 5 then begin
-			it := it + ( PriceFactor * 50 * ( Plusses - 3 ) );
-			Plusses := 5;
-		end;
 		if Plusses > 0 then begin
 			it := BasePrice[ Plusses ] * PriceFactor + it;
 		end;
-		{ Modify the price for noncombat skills. }
-		if Part^.Stat[ STAT_SkillToModify ] > 10 then begin
-			it := it * 3 div 4;
-		end else begin
-			it := it * 3 div 2;
-		end;
-	end;
-
-	{ Reduce cost by the trauma value of the system. }
-	if AStringHasBString( SAttValue( Part^.SA , 'TYPE' ) , 'CHARA' ) then begin
-		it := ( it * ( 100 - Part^.V ) ) div 100;
-	end else begin
-		{ Non-character modifiers are considerably cheaper. }
-		it := it div 2;
 	end;
 
 	{ Make sure the cost doesn't fall below the minimum value. }
@@ -506,15 +486,35 @@ begin
 	{ Check the stats for range. }
 	if Part^.S = GS_StatModifier then begin
 		for t := 1 to NumGearStats do begin
-			if Part^.Stat[ T ] > 10 then Part^.Stat[ T ] := 10
-			else if Part^.Stat[ T ] < -5 then Part^.Stat[ T ] := -5;
+			if Part^.Stat[ T ] > 5 then Part^.Stat[ T ] := 5
+			else if Part^.Stat[ T ] < -3 then Part^.Stat[ T ] := -3;
 		end;
 
 	end else if Part^.S = GS_SkillModifier then begin
 		if Part^.Stat[ 2 ] < 1 then Part^.Stat[ 2 ] := 1
-		else if Part^.Stat[ 2 ] > 10 then Part^.Stat[ 2 ] := 10;
+		else if Part^.Stat[ 2 ] > 3 then Part^.Stat[ 2 ] := 3;
 	end;
 
+end;
+
+Function TraumaValue( Part: GearPtr ): Integer;
+	{ Return how much trauma this part causes. The more bonuses it provides }
+	{ the higher the trauma. }
+var
+	total,T: Integer;
+begin
+	total := 0;
+
+	if Part^.S = GS_StatModifier then begin
+		for t := 1 to NumGearStats do begin
+			if Part^.Stat[ T ] > 0 then total := total + Part^.Stat[ T ];
+		end;
+	end else if Part^.S = GS_SkillModifier then begin
+		total := Part^.Stat[ STAT_SkillModBonus ];
+		if Part^.Stat[ STAT_SkillToModify ] <= Num_Basic_Combat_Skills then Inc( total );
+	end;
+
+	TraumaValue := total;
 end;
 
 end.

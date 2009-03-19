@@ -36,7 +36,7 @@ legality -10
 Acc 1
 Speed 5
 
-Tool 15 1
+RepairTool 1
 name <Spanner>
 desc <A hefty wrench for working on mecha. It also makes a passable weapon.>
 factions <GENERAL>
@@ -50,7 +50,7 @@ sub
 end
 
 
-Tool 14 1
+SurvivalTool 1
 Name <Survival Knife>
 desc <A sturdy knife with a wide variety of uses.>
 sdl_portrait <item_knife.png>
@@ -1612,7 +1612,7 @@ Category <TOOL Religion>
 Factions <GENERAL>
 Legality -50
 
-Tool 37 1
+InsightTool 1
 name <Magnifying Glass>
 desc <Just the thing to make you look like an authentic detective!>
 Category <TOOL SCIENCE ODDITIES>
@@ -1660,7 +1660,7 @@ end
 %  ***  REPAIR FUEL  ***
 %  *********************
 
-FirstAidFuel 30
+MedicineFuel 30
 Name <Sticky Band>
 desc <This can bind wounds.>
 Category <MEDICINE ESSENTIAL>
@@ -1669,7 +1669,7 @@ SDL_PORTRAIT <item_medicine.png>
 Mass 1
 legality -50
 
-FirstAidFuel 60
+MedicineFuel 60
 Name <Gauze>
 desc <Light cloth used for making bandages for wounds.>
 Category <MEDICINE>
@@ -1678,7 +1678,7 @@ SDL_PORTRAIT <item_medicine.png>
 Mass 1
 legality -50
 
-FirstAidFuel 90
+MedicineFuel 90
 Name <Antiseptic Ointment>
 desc <An ointment that stops any chance of infection in a wound.>
 Category <MEDICINE>
@@ -1687,7 +1687,7 @@ SDL_PORTRAIT <item_medicine.png>
 Mass 1
 legality -50
 
-FirstAidFuel 120
+MedicineFuel 120
 Name <Medicated Bandages>
 desc <Premedicated sterile bandages.>
 Category <MEDICINE>
@@ -1696,7 +1696,7 @@ SDL_PORTRAIT <item_medicine.png>
 Mass 1
 legality -50
 
-FirstAidFuel 300
+MedicineFuel 300
 Name <First Aid Kit>
 desc <A kit containing a variety of supplies required for a wide range of injuries.>
 Category <MEDICINE TOOL>
@@ -1705,7 +1705,7 @@ SDL_PORTRAIT <item_medicine.png>
 Mass 2
 legality -50
 
-GenRepairFuel 10
+RepairFuel 10
 Name <Scotch Tape>
 desc <Transparent tape used for binding things together.>
 Category <TOOL>
@@ -1713,7 +1713,7 @@ Factions <GENERAL>
 Mass 1
 legality -50
 
-GenRepairFuel 50
+RepairFuel 50
 Name <Super Glue>
 desc <Strong glue capable of joining together cracks of hard materials.>
 Category <TOOL>
@@ -1721,7 +1721,7 @@ Factions <GENERAL>
 Mass 1
 legality -50
 
-GenRepairFuel 75
+RepairFuel 75
 Name <Duct Tape>
 desc <Silvery adhesive tape generally used for binding sheets of metal.>
 Category <TOOL ESSENTIAL>
@@ -1729,7 +1729,7 @@ Factions <GENERAL>
 Mass 1
 legality -50
 
-GenRepairFuel 100
+RepairFuel 100
 Name <Epoxy Putty>
 desc <A thick paste used as a strong adhesive.>
 Category <TOOL>
@@ -1737,7 +1737,7 @@ Factions <GENERAL>
 Mass 1
 legality -50
 
-GenRepairFuel 170
+RepairFuel 170
 Name <Handyman's Kit>
 desc <Contains everything the modern-day handyman could ever ask for!>
 Category <TOOL>
@@ -1745,7 +1745,7 @@ Factions <GENERAL>
 Mass 1
 legality -50
 
-GenRepairFuel 750
+RepairFuel 750
 Name <Basic Repair Kit>
 desc <Contains various adhesives, screws, nails, tools and other general repair supplies.>
 Category <TOOL>
@@ -1753,7 +1753,7 @@ Factions <GENERAL>
 Mass 3
 legality -50
 
-MechaRepairFuel 100
+RepairFuel 100
 Name <Sheet Metal>
 desc <Plain ol' sheet of metal.>
 Category <TOOL ESSENTIAL>
@@ -1761,7 +1761,7 @@ Factions <GENERAL>
 Mass 2
 legality -50
 
-MechaRepairFuel 125
+RepairFuel 125
 Name <Heavy-Duty Duct Tape>
 desc <Industrial-strength silvery duct tape.>
 Category <TOOL>
@@ -1769,7 +1769,7 @@ Factions <GENERAL>
 Mass 1
 legality -50
 
-MechaRepairFuel 50
+RepairFuel 50
 Name <Scratch Remover>
 desc <A fiberglass set designed to polish off and seal cracks.>
 Category <TOOL>
@@ -1777,7 +1777,7 @@ Factions <GENERAL>
 Mass 1
 legality -50
 
-MechaRepairFuel 500
+RepairFuel 500
 Name <Epoxy Bodyfiller>
 desc <Epoxy resin used to repair large structural damage.>
 Category <TOOL>
@@ -1785,7 +1785,7 @@ Factions <GENERAL>
 Mass 3
 legality -20
 
-MechaRepairFuel 1500
+RepairFuel 1500
 Name <Mecha Patch Kit>
 desc <For the budding mecha engineer wanting to do their own repairs!>
 Category <TOOL>
@@ -1793,7 +1793,7 @@ Factions <GENERAL>
 Mass 4
 legality -10
 
-MechaRepairFuel 3000
+RepairFuel 3000
 Name <Mecha Welding Set>
 desc <This heavy-duty mecha repair set is commonly found in mecha garages.>
 Category <TOOL>
@@ -1801,7 +1801,7 @@ Factions <GENERAL>
 Mass 5
 legality -10
 
-MediceneFuel 50
+MedicineFuel 50
 Name <Sutures>
 desc <Sterilised string used to bind open wounds and, in less fortunate circumstances, reattach limbs.>
 Category <MEDICINE ESSENTIAL>
@@ -1810,7 +1810,7 @@ SDL_PORTRAIT <item_medicine.png>
 Mass 1
 legality -50
 
-MediceneFuel 150
+MedicineFuel 150
 Name <Field Surgery Kit>
 desc <A kit often found in the possession of combat medics.>
 Category <MEDICINE>
@@ -2023,74 +2023,67 @@ legality -5
 %  ***  CYBERWARE  ***
 %  *******************
 
-StatModifier 20
+StatCyberware
 Name <Bone Weaving>
 desc <(SKELETON) Repair and reinforcement for damaged bones.>
 CyberSlot <SKELETON>
-Type <CHARA CYBER>
 Category <MEDICINE>
 Factions <GENERAL>
 Body 2
 Mass 25
 legality -20
 
-StatModifier 50
+StatCyberware
 Name <Reinforced Skeleton>
 desc <(SKELETON) A structurally-strengthened skeleton.>
 CyberSlot <SKELETON>
-Type <CHARA CYBER>
 Category <CYBERWARE>
 Factions <GENERAL>
-Body 7
+Body 5
 Speed -1
 Mass 25
 legality 10
 
-StatModifier 45
+StatCyberware
 Name <Lightened Skeleton>
 desc <(SKELETON) Does away with the weight caused by organically dense bones.>
 Category <CYBERWARE>
 Factions <GENERAL>
 CyberSlot <SKELETON>
-Type <CHARA CYBER>
 Body -1
 Speed 4
-Reflexes 2
-Mass 14
+Reflexes 1
 legality 5
 
-StatModifier 45
+StatCyberware
 Name <Armored Spine>
 desc <(SPINE) Does away with the fragile nature of a human's organic spine.>
 Category <CYBERWARE>
 Factions <GENERAL>
 CyberSlot <SPINE>
-Type <CHARA CYBER>
 Body 4
 Ego 4
 Speed -1
 Mass 16
 legality 5
 
-StatModifier 25
+StatCyberware
 Name <Replacement Spine>
 desc <(SPINE) A replacement for an injured spine.>
 Category <MEDICINE>
 Factions <GENERAL>
 CyberSlot <SPINE>
-Type <CHARA CYBER>
 Body 2
 Speed -1
 Mass 2
 legality -20
 
-StatModifier 45
+StatCyberware
 Name <Optical Spine>
 desc <(SPINE) Replaces many of the spinal nerves with fiber-optic data transmission wires.>
 Category <CYBERWARE>
 Factions <GENERAL>
 CyberSlot <SPINE>
-Type <CHARA CYBER>
 Speed 3
 Craft 2
 Reflexes 1
@@ -2099,13 +2092,12 @@ Body -1
 Mass 10
 Legality 10
 
-StatModifier 60
+StatCyberware
 Name <Predator Reflexes>
 desc <(BRAIN) Takes advantage of certain predator instincts found in animals of prey.>
 Category <CYBERWARE>
 Factions <GENERAL>
 CyberSlot <BRAIN>
-Type <CHARA CYBER>
 Body 2
 Reflexes 5
 Speed 4
@@ -2116,66 +2108,61 @@ Charm -1
 Mass 15
 legality 25
 
-StatModifier 35
+StatCyberware
 Name <Heavy Myomer Muscles>
 desc <(MUSCULATURE) Replaces conventional muscles with a technologically-improved biomaterial.>
 Category <CYBERWARE>
 Factions <GENERAL>
 CyberSlot <MUSCULATURE>
-Type <CHARA CYBER>
 Body 4
 Mass 20
 legality 10
 
-StatModifier 40
+StatCyberware
 Name <Rapid Strike Muscles>
 desc <(MUSCULATURE) Muscles tuned for quick reactions.>
 Category <CYBERWARE>
 Factions <GENERAL>
 CyberSlot <MUSCULATURE>
-Type <CHARA CYBER>
 Reflexes 2
 Speed 2
 Mass 20
 legality 15
 
-StatModifier 30
+StatCyberware
 Name <Muscle Bonding>
 desc <(MUSCULATURE) Synthetic reinforcements for the augmentation or repair of muscles.>
 Category <MEDICINE>
 Factions <GENERAL>
 CyberSlot <MUSCULATURE>
-Type <CHARA CYBER>
 Body 2
 Mass 20
 legality -10
 
-StatModifier 20
+StatCyberware
 Name <Cyber Eyes>
 desc <(EYES) These eyes include resolution enhancers.>
 Category <CYBERWARE MEDICINE>
 Factions <GENERAL>
 CyberSlot <EYES>
-Type <CHARA CYBER>
 Reflexes 2
 Perception 3
 Charm -1
 Mass 1
 legality -5
 
-StatModifier 20
+StatCyberware
 Name <Fashion Cybereyes>
 desc <(EYES) A pair of rather charming eyes.>
 Category <CYBERWARE MEDICINE>
 Factions <GENERAL>
 CyberSlot <EYES>
-Type <CHARA CYBER>
 Perception 1
 Charm 1
 Mass 1
 legality -5
 
-SkillModifier 25
+SkillCyberware
 Name <Targeter Eye>
 desc <(EYES) Provides highlighting of personal-scale targets.>
 Category <CYBERWARE>
@@ -2183,96 +2170,88 @@ Factions <GENERAL>
 CyberSlot <EYES>
 Type <CHARA CYBER>
 SkillModRangedCombat
-SkillModAmount 4
+SkillModAmount 1
 Mass 1
 legality 10
 
-StatModifier 15
+StatCyberware
 Name <Cyber Ears>
 desc <(EARS) Improves the perception of sound.>
 Category <CYBERWARE>
 Factions <GENERAL>
 CyberSlot <EARS>
-Type <CHARA CYBER>
 Perception 1
 Mass 1
 legality -10
 
-SkillModifier 20
+SkillCyberware
 Name <Perfect Pitch Ears>
 desc <(EARS) Ears used by some performance judges to dissect and analyse music.>
 Category <CYBERWARE>
 Factions <GENERAL>
 CyberSlot <EARS>
-Type <CHARA CYBER>
 SkillModPerformance
 SkillModAmount 3
 Mass 1
 legality -5
 
-StatModifier 15
+StatCyberware
 Name <Cyber Heart>
 desc <(HEART) A heavy-duty replacement for a conventional organic heart.>
 Category <CYBERWARE MEDICINE>
 Factions <GENERAL>
 CyberSlot <HEART>
-Type <CHARA CYBER>
 Body 2
 Mass 2
 legality -25
 
-SkillModifier 30
+SkillCyberware
 Name <Spinal Pilot Link>
 desc <(BRAINSTEM) Interacts with a piloted mecha and provides neural feedback to the pilot.>
 Category <CYBERWARE>
 Factions <SILKN COMET BIOCO>
 CyberSlot <BRAINSTEM>
-Type <CHARA CYBER>
 SkillModMechaPiloting
 SkillModAmount 3
 Mass 1
 legality 10
 
-StatModifier 10
+StatCyberware
 Name <Data Link>
 desc <(BRAIN) Provides direct links between some parts of the brain.>
 Category <CYBERWARE>
 Factions <GENERAL>
 CyberSlot <BRAIN>
-Type <CHARA CYBER>
 Knowledge 1
 Mass 1
 legality -5
 
-StatModifier 20
+StatCyberware
 Name <Neural Coprocessor>
 desc <(BRAIN) Removes some of the processing burden from the human brain.>
 Category <CYBERWARE>
 Factions <GENERAL>
 CyberSlot <BRAIN>
-Type <CHARA CYBER>
 Knowledge 2
 Mass 1
 legality 5
 
-StatModifier 35
+StatCyberware
 Name <Sensory Amplifier>
 desc <(BRAIN) Tunes the mind to detect tiny inputs that would otherwise go unnoticed.>
 Category <CYBERWARE>
 Factions <GENERAL>
 CyberSlot <BRAIN>
-Type <CHARA CYBER>
 Perception 5
 Mass 2
 legality 5
 
-StatModifier 40
+StatCyberware
 Name <Synaptic Booster>
 desc <(BRAIN) Works with the existing synapses of the brain to greatly boost data storage and retrieval capabilities.>
 Category <CYBERWARE>
 Factions <GENERAL>
 CyberSlot <BRAIN>
-Type <CHARA CYBER>
 Knowledge 5
 Mass 1
 legality 10

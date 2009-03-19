@@ -328,7 +328,7 @@ Const
 	NAS_Taunt = 28;
 
 	NAG_Talent = 16;
-	NumTalent = 22;
+	NumTalent = 27;
 
 	NAS_KungFu = 1;
 	NAS_HapKiDo = 2;
@@ -352,6 +352,11 @@ Const
 	NAS_Innovation = 20;
 	NAS_Camaraderie = 21;
 	NAS_Entourage = 22;
+	NAS_Robotics = 23;
+	NAS_Acrobatics = 24;
+	NAS_DominateAnimal = 25;
+	NAS_PickPockets = 26;
+	NAS_Extropian = 27;
 
 	{ Talent pre-requisites are described as follows: The first }
 	{ coordinate lists the skill (if positive) or stat (if negative) }
@@ -364,7 +369,18 @@ Const
 	( 0 , 0 ), ( -STAT_Charm , 15 ) , ( NAS_MechaPiloting , 5 ) , ( NAS_MechaPiloting , 5 ) , ( NAS_MechaPiloting , 5 ),
 	( NAS_Repair , 5 ), ( 0 , 0 ), ( NAS_Shopping , 5 ), (-STAT_Craft,15), ( -8 + NAS_Cheerful , -25 ),
 	( NAS_Stealth , 5 ), ( NAS_ElectronicWarfare , 5 ), ( -8 + NAS_Easygoing , -25 ), ( NAS_SpotWeakness , 5 ), ( NAS_MechaEngineering , 10 ),
-	( NAS_Conversation , 5 ), ( -8 + NAS_Renowned , 80 )
+	( NAS_Conversation , 5 ), ( -8 + NAS_Renowned , 80 ), ( NAS_Science , 5 ), ( NAS_Dodge , 5 ), ( NAS_Survival , 5 ),
+	( NAS_Stealth , 5 ), ( -8 + NAS_Pragmatic , 25 )
+	);
+
+
+	TALENT_Usage: Array [1..NumTalent] of Integer = (
+		0, 0, 0, 0, 0,
+		0, 0, 0, 0, 0,
+		0, 0, 0, 0, 0,
+		0, 0, 0, 0, 0,
+		0, 0, USAGE_Robotics, 0, USAGE_DominateAnimal,
+		USAGE_PickPockets, 0
 	);
 
 
@@ -440,6 +456,8 @@ Function CharMental( PC: GearPtr ): Integer;
 Function IsACombatant( NPC: GearPtr ): Boolean;
 
 implementation
+
+uses ghmodule;
 
 Procedure InitChar(Part: GearPtr);
 	{PART is a newly created Character record.}
@@ -681,7 +699,7 @@ function IsLegalCharSub( Part: GearPtr ): Boolean;
 	{ SPC, false if it can't be. }
 begin
 	if ( Part^.G = GG_Module ) then IsLegalCharSub := True
-	else if ( Part^.G = GG_Modifier ) then IsLegalCharSub := AStringHasBString( SAttValue( Part^.SA , 'TYPE' ) , 'CHARA' )
+	else if ( Part^.G = GG_Modifier ) then IsLegalCharSub := Part^.V = GV_CharaModifier
 	else IsLegalCharSub := False;
 end;
 

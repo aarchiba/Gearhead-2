@@ -47,7 +47,7 @@ const
 
 
 Function TotalRepairableDamage( Target: GearPtr; Material: Integer ): LongInt;
-Procedure ApplyRepairPoints( Target: GearPtr; Material: Integer; var RP: LongInt );
+Procedure ApplyRepairPoints( Target: GearPtr; Material: Integer; var RP: LongInt; CureStatus: Boolean );
 Procedure ApplyEmergencyRepairPoints( Target: GearPtr; Material: Integer; var RP: LongInt );
 Function UseRepairSkill( GB: GameBoardPtr; PC,Target: GearPtr; Skill: Integer ): Boolean;
 Procedure DoCompleteRepair( Target: GearPtr );
@@ -117,7 +117,7 @@ begin
 	TotalRepairableDamage := it;
 end;
 
-Procedure ApplyRepairPoints( Target: GearPtr; Material: Integer; var RP: LongInt );
+Procedure ApplyRepairPoints( Target: GearPtr; Material: Integer; var RP: LongInt; CureStatus: Boolean );
 	{ Search through TARGET, and restore DPs to parts }
 	{ that can be repaired using SKILL. }
 var
@@ -174,11 +174,13 @@ begin
 		end;
 
 		{ Check for status effects. }
-		for t := 1 to Num_Status_FX do begin
-			if SX_Repairable[ t ] and ( NAttValue( Target^.NA , NAG_StatusEffect , T ) <> 0 ) then begin
-				if RP >= SX_RepCost[ t ] then begin
-					RP := RP - SX_RepCost[ t ];
-					SetNAtt( Target^.NA , NAG_StatusEffect , T , 0 );
+		if CureStatus then begin
+			for t := 1 to Num_Status_FX do begin
+				if SX_Repairable[ t ] and ( NAttValue( Target^.NA , NAG_StatusEffect , T ) <> 0 ) then begin
+					if RP >= SX_RepCost[ t ] then begin
+						RP := RP - SX_RepCost[ t ];
+						SetNAtt( Target^.NA , NAG_StatusEffect , T , 0 );
+					end;
 				end;
 			end;
 		end;
@@ -187,14 +189,14 @@ begin
 	{ Check the sub-components for damage. }
 	Part := Target^.SubCom;
 	while ( Part <> Nil ) and ( RP > 0 ) do begin
-		ApplyRepairPoints( Part , Material , RP );
+		ApplyRepairPoints( Part , Material , RP , CureStatus );
 		Part := Part^.Next;
 	end;
 
 	{ Check the inv-components for damage. }
 	Part := Target^.InvCom;
 	while ( Part <> Nil ) and ( RP > 0 ) do begin
-		ApplyRepairPoints( Part , Material , RP );
+		ApplyRepairPoints( Part , Material , RP , CureStatus );
 		Part := Part^.Next;
 	end;
 end;
@@ -209,20 +211,21 @@ Procedure ApplyEmergencyRepairPoints( Target: GearPtr; Material: Integer; var RP
 		Part: GearPtr;
 	begin
 		Part := SeekGear( Target , G , S , False );
-		if ( Part <> Nil ) and ( RP > 0 ) then begin
-			ApplyRepairPoints( Part, Material, RP );
+		if ( Part <> Nil ) and ( RP > 0 ) and Destroyed( Part ) then begin
+			ApplyRepairPoints( Part, Material, RP, False );
 		end;
 	end;
 begin
 	if Target^.G = GG_Character then begin
 		ApplyPointsToPart( GG_Module , GS_Head );
 		ApplyPointsToPart( GG_Module , GS_Body );
-		if RP > 0 then ApplyRepairPoints( Target, Material, RP );
+		if RP > 0 then ApplyRepairPoints( Target, Material, RP, False );
 	end else if Target^.G = GG_Mecha then begin
 		ApplyPointsToPart( GG_Support , GS_Engine );
 		ApplyPointsToPart( GG_Module , GS_Body );
-		if RP > 0 then ApplyRepairPoints( Target, Material, RP );
-	end else ApplyRepairPoints( Target, Material, RP );
+		if RP > 0 then ApplyRepairPoints( Target, Material, RP, False );
+	end else ApplyRepairPoints( Target, Material, RP, False );
+	if RP > 0 then ApplyRepairPoints( Target, Material, RP, True );
 end;
 
 Function UseRepairSkill( GB: GameBoardPtr; PC,Target: GearPtr; Skill: Integer ): Boolean;
@@ -239,13 +242,13 @@ Function UseRepairSkill( GB: GameBoardPtr; PC,Target: GearPtr; Skill: Integer ):
 		RST: Integer;
 	begin
 		if Target^.Scale = 0 then begin
-			RST := 5;
+			RST := 4;
 		end else if Target^.Scale = 1 then begin
 			RST := 3;
 		end else begin
 			RST := 2;
 		end;
-		if Destroyed( Target ) then RST := RST + 5;
+		if Destroyed( Target ) then RST := RST + 3;
 		Repair_Skill_Target := RST;
 	end;
 	Procedure SpendRepairFuel( PC: GearPtr; Material , RP: LongInt );
@@ -309,7 +312,7 @@ Function UseRepairSkill( GB: GameBoardPtr; PC,Target: GearPtr; Skill: Integer ):
 			SpendRepairFuel( PC , Material , RP );
 
 			{ Apply the repair points. }
-			ApplyRepairPoints( Target , Skill , RP );
+			ApplyRepairPoints( Target , Skill , RP , True );
 			RFFound := True;
 		end;
 		ActivateRepair := RFFound;
@@ -375,14 +378,15 @@ begin
 
 	end else begin
 		{ The repair attempt failed. }
-		{ If you fail to revive a dead character, there's not much else you can do. }
-		if ( TMaster <> Nil ) and ( TMaster^.G = GG_Character ) and Destroyed( TMaster ) then begin
-			AddNAtt( TMaster^.NA , NAG_Damage , NAS_StrucDamage , 30 );
-		end;
-
 		{ At this point repair fuel is a moot point, so return TRUE. }
 		HadRepairFuel := True;
 	end;
+
+	{ If you fail to revive a dead character, there's not much else you can do. }
+	if ( TMaster <> Nil ) and ( TMaster^.G = GG_Character ) and Destroyed( TMaster ) and HadRepairFuel then begin
+		AddNAtt( TMaster^.NA , NAG_Damage , NAS_StrucDamage , 30 );
+	end;
+
 
 	{ Using repair takes time and concentration. }
 	WaitAMinute( GB , PC , ReactionTime( PC ) * Tries );
@@ -403,7 +407,7 @@ begin
 	for t := 0 to ( NumMaterial - 1 ) do begin
 		if TotalRepairableDamage( Target , T ) > 0 then begin
 			Pts := TotalRepairableDamage( Target , T );
-			ApplyRepairPoints( Target , T , Pts );
+			ApplyRepairPoints( Target , T , Pts , True );
 		end;
 	end;
 end;

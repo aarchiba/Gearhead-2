@@ -870,7 +870,7 @@ begin
 		if SkTarget < 1 then begin
 			DialogMsg( ReplaceHash( MsgString( 'DOMINATE_Fail' ) , GearName( Target ) ) );
 		end else begin
-			SkRoll := SkillRoll( GB , PC , NAS_Survival , STAT_Ego , SkTarget , 0 , False , True );
+			SkRoll := SkillRoll( GB , PC , NAS_Survival , STAT_Ego , SkTarget , ToolBonus( PC , -NAS_DominateAnimal ) , False , True );
 
 			if ( SkRoll > SkTarget ) and ( PetsPresent( GB ) < PartyPetSlots( PC ) ) then begin
 				DialogMsg( ReplaceHash( MsgString( 'DOMINATE_OK' ) , GearName( Target ) ) );
@@ -983,7 +983,7 @@ begin
 	end else begin
 		{ Time to start the actual stealing of stuff. }
 		SkTarget := Target^.Stat[ STAT_Perception ] + 5;
-		SkRoll := SkillRoll( GB ,  PC , NAS_Stealth , STAT_Craft , Target^.Stat[ STAT_Perception ] + 5 , 0 , True , True );
+		SkRoll := SkillRoll( GB ,  PC , NAS_Stealth , STAT_Craft , Target^.Stat[ STAT_Perception ] + 5 , ToolBonus( PC , -NAS_PickPockets ) , True , True );
 
 		if SkRoll > SkTarget then begin
 			{ The PC will now steal something. }
@@ -1047,7 +1047,7 @@ Procedure PCActivateSkill( GB: GameBoardPtr; PC: GearPtr );
 	{ applied to an item. }
 var
 	RPM: RPGMenuPtr;
-	N: Integer;
+	N,Usage: Integer;
 begin
 	{ Make sure we have the actual PC first. }
 	PC := LocatePilot( PC );
@@ -1066,6 +1066,14 @@ begin
 			AddRPGMenuItem( RPM , MsgString( 'SKILLNAME_' + BStr( N ) ) , N , SkillDescription( N ) );
 		end;
 	end;
+
+	{ Add all usable talents to the list too. }
+	for N := 1 to NumTalent do begin
+		if ( Talent_Usage[ N ] > 0 ) and HasTalent( PC , N ) then begin
+			AddRPGMenuItem( RPM , MsgString( 'TALENT' + BStr( N ) ) , -N , MsgString( 'TALENTDESC' + BStr( N ) ) );
+		end;
+	end;
+
 	RPMSortAlpha( RPM );
 	AlphaKeyMenu( RPM );
 	AddRPGMenuItem( RPM , MsgString( 'PCAS_Cancel' ) , -1 );
@@ -1076,18 +1084,22 @@ begin
 
 	DisposeRPGMenu( RPM );
 
-	if ( N > 0 ) and ( N <= NumSkill ) then begin
-		if SkillMan[ N ].Usage = USAGE_Repair then begin
+	if ( N <> -1 ) then begin
+		{ Determine the usage. }
+		if N > 0 then Usage := SkillMan[ N ].Usage
+		else Usage := Talent_Usage[ Abs( N ) ];
+
+		if Usage = USAGE_Repair then begin
 			DoPCRepair( GB , PC , N );
-		end else if SkillMan[ N ].Usage = USAGE_Clue then begin
+		end else if Usage = USAGE_Clue then begin
 			PCUseSkillOnProp( GB , PC , N );
-		end else if SkillMan[ N ].Usage = USAGE_Performance then begin
+		end else if Usage = USAGE_Performance then begin
 			StartPerforming( GB , PC );
-		end else if SkillMan[ N ].Usage = USAGE_Robotics then begin
+		end else if Usage = USAGE_Robotics then begin
 			BuildRobot( GB , PC );
-		end else if SkillMan[ N ].Usage = USAGE_DominateAnimal then begin
+		end else if Usage = USAGE_DominateAnimal then begin
 			DominateAnimal( GB , PC );
-		end else if SkillMan[ N ].Usage = USAGE_PickPockets then begin
+		end else if Usage = USAGE_PickPockets then begin
 			PickPockets( GB , PC );
 		end;
 

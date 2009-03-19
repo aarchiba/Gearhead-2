@@ -376,7 +376,7 @@ begin
 			Cost := RepairMasterCost( Part , Skill );
 			if Cost > 0 then begin
 				TRD := TotalRepairableDamage( Part , SKill );
-				ApplyRepairPoints( Part , Skill , TRD );
+				ApplyRepairPoints( Part , Skill , TRD , True );
 				AddNAtt( HQCamp^.Source^.NA , NAG_Experience , NAS_Credits , -Cost );
 			end;
 		end;

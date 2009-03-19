@@ -129,7 +129,7 @@ begin
 
 	{ Mecha can mount modification gears. }
 	end else if Equip^.G = GG_Modifier then begin
-		IsLegalMechaSubCom := AStringHasBString( SAttValue( Equip^.SA , 'TYPE' ) , 'MECHA' );
+		IsLegalMechaSubCom := Equip^.V = GV_MechaModifier;
 
 	{ No other components may be subcoms of a mecha. }
 	end else IsLegalMechaSubCom := False;

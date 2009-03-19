@@ -395,15 +395,15 @@ Content
 		STC OneShotDoor
 	end
 	inv
-		MechaRepairFuel 1500
+		RepairFuel 1500
 		name <Mecha Parts>
 		mass 20
 
-		MechaRepairFuel 1500
+		RepairFuel 1500
 		name <Mecha Parts>
 		mass 20
 
-		MechaRepairFuel 1500
+		RepairFuel 1500
 		name <Mecha Parts>
 		mass 20
 	end
@@ -479,7 +479,7 @@ Content
 		FoodXValue 1500
 		desc <This medicine increases the body's ability to repair itself. While it is in effect injuries will be healed much faster than normal.>
 
-		FirstAidFuel 120
+		MedicineFuel 120
 		Name <Medicated Bandages>
 		desc <Premedicated sterile bandages.>
 		Mass 1

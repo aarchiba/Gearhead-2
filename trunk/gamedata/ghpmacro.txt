@@ -51,8 +51,10 @@ HeavyActuator <Gear 6 8 ?3>
 Armor         <Stat 1 ?0>
 Shield        <Gear 10 0 ?2>
 EShield       <Gear 10 1 ?2>
-StatModifier  <Gear 19 1 ?40>
-SkillModifier <Gear 19 2 ?40>
+StatCyberware  <Gear 19 1 1>
+SkillCyberware <Gear 19 2 1>
+StatMechaSys   <Gear 19 1 2>
+SkillMechaSys  <Gear 19 2 2>
 DefBonus      <Stat 1 ?-1>
 BodyArmor     <Gear 11 1 ?1>  These cmds create external armor gears
 HeadArmor     <Gear 11 2 ?1>
@@ -67,11 +69,9 @@ Engine        <Gear 9 2 ?5>   Engine automatically added by LoadGear
 HighOutput    <STAT 2 1>       - High-output engine
 HighPerformance <STAT 2 2>     - High-performance engine
 Treasure      <Gear 12 0 0>
-FirstAidFuel  <Gear 17 20 ?100>
-MechaRepairFuel <Gear 17 15 ?1000>
-MediceneFuel  <Gear 17 16 ?100>
-BiotechFuel   <Gear 17 22 ?1000>
-GenRepairFuel <Gear 17 23 ?100>
+RepairFuel    <Gear 17 0 ?1000>
+MedicineFuel  <Gear 17 1 ?100>
+BiotechFuel   <Gear 17 2 ?1000>
 Mass          <NAtt 2 1 ?>
 DomTarget     <NATT 2 2 ?10>
 EvolveAt      <NATT 2 3 ?5000>
@@ -216,12 +216,14 @@ EncounterMove <Stat 7 ?100>
 Encounter_Hostile <Stat 8 0>
 ENCOUNTER_Defense <Stat 8 1>
 ENCOUNTER_NonCombat <Stat 8 2>
-Tool          <G 16 ?35 ?1>
-Instrument    <G 16 35 ?0>
-Lockpick      <G 16 32 ?1>
-HolySymbol    <G 16 34 ?1>
-ScienceTool   <G 16 29 ?1>
-AcrobatTool   <G 16 43 ?1>
+Instrument    <G 16 25 ?0>
+Lockpick      <G 16 23 ?1>
+HolySymbol    <G 16 24 ?1>
+ScienceTool   <G 16 21 ?1>
+AcrobatTool   <G 16 -24 ?1>
+RepairTool    <G 16 13 ?1>
+SurvivalTool  <G 16 12 ?1>
+InsightTool   <G 16 27 ?1>
 Destination   <Stat 4 ?>
 Hidden        <Stat 5 1>
 Hide          <Stat 5 ?-1>

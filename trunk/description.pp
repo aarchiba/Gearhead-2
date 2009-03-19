@@ -229,7 +229,11 @@ Function ToolDescription( Part: GearPtr ): String;
 var
 	msg: String;
 begin
-	msg := SgnStr( Part^.V ) + ' ' + MsgString( 'SKILLNAME_' + Bstr( Part^.S ) );
+	if Part^.S > 0 then begin
+		msg := SgnStr( Part^.V ) + ' ' + MsgString( 'SKILLNAME_' + Bstr( Part^.S ) );
+	end else begin
+		msg := SgnStr( Part^.V ) + ' ' + MsgString( 'TALENT' + Bstr( Abs( Part^.S ) ) );
+	end;
 	ToolDescription := msg;
 end;
 

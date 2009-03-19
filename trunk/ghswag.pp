@@ -34,9 +34,9 @@ uses gears;
 	{ V = Undefined                 }
 
 	{ TOOL format }
-	{ G = GG_Tool               }
-	{ S = Skill Affected        }
-	{ V = Skill Bonus           }
+	{ G = GG_Tool                }
+	{ S = Skill/Talent Affected  }
+	{ V = Skill Bonus            }
 
 	{ REPAIRFUEL format }
 	{ G = GG_Usable             }
@@ -53,6 +53,9 @@ Const
 	STAT_FoodEffectValue = 2;
 	STAT_FoodQuantity = 3;
 
+	Repair_Cost_Multiplier: Array [0..NumMaterial] of Byte = (
+		1, 1, 5
+	);
 
 Function ToolDamage( Part: GearPtr ): Integer;
 Function ToolValue( Part: GearPtr ): Integer;
@@ -62,6 +65,7 @@ Function IsLegalToolSub( Equip: GearPtr ): Boolean;
 
 Function RepairFuelName( Part: GearPtr ): String;
 Procedure CheckRepairFuelRange( Part: GearPtr );
+Function RepairFuelValue( Part: GearPtr ): LongInt;
 
 Procedure CheckFoodRange( Part: GearPtr );
 Function FoodMass( Part: GearPtr ): Integer;
@@ -89,9 +93,14 @@ Procedure CheckToolRange( Part: GearPtr );
 	{ is all nice and legal. }
 begin
 	{ Check S - Usable Type; corresponds to a skill }
-	{  Tools may not benefit the 10 basic combat skills. }
-	if Part^.S < 11 then Part^.S := 11
-	else if Part^.S > NumSkill then Part^.S := NumSkill;
+	{  or a talent. May not target the basic combat skills. }
+	if Part^.S > 0 then begin
+		if Part^.S <= Num_Basic_Combat_Skills then Part^.S := Num_Basic_Combat_Skills + 1
+		else if Part^.S > NumSkill then Part^.S := NumSkill;
+	end else begin
+		if Part^.S > -1 then Part^.S := -1
+		else if Part^.S < -NumTalent then Part^.S := -1;
+	end;
 
 	{ Check V - Skill Bonus }
 	if Part^.V < 0 then Part^.V := 0
@@ -120,8 +129,14 @@ Procedure CheckRepairFuelRange( Part: GearPtr );
 	{ is all nice and legal. }
 begin
 	{ Check S - Skill Type }
-	if Part^.S < 1 then Part^.S := 23
-	else if Part^.S > NumSkill then Part^.S := 23;
+	if Part^.S < 0 then Part^.S := 0
+	else if Part^.S > NumMaterial then Part^.S := NumMaterial;
+end;
+
+Function RepairFuelValue( Part: GearPtr ): LongInt;
+	{ Return the value of this repair fuel. }
+begin
+	RepairFuelValue := Part^.V * Repair_Cost_Multiplier[ Part^.S ];
 end;
 
 Procedure CheckFoodRange( Part: GearPtr );

@@ -478,7 +478,12 @@ begin
 	for t := 1 to Num_Status_FX do SFX_Check[ t ] := HasStatus( Item , T );
 
 	RepairFuelFound := UseRepairSkill( GB , PC , Item , Skill );
-	msg := ReplaceHash( MsgString( 'PCREPAIR_UseSkill' ) , MsgString( 'SkillName_' + BStr( Skill ) ) );
+	if NAttValue( PC^.NA , NAG_Location , NAS_Team ) = NAV_DefPlayerTeam then begin
+		msg := ReplaceHash( MsgString( 'PCREPAIR_UseSkill' ) , MsgString( 'SkillName_' + BStr( Skill ) ) );
+	end else begin
+		msg := ReplaceHash( MsgString( 'NPCREPAIR_UseSkill' ) , PilotName( PC ) );
+		msg := ReplaceHash( msg , MsgString( 'SkillName_' + BStr( Skill ) ) );
+	end;
 	msg := ReplaceHash( msg , GearName( Item ) );
 
 	{ Report the final state of the repair target. }
@@ -487,6 +492,8 @@ begin
 	{ Inform the user of the success. }
 	if ( Item^.G = GG_Character ) and Destroyed( Item ) then begin
 		msg := msg + ' ' + ReplaceHash( MsgString( 'PCREPAIR_DEAD' ) , GearName( Item ) );
+	end else if not RepairFuelFound then begin
+		msg := msg + ' ' + MsgString( 'PCREPAIR_NoRepairFuel' );
 	end else if DDmg > 0 then begin
 		msg := msg + ' ' + ReplaceHash( MsgString( 'PCREPAIR_Success' ) , BStr( DDmg ) );
 	end;

@@ -102,7 +102,7 @@ Procedure DoTraining( GB: GameBoardPtr; PC: GearPtr; RD: RedrawProcedureType );
 			AttachMenuDesc( SkMenu , ZONE_Info );
 
 			while Sk <> Nil do begin
-				if ( Sk^.G = NAG_Skill ) and ( Sk^.S > 0 ) then begin
+				if ( Sk^.G = NAG_Skill ) and ( Sk^.S > 0 ) and not SkillMan[ Sk^.S ].Hidden then begin
 					{ Add this skill to the menu. This is going to be one doozy of a long description. }
 					AddRPGMenuItem( SkMenu , MsgString( 'SKILLNAME_' + BStr( Sk^.S ) ) + ' +' + BStr( Sk^.V ) + '   (' + BStr( SkillAdvCost( PC , Sk^.V ) ) + ' XP)' , Sk^.S , SkillDescription( Sk^.S ) );
 				end;
@@ -304,11 +304,11 @@ Procedure DoTraining( GB: GameBoardPtr; PC: GearPtr; RD: RedrawProcedureType );
 
 		SkMenu^.dtexcolor := InfoGreen;
 
-		if NAttValue( PC^.NA , NAG_Location , NAS_Team ) = NAV_LancemateTeam then SkillLimit := 10
+		if NAttValue( PC^.NA , NAG_Location , NAS_Team ) = NAV_LancemateTeam then SkillLimit := Num_Basic_Combat_Skills
 		else SkillLimit := NumSkill;
 
 		for N := 1 to SkillLimit do begin
-			if FindNAtt( PC^.NA , NAG_Skill , N ) = Nil then begin
+			if ( NAttValue( PC^.NA , NAG_Skill , N ) = 0 ) and not SkillMan[ N ].Hidden then begin
 				AddRPGMenuItem( SkMenu , MsgString( 'SkillName_' + BStr( N ) ) + '   (' + BStr( SkillAdvCost( PC , 0 ) ) + ' XP)' , N , SkillDescription( N ) );
 			end;
 		end;

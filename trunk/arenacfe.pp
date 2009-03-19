@@ -60,7 +60,7 @@ Procedure ResolveAfterEffects( GB: GameBoardPtr );
 implementation
 
 uses ability,effects,gearutil,ghchars,ghweapon,rpgdice,texutil,movement,
-     ui4gh,sysutils,description,action,
+     ui4gh,sysutils,description,action,ghmodule,
 {$IFDEF ASCII}
 	vidmap,vidgfx,vidinfo;
 {$ELSE}
@@ -492,73 +492,53 @@ const
 		30,35,45,50,55, 60,65,70,80,85, 90,95
 	);
 var
-	TT: Integer;	{ Trauma Target; the PC must beat this target }
-		{ with a cybernetics roll in order to avoid disfunction. }
+	TT: Integer;	{ Total Trauma }
 	SC: GearPtr;	{ Sub-Components of PC; looking for cyberware. }
 	N: Integer;	{ Number of implants. }
 	D: Integer;	{ Disfunction # }
 begin
 	{ To start with, add up all the trauma points the PC has. }
-{	TT := 0;
+	TT := 0;
 	N := 0;
 	SC := PC^.SubCom;
 	while SC <> Nil do begin
-		if ( SC^.G = GG_Modifier ) then begin
-			if SC^.V > 0 then TT := TT + SC^.V + 9;
-			Inc( N );
+		if ( SC^.G = GG_Modifier ) and ( SC^.V = GV_CharaModifier ) then begin
+			TT := TT + TraumaValue( SC );
 		end;
 		SC := SC^.Next;
 	end;
 
+	{ Reduce the total trauma by Ego/4, and reduce further if Cybertech talent known. }
+	TT := TT - ( CStat( PC , STAT_Ego ) div 4 ) - Random( 2 );
+	if HasTalent( PC , NAS_Extropian ) then TT := TT - 5;
 
 	{ If there is any trauma, the PC must make a skill roll against it. }
 	if TT > 0 then begin
-		{ The current total is gonna be a bit high for a target }
-		{ roll... reduce it and add 3. }
-		TT := ( TT div 5 ) + 3;
+		AddNAtt( PC^.NA , NAG_Condition , NAS_CyberTrauma , 1 );
+		if RollStep( SkillValue( PC , NAS_Toughness , STAT_Ego ) ) < ( TT + 5 ) then AddNAtt( PC^.NA , NAG_Condition , NAS_CyberTrauma , 1 );
 
-		{ If the PC has the EXTROPIAN talent, and fewer implants than one-third }
-		{ skill rank, there's no chance of disfunction. }
-		{ Even if there are more implants, he'll get a bonus to the disfunction roll. }
-		if HasTalent( PC , NAS_Extropian ) then begin
-			D := NAttValue( PC^.NA , NAG_Skill , 24 );
-			if ( N * 3 ) < D then begin
-				Exit;
-			end else begin
-				TT := TT - D;
+		{ If the PC has enough trauma points to consider }
+		{ getting a disfunction, deal with that now. }
+		if ( NAttValue( PC^.NA , NAG_Condition , NAS_CyberTrauma ) > 72 ) and ( Random( 3 ) = 1 ) then begin
+			{ Select a disfunction at random. The PC might }
+			{ get this if he doesn't already have it and }
+			{ if it's cheap enough. }
+			D := Random( Num_Disfunction ) + 1;
+			if ( NAttValue( PC^.NA , NAG_StatusEffect , Dis_Index[ D ] ) = 0 ) and ( Random( NAttValue( PC^.NA , NAG_Condition , NAS_CyberTrauma ) ) > Dis_Cost[ D ] ) then begin
+				SetNAtt( PC^.NA , NAG_StatusEffect , Dis_Index[ D ] , -1 );
+				SetNAtt( PC^.NA , NAG_Condition , NAS_CyberTrauma , NAttValue( PC^.NA , NAG_Condition , NAS_CyberTrauma ) div 2 );
+				DialogMsg( ReplaceHash( MsgString( 'Disfunction_' + BStr( D ) ) , GearName( PC ) ) );
 			end;
 		end;
-
-		{ If the skill roll fails, add trauma. }
-		if RollStep( SkillValue( PC , 24 ) ) < TT then begin
-			if HasTalent( PC , NAS_CyberPsycho ) and ( CurrentMental( PC ) > ( Random( 10 ) + 1 ) ) then begin
-				AddNAtt( PC^.NA , NAG_Condition , NAS_MentalDown , 1 );
-				AddMoraleDmg( PC , 2 );
-			end else begin
-				AddNAtt( PC^.NA , NAG_Condition , NAS_CyberTrauma , 1 );
-			end;
-
-			{ If the PC has enough trauma points to consider }
-			{ getting a disfunction, deal with that now. }
-			if NAttValue( PC^.NA , NAG_Condition , NAS_CyberTrauma ) > 72 then begin
-				{ Select a disfunction at random. The PC might }
-				{ get this if he doesn't already have it and }
-				{ if it's cheap enough. }
-				D := Random( Num_Disfunction ) + 1;
-				if ( NAttValue( PC^.NA , NAG_StatusEffect , Dis_Index[ D ] ) = 0 ) and ( Random( NAttValue( PC^.NA , NAG_Condition , NAS_CyberTrauma ) ) > Dis_Cost[ D ] ) then begin
-					SetNAtt( PC^.NA , NAG_StatusEffect , Dis_Index[ D ] , -1 );
-					SetNAtt( PC^.NA , NAG_Condition , NAS_CyberTrauma , NAttValue( PC^.NA , NAG_Condition , NAS_CyberTrauma ) div 2 );
-					DialogMsg( ReplaceHash( MsgString( 'Disfunction_' + BStr( D ) ) , GearName( PC ) ) );
-				end;
-			end;
-		end;
-	end;}
+	end;
 end;
 
-Procedure RegenerationCheck( MList: GearPtr );
+Procedure RegenerationCheck( MList: GearPtr; BeQuick: Boolean );
 	{ Go through MList and all siblings and all children. Any gears }
 	{ found which are of type MEAT will recover one point of damage, }
 	{ if damaged. }
+	{ If BEQUICK, don't do a cybernetics check because the PC doesn't have any chance to }
+	{ go see a doctor. }
 const
 	STAMINA_CHANCE = 30;	{ Determines speed of Stamina/Mental recovery. }
 var
@@ -654,13 +634,13 @@ begin
 				end;
 
 				{ Check the PC's cyberware... }
-				CyberneticsCheck( MList );
+				if not BeQuick then CyberneticsCheck( MList );
 			end;
 		end;
 
 		{ Check the children - InvCom and SubCom. }
-		RegenerationCheck( MList^.InvCom );
-		RegenerationCheck( MList^.SubCom );
+		RegenerationCheck( MList^.InvCom , BeQuick );
+		RegenerationCheck( MList^.SubCom , BeQuick );
 
 		{ Move to the next sibling. }
 		MList := MList^.Next;
@@ -704,7 +684,7 @@ begin
 
 	{ Once every 10 minutes, living gears regenerate. }
 	if ( GB^.ComTime mod AP_10minutes ) = 0 then begin
-		RegenerationCheck( GB^.Meks );
+		RegenerationCheck( GB^.Meks , BeQuick );
 	end;
 
 	{ Once every 3 minutes, update the status effects. }

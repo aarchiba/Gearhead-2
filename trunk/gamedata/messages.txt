@@ -392,8 +392,8 @@ SERVICES_MoveDone3 <Your package should arrive here shortly.>
 SERVICES_MoveNoCash <You can't afford it! Without the cash, we can't move anything.>
 SelectCampaignFile <Select campaign file.>
 EXIT <Exit>
-TRAINING_ImproveSkill <Improve Skills>
-TRAINING_NewSkill <Learn New Skill>
+TRAINING_ImproveSkill <Improve Specialties>
+TRAINING_NewSkill <Learn New Specialty>
 TRAINING_ReviewTalents <Review Talents>
 TRAINING_ReviewCyberware <Review Cyberware>
 TRAINING_NewTalent <Learn New Talent>
@@ -444,6 +444,16 @@ TALENT21 <Camaraderie>
 TALENTDESC21 <Your friends all want to take part in your adventure. (May recruit friends as lancemates)>
 TALENT22 <Entourage>
 TALENTDESC22 <You can command a larger group of followers. (May take two lancemates rather than one)>
+TALENT23 <Robotics>
+TALENTDESC23 <Ability to construct multipurpose robots from scratch. Using this skill costs MP and parts.>
+TALENT24 <Acrobatics>
+TALENTDESC24 <As long as you aren't wearing any armor heavier than DC:2, you get an additional defense roll in combat.>
+TALENT25 <Dominate Animal>
+TALENTDESC25 <The ability to tame certain wild animals. Using this talent costs MP.>
+TALENT26 <Pick Pockets>
+TALENTDESC26 <The ability to steal money and small items from NPCs. Using this talent costs MP and is a criminal act.>
+TALENT27 <Extropian>
+TALENTDESC27 <You are philosophically ready to deal with the loss of your humanity. (may have 5 extra points of cyberware with no chance of disfunction)>
 BUYPROMPT1 <I can give you this # for $#. What do you say, do we have a deal?>
 BUYPROMPT2 <This # can be yours for the low price of $#.>
 BUYPROMPT3 <The price for this # is $#. You won't find it cheaper anywhere else.>
@@ -695,7 +705,7 @@ SERVICES_Cyber_Cancel <Well, maybe next time...>
 SERVICES_Cyber_SelectSlot <Select the location where you'd like to implant it.>
 SERVICES_Cyber_Done1 <I have performed the implantation. There were some complications during the surgery... nothing to worry about, I'm sure.>
 SERVICES_Cyber_Done2 <I have performed the implantation. You may be tired from the anesthetic for a while. Seek treatment immediately if you experience any side effects.>
-SERVICES_Cyber_Done3 <I have performed the implantation. The operation went more smoothly than expected. You shouldn't have much trouble, but see a doctor if you experience any side effects.>
+SERVICES_Cyber_Done3 <I have performed the implantation. The operation went smoothly. You shouldn't have much trouble, but see a doctor if you experience any side effects.>
 SERVICES_Cyber_Wait <You'll need to be anaesthetized for the operation. Just lie back and relax.>
 SERVICES_Cyber_WaitPrompt <[...]>
 SERVICES_Cyber_Pay <The operation will cost $#. Is that alright?>
@@ -712,7 +722,8 @@ RANDCHAR_FHPrompt <Family History>
 RANDCHAR_FHDesc <Your family history influences your personality traits, experience, and skill aptitude.>
 RANDCHAR_FHAccept <Accept Family History>
 RANDCHAR_FHDecline <Reroll Family History>
-RANDCHAR_ASPPrompt <Points: >
+RANDCHAR_SelectStatsCap <# points>
+RANDCHAR_ASPPrompt <# points; # slots>
 RANDCHAR_ASPDesc <Allocate stat points. Move up and down to choose a stat, then right and left to increase or decrease it. Select [DONE] to finish. Any remaining points will be spent randomly.>
 RANDCHAR_SkillDesc <Purchase skill levels. Move up and down to choose a skill, then right and left to increase or decrease it. Select [DONE] when you are finished.>
 RANDCHAR_ASPDone <   [DONE]>
@@ -781,8 +792,9 @@ BACKPACK_CancelSkillUse < Cancel Skill Use>
 FHQ_SM4P_Prompt <Select a mecha for #.>
 FHQ_SP4M_Prompt <Select a pilot for #.>
 PCREPAIR_UseSkill <You use # on #.>
+NPCREPAIR_UseSkill <# uses # on #.>
 PCREPAIR_DEAD < # is beyond your help.>
-PCREPAIR_NoRepairFuel <You don't have any repair supplies!>
+PCREPAIR_NoRepairFuel <No repair supplies found!>
 PCREPAIR_NoDamageDone <You can't find any damage to fix!>
 PCREPAIR_Success <# damage points restored.>
 PCREPAIR_Failure <No damage points restored.>

@@ -76,7 +76,6 @@ uses ability,arenacfe,backpack,gearutil,ghchars,ghmodule,gearparser,
 {$ENDIF}
 
 Const
-	CredsPerDP = 1;		{ Cost to repair 1DP of damage. }
 	MaxShopItems = 21;	{ Maximum number of items in a shop. }
 
 	{ Repair Mode Constants }
@@ -572,7 +571,7 @@ Function RepairMasterCost( Master: GearPtr; Material: Integer ): LongInt;
 var
 	it: LongInt;
 begin
-	it := TotalRepairableDamage( Master , Material ) * CredsPerDP;
+	it := TotalRepairableDamage( Master , Material ) * Repair_Cost_Multiplier[ Material ];
 
 	RepairMasterCost := it;
 end;
@@ -629,7 +628,7 @@ var
 begin
 	{ Repair this part, if appropriate. }
 	TRD := TotalRepairableDamage( Master , Material );
-	ApplyRepairPoints( Master , Material , TRD );
+	ApplyRepairPoints( Master , Material , TRD , True );
 
 	{ Wait an amount of time. }
 	QuickTime( GB , AP_Minute * 5 );
@@ -1489,10 +1488,6 @@ Procedure InstallCyberware( GB: GameBoardPtr; PC , NPC: GearPtr );
 	{ - NPC will make rolls to reduce trauma rating of part. }
 	{ - Time will be advanced by 6 hours. }
 	{ - Part will be transferred and installed. }
-	const
-		RT_Average = 2;
-		RT_Good = 3;
-		RT_Bad = 1;
 
 	Procedure ClearCyberSlot( Slot,Item: GearPtr );
 		{ Clear any items currently using ITEM's CyberSlot }
@@ -1516,50 +1511,6 @@ Procedure InstallCyberware( GB: GameBoardPtr; PC , NPC: GearPtr );
 		end;
 	end;
 
-	Function ReduceTrauma( Item: GearPtr ): Integer;
-		{ As part of the deal, the cyberdoc will attempt to }
-		{ lower the trauma cost of this item. }
-	var
-		T,SkRoll,V0: Integer;
-	begin
-		{ Only modifier gears have trauma values, and not even }
-		{ all of those... better make sure. }
-		if ( Item^.G = GG_Modifier ) and ( Item^.V > 0 ) then begin
-			{ Initial trauma will be affected by the PC's }
-			{ psychological predisposition. }
-			T := NAttValue( PC^.NA , NAG_CharDescription , NAS_Pragmatic );
-			if T > 0 then begin
-				Item^.V := Item^.V * ( 400 - T ) div 400;
-			end else if T < 0 then begin
-				{ Spiritual characters are more heavily }
-				{ traumatized by cyberware. }
-				Item^.V := Item^.V + ( Abs( T ) div 2 );
-			end;
-
-			{ The NPC gets three rolls to reduce the trauma. }
-			V0 := Item^.V;
-			SkRoll := 0;
-			for t := 1 to 3 do begin
-				SkRoll := SkRoll + RollStep( SkillValue( NPC , NAS_Medicine , STAT_Knowledge ) );
-			end;
-			if SkRoll > Item^.V then begin
-				Item^.V := Item^.V - ( SkRoll - Item^.V );
-				if Item^.V < 1 then Item^.V := 1;
-			end;
-
-			if Item^.V = 1 then begin
-				ReduceTrauma := RT_Good;
-			end else if Item^.V < ( V0 div 2 ) then begin
-				ReduceTrauma := RT_Average;
-			end else begin
-				ReduceTrauma := RT_Bad;
-			end;
-
-		end else begin
-			ReduceTrauma := RT_Average;
-		end;
-	end;
-
 var
 	RPM: RPGMenuPtr;
 	N: Integer;
@@ -1573,7 +1524,7 @@ var
 	begin
 		Part := LocatePilot( PC )^.InvCom;
 		while Part <> Nil do begin
-			if AStringHasBString( SAttValue( Part^.SA , 'TYPE' ) , 'CYBER' ) then begin
+			if ( Part^.G = GG_Modifier ) and ( Part^.V = GV_CharaModifier ) then begin
 				AddRPGMenuItem( RPM , GearName( Part ) , FindGearIndex( PC , Part ) );
 			end;
 			Part := Part^.Next;
@@ -1587,7 +1538,7 @@ var
 	var
 		Cost: LongInt;
 	begin
-		Cost := SkillAdvCost( Nil , NAttValue( NPC^.NA , NAG_Skill , 24 ) ) * 2;
+		Cost := SkillAdvCost( Nil , NAttValue( NPC^.NA , NAG_Skill , NAS_Medicine ) ) * 2;
 		RPM := CreateRPGMenu( MenuItem , MenuSelect , ZONE_ShopMenu );
 		AddRPGMenuItem( RPM , MsgString( 'SERVICES_Cyber_Pay_Yes' ) , 1 );
 		AddRPGMenuItem( RPM , MsgString( 'SERVICES_Cyber_Pay_No' ) , -1 );
@@ -1612,24 +1563,29 @@ var
 	Procedure PerformInstallation;
 		{ Actually stick the part into the PC. }
 	var
-		Result: Integer;
+		SkRoll,Trauma: Integer;
 	begin
 		RPM := CreateRPGMenu( MenuItem , MenuSelect , ZONE_ShopMenu );
 		AddRPGMenuItem( RPM , MsgString( 'SERVICES_Cyber_WaitPrompt' ) , -1 );
 		ClearCyberSlot( Slot , Item );
 		DelinkGear( Item^.Parent^.InvCom , Item );
-		Result := ReduceTrauma( Item );
+
 		InsertSubCom( Slot , Item );
-		if GB <> Nil then QuickTime( GB , 3600 * 2 );
+		if GB <> Nil then QuickTime( GB , 7200 + Random( 3600 ) );
 		AddStaminaDown( PC , Random( 8 ) + Random( 8 ) + Random( 8 ) + 3 );
 		AddMentalDown( PC , Random( 8 ) + Random( 8 ) + Random( 8 ) + 3 );
-		AddReputation( PC , 7 , 3 );
 		ApplyCyberware( LocatePilot( PC ) , Item );
+
+		{ Add some cyberdisfunction points now. }
+		SkRoll := RollStep( SkillValue( NPC , NAS_Medicine , STAT_Knowledge ) );
+		if SkRoll < 1 then SkRoll := 1;
+		Trauma := ( TraumaValue( Item ) * 10 ) div SkRoll;
+		AddNAtt( FindMaster( Slot )^.NA , NAG_Condition , NAS_CyberTrauma , Trauma );
 
 		CHAT_Message := MsgString( 'SERVICES_Cyber_Wait' );
 		N := SelectMenu( RPM , @ServiceRedraw );
 		DisposeRPGMenu( RPM );
-		CHAT_Message := MsgString( 'SERVICES_Cyber_Done' + BStr( Result ) );
+		CHAT_Message := MsgString( 'SERVICES_Cyber_Done' + BStr( Random( 3 ) + 1 ) );
 
 		DialogMsg( ReplaceHash( MsgString( 'SERVICES_Cyber_Confirmation' ) , GearName( Item ) ) );
 	end;
@@ -1669,17 +1625,13 @@ begin
 						PerformInstallation;
 					end else begin
 						CHAT_Message := MsgString( 'SERVICES_Cyber_Cancel' );
-
 					end;
 				end else begin
 					CHAT_Message := MsgString( 'SERVICES_Cyber_Cancel' );
-
 				end;
-
 			end;
 		end else begin
 			CHAT_Message := MsgString( 'SERVICES_Cyber_Cancel' );
-
 		end;
 
 	end else begin
@@ -1773,7 +1725,7 @@ begin
 
 		{ If the shopkeeper knows Cybertech, allow the implantation }
 		{ of modules. }
-		if ( NAttValue( NPC^.NA , NAG_Skill , 24 ) > 0 ) then AddRPGMenuItem( RPM , MsgString( 'SERVICES_CybInstall' ) , -7 );
+		if (( NAttValue( NPC^.NA , NAG_Skill , NAS_Medicine ) > 0 ) and ( NAttValue( NPC^.NA , NAG_Skill , NAS_Science ) > 0 )) or AStringHasBString( Stuff , 'BodyMod' ) then AddRPGMenuItem( RPM , MsgString( 'SERVICES_CybInstall' ) , -7 );
 
 		AddRPGMenuItem( RPM , MsgString( 'SERVICES_SellStuff' ) , -5 );
 

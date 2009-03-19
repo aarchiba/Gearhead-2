@@ -473,7 +473,7 @@ Procedure TacticsMain( Camp: CampaignPtr );
 	{ PRECONDITION: Camp^.GB^.Scene <> Nil }
 var
 	M: GearPtr;
-	Team: Integer;
+	Team,T: Integer;
 	FoundPCToAct: Boolean;
 	FX_String,FX_Desc: String;
 begin
@@ -537,7 +537,7 @@ begin
 			end;
 
 			{ Advance the clock by 60 seconds. }
-			QuickTime( Camp^.GB , TacticsRoundLength );
+			for T := 1 to TacticsRoundLength do AdvanceGameClock( Camp^.GB , False );
 			AddNAtt( Camp^.GB^.Scene^.NA , NAG_SceneData , NAS_TacticsTurnStart , TacticsRoundLength );
 			HandleTriggers( Camp^.GB );
 

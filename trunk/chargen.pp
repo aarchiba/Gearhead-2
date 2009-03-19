@@ -571,7 +571,7 @@ begin
 		LegalFactionList := CreateFactionList( SAttValue( PC^.SA , 'HOMETOWN_FACTIONS' ) , Job );
 
 
-		if CanEdit then begin
+		if CanEdit and ( LegalFactionList <> Nil ) then begin
 			{ Create the menus. }
 			RPM := CreateRPGMenu( MenuItem , MenuSelect , ZONE_CharGenMenu );
 			AttachMenuDesc( RPM , ZONE_CharGenPrompt );
@@ -585,6 +585,7 @@ begin
 				F := F^.Next;
 			end;
 			RPMSortAlpha( RPM );
+
 			{ If this job absolutely requires a faction, don't add the "NoFac" option }
 			{ to the menu. }
 			if not NeedsFaction( Job ) then AddRPGMenuItem( RPM , MsgString( 'RANDCHAR_NoFactionPlease' ) , -1 );
@@ -592,9 +593,10 @@ begin
 			{ If there are any factions in the menu, select one. }
 			if RPM^.NumItem > 1 then begin
 				N := SelectMenu( RPM , @RandCharRedraw );
-				F := SeekCurrentLevelGear( LegalFactionList , GG_Faction , N );
-				if ( F = Nil ) and NeedsFaction( Job ) then F := SelectRandomGear( LegalFactionList );
-			end else F := Nil;
+			end else N := RPM^.FirstItem^.Value;
+
+			F := SeekCurrentLevelGear( LegalFactionList , GG_Faction , N );
+			if ( F = Nil ) and NeedsFaction( Job ) then F := SelectRandomGear( LegalFactionList );
 
 			{ Get rid of the menu. }
 			DisposeRPGMenu( RPM );
@@ -673,7 +675,7 @@ begin
 {$ENDIF}
 
 	repeat
-		RCCaption := MsgString( 'RANDCHAR_ASPPrompt' ) + BStr( StatPt );
+		RCCaption := ReplaceHash( MsgString( 'RANDCHAR_SelectStatsCap' ) , BStr( StatPt ) );
 		T := SelectMenu( RPM , @RandCharRedraw );
 
 		if ( T = 1 ) and ( RPM^.selectitem <= NumGearStats ) and ( StatPt > 0 ) then begin
@@ -852,7 +854,7 @@ Procedure SpendSkillPointsRandomly( PC: GearPtr; var PCSkills: SkillArray; Skill
 			if CGPCHasSkill( PC , PCSkills , SkT ) then Inc( NPS );
 		end;
 
-		NumFreeSkillSlots := NumberOfSkillSlots( PC ) - 10 - NPS;
+		NumFreeSkillSlots := NumberOfSkillSlots( PC ) - 6 - NPS;
 	end;
 	Procedure AddNewSkill;
 		{ Try to add a new skill to this PC. }
@@ -947,6 +949,11 @@ var
 		msg := msg + BStr( NAttValue( PC^.NA , NAG_Skill , N ) + PCSkills[ N ] );
 		SkillSelectorMsg := msg;
 	end;
+	Function FreeSkillSlots: Integer;
+		{ Return the number of free skill slots. }
+	begin
+		FreeSkillSlots := NumberOfSkillSlots( PC ) - NumPickedSkills( PC , PCSkills );
+	end;
 begin
 	ClearSkillArray( PCSkills );
 
@@ -980,7 +987,9 @@ begin
 {$ENDIF}
 
 	repeat
-		RCCaption := MsgString( 'RANDCHAR_ASPPrompt' ) + BStr( SkillPt );
+		RCCaption := ReplaceHash( MsgString( 'RANDCHAR_ASPPrompt' ) , BStr( SkillPt ) );
+		RCCaption := ReplaceHash( RCCaption , BStr( FreeSkillSlots ) );
+
 		T := SelectMenu( RPM , @RandCharRedraw );
 
 		if ( T > 0 ) and ( SkillPt > 0 ) then begin
@@ -988,12 +997,13 @@ begin
 			{ Figure out which skill we're changing... }
 			SkNum := RPMLocateByPosition(RPM , RPM^.selectitem )^.value;
 
-			{ Only increase if the skill < 10... }
 			if ( SkNum > 0 ) and ( SkNum <= NumSkill ) and CanIncreaseSkill( PCSkills[ SkNum ] , SkillPt ) then begin
-				CGImproveSkill( PCSkills, SkNum , SkillPt );
+				if CGPCHasSkill( PC , PCSkills , SkNum ) or ( FreeSkillSlots > 0 ) then begin
+					CGImproveSkill( PCSkills, SkNum , SkillPt );
 
-				{ Replace the message line. }
-				RPMLocateByPosition(RPM , RPM^.selectitem )^.msg := SkillSelectorMsg( SkNum );
+					{ Replace the message line. }
+					RPMLocateByPosition(RPM , RPM^.selectitem )^.msg := SkillSelectorMsg( SkNum );
+				end;
 			end; 
 
 		end else if ( T = -1 ) then begin
@@ -1451,7 +1461,7 @@ begin
 
 	{ Adjust cash & free skill points based on Age. }
 	AddNAtt( PC^.NA , NAG_Experience , NAS_TotalXP , ( N + 5 ) * 25 );
-	AddNAtt( PC^.NA , NAG_Experience , NAS_Credits , 35000 - N * 3000 + Random( 100 ) );
+	AddNAtt( PC^.NA , NAG_Experience , NAS_Credits , 150000 - N * 5000 + Random( 1000 ) );
 	RCPC := PC;
 
 	{ Next, select home town. }

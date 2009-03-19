@@ -362,33 +362,30 @@
 		Recharge 3
 	end
 
-	GenRepairFuel 45
+	RepairFuel 45
 	name <Spare Parts>
 	scale 0
 	desig <SPAREPARTS-1>
-	mass 1
 
-	MechaRepairFuel 250
+	RepairFuel 250
 	name <Mecha Parts>
 	scale 0
 	desig <SPAREPARTS-2>
 	mass 1
 
-	SkillModifier 0
+	SkillMechaSys
 	name <Sentinel FCS>
 	desig <SENTINELFCS>
 	CyberSlot <ARTILLERY>
-	type <CYBER MECHA>
 	SkillModMechaGunnery
 	SkillModAmount 2
 
-	SkillModifier 0
+	SkillMechaSys
 	name <Self Defense Matrix>
 	desig <SELFDEFENSEMATRIX>
 	CyberSlot <FIGHTING>
-	type <CYBER MECHA>
 	SkillModMechaFighting
-	SkillModAmount 2
+	SkillModAmount 1
 
 	Food 30
 	name <Red Bear Liver>

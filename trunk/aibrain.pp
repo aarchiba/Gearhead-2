@@ -48,7 +48,7 @@ implementation
 
 uses ability,action,arenacfe,effects,movement,gearutil,specialsys,
      ghchars,ghmodule,ghweapon,gearparser,ghprop,interact,rpgdice,skilluse,
-     texutil,ui4gh,grabgear,arenascript,menugear,ghsupport,
+     texutil,ui4gh,grabgear,arenascript,menugear,ghsupport,backpack,
 {$IFDEF ASCII}
 	vidgfx,vidmap;
 {$ELSE}
@@ -1123,33 +1123,8 @@ end;
 Procedure AIRepair( GB: GameBoardPtr; NPC,Target,RepairFuel: GearPtr; Skill: Integer );
 	{ This procedure acts as a frontend for the repair skill bits. }
 	{ It's analogous to the DoFieldRepair skill in the backpack unit. }
-var
-	N: LongInt;
-	msg: String;
 begin
-{	N := UseRepairSkill( GB , NPC , Target , Skill );
-	msg := MsgString( 'NPCREPAIR_UseSkill' );
-	msg := ReplaceHash( msg , GearName( NPC ) );
-	msg := ReplaceHash( msg , GearName( Target ) );
-
-	{ Inform the user of the success. }
-	if N > 0 then begin
-		msg := msg + ' ' + MsgString( 'NPCREPAIR_Success' );
-		msg := ReplaceHash( msg , BStr( N ) );
-	end else begin
-		msg := msg + ' ' + MsgString( 'NPCREPAIR_Failure' );
-	end;
-
-	DialogMsg( msg );
-
-	RepairFuel^.V := RepairFuel^.V - N;
-	if RepairFuel^.V < 1 then begin
-		if IsSubCom( RepairFuel ) then begin
-			RemoveGear( RepairFuel^.Parent^.SubCom , RepairFuel );
-		end else if IsInvCom( RepairFuel ) then begin
-			RemoveGear( RepairFuel^.Parent^.InvCom , RepairFuel );
-		end;
-	end;}
+	DoFieldRepair( GB , NPC , Target , Skill );
 end;
 
 Function SelectRepairTarget( GB: GameBoardPtr; Mek: GearPtr; Skill: Integer ): GearPtr;

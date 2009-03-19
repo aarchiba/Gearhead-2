@@ -426,7 +426,7 @@ begin
 	{ Make a skill roll for the robot stats. You only get one skill roll; }
 	{ the target number is the stat in question. If your skill roll for any }
 	{ of the stats fail, you can make up for it by spending build points. }
-	SkRoll := SkillRoll( GB , PC , NAS_Science , STAT_Knowledge , R_SkillLevelNeeded( Form ) + 5 , 0 , True , True );
+	SkRoll := SkillRoll( GB , PC , NAS_Science , STAT_Knowledge , R_SkillLevelNeeded( Form ) + 5 , ToolBonus( PC , -NAS_Robotics ) , True , True );
 	SkRank := SkillRank( PC , NAS_Science );
 
 	{ Check the skill roll against each of the form's stats. }

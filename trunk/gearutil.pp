@@ -168,6 +168,7 @@ Function SkillAdvCost( PC: GearPtr; CurrentLevel: Integer ): LongInt;
 
 Function IsExternalPart( Master,Part: GearPtr ): Boolean;
 
+Function ToolBonus( Master: GearPtr; Skill: Integer ): Integer;
 
 implementation
 
@@ -1345,7 +1346,7 @@ begin
 		GG_Treasure:	if CalcCost then it := 5
 				else it := 0;
 		GG_Tool:	it := ToolValue( Part );
-		GG_RepairFuel:	it := Part^.V;
+		GG_RepairFuel:	it := RepairFuelValue( Part );
 		GG_Consumable:	if CalcCost then it := FoodValue( Part )
 				else it := 0;
 		GG_Modifier:	it := ModifierCost( Part );
@@ -3150,5 +3151,36 @@ begin
 	IsExternalPart := IsXP;
 end;
 
+Function ToolBonus( Master: GearPtr; Skill: Integer ): Integer;
+	{ Return the tool bonus that this master has. If Skill is positive it refers to a skill; }
+	{ if negative, it affects a talent. }
+	Function MustBeEquipped: Boolean;
+		{ Return TRUE if this tool must be equipped, or FALSE otherwise. }
+	begin
+		if ( Skill >= 1 ) and ( Skill <= NumSkill ) then begin
+			MustBeEquipped := SkillMan[ Skill ].Usage = 0;
+		end else if ( Skill <= -1 ) and ( Skill >= -NumTalent ) then begin
+			MustBeEquipped := Talent_Usage[ Abs( Skill ) ] = 0;
+		end else MustBeEquipped := True;
+	end;
+var
+	Tool: GearPtr;
+	TB: Integer;
+begin
+	if MustBeEquipped then begin
+		Tool := SeekItem( Master , GG_Tool , Skill , False );
+	end else begin
+		{ If this is an activatable skill, it doesn't matter if }
+		{ the relevant tool has been equipped or not. }
+		Tool := SeekItem( Master , GG_Tool , Skill , True );
+	end;
+	if Tool <> Nil then begin
+		ToolBonus := Tool^.V;
+	end else if ( Skill >= 1 ) and ( Skill <= NumSkill ) and ( SkillMan[ Skill ].ToolNeeded <> TOOL_None ) then begin
+		ToolBonus := -5;
+	end else begin
+		ToolBonus := 0;
+	end;
+end;
 
 end.

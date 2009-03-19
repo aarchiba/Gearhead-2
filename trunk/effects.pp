@@ -982,6 +982,9 @@ var
 	DefRoll,SkMod: Integer;
 	CanUseAcrobatics: Boolean;
 begin
+	{ You need the talent to even attempt acrobatics. }
+	if not HasTalent( TMaster , NAS_Acrobatics ) then Exit( 0 );
+
 	CanUseAcrobatics := False;
 	SkMod := 0;
 	if TMaster^.G = GG_Character then begin
@@ -1007,7 +1010,7 @@ begin
 	{ If it's possible, do the acrobatics attempt. }
 	if CanUseAcrobatics then begin
 		{ Make an attack roll to block. }
-		DefRoll := SkillRoll( GB , TMaster , NAS_Dodge , STAT_Speed , SkRoll , SkMod , False , True );
+		DefRoll := SkillRoll( GB , TMaster , NAS_Dodge , STAT_Speed , SkRoll , SkMod + ToolBonus( TMaster , -NAS_Acrobatics ) , False , True );
 	end;
 
 	{ Return the resultant defense roll. }
@@ -1779,7 +1782,7 @@ begin
 
 		{ Do some repairs. }
 		RepairRoll := RollStep( ER.FXDice );
-		ApplyRepairPoints( Target , RepSkill , RepairRoll );
+		ApplyRepairPoints( Target , RepSkill , RepairRoll , False );
 
 		{ Find out how much repairable damage we have now... }
 		D1 := TotalRepairableDamage( Target , RepSkill );

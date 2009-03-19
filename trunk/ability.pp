@@ -273,20 +273,7 @@ begin
 		if ( SkRk < 1 ) then SkMod := -2;
 
 		{ Check for tools. }
-		if SkillMan[ Skill ].ToolNeeded <> TOOL_None then begin
-			{ If the tool is mandatory, it doesn't matter if it's been equipped or not. }
-			Tool := SeekItem( Master , GG_Tool , Skill , True );
-			if Tool <> Nil then begin
-				SkMod := SkMod + Tool^.V;
-			end else begin
-				SkMod := SkMod - 5;
-			end;
-		end else begin
-			Tool := SeekItem( Master , GG_Tool , Skill , False );
-			if Tool <> Nil then begin
-				SkMod := SkMod + Tool^.V;
-			end;
-		end;
+		SkMod := SkMod + ToolBonus( Master , Skill );
 
 		{ If this is a combat skill, check for RAGE. }
 		if ( Skill <= 10 ) and ( NAttValue( Master^.NA , NAG_Talent , NAS_Rage ) <> 0 ) then begin

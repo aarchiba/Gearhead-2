@@ -60,7 +60,7 @@ Content
 	Msg%id%01_1 <\PERSONA %param% : Keep your paws off the merchandise!>
 	Msg%id%01_2 <\PERSONA %param% : I saw that!>
 	inv
-		MechaRepairFuel 5000
+		RepairFuel 5000
 		name <Mecha Parts>
 		mass 40
 	end
@@ -74,7 +74,7 @@ Content
 	Msg%id%01_1 <[ \PERSONA %param% ]: Keep your paws off the merchandise!>
 	Msg%id%01_2 <[ \PERSONA %param% ]: I saw that!>
 	inv
-		GenRepairFuel 250
+		RepairFuel 250
 		name <Spare Parts>
 		mass 10
 	end

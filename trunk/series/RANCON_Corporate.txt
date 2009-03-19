@@ -236,11 +236,10 @@ Content
 	Get%1% <ifNotAccessArmory if= L%id%01 0 L= %id%01 1 SetItemStolen %1% AddLawful -5 if= L%param% 0  Alert %id%01>
 	Msg%id%01 <Suddenly an alarm sounds!>
 	inv
-		StatModifier 30
+		StatCyberware
 		name <Advanced Cybereyes>
 		desc <Experimental new cybereyes.>
 		CyberSlot <EYES>
-		type <CYBER CHARA>
 		Reflexes 3
 		Perception 4
 		Craft 2
