@@ -112,6 +112,7 @@ Torso
 
 		BeamGun 14
 		Name <Plasma Core Gun>
+		type <BRUTAL>
 		mass -3
 		Integral
 		Acc 1
@@ -159,9 +160,9 @@ Arm
 			Speed 1
 			Mass -7
 			caliber <120mm ferrous>
+			Magazine 50
 			sub
 				Ammo 20
-				Magazine 50
 				Mass -5
 				caliber <120mm ferrous>
 			end
@@ -194,9 +195,9 @@ Arm
 			Speed 1
 			Mass -7
 			caliber <120mm ferrous>
+			Magazine 50
 			sub
 				Ammo 22
-				Magazine 50
 				Mass -5
 				caliber <120mm ferrous>
 			end

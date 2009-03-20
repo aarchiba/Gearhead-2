@@ -467,7 +467,6 @@ Procedure DoFieldRepair( GB: GameBoardPtr; PC , Item: GearPtr; Skill: Integer );
 	{ The PC is going to use one of the repair skills. Call the }
 	{ standard procedure, then print output. }
 var
-	RMaster: GearPtr;
 	msg: String;
 	Dmg0,DDmg,T: LongInt;
 	SFX_Check: Array [1..Num_Status_FX] of Boolean;

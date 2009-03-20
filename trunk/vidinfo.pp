@@ -379,17 +379,13 @@ end;
 
 Procedure CharStatDisplay( M: GearPtr; X0,Y0: Integer );
 	{ Display the stats for this character. }
-const
-	StatName: Array [1..8] of String = (
-	'Re','Bo','Sp','Pe','Cr','Eg','Kn','Ch'
-	);
 var
 	T,S: Integer;
 begin
 	for t := 1 to 4 do begin
 		TextColor( LightGray );
-		TextOut( X0 + ( T - 1 ) * 6 , Y0 + 0 , StatName[t] );
-		TextOut( X0 + ( T - 1 ) * 6 , Y0 + 1 , StatName[t+4] );
+		TextOut( X0 + ( T - 1 ) * 6 , Y0 + 0 , MsgString( 'STATABRV_' + BStr( t ) ) );
+		TextOut( X0 + ( T - 1 ) * 6 , Y0 + 1 , MsgString( 'STATABRV_' + BStr( t + 4 ) ) );
 
 		S := CSTat( M , T );
 		if S > M^.Stat[ T ] then TextColor( LightGreen )

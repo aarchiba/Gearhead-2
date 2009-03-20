@@ -9,9 +9,9 @@
 	caliber <50mm cannister>
 	Range 4
 	Scale 2
+	Magazine 5
 	sub
 		Ammo 5
-		Magazine 5
 		caliber <50mm cannister>
 	end
 
@@ -22,40 +22,40 @@
 	Range 3
 	BV 3
 	scale 2
+	Magazine 40
 	sub
 		Ammo 2
-		Magazine 40
 		caliber <20mm caseless>
 	end
 
 	Gun 4
 	name <Machine Cannon>
 	desig <MAC-4>
-	caliber <20mm caseless>
+	caliber <45mm caseless>
 	Range 6
 	BV 3
 	scale 2
+	Magazine 60
 	sub
 		Ammo 4
-		Magazine 60
-		caliber <20mm caseless>
+		caliber <45mm caseless>
 	end
 
 
 	Gun 5
 	name <Vulcan Cannon>
 	desig <VC-5>
-	caliber <25mm caseless>
+	caliber <45mm caseless>
 	type <INTERCEPT>
 	mass -7
 	scale 2
 	range 3
 	acc -2
 	BV 7
+	magazine 80
 	sub
 		ammo 5
-		caliber <25mm caseless>
-		magazine 80
+		caliber <45mm caseless>
 	end
 
 	Gun 8
@@ -65,10 +65,10 @@
 	caliber <30mm ferrous>
 	Range 6
 	BV 4
+	Magazine 100
 	sub
 		Ammo 8
 		caliber <30mm ferrous>
-		Magazine 100
 		mass -8
 	end
 
@@ -79,11 +79,11 @@
 	caliber <50mm ferrous>
 	Range 7
 	BV 3
+	Magazine 60
 	sub
 		Ammo 16
 		caliber <50mm ferrous>
 		mass -8
-		Magazine 60
 	end
 
 	Gun 12
@@ -93,10 +93,113 @@
 	caliber <70mm ferrous>
 	Range 7
 	Recharge 1
+	Magazine 24
 	sub
 		Ammo 12
-		Magazine 16
 		caliber <70mm ferrous>
+	end
+
+	Gun 9
+	scale 2
+	Name <Shaka Cannon>
+	desig <SC-9>
+	Caliber <150mm Shells>
+	range 5
+	Magazine 15
+	sub
+		Ammo 9
+		Caliber <150mm Shells>
+	end
+
+	Gun 6
+	scale 2
+	Name <Repeater Cannon>
+	desig <SC-6>
+	Caliber <99mm Shells>
+	range 5
+	BV 1
+	Magazine 30
+	sub
+		Ammo 6
+		Caliber <99mm Shells>
+	end
+
+	Gun 7
+	name <Mecha Blunderbuss>
+	desig <MB-7>
+	caliber <ferrous fragments>
+	Scale 2
+	type <SCATTER BRUTAL>
+	range 5
+	Acc 1
+	Speed 2
+	BV 1
+	Magazine 50
+	sub
+		Ammo 7
+		caliber <ferrous fragments>
+	end
+
+	Gun 17
+	scale 2
+	name <Gunner Bazooka>
+	desig <GBAZ-17>
+	caliber <70cm self-propelled>
+	range 7
+	scale 2
+	mass -4
+	recharge 1
+	Magazine 8
+	sub
+		Ammo 17
+		caliber <70cm self-propelled>
+		type <BLAST 2 BRUTAL>
+	end
+
+	Gun 17
+	name <Mecha Bazooka>
+	desig <MBAZ-17>
+	caliber <70cm self-propelled>
+	range 7
+	scale 2
+	mass -4
+	Magazine 12
+	sub
+		Ammo 17
+		caliber <70cm self-propelled>
+		type <BLAST 2 BRUTAL>
+	end
+
+	Gun 5
+	Scale 2
+	name <Mech Rifle>
+	caliber <65mm caseless>
+	desig <MRIF-5>
+	Speed 2
+	Range 6
+	mass -4
+	Magazine 120
+	sub
+		Ammo 5
+		caliber <65mm caseless>
+		mass -3
+	end
+
+	Gun 4
+	Scale 2
+	name <Skybolt Rifle>
+	desig <SKBOR-4>
+	caliber <15mm ferrous needle>
+	desc <This light railgun fires electrically charged needles, potentially disabling the target's control system.>
+	range 6
+	Acc 2
+	Speed 3
+	Mass -1
+	Magazine 20
+	sub
+		Ammo 4
+		caliber <15mm ferrous needle>
+		type <HAYWIRE>
 	end
 
 	Gun 24
@@ -106,9 +209,9 @@
 	caliber <120mm ferrous>
 	Range 8
 	Recharge 1
+	Magazine 16
 	sub
 		Ammo 24
-		Magazine 10
 		caliber <120mm ferrous>
 	end
 
@@ -1775,9 +1878,9 @@ sub
 		Range 6
 		BV 3
 		scale 2
+		Magazine 60
 		sub
 			Ammo 4
-			Magazine 60
 			caliber <20mm caseless>
 		end
 	end
@@ -1804,9 +1907,9 @@ sub
 		Range 6
 		BV 3
 		scale 2
+		Magazine 60
 		sub
 			Ammo 4
-			Magazine 60
 			caliber <20mm caseless>
 		end
 	end

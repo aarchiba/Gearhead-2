@@ -48,11 +48,11 @@ Arm
 			Acc -1
 			Range 5
 			BV 4
-			caliber <8mm sliver>
+			caliber <16mm ferrous>
+			Magazine 60
 			sub
 				Ammo 1
-				caliber <8mm sliver>
-				Magazine 60
+				caliber <16mm ferrous>
 			end
 		end
 	end
@@ -162,10 +162,10 @@ Arm
 			Acc 1
 			Range 6
 			Speed 3
+			Magazine 30
 			sub
 				Ammo 8
 				caliber <30mm ferrous>
-				Magazine 30
 			end
 		end
 

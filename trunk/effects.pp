@@ -646,11 +646,7 @@ begin
 		end;
 
 	end else if Attacker^.G = GG_Ammo then begin
-		{ Grenades use Heavy Weapons/Artillery skill by }
-		{ default, but may redefine this freely. I did so }
-		{ to allow the creation of shurikens, cans of mace, }
-		{ and other derivitaves from the grenade code. }
-		ASkill := Attacker^.Stat[ STAT_GrenadeSkill ];
+		ASkill := NAS_MechaGunnery;
 
 	end else begin
 		{ Not a weapon- use Fighting/Martial Arts. }
@@ -672,19 +668,9 @@ Function AttackStatNeeded( Attacker: GearPtr ): Integer;
 var
 	AtStat: Integer;
 begin
-	if Attacker^.G = GG_Weapon then begin
-		if ( Attacker^.S = GS_Missile ) then begin
-			AtStat := STAT_Perception;
-		end else if ( Attacker^.S = GS_Melee ) or ( Attacker^.S = GS_EMelee ) then begin
-			AtStat := STAT_Reflexes;
-		end else if Attacker^.V > 10 then begin
-			AtStat := STAT_Perception;
-		end else begin
-			AtStat := STAT_Reflexes;
-		end;
-	end else if Attacker^.G = GG_Ammo then begin
-		{ Grenades use Perception. }
-		AtStat := STAT_Perception;
+	if ( Attacker^.G = GG_Weapon ) or ( Attacker^.G = GG_Ammo ) then begin
+		{ Weapons have their attack stat stored. }
+		AtStat := Attacker^.Stat[ STAT_AttackStat ];
 	end else begin
 		{ Not a weapon- use Body. }
 		AtStat := STAT_Body;

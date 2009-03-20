@@ -75,7 +75,7 @@ begin
 		WeaponThemeClass := WT_MeleeWeapon;
 	end else if W^.S = GS_Missile then begin
 		WeaponThemeClass := WT_MissileLauncher;
-	end else if AttackSkillNeeded( W ) = 2 then begin
+	end else if W^.V > 10 then begin
 		WeaponThemeClass := WT_BigGun;
 	end else begin
 		WeaponThemeClass := WT_SmallGun;

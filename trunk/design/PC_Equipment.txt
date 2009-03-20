@@ -112,6 +112,7 @@ Mass -2
 Melee 5
 Name <Pick>
 desc <A tool for digging. Also a passable weapon.>
+UsesBody
 category <MINING TOOL>
 factions <GENERAL>
 SDL_PORTRAIT <item_pick.png>
@@ -122,6 +123,7 @@ Speed 1
 Melee 4
 Name <Cricket Bat>
 desc <An archaic sporting bat. Also a passable weapon.>
+UsesBody
 category <SPORTS>
 factions <GENERAL>
 SDL_PORTRAIT <item_cricketbat.png>
@@ -199,6 +201,7 @@ EMelee 19
 Name <Chainsaw>
 Type <BRUTAL>
 SDL_PORTRAIT <item_chainsaw.png>
+UsesBody
 Mass 12
 Acc -1
 desc <An energy-cell powered cutting tool. Particularly suited for cutting through materials.>
@@ -215,6 +218,7 @@ EMelee 19
 Name <Combat Chainsaw>
 Type <BRUTAL>
 SDL_PORTRAIT <item_chainsaw.png>
+UsesBody
 Mass 8
 Acc 1
 Speed 3
@@ -248,6 +252,7 @@ end
 Melee 12
 Name <Gyro Mace>
 Type <BRUTAL>
+UsesBody
 Mass -7
 legality 10
 Acc 2
@@ -295,6 +300,7 @@ Melee 2
 Name <Whip>
 Acc -2
 Speed 4
+UsesSpeed
 Type <EXTEND FLAIL>
 desc <A long flexible lash used for hitting people.>
 category <WEAPON MELEE>
@@ -334,11 +340,11 @@ Mass -1
 Range 9
 Acc 1
 Speed 3
+magazine 30
 sub
 	Ammo 8
 	name <5mm Rifle Clip>
 	caliber <5mm rifle>
-	magazine 30
 	SDL_PORTRAIT <item_ammoclip.png>
 end
 
@@ -358,7 +364,6 @@ sub
 	Ammo 8
 	name <5mm Rifle Clip>
 	caliber <5mm rifle>
-	magazine 30
 	SDL_PORTRAIT <item_ammoclip.png>
 end
 
@@ -374,11 +379,11 @@ legality 0
 Mass -3
 Range 6
 Speed 5
+magazine 40
 sub
 	Ammo 8
 	name <5mm Rifle Clip>
 	caliber <5mm rifle>
-	magazine 40
 	category <AMMO>
 	factions <GENERAL>
 	SDL_PORTRAIT <item_ammoclip.png>
@@ -397,11 +402,11 @@ Mass -4
 Range 6
 Speed 4
 BV 2
+magazine 60
 sub
 	Ammo 8
 	name <5mm Rifle Clip>
 	caliber <5mm rifle>
-	magazine 60
 	category <AMMO>
 	factions <GENERAL>
 	SDL_PORTRAIT <item_ammoclip.png>
@@ -419,12 +424,12 @@ Range 5
 Acc 1
 Recharge 3
 Legality 5
+magazine 16
 sub
 	Ammo 15
 	name <18mm Shotgun Clip>
 	caliber <18mm shell>
 	type <SCATTER>
-	magazine 16
 	category <AMMO>
 	factions <GENERAL>
 	SDL_PORTRAIT <item_shellsammo.png>
@@ -442,12 +447,12 @@ Range 5
 Acc 1
 Recharge 5
 Legality 10
+magazine 32
 sub
 	Ammo 15
 	name <18mm Shotgun Clip>
 	caliber <18mm shell>
 	type <SCATTER>
-	magazine 32
 	category <AMMO>
 	factions <GENERAL>
 	SDL_PORTRAIT <item_shellsammo.png>
@@ -466,12 +471,12 @@ Acc 1
 Recharge 3
 BV 1
 Legality 15
+magazine 24
 sub
 	Ammo 15
 	name <18mm Shotgun Clip>
 	caliber <18mm shell>
 	type <SCATTER>
-	magazine 24
 	category <AMMO>
 	factions <GENERAL>
 	SDL_PORTRAIT <item_shellsammo.png>
@@ -488,11 +493,11 @@ category <WEAPON MISSILE ANTIQUE>
 factions <GENERAL>
 SDL_PORTRAIT <item_peacemakerrevolver.png>
 Legality -15
+Magazine 6
 sub
 	Ammo 5
 	name <Revolver Cylinder>
 	desc <A departure from the traditional cartridge, this clip comes in the form of a cylinder with the bullets preloaded.>
-	Magazine 6
 	category <AMMO>
 	factions <GENERAL>
 	caliber <.32 revolver>
@@ -510,11 +515,11 @@ category <WEAPON MISSILE ANTIQUE>
 factions <GENERAL>
 SDL_PORTRAIT <item_peacemakerrevolver.png>
 Legality -10
+Magazine 6
 sub
 	Ammo 8
 	name <Revolver Cylinder>
 	desc <A departure from the traditional cartridge, this clip comes in the form of a cylinder with the bullets preloaded.>
-	Magazine 6
 	category <AMMO>
 	factions <GENERAL>
 	caliber <.32 revolver>
@@ -604,6 +609,14 @@ Factions <GENERAL>
 Speed 1
 
 GunAddOn 0
+Name <Gyro Mount>
+desc <Reduces recoil in heavy weapons.>
+Category <ACCESSORY>
+Factions <GENERAL>
+Acc 1
+Speed 1
+
+GunAddOn 0
 Name <Bayonet>
 desc <Adds close-combat capabilities to a firearm.>
 Category <ACCESSORY>
@@ -623,52 +636,23 @@ Category <ACCESSORY>
 Factions <GENERAL>
 legality 5
 sub
-	MLauncher 1
+	Gun 8
 	Name <Aux Grenade Launcher>
 	desc <A grenade launcher designed as auxiliary support for a lighter firearm.>
+	Mass -7
+	Integral
 	Range 6
+	caliber <20mm cannister>
+	UsesPerception
+	Magazine 5
 	sub
-		Rockets 10
-		Name <AGL Clip>
+		Ammo 8
+		name <AGL Clip>
 		desc <Explosive grenades designed exclusively for an Aux Grenade Launcher.>
+		caliber <20mm cannister>
 		Type <BLAST 4 BRUTAL>
-		Magazine 1
-		legality 5
 	end
 end
-
-Rockets 10
-Name <AGL Clip (Smoke)>
-desc <Allows an Aux Grenade Launcher to fire smoke grenades.>
-Category <ACCESSORY>
-Factions <GENERAL>
-Magazine 1
-Type <BLAST 6 SMOKE>
-legality 5
-
-Rockets 5
-Name <AGL Clip (Toxin)>
-desc <Allows an Aux Grenade Launcher to fire toxic gas-releasing grenades.>
-Category <ACCESSORY>
-Factions <GENERAL>
-Magazine 1
-Type <BLAST 6 TOXIN>
-legality 50
-
-HeavyAddOn 0
-Name <Laser Guidance System>
-desc <Provides an improved laser-based targeting system to heavy weapons.>
-Category <ACCESSORY>
-Factions <GENERAL>
-Acc 2
-
-HeavyAddOn 0
-Name <Gyro Mount>
-desc <Reduces recoil in heavy weapons.>
-Category <ACCESSORY>
-Factions <GENERAL>
-Acc 1
-Speed 1
 
 MeleeAddOn 0
 Name <Ergonomic Grip>
@@ -746,19 +730,6 @@ Category <ACCESSORY>
 Factions <GENERAL>
 Type <THROWN>
 
-MeleeAddOn 0
-Name <Sonic Token>
-desc <Releases a sonic burst when used in conjunction with a melee weapon.>
-Category <ACCESSORY>
-Factions <GENERAL>
-sub
-	BeamGun 8
-	Name <Sonic Wave>
-	desc <A sonic burst that damages multiple targets.>
-	Range 5
-	Acc -1
-	Type <SCATTER>
-end
 
 %  ******************
 %  ***  GRENADES  ***
@@ -894,11 +865,11 @@ desc <A PreZero ancient Japanese weapon, literally "thrown blade." The four-blad
 Category <WEAPON MELEE EXOTIC NINJA>
 Factions <GENERAL>
 SDL_PORTRAIT <item_shurikens.png>
-GrenadeSkill 2
 Mass -1
 BV 4
 Type <SWARM>
 legality -5
+UsesSpeed
 
 Grenade 13
 Name <MonoShuriken>
@@ -906,10 +877,10 @@ desc <A redesign of the shuriken, this is manufactured with a monomolecularly sh
 Category <WEAPON MELEE EXOTIC NINJA>
 Factions <GENERAL>
 SDL_PORTRAIT <item_shurikens.png>
-GrenadeSkill 2
 Mass -1
 BV 9
 Type <ARMORPIERCING SWARM>
+UsesSpeed
 
 %  ***************
 %  ***  ARMOR  ***
@@ -1211,11 +1182,11 @@ sub
 	Mass -3
 	Range 7
 	Speed 5
+	magazine 40
 	sub
 		Ammo 6
 		name <5mm Rifle Clip>
 		caliber <5mm rifle>
-		magazine 40
 		category <AMMO>
 		factions <GENERAL>
 	end

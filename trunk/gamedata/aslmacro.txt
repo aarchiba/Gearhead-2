@@ -252,7 +252,7 @@ IfMedicine <ifSkillTest NAS_Medicine STAT_Knowledge ?>
 IfShopping <ifSkillTest NAS_Shopping STAT_Charm ?>
 IfMartialArts <ifSkillTest NAS_CloseCombat STAT_Body ?>
 IfToughness <ifSkillTest NAS_Toughness STAT_Ego ?>
-IfDancing <ifSkillTest NAS_Conversation STAT_Speed ?>
+IfDancing <ifSkillTest NAS_Athletics STAT_Charm ?>
 SeekEntrance <SeekGate ParentSceneID ?>
 IfNPCSurrendered <GrabNPC ? if= GNAtt NAG_EpisodeData NAS_SurrenderStatus NAV_NowSurrendered>
 IfChatNPCSurrendered <GrabChatNPC if= GNAtt NAG_EpisodeData NAS_SurrenderStatus NAV_NowSurrendered>

@@ -67,7 +67,7 @@ var
 begin
 	{ Take the default name for the weapon from the WeaponName }
 	{ function in ghweapon. }
-	desc := BasicWeaponDesc( Weapon );
+	desc := BasicWeaponDesc( Weapon ) + ' (' + MsgSTring( 'STATABRV_' + BStr( Weapon^.Stat[ STAT_AttackStat ] ) ) + ')';
 
 	if Weapon^.G = GG_Weapon then begin
 		Master := FindMaster( Weapon );

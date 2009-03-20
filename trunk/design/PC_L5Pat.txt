@@ -11,6 +11,7 @@
 Melee 20
 Name <MonoWhip>
 Speed 6
+UsesSpeed
 Acc -2
 Type <ARMORPIERCING EXTEND FLAIL>
 Mass -18
@@ -25,6 +26,7 @@ Name <Electro-Whip>
 Acc -2
 mass -7
 Speed 5
+UsesSpeed
 Type <EXTEND FLAIL HAYWIRE>
 desc <This whip transmits a powerful electric charge.>
 category <WEAPON MELEE>
@@ -49,6 +51,7 @@ Name <Nerve Whip>
 Acc -2
 mass -6
 Speed 5
+UsesSpeed
 Type <EXTEND FLAIL STONE>
 desc <This whip transmits an electric pulse which can temporarily disrupt the nervous system of its target.>
 category <WEAPON MELEE>
@@ -108,11 +111,11 @@ Mass -3
 Range 6
 Speed 4
 BV 3
+magazine 80
 sub
 	Ammo 8
 	name <5mm Auto Clip>
 	caliber <5mm auto>
-	magazine 80
 	category <AMMO>
 	factions <GENERAL>
 	SDL_PORTRAIT <item_ammoclip.png>
@@ -131,12 +134,12 @@ Range 4
 Speed 3
 Legality -5
 Mass -4
+magazine 40
 sub
 	Ammo 6
 	name <Glitter Pistol Clip>
 	caliber <Crystalline Shard>
 	type <SCATTER BRUTAL>
-	magazine 40
 	mass -1
 	SDL_PORTRAIT <item_ammoclip.png>
 end
@@ -155,11 +158,11 @@ BV 2
 Speed 4
 Legality 5
 Mass -2
+magazine 90
 sub
 	Ammo 4
 	name <2mm Ferrous Clip>
 	caliber <2mm ferrous>
-	magazine 90
 	mass -1
 	SDL_PORTRAIT <item_ammoclip.png>
 end
@@ -173,17 +176,18 @@ factions <MAQUI FCOMS RISHI>
 desc <A magnetic cannon that fires tiny slivers of metal at extreme velocity.>
 sdl_portrait <item_combatrifle.png>
 caliber <2mm ferrous>
+UsesPerception
 Mass -8
 Acc 1
 Range 8
 BV 8
 Speed 3
 legality 5
+magazine 450
 sub
 	Ammo 4
 	name <2mm Ferrous Clip>
 	caliber <2mm ferrous>
-	magazine 450
 	mass -4
 	SDL_PORTRAIT <item_ammoclip.png>
 end
@@ -197,17 +201,18 @@ factions <MAQUI FCOMS RISHI>
 desc <A magnetic cannon that fires tiny slivers of metal at extreme velocity.>
 sdl_portrait <item_combatrifle.png>
 caliber <2mm ferrous>
+UsesPerception
 Mass -8
 Acc 1
 Range 9
 BV 8
 Speed 4
 legality 10
+magazine 450
 sub
 	Ammo 4
 	name <2mm Ferrous Clip>
 	caliber <2mm ferrous>
-	magazine 450
 	mass -4
 	SDL_PORTRAIT <item_ammoclip.png>
 end
@@ -226,11 +231,11 @@ Range 3
 Acc 2
 Speed 4
 legality -5
+magazine 12
 sub
 	Ammo 8
 	name <6mm Pistol Clip>
 	caliber <6mm pistol>
-	magazine 12
 	SDL_PORTRAIT <item_ammoclip.png>
 end
 
@@ -247,11 +252,11 @@ Range 3
 Acc 1
 Speed 5
 BV 3
+magazine 40
 sub
 	Ammo 3
 	name <5mm Automatic Clip>
 	caliber <5mm auto>
-	magazine 40
 	SDL_PORTRAIT <item_ammoclip.png>
 end
 
@@ -269,11 +274,11 @@ Acc 1
 Speed 5
 BV 5
 Legality 0
+magazine 90
 sub
 	Ammo 3
 	name <5mm Automatic Clip>
 	caliber <5mm auto>
-	magazine 90
 	SDL_PORTRAIT <item_ammoclip.png>
 end
 
@@ -283,17 +288,17 @@ desc <A high caliber gyrojet rifle.>
 desig <IG-28>
 caliber <22mm cone>
 category <WEAPON MISSILE CONTRABAND>
-factions <MAQUI FCOMS RISHI CRIHN>
+factions <MAQUI FCOMS RISHI CRIHN REDMA BOHEM COMET MUGLE HOELL ROCKE SILKN>
 sdl_sprite <item_bigrifle.png>
 Range 8
 Speed 3
 Legality 5
+Magazine 20
 sub
 	Ammo 15
 	name <Cone Rifle Clip>
 	caliber <22mm cone>
 	type <ARMORPIERCING>
-	Magazine 20
 end
 
 Gun 24
@@ -309,12 +314,12 @@ acc -1
 Speed 2
 Legality 10
 mass -14
+Magazine 12
 sub
 	Ammo 24
 	name <Raketen Clip>
 	caliber <60mm rocket>
 	type <BLAST 3 BRUTAL>
-	Magazine 12
 end
 
 
@@ -438,7 +443,7 @@ desig <T51>
 desc <A rapid firing light laser cannon.>
 sdl_portrait <>
 category <WEAPON MISSILE>
-factions <GENERAL>
+factions <MAQUI FCOMS RISHI BOHEM  PRIVA CRIHN REDMA  HOELL COMET MUGLE  SILKN ROCKE AEGSF>
 Range 7
 Mass -8
 Acc 1
@@ -465,7 +470,7 @@ MeleeAddOn 0
 Name <Bladed Haft>
 desc <Extends the reach of a weapon and adds a secondary blade.>
 Category <ACCESSORY>
-Factions <MAQUI FCOMS BOHEM PRIVA CRIHN RISHI HOELL>
+Factions <MAQUI FCOMS BOHEM PRIVA CRIHN RISHI HOELL REDMA>
 Type <EXTEND>
 Acc 1
 Mass 1
@@ -475,6 +480,23 @@ sub
 	name <Haft Blade>
 	Acc 1
 end
+
+MeleeAddOn 2
+Name <Inferno Token>
+desc <Creates an intense plasma field around a weapon. This plasma may also be used to attack at a distance.>
+Category <ACCESSORY>
+Factions <MAQUI FCOMS RISHI CRIHN REDMA BOHEM COMET MUGLE HOELL ROCKE SILKN>
+sub
+	BeamGun 6
+	Name <Fireball>
+	desc <>
+	Integral
+	Range 4
+	Acc -1
+	Type <BRUTAL>
+	mass -5
+end
+
 
 %  ******************
 %  ***  GRENADES  ***

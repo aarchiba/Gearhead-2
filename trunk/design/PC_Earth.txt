@@ -308,3 +308,22 @@ Mass -7
 Memo
 legality -5
 
+
+%  ************************
+%  ***  WEAPON ADD-ONS  ***
+%  ************************
+
+MeleeAddOn 0
+Name <Sonic Token>
+desc <Releases a sonic burst when used in conjunction with a melee weapon.>
+Category <ACCESSORY>
+Factions <FEDER>
+sub
+	BeamGun 8
+	Name <Sonic Wave>
+	desc <A sonic burst that damages multiple targets.>
+	Range 5
+	Acc -1
+	Type <SCATTER>
+end
+

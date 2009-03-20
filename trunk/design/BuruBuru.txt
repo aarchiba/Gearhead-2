@@ -45,15 +45,7 @@ Arm
 	sub
 		Hand
 		inv
-			Gun 9
-			Name <Shaka Cannon>
-			Caliber <150mm Shells>
-			range 5
-			sub
-				Ammo 9
-				Caliber <150mm Shells>
-				Magazine 15
-			end
+			STC SC-9
 		end
 	end
 
@@ -136,16 +128,7 @@ Arm
 	sub
 		Hand
 		inv
-			Gun 6
-			Name <Repeater Cannon>
-			Caliber <90mm Shells>
-			range 5
-			BV 1
-			sub
-				Ammo 6
-				Caliber <90mm Shells>
-				Magazine 30
-			end
+			STC SC-6
 		end
 		HeavyActuator 1
 
@@ -329,19 +312,7 @@ Arm
 	sub
 		Hand
 		inv
-			Gun 17
-			name <Gunner Bazooka>
-			caliber <70mm self-propelled>
-			range 7
-			scale 2
-			mass -4
-			recharge 1
-			sub
-				Ammo 17
-				Magazine 8
-				caliber <70mm self-propelled>
-				type <BLAST 2 BRUTAL>
-			end
+			STC GBAZ-17
 		end
 	end
 
@@ -423,15 +394,7 @@ Arm
 	sub
 		Hand
 		inv
-			Gun 9
-			Name <Shaka Cannon>
-			Caliber <150mm Shells>
-			range 5
-			sub
-				Ammo 9
-				Caliber <150mm Shells>
-				Magazine 15
-			end
+			STC SC-9
 		end
 	end
 
@@ -522,20 +485,7 @@ Arm
 	sub
 		Hand
 		inv
-			Gun 7
-			name <Mecha Blunderbuss>
-			caliber <ferrous fragments>
-			Scale 2
-			type <SCATTER BRUTAL>
-			range 5
-			Acc 1
-			Speed 2
-			BV 1
-			sub
-				Ammo 7
-				Magazine 50
-				caliber <ferrous fragments>
-			end
+			STC MB-7
 		end
 	end
 	inv
@@ -634,16 +584,7 @@ Arm
 	sub
 		Hand
 		inv
-			Gun 6
-			Name <Repeater Cannon>
-			Caliber <90mm Shells>
-			range 5
-			BV 1
-			sub
-				Ammo 6
-				Caliber <90mm Shells>
-				Magazine 30
-			end
+			STC SC-6
 		end
 	end
 
@@ -824,15 +765,15 @@ Arm
 		inv
 			Gun 5
 			name <Chain Cannon>
-			caliber <35mm caseless>
+			caliber <70mm caseless>
 			mass -4
 			range 4
 			acc -2
 			BV 4
+			magazine 100
 			sub
 				ammo 5
-				caliber <35mm caseless>
-				magazine 100
+				caliber <70mm caseless>
 			end
 		end
 		HeavyActuator 1
@@ -933,10 +874,10 @@ Arm
 			Speed 4
 			BV 4
 			Acc -1
+			Magazine 120
 			sub
 				Ammo 3
 				caliber <Construction Bolts>
-				Magazine 120
 			end
 		end
 	end

@@ -71,7 +71,7 @@ Const
 	STAT_Recharge = 3;
 	STAT_BurstValue = 4;
 
-	STAT_GrenadeSkill = 5;
+	STAT_AttackStat = 5;
 
 	{For ammunition}
 	STAT_AmmoPresent = 7;
@@ -108,7 +108,7 @@ Const
 		'STRAIN','COMPLEX','GASATTACK','NONLETHAL','EXPERIMENTAL'
 	);
 	AA_Cost: Array [1..Num_Attack_Attributes] of SmallInt = (
-		15, 15, 20,  9, 11,     150, 20, 10,15,30,
+		15, 15, 20, 10, 11,     150, 20, 10,15,30,
 		85, 25, 15, 20, 25,	12,2,100, 20,10,
 		 7,  7, 10,  5, 13
 	);
@@ -306,6 +306,8 @@ Const
 Function ScaleDC( DC,Scale: LongInt ): LongInt;
 Function DCName( DC,Scale: LongInt ): String;
 
+Function DefaultWeaponStat( Weapon: GearPtr ): Integer;
+
 Procedure InitWeapon( Weapon: GearPtr );
 Procedure InitAmmo( Ammo: GearPtr );
 Function WeaponBaseDamage( Weapon: GearPtr ): Integer;
@@ -375,6 +377,20 @@ begin
 	DCName := msg;
 end;
 
+Function DefaultWeaponStat( Weapon: GearPtr ): Integer;
+	{ Return the default stat which this weapon should use. }
+begin
+	if ( Weapon^.S = GS_Missile ) then begin
+		DefaultWeaponStat := STAT_Perception;
+	end else if ( Weapon^.S = GS_Melee ) or ( Weapon^.S = GS_EMelee ) then begin
+		DefaultWeaponStat := STAT_Reflexes;
+	end else if Weapon^.V > 10 then begin
+		DefaultWeaponStat := STAT_Perception;
+	end else begin
+		DefaultWeaponStat := STAT_Reflexes;
+	end;
+end;
+
 Procedure InitWeapon( Weapon: GearPtr );
 	{Given Weapon's size and type, initialize all of its}
 	{fields to the default values.}
@@ -391,6 +407,9 @@ begin
 
 	end;
 
+	{ Set the default weapon stat. }
+	Weapon^.Stat[ STAT_AttackStat ] := DefaultWeaponStat( Weapon );
+
 	{ Set default recharge period for all weapons. }
 	Weapon^.Stat[STAT_Recharge] := 2;
 end;
@@ -399,9 +418,18 @@ Procedure InitAmmo( Ammo: GearPtr );
 	{Initialize an ammo gear.}
 begin
 	if Ammo^.S = GS_Missile then begin
-		Ammo^.Stat[STAT_Range] := ( Ammo^.V + 5 ) div 2;
+		{ For missiles, set a default range. }
+		Ammo^.Stat[STAT_Range] := ( Ammo^.V ) div 3 + 2;
+		if ( Ammo^.Parent <> Nil ) and ( Ammo^.Parent^.G = GG_Weapon ) and ( Ammo^.V > 0 ) then begin
+			Ammo^.Stat[ STAT_AmmoPresent ] := ( Ammo^.Parent^.V * 10 ) div Ammo^.V;
+		end;
+	end else begin
+		{ For regular ammo, set the magazine size. }
+		if ( Ammo^.Parent <> Nil ) and ( Ammo^.Parent^.G = GG_Weapon ) then begin
+			Ammo^.Stat[ STAT_AmmoPresent ] := Ammo^.Parent^.Stat[ STAT_AmmoPresent ];
+		end;
 	end;
-	Ammo^.Stat[ STAT_GrenadeSkill ] := NAS_MechaGunnery;
+	Ammo^.Stat[ STAT_AttackStat ] := STAT_Perception;
 end;
 
 Function WeaponBaseDamage( Weapon: GearPtr ): Integer;
@@ -546,8 +574,9 @@ begin
 		NotGoodAmmo := ( Mag^.V * Mag^.Stat[STAT_AmmoPresent] ) > ( Wep^.V * 10 )
 
 	{ Everything is okay. This is probably good ammunition. }
+	{  Check caliber and magazine size. }
 	else
-		NotGoodAmmo := UpCase( SAttValue( Mag^.SA , SATT_CALIBER ) ) <> UpCase( SAttValue( Wep^.SA , SATT_CALIBER ) );
+		NotGoodAmmo := ( UpCase( SAttValue( Mag^.SA , SATT_CALIBER ) ) <> UpCase( SAttValue( Wep^.SA , SATT_CALIBER ) ) ) or ( Mag^.Stat[ STAT_AmmoPresent ] > Wep^.Stat[ STAT_AmmoPresent ] );
 end;
 
 Procedure CheckWeaponRange( Wpn: GearPtr );
@@ -585,6 +614,16 @@ begin
 		else if Wpn^.Stat[4] > 10 then Wpn^.Stat[4] := 10;
 	end else begin
 		Wpn^.Stat[4] := 0;
+	end;
+
+	{ Stat 5 = Attack Stat }
+	if ( Wpn^.Stat[ STAT_AttackStat ] < 1 ) or ( Wpn^.Stat[ STAT_AttackStat ] > NumGearStats ) then Wpn^.Stat[ STAT_AttackStat ] := DefaultWeaponStat( Wpn );
+
+	{ Stat 7 = Magazine Size }
+	if Wpn^.S = GS_Ballistic then begin
+		if Wpn^.Stat[ STAT_AmmoPresent ] < 1 then Wpn^.Stat[ STAT_AmmoPresent ] := 1;
+	end else begin
+		Wpn^.Stat[ STAT_AmmoPresent ] := 0;
 	end;
 end;
 
@@ -672,10 +711,6 @@ begin
 		{ Stat[4] = Burst Value }
 		if Ammo^.Stat[4] < 0 then Ammo^.Stat[4] := 0
 		else if Ammo^.Stat[4] > 10 then Ammo^.Stat[4] := 10;
-
-		{ Stat[5] = Skill }
-		if Ammo^.Stat[5] < 1 then Ammo^.Stat[5] := 2
-		else if Ammo^.Stat[5] > 5 then Ammo^.Stat[5] := 2;
 
 	end else begin
 		Ammo^.Stat[4] := 0;
@@ -819,6 +854,20 @@ begin
 	{ Each point of recharge time is 2/5 the weapon's cost, or }
 	{ a little less than half. }
 	AddToTotal( 1 + 2 * Part^.Stat[ STAT_Recharge ] , 5 );
+
+	{ STAT 5 - Attack Stat }
+	{ If a nonstandard attack stat is chosen, increase the weapon's cost }
+	{ by 5%. }
+	if Part^.Stat[ STAT_AttackStat ] <> DefaultWeaponStat( Part ) then AddToTotal( 21 , 20 );
+
+	{ Stat 7 - Magazine }
+	if ( Part^.S = GS_Ballistic ) and ( Part^.Stat[ STAT_AmmoPresent ] < 20 ) then begin
+		if Part^.Stat[ STAT_AmmoPresent ] < 10 then begin
+			AddToTotal( 6 + Part^.Stat[ STAT_AmmoPresent ] , 20 );
+		end else begin
+			AddToTotal( 30 + Part^.Stat[ STAT_AmmoPresent ] , 50 );
+		end;
+	end;
 
 	{ Add Attack Attributes. }
 	AddToTotal( AttackAttributeValue( Part ) , 10 );

@@ -177,7 +177,7 @@ var
 	Pilot: GearPtr;
 begin
 	{ Determine the base skill value, and initialize the message. }
-	msg := PilotName( PC ) + ' rolls ' + MSgString( 'SKILLNAME_' + BStr( Skill ) );
+	msg := PilotName( PC ) + ' rolls ' + MSgString( 'SKILLNAME_' + BStr( Skill ) ) + '+' + MSgString( 'STATNAME_' + BStr( Stat ) ) + ' ';
 	if CasualUse and ( GB <> Nil ) then begin
 		SkRank := TeamSkill( GB , NAV_DefPlayerTeam , Skill , Stat );
 	end else begin

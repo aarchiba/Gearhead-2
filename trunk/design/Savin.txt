@@ -104,10 +104,10 @@ Arm
 			Range 7
 			caliber <60cm Nuclear>
 			mass -6
+			Magazine 12
 			sub
 				Ammo 10
 				Type <ARMORPIERCING HYPER>
-				Magazine 12
 				caliber <60cm Nuclear>
 			end
 		end
@@ -959,17 +959,10 @@ Arm
 		Mount
 		Name <Right Arm Mount>
 		inv
-			Gun 24
-			name <Heavy Gauss Rifle>
-			caliber <120mm ferrous>
-			Range 8
-			Recharge 2
+			STC GR-24
+			desig <FS-01>
 			mass -14
-			sub
-				Ammo 24
-				Magazine 20
-				caliber <120mm ferrous>
-			end
+			Recharge 2
 		end
 
 		ArcJet 3
@@ -1247,13 +1240,14 @@ Leg
 			Gun 13
 			name <Fire Mortar>
 			caliber <Chemical>
+			desig <DS-02>
 			range 5
 			Speed 1
 			type <BLAST 2>
 			mass -6
+			Magazine 15
 			sub
 				Ammo 13
-				Magazine 15
 				caliber <Chemical>
 				type <BURN>
 			end
@@ -1280,13 +1274,14 @@ Leg
 			Gun 13
 			name <Fire Mortar>
 			caliber <Chemical>
+			desig <DS-02>
 			range 5
 			Speed 1
 			type <BLAST 2>
 			mass -6
+			Magazine 15
 			sub
 				Ammo 13
-				Magazine 15
 				caliber <Chemical>
 				type <BURN>
 			end

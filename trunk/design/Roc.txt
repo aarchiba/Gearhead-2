@@ -130,21 +130,8 @@ Wing
 		Mount
 		Name <Left Wing Mount>
 		inv
-			Gun 4
-			Scale 2
-			name <Skybolt Rifle>
-			caliber <15mm ferrous needle>
-			desc <This light railgun fires electrically charged needles, potentially disabling the target's control system.>
-			range 6
-			Acc 2
-			Speed 3
-			Mass -2
-			sub
-				Ammo 4
-				Magazine 20
-				caliber <15mm ferrous needle>
-				type <HAYWIRE>
-			end
+			STC SKBOR-4
+			mass -2
 		end
 
 		Flight 5

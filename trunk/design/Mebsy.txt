@@ -32,13 +32,13 @@ Arm
 		inv
 			Gun 5
 			name <Mag Rifle>
-			caliber <20mm ferrous>
+			caliber <25mm ferrous>
 			speed 3
 			Range 6
+			Magazine 40
 			sub
 				Ammo 5
-				caliber <20mm ferrous>
-				Magazine 40
+				caliber <25mm ferrous>
 			end
 		end
 	end
@@ -127,19 +127,7 @@ Arm
 		Hand
 		name <Right Hand>
 		inv
-			Gun 17
-			name <Gunner Bazooka>
-			caliber <70mm self-propelled>
-			range 7
-			scale 2
-			mass -4
-			recharge 1
-			sub
-				Ammo 17
-				Magazine 8
-				caliber <70mm self-propelled>
-				type <BLAST 2 BRUTAL>
-			end
+			STC GBAZ-17
 		end
 	end
 

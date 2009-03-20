@@ -40,39 +40,39 @@ Theme 11
 		Gun 11
 		Scale 2
 		name <Storm Bomber>
-		caliber <50mm self-propelled>
+		caliber <50cm self-propelled>
 		Range 5
 		Recharge 1
+		Magazine 12
 		sub
 			Ammo 11
-			Magazine 12
-			caliber <50mm self-propelled>
+			caliber <50cm self-propelled>
 			type <BLAST 1>
 		end
 
 		Gun 12
 		Scale 2
 		name <Polaris Cannon>
-		caliber <40mm caseless>
+		caliber <140mm caseless>
 		Range 5
 		Recharge 2
+		Magazine 30
 		sub
 			Ammo 12
-			Magazine 30
-			caliber <40mm caseless>
+			caliber <140mm caseless>
 		end
 
 		Gun 12
 		Scale 2
 		name <Thunder Bringer>
-		caliber <65mm shell>
+		caliber <165mm shell>
 		Range 6
 		Recharge 3
 		acc -2
+		Magazine 25
 		sub
 			Ammo 12
-			Magazine 25
-			caliber <65mm shell>
+			caliber <165mm shell>
 		end
 
 		Gun 12
@@ -81,23 +81,23 @@ Theme 11
 		caliber <70mm ferrous>
 		Range 7
 		Recharge 2
+		Magazine 16
 		sub
 			Ammo 12
-			Magazine 16
 			caliber <70mm ferrous>
 			type <HAYWIRE>
 		end
 
 		Gun 14
 		name <Storm Cannon>
-		caliber <72mm capacitor>
+		caliber <210mm capacitor>
 		range 9
 		scale 2
 		speed 1
+		Magazine 16
 		sub
 			Ammo 14
-			Magazine 16
-			caliber <72mm capacitor>
+			caliber <210mm capacitor>
 			type <BLAST 3 OVERLOAD>
 		end
 
@@ -107,11 +107,11 @@ Theme 11
 		caliber <50mm ferrous>
 		Range 7
 		Speed 4
+		Magazine 60
 		sub
 			Ammo 16
 			caliber <50mm ferrous>
 			mass -10
-			Magazine 60
 		end
 
 		Beamgun 11
@@ -300,9 +300,9 @@ Theme 11
 		Acc 1
 		Speed 4
 		Mass -1
+		Magazine 20
 		sub
 			Ammo 5
-			Magazine 20
 			caliber <15mm ferrous needle>
 			type <HAYWIRE>
 		end
@@ -321,14 +321,14 @@ Theme 11
 
 		Gun 9
 		name <Storm Caller>
-		caliber <58mm capacitor>
+		caliber <158mm capacitor>
 		range 9
 		scale 2
 		speed 4
+		Magazine 24
 		sub
 			Ammo 9
-			Magazine 24
-			caliber <58mm capacitor>
+			caliber <158mm capacitor>
 			type <BLAST 3 OVERLOAD>
 		end
 
@@ -373,14 +373,14 @@ Theme 12
 		range 4
 		acc -1
 
-		Gun 8
+		Gun 7
 		Scale 2
 		name <Fiend Rifle>
 		Range 6
 		caliber <40mm ferrous>
+		Magazine 30
 		sub
-			Ammo 8
-			Magazine 30
+			Ammo 7
 			caliber <40mm ferrous>
 			type <SCATTER BRUTAL>
 		end
@@ -392,95 +392,95 @@ Theme 12
 		Recharge 1
 		scale 2
 		type <Line>
+		Magazine 25
 		sub
 			Ammo 10
-			Magazine 25
 			caliber <Chemical>
 			type <BRUTAL>
 		end
 
 		Gun 4
 		name <Malebranch Rifle>
-		caliber <20mm caseless>
+		caliber <30mm caseless>
 		Range 6
 		BV 2
 		speed 3
 		scale 2
 		mass -2
+		Magazine 60
 		sub
 			Ammo 4
-			Magazine 60
-			caliber <20mm caseless>
+			caliber <30mm caseless>
 		end
 
 		Gun 7
 		name <Punishment Cannon>
-		caliber <50mm self-propelled>
+		caliber <30cm self-propelled>
 		range 8
 		scale 2
 		Speed 3
+		Magazine 24
 		sub
 			Ammo 7
-			Magazine 24
-			caliber <50mm self-propelled>
+			caliber <30cm self-propelled>
 			type <BLAST 2 BURN BRUTAL>
 		end
 
 		Gun 6
 		name <Beast Cannon>
-		caliber <25mm caseless>
+		caliber <70mm shell>
 		mass -6
 		scale 2
 		range 6
 		acc -1
 		BV 5
+		magazine 90
 		sub
 			ammo 6
-			caliber <25mm caseless>
-			magazine 90
+			caliber <70mm shell>
 		end
 
 		Gun 9
 		name <Desecrator>
-		caliber <50mm self-propelled>
+		caliber <50cm self-propelled>
 		range 8
 		scale 2
 		Speed 3
+		Magazine 24
 		sub
 			Ammo 9
-			Magazine 24
-			caliber <50mm self-propelled>
+			caliber <50cm self-propelled>
 			type <BLAST 2 BURN BRUTAL>
 		end
 
 		Gun 10
 		name <Spite Rifle>
-		caliber <40mm cannister>
+		caliber <20cm cannister>
 		range 8
 		scale 2
 		Speed 4
 		Acc 2
 		mass -5
+		Magazine 24
 		sub
 			Ammo 10
-			Magazine 24
-			caliber <40mm cannister>
+			caliber <20cm cannister>
 			type <SCATTER BRUTAL HAYWIRE>
 		end
 
 		Gun 9
 		name <Diablo Shotgun>
-		caliber <80mm shell>
+		caliber <150mm shell>
 		mass -5
 		scale 2
 		range 7
 		acc 2
 		Speed 4
 		type <BRUTAL>
+		magazine 30
 		sub
 			ammo 9
-			caliber <80mm shell>
-			magazine 30
+			caliber <150mm shell>
 			type <SCATTER BURN>
 		end
 
@@ -491,10 +491,10 @@ Theme 12
 		Range 6
 		BV 4
 		type <ARMORPIERCING>
+		Magazine 100
 		sub
 			Ammo 8
 			caliber <30mm ferrous>
-			Magazine 100
 			mass -8
 
 			Melee 9
@@ -510,14 +510,14 @@ Theme 12
 		Gun 11
 		Scale 2
 		name <Hell Bomber>
-		caliber <50mm self-propelled>
+		caliber <40cm self-propelled>
 		Range 5
 		Recharge 1
 		Acc -1
+		Magazine 8
 		sub
 			Ammo 11
-			Magazine 8
-			caliber <50mm self-propelled>
+			caliber <40cm self-propelled>
 			type <BLAST 2>
 		end
 
@@ -528,10 +528,10 @@ Theme 12
 		Range 7
 		Acc -2
 		Recharge 1
+		Magazine 16
 		sub
 			Ammo 12
 			name <Firestarter Shells>
-			Magazine 16
 			caliber <70mm ferrous>
 			type <BURN>
 		end
@@ -543,9 +543,9 @@ Theme 12
 		Recharge 1
 		scale 2
 		type <Line>
+		Magazine 30
 		sub
 			Ammo 13
-			Magazine 30
 			caliber <Chemical>
 			type <BURN>
 		end
@@ -555,9 +555,9 @@ Theme 12
 		name <Fiend Cannon>
 		Range 7
 		caliber <60mm ferrous>
+		Magazine 20
 		sub
 			Ammo 11
-			Magazine 20
 			caliber <60mm ferrous>
 			type <SCATTER BRUTAL>
 		end
@@ -568,9 +568,9 @@ Theme 12
 		caliber <40mm ferrous>
 		BV 1
 		range 6
+		Magazine 40
 		sub
 			Ammo 12
-			Magazine 40
 			caliber <40mm ferrous>
 			type <BRUTAL>
 		end
@@ -580,9 +580,9 @@ Theme 12
 		scale 2
 		caliber <160mm cannister>
 		range 7
+		Magazine 24
 		sub
 			Ammo 17
-			Magazine 24
 			caliber <160mm cannister>
 			type <SCATTER HAYWIRE BRUTAL>
 		end
@@ -592,9 +592,9 @@ Theme 12
 		name <Dante Cannon>
 		Range 8
 		caliber <120mm ferrous>
+		Magazine 20
 		sub
 			Ammo 25
-			Magazine 20
 			caliber <120mm ferrous>
 			type <SCATTER BRUTAL>
 		end
@@ -602,14 +602,14 @@ Theme 12
 		Gun 13
 		name <Hades Cannon>
 		scale 2
-		caliber <65mm self-propelled>
+		caliber <15cm self-propelled>
 		range 6
 		BV 2
 		type <SWARM>
+		Magazine 60
 		sub
 			Ammo 13
-			Magazine 60
-			caliber <65mm self-propelled>
+			caliber <15cm self-propelled>
 			type <BURN>
 		end
 
@@ -618,9 +618,9 @@ Theme 12
 		caliber <80cm nuclear>
 		range 7
 		scale 2
+		Magazine 12
 		sub
 			Ammo 18
-			Magazine 12
 			caliber <80cm nuclear>
 			type <ARMORPIERCING HYPER>
 		end
@@ -631,9 +631,9 @@ Theme 12
 		range 7
 		scale 2
 		Acc 2
+		Magazine 16
 		sub
 			Ammo 18
-			Magazine 16
 			caliber <80cm nuclear>
 			type <ARMORPIERCING HYPER>
 		end

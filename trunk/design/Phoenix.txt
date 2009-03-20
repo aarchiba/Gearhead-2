@@ -69,13 +69,13 @@ Storage
 			Range 8
 			Name <L-Cannon>
 			Mass -5
-			caliber <65mm self-propelled>
+			caliber <130mm self-propelled>
+			Magazine 20
 			sub
 				Ammo 12
-				caliber <65mm self-propelled>
+				caliber <130mm self-propelled>
 				Name <L-Cannon Clip (EMP)>
 				Type <HAYWIRE>
-				Magazine 20
 			end
 		end
 	end
@@ -94,16 +94,16 @@ Arm
 		inv
 			Gun 5
 			name <Phoenix Rifle>
-			caliber <20mm caseless>
+			caliber <40mm shell>
 			Range 5
 			BV 2
 			Speed 3
 			Acc 1
 			mass -3
+			Magazine 60
 			sub
 				Ammo 5
-				caliber <20mm caseless>
-				Magazine 60
+				caliber <40mm shell>
 				mass -3
 			end
 		end

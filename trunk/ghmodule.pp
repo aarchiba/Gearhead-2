@@ -154,13 +154,6 @@ begin
 	BaseArmorCost := it;
 end;
 
-Function PrimaryModuleForm( Part: GearPtr ): Integer;
-	{ Return the primary form of this module. }
-begin
-	if Part^.Stat[ STAT_PrimaryModuleForm ] <> 0 then PrimaryModuleForm := Part^.Stat[ STAT_PrimaryModuleForm ]
-	else PrimaryModuleForm := Part^.S;
-end;
-
 Procedure InitModule( Part: GearPtr );
 	{ This doesn't really do much except initialize the primary form. }
 begin
@@ -224,8 +217,7 @@ begin
 	if Part^.G <> GG_Module then Exit(0);
 
 	{ The mass of a part is the maximum of its forms. }
-	if Part^.Stat[ STAT_PrimaryModuleForm ] = 0 then form := Part^.S
-	else form := Part^.Stat[ STAT_PrimaryModuleForm ];
+	form := Part^.Stat[ STAT_PrimaryModuleForm ];
 	if ( Part^.Stat[ STAT_VariableModuleForm ] <> 0 ) and ( ModuleHP[ Part^.Stat[ STAT_VariableModuleForm ] ] > ModuleHP[ form ] ) then form := Part^.Stat[ STAT_VariableModuleForm ];
 
 	Case ModuleHP[ form ] of
@@ -314,19 +306,19 @@ var
 begin
 	if Equip^.G = GG_Harness then begin
 		{ Harnesses fit if their type is the same as the module being checked. }
-		it := Equip^.S = PrimaryModuleForm( Slot );
-	end else if PrimaryModuleForm( Slot ) = GS_Arm then begin
+		it := Equip^.S = Slot^.Stat[ STAT_PrimaryModuleForm ];
+	end else if  Slot^.Stat[ STAT_PrimaryModuleForm ] = GS_Arm then begin
 		Case Equip^.G of
 			GG_ExArmor:	begin
-					it := PrimaryModuleForm( Slot ) = Equip^.S;
+					it := Slot^.Stat[ STAT_PrimaryModuleForm ] = Equip^.S;
 					end;
 			GG_Shield:	it := true;
 			else it := False;
 		end;
-	end else if PrimaryModuleForm( Slot ) = GS_Tail then begin
+	end else if Slot^.Stat[ STAT_PrimaryModuleForm ] = GS_Tail then begin
 		Case Equip^.G of
 			GG_ExArmor:	begin
-					it := PrimaryModuleForm( Slot ) = Equip^.S;
+					it := Slot^.Stat[ STAT_PrimaryModuleForm ] = Equip^.S;
 					end;
 			GG_Shield:	it := true;
 			else it := False;
@@ -334,7 +326,7 @@ begin
 	end else begin
 		Case Equip^.G of
 			GG_ExArmor:	begin
-					it := PrimaryModuleForm( Slot ) = Equip^.S;
+					it := Slot^.Stat[ STAT_PrimaryModuleForm ] = Equip^.S;
 					end;
 			else it := False;
 		end;
@@ -373,7 +365,7 @@ begin
 			GG_Weapon:	IsLegalModuleSub := True;
 			GG_MoveSys:	IsLegalModuleSub := True;
 			GG_Holder:	begin
-						if ( Equip^.S = GS_Hand ) and ( Slot^.S <> GS_Arm ) then IsLegalModuleSub := False
+						if ( Equip^.S = GS_Hand ) and ( Slot^.Stat[ STAT_PrimaryModuleForm ] <> GS_Arm ) then IsLegalModuleSub := False
 						else IsLegalModuleSub := True;
 					end;
 			GG_Sensor:	IsLegalModuleSub := True;

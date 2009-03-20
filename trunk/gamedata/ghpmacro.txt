@@ -250,7 +250,14 @@ GAddOn        <Gear 20 0 ?0>
 GunAddOn      <Gear 20 1 ?0>
 HeavyAddOn    <Gear 20 2 ?0>
 MeleeAddOn    <Gear 20 3 ?0>
-GrenadeSkill  <Stat 5 ?>
+UsesReflexes   <Stat 5 1> AttackStat for weapons and grenades
+UsesBody       <Stat 5 2>
+UsesSpeed      <Stat 5 3>
+UsesPerception <Stat 5 4>
+UsesCraft      <Stat 5 5>
+UsesEgo        <Stat 5 6>
+UsesKnowledge  <Stat 5 7>
+UsesCharm      <Stat 5 8>
 SkillModSkill             <Stat 1 ?>
 SkillModAmount            <Stat 2 ?>
 SkillModMechaGunnery      <Stat 1 1>

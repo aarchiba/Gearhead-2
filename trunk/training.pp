@@ -83,6 +83,7 @@ Procedure DoTraining( GB: GameBoardPtr; PC: GearPtr; RD: RedrawProcedureType );
 		Sk: NAttPtr;		{ A skill counter }
 		N: LongInt;		{ A number }
 		SI,TI: Integer;		{ Selected Item , Top Item }
+		msg: String;
 	begin
 		{ Initialize the Selected Item and Top Item to the }
 		{ top of the list. }
@@ -135,38 +136,17 @@ Procedure DoTraining( GB: GameBoardPtr; PC: GearPtr; RD: RedrawProcedureType );
 				{ If the PC has enough free XP, this skill will be improved. }
 				{ Otherwise, do nothing. }
 				if N > FXP then begin
-					DialogMsg( GearName( PC ) + ' doesn''t have enough experience points to improve ' + MsgString( 'SKILLNAME_' + BStr( Sk^.S ) ) + '.' );
+					DialogMsg( ReplaceHash( MsgString( 'TRAINING_NotEnoughXP' ) , GearName( PC ) ) );
 				end else begin
 					{ Improve the skill, pay the XP. }
-					DialogMsg( GearName( PC ) + ' has improved ' + MsgString( 'SKILLNAME_' + BStr( Sk^.S ) ) + '.' );
+					msg := ReplaceHash( MsgString( 'TRAINING_Improved' ) , GearName( PC ) );
+					msg := ReplaceHash( msg , MsgString( 'SKILLNAME_' + BStr( Sk^.S ) ) );
+					DialogMsg( msg );
 					AddNAtt( PC^.NA , NAG_Skill , Sk^.S , 1 );
 					AddNAtt( PC^.NA , NAG_Experience , NAS_SpentXP , N );
 				end;
 			end;
 		until N = -1;
-	end;
-
-	Function StatCanBeAdvanced( N: Integer ): Boolean;
-		{ Return TRUE if the requested stat is eligible for }
-		{ advancement, or FALSE if it is not. In order to be }
-		{ advanced a stat must have sufficient skills at the }
-		{ sufficient level. }
-	var
-		CIV, T: Integer;	{ Current Improvement Value. }
-		min_rank,num_required: Integer;
-	begin
-{		CIV := NAttValue( PC^.NA , NAG_StatImprovementLevel , N );
-		min_rank := ( CIV div 2 ) + 6;
-		num_required := ( CIV + 3 ) div 2;
-
-		for t := 1 to NumSkill do begin
-			if ( SkillMan[ T ].Stat = N ) and ( NAttValue( PC^.NA , NAG_Skill , T ) >= min_rank ) then begin
-				num_required := num_required - ( ( NAttValue( PC^.NA , NAG_Skill , T ) - min_rank + 3 ) div 3 );
-			end;
-		end;
-
-		StatCanBeAdvanced := ( num_required <= 0 );}
-		StatCanBeAdvanced := True;
 	end;
 
 	Function OneStatCanBeAdvanced: Boolean;
@@ -175,11 +155,12 @@ Procedure DoTraining( GB: GameBoardPtr; PC: GearPtr; RD: RedrawProcedureType );
 	var
 		t,N: Integer;
 	begin
+		{ To start with, count up the number of advancements so far. }
 		N := 0;
 		for t := 1 to NumGearStats do begin
-			if StatCanBeAdvanced( T ) then Inc( N );
+			N := N + NAttValue( PC^.NA , NAG_StatImprovementLevel , T );
 		end;
-		OneStatCanBeAdvanced := N > 0;
+		OneStatCanBeAdvanced := N < ( NAttValue( PC^.NA , NAG_Experience , NAS_TotalXP ) div 5000 );
 	end;
 
 	Function StatImprovementCost( CIV: Integer ): LongInt;
@@ -196,6 +177,7 @@ Procedure DoTraining( GB: GameBoardPtr; PC: GearPtr; RD: RedrawProcedureType );
 		CIV: Integer;		{ Current Improvement Value. }
 		N,T,SI,TI: Integer;	{ Selected Item , Top Item }
 		XP: LongInt;
+		msg: String;
 	begin
 		{ Initialize the Selected Item and Top Item to the }
 		{ top of the list. }
@@ -210,12 +192,10 @@ Procedure DoTraining( GB: GameBoardPtr; PC: GearPtr; RD: RedrawProcedureType );
 			StMenu := CreateRPGMenu( MenuItem , MenuSelect , ZONE_Menu2 );
 
 			for t := 1 to NumGearStats do begin
-				if StatCanBeAdvanced( T ) then begin
-					{ Find out how many times this stat has been }
-					{ improved thus far. }
-					CIV := NAttValue( PC^.NA , NAG_StatImprovementLevel , T );
-					AddRPGMenuItem( StMenu , MsgString( 'StatName_' + BStr( T ) ) + '   (' + BStr( StatImprovementCost( CIV ) ) + ' XP)' , T );
-				end;
+				{ Find out how many times this stat has been }
+				{ improved thus far. }
+				CIV := NAttValue( PC^.NA , NAG_StatImprovementLevel , T );
+				AddRPGMenuItem( StMenu , MsgString( 'StatName_' + BStr( T ) ) + '   (' + BStr( StatImprovementCost( CIV ) ) + ' XP)' , T );
 			end;
 
 			AddRPGMenuItem( StMenu , MsgString( 'RANDCHAR_ASPDone' ) , -1 );
@@ -241,17 +221,20 @@ Procedure DoTraining( GB: GameBoardPtr; PC: GearPtr; RD: RedrawProcedureType );
 				XP := StatImprovementCost( CIV );
 
 				if XP > FXP then begin
-					DialogMsg( GearName( PC ) + ' doesn''t have enough experience points.' );
+
+					DialogMsg( ReplaceHash( MsgString( 'TRAINING_NotEnoughXP' ) , GearName( PC ) ) );
 				end else begin
 					{ Improve the skill, pay the XP. }
-					DialogMsg( GearName( PC ) + ' has improved ' + MsgString( 'StatName_' + BStr( N ) ) + '.' );
+					msg := ReplaceHash( MsgString( 'TRAINING_Improved' ) , GearName( PC ) );
+					msg := ReplaceHash( msg , MsgString( 'StatName_' + BStr( N ) ) );
+					DialogMsg( msg );
 					Inc( PC^.Stat[ N ] );
 					AddNAtt( PC^.NA , NAG_Experience , NAS_SpentXP , XP );
 					AddNAtt( PC^.NA , NAG_StatImprovementLevel , N , 1 );
 				end;
 
 			end;
-		until N = -1;
+		until ( N = -1 ) or not OneStatCanBeAdvanced;
 	end;
 
 	Procedure ForgetLowSkill( PC: GearPtr );
@@ -291,6 +274,7 @@ Procedure DoTraining( GB: GameBoardPtr; PC: GearPtr; RD: RedrawProcedureType );
 					{ NPCs are generally stuck with the skills they }
 					{ start with, but everyone can learn the 10 basic }
 					{ combat skills. }
+		msg: String;
 	begin
 		{ The number of free XP is the total XP minus the spent XP. }
 		FXP := NAttValue( PC^.NA , NAG_Experience , NAS_TotalXP ) - NAttValue( PC^.NA , NAG_Experience , NAS_SpentXP );
@@ -323,7 +307,7 @@ Procedure DoTraining( GB: GameBoardPtr; PC: GearPtr; RD: RedrawProcedureType );
 			{ If the PC has enough free XP, this skill will be improved. }
 			{ Otherwise, do nothing. }
 			if SkillAdvCost( PC , 0 ) > FXP then begin
-				DialogMsg( GearName( PC ) + ' doesn''t have enough experience points to learn ' + MsgString( 'SkillNAME_' + BStr(N)) + '.' );
+				DialogMsg( ReplaceHash( MsgString( 'TRAINING_NotEnoughXP' ) , GearName( PC ) ) );
 
 			end else begin
 				{ Improve the skill, pay the XP. }
@@ -353,7 +337,10 @@ Procedure DoTraining( GB: GameBoardPtr; PC: GearPtr; RD: RedrawProcedureType );
 
 
 				if ( N >= 1 ) and ( N <= NumSkill ) then begin
-					DialogMsg( GearName( PC ) + ' has learned the ' + MsgString( 'SkillNAME_' + BStr(N)) + ' skill.' );
+					msg := ReplaceHash( MsgString( 'TRAINING_Learned' ) , GearName( PC ) );
+					msg := ReplaceHash( msg , MsgString( 'SKILLNAME_' + BStr( N ) ) );
+					DialogMsg( msg );
+
 					SetNAtt( PC^.NA , NAG_Skill , N , 1 );
 					AddNAtt( PC^.NA , NAG_Experience , NAS_SpentXP , SkillAdvCost( PC , 0 ) );
 
@@ -369,6 +356,7 @@ Procedure DoTraining( GB: GameBoardPtr; PC: GearPtr; RD: RedrawProcedureType );
 		FXP: LongInt;		{ Free XP Points }
 		TMenu: RPGMenuPtr;	{ Training Hall Menu }
 		N: LongInt;		{ A number }
+		msg: String;
 	begin
 		{ The number of free XP is the total XP minus the spent XP. }
 		FXP := NAttValue( PC^.NA , NAG_Experience , NAS_TotalXP ) - NAttValue( PC^.NA , NAG_Experience , NAS_SpentXP );
@@ -390,8 +378,6 @@ Procedure DoTraining( GB: GameBoardPtr; PC: GearPtr; RD: RedrawProcedureType );
 		RPMSortAlpha( TMenu );
 		AddRPGMenuItem( TMenu , '  Cancel' , -1 );
 
-		CMessage( 'FREE XP: ' + BStr( FXP ) , ZONE_Menu1 , InfoHilight );
-
 		repeat
 			N := SelectMenu( TMenu , @TrainingRedraw );
 
@@ -404,8 +390,9 @@ Procedure DoTraining( GB: GameBoardPtr; PC: GearPtr; RD: RedrawProcedureType );
 				end else if NumFreeTalents( PC ) < 1 then begin
 					DialogMsg( MsgString( 'NOFREETALENTS' ) );
 				end else begin
-					{ Improve the skill, pay the XP. }
-					DialogMsg( GearName( PC ) + ' has learned ' + MsgString( 'TALENT' + BStr( N ) ) + '.' );
+					msg := ReplaceHash( MsgString( 'TRAINING_Learned' ) , GearName( PC ) );
+					msg := ReplaceHash( msg , MsgString( 'TALENT' + BStr( N ) ) );
+					DialogMsg( msg );
 					ApplyTalent( PC , N );
 					AddNAtt( PC^.NA , NAG_Experience , NAS_SpentXP , 1000 );
 
@@ -417,20 +404,15 @@ Procedure DoTraining( GB: GameBoardPtr; PC: GearPtr; RD: RedrawProcedureType );
 			end;
 		until N = -1;
 
-		CMessage( 'FREE XP: ' + BStr( FXP ) , ZONE_Menu1 , InfoHilight );
 		DisposeRPGMenu( TMenu );
 	end;
 
 	Procedure ReviewTalents( PC: GearPtr );
 		{ The PC is going to review his talents. }
 	var
-		FXP: LongInt;		{ Free XP Points }
 		TMenu: RPGMenuPtr;	{ Training Hall Menu }
 		N: LongInt;		{ A number }
 	begin
-		{ The number of free XP is the total XP minus the spent XP. }
-		FXP := NAttValue( PC^.NA , NAG_Experience , NAS_TotalXP ) - NAttValue( PC^.NA , NAG_Experience , NAS_SpentXP );
-
 		{ Create the skill menu. }
 		TMenu := CreateRPGMenu( MenuItem , MenuSelect , ZONE_Menu2 );
 
@@ -447,9 +429,6 @@ Procedure DoTraining( GB: GameBoardPtr; PC: GearPtr; RD: RedrawProcedureType );
 		RPMSortAlpha( TMenu );
 		AddRPGMenuItem( TMenu , '  Exit' , -1 );
 
-		CMessage( 'FREE XP: ' + BStr( FXP ) , ZONE_Menu1 , InfoHilight );
-
-
 		N := SelectMenu( TMenu , @TrainingRedraw );
 
 		DisposeRPGMenu( TMenu );
@@ -458,17 +437,11 @@ Procedure DoTraining( GB: GameBoardPtr; PC: GearPtr; RD: RedrawProcedureType );
 	Procedure ReviewCyberware( PC: GearPtr );
 		{ The PC is going to review his talents. }
 	var
-		FXP: LongInt;		{ Free XP Points }
 		S: GearPtr;		{ Subcoms of PC. }
 		TMenu: RPGMenuPtr;	{ Training Hall Menu }
 	begin
-		{ The number of free XP is the total XP minus the spent XP. }
-		{ We just need this for display purposes. }
-		FXP := NAttValue( PC^.NA , NAG_Experience , NAS_TotalXP ) - NAttValue( PC^.NA , NAG_Experience , NAS_SpentXP );
-
 		{ Create the cyber menu. }
 		TMenu := CreateRPGMenu( MenuItem , MenuSelect , ZONE_Menu2 );
-
 
 		AttachMenuDesc( TMenu , ZONE_Info );
 
@@ -483,9 +456,6 @@ Procedure DoTraining( GB: GameBoardPtr; PC: GearPtr; RD: RedrawProcedureType );
 		end;
 		RPMSortAlpha( TMenu );
 		AddRPGMenuItem( TMenu , '  Exit' , -1 );
-
-		CMessage( 'FREE XP: ' + BStr( FXP ) , ZONE_Menu1 , InfoHilight );
-
 
 		SelectMenu( TMenu , @TrainingRedraw );
 

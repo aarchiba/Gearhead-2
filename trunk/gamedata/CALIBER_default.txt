@@ -174,6 +174,30 @@
 	end
 
 	Set
+	name <20mm cannister>
+	sub
+		Ammo
+		name <Smoke>
+		type <Blast 6 Smoke>
+		Legality -10
+
+		Ammo
+		name <Incendiary>
+		type <Blast 3 Burn>
+		Legality 5
+
+		Ammo
+		name <Toxin>
+		type <Blast 1 Toxin>
+		Legality 50
+
+		Ammo
+		name <Plasma>
+		type <Blast 5 Brutal>
+		Legality 25
+	end
+
+	Set
 	name <60mm rocket>
 	% Bazooka
 	sub

@@ -83,36 +83,15 @@
 %  ***  BALLISTIC  WEAPONS  ***
 %  ****************************
 
-	Gun 17
-	name <Mecha Bazooka>
-	caliber <70mm self-propelled>
+	STC MBAZ-17
+	desig <>
 	Category <MEXTRA MEK_WEP>
 	factions <GENERAL>
-	range 7
-	scale 2
-	mass -4
-	sub
-		Ammo 17
-		Magazine 12
-		caliber <70mm self-propelled>
-		type <BLAST 2 BRUTAL>
-	end
 
-	Gun 5
-	Scale 2
-	name <Mech Rifle>
+	STC MRIF-5
+	desig <>
 	Category <MEXTRA MEK_WEP>
 	factions <GENERAL>
-	caliber <30mm caseless>
-	Speed 2
-	Range 6
-	mass -4
-	sub
-		Ammo 5
-		caliber <30mm caseless>
-		Magazine 120
-		mass -3
-	end
 
 	BeamGun 7
 	Name <Mining Laser>
