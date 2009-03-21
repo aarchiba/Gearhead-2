@@ -138,16 +138,23 @@ uses ghintrinsic,ghchars;
 Function BaseArmorCost( Part: GearPtr; DV: Integer ): LongInt;
 	{ Return the cost of this armor value. }
 	{ Modify this if the HARDENED intrinsic is had. }
+const
+	ATypePremium: Array [1..NumArmorType] of Byte = (
+		10, 6
+	);
 var
-	it: LongInt;
+	AType,it,Premium: LongInt;
 begin
 	{ Start with the basic formula. }
 	it := DV * DV * DV * 5 + DV * DV * 10 + DV * 35;
 
 	{ Modify upwards if the HARDENED intrinsic is applied. }
-	if NAttValue( Part^.NA , NAG_Intrinsic , NAS_Hardened ) <> 0 then begin
-		if DV > 5 then it := it * DV
-		else it := it * 5;
+	AType := NAttValue( Part^.NA , NAG_GearOps , NAS_ArmorType );
+	if ( AType > 0 ) and ( AType <= NumArmorType ) then begin
+		if DV > 5 then Premium := it * ( DV - 1 )
+		else Premium := it * 4;
+		Premium := ( Premium * ATypePremium[ AType ] ) div 10;
+		it := it + Premium;
 	end;
 
 	{ Return the finished value. }

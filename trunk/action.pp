@@ -599,6 +599,17 @@ var
 		end;
 	end;
 
+	Function IsBeamAttack: Boolean;
+		{ Return TRUE if this is a beam attack. How to tell? }
+		{ If it's a beamgun, an emelee, or HYPER. }
+	begin
+		if HasAttackAttribute( AtAt , AA_Brutal ) then begin
+			IsBeamAttack := TRUE;
+		end else if ( O_Weapon <> Nil ) and ( O_Weapon^.G = GG_Weapon ) then begin
+			IsBeamAttack := ( O_Weapon^.S = GS_BeamGun ) or ( O_Weapon^.S = GS_EMelee );
+		end else IsBeamAttack := False;
+	end;
+
 	Procedure StagedPenetration( Part: GearPtr; var DMG: Longint; var MOS , Scale: Integer );
 		{This procedure applies armor damage to Part.}
 		{ Variables DMG and MOS will be affected by this procedure. }
@@ -606,7 +617,9 @@ var
 		XA,PMaster: GearPtr;
 		MAP: Integer; {The maximum number of armor points to lose.}
 		AAP: Integer; {The actual number that will be lost.}
+		AType: Integer;	{ What kind of armor does this part have? }
 		Armor: LongInt; { Initial armor value of the part. }
+		IsHardened: Boolean;
 	begin
 		{ First, check InvComponents for external armor. }
 		if ( Part <> Nil ) and ( not IsMasterGear( Part ) ) then begin
@@ -615,6 +628,20 @@ var
 				if XA^.G = GG_ExArmor then StagedPenetration( XA , Dmg , MOS , Scale );
 				XA := XA^.Next;
 			end;
+		end;
+
+		{ Damage can be affected by the armor type. }
+		AType := NAttValue( Part^.NA , NAG_GearOps , NAS_ArmorType );
+		if AType = NAV_Hardened then begin
+			{ Hardened armor is hardened. That is all. }
+			IsHardened := True;
+		end else if ( AType = NAV_AntiBeam ) and IsBeamAttack then begin
+			{ Anti-Beam Armor reduces beam damage by half, and counts as }
+			{ hardened against it. }
+			Dmg := Dmg div 2;
+			IsHardened := True;
+		end else begin
+			IsHardened := False;
 		end;
 
 		{ Locate the master of this part, which we'll need in order }
@@ -659,7 +686,7 @@ var
 			end;
 
 			{ HARDENED armor takes only half damage. }
-			if PartHasIntrinsic( Part , NAS_Hardened ) then begin
+			if IsHardened then begin
 				AAP := AAP div 2;
 			end;
 

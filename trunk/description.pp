@@ -245,6 +245,10 @@ var
 begin
 	it := '';
 
+	{ Start by adding the armor type, if appropriate. }
+	T := NAttValue( Part^.NA , NAG_GearOps , NAS_ArmorType );
+	if T <> 0 then it := MsgString( 'ARMORTYPE_' + BStr( T ) );
+
 	{ We're only interested if the intrinsics are attached directly }
 	{ to this part. }
 	for t := 1 to NumIntrinsic do begin

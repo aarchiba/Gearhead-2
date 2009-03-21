@@ -37,8 +37,7 @@ const
 	NAS_News = 3;
 	NAS_Phone = 4;
 	NAS_EnviroSealed = 5;
-	NAS_Hardened = 6;
-	NAS_Integral = 7;
+	NAS_Integral = 6;
 
 	Intrinsic_Value: Array [1..NumIntrinsic] of Integer = (
 		200, 300, 400, 500, 100,

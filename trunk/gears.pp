@@ -109,6 +109,10 @@ Const
 					{ in a store or not. }
 	NAS_MonsterTV = 6;		{ Monster Threat Value }
 
+	NAS_ArmorType = 7;		{ What kind of armor does this part have? }
+		NumArmorType = 2;
+		NAV_Hardened = 1;	{ Hardened armor degrades slower. }
+		NAV_AntiBeam = 2;	{ Strong against energy attacks. }
 
 	NAG_Narrative = 7;	{ Variables having to do with RPG }
 	NAS_NID = 0;	{ Narrative ID }
