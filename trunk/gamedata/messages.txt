@@ -211,10 +211,6 @@ AttackMissed_11 <# resisted the attack.>
 #destroyed! <# destroyed!>
 #ejected <# ejected!>
 #died <# died!>
-RUMOR_PCTRAIT <you are #.>
-RUMOR_NPCTRAIT <# is #.>
-RUMOR_SCENEFAC <# is controlled by #.>
-RUMOR_IAMMEMBER <I am a member of #.>
 AS_EXIT_NOMETASCENE <There's nothing interesting in here.>
 TERRNAME_1 <Open Ground>
 TERRNAME_2 <Light Forest>
@@ -1021,3 +1017,23 @@ PrepPCF_InvalidMecha <# can't pilot # here.>
 TRANSFORM_Announce <# transforms to # mode.>
 TRANSFORM_NotNow <You can't transform right now.>
 BlowOff <I really don't have much time to chat today, I have a lot of things to do.>
+NEWCHAT_CHat <[Chat]>
+NEWCHAT_Goodbye <[Goodbye]>
+NEWCHAT_Join <[Join]>
+NEWCHAT_QuitLance <[Quit lance]>
+NEWCHAT_WhereAreYou <[Where are you?]>
+NEWCHAT_AskAboutRumors <[Ask about rumors]>
+#SaidThat <# said that>
+Continue <[Continue]>
+RUMOR_NoRumors1 <I'm afraid I don't know anything.>
+RUMOR_NoRumors2 <Sorry, I can't help you with that.>
+RUMOR_NoRumors3 <I haven't heard anything interesting.>
+RUMOR_NoRumors4 <Um, maybe you should ask someone else.>
+RUMOR_NoRumors5 <Nope, I don't have any rumors.>
+RUMOR_NoRumors6 <You should probably ask someone else about that.>
+RUMOR_IAlreadyToldYou1 <I already told you everything I know.>
+RUMOR_IAlreadyToldYou2 <Sorry, but I haven't heard anything else lately.>
+RUMOR_IAlreadyToldYou3 <If you ask somebody else, maybe they've heard something.>
+RUMOR_IAlreadyToldYou4 <Come back later and maybe I'll have something else then.>
+RUMOR_IAlreadyToldYou5 <Didn't we do this once already today?>
+RUMOR_IAlreadyToldYou6 <I haven't heard anything new since the last time we spoke.>

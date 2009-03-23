@@ -11,7 +11,7 @@ sub
 torso
 	Armor 6
 	mass -4
-	Hardened
+	antibeam
 	sub
 		CPit
 		Armor 1
@@ -76,7 +76,7 @@ Storage
 	name <Right Pod>
 	size 4
 	Armor 4
-	Hardened
+	antibeam
 	mass -3
 	Integral
 	sub
@@ -90,7 +90,7 @@ Storage
 	name <Left Pod>
 	size 4
 	Armor 4
-	Hardened
+	antibeam
 	mass -3
 	Integral
 	sub
@@ -103,7 +103,7 @@ Storage
 Wing
 	Name <Right Wing>
 	Armor 5
-	Hardened
+	antibeam
 	mass -3
 	sub
 		Mount
@@ -124,7 +124,7 @@ Wing
 Wing
 	Name <Left Wing>
 	Armor 5
-	Hardened
+	antibeam
 	mass -3
 	sub
 		Mount

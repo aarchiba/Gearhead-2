@@ -1240,7 +1240,7 @@ begin
 	end;
 end;}
 
-Procedure NPC_Chatting( GB: GameBoardPtr; NPC , Target: GearPtr );
+{Procedure NPC_Chatting( GB: GameBoardPtr; NPC , Target: GearPtr );
 	{ NPC will chat with TARGET. This may reveal a rumor. }
 var
 	skRoll: Integer;
@@ -1271,7 +1271,7 @@ begin
 		msg := ReplaceHash( msg , PilotName( TARGET ) );
 		DialogMsg( msg );
 	end;
-end;
+end;}
 
 Procedure LancemateUsefulAction( Mek: GearPtr; GB: GameBoardPtr );
 	{ Do something useful! There are no enemies to be found... }
@@ -1340,7 +1340,7 @@ begin
 			{ If off the map, cancel the action. }
 			SetNAtt( Mek^.NA , NAG_EpisodeData , NAS_ContinuousOrders , 0 );
 		end;
-}
+
 	end else if CORD = CORD_Chat then begin
 		Target := NAttValue( Mek^.NA , NAG_EpisodeData , NAS_ATarget );
 		TGear := LocateMekByUID( GB , Target );
@@ -1367,7 +1367,7 @@ begin
 			{ If off the map, cancel the action. }
 			SetNAtt( Mek^.NA , NAG_EpisodeData , NAS_ContinuousOrders , 0 );
 		end;
-
+}
 	end else begin
 		{ Attempt to find a useful thing to do. }
 		{ Locate the NPC proper. }

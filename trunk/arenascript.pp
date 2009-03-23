@@ -94,6 +94,7 @@ var
 				{ generic commands. }
 
 	lancemate_tactics_persona: GearPtr;	{ Persona for setting lancemate tactics. }
+	rumor_leads: GearPtr;			{ Mini-conversations for finding rumors. }
 
 
 Procedure SetLancemateOrders( GB: GameBoardPtr );
@@ -146,6 +147,7 @@ const
 	CMD_Join = -3;
 	CMD_Quit = -4;
 	CMD_WhereAreYou = -5;
+	CMD_AskAboutRumors = -6;
 	Debug_On: Boolean = False;
 
 var
@@ -153,6 +155,182 @@ var
 	ASRD_GameBoard: GameBoardPtr;
 	ASRD_MemoMessage: String;
 	local_triggers: SAttPtr;
+
+Function CreateRumorList( GB: GameBoardPtr; Rumor_Source: GearPtr; SkRoll: Integer; DoHarvest: Boolean; var Rumor_Error: Boolean; const Rumemo_Lead,Rumor_Head: String ): SAttPtr;
+	{ RUMOR_HEAD is the rumor type to collect: RUMORs or RUMEMOs. }
+	{ RUMEMO_LEAD is the leading message appended to a rumor if we're }
+	{ harvesting them for RUMEMOs. }
+
+	{ If DoHarvest is TRUE, all found rumors will be changed to RUMEMOs. }
+	{ ...if FALSE, then SkRoll is ignored and all messages are returned. }
+
+	{ Search through the adventure, revealing rumors as you go. When a rumor }
+	{ is discovered, do the following: }
+	{ - Check to see if SkRoll is high enough to reveal it. }
+	{ - If so, add it to the list of rumors. }
+	{ - Also convert the original rumor to a rumor memo. }
+	{ If no rumors are found at all, set RUMOR_ERROR to TRUE; otherwise FALSE. }
+var
+	InfoList: SAttPtr;
+
+	Function RumorSKTarget( Part: gearPtr ): Integer;
+		{ Return the skill roll needed to learn this rumor. }
+	var
+		Plot: GearPtr;
+		it: Integer;
+	begin
+		{ If we're dealing with a plot-based rumor, get the difficulty number from the plot. }
+		Plot := PlotMaster( GB , Part );
+		if Plot <> Nil then begin
+			{ Use the difficulty rating for this plot. }
+			it := BasicSkillTarget( NAttValue( Plot^.NA , NAG_XXRan , NAS_DifficulcyLevel ) );
+		end else begin
+			it := 5;
+		end;
+
+		{ In order to keep the process somewhat unpredictable, randomize the target }
+		{ just a bit. }
+		it := it - 2 + RollStep( 2 );
+		if Random( 3 ) = 1 then it := it + Random( 4 );
+
+		RumorSKTarget := it;
+	end;
+
+	Procedure AddThisRumor( Part: GearPtr; Rumor: SAttPtr );
+		{ Add this rumor to the list... maybe. }
+	var
+		msg,rh: String;
+	begin
+		msg := RetrieveAString( Rumor^.Info );
+		if DoHarvest then begin
+			if SkRoll > RumorSkTarget( Part ) then begin
+				{ This rumor has been retrieved. }
+				StoreSAtt( InfoList , msg );
+				rh := RetrieveAPreamble( rumor^.Info );
+				Rumor^.Info := 'RUMEMO' + Copy( rh , Length( Rumor_Head ) + 1 , Length( rh ) ) + ' <' + RuMemo_Lead + ' ' + msg + '>';
+			end;
+		end else begin
+			{ We aren't converting to RUMEMO right now. Ignore the skill roll }
+			{ and simply return the message without changing anything. }
+			StoreSAtt( InfoList , msg );
+		end;
+		{ Set RUMOR_ERROR to FALSE, since we just found one. }
+		RUMOR_ERROR := FALSE;
+	end;
+
+	Procedure GetRumorFromGear( P: GearPtr );
+		{ Retrieve the rumor info from this gear, without caring about }
+		{ what kind of gear it is. Well, for the most part, anyhow... }
+	var
+		Rumor: SAttPtr;
+		Level: LongInt;
+		Plot: GearPtr;
+	begin
+		{ First add the basic rumor.  }
+		Rumor := FindSAtt( P^.SA , Rumor_Head );
+		if Rumor <> Nil then AddThisRumor( P , Rumor );
+
+		{ Next add the quest rumor. }
+		Level := NAttValue( P^.NA , NAG_QuestInfo , NAS_QuestID );
+		if Level <> 0 then begin
+			Rumor := FindSAtt( P^.SA , Rumor_Head + BStr( NAttValue( FindRoot( GB^.Scene )^.NA , NAG_QuestStatus , Level ) ) );
+			if Rumor <> Nil then AddThisRumor( P , Rumor );
+		end;
+
+		{ Finally add the plot rumor. }
+		if (( P^.G = GG_Persona ) or ( P^.G = GG_MetaScene )) and ( P^.Parent <> Nil ) and ( P^.Parent^.G = GG_Plot ) then begin
+			Plot := P^.Parent;
+			Level := NAttValue( Plot^.NA , NAG_PlotStatus , NAttValue( P^.NA , NAG_Narrative , NAS_PlotID ) );
+			Rumor := FindSAtt( P^.SA , Rumor_Head + BStr( Level ) );
+			if Rumor <> Nil then AddThisRumor( P , Rumor );
+		end;
+	end;
+
+	Procedure RumorWorkup( P: GearPtr ); Forward;
+	Procedure ExtractData( P: GearPtr );
+		{ Store all relevant info from PART. }
+		{ If P is of certain types, we're gonna have to harvest the data from }
+		{ its associated bits. Characters also need the data from their Personas, }
+		{ gates to metascenes need to check there, and scenes get faction data. }
+	var
+		Rumor: String;
+		Trait,Level: Integer;
+		Persona: GearPtr;
+	begin
+		if ( P <> Rumor_Source ) and ( P^.G <> GG_Persona ) then begin
+			if P <> GB^.Scene then GetRumorFromGear( P );
+			if P^.G = GG_Character then begin
+				Persona := SeekPersona( GB , NAttValue( P^.NA , NAG_Personal , NAS_CID ) );
+				if Persona <> Nil then begin
+					{ Previously we'd just collect the rumor from the persona }
+					{ and be done with it, but since Quests have been introduced }
+					{ the rumor associated with a given NPC can change depending }
+					{ on quest state. }
+					GetRumorFromGear( Persona );
+				end;
+
+			end else if ( P^.G = GG_MetaTerrain ) and ( P^.Stat[ STAT_Destination ] < 0 ) then begin
+				{ Find the metascene, and do a complete rumor work-up of it. }
+				Persona := FindActualScene( GB , P^.Stat[ STAT_Destination ] );
+				if Persona <> Nil then begin
+					RumorWorkup( Persona );
+				end;
+			end;
+		end;
+	end;
+	Procedure RumorWorkup( P: GearPtr );
+		{ Do a complete rumor workup on P, gathering info from it }
+		{ and all its child gears. }
+	var
+		P2: GearPtr;
+	begin
+		if P = Nil then Exit;
+		ExtractData( P );
+		P2 := P^.SubCom;
+		while P2 <> Nil do begin
+			RumorWorkup( P2 );
+			P2 := P2^.Next;
+		end;
+		P2 := P^.InvCom;
+		while P2 <> Nil do begin
+			RumorWorkup( P2 );
+			P2 := P2^.Next;
+		end;
+	end;
+var
+	Part: GearPtr;
+
+begin
+	{ Assume an error until we find a rumor to prove us wrong. }
+	Rumor_Error := TRUE;
+
+	InfoList := Nil;
+
+	Part := FindRootScene( GB , GB^.Scene );
+	RumorWorkup( Part );
+
+	Part := GB^.Meks;
+	while Part <> Nil do begin
+		ExtractData( Part );
+		Part := Part^.Next;
+	end;
+
+	CreateRumorList := InfoList;
+end;
+
+Function RevealRumors( GB: GameBoardPtr; NPC: GearPtr; SkRoll: Integer; var Rumor_Error: Boolean ): SAttPtr;
+	{ Reveal some rumors! Call the CreateRumorList procedure with a standard reveal. }
+begin
+	RevealRumors := CreateRumorList( GB, NPC, SkRoll, TRUE, Rumor_Error, ReplaceHash( MsgString( '#SaidThat' ) , PilotName( NPC ) ), 'RUMOR' );
+end;
+
+Function ReviewRumorMemos( GB: GameBoardPtr ): SAttPtr;
+	{ Create the list of rumor memos. }
+var
+	Rumor_Error: Boolean;	{ A dummy variable. }
+begin
+	ReviewRumorMemos := CreateRumorList( GB, Nil, 0, FALSE, Rumor_Error, '', 'RUMEMO' );
+end;
 
 Procedure ArenaScriptReDraw;
 	{ Redraw the combat screen for some menu usage. }
@@ -295,7 +473,11 @@ begin
 	tag := UpCase( Tag );
 	MemoList := Nil;
 	Adv := FindRoot( GB^.Scene );
-	CreateMemoList( Adv , Tag );
+	if ( Tag = 'RUMEMO' ) then begin
+		MemoList := ReviewRumorMemos( GB );
+	end else begin
+		CreateMemoList( Adv , Tag );
+	end;
 	if Tag = 'MEMO' then AddQuestMemos;
 
 	{ Sort the memo list. }
@@ -2699,18 +2881,19 @@ begin
 		ClearMenu( IntMenu );
 	end;
 
-	AddRPGMenuItem( IntMenu , '[Chat]' , CMD_Chat );
-	AddRPGMenuItem( IntMenu , '[Goodbye]' , -1 );
+	AddRPGMenuItem( IntMenu , MsgString( 'NEWCHAT_Chat' ) , CMD_Chat );
+	AddRPGMenuItem( IntMenu , MsgString( 'NEWCHAT_Goodbye' ) , -1 );
 	if ( GB <> Nil ) and OnTheMap( GB , FindRoot( I_NPC ) ) and IsFoundAlongTrack( GB^.Meks , FindRoot( I_NPC ) ) then begin
 		{ Only add the JOIN command if this NPC is in the same scene as the PC. }
 		if ( I_PC <> Nil ) and HasTalent( I_PC , NAS_Camaraderie ) then begin
-			if ( I_NPC <> Nil ) and ( NAttValue( I_NPC^.NA , NAG_Relationship , 0 ) >= NAV_Friend ) and ( NAttValue( I_NPC^.NA , NAG_Location , NAS_Team ) <> NAV_LancemateTeam ) then AddRPGMenuItem( IntMenu , '[Join]' , CMD_Join );
+			if ( I_NPC <> Nil ) and ( NAttValue( I_NPC^.NA , NAG_Relationship , 0 ) >= NAV_Friend ) and ( NAttValue( I_NPC^.NA , NAG_Location , NAS_Team ) <> NAV_LancemateTeam ) then AddRPGMenuItem( IntMenu , MsgString( 'NEWCHAT_Join' ) , CMD_Join );
 		end else begin
-			if ( I_NPC <> Nil ) and ( NAttValue( I_NPC^.NA , NAG_Relationship , 0 ) >= NAV_ArchAlly ) and ( NAttValue( I_NPC^.NA , NAG_Location , NAS_Team ) <> NAV_LancemateTeam ) then AddRPGMenuItem( IntMenu , '[Join]' , CMD_Join );
+			if ( I_NPC <> Nil ) and ( NAttValue( I_NPC^.NA , NAG_Relationship , 0 ) >= NAV_ArchAlly ) and ( NAttValue( I_NPC^.NA , NAG_Location , NAS_Team ) <> NAV_LancemateTeam ) then AddRPGMenuItem( IntMenu , MsgString( 'NEWCHAT_Join' ) , CMD_Join );
 		end;
 	end;
-	if ( I_NPC <> Nil ) and ( NAttValue( I_NPC^.NA , NAG_Location , NAS_Team ) = NAV_LancemateTeam ) and ( NAttValue( I_NPC^.NA , NAG_CharDescription , NAS_CharType ) <> NAV_TempLancemate ) then AddRPGMenuItem( IntMenu , '[Quit Lance]' , CMD_Quit );
-	if not ( OnTheMap( GB , FindRoot( I_NPC ) ) and IsFoundAlongTrack( GB^.Meks , FindRoot( I_NPC ) ) ) then AddRPGMenuItem( IntMenu , '[Where are you?]' , CMD_WhereAreYou );
+	if ( I_NPC <> Nil ) and ( NAttValue( I_NPC^.NA , NAG_Location , NAS_Team ) = NAV_LancemateTeam ) and ( NAttValue( I_NPC^.NA , NAG_CharDescription , NAS_CharType ) <> NAV_TempLancemate ) then AddRPGMenuItem( IntMenu , MsgSTring( 'NEWCHAT_QuitLance' ) , CMD_Quit );
+	if not ( OnTheMap( GB , FindRoot( I_NPC ) ) and IsFoundAlongTrack( GB^.Meks , FindRoot( I_NPC ) ) ) then AddRPGMenuItem( IntMenu , MsgString( 'NewChat_WhereAreYou' ) , CMD_WhereAreYou );
+	if NAttValue( I_NPC^.NA , NAG_Personal , NAS_RumorRecharge ) < GB^.ComTime then AddRPGMenuItem( IntMenu , MsgString( 'NEWCHAT_AskAboutRumors' ) , CMD_AskAboutRumors );
 	RPMSortAlpha( IntMenu );
 end;
 
@@ -4364,7 +4547,7 @@ begin
 	if ( SCRIPT_DynamicEncounter <> Nil ) and ( SCRIPT_DynamicEncounter^.V > 0 ) then CheckMechaEquipped( GB );
 end;
 
-Procedure HandleChat( GB: GameBoardPtr; var FreeRumors: Integer );
+{Procedure HandleChat( GB: GameBoardPtr; var FreeRumors: Integer );
 	{ Call the CHAT procedure, then display the string that is returned. }
 var
 	msg: String;
@@ -4372,7 +4555,7 @@ begin
 	msg := DoChatting( GB , I_Rumors , I_PC , I_NPC , I_Endurance , FreeRumors );
 	CHAT_Message := msg;
 	QuickTime( GB , 16 + Random( 15 ) );
-end;
+end;}
 
 Procedure HandleWhereAreYou( GB: GameBoardPtr );
 	{ The PC has asked the NPC where he is. The NPC will tell the PC }
@@ -4386,6 +4569,114 @@ begin
 	end else begin
 		CHAT_Message := MsgString( 'WHEREAREYOU_Dunno' );
 	end;
+end;
+
+Procedure InteractRedraw;
+	{ Redraw the screen for whatever interaction is going to go on. }
+begin
+	CombatDisplay( ASRD_GameBoard );
+	SetupInteractDisplay( PlayerBlue );
+	if I_NPC <> Nil then begin
+		DisplayInteractStatus( ASRD_GameBoard , I_NPC , CHAT_React , I_Endurance );
+
+	end;
+	GameMsg( CHAT_Message , ZONE_InteractMsg , InfoHiLight );
+end;
+
+
+Procedure HandleAskAboutRumors( GB: GameBoardPtr; Source: GearPtr );
+	{ The PC wants to find some rumors. Make it so. }
+var
+	RL,RL_Skill: GearPtr;
+	SkVal,BestScore,SkRoll: Integer;
+	NPCDesc,RL_Script: String;
+	Rumor_List,R: SAttPtr;
+	Rumor_Error: Boolean;
+	RPM: RPGMenuPtr;
+begin
+	{ Error check- no rumor scumming. }
+	if NAttValue( I_NPC^.NA , NAG_Personal , NAS_RumorRecharge ) > GB^.ComTime then begin
+		Chat_Message := MsgString( 'RUMOR_IAlreadyToldYou' + BStr( Random( 6 ) + 1 ) );
+		Exit;
+	end;
+
+	{ Step one- Locate an appropriate skill. }
+	RL_Skill := Nil;
+	RL := rumor_leads;
+	BestScore := 0;
+	NPCDesc := XNPCDesc( GB , GG_LocateAdventure( GB , Source ) , I_NPC );
+	while ( RL <> Nil ) do begin
+		if ( RL^.S >= 1 ) and ( RL^.S <= NumSkill ) and HasSkill( I_PC , RL^.S ) and PartMatchesCriteria( NPCDesc , SAttValue( RL^.SA , 'REQUIRES' ) ) then begin
+			{ This skill might be of use. Check it to see. }
+			if RL_Skill = Nil then begin
+				RL_Skill := RL;
+				BestScore := SkillValue( I_PC , RL^.S , STAT_Charm );
+			end else begin
+				SkVal := SkillValue( I_PC , RL^.S , STAT_Charm );
+				if SkVal > BestScore then begin
+					RL_Skill := RL;
+					BestScore := SkVal;
+				end;
+			end;
+		end;
+		RL := RL^.Next;
+	end;
+
+	{ Make the skill roll. }
+	if ( RL_Skill <> Nil ) and ( BestScore > 3 ) then begin
+		{ Make the skill roll here. }
+		SkRoll := SkillRoll( GB , I_PC , RL_Skill^.S , STAT_Charm , BasicSkillTarget( NAttValue( I_PC^.NA , NAG_CharDescription , NAS_Renowned ) ) , 0 , False , True );
+	end else begin
+		{ Make a default crappy skill roll, and find the default lead. }
+		SkRoll := RollStep( 3 );
+		RL_Skill := SeekCurrentLevelGear( rumor_leads , GG_Persona , 0 );
+	end;
+
+	{ If this NPC has a relationship with the PC, the skill roll cannot fall }
+	{ beneath an amount appropriate to the reaction score. }
+	if NAttValue( I_NPC^.NA , NAG_Relationship , 0 ) > 0 then begin
+		SkVal := BasicSkillTarget( ReactionScore( GB^.Scene , I_PC , I_NPC ) );
+		if SkVal > SkRoll then SkRoll := SkVal;
+	end;
+
+	{ Harvest a list of rumors based on the skill roll. }
+	{ As the rumors are added to the list, convert them to memos. }
+	Rumor_List := RevealRumors( GB , I_NPC , SkRoll , Rumor_Error );
+
+	{ If our rumor list is not empty, do the lead-in and then present those }
+	{ rumors to the player. If it is empty, print a know nothing message. }
+	if Rumor_List <> Nil then begin
+		{ Play the RL_Skill dialog. }
+		RL_Script := AS_GetString( RL_Skill , 'START' );
+
+		{ Use NPCDesc as a dummy trigger. }
+		InvokeEvent( RL_Script , GB , RL_Skill , NPCDesc );
+
+		{ Create the menu. }
+		RPM := CreateRPGMenu( MenuItem , MenuSelect , ZONE_InteractMenu );
+		RPM^.Mode := RPMNoCancel;
+		AddRPGMenuItem( RPM , MsgString( 'Continue' ) , 1 );
+
+		{ Show the rumors next. }
+		R := Rumor_List;
+		while R <> Nil do begin
+			SelectMenu( RPM , @InteractRedraw );
+			Chat_Message := MadLibString( RLI_List ) + ' ' + R^.Info;
+			R := R^.Next;
+		end;
+
+		{ Dispose of the rumor list. }
+		DisposeSAtt( Rumor_List );
+		DisposeRPGMenu( RPM );
+
+	end else begin
+		{ Set the chat message. }
+		Chat_Message := MsgString( 'RUMOR_NoRumors' + BStr( Random( 6 ) + 1 ) );
+
+	end;
+
+	{ Set the recharge counter for this NPC. }
+	if not Rumor_Error then SetNAtt( I_NPC^.NA , NAG_Personal , NAS_RumorRecharge , GB^.ComTime + 21600 + Random( 7200 ) - Random( 7200 ) );
 end;
 
 
@@ -4455,17 +4746,6 @@ begin
 	RemoveLancemate( GB , I_NPC );
 end;
 
-Procedure InteractRedraw;
-	{ Redraw the screen for whatever interaction is going to go on. }
-begin
-	CombatDisplay( ASRD_GameBoard );
-	SetupInteractDisplay( PlayerBlue );
-	if I_NPC <> Nil then begin
-		DisplayInteractStatus( ASRD_GameBoard , I_NPC , CHAT_React , I_Endurance );
-
-	end;
-	GameMsg( CHAT_Message , ZONE_InteractMsg , InfoHiLight );
-end;
 
 Procedure PruneNothings( var LList: GearPtr );
 	{ Traverse the list. Anything marked as ABSOLUTELYNOTHING gets deleted, along with }
@@ -4511,7 +4791,6 @@ begin
 	{ Initialize interaction variables. }
 	I_PC := PC;
 	I_NPC := NPC;
-	I_Rumors := CreateRumorList( GB , PC , NPC );
 	ASRD_GameBoard := GB;
 
 	{ Since the conversation can be switched by REVERTPERSONA and maybe some other }
@@ -4575,11 +4854,6 @@ begin
 			IntScr := AS_GetString( I_Persona , 'RESULT' + BStr( N ) );
 			InvokeEvent( IntScr , GB , I_Persona , T );
 
-		{ It wasn't a scripted response chosen. }
-		{ Handle one of the standard options. }
-		end else if N = CMD_Chat then begin
-			HandleChat( GB , FreeRumors );
-
 		end else if N = CMD_Join then begin
 			AttemptJoin( GB );
 
@@ -4588,6 +4862,9 @@ begin
 
 		end else if N = CMD_WhereAreYou then begin
 			HandleWhereAreYou( GB );
+
+		end else if N = CMD_AskAboutRumors then begin
+			HandleAskAboutRumors( GB , Persona );
 
 		end;
 
@@ -4874,6 +5151,8 @@ initialization
 	Default_Scene_Scripts := LoadStringList( Data_Directory + 'scene.txt' );
 
 	lancemate_tactics_persona := LoadFile( 'lmtactics.txt' , Data_Directory );
+	rumor_leads := LoadFile( 'rumor_leads.txt' , Data_Directory );
+
 	local_triggers := Nil;
 
 finalization
@@ -4884,5 +5163,6 @@ finalization
 	DisposeSAtt( Value_Macros );
 	DisposeSAtt( Default_Scene_Scripts );
 	DisposeGear( lancemate_tactics_persona );
+	DisposeGear( rumor_leads );
 	if local_triggers <> Nil then DisposeSATt( local_triggers );
 end.

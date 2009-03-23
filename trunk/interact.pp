@@ -70,12 +70,16 @@ Const
 	MaxFactionScore = 25;
 	MinFactionScore = -50;
 
+var
+	{ Strings for the random conversation generator. }
+	Noun_List,Phrase_List,Adjective_List,RLI_List,Chat_Msg_List,Threat_List: SAttPtr;
 
+
+function MadLibString( SList: SAttPtr ): String;
 
 Function PersonalityCompatability( PC, NPC: GearPtr ): Integer;
 Function ReactionScore( Scene, PC, NPC: GearPtr ): Integer;
 
-Function CreateRumorList( GB: gameBoardPtr; PC,NPC: GearPtr ): SAttPtr;
 Function IdleChatter: String;
 Function IsSexy( PC, NPC: GearPtr ): Boolean;
 function DoChatting( GB: GameBoardPtr; var Rumors: SAttPtr; PC,NPC: GearPtr; Var Endurance,FreeRumors: Integer ): String;
@@ -99,12 +103,8 @@ const
 
 	Chat_MOS_Measure = 5;
 
-
 var
-	{ Strings for the random conversation generator. }
-	Noun_List,Phrase_List,Adjective_List,RLI_List,Chat_Msg_List,Threat_List: SAttPtr;
 	Trait_Chatter: Array [1..Num_Personality_Traits,1..2] of SAttPtr;
-
 
 
 Function GeneralCompatability( PC1, PC2: GearPtr ): Integer;
@@ -411,143 +411,6 @@ begin
 	end;
 
 	DoTraitChatter := Msg;
-end;
-
-Function CreateRumorList( GB: gameBoardPtr; PC,NPC: GearPtr ): SAttPtr;
-	{ Scour the GB for information which can be passed to the PC. }
-var
-	InfoList: SAttPtr;
-
-	Procedure GetRumorFromGear( P: GearPtr );
-		{ Retrieve the rumor info from this gear, without caring about }
-		{ what kind of gear it is. Well, for the most part, anyhow... }
-	var
-		Rumor: String;
-		Level: LongInt;
-		Plot: GearPtr;
-	begin
-		{ First add the basic rumor.  }
-		Rumor := SAttValue( P^.SA , 'RUMOR' );
-		if Rumor <> '' then StoreSAtt( InfoList , MadLibString( RLI_List ) + ' ' + Rumor );
-
-		{ Next add the quest rumor. }
-		Level := NAttValue( P^.NA , NAG_QuestInfo , NAS_QuestID );
-		if Level <> 0 then begin
-			Rumor := SAttValue( P^.SA , 'RUMOR' + BStr( NAttValue( FindRoot( GB^.Scene )^.NA , NAG_QuestStatus , Level ) ) );
-			if Rumor <> '' then StoreSAtt( InfoList , MadLibString( RLI_List ) + ' ' + Rumor );
-		end;
-
-		{ Finally add the plot rumor. }
-		if (( P^.G = GG_Persona ) or ( P^.G = GG_MetaScene )) and ( P^.Parent <> Nil ) and ( P^.Parent^.G = GG_Plot ) then begin
-			Plot := P^.Parent;
-			Level := NAttValue( Plot^.NA , NAG_PlotStatus , NAttValue( P^.NA , NAG_Narrative , NAS_PlotID ) );
-			Rumor := SAttValue( P^.SA , 'RUMOR' + BStr( Level ) );
-			if Rumor <> '' then StoreSAtt( InfoList , MadLibString( RLI_List ) + ' ' + Rumor );
-		end;
-	end;
-
-	Procedure RumorWorkup( P: GearPtr ); Forward;
-	Procedure ExtractData( P: GearPtr );
-		{ Store all relevant info from PART. }
-		{ If P is of certain types, we're gonna have to harvest the data from }
-		{ its associated bits. Characters also need the data from their Personas, }
-		{ gates to metascenes need to check there, and scenes get faction data. }
-	var
-		Rumor: String;
-		Trait,Level: Integer;
-		Persona: GearPtr;
-	begin
-		if ( P <> NPC ) and ( P^.G <> GG_Persona ) then begin
-			if P <> GB^.Scene then GetRumorFromGear( P );
-			if P^.G = GG_Character then begin
-				{ At most one personality trait per NPC will be added }
-				{ to the list. This is to keep them from overwhelming the }
-				{ rumors from plots & other stuff... }
-				{ GH2: Because there are so many NPCs now, only one in three }
-				{  viable personality rumors will ever be added. }
-				Trait := Random( Num_Personality_Traits ) + 1;
-				Level := NAttValue( P^.NA , NAG_CharDescription , -Trait );
-				if ( Level <> 0 ) and ( Random( 7 ) = 1 ) then begin
-					if P = PC then begin
-						StoreSAtt( InfoList , MadLibString( RLI_List ) + ' ' + ReplaceHash( MsgString( 'RUMOR_PCTRAIT' ) , LowerCase( PersonalityTraitDesc( Trait,Level ) ) ) );
-					end else begin
-						rumor := MadLibString( RLI_List ) + ' ' + ReplaceHash( MsgString( 'RUMOR_NPCTRAIT' ) , GearName( P ) );
-						StoreSAtt( InfoList , ReplaceHash( rumor , LowerCase( PersonalityTraitDesc( Trait,Level ) ) ) );
-					end;
-				end;
-
-				Persona := SeekPersona( GB , NAttValue( P^.NA , NAG_Personal , NAS_CID ) );
-				if Persona <> Nil then begin
-					{ Previously we'd just collect the rumor from the persona }
-					{ and be done with it, but since Quests have been introduced }
-					{ the rumor associated with a given NPC can change depending }
-					{ on quest state. }
-					GetRumorFromGear( Persona );
-				end;
-
-			end else if ( P^.G = GG_Scene ) then begin
-				{ Include a rumor based on what faction controls this scene. }
-				Persona := SeekFaction( GB^.Scene , NAttValue( P^.NA , NAG_Personal , NAS_FactionID ) );
-				if ( Persona <> Nil ) and ( Random( 5 ) = 1 ) then begin
-					Rumor := MadLibString( RLI_List ) + ' ' + ReplaceHash( MsgString( 'RUMOR_SCENEFAC' ) , GearName( P ) );
-					Rumor := ReplaceHash( Rumor , GearName( Persona ) );
-					StoreSAtt( InfoList , Rumor );
-				end;
-
-			end else if ( P^.G = GG_MetaTerrain ) and ( P^.Stat[ STAT_Destination ] < 0 ) then begin
-				{ Find the metascene, and do a complete rumor work-up of it. }
-				Persona := FindActualScene( GB , P^.Stat[ STAT_Destination ] );
-				if Persona <> Nil then begin
-					RumorWorkup( Persona );
-				end;
-			end;
-		
-		end else if P = NPC then begin
-			{ Include information about the NPC's faction, }
-			{ if appropriate. }
-			Persona := SeekFaction( GB^.Scene , NAttValue( NPC^.NA , NAG_Personal , NAS_FactionID ) );
-			if Persona <> Nil then begin
-				Rumor := SAttValue( Chat_Msg_List , 'TRAITCHAT_Lead' + BStr( Random( Num_Openings ) + 1 ) ) + ' ';
-				Rumor := Rumor + ReplaceHash( MsgString( 'RUMOR_IAmMember' ) , GearName( Persona ) );
-				StoreSAtt( InfoList , Rumor );
-			end;
-		end;
-	end;
-	Procedure RumorWorkup( P: GearPtr );
-		{ Do a complete rumor workup on P, gathering info from it }
-		{ and all its child gears. }
-	var
-		P2: GearPtr;
-	begin
-		if P = Nil then Exit;
-		ExtractData( P );
-		P2 := P^.SubCom;
-		while P2 <> Nil do begin
-			RumorWorkup( P2 );
-			P2 := P2^.Next;
-		end;
-		P2 := P^.InvCom;
-		while P2 <> Nil do begin
-			RumorWorkup( P2 );
-			P2 := P2^.Next;
-		end;
-	end;
-var
-	Part: GearPtr;
-
-begin
-	InfoList := Nil;
-
-	Part := FindRootScene( GB , GB^.Scene );
-	RumorWorkup( Part );
-
-	Part := GB^.Meks;
-	while Part <> Nil do begin
-		ExtractData( Part );
-		Part := Part^.Next;
-	end;
-
-	CreateRumorList := InfoList;
 end;
 
 function InOpposition( PC , NPC: GearPtr; Trait: Integer ): Boolean;

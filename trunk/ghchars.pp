@@ -422,6 +422,7 @@ Const
 					{ relations with this NPC. }
 
 	NAS_PlotRecharge = 16;	{ NPCs must recharge before offering another mission, usually. }
+	NAS_RumorRecharge = 17;	{ They also have to recharge in between providing rumors. }
 
 
 	{ FACREWARD attributes tell what perks the PC has been given by a faction. }
