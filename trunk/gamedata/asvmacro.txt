@@ -29,6 +29,7 @@ NPCFac <GrabNPC ?  GNAtt NAG_Personal NAS_FactionID>
 ChatNPCFac <GrabChatNPC  GNAtt NAG_Personal NAS_FactionID>
 ChatNPCTeam <GrabChatNPC  GNAtt NAG_Location NAS_Team>
 ChatNPCTheme <GrabChatNPC  GNAtt NAG_Personal NAS_MechaTheme>
+SelfTeam <GrabSource GNAtt NAG_Location NAS_Team>
 PCRep <GrabPCPilot GNAtt NAG_CharDescription - ?>
 PCHeroism <GrabPCPilot GNAtt NAG_CharDescription -1>
 ChatNPCHeroism <GrabChatNPC GNAtt NAG_CharDescription -1>
@@ -144,6 +145,7 @@ CodeBreaking <SkRoll NAS_CodeBreaking STAT_Craft>
 Conversation <SkRoll NAS_Conversation STAT_Charm>
 Intimidation <SkRoll NAS_Intimidation STAT_Ego>
 Awareness <SkRoll NAS_Awareness STAT_Perception>
+Survival <SkRoll NAS_Survival STAT_Craft>
 Stealth <SkRoll NAS_Stealth STAT_Speed>
 Taunt <SkRoll NAS_Taunt STAT_Charm>
 Shopping <SkRoll NAS_Shopping STAT_Charm>

@@ -182,7 +182,7 @@ Content
 		SDL_SPRITE <prop_displaycase.png>
 		roguechar <+>
 		use <Print 1>
-		clue29 <ifG ComTime V1 else GoBeenBefore V= 1 NextDay Reputation 7 d4 MENTAL ifUScience 10 else GoNoDice ifG PCRep 7 -d100 else GoNoDice Print 2 XPV 150>
+		CLUE_SCIENCE <ifG ComTime V1 else GoBeenBefore V= 1 NextDay Reputation 7 d4 MENTAL ifUScience 10 else GoNoDice ifG PCRep 7 -d100 else GoNoDice Print 2 XPV 150>
 		GoNoDice <Print 3>
 		GoBeenBefore <Print 4>
 		Msg1 <It's a classical physics workbench.>
@@ -787,7 +787,7 @@ Content
 		GoInvestSucceed <NewChat Say 10 Memo 0 V= 2 PCRenown V+ 9 1 if= V5 2 else GoCheckMedium CashPrize * V1 100000 V= 1 0>
 		GoCheckMedium <if= V5 1 else GoLowMoney  CashPrize * V1 50000 V= 1 0>
 		GoLowMoney <CashPrize * V1 37500 V= 1 0>
-		GoInvestFailed <NewChat Say 11  SkillXP 21 * V1 5  Memo 0 V= 2 PCRenown V= 1 0>
+		GoInvestFailed <NewChat Say 11  SkillXP NAS_Shopping * V1 5  Memo 0 V= 2 PCRenown V= 1 0>
 		result1 <ifG PCRenown V2 else GoNoClients if# PCRenown 100 else GoNoClients NewChat Say 5 AddChat 6 AddChat 7 AddChat 8 AddChat 9 AddChat 10 AddChat 11 AddChat 12>
 		result2 <NewChat Say 2 AddChat 4>
 		result3 <ifG ComTime V8 else GoNotYet ifG PCRenown V6 else GoNotYet V= 10 5 V+ 10 * 5 V5 V+ 10 V9 ifG V7 V10 else GoInvestFailed Goto GoInvestSucceed>
@@ -1099,7 +1099,7 @@ Content
 		use <ifAccessArmory else GoNotAllowed OpenInv>
 		GoNotAllowed <if# V1 0 else GoLocked OpenInv>
 		GoLocked <Print 1>
-		Clue32 <if= V1 0 else GoUnlocked Mental ifCodeBreaking 20 else GoCheckStealth Print 3 V= 1 1 XPV 100>
+		CLUE_CODEBREAKING <if= V1 0 else GoUnlocked Mental ifCodeBreaking 20 else GoCheckStealth Print 3 V= 1 1 XPV 100>
 		GoCheckStealth <ifStealth 10 else GoAlarm Goto GoCBFail>
 		GoAlarm <Print 5 TeamAttack 3 PCFEnemy 3 AddRenown -10 AddLawful -5>
 		GoUnlocked <Print 4>

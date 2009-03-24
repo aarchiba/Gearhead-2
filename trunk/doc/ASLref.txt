@@ -7,6 +7,13 @@
 	ATTACK			Called when PC shares same tile as hostile encounter
 	APPLAUSE		Using performance skill, favorable result
 	CLEANUP			Story is ending, do plot cleanup
+	CLUE_SURVIVAL
+	CLUE_REPAIR
+	CLUE_MEDICINE
+	CLUE_SCIENCE
+	CLUE_CODEBREAKING
+	CLUE_MYSTICISM
+	CLUE_INSIGHT
 	DEPLOY			Placed in team gears; called during map deployment
 	ENCGOAL[scene ID]	An encounter has reached its target square
 	END			Trigger placed when scene ends

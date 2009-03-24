@@ -170,16 +170,7 @@ type <BUG DESERT RUINS FIRE>
 habitat <>
 MonsterTV 68
 DomTarget 32
-% Begin SURVIVAL block.
-clue14 <ifSelfOK else GoPelt>
-GoPelt <if= V1 0 else GoDone Mental Gut V= 1 10 ifG SkRoll 14 16 else GoFail Print 1 GiveSTC .stcdesc>
-.stcdesc <FLAMEGLAND>
-GoFail <Print 2>
-GoDone <Print 3>
-Msg1 <You remove the flame gland from the beetle.>
-Msg2 <You don't manage to do much of anything with this beetle.>
-Msg3 <You've already done all you can with this beetle.>
-% End SURVIVAL block.
+*CLUE_SURVIVAL <*SURVIVAL_GetFlameGland 68 beetle>
 RangedCombat 3
 CloseCombat 5
 Dodge 6
@@ -313,16 +304,7 @@ statline 14 5 7 5 1 1 1 1
 MonsterTV 44
 type <Water Sea>
 habitat <>
-% Begin SURVIVAL block.
-clue14 <ifSelfOK else GoPelt>
-GoPelt <if= V1 0 else GoDone Mental Gut V= 1 1 ifG SkRoll 14 17 else GoFail Print 1 GiveSTC .stcdesc>
-.stcdesc <FOOD-4>
-GoFail <Print 2>
-GoDone <Print 3>
-Msg1 <You cut open the urchin and collect some meat from inside.>
-Msg2 <You cut open the urchin, and nearly get sick...>
-Msg3 <You've already gutted this urchin.>
-% End SURVIVAL block.
+*CLUE_SURVIVAL <*SURVIVAL_GetSashimiMaybeTainted 44 urchin>
 RangedCombat 5
 CloseCombat 3
 Dodge 1
@@ -357,19 +339,7 @@ DomTarget 19
 type <Animal Mountain Air>
 habitat <>
 statline 17 19 13 14 8 10 2 4
-% Begin SURVIVAL block.
-clue14 <ifSelfOK else GoPelt>
-GoPelt <if= V1 0 else GoDone Mental Gut V= 1 SkRoll 14 ifG V1 17 else GoMeat Print 1 GiveSTC .stcdesc>
-GoMeat <ifG V1 12 else GoFail Print 4 GiveSTC .fooddesc>
-.stcdesc <REDBEARLIVER>
-.fooddesc <FOOD-3>
-GoFail <Print 2>
-GoDone <Print 3>
-Msg1 <You remove the liver from this bear. It's supposed to have healing properties.>
-Msg2 <You don't manage to do much of anything with this bear carcass.>
-Msg3 <You've already done all you can with this bear carcass.>
-Msg4 <You cut some meat from the bear to have later.>
-% End SURVIVAL block.
+*CLUE_SURVIVAL <*SURVIVAL_GetMeatOrBearLiver 90 bear>
 CloseCombat 7
 Dodge 4
 % Bears have the talent HARD AS NAILS
@@ -416,22 +386,7 @@ DomTarget 25
 type <Animal Exotic Forest Cave Ice>
 habitat <>
 statline 16 19 11 15 10 16 7 6
-% Begin SURVIVAL block.
-clue14 <ifSelfOK else GoPelt>
-GoPelt <if= V1 0 else GoDone Mental Gut V= 1 SkRoll 14 ifG V1 20 else GoGland Print 5 GiveSTC .heartdesc>
-GoGland <ifG V1 18 else GoMeat Print 1 GiveSTC .stcdesc>
-GoMeat <ifG V1 13 else GoFail Print 4 GiveSTC .fooddesc>
-.heartdesc <DRAGONHEART>
-.stcdesc <REDBEARLIVER>
-.fooddesc <FOOD-3>
-GoFail <Print 2>
-GoDone <Print 3>
-Msg1 <You remove the liver from this bear. It's good for stamina.>
-Msg2 <You don't manage to do anything with this bear carcass other than make a mess.>
-Msg3 <You've already done all you can with this bear.>
-Msg4 <You cut some meat from the bear to have later.>
-Msg5 <You remove the heart from this bear to have later.>
-% End SURVIVAL block.
+*CLUE_SURVIVAL <*SURVIVAL_GetMeatOrBearLiverOrDragonHeart 90 bear>
 RangedCombat 4
 CloseCombat 8
 Dodge 4
@@ -486,16 +441,7 @@ roguechar <B>
 SDL_SPRITE <monster_bear.png>
 SDL_COLORS <80 90 90 90 100 100 200 50 0>
 genepool <BEAR>
-% Begin SURVIVAL block.
-clue14 <ifSelfOK else GoPelt>
-GoPelt <if= V1 0 else GoDone Mental Gut V= 1 1 ifG SkRoll 14 15 else GoFail Print 1 GiveSTC .stcdesc>
-.stcdesc <FOOD-3>
-GoFail <Print 2>
-GoDone <Print 3>
-Msg1 <You cut some meat from this bear.>
-Msg2 <This bear is too mutated and toxic to even think about eating.>
-Msg3 <You've already gutted this bear.>
-% End SURVIVAL block.
+*CLUE_SURVIVAL <*SURVIVAL_GetMeatMaybeTainted 80 bear>
 MonsterTV 80
 DomTarget 26
 type <Animal Mutant Earth Wasteland>
@@ -548,19 +494,7 @@ DomTarget 17
 type <Animal Forest Tundra Ice>
 habitat <>
 statline 14 17 9 13 8 10 2 4
-% Begin SURVIVAL block.
-clue14 <ifSelfOK else GoPelt>
-GoPelt <if= V1 0 else GoDone Mental Gut V= 1 SkRoll 14 ifG V1 20 else GoMeat Print 1 GiveSTC .stcdesc>
-GoMeat <ifG V1 12 else GoFail Print 4 GiveSTC .fooddesc>
-.stcdesc <REDBEARLIVER>
-.fooddesc <FOOD-3>
-GoFail <Print 2>
-GoDone <Print 3>
-Msg1 <You remove the liver from this bear. It's supposed to have healing properties.>
-Msg2 <You don't manage to do much of anything with this bear carcass.>
-Msg3 <You've already done all you can with this bear carcass.>
-Msg4 <You cut some meat from the bear to have later.>
-% End SURVIVAL block.
+*CLUE_SURVIVAL <*SURVIVAL_GetMeatOrBearLiver 56 bear>
 CloseCombat 6
 Dodge 2
 % Bears have the talent HARD AS NAILS
@@ -627,6 +561,7 @@ end
 
 Arch Toxic Chameleon
 statline 13 10 6 9 5 3 1 2
+*CLUE_SURVIVAL <*SURVIVAL_GetMeatMaybeTainted 48 chameleon>
 sdl_sprite <monster_chameleon.png>
 sdl_colors <220 100 170 60 70 60 230 30 50>
 MonsterTV 48
@@ -669,15 +604,7 @@ habitat <>
 RogueChar <c>
 sdl_sprite <monster_chameleon.png>
 sdl_colors <125 100 15 70 125 120 230 170 90>
-% Begin SURVIVAL block.
-clue14 <ifSelfOK else GoPelt>
-GoPelt <if= V1 0 else GoDone Mental Flay V= 1 10 V+ 1 d100 ifG SkRoll 14 15 else GoFail Print 1 Cash+ V1>
-GoFail <Print 2>
-GoDone <Print 3>
-Msg1 <You skin the chameleon, recieving a pelt worth $ \VAL V1 .>
-Msg2 <You attempt to skin the chameleon, but end up just making a mess.>
-Msg3 <You've already skinned this chameleon.>
-% End SURVIVAL block.
+*CLUE_SURVIVAL <*SURVIVAL_GetMeatOrSmallPelt 20 chameleon>
 CloseCombat 3
 Dodge 1
 Awareness 5
@@ -713,16 +640,7 @@ SDL_SPRITE <monster_alligator.png>
 SDL_COLORS <150 112 89 170 130 100 210 40 50>
 type <Earth Mountain Reptile>
 habitat <>
-% Begin SURVIVAL block.
-clue14 <ifSelfOK else GoPelt>
-GoPelt <if= V1 0 else GoDone Mental Gut V= 1 1 ifG SkRoll 14 10 else GoFail Print 1 GiveSTC .stcdesc>
-.stcdesc <FOOD-3>
-GoFail <Print 2>
-GoDone <Print 3>
-Msg1 <You cut up the lizard and save some nice steaks for later.>
-Msg2 <You attempt to cut some meat from the lizard, but can't find anything worth eating.>
-Msg3 <You've already gutted this lizard.>
-% End SURVIVAL block.
+*CLUE_SURVIVAL <*SURVIVAL_GetMeatOrLootGizzard 50 lizard>
 CloseCombat 5
 Dodge 4
 Vitality 6
@@ -759,15 +677,7 @@ SDL_SPRITE <monster_alligator.png>
 SDL_COLORS <199 188 162 152 61 97 208 35 51>
 type <City Water Swamp Cave Reptile Animal>
 habitat <>
-% Begin SURVIVAL block.
-clue14 <ifSelfOK else GoPelt>
-GoPelt <if= V1 0 else GoDone Mental Gut V= 1 500 V+ 1 d1500 V+ 1 d1500 ifG SkRoll 14 20 else GoFail Print 1 Cash+ V1>
-GoFail <Print 2>
-GoDone <Print 3>
-Msg1 <You recover metal objects worth $ \VAL V1 from the alligator's gizzard.>
-Msg2 <You cut open the alligator's gizzard to see if it swallowed anything valuable, but find nothing.>
-Msg3 <This albino alligator has nothing else that might be useful to you.>
-% End SURVIVAL block.
+*CLUE_SURVIVAL <*SURVIVAL_GetMeatOrLootGizzard 72 alligator>
 CloseCombat 5
 Dodge 4
 Vitality 6
@@ -895,19 +805,7 @@ roguechar <F>
 type <animal earth swamp mutant cave fire>
 habitat <>
 statline 10 17 9 10 2 2 2 2
-% Begin SURVIVAL block.
-clue14 <ifSelfOK else GoPelt>
-GoPelt <if= V1 0 else GoDone Mental Gut V= 1 10 ifG SkRoll 14 19 else GoCheckMeat Print 1 GiveSTC .stcdesc>
-GoCheckMeat <ifG SkRoll 14 15 else GoFail Print 4 GiveSTC .food>
-.stcdesc <FLAMEGLAND>
-.food <FOOD-3>
-GoFail <Print 2>
-GoDone <Print 3>
-Msg1 <You remove the flame gland from the toad.>
-Msg2 <You don't manage to do much of anything with this toad.>
-Msg3 <You've already done all you can with this toad.>
-Msg4 <You cut some meat from this toad. It's very spicy!>
-% End SURVIVAL block.
+*CLUE_SURVIVAL <*SURVIVAL_GetMeatOrFlameGland 56 toad>
 MonsterTV 56
 DomTarget 19
 RangedCombat 3
@@ -953,16 +851,7 @@ SDL_COLORS <101 72 42  245 200 170  34 216 244>
 roguechar <F>
 type <animal earth swamp mutant cave reptile>
 habitat <>
-% Begin SURVIVAL block.
-clue14 <ifSelfOK else GoPelt>
-GoPelt <if= V1 0 else GoDone Mental Gut V= 1 1 ifG SkRoll 14 13 else GoFail Print 1 GiveSTC .stcdesc>
-.stcdesc <FOOD-3>
-GoFail <Print 2>
-GoDone <Print 3>
-Msg1 <You cut up the toad and save some meat for later.>
-Msg2 <You attempt to get some meat from the toad, but it's nothing but bone and gristle.>
-Msg3 <You've already gutted this toad.>
-% End SURVIVAL block.
+*CLUE_SURVIVAL <*SURVIVAL_GetMeat 72 toad>
 statline 10 16 10 7 2 2 2 2
 MonsterTV 72
 DomTarget 23
@@ -999,16 +888,7 @@ SDL_COLORS <45 85 80  112 127 98  244 216 35>
 roguechar <F>
 type <animal water Green Forest Swamp>
 habitat <>
-% Begin SURVIVAL block.
-clue14 <ifSelfOK else GoPelt>
-GoPelt <if= V1 0 else GoDone Mental Gut V= 1 1 ifG SkRoll 14 12 else GoFail Print 1 GiveSTC .stcdesc>
-.stcdesc <FOOD-3>
-GoFail <Print 2>
-GoDone <Print 3>
-Msg1 <You cut up the frog and save some drumsticks for later.>
-Msg2 <You attempt to get some meat from the frog, but it's too disgusting to even think about eating it.>
-Msg3 <You've already gutted this frog.>
-% End SURVIVAL block.
+*CLUE_SURVIVAL <*SURVIVAL_GetMeat 35 frog>
 statline 8 11 10 9 2 2 2 2
 MonsterTV 35
 DomTarget 14
@@ -1038,6 +918,7 @@ SDL_SPRITE <monster_leech.png>
 SDL_COLORS <140 105 81 136 141 101 130 143 114>
 roguechar <l>
 type <Dark Swamp Water>
+*CLUE_SURVIVAL <*SURVIVAL_GetMeatMaybeTainted 39 viper>
 habitat <>
 statline 7 8 3 4 1 1 1 1
 MonsterTV 21
@@ -1059,16 +940,7 @@ SDL_SPRITE <monster_lobster.png>
 SDL_COLORS <134 141 101  144 161 111  168 153 230>
 type <Bug Water Swamp Green>
 habitat <>
-% Begin SURVIVAL block.
-clue14 <ifSelfOK else GoPelt>
-GoPelt <if= V1 0 else GoDone Mental Gut V= 1 1 ifG SkRoll 14 15 else GoFail Print 1 GiveSTC .stcdesc>
-.stcdesc <FOOD-4>
-GoFail <Print 2>
-GoDone <Print 3>
-Msg1 <You cut up the lobster and make a lovely sushi plate.>
-Msg2 <You attempt to get some meat from the lobster, but it's tougher than it looks...>
-Msg3 <You've already gutted this lobster.>
-% End SURVIVAL block.
+*CLUE_SURVIVAL <*SURVIVAL_GetSashimi 35 lobster>
 statline 12 14 8 11 5 7 4 6
 MonsterTV 35
 DomTarget 15
@@ -1092,19 +964,7 @@ SDL_SPRITE <monster_lobster.png>
 SDL_COLORS <150 112 89  80 80 85  234 180 88>
 type <Bug Earth Cave Ruins>
 habitat <>
-% Begin SURVIVAL block.
-clue14 <ifSelfOK else GoPelt>
-GoPelt <if= V1 0 else GoDone Mental Gut V= 1 SkRoll 14 ifG V1 25 else GoCheckSushi Print 4 GiveSTC .shielddesc>
-.shielddesc <LOBSTERSHIELD>
-GoCheckSushi <ifG V1 12 else GoFail else GoFail Print 1 GiveSTC .stcdesc>
-.stcdesc <FOOD-4>
-GoFail <Print 2>
-GoDone <Print 3>
-Msg1 <You cut up the lobster and make a lovely sushi plate.>
-Msg2 <You attempt to get some meat from the lobster, but it's tougher than it looks...>
-Msg3 <You've already gutted this lobster.>
-Msg4 <You remove the tough, spiky plate from the top of this lobster. It might make a decent shield.>
-% End SURVIVAL block.
+*CLUE_SURVIVAL <*SURVIVAL_GetSashimiOrLobsterShield 68 lobster>
 statline 13 20 9 11 5 7 4 5
 MonsterTV 52
 DomTarget 18
@@ -1128,19 +988,7 @@ SDL_SPRITE <monster_lobster.png>
 SDL_COLORS <45 26 91 6 42 120 77 121 119>
 type <Bug Water Sea Cave>
 habitat <>
-% Begin SURVIVAL block.
-clue14 <ifSelfOK else GoPelt>
-GoPelt <if= V1 0 else GoDone Mental Gut V= 1 SkRoll 14 ifG V1 25 else GoCheckSushi Print 4 GiveSTC .shielddesc>
-.shielddesc <LOBSTERSHIELD>
-GoCheckSushi <ifG V1 9 else GoFail else GoFail Print 1 GiveSTC .stcdesc>
-.stcdesc <FOOD-4>
-GoFail <Print 2>
-GoDone <Print 3>
-Msg1 <You cut up the lobster and make a lovely sushi plate.>
-Msg2 <You attempt to get some meat from the lobster, but it's tougher than it looks...>
-Msg3 <You've already gutted this lobster.>
-Msg4 <You remove the tough, spiky plate from the top of this lobster. It might make a decent shield.>
-% End SURVIVAL block.
+*CLUE_SURVIVAL <*SURVIVAL_GetSashimiOrLobsterShield 85 lobster>
 statline 17 29 6 13 5 8 8 3
 MonsterTV 85
 DomTarget 21
@@ -1177,6 +1025,7 @@ habitat <>
 sdl_sprite <monster_eagle.png>
 sdl_colors <170 50 32 70 121 120 0 200 150>
 statline 10 2 11 7 2 3 2 2
+*CLUE_SURVIVAL <*SURVIVAL_GetMeat 33 bird-thing>
 MonsterTV 22
 CloseCombat 1
 Dodge 1
@@ -1201,16 +1050,7 @@ type <exotic cave desert reptile>
 habitat <>
 SDL_SPRITE <monster_raptor.png>
 SDL_COLORS <170 120 89 0 0 0 0 200 100>
-% Begin SURVIVAL block.
-clue14 <ifSelfOK else GoPelt>
-GoPelt <if= V1 0 else GoDone Mental Gut V= 1 1 ifG SkRoll 14 10 else GoFail Print 1 GiveSTC .stcdesc>
-.stcdesc <FOOD-3>
-GoFail <Print 2>
-GoDone <Print 3>
-Msg1 <You cut up the raptor and save some meat for later.>
-Msg2 <You attempt to get some meat from the raptor, but it's too tough even for jerkey.>
-Msg3 <You've already gutted this raptor.>
-% End SURVIVAL block.
+*CLUE_SURVIVAL <*SURVIVAL_GetMeat 52 raptor>
 statline 14 13 16 11 8 7 2 5
 DomTarget 23
 MonsterTV 52
@@ -1246,16 +1086,7 @@ type <exotic cave desert reptile>
 habitat <>
 SDL_SPRITE <monster_raptor.png>
 SDL_COLORS <146 161 101 0 0 0 214 216 28>
-% Begin SURVIVAL block.
-clue14 <ifSelfOK else GoPelt>
-GoPelt <if= V1 0 else GoDone Mental Gut V= 1 1 ifG SkRoll 14 10 else GoFail Print 1 GiveSTC .stcdesc>
-.stcdesc <FOOD-3>
-GoFail <Print 2>
-GoDone <Print 3>
-Msg1 <You cut up the raptor and save some meat for later.>
-Msg2 <You attempt to get some meat from the raptor, but it's all skin and bones.>
-Msg3 <You've already gutted this raptor.>
-% End SURVIVAL block.
+*CLUE_SURVIVAL <*SURVIVAL_GetMeat 25 raptor>
 statline 10 6 11 13 8 7 2 5
 DomTarget 17
 MonsterTV 25
@@ -1290,16 +1121,7 @@ SDL_COLORS <136 191 225  170 178 187  179 0 210>
 roguechar <w>
 type <animal cave water bug sea>
 habitat <>
-% Begin SURVIVAL block.
-clue14 <ifSelfOK else GoPelt>
-GoPelt <if= V1 0 else GoDone Mental Gut V= 1 1 ifG SkRoll 14 13 else GoFail Print 1 GiveSTC .stcdesc>
-.stcdesc <FOOD-4>
-GoFail <Print 2>
-GoDone <Print 3>
-Msg1 <You cut up the crab and make a lovely sushi plate.>
-Msg2 <You attempt to get some meat from the crab, but it's tougher than it looks...>
-Msg3 <You've already gutted this crab.>
-% End SURVIVAL block.
+*CLUE_SURVIVAL <*SURVIVAL_GetSashimi 44 crab>
 statline 10 15 5 9 1 1 1 1
 DomTarget 21
 MonsterTV 44
@@ -1339,16 +1161,7 @@ SDL_COLORS <204 51 85  200 144 64  208 93 8>
 roguechar <w>
 type <animal cave water bug sea>
 habitat <>
-% Begin SURVIVAL block.
-clue14 <ifSelfOK else GoPelt>
-GoPelt <if= V1 0 else GoDone Mental Gut V= 1 1 ifG SkRoll 14 14 else GoFail Print 1 GiveSTC .stcdesc>
-.stcdesc <FOOD-4>
-GoFail <Print 2>
-GoDone <Print 3>
-Msg1 <You cut up the crab and make a lovely sushi plate.>
-Msg2 <You attempt to get some meat from the crab, but it's tougher than it looks...>
-Msg3 <You've already gutted this crab.>
-% End SURVIVAL block.
+*CLUE_SURVIVAL <*SURVIVAL_GetSashimi 30 crab>
 statline 9 9 6 8 1 1 1 1
 DomTarget 13
 MonsterTV 30
@@ -1386,19 +1199,7 @@ SDL_SPRITE <monster_serpent.png>
 roguechar <S>
 type <swamp water dark exotic reptile>
 habitat <>
-% Begin SURVIVAL block.
-clue14 <ifSelfOK else GoPelt>
-GoPelt <if= V1 0 else GoDone Mental Gut V= 1 SkRoll 14 ifG V1 23 else GoFood Print 4 GiveSTC .heartdesc>
-GoFood <ifG V1 13 else GoFail Print 1 GiveSTC .stcdesc>
-.heartdesc <DRAGONHEART>
-.stcdesc <FOOD-3>
-GoFail <Print 2>
-GoDone <Print 3>
-Msg1 <You cut up the serpent and save some nice steaks for later.>
-Msg2 <You attempt to cut some meat from the serpent, but end up just making yourself sick.>
-Msg3 <You've already gutted this serpent.>
-Msg4 <You remove the heart from this dragon. It's supposed to have healing properties.>
-% End SURVIVAL block.
+*CLUE_SURVIVAL <*SURVIVAL_GetMeatOrDragonHeart 85 serpent>
 statline 15 16 16 11 4 19 2 2
 MonsterTV 85
 DomTarget 22
@@ -1440,6 +1241,7 @@ SDL_COLORS <84 97 85  191 205 229  244 206 48>
 roguechar <S>
 type <animal swamp dark reptile>
 habitat <>
+*CLUE_SURVIVAL <*SURVIVAL_GetMeatMaybeTainted 44 viper>
 statline 13 5 12 7 2 3 2 2
 MonsterTV 44
 DomTarget 21
@@ -1466,19 +1268,7 @@ SDL_SPRITE <monster_serpent.png>
 SDL_COLORS <36 46 22  200 50 0  56 28 81>
 genepool <DRAGON>
 EvolveAt 20000
-% Begin SURVIVAL block.
-clue14 <ifSelfOK else GoPelt>
-GoPelt <if= V1 0 else GoDone Mental Gut V= 1 SkRoll 14 ifG V1 25 else GoFood Print 4 GiveSTC .heartdesc>
-GoFood <ifG V1 12 else GoFail Print 1 GiveSTC .stcdesc>
-.heartdesc <DRAGONHEART>
-.stcdesc <FOOD-3>
-GoFail <Print 2>
-GoDone <Print 3>
-Msg1 <You cut up the serpent and save some nice steaks for later.>
-Msg2 <You attempt to cut some meat from the serpent, but end up just making yourself sick.>
-Msg3 <You've already gutted this serpent.>
-Msg4 <You remove the heart from this dragon. It's supposed to have healing properties.>
-% End SURVIVAL block.
+*CLUE_SURVIVAL <*SURVIVAL_GetMeatOrDragonHeart 45 serpent>
 roguechar <S>
 type <exotic cave fire forest reptile>
 habitat <>
@@ -1549,19 +1339,7 @@ SDL_SPRITE <monster_rat.png>
 SDL_COLORS <55 153 93 174 68 42 221 0 132>
 type <animal cave exotic earth fire vermin>
 habitat <>
-% Begin SURVIVAL block.
-clue14 <ifSelfOK else GoPelt>
-GoPelt <if= V1 0 else GoDone Mental Gut V= 1 SkRoll 14 ifG V1 25 else GoFood Print 4 GiveSTC .heartdesc>
-GoFood <ifG V1 10 else GoFail Print 1 GiveSTC .stcdesc>
-.heartdesc <DRAGONHEART>
-.stcdesc <FOOD-3>
-GoFail <Print 2>
-GoDone <Print 3>
-Msg1 <You cut up the dragon rat and save some nice steaks for later.>
-Msg2 <You try to butcher the rat, but can't get through its tough scales.>
-Msg3 <You've already done all you can with this rat.>
-Msg4 <You remove the heart from this dragon rat. It's supposed to be good for your health.>
-% End SURVIVAL block.
+*CLUE_SURVIVAL <*SURVIVAL_GetMeatOrDragonHeart 76 rat>
 statline 13 12 15 9 9 7 5 5
 MonsterTV 76
 DomTarget 20
@@ -1625,16 +1403,7 @@ SDL_SPRITE <monster_rat.png>
 SDL_COLORS <119 123 178 234 195 0 217 103 126>
 type <animal cave mutant desert earth city vermin>
 habitat <>
-% Begin SURVIVAL block.
-clue14 <ifSelfOK else GoPelt>
-GoPelt <if= V1 0 else GoDone Mental Gut V= 1 1 ifG SkRoll 14 15 else GoFail Print 1 GiveSTC .stcdesc>
-.stcdesc <FOOD-3>
-GoFail <Print 2>
-GoDone <Print 3>
-Msg1 <You cut up the rat and save some nice steaks for later.>
-Msg2 <You attempt to cut some meat from the rat, but it's too tough to cut.>
-Msg3 <You've already gutted this rat.>
-% End SURVIVAL block.
+*CLUE_SURVIVAL <*SURVIVAL_GetMeat 56 rat>
 statline 11 7 14 8 8 6 2 2
 MonsterTV 56
 DomTarget 18
@@ -1682,16 +1451,7 @@ SDL_SPRITE <monster_rat.png>
 SDL_COLORS <174 68 42 234 195 0 217 123 166>
 type <animal mutant vermin>
 habitat <>
-% Begin SURVIVAL block.
-clue14 <ifSelfOK else GoPelt>
-GoPelt <if= V1 0 else GoDone Mental Gut V= 1 1 ifG SkRoll 14 10 else GoFail Print 1 GiveSTC .stcdesc>
-.stcdesc <FOOD-3>
-GoFail <Print 2>
-GoDone <Print 3>
-Msg1 <You cut up the rat and save some nice steaks for later.>
-Msg2 <You attempt to cut some meat from the rat, but end up just making yourself nauseous.>
-Msg3 <You've already gutted this rat.>
-% End SURVIVAL block.
+*CLUE_SURVIVAL <*SURVIVAL_GetMeat 30 rat>
 statline 10 4 10 8 8 6 2 2
 MonsterTV 40
 DomTarget 15
@@ -1729,16 +1489,7 @@ SDL_SPRITE <monster_rat.png>
 SDL_COLORS <167 144 59 110 133 62 217 132 217>
 type <animal cave mutant swamp earth vermin>
 habitat <>
-% Begin SURVIVAL block.
-clue14 <ifSelfOK else GoPelt>
-GoPelt <if= V1 0 else GoDone Mental Gut V= 1 1 ifG SkRoll 14 20 else GoFail Print 1 GiveSTC .stcdesc>
-.stcdesc <FOOD-3>
-GoFail <Print 2>
-GoDone <Print 3>
-Msg1 <You find some parts of this rat that don't appear too rotten.>
-Msg2 <You cut some meat from this rat, but would probably die if you tried to eat it.>
-Msg3 <You've already gutted this rat.>
-% End SURVIVAL block.
+*CLUE_SURVIVAL <*SURVIVAL_GetMeatMaybeTainted 35 rat>
 statline 10 3 10 8 8 6 2 2
 MonsterTV 48
 CloseCombat 4
@@ -1808,6 +1559,7 @@ CHAT_SAFE <Chu?>
 CHAT_SAFE2 <Chu.>
 genepool <E-RAT>
 habitat <>
+*CLUE_SURVIVAL <*SURVIVAL_GetMeatOrSmallPelt 30 rat>
 statline 14 10 16 10 10 9 7 13
 MonsterTV 68
 DomTarget 30
@@ -1869,15 +1621,7 @@ CHAT_SAFE <Chu?>
 CHAT_SAFE2 <Chu.>
 type <animal exotic cave forest vermin>
 habitat <>
-% Begin SURVIVAL block.
-clue14 <ifSelfOK else GoPelt>
-GoPelt <if= V1 0 else GoDone Mental Flay V= 1 10 V+ 1 d20 ifG SkRoll 14 15 else GoFail Print 1 Cash+ V1>
-GoFail <Print 2>
-GoDone <Print 3>
-Msg1 <You skin the electric rat, recieving a pelt worth $ \VAL V1 .>
-Msg2 <You attempt to skin the rat, but end up just mutilating it instead.>
-Msg3 <You've already skinned this rat.>
-% End SURVIVAL block.
+*CLUE_SURVIVAL <*SURVIVAL_GetMeatOrSmallPelt 30 rat>
 statline 8 4 14 8 8 6 3 9
 MonsterTV 35
 DomTarget 10
@@ -1920,16 +1664,7 @@ ARCH Rat
 roguechar <r>
 SDL_SPRITE <monster_rat.png>
 SDL_COLORS <174 68 42 174 68 42 217 123 166>
-% Begin SURVIVAL block.
-clue14 <ifSelfOK else GoPelt>
-GoPelt <if= V1 0 else GoDone Mental Gut V= 1 1 ifG SkRoll 14 15 else GoFail Print 1 GiveSTC .stcdesc>
-.stcdesc <FOOD-3>
-GoFail <Print 2>
-GoDone <Print 3>
-Msg1 <You cut up the rat and save some nice steaks for later.>
-Msg2 <You attempt to cut some meat from the rat, but end up just making yourself nauseous.>
-Msg3 <You've already gutted this rat.>
-% End SURVIVAL block.
+*CLUE_SURVIVAL <*SURVIVAL_GetMeat 20 rat>
 type <animal cave earth swamp city vermin>
 habitat <>
 statline 8 1 10 8 8 6 2 2

@@ -806,7 +806,7 @@ Content
 		Result5 <NewChat  Say 10  Cash+ -V2  Goto GoGiveItem>
 		% Offering to appear in a naughty video will tarnish your reputation a bit... but threatening
 		% to kill someone won't. What a strange universe this is.
-		Result6 <NewChat  Say 11  AddEasygoing -10  AddCheerful d10  AddPragmatic d10  AddRenown -1  SkillXP 27 100  ifG PCHeroism 0 else GoGiveItem  AddHeroic -1  Goto GoGiveItem>
+		Result6 <NewChat  Say 11  AddEasygoing -10  AddCheerful d10  AddPragmatic d10  AddRenown -1  XPV 100  ifG PCHeroism 0 else GoGiveItem  AddHeroic -1  Goto GoGiveItem>
 		Result7 <NewChat Say 12>
 		Msg1 <%name1%... Yes, that name does ring a bell. I believe \SPR %1% appeared in one of my recent videos.>
 		Msg2 <Hello \PC . I guess you're back to talk about %name1%'s video again.>

@@ -189,7 +189,7 @@
 	result%id%01 <ifIntimidation NPCEgo ChatNPCID else .%id%_GoFail NewChat Say %id%04 AddChat %id%03>
 	.%id%_GoFail <NewChat Say %id%03>
 	result%id%02 <NewChat Say %id%02>
-	result%id%03 <V= %id%01 1 SkillXP 28 250 Goto %1%>
+	result%id%03 <V= %id%01 1 SkillXP 20 250 Goto %1%>
 	Msg%id%01 <Sorry, my shop is closed.>
 	Msg%id%02 <I wouldn't expect it to open again any time soon.>
 	Msg%id%03 <Like I said, we're closed. There's nothing I can do about it.>
@@ -250,7 +250,7 @@
 	requires <*NiceToMeetYou Charm ~Renowned>
 	Start <ifCHatNPCUnknown else %1% NewChat Say %id%01 AddChat %id%01 AddChat %id%02>
 	result%id%01 <Goto %1%>
-	result%id%02 <AddEasygoing -d4  ifConversation 5 else .%id%_GoFail ifG React 0 else .%id%_GoFail AddReact 10 SkillXP 27 100  NewChat Say %id%03 AddChat %id%04>
+	result%id%02 <AddEasygoing -d4  ifConversation 5 else .%id%_GoFail ifG React 0 else .%id%_GoFail AddReact 10 SkillXP 17 100  NewChat Say %id%03 AddChat %id%04>
 	.%id%_GoFail <NewChat AddReact -5 Say %id%02 AddChat %id%03 PCMoraleDmg 10 ifG PCRenown 0 AddRenown -1>
 	result%id%03 <Goto %1%>
 	result%id%04 <Goto %1%>
@@ -326,7 +326,7 @@
 	requires <*NiceToMeetYou "PDASS" ~Ego>
 	Start <ifCHatNPCUnknown else %1% V= %id%01 10 V+ %id%01 d8 NewChat Say %id%01 AddChat %id%01 AddChat %id%02>
 	result%id%01 <Goto %1%>
-	result%id%02 <NewChat Say %id%02   AddReact d10   SkillXP 11 100   AddChat %id%03  AddChat %id%04  AddChat %id%05>
+	result%id%02 <NewChat Say %id%02   AddReact d10   SkillXP 10 100   AddChat %id%03  AddChat %id%04  AddChat %id%05>
 	result%id%03 <NewChat Say %id%03   AddChat %id%06>
 	result%id%04 <NewChat Say %id%03   AddChat %id%06>
 	result%id%05 <Goto %1%>

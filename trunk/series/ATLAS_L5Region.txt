@@ -1634,11 +1634,11 @@ sub
 					name <Cargo Container>
 					use <Print 1>
 					% Survival block...
-					clue14 <Print 2>
+					clue_survival <Print 2>
 					% Science block..
-					clue29 <Print 3>
+					clue_science <Print 3>
 					% Investigation block...
-					clue37 <Print 4>
+					clue_insight <Print 4>
 					Msg1 <This is an old cargo container. It's been busted open.>
 					Msg2 <It's strange, but the damage done to this container looks like it was done by the claws of a large animal.>
 					Msg3 <This type of container is generally used for shipping biological materials. It was broken from the inside out.>
@@ -4517,11 +4517,11 @@ sub
 			name <Meteor Fragment>
 			MiniMapComponent 2
 			Use <Print 1>
-			Clue14 <Print 4>
-			Clue22 <Print 3>
-			Clue29 <Print 2>
-			Clue34 <Print 5 if= V1 0 ifMysticism 5 XPV 50 V= 1 1 AddPragmatic -d10>
-			Clue37 <Print 4>
+			Clue_Survival  <Print 4>
+			Clue_Science   <Print 3>
+			Clue_Repair    <Print 2>
+			Clue_Mysticism <Print 5 if= V1 0 ifMysticism 5 XPV 50 V= 1 1 AddPragmatic -d10>
+			Clue_Insight   <Print 4>
 			Msg1 <This display houses a fragment of the meteor which struck Tohru Spinner.>
 			Msg2 <It's possible that the meteor's unusual organic-metallic composition allowed it to slip past Tohru Spinner's long range sensors.>
 			Msg3 <This meteor is composed of a metallic alloy interwoven with organic polymer chains. This was a common building material for bioweapons during the Age of Superpowers.>

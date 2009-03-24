@@ -214,7 +214,7 @@ Content
 		name <%name4%>
 		use <ifG P%id%02 ComTime else GoFriendDied Goto GoSaveFriend>
 		GoFriendDied <Alert 1 L= 1 1>
-		Clue16 <Goto GoSaveFriend>
+		CLUE_MEDICINE <Goto GoSaveFriend>
 		Pass -100
 		GoSaveFriend <Alert 2 History 3 XPV 100 Return MoveNPC %4% %6%  &SetHangingNPC %4% AlterContext .next WinSubPlot %plotid% Trigger0 .%id%_%plotid%_GoWin>
 		.next <+Hrt>

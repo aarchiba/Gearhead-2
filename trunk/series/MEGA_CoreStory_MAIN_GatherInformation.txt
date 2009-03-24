@@ -114,7 +114,7 @@ Content
 		GoSoloLoud <Alert 3>
 		GoLoudEntry <Alert 4 Monologue %5% 5 Alert 6>
 
-		.%id%_%plotid%_LocalEvent <if= L1 0 L= 1 1 Alert 10 History 11 XPV 100  SkillXP 31 100  WinSubPlot %plotid% Trigger0 .%id%_%plotid%_GoWin ifNPCOK %5% Monologue %5% 12 SetXXRAttitude %5% XXR_A_IsEqual>
+		.%id%_%plotid%_LocalEvent <if= L1 0 L= 1 1 Alert 10 History 11 XPV 100  SkillXP 22 100  WinSubPlot %plotid% Trigger0 .%id%_%plotid%_GoWin ifNPCOK %5% Monologue %5% 12 SetXXRAttitude %5% XXR_A_IsEqual>
 
 		end <if# L1 0 SetEncounterInactive %3%>
 
@@ -397,7 +397,7 @@ Content
 		result1 <NewChat Say 3 AddChat 3>
 		result2 <NewChat Say 4 AddChat 3>
 		result3 <NewChat Say 5 AddChat 4>
-		result4 <EndChat Say 6 History 7 Print 8 Time 3600   SkillXP 1 100   SkillXP 2 100   SkillXP 3 100   SkillXP 4 100   SkillXP 5 100>
+		result4 <EndChat Say 6 History 7 Print 8 Time 3600   SkillXP 1 150   SkillXP 2 150   SkillXP 3 200>
 		Msg1 <Don't worry about me. I can get home by myself.>
 		Msg2 <Sorry for causing all this fuss... %name6% always did have a problem with subtlety. Thanks for trying to rescue me, anyhow, even if I didn't really need it.>
 		Msg3 <Ever since \SPR %6% was my student \SPR %6% 's been like that. I think \SPR %6% isn't very happy with the direction \PPR %6% life has taken; \SPR %6% came to me for advice.>

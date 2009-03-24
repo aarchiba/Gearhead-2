@@ -42,6 +42,9 @@ var
 	STC_Item_List: GearPtr;
 	Factions_List: GearPtr;
 	Mecha_Theme_List: GearPtr;
+	standard_script_list: GearPtr;
+
+Procedure ApplyDictionaryToString( var Info: String; Dictionary: SAttPtr );
 
 Function SkillRankForRenown( Renown: Integer ): Integer;
 Procedure SetSkillsAtLevel( NPC: GearPtr; Lvl: Integer );
@@ -557,6 +560,88 @@ begin
 
 end;
 
+Procedure ApplyDictionaryToString( var Info: String; Dictionary: SAttPtr );
+	{ This dictionary contains a bunch of substitution strings. Apply them to }
+	{ the string provided. }
+var
+	P,P2: Integer;
+	SPat,SRep: String;
+begin
+	P := 1;
+	while P < Length( Info ) do begin
+		if ( Info[P] = '%' ) and ( P < ( Length( Info ) - 1 ) ) then begin
+			{ We've found a hash. This could be a replacement string. See what string it is. }
+			SPat := '%';
+			P2 := P;
+			repeat
+				Inc( P2 );
+				SPat := SPat + Info[P2];
+			until ( P2 >= Length( Info ) ) or ( Info[P2] = '%' );
+
+			{ We now have a string that may very well be something we want to replace. Check it. }
+			SRep := SAttValue( Dictionary , SPat );
+			if SRep <> '' then begin
+				{ The pattern was found in the dictionary. Replace all instances of it. }
+				ReplacePat( Info , SPat , SRep );
+				P := P + Length( SRep ) - 1;
+			end;
+		end;
+
+		Inc( P );
+	end;
+end;
+
+Procedure InsertStandardScript( Part: GearPtr; ScriptRequest: String );
+	{ This part has requested a standard script. }
+var
+	sr_tag,sr_type,msg: String;
+	sr_script: GearPtr;
+	Dictionary,SA: SAttPtr;
+	T: Integer;
+begin
+	{ Remove the * from the beginning of the request. }
+	DeleteFirstChar( ScriptRequest );
+
+	{ Get some of the needed information. }
+	sr_tag := RetrieveAPreamble( ScriptRequest );
+	msg := RetrieveAString( ScriptRequest );
+	sr_type := ExtractWord( msg );
+
+	{ Locate the script to be used. }
+	sr_script := SeekGearByName( standard_script_list , sr_type );
+	if sr_script <> Nil then begin
+		{ Create our dictionary. }
+		Dictionary := Nil;
+		AddNAtt( Part^.NA , NAG_GearOps , NAS_MaxStandardScriptID , 1 );
+		StoreSAtt( Dictionary , '%id% <' + BStr( NAttValue( Part^.NA , NAG_GearOps , NAS_MaxStandardScriptID ) ) + '>' );
+		for t := 1 to 8 do StoreSAtt( Dictionary , '%' + BStr( T ) + '% <' + ExtractWord( msg ) + '>' );
+
+		{ Copy the START script into the sr_tag script, copy everything else }
+		{ besides the name over directly. }
+		SA := SR_Script^.SA;
+		while SA <> Nil do begin
+			sr_type := UpCase( RetrieveAPreamble( SA^.Info ) );
+
+			if sr_type = 'START' then begin
+				msg := RetrieveAString( SA^.Info );
+				ApplyDictionaryToString( msg , Dictionary );
+				SetSAtt( Part^.SA , sr_tag + ' <' + msg + '>' );
+			end else if sr_type <> 'NAME' then begin
+				msg := SA^.Info;
+				ApplyDictionaryToString( msg , Dictionary );
+				SetSAtt( Part^.SA , msg );
+			end;
+
+			SA := SA^.Next;
+		end;
+
+		DisposeSAtt( Dictionary );
+	end else begin
+		DialogMsg( 'ERROR: Standard script ' + sr_type + ' not found.' );
+	end;
+end;
+
+
 Function ReadGear( var F: Text; RandomizeNPCs: Boolean; const ZZZFName: String ): GearPtr;
 	{F is an open file of type F.}
 	{Start reading information from the file, stopping}
@@ -1001,6 +1086,11 @@ begin
 			{ *** COMMENT *** }
 			TheLine := '';
 
+		end else if ( TheLine[1] = '*' ) and ( C <> Nil ) and ( C^.G > 0 ) then begin
+			{ *** STANDARD SCRIPT *** }
+			{ This is apparently a standard script. Deal with it. }
+			InsertStandardScript( C , TheLine );
+
 		end else if Pos('<',TheLine) > 0 then begin
 			{ *** STRING ATTRIBUTE *** }
 			if C <> Nil then SetSAtt(C^.SA,TheLine);
@@ -1385,6 +1475,7 @@ end;
 
 initialization
 	Parser_Macros := LoadStringList( Parser_Macro_File );
+	standard_script_list := LoadFile( 'standard_scripts.txt' , Data_Directory );
 	LoadArchetypes;
 	Standard_Equipment_List := AggregatePattern( PC_Equipment_Pattern , Design_Directory );
 	WMonList := AggregatePattern( Monsters_File_Pattern , Series_Directory );
@@ -1400,5 +1491,5 @@ finalization
 	DisposeGear( STC_Item_List );
 	DisposeGear( Factions_List );
 	DisposeGear( Mecha_Theme_List );
-
+	DisposeGear( Standard_Script_List );
 end.

@@ -280,11 +280,11 @@ Content
 		desc <An old fashioned paper diary obtained from the mecha of your enemy's henchman.>
 		use <Alert 1>
 		GoNoUse <Print 2>
-		clue14 <Alert 7>
-		clue29 <Alert 7>
-		clue32 <if= PlotStatus %plotid% %id1% else GoNoUse ifCodeBreaking HardSkillTar StoryDL else GoFail  Alert 3 Goto GoReveal>
-		clue34 <Alert 7>
-		clue37 <if= PlotStatus %plotid% %id1% else GoNoUse ifInsight SkillTar StoryDL else GoFail     Alert 4 Goto GoReveal>
+		CLUE_SURVIVAL <Alert 7>
+		CLUE_SCIENCE <Alert 7>
+		CLUE_CODEBREAKING <if= PlotStatus %plotid% %id1% else GoNoUse ifCodeBreaking HardSkillTar StoryDL else GoFail  Alert 3 Goto GoReveal>
+		CLUE_MYSTICISM <Alert 7>
+		CLUE_INSIGHT <if= PlotStatus %plotid% %id1% else GoNoUse ifInsight SkillTar StoryDL else GoFail     Alert 4 Goto GoReveal>
 		GoReveal <History 5 PMemo %plotid% 5 SetEncounterActive %2% WinSubPlot %plotid% XPV 100>
 		GoFail <Alert 6>
 		Msg1 <This diary tells all the mundane details of being a henchman. Still, you're certain that there must be a clue in it somewhere.>
@@ -632,11 +632,11 @@ Content
 		desc <An old fashioned holographic map obtained from a gang of pirates.>
 		use <if= PlotStatus %plotid% %id1% else GoNoUse Alert 1>
 		GoNoUse <Print 2>
-		clue14 <if= PlotStatus %plotid% %id1% else GoNoUse ifSurvival SkillTar StoryDL else GoFail  Alert 3 Goto GoReveal>
-		clue29 <if= PlotStatus %plotid% %id1% else GoNoUse ifScience SkillTar StoryDL else GoFail   Alert 4 Goto GoReveal>
-		clue32 <Alert 7>
-		clue34 <Alert 7>
-		clue37 <Alert 7>
+		CLUE_SURVIVAL <if= PlotStatus %plotid% %id1% else GoNoUse ifSurvival SkillTar StoryDL else GoFail  Alert 3 Goto GoReveal>
+		CLUE_SCIENCE <if= PlotStatus %plotid% %id1% else GoNoUse ifScience SkillTar StoryDL else GoFail   Alert 4 Goto GoReveal>
+		CLUE_CODEBREAKING <Alert 7>
+		CLUE_MYSTICISM <Alert 7>
+		CLUE_INSIGHT <Alert 7>
 		GoReveal <History 5 PMemo %plotid% 5 SetEncounterActive %2% WinSubPlot %plotid% XPV 100>
 		GoFail <Alert 6>
 		Msg1 <You're going to need specialized knowledge to decipher this map.>
@@ -1293,8 +1293,8 @@ Content
 		Email
 		Mass -1
 		use <if= PlotStatus %plotid% %id% else GoNoUse Alert 1 StoryNote 2 &%id%_RevealEncounter  ifNPCOK %4% XPV 100>
-		clue32 <goto use>
-		clue37 <goto use>
+		CLUE_CODEBREAKING <goto use>
+		CLUE_INSIGHT <goto use>
 		GoNoUse <Print 3>
 		Msg1 <According to a map saved on this dataslate, the raiders are hiding in %name1%.>
 		Msg2 <You learned from a dataslate that the raiders are in %name1%.>

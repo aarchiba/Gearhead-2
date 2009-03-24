@@ -72,12 +72,11 @@ Content
 				GoWin  <Print 3 SetQuestStatus %qid% -1 QMemo %prev_qid% 4 XPV 100>
 				GoLose <Print 5>
 				GoNothing <Print 2>
-				% Mecha Repair, Code Breaking and Science allow difficult skill rolls to fix the robots
-				Clue15 <if= QuestStatus %qid% %id% else GoNothing  ifRepair   SkillTar %threat% else GoLose Goto GoWin>
-				Clue29 <if= QuestStatus %qid% %id% else GoNothing  ifScience       HardSkillTar %threat% else GoLose Goto GoWin>
-				Clue32 <if= QuestStatus %qid% %id% else GoNothing  ifCodeBreaking  HardSkillTar %threat% else GoLose Goto GoWin>
-				% General Repair allows a relatively easy roll to fix the robots
-				Clue23 <if= QuestStatus %qid% %id% else GoNothing  ifRepair SkillTar %threat%     else GoLose Goto GoWin>
+				% Code Breaking and Science allow difficult skill rolls to fix the robots
+				% Repair allows a relatively easy roll to fix the robots
+				Clue_REPAIR        <if= QuestStatus %qid% %id% else GoNothing  ifRepair   SkillTar %threat% else GoLose Goto GoWin>
+				Clue_SCIENCE       <if= QuestStatus %qid% %id% else GoNothing  ifScience       HardSkillTar %threat% else GoLose Goto GoWin>
+				Clue_CODEBREAKING  <if= QuestStatus %qid% %id% else GoNothing  ifCodeBreaking  HardSkillTar %threat% else GoLose Goto GoWin>
 				Msg1 <This computer controls the robots for the construction site. The lights on its display are blinking wildly.>
 				Msg2 <This computer controls the robots for the construction site.>
 				Msg3 <You repair the computer and deactivate the malfunctioning robots.>

@@ -99,6 +99,7 @@ FREEZENPC <GrabNPC ? MoveGG 0>
 FREEZEITEM <GrabItem ? MoveGG 0>
 GIVEITEM <GrabItem ?  GiveGG Trigger GET !>
 IFSELFOK <GrabSource ifGOK>
+IFSELFDEAD <GrabSource ifGDead>
 IFNPCOK <GrabNPC ?  IfGOK>
 IFNPCDEAD <GrabNPC ? ifGDead>
 IFNPCMALE <if= NPCGender ? 0>
@@ -144,6 +145,7 @@ NPCSeekEdge <GrabNPC ? GrabRoot  GSetNAtt NAG_EpisodeData NAS_Orders 2 GSetNAtt 
 PCMoraleDmg <GrabPCPilot GMoraleDMG ?>
 SkillXP <GrabPC GSkillXP ? ?>
 GiveSTC <GNewPart ? GiveGG>
+GiveSTCTreasure <GNewPart ? GSetNAtt 2 4 ? GiveGG>
 PCEat <GrabPCPilot GSetNAtt NAG_Condition NAS_Hunger 0 Time 1800>
 RunAway <GrabNPC ? GrabRoot GRunAway>
 LocalRunAway <GrabLocal ? GRunAway>

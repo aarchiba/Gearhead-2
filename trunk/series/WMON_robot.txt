@@ -14,19 +14,7 @@ sdl_portrait <por_x_androbot.png>
 type <Robot Guard>
 habitat <>
 CHAT_ATTACK <Leave the premesis or face retaliation.>
-% Begin Science block.
-clue29 <ifSelfOK else GoPelt>
-GoPelt <if= V1 0 else GoDone Mental Gut Flay V= 1 SkRoll 29 ifG V1 27 else GoMeat Print 1 GiveSTC .stcdesc>
-GoMeat <ifG V1 12 else GoFail Print 4 GiveSTC .fooddesc>
-.stcdesc <SELFDEFENSEMATRIX>
-.fooddesc <SPAREPARTS-1>
-GoFail <Print 2>
-GoDone <Print 3>
-Msg1 <You manage to extract the Self Defense NNet from this robot.>
-Msg2 <You take apart the robot, but don't find anything useful.>
-Msg3 <You've already disassembled this robot.>
-Msg4 <You salvage some spare parts from this robot.>
-% End Science block.
+*CLUE_SCIENCE <*SCIENCE_GetSparePartsOrSDN 70 robot>
 Metal
 RangedCombat 4
 CloseCombat 5
@@ -94,19 +82,7 @@ habitat <>
 sdl_sprite <monster_sentinel.png>
 sdl_colors <234 180 88 199 188 162 255 107 83>
 statline 16 35 10 15 10 10 10 1
-% Begin Science block.
-clue29 <ifSelfOK else GoPelt>
-GoPelt <if= V1 0 else GoDone Mental Gut Flay V= 1 SkRoll 29 ifG V1 27 else GoMeat Print 1 GiveSTC .stcdesc>
-GoMeat <ifG V1 12 else GoFail Print 4 GiveSTC .fooddesc>
-.stcdesc <SENTINELFCS>
-.fooddesc <SPAREPARTS-2>
-GoFail <Print 2>
-GoDone <Print 3>
-Msg1 <You manage to extract the Fire Control System from this robot.>
-Msg2 <You take apart the Sentinel, but don't find anything useful.>
-Msg3 <You've already disassembled this robot.>
-Msg4 <You salvage some spare parts from this robot.>
-% End Science block.
+*CLUE_SCIENCE <*SCIENCE_GetMechaPartsOrFCS 120 robot>
 RangedCombat 7
 Dodge 7
 Initiative 7
@@ -120,7 +96,7 @@ Hardened
 sub
 	mount
 	inv
-		gear 4 3 25
+		BeamGun 25
 		name <Laser Cannon>
 		desig <Antique>
 		Acc 1
@@ -137,7 +113,7 @@ Hardened
 sub
 	mount
 	inv
-		gear 4 3 16
+		BeamGun 16
 		name <Plasma Cannon>
 		desig <Antique>
 		type <SCATTER BRUTAL>
@@ -159,7 +135,7 @@ Hardened
 sub
 	mount
 	inv
-		gear 4 3 16
+		BeamGun 16
 		name <Plasma Cannon>
 		desig <Antique>
 		type <SCATTER BRUTAL>
@@ -192,16 +168,7 @@ sdl_colors <199 188 162 157 173 182 200 150 50>
 type <robot factory lab guard>
 habitat <>
 statline 10 15 10 16 10 1 1 1
-% Begin SCIENCE block.
-clue29 <ifSelfOK else GoPelt>
-GoPelt <if= V1 0 else GoDone Mental Gut Flay V= 1 1 ifG SkRoll 29 15 else GoFail Print 1 GiveSTC .stcdesc>
-.stcdesc <SPAREPARTS-1>
-GoFail <Print 2>
-GoDone <Print 3>
-Msg1 <You extract some spare parts from the wreckage of this robot.>
-Msg2 <You try to get some spare parts from this robot, but don't find anything worth keeping.>
-Msg3 <You've already dismantled this robot.>
-% End SCIENCE block.
+*CLUE_SCIENCE <*SCIENCE_GetSpareParts 56 robot>
 metal
 Sealed
 MonsterTV 56
@@ -230,16 +197,7 @@ SDL_COLORS <166 47 32 201 205 225 210 0 100>
 type <robot factory ruins>
 habitat <>
 statline 13 16 11 13 16 1 1 1
-% Begin SCIENCE block.
-clue29 <ifSelfOK else GoPelt>
-GoPelt <if= V1 0 else GoDone Mental Gut Flay V= 1 1 ifG SkRoll 29 10 else GoFail Print 1 GiveSTC .stcdesc>
-.stcdesc <SPAREPARTS-1>
-GoFail <Print 2>
-GoDone <Print 3>
-Msg1 <You extract some spare parts from the wreckage of this robot.>
-Msg2 <You try to get some spare parts from this robot, but don't find anything worth keeping.>
-Msg3 <You've already dismantled this robot.>
-% End SCIENCE block.
+*CLUE_SCIENCE <*SCIENCE_GetSpareParts 95 robot>
 metal
 Sealed
 MonsterTV 95
@@ -274,16 +232,7 @@ habitat <>
 CHAT_ATTACK <MalFuNCtIoN! mAlFunCTuiOn!>
 CHAT_ATTACK2 <ExTerMiNaTE!>
 statline 10 15 7 8 15 1 1 1
-% Begin SCIENCE block.
-clue29 <ifSelfOK else GoPelt>
-GoPelt <if= V1 0 else GoDone Mental Gut Flay V= 1 1 ifG SkRoll 29 10 else GoFail Print 1 GiveSTC .stcdesc>
-.stcdesc <SPAREPARTS-1>
-GoFail <Print 2>
-GoDone <Print 3>
-Msg1 <You extract some spare parts from the wreckage of this robot.>
-Msg2 <You try to get some spare parts from this robot, but don't find anything worth keeping.>
-Msg3 <You've already dismantled this robot.>
-% End SCIENCE block.
+*CLUE_SCIENCE <*SCIENCE_GetSpareParts 25 robot>
 metal
 Sealed
 MonsterTV 25
@@ -311,16 +260,7 @@ habitat <>
 CHAT_ATTACK <MalFuNCtIoN! mAlFunCTuiOn!>
 CHAT_ATTACK2 <ExTerMiNaTE!>
 statline 10 15 7 8 15 1 1 1
-% Begin SCIENCE block.
-clue29 <ifSelfOK else GoPelt>
-GoPelt <if= V1 0 else GoDone Mental Gut Flay V= 1 1 ifG SkRoll 29 10 else GoFail Print 1 GiveSTC .stcdesc>
-.stcdesc <SPAREPARTS-1>
-GoFail <Print 2>
-GoDone <Print 3>
-Msg1 <You extract some spare parts from the wreckage of this robot.>
-Msg2 <You try to get some spare parts from this robot, but don't find anything worth keeping.>
-Msg3 <You've already dismantled this robot.>
-% End SCIENCE block.
+*CLUE_SCIENCE <*SCIENCE_GetSpareParts 21 robot>
 metal
 Sealed
 MonsterTV 21
@@ -346,16 +286,7 @@ SDL_COLORS <157 172 183 130 143 114 230 60 0>
 type <robot mine>
 habitat <>
 statline 10 15 7 8 15 1 1 1
-% Begin SCIENCE block.
-clue29 <ifSelfOK else GoPelt>
-GoPelt <if= V1 0 else GoDone Mental Gut Flay V= 1 1 ifG SkRoll 29 10 else GoFail Print 1 GiveSTC .stcdesc>
-.stcdesc <SPAREPARTS-1>
-GoFail <Print 2>
-GoDone <Print 3>
-Msg1 <You extract some spare parts from the wreckage of this robot.>
-Msg2 <You try to get some spare parts from this robot, but don't find anything worth keeping.>
-Msg3 <You've already dismantled this robot.>
-% End SCIENCE block.
+*CLUE_SCIENCE <*SCIENCE_GetSpareParts 28 robot>
 metal
 Sealed
 MonsterTV 28
@@ -382,16 +313,7 @@ SDL_SPRITE <MONSTER_Drone.png>
 SDL_COLORS <72 104 136 150 150 150 220 0 0>
 type <robot factory dark>
 habitat <>
-% Begin SCIENCE block.
-clue29 <ifSelfOK else GoPelt>
-GoPelt <if= V1 0 else GoDone Mental Gut Flay V= 1 1 ifG SkRoll 29 14 else GoFail Print 1 GiveSTC .stcdesc>
-.stcdesc <SPAREPARTS-1>
-GoFail <Print 2>
-GoDone <Print 3>
-Msg1 <You extract some spare parts from the wreckage of this robot.>
-Msg2 <You try to get some spare parts from this robot, but don't find anything worth keeping.>
-Msg3 <You've already dismantled this robot.>
-% End SCIENCE block.
+*CLUE_SCIENCE <*SCIENCE_GetSpareParts 32 robot>
 statline 11 13 13 11 11 1 1 1
 metal
 Sealed

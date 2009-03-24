@@ -442,22 +442,31 @@ end;
 Procedure MemoBrowser( GB: GameBoardPtr; PC: GearPtr );
 	{ Find all the memos that the player has accumulated, then allow }
 	{ them to be browsed through, then restore the display afterwards. }
+const
+	m_email = 1;
+	m_memo = 2;
+	m_rumor = 3;
+	m_news = 4;
 var
 	MainMenu: RPGMenuPtr;
 	A: Integer;
 begin
 	MainMenu := CreateRPGMenu( MenuItem , MenuSelect , ZONE_MemoText );
-	if HasPCommCapability( PC , NAS_EMail ) then AddRPGMenuItem( MainMenu , MsgString( 'MEMO_ReadEMail' ) , NAS_EMail );
-	if HasPCommCapability( PC , NAS_Memo ) then AddRPGMenuItem( MainMenu , MsgString( 'MEMO_ReadMemo' ) , NAS_Memo );
-	if HasPCommCapability( PC , NAS_News ) then AddRPGMenuItem( MainMenu , MsgString( 'MEMO_ReadNews' ) , NAS_News );
+	if HasPCommCapability( PC , NAS_EMail ) then AddRPGMenuItem( MainMenu , MsgString( 'MEMO_ReadEMail' ) , m_EMail );
+	if HasPCommCapability( PC , NAS_Memo ) then begin
+		AddRPGMenuItem( MainMenu , MsgString( 'MEMO_ReadMemo' ) , m_Memo );
+		AddRPGMenuItem( MainMenu , MsgString( 'MEMO_ReadRumors' ) , m_Rumor );
+	end;
+	if HasPCommCapability( PC , NAS_News ) then AddRPGMenuItem( MainMenu , MsgString( 'MEMO_ReadNews' ) , m_News );
 
 	if MainMenu^.NumItem < 1 then begin
 		DialogMsg( MsgString( 'MEMO_NoBrowser' ) );
 	end else if MainMenu^.NumItem = 1 then begin
 		case MainMenu^.FirstItem^.Value of
-			NAS_Memo: BrowseMemoType( GB , 'MEMO' );
-			NAS_News: BrowseMemoType( GB , 'NEWS' );
-			NAS_EMail: BrowseMemoType( GB , 'EMAIL' );
+			m_Memo: BrowseMemoType( GB , 'MEMO' );
+			m_rumor: BrowseMemoType( GB , 'RUMEMO' );
+			m_News: BrowseMemoType( GB , 'NEWS' );
+			m_EMail: BrowseMemoType( GB , 'EMAIL' );
 		end;
 
 	end else begin
@@ -467,9 +476,10 @@ begin
 			A := SelectMenu( MainMenu , @PCSRedraw );
 
 			case A of
-				NAS_Memo: BrowseMemoType( GB , 'MEMO' );
-				NAS_News: BrowseMemoType( GB , 'NEWS' );
-				NAS_EMail: BrowseMemoType( GB , 'EMAIL' );
+				m_Memo: BrowseMemoType( GB , 'MEMO' );
+				m_rumor: BrowseMemoType( GB , 'RUMEMO' );
+				m_News: BrowseMemoType( GB , 'NEWS' );
+				m_EMail: BrowseMemoType( GB , 'EMAIL' );
 			end;
 
 		until A = -1;
@@ -737,6 +747,15 @@ end;
 
 Procedure PCUseSkillOnProp( GB: GameBoardPtr; PC: GearPtr; Skill: Integer );
 	{ PC wants to do something with a prop. Select an item, then let 'er rip. }
+const
+	Skill_Use_Trigger: Array [1..NumSkill] of String = (
+		'USE', 'USE', 'USE', 'USE', 'USE',
+		'USE', 'USE', 'USE', 'USE', 'USE',
+		'USE', 'CLUE_SURVIVAL', 'CLUE_REPAIR', 'CLUE_MEDICINE', 'USE',
+		'USE', 'USE', 'USE', 'USE', 'USE',
+		'CLUE_SCIENCE', 'USE', 'CLUE_CODEBREAKING', 'CLUE_MYSTICISM', 'USE',
+		'USE', 'CLUE_INSIGHT', 'USE'
+	);
 var
 	PropD: Integer;
 	P: Point;
@@ -747,7 +766,7 @@ begin
 
 	PropD := DirKey( @PCActionRedraw );
 
-	Trigger := 'CLUE' + BStr( Skill );
+	Trigger := Skill_Use_Trigger[ Skill ];
 
 	if ( PropD = -1 ) and ( NumVisibleUsableGearsXY( GB , P.X , P.Y , Trigger ) > 0 ) then begin
 		if not ActivatePropAtSpot( GB , PC , P.X , P.Y , Trigger ) then DialogMsg( MsgString( 'PCUS_NotFound' ) );;

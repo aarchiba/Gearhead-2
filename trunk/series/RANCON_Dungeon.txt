@@ -658,7 +658,7 @@ Content
 		% V1 = Have "unlocked" the rock
 		use <if= V1 1 else GoBlocked Goto GoOpen>
 		GoBlocked <Print 1>
-		clue29 <if= V1 0 else GoOpen ifScience 3 else GoSciFail V= 1 1 Goto GoOpen>
+		CLUE_SCIENCE <if= V1 0 else GoOpen ifScience 3 else GoSciFail V= 1 1 Goto GoOpen>
 		GoOpen <Print 2 OpenInv>
 		GoSciFail <Print 3>
 		Msg1 <It's a rock.>
@@ -679,7 +679,7 @@ Content
 		% V1 = Have "unlocked" the rock
 		use <if= V1 1 else GoBlocked Goto GoOpen>
 		GoBlocked <Print 1>
-		clue29 <if= V1 0 else GoOpen ifScience 6 else GoSciFail V= 1 1 Goto GoOpen>
+		CLUE_SCIENCE <if= V1 0 else GoOpen ifScience 6 else GoSciFail V= 1 1 Goto GoOpen>
 		GoOpen <Print 2 OpenInv>
 		GoSciFail <Print 3>
 		Msg1 <It's a rock.>
@@ -700,7 +700,7 @@ Content
 		% V1 = Have "unlocked" the rock
 		use <if= V1 1 else GoBlocked Goto GoOpen>
 		GoBlocked <Print 1>
-		clue29 <if= V1 0 else GoOpen ifScience 9 else GoSciFail V= 1 1 Goto GoOpen>
+		CLUE_SCIENCE <if= V1 0 else GoOpen ifScience 9 else GoSciFail V= 1 1 Goto GoOpen>
 		GoOpen <Print 2 OpenInv>
 		GoSciFail <Print 3>
 		Msg1 <It's a rock.>
@@ -721,7 +721,7 @@ Content
 		% V1 = Have "unlocked" the rock
 		use <if= V1 1 else GoBlocked Goto GoOpen>
 		GoBlocked <Print 1>
-		clue29 <if= V1 0 else GoOpen ifScience 12 else GoSciFail V= 1 1 Goto GoOpen>
+		CLUE_SCIENCE <if= V1 0 else GoOpen ifScience 12 else GoSciFail V= 1 1 Goto GoOpen>
 		GoOpen <Print 2 OpenInv>
 		GoSciFail <Print 3>
 		Msg1 <It's a rock.>
@@ -742,7 +742,7 @@ Content
 		% V1 = Have "unlocked" the rock
 		use <if= V1 1 else GoBlocked Goto GoOpen>
 		GoBlocked <Print 1>
-		clue29 <if= V1 0 else GoOpen ifScience 15 else GoSciFail V= 1 1 Goto GoOpen>
+		CLUE_SCIENCE <if= V1 0 else GoOpen ifScience 15 else GoSciFail V= 1 1 Goto GoOpen>
 		GoOpen <Print 2 OpenInv>
 		GoSciFail <Print 3>
 		Msg1 <It's a rock.>
@@ -867,9 +867,9 @@ Content
 	inv
 		STC COMPUTER-1
 		use <Print 1>
-		clue32 <Print 1>
-		clue23 <if= V1 0 else GoBeenBefore V= 1 1 Print 2 GiveSTC .parts  SkillXP 23 25>
-		clue29 <if= V1 0 else GoBeenBefore V= 1 1 Print 2 GiveSTC .parts  SkillXP 29 25>
+		CLUE_CODEBREAKING <Print 1>
+		CLUE_REPAIR <if= V1 0 else GoBeenBefore V= 1 1 Print 2 GiveSTC .parts  SkillXP NAS_Repair 25>
+		CLUE_SCIENCE <if= V1 0 else GoBeenBefore V= 1 1 Print 2 GiveSTC .parts  SkillXP NAS_Science 25>
 		.parts <SPAREPARTS-1>
 		GoBeenBefore <Print 3>
 		msg1 <This old computer appears to be broken.>
@@ -890,8 +890,8 @@ Content
 		GoRefuse <Print 105>
 		GoUsed <Print 106>
 		NPCOpenDoor < >
-		clue29 <if= V1 0 ifScience 5 else GoSkillFailed Print 107>
-		clue37 <if= V1 0 ifInsight 5 else GoSkillFailed Print 107>
+		CLUE_SCIENCE <if= V1 0 ifScience 5 else GoSkillFailed Print 107>
+		CLUE_INSIGHT <if= V1 0 ifInsight 5 else GoSkillFailed Print 107>
 		GoSkillFailed <Print 108>
 		Msg101 <[DEFENSE ROBOT RECHARGE STATION] Lift bar to activate defense robot.>
 		Msg102 <Lift the bar.>
@@ -918,8 +918,8 @@ Content
 		GoRefuse <Print 105>
 		GoUsed <Print 106>
 		NPCOpenDoor < >
-		clue29 <if= V1 0 ifScience 5 else GoSkillFailed Print 107>
-		clue37 <if= V1 0 ifInsight 5 else GoSkillFailed Print 107>
+		CLUE_SCIENCE <if= V1 0 ifScience 5 else GoSkillFailed Print 107>
+		CLUE_INSIGHT <if= V1 0 ifInsight 5 else GoSkillFailed Print 107>
 		GoSkillFailed <Print 108>
 		Msg101 <[DEFENSE ROBOT RECHARGE STATION] Lift bar to activate defense robot.>
 		Msg102 <Lift the bar.>
@@ -959,7 +959,7 @@ Content
 	inv
 		STC COMPUTER-1
 		use <Print 1>
-		clue32 <if= V1 0 else GoBeenBefore V= 1 1 Mental ifCodeBreaking 10 else GoFail Print 4 MagicMap>
+		CLUE_CODEBREAKING <if= V1 0 else GoBeenBefore V= 1 1 Mental ifCodeBreaking 10 else GoFail Print 4 MagicMap>
 		GoBeenBefore <Print 2>
 		GoFail <Print 3>
 		msg1 <This old computer still seems to be working.>

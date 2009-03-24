@@ -8,7 +8,7 @@ roguechar <+>
 roguechar1 <->
 roguechar2 <+>
 SDL_Sprite <meta_terrain.png>
-CLUE32 <if# StatVal STAT_Lock 0 else GoNotLocked Mental ifUCodeBreaking StatVal STAT_Lock else GoNoUnlock Print 3 SetStat STAT_Lock 0>
+CLUE_CODEBREAKING <if# StatVal STAT_Lock 0 else GoNotLocked Mental ifUCodeBreaking StatVal STAT_Lock else GoNoUnlock Print 3 SetStat STAT_Lock 0>
 GoNoUnlock <Print 4>
 GoNotLocked <Print 5>
 REVEAL <DrawTerr SelfX SelfY TERRAIN_THRESHOLD Print 7>

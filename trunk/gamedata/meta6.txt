@@ -4,7 +4,7 @@ use <if= StatVal STAT_MetaVisibility 0 if= StatVal STAT_Lock 0 else GoLocked Pri
 GoLocked <Print 3>
 REVEAL <Print 2>
 roguechar <.>
-CLUE32 <if# StatVal STAT_Lock 0 else GoNotLocked Mental ifG CodeBreaking StatVal STAT_Lock else GoNoUnlock Print 6 XPV 100 SetStat STAT_Lock 0>
+CLUE_CODEBREAKING <if# StatVal STAT_Lock 0 else GoNotLocked Mental ifG CodeBreaking StatVal STAT_Lock else GoNoUnlock Print 6 XPV 100 SetStat STAT_Lock 0>
 GoNoUnlock <Print 4>
 GoNotLocked <Print 5>
 SDL_Sprite <meta_terrain.png>

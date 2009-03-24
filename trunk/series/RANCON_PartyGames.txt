@@ -24,8 +24,8 @@ Content
 		% V1 = Have repaired it
 		use <if= V1 0 else GoAlreadyRepaired Print 1>
 		GoAlreadyRepaired <Print 2>
-		Clue23 <ifRepair SkillTar %param% else GoFail Goto GoWin>
-		Clue29 <ifScience HardSkillTar %param% else GoFail Goto GoWin>
+		Clue_REPAIR <ifRepair SkillTar %param% else GoFail Goto GoWin>
+		CLUE_SCIENCE <ifScience HardSkillTar %param% else GoFail Goto GoWin>
 		GoWin <V= 1 1 L= %id%02 1 Print 3 XPV 50 WinPartyPoint>
 		GoFail <Print 4>
 

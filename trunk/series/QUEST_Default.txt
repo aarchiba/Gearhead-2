@@ -1097,7 +1097,7 @@ Content
 				MiniMapComponent 2
 				desig <ENTRANCE %s3%>
 				use <if= SceneVar %s3% 1 1 else GoLocked Print 1 Exit StatVal 4>
-				Clue32 <Print 101>
+				CLUE_CODEBREAKING <Print 101>
 				Msg1 <You go down the trapdoor.>
 				Msg101 <You see no way to pick this lock. The trapdoor appears to have been barred from the other side.>
 
@@ -1105,7 +1105,7 @@ Content
 				MiniMapComponent 3
 				PDir 1
 				Use <Print 1>
-				Clue32 <Print 2>
+				CLUE_CODEBREAKING <Print 2>
 				Msg1 <You examine the computer. It looks like someone's been playing solitaire all day.>
 				Msg2 <Examining the access records, it seems that someone tried to hack into this computer. The hostile signal originated from within this building.>
 			end
@@ -1134,7 +1134,7 @@ Content
 				desig <ENTRANCE %s4%>
 				MiniMapComponent 2
 				use <if= SceneVar %s4% 1 1 else GoLocked Print 1 Exit StatVal 4>
-				Clue32 <Print 101>
+				CLUE_CODEBREAKING <Print 101>
 				Msg1 <You go down the trapdoor.>
 				Msg101 <You see no way to pick this lock. The trapdoor appears to have been barred from the other side.>
 			end
@@ -2287,10 +2287,9 @@ Content
 		Fudge 1000
 		desc <This unmarked aerosol container looks mighty suspicious.>
 		use <Print 4>
-		Clue16 <Print 2>
-		Clue20 <Print 2>
-		Clue22 <Print 3>
-		Clue29 <Print 1>
+		CLUE_MEDICINE <Print 2>
+		Clue_SCIENCE <Print 1>
+		Clue_INSIGHT <Print 3>
 		Msg1 <This type of container is used to transport biological samples. No idea why it would be connected to a spray head, though.>
 		Msg2 <This type of container is used for storing and dispensing biological agents. As this one isn't marked, it probably doesn't contain medicine.>
 		Msg3 <This type of container is used for storing and dispensing biological agents. Perhaps it's a weapon of some kind.>

@@ -114,6 +114,8 @@ Const
 		NAV_Hardened = 1;	{ Hardened armor degrades slower. }
 		NAV_AntiBeam = 2;	{ Strong against energy attacks. }
 
+	NAS_MaxStandardScriptID = 8;	{ The highest standard script ID assigned for this part. }
+
 	NAG_Narrative = 7;	{ Variables having to do with RPG }
 	NAS_NID = 0;	{ Narrative ID }
 

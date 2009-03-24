@@ -253,8 +253,6 @@ var
 		{ its associated bits. Characters also need the data from their Personas, }
 		{ gates to metascenes need to check there, and scenes get faction data. }
 	var
-		Rumor: String;
-		Trait,Level: Integer;
 		Persona: GearPtr;
 	begin
 		if ( P <> Rumor_Source ) and ( P^.G <> GG_Persona ) then begin
@@ -2881,7 +2879,6 @@ begin
 		ClearMenu( IntMenu );
 	end;
 
-	AddRPGMenuItem( IntMenu , MsgString( 'NEWCHAT_Chat' ) , CMD_Chat );
 	AddRPGMenuItem( IntMenu , MsgString( 'NEWCHAT_Goodbye' ) , -1 );
 	if ( GB <> Nil ) and OnTheMap( GB , FindRoot( I_NPC ) ) and IsFoundAlongTrack( GB^.Meks , FindRoot( I_NPC ) ) then begin
 		{ Only add the JOIN command if this NPC is in the same scene as the PC. }
@@ -2893,7 +2890,7 @@ begin
 	end;
 	if ( I_NPC <> Nil ) and ( NAttValue( I_NPC^.NA , NAG_Location , NAS_Team ) = NAV_LancemateTeam ) and ( NAttValue( I_NPC^.NA , NAG_CharDescription , NAS_CharType ) <> NAV_TempLancemate ) then AddRPGMenuItem( IntMenu , MsgSTring( 'NEWCHAT_QuitLance' ) , CMD_Quit );
 	if not ( OnTheMap( GB , FindRoot( I_NPC ) ) and IsFoundAlongTrack( GB^.Meks , FindRoot( I_NPC ) ) ) then AddRPGMenuItem( IntMenu , MsgString( 'NewChat_WhereAreYou' ) , CMD_WhereAreYou );
-	if NAttValue( I_NPC^.NA , NAG_Personal , NAS_RumorRecharge ) < GB^.ComTime then AddRPGMenuItem( IntMenu , MsgString( 'NEWCHAT_AskAboutRumors' ) , CMD_AskAboutRumors );
+	if ( NAttValue( I_NPC^.NA , NAG_Personal , NAS_RumorRecharge ) < GB^.ComTime ) and ( NAttValue( I_NPC^.NA , NAG_Location , NAS_Team ) <> NAV_LancemateTeam ) then AddRPGMenuItem( IntMenu , MsgString( 'NEWCHAT_AskAboutRumors' ) , CMD_AskAboutRumors );
 	RPMSortAlpha( IntMenu );
 end;
 
@@ -4290,7 +4287,7 @@ end;
 Procedure ProcessGSkillLevel( var Event: String; GB: GameBoardPtr; Source: GearPtr );
 	{ Set the skill points for the grabbed gear. }
 var
-	Renown,T: Integer;
+	Renown: Integer;
 begin
 	{ Find out what level the NPC should be at. }
 	Renown := ScriptValue( Event , GB , Source );
@@ -4547,16 +4544,6 @@ begin
 	if ( SCRIPT_DynamicEncounter <> Nil ) and ( SCRIPT_DynamicEncounter^.V > 0 ) then CheckMechaEquipped( GB );
 end;
 
-{Procedure HandleChat( GB: GameBoardPtr; var FreeRumors: Integer );
-	{ Call the CHAT procedure, then display the string that is returned. }
-var
-	msg: String;
-begin
-	msg := DoChatting( GB , I_Rumors , I_PC , I_NPC , I_Endurance , FreeRumors );
-	CHAT_Message := msg;
-	QuickTime( GB , 16 + Random( 15 ) );
-end;}
-
 Procedure HandleWhereAreYou( GB: GameBoardPtr );
 	{ The PC has asked the NPC where he is. The NPC will tell the PC }
 	{ his or her current location. }
@@ -4676,7 +4663,8 @@ begin
 	end;
 
 	{ Set the recharge counter for this NPC. }
-	if not Rumor_Error then SetNAtt( I_NPC^.NA , NAG_Personal , NAS_RumorRecharge , GB^.ComTime + 21600 + Random( 7200 ) - Random( 7200 ) );
+	if not Rumor_Error then SetNAtt( I_NPC^.NA , NAG_Personal , NAS_RumorRecharge , GB^.ComTime + 21600 + Random( 7200 ) - Random( 7200 ) )
+	else SetNAtt( I_NPC^.NA , NAG_Personal , NAS_RumorRecharge , GB^.ComTime + 10 );
 end;
 
 
@@ -4779,6 +4767,7 @@ var
 	N,FreeRumors: Integer;
 	RTT: LongInt;		{ ReTalk Time }
 	T: String;
+	MI: RPGMenuItemPtr;	{ For removing options once they've been used. }
 begin
 	{ Start by allocating the menu. }
 	IntMenu := CreateRPGMenu( MenuItem , MenuSelect , ZONE_InteractMenu );
@@ -4865,7 +4854,9 @@ begin
 
 		end else if N = CMD_AskAboutRumors then begin
 			HandleAskAboutRumors( GB , Persona );
-
+			MI := SetItemByValue( IntMenu , CMD_AskAboutRumors );
+			if MI <> Nil then RemoveRPGMenuItem( IntMenu , MI );
+			SetItemByPosition( IntMenu , 1 );
 		end;
 
 	until ( N = -1 ) or ( IntMenu^.NumItem < 1 ) or ( I_Endurance < 1 ) or ( I_NPC = Nil );

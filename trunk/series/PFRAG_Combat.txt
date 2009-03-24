@@ -697,7 +697,7 @@ Persona
 	requires <*BattleChallenge &Avoid>
 	start <EndChat Say %id%01 AddChat %id%01 AddChat %id%02 AddChat %id%03>
 	Result%id%01 <Goto %1%>
-	Result%id%02 <EndChat AddEasygoing -d8   ifIntimidation NPCEgo ChatNPCID else .%id%_Go2Fail Say %id%03 SkillXP 28 50   XPV 100   Goto %2%>
+	Result%id%02 <EndChat AddEasygoing -d8   ifIntimidation NPCEgo ChatNPCID else .%id%_Go2Fail Say %id%03 SkillXP 20 50   XPV 100   Goto %2%>
 	.%id%_Go2Fail <Goto %1%>
 	Result%id%03 <EndChat AddRenown -5 ifNPCPassionate else .%id%_Go3Work Say %id%06 AddChat %id%04>
 	.%id%_Go3Work <Say %id%05 Goto %2%>

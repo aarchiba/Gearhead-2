@@ -483,11 +483,11 @@ Content
 				Use <if= L1 1 else GoCantUse Print 1 Exit Destination>
 				GoCantUse <Print 2>
 				% The PC can try to pick the lock, but if the guard sees him it's bad.
-				Clue32 <if= L1 0 ifNPCCanSeePC %2% else GoMaybePick  Print 3  TeamAttack 3>
+				CLUE_CODEBREAKING <if= L1 0 ifNPCCanSeePC %2% else GoMaybePick  Print 3  TeamAttack 3>
 				GoMaybePick <Mental ifCodeBreaking %sktar_hard% else GoCBFail Print 4 L= 1 1 XPV 50>
 				GoCBFail <Print 5>
-				Clue29 <Print 6>
-				Clue37 <Print 6>
+				CLUE_SCIENCE <Print 6>
+				CLUE_INSIGHT <Print 6>
 				Msg1 <You ride the elevator up to the main level.>
 				Msg2 <This elevator won't open for you. There must be some kind of security measure.>
 				Msg3 <The guard saw you!>

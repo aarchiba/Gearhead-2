@@ -277,7 +277,7 @@ Content
 				PDir 2
 				Use <if= V1 0 else GoAlreadyRobbed Print 1>
 				GoAlreadyRobbed <Print 2>
-				Clue32 <if= V1 0 else GoAlreadyRobbed if= V2 0 else GoSafeOpen ifNPCOK %2% else GoSafeOpen ifNPCCanSeePC %2% else GoSafeOpen Goto GoRiskyOpen>
+				CLUE_CODEBREAKING <if= V1 0 else GoAlreadyRobbed if= V2 0 else GoSafeOpen ifNPCOK %2% else GoSafeOpen ifNPCCanSeePC %2% else GoSafeOpen Goto GoRiskyOpen>
 				GoRiskyOpen <ifStealth HardSkillTar %threat% else GoDiscovered Goto GoSafeOpen>
 				GoSafeOpen <Mental ifCodeBreaking HardSkillTar %threat% else GoCantOpen Goto GoOpen>
 				GoDiscovered <Alert 3 Alarm AddLawful -10 PCEnemy %2% if= QuestStatus %qid% %id% SetQuestStatus %qid% -2 V= 2 1>

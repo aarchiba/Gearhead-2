@@ -451,6 +451,7 @@
 	meat
 	Scale 0
 	type <Blast 2 BURN>
+	mass 1
 
 	gear 10 0 6
 	name <Lobster Shield>
@@ -505,6 +506,48 @@
 	effect <9 Healing 1>
 	FoodXValue 2000
 	FoodMorale -2
+
+	Treasure
+	name <Pelt>
+	desig <PELT-1>
+	mass 1
+
+	Food 30
+	name <Boxed Lunch>
+	desig <FOOD-1>
+
+	Food 20
+	name <Hot Dog>
+	desig <FOOD-2>
+
+	Food 25
+	name <Meat>
+	desig <FOOD-3>
+	FoodMorale -1
+
+	Food 20
+	name <Sashimi>
+	desig <FOOD-4>
+	FoodMorale 1
+
+	Food 20
+	name <Salad>
+	desig <SALAD-1>
+
+	Food 25
+	name <Meat>
+	desig <TAINTED-MEAT>
+	FoodMorale -3
+	% Tainted meat makes you sick.
+	Effect <12 STATUS 20 CANRESIST>
+
+	Food 20
+	name <Sashimi>
+	desig <TAINTED-SASHIMI>
+	FoodMorale -3
+	% Tainted sashimi can poison you.
+	Effect <12 STATUS 1 CANRESIST>
+
 
 %  ***************
 %  ***  PROPS  ***
@@ -649,7 +692,7 @@ roguechar <=>
 SDL_SPRITE <prop_displaycase.png>
 use <if= StatVal STAT_Lock 0 else GoLocked Print -5 OpenInv>
 GoLocked <Print -4>
-CLUE32 <if# StatVal STAT_Lock 0 else GoNotLocked Mental ifCodeBreaking StatVal STAT_Lock else GoNoUnlock Print -1 SetStat STAT_Lock 0>
+CLUE_CODEBREAKING <if# StatVal STAT_Lock 0 else GoNotLocked Mental ifCodeBreaking StatVal STAT_Lock else GoNoUnlock Print -1 SetStat STAT_Lock 0>
 GoNoUnlock <Print -2>
 GoNotLocked <Print -3>
 Msg-1 <You unlock the display case.>
@@ -721,7 +764,7 @@ desig <SHRINE-1>
 SDL_SPRITE <prop_shrine.png>
 roguechar <+>
 use <Print 1>
-clue34 <ifG ComTime V1 else GoBeenBefore V= 1 NextDay Reputation 7 -d4 MENTAL ifUMysticism 10 else GoNoDice ifG d100 PCRep 7 else GoNoDice Print 2 XPV 150>
+CLUE_MYSTICISM <ifG ComTime V1 else GoBeenBefore V= 1 NextDay Reputation 7 -d4 MENTAL ifUMysticism 10 else GoNoDice ifG d100 PCRep 7 else GoNoDice Print 2 XPV 150>
 GoNoDice <Print 3>
 GoBeenBefore <Print 4>
 Msg1 <It's a small shrine.>
@@ -936,29 +979,6 @@ Msg11 <You lose before completing the first lap.>
 Msg12 <You play the game.>
 
 
-Food 30
-name <Boxed Lunch>
-desig <FOOD-1>
-
-Food 20
-name <Hot Dog>
-desig <FOOD-2>
-
-Food 25
-name <Meat>
-desig <FOOD-3>
-FoodMorale -1
-
-Food 20
-name <Sashimi>
-desig <FOOD-4>
-FoodMorale 1
-
-Food 20
-name <Salad>
-desig <SALAD-1>
-
-
 Cloud
 name <Smoke>
 desig <SMOKE-1>
@@ -1007,7 +1027,7 @@ AltFrame 2 0
 USE <if# 0 StatVal STAT_Lock else GoCloseDoor  if= StatVal STAT_Lock -1 else GoDoorLocked Print 1  SetStat STAT_Lock 0  Transform 1>
 GoDoorLocked <Print 6>
 GoCloseDoor <Print 2 SetStat STAT_Lock -1  Transform 2>
-CLUE32 <ifG StatVal STAT_Lock 0 else GoNotLocked Mental ifCodeBreaking StatVal STAT_Lock else GoNoUnlock Print 3 XPV 50 SetStat STAT_Lock 0 Transform 1>
+CLUE_CODEBREAKING <ifG StatVal STAT_Lock 0 else GoNotLocked Mental ifCodeBreaking StatVal STAT_Lock else GoNoUnlock Print 3 XPV 50 SetStat STAT_Lock 0 Transform 1>
 GoNoUnlock <Print 4>
 GoNotLocked <Print 5>
 REVEAL <Print 7>
@@ -1039,7 +1059,7 @@ Door
 desig <ONESHOTDOOR>
 % A one shot door gives you a single chance to pick its lock. If you fail,
 % you must raise your CodeBreaking skill before you will be able to try again.
-CLUE32 <if# StatVal STAT_Lock 0 else GoNotLocked ifCodeBreaking StatVal STAT_Lock else GoNoUnlock Mental Print 3 SetStat STAT_Lock 0>
+CLUE_CODEBREAKING <if# StatVal STAT_Lock 0 else GoNotLocked ifCodeBreaking StatVal STAT_Lock else GoNoUnlock Mental Print 3 SetStat STAT_Lock 0>
 Msg4 <This lock is beyond your ability to pick.>
 
 Prop 10
@@ -1049,7 +1069,7 @@ roguechar <=>
 SDL_Sprite <prop_box_low.png>
 use <if= StatVal STAT_Lock 0 else GoLocked Print -5 OpenInv>
 GoLocked <Print -4>
-CLUE32 <if# StatVal STAT_Lock 0 else GoNotLocked Mental ifCodeBreaking StatVal STAT_Lock else GoNoUnlock Print -1 SetStat STAT_Lock 0>
+CLUE_CODEBREAKING <if# StatVal STAT_Lock 0 else GoNotLocked Mental ifCodeBreaking StatVal STAT_Lock else GoNoUnlock Print -1 SetStat STAT_Lock 0>
 GoNoUnlock <Print -2>
 GoNotLocked <Print -3>
 Mesh 4
@@ -1067,7 +1087,7 @@ Desig <SAFE>
 roguechar <=>
 use <if= StatVal STAT_Lock 0 else GoLocked Print -5 OpenInv>
 GoLocked <Print -4>
-CLUE32 <if# StatVal STAT_Lock 0 else GoNotLocked Mental ifCodeBreaking StatVal STAT_Lock else GoNoUnlock Print -1 SetStat STAT_Lock 0>
+CLUE_CODEBREAKING <if# StatVal STAT_Lock 0 else GoNotLocked Mental ifCodeBreaking StatVal STAT_Lock else GoNoUnlock Print -1 SetStat STAT_Lock 0>
 GoNoUnlock <Print -2>
 GoNotLocked <Print -3>
 Mesh 4

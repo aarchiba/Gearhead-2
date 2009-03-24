@@ -25,12 +25,12 @@ ITEM_DESC <It's a skull made from transparent crystal.>
 ITEM_HISTORY <Supposedly it was created in the distant past by unknown methods.>
 ITEM_USAGE <It's a priceless work of art.>
 % V1 = Meditation recharge timer
-clue16 <Print 1>
-clue29 <Print 2>
-clue34 <ifG ComTime V1 else GoNotYet V= 1 ComTime V+ 1 86400 ifUMysticism 12 else GoFail Print 5 XPV 20 AddCheerful -d3>
+CLUE_MEDICINE <Print 1>
+CLUE_SCIENCE <Print 2>
+CLUE_MYSTICISM <ifG ComTime V1 else GoNotYet V= 1 ComTime V+ 1 86400 ifUMysticism 12 else GoFail Print 5 XPV 20 AddCheerful -d3>
 GoFail <Mental Print 6>
 GoNotYet <Print 4>
-clue37 <Print 3>
+CLUE_INSIGHT <Print 3>
 Msg1 <Though quite good, this skull is not entirely true to anatomy.>
 Msg2 <Research has suggested that this skull was made sometime following the industrial revolution.>
 Msg3 <You discover that the jaw detaches. Cool!>
@@ -57,10 +57,10 @@ ITEM_USAGE <Well, it's a game, isn't it?>
 % V3 = Failure counter
 % Default skill for solving is Science
 use <ifG V1 -1 else GoSolved  Mental       V= 2 25 V+ 2 -V1 V+ 1 1 ifUScience       V2 else GoLose   Goto GoWin>
-Clue29 <Goto use>
-Clue32 <ifG V1 -1 else GoSolved   Mental   V= 2 25 V+ 2 -V1 V+ 1 1 ifUCodeBreaking  V2 else GoLose   Goto GoWin>
-Clue34 <Print 4>
-Clue37 <ifG V1 -1 else GoSolved   Mental   V= 2 25 V+ 2 -V1 V+ 1 1 ifUInsight V2 else GoLose   Goto GoWin>
+CLUE_SCIENCE <Goto use>
+CLUE_CODEBREAKING <ifG V1 -1 else GoSolved   Mental   V= 2 25 V+ 2 -V1 V+ 1 1 ifUCodeBreaking  V2 else GoLose   Goto GoWin>
+CLUE_MYSTICISM <Print 4>
+CLUE_INSIGHT <ifG V1 -1 else GoSolved   Mental   V= 2 25 V+ 2 -V1 V+ 1 1 ifUInsight V2 else GoLose   Goto GoWin>
 GoSolved <Print 1>
 GoLose <V+ 3 1 ifG V3 d100 else GoJustLose Print 3 V= 3 0 PCMoraleDmg 10>
 GoJustLose <Print 2>
@@ -83,7 +83,7 @@ SDL_PORTRAIT <item_biskupengine.png>
 Mass -4
 Fudge 300
 Biotech
-Clue29 <Print 1>
+CLUE_SCIENCE <Print 1>
 Msg1 <This is a PreZero organic power source. The device it was supposed to be connected to was never finished.>
 
 Gun 8
@@ -201,7 +201,7 @@ desc <An intricately detailed glowing orb.>
 ITEM_DESC <It's a microfusion generator, one of the earliest examples known.>
 ITEM_HISTORY <It was created to power a new weapon system, but as far as we know that weapon was never completed.>
 ITEM_USAGE <It's an important scientific artifact.>
-Clue29 <Print 1>
+CLUE_SCIENCE <Print 1>
 Msg1 <This appears to be a primitive but extremely powerful microfusion reactor. You better handle it carefully or it could explode.>
 
 HeadArmor 7
@@ -215,7 +215,7 @@ desc <A strangely biological helmet>
 ITEM_DESC <It's a prototype symbiotic armor created during the age of superpowers.>
 ITEM_HISTORY <According to legend, only one suit of Zeron Armor was ever produced.>
 ITEM_USAGE <The armor is supposed to be very powerful, though its exact characteristics aren't known.>
-Clue29 <Print 1>
+CLUE_SCIENCE <Print 1>
 Msg1 <A helmet crafted of living tissue. It appears to be powered by feeding off its wearer's blood.>
 Sealed
 Memo
@@ -233,7 +233,7 @@ desc <A suit of strangely biological armor.>
 ITEM_DESC <It's a prototype symbiotic armor created during the age of superpowers.>
 ITEM_HISTORY <According to legend, only one suit of Zeron Armor was ever produced.>
 ITEM_USAGE <The armor is supposed to be very powerful, though its exact characteristics aren't known.>
-Clue29 <Print 1>
+CLUE_SCIENCE <Print 1>
 Msg1 <A bodysuit crafted of living tissue. It appears to be powered by feeding off its wearer's blood.>
 sealed
 hardened
@@ -259,7 +259,7 @@ desc <A strangely organic gauntlet.>
 ITEM_DESC <It's a prototype symbiotic armor created during the age of superpowers.>
 ITEM_HISTORY <According to legend, only one suit of Zeron Armor was ever produced.>
 ITEM_USAGE <The armor is supposed to be very powerful, though its exact characteristics aren't known.>
-Clue29 <Print 1>
+CLUE_SCIENCE <Print 1>
 Msg1 <A gauntlet crafted of living tissue. It appears to be powered by feeding off its wearer's blood.>
 sealed
 hardened
@@ -282,7 +282,7 @@ desc <A strangely organic legging.>
 ITEM_DESC <It's a prototype symbiotic armor created during the age of superpowers.>
 ITEM_HISTORY <According to legend, only one suit of Zeron Armor was ever produced.>
 ITEM_USAGE <The armor is supposed to be very powerful, though its exact characteristics aren't known.>
-Clue29 <Print 1>
+CLUE_SCIENCE <Print 1>
 Msg1 <A legging crafted of living tissue. It appears to be powered by feeding off its wearer's blood.>
 sealed
 hardened
@@ -301,7 +301,7 @@ desc <A strangely organic gauntlet.>
 ITEM_DESC <It's a prototype symbiotic armor created during the age of superpowers.>
 ITEM_HISTORY <According to legend, only one suit of Zeron Armor was ever produced.>
 ITEM_USAGE <The armor is supposed to be very powerful, though its exact characteristics aren't known.>
-Clue29 <Print 1>
+CLUE_SCIENCE <Print 1>
 Msg1 <A gauntlet crafted of living tissue. It appears to be powered by feeding off its wearer's blood.>
 sealed
 hardened
@@ -324,7 +324,7 @@ desc <A strangely organic legging.>
 ITEM_DESC <It's a prototype symbiotic armor created during the age of superpowers.>
 ITEM_HISTORY <According to legend, only one suit of Zeron Armor was ever produced.>
 ITEM_USAGE <The armor is supposed to be very powerful, though its exact characteristics aren't known.>
-Clue29 <Print 1>
+CLUE_SCIENCE <Print 1>
 Msg1 <A legging crafted of living tissue. It appears to be powered by feeding off its wearer's blood.>
 sealed
 hardened

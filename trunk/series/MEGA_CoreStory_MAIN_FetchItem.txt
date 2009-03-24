@@ -439,7 +439,7 @@ Content
 				MiniMapComponent 2
 				use <if# L1 0 else GoLocked Print 1 Return>
 				%% Unlocking the trapdoor with CodeBreaking is difficult, but not impossible.
-				CLUE32 <if= L1 0 else GoNotLocked Mental ifCodeBreaking 20 else GoNoUnlock Print 6 XPV 100 L= 1 1 ReAttack %4%>
+				CLUE_CODEBREAKING <if= L1 0 else GoNotLocked Mental ifCodeBreaking 20 else GoNoUnlock Print 6 XPV 100 L= 1 1 ReAttack %4%>
 				Msg4 <You aren't skilled enough to pick this lock.>
 			end
 

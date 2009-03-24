@@ -82,19 +82,7 @@ DomTarget 37
 type <Exotic Reptile Earth Cave Mountain>
 habitat <>
 statline 15 20 12 19 12 13 6 9
-% Begin SURVIVAL block.
-clue14 <ifSelfOK else GoPelt>
-GoPelt <if= V1 0 else GoDone Mental Gut V= 1 SkRoll 14 ifG V1 18 else GoMeat Print 5 GiveSTC .heartdesc>
-GoMeat <ifG V1 9 else GoFail Print 4 GiveSTC .fooddesc>
-.heartdesc <DRAGONHEART>
-.fooddesc <FOOD-3>
-GoFail <Print 2>
-GoDone <Print 3>
-Msg2 <You don't manage to do much of anything with this dragon.>
-Msg3 <You've already done all you can with this dragon.>
-Msg4 <You cut some meat from the dragon to have later.>
-Msg5 <You remove the heart from this dragon to eat later.>
-% End SURVIVAL block.
+*CLUE_SURVIVAL <*SURVIVAL_GetMeatOrDragonHeart 110 dragon>
 RangedCombat 5
 CloseCombat 5
 Dodge 4
@@ -239,22 +227,7 @@ DomTarget 25
 type <Exotic Reptile Water Sea>
 habitat <>
 statline 17 19 16 15 8 16 7 9
-% Begin SURVIVAL block.
-clue14 <ifSelfOK else GoPelt>
-GoPelt <if= V1 0 else GoDone Gut Mental V= 1 SkRoll 14 ifG V1 21 else GoGland Print 5 GiveSTC .heartdesc>
-GoGland <ifG V1 19 else GoMeat Print 1 GiveSTC .stcdesc>
-GoMeat <ifG V1 14 else GoFail Print 4 GiveSTC .fooddesc>
-.heartdesc <DRAGONHEART>
-.stcdesc <FLAMEGLAND>
-.fooddesc <FOOD-3>
-GoFail <Print 2>
-GoDone <Print 3>
-Msg1 <You remove the flame gland from the dragon.>
-Msg2 <You don't manage to do much of anything with this dragon.>
-Msg3 <You've already done all you can with this dragon.>
-Msg4 <You cut some meat from the dragon to have later.>
-Msg5 <You remove the heart from this dragon to eat later.>
-% End SURVIVAL block.
+*CLUE_SURVIVAL <*SURVIVAL_GetMeatOrFlameGlandOrDragonHeart 100 dragon>
 RangedCombat 4
 CloseCombat 9
 Dodge 5
@@ -316,22 +289,7 @@ genepool <DRAGON>
 type <Exotic Reptile Bright Fire Desert Lab>
 habitat <>
 statline 16 15 14 17 9 14 5 10
-% Begin SURVIVAL block.
-clue14 <ifSelfOK else GoPelt>
-GoPelt <if= V1 0 else GoDone Mental Gut V= 1 SkRoll 14 ifG V1 23 else GoGland Print 5 GiveSTC .heartdesc>
-GoGland <ifG V1 19 else GoMeat Print 1 GiveSTC .stcdesc>
-GoMeat <ifG V1 12 else GoFail Print 4 GiveSTC .fooddesc>
-.heartdesc <DRAGONHEART>
-.stcdesc <FLAMEGLAND>
-.fooddesc <FOOD-3>
-GoFail <Print 2>
-GoDone <Print 3>
-Msg1 <You remove the flame gland from the dragon.>
-Msg2 <You don't manage to do much of anything with this dragon.>
-Msg3 <You've already done all you can with this dragon.>
-Msg4 <You cut some meat from the dragon to have later.>
-Msg5 <You remove the heart from this dragon to eat later.>
-% End SURVIVAL block.
+*CLUE_SURVIVAL <*SURVIVAL_GetMeatOrFlameGlandOrDragonHeart 84 dragon>
 RangedCombat 4
 CloseCombat 5
 Dodge 4
@@ -382,6 +340,7 @@ sdl_colors <127 45 35 250 50 100 244 244 30>
 type <mutant fire desert wasteland air>
 habitat <>
 statline 10 4 8 9 2 2 2 2
+*CLUE_SURVIVAL <*SURVIVAL_GetFlameGland 80 worm>
 MonsterTV 40
 RangedCombat 3
 CloseCombat 3

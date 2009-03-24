@@ -431,29 +431,7 @@ var
 begin
 	S := Part^.SA;
 	while S <> Nil do begin
-		P := 1;
-		while P < Length( S^.Info ) do begin
-			if ( S^.Info[P] = '%' ) and ( P < ( Length( S^.Info ) - 1 ) ) then begin
-				{ We've found a hash. This could be a replacement string. See what string it is. }
-				SPat := '%';
-				P2 := P;
-				repeat
-					Inc( P2 );
-					SPat := SPat + S^.Info[P2];
-				until ( P2 >= Length( S^.Info ) ) or ( S^.Info[P2] = '%' );
-
-				{ We now have a string that may very well be something we want to replace. Check it. }
-				SRep := SAttValue( Dictionary , SPat );
-				if SRep <> '' then begin
-					{ The pattern was found in the dictionary. Replace all instances of it. }
-					ReplacePat( S^.Info , SPat , SRep );
-					P := P + Length( SRep ) - 1;
-				end;
-			end;
-
-			Inc( P );
-		end;
-
+		ApplyDictionaryToString( S^.Info , Dictionary );
 		S := S^.Next;
 	end;
 end;
