@@ -131,7 +131,7 @@
 
 	Persona
 	requires <*ChallengeArenaWin>
-	START <NewChat Say %id%01 CashPrize Reward ArenaThreat %2% 150 Goto %3%>
+	START <NewChat Say %id%01  AddReact d10  CashPrize Reward ArenaThreat %2% 150 Goto %3%>
 	Msg%id%01_10 <Good job. Here's your prize money. Come back tomorrow for another match.>
 	CMsg%id%01_10 <ifNPCDead %1% Accept>
 	Msg%id%01_20 <Good job against \PERSONA %1% . Here's your prize money. Come back tomorrow for another fight.>
@@ -139,7 +139,7 @@
 
 	Persona
 	requires <*ChallengeArenaWin>
-	START <NewChat Say %id%01   CustomMecha .%id%_MekFac ArenaThreat %2%   Goto %3%>
+	START <NewChat Say %id%01 AddReact d3     CustomMecha .%id%_MekFac ArenaThreat %2%   Goto %3%>
 	.%id%_MekFac <PDASS>
 	Msg%id%01 <In recognition of your victory, I'm glad to present you with a brand new mecha. Come back tomorrow for another match.>
 	Msg%id%01_20 <You have defeated \PERSONA %1% . As a reward, you've earned a brand new Duelist League mecha. There will be another match tomorrow.>
@@ -147,7 +147,7 @@
 
 	Persona
 	requires <*ChallengeArenaWin L5PAT>
-	START <NewChat Say %id%01   RandomMecha .%id%_MekFac ArenaThreat %2%   Goto %3%>
+	START <NewChat Say %id%01  AddReact d6     RandomMecha .%id%_MekFac ArenaThreat %2%   Goto %3%>
 	.%id%_MekFac <PDASS COMET HOELL>
 	Msg%id%01 <For the last match, you've earned a brand new mecha. Congratulations. As always there'll be a new challenger waiting for you tomorrow.>
 	Msg%id%01_20 <For defeating \PERSONA %1% , I'm glad to present you with this brand new mecha. Use it well. There will be another match tomorrow.>
@@ -161,7 +161,7 @@
 
 	Persona
 	requires <*BasicArenaWin>
-	START <NewChat Say %id%01 CashPrize Reward ArenaThreat %1% 100 Goto %2%>
+	START <NewChat Say %id%01 CashPrize Reward ArenaThreat %1% 100  AddReact d4   Goto %2%>
 	Msg%id%01 <Good job. Here's the prize money you earned. Come back tomorrow for another fight.>
 	Msg%id%01_1 <You did well out there; people will be talking about that win. Here's your prize.>
 	CMsg%id%01_1 <ifNPCSociable Accept>
@@ -185,7 +185,7 @@
 
 	Persona
 	requires <*BasicArenaLoss Melancholy>
-	START <NewChat Say %id%01  Goto %2%>
+	START <NewChat Say %id%01  AddReact -d4  Goto %2%>
 	Msg%id%01 <You lost the fight. Try not to lose again in tomorrow's match.>
 	Msg%id%01_1 <Wow, that was a record ass-kicking that they gave you. Do you think you could try to not lose next time? There'll be another fight tomorrow.>
 	CMsg%id%01_1 <ifNPCSociable Accept>
@@ -198,7 +198,7 @@
 
 	Persona
 	requires <*BasicArenaLoss>
-	START <NewChat Say %id%01  Goto %2%>
+	START <NewChat Say %id%01  AddReact -d4  Goto %2%>
 	Msg%id%01 <You lost the match. Come back here tomorrow and try your luck again.>
 	Msg%id%01_1 <You were defeated... that's not going to be good for your reputation. We'll have another match tomorrow and maybe you can redeem yourself.>
 	CMsg%id%01_1 <ifNPCSociable Accept>
@@ -221,7 +221,7 @@
 
 	Persona
 	requires <*CharaArenaWin>
-	START <NewChat Say %id%01 CashPrize Reward ArenaThreat %1% 400 Goto %2%>
+	START <NewChat Say %id%01 CashPrize Reward ArenaThreat %1% 400  AddReact d4  Goto %2%>
 	Msg%id%01 <You've emerged victorious from the arena. Come back tomorrow and I'll give you another shot.>
 	Msg%id%01_1 <You survived the battle. Here's your reward. Come see me again tomorrow and I'll line up another fight.>
 	CMsg%id%01_1 <ifNPCSociable Accept>
@@ -246,7 +246,7 @@
 
 	Persona
 	requires <*CharaArenaLoss>
-	START <NewChat Say %id%01  Goto %2%>
+	START <NewChat Say %id%01  AddReact -d4  Goto %2%>
 	Msg%id%01 <Strange to see you again, I could have sworn they took you to bits in the arena. We'll be having another game tomorrow.>
 	Msg%id%01_1 <Didn't you get killed in the arena? No matter... we've got another game coming up tomorrow.>
 	Msg%id%01_2 <Look at this, the living dead... There's no match going on right now, but we'll have another one tomorrow if you're interested.>

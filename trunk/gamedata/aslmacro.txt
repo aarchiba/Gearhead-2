@@ -64,7 +64,6 @@ PCFacLevel+ <GrabAdventure GAddNAtt NAG_Experience NAS_FacLevel ?>
 PCRewardLevel+ <GrabAdventure GAddNAtt NAG_Experience NAS_RewardLevel ?>
 CASHPRIZE <GrabPCPilot  GAddNAtt NAG_Experience NAS_Credits ?  VMsg AS_CashPrize !>
 CASH+ <GrabPCPilot  GAddNAtt NAG_Experience NAS_Credits ?>
-ADDREACT <GrabPCPilot GAddNAtt NAG_ReactionScore ChatNPCID ?>
 ADDNPCREACT <GrabPCPilot GAddNAtt NAG_ReactionScore ? ?>
 SAVEPOS <GrabCurrentScene GSetNAtt NAG_ParaLocation NAS_X PCX  GSetNAtt NAG_ParaLocation NAS_Y PCY>
 SETPCFAC <GrabPCPilot GSetNAtt NAG_Personal NAS_FactionID ?  GrabAdventure GSetNAtt NAG_Personal NAS_FactionID ! GrabFaction ! GSetNAtt NAG_Relationship 0 0 ClearFacXP>

@@ -81,6 +81,7 @@ roguechar <'>
 type <fungus mine asteroid>
 habitat <SPACE>
 statline 10 8 10 1 1 1 1 1
+*CLUE_SURVIVAL <*SURVIVAL_GetPearl 40 fungus>
 MonsterTV 40
 RangedCombat 1
 CloseCombat 4
@@ -225,8 +226,8 @@ roguechar <f>
 type <fungus mine asteroid>
 habitat <SPACE>
 statline 9 13 13 10 1 1 1 1
-*CLUE_SURVIVAL <*SURVIVAL_LootGizzard 55 fungus>
-MonsterTV 52
+*CLUE_SURVIVAL <*SURVIVAL_GetPearl 65 fungus>
+MonsterTV 60
 CloseCombat 7
 Dodge 5
 Initiative 5
@@ -238,14 +239,14 @@ torso
 arm
 	armor 3
 	sub
-		melee 5
+		melee 9
 		name <Claw>
 		type <Brutal>
 	end
 arm
 	armor 3
 	sub
-		melee 5
+		melee 9
 		name <Claw>
 		type <Brutal>
 	end

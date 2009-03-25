@@ -380,7 +380,7 @@ procedure PurchaseGearMenu( GB: GameBoardPtr; PC,NPC,Part: GearPtr );
 var
 	YNMenu: RPGMenuPtr;
 	Cost: LongInt;
-	N: Integer;
+	N,XP: Integer;
 	msg: String;
 begin
 	Cost := PurchasePrice( PC , NPC , Part );
@@ -413,7 +413,10 @@ begin
 				AddNAtt( PC^.NA , NAG_Experience , NAS_Credits , -Cost );
 
 				CHAT_Message := MsgString( 'BUYREPLY' + BStr( Random( 4 ) + 1 ) );
-				if NPC <> Nil then DoleSkillExperience( NPC , NAS_Shopping , ( ( Round( Ln( Cost ) * 100 ) ) div ( Part^.Scale * 2 + 1 ) ) + 1 );
+				if NPC <> Nil then begin
+					XP := Round( Ln( Cost ) * 100 );
+					DoleSkillExperience( NPC , NAS_Shopping , ( XP div ( Part^.Scale * 2 + 1 ) ) + 1 );
+				end;
 
 				DialogMSG( ReplaceHash( MsgString( 'BUY_YOUHAVEBOUGHT' ) , GearName( Part ) ) );
 
@@ -1688,38 +1691,28 @@ begin
 				AddRPGMenuItem( RPM , MsgString( 'SERVICES_DoGeneralRepair' ) + ' [$' + BStr( ScalePrice( PC , NPC , Cost ) ) + ']' , RM_GeneralRepair );
 			end;
 
+			{ If the shopkeeper knows Basic Repair, allow Reload Chars. }
+			C1 := ReloadCharsCost( GB , PC , NPC , False );
+			C2 := ReloadCharsCost( GB , PC , NPC , True );
+			if ( C1 > 0 ) then AddRPGMenuItem( RPM , MsgString( 'SERVICES_ReloadCharsPrompt' ) + ' [$' + BStr( C1 ) + ']' , -4 );
+			if C2 > C1 then AddRPGMenuItem( RPM , MsgString( 'SERVICES_ReloadChars+Prompt' ) + ' [$' + BStr( C2 ) + ']' , -11 );
+
 			if NAttValue( NPC^.NA , NAG_Skill , NAS_Repair ) > 5 then begin
 				Cost := RepairAllCost( GB , RM_MechaRepair );
 				if Cost > 0 then begin
 					AddRPGMenuItem( RPM , MsgString( 'SERVICES_DoMechaRepair' ) + ' [$' + BStr( ScalePrice( PC , NPC , Cost ) ) + ']' , RM_MechaRepair );
 				end;
-			end;
-		end;
 
-		for N := 1 to NumSkill do begin
-			{ A shopkeeper can only repair items for which he has the }
-			{ required skills. }
-			if NAttValue( NPC^.NA , NAG_Skill , N ) > 0 then begin
+				{ If the shopkeeper knows Mecha Repair, allow reload mecha. }
+				C1 := ReloadMechaCost( GB , PC , NPC , False );
+				C2 := ReloadMechaCost( GB , PC , NPC , True );
+				if ( C1 > 0 ) then AddRPGMenuItem( RPM , MsgString( 'SERVICES_ReloadMeksPrompt' ) + ' [$' + BStr( C1 ) + ']' , -3 );
+				if C2 > C1 then AddRPGMenuItem( RPM , MsgString( 'SERVICES_ReloadMeks+Prompt' ) + ' [$' + BStr( C2 ) + ']' , -10 );
 			end;
-		end;
-
-		{ If the shopkeeper knows Basic Repair, allow Reload Chars. }
-		{ If the shopkeeper knows Mecha Repair, allow reload mecha. }
-		if NAttValue( NPC^.NA , NAG_Skill , 23 ) > 0 then begin
-			C1 := ReloadCharsCost( GB , PC , NPC , False );
-			C2 := ReloadCharsCost( GB , PC , NPC , True );
-			if ( C1 > 0 ) then AddRPGMenuItem( RPM , MsgString( 'SERVICES_ReloadCharsPrompt' ) + ' [$' + BStr( C1 ) + ']' , -4 );
-			if C2 > C1 then AddRPGMenuItem( RPM , MsgString( 'SERVICES_ReloadChars+Prompt' ) + ' [$' + BStr( C2 ) + ']' , -11 );
-		end;
-		if NAttValue( NPC^.NA , NAG_Skill , 15 ) > 0 then begin
-			C1 := ReloadMechaCost( GB , PC , NPC , False );
-			C2 := ReloadMechaCost( GB , PC , NPC , True );
-			if ( C1 > 0 ) then AddRPGMenuItem( RPM , MsgString( 'SERVICES_ReloadMeksPrompt' ) + ' [$' + BStr( C1 ) + ']' , -3 );
-			if C2 > C1 then AddRPGMenuItem( RPM , MsgString( 'SERVICES_ReloadMeks+Prompt' ) + ' [$' + BStr( C2 ) + ']' , -10 );
 		end;
 
 		{ Also if the shopkeeper knows Basic Repair, allow recharging of batteries. }
-		if ( RechargeCost( GB , PC , NPC ) > 0 ) and ( NAttValue( NPC^.NA , NAG_Skill , 23 ) > 0 ) then AddRPGMenuItem( RPM , MsgString( 'SERVICES_RechargePrompt' ) + ' [$' + BStr( RechargeCost( GB , PC , NPC ) ) + ']' , -9 );
+		if ( RechargeCost( GB , PC , NPC ) > 0 ) and ( NAttValue( NPC^.NA , NAG_Skill , NAS_Repair ) > 0 ) then AddRPGMenuItem( RPM , MsgString( 'SERVICES_RechargePrompt' ) + ' [$' + BStr( RechargeCost( GB , PC , NPC ) ) + ']' , -9 );
 
 		if AStringHasBString( Stuff, 'DELIVERY' ) then AddRPGMenuItem( RPM , MsgString( 'SERVICES_ExpressDelivery' ) , -8 );
 
@@ -1733,7 +1726,7 @@ begin
 
 		AddRPGMenuItem( RPM , MsgString( 'SERVICES_Inventory' ) , -6 );
 
-		AddRPGMenuItem( RPM , 'Exit Shop' , -1 );
+		AddRPGMenuItem( RPM , MsgString( 'SERVICES_Exit' ) , -1 );
 
 		{ Display the trading stats. }
 		N := SelectMenu( RPM , @ServiceRedraw );

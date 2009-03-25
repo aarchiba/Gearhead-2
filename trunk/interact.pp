@@ -92,6 +92,8 @@ Function PetsPresent( GB: GameBoardPtr ): Integer;
 
 Function FindLocalNPCByKeyWord( GB: GameBoardPtr; KW: String ): GearPtr;
 
+Procedure AddReact( GB: GameBoardPtr; PC,NPC: GearPtr; DReact: Integer );
+
 
 implementation
 
@@ -721,6 +723,23 @@ begin
 
 	{ Return the NPC found. }
 	FindLocalNPCByKeyWord := M;
+end;
+
+Procedure AddReact( GB: GameBoardPtr; PC,NPC: GearPtr; DReact: Integer );
+	{ Adjust the reaction score between the PC and this NPC, causing any other }
+	{ status changes as needed. }
+begin
+	if ( PC <> Nil ) and ( NPC <> Nil ) and ( GB <> Nil ) then begin
+		{ We have a PC and an NPC. Do the math. }
+		AddNAtt( PC^.NA , NAG_ReactionScore , NAttValue( NPC^.NA , NAG_Personal , NAS_CID ) , DReact );
+
+		{ If this brings the reaction over 50, and the change was positive, and }
+		{ the NPC doesn't currently have a relationship to the PC, maybe become friends. }
+		if ( DReact > 0 ) and ( NAttValue( NPC^.NA , NAG_Relationship , 0 ) = 0 ) and ( ReactionScore( GB^.Scene , PC , NPC ) > ( 50 + Random( 10 ) ) ) then begin
+			SetNAtt( NPC^.NA , NAG_Relationship , 0 , NAV_Friend );
+			DoleExperience( PC , 50 );
+		end;
+	end;
 end;
 
 initialization

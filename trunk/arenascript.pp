@@ -1230,6 +1230,9 @@ begin
 		end else if ( msg = '' ) and ( ( Source^.G = GG_Scene ) or ( Source^.G = GG_MetaScene ) or ( Source^.G = GG_World ) ) then begin
 			msg := SAttValue( Default_Scene_Scripts , Key );
 		end;
+		if ( msg = '' ) and HeadMatchesString( 'CLUE_' , Key ) then begin
+			msg := 'VMsg AS_YouHaveNoClue 0';
+		end;
 	end else begin
 		msg := '';
 	end;
@@ -4353,6 +4356,18 @@ begin
 	end;
 end;
 
+Procedure ProcessAddReact( var Event: String; GB: GameBoardPtr; Source: GearPtr );
+	{ Adjust the reaction score of I_NPC. }
+var
+	DReact: integer;	{ How much do we want to change? }
+	PC: GearPtr;
+begin
+	DReact := ScriptValue( Event , GB , Source );
+
+	PC := LocatePilot( GG_LocatePC( GB ) );
+	AddReact( GB , PC , I_NPC , DReact );
+end;
+
 Procedure ProcessMagicMap( GB: GameBoardPtr );
 	{ Make every tile on the map visible, then redraw. }
 var
@@ -4533,6 +4548,7 @@ begin
 		else if cmd = 'GJOINLANCE' then ProcessGJoinLance( GB )
 		else if cmd = 'GOPENINV' then ProcessGOpenInv( GB )
 		else if cmd = 'ARENAREP' then ProcessArenaRep( Event , GB , Source )
+		else if cmd = 'ADDREACT' then ProcessAddReact( Event , GB , Source )
 		else if cmd <> '' then begin
 					DialogMsg( 'ERROR: Unknown ASL command ' + cmd );
 					DialogMsg( 'CONTEXT: ' + event );

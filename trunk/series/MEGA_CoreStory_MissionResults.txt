@@ -118,7 +118,7 @@ Content
 		*.%id%_GoComeHere <*NotByPhone>
 		result%id%01 <NewChat Say %id%02>
 		*result%id%02 <*MissionWasSuccess&Reward .%id%_GoEnd &AllyFac &EnemyFac>
-		.%id%_GoEnd <CashPrize Reward StoryDL 500 SMemo 0 DeleteItem %2% NTBWinComp 0 .%id%_next>
+		.%id%_GoEnd <CashPrize Reward StoryDL 500 SMemo 0 DeleteItem %2%  AddReact d10  NTBWinComp 0 .%id%_next>
 		.%id%_next <+T-- +F-->
 		result%id%03 <NTBLoseComp 0 .%id%_next Goto .%id%_GoLose>
 		*.%id%_GoLose <*YouLostItem>
@@ -157,7 +157,7 @@ Content
 
 	sub
 		Persona 1
-		greeting <if= PlotStatus %plotid% %id% else %pop% NewChat Say %id%01 StoryNote %id%02 WinComp %2% .%id%_win>
+		greeting <if= PlotStatus %plotid% %id% else %pop% NewChat Say %id%01 StoryNote %id%02 AddReact d10  WinComp %2% .%id%_win>
 		.%id%_win <+Tgs +Fmi>
 		Msg%id%01 <Wow, you're great! If you'd like to get a paying job next time, you should look for work at %name2%... that's what I've heard, anyhow.>
 		Msg%id%01_1 <>
@@ -191,7 +191,7 @@ Content
 		.%id%_GoComeHere <NewChat Say %id%07>
 		.%id%_GoBecomeAlly <PCAlly %1% NPCLevel %1% StoryDL History %id%05 SMemo 0 NTBWinComp 0 .%id%_win>
 		.%id%_win <+T-- +F-->
-		result%id%01 <History %id%02 NPCLevel %1% StoryDL &SetPartnerNPC %1% &AddPartnerToLance SMemo 0 NTBWinComp 0 .%id%_win Goto .%id%_GoJoinLance>
+		result%id%01 <History %id%02 NPCLevel %1% StoryDL &SetPartnerNPC %1% &AddPartnerToLance SMemo 0 AddReact d10  NTBWinComp 0 .%id%_win Goto .%id%_GoJoinLance>
 		*.%id%_GoJoinLance <*WelcomeToLance>
 		result%id%02 <ifNPCInPlay &PartnerNPC else .%id%_GoEndR2 Monologue &PartnerNPC %id%03 Goto .%id%_GoEndR2>
 		.%id%_GoEndR2 <NewChat Say %id%04 Goto .%id%_GoBecomeAlly>
@@ -222,7 +222,7 @@ Content
 
 	sub
 		Persona 1
-		greeting <if= PlotStatus %plotid% %id% else %pop% NewChat Say %id%01 CashPrize Reward StoryDL 500 SMemo 0 NTBWinComp 0 .%id%_win>
+		greeting <if= PlotStatus %plotid% %id% else %pop% NewChat Say %id%01 CashPrize Reward StoryDL 500 SMemo 0 AddReact d10  NTBWinComp 0 .%id%_win>
 		.%id%_win <+T-- +F-->
 		Msg%id%01 <Thanks for your help. Here, I'd like for you to have this money.>
 		Msg%id%01_1 <>
@@ -260,7 +260,7 @@ Content
 
 	sub
 		Persona 1
-		greeting <if= PlotStatus %plotid% %id% else %pop% NewChat Say %id%01 SMemo 0 NTBLoseComp 0 .%id%_loss>
+		greeting <if= PlotStatus %plotid% %id% else %pop% NewChat Say %id%01 SMemo 0 AddReact -d4  NTBLoseComp 0 .%id%_loss>
 		.%id%_loss <+T-- +F-->
 		Msg%id%01 <That didn't go so well.>
 		Msg%id%01_1 <>
@@ -337,7 +337,7 @@ Content
 		Persona 1
 		greeting <if= PlotStatus %plotid% %id% else %pop% gOTO .%id%_GoReportSuccess>
 		*.%id%_GoReportSuccess <*MissionWasSuccess&Reward .%id%_GoEnd &AllyFac &EnemyFac>
-		.%id%_GoEnd <CashPrize Reward StoryDL 500 SMemo 0 NTBWinComp 0 .%id%_win>
+		.%id%_GoEnd <CashPrize Reward StoryDL 500 SMemo 0  AddReact d10  NTBWinComp 0 .%id%_win>
 		.%id%_win <+T-- +F-->
 	end
 
@@ -359,9 +359,9 @@ Content
 		Persona 1
 		greeting <if= PlotStatus %plotid% %id% else %pop% ifNPCOK %2% else .%id%_GoReportSuccess  NewChat Say %id%01 SMemo %id%02 History %id%03 Goto .%id%_GoEnd>
 		*.%id%_GoReportSuccess <*MissionWasSuccess&Reward .%id%_GoMeh &AllyFac &EnemyFac>
-		.%id%_GoEnd <CashPrize Reward StoryDL 500 &SetTargetNPC %2% WinComp %3% .%id%_win>
+		.%id%_GoEnd <CashPrize Reward StoryDL 500 &SetTargetNPC %2%  AddReact d10  WinComp %3% .%id%_win>
 		.%id%_win <+Tgt +Fmi>
-		.%id%_GoMeh <CashPrize Reward StoryDL 500 NTBWinComp 0 .%id%_meh>
+		.%id%_GoMeh <CashPrize Reward StoryDL 500  AddReact d10  NTBWinComp 0 .%id%_meh>
 		.%id%_meh <+T-- +F-->
 		Msg%id%01 <Good job on that mission. I think %name2% has some more work for you; you should go meet \OPR %2% at %name3%.>
 		Msg%id%01_1 <>
@@ -398,9 +398,9 @@ Content
 		Persona 1
 		greeting <if= PlotStatus %plotid% %id% else %pop% SMemo 0  ifNPCOK %2% else .%id%_GoReportSuccess  if# ChatNPCFac 0 else .%id%_GoReportSuccess NewChat Say %id%01 SMemo %id%02 History %id%03 Goto .%id%_GoEnd>
 		*.%id%_GoReportSuccess <*MissionWasSuccess&Reward .%id%_GoMeh &AllyFac &EnemyFac>
-		.%id%_GoEnd <CashPrize Reward StoryDL 500 &SetTargetNPC %2% WinComp %3% .%id%_win>
+		.%id%_GoEnd <CashPrize Reward StoryDL 500 &SetTargetNPC %2%  AddReact d10  WinComp %3% .%id%_win>
 		.%id%_win <+Tgt +Fmi>
-		.%id%_GoMeh <CashPrize Reward StoryDL 500 NTBWinComp 0 .%id%_meh>
+		.%id%_GoMeh <CashPrize Reward StoryDL 500  AddReact d10  NTBWinComp 0 .%id%_meh>
 		.%id%_meh <+T-- +F-->
 		Msg%id%01 <Good work, \PC . If you want to see this through, I believe %name2% at %name3% has another mission you could help with.>
 		Msg%id%01_1 <Thanks \PC . We're going to need a lot of help to fight this problem... I believe %name2% at %name3% is looking for someone to run another mission, if you're interested.>
@@ -448,7 +448,7 @@ Content
 		Persona 1
 		greeting <if= PlotStatus %plotid% %id% else %pop% gOTO .%id%_GoReportLoss>
 		*.%id%_GoReportLoss <*MissionWasFailure .%id%_GoEnd &AllyFac &EnemyFac>
-		.%id%_GoEnd <SMemo 0 NTBLoseComp 0 .%id%_loss>
+		.%id%_GoEnd <SMemo 0  AddReact -d6  NTBLoseComp 0 .%id%_loss>
 		.%id%_loss <+T-- +F-->
 	end
 

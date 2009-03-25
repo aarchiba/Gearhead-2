@@ -26,7 +26,7 @@ Content
 	sub
 		Persona 1
 		% V%id%01 = Mecha rating calculator
-		greeting <PCRewardLevel+ 1 XPV 100 EndPlot ifG 9 PCRewardLevel else .%id%_GoMinorPrize ifG PCRenown * 10 PCRewardLevel else .%id%_GoMinorPrize Goto .%id%_GoBigPrize>
+		greeting <PCRewardLevel+ 1 XPV 100 EndPlot  AddReact d4  ifG 9 PCRewardLevel else .%id%_GoMinorPrize ifG PCRenown * 10 PCRewardLevel else .%id%_GoMinorPrize Goto .%id%_GoBigPrize>
 		*.%id%_GoMinorPrize <*PROMOTION_Minor_Reward>
 		% Generate a mecha of the requested renown level with a random theme and
 		% rewardlevel * 2 modification points.

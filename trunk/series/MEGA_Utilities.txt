@@ -39,7 +39,7 @@ Content
 		Persona 1
 		greeting <if= PlotStatus %plotid% %id% else %pop%  Goto .%id%_GoWinMission>
 		*.%id%_GoWinMission <*MissionWasSuccess&Reward .%id%_GoEnd ChatNPCFac na>
-		.%id%_GoEnd <CashPrize Reward %threat% PayRate    FacXP+ ChatNPCFac 1   EndPlot>
+		.%id%_GoEnd <CashPrize Reward %threat% PayRate    FacXP+ ChatNPCFac 1    AddReact d6   EndPlot>
 	end
 
 Content
@@ -54,7 +54,7 @@ Content
 		Persona 1
 		greeting <if= PlotStatus %plotid% %id% else %pop%  Goto .%id%_GoWinMission>
 		*.%id%_GoWinMission <*MissionWasSuccess&Reward&Mecha .%id%_GoEnd ChatNPCFac na>
-		.%id%_GoEnd <CashPrize Reward %threat% PayRate    FacXP+ ChatNPCFac 1   EndPlot>
+		.%id%_GoEnd <CashPrize Reward %threat% PayRate    FacXP+ ChatNPCFac 1   AddReact d6   EndPlot>
 	end
 
 %%
@@ -79,7 +79,7 @@ Content
 		Persona 1
 		greeting <if= PlotStatus %plotid% %id% else %pop%  Goto .%id%_GoLostMission>
 		*.%id%_GoLostMission <*MissionWasFailure .%id%_GoEnd ChatNPCFac na>
-		.%id%_GoEnd <EndPlot>
+		.%id%_GoEnd <AddReact -d6   EndPlot>
 	end
 
 Content
@@ -97,7 +97,7 @@ Content
 		Persona 1
 		greeting <if= PlotStatus %plotid% %id% else %pop%  Goto .%id%_GoLostMission>
 		*.%id%_GoLostMission <*MissionWasFailure&Mecha .%id%_GoEnd ChatNPCFac na>
-		.%id%_GoEnd <EndPlot>
+		.%id%_GoEnd <AddReact -d6   EndPlot>
 	end
 
 %%
@@ -123,7 +123,7 @@ Content
 
 	sub
 		Persona 1
-		greeting <if= PlotStatus %plotid% %id% else %pop%  NewChat Say %id%01 EndPlot>
+		greeting <if= PlotStatus %plotid% %id% else %pop%  NewChat Say %id%01 AddReact -d3 EndPlot>
 		Msg%id%01 <I'm afraid that you took too long on that mission. It's over now.>
 	end
 
