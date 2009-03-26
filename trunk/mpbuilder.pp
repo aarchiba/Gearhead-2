@@ -339,13 +339,22 @@ var
 	ShoppingList: NAttPtr;
 	Context,EDesc,SPContext,changes_list: String;
 	ParamList: ElementTable;
-	T,E: Integer;
+	T,E,Threat: Integer;
 	Shard: GearPtr;
 	NotFoundMatch: Boolean;
 	PlotID: LongInt;
 	IsBranchPlot: Boolean;
 begin
-	{ Start by determining the context. }
+	{ Determine the difficulty rating of this subplot. }
+	if ( SPReq <> '' ) and ( SPReq[1] = '#' ) then begin
+		DeleteFirstChar( SPReq );
+		T := ExtractValue( SPReq );
+		if T > 0 then Threat := T;
+	end else begin
+		threat := NAttValue( Plot0^.NA , NAG_Narrative , NAS_PlotDifficulcy );
+	end;
+
+	{ Next determine the context. }
 	Context := ExtractWord( SPReq );
 	if Slot^.G = GG_Story then Context := Context + ' ' + StoryContext( GB , Slot );
 	SPContext := SAttValue( Plot0^.SA , 'SPContext' );
@@ -405,7 +414,7 @@ begin
 				{ See if we can add this one to the list. If not, it will be }
 				{ deleted by InitShard. }
 				if SPContext <> '' then SetSAtt( Shard^.SA , 'SPCONTEXT <' + SPContext + '>' );
-				Shard := InitShard( GB , Scope , Slot , Shard , EsSoFar , PlotID , LayerID , NAttValue( Plot0^.NA , NAG_Narrative , NAS_PlotDifficulcy ) , ParamList , DoDebug );
+				Shard := InitShard( GB , Scope , Slot , Shard , EsSoFar , PlotID , LayerID , Threat , ParamList , DoDebug );
 				if Shard <> Nil then NotFoundMatch := False;
 			end else begin
 				{ This shard wants to change something we've already changed elsewhere }

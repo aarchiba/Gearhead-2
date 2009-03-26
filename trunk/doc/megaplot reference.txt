@@ -50,7 +50,7 @@ rumors can only be keyed to LayerIDs belonging to this thread.
 
 A subplot may be requested by adding a string describing the subplot.
 
-SUBPLOT[n] <[*SubPlot Type] Param1 Param2 ...>
+SUBPLOT[n] <[*SubPlot Type] ([#threat]) Param1 Param2 ...>
 
 Basically it's the same as adding subquests. Up to 8 subplots may
 be defined, and they all must be numbered.
@@ -62,6 +62,8 @@ If the second character of the SubPlot Type is a colon, this subplot
 will be a side plot with its own PlotID. In this way it's possible for a
 single plot to have multiple narrative threads running at once.
 
+Threat is an optional value which, if added, will determine the threat
+rating of the subplot being generated.
 
 ********************************
 ***   REPLACEMENT  STRINGS   ***

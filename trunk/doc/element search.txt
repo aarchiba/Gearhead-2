@@ -15,8 +15,6 @@ G: Grab
 	inserted into a story.
 
 KEY: Key Element
-	This element request can be made from a quest or an arena mission.
-	From a quest it selects the key character or item.
 	From an arena mission it selects the core campaign enemy faction.
 
 M: METASCENE
@@ -32,6 +30,11 @@ N: NEW NPC
 	faction.
 
 P: PREFAB
+
+Q: QUEST SCENE
+	A brand new permanent scene to add to the adventure. This scene must have a
+	metascene described in the subcoms of the quest fragment. Requesting this type
+	of element from anything other than a quest could have disasterous results.
 
 S: SCENE
 

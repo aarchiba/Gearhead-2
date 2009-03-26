@@ -179,6 +179,7 @@ Function FindSceneEntrance( Adventure: GearPtr; GB: GameBoardPtr; MSID: LongInt 
 Function NewCID( Adventure: GearPtr ): LongInt;
 Function NewNID( Adventure: GearPtr ): LongInt;
 Function NewMetaSceneID( Adventure: GearPtr ): LongInt;
+Function NewSceneID( Adv: GearPtr ): Integer;
 
 Function ElementLocation( Adv,Plot: GearPtr; N: Integer; GB: GameBoardPtr ): Integer;
 Function ElementFaction( Adv,Plot: GearPtr; N: Integer; GB: GameBoardPtr ): Integer;
@@ -469,6 +470,35 @@ begin
 	FindMetascene := MS;
 end;
 
+Function FindQuestscene( LList: GearPtr; QSID: LongInt ): GearPtr;
+	{ Attempt to locate the questscene referenced by MSID. Check LList and }
+	{ all of its subcoms. }
+var
+	Plot,MS,T: GearPtr;
+	N: Integer;
+begin
+	MS := Nil;
+
+	while ( LList <> Nil ) and ( MS = Nil ) do begin
+		if LList^.G = GG_Plot then begin
+			N := PlotElementID( Plot , 'Q' , QSID );
+			if N > 0 then begin
+				T := Plot^.SubCom;
+				while T <> Nil do begin
+					if ( T^.G = GG_MetaScene ) and ( T^.S = N ) then MS := T;	
+					T := T^.Next;
+				end;
+			end;
+		end;
+
+		if MS = Nil then MS := FindQuestScene( MS^.SubCom , QSID );
+
+		LList := LList^.Next;
+	end;
+
+	FindQuestscene := MS;
+end;
+
 Function FindSceneEntrance( Adventure: GearPtr; GB: GameBoardPtr; MSID: LongInt ): GearPtr;
 	{ Attempt to find an entrance for this metascene. }
 	Function CheckAlongPath( P: GearPtr ): GearPtr;
@@ -520,6 +550,10 @@ begin
 		end else begin
 			Part := SeekGear( Adventure , GG_Scene , ElementID( Plot , N ) );
 		end;
+
+	end else if Desc[1] = 'Q' then begin
+		{ Find a quest scene- this scene probably hasn't been deployed yet. }
+		Part := FindQuestScene( FindRoot( Adventure ) , ElementID( Plot , N ) );
 
 	end else if Desc[1] = 'F' then begin
 		{ Find a faction. }
@@ -683,6 +717,16 @@ begin
 	SetNAtt( Adventure^.NA , NAG_Narrative , NAS_MinMSID , it );
 	NewMetaSceneID := it;
 end;
+
+Function NewSceneID( Adv: GearPtr ): Integer;
+	{ The campaign initialization should have set the maximum scene ID currently }
+	{ in use. We'll use that to get a new ID. }
+begin
+	Adv := FindRoot( Adv );
+	AddNAtt( Adv^.NA , NAG_Narrative , NAS_MaxSceneID , 1 );
+	NewSceneID := NAttValue( Adv^.NA , NAG_Narrative , NAS_MaxSceneID );
+end;
+
 
 Function ElementLocation( Adv,Plot: GearPtr; N: Integer; GB: GameBoardPtr ): Integer;
 	{ Find the scene number where this element resides. If no such }

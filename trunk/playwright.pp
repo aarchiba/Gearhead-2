@@ -895,6 +895,16 @@ begin
 	NewContentNPC := NPC;
 end;
 
+Function PrepareNewSceneElement( Adventure , Plot: GearPtr; N: Integer ): GearPtr;
+	{ We've received a request for a new permanent scene. Assign a SceneID for it. }
+var
+	ID: Integer;
+begin
+	ID := NewSceneID( Adventure );
+	SetNAtt( Plot^.NA , NAG_ElementID , N , ID );
+	PrepareNewSceneElement := SeekCurrentLevelGear( Plot^.SubCom , GG_MetaScene , N );
+end;
+
 Function FindElement( Adventure,Plot: GearPtr; N: Integer; GB: GameBoardPtr ; MovePrefabs, Debug: Boolean ): Boolean;
 	{ Locate and store the Nth element for this plot. }
 	{ Return TRUE if a suitable element could be found, or FALSE }
@@ -993,6 +1003,12 @@ begin
 			{ PreFab element. Check Plot/InvCom and }
 			{ retrieve it. }
 			Element := DeployNextPrefabElement( GB , Adventure , Plot , N , MovePrefabs );
+			Fast_Seek_Element[ 1 , N ] := Element;
+			OK := Element <> Nil;
+
+		end else if EKind[1] = 'Q' then begin
+			{ Quest Scene. Find the metascene template being used. }
+			Element := PrepareNewSceneElement( Adventure , Plot , N );
 			Fast_Seek_Element[ 1 , N ] := Element;
 			OK := Element <> Nil;
 
@@ -1670,10 +1686,12 @@ begin
 			Fast_Seek_Element[ 1 , T ] := SeekPlotElement( Adventure , Plot , T , GB );
 
 			{ If the element wasn't found, this will cause an error... unless, }
-			{ of course, we're dealing with a MetaScene. This is the only element }
-			{ type that can not exist and still be valid. }
+			{ of course, we're dealing with a MetaScene or a new Quest Scene. }
+			{ These are the only element types that can not exist and still be valid. }
 			E := SAttValue( Plot^.SA , 'ELEMENT' + BStr( T ) );
-			if ( E = '' ) or ( ( UpCase( E[1] ) <> 'S' ) and ( ElementID( Plot , t ) > 0 ) ) then begin
+			if ( E <> '' ) and ( E[1] = 'Q' ) then begin
+				OkNow := True;
+			end else if ( E = '' ) or ( ( UpCase( E[1] ) <> 'S' ) and ( ElementID( Plot , t ) > 0 ) ) then begin
 				OkNow := Fast_Seek_Element[ 1 , T ] <> Nil;
 			end else begin
 				OkNow := True;

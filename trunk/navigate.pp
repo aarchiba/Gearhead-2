@@ -572,14 +572,6 @@ var
 		end;
 	end;
 
-	Function NewSceneID: Integer;
-		{ The campaign initialization should have set the maximum scene ID currently }
-		{ in use. We'll use that to get a new ID. }
-	begin
-		AddNAtt( Adv^.NA , NAG_Narrative , NAS_MaxSceneID , 1 );
-		NewSceneID := NAttValue( Adv^.NA , NAG_Narrative , NAS_MaxSceneID );
-	end;
-
 	Function AddNewScene( RootScene,Frag,KeyGear: GearPtr; SceneReq: String; AddEntrance: Boolean; BranchPoints,Faction,Threat: Integer ): GearPtr;
 		{ Attempt to add a new scene to the adventure. }
 		{ If this scene has a subquest associated with it, add that too. }
@@ -599,7 +591,7 @@ var
 		ShoppingList := CreateComponentList( ScenePrototypeList , SceneReq );
 
 		{ Determine the new ID for this scene. }
-		SID := NewSceneID;
+		SID := NewSceneID( Adv );
 
 		{ Search for a new scene until either we get one or we run out of options. }
 		NewScene := Nil;
@@ -1215,7 +1207,7 @@ var
 		begin
 			while SList <> Nil do begin
 				if ( SList^.G = GG_Scene ) then begin
-					SList^.S := NewSceneID();
+					SList^.S := NewSceneID( Adv );
 					ConnectScene( SList );
 				end;
 				if SList <> GoalLevel then AssignSceneIDs( SList^.SubCom );
