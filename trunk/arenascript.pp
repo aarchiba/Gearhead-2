@@ -183,7 +183,7 @@ var
 		Plot := PlotMaster( GB , Part );
 		if Plot <> Nil then begin
 			{ Use the difficulty rating for this plot. }
-			it := BasicSkillTarget( NAttValue( Plot^.NA , NAG_XXRan , NAS_DifficulcyLevel ) );
+			it := BasicSkillTarget( NAttValue( Plot^.NA , NAG_Narrative , NAS_DifficultyLevel ) );
 		end else begin
 			it := 5;
 		end;

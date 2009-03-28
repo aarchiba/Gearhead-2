@@ -30,13 +30,17 @@ uses gears,locale;
 
 Procedure ReplaceStrings( Part: GearPtr; Dictionary: SAttPtr );
 Function ComponentMenu( CList: GearPtr; var ShoppingList: NAttPtr ): GearPtr;
-Function InitMegaPlot( GB: GameBoardPtr; Scope,Slot,Plot: GearPtr; Threat: Integer ): GearPtr;
 
+Function ExpandDungeon( Dung: GearPtr ): GearPtr;
+Procedure ConnectScene( Scene: GearPtr; DoInitExits: Boolean );
+
+Function InitMegaPlot( GB: GameBoardPtr; Scope,Slot,Plot: GearPtr; Threat: Integer ): GearPtr;
+Function AddQuest( Adv,City: GearPtr; var Quest_Frags: GearPtr; QReq: String ): Boolean;
 
 implementation
 
 uses narration,playwright,texutil,gearutil,gearparser,ghchars,randmaps,
-	ui4gh,wmonster,
+	ui4gh,wmonster,rpgdice,ghprop,
 {$IFDEF ASCII}
 	vidgfx,vidmenus;
 {$ELSE}
@@ -50,7 +54,7 @@ uses narration,playwright,texutil,gearutil,gearparser,ghchars,randmaps,
 Type
 	ElementDesc = Record
 		EType: Char;
-		EValue: LongInt;
+		EValue,EScene: LongInt;
 	end;
 	{ I feel just like Dmitri Mendelev writing this... }
 	ElementTable = Array [1..Num_Plot_Elements] of ElementDesc;
@@ -62,6 +66,8 @@ Var
 	Sub_Plot_List: GearPtr;
 	standard_trigger_list: SAttPtr;
 	changes_used_so_far: String;
+	MasterEntranceList: GearPtr;
+
 
 Procedure ComponentMenuRedraw;
 	{ The redraw for the component selector below. }
@@ -97,12 +103,17 @@ begin
 	ComponentMenu := RetrieveGearSib( CList , N );
 end;
 
-Function NewPlotID( Adv: GearPtr ): LongInt;
+Function NewPlotID( Adv: GearPtr; IsAQuest: Boolean ): LongInt;
 	{ Calculate a new unique Plot ID. }
+	{ Plots have positive PlotIDs, quests have negative PlotIDs. }
 begin
 	{ Increase the previous ID by one, and return that. }
 	AddNAtt( Adv^.NA , NAG_Narrative , NAS_MaxPlotID , 1 );
-	NewPlotID := NAttValue( Adv^.NA , NAG_Narrative , NAS_MaxPlotID );
+	if IsAQuest then begin
+		NewPlotID := -NAttValue( Adv^.NA , NAG_Narrative , NAS_MaxPlotID );
+	end else begin
+		NewPlotID := NAttValue( Adv^.NA , NAG_Narrative , NAS_MaxPlotID );
+	end;
 end;
 
 Function NewLayerID( Slot: GearPtr ): LongInt;
@@ -178,9 +189,9 @@ begin
 	end;
 end;
 
-Function AddSubPlot( GB: GameBoardPtr; Scope,Slot,Plot0: GearPtr; SPReq: String; EsSoFar, LayerID, SubPlotSlot: LongInt; DoDebug: Boolean ): GearPtr; Forward;
+Function AddSubPlot( GB: GameBoardPtr; Scope,Slot,Plot0: GearPtr; SPReq: String; EsSoFar, LayerID, SubPlotSlot: LongInt; IsAQuest,DoDebug: Boolean ): GearPtr; forward;
 
-Function InitShard( GB: GameBoardPtr; Scope,Slot,Shard: GearPtr; EsSoFar,PlotID,LayerID,Threat: LongInt; const ParamIn: ElementTable; DoDebug: Boolean ): GearPtr;
+Function InitShard( GB: GameBoardPtr; Scope,Slot,Shard: GearPtr; EsSoFar,PlotID,LayerID,Threat: LongInt; const ParamIn: ElementTable; IsAQuest,DoDebug: Boolean ): GearPtr;
 	{ SHARD is a plot fragment candidate. Attempt to add it to the Slot. }
 	{ Attempt to add its subplots as well. }
 	{ SHARD can only be added if its number of new elements plus the current }
@@ -217,7 +228,7 @@ begin
 	{ Assign the values to this shard. }
 	SetNAtt( Shard^.NA , NAG_Narrative , NAS_PlotID , PlotID );
 	SetNAtt( Shard^.NA , NAG_Narrative , NAS_PlotLayer , LayerID );
-	SetNAtt( Shard^.NA , NAG_Narrative , NAS_PlotDifficulcy , Threat );
+	SetNAtt( Shard^.NA , NAG_Narrative , NAS_DifficultyLevel , Threat );
 
 	{ Record the original changes_used_so_far string; if things go sour in this procedure, }
 	{ we're going to have to restore it. }
@@ -233,6 +244,7 @@ begin
 	for t := 1 to Num_Plot_Elements do begin
 		if ParamIn[ t ].EValue <> 0 then begin
 			SetNAtt( Shard^.NA , NAG_ElementID , T , ParamIn[ t ].EValue );
+			SetNAtt( Shard^.NA , NAG_QuestElemScene , T , ParamIn[ t ].EScene );
 			SetSAtt( Shard^.SA , 'ELEMENT' + BStr( T ) + ' <' + ParamIn[ t ].EType + '>' );
 			Inc( NumParam );
 		end;
@@ -279,7 +291,7 @@ begin
 					SPReq := SAttValue( Shard^.SA , 'SUBPLOT' + BStr( T ) );
 					if SPReq <> '' then begin
 						SPID := NewLayerID( Slot );
-						SubPlot := AddSubPlot( GB , Scope , Slot , Shard , SPReq , NumElem , SPID , T , DoDebug );
+						SubPlot := AddSubPlot( GB , Scope , Slot , Shard , SPReq , NumElem , SPID , T , IsAQuest, DoDebug );
 						if SubPlot <> Nil then begin
 							{ A subplot was correctly installed. Add it to the list. }
 							AppendGear( SPList , SubPlot );
@@ -331,7 +343,7 @@ begin
 	end;
 end;
 
-Function AddSubPlot( GB: GameBoardPtr; Scope,Slot,Plot0: GearPtr; SPReq: String; EsSoFar, LayerID, SubPlotSlot: LongInt; DoDebug: Boolean ): GearPtr;
+Function AddSubPlot( GB: GameBoardPtr; Scope,Slot,Plot0: GearPtr; SPReq: String; EsSoFar, LayerID, SubPlotSlot: LongInt; IsAQuest,DoDebug: Boolean ): GearPtr;
 	{ A request has been issued for a subplot. Search through the plot }
 	{ component list and see if there's anything that matches our criteria. }
 	{ Plot0 = the plot requesting the subplot. It must not be Nil. }
@@ -345,43 +357,53 @@ var
 	PlotID: LongInt;
 	IsBranchPlot: Boolean;
 begin
+	{ First determine the context. }
+	Context := ExtractWord( SPReq );
+
 	{ Determine the difficulty rating of this subplot. }
 	if ( SPReq <> '' ) and ( SPReq[1] = '#' ) then begin
 		DeleteFirstChar( SPReq );
 		T := ExtractValue( SPReq );
 		if T > 0 then Threat := T;
+	end else if ( Plot0 <> Nil ) then begin
+		threat := NAttValue( Plot0^.NA , NAG_Narrative , NAS_DifficultyLevel );
 	end else begin
-		threat := NAttValue( Plot0^.NA , NAG_Narrative , NAS_PlotDifficulcy );
+		threat := 10;
 	end;
 
-	{ Next determine the context. }
-	Context := ExtractWord( SPReq );
+	{ Next complete the context. }
 	if Slot^.G = GG_Story then Context := Context + ' ' + StoryContext( GB , Slot );
-	SPContext := SAttValue( Plot0^.SA , 'SPContext' );
-	if SPContext <> '' then Context := Context + ' ' + SPContext;
+	if Plot0 <> Nil then begin
+		SPContext := SAttValue( Plot0^.SA , 'SPContext' );
+		if SPContext <> '' then Context := Context + ' ' + SPContext;
+	end;
 
 	{ Determine whether this is a regular subplot or a branch plot that will start its own narrative thread. }
 	IsBranchPlot := ( Length( Context ) > 2 ) and ( Context[2] = ':' );
 	{ This will determine whether we inherit the PlotID from Plot0, or generate a new one. }
-	if IsBranchPlot then PlotID := NewPlotID( FindRoot( Slot ) )
+	if IsBranchPlot or ( Plot0 = Nil ) then PlotID := NewPlotID( FindRoot( Slot ) , IsAQuest )
 	else PlotID := NAttValue( Plot0^.NA , NAG_Narrative , NAS_PlotID );
 
 	{ Store the details for this subplot in Plot0. }
-	SetNAtt( Plot0^.NA , NAG_SubPlotLayerID , SubPlotSlot , LayerID );
-	SetNAtt( Plot0^.NA , NAG_SubPlotPlotID , SubPlotSlot , PlotID );
+	if Plot0 <> Nil then begin
+		SetNAtt( Plot0^.NA , NAG_SubPlotLayerID , SubPlotSlot , LayerID );
+		SetNAtt( Plot0^.NA , NAG_SubPlotPlotID , SubPlotSlot , PlotID );
 
-	{ Determine the parameters to be sent, and add context info for them. }
-	ClearElementTable( ParamList );
-	T := 1;
-	while ( SPReq <> '' ) and ( T <= Num_Plot_Elements ) do begin
-		E := ExtractValue( SPReq );
-		if ( E >= 1 ) and ( E <= Num_Plot_Elements ) then begin
-			{ This element is being shared with the subplot. }
-			ParamList[t].EValue := ElementID( Plot0 , E );
-			EDesc := SAttValue( Plot0^.SA , 'ELEMENT' + BStr( E ) );
-			if EDesc <> '' then ParamList[t].EType := EDesc[1];
-			AddElementContext( GB , Plot0 , Context , BStr( T )[1] , E );
-			Inc( T );
+		{ Determine the parameters to be sent, and add context info for them. }
+		{ We only need parameters if Plot0 = Nil, since root quests take no params. }
+		ClearElementTable( ParamList );
+		T := 1;
+		while ( SPReq <> '' ) and ( T <= Num_Plot_Elements ) do begin
+			E := ExtractValue( SPReq );
+			if ( E >= 1 ) and ( E <= Num_Plot_Elements ) then begin
+				{ This element is being shared with the subplot. }
+				ParamList[t].EValue := ElementID( Plot0 , E );
+				ParamList[t].EScene := NAttValue( Plot0^.NA , NAG_QuestElemScene , E );
+				EDesc := SAttValue( Plot0^.SA , 'ELEMENT' + BStr( E ) );
+				if EDesc <> '' then ParamList[t].EType := EDesc[1];
+				AddElementContext( GB , Plot0 , Context , BStr( T )[1] , E );
+				Inc( T );
+			end;
 		end;
 	end;
 
@@ -414,7 +436,7 @@ begin
 				{ See if we can add this one to the list. If not, it will be }
 				{ deleted by InitShard. }
 				if SPContext <> '' then SetSAtt( Shard^.SA , 'SPCONTEXT <' + SPContext + '>' );
-				Shard := InitShard( GB , Scope , Slot , Shard , EsSoFar , PlotID , LayerID , Threat , ParamList , DoDebug );
+				Shard := InitShard( GB , Scope , Slot , Shard , EsSoFar , PlotID , LayerID , Threat , ParamList , IsAQuest , DoDebug );
 				if Shard <> Nil then NotFoundMatch := False;
 			end else begin
 				{ This shard wants to change something we've already changed elsewhere }
@@ -486,7 +508,9 @@ begin
 				PlotIndex := FirstFreeSlot;
 				Inc( FirstFreeSlot );
 				SetNAtt( MasterPlot^.NA , NAG_ElementID , PlotIndex , EID );
+				SetNAtt( MasterPlot^.NA , NAG_QuestElemScene , PlotIndex , NAttValue( SubPlot^.NA , NAG_QuestElemScene , T ) );
 				SetSAtt( MasterPlot^.SA , 'ELEMENT' + BStr( PlotIndex ) + ' <' + EDesc + '>' );
+				SetSAtt( MasterPlot^.SA , 'TEAM' + BStr( PlotIndex ) + ' <' + SAttValue( SubPlot^.SA , 'TEAM' + BStr( T ) ) + '>' );
 			end;
 
 			{ We should now have a working PlotIndex. Save it in SubPlot, }
@@ -648,7 +672,7 @@ Function AssembleMegaPlot( Slot , SPList: GearPtr ): GearPtr;
 	{   - Sequester the standard scripts }
 	{   - Do string substitutions }
 	{   - Combine plots }
-	{ - Insert the finished plot into slot }
+	{ - Insert the finished plot into slot as an invcom }
 	Procedure PrepStandardScripts( SubPlot: GearPtr );
 		{ A subplot's standard scripts (those attached to basic game triggers, as }
 		{ listed in ASLRef.txt) will only be called when the subplot is active. }
@@ -704,7 +728,7 @@ Function AssembleMegaPlot( Slot , SPList: GearPtr ): GearPtr;
 		Dictionary := Nil;
 		SetSAtt( Dictionary , '%plotid% <' + BStr( NAttValue( SubPlot^.NA , NAG_Narrative , NAS_PlotID ) ) + '>' );
 		SetSAtt( Dictionary , '%id% <' + BStr( NAttValue( SubPlot^.NA , NAG_Narrative , NAS_PlotLayer ) ) + '>' );
-		SetSAtt( Dictionary , '%threat% <' + BStr( NAttValue( SubPlot^.NA , NAG_Narrative , NAS_PlotDifficulcy ) ) + '>' );
+		SetSAtt( Dictionary , '%threat% <' + BStr( NAttValue( SubPlot^.NA , NAG_Narrative , NAS_DifficultyLevel ) ) + '>' );
 		for t := 1 to Num_Sub_Plots do begin
 			SetSAtt( Dictionary , '%id' + BStr( T ) + '% <' + Bstr( NAttValue( SubPlot^.NA , NAG_SubPlotLayerID , T ) ) + '>' );
 			SetSAtt( Dictionary , '%plotid' + BStr( T ) + '% <' + Bstr( NAttValue( SubPlot^.NA , NAG_SubPlotPlotID , T ) ) + '>' );
@@ -768,34 +792,58 @@ begin
 	AssembleMegaPlot := MasterPlot;
 end;
 
-Procedure MoveElements( GB: GameBoardPtr; Plot: GearPtr );
+Procedure MoveElements( GB: GameBoardPtr; Adv,Plot: GearPtr; IsAQuest: Boolean );
 	{ There are a bunch of elements in this plot. Some of them need to be moved. }
 	{ Make it so. }
+	{ GB may be nil, but Adv must be a component of the adventure. }
 var
 	T,PlaceIndex: Integer;
 	PlaceCmd,EDesc,TeamName,DebugRec: String;
-	Element,Dest,MF,Team: GearPtr;
+	Element,Dest,MF,Team,MS,Thing: GearPtr;
 	InSceneNotElement: Boolean;
-	EID: LongInt;
+	EID,SceneID: LongInt;
 begin
+	{ Loop through all elements, looking for stuff to move. }
 	for t := 1 to Num_Plot_ELements do begin
 		PlaceCmd := SAttValue( Plot^.SA , 'PLACE' + BStr( T ) );
-		if PlaceCmd <> '' then begin
-			DebugRec := PlaceCmd;
-			EDesc := SAttValue( Plot^.SA , 'ELEMENT' + BStr( T ) );
-			if ( EDesc <> '' ) and ( UpCase( EDesc[1] ) = 'S' ) then begin
-				{ I can't believe you just asked me to move a scene... }
-				{ What you really must want is for me to move an encounter }
-				{ attached to a metascene. Yeah, that must be it. }
-				EID := ElementID( Plot , T );
-				if EID < 0 then begin
-					Element := FindSceneEntrance( FindRoot( GB^.Scene ) , GB , EID );
-				end else begin
-					Element := Nil;
-				end;
+		SceneID := NAttValue( Plot^.NA , NAG_QuestElemScene , T );
+		if ( PlaceCmd <> '' ) or ( SceneID <> 0 ) then begin
+			if SceneID <> 0 then begin
+				Dest := FindActualScene( Adv , SceneID );
+				TeamName := SAttValue( Plot^.SA , 'TEAM' + BStr( T ) );
+				Element := SeekPlotElement( FindRoot( Adv ) , Plot , T , GB );
+				InSceneNotElement := False;
+
 			end else begin
-				{ Just find the regular element. }
-				Element := SeekPlotElement( FindRoot( GB^.Scene ) , Plot , T , GB );
+				EDesc := SAttValue( Plot^.SA , 'ELEMENT' + BStr( T ) );
+				DebugRec := PlaceCmd;
+				if ( EDesc <> '' ) and ( UpCase( EDesc[1] ) = 'S' ) then begin
+					{ I can't believe you just asked me to move a scene... }
+					{ What you really must want is for me to move an encounter }
+					{ attached to a metascene. Yeah, that must be it. }
+					EID := ElementID( Plot , T );
+					if EID < 0 then begin
+						Element := FindSceneEntrance( FindRoot( Adv ) , GB , EID );
+					end else begin
+						Element := Nil;
+					end;
+				end else begin
+					{ Just find the regular element. }
+					Element := SeekPlotElement( FindRoot( Adv ) , Plot , T , GB );
+				end;
+
+				InSceneNotElement := ( PlaceCmd[1] = '~' );
+				if InSceneNotElement then DeleteFirstChar( PlaceCmd );
+
+				if PlaceCmd = '/' then begin
+					Dest := SeekCurrentLevelGear( FindRoot( Adv )^.InvCom , GG_PlotThingSet , 0 );
+					InSceneNotElement := False;
+				end else begin
+					PlaceIndex := ExtractValue( PlaceCmd );
+					Dest := SeekPlotElement( FindRoot( Adv ) , Plot , PlaceIndex , GB );
+				end;
+
+				TeamName := RetrieveBracketString( PlaceCmd );
 			end;
 
 			if Element = Nil then begin
@@ -807,29 +855,20 @@ begin
 			{ We don't want the delinker to give our element an OriginalHome }
 			{ if it's a prefab element, because we want to do that ourselves }
 			{ now in a bit. }
-			if ( Element^.Parent <> Nil ) and ( Element^.Parent^.G = GG_Plot ) and IsInvCom( Element ) then begin
-				DelinkGear( Element^.Parent^.InvCom , Element );
-			end else begin
-				DelinkGearForMovement( GB , Element );
+			{ Don't delink if we have a scene- in that case, we're just here to transfer }
+			{ over the metascene stuff. }
+			if Element^.G <> GG_Scene then begin
+				if ( Element^.Parent <> Nil ) and ( Element^.Parent^.G = GG_Plot ) and IsInvCom( Element ) then begin
+					DelinkGear( Element^.Parent^.InvCom , Element );
+				end else begin
+					DelinkGearForMovement( GB , Element );
+				end;
 			end;
-
-			InSceneNotElement := ( PlaceCmd[1] = '~' );
-			if InSceneNotElement then DeleteFirstChar( PlaceCmd );
-
-			if PlaceCmd = '/' then begin
-				Dest := SeekCurrentLevelGear( FindRoot( GB^.Scene )^.InvCom , GG_PlotThingSet , 0 );
-				InSceneNotElement := False;
-			end else begin
-				PlaceIndex := ExtractValue( PlaceCmd );
-				Dest := SeekPlotElement( FindRoot( GB^.Scene ) , Plot , PlaceIndex , GB );
-			end;
-
-			TeamName := RetrieveBracketString( PlaceCmd );
 
 			if InSceneNotElement and (( Dest = Nil ) or ( Dest^.G <> GG_Scene )) then begin
 				{ If the destination is a metascene, locate its entrance. }
 				if ( Dest = Nil ) or ( Dest^.G = GG_MetaScene ) then begin
-					Dest := FindSceneEntrance( FindRoot( GB^.Scene ) , GB , ElementID( Plot , PlaceIndex ) );
+					Dest := FindSceneEntrance( FindRoot( Adv ) , GB , ElementID( Plot , PlaceIndex ) );
 				end;
 
 				{ Try to find the associated scene now. }
@@ -871,6 +910,32 @@ begin
 						end;
 					end;
 
+					{ If this is a quest, then this element might have some supplemental }
+					{ scene content. Better take a look. }
+					if IsAQuest then begin
+						MS := SeekCurrentLevelGear( Plot^.SubCom , GG_MetaScene , T );
+						if MS <> Nil then begin
+							{ This metascene may also contain a home for this element. }
+							MF := SeekGearByDesig( MS^.SubCom , 'HOME' );
+							if ( MF <> Nil ) and ( Element^.G <> GG_Scene ) then begin
+								Dest := MF;
+								SetNAtt( Element^.NA , NAG_ComponentDesc , NAS_ELementID , 1 );
+							end;
+
+							{ Copy over all InvComs and SubComs. }
+							while ( MS^.InvCom <> Nil ) do begin
+								Thing := MS^.InvCom;
+								DelinkGear( MS^.InvCom , Thing );
+								InsertInvCom( Dest , Thing );
+							end;
+							while ( MS^.SubCom <> Nil ) do begin
+								Thing := MS^.SubCom;
+								DelinkGear( MS^.SubCom , Thing );
+								InsertSubCom( Dest , Thing );
+							end;
+						end;
+					end;
+
 					{ If this is a prefab element and we're deploying }
 					{ to a metascene, assign an OriginalHome value of -1 }
 					{ to make sure it doesn't get deleted when the plot }
@@ -879,9 +944,9 @@ begin
 						if Dest^.G = GG_MetaScene then SetNAtt( Element^.NA , NAG_ParaLocation , NAS_OriginalHome , -1 );
 					end;
 
-					if Dest = GB^.Scene then begin
+					if ( GB <> Nil ) and ( Dest = GB^.Scene ) then begin
 						EquipThenDeploy( GB , Element , True );
-					end else begin
+					end else if Element^.G <> GG_Scene then begin
 						InsertInvCom( Dest , Element );
 					end;
 				end;
@@ -901,12 +966,491 @@ Procedure DeployPlot( GB: GameBoardPtr; Slot,Plot: GearPtr; Threat: Integer );
 	{ - Deploy elements as indicated by PLACE strings }
 begin
 	PrepAllPersonas( FindRoot( Slot ) , Plot , GB , NAttValue( Slot^.NA , NAG_Narrative , NAS_MaxPlotLayer ) + 1 );
-	SetNAtt( Plot^.NA , NAG_XXRan , NAS_DifficulcyLevel , Threat );
 
 	if Plot^.G <> GG_Scene then begin
-		MoveElements( GB , Plot );
+		MoveElements( GB , FindRoot( Slot ) , Plot , False );
 		PrepMetascenes( FindRoot( Slot ) , Plot , GB );
 	end;
+end;
+
+Function ExpandDungeon( Dung: GearPtr ): GearPtr;
+	{ Expand this dungeon. Return the "goal scene", which is the lowest level generated. }
+	{ Add sub-levels, branches, and goal requests. }
+	{ Note that this procedure will not assign SceneIDs nor will it connect the levels }
+	{ with entrances. }
+var
+	name_base,type_base: String;
+	branch_number: Integer;
+	sub_scenes: GearPtr;
+	LowestLevel: GearPtr;
+	Function ExtractSubScenes: GearPtr;
+		{ Remove any scenes that are subcoms of the dungeon, and }
+		{ return them in a list. }
+	var
+		it,S,S2: GearPtr;
+	begin
+		it := Nil;
+		S := Dung^.SubCom;
+		while S <> Nil do begin
+			S2 := S^.Next;
+			if S^.G = GG_Scene then begin
+				DelinkGear( Dung^.SubCom , S );
+				AppendGear( it , S );
+			end;
+			S := S2;
+		end;
+		ExtractSubScenes := it;
+	end;
+	Procedure EliminateClonedScenes( DL: GearPtr );
+		{ When cloning the prototype dungeon level, don't copy }
+		{ the sub-scenes as well. }
+	var
+		S,S2: GearPtr;
+	begin
+		S := DL^.SubCom;
+		while S <> Nil do begin
+			S2 := S^.Next;
+			if S^.G = GG_Scene then begin
+				RemoveGear( DL^.SubCom , S );
+			end;
+			S := S2;
+		end;
+	end;
+	Procedure AddNewDungeonLevel( S: GearPtr; Branch: Integer );
+	var
+		S2,T: GearPtr;
+	begin
+		S2 := CloneGear( S );
+		{ Eliminate any sub-scenes of S2. }
+		EliminateClonedScenes( S2 );
+		InsertSubCom( S , S2 );
+		{ We don't want to use the main dungeon entrance type for this entrance, }
+		{ so copy the DEntrance string instead. }
+		SetSAtt( S2^.SA , 'ENTRANCE <' + SAttValue( S^.SA , 'DENTRANCE' ) + '>' );
+
+		{ Increase the dungeon level. }
+		AddNAtt(  S2^.NA , NAG_Narrative , NAS_DungeonLevel , 1 );
+		if NAttValue( S2^.NA , NAG_Narrative , NAS_DungeonLevel ) > NAttValue( LowestLevel^.NA , NAG_Narrative , NAS_DungeonLevel ) then LowestLevel := S2;
+		SetNAtt( S2^.NA , NAG_Narrative , NAS_DungeonBranch , Branch );
+
+		{ Increase the difficulcy level. }
+		T := S2^.SubCom;
+		while T <> Nil do begin
+			if ( T^.G = GG_Team ) and ( T^.Stat[ STAT_WanderMon ] > 0 ) then begin
+				T^.Stat[ STAT_WanderMon ] := T^.Stat[ STAT_WanderMon ] + 1 + Random( 3 ) + Random( 2 );
+
+				{ Add the context description for the difficulcy level. }
+				SetSAtt( S2^.SA , 'type <' + type_base + ' ' + DifficulcyContext( T^.Stat[ STAT_WanderMon ] ) );
+
+			end;
+			T := T^.Next;
+		end;
+	end;
+	Procedure ExpandThisLevel( S: GearPtr );
+		{ Search for dungeons among the adventure's scenes. If you find any, }
+		{ maybe expand them by adding sub-dungeons. }
+	const
+		Branch_Suffix: Array [1..10] of char = ( 'a','b','c','d','e','f','g','h','i','j' );
+		dungeon_goal_content_string = 'SOME 1 # SUB *DUNGEON_GOAL';
+	var
+		S2: GearPtr;
+		Branch: Integer;
+	begin
+		Branch := NAttValue( S^.NA , NAG_Narrative , NAS_DungeonBranch );
+		if ( S^.G = GG_Scene ) and AStringHasBString( SAttValue( S^.SA , 'TYPE' ) , 'DUNGEON' ) and ( SAttValue( S^.SA , 'DENTRANCE' ) <> '' ) then begin
+			if NAttValue( S^.NA , NAG_Narrative , NAS_DungeonLevel ) < ( RollStep( 3 ) + 1 ) then begin
+				{ Maybe add a branch. }
+				AddNewDungeonLevel( S , Branch );
+
+				if ( Random( 5 ) = 1 ) and ( Branch_Number < 9 ) then begin
+					AddNewDungeonLevel( S , Branch_Number + 1 );
+					Inc( Branch_Number );
+				end;
+			end else begin
+				{ If not adding a deeper level, add DungeonGoal content. }
+				AddSAtt( S^.SA , 'CONTENT' , ReplaceHash( dungeon_goal_content_string , BSTr( NAttValue( S^.NA , NAG_Narrative , NAS_DungeonLevel ) * 10 + 15 ) ) )
+			end;
+
+			{ Name the dungeon. }
+			if Branch = 0 then begin
+				SetSAtt( S^.SA , 'name <' + name_base + ', L' + BStr( NAttValue( S^.NA , NAG_Narrative , NAS_DungeonLevel ) + 1 ) );
+			end else begin
+				SetSAtt( S^.SA , 'name <' + name_base + ', L' + BStr( NAttValue( S^.NA , NAG_Narrative , NAS_DungeonLevel ) + 1 )  + Branch_Suffix[ Branch ] );
+			end;
+		end;
+		S2 := S^.SubCom;
+		while S2 <> Nil do begin
+			ExpandThisLevel( S2 );
+			S2 := S2^.Next;
+		end;
+	end;
+begin
+	{ Record some information, initialize some variables. }
+	name_base := GearName( Dung );
+	if Full_RPGWorld_Info then DialogMsg( 'Expanding ' + name_base );
+	SetSAtt( Dung^.SA , 'DUNGEONNAME <' + name_base + '>' );
+	type_base := SAttValue( Dung^.SA , 'TYPE' );
+	sub_scenes := ExtractSubScenes;
+	LowestLevel := Dung;
+	Branch_Number := 0;
+
+	ExpandThisLevel( Dung );
+
+	if Sub_Scenes <> Nil then InsertSubCom( lowestLevel , Sub_Scenes );
+
+	ExpandDungeon := lowestlevel;
+end;
+
+
+
+Procedure ConnectScene( Scene: GearPtr; DoInitExits: Boolean );
+	{ SCENE needs to be connected to its parent scene. This means that any }
+	{ entrances in PARENT pointing to SCENE have to be given the correct }
+	{ destination number, and any entrances in SCENE leading back to PARENT }
+	{ also have to be given the correct destination number. }
+	{ PRECON: Scene and its parent must have already been given scene IDs. }
+	Function FindEntranceByName( EG: GearPtr; Name: String ): GearPtr;
+		{ Find an entrance with the provided name. }
+		{ This may be in one of the parent scene's subcoms, or one of its }
+		{ map feature's subcoms or invcoms. }
+	var
+		it: GearPtr;
+	begin
+		it := Nil;
+		Name := UpCase( Name );
+		while ( EG <> Nil ) and ( it = Nil ) do begin
+			if ( EG^.G = GG_MetaTerrain ) and ( UpCase( SAttValue( EG^.SA , 'NAME' ) ) = Name ) then it := EG
+			else if ( EG^.G = GG_MapFeature ) then begin
+				it := FindEntranceByName( EG^.SubCom , Name );
+				if ( it = Nil ) then it := FindEntranceByName( EG^.InvCom , Name );
+			end;
+			EG := EG^.Next;
+		end;
+		FindEntranceByName := it;
+	end;
+	Procedure InitExits( S,E: GearPtr );
+		{ Locate exits with a nonzero destination, then give them the proper }
+		{ destination of the parent scene. }
+	begin
+		while E <> Nil do begin
+			if E^.G = GG_MapFeature then begin
+				InitExits( S , E^.SubCom );
+				InitExits( S , E^.InvCom );
+			end else if ( E^.G = GG_MetaTerrain ) and ( E^.Stat[ STAT_Destination ] <> 0 ) then begin
+				if ( S^.Parent^.G = GG_Scene ) then begin
+					E^.Stat[ STAT_Destination ] := S^.Parent^.S;
+				end else if S^.Parent^.G = GG_MetaScene then begin
+					{ We must be dealing with a quest scene. No problem- }
+					{ I know exactly where its SceneID is. }
+					E^.Stat[ STAT_Destination ] := ElementID( S^.Parent^.Parent , E^.Parent^.S );
+				end;
+			end;
+
+			E := E^.Next;
+		end;
+	end;
+var
+	E,Loc: GearPtr;
+	Entrance: String;
+begin
+	{ Insert entrance to super-scene. }
+	E := FindEntranceByName( Scene^.Parent^.SubCom , GearName( Scene ) );
+	if E = Nil then begin
+		Entrance := SAttValue( Scene^.SA , 'DUNGEONNAME' );
+		if Entrance <> '' then begin
+			E := FindEntranceByName( Scene^.Parent^.SubCom , Entrance );
+		end;
+	end;
+	if ( E <> Nil ) and ( E^.G = GG_MetaTerrain ) then begin
+		{ A named entrance was found. Initialize it. }
+		E^.Stat[ STAT_Destination ] := Scene^.S;
+	end else begin
+		{ No entrance for this scene was specified. Better create one. }
+		E := FindNextComponent( MasterEntranceList , SAttValue( Scene^.SA , 'ENTRANCE' ) );
+		if E <> Nil then begin
+			E := CloneGear( E );
+			if E^.S = GS_MetaBuilding then SetSAtt( E^.SA , 'NAME <' + GearName( Scene ) + '>' );
+			E^.Stat[ STAT_Destination ] := Scene^.S;
+			if Scene^.Parent^.G <> GG_World then E^.Scale := Scene^.Parent^.V;
+			if NAttValue( Scene^.NA , NAG_LOcation , NAS_X ) <> 0 then begin
+				SetNAtt( E^.NA , NAG_Location , NAS_X , NAttValue( Scene^.NA , NAG_LOcation , NAS_X ) );
+				SetNAtt( E^.NA , NAG_Location , NAS_Y , NAttValue( Scene^.NA , NAG_LOcation , NAS_Y ) );
+			end;
+
+			{ Insert "E" as an InvCom of the parent scene. }
+			{ If E isn't a building or the parent scene isn't a world, }
+			{ also insert a subzone for E so it won't be stuck randomly somewhere. }
+			if ( E^.S = GS_MetaBuilding ) or ( Scene^.Parent^.G = GG_World ) then begin
+				InsertInvCom( Scene^.Parent , E );
+			end else begin
+				Loc := NewSubZone( Scene^.Parent );
+				InsertSubCom( Loc , E );
+			end;
+		end;
+	end;
+
+	{ Initialize exits back to the upper level. }
+	if DoInitExits then begin
+		InitExits( Scene , Scene^.SubCom );
+		InitExits( Scene , Scene^.InvCom );
+	end;
+end;
+
+Procedure PrepQuestDungeon( Adv,SceneProto: GearPtr );
+	{ Prepare this dungeon, please. To do this we'll need to expand the dungeon }
+	{ by several levels, assign unique IDs to all our new scenes, and connect }
+	{ them all to each other. }
+	{ The SceneID which has already been assigned will be the SceneID of the }
+	{ goal level. The ScenePrototype, which will serve as the entry level, }
+	{ will be given a new SceneID. Make sure that you use this new SceneID }
+	{ for assigning the entrance. }
+	{ The procedure for expanding a quest dungeon is as follows: }
+	{ 1 - Remove non-original subs and invs, saving them for the goal level. }
+	{ 2 - Expand the dungeon. }
+	{ 3 - Assign SceneIDs as needed and connect the scenes. }
+	{ 4 - Reinstall the subs and invs from step 1 into the goal level. }
+var
+	GoalLevel,NOSubs,NOInvs: GearPtr;
+	Procedure AssignSceneIDs( SList: GearPtr );
+		{ Assign unique IDs to all the scenes in this list and all of }
+		{ their children scenes. Also do the connections, as long as we're here. }
+	begin
+		while SList <> Nil do begin
+			if ( SList^.G = GG_Scene ) then begin
+				if SList <> GoalLevel then SList^.S := NewSceneID( Adv );
+				ConnectScene( SList , True );
+			end;
+			if SList <> GoalLevel then AssignSceneIDs( SList^.SubCom );
+			SList := SList^.next;
+		end;
+	end;
+	Procedure InitPrototype;
+		{ The prototype must be initialized. }
+		{ Things to do: }
+		{ - Set the L1 Difficulty rating }
+		{ - Strip out the non-original SubComs and InvComs. }
+		Function StripNonOriginals( var LList: GearPtr ): GearPtr;
+			{ Remove anything from this list that doesn't have the WasQDOriginal tag. }
+			{ Return the list of removed items. }
+		var
+			LL,LL2,OutList: GearPtr;
+		begin
+			LL := LList;
+			OutList := Nil;
+			while LL <> Nil do begin
+				LL2 := LL^.Next;
+				if NAttValue( LL^.NA , NAG_Narrative , NAS_QuestDungeonOriginal ) <> NAV_WasQDOriginal then begin
+					DelinkGear( LList , LL );
+					AppendGear( OutList , LL );
+				end;
+				LL := LL2;
+			end;
+			StripNonOriginals := OutList;
+		end;
+	var
+		Team: GearPtr;
+	begin
+		{ Assign the Difficulty number. }
+		Team := SceneProto^.SubCom;
+		while Team <> Nil do begin
+			if ( Team^.G = GG_Team ) and ( Team^.Stat[ STAT_WanderMon ] > 0 ) then begin
+				Team^.Stat[ STAT_WanderMon ] := NAttValue( SceneProto^.NA , NAG_Narrative , NAS_DifficultyLevel ) - 10;
+				if Team^.Stat[ STAT_WanderMon ] < 4 then Team^.Stat[ STAT_WanderMon ] := 2 + Random( 3 );
+			end;
+			Team := Team^.Next;
+		end;
+
+		{ Strip out the non-original subs and invs. }
+		NOSubs := StripNonOriginals( SceneProto^.SubCom );
+		NOInvs := StripNonOriginals( SceneProto^.InvCom );
+	end;
+begin
+	{ **************** }
+	{ *** STEP ONE *** }
+	{ **************** }
+	{ Start by initializing the dungeon prototype. }
+	InitPrototype;
+
+	{ **************** }
+	{ *** STEP TWO *** }
+	{ **************** }
+	{ Next expand the dungeon. }
+	GoalLevel := ExpandDungeon( SceneProto );
+
+	{ ****************** }
+	{ *** STEP THREE *** }
+	{ ****************** }
+	{ Next, pass out the UniqueIDs. }
+	AssignSceneIDs( SceneProto^.SubCom );
+
+	{ ***************** }
+	{ *** STEP FOUR *** }
+	{ ***************** }
+	{ Re-insert the NOSubs and NOInvs into the goal level. }
+	InsertSubCom( GoalLevel , NoSubs );
+	InsertInvCom( GoalLevel , NoInvs );
+end;
+
+
+Procedure InstallQuestScenes( Adv , City , Quest: GearPtr );
+	{ QUEST probably contains a number of metascenes which we have to deal with. }
+	{ If these are newly-defined scenes, they get placed in the adventure. Otherwise }
+	{ they get combined with existing scenes. }
+	{ 1 - Locate the destination for each scene. }
+	{   - If a destination cannot be found, assign it to the city. }
+	{ 2 - Move scene to its destination, and change type. }
+	{ 3 - Expand dungeons. }
+	{   - If this isn't a dungeon, initialize any WMon teams that may exist. }
+	{   - Element ID will be the SceneID of the goal level. }
+	{ 4 - Locate and initialize entrances. }
+	{   - Make sure dungeon entrances point to the entrance, not the goal level. }
+	{   - If no entrance can be found, use default ConnectScene procedure. }
+	{ 5 - Locate and initialize exits. }
+	Procedure PrepWMonTeams( Scene: GearPtr );
+		{ Check for monster teams. Set appropriate threat levels. }
+	var
+		Team: GearPtr;
+	begin
+		Team := Scene^.SubCom;
+		while Team <> Nil do begin
+			if ( Team^.G = GG_Team ) and ( Team^.Stat[ STAT_WanderMon ] > 0 ) then begin
+				Team^.Stat[ STAT_WanderMon ] := NAttValue( Scene^.NA , NAG_Narrative , NAS_DifficultyLevel );
+				if Team^.Stat[ STAT_WanderMon ] < 3 then Team^.Stat[ STAT_WanderMon ] := 3;
+			end;
+			Team := Team^.Next;
+		end;
+	end;
+	Procedure InitializeEntrance( Scene: GearPtr; SIDtoSeek: Integer );
+		{ Initialize the entrances for this scene. Note that because of dungeons, }
+		{ the SceneID to seek might not be the same as the current SceneID of the }
+		{ scene. Therefore, search for the provided SceneID, but set the SceneID }
+		{ of the provided scene. }
+	var
+		Entrance: GearPtr;
+		EDesig: String;
+		FoundAnEntrance: Boolean;
+	begin
+		{ Haven't started... therefore, we haven't found an entrance yet. }
+		FoundAnEntrance := False;
+
+		{ Create the designation that we're looking for. }
+		EDesig := 'ENTRANCE ' + BStr( SIDtoSeek );
+
+		{ Now that we have this, start searching for entrances until we }
+		{ run out of them. There may be more than one. }
+		repeat
+			ENtrance := SeekGearByDesig( Quest , EDesig );
+			if ENtrance = Nil then begin
+				Entrance := SeekGearByDesig( Adv , EDesig );
+			end;
+
+			if Entrance <> Nil then begin
+				FoundAnEntrance := True;
+				Entrance^.Stat[ STAT_Destination ] := Scene^.S;
+			end;
+
+		until Entrance = Nil;
+
+		{ If we haven't found any entrances, add one automatically. }
+		if not FoundAnEntrance then begin
+			{ Don't bother initializing the exits, because we're doing that ourselves below. }
+			ConnectScene( Scene , False );
+		end;
+	end;
+	Procedure InitExits( S,E: GearPtr );
+		{ Locate exits with a nonzero destination, then give them the proper }
+		{ destination of the parent scene. }
+	begin
+		while E <> Nil do begin
+			if E^.G = GG_MapFeature then begin
+				InitExits( S , E^.SubCom );
+				InitExits( S , E^.InvCom );
+			end else if ( E^.G = GG_MetaTerrain ) and ( E^.Stat[ STAT_Destination ] = -1 ) and ( S^.Parent^.G = GG_Scene ) then begin
+				E^.Stat[ STAT_Destination ] := S^.Parent^.S;
+			end;
+
+			E := E^.Next;
+		end;
+	end;
+var
+	QS,QS2,Dest: GearPtr;
+	EDesc,DDesc: String;
+	N,EIn: Integer;
+begin
+	{ Loop through all the subcoms looking for potential quest scenes. }
+	QS := Quest^.SubCom;
+	while QS <> Nil do begin
+		QS2 := QS^.Next;
+
+		if QS^.G = GG_MetaScene then begin
+			{ Find out whether this is a quest scene or not. If not, }
+			{ then it's just a list of contents to stuff into one of the }
+			{ pre-existing scenes. }
+			EDesc := SAttValue( Quest^.SA , 'ELEMENT' + BStr( QS^.S ) );
+			if ( EDesc <> '' ) and ( UpCase( EDesc[1] ) = 'Q' ) then begin
+				{ **************** }
+				{ *** STEP ONE *** }
+				{ **************** }
+				{ We've got a live one. Start by locating the destination. }
+				DDesc := SAttValue( Quest^.SA , 'PLACE' + BStr( QS^.S ) );
+				N := ExtractValue( DDesc );
+				Dest := SeekPlotElement( Adv , Quest , N , Nil );
+				if not IsAScene( Dest ) then Dest := FindActualScene( Adv , NAttValue( Quest^.NA , NAG_QuestElemScene , N ) );
+				if Dest = Nil then Dest := City;
+
+				{ **************** }
+				{ *** STEP TWO *** }
+				{ **************** }
+				{ Move the new scene to its destination. Change it from a metascene }
+				{ into an actual scene. Update its element description in the quest. }
+				DelinkGear( Quest^.SubCom , QS );
+				InsertSubCom( Dest , QS );
+				{ Record the element index. }
+				EIn := QS^.S;
+				SetSAtt( Quest^.SA , 'ELEMENT' + BStr( EIn ) + ' <S>' );
+				QS^.G := GG_Scene;
+				QS^.S := ElementID( Quest , EIn );
+
+				{ ****************** }
+				{ *** STEP THREE *** }
+				{ ****************** }
+				{ If this scene is a dungeon, expand it. The current SceneID will be }
+				{ retained by the goal level; check QS^.S to find the ID of the entry. }
+				if AStringHasBString( SAttValue( QS^.SA , 'TYPE' ) , 'DUNGEON' ) then PrepQuestDungeon( Adv, QS )
+				else PrepWMonTeams( QS );
+
+				{ ***************** }
+				{ *** STEP FOUR *** }
+				{ ***************** }
+				{ Locate and initialize the scene's entrance. }
+				{ Just in case this is a dungeon, don't forget to use QS^.S rather than }
+				{ the ElementID. }
+				InitializeEntrance( QS , ElementID( Quest , EIn ) );
+
+				{ ***************** }
+				{ *** STEP FIVE *** }
+				{ ***************** }
+				{ Locate and initialize the scene's exits. These should point to the }
+				{ parent scene. }
+				InitExits( QS , QS^.SubCom );
+				InitExits( QS , QS^.InvCom );
+			end;
+		end;
+
+		QS := QS2;
+	end;
+end;
+
+Procedure DeployQuest( Adv , City , Quest: GearPtr );
+	{ Deploy this quest. }
+begin
+	{ Remove the quest from the adventure, and stick it into the city. }
+	DelinkGear( Adv^.InvCom , Quest );
+	InsertSubCom( City , Quest );
+
+	PrepAllPersonas( Adv , Quest , Nil , NAttValue( Adv^.NA , NAG_Narrative , NAS_MaxPlotLayer ) + 1 );
+	InstallQuestScenes( Adv , City , Quest );
+	MoveElements( Nil , Adv , Quest , True );
 end;
 
 Function InitMegaPlot( GB: GameBoardPtr; Scope,Slot,Plot: GearPtr; Threat: Integer ): GearPtr;
@@ -926,14 +1470,14 @@ begin
 	{ give us a list of subplots. If InitShard fails, PLOT will be deleted. }
 	{ First, we need to clear SLOT's current Plot Layer ID to start fresh, then }
 	{ request a new later ID from Slot and a Plot ID from the adventure. }
-	PlotID := NewPlotID( FindRoot( Slot ) );
+	PlotID := NewPlotID( FindRoot( Slot ) , False );
 	SetNAtt( Slot^.NA , NAG_Narrative , NAS_MaxPlotLayer , 0 );
 	LayerID := NewLayerID( Slot );
 
 	changes_used_so_far := '';
 
 	ClearElementTable( FakeParams );
-	SPList := InitShard( GB , Scope , Slot , Plot , 0 , PlotID , LayerID , Threat , FakeParams , ( GearName( Plot ) = 'DEBUG' ) );
+	SPList := InitShard( GB , Scope , Slot , Plot , 0 , PlotID , LayerID , Threat , FakeParams , False , ( GearName( Plot ) = 'DEBUG' ) );
 
 	{ Now that we have the list, assemble it. }
 	if SPList <> Nil then begin
@@ -942,6 +1486,28 @@ begin
 	end;
 
 	InitMegaPlot := SPList;
+end;
+
+Function AddQuest( Adv,City: GearPtr; var Quest_Frags: GearPtr; QReq: String ): Boolean;
+	{ Add a quest to the provided city, using the provided THREAT rating. }
+	{ Quest_Frags is the list of quest fragments. Some of them may get deleted here. }
+	{ QReq is the quest request taken from the ATLAS. }
+var
+	QList,Quest: GearPtr;
+begin
+	changes_used_so_far := '';
+
+	{ Step One- Select a starting fragment. }
+	QList := AddSubPlot( Nil, City, Adv, Nil, QReq, 0, NewLayerID( Adv ), 0, True, False );
+
+	{ This will give us a list of quest fragments. Assemble them. }
+	if QList <> Nil then begin
+		Quest := AssembleMegaPlot( Adv , QList );
+		DeployQuest( Adv , City , Quest );
+		AddQuest := True;
+	end else begin
+		AddQuest := False;
+	end;
 end;
 
 Procedure InitPlaceStrings();
@@ -984,10 +1550,13 @@ initialization
 	Sub_Plot_List := LoadRandomSceneContent( 'MEGA_*.txt' , series_directory );
 	standard_trigger_list := LoadStringList( Data_Directory + 'standard_triggers.txt' );
 	InitPlaceStrings();
+	MasterEntranceList := AggregatePattern( 'ENTRANCE_*.txt' , Series_Directory );
+
 
 finalization
 	{ Dispose of the list of subplots. }
 	DisposeGear( Sub_Plot_List );
 	DisposeSAtt( standard_trigger_list );
+	DisposeGear( MasterEntranceList );
 
 end.

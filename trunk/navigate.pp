@@ -51,7 +51,7 @@ Procedure RestoreCampaign( RDP: RedrawProcedureType );
 implementation
 
 uses arenaplay,arenascript,interact,gearutil,narration,texutil,ghprop,rpgdice,ability,
-     ghchars,ghweapon,movement,ui4gh,gearparser,playwright,randmaps,
+     ghchars,ghweapon,movement,ui4gh,gearparser,playwright,randmaps,mpbuilder,
 {$IFDEF ASCII}
 	vidmap,vidmenus;
 {$ELSE}
@@ -62,8 +62,6 @@ uses arenaplay,arenascript,interact,gearutil,narration,texutil,ghprop,rpgdice,ab
 {$ENDIF}
 {$ENDIF}
 
-var
-	MasterEntranceList: GearPtr;
 
 Procedure DebugMessage( msg: String );
 	{ Display a debugging message, and refresh the screen right away. }
@@ -187,218 +185,6 @@ begin
 	end;
 end;
 
-Function ExpandDungeon( Dung: GearPtr ): GearPtr;
-	{ Expand this dungeon. Return the "goal scene", which is the lowest level generated. }
-	{ Add sub-levels, branches, and goal requests. }
-var
-	name_base,type_base: String;
-	branch_number: Integer;
-	sub_scenes: GearPtr;
-	LowestLevel: GearPtr;
-	Function ExtractSubScenes: GearPtr;
-		{ Remove any scenes that are subcoms of the dungeon, and }
-		{ return them in a list. }
-	var
-		it,S,S2: GearPtr;
-	begin
-		it := Nil;
-		S := Dung^.SubCom;
-		while S <> Nil do begin
-			S2 := S^.Next;
-			if S^.G = GG_Scene then begin
-				DelinkGear( Dung^.SubCom , S );
-				AppendGear( it , S );
-			end;
-			S := S2;
-		end;
-		ExtractSubScenes := it;
-	end;
-	Procedure EliminateClonedScenes( DL: GearPtr );
-		{ When cloning the prototype dungeon level, don't copy }
-		{ the sub-scenes as well. }
-	var
-		S,S2: GearPtr;
-	begin
-		S := DL^.SubCom;
-		while S <> Nil do begin
-			S2 := S^.Next;
-			if S^.G = GG_Scene then begin
-				RemoveGear( DL^.SubCom , S );
-			end;
-			S := S2;
-		end;
-	end;
-	Procedure AddNewDungeonLevel( S: GearPtr; Branch: Integer );
-	var
-		S2,T: GearPtr;
-	begin
-		S2 := CloneGear( S );
-		{ Eliminate any sub-scenes of S2. }
-		EliminateClonedScenes( S2 );
-		InsertSubCom( S , S2 );
-		{ We don't want to use the main dungeon entrance type for this entrance, }
-		{ so copy the DEntrance string instead. }
-		SetSAtt( S2^.SA , 'ENTRANCE <' + SAttValue( S^.SA , 'DENTRANCE' ) + '>' );
-
-		{ Increase the dungeon level. }
-		AddNAtt(  S2^.NA , NAG_Narrative , NAS_DungeonLevel , 1 );
-		if NAttValue( S2^.NA , NAG_Narrative , NAS_DungeonLevel ) > NAttValue( LowestLevel^.NA , NAG_Narrative , NAS_DungeonLevel ) then LowestLevel := S2;
-		SetNAtt( S2^.NA , NAG_Narrative , NAS_DungeonBranch , Branch );
-
-		{ Increase the difficulcy level. }
-		T := S2^.SubCom;
-		while T <> Nil do begin
-			if ( T^.G = GG_Team ) and ( T^.Stat[ STAT_WanderMon ] > 0 ) then begin
-				T^.Stat[ STAT_WanderMon ] := T^.Stat[ STAT_WanderMon ] + 1 + Random( 3 ) + Random( 2 );
-
-				{ Add the context description for the difficulcy level. }
-				SetSAtt( S2^.SA , 'type <' + type_base + ' ' + DifficulcyContext( T^.Stat[ STAT_WanderMon ] ) );
-
-			end;
-			T := T^.Next;
-		end;
-	end;
-	Procedure ExpandThisLevel( S: GearPtr );
-		{ Search for dungeons among the adventure's scenes. If you find any, }
-		{ maybe expand them by adding sub-dungeons. }
-	const
-		Branch_Suffix: Array [1..10] of char = ( 'a','b','c','d','e','f','g','h','i','j' );
-		dungeon_goal_content_string = 'SOME 1 # SUB *DUNGEON_GOAL';
-	var
-		S2: GearPtr;
-		Branch: Integer;
-	begin
-		Branch := NAttValue( S^.NA , NAG_Narrative , NAS_DungeonBranch );
-		if ( S^.G = GG_Scene ) and AStringHasBString( SAttValue( S^.SA , 'TYPE' ) , 'DUNGEON' ) and ( SAttValue( S^.SA , 'DENTRANCE' ) <> '' ) then begin
-			if NAttValue( S^.NA , NAG_Narrative , NAS_DungeonLevel ) < ( RollStep( 3 ) + 1 ) then begin
-				{ Maybe add a branch. }
-				AddNewDungeonLevel( S , Branch );
-
-				if ( Random( 5 ) = 1 ) and ( Branch_Number < 9 ) then begin
-					AddNewDungeonLevel( S , Branch_Number + 1 );
-					Inc( Branch_Number );
-				end;
-			end else begin
-				{ If not adding a deeper level, add DungeonGoal content. }
-				AddSAtt( S^.SA , 'CONTENT' , ReplaceHash( dungeon_goal_content_string , BSTr( NAttValue( S^.NA , NAG_Narrative , NAS_DungeonLevel ) * 10 + 15 ) ) )
-			end;
-
-			{ Name the dungeon. }
-			if Branch = 0 then begin
-				SetSAtt( S^.SA , 'name <' + name_base + ', L' + BStr( NAttValue( S^.NA , NAG_Narrative , NAS_DungeonLevel ) + 1 ) );
-			end else begin
-				SetSAtt( S^.SA , 'name <' + name_base + ', L' + BStr( NAttValue( S^.NA , NAG_Narrative , NAS_DungeonLevel ) + 1 )  + Branch_Suffix[ Branch ] );
-			end;
-		end;
-		S2 := S^.SubCom;
-		while S2 <> Nil do begin
-			ExpandThisLevel( S2 );
-			S2 := S2^.Next;
-		end;
-	end;
-begin
-	{ Record some information, initialize some variables. }
-	name_base := GearName( Dung );
-	if Full_RPGWorld_Info then DebugMessage( 'Expanding ' + name_base );
-	SetSAtt( Dung^.SA , 'DUNGEONNAME <' + name_base + '>' );
-	type_base := SAttValue( Dung^.SA , 'TYPE' );
-	sub_scenes := ExtractSubScenes;
-	LowestLevel := Dung;
-	Branch_Number := 0;
-
-	ExpandThisLevel( Dung );
-
-	if Sub_Scenes <> Nil then InsertSubCom( lowestLevel , Sub_Scenes );
-
-	ExpandDungeon := lowestlevel;
-end;
-
-Procedure ConnectScene( Scene: GearPtr );
-	{ SCENE needs to be connected to its parent scene. This means that any }
-	{ entrances in PARENT pointing to SCENE have to be given the correct }
-	{ destination number, and any entrances in SCENE leading back to PARENT }
-	{ also have to be given the correct destination number. }
-	{ PRECON: Scene and its parent must have already been given scene IDs. }
-	Function FindEntranceByName( EG: GearPtr; Name: String ): GearPtr;
-		{ Find an entrance with the provided name. }
-		{ This may be in one of the parent scene's subcoms, or one of its }
-		{ map feature's subcoms or invcoms. }
-	var
-		it: GearPtr;
-	begin
-		it := Nil;
-		Name := UpCase( Name );
-		while ( EG <> Nil ) and ( it = Nil ) do begin
-			if ( EG^.G = GG_MetaTerrain ) and ( UpCase( SAttValue( EG^.SA , 'NAME' ) ) = Name ) then it := EG
-			else if ( EG^.G = GG_MapFeature ) then begin
-				it := FindEntranceByName( EG^.SubCom , Name );
-				if ( it = Nil ) then it := FindEntranceByName( EG^.InvCom , Name );
-			end;
-			EG := EG^.Next;
-		end;
-		FindEntranceByName := it;
-	end;
-	Procedure InitExits( S,E: GearPtr );
-		{ Locate exits with a destination of -1, then give them the proper }
-		{ destination of the parent scene. }
-	begin
-		while E <> Nil do begin
-			if E^.G = GG_MapFeature then begin
-				InitExits( S , E^.SubCom );
-				InitExits( S , E^.InvCom );
-			end else if ( E^.G = GG_MetaTerrain ) and ( E^.Stat[ STAT_Destination ] <> 0 ) and ( S^.Parent^.G = GG_Scene ) then begin
-				E^.Stat[ STAT_Destination ] := S^.Parent^.S;
-			end;
-
-			E := E^.Next;
-		end;
-	end;
-var
-	E,Loc: GearPtr;
-	Entrance: String;
-begin
-	{ Insert entrance to super-scene. }
-	E := FindEntranceByName( Scene^.Parent^.SubCom , GearName( Scene ) );
-	if E = Nil then begin
-		Entrance := SAttValue( Scene^.SA , 'DUNGEONNAME' );
-		if Entrance <> '' then begin
-			E := FindEntranceByName( Scene^.Parent^.SubCom , Entrance );
-		end;
-	end;
-	if ( E <> Nil ) and ( E^.G = GG_MetaTerrain ) then begin
-		{ A named entrance was found. Initialize it. }
-		E^.Stat[ STAT_Destination ] := Scene^.S;
-	end else begin
-		{ No entrance for this scene was specified. Better create one. }
-		E := FindNextComponent( MasterEntranceList , SAttValue( Scene^.SA , 'ENTRANCE' ) );
-		if E <> Nil then begin
-			E := CloneGear( E );
-			if E^.S = GS_MetaBuilding then SetSAtt( E^.SA , 'NAME <' + GearName( Scene ) + '>' );
-			E^.Stat[ STAT_Destination ] := Scene^.S;
-			if Scene^.Parent^.G <> GG_World then E^.Scale := Scene^.Parent^.V;
-			if NAttValue( Scene^.NA , NAG_LOcation , NAS_X ) <> 0 then begin
-				SetNAtt( E^.NA , NAG_Location , NAS_X , NAttValue( Scene^.NA , NAG_LOcation , NAS_X ) );
-				SetNAtt( E^.NA , NAG_Location , NAS_Y , NAttValue( Scene^.NA , NAG_LOcation , NAS_Y ) );
-			end;
-
-			{ Insert "E" as an InvCom of the parent scene. }
-			{ If E isn't a building or the parent scene isn't a world, }
-			{ also insert a subzone for E so it won't be stuck randomly somewhere. }
-			if ( E^.S = GS_MetaBuilding ) or ( Scene^.Parent^.G = GG_World ) then begin
-				InsertInvCom( Scene^.Parent , E );
-			end else begin
-				Loc := NewSubZone( Scene^.Parent );
-				InsertSubCom( Loc , E );
-			end;
-		end;
-	end;
-
-	{ Initialize exits back to the upper level. }
-	InitExits( Scene , Scene^.SubCom );
-	InitExits( Scene , Scene^.InvCom );
-end;
-
-
 Procedure InitializeCampaignScenes( Adv: GearPtr; var HiSceneID: Integer );
 	{ Initialize the scenes of this adventure. This involves providing them all }
 	{ with unique IDs, inserting content where needed, adding entrances to superscenes. }
@@ -414,7 +200,7 @@ Procedure InitializeCampaignScenes( Adv: GearPtr; var HiSceneID: Integer );
 					ExpandDungeon( S );
 				end;
 
-				ConnectScene( S );
+				ConnectScene( S , True );
 			end;
 
 			CheckAlongPath( S^.SubCom );
@@ -538,9 +324,9 @@ var
 				ReplacePat( S^.Info , '%qid%' , BStr( NAttValue( Master^.NA , NAG_QuestInfo , NAS_QuestID ) ) );
 				ReplacePat( S^.Info , '%prev_id%' , BStr( NAttValue( Master^.NA , NAG_SubQuestLID , 0 ) ) );
 				ReplacePat( S^.Info , '%prev_qid%' , BStr( NAttValue( Master^.NA , NAG_SubQuestQID , 0 ) ) );
-				ReplacePat( S^.Info , '%threat%' , BStr( NAttValue( Master^.NA , NAG_QuestInfo , NAS_DifficulcyLevel ) ) );
-				ReplacePat( S^.Info , '%sktar%' , BStr( BasicSkillTarget( NAttValue( Master^.NA , NAG_QuestInfo , NAS_DifficulcyLevel ) ) ) );
-				ReplacePat( S^.Info , '%sktar_hard%' , BStr( HardSkillTarget( NAttValue( Master^.NA , NAG_QuestInfo , NAS_DifficulcyLevel ) ) ) );
+				ReplacePat( S^.Info , '%threat%' , BStr( NAttValue( Master^.NA , NAG_QuestInfo , NAS_DifficultyLevel ) ) );
+				ReplacePat( S^.Info , '%sktar%' , BStr( BasicSkillTarget( NAttValue( Master^.NA , NAG_QuestInfo , NAS_DifficultyLevel ) ) ) );
+				ReplacePat( S^.Info , '%sktar_hard%' , BStr( HardSkillTarget( NAttValue( Master^.NA , NAG_QuestInfo , NAS_DifficultyLevel ) ) ) );
 				ReplacePat( S^.Info , '%scenesq_qid%' , BStr( SceneSubQuestQID ) );
 				ReplacePat( S^.Info , '%scenesq_id%' , BStr( SceneSubQuestLID ) );
 				ReplacePat( S^.Info , '%scenechar%' , BStr( SceneKeyChara ) );
@@ -604,7 +390,7 @@ var
 			NewScene^.S := SID;
 			if KeyGear <> Nil then SetNAtt( NewScene^.NA , NAG_QuestInfo , NAS_SceneKeyChara , NAttValue( KeyGear^.NA , NAG_Personal , NAS_CID ) );
 			SetNAtt( NewScene^.NA , NAG_Personal , NAS_FactionID , Faction );
-			SetNAtt( NewScene^.NA , NAG_QuestInfo , NAS_DifficulcyLevel , NAttValue( Frag^.NA , NAG_QuestInfo , NAS_DifficulcyLevel ) );
+			SetNAtt( NewScene^.NA , NAG_QuestInfo , NAS_DifficultyLevel , NAttValue( Frag^.NA , NAG_QuestInfo , NAS_DifficultyLevel ) );
 			if SAttValue( NewScene^.SA , 'HABITAT' ) = '' then begin
 				SetSAtt( NewScene^.SA , 'HABITAT <' + SAttValue( RootScene^.SA , 'HABITAT' ) + '>' );
 			end;
@@ -678,7 +464,7 @@ var
 	Procedure ScaleRandomTreasure( LList: GearPtr; Threat: Integer );
 		{ Scale any random loot values found along this path. }
 		{ The treasures found as part of a quest should be }
-		{ commesurate with the difficulcy rating of the quest. }
+		{ commesurate with the Difficulty rating of the quest. }
 	var
 		LootValue: LongInt;
 	begin
@@ -827,8 +613,8 @@ var
 				end;
 			end;
 
-			{ Record the difficulcy rating. }
-			SetNAtt( C^.NA , NAG_QuestInfo , NAS_DifficulcyLevel , Threat );
+			{ Record the Difficulty rating. }
+			SetNAtt( C^.NA , NAG_QuestInfo , NAS_DifficultyLevel , Threat );
 			ScaleRandomTreasure( C , Threat );
 
 			{ Reset the SubQuest Branch Total to a minimum value of 1. }
@@ -1174,10 +960,10 @@ var
 					end;
 
 					{ If this is a character with a mecha, set its renown and }
-					{ skills based on the difficulcy level of the fragment. }
+					{ skills based on the Difficulty level of the fragment. }
 					if ( E^.G = GG_Character ) and IsACombatant( E ) and NotAnAnimal( E ) then begin
-						SetSkillsAtLevel( E , NAttValue( Frag^.NA , NAG_QuestInfo , NAS_DifficulcyLevel ) );
-						SetNAtt( E^.NA , NAG_CharDescription , NAS_Renowned , NAttValue( Frag^.NA , NAG_QuestInfo , NAS_DifficulcyLevel ) );
+						SetSkillsAtLevel( E , NAttValue( Frag^.NA , NAG_QuestInfo , NAS_DifficultyLevel ) );
+						SetNAtt( E^.NA , NAG_CharDescription , NAS_Renowned , NAttValue( Frag^.NA , NAG_QuestInfo , NAS_DifficultyLevel ) );
 					end;
 				end;
 
@@ -1191,96 +977,6 @@ var
 		{ Use global scripts sparingly- I can see this becoming a major problem }
 		{ if over-used. }
 		BuildMegalist( Adv , Frag^.SA );
-	end;
-
-	Procedure PrepQuestDungeon( Frag: GearPtr );
-		{ Prepare this dungeon, please. To do this we'll need to expand the dungeon }
-		{ by several levels, assign unique IDs to all our new scenes, and connect }
-		{ them all to each other. The SceneID of FRAG will be the first level of }
-		{ the dungeon. The goal level's SceneID will be stored and all further content }
-		{ sent to there. }
-	var
-		GoalLevel: GearPtr;
-		Procedure AssignSceneIDs( SList: GearPtr );
-			{ Assign unique IDs to all the scenes in this list and all of }
-			{ their children scenes. Also do the connections, as long as we're here. }
-		begin
-			while SList <> Nil do begin
-				if ( SList^.G = GG_Scene ) then begin
-					SList^.S := NewSceneID( Adv );
-					ConnectScene( SList );
-				end;
-				if SList <> GoalLevel then AssignSceneIDs( SList^.SubCom );
-				SList := SList^.next;
-			end;
-		end;
-		Procedure VerifySubScenes( SList: GearPtr );
-			{ It's possible that some of the subscenes of the goal level }
-			{ have exits pointing back to the L1 scene. If so, deal with that. }
-			Procedure VerifyExits( MFList: GearPtr );
-				{ Attempt to verify the exits throughout this list and }
-				{ through the children of any map features. }
-			begin
-				while MFList <> Nil do begin
-					if ( MFList^.G = GG_MetaTerrain ) and ( MFList^.Stat[ STAT_Destination ] = Frag^.S ) then begin
-						{ Set its destination to the parent scene. }
-						MFList^.Stat[ STAT_Destination ] := SList^.Parent^.S;
-					end else if MFList^.G = GG_MapFeature then begin
-						{ Check its children. }
-						VerifyExits( MFList^.SubCom );
-						VerifyExits( MFList^.InvCom );
-					end;
-					MFList := MFList^.Next;
-				end;
-			end;
-		begin
-			while SList <> Nil do begin
-				if SList^.G = GG_Scene then begin
-					{ This is a subscene. Deal with it. }
-					VerifyExits( SList^.InvCom );
-					VerifyExits( SList^.SubCom );
-				end;
-
-				SList := SList^.next;
-			end;
-		end;
-		Procedure InitPrototype;
-			{ The prototype must be initialized. }
-			{ Things to do: }
-			{ - Delete quest requests, to prevent double-dipping }
-			{ - Set the L1 difficulcy rating }
-		var
-			Team: GearPtr;
-		begin
-			{ Assign the difficulcy number. }
-			Team := Frag^.SubCom;
-			while Team <> Nil do begin
-				if ( Team^.G = GG_Team ) and ( Team^.Stat[ STAT_WanderMon ] > 0 ) then begin
-					Team^.Stat[ STAT_WanderMon ] := NAttValue( Frag^.NA , NAG_QuestInfo , NAS_DifficulcyLevel ) - 10;
-					if Team^.Stat[ STAT_WanderMon ] < 4 then Team^.Stat[ STAT_WanderMon ] := 2 + Random( 3 );
-				end;
-				Team := Team^.Next;
-			end;
-		end;
-	begin
-		{ Start by initializing the dungeon prototype. }
-		InitPrototype;
-
-		{ Next expand the dungeon. }
-		GoalLevel := ExpandDungeon( Frag );
-
-		{ Next, pass out the UniqueIDs. }
-		AssignSceneIDs( Frag^.SubCom );
-
-		{ Check the GoalLevel's subscenes for erroneous exits back to level one. }
-		VerifySubScenes( GoalLevel^.InvCom );
-		{ May 18 2007 - Originally only the InvComs were checked; now I'm checking the subcoms as well, }
-		{ since that's where a lot of entrances are. If anything starts acting strange it's probably a }
-		{ result of this. }
-		VerifySubScenes( GoalLevel^.SubCom );
-
-		{ Finally, save the ID of the goal level. }
-		SetNAtt( Frag^.NA , NAG_QuestInfo , NAS_GoalLevel , GoalLevel^.S );
 	end;
 
 	Procedure InsertScene( LList,Frag: GearPtr );
@@ -1326,7 +1022,7 @@ var
 			Team := Scene^.SubCom;
 			while Team <> Nil do begin
 				if ( Team^.G = GG_Team ) and ( Team^.Stat[ STAT_WanderMon ] > 0 ) then begin
-					Team^.Stat[ STAT_WanderMon ] := NAttValue( Frag^.NA , NAG_QuestInfo , NAS_DifficulcyLevel );
+					Team^.Stat[ STAT_WanderMon ] := NAttValue( Frag^.NA , NAG_QuestInfo , NAS_DifficultyLevel );
 					if Team^.Stat[ STAT_WanderMon ] < 3 then Team^.Stat[ STAT_WanderMon ] := 3;
 				end;
 				Team := Team^.Next;
@@ -1423,7 +1119,7 @@ var
 			{ that goes with that. We need to do this before initializing the exits }
 			{ so any stairs up in the place will retain a destination of -1. }
 			if ( Frag <> Nil ) and AStringHasBString( SAttValue( Frag^.SA , 'TYPE' ) , 'DUNGEON' ) then begin
-				PrepQuestDungeon( Frag );
+{				PrepQuestDungeon( Frag );}
 			end else begin
 				{ This is not a dungeon, but may still have teams with }
 				{ random monsters that need to be set. }
@@ -1906,11 +1602,5 @@ begin
 
 	DisposeRPGMenu( RPM );
 end;
-
-initialization
-	MasterEntranceList := AggregatePattern( 'ENTRANCE_*.txt' , Series_Directory );
-
-finalization
-	DisposeGear( MasterEntranceList );
 
 end.

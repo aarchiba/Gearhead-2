@@ -46,7 +46,7 @@ uses gears,locale;
 Const
 	NAG_XXRan = -7;		{ Extra-Extra-Random Plot Generator Data }
 	NAS_LoadNextComponent = 0;	{ if =0, load next component. }
-	NAS_DifficulcyLevel = 1;	{ The difficulcy level constant is also used by quests below. }
+
 	NAS_PlotPointGoal = 2;
 	NAS_PlotPointVictory = 3;
 	NAS_PlotPointCompleted = 4;
@@ -492,6 +492,7 @@ begin
 		end;
 
 		if MS = Nil then MS := FindQuestScene( MS^.SubCom , QSID );
+		if MS = Nil then MS := FindQuestScene( MS^.InvCom , QSID );
 
 		LList := LList^.Next;
 	end;

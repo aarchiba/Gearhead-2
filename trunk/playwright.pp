@@ -895,14 +895,60 @@ begin
 	NewContentNPC := NPC;
 end;
 
-Function PrepareNewSceneElement( Adventure , Plot: GearPtr; N: Integer ): GearPtr;
+Function PrepareQuestSceneElement( Adventure , Plot: GearPtr; N: Integer ): GearPtr;
 	{ We've received a request for a new permanent scene. Assign a SceneID for it. }
+	{ Also, copy over the difficulty rating from the plot, and mark all current }
+	{ subs and invs as original content. }
+	{ Also make sure to give the scene a unique name. }
+	Procedure MarkChildrenAsOriginal( LList: GearPtr );
+		{ Mark all the children of this quest scene as original, so if it's a }
+		{ dungeon other things which get added can be set aside and placed in }
+		{ the goal level. }
+	begin
+		while LList <> Nil do begin
+			if NAttValue( LList^.NA , NAG_Narrative , NAS_QuestDungeonOriginal ) = 0 then begin
+				SetNAtt( LList^.NA , NAG_NArrative , NAS_QuestDungeonOriginal , NAV_WasQDOriginal );
+			end;
+			LList := LList^.Next;
+		end;
+	end;
 var
-	ID: Integer;
+	ID,Tries: Integer;
+	QS,PScene: GearPtr;
+	BaseName,UniqueName: String;
 begin
 	ID := NewSceneID( Adventure );
 	SetNAtt( Plot^.NA , NAG_ElementID , N , ID );
-	PrepareNewSceneElement := SeekCurrentLevelGear( Plot^.SubCom , GG_MetaScene , N );
+	QS := SeekCurrentLevelGear( Plot^.SubCom , GG_MetaScene , N );
+	if QS <> Nil then begin
+		{ Set the difficulty level. }
+		SetNAtt( QS^.NA , NAG_NArrative , NAS_DifficultyLevel , NAttValue( Plot^.NA , NAG_Narrative , NAS_DifficultyLevel ) );
+
+		{ Mark the children as originals. }
+		MarkChildrenAsOriginal( QS^.SubCom );
+		MarkChildrenAsOriginal( QS^.InvCom );
+
+		{ Assign a unique name for this scene. }
+		{ Generate a unique name for this scene. }
+		BaseName := SAttValue( QS^.SA , 'NAME' );
+		UniqueName := ReplaceHash( BaseName , RandomName );
+		Tries := 0;
+		repeat
+			PScene := SeekGearByName( Adventure , UniqueName );
+			if PScene <> Nil then UniqueName := ReplaceHash( BaseName , RandomName );
+			Inc( Tries );
+		until ( PScene = Nil ) or ( Tries > 500 );
+
+		if Tries > 500 then begin
+			{ We tried, and failed, to get a unique name. }
+			UniqueName := 'Ique ' + BStr( ID );
+			DialogMsg( 'ERROR: Scene ' + GearName( Plot ) + ' (' + BStr( ID ) + ') couldn''t generate unique name.' );
+		end;
+
+		SetSAtt( QS^.SA , 'NAME <' + UniqueName + '>' );
+
+	end;
+	PrepareQuestSceneElement := QS;
 end;
 
 Function FindElement( Adventure,Plot: GearPtr; N: Integer; GB: GameBoardPtr ; MovePrefabs, Debug: Boolean ): Boolean;
@@ -1008,7 +1054,7 @@ begin
 
 		end else if EKind[1] = 'Q' then begin
 			{ Quest Scene. Find the metascene template being used. }
-			Element := PrepareNewSceneElement( Adventure , Plot , N );
+			Element := PrepareQuestSceneElement( Adventure , Plot , N );
 			Fast_Seek_Element[ 1 , N ] := Element;
 			OK := Element <> Nil;
 
@@ -1363,7 +1409,7 @@ begin
 	it := SAttValue( Story^.SA , 'CONTEXT' );
 
 	{ Add a description for the difficulcy rating. }
-	it := it + ' ' + DifficulcyContext( NAttValue( Story^.NA , NAG_XXRan , NAS_DifficulcyLevel ) );
+	it := it + ' ' + DifficulcyContext( NAttValue( Story^.NA , NAG_Narrative , NAS_DifficultyLevel ) );
 
 	{ Add the extra random palette entries. }
 	if ( Story^.G = GG_Story ) and ( Story^.S = GS_XRANStory ) then begin
@@ -1514,7 +1560,7 @@ begin
 	if ( Plot^.Parent <> Nil ) and ( Plot^.Parent^.G = GG_Story ) then begin
 		Context := StoryContext( GB , Plot^.Parent );
 	end else begin
-		Context := SAttValue( Plot^.SA , 'CONTEXT' ) + ' ' + DifficulcyContext( NAttValue( Plot^.NA , NAG_XXRan , NAS_DifficulcyLevel ) );
+		Context := SAttValue( Plot^.SA , 'CONTEXT' ) + ' ' + DifficulcyContext( NAttValue( Plot^.NA , NAG_Narrative , NAS_DifficultyLevel ) );
 	end;
 	M := Plot^.SubCom;
 	while M <> Nil do begin
@@ -1825,9 +1871,61 @@ Function InsertSubPlot( Scope,Slot,SubPlot: GearPtr; GB: GameBoardPtr ): Boolean
 	{ Stick SUBPLOT into SLOT, but better not initialize anything. }
 var
 	InitOK: Boolean;
+	T,N: Integer;
+	Scene: GearPtr;
+	SceneDesc,EDesc: String;
 begin
 	InitOK := DoElementGrabbing( Scope , Slot , SubPlot );
-	InsertSubPlot := InitOK and MatchPlotToAdventure( Scope , Slot , SubPlot , GB , False , False , False );
+	InitOK := InitOK and MatchPlotToAdventure( Scope , Slot , SubPlot , GB , False , False , False );
+
+	{ If the basic MatchPlot... went okay, attempt to locate any needed scenes. }
+	if InitOK then begin
+		for t := 1 to Num_Plot_Elements do begin
+			{ If any scene cannot be found, delete FRAG and set InitOK to FALSE. }
+			SceneDesc := SAttValue( SubPlot^.SA , 'SCENE' + BStr( T ) );
+			EDesc := SAttValue( SubPlot^.SA , 'ELEMENT' + BStr( T ) );
+
+			{ We aren't concerned if no scene was defined; nor are we concerned }
+			{ if a new scene is requested. Those get added later. }
+			if ( SceneDesc <> '' ) then begin
+				if HeadMatchesString( 'GRAB ' , SceneDesc ) then begin
+					ExtractWord( SceneDesc );
+					N := ElementID( SubPlot , ExtractValue( SceneDesc ) );
+
+					if N <> 0 then begin
+						SetNAtt( SubPlot^.NA , NAG_QuestElemScene , T , N );
+						if EDesc = '' then begin
+							SetSAtt( SubPlot^.SA , 'ELEMENT' + BStr( T ) + ' <Scene>' );
+							SetNAtt( SubPlot^.NA , NAG_ElementID , T , N );
+						end;
+					end else begin
+						InitOK := False;
+						Break;
+					end;
+				end else begin
+					Scene := SearchForScene( Scope , SubPlot , Nil , SceneDesc );
+					if Scene <> Nil then begin
+						SetNAtt( SubPlot^.NA , NAG_QuestElemScene , T , Scene^.S );
+						if EDesc = '' then begin
+							SetSAtt( SubPlot^.SA , 'ELEMENT' + BStr( T ) + ' <Scene>' );
+							SetNAtt( SubPlot^.NA , NAG_ElementID , T , Scene^.S );
+							SetSAtt( SubPlot^.SA , 'NAME_' + BStr( T ) + ' <' + GearName( Scene ) + '>' );
+						end;
+					end else begin
+						InitOK := False;
+						Break;
+					end;
+				end;
+			end else if ( EDesc <> '' ) and ( ( UpCase( EDesc[1] ) = 'S' ) or ( UpCase( EDesc[1] ) = 'Q' ) ) then begin
+				SetNAtt( SubPlot^.NA , NAG_QuestElemScene , T , ElementID( SubPlot , T ) );
+			end;
+		end;
+		if not InitOK then begin
+			RemoveGear( Slot^.InvCom , SubPlot );
+		end;
+	end;
+
+	InsertSubPlot := InitOK;
 end;
 
 Function InsertPlot( Scope,Slot,Plot: GearPtr; GB: GameBoardPtr; Threat: Integer ): Boolean;
@@ -1994,7 +2092,7 @@ begin
 			{ This episode was "lost". }
 			plot_desc := '#L ' + plot_desc;
 		end;
-	end else if NAttValue( Story^.NA , NAG_XXRan , NAS_DifficulcyLevel ) > 80 then begin
+	end else if NAttValue( Story^.NA , NAG_Narrative , NAS_DifficultyLevel ) > 80 then begin
 		plot_desc := '#C ' + plot_desc;
 	end else begin
 		plot_desc := '#A ' + plot_desc;
@@ -2018,7 +2116,7 @@ begin
 
 		if C <> Nil then begin
 			C := CloneGear( C );
-			MergeOK := InsertPlot( FindRoot( Story ) , Story , C , GB , NAttValue( Story^.NA , NAG_XXRan , NAS_DifficulcyLevel ) );
+			MergeOK := InsertPlot( FindRoot( Story ) , Story , C , GB , NAttValue( Story^.NA , NAG_Narrative , NAS_DifficultyLevel ) );
 		end else MergeOK := False;
 	until MergeOK or ( Shopping_List = Nil );
 
@@ -2075,7 +2173,7 @@ begin
 			{ This is an artifact request. If no difficulcy context has been }
 			{ defined, add one ourselves. }
 			if not AStringHasBString( EDesc , '!' ) then begin
-				EDesc := EDesc + ' ' + DifficulcyContext( NAttValue( Frag^.NA , NAG_QuestInfo , NAS_DifficulcyLevel ) );
+				EDesc := EDesc + ' ' + DifficulcyContext( NAttValue( Frag^.NA , NAG_Narrative , NAS_DifficultyLevel ) );
 				SetSAtt( Frag^.SA , 'ELEMENT' + BStr( T ) + ' <' + EDesc + '>' );
 			end;
 		end;
