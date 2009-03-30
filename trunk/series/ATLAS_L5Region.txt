@@ -44,8 +44,7 @@ Scene 0 3
 
 	desig <MAQSP>
 
-	Quest1 <*:LocalQuest>
-	Quest2 <*:MECHA_ARENA_BASE>
+
 
 	start <if= V1 0 else GoSecondTime V= 1 1 Alert 1 Print 2>
 	GoSecondTime <Print 2>
@@ -404,8 +403,6 @@ sub
 			chardesc Female Sociable Passionate Pragmatic Renowned
 			statline 13 10 14 16 13 17 16 17
 			MiniMapComponent 1
-			%% Adrianna will have a fairly extensive quest.
-			quest <*:NPCQuest>
 
 			NPC Knight
 			SetTeam 3
@@ -516,9 +513,6 @@ Scene 0 3
 
 	SetFaction 1
 	factions <MAQUI SILKN PRIVA MUGLE L5LAW>
-
-	Quest1 <*:LocalQuest>
-	Quest2 <*:Concert_Venue>
 
 	desig <ATHSP>
 
@@ -773,7 +767,6 @@ sub
 				SetFaction 1
 				MiniMapComponent 1
 				CharDesc Sociable Passionate Male
-				quest <*:NPCQuest>
 			end
 
 			room
@@ -1003,8 +996,6 @@ Scene
 	personatype <asteroid village mine>
 	habitat <SPACE.ASTER>
 
-	Quest1 <*:LocalQuest>
-	Quest2 <*:MECHA_ARENA_BASE>
 
 	ClubMap
 
@@ -1751,7 +1742,6 @@ Scene 0 3
 
 	desig <CSNSP>
 
-	Quest1 <*:LocalQuest>
 
 	start <if= V1 0 else GoSecondTime V= 1 1 Alert 1 Print 2>
 	GoSecondTime <Print 2>
@@ -2088,7 +2078,6 @@ sub
 			NPC Knight
 			name <Gordon Valeus>
 			job <Lord Master>
-			quest <*:NPCQuest>
 			SDL_PORTRAIT <por_m_gordonvaleus(OAY).png>
 			SDL_COLORS <150 205 229 235 212 195 130 143 114>
 			SetTeam 3
@@ -2299,9 +2288,6 @@ Scene 0 3
 	factions <FCOMS COMET HOELL PRIVA MUGLE L5LAW>
 
 	desig <XIASP>
-
-	Quest1 <*:LocalQuest>
-	Quest2 <*:BlackMarket>
 
 	start <if= V1 0 else GoSecondTime V= 1 1 Alert 1 Print 2>
 	GoSecondTime <Print 2>
@@ -2539,7 +2525,6 @@ sub
 			SetFaction 9
 			Age 10
 			MiniMapComponent 1
-			Quest <*:NPCQuest>
 
 			STC TV
 			MiniMapComponent 2
@@ -2780,9 +2765,6 @@ Scene 0 3
 	factions <FCOMS PDASS PRIVA L5LAW>
 
 	desig <GAOSP>
-
-	Quest1 <*:LocalQuest>
-	Quest2 <*:MECHA_ARENA_BASE>
 
 	start <if= V1 0 else GoSecondTime V= 1 1 Alert 1 Print 2>
 	GoSecondTime <Print 2>
@@ -3206,7 +3188,6 @@ sub
 			SDL_COLORS <90 150 80 199 188 162 190 210 230>
 			SetTeam 2
 			MiniMapComponent 1
-			Quest <*:NPCQuest>
 		end
 	end
 
@@ -3324,9 +3305,6 @@ Scene 0 3
 	factions <MAQUI COMET HOELL L5LAW>
 
 	desig <FUCSP>
-
-	Quest1 <*:LocalQuest>
-	Quest2 <*:GuaranteedQuest>
 
 	start <if= V1 0 else GoSecondTime V= 1 1 Alert 1 Print 2>
 	GoSecondTime <Print 2>
@@ -3652,8 +3630,6 @@ Scene 0 3
 
 	desig <KOSSP>
 
-	Quest1 <*:LocalQuest>
-
 	start <if= V1 0 else GoSecondTime V= 1 1 Alert 1 Print 2>
 	GoSecondTime <Print 2>
 	Msg1 <The flawless crystal towers and beautiful gardens of Kosaka Spinner clearly demonstrate the precision and efficiency with which this city governs the Free Commerce States.>
@@ -3894,7 +3870,6 @@ sub
 			SetFaction 10
 			job <Chief Technocrat>
 			MiniMapComponent 1
-			quest <*:NPCQuest>
 
 			NPC Soldier
 			SetTeam 3
@@ -4155,7 +4130,6 @@ Scene 0 3
 
 	desig <TOHSP>
 
-	Quest1 <*:LocalQuest>
 
 	start <if= V1 0 else GoSecondTime V= 1 1 Alert 1 Print 2>
 	GoSecondTime <Print 2>
@@ -4439,7 +4413,6 @@ sub
 		name <McCabe>
 		SetFaction 10
 		home <Foyer>
-		quest <*:NPCQuest>
 		SDL_PORTRAIT <por_f_allisonnewver(J--).png>
 		SDL_COLORS <239 198 58 255 212 195 6 42 120>
 		CharDesc Female Melancholy Easygoing Pragmatic Heroic
@@ -4628,8 +4601,6 @@ Scene 0 3
 	factions <FCOMS L5LAW HOELL MUGLE>
 
 	desig <EMESP>
-
-	Quest1 <*:LocalQuest>
 
 	start <if= V1 0 else GoSecondTime V= 1 1 Alert 1 Print 2>
 	GoSecondTime <Print 2>
@@ -4984,7 +4955,6 @@ sub
 			SetFaction 10
 			job <Chief Treasurer>
 			MiniMapComponent 1
-			quest <*:NPCQuest>
 
 			NPC Police Officer
 			SetTeam 3
@@ -5179,10 +5149,6 @@ Scene 0 3
 	factions <PRIVA>
 
 	desig <THESP>
-
-	Quest1 <*:LocalQuest>
-	Quest2 <*:GuaranteedQuest 35>
-	Quest3 <*:CHARA_ARENA_BASE>
 
 	start <if= V1 0 else GoSecondTime V= 1 1 Alert 1 Print 2>
 	GoSecondTime <Print 2>
@@ -5622,9 +5588,6 @@ Scene 0 3
 
 	desig <YATSP>
 
-	Quest1 <*:LocalQuest>
-	Quest2 <*:MECHA_ARENA_BASE>
-
 	start <if= V1 0 else GoSecondTime V= 1 1 Alert 1 Print 2>
 	GoSecondTime <Print 2>
 	Msg1 <Yatate Spinner is the home port of the Rocket Stars. Aspiring mecha pilots from all over come here hoping to make it big.>
@@ -5929,8 +5892,6 @@ sub
 			age 34
 			renown 90
 			chardesc female sociable passionate
-			MiniMapComponent 3
-			quest <*:NPCQuest>
 			SDL_PORTRAIT <por_f_vannis(ACY).png>
 			SDL_COLORS <200 30 90 255 212 195 49 91 141>
 			SetTeam 3
@@ -6120,8 +6081,6 @@ Scene 0 3
 	factions <RISHI L5LAW ROCKE>
 
 	desig <GALSP>
-
-	Quest1 <*:LocalQuest>
 
 	start <if= V1 0 else GoSecondTime V= 1 1 Alert 1 Print 2>
 	GoSecondTime <Print 2>
@@ -6410,7 +6369,6 @@ sub
 			SetTeam 2
 			Age 28
 			MiniMapComponent 1
-			quest <*:NPCQuest>
 		end
 	end
 
@@ -6449,8 +6407,6 @@ Scene 0 3
 	factions <RISHI ROCKE L5LAW>
 
 	desig <RISSP>
-
-	Quest1 <*:LocalQuest>
 
 	start <if= V1 0 else GoSecondTime V= 1 1 Alert 1 Print 2>
 	GoSecondTime <Print 2>
@@ -6714,8 +6670,6 @@ sub
 			SetTeam 3
 			SetFaction 11
 			MiniMapComponent 2
-			%% This leader will have a quest.
-			quest <*:NPCQuest>
 		end
 	end
 

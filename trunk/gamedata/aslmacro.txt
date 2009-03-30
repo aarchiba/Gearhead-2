@@ -29,13 +29,13 @@ NPCVar+ <GrabNPC ? GAddNAtt NAG_ScriptVar ? ?>
 SceneVar= <GrabScene ? GSetNAtt NAG_ScriptVar ? ?>
 SceneVar+ <GrabScene ? GAddNAtt NAG_ScriptVar ? ?>
 EncounterVar= <GrabEntrance ?  GSetNAtt NAG_ScriptVar ? ?>
-SetEncounterActive <GrabEntrance ? GSetNAtt NAG_QuestInfo NAS_QEncActive 1>
-SetEncounterInactive <GrabEntrance ? GSetNAtt NAG_QuestInfo NAS_QEncActive 0>
-SetQEncActive <GrabItem ? GSetNAtt NAG_QuestInfo NAS_QEncActive 1>
-SetQEncInactive <GrabItem ? GSetNAtt NAG_QuestInfo NAS_QEncActive 0>
-SetSelfQEncInactive <GrabSource GSetNAtt NAG_QuestInfo NAS_QEncActive 0>
-IfThisQEncActive <GrabSource if# GNAtt NAG_QuestInfo NAS_QEncActive 0>
-ifQEncActive <GrabItem ? if# GNAtt NAG_QuestInfo NAS_QEncActive 0>
+SetEncounterActive <GrabEntrance ? GSetNAtt NAG_Narrative NAS_EncounterActive 1>
+SetEncounterInactive <GrabEntrance ? GSetNAtt NAG_Narrative NAS_EncounterActive 0>
+SetEntranceActive <GrabItem ? GSetNAtt NAG_Narrative NAS_EncounterActive 1>
+SetEntranceInactive <GrabItem ? GSetNAtt NAG_Narrative NAS_EncounterActive 0>
+SetSelfEncInactive <GrabSource GSetNAtt NAG_Narrative NAS_EncounterActive 0>
+IfSelfEncActive <GrabSource if# GNAtt NAG_Narrative NAS_EncounterActive 0>
+ifEntranceActive <GrabItem ? if# GNAtt NAG_Narrative NAS_EncounterActive 0>
 SetItemStolen <GrabItem ? GSetNAtt NAG_Narrative 8 1>
 SetItemFudge <GrabItem ? GSetNAtt 2 4 ?>
 SetItemDesc <GrabItem ? GSetSAtt desc ?>
@@ -263,14 +263,14 @@ ShowEncounter <GrabSource GSetNAtt NAG_EpisodeData NAS_EncVis ComTime GAddNAtt N
 ShowEntrance <GrabEntrance ? GSetNAtt NAG_EpisodeData NAS_EncVis ComTime GAddNAtt NAG_EpisodeData NAS_EncVis 86400>
 ifEncounterVisible <GrabSource ifG GNatt NAG_EpisodeData NAS_EncVis ComTime>
 AddDatePoint <GrabSource GAddNAtt NAG_Narrative NAS_DatePoints 1>
-SetQuestStatus <GrabAdventure GSetNAtt NAG_QuestStatus ? ? Trigger0 Update>
-SetPlotStatus <GrabPlot GSetNAtt NAG_PlotStatus ? ? Trigger0 Update>
-CancelSubPlot <GrabPlot GSetNAtt NAG_PlotStatus ? -3 Trigger0 Update>
-WinSubPlot <GrabPlot GSetNAtt NAG_PlotStatus ? -1 Trigger0 Update>
-LoseSubPlot <GrabPlot GSetNAtt NAG_PlotStatus ? -2 Trigger0 Update>
-IfSubPlotWon <GrabPlot if= GNAtt NAG_PlotStatus ? -1>
-IfSubPlotLost <GrabPlot if= GNAtt NAG_PlotStatus ? -2>
-IfSubPlotCanceled <GrabPlot if= GNAtt NAG_PlotStatus ? -3>
+SetQuestStatus <GrabAdventure GSetNAtt NAG_PlotStatus ? ? Trigger0 Update>
+SetPlotStatus <GrabAdventure GSetNAtt NAG_PlotStatus ? ? Trigger0 Update>
+CancelSubPlot <GrabAdventure GSetNAtt NAG_PlotStatus ? -3 Trigger0 Update>
+WinSubPlot <GrabAdventure GSetNAtt NAG_PlotStatus ? -1 Trigger0 Update>
+LoseSubPlot <GrabAdventure GSetNAtt NAG_PlotStatus ? -2 Trigger0 Update>
+IfSubPlotWon <GrabAdventure if= GNAtt NAG_PlotStatus ? -1>
+IfSubPlotLost <GrabAdventure if= GNAtt NAG_PlotStatus ? -2>
+IfSubPlotCanceled <GrabAdventure if= GNAtt NAG_PlotStatus ? -3>
 AddTempLancemate <GrabNPC ? GSetNAtt NAG_CharDescription NAS_CharType NAV_TempLancemate GJoinLance>
 ChatNPCJoinLance <GrabChatNPC GJoinLance>
 RemoveTempLancemate <GrabNPC ? GSetNAtt NAG_CharDescription NAS_CharType 0 GQuitLance>

@@ -178,6 +178,11 @@ Const
 					{ remove it from the prototype and reinstall it in the goal level. }
 		NAV_WasQDOriginal = 1;
 
+	NAS_EncounterActive = 34;	{ Is this activatable encounter active? Formerly QEncActive... }
+
+	NAS_QuestInUse = 35;		{ Used when constructing quests, to prevent the same fragment }
+					{ from being selected multiple times. }
+
 	{ The following are used by the randmaps unit... }
 	NAS_LockedDoorChance = 101;
 	NAS_SecretDoorChance = 102;

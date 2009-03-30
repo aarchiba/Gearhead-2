@@ -75,7 +75,6 @@ Procedure EndPlot( GB: GameBoardPtr; Adv,Plot: GearPtr );
 
 Procedure PrepareNewComponent( Story: GearPtr; GB: GameBoardPtr );
 
-Function PrepareQuestFragment( City,Frag: GearPtr; DoDebug: Boolean ): Boolean;
 Function InsertArenaMission( Source,Mission: GearPtr; ThreatAtGeneration: Integer ): Boolean;
 
 Procedure UpdatePlots( GB: GameBoardPtr; Renown: Integer );
@@ -1878,53 +1877,6 @@ begin
 	InitOK := DoElementGrabbing( Scope , Slot , SubPlot );
 	InitOK := InitOK and MatchPlotToAdventure( Scope , Slot , SubPlot , GB , False , False , False );
 
-	{ If the basic MatchPlot... went okay, attempt to locate any needed scenes. }
-	if InitOK then begin
-		for t := 1 to Num_Plot_Elements do begin
-			{ If any scene cannot be found, delete FRAG and set InitOK to FALSE. }
-			SceneDesc := SAttValue( SubPlot^.SA , 'SCENE' + BStr( T ) );
-			EDesc := SAttValue( SubPlot^.SA , 'ELEMENT' + BStr( T ) );
-
-			{ We aren't concerned if no scene was defined; nor are we concerned }
-			{ if a new scene is requested. Those get added later. }
-			if ( SceneDesc <> '' ) then begin
-				if HeadMatchesString( 'GRAB ' , SceneDesc ) then begin
-					ExtractWord( SceneDesc );
-					N := ElementID( SubPlot , ExtractValue( SceneDesc ) );
-
-					if N <> 0 then begin
-						SetNAtt( SubPlot^.NA , NAG_QuestElemScene , T , N );
-						if EDesc = '' then begin
-							SetSAtt( SubPlot^.SA , 'ELEMENT' + BStr( T ) + ' <Scene>' );
-							SetNAtt( SubPlot^.NA , NAG_ElementID , T , N );
-						end;
-					end else begin
-						InitOK := False;
-						Break;
-					end;
-				end else begin
-					Scene := SearchForScene( Scope , SubPlot , Nil , SceneDesc );
-					if Scene <> Nil then begin
-						SetNAtt( SubPlot^.NA , NAG_QuestElemScene , T , Scene^.S );
-						if EDesc = '' then begin
-							SetSAtt( SubPlot^.SA , 'ELEMENT' + BStr( T ) + ' <Scene>' );
-							SetNAtt( SubPlot^.NA , NAG_ElementID , T , Scene^.S );
-							SetSAtt( SubPlot^.SA , 'NAME_' + BStr( T ) + ' <' + GearName( Scene ) + '>' );
-						end;
-					end else begin
-						InitOK := False;
-						Break;
-					end;
-				end;
-			end else if ( EDesc <> '' ) and ( ( UpCase( EDesc[1] ) = 'S' ) or ( UpCase( EDesc[1] ) = 'Q' ) ) then begin
-				SetNAtt( SubPlot^.NA , NAG_QuestElemScene , T , ElementID( SubPlot , T ) );
-			end;
-		end;
-		if not InitOK then begin
-			RemoveGear( Slot^.InvCom , SubPlot );
-		end;
-	end;
-
 	InsertSubPlot := InitOK;
 end;
 
@@ -2136,97 +2088,6 @@ begin
 
 	if DeleteAllComps then DisposeGear( All_Comps );
 	DisposeNAtt( Shopping_List );
-end;
-
-Function PrepareQuestFragment( City,Frag: GearPtr; DoDebug: Boolean ): Boolean;
-	{ Attempt to match this quest fragment to the adventure. Quest fragments can }
-	{ use a subset of the resources available to other types of content- in }
-	{ particular, they can't use character searches and their personas are not }
-	{ initialized until the assembly routine that comes later. }
-	{ This procedure is responsible for: }
-	{ - Locating and initializing elements (via MatchPlotToAdventure) }
-	{ - Locating and storing element scenes }
-	{ - Storing the element names for later use }
-var
-	MatchOK: Boolean;
-	T,KSID: Integer;
-	EDesc,SceneDesc: String;
-	Scene: GearPtr;
-begin
-	{ Make sure the city really is the city. }
-	City := FindRootScene( Nil , City );
-
-	{ First, insert the key character as requested. }
-	for t := 1 to Num_Plot_Elements do begin
-		EDesc := UpCase( SAttValue( Frag^.SA , 'ELEMENT' + BStr( T ) ) );
-		if EDesc = 'KEY' then begin
-			SetSAtt( Frag^.SA , 'ELEMENT' + BStr( T ) + ' <' + SAttValue( Frag^.SA , 'ELEMENT0' ) + '>' );
-			SetSAtt( Frag^.SA , 'SCENE' + BStr( T ) + ' <KEY>' );
-			SetNAtt( Frag^.NA , NAG_ElementID , T , NAttValue( Frag^.NA , NAG_ElementID , 0 ) );
-		end else if EDesc = '.' then begin
-			{ This element is the city scene. }
-			SetSAtt( Frag^.SA , 'ELEMENT' + BStr( T ) + ' <SCENE>' );
-			SetSAtt( Frag^.SA , 'SCENE' + BStr( T ) + ' <>' );
-			SetNAtt( Frag^.NA , NAG_ElementID , T , City^.S );
-
-		end else if ( EDesc <> '' ) and ( EDesc[1] = 'A' ) then begin
-			{ This is an artifact request. If no difficulcy context has been }
-			{ defined, add one ourselves. }
-			if not AStringHasBString( EDesc , '!' ) then begin
-				EDesc := EDesc + ' ' + DifficulcyContext( NAttValue( Frag^.NA , NAG_Narrative , NAS_DifficultyLevel ) );
-				SetSAtt( Frag^.SA , 'ELEMENT' + BStr( T ) + ' <' + EDesc + '>' );
-			end;
-		end;
-	end;
-
-	{ Next, locate the rest of the elements. }
-	MatchOK := MatchPlotToAdventure( FindROot( City ) , FindROot( City ) , Frag , Nil , FALSE , TRUE , FALSE );
-
-	{ If this worked, get all the needed scenes and store the element names. }
-	if MatchOK then begin
-		for t := 1 to Num_Plot_Elements do begin
-			{ If any scene cannot be found, delete FRAG and set MATCHOK to FALSE. }
-			SceneDesc := SAttValue( Frag^.SA , 'SCENE' + BStr( T ) );
-
-			{ We aren't concerned if no scene was defined; nor are we concerned }
-			{ if a new scene is requested. Those get added later. }
-			if UpCase( SceneDesc ) = 'KEY' then begin
-				{ The key scene was requested. }
-				KSID := NAttValue( Frag^.NA , NAG_QuestElemScene , 0 );
-				if KSID <> 0 then begin
-					SetNAtt( Frag^.NA , NAG_QuestElemScene , T , KSID );
-					if SAttValue( Frag^.SA , 'ELEMENT' + BStr( T ) ) = '' then begin
-						SetSAtt( Frag^.SA , 'ELEMENT' + BStr( T ) + ' <Scene>' );
-						SetNAtt( Frag^.NA , NAG_ElementID , T , KSID );
-					end;
-				end else begin
-					if DoDebug then DialogMsg( 'DEBUG Quest error: Key Scene not found not found for ' + GearName( Frag ) + '.' );
-					RemoveGear( FindRoot( City )^.InvCom , Frag );
-					MatchOK := False;
-					Break;
-				end;
-			end else if ( SceneDesc <> '' ) and not ( HeadMatchesString( 'NEW ' , SceneDesc ) or HeadMatchesString( 'GRAB ' , SceneDesc ) ) then begin
-				Scene := SearchForScene( City , Frag , Nil , SceneDesc );
-				if Scene <> Nil then begin
-					SetNAtt( Frag^.NA , NAG_QuestElemScene , T , Scene^.S );
-					if SAttValue( Frag^.SA , 'ELEMENT' + BStr( T ) ) = '' then begin
-						SetSAtt( Frag^.SA , 'ELEMENT' + BStr( T ) + ' <Scene>' );
-						SetNAtt( Frag^.NA , NAG_ElementID , T , Scene^.S );
-						SetSAtt( Frag^.SA , 'NAME_' + BStr( T ) + ' <' + GearName( Scene ) + '>' );
-					end;
-				end else begin
-					if DoDebug then DialogMsg( 'DEBUG Quest error: Scene ' + BStr( T ) + ' not found for ' + GearName( Frag ) + '.' );
-					RemoveGear( FindRoot( City )^.InvCom , Frag );
-					MatchOK := False;
-					Break;
-				end;
-			end;
-		end;
-	end else if DoDebug then begin
-		DialogMsg( 'DEBUG Quest error: MatchPlotToAdventure Failed.' );
-	end;
-
-	PrepareQuestFragment := MatchOK;
 end;
 
 Function InsertArenaMission( Source,Mission: GearPtr; ThreatAtGeneration: Integer ): Boolean;

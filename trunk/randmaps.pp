@@ -1723,6 +1723,8 @@ var
 	M: GearPtr;
 	it: Boolean;
 begin
+	if not OnTheMap( GB , X , Y ) then Exit( True );
+
 	it := TerrMan[ TileTerrain( GB , X , Y ) ].Pass = -100;
 	if ( GB^.Scene <> Nil ) and not it then begin
 		M := GB^.Scene^.InvCom;
@@ -2429,10 +2431,10 @@ begin
 		if ( E <> Nil ) and ( E^.G >= 0 ) and ( SATtValue( C^.SA , 'PLACE' + BStr( T ) ) = '' ) then begin
 			DelinkGearForMovement( GB , E );
 
-			{ If E is prefab, don't store an original home, but do save the QuestID. }
+			{ If E is prefab, don't store an original home, but do save the PlotID. }
 			if AStringHasBString( SAttValue( E^.SA , 'ELEMENT' ) , 'PREFAB' ) then begin
 				SetNAtt( E^.NA , NAG_ParaLocation , NAS_OriginalHome , 0 );
-				SetNAtt( E^.NA , NAG_QuestInfo , NAS_QuestID , NAttValue( GB^.Scene^.NA , NAG_QuestInfo , NAS_QuestID ) );
+				SetNAtt( E^.NA , NAG_Narrative , NAS_PlotID , NAttValue( GB^.Scene^.NA , NAG_Narrative , NAS_PlotID ) );
 			end;
 
 			if ( MiniMap <> '' ) and ( Pos( BStr( T ) , MiniMap ) > 0 ) then begin
@@ -2477,8 +2479,8 @@ begin
 			{ Set the correct CID code for this persona. }
 			P^.S := ElementID( C , P^.S );
 
-			{ Also record the Quest ID. }
-			SetNAtt( P^.NA , NAG_QuestInfo , NAS_QuestID , NAttValue( GB^.Scene^.NA , NAG_QuestInfo , NAS_QuestID ) );
+			{ Also record the Plot ID. }
+			SetNAtt( P^.NA , NAG_Narrative , NAS_PlotID , NAttValue( GB^.Scene^.NA , NAG_Narrative , NAS_PlotID ) );
 
 			{ Stick it where it needs to go. }
 			InsertSubCom( GB^.Scene , P );

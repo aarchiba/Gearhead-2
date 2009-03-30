@@ -44,6 +44,24 @@ NPCs are attached to the thread which first defines a persona for them; personal
 rumors can only be keyed to LayerIDs belonging to this thread.
 
 
+******************
+***   QUESTS   ***
+******************
+
+A Quest is a special case of a megaplot. Quests are created at the start of
+an RPG campaign and permanently incorporated into the adventure. Quests may
+not use regular metascenes, but may define Quest Scenes which get added as
+new permanent scenes.
+
+If "." is requested as an element, it will be the city where this story takes place.
+
+If a dungeon is added as a quest scene, its ElementID will point to the goal
+level rather than the entry level.
+
+An entrance for a quest scene may be added by attaching the designation
+"ENTRANCE %n%", where N is the index of the scene.
+
+
 ********************************
 ***   REQUESTING  SUBPLOTS   ***
 ********************************

@@ -231,17 +231,14 @@ var
 		if Rumor <> Nil then AddThisRumor( P , Rumor );
 
 		{ Next add the quest rumor. }
-		Level := NAttValue( P^.NA , NAG_QuestInfo , NAS_QuestID );
-		if Level <> 0 then begin
-			Rumor := FindSAtt( P^.SA , Rumor_Head + BStr( NAttValue( FindRoot( GB^.Scene )^.NA , NAG_QuestStatus , Level ) ) );
+		Level := NAttValue( P^.NA , NAG_Narrative , NAS_PlotID );
+		if Level < 0 then begin
+			Rumor := FindSAtt( P^.SA , Rumor_Head + BStr( NAttValue( FindRoot( GB^.Scene )^.NA , NAG_PlotStatus , Level ) ) );
 			if Rumor <> Nil then AddThisRumor( P , Rumor );
-		end;
-
-		{ Finally add the plot rumor. }
-		if (( P^.G = GG_Persona ) or ( P^.G = GG_MetaScene )) and ( P^.Parent <> Nil ) and ( P^.Parent^.G = GG_Plot ) then begin
+		end else if (( P^.G = GG_Persona ) or ( P^.G = GG_MetaScene )) and ( P^.Parent <> Nil ) and ( P^.Parent^.G = GG_Plot ) then begin
+			{ Finally add the plot rumor. }
 			Plot := P^.Parent;
-			Level := NAttValue( Plot^.NA , NAG_PlotStatus , NAttValue( P^.NA , NAG_Narrative , NAS_PlotID ) );
-			Rumor := FindSAtt( P^.SA , Rumor_Head + BStr( Level ) );
+			Rumor := FindSAtt( P^.SA , Rumor_Head + BStr( NAttValue( FindRoot( GB^.Scene )^.NA , NAG_PlotStatus , Level ) ) );
 			if Rumor <> Nil then AddThisRumor( P , Rumor );
 		end;
 	end;
@@ -384,9 +381,9 @@ var
 
 				{ This part may also have a quest-related message attached }
 				{ to it. See if that's so. }
-				QID := NAttValue( Part^.NA , NAG_QuestInfo , NAS_QuestID );
+				QID := NAttValue( Part^.NA , NAG_Narrative , NAS_PlotID );
 				if ( QID <> 0 ) then begin
-					msg := SAttValue( Part^.SA , Tag + '_' + BStr( NAttValue( Adv^.NA , NAG_QuestStatus , Qid ) ) );
+					msg := SAttValue( Part^.SA , Tag + '_' + BStr( NAttValue( Adv^.NA , NAG_PlotStatus , Qid ) ) );
 					if msg <> '' then StoreSAtt( MemoList , msg );
 				end;
 			end;
@@ -416,7 +413,7 @@ var
 				msg_head := RetrieveAPreamble( SA^.Info );
 				msg_head := Copy( msg_head , 6 , Length( msg_head ) );
 				qid := ExtractValue( msg_head );
-				if ( qid <> 0 ) and ( NAttValue( Adv^.NA , NAG_QuestStatus , Qid ) > -1 ) then begin
+				if ( qid <> 0 ) and ( NAttValue( Adv^.NA , NAG_PlotStatus , Qid ) > -1 ) then begin
 					{ Add it to the list. }
 					StoreSAtt( MemoList , RetrieveAString( SA^.Info ) );
 				end else begin
@@ -578,7 +575,7 @@ begin
 		CanJoin := False;
 	end else if PersonaInUse( FindRoot( GB^.Scene ) , NAttValue( NPC^.NA , NAG_Personal , NAS_CID ) ) then begin
 		CanJoin := False;
-	end else if ( GB <> Nil ) and ( GB^.Scene <> Nil ) and ( NAttValue( NPC^.NA , NAG_QuestInfo , NAS_QuestID ) <> 0 ) and ( NAttValue( FindROot( GB^.Scene )^.NA , NAG_QuestStatus , NAttValue( NPC^.NA , NAG_QuestInfo , NAS_QuestID ) ) >= 0 ) then begin
+	end else if ( GB <> Nil ) and ( GB^.Scene <> Nil ) and ( NAttValue( NPC^.NA , NAG_Narrative , NAS_PlotID ) < 0 ) and ( NAttValue( FindROot( GB^.Scene )^.NA , NAG_PlotStatus , NAttValue( NPC^.NA , NAG_Narrative , NAS_PlotID ) ) >= 0 ) then begin
 		CanJoin := False;
 	end else if LMP > NumLancemateSlots( PC ) then begin
 		CanJoin := False;
@@ -4026,7 +4023,6 @@ var
 begin
 	{ Find out the trigger's details. }
 	BaseTrigger := ExtractWord( Event );
-
 	if GB <> Nil then begin
 		StoreSAtt( local_triggers , BaseTrigger );
 	end;

@@ -1377,14 +1377,14 @@ desig <CORE-MECHAAMBUSH-ACTIVATABLE>
 % This encounter attacks as soon as the PC enters the scene.
 GoSetOrders <GrabSource GSetNAtt NAG_EpisodeData NAS_Orders 0>
 name <Hostile Mecha>
-update <ifThisQEncActive else GoHide SetStat STAT_MetaVisibility 0  SetSelfX PCX SetSelfY PCY  ClearEncounterRecharge  Goto GoSetOrders>
+update <ifSelfEncActive else GoHide SetStat STAT_MetaVisibility 0  SetSelfX PCX SetSelfY PCY  ClearEncounterRecharge  Goto GoSetOrders>
 EncounterMove 100
 
 
 Encounter
 desig <CORE-ACTIVATABLE>
-% It becomes active when its NAG_QuestInfo/NAS_QEncActive attribute is nonzero.
-update <ifThisQEncActive else GoHide  SetStat STAT_MetaVisibility 0  ShowEncounter Goto GoSetOrders>
+% It becomes active when its NAG_Narrative/NAS_EncounterActive attribute is nonzero.
+update <ifSelfEncActive else GoHide  SetStat STAT_MetaVisibility 0  ShowEncounter Goto GoSetOrders>
 % Sets this encounter's orders to Passive
 GoSetOrders <GrabSource GSetNAtt NAG_EpisodeData NAS_Orders 3>
 Attack <  >
@@ -1392,8 +1392,8 @@ EncounterMove 0
 
 Encounter
 desig <CORE-ACTIVATABLE-INVISIBLE>
-% It becomes active when its NAG_QuestInfo/NAS_QEncActive attribute is nonzero.
-update <ifThisQEncActive else GoHide  SetStat STAT_MetaVisibility 0  Goto GoSetOrders>
+% It becomes active when its NAG_Narrative/NAS_EncounterActive attribute is nonzero.
+update <ifSelfEncActive else GoHide  SetStat STAT_MetaVisibility 0  Goto GoSetOrders>
 % Sets this encounter's orders to Passive
 GoSetOrders <GrabSource GSetNAtt NAG_EpisodeData NAS_Orders 3>
 Attack <  >
@@ -1401,7 +1401,7 @@ EncounterMove 0
 
 Encounter
 desig <CORE-ACTIVATABLE-STATIONARY-DEFENDED>
-% It becomes active when its NAG_QuestInfo/NAS_QEncActive attribute is nonzero.
+% It becomes active when its NAG_Narrative/NAS_EncounterActive attribute is nonzero.
 %
 % The first time the PC tries to enter, he will be attacked. Afterwards he may enter
 % the location normally. The fight uses %threat% for its difficulty rating.
@@ -1415,7 +1415,7 @@ desig <CORE-ACTIVATABLE-STATIONARY-DEFENDED>
 %% %    V2 = Initialization Counter
 %% %    V3 = Destination Scene
 %%
-update <ifThisQEncActive else GoHide  SetStat STAT_MetaVisibility 0  ShowEncounter  Goto GoSetOrders>
+update <ifSelfEncActive else GoHide  SetStat STAT_MetaVisibility 0  ShowEncounter  Goto GoSetOrders>
 % Sets this encounter's orders to Passive
 GoSetOrders <GrabSource GSetNAtt NAG_EpisodeData NAS_Orders 3>
 Attack <  >
@@ -1476,9 +1476,9 @@ EncounterMove 50
 Encounter
 desig <QUEST-ENCOUNTER-WANDER>
 % A Quest Encounter doesn't have a MetaScene ID.
-% It becomes active when its NAG_QuestInfo/NAS_QEncActive attribute is nonzero.
+% It becomes active when its NAG_Narrative/NAS_EncounterActive attribute is nonzero.
 Special <NoMSID>
-update <ifThisQEncActive else GoHide  SetStat STAT_MetaVisibility 0  Goto GoSetOrders>
+update <ifSelfEncActive else GoHide  SetStat STAT_MetaVisibility 0  Goto GoSetOrders>
 % Sets this encounter's orders to Passive
 GoSetOrders <GrabSource GSetNAtt NAG_EpisodeData NAS_Orders 3>
 EncounterMove 50
@@ -1499,9 +1499,9 @@ EncounterMove 50
 Encounter
 desig <QUEST-ENCOUNTER-STATIONARY>
 % A Quest Encounter doesn't have a MetaScene ID.
-% It becomes active when its NAG_QuestInfo/NAS_QEncActive attribute is nonzero.
+% It becomes active when its NAG_Narrative/NAS_EncounterActive attribute is nonzero.
 Special <NoMSID>
-update <ifThisQEncActive else GoHide  SetStat STAT_MetaVisibility 0  Goto GoSetOrders>
+update <ifSelfEncActive else GoHide  SetStat STAT_MetaVisibility 0  Goto GoSetOrders>
 % Sets this encounter's orders to Passive
 GoSetOrders <GrabSource GSetNAtt NAG_EpisodeData NAS_Orders 3>
 Attack <  >
@@ -1526,9 +1526,9 @@ ENCOUNTER_NonCombat
 Encounter
 desig <QUEST-MAPMARKER-STATIONARY>
 % A Quest Encounter doesn't have a MetaScene ID.
-% It becomes active when its NAG_QuestInfo/NAS_QEncActive attribute is nonzero.
+% It becomes active when its NAG_Narrative/NAS_EncounterActive attribute is nonzero.
 Special <NoMSID>
-update <ifThisQEncActive else GoHide  SetStat STAT_MetaVisibility 0  ShowEncounter  Goto GoSetOrders>
+update <ifSelfEncActive else GoHide  SetStat STAT_MetaVisibility 0  ShowEncounter  Goto GoSetOrders>
 % Sets this encounter's orders to Passive
 GoSetOrders <GrabSource GSetNAtt NAG_EpisodeData NAS_Orders 3>
 Attack <  >
@@ -1608,7 +1608,7 @@ Encounter
 desig <QUEST-MAPMARKER-STATIONARY-DEFENDED>
 % A Quest Encounter doesn't have a MetaScene ID.
 % This one does, however, require a NID
-% It becomes active when its NAG_QuestInfo/NAS_QEncActive attribute is nonzero.
+% It becomes active when its NAG_Narrative/NAS_EncounterActive attribute is nonzero.
 %
 % The first time the PC tries to enter, he will be attacked. Afterwards he may enter
 % the location normally. The fight uses %threat% for its difficulty rating.
@@ -1622,7 +1622,7 @@ desig <QUEST-MAPMARKER-STATIONARY-DEFENDED>
 %% %    V3 = Destination Scene
 %%
 Special <NoMSID>
-update <ifThisQEncActive else GoHide  SetStat STAT_MetaVisibility 0  ShowEncounter  Goto GoSetOrders>
+update <ifSelfEncActive else GoHide  SetStat STAT_MetaVisibility 0  ShowEncounter  Goto GoSetOrders>
 % Sets this encounter's orders to Passive
 GoSetOrders <GrabSource GSetNAtt NAG_EpisodeData NAS_Orders 3>
 Attack <  >

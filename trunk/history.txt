@@ -1,3 +1,8 @@
+- Unused PlotStatus attributes cleared during upkeep (naviagte.pp)
+- Removed Quest "Scene" attributes (playwright.pp)
+- MegaPlots now include tag for all subplot IDs (mpbuilder.pp)
+- PlotStatus stored in Adventure (mpbuilder.pp)
+- Merged MegaPlot and Quest generators (mpbuilder.pp)
 - Plot, story, quest difficulty all stored as Narrative value (gears.pp)
 - Added QuestScene element request (playwright.pp)
 - Subplot request may include optional difficulty value (mpbuilder.pp)

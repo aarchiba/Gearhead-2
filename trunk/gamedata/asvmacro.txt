@@ -100,8 +100,8 @@ S <GrabStory         GNAtt NAG_ScriptVar ?>
 N <GrabStory         GNAtt NAG_ElementID ?>
 M <GrabCurrentScene  GNAtt NAG_ElementID ?>
 PayRate <GrabPlot    GNAtt 20 1>
-QuestStatus <GrabAdventure GNatt NAG_QuestStatus ?>
-PlotStatus <GrabPlot  GNAtt NAG_PlotStatus ?>
+QuestStatus <GrabAdventure GNatt NAG_PlotStatus ?>
+PlotStatus <GrabAdventure GNAtt NAG_PlotStatus ?>
 NAG_ElementID <-9>
 StatVal <GrabSource GStat ?>
 MetaPass <GrabSource GStat STAT_Pass>
@@ -240,6 +240,7 @@ NAG_Action <-2>
 NAS_CallTime <4>
 NAG_Narrative <7>
 NAS_HomeTownID <11>
+NAS_EncounterActive <34>
 NAG_PlotStatus <-22>
 NAS_NID <0>
 NAS_VictimsRecovered <201>
@@ -257,9 +258,6 @@ NAS_Sickness <20>
 NAG_FacReward <17>
 NAS_DatePoints <14>
 NAS_PartyPoints <17>
-NAG_QuestStatus <-14>
-NAG_QuestInfo <-12>
-NAS_QEncActive <5>
 TERRAIN_THRESHOLD <15>
 ArenaState <GrabScene ? GNAtt NAG_ArenaData NAS_ArenaState>
 ArenaRecharge <GrabScene ? GNAtt NAG_ArenaData NAS_ArenaRecharge>

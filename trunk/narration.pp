@@ -26,6 +26,11 @@ interface
 
 uses gears,locale;
 
+	{ PLOT DEFINITION }
+	{   G = GG_Plot               }
+	{   S = Quest Prototype Index }
+	{   V = SubPlot Size          }
+
 	{ MEME DEFINITION      }
 	{   G = GG_Meme        }
 	{   S = ID Number      }
@@ -62,20 +67,6 @@ Const
 
 	Num_Plot_Elements = 30;	{ Maximum number of plot elements }
 
-	NAG_QuestInfo = -12;	{ These NAGs deal with set quests; see the adventure compiler }
-				{ in navigate.pp for more info. }
-	NAS_QuestID = 2;
-	NAS_LayerID = 3;
-	NAS_QuestBranches = 4;
-	NAS_QEncActive = 5;
-	NAS_SceneKeyChara = 6;	{ Key character for this scene. }
-	NAS_GoalLevel = 7;	{ SceneID for the goal level of a dungeon. }
-	NAS_QuestUsed = 8;	{ If nonzero, this quest component is in use }
-				{ elsewhere in the quest construction tree. }
-
-	NAG_SubQuestQID = -10;
-	NAG_SubQuestLID = -11;
-	NAG_QuestElemScene = -13;
 
 	NAG_SubPlotLayerID = -19;	{ Most of the megaplot info is filed under }
 	NAG_SubPlotPlotID = -21;	{ "Narrative" in gears.pp, but I figured I'd }
@@ -84,10 +75,6 @@ Const
 	NAG_MasterPlotElementIndex = -20;	{ When combining two plots, this NAtt stores }
 					{ the index number of element [S] in the master plot. }
 	NAG_PlotStatus = -22;	{ S = Layer ID, V = State for this layer. Just like QuestStatus, below. }
-
-	NAG_QuestStatus = -14;	{ Used to record the PC's progress through set adventure content. }
-			{ Also used to determine whether the NPCs associated with the content }
-			{ are free to be used in plots or not. }
 
 	NAG_MemeData = -17;	{ Used to record certain things about memes. }
 		NAS_MemeTimeLimit = 1;	{ Holds the time at which this meme should be deleted. }
