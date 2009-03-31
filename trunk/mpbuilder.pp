@@ -35,7 +35,10 @@ Function ExpandDungeon( Dung: GearPtr ): GearPtr;
 Procedure ConnectScene( Scene: GearPtr; DoInitExits: Boolean );
 
 Function InitMegaPlot( GB: GameBoardPtr; Scope,Slot,Plot: GearPtr; Threat: Integer ): GearPtr;
+
+Function LoadQuestFragments: GearPtr;
 Function AddQuest( Adv,City: GearPtr; var Quest_Frags: GearPtr; QReq: String ): Boolean;
+
 
 implementation
 
@@ -137,8 +140,8 @@ end;
 
 Procedure CreatePlotPlaceholder( Slot , Shard: GearPtr );
 	{ Create a new plot gear to hold all of SHARD's elements, and store it }
-	{ in SLOT. IT will be marked with a PlotID of -(plotid), and this marking will be }
-	{ used to dispose of all the placeholders after assembly. }
+	{ in SLOT. IT will be marked with a PlotLayer of -(plotlayer), and this marking }
+	{ will be used to dispose of all the placeholders after assembly. }
 var
 	it: GearPtr;
 	T: Integer;
@@ -148,7 +151,7 @@ begin
 	InsertInvCom( Slot , It );
 	it^.G := GG_Plot;
 	SetSAtt( it^.SA , 'name <Placeholder>' );
-	SetNAtt( it^.NA , NAG_Narrative , NAS_PlotID , -NAttValue( Shard^.NA , NAG_Narrative , NAS_PlotID ) );
+	SetNAtt( it^.NA , NAG_Narrative , NAS_PlotLayer , -NAttValue( Shard^.NA , NAG_Narrative , NAS_PlotLayer ) );
 	for t := 1 to Num_Plot_Elements do begin
 		EID := ElementID( Shard , T );
 		if EID <> 0 then begin
@@ -164,11 +167,11 @@ var
 	p,p2: GearPtr;
 	plotid: LongInt;
 begin
-	plotid := -NAttValue( Shard^.NA , NAG_Narrative , NAS_PlotID );
+	plotid := -NAttValue( Shard^.NA , NAG_Narrative , NAS_PlotLayer );
 	P := Slot^.InvCom;
 	while P <> Nil do begin
 		P2 := P^.Next;
-		if NAttValue( P^.NA , NAG_Narrative , NAS_PlotID ) = PlotID then begin
+		if NAttValue( P^.NA , NAG_Narrative , NAS_PlotLayer ) = PlotID then begin
 			RemoveGear( Slot^.InvCom , P );
 		end;
 		P := P2;
@@ -177,14 +180,14 @@ end;
 
 Procedure DeletePlotPlaceholders( Slot: GearPtr );
 	{ Delete all the plot placeholders. They should be invcoms of SLOT, }
-	{ and be marked with negative PlotIDs. }
+	{ and be marked with negative PlotLayers. }
 var
 	PP,PP2: GearPtr;
 begin
 	PP := Slot^.InvCom;
 	while PP <> Nil do begin
 		PP2 := PP^.Next;
-		if NAttValue( PP^.NA , NAG_Narrative , NAS_PlotID ) < 0 then RemoveGear( Slot^.InvCom , PP );
+		if NAttValue( PP^.NA , NAG_Narrative , NAS_PlotLayer ) < 0 then RemoveGear( Slot^.InvCom , PP );
 		PP := PP2;
 	end;
 end;
@@ -200,6 +203,8 @@ Function InitShard( GB: GameBoardPtr; Scope,Slot,Shard: GearPtr; var Quest_Frags
 	{ Before initializing a shard, the following will be done: }
 	{ - Parameter elements copied over }
 	{ - Any character gears present will be randomized }
+	{ Initializing includes the following: }
+	{ - Set combatant skill levels for quests }
 	{ Upon successfully initializing a shard, this procedure will then do the following: }
 	{ - Delink the shard from the Slot, and attach all subplots. }
 	{ - Create a plot stub and mark it with the PlotID; copy over all elements used by }
@@ -247,10 +252,10 @@ Function InitShard( GB: GameBoardPtr; Scope,Slot,Shard: GearPtr; var Quest_Frags
 	end;
 var
 	InitOK: Boolean;
-	T,NumParam,NumElem: Integer;
+	T,NumParam,NumElem,HiParam: Integer;
 	I,SubPlot,SPList: GearPtr;
 	SPID: LongInt;
-	SPReq,original_changes: String;
+	SPReq,original_changes,EDesc: String;
 begin
 	{ Assign the values to this shard. }
 	SetNAtt( Shard^.NA , NAG_Narrative , NAS_PlotID , PlotID );
@@ -277,6 +282,21 @@ begin
 			SetNAtt( Shard^.NA , NAG_ElementID , T , ParamIn[ t ].EValue );
 			SetSAtt( Shard^.SA , 'ELEMENT' + BStr( T ) + ' <' + ParamIn[ t ].EType + '>' );
 			Inc( NumParam );
+		end;
+	end;
+
+	{ If this is a quest, check the remaining parameters for artifacts. }
+	if IsAQuest then begin
+		for t := ( NumParam + 1 ) to Num_Plot_Elements do begin
+			EDesc := UpCase( SAttValue( Shard^.SA , 'ELEMENT' + BStr( T ) ) );
+			if ( EDesc <> '' ) and ( EDesc[1] = 'A' ) then begin
+				{ This is an artifact request. If no difficulcy context has been }
+				{ defined, add one ourselves. }
+				if not AStringHasBString( EDesc , '!' ) then begin
+					EDesc := EDesc + ' ' + DifficulcyContext( Threat );
+					SetSAtt( Shard^.SA , 'ELEMENT' + BStr( T ) + ' <' + EDesc + '>' );
+				end;
+			end;
 		end;
 	end;
 
@@ -388,6 +408,63 @@ Function AddSubPlot( GB: GameBoardPtr; Scope,Slot,Plot0: GearPtr; var Quest_Frag
 	{ QUEST_FRAGS contains a list of quest fragents. If constructing a quest, these may be used }
 	{ in addition to the regular megaplot comps. Once a quest fragment is used, it cannot usually }
 	{ be used again. }
+	Function CreateSubPlotList( const CReq: String ): NAttPtr;
+		{ Create the list of legal subplots. Start with the regular ones, }
+		{ then if appropriate add the not-in-use quest fragments. }
+		{ Regular subplots will be added as positive G,S. }
+		{ Quest fragments will be added as negative G,S. }
+	var
+		CList: NAttPtr;
+		N,MW: Integer;
+		C: GearPtr;
+	begin
+		{ Start by adding the standard components. }
+		CList := CreateComponentList( Sub_Plot_List , CReq );
+
+		{ Next, add the quest fragments. }
+		if IsAQuest and ( Quest_Frags <> Nil ) then begin
+			N := -1;
+			C := Quest_Frags;
+			while C <> nil do begin
+				if NAttValue( C^.NA , NAG_Narrative , NAS_QuestInUse ) = 0 then begin
+					MW := StringMatchWeight( CReq , SAttValue( C^.SA , 'REQUIRES' ) );
+					if MW > 0 then begin
+						SetNAtt( CList , N , N , MW );
+					end;
+				end;
+				Dec( N );
+				C := C^.Next;
+			end;
+		end;
+		CreateSubPlotList := CList;
+	end;
+	Function SelectNextSubPlot( var ShoppingList: NAttPtr ): GearPtr;
+		{ Select a new subplot prototype, and return a pointer to it. }
+		{ If a quest fragment is selected, mark it as used. }
+		{ Previously, we'd mark a quest fragment as used when it was selected and }
+		{ unmark it if the quest initialization failed. This time around it'll stay }
+		{ marked for the duration of this quest; if an earlier component can't }
+		{ initialize the fragment, chances are good that a later component in the }
+		{ same quest won't be able to either. }
+	var
+		it: NAttPtr;
+		N: Integer;
+		Proto: GearPtr;
+	begin
+		{ Select one of the components, and delete its entry from the }
+		{ shopping list. }
+		it := RandomComponentListEntry( ShoppingList );
+		N := it^.S;
+		RemoveNAtt( ShoppingList , it );
+
+		if N < 0 then begin
+			Proto := RetrieveGearSib( quest_frags , Abs( N ) );
+			SetNAtt( Proto^.NA , NAG_Narrative , NAS_QuestInUse , 1 );
+		end else begin
+			Proto := RetrieveGearSib( sub_plot_list , N );
+		end;
+		SelectNextSubPlot := Proto;
+	end;
 var
 	ShoppingList: NAttPtr;
 	Context,EDesc,SPContext,changes_list: String;
@@ -446,10 +523,16 @@ begin
 				Inc( T );
 			end;
 		end;
+	end else begin
+		{ We have no parameters to send. Clear the param list. }
+		ClearElementTable( ParamList );
 	end;
 
 	{ We have the context. Create the shopping list. }
-	ShoppingList := CreateComponentList( Sub_Plot_List , Context );
+	{ Positive component values are from the main subplot list. Negative }
+	{ component values point to items from the quest_frags list. }
+	ShoppingList := CreateSubPlotList( Context );
+
 	if XXRan_Debug and ( Slot^.G = GG_Story ) then begin
 		if NumNAtts( ShoppingList ) < 5 then begin
 			DialogMsg( '[DEBUG] Only ' + BStr( NumNatts( ShoppingList ) ) + ' components for "' + Context + '".' );
@@ -461,14 +544,14 @@ begin
 	NotFoundMatch := True;
 	Shard := Nil;
 	while ( ShoppingList <> Nil ) and NotFoundMatch do begin
-		if XXRan_Wizard and ( ShoppingList <> Nil ) and ( Slot^.G = GG_Story ) then begin
+		if XXRan_Wizard and ( ShoppingList <> Nil ) and ( Slot^.G = GG_Story ) and not IsAQuest then begin
 			DialogMsg( Context );
 			Shard := CloneGear( ComponentMenu( Sub_Plot_List , ShoppingList ) );
-		end else if DoDebug then begin
+		end else if DoDebug and not IsAQuest then begin
 			DialogMsg( Context );
 			Shard := CloneGear( ComponentMenu( Sub_Plot_List , ShoppingList ) );
 		end else begin
-			Shard := CloneGear( SelectComponentFromList( Sub_Plot_List , ShoppingList ) );
+			Shard := CloneGear( SelectNextSubPlot( ShoppingList ) );
 		end;
 		if Shard <> Nil then begin
 			{ Make sure this candidate doesn't violate our changes_used_so_far list. }
@@ -574,7 +657,7 @@ begin
 	end;
 end;
 
-Procedure MergePersona( MainPlot , SubPlot , Persona: GearPtr );
+Procedure MergePersona( MainPlot , SubPlot , Persona: GearPtr; IsAQuest: Boolean );
 	{ We have a persona that needs to be merged into the main plot. }
 	{ If the main plot already has a persona for this character, merge }
 	{ this new persona in as a megalist. If no persona currently exists, }
@@ -590,7 +673,11 @@ begin
 	MainPersona := SeekCurrentLevelGear( MainPlot^.SubCom , GG_Persona , MPIndex );
 	if MainPersona = Nil then begin
 		{ No main persona- create one. }
-		MainPersona := LoadNewSTC( 'PERSONA_REVERT' );
+		if IsAQuest then begin
+			MainPersona := LoadNewSTC( 'PERSONA_BLANK' );
+		end else begin
+			MainPersona := LoadNewSTC( 'PERSONA_REVERT' );
+		end;
 		InsertSubCom( MainPlot , MainPersona );
 		SetSAtt( MainPersona^.SA , 'SPECIAL <' + SAttValue( Persona^.SA , 'SPECIAL' ) + '>' );
 		{ Store the PlotID of this layer, since it's the first to provide a persona for this NPC. }
@@ -642,7 +729,7 @@ begin
 	end;
 end;
 
-Procedure CombinePlots( MasterPlot, SubPlot: GearPtr );
+Procedure CombinePlots( MasterPlot, SubPlot: GearPtr; IsAQuest: Boolean );
 	{ Combine SubPlot into MasterPlot, including all elements, scripts, }
 	{ personas, metascenes, and so on. }
 	{ - Merge element lists }
@@ -670,7 +757,7 @@ begin
 		T2 := Thing^.Next;
 
 		if Thing^.G = GG_Persona then begin
-			MergePersona( MasterPlot , SubPlot , Thing );
+			MergePersona( MasterPlot , SubPlot , Thing , IsAQuest );
 		end else if Thing^.G = GG_MetaScene then begin
 			MergeMetascene( MasterPlot , SubPlot , Thing );
 		end;
@@ -703,7 +790,7 @@ begin
 	IsStandardTrigger := MatchFound;
 end;
 
-Function AssembleMegaPlot( Slot , SPList: GearPtr; var Quest_Frags: GearPtr ): GearPtr;
+Function AssembleMegaPlot( Slot , SPList: GearPtr; var Quest_Frags: GearPtr; IsAQuest: Boolean ): GearPtr;
 	{ SPList is a list of subplots. Assemble them into a single coherent megaplot. }
 	{ The first item in the list is the base plot- all other plots get added to it. }
 	{ - Delete all placeholder stubs from SLOT }
@@ -758,7 +845,7 @@ Function AssembleMegaPlot( Slot , SPList: GearPtr; var Quest_Frags: GearPtr ): G
 			MScene := MScene^.Next;
 		end;
 	end;
-	Procedure DoStringSubstitutions( SubPlot: GearPtr );
+	Procedure DoStringSubstitutions( SubPlot: GearPtr; IsMasterPlot: Boolean );
 		{ Do the string substitutions for this subplot. Basically, }
 		{ create the dictionary and pass it on to the substituter. }
 	var
@@ -776,7 +863,7 @@ Function AssembleMegaPlot( Slot , SPList: GearPtr; var Quest_Frags: GearPtr ): G
 		end;
 		for t := 1 to Num_Plot_Elements do begin
 			{ If dealing with the main plot, do substitutions for the Element Indicies now. }
-			if SubPlot = SPList then SetSAtt( Dictionary , '%E' + BStr( T ) + '% <' + BStr( T ) + '>' );
+			if IsMasterPlot then SetSAtt( Dictionary , '%E' + BStr( T ) + '% <' + BStr( T ) + '>' );
 			SetSAtt( Dictionary , '%' + BStr( T ) + '% <' + BStr( ElementID( SubPlot , T ) ) + '>' );
 			SetSAtt( Dictionary , '%name' + BStr( T ) + '% <' + SAttValue( SubPlot^.SA , 'name_' + BStr( T ) ) + '>' );
 		end;
@@ -835,7 +922,7 @@ begin
 	{ Extract the master plot. It should be the first one in the list. }
 	MasterPlot := SPList;
 	DelinkGear( SPList , MasterPlot );
-	DoStringSubstitutions( MasterPlot );
+	DoStringSubstitutions( MasterPlot , True );
 	InitMetasceneFactions( MasterPlot );
 	InitMPSubs( MasterPlot );
 	InsertInvCom( Slot , MasterPlot );
@@ -857,8 +944,8 @@ begin
 		InitMetasceneFactions( SubPlot );
 		DeleteQuestPrototype( SubPlot );
 
-		DoStringSubstitutions( SubPlot );
-		CombinePlots( MasterPlot, SubPlot );
+		DoStringSubstitutions( SubPlot , False );
+		CombinePlots( MasterPlot, SubPlot , IsAQuest );
 		DisposeGear( SubPlot );
 	end;
 
@@ -1371,6 +1458,7 @@ Procedure InstallQuestScenes( Adv , City , Quest: GearPtr );
 	{   - If a destination cannot be found, assign it to the city. }
 	{   - Clear the PLACE attribute after reading it. }
 	{ 2 - Move scene to its destination, and change type. }
+	{   - Perform additional initialization. }
 	{ 3 - Expand dungeons. }
 	{   - If this isn't a dungeon, initialize any WMon teams that may exist. }
 	{   - Element ID will be the SceneID of the goal level. }
@@ -1390,6 +1478,20 @@ Procedure InstallQuestScenes( Adv , City , Quest: GearPtr );
 				if Team^.Stat[ STAT_WanderMon ] < 3 then Team^.Stat[ STAT_WanderMon ] := 3;
 			end;
 			Team := Team^.Next;
+		end;
+	end;
+	Procedure InitializeMapFeatures( LList: GearPtr; PlotID: LongInt );
+		{ Mark all map features, their subs and invs, with the PlotID of the }
+		{ parent scene. Why do this? So scripts can then locate the quest }
+		{ without too much difficulty. }
+	begin
+		while LList <> Nil do begin
+			if NAttValue( LList^.NA , NAG_Narrative , NAS_PlotID ) = 0 then SetNAtt( LList^.NA , NAG_Narrative , NAS_PlotID , PlotID );
+			if LList^.G = GG_MapFeature then begin
+				InitializeMapFeatures( LList^.SubCom , PlotID );
+				InitializeMapFeatures( LList^.InvCom , PlotID );
+			end;
+			LList := LList^.Next;
 		end;
 	end;
 	Procedure InitializeEntrance( Scene: GearPtr; SIDtoSeek: Integer );
@@ -1419,12 +1521,14 @@ Procedure InstallQuestScenes( Adv , City , Quest: GearPtr );
 			if Entrance <> Nil then begin
 				FoundAnEntrance := True;
 				Entrance^.Stat[ STAT_Destination ] := Scene^.S;
+				SetSAtt( Entrance^.SA , 'DESIG <FINAL' + BStr( Scene^.S ) + '>' );
 			end;
 
 		until Entrance = Nil;
 
-		{ If we haven't found any entrances, add one automatically. }
-		if not FoundAnEntrance then begin
+		{ If we haven't found any entrances, or if we're requesting one, }
+		{ call the automatic scene connector. }
+		if ( SAttValue( Scene^.SA , 'ENTRANCE' ) <> '' ) or not FoundAnEntrance then begin
 			{ Don't bother initializing the exits, because we're doing that ourselves below. }
 			ConnectScene( Scene , False );
 		end;
@@ -1471,11 +1575,13 @@ begin
 				{ **************** }
 				{ We've got a live one. Start by locating the destination. }
 				DDesc := SAttValue( Quest^.SA , 'PLACE' + BStr( QS^.S ) );
+DialogMsg( 'Placing ' + GearName( QS ) + ': "' + DDesc + '"' );
 				N := ExtractValue( DDesc );
 				Dest := SeekPlotElement( Adv , Quest , N , Nil );
 				if ( Dest = Nil ) or not IsAScene( Dest ) then Dest := City;
 				{ Remove the PLACE string, so the element placer doesn't try to move it. }
 				SetSAtt( Quest^.SA , 'PLACE' + BStr( QS^.S ) + ' <>' );
+DialogMsg( 'Destination ' + BStr( N ) + ': ' + GearName( Dest ) );
 
 				{ **************** }
 				{ *** STEP TWO *** }
@@ -1489,6 +1595,14 @@ begin
 				SetSAtt( Quest^.SA , 'ELEMENT' + BStr( EIn ) + ' <S>' );
 				QS^.G := GG_Scene;
 				QS^.S := ElementID( Quest , EIn );
+
+				{ Also mark all of the scene's things with the PlotID, so scripts can locate }
+				{ the quest easily. }
+				InitializeMapFeatures( QS^.SubCom, NAttValue( QS^.NA , NAG_Narrative , NAS_PlotID ) );
+				InitializeMapFeatures( QS^.InvCom, NAttValue( QS^.NA , NAG_Narrative , NAS_PlotID ) );
+
+				{ Also copy over the HABITAT, if this scene doesn't have one. }
+				if SAttValue( QS^.SA , 'HABITAT' ) = '' then SetSAtt( QS^.SA , 'HABITAT <' + SAttValue( City^.SA , 'HABITAT' ) + '>' );
 
 				{ ****************** }
 				{ *** STEP THREE *** }
@@ -1576,48 +1690,24 @@ begin
 
 	{ Now that we have the list, assemble it. }
 	if SPList <> Nil then begin
-		Plot := AssembleMegaPlot( Slot , SPList , FakeFrags );
+		Plot := AssembleMegaPlot( Slot , SPList , FakeFrags , False );
 		DeployPlot( GB , Slot , Plot , Threat );
 	end;
 
 	InitMegaPlot := SPList;
 end;
 
-Function AddQuest( Adv,City: GearPtr; var Quest_Frags: GearPtr; QReq: String ): Boolean;
-	{ Add a quest to the provided city, using the provided THREAT rating. }
-	{ Quest_Frags is the list of quest fragments. Some of them may get deleted here. }
-	{ QReq is the quest request taken from the ATLAS. }
-var
-	QList,Quest: GearPtr;
-begin
-	changes_used_so_far := '';
-
-	{ Step One- Select a starting fragment. }
-	QList := AddSubPlot( Nil, City, Adv, Nil, Quest_Frags, QReq, 0, NewLayerID( Adv ), 0, True, False );
-
-	{ This will give us a list of quest fragments. Assemble them. }
-	if QList <> Nil then begin
-		Quest := AssembleMegaPlot( Adv , QList , Quest_Frags );
-		DeployQuest( Adv , City , Quest );
-		AddQuest := True;
-	end else begin
-		AddQuest := False;
-	end;
-end;
-
-Procedure InitPlaceStrings();
+Procedure InitPlaceStrings( P: GearPtr );
 	{ Initialize all the place strings of the standard subplots. }
 	{ To be comprehended, place strings need to point to the master plot }
 	{ element slot, but for human readability it's better to point them }
 	{ at the subplot element slot. This procedure converts any subplot }
 	{ element slots to master plot slot references. }
 var
-	P: GearPtr;
 	T: Integer;
 	PlaceCmd,DestSlot: String;
 	HasTilde: Boolean;
 begin
-	P :=  Sub_Plot_List;
 	while P <> Nil do begin
 		for t := 1 to Num_Plot_Elements do begin
 			PlaceCmd := SAttValue( P^.SA , 'PLACE' + BStr( T ) );
@@ -1640,11 +1730,61 @@ begin
 	end;
 end;
 
+Function LoadQuestFragments: GearPtr;
+	{ Load and initialize the quest fragments. }
+	Procedure AssignMasterListIDNumbers( M: GearPtr );
+		{ Each fragment in the master list needs a unique ID number, stored }
+		{ in its "S" descriptor. }
+	var
+		ID: Integer;
+	begin
+		ID := 0;
+		while M <> Nil do begin
+			M^.S := ID;
+			Inc( ID );
+			M := M^.Next;
+		end;
+	end;
+var
+	Frags: GearPtr;
+begin
+	Frags := AggregatePattern( 'QUEST_*.txt' , Series_Directory );
+
+	{ Initialize the quest fragments. }
+	AssignMasterListIDNumbers( Frags );
+	InitPlaceStrings( Frags );
+
+	LoadQuestFragments := Frags;
+end;
+
+Function AddQuest( Adv,City: GearPtr; var Quest_Frags: GearPtr; QReq: String ): Boolean;
+	{ Add a quest to the provided city, using the provided THREAT rating. }
+	{ Quest_Frags is the list of quest fragments. Some of them may get deleted here. }
+	{ QReq is the quest request taken from the ATLAS. }
+var
+	QList,Quest: GearPtr;
+begin
+	changes_used_so_far := '';
+
+	{ Step One- Select a starting fragment. }
+	QList := AddSubPlot( Nil, City, Adv, Nil, Quest_Frags, QReq, 0, NewLayerID( Adv ), 0, True, False );
+
+	{ This will give us a list of quest fragments. Assemble them. }
+	if QList <> Nil then begin
+		Quest := AssembleMegaPlot( Adv , QList , Quest_Frags , True );
+		DeployQuest( Adv , City , Quest );
+		AddQuest := True;
+	end else begin
+		AddQuest := False;
+	end;
+end;
+
+
 initialization
 	{ Load the list of subplots from disk. }
 	Sub_Plot_List := LoadRandomSceneContent( 'MEGA_*.txt' , series_directory );
 	standard_trigger_list := LoadStringList( Data_Directory + 'standard_triggers.txt' );
-	InitPlaceStrings();
+	InitPlaceStrings( Sub_Plot_List );
 	MasterEntranceList := AggregatePattern( 'ENTRANCE_*.txt' , Series_Directory );
 
 

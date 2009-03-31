@@ -196,6 +196,12 @@ begin
 	if ( Plot = Nil ) and ( NAttValue( Source^.NA , NAG_Narrative , NAS_NID ) <> 0 ) and ( GB <> Nil ) and ( GB^.Scene <> Nil ) then begin
 		Plot := FindItemPlot( FindRoot( GB^.Scene ) , NAttValue( Source^.NA , NAG_Narrative , NAS_NID ) );
 	end;
+
+	{ This plot could be a quest. Look that up now. }
+	if ( Plot = Nil ) and ( NAttValue( Source^.NA , NAG_Narrative , NAS_PlotID ) <> 0 ) and ( GB <> Nil ) and ( GB^.Scene <> Nil ) then begin
+		Plot := SeekGearByIDTag( FindRoot( GB^.Scene ) , NAG_PlotStatus , NAttValue( Source^.NA , NAG_Narrative , NAS_PlotID ) , 1 );
+	end;
+
 	PlotMaster := Plot;
 end;
 

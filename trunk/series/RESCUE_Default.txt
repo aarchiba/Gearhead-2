@@ -17,7 +17,7 @@
 %%	Be sure to use FORCEEXIT rather than EXIT to move the PC to the recovery
 %%	area, since the exit has probably already been set by whatever killed him.
 
-Plot 0
+Plot
 	name <Space Pickup>
 	requires <*PICKUP SPACE>
 	Element1 <Scene>
@@ -26,7 +26,7 @@ Plot 0
 	start <Print 1   EndPlot>
 	Msg1 <You are rescued by a passing mecha pilot and brought to \SCENE E2 .>
 
-Plot 0
+Plot
 	name <Generic Pickup>
 	requires <*PICKUP>
 	Element1 <Scene>
@@ -36,7 +36,7 @@ Plot 0
 	Msg1 <You are rescued by a passing mecha pilot and brought to \SCENE E2 .>
 
 
-Plot 0
+Plot
 	name <Generic Rescue>
 	requires <*DEATH>
 	Element1 <Scene>
@@ -49,7 +49,7 @@ Plot 0
 	Msg2_2 <You nearly died, but were miraculously rescued.>
 	CMsg2_2 <ifG 1 E1 Accept>
 
-Plot 0
+Plot
 	name <Generic Recovery>
 	requires <*RECOVERY>
 	Element1 <Scene>
@@ -62,7 +62,7 @@ Plot 0
 	Msg2_2 <You nearly died, but were rescued by your companions.>
 	CMsg2_2 <ifG 1 E1 Accept>
 
-Plot 0
+Plot
 	name <Generic Recovery>
 	requires <*RECOVERY>
 	Element1 <Scene>

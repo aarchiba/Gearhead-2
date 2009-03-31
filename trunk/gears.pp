@@ -234,7 +234,7 @@ Const
 	Series_Directory = Series_DirName + OS_Dir_Separator;
 	Archetypes_File = Series_Directory + 'ANPCdefault.txt';
 	Adventure_File_Base = Series_Directory + 'ADV_';
-	STC_Item_File = Series_Directory + 'STCdefault.txt';
+	STC_Item_Pattern = 'STC_*.txt';
 	Plot_Seacrh_Pattern = Series_Directory + 'PLOT' + Default_Search_Pattern;
 	Jobs_File = Series_Directory + 'RCJobs.txt';
 

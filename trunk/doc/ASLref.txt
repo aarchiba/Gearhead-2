@@ -30,6 +30,7 @@
 	NPCOPENDOOR		Request sent when NPC wants to open a door
 	NU[team]		Number of masters on team has changed
 	PCATTACK		PC has fired a weapon
+	PUMPNEWS		Applied to quests and moods once every 6 hours
 	QUARTER			Generated every 6 hours (1/4 of a day)
 	RESULT[number]		Called when interact menu item selected
 	REVEAL			Called when hidden metaterrain is discovered
@@ -133,6 +134,7 @@
 	PMEMO [plotid] [Message Number]	Store a memo relating to this subplot
 	PRINT [idnum]		Display message in console area
 	PURGESTORY		Pass CLEANUP to and delete story plots
+	PUMPNEWS		Applies the PUMPNEWS to city subcoms in this world
 	QMEMO [qid] [Message Number]	Store a memo relating to this quest
 	RANDOMMECHA [faction list label] [renown]	Give PC a mecha appropriate to factions, renown
 	REPUTATION [rep num] [value]	Alter PC's reputation
@@ -269,7 +271,7 @@
 	GADDNATT [G] [S] [V]
 	GALTERCONTEXT [label]	Alters the story context string by the changes provided
 	GIVEGG			Gives the grabbed (physical) gear to PC
-	GMENTAL			The grabbed gear will waitaminute and 1MP
+	GMENTAL			The grabbed gear will waitaminute and 5MP
 	GMONOLOGUE [msg id]	The grabbed gear will speak a single line outside of conversation
 	GMORALEDMG [Morale]	Adds morale damage to the grabbed gear
 	GNEWPART [label]	Adds new item, monster, NPC to game board
@@ -282,6 +284,7 @@
 	GSETSTAT [Slot] [Value]
 	GSKILLLEVEL [Reputation]	Scales skill points to set level
 	GSKILLXP [Skill] [XP]	Gives skill-specific experience to GG
+	GSTAMINA		The grabbed gear will waitaminute and 5SP
 	IFGARCHALLY		True if GG an arch-ally of PC
 	IFGARCHENEMY		True if GG an arch-enemy of PC
 	IFGCANJOINLANCE		True if GG can join the lance, assuming GG is an ally

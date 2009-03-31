@@ -1,0 +1,46 @@
+
+
+MetaScene
+	name <# Mine>
+	desig <QS_Dungeon_AsteroidMine>
+
+	special <NOEXIT>
+	type <DUNGEON asteroid mine>
+	terrain <SPACE>
+	habitat <SPACE.ASTER>
+	dentrance <*GoDown>
+	content1 <Some 1 40 Sub *DUNGEON_THREAT>
+	content2 <Some 1 45 Sub *DUNGEON_DECOR>
+	content3 <Some 1 30 Sub *DUNGEON_REWARD>
+	% Suffocation effect...
+	Vacuum
+	mapwidth 30
+	mapheight 30
+	CaveMap
+	Ceiling
+	RockyTiles
+
+	NeededCells 3
+
+	start <Print 1>
+	msg1 <You enter \SCENE SceneID .>
+
+	sub
+		Team 1
+		SetEnemy 2
+
+		Team 2
+		name <Monster>
+		type <Mine Fungus Asteroid>
+		SetEnemy 1
+		Stat 2 1
+
+		room
+		width 3
+		height 3
+		sub
+			StairsUp
+			Destination -1
+		end
+	end
+

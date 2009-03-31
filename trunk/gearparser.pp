@@ -1465,17 +1465,13 @@ begin
 	Reset( F );
 	Archetypes_List := ReadGear( F , False , 'Archetypes' );
 	Close( F );
-
-	Assign( F , STC_Item_File );
-	Reset( F );
-	STC_Item_List := ReadGear( F , True , 'Items' );
-	Close( F );
 end;
 
 
 initialization
 	Parser_Macros := LoadStringList( Parser_Macro_File );
 	standard_script_list := LoadFile( 'standard_scripts.txt' , Data_Directory );
+	STC_Item_List := AggregatePattern( STC_Item_Pattern , Series_Directory );
 	LoadArchetypes;
 	Standard_Equipment_List := AggregatePattern( PC_Equipment_Pattern , Design_Directory );
 	WMonList := AggregatePattern( Monsters_File_Pattern , Series_Directory );

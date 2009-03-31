@@ -3070,7 +3070,7 @@ begin
 		{ It's possible that our SOURCE is a PERSONA rather than }
 		{ a PLOT, so if SOURCE isn't a PLOT move to its parent. }
 		Source := PlotMaster( GB , Source );
-		if ( Source <> Nil ) and ( Source^.G = GG_Plot ) then EndPlot( GB , Source^.Parent , Source );
+		if ( Source <> Nil ) and ( Source^.G = GG_Plot ) and ( NAttValue( Source^.NA , NAG_Narrative , NAS_PlotID ) > 0 ) then EndPlot( GB , Source^.Parent , Source );
 		SetTrigger( GB , 'UPDATE' );
 	end;
 end;
@@ -3133,6 +3133,33 @@ begin
 		CleanupStoryPlots( GB , Source );
 
 		SetTrigger( GB , 'UPDATE' );
+	end;
+end;
+
+Procedure ProcessPumpNews( GB: GameBoardPtr );
+	{ Once every six hours or so, check through all the QUESTs and MOODs and }
+	{ see if they've got anything new to do. PumpNews will trigger the PUMPNEWS }
+	{ script of the subcoms of every city in this world. }
+var
+	T: String;
+	world,city: GearPtr;
+begin
+	{ Error check }
+	if ( GB = Nil ) or ( GB^.Scene = Nil ) then Exit;
+
+	{ Start by locating the world. }
+	world := FindWorld( GB , GB^.Scene );
+	if world = Nil then Exit;
+
+	T := 'PUMPNEWS';
+
+	{ Go through the world's cities, springing the trigger at each. }
+	city := world^.SubCom;
+	while city <> Nil do begin
+		if City^.G = GG_Scene then begin
+			CheckTriggerAlongPath( T , GB , City^.SubCom , False );
+		end;
+		city := city^.Next;
 	end;
 end;
 
@@ -4249,7 +4276,18 @@ end;
 
 Procedure ProcessGMental( GB: GameBoardPtr );
 	{ The grabbed gear is doing something. Make it wait, and spend }
-	{ one mental point. }
+	{ five mental points. }
+begin
+	{ As long as we have a grabbed gear, go for it! }
+	if Grabbed_Gear <> Nil then begin
+		WaitAMinute( GB , Grabbed_Gear , ReactionTime( Grabbed_Gear ) * 3 );
+		AddMentalDown( Grabbed_Gear , 5 );
+	end;
+end;
+
+Procedure ProcessGStamina( GB: GameBoardPtr );
+	{ The grabbed gear is doing something. Make it wait, and spend }
+	{ five stamina points. }
 begin
 	{ As long as we have a grabbed gear, go for it! }
 	if Grabbed_Gear <> Nil then begin
@@ -4540,11 +4578,13 @@ begin
 		else if cmd = 'DRAWTERR' then ProcessDrawTerr( Event , GB , Source )
 		else if cmd = 'MAGICMAP' then ProcessMagicMap( GB )
 		else if cmd = 'GMENTAL' then ProcessGMental( GB )
+		else if cmd = 'GSTAMINA' then ProcessGStamina( GB )
 		else if cmd = 'GQUITLANCE' then ProcessGQuitLance( GB )
 		else if cmd = 'GJOINLANCE' then ProcessGJoinLance( GB )
 		else if cmd = 'GOPENINV' then ProcessGOpenInv( GB )
 		else if cmd = 'ARENAREP' then ProcessArenaRep( Event , GB , Source )
 		else if cmd = 'ADDREACT' then ProcessAddReact( Event , GB , Source )
+		else if cmd = 'PUMPNEWS' then ProcessPumpNews( GB )
 		else if cmd <> '' then begin
 					DialogMsg( 'ERROR: Unknown ASL command ' + cmd );
 					DialogMsg( 'CONTEXT: ' + event );
@@ -4976,7 +5016,7 @@ begin
 	it := False;
 	while ( Plot <> Nil ) and ( T <> '' ) do begin
 		P2 := Plot^.Next;
-		if CheckAll or ( Plot^.G = GG_Plot ) or ( Plot^.G = GG_Faction ) or ( Plot^.G = GG_Story ) or ( Plot^.G = GG_Adventure ) then begin
+		if CheckAll or ( Plot^.G = GG_Plot ) or ( Plot^.G = GG_Faction ) or ( Plot^.G = GG_Story ) or ( Plot^.G = GG_Adventure ) or ( Plot^.G = GG_CityMood ) then begin
 			{ FACTIONs and STORYs can hold active plots in their InvCom. }
 			if ( Plot^.G = GG_Faction ) or ( Plot^.G = GG_Story ) or ( Plot^.G = GG_Adventure ) then CheckTriggerAlongPath( T , GB , Plot^.InvCom , CheckAll);
 
@@ -5000,7 +5040,10 @@ begin
 			P2 := Plot^.Next;
 
 			{ Remove the plot, if it's been advanced. }
-			if Plot^.G = GG_AbsolutelyNothing then RemoveGear( Plot^.Parent^.InvCom , Plot );
+			if Plot^.G = GG_AbsolutelyNothing then begin
+				if IsInvCom( Plot ) then RemoveGear( Plot^.Parent^.InvCom , Plot )
+				else if IsSubCom( Plot ) then RemoveGear( Plot^.Parent^.SubCom , Plot );
+			end;
 		end;
 		Plot := P2;
 	end;
@@ -5013,6 +5056,7 @@ Procedure HandleTriggers( GB: GameBoardPtr );
 var
 	TList,TP: SAttPtr;	{ Trigger List , Trigger Pointer }
 	E: String;
+	City: GearPtr;
 begin
 	IntMenu := Nil;
 
@@ -5033,7 +5077,6 @@ begin
 			TP := TList;
 
 			while TP <> Nil do begin
-				{ Brand New Thing - v0.531 July 18 2002 }
 				{ Commands can be embedded in the triggers list. }
 				{ The actual point of this is to allow scripts }
 				{ to automatically activate interactions & props. }
@@ -5058,6 +5101,12 @@ begin
 					{ Adventure/InvCom first. }
 					if GB^.Scene^.Parent <> Nil then begin
 						CheckTriggerAlongPath( TP^.Info , GB , FindRoot( GB^.Scene ) , False );
+					end;
+
+					{ Check for quests and moods in the current city next. }
+					City := FindRootScene( GB , GB^.Scene );
+					if ( City <> Nil ) and ( TP^.Info <> '' ) then begin
+						CheckTriggerAlongPath( TP^.Info , GB , City^.SubCom , False );
 					end;
 
 					{ Check the current scene last. }

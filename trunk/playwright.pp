@@ -326,7 +326,7 @@ begin
 				it := it and ( not PWAreEnemies( Adv, Part , ExtractValue( Desc ) ) );
 
 			end else if ( Q = 'A' ) and ( Plot <> Nil ) then begin
-				{ eXclude. This part must not be an ally }
+				{ Ally. This part must not be an ally }
 				{ of the faction of the requested element. }
 				it := it and PWAreAllies( Adv, Part , ExtractValue( Desc ) );
 
@@ -818,10 +818,9 @@ begin
 						DialogMsg( 'ERROR: No dest found for ' + GearName( E ) + ' in ' + GearName( Plot ) );
 						DisposeGear( E );
 					end;
-				end; { If MovePrefabs }
-			end;
-
-		end; { if place <> '' }
+				end; { If Dest ... }
+			end; { if Place <> '' }
+		end; { if MovePrefabs }
 
 	end;
 	DeployNextPrefabElement := E;
@@ -920,8 +919,8 @@ begin
 	SetNAtt( Plot^.NA , NAG_ElementID , N , ID );
 	QS := SeekCurrentLevelGear( Plot^.SubCom , GG_MetaScene , N );
 	if QS <> Nil then begin
-		{ Set the difficulty level. }
-		SetNAtt( QS^.NA , NAG_NArrative , NAS_DifficultyLevel , NAttValue( Plot^.NA , NAG_Narrative , NAS_DifficultyLevel ) );
+		{ Set the difficulty level, unless this has been overridden. }
+		if NAttValue( QS^.NA , NAG_NArrative , NAS_DifficultyLevel ) = 0 then SetNAtt( QS^.NA , NAG_NArrative , NAS_DifficultyLevel , NAttValue( Plot^.NA , NAG_Narrative , NAS_DifficultyLevel ) );
 
 		{ Mark the children as originals. }
 		MarkChildrenAsOriginal( QS^.SubCom );
@@ -1059,7 +1058,7 @@ begin
 
 		end else if EKind[1] = 'A' then begin
 			{ Artifact. Select one at random, then deploy it as a prefab element. }
-			Element := SelectArtifact( Adventure , desc );
+			Element := SelectArtifact( FindRoot( Adventure ) , desc );
 			if Element <> Nil then begin
 				{ We now want to deploy the artifact as though it were a }
 				{ prefab element. }
@@ -1093,6 +1092,13 @@ begin
 				SetNAtt( PLOT^.NA , NAG_ElementID , N , RealSceneID( GB^.Scene ) );
 				Fast_Seek_Element[ 1 , N ] := GB^.Scene;
 				OK := True;
+			end else if Adventure^.G = GG_Scene then begin
+				{ Insert the current scope as this element. }
+				SetSAtt( PLOT^.SA , 'ELEMENT' + BStr( N ) + ' <S>' );
+				SetNAtt( PLOT^.NA , NAG_ElementID , N , RealSceneID( Adventure ) );
+				Fast_Seek_Element[ 1 , N ] := Adventure;
+				OK := True;
+
 			end else OK := False;
 		end;		
 	end;

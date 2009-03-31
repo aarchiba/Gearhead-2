@@ -311,25 +311,9 @@ var
 			LList := LList^.Next;
 		end;
 	end;
-	Procedure AssignMasterListIDNumbers;
-		{ Each fragment in the master list needs a unique ID number, stored }
-		{ in its "S" descriptor. }
-	var
-		M: GearPtr;
-		ID: Integer;
-	begin
-		ID := 0;
-		M := MasterList;
-		while M <> Nil do begin
-			M^.S := ID;
-			Inc( ID );
-			M := M^.Next;
-		end;
-	end;
 begin
 	{ Load the component library. }
-	MasterList := AggregatePattern( 'QUEST_*.txt' , Series_Directory );
-	AssignMasterListIDNumbers;
+	MasterList := LoadQuestFragments;
 
 	{ Start checing the adventure scenes for content requests. }
 	CheckAlongPath( Adv^.SubCom );

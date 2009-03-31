@@ -379,6 +379,8 @@ end;
 
 Function PersonaInUse( Adventure: GearPtr;  ID: LongInt ): Boolean;
 	{ Seek a plot, story, or remnant which uses this Character ID. }
+	{ Quests aren't checked, making the title of this particular function misleading. }
+	{ I should change that sometime. }
 var
 	it: Boolean;
 begin
@@ -461,16 +463,16 @@ Function FindQuestscene( LList: GearPtr; QSID: LongInt ): GearPtr;
 	{ Attempt to locate the questscene referenced by MSID. Check LList and }
 	{ all of its subcoms. }
 var
-	Plot,MS,T: GearPtr;
+	MS,T: GearPtr;
 	N: Integer;
 begin
 	MS := Nil;
 
 	while ( LList <> Nil ) and ( MS = Nil ) do begin
 		if LList^.G = GG_Plot then begin
-			N := PlotElementID( Plot , 'Q' , QSID );
+			N := PlotElementID( LList , 'Q' , QSID );
 			if N > 0 then begin
-				T := Plot^.SubCom;
+				T := LList^.SubCom;
 				while T <> Nil do begin
 					if ( T^.G = GG_MetaScene ) and ( T^.S = N ) then MS := T;	
 					T := T^.Next;
@@ -478,8 +480,8 @@ begin
 			end;
 		end;
 
-		if MS = Nil then MS := FindQuestScene( MS^.SubCom , QSID );
-		if MS = Nil then MS := FindQuestScene( MS^.InvCom , QSID );
+		if MS = Nil then MS := FindQuestScene( LList^.SubCom , QSID );
+		if MS = Nil then MS := FindQuestScene( LList^.InvCom , QSID );
 
 		LList := LList^.Next;
 	end;

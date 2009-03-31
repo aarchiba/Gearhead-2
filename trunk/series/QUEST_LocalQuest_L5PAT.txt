@@ -1,0 +1,146 @@
+%%
+%%  *:Q_LocalQuest Content
+%%
+%% This file contains the quest frameworks for the cities of the L5 Region.
+%%
+%% The requires field should include *:LocalQuest and the designation of the
+%% city to which this quest applies.
+%%
+
+Content
+	name <Cayley Rock/Old Wynter's Mine>
+	requires <*:Q_LocalQuest "CAYLE">
+
+	% E1 is the exterior scene
+	% E2 is the mine entrance
+	% E3 is Wynter's Mine
+	% E4 is Lower Wynter's Mine
+	% E5 is the blocked level
+	Element1 <Scene Outdoors>
+	Element2 <QuestScene>
+	Place2 <1>
+	Element3 <QuestScene>
+	Place3 <2>
+	Element4 <QuestScene>
+	Place4 <3>
+	Element5 <QuestScene>
+	Place5 <4>
+
+	% P1 = Elevator Repair Counter (From main building to mine bottom)
+	%      0: Broken, 1: Repaired
+	% P2 = Initialization Counter
+
+	% Activate the Wynter's Mine and Lower Wynter's Mine quests right away.
+	update <if= P2 0 P= 2 1 SetPlotStatus %plotid1% %id1%>
+
+	% SubPlot1 = Wynter's Mine Quest
+	SubPlot1 <*:Q_DungeonQuest 3>
+
+	sub
+		MetaScene 2
+		name <Old Wynter's Mine>
+		type <building ruin mine !Ne open>
+		terrain <SPACE>
+		habitat <SPACE.ASTER>
+		entrance <*Building>
+		MonkeyMap
+		MapWidth 21
+		MapHeight 21
+		special <AddExit>
+		IndustrialTiles
+
+		NeededCells 1
+		content <Some 1 100 Sub *DUNGEON_DECOR>
+
+		% V1 = First time entry indicator.
+
+		Start <if= V1 0 else GoBeenBefore V= 1 1 Print 2 Alert 1>
+		GoBeenBefore <Print 2>
+
+		Msg1 <This old building was obviously abandoned some time ago. The power generator still works on this upper level, and the air seems breathable enough.>
+		Msg2 <You enter Old Wynter's Mine.>
+
+		sub
+			Team 1
+			SetEnemy 2
+
+			Team 2
+			name <Monster>
+			type <Mine Fungus Asteroid>
+			SetEnemy 1
+
+			room
+			sub
+				trapdoor
+				desig <ENTRANCE %3%>
+				use <if= StatVal STAT_Lock 0 else GoLocked if= V1 1 else GoFirstTime Print 1 Exit StatVal 4>
+				GoFirstTime <ifYesNo 101 102 103  V= 1 1  Print 1 Exit StatVal 4 MonsterUp 2 10>
+				Msg101 <This is an airlock. There's still power here, but no guarantee there will be power in the mines.>
+				Msg102 <Enter the mine.>
+				Msg103 <Don't enter the mine.>
+			end
+
+			room
+			minimap <......###..#1#...........>
+			inv
+				elevator
+				desig <ENTRANCE %5%>
+				MiniMapComponent 1
+				use <if= P1 1 else GoBroken Print 1 Exit Destination>
+				GoBroken <Print 101>
+				CLUE_REPAIR <if= P1 0 else GoWorking ifRepair HardSkillTar 50 else GoRepairFail Mental Print 104 XPV 50 P= 1 1>
+				CLUE_INSIGHT <if= P1 0 else GoWorking Print 103>
+				GoRepairFail <Print 103>
+				GoWorking <Print 102>
+				Msg101 <This elevator isn't working.>
+				Msg102 <You can't find any damage to fix.>
+				Msg103 <The problem with this elevator appears to be at the other end.>
+				Msg104 <You repair the elevator. It should be usable now.>
+			end
+		end
+
+		STC QS_Dungeon_AsteroidMine
+		SetID 3
+		name <Wynter's Mine>
+		DifficultyLevel 10
+
+		STC QS_Dungeon_AsteroidMine
+		SetID 4
+		name <Lower Wynter's Mine>
+		entrance <*GoDown>
+		DifficultyLevel 30
+
+		STC QS_Dungeon_AsteroidMine
+		SetID 5
+		name <Wynter's Mine Bottom>
+		type <asteroid mine>
+		entrance <*GoDown>
+		DifficultyLevel 40
+		sub
+			Room
+			minimap <......###..#1#...... ... >
+			width 5
+			height 5
+			inv
+				Elevator
+				desig <ENTRANCE %2%>
+				MiniMapComponent 1
+				use <if= P1 0 else GoAlreadyWorking ifYesNo 101 102 103 Print 104 Stamina P= 1 1 XPV 50>
+				GoAlreadyWorking <Print 1 Exit Destination>
+				CLUE_REPAIR <if= P1 0 else GoNoDamage Print 106>
+				GoNoDamage <Print 105>
+				CLUE_INSIGHT <Print 107>
+				Msg101 <This elevator has been clogged by debris.>
+				Msg102 <Clean it out.>
+				Msg103 <Leave it alone.>
+				Msg104 <You clean out the elevator. It should be usable now.>
+				Msg105 <You can't find any damage to fix.>
+				Msg106 <The only way to repair this elevator is to clear out the rubble.>
+				Msg107 <This elevator probably connects to the one in the minehouse above.>
+			end
+		end
+	end
+
+
+
+

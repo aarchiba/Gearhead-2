@@ -53,10 +53,27 @@ an RPG campaign and permanently incorporated into the adventure. Quests may
 not use regular metascenes, but may define Quest Scenes which get added as
 new permanent scenes.
 
+Quests should not perform a Character search, but should instead create any
+NPCs they need using either PREFAB or NEWNPC. Combatants created by a quest
+are scaled to the difficulty level of the quest.
+
 If "." is requested as an element, it will be the city where this story takes place.
+
+Artifacts requested by a quest will be of the same challenge rating as the
+quest itself. This may be overridden by including a difficulty tag in the
+element search.
+
+*************************
+***   QUEST  SCENES   ***
+*************************
+
+If a quest scene's HABITAT isn't defined, it will be inherited from the city.
 
 If a dungeon is added as a quest scene, its ElementID will point to the goal
 level rather than the entry level.
+
+Quest dungeons may override the normal quest difficulty rating by defining
+a nonzero DifficultyLevel in their definition.
 
 An entrance for a quest scene may be added by attaching the designation
 "ENTRANCE %n%", where N is the index of the scene.
@@ -82,6 +99,7 @@ single plot to have multiple narrative threads running at once.
 
 Threat is an optional value which, if added, will determine the threat
 rating of the subplot being generated.
+
 
 ********************************
 ***   REPLACEMENT  STRINGS   ***
@@ -137,6 +155,9 @@ If being moved to a metascene, if there's a map feature with the designation
 "HOME [index]", where [index] is the Element Index of this element, it will be placed
 there as mini map component 1. Note that the Index here refers to the master plot
 index, not the subplot index; use %e1%..%e10% to set it.
+
+Also if being moved to a metascene, at the conclusion of the plot the gear will
+be moved back to its original home.
 
 Note that elements moved in this way are moved when the plot is initialized,
 not when the appropriate node is triggered. If you want to move a NPC at a specific

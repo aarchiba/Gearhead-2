@@ -1,0 +1,173 @@
+%%
+%% ********************************
+%% ***   A  NOTE  ON  REWARDS   ***
+%% ********************************
+%%
+%%  Quest rewards should be much greater than regular plot rewards. Here
+%%  are some suggestions:
+%%   - 500% cash prize
+%%   - A new mecha
+%%   - NPC becomes a skill trainer, opens a custom shop, or otherwise provides
+%%     a permanent benefit to the PC
+%%
+%%  If providing a permanent bonus, also leave a history note to remind the
+%%  player of what's available.
+%%
+
+
+%%
+%%  *Q_WinFetchItem
+%%      SubTypes:
+%%      .secret		The item contains a secret that must be preserved
+%%
+%% The PC was sent to fetch an item, and succeeded.
+%% Of course the item might not make it back to this NPC...
+%%
+%%  PARAM1: The NPC who provided the task.
+%%  PARAM2: The item being fetched
+%%
+
+
+Content
+	name <Good job, let's study>
+	%% The PC will gain a new teacher.
+	requires <*Q_WinFetchItem (1:MILIT|1:ADVEN) -.secret>
+	special <REUSABLE>
+
+	%% E1 is the character to give the reward.
+	%% E2 is the item that was given.
+
+	start <ifNPCDead %1% LoseSubPlot %plotid%>
+
+	sub
+		Persona 1
+		Greeting <if# PlotStatus %plotid% -1 else .%id%_GoStudy  if= PlotStatus %plotid% %id% else %pop%  ifItemOK %2% else .%id%_GoFail ifChatNPCInPlay else .%id%_GoComeHere NewChat Say %id%01 AddChat %id%04 AddChat %id%05>
+		.%id%_GoFail <NewChat Say %id%05 LoseSubPlot %plotid%>
+		.%id%_GoStudy <ifChatNPCArchEnemy else .%id%_GoNoEnemy SetPlotStatus %plotid% -2 Goto .%id%_GoBlowOff>
+		*.%id%_GoBlowOff <*BrushOff>
+		.%id%_GoNoEnemy <NewChat Say %id%02 AddChat %id%01 AddChat %id%02>
+		*.%id%_GoComeHere <*NotByPhone>
+		*.%id%_GoBye <*GOODBYE>
+		result%id%01 <EndChat Say %id%03 School .%id%_skills Goto .%id%_GoBye>
+		.%id%_skills <1 2 3 4 5 6>
+		result%id%02 <NewChat Say %id%04>
+		result%id%03 <Goto result%id%01>
+		result%id%04 <NewChat Say %id%07 History %id%06 DeleteItem %2% AddReact 10 AddEasygoing  d6  CashPrize %threat% 200  SetPlotStatus %plotid% -1 AddChat %id%03>
+		result%id%05 <NewChat Say %id%08 History %id%06                            AddEasygoing -d10                         SetPlotStatus %plotid% -1 AddChat %id%03>
+		Msg%id%01 <So this is the %name2%... May I have it?>
+		Msg%id%02 <Hello \PC . Are you in the mood for some training?>
+		Msg%id%03 <You're getting better all the time, but there are a few tricks you haven't picked up yet.>
+		Msg%id%04 <Okay. I'll be here when you need me.>
+		Msg%id%05 <You have failed to recover the %name2%. I guess you aren't as talented as I thought originally.>
+		Msg%id%06 <%name1% offered to become your trainer after you recovered the %name2%.>
+		Msg%id%07 <Thank you. In exchange for this item, why don't I teach you some things about fighting?>
+		Msg%id%08 <You have a lot of spirit... I can tell that you're going to be a fine warrior, someday. How would you like for me to teach you some things about fighting?>
+		Prompt%id%01 <Absolutely. Let's go.>
+		Prompt%id%02 <Not today, thanks.>
+		Prompt%id%03 <Let's get started right away.>
+		Prompt%id%04 <Sure. [Give Item]>
+		Prompt%id%05 <No way... I want to keep it.>
+	end
+
+Content
+	name <Trade Item For Reward>
+	desc <The Mission-Giver will pay the PC for the item.>
+	requires <*Q_WinFetchItem>
+	special <REUSABLE>
+
+	% E1 is the NPC
+	% E2 is the item
+
+	start <ifNPCDead %1% CancelSubPlot %plotid%>
+
+	sub
+		Persona 1
+		greeting <if= PlotStatus %plotid% %id% else %pop% ifChatNPCInPlay else .%id%_GoComeHere NewChat Say %id%01 AddChat %id%01 AddCHat %id%02 AddChat %id%03>
+		*.%id%_GoComeHere <*NotByPhone>
+		result%id%01 <NewChat Say %id%02>
+		*result%id%02 <*MissionWasSuccess&Reward .%id%_GoEnd na na>
+		.%id%_GoEnd <CashPrize Reward %threat% 500  DeleteItem %2%  AddReact d10  WinSubPlot %plotid%>
+		result%id%03 <LoseSubPlot %plotid%   AddReact -d4   Goto .%id%_GoLose>
+		*.%id%_GoLose <*YouLostItem>
+		Msg%id%01 <Have you found the %name2% yet?>
+		Msg%id%02 <Then come back here when you've found it!>
+		Prompt%id%01 <I'm still working on it.>
+		Prompt%id%02 <I have it right here. [Give item]>
+		CPrompt%id%02 <ifKeyItem %2% Accept>
+		Prompt%id%03 <I sort of lost the %name2%...>
+		CPrompt%id%03 <ifItemDestroyed %2% Accept>
+	end
+
+
+%%
+%%  *Q_FetchWantedItem
+%%
+%% The PC has obtained an item that someone else wants.
+%% This subplot will allow the PC to hand over said item
+%% for a reward.
+%%
+%%  PARAM1: The NPC who provided the task.
+%%  PARAM2: The item being fetched
+%%
+
+Content
+	name <Trade Item For Reward>
+	desc <The Mission-Giver will pay the PC for the item.>
+	requires <*Q_FetchWantedItem>
+	special <REUSABLE>
+
+	% E1 is the NPC
+	% E2 is the item
+
+	start <ifNPCDead %1% else .%id%_GoCheckItem CancelSubPlot %plotid%>
+	.%id%_GoCheckItem <ifItemDestroyed %2% CancelSubPlot %plotid%>
+
+	sub
+		Persona 1
+		rumor%id% <%name1% really wants the %name2%.>
+		greeting <if= PlotStatus %plotid% %id% else %pop% ifChatNPCInPlay else .%id%_GoComeHere NewChat Say %id%01 AddChat %id%01 AddCHat %id%02 AddChat %id%03>
+		*.%id%_GoComeHere <*NotByPhone>
+		*result%id%01 <*MissionWasSuccess&Reward .%id%_GoEnd na na>
+		.%id%_GoEnd <CashPrize Reward %threat% 500  DeleteItem %2%  AddReact d10  WinSubPlot %plotid%>
+		result%id%02 <LoseSubPlot %plotid%   AddReact -d10   Goto .%id%_GoKeep>
+		*.%id%_GoKeep <*PCWillKeepItem %4%>
+		result%id%03 <LoseSubPlot %plotid%   AddReact -d4   Goto .%id%_GoLose>
+		*.%id%_GoLose <*YouLostItem>
+		Msg%id%01 <They say that you have the %name2%. Well, I want it, and I'm willing to offer you $ \VAL Reward %threat% 500 for it.>
+		Msg%id%02 <Then come back here when you've found it!>
+		Prompt%id%01 <That's a good offer. Here you go. [Give Item]>
+		CPrompt%id%01 <ifKeyItem %2% Accept>
+		Prompt%id%02 <Actually, I want to keep it for myself.>
+		CPrompt%id%02 <ifKeyItem %2% Accept>
+		Prompt%id%03 <I sort of lost the %name2%...>
+		CPrompt%id%03 <ifItemDestroyed %2% Accept>
+	end
+
+
+%%
+%%  *Q_LoseTask
+%%
+%% The PC was sent to do something, but failed. Call them a big
+%% stupid loser and end the plot thread.
+%%
+%%  PARAM1: The NPC who provided the task.
+%%
+
+Content
+	name <Default Loss>
+	desc <The NPC will debrief the PC on the loss.>
+	requires <*Q_LoseTask>
+	special <REUSABLE>
+
+	% E1 is the NPC.
+
+	start <ifNPCDead %1%  LoseSubPlot %plotid%>
+
+	sub
+		Persona 1
+		greeting <if= PlotStatus %plotid% %id% else %pop% gOTO .%id%_GoReportLoss>
+		*.%id%_GoReportLoss <*MissionWasFailure .%id%_GoEnd na na>
+		.%id%_GoEnd <AddReact -d6  LoseSubPlot %plotid%>
+	end
+
+
