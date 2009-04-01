@@ -402,6 +402,12 @@ begin
 	end;
 end;
 
+Function QuestIsReusable( Q: GearPtr ): Boolean;
+	{ Return TRUE if this quest is reusable, or FALSE otherwise. }
+begin
+	QuestIsReusable := AStringHasBString( SAttValue( Q^.SA , 'SPECIAL' ) , 'REUSABLE' );
+end;
+
 Function AddSubPlot( GB: GameBoardPtr; Scope,Slot,Plot0: GearPtr; var Quest_Frags: GearPtr; SPReq: String; EsSoFar, LayerID, SubPlotSlot: LongInt; IsAQuest,DoDebug: Boolean ): GearPtr;
 	{ A request has been issued for a subplot. Search through the plot }
 	{ component list and see if there's anything that matches our criteria. }
@@ -461,7 +467,7 @@ Function AddSubPlot( GB: GameBoardPtr; Scope,Slot,Plot0: GearPtr; var Quest_Frag
 
 		if N < 0 then begin
 			Proto := RetrieveGearSib( quest_frags , Abs( N ) );
-			SetNAtt( Proto^.NA , NAG_Narrative , NAS_QuestInUse , 1 );
+			if not QuestIsReusable( Proto ) then SetNAtt( Proto^.NA , NAG_Narrative , NAS_QuestInUse , 1 );
 		end else begin
 			Proto := RetrieveGearSib( sub_plot_list , N );
 		end;
@@ -479,6 +485,7 @@ var
 begin
 	{ First determine the context. }
 	Context := ExtractWord( SPReq );
+	DeleteWhiteSpace( SPReq );
 
 	{ Determine the difficulty rating of this subplot. }
 	if ( SPReq <> '' ) and ( SPReq[1] = '#' ) then begin
@@ -493,7 +500,7 @@ begin
 
 	{ Next complete the context. }
 	if Slot^.G = GG_Story then Context := Context + ' ' + StoryContext( GB , Slot );
-	if IsAQuest then Context := Context + ' ' + QuoteString( SceneContext( Nil , Scope ) );
+	if IsAQuest then Context := Context + ' ' + QuoteString( SceneContext( Nil , Scope ) ) + ' ' + DifficulcyContext( Threat );
 	if Plot0 <> Nil then begin
 		SPContext := SAttValue( Plot0^.SA , 'SPContext' );
 		if SPContext <> '' then Context := Context + ' ' + SPContext;
@@ -888,11 +895,6 @@ Function AssembleMegaPlot( Slot , SPList: GearPtr; var Quest_Frags: GearPtr; IsA
 			LList := LList^.Next;
 		end;
 	end;
-	Function QuestIsReusable( Q: GearPtr ): Boolean;
-		{ Return TRUE if this quest is reusable, or FALSE otherwise. }
-	begin
-		QuestIsReusable := AStringHasBString( SAttValue( Q^.SA , 'SPECIAL' ) , 'REUSABLE' );
-	end;
 	Procedure DeleteQuestPrototype( Plot: GearPtr );
 		{ It's possible that this subplot is based on a quest fragment. }
 		{ If said fragment isn't reusable, remove it from the list. }
@@ -901,7 +903,9 @@ Function AssembleMegaPlot( Slot , SPList: GearPtr; var Quest_Frags: GearPtr; IsA
 	begin
 		if ( Quest_Frags <> Nil ) and ( Plot^.S > 0 ) then begin
 			Frag := SeekCurrentLevelGear( Quest_Frags , GG_Plot , Plot^.S );
-			if ( Frag <> Nil ) and not QuestIsReusable( Frag ) then RemoveGear( Quest_Frags , Frag );
+			if ( Frag <> Nil ) and ( not QuestIsReusable( Frag ) ) then begin
+				RemoveGear( Quest_Frags , Frag );
+			end;
 		end;
 	end;
 	Procedure ResetQuestPrototypes;

@@ -44,7 +44,7 @@ Scene 0 3
 
 	desig <MAQSP>
 
-
+	Quest1 <*:Q_MECHA_ARENA_BASE>
 
 	start <if= V1 0 else GoSecondTime V= 1 1 Alert 1 Print 2>
 	GoSecondTime <Print 2>
@@ -997,6 +997,7 @@ Scene
 	habitat <SPACE.ASTER>
 
 	Quest1 <*:Q_LocalQuest>
+	Quest2 <*:Q_MECHA_ARENA_BASE>
 
 	ClubMap
 
@@ -2537,6 +2538,8 @@ Scene 0 3
 	factions <FCOMS PDASS PRIVA L5LAW>
 
 	desig <GAOSP>
+
+	Quest1 <*:Q_MECHA_ARENA_BASE>
 
 	start <if= V1 0 else GoSecondTime V= 1 1 Alert 1 Print 2>
 	GoSecondTime <Print 2>
@@ -5359,6 +5362,8 @@ Scene 0 3
 	factions <RISHI ROCKE HOELL L5LAW>
 
 	desig <YATSP>
+
+	Quest1 <*:Q_MECHA_ARENA_BASE>
 
 	start <if= V1 0 else GoSecondTime V= 1 1 Alert 1 Print 2>
 	GoSecondTime <Print 2>
