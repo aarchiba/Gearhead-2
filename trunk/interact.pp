@@ -584,7 +584,7 @@ begin
 	CID := NAttValue( NPC^.NA , NAG_Personal , NAS_CID );
 	Persona := SeekPersona( Adv , CID );
 	if ( Persona <> Nil ) and AStringHasBString( SAttValue( Persona^.SA , 'SPECIAL' ) , 'NOPLOTS' ) then it := it + ' INUSE'
-	else if ( NAttValue( NPC^.NA , NAG_Narrative , NAS_PlotID ) < 0 ) and ( NAttValue( FindROot( Adv )^.NA , NAG_PlotStatus , NAttValue( NPC^.NA , NAG_Narrative , NAS_PlotID ) ) >= 0 ) then it := it + ' INUSE'
+	else if ( Persona <> Nil ) and ( NAttValue( Persona^.NA , NAG_Narrative , NAS_PlotID ) < 0 ) and ( NAttValue( FindROot( Adv )^.NA , NAG_PlotStatus , NAttValue( Persona^.NA , NAG_Narrative , NAS_PlotID ) ) >= 0 ) then it := it + ' INUSE'
 	else if PersonaInUse( Adv , CID ) then it := it + ' INUSE'
 	else it := it + ' NOTUSED';
 

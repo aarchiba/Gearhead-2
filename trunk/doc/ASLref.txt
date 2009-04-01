@@ -151,6 +151,7 @@
 	SEEKGATE [scene ID]	Player will enter next map at entry of specified scene
 			***IMPORTANT*** Only works if called after Exit, Return, etc
 	SEEKTERR [terrain type]		Set where PC will enter next scene
+	SETENCOUNTER [SID] [Value]	Sets encounters active/inactive by SceneID
 	SETMOOD [Mood NID] [City]	Activates a prefab mood
 	SETSCENEFACTION [scene ID] [faction ID]
 	SHOP [wares identifier]
@@ -276,7 +277,6 @@
 	GMORALEDMG [Morale]	Adds morale damage to the grabbed gear
 	GNEWPART [label]	Adds new item, monster, NPC to game board
 	GOPENINV		Allows PC to trade items with grabbed gear
-	GQSUBMEMO [QuestStatus] [Msg]	Stores a Quest Submemo in the grabbed gear
 	GQUITLANCE		The grabbed gear quits the lance
 	GRUNAWAY		If easily found on map, GG runs away
 	GSETNATT [G] [S] [V]

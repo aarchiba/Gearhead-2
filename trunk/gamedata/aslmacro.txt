@@ -29,8 +29,8 @@ NPCVar+ <GrabNPC ? GAddNAtt NAG_ScriptVar ? ?>
 SceneVar= <GrabScene ? GSetNAtt NAG_ScriptVar ? ?>
 SceneVar+ <GrabScene ? GAddNAtt NAG_ScriptVar ? ?>
 EncounterVar= <GrabEntrance ?  GSetNAtt NAG_ScriptVar ? ?>
-SetEncounterActive <GrabEntrance ? GSetNAtt NAG_Narrative NAS_EncounterActive 1>
-SetEncounterInactive <GrabEntrance ? GSetNAtt NAG_Narrative NAS_EncounterActive 0>
+SetEncounterActive <SetEncounter ? 1 UpdateProps>
+SetEncounterInactive <SetEncounter ? 0 UpdateProps>
 SetEntranceActive <GrabItem ? GSetNAtt NAG_Narrative NAS_EncounterActive 1>
 SetEntranceInactive <GrabItem ? GSetNAtt NAG_Narrative NAS_EncounterActive 0>
 SetSelfEncInactive <GrabSource GSetNAtt NAG_Narrative NAS_EncounterActive 0>
@@ -227,9 +227,6 @@ IfTeamCanSeePC <GrabPC ifTeamCanSeeGG ?>
 IfNPCCanSeePC <GrabPC ifTeamCanSeeGG NPCTeam ?>
 ifPCCanSeeLocal <GrabLocal ? IfTeamCanSeeGG 1>
 StoryNote <SMemo ? History !>
-GateQSubMemo <GrabEntrance ? GQSubMemo ? ?>
-ItemQSubMemo <GrabItem ? GQSubMemo ? ?>
-NPCSubQMemo <GrabNPC ? GQSubMemo ? ?>
 IfMechaPiloting <ifSkillTest NAS_MechaPiloting STAT_Speed ?>
 IfIntimidation <ifSkillTest NAS_Intimidation STAT_Ego ?>
 IfUIntimidation <ifUSkillTest NAS_Intimidation STAT_Ego ?>

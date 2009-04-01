@@ -1887,23 +1887,6 @@ begin
 	if ( Source <> Nil ) then SetSAtt( Source^.SA , 'MEMO_' + BStr( qid ) + ' <' + msg + '>' );
 end;
 
-Procedure ProcessGQSubMemo( var Event: String; GB: GameBoardPtr; Source: GearPtr );
-	{ Locate and then store the specified message as a Quest SubMemo in the }
-	{ grabbed gear. }
-var
-	qstat,mid: LongInt;
-	msg: String;
-begin
-	{ Determine the relevant Quest Status and the Message ID. }
-	qstat := ScriptValue( Event , GB , Source );
-	mid := ScriptValue( Event , GB , Source );
-	msg := FormatMemoString( GB , getTheMessage( 'msg', mid , GB , Source ) );
-
-	{ Quest Submemos look like regular memos but their tag is followed by an underscore }
-	{ and the Quest Status. }
-	if ( Grabbed_Gear <> Nil ) then SetSAtt( Grabbed_Gear^.SA , 'MEMO_' + BStr( qstat ) + ' <' + msg + '>' );
-end;
-
 Procedure ProcessEMail( var Event: String; GB: GameBoardPtr; Scene: GearPtr );
 	{ Locate and then store the specified message. }
 var
@@ -4444,6 +4427,35 @@ begin
 	end;
 end;
 
+Procedure ProcessSetEncounter( var Event: String; GB: GameBoardPtr; Source: GearPtr );
+	{ Search for encounters leading to a specified scene. Set their activation value. }
+var
+	SID,AVal: LongInt;	{ SceneID, Activation Value }
+	Adv: GearPtr;
+	Procedure CheckAlongPath( LList: GearPtr );
+		{ Check for encounters along this list and throughout all children. }
+	begin
+		while LList <> Nil do begin
+			if ( LList^.G = GG_MetaTerrain ) and ( LList^.S = GS_MetaEncounter ) and ( LList^.Stat[ STAT_Destination ] = SID ) then begin
+				SetNAtt( LList^.NA , NAG_Narrative , NAS_EncounterActive , AVal );
+			end;
+			CheckALongPath( LList^.SubCom );
+			CheckALongPath( LList^.InvCom );
+			LList := LList^.Next;
+		end;
+	end;
+begin
+	{ Find out which scene and what value. }
+	SID := ScriptValue( Event , GB , Source );
+	AVal := ScriptValue( Event , GB , Source );
+
+	{ Locate the adventure. }
+	Adv := GG_LocateAdventure( GB , Source );
+	if Adv <> Nil then CheckAlongPath( Adv^.SubCom );
+
+	{ Also check the currently deployed gears. }
+	if GB <> Nil then CheckAlongPath( GB^.Meks );
+end;
 
 Procedure InvokeEvent( Event: String; GB: GameBoardPtr; Source: GearPtr; var Trigger: String );
 	{ Do whatever is requested by game script EVENT. }
@@ -4494,7 +4506,6 @@ begin
 		else if cmd = 'PMEMO' then ProcessPMemo( Event , GB , Source )
 		else if cmd = 'SMEMO' then ProcessSMemo( Event , GB , Source )
 		else if cmd = 'QMEMO' then ProcessQMemo( Event , GB , Source )
-		else if cmd = 'GQSUBMEMO' then ProcessGQSubMemo( Event , GB , Source )
 		else if cmd = 'NEWS' then ProcessNews( Event , GB , Source )
 		else if cmd = 'EMAIL' then ProcessEMail( Event , GB , Source )
 		else if cmd = 'HISTORY' then ProcessHistory( Event , GB , Source )
@@ -4585,6 +4596,7 @@ begin
 		else if cmd = 'ARENAREP' then ProcessArenaRep( Event , GB , Source )
 		else if cmd = 'ADDREACT' then ProcessAddReact( Event , GB , Source )
 		else if cmd = 'PUMPNEWS' then ProcessPumpNews( GB )
+		else if cmd = 'SETENCOUNTER' then ProcessSetEncounter( Event , GB , Source )
 		else if cmd <> '' then begin
 					DialogMsg( 'ERROR: Unknown ASL command ' + cmd );
 					DialogMsg( 'CONTEXT: ' + event );

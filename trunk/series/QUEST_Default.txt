@@ -1,0 +1,165 @@
+%%
+%%  *:Q_NPCHideout Content
+%%
+%% An NPC has a hideout, somewhere in town. The PC has to go find it.
+%%
+%% This subplot should set a PLACE string for the NPC in question.
+%%
+%% PARAM1: The NPC who needs a hideout.
+%%
+
+
+
+
+%%
+%% *Q_ProveMyself Content
+%%
+%% The key NPC needs to prove himself, somehow. This may be to make up for
+%% some past deed, as a rite of passage, or whatever. In any case the deed
+%% done will be risky.
+%%
+%% At the first UPDATE, move the NPC to the proving ground.
+%%
+%% PARAM1: The NPC who will be doing the proving.
+%%
+
+Content
+	name <Prove Myself vs Derelict Spaceship>
+	% A derelict spaceship has been found. A local professor has offered a reward
+	% for the first person to locate its cargo hold. The PC can take part in the mission,
+	% but will be beaten there by E1... at which point in time the PC can allow him to
+	% claim the prize, or fight him and take the prize himself.
+	requires <*Q_ProveMyself L5PAT ~"Safe">
+
+	% E1 is the character who must prove himself
+	% E2 is the professor offering the quest
+	% E3 is the environs scene
+	% E4 is the spaceship dungeon
+	% E5 is the final goal room
+	% E6 is the professor's home
+	Element2 <Prefab>
+	Place2 <6 (Citizens) Pass Ally>
+	Element3 <Scene Environs>
+	Element4 <QuestScene>
+	Place4 <3>
+	Element5 <QuestScene>
+	Place5 <4>
+	Element6 <Scene (Building|Meeting) Public>
+
+	%% FAIL CONDITIONS:
+	%% - E2 dies
+
+	start <ifNPCDead %2%  MoveAndPacifyNPC %1% P%id%02  CancelSubPlot %plotid%>
+
+	% P%id%01 = Initialization Counter
+	% P%id%02 = Original Home of E1
+	Update <if= P%id%01 0 P= %id%01 1  P= %id%02 NPCScene %1% MoveNPC %1% %5%  SetNPCTeam %1% 2>
+
+	sub
+		Persona 1
+		% v%id%01 = Have gotten win speech already
+		greeting <if# PlotStatus %plotid% -1 else .%id%_GoWinQuest if= PlotStatus %plotid% %id% else %pop%  ifChatNPCInPlay else .%id%_GoBusy Goto .%id%_GoInDungeon>
+		.%id%_GoWinQuest <if= v%id%01 0 else .%id%_GoChat NewChat Say %id%01 v= %id%01 1>
+		.%id%_GoInDungeon <IfChatNPCSurrendered else .%id%_GoFirstDungeon AddHeroic 2 Goto .%id%_GoSurrender>
+		.%id%_GoFirstDungeon <NewChat Say %id%03 AddChat %id%01 AddChat %id%02>
+		*.%id%_GoBusy <*IAmBusy&OnPhone>
+		*.%id%_GoChat <*MISC_CHATTER>
+		result%id%01 <NewChat Say %id%04   Print %id%07  AddLawful 1 AddRenown -1 SetPlotStatus %plotid% -1  MoveAndPacifyNPC %1% %s1%  PCAlly %1%>
+		result%id%02 <AddLawful -5 ifIntimidation %sktar_hard% else .%id%_GoStartFight Goto .%id%_GoSurrender>
+		.%id%_GoSurrender <EndChat Say %id%05   Print %id%07  SetPlotStatus %plotid% -2  MoveAndPacifyNPC %1% %s1%  PCEnemy %1%  L= 13 1  UnSurrender %1%>
+		.%id%_GoStartFight <AddHeroic -3 TeamAttack 2 EndChat  Say %id%06  SetPlotStatus %plotid% -2  PCEnemy %1%>
+		Msg%id%01 <Now that I've completed my first real mission, I feel that I'm ready to be a cavalier!>
+		Msg%id%02 <What I really need to prove myself is a real mission. The trouble is, until I've completed a real mission, nobody's willing to hire me...>
+		Msg%id%03 <I did it! I found the cargo hold of this spaceship for Professor %name2%, and it seems like I'm the first person here! I can't wait to get back to town and collect my reward.>
+		Msg%id%04 <Thanks, \PC . I'll see you back in town.>
+		Msg%id%05 <Alright, I see how this is going... I'll let you claim you were here first. The reward's not worth dying over.>
+		Msg%id%06 <Do you expect me to give up on this without a fight? I think I can take you...>
+		Msg%id%07 <%name1% leaves the area.>
+		Prompt%id%01 <Congratulations, I concede victory to you.>
+		Prompt%id%01_1 <Congratulations, you earned it.>
+		Prompt%id%02 <Too bad you aren't getting out alive.>
+
+		Persona 2
+		rumor%id% <%name2% has discovered an old wrecked spaceship, and is offering a reward to whoever explores it.>
+		% V1 = Have collected reward
+		% V2 = Have initialized quest
+		% V3 = E1 dead at start of mission
+		greeting <if# SceneVar %5% 13 0 else GoCheckQuest if= V1 0 else GoChat NewChat Say 1 AddChat 1 AddChat 2>
+		GoCheckQuest <if= PlotStatus %plotid% -1 else GoCheckBegin if= V1 0 else GoChat NewChat Say 4 v= 1 1>
+		GoCheckBegin <if= PlotStatus %plotid% %id% else GoNoQuest if= V2 0 else GoRemindQuest NewChat Say 5 QMemo %plotid% 6  V= 2 1 Goto GoStartQuest>
+		GoRemindQuest <NewChat say 7>
+		GoStartQuest <SceneVar= %5% 12 1    SetEncounterActive %4%  ifNPCDead %1% V= 3 1>
+		*GoNoQuest <*NiceToMeetYou GoChat>
+		*GoChat <*MISC_CHATTER>
+		result1 <NewChat Say 2 CashPrize Reward %threat% 100 V= 1 1>
+		result2 <NewChat Say 3  AddHeroic 1 AddRenown -5   V= 1 1>
+		Msg1 <Welcome back. Have you discovered anything of interest?>
+		Msg2 <Ah, that's good to hear. Now I have a good place to begin my expedition. Here's a small reward for your trouble.>
+		Msg3 <Is that so? In that case, I'll have to prepare a reward.>
+		Msg4 <Did you hear? A young adventurer named %name1% has located the cargo hold. My expedition can start soon.>
+		Msg5 <I've discovered an old space wreck not far from here. To find out about it, I really need to have a look at its cargo hold. I'm offering a reward for the first person to explore this spaceship and tell me exactly where it is.>
+		Msg6 <Professor %name2% is offering a prize for the first person to locate the cargo hold of an old wreck \SPR %2% discovered.>
+		Msg7 <I'm still waiting for someone to locate the cargo hold of that derelict spaceship I discovered.>
+		Prompt1 <I've located the cargo hold.>
+		Prompt2 <%name1% found the cargo hold.>
+		CPrompt2 <if= V3 0 Accept>
+
+		STC QS_Dungeon_TreasureWreck
+		SetID 4
+		entrance <*QUEST-INACTIVE>
+
+		MetaScene 5
+		name <# Hold>
+		type <Private>
+		special <NOEXIT>
+		BoxMap
+		IndustrialTiles
+		entrance <*GoDown>
+
+		MapWidth 22
+		MapHeight 32
+
+		NeededCells 2
+		content <Fill Sub *STORAGE_X na>
+
+		% V11 = Quest initialization counter
+		% V12 = SubQuest Status; if V12=1, quest has been initialized.
+		% V13 = If nonzero, PC counts as first to cargo hold
+		start <if= v11 0 else GoEntry  V= 11 1  ifNPCOK %1% else GoStartNPCDead ForceChat %1% Goto GoEntry>
+		GoEntry <Print 1>
+		GoStartNPCDead <Print 11  V= 13 1  SetPlotStatus %plotid% -2>
+		SURRENDER%1% <if= V11 1 SetPlotStatus %plotid% %id% Forcechat %1%>
+		FAINT%1% <if= V11 1 V= 13 1 SetPlotStatus %plotid% -2>
+		% If the quest status hasn't been set by the time the scene is exited, do it then.
+		End <if= V11 1   V= 11 2   ifNPCOK %1% else GoNPCDead  ifTeamHostile 2 else GoNoHostile  MoveAndPacifyNPC %1% P%id%02  SetPlotStatus %plotid% -2>
+		GoNoHostile <if= PlotStatus %plotid% %id%  MoveAndPacifyNPC %1% P%id%02  SetPlotStatus %plotid% -1>
+		GoNPCDead <if= PlotStatus %plotid% %id%  SetPlotStatus %plotid% -2 V= 13 1>
+
+		Msg1 <You enter the cargo hold.>
+		Msg11 <You enter the cargo hold. This must be the place that %name2% was searching for.>
+
+		sub
+			Team 1
+
+			Team 2
+			name <Citizens>
+			SetAlly 1
+
+			Team 3
+			name <Guards>
+			SetAlly 2
+
+			Room
+			minimap <......###..#1#...........>
+			sub
+				Elevator
+				Destination -1
+				MiniMapComponent 1
+			end
+		end
+	end
+	inv
+		NPC Professor
+	end
+
+

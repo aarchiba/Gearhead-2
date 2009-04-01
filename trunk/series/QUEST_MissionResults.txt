@@ -14,6 +14,32 @@
 %%  player of what's available.
 %%
 
+%%
+%%  *Q_Win_CatchNPC
+%%
+%% The PC has captured an NPC, and is now due for a reward.
+%%
+%%  PARAM1: The NPC who provided the task.
+%%  PARAM2: The item being fetched
+%%
+
+Content
+	name <Capture vs. Reward>
+	%% The PC will be given a reward and that's it.
+	requires <*Q_Win_CatchNPC>
+	special <REUSABLE>
+
+	%% E1 is the character to give the reward.
+	%% E2 is the character who's been defeated.
+
+	sub
+		Persona 1
+		greeting <if= PlotStatus %plotid% %id% else %pop% NewChat Say %id%01 CashPrize Reward %threat% 500 WinSubPlot %plotid%>
+		Msg%id%01_10 <%name2% is now in custody. Thanks, \PC ... This wouldn't have been possible without you.>
+		CMsg%id%01_10 <ifNPCOK %2% Accept>
+		Msg%id%01_20 <%name2% won't be a threat any more. Thanks, \PC ... This wouldn't have been possible without you.>
+	end
+
 
 %%
 %%  *Q_WinFetchItem

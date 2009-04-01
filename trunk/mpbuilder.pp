@@ -240,12 +240,14 @@ Function InitShard( GB: GameBoardPtr; Scope,Slot,Shard: GearPtr; var Quest_Frags
 			LList := LList^.Next;
 		end;
 	end;
-	Procedure ScaleCombatants( LList: GearPtr );
+	Procedure PrepQuestCombatants( LList: GearPtr );
 		{ If this is a quest, scale any combatant NPCs to the proper level. }
 	begin
 		while LList <> Nil do begin
-			if ( LList^.G = GG_Character ) and NotAnAnimal( Llist ) and IsACombatant( LList ) then begin
-				SetSkillsAtLevel( LList , Threat );
+			if ( LList^.G = GG_Character ) then begin
+				if NotAnAnimal( Llist ) and IsACombatant( LList ) then begin
+					SetSkillsAtLevel( LList , Threat );
+				end;
 			end;
 			LList := LList^.Next;
 		end;
@@ -338,7 +340,7 @@ begin
 			{ We have room for the elements. Good. Now move on by installing the subplots. }
 
 			{ Initialize the prefab NPCs for a quest. }
-			if IsAQuest then ScaleCombatants( Shard^.InvCom );
+			if IsAQuest then PrepQuestCombatants( Shard^.InvCom );
 
 			{ If any of the needed subplots fail, installation of this shard fails }
 			{ as well. }
@@ -964,7 +966,7 @@ Procedure MoveElements( GB: GameBoardPtr; Adv,Plot: GearPtr; IsAQuest: Boolean )
 var
 	T,PlaceIndex: Integer;
 	PlaceCmd,EDesc,TeamName,DebugRec: String;
-	Element,Dest,MF,Team,MS,Thing: GearPtr;
+	Element,Dest,MF,Team,MS,Thing,DScene: GearPtr;
 	InSceneNotElement: Boolean;
 	EID: LongInt;
 begin
@@ -1068,9 +1070,12 @@ begin
 
 					{ If this is a quest, then this element might have some supplemental }
 					{ scene content. Better take a look. }
-					if IsAQuest then begin
+					if IsAQuest and IsAScene( Dest ) then begin
 						MS := SeekCurrentLevelGear( Plot^.SubCom , GG_MetaScene , T );
 						if MS <> Nil then begin
+							{ Store the destination scene- we'll need it later. }
+							DScene := Dest;
+
 							{ This metascene may also contain a home for this element. }
 							MF := SeekGearByDesig( MS^.SubCom , 'HOME' );
 							if ( MF <> Nil ) and ( Element^.G <> GG_Scene ) then begin
@@ -1082,12 +1087,12 @@ begin
 							while ( MS^.InvCom <> Nil ) do begin
 								Thing := MS^.InvCom;
 								DelinkGear( MS^.InvCom , Thing );
-								InsertInvCom( Dest , Thing );
+								InsertInvCom( DScene , Thing );
 							end;
 							while ( MS^.SubCom <> Nil ) do begin
 								Thing := MS^.SubCom;
 								DelinkGear( MS^.SubCom , Thing );
-								InsertSubCom( Dest , Thing );
+								InsertSubCom( DScene , Thing );
 							end;
 						end;
 					end;
@@ -1325,7 +1330,7 @@ begin
 		E := FindNextComponent( MasterEntranceList , SAttValue( Scene^.SA , 'ENTRANCE' ) );
 		if E <> Nil then begin
 			E := CloneGear( E );
-			if E^.S = GS_MetaBuilding then SetSAtt( E^.SA , 'NAME <' + GearName( Scene ) + '>' );
+			if ( E^.S = GS_MetaBuilding ) or ( E^.S = GS_MetaEncounter ) then SetSAtt( E^.SA , 'NAME <' + GearName( Scene ) + '>' );
 			E^.Stat[ STAT_Destination ] := Scene^.S;
 			if Scene^.Parent^.G <> GG_World then E^.Scale := Scene^.Parent^.V;
 			if NAttValue( Scene^.NA , NAG_LOcation , NAS_X ) <> 0 then begin
@@ -1575,13 +1580,11 @@ begin
 				{ **************** }
 				{ We've got a live one. Start by locating the destination. }
 				DDesc := SAttValue( Quest^.SA , 'PLACE' + BStr( QS^.S ) );
-DialogMsg( 'Placing ' + GearName( QS ) + ': "' + DDesc + '"' );
 				N := ExtractValue( DDesc );
 				Dest := SeekPlotElement( Adv , Quest , N , Nil );
 				if ( Dest = Nil ) or not IsAScene( Dest ) then Dest := City;
 				{ Remove the PLACE string, so the element placer doesn't try to move it. }
 				SetSAtt( Quest^.SA , 'PLACE' + BStr( QS^.S ) + ' <>' );
-DialogMsg( 'Destination ' + BStr( N ) + ': ' + GearName( Dest ) );
 
 				{ **************** }
 				{ *** STEP TWO *** }

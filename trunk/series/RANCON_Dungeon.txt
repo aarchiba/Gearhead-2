@@ -982,6 +982,11 @@ Content
 
 %% *DUNGEON_GOAL CONTENT
 %%  - When sold, the dungeon goal content should be enough to buy a cheap level-appropriate mecha.
+%%    !Ne  =  1,000,000
+%%    !Lo  =  2,000,000
+%%    !Md  =  4,000,000
+%%    !Hi  =  8,000,000
+%%    !Ex  = 16,000,000
 
 Content
 	requires <*DUNGEON_GOAL !Ne>
@@ -1041,5 +1046,32 @@ Content
 		Loot_Factions <GENERAL>
 	end
 
+Content
+	name <Gold Nugget>
+	requires <*DUNGEON_GOAL (Mine|Cave) !Ne>
+	minimap < ... .......1....... ... >
+	% E1 is the nugget.
+	element1 <Prefab>
+	inv
+		Treasure
+		name <Gold Nugget>
+		desc <A shiny lump of raw gold.>
+		Fudge 1200000
+		mass 7
+	end
+
+Content
+	name <Gold Nugget>
+	requires <*DUNGEON_GOAL (Mine|Cave) !Lo>
+	minimap < ... .......1....... ... >
+	% E1 is the nugget.
+	element1 <Prefab>
+	inv
+		Treasure
+		name <Gold Nugget>
+		desc <This gold nugget is fairly big.>
+		Fudge 2500000
+		mass 18
+	end
 
 

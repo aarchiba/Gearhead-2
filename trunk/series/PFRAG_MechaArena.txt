@@ -51,7 +51,7 @@
 
 	Persona
 	requires <*YourChallengerDied>
-	START <NewChat Say %id%01 SavePos PrepArena %1% 150 Jump %1% SetQuestStatus %2% -2>
+	START <NewChat Say %id%01 SavePos PrepArena %1% 150 Jump %1% CancelSubPlot %2%>
 	Msg%id%01 <You were supposed to face a special opponent, but that's not going to happen. Instead you'll just have a regular fight... Come talk to me when you're done.>
 	Msg%id%01_1 <Did you hear that one of our pilots has died? This is a dangerous business... The challenge match you were supposed to have has been cancelled; instead you'll just fight a normal one.>
 	CMsg%id%01_1 <ifNPCSociable Accept>

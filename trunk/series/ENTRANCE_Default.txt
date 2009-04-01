@@ -1,5 +1,6 @@
 %% DEFAULT ENTRANCES
 
+
 MetaTerrain 0
 requires <*COLONY-1>
 roguechar <*>
@@ -19,6 +20,9 @@ Msg3 <Try to sneak around them.>
 Msg4 <Attack!>
 Msg5 <You evade the guards and slip into the city.>
 Msg6 <You fail to evade the guards, and will now have to defend yourself...>
+
+STC QUEST-MAPMARKER-STATIONARY
+requires <*QUEST-INACTIVE>
 
 StairsUp
 requires <*GoUp>

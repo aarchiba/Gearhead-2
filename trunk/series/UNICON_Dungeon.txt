@@ -112,8 +112,84 @@ Content
 %% *DUNGEON_GOAL CONTENT
 
 	Content
+	name <Shiny Rock>
+	requires <*DUNGEON_GOAL Mine !Ne>
+	minimap < ... .......1....... ... >
+	% E1 is the treasure. It's heavy.
+	element1 <Prefab>
+	inv
+		Treasure
+		name <Shiny Rock>
+		desc <This rock is really shiny. It probably contains all kinds of valuable minerals.>
+		CLUE_SCIENCE <Print 1>
+		CLUE_SURVIVAL <Print 1>
+		CLUE_INSIGHT <Print 1>
+		Msg1 <It does indeed contain all kinds of valuable minerals.>
+		Fudge 1255000
+		mass 24
+	end
+
+	Content
+	name <Massive Geode>
+	requires <*DUNGEON_GOAL Mine !Lo>
+	minimap < ... .......1....... ... >
+	% E1 is the treasure. It's heavy.
+	element1 <Prefab>
+	inv
+		Treasure
+		name <Massive Geode>
+		desc <This is the biggest geode that you've ever seen.>
+		Fudge 2550000
+		mass 21
+	end
+
+	Content
+	name <Big Gold Nugget>
+	requires <*DUNGEON_GOAL Mine !Md>
+	minimap < ... .......1....... ... >
+	% E1 is the nugget. It's a doozy.
+	element1 <Prefab>
+	inv
+		Treasure
+		name <Huge Gold Nugget>
+		desc <This gold nugget is very big.>
+		Fudge 5500000
+		mass 32
+	end
+
+	Content
+	name <Huge Jewel>
+	requires <*DUNGEON_GOAL Mine !Hi>
+	minimap < ... .......1....... ... >
+	% E1 is the treasure.
+	element1 <Prefab>
+	inv
+		Treasure
+		name <Huge Jewel>
+		desc <This jewel is extremely large. It must be worth quite a lot of money.>
+		Fudge 9000000
+		mass 14
+	end
+
+	Content
+	name <Enormous Gold Nugget>
+	requires <*DUNGEON_GOAL Mine !Ex>
+	minimap < ... .......1....... ... >
+	% E1 is the treasure.
+	element1 <Prefab>
+	inv
+		Treasure
+		name <Enormous Gold Nugget>
+		desc <This nugget is extremely large.>
+		Fudge 20000000
+		mass 45
+	end
+
+
+	Content
 	name <Careless Samurai>
 	requires <*DUNGEON_GOAL>
+	minimap < ... .......1....... ... >
 
 	% Element1 is the katana
 	% E2 is the current scene being built.

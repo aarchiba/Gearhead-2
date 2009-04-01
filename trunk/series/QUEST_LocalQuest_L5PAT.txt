@@ -34,7 +34,7 @@ Content
 	update <if= P2 0 P= 2 1 SetPlotStatus %plotid1% %id1%>
 
 	% SubPlot1 = Wynter's Mine Quest
-	SubPlot1 <*:Q_DungeonQuest 3>
+	SubPlot1 <*:Q_DungeonQuest #10 3>
 
 	sub
 		MetaScene 2
