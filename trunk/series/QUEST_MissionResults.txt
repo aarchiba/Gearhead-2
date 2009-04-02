@@ -15,6 +15,47 @@
 %%
 
 %%
+%%  *Q_WinTask
+%%
+%% The PC has completed some task (not a formal mission) for this NPC.
+%% Give a reward.
+%%
+%%  PARAM1: The NPC who provided the task.
+%%
+
+Content
+	name <Money is the sincerest form of flattery>
+	desc <The NPC will pay the PC for the job.>
+	requires <*Q_WinTask>
+	special <REUSABLE>
+
+	% E1 is the NPC.
+
+	%% FAIL CONDITIONS:
+	%% - E1 dies
+	start <ifNPCDead %1% WinSubPlot %plotid%>
+
+	sub
+		Persona 1
+		greeting <if= PlotStatus %plotid% %id% else %pop% NewChat Say %id%01 CashPrize Reward %threat% 500 AddReact d10  WinSubPlot %plotid%>
+		Msg%id%01 <Thanks for your help. Here, I'd like for you to have this money.>
+		Msg%id%01_1 <>
+		CMsg%id%01_1 <ifNPCSociable Accept>
+		Msg%id%01_2 <>
+		CMsg%id%01_2 <ifNPCShy Accept>
+		Msg%id%01_3 <>
+		CMsg%id%01_3 <ifNPCEasygoing Accept>
+		Msg%id%01_4 <>
+		CMsg%id%01_4 <ifNPCPassionate Accept>
+		Msg%id%01_5 <>
+		CMsg%id%01_5 <ifNPCCheerful Accept>
+		Msg%id%01_6 <>
+		CMsg%id%01_6 <ifNPCMelancholy Accept>
+	end
+
+
+
+%%
 %%  *Q_Win_CatchNPC
 %%
 %% The PC has captured an NPC, and is now due for a reward.
@@ -42,7 +83,7 @@ Content
 
 
 %%
-%%  *Q_WinFetchItem
+%%  *Q_Win_FetchItem
 %%      SubTypes:
 %%      .secret		The item contains a secret that must be preserved
 %%
@@ -57,7 +98,7 @@ Content
 Content
 	name <Good job, let's study>
 	%% The PC will gain a new teacher.
-	requires <*Q_WinFetchItem (1:MILIT|1:ADVEN) -.secret>
+	requires <*Q_Win_FetchItem (1:MILIT|1:ADVEN) -.secret>
 	special <REUSABLE>
 
 	%% E1 is the character to give the reward.
@@ -98,7 +139,7 @@ Content
 Content
 	name <Trade Item For Reward>
 	desc <The Mission-Giver will pay the PC for the item.>
-	requires <*Q_WinFetchItem>
+	requires <*Q_Win_FetchItem>
 	special <REUSABLE>
 
 	% E1 is the NPC

@@ -1,4 +1,5 @@
 % ArenaScript Value Macros
+ControllerID <GrabPlot GNAtt NAG_Narrative NAS_ControllerID>
 RandomTheme <d12>	% returns a random mecha theme
 PartyScore <GrabCurrentScene GNAtt NAG_Narrative NAS_PartyPoints>
 CurrentPPScore <GrabStory GNAtt NAG_XXRan NAS_PPVictory>
@@ -240,6 +241,7 @@ NAG_Action <-2>
 NAS_CallTime <4>
 NAG_Narrative <7>
 NAS_HomeTownID <11>
+NAS_ControllerID <29>
 NAS_EncounterActive <34>
 NAG_PlotStatus <-22>
 NAS_NID <0>

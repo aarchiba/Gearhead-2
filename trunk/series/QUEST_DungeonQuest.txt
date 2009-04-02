@@ -9,6 +9,91 @@
 %%
 
 Content
+	name <Last Rites>
+	requires <*:Q_DungeonQuest>
+	% Someone died in this dungeon; apparently, they want their ashes
+	% returned there. Yes, I know I did this plot in GH1... I'm trying
+	% to get the Cayley dungeon ready for release!
+
+	% E1 is the dungeon involved
+	% E2 is a local public scene
+	% E3 is the priest who requests this
+	% E4 is the urn to be placed
+	% E5 is the character to die
+	Element2 <Scene Public (meeting|residence|temple)>
+	Element3 <Prefab>
+	Place3 <2 (Citizens) pass ally>
+	Element4 <Prefab>
+	Place4 <3>
+	Element5 <Prefab>
+	Place5 <2 (Citizens) pass ally>
+
+	% P%id%01 = Have accepted task
+	% P%id%02 = Initialization Counter
+
+	%% FAIL CONDITIONS:
+	%% - Before accepting quest, priest dies or item destroyed
+	%% - After accepting quest, urn destroyed
+	end <if= P%id%01 0 else .%id%_GoCheckUrn ifNPCDead %3% else .%id%_GoCU2 LoseSubPlot %plotid%>
+	.%id%_GoCheckUrn <ifItemDestroyed %4% SetPlotStatus %plotid2% %id2%>
+	.%id%_GoCU2 <ifItemDestroyed %4% LoseSubPlot %plotid%>
+
+	update <if= P%id%02 0 P= %id%02 1 DeleteNPC %5%>
+
+	% Victory is achieved if the PC has accepted the mission, the urn is in E1,
+	% and E1 isn't the current scene.
+	start <if# P%id%01 0 if# SceneID %1% if= ItemScene %4% %1%  Alert %id%01 XPV 100 QMemo %plotid% %id%02 DeleteItem %4% SetPlotStatus %plotid1% %id1%>
+
+	Msg%id%01 <The soul of %name5% has been laid to rest.>
+	Msg%id%02 <You placed %name5%'s urn in %name1%. You should return to %name3% now.>
+
+	% SubPlot1 is the victory condition
+	% SubPlot2 is the loss condition
+	SubPlot1 <*Q_WinTask 3>
+	SubPlot2 <*Q_LoseTask 3>
+
+	sub
+		Persona 3
+		rumor%id% <%name3% needs a cavalier to make a very unusual delivery.>
+		greeting <if= PlotStatus %plotid% %id% else GoGreet if= P%id%01 0 else GoRemind ifItemOK %4% else GoGreet ifChatNPCInPlay else GoComeHere Goto GoMakeOffer>
+		*GoRemind <*GenericMissionReminder>
+		*GoGreet <*NiceToMeetYou GoChat>
+		*GoChat <*MISC_CHATTER>
+		*GoComeHere <*NotByPhone>
+		*GoMakeOffer <*INeedYourHelp&Spiritual GoListen GoRefuse>
+		*GoRefuse <*RejectMission GoCancelQuest>
+		GoCancelQuest <AddReact -d10   CancelSubPlot %plotid%>
+		GoListen <NewChat Say 1 AddChat 1 AddChat 2 AddChat 3>
+		result1 <NewChat Say 2 P= %id%01 1 GiveItem %4% QMemo %plotid% 3>
+		result2 <Goto GoRefuse>
+		result3 <NewCHat Say 4 AddChat 4 AddChat 5>
+		result4 <Goto result1>
+		result5 <Goto GoRefuse>
+		Msg1 <An adventurer by the name of %name5% recently passed away. This urn contains his ashes; I would hire you to deliver them to \SCENE %1% , as was the deceased's wish.>
+		Msg2 <Thank you. Here is the urn; return to me after you have placed it, and I will give you a reward then.>
+		Msg3 <%name3% hired you to bring %name5%'s ashes to \SCENE %1% .>
+		Msg4 <It's a strange thing. Around five years ago a famous explorer had his ashes returned to the dungeon where he died, and now it seems like everyone's doing it.>
+		Prompt1 <Alright, I can do that for you.>
+		Prompt2 <No way. This mission is way too creepy.>
+		Prompt3 <Why would anyone want to be buried in a dungeon?>
+		Prompt4 <As long as it's in fashion, I'll do it.>
+		Prompt5 <Weird. The more I learn, the less I want any part in this.>
+	end
+	inv
+		NPC Priest
+		chardesc heroic spiritual
+
+		Treasure
+		name <Burial Urn>
+		mass 1
+		Fudge 65000
+
+		NPC Explorer
+		chardesc Male
+	end
+
+
+Content
 	name <Artifact Recovery>
 	requires <*:Q_DungeonQuest>
 
@@ -40,7 +125,7 @@ Content
 	% SubPlot1 is the win fetch quest.
 	% SubPlot2 is the task lost quest.
 	% SubPlot3 is the didn't-accept-quest-but-fetched-anyways bit.
-	SubPlot1 <*Q_WinFetchItem 3 4>
+	SubPlot1 <*Q_Win_FetchItem 3 4>
 	SubPlot2 <*Q_LoseTask 3>
 	SubPlot3 <*Q_FetchWantedItem 3 4>
 

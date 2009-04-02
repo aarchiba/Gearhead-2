@@ -1,4 +1,257 @@
 %%
+%% *:Q_MechaHeld Content
+%%
+%% E1's mecha is currently being held by someone else. In this subquest,
+%% the PC will be able to find that someone and release the mecha... Or
+%% maybe have it locked up perminantly. The NPC has a semi-legitimate
+%% claim to holding the mecha... it may be in hock due to debts, or maybe
+%% its ownership is disputed. The presence of this subquests implies a
+%% certain amount of inexperience or irresponsibility on the part of the
+%% pilot.
+%%
+%% PARAM1: The NPC who lost his mecha.
+%%
+
+Content
+	name <Meks in Hock>
+	desc <E1 is in debt to E2; the mecha is in hock>
+	requires <*:Q_MechaHeld>
+
+	% E1 is the character who owns the mecha.
+	% E2 is the storekeeper holding the mecha.
+	% E3 is the building where the storekeeper operates
+	Element2 <Prefab>
+	Place2 <3 (Citizens) pass ally>
+	Element3 <Scene Building (Garage|Sleazy)>
+
+	%% FAIL CONDITIONS:
+	%% - if E2 dies, the quest is a failure.
+	end <ifNPCDead %2% else %pop% LoseSubPlot %plotid%>
+
+	sub
+		Persona 1
+		% This conversation thread will activate after the PC asks E2 about the mecha.
+		greeting <if= QuestStatus %plotid% %id% else %pop% ifNPCOK %2% else .%id%_GoE2Died if= NPCVar %2% 1 1 else %pop%  NewChat Say %id%02 AddChat %id%01 AddChat %id%02>
+		.%id%_GoE2Died <NewChat Say %id%01 LoseSubPlot %plotid%>
+		result%id%01 <NewChat Say %id%03 AddChat %id%03 AddCHat %id%04 AddChat %id%05>
+		result%id%02 <NewChat Say %id%04>
+		result%id%03 <NewChat Say %id%05 NPCVar= %2% 1 2>
+		result%id%04 <NewChat Say %id%06>
+		result%id%05 <NewChat Say %id%07 NPCVar= %2% 1 2>
+		Msg%id%01 <I'll never get my mecha back from %name2% now...>
+		Msg%id%02 <I wish there was some way to get my mecha back from %name2%...>
+		Msg%id%03 <I can't afford to pay back everything I owe, and with my mecha gone I don't have any way to make more money. It's a tough situation.>
+		Msg%id%04 <Please do that. Any help would be greatly appreciated.>
+		Msg%id%05 <I could do that, if %name2% would agree to return my mecha. That way \SPR %2% gets paid and I still get to eat.>
+		Msg%id%06 <That's so true.>
+		Msg%id%07 <You're right... the only way to get past this is to bite the bullet and pay up. It's going to be painful in the short term, but really there's nothing else I can do. Tell %name2% I'll pay as much as I can now and the rest later.>
+		Prompt%id%01 <Why don't you just pay the money you owe?>
+		Prompt%id%02 <I'll talk with \OPR %2% , see if I can help.>
+		Prompt%id%03 <Maybe you can work out an installment plan.>
+		CPrompt%id%03 <ifConversation SkillTar %threat% Accept>
+		Prompt%id%04 <That's a real problem.>
+		Prompt%id%05 <Face responsibility and pay what you owe.>
+		CPrompt%id%05 <ifIntimidation SkillTar %threat% accept>
+
+		Persona 2
+		% V1 = Amount owed
+		% NPCVar %2% 1 = Communication variable. When =1, PC has talked to E2. WHen =2, E1 agreed to pay installments.
+		rumor%id% <%name2% is holding %name1%'s mecha until all debts are paid.>
+		greeting <if= QuestStatus %plotid% %id% else GoNoQuest NewChat Say 1 AddChat 1 AddChat 2>
+		GoE1Dead <NewChat Say 2 LoseSubPlot %plotid%>
+		result1 <ifNPCOK %1% else GoE1Dead NewChat Say 3 AddChat 3 AddChat 4 AddChat 5 AddCHat 6 if= NPCVar %2% 1 0 NPCVar= %2% 1 1 V= 1 Threat %threat% 2 QMemo %plotid% 4>
+		result2 <Goto GoShop>
+		result3 <NewChat Say 6 AddChat 7 AddChat 8 AddChat 4>
+		result4 <ifConversation HardSkillTar %threat% else GoR4Fail NewChat Say 7 WinSubPlot %plotid%>
+		GoR4Fail <NewChat Say 8>
+		result5 <NewChat Say 5 WinSubPlot %plotid%>
+		result6 <NewChat Say 9 AddChat 9 AddChat 8 AddCHat 7>
+		result7 <ifConversation SkillTar %threat% else GoR7Fail NewChat Say 11 AddChat 10 AddChat 11>
+		GoR7Fail <NewChat Say 10>
+		result8 <NewChat Say 12>
+		result9 <ifConversation HardSkillTar %threat% else GoR9Fail NewChat Say 13 WinSubPlot %plotid% AddReact d12 AddHeroic -1>
+		GoR9Fail <NewChat Say 14>
+		result10 <NewChat Say 15 Cash+ - V1 WinSubPlot %plotid%>
+		result11 <NewChat Say 16>
+		*GoNoQuest <*NiceToMeetYou GoShop>
+		*GoShop <*SHOP_Mecha GoBye>
+		*GoBye <*GoodBye>
+		Msg1 <Yes, may I help you?>
+		Msg2 <I don't think %name1% is going to be needing a mecha any time soon... It's a shame that I'll never get the money I'm owed.>
+		Msg3 <%name1% owes me money, quite a bit of it in fact... I'll be holding onto \PPR %1% mecha until that money is repaid in full.>
+		Msg4 <%name2% is holding %name1%'s mecha until \SPR %1% can pay off \PPR %1% debt.>
+		Msg5 <Is that so? As soon as I've recieved the first installment, I will return \PPR %1% mecha.>
+		Msg6 <I'm owed $ \VAR V1 in total. If only %name1% would pay some installments, I wouldn't have needed to impound \ppr %1% mecha.>
+		Msg7 <Hmm. You're right, I know. %name1% won't be able to pay me back so long as \SPR %1% doesn't have the money. Alright, you can go tell %name1% that \SPR %1% can have \PPR %1% mecha back.>
+		Msg8 <That's hardly my problem, is it? Either I get that money or %name1%'s mecha stays where it is.>
+		Msg9 <Look, I'm running a business here. I can't just give it back until I've been paid.>
+		Msg10 <No way. This is %name1%'s debt, and \SPR %1% 's going to pay it off.>
+		Msg11 <Sure, you could do that... I mean, you really want to?>
+		Msg12 <You do that.>
+		Msg13 <For you? Well, it's a lot of money, but... yeah, I could do that for you.>
+		Msg14 <No. Definitely not.>
+		Msg15 <Ah, it's been a pleasure doing business with you. You can go tell %name1% that \SPR %1% can pick up \PPR %1% mecha anytime \SPR %1% wants.>
+		Msg16 <I didn't think so. Now, if you'll excuse me, I have other customer to attend to.>
+		Prompt1 <I'd like to talk about %name1%'s mecha.>
+		Prompt2 <I'd like to see what you have for sale.>
+		Prompt3 <How much does \SPR %1% owe you?>
+		Prompt4 <%name1% can't earn money without a mecha.>
+		Prompt5 <%name1% has agreed to pay the money.>
+		CPrompt5 <if= NPCVar %2% 1 2 Accept>
+		Prompt6 <Why can't you just give the mecha back?>
+		CPrompt6 <ifChatNPCSexy ifConversation HardSkillTar %threat% Accept>
+		Prompt7 <How about I pay off the debt myself?>
+		CPrompt7 <ifG PC$ V1 Accept>
+		Prompt8 <I'll go talk with %name1% about that.>
+		Prompt9 <Couldn't you do it for me?>
+		Prompt10 <Yes, I do. [pay $ \VAL V1 ]>
+		Prompt11 <No, not really.>
+
+		Metascene 2
+		sub
+			room
+			minimap <2#...+#.......1.....&---&>
+			special <SHAREDPALETTE>
+			desig <HOME>
+			inv
+				TrapDoor
+				MiniMapComponent 2
+				% V1 = Reputation Counter
+				use <if= PlotStatus %plotid% %id% else GoNoUse ifYesNo 102 103 104 ifStealth SkillTar %threat% else GoFail AddLawful -5 Print 105 XPV 100 WinSubPlot %plotid%>
+				GoFail <Print 106 if= V1 0 V= 1 1 AddRenown -3 AddLawful -2>
+				GoNoUse <Print 101>
+				Msg101 <There's nothing interesting down here.>
+				Msg102 <This trapdoor leads to %name2%'s lockup. You may be able to sneak down there and steal %name1%'s mecha back.>
+				Msg103 <Steal the mecha.>
+				Msg104 <Find another way.>
+				Msg105 <You sneak into the garage and recover %name1%'s mecha.>
+				Msg106 <It's no good- you aren't skilled enough to get past the security cameras.>
+			end
+		end
+	end
+	inv
+		NPC Shopkeeper
+	end
+
+Content
+	name <Mecha Impounded by L5Law>
+	desc <E1 broke some traffic rules; must pass a test to get mecha back>
+	requires <*:Q_MechaHeld L5PAT ~"Safe">
+
+	% E1 is the character who owns the mecha.
+	% E2 is the police officer holding the mecha.
+	% E3 is a scene for the police officer.
+	Element2 <Prefab>
+	Place2 <3 (Guards) SD Ally>
+	Element3 <Scene Building Legit>
+
+	% FAIL CONDITIONS:
+	% - E2 dies
+	end <ifNPCDead %2% LoseSubPlot %plotid%>
+
+	sub
+		Persona 1
+		greeting <if= PlotStatus %plotid% %id% else %pop%  if= NPCVar %2% 1 1 else %pop%  NewChat Say %id%01 AddChat %id%01>
+		result%id%01 <NewChat Say %id%02 AddCHat %id%02 AddCHat %id%03>
+		result%id%02 <NewChat Say %id%03 NPCVar= %2% 1 2>
+		result%id%03 <NewChat Say %id%04>
+		Msg%id%01 <All these traffic rules... What do they really have to do with how well I can pilot a mecha? %name2% says I have to pass a test before I can get my machine back.>
+		Msg%id%02 <Really, you'd do that? So, you know the answers to all of these questions, then?>
+		Msg%id%03 <Thanks. With your help, I'm sure I'll do fine on the test.>
+		Msg%id%04 <Be careful... if %name2% finds out, your mecha will be confiscated next.>
+		Prompt%id%01 <I could help you to study, if you want.>
+		Prompt%id%02 <No problem. Let me show you.>
+		CPrompt%id%02 <ifMechaPiloting SkillTar %threat% Accept>
+		Prompt%id%03 <Um... Actually I don't know either.>
+
+		Persona 2
+		% NPCVar %2% 1 = State Counter, if =1 have learned of test, if =2 have taught E1
+		% V2 = Intimidation counter
+		&Bribe <Threat %threat% 3>
+		rumor%id% <%name2% impounded %name1%'s mecha due to multiple parking tickets.>
+		greeting <if= PlotStatus %plotid% %id% else GoNoQuest ifNPCDead %1% else GoCheckWin LoseSubPlot %plotid% Goto GoChat>
+		GoCheckWin <if= NPCVar %2% 1 2 else GoMainQuest NewChat Say 14 WinSubPlot %plotid%>
+		GoMainQuest <if= NPCVar %2% 1 1 else GoFirstTime NewChat Say 3 AddChat 3 AddChat 4>
+		GoFirstTime <NewChat Say 1 AddChat 1 AddChat 2>
+		*GoNoQuest <*NiceToMeetYou GoChat>
+		*GoChat <*MISC_CHATTER>
+		result1 <NewChat Say 2 AddChat 3 AddChat 4 NPCVar= %2% 1 1 QMemo %plotid% 4>
+		*result2 <*MISC_CHATTER>
+		result3 <NewChat Say 5>
+		result4 <NewChat Say 6 AddCHat 5 AddChat 6 AddCHat 7>
+		result5 <ifNPCLawful else GoR5NoLaw NewChat Say 7 AddCHat 6 AddChat 3>
+		GoR5NoLaw <NewChat Say 8 AddChat 8 AddChat 9 AddChat 10>
+		result6 <AddLawful -5 AddHeroic -1 ifIntimidation HardSkillTar %threat% else GoR6Fail NewChat Say 9 WinSubPlot %plotid%>
+		GoR6Fail <NewChat Say 10 PCEnemy %2% V= 2 1>
+		result7 <NewChat Say 11>
+		result8 <NewChat Say 12 Cash+ - &Bribe WinSubPlot %plotid% AddLawful -5>
+		result9 <NewChat Say 13 AddReact d10 WinSubPlot %plotid% AddLawful -3 AddEasygoing -d8>
+		result10 <NewChat Say 11>
+		Msg1 <Yes, may I help you?>
+		Msg2 <I caught %name1% piloting in an improper manner. I confiscated \PPR %1% mecha, and will not return it until \SPR %1% completes a mecha safety course.>
+		Msg3 <I'm still waiting for %name1% to complete \PPR %1% safety course.>
+		Msg4 <%name2% confiscated %name1%'s mecha, and won't return it until \SPR %1% completes a safety course.>
+		Msg5 <Please try. I've talked to \OPR %1% over and over but it never seems to sink in.>
+		Msg6 <What exactly do you mean by that?>
+		Msg7 <I'm not about to be bribed. You can tell %name1% that \SPR %1% can't get out of the test that easily.>
+		Msg8 <That sounds alright... what can you offer me?>
+		Msg9 <Yikes... Alright, you can tell %name1% that \PPR %1% mecha is being released. There's no need to make a big deal over this.>
+		Msg10 <It's not a smart idea to try intimidating a law officer. You can tell %name1% that \SPR %1% can't get out of the test that easily.>
+		Msg11 <That's too bad.>
+		Msg12 <It's been a pleasure doing business with you. You can tell %name1% that \PPR %1% mecha is being released.>
+		Msg13 <Yes, I do believe that would be a worthwhile trade. You can tell %name1% that \PPR %1% mecha is being released.>
+		Msg14 <You can tell %name1% that \SPR %1% passed the exam. I'll release \PPR %1% mecha shortly.>
+		Prompt1 <I'm here to talk about %name1%'s mecha.>
+		Prompt2 <I'm just here to chat.>
+		Prompt3 <I'll talk with \OPR %1% about that.>
+		Prompt4 <I want you to return \PPR %1% mecha now.>
+		Prompt5 <I can make it worth your while.>
+		Prompt6 <It wouldn't be healthy to refuse me.>
+		CPrompt6 <if= V2 0 Accept>
+		Prompt7 <Nothing, I'm just saying...>
+		Prompt8 <I can offer cash. [give $ \VAL &Bribe ]>
+		CPrompt8 <ifG PC$ &Bribe Accept>
+		Prompt9 <I can show you a good time.>
+		CPrompt9 <ifChatNPCSexy ifConversation HardSkillTar %threat% Accept>
+		Prompt10 <I've got nothing...>
+	end
+	inv
+		NPC Police Officer
+		SetFaction 9
+	end
+
+
+Content
+	name <Mecha Drifting in Space>
+	desc <E1 ejected while in space; now his mecha is floating aimlessly outside.>
+	requires <*:Q_MechaHeld Spinner (!Ne|!Lo)>
+
+	% E1 is the character that owns the mecha
+	% E2 is the encounter representing the mecha
+	% E3 is the environs scene
+	Element2 <Prefab>
+	Place2 <3>
+	Element3 <Scene Space Environs>
+
+	inv
+		STC QUEST-ENCOUNTER-AUTO-WANDER
+		name <Abandoned Mecha>
+		rumor%id% <%name1% was forced to eject outside the station.>
+		EncounterMove 20
+		ENCOUNTER_NonCombat
+		ATTACK <ifG StatVal STAT_MetaVisibility -1    ifEncounterVisible Goto Use>
+		USE <ifYesNo 1 2 3 else GoTakeMecha   Print 4   XPV 50  WinSubPlot %plotid%  DeleteItem %2%>
+		GoTakeMecha <RandomMecha .mekdesc %threat% LoseSubPlot %plotid%  AddNPCReact %1% -10  DeleteItem %2%>
+		.mekdesc <GENERAL>
+		Msg1 <You spot a mecha floating in space. It's most likely the one lost by %name1%.>
+		Msg2 <Mark its location for %name1%.>
+		Msg3 <Take the mecha as your own.>
+		Msg4 <You send the mecha coordinates to %name1%.>
+	end
+
+
+
+%%
 %%  *:Q_NPCHideout Content
 %%
 %% An NPC has a hideout, somewhere in town. The PC has to go find it.
@@ -8,8 +261,64 @@
 %% PARAM1: The NPC who needs a hideout.
 %%
 
+Content
+	name <Urban Hideout>
+	%% The NPC has a hideout in the urban scene of this location.
+	%% Reveal the hideout using a FindEncounter mood.
+	requires <*:Q_NPCHideout>
 
+	% E1 is the NPC being sought
+	% E2 is a local urban scene
+	% E3 is the hideout proper
+	% E4 is a mood to be deployed to locate the hideout
+	Place1 <3 (Guards) sd ally>
+	Element2 <Scene Urban>
+	Element3 <QuestScene>
+	Place3 <2>
+	Element4 <Prefab>
 
+	% P%id%01 = Initialization Counter
+	update <if= P%id%01 0 P= %id%01 1 SetMood %4% RootSceneID>
+
+	sub
+		MetaScene 3
+		name <%name1%'s Hideout>
+		type <Private Complex>
+		special <NOEXIT>
+		BoxMap
+		entrance <*QUEST-INACTIVE>
+		MapWidth 12
+		MapHeight 17
+		NeededCells 2
+		content <Fill Sub *HIDEOUT_X na>
+		Start <Print 1>
+		Msg1 <You enter \SCENE SceneID .>
+		sub
+			Team 1
+
+			Team 2
+			name <Citizens>
+
+			Team 3
+			name <Guards>
+			SetAlly 2
+
+			Room
+			minimap <......###..#1#...........>
+			sub
+				Elevator
+				Destination -1
+				MiniMapComponent 1
+			end
+		end
+	end
+	inv
+		MinorMood 1
+		name <Hideout Search>
+		plot_type <*FindEncounter>
+		Element1 <Grab 2>
+		Element2 <Grab 3>
+	end
 
 %%
 %% *Q_ProveMyself Content
@@ -64,10 +373,10 @@ Content
 		.%id%_GoFirstDungeon <NewChat Say %id%03 AddChat %id%01 AddChat %id%02>
 		*.%id%_GoBusy <*IAmBusy&OnPhone>
 		*.%id%_GoChat <*MISC_CHATTER>
-		result%id%01 <NewChat Say %id%04   Print %id%07  AddLawful 1 AddRenown -1 SetPlotStatus %plotid% -1  MoveAndPacifyNPC %1% %s1%  PCAlly %1%>
-		result%id%02 <AddLawful -5 ifIntimidation %sktar_hard% else .%id%_GoStartFight Goto .%id%_GoSurrender>
-		.%id%_GoSurrender <EndChat Say %id%05   Print %id%07  SetPlotStatus %plotid% -2  MoveAndPacifyNPC %1% %s1%  PCEnemy %1%  L= 13 1  UnSurrender %1%>
-		.%id%_GoStartFight <AddHeroic -3 TeamAttack 2 EndChat  Say %id%06  SetPlotStatus %plotid% -2  PCEnemy %1%>
+		result%id%01 <NewChat Say %id%04   Print %id%07  AddLawful 1 AddRenown -1 WinSubPlot %plotid%  MoveAndPacifyNPC %1% P%id%02  PCAlly %1%>
+		result%id%02 <AddLawful -5 ifIntimidation HardSkillTar %threat% else .%id%_GoStartFight Goto .%id%_GoSurrender>
+		.%id%_GoSurrender <EndChat Say %id%05   Print %id%07  LoseSubPlot %plotid%  MoveAndPacifyNPC %1% P%id%02  PCEnemy %1%  L= 13 1  UnSurrender %1%>
+		.%id%_GoStartFight <AddHeroic -3 TeamAttack 2 EndChat  Say %id%06  LoseSubPlot %plotid%  PCEnemy %1%>
 		Msg%id%01 <Now that I've completed my first real mission, I feel that I'm ready to be a cavalier!>
 		Msg%id%02 <What I really need to prove myself is a real mission. The trouble is, until I've completed a real mission, nobody's willing to hire me...>
 		Msg%id%03 <I did it! I found the cargo hold of this spaceship for Professor %name2%, and it seems like I'm the first person here! I can't wait to get back to town and collect my reward.>
@@ -127,13 +436,13 @@ Content
 		% V13 = If nonzero, PC counts as first to cargo hold
 		start <if= v11 0 else GoEntry  V= 11 1  ifNPCOK %1% else GoStartNPCDead ForceChat %1% Goto GoEntry>
 		GoEntry <Print 1>
-		GoStartNPCDead <Print 11  V= 13 1  SetPlotStatus %plotid% -2>
+		GoStartNPCDead <Print 11  V= 13 1  LoseSubPlot %plotid%>
 		SURRENDER%1% <if= V11 1 SetPlotStatus %plotid% %id% Forcechat %1%>
-		FAINT%1% <if= V11 1 V= 13 1 SetPlotStatus %plotid% -2>
+		FAINT%1% <if= V11 1 V= 13 1 LoseSubPlot %plotid%>
 		% If the quest status hasn't been set by the time the scene is exited, do it then.
-		End <if= V11 1   V= 11 2   ifNPCOK %1% else GoNPCDead  ifTeamHostile 2 else GoNoHostile  MoveAndPacifyNPC %1% P%id%02  SetPlotStatus %plotid% -2>
-		GoNoHostile <if= PlotStatus %plotid% %id%  MoveAndPacifyNPC %1% P%id%02  SetPlotStatus %plotid% -1>
-		GoNPCDead <if= PlotStatus %plotid% %id%  SetPlotStatus %plotid% -2 V= 13 1>
+		End <if= V11 1   V= 11 2   ifNPCOK %1% else GoNPCDead  ifTeamHostile 2 else GoNoHostile  MoveAndPacifyNPC %1% P%id%02  LoseSubPlot %plotid%>
+		GoNoHostile <if= PlotStatus %plotid% %id%  MoveAndPacifyNPC %1% P%id%02  WinSubPlot %plotid%>
+		GoNPCDead <if= PlotStatus %plotid% %id%  LoseSubPlot %plotid% V= 13 1>
 
 		Msg1 <You enter the cargo hold.>
 		Msg11 <You enter the cargo hold. This must be the place that %name2% was searching for.>

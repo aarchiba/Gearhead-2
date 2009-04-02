@@ -1,0 +1,40 @@
+%%
+%% *FindEncounter Plots
+%%
+%%  An encounter needs to be found and activated with SetEncounterActive.
+%%  Upon activation, the plot involved should KillPlotMood to prevent another
+%%  redundant plot from loading.
+%%
+%% Mood Spec:
+%%  E1 = The outdoors scene
+%%  E2 = The encounter being sought
+%%
+
+Plot
+	name <Trivial Case>
+	desc <Someone knows where %name2% is, and will tell you without any fuss.>
+	requires <*FindEncounter>
+
+	% E1 is the outdoor scene where the encounter is
+	% E2 is the MetaScene being sought
+	% E3 is a character who can tell where it is
+	Element1 <Grab 1>
+	Element2 <Grab 2>
+	Element3 <Character -ArchEnemy>
+
+	%% FAIL CONDITIONS:
+	%%  - E3 dies before revealing the secret
+	start <ifNPCDead %3% EndPlot>
+
+	sub
+		Persona 3
+		rumor <%name3% knows where to find %name2%.>
+		*greeting <*IHaveInformation GoSpiel na>
+		GoSpiel <NewChat Say 1 SetEncounterActive %2% KillPlotMood EndPlot>
+		Msg1 <As far as I know %name2% is in %name1%. Of course I could be wrong about that.>
+	end
+
+
+
+
+

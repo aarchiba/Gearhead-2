@@ -155,12 +155,12 @@ Content
 	% V%id%03 = Cash Payout
 	% V%id%04 = Cash Randomizer
 	%
-	START <ifSelfDead if# SelfTeam NAV_LancemateTeam if= V%id%01 0 else .%id%_GoDone Mental Gut if= V%id%02 0 else .%id%_GoCheckMeat V= %id%02 1 ifUSurvival HardSkillTar %1% else .%id%_GoCheckMeat V= %id%01 1 V= %id%04 5 V+ %id%04 d20 V= %id%03 Reward %1% V%id%04  Print %id%01 CashPrize v%id%03>
+	START <ifSelfDead if# SelfTeam NAV_LancemateTeam if= V%id%01 0 else .%id%_GoDone Mental Gut if= V%id%02 0 else .%id%_GoCheckMeat V= %id%02 1 ifUSurvival HardSkillTar %1% else .%id%_GoCheckMeat V= %id%01 1   Print %id%01 CashPrize * d4 %1%>
 	.%id%_GoCheckMeat <ifSurvival SkillTar %1% else .%id%_GoFail V= %id%01 1 Print %id%02 GiveSTC .%id%_meatdesc>
 	.%id%_meatdesc <FOOD-3>
 	.%id%_GoFail <Print %id%03>
 	.%id%_GoDone <Print %id%04>
-	Msg%id%01 <You recover shiny objects worth $ \VAL V%id%03 from the %2%'s gizzard.>
+	Msg%id%01 <You discover some shiny objects in the %2%'s gizzard.>
 	Msg%id%02 <You cut some meat from this %2%.>
 	Msg%id%03 <You don't manage to do much of anything with this %2%.>
 	Msg%id%04 <This %2% is of no further use to you.>
@@ -174,10 +174,10 @@ Content
 	% V%id%01 = Use Counter
 	% V%id%02 = Cash Payout
 	%
-	START <ifSelfDead if# SelfTeam NAV_LancemateTeam if= V%id%01 0 else .%id%_GoDone Mental Gut ifSurvival HardSkillTar %1% else .%id%_GoFail V= %id%01 1 V= %id%02 Reward %1% d20  Print %id%01  CashPrize v%id%02>
+	START <ifSelfDead if# SelfTeam NAV_LancemateTeam if= V%id%01 0 else .%id%_GoDone Mental Gut ifSurvival HardSkillTar %1% else .%id%_GoFail V= %id%01 1  Print %id%01  CashPrize * d5 %1%>
 	.%id%_GoFail <Print %id%02>
 	.%id%_GoDone <Print %id%03>
-	Msg%id%01 <You recover shiny objects worth $ \VAL V%id%02 from the %2%'s gizzard.>
+	Msg%id%01 <You recover some shiny objects from the %2%'s gizzard.>
 	Msg%id%02 <You cut open the %2%'s gizzard to see if it swallowed anything valuable, but find nothing.>
 	Msg%id%03 <This %2% is of no further use to you.>
 

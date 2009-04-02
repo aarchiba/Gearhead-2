@@ -1662,6 +1662,9 @@ begin
 						{ Only copy over the first character of the element description, }
 						{ since that's all we need, and also because copying a PREFAB tag }
 						{ may result in story elements being unnessecarily deleted. }
+						{ Copy QuestScenes as regular scenes, since by the time this mood is deployed }
+						{ that's what they'll be. }
+						if UpCase( desc[1] ) = 'Q' then desc[1] := 'S';
 						SetSAtt( LList^.SA , 'ELEMENT' + BStr( T ) + ' <' + desc[1] + '>' );
 						SetNAtt( LList^.NA , NAG_ElementID , T , ElementID( Grab_Source , N ) );
 					end;
@@ -2333,8 +2336,9 @@ Procedure UpdateMoods( GB: GameBoardPtr );
 				end;
 
 				{ Even if this mood is getting deleted, we don't want to load }
-				{ a new one right away, so set MOODFOUND to TRUE. }
-				MoodFound := True;
+				{ a new one right away, so set MOODFOUND to TRUE... as long as }
+				{ it's a major mood. Otherwise, who cares about it? }
+				if Mood^.S = GS_MajorMood then MoodFound := True;
 			end;
 			Mood := M2;
 		end;

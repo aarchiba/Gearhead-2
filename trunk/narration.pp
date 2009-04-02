@@ -40,7 +40,7 @@ uses gears,locale;
 
 	{ CITYMOOD DEFINITION }
 	{  G = GG_CityMood     }
-	{  S = Undefined       }
+	{  S = Major/Minor     }
 	{  V = Number of attached plots }
 	{ A mood may also have TYPE and a PLOT_TYPE string attributes. The first modifies the }
 	{ type of the city to which the mood is attached. The second determines what sort of plot }
@@ -49,6 +49,9 @@ uses gears,locale;
 
 
 Const
+	GS_MajorMood = 0;
+	GS_MinorMood = 1;
+
 	NAG_XXRan = -7;		{ Extra-Extra-Random Plot Generator Data }
 	NAS_LoadNextComponent = 0;	{ if =0, load next component. }
 

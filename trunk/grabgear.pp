@@ -128,6 +128,24 @@ begin
 	GG_LocateItem := Item;
 end;
 
+Function GG_LocateController( ConID: LongInt; GB: GameBoardPtr; Source: GearPtr ): GearPtr;
+	{ Attempt to find a plot controller. }
+	{ Return NIL if no such item can be found. }
+var
+	Item: GearPtr;
+begin
+	{ Error check - no undefined searches!!! }
+	if ConID = 0 then Exit( Nil );
+
+	if GB <> Nil then begin
+		Item := SeekGearByIDTag( GB^.Meks , NAG_Narrative , NAS_ControllerID , ConID );
+		if Item = Nil then Item := SeekGearByIDTag( FindRoot( GB^.Scene ) , NAG_Narrative , NAS_ControllerID , ConID );
+	end else begin
+		Item := SeekGearByIDTag( FindRoot( Source ) , NAG_Narrative , NAS_ControllerID , ConID );
+	end;
+	GG_LocateController := Item;
+end;
+
 Function GG_LocateFaction( FID: Integer; GB: GameBoardPtr; Scene: GearPtr ): GearPtr;
 	{ Find a faction gear, given its ID number and all the regular }
 	{ information passed around by ArenaScript procedures. }
@@ -301,6 +319,10 @@ begin
 	end else if CMD = 'GRABITEM' then begin
 		X := ScriptValue( Event , GB , Source );
 		Grabbed_Gear := GG_LocateItem( X , GB , Source );
+
+	end else if CMD = 'GRABCONTROLLER' then begin
+		X := ScriptValue( Event , GB , Source );
+		Grabbed_Gear := GG_LocateController( X , GB , Source );
 
 	end else if ( CMD = 'GRABCHATNPC' ) then begin
 		Grabbed_Gear := I_NPC;

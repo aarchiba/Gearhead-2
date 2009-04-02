@@ -28,12 +28,12 @@ Scene
 	Content3 <Fill Sub *SHOP_RANDOM>
 
 	% Load the debug quests. For testing purposes, set difficulcy to 1.
-	Quest1 <*:Q_DEBUG 1>
-	Quest2 <*:Q_DEBUGARENA 1>
-	Quest3 <*:Q_DEBUGGIVEMISSION 1>
+	Quest1 <*:Q_DEBUG #1>
+	Quest2 <*:Q_DEBUGARENA #1>
+	Quest3 <*:Q_DEBUGGIVEMISSION #1>
 
 	% The FreeMecha quest has a difficulcy rating of 5.
-	Quest4 <*:Q_FREEMECHA 5>
+	Quest4 <*:Q_FREEMECHA #5>
 
 	sub
 		Team 1
@@ -56,5 +56,3 @@ Scene
 		special <STARTHERE>
 
 	end
-
-
