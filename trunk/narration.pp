@@ -68,7 +68,7 @@ Const
 
 	NAG_ElementID = -9;	{ Used to store ID numbers for plot/story elements. }
 
-	Num_Plot_Elements = 30;	{ Maximum number of plot elements }
+	Num_Plot_Elements = 50;	{ Maximum number of plot elements }
 
 
 	NAG_SubPlotLayerID = -19;	{ Most of the megaplot info is filed under }

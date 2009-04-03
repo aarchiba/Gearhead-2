@@ -1,0 +1,219 @@
+%%
+%%  *:Q_SideStory Content
+%%
+%% These quests essentially act as filler for the LocalQuest ladders.
+%%
+
+Content
+	name <Restaurant Dreams>
+	desc <An aspiring chef wants to start a restaurant. Maybe the PC can help.>
+	requires <*:Q_ZSideStory ("Cuisine"|"Rich")>
+
+	% E1 is the cook
+	% E2 is a scene for the restaurant
+	Element1 <Prefab>
+	Place1 <2 (Citizens) Pass Ally>
+	Element2 <Scene (Building|Meeting) Public>
+
+	%% FAIL CONDITIONS:
+	%% - E1 dies
+	end <ifNPCDead %1% LoseSubPlot %plotid%>
+
+	% SubQuest1 is the search for money
+	SubPlot1 <*:Q_FindMoney.Investor 1>
+
+	sub
+		Persona 1
+		rumor%id% <%name1%'s dream is to some day open a restaurant.>
+		% V1 = Salad Timer
+		greeting <ifSubPlotWon %plotid% else GoCheckQuest ifG ComTime V1 else GoNoSalad ifChatNPCinPlay else GoNoSalad NewChat Say 16 AddChat 12 AddChat 13>
+		GoNoSalad <NewChat Say 15>
+		GoCheckQuest <if= PlotStatus %plotid% %id% else GoChat if# PlotStatus %plotid1% 0 else GoMakeOffer  NewChat Say 1 AddChat 1 AddChat 2 AddChat 3>
+		GoMakeOffer <if= PlotStatus %plotid% 0 else GoChat  ifG React 30 else GoNoLike  NewChat Say 10 AddChat 10 AddChat 11>
+		GoNoLike <NewChat SayAnything AddChat 7>
+		*GoChat <*MISC_CHATTER>
+		GoStartQuest <SetPlotStatus %plotid1% %id1% QMemo %plotid% 7>
+		result1 <NewChat Say 13 History 14 AddReact d10 WinSubPlot %plotid% V= 1 NextDay>
+		result2 <NewChat Say 2>
+		result3 <NewChat Say 3 AddChat 4 AddChat 5>
+		result4 <EndChat Say 4 History 14 Cash+ -2000000 AddReact * 2 d10  WinSubPlot %plotid% V= 1 NextDay>
+		result5 <NewChat Say 5>
+		result7 <NewChat Say 6 AddChat 8 AddChat 3 AddChat 9 Goto GoStartQuest>
+		result8 <NewChat Say 8>
+		result9 <NewChat Say 9>
+		result10 <NewChat Say 11 AddChat 8 AddChat 3 AddChat 9 Goto GoStartQuest>
+		result11 <NewChat Say 12 AddReact -10 CancelSubPlot %plotid%>
+		result12 <NewChat Say 17 PCEat GiveSTC .salad V= 1 NextDay>
+		.salad <SALAD-1>
+		result13 <NewChat Say 18>
+		Msg1 <So, have you had any luck finding investors for my restaurant yet?>
+		Msg2 <Well, until such a time as you have, I'll be right here reading these cookbooks. I've got to be ready for my big day.>
+		Msg3 <It's going to take at least $2,000,000 to set up a decent restaurant, and even then I might not be able to afford chairs. It shouldn't matter, though- for fine cuisine, people should be willing to stand.>
+		Msg4 <Wow, you'd do that? Thanks! I'll be sure to name a salad in your honor... "Salad du \PC "...>
+		Msg5 <It's a bit too steep for me as well, and that's the problem. Let me know when you find something.>
+		Msg6 <Yes, that's right. Why does that matter to you?>
+		msg7 <%name1% in \SCENE %s1% needs an investor so \SPR %1% can open a restaurant.>
+		msg8 <It'd be great if you could. Come back here and let me know if you find anything.>
+		Msg9 <Well, if you come up with anything, come back here and let me know. I'll take all the help I can get.>
+		Msg10 <Hey, how would you like to help me with something?>
+		Msg11 <I came to this city to study cooking. It's my dream to open a restaurant, but right now I don't have the money. I heard that cavaliers know lots of people; do you think maybe someone you know could help me?>
+		Msg12 <I understand. Maybe someday when I'm rich and successful I'll be able to brush people off like that too.>
+		Msg13 <Thank you so much! I'll be sure to name a salad in your honor... "Salad du \PC "...>
+		Msg14 <You helped %name1% to open a restaurant in \SCENE RootSceneID .>
+		Msg15 <Hi, \PC ! I'm working on some new recipes for my grand opening.>
+		Msg16 <You've arrived at just the right time. How would you like to try my new "Salad du \PC "?>
+		Msg17_1 <Here you go. I'm still working on the ingredients, but I think this is pretty close to the final recipe.>
+		Msg17_2 <Here you are. I hope you like it.>
+		Msg17_3 <Here you go. Come back tomorrow and I may have something else for you to try.>
+		Msg18 <Come back whenever you're hungry, then.>
+		Prompt1 <Actually, I have.>
+		CPrompt1 <ifSubPlotWon %plotid1% Accept>
+		Prompt2 <No, not yet.>
+		Prompt3 <I'd like to invest in it myself.>
+		CPrompt3 <ifPCRenowned Accept>
+		Prompt4 <I can afford that. [Give Money]>
+		CPrompt4 <ifG PC$ 1999999 Accept>
+		Prompt5 <That's a bit too steep for me.>
+		Prompt7 <Aren't you the person who wants to open a restaurant?>
+		CPrompt7 <ifG PCPerception 14 Accept>
+		Prompt8 <Maybe I could find you an investor.>
+		Prompt9 <I don't know.>
+		Prompt10 <Tell me what you want.>
+		Prompt11 <Sorry, kid, I don't have the time.>
+		Prompt12 <Sounds good. Let me try it!>
+		Prompt13 <Thanks, but I'm not hungry.>
+	end
+	inv
+		NPC Cook
+		chardesc Passionate Young
+	end
+
+
+Content
+	name <Addiction Issues>
+	desc <An NPC asks you to help his cousin escape a life of sin and debauchery.>
+	requires <*:Q_SideStory "City">
+
+	% E1 is the home scene
+	% E2 is the mission-giving NPC
+	% E3 is the wayward cousin
+	% E4 is the mission-giver's home scene
+	Element1 <.>
+	Element2 <NewNPC 1 1 Lawful Easygoing>
+	Place2 <4 (Citizens) pass ally>
+	Element3 <NewNPC 0 1 Criminal Passionate Young>
+	Element4 <Scene Building Legit Public>
+
+	%% FAIL CONDITIONS:
+	%% - E2 dies
+	end <ifNPCDead %2% LoseSubPlot %plotid%>
+
+	update <ifSubPlotWon %plotid1% else .%id%_GoCheckLoss SetPlotStatus %plotid2% %id2%>
+	.%id%_GoCheckLoss <ifSubPlotLost %plotid1% SetPlotStatus %plotid3% %id3%>
+
+	% SubQuest1 is the intervention for the target
+	% SubQuest2 is the victory if E2 is reformed
+	% SubQuest3 is the loss condition
+	SubPlot1 <*:Q_PersonalIntervention 3 2>
+	SubPlot2 <*Q_WinTask 2>
+	SubPlot3 <*Q_LoseTask 2>
+
+	sub
+		Persona 2
+		rumor%id% <%name2% has been very worried about %name3%.>
+		greeting <if= PlotStatus %plotid% %id% else GoGreet  if# PlotStatus %plotid1% 0 else GoCheckQuest NewChat Say 4 AddChat 4>
+		*GoGreet <*NiceToMeetYou GoChat>
+		*GoChat <*MISC_CHATTER>
+		GoCheckQuest <ifNPCOK %3% else GoCancelQuest Goto GoAskHelp>
+		GoCancelQuest <CancelSubPlot %plotid% Goto GoGreet>
+		*GoAskHelp <*INeedYourHelp GoAccept GoRefuse>
+		GoAccept <NewChat Say 1 QMemo %plotid% 2 SetPlotStatus %plotid1% %id1% AddChat 1 AddChat 2 AddChat 3>
+		GoRefuse <NewChat Say 3 AddReact -d20  CancelSubPlot %plotid%>
+		Result1 <NewChat Say 6>
+		Result2 <NewChat Say 7 AddEasygoing -d10>
+		result3 <NewChat Say 8>
+		result4 <NewChat Say 8>
+		Msg1 <My cousin %name3% has been missing for a couple of days now. In the past \SPR %3% 's had trouble with drugs and gambling, so I dread to think what \SPR %3% might be up to now.>
+		Msg2 <%name2% in %name4% is worried that \PPR %2% cousin %name3% may have fallen off the wagon.>
+		Msg3 <Suit yourself, if you don't want to get involved.>
+		Msg4 <Have you had any news about %name3% yet?>
+		Msg6 <I couldn't say... \SPR %3% always had a thing for drugs, gambling, and pornography, so wherever you can find those you should be able to find \OPR %3% .>
+		Msg7 <You may be right, but I can't help but worry... we are family, after all. If you see %name3% please tell \OPR %3% to come home.>
+		Msg8 <Thank you. Please, let me know when you have any information.>
+		Prompt1 <Where do you think %name3% is?>
+		Prompt2 <What %name3% wants to do is none of your business.>
+		Prompt3 <I'll see what I can find out.>
+		Prompt4 <I'm still working on it.>
+
+		Persona 3
+		special <UNLISTED>
+		Greeting <NewChat SayAnything>
+	end
+
+
+Content
+	name <Losing my Inventory>
+	desc <A local mechanic is losing his repair parts. The PC may be able to help.>
+	requires <*:Q_SideStory>
+
+	% E1 is the mechanic.
+	% E2 is the scene for their shop
+	Element1 <Prefab>
+	Place1 <2 (Citizens) Pass Ally>
+	Element2 <Scene Building (Garage|Spaceport) Public>
+
+	% FAIL CONDITIONS:
+	% - E1 dies
+	end <ifNPCDead %1% LoseSubPlot %plotid%>
+
+	update <ifSubPlotWon %plotid1% else .%id%_GoCheckLoss SetPlotStatus %plotid2% %id2%>
+	.%id%_GoCheckLoss <ifSubPlotLost %plotid1% SetPlotStatus %plotid3% %id3%>
+
+	% SubQuest1 is the search for the missing parts.
+	% SubQuest2 is the reward for finding the parts.
+	% SubQuest3 is the loss condition
+	SubPlot1 <*:Q_StolenMaterials 1>
+	SubPlot2 <*Q_WinTask 1>
+	SubPlot3 <*Q_LoseTask 1>
+
+	sub
+		Persona 1
+		rumor%id% <%name1% doesn't have enough spare parts to keep the garage in business.>
+		Greeting <if= PlotStatus %plotid% %id% else GoGreet if# PlotStatus %plotid1% 0 else GoCheckFirst NewChat Say 1 AddChat 1>
+		GoCheckFirst <NewChat Say 2 AddChat 4 AddChat 5>
+		*GoGreet <*NiceToMeetYou GoCheckClose>
+		GoCheckClose <ifSubPlotLost %plotid% else GoRegularService NewChat Say 6>
+		*GoRegularService <*SHOP_MECHA GoBye>
+		*GoBye <*GOODBYE>
+		Result1 <NewChat Say 3>
+		result4 <Goto GoBye>
+		result5 <NewChat Say 7 QMemo %plotid% 8 SetPlotStatus %plotid1% %id1% AddChat 7>
+		result7 <NewChat Say 9>
+		Msg1 <Have you found out what happened to all my missing repair parts yet?>
+		Msg2 <I usually do service on all kinds of machine. I also sell a variety of new mecha and replacement parts.>
+		Msg3 <Three hundred tons of salvage doesn't just disappear... It's got to be around this place somewhere.>
+		Msg4 <That's fantastic news! I'll be able to re-open my shop shortly.>
+		Msg5 <That's serious bad news. My business can't afford a loss like that... I can't see any way to re-open the shop.>
+		Msg6 <The shop's closed.>
+		Msg6_1 <The shop's closed. The shop is always closed.>
+		Msg7 <Well, you see, that's a problem. I'm in a bit of a jam right now- all of my stock has gone missing. It seems likely that someone stole it, but then again it seems unlikely that anyone would steal 300 tons of scrap metal.>
+		Msg8 <%name1% in %name2% had to close \PPR %1% garage because all of \PPR %1% stock went missing.>
+		Msg9 <It'd be great if you could. Without those parts, I won't be able to stay in business.>
+		Prompt1 <No, I haven't.>
+		Prompt4 <Thanks, but I don't need anything now.>
+		Prompt5 <Let me see what you have.>
+		Prompt7 <I could try to find it for you.>
+
+		MetaScene 1
+		sub
+			room
+			minimap <..............1.....&---&>
+			special <SHAREDPALETTE>
+			desig <HOME>
+		end
+	end
+	inv
+		NPC Mechanic
+		CharDesc Easygoing
+	end
+

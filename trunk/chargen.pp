@@ -1553,8 +1553,11 @@ begin
 		SelectHomeTown( NPC , False , Fac );
 	end else begin
 		City := SeekGear( Adv , GG_Scene , HomeTown , False );
-		if City <> Nil then begin
+		if ( City <> Nil ) and ( City^.G = GG_Scene ) then begin
+{			City := FindRootScene( Nil , City );}
 			StoreHomeTownDataInPC( NPC , City );
+		end else begin
+			SelectHomeTown( NPC , False , Fac );
 		end;
 	end;
 

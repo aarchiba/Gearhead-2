@@ -1307,7 +1307,7 @@ Procedure ConnectScene( Scene: GearPtr; DoInitExits: Boolean );
 				end else if S^.Parent^.G = GG_MetaScene then begin
 					{ We must be dealing with a quest scene. No problem- }
 					{ I know exactly where its SceneID is. }
-					E^.Stat[ STAT_Destination ] := ElementID( S^.Parent^.Parent , E^.Parent^.S );
+					E^.Stat[ STAT_Destination ] := ElementID( S^.Parent^.Parent , S^.Parent^.S );
 				end;
 			end;
 
@@ -1556,7 +1556,7 @@ Procedure InstallQuestScenes( Adv , City , Quest: GearPtr );
 				end else if S^.Parent^.G = GG_MetaScene then begin
 					{ We must be dealing with a quest scene. No problem- }
 					{ I know exactly where its SceneID is. }
-					E^.Stat[ STAT_Destination ] := ElementID( S^.Parent^.Parent , E^.Parent^.S );
+					E^.Stat[ STAT_Destination ] := ElementID( S^.Parent^.Parent , S^.Parent^.S );
 				end;
 			end;
 

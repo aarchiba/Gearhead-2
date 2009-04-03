@@ -31,10 +31,12 @@ Content
 	% P2 = Initialization Counter
 
 	% Activate the Wynter's Mine and Lower Wynter's Mine quests right away.
-	update <if= P2 0 P= 2 1 SetPlotStatus %plotid1% %id1%>
+	update <if= P2 0 P= 2 1 SetPlotStatus %plotid1% %id1% SetPlotStatus %plotid2% %id2%>
 
 	% SubPlot1 = Wynter's Mine Quest
+	% SubPlot2 = Lower Wynter's Mine Quest
 	SubPlot1 <*:Q_DungeonQuest #10 3>
+	SubPlot2 <*:Q_DungeonQuest #30 3>
 
 	sub
 		MetaScene 2
