@@ -16,7 +16,7 @@ MetaScene
 	content <Fill Sub *STORAGE_X na>
 
 	Start <Print 1 if= L2 0 if= PlotStatus %plotid% %id% L= 2 1 WMonster 2 %threat% 100>
-	nu2 <if= t2 0 if= L1 0 Print 2 XPV 100 L= 1 1>
+	nu2 <if= t2 0 if= L1 0 Print 2 XPV 100 L= 1 1 Trigger0 Update>
 	Msg1 <You enter the basement.>
 	Msg2 <That seems to be the last of the vermin.>
 

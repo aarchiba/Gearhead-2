@@ -3,11 +3,128 @@
 %%
 %% These quests essentially act as filler for the LocalQuest ladders.
 %%
+%% To test a sidestory, set its requires attribute to *:Q_DSideStory
+%%
+
+Content
+	name <Rat Killing>
+	desc <The PC has to kill a rat for the NPC.>
+	requires <*:Q_SideStory>
+
+	% E1 is the shopkeeper
+	% E2 is the infested basement
+	% E3 is the mall for the shopkeeper	
+	element1 <Prefab>
+	Place1 <3 (Citizens) Pass Ally>
+	Element2 <QuestScene>
+	Place2 <3>
+	Element3 <Scene Mall Public>
+
+	%% FAIL CONDITIONS:
+	%% - E1 dies
+	end <ifNPCDead %1% LoseSubPlot %plotid%>
+
+	update <if= SceneVar %2% 1 1 SetPlotSTatus %plotid1% %id1%>
+
+	% Quest1 is the continuation after the PC has cleared the basement.
+	SubPlot1 <*Q_WinTask 1>
+
+	sub
+		Persona 1
+		rumor%id% <%name1% has a real problem in the basement.>
+		% V1 = Have given quest
+		greeting <if= PlotStatus %plotid% %id% else GoGreet if= V1 1 else GoFirstTime NewChat Say 1 AddChat 1 AddChat 2>
+		GoFirstTime <ifChatNPCInPlay else GoBusy NewChat Say 2 AddChat 3 AddChat 4>
+		GoBusy <NewChat Say 6>
+		*GoGreet <*NiceToMeetYou GoOpenShop>
+		*GoOpenShop <*SHOP_GENERAL GoGoodbye>
+		*GoGoodbye <*GOODBYE>
+		Result1 <Goto GoOpenShop>
+		Result2 <NewChat Say 1>
+		Result3 <NewChat Say 3  V= 1 1  QMemo %plotid% 5  UpdateProps>
+		result4 <NewChat Say 4  SetPlotStatus %plotid% -2>
+		Msg1 <So, how goes the extermination of those rats?>
+		Msg2 <Hey, I was wondering if you could help me with a little problem.>
+		Msg3 <There are some rats or something infesting the basement. One of my workers got bit just recently... I need you to exterminate them. This door will take you down there.>
+		Msg4 <I understand. I won't bother you about it again.>
+		Msg5 <%name1% in %name3% asked you to clear some vermin out of \PPR %1% basement.>
+		Msg6 <I'm kind of busy right now... Why don't you drop by %name3% if there's something you need?>
+		Prompt1 <Actually, I need to buy some things first.>
+		Prompt2 <Still working on it.>
+		Prompt3 <What kind of problem?>
+		Prompt4 <Sorry, I'm not interested.>
+
+		MetaScene 1
+		sub
+			room
+			minimap <2#...+#.......1.....&---&>
+			special <SHAREDPALETTE>
+			desig <HOME>
+			sub
+				Door
+				update <if= V1 0 else GoCheckQuest V= 1 1 SetStat STAT_Lock HardSkillTar %threat%>
+				GoCheckQuest <ifG PlotStatus %plotid% 0 SetStat STAT_Lock 0>
+			end
+			inv
+				TrapDoor
+				MiniMapComponent 2
+				desig <ENTRANCE %2%>
+			end
+		end
+
+		STC QS_ExterminationBasement
+		name <%name1%'s Basement>
+		SetID 2
+	end
+	inv
+		NPC Shopkeeper
+	end
+
+
+Content
+	name <"Give Mission" NewNPC>
+	requires <*:Q_SideStory>
+	desc <A randomly generated NPC will give the PC a mission, to be handled by a "GiveMission" subquest.>
+
+	% E1 is the root scene
+	% E2 is the person who will be giving the mission.
+	% E3 is the scene where they are located
+	Element1 <.>
+	Element2 <NewNPC 0 1>
+	Place2 <3 (Citizens) Pass>
+	Element3 <Scene Building Public !Okay 2>
+
+	%% FAIL CONDITIONS:
+	%% - E2 dies
+	end <ifNPCDead %2% LoseSubPlot %plotid%>
+
+	update <ifSubPlotWon %plotid1% else .%id%_GoCheckLoss SetPlotStatus %plotid2% %id2%>
+	.%id%_GoCheckLoss <ifSubPlotLost %plotid1% SetPlotStatus %plotid3% %id3%>
+
+	% SubQuest1 is the mission.
+	% SubQuest2 is the victory, after the mission is completed.
+	% SubPlot3 is the loss condition
+	SubPlot1 <*:Q_MinorMission 2>
+	SubPlot2 <*Q_WinTask 2>
+	SubPlot3 <*Q_LoseTask 2>
+
+	sub
+		Persona 2
+		rumor%id% <%name2% needs help from a cavalier.>
+		greeting <if= PlotStatus %plotid% %id% else GoChat if= PlotStatus %plotid1% 0 else GoRemind Goto GoEnemyCheck>
+		*GoRemind <*GenericMissionReminder>
+		*GoEnemyCheck <*ENEMY_CHECK GoOfferQuest ChatNPCFac GoMakeEnemy>
+		GoMakeEnemy <SetPlotStatus %plotid% -2 ifG d20 React PCEnemy %2%>
+		*GoOfferQuest <*DoYouWantAJob GoStartQuest>
+		GoStartQuest <SetPlotStatus %plotid% %id% Goto .%id1%_GoInit>
+		GoChat <NewChat SayAnything>
+	end
+
 
 Content
 	name <Restaurant Dreams>
 	desc <An aspiring chef wants to start a restaurant. Maybe the PC can help.>
-	requires <*:Q_ZSideStory ("Cuisine"|"Rich")>
+	requires <*:Q_SideStory ("Cuisine"|"Rich")>
 
 	% E1 is the cook
 	% E2 is a scene for the restaurant
@@ -29,7 +146,7 @@ Content
 		greeting <ifSubPlotWon %plotid% else GoCheckQuest ifG ComTime V1 else GoNoSalad ifChatNPCinPlay else GoNoSalad NewChat Say 16 AddChat 12 AddChat 13>
 		GoNoSalad <NewChat Say 15>
 		GoCheckQuest <if= PlotStatus %plotid% %id% else GoChat if# PlotStatus %plotid1% 0 else GoMakeOffer  NewChat Say 1 AddChat 1 AddChat 2 AddChat 3>
-		GoMakeOffer <if= PlotStatus %plotid% 0 else GoChat  ifG React 30 else GoNoLike  NewChat Say 10 AddChat 10 AddChat 11>
+		GoMakeOffer <if= PlotStatus %plotid1% 0 else GoChat  ifG React 30 else GoNoLike  NewChat Say 10 AddChat 10 AddChat 11>
 		GoNoLike <NewChat SayAnything AddChat 7>
 		*GoChat <*MISC_CHATTER>
 		GoStartQuest <SetPlotStatus %plotid1% %id1% QMemo %plotid% 7>
@@ -52,7 +169,7 @@ Content
 		Msg4 <Wow, you'd do that? Thanks! I'll be sure to name a salad in your honor... "Salad du \PC "...>
 		Msg5 <It's a bit too steep for me as well, and that's the problem. Let me know when you find something.>
 		Msg6 <Yes, that's right. Why does that matter to you?>
-		msg7 <%name1% in \SCENE %s1% needs an investor so \SPR %1% can open a restaurant.>
+		msg7 <%name1% in %name2% needs an investor so \SPR %1% can open a restaurant.>
 		msg8 <It'd be great if you could. Come back here and let me know if you find anything.>
 		Msg9 <Well, if you come up with anything, come back here and let me know. I'll take all the help I can get.>
 		Msg10 <Hey, how would you like to help me with something?>
@@ -75,7 +192,6 @@ Content
 		CPrompt4 <ifG PC$ 1999999 Accept>
 		Prompt5 <That's a bit too steep for me.>
 		Prompt7 <Aren't you the person who wants to open a restaurant?>
-		CPrompt7 <ifG PCPerception 14 Accept>
 		Prompt8 <Maybe I could find you an investor.>
 		Prompt9 <I don't know.>
 		Prompt10 <Tell me what you want.>
@@ -216,4 +332,18 @@ Content
 		NPC Mechanic
 		CharDesc Easygoing
 	end
+
+
+%%
+%%  *:Q_DEBUG
+%%
+%%  This quest will load a debug side story and activate it.
+%%
+
+Content
+	name <Debugging Frame>
+	requires <*:Q_DEBUG>
+	update <if= V1 0 V= 1 1 SetPlotStatus %plotid1% %id1%>
+	subplot1 <*:Q_DSideStory>
+
 

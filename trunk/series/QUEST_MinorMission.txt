@@ -17,6 +17,51 @@
 %%
 
 Content
+	name <Go Beat Invaders>
+	desc <Some unauthorized mecha have shown up in the city. See what you can do.>
+	requires <*:Q_MinorMission (1:MILIT|1:POLIT|1:ADVEN)>
+	special <REUSABLE>
+
+	% E1 is the NPC offering the mission
+	% E2 is the encounter that is the mission
+	% E3 is an outdoors scene for it
+	Element2 <Prefab>
+	Place2 <3>
+	Element3 <Scene Outdoors>
+
+	%% FAIL CONDITIONS:
+	%% - E1 dies
+	end <ifNPCDead %1% LoseSubPlot %plotid%>
+
+	sub
+		Persona 1
+		Greeting <if= PlotStatus %plotid% %id% else %pop% NewChat Say %id%01>
+		.%id%_GoInit <SetPlotStatus %plotid% %id% NewChat Say %id%02 QMemo %plotid% %id%03>
+		Msg%id%01 <The infiltrators in \SCENE %s2% have not yet been dealt with.>
+		Msg%id%02 <A team of unknown mecha has been detected in %name3% . We don't yet know their intentions, but they must be stopped before they have a chance to do any damage.>
+		Msg%id%03 <%name1% asked you to locate and eliminate some mecha infiltrators in %name3%.>
+	end
+	inv
+		Encounter
+		name <Invaders>
+		Special <NoMSID>
+		% V1 = Visibility Clock.
+		%      If ComTime > V1 and PlotStatus %plotid% = %id%, encounter is active
+		&EnemyFac <0>
+		update <if= PlotStatus %plotid% %id% else GoHide ifG ComTime V1 else GoHide  SetStat STAT_MetaVisibility 0  ShowEncounter  Goto GoSetOrders>
+		GoSetOrders <GrabSource GSetNAtt NAG_EpisodeData NAS_Orders 3>
+		use <ifG StatVal STAT_MetaVisibility -1  Print -1  Goto GoStartCombat>
+		ATTACK <ifG StatVal STAT_MetaVisibility -1    ifUStealth 15 else GoAutoAttack ifYesNo -3 -4 -5 else GoAvoidAttack Goto GoAutoAttack>
+		GoAutoAttack <Alert -2 Goto GoStartCombat>
+		GoAvoidAttack <Print -6 AddSociable -1>
+		GoStartCombat <V= 1 ComTime V+ 1 86400  SavePos Dynamic 2 %threat% 100 .nu1 .nu2 ComposeD Msg1 .Msg1  DynaFaction &EnemyFac>
+		.nu1 <if= T1 0  Return   if= L2 0  L= 2 1  AddRenown -5  ItemVar= %2% 1 ComTime ItemVar+ %2% 1 d86400 ItemVar+ %2% 1 43200>
+		.nu2 <if= T2 0           if= L2 0  L= 2 1  XPV 100     Alert 1  WinSubPlot %plotid% DeleteItem %2%>
+		.msg1 <You have defeated the invaders.>
+		EncounterMove 50
+	end
+
+Content
 	name <Go Beat Thieves>
 	desc <Some mecha have been stolen, and are galavanting around. See what you can do.>
 	requires <*:Q_MinorMission (1:POLIC|1:CRAFT)>
@@ -181,5 +226,12 @@ Content
 		GoStartQuest <SetPlotStatus %plotid% %id% Goto .%id1%_GoInit>
 		GoChat <NewChat SayAnything>
 		Msg1 <I hear that you succeeded. The debugging of the mission is now over.>
+
+		MetaScene 1
+		sub
+			room
+			desig <HOME>
+			minimap <#####&...&&.1.&&...&&&-&&>
+		end
 	end
 

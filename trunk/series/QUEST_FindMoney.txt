@@ -1,11 +1,128 @@
+%%
 %%   *:Q_FindMoney Contents
 %%		.Investor = The NPC needs the money to invest in a new product
 %%		.Charity = The NPC needs the money to save an orphanage or whatever
 %%
 %%	The PC is sent by someone to scrounge funds for some project or another.
 %%
+%%  Set the requires attribute to *:Q_DFindMoney for testing
+%%
 %%	Param1: The character who needs the money
 %%
+
+Content
+	name <Mechanic Mission>
+	desc <A mechanic may provide funding, if the PC does something for him.>
+	requires <*:Q_FindMoney>
+
+	% E1 is the character who needs the money
+	% E2 is the character who can give the money
+	% E3 is a scene for E2
+	Element2 <Prefab>
+	Place2 <3 (Citizens) Pass>
+	Element3 <Scene Building Public Garage>
+
+	%% FAIL CONDITIONS:
+	%% - E2 dies
+	end <ifNPCDead %2% LoseSubPlot %plotid%>
+
+	% Quest1 is the mission offered by the shopkeeper.
+	SubPlot1 <*:Q_MinorMission 2>
+
+	sub
+		Persona 2
+		rumor%id% <%name2% is known as a great philanthropist.>
+		greeting <if= PlotStatus %plotid% %id% else GoGreet if= PlotStatus %plotid1% -1 else GoCheckLoss NewChat Say 1 WinSubPlot %plotid%>
+		GoCheckLoss <if= PlotStatus %plotid1% -2 else GoCheckQuest NewChat Say 3 SetPlotStatus %plotid% -2>
+		GoCheckQuest <NewChat Say 4 AddChat 1 AddChat 2>
+		*GoGreet <*NiceToMeetYou GoShop>
+		*GoShop <*SHOP_MECHA GoBye>
+		*GoBye <*GoodBye>
+		result1 <EndChat Say 5 AddChat 3>
+		result2 <Goto GoShop>
+		result3 <Goto .%id1%_GoInit>
+		Msg1 <You really came through; thanks. Go let %name1% know that I'm willing to back \PPR %1% project.>
+		Msg3 <You failed to complete the task I asked of you. I'm afraid that I won't be able to help %name1%.>
+		Msg4 <Yes? You look like there's something you want.>
+		Msg5 <Interesting. Well, before I can help %name1%, I need some help myself. If you could do one small thing for me I'd be more than willing to provide funding.>
+		Prompt1 <%name1% needs your help.>
+		Prompt2 <Right now, I just need repairs.>
+		Prompt3 <[Continue]>
+
+		MetaScene 2
+		sub
+			room
+			minimap <....1...............&---&>
+			special <SHAREDPALETTE>
+			desig <HOME>
+		end
+	end
+	inv
+		NPC Mechanic
+		chardesc heroic
+	end
+
+Content
+	name <Shopkeeper Mission>
+	desc <A shopkeeper may provide funding, if the PC does something for him.>
+	requires <*:Q_FindMoney>
+
+	% E1 is the character who needs the money
+	% E2 is the character who can give the money
+	% E3 is a scene for E2
+	Element2 <Prefab>
+	Place2 <3 (Citizens) Pass>
+	Element3 <Scene Building Public Mall>
+
+	%% FAIL CONDITIONS:
+	%% - E2 dies
+	end <ifNPCDead %2% LoseSubPlot %plotid%>
+
+	% Quest1 is the mission offered by the shopkeeper.
+	SubPlot1 <*:Q_MinorMission 2>
+
+	sub
+		Persona 2
+		rumor%id% <%name2% has been known to donate money to a variety of causes.>
+		greeting <if= PlotStatus %plotid% %id% else GoGreet if= PlotStatus %plotid1% -1 else GoCheckLoss NewChat Say 1  WinSubPlot %plotid%>
+		GoCheckLoss <if= PlotStatus %plotid1% -2 else GoCheckQuest NewChat Say 3 SetPlotStatus %plotid% -2>
+		GoCheckQuest <NewChat Say 4 AddChat 1 AddChat 2>
+		*GoGreet <*NiceToMeetYou GoShop>
+		*GoShop <*SHOP_ARMOR GoBye>
+		*GoBye <*GoodBye>
+		result1 <EndChat Say 5 AddChat 3>
+		result2 <Goto GoShop>
+		result3 <Goto .%id1%_GoInit>
+		Msg1 <Thanks for your help. I'll send that money to %name1% right away.>
+		Msg3 <Things are looking grim. Under these circumstances, I can't afford to give any money to %name1%.>
+		Msg4 <May I help you?>
+		Msg5 <I'd like to help %name1%, but before I can do that there's a little something I need you to do for me.>
+		Prompt1 <I'm soliciting donations for %name1%.>
+		Prompt2 <I'd like to buy something.>
+		Prompt3 <[Continue]>
+
+		MetaScene 2
+		sub
+			room
+			minimap <....1..........2...3&---&>
+			special <SHAREDPALETTE>
+			desig <HOME>
+			inv
+				STC MANNEKIN-M
+				PDir 1
+				MiniMapComponent 2
+
+				STC MANNEKIN-F
+				PDir 3
+				MiniMapComponent 3
+			end
+		end
+	end
+	inv
+		NPC Shopkeeper
+		Chardesc Shy
+	end
+
 
 Content
 	name <Charity Mecha Tournament>
@@ -465,4 +582,43 @@ Content
 		Age 30
 	end
 
+%%
+%% Debugging Frame
+%%
+%% Loads a mission into the Cavalier's Club for easy debugging.
+%%
+
+Content
+	requires <*:Q_Debug>
+	desc <The NPC will give the PC a mission, to be handled by a "GiveMission" subquest.>
+
+	% E1 is the person who will be giving the mission.
+	% E2 is the CavClub
+	Element1 <NewNPC 0 0>
+	Place1 <2 (Citizens) ally pass>
+	Element2 <Scene CavClub>
+
+	% SubQuest1 is the mission.
+	SubPlot1 <*:Q_DFindMoney 1>
+
+	sub
+		Persona 1
+		rumor0 <%name1% needs a cavalier for a mission of some kind.>
+		greeting <if= PlotStatus %plotid1% -1 else GoCheckLoss NewChat Say 1 SetPlotStatus %plotid% -1>
+		GoCheckLoss <if= PlotStatus %plotid1% -2 else GoCheckFirst SetPlotStatus %plotid% -2 Goto GoEndInLoss>
+		*GoEndInLoss <*MissionWasFailure na na na>
+		GoCheckFirst <if= PlotStatus %plotid1% 0 else GoChat Goto GoOfferQuest>
+		*GoOfferQuest <*DoYouWantAJob GoStartQuest>
+		GoStartQuest <SetPlotStatus %plotid1% %id1% NewChat Say 2>
+		GoChat <NewChat SayAnything>
+		Msg1 <I hear that you succeeded. The debugging of the mission is now over.>
+		Msg2 <Give me my money!!!>
+
+		MetaScene 1
+		sub
+			room
+			desig <HOME>
+			minimap <#&&&#&...&&.1.&&...&&&-&&>
+		end
+	end
 
