@@ -1117,13 +1117,13 @@ Content
 		result1 <NewChat Say 2 AddChat 4 AddChat 5>
 		result2 <Print 3 History 4 PMemo %plotid% 5 SetPlotStatus %plotid1% %id1% Goto GoR2Finish>
 		*GoR2Finish <*BrushOff>
-		result3 <ifIntimidation HardSkillTar StoryDL else result2 NewChat Say 6 AddChat 6>
+		result3 <ifIntimidation SkillTar StoryDL else result2 NewChat Say 6 AddChat 6>
 		result4 <EndChat Say 7 Print 3 History 4 PMemo %plotid% 5 SetPlotStatus %plotid1% %id1%>
-		result5 <ifConversation SkillTar StoryDL else GoR5Fail NewChat Say 8 AddChat 7 AddChat 8 AddChat 9>
+		result5 <ifG React 0 else GoR5Fail NewChat Say 8 AddChat 7 AddChat 8 AddChat 9>
 		GoR5Fail <EndChat Say 9 Print 3 History 4 PMemo %plotid% 5 SetPlotStatus %plotid1% %id1%>
-		result6 <ifConversation SkillTar StoryDL else GoR6Fail NewChat Say 10 Goto GoReveal>
+		result6 <NewChat Say 10 Goto GoReveal>
 		GoR6Fail <EndChat Say 13 Print 3 History 4 PMemo %plotid% 5 SetPlotStatus %plotid1% %id1%>
-		result7 <ifConversation HardSkillTar StoryDL else GoR7Fail NewChat Say 14 Goto GoReveal>
+		result7 <ifConversation SkillTar StoryDL else GoR7Fail NewChat Say 14 Goto GoReveal>
 		GoR7Fail <EndChat Say 15 Print 3 History 4 PMemo %plotid% 5 SetPlotStatus %plotid1% %id1%>
 		result8 <EndChat Say 16 Print 3 History 4 PMemo %plotid% 5 SetPlotStatus %plotid1% %id1%>
 		result9 <ifConversation SkillTar StoryDL else GoR9Fail NewChat Say 17 ifG React d100 else GoReveal if= &AmoreNPC 0 else GoReveal ifG ChatNPCDAge -3 else GoReveal  PCLover %4% History 18  Goto GoReveal>
@@ -1377,6 +1377,7 @@ Content
 	end
 	inv
 		Encounter
+		EncounterMove 50
 		name <%name3%'s Lance>
 		% V1 = Recharge Counter
 		% This encounter will appear once every 5 hours, as long as this is the active subplot.
