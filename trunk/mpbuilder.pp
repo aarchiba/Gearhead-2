@@ -1404,7 +1404,7 @@ var
 			OutList := Nil;
 			while LL <> Nil do begin
 				LL2 := LL^.Next;
-				if NAttValue( LL^.NA , NAG_Narrative , NAS_QuestDungeonOriginal ) <> NAV_WasQDOriginal then begin
+				if NAttValue( LL^.NA , NAG_Narrative , NAS_QuestDungeonPlacement ) <> NAV_WasQDOriginal then begin
 					DelinkGear( LList , LL );
 					AppendGear( OutList , LL );
 				end;
@@ -1428,6 +1428,34 @@ var
 		{ Strip out the non-original subs and invs. }
 		NOSubs := StripNonOriginals( SceneProto^.SubCom );
 		NOInvs := StripNonOriginals( SceneProto^.InvCom );
+	end;
+	Procedure ReinstallSubsAndInvs;
+		{ Reinstall the subs and invs, placing them in either the goal or the }
+		{ entry levels. }
+	var
+		part: GearPtr;
+	begin
+		{ Begin with the subs. }
+		while NoSubs <> Nil do begin
+			part := NoSubs;
+			DelinkGear( NoSubs , part );
+			if NAttValue( Part^.NA , NAG_Narrative , NAS_QuestDungeonPlacement ) = NAV_ForEntryLevel then begin
+				InsertSubCom( SceneProto , part );
+			end else begin
+				InsertSubCom( GoalLevel , part );
+			end;
+		end;
+
+		{ Finish with the invs. }
+		while NOInvs <> Nil do begin
+			part := NoInvs;
+			DelinkGear( NoInvs , part );
+			if NAttValue( Part^.NA , NAG_Narrative , NAS_QuestDungeonPlacement ) = NAV_ForEntryLevel then begin
+				InsertInvCom( SceneProto , part );
+			end else begin
+				InsertInvCom( GoalLevel , part );
+			end;
+		end;
 	end;
 begin
 	{ **************** }
@@ -1453,9 +1481,8 @@ begin
 	{ ***************** }
 	{ *** STEP FOUR *** }
 	{ ***************** }
-	{ Re-insert the NOSubs and NOInvs into the goal level. }
-	InsertSubCom( GoalLevel , NoSubs );
-	InsertInvCom( GoalLevel , NoInvs );
+	{ Re-insert the NOSubs and NOInvs into the finished dungeon. }
+	ReinstallSubsAndInvs;
 end;
 
 

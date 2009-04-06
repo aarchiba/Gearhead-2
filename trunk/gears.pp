@@ -174,9 +174,11 @@ Const
 
 	NAS_MoodRecharge = 32;		{ Scenes will only attempt to load new moods once every 10 hours or so. }
 
-	NAS_QuestDungeonOriginal = 33;	{ Was this item originally a subcom of the quest dungeon? If not, }
+	NAS_QuestDungeonPlacement = 33;	{ Was this item originally a subcom of the quest dungeon? If not, }
 					{ remove it from the prototype and reinstall it in the goal level. }
 		NAV_WasQDOriginal = 1;
+		NAV_ForGoalLevel = -1;	{ Put this only in the goal level. }
+		NAV_ForEntryLevel = -2;	{ Put this only in the entry level. }
 
 	NAS_EncounterActive = 34;	{ Is this activatable encounter active? Formerly QEncActive... }
 

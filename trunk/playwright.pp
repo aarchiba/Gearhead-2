@@ -904,8 +904,8 @@ Function PrepareQuestSceneElement( Adventure , Plot: GearPtr; N: Integer ): Gear
 		{ the goal level. }
 	begin
 		while LList <> Nil do begin
-			if NAttValue( LList^.NA , NAG_Narrative , NAS_QuestDungeonOriginal ) = 0 then begin
-				SetNAtt( LList^.NA , NAG_NArrative , NAS_QuestDungeonOriginal , NAV_WasQDOriginal );
+			if NAttValue( LList^.NA , NAG_Narrative , NAS_QuestDungeonPlacement ) = 0 then begin
+				SetNAtt( LList^.NA , NAG_NArrative , NAS_QuestDungeonPlacement , NAV_WasQDOriginal );
 			end;
 			LList := LList^.Next;
 		end;

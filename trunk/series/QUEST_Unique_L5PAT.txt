@@ -1,0 +1,269 @@
+%%
+%%  *:Q_UNIQUE_[city designation]_[identifier] Content
+%%
+%% For guaranteed quests.
+%%
+
+Content
+	name <First Contact>
+	requires <*:Q_Unique_CAYLE_Caves>
+
+	%% Param1 is the Cayley Caves dungeon
+	% Element2 is the ghost dog
+	% Element3 is the watcher
+
+	Element2 <Prefab>
+	Place2 </>
+	Element3 <Prefab>
+	Place3 <1 (Exorg) SD enemy>
+
+	% P%id%01 = Ghost dog counter
+	% P%id%02 = Final level message counter
+	% P%id%03 = Ghost dog likes the PC
+
+	% Get on good terms with the ghost dog, and you get on good terms with the watcher. Not that
+	% it's going to help much if you plan on visiting Cayley Core.
+	start <if= SceneID %1% if= P%id%02 0 P= %id%02 1 Alert %id%01 EndSubPlot %plotid%  if= P%id%03 1 TeamNeutral 3>
+	Msg%id%01 <As you enter this level, you have the distinct feeling of being watched.>
+
+	sub
+		MetaScene 1
+		% The encounter with the ghost dog should happen within a half
+		% hour of entering the caves.
+		5min <if= P%id%01 0  if= d4 1  P= %id%01 1 ifItemOK %3% Alert 11 ForceChat %2%>
+		Msg11 <Suddenly, the ghostly apparition of a large dog appears before you. You hear its voice clearly through your helmet speakers.>
+
+		Persona 2
+		special <NOPLOTS NOESCAPE>
+		greeting <EndChat Say 1 AddChat 1 AddChat 2 AddChat 3>
+		result1 <EndChat ifG PCHeroism %threat% else GoFail Alert 4 Say 5 P= %id%03 1>
+		GoFail <Alert 2 Say 3>
+		result2 <Goto result1>
+		result3 <Goto result1>
+		Msg1 <Rowr?>
+		Msg2 <The ghost dog seems to dislike the sound of your voice. It begins to fade away.>
+		Msg3 <Grrr...>
+		Msg4 <The ghost dog seems to like the sound of your voice. It begins to fade away.>
+		Msg5 <Ruff ruff.>
+		Prompt1 <Nice doggy...>
+		Prompt2 <What the blazes!?>
+		Prompt3 <Greetings. My name is \PC .>
+	end
+	inv
+		NPC Citizen
+		%% Just use a character blank, and fill it with our needed info
+		name <Ghost Dog>
+		job <Apparition>
+		SDL_PORTRAIT <por_x_ghostdog.png>
+		SDL_COLORS <172 225 175 172 225 175 255 255 80>
+		age -20
+		statline 17 19 16 22 15 20 12 14
+
+		Monster Exorg Watcher
+	end
+
+Content
+	name <Exorg Laboratory>
+	requires <*:Q_Unique_CAYLE_Core>
+
+	%% Param1 is the Cayley Core dungeon
+	% Element2 is the laboratory
+	% Element3 is the data slate
+	% Element4 is a local public scene
+	% Element5 is a specific faction
+	% Element6 is the person searching for the data core
+	% Element7 is a holder for the data core
+	Element2 <QuestScene>
+	Place2 <1>
+	Element3 <Prefab>
+	Place3 <7>
+	Element4 <Scene Building Public>
+	Element5 <Faction AEGIS>
+	Element6 <NewNPC 5 4>
+	Place6 </>
+	Element7 <Prefab>
+	Place7 <2>
+
+	% P%id%01 = Initialization Counter
+
+	update <if= P%id%01 0 P= %id%01 1 MoveNPC %6% %4%>
+	end <ifItemDestroyed %3% else .%id%_GoCheckDeath CancelSubPlot %plotid%>
+	.%id%_GoCheckDeath <ifNPCDead %6% CancelSubPlot %plotid%>
+
+	sub
+		Persona 6
+		rumor%id% <%name6% is looking for something from the bottom of the mine.>
+		% V1 = Have offered quest
+		% V2 = Have completed quest
+		greeting <if= V2 0 else GoChat if= V1 1 else GoOfferQuest NewChat Say 1 AddChat 1 AddChat 2 AddChat 3 AddChat 4>
+		GoChat <NewChat SayAnything>
+		*GoOfferQuest <*DoYouWantAJob&Chara GoBriefing>
+		GoBriefing <NewChat Say 2 AddChat 5 AddChat 6 AddChat 7>
+
+		Msg1 <Have you found the dataslate yet?>
+		Msg2 <I've been searching for information about a brilliant yet reclusive scientist who used to live on Cayley Rock.>
+
+		Prompt1 <I'm still working on it.>
+		Prompt2 <I have it right here. [Give Slate]>
+		CPrompt2 <ifKeyItem %3% Accept>
+		Prompt3 <I found it, and I've decided to keep it.>
+		CPrompt3 <ifKeyItem %3% Accept>
+		Prompt4 <I'd like to ask a few questions, first.>
+		Prompt5 <>
+		Prompt6 <>
+		Prompt7 <>
+
+		MetaScene 2
+		name <Exorg Laboratory>
+		%% Lab originally used by Jane Modo years ago
+		type <Private Complex Laboratory>
+		special <NOEXIT UNSAFE>
+		BoxMap
+		RockyTiles
+		entrance <*GoDown>
+		MapWidth 17
+		MapHeight 17
+		% V1 = First time entry
+		Start <if= V1 0 else GoBeenBefore Alert 2 V= 1 1>
+		GoBeenBefore <Print 1>
+		Msg1 <You enter the mysterious laboratory.>
+		Msg2 <At the bottom of the caves, you discover a secret laboratory. Judging by the furnishings whoever lived here was obviously human.>
+		content <Fill Sub *STORAGE_X na>
+		sub
+			Team 1
+
+			Team 2
+			name <Citizens>
+
+			Team 3
+			name <Guards>
+			SetAlly 2
+
+			Room
+			minimap <......###..#1#...........>
+			inv
+				Elevator
+				name <Airlock>
+				Destination -1
+				MiniMapComponent 1
+			end
+
+			room
+			minimap <......&&&..&&&..&&&......>
+
+			room
+			minimap <......&&&..&&&..&&&......>
+
+			room
+			minimap <............1............>
+			inv
+				STC BIOTANK
+				name <Empty Specimen Tank>
+				MiniMapComponent 1
+				use <Print 1>
+				CLUE_SCIENCE <Print 2>
+				CLUE_INSIGHT <Print 2>
+				Msg1 <This specimen tank is ruptured. Whatever was once in it is now long gone.>
+				Msg2 <It's possible that this tank contained the Watcher you encountered earlier.>
+			end
+
+			room
+			minimap <............1............>
+			inv
+				STC BIOTANK
+				name <Specimen Tank>
+				MiniMapComponent 1
+				use <if= V1 0 else GoBeenBefore ifYesNo 1 2 3 V= 1 1 Alert 4 OpenInv>
+				GoBeenBefore <OpenInv>
+				Msg1 <You can see misty shapes floating in this specimen tank.>
+				Msg2 <Open it up and reach inside.>
+				Msg3 <Leave it alone.>
+				Msg4 <You reach inside...>
+				inv
+					BeamGun 14
+					name <Exorg Rifle>
+					desc <A mysterious beamgun recovered from a secret laboratory.>
+					UsesReflexes
+					Range 8
+					Acc 1
+					Recharge 3
+					mass -9
+					Biotech
+					inv
+						PowerSource 6
+						name <Jade Disc>
+						mass -5
+					end
+				end
+			end
+
+			room
+			minimap <............1............>
+			inv
+				STC BIOTANK
+				name <Specimen Tank>
+				MiniMapComponent 1
+				use <if= V1 0 else GoBeenBefore ifYesNo 1 2 3 V= 1 1 Alert 4 OpenInv>
+				GoBeenBefore <OpenInv>
+				Msg1 <You can see misty shapes floating in this specimen tank.>
+				Msg2 <Open it up and reach inside.>
+				Msg3 <Leave it alone.>
+				Msg4 <You reach inside...>
+				inv
+					Shield 8
+					name <Exorg Shield>
+					desc <A mysterious shield recovered from a secret laboratory.>
+					DefBonus 2
+					mass -7
+					Biotech
+					AntiBeam
+					sub
+						EMelee 16
+						name <Beam Blade>
+						type <EXTEND BRUTAL>
+						Integral
+						inv
+							PowerSource 6
+							name <Jade Disc>
+							mass -5
+						end
+					end
+				end
+			end
+		end
+
+		MetaScene 7
+		% Hold the bedroom, which holds the endtable, which holds the data slate
+		sub
+			Room
+			minimap <...........321..###......>
+			desig <HOME>
+			inv
+
+				STC BED-1
+				MiniMapComponent 2
+
+				STC ENDTABLE-1
+				PDir 6
+				use <OpenInv>
+				MiniMapComponent 3
+				inv
+					item Antiseptic Ointment
+					item Super Glue
+					item Biotech Lab Set
+				end
+			end
+		end
+	end
+	inv
+		item Mediabook
+		name <Data Slate>
+		desc <A data slate previously owned by whoever built the lab in Cayley Core.>
+		% V1 = Have overcome 
+		use <>
+
+		STC ENDTABLE-1
+		PDir 6
+		use <OpenInv>
+	end
+

@@ -3206,7 +3206,7 @@ begin
 			MechaMakeover( Mek , 0 , Theme , ModPoints );
 		end;
 
-		SetSATt( Mek^.SA , 'SDL_COLORS <' + standard_lot_colors[ Random( num_standard_schemes ) ] + '>' );
+		SetSATt( Mek^.SA , 'SDL_COLORS <' + Random_Mecha_Colors + '>' );
 
 		SetNAtt( Mek^.NA , NAG_Location , NAS_Team , NAV_DefPlayerTeam );
 		DeployGear( GB , Mek , False );
@@ -4275,7 +4275,7 @@ begin
 	{ As long as we have a grabbed gear, go for it! }
 	if Grabbed_Gear <> Nil then begin
 		WaitAMinute( GB , Grabbed_Gear , ReactionTime( Grabbed_Gear ) * 3 );
-		AddMentalDown( Grabbed_Gear , 5 );
+		AddStaminaDown( Grabbed_Gear , 5 );
 	end;
 end;
 

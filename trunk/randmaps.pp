@@ -1950,6 +1950,8 @@ begin
 				'#':	SetTerrain( GB , GBP.X , GBP.Y , Palette[ STAT_MFBorder ] );
 				',':	SetTerrain( GB , GBP.X , GBP.Y , Palette[ STAT_MFMarble ] );
 				'&':	SetTerrain( GB , GBP.X , GBP.Y , Palette[ STAT_MFSpecial ] );
+				'^':	SetTerrain( GB , GBP.X , GBP.Y , TERRAIN_Wreckage );
+				'%':	SetTerrain( GB , GBP.X , GBP.Y , TERRAIN_Rubble );
 				'-':	SetTerrain( GB , GBP.X , GBP.Y , TERRAIN_Threshold );
 				' ':	{Do Nothing};
 

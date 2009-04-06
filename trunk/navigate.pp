@@ -375,6 +375,12 @@ begin
 	TruePC := PC;
 	while ( TruePC <> Nil ) and ( ( TruePC^.G <> GG_Character ) or ( NAttValue( TruePC^.NA , NAG_CharDescription , NAS_CharType ) <> 0 ) ) do TruePC := TruePC^.Next;
 
+	{ Give the PC a personal communicator. Maybe. }
+	if TruePC^.InvCom = Nil then begin
+		Artifacts := LoadNewItem( 'Personal Communicator' );
+		if Artifacts <> Nil then InsertInvCom( TruePC , Artifacts );
+	end;
+
 	Camp := NewCampaign;
 	Camp^.Source := LoadFile( 'adventurestub.txt' , Series_Directory );
 

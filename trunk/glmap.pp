@@ -1217,7 +1217,8 @@ begin
 
 	end else if ( it = '' ) and ( M^.G <> GG_Prop ) and ( M^.G <> GG_MetaTerrain ) then begin
 		T := NAttValue( M^.NA , NAG_Location , NAS_Team );
-		Team := LocateTeam( GB , T );
+		if isFoundAlongTrack( GB^.meks , FindRoot( M ) ) then Team := LocateTeam( GB , T )
+		else Team := Nil;
 		if Team <> Nil then it := SAttValue( Team^.SA , 'SDL_COLORS' );
 
 		if it = '' then begin
@@ -1229,9 +1230,9 @@ begin
 				if it = '' then begin
 					if T = NAV_DefPlayerTeam then begin
 						it := '66 121 179';
-					end else if AreEnemies( GB , T , NAV_DefPlayerTeam ) then begin
+					end else if ( Team <> Nil ) and AreEnemies( GB , T , NAV_DefPlayerTeam ) then begin
 						it := '180 10 120';
-					end else if AreAllies( GB , T , NAV_DefPlayerTeam ) then begin
+					end else if ( Team <> Nil ) and AreAllies( GB , T , NAV_DefPlayerTeam ) then begin
 						it := '150 150 150';
 					end else begin
 						it := neutral_clothing_color;

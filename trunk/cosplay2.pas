@@ -16,13 +16,13 @@ var
 
 begin
 	FileMenu := CreateRPGMenu( MenuItem , MenuSelect , ZONE_Menu );
-	BuildFileMenu( FileMenu , Graphics_Directory + 'por_*.png' );
+	BuildFileMenu( FileMenu , Graphics_Directory + '*.png' );
 	RPMSortAlpha( FileMenu );
 	SpriteName := '';
 
 	repeat
 		SpriteName := SelectFile( FileMenu , @RedrawOpening );
-		if SpriteName <> '' then SelectColorPalette( 1, SpriteName, '200 0 0 200 200 0 0 200 0', 100, 150, @ClrScreen );
+		if SpriteName <> '' then SelectColorPalette( 0, SpriteName, '200 0 0 200 200 0 0 200 0', 100, 150, @ClrScreen );
 
 	until SpriteName = '';
 

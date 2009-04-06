@@ -6,6 +6,67 @@
 
 %  STATS  REF BOD SPD PER CFT EGO KNO CHA
 
+ARCH Exorg Watcher
+MonsterTV 130
+Sealed
+Biotech
+roguechar <X>
+sdl_sprite <>
+sdl_colors <28 52 38 45 45 45 194 16 38>
+type <Space Exorg Asteroid>
+habitat <SPACE>
+statline 17 19 16 22 15 20 12 14
+CloseCombat 9
+RangedCombat 12
+Dodge 10
+Awareness 15
+SpotWeakness 8
+ElectronicWarfare 8
+Toughness 8
+sub
+torso
+	armor 5
+	AntiBeam
+	sub
+		BeamGun 8
+		range 7
+		name <Eye Laser>
+		type <ArmorPiercing>
+
+		PowerSource 6
+		name <Energy Gland>
+
+		EMelee 12
+		name <Laser Burn>
+
+		ECM 6
+	end
+leg
+	armor 5
+	AntiBeam
+	sub
+		Arcjet 5
+	end
+leg
+	armor 5
+	AntiBeam
+	sub
+		Arcjet 5
+	end
+leg
+	armor 5
+	AntiBeam
+	sub
+		Arcjet 5
+	end
+leg
+	armor 5
+	AntiBeam
+	sub
+		Arcjet 5
+	end
+end
+
 ARCH Exorg Floater
 MonsterTV 60
 Sealed

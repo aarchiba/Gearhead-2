@@ -48,6 +48,8 @@ var
 	I_Endurance: Integer;	{ How much of the PC's crap the NPC is }
 		{ willing to take. When it reaches 0, the NPC says goodbye. }
 
+Function Random_Mecha_Colors: String;
+
 Function RepairMasterCost( Master: GearPtr; Material: Integer ): LongInt;
 Function ReloadMasterCost( M: GearPtr; ReloadGeneralInv: Boolean ): LongInt;
 Procedure DoReloadMaster( M: GearPtr; ReloadGeneralInv: Boolean );
@@ -69,9 +71,9 @@ uses ability,arenacfe,backpack,gearutil,ghchars,ghmodule,gearparser,
 	vidgfx,vidmap,vidmenus,vidinfo;
 {$ELSE}
 {$IFDEF CUTE}
-	cutegfx,cutemap,glmenus,glinfo;
+	cutegfx,cutemap,glmenus,glinfo,colormenu;
 {$ELSE}
-	glgfx,glmap,glmenus,glinfo;
+	glgfx,glmap,glmenus,glinfo,colormenu;
 {$ENDIF}
 {$ENDIF}
 
@@ -1117,6 +1119,20 @@ begin
 	NotGoodWares := NGW;
 end;
 
+Function Random_Mecha_Colors: String;
+	{ Return some random colors for this mecha. }
+begin
+{$IFDEF ASCII}
+	random_mecha_colors := standard_lot_colors[ random( num_standard_schemes ) ];
+{$ELSE}
+	if Random( 3 ) = 1 then begin
+		random_mecha_colors := standard_lot_colors[ random( num_standard_schemes ) ];
+	end else begin
+		random_mecha_colors := RandomColorString( CS_PrimaryMecha ) + ' ' + RandomColorString( CS_SecondaryMecha ) + ' ' + RandomColorString( CS_Detailing );
+	end;
+{$ENDIF}
+end;
+
 Procedure AddSomeMeks( GB: GameBoardPtr; NPC: GearPtr; var Wares: GearPtr );
 	{ WARES is the inventory list of a shop. Let's add ~10 mecha files }
 	{ to the list. }
@@ -1135,7 +1151,7 @@ begin
 		Fac := SeekFaction( GB^.Scene , NAttValue( NPC^.NA , NAG_Personal , NAS_FactionID ) );
 		if Fac <> Nil then mecha_colors := SAttValue( Fac^.SA , 'mecha_colors' );
 		if mecha_colors = '' then begin
-			mecha_colors := standard_lot_colors[ random( num_standard_schemes ) ];
+			mecha_colors := Random_Mecha_Colors;
 		end;
 		SetSAtt( NPC^.SA , 'mecha_colors <' + mecha_colors + '>' );
 	end;

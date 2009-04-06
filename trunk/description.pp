@@ -537,7 +537,9 @@ var
 	msg,job: String;
 	R: Integer;
 begin
-	msg := BStr( NAttValue( NPC^.NA , NAG_CharDescription , NAS_DAge ) + 20 );
+	R := NAttValue( NPC^.NA , NAG_CharDescription , NAS_DAge ) + 20;
+	if R > 0 then msg := BStr( R )
+	else msg := '???';
 	msg := msg + ' year old ' + LowerCase( MsgString( 'GenderName_' + BStr( NAttValue( NPC^.NA , NAG_CharDescription , NAS_Gender ) ) ) );
 	job := SAttValue( NPC^.SA , 'JOB' );
 	if job <> '' then msg := msg + ' ' + LowerCase( job );

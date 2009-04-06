@@ -57,6 +57,15 @@ const
 	Roguelike_D: Array [1..9] of Byte = ( 3, 2, 1, 4, 0, 0, 5, 6, 7 );
 	Reverse_RL_D: Array [0..7] of Byte = ( 6 , 3 , 2 , 1 , 4 , 7, 8 , 9 );
 
+	Skill_Use_Trigger: Array [1..NumSkill] of String = (
+		'USE', 'USE', 'USE', 'USE', 'USE',
+		'USE', 'USE', 'USE', 'USE', 'USE',
+		'USE', 'CLUE_SURVIVAL', 'CLUE_REPAIR', 'CLUE_MEDICINE', 'USE',
+		'USE', 'USE', 'USE', 'USE', 'USE',
+		'CLUE_SCIENCE', 'USE', 'CLUE_CODEBREAKING', 'CLUE_MYSTICISM', 'USE',
+		'USE', 'CLUE_INSIGHT', 'USE'
+	);
+
 var
 	PCACTIONRD_PC: GearPtr;
 	PCACTIONRD_GB: GameBoardPtr;
@@ -747,15 +756,6 @@ end;
 
 Procedure PCUseSkillOnProp( GB: GameBoardPtr; PC: GearPtr; Skill: Integer );
 	{ PC wants to do something with a prop. Select an item, then let 'er rip. }
-const
-	Skill_Use_Trigger: Array [1..NumSkill] of String = (
-		'USE', 'USE', 'USE', 'USE', 'USE',
-		'USE', 'USE', 'USE', 'USE', 'USE',
-		'USE', 'CLUE_SURVIVAL', 'CLUE_REPAIR', 'CLUE_MEDICINE', 'USE',
-		'USE', 'USE', 'USE', 'USE', 'USE',
-		'CLUE_SCIENCE', 'USE', 'CLUE_CODEBREAKING', 'CLUE_MYSTICISM', 'USE',
-		'USE', 'CLUE_INSIGHT', 'USE'
-	);
 var
 	PropD: Integer;
 	P: Point;
@@ -808,7 +808,7 @@ begin
 	if Target <> Nil then begin
 		DoFieldRepair( GB , PC , FindRoot( Target ) , Skill );
 	end else begin
-		if not ActivatePropAtSpot( GB , PC , P.X , P.Y , 'CLUE' + BStr( Skill ) ) then DialogMsg( MsgString( 'PCREPAIR_NoDamageDone' ) );
+		if not ActivatePropAtSpot( GB , PC , P.X , P.Y , Skill_Use_Trigger[ Skill ] ) then DialogMsg( MsgString( 'PCREPAIR_NoDamageDone' ) );
 	end;
 end;
 
@@ -2581,8 +2581,6 @@ begin
 {$IFNDEF ASCII}
 	end else if KCode = KMC_WallToggle then begin
 		Use_Tall_Walls := not Use_Tall_Walls;
-{	end else if ( KCode = RPK_RightButton ) and Mouse_Active then begin
-		GameOptionMenu( Mek , Camp^.GB );}
 {$ENDIF}
 
 	end;
@@ -2767,6 +2765,10 @@ begin
 				{ We got a command. Process it. }
 				GotMove := PCA_CommandProcessor( Mek, Camp, KCode, True );
 
+{$IFNDEF ASCII}
+			end else if ( KP = RPK_RightButton ) and Mouse_Active then begin
+				GameOptionMenu( Mek , Camp^.GB );
+{$ENDIF}
 			end else if KP = '}' then begin
 				ForcePlot( Camp^.GB , Mek , Camp^.GB^.Scene );
 			end else if ( KP = '!' ) and ( Camp^.GB^.Scene <> Nil ) then begin
