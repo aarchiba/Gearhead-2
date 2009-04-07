@@ -1068,8 +1068,13 @@ begin
 	DR.MechaDestroyed := TMasterOK and not GearOperational( TMaster );
 
 	{ Check for explosions here. }
-	if OkAtStart and Destroyed( TMaster ) and ( SAttValue( TMaster^.SA , SA_Explosion ) <> '' ) then begin
-		SetNAtt( TMaster^.NA , NAG_Action , NAS_WillExplode , 1 );
+	if OkAtStart and Destroyed( TMaster ) then begin
+		if ( SAttValue( TMaster^.SA , SA_Explosion ) <> '' ) then begin
+			SetNAtt( TMaster^.NA , NAG_Action , NAS_WillExplode , 1 );
+		end;
+		if NAttValue( TMaster^.NA , NAG_GearOps , NAS_CorpseOp ) = NAV_NoCorpse then begin
+			SetNAtt( TMaster^.NA , NAG_Action , NAS_WillDisappear , 1 );
+		end;
 	end;
 
 	if MobileAtStart and ( CurrentMoveRate( GB^.Scene , TMaster ) = 0 ) and NotDestroyed( TMaster ) then begin

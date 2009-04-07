@@ -117,6 +117,7 @@ Arm
 		inv
 			EMelee 12
 			Name <Nova Sword>
+			UsesReflexes
 			Speed 3
 			Acc 1
 		end
@@ -517,6 +518,7 @@ Arm
 			EMelee 20
 			Name <Nova Scythe>
 			Speed 3
+			UsesReflexes
 			Acc 2
 			Type <ARMORPIERCING EXTEND>
 			Mass 6
@@ -1161,6 +1163,7 @@ Arm
 			EMelee 12
 			Name <Double Lance>
 			Type <EXTEND>
+			UsesReflexes
 			Mass 4
 		end
 
@@ -1200,6 +1203,7 @@ Arm
 		inv
 			EMelee 15
 			Name <Dragon Sword>
+			UsesReflexes
 			Type <OVERLOAD>
 			Acc 1
 		end

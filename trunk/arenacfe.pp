@@ -60,7 +60,7 @@ Procedure ResolveAfterEffects( GB: GameBoardPtr );
 implementation
 
 uses ability,effects,gearutil,ghchars,ghweapon,rpgdice,texutil,movement,
-     ui4gh,sysutils,description,action,ghmodule,
+     ui4gh,sysutils,description,action,ghmodule,backpack,
 {$IFDEF ASCII}
 	vidmap,vidgfx,vidinfo;
 {$ELSE}
@@ -962,11 +962,13 @@ Procedure ResolveAfterEffects( GB: GameBoardPtr );
 	{ 1. Charge }
 	{ 2. Explosions }
 	{ 3. Crashes }
+	{ 4. Ejection/Surrender }
 var
 	FakeGB: GameBoardPtr;
 	Mek,Target: GearPtr;
 	FX_Desc: String;
 	V: LongInt;
+	DidExplode: Boolean;
 begin
 	{ Check for charges first. }
 	Mek := GB^.Meks;
@@ -992,11 +994,13 @@ begin
 		Mek := Mek^.Next;
 	end;
 
-	{ Check for explosions now. }
+	{ Check for explosions and disappearance now. }
 	Mek := GB^.Meks;
 	while Mek <> Nil do begin
 		V := NAttValue( Mek^.NA , NAG_Action , NAS_WillExplode );
 		if V > 0 then begin
+			DidExplode := True;
+
 			{ Generate a fake gameboard to be used for screen output. }
 			FakeGB := CloneMap( GB );
 
@@ -1007,6 +1011,22 @@ begin
 			DisposeMapClone( FakeGB );
 
 			SetNAtt( Mek^.NA , NAG_Action , NAS_WillExplode , 0 );
+		end else begin
+			DidExplode := False;
+		end;
+
+		V := NAttValue( Mek^.NA , NAG_Action , NAS_WillDisappear );
+		if ( V > 0 ) or DidExplode then begin
+			{ Shake down this model at its current location. }
+			ShakeDown( GB , Mek , NAttValue( Mek^.NA , NAG_Location , NAS_X ) , NAttValue( Mek^.NA , NAG_Location , NAS_Y ) );
+
+			{ Move this model off the map. }
+			SetNAtt( Mek^.NA , NAG_Location , NAS_X , 0 );
+
+			{ If this is a spontaneous disappearance, print a message. }
+			if not DidExplode then DialogMsg( ReplaceHash( MsgString( 'Model_Disappeared' ) , GearName( Mek ) ) );
+
+			SetNAtt( Mek^.NA , NAG_Action , NAS_WillDisappear , 0 );
 		end;
 		Mek := Mek^.Next;
 	end;
@@ -1015,7 +1035,7 @@ begin
 	Mek := GB^.Meks;
 	while Mek <> Nil do begin
 		V := NAttValue( Mek^.NA , NAG_Action , NAS_WillCrash );
-		if V > 0 then begin
+		if ( V > 0 ) and OnTheMap( GB , Mek ) then begin
 			{ Generate a fake gameboard to be used for screen output. }
 			FakeGB := CloneMap( GB );
 			if Mek^.G = GG_Character then begin
@@ -1048,7 +1068,7 @@ begin
 			SetNAtt( Mek^.NA , NAG_Action , NAS_MightGiveUp , 0 );
 		end;
 		Mek := Mek^.Next;
-	end;	
+	end;
 end;
 
 Procedure DoTaunt( GB: GameBoardPtr; Attacker,Target: GearPtr );

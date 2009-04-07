@@ -42,7 +42,6 @@ Content
 
 	% Activate the Wynter's Mine and Lower Wynter's Mine quests right away.
 	update <if= P2 0 P= 2 1 SetPlotStatus %plotid1% %id1% SetPlotStatus %plotid2% %id2%>
-update <if= P2 0 P= 2 1 SetPlotStatus %plotid1% %id1% SetPlotStatus %plotid4% %id4%>
 
 	% Activate the lower quests some time after the PC reaches Renown 50.
 	PUMPNEWS <if= PlotStatus %plotid3% 0  ifG PCRenown 50  if= d8 1  SetPlotStatus %plotid3% %id3% SetPlotStatus %plotid4% %id4% SetMood %9% %8% if= RootSceneID %8% Goto GoEarthQuake>
@@ -237,13 +236,24 @@ update <if= P2 0 P= 2 1 SetPlotStatus %plotid1% %id1% SetPlotStatus %plotid4% %i
 		MoodTimeLimit
 		% V1 = Initialization Counter
 		Update <if= v1 0 V= 1 1   News 1>
-		Msg1_1 <%city% >
-		Msg1_2 <>
-		Msg1_3 <>
+		Msg1_1 <Disaster in %city% as station is rocked by mysterious quake.>
+		Msg1_2 <Technocrats say swamp gas responsible for %city% earthquake.>
 		% Meme Messages
-		Msg_1 <>
-		Msg_2 <>
-		Msg_3 <>
+		Msg_1 <It's a wonder more people weren't killed when the quake hit.>
+		Msg_2 <In all the time I've been living here, we've never had an earthquake until now.>
+		Msg_3 <I wonder if there's going to be another earthquake, later on...?>
+		Msg_11 <Why do you think the earthquake happened? I heard that it may have been a meteor collision.>
+		CMsg_11 <ifNPCSociable Accept>
+		Msg_12 <I'm still shaken up...>
+		CMsg_12 <ifNPCShy Accept>
+		Msg_13 <I thought earthquakes were only supposed to happen on planets, but I guess I was wrong.>
+		CMsg_13 <ifNPCEasygoing Accept>
+		Msg_14 <The earth moved! It was incredible!>
+		CMsg_14 <ifNPCPassionate Accept>
+		Msg_15 <Were you here when the earthquake hit? It was the most exciting thing to happen in Cayley Rock for ages.>
+		CMsg_15 <ifNPCCheerful Accept>
+		Msg_16 <I heard someone claim that the mines are collapsing. If the rock breaks up, we're all going to be in a lot of trouble.>
+		CMsg_16 <ifNPCMelancholy Accept>
 	end
 
 

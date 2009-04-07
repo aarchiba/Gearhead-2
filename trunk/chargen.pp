@@ -736,14 +736,14 @@ const
 	);
 	BaseLineStats: Array [0..NumBaseLineTypes,1..NumGearStats] of Byte = (
 	{	Ref	Bod	Spd	Per	Cra	Ego	Kno	Cha	}
-	(	10,	10,	10,	10,	10,	10,	10,	10	),	
-	(	9,	6,	8,	10,	13,	10,	14,	10	),	{Professor}
-	(	10,	8,	10,	10,	10,	10,	10,	12	),	{Corporate}
-	(	10,	13,	10,	8,	12,	10,	7,	10	),	{Labor}
-	(	9,	10,	9,	8,	8,	13,	9,	14	),	{Celeb}
-	(	12,	12,	12,	12,	9,	9,	7,	7	),	{Soldier}
-	(	10,	6,	12,	12,	12,	8,	10,	10	),	{Thief}
-	(	9,	9,	9,	12,	13,	8,	11,	9	)	{Tech}
+	(	8,	8,	8,	8,	8,	8,	8,	8	),	
+	(	7,	5,	7,	8,	10,	8,	12,	8	),	{Professor}
+	(	8,	7,	8,	8,	8,	8,	8,	9	),	{Corporate}
+	(	8,	10,	8,	6,	9,	8,	6,	8	),	{Labor}
+	(	7,	8,	7,	6,	7,	10,	7,	12	),	{Celeb}
+	(	10,	10,	10,	10,	7,	7,	6,	6	),	{Soldier}
+	(	8,	5,	10,	10,	10,	6,	8,	8	),	{Thief}
+	(	7,	7,	7,	10,	11,	6,	9,	7	)	{Tech}
 	);
 
 var
@@ -1435,7 +1435,7 @@ begin
 	PC := NewGear( Nil );
 	PC^.G := GG_Character;
 	InitGear( PC );
-	StatPt := 100;
+	StatPt := 90;
 	SkillPt := 50;
 	SetSAtt( PC^.SA , 'SDL_COLORS <49 91 161 252 212 195 150 112 89>' );
 

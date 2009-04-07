@@ -85,33 +85,71 @@ Content
 	Place7 <2>
 
 	% P%id%01 = Initialization Counter
+	% P%id%02 = Have accepted E6's mission
 
 	update <if= P%id%01 0 P= %id%01 1 MoveNPC %6% %4%>
-	end <ifItemDestroyed %3% else .%id%_GoCheckDeath CancelSubPlot %plotid%>
+	end <ifItemDestroyed %3% else .%id%_GoCheckDeath CancelSubPlot %plotid% if= P%id%02 1 PCEnemy %6% PCFEnemy %5% FreezeNPC %6% History %id%01>
 	.%id%_GoCheckDeath <ifNPCDead %6% CancelSubPlot %plotid%>
+
+	Msg%id%01 <You failed to retrieve the dataslate for %name6%.>
 
 	sub
 		Persona 6
 		rumor%id% <%name6% is looking for something from the bottom of the mine.>
-		% V1 = Have offered quest
-		% V2 = Have completed quest
-		greeting <if= V2 0 else GoChat if= V1 1 else GoOfferQuest NewChat Say 1 AddChat 1 AddChat 2 AddChat 3 AddChat 4>
+		greeting <if= PlotStatus %plotid% %id% else GoChat if= P%id%02 1 else GoOfferQuest NewChat Say 1 AddChat 1 AddChat 2 AddChat 3 AddChat 4>
 		GoChat <NewChat SayAnything>
 		*GoOfferQuest <*DoYouWantAJob&Chara GoBriefing>
-		GoBriefing <NewChat Say 2 AddChat 5 AddChat 6 AddChat 7>
-
+		GoBriefing <EndChat Say 2 AddChat 5>
+		GoNotHere <NewChat Say 4>
+		result1 <NewChat Say 3>
+		result2 <ifChatNPCinPlay else GoNotHere NewChat Say 5 History 8 WinSubPlot %plotid% DeleteItem %3% CashPrize Reward %threat% 500 CustomMecha .fac %threat%>
+		.fac <FCOMS RISHI HOELL MUGLE ROCKE>
+		result3 <ifFactionEnemy %5% else GoR3Warn EndChat Say 6 History 9 PCEnemy %6% FreezeNPC %6% LoseSubPlot %plotid%>
+		GoR3Warn <NewChat Say 7 AddChat 6 AddChat 7>
+		result4 <NewChat Say 10 AddChat 8 AddChat 9>
+		result5 <NewChat Say 11 AddChat 10 AddChat 11 P= %id%02 1 QMemo %plotid% 12>
+		result6 <Goto result2>
+		result7 <EndChat Say 13 History 9 PCEnemy %6% FreezeNPC %6% LoseSubPlot %plotid%>
+		result8 <NewChat Say 14 AddChat 1 AddCHat 2 AddChat 3 AddChat 12>
+		result9 <NewChat Say 15 AddChat 1 AddCHat 2 AddChat 3 AddChat 13>
+		result10 <NewChat Say 16>
+		result11 <NewChat Say 17 LoseSubPlot %plotid% AddRenown -d6>
+		result12 <NewChat Say 18 AddChat 1 AddChat 2 AddChat 3 AddChat 9>
+		result13 <NewChat Say 19 AddChat 1 AddChat 2 AddChat 3 AddChat 8>
 		Msg1 <Have you found the dataslate yet?>
-		Msg2 <I've been searching for information about a brilliant yet reclusive scientist who used to live on Cayley Rock.>
-
+		Msg2 <I've been searching for information about a brilliant yet reclusive scientist who used to live on Cayley Rock. Apparently she constructed a private research station at the bottom of Old Wynter's Mine.>
+		Msg3 <Come back here when you have it.>
+		Msg4 <You're going to have to come to %name4% for that.>
+		Msg5 <Yes, this is exactly what I wanted. The information on this dataslate will make our research far easier... in thanks, I'd like for you to have this money and a brand new mecha.>
+		Msg6 <It is... regretable that you have chosen this path. My employers will be most displeased.>
+		Msg7 <Are you certain that you want to do this? My employers are quite powerful, and if you displease them they would not hesitate to destroy you.>
+		Msg8 <You gave the scientist's dataslate to %name6%.>
+		Msg9 <You refused to give the scientist's dataslate to %name6%.>
+		Msg10 <Certainly. What is it that you want to know?>
+		Msg11 <I want you to find this research station and bring me back a dataslate located there. Anything else that you find in the cave is yours to keep.>
+		Msg12 <%name6% in %name4% asked you to recover a dataslate from a secret research station at the bottom of Old Wynter's Mine.>
+		Msg13 <Clearly so, but I think you'll find that you aren't nearly powerful enough.>
+		Msg14 <She was studying the Exorg space fungi, which she believed to be alien invaders from the Andromeda galaxy. Crazy, perhaps, but defintely brilliant. Now, about that dataslate...?>
+		Msg15 <I am working for a technology company that specializes in anti-fungal station defenses. Exorgs have evolved resistance to standard laser systems, making them far more difficult to exterminate than spaceworms.>
+		Msg16 <Thank you. Bring me the dataslate when you have it, and I promise you'll be amply rewarded.>
+		Msg17 <Understood. I will find someone else for this mission.>
+		Msg18 <You believe those stories? There's no evidence for that, just a lot of conspiracy theories and wild speculation. Getting back to the subject of the dataslate...>
+		Msg19 <Unlikely. Exorgs aren't particularly aggressive; I mean, they chew up power lines and will attack if you get too close, but they're no worse than regular bugs. I believe we were talking about the dataslate?>
 		Prompt1 <I'm still working on it.>
 		Prompt2 <I have it right here. [Give Slate]>
 		CPrompt2 <ifKeyItem %3% Accept>
 		Prompt3 <I found it, and I've decided to keep it.>
 		CPrompt3 <ifKeyItem %3% Accept>
 		Prompt4 <I'd like to ask a few questions, first.>
-		Prompt5 <>
-		Prompt6 <>
-		Prompt7 <>
+		Prompt5 <[Continue]>
+		Prompt6 <Alright, you can have it...>
+		Prompt7 <Hey, I'm quite powerful too.>
+		Prompt8 <Who was this scientist?>
+		Prompt9 <Who are you working for?>
+		Prompt10 <I'll be back when I have it.>
+		Prompt11 <Sorry, but I don't think I can do that.>
+		Prompt12 <Don't you think that they might really be aliens?>
+		Prompt13 <Maybe they're some kind of biomonster.>
 
 		MetaScene 2
 		name <Exorg Laboratory>
@@ -127,7 +165,7 @@ Content
 		Start <if= V1 0 else GoBeenBefore Alert 2 V= 1 1>
 		GoBeenBefore <Print 1>
 		Msg1 <You enter the mysterious laboratory.>
-		Msg2 <At the bottom of the caves, you discover a secret laboratory. Judging by the furnishings whoever lived here was obviously human.>
+		Msg2 <At the bottom of the caves, you discover a secret laboratory. It seems to have been abandoned some time ago.>
 		content <Fill Sub *STORAGE_X na>
 		sub
 			Team 1
@@ -140,10 +178,11 @@ Content
 			SetAlly 2
 
 			Room
-			minimap <......###..#1#...........>
+			minimap <......#&#..&#&..#1#......>
 			inv
 				Elevator
 				name <Airlock>
+				Msg1 <You enter the airlock.>
 				Destination -1
 				MiniMapComponent 1
 			end
@@ -183,6 +222,9 @@ Content
 					BeamGun 14
 					name <Exorg Rifle>
 					desc <A mysterious beamgun recovered from a secret laboratory.>
+					CLUE_SCIENCE <Print 1>
+					CLUE_INSIGHT <Print 1>
+					Msg1 <This rifle appears to be made from the same material as the Exorgs themselves.>
 					UsesReflexes
 					Range 8
 					Acc 1
@@ -192,7 +234,7 @@ Content
 					inv
 						PowerSource 6
 						name <Jade Disc>
-						mass -5
+						mass -8
 					end
 				end
 			end
@@ -213,19 +255,23 @@ Content
 					Shield 8
 					name <Exorg Shield>
 					desc <A mysterious shield recovered from a secret laboratory.>
+					CLUE_SCIENCE <Print 1>
+					CLUE_INSIGHT <Print 1>
+					Msg1 <This shield appears to be made from the same material as the Exorgs themselves.>
 					DefBonus 2
 					mass -7
 					Biotech
 					AntiBeam
 					sub
-						EMelee 16
+						EMelee 13
 						name <Beam Blade>
 						type <EXTEND BRUTAL>
-						Integral
+						Recharge 3
+						UsesReflexes
 						inv
 							PowerSource 6
 							name <Jade Disc>
-							mass -5
+							mass -8
 						end
 					end
 				end
@@ -258,9 +304,17 @@ Content
 	inv
 		item Mediabook
 		name <Data Slate>
-		desc <A data slate previously owned by whoever built the lab in Cayley Core.>
-		% V1 = Have overcome 
-		use <>
+		desc <A data slate previously owned by whoever built the lab in Cayley Core. It's marked with the initials "JM".>
+		% V1 = Have overcome encryption
+		use <ifYesNo 1 2 3 moretext .fname>
+		.fname <TEXT_CCLJMD.txt>
+		CLUE_CODEBREAKING <if= V1 0 else GoAlreadyBroken ifCodeBreaking HardSkillTar 100 else use Mental Mental Alert 4 XPV 100   SkillXP NAS_Medical 200  SkillXP NAS_Repair 200  SkillXP NAS_Science 200   V= 1 1>
+		GoAlreadyBroken <Print 5>
+		Msg1 <This dataslate contains someone's diary. Do you want to read it?>
+		Msg2 <Yes I do.>
+		Msg3 <No, thanks.>
+		Msg4 <You discover an encrypted file containing detailed anatomical and biochemical information about the Exorgs. Reading it makes your head hurt.>
+		Msg5 <You've already viewed the encrypted file.>
 
 		STC ENDTABLE-1
 		PDir 6

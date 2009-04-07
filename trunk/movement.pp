@@ -134,6 +134,7 @@ const
 	NAS_ChargeSpeed = 13;	{ Speed at the time the charge is declared. }
 	NAS_MightGiveUp = 14;	{ The NPC will make an ejection/surrender check now. }
 	NAS_WillExplode = 15;	{ The target's gonna blow up real good. }
+	NAS_WillDisappear = 16;	{ The target's gonna get shaken down and will disappear. }
 
 	NAG_EnvironmentData = 22;	{ Tells things about the scene. }
 					{ Environment data is inherited by encounters and }

@@ -534,7 +534,7 @@ begin
 		{ Create a pilot, add it to the mecha. }
 		CP := SeekGear( Mek , GG_CockPit , 0 );
 		if CP <> Nil then begin
-			Pilot := RandomPilot( 80  , 10 );
+			Pilot := RandomPilot( 72  , 10 );
 			SetSkillsAtLevel( Pilot , Lvl );
 			InsertSubCom( CP , Pilot );
 		end;

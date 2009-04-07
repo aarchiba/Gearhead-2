@@ -322,8 +322,8 @@ begin
 	end;
 
 	{ The final value equals the Skill Rank plus }
-	{ stat rank plus skill roll modifier. }
-	it := ( ( StRk + 2 ) div 3 ) + SkRk + SkMod;
+	{ stat modifier plus skill roll modifier. }
+	it := ( ( StRk + 1 ) div 2 ) + SkRk + SkMod;
 	if it < 1 then it := 1;
 
 	{ Last minute check- if the character is dead, they don't get }

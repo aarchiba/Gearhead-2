@@ -116,6 +116,10 @@ Const
 
 	NAS_MaxStandardScriptID = 8;	{ The highest standard script ID assigned for this part. }
 
+	NAS_CorpseOp = 9;		{ What happens to this gear's corpse? }
+		NAV_LeaveCorpse = 0;	{  The default value }
+		NAV_NoCorpse = 1;	{  Don't leave behind a corpse. }
+
 	NAG_Narrative = 7;	{ Variables having to do with RPG }
 	NAS_NID = 0;	{ Narrative ID }
 

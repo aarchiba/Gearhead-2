@@ -931,12 +931,13 @@ end;
 Function AttemptDodge( GB: GameBoardPtr; TMaster,Attacker: GearPtr; SkRoll: Integer; const FX: String ): Integer;
 	{ TMaster will attempt to dodge. }
 var
-	DodgeSkill,SkMod: Integer;
+	DodgeSkill,DodgeStat,SkMod: Integer;
 begin
 	SkMod := 0;
 	if TMaster^.G = GG_MEcha then begin
 		{ Mecha use Mecha Piloting. }
 		DodgeSkill := NAS_MechaPiloting;
+		DodgeStat := STAT_Reflexes;
 
 		{ Adjust the dodge skill value for talents. }
 		if ( NAttValue( TMaster^.NA , NAG_Action , NAS_MoveMode ) = MM_Walk ) and HasTalent( TMaster , NAS_SureFooted ) then begin
@@ -949,6 +950,7 @@ begin
 	end else begin
 		{ Characters use Dodge. }
 		DodgeSkill := NAS_Dodge;
+		DodgeStat := STAT_Speed;
 	end;
 
 	{ Adjust the modifier for melee attacks. These are hard to dodge, but should }
@@ -958,7 +960,7 @@ begin
 	end;
 
 	DoleSkillExperience( TMaster , DodgeSkill , XPA_SK_Basic );
-	AttemptDodge := SkillRoll( GB , TMaster , DodgeSkill , STAT_Speed , SkRoll , SkMod , False , True );
+	AttemptDodge := SkillRoll( GB , TMaster , DodgeSkill , DodgeStat , SkRoll , SkMod , False , True );
 end;
 
 Function AttemptAcrobatics( GB: GameBoardPtr; TMaster: GearPtr; SkRoll: Integer ): Integer;
@@ -1369,7 +1371,7 @@ begin
 		{ Error! }
 		BasicDefenseValue := 0;
 	end else if Target^.G = GG_Mecha then begin
-		BasicDefenseValue := SkillValue( Target , NAS_MechaPiloting , STAT_Speed );
+		BasicDefenseValue := SkillValue( Target , NAS_MechaPiloting , STAT_Reflexes );
 	end else if Target^.G = GG_Character then begin
 		BasicDefenseValue := SkillValue( Target , NAS_Dodge , STAT_Speed );
 	end else begin

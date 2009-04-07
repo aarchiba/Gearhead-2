@@ -383,7 +383,11 @@ begin
 	if ( Weapon^.S = GS_Missile ) then begin
 		DefaultWeaponStat := STAT_Perception;
 	end else if ( Weapon^.S = GS_Melee ) or ( Weapon^.S = GS_EMelee ) then begin
-		DefaultWeaponStat := STAT_Reflexes;
+		if Weapon^.V > 10 then begin
+			DefaultWeaponStat := STAT_Body;
+		end else begin
+			DefaultWeaponStat := STAT_Reflexes;
+		end;
 	end else if Weapon^.V > 10 then begin
 		DefaultWeaponStat := STAT_Perception;
 	end else begin
