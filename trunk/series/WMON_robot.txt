@@ -4,8 +4,63 @@
 
 %  STATS  REF BOD SPD PER CFT EGO KNO CHA
 
+ARCH Forgebot
+roguechar <R>
+sdl_sprite <monster_forgebot.png>
+sdl_colors <111 155 134 77 93 83 255 70 0>
+type <robot factory mine>
+habitat <>
+statline 8 24 8 8 13 1 1 1
+*CLUE_SCIENCE <*SCIENCE_GetMechaPartsOrIngot 80 robot>
+metal
+Sealed
+MonsterTV 78
+RangedCombat 4
+CloseCombat 4
+Dodge 4
+Toughness 8
+sub
+torso
+	armor 5
+	Hardened
+	sub
+		Gun 13
+		name <Magma Spew>
+		caliber <Molten>
+		UsesCraft
+		range 3
+		Acc -2
+		Speed 1
+		Magazine 10
+		sub
+			Ammo 13
+			name <Containment Tank>
+			caliber <Molten>
+			type <BURN BRUTAL>
+		end
+
+		Melee 4
+		name <Manipulator>
+
+		Melee 4
+		name <Manipulator>
+	end
+leg
+	armor 5
+	Hardened
+	sub
+		Mount
+	end
+leg
+	armor 5
+	Hardened
+	sub
+		Mount
+	end
+end
+
 Arch Androbot
-statline 12 19 12 13 12 12 12 1
+statline 11 19 11 11 9 10 9 1
 MonsterTV 60
 roguechar <R>
 sdl_sprite <monster_androbot.png>
@@ -167,7 +222,7 @@ sdl_sprite <monster_guardbot.png>
 sdl_colors <199 188 162 157 173 182 200 150 50>
 type <robot factory lab guard>
 habitat <>
-statline 10 15 10 16 10 1 1 1
+statline 10 15 10 15 5 1 1 1
 *CLUE_SCIENCE <*SCIENCE_GetSpareParts 56 robot>
 metal
 Sealed
@@ -196,7 +251,7 @@ SDL_SPRITE <monster_workbot.png>
 SDL_COLORS <166 47 32 201 205 225 210 0 100>
 type <robot factory ruins>
 habitat <>
-statline 13 16 11 13 16 1 1 1
+statline 13 16 11 13 5 1 1 1
 *CLUE_SCIENCE <*SCIENCE_GetSpareParts 95 robot>
 metal
 Sealed
@@ -231,7 +286,7 @@ type <robot factory>
 habitat <>
 CHAT_ATTACK <MalFuNCtIoN! mAlFunCTuiOn!>
 CHAT_ATTACK2 <ExTerMiNaTE!>
-statline 10 15 7 8 15 1 1 1
+statline 9 13 7 8 11 1 1 1
 *CLUE_SCIENCE <*SCIENCE_GetSpareParts 25 robot>
 metal
 Sealed
@@ -259,7 +314,7 @@ type <robot factory>
 habitat <>
 CHAT_ATTACK <MalFuNCtIoN! mAlFunCTuiOn!>
 CHAT_ATTACK2 <ExTerMiNaTE!>
-statline 10 15 7 8 15 1 1 1
+statline 9 11 7 8 8 1 1 1
 *CLUE_SCIENCE <*SCIENCE_GetSpareParts 21 robot>
 metal
 Sealed
@@ -285,7 +340,7 @@ SDL_SPRITE <monster_workbot.png>
 SDL_COLORS <157 172 183 130 143 114 230 60 0>
 type <robot mine>
 habitat <>
-statline 10 15 7 8 15 1 1 1
+statline 9 13 7 8 10 1 1 1
 *CLUE_SCIENCE <*SCIENCE_GetSpareParts 28 robot>
 metal
 Sealed
@@ -314,7 +369,7 @@ SDL_COLORS <72 104 136 150 150 150 220 0 0>
 type <robot factory dark>
 habitat <>
 *CLUE_SCIENCE <*SCIENCE_GetSpareParts 32 robot>
-statline 11 13 13 11 11 1 1 1
+statline 11 9 13 11 5 1 1 1
 metal
 Sealed
 MonsterTV 32

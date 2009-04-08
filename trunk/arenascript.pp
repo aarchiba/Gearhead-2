@@ -3411,6 +3411,7 @@ begin
 		Grabbed_Gear := LoadNewSTC( IName );
 		if Grabbed_Gear = Nil then Grabbed_Gear := LoadNewMonster( IName );
 		if Grabbed_Gear = Nil then Grabbed_Gear := LoadNewNPC( IName , True );
+		if Grabbed_Gear = Nil then Grabbed_Gear := LoadNewItem( IName );
 
 		{ If we found something, stick it on the map. }
 		if Grabbed_Gear <> Nil then begin

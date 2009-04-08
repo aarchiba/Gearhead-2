@@ -115,6 +115,88 @@ wing
 	end
 end
 
+ARCH Space Squid
+roguechar <Q>
+SDL_SPRITE <monster_seadragon.png>
+SDL_COLORS <180 36 70 135 30 17 200 200 0>
+MonsterTV 92
+type <fungus cave ruin>
+habitat <SPACE>
+statline 13 16 12 9 3 6 1 5
+*CLUE_SURVIVAL <*SURVIVAL_GetPearl 80 squid>
+RangedCombat 5
+CloseCombat 6
+Dodge 6
+Stealth 4
+sub
+torso
+armor 4
+sub
+	Melee 14
+	name <Beak>
+	acc -3
+	type <BRUTAL POISON>
+
+	Gun 5
+	name <Spore Shot>
+	caliber <Spore>
+	range 5
+	type <SCATTER BLIND>
+	Magazine 16
+	sub
+		Ammo 5
+		caliber <Spore>
+	end
+end
+tail
+name <Tentacle>
+armor 4
+sub
+	Melee 5
+	name <Hook>
+	type <ArmorPiercing Flail Sickness>
+end
+tail
+name <Tentacle>
+armor 4
+sub
+	Melee 5
+	name <Hook>
+	type <ArmorPiercing Flail Sickness>
+end
+tail
+name <Tentacle>
+armor 4
+sub
+	Melee 5
+	name <Hook>
+	type <ArmorPiercing Flail Sickness>
+end
+end
+
+ARCH Scarlet Shil
+SDL_SPRITE <monster_shil.png>
+SDL_COLORS <180 36 70 0 0 0 200 244 40>
+roguechar <S>
+type <fungus ruin derelict>
+habitat <SPACE>
+statline 13 5 13 2 1 1 1 1
+MonsterTV 70
+CloseCombat 6
+Dodge 10
+Vitality 4
+sealed
+sub
+torso
+	sub
+		Melee 8
+		name <Touch>
+		type <SICKNESS POISON>
+
+		HoverJet 7
+	end
+end
+
 ARCH Silver Shil
 SDL_SPRITE <monster_shil.png>
 SDL_COLORS <199 188 162 0 0 0 244 216 28>

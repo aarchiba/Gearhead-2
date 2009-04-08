@@ -6,6 +6,31 @@
 %%
 
 Content
+	name <*SCIENCE_GetMechaPartsOrIngot>
+	%
+	% Param 1 = Difficulty Level (in Renown)
+	% Param 2 = Monster Description
+	%
+	% V%id%01 = Use Counter
+	% V%id%02 = Big Prize Counter
+	%
+	START <ifSelfDead if# SelfTeam NAV_LancemateTeam if= V%id%01 0 else .%id%_GoDone Mental Gut if= V%id%02 0 else .%id%_GoCheckParts V= %id%02 1 ifUScience HardSkillTar %1% else .%id%_GoCheckParts V= %id%01 1 Print %id%01 Goto .%id%_GoGiveIngot>
+	.%id%_GoGiveIngot   <if= d6 1 else .%id%_GoCheckSilver GiveSTCTreasure .%id%_golddesc Reward %1% 255>
+	.%id%_GoCheckSilver <if= d3 1 else .%id%_GoGiveCopper GiveSTCTreasure .%id%_silverdesc Reward %1% 95>
+	.%id%_GoGiveCopper  <GiveSTCTreasure .%id%_copperdesc Reward %1% 55>
+	.%id%_GoCheckParts <ifScience SkillTar %1% else .%id%_GoFail V= %id%01 1 Print %id%02 GiveSTC .%id%_partdesc>
+	.%id%_golddesc      <Gold Ingot>
+	.%id%_silverdesc    <Silver Ingot>
+	.%id%_copperdesc    <Copper Ingot>
+	.%id%_partdesc <SPAREPARTS-2>
+	.%id%_GoFail <Print %id%03>
+	.%id%_GoDone <Print %id%04>
+	Msg%id%01 <You take apart this %2% and find a valuable ingot inside.>
+	Msg%id%02 <You salvage some spare parts from this %2%.>
+	Msg%id%03 <You take apart the %2%, but don't find anything useful.>
+	Msg%id%04 <You've already disassembled this %2%.>
+
+Content
 	name <*SCIENCE_GetSparePartsOrSDN>
 	%
 	% Param 1 = Difficulty Level (in Renown)

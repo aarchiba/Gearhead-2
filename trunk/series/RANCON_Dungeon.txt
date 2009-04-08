@@ -63,7 +63,7 @@ Content
 	requires <*DUNGEON_THREAT !Ne (Condemned|Sewer)>
 	element1 <Prefab>
 	teamdata1 <sd enemy>
-	start <if= V%id%01 0 else %pop% V= %id%01 1 ifAwareness 10 else %pop% Print %id%01 Goto %pop%>
+	start <if= V%id%01 0 else %pop% V= %id%01 1 ifAwareness 5 else %pop% Print %id%01 Goto %pop%>
 	msg%id%01 <This place looks dirty.>
 	inv
 		Monster Giant Roach
@@ -81,7 +81,7 @@ Content
 	teamdata2 <sd enemy>
 	element3 <Prefab>
 	teamdata3 <sd enemy>
-	start <if= V%id%01 0 else %pop% V= %id%01 1 ifAwareness 10 else %pop% Print %id%01 Goto %pop%>
+	start <if= V%id%01 0 else %pop% V= %id%01 1 ifAwareness 5 else %pop% Print %id%01 Goto %pop%>
 	msg%id%01 <This place looks absolutely filthy.>
 	inv
 		Monster Giant Roach
@@ -91,10 +91,10 @@ Content
 
 Content
 	name <Mining Robot>
-	requires <*DUNGEON_THREAT !Ne (mine|cave)>
+	requires <*DUNGEON_THREAT !Ne mine>
 	element1 <Prefab>
 	teamdata1 <sd enemy>
-	start <if= V%id%01 0 else %pop% V= %id%01 1 ifAwareness 10 else %pop% Print %id%01 Goto %pop%>
+	start <if= V%id%01 0 else %pop% V= %id%01 1 ifAwareness 5 else %pop% Print %id%01 Goto %pop%>
 	msg%id%01 <The walls of this level have been worked by machines.>
 	inv
 		Monster Mining bot
@@ -102,14 +102,14 @@ Content
 
 Content
 	name <Robot Gang>
-	requires <*DUNGEON_THREAT !Lo (mine|cave)>
+	requires <*DUNGEON_THREAT !Lo mine>
 	element1 <Prefab>
 	teamdata1 <sd enemy>
 	element2 <Prefab>
 	teamdata2 <sd enemy>
 	element3 <Prefab>
 	teamdata3 <sd enemy>
-	start <if= V%id%01 0 else %pop% V= %id%01 1 ifAwareness 10 else %pop% Print %id%01 Goto %pop%>
+	start <if= V%id%01 0 else %pop% V= %id%01 1 ifAwareness 5 else %pop% Print %id%01 Goto %pop%>
 	msg%id%01 <You see many rectangular footprints in the dust on the floor.>
 	inv
 		Monster Mining bot
@@ -118,17 +118,193 @@ Content
 	end
 
 Content
+	name <I'm melting!>
+	requires <*DUNGEON_THREAT !Md mine>
+	element1 <Prefab>
+	teamdata1 <sd enemy>
+	start <if= V%id%01 0 else %pop% V= %id%01 1 ifAwareness 5 else %pop% Print %id%01 Goto %pop%>
+	msg%id%01 <This level shows signs of recent volcanic activity.>
+	inv
+		Monster Forgebot
+	end
+
+Content
+	name <The Robot King>
+	requires <*DUNGEON_THREAT !Hi (mine|Factory)>
+	element1 <Prefab>
+	teamdata1 <sd enemy>
+	element2 <Prefab>
+	teamdata2 <sd enemy>
+	element3 <Prefab>
+	teamdata3 <sd enemy>
+	element4 <Prefab>
+	teamdata4 <sd enemy>
+	element5 <Prefab>
+	teamdata5 <sd enemy>
+	start <if= V%id%01 0 else %pop% V= %id%01 1 ifAwareness 5 else %pop% Print %id%01 Goto %pop%>
+	msg%id%01 <This level seems somewhat regal.>
+	inv
+		Monster Murder Machine
+		inv
+			item Golden Crown
+		end
+		Monster Guardbot
+		Monster Guardbot
+		Monster Guardbot
+		Monster Guardbot
+	end
+
+Content
+	name <The Robot Emperor>
+	requires <*DUNGEON_THREAT !Ex (mine|Factory)>
+	minimap <.......47..213..65.......>
+	element1 <Prefab>
+	teamdata1 <sd enemy>
+	element2 <Prefab>
+	teamdata2 <sd enemy>
+	element3 <Prefab>
+	teamdata3 <sd enemy>
+	element4 <Prefab>
+	teamdata4 <sd enemy>
+	element5 <Prefab>
+	teamdata5 <sd enemy>
+	element6 <Prefab>
+	teamdata6 <sd enemy>
+	element7 <Prefab>
+	teamdata7 <sd enemy>
+	start <if= V%id%01 0 else %pop% V= %id%01 1 ifAwareness 5 else %pop% Print %id%01 Goto %pop%>
+	msg%id%01 <This level seems extremely regal.>
+	inv
+		Monster Murder Machine
+		inv
+			item Jeweled Crown
+		end
+		Monster ForgeBot
+		Monster ForgeBot
+		Monster Guardbot
+		Monster Guardbot
+		Monster Androbot
+		Monster Workbot
+	end
+
+Content
+	name <Threadfall>
+	requires <*DUNGEON_THREAT !Ne Asteroid>
+	minimap <......1.....3.....2......>
+	element1 <Prefab>
+	teamdata1 <sd enemy>
+	element2 <Prefab>
+	teamdata2 <sd enemy>
+	element3 <Prefab>
+	start <if= V%id%01 0 else %pop% V= %id%01 1 ifAwareness 5 else %pop% Print %id%01 Goto %pop%>
+	msg%id%01 <You see the footprints of another person in the dust here.>
+	inv
+		Monster Silver Shil
+		Monster Silver Shil
+		STC Victim
+		Use <Print 1>
+		CLUE_MEDICINE <Print 2>
+		CLUE_MYSTICISM <Print 3>
+		Msg1 <This unfortunate explorer has been digested down to the bone.>
+		Msg2 <It's far too late for that.>
+		Msg3 <You say a short prayer for the soul of the deceased.>
+	end
+
+Content
+	name <Hunting Grounds>
+	requires <*DUNGEON_THREAT !Lo Asteroid>
+	element1 <Prefab>
+	teamdata1 <sd enemy>
+	start <if= V%id%01 0 else %pop% V= %id%01 1 ifAwareness 5 else %pop% Print %id%01 Goto %pop%>
+	msg%id%01 <The ground is littered with the empty husks of slain fungi.>
+	inv
+		Monster Fungal Hunter
+	end
+
+Content
+	name <Threadfall Mk2>
+	requires <*DUNGEON_THREAT !Md Asteroid>
+	minimap <......1.....3.....2......>
+	element1 <Prefab>
+	teamdata1 <sd enemy>
+	element2 <Prefab>
+	teamdata2 <sd enemy>
+	start <if= V%id%01 0 else %pop% V= %id%01 1 ifAwareness 5 else %pop% Print %id%01 Goto %pop%>
+	msg%id%01 <You see footprints in the dust, but no other sign of human presence.>
+	inv
+		Monster Scarlet Shil
+		Monster Scarlet Shil
+	end
+
+Content
+	name <San Ojingeo>
+	requires <*DUNGEON_THREAT !Hi Asteroid>
+	element1 <Prefab>
+	teamdata1 <sd enemy>
+	element2 <Prefab>
+	teamdata2 <sd enemy>
+	element3 <Prefab>
+	teamdata3 <sd enemy>
+	start <if= V%id%01 0 else %pop% V= %id%01 1 ifAwareness 5 else %pop% Print %id%01 Goto %pop%>
+	msg%id%01 <You suddenly feel hungry for sushi.>
+	inv
+		Monster Space Squid
+	end
+
+Content
+	name <From Moria to you>
+	requires <*DUNGEON_THREAT !Ne Cave>
+	element1 <Prefab>
+	teamdata1 <sd enemy>
+	element2 <Prefab>
+	teamdata2 <sd enemy>
+	element3 <Prefab>
+	teamdata3 <sd enemy>
+	start <if= V%id%01 0 else %pop% V= %id%01 1 ifAwareness 5 else %pop% Print %id%01 Goto %pop%>
+	msg%id%01 <This level is slimy.>
+	inv
+		Monster Icky Slime
+		Monster Icky Slime
+		Monster Icky Slime
+	end
+
+Content
+	name <Like Gwar, but less so>
+	requires <*DUNGEON_THREAT !Lo Cave>
+	element1 <Prefab>
+	teamdata1 <sd enemy>
+	start <if= V%id%01 0 else %pop% V= %id%01 1 ifAwareness 5 else %pop% Print %id%01 Goto %pop%>
+	msg%id%01 <This level is very slimy.>
+	inv
+		Monster Green Jelly
+	end
+
+Content
+	name <Yith Go Home>
+	requires <*DUNGEON_THREAT !Hi Cave>
+	element1 <Prefab>
+	teamdata1 <sd enemy>
+	element2 <Prefab>
+	teamdata2 <sd enemy>
+	start <if= V%id%01 0 else %pop% V= %id%01 1 ifAwareness 5 else %pop% Print %id%01 Goto %pop%>
+	msg%id%01 <All of a sudden, your brain hurts.>
+	inv
+		Monster Flying Polyp
+		Monster Flying Polyp
+	end
+
+Content
 	name <Bad Mushroom>
 	requires <*DUNGEON_THREAT !Ne SPACE>
 	element1 <Prefab>
 	teamdata1 <sd enemy>
-	start <if= V%id%01 0 else %pop% V= %id%01 1 ifAwareness 10 else %pop% Print %id%01 Goto %pop%>
+	start <if= V%id%01 0 else %pop% V= %id%01 1 ifAwareness 5 else %pop% Print %id%01 Goto %pop%>
 	msg%id%01 <You notice a strange blue fungus growing on the walls.>
 	inv
 		Monster Armored Fungus
 		% This armored fungus is slightly easier than a regular one.
 		Dodge 1
-		Vitality 2
+		Vitality 0
 	end
 
 Content
@@ -140,7 +316,7 @@ Content
 	teamdata2 <sd enemy>
 	element3 <Prefab>
 	teamdata3 <sd enemy>
-	start <if= V%id%01 0 else %pop% V= %id%01 1 ifAwareness 10 else %pop% Print %id%01 Goto %pop%>
+	start <if= V%id%01 0 else %pop% V= %id%01 1 ifAwareness 5 else %pop% Print %id%01 Goto %pop%>
 	msg%id%01 <You notice some organic filaments drifting through space.>
 	inv
 		Monster Fungal Sphere
@@ -153,7 +329,7 @@ Content
 	requires <*DUNGEON_THREAT !Ne (Derelict|Industrial|Ruin)>
 	element1 <Prefab>
 	teamdata1 <sd enemy>
-	start <if= V%id%01 0 else %pop% V= %id%01 1 ifAwareness 10 else %pop% Print %id%01 Goto %pop%>
+	start <if= V%id%01 0 else %pop% V= %id%01 1 ifAwareness 5 else %pop% Print %id%01 Goto %pop%>
 	msg%id%01 <This level is clean... too clean.>
 	inv
 		Monster Cleanbot
@@ -169,7 +345,7 @@ Content
 	requires <*DUNGEON_THREAT !Lo (Derelict|Industrial|Laboratory)>
 	element1 <Prefab>
 	teamdata1 <sd enemy>
-	start <if= V%id%01 0 else %pop% V= %id%01 1 ifAwareness 10 else %pop% Print %id%01 Goto %pop%>
+	start <if= V%id%01 0 else %pop% V= %id%01 1 ifAwareness 5 else %pop% Print %id%01 Goto %pop%>
 	msg%id%01 <This level seems to be well-defended.>
 	inv
 		Monster Guardbot
@@ -177,10 +353,10 @@ Content
 
 Content
 	name <Vacuum Flowers>
-	requires <*DUNGEON_THREAT !Lo Ruin SPACE>
+	requires <*DUNGEON_THREAT !Lo (Ruin|Cave) SPACE>
 	element1 <Prefab>
 	teamdata1 <sd enemy>
-	start <if= V%id%01 0 else %pop% V= %id%01 1 ifAwareness 10 else %pop% Print %id%01 Goto %pop%>
+	start <if= V%id%01 0 else %pop% V= %id%01 1 ifAwareness 5 else %pop% Print %id%01 Goto %pop%>
 	msg%id%01 <You sense an alien presence here.>
 	inv
 		Monster Exorg Floater
@@ -191,7 +367,7 @@ Content
 	requires <*DUNGEON_THREAT !Ne GROUND>
 	element1 <Prefab>
 	teamdata1 <sd enemy>
-	start <if= V%id%01 0 else %pop% V= %id%01 1 ifAwareness 10 else %pop% Print %id%01 Goto %pop%>
+	start <if= V%id%01 0 else %pop% V= %id%01 1 ifAwareness 5 else %pop% Print %id%01 Goto %pop%>
 	msg%id%01 <You hear the pitter-patter of little feet.>
 	inv
 		Monster Plague Rat
@@ -758,7 +934,7 @@ Content
 	element3 <Prefab>
 	element4 <Prefab>
 	minimap <......12....34..###......>
-	start <if= V%id%01 0 else %pop% V= %id%01 1 ifAwareness 10 else %pop% Print %id%01 Goto %pop%>
+	start <if= V%id%01 0 else %pop% V= %id%01 1 ifAwareness 5 else %pop% Print %id%01 Goto %pop%>
 	msg%id%01 <This place doesn't appear to be entirely abandoned.>
 	inv
 		NPC Soldier
@@ -793,7 +969,7 @@ Content
 	element3 <Prefab>
 	element4 <Prefab>
 	minimap <......12....34..###......>
-	start <if= V%id%01 0 else %pop% V= %id%01 1 ifAwareness 10 else %pop% Print %id%01 Goto %pop%>
+	start <if= V%id%01 0 else %pop% V= %id%01 1 ifAwareness 5 else %pop% Print %id%01 Goto %pop%>
 	msg%id%01 <This place doesn't appear to be entirely abandoned.>
 	inv
 		NPC Soldier
@@ -828,7 +1004,7 @@ Content
 	element3 <Prefab>
 	element4 <Prefab>
 	minimap <......12....34..###......>
-	start <if= V%id%01 0 else %pop% V= %id%01 1 ifAwareness 10 else %pop% Print %id%01 Goto %pop%>
+	start <if= V%id%01 0 else %pop% V= %id%01 1 ifAwareness 5 else %pop% Print %id%01 Goto %pop%>
 	msg%id%01 <This place doesn't appear to be entirely abandoned.>
 	inv
 		NPC Soldier
@@ -950,7 +1126,7 @@ Content
 	requires <*DUNGEON_DECOR (Ruin|Derelict|Laboratory)>
 	minimap < ... .###..#1+..###. ... >
 	element1 <Prefab>
-	start <if= V%id%01 0 else %pop% V= %id%01 1 ifAwareness 10 else %pop% Print %id%01 Goto %pop%>
+	start <if= V%id%01 0 else %pop% V= %id%01 1 ifAwareness 5 else %pop% Print %id%01 Goto %pop%>
 	msg%id%01 <This level seems to be in good condition.>
 	inv
 		STC COMPUTER-1

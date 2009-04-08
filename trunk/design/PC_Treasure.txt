@@ -9,13 +9,14 @@
 % ODDITIES
 %
 
+
 		Treasure
 		Fudge 250
 		name <Quartz Crystal>
 		desc <A pretty, though presumably worthless, quartz crystal.>
 		Category <TREASURE GEMSTONE MINERAL>
 		Factions <GENERAL>
-		SDL_PORTRAIT <>
+		SDL_PORTRAIT <item_gemquartz.png>
 		Legality -50
 
 		Treasure
@@ -23,7 +24,7 @@
 		name <Cairngorm>
 		Category <TREASURE MINERAL>
 		Factions <GENERAL>
-		SDL_PORTRAIT <>
+		SDL_PORTRAIT <item_gemdiamond.png>
 		Legality -50
 
 		Treasure
@@ -31,7 +32,7 @@
 		name <Agate>
 		Category <TREASURE GEMSTONE MINERAL>
 		Factions <GENERAL>
-		SDL_PORTRAIT <>
+		SDL_PORTRAIT <item_biskupengine.png>
 		Legality -50
 
 		Treasure
@@ -39,7 +40,7 @@
 		name <Bloodstone>
 		Category <TREASURE GEMSTONE MINERAL>
 		Factions <GENERAL>
-		SDL_PORTRAIT <>
+		SDL_PORTRAIT <item_gemruby.png>
 		Legality -50
 
 		Treasure
@@ -55,7 +56,7 @@
 		name <Jasper>
 		Category <TREASURE GEMSTONE MINERAL>
 		Factions <GENERAL>
-		SDL_PORTRAIT <>
+		SDL_PORTRAIT <item_gemaquamarine.png>
 		Legality -50
 
 		Treasure
@@ -72,7 +73,7 @@
 		desc <A pretty quartz crystal.>
 		Category <TREASURE GEMSTONE MINERAL>
 		Factions <GENERAL>
-		SDL_PORTRAIT <>
+		SDL_PORTRAIT <item_gemruby.png>
 		Legality -50
 
 		Treasure
@@ -84,11 +85,27 @@
 		Legality -50
 
 		Treasure
+		name <Copper Ingot>
+		Fudge 6000
+		Category <TREASURE MINERAL>
+		Factions <GENERAL>
+		SDL_PORTRAIT <item_lingotgold.png>
+		Legality -50
+
+		Treasure
 		name <Silver Ingot>
 		Fudge 12000
 		Category <TREASURE MINERAL>
 		Factions <GENERAL>
-		SDL_PORTRAIT <>
+		SDL_PORTRAIT <item_lingotsilver.png>
+		Legality -50
+
+		Treasure
+		name <Gold Ingot>
+		Fudge 48000
+		Category <TREASURE MINERAL>
+		Factions <GENERAL>
+		SDL_PORTRAIT <item_lingotgold.png>
 		Legality -50
 
 		Treasure
@@ -104,7 +121,7 @@
 		Fudge 60000
 		Category <TREASURE MINERAL>
 		Factions <GENERAL>
-		SDL_PORTRAIT <>
+		SDL_PORTRAIT <item_lingotsilver.png>
 		Legality -50
 
 		Treasure
@@ -129,7 +146,7 @@
 		Fudge 20000
 		Category <TREASURE GEMSTONE>
 		Factions <GENERAL>
-		SDL_PORTRAIT <>
+		SDL_PORTRAIT <item_gemruby.png>
 		Legality -50
 
 		Treasure
@@ -145,7 +162,7 @@
 		Fudge 35000
 		Category <TREASURE GEMSTONE MINERAL>
 		Factions <GENERAL>
-		SDL_PORTRAIT <>
+		SDL_PORTRAIT <item_gemdiamond.png>
 		Legality -50
 
 		Treasure
@@ -169,7 +186,7 @@
 		Fudge 55000
 		Category <TREASURE GEMSTONE MINERAL>
 		Factions <GENERAL>
-		SDL_PORTRAIT <>
+		SDL_PORTRAIT <item_gemaquamarine.png>
 		Legality -50
 
 		Treasure
@@ -193,7 +210,7 @@
 		Fudge 85000
 		Category <TREASURE GEMSTONE>
 		Factions <GENERAL>
-		SDL_PORTRAIT <>
+		SDL_PORTRAIT <item_gemaquamarine.png>
 		Legality -50
 
 		Treasure
@@ -201,7 +218,7 @@
 		Fudge 115000
 		Category <TREASURE GEMSTONE MINERAL>
 		Factions <GENERAL>
-		SDL_PORTRAIT <>
+		SDL_PORTRAIT <item_biskupengine.png>
 		Legality -50
 		mass 1
 
@@ -267,7 +284,7 @@
 		Fudge 1750000
 		Category <TREASURE GEMSTONE>
 		Factions <GENERAL>
-		SDL_PORTRAIT <>
+		SDL_PORTRAIT <item_gemdiamond.png>
 		Legality -50
 
 		Treasure
@@ -275,7 +292,7 @@
 		Fudge 3250000
 		Category <TREASURE GEMSTONE>
 		Factions <GENERAL>
-		SDL_PORTRAIT <>
+		SDL_PORTRAIT <item_gemruby.png>
 		Legality -50
 
 		Treasure
@@ -300,7 +317,7 @@
 		Fudge 9750000
 		Category <TREASURE GEMSTONE MINERAL>
 		Factions <GENERAL>
-		SDL_PORTRAIT <>
+		SDL_PORTRAIT <item_gemruby.png>
 		Legality -50
 		mass 1
 
@@ -314,139 +331,171 @@
 		mass 1
 
 
-Treasure
-Fudge 25000000
-name <Phobos Emerald>
-desc <A large, flawless emerald.>
-mass 1
-Category <TREASURE GENSTONE>
-Factions <GENERAL>
-Legality -25
+	Treasure
+	Fudge 25000000
+	name <Phobos Emerald>
+	desc <A large, flawless emerald.>
+	mass 1
+	Category <TREASURE GENSTONE>
+	Factions <GENERAL>
+	Legality -25
 
-Treasure
-Fudge 500
-name <Mood Ring>
-desc <An advanced polymer ring which changes color according to biometrics.>
-Category <TREASURE JEWELRY>
-Factions <GENERAL>
-SDL_PORTRAIT <>
-Legality -25
+	Treasure
+	Fudge 500
+	name <Mood Ring>
+	desc <An advanced polymer ring which changes color according to biometrics.>
+	Category <TREASURE JEWELRY>
+	Factions <GENERAL>
+	SDL_PORTRAIT <>
+	Legality -25
 
-Treasure
-Fudge 800
-name <Crystal Ring>
-desc <An attractive ring featuring a synthetic crystal stone.>
-Category <TREASURE JEWELRY>
-Factions <GENERAL>
-SDL_PORTRAIT <>
-Legality -25
+	Treasure
+	Fudge 800
+	name <Crystal Ring>
+	desc <An attractive ring featuring a synthetic crystal stone.>
+	Category <TREASURE JEWELRY>
+	Factions <GENERAL>
+	SDL_PORTRAIT <>
+	Legality -25
 
-Treasure
-Fudge 1200
-name <Brass Ring>
-desc <A plain brass ring.>
-Category <TREASURE JEWELRY>
-Factions <GENERAL>
-SDL_PORTRAIT <>
-Legality -25
+	Treasure
+	Fudge 1200
+	name <Brass Ring>
+	desc <A plain brass ring.>
+	Category <TREASURE JEWELRY>
+	Factions <GENERAL>
+	SDL_PORTRAIT <>
+	Legality -25
 
-Treasure
-Fudge 2200
-name <Steel Ring>
-desc <A plain steel ring.>
-Category <TREASURE JEWELRY>
-Factions <GENERAL>
-SDL_PORTRAIT <>
-Legality -25
+	Treasure
+	Fudge 2200
+	name <Steel Ring>
+	desc <A plain steel ring.>
+	Category <TREASURE JEWELRY>
+	Factions <GENERAL>
+	SDL_PORTRAIT <>
+	Legality -25
 
-Treasure
-Fudge 4200
-name <Ceramic Ring>
-desc <A plain ceramic ring.>
-Category <TREASURE JEWELRY>
-Factions <GENERAL>
-SDL_PORTRAIT <>
-Legality -25
+	Treasure
+	Fudge 4200
+	name <Ceramic Ring>
+	desc <A plain ceramic ring.>
+	Category <TREASURE JEWELRY>
+	Factions <GENERAL>
+	SDL_PORTRAIT <>
+	Legality -25
 
-Treasure
-Fudge 5000
-name <Silver Ring>
-desc <A plain silver ring.>
-Category <TREASURE JEWELRY>
-Factions <GENERAL>
-SDL_PORTRAIT <>
-Legality -25
+	Treasure
+	Fudge 5000
+	name <Silver Ring>
+	desc <A plain silver ring.>
+	Category <TREASURE JEWELRY>
+	Factions <GENERAL>
+	SDL_PORTRAIT <>
+	Legality -25
 
-Treasure
-Fudge 9000
-name <Gold Ring>
-desc <A plain gold ring.>
-Category <TREASURE JEWELRY>
-Factions <GENERAL>
-SDL_PORTRAIT <>
-Legality -25
+	Treasure
+	Fudge 9000
+	name <Gold Ring>
+	desc <A plain gold ring.>
+	Category <TREASURE JEWELRY>
+	Factions <GENERAL>
+	SDL_PORTRAIT <>
+	Legality -25
 
-Treasure
-Fudge 19000
-name <Platinum Ring>
-desc <A plain platinum ring.>
-Category <TREASURE JEWELRY>
-Factions <GENERAL>
-SDL_PORTRAIT <>
-Legality -25
+	Treasure
+	Fudge 19000
+	name <Platinum Ring>
+	desc <A plain platinum ring.>
+	Category <TREASURE JEWELRY>
+	Factions <GENERAL>
+	SDL_PORTRAIT <>
+	Legality -25
 
-Treasure
-Fudge 70000
-name <Impervium Ring>
-desc <A plain ring made of impervium.>
-Category <TREASURE JEWELRY>
-Factions <GENERAL>
-SDL_PORTRAIT <>
-special <ARTIFACT>
+	Treasure
+	Fudge 70000
+	name <Impervium Ring>
+	desc <A plain ring made of impervium.>
+	Category <TREASURE JEWELRY>
+	Factions <GENERAL>
+	SDL_PORTRAIT <>
+	special <ARTIFACT>
 
-Treasure
-Fudge 300
-name <Cheap Necklace>
-desc <A cheap necklace made of shiny plastic.>
-Category <TREASURE JEWELRY>
-Factions <GENERAL>
-SDL_PORTRAIT <>
-Legality -25
+	Treasure
+	Fudge 300
+	name <Cheap Necklace>
+	desc <A cheap necklace made of shiny plastic.>
+	Category <TREASURE JEWELRY>
+	Factions <GENERAL>
+	SDL_PORTRAIT <>
+	Legality -25
 
-Treasure
-Fudge 4000
-name <Silver Chain>
-desc <A simple chain made of silver.>
-Category <TREASURE JEWELRY>
-Factions <GENERAL>
-SDL_PORTRAIT <>
-Legality -25
+	Treasure
+	Fudge 4000
+	name <Silver Chain>
+	desc <A simple chain made of silver.>
+	Category <TREASURE JEWELRY>
+	Factions <GENERAL>
+	SDL_PORTRAIT <>
+	Legality -25
 
-Treasure
-Fudge 16000
-name <Gold Chain>
-desc <A simple chain made of gold.>
-Category <TREASURE JEWELRY>
-Factions <GENERAL>
-SDL_PORTRAIT <>
-Legality -25
+	Treasure
+	Fudge 16000
+	name <Gold Chain>
+	desc <A simple chain made of gold.>
+	Category <TREASURE JEWELRY>
+	Factions <GENERAL>
+	SDL_PORTRAIT <>
+	Legality -25
 
-Treasure
-Fudge 36000
-name <Platinum Chain>
-desc <A simple chain made of platinum.>
-Category <TREASURE JEWELRY>
-Factions <GENERAL>
-SDL_PORTRAIT <>
-Legality -25
+	Treasure
+	Fudge 36000
+	name <Platinum Chain>
+	desc <A simple chain made of platinum.>
+	Category <TREASURE JEWELRY>
+	Factions <GENERAL>
+	SDL_PORTRAIT <>
+	Legality -25
 
-Treasure
-Fudge 120000
-name <Impervium Chain>
-desc <A simple chain made of impervium.>
-Category <TREASURE JEWELRY>
-Factions <GENERAL>
-special <ARTIFACT>
-SDL_PORTRAIT <>
-Legality 0
+	Treasure
+	Fudge 120000
+	name <Impervium Chain>
+	desc <A simple chain made of impervium.>
+	Category <TREASURE JEWELRY>
+	Factions <GENERAL>
+	special <ARTIFACT>
+	SDL_PORTRAIT <>
+	Legality 0
+
+	HeadArmor 2
+	name <Golden Crown>
+	Fudge 1300000
+	desc <An intricate golden crown.>
+	Charm 10
+	Category <TREASURE JEWELRY ANTIQUE>
+	Factions <GENERAL>
+	SDL_PORTRAIT <>
+	Legality -50
+
+	HeadArmor 6
+	name <Iron Crown>
+	Fudge 2200500
+	Hardened
+	desc <An impressive iron crown.>
+	Charm 10
+	Ego 10
+	Category <TREASURE JEWELRY ANTIQUE>
+	Factions <GENERAL>
+	SDL_PORTRAIT <>
+	Legality -50
+
+	HeadArmor 2
+	name <Jeweled Crown>
+	Fudge 4800000
+	desc <An intricate golden crown encrusted with jewels.>
+	Charm 10
+	Category <TREASURE JEWELRY ANTIQUE>
+	Factions <GENERAL>
+	SDL_PORTRAIT <>
+	Legality -50
 
