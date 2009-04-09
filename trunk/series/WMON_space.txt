@@ -164,14 +164,6 @@ sub
 	name <Hook>
 	type <ArmorPiercing Flail Sickness>
 end
-tail
-name <Tentacle>
-armor 4
-sub
-	Melee 5
-	name <Hook>
-	type <ArmorPiercing Flail Sickness>
-end
 end
 
 ARCH Scarlet Shil
@@ -219,11 +211,48 @@ torso
 	end
 end
 
+ARCH Strobe Sphere
+SDL_SPRITE <monster_fungus3.png>
+SDL_COLORS <94 96 125 174 238 251 174 238 251>
+SDL_PORTRAIT <monster_fungus3.png>
+roguechar <'>
+type <fungus cave>
+habitat <SPACE>
+statline 11 8 10 5 1 1 1 1
+*CLUE_SURVIVAL <*SURVIVAL_GetPearl 70 fungus>
+MonsterTV 70
+RangedCombat 5
+CloseCombat 5
+Dodge 7
+Vitality 5
+Stealth 5
+sealed
+sub
+torso
+	sub
+		Melee 5
+		name <Maw>
+		type <BRUTAL POISON>
+		Speed 3
+
+		BeamGun 6
+		name <Strobe Flash>
+		type <BLIND>
+		range 4
+
+		PowerSource 5
+		name <Energy Gland>
+
+		HoverJet 8
+	end
+end
+
 ARCH Fungal Sphere
 SDL_SPRITE <monster_fungus3.png>
+SDL_PORTRAIT <monster_fungus3.png>
 SDL_COLORS <199 188 162 135 141 101 234 180 0>
 roguechar <'>
-type <fungus mine asteroid>
+type <fungus mine asteroid cave>
 habitat <SPACE>
 statline 10 8 10 1 1 1 1 1
 *CLUE_SURVIVAL <*SURVIVAL_GetPearl 40 fungus>
@@ -245,14 +274,90 @@ torso
 		caliber <FUNGUS TOXIC DART>
 		range 4
 		BV 3
+		Magazine 80
 		sub
 			Ammo 3
 			type <POISON SWARM>
 			caliber <FUNGUS TOXIC DART>
-			Magazine 80
 		end
 
 		HoverJet 8
+	end
+end
+
+ARCH Toxic Fungus
+SDL_SPRITE <monster_fungus2.png>
+SDL_PORTRAIT <monster_fungus2.png>
+SDL_COLORS <250 200 49 175 26 10 17 78 200>
+roguechar <f>
+type <fungus mine asteroid>
+habitat <SPACE>
+statline 9 16 8 9 1 1 1 1
+*CLUE_SURVIVAL <*SURVIVAL_LootGizzard 75 fungus>
+MonsterTV 75
+CloseCombat 6
+RangedCombat 6
+Dodge 7
+Initiative 7
+Vitality 5
+sealed
+sub
+torso
+	armor 5
+	sub
+		Gun 4
+		name <Toxic Dart>
+		caliber <FUNGUS TOXIC DART>
+		range 5
+		BV 4
+		Magazine 80
+		sub
+			Ammo 4
+			type <POISON SWARM>
+			caliber <FUNGUS TOXIC DART>
+		end
+	end
+leg
+	armor 4
+	sub
+		melee 5
+		name <Claw>
+		type <ARMORPIERCING POISON>
+	end
+leg
+	armor 4
+	sub
+		melee 5
+		name <Claw>
+		type <ARMORPIERCING POISON>
+	end
+leg
+	armor 4
+	sub
+		melee 5
+		name <Claw>
+		type <ARMORPIERCING POISON>
+	end
+leg
+	armor 4
+	sub
+		melee 5
+		name <Claw>
+		type <ARMORPIERCING POISON>
+	end
+leg
+	armor 4
+	sub
+		melee 5
+		name <Claw>
+		type <ARMORPIERCING POISON>
+	end
+leg
+	armor 4
+	sub
+		melee 5
+		name <Claw>
+		type <ARMORPIERCING POISON>
 	end
 end
 
@@ -368,9 +473,9 @@ ARCH Fungal Hunter
 SDL_SPRITE <monster_fungus1.png>
 SDL_COLORS <199 188 162 135 141 101 250 50 150>
 roguechar <f>
-type <fungus mine asteroid>
+type <fungus asteroid cave>
 habitat <SPACE>
-statline 9 13 13 10 1 1 1 1
+statline 9 13 13 9 1 1 1 1
 *CLUE_SURVIVAL <*SURVIVAL_GetPearl 65 fungus>
 MonsterTV 60
 CloseCombat 7
@@ -421,11 +526,48 @@ leg
 	end
 end
 
+arch armored worm
+roguechar <w>
+SDL_SPRITE <monster_larva.png>
+SDL_PORTRAIT <monster_larva.png>
+SDL_COLORS <49 91 159 170 153 230 244 210 30>
+type <mutant vermin mine derelict>
+habitat <SPACE>
+statline 9 12 6 5 4 5 1 1
+MonsterTV 65
+sealed
+CloseCombat 8
+Dodge 5
+Vitality 10
+Toughness 10
+%% The armored worm is tough as nails
+Talent 4
+sub
+head
+	armor 5
+	Hardened
+	sub
+		Melee 8
+		name <Jaws>
+		type <BRUTAL SICKNESS>
+		UsesBody
+	end
+torso
+	armor 5
+	sub
+		Melee 4
+		name <Spines>
+		type <ARMORPIERCING POISON>
+	end
+tail
+	armor 5
+end
+
 arch spaceworm
 roguechar <w>
 SDL_SPRITE <monster_larva.png>
 SDL_COLORS <245 213 160 245 213 160 255 230 195>
-type <mutant vermin mine asteroid>
+type <mutant vermin mine derelict>
 habitat <SPACE>
 statline 7 3 6 5 4 5 1 1
 MonsterTV 18

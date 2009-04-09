@@ -424,7 +424,7 @@ Plot
 	element1 <Scene !Near -7 cavclub>
 	element2 <NewNPC -3 -7 Friend>
 	place2 <1 pass>
-	element3 <Faction !Enemy -7>
+	element3 <Faction !Enemy -7 -ArchAlly !XClude -3>
 
 	% P1 = Forcechat counter
 	update <if= P1 0 P= 1 1 ForceChat %2%>
@@ -444,7 +444,7 @@ Plot
 		*GoAskQuestion <*INTRO_Question GoStoryInfo>
 		GoStoryInfo <NewChat Say 1 V= 1 1 AddChat 1 AddChat 2 AddChat 3>
 		*GoAdvice <*INTRO_Advice>
-		result1 <NewChat Say 3 AddEasygoing -d4  AddChat 4>
+		result1 <NewChat Say 3   PCFEnemy %3%  AddChat 4>
 		result2 <NewChat Say 4 AddChat 4>
 		result3 <NewChat Say 5 AddCheerful -d10  AddChat 4>
 		result4 <Goto GoAdvice>

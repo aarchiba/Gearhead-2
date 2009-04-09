@@ -282,7 +282,7 @@ end;
 Function RepairFuelDescription( Part: GearPtr ): String;
 	{ Return a description for this repair fuel. }
 begin
-	RepairFuelDescription := MsgString( 'SkillName_' + BStr( Part^.S ) ) + ' ' + BStr( Part^.V ) + ' DP';
+	RepairFuelDescription := MsgString( 'REPAIRTYPE_' + BStr( Part^.S ) ) + ' ' + BStr( Part^.V ) + ' DP';
 end;
 
 Function PowerSourceDescription( Part: GearPtr ): String;

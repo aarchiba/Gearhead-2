@@ -449,25 +449,6 @@ Const
 	STAT_TeamOrders = 1;
 	STAT_WanderMon = 2;
 
-	{ *** MAP FEATURE DEFINITION *** }
-	{ G = GG_MapFeature              }
-	{ S = Feature Type               }
-	{ V = Feature Value              }
-	GS_Building = -1;
-
-	STAT_XPos = 1;
-	STAT_YPos = 2;
-	STAT_MFWidth = 3;
-	STAT_MFHeight = 4;
-	STAT_MFFloor = 5;
-	STAT_MFMarble = 6;
-	STAT_MFBorder = 7;
-	STAT_MFSpecial = 8;
-
-	MapFeatureMaxWidth = 25;
-	MapFeatureMaxHeight = 15;
-	MapFeatureMinDimension = 5;
-
 	{ *** SUPERPROP DEFINITION *** }
 	{ Stats 3 and 4 are width and height as with map features. }
 	STAT_TeamA = 5;

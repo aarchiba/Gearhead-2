@@ -1119,6 +1119,23 @@ Content
 		Treasure
 		name <Gold Nugget>
 		Fudge 32000
+		Mass 1
+	end
+
+Content
+	name <Big Robot Team>
+	requires <*DUNGEON_DECOR !Hi (mine|cave)>
+	element1 <Prefab>
+	teamdata1 <sd enemy>
+	element2 <Prefab>
+	teamdata2 <sd enemy>
+	element3 <Prefab>
+	inv
+		Monster Forgebot
+		Monster Forgebot
+		Item Platinum Ingot
+		mass 1
+		fudge 600000
 	end
 
 Content

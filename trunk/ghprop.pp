@@ -100,6 +100,26 @@ const
 	GS_BasicProp = 0;	{ Doesn't do anything. }
 	GS_CombatProp = 1;	{ Will fire weapons at enemies, as appropriate. }
 
+	{ *** MAP FEATURE DEFINITION *** }
+	{ G = GG_MapFeature              }
+	{ S = Feature Type               }
+	{ V = Feature Value              }
+	GS_Building = -1;
+
+	STAT_XPos = 1;
+	STAT_YPos = 2;
+	STAT_MFWidth = 3;
+	STAT_MFHeight = 4;
+	STAT_MFFloor = 5;
+	STAT_MFMarble = 6;
+	STAT_MFBorder = 7;
+	STAT_MFSpecial = 8;
+
+	MapFeatureMaxWidth = 25;
+	MapFeatureMaxHeight = 15;
+	MapFeatureMinDimension = 5;
+
+
 var
 	{ This array holds the scripts. }
 	Meta_Terrain_Scripts: Array [1..NumBasicMetaTerrain] of SAttPtr;
@@ -108,6 +128,7 @@ var
 Procedure CheckPropRange( Part: GearPtr );
 
 Procedure InitMetaTerrain( Part: GearPtr );
+Procedure InitMapFeature( Part: GearPtr );
 
 Function RandomBuildingName( B: GearPtr ): String;
 
@@ -155,6 +176,16 @@ begin
 		Part^.Stat[ STAT_Pass ] := -100;
 		Part^.Stat[ STAT_Altitude ] := 1;
 		Part^.Stat[ STAT_Obscurement ] := 1;
+	end;
+end;
+
+Procedure InitMapFeature( Part: GearPtr );
+	{ This procedure does only one thing- if the part has a minimap defined, }
+	{ make sure it's at least a 5x5 area. }
+begin
+	if ( part <> Nil ) and ( SAttValue( Part^.SA , 'MINIMAP' ) <> '' ) then begin
+		if Part^.Stat[ STAT_MFWidth ] < 5 then Part^.Stat[ STAT_MFWidth ] := 5;
+		if Part^.Stat[ STAT_MFHeight ] < 5 then Part^.Stat[ STAT_MFHeight ] := 5;
 	end;
 end;
 

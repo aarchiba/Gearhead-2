@@ -234,6 +234,7 @@ begin
 		GG_Ammo: InitAmmo(Part);
 		GG_MetaTerrain: InitMetaTerrain(Part);
 		GG_Module: InitModule( Part );
+		GG_MapFeature: InitMapFeature( Part );
 	end;
 end;
 

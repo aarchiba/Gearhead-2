@@ -2321,6 +2321,9 @@ Procedure UpdateMoods( GB: GameBoardPtr );
 		MoodFound: Boolean;
 		TimeLimit: LongInt;
 	begin
+		{ If Scene = Nil, we have a major problem. }
+		if Scene = Nil then Exit;
+
 		{ No mood found yet- we haven't started searching! }
 		MoodFound := False;
 
@@ -2329,16 +2332,16 @@ Procedure UpdateMoods( GB: GameBoardPtr );
 		while Mood <> Nil do begin
 			M2 := Mood^.Next;
 			if Mood^.G = GG_CityMood then begin
+				{ Even if this mood is getting deleted, we don't want to load }
+				{ a new one right away, so set MOODFOUND to TRUE... as long as }
+				{ it's a major mood. Otherwise, who cares about it? }
+				if Mood^.S = GS_MajorMood then MoodFound := True;
+
 				{ Check the time limit now. }
 				TimeLimit := NAttValue( Mood^.NA , NAG_MoodData , NAS_MoodTimeLimit );
 				if ( TimeLimit > 0 ) and ( TimeLimit < GB^.ComTime ) then begin
 					RemoveGear( Scene^.SubCom , Mood );
 				end;
-
-				{ Even if this mood is getting deleted, we don't want to load }
-				{ a new one right away, so set MOODFOUND to TRUE... as long as }
-				{ it's a major mood. Otherwise, who cares about it? }
-				if Mood^.S = GS_MajorMood then MoodFound := True;
 			end;
 			Mood := M2;
 		end;
