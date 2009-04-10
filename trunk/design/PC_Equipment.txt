@@ -104,7 +104,7 @@ desc <A curved short sword.>
 sdl_portrait <item_cutlass.png>
 category <WEAPON MELEE>
 factions <GENERAL>
-legality -5
+legality -10
 Acc 1
 Speed 4
 Mass -2
@@ -139,6 +139,26 @@ legality -5
 Acc 1
 Speed 4
 Mass -3
+
+Melee 6
+Name <Mace>
+desc <A steel club.>
+category <WEAPON MELEE>
+factions <GENERAL>
+SDL_PORTRAIT <item_mace.png>
+legality -5
+Speed 3
+UsesBody
+
+Melee 8
+Name <War Hammer>
+desc <A big hammer weighted for combat.>
+type <STUN>
+category <WEAPON MELEE>
+factions <GENERAL>
+SDL_PORTRAIT <item_warhammer.png>
+legality 0
+UsesBody
 
 Melee 8
 Name <Katana>
@@ -202,7 +222,6 @@ EMelee 19
 Name <Chainsaw>
 Type <BRUTAL>
 SDL_PORTRAIT <item_chainsaw.png>
-UsesBody
 Mass 12
 Acc -1
 desc <An energy-cell powered cutting tool. Particularly suited for cutting through materials.>
@@ -219,7 +238,6 @@ EMelee 19
 Name <Combat Chainsaw>
 Type <BRUTAL>
 SDL_PORTRAIT <item_chainsaw.png>
-UsesBody
 Mass 8
 Acc 1
 Speed 3
@@ -251,10 +269,10 @@ inv
 	name <Power Cell 100>
 end
 
-Melee 12
+Melee 14
 Name <Gyro Mace>
 Type <BRUTAL>
-Mass -7
+Mass -9
 legality 10
 Acc 2
 Speed 3

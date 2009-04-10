@@ -126,12 +126,6 @@ job_desig <ADVEN>
 Awareness
 Intimidation
 
-Arch Cyberdoc
-statline 10 7 8 10 15 10 18 10
-chardesc Pragmatic
-job_desig <MEDIC>
-Medicine 15
-
 ARCH Corporate Executive
 statline 8 9 10 8 13 11 11 10
 job_desig <CORPO>
@@ -187,6 +181,13 @@ statline 8 9 8 9 14 8 11 13
 chardesc Heroic Cheerful
 job_desig <MEDIC>
 Medicine 5
+
+Arch Cyberdoc
+statline 10 7 8 10 15 10 18 10
+chardesc Pragmatic
+job_desig <MEDIC>
+Medicine 15
+Science 10
 
 Arch Doctor
 statline 10 8 9 10 13 11 17 12

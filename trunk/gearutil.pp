@@ -1212,8 +1212,10 @@ begin
 		if HM > 2 then HM := 2;
 		GearEncumberance := MassPerMV + Mek^.V + HM;
 	end else if Mek^.G = GG_Character then begin
-		{ Encumberance value is BODY stat + 5. }
-		GearEncumberance := CStat( Mek , STAT_Body ) + 5 + CountActivePoints( Mek , GG_MoveSys , GS_HeavyActuator ) * 2;
+		{ Encumberance value is BODY stat + 5 + exponential bonus for BODY > 10. }
+		HM := CStat( Mek , STAT_Body );
+		if HM > 10 then HM := HM + ( HM * HM div 25 ) - 3;
+		GearEncumberance := HM + 5 + CountActivePoints( Mek , GG_MoveSys , GS_HeavyActuator ) * 2;
 	end else begin
 		GearEncumberance := 0;
 	end;

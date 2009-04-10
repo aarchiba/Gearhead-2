@@ -415,7 +415,7 @@ var
 		end else if OK_At_Start and ( Part^.G = GG_Character ) then begin
 			{ Taking damage trains vitality... }
 			{ As long as the character survives, that is. }
-			DoleSkillExperience( FindMaster( Part ) , NAS_Vitality , DMG * 3 );
+			DoleSkillExperience( FindMaster( Part ) , NAS_Vitality , DMG * 5 );
 
 			{ It also causes the afflicted to feel worse for wear. }
 			AddMoraleDmg( Part , DMG );

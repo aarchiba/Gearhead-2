@@ -1,5 +1,29 @@
 % RANDOM CONTENT FILE
 
+%% *ARMORY Content
+%%	Weapon lockers.
+
+Content
+	requires <*ARMORY>
+	MiniMap <...........1#2...........>
+	element1 <PREFAB>
+	element2 <PREFAB>
+	inv
+		STC SHOPDISPLAY-WEAPONS-1
+		PDir 4
+		use <OpenInv>
+		RandomLoot 100000
+		Loot_Category <WEAPON>
+		Loot_Factions <GENERAL>
+
+		STC SHOPDISPLAY-WEAPONS-2
+		PDir 0
+		use <OpenInv>
+		RandomLoot 100000
+		Loot_Category <WEAPON>
+		Loot_Factions <GENERAL>
+	end
+
 %% *HIDEOUT_X Content
 %%	Filler for hideouts and strongholds.
 %%	Minimaps should be open on all four sides.
