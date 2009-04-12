@@ -41,7 +41,7 @@ const
 	TRIGGER_Applause = 'APPLAUSE';
 
 	Repair_Skill_Needed: Array [0..NumMaterial] of Byte = (
-		NAS_Medicine, NAS_Repair, NAS_Repair
+		NAS_Repair, NAS_Medicine, NAS_Repair
 	);
 
 
@@ -49,6 +49,7 @@ const
 Function TotalRepairableDamage( Target: GearPtr; Material: Integer ): LongInt;
 Procedure ApplyRepairPoints( Target: GearPtr; Material: Integer; var RP: LongInt; CureStatus: Boolean );
 Procedure ApplyEmergencyRepairPoints( Target: GearPtr; Material: Integer; var RP: LongInt );
+Function RepairNeededBySkill( Target: GearPtr; Skill: Integer ): LongInt;
 Function UseRepairSkill( GB: GameBoardPtr; PC,Target: GearPtr; Skill: Integer ): Boolean;
 Procedure DoCompleteRepair( Target: GearPtr );
 
@@ -226,6 +227,21 @@ begin
 		if RP > 0 then ApplyRepairPoints( Target, Material, RP, False );
 	end else ApplyRepairPoints( Target, Material, RP, False );
 	if RP > 0 then ApplyRepairPoints( Target, Material, RP, True );
+end;
+
+Function RepairNeededBySkill( Target: GearPtr; Skill: Integer ): LongInt;
+	{ Return the amount of damage that can be affected by the listed skill. }
+var
+	T,Total,RP: Longint;
+begin
+	Total := 0;
+	for t := 0 to NumMaterial do begin
+		if ( Repair_Skill_Needed[ t ] = Skill ) then begin
+			RP := TotalRepairableDamage( Target , T );
+			if RP > 0 then Total := Total + RP;
+		end;
+	end;
+	RepairNeededBySkill := Total;
 end;
 
 Function UseRepairSkill( GB: GameBoardPtr; PC,Target: GearPtr; Skill: Integer ): Boolean;

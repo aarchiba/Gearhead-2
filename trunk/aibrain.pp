@@ -1139,7 +1139,7 @@ begin
 
 	while T <> Nil do begin
 		if AreAllies( GB , Mek , T ) then begin
-			Dmg := TotalRepairableDamage( T , Skill );
+			Dmg := RepairNeededBySkill( T , Skill );
 			if Dmg > Best then begin
 				BTar := T;
 				Best := Dmg;
@@ -1296,7 +1296,7 @@ begin
 		Tool := SeekGear( Mek , GG_RepairFuel , Abs( Cord ) );
 
 		{ If this gear no longer needs repairs, quit. }
-		if ( TGear = Nil ) or ( TotalRepairableDamage( TGear , Abs( CORD ) ) < 1 ) or ( Tool = Nil ) or ( CurrentMental( Mek ) < 1 ) then begin
+		if ( TGear = Nil ) or ( RepairNeededBySkill( TGear , Abs( CORD ) ) < 1 ) or ( Tool = Nil ) or ( CurrentMental( Mek ) < 1 ) then begin
 			{ Clear the continuous action. }
 			SetNAtt( Mek^.NA , NAG_EpisodeData , NAS_ContinuousOrders , 0 );
 

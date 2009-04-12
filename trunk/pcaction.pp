@@ -799,9 +799,9 @@ begin
 	Target := Nil;
 	Best := 0;
 	while Mek <> Nil do begin
-		if ( not AreEnemies( GB , PC , Mek ) ) and ( TotalRepairableDamage( Mek , Skill ) > Best ) and ( NAttValue( Mek^.NA , NAG_Location , NAS_X ) = P.X ) and ( NAttValue( Mek^.NA , NAG_Location , NAS_Y ) = P.Y ) then begin
+		if ( not AreEnemies( GB , PC , Mek ) ) and ( RepairNeededBySkill( Mek , Skill ) > Best ) and ( NAttValue( Mek^.NA , NAG_Location , NAS_X ) = P.X ) and ( NAttValue( Mek^.NA , NAG_Location , NAS_Y ) = P.Y ) then begin
 			Target := Mek;
-			Best := TotalRepairableDamage( Mek , Skill );
+			Best := RepairNeededBySkill( Mek , Skill );
 		end;
 		mek := mek^.Next;
 	end;

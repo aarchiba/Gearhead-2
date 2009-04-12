@@ -217,7 +217,7 @@ LoseComp <N= 6 ? NextComp ?>
 NTBLoseComp <&SetTargetNPC ChatNPCID LoseComp ? ?>
 NTBNegateComp <&SetTargetNPC ChatNPCID NegateComp ? ?>
 StoryDL= <GrabStory GSetNAtt NAG_Narrative NAS_DifficultyLevel ?>
-WinEpisode <XPV 200   N= 7 ? N= 6 ? GrabStory GAddNAtt -7 1 7 GAddNAtt -7 2 1 GAddNAtt -7 6 1 GSetNAtt -7 3 0 GSetNAtt -7 4 0 NextComp ? FacXP+ &AllyFac 3>
+WinEpisode <XPV 200   N= 7 ? N= 6 ? GrabStory GAddNAtt NAG_Narrative NAS_DifficultyLevel 7 GAddNAtt -7 2 1 GAddNAtt -7 6 1 GSetNAtt -7 3 0 GSetNAtt -7 4 0 NextComp ? FacXP+ &AllyFac 3>
 LoseEpisode <N= 7 ? N= 6 ? GrabStory                  GAddNAtt -7 2 1 GAddNAtt -7 6 1 GSetNAtt -7 3 0 GSetNAtt -7 4 0 NextComp ?>
 IfFacReward     <GrabFaction ? if# GNAtt NAG_FacReward ? 0>
 IfAccessArmory  <GrabFaction LocalFaction if# GNAtt NAG_FacReward 1 0>
@@ -246,6 +246,7 @@ IfUScience <ifUSkillTest NAS_Science STAT_Knowledge ?>
 IfMysticism <ifSkillTest NAS_Mysticism STAT_Ego ?>
 IfUMysticism <ifUSkillTest NAS_Mysticism STAT_Ego ?>
 IfSurvival <ifSkillTest NAS_Survival STAT_Craft ?>
+IfUSurvival <ifUSkillTest NAS_Survival STAT_Craft ?>
 IfRepair <ifSkillTest NAS_Repair STAT_Craft ?>
 IfTaunt <ifSkillTest NAS_Taunt STAT_Charm ?>
 IfMedicine <ifSkillTest NAS_Medicine STAT_Knowledge ?>

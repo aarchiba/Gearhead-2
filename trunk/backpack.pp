@@ -456,7 +456,7 @@ begin
 			{ The repair option will only be added to the menu if: }
 			{ - The PC has the required skill. }
 			{ - The item is in need of repair (using this skill). }
-			if ( SkillMan[N].Usage = USAGE_Repair ) and ( NAttValue( PC^.NA , NAG_Skill , N ) > 0 ) and ( TotalRepairableDamage( Item , N ) > 0 ) then begin
+			if ( SkillMan[N].Usage = USAGE_Repair ) and ( NAttValue( PC^.NA , NAG_Skill , N ) > 0 ) and ( RepairNeededBySkill( Item , N ) > 0 ) then begin
 				AddRPGMenuItem( RPM , MsgString( 'BACKPACK_Repair' ) + MSgString( 'SKILLNAME_' + BStr( N ) ) , 100 + N );
 			end;
 		end;
