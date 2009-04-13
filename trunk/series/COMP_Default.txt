@@ -69,6 +69,84 @@ Plot
 %% #A Plots
 %%
 
+Plot
+	name <Information Trade>
+	desc <A person here has information for you, if you do them a favor first.>
+	requires <#A +Tgs (+Fcc|+Fin) ~+Gkn>
+	Size 1
+
+	% E1 is a scene for the conference
+	% E2 is the presenter
+	Element1 <Grab 6>
+	Element2 <Character (ACADE|TRADE|CORPO) !Near -7 -ArchEnemy !XClude -2>
+	Place2 <1 (Citizens) pass>
+
+	% P1 = Spot E2 counter
+
+	%% FAIL CONDITIONS:
+	%% - E2 dies before subplot 2 is activated
+	end <if= PlotStatus %plotid2% 0 ifNPCDead %2% LoseComp 0 .%id%_next>
+	.%id%_next <+T-- +F-->
+
+	start <if= P1 0 if= SceneID %1%  P= 1 1 ifNPCInPlay &PartnerNPC else GoSoloSpot Monologue &PartnerNPC %id%01>
+	GoSoloSpot <ifUAwareness 5 Alert %id%02>
+
+	.%id2%_%plotid2%_GoWin <WinComp 0 .%id%_next>
+	.%id2%_%plotid2%_GoLoss <LoseComp 0 .%id%_next>
+
+	Msg%id%01 <Hey, look, it's %name2%; I heard that \SPR %2% 's got some kind of mission that needs doing.>
+	Msg%id%02 <You notice that %name2% seems to be thinking about something.>
+
+	% SubPlot1 is the favor for E2
+	% SubPlot2 is the Gather Information task
+	SubPlot1 <*:CS_MinorMission 2>
+	SubPlot2 <*:CS_GatherInformation 2>
+
+	sub
+		Persona 2
+		rumor0 <%name2% knows a secret.>
+		% V1 = Have offered mission (1), Have completed mission (2)
+		% V2 = Reputation Counter
+		&BribeAmount <Threat %threat% 1>
+		greeting <if= V1 2 else GoCheckProgress RevertPersona>
+		GoCheckProgress <if= V1 1 else GoCheckFirst ifSubPlotWon %plotid1% else GoCheckLoss Goto GoReveal>
+		*GoReveal <*RevealSecret GoInitSP2>
+		GoInitSP2 <V= 1 2 SetPlotStatus %plotid% %id% SetPlotStatus %plotid2% %id2% Goto .%id2%_GoInform>
+		GoCheckLoss <ifSubPlotLost %plotid1% else GoRemind LoseComp 0 .next SMemo 0 History 4 Goto GoLose>
+		.next <+T-- +F-->
+		*GoLose <*MissionWasFailure na na na>
+		*GoRemind <*GenericMissionReminder>
+		*GoCheckFirst <*IHaveInformation GoInform na>
+		GoInform <NewChat Say 1 SMemo 2 AddChat 1 AddChat 2 AddChat 3 AddChat 4 AddChat 5>
+		result1 <V= 1 1 History 3 Goto .%id1%_GoInit>
+		*result2 <*RejectMission .%id%_GoR2Exit>
+		.%id%_GoR2Exit <SMemo 0 LoseComp 0 .next>
+		result3 <EndChat Say 5 AddChat 6>
+		result4 <EndChat Say 6 AddChat 7 if= V2 0 V= 2 1 AddCheerful -d10>
+		result5 <EndChat Say 7 AddChat 7 if= V2 0 V= 2 1 AddEasygoing d6>
+		result6 <Cash+ -&BribeAmount Goto GoInitSP2>
+		result7 <Goto GoInitSP2>
+		Msg1 <Before I tell you what I know, I need you to do something for me. It's a fair exchange, don't you think?>
+		Msg2 <%name2% offered to tell you some information, if you complete a mission for \OPR %2% first.>
+		Msg3 <%name2% offered to tell you some information if you completed a mission first.>
+		Msg4 <You lost %name2%'s mission.>
+		Msg5 <You're right, that would save us both a whole lot of trouble. Here's what I know...>
+		Msg6 <Um... I guess this is what we call one of those offers I can't refuse, right? Here's what I know...>
+		Msg7 <Alright, I guess I can't hold out on you like this... just stop making those puppy dog eyes and I'll tell you what I know.>
+		Prompt1 <Alright. What do you need done?>
+		Prompt2 <No deal.>
+		Prompt3 <Why don't I just pay you for the info? [Offer $ \VAL &BribeAmount ]>
+		CPrompt3 <ifShopping HardSkillTar %threat% ifG PC$ &BribeAmount Accept>
+		Prompt4 <Why don't you tell me what you know, and I let you live?>
+		CPrompt4 <ifIntimidation HardSkillTar %threat% Accept>
+		Prompt5 <Come on, %name2%, why make me jump through hoops?>
+		CPrompt5 <ifG React %threat% Accept>
+		Prompt6 <[Continue]>
+		Prompt7 <[Continue]>
+
+		STC MS_SOCIAL
+		SetID 1
+	end
 
 Plot
 	name <Missing Prototype>

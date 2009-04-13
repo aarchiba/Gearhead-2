@@ -25,6 +25,96 @@
 %%  ***   +P--  Peaceful  Life   ***
 %%  ********************************
 
+Content
+	name <Secret War>
+	desc <There's been a lot of fighting that hasn't been covered by the press.>
+	requires <*:CS_GatherInformation +P-- P:-- (L:MAQUI|L:RISHI|L:FCOMS)>
+	changes <+P>
+	size 5
+
+	% E1 is the person who tells the PC about the attacks
+	% E2 is the city faction, which must exclude E1
+	% E3 is a local space scene
+	% E4 is the encounter
+	Element2 <Faction !Comrade -7 !Xclude 1>
+	Element3 <Scene Space Environs !Near -7>
+	Element4 <Prefab>
+	Place4 <3>
+
+	%% FAIL CONDITIONS:
+	%% - None
+
+	sub
+		Persona 1
+		.%id%_GoInform <NewChat Say %id%01 SMemo %id%02 History %id%03>
+		Msg%id%01 <There's something going on that the technocracy is trying to keep a secret. They've mobilized the fleet in %name3%. It's obvious that they're looking for something, but what?>
+		Msg%id%02 <%name1% revealed that the fleet has been mobilized to find something in %name3%, but the technocracy is trying to keep it a secret.>
+		Msg%id%03 <You learned that the fleet was searching for something in %name3%>
+
+		MetaScene 4 2
+		rumor%id% <there have been a lot of mecha attacks lately that haven't been in the news.>
+		MapWidth 50
+		MapHeight 50
+		SpaceMap
+		terrain <SPACE>
+		SpaceScroll
+		Microgravity
+		Vacuum
+		SpaceBackdrop
+		% L1 = Initialization Counter
+		% L2 = Have released Team4
+		% L3 = Initial T3 number
+		% L4 = End Message Counter
+		start <if= L1 0 Alert 1 L= 1 1 L= 3 t3 AlterContext .next Trigger0 .%id%_%plotid%_GoWin WinSubPlot %plotid%>
+		.next <+Pun>
+		end <if= L4 0 L= 4 1 Alert 4>
+		nu2 <if= T2 0 if= L2 0 L= 2 1  WMecha 4 %threat% 50 WMecha 4 %threat% 50 Alert 2 TeamMonologue 4 3 Retreat 3>
+		nu3 <if= L2 0 ifG L3 T3 L= 2 1 WMecha 4 %threat% 50 WMecha 4 %threat% 50 Alert 2 TeamMonologue 4 3 Retreat 3>
+		nu4 <if= L2 1 if= T4 0  Alert 5 L= 4 1 L= 2 2 XPV 100 Salvage>
+		Msg1 <You find yourself face to face with an enemy battleship being escorted by a lance of mecha. Fortunately, the battleship doesn't seem to be preparing to fire... yet.>
+		Msg2 <A second lance of mecha launches from the battleship.>
+		Msg3 <Return the ship to base; I'll deal with this intruder myself.>
+		Msg4 <This could have been the first wave of an invasion force.>
+		Msg5 <All of the mecha have been defeated, but there is no sign of the battleship. This could have been the first wave of an invasion force.>
+		sub
+			Team 1
+			SetEnemy 2 4
+			ParaX 30
+			ParaY 25
+
+			Team 2
+			SetEnemy 1
+			Deploy <WMecha 2 %threat% 75>
+			home <Enemy Zone>
+
+			Team 3
+			%% The battleship starts out as neutral. It will stay neutral
+			%% as long as the PC doesn't try anything stupid, such as
+			%% attacking it.
+
+			Team 4
+			SetEnemy 1
+			SetAlly 2
+			home <Enemy Zone>
+
+			void
+			name <Enemy Zone>
+			width 12
+			height 12
+			MFX 10
+			MFY 19
+			sub
+				SuperProp
+				requires <*Battleship>
+				SetTeam 3
+			end
+		end
+	end
+	inv
+		STC CORE-INVISIBLEENCOUNTER
+		name <Mysterious Object>
+	end
+
 %%  ****************************
 %%  ***   +Pme  Meet Enemy   ***
 %%  ****************************

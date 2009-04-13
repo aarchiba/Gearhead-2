@@ -299,6 +299,29 @@ Function UseRepairSkill( GB: GameBoardPtr; PC,Target: GearPtr; Skill: Integer ):
 		SpendRFAlongTrack( PC^.InvCom );
 		SpendRFAlongTrack( PC^.SubCom );
 	end;
+	Function AmountOfRepairFuel( PC: GearPtr; Material: Integer ): LongInt;
+		{ Return the total amount of repair fuel that the PC has. }
+	var
+		Total: LongInt;
+		Procedure SeekRFAlongTrack( LList: GearPtr );
+		begin
+			while LList <> Nil do begin
+				if ( LList^.G = GG_RepairFuel ) and ( LList^.S = Material ) then begin
+					Total := Total + LList^.V;
+				end else begin
+					SeekRFAlongTrack( LList^.SubCom );
+					SeekRFAlongTrack( LList^.InvCom );
+				end;
+				LList := LList^.Next;
+			end;
+		end;
+	begin
+		PC := FindRoot( PC );
+		Total := 0;
+		SeekRFAlongTrack( PC^.InvCom );
+		SeekRFAlongTrack( PC^.SubCom );
+		AmountOfRepairFuel := Total;
+	end;
 	Function ActivateRepair( Material: Integer; var SkRoll: Integer ): Boolean;
 		{ Activate the repair. Return the number of repair points used. }
 		{ Reduce SkRoll by this same amount. }
@@ -312,7 +335,7 @@ Function UseRepairSkill( GB: GameBoardPtr; PC,Target: GearPtr; Skill: Integer ):
 		RP := TotalRepairableDamage( Target , Material );
 		RFFound := False;
 		{ Locate the repair fuel. }
-		RepairFuel := CountActivePoints( PC , GG_RepairFuel , Material );
+		RepairFuel := AmountOfRepairFuel( PC , Material );
 
 		if RepairFuel > 0 then begin
 			{ The amount of damage recovered will not exceed the skill roll * 2. }
@@ -328,7 +351,7 @@ Function UseRepairSkill( GB: GameBoardPtr; PC,Target: GearPtr; Skill: Integer ):
 			SpendRepairFuel( PC , Material , RP );
 
 			{ Apply the repair points. }
-			ApplyRepairPoints( Target , Skill , RP , True );
+			ApplyRepairPoints( Target , Material , RP , True );
 			RFFound := True;
 		end;
 		ActivateRepair := RFFound;
