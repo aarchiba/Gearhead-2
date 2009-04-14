@@ -47,9 +47,9 @@ Content
 		caliber <50mm explosive cannister>
 		range 6
 		scale 2
+		Magazine 30
 		sub
 			Ammo 9
-			Magazine 30
 			caliber <50mm explosive cannister>
 			type <BLAST 3 BRUTAL>
 		end
@@ -74,6 +74,7 @@ Content
 		name <Mech Assault Rifle>
 		caliber <30mm caseless>
 		Range 6
+		Magazine 60
 		BV 2
 		Speed 3
 		Acc 1
@@ -81,7 +82,6 @@ Content
 		sub
 			Ammo 8
 			caliber <30mm caseless>
-			Magazine 60
 			mass -6
 		end
 	end

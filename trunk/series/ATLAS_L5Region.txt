@@ -3905,6 +3905,7 @@ Scene 0 3
 
 	desig <TOHSP>
 
+	Quest1 <*:Q_LocalQuest 50>
 
 	start <if= V1 0 else GoSecondTime V= 1 1 Alert 1 Print 2>
 	GoSecondTime <Print 2>
@@ -4181,18 +4182,6 @@ sub
 			home <Foyer>
 			SetFaction 13
 		end
-	end
-	inv
-		%% Inventory of Jiason Factory
-		NPC Construction Worker
-		name <McCabe>
-		SetFaction 10
-		home <Foyer>
-		SDL_PORTRAIT <por_f_allisonnewver(J--).png>
-		SDL_COLORS <239 198 58 255 212 195 6 42 120>
-		CharDesc Female Melancholy Easygoing Pragmatic Heroic
-		Combatant
-		Age 16
 	end
 
 	Scene
@@ -4929,6 +4918,8 @@ Scene 0 3
 	GoSecondTime <Print 2>
 	Msg1 <Theles Spinner is also known as "The Meatyard". It is a place where human life is cheap, populated by exiles from the other colonies.>
 	Msg2 <You enter the Theles Spinner lower level.>
+
+	Quest1 <*:Q_CHARA_ARENA_BASE>
 
 sub
 	Scene

@@ -1,8 +1,69 @@
 %%
 %%  *:Q_UNIQUE_[city designation]_[identifier] Content
+%%  *Q_UNIQUE_[city designation]_[identifier] Content
 %%
-%% For guaranteed quests.
+%% For guaranteed quests. Some of these will have their own PlotIDs, while
+%% others will use the parent PlotID.
 %%
+
+Content
+	name <McCabe's Construction Project>
+	requires <*Q_UNIQUE_TOHSP_McCabe1>
+
+	%% Param1 is McCabe
+	%% Param2 is the new building under construction
+
+	%% FAIL CONDITIONS:
+	%% - McCabe dies
+	update <ifNPCDead %1% LoseSubPlot %plotid%>
+
+	% SubPlot1 is the construction problem
+	SubPlot1 <*:Q_ConstructionProblem 1 2>
+
+	sub
+		Persona 1
+		rumor%id% <%name1%'s reconstruction effort has hit a problem.>
+		%% V%id%01 = Victory counter
+		greeting <if= PlotStatus %plotid% %id% else %pop% if= V%id%01 1 else GoCheckVictory Goto %pop%>
+		GoCheckVictory <ifSubPlotWon %plotid1% else GoCheckResult NewChat Say 5 History 12 QMemo %plotid% 0 P= 1 1 V= %id%01 1 AddReact 10 XPV 100 MechaPrize .%id%_mektype %threat% 4 2>
+		.%id%_mektype <FCOMS MUGLE COMET HOELL>
+		GoCheckResult <if# PlotStatus %plotid1% 0 else GoCheckEnemy NewChat Say 3 AddChat 3 AddChat 2>
+		*GoCheckEnemy <*ENEMY_CHECK GoOfferQuest ChatNPCFac GoMakeEnemy>
+		GoMakeEnemy <LoseSubPlot %plotid%>
+		*GoOfferQuest <*NiceToMeetYou GoExplainQuest>
+		GoExplainQuest <NewChat Say 1 AddChat 4 AddChat 5 AddChat 1>
+		Result1 <NewChat Say 9 AddChat 8>
+		Result2 <NewChat Say 4 LoseSubPlot %plotid%>
+		Result3 <NewChat Say 6>
+		Result4 <NewChat Say 7 AddChat 6 AddChat 7  AddSociable -d10    SetPlotStatus %plotid1% %id1%  QMemo %plotid% 2>
+		Result5 <NewChat Say 8 AddChat 6 AddChat 7                      SetPlotStatus %plotid1% %id1%  QMemo %plotid% 2>
+		result6 <NewChat Say 10  LoseSubPlot %plotid%  QMemo %plotid% 0>
+		result7 <NewChat Say 11>
+		Result8 <NewChat Say 13 AddChat 6 AddChat 7                     SetPlotStatus %plotid1% %id1%  QMemo %plotid% 2>
+		Msg1 <As you probably know, we're still rebuilding from the damage we suffered in the impact. I'm in charge of the reconstruction efforts.>
+		Msg2 <%name1% is in charge of reconstruction in Tohru Spinner. Unfortunately, one of her projects has hit a problem.>
+		Msg3 <Do you have any good news for me about the reconstruction work?>
+		Msg4 <This is just what we need; hasn't our city suffered enough?>
+		Msg5 <I hear that you've solved our construction problem. Congratulations. Here, I'd like for you to have this mecha. It may be an industrial model but that doesn't mean that it can't kick arse.>
+		Msg6 <Please do. The citizens of Tohru Spinner are counting on this.>
+		Msg7 <Maybe not, but you might be interested to know that there's been a problem at one of the reconstruction sites. I'm offering a reward to anyone who can get the project back on track.>
+		Msg8 <Not so well, I'm afraid. There's been a problem at one of the reconstruction sites; work has all but halted. If you could find out what's going wrong and fix it, it would be a great help to us.>
+		Msg9 <Our station is close to the dusty ring, and it got hit by an asteroid that somehow made it through the sensor net. That's why you can see a big crack running across the skyfield. A lot of people got killed...>
+		Msg10 <No worries. With unemployment at an all-time high, I shouldn't have any trouble finding someone more qualified than you.>
+		Msg11 <Thanks. Let me know when the situation has been resolved and I'll have a special present for you.>
+		Msg12 <You helped McCain with the rebuilding of Tohru Spinner.>
+		Msg13 <You might be interested to know that there's been a problem at one of the reconstruction sites. I'm offering a reward to anyone who can get the project back on track.>
+		Prompt1 <Wait, could you tell me about the impact?>
+		Prompt2 <The reconstruction has halted.>
+		CPrompt2 <ifSubPlotLost %plotid1% Accept>
+		Prompt3 <I'll be back when I have something to report.>
+		Prompt4 <I don't care; I don't live here.>
+		CPrompt4 <if# PCHomeTown RootSceneID Accept>
+		Prompt5 <How is the work coming along?>
+		Prompt6 <Forget it, I'm not interested.>
+		Prompt7 <Alright. I'll be back when it's fixed.>
+		Prompt8 <I see.>
+	end
 
 Content
 	name <First Contact>

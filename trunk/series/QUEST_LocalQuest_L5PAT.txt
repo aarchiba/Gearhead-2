@@ -8,6 +8,55 @@
 %%
 
 Content
+	name <Tohru Spinner/Reconstruction>
+	requires <*:Q_LocalQuest "TOHSP">
+
+	% E1 is Jiason Factory
+	% E2 is McCabe
+	% E3 is the urban scene
+	% E4 is McCabe's building project
+	Element1 <Scene building garage factory public>
+	Element2 <Prefab>
+	Place2 <1 (Guards) SD ally>
+	Element3 <Scene Urban>
+	Element4 <QuestScene>
+	Place4 <3>
+
+	%%  P1 = McCabe quest status
+	%%       1: Have completed construction quest
+
+	start <if= PlotStatus %plotid1% 0 else GoCheckSP2 SetPlotStatus %plotid1% %id1%>
+	GoCheckSP2 <if= PlotStatus %plotid2% 0 ifG PCRenown 30 SetPlotStatus %plotid2% %id2%>
+
+	PUMPNEWS <>
+
+	% SubPlot1 = McCabe's new building
+	% SubPlot2 = Filler
+	SubPlot1 <*Q_UNIQUE_TOHSP_McCabe1 #10 2 4>
+	SubPlot2 <*:Q_SideStory #30>
+
+	sub
+		Persona 1
+		greeting <NewChat SayAnything>
+
+		STC QS_ConstructionSite
+		name <McCabe's Project>
+		entrance <*BUILDING>
+		SetID 4
+	end
+	inv
+		NPC Construction Worker
+		name <McCabe>
+		SetFaction 10
+		SDL_PORTRAIT <por_f_allisonnewver(J--).png>
+		SDL_COLORS <239 198 58  250 183 139  6 42 120>
+		CharDesc Female Melancholy Easygoing Pragmatic Heroic
+		Combatant
+		Age 16
+	end
+
+
+Content
 	name <Cayley Rock/Old Wynter's Mine>
 	requires <*:Q_LocalQuest "CAYLE">
 

@@ -413,11 +413,7 @@ var
 			if ( Part^.Parent <> Nil ) and not IsMasterGear( Part ) then StoreSAtt( Destroyed_Parts_List , GearName( Part ) );
 
 		end else if OK_At_Start and ( Part^.G = GG_Character ) then begin
-			{ Taking damage trains vitality... }
-			{ As long as the character survives, that is. }
-			DoleSkillExperience( FindMaster( Part ) , NAS_Vitality , DMG * 5 );
-
-			{ It also causes the afflicted to feel worse for wear. }
+			{ Taking damage causes the afflicted to feel worse for wear. }
 			AddMoraleDmg( Part , DMG );
 		end;
 
@@ -953,7 +949,7 @@ var
 	end;
 var
 	P2: GearPtr;
-	Total,T,Scale: LongInt;
+	Total,T,Scale,TPDmg0: LongInt;
 	TMaster,TPilot: GearPtr;
 	TMasterOK,TPilotOK,OKatStart: Boolean;
 	MobileAtStart: Boolean;
@@ -973,6 +969,7 @@ begin
 	TMasterOK := ( TMaster <> TPilot ) and NotDestroyed( TMaster );
 	TPilotOK := NoTDestroyed( TPilot );
 	OKatStart := TMasterOK or TPilotOK;
+	if TPilot <> Nil then TPDmg0 := AmountOfDamage( TPilot , False );
 
 	MobileAtStart := CurrentMoveRate( GB^.Scene , TMaster ) > 0;
 
@@ -1074,6 +1071,24 @@ begin
 		end;
 		if NAttValue( TMaster^.NA , NAG_GearOps , NAS_CorpseOp ) = NAV_NoCorpse then begin
 			SetNAtt( TMaster^.NA , NAG_Action , NAS_WillDisappear , 1 );
+		end;
+	end;
+
+	{ Give experience for Vitality here. }
+	if ( TPilot <> Nil ) and NotDestroyed( TPilot ) then begin
+		{ Determine the change in damage status for the pilot. }
+		TPDmg0 := AmountOfDamage( TPilot , False ) - TPDmg0;
+
+		{ Taking damage trains vitality... }
+		{ As long as the character survives, that is. }
+		if TPDmg0 > 0 then begin
+			{ Give an amount of experience equal to the amount of damage }
+			{ taken squared, but no more than enough to raise Vitality by one }
+			{ level. }
+			TPDmg0 := TPDmg0 * TPDmg0 + 4;
+			T := SkillAdvCost( Nil , NAttValue( TPilot^.NA , NAG_Skill , NAS_Vitality ) );
+			if TPDmg0 > T then TPDmg0 := T;
+			DoleSkillExperience( TPilot , NAS_Vitality , TPDmg0 );
 		end;
 	end;
 

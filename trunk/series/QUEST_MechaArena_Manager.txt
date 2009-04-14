@@ -567,6 +567,7 @@ Content
 %%
 %%	These places will typically only show up in dystopian, dangerous,
 %%	and typically bad cities.
+%%
 
 Content
 	name <Theles Spinner Arena>
@@ -575,15 +576,14 @@ Content
 	% E1 is the manager
 	% E2 is the arena
 	% E3 is the prize
+	% E4 is the arena site
 	Element1 <Prefab>
-	Scene1 <ArenaSite>
-	Team1 <Citizens>
-	TeamData1 <Pass Ally>
-
-	Scene2 <New *Arena_ThelesSpinner>
-
+	Place1 <4 (Citizens) Pass Ally>
+	Element2 <QuestScene>
+	Place2 <4>
 	Element3 <Prefab>
 	Place3 </>
+	Element4 <Scene ArenaSite>
 
 	sub
 		Persona 1
@@ -591,32 +591,25 @@ Content
 		GoCheckProgress <if# PlotStatus %plotid% 0 else GoPreQuest if= ArenaState %2% NAV_AS_Win else GoCheckLoss Goto GoArenaWin>
 		GoCheckLoss <if= ArenaState %2% NAV_AS_Loss else GoCheckReady Goto GoArenaLoss>
 		GoCheckReady <if= ArenaState %2% NAV_AS_Vacant else GoArenaFull ifG ComTime ArenaRecharge %2% else GoArenaBusy Goto GoOfferFight>
-
 		GoArenaWin <if= ArenaWins %2% 10 else GoMinorWin Goto GoBigWin>
 		*GoMinorWin <*CharaArenaWin %2% GoResetArena>
 		*GoArenaLoss <*CharaArenaLoss %2% GoResetArena>
 		GoResetArena <ResetArena %2%>
-
 		*GoArenaFull <*ArenaIsFull %2%>
 		*GoArenaBusy <*ArenaIsBusy %2%>
-
 		*GoChooseBattle <*StartCharaBattle %2% GoStartFight>
 		GoStartFight <SavePos PrepArena %2% 100 Jump %2%>
 		*GoRefuseBattle <*RefuseArenaFight %2%>
-
 		GoStartQuest <SetPlotStatus %plotid% %id% SetArenaThreat %2% %threat%>
-
 		GoOfferFight <NewChat Say 1 AddChat 1 AddChat 2>
 		% Remember, there's a lot of fiddly bits for the big win.
 		GoBigWin <NewChat Say 2 History 3 GiveItem %3% XPV 100 SetPlotStatus %plotid% -1  Goto GoResetArena>
 		*GoPreQuest <*NiceToMeetYou GoArenaIntro>
 		GoArenaIntro <NewChat Say 4 AddChat 3 AddChat 4>
-
 		result1 <Goto GoChooseBattle>
 		result2 <Goto GoRefuseBattle>
 		result3 <NewChat Say 6 AddChat 1 AddChat 2  Goto GoStartQuest>
 		result4 <NewChat Say 7>
-
 		Msg1 <Welcome back. Are you ready to fight?>
 		Msg2 <In honor of your tenth victory, I'd like to present you with this Thracian helmet.>
 		Msg3 <You were crowned champion of the Gladiator Pit.>
@@ -624,7 +617,6 @@ Content
 		Msg5 <Champions like you get retired from the games. We used to let them just keep on fighting, but that screwed with the betting odds.>
 		Msg6 <All matches are to the death. You could try surrendering but nobody can hear you over the screams. If you want, you can have your first match right away.>
 		Msg7 <Look around you. When violence is a way of life, the only entertainment possible becomes megaviolence.>
-
 		Prompt1 <I'm all set to go.>
 		CPrompt1 <ifChatNPCInPlay Accept>
 		Prompt2 <Not right now, no.>
@@ -644,6 +636,10 @@ Content
 				MiniMapComponent 2
 			end
 		end
+
+		STC QS_CharaArena
+		name <the Gladiator Pit>
+		SetID 2
 	end
 	inv
 		NPC Bandit

@@ -18,7 +18,7 @@ SetSelfFaction <GrabSource GSetNAtt NAG_Personal NAS_FactionID ?>
 SetSelfTeam <GrabSource GSetNAtt NAG_Location NAS_Team ?>
 RandomMecha <MechaPrize ? ? 0 0>
 CustomMecha <MechaPrize ? ? RandomTheme d12>
-EraseRumor <GrabSource GSetSAtt rumor na>
+EraseRumor <GrabSource GSetSAtt rumor na GSetSAtt rumemo na>
 EraseSpecial <GrabSource GSetSAtt special na>
 ItemVar= <GrabItem ? GSetNAtt NAG_ScriptVar ? ?>
 ItemStat= <GrabItem ? GSetStat ? ?>
