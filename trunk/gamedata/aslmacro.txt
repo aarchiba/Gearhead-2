@@ -137,6 +137,7 @@ GSD <GSetNAtt NAG_EpisodeData NAS_Orders 0>
 GTargetPC <GSetNAtt NAG_EpisodeData NAS_Target PCUID>
 GQuickShot <GSetNAtt NAG_Action NAS_CallTime 0>
 MonsterUP <GrabTeam ? GAddStat STAT_WMonster ?>
+MonsterSet <GrabTeam ? GSetStat STAT_WMonster ?>
 MonsterOFF <GrabTeam ? GSetStat STAT_WMonster 0>
 NPCgoPC <GrabNPC ? GrabRoot GSetNAtt NAG_EpisodeData NAS_Orders 5 GSetNAtt NAG_EpisodeData 3 PCUID>
 UIDgoPC <GrabLocal ?  GSetNAtt NAG_EpisodeData NAS_Orders 5 GSetNAtt NAG_EpisodeData 3 PCUID>
@@ -240,17 +241,20 @@ IfUStealth <ifUSkillTest NAS_Stealth STAT_Speed ?>
 IfAwareness <ifSkillTest NAS_Awareness STAT_Perception ?>
 IfUAwareness <ifUSkillTest NAS_Awareness STAT_Perception ?>
 IfInsight <ifSkillTest NAS_Insight STAT_Perception ?>
+IfInsightKN <ifSkillTest NAS_Insight STAT_Knowledge ?>
 IfUInsight <ifUSkillTest NAS_Insight STAT_Perception ?>
 IfScience <ifSkillTest NAS_Science STAT_Knowledge ?>
 IfUScience <ifUSkillTest NAS_Science STAT_Knowledge ?>
 IfMysticism <ifSkillTest NAS_Mysticism STAT_Ego ?>
 IfUMysticism <ifUSkillTest NAS_Mysticism STAT_Ego ?>
 IfSurvival <ifSkillTest NAS_Survival STAT_Craft ?>
+IfSurvivalKN <ifSkillTest NAS_Survival STAT_Knowledge ?>
 IfUSurvival <ifUSkillTest NAS_Survival STAT_Craft ?>
 IfRepair <ifSkillTest NAS_Repair STAT_Craft ?>
 IfTaunt <ifSkillTest NAS_Taunt STAT_Charm ?>
 IfMedicine <ifSkillTest NAS_Medicine STAT_Knowledge ?>
 IfShopping <ifSkillTest NAS_Shopping STAT_Charm ?>
+IfShoppingKN <ifSkillTest NAS_Shopping STAT_Knowledge ?>
 IfMartialArts <ifSkillTest NAS_CloseCombat STAT_Body ?>
 IfToughness <ifSkillTest NAS_Toughness STAT_Ego ?>
 IfDancing <ifSkillTest NAS_Athletics STAT_Charm ?>
