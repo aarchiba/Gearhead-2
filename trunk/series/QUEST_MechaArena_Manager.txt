@@ -480,13 +480,11 @@ Content
 	% E1 is the manager
 	% E2 is the arena
 	% E3 is the cavalier's club
-	% E4 is an outdoors scene
 	Element1 <Prefab>
 	Place1 <3 (Citizens) Pass Ally>
 	Element2 <QuestScene>
-	Place2 <4>
+	Place2 <3>
 	Element3 <Scene cavclub>
-	Element4 <Scene Environs>
 
 	SubPlot1 <*:Q_DEBUG_MECHA_ARENA_CHALLENGE #5 1 2>
 
@@ -546,7 +544,12 @@ Content
 			name <The Debug Arena>
 			special <SHAREDPALETTE>
 			desig <HOME>
-			minimap <#...#........1......#---#>
+			minimap <#...#..2.....1......#---#>
+			inv
+				Trapdoor
+				MiniMapComponent 2
+				desig <ENTRANCE %2%>
+			end
 		end
 
 		STC QS_MechaArena

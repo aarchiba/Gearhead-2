@@ -46,7 +46,7 @@ Procedure EquipThenDeploy( GB: GameBoardPtr; NPC: GearPtr; PutOnMap: Boolean );
 implementation
 
 uses dos,ability,action,gearutil,ghchars,gearparser,texutil,narration,movement,
-	customization,ghweapon,ghmodule,ghholder,
+	customization,ghweapon,ghmodule,ghholder,ui4gh,
 {$IFDEF ASCII}
 	vidmap,vidgfx;
 {$ELSE}
@@ -724,6 +724,8 @@ begin
 		DialogMsg( GearName( NPC ) + ' is forced to take a crappy mecha...' + Terrain_Type + ' ' + Factions + BStr( Minimum_Cost ) + ' - ' + Bstr( Maximum_Cost ) );
 		M := LoadSingleMecha( 'buruburu.txt' , Design_Directory );
 	end;
+
+	if XXRan_Debug then DialogMsg( 'Mecha for ' + GearName( NPC ) + ' [' + Bstr( Renown ) + '] ($' + BStr( Minimum_Cost ) + '-$' + BStr( Maximum_Cost ) + '): ' + GearName( M ) + ' ($' + Bstr( GearValue( M ) ) + ')' );
 
 	SelectNPCMecha := M;
 end;

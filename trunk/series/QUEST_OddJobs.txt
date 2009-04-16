@@ -297,6 +297,347 @@ Content
 %%
 
 Content
+	name <Pirates Took It>
+	desc <A pirate at the black market stole the materials.>
+	requires <*:Q_DStolenMaterials "L5PAT">
+
+	% E1 is the NPC who stole the materials
+	% E2 is the pirate who took the materials
+	% E3 is the black market
+	% E4 is the pirate's office
+	% E5 is L5Law, needed for "Gotcha"
+	Element2 <Prefab>
+	Place2 <4 (Pirate) sd>
+	Element3 <QuestScene>
+	Element4 <QuestScene>
+	Place4 <3>
+	Element5 <Faction L5LAW>
+
+	%% Hear a rumor that this pirate has been selling stolen goods.
+	%% Locate the black market. Ask the pirate nicely to release the
+	%% goods, perform a service to get the goods, or simply fight for
+	%% them. Alternatively you could take a bribe and let the pirate
+	%% keep the goods. Doing the service and taking the bribe both
+	%% result in the pirate opening a contraband store which you can
+	%% use later.
+
+	% P%id%01 = Initialization Counter
+	% P%id%02 = Have fought E2
+	update <if= P%id%01 0 P= %id%01 1 SetPlotStatus %plotid1% %id1%>
+
+	%% SubPlot1 = Locate the black market
+	%% SubPlot2 = E2's task
+	SubPlot1 <*:Q_ENT_BlackMarket 3>
+	SubPlot2 <*:Q_MinorMission 2>
+
+	sub
+		Persona 2
+		rumor%id% <the pirate %name2% specializes in stolen goods.>
+		special <UNLISTED>
+		&MaterialsCost <Threat %threat% 50>
+		&DiscountPrice <Threat %threat% 10>
+		&BribeAmount <Reward %threat% 500>
+		% V1 = Have opened shop to PC
+		% V2 = Melancholy Counter
+		% V3 = Easygoing Counter
+		% V4 = Insult Counter
+		greeting <if= V1 1 else GoCheckQuest NewChat Say 17 AddChat 17 AddChat 18>
+		GoCheckQuest <if= PlotStatus %plotid% %id% else GoChat ifSubPlotWon %plotid2% else GoCheckLoss NewChat Say 16 WinSubPlot %plotid% V= 1 1>
+		GoCheckLoss <ifSubPlotLost %plotid2% else GoGreet NewChat Say 13 AddChat 1 AddChat 14 AddChat 15 AddChat 16>
+		GoChat <NewChat SayAnything>
+		*GoGreet <*NiceToMeetYou GoNegotiate>
+		GoNegotiate <NewChat Say 1 AddChat 1 AddChat 2 AddCHat 3 AddChat 4 AddChat 16>
+		result1 <NewChat Say 2 XPV 100  AddReact d10  AddRenown 1  WinSubPlot %plotid%  Cash+ -&MaterialsCost  V= 1 1>
+		result2 <NewChat Say 3 AddChat 5 AddChat 6 AddChat 7 AddChat 8 if= V2 0 V= 2 1 AddCheerful -d10>
+		result3 <NewChat Say 4 AddCHat 5 AddChat 6 if= V3 0 V= 3 1 AddEasygoing d10>
+		result4 <NewChat Say 5 AddChat 9 AddChat 10 AddChat 11 AddChat 12 AddChat 13>
+		result5 <AddLawful -1 AddEasygoing d6   Goto .%id2%_GoInit>
+		result6 <NewChat Say 6 AddLawful -2 LoseSubPlot %plotid% CashPrize &BribeAmount>
+		result7 <EndChat Say 7 AddEasygoing -d10 AddHeroic -1 TeamAttack 2 TeamAttack 3 P= %id%02 1>
+		result8 <Goto result4>
+		result9 <NewChat  Say 8  XPV 100  WinSubPlot %plotid%>
+		result10 <NewChat Say 9  XPV 100  WinSubPlot %plotid%>
+		result11 <NewChat Say 10 V= 4 1>
+		*result12 <*InsultContest GoR12Win result11 %threat%>
+		GoR12Win <NewChat Say 11  XPV 100  WinSubPlot %plotid%>
+		result13 <NewChat Say 12  XPV 100  WinSubPlot %plotid%>
+		result14 <NewChat Say 14 AddLawful -2 LoseSubPlot %plotid% CashPrize Reward %threat% 200 V= 1 1>
+		result15 <NewChat Say 10>
+		result16 <NewChat Say 15 XPV 100  WinSubPlot %plotid%  Cash+ -&DiscountCost>
+		result17 <EndChat Say 18 Shop .wares Goto result18>
+		.wares <WEAPON MECHA CONTRABAND>
+		*result18 <*GoodBye>
+		Msg1 <Word on the street is that you're looking for some materials stolen from %name1%. Now, I may be able to help you find them, but it's going to cost $ \VAL &MaterialsCost .>
+		Msg2 <Hmm... maybe I was a bit hasty in setting my price so low. No matter, a deal's a deal. I'll give back %name1%'s stuff right away. As for you, why don't you come back later and see if I have anything else you'd like to buy?>
+		Msg3 <Well that's a problem, isn't it? I'm not fool enough to keep %name1%'s swag nearby. Look, if you really want to get it back, there's a little job you could do for me. If not, how much would it cost to make you forget about it?>
+		Msg4 <That's certainly possible. If you're serious about getting %name1%'s swag, I'm willing to give it back in exchange for a little job I need done. If you aren't serious, maybe I can make you a better offer than %name1% did.>
+		Msg5 <Or else what? I'm the one holding all the cards here, and so far I think I've been more than reasonable.>
+		Msg6 <Selective amnesia is a wonderful thing, isn't it? Go tell %name1% that \PPR %1% materials have been lost in space. Feel free to spend your earnings in the shop upstairs.>
+		Msg7 <You're a fool, \PC ! My pets will make short work of you...>
+		Msg8 <Your men outside... Yes, I will admit, that is a good reason to cooperate. Here, this datachip will lead you to %name1%'s materials.>
+		Msg9 <Arrest me... ah, yes. That would explain the badge. Kind of silly that I didn't notice it before... Um, I didn't admit to anything illegal, did I? I just found %name1%'s stuff. Here, you can have it back...>
+		Msg10 <Come back when you have enough money. Until then, don't bother me.>
+		Msg11 <Arr... I know when I've been bested. Here, this datachip will take you to %name1%'s gear.>
+		Msg12 <An inventive threat... but given the questionable hygiene of our sales staff one which I dare not risk. Alright, here are the coordinates of %name1%'s materials.>
+		Msg13 <You lost the mission I gave you. Well, I guess there's nothing left for you to do now but pay the $ \VAL &MaterialsCost that I asked for originally.>
+		Msg14 <Hey, don't look some glum. Here's some cash to help you forget all about it... seriously, forget. Maybe you can come back later and spend it in my personal private shop.>
+		Msg15 <You drive a hard bargain, matey, but I can't argue that it's a fair price. Here, these coordinates will lead you to where %name1%'s swag is hidden.>
+		Msg16 <Ha ha! You really came through for old %name2%, didn't you? Here, these coordinates will take you to where %name1%'s swag is hidden. Come back later and I'll show you my personal private shop.>
+		Msg17 <Good to see you, \PC . How'd you like to take a look in my private collection?>
+		Msg18 <Here it is. Hard to believe the kind of stuff people just leave lying around, ain't it?>
+		Prompt1 <That's all? No problem. [Pay $ \VAL &MaterialsCost ]>
+		CPrompt1 <ifG PC$ &MaterialsCost Accept>
+		Prompt2 <Why don't I just take them back over your bullet-ridden corpse?>
+		Prompt3 <That's too much. Surely we can reach another agreement?>
+		Prompt4 <I'm not here to bargain, pirate. Give me %name1%'s stuff or else.>
+		Prompt5 <Alright, tell me about this job you need done.>
+		Prompt6 <I could be persuaded to give up for $ \VAL &BribeAmount .>
+		Prompt7 <No deals. You're going to die!!!>
+		Prompt8 <I'm only going to ask you one more time...>
+		Prompt9 <Or else my men outside will start shooting up this business of yours.>
+		CPrompt9 <ifIntimidation HardSkillTar %threat% Accept>
+		Prompt10 <Or else I arrest you right now.>
+		CPrompt10 <if= PCFac %5% Accept>
+		Prompt11 <Or else... or else... I got nothing.>
+		Prompt12 <Or else I will insult you brutally!>
+		CPrompt12 <if= V4 0 Accept>
+		Prompt13 <Or else I start a rumor that your shop's infested with space-scumps.>
+		CPrompt13 <ifConversation HardSkillTar %threat% Accept>
+		Prompt14 <Forget it... You can keep it.>
+		Prompt15 <I'll be back later.>
+		Prompt16 <I won't pay more than $ \VAL &DiscountPrice .>
+		CPrompt16 <ifShopping HardSkillTar %threat% Accept>
+		Prompt17 <Sure, I'd like that.>
+		Prompt18 <Not today, thanks.>
+
+		STC QS_BlackMarket
+		name <%name2%'s Black Market>
+		SetID 3
+		IndustrialTiles
+		start <if= P%id%02 0 else GoDeserted Print 1>
+		GoDeserted <Print 2 Retreat 2 Retreat 3>
+		Msg1 <You enter %name2%'s Black Market.>
+		Msg2 <You enter %name2%'s Black Market. It's currently deserted.>
+		sub
+			Room
+			minimap <#...##.1.##...###+###...#>
+			inv
+				StairsDown
+				desig <ENTRANCE %4%>
+				MiniMapComponent 1
+			end
+		end
+
+		MetaScene 4
+		name <%name2%'s Office>
+		type <Private Complex>
+		special <NOEXIT SHOWALL UNREGULATED>
+		Tolerance 25
+		BoxMap
+		MapWidth 12
+		MapHeight 12
+		NeededCells 2
+		IndustrialTiles
+		content <Some 2 50 Sub *HIDEOUT_X na>
+		Start <Print 1>
+		Faint%2%     <if= PlotStatus %plotid% %id% LoseSubPlot %plotid%>
+		Surrender%2% <if= PlotStatus %plotid% %id% Monologue %2% 2 WinSubPlot %plotid% XPV 100  FreezeNPC %2% PCEnemy %2%  History 3>
+		end <ifTeamHostile 2 P= %id%02 1 if= PlotStatus %plotid% %id% LoseSubPlot %plotid% FreezeNPC %2% PCEnemy %2%  History 3>
+		Msg1 <You enter %name2%'s office.>
+		Msg2 <Alright, I'll tell you... You can find %name1%'s stuff at these coordinates. Don't think I'm going to be forgetting today, though...>
+		Msg3 <You fought %name2% to recover %name1%'s belongings.>
+		sub
+			Team 1
+
+			Team 2
+			name <Pirate>
+			SetAlly 3
+
+			Team 3
+			name <Pets>
+			SetAlly 2
+			type <ROBOT SYNTH>
+			deploy <ifNPCOK %2% if= T3 0 WMonster 3 %threat% 100>
+
+			Room
+			minimap <............1............>
+			sub
+				StairsUp
+				Destination -1
+				MiniMapComponent 1
+			end
+		end
+	end
+	inv
+		NPC Pirate
+		Shopping 10
+		Knowledge 13
+		chardesc sociable cheerful easygoing
+	end
+
+Content
+	name <It Was Embezzled>
+	desc <An assistant of E1 has been embezzling parts to open a custom shop.>
+	requires <*:Q_StolenMaterials (1:CRAFT|1:LABOR|1:TRADE)>
+
+	% E1 is the NPC who lost the materials
+	% E2 is the assistant
+	% E3 is a local outdoors scene
+	% E4 is E2's hideout
+	% E5 is a local public scene for E2
+	Element2 <Prefab>
+	Place2 <5 (Citizens) pass ally>
+	Element3 <Scene Outdoors>
+	Element4 <QuestScene>
+	Place4 <3>
+	Element5 <Scene Public (Garage|Mall|Spaceport)>
+
+	%% Confront E2 in a public place, causing him to flee. Locate his hideout.
+	%% Once there, learn the truth: E2 has been stealing the parts so he can
+	%% build mecha and open a customization shop. The PC then has several
+	%% choices: return the parts to E1, take the mecha, or let E2 keep them;
+	%% also, turn E2 in to the authorities or keep his crime a secret.
+
+	% P%id%01 = Have moved E2
+
+	%% FAIL CONDITIONS:
+	%% - E2 dies before hideout is revealed
+	end <if= P%id%01 0 ifNPCDead %2% LoseSubPlot %plotid%>
+
+	% SubPlot1 : Locate E2's hideout
+	SubPlot1 <*:Q_RevealEncounter 4 3>
+
+	sub
+		Persona 2
+		rumor%id% <%name2% has been acting suspicious lately.>
+		%% V1 = Have opened shop
+		%% V2 = Have decided fate
+		%% V3 = Reputation Counter
+		greeting <if= p%id%01 1 else GoCheckQuest ifChatNPCinPlay else GoHangUp if= V1 1 else GoDecideFate Goto GoOpenStore>
+		GoOpenStore <NewChat Say 15 AddChat 13 AddChat 14>
+		GoDecideFate <if= V2 0 else GoChat NewChat Say 2 AddChat 1 AddChat 2 AddChat 3 QMemo %plotid% 3>
+		GoHangUp <EndChat Say 1>
+		GoCheckQuest <if= PlotStatus %plotid% %id% else GoChat Goto GoGreet>
+		*GoGreet <*IWantToTalkAboutNPC&YouBadNPC %1% GoAvoid>
+		GoAvoid <newChat Say 17 AddChat 15 AddChat 16>
+		GoChat <NewChat SayAnything>
+		result1 <NewChat Say 4 AddChat 4 AddChat 5 AddChat 6>
+		result2 <EndChat Say 5 V= 2 1 FreezeNPC %2% History 6 AddLawful 2 AddReact -d10 ifG d20 React PCEnemy %2%>
+		result3 <NewChat Say 7 AddChat 7 AddChat 8 AddChat 9 if= V3 0 V= 3 1 AddMelancholy -d12>
+		result4 <Goto result2>
+		result5 <NewChat Say 8 V= 2 1 AddLawful -1 AddReact 10 ifG React d20 PCFriend %2%>
+		result6 <NewChat Say 9 AddChat 10 AddCHat 11 AddChat 12>
+		result7 <NewChat Say 10 V= 2 1  XPV 100 WinSubPlot %plotid%>
+		result8 <NewChat Say 11 V= 2 1  MechaPrize .mektype %threat% 0 6  LoseSubPlot %plotid%  AddLawful -2>
+		.mektype <GENERAL \FACTION_DESIG RootSceneFac>
+		result9 <NewChat Say 12 AddChat 4 AddChat 5>
+		result10 <NewChat Say 13 History 14 V= 1 1 V= 2 1 LoseSubPlot %plotid% AddLawful -2 AddReact d10>
+		result11 <Goto result2>
+		result12 <Goto result5>
+		result13 <EndChat Say 16 Shop .wares Goto result14>
+		.wares <MECHA MEXTRA>
+		*result14 <*GoodBye>
+		result15 <EndChat Say 18 QMemo %plotid% 19   P= %id%01 1 MoveNPC %2% %4% SetNPCTeam %2% 3 SetPlotStatus %plotid1% %id1%>
+		result16 <AddSociable d8   Goto result15>
+		Msg1 <...[click]>
+		Msg2 <How did you find this place? I guess it doesn't matter... What do you plan to do now?>
+		Msg3 <You discovered %name2%'s hidden workshop in %name3%, and all the materials \SPR %2% has stolen from %name1%.>
+		Msg4 <I wasn't stealing, I'm not a thief! I just needed to... borrow... some supplies. I'm trying to open my own customization shop, but I don't have the materials. I'm working on a mecha right now.>
+		Msg5 <It's a fair cop, I guess...>
+		Msg6 <Your caught %name2% stealing %name1%'s materials.>
+		Msg7 <No, wait! The materials are all right here- I'll give them back to %name1%, or you, or anything! Just don't hurt me!>
+		Msg8 <Really? Well, I guess that's better than going to jail... Thanks, \PC .>
+		Msg9 <Yes, if you let me keep the parts, I could help you with some custom mecha. I promise I won't steal anything else from %name1%... well, not after I get the shop off the ground, anyhow...>
+		Msg10 <Fine... I'll return the parts to %name1%. Hopefully if I apologize \SPR %1% won't decide to press charges.>
+		Msg11 <I was using the materials to build this custom mecha... Here, I guess I'm going to have to start over now.>
+		Msg12 <Ha ha. So what are you going to do with me?>
+		Msg13 <Wow, thanks! Come back here later and I'll show you what I have for sale.>
+		Msg14 <You helped %name2% in %name3% open a shop using stolen goods.>
+		Msg15 <Hi \PC . I've got some mecha and assorted parts in stock, if you want to take a look.>
+		Msg16 <Let me know if you need any help.>
+		Msg17 <What are you asking me for? I don't know anything about any stolen goods...>
+		Msg18 <Um... I can't talk right now. Gotta go.>
+		Msg19 <You suspect that %name2% has something to do with %name1%'s missing materials, but unfortunately \SPR %2% has disappeared.>
+		Prompt1 <I want to know why you were stealing from %name1%.>
+		Prompt2 <I'm going to turn you over to the police, of course.>
+		Prompt3 <I think it would be best if I killed you.>
+		Prompt4 <I'm afraid that I still have to tell the police.>
+		Prompt5 <The parts must be returned, but I'll keep your "borrowing" a secret.>
+		Prompt6 <A custom shop, you say? That could be useful...>
+		CPrompt6 <if= PlotStatus %plotid% %id% Accept>
+		Prompt7 <Alright. Send the materials back to %name1%.>
+		CPrompt7 <if= PlotStatus %plotid% %id% Accept>
+		Prompt8 <Alright. Give me whatever you've been working on.>
+		CPrompt8 <if= PlotStatus %plotid% %id% Accept>
+		Prompt9 <Heh, I'm just messing with you.>
+		CPrompt9 <if# PlotStatus %plotid% %id% Accept>
+		Prompt10 <Alright. %name1% can do without those parts.>
+		Prompt11 <No deal. You have to go to jail.>
+		Prompt12 <No deal. %name1% needs those parts.>
+		Prompt13 <Show me the goods.>
+		Prompt14 <You don't have anything I need.>
+		Prompt15 <How did you know the goods were stolen?>
+		Prompt16 <You work with %name1%, you must know something.>
+
+		MetaScene 4
+		name <%name2%'s Workshop>
+		type <Private Complex>
+		special <NOEXIT SHOWALL>
+		BoxMap
+		entrance <*QUEST-INACTIVE>
+		MapWidth 12
+		MapHeight 17
+		NeededCells 2
+		%% L1 = First time entry counter
+		content <Fill Sub *HIDEOUT_X na>
+		Start <Print 1 if= L1 0 L= 1 1 ForceChat %2%>
+		Msg1 <You enter %name2%'s hideout.>
+		sub
+			Team 1
+
+			Team 2
+			name <Citizens>
+
+			Team 3
+			name <Guards>
+			SetAlly 2
+
+			Room
+			minimap <......###..#1#...........>
+			sub
+				Elevator
+				name <Workshop>
+				MiniMapComponent 1
+				Use <if= PlotStatus %plotid% %id% else GoQuestOver ifYesNo 2 3 4 else GoStealMecha Print 5 XPV 100 WinSubPlot %plotid% AddHeroic 1>
+				GoQuestOver <Print 1>
+				GoStealMecha <MechaPrize .mektype %threat% 0 5  LoseSubPlot %plotid%  AddLawful -2>
+				.mektype <GENERAL \FACTION_DESIG RootSceneFac>
+				Msg1 <This door leads to %name2%'s workshop.>
+				Msg2 <This door leads to %name2%'s workshop. Inside, you see a custom mecha \SPR %2% was building with parts stolen from %name1%.>
+				Msg3 <Return the supplies to %name1%.>
+				Msg4 <Take the mecha for yourself.>
+				Msg5 <You get everything ready for transport.>
+			end
+
+			Room
+			minimap <............1............>
+			sub
+				TrapDoor
+				Destination -1
+				MiniMapComponent 1
+			end
+		end
+	end
+	inv
+		NPC Mechanic
+		job <Assistant>
+		chardesc Criminal Easygoing
+		MechaEngineering 10
+		Shopping 10
+		Combatant
+	end
+
+Content
 	name <Never Received It>
 	desc <The stuff that was supposedly stolen actually never showed up in the first place.>
 	requires <*:Q_StolenMaterials -"EARTH">
@@ -762,4 +1103,41 @@ Content
 		Msg4 <You send the mecha coordinates to %name1%.>
 	end
 
+%%
+%%  Debugging Frames
+%%
+
+Content
+	requires <*:Q_Debug>
+	desc <Find Materials debugger>
+
+	% E1 is the person who will be giving the mission.
+	% E2 is the CavClub
+	Element1 <NewNPC 0 0>
+	Place1 <2 (Citizens) ally pass>
+	Element2 <Scene CavClub>
+
+	% SubQuest1 is the mission.
+	SubPlot1 <*:Q_DStolenMaterials 1>
+
+	sub
+		Persona 1
+		rumor0 <%name1% needs a cavalier for a mission of some kind.>
+		greeting <if= PlotStatus %plotid% %id% else GoCheckFirst if= PlotStatus %plotid1% -1 else GoCheckLoss NewChat Say 1 SetPlotStatus %plotid% -1>
+		GoCheckLoss <if= PlotStatus %plotid1% -2 else GoCheckFirst SetPlotStatus %plotid% -2 Goto GoEndInLoss>
+		*GoEndInLoss <*MissionWasFailure na na na>
+		GoCheckFirst <if= PlotStatus %plotid% 0 else GoChat Goto GoOfferQuest>
+		*GoOfferQuest <*DoYouWantAJob GoStartQuest>
+		GoStartQuest <SetPlotStatus %plotid% %id% SetPlotStatus %plotid1% %id1% NewChat Say 2 PCFriend %1% AddReact 50>
+		GoChat <NewChat SayAnything>
+		Msg1 <I hear that you succeeded. The debugging of the mission is now over.>
+		Msg2 <Go find my stuff!>
+
+		MetaScene 1
+		sub
+			room
+			desig <HOME>
+			minimap <#&&&#&...&&.1.&&...&&&-&&>
+		end
+	end
 

@@ -1034,7 +1034,7 @@ begin
 				end;
 
 				{ Try to find the associated scene now. }
-				if Dest <> Nil then begin
+				if ( Dest <> Nil ) and not IsAQuest then begin
 					Dest := FindActualScene( GB , FindSceneID( Dest , GB ) );
 				end;
 			end;
