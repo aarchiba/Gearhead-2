@@ -216,8 +216,12 @@ begin
 	end;
 
 	{ This plot could be a quest. Look that up now. }
-	if ( Plot = Nil ) and ( NAttValue( Source^.NA , NAG_Narrative , NAS_PlotID ) <> 0 ) and ( GB <> Nil ) and ( GB^.Scene <> Nil ) then begin
-		Plot := SeekGearByIDTag( FindRoot( GB^.Scene ) , NAG_PlotStatus , NAttValue( Source^.NA , NAG_Narrative , NAS_PlotID ) , 1 );
+	if ( Plot = Nil ) and ( GB <> Nil ) and ( GB^.Scene <> Nil ) then begin
+		if NAttValue( Source^.NA , NAG_Narrative , NAS_PlotID ) <> 0 then begin
+			Plot := SeekGearByIDTag( FindRoot( GB^.Scene ) , NAG_PlotStatus , NAttValue( Source^.NA , NAG_Narrative , NAS_PlotID ) , 1 );
+		end else if NAttValue( GB^.Scene^.NA , NAG_Narrative , NAS_PlotID ) <> 0 then begin
+			Plot := SeekGearByIDTag( FindRoot( GB^.Scene ) , NAG_PlotStatus , NAttValue( GB^.Scene^.NA , NAG_Narrative , NAS_PlotID ) , 1 );
+		end;
 	end;
 
 	PlotMaster := Plot;

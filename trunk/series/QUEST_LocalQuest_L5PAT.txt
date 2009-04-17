@@ -15,23 +15,30 @@ Content
 	% E2 is McCabe
 	% E3 is the urban scene
 	% E4 is McCabe's building project
+	% E5 is the new shopping center, opened when McCabe's quest succeeds
+	% E6 is the mood for the shopping center opening
 	Element1 <Scene building garage factory public>
 	Element2 <Prefab>
 	Place2 <1 (Guards) SD ally>
 	Element3 <Scene Urban>
 	Element4 <QuestScene>
 	Place4 <3>
+	Element5 <QuestScene>
+	Place5 <4>
+	Element6 <Prefab>
 
 	%%  P1 = McCabe quest status
 	%%       1: Have completed construction quest
+	%%       2: Have opened the shopping center
+	%%  P2 = Timer; shopping center opens after 24 hours
 
 	start <if= PlotStatus %plotid1% 0 else GoCheckSP2 SetPlotStatus %plotid1% %id1%>
 	GoCheckSP2 <if= PlotStatus %plotid2% 0 ifG PCRenown 30 SetPlotStatus %plotid2% %id2%>
 
-	PUMPNEWS <>
+	PUMPNEWS <if= P1 1 P+ 2 1 ifG P2 3  P= 1 2  SetMood %6% %3%>
 
 	% SubPlot1 = McCabe's new building
-	% SubPlot2 = Filler
+	% SubPlot2 = Side Story
 	SubPlot1 <*Q_UNIQUE_TOHSP_McCabe1 #10 2 4>
 	SubPlot2 <*:Q_SideStory #30>
 
@@ -43,6 +50,52 @@ Content
 		name <McCabe's Project>
 		entrance <*BUILDING>
 		SetID 4
+		sub
+			room
+			minimap <............1............>
+			inv
+				TrapDoor
+				MiniMapComponent 1
+				Hide
+				update <if= P1 2  SetStat STAT_MetaVisibility 0>
+				desig <ENTRANCE %5%>
+			end
+		end
+
+		MetaScene 5
+		name <# Shopping Center>
+		type <building mall meeting>
+		MallMap
+		MapWidth 23
+		MapHeight 15
+		start <Print 1>
+		Msg1 <You enter \SCENE %5% .>
+		NeededCells 4
+		Content3 <Some 1 100 Sub *WEAPON_SHOP       na>
+		Content4 <Some 1 100 Sub *ARMOR_SHOP        na>
+		Content9 <Fill Sub *SHOP_RANDOM             na>
+		sub
+			team 1
+
+			team 2
+			name <Citizens>
+			SetAlly 1
+			Passive
+
+			team 3
+			name <Guards>
+			SetAlly 2
+
+			room
+			name <Foyer>
+			desig <EntranceGrid>
+			Content <Some 3 50 Here *URBAN_X>
+			Content2 <Some 1 100 Here *ANTI_ATTACK_SECURITY 2>
+			sub
+				StairsUp
+				Destination -1
+			end
+		end
 	end
 	inv
 		NPC Construction Worker
@@ -53,6 +106,24 @@ Content
 		CharDesc Female Melancholy Easygoing Pragmatic Heroic
 		Combatant
 		Age 16
+
+		Mood 5
+		name <New Shopping Center>
+		%% Essentially, this is a copy of the standard "Boom Times" mood.
+		MoodTimeLimit 86400
+		% V1 = Initialization Counter
+		update <if= V1 0 V= 1 1 News 1>
+		Msg1_1 <New shopping center opens in %city%.>
+		% Meme Messages
+		Msg_1 <McCabe's rebuilding project is starting to shape up. They've already opened the shops in the basement level.>
+		CMsg_1 <if# ChatNPCID %2% if# SceneID %5% Accept>
+		Msg_2 <Have you been to %name5% yet? They've got a lot of new shops there.>
+		CMsg_2 <if# SceneID %5% Accept>
+		Msg_3 <%name5% has opened for business. This is the first new building to open since the disaster.>
+		Msg_4 <There are shops in the basement of the new building, now. You really ought to go check them out!>
+		CMsg_4 <if# SceneID %5% Accept>
+		Msg_5 <A shopping center has opened in the basement of the new building. Hopefully, the next thing they'll fix is that giant crack running across the sky.>
+		CMsg_5 <if# SceneID %5% Accept>
 	end
 
 

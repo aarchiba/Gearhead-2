@@ -446,7 +446,7 @@ Recharge 3
 Legality 5
 magazine 16
 sub
-	Ammo 15
+	Ammo 12
 	name <18mm Shotgun Clip>
 	caliber <18mm shell>
 	type <SCATTER>
@@ -493,7 +493,7 @@ BV 1
 Legality 15
 magazine 24
 sub
-	Ammo 15
+	Ammo 12
 	name <18mm Shotgun Clip>
 	caliber <18mm shell>
 	type <SCATTER>
@@ -1931,9 +1931,8 @@ legality -15
 Food 0
 Name <Quick Fix Pill>
 FoodQuantity 10
-% Healing , restore Step7 damage to meat (Material 1)
-Effect <7 HEALING 1>
-FoodXValue 375
+FoodFX:Healing
+FoodMod 7
 desc <This medicine promotes rapid cellular regeneration, and can instantly heal many injuries.>
 Category <MEDICINE>
 Factions <GENERAL>
@@ -1943,9 +1942,8 @@ legality -10
 Food 0
 Name <Quick Fix Pill>
 FoodQuantity 5
-% Healing , restore Step7 damage to meat (Material 1)
-Effect <7 HEALING 1>
-FoodXValue 375
+FoodFX:Healing
+FoodMod 7
 desc <This medicine promotes rapid cellular regeneration, and can instantly heal many injuries.>
 Category <MEDICINE ESSENTIAL>
 Factions <GENERAL>
@@ -1955,9 +1953,8 @@ legality -10
 Food 0
 Name <Regen Boost Pill>
 FoodQuantity 10
-% Status Effect, Duration Step6, Regen(3), Skill25 but can't resist
-Effect <6 STATUS 3>
-FoodXValue 500
+FoodFX:Regeneration
+FoodMod 6
 desc <This medicine increases the body's ability to repair itself. While it is in effect injuries will be healed much faster than normal.>
 Category <MEDICINE>
 Factions <GENERAL>
@@ -1967,9 +1964,8 @@ legality 0
 Food 0
 Name <Regen Boost Pill>
 FoodQuantity 5
-% Status Effect, Duration Step6, Regen(3), Skill25 but can't resist
-Effect <6 STATUS 3>
-FoodXValue 500
+FoodFX:Regeneration
+FoodMod 6
 desc <This medicine increases the body's ability to repair itself. While it is in effect injuries will be healed much faster than normal.>
 Category <MEDICINE>
 Factions <GENERAL>
@@ -1979,9 +1975,8 @@ legality 0
 Food 0
 name <Poison Antidote>
 FoodQuantity 5
-% Cure Status, Poison (1), no magnitude
-Effect <0 Cure 1>
-FoodXValue 600
+FoodFX:CureStatus
+FoodMod:Poison
 desc <A broad spectrum antivenom effective against most organic and synthetic poisons.>
 Category <MEDICINE ESSENTIAL>
 Factions <GENERAL>
@@ -1991,9 +1986,8 @@ legality -10
 Food 0
 name <Antibiotic Pill>
 FoodQuantity 5
-% Cure Status, Sickness (20), no magnitude
-Effect <0 Cure 20>
-FoodXValue 400
+FoodFX:CureStatus
+FoodMod:Sickness
 desc <A fast acting antiviral, antibacterial drug coupled with an immune system booster.>
 Category <MEDICINE>
 Factions <GENERAL>
@@ -2002,9 +1996,8 @@ legality -10
 
 Food 5
 Name <Xozu>
-% Status Effect (1), Duration Step3, Stoned(4), Skill7 to resist
-Effect <7 STATUS 4 CANRESIST>
-FoodXValue 10
+FoodFX:CauseStatus
+FoodMod:Stone
 FoodMorale 3
 desc <An alcoholic beverage.>
 Category <ENTERTAINMENT>

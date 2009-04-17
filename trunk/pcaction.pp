@@ -1079,7 +1079,7 @@ begin
 
 	{ Add all usable skills to the list, as long as the PC knows them. }
 	for N := 1 to NumSkill do begin
-		if ( SkillMan[ N ].Usage = USAGE_Clue ) and ( TeamHasSkill( GB , NAV_DefPlayerTeam , N ) or HasTalent( PC , NAS_JackOfAll ) ) then begin
+		if ( SkillMan[ N ].Usage = USAGE_Clue ) and ( TeamHasSkill( GB , NAV_DefPlayerTeam , N ) or TeamHasTalent( GB , NAV_DefPlayerTeam , NAS_JackOfAll ) ) then begin
 			AddRPGMenuItem( RPM , MsgString( 'SKILLNAME_' + BStr( N ) ) , N , SkillDescription( N ) );
 		end else if ( SkillMan[ N ].Usage > 0 ) and HasSkill( PC , N ) then begin
 			AddRPGMenuItem( RPM , MsgString( 'SKILLNAME_' + BStr( N ) ) , N , SkillDescription( N ) );

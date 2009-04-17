@@ -50,7 +50,7 @@ Procedure SelectColors( M: GearPtr; Redrawer: RedrawProcedureType );
 Procedure SelectSprite( M: GearPtr; Redrawer: RedrawProcedureType );
 {$ENDIF}
 
-Procedure DoFieldRepair( GB: GameBoardPtr; PC , Item: GearPtr; Skill: Integer );
+Function DoFieldRepair( GB: GameBoardPtr; PC , Item: GearPtr; Skill: Integer ): Boolean;
 
 Function Handless( Mek: GearPtr ): Boolean;
 Function CanBeExtracted( Item: GearPtr ): Boolean;
@@ -59,6 +59,7 @@ Procedure ExtractMechaPart( var LList,Item: GearPtr );
 Function ShakeDown( GB: GameBoardPtr; Part: GearPtr; X,Y: Integer ): LongInt;
 Procedure PCGetItem( GB: GameBoardPtr; PC: GearPtr );
 Procedure PCTradeItems( GB: GameBoardPtr; PC,Target: GearPtr );
+Procedure EatItem( GB: GameBoardPtr; TruePC , Item: GearPtr );
 
 Procedure FHQ_SelectMechaForPilot( GB: GameBoardPtr; NPC: GearPtr );
 Procedure ArenaHQBackpack( Source,BPPC: GearPtr; BasicRedraw: RedrawProcedureType );
@@ -463,9 +464,10 @@ begin
 	end;
 end;
 
-Procedure DoFieldRepair( GB: GameBoardPtr; PC , Item: GearPtr; Skill: Integer );
+Function DoFieldRepair( GB: GameBoardPtr; PC , Item: GearPtr; Skill: Integer ): Boolean;
 	{ The PC is going to use one of the repair skills. Call the }
 	{ standard procedure, then print output. }
+	{ Return TRUE if repair fuel found, or FALSE otherwise. }
 var
 	msg: String;
 	Dmg0,DDmg,T: LongInt;
@@ -511,6 +513,8 @@ begin
 	else if NotDestroyed( Item ) and not NoStatusCured then msg := msg + ' ' + ReplaceHash( MsgString( 'STATUS_Remove' ) , GearName( Item ) );
 
 	DialogMsg( msg );
+
+	DoFieldRepair := RepairFuelFound;
 end;
 
 Function ShakeDown( GB: GameBoardPtr; Part: GearPtr; X,Y: Integer ): LongInt;
@@ -1559,7 +1563,7 @@ begin
 	for t := 1 to NumSkill do begin
 		{ In order to be usable, it must be a CLUE type skill, }
 		{ and the PC must have ranks in it. }
-		if ( SkillMan[ T ].Usage = USAGE_Clue ) and ( TeamHasSkill( GB , NAV_DefPlayerTeam , T ) or HasTalent( TruePC , NAS_JackOfAll ) ) then begin
+		if ( SkillMan[ T ].Usage = USAGE_Clue ) and ( TeamHasSkill( GB , NAV_DefPlayerTeam , T ) or TeamHasTalent( GB , NAV_DefPlayerTeam , NAS_JackOfAll ) ) then begin
 			msg := ReplaceHash( MsgString( 'BACKPACK_ClueSkillPrompt' ) , MsgString( 'SKILLNAME_' + BStr( T ) ) );
 			msg := ReplaceHash( msg , GearName( Item ) );
 			AddRPGMenuItem( SkMenu , msg , T );
@@ -1604,9 +1608,8 @@ begin
 		AddMoraleDmg( TruePC , -( Item^.Stat[ STAT_MoraleBoost ] * FOOD_MORALE_FACTOR ) );
 
 		{ Invoke the item's effect, if any. }
-		effect := SAttValue( Item^.SA , 'EFFECT' );
-		if effect <> '' then begin
-			CombatDisplay( GB );
+		if Item^.Stat[ STAT_FoodEffectType ] <> 0 then begin
+			effect := ReplaceHash( Food_Effect_String[ Item^.Stat[ STAT_FoodEffectType ] ] , BStr( Item^.Stat[ STAT_FoodEffectMod ] ) );
 			EffectFrontEnd( GB , TruePC , effect , '' );
 		end;
 

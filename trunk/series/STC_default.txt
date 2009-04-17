@@ -494,17 +494,15 @@
 	Food 30
 	name <Red Bear Liver>
 	desig <REDBEARLIVER>
-	% Step 12 , Status Effect, Regen(3), Skill25 but can't resist anyways
-	effect <12 STATUS 3 25>
-	FoodXValue 1500
+	FoodFX:Regeneration
+	FoodMod 16
 	FoodMorale -5
 
 	Food 20
 	name <Dragon Heart>
 	desig <DRAGONHEART>
-	% Step 9 , Healing, restore Step9 damage for material 1 (Meat)
-	effect <9 Healing 1>
-	FoodXValue 2000
+	FoodFX:Healing
+	FoodMod 9
 	FoodMorale -2
 
 	Treasure
@@ -542,15 +540,15 @@
 	name <Meat>
 	desig <TAINTED-MEAT>
 	FoodMorale -3
-	% Tainted meat makes you sick.
-	Effect <12 STATUS 20 CANRESIST>
+	FoodFX:CauseStatus
+	FoodMod:Sickness
 
 	Food 20
 	name <Sashimi>
 	desig <TAINTED-SASHIMI>
 	FoodMorale -3
-	% Tainted sashimi can poison you.
-	Effect <12 STATUS 1 CANRESIST>
+	FoodFX:CauseStatus
+	FoodMod:Poison
 
 
 %  ***************

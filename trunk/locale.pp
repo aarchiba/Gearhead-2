@@ -1235,7 +1235,7 @@ end;
 Function TeamHasSkill( GB: GameBoardPtr; Team,Skill: Integer): Boolean;
 	{ Return TRUE if at least one member of the team has the requested skill. }
 var
-	M: GearPtr;
+	M,P: GearPtr;
 	Found: Boolean;
 	T2: Integer;
 begin
@@ -1248,7 +1248,7 @@ begin
 		if T2 = NAV_LancemateTeam then T2 := NAV_DefPlayerTeam;
 		if T2 = Team then begin
 			if IsMasterGear( M ) and GearActive( M ) then begin
-				if HasSkill( M , Skill ) then Found := True;
+				if HasSkill( LocatePilot( M ) , Skill ) then Found := True;
 			end;
 		end;
 		m := m^.Next;
@@ -1272,7 +1272,7 @@ begin
 		if T2 = NAV_LancemateTeam then T2 := NAV_DefPlayerTeam;
 		if T2 = Team then begin
 			if IsMasterGear( M ) and GearActive( M ) then begin
-				if HasTalent( M , Talent ) then Found := True;
+				if HasTalent( LocatePilot( M ) , Talent ) then Found := True;
 			end;
 		end;
 		m := m^.Next;

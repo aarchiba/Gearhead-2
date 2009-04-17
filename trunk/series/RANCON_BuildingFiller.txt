@@ -114,17 +114,9 @@ Content
 %%	Minimaps should be open on all four sides.
 
 Content
-	%% Sub-Basement; really just a red herring
 	requires <*STORAGE_X>
 	Element1 <Prefab>
-	minimap <......###..#1#...........>
-	inv
-		Elevator
-		name <Sub-Basement>
-		MiniMapComponent 1
-		use <Print 1>
-		Msg1 <There's nothing interesting in here.>
-	end
+	minimap <......###..###...........>
 
 Content
 	%% Pylon
@@ -465,19 +457,9 @@ Content
 		STC OneShotDoor
 	end
 	inv
-		Food 0
-		Name <Quick Fix Pill>
-		FoodQuantity 5
-		Effect <2 10 20 0>
-		FoodXValue 1000
-		desc <This medicine promotes rapid cellular regeneration, and can instantly heal many injuries.>
+		item Quick Fix Pill
 
-		Food 0
-		Name <Regen Boost Pill>
-		FoodQuantity 5
-		Effect <1 12 3 25>
-		FoodXValue 1500
-		desc <This medicine increases the body's ability to repair itself. While it is in effect injuries will be healed much faster than normal.>
+		item Regen Boost Pill
 
 		MedicineFuel 120
 		Name <Medicated Bandages>
@@ -561,9 +543,8 @@ Content
 
 		Food 5
 		Name <Imperialis Classico>
-		% Status Effect (1), Duration Step5, Stoned(4), Skill10 to resist
-		Effect <10 STATUS 4  CanResist>
-		FoodXValue 10
+		FoodFX:CauseStatus
+		FoodMod:Stone
 		FoodMorale 10
 		Fudge 300000
 		desc <A vintage wine from the Age of Superpowers. It is extremely rare and extremely expensive.>

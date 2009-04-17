@@ -200,7 +200,7 @@ Const
 		60,50,75,100,120,
 		150,500,1500,2000,3000,
 		4500,10000,100,1,20,
-		0,0,0,0,0,
+		30000,30000,30000,30000,30000,
 		0,0,100,0
 	);
 	SX_Cost: Array [1..Num_Status_FX] of Byte = (
@@ -247,7 +247,7 @@ Const
 	SX_Effect_String: Array [1..Num_Status_FX] of String = (
 		'1 DAMAGE 12 0 0 0  ARMORIGNORE CANRESIST',	{ Poison }
 		'2 DAMAGE 16 0 0 0  CANRESIST BRUTAL',	{ Burn }
-		'1 HEALING 1',	{ Regen: Heal(2) Step1 by FirstAid(20) }
+		'1 HEALING 1',	{ Regen: Heal(2) Step1 to meat (1) }
 		'',	{ Stoned }
 		'',	{ Haywire }
 		'','','','','',	{ Cyber side effects }
@@ -260,7 +260,7 @@ Const
 		'',	{ Sickness }
 		'','','','','',	{ Perminant injuries }
 		'','',		{ Enraged, Flummoxed }
-		'8 DAMAGE 1 0 0 0  ARMORPIERCING BRUTAL',	{ Disintegration }
+		'4 DAMAGE 1 0 0 0  ARMORPIERCING BRUTAL',	{ Disintegration }
 		''	{ Blinded }
 	);
 	SX_StatMod: Array [1..Num_Status_FX , 1..NumGearStats ] of SmallInt = (

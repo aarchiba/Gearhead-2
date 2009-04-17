@@ -50,11 +50,25 @@ uses gears;
 
 Const
 	STAT_MoraleBoost = 1;
-	STAT_FoodEffectValue = 2;
+
 	STAT_FoodQuantity = 3;
+	STAT_FoodEffectType = 4;
+		Num_FoodEffectType = 4;
+		FET_Healing = 1;
+		FET_Regeneration = 2;
+		FET_CauseStatus = 3;
+		FET_CureStatus = 4;
+	STAT_FoodEffectMod = 5;
 
 	Repair_Cost_Multiplier: Array [0..NumMaterial] of Byte = (
 		1, 1, 5
+	);
+
+	Food_Effect_String: Array [1..Num_FoodEffectType] of String = (
+		'# HEALING 1',
+		'# STATUS 3',
+		'9 STATUS #',
+		'9 CURE #'
 	);
 
 Function ToolDamage( Part: GearPtr ): Integer;
@@ -73,7 +87,7 @@ Function FoodValue( Part: GearPtr ): LongInt;
 
 implementation
 
-uses ghchars,ui4gh,texutil;
+uses ghchars,ghweapon,ui4gh,texutil;
 
 
 Function ToolDamage( Part: GearPtr ): Integer;
@@ -150,12 +164,24 @@ begin
 	if Part^.Stat[ STAT_MoraleBoost ] > 10 then Part^.Stat[ STAT_MoraleBoost ] := 10
 	else if Part^.Stat[ STAT_MoraleBoost ] < -5 then Part^.Stat[ STAT_MoraleBoost ] := -5;
 
-	{ Stat 2 - Extra Value }
-	if Part^.Stat[ STAT_FoodEffectValue ] < 0 then Part^.Stat[ STAT_FoodEffectValue ] := 0;
-
 	{ Stat 3 - Quantity }
 	if Part^.Stat[ STAT_FoodQuantity ] > 50 then Part^.Stat[ STAT_FoodQuantity ] := 50
 	else if Part^.Stat[ STAT_FoodQuantity ] < 1 then Part^.Stat[ STAT_FoodQuantity ] := 1;
+
+	{ Stat 4 - Food Effect Type }
+	if Part^.Stat[ STAT_FoodEffectType ] < 0 then Part^.Stat[ STAT_FoodEffectType ] := 0
+	else if Part^.Stat[ STAT_FoodEffectType ] > Num_FoodEffectType then Part^.Stat[ STAT_FoodEffectType ] := 0;
+
+	{ Stat 5 - Food Effect Mod }
+	if Part^.Stat[ STAT_FoodEffectType ] <> 0 then begin
+		if Part^.Stat[ STAT_FoodEffectType ] = FET_CureStatus then begin
+			if Part^.Stat[ STAT_FoodEffectMod ] < 1 then Part^.Stat[ STAT_FoodEffectMod ] := 1
+			else if Part^.Stat[ STAT_FoodEffectMod ] > 10 then Part^.Stat[ STAT_FoodEffectMod ] := 10;
+		end else begin
+			if Part^.Stat[ STAT_FoodEffectMod ] < 1 then Part^.Stat[ STAT_FoodEffectMod ] := 1
+			else if Part^.Stat[ STAT_FoodEffectMod ] > Num_Status_FX then Part^.Stat[ STAT_FoodEffectMod ] := Num_Status_FX;
+		end;
+	end else Part^.Stat[ STAT_FoodEffectMod ] := 0;
 end;
 
 Function FoodMass( Part: GearPtr ): Integer;
@@ -169,7 +195,13 @@ Function FoodValue( Part: GearPtr ): LongInt;
 var
 	it,M: LongInt;
 begin
-	it := Part^.V div 3 + Part^.Stat[ Stat_FoodEffectValue ];
+	it := Part^.V div 3;
+
+	Case Part^.Stat[ STAT_FoodEffectType ] of
+		FET_Healing: it := it + 55 * Part^.Stat[ STAT_FoodEffectMod ];
+		FET_Regeneration: it := it + 45 * Part^.Stat[ STAT_FoodEffectMod ];
+		FET_CureStatus: it := it + SX_RepCost[ Part^.Stat[ STAT_FoodEffectMod ] ] * 10;
+	end;
 
 	if Part^.Stat[ STAT_MoraleBoost ] > 0 then begin
 		it := it + ( Part^.Stat[ STAT_MoraleBoost ] * ( 75 - Part^.V ) );

@@ -11,6 +11,7 @@ Content
 	name <Basic Model>
 	%% Reveal the scene using a FindEncounter mood.
 	requires <*:Q_RevealEncounter>
+	special <REUSABLE>
 
 	% E1 is the scene being sought
 	% E2 is the outdoors scene
@@ -44,6 +45,7 @@ Content
 	name <Worst Kept Secret>
 	%% Reveal the scene using a FindEncounter mood.
 	requires <*:Q_ENT_BlackMarket>
+	special <REUSABLE>
 
 	% E1 is the black market being sought
 	% E2 is a local urban scene
@@ -86,6 +88,7 @@ Content
 	%% The NPC has a hideout in the urban scene of this location.
 	%% Reveal the hideout using a FindEncounter mood.
 	requires <*:Q_NPCHideout>
+	special <REUSABLE>
 
 	% E1 is the NPC being sought
 	% E2 is a local urban scene

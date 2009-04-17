@@ -231,7 +231,14 @@ Lock          <Stat 6 ?15>
 Damage        <NAtt 12 0 ?10>
 Food          <G 18 0 ?50>
 FoodMorale    <Stat 1 ?>
-FoodXValue    <Stat 2 ?100>
+FoodFX:Healing      <Stat 4 1>
+FoodFX:Regeneration <Stat 4 2>
+FoodFX:CureStatus   <Stat 4 4>
+FoodFX:CauseStatus  <Stat 4 3>
+FoodMod             <Stat 5 ?5>
+FoodMod:Poison      <Stat 5 1>
+FoodMod:Sickness    <Stat 5 20>
+FoodMod:Stone       <Stat 5 4>
 FoodQuantity  <Stat 3 ?1>
 Reflexes      <Stat 1 ?0>
 Body          <Stat 2 ?0>

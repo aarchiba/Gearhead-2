@@ -46,7 +46,7 @@ Function MOVE_MODEL_TOWARDS_SPOT( Mek: GearPtr; GB: GameBoardPtr; GX,GY: Integer
 
 implementation
 
-uses ability,action,arenacfe,effects,movement,gearutil,specialsys,
+uses ability,action,arenacfe,effects,movement,gearutil,specialsys,ghswag,
      ghchars,ghmodule,ghweapon,gearparser,ghprop,interact,rpgdice,skilluse,
      texutil,ui4gh,grabgear,arenascript,menugear,ghsupport,backpack,
 {$IFDEF ASCII}
@@ -1120,11 +1120,12 @@ begin
 	HotMoveMode := T;
 end;
 
-Procedure AIRepair( GB: GameBoardPtr; NPC,Target,RepairFuel: GearPtr; Skill: Integer );
+Procedure AIRepair( GB: GameBoardPtr; NPC,Target: GearPtr; Skill: Integer );
 	{ This procedure acts as a frontend for the repair skill bits. }
-	{ It's analogous to the DoFieldRepair skill in the backpack unit. }
 begin
-	DoFieldRepair( GB , NPC , Target , Skill );
+	if not DoFieldRepair( GB , NPC , Target , Skill ) then begin
+		SetNAtt( NPC^.NA , NAG_EpisodeData , NAS_ContinuousOrders , 0 );
+	end;
 end;
 
 Function SelectRepairTarget( GB: GameBoardPtr; Mek: GearPtr; Skill: Integer ): GearPtr;
@@ -1276,10 +1277,9 @@ end;}
 Procedure LancemateUsefulAction( Mek: GearPtr; GB: GameBoardPtr );
 	{ Do something useful! There are no enemies to be found... }
 const
-	Num_AI_Repair = 5;
+	Num_AI_Repair = 2;
 	AI_Repair_List: Array [1..Num_AI_Repair] of Byte = (
-		{ Order of preference: Medical, First Aid, General Repair, Mecha Repair, Biotech }
-		16, 20 , 23, 15, 22
+		NAS_Medicine, NAS_Repair
 	);
 var
 	HM,Target,T: Integer;
@@ -1293,10 +1293,9 @@ begin
 	if CORD < 0 then begin
 		Target := NAttValue( Mek^.NA , NAG_EpisodeData , NAS_ATarget );
 		TGear := LocateMekByUID( GB , Target );
-		Tool := SeekGear( Mek , GG_RepairFuel , Abs( Cord ) );
 
 		{ If this gear no longer needs repairs, quit. }
-		if ( TGear = Nil ) or ( RepairNeededBySkill( TGear , Abs( CORD ) ) < 1 ) or ( Tool = Nil ) or ( CurrentMental( Mek ) < 1 ) then begin
+		if ( TGear = Nil ) or ( RepairNeededBySkill( TGear , Abs( CORD ) ) < 1 ) or ( CurrentMental( Mek ) < 1 ) then begin
 			{ Clear the continuous action. }
 			SetNAtt( Mek^.NA , NAG_EpisodeData , NAS_ContinuousOrders , 0 );
 
@@ -1306,12 +1305,12 @@ begin
 				HM := GetHotMap( GB , Target , HotMoveMode( Mek ) , ORD_SeekSingleModel );
 				MoveTowardsGoal( GB , Mek , HM );
 			end else begin
-				AIRepair( GB , Mek , TGear , Tool , Abs( CORD ) );
+				AIRepair( GB , Mek , TGear , Abs( CORD ) );
 			end;
 
 		end else begin
 			{ If off the map, NPC can just autorepair it. }
-			AIRepair( GB , Mek , TGear , Tool , Abs( CORD ) );
+			AIRepair( GB , Mek , TGear , Abs( CORD ) );
 		end;
 
 {	end else if CORD = CORD_Flirt then begin
@@ -1380,7 +1379,7 @@ begin
 		CORD := 0;
 		if CurrentMental( Mek ) > 0 then begin
 			while ( t <= Num_AI_Repair ) and ( Target = 0 ) do begin
-				if ( NAttValue( NPC^.NA , NAG_Skill , AI_Repair_List[ t ] ) > 0 ) and ( SeekGear( Mek , GG_RepairFuel , AI_Repair_List[ t ] ) <> Nil ) then begin
+				if ( NAttValue( NPC^.NA , NAG_Skill , AI_Repair_List[ t ] ) > 0 ) then begin
 					TGear := SelectRepairTarget( GB , Mek , AI_Repair_List[ t ] );
 					if TGear <> Nil then begin
 						Target := NAttValue( TGear^.NA , NAG_EpisodeData , NAS_UID );
@@ -1398,8 +1397,8 @@ begin
 				Target := NAttValue( TGear^.NA , NAG_EpisodeData , NAS_UID );
 				CORD := CORD_Flirt;
 			end;
-		end;
-}		if ( CORD = 0 ) and ( NAttValue( NPC^.NA , NAG_Skill , NAS_Conversation ) > Random( 10 ) ) and ( Random( 3 ) = 1 ) and IsSafeArea( GB ) then begin
+		end;}
+		if ( CORD = 0 ) and ( NAttValue( NPC^.NA , NAG_Skill , NAS_Conversation ) > Random( 10 ) ) and ( Random( 3 ) = 1 ) and IsSafeArea( GB ) then begin
 			TGEar := SelectSocialTarget( GB , NPC , False );
 			if TGear <> Nil then begin
 				Target := NAttValue( TGear^.NA , NAG_EpisodeData , NAS_UID );
@@ -1638,6 +1637,41 @@ begin
 	end;
 end;
 
+Function AIUseInventory( NPC: GearPtr; GB: GameBoardPtr ): Boolean;
+	{ It's possible that this NPC has a status condition. Check to see }
+	{ whether or not they have any medicine to deal with it. }
+var
+	Item,I2: GearPtr;
+	UsedSomething: Boolean;
+begin
+	{ Assume FALSE until something gets used. }
+	UsedSomething := FALSE;
+
+	{ Animals never do this. }
+	if NotAnAnimal( NPC ) then begin
+		NPC := LocatePilot( NPC );
+
+		Item := NPC^.InvCom;
+		while ( Item <> Nil ) and not UsedSomething do begin
+			I2 := Item^.Next;
+
+			if ( Item^.G = GG_Consumable ) and ( Item^.Stat[ STAT_FoodEffectType ] <> 0 ) then begin
+				if ( Item^.Stat[ STAT_FoodEffectType ] = FET_CureStatus ) and HasStatus( NPC , Item^.Stat[ STAT_FoodEffectMod ] ) then begin
+					EatItem( GB , NPC , Item );
+					UsedSomething := True;
+				end else if ( ( Item^.Stat[ STAT_FoodEffectType ] = FET_Healing ) or ( Item^.Stat[ STAT_FoodEffectType ] = FET_Regeneration ) ) and ( PercentDamaged( NPC ) < 90 ) then begin
+					EatItem( GB , NPC , Item );
+					UsedSomething := True;
+				end;
+			end;
+
+			Item := I2;
+		end;
+	end;
+
+	AIUseInventory := UsedSomething;
+end;
+
 Procedure GetAIInput( Mek: GearPtr; GB: GameBoardPtr );
 	{ MEK belongs to the computer team. Decide upon }
 	{ a course of action for it here. }
@@ -1663,7 +1697,7 @@ begin
 		{ If this is not a master gear, just wait. }
 		SetNAtt( Mek^.NA , NAG_Action , NAS_CallTime , GB^.ComTime + ClicksPerRound );
 
-	end else begin
+	end else if not AIUseInventory( mek , GB ) then begin
 
 		{ Otherwise, check the orders of the NPC unit, and branch accordingly. }
 		O := NAttValue( Mek^.NA , NAG_EpisodeData , NAS_Orders );
