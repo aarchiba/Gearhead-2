@@ -483,7 +483,7 @@ begin
 		msg := ReplaceHash( MsgString( 'PCREPAIR_UseSkill' ) , MsgString( 'SkillName_' + BStr( Skill ) ) );
 	end else begin
 		msg := ReplaceHash( MsgString( 'NPCREPAIR_UseSkill' ) , PilotName( PC ) );
-		msg := ReplaceHash( msg , MsgString( 'SkillName_' + BStr( Skill ) ) );
+		msg := ReplaceHash( msg , GearName( Item ) );
 	end;
 	msg := ReplaceHash( msg , GearName( Item ) );
 
