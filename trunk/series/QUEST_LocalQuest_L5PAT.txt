@@ -8,6 +8,50 @@
 %%
 
 Content
+	name <Xianxai Spinner/Trade Regulation>
+	requires <*:Q_LocalQuest "XIASP">
+
+	% E1 is the trade authority building
+	% E2 is Matthias
+	Element1 <Scene building public legit police>
+	Element2 <Prefab>
+	Place2 <1 (Guards) sd ally>
+
+	% SubPlot1 is the pirates/black market task
+	SubPlot1 <*Q_UNIQUE_XIASP_Matthias #50 2>
+
+	sub
+		Persona 2
+		rumor0 <Matthias has his hands full dealing with all the pirate attacks we've had.>
+		greeting <if= PlotStatus %plotid% 0 else GoChat NewChat Say 1 QMemo %plotid% 2 SetPlotStatus %plotid1% %id1%>
+		GoChat <NewChat SayAnything>
+		Msg1 <If you're planning to fly around outside the station, you should know that there have been a lot of pirate attacks recently. I'm offering a reward for anyone who can help get rid of them.>
+		Msg2 <%name2% in %name1% told you that there's a reward for fighting pirates outside of the colony.>
+
+		MetaScene 2
+		sub
+			room
+			name <Office>
+			special <HOME>
+			minimap <2....1..............#&+##>
+			inv
+				STC TV
+				MiniMapComponent 2
+				PDir 1
+			end
+		end
+	end
+	inv
+		NPC Police Officer
+		name <Matthias>
+		chardesc Male Lawful Shy Passionate Pragmatic Renowned
+		SDL_PORTRAIT <por_m_serious(J--).png>
+		SDL_COLORS <30 30 90 150 112 89 35 45 22>
+		SetFaction 9
+		Age 10
+	end
+
+Content
 	name <Tohru Spinner/Reconstruction>
 	requires <*:Q_LocalQuest "TOHSP">
 
@@ -43,7 +87,7 @@ Content
 	SubPlot2 <*:Q_SideStory #30>
 
 	sub
-		Persona 1
+		Persona 2
 		greeting <NewChat SayAnything>
 
 		STC QS_ConstructionSite

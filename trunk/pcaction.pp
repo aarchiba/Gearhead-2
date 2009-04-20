@@ -619,7 +619,7 @@ begin
 			NPC := SeekGearByName( GB^.Meks , Name );
 			if NPC = Nil then begin
 				{ Next, try the entire root scene... }
-				RootScene := FindRootScene( GB , GB^.Scene );
+				RootScene := FindRootScene( GB^.Scene );
 				if RootScene <> Nil then begin
 					NPC := SeekChildByName( RootScene , Name );
 				end;
@@ -1150,7 +1150,7 @@ begin
 			Plot := CloneGear( RetrieveGearSib( Standard_Plots , PID ) );
 			SetSAtt( Plot^.SA , 'name <DEBUG>' );
 
-			if InsertPlot( FindRootScene( GB , GB^.Scene ) , FindRoot( Scene ) , Plot , GB , NAttValue( PC^.NA , NAG_CharDescription , NAS_Renowned ) ) then begin
+			if InsertPlot( FindRootScene( GB^.Scene ) , FindRoot( Scene ) , Plot , GB , NAttValue( PC^.NA , NAG_CharDescription , NAS_Renowned ) ) then begin
 				DialogMsg( 'Plot successfully loaded.' );
 			end else begin
 				DialogMsg( 'Plot rejected.' );

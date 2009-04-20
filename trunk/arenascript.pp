@@ -301,7 +301,7 @@ begin
 
 	InfoList := Nil;
 
-	Part := FindRootScene( GB , GB^.Scene );
+	Part := FindRootScene( GB^.Scene );
 	RumorWorkup( Part );
 
 	Part := GB^.Meks;
@@ -1297,7 +1297,7 @@ begin
 			end else if ( Dest <> Nil ) and ( Dest^.G = GG_World ) then begin
 				{ If we're exiting to the world, the gate to seek }
 				{ should be the root scene. }
-				Src := FindRootScene( GB , GB^.Scene );
+				Src := FindRootScene( GB^.Scene );
 				if Src <> Nil then SCRIPT_Gate_To_Seek := Src^.S;
 			end;
 		end;
@@ -1426,7 +1426,7 @@ Function FormatMemoString( GB: GameBoardPtr; const Msg: String ): String;
 var
 	RootScene: GearPtr;
 begin
-	RootScene := FindRootScene( GB , GB^.Scene );
+	RootScene := FindRootScene( GB^.Scene );
 	if ( RootScene <> Nil ) and ( msg <> '' ) then begin
 		FormatMemoString := GearName( RootScene ) + ': ' + msg;
 	end else begin
@@ -2233,7 +2233,7 @@ var
 	City,Meme: GearPtr;
 	msg: String;
 begin
-	City := FindRootScene( GB , GB^.Scene );
+	City := FindRootScene( GB^.Scene );
 	{ Before checking for memes, delete any expired memes that might still be kicking around. }
 	if City <> Nil then CleanMemes( City );
 
@@ -2271,7 +2271,7 @@ begin
 	MemeID := ScriptValue( event , GB , source );
 	SceneID := ScriptValue( event , GB , source );
 	Meme := GG_LocateItem( MemeID , GB , Source );
-	Scene := FindRootScene( GB , FindActualScene( GB , SceneID ) );
+	Scene := FindRootScene( FindActualScene( GB , SceneID ) );
 
 	if ( Meme = Nil ) or ( Meme^.G <> GG_Meme ) then begin
 		DialogMsg( 'ERROR: Meme ' + BStr( MemeID ) + ' not found. Context: ' + Event );
@@ -3665,7 +3665,7 @@ begin
 	Mood := GG_LocateItem( ID , GB , Source );
 
 	ID := ScriptValue( Event , GB , Source );
-	City := FindRootScene( GB , FindActualScene( GB , ID ) );
+	City := FindRootScene( FindActualScene( GB , ID ) );
 
 	{ Call the above procedure to see if it works or not. }
 	if ( Mood <> Nil ) and ( City <> Nil ) then begin
@@ -5117,7 +5117,7 @@ begin
 					end;
 
 					{ Check for quests and moods in the current city next. }
-					City := FindRootScene( GB , GB^.Scene );
+					City := FindRootScene( GB^.Scene );
 					if ( City <> Nil ) and ( TP^.Info <> '' ) then begin
 						CheckTriggerAlongPath( TP^.Info , GB , City^.SubCom , False );
 					end;
@@ -5154,7 +5154,7 @@ Function StartRescueScenario( GB: GameBoardPtr; PC: GearPtr; Context: String ): 
 
 		{ Next add the data for the city we're located in, its faction, and the }
 		{ world that it's located in. }
-		C := FindRootScene( GB , GB^.Scene );
+		C := FindRootScene( GB^.Scene );
 		if C <> Nil then begin
 			AddTraits( RC , SAttValue( C^.SA , 'DESIG' ) );
 			C := SeekFaction( FindRoot( GB^.Scene ) , NAttValue( C^.NA , NAG_Personal , NAS_FactionID ) );
@@ -5184,7 +5184,7 @@ begin
 		if R <> Nil then begin
 			DelinkGear( Rescue_List , R );
 			SetNAtt( R^.NA , NAG_ElementID , 1 , GB^.Scene^.S );
-			if InsertPlot( FindRootScene( GB , GB^.Scene ) , FindRoot( GB^.Scene ) , R , GB , CurrentPCRenown( GB ) ) then begin
+			if InsertPlot( FindRootScene( GB^.Scene ) , FindRoot( GB^.Scene ) , R , GB , CurrentPCRenown( GB ) ) then begin
 				{ Start by printing a message, since the time taken by the }
 				{ rescue scenario is likely to cause a noticeable delay. }
 				DialogMsg( MsgString( 'JustAMinute' ) );

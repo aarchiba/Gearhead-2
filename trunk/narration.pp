@@ -188,7 +188,7 @@ Function FindActualScene( Scene: GearPtr; SID: Integer ): GearPtr;
 Function FindActualScene( GB: GameBoardPtr; SID: Integer ): GearPtr;
 Function IsAScene( S: GearPtr ): Boolean;
 Function SceneIsTemp( S: GearPtr ): Boolean;
-Function FindRootScene( GB: GameBoardPtr; S: GearPtr ): GearPtr;
+Function FindRootScene( S: GearPtr ): GearPtr;
 Function FindWorld( GB: GameBoardPtr; S: GearPtr ): GearPtr;
 
 Procedure DelinkGearForMovement( GB: GameBoardPtr; GearToBeMoved: GearPtr );
@@ -644,7 +644,10 @@ begin
 	{ Next two places to look - The current scene, and the }
 	{ adventure itself. }
 	if Persona = Nil then Persona := SeekGear( Scene , GG_Persona , CID );
-	if ( Persona = Nil ) and ( CID > Num_Plot_Elements ) then Persona := SeekGear( FindRoot( Scene ) , GG_Persona , CID );
+	if ( Persona = Nil ) and ( CID > Num_Plot_Elements ) then begin
+		Scene := FindRootScene( Scene );
+		if Scene <> Nil then Persona := SeekGear( Scene , GG_Persona , CID , False );
+	end;
 
 
 	SeekPersona := Persona;
@@ -1096,8 +1099,10 @@ begin
 	SceneIsTemp := ( S = Nil ) or ( S^.G = GG_MetaScene ) or IsInvCom( S );
 end;
 
-Function FindRootScene( GB: GameBoardPtr; S: GearPtr ): GearPtr;
+Function FindRootScene( S: GearPtr ): GearPtr;
 	{ Return the root scene of S. If no root is found, return Nil. }
+	{ S should be a scene or metascene connected to the adventure; otherwise, }
+	{ expect an error. }
 begin
 	if S = Nil then Exit( Nil );
 	if ( S^.G = GG_MetaScene ) and ( NAttValue( S^.NA , NAG_Narrative , NAS_EntranceScene ) <> 0 ) then S := FindActualScene( FindRoot( S ) , NAttValue( S^.NA , NAG_Narrative , NAS_EntranceScene ) )
@@ -1113,7 +1118,7 @@ Function FindWorld( GB: GameBoardPtr; S: GearPtr ): GearPtr;
 	{ If no world can be found, return Nil. }
 begin
 	{ First, find the city this scene belongs to. That should make things easier. }
-	S := FindRootScene( GB , S );
+	S := FindRootScene( S );
 	while ( S <> Nil ) and ( S^.G <> GG_World ) do begin
 		S := S^.Parent;
 	end;

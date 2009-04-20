@@ -124,7 +124,7 @@ Speed 4
 BV 3
 magazine 80
 sub
-	Ammo 8
+	Ammo 6
 	name <5mm Auto Clip>
 	caliber <5mm auto>
 	category <AMMO>
@@ -132,11 +132,102 @@ sub
 	SDL_PORTRAIT <item_ammoclip.png>
 end
 
+Gun 7
+Name <Assault Rifle>
+desig <Yars MG>
+desc <An advanced sensor-assisted smart rifle used by elite military forces in the L5 region.>
+sdl_portrait <item_compactrifle.png>
+caliber <5mm auto>
+type <ARMORPIERCING>
+category <WEAPON MISSILE>
+factions <FCOMS RISHI BOHEM MAQUI ROCKE SILKN PRIVA>
+legality 5
+Mass -5
+Range 7
+Acc 2
+Speed 3
+BV 4
+magazine 100
+sub
+	Ammo 7
+	name <5mm Auto Clip>
+	caliber <5mm auto>
+	SDL_PORTRAIT <item_ammoclip.png>
+end
+
+Gun 9
+Name <Rocket Rifle>
+desig <SMRT-1>
+desc <Also known as the smartgun, this weapon fires miniature computer-guided missiles.>
+sdl_portrait <>
+caliber <8mm self-propelled>
+category <WEAPON MISSILE>
+factions <MAQUI FCOMS RISHI BOHEM  PRIVA CRIHN REDMA  HOELL COMET MUGLE  L5LAW AEGSF>
+legality 5
+Mass -6
+Range 7
+Acc 4
+Speed 5
+magazine 50
+sub
+	Ammo 9
+	name <Rocket Rifle Clip>
+	caliber <8mm self-propelled>
+	SDL_PORTRAIT <item_ammoclip.png>
+	type <ARMORPIERCING>
+end
+
+Gun 9
+Name <Rocket Pistol>
+desig <Junior SMRT>
+desc <A compact version of the SMRT-1 rocket rifle.>
+sdl_portrait <>
+caliber <8mm self-propelled>
+category <WEAPON MISSILE>
+factions <MAQUI FCOMS RISHI BOHEM  PRIVA CRIHN REDMA  HOELL COMET MUGLE  L5LAW>
+legality 0
+Mass -8
+Range 4
+Acc 4
+Speed 5
+magazine 20
+sub
+	Ammo 9
+	name <Rocket Pistol Clip>
+	caliber <8mm self-propelled>
+	SDL_PORTRAIT <item_ammoclip.png>
+	type <ARMORPIERCING>
+end
+
+Gun 9
+Name <Heavy Rocket Rifle>
+desig <SMRT-2>
+desc <Also known as the smartgun, this weapon fires miniature computer-guided missiles.>
+sdl_portrait <>
+caliber <8mm self-propelled>
+category <WEAPON MISSILE>
+factions <MAQUI FCOMS RISHI  HOELL COMET MUGLE PRIVA CRIHN REDMA  L5LAW AEGSF>
+legality 15
+Mass -4
+Range 8
+Acc 4
+Speed 5
+BV 4
+type <SWARM>
+magazine 150
+sub
+	Ammo 9
+	name <Rocket Rifle Clip>
+	caliber <8mm self-propelled>
+	SDL_PORTRAIT <item_ammoclip.png>
+	type <ARMORPIERCING>
+end
+
 Gun 6
 name <Glitter Pistol>
 desig <Jonass 53>
 category <WEAPON MISSILE>
-Factions <MAQUI FCOMS RISHI>
+factions <MAQUI FCOMS RISHI BOHEM  PRIVA CRIHN REDMA  HOELL COMET MUGLE  ROCKE>
 desc <This pistol fires crystalline shard ammunition.>
 caliber <Crystalline Shard>
 SDL_PORTRAIT <item_glitterpistol.png>
@@ -159,7 +250,7 @@ Gun 4
 name <Pin Magnum>
 desig <VT2-X>
 category <WEAPON MISSILE>
-Factions <MAQUI FCOMS RISHI L5LAW>
+Factions <MAQUI FCOMS RISHI L5LAW AEGSF>
 desc <A light magnetic rifle often used by security forces.>
 sdl_portrait <item_autogun.png>
 caliber <2mm ferrous>
@@ -244,7 +335,7 @@ Speed 4
 legality -5
 magazine 12
 sub
-	Ammo 8
+	Ammo 5
 	name <6mm Pistol Clip>
 	caliber <6mm pistol>
 	SDL_PORTRAIT <item_ammoclip.png>
@@ -391,6 +482,24 @@ inv
 	name <Power Cell 50>
 end
 
+BeamGun 10
+Name <Laser Rifle>
+desig <A-109>
+desc <A high powered laser rifle used primarily in the L5 region.>
+sdl_portrait <item_laserrifle.png>
+category <WEAPON MISSILE>
+factions <MAQUI FCOMS RISHI BOHEM  PRIVA CRIHN REDMA  HOELL COMET MUGLE  SILKN ROCKE AEGSF>
+Range 5
+Mass -7
+Acc 2
+Speed 3
+Legality 5
+inv
+	PowerSource 4
+	name <Power Cell 100>
+	mass -2
+end
+
 BeamGun 9
 Name <Plasma Rifle>
 desig <Hawke>
@@ -448,7 +557,7 @@ inv
 	mass -2
 end
 
-BeamGun 14
+BeamGun 16
 Name <Laser Cannon>
 desig <T51>
 desc <A rapid firing light laser cannon.>

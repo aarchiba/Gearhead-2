@@ -63,6 +63,25 @@
 	end
 
 	Set
+	name <12mm auto>
+	% Used by miniguns
+	sub
+		Ammo
+		name <Carbide>
+		type <ArmorPiercing>
+		Legality 25
+
+		Ammo
+		name <Shard>
+		type <Brutal Scatter>
+		Legality 20
+
+		Ammo
+		name <Flechette>
+		type <Scatter>
+	end
+
+	Set
 	name <18mm shell>
 	% Shotgun shells
 	sub
@@ -164,13 +183,43 @@
 	sub
 		Ammo
 		name <HE>
-		type <Blast 1 Brutal>
+		type <Blast 3 Brutal>
 		Legality 10
 
 		Ammo
 		name <Miasma>
 		type <Blast 2 Toxin>
 		Legality 50
+	end
+
+	Set
+	name <8mm self-propelled>
+	%% L5Pat rocket rifles
+	sub
+		Ammo
+		name <HE>
+		type <Blast 2>
+		Legality 10
+
+		Ammo
+		name <Smoke>
+		type <Blast 4 Smoke>
+		Legality -10
+
+		Ammo
+		name <Incendiary>
+		type <BRUTAL BURN>
+		Legality 5
+
+		Ammo
+		name <Frag>
+		type <Brutal Scatter>
+		Legality 5
+
+		Ammo
+		name <Acid>
+		type <Brutal Rust Scatter>
+		Legality 15
 	end
 
 	Set

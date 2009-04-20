@@ -54,6 +54,33 @@ SDL_PORTRAIT <item_poleaxe.png>
 legality 5
 
 
+%  ****************************
+%  ***   MISSILE  WEAPONS   ***
+%  ****************************
+
+Gun 8
+Name <Assault Rifle>
+desig <7-Z>
+desc <>
+sdl_portrait <>
+caliber <5mm auto>
+category <WEAPON MISSILE ESSENTIAL>
+factions <EARTH>
+type <ARMORPIERCING>
+legality 5
+Mass -7
+Range 6
+Speed 3
+BV 5
+magazine 120
+sub
+	Ammo 8
+	name <5mm Auto Clip>
+	caliber <5mm auto>
+	SDL_PORTRAIT <item_ammoclip.png>
+end
+
+
 %  ***************
 %  ***  ARMOR  ***
 %  ***************

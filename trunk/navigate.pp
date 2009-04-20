@@ -299,7 +299,7 @@ var
 				while SA <> Nil do begin
 					if HeadMatchesString( 'QUEST' , SA^.Info ) then begin
 						ConReq := RetrieveAString( SA^.Info );
-						if not AddQuest( Adv , FindRootScene( Nil , LList ) , MasterList , ConReq ) then begin
+						if not AddQuest( Adv , FindRootScene( LList ) , MasterList , ConReq ) then begin
 							if XXRan_Debug then DialogMsg( 'ERROR: AddQuest failed for ' + ConReq );
 						end;
 					end;

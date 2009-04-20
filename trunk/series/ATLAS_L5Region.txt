@@ -521,6 +521,8 @@ Scene 0 3
 	Msg1 <Athera Spinner is known as "the Garden of the L5 Alliance". This is the center of orbital art and culture.>
 	Msg2 <You enter Athera Spinner.>
 
+	Quest1 <*:Q_Concert_Venue>
+
 sub
 	Scene
 	name <The Atrium>
@@ -628,6 +630,42 @@ sub
 		name <Foyer>
 		desig <EntranceGrid>
 		Content <Some 2 50 Here *URBAN_X>
+		Content2 <Some 1 100 Here *ANTI_ATTACK_SECURITY 2>
+	end
+
+	Scene
+	name <Bliss Station>
+	type <building restaurant nightclub meeting public>
+	entrance <*Building Short>
+	special <ADDEXIT>
+	ClubMap
+	MapWidth 20
+	MapHeight 19
+
+	start <Print 1>
+	Msg1 <You enter Bliss Station.>
+
+	NeededCells 4
+	Content1 <Some 1 100 Sub *RESTAURANT>
+	Content2 <Some 1 100 Sub *BAR_SERVICE>
+	Content3 <Some 1  70 Sub *CLUB_X>
+	Content5 <Fill Sub *SHOP_RANDOM>
+	sub
+		team 1
+
+		team 2
+		name <Citizens>
+		SetAlly 1
+		Passive
+
+		team 3
+		name <Guards>
+		SetAlly 2
+
+		room
+		name <Foyer>
+		desig <EntranceGrid>
+		Content <Some 4 65 Here *URBAN_X>
 		Content2 <Some 1 100 Here *ANTI_ATTACK_SECURITY 2>
 	end
 
@@ -2067,6 +2105,8 @@ Scene 0 3
 	Msg1 <Xianzai Spinner is a major trading port. People come here from all over the solar system to buy and sell goods.>
 	Msg2 <You enter Xianzai Spinner.>
 
+	Quest1 <*:Q_LocalQuest>
+
 sub
 	Scene
 	name <Commerce Tower>
@@ -2282,26 +2322,6 @@ sub
 			SetTeam 2
 			SetFaction 10
 			MiniMapComponent 2
-		end
-
-		room
-		name <Office>
-		minimap <2....1..............##+##>
-		inv
-			NPC Police Officer
-			name <Matthias>
-			chardesc Male Lawful Shy Passionate Pragmatic Renowned
-			SDL_PORTRAIT <por_m_serious(J--).png>
-			SDL_COLORS <30 30 90 150 112 89 35 45 22>
-			StatLine 14 13 15 15 13 14 15 13
-			SetTeam 2
-			SetFaction 9
-			Age 10
-			MiniMapComponent 1
-
-			STC TV
-			MiniMapComponent 2
-			PDir 1
 		end
 	end
 	inv

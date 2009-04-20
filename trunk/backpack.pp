@@ -348,7 +348,7 @@ Procedure GatherFieldHQ( GB: GameBoardPtr );
 var
 	City: GearPtr;
 begin
-	City := FindRootScene( GB , GB^.Scene );
+	City := FindRootScene( GB^.Scene );
 	if City <> Nil then begin
 		GatherFromScene( City );
 		SearchAlongPath( City^.SubCom );

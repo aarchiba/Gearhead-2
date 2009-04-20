@@ -355,7 +355,7 @@ begin
 		Grabbed_Gear := FindRoot( Grabbed_Gear );
 
 	end else if CMD = 'GRABROOTSCENE' then begin
-		Grabbed_Gear := FindRootScene( GB , Grabbed_Gear );
+		Grabbed_Gear := FindRootScene( Grabbed_Gear );
 
 	end else if CMD = 'GRABTEAMNAME' then begin
 		name := ExtractWord( Event );

@@ -50,6 +50,7 @@ Function TotalRepairableDamage( Target: GearPtr; Material: Integer ): LongInt;
 Procedure ApplyRepairPoints( Target: GearPtr; Material: Integer; var RP: LongInt; CureStatus: Boolean );
 Procedure ApplyEmergencyRepairPoints( Target: GearPtr; Material: Integer; var RP: LongInt );
 Function RepairNeededBySkill( Target: GearPtr; Skill: Integer ): LongInt;
+Function CanRepairUsingSkill( NPC,Target: GearPtr; Skill: Integer ): Boolean;
 Function UseRepairSkill( GB: GameBoardPtr; PC,Target: GearPtr; Skill: Integer ): Boolean;
 Procedure DoCompleteRepair( Target: GearPtr );
 
@@ -244,6 +245,52 @@ begin
 	RepairNeededBySkill := Total;
 end;
 
+Function AmountOfRepairFuel( PC: GearPtr; Material: Integer ): LongInt;
+	{ Return the total amount of repair fuel that the PC has. }
+var
+	Total: LongInt;
+	Procedure SeekRFAlongTrack( LList: GearPtr );
+	begin
+		while LList <> Nil do begin
+			if ( LList^.G = GG_RepairFuel ) and ( LList^.S = Material ) then begin
+				Total := Total + LList^.V;
+			end else begin
+				SeekRFAlongTrack( LList^.SubCom );
+				SeekRFAlongTrack( LList^.InvCom );
+			end;
+			LList := LList^.Next;
+		end;
+	end;
+begin
+	PC := FindRoot( PC );
+	Total := 0;
+	SeekRFAlongTrack( PC^.InvCom );
+	SeekRFAlongTrack( PC^.SubCom );
+	AmountOfRepairFuel := Total;
+end;
+
+
+Function CanRepairUsingSkill( NPC,Target: GearPtr; Skill: Integer ): Boolean;
+	{ Return TRUE if this target has repairable damage which can be healed using SKILL, }
+	{ and the NPC has the required repair fuel. Return FALSE otherwise. }
+var
+	CanRepair: Boolean;
+	T,Total,RP: Longint;
+begin
+	CanRepair := False;
+	for t := 0 to NumMaterial do begin
+		if ( Repair_Skill_Needed[ t ] = Skill ) then begin
+			RP := TotalRepairableDamage( Target , T );
+			if RP > 0 then begin
+				{ Alright, we found some damage to repair. }
+				{ Check for repair fuel. }
+				if AmountOfRepairFuel( NPC , T ) > 0 then CanRepair := True;
+			end;
+		end;
+	end;
+	CanRepairUsingSkill := CanRepair;
+end;
+
 Function UseRepairSkill( GB: GameBoardPtr; PC,Target: GearPtr; Skill: Integer ): Boolean;
 	{ The PC wants to use the requested repair SKILL on TARGET. }
 	{ Roll to see how many DPs will be restored, apply these DPs }
@@ -298,29 +345,6 @@ Function UseRepairSkill( GB: GameBoardPtr; PC,Target: GearPtr; Skill: Integer ):
 		PC := FindRoot( PC );
 		SpendRFAlongTrack( PC^.InvCom );
 		SpendRFAlongTrack( PC^.SubCom );
-	end;
-	Function AmountOfRepairFuel( PC: GearPtr; Material: Integer ): LongInt;
-		{ Return the total amount of repair fuel that the PC has. }
-	var
-		Total: LongInt;
-		Procedure SeekRFAlongTrack( LList: GearPtr );
-		begin
-			while LList <> Nil do begin
-				if ( LList^.G = GG_RepairFuel ) and ( LList^.S = Material ) then begin
-					Total := Total + LList^.V;
-				end else begin
-					SeekRFAlongTrack( LList^.SubCom );
-					SeekRFAlongTrack( LList^.InvCom );
-				end;
-				LList := LList^.Next;
-			end;
-		end;
-	begin
-		PC := FindRoot( PC );
-		Total := 0;
-		SeekRFAlongTrack( PC^.InvCom );
-		SeekRFAlongTrack( PC^.SubCom );
-		AmountOfRepairFuel := Total;
 	end;
 	Function ActivateRepair( Material: Integer; var SkRoll: Integer ): Boolean;
 		{ Activate the repair. Return the number of repair points used. }

@@ -573,7 +573,7 @@ begin
 		{ Also locate the faction of the root scene; this will give the "generic" }
 		{ mecha for this particular region. }
 		if Fac = Nil then begin
-			rscene := FindRootScene( GB , GB^.Scene );
+			rscene := FindRootScene( GB^.Scene );
 			if rscene <> Nil then begin
 				LFac := SeekFaction( GB^.Scene , NAttValue( RScene^.NA , NAG_Personal , NAS_FactionID ) );
 				if LFac <> Nil then fdesc := fdesc + ' ' + SAttValue( LFac^.SA , 'DESIG' );
@@ -665,7 +665,7 @@ begin
 	Factions := 'GENERAL';
 	if Fac <> Nil then Factions := Factions + ' ' + SAttValue( Fac^.SA , 'DESIG' )
 	else begin
-		rscene := FindRootScene( GB , Scene );
+		rscene := FindRootScene( Scene );
 		if rscene <> Nil then begin
 			Fac := SeekCurrentLevelGear( Factions_List , GG_Faction , NAttValue( RScene^.NA , NAG_Personal , NAS_FactionID ) );
 			if Fac <> Nil then factions := factions + ' ' + SAttValue( Fac^.SA , 'DESIG' );
@@ -1129,7 +1129,7 @@ begin
 	Faction_Desc := 'GENERAL ';
 	if Fac <> Nil then Faction_Desc := Faction_Desc + SAttValue( Fac^.SA , 'DESIG' );
 	if ( GB <> Nil ) and ( GB^.Scene <> Nil ) then begin
-		Scene := FindRootScene( GB , GB^.Scene );
+		Scene := FindRootScene( GB^.Scene );
 		if Scene <> Nil then begin
 			Fac := SeekCurrentLevelGear( Factions_List , GG_Faction , NAttValue( Scene^.NA , NAG_Personal , NAS_FactionID ) );
 			if Fac <> Nil then Faction_Desc := Faction_Desc + ' ' + SAttValue( Fac^.SA , 'DESIG' );

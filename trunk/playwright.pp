@@ -159,13 +159,13 @@ begin
 
 	{ Next add the data for the city we're located in, its faction, and the }
 	{ world that it's located in. }
-	C := FindRootScene( GB , Scene );
+	C := FindRootScene( Scene );
 	if C <> Nil then begin
 		if C <> Scene then AddTraits( CType , SAttValue( C^.SA , 'DESIG' ) );
 		AddTraits( CType , SAttValue( C^.SA , 'PERSONATYPE' ) );
 		C := SeekFaction( FindRoot( Scene ) , NAttValue( C^.NA , NAG_Personal , NAS_FactionID ) );
 		if C <> Nil then AddTraits( CType , SAttValue( C^.SA , 'DESIG' ) );
-		C := FindRootScene( GB , Scene )^.Parent;
+		C := FindRootScene( Scene )^.Parent;
 		if ( C <> Nil ) and ( C^.G = GG_World ) then begin
 			AddTraits( CType , SAttValue( C^.SA , 'DESIG' ) );
 		end;
@@ -299,11 +299,11 @@ begin
 
 			if ( Q = 'N' ) and ( Plot <> Nil ) then begin
 				{ L1 must equal L2. }
-				it := it and ( FindRootScene( GB , FindActualScene( GB , FindSceneID( Part , GB ) ) ) = FindRootScene( GB , FindActualScene( GB , FindSceneID( GetFSE( ExtractValue( Desc ) ) , GB ) ) ) );
+				it := it and ( FindRootScene( FindActualScene( GB , FindSceneID( Part , GB ) ) ) = FindRootScene( FindActualScene( GB , FindSceneID( GetFSE( ExtractValue( Desc ) ) , GB ) ) ) );
 
 			end else if ( Q = 'F' ) and ( Plot <> Nil ) then begin
 				{ L1 must not equal L2. }
-				it := it and ( FindRootScene( GB , FindActualScene( GB , FindSceneID( Part , GB ) ) ) <> FindRootScene( GB , FindActualScene( GB , FindSceneID( GetFSE( ExtractValue( Desc ) ) , GB ) ) ) );
+				it := it and ( FindRootScene( FindActualScene( GB , FindSceneID( Part , GB ) ) ) <> FindRootScene( FindActualScene( GB , FindSceneID( GetFSE( ExtractValue( Desc ) ) , GB ) ) ) );
 
 			end else if Q = 'M' then begin
 				{ MEMBER. This part must belong to the }
@@ -1191,7 +1191,7 @@ begin
 			{ This element is a CHARACTER. Create one. }
 			job := SAttValue( Plot^.SA , 'NEVERFAIL' + BStr( N ) );
 			if job = '' then begin
-				Element := RandomNPC( FindRoot( Adventure ) , 0 , RealSceneID( FindRootScene( GB , GB^.Scene ) ) );
+				Element := RandomNPC( FindRoot( Adventure ) , 0 , RealSceneID( FindRootScene( GB^.Scene ) ) );
 				{ Do the individualization. }
 				IndividualizeNPC( Element );
 				job := SAttValue( Element^.SA , 'job' );
@@ -2262,7 +2262,7 @@ var
 begin
 	{ Locate the adventure and the city. These will be important. }
 	Adv := FindRoot( GB^.Scene );
-	City := FindRootScene( GB , GB^.Scene );
+	City := FindRootScene( GB^.Scene );
 
 	{ If either the adventure or the city cannot be found, exit. }
 	if ( Adv = Nil ) or ( Adv^.G <> GG_Adventure ) or ( City = Nil ) then Exit;
@@ -2351,7 +2351,7 @@ Procedure UpdateMoods( GB: GameBoardPtr );
 			{ There's a chance of loading a new mood. }
 			{ NIEHH: Nothing Interesting Ever Happens Here. If the scene being examined is the }
 			{ town the PC is currently in, no new mood will be loaded. }
-			if ( ( Random( 8 ) = 1 ) or ( ( Random( 5 ) = 1 ) and ( GB^.ComTime < 10 ) ) ) and ( Scene <> FindRootScene( GB , GB^.Scene ) ) then begin
+			if ( ( Random( 8 ) = 1 ) or ( ( Random( 5 ) = 1 ) and ( GB^.ComTime < 10 ) ) ) and ( Scene <> FindRootScene( GB^.Scene ) ) then begin
 				{ Try to set a mood. }
 				{ If setting the mood fails, set the recharge timer. }
 				if not SetNewMood( Scene ) then SetNAtt( Scene^.NA , NAG_Narrative , NAS_MoodRecharge , GB^.ComTime + 7200 + Random( 43200 ) );

@@ -540,9 +540,28 @@ sub
 	Ammo 8
 	name <Revolver Cylinder>
 	desc <A departure from the traditional cartridge, this clip comes in the form of a cylinder with the bullets preloaded.>
-	category <AMMO>
-	factions <GENERAL>
 	caliber <.32 revolver>
+end
+
+Gun 17
+Name <Assault Cannon>
+desig <JTS-1P>
+desc <A heavy gatling-style magnetic cannon.>
+Type <SWARM>
+caliber <12mm auto>
+category <WEAPON MISSILE CONTRABAND>
+factions <GENERAL>
+Mass -9
+Range 7
+Speed 4
+BV 7
+Magazine 80
+UsesBody
+Legality 15
+sub
+	Ammo 17
+	Mass -3
+	caliber <12mm auto>
 end
 
 
@@ -568,7 +587,7 @@ inv
 	mass -2
 end
 
-BeamGun 16
+BeamGun 20
 Name <Laser Cannon>
 desig <Kirb IV>
 desc <A shoulder-fired light laser cannon.>

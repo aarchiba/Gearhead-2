@@ -705,7 +705,7 @@ begin
 	{ Search order: GB, Root Scene SubComs }
 	N := NumNPCsAlongPath( GB^.Meks );
 	M := Nil;
-	RootScene := FindRootScene( GB , GB^.Scene );
+	RootScene := FindRootScene( GB^.Scene );
 	if RootScene <> Nil then begin
 		N := N + NumNPCsAlongPath( RootScene^.SubCom );
 		N := N + NumNPCsAlongPath( RootScene^.InvCom );

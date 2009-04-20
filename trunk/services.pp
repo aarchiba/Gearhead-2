@@ -220,7 +220,7 @@ var
 	Tolerance: Integer;
 begin
 	if ( GB <> Nil ) and ( GB^.Scene <> Nil ) then begin
-		Scene := FindRootScene( GB , GB^.Scene );
+		Scene := FindRootScene( GB^.Scene );
 		if AStringHasBSTring( SAttValue( GB^.Scene^.SA , 'SPECIAL' ) , 'UNREGULATED' ) then begin
 			Tolerance := NAttValue( GB^.Scene^.NA , NAG_GearOps , NAS_Legality );
 		end else begin
@@ -1075,7 +1075,7 @@ begin
 	Category := SAttValue( I^.SA , 'CATEGORY' );
 	NGW := not PartAtLeastOneMatch ( Stuff , Category );
 
-	Scene := FindRootScene( GB , GB^.Scene );
+	Scene := FindRootScene( GB^.Scene );
 
 	{ Make sure this item is cleared for the shopkeeper's faction, and the faction }
 	{ of the city. Items marked with the GENERAL tag are clear for all factions. }
@@ -1930,7 +1930,7 @@ var
 	end;
 begin
 	N := 0;
-	CurrentCity := FindRootScene( GB , GB^.Scene );
+	CurrentCity := FindRootScene( GB^.Scene );
 	World := FindWorld( GB , GB^.Scene );
 
 	CheckAlongPath( World^.InvCom , True );
@@ -2083,7 +2083,7 @@ begin
 	AttachMenuDesc( RPM , ZONE_ItemsInfo );
 	World := FindWorld( GB , GB^.Scene );
 	City := World^.SubCom;
-	Entrance := FindLocalGate( World , FindRootScene( GB , GB^.Scene )^.S );
+	Entrance := FindLocalGate( World , FindRootScene( GB^.Scene )^.S );
 	if Entrance <> Nil then begin
 		X0 := NAttValue( Entrance^.NA , NAG_Location , NAS_X );
 		Y0 := NAttValue( Entrance^.NA , NAG_Location , NAS_Y );
@@ -2091,11 +2091,11 @@ begin
 		X0 := 1;
 		Y0 := 1;
 	end;
-	Fac := SeekFaction( GB^.Scene , GetFactionID( FindRootScene( GB , GB^.Scene ) ) );
+	Fac := SeekFaction( GB^.Scene , GetFactionID( FindRootScene( GB^.Scene ) ) );
 
 	while City <> Nil do begin
 		{ Do the faction check. }
-		if ( City <> FindRootScene( GB , GB^.Scene ) ) and ( ( Fac = Nil ) or ( NAttValue( Fac^.NA , NAG_FactionScore , GetFactionID( City ) ) >= 0 ) ) then begin
+		if ( City <> FindRootScene( GB^.Scene ) ) and ( ( Fac = Nil ) or ( NAttValue( Fac^.NA , NAG_FactionScore , GetFactionID( City ) ) >= 0 ) ) then begin
 			{ Do the range check. }
 			Entrance := FindLocalGate( World , City^.S );
 			if AStringHasBString( SAttValue( City^.SA , 'TYPE' ) , 'DESTINATION' ) then begin
