@@ -1711,7 +1711,7 @@ Procedure LoadTerrTex( TileSet: Integer );
 const
 	Tile_Filenames: Array [0..NumTileSet] of String = (
 		'terr_default.png', 'terr_rocky.png', 'terr_palacepark.png',
-		'terr_industrial.png'
+		'terr_industrial.png', 'terr_organic.png'
 	);
 var
 	tmp: PSDL_Surface;

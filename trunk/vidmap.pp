@@ -91,6 +91,15 @@ const
 		Blue, Blue, Blue, Brown, Yellow,
 		Blue, Brown,DarkGray,LightGray,LightGray,
 		LightCyan,LightGray
+		),
+
+	{ Organic Tileset }
+	(	Red, LightGreen, LightGreen, LightBlue, DarkGray,
+		LightGray, Magenta, DarkGray, LightGray, White,
+		DarkGray, LightGray, LightMagenta, Magenta, DarkGray,
+		Blue, Blue, Blue, Brown, Yellow,
+		Blue, Brown,DarkGray,LightGray,LightGray,
+		Yellow,LightGray
 		)
 
 	);

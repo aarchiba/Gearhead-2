@@ -7,6 +7,205 @@
 %%
 
 Content
+	name <Could Be Lupus>
+	requires <*Q_UNIQUE_XIASP_Venus>
+
+	%%
+	%% There's a Vesuvian trading ship at the spaceport. The ship is actually
+	%% a living being; unfortunately, en route to L5 it developed an autoimmune
+	%% disorder and its antibodies are now wreaking havoc on the engineering
+	%% level. The PC will be hired to enter the ship and deactivate its defenses.
+	%%
+
+	% E1 is the spaceport
+	% E2 is the first officer
+	% E3 is the engineering level itself
+	% E4 is the "magic pill" reward
+	Element1 <Scene Spaceport>
+	Element2 <Prefab>
+	Place2 </>
+	Element3 <QuestScene>
+	Place3 <1>
+	Element4 <Prefab>
+	Place4 </>
+
+	%% P%id%01 = Initialization Counter
+	%% P%id%02 = Have accepted quest
+	%% P%id%03 = Have shut down defenses
+	%% P%id%04 = Have destroyed neurocore
+
+	update <if= P%id%01 0 P= %id%01 1 MoveNPC %2% %1% SetNPCTeam %2% 2>
+	end <ifNPCDead %2% LoseSubPlot %plotid%>
+
+	sub
+		Persona 2
+		rumor%id% <there's something wrong with %name2%'s ship.>
+		greeting <if= PlotStatus %plotid% %id% else GoChat if= P%id%03 1 else GoCheckQuest   NewChat Say 9 WinSubPlot %plotid%  GiveItem %4%  AddReact d10  if= P%id%04 1 else GoLowPrize PCFriend %2%  CashPrize Reward %threat% 1000>
+		GoLowPrize <CashPrize Reward %threat% 500>
+		GoCheckQuest <if= P%id%02 1 else GoFirstTime NewCHat Say 8>
+		GoChat <NewChat SayAnything>
+		*GoFirstTime <*INeedYourHelp&PCSpecifically GoBriefing GoRefuse>
+		GoBriefing <NewChat Say 2 AddChat 1>
+		GoRefuse <NewChat Say 1 LoseSubPlot %plotid%>
+		result1 <NewChat Say 3 AddChat 2 AddChat 3 AddChat 4>
+		result2 <NewChat Say 4 P= %id%02 1 QMemo %plotid% 5>
+		result3 <NewChat Say 6 AddChat 5 AddChat 6>
+		result4 <Goto GoRefuse>
+		result5 <NewChat Say 7 P= %id%02 1 QMemo %plotid% 5>
+		result6 <Goto GoRefuse>
+		Msg1 <I regret that you will not be able to help us. May the mother guide your steps.>
+		Msg2 <My name is %name2%; I am first officer of the Zuryo Maru, a trading ship from Venus. We have heard of your adventures and believe that you can help us.>
+		Msg3 <Our ship is malfunctioning. It is... ill. The automated defense system has turned on itself. We have confined the problem to the engineering deck, but our technicians dare not enter since it is far too dangerous.>
+		Msg4 <Exactly. You can find our ship at the private dock. I should warn you that the defense system is adaptative; it will detect your presence and try to destroy you.>
+		Msg5 <%name5% asked you to stop the malfunctioning defense system of the Vesuvian spaceship Zuryo Maru; \spr %2% mentioned something about the system being adaptative.>
+		Msg6 <On Venus we make use of living technology. The Zuryo Maru is a living being. Unlike the vulgar biomonsters of old Earth, Vesuvian technology has only peaceful applications. Please, it needs your help...>
+		Msg7 <Thank you. All you need to do is locate the neurocortex and disable that part. You can find our ship at the private dock; I should warn you beforehand that the defense system will adapt to your presence. Be careful.>
+		Msg8 <Please do your best. May the green mother protect you.>
+		Msg9 <Zuryo Maru is feeling better; thank you so much for your help. Here, in addition to the reward, I'd like for you to have this. It's a special medicine from Venus. Save it for when you need it the most.>
+		Prompt1 <What seems to be the problem?>
+		Prompt2 <So you want me to go in there and disable it?>
+		Prompt3 <Wait, what do you mean "ill"?>
+		Prompt4 <Sorry, this job sounds way too dangerous for me.>
+		Prompt5 <Alright, I'll help you to fix it.>
+		Prompt6 <I don't want to mess around with biotechnology.>
+
+		MetaScene 1
+		sub
+			Room
+			minimap <########2####....+....#&&>
+			special <NOGO>
+			sub
+				Door
+				update <if= V1 0 else GoCheckQuest V= 1 1 SetStat STAT_Lock HardSkillTar %threat%>
+				GoCheckQuest <if= P%id%02 1 SetStat STAT_Lock 0>
+			end
+			inv
+				Elevator
+				name <Private Spacedock>
+				desig <ENTRANCE %3%>
+				use <if= P%id%02 1 else GoNoUse Print 1 Exit Destination>
+				GoNoUse <Print 2>
+				CLUE_CodeBreaking <Print 3>
+				MiniMapComponent 2
+				Msg1 <You ride the elevator to the Vesuvian spaceship.>
+				Msg2 <This elevator does not respond to your commands.>
+				Msg3 <You can't see any way to hack this elevator.>
+			end
+		end
+
+		MetaScene 3
+		name <the Zuryo Maru>
+		special <NOEXIT>
+		type <spaceship>
+		mapwidth 50
+		mapheight 50
+		MonkeyMap
+		Ceiling
+		LockedDoorChance 35
+		SecretDoorChance 25
+		OrganicTiles
+		% L1 = Deactivation counter
+		% L2 = Monster initialization counter
+		% L3 = First time counter
+		start <if= L3 0 else GoBeenBefore Alert 4 L= 3 1 Goto GoInitMonsters>
+		GoBeenBefore <Print 1 Goto GoInitMonsters>
+		GoInitMonsters <if= L2 0 L= 2 1   if= PlotStatus %plotid% %id% MonsterSet 2 %threat%>
+		end <L= 2 0>
+		5Min <if= L1 0 ifStealth SkillTar %threat% else GoMonsterUp>
+		GoMonsterUp <MonsterUp 2 d4>
+		nu3 <if= T3 0 P= %id%04 1 if= L1 0 L= 1 1 Alert 2 QMemo %plotid% 3 XPV 100 P= %id%03 1 TeamNeutral 2>
+		msg1 <You enter the Zuryo Maru.>
+		msg2 <As you destroy the neurocore, the inside of the ship suddenly goes quiet.>
+		msg3 <You deactivated the neurocore of the Zuryo Maru. You should go inform %name2% at Xianzai Spaceport.>
+		msg4 <You enter the Zuryo Maru. The tunnels of the engineering level look like the guts of some colossal beast. You wonder what secrets may be hidden within.>
+		sub
+			Team 1
+			SetEnemy 2
+
+			Team 2
+			name <Monster>
+			type <Antibody Synth>
+			SetEnemy 1
+			SetAlly 2
+			Stat 2 1
+
+			Team 3
+			name <Brains>
+			SetEnemy 1
+			SetAlly 2
+
+			room
+			minimap <......###..#2#...........>
+			inv
+				Elevator
+				Destination -1
+				MiniMapComponent 2
+			end
+
+			Room
+			minimap <......#.#...2...#.#......>
+			inv
+				CombatProp 25
+				name <Neurocore>
+				roguechar <=>
+				SDL_SPRITE <prop_displaycase.png>
+				SetTeam 3
+				MiniMapComponent 2
+				RangedCombat 13
+				CloseCombat 9
+				Initiative 13
+				ElectronicWarfare 10
+				Biotech
+				CLUE_SCIENCE <ifSelfOK else GoDead  if= P%id%03 0 else GoDone   Mental  ifUScience SkillTar %threat% else GoFail     Goto GoRepair>
+				CLUE_REPAIR <ifSelfOK else GoDead   if= P%id%03 0 else GoDone   Mental  ifURepair HardSkillTar %threat% else GoFail  Goto GoRepair>
+				GoDead <Print 1>
+				GoDone <Print 2>
+				GoFail <Print 3 MonsterUp 2 d8>
+				GoRepair <Alert 4 QMemo %plotid% 5 XPV 100 SkillXP NAS_Science 100 SkillXP NAS_Repair 100 P= %id%03 1 TeamNeutral 2 TeamNeutral 3 L= 1 1>
+				Msg1 <There's nothing else you can do for the neurocore.>
+				Msg2 <You've already fixed the neurocore.>
+				Msg3 <It's difficult to repair this thing while it's trying to kill you!>
+				Msg4 <You reboot the neurocore. The inside of the ship suddenly goes quiet.>
+				Msg5 <You repaired the neurocore of the Zuryo Maru. You should go inform %name2% at Xianzai Spaceport.>
+				sub
+					Turret
+					name <Eye>
+					size 5
+					armor 5
+					sub
+						BeamGun 8
+						name <Bio-Plasma>
+						range 8
+						type <BRUTAL>
+					end
+
+					Tail
+					name <Tendril>
+					Size 5
+					Armor 5
+
+					ECM 5
+				end
+			end
+		end
+	end
+	inv
+		NPC Scientist
+		job <First Officer>
+		chardesc sociable spiritual easygoing lawful heroic
+
+		Food 0
+		name <Neural Regenerator>
+		FoodQuantity 1
+		FoodFX:CureStatus
+		FoodMod 22
+		desc <A special medicine from Venus to be used in the case of spinal injury.>
+		Category <MEDICINE>
+		SDL_PORTRAIT <item_pills.png>
+		Fudge 1000000
+	end
+
+Content
 	name <Matthias agaisnt the pirates>
 	requires <*Q_UNIQUE_XIASP_Matthias>
 
@@ -17,6 +216,9 @@ Content
 	%% E5 is the pirate captain
 	%% E6 is the pirate faction
 	%% E7 is the Nomos Blade
+	%% E8 is E5's mission
+	%% E9 is the trucker being sought
+	%% E10 is the Demios Blade
 	Element2 <Scene Environs>
 	Element3 <Prefab>
 	Place3 <2>
@@ -26,10 +228,16 @@ Content
 	Element6 <Faction (CRIHN|REDMA)>
 	Element7 <Prefab>
 	Place7 </>
+	Element8 <Prefab>
+	Place8 <2>
+	Element9 <Prefab>
+	Place9 </>
+	Element10 <Prefab>
+	Place10 </>
 
 	%%
 	%% Matthias warns the player to watch out- there are pirates in the area.
-	%% From this point onwards the PC may get attacked by pirates in Xianxai
+	%% From this point onwards the PC may get attacked by pirates in Xianzai
 	%% Station Exterior. Each time they are defeated, the PC can return to
 	%% Matthias for a reward. Doing so resets the pirates for another attack
 	%% the next day.
@@ -38,13 +246,13 @@ Content
 	%% player travels there they can meet a pirate captain. Drive away the
 	%% captain and the mecha attacks stop immediately, and the PC can claim a
 	%% special reward from Matthias. Alternatively, the player can do a mission
-	%% for the pirate captain, which earns a reward and a chance for a future
-	%% mission.
+	%% for the pirate captain, which earns a different reward.
 	%%
 
 	%% P%id%01 = Initialization Counter
 	%% P%id%02 = Pirate lances destroyed
 	%% P%id%03 = Have eliminated E5
+	%% P%id%04 = Have accepted E5's mission
 
 	%% FAIL CONDITIONS:
 	%% - Matthias dies
@@ -52,13 +260,14 @@ Content
 
 	%% Killing or forcing the surrender of the pirate captain will cause the
 	%% pirates to retreat.
-	Faint%5% <if= P%id%03 0  P= %id%03 1  XPV 100>
-	Surrender%5% <if= P%id%03 0  Monologue %5% %id%01  XPV 100  History %id%02  P= %id%03 1 FreezeNPC %5% PCEnemy %5%>
+	Faint%5% <if= P%id%03 0  P= %id%03 1  QMemo %plotid% %id%03   XPV 100>
+	Surrender%5% <if= P%id%03 0  Monologue %5% %id%01  QMemo %plotid% %id%03  XPV 100  History %id%02  P= %id%03 1 FreezeNPC %5% PCEnemy %5%>
 
 	update <if= P%id%01 0 P= %id%01 1 SetPlotStatus %plotid1% %id1% ItemVar= %3% 1 ComTime ItemVar= %3% 2 5 SetNPCFaction %5% %6% SetSceneFaction %4% %6%>
 
-	Msg%id%01 <Alright, you win- I'll get out of Xianxai Spinner. Don't think this means you've seen the last of me, though...>
-	Msg%id%02 <You drove the pirate captain %name5% out of Xianxai Spinner.>
+	Msg%id%01 <Alright, you win- I'll get out of Xianzai Spinner. Don't think this means you've seen the last of me, though...>
+	Msg%id%02 <You drove the pirate captain %name5% out of Xianzai Spinner.>
+	Msg%id%03 <You defeated the pirate captain %name5%. Matthias will want to hear about this.>
 
 	%% SubPlot1 is the black market entrance
 	SubPlot1 <*:Q_ENT_BlackMarket #25 4>
@@ -66,33 +275,115 @@ Content
 	sub
 		Persona 1
 		%% V%id%02 = Rewards received
-		greeting <if= PlotStatus %plotid% %id% else %pop% NewChat Say %id%01 AddChat %id%01 AddChat %id%02>
+		greeting <if= PlotStatus %plotid% %id% else %pop% NewChat Say %id%01 AddChat %id%01 AddChat %id%02 AddChat %id%03>
 		result%id%01 <ifG ItemVar %3% 2 %threat% else .%id%_GoSmallReward Goto .%id%_GoSmallEnding>
 		.%id%_mecha <GENERAL L5LAW COMET HOELL MUGLE>
-		.%id%_GoSmallReward <NewChat Say %id%02  AddReact d5  CashPrize ItemVar %3% 2 250  V= %id%02 P%id%02  QMemo %plotid% %id%03 ItemVar= %3% 1 ComTime ItemVar+ %3% 1 43200 ItemVar+ %3% 1 d86400    ItemVar+ %3% 2 d10>
+		.%id%_GoSmallReward <NewChat Say %id%02  AddReact d5  CashPrize Reward ItemVar %3% 2 250  V= %id%02 P%id%02  QMemo %plotid% %id%03 ItemVar= %3% 1 ComTime ItemVar+ %3% 1 43200 ItemVar+ %3% 1 d86400    ItemVar+ %3% 2 d10>
 		.%id%_GoSmallEnding <NewChat Say %id%04  CustomMecha .%id%_mecha %threat%  Goto .%id%_GoWinQuest>
 		result%id%02 <ifPCLawful else .%id%_GoSmallEnding  NewChat Say %id%05   CashPrize ItemVar %3% 2 500  RandomMecha .%id%_mecha %threat%  GiveItem %7%  Goto .%id%_GoWinQuest>
-		.%id%_GoWinQuest <AddLawful 2   AddReact d10   DeleteItem %3%   WinSubPlot %plotid%>
-		Msg%id%01 <Pirates are still operating in Xianxai Spinner.>
+		  %% Winning the quest gives 2 points of lawful, deletes the encounters, and if
+		  %% the PC agreed to do E5's quest turns E5 into an enemy.
+		.%id%_GoWinQuest <AddLawful 2   AddReact d10   DeleteItem %3%  DeleteItem %8%   WinSubPlot %plotid% ifNPCOK %5% ifG P%id%04 0 FreezeNPC %5% PCEnemy %5%>
+		result%id%03 <AddLawful 1  Goto .%id%_GoSmallEnding>
+		Msg%id%01 <Pirates are still operating in Xianzai Spinner.>
 		Msg%id%02 <Good work \PC . There are still a lot of pirates out there, though... Come back later if you happen to defeat any more.>
 		Msg%id%03 <%name2% in %name1% told you that there's a reward for fighting pirates outside of the colony.>
 		Msg%id%04 <Good job. The pirate threat appears to be over, for the time being. On behaf of the trade authority I'd like to present you with this custom mecha in thanks for your help.>
-		Msg%id%05 <Amazing work, \PC . On behaf of Xianxai Spinner I'm authorized to present you with this mecha in thanks for your help, and since you did such a great job I'd also like for you to have this blade. Use it well.>
+		Msg%id%05 <Amazing work, \PC . On behaf of Xianzai Spinner I'm authorized to present you with this mecha in thanks for your help, and since you did such a great job I'd also like for you to have this blade. Use it well.>
 		Prompt%id%01 <There's fewer of them now.>
 		CPrompt%id%01 <ifG P%id%02 V%id%02 Accept>
 		Prompt%id%01_1 <Not as many as there were yesterday...>
 		Prompt%id%01_2 <I've defeated one of their lances.>
 		Prompt%id%02 <Not any more, they aren't.>
 		CPrompt%id%02 <if# P%id%03 0 Accept>
+		Prompt%id%03 <The pirate captain is %name5%. I can tell you all about \OPR %5% .>
+		CPrompt%id%03 <ifG P%id%04 0 ifNPCOK %5% Accept>
 
 		Persona 5
 		special <UNLISTED>
-		greeting <if= PlotStatus %plotid% %id% else .%id%_GoChat   NewChat SayAnything>
+		% V%id%01 = Have spoken first time
+		greeting <if= PlotStatus %plotid% %id% else .%id%_GoChat   if= P%id%04 2 else .%id%_GoCheckMission NewChat Say %id%01 WinSubPlot %plotid% CustomMecha .%id%_mecha %threat% AddReact d10  DeleteItem %3% ifG React 30 GiveItem %10% Print %id%02>
+		.%id%_mecha <GENERAL COMET HOELL MUGLE \FACTION_DESIG ChatNPCFac>
+		.%id%_GoCheckMission <if= P%id%04 1 else .%id%_GoGreet NewChat Say %id%03 AddChat %id%01 AddChat %id%02>
+		.%id%_GoGreet <if= v%id%01 0 else .%id%_GoConfront NewChat Say %id%04 AddChat %id%03 AddChat %id%04>
 		.%id%_GoChat <NewChat SayAnything>
+		.%id%_GoConfront <NewChat Say %id%05 AddChat %id%05 AddChat %id%06 AddChat %id%07 AddChat %id%08 AddChat %id%04>
+		result%id%01 <NewChat Say %id%06>
+		result%id%02 <NewChat  Say %id%07  P= %id%04 -1  AddReact -d10>
+		result%id%03 <NewChat Say %id%08 V= %id%01 1 AddChat %id%05 AddChat %id%06 AddChat %id%07 AddChat %id%08>
+		*result%id%04 <*GoodBye>
+		result%id%05 <NewChat Say %id%09 AddChat %id%09 AddChat %id%10>
+		*result%id%06 <*InsultContest .%id%_GoR6Succeed .%id%_Go678Fail %threat%>
+		.%id%_GoR6Succeed <NewChat Say %id%10 AddCHat %id%11 AddChat %id%12 AddChat %id%13>
+		.%id%_Go678Fail <EndChat Say %id%11 FreezeNPC %5%>
+		result%id%07 <ifConversation SkillTar %threat% else .%id%_Go678Fail  NewChat Say %id%12 AddCHat %id%12 AddChat %id%13>
+		result%id%08 <ifIntimidation SkillTar %threat% else .%id%_Go678Fail  NewChat Say %id%13 AddCHat %id%11 AddChat %id%13>
+		result%id%09 <NewChat Say %id%14 QMemo %plotid% %id%15 P= %id%04 1 ItemVar= %8% 1 ComTime AddLawful -1>
+		result%id%10 <EndChat Say %id%11 P= %id%04 -1>
+		result%id%11 <ifConversation HardSkillTar %threat% else .%id%_Go1112Fail  EndChat Say %id%16  Goto .%id%_GoRunAway>
+		result%id%12 <ifIntimidation HardSkillTar %threat% else .%id%_Go1112Fail  EndChat Say %id%17  Goto .%id%_GoRunAway>
+		.%id%_Go1112Fail <EndChat Say %id%18 L= 11 1 TeamAttack 3>
+		.%id%_GoRunAway <FreezeNPC %5% PCEnemy %5% P= %id%04 -1 P= %id%03 1 XPV 100>
+		result%id%13 <EndChat Say %id%19 L= 11 1 TeamAttack 3>
+		Msg%id%01 <Arr, you did a fine job capturing that shipment. In thanks I'll let you have the best pieces of loot from the haul.>
+		Msg%id%02 <You receive the Demios Blade.>
+		Msg%id%03 <My mates still haven't found that convoy. How's your own luck been holding out?>
+		Msg%id%04 <Yeah, what do you want?>
+		Msg%id%05 <Back again to pester me... Well, spit it out. What do you want this time?>
+		Msg%id%06 <Don't bother to come back until you find it, then.>
+		Msg%id%07 <Is that so? Well go on then, off with you... It's not like you were much help to begin with.>
+		Msg%id%08 <I know all kinds of things about them, I'm their captain! You don't look like you're real pleased to hear that.>
+		Msg%id%09 <Well, I have been losing a lot of pilots these days... We're looking for a particular convoy passing through the area. Help us catch it, and you can share in the booty.>
+		Msg%id%10 <Heh, that's a good one... now tell me one reason why I shouldn't kill you on the spot.>
+		Msg%id%11 <You annoy me. Get out of here before I have you removed permanently.>
+		Msg%id%12 <You think I should, huh? So why do you think I shouldn't kill you right now?>
+		Msg%id%13 <You barge into my place of business and threaten me? Tell me, why should I let an ignorant little piece of filth like yourself walk out of here alive?>
+		Msg%id%14 <Welcome to the team. The captain of the freighter is named %name9%; you should know it when you see it. Come back here when you're done and we'll split everything up nice and fair.>
+		Msg%id%15 <%name5% asked you to capture a freighter in Xianzai Spinner exterior in exchange for a share of the loot.>
+		Msg%id%16 <You don't say. Alright, I can see there's no use in fighting. Me and my mates will leave Xianzai Spinner... but don't think we'll forget your part in this.>
+		Msg%id%17 <I can see this isn't the right place for a fight... I'll leave Xianzai Spinner, but you and me can finish things some other time.>
+		Msg%id%18 <You must think I'm awful stupid to fall for a line like that. Now, you're going to die!>
+		Msg%id%19 <I hope you realize that made no sense whatsoever. In any case, you're going to die!>
+		Prompt%id%01 <I'm still looking for it.>
+		Prompt%id%02 <Really, I don't want this job anymore.>
+		Prompt%id%03 <What do you know about those pirates outside the station?>
+		Prompt%id%04 <Nothing...>
+		Prompt%id%05 <Say, are you looking for more pilots?>
+		CPrompt%id%05 <if# P%id%04 -1 Accept>
+		Prompt%id%06 <You're the ugliest pirate I've ever seen.>
+		Prompt%id%07 <I think you and your men should get out of Xianzai.>
+		Prompt%id%08 <Your men attacked me. I'm here to return the favor.>
+		Prompt%id%09 <Sounds good. I'm in.>
+		Prompt%id%10 <I'm not going to do your dirty work.>
+		Prompt%id%11 <Because L5Law knows where you are. I'm your only hope to live.>
+		Prompt%id%12 <Think you're up for it? You're free to try.>
+		Prompt%id%13 <Because when I tell Matthias where you are, you're history.>
+
+		Persona 9
+		special <UNLISTED NOESCAPE>
+		greeting <if= PlotStatus %plotid% %id% else .%id%_GoChat EndChat Say 1 AddChat 1 AddChat 2 Return>
+		.%id%_GoChat <NewCHat SayAnything>
+		result1 <EndChat Say 2 History 3 P= %id%04 2 DeleteItem %8% PCEnemy %9% QMemo %plotid% 6>
+		result2 <EndChat Say 2 LoseSubPlot %plotid%  DeleteItem %3% DeleteItem %8%  PCEnemy %9% History 4 CashPrize Reward %threat% 3000 CustomMecha .%id%_mecha %threat% GiveItem %10% Print 5 XPV 200 AddLawful -10 ifNPCOK %5% FreezeNPC %5% PCEnemy %5%>
+		.%id%_mecha <GENERAL FCOMS COMET HOELL MUGLE>
+		Msg1 <Our ship is at your mercy. What is it that you want?>
+		Msg2 <There's no point in resisting... but don't think I'm just going to forget this.>
+		Msg3 <You captured %name9%'s convoy for the pirate %name5%.>
+		Msg4 <You double-crossed %name5%, taking %name9%'s cargo for yourself.>
+		Msg5 <You receive the Demios Blade.>
+		Msg6 <You should report back to %name5% at %name4%.>
+		Prompt1 <I claim your cargo in the name of %name5%!>
+		CPrompt1 <ifNPCOK %5% Accept>
+		Prompt2 <I claim your cargo in the name of myself!>
 
 		STC QS_BlackMarket
 		SetID 4
-		start <Print 1 ifTeamHostile 2 Retreat 2>
+		%% V11 = Have started fight with guards
+		start <if= L11 0 else GoGone Print 1>
+		GoGone <Print 2 Retreat 2 Retreat 3>
+		end <ifTeamHostile 3 L= 11 1 P= %id%04 -1>
+		Msg1 <You enter \SCENE %4% .>
+		Msg2 <You enter \SCENE %4% . It appears to be deserted now.>
 	end
 	inv
 		Encounter
@@ -102,7 +393,7 @@ Content
 		%% needs to be reset by Matthias before it will appear again.
 		% V1 = Visibility Clock. If ComTime > V1 and V1 <> 0, encounter is active
 		% V2 = Difficulcy Rating. Increases by one each time the PC defeats the pirates.
-		update <if# V1 0 else GoHide ifG ComTime V1 else GoHide  SetStat STAT_MetaVisibility 0  Goto GoSetOrders>
+		update <if# V1 0 else GoHide ifG 1 P%id%04 else GoHide ifG ComTime V1 else GoHide  SetStat STAT_MetaVisibility 0  Goto GoSetOrders>
 		% Sets this encounter's orders to Passive
 		GoSetOrders <GrabSource GSetNAtt NAG_EpisodeData NAS_Orders 3>
 		use <ifG StatVal STAT_MetaVisibility -1  Print -1  Goto GoStartCombat>
@@ -111,7 +402,7 @@ Content
 		GoAvoidAttack <Print -6 AddSociable -1>
 		GoStartCombat <V= 1 0  SavePos Dynamic 2 V2 100 .nu1 .nu2 ComposeD Msg1 .Msg1 DynaFaction %6%>
 		.nu1 <if= T1 0  Return   if= L1 0  L= 1 1  AddRenown -5  ItemVar= %3% 1 ComTime ItemVar+ %3% 1 d86400 ItemVar+ %3% 1 43200>
-		.nu2 <if= T2 0           if= L1 0  L= 1 1  Alert 1 XPV 100  AddRenown 1    P+ %id%02 1   QMemo %plotid% 1>
+		.nu2 <if= T2 0           if= L1 0  L= 1 1  Alert 1 XPV 100    P+ %id%02 1   QMemo %plotid% 1>
 		EncounterMove 50
 		Msg-1 <You attack the pirates!>
 		Msg-2 <You are attacked by pirates!>
@@ -128,6 +419,58 @@ Content
 		Acc 1
 		mass -8
 		type <ARMORPIERCING>
+		sub
+			Gun 9
+			Name <Rocket Pistol>
+			caliber <8mm self-propelled>
+			Integral
+			Mass -7
+			Range 5
+			Acc 2
+			Speed 4
+			magazine 20
+			sub
+				Ammo 9
+				name <Rocket Pistol Clip>
+				caliber <8mm self-propelled>
+				SDL_PORTRAIT <item_ammoclip.png>
+				type <ARMORPIERCING>
+			end
+		end
+
+		Encounter
+		name <%name5%'s Mission>
+		Special <NoMSID>
+		%% This encounter will attack once per day until defeated.
+		% V1 = Visibility Clock. If ComTime > V1 and V1 <> 0, encounter is active
+		update <if= P%id%04 1 else GoHide if# V1 0 else GoHide ifG ComTime V1 else GoHide  SetStat STAT_MetaVisibility 0  Goto GoSetOrders>
+		% Sets this encounter's orders to Passive
+		GoSetOrders <GrabSource GSetNAtt NAG_EpisodeData NAS_Orders 3>
+		use <ifG StatVal STAT_MetaVisibility -1  Print 1  Goto GoStartCombat>
+		ATTACK <ifG StatVal STAT_MetaVisibility -1    ifG PCRenown %threat%   ifYesNo 3 4 5 else GoAvoidAttack Goto GoAutoAttack>
+		GoAutoAttack <Alert 1 Goto GoStartCombat>
+		GoAvoidAttack <Print 6>
+		GoStartCombat <V= 1 0  SavePos Dynamic 2 %threat% 150 .nu1 .nu2 ComposeD Msg1 .Msg1>
+		.nu1 <if= T1 0  Return   if= L1 0  L= 1 1  AddRenown -5  ItemVar= %3% 1 ComTime ItemVar+ %8% 1 d86400 ItemVar+ %8% 1 43200>
+		.nu2 <if= T2 0           if= L1 0  L= 1 1  AddLawful -5  if= PlotStatus %plotid% %id% Alert 1 XPV 100  ForceChat %9%  AddRenown 1>
+		EncounterMove 50
+		Msg1 <You attack the convoy!>
+		Msg3 <You spot a group of mecha escorting a cruiser. This must be the convoy that %name5% was talking about.>
+		Msg4 <Attack them.>
+		Msg5 <Leave them alone.>
+		Msg6 <You decide to finish this job later.>
+		.Msg1 <You have defeated the escort. The freighter is yours.>
+
+		NPC Trucker
+		Combatant
+
+		Melee 10
+		name <Demios Blade>
+		desc <A rare gunsword stolen from %name9%'s convoy.>
+		Speed 4
+		Acc 1
+		mass -8
+		type <STONE>
 		sub
 			Gun 9
 			Name <Rocket Pistol>

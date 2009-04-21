@@ -97,11 +97,12 @@ Const
 	{ SceneData holds various miscellaneous values associated with scenes. }
 	NAS_TacticsTurnStart = 1;
 	NAS_Tileset = 2;
-		NumTileSet = 3;
+		NumTileSet = 4;
 		NAV_DefaultTiles = 0;
 		NAV_RockyTiles = 1;
 		NAV_PalaceParkTiles = 2;
 		NAV_IndustrialTiles = 3;
+		NAV_OrganicTiles = 4;
 	NAS_Backdrop = 3;	{ The image used in the background. Left as 0, it means no backdrop. }
 		NumBackdrop = 1;
 		NAV_Starfield = 1;

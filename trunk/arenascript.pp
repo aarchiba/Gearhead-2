@@ -3426,7 +3426,7 @@ begin
 	end;
 end;
 
-Procedure BuildGenericEncounter( GB: GameBoardPtr; Scale: Integer );
+Procedure BuildGenericEncounter( GB: GameBoardPtr; Source: GearPtr; Scale: Integer );
 	{ Create a SCENE gear, then do everything except stock it with }
 	{ enemies. }
 const
@@ -3446,6 +3446,12 @@ begin
 	SCRIPT_DynamicEncounter^.Stat[ STAT_MapHeight ] := DefaultMapSize;
 	if ( GB <> Nil ) and ( GB^.Scene <> Nil ) then SCRIPT_DynamicEncounter^.S := GB^.Scene^.S;
 	SCRIPT_DynamicEncounter^.V := Scale;
+
+	{ Copy over the PlotID of the source. }
+	Src := PlotMaster( GB , Source );
+	if Src <> Nil then begin
+		SetNAtt( SCRIPT_DynamicEncounter^.NA , NAG_Narrative , NAS_PlotID , NAttValue( Src^.NA , NAG_Narrative , NAS_PlotID ) );
+	end;
 
 	{ Add a TEAM gear for each of the player and the enemy teams. }
 	{ We need to do this so that we'll have some control over the placement }
@@ -3500,7 +3506,7 @@ var
 	Scale: Integer;
 begin
  	Scale := ScriptValue( Event , GB , Source );
-	BuildGenericEncounter( GB , Scale );
+	BuildGenericEncounter( GB , Source , Scale );
 end;
 
 Procedure ProcessWMecha( var Event: String; GB: GameBoardPtr; Source: GearPtr );

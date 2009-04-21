@@ -213,6 +213,9 @@ begin
 	end;
 	if ( Plot = Nil ) and ( NAttValue( Source^.NA , NAG_Narrative , NAS_NID ) <> 0 ) and ( GB <> Nil ) and ( GB^.Scene <> Nil ) then begin
 		Plot := FindItemPlot( FindRoot( GB^.Scene ) , NAttValue( Source^.NA , NAG_Narrative , NAS_NID ) );
+
+		{ Maybe it's a quest. Find out. }
+		if Plot = Nil then Plot := FindItemQuest( FindRootScene( GB^.Scene ) , NAttValue( Source^.NA , NAG_Narrative , NAS_NID ) );
 	end;
 
 	{ This plot could be a quest. Look that up now. }

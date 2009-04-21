@@ -158,6 +158,7 @@ Function SeekPersona( GB: GameBoardPtr; CID: LongInt ): GearPtr;
 function SeekGearByCID( LList: GearPtr; CID: LongInt ): GearPtr;
 
 Function FindItemPlot( Adventure: GearPtr; NID: LongInt ): GearPtr;
+Function FindItemQuest( City: GearPtr; NID: LongInt ): GearPtr;
 Function FindItemStory( Adventure: GearPtr; NID: LongInt ): GearPtr;
 
 Function FindMetascenePlot( Adventure: GearPtr; MSID: LongInt ): GearPtr;
@@ -406,6 +407,12 @@ Function FindItemPlot( Adventure: GearPtr; NID: LongInt ): GearPtr;
 	{ Locate the plot that uses this metascene. }
 begin
 	FindItemPlot := SeekPlotAlongPath( Adventure^.InvCom , 'I' , NID , GG_Plot , False );
+end;
+
+Function FindItemQuest( City: GearPtr; NID: LongInt ): GearPtr;
+	{ Locate the plot that uses this metascene. }
+begin
+	FindItemQuest := SeekPlotAlongPath( City^.SubCom , 'I' , NID , GG_Plot , False );
 end;
 
 Function FindItemStory( Adventure: GearPtr; NID: LongInt ): GearPtr;

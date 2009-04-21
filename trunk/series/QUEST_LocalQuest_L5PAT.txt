@@ -17,8 +17,14 @@ Content
 	Element2 <Prefab>
 	Place2 <1 (Guards) sd ally>
 
+	%% Begin the Vesuvian Freighter task at Renown = 60
+	start <ifSubPlotWon %plotid% ifG PCRenown 60 SetPlotStatus %plotid2% %id2%>
+
 	% SubPlot1 is the pirates/black market task
+	% SubPlot2 is the Vesuvian Freighter task- activates at Renown 60 if 
+	%       the PC won the previous task.
 	SubPlot1 <*Q_UNIQUE_XIASP_Matthias #50 2>
+	SubPlot2 <*:Q_UNIQUE_XIASP_Venus #75>
 
 	sub
 		Persona 2
