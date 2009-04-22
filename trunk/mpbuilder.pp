@@ -210,6 +210,7 @@ Function InitShard( GB: GameBoardPtr; Scope,Slot,Shard: GearPtr; var Quest_Frags
 	{ - Create a plot stub and mark it with the PlotID; copy over all elements used by }
 	{   this shard and place it as Slot's invcom. This stub is to prevent other shards }
 	{   from selecting characters or items used here. }
+	{ - Initialize quest metascenes with the PlotID. }
 	{ - Return the shard list }
 	{ If installation fails, SHARD will be deleted and NIL will be returned. }
 	Procedure DisposeSPList( SPList: GearPtr );
@@ -248,6 +249,34 @@ Function InitShard( GB: GameBoardPtr; Scope,Slot,Shard: GearPtr; var Quest_Frags
 				if NotAnAnimal( Llist ) and IsACombatant( LList ) then begin
 					SetSkillsAtLevel( LList , Threat );
 				end;
+			end;
+			LList := LList^.Next;
+		end;
+	end;
+
+	Procedure InitializeMapFeatures( LList: GearPtr );
+		{ Mark all map features, their subs and invs, with the PlotID of the }
+		{ parent scene. Why do this? So scripts can then locate the quest }
+		{ without too much difficulty. }
+	begin
+		while LList <> Nil do begin
+			if NAttValue( LList^.NA , NAG_Narrative , NAS_PlotID ) = 0 then SetNAtt( LList^.NA , NAG_Narrative , NAS_PlotID , PlotID );
+			if LList^.G = GG_MapFeature then begin
+				InitializeMapFeatures( LList^.SubCom );
+				InitializeMapFeatures( LList^.InvCom );
+			end;
+			LList := LList^.Next;
+		end;
+	end;
+	Procedure PrepQuestMetascenes( LList: GearPtr );
+		{ If this is a quest, mark the map features. }
+	begin
+		while LList <> Nil do begin
+			if ( LList^.G = GG_MetaScene ) then begin
+				{ Also mark all of the scene's things with the PlotID, so scripts can locate }
+				{ the quest easily. }
+				InitializeMapFeatures( LList^.SubCom );
+				InitializeMapFeatures( LList^.InvCom );
 			end;
 			LList := LList^.Next;
 		end;
@@ -340,7 +369,10 @@ begin
 			{ We have room for the elements. Good. Now move on by installing the subplots. }
 
 			{ Initialize the prefab NPCs for a quest. }
-			if IsAQuest then PrepQuestCombatants( Shard^.InvCom );
+			if IsAQuest then begin
+				PrepQuestCombatants( Shard^.InvCom );
+				PrepQuestMetascenes( Shard^.SubCom );
+			end;
 
 			{ If any of the needed subplots fail, installation of this shard fails }
 			{ as well. }
@@ -1516,20 +1548,6 @@ Procedure InstallQuestScenes( Adv , City , Quest: GearPtr );
 			Team := Team^.Next;
 		end;
 	end;
-	Procedure InitializeMapFeatures( LList: GearPtr; PlotID: LongInt );
-		{ Mark all map features, their subs and invs, with the PlotID of the }
-		{ parent scene. Why do this? So scripts can then locate the quest }
-		{ without too much difficulty. }
-	begin
-		while LList <> Nil do begin
-			if NAttValue( LList^.NA , NAG_Narrative , NAS_PlotID ) = 0 then SetNAtt( LList^.NA , NAG_Narrative , NAS_PlotID , PlotID );
-			if LList^.G = GG_MapFeature then begin
-				InitializeMapFeatures( LList^.SubCom , PlotID );
-				InitializeMapFeatures( LList^.InvCom , PlotID );
-			end;
-			LList := LList^.Next;
-		end;
-	end;
 	Procedure InitializeEntrance( Scene: GearPtr; SIDtoSeek: Integer );
 		{ Initialize the entrances for this scene. Note that because of dungeons, }
 		{ the SceneID to seek might not be the same as the current SceneID of the }
@@ -1629,11 +1647,6 @@ begin
 				SetSAtt( Quest^.SA , 'ELEMENT' + BStr( EIn ) + ' <S>' );
 				QS^.G := GG_Scene;
 				QS^.S := ElementID( Quest , EIn );
-
-				{ Also mark all of the scene's things with the PlotID, so scripts can locate }
-				{ the quest easily. }
-				InitializeMapFeatures( QS^.SubCom, NAttValue( QS^.NA , NAG_Narrative , NAS_PlotID ) );
-				InitializeMapFeatures( QS^.InvCom, NAttValue( QS^.NA , NAG_Narrative , NAS_PlotID ) );
 
 				{ Also copy over the HABITAT, if this scene doesn't have one. }
 				if SAttValue( QS^.SA , 'HABITAT' ) = '' then SetSAtt( QS^.SA , 'HABITAT <' + SAttValue( City^.SA , 'HABITAT' ) + '>' );

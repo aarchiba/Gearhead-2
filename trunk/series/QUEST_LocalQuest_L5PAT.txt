@@ -8,6 +8,46 @@
 %%
 
 Content
+	name <Gaos Spinner/Galena Hodges>
+	requires <*:Q_LocalQuest "GAOSP">
+
+	% E1 is the hospital
+	% E2 is Galena Hodges
+	Element1 <Scene hospital public>
+	Element2 <Prefab>
+	Place2 <1 (Citizens) pass>
+
+	% SubPlot1 is the Galena Hodges/Money for Orphanage quest (15)
+	% SubPlot2 is a side story (40)
+	% SubPlot3 is the Prince Hotel party (65)
+
+	sub
+		MetaScene 2
+		sub
+			room
+			desig <HOME>
+			name <Office>
+			minimap <..1............##+###...#>
+		end
+
+		Persona 2
+		rumor0 <Galena Hodges has been helping the poor for nearly a century.>
+
+	end
+	inv
+		NPC Doctor
+		name <Galena Hodges>
+		Age 98
+		SetTeam 2
+		Statline 7 6 8 13 18 16 23 12
+		chardesc Female Heroic Heroic Heroic Sociable Spiritual
+		SDL_PORTRAIT <>
+		SDL_COLORS <90 150 80 199 188 162 190 210 230>
+		SetTeam 2
+		MiniMapComponent 1
+	end
+
+Content
 	name <Xianxai Spinner/Trade Regulation>
 	requires <*:Q_LocalQuest "XIASP">
 

@@ -2464,10 +2464,9 @@ sub
 	start <Print 1>
 	Msg1 <You enter Xianzai Spaceport.>
 
-	NeededCells 5
+	NeededCells 4
 	Content1 <Some 1 100 Sub *SHUTTLESERVICE  na>
 	Content2 <Some 1 100 Sub *RESTAURANT      na>
-	Content3 <Some 1  55 Sub *SHOP_RANDOM     na>
 	Content4 <Some 1  25 Sub *GOV_POLICE      na>
 	Content5 <Some 1 100 Sub *MECHANIC_SHOP   na>
 	Content6 <Fill Sub *SPACEPORT_X>
@@ -2560,6 +2559,7 @@ Scene 0 3
 	desig <GAOSP>
 
 	Quest1 <*:Q_MECHA_ARENA_BASE>
+	Quest2 <*:Q_LocalQuest>
 
 	start <if= V1 0 else GoSecondTime V= 1 1 Alert 1 Print 2>
 	GoSecondTime <Print 2>
@@ -2967,23 +2967,6 @@ sub
 		desig <EntranceGrid>
 		Content <Some 2 50 Here *URBAN_X>
 		Content2 <Some 1 100 Here *ANTI_ATTACK_SECURITY 2>
-
-		room
-		name <Office>
-		minimap <..1.................##+##>
-		inv
-			NPC Doctor
-			name <Galena Hodges>
-			rumor <Galena Hodges has been helping the poor for nearly a century.>
-			Age 98
-			SetTeam 2
-			Statline 7 6 8 13 18 16 23 12
-			chardesc Female Heroic Heroic Heroic Sociable Spiritual
-			SDL_PORTRAIT <por_f_knowledge(--N).png>
-			SDL_COLORS <90 150 80 199 188 162 190 210 230>
-			SetTeam 2
-			MiniMapComponent 1
-		end
 	end
 
 	Scene

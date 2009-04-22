@@ -8,7 +8,7 @@
 
 Content
 	name <Could Be Lupus>
-	requires <*Q_UNIQUE_XIASP_Venus>
+	requires <*:Q_UNIQUE_XIASP_Venus>
 
 	%%
 	%% There's a Vesuvian trading ship at the spaceport. The ship is actually
@@ -21,6 +21,7 @@ Content
 	% E2 is the first officer
 	% E3 is the engineering level itself
 	% E4 is the "magic pill" reward
+	% E5 is the elevator
 	Element1 <Scene Spaceport>
 	Element2 <Prefab>
 	Place2 </>
@@ -28,6 +29,8 @@ Content
 	Place3 <1>
 	Element4 <Prefab>
 	Place4 </>
+	Element5 <Prefab>
+	Place5 <1>
 
 	%% P%id%01 = Initialization Counter
 	%% P%id%02 = Have accepted quest
@@ -61,7 +64,7 @@ Content
 		Msg6 <On Venus we make use of living technology. The Zuryo Maru is a living being. Unlike the vulgar biomonsters of old Earth, Vesuvian technology has only peaceful applications. Please, it needs your help...>
 		Msg7 <Thank you. All you need to do is locate the neurocortex and disable that part. You can find our ship at the private dock; I should warn you beforehand that the defense system will adapt to your presence. Be careful.>
 		Msg8 <Please do your best. May the green mother protect you.>
-		Msg9 <Zuryo Maru is feeling better; thank you so much for your help. Here, in addition to the reward, I'd like for you to have this. It's a special medicine from Venus. Save it for when you need it the most.>
+		Msg9 <The problem has been solved; thank you so much for your help. In thanks, I'd like you to have this special plant nectar from Venus. Save it for when you really need it.>
 		Prompt1 <What seems to be the problem?>
 		Prompt2 <So you want me to go in there and disable it?>
 		Prompt3 <Wait, what do you mean "ill"?>
@@ -69,27 +72,16 @@ Content
 		Prompt5 <Alright, I'll help you to fix it.>
 		Prompt6 <I don't want to mess around with biotechnology.>
 
-		MetaScene 1
+		MetaScene 5
 		sub
 			Room
-			minimap <########2####....+....#&&>
+			minimap <########1####....+....#&&>
+			desig <HOME>
 			special <NOGO>
 			sub
 				Door
-				update <if= V1 0 else GoCheckQuest V= 1 1 SetStat STAT_Lock HardSkillTar %threat%>
-				GoCheckQuest <if= P%id%02 1 SetStat STAT_Lock 0>
-			end
-			inv
-				Elevator
-				name <Private Spacedock>
-				desig <ENTRANCE %3%>
-				use <if= P%id%02 1 else GoNoUse Print 1 Exit Destination>
-				GoNoUse <Print 2>
-				CLUE_CodeBreaking <Print 3>
-				MiniMapComponent 2
-				Msg1 <You ride the elevator to the Vesuvian spaceship.>
-				Msg2 <This elevator does not respond to your commands.>
-				Msg3 <You can't see any way to hack this elevator.>
+				update <if= V1 0 else GoCheckQuest V= 1 1 SetStat STAT_Lock HardSkillTar %threat% Goto GoCheckQuest>
+				GoCheckQuest <if# P%id%02 0 SetStat STAT_Lock 0>
 			end
 		end
 
@@ -104,15 +96,16 @@ Content
 		LockedDoorChance 35
 		SecretDoorChance 25
 		OrganicTiles
+		FloorType 1
 		% L1 = Deactivation counter
 		% L2 = Monster initialization counter
 		% L3 = First time counter
 		start <if= L3 0 else GoBeenBefore Alert 4 L= 3 1 Goto GoInitMonsters>
 		GoBeenBefore <Print 1 Goto GoInitMonsters>
-		GoInitMonsters <if= L2 0 L= 2 1   if= PlotStatus %plotid% %id% MonsterSet 2 %threat%>
+		GoInitMonsters <if= L2 0 L= 2 1   if= PlotStatus %plotid% %id%   MonsterSet 2 %threat%  MonsterUp 2 -20>
 		end <L= 2 0>
 		5Min <if= L1 0 ifStealth SkillTar %threat% else GoMonsterUp>
-		GoMonsterUp <MonsterUp 2 d4>
+		GoMonsterUp <MonsterUp 2 d3>
 		nu3 <if= T3 0 P= %id%04 1 if= L1 0 L= 1 1 Alert 2 QMemo %plotid% 3 XPV 100 P= %id%03 1 TeamNeutral 2>
 		msg1 <You enter the Zuryo Maru.>
 		msg2 <As you destroy the neurocore, the inside of the ship suddenly goes quiet.>
@@ -134,16 +127,95 @@ Content
 			SetEnemy 1
 			SetAlly 2
 
-			room
-			minimap <......###..#2#...........>
+			rect
+			minimap <      ###  #2#  ...      >
 			inv
 				Elevator
 				Destination -1
 				MiniMapComponent 2
 			end
 
-			Room
-			minimap <......#.#...2...#.#......>
+			rect
+			MarbleType 2
+			minimap < ... ..,...,,,...,.. ... >
+
+			rect
+			MarbleType 2
+			minimap < ... ..,...,,,...,.. ... >
+
+			rect
+			minimap <      1#%  &^%  %^.      >
+			inv
+				STC BioTank
+				MiniMapComponent 1
+				%% V1 = Have repaired tank
+				use <if= V1 0 else GoRepaired Print 1>
+				GoRepaired <Print 2>
+				CLUE_REPAIR <if= V1 0 else GoRepaired Mental ifURepair SkillTar %threat% else GoFail Print 3 XPV 50 V= 1 1>
+				GoFail <Print 4>
+				Msg1 <This specimen tank has been destroyed.>
+				Msg2 <This specimen tank has been repaired.>
+				Msg3 <You patch up the specimen tank.>
+				Msg4 <You don't quite manage to fix this tank.>
+			end
+
+			rect
+			minimap <      1#.  &#2  3#.      >
+			inv
+				STC BioTank
+				MiniMapComponent 1
+				%% V1 = Have obtained jade disc
+				use <ifSelfOK if= L1 0 else GoDone if= V1 0 else GoDone Print 1>
+				GoDone <Print 2>
+				CLUE_SCIENCE <ifSelfOK if= V1 0 else GoDone V= 1 1 Mental ifScience SkillTar %threat% else GoFail Alert 3 GiveSTC .item XPV 50>
+				.item <Jade Disc>
+				GoFail <Alert 4 SkillXP NAS_Science 100>
+				Msg1 <This tank contains an Exorg Floater suspended in a viscous liquid.>
+				Msg2 <This tank contains nothing but fibrous sediment.>
+				Msg3 <You activate the machine. Robotic arms unfold from the top and quickly dissect the Exorg. They place a green sphere in the specimen tray.>
+				Msg4 <You activate the machine. Robotic arms unfold from the top and quickly dissect the Exorg.>
+
+				STC BioTank
+				MiniMapComponent 3
+				%% V1 = Have obtained jade disc
+				use <ifSelfOK if= L1 0 else GoDone if= V1 0 else GoDone Print 1>
+				GoDone <Print 2>
+				CLUE_SCIENCE <ifSelfOK if= V1 0 else GoDone V= 1 1 Mental ifScience SkillTar %threat% else GoFail Alert 3 GiveSTC .item XPV 50>
+				.item <Jade Disc>
+				GoFail <Alert 4 SkillXP NAS_Science 100>
+				Msg1 <This tank contains an Exorg Creeper suspended in a viscous liquid.>
+				Msg2 <This tank contains nothing but fibrous sediment.>
+				Msg3 <You activate the machine. Robotic arms unfold from the top and quickly dissect the Exorg. They place a green sphere in the specimen tray.>
+				Msg4 <You activate the machine. Robotic arms unfold from the top and quickly dissect the Exorg.>
+
+				STC COMPUTER-1
+				% V1 = Have deciphered code
+				% V2 = Have perused database
+				MiniMapComponent 2
+				use <ifSelfOK if= L1 0 else GoNoPower if= V1 0 else GoDeciphered Print 1>
+				GoNoPower <Print 2>
+				GoDeciphered <if= V2 1 else GoFirstTime Print 3>
+				GoFirstTime <ifYesNo 5 6 7 Alert 9 Alert 10 Alert 11 Alert 12 Alert 13 V= 2 1 XPV 100 Mental Time 150 MonsterUp 2 d12 SkillXP NAS_Science 150 SkillXP NAS_Survival 150>
+				CLUE_CODEBREAKING <ifSelfOK if= L1 0 else GoNoPower if= V1 0 else GoDeciphered Mental ifCodeBreaking SkillTar %threat% else GoFail V= 1 1 Alert 4 XPV 50 Goto GoDeciphered>
+				CLUE_SCIENCE <ifSelfOK if= L1 0 else GoNoPower if= V1 0 else GoDeciphered Mental      ifScience  HardSkillTar %threat% else GoFail V= 1 1 Alert 4 XPV 50 Goto GoDeciphered>
+				GoFail <Print 8>
+				Msg1 <The computer is covered in blinking lights.>
+				Msg2 <The computer terminal is dark.>
+				Msg3 <This computer contains an anatomical database of the mutant fungi and space monsters of the L5 region.>
+				Msg4 <You decipher the holographic interface used by this computer. It appears to be a scientific reference of the mutant fungi and space monsters of the L5 region.>
+				Msg5 <Would you like to peruse the database?>
+				Msg6 <Yes, please.>
+				Msg7 <Not right now.>
+				Msg8 <You can't make sense of this computer's interface.>
+				Msg9 <[FUNGI] 68 species observed. Evolved from earthbound types, possibly with the assistance of transgenetic contamination. Gene sequencing suggests ancestral link with Vesuvian megaflaura.>
+				Msg10 <[WORMS] 104 species observed. Although commonly linked with fungi, may have bacterial origin. Simple body plan and largely undifferentiated cellular mass reminiscent of protypes.>
+				Msg11 <[ABERATA] 12 species observed. The question of lineage cannot yet be resolved, though polyps found in deep space are closely related to those found planetside. Possibly feralized bioweapon.>
+				Msg12 <[CYBIOTA] 0 species observed. Reports of self-replicating inorganic lifeforms left unconfirmed. May be related to composite being "AIGAION".>
+				Msg13 <[EXORG] 17 species observed. More information required.>
+			end
+
+			Rect
+			minimap <      #.#  .2.  #.#      >
 			inv
 				CombatProp 25
 				name <Neurocore>
@@ -185,6 +257,7 @@ Content
 					Armor 5
 
 					ECM 5
+					name <Defense Cortex>
 				end
 			end
 		end
@@ -193,16 +266,28 @@ Content
 		NPC Scientist
 		job <First Officer>
 		chardesc sociable spiritual easygoing lawful heroic
+		SDL_Colors <77 156 131 250 183 139 211 224 230>
 
 		Food 0
 		name <Neural Regenerator>
 		FoodQuantity 1
 		FoodFX:CureStatus
 		FoodMod 22
-		desc <A special medicine from Venus to be used in the case of spinal injury.>
+		desc <A special medicine from Venus. It's a highly effective treatment for spinal injury.>
 		Category <MEDICINE>
 		SDL_PORTRAIT <item_pills.png>
 		Fudge 1000000
+
+		Elevator
+		name <Private Spacedock>
+		desig <ENTRANCE %3%>
+		use <if= P%id%02 1 else GoNoUse Print 1 Exit Destination>
+		GoNoUse <Print 2>
+		CLUE_CodeBreaking <Print 3>
+		MiniMapComponent 2
+		Msg1 <You ride the elevator to the Vesuvian spaceship.>
+		Msg2 <This elevator does not respond to your commands.>
+		Msg3 <You can't see any way to hack this elevator.>
 	end
 
 Content
@@ -779,10 +864,7 @@ Content
 					mass -9
 					Biotech
 					inv
-						PowerSource 6
-						name <Jade Disc>
-						sdl_portrait <item_biskupengine.png>
-						mass -8
+						item Jade Disc
 					end
 				end
 			end
@@ -817,10 +899,7 @@ Content
 						Recharge 3
 						UsesReflexes
 						inv
-							PowerSource 6
-							name <Jade Disc>
-							mass -8
-							sdl_portrait <item_biskupengine.png>
+							item Jade Disc
 						end
 					end
 				end
