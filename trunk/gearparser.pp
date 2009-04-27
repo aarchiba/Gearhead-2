@@ -315,7 +315,7 @@ begin
 	if SAttValue( NPC^.SA , 'NAME' ) = '' then begin
 		SetSAtt( NPC^.SA , 'NAME <' + RandomName + '>' );
 		SetNAtt( NPC^.NA , NAG_CharDescription , NAS_Gender , Random( 2 ) );
-		AddNAtt( NPC^.NA , NAG_CharDescription , NAS_DAge , 1 + Random( 10 ) - Random( 10 ) + RollStep( 5 ) );
+		if NAttValue( NPC^.NA , NAG_CharDescription , NAS_DAge ) = 0 then AddNAtt( NPC^.NA , NAG_CharDescription , NAS_DAge , 1 + Random( 10 ) - Random( 10 ) + RollStep( 5 ) );
 
 		{ Give out some personality traits. }
 		{ Most NPCs have at least a single trait in the group Sociable,Easygoing,Cheerful }

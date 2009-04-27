@@ -357,6 +357,42 @@
 %   PARAM2: Won't listen exit label
 
 	Persona
+	requires <*INeedYourHelp &PCSpecifically>
+	START <NewChat Say %id%01 AddChat %id%01 AddChat %id%02 AddChat %id%03>
+	result%id%01 <Goto %1%>
+	result%id%02 <NewChat Say %id%02 AddChat %id%04 AddChat %id%05>
+	result%id%03 <Goto %2%>
+	Msg%id%01 <\PC , at last I've found you. I need your help with something.>
+	Msg%id%01_1 <I've been searching all over for you, \PC . We have a problem that only you are capable of handling.>
+	CMsg%id%01_1 <ifNPCSociable Accept>
+	Msg%id%01_2 <\PC , I need your help.>
+	CMsg%id%01_2 <ifNPCShy Accept>
+	Msg%id%01_3 <So there you are. I've been looking for you; I could really use your help with something.>
+	CMsg%id%01_3 <ifNPCEasygoing Accept>
+	Msg%id%01_4 <\PC , I have a terrible problem, and you're the only one in the universe who can help!>
+	CMsg%id%01_4 <ifNPCPassionate Accept>
+	Msg%id%01_5 <Hey \PC ! Am I ever glad to see you... I need your help with something.>
+	CMsg%id%01_5 <ifNPCCheerful Accept>
+	Msg%id%01_6 <\PC , I've come to seek your aid in an important matter. You are quite literally my last hope.>
+	CMsg%id%01_6 <ifNPCMelancholy Accept>
+	Msg%id%02 <Well, no, but I've heard about you and I think you're the perfect one to help...>
+	Msg%id%02_1 <No, we haven't exactly met, but I need something done and you're the perfect person for the job...>
+	Msg%id%02_2 <No, you don't. I've heard all about you, though, so I know you're perfect for this upcoming mission.>
+	Prompt%id%01 <Alright, tell me what you need.>
+	Prompt%id%01_1 <Okay. Tell me what's going on.>
+	Prompt%id%01_2 <It's alright. I'm here now.>
+	Prompt%id%02 <Wait, do I know you?>
+	CPrompt%id%02 <ifChatNPCUnknown Accept>
+	Prompt%id%02_1 <Wait, do we know each other?>
+	Prompt%id%03 <Stop right there. I'm not interested.>
+	Prompt%id%03_1 <Sorry, \ChatNPC , I've got my own problems right now.>
+	Prompt%id%03_2 <Why don't you tell someone who cares?>
+	Prompt%id%04 <Perfect, huh? What kind of a job are we talking about?>
+	Prompt%id%04_1 <Perfect, you say? I'd like to hear more.>
+	Prompt%id%05 <You'll have to find someone else to help.>
+	Prompt%id%05_1 <Whatever it is, it's not my problem.>
+
+	Persona
 	requires <*INeedYourHelp>
 	START <NewChat Say %id%01 AddChat %id%01>
 	result%id%01 <Goto %1%>

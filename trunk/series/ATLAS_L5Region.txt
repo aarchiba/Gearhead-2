@@ -2758,41 +2758,6 @@ sub
 			desig <EntranceGrid>
 			Content <Some 3 45 Here *URBAN_X>
 			Content2 <Some 1 100 Here *ANTI_ATTACK_SECURITY 2>
-
-			room
-			MFX 2
-			MFY 2
-			Width 5
-			Height 5
-			name <Reception Area>
-			minimap <...#..1.#.---#...........>
-			inv
-				NPC Shopkeeper
-				name <Parshall>
-				job <Receptionist>
-				Age 14
-				chardesc male Sociable Melancholy Easygoing Lawful
-				MiniMapComponent 1
-				SetTeam 2
-				statline 12 11 12 10 13 11 12 11
-			end
-
-			Persona
-			name <Parshall Persona>
-			greeting <if= V1 1 else GoFirstTime NewChat Say 1>
-			GoFirstTime <NewChat Say 2 AddChat 1>
-			result1 <NewChat Say 3 V= 1 1>
-			Msg1 <Hello, Gaos Prince Hotel.>
-			Msg1_1 <Hello, Gaos Prince Hotel. I guess you still don't want anything.>
-			Msg1_2 <Hello, Gaos Prince Hotel. I don't know where your arch-enemy is but I'm sure he's perfectly dreadful.>
-			Msg1_3 <Hello, Gaos Prince Hotel. Please excuse me; we may have some customers who actually want to stay here.>
-			Msg1_4 <Hello, Gaos Prince Hotel. May I help... oh, it's you.>
-			Msg1_5 <Hello, Gaos Prince Hotel. Why aren't you out cleaning sewers now?>
-			Msg1_6 <Hello, Gaos Prince Hotel. Please check your weapons at the front desk before attempting to open the minibar.>
-			Msg1_7 <Hello, Gaos Prince Hotel. No, I don't have any jobs for a mecha pilot.>
-			Msg2 <Hello, welcome to the Gaos Prince Hotel. Would you like to reserve a suite for this evening?>
-			Msg3 <That's what I heard about cavaliers... they all sleep in the driver's seat of their mecha.>
-			Prompt1 <No thanks, I never seem to need one.>
 		end
 
 		Scene
@@ -2850,7 +2815,7 @@ sub
 			end
 
 			Scene
-			name <The Tower of Delights>
+			name <The Tower of Delight>
 			type <building legit public meeting arcade>
 			ClubMap
 			PalaceParkTiles
@@ -2944,7 +2909,7 @@ sub
 	MapWidth 20
 	MapHeight 16
 
-	NeededCells 2
+	NeededCells 1
 	Content <Some 1 100 Sub *Doctor>
 	Content2 <Fill Sub *HOSPITAL_X>
 
@@ -2965,7 +2930,7 @@ sub
 
 		room
 		desig <EntranceGrid>
-		Content <Some 2 50 Here *URBAN_X>
+		Content <Some 1 50 Here *URBAN_X>
 		Content2 <Some 1 100 Here *ANTI_ATTACK_SECURITY 2>
 	end
 

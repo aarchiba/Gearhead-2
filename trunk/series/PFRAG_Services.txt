@@ -16,6 +16,19 @@
 	Prompt%id%01 <I'll take a look.>
 	Prompt%id%02 <I've already got everything I need.>
 
+% TYPE: *SHOP_CASINO
+
+	Persona
+	requires <*SHOP_CASINO>
+	START <NewChat Say %id%01 AddChat %id%01 AddChat %id%02>
+	result%id%01 <EndChat Say %id%02 shop .%id%_wares Goto %1%>
+	result%id%02 <Goto %1%>
+	.%id%_wares <WEAPON ARMOR EXOTIC ANTIQUE MECHA>
+	Msg%id%01 <When you've won big in the casino, why not treat yourself to something nice? I carry a selection of high-end merchandise that's guaranteed to make any cavalier smile.>
+	Msg%id%02 <Take your time. If you see something that you can't afford, maybe you could try playing more games!>
+	Prompt%id%01 <Alright, I'll see what you have.>
+	Prompt%id%02 <No way, I'm saving my money.>
+
 
 % TYPE: *SHOP_SPECIALIST
 

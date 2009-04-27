@@ -2,6 +2,7 @@
 ControllerID <GrabPlot GNAtt NAG_Narrative NAS_ControllerID>
 RandomTheme <d12>	% returns a random mecha theme
 PartyScore <GrabCurrentScene GNAtt NAG_Narrative NAS_PartyPoints>
+ScenePartyScore <GrabScene ? GNAtt NAG_Narrative NAS_PartyPoints>
 CurrentPPScore <GrabStory GNAtt NAG_XXRan NAS_PPVictory>
 CitizensTeam <GrabTeamName Citizens GS>
 NumDatePoints <GrabSource GNAtt NAG_Narrative NAS_DatePoints>

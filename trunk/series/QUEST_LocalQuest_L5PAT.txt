@@ -17,9 +17,17 @@ Content
 	Element2 <Prefab>
 	Place2 <1 (Citizens) pass>
 
+	%% P1 = Have negotiated a share of profits from Parshall
+
+	Start <if= PlotStatus %plotid2% 0 else GoCheckSP3 ifG PCRenown 35 SetPlotStatus %plotid2% %id2%>
+	GoCheckSP3 <if= PlotStatus %plotid3% 0 ifSubPlotWon %plotid% ifG PCRenown 60  SetPlotStatus %plotid3% %id3%>
+
 	% SubPlot1 is the Galena Hodges/Money for Orphanage quest (15)
 	% SubPlot2 is a side story (40)
 	% SubPlot3 is the Prince Hotel party (65)
+	SubPlot1 <*Q_UNIQUE_GAOSP_Galena #15 1 2>
+	SubPlot2 <*:Q_SideStory #40>
+	SubPlot3 <*:Q_UNIQUE_GAOSP_Parshall #65>
 
 	sub
 		MetaScene 2
@@ -27,12 +35,17 @@ Content
 			room
 			desig <HOME>
 			name <Office>
-			minimap <..1............##+###...#>
+			minimap <.23.........1..#&+&##...#>
+			inv
+				STC BED-1
+				PDir 2
+				MiniMapComponent 2
+
+				STC ENDTABLE-1
+				PDir 2
+				MiniMapComponent 3
+			end
 		end
-
-		Persona 2
-		rumor0 <Galena Hodges has been helping the poor for nearly a century.>
-
 	end
 	inv
 		NPC Doctor
@@ -57,8 +70,10 @@ Content
 	Element2 <Prefab>
 	Place2 <1 (Guards) sd ally>
 
-	%% Begin the Vesuvian Freighter task at Renown = 60
-	start <ifSubPlotWon %plotid% ifG PCRenown 60 SetPlotStatus %plotid2% %id2%>
+	%% P%id%01 = Initialization Counter
+	%% Begin the Vesuvian Freighter task at Renown = 65
+	start <ifSubPlotWon %plotid% ifG PCRenown 65 SetPlotStatus %plotid2% %id2%>
+	update <if= P%id%01 0 P= %id%01 1 NPCLevel %2% 65>
 
 	% SubPlot1 is the pirates/black market task
 	% SubPlot2 is the Vesuvian Freighter task- activates at Renown 60 if 

@@ -4,7 +4,33 @@
 %%	Weapon lockers.
 
 Content
-	requires <*ARMORY>
+	requires <*ARMORY -!Md -!Hi -!Ex>
+	MiniMap <...........1#............>
+	element1 <PREFAB>
+	inv
+		STC SHOPDISPLAY-WEAPONS-2
+		PDir 4
+		use <OpenInv>
+		RandomLoot 50000
+		Loot_Category <WEAPON>
+		Loot_Factions <GENERAL>
+	end
+
+Content
+	requires <*ARMORY -!Ne -!Hi -!Ex>
+	MiniMap <...........1#............>
+	element1 <PREFAB>
+	inv
+		STC SHOPDISPLAY-WEAPONS-3
+		PDir 4
+		use <OpenInv>
+		RandomLoot 100000
+		Loot_Category <WEAPON>
+		Loot_Factions <GENERAL>
+	end
+
+Content
+	requires <*ARMORY (!Md|!Hi)>
 	MiniMap <...........1#2...........>
 	element1 <PREFAB>
 	element2 <PREFAB>
@@ -23,6 +49,81 @@ Content
 		Loot_Category <WEAPON>
 		Loot_Factions <GENERAL>
 	end
+
+Content
+	requires <*ARMORY (!Hi|!Ex)>
+	MiniMap <.......3...1#2...4.......>
+	element1 <PREFAB>
+	element2 <PREFAB>
+	element3 <PREFAB>
+	element4 <PREFAB>
+	inv
+		STC SHOPDISPLAY-WEAPONS-3
+		PDir 4
+		use <OpenInv>
+		RandomLoot 100000
+		Loot_Category <WEAPON>
+		Loot_Factions <GENERAL>
+
+		STC SHOPDISPLAY-WEAPONS-1
+		PDir 0
+		use <OpenInv>
+		RandomLoot 100000
+		Loot_Category <WEAPON>
+		Loot_Factions <GENERAL>
+
+		STC SHOPDISPLAY-ARMOR-1
+		PDir 6
+		use <OpenInv>
+		RandomLoot 100000
+		Loot_Category <ARMOR ACCESSORY GRENADE>
+		Loot_Factions <GENERAL>
+
+		STC SHOPDISPLAY-ARMOR-2
+		PDir 2
+		use <OpenInv>
+		RandomLoot 100000
+		Loot_Category <ARMOR ACCESSORY GRENADE>
+		Loot_Factions <GENERAL>
+	end
+
+Content
+	requires <*ARMORY !Ex>
+	MiniMap <.......3...1#2...4.......>
+	element1 <PREFAB>
+	element2 <PREFAB>
+	element3 <PREFAB>
+	element4 <PREFAB>
+	inv
+		STC SHOPDISPLAY-WEAPONS-3
+		PDir 4
+		use <OpenInv>
+		RandomLoot 250000
+		Loot_Category <WEAPON EXOTIC>
+		Loot_Factions <GENERAL>
+
+		STC SHOPDISPLAY-WEAPONS-1
+		PDir 0
+		use <OpenInv>
+		RandomLoot 250000
+		Loot_Category <WEAPON>
+		Loot_Factions <GENERAL>
+
+		STC SHOPDISPLAY-ARMOR-1
+		PDir 6
+		use <OpenInv>
+		RandomLoot 200000
+		Loot_Category <ARMOR ACCESSORY GRENADE>
+		Loot_Factions <GENERAL>
+
+		STC SHOPDISPLAY-ARMOR-2
+		PDir 2
+		use <OpenInv>
+		RandomLoot 200000
+		Loot_Category <ARMOR ACCESSORY GRENADE>
+		Loot_Factions <GENERAL>
+	end
+
 
 %% *HIDEOUT_X Content
 %%	Filler for hideouts and strongholds.
@@ -53,7 +154,7 @@ Content
 	element2 <PREFAB>
 	inv
 		STC BOX-1
-		STC CHEST-1
+		STC CRATE
 		Lock 10
 		inv
 			Treasure

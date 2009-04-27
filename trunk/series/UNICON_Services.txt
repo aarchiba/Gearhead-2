@@ -78,10 +78,10 @@ Content
 		chardesc Male Shy Spiritual Cheerful
 
 		STC VIDEOGAME-1
-		PDir 4
+		PDir 0
 
 		STC VIDEOGAME-3
-		PDir 0
+		PDir 4
 	end
 
 %% *BLACKMARKET_SHOP CONTENT
@@ -181,16 +181,16 @@ Content
 	Element5 <Prefab>
 	inv
 		STC VIDEOGAME-5
-		PDir 4
+		PDir 0
 
 		STC VIDEOGAME-3
-		PDir 0
-
-		STC VIDEOGAME-4
 		PDir 4
 
-		STC VIDEOGAME-2
+		STC VIDEOGAME-4
 		PDir 0
+
+		STC VIDEOGAME-2
+		PDir 4
 
 		Prop 10
 		name <Karaoke King>
@@ -210,8 +210,8 @@ Content
 		GoDoNotWant <Print 5>
 		GoBeat <Print 8>
 		GoPlayGame <Print 12 if= V2 0 else GoStartConcert V= 2 15 Goto GoStartConcert>
-		GoStartConcert <V= 3 Concert 5 SkillTar V2 ifG V3 90 else GoCheckMedium ifG v2 64 else GoMinorWin Print 6 History 7 PCMoraleDmg -25 SkillXP NAS_Performance 100 XPV 100 PCSkill+ NAS_Performance 1 V= 4 1>
-		GoMinorWin <V+ 2 d10 V+ 2 d10 SkillXP NAS_Performance 50 PCMoraleDmg -15  Print 9>
+		GoStartConcert <V= 3 Concert 5 SkillTar V2 ifG V3 90 else GoCheckMedium ifG v2 75 else GoMinorWin Print 6 History 7 PCMoraleDmg -25 SkillXP NAS_Performance 100 XPV 100 PCSkill+ NAS_Performance 1 V= 4 1>
+		GoMinorWin <V+ 2 d10 V+ 2 d10 V+ 2 d12 SkillXP NAS_Performance 50 PCMoraleDmg -15  Print 9>
 		GoCheckMedium <ifG V3 50 else GoLose SkillXP NAS_Performance 25 Print 10>
 		GoLose <PCMoraleDmg 15 Print 11>
 		Msg1 <This game is called Karaoke King. You have to sing a concert for a virtual audience.>

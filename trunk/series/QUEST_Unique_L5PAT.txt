@@ -7,6 +7,522 @@
 %%
 
 Content
+	name <Gaos Nightlife, Part Two>
+	requires <*Q_UNIQUE_GAOSP_NewResort>
+
+	%%
+	%% Parshall's plan is to build a hot springs resort and casino on an
+	%% asteroid just outside the station. Unfortunately, the construction
+	%% has stalled.
+	%%
+
+	% Param1 is Parshall himself
+	% E2 is the construction site
+	% E3 is Parshall's sister, Ritzi
+	% E4 is the casino
+	% E5 is the spa "bubble"
+	% E6 is the exterior scene
+	% E7 is the success meme
+	Element2 <QuestScene>
+	Place2 <6>
+	Element3 <Prefab>
+	Place3 <2 (Guards) sd>
+	Element4 <QuestScene>
+	Place4 <2>
+	Element5 <QuestScene>
+	Place5 <4>
+	Element6 <Scene Environs>
+	Element7 <Prefab>
+
+	% P%id%01 = Initialization Counter
+	update <if= P%id%01 0 P= %id%01 1 SetEncounterActive %2% SetPlotStatus %plotid1% %id1%>
+	end <ifNPCDead %1% LoseSubPlot %plotid%>
+
+	% SubPlot1 is the construction problem proper.
+	SubPlot1 <*:Q_ConstructionProblem 1 2>
+
+	sub
+		Persona 1
+		greeting <if= PlotStatus %plotid% %id% else %pop% ifSubPlotWon %plotid1% else .%id%_GoPassBuck WinSubPlot %plotid% if= P1 0 else .%id%_GoBigPrize NewChat Say %id%03 RandomMecha .%id%_mecha %threat% ActivateMeme %7% RootSceneID>
+		.%id%_GoBigPrize <NewChat Say %id%04 History %id%05 RandomMecha .%id%_mecha %threat% CashPrize Reward %threat% 5000 ActivateMeme %7% RootSceneID>
+		.%id%_mecha <GENERAL FCOMS>
+		.%id%_GoPassBuck <NewChat Say %id%01 ifSubPlotLost %plotid1% AddChat %id%01>
+		result%id%01 <NewChat Say %id%02 LoseSubPlot %plotid%>
+		Msg%id%01 <Please, speak to %name3% about the development. I cannot be bothered to manage every tiny detail by myself.>
+		Msg%id%02 <What are you saying? So that's how it is...>
+		Msg%id%03 <My asteroid spa will be opening soon. You've done a lot of work to get us here, \PC ... not as much as I have, but still considerable. Here's a brand new mecha for your troubles. Remember to drop by the casino when it opens.>
+		Msg%id%04 <Our new asteroid spa will be opening soon. You've done a lot of work to get us here, \PC ... It's going to be a while before we can expect regular earnings, but here's your cut of the initial profits and a new mecha.>
+		Msg%id%05 <You opened an asteroid resort with Parshall.>
+		Prompt%id%01 <Um, things aren't going so well...>
+
+		Persona 3
+		% V1 = Have spoken before
+		greeting <ifSubPlotWon %plotid% else GoCheckProgress NewChat Say %id%01>
+		GoCheckProgress <if= PlotStatus %plotid% %id% else GoChat if= V1 1 else GoFirstTime NewChat Say %id%04 AddChat %id%03 AddChat %id%04>
+		GoChat <NewChat SayANything>
+		GoFirstTime <NewChat Say %id%02 AddChat %id%01 AddCHat %id%02 AddChat %id%03 AddChat %id%04>
+		result%id%01 <NewChat Say %id%03 AddChat %id%05 AddChat %id%06 V= 1 1>
+		result%id%02 <NewChat Say %id%05 AddChat %id%05 AddChat %id%06 V= 1 1>
+		result%id%03 <NewChat Say %id%06>
+		result%id%04 <NewChat Say %id%07 LoseSubPlot %plotid%>
+		result%id%05 <NewChat Say %id%08>
+		result%id%06 <NewChat Say %id%09 AddChat %id%07 AddChat %id%08 AddReact d10>
+		result%id%07 <NewChat Say %id%10>
+		result%id%08 <NewChat Say %id%11 AddChat %id%09 AddReact -d10>
+		result%id%09 <NewChat Say %id%08>
+		Msg%id%01 <Welcome to Gaos Casino and Spa. Please enjoy your stay.>
+		Msg%id%01_1 <Welcome to Gaos Casino and Spa. Please try not to break anything.>
+		Msg%id%01_2 <Welcome to Gaos Casino and Spa. No, you will not find any artifacts in our gift shop.>
+		Msg%id%02 <Hello! Welcome to Gaos Casino and Spa. We are not yet open for business, but please enjoy a look around our fully furnished construction site. Thank you and please come again!>
+		Msg%id%03 <[sigh] It's about bloody time that idiot sent someone. They're having some kind of problem on the upper levels. It was supposed to be finished by now, but it's not, and someone deserves to get fired.>
+		Msg%id%04 <Welcome to Gaos Casino and Spa. Well, that's what it's going to be if it ever gets finished.>
+		Msg%id%05 <I just told you- Gaos Casino and Spa. Parshall had the bright idea to build an upscale resort on the inside of an asteroid; of course like most of his ideas this one's gone to ash. Construction has haled on the upper levels.>
+		Msg%id%06 <Really? I never expected this project to actually succeed... %name1%'s going to want to hear about this himself. You better go there and tell him.>
+		Msg%id%07 <I was expecting this. You can go... I'll tell %name1% myself.>
+		Msg%id%08 <Don't get your hopes up.>
+		Msg%id%09 <Actually he's my brother... but yeah, he can be a bit of a jerk.>
+		Msg%id%10 <I guess at this point in time I should ask you to go see if you can solve our construction problem, but honestly I just couldn't be bothered...>
+		Msg%id%11 <I DESIGNED THIS COSTUME MYSELF, ASH-BRAIN!>
+		Prompt%id%01 <%name1% sent me to check up on things.>
+		Prompt%id%02 <Wow, what is this place?>
+		Prompt%id%03 <I've solved your construction problem.>
+		CPrompt%id%03 <ifSubPlotWon %plotid1% Accept>
+		Prompt%id%04 <I'm afraid construction has halted...>
+		CPrompt%id%04 <ifSubPlotLost %plotid1% Accept>
+		Prompt%id%05 <I'll see what I can find out.>
+		Prompt%id%06 <I'll bet Parshall is a real jerk of a boss, right?>
+		Prompt%id%07 <I see.>
+		Prompt%id%08 <Why is your brother making you wear a bunny costume?>
+		Prompt%id%09 <Um... I'll go see if I can solve that problem, now...>
+
+		STC QS_ConstructionSite
+		name <%name1%'s Project>
+		entrance <*QUEST-INACTIVE>
+		SetID 2
+		RockyTiles
+		sub
+			room
+			minimap <......&&&..&1&...........>
+			inv
+				Elevator
+				name <To Casino>
+				MiniMapComponent 1
+				use <ifSubPlotWon %plotid% else GoNotYet Exit Destination>
+				GoNotYet <Print 2>
+				Msg2 <This area hasn't been finished yet.>
+				desig <ENTRANCE %4%>
+			end
+		end
+
+		MetaScene 4
+		name <Gaos Casino>
+		type <Building Private Meeting Casino Legit>
+		special <UNREGULATED NOEXIT>
+		Tolerance 10
+		ClubMap
+		PalaceParkTiles
+		MapWidth 31
+		MapHeight 26
+		start <Print 1>
+		Msg1 <You enter the Gaos Casino.>
+		NeededCells 3
+		Content1 <Some 1 100 Sub *RESTAURANT            na>
+		Content1 <Some 1 100 Sub *SHOP_CASINO           na>
+		Content3 <Fill       Sub *CASINO_CELLS          na>
+		sub
+			team 1
+
+			team 2
+			name <Citizens>
+			SetAlly 1
+			Passive
+
+			team 3
+			name <Guards>
+			SetAlly 2
+
+			Boxroom
+			desig <EntranceGrid>
+			Content <Some 5 45 Here *URBAN_X>
+			Content2 <Some 1 100 Here *ANTI_ATTACK_SECURITY 2>
+			Content3 <Fill Sub *CASINO_FLOOR na>
+			sub
+				Room
+				sub
+					StairsDown
+					Destination -1
+				end
+			end
+
+			room
+			minimap <############1###...##...#>
+			inv
+				Elevator
+				MiniMapComponent 1
+				desig <ENTRANCE %5%>
+			end
+		end
+
+		MetaScene 5
+		name <Gaos Spa>
+		type <Park Private Meeting Spa Legit>
+		special <NOEXIT SHOWALL>
+		ArenaMap
+		MapWidth 30
+		MapHeight 30
+		PalaceParkTiles
+		WallType 26
+		GapFill <-4>
+		% V1 = First Time Visit Counter
+		start <if= V1 0 else GoBeenBefore Alert 1>
+		GoBeenBefore <Print 2>
+		TMOVE1 <ifTeamNotHostile 2 ifTeamNotHostile 3 ifTeamNotHostile 4 PCMoraleDmg -d3>
+		Msg1 <The spa level is built within a clear dome on the outside of the asteroid. Hot water bubbles up from a natural-looking hot spring. You feel at peace.>
+		Msg2 <You enter Gaos Spa.>
+		Content <Some 5 45 Here *URBAN_X>
+		Content2 <Some 1 100 Here *ANTI_ATTACK_SECURITY 2>
+		sub
+			team 1
+
+			team 2
+			name <Citizens>
+			SetAlly 1 4
+			Passive
+
+			team 3
+			name <Guards>
+			SetAlly 2 4
+
+			team 4
+			name <Exotics>
+			type <Exotic Water>
+			SetAlly 2 3
+			Stat 2 1
+
+			Lake
+			Width 15
+			Height 15
+
+			rect
+			Width 5
+			Height 5
+			minimap <      ...  &1&  ###      >
+			inv
+				Elevator
+				MiniMapComponent 1
+				destination -1
+			end
+		end
+		inv
+			%% Steam for the spa
+			STC SMOKE-2
+			STC SMOKE-2
+			STC SMOKE-2
+			STC SMOKE-2
+			STC SMOKE-2
+			STC SMOKE-2
+			STC SMOKE-2
+			STC SMOKE-2
+			STC SMOKE-2
+			STC SMOKE-2
+		end
+	end
+	inv
+		NPC Shopkeeper
+		name <Ritzi>
+		job <Hostess>
+		SDL_Portrait <por_f_ladilolita(YC-).png>
+		SDL_Colors <67 73 100 255 244 208 113 175 98>
+		Combatant
+		Intimidation
+		Age 8
+		chardesc female Sociable Melancholy Easygoing Pragmatic
+		statline 9 8 13 11 9 12 12 15
+
+		Meme
+		MaxMemeViews 3
+		MemeTimeLimit
+		Msg_1 <Have you been to Parshall's new casino yet? I never thought we'd get something like that in Gaos Spinner.>
+		CMsg <if# ChatNPCID %1% if# ChatNPCID %3% Accept>
+		Msg_2 <You know, Gaos Spinner wasn't originally built as a holiday destination, but as long as we've got it we should hang onto it.>
+		Msg_3 <I don't know about this new casino... On the one hand it's going to create a lot of jobs, but on the other hand don't those things attract crime?>
+		Msg_4 <Wow, I won $50000 at the casino! Good thing I quit while I was ahead.>
+		Msg_5 <Parshall's new spa has a menagerie of exotic animals imported from Earth. I hear you can pose for pictures with them.>
+		Msg_6 <The new casino is really fun, but the woman in the bunny suit scares me...>
+	end
+
+Content
+	name <Gaos Nightlife, Part One>
+	requires <*:Q_UNIQUE_GAOSP_Parshall>
+
+	%%
+	%% Gaos Spinner isn't nearly so ritzy as it once was. Parshall will hire
+	%% the PC to go spice up a party.
+	%%
+
+	% E1 is the Prince Hotel
+	% E2 is Parshall
+	% E3 is the Prince Ballroom
+	Element1 <Scene Hotel Public>
+	Element2 <Prefab>
+	Place2 <1 (Citizens) pass>
+	Element3 <QuestScene>
+	Place3 <1>
+
+	% P%id%01 = Have accepted mission
+	end <ifNPCDead %2%   LoseSubPlot %plotid%>
+
+	% SubPlot1 = Building the Resort
+	SubPlot1 <*Q_UNIQUE_GAOSP_NewResort #70 2>
+
+	sub
+		Persona 2
+		rumor%id% <there's a fancy party going on at the Prince Hotel.>
+		% V1 = Have chatted before (original dialog)
+		greeting <if= PlotStatus %plotid% %id% else GoChat if= P%id%01 1 else .%id%_GoOfferMission NewChat Say %id%10 AddChat %id%10 AddChat %id%11 AddChat %id%12>
+		*.%id%_GoOfferMission <*INeedYourHelp&PCSpecifically .%id%_GoMissionBriefing .%id%_GoHasslePC>
+		.%id%_GoHasslePC <NewChat Say %id%01 AddChat %id%01>
+		.%id%_GoMissionBriefing <NewChat Say %id%02 AddChat %id%02 AddChat %id%03 AddChat %id%04 AddChat %id%05>
+		result%id%01 <Goto .%id%_GoMissionBriefing>
+		result%id%02 <NewChat Say %id%03 AddChat %id%06>
+		result%id%03 <NewChat Say %id%04 AddChat %id%07 AddChat %id%08 AddChat %id%09>
+		result%id%04 <NewChat Say %id%05 QMemo %plotid% %id%06 P= %id%01 1>
+		result%id%05 <NewChat Say %id%07 LoseSubPlot %plotid%>
+		result%id%06 <Goto result%id%03>
+		result%id%07 <Goto result%id%04>
+		result%id%08 <Goto result%id%05>
+		result%id%09 <NewChat Say %id%08 History %id%09 QMemo %plotid% %id%06 P= %id%01 1 P= 1 1>
+		result%id%10 <NewChat Say %id%11>
+		result%id%11 <NewChat Say %id%12>
+		result%id%12 <NewChat Say %id%13 QMemo %plotid% %id%14 XPV 100 AddReact d10 SetPlotStatus %plotid1% %id1%>
+		Msg%id%01 <All of the abuse I've put up with from you over the years, and now you won't even listen when I'm inviting you to a party? The nerve! What irresponsible rudeness!>
+		Msg%id%02 <I know about the good you did for Galena Hodges, and I think that a heroic adventurer like you would make the perfect "face" for Gaos Spinner's rebranding.>
+		Msg%id%03 <You seem to be ignorant of the finer points of marketing. It doesn't matter where you're from or who you are, just that we have a famous name attached to our brand. It's like that time Tai did the ad for Cyber-Hoagies.>
+		Msg%id%04 <Our image is stale, boring, family-oriented... We're losing tourist creds to Athera, Yatate, even Clund Rock. I want to make Gaos young and exciting again. The first step is building the image, then we make it reality.>
+		Msg%id%05 <Wonderful. There's a party going on in the Prince Ballroom right now. Go there, see if you can impress the guests.>
+		Msg%id%06 <%name2% asked you to attend a party at the Prince Ballroom. He's trying to rebrand Gaos Spinner as a hip, exciting tourist destination.>
+		Msg%id%07 <Obviously not. Fine, then, go... I'm sure I can find someone more suited to the role.>
+		Msg%id%08 <Hmmm. You aren't as stupid as you look... Fine, a share in the profits, once this development is complete. First, though, the promotion. There's a party in the ballroom right now. Go there, see if you can impress the guests.>
+		Msg%id%09 <You negotiated a share of the profits from Parshall's new development.>
+		Msg%id%10 <Hello, Gaos Prince Hotel. So, \PC , how is the party going?>
+		Msg%id%11 <It must be better than okay. It must be perfect. Get back in there and do something entertaining.>
+		Msg%id%12 <You are supposed to be the life of the party. Maybe you are not yet famous enough... Try speaking to the guests instead of just standing around.>
+		Msg%id%13 <You see? I knew that my plan was brilliant. It is now time for phase two... outside of the station I am working on a new attraction. Could you go there and see how construction is progressing?>
+		Msg%id%14 <%name2% asked you to check up on the construction of his new attraction in Gaos Spinner Exterior.>
+		Prompt%id%01_1 <Did you just say "party"?>
+		CPrompt%id%01_1 <ifChatNPCKnown Accept>
+		Prompt%id%01_2 <This is the first time we've met...>
+		CPrompt%id%01_2 <ifChatNPCUnknown Accept>
+		Prompt%id%02 <But I'm not even from Gaos Spinner!>
+		CPrompt%id%02 <if# PCHomeTown RootSceneID Accept>
+		Prompt%id%03 <What kind of rebranding are you thinking about?>
+		Prompt%id%04 <It would be an honor to serve Gaos Spinner.>
+		Prompt%id%05 <Really, this is not my kind of thing.>
+		Prompt%id%06 <I see...>
+		Prompt%id%07 <Alright, I'll help you with this.>
+		Prompt%id%08 <Sorry, I don't want to get involved.>
+		Prompt%id%09 <I'll help you, but I want a cut from whatever you're planning.>
+		CPrompt%id%09 <ifShopping HardSkillTar %threat% Accept>
+		Prompt%id%10 <It's okay, I guess.>
+		CPrompt%id%10 <ifG 3 ScenePartyScore %3% Accept>
+		Prompt%id%11 <I don't really know what I'm supposed to do.>
+		CPrompt%id%11 <ifG 1 ScenePartyScore %3% Accept>
+		Prompt%id%12 <It's a blast!>
+		CPrompt%id%12 <ifG ScenePartyScore %3% 2 Accept>
+		%% The original persona for Parshall, sequestered off down here.
+		GoChat <if= V1 1 else GoFirstTime NewChat Say 1>
+		GoFirstTime <NewChat Say 2 AddChat 1>
+		result1 <NewChat Say 3 V= 1 1>
+		Msg1 <Hello, Gaos Prince Hotel.>
+		Msg1_1 <Hello, Gaos Prince Hotel. I guess you still don't want anything.>
+		Msg1_2 <Hello, Gaos Prince Hotel. I don't know where your arch-enemy is but I'm sure he's perfectly dreadful.>
+		Msg1_3 <Hello, Gaos Prince Hotel. Please excuse me; we may have some customers who actually want to stay here.>
+		Msg1_4 <Hello, Gaos Prince Hotel. May I help... oh, it's you.>
+		Msg1_5 <Hello, Gaos Prince Hotel. Why aren't you out cleaning sewers now?>
+		Msg1_6 <Hello, Gaos Prince Hotel. Please check your weapons at the front desk before attempting to open the minibar.>
+		Msg1_7 <Hello, Gaos Prince Hotel. No, I don't have any jobs for a mecha pilot.>
+		Msg1_8 <Hello, Gaos Prince Hotel. Please stop stealing from our rooms.>
+		CMsg1_8 <ifPCCriminal Accept>
+		Msg2 <Hello, welcome to the Gaos Prince Hotel. Would you like to reserve a suite for this evening?>
+		Msg3 <That's what I heard about cavaliers... they all sleep in the driver's seat of their mecha.>
+		Prompt1 <No thanks, I never seem to need one.>
+
+
+		MetaScene 2
+		sub
+			room
+			MFX 2
+			MFY 2
+			Width 5
+			Height 5
+			name <Reception Area>
+			minimap <...#..1.#.---#...........>
+			desig <HOME>
+
+			room
+			minimap <###########&2&##...##...#>
+			inv
+				Elevator
+				name <Private Ballroom>
+				desig <ENTRANCE %3%>
+				use <if= P%id%01 1 else GoNoUse Exit Destination>
+				GoNoUse <Print 2>
+				Msg2 <There's nothing interesting happening in here right now.>
+				MiniMapComponent 2
+			end
+		end
+
+		MetaScene 3
+		name <the Prince Ballroom>
+		type <Private Ballroom Meeting>
+		mapwidth 21
+		mapheight 21
+		PalaceParkTiles
+		BoxMap
+		special <AddEXIT>
+		NeededCells 5
+		Applause <AddPartyPoint>
+
+		start <Print 1>
+		5min <ifG 3 PartyScore if= d3 1 ifTeamNotHostile 2 ifG T2 0 ifG PCRenown %threat% ifG PCCharm d20 TeamMonologue 2 2 AddPartyPoint>
+		Msg1 <You enter the Prince Ballroom.>
+		Msg2_1 <Oh look, isn't that the famous cavalier \PC ?>
+		Msg2_2 <I never knew that Gaos Spinner had such a fabulous nightlife.>
+		Msg2_3 <Isn't \SPR 0 the cavalier who found a home for all those orphans?>
+		Msg2_4 <Have you tried the cocktail sausage? It's brilliant!>
+		Msg2_5 <I can't believe how many celebrities there are here...>
+
+		Content1 <Some 1 100 Here *ANTI_ATTACK_SECURITY 2>
+		Content2 <Variety 3 5 Here *PartyGames %threat%>
+		Content3 <Some 3  55 Here *URBAN_X na>
+
+		sub
+			team 1
+
+			team 2
+			name <Citizens>
+			SetAlly 3
+			Passive
+
+			team 3
+			name <Guards>
+			SetAlly 2
+		end
+	end
+	inv
+		NPC Shopkeeper
+		name <Parshall>
+		job <Manager>
+		SDL_Portrait <por_m_guy3(AA-).png>
+		SDL_Colors <67 73 100 255 244 208 113 175 98>
+		Age 14
+		chardesc male Sociable Melancholy Easygoing Lawful
+		statline 11 10 11 9 10 13 11 10
+	end
+
+Content
+	name <Charity Orphanage>
+	requires <*Q_UNIQUE_GAOSP_Galena>
+
+	%%
+	%% This subplot is activated the first time the PC speaks to Galena Hodges.
+	%%
+	%% There are a lot of orphans in Gaos Spinner. There really ought to be an
+	%% orphanage, but that's going to take money.
+	%%
+
+	% Param1 is the hospital
+	% Param2 is Galena Hodges
+	% E3 is one of the orphans
+	% E4 is another of the orphans
+	% E5 is the third, since mecha series orphans only come in threes
+	Element3 <Prefab>
+	Place3 <1 (Guards) sd ally>
+	Element4 <Prefab>
+	Place4 <1 (Citizens) pass ally>
+	Element5 <Prefab>
+	Place5 <1 (Citizens) pass ally>
+
+	end <ifNPCDead %2% LoseSubPlot %plotid%>
+
+	% SubPlot1 is the search for cash
+	SubPlot1 <*:Q_FindMoney.Charity 2>
+
+	sub
+		Persona 2
+		rumor0 <Galena Hodges has been helping the poor for nearly a century.>
+		greeting <if= PlotStatus %plotid% %id% else GoCheckFirst NewChat Say 7 AddChat 6 AddChat 3>
+		*GoCheckFirst <*NiceToMeetYou GoOfferQuest>
+		GoOfferQuest <if= PlotStatus %plotid% 0 else GoChat NewChat Say 1 AddChat 1 AddChat 2 AddChat 3 QMemo %plotid% 3 SetPlotStatus %plotid% %id% SetPlotStatus %plotid1% %id1%>
+		*GoChat <*MISC_CHATTER>
+		result1 <NewChat Say 2>
+		result2 <NewChat Say 4 SetPlotStatus %plotid% -2 SetPlotStatus %plotid1% -2>
+		result3 <NewChat Say 5 AddChat 4 AddChat 5>
+		result4 <NewChat Say 9  Cash+ -5000000 AddHeroic 5 AddReact 10 AddRenown 1 XPV 100  CancelSubPlot %plotid1%  WinSubPlot %plotid%>
+		result5 <NewChat Say 6>
+		result6 <NewChat Say 8 AddHeroic 1 WinSubPlot %plotid%>
+		Msg1 <This city desperately needs a new orphanage. We are caring for many children here at %name1%, but they lack adequate housing and support...>
+		Msg2 <Could you do that? Any help would be greatly appreciated.>
+		Msg3 <%name2% in %name1% needs money to build a new orphanage.>
+		Msg4 <It's a sad day for the world when we cast off our own children, and nobody cares...>
+		Msg5 <Building a new orphanage isn't cheap... it would cost at least five million credits. Are you certain you're willing to do that?>
+		Msg6 <Please do your best.>
+		Msg7 <There are so many needy, but I fear we don't yet have the resources to help them all.>
+		Msg8 <Oh, this is wonderful news! Thank you so much for your help; I only wish I had a reward to give you.>
+		Msg9 <Oh, my. I don't know what to say... Thank you, thank you so much for this generous gift. I promise that we will put this money to good use.>
+		Prompt1 <I could help you find the money.>
+		Prompt2 <I don't care about your stinky orphans.>
+		Prompt3 <Why don't I just buy you an orphanage myself?>
+		CPrompt3 <ifG PC$ 4999999 Accept>
+		Prompt4 <Sure. I'm good for it. [give $5M]>
+		Prompt5 <I'll see if I can find anything else first.>
+		Prompt6 <I've found a sponsor for your orphanage.>
+		CPrompt6 <ifSubPlotWon %plotid1% Accept>
+
+		Persona 3
+		%% V1 = Have offered to aid PC
+		greeting <ifSubplotWon %plotid% else GoChat ifG PCHeroism -1 else GoChat if= V1 0 else GoChat PCAlly %3% V= 1 1 NewChat Say 1 History 2>
+		GoChat <NewChat SayAnything>
+		Msg1 <Thanks for helping out us orphans. You know, I'd like to be a cavalier too, someday.>
+		Msg2 <%name3% thanked you for helping the orphans of Gaos Spinner.>
+
+		MetaScene 3
+		sub
+			Room
+			minimap <5..1.....32........4##+##>
+			desig <HOME>
+			inv
+				STC BED-1
+				PDir 0
+				MiniMapComponent 5
+
+				STC BED-1
+				PDir 0
+				MiniMapComponent 2
+
+				STC BED-1
+				PDir 4
+				MiniMapComponent 3
+
+				STC BED-1
+				PDir 4
+				MiniMapComponent 4
+			end
+		end
+	end
+	inv
+		NPC Student
+		Combatant
+		Age -2
+
+		NPC Student
+		Age -3
+
+		NPC Student
+		Age -4
+	end
+
+Content
 	name <Could Be Lupus>
 	requires <*:Q_UNIQUE_XIASP_Venus>
 

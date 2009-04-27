@@ -445,16 +445,16 @@ Content
 	Element5 <Prefab>
 	inv
 		STC VIDEOGAME-3
-		PDir 4
+		PDir 0
 
 		STC VIDEOGAME-2
-		PDir 0
-
-		STC VIDEOGAME-1
 		PDir 4
 
-		STC VIDEOGAME-5
+		STC VIDEOGAME-1
 		PDir 0
+
+		STC VIDEOGAME-5
+		PDir 4
 
 		STC VIDEOGAME-4
 		PDir 2
@@ -469,10 +469,10 @@ Content
 	Element2 <Prefab>
 	inv
 		STC VIDEOGAME-2
-		PDir 4
+		PDir 0
 
 		STC VIDEOGAME-1
-		PDir 0
+		PDir 4
 	end
 
 Content
@@ -483,10 +483,10 @@ Content
 	Element2 <Prefab>
 	inv
 		STC VIDEOGAME-1
-		PDir 4
+		PDir 0
 
 		STC VIDEOGAME-3
-		PDir 0
+		PDir 4
 	end
 
 Content
@@ -497,10 +497,10 @@ Content
 	Element2 <Prefab>
 	inv
 		STC VIDEOGAME-1
-		PDir 4
+		PDir 0
 
 		STC VIDEOGAME-4
-		PDir 0
+		PDir 4
 	end
 
 Content
@@ -511,10 +511,10 @@ Content
 	Element2 <Prefab>
 	inv
 		STC VIDEOGAME-1
-		PDir 4
+		PDir 0
 
 		STC VIDEOGAME-5
-		PDir 0
+		PDir 4
 	end
 
 Content
@@ -525,10 +525,10 @@ Content
 	Element2 <Prefab>
 	inv
 		STC VIDEOGAME-2
-		PDir 4
+		PDir 0
 
 		STC VIDEOGAME-3
-		PDir 0
+		PDir 4
 	end
 
 Content
@@ -539,10 +539,10 @@ Content
 	Element2 <Prefab>
 	inv
 		STC VIDEOGAME-2
-		PDir 4
+		PDir 0
 
 		STC VIDEOGAME-4
-		PDir 0
+		PDir 4
 	end
 
 Content
@@ -553,10 +553,10 @@ Content
 	Element2 <Prefab>
 	inv
 		STC VIDEOGAME-5
-		PDir 4
+		PDir 0
 
 		STC VIDEOGAME-2
-		PDir 0
+		PDir 4
 	end
 
 Content
@@ -567,10 +567,10 @@ Content
 	Element2 <Prefab>
 	inv
 		STC VIDEOGAME-3
-		PDir 4
+		PDir 0
 
 		STC VIDEOGAME-4
-		PDir 0
+		PDir 4
 	end
 
 Content
@@ -581,10 +581,10 @@ Content
 	Element2 <Prefab>
 	inv
 		STC VIDEOGAME-3
-		PDir 4
+		PDir 0
 
 		STC VIDEOGAME-5
-		PDir 0
+		PDir 4
 	end
 
 Content
@@ -595,10 +595,10 @@ Content
 	Element2 <Prefab>
 	inv
 		STC VIDEOGAME-5
-		PDir 4
+		PDir 0
 
 		STC VIDEOGAME-4
-		PDir 0
+		PDir 4
 	end
 
 
@@ -817,7 +817,26 @@ Content
 		NPC Mechanic
 	end
 
+%% *SHOP_CASINO CONTENT
+%%   Casino shops sell WEAPONs, ARMOR, and EXOTICs.
 
+Content
+	requires <*SHOP_CASINO>
+	content <Required *DECOR_FOR_GENERAL_SHOP %1% Local>
+	element1 <Prefab>
+	team1 <Citizens>
+	teamdata1 <ally pass>
+	sub
+		Persona 1
+		*greeting <*NiceToMeetYou GoShop>
+		*GoShop <*SHOP_CASINO GoBye>
+		*GoBye <*GOODBYE>
+	end
+	inv
+		NPC Shopkeeper
+		Shopping 15
+		chardesc Sociable Cheerful
+	end
 
 %% *SHOP_GENERAL CONTENT
 %%   Contains a miscellaneous store.
@@ -1354,6 +1373,7 @@ Content
 		Shopping 10
 	end
 
+
 % *PDARENA_MISC Content
 %	Miscellaneous things for the arena. Mostly shops.
 
@@ -1366,5 +1386,64 @@ Content
 	content <Required *RESTAURANT %1% Local>
 
 
+% *CASINO_FLOOR Content
+%	Things to go in the boxmap at the center of a casino.
 
+Content
+	%% Gambling Machines
+	requires <*CASINO_FLOOR Common>
+	Element1 <Prefab>
+	Element2 <Prefab>
+	minimap <      .1.  .&.  .2.      >
+	inv
+		STC GAMBLING-1
+		PDir 6
+
+		STC GAMBLING-1
+		PDir 2
+	end
+
+Content
+	%% Game Machines
+	requires <*CASINO_FLOOR>
+	Element1 <Prefab>
+	Element2 <Prefab>
+	minimap <      .1.  .&.  .2.      >
+	inv
+		STC VIDEOGAME-4
+		PDir 6
+
+		STC VIDEOGAME-5
+		PDir 2
+	end
+
+
+% *CASINO_CELLS Content
+%	Things to go in the alcoves of a casino map.
+
+Content
+	requires <*CASINO_CELLS>
+	content <Required *RESTAURANT %1% Local>
+
+Content
+	requires <*CASINO_CELLS>
+	content <Required *SHOP_RANDOM %1% Local>
+
+Content
+	requires <*CASINO_CELLS>
+	content <Required *VIDEOARCADE %1% Local>
+
+Content
+	%% Gambling Spot
+	requires <*CASINO_CELLS>
+	minimap <####################1...2>
+	element1 <Prefab>
+	Element2 <Prefab>
+	inv
+		STC GAMBLING-1
+		PDir 0
+
+		STC GAMBLING-1
+		PDir 4
+	end
 

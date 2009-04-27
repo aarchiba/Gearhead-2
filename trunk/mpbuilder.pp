@@ -1377,7 +1377,7 @@ begin
 			{ Insert "E" as an InvCom of the parent scene. }
 			{ If E isn't a building or the parent scene isn't a world, }
 			{ also insert a subzone for E so it won't be stuck randomly somewhere. }
-			if ( E^.S = GS_MetaBuilding ) or ( Scene^.Parent^.G = GG_World ) then begin
+			if ( E^.S = GS_MetaBuilding ) or ( E^.S = GS_MetaEncounter ) or ( Scene^.Parent^.G = GG_World ) then begin
 				InsertInvCom( Scene^.Parent , E );
 			end else begin
 				Loc := NewSubZone( Scene^.Parent );
