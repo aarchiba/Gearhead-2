@@ -2,7 +2,55 @@
 %%   Contains a mechanic and/or mecha shop.
 
 Content
-	requires <*MECHANIC_SHOP (MAQUI|FCOMS) (NOFAC|COMET)>
+	requires <*MECHANIC_SHOP Rich>
+	content <Required *DECOR_FOR_SHOP %1% Local>
+	element1 <Prefab>
+	team1 <Citizens>
+	teamdata1 <ally pass>
+	sub
+		Persona 1
+		% V1 = Have purchased membership
+		&JoinCost <250000>
+		*greeting <*NiceToMeetYou GoShop>
+		GoShop <if= V1 0 else GoFullService ifG React 0 else GoBadService NewChat Say 3 AddChat 1 AddChat 2 AddChat 3>
+		GoBadService <NewChat Say 1 AddChat 1 AddChat 2>
+		GoFullService <NewChat Say 8 AddChat 8 AddCHat 7>
+		result1 <EndChat Say 2 Shop .nowares Goto GoBye>
+		result2 <Goto GoBye>
+		result3 <NewChat Say 4 AddChat 4 AddChat 5>
+		result4 <NewChat Say 5>
+		result5 <NewChat Say 6 V= 1 1 Cash+ -&JoinCost AddReact 10 AddChat 6 AddCHat 7>
+		result6 <Goto result8>
+		result7 <Goto GoBye>
+		result8 <EndChat Say 7 Shop .wares Goto GoBye>
+		.wares <MECHA>
+		Msg1 <Yes, may I help you?>
+		Msg2 <Let me see what's wrong with your things.>
+		Msg3 <Welcome to %name1%'s Custom Shop and Garage. Is there anything I can do for you?>
+		Msg4 <My repair services are open to the public, but in order to see the custom mecha you need to purchase a membership. This is a very exclusive club; it costs $ \VAL &JoinCost to join.>
+		Msg5 <Don't feel bad. If you think the membership fee is high, you wouldn't be able to afford anything in my shop anyhow.>
+		Msg6 <Here is your membership card; welcome to the club. Would you like to see my mecha now?>
+		Msg7 <Each of these mecha is a unique work of art. They've been upgraded and customized for optimum performance.>
+		Msg8 <Welcome back, \PC . Are you in the market for a new mecha today?>
+		Prompt1 <I need some repairs.>
+		Prompt2 <Nope, just looking around.>
+		Prompt3 <I'd like to buy a new mecha.>
+		Prompt4 <Um... no.>
+		Prompt5 <Alright, here you are. [Give $ \VAL &JoinCost ]>
+		CPrompt5 <ifG PC$ &JoinCost Accept>
+		Prompt6 <Show me what you have.>
+		Prompt7 <Maybe some other time.>
+		Prompt8 <I'd like to see what you have.>
+	end
+	inv
+		NPC Mechanic
+		Shopping 12
+		MechaEngineering 10
+		chardesc lawful sociable renowned renowned renowned
+	end
+
+Content
+	requires <*MECHANIC_SHOP (MAQUI|FCOMS) (NOFAC|COMET) -Seedy -SILKN>
 	content <Required *DECOR_FOR_SHOP %1% Local>
 	element1 <Prefab>
 	team1 <Citizens>

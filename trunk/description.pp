@@ -208,10 +208,6 @@ begin
 		it := it + ' ' + SgnStr( Part^.Stat[ STAT_SkillModBonus ] );
 	end;
 
-	if Part^.V > 0 then begin
-		if it <> '' then it := it + ', ';
-		it := it + BStr( Part^.V ) + ' Trauma';
-	end;
 	if it <> '' then it := it + '.';
 	ModifierDescription := it;
 end;

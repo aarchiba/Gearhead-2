@@ -1,3 +1,41 @@
+MetaScene
+	name <#'s Workshop>
+	desig <QS_Workshop>
+	type <building basement workshop>
+	mapwidth 12
+	mapheight 12
+	BoxMap
+	IndustrialTiles
+
+	special <NOEXIT>
+
+	start <Print 1>
+	msg1 <You enter \SCENE SceneID .>
+
+	NeededCells 2
+	content <Fill Sub *STORAGE_X na>
+
+	sub
+		team 1
+
+		team 2
+		name <Citizens>
+		SetAlly 1
+		Passive
+
+		team 3
+		name <Guards>
+		SetAlly 2
+
+		room
+		minimap <.......##...1#...##......>
+		inv
+			Elevator
+			name <Exit>
+			MiniMapComponent 1
+			Destination -1
+		end
+	end
 
 MetaScene
 	name <#'s Workyard>
