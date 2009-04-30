@@ -104,6 +104,9 @@ Const
 	NAS_Skill_XP_Base = 100;	{ For skill-specific XP awards. }
 					{ S = 100 + Skill Index }
 
+	Credits_Per_XP = 250; 	{ Conversion between credits and experience, used for }
+				{ skill training and also for skill-boosting foods. }
+
 	NAG_Condition = 9;
 	NAS_StaminaDown = 0;
 	NAS_MentalDown = 1;

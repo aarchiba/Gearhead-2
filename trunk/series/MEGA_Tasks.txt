@@ -7,6 +7,59 @@
 %% its plotid will be set to LOSS.
 
 %%
+%% *:TASK_Defeat[X]
+%%
+%%  The PC is sent to defeat some mecha. The mecha involved have no faction,
+%%  or at least no faction as set by the calling plot.
+%%
+%%  PARAM1: The outdoors scene where the mecha will be found.
+%%
+
+Content
+	name <TASK: Defeat Looters>
+	requires <*:TASK_DefeatLooters>
+	desc <Go to X, Kill Y. The staple of role playing games since time began.>
+
+	% E1 is the target scene
+	% E2 is the encounter
+	Element2 <Prefab>
+	Place2 <1>
+
+	sub
+		MetaScene 2 2
+		% L1 = Encounter Over Counter
+		% L2 = Initialization Counter
+		MapWidth 50
+		MapHeight 50
+
+		nu1 <if= T1 0   Return   if= V1 0 V= 1 1    LoseSubPlot %plotid%>
+		nu2 <if= T2 0   if= V1 0 V= 1 1   Alert 1   AddRenown 1  XPV 100   SALVAGE   WinSubPlot %plotid%>
+
+		Msg1 <You have defeated the looters.>
+
+		% Random scene content- there's a chance that an enemy or an ally will show up.
+		Content1 <Some 1 20 Sub *CRC_Nemesis   na>
+		Content2 <Some 1 10 Sub *CRC_Backup    na>
+
+		sub
+			team 1
+			SetEnemy 2
+			ParaX 5
+			ParaY 5
+
+			team 2
+			SetEnemy 1
+			Deploy <if= PlotStatus %plotid% %id%   WMecha 2 %threat% 100>
+			ParaX 45
+			ParaY 45
+		end
+	end
+	inv
+		STC CORE-MECHAENCOUNTER
+		name <Looters>
+	end
+
+%%
 %% *:TASK_KillFungus
 %%
 %%  The PC is sent to clean out a fungal infestation from somewhere. As soon as

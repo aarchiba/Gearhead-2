@@ -73,6 +73,7 @@ ChatNPCRenown <GrabChatNPC GNAtt NAG_CharDescription -6>
 ChatNPCRelationship <GrabChatNPC GNAtt NAG_Relationship 0>
 NPCRelationship <GrabNPC ? GNAtt NAG_Relationship 0>
 FacRelationship <GrabFaction ? GNatt NAG_Relationship 0>
+FacFortune <GrabFaction ? GNAtt NAG_Narrative NAS_Fortune>
 NPCUID <GrabNPC ? GNAtt NAG_EpisodeData NAS_UID>
 NPCX <GrabNPC ? GrabRoot GNAtt NAG_Location NAS_X>
 NPCY <GrabNPC ? GrabRoot GNAtt NAG_Location NAS_Y>
@@ -244,6 +245,7 @@ NAG_Narrative <7>
 NAS_HomeTownID <11>
 NAS_ControllerID <29>
 NAS_EncounterActive <34>
+NAS_Fortune <36>
 NAG_PlotStatus <-22>
 NAS_NID <0>
 NAS_VictimsRecovered <201>

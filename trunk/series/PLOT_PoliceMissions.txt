@@ -4,7 +4,7 @@ Plot
 	% As a police job, this misssion doesn't offer salvage but it will
 	% give a point of Lawful reputation.
 	% This job will not result in the PC making any enemies.
-	requires <*GENERAL>
+	requires <*GENERAL -Lawless>
 	PayRate 90
 
 	% E1 is the town itself
@@ -78,7 +78,7 @@ Plot
 	% As a police job, this misssion doesn't offer salvage but it will
 	% give a point of Lawful reputation.
 	% This job will result in the PC making an enemy.
-	requires <*GENERAL -!Ne>
+	requires <*GENERAL -!Ne -Lawless>
 	PayRate 135
 
 	% E1 is the town itself

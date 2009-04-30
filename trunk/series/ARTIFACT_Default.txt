@@ -187,6 +187,7 @@ Context <TL_Md>
 SDL_PORTRAIT <item_bonesword.png>
 mass -12
 Biotech
+UsesReflexes
 Acc 2
 Speed 5
 
@@ -241,6 +242,7 @@ sub
 	gear 4 3 20
 	name <Mega Smasher>
 	type <LINE BURN STRAIN MYSTERY>
+	UsesEgo
 	scale 0
 	mass 2
 	Range 6

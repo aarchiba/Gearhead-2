@@ -1613,6 +1613,13 @@ begin
 			EffectFrontEnd( GB , TruePC , effect , '' );
 		end;
 
+		{ Apply the item's SkillXP, if any. }
+		if Item^.Stat[ STAT_FoodSkillXP ] <> 0 then begin
+			if DoleSkillExperience( TruePC , Item^.Stat[ STAT_FoodSkillXP ] , Item^.Stat[ STAT_FoodSkillXPAmount ] ) then begin
+				DialogMsg( ReplaceHash( MsgString( 'BACKPACK_FoodSkillBoost' ) , GearName( Item ) ) );
+			end;
+		end;
+
 		{ Destroy the item, if appropriate. }
 		Dec( Item^.Stat[ STAT_FoodQuantity ] );
 		if Item^.Stat[ STAT_FoodQuantity ] < 1 then begin

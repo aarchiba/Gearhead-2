@@ -59,6 +59,8 @@ Const
 		FET_CauseStatus = 3;
 		FET_CureStatus = 4;
 	STAT_FoodEffectMod = 5;
+	STAT_FoodSkillXP = 6;		{ Does this food provide a bonus to SkillXP? }
+	STAT_FoodSkillXPAmount = 7;	{ How much skill experience does it provide? }
 
 	Repair_Cost_Multiplier: Array [0..NumMaterial] of Byte = (
 		1, 1, 5
@@ -182,6 +184,17 @@ begin
 			else if Part^.Stat[ STAT_FoodEffectMod ] > Num_Status_FX then Part^.Stat[ STAT_FoodEffectMod ] := Num_Status_FX;
 		end;
 	end else Part^.Stat[ STAT_FoodEffectMod ] := 0;
+
+	{ Stat 6 - Skill XP }
+	if Part^.STAT[ STAT_FoodSkillXP ] > NumSkill then Part^.STAT[ STAT_FoodSkillXP ] := 0
+	else if Part^.STAT[ STAT_FoodSkillXP ] < 0 then Part^.STAT[ STAT_FoodSkillXP ] := 0;
+
+	{ Stat 7 - Skill XP amount }
+	if Part^.STAT[ STAT_FoodSkillXP ] > 0 then begin
+		if Part^.STAT[ STAT_FoodSkillXPAmount ] < 1 then Part^.STAT[ STAT_FoodSkillXPAmount ] := 1
+		else if Part^.STAT[ STAT_FoodSkillXPAmount ] > 1000 then Part^.STAT[ STAT_FoodSkillXPAmount ] := 1000;
+	end;
+
 end;
 
 Function FoodMass( Part: GearPtr ): Integer;
@@ -210,6 +223,9 @@ begin
 		if M < ( it div 2 ) then M := it div 2;
 		it := M;
 	end;
+
+	{ Add the SkillXP cost. }
+	it := it + Part^.STAT[ STAT_FoodSkillXPAmount ] * Credits_Per_XP;
 
 	it := it * Part^.Stat[ sTAT_FoodQuantity ];
 

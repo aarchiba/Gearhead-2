@@ -24,6 +24,7 @@ ItemVar= <GrabItem ? GSetNAtt NAG_ScriptVar ? ?>
 ItemStat= <GrabItem ? GSetStat ? ?>
 ItemVar+ <GrabItem ? GAddNAtt NAG_ScriptVar ? ?>
 FacVar= <GrabFaction ? GSetNAtt NAG_ScriptVar ? ?>
+AddFortune <GrabFaction ? GAddNAtt NAG_Narrative NAS_Fortune ?>
 NPCVar= <GrabNPC ? GSetNAtt NAG_ScriptVar ? ?>
 NPCVar+ <GrabNPC ? GAddNAtt NAG_ScriptVar ? ?>
 SceneVar= <GrabScene ? GSetNAtt NAG_ScriptVar ? ?>

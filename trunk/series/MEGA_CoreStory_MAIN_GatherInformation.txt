@@ -479,7 +479,7 @@ Content
 				% V1 = Virys counter
 				use <if= PlotStatus %plotid% %id% else GoBeenBefore Alert 1 XPV 100 History 2 &SetEnemyFac %6% WinSubPlot %plotid% Trigger0 .%id%_%plotid%_GoWin>
 				GoBeenBefore <Print 3>
-				CLUE_CODEBREAKING <if# PlotStatus %plotid% %id% else GoNotYet if= V1 0 else GoBeenBefore Mental ifCodeBreaking HardSkillTar %threat% else GoFail Alert 4 V= 1 1 XPV 200>
+				CLUE_CODEBREAKING <if# PlotStatus %plotid% %id% else GoNotYet if= V1 0 else GoBeenBefore Mental ifCodeBreaking HardSkillTar %threat% else GoFail Alert 4 V= 1 1 XPV 200 AddFortune %6% -1>
 				GoFail <Print 5>
 				GoNotYet <Print 6>
 				Msg1 <Accessing this computer, you find communications between %name3% and %name6%.>

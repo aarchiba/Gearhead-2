@@ -1800,7 +1800,6 @@ const
 	);
 	Knowledge_First_Bonus = 14;
 	Knowledge_First_Penalty = 8;
-	CostFactor = 250;
 var
 	SkillMenu,CostMenu: RPGMenuPtr;
 	Skill,N: Integer;
@@ -1842,8 +1841,8 @@ begin
 			{ Add menu entries for each of the cost values }
 			{ that the PC can afford. }
 			for N := 1 to 40 do begin
-				if XPStep[ N ] * CostFactor <= Cash then begin
-					AddRPGMenuItem( CostMenu , '$' + BStr( XPStep[ N ] * CostFactor ) , N );
+				if XPStep[ N ] * Credits_Per_XP <= Cash then begin
+					AddRPGMenuItem( CostMenu , '$' + BStr( XPStep[ N ] * Credits_Per_XP ) , N );
 				end;
 			end;
 
@@ -1859,7 +1858,7 @@ begin
 			{ and give the PC some experience. }
 			if N <> -1 then begin
 				CHAT_Message := MsgString( 'SCHOOL_TeachingInProgress' );
-				AddNAtt( PC^.NA , NAG_Experience , NAS_Credits , -( XPStep[ N ] * CostFactor ) );
+				AddNAtt( PC^.NA , NAG_Experience , NAS_Credits , -( XPStep[ N ] * Credits_Per_XP ) );
 
 				{ Calculate the number of XPs earned. }
 				if NPC <> Nil then begin

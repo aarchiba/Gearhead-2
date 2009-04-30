@@ -906,50 +906,6 @@ Content
 	end
 
 
-%% *FUCSP_CBHQ_CometBurger
-%%	The actual CometBurger restaurant needed for the HQ.
-
-Content
-	requires <*FUCSP_CBHQ_CometBurger>
-	minimap <....2.......1.......#---#>
-	element1 <Prefab>
-	team1 <Citizens>
-	teamdata1 <ally pass>
-	content <Optional *URBAN_X - Local>
-	element2 <Prefab>
-
-	sub
-		Persona 1
-		*greeting <*NiceToMeetYou GoShop>
-		GoShop <NewChat ifChatNPCInPlay else GoNotHere Say 1 AddChat 1 AddChat 2 AddChat 3 AddChat 4>
-		*GoBye <*GOODBYE>
-		Keywords <FOOD RESTAURANT>
-		GoNotHere <Say 4>
-		% This particular CometBurger, being the HQ and all, is slightly better than most.
-		result1 <NewChat ifG PC$ 79 else GoNoMoney Say 2 PCEat PCMoraleDmg -3 Cash+ -80>
-		GoNoMoney <NewChat Say %id%03>
-		result2 <Goto GoBye>
-		result3 <Goto result1>
-		result4 <Goto result1>
-		Msg1 <This is CometBurger. My name is \ChatNPC , and I will be your meal coordinator today. All items on our extra-value menu are $80.>
-		Msg2 <Enjoy your meal and have a Comet Happy Fun day.>
-		Msg3 <Sorry, you don't have enough money to pay for this order. I can't let you have it for free. That's a company policy.>
-		Msg4 <Hello? This is Comet Burger. I'm not supposed to be using this phone for personal calls.>
-		Prompt1 <I'll have a CometBurger.>
-		CPrompt1 <ifG PCHunger 10 Accept>
-		Prompt2 <No thanks.>
-		Prompt3 <I'll have an order of CometNuggets.>
-		CPrompt3 <ifG PCHunger 10 Accept>
-		Prompt4 <I'll have some CometRings.>
-		CPrompt4 <ifG PCHunger 10 Accept>
-	end
-	inv
-		NPC Cook
-		SetFaction 2
-
-		STC TV
-		PDir 2
-	end
 
 
 %% *CSNSP_SilSan_Content

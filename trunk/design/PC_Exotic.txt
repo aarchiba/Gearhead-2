@@ -1,0 +1,37 @@
+%%
+%%  Exotic items are difficult to find. They're strange, different...
+%%  not necessarily better than normal items, but possibly better for
+%%  certain characters. Exotic weapons will often use unusual stats.
+%%
+
+%  ************************
+%  ***  MELEE  WEAPONS  ***
+%  ************************
+
+	Melee 8
+	name <Skull Cane>
+	desc <A black cane topped by a silver skull.>
+	factions <GENERAL>
+	category <EXOTIC>
+	legality -5
+	mass -4
+	UsesEgo
+	Acc 1
+	Speed 3
+	sub
+		BeamGun 6
+		Name <Laser Eyes>
+		desc <The ruby eyes of the cane are capable of unleashing a powerful laser blast.>
+		Range 5
+		Mass -5
+		Acc 1
+		Speed 3
+		UsesEgo
+		Integral
+		inv
+			PowerSource 2
+			name <Skull Cell 50>
+			mass -2
+		end
+	end
+

@@ -8,6 +8,39 @@
 %%
 
 Content
+	name <Fuchal Spinner/CometBurger Sequence>
+	requires <*:Q_LocalQuest "FUCSP">
+
+	% E1 is CometBurger
+	% E2 is Not CometBurger
+	% E3 is the police officer
+	% E4 is the food critic
+	Element1 <Scene CometBurger>
+	Element2 <Scene Building Public -CometBurger>
+	Element3 <Prefab>
+	Place3 <1 (Guards) sd ally>
+	Element4 <Prefab>
+	Place4 <2 (Citizens) pass ally>
+
+	%% SubPlot1 is the initial CometBurger confrontation-
+	%%       this one will determine which of the two NPCs the PC will get all remaining
+	%%       missions from.
+	%% SubPlot2 is the CometBurger extermination.
+	%% SubPlot3 is the bit where we TAKE OVER THE WORLD!!!
+	SubPlot1 <*Q_UNIQUE_FUCSP_Part1 #15 4 3 1>
+
+	inv
+		NPC Police Officer
+		SetFaction 9
+
+		NPC Cook
+		Combatant
+		CharDesc Criminal Passionate
+		job <Food Critic>
+		job_desig <ADVEN>
+	end
+
+Content
 	name <Gaos Spinner/Galena Hodges>
 	requires <*:Q_LocalQuest "GAOSP">
 

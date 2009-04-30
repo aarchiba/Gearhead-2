@@ -7,6 +7,413 @@
 %%
 
 Content
+	name <Ronald McComet Must Die>
+	requires <*Q_UNIQUE_FUCSP_Part1>
+
+	%%
+	%% Fuchal Spinner is known for its culinary excellence... and also
+	%% for CometBurger. A certain food critic would like to destroy
+	%% the ubiquitous fast food giant. In this first episode, the PC
+	%% gets to choose sides: with good taste, or with Comet (and the
+	%% law, of course).
+	%%
+
+	% Param1 is the culinary terrorist.
+	% Param2 is the L5Law officer investigating.
+	% Param3 is the CometBurger building
+	% E4 is the burger vat level
+	% E5 is the bac-bomb
+	% E6 is the meme
+	% E7 is the robotic factory level
+	% E8 is the CometBurger home restaurant
+	% E9 is the Perfect Sandwich
+	Element4 <QuestScene>
+	Place4 <7>
+	Element5 <Prefab>
+	Place5 <1>
+	Element6 <Prefab>
+	Element7 <QuestScene>
+	Place7 <3>
+	Element8 <Prefab>
+	Place8 <3 (Citizens) Pass>
+	Element9 <Prefab>
+	Place9 </>
+
+	%% P1 = CometBurger recharge; if nonzero, production has halted
+	%% P%id%01 = Have finished stage one, waiting for stage two
+
+	%% FAIL CONDITIONS:
+	%% - E1 and E2 both die
+	end <ifNPCDead %1% ifNPCDead %2% LoseSubPlot %plotid%>
+
+	sub
+		Persona 1
+		% V1 = Have given quest
+		% V2 = Have offered quest over the phone
+		rumor0 <%name1% has a vendetta against Comet Burger.>
+		KeyWords <TERRORIST>
+		greeting <if= P%id%01 0 else GoChat if# PlotStatus %plotid% %id% else GoDoQuest if# PlotStatus %plotid% 0 else GoDoQuest Goto GoNoQuest>
+		GoChat <NewChat SayAnything>
+		GoDoQuest <if= V1 1 else GoOfferQuest NewChat Say 1 AddChat 1 AddChat 2 AddChat 3>
+		GoNoQuest <NewChat Say 17>
+		% If the PC has accepted the job offer from E2, getting the job offer here will
+		% be more difficult.
+		GoOfferQuest <ifItemOK %5% else GoRuinQuest if= V2 0 else GoAutoOffer if= PlotStatus %plotid% %id% else GoPlainOffer NewChat Say 13 AddChat 12 AddChat 13>
+		GoAutoOffer <NewChat Say 19 AddChat 7 AddChat 8 AddChat 9>
+		GoPlainOffer <NewChat Say 5 AddChat 5 AddChat 6>
+		GoRuinQuest <SetPlotStatus %id% -2 NewChat SayAnything>
+		result1 <EndChat Say 2 AddChat 4>
+		result2 <NewChat Say 3>
+		result3 <SetPlotStatus %plotid% -2 Goto GoR3Finish>
+		*GoR3Finish <*YouLostItem>
+		result4 <NewChat Say 20 GiveItem %9% QMemo %plotid% 0 P= %id%01 1 P= 1 ComTime P+ 1 432000 AddLawful -5 AddEasygoing -10 AddReact 20 History 4 DeleteItem %5% XPV 100 ActivateMeme %6% RootSceneID>
+		result5 <EndChat Say 6>
+		result6 <NewChat Say 7 AddChat 7 AddChat 8 AddChat 9>
+		result7 <ifChatNPCInPlay else GoR7NotHere NewChat Say 8 QMemo %plotid% 9 V= 1 1 SetPlotStatus %plotid% %id% GiveItem %5%>
+		GoR7NotHere <NewChat Say 18 V= 2 1>
+		result8 <NewChat Say 10>
+		result9 <NewChat Say 11 AddChat 10 AddChat 11>
+		result10 <Goto result7>
+		result11 <NewChat Say 12>
+		result12 <ifIntimidation SkillTar %threat% else GoR12Fail NewChat Say 14 AddChat 10 AddChat 8 AddChat 9>
+		GoR12Fail <NewChat Say 15>
+		result13 <ifConversation SkillTar %threat% else GoR13Fail NewChat Say 14 AddChat 10 AddChat 8 AddChat 9>
+		GoR13Fail <NewChat Say 16>
+		Msg1 <Have you planted the Bac-Bomb in the CometBurger basement yet?>
+		Msg2 <Bwa ha ha! When I press this button to detonate the bomb, Comet Burger will be forced to close! At the very least they'll be forced to throw out lots of patties and detoxify the area, which should eat into their profits quite a bit!!!>
+		Msg3 <Every minute you waste is another two hundred bland mass-produced hamburgers sold to unwitting consumers!>
+		Msg4 <You helped %name1% attack the CometBurger main office.>
+		Msg5 <Do you like Comet Burger?>
+		Msg6 <They say that repeated consumption dulls your taste buds and rots your brain... it may already be too late to save you.>
+		Msg7 <Do you hate Comet Burger with the same passion I feel? Do you hate them enough to cross the law and risk your very life to bring them down?>
+		Msg8 <Then take this device- sneak the bacteria bomb into the sub-basement of CometBurger's main office, then come back here and we can detonate it remotely. No people will be hurt but all their patties will be ruined!>
+		Msg9 <%name1% in \SCENE NPCScene %1% gave you a bacteria bomb to detonate in the sub-basement of the CometBurger main office.>
+		Msg10 <That's the trouble these days- people no longer care about the food they eat! It's all CometBurger's fault for lowering the bar!>
+		Msg11 <Why? Because they are an affront to all that is good and pure in the world. Their mass-produced flavorless slop is an insult to true cuisine. Now, are you going to help me destroy them, or are you one of the enemy?>
+		Msg12 <I tried that. It didn't work.>
+		Msg13 <What are you looking at? I'm a very busy person... I don't have time to waste talking to crazies.>
+		Msg14 <I'm plotting the destruction of CometBurger! Their loathsome fast food must be stopped, and if the law won't do anything it's up to us to do it ourselves! Are you with me or against me?>
+		Msg15 <You don't sound like you really mean that... the burger sauce must have rotted your brain...>
+		Msg16 <I'm not telling you my plan... You might be one of them!>
+		Msg17 <The price we pay for good food is eternal vigilance and sometimes violence.>
+		Msg18 <Come see me in \SCENE NPCScene %1% then. I can't do everything over the phone!>
+		Msg19 <Are you ready to help me unleash culinary justice upon the abomination that is CometBurger!?>
+		Msg20 <As for you, my fellow food-lover, I know that no cash award or customized mecha could ever serve to repay your help. Instead, I present you with this- the world's perfect sandwich. Eat it with the mustard of sweet, sweet justice.>
+		Prompt1 <It has been done.>
+		CPrompt1 <if= ItemScene %5% %4% Accept>
+		Prompt2 <Uh, no, not yet.>
+		Prompt3 <I sort of lost the bomb.>
+		CPrompt3 <ifItemDestroyed %5% Accept>
+		Prompt4 <[Continue]>
+		Prompt5 <Yes I do. It's great!>
+		Prompt6 <No, not particularly.>
+		Prompt7 <Yes, absolutely!>
+		Prompt8 <No, I don't care that much.>
+		Prompt9 <Why don't you like Comet Burger?>
+		Prompt10 <I'll help you!>
+		Prompt11 <What you need is psychological help...>
+		Prompt12 <I hate Comet Burger!>
+		Prompt13 <What are you doing?>
+
+		Persona 2
+		% V1 = Have given quest
+		rumor0 <%name2% is investigating a culinary terrorist.>
+		greeting <if= P%id%01 0 else GoChat if# PlotStatus %plotid% %id% else GoDoQuest if# PlotStatus %plotid% 0 else GoDoQuest Goto GoNoQuest>
+		GoChat <NewChat SayANything>
+		GoDoQuest <if= V1 1 else GoOfferQuest  NewChat Say 1 AddChat 1 AddChat 2 AddChat 3>
+		*GoNoQuest <*MISC_CHATTER>
+		*GoOfferQuest <*ENEMY_CHECK GoRealOffer 9 na>
+		% If the PC has accepted the job offer from E2, giving the Bac-Bomb to E2 will be
+		% a bit of a letdown.
+		GoRealOffer <if= PlotStatus %plotid% %id% else GoPlainOffer NewChat Say 4 AddChat 4 AddChat 8>
+		GoPlainOffer <NewChat Say 6 AddChat 5 AddChat 6>
+		result1 <NewChat Say 12 RandomMecha .mek %threat% AddReact d10 FreezeNPC %1% PCEnemy %1% History 2 DeleteItem %5% AddLawful 1 QMemo %plotid% 0 P= %id%01 1>
+		.mek <GENERAL COMET>
+		result2 <NewChat Say 3>
+		result3 <SetPlotStatus %plotid% -2 Goto GoR3Finish>
+		*GoR3Finish <*YouLostItem>
+		result4 <NewChat Say 5 DeleteItem %5% FreezeNPC %1% PCEnemy %1% History 2  AddReact 10  QMemo %plotid% 0 P= %id%01 1>
+		result5 <NewChat Say 7 QMemo %plotid% 8 V= 1 1 SetPlotStatus %plotid% %id% AddChat 7>
+		result6 <NewChat Say 9>
+		result7 <NewChat Say 10>
+		result8 <NewChat Say 11>
+		Msg1 <Have you collected any evidence against %name1% yet?>
+		Msg2 <You helped %name2% stop %name1% from attacking CometBurger HQ.>
+		Msg3 <Well then, see what you can manage.>
+		Msg4 <We've received a tip that a culinary terrorist is planning to strike against this building. Unfortunately we don't yet have any evidence with which to make a case.>
+		Msg5 <Thank you... I'm not sure exactly what it is, but the lab guys will find out. I'm sure this might be an object of particular significance.>
+		Msg6 <There have been reports about a culinary terrorist planning to strike this building, but the police have everything under control.>
+		Msg7 <It's certainly possible. Our main suspect is %name1%, but so far we haven't been able to find any evidence implicating \OPR %1% . If you could obtain something like that it would really help our investigation.>
+		Msg8 <%name2% sent you to find evidence that %name1% in \SCENE NPCScene %1% is planning an attack against CoometBurger.>
+		Msg9 <Good. It's nice to know that we have the trust of the public.>
+		Msg10 <Reports indicate that \OPR %1% can be found at \SCENE NPCScene %1% . Good luck.>
+		Msg11 <Great! Come to the CometBurger building so I can examine it myself.>
+		Msg12 <Ah, yes... With this evidence, we'll be able to put %name1% away no problem. Thanks for your help, \PC . The fine people at Comet Metalworks have asked me to give you this mecha as a token of their gratitude.>
+		Prompt1 <I have \PPR %1% Bac-Bomb right here.>
+		CPrompt1 <ifKeyItem %5% ifChatNPCInPlay Accept>
+		Prompt2 <Still working on that.>
+		Prompt3 <I think the evidence has been destroyed.>
+		CPrompt3 <ifItemDestroyed %5% Accept>
+		Prompt4 <I have some evidence. [give Bac-Bomb]>
+		CPrompt4 <ifKeyItem %5% ifChatNPCInPlay Accept>
+		Prompt5 <Is there anything I could do to help?>
+		Prompt6 <I'm not too worried about it.>
+		Prompt7 <Where can I find %name1%?>
+		Prompt8 <I have some evidence.>
+		CPrompt8 <ifKeyItem %5% if# SceneID %3% Accept>
+
+		Persona 8
+		*greeting <*NiceToMeetYou GoShop>
+		GoShop <ifG P1 ComTime else GoOpenShop NewChat Say 5>
+		GoOpenShop <NewChat ifChatNPCInPlay else GoNotHere Say 1 AddChat 1 AddChat 2 AddChat 3 AddChat 4>
+		*GoBye <*GOODBYE>
+		Keywords <FOOD RESTAURANT>
+		GoNotHere <Say 4>
+		% This particular CometBurger, being the HQ and all, is slightly better than most.
+		result1 <NewChat ifG PC$ 79 else GoNoMoney Say 2 PCEat PCMoraleDmg -3 Cash+ -80>
+		GoNoMoney <NewChat Say %id%03>
+		result2 <Goto GoBye>
+		result3 <Goto result1>
+		result4 <Goto result1>
+		Msg1 <This is CometBurger. My name is \ChatNPC , and I will be your meal coordinator today. All items on our extra-value menu are $80.>
+		Msg2 <Enjoy your meal and have a Comet Happy Fun day.>
+		Msg3 <Sorry, you don't have enough money to pay for this order. I can't let you have it for free. That's a company policy.>
+		Msg4 <Hello? This is Comet Burger. I'm not supposed to be using this phone for personal calls.>
+		Msg5 <This is CometBurger. I am sorry, but we are currently experiencing technical difficulties. Please come back again later.>
+		Prompt1 <I'll have a CometBurger.>
+		CPrompt1 <ifG PCHunger 10 Accept>
+		Prompt2 <No thanks.>
+		Prompt3 <I'll have an order of CometNuggets.>
+		CPrompt3 <ifG PCHunger 10 Accept>
+		Prompt4 <I'll have some CometRings.>
+		CPrompt4 <ifG PCHunger 10 Accept>
+
+		MetaScene 4
+		name <the Burger Garden>
+		type <Basement Private>
+		terrain <GROUND>
+		special <NOEXIT>
+		BoxMap
+		MapWidth 17
+		MapHeight 17
+		IndustrialTiles
+		start <Print 1>
+		msg1 <You enter the Burger Garden.>
+		sub
+			Team 1
+
+			Team 2
+
+			Room
+			sub
+				StairsUp
+				Destination -1
+			end
+
+			Room
+			minimap<......2.3.......4.5......>
+			special <SHAREDPALETTE>
+			inv
+				STC BIOTANK
+				use <Print 1>
+				msg1 <You can see thousands of cometburger patties floating in the nutrient solution.>
+				MiniMapComponent 2
+				SetTeam 2
+
+				STC BIOTANK
+				use <Print 1>
+				msg1 <You can see thousands of cometburger patties floating in the nutrient solution.>
+				MiniMapComponent 3
+				SetTeam 2
+
+				STC BIOTANK
+				use <Print 1>
+				msg1 <You can see thousands of cometburger patties floating in the nutrient solution.>
+				MiniMapComponent 4
+				SetTeam 2
+
+				STC BIOTANK
+				use <Print 1>
+				msg1 <You can see thousands of cometburger patties floating in the nutrient solution.>
+				MiniMapComponent 5
+				SetTeam 2
+			end
+
+			Room
+			minimap<......2.3.......4.5......>
+			special <SHAREDPALETTE>
+			inv
+				STC BIOTANK
+				use <Print 1>
+				msg1 <You can see thousands of cometburger patties floating in the nutrient solution.>
+				MiniMapComponent 2
+				SetTeam 2
+
+				STC BIOTANK
+				use <Print 1>
+				msg1 <You can see thousands of cometburger patties floating in the nutrient solution.>
+				MiniMapComponent 3
+				SetTeam 2
+
+				STC BIOTANK
+				use <Print 1>
+				msg1 <You can see thousands of cometburger patties floating in the nutrient solution.>
+				MiniMapComponent 4
+				SetTeam 2
+
+				STC BIOTANK
+				use <Print 1>
+				msg1 <You can see thousands of cometburger patties floating in the nutrient solution.>
+				MiniMapComponent 5
+				SetTeam 2
+			end
+
+			Room
+			minimap<......2.3.......4.5......>
+			special <SHAREDPALETTE>
+			inv
+				STC BIOTANK
+				use <Print 1>
+				msg1 <You can see thousands of cometburger patties floating in the nutrient solution.>
+				MiniMapComponent 2
+				SetTeam 2
+
+				STC BIOTANK
+				use <Print 1>
+				msg1 <You can see thousands of cometburger patties floating in the nutrient solution.>
+				MiniMapComponent 3
+				SetTeam 2
+
+				STC BIOTANK
+				use <Print 1>
+				msg1 <You can see thousands of cometburger patties floating in the nutrient solution.>
+				MiniMapComponent 4
+				SetTeam 2
+
+				STC BIOTANK
+				use <Print 1>
+				msg1 <You can see thousands of cometburger patties floating in the nutrient solution.>
+				MiniMapComponent 5
+				SetTeam 2
+			end
+		end
+
+		MetaScene 7
+		name <the CometBurger Factory>
+		special <NOEXIT>
+		type <factory>
+		mapwidth 30
+		mapheight 30
+		MonkeyMap
+		IndustrialTiles
+		LockedDoorChance 15
+		SecretDoorChance 20
+		NeededCells 3
+		start <Print 1>
+		msg1 <You enter the CometBurger Factory.>
+		sub
+			Team 1
+			SetEnemy 2
+
+			Team 2
+			name <Monster>
+			type <Robot>
+			SetEnemy 1
+			Stat 2 1
+
+			room
+			width 3
+			height 3
+			sub
+				StairsUp
+				Destination -1
+			end
+
+			Room
+			minimap <#...#.......2.......#...#>
+			special <SHAREDPALETTE>
+			inv
+				StairsDown
+				MiniMapComponent 2
+				desig <ENTRANCE %4%>
+				Hide
+				update <if# PlotStatus %plotid% 0  SetStat STAT_MetaVisibility 0>
+			end
+		end
+
+
+		MetaScene 8
+		%% The furnishings of CometBurger
+		sub
+			Room
+			minimap <....2.......1.......#---#>
+			desig <HOME>
+			content <Optional *URBAN_X na Local>
+			inv
+				STC TV
+				PDir 2
+				MiniMapComponent 2
+			end
+
+			Room
+			minimap <.......2............##+##>
+			special <SHAREDPALETTE NOGO>
+			sub
+				Door
+				use <if= v1 0 else GoJustUse ifYesNo 101 102 103 else GoLeaveDoor V= 1 1 Goto GoJustUse>
+				GoJustUse <ifG -99 MetaPass else GoCloseDoor  if= StatVal STAT_Lock 0 else GoDoorLocked Print 1  SetStat STAT_Pass 0  Transform 1>
+				GoLeaveDoor <Print 104>
+				Msg101 <WARNING: Factory level contains unsupervised workbots. Enter at own risk.>
+				Msg102 <Open the door>
+				Msg103 <Leave it alone>
+				Msg104 <You leave the door alone.>
+			end
+			inv
+				TrapDoor
+				MiniMapComponent 2
+				desig <ENTRANCE %7%>
+			end
+		end
+	end
+	inv
+		Treasure
+		name <Bac-Bomb>
+		desc <A home-made bacteriological bomb. There is no obvious way to trigger it.>
+
+		Meme
+		MaxMemeViews 3
+		Msg <Did you hear that someone set off a bomb in the CometBurger factory? I never thought it could happen here...>
+		Msg_1 <Everybody's talking about the bomb that went off at CometBurger. I wonder who could have done something like that...>
+		CMsg_1 <ifNPCSociable Accept>
+		Msg_2 <I think I know who planted the bomb at CometBurger, but I can't say until I find some evidence.>
+		CMsg_2 <ifNPCShy Accept>
+		Msg_3 <How could anyone do such a crappy thing to CometBurger? I mean, everybody loves the food there!>
+		CMsg_3 <ifNPCEasygoing Accept>
+		Msg_4 <It's terrible what happened at CometBurger headquarters... but a part of me thinks they brought it on themselves for serving crappy food.>
+		CMsg_4 <ifNPCPassionate if# ChatNPCFac 2 Accept>
+		Msg_5 <>
+		CMsg_5 <ifNPCCheerful Accept>
+		Msg_6 <>
+		CMsg_6 <ifNPCMelancholy Accept>
+		Msg_7 <Somebody bombed CometBurger! Oh yeah, stickin' it to the man!>
+		CMsg_7 <ifNPCCriminal if# ChatNPCFac 2 Accept>
+		Msg_8 <This attack must have been carried out by our enemies. The strange thing is, if it were MUGL the bomb would have been painted pink, and if it were Hoeller they would have just sent mecha.>
+		CMsg_8 <if= ChatNPCFac 2 Accept>
+
+		NPC Cook
+		chardesc young
+		SetFaction 2
+
+		Food 50
+		name <Perfect Sandwich>
+		desc <This sandwich is just simply perfect. It would almost be a shame to eat it.>
+		FoodMorale 5
+		Mass -8
+		FoodXP:Vitality
+		FoodXPAmount 100
+	end
+
+Content
 	name <Gaos Nightlife, Part Two>
 	requires <*Q_UNIQUE_GAOSP_NewResort>
 

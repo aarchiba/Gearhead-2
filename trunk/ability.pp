@@ -631,7 +631,7 @@ begin
 				AddNAtt( PC^.NA , NAG_Condition , NAS_StaminaDown , Strain );
 
 				{ Using SP trains athletics. }
-				DoleSkillExperience( PC , NAS_Athletics , Strain );
+				DoleSkillExperience( PC , NAS_Athletics , Strain * 2 );
 			end else begin
 				AddMoraleDmg( PC , Strain );
 			end;
@@ -650,7 +650,7 @@ begin
 				AddNAtt( PC^.NA , NAG_Condition , NAS_MentalDown , Strain );
 
 				{ Using MP trains concentration. }
-				DoleSkillExperience( PC , NAS_Concentration , Strain );
+				DoleSkillExperience( PC , NAS_Concentration , Strain * 2 );
 			end else begin
 				AddMoraleDMG( PC , Strain );
 			end;

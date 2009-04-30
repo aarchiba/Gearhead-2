@@ -188,6 +188,8 @@ Const
 
 	NAS_QuestInUse = 35;		{ Used when constructing quests, to prevent the same fragment }
 					{ from being selected multiple times. }
+	NAS_Fortune = 36;	{ Factions may rise and fall in fortune. }
+				{ This is used to help determine the RPG campaign ending. }
 
 	{ The following are used by the randmaps unit... }
 	NAS_LockedDoorChance = 101;
