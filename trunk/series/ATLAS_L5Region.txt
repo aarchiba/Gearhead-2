@@ -3874,7 +3874,7 @@ Scene 0 3
 
 	desig <TOHSP>
 
-	Quest1 <*:Q_LocalQuest 50>
+	Quest1 <*:Q_LocalQuest #50>
 
 	start <if= V1 0 else GoSecondTime V= 1 1 Alert 1 Print 2>
 	GoSecondTime <Print 2>
@@ -4868,7 +4868,7 @@ Scene 0 3
 	world <L5 Region>
 	desc <Theles Spinner is also known as "The Meatyard". It is a place where lives may be bought and sold.>
 	special <NOEXIT SHOWALL SOLO>
-	type <city town spinner target outdoors urban destination hometown dangerous sleazy dystopia>
+	type <city town spinner target outdoors urban destination hometown dangerous sleazy dystopia lawless>
 	habitat <SPACE.URBAN>
 	personatype <city dystopia spinner>
 	MegaCityMap
@@ -4889,6 +4889,7 @@ Scene 0 3
 	Msg2 <You enter the Theles Spinner lower level.>
 
 	Quest1 <*:Q_CHARA_ARENA_BASE>
+	Quest2 <*:Q_LocalQuest #25>
 
 sub
 	Scene

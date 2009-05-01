@@ -260,4 +260,41 @@
 		Legality 25
 	end
 
+	Set
+	name <20cm bolt>
+	% Used in the Magna Crossbow and some other weapons
+	sub
+		Ammo
+		name <Carbide>
+		type <ArmorPiercing>
+
+		Ammo
+		name <Flare>
+		type <Brutal Burn>
+
+		Ammo
+		name <Cluster>
+		type <Scatter Brutal>
+		Legality 5
+
+		Ammo
+		name <HE>
+		type <Blast 2>
+		Legality 10
+
+		Ammo
+		name <EMP>
+		type <Blast 2 Haywire>
+		Legality 15
+
+		Ammo
+		name <Assassin>
+		type <Poison>
+		Legality 20
+
+		Ammo
+		name <Plasma>
+		type <Blast 3 Brutal>
+		Legality 25
+	end
 

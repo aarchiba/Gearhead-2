@@ -7,6 +7,848 @@
 %%
 
 Content
+	name <Climbing the Ladder, Fourth Rung>
+	desc <Theles Spinner is divided into regions based on social class. The PC has a chance to climb the ladder.>
+	requires <*Q_UNIQUE_THESP_Rung4>
+
+	% For the final level, the PC will meet the gardener behind Theles Spinner and
+	% be given a choice that could end the game.
+	% E1 is the third level. This is needed to open up the pathways after finishing
+	%   the fourth level.
+	% E2 is the fourth level itself.
+	% E3 is the gardener.
+	% E4 is the meme
+	Element3 <Prefab>
+	Place3 <2 (Citizens) SD>
+	Element4 <Prefab>
+
+	sub
+		Persona 3
+		special <UNLISTED NOPLOTS>
+		% V1 = Have been told to get in the pod.
+		greeting <if= V1 1 else GoFirstTime NewChat Say 1 AddChat 1 AddChat 2>
+		GoFirstTime <NewChat Say 2 AddChat 3>
+		result1 <NewChat Say 3>
+		result2 <EndChat Say 4 SoloAttack %3%>
+		result3 <NewChat Say 5 AddChat 4>
+		result4 <NewChat Say 6 AddChat 5>
+		result5 <NewChat Say 7 AddChat 6>
+		result6 <NewChat Say 8 AddChat 7>
+		result7 <NewChat Say 9 QMemo %plotid% 10 V= 1 1 AddChat 8 AddChat 9 AddChat 10>
+		result8 <NewChat Say 11 L= 3 1>
+		result9 <NewChat Say 12 L= 3 1>
+		result10 <EndChat Say 13 SoloAttack %3%>
+		Msg1 <Yes, are you having trouble finding the cell?>
+		Msg2 <Hello \PC . I've been watching you, watching you from way up here. I see that you've bloomed into a beautiful flower.>
+		Msg3 <You really shouldn't dawdle. The administration of Theles Spinner is a serious business... it makes me glad that I'm simply a gardener.>
+		Msg4 <My, but that was the wrong answer. Wilted flowers must be pruned, before they infect the rest of the garden. I'm so sorry.>
+		Msg5 <This is the fourth level of Theles Spinner, the home of the supreme technocrats. I am merely a humble gardener. My purpose is to keep everything running.>
+		Msg6 <They are the technocrats, of course, the fruits of Theles Spinner, those people who have proven themselves smarter, more competitive, far more ruthless than the rabble below.>
+		Msg7 <Leaders such as these, giants if I may say, cannot be expected to work together under normal circumstances. Luckily we've found a way to let them share. They are dreaming.>
+		Msg8 <Yes, dreaming. Their subconscious minds send orders to the levels below. If their orders result in energy profit for the colony, their brains are granted exquisite pleasure. If they result in energy loss... well, let's not mention that.>
+		Msg9 <Why, to add you to the garden, of course! You have proven that you belong here.>
+		Msg10 <%name3% offered you a position as technocrat of Theles Spinner, as long as you don't mind spending the rest of your life in a tube.>
+		Msg11 <There's an empty biotank around here someplace. Just climb inside, and all the worries of this life will pass from your mind.>
+		Msg12 <Don't be so hasty. Take a look around the garden, see how peaceful they are. Make your decision then.>
+		Msg13 <Oh, so you are a weed, not a flower at all. I think we both know what happens to them.>
+		Prompt1 <I'll go there in a minute.>
+		Prompt2 <I've decided that I don't want to.>
+		Prompt3 <Who are you? What is this place?>
+		Prompt4 <Who are these people in the tanks?>
+		Prompt5 <Why are they in those containment tanks?>
+		Prompt6 <Dreaming?>
+		Prompt7 <Why did you call me here?>
+		Prompt8 <I accept your offer.>
+		Prompt9 <I'm not going to spend my life in a fishtank.>
+		Prompt10 <Actually I came here to destroy the technocracy.>
+
+		MetaScene 2
+		% L1 = Initialization Counter
+		% L2 = Can use elevator
+		% L3 = Can use biotank
+		Faint%3% <SetPlotStatus %plotid% -1 Alert 5 History 3 XPV 100 L= 2 1 L= 3 0 ActivateMeme %4% RootSceneID SceneVar= %1% 1 1 SceneVar= RootSceneID 2 1 SceneVar= %1% 12 1>
+		Surrender%3% <Print 4 KillNPC %3%>
+		start <if= L1 0 else GoBeenBefore L= 1 1 SetPlotStatus %plotid% %id% Alert 1>
+		GoBeenBefore <Print 2>
+		Msg1 <You enter the fourth level. The area is brightly illuminated by reflected sunlight. In the distance, an old man tends to the plants.>
+		Msg2 <You enter Theles Spinner fourth level.>
+		Msg3 <You killed the gardener of Theles Spinner.>
+		Msg4 <%name4% crumples over and dies.>
+		Msg5 <With the gardener gone, you wonder what is going to happen to Theles Spinner. Is this the beginning of a better tomorrow, or of a new age of chaos?>
+		sub
+			rect
+			minimap <      ...  .2.  ...      >
+			inv
+				trapdoor
+				MiniMapComponent 2
+				use <if# L2 0 else GoAccessDenied Print 1 Exit RootSceneID>
+				GoAccessDenied <Print 101>
+				Msg101 <You can't open this trapdoor right now.>
+			end
+		end
+	end
+	inv
+		NPC Soldier
+		Biotech
+		job <Gardener>
+		job_desig <ACADE>
+		Age -20
+		chardesc male
+		CHAT_ATTACK_1 <It's strange fruit we grow in Theles Spinner... very strange.>
+		CHAT_ATTACK_2 <This garden must to be weeded!>
+		CHAT_SAFE_1 <It's strange fruit we grow in Theles Spinner... very strange.>
+		CHAT_SAFE_2 <How pretty... so pretty...>
+
+		Meme
+		MaxMemeViews 10
+		Msg_1 <What's going to happen to Theles Spinner without the technocrats?>
+		Msg_2 <Did you hear? Someone went all the way to the top level and killed the technocrats!>
+		Msg_10 <This is the time when we should band together. Free from the technocrats, we can make Theles Spinner a normal place, like all the others.>
+		CMsg_10 <ifNPCSociable Accept>
+		Msg_11 <Stay away from me.>
+		CMsg_11 <ifNPCShy Accept>
+		Msg_12 <With the technocrats we had chaos. Now with them gone we have chaos. Big deal.>
+		CMsg_12 <ifNPCEasygoing Accept>
+		Msg_13 <Time to get ours, before the FCS security forces arrive and put their boots to our heads.>
+		CMsg_13 <ifNPCPassionate Accept>
+		Msg_14 <Maybe with the technocrats gone, we can build a better society for ourselves!>
+		CMsg_14 <ifNPCCheerful Accept>
+		Msg_15 <The FCS is going to declare martial law while they clean up the mess made by the last technocrats. I get a feeling the new boss isn't going to be much different from the old one.>
+		CMsg_15 <ifNPCMelancholy Accept>
+		Msg_16 <Pillage and burn! The city belongs to us now!>
+		CMsg_16 <ifNPCCriminal Accept>
+		Msg_17 <This isn't going to change anything. Theles Spinner is sick to its core.>
+		CMsg_17 <ifNPCVillainous Accept>
+		Msg_18 <I wonder what the death of the technocrats is going to mean for my job...>
+		CMsg_18 <ifNPCLawful Accept>
+		Msg_20 <I hear there's a riot on the upper level! I'm gonna go join it!>
+		CMsg_20 <ifNPCSociable Accept>
+		Msg_21 <Keep away from me... with society breaking down, the crazies are more dangerous than ever.>
+		CMsg_21 <ifNPCShy Accept>
+		Msg_22 <I got exiled here for being a slacker. Hopefully the new technocrats aren't going to kick people out for not working like my last spinner did.>
+		CMsg_22 <ifNPCEasygoing Accept>
+		Msg_23 <It's about time someone brought a taste of the city floor up to the top level!>
+		CMsg_23 <ifNPCPassionate Accept>
+		Msg_24 <Hooray! Did you hear? The technocrats are dead! I grabbed myself a vidscreen during the riot!>
+		CMsg_24 <ifNPCCheerful Accept>
+		Msg_25 <The technocracy has been beaten, but life down here stays the same.>
+		CMsg_25 <ifNPCMelancholy Accept>
+		Msg_26 <It's great that the technocrats are gone, but if the new bosses decide to close the doors I wonder where all of the exiles will be able to go.>
+		CMsg_26 <ifNPCCriminal Accept>
+		Msg_27 <When the FCS installs a new technocrat and brings law to this place, that's going to be the end of our fun.>
+		CMsg_27 <ifNPCVillainous Accept>
+		Msg_28 <I wanted to see the technocrats gone, but is this anarchy really any better?>
+		CMsg_28 <ifNPCHeroic Accept>
+	end
+
+Content
+	name <Climbing the Ladder, Third Rung>
+	desc <Theles Spinner is divided into regions based on social class. The PC has a chance to climb the ladder.>
+	requires <*Q_UNIQUE_THESP_Rung3>
+
+	% For the third level, the PC will be given a chance to crush the anti-technocrat
+	% rebellion... or become a part of it.
+	% E1 is the third level. Unlike the previous two, this is not an outdoors scene.
+	% E2 is the mission-giver. If the PC accepts the offer, the path back down to the
+	%  second level is opened.
+	% E3 is the leader of the rebellion, who the PC needs to find. Actually he's not
+	%  much better than the technocrats...
+	% E4 is E3's hideout
+	% E5 is the final spire
+	% E6 is the fourth layer
+	% E7 is the environs scene for E4
+	% E8 is the entrance for E4
+	Element2 <Prefab>
+	Place2 <1 (Citizens) sd>
+	Element3 <Prefab>
+	Place3 <4 (Rebels) sd>
+	Element4 <QuestScene>
+	Place4 <7>
+	Element5 <QuestScene>
+	Place5 <1>
+	Element6 <QuestScene>
+	Place6 <5>
+	Element7 <Scene Space Environs>
+	Element8 <Prefab>
+	Place8 <7>
+
+	% SubQuest1 is the task to locate the rebel hideout
+	% SubQuest2 is the final rung of this quest
+	SubPlot1 <*:Q_RevealEncounter 4 7>
+	SubPlot2 <*Q_UNIQUE_THESP_Rung4 #90 1 6>
+
+	sub
+		Persona 2
+		special <UNLISTED NOPLOTS>
+		%%  V1 = Have accepted mission
+		greeting <if= PlotStatus %plotid% %id% else GoChat if# V1 2 else GoChat if= V1 1 else GoOfferMission NewChat Say 2 AddChat 1 AddChat 2 AddChat 3>
+		GoChat <NewChat SayAnything>
+		GoStartMission <V= 1 1 SceneVar= %1% 1 1 SetPlotStatus %plotid1% %id1% QMemo %plotid% 1>
+		GoOfferMission <NewChat Say 3 AddChat 4 AddChat 5>
+		GoAttack <TeamAttack 2 QMemo %plotid% 0 TeamAttack 3 SceneVar= %1% 12 1 SceneVar= %1% 1 0>
+		result1 <NewChat Say 4>
+		result2 <NewChat Say 5 AddChat 6 AddChat 7>
+		result3 <EndChat Say 6 AddChat 8  SceneVar= %1% 1 0>
+		result4 <NewChat Say 7 AddChat 9 AddChat 10>
+		result5 <NewChat Say 8 Goto GoStartMission>
+		result6 <NewChat Say 4>
+		result7 <EndChat Say 9 Goto GoAttack>
+		result8 <NewChat Say 10 QMemo %plotid% 11 SceneVar= %1% 2 1 SceneVar= %1% 1 0 V= 1 2 UpdateProps AddChat 11 AddChat 12>
+		result9 <Goto result5>
+		result10 <NewChat Say 12 QMemo %plotid% 0 SceneVar= %1% 1 1 SceneVar= %1% 12 1>
+		result11 <NewChat Say 13>
+		result12 <NewChat Say 14>
+		Msg1 <Technocrat %name2% sent you back to the lower levels to find and eliminate a rebel movement.>
+		Msg2 <Have you dealt with the insurgents yet? The Technocrats demand progress.>
+		Msg3 <We've been waiting for a long time. Let me give you the details of your task...>
+		Msg4 <Don't come back until the rebels have been dealt with.>
+		Msg5 <I don't have time to play games, \PC , so I'd advise that you think very carefully about what you say. Are you going to complete this mission or will we find some other purpose for you?>
+		Msg6 <So, I guess you really are as good as the tests indicated. You've even attracted the attention of the fourth level.>
+		Msg7 <You? A technocrat? Don't make me laugh. You were brought here because we intend to use your abilities, though if you prove yourself there's a chance that you could be promoted to join our ranks.>
+		Msg8 <There's a rebellion brewing on the lower levels. Certain residents dislike the way Theles Spinner is run. Your task is to destroy their mecha and eliminate their leader. Return here when the task has been completed.>
+		Msg9 <You were given every chance. If you will not serve your purpose in life, then your body will serve us in death.>
+		Msg10 <The door in the southeast corner of the room will now be open to you. I suppose I should warn you that... no, it will be more fun if you discover on your own.>
+		Msg11 <Technocrat %name2% informed you that you've been granted access to Theles level four.>
+		Msg12 <I can see that the testing has been for nothing. You are not suited to be one of us; you may leave any time you desire.>
+		Msg13 <It doesn't make any difference what I was going to say. Your fate from this point onwards is sealed.>
+		Msg14 <You are ignorant of how things operate in Theles. What would be the point of a third level, if not for a fourth?>
+		Prompt1 <I'm still working on it.>
+		Prompt2 <I've decided that I'm not going to help you.>
+		CPrompt2 <if= SceneVar %4% 2 0 Accept>
+		Prompt3 <The rebels have been dealt with.>
+		CPrompt3 <if= SceneVar %4% 2 1 Accept>
+		Prompt4 <Wait, I'm a technocrat now, you can't order me...>
+		Prompt5 <Tell me what I must do.>
+		Prompt6 <I'll do the mission.>
+		Prompt7 <You can take this mission and burn it.>
+		Prompt8 <[Continue]>
+		Prompt9 <Fine. Tell me what you want.>
+		Prompt10 <I'm not your slave to boss around.>
+		Prompt11 <Wait, what were you going to say?>
+		Prompt12 <There's a fourth level? Isn't this the top?>
+
+		Persona 3
+		special <UNLISTED>
+		% V1 = Have joined rebellion
+		greeting <if= PlotStatus %plotid% %id% else GoCheck if= V1 0 else GoChat ifChatNPCSurrendered else GoChallenge NewChat Say 1 AddChat 1 AddChat 2>
+		GoCheck <if= V1 1 else GoChat if= SceneVar RootSceneID 2 1 else GoChat PCAlly %3% NewChat Say 14>
+		GoChat <NewChat SayAnything>
+		GoChallenge <NewChat Say 2 AddChat 3 AddChat 4>
+		Result1 <EndChat Say 3 Print 4 KillNPC %3%>
+		Result2 <EndChat Say 5 History 6 FreezeNPC %3% Trigger0 NU2 ifChatNPCHeroic else GoMakeEnemy PCAlly %3%>
+		GoMakeEnemy <PCEnemy %3%>
+		Result3 <EndChat Say 7  TeamAttack 2>
+		Result4 <NewChat Say 8 AddChat 5>
+		Result5 <NewChat Say 9 AddChat 6 AddChat 7 AddChat 8>
+		result6 <NewChat Say 10 V= 1 1 QMemo %plotid% 11 AddReact d30>
+		result7 <EndChat Say 12  TeamAttack 2>
+		result8 <NewChat Say 13 AddChat 3 AddChat 9>
+		*result9 <*GOODBYE>
+		Msg1 <Please, you have defeated me, spare my life...>
+		Msg2 <You've come to a dangerous place. What do you hope to find here?>
+		Msg3 <Then I'll die of my own free will, and not at the hand of their slave!>
+		Msg4 <%name3% kills \PPR %3% self.>
+		Msg5 <Thank you... we will probably meet again, though as friends or enemies I couldn't say.>
+		Msg6 <You spared the life of rebel leader %name3%.>
+		Msg7 <You aren't the first one they've sent, and I doubt you'll be the last. Kill the intruder!>
+		Msg8 <The people of Theles Spinner are regarded as living waste! It's the fault of the technocrats- these abuses would never be tolerated in any other spinner.>
+		Msg9 <We have a two part plan. First, the technocracy must be eliminated. Second, the shipment of criminals and slackers from the other colonies will be stopped.>
+		Msg10 <Great! We could always use more members. Look, just see what kind of trouble you can make for the technocrats. I'll be here administrating.>
+		Msg11 <You joined %name3%'s rebellion against the technocrats. %name2% isn't going to be happy.>
+		Msg12 <Another slave of the technocrats, I should have known... Destroy the intruder!>
+		Msg13 <What are you doing asking questions like that!? It's as though you don't want this rebellion to succeed. Tell me, where do your loyalties lie?>
+		Msg14 <They say you had something to do with getting rid of the technocrats. I salute you!>
+		Prompt1 <No. The technocrats ordered your death.>
+		Prompt2 <Fine. Leave this place, and never come back.>
+		Prompt3 <The technocrats sent me to kill you.>
+		Prompt4 <I want to learn about the rebellion.>
+		Prompt5 <What do you plan to do about it?>
+		Prompt6 <I want to join your rebellion!>
+		Prompt7 <I think it's time that I kill you.>
+		Prompt8 <But how will you keep the colony operating?>
+		Prompt9 <I'm not going to oppose you... yet.>
+
+		MetaScene 2
+		% L1 = PC can return to the lower levels from this level
+		% L2 = Granted entrance to Level 4
+		% L11 = Initialization Counter
+		% L12 = Re-entry denied; PC will not be allowed to return to this level
+		start <if= L11 0 else %pop% L= 11 1 SetPlotStatus %plotid% %id% Monologue %2% 11 Goto %pop%>
+		Surrender%2% <Print 12 KillNPC %2%>
+		Msg11 <It's about time you arrived. Get over here.>
+		Msg12 <%name2% suddenly drops dead!>
+		sub
+			Room
+			minimap <.......1............#---#>
+			special <SHAREDPALETTE>
+			desig <HOME>
+		end
+		inv
+			Elevator
+			desig <Entrance %5%>
+			XPos 38
+			YPos 12
+
+			STC FOOD-1
+			XPos 37
+			YPos 13
+
+			STC FOOD-1
+			XPos 37
+			YPos 14
+
+			STC FOOD-1
+			XPos 39
+			YPos 13
+
+			STC FOOD-1
+			XPos 39
+			YPos 14
+		end
+
+		MetaScene 4
+		name <%name3%'s Lair>
+		type <Lair Private>
+		terrain <GROUND>
+		special <NOEXIT>
+		BoxMap
+		MapWidth 17
+		MapHeight 17
+		% V1 = First time entry counter
+		% V2 = Have defeated all rebels
+		start <Print 1 if= V1 0 ForceChat %3% V= 1 1 WMonster 2 %threat% 150>
+		nu2 <if= T2 0 if= V2 0 V= 2 1 XPV 100 QMemo %plotid% 2>
+		Msg1 <You enter the rebel microstation.>
+		Msg2 <You have defeated the rebels and should report back to %name2%.>
+		sub
+			Team 1
+
+			Team 2
+			name <Rebels>
+			type <Criminal Guard City>
+
+			Room
+			sub
+				Trapdoor
+				Destination -1
+			end
+		end
+
+		MetaScene 5
+		name <Final Spire>
+		special <SOLO NOEXIT NORESCUE>
+		type <DUNGEON Industrial>
+		dentrance <*GoUp>
+		mapwidth 40
+		mapheight 40
+		MonkeyMap
+		LockedDoorChance 5
+		SecretDoorChance 15
+		IndustrialTiles
+		NeededCells 3
+		DifficultyLevel 90
+		start <Print 1>
+		msg1 <You enter \SCENE SceneID .>
+		sub
+			Room
+			ForGoalLevel
+			sub
+				StairsUp
+				desig <Entrance %6%>
+			end
+
+			Team 1
+			SetEnemy 2
+
+			Team 2
+			name <Monster>
+			type <Robot Vermin Mutant>
+			SetEnemy 1
+			Stat 2 1
+
+			room
+			width 3
+			height 3
+			sub
+				StairsDown
+				Destination -1
+			end
+		end
+
+		MetaScene 6
+		name <Theles Spinner Fourth Level>
+		type <complex private>
+		special <NOEXIT NORESCUE SOLO UNSAFE SHOWALL>
+		PalaceParkTiles
+		MapWidth 32
+		MapHeight 22
+		BoxMap
+		FloorType 1
+		sub
+			team 1
+
+			team 2
+			name <Citizens>
+			SetAlly 3
+
+			team 3
+			name <Guards>
+			SetAlly 2
+
+			rect
+			minimap <      ###  #1#  ...      >
+			inv
+				Elevator
+				MiniMapComponent 1
+				Destination -1
+				use <Print 11>
+				Msg11 <This elevator doesn't respond.>
+			end
+
+			rect
+			minimap <......1#2..###..3#4......>
+			special <SHAREDPALETTE>
+			inv
+				STC BIOTANK
+				use <Print 1>
+				Msg1 <This tank contains a human being floating in a foetal position.>
+				MiniMapComponent 1
+
+				STC BIOTANK
+				use <Print 1>
+				Msg1 <This tank contains a human being floating in a foetal position.>
+				MiniMapComponent 2
+
+				STC BIOTANK
+				use <Print 1>
+				Msg1 <This tank contains a human being floating in a foetal position.>
+				MiniMapComponent 3
+
+				STC BIOTANK
+				use <Print 1>
+				Msg1 <This tank contains a human being floating in a foetal position.>
+				MiniMapComponent 4
+			end
+
+			rect
+			minimap <......1#2..###..3#4......>
+			special <SHAREDPALETTE>
+			inv
+				STC BIOTANK
+				use <Print 1>
+				Msg1 <This tank contains a human being floating in a foetal position.>
+				MiniMapComponent 1
+
+				STC BIOTANK
+				use <Print 1>
+				Msg1 <This tank contains a human being floating in a foetal position.>
+				MiniMapComponent 2
+
+				STC BIOTANK
+				use <Print 1>
+				Msg1 <This tank contains a human being floating in a foetal position.>
+				MiniMapComponent 3
+
+				STC BIOTANK
+				use <Print 1>
+				Msg1 <This tank contains a human being floating in a foetal position.>
+				MiniMapComponent 4
+			end
+
+			rect
+			minimap <......1#2..###..3#4......>
+			special <SHAREDPALETTE>
+			inv
+				STC BIOTANK
+				name <Empty Biotank>
+				MiniMapComponent 1
+				use <if= L3 0 else GoMaybeDie Print 1>
+				GoMaybeDie <ifYesNo 2 3 4 else GoDontDie Alert 5 Alert 6 History 8 KillPC Victory>
+				GoDontDie <Print 7>
+				Msg1 <This tank appears to be empty.>
+				Msg2 <You find the empty tank that the gardener mentioned.>
+				Msg3 <Enter the container.>
+				Msg4 <Don't do it.>
+				Msg5 <You climb inside the biotank and close the door. Relaxing music begins to play as a pleasantly smelling gas fills the chamber.>
+				Msg6 <You drift into a strange dream from which you never awaken.>
+				Msg7 <You leave it alone.>
+				Msg8 <You became part of the collective consciousness which runs Theles Spinner.>
+
+				STC BIOTANK
+				use <Print 1>
+				Msg1 <This tank contains a human being floating in a foetal position.>
+				MiniMapComponent 2
+
+				STC BIOTANK
+				use <Print 1>
+				Msg1 <This tank contains a human being floating in a foetal position.>
+				MiniMapComponent 3
+
+				STC BIOTANK
+				use <Print 1>
+				Msg1 <This tank contains a human being floating in a foetal position.>
+				MiniMapComponent 4
+			end
+			forest
+			forest
+			forest
+			forest
+			forest
+			lake
+			lake
+		end
+	end
+	inv
+		NPC Scientist
+		job <Technocrat>
+		Combatant
+		chardesc melancholy villainous shy
+
+		NPC Soldier
+		job <Rebel Leader>
+		chardesc melancholy criminal passionate
+
+		STC QUEST-MAPMARKER-STATIONARY-DEFENDED
+		name <Rebel Station>
+		desig <ENTRANCE %4%>
+	end
+
+
+Content
+	name <Climbing the Ladder, Second Rung>
+	desc <Theles Spinner is divided into regions based on social class. The PC has a chance to climb the ladder.>
+	requires <*Q_UNIQUE_THESP_Rung2>
+	% For the second rung, the PC must prove his or her worth to the technocracy
+	% in order to gain access to the third level. This can be done by completing
+	% a series of quests for the residents of the second level.
+	% E1 is the second level outdoors scene.
+	% E2 is the second gateman at the Ascension Complex.
+	% E3 is the Ascension Complex
+	% E4 is the NPC at the shopping center who will offer a quest
+	% E5 is the shopping center
+	% E6 is the NPC at the factory control who will offer a quest
+	% E7 is the factory control office
+	% E8 is the third level
+	% E9 is the NPC at the population control who will offer a quest
+	% E10 is the population control office
+	Element2 <Prefab>
+	Place2 <3 (Citizens) pass>
+	Element3 <QuestScene>
+	Place3 <1>
+	Element4 <Prefab>
+	Place4 <5 (Citizens) pass>
+	Element5 <QuestScene>
+	Place5 <1>
+	Element6 <Prefab>
+	Place6 <7 (Citizens) pass>
+	Element7 <QuestScene>
+	Place7 <1>
+	Element8 <QuestScene>
+	Place8 <3>
+	Element9 <Prefab>
+	Place9 <10 (Citizens) pass>
+	Element10 <QuestScene>
+	Place10 <1>
+
+	% SubQuest1 is E4's mission
+	% SubQuest2 is E6's mission
+	% SubQuest3 is E9's mission
+	% SubQuest4 is the third rung
+	SubPlot1 <*:Q_MinorMission #50 4>
+	SubPlot2 <*:Q_MinorMission #50 6>
+	SubPlot3 <*:Q_MinorMission #50 9>
+	SubPlot4 <*Q_UNIQUE_THESP_Rung3 #70 8>
+
+	sub
+		Persona 2
+		rumor%id% <people granted access to level three never return to the lower levels.>
+		% V1 = Asked for work counter
+		greeting <if= PlotStatus %plotid% %id% else GoChat NewChat Say 1 AddChat 1 AddChat 2>
+		GoChat <NewChat SayAnything>
+		result1 <NewChat Say 2 AddChat 3>
+		result2 <NewChat Say 3 v= 1 1 AddChat 4>
+		result3 <NewChat Say 4 AddChat 4>
+		result4 <NewChat Say 5 AddChat 5>
+		result5 <NewChat Say 6>
+		Msg1 <This is the Ascension Complex. It is our job to enact the orders of the technocrats above on the city floor below.>
+		Msg2 <All residents of level two are expected to file periodic reports for the technocrat council. You can enclose your questions or comments with this report.>
+		Msg3 <Let me check the databoard... No specific orders for you have come from level three, but if you ask around I'm sure you'll find things which need doing.>
+		Msg4 <I'm afraid that's not possible. The technocrats never come down to the lower levels. When they choose to interact directly with the rest of us, which isn't very often, they do so via phone or holopresence.>
+		Msg5 <Sometimes residents of the second level are promoted into the ranks of the technocrats. If you want to advance you should work hard and prove your value to Theles Spinner, though I should warn you that it might not be a good idea.>
+		Msg6 <I've seen loads of people go into that door, but I've never seen anyone come back out. I don't know what happens to the people who become technocrats but I do know that they never leave.>
+		Prompt1 <I want to speak with the technocrats.>
+		Prompt2 <I was told you'd have some work for me?>
+		CPrompt2 <if= V1 0 Accept>
+		Prompt3 <No, I mean I want to speak with them in person.>
+		Prompt4 <How do I gain access to level three myself?>
+		Prompt5 <Why do you say that?>
+
+		Persona 4
+		% V%id%01 = Have given reward
+		greeting <if= PlotStatus              %plotid1% -1   else GoCheckLoss if= v%id%01 0 else GoWin v= %id%01 1  CashPrize Reward %threat% 200  QMemo %plotid% 0 Goto GoWin>
+		GoCheckLoss <if= PlotStatus           %plotid1% -2   else GoCheckFirst Goto GoLose>
+		GoCheckFirst <if= PlotStatus          %plotid1%  0   else GoChat if= PlotStatus %plotid% %id% else GoChat Goto GoOfferMission>
+		*GoOfferMission <*AreYouHereAboutJob  .%id1%_GoInit>
+		GoEnd <SetPlotStatus                  %plotid1% -3>
+		GoChat <NewChat SayAnything>
+		*GoLose <*MissionWasFailure GoEnd na na>
+		*GoWin <*MissionWasSuccess&Reward GoEnd na na>
+
+		Persona 6
+		% V%id%01 = Have given reward
+		greeting <if= PlotStatus              %plotid2% -1   else GoCheckLoss if= v%id%01 0 else GoWin v= %id%01 1  CashPrize Reward %threat% 200  QMemo %plotid% 0 Goto GoWin>
+		GoCheckLoss <if= PlotStatus           %plotid2% -2   else GoCheckFirst Goto GoLose>
+		GoCheckFirst <if= PlotStatus          %plotid2%  0   else GoChat if= PlotStatus %plotid% %id% else GoChat Goto GoOfferMission>
+		*GoOfferMission <*AreYouHereAboutJob  .%id2%_GoInit>
+		GoEnd <SetPlotStatus                  %plotid2% -3>
+		GoChat <NewChat SayAnything>
+		*GoLose <*MissionWasFailure GoEnd na na>
+		*GoWin <*MissionWasSuccess&Reward GoEnd na na>
+
+		Persona 9
+		% V%id%01 = Have given reward
+		greeting <if= PlotStatus              %plotid3% -1   else GoCheckLoss if= v%id%01 0 else GoWin v= %id%01 1  CashPrize Reward %threat% 200  QMemo %plotid% 0 Goto GoWin>
+		GoCheckLoss <if= PlotStatus           %plotid3% -2   else GoCheckFirst Goto GoLose>
+		GoCheckFirst <if= PlotStatus          %plotid3%  0   else GoChat if= PlotStatus %plotid% %id% else GoChat Goto GoOfferMission>
+		*GoOfferMission <*AreYouHereAboutJob  .%id3%_GoInit>
+		GoEnd <SetPlotStatus                  %plotid3% -3>
+		GoChat <NewChat SayAnything>
+		*GoLose <*MissionWasFailure GoEnd na na>
+		*GoWin <*MissionWasSuccess&Reward GoEnd na na>
+
+		MetaScene 2
+		% V11 = surprise message counter
+		start <if= L11 1 else %pop% ifNPCOK %2% else %pop% Monologue %2% 11 L= 11 2>
+		Msg11 <Well, there's a first time for everything!>
+		sub
+			Room
+			minimap <##2##............1..#---#>
+			special <SHAREDPALETTE NOGO>
+			desig <HOME>
+			inv
+				Elevator
+				% V1 = Have used the elevator already				MiniMapComponent 2
+				desig <ENTRANCE %8%>
+				use <if= V1 1 else GoCheckEligibility  if= SceneVar %8% 12 0 else GoAccessDenied Print -1 Exit Destination>
+				%% There are two ways to gain access to L3: First, the PC
+				%% can simply obtain a lot of renown and money, and the door
+				%% will magically open. Second, the player can complete all
+				%% the miniquests on this level, in which case the door will
+				%% also open.
+				GoCheckEligibility <ifG PCRenown 60 else GoCheckM1 ifG PC$ 1000000 else GoCheckM1 Goto GoAccessGranted>
+				GoCheckM1 <if= PlotStatus %plotid1% -1 else GoAccessDenied if= PlotStatus %plotid2% -1 else GoAccessDenied if= PlotStatus %plotid3% -1 else GoAccessDenied Goto GoAccessGranted>
+				GoAccessGranted <ifYesNo 2 3 4 V= 1 1 XPV 100 SetPlotStatus %plotid% %id4% L= 11 1 Print -1 Exit Destination>
+				GoAccessDenied <Print 1>
+				Msg1 <You have not been authorized to use this elevator.>
+				Msg2 <The door of the elevator opens as you approach. You think back on the stories you've heard- people who go to level three never return to the lower levels.>
+				Msg3 <Go to level three.>
+				Msg4 <Stay right here.>
+			end
+		end
+
+		MetaScene 3
+		name <Ascension Complex>
+		Entrance <*SPACEPORT>
+		type <building private rich>
+		mapwidth 15
+		mapheight 15
+		MallMap
+		special <ADDEXIT>
+		Start <Print 1>
+		Msg1 <You enter the Ascension Complex.>
+		sub
+			team 1
+
+			team 2
+			name <Citizens>
+			SetAlly 1
+			Passive
+
+			team 3
+			name <Guards>
+			SetAlly 2
+
+			room
+			name <Foyer>
+			desig <EntranceGrid>
+			Content <Some 1 20 Here *URBAN_X>
+			Content2 <Some 1 100 Here *ANTI_ATTACK_SECURITY 3>
+		end
+
+		MetaScene 5
+		name <Second Tier Armory>
+		requires <*THESP_Armory>
+		type <building private rich>
+		entrance <*DEPARTMENTSTORE>
+		mapwidth 15
+		mapheight 15
+		MallMap
+		special <ADDEXIT UNREGULATED>
+		Tolerance 10
+		Start <Print 1>
+		Msg1 <You enter the Second Tier Armory.>
+		NeededCells 2
+		Content3 <Some 1 100 Sub *WEAPON_SHOP     na>
+		Content4 <Some 1 100 Sub *ARMOR_SHOP      na>
+		Content9 <Fill Sub *SHOP_RANDOM           na>
+		sub
+			team 1
+
+			team 2
+			name <Citizens>
+			SetAlly 1
+			Passive
+
+			team 3
+			name <Guards>
+			SetAlly 2
+
+			room
+			name <Foyer>
+			desig <EntranceGrid>
+			Content <Some 2 50 Here *URBAN_X>
+			Content2 <Some 1 100 Here *ANTI_ATTACK_SECURITY 3>
+		end
+
+		MetaScene 7
+		name <Theles Industrial>
+		entrance <*GARAGE>
+		type <building private rich>
+		mapwidth 15
+		mapheight 15
+		MallMap
+		special <ADDEXIT UNREGULATED>
+		Tolerance 10
+		Start <Print 1>
+		Msg1 <You enter the Theles Industrial Control Center.>
+		NeededCells 2
+		Content3 <Some 1 100 Sub *MECHANIC_SHOP   na>
+		Content6 <Some 1 100 Sub *MECHA_SHOP      na>
+		Content9 <Fill Sub *SHOP_RANDOM           na>
+		sub
+			team 1
+
+			team 2
+			name <Citizens>
+			SetAlly 1
+			Passive
+
+			team 3
+			name <Guards>
+			SetAlly 2
+
+			room
+			name <Foyer>
+			desig <EntranceGrid>
+			Content <Some 2 50 Here *URBAN_X>
+			Content2 <Some 1 100 Here *ANTI_ATTACK_SECURITY 3>
+		end
+
+		MetaScene 8
+		name <Theles Spinner Third Level>
+		type <building private>
+		map <MAP_Theles3F.txt>
+		special <NOEXIT UNREGULATED NORESCUE SOLO UNSAFE>
+		Tolerance 15
+		% L1 = If nonzero, this level may be exited.
+		Start <Print 1>
+		Msg1 <You enter the Theles Spinner third level.>
+		5Min <ifTeamHostile 3 MonsterUp 3 d10>
+		sub
+			team 1
+
+			team 2
+			name <Citizens>
+			SetAlly 3
+			Passive
+
+			team 3
+			name <Guards>
+			type <ROBOT>
+			SetAlly 2
+			Stat 2 50
+
+			room
+			name <Foyer>
+			desig <EntranceGrid>
+			Content2 <Some 1 100 Here *ANTI_ATTACK_SECURITY 3>
+		end
+		inv
+			Elevator
+			use <if# L1 0 else GoNoElevator  Print 1 Exit Destination>
+			GoNoElevator <Print 11>
+			Msg11 <This elevator doesn't respond.>
+			Destination -1
+			XPos 2
+			YPos 9
+
+			STC ELEVATOR_TO_NOWHERE
+			XPos 3
+			YPos 3
+
+			STC ELEVATOR_TO_NOWHERE
+			XPos 3
+			YPos 16
+
+			STC ELEVATOR_TO_NOWHERE
+			XPos 36
+			YPos 4
+
+			STC ONESHOTDOOR
+			update <if# L2 0 SetStat STAT_Lock 0>
+			XPos 30
+			YPos 14
+			Lock 14
+		end
+
+		MetaScene 10
+		name <Population Control>
+		entrance <*HOSPITAL>
+		type <building private rich>
+		mapwidth 15
+		mapheight 15
+		MallMap
+		special <ADDEXIT UNREGULATED>
+		Tolerance 10
+		Start <Print 1>
+		Msg1 <You enter the Theles Industrial Control Center.>
+		NeededCells 2
+		Content2 <Fill Sub *HOSPITAL_X>
+		sub
+			team 1
+
+			team 2
+			name <Citizens>
+			SetAlly 1
+			Passive
+
+			team 3
+			name <Guards>
+			SetAlly 2
+
+			room
+			name <Foyer>
+			desig <EntranceGrid>
+			Content <Some 2 50 Here *URBAN_X>
+			Content2 <Some 1 100 Here *ANTI_ATTACK_SECURITY 3>
+		end
+	end
+	inv
+		NPC Soldier
+		job <Gateman>
+
+		NPC Shopkeeper
+		job <Production Manager>
+
+		NPC Mechanic
+		job <Production Manager>
+
+		NPC Politician
+		job <Security Chief>
+	end
+
+
+Content
 	name <Ronald McComet Must Die>
 	requires <*Q_UNIQUE_FUCSP_Part1>
 

@@ -57,14 +57,6 @@ const
 	Roguelike_D: Array [1..9] of Byte = ( 3, 2, 1, 4, 0, 0, 5, 6, 7 );
 	Reverse_RL_D: Array [0..7] of Byte = ( 6 , 3 , 2 , 1 , 4 , 7, 8 , 9 );
 
-	Skill_Use_Trigger: Array [1..NumSkill] of String = (
-		'USE', 'USE', 'USE', 'USE', 'USE',
-		'USE', 'USE', 'USE', 'USE', 'USE',
-		'USE', 'CLUE_SURVIVAL', 'CLUE_REPAIR', 'CLUE_MEDICINE', 'USE',
-		'USE', 'USE', 'USE', 'USE', 'USE',
-		'CLUE_SCIENCE', 'USE', 'CLUE_CODEBREAKING', 'CLUE_MYSTICISM', 'USE',
-		'USE', 'CLUE_INSIGHT', 'USE'
-	);
 
 var
 	PCACTIONRD_PC: GearPtr;

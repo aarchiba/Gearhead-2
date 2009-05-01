@@ -3,9 +3,207 @@
 %%
 %% This file contains the quest frameworks for the cities of the L5 Region.
 %%
-%% The requires field should include *:LocalQuest and the designation of the
+%% The requires field should include *:Q_LocalQuest and the designation of the
 %% city to which this quest applies.
 %%
+
+Content
+	name <Theles Spinner/Climbing the Ladder, First Rung>
+	desc <Theles Spinner is divided into regions based on social class. The PC has a chance to climb the ladder.>
+	requires <*:Q_LocalQuest "THESP">
+
+	% The first rung is pretty simple- the player can either buy his way into
+	% the top level, or complete a grueling dungeon.
+	% E1 is the "gateman"
+	% E2 is the theles control office
+	% E3 is the dungeon leading to the top
+	% E4 is the middle layer of the spinner
+	% E5 is the urban level
+	Element1 <Prefab>
+	Place1 <2 (Citizens) pass>
+	Element2 <QuestScene>
+	Place2 <5>
+	Element3 <QuestScene>
+	Place3 <2>
+	Element4 <QuestScene>
+	Place4 <3>
+	Element5 <Scene City Urban>
+
+	% SubPlot1 is rung two: the journey from the middle layer to joining the ranks of the technocrats.
+	SubPlot1 <*Q_UNIQUE_THESP_Rung2 #50 4>
+
+	sub
+		Persona 1
+		% V1 = Threat Counter
+		greeting <if= PlotStatus %plotid% 0 else GoChat NewChat Say 1 AddChat 1 AddChat 2>
+		GoChat <NewChat SayAnything>
+		result1 <ifG PCRenown %threat% else GoR1Fail ifG PCLaw -1 else GoR1Fail NewChat Say 2 AddChat 3 AddChat 4 AddChat 5>
+		GoR1Fail <NewChat Say 3 AddChat 4>
+		result2 <NewChat Say 4>
+		result3 <NewChat Say 5 SetPlotStatus %plotid% %id1% XPV 100 Cash+ -500000>
+		result4 <NewChat Say 6 V= 1 1>
+		result5 <NewChat Say 7>
+		Msg1 <Access to the second level is restricted to those with SecTag Beta. I'm afraid that I can't let you pass.>
+		Msg2 <In order to weed out the scum and the riffraff, applicants for SecTag Beta must perform a demonstration of their industriousness and determination. This demonstration takes the form of a $500,000 fee.>
+		Msg3 <I'm sorry, but you are strictly inelgible for this security clearance. The technocrats only allow those who have proven their ability, drive, and strength of character to advance.>
+		Msg4 <Of course not! You don't think the technocrats would be stupid enough to allow that, do you? Even just wondering about such things is treasonous...>
+		Msg5 <This money proves your worth to Theles Spinner. When you step into the elevator, your brain-pattern will be scanned and added to the database. On level two you should head to the Ascension Complex; they'll probably have work for you there.>
+		Msg6 <It's not up to me, I just explain how things work. The real decision is made by the Ascension Complex. If an unauthorized person attempts to board the elevator, instead of going to the second level it goes straight to a plasma furnace.>
+		Msg7 <Be seeing you.>
+		Prompt1 <How do I get this "SecTag Beta"?>
+		Prompt2 <Isn't there any other way up there?>
+		Prompt3 <No problem. [Give $500000]>
+		CPrompt3 <ifG PC$ 499999 Accept>
+		Prompt4 <Let me in now, or else.>
+		CPrompt4 <if= V1 0 Accept>
+		Prompt5 <I'll be back later.>
+
+		MetaScene 1
+		sub
+			Room
+			minimap <##2##............1..#---#>
+			special <SHAREDPALETTE NOGO>
+			desig <HOME>
+			inv
+				Elevator
+				MiniMapComponent 2
+				desig <ENTRANCE %4%>
+				use <if# PlotStatus %plotid% 0 else GoAccessDenied Print 3 Exit Destination>
+				GoAccessDenied <Print 1>
+				CLUE_CODEBREAKING <Print 2>
+				CLUE_INSIGHT <Print 2>
+				Msg1 <You have not been authorized to use this elevator.>
+				Msg2 <This elevator has no control panel or interface of any kind.>
+				Msg3 <The elevator doors open as you approach.>
+			end
+
+			Room
+			minimap <##2###...###?###3.4###=##>
+			special <SHAREDPALETTE NOGO>
+			sub
+				Door
+				use <if= StatVal STAT_Lock 0 else GoDoorLocked if= v1 0 else GoJustUse ifYesNo 101 102 103 else GoLeaveDoor V= 1 1 Goto GoJustUse>
+				GoJustUse <ifG -99 MetaPass else GoCloseDoor  if= StatVal STAT_Lock 0 else GoDoorLocked Print 1  SetStat STAT_Pass 0  Transform 1>
+				GoLeaveDoor <Print 104>
+				Msg101 <Central life support and mechanicals. Access strictly prohibited.>
+				Msg102 <Open the door>
+				Msg103 <Leave it alone>
+				Msg104 <You leave the door alone.>
+			end
+			inv
+				Elevator
+				MiniMapComponent 2
+				desig <ENTRANCE %3%>
+
+				STC Crate
+				MiniMapComponent 3
+				PDir 1
+
+				STC Crate
+				MiniMapComponent 4
+				PDir 3
+			end
+		end
+
+		MetaScene 2
+		name <Theles Control Office>
+		type <building public>
+		entrance <*BUILDING>
+		mapwidth 15
+		mapheight 15
+		MallMap
+		SetFaction 10
+		special <ADDEXIT>
+		NeededCells 2
+		content <Some 2 70 Sub *GOV_MILITARY na>
+		sub
+			team 1
+
+			team 2
+			name <Citizens>
+			SetAlly 1
+			Passive
+
+			team 3
+			name <Guards>
+			SetAlly 2
+
+			room
+			name <Foyer>
+			desig <EntranceGrid>
+			Content <Some 3 50 Here *URBAN_X>
+			Content2 <Some 1 100 Here *ANTI_ATTACK_SECURITY 3>
+		end
+
+
+		MetaScene 3
+		name <Theles Spire>
+		special <NOEXIT NORESCUE>
+		type <DUNGEON Industrial>
+		dentrance <*GoUp>
+		content1 <Some 2 35 Sub *DUNGEON_THREAT>
+		content2 <Some 1 10 Sub *DUNGEON_DECOR>
+		mapwidth 35
+		mapheight 35
+		MonkeyMap
+		LockedDoorChance 30
+		SecretDoorChance 5
+		IndustrialTiles
+		NeededCells 3
+		start <Print 1>
+		msg1 <You enter \SCENE SceneID .>
+		sub
+			Team 1
+			SetEnemy 2
+
+			Team 2
+			name <Monster>
+			type <Robot Vermin Mutant>
+			SetEnemy 1
+			Stat 2 1
+
+			room
+			width 3
+			height 3
+			sub
+				StairsDown
+				Destination -1
+			end
+
+			Room
+			minimap <............2............>
+			special <SHAREDPALETTE>
+			ForGoalLevel
+			inv
+				StairsUp
+				use <Print 1 Exit %4% SeekGate %2%>
+				MiniMapComponent 2
+				update <SetDestination %4%>
+			end
+		end
+
+		MetaScene 4 3
+		name <Theles Spinner Second Level>
+		requires <*THESP_SecondLevel>
+		special <NOEXIT SHOWALL>
+		type <Private>
+		MegaCityMap
+		MapWidth 15
+		MapHeight 8
+		Start <Print 1 if= PlotStatus %plotid% 0 SetPlotStatus %plotid% %id1% Alert 11 XPV 100>
+		Msg1 <You enter the Theles Spinner second layer.>
+		Msg11 <[Voice]: You have proven yourself worthy of level two clearance. Please report to Ascension Complex immediately or face termination.>
+		inv
+			STC Building
+			name <Theles Control Office>
+			desig <ENTRANCE %2%>
+		end
+	end
+	inv
+		NPC Soldier
+		job <Gateman>
+	end
+
 
 Content
 	name <Fuchal Spinner/CometBurger Sequence>

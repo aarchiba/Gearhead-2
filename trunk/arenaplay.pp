@@ -968,7 +968,7 @@ begin
 
 	{ Step Two: Apply emergency healing to all. }
 	{ If this scene is of a NORESCUE type, don't bother. }
-	if ( GB^.Scene = Nil ) or not AStringHasBString( SAttValue( GB^.Scene^.SA , 'SPECIAL' ) , 'NORESCUE' ) then begin
+	if ( GB^.Scene = Nil ) or ( not AStringHasBString( SAttValue( GB^.Scene^.SA , 'SPECIAL' ) , 'NORESCUE' ) ) then begin
 		ApplyEmergencyHealing( FindRoot( GB^.Scene ) , GB );
 	end;
 

@@ -25,7 +25,7 @@ unit backpack;
 
 interface
 
-uses gears,locale,
+uses gears,locale,ghchars,
 {$IFDEF ASCII}
 	vidgfx;
 {$ELSE}
@@ -38,6 +38,16 @@ uses gears,locale,
 
 const
 	TRIGGER_GetItem = 'GET';
+
+	Skill_Use_Trigger: Array [1..NumSkill] of String = (
+		'USE', 'USE', 'USE', 'USE', 'USE',
+		'USE', 'USE', 'USE', 'USE', 'USE',
+		'USE', 'CLUE_SURVIVAL', 'CLUE_REPAIR', 'CLUE_MEDICINE', 'USE',
+		'USE', 'USE', 'USE', 'USE', 'USE',
+		'CLUE_SCIENCE', 'USE', 'CLUE_CODEBREAKING', 'CLUE_MYSTICISM', 'USE',
+		'USE', 'CLUE_INSIGHT', 'USE'
+	);
+
 
 Function DefaultAtOp( Weapon: GearPtr ): Integer;
 
@@ -81,7 +91,7 @@ Procedure UsableGearMenu( GB: GameBoardPtr; PC: GearPtr );
 
 implementation
 
-uses ability,action,arenacfe,arenascript,gearutil,ghchars,ghholder,
+uses ability,action,arenacfe,arenascript,gearutil,ghholder,
      ghmodule,ghprop,ghswag,interact,menugear,rpgdice,skilluse,texutil,
      description,ghweapon,ui4gh,narration,specialsys,ghsupport,
      ghintrinsic,effects,targetui,ghsensor,customization,
@@ -1579,7 +1589,7 @@ begin
 	DisposeRPGMenu( SkMenu );
 
 	if T <> -1 then begin
-		UseScriptItem( GB , TruePC , Item , 'CLUE' + BStr( T ) );
+		UseScriptItem( GB , TruePC , Item , Skill_Use_Trigger[ T ] );
 	end;
 end;
 

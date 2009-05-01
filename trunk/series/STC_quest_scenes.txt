@@ -6,7 +6,7 @@ MetaScene
 	mapheight 12
 	BoxMap
 	IndustrialTiles
-
+	Ceiling
 	special <NOEXIT>
 
 	start <Print 1>
@@ -45,7 +45,7 @@ MetaScene
 	mapheight 12
 	BoxMap
 	IndustrialTiles
-
+	Ceiling
 	special <NOEXIT>
 
 	NeededCells 2
@@ -80,21 +80,17 @@ MetaScene
 	special <NOEXIT>
 	BoxMap
 	RockyTiles
-
+	Ceiling
 	% L1 = Victory Indicator
 	% L2 = Initialization Counter
-
 	MapWidth 22
 	MapHeight 32
-
 	NeededCells 2
 	content <Fill Sub *STORAGE_X na>
-
 	Start <Print 1 if= L2 0 if= PlotStatus %plotid% %id% L= 2 1 WMonster 2 %threat% 100>
 	nu2 <if= t2 0 if= L1 0 Print 2 XPV 100 L= 1 1 Trigger0 Update>
 	Msg1 <You enter the basement.>
 	Msg2 <That seems to be the last of the vermin.>
-
 	sub
 		Team 1
 		SetEnemy 2
@@ -119,6 +115,7 @@ MetaScene
 	mapwidth 15
 	mapheight 15
 	MallMap
+	Ceiling
 	special <ADDEXIT UNREGULATED>
 	Tolerance 15
 	NeededCells 3
@@ -150,6 +147,7 @@ MetaScene
 	name <the # Pit>
 	desig <QS_CharaArena>
 	BoxMap
+	Ceiling
 	MapWidth 32
 	MapHeight 32
 	terrain <GROUND>
