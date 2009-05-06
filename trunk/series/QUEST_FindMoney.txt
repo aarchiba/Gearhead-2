@@ -186,7 +186,7 @@ Content
 		update <if# V11 0 else GoHide  SetStat STAT_MetaVisibility 0  ShowEncounter  Goto GoSetOrders>
 		use <ifG StatVal STAT_MetaVisibility -1  Print 1  Goto GoStartCombat>
 		GoStartCombat <V= 11 0  SavePos Dynamic 2 V2 100 .nu1 .nu2 ComposeD Msg1 .Msg1 DynaFaction 5>
-		.nu1 <if= T1 0  Return   if= L1 0  L= 1 1  AddRenown -5>
+		.nu1 <if= T1 0  Return   if= L1 0  L= 1 1  LoseRenown>
 		.nu2 <if= T2 0           if= L1 0  L= 1 1  XPV 100  AddRenown 1   NPCVar= %2% 1 1  QMemo %plotid% 1  DeleteItem %3%>
 		.msg1 <You have won the charity mecha tournament, and should inform %name2% in %name4% .>
 		Msg1 <You enter the arena.>

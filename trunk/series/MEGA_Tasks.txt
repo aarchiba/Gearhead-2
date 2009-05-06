@@ -32,7 +32,7 @@ Content
 		MapWidth 50
 		MapHeight 50
 
-		nu1 <if= T1 0   Return   if= V1 0 V= 1 1    LoseSubPlot %plotid%>
+		nu1 <if= T1 0   Return   if= V1 0 V= 1 1    LoseRenown   LoseSubPlot %plotid%>
 		nu2 <if= T2 0   if= V1 0 V= 1 1   Alert 1   AddRenown 1  XPV 100   SALVAGE   WinSubPlot %plotid%>
 
 		Msg1 <You have defeated the looters.>
@@ -93,7 +93,7 @@ Content
 
 		% L1 = Victory Counter
 
-		end <if= L1 0   LoseSubPlot %plotid%>
+		end <if= L1 0   LoseRenown                            LoseSubPlot %plotid%>
 		nu2 <if= T2 0   if= V1 0 V= 1 1   Alert 1   XPV 100   WinSubPlot %plotid%>
 		Msg1 <You have exterminated the last of the vermin.>
 
@@ -147,7 +147,7 @@ Content
 
 		% L1 = Victory Counter
 
-		end <if= L1 0   LoseSubPlot %plotid%>
+		end <if= L1 0   LoseRenown   LoseSubPlot %plotid%>
 		nu2 <if= T2 0   if= V1 0 V= 1 1   Alert 1   XPV 100   WinSubPlot %plotid%>
 		Msg1 <You have exterminated the last of the vermin.>
 
@@ -201,7 +201,7 @@ Content
 
 		% L1 = Victory Counter
 
-		end <if= L1 0   LoseSubPlot %plotid%>
+		end <if= L1 0   LoseRenown   LoseSubPlot %plotid%>
 		nu2 <if= T2 0   if= V1 0 V= 1 1   Alert 1   XPV 100   WinSubPlot %plotid%>
 		Msg1 <You have exterminated the last of the vermin.>
 

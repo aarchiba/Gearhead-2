@@ -577,7 +577,7 @@ begin
 		CanJoin := False;
 	end else if ( GB <> Nil ) and ( GB^.Scene <> Nil ) and ( NAttValue( NPC^.NA , NAG_Narrative , NAS_PlotID ) < 0 ) and ( NAttValue( FindROot( GB^.Scene )^.NA , NAG_PlotStatus , NAttValue( NPC^.NA , NAG_Narrative , NAS_PlotID ) ) >= 0 ) then begin
 		CanJoin := False;
-	end else if LMP > NumLancemateSlots( PC ) then begin
+	end else if LMP >= NumLancemateSlots( PC ) then begin
 		CanJoin := False;
 	end;
 	CanJoinLance := CanJoin;
@@ -3162,6 +3162,24 @@ begin
 	SetTeamReputation( GB , T , R , V );
 end;
 
+Procedure ProcessLoseRenown( GB: GameBoardPtr );
+	{ The PC has just done something to lose face. Reduce the RENOWN attribute }
+	{ by 25% of its total or 5 points, whichever is more severe. }
+var
+	PC: GearPtr;
+	Renown: Integer;
+begin
+	PC := LocatePilot( GG_LocatePC( GB ) );
+	if PC <> Nil then begin
+		Renown := NAttValue( PC^.NA , NAG_CHarDescription , NAS_Renowned );
+		if Renown > 23 then begin
+			AddReputation( PC , NAS_Renowned , -( Renown div 4 ) );
+		end else begin
+			AddReputation( PC , NAS_Renowned , -5 );
+		end;
+	end;
+end;
+
 Procedure ProcessMechaPrize( var Event: String; GB: GameBoardPtr; Source: GearPtr );
 	{ The player has just won a mecha. Cool! }
 var
@@ -4562,6 +4580,7 @@ begin
 		else if cmd = 'ENDSTORY' then ProcessEndStory( GB , Source )
 		else if cmd = 'PURGESTORY' then ProcessPurgeStory( GB , Source )
 		else if cmd = 'TREPUTATION' then ProcessTReputation( Event , GB , Source )
+		else if cmd = 'LOSERENOWN' then ProcessLoseRenown( GB )
 		else if cmd = 'XPV' then ProcessXPV( Event , GB , Source )
 		else if cmd = 'MECHAPRIZE' then ProcessMechaPrize( Event , GB , Source )
 		else if cmd = 'NEWD' then ProcessNewD( Event , GB , Source )
@@ -4779,7 +4798,7 @@ begin
 		LMP := LancematesPresent( GB );
 		if ReactionScore( GB^.Scene , I_PC , I_NPC ) < 25 then begin
 			CHAT_Message := MsgString( 'JOIN_REFUSE' );
-		end else if LMP > NumLancemateSlots( I_PC ) then begin
+		end else if LMP >= NumLancemateSlots( I_PC ) then begin
 			CHAT_Message := MsgString( 'JOIN_NOPOINT' );
 		end else begin
 			CHAT_Message := MsgString( 'JOIN_BUSY' );

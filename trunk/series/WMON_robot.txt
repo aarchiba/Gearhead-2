@@ -138,15 +138,15 @@ sdl_sprite <monster_sentinel.png>
 sdl_colors <234 180 88 199 188 162 255 107 83>
 statline 16 35 10 15 10 10 10 1
 *CLUE_SCIENCE <*SCIENCE_GetMechaPartsOrFCS 120 robot>
-RangedCombat 7
-Dodge 7
+RangedCombat 8
+Dodge 8
 Initiative 7
 Vitality 10
 Athletics 10
 Concentration 10
 sub
 turret
-armor 6
+armor 7
 Hardened
 sub
 	mount
@@ -155,15 +155,16 @@ sub
 		name <Laser Cannon>
 		desig <Antique>
 		Acc 1
+		Range 10
 		type <ARMORPIERCING>
 		inv
-			PowerSource 20
+			PowerSource 10
 			name <Battery>
 		end
 	end
 end
 turret
-armor 5
+armor 6
 Hardened
 sub
 	mount
@@ -174,18 +175,18 @@ sub
 		type <SCATTER BRUTAL>
 		scale 0
 		mass 8
-		stat 1 10
-		stat 2 1
-		stat 3 1
-		stat 4 8
+		Range 9
+		Acc 1
+		Recharge 1
+		BV 4
 		inv
-			PowerSource 20
+			PowerSource 10
 			name <Battery>
 		end
 	end
 end
 turret
-armor 5
+armor 6
 Hardened
 sub
 	mount
@@ -196,22 +197,22 @@ sub
 		type <SCATTER BRUTAL>
 		scale 0
 		mass 8
-		stat 1 10
-		stat 2 1
-		stat 3 1
-		stat 4 8
+		Range 9
+		Acc 1
+		Recharge 1
+		BV 4
 		inv
-			PowerSource 20
+			PowerSource 10
 			name <Battery>
 		end
 	end
 end
 torso
-armor 7
+armor 8
 Hardened
 sub
 	Tracks 10
-	PowerSource 25
+	PowerSource 10
 	name <Secondary Reactor>
 end
 end

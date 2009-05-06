@@ -201,6 +201,8 @@ Content
 	Element4 <Prefab>
 	Place4 <3 SD Ally>
 
+	get%1% <if= L%id%01 0 L= %id%01 1 NPCLevel %4% PCRenown>
+
 	sub
 		Persona 4
 		% Kind of a kludgey thing- after resolving this event, one way or another,
@@ -241,7 +243,7 @@ Content
 		Mass -5
 
 		NPC Warrior Monk
-		statline 16 14 13 14 11 16 10 9
+		statline 14 12 13 11 9 14 9 7
 		job <Samurai>
 	end
 

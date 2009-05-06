@@ -2251,7 +2251,7 @@ Content
 		GoAutoAttack <Alert -2 Goto GoStartCombat>
 		GoAvoidAttack <Print -6 AddSociable -1>
 		GoStartCombat <V= 1 0  SavePos Dynamic 2 V2 100 .nu1 .nu2 ComposeD Msg1 .Msg1 DynaFaction %6%>
-		.nu1 <if= T1 0  Return   if= L1 0  L= 1 1  AddRenown -5  ItemVar= %3% 1 ComTime ItemVar+ %3% 1 d86400 ItemVar+ %3% 1 43200>
+		.nu1 <if= T1 0  Return   if= L1 0  L= 1 1  LoseRenown  ItemVar= %3% 1 ComTime ItemVar+ %3% 1 d86400 ItemVar+ %3% 1 43200>
 		.nu2 <if= T2 0           if= L1 0  L= 1 1  Alert 1 XPV 100    P+ %id%02 1   QMemo %plotid% 1>
 		EncounterMove 50
 		Msg-1 <You attack the pirates!>
@@ -2301,7 +2301,7 @@ Content
 		GoAutoAttack <Alert 1 Goto GoStartCombat>
 		GoAvoidAttack <Print 6>
 		GoStartCombat <V= 1 0  SavePos Dynamic 2 %threat% 150 .nu1 .nu2 ComposeD Msg1 .Msg1>
-		.nu1 <if= T1 0  Return   if= L1 0  L= 1 1  AddRenown -5  ItemVar= %3% 1 ComTime ItemVar+ %8% 1 d86400 ItemVar+ %8% 1 43200>
+		.nu1 <if= T1 0  Return   if= L1 0  L= 1 1  LoseRenown  ItemVar= %3% 1 ComTime ItemVar+ %8% 1 d86400 ItemVar+ %8% 1 43200>
 		.nu2 <if= T2 0           if= L1 0  L= 1 1  AddLawful -5  if= PlotStatus %plotid% %id% Alert 1 XPV 100  ForceChat %9%  AddRenown 1>
 		EncounterMove 50
 		Msg1 <You attack the convoy!>

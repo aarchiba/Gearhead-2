@@ -912,21 +912,28 @@ begin
 	MyDest.X := Z.X + Z.W - 5;
 	MyDest.Y := Z.Y;
 	QuickTextRJ( 'DP' , MyDest , NeutralGrey , game_font );
-
-	{ Display the part's damage rating. }
 	MyDest.X := MyDest.X - TextLength( Game_Font , ' DP' );
-	N := GearCurrentDamage( Part );
-	if N > 0 then msg := BStr( N )
-	else msg := '-';
-	QuickTextRJ( Msg , MyDest , HitsColor( Part ) , game_font );
 
-	{ Display the part's armor rating. }
-	MyDest.X := MyDest.X - TextLength( Game_Font , msg );
-	N := GearCurrentArmor( Part );
-	if N > 0 then msg := '[' + BStr( N )
-	else msg := '[-';
-	msg := msg + '] ';
-	QuickTextRJ( Msg , MyDest , ArmorColor( Part ) , game_font );
+	if IsMasterGear( Part ) then begin
+		{ Display the percent damaged. }
+		N := PercentDamaged( Part );
+		msg := BStr( N ) + '%';
+		QuickTextRJ( Msg , MyDest , StatusColor( 100 , N ) , game_font );
+	end else begin
+		{ Display the part's damage rating. }
+		N := GearCurrentDamage( Part );
+		if N > 0 then msg := BStr( N )
+		else msg := '-';
+		QuickTextRJ( Msg , MyDest , HitsColor( Part ) , game_font );
+
+		{ Display the part's armor rating. }
+		MyDest.X := MyDest.X - TextLength( Game_Font , msg );
+		N := GearCurrentArmor( Part );
+		if N > 0 then msg := '[' + BStr( N )
+		else msg := '[-';
+		msg := msg + '] ';
+		QuickTextRJ( Msg , MyDest , ArmorColor( Part ) , game_font );
+	end;
 
 	{ Display the mass. }
 	N := GearMass( Part );

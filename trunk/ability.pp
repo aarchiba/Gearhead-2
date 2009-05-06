@@ -576,6 +576,7 @@ var
 	CL: Integer;	{ Current Level }
 begin
 	if PC^.G <> GG_Character then PC := LocatePilot( PC );
+	R := Abs( R );
 
 	if ( PC <> Nil ) and ( PC^.G = GG_Character ) then begin
 		CL := NAttValue( PC^.NA , NAG_CHarDescription , -R );

@@ -874,7 +874,7 @@ GoSetOrders <GrabSource GSetNAtt NAG_EpisodeData NAS_Orders 3>
 Attack <  >
 use <ifG StatVal STAT_MetaVisibility -1  if# V1 0 else GoStartCombat  Print -1 Exit Destination>
 GoStartCombat <Alert 1 SavePos Dynamic 2 StoryDL 100 .nu1 .nu2 ComposeD Msg1 .Msg1 DynaVar= 3 Destination  DynaFaction &EnemyFac>
-.nu1 <if= T1 0  Return  SeekGate L3   if= L2 0  L= 2 1  AddRenown -5>
+.nu1 <if= T1 0  Return  SeekGate L3   if= L2 0  L= 2 1  LoseRenown>
 .nu2 <if= T2 0           if= L2 0  L= 2 1  XPV 100  AddRenown 1   EncounterVar= L3 1 1  Alert 1  Exit L3>
 .msg1 <You have defeated the mecha.>
 Msg1 <You are attacked by mecha as you approach \SCENE Destination !>
@@ -904,7 +904,7 @@ use <ifG StatVal STAT_MetaVisibility -1  if# V1 0 else GoMaybeCombat  Print 5 Ex
 GoMaybeCombat <ifStealth SkillTar StoryDL else GoAutoCombat ifYesNo 2 3 4 else GoStartCombat XPV 100 V= 1 1 AddSociable -d6 Print 5 Exit Destination>
 GoAutoCombat <Alert 1 Goto GoStartCombat>
 GoStartCombat <SavePos Dynamic 2 StoryDL 100 .nu1 .nu2 ComposeD Msg1 .Msg1 DynaVar= 3 Destination  DynaFaction &EnemyFac>
-.nu1 <if= T1 0  Return  SeekGate L3   if= L2 0  L= 2 1  AddRenown -5>
+.nu1 <if= T1 0  Return  SeekGate L3   if= L2 0  L= 2 1  LoseRenown>
 .nu2 <if= T2 0           if= L2 0  L= 2 1  XPV 100  AddRenown 1   EncounterVar= L3 1 1  Alert 1  Exit L3>
 .msg1 <You have defeated the mecha.>
 Msg1 <As you approach the enemy ship, you are intercepted by its defenders!>
@@ -1066,7 +1066,7 @@ GoSetOrders <GrabSource GSetNAtt NAG_EpisodeData NAS_Orders 3>
 Attack <  >
 use <ifG StatVal STAT_MetaVisibility -1  if# V1 0 else GoStartCombat  Print -1 Exit Destination>
 GoStartCombat <Alert 1 SavePos Dynamic 2 %threat% 100 .nu1 .nu2 ComposeD Msg1 .Msg1 DynaVar= 1 SelfNID DynaVar= 3 Destination  DynaFaction SelfFac>
-.nu1 <if= T1 0  Return   if= L2 0  L= 2 1  AddRenown -5>
+.nu1 <if= T1 0  Return   if= L2 0  L= 2 1  LoseRenown>
 .nu2 <if= T2 0           if= L2 0  L= 2 1  XPV 100  AddRenown 1   ItemVar= L1 1 1  Alert 1  Exit L3>
 .msg1 <You have defeated the mecha.>
 Msg1 <You are attacked by mecha as you approach \SCENE Destination !>
@@ -1103,7 +1103,7 @@ GoAutoAttack <Alert -2 Goto GoStartCombat>
 GoAvoidAttack <Print -6 AddSociable -1>
 % In the dynamic scene, L1 = This encounter's NID
 GoStartCombat <V= 1 0  SavePos Dynamic 2 V2 100 .nu1 .nu2 ComposeD Msg1 .Msg1 DynaVar= 1 SelfNID DynaFaction SelfFac>
-.nu1 <if= T1 0  Return   if= L2 0  L= 2 1  AddRenown -5  ItemVar= L1 1 ComTime ItemVar+ L1 1 d86400 ItemVar+ L1 1 43200>
+.nu1 <if= T1 0  Return   if= L2 0  L= 2 1  LoseRenown  ItemVar= L1 1 ComTime ItemVar+ L1 1 d86400 ItemVar+ L1 1 43200>
 .nu2 <if= T2 0           if= L2 0  L= 2 1  XPV 100  AddRenown 1   ItemVar+ L1 3 1  Alert 1>
 .msg1 <You have defeated the mecha.>
 EncounterMove 50

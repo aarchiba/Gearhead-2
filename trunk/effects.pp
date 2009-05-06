@@ -1741,7 +1741,7 @@ begin
 		DefRep := AttemptDefenses( GB , Target , ER.Weapon , AtRoll , AtDesc );
 
 		if AtRoll > DefRep.HiRoll then begin
-			AddNAtt( Target^.NA , NAG_Condition , NAS_PowerSpent , 5 + Random( 5 ) + ( ( AtRoll - DefRep.HiRoll ) div 3 ) );
+			AddNAtt( Target^.NA , NAG_Condition , NAS_PowerSpent , 10 + Random( 10 ) + ( ( AtRoll - DefRep.HiRoll ) div 2 ) );
 			RecordAnnouncement( ReplaceHash( MsgString( 'Status_Overload' ) , GearName( Target ) ) );
 		end else begin
 			AddNAtt( Target^.NA , NAG_Condition , NAS_PowerSpent , Random( ER.FXDice ) + 2 );

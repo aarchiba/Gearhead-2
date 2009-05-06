@@ -660,6 +660,36 @@ begin
 	end;
 end;
 
+Procedure MoveToPublicScene( GB: GameBoardPtr; Scene0 , it: GearPtr );
+	{ We have a NPC in this oversized scene. We don't want to deploy them here, }
+	{ so move them to a sensible place. }
+var
+	RootScene, PublicScene: GearPtr;
+begin
+	{ Make sure the root scene is a root scene. }
+	RootScene := FindRootScene( Scene0 );
+	if RootScene <> Nil then begin
+		PublicScene := SearchForScene( RootScene , Nil , GB , 'PUBLIC (BUILDING|MEETING)' );
+		if PublicScene <> Nil then begin
+			InsertInvCom( PublicScene , it );
+			ChooseTeam( it , PublicScene );
+			StripNAtt( it , NAG_Location );
+			StripNAtt( it , NAG_Damage );
+			StripNAtt( it , NAG_WeaponModifier );
+			StripNAtt( it , NAG_Condition );
+			StripNAtt( it , NAG_StatusEffect );
+
+			if XXRan_Debug then begin
+				DialogMsg( 'Moving ' + GearName( it ) + ' to ' + GearName( PublicScene ) + '.' );
+			end;
+		end else begin
+			{ Stick the character back where it was originally. }
+			InsertInvCom( Scene0 , it );
+		end;
+	end else begin
+		InsertInvCom( Scene0 , it );
+	end;
+end;
 
 Procedure DeployJJang( Camp: CampaignPtr; Scene,PCForces: GearPtr );
 	{ Deploy the game forces as described in the Scene. }
@@ -738,6 +768,9 @@ begin
 			DelinkGear( Scene^.InvCom , it );
 			if NAttValue( it^.NA , NAG_Location , NAS_Team ) = NAV_DefPlayerTeam then begin
 				DeployGear( Camp^.gb , it , ( it^.G = GG_Character ) );
+			end else if ( it^.G = GG_Character ) and ( Camp^.GB^.Scale > 2 ) and ( NAttValue( it^.NA , NAG_Location , NAS_Team ) <> NAV_LancemateTeam ) then begin
+				{ Don't deposit NPCs on outdoors maps. Move them to a public scene instead. }
+				MoveToPublicScene( Camp^.GB , Scene , it );
 			end else begin
 				EquipThenDeploy( Camp^.gb , it , ( ( it^.Scale <= Scene^.V ) or ( it^.G = GG_Character ) ) );
 			end;

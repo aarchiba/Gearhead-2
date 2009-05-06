@@ -748,20 +748,28 @@ begin
 	YEnd := MyDest.Y + MyDest.H - 1;
 
 	{ Display the part's armor rating. }
-	N := GearCurrentArmor( Part );
-	if N > 0 then msg := '[' + BStr( N )
-	else msg := '[-';
-	msg := msg + '] ';
-	TextColor( ArmorColor( Part ) );
-	TextOut( MyDest.X , MyDest.Y + 1 , msg );
-	X := MyDest.X + Length( msg ) + 1;
+	if IsMasterGear( Part ) then begin
+		N := PercentDamaged( Part );
+		msg := BStr( N ) + '%';
+		TextColor( StatusColor( 100 , N ) );
+		TextOut( MyDest.X , MyDest.Y + 1 , msg );
+		X := MyDest.X + 1;
+	end else begin
+		N := GearCurrentArmor( Part );
+		if N > 0 then msg := '[' + BStr( N )
+		else msg := '[-';
+		msg := msg + '] ';
+		TextColor( ArmorColor( Part ) );
+		TextOut( MyDest.X , MyDest.Y + 1 , msg );
+		X := MyDest.X + Length( msg ) + 1;
 
-	{ Display the part's damage rating. }
-	N := GearCurrentDamage( Part );
-	if N > 0 then msg := BStr( N )
-	else msg := '-';
-	TextColor( HitsColor( Part ) );
-	TextOut( X , MyDest.Y + 1 , msg );
+		{ Display the part's damage rating. }
+		N := GearCurrentDamage( Part );
+		if N > 0 then msg := BStr( N )
+		else msg := '-';
+		TextColor( HitsColor( Part ) );
+		TextOut( X , MyDest.Y + 1 , msg );
+	end;
 
 	textColor( DarkGray );
 	TextOut( X + Length( msg ) , MyDest.Y + 1 , 'DP' );

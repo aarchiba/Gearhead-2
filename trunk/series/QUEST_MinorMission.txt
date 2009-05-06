@@ -55,7 +55,7 @@ Content
 		GoAutoAttack <Alert -2 Goto GoStartCombat>
 		GoAvoidAttack <Print -6 AddSociable -1>
 		GoStartCombat <V= 1 ComTime V+ 1 86400  SavePos Dynamic 2 %threat% 100 .nu1 .nu2 ComposeD Msg1 .Msg1  DynaFaction &EnemyFac>
-		.nu1 <if= T1 0  Return   if= L2 0  L= 2 1  AddRenown -5  ItemVar= %2% 1 ComTime ItemVar+ %2% 1 d86400 ItemVar+ %2% 1 43200>
+		.nu1 <if= T1 0  Return   if= L2 0  L= 2 1  LoseRenown  ItemVar= %2% 1 ComTime ItemVar+ %2% 1 d86400 ItemVar+ %2% 1 43200>
 		.nu2 <if= T2 0           if= L2 0  L= 2 1  XPV 100     Alert 1  WinSubPlot %plotid% DeleteItem %2%>
 		.msg1 <You have defeated the rival gang.>
 		EncounterMove 50
@@ -101,7 +101,7 @@ Content
 		GoAutoAttack <Alert -2 Goto GoStartCombat>
 		GoAvoidAttack <Print -6 AddSociable -1>
 		GoStartCombat <V= 1 ComTime V+ 1 86400  SavePos Dynamic 2 %threat% 100 .nu1 .nu2 ComposeD Msg1 .Msg1  DynaFaction &EnemyFac>
-		.nu1 <if= T1 0  Return   if= L2 0  L= 2 1  AddRenown -5  ItemVar= %2% 1 ComTime ItemVar+ %2% 1 d86400 ItemVar+ %2% 1 43200>
+		.nu1 <if= T1 0  Return   if= L2 0  L= 2 1  LoseRenown  ItemVar= %2% 1 ComTime ItemVar+ %2% 1 d86400 ItemVar+ %2% 1 43200>
 		.nu2 <if= T2 0           if= L2 0  L= 2 1  XPV 100     Alert 1  WinSubPlot %plotid% DeleteItem %2%>
 		.msg1 <You have defeated the invaders.>
 		EncounterMove 50
@@ -146,7 +146,7 @@ Content
 		GoAutoAttack <Alert -2 Goto GoStartCombat>
 		GoAvoidAttack <Print -6 AddSociable -1>
 		GoStartCombat <V= 1 ComTime V+ 1 86400  SavePos Dynamic 2 %threat% 100 .nu1 .nu2 ComposeD Msg1 .Msg1  DynaFaction &EnemyFac>
-		.nu1 <if= T1 0  Return   if= L2 0  L= 2 1  AddRenown -5  ItemVar= %2% 1 ComTime ItemVar+ %2% 1 d86400 ItemVar+ %2% 1 43200>
+		.nu1 <if= T1 0  Return   if= L2 0  L= 2 1  LoseRenown  ItemVar= %2% 1 ComTime ItemVar+ %2% 1 d86400 ItemVar+ %2% 1 43200>
 		.nu2 <if= T2 0           if= L2 0  L= 2 1  XPV 100     Alert 1  WinSubPlot %plotid% DeleteItem %2%>
 		.msg1 <You have defeated the mecha thieves.>
 		EncounterMove 50
@@ -190,7 +190,7 @@ Content
 		GoAutoAttack <Alert -2 Goto GoStartCombat>
 		GoAvoidAttack <Print -6 AddSociable -1>
 		GoStartCombat <V= 1 ComTime V+ 1 86400  SavePos Dynamic 2 %threat% 100 .nu1 .nu2 ComposeD Msg1 .Msg1  DynaFaction &EnemyFac>
-		.nu1 <if= T1 0  Return   if= L2 0  L= 2 1  AddRenown -5  ItemVar= %2% 1 ComTime ItemVar+ %2% 1 d86400 ItemVar+ %2% 1 43200>
+		.nu1 <if= T1 0  Return   if= L2 0  L= 2 1  LoseRenown  ItemVar= %2% 1 ComTime ItemVar+ %2% 1 d86400 ItemVar+ %2% 1 43200>
 		.nu2 <if= T2 0           if= L2 0  L= 2 1  XPV 100     Alert 1  Salvage  WinSubPlot %plotid% DeleteItem %2%>
 		.msg1 <You have defeated the mecha.>
 		EncounterMove 50
@@ -235,7 +235,7 @@ Content
 		GoAutoAttack <Alert -2 Goto GoStartCombat>
 		GoAvoidAttack <Print -6 AddSociable -1>
 		GoStartCombat <V= 1 ComTime V+ 1 86400  SavePos Dynamic 2 %threat% 100 .nu1 .nu2 ComposeD Msg1 .Msg1  DynaFaction 0>
-		.nu1 <if= T1 0  Return   if= L2 0  L= 2 1  AddRenown -5  ItemVar= %2% 1 ComTime ItemVar+ %2% 1 d86400 ItemVar+ %2% 1 43200>
+		.nu1 <if= T1 0  Return   if= L2 0  L= 2 1  LoseRenown  ItemVar= %2% 1 ComTime ItemVar+ %2% 1 d86400 ItemVar+ %2% 1 43200>
 		.nu2 <if= T2 0           if= L2 0  L= 2 1  XPV 100     Alert 1  Salvage  WinSubPlot %plotid% DeleteItem %2%>
 		.msg1 <You have defeated the bandits.>
 		EncounterMove 50

@@ -571,7 +571,7 @@ Content
 		result1 <EndChat Say 2 StoryNote 3 Print 4 &SetTargetItem 0           WinSubPlot %plotid%   Trigger0 .%id%_%plotid%_GoWin   AlterContext .next  SavePos  Dynamic 2 StoryDL 100 .nu1 .nu2  DynaFaction &EnemyFac>
 		result2 <EndChat Say 2 History 5 StoryNote 3 Print 4 &SetTargetItem 0 LoseSubPlot %plotid%  Trigger0 .%id%_%plotid%_GoLoss  AlterContext .next  SavePos  Dynamic 2 StoryDL 100 .nu1 .nu2  DynaFaction &EnemyFac>
 		.next <+Pew>
-		.nu1 <if= T1 0  Return   if= L2 0  L= 2 1  AddRenown -5>
+		.nu1 <if= T1 0  Return   if= L2 0  L= 2 1  LoseRenown>
 		.nu2 <if= T2 0           if= L2 0  L= 2 1  XPV 100  AddRenown 1  Salvage   Return>
 		Msg1 <\PC , I should have expected to find you here. Well, it hardly matters- you're too late to stop me.>
 		Msg2 <It wasn't the %name2% that I was after- it was the computer in that place which was the real prize. This information will be a great help to our new weapons program. Unfortunately, you will not live to see the glorious rise of \FACTION &EnemyFac !>

@@ -5,5 +5,224 @@
 %% The enemy is developing a new weapon program. The PC will supposedly oppose this, in
 %% some way.
 
+Content
+	name <Kidnapping Scientists>
+	desc <The person you were about to meet has been targeted by an enemy weapon program.>
+	%% Rescue the scientists, plus maybe a new love interest.
+	requires <#A +Tgt (T:ACADE|T:MEDIC) +Pew E:++ (F:AEGIS|F:AEGSF|F:CRIME) S:++ A:-->
+	changes <A:++>
+	Size 8
+
+	% E1 is the location of the meeting.
+	% E2 is the NPC to be met.
+	% E3 is the enemy NPC
+	% E4 is an environs scene
+	% E5 is the enemy base
+	% E6 is the possible new love interest
+	% E7 is another miscellaneous scientist
+	% E8 is the scientist in charge of things
+	% E9 is a scene to meet the friend at later
+	Element1 <Grab 6>
+	Element2 <Grab 5>
+	Place2 <5 (Captives) pass>
+	Element3 <Grab 1>
+	Element4 <Scene Environs !Near -7>
+	Element5 <Prefab>
+	Place5 <4>
+	Element6 <Prefab>
+	Place6 <5 (Captives) pass>
+	Element7 <Prefab>
+	Place7 <5 (Captives) pass>
+	Element8 <Prefab>
+	Place8 <5 (Scientist) sd>
+	Element9 <Scene (Building|Meeting) Public !Near -7>
+
+	% P%id%01 = Have gained peaceful entry
+
+	%% FAIL CONDITIONS:
+	%% - SubPlot1 fails
+	%% - SubPlot2 fails
+
+	%% Upon initialization, this plot will activate the *:CS_DiscoverNPCKidnappedByCSE task.
+	%% Once that's completed a LocateEnemyBase will be activated, along with a peaceful entry.
+	update <if= PlotStatus %plotid1% 0 SetPlotStatus %plotid1% %id1% ConGen %6% NPCLevel %8% %threat% SetNPCFaction %8% &EnemyFac>
+	end <ifSubPlotLost %plotid1% else GoCheckSP2 LoseComp 0 .next>
+	GoCheckSP2 <ifSubPlotLost %plotid2% LoseComp 0 .next>
+	.next <+T-- +F-->
+	.%id1%_%plotid1%_GoDiscover <if= PlotStatus %plotid% 0 SetPlotStatus %plotid% %id% SetPlotStatus %plotid2% %id2% SetPlotStatus %plotid3% %id3%>
+	.%id3%_%plotid3%_GoPeacefulEntry <P= %id%01 1>
+
+	% SubPlot1 is the Discover NPC kidnapped task
+	% SubPlot2 is to locate the enemy base
+	% SubPlot3 is to gain peaceful entry to the base
+	% SubPlot4 is E2's thanks reward
+	SubPlot1 <*:CS_DiscoverNPCKidnappedByCSE 1 2>
+	SubPlot2 <*:CS_RevealEncounter_NPCBase&Kidnapping&EnemyNPC 4 5 3>
+	SubPlot3 <*:CS_PeacefulEntry_NPCBase 3 5>
+	SubPlot4 <*CS_ThanksForRescue&FromCSEnemy 2>
+
+	sub
+		STC MS_SCHOOL
+		SetID 1
+
+		Persona 2
+		special <UNLISTED>
+		greeting <if= PlotStatus %plotid% %id% else .%id%_GoChat NewChat Say %id%01 AddChat %id%01 AddChat %id%02>
+		.%id%_GoChat <NewChat SayAnything>
+		.%id%_GoWinEpisode <SMemo %id%04 MoveAndPacifyNPC %2% %9% SetPlotStatus %plotid% %id4% XPV 100 History %id%05 Print %id%06>
+		Result%id%01 <EndChat Say %id%02 Goto .%id%_GoWinEpisode>
+		Result%id%02 <EndChat Say %id%03 Goto .%id%_GoWinEpisode>
+		Msg%id%01 <\PC ! Am I ever glad to see you... We were captured by %name3% and forced to work on \PPR %3% weapon project.>
+		Msg%id%02_1 <Thanks... You should get the other scientists out of here, as well. Meet me at %name9% later on and I'll thank you properly.>
+		CMsg%id%02_1 <ifG T2 1 Accept>
+		Msg%id%02_2 <Thanks... Meet me at %name9% later on and I'll be sure to reward you.>
+		CMsg%id%02_2 <ifG 2 T2 Accept>
+		Msg%id%03 <I can't make any promises, but meet me at %name9% later on and I'll see what I can do to thank you for this rescue.>
+		Msg%id%04 <You rescued %name2% from %name3%'s lab; \SPR %2% 's waiting for you at %name9%.>
+		Msg%id%05 <You rescued %name2% from %name3%'s lab.>
+		Msg%id%06 <%name2% leaves the area.>
+		Prompt%id%01 <Well, you're free to go now.>
+		Prompt%id%02 <Why don't you ever build superweapons for me?>
+
+		Persona 6
+		special <UNLISTED NOESCAPE>
+		greeting <EndChat Say %id%01 AddChat %id%01 AddChat %id%02>
+		result%id%01 <EndChat Say %id%02 AddChat %id%03 AddChat %id%04 AddReact d20>
+		result%id%02 <EndChat Say %id%03 AddReact -d10 AddHeroic -1  CashPrize Reward %threat% 50  FreezeNPC %6% Print %id%04>
+		result%id%03 <EndChat Say %id%05 AddReact d10  &SetAmoreNPC %6%  SetXXRAttitude %6% XXR_A_Thankful  FreezeNPC %6%  XPV 100  Print %id%04 History %id%06>
+		result%id%04 <EndChat Say %id%07 FreezeNPC %6%  XPV 100  Print %id%04>
+		Msg%id%01 <Who are you? Are you here to rescue us?>
+		Msg%id%02 <Wait... I didn't even catch your name. Will I ever see you again?>
+		Msg%id%03 <You're no better than %name3%... At least I can get out of here now.>
+		Msg%id%04 <%name6% leaves the area.>
+		Msg%id%05 <I look forward to it... The next time we meet, I hope I'll be able to repay you for this.>
+		Msg%id%06 <You rescued %name6% from %name3%'s lab.>
+		Msg%id%07 <I see... well, thanks for the rescue, whoever you are...>
+		Prompt%id%01 <Yes, you're free to go. The exit's that way.>
+		Prompt%id%02 <That depends... Can you pay for my services?>
+		Prompt%id%03 <I guarantee it.>
+		Prompt%id%04 <No, probably not... just go.>
+
+		Persona 7
+		special <UNLISTED>
+		% V%id%01 = Have rescued already counter
+		greeting <if= v%id%01 0 else .%id%_GoChat NewChat Say %id%01 AddChat %id%01 AddChat %id%02>
+		.%id%_GoChat <NewChat SayANything>
+		.%id%_GoRescue <Print %id%04 MoveAndPacifyNPC %7% %9% XPV 100 V= %id%01 1>
+		result%id%01 <EndChat Say %id%02 AddReact d10 Goto .%id%_GoRescue>
+		result%id%02 <EndChat Say %id%03 Goto .%id%_GoRescue>
+		Msg%id%01 <You're the rescue team, right? I knew they'd send somebody... I just want to get out of this place!>
+		Msg%id%02 <Thank you! I won't forget your kindness!>
+		Msg%id%03 <%name3% is working on something for \FACTION &EnemyFac ... I only understand bits and pieces of it. Whatever they're building, it's going to be extremely dangerous.>
+		Msg%id%04 <%name6% leaves the area.>
+		Prompt%id%01 <The exit's over that way. Be careful.>
+		Prompt%id%02 <First, tell me about %name3%'s project.>
+
+		Persona 8
+		special <UNLISTED NOESCAPE>
+		% V%id%01 = Have already spoken
+		greeting <if= V%id%01 0 else GoChat EndChat Say %id%01 AddCHat %id%01 AddChat %id%02 AddChat %id%03>
+		GoChat <EndChat Say %id%04>
+		.%id%_GoRuseFailed <EndChat Say %id%03 AddChat %id%04 AddChat %id%05 AddChat %id%06>
+		.%id%_GoFail <EndChat Say %id%07 TeamATtack 3 TeamAttack 4>
+		.%id%_GoWin <EndChat Say %id%08>
+		result%id%01 <ifStealthCH HardSkilltar %threat% else .%id%_GoRuseFailed  EndCHat Say %id%05 CustomMecha .%id%_mek %threat% V= %id%01 1>
+		.%id%_mek <GENERAL \FACTION_DESIG &EnemyFac>
+		result%id%02 <ifStealthCH Skilltar %threat% else .%id%_GoRuseFailed      EndChat Say %id%06 V= %id%01 1>
+		result%id%03 <EndChat Say %id%02 TeamATtack 3 TeamAttack 4 V= %id%01 1>
+		result%id%04 <V= %id%01 1 ifConversation SkillTar %threat% else .%id%_GoFail Goto .%id%_GoWin>
+		result%id%05 <V= %id%01 1 ifIntimidation SkillTar %threat% else .%id%_GoFail Goto .%id%_GoWin>
+		result%id%06 <V= %id%01 1 ifTaunt SkillTar %threat% else .%id%_GoFail Goto .%id%_GoWin>
+		Msg%id%01 <You there! Who are you, and what are you doing here?>
+		Msg%id%02 <Very interesting. I think you'll find that escape from my laboratory is quite impossible...>
+		Msg%id%03 <Wait a minute... I don't remember authorizing any new hires.>
+		Msg%id%04 <So much work to do, and so little time...>
+		Msg%id%05 <Oh... Alright then, you're going to need access codes to the hangar level.>
+		Msg%id%06 <Oh... Alright then, you can start in the prisoner quarters. The next time we kidnap some scientists to work on a secret project I sincerely hope we don't get pigs like this lot.>
+		Msg%id%07 <I don't think so... in fact, I'm quite certain that you're an intruder!>
+		Msg%id%08 <Hmmm... Well then, you better get back to work, I guess...>
+		Prompt%id%01 <I'm the test pilot for the new mecha we're building.>
+		CPrompt%id%01 <ifInsight 5 Accept>
+		Prompt%id%02 <Uh, I'm just part of the cleaning crew.>
+		Prompt%id%03 <I'm here to rescue %name2%, you bastard!>
+		Prompt%id%04 <It was authorized by %name3%, actually.>
+		Prompt%id%05 <Are you calling me a liar!?>
+		Prompt%id%06 <You must be starting to lose your memory, geezer.>
+
+		MetaScene 5
+		MapWidth 35
+		MapHeight 35
+		MonkeyMap
+		IndustrialTiles
+		SecretDoorChance 10
+		LockedDoorChance 10
+		type <Complex Private Laboratory>
+		special <UNSAFE NOEXIT>
+		NeededCells 1
+		% L1 = Have rescued friend.
+		% L2 = Have captured/killed enemy scientist
+		start <Print 3 if# P%id%01 0 else GoCancelSP3 TeamNeutral 3 TeamNeutral 4>
+		GoCancelSP3 <CancelSubPlot %plotid3%>
+		PCAttack <ifTeamNotHostile 3 TeamAttack 3 TeamAttack 4 Alert 1>
+		faint%8% <if= L2 0 L= 2 1>
+		surrender%8% <if= L2 0 L= 2 1 Monologue %8% 5 Alert 4 DeleteNPC %8% XPV 100>
+		end <ifNPCDead %2% else GoCheckRescue LoseComp 0 .next History 2 SMemo 0 SetEncounterInactive %5% ifNPCOK %8% FreezeNPC %8%>
+		.next <+T-- +F-->
+		GoCheckRescue <if# PlotStatus %plotid% %id% SetEncounterInactive %5% ifNPCOK %8% FreezeNPC %8%>
+		Msg1 <Suddenly, an alarm rings throughout the complex!>
+		Msg2 <You failed to rescue %name2% from %name3%.>
+		Msg3 <You enter %name3%'s mobile lab.>
+		Msg4 <You capture %name4%.>
+		Msg5 <Stop, I surrender!>
+		Content1 <Some 1 80 Sub *ARMORY na>
+		sub
+			Team 1
+			SetEnemy 3 4
+
+			Team 2
+			name <Captives>
+			home <Lab Cell>
+
+			Team 3
+			name <Guards>
+			type <GUARD ROBOT SYNTH>
+			Deploy <if= V1 0 V= 1 1 MonsterUp 3 StoryDL>
+			SetEnemy 1
+			SetAlly 4
+
+			Team 4
+			name <Scientist>
+			SetEnemy 1
+			SetAlly 3
+			home <Foyer>
+
+			Room
+			name <Foyer>
+			special <STARTHERE>
+			sub
+				Trapdoor
+				Destination -1
+				use <Print 1 Return>
+			end
+
+			Room
+			name <Lab Cell>
+		end
+	end
+	inv
+		STC CORE-ACTIVATABLE-STATIONARY-DEFENDED
+		name <Mobile Lab>
+
+		NPC Scientist
+		Charm 14
+
+		NPC Scientist
+		chardesc Old Old
+
+		NPC Scientist
+		chardesc Old Old
+		Combatant
+		MechaEngineering
+	end
 
 

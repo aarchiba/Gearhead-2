@@ -48,7 +48,7 @@ Content
 		MapHeight 50
 
 		Start <if= L2 0 L= 2 1   L= 1 0   ForceChat %2%>
-		nu1 <if= T1 0   Return  if= L1 0   L= 1 1   AddRenown -3>
+		nu1 <if= T1 0   Return  if= L1 0   L= 1 1   LoseRenown>
 		nu2 <if= T2 0   if= L1 0   L= 1 1   Goto GoVictory>
 		Faint%2% <L= 1 1 Goto GoVictory>
 		GoVictory <XPV 100 Trigger0 .%id%_%plotid%_GoWin WinSubPlot %plotid%>
@@ -306,49 +306,6 @@ Plot
 		Prompt%id%01 <Tell me what it is.>
 		Prompt%id%01_1 <Really? Great.>
 		Prompt%id%01_2 <Go on, then. Don't leave me waiting.>
-	end
-
-%%
-%% *CS_Pla_GetItem
-%%	&Derelict	The item was found in a wreck
-%%
-%% In the +Pla plot state, the PC is about to come into posession of the
-%% target item. This subplot will add some consequences for this; Note that
-%% this may also be triggered if the target item is destroyed or otherwise
-%% lost. Make sure you check for that, too.
-%%
-%% PARAM1: The item obtained.
-%%
-
-Content
-	name <Do Not Want>
-	desc <The enemy didn't want the artifact; he wanted the info from the derelict's computer.>
-	requires <*CS_Pla_GetItem &Derelict E:++ F:++>
-	Size 3
-
-	% E1 is the item obtained
-	% E2 is the enemy character
-	Element2 <Grab 1>
-	Place2 </>
-
-	% P%id%01 = Message counter
-
-	start <if= PlotStatus %plotid% %id% else %pop% ifScene .%id%_Scene if= P%id%01 0 P= %id%01 1 ForceChat %2%>
-	.%id%_Scene <OUTDOORS>
-
-	sub
-		Persona 2
-		special <UNLISTED NOESCAPE>
-		greeting <EndChat Say 1 AddChat 1>
-		result1 <EndChat Say 2 StoryNote 3 Print 4 &SetTargetItem 0 WinComp 0 .next  SavePos Dynamic 2 StoryDL 100 .nu1 .nu2 DynaFaction &EnemyFac>
-		.next <+Pew +T-- +F-->
-		.nu1 <if= T1 0  Return   if= L2 0  L= 2 1  AddRenown -5>
-		.nu2 <if= T2 0           if= L2 0  L= 2 1  XPV 100  AddRenown 1   Return>
-		Msg1 <\PC , I should have expected to find you here. Well, it hardly matters- you're too late to stop me.>
-		Msg2 <It wasn't the %name1% that I was after- it was the computer on board the ship that was carrying it. This information will be a great help to our new weapons program. Unfortunately, you will not live to see the glorious rise of \FACTION &EnemyFac !>
-		Msg3 <%name2% revealed that \FACTION &EnemyFac were working on a new weapons program.>
-		Msg4 <You are attacked by %name2%'s men.>
-		Prompt1 <Too late? I beat you to the %name1%!>
 	end
 
 

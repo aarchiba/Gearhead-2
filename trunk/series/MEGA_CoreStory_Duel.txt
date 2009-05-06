@@ -66,7 +66,7 @@ Content
 		special <ARENA SOLO>
 
 		Start <if= L2 0 L= 2 1   Alert 1 ForceChat %1%>
-		nu1 <if= T1 0  Return   if= L1 0 L= 1 1   MoveNPC %1% %2%  History 4  Print 2   Trigger0 .%id%_%plotid%_GoLose>
+		nu1 <if= T1 0  Return   if= L1 0 L= 1 1   MoveNPC %1% %2%  History 4  Print 2 LoseRenown  Trigger0 .%id%_%plotid%_GoLose>
 		nu2 <if= T2 0           if= L1 0 L= 1 2   MoveNPC %1% %2%  History 5  Print 2 AddRenown 1   XPV 100   Trigger0 .%id%_%plotid%_GoWin>
 
 		Msg1 <%name1% found a large asteroid to fight on>
@@ -145,7 +145,7 @@ Content
 		special <ARENA>
 
 		Start <if= L2 0 L= 2 1   ForceChat %1%>
-		nu1 <if= T1 0  Return   if= L1 0 L= 1 1   MoveNPC %1% %2%  History 4  Print 2   Trigger0 .%id%_%plotid%_GoLose>
+		nu1 <if= T1 0  Return   if= L1 0 L= 1 1   MoveNPC %1% %2%  History 4  Print 2 LoseRenown  Trigger0 .%id%_%plotid%_GoLose>
 		nu2 <if= T2 0           if= L1 0 L= 1 2   MoveNPC %1% %2%  History 5  Print 2 AddRenown 1   XPV 100  Salvage   Trigger0 .%id%_%plotid%_GoWin>
 
 		Msg2 <%name1% returns to %name2%.>
@@ -427,7 +427,7 @@ Content
 		special <ARENA SOLO>
 
 		Start <if= L2 0 L= 2 1   ForceChat %1%   AlterContext .change L= 4 %1%>
-		nu1 <if= T1 0  Return   if= L1 0 L= 1 1   StoryNote 1   Trigger0 .%id%_%plotid%_GoLose>
+		nu1 <if= T1 0  Return   if= L1 0 L= 1 1   StoryNote 1   LoseRenown Trigger0 .%id%_%plotid%_GoLose>
 		nu2 <if= T2 0           if= L1 0 L= 1 2   StoryNote 1   AddRenown 1  XPV 100   SALVAGE  ifTeamNotHostile 3 else GoFoughtNPC   Trigger0 .%id%_%plotid%_GoWin>
 		GoFoughtNPC <WinComp 0 .Next>
 		.next <+T-- +F-->
@@ -531,7 +531,7 @@ Content
 		special <ARENA SOLO>
 
 		Start <if= L2 0 L= 2 1   ForceChat %1%>
-		nu1 <if= T1 0  Return   if= L1 0 L= 1 1   MoveNPC %1% %2%  History 4  Print 2   Trigger0 .%id%_%plotid%_GoLose>
+		nu1 <if= T1 0  Return   if= L1 0 L= 1 1   MoveNPC %1% %2%  History 4  Print 2 LoseRenown  Trigger0 .%id%_%plotid%_GoLose>
 		nu2 <if= T2 0           if= L1 0 L= 1 2   MoveNPC %1% %2%  History 5  Print 2 AddRenown 1   XPV 100   Trigger0 .%id%_%plotid%_GoWin>
 
 		Msg2 <%name1% returns to %name2%.>
