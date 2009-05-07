@@ -2121,7 +2121,7 @@ begin
 	Team := NAttValue( PC^.NA , NAG_LOcation , NAS_Team );
 	while M <> Nil do begin
 		if ( ( NAttValue( M^.NA , NAG_LOcation , NAS_Team ) = Team ) or ( NAttValue( M^.NA , NAG_LOcation , NAS_Team ) = NAV_LancemateTeam ) ) and IsMasterGear( M ) and IsLegalInvcom( M , Item ) then begin
-			AddRPGMenuItem( RPM , GearName( M ) , N );
+			AddRPGMenuItem( RPM , TeamMateName( M ) , N );
 		end;
 
 		M := M^.Next;
@@ -2130,6 +2130,7 @@ begin
 
 	{ Sort the menu, then add an exit option. }
 	RPMSortAlpha( RPM );
+	AlphaKeyMenu( RPM );
 	AddRPGMenuItem( RPM , MsgString( 'FHQ_ReturnToMain' ) , -1 );
 
 	{ Get a menu selection, then exit the menu. }

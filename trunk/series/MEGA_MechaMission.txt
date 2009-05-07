@@ -44,8 +44,8 @@ Content
 	sub
 		MetaScene 4 2
 		% L1 = Encounter Over Counter
-		MapWidth 30
-		MapHeight 30
+		MapWidth 50
+		MapHeight 50
 
 		% Set this metascene's faction to E3
 		SetFaction 3
@@ -72,8 +72,8 @@ Content
 			name <Enemies>
 			SetEnemy 1 3
 			Deploy <SetSelfFaction %3% WMecha 2 %threat% 100>
-			ParaX 25
-			ParaY 25
+			ParaX 45
+			ParaY 45
 
 			team 3
 			name <Allies>
@@ -132,8 +132,8 @@ Content
 	sub
 		MetaScene 3 2
 		% L1 = Encounter Over Counter
-		MapWidth 30
-		MapHeight 30
+		MapWidth 50
+		MapHeight 50
 
 		Start <if= P%id%02 0  P= %id%02 1>
 		nu1 <if= T1 0   Return   if= V1 0 V= 1 1   LoseRenown                     Memo 1  Alert 1   SetPlotStatus %plotid% %id2%>
@@ -157,8 +157,8 @@ Content
 			name <Enemies>
 			SetEnemy 1 3
 			Deploy <WMecha 2 %threat% 100>
-			ParaX 25
-			ParaY 25
+			ParaX 45
+			ParaY 45
 
 			team 3
 			name <Allies>
@@ -198,8 +198,8 @@ Content
 	sub
 		MetaScene 3 2
 		% L1 = Encounter Over Counter
-		MapWidth 30
-		MapHeight 30
+		MapWidth 50
+		MapHeight 50
 		AsteroidMap
 		RockyTiles
 
@@ -230,8 +230,8 @@ Content
 			name <Enemies>
 			SetEnemy 1 3
 			Deploy <WMecha 2 %threat% 100>
-			ParaX 25
-			ParaY 25
+			ParaX 45
+			ParaY 45
 
 			team 3
 			name <Allies>
@@ -273,8 +273,8 @@ Content
 	sub
 		MetaScene 3 2
 		% L1 = Encounter Over Counter
-		MapWidth 30
-		MapHeight 30
+		MapWidth 50
+		MapHeight 50
 
 		% Set this metascene's faction to E4
 		SetFaction 4
@@ -301,8 +301,8 @@ Content
 			name <Enemies>
 			SetEnemy 1
 			Deploy <SetSelfFaction %4% WMecha 2 %threat% 100>
-			ParaX 25
-			ParaY 25
+			ParaX 45
+			ParaY 45
 
 			team 3
 			name <Allies>

@@ -104,7 +104,7 @@ Plot
 	update <if= PlotStatus %plotid% 0 if= P1 0 P= 1 ComTime P+ 1 86400>
 
 	% Insert email here
-	5min <if= PlotStatus %plotid% 0 if= P2 0  if# NPCFac %2% 0  if= PCFac NPCFac %2%  if= RootSceneID %1% if= d10 1  ifG PCCharm d20  Email 1 P= 2 1>
+	5min <if= PlotStatus %plotid% 0 if= P2 0  if# NPCFac %2% 0  if= PCFac NPCFac %2%  if= RootSceneID %1% ifG PCCharm d30  Email 1 P= 2 1>
 	Msg1   <%name2%@ \SCENE NPCSCene %2% :// Hey \RANK , I've got a mission for you in %name1%.>
 	Msg1_1 <%name2%@ \SCENE NPCSCene %2% :// Report to \SCENE NPCSCene %2% for a mission at once.>
 	Msg1_2 <%name2%@ \SCENE NPCSCene %2% :// Your services are required by \FACTION NPCFac %2% . Come see me for mission briefing.>

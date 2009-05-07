@@ -149,6 +149,15 @@ Procedure DoTraining( GB: GameBoardPtr; PC: GearPtr; RD: RedrawProcedureType );
 		until N = -1;
 	end;
 
+	Function NumAllowedStatAdvances: LongInt;
+		{ Return the number of stat advances this PC is allowed. }
+	var
+		XP: LongInt;
+	begin
+		XP := NAttValue( PC^.NA , NAG_Experience , NAS_TotalXP );
+		if XP > 100000 then XP := 100000;
+		NumAllowedStatAdvances := XP div 5000;
+	end;
 	Function OneStatCanBeAdvanced: Boolean;
 		{ Return TRUE if at least one stat is capable of being }
 		{ advanced, or FALSE otherwise. }
@@ -160,7 +169,7 @@ Procedure DoTraining( GB: GameBoardPtr; PC: GearPtr; RD: RedrawProcedureType );
 		for t := 1 to NumGearStats do begin
 			N := N + NAttValue( PC^.NA , NAG_StatImprovementLevel , T );
 		end;
-		OneStatCanBeAdvanced := N < ( NAttValue( PC^.NA , NAG_Experience , NAS_TotalXP ) div 5000 );
+		OneStatCanBeAdvanced := N < NumAllowedStatAdvances;
 	end;
 
 	Function StatImprovementCost( CIV: Integer ): LongInt;

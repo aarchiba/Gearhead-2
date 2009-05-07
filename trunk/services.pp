@@ -1458,7 +1458,7 @@ begin
 		{ If this gear is a mecha, and it belongs to the PC, }
 		{ add it to the menu. }
 		if ( NAttValue( Mek^.NA , NAG_Location , NAS_Team ) = NAV_DefPlayerTeam ) and not GearActive( Mek ) then begin
-			msg := FullGearName( Mek );
+			msg := TeamMateName( Mek );
 			AddRPGMenuItem( RPM , msg , N );
 		end;
 
@@ -1467,6 +1467,7 @@ begin
 	end;
 
 	RPMSortAlpha( RPM );
+	AlphaKeyMenu( RPM );
 	AddRPGMenuItem( RPM , MsgString( 'SERVICES_Exit' ) , -1 );
 
 	CreateMechaMenu := RPM;

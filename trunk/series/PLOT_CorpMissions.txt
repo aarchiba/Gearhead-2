@@ -25,7 +25,7 @@ Plot
 	update <if= PlotStatus %plotid% 0 if= P1 0 P= 1 ComTime P+ 1 86400>
 
 	% Insert email here
-	5min <if= PlotStatus %plotid% 0 if= RootSceneID %4% if= P2 0  if= PCFac %2%  if= d20 1  ifG PCCharm d40  Email 1 P= 2 1>
+	5min <if= PlotStatus %plotid% 0 if= RootSceneID %4% if= P2 0  if= PCFac %2%  if= d4 1  ifG PCCharm d40  Email 1 P= 2 1>
 	Msg1 <\ELEMENT 1 @ \SCENE NPCScene %1% :// I have a mission for you from \ELEMENT 2 .>
 	Msg1_1 <\ELEMENT 1 @ \SCENE NPCScene %1% :// Report to \SCENE EScene 1 for a mission at once.>
 	Msg1_2 <\ELEMENT 1 @ \SCENE NPCScene %1% :// Your services are required by \ELEMENT 2 . Come see me for mission briefing.>
@@ -103,7 +103,7 @@ Plot
 	update <if= PlotStatus %plotid% 0 if= P1 0 P= 1 ComTime P+ 1 86400>
 
 	% Insert email here
-	5min <if= PlotStatus %plotid% 0 if= RootSceneID %5% if= P2 0  if= PCFac %2%  if= d20 1  ifG PCCharm d40  Email 1 P= 2 1>
+	5min <if= PlotStatus %plotid% 0 if= RootSceneID %5% if= P2 0  if= PCFac %2%  if= d4 1  ifG PCCharm d40  Email 1 P= 2 1>
 	Msg1 <\ELEMENT 1 @ \SCENE NPCScene %1% :// I have a mission for you against %name4%.>
 	Msg1_1 <\ELEMENT 1 @ \SCENE NPCScene %1% :// Report to \SCENE EScene 1 for a mission against %name4%.>
 	Msg1_2 <\ELEMENT 1 @ \SCENE NPCScene %1% :// Your services are required by \ELEMENT 2 . Come see me for mission briefing.>

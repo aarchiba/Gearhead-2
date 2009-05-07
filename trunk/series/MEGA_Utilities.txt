@@ -21,15 +21,42 @@ Content
 %% *UTIL_WinMission
 %%
 %%  The player has won this mission, and will be paid by the NPC according to the agreed upon
-%%  pay rate.
+%%  pay rate. There may be an additional bonus, depending on the situation.
 %%
 %% The master plot must have a PayRate set.
 %%
 %%  PARAM1: The mission-giving NPC
 
 Content
+	name <Friend/Lover Win Mission>
+	requires <*UTIL_WinMission (1:FRIEND|1:LOVER)>
+
+	% E1 is the mission-giving NPC.
+
+	start <ifNPCDead %1% EndPlot>
+
+	sub
+		Persona 1
+		greeting <if= PlotStatus %plotid% %id% else %pop%  NewChat Say %id%01 CashPrize Reward %threat% PayRate    FacXP+ ChatNPCFac 1    RandomMecha .%id%_meks %threat%   EndPlot>
+		.%id%_meks <GENERAL \FACTION_DESIG RootSceneID \FACTION_DESIG ChatNPCFac>
+		Msg%id%01 <Here's your reward for that last mission, \PC . I decided to throw in a little something extra as well.>
+		Msg%id%01_1 <Your mission was a complete success. You're impressing a lot of people with your performance, \PC . In addition to the mission pay you've also been awarded this special gift.>
+		CMsg%id%01_1 <ifNPCSociable Accept>
+		Msg%id%01_2 <Good work, \PC . You've been awarded this new mecha.>
+		CMsg%id%01_2 <ifNPCShy Accept>
+		Msg%id%01_3 <Hey \PC . I hope the mission wasn't too hard... Anyhow, because of your success, I've been asked to give you this new mecha in addition to your regular pay.>
+		CMsg%id%01_3 <ifNPCEasygoing Accept>
+		Msg%id%01_4 <You did it! Wow, you really are a powerful fighter... In recognition of your success, I'm pleased to give you this brand new mecha in addition to your pay. Pilot it well!>
+		CMsg%id%01_4 <ifNPCPassionate Accept>
+		Msg%id%01_5 <Good job, \PC ! You'll be pleased to know that the higher-ups are just as impressed with you as I am. In addition to the regular mission pay, they've authorized me to give you this brand new mecha.>
+		CMsg%id%01_5 <ifNPCCheerful Accept>
+		Msg%id%01_6 <I'm glad to see that you made it back in one piece. Here, this new mecha is for you. You're probably going to need a backup one of these days.>
+		CMsg%id%01_6 <ifNPCMelancholy Accept>
+	end
+
+Content
 	name <Basic Win Mission>
-	requires <*UTIL_WinMission>
+	requires <*UTIL_WinMission Common>
 
 	% E1 is the mission-giving NPC.
 
@@ -44,7 +71,7 @@ Content
 
 Content
 	name <Basic Win Mission>
-	requires <*UTIL_WinMission &Mecha>
+	requires <*UTIL_WinMission &Mecha Common>
 
 	% E1 is the mission-giving NPC.
 

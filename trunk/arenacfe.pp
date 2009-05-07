@@ -974,10 +974,10 @@ begin
 	Mek := GB^.Meks;
 	while Mek <> Nil do begin
 		V := NAttValue( Mek^.NA , NAG_Action , NAS_WillCharge );
-		if GearActive( Mek ) and ( V <> 0 ) then begin
+		if GearActive( Mek ) and ( V <> 0 ) and OnTheMap( GB , Mek ) then begin
 			Target := LocateMekByUID( GB , V );
 
-			if ( Target <> Nil ) and NotDestroyed( Target ) then begin
+			if ( Target <> Nil ) and NotDestroyed( Target ) and OnTheMap( GB , Target ) then begin
 				{ Generate a fake gameboard to be used for screen output. }
 				FakeGB := CloneMap( GB );
 

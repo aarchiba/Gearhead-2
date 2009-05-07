@@ -702,7 +702,7 @@ Content
 		Persona 1
 		% V1 = Have become skill trainer (1) or PC has declined the offer (-1)
 		*greeting <*NiceToMeetYou GoCheckOFfer>
-		GoCheckOffer <if= V1 0 else GoOpenStore ifChatNPCKnown else GoOpenStore ifG React 50 else GoOpenStore EndChat Say 4 AddChat 4>
+		GoCheckOffer <if= V1 0 else GoOpenStore ifChatNPCKnown else GoOpenStore ifG React 20 else GoOpenStore EndChat Say 4 AddChat 4>
 		GoOpenStore <NewChat Say 1 AddChat 1 AddChat 2 AddChat 3>
 		result1 <EndChat Say 2 Shop .wares Goto result2>
 		.wares <INSTRUMENT ENTERTAINMENT>
