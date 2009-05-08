@@ -162,8 +162,8 @@ Content
 		% L1 = Have rescued friend.
 		% L2 = Have captured/killed enemy scientist
 		start <Print 3 if# P%id%01 0 else GoCancelSP3 TeamNeutral 3 TeamNeutral 4>
-		GoCancelSP3 <CancelSubPlot %plotid3%>
-		PCAttack <ifTeamNotHostile 3 TeamAttack 3 TeamAttack 4 Alert 1>
+		GoCancelSP3 <CancelSubPlot %plotid3%  P= %id%01 0>
+		PCAttack <ifTeamNotHostile 3 TeamAttack 3 TeamAttack 4 Alert 1 P= %id%01 0>
 		faint%8% <if= L2 0 L= 2 1>
 		surrender%8% <if= L2 0 L= 2 1 Monologue %8% 5 Alert 4 DeleteNPC %8% XPV 100>
 		end <ifNPCDead %2% else GoCheckRescue LoseComp 0 .next History 2 SMemo 0 SetEncounterInactive %5% ifNPCOK %8% FreezeNPC %8%>

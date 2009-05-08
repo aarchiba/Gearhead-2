@@ -588,6 +588,213 @@ Content
 %%  ***   +Pew  Enemy  Weapon  Program   ***
 %%  ****************************************
 
+Content
+	name <Steal The Prototype>
+	desc <The PC will be sent into enemy territory to steal a prototype weapon from the other side.>
+	requires <*:CS_GatherInformation (!Md|!Hi)  +Pew  P:++ F:++ ~&AboutEnemy>
+	changes <+P>
+	Size 15
+
+	% E1 is the person who tells the PC.
+	% E2 is the scene where the prototype is
+	% E3 is the environs scene where the lab is located
+	% E4 is the lab itself
+	% E5 is the research head
+	% E6 is the "high alert" mood
+	Element2 <Scene Town !Far -7 !Ally -2 !XClude -3>
+	Element3 <Scene Environs !Near 2>
+	Element4 <Prefab>
+	Place4 <3>
+	Element5 <Prefab>
+	Place5 <4 (Scientist) sd enemy>
+	Element6 <Prefab>
+
+	% P%id%01 = Initialization Counter
+	% P%id%02 = Safe Entry Counter
+
+	update <if= P%id%01 0 P= %id%01 1 SetEncounterActive %4% NPCLevel %5% StoryDL SetNPCFaction %5% &EnemyFac SetPlotStatus %plotid1% %id1% SetMood %6% %2%>
+
+	.%id3%_%plotid3%_GoPeacefulEntry <P= %id%02 1>
+
+	% SubPlot1 is the peaceful entry task
+	SubPlot1 <*:CS_PeacefulEntry_NPCBase 4 5>
+
+	sub
+		Persona 1
+		.%id%_GoInform <NewChat Say %id%01 SMemo %id%02 History %id%03>
+		Msg%id%01 <Here. These are the coordinates of a weapons lab in %name2% belonging to \FACTION &EnemyFac . They've been testing a prototype there, and are just about to go into production. Go see what you can find out.>
+		Msg%id%02 <%name1% informed you that \FACTION &EnemyFac has a weapons lab in %name3%, and their prototype is nearly ready for production.>
+		Msg%id%03 <%name1% told you where to find the weapons lab in %name2%.>
+
+		MetaScene 4
+		rumor%id% <the weapons lab is being run by %name5%.>
+		MapWidth 35
+		MapHeight 35
+		MonkeyMap
+		Ceiling
+		IndustrialTiles
+		SecretDoorChance 10
+		LockedDoorChance 10
+		type <Complex Private Laboratory>
+		special <UNSAFE NOEXIT>
+		NeededCells 1
+		%%  L1 = Have opened mecha bay doors
+		%%  L2 = Have prepared mecha core
+		%%  L3 = Have released construction harness
+		%%  L4 = Bonus build points
+		%%  L5 = Bonus customization points
+		start <Print 3 if# P%id%02 0 else GoCancelSP1 TeamNeutral 2 TeamNeutral 3>
+		GoCancelSP1 <CancelSubPlot %plotid1%>
+		PCAttack <ifTeamNotHostile 3 TeamAttack 2 TeamAttack 3 Alert 1 P= %id%02 0>
+		end <if# PlotStatus %plotid% %id% else GoCheckLoss SetEncounterInactive %4% ifNPCOK %5% FreezeNPC %5%>
+		GoCheckLoss <Alert 2 History 2 LoseSubPlot %plotid% Trigger0 .%id%_%plotid%_GoLoss SetEncounterInactive %4% KillMood %6% ifNPCOK %5% FreezeNPC %5%>
+		Surrender%5% <Monologue %5% 4 Alert 5 FreezeNPC %5% L= 1 1 L= 2 1 L= 3 1>
+		Msg1 <Suddenly, an alarm rings throughout the complex!>
+		Msg2 <You did not manage to find the prototype before it could be deployed.>
+		Msg3 <You enter %name5%'s weapons lab.>
+		Msg4 <I surrender! You can have the prototype, just take it and go!>
+		Msg5 <%name5% gives you the passcodes for the prototype mecha.>
+		Content1 <Some 1 80 Sub *ARMORY na>
+		sub
+			Team 1
+			SetEnemy 3 4
+
+			Team 2
+			name <Guards>
+			type <GUARD ROBOT SYNTH>
+			Deploy <if= V1 0 V= 1 1 MonsterUp 2 StoryDL>
+			SetEnemy 1
+			SetAlly 3
+
+			Team 3
+			name <Scientist>
+			SetEnemy 1
+			SetAlly 2
+
+			Room
+			name <Foyer>
+			special <STARTHERE>
+			sub
+				Trapdoor
+				Destination -1
+				use <Print 1 Return>
+			end
+
+			Room
+			%% Hangar Door Computer
+			sub
+				STC COMPUTER-INDESTRUCTIBLE
+				name <Hangar Control>
+				use <if= L1 0 else GoBeenBefore ifYesNo 1 2 3 Alert 4 L= 1 1>
+				GoBeenBefore <Print 5>
+				CLUE_CODEBREAKING <Print 9>
+				Msg1 <This computer operates the mecha bay doors. Do you want to open them?>
+				Msg2 <Yes, I do.>
+				Msg3 <No, not just yet...>
+				Msg4 <You open the external bay doors.>
+				Msg5 <You used this computer to open the mecha bay doors.>
+				Msg9 <You don't see any reason to hack this particular computer.>
+			end
+
+			Room
+			%% Power Core Computer
+			sub
+				STC COMPUTER-INDESTRUCTIBLE
+				name <Power Control>
+				use <if= L2 0 else GoBeenBefore ifYesNo 1 2 3 if= L1 1 else GoNonSequence Alert 4 L= 2 1>
+				GoNonSequence <L= 2 1 Alert 6 MonsterUp 2 d6 TeamAttack 2 TeamAttack 3>
+				GoBeenBefore <Print 5>
+				CLUE_SCIENCE <if= L4 0 else GoBeenBefore Mental ifScience HardSkillTar StoryDL else GoSciFail Print 7 L= 4 10>
+				GoSciFail <Print 8>
+				CLUE_CODEBREAKING <Print 9>
+				Msg1 <This computer operates the prototype mecha's ignition system. Do you want to power up the mecha?>
+				Msg2 <Yes, I do.>
+				Msg3 <No, not just yet...>
+				Msg4 <You power up the mecha.>
+				Msg5 <You used this computer to power up the prototype mecha.>
+				Msg6 <You power up the mecha. Suddenly, an alarm sounds!>
+				Msg7 <You examine the design of this prototype mecha and make a few improvements.>
+				Msg8 <You examine the design of this prototype mecha.>
+				Msg9 <You don't see any reason to hack this particular computer.>
+			end
+
+			Room
+			%% Construction Frame Computer
+			sub
+				STC COMPUTER-INDESTRUCTIBLE
+				name <Design Console>
+				% V1 = Have corrupted database
+				use <if= L3 0 else GoBeenBefore ifYesNo 1 2 3 if= L1 1 else GoNonSequence if= L2 1 else GoNonSequence Alert 4 L= 3 1>
+				GoNonSequence <L= 3 1 Alert 6 MonsterUp 2 d6 TeamAttack 2 TeamAttack 3>
+				GoBeenBefore <Print 5>
+				CLUE_SCIENCE <if= L5 0 else GoBeenBefore Mental ifScience HardSkillTar StoryDL else GoSciFail Print 7 L= 5 d10>
+				GoSciFail <Print 8>
+				CLUE_CODEBREAKING <if= V1 0 else GoBeenBefore Mental Print 9 V= 1 1 ifCodeBreaking SkillTar StoryDL AddFortune &EnemyFac -1>
+				Msg1 <This computer operates the mecha construction system. Do you want to release the prototype mecha?>
+				Msg2 <Yes, I do.>
+				Msg3 <No, not just yet...>
+				Msg4 <You release the prototype mecha.>
+				Msg5 <You used this computer to release the prototype mecha.>
+				Msg6 <You release the prototype mecha. Suddenly, an alarm sounds!>
+				Msg7 <You examine the design of this prototype mecha and make a few improvements.>
+				Msg8 <You examine the design of this prototype mecha.>
+				Msg9 <You erase the design database for this mecha. Hopefully \FACTION &EnemyFac didn't keep a backup.>
+			end
+
+			Room
+			name <Mecha Bay>
+			minimap <......###..#2#...........>
+			inv
+				Elevator
+				name <Mecha Hangar>
+				MiniMapComponent 2
+				use <if= L1 1 else GoNotOpen if= L2 1 else GoNotActive if= L3 1 else GoNotFree IfYesNo 7 8 9 Goto GoEndPlot>
+				GoEndPlot <Alert 10 Return V= 1 StoryDL V+ 1 10 V+ 1 L4 V= 2 8 V+ 2 L5 MechaPrize .facs V1 RandomTheme V2 AlterContext .next WinSubPlot %plotid% Trigger0 .%id%_%plotid%_GoWin XPV 100 History 11 History 12 SMemo 13 SetMoodTimeLimit %6% 86400>
+				.facs <GENERAL \FACTION_DESIG &EnemyFac>
+				.next <+Ppw>
+				GoNotOpen <Print 1>
+				GoNotActive <Print 2>
+				GoNotFree <Print 6>
+				CLUE_CODEBREAKING <if= L1 0 else GoDoorOpen ifCodeBreaking HardSkillTar StoryDL else GoFailCB L= 1 1 Print 5 XPV 50>
+				GoDoorOpen <Print 3>
+				GoFailCB <Print 4>
+				Msg1 <This door leads to the mecha hangar. It's locked.>
+				Msg2 <This door leads to the mecha hangar. The prototype mecha is not ready for launch.>
+				Msg3 <This door is already open.>
+				Msg4 <You can't see any way to open the door from right here.>
+				Msg5 <You unlock the door.>
+				Msg6 <This door leads to the mecha hangar. The prototype mecha is still bound within the construction harness.>
+				Msg7 <This door leads to the mecha hangar. Do you want to take the protoype mecha and go?>
+				Msg8 <Yes, please.>
+				Msg9 <No, not yet.>
+				Msg10 <You take the mecha and go. With the information gained from this prototype, \FACTION &AllyFac will be able to begin its own weapons program.>
+				Msg11 <You stole a prototype mecha from \FACTION &EnemyFac .>
+				Msg12 <Now, \FACTION &AllyFac can start its own weapons program.>
+				Msg13 <You stole a prototype mecha from \FACTION &EnemyFac . Maybe you should head back to \SCENE &EpisodeScene now.>
+			end
+		end
+	end
+	inv
+		STC CORE-ACTIVATABLE-STATIONARY-DEFENDED
+		name <Weapons Lab>
+
+		NPC Scientist
+		Combatant
+		MechaEngineering
+
+		Mood 3
+		name <"High Alert" Mood>
+		plot_type <*FactionRampage>
+		Element1 <Grab -2>
+		Update <if= v1 0 V= 1 1   News 1>
+		Msg1_1 <%city% heightens security after report of immanent terror attack.>
+		Msg1_2 <Terror alert issued for %city%; security forces to remain on high alert for duration.>
+		% Meme Messages
+		Msg_1 <Have you seen any terrorists about? The defense force is on high alert...>
+		Msg_2 <I've heard that there's an infiltrator in %city% at this very moment. What do you think about that?>
+		Msg_3 <I just hope that the terrorists don't blow up the building I'm in, that's all.>
+	end
+
 %%  *******************
 %%  ***   GENERAL   ***
 %%  *******************
