@@ -1147,7 +1147,7 @@ begin
 
 	{ At the very end, if no other talents can be learned, apply one of the two }
 	{ generic talents which don't have any pre-requisites. }
-	end else if ( Random( 2 ) = 1 ) and CanLearnTalent( PC , NAS_Polymath ) then begin
+	end else if ( Random( 5 ) = 1 ) and CanLearnTalent( PC , NAS_Polymath ) then begin
 		ApplyTalent( PC , NAS_Polymath );
 	end else begin
 		ApplyTalent( PC , NAS_Idealist );

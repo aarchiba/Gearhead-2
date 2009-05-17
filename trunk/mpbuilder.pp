@@ -1348,7 +1348,7 @@ Procedure ConnectScene( Scene: GearPtr; DoInitExits: Boolean );
 	end;
 var
 	E,Loc: GearPtr;
-	Entrance: String;
+	Entrance,EName: String;
 begin
 	{ Insert entrance to super-scene. }
 	E := FindEntranceByName( Scene^.Parent^.SubCom , GearName( Scene ) );
@@ -1366,7 +1366,11 @@ begin
 		E := FindNextComponent( MasterEntranceList , SAttValue( Scene^.SA , 'ENTRANCE' ) );
 		if E <> Nil then begin
 			E := CloneGear( E );
-			if ( E^.S = GS_MetaBuilding ) or ( E^.S = GS_MetaEncounter ) then SetSAtt( E^.SA , 'NAME <' + GearName( Scene ) + '>' );
+			if ( E^.S = GS_MetaBuilding ) or ( E^.S = GS_MetaEncounter ) then begin
+				EName := SAttValue( Scene^.SA , 'DUNGEONNAME' );
+				if EName = '' then EName := GearName( Scene );
+				SetSAtt( E^.SA , 'NAME <' + EName + '>' );
+			end;
 			E^.Stat[ STAT_Destination ] := Scene^.S;
 			if Scene^.Parent^.G <> GG_World then E^.Scale := Scene^.Parent^.V;
 			if NAttValue( Scene^.NA , NAG_LOcation , NAS_X ) <> 0 then begin

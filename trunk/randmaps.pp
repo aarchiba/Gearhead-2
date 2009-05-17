@@ -2687,12 +2687,16 @@ var
 	Zone,C,C2: GearPtr;
 	ContentID: LongInt;
 	T: Integer;
+	UCon,U: NAttPtr;
 begin
 	{ Create the list of potential components. }
 	{ Start by calculating the context type for the random map content. }
 	CType := CType + ' ' + SceneContext( GB , GB^.Scene );
 	CList := CreateContentList( GB^.Scene , CType );
 	if CList = Nil then Exit;
+
+	{ Initialize the list of unique content to be deleted. }
+	UCon := Nil;
 
 	for t := 1 to NumCon do begin
 		{ If CList = Nil, we've run out of content. Better break the loop. }
@@ -2723,16 +2727,25 @@ begin
 			{ Record the content ID. }
 			ContentID := NAttValue( C^.NA , NAG_Narrative , NAS_ContentID );
 
-			{ If the content has a unique ID, delete the prototype from the }
-			{ adventure. }
+			{ If the content has a unique ID, store it so we can delete it later. }
 			if ContentID <> 0 then begin
 				SetNAtt( C^.NA , NAG_Narrative , NAS_ContentID , 0 );
-				C2 := SeekGearByIDTag( FindRoot( GB^.Scene ) , NAG_Narrative , NAS_ContentID , ContentID );
-				if C2 <> Nil then RemoveGear( C2^.Parent^.InvCom , C2 );
+				SetNAtt( UCon , ContentID , ContentID , ContentID );
 			end;
 		end;
 
 	end; { for t... }
+
+	{ Finally, delete any unique content which got used here. }
+	if UCon <> Nil then begin
+		U := UCon;
+		while U <> Nil do begin
+			C2 := SeekGearByIDTag( FindRoot( GB^.Scene ) , NAG_Narrative , NAS_ContentID , U^.G );
+			if C2 <> Nil then RemoveGear( C2^.Parent^.InvCom , C2 );
+			U := U^.Next;
+		end;
+		DisposeNAtt( UCon );
+	end;
 
 	{ Get rid of any remaining components. }
 	DisposeNAtt( CList );

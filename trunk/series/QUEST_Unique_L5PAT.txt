@@ -66,7 +66,8 @@ Content
 		% L1 = Initialization Counter
 		% L2 = Can use elevator
 		% L3 = Can use biotank
-		Faint%3% <SetPlotStatus %plotid% -1 Alert 5 History 3 XPV 100 L= 2 1 L= 3 0 ActivateMeme %4% RootSceneID SceneVar= %1% 1 1 SceneVar= RootSceneID 2 1 SceneVar= %1% 12 1>
+		% L4 = Have killed Gardener
+		Faint%3% <SetPlotStatus %plotid% -1 if= L4 0 L= 4 1 Alert 5 History 3 XPV 100 L= 2 1 L= 3 0 ActivateMeme %4% RootSceneID SceneVar= %1% 1 1 SceneVar= RootSceneID 2 1 SceneVar= %1% 12 1>
 		Surrender%3% <Print 4 KillNPC %3%>
 		start <if= L1 0 else GoBeenBefore L= 1 1 SetPlotStatus %plotid% %id% Alert 1>
 		GoBeenBefore <Print 2>
@@ -629,6 +630,7 @@ Content
 				Elevator
 				% V1 = Have used the elevator already				MiniMapComponent 2
 				desig <ENTRANCE %8%>
+				MiniMapComponent 2
 				use <if= V1 1 else GoCheckEligibility  if= SceneVar %8% 12 0 else GoAccessDenied Print -1 Exit Destination>
 				%% There are two ways to gain access to L3: First, the PC
 				%% can simply obtain a lot of renown and money, and the door
@@ -2420,7 +2422,7 @@ Content
 
 	% Get on good terms with the ghost dog, and you get on good terms with the watcher. Not that
 	% it's going to help much if you plan on visiting Cayley Core.
-	start <if= SceneID %1% if= P%id%02 0 P= %id%02 1 Alert %id%01 EndSubPlot %plotid%  if= P%id%03 1 TeamNeutral 3>
+	start <if= SceneID %1% if= P%id%02 0 P= %id%02 1 Alert %id%01 WinSubPlot %plotid%  if= P%id%03 1 TeamNeutral 3>
 	Msg%id%01 <As you enter this level, you have the distinct feeling of being watched.>
 
 	sub

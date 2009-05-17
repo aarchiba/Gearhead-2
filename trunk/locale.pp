@@ -2069,18 +2069,17 @@ begin
 			if HasAttackAttribute( WeaponAttackAttributes( Weapon ) , AA_Extended ) then begin
 				rng := rng + 3;
 			end;
+
+			{ Throwing range may get a bonus from heavy actuators. }
+			HeavyActuator := CountActivePoints( User , GG_MoveSys , GS_HeavyActuator );
+			if HeavyActuator > 0 then begin
+				rng := rng + ( HeavyActuator div 10 );
+			end;
 		end;
 
 	end else if ( Weapon <> Nil ) and ( Weapon^.G = GG_Ammo ) and ( Weapon^.S = GS_Grenade ) then begin
 		rng := MasterSize( User ) * 2 + 1;
 	end;
-
-	{ Throwing range may get a bonus from heavy actuators. }
-	HeavyActuator := CountActivePoints( User , GG_MoveSys , GS_HeavyActuator );
-	if HeavyActuator > 0 then begin
-		rng := rng + ( HeavyActuator div 10 );
-	end;
-
 
 	if ( Weapon <> Nil ) and ( GB <> Nil ) and ( rng > 1 ) and ( Weapon^.Scale <> GB^.Scale ) then begin
 		if Weapon^.Scale > GB^.Scale then begin

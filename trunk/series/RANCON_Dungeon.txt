@@ -692,6 +692,23 @@ Content
 %%   usable by all characters, or reward/threat combos.
 
 Content
+	name <Magic Mushrooms>
+	requires <*DUNGEON_DECOR (cave|sewer) (!Hi|!Ex)>
+	element1 <Prefab>
+	minimap < ... .......1....... ... >
+	inv
+		STC MUSHROOMPATCH-2
+		% V1 = Have extracted mushroom
+		CLUE_SURVIVAL <ifSelfOK if= V1 0 else GoBeenBefore ifSurvival 10 else GoFail Mental V= 1 1 Print 3 GiveSTC .mushroom GSetStat 6 d9 GSetSTat 7 * 250 d4>
+		.mushroom <EDIBLE-MUSHROOM>
+		GoBeenBefore <Print 1>
+		GoFail <Print 2>
+		Msg1 <It will take years for new mushrooms to grow here.>
+		Msg2 <You aren't skilled enough to tell if these mushrooms are poisonous or not.>
+		Msg3 <You find a rare edible mushroom here. These things are supposed to be really good for your health.>
+	end
+
+Content
 	name <Pile of Filth: Red Herring>
 	requires <*DUNGEON_DECOR (sewer|condemned)>
 	element1 <Prefab>
