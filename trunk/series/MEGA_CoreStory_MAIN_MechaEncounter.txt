@@ -848,7 +848,7 @@ Content
 		MapHeight 50
 
 		Start <if= L2 0 L= 2 1  ForceChat %6%>
-		nu1 <if= T1 0   Return   if= V1 0 V= 1 1 LoseRenown History 1 SetMoodTimeLimit %9% 86400 LoseSubPlot %plotid%   Trigger0 .%id1%_%plotid1%_GoLoss>
+		nu1 <if= T1 0   Return   if= V1 0 V= 1 1 LoseRenown History 1 SetMoodTimeLimit %9% 86400 LoseSubPlot %plotid%   Trigger0 .%id%_%plotid%_GoLoss>
 		nu2 <if= T2 0   if= V1 0 V= 1 1   Alert 2 History 3   XPV 100  SALVAGE  KillMood %9%   AddRenown 1   Trigger0 .%id%_%plotid%_GoWin   WinSubPlot %plotid%>
 		end <SetEncounterInactive %5%>
 

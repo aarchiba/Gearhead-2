@@ -91,6 +91,7 @@ Function LancematesPresent( GB: GameBoardPtr ): Integer;
 Function PetsPresent( GB: GameBoardPtr ): Integer;
 
 Function FindLocalNPCByKeyWord( GB: GameBoardPtr; KW: String ): GearPtr;
+Function CanContactByPhone( GB: GameBoardPtr; NPC: GearPtr ): Boolean;
 
 Procedure AddReact( GB: GameBoardPtr; PC,NPC: GearPtr; DReact: Integer );
 
@@ -723,6 +724,27 @@ begin
 
 	{ Return the NPC found. }
 	FindLocalNPCByKeyWord := M;
+end;
+
+Function CanContactByPhone( GB: GameBoardPtr; NPC: GearPtr ): Boolean;
+	{ Return TRUE if NPC can be contacted by phone, or FALSE otherwise. }
+	{ PRECONDITIONS: NPC is in the current city, and is a valid NPC with a CID. }
+var
+	Persona: GearPtr;
+	it: Boolean;
+begin
+	{ If passed a null pointer, no conversation possible. }
+	if NPC = Nil then Exit( False );
+
+	{ Locate the persona. }
+	Persona := SeekPersona( GB , NAttValue( NPC^.NA , NAG_Personal , NAS_CID ) );
+	if Persona <> Nil then begin
+		{ If the Persona's SPECIAL attribute holds an UNLISTED tag, }
+		{ this conversation cannot proceed by phone. }
+		CanContactByPhone := not AStringHasBString( SAttValue( Persona^.SA , 'SPECIAL' ) , 'UNLISTED' );
+	end else begin
+		CanContactByPhone := True;
+	end;
 end;
 
 Procedure AddReact( GB: GameBoardPtr; PC,NPC: GearPtr; DReact: Integer );

@@ -7,6 +7,35 @@
 %%
 %% NAME: *[city designation]_[building name abbreviated]_[content type]
 
+%% *WAGSP_L5LA_Content
+%%	Content for the L5Law Academy in Wagner Spinner.
+
+Content
+	requires <*WAGSP_L5LA_Content>
+	minimap <............1.......#-&-#>
+	element1 <Prefab>
+	team1 <Citizens>
+	teamdata1 <ally pass>
+
+	sub
+		Persona 1
+		special <NOPLOTS>
+		greeting <if# ChatNPCFac 0 else GoChat if= PCFac ChatNPCFac else GoCheckEligibility Goto GoTrain>
+		*GoTrain <*SKILL_TRAINING GoGoodbye>
+		*GoCheckEligibility <*ENEMY_CHECK GoCheckFaction ChatNPCFac GoNil>
+		GoCheckFaction <if= PCFac 0 else GoChat Goto GoCheckSkills>
+		*GoCheckSkills <*FACTION_ENTRANCE_EXAM GoJobOffer ChatNPCFac>
+		*GoChat <*MISC_CHATTER>
+		*GoGoodbye <*GOODBYE>
+		*GoJobOffer <*FACTION_JOIN_OFFER ChatNPCFac GoJoin>
+		*GoJoin <*FACTION_JOIN_ACCEPT ChatNPCFac>
+	end
+	inv
+		NPC Police Officer
+		job <Instructor>
+		SetFaction 9
+	end
+
 %% *RISSP_SFHQ_Content
 %%	Content for the Space Force HQ. Includes a recruiter for the Rishiri Dominion and an
 %%	Aegis mecha shop.

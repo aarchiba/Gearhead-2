@@ -592,7 +592,7 @@
 	START <NewChat Say %id%01 AddChat %id%01 AddChat %id%02>
 	result%id%01 <EndChat Say %id%02 shop .%id%_wares Goto %1%>
 	result%id%02 <Goto %1%>
-	.%id%_wares <WEAPON CLOTHING FOOD TOOL COMMUNICATIONS MECHA>
+	.%id%_wares <WEAPON CLOTHING FOOD TOOL COMMUNICATIONS MECHA ESSENTIAL>
 	KEYWORDS <WEAPON CLOTHING FOOD TOOL COMMUNICATIONS MECHA>
 	Msg%id%01 <There's no way to keep everything in stock, so I stick to the basics. We have a variety of adventuring goods.>
 	Msg%id%02 <If there's something you need that I don't have, let me know and I'll try to order it. Might take a week or two to get here.>
@@ -604,7 +604,7 @@
 	START <NewChat Say %id%01 AddChat %id%01 AddChat %id%02>
 	result%id%01 <EndChat Say %id%02 shop .%id%_wares Goto %1%>
 	result%id%02 <Goto %1%>
-	.%id%_wares <MISSILE GRENADE TOOL CLOTHING FOOD MEDICINE ELECTRONICS>
+	.%id%_wares <MISSILE GRENADE TOOL CLOTHING FOOD MEDICINE ELECTRONICS ESSENTIAL>
 	KEYWORDS <MISSILE GRENADE TOOL CLOTHING FOOD MEDICINE ELECTRONICS>
 	Msg%id%01 <I have a fine selection of adventuring equipment.>
 	Msg%id%02 <You should be able to find anything you need. If not, we can get it in stock later.>
@@ -616,7 +616,7 @@
 	START <NewChat Say %id%01 AddChat %id%01 AddChat %id%02>
 	result%id%01 <EndChat Say %id%02 shop .%id%_wares Goto %1%>
 	result%id%02 <Goto %1%>
-	.%id%_wares <WEAPON CLOTHING ARMOR FOOD TOOL COMMUNICATIONS>
+	.%id%_wares <WEAPON CLOTHING ARMOR FOOD TOOL COMMUNICATIONS ESSENTIAL>
 	KEYWORDS <WEAPON CLOTHING ARMOR FOOD TOOL COMMUNICATIONS>
 	Msg%id%01 <I've spoken to a lot of cavaliers, and no matter what their specialty there's a couple of things that everyone needs. That's what I have in my store.>
 	Msg%id%02 <Here's my complete inventory. Take a nice long look through it all, and ask me if you have any problems.>
@@ -628,7 +628,7 @@
 	START <NewChat Say %id%01 AddChat %id%01 AddChat %id%02>
 	result%id%01 <EndChat Say %id%02 shop .%id%_wares Goto %1%>
 	result%id%02 <Goto %1%>
-	.%id%_wares <TOOL CLOTHING FOOD>
+	.%id%_wares <TOOL CLOTHING FOOD ESSENTIAL>
 	KEYWORDS <TOOL CLOTHING FOOD>
 	Msg%id%01 <Our store has a good selection of tools, clothing, and food.>
 	Msg%id%02 <Take your time. Ask if you have any questions.>
@@ -640,7 +640,7 @@
 	START <NewChat Say %id%01 AddChat %id%01 AddChat %id%02>
 	result%id%01 <EndChat Say %id%02 shop .%id%_wares Goto %1%>
 	result%id%02 <Goto %1%>
-	.%id%_wares <TOOL COMMUNICATIONS SPACE FOOD>
+	.%id%_wares <TOOL COMMUNICATIONS SPACE FOOD ESSENTIAL>
 	KEYWORDS <TOOL COMMUNICATIONS SPACE FOOD>
 	Msg%id%01 <Our store has a good selection of survival goods. If you're planning to explore the outside, this is the stuff you'll need.>
 	Msg%id%02 <You'll need a complete spacesuit if you hope to survive after ejecting from your mecha.>
@@ -652,7 +652,7 @@
 	START <NewChat Say %id%01 AddChat %id%01 AddChat %id%02>
 	result%id%01 <EndChat Say %id%02 shop .%id%_wares Goto %1%>
 	result%id%02 <Goto %1%>
-	.%id%_wares <MECHA SPACE FOOD>
+	.%id%_wares <MECHA SPACE FOOD ESSENTIAL>
 	KEYWORDS <MECHA SPACE FOOD>
 	Msg%id%01 <I stock a variety of exploration goods- rations, space gear, and even mecha.>
 	Msg%id%02 <In space, having the right equipment can mean the difference between life and death.>

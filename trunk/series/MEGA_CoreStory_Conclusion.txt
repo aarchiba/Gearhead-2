@@ -59,6 +59,7 @@ Content
 		MonkeyMap
 		LockedDoorChance 10
 		SecretDoorChance 5
+		NeededCells 2
 
 		% L1 = Have completed task
 		% L2 = Have spotted computer
@@ -75,6 +76,8 @@ Content
 		Msg2 <You spot an important-looking computer terminal.>
 		Msg3 <You raided %name2%'s command bunker.>
 		Msg4 <Suddenly, an alarm goes off!>
+
+		Content1 <Some 2 80 Sub *Armory>
 
 		sub
 			Team 1

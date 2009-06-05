@@ -118,6 +118,8 @@ Procedure AddLancemate( GB: GameBoardPtr; NPC: GearPtr );
 Procedure RemoveLancemate( GB: GameBoardPtr; NPC: GearPtr );
 
 Procedure HandleInteract( GB: GameBoardPtr; PC,NPC,Persona: GearPtr );
+Procedure DoTalkingWIthNPC( GB: GameBoardPtr; PC,Mek: GearPtr; ByTelephone: Boolean );
+
 Function TriggerGearScript( GB: GameBoardPtr; Source: GearPtr; var Trigger: String ): Boolean;
 Function CheckTriggerAlongPath( var T: String; GB: GameBoardPtr; Plot: GearPtr; CheckAll: Boolean ): Boolean;
 Procedure HandleTriggers( GB: GameBoardPtr );
@@ -131,7 +133,7 @@ implementation
 uses action,arenacfe,ability,gearutil,ghchars,gearparser,ghmodule,backpack,
      ghprop,ghweapon,grabgear,interact,menugear,playwright,rpgdice,
      services,texutil,ui4gh,wmonster,narration,description,skilluse,
-	ghintrinsic,movement,minigame,customization,
+	ghintrinsic,movement,minigame,customization,aibrain,
 {$IFDEF ASCII}
 	vidmap,vidinfo;
 {$ELSE}
@@ -425,16 +427,85 @@ var
 			SA := SA2;
 		end;
 	end;
+	Function PlaceMemoPhoneCall( PC: GearPtr; MMsg: String ): Boolean;
+		{ We want to make a phone call to someone mentioned in this memo. }
+		{ Search through all the NPCs on the game board and within the current city. }
+		{ Add them to a menu. Then, query the menu, and do talking with the selected NPC. }
+		{ Return TRUE if a conversation was had, or FALSE otherwise. }
+		Procedure CheckAlongList( RPM: RPGMenuPtr; LList: GearPtr );
+			{ Check along this list for NPCs mentioned in the memo, recursively }
+			{ searching through children as well. }
+			{ Add any good NPCs found to the menu, using their CID as the key. }
+		var
+			Name: String;
+			CID: LongInt;
+		begin
+			while LList <> Nil do begin
+				if LList^.G = GG_Character then begin
+					{ This is a character. Is it somebody we're looking for? }
+					Name := GearName( LList );
+					CID := NAttValue( LList^.NA , NAG_Personal , NAS_CID );
+					if ( CID <> 0 ) and ( Pos( Name , MMsg ) > 0 ) and CanContactByPhone( GB , LList ) then begin
+						AddRPGMenuItem( RPM , GearName( LList ) , CID );
+					end;
+				end else begin
+					{ Not a character. Recurse like mad! }
+					CheckAlongList( RPM , LList^.SubCom );
+					CheckAlongList( RPM , LList^.InvCom );
+				end;
+
+				LList := LList^.Next;
+			end;
+		end;
+	var
+		RPM: RPGMenuPtr;
+		city,NPC: GearPtr;
+		CID: LongInt;
+	begin
+		{ Step One- Create the menu. }
+		RPM := CreateRPGMenu( MenuItem , MenuSelect , ZONE_MemoMenu );
+		CheckAlongList( RPM , GB^.Meks );
+		City := FindRootScene( GB^.Scene );
+		if City <> Nil then begin
+			CheckAlongList( RPM , City^.SubCom );
+			CheckAlongList( RPM , City^.InvCom );
+		end;
+		RPMSortAlpha( RPM );
+		AlphaKeyMenu( RPM );
+		if RPM^.NumItem > 0 then begin
+			AddRPGMenuItem( RPM , MsgString( 'Cancel' ) , -1 );
+		end else begin
+			AddRPGMenuItem( RPM , MsgString( 'MEMO_CALL_NoPeople' ) , -1 );
+		end;
+
+		{ Step Two- Query the menu and locate the NPC. }
+		CID := SelectMenu( RPM , @MemoPageRedraw );
+		DisposeRPGMenu( RPM );
+
+		{ Step Three- Pass the request along to HandleInteract. }
+		if CID > -1 then begin
+			NPC := GG_LocateNPC( CID , GB , GB^.Scene );
+			if NPC <> Nil then begin
+				DoTalkingWithNPC( GB , PC , NPC , True );
+			end;
+		end else NPC := Nil;
+
+		PlaceMemoPhoneCall := NPC <> Nil;
+	end;
 	Procedure BrowseList;
 		{ Actually browse the created list. }
 	var
 		RPM: RPGMenuPtr;
 		N,D: Integer;
+		PC: GearPtr;
 	begin
+		{ Locate the PC. We need it for the PComm capability. }
+		PC := GG_LocatePC( GB );
 		if MemoList <> Nil then begin
 			RPM := CreateRPGMenu( MenuItem , MenuSelect , ZONE_MemoMenu );
 			AddRPGMenuItem( RPM , MsgString( 'MEMO_Next' ) , 1 );
 			AddRPGMenuItem( RPM , MsgString( 'MEMO_Prev' ) , 2 );
+			if ( PC <> Nil ) and HasPCommCapability( PC , PCC_Phone ) then AddRPGMenuItem( RPM , MsgString( 'MEMO_Call' ) , 3 );
 			AddRPGMenuKey( RPM , KeyMap[ KMC_East ].KCode , 1 );
 			AddRPGMenuKey( RPM , KeyMap[ KMC_West ].KCode , 2 );
 			AlphaKeyMenu( RPM );
@@ -454,6 +525,11 @@ var
 				end else if D = 2 then begin
 					N := N - 1;
 					if N < 1 then N := NumSAtts( MemoList );
+				end else if D = 3 then begin
+					{ We want to place a phone call to someone mentioned }
+					{ in this memo. Make it so. }
+					PlaceMemoPhoneCall( PC , M^.Info );
+					D := -1;
 				end;
 			until D = -1;
 
@@ -461,6 +537,16 @@ var
 			DisposeRPGMenu( RPM );
 		end;
 
+	end;
+	Function NoMemoError: String;
+		{ Return a string which will explain to the user that there are }
+		{ no memos of the selected type. }
+	var
+		msg: String;
+	begin
+		msg := MsgString( 'MEMO_No_' + Tag );
+		if msg = '' then msg := ReplaceHash( MsgString( 'MEMO_None' ) , LowerCase( Tag ) );
+		NoMemoError := msg;
 	end;
 begin
 	{ Error check first - we need the GB and the scene for this. }
@@ -477,7 +563,7 @@ begin
 
 	{ Sort the memo list. }
 	if MemoList <> Nil then SortStringList( MemoList )
-	else StoreSAtt( MemoList , ReplaceHash( MsgString( 'MEMO_None' ) , LowerCase( Tag ) ) );
+	else StoreSAtt( MemoList , NoMemoError );
 
 	BrowseList;
 end;
@@ -4989,6 +5075,87 @@ begin
 	{ Get rid of the menu. }
 	DisposeRPGMenu( IntMenu );
 	DisposeSAtt( I_Rumors );
+end;
+
+Procedure PCDoVerbalAttack( GB: GameBoardPtr; PC,NPC: GearPtr );
+	{ The PC wants to verbally abuse this NPC. If it's possible do so. If it }
+	{ isn't possible, then explain why. }
+begin
+	NPC := LocatePilot( NPC );
+	if CurrentMental( PC ) < 1 then begin
+		DialogMsg( MsgSTring( 'VERBALATTACK_NoMP' ) );
+	end else if ( NPC <> Nil ) and CanSpeakWithTarget( GB , PC , NPC ) then begin
+		if AreEnemies( GB , PC , NPC ) then begin
+			DoVerbalAttack( GB , PC , FindRoot( NPC ) );
+			{ When the PC taunts an enemy, it takes an action. }
+			SetNAtt( PC^.NA , NAG_Action , NAS_CallTime , GB^.ComTime + ReactionTime( PC ) );
+		end else begin
+			DialogMsg( ReplaceHash( MsgSTring( 'TAUNT_OnlyEnemies' ) , GearName( NPC ) ) );
+		end;
+	end else begin
+		DialogMsg( ReplaceHash( MsgSTring( 'TALKING_TooFar' ) , GearName( NPC ) ) );
+	end;
+end;
+
+Procedure DoTalkingWIthNPC( GB: GameBoardPtr; PC,Mek: GearPtr; ByTelephone: Boolean );
+	{ Actually handle the talking with an NPC already selected. }
+var
+	Persona,NPC: GearPtr;
+	CID: Integer;
+	React: Integer;
+	ReTalk: LongInt;
+begin
+	NPC := LocatePilot( Mek );
+	if ( NPC <> Nil ) and GearOperational( NPC ) and AreEnemies( GB , Mek , PC ) and NotAnAnimal( NPC ) and IsFoundAlongTrack( GB^.Meks , FindRoot( NPC ) ) and ( NATtValue( NPC^.NA , NAG_EpisodeData , NAS_SurrenderStatus ) <> NAV_NowSurrendered ) then begin
+		PCDoVerbalAttack( GB , PC , NPC );
+
+	end else if ( NPC <> Nil ) and GearOperational( NPC ) then begin
+		if ByTelephone or CanSpeakWithTarget( GB , PC , NPC ) then begin
+			CID := NAttValue( NPC^.NA , NAG_Personal , NAS_CID );
+			if CID <> 0 then begin
+				{ Everything should be okay to talk... Now see if the NPC wants to. }
+				{ Determine the NPC's RETALK and REACT values. }
+				ReTalk := NAttValue( NPC^.NA , NAG_Personal , NAS_Retalk );
+				React := ReactionScore( GB^.Scene , PC , NPC );
+
+				Persona := SeekPersona( GB , CID );
+
+				{ Surrendered NPCs never refuse to talk. }
+				if NATtValue( NPC^.NA , NAG_EpisodeData , NAS_SurrenderStatus ) = NAV_NowSurrendered then begin
+					DialogMsg( ReplaceHash( MsgSTring( 'TALKING_Start' ) , GearName( NPC ) ) );
+
+					HandleInteract( GB , PC , NPC , Persona );
+					CombatDisplay( gb );
+
+				{ If the NPC really doesn't like the PC, }
+				{ they'll refuse to talk on principle. }
+				end else if ( ( React + RollStep( SkillValue ( PC , NAS_Conversation , STAT_Ego ) ) ) < -Random( 120 ) ) or ( AreEnemies( GB , NPC , PC ) and IsFoundAlongTrack( GB^.Meks , NPC ) ) then begin
+					DialogMsg( ReplaceHash( MsgSTring( 'TALKING_RefuseHard' ) , GearName( NPC ) ) );
+					SetNAtt( NPC^.NA , NAG_Personal , NAS_Retalk , GB^.ComTime + 1500 );
+
+				{ If the NPC is ready to talk, is friendly with the PC, or has a PERSONA gear defined, }
+				{ they'll be willing to talk. }
+				end else if ( ReTalk < GB^.ComTime ) or ( Random( 50 ) < ( React + 20 ) ) or ( Persona <> Nil ) then begin
+					DialogMsg( ReplaceHash( MsgSTring( 'TALKING_Start' ) , GearName( NPC ) ) );
+
+					HandleInteract( GB , PC , NPC , Persona );
+					CombatDisplay( gb );
+
+				end else begin
+					DialogMsg( ReplaceHash( MsgSTring( 'TALKING_RefuseSoft' ) , GearName( NPC ) ) );
+
+				end;
+
+				WaitAMinute( GB , PC , ReactionTime( PC ) );
+			end else begin
+				DialogMsg( MsgSTring( 'TALKING_NoReply' ) );
+			end;
+		end else begin
+			DialogMsg( ReplaceHash( MsgSTring( 'TALKING_TooFar' ) , GearName( NPC ) ) );
+		end;
+	end else begin
+		DialogMsg( 'Not found!' );
+	end;
 end;
 
 Procedure ForceInteract( GB: GameBoardPtr; CID: LongInt );
