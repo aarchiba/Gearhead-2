@@ -7,6 +7,41 @@
 %%
 %% NAME: *[city designation]_[building name abbreviated]_[content type]
 
+
+%% *WAGSP_L5LA2_Content
+%%	Content for the 2nd level of the L5Law Academy in Wagner Spinner.
+
+Content
+	%% The master of weapons
+	requires <*WAGSP_L5LA2_Content>
+	content <Required *DECOR_FOR_WEAPON_SHOP %1% Local>
+	element1 <Prefab>
+	team1 <Citizens>
+	teamdata1 <ally pass>
+
+	sub
+		Persona 1
+		special <NOPLOTS>
+		*greeting <*NiceToMeetYou GoCheckFac>
+		GoCheckFac <if= PCFac ChatNPCFac else GoChat NewChat Say 1 AddChat 1 AddChat 2>
+		*GoChat <*MISC_CHATTER>
+		*GoBye <*GOODBYE>
+		result1 <EndChat Say 2 Shop .wares Goto GoBye>
+		.wares <WEAPON AMMO GRENADE ACCESSORY ARMOR SHIELD>
+		result2 <Goto GoBye>
+		Msg1 <Having the right equipment can make the difference between life and death. Of course, knowing how to use it is also important.>
+		Msg2 <Take a look through the armory. Let me know what you need.>
+		Prompt1 <I need some new equipment.>
+		Prompt2 <Right now I have everything I need.>
+	end
+	inv
+		NPC Police Officer
+		job <Weaponmaster>
+		SetFaction 9
+		NonCombatant
+		Shopping 12
+	end
+
 %% *WAGSP_L5LA_Content
 %%	Content for the L5Law Academy in Wagner Spinner.
 

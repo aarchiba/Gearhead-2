@@ -42,6 +42,7 @@ Const
 		'EYES','SPINE','MUSCULATURE','SKELETON','HEART'
 	);
 
+Function GearsAreIdentical( A,B: GearPtr ): Boolean;
 
 Function IsMasterGear(G: GearPtr): Boolean;
 Procedure InitGear(Part: GearPtr);
@@ -185,6 +186,74 @@ Const
 	MVSensorPenalty = 1;
 	MVGyroPenalty = 6;
 	TRSensorPenalty = 5;
+
+Function GearsAreIdentical( A,B: GearPtr ): Boolean;
+	{ Return TRUE if A and B are perfectly identical, including all child gears. }
+	Function StatsMatch: Boolean;
+		{ Return TRUE if all of A's and B's stats match. }
+	var
+		T: Integer;
+		AllOK: Boolean;
+	begin
+		AllOK := True;
+		for t := 1 to NumGearStats do AllOK := AllOK and ( A^.Stat[ T ] = B^.Stat[ T ] );
+		StatsMatch := AllOK;
+	end;
+	Function ChildrenMatch: Boolean;
+		{ Return TRUE if all of A's children are identical to B's children. Note that }
+		{ this procedure may result in false negatives- if two gears are effectively identical }
+		{ but their children are in a different order, this function will claim that they }
+		{ aren't identical. Oh well, not a big deal... }
+	var
+		AllOK: Boolean;
+		C1,C2: GearPtr;
+	begin
+		AllOK := True;
+		C1 := A^.SubCom;
+		C2 := B^.SubCom;
+		while ( C1 <> Nil ) and ( C2 <> Nil ) and AllOK do begin
+			AllOK := AllOK and GearsAreIdentical( C1 , C2 );
+			C1 := C1^.Next;
+			C2 := C2^.Next;
+		end;
+		AllOK := AllOK and ( C1 = Nil ) and ( C2 = Nil );
+		C1 := A^.InvCom;
+		C2 := B^.InvCom;
+		while ( C1 <> Nil ) and ( C2 <> Nil ) and AllOK do begin
+			AllOK := AllOK and GearsAreIdentical( C1 , C2 );
+			C1 := C1^.Next;
+			C2 := C2^.Next;
+		end;
+		AllOK := AllOK and ( C1 = Nil ) and ( C2 = Nil );
+		ChildrenMatch := AllOK;
+	end;
+	Function AllAttAcc4( G1,G2: GearPtr ): Boolean;
+		{ All Attributes Accounted For. All numeric and string attributes of G1 must }
+		{ be found in G2. }
+	var
+		SA: SAttPtr;
+		NA: NAttPtr;
+		AllOK: Boolean;
+		S_tag,S_data: String;
+	begin
+		AllOK := True;
+		SA := G1^.SA;
+		while ( SA <> Nil ) and AllOK do begin
+			S_tag := RetrieveAPreamble( SA^.Info );
+			S_data := RetrieveAString( SA^.Info );
+			AllOK := AllOK and ( SAttValue( G2^.SA , S_tag ) = S_data );
+			SA := SA^.Next;
+		end;
+		NA := G1^.NA;
+		while ( NA <> Nil ) and AllOK do begin
+			AllOK := AllOK and ( NAttValue( G2^.NA , NA^.G , NA^.S ) = NA^.V );
+			NA := NA^.Next;
+		end;
+		AllAttAcc4 := AllOK;
+	end;
+begin
+	GearsAreIdentical := ( A <> Nil ) and ( B <> Nil ) and ( A^.G = B^.G ) and ( A^.S = B^.S ) and ( A^.V = B^.V ) and StatsMatch and ChildrenMatch and AllAttAcc4( A , B ) and AllAttAcc4( B , A );
+end;
 
 Function IsMasterGear(G: GearPtr): Boolean;
 	{This function checks gear G to see whether or not it counst}

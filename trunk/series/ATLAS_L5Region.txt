@@ -6695,6 +6695,72 @@ sub
 			SetFaction 9
 			MiniMapComponent 1
 		end
+
+		room
+		special <NOGO>
+		minimap <##1##...............##=##>
+		sub
+			Door
+			update <if= PCFac 9 SetStat 6 0>
+		end
+		inv
+			Elevator
+			name <L5Law Academy, L2>
+			MiniMapComponent 1
+			use <if= PCFac 9 else GoGiveWarning Print 1 Exit Destination>
+			GoGiveWarning <ifYesNo 101 102 103 Print 1 Exit Destination>
+			Msg1 <You board the elevator.>
+			Msg101 <This elevator leads to the upper levels of the academy. Only officers of L5Law are permitted beyond this point.>
+			Msg102 <Use the elevator.>
+			Msg103 <Stay here.>
+		end
+
+		Scene
+		name <L5Law Academy, L2>
+		type <building private legit>
+		special <NOEXIT>
+		SetFaction 3
+		ClubMap
+		MapWidth 25
+		MapHeight 25
+
+		NeededCells 6
+		Content <Variety 3 3 Sub *WAGSP_L5LA2_Content>
+		Content2 <Some 3 75 Sub *GOV_POLICE>
+
+		5Min <ifTeamHostile 3  MonsterUp 3 d20>
+
+		start <Print 1>
+		Msg1 <You enter the teacher's office of the L5Law Academy.>
+
+		sub
+			team 1
+
+			team 2
+			name <Citizens>
+			SetAlly 1 3
+			Passive
+
+			Team 3
+			name <Guards>
+			type <Guard Robot>
+			SetAlly 1 2
+
+			room
+			name <Foyer>
+			desig <EntranceGrid>
+			Content <Some 1 100 Here *ANTI_ATTACK_SECURITY 2>
+			sub
+				room
+				minimap <......###..#1#...........>
+				inv
+					Elevator
+					MiniMapComponent 1
+					Destination -1
+				end
+			end
+
+		end
 	end
 
 
