@@ -387,6 +387,8 @@ begin
 			GivePartToPC( LList , P2 , PC );
 		end;
 	end else if ( Pilot <> Nil ) and IsLegalInvCom( Pilot , Part ) then begin
+		StripNAtt( Part , NAG_Location );
+		StripNAtt( Part , NAG_EpisodeData );
 		InsertInvCom( Pilot , Part );
 	end else if ( PC <> Nil ) and IsLegalInvCom( PC , Part ) then begin
 		InsertInvCom( PC , Part );
@@ -1631,13 +1633,10 @@ begin
 		end;
 
 		{ Destroy the item, if appropriate. }
-		Dec( Item^.Stat[ STAT_FoodQuantity ] );
-		if Item^.Stat[ STAT_FoodQuantity ] < 1 then begin
-			if IsInvCom( Item ) then begin
-				RemoveGEar( Item^.Parent^.InvCom , Item );
-			end else if IsSubCom( Item ) then begin
-				RemoveGEar( Item^.Parent^.SubCom , Item );
-			end;
+		if IsInvCom( Item ) then begin
+			RemoveGEar( Item^.Parent^.InvCom , Item );
+		end else if IsSubCom( Item ) then begin
+			RemoveGEar( Item^.Parent^.SubCom , Item );
 		end;
 	end else begin
 		DialogMsg( MsgString( 'BACKPACK_NotHungry' ) );

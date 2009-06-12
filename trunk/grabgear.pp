@@ -48,7 +48,7 @@ Function GG_LocatePC( GB: GameBoardPtr ): GearPtr;
 	{ master on Team 1, return one of them. }
 var
 	Bits,PC,Pilot: GearPtr;
-	XPScore,HiXP: Integer;
+	XPScore,HiXP: LongInt;
 begin
 	{ Begin the search... }
 	PC := Nil;

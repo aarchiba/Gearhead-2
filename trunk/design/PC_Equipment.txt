@@ -1918,15 +1918,20 @@ Factions <GENERAL>
 SDL_PORTRAIT <item_noodlecup.png>
 legality -50
 
-Food 15
-Name <Survival Bar>
-Mass -2
-FoodMorale -3
-FoodQuantity 3
+Set
+name <Survival Bar x3>
 desc <It's everything that a human needs to stay alive packaged in a crunchy bar!>
 Category <FOOD>
 Factions <GENERAL>
 legality -10
+inv
+	STC SurvivalBar
+	desig <>
+	STC SurvivalBar
+	desig <>
+	STC SurvivalBar
+	desig <>
+end
 
 Food 5
 Name <Chocolate Bar>
@@ -1936,82 +1941,173 @@ Category <FOOD>
 Factions <GENERAL>
 legality -15
 
-Food 35
-Name <Nutrient Pill>
-FoodMorale -1
-Mass -70
-FoodQuantity 10
+Set
+name <Nutrient Pill x10>
 desc <Complete nutrition in pill form.>
 Category <MEDICINE>
 Factions <GENERAL>
 SDL_PORTRAIT <item_pills.png>
 legality -15
+inv
+	STC PILL_Nutrient
+	desig <>
+	STC PILL_Nutrient
+	desig <>
+	STC PILL_Nutrient
+	desig <>
+	STC PILL_Nutrient
+	desig <>
+	STC PILL_Nutrient
+	desig <>
+	STC PILL_Nutrient
+	desig <>
+	STC PILL_Nutrient
+	desig <>
+	STC PILL_Nutrient
+	desig <>
+	STC PILL_Nutrient
+	desig <>
+	STC PILL_Nutrient
+	desig <>
+end
 
-Food 0
-Name <Quick Fix Pill>
-FoodQuantity 10
-FoodFX:Healing
-FoodMod 7
+Set
+name <Quick Fix Pill x10>
 desc <This medicine promotes rapid cellular regeneration, and can instantly heal many injuries.>
 Category <MEDICINE>
 Factions <GENERAL>
 SDL_PORTRAIT <item_pills.png>
 legality -10
+inv
+	STC PILL_QuickFix
+	desig <>
+	STC PILL_QuickFix
+	desig <>
+	STC PILL_QuickFix
+	desig <>
+	STC PILL_QuickFix
+	desig <>
+	STC PILL_QuickFix
+	desig <>
+	STC PILL_QuickFix
+	desig <>
+	STC PILL_QuickFix
+	desig <>
+	STC PILL_QuickFix
+	desig <>
+	STC PILL_QuickFix
+	desig <>
+	STC PILL_QuickFix
+	desig <>
+end
 
-Food 0
-Name <Quick Fix Pill>
-FoodQuantity 5
-FoodFX:Healing
-FoodMod 7
+Set
+name <Quick Fix Pill x5>
 desc <This medicine promotes rapid cellular regeneration, and can instantly heal many injuries.>
-Category <MEDICINE ESSENTIAL>
+Category <MEDICINE>
 Factions <GENERAL>
 SDL_PORTRAIT <item_pills.png>
 legality -10
+inv
+	STC PILL_QuickFix
+	desig <>
+	STC PILL_QuickFix
+	desig <>
+	STC PILL_QuickFix
+	desig <>
+	STC PILL_QuickFix
+	desig <>
+	STC PILL_QuickFix
+	desig <>
+end
 
-Food 0
-Name <Regen Boost Pill>
-FoodQuantity 10
-FoodFX:Regeneration
-FoodMod 6
-desc <This medicine increases the body's ability to repair itself. While it is in effect injuries will be healed much faster than normal.>
+Set
+name <Regen Boost Pill x5>
 Category <MEDICINE>
 Factions <GENERAL>
 SDL_PORTRAIT <item_pills.png>
 legality 0
+inv
+	STC PILL_Regen
+	desig <>
+	STC PILL_Regen
+	desig <>
+	STC PILL_Regen
+	desig <>
+	STC PILL_Regen
+	desig <>
+	STC PILL_Regen
+	desig <>
+end
 
-Food 0
-Name <Regen Boost Pill>
-FoodQuantity 5
-FoodFX:Regeneration
-FoodMod 6
-desc <This medicine increases the body's ability to repair itself. While it is in effect injuries will be healed much faster than normal.>
+Set
+name <Regen Boost Pill x10>
 Category <MEDICINE>
 Factions <GENERAL>
 SDL_PORTRAIT <item_pills.png>
 legality 0
+inv
+	STC PILL_Regen
+	desig <>
+	STC PILL_Regen
+	desig <>
+	STC PILL_Regen
+	desig <>
+	STC PILL_Regen
+	desig <>
+	STC PILL_Regen
+	desig <>
+	STC PILL_Regen
+	desig <>
+	STC PILL_Regen
+	desig <>
+	STC PILL_Regen
+	desig <>
+	STC PILL_Regen
+	desig <>
+	STC PILL_Regen
+	desig <>
+end
 
-Food 0
-name <Poison Antidote>
-FoodQuantity 5
-FoodFX:CureStatus
-FoodMod:Poison
+Set
+name <Poison Antidote x5>
 desc <A broad spectrum antivenom effective against most organic and synthetic poisons.>
 Category <MEDICINE ESSENTIAL>
 Factions <GENERAL>
 SDL_PORTRAIT <item_pills.png>
 legality -10
+inv
+	STC PILL_Antidote
+	desig <>
+	STC PILL_Antidote
+	desig <>
+	STC PILL_Antidote
+	desig <>
+	STC PILL_Antidote
+	desig <>
+	STC PILL_Antidote
+	desig <>
+end
 
-Food 0
-name <Antibiotic Pill>
-FoodQuantity 5
-FoodFX:CureStatus
-FoodMod:Sickness
+Set
+name <Antibiotic Pill x5>
 desc <A fast acting antiviral, antibacterial drug coupled with an immune system booster.>
 Category <MEDICINE>
 Factions <GENERAL>
 SDL_PORTRAIT <item_pills.png>
 legality -10
+inv
+	STC PILL_Antibiotic
+	desig <>
+	STC PILL_Antibiotic
+	desig <>
+	STC PILL_Antibiotic
+	desig <>
+	STC PILL_Antibiotic
+	desig <>
+	STC PILL_Antibiotic
+	desig <>
+end
 
 Food 5
 Name <Xozu>

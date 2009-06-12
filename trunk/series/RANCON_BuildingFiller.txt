@@ -457,14 +457,9 @@ Content
 		STC OneShotDoor
 	end
 	inv
-		item Quick Fix Pill
-
-		item Regen Boost Pill
-
-		MedicineFuel 120
-		Name <Medicated Bandages>
-		desc <Premedicated sterile bandages.>
-		Mass 1
+		STC PILL_QuickFix
+		STC PILL_Regen
+		item Medicated Bandages
 	end
 
 %% *CLUB_X Content

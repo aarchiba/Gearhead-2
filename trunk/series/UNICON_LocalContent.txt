@@ -12,6 +12,73 @@
 %%	Content for the 2nd level of the L5Law Academy in Wagner Spinner.
 
 Content
+	%% The master of forensics
+	requires <*WAGSP_L5LA2_Content>
+	minimap <............1.......#-&-#>
+	element1 <Prefab>
+	team1 <Citizens>
+	teamdata1 <ally pass>
+
+	sub
+		Persona 1
+		special <NOPLOTS>
+		*greeting <*NiceToMeetYou GoCheckFac>
+		GoCheckFac <if= PCFac ChatNPCFac else GoChat NewChat Say 1 AddChat 1 AddChat 2>
+		*GoChat <*MISC_CHATTER>
+		*GoGoodbye <*GOODBYE>
+		result1 <EndChat Say 2 School .skills Goto GoGoodbye>
+		.skills <1 2 3 4 5 6 15 21 27>
+		result2 <Goto GoGoodbye>
+		Msg1 <The most important part of our work is investigation. Of course being able to take down a perp is also mighty handy.>
+		Msg2 <Sure. What skill do you want to train?>
+		Prompt1 <Could you give me some pointers?>
+		Prompt2 <I don't need anything right now.>
+	end
+	inv
+		NPC Forensic Investigator
+		NonCombatant
+		SetFaction 9
+	end
+
+Content
+	%% The master of mecha
+	requires <*WAGSP_L5LA2_Content>
+	minimap <........1...........&---&>
+	element1 <Prefab>
+	team1 <Citizens>
+	teamdata1 <ally pass>
+
+	sub
+		Persona 1
+		special <NOPLOTS>
+		*greeting <*NiceToMeetYou GoCheckFac>
+		GoCheckFac <if= PCFac ChatNPCFac else GoChat NewChat Say 1 AddChat 1 AddChat 2>
+		*GoChat <*MISC_CHATTER>
+		*GoBye <*GOODBYE>
+		result1 <EndChat Say 2 Shop .wares Goto GoBye>
+		.wares <MECHA MEK_WEP>
+		result2 <Goto GoBye>
+		Msg1 <So, \RANK \PC , how's your mecha holding up against the opposition?>
+		Msg2 <That's the way it always is, isn't it? You have to keep running as fast as you can just to stay in the same place as before.>
+		Msg2_1 <You have my deepest sympathies. Let me show you what we've got.>
+		Msg2_2 <Probably? Try definitely. That crate you're flying around in isn't fit to use for parts.>
+		Prompt1 <I could probably use an upgrade.>
+		Prompt2 <Things are fine... for now.>
+	end
+	inv
+		NPC Police Officer
+		name <Starseid>
+		job <Mechamaster>
+		SDL_PORTRAIT <por_f_starseid(A-Y).png>
+		SDL_COLORS <30 30 90 241 254 223 122 88 193>
+		SetFaction 9
+		NonCombatant
+		Shopping 12
+		Age 17
+		chardesc easygoing pragmatic heroic female
+	end
+
+Content
 	%% The master of weapons
 	requires <*WAGSP_L5LA2_Content>
 	content <Required *DECOR_FOR_WEAPON_SHOP %1% Local>
@@ -29,10 +96,10 @@ Content
 		result1 <EndChat Say 2 Shop .wares Goto GoBye>
 		.wares <WEAPON AMMO GRENADE ACCESSORY ARMOR SHIELD>
 		result2 <Goto GoBye>
-		Msg1 <Having the right equipment can make the difference between life and death. Of course, knowing how to use it is also important.>
-		Msg2 <Take a look through the armory. Let me know what you need.>
-		Prompt1 <I need some new equipment.>
-		Prompt2 <Right now I have everything I need.>
+		Msg1 <Personal combat is an important part of our training program. If you need a weapon, just ask me about it.>
+		Msg2 <Keep your gun ready at all times, and hope you never have to use it.>
+		Prompt1 <I could use something new.>
+		Prompt2 <I don't need anything right now.>
 	end
 	inv
 		NPC Police Officer
@@ -66,7 +133,7 @@ Content
 		*GoJoin <*FACTION_JOIN_ACCEPT ChatNPCFac>
 	end
 	inv
-		NPC Police Officer
+		NPC Police Office
 		job <Instructor>
 		SetFaction 9
 	end

@@ -1279,8 +1279,6 @@ begin
 			msg := msg + '  (DC:' + BStr( ScaleDC( I^.V , I^.Scale ) ) + ')';
 		end else if ( I^.G = GG_ExArmor ) or ( I^.G = GG_Shield ) then begin
 			msg := msg + '  [AC:' + BStr( GearMaxArmor( I ) ) + ']';
-		end else if I^.G = GG_Consumable then begin
-			msg := msg + '  (' + BStr( I^.Stat[ STAT_FoodQuantity ] ) + ')';
 		end else if I^.G = GG_Ammo then begin
 			msg := msg + '  (' + BStr( I^.Stat[ STAT_AmmoPresent ] ) + ')';
 		end else if I^.G = GG_Software then begin

@@ -158,8 +158,10 @@ Procedure BuildInventoryMenu( RPM: RPGMenuPtr; Master: GearPtr );
 	{ Create a menu for this master's inventory. Inventory is defined as }
 	{ any InvCom of the master. }
 var
-	N: Integer;
+	N,T: Integer;
 	Part: GearPtr;
+	num_items,num_extras: Integer;
+	was_already_added: Array of Boolean;
 	Procedure CountTheKids( P: GearPtr );
 		{ This procedure ignores the sub/inv components of things }
 		{ in the general inventory, but they have to be counted so }
@@ -172,7 +174,7 @@ var
 			P := P^.Next;
 		end;
 	end;
-	Function IMString( P: GearPtr ): String;
+	Function IMString( P: GearPtr; num_copies: Integer ): String;
 		{ Given part P, return a string to use in the menu. }
 	var
 		msg: String;
@@ -188,19 +190,50 @@ var
 		end else if P^.G = GG_Ammo then begin
 			ShotsUsed := NAttValue( P^.NA , NAG_WeaponModifier , NAS_AmmoSpent );
 			msg := msg + '  (' + BStr( P^.STat[ STAT_AmmoPresent ] - ShotsUSed ) + '/' + BStr( P^.Stat[ STAT_AmmoPresent ] ) + 'a)';
-		end else if P^.G = GG_Consumable then begin
-			msg := msg + '  (' + BStr( P^.STat[ STAT_FoodQuantity ] ) + ')';
 		end;
 
+		if num_copies > 0 then msg := msg + ' x' + Bstr( num_copies + 1 );
+
 		IMString := Msg;
+	end;
+	Function CountIdenticalSibs( P1: GearPtr; T1: Integer ): Integer;
+		{ Return how many identical siblings this gear has. }
+	var
+		P2: GearPtr;
+		it: Integer;
+	begin
+		it := 0;
+		P2 := P1^.Next;
+		while P2 <> Nil do begin
+			inc( T1 );
+			if GearsAreIdentical( P1 , P2 ) then begin
+				Inc( it );
+				was_already_added[ t1 ] := True;
+			end;
+			P2 := P2^.Next;
+		end;
+		CountIdenticalSibs := it;
 	end;
 begin
 	N := 0;
 	Part := Master^.InvCom;
+	if Part = Nil then Exit;
+
+	{ Determine the number of items in the inventory, and initialize the Was_Already_Added array. }
+	num_items := NumSiblingGears( Part );
+	SetLength( was_already_added , num_items + 1 );
+	for t := 1 to num_items do was_already_added[ t ] := False;
+	T := 0;
 
 	while Part <> Nil do begin
+		{ N is the tree index for the current part. T is its sibling index. }
 		Inc( N );
-		AddRPGMenuItem( RPM , IMString( Part ) , N , SAttValue( Part^.SA , 'DESC' ) );
+		Inc( T );
+
+		if not was_already_added[ t ] then begin
+			num_extras := CountIdenticalSibs( Part , T );
+			AddRPGMenuItem( RPM , IMString( Part , num_extras ) , N , SAttValue( Part^.SA , 'DESC' ) );
+		end;
 		if Part^.InvCom <> Nil then CountTheKids( Part^.InvCom );
 		if Part^.SubCom <> Nil then CountTheKids( Part^.SubCom );
 		Part := Part^.Next;

@@ -51,7 +51,6 @@ uses gears;
 Const
 	STAT_MoraleBoost = 1;
 
-	STAT_FoodQuantity = 3;
 	STAT_FoodEffectType = 4;
 		Num_FoodEffectType = 4;
 		FET_Healing = 1;
@@ -166,10 +165,6 @@ begin
 	if Part^.Stat[ STAT_MoraleBoost ] > 10 then Part^.Stat[ STAT_MoraleBoost ] := 10
 	else if Part^.Stat[ STAT_MoraleBoost ] < -5 then Part^.Stat[ STAT_MoraleBoost ] := -5;
 
-	{ Stat 3 - Quantity }
-	if Part^.Stat[ STAT_FoodQuantity ] > 50 then Part^.Stat[ STAT_FoodQuantity ] := 50
-	else if Part^.Stat[ STAT_FoodQuantity ] < 1 then Part^.Stat[ STAT_FoodQuantity ] := 1;
-
 	{ Stat 4 - Food Effect Type }
 	if Part^.Stat[ STAT_FoodEffectType ] < 0 then Part^.Stat[ STAT_FoodEffectType ] := 0
 	else if Part^.Stat[ STAT_FoodEffectType ] > Num_FoodEffectType then Part^.Stat[ STAT_FoodEffectType ] := 0;
@@ -200,7 +195,7 @@ end;
 Function FoodMass( Part: GearPtr ): Integer;
 	{ Return the basic mass value for this food. }
 begin
-	FoodMass := ( Part^.V * Part^.Stat[ STAT_FoodQuantity ] ) div 5;
+	FoodMass := Part^.V div 5;
 end;
 
 Function FoodValue( Part: GearPtr ): LongInt;
@@ -226,8 +221,6 @@ begin
 
 	{ Add the SkillXP cost. }
 	it := it + Part^.STAT[ STAT_FoodSkillXPAmount ] * Credits_Per_XP;
-
-	it := it * Part^.Stat[ sTAT_FoodQuantity ];
 
 	FoodValue := it;
 end;
