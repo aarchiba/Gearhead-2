@@ -40,7 +40,7 @@ Function RetrieveAPreamble(const S: String ): String;
 
 Function BStr( N: LongInt ): String;
 Function SgnStr( N: Integer ): String;
-Function WideStr( N,Width: Integer ): String;
+Function WideStr( N,Width: LongInt ): String;
 
 Function Acronym( phrase: String ): String; {can't const}
 Function Acronym( const phrase: String ; NumPlaces: Byte ): String;
@@ -253,7 +253,7 @@ begin
 	SgnStr := it;
 end;
 
-Function WideStr( N,Width: Integer ): String;
+Function WideStr( N,Width: LongInt ): String;
 	{ Pack the string with zeroes until it's the specified width. }
 	{ This command is being used for my clock. }
 var

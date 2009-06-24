@@ -67,6 +67,55 @@ begin
 	writeln( ' Total: ' , total );
 end;
 
+Procedure CalcBARat( llist: GearPtr );
+	{ Go through every mecha in LList. Calculate the percentage of mecha cost }
+	{ not related to weapons. }
+	Function WeaponsOnlyValue( plist: GearPtr ): LongInt;
+		{ Return the value of this list's weapons. }
+	var
+		it: LongInt;
+	begin
+		it := 0;
+		while plist <> Nil do begin
+			if plist^.G = GG_Weapon then begin
+				it := it + GearCost( plist );
+			end else begin
+				it := it + WeaponsOnlyValue( plist^.subcom );
+				it := it + WeaponsOnlyValue( plist^.invcom );
+			end;
+			plist := plist^.next;
+		end;
+		WeaponsOnlyValue := it;
+	end;
+var
+	msg: String;
+	tval,wval: LongInt;
+	mlist,m: SAttPtr;
+begin
+	mlist := Nil;
+	while llist <> Nil do begin
+		tval := GearCost( llist );
+		wval := WeaponsOnlyValue( llist^.subcom );
+		if wval > tval then wval := tval;
+
+		msg := WideStr( tval - wval , 9 ) + '   ' + FullGearName( llist ) + ': ';
+		while Length( msg ) < 45 do msg := msg + ' ';
+
+		msg :=  msg + '%' + BStr( ( ( tval - wval ) * 100 ) div tval );
+
+		StoreSAtt( mlist , msg );
+		llist := llist^.next;
+	end;
+
+	SortStringList( mlist );
+	m := mlist;
+	while m <> Nil do begin
+		writeln( m^.info );
+		m := m^.Next;
+	end;
+	DisposeSAtt( mlist );
+end;
+
 
 var
 	t: Integer;
@@ -94,6 +143,10 @@ begin
 
 		F := F^.Next;
 	end;
+
+	writeln();
+	writeln( 'MECHA BODY/ARMAMENT RATING' );
+	CalcBARat( mecha_list );
 
 	DisposeGear( mecha_list );
 end.

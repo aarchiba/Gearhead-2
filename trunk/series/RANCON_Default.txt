@@ -306,6 +306,36 @@ Content
 		SetFaction 3
 	end
 
+Content
+	requires <*NPC_GUARD Static BOHEM Public Common ~Government ~Habitation>
+	element1 <Prefab>
+	team1 <guards>
+	teamdata1 <pass>
+	sub
+		Persona 1
+		*greeting <*NiceToMeetYou GoMiscTalk>
+		*GoMiscTalk <*MISC_CHATTER>
+	end
+	inv
+		NPC Pirate
+		SetFaction 8
+	end
+
+Content
+	requires <*NPC_GUARD Static BOHEM Public ~Sleazy>
+	element1 <Prefab>
+	team1 <guards>
+	teamdata1 <pass>
+	sub
+		Persona 1
+		*greeting <*NiceToMeetYou GoMiscTalk>
+		*GoMiscTalk <*MISC_CHATTER>
+	end
+	inv
+		NPC Pirate
+		SetFaction 15
+	end
+
 
 %% *SECURITY Content
 %%   There's some sort of guard here, as a member of the GUARD team.

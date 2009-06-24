@@ -119,6 +119,9 @@ Content
 	team1 <Citizens>
 	teamdata1 <ally pass>
 
+	start <print %id%01 goto %pop%>
+	Msg%id%01 <Installed.>
+
 	sub
 		Persona 1
 		special <NOPLOTS>
@@ -133,7 +136,7 @@ Content
 		*GoJoin <*FACTION_JOIN_ACCEPT ChatNPCFac>
 	end
 	inv
-		NPC Police Office
+		NPC Police Officer
 		job <Instructor>
 		SetFaction 9
 	end
@@ -238,7 +241,7 @@ Content
 		Msg3 <Luna is the oldest federation in the solar system, having existed since before the fall of Pax Europa. The colonies of Luna are united peacefully under Aegis Overlord. We are eager to share our knowledge and experience with other worlds.>
 		Msg4 <They are certainly misguided in their alliance with Earth, but their citizens should not be made to suffer for the faults of their leaders. Aegis Overlord wishes them no ill.>
 		Msg5 <What else do you wish to know?>
-		Msg6 <That it was damaged by a meteor strike and rebuilt by Aegis Overlord? Yes, that is true. No expense was spared to restore the dome to its original glory.>
+		Msg6 <That it was damaged by a quake and rebuilt by Aegis Overlord? Yes, that is true. No expense was spared to restore the dome to its original glory.>
 		Msg7 <Crihna Rock had no citizens; it was not a legitimate political entity. Besides, Aegis had nothing to do with its destruction. That decision was made by Admiral Haarast himself.>
 		Msg8 <It's a remarkable city, as fine as any on Luna. I've told Merdon many times that he has the gravity turned up a bit too high but he apparently thinks I'm joking.>
 		Msg9 <That's very odd. If Tycho Madang were truly destroyed by Aegis forces, surely it would be impossible to keep something like that a secret. I'd advise you to not believe all the anti-Lunar propaganda being spread by Earth.>

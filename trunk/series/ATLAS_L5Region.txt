@@ -22,8 +22,8 @@ Scene 0 3
 	mapwidth 30
 	mapheight 10
 	name <Maquise Spinner>
-	XPos 1
-	YPos 1
+	XPos 42
+	YPos 22
 
 	Tolerance 0
 
@@ -493,8 +493,8 @@ Scene 0 3
 	mapwidth 30
 	mapheight 10
 	name <Athera Spinner>
-	XPos 7
-	YPos 4
+	XPos 38
+	YPos 21
 
 	% Athera Spinner is very peaceful, so low tolerance.
 	Tolerance -5
@@ -1020,8 +1020,8 @@ Scene
 	mapwidth 30
 	mapheight 30
 	name <Cayley Rock>
-	XPos 3
-	YPos 41
+	XPos 44
+	YPos 9
 	entrance <*COLONY-1>
 
 	% Cayley Rock is somewhat lawless.
@@ -1531,8 +1531,8 @@ Scene 0 3
 	mapwidth 30
 	mapheight 10
 	name <Cesena Spinner>
-	XPos 44
-	YPos 45
+	XPos 46
+	YPos 16
 
 	Tolerance 0
 
@@ -2077,8 +2077,8 @@ Scene 0 3
 	mapwidth 30
 	mapheight 10
 	name <Xianzai Spinner>
-	XPos 40
-	YPos 50
+	XPos 28
+	YPos 26
 
 	%% Slightly lawless, compared to the other L5 colonies anyhow.
 	Tolerance 5
@@ -2531,8 +2531,8 @@ Scene 0 3
 	mapwidth 25
 	mapheight 10
 	name <Gaos Spinner>
-	XPos 35
-	YPos 3
+	XPos 17
+	YPos 20
 
 	%% Fairly tightly regulated. All kinds of things you can get elsewhere aren't allowed here.
 	Tolerance -5
@@ -3026,8 +3026,8 @@ Scene 0 3
 	mapwidth 23
 	mapheight 10
 	name <Fuchal Spinner>
-	XPos 38
-	YPos 48
+	XPos 30
+	YPos 20
 
 	% Fuchal is fairly tightly regulated.
 	Tolerance -5
@@ -3351,8 +3351,8 @@ Scene 0 3
 	mapwidth 30
 	mapheight 10
 	name <Kosaka Spinner>
-	XPos 33
-	YPos 47
+	XPos 20
+	YPos 24
 
 	% Low tolerance here- it's the beuracracy.
 	Tolerance -5
@@ -3852,8 +3852,8 @@ Scene 0 3
 	mapwidth 20
 	mapheight 10
 	name <Tohru Spinner>
-	XPos 40
-	YPos 44
+	XPos 27
+	YPos 13
 
 	Tolerance 0
 
@@ -4313,8 +4313,8 @@ Scene 0 3
 	mapwidth 20
 	mapheight 10
 	name <Emerald Spinner>
-	XPos 30
-	YPos 1
+	XPos 10
+	YPos 22
 
 	Tolerance 0
 
@@ -4857,8 +4857,8 @@ Scene 0 3
 	mapwidth 20
 	mapheight 10
 	name <Theles Spinner>
-	XPos 35
-	YPos 5
+	XPos 31
+	YPos 33
 
 	% What the hey!? Despite the lawlessness inside, Theles Spinner's trade
 	% is tightly controlled. Most weapons are unavailable... unless you can
@@ -5302,8 +5302,8 @@ Scene 0 3
 	mapwidth 27
 	mapheight 10
 	name <Yatate Spinner>
-	XPos 14
-	YPos 42
+	XPos 20
+	YPos 29
 
 	Tolerance 0
 
@@ -5797,8 +5797,8 @@ Scene 0 3
 	mapwidth 20
 	mapheight 10
 	name <Galconde Spinner>
-	XPos 15
-	YPos 38
+	XPos 7
+	YPos 32
 
 	% A bit more tolerant than usual.
 	Tolerance 5
@@ -6124,8 +6124,8 @@ Scene 0 3
 	mapwidth 30
 	mapheight 10
 	name <Rishiri Spinner>
-	XPos 14
-	YPos 45
+	XPos 16
+	YPos 31
 
 	Tolerance 0
 
@@ -6545,8 +6545,8 @@ Scene 0 3
 	mapwidth 25
 	mapheight 10
 	name <Wagner Spinner>
-	XPos 40
-	YPos 50
+	XPos 2
+	YPos 25
 
 	%% Strictly regulated
 	Tolerance -5
@@ -6648,7 +6648,6 @@ sub
 		Content <Some 2 50 Here *URBAN_X>
 		Content2 <Some 1 100 Here *ANTI_ATTACK_SECURITY 2>
 	end
-
 
 	Scene
 	name <L5Law Academy>
@@ -6869,7 +6868,7 @@ sub
 			NPC Soldier
 			job <Bodyguard>
 			SetTeam 3
-			SetFaction 10
+			SetFaction 9
 			MiniMapComponent 2
 		end
 	end
@@ -6941,7 +6940,7 @@ sub
 	end
 
 	Scene
-	name <Hamurabi Garden>
+	name <Hammurabi Garden>
 	type <public park meeting>
 	entrance <*PARK>
 	special <SHOWALL>
@@ -6953,7 +6952,7 @@ sub
 	MapHeight 25
 
 	start <Print 1>
-	Msg1 <You enter Hamurabi Garden.>
+	Msg1 <You enter Hammurabi Garden.>
 
 	Content <Some 5 60 Here *URBAN_X>
 	Content2 <Some 1 100 Here *ANTI_ATTACK_SECURITY 2>
@@ -6982,5 +6981,215 @@ sub
 	end
 
 % End of Wagner Spinner...
+end
+
+
+%%
+%%   ***********************
+%%   ***   CLUND  ROCK   ***
+%%   ***********************
+%%
+
+Scene
+	mapwidth 30
+	mapheight 30
+	name <Clund Rock>
+	XPos 39
+	YPos 4
+	entrance <*COLONY-1>
+
+	% Clund Rock is somewhat lawless.
+	Tolerance 5
+
+	world <L5 Region>
+	desc <Clund Rock used to be an industrial station, but its factories were destroyed in the battle of 130. These days it's a shipping hub and tourist destination.>
+	special <NOEXIT>
+	% This town has the rare distinction of being both safe and lawless at the same time.
+	type <asteroid town village destination hometown building public hospital residence spaceport garage resort tradehub safe lawless>
+	personatype <asteroid village>
+	habitat <SPACE.ASTER>
+
+%	Quest1 <*:Q_LocalQuest>
+
+	ClubMap
+
+	% V1 = Message Counter
+
+	SetFaction 12
+	factions <BOHEM CRIHN>
+
+	desig <CLUND>
+
+	NeededCells 6
+	Content1 <Some 1 100 Sub *MECHANIC_SHOP   na>
+	Content2 <Some 1 100 Sub *SHUTTLESERVICE  na>
+	Content3 <Some 1 100 Sub *RESTAURANT      na>
+	Content4 <Some 1 100 Sub *DOCTOR          na>
+	Content5 <Some 1 100 Sub *GENERAL_SHOP    na>
+	Content7 <Fill       Sub *HABITATION_X    na>
+
+	start <if= V1 0 else GoSecondTime V= 1 1 Alert 1>
+	GoSecondTime <Print 2>
+	Msg1 <You enter Clund Rock Station. This colony serves as a rest stop on the shipping route between the spinner colonies and the dusty ring.>
+	Msg2 <You enter Clund Rock Station.>
+
+inv
+	NPC Politician
+	home <Mayor's Office>
+	job <Mayor>
+	SetTeam 2
+	SetFaction 12
+
+	NPC Mecha Pilot
+	home <Mayor's Office>
+	SetTeam 3
+	SetFaction 12
+
+	NPC Pirate
+	SetTeam 3
+	SetFaction 8
+
+	NPC Pirate
+	SetTeam 3
+	SetFaction 15
+end
+sub
+	% BEGIN Clund Rock Main Scene Stuff
+	team 1
+
+	team 2
+	name <Citizens>
+	SetAlly 1
+	Passive
+
+	team 3
+	name <Guards>
+	SetAlly 2
+
+	room
+	name <Foyer>
+	desig <EntranceGrid>
+	special <STARTHERE>
+	Content <Some 3 75 Here *URBAN_X>
+	Content2 <Some 1 100 Here *ANTI_ATTACK_SECURITY 2>
+
+	room
+	name <Police Office>
+	minimap <.....1..............##+##>
+	inv
+		NPC Police Officer
+		name <Kygia>
+		SetTeam 3
+		SetFaction 12
+		MiniMapComponent 1
+		SDL_PORTRAIT <>
+		SDL_COLORS <144 166 195 255 244 208 11 218 81>
+		Age 25
+		chardesc Passionate Passionate Sociable Female
+	end
+
+	room
+	% This is the area that will contain the airlock to outside and the lift to the 
+	% orbital catapult.
+	minimap <###########1#2##...##...#>
+	inv
+		Elevator
+		name <Clund Rock Exterior>
+		MiniMapComponent 1
+		use <if= V1 1 else GoFirstTime Print 1 Exit Destination>
+		GoFirstTime <ifYesNo 101 102 103 Print 1 Exit Destination V= 1 1>
+		msg1 <You exit the airlock.>
+		Msg101 <This airlock opens to the outside surface of the asteroid.>
+		Msg102 <Exit station.>
+		Msg103 <Stay right here.>
+
+		STC AIRLOCK-2
+		MiniMapComponent 2
+		destination <L5 Region>
+	end
+
+	room
+	name <Mayor's Office>
+	minimap <....................##+##>
+
+	% END Clund Rock Main Scene Stuff
+
+	Scene 0 3
+	name <Clund Rock Exterior>
+	mapwidth 30
+	mapheight 30
+
+	special <NOEXIT SHOWALL SOLO>
+	type <outdoors urban environs asteroid>
+	AsteroidMap
+	RockyTiles
+
+	% Suffocation effect...
+	Vacuum
+	SpaceBackdrop
+
+	inv
+		stc Building
+		name <Clund Main Station>
+		destination -1
+	end
+	sub
+	% Clund Rock Exterior subcoms...
+		CityZone
+		Width 15
+		Height 15
+
+
+		Scene
+		name <the One-Thirty Club>
+		type <building nightclub meeting public mall sleazy>
+		entrance <*Building Short>
+		special <ADDEXIT>
+		ClubMap
+		MapWidth 20
+		MapHeight 19
+
+		start <Print 1>
+		Msg1 <You enter the One-Thirty Club.>
+
+		NeededCells 4
+		Content2 <Some 1 100 Sub *BAR_SERVICE>
+		Content3 <Some 1 100 Sub *WEAPON_SHOP>
+		Content4 <Some 1 100 Sub *ARMOR_SHOP>
+		Content5 <Fill Sub *SHOP_RANDOM>
+		sub
+			team 1
+
+			team 2
+			name <Citizens>
+			SetAlly 1
+			Passive
+
+			team 3
+			name <Guards>
+			SetAlly 2
+
+			room
+			name <Foyer>
+			desig <EntranceGrid>
+			Content <Some 4 65 Here *URBAN_X>
+			Content2 <Some 1 100 Here *ANTI_ATTACK_SECURITY 2>
+		end
+		inv
+			NPC Pirate
+			SetTeam 3
+			SetFaction 8
+
+			NPC Pirate
+			SetTeam 3
+			SetFaction 15
+		end
+
+
+	% End Clund Rock Exterior...
+	end
+
+
+% End of Clund Rock...
 end
 
