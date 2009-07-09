@@ -1368,6 +1368,82 @@ begin
 	glPopMatrix();
 end;
 
+Procedure DrawDirectionIndicator( M: GearPtr );
+	{ Draw the direction indicator for this model. }
+const
+	Indicator_Y = 0.01;
+	outer_radius_a = 0.382; {0.425}
+	outer_radius_b = 0.180; {0.200}
+	inner_radius_a = 0.340;
+	inner_radius_b = 0.160;
+begin
+	{ Rotate to the required direction. }
+	{ Push the matrix, then translate to the center of the tile and }
+	{ rotate to the correct angle. }
+	glPushMatrix();
+	glTranslatef( 0.5 , 0 , 0.5 );
+	glRotatef( 90 - NAttValue( M^.NA , NAG_Location , NAS_D ) * 45 , 0 , 1 , 0 );
+
+	glDisable( GL_Texture_2D );
+	glDisable( GL_ALPHA_TEST );
+
+	if M = Focused_On_Mek then begin
+		GLColor4F( 1.0 , 0.5 , 0.0 , 0.0 );
+	end else begin
+		GLColor4F( 0.3 , 0.3 , 0.3 , 0.0 );
+	end;
+
+	glBegin( GL_TRIANGLES );
+	glVertex3f( 0 , Indicator_Y , 0.45 );
+	glVertex3f( 0.1 , Indicator_Y , 0.2 );
+	glVertex3f( -0.1 , Indicator_Y , 0.2 );
+	glEnd;
+
+	glBegin( GL_QUADS );
+	glVertex3f(  outer_radius_b , Indicator_Y ,  outer_radius_a );
+	glVertex3f(  outer_radius_a , Indicator_Y ,  outer_radius_b );
+	glVertex3f(  inner_radius_a , Indicator_Y ,  inner_radius_b );
+	glVertex3f(  inner_radius_b , Indicator_Y ,  inner_radius_a );
+
+	glVertex3f(  outer_radius_a , Indicator_Y ,  outer_radius_b );
+	glVertex3f(  outer_radius_a , Indicator_Y , -outer_radius_b );
+	glVertex3f(  inner_radius_a , Indicator_Y , -inner_radius_b );
+	glVertex3f(  inner_radius_a , Indicator_Y ,  inner_radius_b );
+
+	glVertex3f(  outer_radius_a , Indicator_Y , -outer_radius_b );
+	glVertex3f(  outer_radius_b , Indicator_Y , -outer_radius_a );
+	glVertex3f(  inner_radius_b , Indicator_Y , -inner_radius_a );
+	glVertex3f(  inner_radius_a , Indicator_Y , -inner_radius_b );
+
+	glVertex3f(  outer_radius_b , Indicator_Y , -outer_radius_a );
+	glVertex3f( -outer_radius_b , Indicator_Y , -outer_radius_a );
+	glVertex3f( -inner_radius_b , Indicator_Y , -inner_radius_a );
+	glVertex3f(  inner_radius_b , Indicator_Y , -inner_radius_a );
+
+	glVertex3f( -outer_radius_b , Indicator_Y , -outer_radius_a );
+	glVertex3f( -outer_radius_a , Indicator_Y , -outer_radius_b );
+	glVertex3f( -inner_radius_a , Indicator_Y , -inner_radius_b );
+	glVertex3f( -inner_radius_b , Indicator_Y , -inner_radius_a );
+
+	glVertex3f( -outer_radius_a , Indicator_Y , -outer_radius_b );
+	glVertex3f( -outer_radius_a , Indicator_Y ,  outer_radius_b );
+	glVertex3f( -inner_radius_a , Indicator_Y ,  inner_radius_b );
+	glVertex3f( -inner_radius_a , Indicator_Y , -inner_radius_b );
+
+	glVertex3f( -outer_radius_a , Indicator_Y ,  outer_radius_b );
+	glVertex3f( -outer_radius_b , Indicator_Y ,  outer_radius_a );
+	glVertex3f( -inner_radius_b , Indicator_Y ,  inner_radius_a );
+	glVertex3f( -inner_radius_a , Indicator_Y ,  inner_radius_b );
+
+	glEnd;
+
+	glEnable( GL_Texture_2D );
+	glEnable( GL_ALPHA_TEST );
+
+	{ Pop the matrix. }
+	glPopMatrix();
+end;
+
 
 Procedure SetLighting;
 	{ Set the lighting and materials options. Yay. }
@@ -1523,11 +1599,23 @@ begin
 				H := Z / 2;
 				if H < 0 then H := H * 0.75;
 
-				DrawModel( SensibleTexID( SpriteName( M ) , SpriteColor( GB , M ) , ( NAttValue( M^.NA , NAG_Location , NAS_D ) - DirOffset[ origin_d ] + 10 ) mod 8 ) ,
-						W,	{ width }
+				if Use_Paper_Dolls then begin
+					DrawModel( 	SensibleTexID( 'test_buruburu.png' , SpriteColor( GB , M ) , 0 , 128 ) ,
+						W * 0.75,	{ width }
 						-0.2 ,	{ offset }
 						H ,	{ foot }
 						0 );	{ fade }
+				end else begin
+					DrawModel( 	SensibleTexID( SpriteName( M ) , SpriteColor( GB , M ) , ( NAttValue( M^.NA , NAG_Location , NAS_D ) - DirOffset[ origin_d ] + 10 ) mod 8 ) ,
+						W * 0.75,	{ width }
+						-0.2 ,	{ offset }
+						H ,	{ foot }
+						0 );	{ fade }
+				end;
+
+				{ Draw the direction thingamabob. }
+				DrawDirectionIndicator( M );
+
 				if OnTheMap( GB , X , Y ) and ( Z >= LoAlt ) and ( Z <= HiAlt ) then begin
 					model_map[ X , Y , Z ] := M;
 					if M^.Scale >= GB^.Scale then model_map[ X , Y , Z + 1 ] := M;
@@ -2172,10 +2260,10 @@ initialization
 	Mini_Map_Sprite := LocateSprite( 'minimap.png' , 3 , 3 );
 	World_Terrain := LocateSprite( 'world_terrain.png' , 64 , 64 );
 
-	Strong_Hit_Sprite := LocateTexture( Strong_Hit_Sprite_Name , '' );
-	Weak_Hit_Sprite := LocateTexture( Weak_Hit_Sprite_Name , '' );
-	Parry_Sprite := LocateTexture( Parry_Sprite_Name , '' );
-	Miss_Sprite := LocateTexture( Miss_Sprite_Name , '' );
+	Strong_Hit_Sprite := LocateTexture( Strong_Hit_Sprite_Name , '' , std_tex_size );
+	Weak_Hit_Sprite := LocateTexture( Weak_Hit_Sprite_Name , '' , std_tex_size );
+	Parry_Sprite := LocateTexture( Parry_Sprite_Name , '' , std_tex_size );
+	Miss_Sprite := LocateTexture( Miss_Sprite_Name , '' , std_tex_size );
 
 	Current_Backdrop := 0;
 

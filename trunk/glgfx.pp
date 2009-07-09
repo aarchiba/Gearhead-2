@@ -224,6 +224,8 @@ const
 
 	Animation_Phase_Period = 6000;
 
+	std_tex_size = 64;
+
 var
 	Actual_Screen,Game_Screen: PSDL_Surface;
 	Game_Font,Small_Font: PTTF_Font;
@@ -254,7 +256,8 @@ function LocateSprite( const Name, Color: String; W,H: Integer ): SensibleSprite
 function LocateSprite( const Name: String; W,H: Integer ): SensibleSpritePtr;
 
 Procedure DisposeTexList;
-Function LocateTexture( Name,Color: String ): SensibleTexPtr;
+Function LocateTexture( Name,Color: String; tex_size: Integer ): SensibleTexPtr;
+Function SensibleTexID( const Name,Color: String; D,tex_size: Integer ): GLUInt;
 Function SensibleTexID( const Name,Color: String; D: Integer ): GLUInt;
 Procedure RemoveTexture(var LMember: SensibleTexPtr);
 Procedure CleanTexList;
@@ -779,11 +782,9 @@ begin
 end;
 
 
-Function AddTexture( Name,Color: String ): SensibleTexPtr;
+Function AddTexture( Name,Color: String; tex_size: Integer ): SensibleTexPtr;
 	{ Add a texture to the list. }
 	{ PRECOND: Must be a good image for generating a texture!!! }
-const
-	tex_size = 64;
 var
 	MyTex: SensibleTexPtr;
 	MyImage: SensibleSpritePtr;
@@ -836,7 +837,7 @@ begin
 	AddTexture := MyTex;
 end;
 
-Function LocateTexture( name,color: String ): SensibleTexPtr;
+Function LocateTexture( name,color: String; tex_size: Integer ): SensibleTexPtr;
 	{ Get the number of the texture identified by the provided ID number. }
 var
 	T,it: SensibleTexPtr;
@@ -848,17 +849,23 @@ begin
 		if ( T^.name = name ) and ( T^.Color = Color ) then it := T;
 		T := T^.Next;
 	end;
-	if it = Nil then it := AddTexture( name , color );
+	if it = Nil then it := AddTexture( name , color , tex_size );
 	LocateTexture := it;
 end;
 
-Function SensibleTexID( const Name,Color: String; D: Integer ): GLUInt;
+Function SensibleTexID( const Name,Color: String; D,tex_size: Integer ): GLUInt;
 	{ Return the ID for the requested texture. }
 var
 	ST: SensibleTexPtr;
 begin
-	ST := LocateTexture( name , color );
+	ST := LocateTexture( name , color , tex_size );
 	SensibleTexID := ST^.Img[D];
+end;
+
+Function SensibleTexID( const Name,Color: String; D: Integer ): GLUInt;
+	{ Return the ID for the requested texture. }
+begin
+	SensibleTexID := SensibleTexID( name , color , D , std_tex_size );
 end;
 
 Procedure RemoveTexture(var LMember: SensibleTexPtr);

@@ -415,6 +415,7 @@ const
 
 	Minimal_Screen_Refresh: Boolean = False;
 	Use_Software_Surface: Boolean = False;
+	Use_Paper_Dolls: Boolean = False;
 
 	Full_RPGWorld_Info: Boolean = False;
 
@@ -586,6 +587,9 @@ begin
 				end else if cmd = 'NAMESON' then begin
 					Names_Above_Heads := True;
 
+				end else if cmd = 'PAPERDOLLS' then begin
+					Use_Paper_Dolls := True;
+
 				end else if cmd = 'GIMMEGIMMECHOICE' then begin
 					XXRan_Wizard := True;
 				end else if cmd = 'XXRANDEBUG' then begin
@@ -675,6 +679,7 @@ begin
 	AddBoolean( 'NO_SPLASH_SCREEN_AT_START' , not Splash_Screen_At_Start );
 	AddBoolean( 'REVERT_SLOWER_SAFER' , Revert_Slower_Safer );
 	AddBoolean( 'NAMESON' , Names_Above_Heads );
+	AddBoolean( 'PAPERDOLLS' , Use_Paper_Dolls );
 
 	{ The "secret options" come at the end. These tokens only get }
 	{ included if they're already set. }

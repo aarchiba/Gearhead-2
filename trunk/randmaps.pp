@@ -649,6 +649,32 @@ begin
 	WallCoverage := ( Walls * 100 ) div Tiles;
 end;
 
+Procedure DrawTerrainWithWobblyPen( GB: GameBoardPtr; X,Y,Floor1,Floor2: Integer );
+	{ Draw terrain in this spot, and possibly also in the four adjacent spots. }
+const
+	cardinal_dir: Array [0..3,1..2] of SmallInt = (
+	(1,0),(0,1),(-1,0),(0,-1)
+	);
+var
+	t: Integer;
+begin
+	DrawTerrain( GB , X , Y , Floor1 , Floor2 );
+	for t := 0 to 3 do begin
+		if ( Random( 3 ) <> 1 ) then begin
+			DrawTerrain( GB , X + cardinal_dir[ t , 1 ] , Y + cardinal_dir[ t , 2 ] , Floor1 , Floor2 );
+		end;
+	end;
+end;
+
+Function ProcessCavern( GB: GameBoardPtr;  MF: GearPtr; var Cmd: String; X0,Y0,W,H: Integer ): SAttPtr;
+	{ Construct a cavern with several chambers. }
+begin
+	{ Step One: Place the chambers. }
+
+	{ Step Two: Connect the rooms in order. }
+
+end;
+
 Procedure ProcessCarve( GB: GameBoardPtr; MF: GearPtr; var Cmd: String; X0,Y0,W,H: Integer );
 	{ This should draw a cave using the 'L' method. }
 var
@@ -661,24 +687,24 @@ var
 	begin
 		{ Determine X0,X1,Y0,Y1 points. }
 		if Random( 2 ) = 1 then begin
-			X1 := X - 3 - Random( 15 );
+			X1 := X - 5 - Random( 16 );
 			X2 := X;
 		end else begin
 			X1 := X;
-			X2 := X + 3 + Random( 15 );
+			X2 := X + 5 + Random( 16 );
 		end;
 		if Random( 2 ) = 1 then begin
-			Y1 := Y - 2 - Random( 10 );
+			Y1 := Y - 5 - Random( 16 );
 			Y2 := Y;
 		end else begin
 			Y1 := Y;
-			Y2 := Y + 2 + Random( 10 );
+			Y2 := Y + 5 + Random( 16 );
 		end;
 		for XT := X1 to X2 do begin
-			DrawTerrain( GB , XT , Y , Floor1 , Floor2 );
+			DrawTerrainWithWobblyPen( GB , XT , Y , Floor1 , Floor2 );
 		end;
 		for YT := Y1 to Y2 do begin
-			DrawTerrain( GB , X , YT , Floor1 , Floor2 );
+			DrawTerrainWithWobblyPen( GB , X , YT , Floor1 , Floor2 );
 		end;
 	end;
 begin

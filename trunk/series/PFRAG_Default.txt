@@ -1,14 +1,41 @@
 % Persona Fragment File
 
+%
+% TYPE: *BetterBeGoing
+%
+%	The NPC has to go do something.
+%
+%   PARAM1: Exit Label
+%
+
+	Persona
+	requires <*BetterBeGoing>
+	START <EndChat Say %id%01 Goto %1%>
+	Msg%id%01 <I'd better be going.>
+	Msg%id%01_1 <I'd better be going. Talk with you later.>
+	CMsg%id%01_1 <ifNPCSociable Accept>
+	Msg%id%01_2 <I should go now.>
+	CMsg%id%01_2 <ifNPCShy Accept>
+	Msg%id%01_3 <I guess I should be heading off, now.>
+	CMsg%id%01_3 <ifNPCEasygoing Accept>
+	Msg%id%01_4 <It's time for me to go.>
+	CMsg%id%01_4 <ifNPCPassionate Accept>
+	Msg%id%01_5 <It's been fun seeing you, but I better get going now.>
+	CMsg%id%01_5 <ifNPCCheerful Accept>
+	Msg%id%01_6 <That's all the time I can spare for chitchat today... I really have to go.>
+	CMsg%id%01_6 <ifNPCMelancholy Accept>
+
+
+%
 % TYPE: *IWillDestroyYou
 %
 %	This NPC is swearing to destroy the PC. This is not a normal run of the mill death threat, either-
 %	no, this NPC will literally go to the ends of the universe in their quest for revenge.
+%
 
 	Persona
 	requires <*IWillDestroyYou>
 	START <EndChat Say %id%01>
-	result%id%01 <Goto %1%>
 	Msg%id%01 <From this day forth it will be my sole purpose in life to give you pain, to repay you for what you have given me. I will hunt you down and destroy everything you love. By the end you will beg me for death.>
 	Msg%id%01_1 <>
 	CMsg%id%01_1 <ifNPCSociable Accept>

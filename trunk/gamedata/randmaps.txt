@@ -118,6 +118,15 @@ PARAM-10 <Wall 13 Mitose 14 13>
 SUBZONE-10 <-27>
 TERRAIN-10 <GROUND>
 
+Name-11 <Complex Filler>
+PARAM-11 <Mitose 14 13>
+
+Name-12 <Ruin>
+PARAM-12 <Carve 14 0 13 Wall 13>
+GAPFILL-12 <-11>
+SELECTOR-12 <1 5 14> % Include (1) the Floor Terrain (5) Default Floor (14)
+SubZone-12 <-27>
+
 Name-15 <Arena>
 PARAM-15 <Fill 1 0 Wall 12>
 GAPFILL-15 <-4 -5 -5>
