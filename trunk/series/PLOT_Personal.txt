@@ -28,7 +28,7 @@ Plot
 		Persona 1
 		rumor <%name1%'s mecha is in the shop.>
 		% V1 = Have already interacted
-		greeting <if= V1 0 else GoCHat ifChatNPCArchEnemy else GoNoEnemy NewChat Say 1 Goto GoEndPlot>
+		greeting <if= V1 0 else GoCHat ifChatNPCInPlay else GoChat ifChatNPCArchEnemy else GoNoEnemy NewChat Say 1 Goto GoEndPlot>
 		GoChat <NewChat SayAnything>
 		GoNoEnemy <NewChat Say 1 AddChat 1 AddChat 2>
 		GoEndPlot <P= 1 1 V= 1 1>

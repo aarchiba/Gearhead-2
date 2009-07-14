@@ -12,220 +12,66 @@ Content
 	requires <*:Q_LocalQuest "CLUND">
 
 	% E1 is the exterior scene
-	% E2 is the mine entrance
-	% E3 is Wynter's Mine
-	% E4 is Lower Wynter's Mine
-	% E5 is the blocked level
-	% E6 is Cayley Caves
-	% E7 is Cayley Core
-	% E8 is the root scene
-	% E9 is the disaster mood, following the earthquake
+	% E2 is the Memorial Land entry dome
+	% E3 is the Memorial Land main dome
+	% E4 is the ruin surface
+	% E5 is the main ruin dungeon
+	% E6 is the lower ruin dungeon
 	Element1 <Scene Outdoors>
 	Element2 <QuestScene>
 	Place2 <1>
-	Element3 <QuestScene>
+%	Element3 <QuestScene>
 	Place3 <2>
-	Element4 <QuestScene>
-	Place4 <3>
-	Element5 <QuestScene>
+%	Element4 <QuestScene>
+	Place4 <1>
+%	Element5 <QuestScene>
 	Place5 <4>
-	Element6 <QuestScene>
+%	Element6 <QuestScene>
 	Place6 <5>
-	Element7 <QuestScene>
-	Place7 <6>
-	Element8 <.>
-	Element9 <Prefab>
 
-	% P2 = Initialization Counter
-
-	% Activate the Wynter's Mine and Lower Wynter's Mine quests right away.
-	update <if= P2 0 P= 2 1 SetPlotStatus %plotid1% %id1% SetPlotStatus %plotid2% %id2%>
-
-	% Activate the lower quests some time after the PC reaches Renown 50.
-	PUMPNEWS <if= PlotStatus %plotid3% 0  ifG PCRenown 50  if= d8 1  SetPlotStatus %plotid3% %id3% SetPlotStatus %plotid4% %id4% SetMood %9% %8% if= RootSceneID %8% Goto GoEarthQuake>
-	GoEarthQuake <Alert 1 History 2 Stamina Mental>
-
-	Msg1 <All of a sudden, the ground shakes with incredible force!>
-	Msg2 <You were on Cayley Rock when an earthquake occurred.>
-
-	% SubPlot1 = Wynter's Mine Quest
-	% SubPlot2 = Lower Wynter's Mine Quest
-	% SubPlot3 = Cayley Caves Quest
-	% SubPlot4 = Cayley Core Quest
-	SubPlot1 <*:Q_DungeonQuest #10 3>
-	SubPlot2 <*:Q_DungeonQuest #30 4>
-	SubPlot3 <*:Q_Unique_CAYLE_Caves #55 6>
-	SubPlot4 <*:Q_Unique_CAYLE_Core #85 7>
+	% SubPlot1 = Upper Ruins Quest
+%	SubPlot1 <*:Q_DungeonQuest #25 5>
 
 	sub
 		MetaScene 2
-		name <Old Wynter's Mine>
-		type <building ruin mine !Ne open>
-		terrain <SPACE>
-		habitat <SPACE.ASTER>
-		entrance <*Building>
-		MonkeyMap
-		MapWidth 21
-		MapHeight 21
-		special <AddExit>
-		IndustrialTiles
+		name <Memorial Land>
+		type <building public meeting amusement>
+		special <ADDEXIT>
+		entrance <*Building SHORT>
+		ClubMap
+		MapWidth 22
+		MapHeight 22
 
-		NeededCells 1
-		content <Some 1 100 Sub *DUNGEON_DECOR>
+		% L1 = First time entry counter
+		start <if= L1 0 else GoBeenBefore Alert 2 L= 1 1>
+		GoBeenBefore <Print 1>
+		Msg1 <You enter Memorial Land.>
+		Msg2 <You enter Memorial Land. This amusement park was built above the factories destroyed by the Rishiri Space Force. It now serves as the dusty ring's premier edutainment attraction.>
 
-		% V1 = First time entry indicator.
-
-		Start <if= V1 0 else GoBeenBefore V= 1 1 Print 2 Alert 1>
-		GoBeenBefore <Print 2>
-
-		Msg1 <This old building was obviously abandoned some time ago. The power generator still works on this upper level, and the air seems breathable enough.>
-		Msg2 <You enter Old Wynter's Mine.>
-
+		NeededCells 4
+		Content1 <Some 1 100 Sub *RESTAURANT>
+		Content2 <Variety 3 3 Sub *CLUND_MLP_Content>
+		Content5 <Fill Sub *SHOP_RANDOM>
 		sub
-			Team 1
-			SetEnemy 2
+			team 1
 
-			Team 2
-			name <Monster>
-			type <Mine Fungus Asteroid>
-			SetEnemy 1
+			team 2
+			name <Citizens>
+			SetAlly 1
+			Passive
 
-			room
-			sub
-				trapdoor
-				desig <ENTRANCE %3%>
-				use <if= StatVal STAT_Lock 0 else GoLocked if= V1 1 else GoFirstTime Print 1 Exit StatVal 4>
-				GoFirstTime <ifYesNo 101 102 103  V= 1 1  Print 1 Exit StatVal 4 MonsterUp 2 10>
-				Msg101 <This is an airlock. There's still power here, but no guarantee there will be power in the mines.>
-				Msg102 <Enter the mine.>
-				Msg103 <Don't enter the mine.>
-			end
-
-			room
-			minimap <......###..#1#...........>
-			inv
-				elevator
-				desig <ENTRANCE %5%>
-				MiniMapComponent 1
-				use <if= P1 1 else GoBroken Print 1 Exit Destination>
-				GoBroken <Print 101>
-				CLUE_REPAIR <if= P1 0 else GoWorking ifRepair HardSkillTar 50 else GoRepairFail Mental Print 104 XPV 50 P= 1 1>
-				CLUE_INSIGHT <if= P1 0 else GoWorking Print 103>
-				GoRepairFail <Print 103>
-				GoWorking <Print 102>
-				Msg101 <This elevator isn't working.>
-				Msg102 <You can't find any damage to fix.>
-				Msg103 <The problem with this elevator appears to be at the other end.>
-				Msg104 <You repair the elevator. It should be usable now.>
-			end
-		end
-
-		STC QS_Dungeon_AsteroidMine
-		SetID 3
-		name <Wynter's Mine>
-		DifficultyLevel 10
-
-		STC QS_Dungeon_AsteroidMine
-		SetID 4
-		name <Lower Wynter's Mine>
-		entrance <*GoDown>
-		DifficultyLevel 30
-
-		STC QS_Dungeon_AsteroidMine
-		SetID 5
-		name <Wynter's Mine Bottom>
-		type <asteroid mine>
-		entrance <*GoDown>
-		DifficultyLevel 40
-		sub
-			Room
-			minimap <......###..#1#...... ... >
-			width 5
-			height 5
-			inv
-				Elevator
-				desig <ENTRANCE %2%>
-				MiniMapComponent 1
-				use <if= P1 0 else GoAlreadyWorking ifYesNo 101 102 103 Print 104 Stamina P= 1 1 XPV 50>
-				GoAlreadyWorking <Print 1 Exit Destination>
-				CLUE_REPAIR <if= P1 0 else GoNoDamage Print 106>
-				GoNoDamage <Print 105>
-				CLUE_INSIGHT <Print 107>
-				Msg101 <This elevator has been clogged by debris.>
-				Msg102 <Clean it out.>
-				Msg103 <Leave it alone.>
-				Msg104 <You clean out the elevator. It should be usable now.>
-				Msg105 <You can't find any damage to fix.>
-				Msg106 <The only way to repair this elevator is to clear out the rubble.>
-				Msg107 <This elevator probably connects to the one in the minehouse above.>
-			end
-
-			Room
-			width 5
-			height 5
-			sub
-				StairsDown
-				desig <ENTRANCE %6%>
-				use <if# PlotStatus %plotid3% 0 else GoBlocked Print 1 Exit Destination>
-				GoBlocked <Print 2>
-				CLUE_REPAIR <Print 3>
-				CLUE_SURVIVAL <Print 3>
-				CLUE_SCIENCE <Print 3>
-				CLUE_INSIGHT <Print 3>
-				CLUE_MYSTICISM <Print 4>
-				Msg2 <This passage is blocked by rubble. You can't get through.>
-				Msg3 <There's no way through. You'd need a Haiho to move that rubble.>
-				Msg4 <You have a premonition that something truly unnatural lies buried behind this rubble.>
-			end
-		end
-
-		STC QS_Dungeon_AsteroidCave
-		SetID 6
-		name <Cayley Caves>
-		DifficultyLevel 65
-		sub
-			Team 3
-			name <Exorg>
+			team 3
+			name <Guards>
 			SetAlly 2
-			SetEnemy 1
 
 			room
-			%% The expansion generator
-			width 5
-			height 5
-			ForEntryLevel
-			minimap < %%% %%^&%^%1&%^%%^% %^% >
-			inv
-				STC MACHINE-1
-				% V1 = Science XP counter
-				% V2 = Insight XP counter
-				MiniMapComponent 1
-				name <Destroyed Machine>
-				use <Print 1>
-				CLUE_SCIENCE <if= V1 0 else GoSciBefore ifScience HardSkillTar 65 else GoSciFail Alert 2 Alert 3 XPV 100 SkillXP NAS_Science 500 V= 1 1>
-				GoSciBefore <Print 2>
-				GoSciFail <Print 4>
-				CLUE_REPAIR <Print 5>
-				CLUE_INSIGHT <if= V2 0 else GoInsightBefore ifInsight SkillTar 60 else GoInsightFail Alert 6 Alert 7 V= 2 1 XPV 100>
-				GoInsightBefore <Print 6>
-				GoInsightFail <Print 4>
-				CLUE_MYSTICISM <Print 8>
-				Msg1 <You stand within the wreckage of a huge machine.>
-				Msg2 <This appears to be the wreckage of an expansion generator, a theoretical construct needed to generate a subspace pocket for a faster than light engine.>
-				Msg3 <As far as you know, nobody in this solar system is even close to building one.>
-				Msg4 <You can't figure out what this machine might have been for.>
-				Msg5 <Repairing this device is beyond your skill level. You suspect that it's beyond anyone's skill level.>
-				Msg6 <Judging by the surroundings, the explosion of this machine may have been the cause of the Cayley earthquake.>
-				Msg7 <Inexplicably, the core of the machine is practically undamaged.>
-				Msg8 <The core of this destroyed machine has an otherworldly feel to it.>
-			end
+			name <Foyer>
+			desig <EntranceGrid>
+			Content <Some 4 65 Here *URBAN_X>
+			Content2 <Some 1 100 Here *ANTI_ATTACK_SECURITY 2>
 		end
 
-		STC QS_Dungeon_AsteroidCave
-		SetID 7
-		name <Cayley Core>
-		entrance <*GoDown>
-		DifficultyLevel 85
+
 	end
 
 

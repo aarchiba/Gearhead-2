@@ -529,7 +529,7 @@ begin
 			RPK_Up: RPMUpKey( RPM , True );
 			RPK_Down: RPMDownKey( RPM , True );
 			RPK_TimeEvent:
-				begin
+				if Mouse_Active then begin
 					{ If the mouse pointer is around }
 					{ the menu, we may have to do something. }
 					if ( Mouse_X >= RPM^.Menu_Zone.X ) and ( Mouse_X <= ( RPM^.Menu_Zone.X + RPM^.Menu_Zone.W ) ) and (( Mouse_X <> OldMouseX ) or ( Mouse_Y <> OldMouseY )) then begin

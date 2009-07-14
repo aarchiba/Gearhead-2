@@ -1601,6 +1601,7 @@ begin
 
 				if Use_Paper_Dolls then begin
 					DrawModel( 	SensibleTexID( 'test_buruburu.png' , SpriteColor( GB , M ) , 0 , 128 ) ,
+						{SensibleTexID( 'test_person.png' , SpriteColor( GB , M ) , ( ( NAttValue( M^.NA , NAG_Location , NAS_D ) - DirOffset[ origin_d ] + 10 ) mod 8 ) mod 2 , 128 ) ,}
 						W * 0.75,	{ width }
 						-0.2 ,	{ offset }
 						H ,	{ foot }
@@ -1997,6 +1998,9 @@ const
 var
 	L: Integer;
 begin
+	{ If the mouse isn't active, exit without doing anything. }
+	if not Mouse_Active then Exit;
+
 	if Mouse_X < 20 then begin
 		Origin_X := Origin_X + FineDir[ ( Origin_D + Num_Rotation_Angles div 4 ) mod Num_Rotation_Angles , 1 ]/3;
 		Origin_Y := Origin_Y + FineDir[ ( Origin_D + Num_Rotation_Angles div 4 ) mod Num_Rotation_Angles , 2 ]/3;

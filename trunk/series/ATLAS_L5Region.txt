@@ -7109,10 +7109,64 @@ sub
 	end
 
 	room
+	minimap <#################1###...#>
+	inv
+		Elevator
+		name <the One-Thirty Club>
+		MiniMapComponent 1
+	end
+
+
+	room
 	name <Mayor's Office>
 	minimap <....................##+##>
 
 	% END Clund Rock Main Scene Stuff
+
+	Scene
+	name <the One-Thirty Club>
+	type <building nightclub meeting public mall sleazy>
+	special <ADDEXIT>
+	ClubMap
+	MapWidth 20
+	MapHeight 19
+
+	start <Print 1>
+	Msg1 <You enter the One-Thirty Club.>
+
+	NeededCells 4
+	Content2 <Some 1 100 Sub *BAR_SERVICE>
+	Content3 <Some 1 100 Sub *WEAPON_SHOP>
+	Content4 <Some 1 100 Sub *ARMOR_SHOP>
+	Content5 <Fill Sub *SHOP_RANDOM>
+	sub
+		team 1
+
+		team 2
+		name <Citizens>
+		SetAlly 1
+		Passive
+
+		team 3
+		name <Guards>
+		SetAlly 2
+
+		room
+		name <Foyer>
+		desig <EntranceGrid>
+		Content <Some 4 65 Here *URBAN_X>
+		Content2 <Some 1 100 Here *ANTI_ATTACK_SECURITY 2>
+	end
+	inv
+		NPC Pirate
+		SetTeam 3
+		SetFaction 8
+
+		NPC Pirate
+		SetTeam 3
+		SetFaction 15
+	end
+
 
 	Scene 0 3
 	name <Clund Rock Exterior>
@@ -7140,50 +7194,6 @@ sub
 		Height 15
 
 
-		Scene
-		name <the One-Thirty Club>
-		type <building nightclub meeting public mall sleazy>
-		entrance <*Building Short>
-		special <ADDEXIT>
-		ClubMap
-		MapWidth 20
-		MapHeight 19
-
-		start <Print 1>
-		Msg1 <You enter the One-Thirty Club.>
-
-		NeededCells 4
-		Content2 <Some 1 100 Sub *BAR_SERVICE>
-		Content3 <Some 1 100 Sub *WEAPON_SHOP>
-		Content4 <Some 1 100 Sub *ARMOR_SHOP>
-		Content5 <Fill Sub *SHOP_RANDOM>
-		sub
-			team 1
-
-			team 2
-			name <Citizens>
-			SetAlly 1
-			Passive
-
-			team 3
-			name <Guards>
-			SetAlly 2
-
-			room
-			name <Foyer>
-			desig <EntranceGrid>
-			Content <Some 4 65 Here *URBAN_X>
-			Content2 <Some 1 100 Here *ANTI_ATTACK_SECURITY 2>
-		end
-		inv
-			NPC Pirate
-			SetTeam 3
-			SetFaction 8
-
-			NPC Pirate
-			SetTeam 3
-			SetFaction 15
-		end
 
 
 	% End Clund Rock Exterior...

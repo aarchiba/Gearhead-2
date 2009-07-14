@@ -7,6 +7,119 @@
 %%
 %% NAME: *[city designation]_[building name abbreviated]_[content type]
 
+%% *CLUND_MLP_Content
+%%	Content for the entry dome to Memorial Land.
+
+Content
+	%% Mecha Display 1
+	requires <*CLUND_MLP_Content>
+	minimap <####################1#2#3>
+	element1 <Prefab>
+	element2 <Prefab>
+	element3 <Prefab>
+	inv
+		STC MECHAMODEL-1
+		sdl_colors <211 195 82 222 222 156 211 195 82>
+		SDL_SPRITE <btr_thorshammer.png>
+		PDir 2
+		name <Thorshammer>
+		use <Alert 1>
+		Msg1 <>
+
+		STC MECHAMODEL-1
+		sdl_colors <211 195 82 222 222 156 211 195 82>
+		SDL_SPRITE <btr_buruburu.png>
+		PDir 2
+		use <Alert 1>
+		name <Buru-Buru>
+		Msg1 <The Buru-Buru was used by both sides in the conflict.>
+
+		STC MECHAMODEL-1
+		sdl_colors <211 195 82 222 222 156 211 195 82>
+		SDL_SPRITE <btr_vadel.png>
+		PDir 2
+		name <Vadel>
+		use <Alert 1>
+		Msg1 <>
+	end
+
+Content
+	%% Mecha Display 2
+	requires <*CLUND_MLP_Content>
+	minimap <####################1#2#3>
+	element1 <Prefab>
+	element2 <Prefab>
+	element3 <Prefab>
+	inv
+		STC MECHAMODEL-1
+		sdl_colors <211 195 82 222 222 156 211 195 82>
+		SDL_SPRITE <btr_eyre.png>
+		PDir 2
+		name <Eyre>
+		use <Alert 1>
+		Msg1 <The Eyre was the main battle mecha used by Rishiri Spinner.>
+
+		STC MECHAMODEL-1
+		sdl_colors <211 195 82 222 222 156 211 195 82>
+		PDir 2
+		name <Luna>
+		use <Alert 1>
+		Msg1 <The Aegis Space Force provided military assistance to Rishiri Spinner. They wanted >
+
+		STC MECHAMODEL-1
+		sdl_colors <211 195 82 222 222 156 211 195 82>
+		PDir 2
+		name <Mebsy>
+		use <Alert 1>
+		Msg1 <>
+	end
+
+Content
+	%% Hoblen's gift shop.
+	requires <*CLUND_MLP_Content>
+	minimap <12345........6......&---&LUCRE>
+	element1 <Prefab>
+	element2 <Prefab>
+	element3 <Prefab>
+	element4 <Prefab>
+	element5 <Prefab>
+	element6 <Prefab>
+	team6 <Citizens>
+	teamdata6 <ally pass>
+	sub
+		Persona 6
+		*greeting <*NiceToMeetYou GoShop>
+		GoShop <NewChat Say 1 AddChat 1 AddChat 2>
+		*GoBye <*GOODBYE>
+		result1 <EndChat Say 2 Shop .wares Goto GoBye>
+		.wares <SOUVENIR PIRATE CLOTHING>
+		result2 <Goto GoBye>
+		Msg1 <Welcome to the Memorial Land gift shop. Please enjoy our souvenirs, mementos, and keepsakes.>
+		Msg2 <All of this stuff was made locally, except for the stuff that wasn't.>
+		Prompt1 <I'd like to see what you have.>
+		Prompt2 <I've got enough useless knickknacks already.>
+	end
+	inv
+		STC GAMBLING-1
+		PDir 1
+
+		STC MANNEKIN-M
+		PDir 2
+
+		STC MANNEKIN-F
+		PDir 2
+
+		STC SHOPDISPLAY-WEAPONS-3
+		PDir 2
+
+		STC SHOPDISPLAY-ARMOR-2
+		PDir 2
+
+		NPC Shopkeeper
+		name <Hoblen>
+		chardesc female easygoing melancholy sociable
+		Age -4
+	end
 
 %% *WAGSP_L5LA2_Content
 %%	Content for the 2nd level of the L5Law Academy in Wagner Spinner.
