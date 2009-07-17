@@ -22,7 +22,7 @@ begin
 
 	repeat
 		SpriteName := SelectFile( FileMenu , @RedrawOpening );
-		if SpriteName <> '' then SelectColorPalette( ColorMode, SpriteName, '200 0 0 200 200 0 0 200 0', 100, 150, @ClrScreen );
+		if SpriteName <> '' then SelectColorPalette( ColorMode, SpriteName, '200 0 0 200 200 0 0 200 0', 211, 308, @ClrScreen );
 	until SpriteName = '';
 
 	DisposeRPGMenu( FileMenu );

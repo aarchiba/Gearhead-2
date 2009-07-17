@@ -1368,6 +1368,29 @@ begin
 	glPopMatrix();
 end;
 
+Procedure DrawTestMesh( GB: GameBoardPtr; P: GearPtr );
+	{ DEBUG }
+	{ Draw the needed mesh for this prop. }
+begin
+	{ Push the matrix, then translate to the center of the tile and }
+	{ rotate to the correct angle. }
+	glPushMatrix();
+	glTranslatef( 0.5 , 0 , 0.5 );
+	glRotatef( 90 - NAttValue( P^.NA , NAG_Location , NAS_D ) * 45 , 0 , 1 , 0 );
+
+	glEnable( GL_Lighting );
+	glEnable( GL_Light1 );
+	glEnable( GL_Texture_2D );
+	glBindTexture(GL_TEXTURE_2D, SensibleTexID( 'test_pattern.png' , SpriteColor( GB , P ) , 0) );
+
+	glCallList( 999 );
+	glDisable( GL_Lighting );
+	glDisable( GL_Light1 );
+	glDisable( GL_Texture_2D );
+
+	glPopMatrix();
+end;
+
 Procedure DrawDirectionIndicator( M: GearPtr );
 	{ Draw the direction indicator for this model. }
 const
@@ -1606,6 +1629,9 @@ begin
 						-0.2 ,	{ offset }
 						H ,	{ foot }
 						0 );	{ fade }
+				end else if Use_Test_Mesh then begin
+					{ DEBUG }
+					DrawTestMesh( GB , M );
 				end else begin
 					DrawModel( 	SensibleTexID( SpriteName( M ) , SpriteColor( GB , M ) , ( NAttValue( M^.NA , NAG_Location , NAS_D ) - DirOffset[ origin_d ] + 10 ) mod 8 ) ,
 						W * 0.75,	{ width }
@@ -1913,6 +1939,8 @@ begin
 	for t := 1 to Num_Prop_Meshes do begin
 		Load_Obj_Mesh( data_directory + 'mesh' + BStr( T ) + '.obj' , T );
 	end;
+	{ DEBUG }
+	Load_Obj_Mesh( data_directory + 'test_mesh.obj' , 999 );
 end;
 
 Procedure FocusOn( Mek: GearPtr );

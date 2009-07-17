@@ -416,6 +416,7 @@ const
 	Minimal_Screen_Refresh: Boolean = False;
 	Use_Software_Surface: Boolean = False;
 	Use_Paper_Dolls: Boolean = False;
+	Use_Test_Mesh: Boolean = False;
 
 	Full_RPGWorld_Info: Boolean = False;
 
@@ -589,6 +590,8 @@ begin
 
 				end else if cmd = 'PAPERDOLLS' then begin
 					Use_Paper_Dolls := True;
+				end else if cmd = 'TESTMESH' then begin
+					Use_Test_Mesh := True;
 
 				end else if cmd = 'GIMMEGIMMECHOICE' then begin
 					XXRan_Wizard := True;
@@ -600,6 +603,9 @@ begin
 					ArenaMode_Wizard := True;
 				end else if cmd = 'DEMIURGE' then begin
 					Full_RPGWorld_Info := True;
+
+				end else if cmd[1] = '#' then begin
+					S := '';
 
 				end;
 			end;
@@ -631,6 +637,12 @@ begin
 	{ open it up and start reading. }
 	Assign( F , Config_File );
 	Rewrite( F );
+
+	writeln( F , '#' );
+	writeln( F , '# ATTENTION:' );
+	writeln( F , '#   Only edit the config file if GearHead is not running.' );
+	writeln( F , '#   Configuration saved at game exit.' );
+	writeln( F , '#' );
 
 	for t := 1 to NumMappedKeys do begin
 		WriteLn( F, KeyMap[t].CmdName + ' ' + KeyMap[t].KCode );
@@ -680,6 +692,7 @@ begin
 	AddBoolean( 'REVERT_SLOWER_SAFER' , Revert_Slower_Safer );
 	AddBoolean( 'NAMESON' , Names_Above_Heads );
 	AddBoolean( 'PAPERDOLLS' , Use_Paper_Dolls );
+	AddBoolean( 'TESTMESH' , Use_Test_Mesh );
 
 	{ The "secret options" come at the end. These tokens only get }
 	{ included if they're already set. }
