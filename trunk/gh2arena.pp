@@ -368,17 +368,15 @@ end;
 Procedure DoFullRepair( HQCamp: CampaignPtr; Part: GearPtr );
 	{ Do all the repair that this gear needs. }
 var
-	Skill: Integer;
+	Material: Integer;
 	Cost,TRD: LongInt;
 begin
-	for Skill := 1 to NumSkill do begin
-		if SkillMan[ Skill].Usage = USAGE_Repair then begin
-			Cost := RepairMasterCost( Part , Skill );
-			if Cost > 0 then begin
-				TRD := TotalRepairableDamage( Part , SKill );
-				ApplyRepairPoints( Part , Skill , TRD , True );
-				AddNAtt( HQCamp^.Source^.NA , NAG_Experience , NAS_Credits , -Cost );
-			end;
+	for Material := 0 to NumMaterial do begin
+		Cost := RepairMasterCost( Part , Material );
+		if Cost > 0 then begin
+			TRD := TotalRepairableDamage( Part , Material );
+			ApplyRepairPoints( Part , Material , TRD , True );
+			AddNAtt( HQCamp^.Source^.NA , NAG_Experience , NAS_Credits , -Cost );
 		end;
 	end;
 end;

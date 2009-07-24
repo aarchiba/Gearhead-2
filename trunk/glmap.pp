@@ -882,6 +882,7 @@ Procedure DrawWall2( Tex: Integer; H: GLFloat; C: TSDL_COlor; ShowRoof: Boolean 
 begin
 	if ShowRoof then begin
 		glDisable( GL_Lighting );
+		glDisable( GL_Texture_2D );
 		glbegin( GL_QUADS );
 		GLNormal3i( 0 , 1 , 0 );
 		GLColor3ub( C.R , C.G , C.B );
@@ -1381,7 +1382,7 @@ begin
 	glEnable( GL_Lighting );
 	glEnable( GL_Light1 );
 	glEnable( GL_Texture_2D );
-	glBindTexture(GL_TEXTURE_2D, SensibleTexID( 'test_pattern.png' , SpriteColor( GB , P ) , 0) );
+	glBindTexture(GL_TEXTURE_2D, SensibleTexID( 'test_mecha.png' , SpriteColor( GB , P ) , 0 , 128 ) );
 
 	glCallList( 999 );
 	glDisable( GL_Lighting );

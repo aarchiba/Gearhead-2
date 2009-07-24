@@ -14,20 +14,23 @@ Content
 	% E1 is the exterior scene
 	% E2 is the Memorial Land entry dome
 	% E3 is the Memorial Land main dome
-	% E4 is the ruin surface
-	% E5 is the main ruin dungeon
-	% E6 is the lower ruin dungeon
+	% E4 is the property manager who can open the door to the ruins.
+	% E5 is the ruin surface
+	% E6 is the main ruin dungeon
+	% E7 is the lower ruin dungeon
 	Element1 <Scene Outdoors>
 	Element2 <QuestScene>
 	Place2 <1>
-%	Element3 <QuestScene>
+	Element3 <QuestScene>
 	Place3 <2>
-%	Element4 <QuestScene>
-	Place4 <1>
+	Element4 <Prefab>
+	Place4 <3>
 %	Element5 <QuestScene>
-	Place5 <4>
+	Place5 <1>
 %	Element6 <QuestScene>
 	Place6 <5>
+%	Element7 <QuestScene>
+	Place7 <6>
 
 	% SubPlot1 = Upper Ruins Quest
 %	SubPlot1 <*:Q_DungeonQuest #25 5>
@@ -65,13 +68,89 @@ Content
 			SetAlly 2
 
 			room
+			minimap <############2###...##...#>
+			special <SHAREDPALETTE NOGO>
+			inv
+				Elevator
+				MiniMapComponent 2
+				desig <ENTRANCE %3%>
+				% V1 = Admission Timer
+				use <ifG V1 ComTime else GoBuyTicket Exit Destination>
+				GoBuyTicket <ifYesNo 2 3 4 ifG PC$ 4999 else GoNoMoney Cash+ -5000  V= 1 ComTime  V+ 1 86401  Exit Destination>
+				GoNoMoney <Print 5>
+				CLUE_INSIGHT <Print 1>
+				Msg1 <The admission fee is apparently $5000.>
+				Msg2 <Memorial Land Garden- where the horrors of yesterday become the thrills of tomorrow! A one day pass is $5000.>
+				Msg3 <Enter the park. [Pay $5000]>
+				Msg4 <That's too much for me.>
+				Msg5 <You don't have enough money to enter the park.>
+			end
+
+			room
 			name <Foyer>
 			desig <EntranceGrid>
 			Content <Some 4 65 Here *URBAN_X>
 			Content2 <Some 1 100 Here *ANTI_ATTACK_SECURITY 2>
 		end
 
+		MetaScene 3
+		name <Memorial Land Garden>
+		type <building public meeting amusement>
+		special <ADDEXIT>
+		BoxMap
+		MapWidth 22
+		MapHeight 22
+		FloorType 1
 
+		% L1 = Have unlocked the ruins.
+		% L2 = Number of games won.
+
+		start <Print 1>
+		Msg1 <You enter Memorial Land Garden.>
+
+		NeededCells 4
+
+		Content <Some 4 65 Here *URBAN_X>
+		Content2 <Some 1 100 Here *ANTI_ATTACK_SECURITY 2>
+		Content3 <Variety 4 4 Sub *CLUND_MLP2_Content>
+
+		sub
+			team 1
+
+			team 2
+			name <Citizens>
+			SetAlly 1
+			Passive
+
+			team 3
+			name <Guards>
+			SetAlly 2
+
+			rect
+			forest
+			forest
+		end
+
+		Persona 4
+		greeting <>
+
+		MetaScene 4
+		% The home for the property manager
+		sub
+			rect
+			desig <HOME>
+			minimap <      ###  #2#    1      >
+			inv
+				Elevator
+				MiniMapComponent 2
+				desig <ENTRANCE %6%>
+				use <>
+			end
+		end
+	end
+	sub
+		NPC Trucker
+		job <Property Manager>
 	end
 
 

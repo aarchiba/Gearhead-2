@@ -7,6 +7,46 @@
 %%
 %% NAME: *[city designation]_[building name abbreviated]_[content type]
 
+%% *CLUND_MLP2_Content
+%%	Content for Memorial Land. Each game won will add one to L2;
+%%	once all four games are won, the property manager will let the
+%%	PC into the Ruins of Terror.
+
+Content
+	name <Escape Pod Ride>
+	% This ride will test the PC's Vitality
+	requires <*CLUND_MLP2_Content>
+	minimap <       1   &#&  &       >
+	Element1 <Prefab>
+	inv
+		Elevator
+		% V1 = Have completed ride
+		use <ifYesNo 1 2 3 STAMINA PCMoraleDmg -20 if= V1 0 else GoCompleted ifSkillTest NAS_Vitality STAT_Ego HardSkillTar 35 else GoFailRoll >
+		GoFailRoll <>
+		GoCompleted <>
+
+		Msg1 <>
+		Msg2 <>
+		Msg3 <>
+	end
+
+Content
+	name <Comet Dropper>
+	% This ride will test the PC's Athletics
+	requires <*CLUND_MLP2_Content>
+
+Content
+	name <Bumper Buru-Burus>
+	% This ride will test the PC's Mecha Piloting
+	requires <*CLUND_MLP2_Content>
+
+Content
+	name <Shell Game>
+	% This ride will test the PC's Concentration
+	requires <*CLUND_MLP2_Content>
+
+
+
 %% *CLUND_MLP_Content
 %%	Content for the entry dome to Memorial Land.
 
@@ -24,7 +64,7 @@ Content
 		PDir 2
 		name <Thorshammer>
 		use <Alert 1>
-		Msg1 <>
+		Msg1 <The Thorshammer was the most powerful mecha fielded by the Clund Rock defense force. Due to their low mobility, they were positioned to defend the habitation dome and didn't see much combat action.>
 
 		STC MECHAMODEL-1
 		sdl_colors <211 195 82 222 222 156 211 195 82>
@@ -32,7 +72,7 @@ Content
 		PDir 2
 		use <Alert 1>
 		name <Buru-Buru>
-		Msg1 <The Buru-Buru was used by both sides in the conflict. >
+		Msg1 <The Buru-Buru was used by both sides in the conflict. Consequently, following the battle there was a glut in the local market for salvaged Buru-Buru parts.>
 
 		STC MECHAMODEL-1
 		sdl_colors <211 195 82 222 222 156 211 195 82>
@@ -40,7 +80,7 @@ Content
 		PDir 2
 		name <Vadel>
 		use <Alert 1>
-		Msg1 <>
+		Msg1 <The Vadel was the only unit on the defensive side with the mobility to intercept the attackers wherever they landed. By the end of hostilities only two of these mecha were still functioning.>
 	end
 
 Content
@@ -71,7 +111,7 @@ Content
 		PDir 2
 		name <Mebsy>
 		use <Alert 1>
-		Msg1 <Industrial mecha such as the Mebsy were pressed into service to help defend Clund Rock. Many brave truckers, miners, and prospectors gave their lives to press back the invaders.>
+		Msg1 <Industrial mecha such as the Mebsy were pressed into service to help defend Clund Rock. Many brave truckers, miners, and prospectors gave their lives to hold back the invaders.>
 	end
 
 Content

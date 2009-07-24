@@ -205,6 +205,7 @@
 	L[idnum]		Local variable value
 	MAPTILE [X] [Y]		Terrain value of tile X,Y
 	N[idnum]		Story (Narrative) element value
+	NEXTDAY			Returns the start of the next game day
 	NPCREP [CID] [idnum]	NPC's reputation score
 	P[idnum]		Plot variable value
 	PCFAC			PC's faction ID
