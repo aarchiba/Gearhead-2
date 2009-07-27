@@ -81,7 +81,7 @@ Const
 	NAV_Spotted = 1;
 	NAV_Hidden = 0;
 
-	NAG_SideReaction = -1;	{ Same as Location, since teams are virtual. }
+	NAG_SideReaction = -24;
 	NAV_AreEnemies = -1;
 	NAV_AreNeutral = 0;
 	NAV_AreAllies = 1;

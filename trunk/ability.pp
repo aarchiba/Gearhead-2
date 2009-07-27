@@ -528,7 +528,7 @@ begin
 
 	Pilot := LocatePilot( Mek );
 	if Pilot <> Nil then begin
-		it := it + ( Pilot^.Stat[ STAT_Perception ] div 3 );
+		it := it + ( CStat( Pilot , STAT_Perception ) div 3 );
 	end;
 
 	{ Adjust the mapping range for scale. }

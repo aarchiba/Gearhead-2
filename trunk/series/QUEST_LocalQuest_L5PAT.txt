@@ -15,7 +15,7 @@ Content
 	% E2 is the Memorial Land entry dome
 	% E3 is the Memorial Land main dome
 	% E4 is the property manager who can open the door to the ruins.
-	% E5 is the ruin surface
+	% E5 is the ruin surface (the Boneyard)
 	% E6 is the main ruin dungeon
 	% E7 is the lower ruin dungeon
 	Element1 <Scene Outdoors>
@@ -24,16 +24,16 @@ Content
 	Element3 <QuestScene>
 	Place3 <2>
 	Element4 <Prefab>
-	Place4 <3>
-%	Element5 <QuestScene>
+	Place4 <3 (Citizens) pass>
+	Element5 <QuestScene>
 	Place5 <1>
-%	Element6 <QuestScene>
+	Element6 <QuestScene>
 	Place6 <5>
 %	Element7 <QuestScene>
-	Place7 <6>
+%	Place7 <6>
 
 	% SubPlot1 = Upper Ruins Quest
-%	SubPlot1 <*:Q_DungeonQuest #25 5>
+	SubPlot1 <*:Q_DungeonQuest #40 6>
 
 	sub
 		MetaScene 2
@@ -44,6 +44,7 @@ Content
 		ClubMap
 		MapWidth 22
 		MapHeight 22
+		PalaceParkTiles
 
 		% L1 = First time entry counter
 		start <if= L1 0 else GoBeenBefore Alert 2 L= 1 1>
@@ -101,6 +102,7 @@ Content
 		MapWidth 22
 		MapHeight 22
 		FloorType 1
+		PalaceParkTiles
 
 		% L1 = Have unlocked the ruins.
 		% L2 = Number of games won.
@@ -132,23 +134,171 @@ Content
 		end
 
 		Persona 4
-		greeting <>
+		*greeting <*NiceToMeetYou GoCheckGate>
+		GoCheckGate <if= SceneID %3% else GoChat if= SceneVar %3% 1 0 else GoChat NewChat Say 1 AddChat 1 AddChat 2>
+		GoChat <NewChat SayAnything>
+		GoOpenRuins <History 5 Print 6 L= 1 1 XPV 100>
+		result1 <NewChat Say 2>
+		result2 <NewChat Say 3 AddChat 3 AddChat 4 AddChat 5>
+		result3 <NewChat Say 4 Goto GoOpenRuins>
+		result4 <NewChat Say 7 AddChat 3 AddChat 5>
+		result5 <NewChat Say 8 Cash+ -10000 Goto GoOpenRuins>
+		Msg1 <If you have any problems here in the park just let me know. I'm the one who keeps this place running.>
+		Msg2 <Good to hear. You have a good time, now.>
+		Msg3 <Yeh, they said there's a safety problem, some tourists never came back from down there. No big problem. There's plenty of other rides you can take.>
+		Msg4 <Hmph. I guess I can't fault you for wanting to get in, then. I'll open the gate for you, but make sure you've got a proper suit before going down... and you might also want to pack a gun.>
+		Msg5 <%name4% opened the Ruins of Terror for you on Clund Rock.>
+		Msg6 <%name4% opens the Ruins of Terror.>
+		Msg7 <And I want you to shut up, but we don't always get what we want now do we? There's plenty of other stuff to do here, go do that.>
+		Msg8 <Hmm... Now, you realize that I can't vouch for your safety down there, don't you? Make sure you've got a good suit before heading down, and you'll probably also want to take a gun...>
+		Prompt1 <No problems, thanks. Everything's fine.>
+		Prompt2 <Uh, the Ruins of Terror are locked.>
+		Prompt3 <I'm bored with all the rides. I want the ruins!>
+		CPrompt3 <ifG L2 3 Accept>
+		Prompt4 <But I wanna see the ruins now!>
+		Prompt5 <I'll pay $10000 to get in. [Give $10000]>
+		CPrompt5 <ifG PC$ 9999 ifShopping HardSkillTar 35 Accept>
 
 		MetaScene 4
 		% The home for the property manager
 		sub
 			rect
 			desig <HOME>
-			minimap <      ###  #2#    1      >
+			minimap <      ###  #2#  ..1      >
 			inv
 				Elevator
+				name <Ruins of Terror>
 				MiniMapComponent 2
 				desig <ENTRANCE %6%>
-				use <>
+				use <if# L1 0 else GoLocked Exit Destination>
+				GoLocked <Alert 1>
+				CLUE_CodeBreaking <if= L1 0 else GoUnLocked Mental ifCodeBreaking HardSkillTar 35 else GoNoGood Print 4 L= 1 1 XPV 50>
+				GoUnlocked <Print 2>
+				GoNoGood <Print 3>
+				Msg1 <You attempt to enter the Ruins of Terror, but the door is locked. A small sign indicates that this attraction has been closed for maintenance.>
+				Msg2 <This door isn't locked anymore.>
+				Msg3 <The lock on this door is beyond your ability to pick.>
+				msg4 <You pick the lock on this door. Inside, you find what appears to be an airlock.>
+			end
+		end
+
+		MetaScene 5
+		name <the Boneyard>
+		type <asteroid ruin>
+		terrain <SPACE>
+		habitat <SPACE.ASTER>
+		entrance <*Building SHORT>
+		% Suffocation effect...
+		Vacuum
+		Ceiling
+		mapwidth 50
+		mapheight 50
+		AsteroidMap
+		RockyTiles
+		SpaceBackdrop
+		DifficultyLevel 20
+		% L1 = First time entry counter
+		% L2 = Have discovered trapdoor
+		start <if= L1 0 else GoBeenBefore Alert 1 L= 1 1>
+		GoBeenBefore <Print 2>
+		msg1 <Many years ago this was the site of a fierce battle between the Rishiri Space Force and the Bohemians. Today the landscape is scarred with ruined buildings and twisted metal.>
+		msg2 <You enter the boneyard.>
+		sub
+			Team 1
+			SetEnemy 2
+
+			Team 2
+			name <Monster>
+			type <Ruins Exorg Fungus Asteroid>
+			SetEnemy 1
+			Stat 2 1
+
+			rect
+			width 5
+			height 5
+			mfx 1
+			mfy 1
+			special <STARTHERE>
+
+			room
+			width 5
+			height 5
+			minimap <      1..  .2.  ...      >
+			inv
+				STC RUBBLE-INDESTRUCTIBLE
+				CLUE_SCIENCE <Print 1>
+				CLUE_SURVIVAL <Print 1>
+				MiniMapComponent 1
+				CLUE_INSIGHT <if= L2 0 else GoDone ifInsight HardSkillTar 35 else GoFail Print 2 XPV 50 L= 2 1 UpdateProps>
+				GoFail <Print 3>
+				GoDone <Print 4>
+				Msg1 <This pile of rubble doesn't appear to have been naturally formed.>
+				Msg2 <You locate a hidden switch in this pile of rubble. Pressing it opens a concealed trapdoor.>
+				Msg3 <You can't see anything special about this rubble.>
+				Msg4 <This rubble is of no use to you.>
+
+				TrapDoor
+				MiniMapComponent 2
+				desig <ENTRANCE %6%>
+				Hide -1
+				update <if# L2 0 SetStat STAT_MetaVisibility 0>
+			end
+		end
+
+		MetaScene 6
+		name <the Ruins of Terror>
+		special <NOEXIT>
+		type <DUNGEON asteroid cave ruins>
+		terrain <SPACE>
+		habitat <SPACE.ASTER>
+		dentrance <*GoDown>
+		content1 <Some 1 45 Sub *DUNGEON_THREAT>
+		content2 <Some 1 40 Sub *DUNGEON_DECOR>
+		content3 <Some 1 30 Sub *DUNGEON_REWARD>
+		% Suffocation effect...
+		Vacuum
+		Ceiling
+		mapwidth 30
+		mapheight 30
+		CaveMap
+		RockyTiles
+		NeededCells 3
+		start <Print 1 if= PlotStatus %plotid1% 0 SetPlotStatus %plotid1% %id1%>
+		DifficultyLevel 36
+		msg1 <You enter \SCENE SceneID .>
+		sub
+			Team 1
+			SetEnemy 2
+
+			Team 2
+			name <Monster>
+			type <Cave Exorg Fungus Asteroid Ruins>
+			SetEnemy 1
+			Stat 2 1
+
+			room
+			width 3
+			height 3
+			sub
+				StairsUp
+				Destination -1
+				% The stairs up here will reveal the trapdoor if entering the Boneyard
+				use <Print 1 Exit Destination if= Destination %5% SceneVar= %5% 2 1>
+			end
+
+			room
+			width 3
+			height 3
+			ForEntryLevel
+			sub
+				StairsUp
+				desig <ENTRANCE %3%>
+				% The stairs here will unlock the attraction if entering Memorial Land Garden
+				use <Print 1 Exit Destination SceneVar= %3% 1 1>
 			end
 		end
 	end
-	sub
+	inv
 		NPC Trucker
 		job <Property Manager>
 	end

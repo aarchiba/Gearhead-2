@@ -641,7 +641,7 @@ begin
 	writeln( F , '#' );
 	writeln( F , '# ATTENTION:' );
 	writeln( F , '#   Only edit the config file if GearHead is not running.' );
-	writeln( F , '#   Configuration saved at game exit.' );
+	writeln( F , '#   Configuration overwritten at game exit.' );
 	writeln( F , '#' );
 
 	for t := 1 to NumMappedKeys do begin

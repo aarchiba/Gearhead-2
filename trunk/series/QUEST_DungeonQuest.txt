@@ -92,9 +92,72 @@ Content
 		chardesc Male
 	end
 
+Content
+	name <Artifact Recovery 2>
+	requires <*:Q_DungeonQuest>
+
+	% E1 is the dungeon involved
+	% E2 is a local public scene
+	% E3 is an adventurer who is looking for an artifact
+	% E4 is the artifact being sought
+	Element2 <Scene Public (Building|Meeting|School)>
+	Element3 <Prefab>
+	Place3 <2 (Citizens) pass ally>
+	Element4 <Artifact>
+
+	% P%id%01 = Initialization Counter
+	% P%id%02 = Have accepted quest
+
+	%% FAIL CONDITIONS:
+	%% - E4 gets destroyed
+	%% - E3 dies
+
+	update <if= P%id%01 0 P= %id%01 1 MoveItem %4% %1%>
+	end <ifItemDestroyed %4% else .%id%_GoCheckDeath if= P%id%02 0 else .%id%_GoFailTask CancelSubPlot %plotid%>
+	.%id%_GoFailTask <SetPlotStatus %plotid2% %id2%>
+	.%id%_GoCheckDeath <ifNPCDead %3% CancelSubPlot %plotid%>
+
+	% If the PC gets the item, call the Win Fetch subplot.
+	Get%4% <if= P%id%02 1 else .%id%_GoFetchNoMission SetPlotStatus %plotid1% %id1%>
+	.%id%_GoFetchNoMission <SetPlotStatus %plotid3% %id3%>
+
+	% SubPlot1 is the win fetch quest.
+	% SubPlot2 is the task lost quest.
+	% SubPlot3 is the didn't-accept-quest-but-fetched-anyways bit.
+	SubPlot1 <*Q_Win_FetchItem 3 4>
+	SubPlot2 <*Q_LoseTask 3>
+	SubPlot3 <*Q_FetchWantedItem 3 4>
+
+	sub
+		Persona 3
+		rumor%id% <%name3% is looking for something in %name1%.>
+		greeting <if= PlotStatus %plotid% %id% else %pop% if= P%id%02 0 else .%id%_GoRemind Goto .%id%_GoGreet>
+		*.%id%_GoRemind <*GenericMissionReminder>
+		*.%id%_GoGreet <*AreYouHereAboutJob .%id%_GoBriefing>
+		.%id%_GoBriefing <NewChat Say %id%01 AddChat %id%01 AddChat %id%02 AddChat %id%03>
+		result%id%01 <NewChat Say %id%02 AddChat %id%04 AddChat %id%05>
+		*result%id%02 <*RejectMission .%id%_GoR2Exit>
+		.%id%_GoR2Exit <AddReact -10   CancelSubPlot %plotid%>
+		result%id%03 <NewChat Say %id%03 AddChat %id%04 AddChat %id%05>
+		result%id%04 <NewChat Say %id%04 QMemo %plotid% %id%05 P= %id%02 1>
+		result%id%05 <Goto result%id%02>
+		Msg%id%01 <I've come to \SCENE RootSceneID to find an item called the %name4%. \ITEM_DESC %4%>
+		Msg%id%02 <Ah, but it wouldn't make much sense for me to tell you that... unless you were willing to help me retrieve it.>
+		Msg%id%03 <\ITEM_HISTORY %4% \ITEM_USAGE %4% If you find it for me you'll be greatly rewarded.>
+		Msg%id%04 <The %name4% was last seen in %name1%. That's where I would begin searching, were I you.>
+		Msg%id%05 <%name3% in %name2% hired you to recover the %name4% from %name1%.>
+		Prompt%id%01 <Where do you think it is?>
+		Prompt%id%02 <Sorry, I'm not in the fetch business.>
+		Prompt%id%03 <Can you tell me some more about it?>
+		Prompt%id%04 <Alright, I'll return to you when I've found it.>
+		Prompt%id%05 <Sorry, I don't want this job.>
+	end
+	inv
+		NPC Explorer
+	end
 
 Content
-	name <Artifact Recovery>
+	name <Artifact Recovery 1>
 	requires <*:Q_DungeonQuest>
 
 	% E1 is the dungeon involved

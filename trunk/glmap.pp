@@ -1034,6 +1034,8 @@ var
 begin
 	glDisable( GL_Lighting );
 	glDisable( GL_Texture );
+	glDisable( GL_Texture_2D );
+	glEnable( GL_BLEND );
 	Flash := FineDir[ ( Animation_Phase ) mod Num_Rotation_Angles , 1 ] / 20;
 
 	for t := 1 to 5 do begin
