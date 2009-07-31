@@ -4,6 +4,8 @@
 %% A dungeon is a dangerous place filled with monsters. We give them dungeon
 %% quests in order to prevent them from being boring.
 %%
+%% Set label to *:Q_DDungeonQuest for debuging.
+%%
 %%
 %%  PARAM1: The dungeon involved
 %%
@@ -224,4 +226,29 @@ Content
 		NPC Professor
 	end
 
+%%
+%% *:Debug Frame
+%%
+%% Loads a dungeon quest into the Cavalier's Club for easy debugging.
+%%
+
+Content
+	requires <*:Q_Debug>
+
+	% E1 is the CavClub
+	% E2 is the new dungeon
+	Element1 <Scene CavClub>
+	Element2 <QuestScene>
+	Place2 <1>
+
+	update <if= PlotStatus %plotid1% 0 SetPlotStatus %plotid1% %id1%>
+
+	% SubQuest1 is the mission.
+	SubPlot1 <*:Q_DDungeonQuest 2>
+
+	sub
+		STC QS_Dungeon_Sewer
+		SetID 2
+		entrance <*GoDown>
+	end
 

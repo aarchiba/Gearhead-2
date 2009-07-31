@@ -2129,7 +2129,7 @@ desc <(SKELETON) Repair and reinforcement for damaged bones.>
 CyberSlot <SKELETON>
 Category <MEDICINE>
 Factions <GENERAL>
-Body 2
+Body 1
 Mass 25
 legality -20
 
@@ -2139,7 +2139,7 @@ desc <(SKELETON) A structurally-strengthened skeleton.>
 CyberSlot <SKELETON>
 Category <CYBERWARE>
 Factions <GENERAL>
-Body 5
+Body 3
 Speed -1
 Mass 25
 legality 10
@@ -2151,7 +2151,7 @@ Category <CYBERWARE>
 Factions <GENERAL>
 CyberSlot <SKELETON>
 Body -1
-Speed 4
+Speed 2
 Reflexes 1
 legality 5
 
@@ -2161,8 +2161,8 @@ desc <(SPINE) Does away with the fragile nature of a human's organic spine.>
 Category <CYBERWARE>
 Factions <GENERAL>
 CyberSlot <SPINE>
-Body 4
-Ego 4
+Body 3
+Ego 3
 Speed -1
 Mass 16
 legality 5
@@ -2184,10 +2184,10 @@ desc <(SPINE) Replaces many of the spinal nerves with fiber-optic data transmiss
 Category <CYBERWARE>
 Factions <GENERAL>
 CyberSlot <SPINE>
-Speed 3
-Craft 2
+Speed 2
+Craft 1
 Reflexes 1
-Knowledge 2
+Knowledge 1
 Body -1
 Mass 10
 Legality 10
@@ -2198,11 +2198,11 @@ desc <(BRAIN) Takes advantage of certain predator instincts found in animals of 
 Category <CYBERWARE>
 Factions <GENERAL>
 CyberSlot <BRAIN>
-Body 2
-Reflexes 5
-Speed 4
-Perception 3
-Ego 2
+Body 1
+Reflexes 4
+Speed 3
+Perception 2
+Ego 1
 Knowledge -3
 Charm -1
 Mass 15
@@ -2214,7 +2214,7 @@ desc <(MUSCULATURE) Replaces conventional muscles with a technologically-improve
 Category <CYBERWARE>
 Factions <GENERAL>
 CyberSlot <MUSCULATURE>
-Body 4
+Body 3
 Mass 20
 legality 10
 
@@ -2235,21 +2235,32 @@ desc <(MUSCULATURE) Synthetic reinforcements for the augmentation or repair of m
 Category <MEDICINE>
 Factions <GENERAL>
 CyberSlot <MUSCULATURE>
-Body 2
+Body 1
 Mass 20
 legality -10
 
 StatCyberware
-Name <Cyber Eyes>
+Name <Cybereyes>
 desc <(EYES) These eyes include resolution enhancers.>
 Category <CYBERWARE MEDICINE>
 Factions <GENERAL>
 CyberSlot <EYES>
-Reflexes 2
-Perception 3
+Perception 1
 Charm -1
 Mass 1
 legality -5
+
+StatCyberware
+Name <Advanced Cybereyes>
+desc <(EYES) These eyes include resolution enhancers.>
+Category <CYBERWARE MEDICINE>
+Factions <GENERAL>
+CyberSlot <EYES>
+Reflexes 1
+Perception 2
+Charm -1
+Mass 1
+legality 10
 
 StatCyberware
 Name <Fashion Cybereyes>
@@ -2342,7 +2353,7 @@ desc <(BRAIN) Tunes the mind to detect tiny inputs that would otherwise go unnot
 Category <CYBERWARE>
 Factions <GENERAL>
 CyberSlot <BRAIN>
-Perception 5
+Perception 3
 Mass 2
 legality 5
 
@@ -2352,7 +2363,7 @@ desc <(BRAIN) Works with the existing synapses of the brain to greatly boost dat
 Category <CYBERWARE>
 Factions <GENERAL>
 CyberSlot <BRAIN>
-Knowledge 5
+Knowledge 3
 Mass 1
 legality 10
 

@@ -428,7 +428,7 @@ Content
 		.%id%_skills <1 2 3 4 5 6>
 		result%id%02 <NewChat Say %id%04>
 		result%id%03 <Goto result%id%01>
-		result%id%04 <NewChat Say %id%07 History %id%06 DeleteItem %2% AddReact 10 AddEasygoing  d6  CashPrize %threat% 200  SetPlotStatus %plotid% -1 AddChat %id%03>
+		result%id%04 <NewChat Say %id%07 History %id%06 DeleteItem %2% AddReact 10 AddEasygoing  d6  CashPrize Reward %threat% 200  SetPlotStatus %plotid% -1 AddChat %id%03>
 		result%id%05 <NewChat Say %id%08 History %id%06                            AddEasygoing -d10                         SetPlotStatus %plotid% -1 AddChat %id%03>
 		Msg%id%01 <So this is the %name2%... May I have it?>
 		Msg%id%02 <Hello \PC . Are you in the mood for some training?>

@@ -71,13 +71,14 @@ Procedure RandomLoot( Box: GearPtr; SRP: LongInt; const l_type,l_factions: Strin
 
 implementation
 
+uses ghswag,
 {$IFDEF ASCII}
-uses vidgfx;
+	vidgfx;
 {$ELSE}
 {$IFDEF CUTE}
-uses cutegfx;
+	cutegfx;
 {$ELSE}
-uses glgfx;
+	glgfx;
 {$ENDIF}
 {$ENDIF}
 
@@ -1467,6 +1468,151 @@ begin
 	Close( F );
 end;
 
+Procedure SetEquipmentLevels( TestType: Integer );
+	{ Equipment will be ranked by relative value. How is relative value calculated? }
+	{ First determine what "class" an item belongs in. Sort all items belonging to this }
+	{ class based on value. Finally, break the items into 10 value bands based on their }
+	{ position in the list. }
+	{ If TESTTYPE is nonzero, the contents of this type will be written to out.txt }
+type
+	SELRecord = Record
+		Item: GearPtr;		{ The gear we're talking about. }
+		EClass,ERank: Integer;	{ What kind of gear is it? What's its current rank? }
+		EValue: LongInt;	{ What's this gear's value? }
+	end;
+const
+	IC_MechaGear = -1;
+	IC_MissileWeapon = -2;
+	IC_MeleeWeapon = -3;
+	IC_Food = -4;
+	IC_Medicine = -5;
+	Function ItemClass( Item: GearPtr ): Integer;
+		{ Return the class this item belongs to. In general, this will be the }
+		{ "G" value of the item, unless it's a set in which case it'll be the }
+		{ value of the first invcom. }
+	begin
+		if Item^.G = GG_Set then begin
+			ItemClass := ItemClass( Item^.InvCom );
+		end else if Item^.Scale > 0 then begin
+			ItemClass := IC_MechaGear;
+		end else if Item^.G = GG_Weapon then begin
+			if ( Item^.S = GS_Melee ) or ( Item^.S = GS_EMelee ) then ItemClass := IC_MeleeWeapon
+			else ItemClass := IC_MissileWeapon;
+		end else if Item^.G = GG_Consumable then begin
+			if ( Item^.Stat[ STAT_FoodEffectType ] = 0 ) then ItemClass := IC_Food
+			else ItemClass := IC_Medicine;
+		end else begin
+			ItemClass := Item^.G;
+		end;
+	end;
+	Function ELGearCost( Item: GearPtr ): LongInt;
+		{ Return the value of this item, or the average value of items }
+		{ in a set. }
+	var
+		it: LongInt;
+	begin
+		it := GearCost( Item );
+		if ( Item^.G = GG_Set ) and ( Item^.InvCom <> Nil ) then it := it div NumSiblingGears( Item^.InvCom );
+		ELGearCost := it;
+	end;
+var
+	SEL: Array of SelRecord;
+	Num_Items: Integer;
+	Function ItemRanking( N: Integer ): Integer;
+		{ Determine this item's ranking in the current list. }
+		{ Adjust the rank of other items to compensate. }
+	var
+		Rank,T: Integer;
+	begin
+		Rank := 1;
+		for T := 0 to ( N-1 ) do begin
+			if SEL[t].EClass = SEL[n].EClass then begin
+				if SEL[t].EValue > SEL[n].EValue then begin
+					{ No idea where N places yet, but it's gotta be }
+					{ below T. }
+					Inc( SEL[t].ERank );
+				end else if SEL[t].ERank >= Rank then begin
+					{ This item isn't more expensive than N, but has }
+					{ a higher rank. Better fix that. }
+					Rank := SEL[t].ERank + 1;
+				end;
+			end;
+		end;
+		ItemRanking := Rank;
+	end;
+	Procedure RateClass( EClass: Integer );
+		{ Count the number of members in this class. Then, assign each member }
+		{ a shop rank of 1 to 10 based on its position in the list. While doing this }
+		{ zero out each item's value so we don't end up processing the same }
+		{ category twice. }
+	var
+		T,N,SRank: Integer;
+		SList: SAttPtr;
+	begin
+		{ Step One: Count the members. }
+		N := 0;
+		for t := 0 to ( Num_Items - 1 ) do begin
+			if SEL[t].EClass = EClass then Inc( N );
+		end;
+		SList := Nil;
+
+		{ Step Two: Set the ratings. }
+		for t := 0 to ( Num_Items - 1 ) do begin
+			if SEL[t].EClass = EClass then begin
+				{ We know how many items are in this class, and this item's }
+				{ position within that list. From this information we should be able }
+				{ to calculate a shop rank for it. }
+				{ If there are fewer than 10 items in this class, just use the ranking }
+				{ as the shop rank and leave the higher shop ranks empty. }
+				if N <= 10 then begin
+					SRank := SEL[t].ERank;
+				end else begin
+					SRank := ( ( SEL[t].ERank -1 ) * 10 ) div N + 1;
+				end;
+
+				{ Store the rank in the item. }
+				SetNAtt( SEL[t].Item^.NA , NAG_GearOps , NAS_ShopRank , SRank );
+				if ( TestType <> 0 ) and ( EClass = TestType ) then StoreSAtt( SList , WideStr( SRank , 2 ) + ' ' + WideStr( SEL[t].ERank , 3 ) + ' ' + FullGearName( SEL[t].Item ) + ' ($' + BStr( GearCost( SEL[t].Item ) ) + ')' );
+
+				SEL[t].EValue := 0;
+			end;
+		end;
+		if SList <> Nil then begin
+			SortStringList( SList );
+			SaveStringList( 'out.txt' , SList );
+			DisposeSAtt( SList );
+		end;
+	end;
+var
+	T: Integer;
+	Item: GearPtr;
+begin
+	{ Begin by dimensioning the array. }
+	Num_Items := NumSiblingGears( Standard_Equipment_List );
+	SetLength( SEL , Num_Items );
+
+	{ Fill out the basic information. }
+	Item := Standard_Equipment_List;
+	t := 0;
+	while Item <> Nil do begin
+		SEL[t].Item := Item;
+		SEL[t].EValue := ELGearCost( Item );
+		SEL[t].EClass := ItemClass( Item );
+
+		{ Determine this item's current ranking. }
+		SEL[t].ERank := ItemRanking( T );
+
+		Item := Item^.Next;
+		Inc( T );
+	end;
+
+	{ Alright, now we have all the items divided into categories and sorted. }
+	for t := 0 to Num_Items do begin
+		if SEL[t].EValue <> 0 then begin
+			RateClass( SEL[t].EClass );
+		end;
+	end;
+end;
 
 initialization
 	Parser_Macros := LoadStringList( Parser_Macro_File );
@@ -1474,6 +1620,8 @@ initialization
 	STC_Item_List := AggregatePattern( STC_Item_Pattern , Series_Directory );
 	LoadArchetypes;
 	Standard_Equipment_List := AggregatePattern( PC_Equipment_Pattern , Design_Directory );
+	SetEquipmentLevels( GG_Modifier );
+
 	WMonList := AggregatePattern( Monsters_File_Pattern , Series_Directory );
 
 	Factions_List := AggregatePattern( 'FACTIONS_*.txt' , Series_Directory );

@@ -388,47 +388,43 @@ end;
 Function StatModifierCost( Part: GearPtr ): LongInt;
 	{ Return a price for this particular stat modifier. }
 const
-	BasePrice: Array [1..5] of Byte = (10,25,45,70,100);
-	PriceFactor = 2000;
+	CostFactor = 8000;
+	DiscountFactor = 3500;
 var
-	plusses,minuses,T,Change: Integer;
+	plusses,minuses,T: Integer;
 	it: LongInt;
 begin
 	{ Initialize our counters. }
 	plusses := 0;
 	minuses := 0;
-	change := 0;	{ Leftover tenths of a stat point. }
+	it := 0;
 
 	for t := 1 to NumGearStats do begin
 		if Part^.Stat[ T ] > 0 then begin
-			plusses := plusses + Part^.Stat[ T ];
+			{ ExArmor measures stat bonuses in tenths of a point, so rescale the }
+			{ values we get. }
+			if Part^.G = GG_ExArmor then begin
+				Plusses := Plusses + Part^.Stat[ T ];
+			end else begin
+				plusses := plusses + ( ( Part^.Stat[ T ] * Part^.Stat[ T ] ) - 1 + Part^.Stat[ T ] ) * 10;
+			end;
 		end else if Part^.Stat[ T ] < 0 then begin
 			minuses := minuses - Part^.Stat[ T ];
 		end;
 	end;
 
-	{ ExArmor measures stat bonuses in tenths of a point, so rescale the }
-	{ values we got above. }
-	if Part^.G = GG_ExArmor then begin
-		Change := Plusses mod 10;
-		Plusses := Plusses div 10;
-	end;
-
-	it := 0;
 	if Plusses > 0 then begin
-		it := BasePrice[ Plusses ] * PriceFactor + it;
-	end;
+		it := Plusses * CostFactor div 10;
 
-	if Change > 0 then it := it + Change * PriceFactor;
-
-	if Minuses > 0 then begin
-		it := it - PriceFactor * 5 * Minuses;
-	end else if Part^.G <> GG_ExArmor then begin
-		{ If no minuses, a 50% increase in price. }
-		it := ( it * 3 ) div 2;
+		if Minuses > 0 then begin
+			it := it - DiscountFactor * Minuses;
+		end else if Part^.G <> GG_ExArmor then begin
+			{ If no minuses, a 50% increase in price. }
+			it := ( it * 3 ) div 2;
+		end;
 
 		{ Make sure the cost doesn't fall below the minimum value. }
-		if ( it < PriceFactor )  then it := PriceFactor;
+		if ( it < CostFactor )  then it := CostFactor;
 	end;
 
 	StatModifierCost := it;

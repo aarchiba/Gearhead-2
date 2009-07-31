@@ -120,6 +120,8 @@ Const
 		NAV_LeaveCorpse = 0;	{  The default value }
 		NAV_NoCorpse = 1;	{  Don't leave behind a corpse. }
 
+	NAS_ShopRank = 10;		{ Used to determine what shopkeepers stock. }
+
 	NAG_Narrative = 7;	{ Variables having to do with RPG }
 	NAS_NID = 0;	{ Narrative ID }
 

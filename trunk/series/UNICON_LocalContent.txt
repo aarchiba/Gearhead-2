@@ -16,12 +16,14 @@ Content
 	name <Escape Pod Ride>
 	% This ride will test the PC's Vitality
 	requires <*CLUND_MLP2_Content>
-	minimap <       1   &#&  &       >
+	minimap <       1   &#&   &       >
 	Element1 <Prefab>
 	inv
 		Elevator
+		name <Escape Pod Ride>
 		% V1 = Have completed ride
-		use <ifYesNo 1 2 3 STAMINA PCMoraleDmg -20 if= V1 0 else GoCompleted ifSkillTest NAS_Vitality STAT_Ego HardSkillTar 35 else GoFailRoll >
+		use <ifYesNo 1 2 3 STAMINA PCMoraleDmg -20 if= V1 0 else GoCompleted ifSkillTest NAS_Vitality STAT_Ego HardSkillTar 35 else GoFailRoll Goto GoWinRoll>
+		GoWinRoll <>
 		GoFailRoll <>
 		GoCompleted <>
 
@@ -34,16 +36,61 @@ Content
 	name <Comet Dropper>
 	% This ride will test the PC's Athletics
 	requires <*CLUND_MLP2_Content>
+	minimap <       1   &#&   &       >
+	Element1 <Prefab>
+	inv
+		Elevator
+		name <Comet Dropper>
+		% V1 = Have completed ride
+		use <ifYesNo 1 2 3 STAMINA PCMoraleDmg -20 if= V1 0 else GoCompleted ifSkillTest NAS_Vitality STAT_Ego HardSkillTar 35 else GoFailRoll Goto GoWinRoll>
+		GoWinRoll <>
+		GoFailRoll <>
+		GoCompleted <>
+
+		Msg1 <>
+		Msg2 <>
+		Msg3 <>
+	end
 
 Content
 	name <Bumper Buru-Burus>
 	% This ride will test the PC's Mecha Piloting
 	requires <*CLUND_MLP2_Content>
+	minimap <       1   &#&   &      >
+	Element1 <Prefab>
+	inv
+		Elevator
+		name <Bumper Buru-Burus>
+		% V1 = Have completed ride
+		use <ifYesNo 1 2 3 STAMINA PCMoraleDmg -20 if= V1 0 else GoCompleted ifSkillTest NAS_Vitality STAT_Ego HardSkillTar 35 else GoFailRoll Goto GoWinRoll>
+		GoWinRoll <>
+		GoFailRoll <>
+		GoCompleted <>
+
+		Msg1 <>
+		Msg2 <>
+		Msg3 <>
+	end
 
 Content
 	name <Shell Game>
 	% This ride will test the PC's Concentration
 	requires <*CLUND_MLP2_Content>
+	minimap <       1   &#&   &       >
+	Element1 <Prefab>
+	inv
+		Elevator
+		name <Shell Game>
+		% V1 = Have completed ride
+		use <ifYesNo 1 2 3 STAMINA PCMoraleDmg -20 if= V1 0 else GoCompleted ifSkillTest NAS_Vitality STAT_Ego HardSkillTar 35 else GoFailRoll Goto GoWinRoll>
+		GoWinRoll <>
+		GoFailRoll <>
+		GoCompleted <>
+
+		Msg1 <>
+		Msg2 <>
+		Msg3 <>
+	end
 
 
 

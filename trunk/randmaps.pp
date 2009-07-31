@@ -1934,7 +1934,10 @@ var
 	PlacedItems: Array [0..4,0..4] of GearPtr;
 	E: GearPtr;
 begin
-	if Length( MapDesc ) < 25 then exit;
+	if Length( MapDesc ) < 25 then begin
+		DialogMsg( 'ERROR: MiniMap fail for ' + GearName( MF ) +  ': "' + MapDesc + '"' );
+		exit;
+	end;
 	{ Locate the palette. }
 	for t := 5 to 8 do Palette[ t ] := MF^.Stat[ t ];
 	if Palette[ STAT_MFFloor ] = 0 then Palette[ STAT_MFFloor ] := TERRAIN_Floor;
