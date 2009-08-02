@@ -1620,7 +1620,7 @@ initialization
 	STC_Item_List := AggregatePattern( STC_Item_Pattern , Series_Directory );
 	LoadArchetypes;
 	Standard_Equipment_List := AggregatePattern( PC_Equipment_Pattern , Design_Directory );
-	SetEquipmentLevels( GG_Modifier );
+	SetEquipmentLevels( GG_Harness );
 
 	WMonList := AggregatePattern( Monsters_File_Pattern , Series_Directory );
 
