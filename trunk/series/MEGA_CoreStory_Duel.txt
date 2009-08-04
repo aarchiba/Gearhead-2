@@ -416,6 +416,9 @@ Content
 
 	update <if= PlotStatus %plotid% %id% else %pop%  if=  P%id%01 0  P= %id%01 1  MoveNPC %1% %6%  SetNPCTeam %1% 3  V= %id%02 StoryDL  V+ %id%02 d5  NPCLevel %1% V%id%02 Goto %pop%>
 
+	% SubPlot1 is the victory bit
+	SubPlot1 <*CS_ThanksForAssist 1>
+
 	sub
 		MetaScene 6 2
 		% L1 = Encounter Over Counter
@@ -428,7 +431,7 @@ Content
 
 		Start <if= L2 0 L= 2 1   ForceChat %1%   AlterContext .change L= 4 %1%>
 		nu1 <if= T1 0  Return   if= L1 0 L= 1 1   StoryNote 1   LoseRenown Trigger0 .%id%_%plotid%_GoLose>
-		nu2 <if= T2 0           if= L1 0 L= 1 2   StoryNote 1   AddRenown 1  XPV 100   SALVAGE  ifTeamNotHostile 3 else GoFoughtNPC   Trigger0 .%id%_%plotid%_GoWin>
+		nu2 <if= T2 0           if= L1 0 L= 1 2   StoryNote 1   AddRenown 1  XPV 100   SALVAGE  ifTeamNotHostile 3 else GoFoughtNPC   SetPlotStatus %plotid1% %id1% MoveAndPacifyNPC %1% %2% Alert 2 SMemo 3>
 		GoFoughtNPC <WinComp 0 .Next>
 		.next <+T-- +F-->
 		.change <+Pun>
@@ -436,6 +439,8 @@ Content
 		end <ifNPCOK %1% MoveNPC %1% %2%>
 
 		Msg1 <Your duel with %name1% was interrupted by %name4%.>
+		Msg2 <With %name4% defeated, %name1% returns to %name2%.>
+		Msg3 <You should return to %name2% to speak with %name1%.>
 
 		sub
 			team 1

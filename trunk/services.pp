@@ -568,8 +568,6 @@ begin
 	SellGear := N = 1;
 end;
 
-
-
 Function RepairMasterCost( Master: GearPtr; Material: Integer ): LongInt;
 	{ Return the expected cost of repairing every component of }
 	{ MASTER which is made of MATERIAL. }
@@ -1009,116 +1007,6 @@ begin
 	end;
 end;
 
-Function ItemShopWeight( I: GearPtr ): Integer;
-	{ This is the log base two of the gear's unscaled cost. }
-var
-	Cost: LongInt;
-	N: Integer;
-begin
-	{ First, determine what the unscaled price is. }
-	Cost := GearCost( I );
-
-	{ If I is a set, cost will be the average of all items in the set. }
-	if I^.G = GG_Set then begin
-		N := NumSiblingGears( I^.SubCom ) + NumSiblingGears( I^.InvCom );
-		if N > 0 then Cost := Cost div N;
-	end;
-
-	N := I^.Scale;
-	{ SF:1 items are 10x more expensive than SF:0 items. After that }
-	{ it costs x5 per scale factor. }
-	if N > 0 then Cost := Cost div 2;
-	while N > 0 do begin
-		Dec( N );
-		Cost := Cost div 5;
-	end;
-
-	{ Sets have a weight equal to the average of the parts in them. }
-	N := NumSiblingGears( I^.SubCom ) + NumSiblingGears( I^.InvCom );
-	if N > 0 then Cost := Cost div N;
-
-	{ Determine the Log base 2 of the item... this will be }
-	{ the target number to decide whether or not the shopkeep }
-	{ might have this item. }
-	{ Because mecha are so expensive, take the log base two of their }
-	{ cost divided by ten. }
-	if I^.G = GG_Mecha then Cost := Cost div 10;
-
-	{ Calculate the log here. }
-	N := 0;
-	while Cost > 2 do begin
-		Inc( N );
-		Cost := Cost div 2;
-	end;
-	ItemShopWeight := N;
-end;
-
-Function NotGoodWares( GB: GameBoardPtr; I , NPC: GearPtr; Stuff: String; Tolerance: LongInt ): Boolean;
-	{ Return TRUE if this item is inappropriate for NPC's shop, }
-	{ FALSE if it is. An item is appropriate if: }
-	{ - one of its CATEGORY tags may be found in STUFF. }
-	{ - its unscaled value doesn't exceed the shopkeep's rating. }
-	{ - its faction is either the storekeeper or the town's faction. }
-	{ - its modified legality level is greater or equal to the town's level. }
-const
-	LowLegalityLevel = 0;
-var
-	NGW: Boolean;
-	Tag,Category,Desc: String;
-	N: LongInt;
-	Scene,Fac: GearPtr;
-begin
-	{ Begin by assuming TRUE. }
-	NGW := True;
-
-	{ Search through STUFF to see if Item's type matches the CATEGORY. }
-	Category := SAttValue( I^.SA , 'CATEGORY' );
-	NGW := not PartAtLeastOneMatch ( Stuff , Category );
-
-	Scene := FindRootScene( GB^.Scene );
-
-	{ Make sure this item is cleared for the shopkeeper's faction, and the faction }
-	{ of the city. Items marked with the GENERAL tag are clear for all factions. }
-	if not NGW then begin
-		N := 0;
-		desc := 'GENERAL';
-		Fac := SeekFaction( GB^.Scene , NAttValue( NPC^.NA , NAG_Personal , NAS_FactionID ) );
-		if Fac <> Nil then desc := SAttValue( Fac^.SA , 'DESIG' ) + ' ' + desc;
-
-		{ Scene here points to the root scene. }
-		if ( Scene <> Nil ) and ( Fac = Nil ) then begin
-			Fac := SeekFaction( GB^.Scene , NAttValue( Scene^.NA , NAG_Personal , NAS_FactionID ) );
-			if Fac <> Nil then desc := SAttValue( Fac^.SA , 'DESIG' ) + ' ' + desc;
-		end;
-		Category := SAttValue( I^.SA , 'FACTIONS' );
-		while Category <> '' do begin
-			Tag := ExtractWord( Category );
-			if AStringHasBString( desc , Tag ) then Inc( N );
-		end;
-		{ If there wasn't at least one faction match, this item is no good. }
-		NGW := N < 1;
-	end;
-
-	{ Make sure this item is legal. }
-	{ Mecha don't have to be checked for legality. }
-	if ( Scene <> Nil ) and ( I^.G <> GG_Mecha ) and not NGW then begin
-		{ Scene should point to the root scene here, since we found it above. }
-		{ If the current scene is marked for a modified legality level, }
-		{ use the local tolerance value instead. }
-
-		NGW := NAttValue( I^.NA , NAG_GearOps , NAS_Legality ) > Tolerance;
-	end;
-
-	if not NGW then begin
-		{ Determine the unscaled cost of this item. }
-		N := ItemShopWeight( I );
-		if RollStep( SkillValue( NPC , NAS_Shopping , STAT_Charm ) ) < N then NGW := True;
-
-	end;
-
-	NotGoodWares := NGW;
-end;
-
 Function Random_Mecha_Colors: String;
 	{ Return some random colors for this mecha. }
 begin
@@ -1133,69 +1021,116 @@ begin
 {$ENDIF}
 end;
 
-Procedure AddSomeMeks( GB: GameBoardPtr; NPC: GearPtr; var Wares: GearPtr );
-	{ WARES is the inventory list of a shop. Let's add ~10 mecha files }
-	{ to the list. }
-var
-	Fac,Mek: GearPtr;
-	ShopList,MekFile: SAttPtr;
-	N: Integer;
-	mecha_colors: String;
-begin
-	{ To start with, determine this merchant's lot color. This is the color all }
-	{ the mecha in the sales lot are painted. If the NPC has a faction this will }
-	{ be the faction color. Otherwise, check to see if he has a color stored. }
-	{ Otherwise pick a color scheme at random and save it. }
-	mecha_colors := SAttValue( NPC^.SA , 'mecha_colors' );
-	if mecha_colors = '' then begin
-		Fac := SeekFaction( GB^.Scene , NAttValue( NPC^.NA , NAG_Personal , NAS_FactionID ) );
-		if Fac <> Nil then mecha_colors := SAttValue( Fac^.SA , 'mecha_colors' );
-		if mecha_colors = '' then begin
-			mecha_colors := Random_Mecha_Colors;
+Function CreateWaresList( GB: GameBoardPtr; NPC: GearPtr; Stuff: String ): GearPtr;
+	{ Fabricate the list of items this NPC has for sale. }
+	Function IsGoodWares( I: GearPtr; Tolerance: LongInt ): Boolean;
+		{ Return TRUE if this item is appropriate for NPC's shop, }
+		{ FALSE if it isn't. An item is appropriate if: }
+		{ - one of its CATEGORY tags may be found in STUFF. }
+		{ - its unscaled value doesn't exceed the shopkeep's rating. }
+		{ - its faction is either the storekeeper or the town's faction. }
+		{ - its modified legality level is greater or equal to the town's level. }
+	const
+		LowLegalityLevel = 0;
+	var
+		NGW: Boolean;
+		Tag,Category,Desc: String;
+		N: LongInt;
+		Scene,Fac: GearPtr;
+	begin
+		{ Begin by assuming TRUE. }
+		NGW := True;
+
+		{ Search through STUFF to see if Item's type matches the CATEGORY. }
+		Category := SAttValue( I^.SA , 'CATEGORY' );
+		NGW := not PartAtLeastOneMatch ( Stuff , Category );
+
+		Scene := FindRootScene( GB^.Scene );
+
+		{ Make sure this item is cleared for the shopkeeper's faction, and the faction }
+		{ of the city. Items marked with the GENERAL tag are clear for all factions. }
+		if not NGW then begin
+			N := 0;
+			desc := 'GENERAL';
+			Fac := SeekFaction( GB^.Scene , NAttValue( NPC^.NA , NAG_Personal , NAS_FactionID ) );
+			if Fac <> Nil then desc := SAttValue( Fac^.SA , 'DESIG' ) + ' ' + desc;
+
+			{ Scene here points to the root scene. }
+			if ( Scene <> Nil ) and ( Fac = Nil ) then begin
+				Fac := SeekFaction( GB^.Scene , NAttValue( Scene^.NA , NAG_Personal , NAS_FactionID ) );
+				if Fac <> Nil then desc := SAttValue( Fac^.SA , 'DESIG' ) + ' ' + desc;
+			end;
+			Category := SAttValue( I^.SA , 'FACTIONS' );
+			while Category <> '' do begin
+				Tag := ExtractWord( Category );
+				if AStringHasBString( desc , Tag ) then Inc( N );
+			end;
+			{ If there wasn't at least one faction match, this item is no good. }
+			NGW := N < 1;
 		end;
-		SetSAtt( NPC^.SA , 'mecha_colors <' + mecha_colors + '>' );
+
+		{ Make sure this item is legal. }
+		{ Mecha don't have to be checked for legality. }
+		if ( Scene <> Nil ) and ( I^.G <> GG_Mecha ) and not NGW then begin
+			{ Scene should point to the root scene here, since we found it above. }
+			{ If the current scene is marked for a modified legality level, }
+			{ use the local tolerance value instead. }
+			NGW := NAttValue( I^.NA , NAG_GearOps , NAS_Legality ) > Tolerance;
+		end;
+
+		IsGoodWares := not NGW;
 	end;
-
-	ShopList := CreateFileList( Design_Directory + Default_Search_Pattern );
-
-	{ From the list of filenames, pick a number of them at random. }
-	N := 20;
-	while ( N > 0 ) and ( ShopList <> Nil ) do begin
-		MekFile := SelectRandomSAtt( ShopList );
-
-		{ Load this file }
-		Mek := LoadSingleMecha( MekFile^.Info , Design_Directory );
-
-		{ Remove this SAtt from the list, so we don't load it twice. }
-		RemoveSAtt( ShopList , MekFile );
-
-		{ Attach the loaded mek to the end of WARES. }
-		if ( Mek <> Nil ) and ( Mek^.G = GG_Mecha ) then begin
-			AppendGear( Wares , Mek );
+	Function GetWaresListItem( Wares: NAttPtr; ShopRank , N: Integer ): NAttPtr;
+		{ Return a pointer to the Nth entry of the provided ShopRank. }
+	var
+		it: NAttPtr;
+	begin
+		it := Nil;
+		while ( Wares <> Nil ) and ( it = Nil ) do begin
+			if Wares^.V = ShopRank then begin
+				Dec( N );
+				if N = 0 then it := Wares;
+			end;
+			Wares := Wares^.Next;
+		end;
+		GetWaresListItem := it;
+	end;
+	Procedure InitShopItem( I: GearPtr );
+		{ Certain items may need some initialization. }
+	var
+		mecha_colors: String;
+		Fac: GearPtr;
+	begin
+		if I^.G = GG_Mecha then begin
+			{ To start with, determine this merchant's lot color. This is the color all }
+			{ the mecha in the sales lot are painted. If the NPC has a faction this will }
+			{ be the faction color. Otherwise, check to see if he has a color stored. }
+			{ Otherwise pick a color scheme at random and save it. }
+			mecha_colors := SAttValue( NPC^.SA , 'mecha_colors' );
+			if mecha_colors = '' then begin
+				Fac := SeekFaction( GB^.Scene , NAttValue( NPC^.NA , NAG_Personal , NAS_FactionID ) );
+				if Fac <> Nil then mecha_colors := SAttValue( Fac^.SA , 'mecha_colors' );
+				if mecha_colors = '' then begin
+					mecha_colors := Random_Mecha_Colors;
+				end;
+				SetSAtt( NPC^.SA , 'mecha_colors <' + mecha_colors + '>' );
+			end;
 
 			{ NEW v0.310- If the storekeeper knows MECHA ENGINEERING, maybe }
 			{ modify this mecha! }
 			if ( Random( 2 ) = 1 ) and ( NAttValue( NPC^.NA , NAG_Skill , NAS_MechaEngineering ) > 0 ) then begin
-				ShopkeeperModifyMek( NPC , Mek );
+				ShopkeeperModifyMek( NPC , I );
 			end;
 
-			SetSAtt( Mek^.SA , 'sdl_colors <' + mecha_colors + '>' );
-			SetSAtt( Mek^.SA , 'CATEGORY <MECHA>' );
-		end else begin
-			DisposeGear( Mek );
+			SetSAtt( I^.SA , 'sdl_colors <' + mecha_colors + '>' );
 		end;
 	end;
-
-	{ Get rid of the shopping list. }
-	DisposeSAtt( ShopList );
-end;
-
-Function CreateWaresList( GB: GameBoardPtr; NPC: GearPtr; Stuff: String ): GearPtr;
-	{ Fabricate the list of items this NPC has for sale. }
 var
 	Wares,I,I2: GearPtr;	{ List of items for sale. }
-	NPCSeed,NPCRestock,Tolerance: LongInt;
-	TotalSP,MaxSP: Integer;
+	NPCSeed,NPCRestock,Tolerance,MaxShopRank: LongInt;
+	N,ShopRank,ItemPts: Integer;
+	WList,ILink: NAttPtr;
+	Num_Items_By_Rank: Array [1..10] of Integer;
 begin
 	{ Set the random seed to something less than random... }
 	NPCSeed := NAttValue( NPC^.NA , NAG_PErsonal , NAS_RandSeed );
@@ -1208,45 +1143,76 @@ begin
 	end;
 	RandSeed := ( ( GB^.ComTime + NPCRestock ) div 86400 ) + NPCSeed;
 
-	{ Read the basic items list, then filter it for appropriate }
-	{ wares afterwards. }
-	Wares := AggregatePattern( PC_Equipment_Pattern , Design_Directory );
+	{ We've already got everything loaded from disk, in Standard_Equipment_List. }
+	{ Create a component list of legal parts. }
 
-	{ If this is a mecha shop, also load some mecha files. }
-	if AStringHasBString( Stuff , 'MECHA' ) then begin
-		AddSomeMeks( GB , NPC , Wares );
-	end;
-
-	{ Calculate the shopkeeper's tolerance. }
+	{ Calculate the shopkeeper's tolerance and maximum shop rank. }
 	Tolerance := ShopTolerance( GB , NPC );
+	MaxShopRank := SkillValue( NPC , NAS_Shopping , STAT_Charm ) div 2 - 1;
+	if MaxShopRank < 3 then MaxShopRank := 3;
+DialogMsg( 'SR: ' + BStr( MaxShopRank ) );
 
-	{ Do filtering here. }
-	I := Wares;
+	{ Initialize the Num_Items_By_Rank array. }
+	for n := 1 to 10 do Num_Items_By_Rank[n] := 0;
+
+	{ Create a list of potential wares for the shopkeeper. }
+	{ Follow the same format as the component list from gearutil.pp: }
+	{  G=0, S=ID of the item, V=weight of the item. }
+	{ Also, fill out the NumItemsByShoprank array while we're here. }
+	Wares := Nil;
+	WList := Nil;
+	I := Standard_Equipment_List;
+	N := 1;
 	while I <> Nil do begin
-		I2 := I^.Next;
+		if IsGoodWares( I , Tolerance ) then begin
+			ShopRank := NAttValue( I^.NA , NAG_GearOps , NAS_ShopRank );
+			SetNAtt( WList , 0 , N , ShopRank );
+			Inc( Num_Items_By_Rank[ ShopRank ] );
+		end;
 
-		{ If this isn't a good item for this shop, remove it. }
-		{ Otherwise increment the item counter. }
-		if NotGoodWares( GB , I , NPC , Stuff , Tolerance ) then RemoveGear( Wares , I );
-
-		I := I2;
-	end;
-
-	{ If N is too large for this shopkeeper, remove a number of items }
-	{ from the inventory. }
-	{ GH2: Inventory size is determined by the NPC's shopping skill. }
-	I := Wares;
-	TotalSp := 0;
-	MaxSp := SkillValue( NPC , NAS_Shopping , STAT_Charm ) * 10 + 5;
-	while I <> Nil do begin
-		TotalSP := TotalSP + ItemShopWeight( I );
+		Inc( N );
 		I := I^.Next;
 	end;
-	while TotalSP > MaxSP do begin
-		I := SelectRandomGear( Wares );
-		TotalSP := TotalSP - ItemShopWeight( I );
-		RemoveGear( Wares , I );
+
+	{ We've got a random number of points with which to generate items. }
+	ItemPts := 11 + Random( 15 );
+	while ItemPts > 0 do begin
+		{ Select a shop rank. }
+		ShopRank := Random( MaxShopRank ) + 1;
+		if ShopRank > 10 then ShopRank := 10
+		else if ( Random( 20 ) = 1 ) and ( ShopRank < 10 ) and ( Num_Items_By_Rank[ ShopRank + 1 ] > 0 ) then begin
+			Inc( ShopRank );
+			Dec( ItemPts );
+		end;
+
+		{ Make sure there are items at this shoprank. If not, move down. }
+		while ( ShopRank > 0 ) and ( Num_Items_By_Rank[ ShopRank ] < 1 ) do Dec( ShopRank );
+
+		{ Select one of the items at random. }
+		if ShopRank > 0 then begin
+			N := Random( Num_Items_By_Rank[ ShopRank ] ) + 1;
+
+			{ Locate the NAtt pointer to this item. }
+			ILink := GetWaresListItem( WList , ShopRank , N );
+			N := ILink^.S;
+			RemoveNAtt( WList , ILink );
+			Dec( Num_Items_By_Rank[ ShopRank ] );
+
+			{ Clone it, initialize it, and add it to the list. }
+			I := CloneGear( RetrieveGearSib( Standard_Equipment_List , N ) );
+			InitShopItem( I );
+			AppendGear( Wares , I );
+DialogMsg( WideStr( ShopRank , 2 ) + ': ' + FullGearName( I ) );
+
+			{ If this is a mecha, ItemPts will run out faster. }
+			if I^.G = GG_Mecha then Dec( ItemPts );
+		end;
+
+		Dec( ItemPts );
 	end;
+
+	{ Get rid of the shopping list. }
+	DisposeNAtt( WList );
 
 	{ Re-randomize the random seed. }
 	Randomize;
@@ -1254,6 +1220,7 @@ begin
 	{ Return the list we've created. }
 	CreateWaresList := Wares;
 end;
+
 
 Procedure BrowseWares( GB: GameBoardPtr; PC,NPC: GearPtr; Wares: GearPtr );
 	{ Take a look through the items this NPC has for sale. }

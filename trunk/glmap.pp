@@ -198,6 +198,7 @@ begin
  	glEnd;
 
 	glDisable( GL_Texture_2D );
+	glDisable( GL_ALPHA_TEST );
 end;
 
 Procedure DrawFloor( Tex: Integer; Offset: GLFloat );
@@ -207,6 +208,7 @@ begin
 	glTexEnvi( GL_TEXTURE_ENV , GL_TEXTURE_ENV_MODE , GL_MODULATE );
 	glBindTexture(GL_TEXTURE_2D, Tex );
 	glEnable( GL_Texture_2D );
+	glEnable( GL_ALPHA_TEST );
 
 	glbegin( GL_QUADS );
 
@@ -225,16 +227,16 @@ begin
  	glEnd;
 
 	glDisable( GL_Texture_2D );
+	glDisable( GL_ALPHA_TEST );
 end;
 
 Procedure DrawGrid();
 	{ Draw a grid. Actually, draw one empty square. Enough of them and they make a grid. }
 begin
-	glDisable( GL_Lighting );
 	glEnable( GL_BLEND );
-
 	glEnable( GL_ALPHA_TEST );
 	glAlphaFunc( GL_Greater , 0.0 );
+	glDisable( GL_Lighting );
 
 
 	glBegin( GL_QUADS );
@@ -247,6 +249,8 @@ begin
 	glVertex3f( 0.4 , 0 , 0.6 );
 
  	glEnd;
+	glDisable( GL_BLEND );
+	glDisable( GL_ALPHA_TEST );
 	glEnable( GL_Lighting );
 end;
 
@@ -656,6 +660,7 @@ begin
 	if ( Style < 0 ) or ( Style > NumBuildingStyles ) then Style := 0;
 
 	glEnable( GL_NORMALIZE );
+	glEnable( GL_ALPHA_TEST );
 	for t := 1 to Alt do begin
 		case Level_Type[ Style , t ] of
 			LEVEL_MCDBOX:	DrawMCDBox( Level_Texture[ Style , t ] );
@@ -673,6 +678,7 @@ begin
 		CAP_NARROWPOINTY:	DrawPointyCap( Cap_Texture[ Style ] , Narrow_Gutter );
 	end;
 
+	glDisable( GL_ALPHA_TEST );
 	glDisable( GL_NORMALIZE );
 end;
 
@@ -809,6 +815,7 @@ Procedure DrawModel( Tex: Integer; Width,Offset,Foot,Fade: GLFloat );
 	{ FADE is the percentage of the model to hide. Used for fading out models. }
 begin
 	glEnable( GL_BLEND );
+	glEnable( GL_ALPHA_TEST );
 	GLColor3F( 1.0 , 1.0 , 1.0 );
 	glPushMatrix();
 
@@ -836,6 +843,7 @@ begin
 	glPopMatrix();
 
 	glDisable( GL_BLEND );
+	glDisable( GL_ALPHA_TEST );
 end;
 
 Procedure DrawWave( T,WP: Integer );
@@ -882,7 +890,6 @@ Procedure DrawWall2( Tex: Integer; H: GLFloat; C: TSDL_COlor; ShowRoof: Boolean 
 begin
 	if ShowRoof then begin
 		glDisable( GL_Lighting );
-		glDisable( GL_Texture_2D );
 		glbegin( GL_QUADS );
 		GLNormal3i( 0 , 1 , 0 );
 		GLColor3ub( C.R , C.G , C.B );
@@ -891,13 +898,13 @@ begin
 		glVertex3f( 1 , h + 0.001 , 1 );
 		glVertex3f( 0 , h + 0.001 , 1 );
  		glEnd;
-		glEnable( GL_Lighting );
 	end;
 
 	glTexEnvi( GL_TEXTURE_ENV , GL_TEXTURE_ENV_MODE , GL_MODULATE );
 
 	glBindTexture(GL_TEXTURE_2D, TerrTex[ Tex ] );
 	glEnable( GL_Texture_2D );
+	glEnable( GL_Lighting );
 
 	glEnable( GL_ALPHA_TEST );
 	glAlphaFunc( GL_Equal , 1.0 );
@@ -948,7 +955,8 @@ begin
  	glEnd;
 
 	glDisable( GL_Texture_2D );
-
+	glDisable( GL_Lighting );
+	glDisable( GL_ALPHA_TEST );
 end;
 
 Procedure SmartWall( Tex: Integer; C: TSDL_COlor );
@@ -968,7 +976,6 @@ Procedure DrawTransBox( Tex: Integer; F,H: GLFloat; C: TSDL_Color );
 begin
 	glTexEnvi( GL_TEXTURE_ENV , GL_TEXTURE_ENV_MODE , GL_MODULATE );
 
-	glDisable( GL_Lighting );
 	glEnable( GL_BLEND );
 
 	glBindTexture(GL_TEXTURE_2D, Tex );
@@ -1032,9 +1039,6 @@ var
 	T: Integer;
 	Flash: GLFloat;
 begin
-	glDisable( GL_Lighting );
-	glDisable( GL_Texture );
-	glDisable( GL_Texture_2D );
 	glEnable( GL_BLEND );
 	Flash := FineDir[ ( Animation_Phase ) mod Num_Rotation_Angles , 1 ] / 20;
 
@@ -1073,6 +1077,7 @@ begin
  		glEnd;
 		glPopMatrix();
 	end;
+	glDisable( GL_BLEND );
 end;
 
 Procedure DrawEncounter( M: GearPtr );
@@ -1410,9 +1415,6 @@ begin
 	glTranslatef( 0.5 , 0 , 0.5 );
 	glRotatef( 90 - NAttValue( M^.NA , NAG_Location , NAS_D ) * 45 , 0 , 1 , 0 );
 
-	glDisable( GL_Texture_2D );
-	glDisable( GL_ALPHA_TEST );
-
 	if M = Focused_On_Mek then begin
 		GLColor4F( 1.0 , 0.5 , 0.0 , 0.0 );
 	end else begin
@@ -1463,9 +1465,6 @@ begin
 
 	glEnd;
 
-	glEnable( GL_Texture_2D );
-	glEnable( GL_ALPHA_TEST );
-
 	{ Pop the matrix. }
 	glPopMatrix();
 end;
@@ -1506,9 +1505,6 @@ begin
 	glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT, @mat_specular);
 	glMaterialfv(GL_FRONT_AND_BACK, GL_DIFFUSE, @mat_specular);
 	glMaterialfv(GL_FRONT_AND_BACK, GL_SPECULAR, @mat_specular);
-
-	glEnable( GL_Lighting );
-	glEnable( GL_Light1 );
 end;
 
 Procedure DisplayName( M: GearPtr; X,Y,Z: GLFloat );
@@ -1574,6 +1570,8 @@ begin
 	SetLighting;
 
 	{ Draw all the tiles in memory order. }
+	glEnable( GL_Lighting );
+	glEnable( GL_Light1 );
 	for X := 1 to GB^.Map_Width do begin
 		for Y := 1 to GB^.Map_Height do begin
 			glMatrixMode( GL_MODELVIEW );
@@ -1590,7 +1588,6 @@ begin
 			for z := LoAlt to ( HiAlt + 1 ) do model_map[ X , Y , z ] := Nil;
 		end;
 	end;
-
 	glDisable( GL_Lighting );
 	glDisable( GL_Light1 );
 
@@ -1732,13 +1729,11 @@ begin
 					DrawFloor( BitzTex[ Underlays[ X , Y , Z ] ] , 0.01 );
 				end;
 				if Overlays[ X , Y , Z ] > 0 then begin
-					glDisable( GL_Lighting );
 					DrawModel( Overlays[ X , Y , Z ] ,
 						1.0,	{ width }
 						-0.3 ,	{ offset }
 						Z / 2 ,	{ foot }
 						0 );	{ fade }
-					glEnable( GL_Lighting );
 				end;
 			end;
 			glDisable( GL_ALPHA_TEST );

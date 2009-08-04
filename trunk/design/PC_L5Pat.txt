@@ -663,67 +663,6 @@ memo
 
 
 Set
-name <Flight Suit [set]>
-desc <A light spacesuit.>
-Category <CLOTHING SPACE ESSENTIAL>
-Factions <MAQUI FCOMS RISHI CRIHN>
-Legality -25
-inv
-	HeadArmor 2
-	name <Light Space Helm>
-	desc <A light spacesuit helm with integrated rebreather.>
-	Category <CLOTHING SPACE>
-	SDL_PORTRAIT <item_lightspacehelm.png>
-	Mass -2
-	Legality -25
-	Sealed
-	Hardened
-
-	BodyArmor 2
-	name <Flight Suit>
-	desc <A light spacesuit.>
-	Category <CLOTHING SPACE>
-	Mass -3
-	Legality -25
-	Sealed
-	sub
-		SpaceFlight 2
-	end
-
-	ArmArmor 2
-	name <Flight Suit Sleeve>
-	desc <A light spacesuit.>
-	Category <CLOTHING SPACE>
-	Mass -3
-	Legality -25
-	Sealed
-
-	LegArmor 2
-	name <Flight Suit Legging>
-	desc <A light spacesuit.>
-	Category <CLOTHING SPACE>
-	Mass -3
-	Legality -25
-	Sealed
-
-	ArmArmor 2
-	name <Flight Suit Sleeve>
-	desc <A light spacesuit.>
-	Category <CLOTHING SPACE>
-	Mass -3
-	Legality -25
-	Sealed
-
-	LegArmor 2
-	name <Flight Suit Legging>
-	desc <A light spacesuit.>
-	Category <CLOTHING SPACE>
-	Mass -3
-	Legality -25
-	Sealed
-end
-
-Set
 name <SkinSuit [set]>
 desc <A skintight spacesuit.>
 Category <CLOTHING SPACE>
@@ -1203,7 +1142,6 @@ inv
 	name <Utility Suit>
 	desc <A cheaply made spacesuit.>
 	Category <CLOTHING SPACE>
-	Mass -2
 	Sealed
 	sub
 		SpaceFlight 3

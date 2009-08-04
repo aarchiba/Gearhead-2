@@ -1,4 +1,42 @@
 %%
+%% *CS_AdvisePC
+%%
+%% This component will give some advice to the PC. This component will either
+%% win or negate the current plot, depending on the script called.
+%%
+%% To invoke this component, call one of the following scripts from E1's persona:
+%%  .%id%_GoAdvise
+%%  .%id%_GoAdvise_N
+%%
+%%  PARAM1: The NPC with the advice.
+%%
+
+Content
+	name <Someone's hiring>
+	requires <*CS_AdvisePC>
+
+	% E1 is the NPC to give the advice
+	% E2 is a local character who may give a mission
+	% E3 is a local public scene for the meeting
+	Element2 <Character (MILIT|POLIT|POLIC|CORPO) !Near -7 !Okay -3 !XClude -2 -Enemy>
+	Element3 <Scene Public !Near -7 !Ally 2>
+
+	sub
+		Persona 1
+		.%id%_GoAdvise     <ifNPCOK %2% else .%id%_GoEnd_W NewChat Say %id%01 History %id%02 SMemo %id%03  &SetTargetNPC %2%  WinComp %3% .%id%_next>
+		.%id%_GoAdvise_N   <ifNPCOK %2% else .%id%_GoEnd_N NewChat Say %id%01 History %id%02 SMemo %id%03  &SetTargetNPC %2%  NegateComp %3% .%id%_next>
+		.%id%_next <+Tgt +Fmi>
+		.%id%_GoEnd_W <NewChat Say %id%04 StoryNote %id%05 WinComp %3% .%id%_fail>
+		.%id%_GoEnd_N <NewChat Say %id%04 StoryNote %id%05 NegateComp %3% .%id%_fail>
+		.%id%_fail <+Tgs +Fmi>
+		Msg%id%01 <I've heard that %name2% is going to hire a pilot for some kind of mission. If you head over to %name3%, maybe you can get the job.>
+		Msg%id%02 <%name1% suggested that you ask %name2% for a job.>
+		Msg%id%03 <%name1% suggested that you go to %name3% and ask %name2% for a job.>
+		Msg%id%04 <A lot of pilots have been finding work at %name3%. Maybe if you head over there you can get lucky.>
+		Msg%id%05 <%name1% suggested that you look for work in %name3%.>
+	end
+
+%%
 %% *:CS_SubBossRoadblock
 %%
 %% This is an odd little utility component. In order for something to happen,
@@ -272,6 +310,42 @@ Plot
 %%
 %% PARAM1: The NPC who was aided.
 %%
+
+Plot
+	name <I've got advice for you.>
+	desc <The NPC will give the PC some advice.>
+	requires <*CS_ThanksForAssist>
+
+	% Element1 is the NPC to meet
+
+	start <if= PlotStatus %plotid% %id% else %pop% ifNPCDead %1% LoseComp 0 .%id%_loss>
+	.%id%_loss <+T-- +F-->
+
+	% SubPlot1 is the advice
+	SubPlot1 <*CS_AdvisePC 1>
+
+	sub
+		Persona 1
+		% V%id%01 = Have given reaction bonus
+		greeting <if= PlotStatus %plotid% %id% else %pop% NewChat Say %id%01 AddChat %id%01 if= V%id%01 0 V= %id%01 1 AddReact * 5 d6>
+		result%id%01 <Goto .%id1%_GoAdvise>
+		Msg%id%01 <Thanks for your help back there. You know, I've got some information that you just might find useful.>
+		Msg%id%01_1 <>
+		CMsg%id%01_1 <ifNPCSociable Accept>
+		Msg%id%01_2 <>
+		CMsg%id%01_2 <ifNPCShy Accept>
+		Msg%id%01_3 <>
+		CMsg%id%01_3 <ifNPCCheerful Accept>
+		Msg%id%01_4 <>
+		CMsg%id%01_4 <ifNPCMelancholy Accept>
+		Msg%id%01_5 <>
+		CMsg%id%01_5 <ifNPCEasygoing Accept>
+		Msg%id%01_6 <>
+		CMsg%id%01_6 <ifNPCPassionate Accept>
+		Prompt%id%01 <Tell me what it is.>
+		Prompt%id%01_1 <Really? Great.>
+		Prompt%id%01_2 <Go on, then. Don't leave me waiting.>
+	end
 
 Plot
 	name <I've got info for you.>

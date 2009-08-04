@@ -1493,6 +1493,8 @@ const
 	begin
 		if Item^.G = GG_Set then begin
 			ItemClass := ItemClass( Item^.InvCom );
+		end else if Item^.G = GG_Mecha then begin
+			ItemClass := 0;
 		end else if Item^.Scale > 0 then begin
 			ItemClass := IC_MechaGear;
 		end else if Item^.G = GG_Weapon then begin
@@ -1540,6 +1542,23 @@ var
 		end;
 		ItemRanking := Rank;
 	end;
+	Procedure InitMechaRank( Item: GearPtr );
+		{ Mecha get a rank set directly from their value. Set that now, and }
+		{ also mark the category. }
+	const
+		rank_min_val: Array [1..10] of LongInt = (
+		0, 100000, 200000, 330000, 481600,
+		761600, 1201600, 1801600, 2561600, 3481600
+		);
+	var
+		mval,t,shoprank: LongInt;
+	begin
+		mval := GearValue( Item );
+		shoprank := 1;
+		for t := 1 to 10 do if mval > rank_min_val[t] then shoprank := t;
+		SetNAtt( Item^.NA , NAG_GearOps , NAS_ShopRank , ShopRank );
+		SetSatt( Item^.SA , 'CATEGORY <MECHA>' );
+	end;
 	Procedure RateClass( EClass: Integer );
 		{ Count the number of members in this class. Then, assign each member }
 		{ a shop rank of 1 to 10 based on its position in the list. While doing this }
@@ -1549,6 +1568,9 @@ var
 		T,N,SRank: Integer;
 		SList: SAttPtr;
 	begin
+		{ Error check. }
+		if EClass = 0 then exit;
+
 		{ Step One: Count the members. }
 		N := 0;
 		for t := 0 to ( Num_Items - 1 ) do begin
@@ -1596,11 +1618,17 @@ begin
 	t := 0;
 	while Item <> Nil do begin
 		SEL[t].Item := Item;
-		SEL[t].EValue := ELGearCost( Item );
 		SEL[t].EClass := ItemClass( Item );
 
-		{ Determine this item's current ranking. }
-		SEL[t].ERank := ItemRanking( T );
+		{ Determine this item's current ranking, unless it's a mecha }
+		{ in which case its position is automatically set. }
+		if Item^.G <> GG_Mecha then begin
+			SEL[t].EValue := ELGearCost( Item );
+			SEL[t].ERank := ItemRanking( T );
+		end else begin
+			SEL[t].EValue := 0;
+			InitMechaRank( Item );
+		end;
 
 		Item := Item^.Next;
 		Inc( T );
@@ -1619,8 +1647,8 @@ initialization
 	standard_script_list := LoadFile( 'standard_scripts.txt' , Data_Directory );
 	STC_Item_List := AggregatePattern( STC_Item_Pattern , Series_Directory );
 	LoadArchetypes;
-	Standard_Equipment_List := AggregatePattern( PC_Equipment_Pattern , Design_Directory );
-	SetEquipmentLevels( GG_Harness );
+	Standard_Equipment_List := AggregatePattern( '*.txt' , Design_Directory );
+	SetEquipmentLevels( 0 );
 
 	WMonList := AggregatePattern( Monsters_File_Pattern , Series_Directory );
 

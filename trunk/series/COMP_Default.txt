@@ -636,13 +636,6 @@ Plot
 	Place3 <1 (Citizens) pass>
 	Element4 <Scene Environs !Near -7>
 
-	% SubPlot1 is the duel itself
-	% SubPlot2 is the path if the PC wins the duel
-	% SubPlot3 is the path if the PC loses the duel
-	SubPlot1 <*CS_Duel 3 1 4>
-	SubPlot2 <*CS_WinDuelVs 3>
-	SubPlot3 <*CS_LoseDuelVs 3>
-
 	% V1 = Initialization Counter
 	% V2 = Partner Observation
 	% As long as we're still at the first phase, the NPC's death will end the plot.
@@ -663,21 +656,41 @@ Plot
 	Msg3 <Look over there... %name3% doesn't look like \SPR %3% 's enjoying the party.>
 	Msg3_1 <Say, isn't that %name3% the famous arena pilot? I wonder if we can get an autograph... or a duel.>
 
+	% SubPlot1 is the duel itself
+	% SubPlot2 is the path if the PC wins the duel
+	% SubPlot3 is the path if the PC loses the duel
+	% SubPlot4 is the negation/advice from E3
+	SubPlot1 <*CS_Duel 3 1 4>
+	SubPlot2 <*CS_WinDuelVs 3>
+	SubPlot3 <*CS_LoseDuelVs 3>
+	SubPlot4 <*CS_AdvisePC 3>
+
 	sub
 		Persona 3
+		% V1 = Reputation Counter
 		greeting <if= PlotStatus %plotid% 0 else GoChat Goto GoFirstTime>
 		*GoChat <*MISC_CHATTER>
-		GoFirstTime <NewChat Say 1 AddChat 1 AddChat 2>
+		GoFirstTime <NewChat Say 1 AddChat 1 AddChat 2 AddChat 3>
 		result1 <StoryNote 2 SetPlotStatus %plotid% %id1% Goto GoAcceptChallenge>
 		*GoAcceptChallenge <*IAcceptYourChallenge %4%>
-		result2 <NewChat Say 3 StoryNote 4 LoseComp 0 .next>
-		.next <+T-- +F-->
-		Msg1 <Are you as bored with this party as I am? Why don't we leave this place and go find some real action... I mean a duel, of course.>
-		Msg2 <At the party, %name3% challenged you to a duel in %name4%.>
-		Msg3 <Is that so? I'm afraid to say that you've just blown the one chance you had for something interesting.>
-		Msg4 <At the party, %name3% challenged you to a duel but you refused.>
-		Prompt1 <Let's do it.>
-		Prompt2 <Sorry, I don't want to.>
+		result2 <Goto .%id4%_GoAdvise_N>
+		result3 <EndChat Say 3 AddChat 4 if= V1 0 V= 1 1 AddSociable d10>
+		result4 <Goto .%id4%_GoAdvise_N>
+		Msg1 <Are you as bored with this party as I am? There's just no action here... this entire place is dead and dull.>
+		Msg1_1 <This party is dead. If only there were something interesting to do...>
+		Msg1_2 <>
+		Msg2 <At the party, you challenged %name3% to a duel in %name4%.>
+		Msg3 <Well, if you're looking for something exciting to do today, I might be able to help...>
+		Prompt1 <Why don't we step outside and test our mecha?>
+		Prompt1_1 <Here's an idea. Let's blow this place and do a practice duel.>
+		Prompt1_2 <If you're looking for action, how about a duel?>
+		Prompt2 <Any idea where I could find something better to do?>
+		Prompt2_1 <Yeah, I wouldn't be here if I had anything better to do.>
+		Prompt2_2 <>
+		Prompt3 <If I'd arrived earlier, maybe I could've saved it.>
+		Prompt3_1 <Half the people are gone already... this party's over.>
+		Prompt3_2 <Man, I can't believe it's over already...>
+		Prompt4 <[Continue]>
 
 		STC MS_CAFE
 		SetID 1

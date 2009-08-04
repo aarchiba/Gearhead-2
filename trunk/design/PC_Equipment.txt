@@ -943,29 +943,82 @@ Mass -3
 legality -15
 
 Set
-name <Pilot Suit [set]>
-desc <A light spacesuit used by the Pro Duelist Association.>
-Category <CLOTHING SPACE>
-Factions <PDASS>
+name <Flight Suit [set]>
+desc <A light sealed suit.>
+Category <CLOTHING SPACE ESSENTIAL>
+Factions <GENERAL>
 Legality -25
 inv
-	HeadArmor 3
-	name <Duelist Helm>
+	HeadArmor 1
+	name <Flight Helm>
+	desc <A light spacesuit helm with integrated rebreather.>
+	Category <CLOTHING SPACE>
+	SDL_PORTRAIT <item_lightspacehelm.png>
+	Mass -1
+	Sealed
+	Hardened
+
+	BodyArmor 1
+	name <Flight Suit>
+	desc <A light spacesuit.>
+	Category <CLOTHING SPACE>
+	Mass -1
+	Sealed
+	sub
+		SpaceFlight 1
+	end
+
+	ArmArmor 1
+	name <Flight Suit Sleeve>
+	desc <A light spacesuit.>
+	Category <CLOTHING SPACE>
+	Mass -1
+	Sealed
+
+	LegArmor 1
+	name <Flight Suit Legging>
+	desc <A light spacesuit.>
+	Category <CLOTHING SPACE>
+	Mass -1
+	Sealed
+
+	ArmArmor 1
+	name <Flight Suit Sleeve>
+	desc <A light spacesuit.>
+	Category <CLOTHING SPACE>
+	Mass -1
+	Sealed
+
+	LegArmor 1
+	name <Flight Suit Legging>
+	desc <A light spacesuit.>
+	Category <CLOTHING SPACE>
+	Mass -1
+	Sealed
+end
+
+Set
+name <Pilot Suit [set]>
+desc <A light spacesuit used by mecha pilots.>
+Category <CLOTHING SPACE>
+Factions <GENERAL>
+Legality -25
+inv
+	HeadArmor 2
+	name <Pilot Helm>
 	desc <A spacesuit helm with an integrated rebreather and communicator.>
 	Category <CLOTHING SPACE>
 	SDL_PORTRAIT <item_lightspacehelm.png>
 	Mass -4
-	Legality -25
 	Sealed
 	Hardened
 	Phone
 
-	BodyArmor 3
+	BodyArmor 2
 	name <Pilot Suit>
-	desc <A light spacesuit used by the Pro Duelist Association.>
+	desc <A light spacesuit used by mecha pilots.>
 	Category <CLOTHING SPACE>
-	Mass -4
-	Legality -25
+	Mass -3
 	Sealed
 	sub
 		SpaceFlight 2
@@ -973,18 +1026,16 @@ inv
 
 	ArmArmor 2
 	name <Pilot Suit Sleeve>
-	desc <A light spacesuit used by the Pro Duelist Association.>
+	desc <A light spacesuit used by mecha pilots.>
 	Category <CLOTHING SPACE>
 	Mass -3
-	Legality -25
 	Sealed
 
 	LegArmor 2
 	name <Pilot Suit Legging>
-	desc <A light spacesuit used by the Pro Duelist Association.>
+	desc <A light spacesuit used by mecha pilots.>
 	Category <CLOTHING SPACE>
 	Mass -3
-	Legality -25
 	Sealed
 	sub
 		SpaceFlight 1
@@ -992,18 +1043,16 @@ inv
 
 	ArmArmor 2
 	name <Pilot Suit Sleeve>
-	desc <A light spacesuit used by the Pro Duelist Association.>
+	desc <A light spacesuit used by mecha pilots.>
 	Category <CLOTHING SPACE>
 	Mass -3
-	Legality -25
 	Sealed
 
 	LegArmor 2
 	name <Pilot Suit Legging>
-	desc <A light spacesuit used by the Pro Duelist Association.>
+	desc <A light spacesuit used by mecha pilots.>
 	Category <CLOTHING SPACE>
 	Mass -3
-	Legality -25
 	Sealed
 	sub
 		SpaceFlight 1
@@ -1052,6 +1101,74 @@ inv
 	Category <CLOTHING>
 	Mass -1
 	legality -25
+end
+
+Set
+name <Saga Powered Armor [set]>
+desc <A light powered armor suit. Although considered "light", the protection provided by the Saga is considerably higher than most conventional armor.>
+Category <ARMOR>
+Factions <GENERAL>
+Legality 10
+inv
+	HeadArmor 5
+	name <Saga Helm>
+	desc <The Saga helm features an integrated rebreather and communications systems.>
+	Mass -5
+	Sealed
+	Phone
+	Email
+	Memo
+
+	BodyArmor 5
+	name <Saga Suit>
+	desc <A powered armor suit.>
+	Mass -6
+	Legality 10
+	Sealed
+	Body 10
+	sub
+		HeavyActuator 3
+	end
+
+	ArmArmor 5
+	name <Saga Sleeve>
+	desc <A powered armor suit.>
+	Mass -5
+	Sealed
+	Body 5
+	sub
+		HeavyActuator 3
+	end
+
+	ArmArmor 5
+	name <Saga Sleeve>
+	desc <A powered armor suit.>
+	Mass -5
+	Sealed
+	Body 5
+	sub
+		HeavyActuator 3
+	end
+
+	LegArmor 5
+	name <Saga Legging>
+	desc <A powered armor suit.>
+	Mass -5
+	Sealed
+	Body 5
+	sub
+		SpaceFlight 3
+	end
+
+	LegArmor 5
+	name <Saga Legging>
+	desc <A powered armor suit.>
+	Mass -5
+	Sealed
+	Body 5
+	sub
+		SpaceFlight 3
+	end
 end
 
 BodyArmor 2

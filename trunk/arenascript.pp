@@ -4399,7 +4399,7 @@ begin
 end;
 
 Procedure ProcessGJoinLance( GB: GameBoardPtr );
-	{ The grabbed gear will quit the lance. }
+	{ The grabbed gear will join the lance. }
 begin
 	if Grabbed_Gear <> Nil then begin
 		{ If the Grabbed_Gear is not in play, move it to the current scene. }
@@ -4847,7 +4847,7 @@ end;
 Procedure AddLancemate( GB: GameBoardPtr; NPC: GearPtr );
 	{ Add the listed NPC to the PC's lance. }
 var
-	Mecha: GearPtr;
+	Mecha,Pilot: GearPtr;
 begin
 	{ This NPC will have to quit their current team to do this... }
 	{ so, better set a trigger. }
@@ -4863,6 +4863,9 @@ begin
 			SetNAtt( NPC^.NA , NAG_Narrative , NAS_GaveLMMecha , 1 );
 		end;
 	end;
+
+	Pilot := LocatePilot( NPC );
+	if Pilot <> NPC then SetNAtt( Pilot^.NA , NAG_Location , NAS_Team , NAV_LancemateTeam );
 
 	SetNAtt( NPC^.NA , NAG_Location , NAS_Team , NAV_LancemateTeam );
 	SetLancemateOrders( GB );

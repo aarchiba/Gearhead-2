@@ -601,6 +601,11 @@ begin
 	NPCPersonalInfo( NPC , ZONE_MonologueInfo );
 	DrawSprite( Backdrop_Sprite , ZONE_MonologuePortrait , 0 );
 	SS := LOcateSprite( PortraitName( NPC ) , SpriteColor( GB , NPC ) , 100 , 150 );
+
+	{ If the current portrait doesn't work, clear the portrait attribute so a new one }
+	{ will be selected. }
+	if SS^.Img = Nil then SetSAtt( NPC^.SA , 'SDL_PORTRAIT <>' );
+
 	DrawSprite( SS , ZONE_MonologuePortrait , 0 );
 	GameMsg( Msg , ZONE_MonologueText , InfoHiLight );
 end;
@@ -668,6 +673,11 @@ begin
 	{ Draw the portrait. }
 	DrawSprite( Backdrop_Sprite , ZONE_InteractPhoto , 0 );
 	SS := LOcateSprite( PortraitName( NPC ) , SpriteColor( GB , NPC ) , 100 , 150 );
+
+	{ If the current portrait doesn't work, clear the portrait attribute so a new one }
+	{ will be selected. }
+	if SS^.Img = Nil then SetSAtt( NPC^.SA , 'SDL_PORTRAIT <>' );
+
 	DrawSprite( SS , ZONE_InteractPhoto , 0 );
 end;
 
@@ -787,6 +797,11 @@ begin
 	MyDest.Y := Y0;
 	DrawSprite( Backdrop_Sprite , MyDest , 0 );
 	SS := LocateSprite( PortraitName( PC ) , SAttValue( PC^.SA , 'SDL_COLORS' ) , 100 , 150 );
+
+	{ If the current portrait doesn't work, clear the portrait attribute so a new one }
+	{ will be selected. }
+	if SS^.Img = Nil then SetSAtt( PC^.SA , 'SDL_PORTRAIT <>' );
+
 	DrawSprite( SS , MyDest , 0 );
 
 
