@@ -1150,7 +1150,6 @@ begin
 	Tolerance := ShopTolerance( GB , NPC );
 	MaxShopRank := SkillValue( NPC , NAS_Shopping , STAT_Charm ) div 2 - 1;
 	if MaxShopRank < 3 then MaxShopRank := 3;
-DialogMsg( 'SR: ' + BStr( MaxShopRank ) );
 
 	{ Initialize the Num_Items_By_Rank array. }
 	for n := 1 to 10 do Num_Items_By_Rank[n] := 0;
@@ -1202,7 +1201,6 @@ DialogMsg( 'SR: ' + BStr( MaxShopRank ) );
 			I := CloneGear( RetrieveGearSib( Standard_Equipment_List , N ) );
 			InitShopItem( I );
 			AppendGear( Wares , I );
-DialogMsg( WideStr( ShopRank , 2 ) + ': ' + FullGearName( I ) );
 
 			{ If this is a mecha, ItemPts will run out faster. }
 			if I^.G = GG_Mecha then Dec( ItemPts );

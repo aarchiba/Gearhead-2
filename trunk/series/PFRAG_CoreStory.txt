@@ -21,6 +21,61 @@
 %	 be called)
 
 	Persona
+	requires <*CS_BasicStopEnemyMission P:++ P:PCFAC -"PCFAC">
+	%% The PC is here on behaf of their faction.
+	START <NewChat Say %id%01 AddChat %id%01 AddChat %id%02 AddChat %id%03>
+	result%id%01 <StoryNote %id%02 Goto %1%>
+	result%id%02 <StoryNote %id%02 AddSociable -d10 Goto %1%>
+	result%id%03 <StoryNote %id%02 AddSociable  d10 Goto %1%>
+	Msg%id%01 <According to \FACTION &AllyFac , you can help us with our \PERSONA &EnemyNPC problem. It seems \SPR &EnemyNPC 's in town on some kind of a mission, and we need you to stop \OPR &EnemyNPC .>
+	Msg%id%01_1 <>
+	CMsg%id%01_1 <ifNPCSociable Accept>
+	Msg%id%01_2 <>
+	CMsg%id%01_2 <ifNPCShy Accept>
+	Msg%id%01_3 <>
+	CMsg%id%01_3 <ifNPCEasygoing Accept>
+	Msg%id%01_4 <>
+	CMsg%id%01_4 <ifNPCPassionate Accept>
+	Msg%id%01_5 <>
+	CMsg%id%01_5 <ifNPCCheerful Accept>
+	Msg%id%01_6 <>
+	CMsg%id%01_6 <ifNPCMelancholy Accept>
+	Msg%id%02 <\CHATNPC hired you to stop \PERSONA &EnemyNPC from completing \PPR &EnemyNPC mission.>
+	Prompt%id%01 <I've beaten \OPR &EnemyNPC before, and will again.>
+	Prompt%id%01_1 <>
+	Prompt%id%01_2 <>
+	Prompt%id%02 <Just to be clear, I work for \FACTION &AllyFac , not you.>
+	Prompt%id%03 <It'll be a pleasure to aid \FACTION ChatNPCFac .>
+	CPrompt%id%03 <if# 0 ChatNPCFac Accept>
+
+	Persona
+	requires <*CS_BasicStopEnemyMission ~"POLIC" (E:THIEF|F:CRIME)>
+	START <NewChat Say %id%01 AddChat %id%01 AddChat %id%02>
+	result%id%01 <StoryNote %id%02 Goto %1%>
+	result%id%02 <SMemo 0 Goto %2%>
+	Msg%id%01 <\PERSONA &EnemyNPC is planning some kind of heist in \SCENE RootSceneID . I need you to stop \PPR &EnemyNPC plans before \SPR &EnemyNPC gets a chance to succeed.>
+	Msg%id%01_1 <>
+	CMsg%id%01_1 <ifNPCSociable Accept>
+	Msg%id%01_2 <>
+	CMsg%id%01_2 <ifNPCShy Accept>
+	Msg%id%01_3 <>
+	CMsg%id%01_3 <ifNPCEasygoing Accept>
+	Msg%id%01_4 <>
+	CMsg%id%01_4 <ifNPCPassionate Accept>
+	Msg%id%01_5 <>
+	CMsg%id%01_5 <ifNPCCheerful Accept>
+	Msg%id%01_6 <>
+	CMsg%id%01_6 <ifNPCMelancholy Accept>
+	Msg%id%02 <\CHATNPC hired you to prevent \PERSONA &EnemyNPC 's latest heist.>
+	Prompt%id%01 <No problem. I'll be back when I'm done.>
+	Prompt%id%01_1 <Alright, I'll do it.>
+	Prompt%id%01_2 <I'll be back when \PERSONA &EnemyNPC has been stopped.>
+	Prompt%id%02 <Sorry, but I don't want to.>
+	CPrompt%id%02 <if# PCFac ChatNPCFac Accept>
+	Prompt%id%02_1 <Sorry, but I don't want this job.>
+	Prompt%id%02_2 <You can find someone else for that.>
+
+	Persona
 	requires <*CS_BasicStopEnemyMission>
 	START <NewChat Say %id%01 AddChat %id%01 AddChat %id%02>
 	result%id%01 <StoryNote %id%02 Goto %1%>
@@ -59,6 +114,83 @@
 %   PARAM2: Reject Mission Exit Label (Note: Not all missions may be rejected!)
 %	(Also note: If this component features another ending, neither exit may
 %	 be called)
+
+	Persona
+	requires <*CS_BasicFightingMission F:++ (+P--|+Pun)>
+	START <NewChat Say %id%01 AddChat %id%01 AddChat %id%02>
+	Result%id%01 <StoryNote %id%02 Goto %1%>
+	result%id%02 <SMemo 0 Goto %2%>
+	Msg%id%01 <There's a team of mecha from \FACTION &EnemyFac operating in \SCENE RootSceneID . Since we don't know what they're after, I need you to locate them and see what you can find out.>
+	Msg%id%01_1 <>
+	CMsg%id%01_1 <ifNPCSociable Accept>
+	Msg%id%01_2 <>
+	CMsg%id%01_2 <ifNPCShy Accept>
+	Msg%id%01_3 <>
+	CMsg%id%01_3 <ifNPCEasygoing Accept>
+	Msg%id%01_4 <>
+	CMsg%id%01_4 <ifNPCPassionate Accept>
+	Msg%id%01_5 <>
+	CMsg%id%01_5 <ifNPCCheerful Accept>
+	Msg%id%01_6 <>
+	CMsg%id%01_6 <ifNPCMelancholy Accept>
+	Msg%id%02 <\CHATNPC sent you to intercept a group of mecha from \FACTION &EnemyFac .>
+	Prompt%id%01 <I'll be back when I find something.>
+	Prompt%id%02 <Sorry, but I can't do this job.>
+	CPrompt%id%02 <if# PCFac ChatNPCFac Accept>
+
+	Persona
+	requires <*CS_BasicFightingMission +P-->
+	START <NewChat Say %id%01 AddChat %id%01 AddChat %id%02>
+	result%id%01 <StoryNote %id%02 Goto %1%>
+	result%id%02 <AddEasygoing -d6 SMemo 0 Goto %2%>
+	Msg%id%01 <Our sensors picked up a funny reading nearby. It was probably nothing, but just in case I'd like for you to try and find out what it was.>
+	Msg%id%01_1 <>
+	CMsg%id%01_1 <ifNPCSociable Accept>
+	Msg%id%01_2 <>
+	CMsg%id%01_2 <ifNPCShy Accept>
+	Msg%id%01_3 <>
+	CMsg%id%01_3 <ifNPCEasygoing Accept>
+	Msg%id%01_4 <>
+	CMsg%id%01_4 <ifNPCPassionate Accept>
+	Msg%id%01_5 <>
+	CMsg%id%01_5 <ifNPCCheerful Accept>
+	Msg%id%01_6 <>
+	CMsg%id%01_6 <ifNPCMelancholy Accept>
+	Msg%id%02 <\CHATNPC sent you to investigate an odd sensor reading.>
+	Prompt%id%01 <Sounds like an easy job. I'll do it.>
+	Prompt%id%01_1 <>
+	Prompt%id%01_2 <>
+	Prompt%id%02 <That's it? I'm not interested.>
+	CPrompt%id%02 <if# PCFac ChatNPCFac Accept>
+	Prompt%id%02_1 <You can find someone else for that.>
+	Prompt%id%02_2 <Thanks, but I'll go find a real mission instead.>
+
+	Persona
+	requires <*CS_BasicFightingMission F:++ F:CRIME>
+	START <NewChat Say %id%01 AddChat %id%01 AddChat %id%02>
+	Result%id%01 <StoryNote %id%02 Goto %1%>
+	result%id%02 <SMemo 0 Goto %2%>
+	Msg%id%01 <We've detected some mecha from \FACTION &EnemyFac in town. They must be planning some kind of heist in town; I want you to find them and stop them before that can happen.>
+	Msg%id%01_1 <>
+	CMsg%id%01_1 <ifNPCSociable Accept>
+	Msg%id%01_2 <>
+	CMsg%id%01_2 <ifNPCShy Accept>
+	Msg%id%01_3 <>
+	CMsg%id%01_3 <ifNPCEasygoing Accept>
+	Msg%id%01_4 <>
+	CMsg%id%01_4 <ifNPCPassionate Accept>
+	Msg%id%01_5 <>
+	CMsg%id%01_5 <ifNPCCheerful Accept>
+	Msg%id%01_6 <>
+	CMsg%id%01_6 <ifNPCMelancholy Accept>
+	Msg%id%02 <\CHATNPC sent you to locate and intercept a group of mecha from \FACTION &EnemyFac .>
+	Prompt%id%01 <I'll do it.>
+	Prompt%id%01_1 <Alright. I'll be back when I'm done.>
+	Prompt%id%01_2 <I'll get to work right away.>
+	Prompt%id%02 <You'll need to find someone else for this job.>
+	CPrompt%id%02 <if# PCFac ChatNPCFac Accept>
+	Prompt%id%02_1 <Sorry, but I don't want this job.>
+	Prompt%id%02_2 <Find someone else for this mission.>
 
 	Persona
 	requires <*CS_BasicFightingMission>
@@ -237,33 +369,6 @@
 	Prompt%id%02_2 <>
 
 	Persona
-	requires <*CORE_BasicJob +P-->
-	START <NewChat Say %id%01 AddChat %id%01 AddChat %id%02>
-	result%id%01 <StoryNote %id%02 Goto %1%>
-	result%id%02 <AddEasygoing -d6 SMemo 0 Goto %2%>
-	Msg%id%01 <Our sensors have picked up something in \SCENE %3% . It's probably nothing, but just in case I'd like for you to go there and see.>
-	Msg%id%01_1 <>
-	CMsg%id%01_1 <ifNPCSociable Accept>
-	Msg%id%01_2 <>
-	CMsg%id%01_2 <ifNPCShy Accept>
-	Msg%id%01_3 <>
-	CMsg%id%01_3 <ifNPCEasygoing Accept>
-	Msg%id%01_4 <>
-	CMsg%id%01_4 <ifNPCPassionate Accept>
-	Msg%id%01_5 <>
-	CMsg%id%01_5 <ifNPCCheerful Accept>
-	Msg%id%01_6 <>
-	CMsg%id%01_6 <ifNPCMelancholy Accept>
-	Msg%id%02 <\CHATNPC sent you to investigate sensor readings in \SCENE %3% .>
-	Prompt%id%01 <Sounds like an easy job. I'll do it.>
-	Prompt%id%01_1 <>
-	Prompt%id%01_2 <>
-	Prompt%id%02 <That's it? I'm not interested.>
-	CPrompt%id%02 <if# PCFac ChatNPCFac Accept>
-	Prompt%id%02_1 <You can find someone else for that.>
-	Prompt%id%02_2 <Thanks, but I'll go find a real mission instead.>
-
-	Persona
 	requires <*CORE_BasicJob F:-- (+Pun|+Pme)>
 	% V%id%01 = Have done introduction already
 	START <if= v%id%01 0 else result%id%01 NewChat Say %id%01 AddChat %id%01 AddChat %id%02 AddChat %id%03 V= %id%01 1>
@@ -312,29 +417,6 @@
 	Msg%id%02 <\CHATNPC sent you to fight \PERSONA &EnemyNPC in \SCENE %3% .>
 	Prompt%id%01 <Don't worry; \SPR &EnemyNPC won't get away.>
 	Prompt%id%02 <I'm actually avoiding \PERSONA &EnemyNPC right now.>
-	CPrompt%id%02 <if# PCFac ChatNPCFac Accept>
-
-	Persona
-	requires <*CORE_BasicJob F:++ (+P--|+Pun)>
-	START <NewChat Say %id%01 AddChat %id%01 AddChat %id%02>
-	Result%id%01 <SMemo %id%02 History %id%03 Goto %1%>
-	result%id%02 <SMemo 0 Goto %2%>
-	Msg%id%01 <There's a team of mecha from \FACTION &EnemyFac operating in \SCENE %3% . Since we don't know what they're after, I need you to locate them and see what you can find out.>
-	Msg%id%02 <\CHATNPC sent you to investigate a group of mecha from \FACTION &EnemyFac in \SCENE %3% .>
-	Msg%id%03 <\CHATNPC sent you to investigate a group of mecha from \FACTION &EnemyFac .>
-	Prompt%id%01 <I'll be back when I find something.>
-	Prompt%id%02 <Sorry, but I can't do this job.>
-	CPrompt%id%02 <if# PCFac ChatNPCFac Accept>
-
-	Persona
-	requires <*CORE_BasicJob F:++ F:CRIME>
-	START <NewChat Say %id%01 AddChat %id%01 AddChat %id%02>
-	Result%id%01 <StoryNote %id%02 Goto %1%>
-	result%id%02 <SMemo 0 Goto %2%>
-	Msg%id%01 <We've detected some mecha from \FACTION &EnemyFac in \SCENE %3% . They must be planning some kind of heist in town; I want you to find them and stop them before that can happen.>
-	Msg%id%02 <\CHATNPC sent you to intercept a group of mecha from \FACTION &EnemyFac in \SCENE %3% .>
-	Prompt%id%01 <I'll do it.>
-	Prompt%id%02 <You'll need to find someone else for this job.>
 	CPrompt%id%02 <if# PCFac ChatNPCFac Accept>
 
 	Persona

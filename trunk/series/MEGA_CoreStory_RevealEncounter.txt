@@ -89,6 +89,7 @@ Content
 %%	&EnemyNPC		The NPC in question is the core story enemy NPC
 %%	&DestroyFactory		The mission is to destroy a factory
 %%	&GatheringForces	The enemy forces are assembling for some big event
+%%	&Searching		The enemy is searching for something
 %%
 %% An NPC is going on some kind of mission which the PC has to stop. In order
 %% to do this he's going to have to find out what the mission is, then where
@@ -102,6 +103,105 @@ Content
 %% PARAM2: The MetaScene being sought
 %% PARAM3: The NPC doing the mission
 %%
+
+Content
+	name <Patrols Clash>
+	desc <An enemy of your enemy knows something about your enemy.>
+	requires <*:CS_DiscoverNPCMission (&GatheringForces|&Searching)>
+	Size 5
+
+	% E1 is the outdoors scene where the encounter is
+	% E2 is the metascene being sought
+	% E3 is the NPC doing the mission
+	% E4 is a local NPC who's an enemy of E3 but not of the player
+	% E5 is the encounter/patrol you must rescue
+	Element4 <Character !Near -7 !Enemy 3 !Okay -3 -ArchEnemy -NOFAC>
+	Element5 <Prefab>
+	Place5 <1>
+
+	HINT_%plotid% <%name4% has also been looking into this; you may be able to collaborate.>
+
+	%% FAIL CONDITIONS:
+	%% - E4 dies before revealing E5
+
+	% P%id%01 = E5 has been revealed
+	end <if= P%id%01 0 ifNPCDead %4% LoseSubPlot %plotid%>
+
+	% SubPlot1 - The find-your-own-damn-henchmen branch.
+	subplot1 <*TrailHenchmenToNPC 1 2 3>
+
+	sub
+		Persona 4
+		rumor%id% <%name4%'s team has been tracking %name3%.>
+		greeting <if= PlotStatus %plotid% %id% else GoChat if= P%id%01 0 else GoChat Goto GoGreet>
+		GoChat <RevertPersona>
+		*GoGreet <*IHaveInformation&AboutNPC GoBrief %3%>
+		GoBrief <NewChat Say 1 AddChat 1 AddChat 2 AddChat 3>
+		result1 <NewChat Say 2 History 3 PMemo %plotid% 3 P= %id%01 1 SetEncounterActive %5%>
+		result2 <AddCheerful -d8 Goto result1>
+		result3 <NewChat Say 4 History 5 PMemo %plotid% 5 SetPlotStatus %plotid1% %id1% AddSociable -d6>
+		Msg1 <I've been tracking %name3% for \FACTION ChatNPCFac . It seems like \SPR %3% 's in town searching for something. One of our recon teams has been following \PPR %3% lance, but we lost contact just a short while ago...>
+		Msg2 <The last transmissions came from %name1%. That's where you can begin looking... I just hope that you aren't too late.>
+		Msg3 <%name4% sent you to aid a patrol in %name1% which had been trailing %name3%.>
+		Msg4 <It'd be a lot easier to find %name3% if we joined forces... I'll tell you, though, that we believe \SPR %3% 's in %name1% now. Hopefully one or the other of us will find \OPR %3% .>
+		Msg5 <%name4% told you that %name3% was in %name1%.>
+		Prompt1 <I'll see if I can resume contact.>
+		Prompt2 <So you want me to go babysit them? Great.>
+		Prompt3 <I don't work with \FACTION ChatNPCFac .>
+		CPrompt3 <if# 0 ChatNPCFac if# ChatNPCFac PCFac if# ChatNPCFac &AllyFac Accept>
+
+		MetaScene 5 2
+		% You arrive in time to see a group of enemies fighting the recon patrol.
+		% Defend the scouts to learn the location of E3.
+		% L1 = Encounter Over Counter
+		% L2 = Initialization Counter
+		MapWidth 50
+		MapHeight 50
+
+		Start <if= L2 0 L= 2 1   Alert 1 TeamMonologue 3 2>
+
+		nu1 <if= T1 0   Return   if= V1 0 V= 1 1   LoseRenown Goto GoFailRescue>
+		nu2 <if= T2 0   if= V1 0 V= 1 1 Alert 4 XPV 100  ifG t3 0 else GoFailRescue  TeamMonologue 3 5  History 6  PMemo %plotid% 7  WinSubPlot %plotid%  SetEncounterActive %2%>
+		GoFailRescue <Alert 3  PMemo %plotid% 8 SetPlotStatus %plotid1% %id1%>
+
+		end <SetEncounterInactive %5%>
+
+		Msg1 <You encounter a group of %name3%'s henchmen fighting %name4%'s recon patrol.>
+		Msg2 <Give us a hand, would ya? These guys are killing us! Literally!>
+		Msg3 <You failed to protect the recon team. It looks like you'll have to find %name3% all by yourself.>
+		Msg4 <You have defeated all of %name3%'s henchmen.>
+		Msg5 <Thanks for the help! This is only part of %name3%'s forces... I'll upload the coordinates of their main lance.>
+		Msg6 <You rescued the recon team, who revealed %name3%'s location.>
+		Msg7 <You rescued the recon team, who revealed %name3%'s location in %name1%.>
+		Msg8 <You'll have to find %name3% all by yourself; \PPR %3% is most likely in %name1%.>
+
+		sub
+			team 1
+			setally 3
+			SetEnemy 2
+			ParaX 5
+			ParaY 5
+
+			team 2
+			name <Enemies>
+			SetEnemy 1 3
+			Deploy <SetSelfFaction &EnemyFac   WMecha 2 StoryDL 150>
+			ParaX 45
+			ParaY 45
+
+			team 3
+			name <Recon>
+			setally 1
+			setenemy 2
+			Deploy <SetSelfFaction NPCFac %4%  WMecha 3 StoryDL 60>
+			ParaX 15
+			ParaY 15
+		end
+	end
+	inv
+		stc CORE-ACTIVATABLE
+		name <Recon Patrol>
+	end
 
 Content
 	name <Calling all Mooks>
@@ -1300,6 +1400,99 @@ Content
 		Msg2 <You learned from a dataslate that the raiders are in %name1%.>
 		Msg3 <You no longer have any use for this item.>
 	end
+
+%%
+%% *TrailHenchmenToNPC Content
+%%
+%%	The PC must follow some NPCs to their base.
+%%
+%% When the PC has located the encounter, this subplot will make it visible
+%% with SetEncounterActive and conclude with WinSubPlot. Revealing the entrance
+%% in this subplot will typically not give the PC any XP. Bummer.
+%%
+%% PARAM1: The outdoors scene where the encounter is
+%% PARAM2: The MetaScene being sought
+%% PARAM3: The NPC being sought
+%% 
+
+Content
+	name <Ranger's Delight, specifically>
+	desc <You encounter a small group of henchmen, and can track them to their master.>
+	requires <*TrailHenchmenToNPC>
+	Size 4
+
+	% E1 is the outdoor scene where the encounter is
+	% E2 is the MetaScene being sought
+	% E3 is the NPC being sought
+	% E4 is an encounter
+	Element4 <Prefab>
+	Place4 <1>
+
+	% The Hint
+	HINT_%plotid% <%name3%'s men have been seen in %name1%.>
+
+	% P%id%01 = Initialization Counter
+	% P%id%02 = Tracking Difficulcy Number
+
+	% This particular subplot can't fail. Acers!
+
+	update <if= P%id%01 0 P= %id%01 1 P= %id%02 SkillTar StoryDL>
+	&%id%_RevealEncounter <SetEncounterActive %2% WinSubPlot %plotid%>
+
+	sub
+		MetaScene 4 2
+		rumor%id% <%name3%'s henchmen have been seen in %name1%.>
+		special <UNCHARTABLE>
+
+		% V1 = Encounter Over Counter
+		% V2 = Number of failed attempts to track
+		MapWidth 50
+		MapHeight 50
+
+		% Once the PC has defeated all the raiders, they get an Awareness roll to determine
+		% the location of their main force.
+
+		nu1 <if= T1 0   Return>
+		nu2 <if= T2 0   if= V1 0   V= 1 1   ifUAwareness p%id%02 else GoTrackFailed Alert 1 PMemo %id% 2 History 2 &%id%_RevealEncounter Return SeekGate %2%>
+		GoTrackFailed <Alert 3   L+ 2 1  P+ %id%02 -2 P+ %id%02 -d6   Return>
+
+		end <V= 1 0>
+
+		Msg1 <After defeating the henchmen, you manage to track their movements back to %name3%.>
+		Msg2 <You tracked %name3%'s henchmen back to \OPR %3% .>
+		Msg3 <You have defeated the henchmen, but still have no idea where %name3% is.>
+
+		sub
+			team 1
+			SetEnemy 2
+			ParaX 5
+			ParaY 5
+
+			team 2
+			SetEnemy 1
+			Deploy <if= PlotStatus %plotid% %id% SetSelfFaction &EnemyFac   WMecha 2 StoryDL 100>
+			ParaX 45
+			ParaY 45
+		end
+	end
+	inv
+		STC CORE-INVISIBLEENCOUNTER
+		name <%name3%'s Henchmen>
+		%% If the PC manages a stealth roll upon approaching this encounter, the
+		%% raiders may be followed back to their base instead of being fought.
+		%% V1 = Timer; will only attack once every 3 hours
+		update <if= PlotStatus %plotid% %id% else GoHide ifG ComTime V1 else GoHide SetStat STAT_MetaVisibility 0  Goto GoSetOrders>
+		use <ifG StatVal STAT_MetaVisibility -1    ifUStealth SkillTar StoryDL else GoAutoAttack   ifYesNo 1 2 3 else GoAutoAttack Goto GoTrack>
+		attack <ifG StatVal STAT_MetaVisibility -1  ifG PCScale 0    ifUStealth SkillTar StoryDL else GoAutoAttack ifYesNo 1 2 3 else GoAutoAttack Goto GoTrack>
+		GoAutoAttack <V= 1 ComTime V+ 1 10800   Alert -2 Exit Destination>
+		GoTrack <Alert 4 PMemo %id% 5 History 5 XPV 100 &%id%_RevealEncounter Exit %1% SeekGate %2%>
+		Msg1 <You encounter a small group of %name3% 's henchmen.>
+		Msg2 <Trail them.>
+		Msg3 <Approach them.>
+		Msg4 <You track the henchmen to %name3%.>
+		Msg5 <You tracked %name3%'s henchmen back to \OPR %3% .>
+	end
+
 
 %%
 %% *TrailRaiderToBase Content
