@@ -1562,7 +1562,7 @@ Scene 0 3
 sub
 	Scene
 	name <Cesena Arms Market>
-	type <building mall public legit>
+	type <building mall public legit rich>
 	entrance <*Building>
 	special <ADDEXIT>
 	MallMap
@@ -2110,7 +2110,7 @@ Scene 0 3
 sub
 	Scene
 	name <Commerce Tower>
-	type <building mall public>
+	type <building mall public rich>
 	entrance <*DEPARTMENTSTORE>
 	special <ADDEXIT>
 	MallMap
@@ -2157,7 +2157,7 @@ sub
 
 		Scene
 		name <Commerce Tower, L2>
-		type <building mall public>
+		type <building mall public rich>
 		ClubMap
 		MapWidth 30
 		MapHeight 24
@@ -6154,7 +6154,7 @@ Scene 0 3
 sub
 	Scene
 	name <Contra Dextra Avenue>
-	type <building mall public legit meeting>
+	type <building mall public legit meeting rich>
 	entrance <*DEPARTMENTSTORE>
 	special <ADDEXIT>
 	MallMap

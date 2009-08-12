@@ -329,7 +329,7 @@ Content
 	end
 
 Content
-	requires <*SPECIAL_SHOP Common>
+	requires <*SPECIAL_SHOP Common ~Poor -Rich>
 	content <Required *DECOR_FOR_SHOP %1% Local>
 	element1 <Prefab>
 	team1 <Citizens>
@@ -379,7 +379,7 @@ Content
 	end
 
 Content
-	requires <*SPECIAL_SHOP Common>
+	requires <*SPECIAL_SHOP Common ~Rich -Poor>
 	content <Required *DECOR_FOR_SHOP %1% Local>
 	element1 <Prefab>
 	team1 <Citizens>
@@ -607,7 +607,7 @@ Content
 %%   Contains an electronics store.
 
 Content
-	requires <*ELECTRONICS_SHOP>
+	requires <*ELECTRONICS_SHOP Common>
 	content <Required *DECOR_FOR_SHOP %1% Local>
 	element1 <Prefab>
 	team1 <Citizens>
@@ -622,13 +622,49 @@ Content
 		NPC Shopkeeper
 	end
 
+Content
+	requires <*ELECTRONICS_SHOP Common ~Poor -Rich>
+	content <Required *DECOR_FOR_SHOP %1% Local>
+	element1 <Prefab>
+	team1 <Citizens>
+	teamdata1 <ally pass>
+	sub
+		Persona 1
+		*greeting <*NiceToMeetYou GoShop>
+		*GoShop <*SHOP_ELECTRONICS GoBye>
+		*GoBye <*GOODBYE>
+	end
+	inv
+		NPC Shopkeeper
+		Shopping 5
+		chardesc wangtta
+	end
+
+Content
+	requires <*ELECTRONICS_SHOP Common ~Rich -Poor>
+	content <Required *DECOR_FOR_SHOP %1% Local>
+	element1 <Prefab>
+	team1 <Citizens>
+	teamdata1 <ally pass>
+	sub
+		Persona 1
+		*greeting <*NiceToMeetYou GoShop>
+		*GoShop <*SHOP_ELECTRONICS GoBye>
+		*GoBye <*GOODBYE>
+	end
+	inv
+		NPC Shopkeeper
+		Shopping 15
+		chardesc renowned
+	end
+
 
 
 %% *MECHA_SHOP CONTENT
 %%   Contains a mecha store.
 
 Content
-	requires <*MECHA_SHOP>
+	requires <*MECHA_SHOP ~Poor -Rich>
 	content <Required *DECOR_FOR_SHOP %1% Local>
 	element1 <Prefab>
 	team1 <Citizens>
@@ -662,7 +698,7 @@ Content
 	end
 
 Content
-	requires <*MECHA_SHOP>
+	requires <*MECHA_SHOP ~Rich -Poor>
 	content <Required *DECOR_FOR_SHOP %1% Local>
 	element1 <Prefab>
 	team1 <Citizens>
@@ -680,7 +716,7 @@ Content
 	end
 
 Content
-	requires <*MECHA_SHOP>
+	requires <*MECHA_SHOP ~Rich ~Industrial>
 	content <Required *DECOR_FOR_SHOP %1% Local>
 	element1 <Prefab>
 	team1 <Citizens>
@@ -751,6 +787,7 @@ Content
 
 %% *SHOP_MECHANIC CONTENT
 %%   Contains a mechanic and/or mecha shop.
+
 Content
 	requires <*MECHANIC_SHOP>
 	content <Required *DECOR_FOR_SHOP %1% Local>
@@ -842,7 +879,7 @@ Content
 %%   Contains a miscellaneous store.
 
 Content
-	requires <*GENERAL_SHOP>
+	requires <*GENERAL_SHOP ~Poor -Rich>
 	content <Required *DECOR_FOR_GENERAL_SHOP %1% Local>
 	element1 <Prefab>
 	team1 <Citizens>
@@ -876,7 +913,7 @@ Content
 	end
 
 Content
-	requires <*GENERAL_SHOP>
+	requires <*GENERAL_SHOP ~Rich -Poor>
 	content <Required *DECOR_FOR_GENERAL_SHOP %1% Local>
 	element1 <Prefab>
 	team1 <Citizens>
@@ -915,7 +952,7 @@ Content
 %%   Contains a weapon store.
 
 Content
-	requires <*WEAPON_SHOP>
+	requires <*WEAPON_SHOP ~Poor -Rich>
 	content <Required *DECOR_FOR_WEAPON_SHOP %1% Local>
 	element1 <Prefab>
 	team1 <Citizens>
@@ -967,7 +1004,7 @@ Content
 	end
 
 Content
-	requires <*WEAPON_SHOP>
+	requires <*WEAPON_SHOP ~Rich -Poor>
 	content <Required *DECOR_FOR_WEAPON_SHOP %1% Local>
 	element1 <Prefab>
 	team1 <Citizens>
@@ -1007,7 +1044,7 @@ Content
 %%   Contains a weapon store.
 
 Content
-	requires <*ARMOR_SHOP>
+	requires <*ARMOR_SHOP ~Poor -Rich>
 	content <Required *DECOR_FOR_ARMOR_SHOP %1% Local>
 	element1 <Prefab>
 	team1 <Citizens>
@@ -1041,7 +1078,7 @@ Content
 	end
 
 Content
-	requires <*ARMOR_SHOP>
+	requires <*ARMOR_SHOP ~Rich -Poor>
 	content <Required *DECOR_FOR_ARMOR_SHOP %1% Local>
 	element1 <Prefab>
 	team1 <Citizens>

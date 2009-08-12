@@ -189,6 +189,16 @@ begin
 	ScalePrice := Price;
 end;
 
+Function MaxShopRank( Shopkeeper: GearPtr ): Integer;
+	{ Return the maximum shop rank normally stocks. }
+var
+	MSR: Integer;
+begin
+	MSR := SkillRank( Shopkeeper , NAS_Shopping ) - 3;
+	if MSR < 3 then MSR := 3;
+	MaxShopRank := MSR;
+end;
+
 Function PurchasePrice( PC,NPC,Item: GearPtr ): LongInt;
 	{ Determine the purchase price of ITEM as being sold by NPC }
 	{ to PC. }
@@ -353,7 +363,6 @@ begin
 				AddNAtt( PC^.NA , NAG_Experience , NAS_Credits , -Cost );
 
 				CHAT_Message := MsgString( 'BUYREPLY' + BStr( Random( 4 ) + 1 ) );
-				if NPC <> Nil then DoleSkillExperience( NPC , NAS_Shopping , ( ( Round( Ln( Cost ) * 100 ) ) div ( Ammo^.Scale * 2 + 1 ) ) + 1 );
 
 				DialogMSG( ReplaceHash( MsgString( 'BUY_YOUHAVEBOUGHT' ) , GearName( Ammo ) ) );
 
@@ -415,9 +424,10 @@ begin
 				AddNAtt( PC^.NA , NAG_Experience , NAS_Credits , -Cost );
 
 				CHAT_Message := MsgString( 'BUYREPLY' + BStr( Random( 4 ) + 1 ) );
-				if NPC <> Nil then begin
-					XP := Round( Ln( Cost ) * 100 );
-					DoleSkillExperience( NPC , NAS_Shopping , ( XP div ( Part^.Scale * 2 + 1 ) ) + 1 );
+				if ( NPC <> Nil ) and ( NAttValue( Part^.NA , NAG_GearOps , NAS_ShopRank ) >= MaxShopRank( NPC ) ) then begin
+					if DoleSkillExperience( NPC , NAS_Shopping , Random( SkillAdvCost( NPC , MaxShopRank( NPC ) ) ) + 1 ) then begin
+						CHAT_Message := CHAT_Message + ' ' + MsgString( 'BUYUPGRADE' );
+					end;
 				end;
 
 				DialogMSG( ReplaceHash( MsgString( 'BUY_YOUHAVEBOUGHT' ) , GearName( Part ) ) );
@@ -1127,7 +1137,7 @@ Function CreateWaresList( GB: GameBoardPtr; NPC: GearPtr; Stuff: String ): GearP
 	end;
 var
 	Wares,I,I2: GearPtr;	{ List of items for sale. }
-	NPCSeed,NPCRestock,Tolerance,MaxShopRank: LongInt;
+	NPCSeed,NPCRestock,Tolerance,MSR: LongInt;
 	N,ShopRank,ItemPts: Integer;
 	WList,ILink: NAttPtr;
 	Num_Items_By_Rank: Array [1..10] of Integer;
@@ -1148,8 +1158,7 @@ begin
 
 	{ Calculate the shopkeeper's tolerance and maximum shop rank. }
 	Tolerance := ShopTolerance( GB , NPC );
-	MaxShopRank := SkillValue( NPC , NAS_Shopping , STAT_Charm ) div 2 - 1;
-	if MaxShopRank < 3 then MaxShopRank := 3;
+	MSR := MaxShopRank( NPC );
 
 	{ Initialize the Num_Items_By_Rank array. }
 	for n := 1 to 10 do Num_Items_By_Rank[n] := 0;
@@ -1177,9 +1186,10 @@ begin
 	ItemPts := 11 + Random( 15 );
 	while ItemPts > 0 do begin
 		{ Select a shop rank. }
-		ShopRank := Random( MaxShopRank ) + 1;
-		if ShopRank > 10 then ShopRank := 10
-		else if ( Random( 20 ) = 1 ) and ( ShopRank < 10 ) and ( Num_Items_By_Rank[ ShopRank + 1 ] > 0 ) then begin
+		ShopRank := Random( MSR ) + 1;
+		if ShopRank > 10 then ShopRank := 10;
+
+		while ( ShopRank < 10 ) and ( Random( 8 ) = 1 ) and ( Num_Items_By_Rank[ ShopRank + 1 ] > 0 ) do begin
 			Inc( ShopRank );
 			Dec( ItemPts );
 		end;
