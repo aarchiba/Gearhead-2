@@ -424,8 +424,8 @@ begin
 				AddNAtt( PC^.NA , NAG_Experience , NAS_Credits , -Cost );
 
 				CHAT_Message := MsgString( 'BUYREPLY' + BStr( Random( 4 ) + 1 ) );
-				if ( NPC <> Nil ) and ( NAttValue( Part^.NA , NAG_GearOps , NAS_ShopRank ) >= MaxShopRank( NPC ) ) then begin
-					if DoleSkillExperience( NPC , NAS_Shopping , Random( SkillAdvCost( NPC , MaxShopRank( NPC ) ) ) + 1 ) then begin
+				if ( NPC <> Nil ) and ( NAttValue( Part^.NA , NAG_GearOps , NAS_ShopRank ) >= ( MaxShopRank( NPC ) div 2 ) ) then begin
+					if DoleSkillExperience( NPC , NAS_Shopping , Random( SkillAdvCost( NPC , NAttValue( Part^.NA , NAG_GearOps , NAS_ShopRank ) + 3 ) ) + 1 ) then begin
 						CHAT_Message := CHAT_Message + ' ' + MsgString( 'BUYUPGRADE' );
 					end;
 				end;

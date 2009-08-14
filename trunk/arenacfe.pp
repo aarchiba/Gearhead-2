@@ -1126,11 +1126,23 @@ begin
 	end;
 end;
 
+Function SituationalEjectionModifier( GB: GameBoardPtr; Attacker,Target: GearPtr ): Integer;
+	{ Return the situational modifier to the verbal attack roll. This modifier is based }
+	{ on the following: }
+	{ - }
+begin
+
+end;
+
 Procedure DoVerbalAttack( GB: GameBoardPtr; Attacker,Target: GearPtr );
 	{ ATTACKER is going to spew abuse upon TARGET. If ATTACKER is a member of the }
 	{ PC team and TARGET is in hard shape, this attack has a chance of }
 	{ causing surrender or ejection. Note that the ATTACKER has only one chance to }
 	{ get an ejection, and every time he fails to gain a surrender it gets harder. }
+const
+	MinSurrenderDefRoll = 5;
+	MinEjectDefRoll = 10;
+	ConversationEjectPenalty = 3;
 	Function SelectTactic: Integer;
 		{ ATTACKER has to select a tactic to use against TARGET. }
 		{ This tactic is going to be one of the interaction skills. }
@@ -1138,7 +1150,7 @@ Procedure DoVerbalAttack( GB: GameBoardPtr; Attacker,Target: GearPtr );
 	var
 		Con_Rank,Int_Rank: Integer;
 	begin
-		Con_Rank := SkillValue( Attacker , NAS_Conversation , STAT_Charm ) - 5;
+		Con_Rank := SkillValue( Attacker , NAS_Conversation , STAT_Charm ) - ConversationEjectPenalty;
 		if Con_Rank < 0 then Con_Rank := 0;
 		Int_Rank := SkillValue( Attacker , NAS_Intimidation , STAT_Ego );
 
@@ -1148,15 +1160,12 @@ Procedure DoVerbalAttack( GB: GameBoardPtr; Attacker,Target: GearPtr );
 			SelectTactic := NAS_Conversation;
 		end;
 	end;
-const
-	MinSurrenderDefRoll = 5;
-	MinEjectDefRoll = 10;
 var
 	AtSkill,AtRoll,DefRoll: Integer;
 	msg: String;
 begin
 	if ( Target^.G = GG_Character ) then begin
-		DefRoll := SkillRoll( GB , Target , NAS_Toughness , STAT_Ego , 0 , 0 , False , True );
+		DefRoll := SkillRoll( GB , Target , NAS_Concentration , STAT_Ego , 0 , 0 , False , True );
 		if DefRoll < MinSurrenderDefRoll then DefRoll := MinSurrenderDefRoll;
 		AddMentalDown( Attacker , 3 );
 
@@ -1186,19 +1195,19 @@ begin
 		end;
 
 	end else if ( target^.G = GG_Mecha ) and ( NAttValue( Attacker^.NA , NAG_Location, NAS_Team ) = NAV_DefPlayerTeam ) and MightEject( Target ) then begin
-		DefRoll := SkillRoll( GB , Target , NAS_Toughness , STAT_Ego , 0 , NAttValue( Target^.NA , NAG_EpisodeData , NAS_TauntResistance ) , False , True );
+		DefRoll := SkillRoll( GB , Target , NAS_Concentration , STAT_Ego , 0 , NAttValue( Target^.NA , NAG_EpisodeData , NAS_TauntResistance ) , False , True );
 		if DefRoll < MinEjectDefRoll then DefRoll := MinEjectDefRoll;
 		AddMentalDown( Attacker , 3 );
 
 		AtSkill := SelectTactic;
 		msg := GetTauntString( Attacker , 'CHAT_VA.FORCEEJECT.' + BStr( AtSkill ) );
 		if AtSkill = NAS_Conversation then begin
-			AtRoll :=  SkillRoll( GB , Attacker , AtSkill , STAT_Charm , DefRoll , -10 , False , True );
+			AtRoll :=  SkillRoll( GB , Attacker , AtSkill , STAT_Charm , DefRoll , -5 - ConversationEjectPenalty , False , True );
 		end else begin
 			AtRoll :=  SkillRoll( GB , Attacker , AtSkill , STAT_Ego , DefRoll , -5 , False , True );
 		end;
 
-		AddNAtt( Target^.NA , NAG_EpisodeData , NAS_TauntResistance , 1 + Random( 8 ) );
+		AddNAtt( Target^.NA , NAG_EpisodeData , NAS_TauntResistance , 1 + Random( 6 ) );
 		Monologue( GB , Attacker , msg );
 
 		if AtRoll > DefRoll then begin
