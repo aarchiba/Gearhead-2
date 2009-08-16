@@ -382,7 +382,7 @@ Function UseRepairSkill( GB: GameBoardPtr; PC,Target: GearPtr; Skill: Integer ):
 	end;
 var
 	RP: LongInt;
-	T,tries,SkRoll,SkTar: Integer;
+	T,tries,SkRoll,SkTar,PercentDamage: Integer;
 	IsSafeRepair,HadRepairFuel: Boolean;
 	TMaster: GearPtr;
 begin
@@ -391,6 +391,7 @@ begin
 	if PC = Nil then Exit( False );
 
 	TMaster := FindMaster( Target );
+	PercentDamage := PercentDamaged( TMaster );
 
 	{ Depending upon the situation, this repair will either fix some damage or all the }
 	{ damage in one go. If in a safe area and repairing a mecha which is not currently in play, }
@@ -450,6 +451,12 @@ begin
 		AddNAtt( TMaster^.NA , NAG_Damage , NAS_StrucDamage , 30 );
 	end;
 
+	{ Determine the percentage of damage repaired. This will determine the XP award. }
+	PercentDamage := PercentDamaged( TMaster ) - PercentDamage;
+	if PercentDamage > 0 then begin
+		DoleExperience( PC , PercentDamage div 2 );
+		DoleSkillExperience( PC , Skill , ( PercentDamage + 1 ) div 2 );
+	end;
 
 	{ Using repair takes time and concentration. }
 	WaitAMinute( GB , PC , ReactionTime( PC ) * Tries );
