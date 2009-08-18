@@ -2,231 +2,17 @@ Battroid 4
 Name <Pixie>
 SDL_Sprite <>
 SDL_Portrait <>
-Desig <MMS-01 Blue>
-desc <MUGL's first entry into the high end battroid market.>
-TYPE <GROUND SPACE INSIDE>
-FACTIONS <MUGLE MAQUI FCOMS RISHI>
-ReflexSystem
-
-sub
-Head
-	Armor 4
-	Mass -4
-	sub
-		Sensor 7
-		mass -2
-
-		ECM 6
-		mass -1
-	end
-	inv
-		HeadArmor 3
-		mass -3
-	end
-
-Torso
-	Armor 4
-	Mass -4
-	sub
-		CPit
-		Armor 2
-		mass -1
-
-		Engine 4
-		Armor 2
-		mass -1
-
-		Gyro
-		Armor 2
-		mass -1
-
-		Computer 5
-		mass -5
-		sub
-			Software 2
-			name <Laniac Mecha FCS>
-			S_TRBoost
-			S_BoostScale 2
-
-			Software 2
-			name <Expert Action Processing>
-			S_MVBoost
-			S_BoostScale 2
-
-			Software 1
-			name <Target Analyzer>
-			desc <Mecha identification and analysis software.>
-			S_Information
-			SInfo_MechaDex
-		end
-
-		HeavyActuator 2
-
-		Mount
-		name <Right Torso Mount>
-		inv
-			MLauncher 12
-			sub
-				STC SPKM-3
-				Magazine 40
-				mass -5
-			end
-		end
-
-		Mount
-		name <Left Torso Mount>
-		inv
-			MLauncher 12
-			sub
-				STC SPKM-3
-				Magazine 40
-				mass -5
-			end
-		end
-	end
-	inv
-		BodyArmor 4
-		mass -5
-		sub
-			ArcJet 2
-		end
-	end
-
-Arm
-	name <Right Arm>
-	Armor 4
-	Mass -4
-	sub
-		Hand
-		name <Right Hand>
-		inv
-			Beamgun 8
-			name <Magic Beam>
-			desc <A highly unpredictable beam weapon.>
-			type <EXPERIMENTAL MYSTERY>
-			Acc 1
-			Range 6
-			mass -4
-		end
-
-		HeavyActuator 3
-
-		Mount
-		name <Right Arm Mount>
-		inv
-			Melee 6
-			name <Sting>
-			mass -4
-		end
-	end
-	inv
-		ArmArmor 3
-		mass -3
-		sub
-			ArcJet 2
-		end
-	end
-
-Arm
-	name <Left Arm>
-	Armor 4
-	Mass -4
-	sub
-		Hand
-		name <Left Hand>
-
-		HeavyActuator 3
-
-		Mount
-		name <Left Arm Mount>
-	end
-	inv
-		ArmArmor 3
-		mass -3
-		sub
-			ArcJet 2
-		end
-
-		Shield 3
-		mass -2
-		sub
-			STC LAS-5
-			mass -4
-		end
-	end
-
-Leg
-	name <Right Leg>
-	Armor 4
-	Mass -4
-	sub
-		Mount
-		name <Right Leg Mount>
-
-		ArcJet 4
-	end
-	inv
-		LegArmor 3
-		mass -3
-		sub
-			ArcJet 2
-		end
-	end
-
-Leg
-	name <Left Leg>
-	Armor 4
-	Mass -4
-	sub
-		Mount
-		name <Left Leg Mount>
-
-		ArcJet 4
-	end
-	inv
-		LegArmor 3
-		mass -3
-		sub
-			ArcJet 2
-		end
-	end
-
-Wing
-	name <Right Wing>
-	Armor 3
-	mass -5
-	Hardened
-	sub
-		ArcJet 5
-		Integral
-	end
-
-Wing
-	name <Left Wing>
-	Armor 3
-	mass -5
-	Hardened
-	sub
-		ArcJet 5
-		Integral
-	end
-
-end
-
-Battroid 4
-Name <Pixie>
-SDL_Sprite <>
-SDL_Portrait <>
 Desig <MMS-02 Green>
-desc <An upgraded version of the Blue Pixie.>
+desc <MUGL Enterprise's first entry into the high-end battroid market.>
 TYPE <GROUND SPACE INSIDE>
 FACTIONS <MUGLE>
 ReflexSystem
 
 sub
 Head
+	Size 5
 	Armor 4
-	Mass -4
+	Mass -5
 	Hardened
 	sub
 		Sensor 7
@@ -234,32 +20,39 @@ Head
 
 		ECM 6
 		mass -1
+
+		STC LAS-5
+		name <Intercept Laser>
+		type <INTERCEPT>
+		mass -4
+		Integral
 	end
 	inv
-		HeadArmor 3
-		mass -4
+		HeadArmor 5
+		mass -8
 		sub
-			ArcJet 2
+			ArcJet 4
+			Integral
 		end
 	end
 
 Torso
 	Armor 4
-	Mass -4
+	Mass -5
 	Hardened
 	sub
 		CPit
 		Armor 2
-		mass -1
+		mass -2
 
 		Engine 4
 		Armor 2
-		mass -1
+		mass -2
 		HighOutput
 
 		Gyro
 		Armor 2
-		mass -1
+		mass -2
 
 		Computer 5
 		mass -5
@@ -281,33 +74,41 @@ Torso
 			SInfo_MechaDex
 		end
 
-		STC LAS-5
-		name <Intercept Laser>
-		type <INTERCEPT>
+		Beamgun 8
+		name <Magic Beam>
+		desc <A highly unpredictable beam weapon.>
+		type <EXPERIMENTAL>
+		Acc 1
+		Range 8
+		Recharge 1
+		mass -4
+		Integral
 
 		Mount
 		name <Right Torso Mount>
 		inv
-			STC PAR-6
+			STC RG-8
 			mass -4
 		end
 
 		Mount
 		name <Left Torso Mount>
 		inv
-			MLauncher 12
+			MLauncher 18
+			mass -2
 			sub
 				STC SPKM-3
-				Magazine 40
-				mass -5
+				Magazine 60
+				mass -2
 			end
 		end
 	end
 	inv
-		BodyArmor 5
-		mass -6
+		BodyArmor 6
+		mass -9
 		sub
-			ArcJet 3
+			ArcJet 4
+			Integral
 		end
 	end
 
@@ -320,12 +121,13 @@ Arm
 		Hand
 		name <Right Hand>
 		inv
-			Beamgun 8
-			name <Magic Cannon>
-			desc <A highly unpredictable beam weapon.>
-			type <EXPERIMENTAL MYSTERY>
+			Beamgun 6
+			name <Pixie Rifle>
+			desc <A quick-firing plasma rifle with an integrated beam lash.>
+			type <BRUTAL>
 			Acc 1
-			Range 6
+			Range 5
+			Recharge 3
 			mass -4
 			sub
 				EMelee 8
@@ -335,24 +137,17 @@ Arm
 			end
 		end
 
-		HeavyActuator 3
+		STC PAR-2
 
 		Mount
 		name <Right Arm Mount>
-		inv
-			MLauncher 12
-			sub
-				STC SPKM-3
-				Magazine 40
-				mass -5
-			end
-		end
 	end
 	inv
-		ArmArmor 3
-		mass -4
+		ArmArmor 5
+		mass -8
 		sub
-			ArcJet 2
+			ArcJet 3
+			Integral
 		end
 	end
 
@@ -365,24 +160,21 @@ Arm
 		Hand
 		name <Left Hand>
 
-		HeavyActuator 3
+		STC PAR-2
 
 		Mount
 		name <Left Arm Mount>
 	end
 	inv
-		ArmArmor 3
-		mass -4
+		ArmArmor 5
+		mass -8
 		sub
-			ArcJet 2
+			ArcJet 4
+			Integral
 		end
 
-		Shield 3
-		mass -2
-		sub
-			STC LAS-5
-			mass -4
-		end
+		EShield 5
+		DefBonus 3
 	end
 
 Leg
@@ -391,15 +183,14 @@ Leg
 	Mass -4
 	Hardened
 	sub
-		HeavyActuator 1
-
-		ArcJet 4
+		ArcJet 5
 	end
 	inv
-		LegArmor 3
-		mass -4
+		LegArmor 5
+		mass -8
 		sub
-			ArcJet 2
+			ArcJet 4
+			Integral
 		end
 	end
 
@@ -409,15 +200,14 @@ Leg
 	Mass -4
 	Hardened
 	sub
-		HeavyActuator 1
-
-		ArcJet 4
+		ArcJet 5
 	end
 	inv
-		LegArmor 3
-		mass -4
+		LegArmor 5
+		mass -8
 		sub
-			ArcJet 2
+			ArcJet 4
+			Integral
 		end
 	end
 

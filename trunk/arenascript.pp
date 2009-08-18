@@ -226,7 +226,6 @@ var
 	var
 		Rumor: SAttPtr;
 		Level: LongInt;
-		Plot: GearPtr;
 	begin
 		{ First add the basic rumor.  }
 		Rumor := FindSAtt( P^.SA , Rumor_Head );
@@ -239,7 +238,6 @@ var
 			if Rumor <> Nil then AddThisRumor( P , Rumor );
 		end else if (( P^.G = GG_Persona ) or ( P^.G = GG_MetaScene )) and ( P^.Parent <> Nil ) and ( P^.Parent^.G = GG_Plot ) then begin
 			{ Finally add the plot rumor. }
-			Plot := P^.Parent;
 			Rumor := FindSAtt( P^.SA , Rumor_Head + BStr( NAttValue( FindRoot( GB^.Scene )^.NA , NAG_PlotStatus , Level ) ) );
 			if Rumor <> Nil then AddThisRumor( P , Rumor );
 		end;
@@ -862,16 +860,18 @@ Procedure InitiateMacro( GB: GameBoardPtr; Source: GearPtr; var Event: String; P
 	function NeededParameters( cmd: String ): Integer;
 		{ Return the number of parameters needed by this function. }
 	const
-		NumStandardFunctions = 15;
+		NumStandardFunctions = 18;
 		StdFunName: Array [1..NumStandardFunctions] of string = (
 			'-', 'GNATT', 'GSTAT', '?PILOT', '?MECHA',
 			'SKROLL', 'THREAT', 'REWARD', 'ESCENE', 'RANGE',
-			'FXPNEEDED','*','MAPTILE','PCSKILLVAL','CONCERT'
+			'FXPNEEDED','*','MAPTILE','PCSKILLVAL','CONCERT',
+			'SKILLTAR', 'HARDSKILLTAR', 'SOCSKILLTAR'
 		);
 		StdFunParam: Array [1..NumStandardFunctions] of byte = (
 			1,2,1,1,1,
 			1,2,2,1,2,
-			1,2,2,1,2
+			1,2,2,1,2,
+			1,1,1
 		);
 	var
 		it,T: Integer;
@@ -1029,6 +1029,25 @@ begin
 	if it < 8 then it := 8;
 	HardSkillTarget := it;
 end;
+
+Function SocSkillTarget( GB: GameBoardPtr; Renown: Integer ): Integer;
+	{ Return a social difficult target for skill rolls based on Renown and modified }
+	{ by the relationship between I_PC and I_NPC. }
+var
+	it,react: Integer;
+begin
+	it := Renown div 7 + 7;
+	if it < 10 then it := 10;
+
+	{ If the PC and NPC exist, apply the special modifier. }
+	if ( I_PC <> Nil ) and ( I_NPC <> Nil ) then begin
+		react := ReactionScore( GB^.Scene , I_PC , I_NPC );
+		it := it - ( react div 10 );
+	end;
+
+	SocSkillTarget := it;
+end;
+
 
 Function AV_ProcessConcert( GB: GameBoardPtr; AudienceSize,SkillTarget: Integer ): Integer;
 	{ A concert is beginning! Yay! }
@@ -1216,6 +1235,10 @@ begin
 	end else if ( SMsg = 'HARDSKILLTAR' ) then begin
 		VCode := ScriptValue( Event , GB , Scene );
 		SV := HardSkillTarget( VCode );
+
+	end else if ( SMsg = 'SOCSKILLTAR' ) then begin
+		VCode := ScriptValue( Event , GB , Scene );
+		SV := SocSkillTarget( GB , VCode );
 
 	end else if SMsg = 'PCSCALE' then begin
 		SV := FindPCScale( GB );
@@ -3949,16 +3972,18 @@ begin
 			until M2 = Nil;
 
 			{ Apply emergency repair to it. }
-			for t := 0 to NumMaterial do begin
-				if ( TotalRepairableDamage( Mek , T ) > 0 ) and TeamHasSkill( GB , NAV_DefPlayerTeam , Repair_Skill_Needed[ T ] ) then begin
-					{ Determine how many repair points it's possible }
-					{ to apply. }
-					RPts := RollStep( TeamSkill( GB , NAV_DefPlayerTeam , Repair_Skill_Needed[ T ] , STAT_Knowledge ) ) - 15;
-					if RPts > 0 then begin
-						ApplyEmergencyRepairPoints( Mek , T , RPts );
+			if CanScavenge or ( Random( 6 ) = 1 ) then begin
+				for t := 0 to NumMaterial do begin
+					if ( TotalRepairableDamage( Mek , T ) > 0 ) then begin
+						{ Determine how many repair points it's possible }
+						{ to apply. }
+						RPts := RollStep( TeamSkill( GB , NAV_DefPlayerTeam , Repair_Skill_Needed[ T ] , STAT_Knowledge ) ) - 15;
+						if RPts > 0 then begin
+							ApplyEmergencyRepairPoints( Mek , T , RPts );
+						end;
 					end;
-				end;
-			end;	{ Checking the repair skills. }
+				end;	{ Checking the repair skills. }
+			end;
 
 			{ If at the end of this the mecha is NotDestroyed, it may be }
 			{ added to the PC team. If it is destroyed, the PC has a chance }

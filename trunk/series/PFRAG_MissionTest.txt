@@ -243,7 +243,7 @@
 	requires <*GenericMissionTest &Mecha "POLIC">
 	start <NewChat Say %id%01 AddChat %id%01 AddChat %id%02 AddChat %id%03>
 	.%id%_GoFail <EndChat Say %id%03 Goto %2%>
-	result%id%01 <ifConversation HardSkillTar %6% else .%id%_GoFail Goto %1%>
+	result%id%01 <ifConversation SocSkillTar %6% else .%id%_GoFail Goto %1%>
 	result%id%02 <ifTaunt SkillTar %6% else .%id%_GoFail ifG React 0 else .%id%_GoFail NewChat Say %id%02 AddChat %id%04 AddChat %id%05>
 	result%id%03 <Goto %1%>
 	result%id%04 <Goto %1%>
@@ -294,10 +294,10 @@
 	requires <*GenericMissionTest &Mecha>
 	start <if= v%id%01 0 else .%id%_GoBeenBefore V= %id%01 1 NewChat Say %id%01  AddChat %id%01 AddChat %id%02 AddChat %id%03 AddChat %id%04>
 	.%id%_GoBeenBefore <NewChat SayAnything Goto %2%>
-	result%id%01 <ifConversation HardSkillTar %6% else .%id%_GoR1Lose ifG React -1 else .%id%_GoR1Lose Goto %1%>
+	result%id%01 <ifConversation SocSkillTar %6% else .%id%_GoR1Lose ifG React -1 else .%id%_GoR1Lose Goto %1%>
 	.%id%_GoR1Lose <NewChat Say %id%02 Goto %2%>
-	result%id%02 <ifIntimidation SkillTar %6% else .%id%_GoR1Lose Goto %1%>
-	result%id%03 <AddEasygoing -d10  ifConversation HardSkillTar %6% else .%id%_GoR3Lose  ifG React 20 else .%id%_GoR3Lose  AddReact 10  NewChat Say %id%03 AddChat %id%05>
+	result%id%02 <ifIntimidation SocSkillTar %6% else .%id%_GoR1Lose Goto %1%>
+	result%id%03 <AddEasygoing -d10  ifConversation SocSkillTar %6% else .%id%_GoR3Lose  ifG React 20 else .%id%_GoR3Lose  AddReact 10  NewChat Say %id%03 AddChat %id%05>
 	.%id%_GoR3Lose <AddReact -10  EndChat Say %id%04>
 	result%id%04 <Goto %3%>
 	result%id%05 <Goto %1%>
@@ -379,9 +379,9 @@
 	requires <*GenericMissionTest ~Shy>
 	start <if= v%id%01 0 else .%id%_GoBeenBefore V= %id%01 1 NewChat Say %id%01  AddChat %id%01 AddChat %id%02>
 	.%id%_GoBeenBefore <NewChat SayAnything Goto %2%>
-	result%id%01 <ifIntimidation SkillTar %6% else .%id%_GoR1Fail Goto .%id%_GoOfferMission>
+	result%id%01 <ifIntimidation SocSkillTar %6% else .%id%_GoR1Fail Goto .%id%_GoOfferMission>
 	.%id%_GoR1Fail <NewChat Say %id%02 Goto %2%>
-	result%id%02 <ifConversation SkillTar %6% else .%id%_GoR2Fail Goto .%id%_GoOfferMission>
+	result%id%02 <ifConversation SocSkillTar %6% else .%id%_GoR2Fail Goto .%id%_GoOfferMission>
 	.%id%_GoR2Fail <NewChat Say %id%03 Goto %2%>
 	.%id%_GoOfferMission <NewChat Say %id%04 AddChat %id%03 AddChat %id%04>
 	result%id%03 <Goto %1%>
@@ -472,8 +472,8 @@
 	.%id%_GoFail <NewChat Say %id%03 Goto %2%>
 	.%id%_GoSuccess <NewChat Say %id%04 AddChat %id%05 AddChat %id%06>
 	result%id%01 <Goto %4%>
-	result%id%02 <ifConversation SkillTar %7% else .%id%_GoFail Goto .%id%_GoSuccess>
-	result%id%03 <ifIntimidation SkillTar %7% else .%id%_GoFail Goto .%id%_GoSuccess>
+	result%id%02 <ifConversation SocSkillTar %7% else .%id%_GoFail Goto .%id%_GoSuccess>
+	result%id%03 <ifIntimidation SocSkillTar %7% else .%id%_GoFail Goto .%id%_GoSuccess>
 	result%id%04 <Goto %3%>
 	result%id%05 <Goto %1%>
 	result%id%06 <Goto %3%>
@@ -545,8 +545,8 @@
 	requires <*CivilDefenseTest ~Melancholy>
 	Start <NewChat   Say %id%01   AddChat %id%01   AddChat %id%02   AddChat %id%03  AddChat %id%04>
 	result%id%01 <Goto %4%>
-	result%id%02 <ifConversation SkillTar %7% else .%id%_GoFail   Goto %1%>
-	result%id%03 <AddEasygoing -d6  ifIntimidation SkillTar %7% else .%id%_GoFail   Goto %1%>
+	result%id%02 <ifConversation SocSkillTar %7% else .%id%_GoFail   Goto %1%>
+	result%id%03 <AddEasygoing -d6  ifIntimidation SocSkillTar %7% else .%id%_GoFail   Goto %1%>
 	result%id%04 <Goto %3%>
 	.%id%_GoFail <NewChat Say %id%02 Goto %2%>
 	Msg%id%01 <If you don't have any business in town I suggest you leave. It isn't a safe time to be here.>
@@ -594,7 +594,7 @@
 	requires <*CivilDefenseTest ~Sociable>
 	start <NewChat  Say %id%01  AddChat %id%01  AddChat %id%02  AddChat %id%03>
 	result%id%01 <Goto %4%>
-	result%id%02 <ifIntimidation SkillTar %7% else .%id%_Go2Fail Goto %1%>
+	result%id%02 <ifIntimidation SocSkillTar %7% else .%id%_Go2Fail Goto %1%>
 	.%id%_Go2Fail <ifG %7% PCRenown else %1% NewChat Say %id%02 Goto %2%>
 	result%id%03 <Goto %3%>
 	Msg%id%01 <Our city is in trouble. I need to locate a pilot for a mission against some infiltrators.>

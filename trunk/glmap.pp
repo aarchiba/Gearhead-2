@@ -2024,25 +2024,25 @@ const
 var
 	L: Integer;
 begin
-	{ If the mouse isn't active, exit without doing anything. }
-	if not Mouse_Active then Exit;
-
-	if Mouse_X < 20 then begin
-		Origin_X := Origin_X + FineDir[ ( Origin_D + Num_Rotation_Angles div 4 ) mod Num_Rotation_Angles , 1 ]/3;
-		Origin_Y := Origin_Y + FineDir[ ( Origin_D + Num_Rotation_Angles div 4 ) mod Num_Rotation_Angles , 2 ]/3;
-		checkorigin;
-	END else if Mouse_X > ( screenwidth - 20 ) then begin
-		Origin_X := Origin_X + FineDir[ ( Origin_D + Num_Rotation_Angles * 3 div 4 ) mod Num_Rotation_Angles , 1 ]/3;
-		Origin_Y := Origin_Y + FineDir[ ( Origin_D + Num_Rotation_Angles * 3 div 4 ) mod Num_Rotation_Angles , 2 ]/3;
-		checkorigin;
-	end else if ( Mouse_Y < 20 ) then begin
-		Origin_X := Origin_X + FineDir[ ( Origin_D + Num_Rotation_Angles div 2 ) mod Num_Rotation_Angles , 1 ]/3;
-		Origin_Y := Origin_Y + FineDir[ ( Origin_D + Num_Rotation_Angles div 2 ) mod Num_Rotation_Angles , 2 ]/3;
-		checkorigin;
-	END else if ( Mouse_Y > ( screenheight - 20 ) ) then begin
-		Origin_X := Origin_X + FineDir[ Origin_D , 1 ]/3;
-		Origin_Y := Origin_Y + FineDir[ Origin_D , 2 ]/3;
-		checkorigin;
+	{ Only scroll if the mouse is active. }
+	if Mouse_Active then begin
+		if Mouse_X < 20 then begin
+			Origin_X := Origin_X + FineDir[ ( Origin_D + Num_Rotation_Angles div 4 ) mod Num_Rotation_Angles , 1 ]/3;
+			Origin_Y := Origin_Y + FineDir[ ( Origin_D + Num_Rotation_Angles div 4 ) mod Num_Rotation_Angles , 2 ]/3;
+			checkorigin;
+		END else if Mouse_X > ( screenwidth - 20 ) then begin
+			Origin_X := Origin_X + FineDir[ ( Origin_D + Num_Rotation_Angles * 3 div 4 ) mod Num_Rotation_Angles , 1 ]/3;
+			Origin_Y := Origin_Y + FineDir[ ( Origin_D + Num_Rotation_Angles * 3 div 4 ) mod Num_Rotation_Angles , 2 ]/3;
+			checkorigin;
+		end else if ( Mouse_Y < 20 ) then begin
+			Origin_X := Origin_X + FineDir[ ( Origin_D + Num_Rotation_Angles div 2 ) mod Num_Rotation_Angles , 1 ]/3;
+			Origin_Y := Origin_Y + FineDir[ ( Origin_D + Num_Rotation_Angles div 2 ) mod Num_Rotation_Angles , 2 ]/3;
+			checkorigin;
+		END else if ( Mouse_Y > ( screenheight - 20 ) ) then begin
+			Origin_X := Origin_X + FineDir[ Origin_D , 1 ]/3;
+			Origin_Y := Origin_Y + FineDir[ Origin_D , 2 ]/3;
+			checkorigin;
+		end;
 	end;
 
 
@@ -2068,12 +2068,12 @@ begin
 		origin_d := ( origin_d + Num_Rotation_Angles - 1 ) mod Num_Rotation_Angles;
 		origin_d_target := origin_d;
 	end;
+
 	if ( RK_KeyState[ SDLK_PageUp ] = 1 ) and ( origin_zoom > LowZoom ) then begin
 		origin_zoom := origin_zoom - 1;
 	end else if ( RK_KeyState[ SDLK_PageDown ] = 1 ) and ( origin_zoom < HiZoom ) then begin
 		origin_zoom := origin_zoom + 1;
 	end;
-
 end;
 
 

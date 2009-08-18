@@ -872,6 +872,47 @@ begin
 	MightSurrender := CapableOfSurrender( GB , NPC ) and (( CurrentStamina(NPC) = 0 ) or ( GearCurrentDamage( NPC ) < Random( 6 ) ));
 end;
 
+Function HasAtLeastOneValidWeapon( Mek: GearPtr ): Boolean;
+	{ Return TRUE if this mecha has at least one weapon capable of being used, }
+	{ or FALSE if all of its weapons have been destroyed/run out of ammo/otherwise }
+	{ neutralized. }
+var
+	HALOVW: Boolean;
+	Procedure CheckVWAlongPath( LList: GearPtr );
+		{ Check along this path, recursing through children, looking }
+		{ for at least one valid weapon. }
+	begin
+		while ( llist <> Nil ) and not HALOVW do begin
+			if NotDestroyed( llist ) then begin
+				if LList^.G = GG_Weapon then begin
+					{ This could be it! It's a weapon, and it's not destroyed... }
+					{ The only thing that could hold us back now is ammo. }
+					if ( LList^.S = GS_Ballistic ) or ( LList^.S = GS_Missile ) then begin
+						HALOVW := LocateGoodAmmo( LList ) <> Nil;
+					end else begin
+						{ No ammo, but don't need ammo. }
+						HALOVW := True;
+					end;
+				end;
+				if not HALOVW then begin
+					CheckVWAlongPath( llist^.subcom );
+					CheckVWAlongPath( llist^.invcom );
+				end;
+			end;
+			llist := llist^.Next;
+		end;
+	end;
+begin
+	{ Assume FALSE until shown TRUE. }
+	HALOVW := False;
+
+	{ Check the subcoms. }
+	CheckVWAlongPath( Mek^.SubCom );
+
+	{ Return the result. }
+	HasAtLeastOneValidWeapon := HALOVW;
+end;
+
 Function ShouldEject( Mek: GearPtr; GB: GameBoardPtr ): Boolean;
 	{ Return TRUE if this mecha should eject, or FALSE otherwise. }
 var
@@ -889,7 +930,7 @@ begin
 		Team := GB^.Scene^.SubCom;
 		while Team <> Nil do begin
 			if ( Team^.S <> TeamID ) and AreAllies( GB , Team^.S , TeamID ) then begin
-				Dmg := TeamSkill( GB , Team^.S , NAS_Intimidation , STAT_Ego );
+				Dmg := TeamSkill( GB , Team^.S , NAS_Concentration , STAT_Ego );
 				if Dmg > Leadership then Leadership := Dmg;
 			end else if ( Team^.S <> TeamID ) and AreEnemies( GB , Team^.S , TeamID ) then begin
 				Dmg := TeamSkill( GB , Team^.S , NAS_Intimidation , STAT_Ego );
@@ -900,11 +941,12 @@ begin
 	end;
 
 	Dmg := PercentDamaged( Mek );
+	if not HasAtLeastOneValidWeapon( Mek ) then Dmg := Dmg - 15;
 	PrevDmg := 100 - NAttValue( Mek^.NA , NAG_EpisodeData , NAS_PrevDamage );
 	SetNAtt( Mek^.NA , NAG_EpisodeData , NAS_PrevDamage , 100 - DMG );
 	if MightEject( Mek ) and ( DMG < PrevDmg ) then begin
 		if CurrentMoveRate( GB^.Scene , Mek ) = 0 then Dmg := Dmg - 25;
- 		ShouldEject := Dmg < ( Random( 60 ) + RollStep( Intimidation ) - RollStep( Leadership ) );
+ 		ShouldEject := Dmg < ( Random( 65 ) + RollStep( Intimidation ) - RollStep( Leadership ) );
 
 	end else ShouldEject := False;
 end;
@@ -1129,9 +1171,47 @@ end;
 Function SituationalEjectionModifier( GB: GameBoardPtr; Attacker,Target: GearPtr ): Integer;
 	{ Return the situational modifier to the verbal attack roll. This modifier is based }
 	{ on the following: }
-	{ - }
+	{ - Relative damage level of the attacker }
+	{ - Being outnumbered }
+	{ - Mobility status }
+	{ - Weapon status }
+	{ A higher value is worse for the attacker. }
+var
+	SEM,A,T: Integer;
+	mek: GearPtr;
 begin
+	{ Start with a basic modifier of +5. }
+	SEM := 5;
 
+	{ Relative damage levels. }
+	A := PercentDamaged( Attacker );
+	T := PercentDamaged( Target );
+	if A < T then SEM := SEM + ( ( T - A ) div 5 );
+
+	{ Being outnumbered. }
+	A := 0;
+	T := 0;
+	mek := GB^.Meks;
+	while mek <> Nil do begin
+		if IsMasterGear( mek ) and OnTheMap( GB , mek ) and GearActive( mek ) then begin
+			if AreAllies( GB , Target , mek ) then Inc( T )
+			else if AreEnemies( GB , Target , mek ) then Inc( A );
+		end;
+		mek := mek^.next;
+	end;
+	if A > T then begin
+		SEM := SEM - ( A - T );
+	end else if T > A then begin
+		SEM := SEM + ( ( T - A ) div 2 );
+	end;
+
+	{ Mobility status. }
+	if not HasAtLeastOneValidMovemode( Target ) then SEM := SEM - 3;
+
+	{ Weapon status. }
+	if not HasAtLeastOneValidWeapon( Target ) then SEM := SEM - 5;
+
+	SituationalEjectionModifier := SEM;
 end;
 
 Procedure DoVerbalAttack( GB: GameBoardPtr; Attacker,Target: GearPtr );
@@ -1202,9 +1282,9 @@ begin
 		AtSkill := SelectTactic;
 		msg := GetTauntString( Attacker , 'CHAT_VA.FORCEEJECT.' + BStr( AtSkill ) );
 		if AtSkill = NAS_Conversation then begin
-			AtRoll :=  SkillRoll( GB , Attacker , AtSkill , STAT_Charm , DefRoll , -5 - ConversationEjectPenalty , False , True );
+			AtRoll :=  SkillRoll( GB , Attacker , AtSkill , STAT_Charm , DefRoll , -SituationalEjectionModifier( GB , Attacker , Target ) - ConversationEjectPenalty , False , True );
 		end else begin
-			AtRoll :=  SkillRoll( GB , Attacker , AtSkill , STAT_Ego , DefRoll , -5 , False , True );
+			AtRoll :=  SkillRoll( GB , Attacker , AtSkill , STAT_Ego , DefRoll , -SituationalEjectionModifier( GB , Attacker , Target ) , False , True );
 		end;
 
 		AddNAtt( Target^.NA , NAG_EpisodeData , NAS_TauntResistance , 1 + Random( 6 ) );
