@@ -1345,6 +1345,19 @@ begin
 	AS_GetString := msg;
 end;
 
+Function EncounterMapType( GB: GameBoardPtr; X,Y: Integer ): Integer;
+	{ The PC has met an encounter at point X,Y on the current map. Return the }
+	{ map generator which this encounter should use. }
+begin
+	if ( GB <> Nil ) and ( GB^.Scene <> Nil ) and AStringHasBString( SAttValue( GB^.Scene^.SA , 'SPECIAL' ) , 'UNIFORM' ) then begin
+		EncounterMapType := GB^.Scene^.Stat[ STAT_MapGenerator ];
+	end else if GB <> Nil then begin
+		EncounterMapType := TileTerrain( GB , X , Y )
+	end else begin
+		EncounterMapType := 1;
+	end;
+end;
+
 Procedure AS_SetExit( GB: GameBoardPtr; RC: Integer );
 	{ Several things need to be done when exiting the map. }
 	{ This procedure should centralize most of them. }
@@ -1383,7 +1396,7 @@ begin
 				if Dest^.Stat[ STAT_MapGenerator ] = 0 then begin
 					Src := FindSceneEntrance( FindRoot( GB^.Scene ) , GB , RC );
 					if ( Src <> Nil ) and OnTheMap( GB , Src ) and IsFoundAlongTrack( GB^.Meks , Src ) then begin
-						Dest^.Stat[ STAT_MapGenerator ] := TileTerrain( GB , NAttValue( Src^.NA , NAG_Location , NAS_X ) , NAttValue( Src^.NA , NAG_Location , NAS_Y ) );
+						Dest^.Stat[ STAT_MapGenerator ] := EncounterMapType( GB , NAttValue( Src^.NA , NAG_Location , NAS_X ) , NAttValue( Src^.NA , NAG_Location , NAS_Y ) );
 						{ If this will make the encounter a space map, set the map-scroll tag. }
 						if Dest^.Stat[ STAT_MapGenerator ] = TERRAIN_Space then Dest^.Stat[ STAT_SpaceMap ] := 1;
 					end else begin
@@ -3602,7 +3615,7 @@ begin
 	{ the PC. }
 	Src := FindRoot( GG_LocatePC( GB ) );
 	if ( Src <> Nil ) then begin
-		SCRIPT_DynamicEncounter^.Stat[ STAT_MapGenerator ] := TileTerrain( GB , NAttValue( Src^.NA , NAG_Location , NAS_X ) , NAttValue( Src^.NA , NAG_Location , NAS_Y ) );
+		SCRIPT_DynamicEncounter^.Stat[ STAT_MapGenerator ] := EncounterMapType( GB , NAttValue( Src^.NA , NAG_Location , NAS_X ) , NAttValue( Src^.NA , NAG_Location , NAS_Y ) );
 		{ If this will make the encounter a space map, set the map-scroll tag. }
 		if SCRIPT_DynamicEncounter^.Stat[ STAT_MapGenerator ] = TERRAIN_Space then SCRIPT_DynamicEncounter^.Stat[ STAT_SpaceMap ] := 1;
 	end;
@@ -4566,8 +4579,9 @@ end;
 Procedure ProcessSetEncounter( var Event: String; GB: GameBoardPtr; Source: GearPtr );
 	{ Search for encounters leading to a specified scene. Set their activation value. }
 var
-	SID,AVal: LongInt;	{ SceneID, Activation Value }
+	SID,DEID,AVal: LongInt;	{ SceneID, Dungeon Entrance ID, Activation Value }
 	Adv: GearPtr;
+	DestScene: GearPtr;
 	Procedure CheckAlongPath( LList: GearPtr );
 		{ Check for encounters along this list and throughout all children. }
 	begin
@@ -4584,6 +4598,14 @@ begin
 	{ Find out which scene and what value. }
 	SID := ScriptValue( Event , GB , Source );
 	AVal := ScriptValue( Event , GB , Source );
+
+	{ Locate the scene. If this is a dungeon, we want to activate the encounter for }
+	{ the entrance rather than the level provided. }
+	DestScene := FindActualScene( GB , SID );
+	if DestScene <> Nil then begin
+		DEID := NAttValue( DestScene^.NA , NAG_Narrative , NAS_DungeonEntrance );
+		if DEID <> 0 then SID := DEID;
+	end;
 
 	{ Locate the adventure. }
 	Adv := GG_LocateAdventure( GB , Source );

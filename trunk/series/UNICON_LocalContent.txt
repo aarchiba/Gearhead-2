@@ -7,6 +7,41 @@
 %%
 %% NAME: *[city designation]_[building name abbreviated]_[content type]
 
+%% *KOSSP_CrTo_Content Content
+%%      Kosaka Spinner, Crystal Tower
+
+Content
+	name <FCOMS Recruiter>
+	requires <*KOSSP_CrTo_Content>
+	minimap <............1.......#&+&#>
+	element1 <Prefab>
+	team1 <Citizens>
+	teamdata1 <ally pass>
+
+	sub
+		Persona 1
+		greeting <if# ChatNPCFac 0 else GoChat if= PCFac ChatNPCFac else GoCheckEligibility Goto GoTrain>
+		*GoTrain <*SKILL_TRAINING GoGoodbye>
+		*GoCheckEligibility <*ENEMY_CHECK GoCheckFaction ChatNPCFac GoNil>
+		GoCheckFaction <if= PCFac 0 else GoChat Goto GoCheckSkills>
+		*GoCheckSkills <*FACTION_ENTRANCE_EXAM GoJobOffer ChatNPCFac>
+		*GoChat <*MISC_CHATTER>
+		*GoGoodbye <*GOODBYE>
+		*GoJobOffer <*FACTION_JOIN_OFFER ChatNPCFac GoJoin>
+		*GoJoin <*FACTION_JOIN_ACCEPT ChatNPCFac>
+	end
+	inv
+		NPC Politician
+		job <Technocrat>
+		name <Docun Suno>
+		chardesc male
+		age 5
+		SDL_COLORS <239 198 58 150 112 89 222 222 156>
+		SetFaction 10
+	end
+
+
+
 %% *CLUND_MLP2_Content
 %%	Content for Memorial Land. Each game won will add one to L2;
 %%	once all four games are won, the property manager will let the
@@ -1046,7 +1081,7 @@ Content
 		Persona 1
 		% V1 = Have become skill trainer (1) or PC has declined the offer (-1)
 		*greeting <*NiceToMeetYou GoCheckOFfer>
-		GoCheckOffer <if= V1 0 else GoOpenStore ifChatNPCKnown else GoOpenStore ifG React 20 else GoOpenStore EndChat Say 4 AddChat 4>
+		GoCheckOffer <if= V1 0 else GoOpenStore ifChatNPCKnown else GoOpenStore ifG PCRenown 40 else GoOpenStore EndChat Say 4 AddChat 4>
 		GoOpenStore <NewChat Say 1 AddChat 1 AddChat 2 AddChat 3>
 		result1 <EndChat Say 2 Shop .wares Goto result2>
 		.wares <INSTRUMENT ENTERTAINMENT>

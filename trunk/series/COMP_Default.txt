@@ -348,12 +348,15 @@ Plot
 		Msg%id%04 <You agreed to stop %name4%'s mission for %name3%.>
 		Prompt%id%01 <Alright, I can do that.>
 		Prompt%id%02 <Forget it. I'm done with %name4%.>
+
+		STC MS_SOCIAL
+		SetID 1
 	end
 
 Plot
 	name <Good Thing You Showed Up>
 	desc <An ally faction is hiring.>
-	requires <#A +Tgs (+Fmi|+Fin|+F--) P:++>
+	requires <#A +Tgs (+Fmi|+Fin|+F--) P:++ S:++>
 
 	% E1 is the scene where this component will take place
 	% E2 is the NPC that the PC will speak with
@@ -367,10 +370,13 @@ Plot
 	%% SubPlot1 is the mission to be offered
 	SubPlot1 <*CS_GiveMission 2>
 
-	inv
+	sub
 		Persona 2
 		rumor%id1% <you should really speak to %name2% at %name1%.>
 		Greeting <NewChat SayAnything>
+
+		STC MS_SOCIAL
+		SetID 1
 	end
 
 Plot
@@ -394,10 +400,13 @@ Plot
 	%% SubPlot1 is the mission to be offered
 	SubPlot1 <*CS_GiveMission 3>
 
-	inv
+	sub
 		Persona 3
 		rumor%id1% <%name3% is at %name1% looking for a cavalier. It seems pretty important.>
 		Greeting <NewChat SayAnything>
+
+		STC MS_SOCIAL
+		SetID 1
 	end
 
 Plot

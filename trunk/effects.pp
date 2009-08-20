@@ -2338,7 +2338,7 @@ begin
 	end;
 
 	{ The attacker must have a martial arts skill of at least 5 to benefit. }
-	SkRk := NAttValue( ER.Originator^.NA , NAG_Skill , 9 ) - 4;
+	SkRk := NAttValue( ER.Originator^.NA , NAG_Skill , NAS_CloseCombat ) - 4;
 	if SkRk < 1 then begin
 		if NAttValue( ER.Originator^.NA , NAG_GearOps , NAS_Material ) = NAV_Meat then AtOp := -1;
 		Exit;

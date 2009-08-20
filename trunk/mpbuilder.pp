@@ -1409,16 +1409,23 @@ Procedure PrepQuestDungeon( Adv,SceneProto: GearPtr );
 	{ 1 - Remove non-original subs and invs, saving them for the goal level. }
 	{ 2 - Expand the dungeon. }
 	{ 3 - Assign SceneIDs as needed and connect the scenes. }
+	{     At the same time, record the ID of the entry level. }
 	{ 4 - Reinstall the subs and invs from step 1 into the goal level. }
 var
 	GoalLevel,NOSubs,NOInvs: GearPtr;
+	EntryLevelID: Integer;
 	Procedure AssignSceneIDs( SList: GearPtr );
 		{ Assign unique IDs to all the scenes in this list and all of }
 		{ their children scenes. Also do the connections, as long as we're here. }
+		{ On top of that, record the entry level ID. Got all that? Good. }
 	begin
 		while SList <> Nil do begin
 			if ( SList^.G = GG_Scene ) then begin
 				if SList <> GoalLevel then SList^.S := NewSceneID( Adv );
+
+				{ Record the entry level ID. }
+				SetNAtt( SList^.NA , NAG_Narrative , NAS_DungeonEntrance , EntryLevelID );
+
 				ConnectScene( SList , True );
 			end;
 			if SList <> GoalLevel then AssignSceneIDs( SList^.SubCom );
@@ -1512,6 +1519,7 @@ begin
 	{ Next, pass out the UniqueIDs. }
 	{ Also take this opportunity to connect everything. }
 	SceneProto^.S := NewSceneID( Adv );
+	EntryLevelID := SceneProto^.S;
 	AssignSceneIDs( SceneProto^.SubCom );
 
 	{ ***************** }

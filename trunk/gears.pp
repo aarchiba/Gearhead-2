@@ -193,6 +193,8 @@ Const
 	NAS_Fortune = 36;	{ Factions may rise and fall in fortune. }
 				{ This is used to help determine the RPG campaign ending. }
 
+	NAS_DungeonEntrance = 37;	{ Used to find the entrance of a dungeon. }
+
 	{ The following are used by the randmaps unit... }
 	NAS_LockedDoorChance = 101;
 	NAS_SecretDoorChance = 102;

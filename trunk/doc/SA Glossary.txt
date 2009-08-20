@@ -129,6 +129,7 @@ SPECIAL
 		Unsafe (never counts as a safe place to rest or repair)
 		Unregulated (local tolerance value overrides city-wide tolerance rating)
 		Unchartable (map will be generated anew each time the PC visits)
+		Uniform (encounters will inherit same map generator as parent)
 	RandMaps tags: StartHere,
 		Cell: doors surrounding the feature initialized,
 		AddExit (Mall, MonkeyMap, ClubMap only),

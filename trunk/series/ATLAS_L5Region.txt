@@ -1029,7 +1029,7 @@ Scene
 
 	world <L5 Region>
 	desc <Cayley Rock is an asteroid station. Although its own mines were exhausted long ago, it remains a major ore processing station.>
-	special <NOEXIT>
+	special <NOEXIT UNIFORM>
 	type <asteroid town village destination hometown building public mine hospital residence spaceport garage>
 	personatype <asteroid village mine>
 	habitat <SPACE.ASTER>
@@ -3548,8 +3548,9 @@ sub
 	Msg1 <You enter the Crystal Tower.>
 
 	NeededCells 2
-	Content1 <Some 1 100 Sub *GOV_MILITARY  na>
-	Content2 <Fill       Sub *GOV_MISC      na>
+	Content1 <Some  1 100 Sub *GOV_MILITARY  na>
+	Content2 <Variety 1 1 Sub *KOSSP_CrTo_Content na>
+	Content9 <Fill        Sub *GOV_MISC      na>
 
 	sub
 		team 1
@@ -7004,7 +7005,7 @@ Scene
 
 	world <L5 Region>
 	desc <Clund Rock used to be an industrial station, but its factories were destroyed in the battle of 130. These days it's a shipping hub and tourist destination.>
-	special <NOEXIT>
+	special <NOEXIT UNIFORM>
 	% This town has the rare distinction of being both safe and lawless at the same time.
 	type <asteroid town village destination hometown building public hospital residence spaceport garage resort tradehub safe lawless>
 	personatype <asteroid village>

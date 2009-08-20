@@ -391,6 +391,8 @@ begin
 		StripNAtt( Part , NAG_EpisodeData );
 		InsertInvCom( Pilot , Part );
 	end else if ( PC <> Nil ) and IsLegalInvCom( PC , Part ) then begin
+		StripNAtt( Part , NAG_Location );
+		StripNAtt( Part , NAG_EpisodeData );
 		InsertInvCom( PC , Part );
 	end else begin
 		{ If the PC can't carry this equipment, }
