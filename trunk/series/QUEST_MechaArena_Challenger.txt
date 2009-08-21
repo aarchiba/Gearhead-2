@@ -95,7 +95,9 @@ inv
 	NPC Mecha Pilot
 	name <Tama>
 	SetFaction 13
-	CHAT_ATTACK <Yee-haw!>
+	CHAT_ATTACK <Woo-hoo!>
+	SDL_Portrait <por_f_ladi_tama(J--).png>
+	SDL_Colors <152 190 181 172 114 89 123 63 0>
 	chardesc Female Cheerful Easygoing Spiritual
 	StatLine 14 13 17 10 16 12 11 15
 	Age -3
@@ -1258,8 +1260,8 @@ inv
 	NPC Soldier
 	name <Evan>
 	chardesc Male Shy Melancholy Spiritual
-	SDL_PORTRAIT <>
-	SDL_COLORS <>
+	SDL_PORTRAIT <por_m_ladi_ahnuld(O-Y).png>
+	SDL_COLORS <166 47 32 184 124 81 136 141 101>
 	statline 14 16 14 15 9 15 11 9
 	Age 21
 	SetTheme 2

@@ -1029,7 +1029,7 @@ Scene
 
 	world <L5 Region>
 	desc <Cayley Rock is an asteroid station. Although its own mines were exhausted long ago, it remains a major ore processing station.>
-	special <NOEXIT UNIFORM>
+	special <NOEXIT>
 	type <asteroid town village destination hometown building public mine hospital residence spaceport garage>
 	personatype <asteroid village mine>
 	habitat <SPACE.ASTER>
@@ -1306,7 +1306,7 @@ sub
 	XPos 1
 	YPos 1
 
-	special <NOEXIT SHOWALL SOLO>
+	special <NOEXIT SHOWALL SOLO UNIFORM>
 	type <outdoors urban environs asteroid>
 	AsteroidMap
 	RockyTiles
@@ -1332,19 +1332,17 @@ sub
 
 	Scene
 	name <Cayley Steelworks>
-	type <asteroid building factory>
+	type <asteroid building factory arenasite>
+	%% The Steel Arena will be placed here.
 	entrance <*Building>
-	mapwidth 21
-	mapheight 28
-
+	mapwidth 17
+	mapheight 12
 	special <ADDEXIT>
-
-	MonkeyMap
+	BoxMap
 	IndustrialTiles
-
 	start <Print 1>
 	Msg1 <You enter the Cayley Steelworks.>
-
+	Content <fill sub *FACTORY_X na>
 	inv
 		NPC Corporate Executive
 		home <Office>
@@ -1370,147 +1368,6 @@ sub
 		room
 		name <Office>
 		Content2 <Some 1 100 Here *ANTI_ATTACK_SECURITY 2>
-
-		room
-		name <Lounge>
-		minimap <......###..#1#...........>
-		inv
-			Elevator
-			MiniMapComponent 1
-			name <Steelworks Lounge>
-		end
-
-		Scene
-		name <Steelworks Lounge>
-		type <building factory private sleazy meeting arenasite dangerous>
-		mapwidth 24
-		mapheight 24
-		ClubMap
-		IndustrialTiles
-
-		special <NOEXIT>
-
-		% V1 = Initialization
-		% V2 = Have been allowed into the lounge.
-		% V3 = CID of the bouncer
-
-		start <Print 1 if= L1 0 else GoCheckChallenge  L= 1 1 L= 3 DesigNPCID NPC_Kodie Compose FAINT V3 .BouncerDies Compose SURRENDER V3 .BouncerSurrender NPCLevel L3 30 Goto GoCheckChallenge>
-		.BouncerDies <L= 2 1>
-		.BouncerSurrender <if= L2 0 XPV 100  L= 2 1  ForceChat L3  GrabNPC L3  GSetNAtt NAG_Location NAS_Team 3>
-		GoCheckChallenge <if= L2 0 ForceChat L3>
-		Msg1 <You enter the lounge area of Cayley Steelworks.>
-
-		NeededCells 3
-		content1 <Some 1  75 Sub *WEAPON_SHOP   na>
-		content2 <Some 1  35 Sub *SHOP_RANDOM   na>
-		content3 <Some 1 100 Sub *BAR_SERVICE   na>
-		content9 <Fill Sub *CLUB_X na>
-
-		inv
-			NPC Soldier
-			job <Bouncer>
-			home <Entry Point>
-			Renown 20
-			name <Kodie>
-			desig <NPC_Kodie>
-			chardesc Male Passionate Sociable
-			SetTeam 3
-		end
-		sub
-			team 1
-
-			team 2
-			name <Citizens>
-			Passive
-
-			team 3
-			name <Guards>
-			SetAlly 2
-
-			team 4
-			name <Bouncer's Bit>
-			SetEnemy 1
-
-			Persona
-			name <Kodie PERSONA>
-			special <NOESCAPE NOPLOTS UNLISTED>
-			% V1 = Has offered training
-			greeting <ifNPCSurrendered ChatNPCID else GoCheckPermission UnSurrender ChatNPCID NewChat Say 19 Goto GoStamp>
-			GoCheckPermission <if= L2 0 else GoAllowed if= PCFac 5 else GoCheckHome EndChat Say 1 Goto GoStamp>
-			GoCheckHome <if= PCHomeTown RootSceneID else GoCheckPriva   EndChat Say 2 Goto GoStamp>
-			GoCheckPriva <if= PCFac 6 else GoNoEntry   EndChat Say 3 Goto GoStamp>
-			GoNoEntry <EndChat Say 4  AddChat 1 AddChat 2 AddChat 3 AddChat 4>
-			% It's like getting your hand stamped to get back in..
-			GoStamp <L= 2 1 GrabSource GSetSAtt special .nothing>
-			GoAllowed <NewChat if= V1 1 else GoCheckLessons Say 15 AddChat 9 AddChat 10>
-			GoCheckLessons <ifG React 45 else GoSayAnything V= 1 1 Say 14  AddChat 9 AddChat 10>
-			GoSayAnything <SayAnything>
-			% After the attack starts, we'll stamp anyhow to prevent challenge bounce.
-			GoAttack <GrabChatNPC GSetNAtt NAG_Location NAS_Team 4 GSD GTargetPC GQuickShot  Goto GoStamp>
-			result1 <EndChat Say 5 Return>
-			result2 <EndChat Say 6 AddChat 5 AddChat 6>
-			result3 <EndChat Say 9 AddChat 7 AddChat 8>
-			result4 <EndChat ifG PCCharm d10 else GoR4Fail Say 12 Goto GoStamp>
-			GoR4Fail <Say 13 Goto GoAttack>
-			result5 <Goto result1>
-			result6 <EndChat ifIntimidation 8 else GoR6Fail AddEasygoing -d8  Say 7 Goto GoStamp>
-			GoR6Fail <Say 8 Goto GoAttack>
-			result7 <EndChat ifNPCLawful else GoR7Works Say 11 Goto GoAttack>
-			GoR7Works <Say 10 Cash+ -5000 Goto GoStamp>
-			result8 <Goto result1>
-			result9 <EndChat Say 16 school .skills Say 17>
-			.skills <4 5 6>
-			result10 <NewChat Say 18>
-			Msg1 <You're with the dueling guild? The arena manager's over there in the back. Have a good fight.>
-			Msg2 <Hey, \PC , I've got this job now where I'm supposed to guard the door. We don't want any undesirables coming in to ruin our fun.>
-			Msg3 <Hey, you're a privateer, aren't you? You guys rock.>
-			Msg4 <This is a private lounge. No entry to anyone who don't belong here. That means you.>
-			Msg5 <Buh-bye.>
-			Msg6 <Look, if you don't go peacefully, I'm gonna have to make you go the other way... understand?>
-			Msg7 <Heh... I like you, you've got some real nerve. You can come in here if you wants. I think you'll fit right in with the regulars.>
-			Msg8 <This ain't gonna take long...>
-			Msg9 <What the blue blazes are you talking about? How will you make this worth my while?>
-			Msg10 <Wow, that's a whole lot of money... most times I only gets $1500 or so. Sure, you can come on in...>
-			Msg11 <You think \ChatNPC can be bribed? You'll pay for that!!!>
-			Msg12 <Yeah, I guess it'd be nice to have someone pretty here for a change. Come in.>
-			Msg13 <You an ugly minger. If you stay here too long, everyone's gonna get sick. I better put you by the curb.>
-			Msg14 <I know you're supposed to be a mecha pilot, but if you'd like I can help you learn how to fight. That's how I get most of my money... the pay for this bouncer gig blows.>
-			Msg15 <How you like to practice some fighting skills now?>
-			Msg15_1 <How'd you like to practice some fighting skills? I could really use the cash.>
-			Msg15_2 <How'd you like to practice fighting? That's the only excitement I get these days.>
-			Msg16 <Let's get started... I'll try not to hurt you.>
-			Msg17 <Come back later and we'll do this again.>
-			Msg18 <Alright, well have fun here in the lounge.>
-			Msg19 <Okay, you can come in... I'm not going to stop you...>
-			Prompt1 <Sorry, I'll leave now.>
-			Prompt2 <What are you gonna do about it?>
-			CPrompt2 <ifPCPassionate Accept>
-			Prompt3 <It'll be worth your while to let me in.>
-			CPrompt3 <ifG PC$ 10000 Accept>
-			Prompt4 <Couldn't you just let me through?>
-			CPrompt4 <ifNPCSexy ChatNPCID Accept>
-			Prompt5 <Alright, I'll go.>
-			Prompt6 <Come on, if you think you can take me.>
-			Prompt7 <I'll pay you $5000. [give money]>
-			Prompt8 <Um, I'll be back later.>
-			Prompt9 <Let's train.>
-			Prompt10 <Maybe some other time.>
-
-			room
-			name <Foyer>
-			desig <EntranceGrid>
-			Content <Some 2 65 Here *URBAN_X>
-
-			room
-			name <Entry Point>
-			minimap <############1##..........>
-			inv
-				Elevator
-				MiniMapComponent 1
-				Destination -1
-			end
-		end
-
 	end
 
 
@@ -7005,7 +6862,7 @@ Scene
 
 	world <L5 Region>
 	desc <Clund Rock used to be an industrial station, but its factories were destroyed in the battle of 130. These days it's a shipping hub and tourist destination.>
-	special <NOEXIT UNIFORM>
+	special <NOEXIT>
 	% This town has the rare distinction of being both safe and lawless at the same time.
 	type <asteroid town village destination hometown building public hospital residence spaceport garage resort tradehub safe lawless>
 	personatype <asteroid village>
@@ -7175,7 +7032,7 @@ sub
 	mapwidth 30
 	mapheight 30
 
-	special <NOEXIT SHOWALL SOLO>
+	special <NOEXIT SHOWALL SOLO UNIFORM>
 	type <outdoors urban environs asteroid>
 	AsteroidMap
 	RockyTiles

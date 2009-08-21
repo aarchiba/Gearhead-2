@@ -263,12 +263,23 @@ Content
 	% E2 is the arena
 	% E3 is the steelworks lounge
 	% E4 is the environs scene for the arena
+	% E5 is the steelworks building
+	% E6 is Kodie
+	% E7 is the lounge entrance
 	Element1 <Prefab>
 	Place1 <3 (Citizens) pass ally>
 	Element2 <QuestScene>
 	Place2 <4>
-	Element3 <Scene ArenaSite>
+	Element3 <QuestScene>
+	Place3 <5>
 	Element4 <Scene Environs>
+	Element5 <Scene ArenaSite>
+	Element6 <Prefab>
+	Place6 <3 (Guards) sd ally>
+	Element7 <Prefab>
+	Place7 <5>
+
+	%% P1 = Have gained access to the arena
 
 	SubPlot1 <*:Q_MECHA_ARENA_CHALLENGE #35 1 2>
 	SubPlot2 <*:Q_MECHA_ARENA_CHALLENGE #60 1 2>
@@ -343,6 +354,112 @@ Content
 		RockyTiles
 		Vacuum
 		SpaceBackdrop
+
+		MetaScene 3
+		name <Steelworks Lounge>
+		type <building factory private sleazy meeting dangerous>
+		mapwidth 24
+		mapheight 24
+		ClubMap
+		IndustrialTiles
+		special <NOEXIT>
+		% V1 = Initialization
+		% V2 = Have been allowed into the lounge.
+		% V3 = CID of the bouncer
+		start <Print 1>
+		Msg1 <You enter the lounge area of Cayley Steelworks.>
+		NeededCells 4
+		content1 <Some 1  75 Sub *WEAPON_SHOP   na>
+		content2 <Some 1  35 Sub *SHOP_RANDOM   na>
+		content3 <Some 1 100 Sub *BAR_SERVICE   na>
+		Content4 <Some 1 100 Sub *MECHANIC_SHOP>
+		content9 <Fill Sub *CLUB_X na>
+		sub
+			team 1
+
+			team 2
+			name <Citizens>
+			Passive
+
+			team 3
+			name <Guards>
+			SetAlly 2
+
+			room
+			name <Foyer>
+			desig <EntranceGrid>
+			Content <Some 2 65 Here *URBAN_X>
+
+			room
+			name <Entry Point>
+			minimap <############1##..........>
+			inv
+				Elevator
+				MiniMapComponent 1
+				Destination -1
+			end
+		end
+
+		Persona 6
+		special <NOESCAPE NOPLOTS UNLISTED>
+		% V1 = Has offered training
+		greeting <if# V1 0 else GoCheckPermission Say 15 AddChat 9 AddChat 10>
+		GoCheckPermission <if# P1 0 else GoChallenge ifG React 35 else GoSayAnything V= 1 1 Say 14  AddChat 9 AddChat 10>
+		GoSayAnything <NewChat SayAnything>
+		GoChallenge <if= PCFac 5 else GoCheckHome EndChat Say 1 Goto GoStamp>
+		GoCheckHome <if= PCHomeTown RootSceneID else GoCheckPriva   EndChat Say 2 Goto GoStamp>
+		GoCheckPriva <if= PCFac 6 else GoNoEntry   EndChat Say 3 Goto GoStamp>
+		GoNoEntry <EndChat Say 4  AddChat 1 AddChat 2 AddChat 3 AddChat 4>
+		% It's like getting your hand stamped to get back in..
+		GoStamp <P= 1 1 GrabSource GSetSAtt special .nothing Exit %3%>
+		result1 <EndChat Say 5>
+		result2 <ifIntimidation 8 else GoR2Fail EndChat Say 7 AddReact d10 Goto GoStamp>
+		GoR2Fail <EndCHat Say 8>
+		result3 <EndChat Say 9 AddChat 7 AddChat 8>
+		result4 <EndChat ifG React d20 else GoR4Fail Say 12 Goto GoStamp>
+		GoR4Fail <Say 13 AddReact -d10>
+		result7 <EndChat Say 10 Cash+ -5000 Goto GoStamp>
+		result8 <Goto result1>
+		result9 <EndChat Say 16 school .skills Say 17>
+		.skills <4 5 6>
+		result10 <NewChat Say 18>
+		Msg1 <You're with the dueling guild? Come on up. The arena manager's over there in the back.>
+		Msg2 <Hey, \PC , I've got this job now where I'm supposed to guard the door. We don't want any undesirables coming in to ruin our fun. I'll open 'er up for ya.>
+		Msg3 <Hey, you're a privateer, aren't you? You guys rock. Come on up.>
+		Msg4 <This is a private lounge. No entry to anyone who don't belong here. That means you.>
+		Msg5 <Buh-bye.>
+		Msg7 <Heh... I like you, you've got some real nerve. You can come in here if you wants. I think you'll fit right in with the regulars.>
+		Msg8 <Them's big words for a one who's on the wrong side of the door.>
+		Msg9 <What the blue blazes are you talking about? How will you make this worth my while?>
+		Msg10 <Wow, that's a whole lot of money... most times I only gets $1500 or so. Sure, you can come on in...>
+		Msg12 <Yeh, I guess it'd be nice to have someone pretty here for a change. Come in.>
+		Msg13 <You're a real minger. We got enough ugly faces in here for now.>
+		Msg14 <I know you're supposed to be a mecha pilot, but if you'd like I can help you learn how to fight. That's how I get most of my money... the pay for this bouncer gig blows.>
+		Msg15 <How you like to practice some fighting skills now?>
+		Msg15_1 <How'd you like to practice some fighting skills? I could really use the cash.>
+		Msg15_2 <How'd you like to practice fighting? That's the only excitement I get these days.>
+		Msg16 <Let's get started... I'll try not to hurt you.>
+		Msg17 <Come back later and we'll do this again.>
+		Msg18 <Alright, well have fun here in the lounge.>
+		Prompt1 <Sorry, I'll leave now.>
+		Prompt2 <Let me in or prepare to get your arse kicked.>
+		CPrompt2 <ifPCPassionate Accept>
+		Prompt3 <It'll be worth your while to let me in.>
+		CPrompt3 <ifG PC$ 10000 Accept>
+		Prompt4 <Couldn't you just let me through?>
+		CPrompt4 <ifNPCSexy ChatNPCID Accept>
+		Prompt7 <I'll pay you $5000. [give money]>
+		Prompt8 <Um, I'll be back later.>
+		Prompt9 <Let's train.>
+		Prompt10 <Maybe some other time.>
+
+		MetaScene 7
+		sub
+			room
+			special <SHAREDPALETTE>
+			desig <HOME>
+			minimap <......###..#1#...........>
+		end
 	end
 	inv
 		NPC Citizen
@@ -351,6 +468,26 @@ Content
 		chardesc Male Passionate Sociable Cheerful Pragmatic
 		Age 2
 		SetFaction 5
+
+		NPC Soldier
+		job <Bouncer>
+		home <Entry Point>
+		Renown 20
+		Knowledge 5
+		Charm 5
+		name <Kodie>
+		desig <NPC_Kodie>
+		chardesc Male Passionate Sociable
+		SetTeam 3
+		Age -1
+
+		Elevator
+		name <Steelworks Lounge>
+		desig <ENTRANCE %3%>
+		use <if# P1 0 else GoTalkKodie if= StatVal STAT_MetaVisibility 0 Print 1 Exit Destination>
+		GoTalkKodie <ifNPCOK %6% else GoJustGo Alert 101 ForceChat %6%>
+		GoJustGo <P= 1 1 Print 1 Exit Destination>
+		Msg101 <You try the door but can't get it to open. All of a sudden the security monitor activates.>
 	end
 
 
