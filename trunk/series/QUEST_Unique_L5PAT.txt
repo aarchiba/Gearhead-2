@@ -2131,7 +2131,7 @@ Content
 		.%id%_mecha <GENERAL L5LAW COMET HOELL MUGLE>
 		.%id%_GoSmallReward <NewChat Say %id%02  AddReact d5  CashPrize Reward ItemVar %3% 2 250  V= %id%02 P%id%02  QMemo %plotid% %id%03 ItemVar= %3% 1 ComTime ItemVar+ %3% 1 43200 ItemVar+ %3% 1 d86400    ItemVar+ %3% 2 d10>
 		.%id%_GoSmallEnding <NewChat Say %id%04  CustomMecha .%id%_mecha %threat%  Goto .%id%_GoWinQuest>
-		result%id%02 <ifPCLawful else .%id%_GoSmallEnding  NewChat Say %id%05   CashPrize ItemVar %3% 2 500  RandomMecha .%id%_mecha %threat%  GiveItem %7%  Goto .%id%_GoWinQuest>
+		result%id%02 <ifPCLawful else .%id%_GoSmallEnding  NewChat Say %id%05   CashPrize Reward %threat% 500  RandomMecha .%id%_mecha %threat%  GiveItem %7%  Goto .%id%_GoWinQuest>
 		  %% Winning the quest gives 2 points of lawful, deletes the encounters, and if
 		  %% the PC agreed to do E5's quest turns E5 into an enemy.
 		.%id%_GoWinQuest <AddLawful 2   AddReact d10   DeleteItem %3%  DeleteItem %8%   WinSubPlot %plotid% ifNPCOK %5% ifG P%id%04 0 FreezeNPC %5% PCEnemy %5%>
