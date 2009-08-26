@@ -349,7 +349,7 @@ begin
 		M2 := M2^.Next;
 	end;
 
-	if Team = NAV_DefPlayerTeam then begin
+	if ( Team = NAV_DefPlayerTeam ) or ( Team = NAV_LancemateTeam ) then begin
 		CheckVisibleArea( GB , Mek );
 	end;
 
