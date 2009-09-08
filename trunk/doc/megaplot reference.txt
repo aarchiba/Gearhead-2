@@ -97,8 +97,15 @@ If the second character of the SubPlot Type is a colon, this subplot
 will be a side plot with its own PlotID. In this way it's possible for a
 single plot to have multiple narrative threads running at once.
 
+If the subplot type contains a hash, and the subplot is being loaded
+into a story, then the hash will be changed to indicate whether this
+plot concludes the episode or not. "A" indicates that the episode will
+continue after this plot, while "Z" indicates that this will be the
+episode conclusion.
+
 Threat is an optional value which, if added, will determine the threat
-rating of the subplot being generated.
+rating of the subplot being generated. Normally the threat rating is
+automatically determined.
 
 
 ********************************

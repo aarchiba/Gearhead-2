@@ -69,6 +69,7 @@ Var
 	Sub_Plot_List: GearPtr;
 	standard_trigger_list: SAttPtr;
 	changes_used_so_far: String;
+	plotpoints_used_so_far: Integer;
 	MasterEntranceList: GearPtr;
 
 
@@ -283,7 +284,7 @@ Function InitShard( GB: GameBoardPtr; Scope,Slot,Shard: GearPtr; var Quest_Frags
 	end;
 var
 	InitOK: Boolean;
-	T,NumParam,NumElem,HiParam: Integer;
+	T,NumParam,NumElem,HiParam,original_plotpoints: Integer;
 	I,SubPlot,SPList: GearPtr;
 	SPID: LongInt;
 	SPReq,original_changes,EDesc: String;
@@ -300,10 +301,12 @@ begin
 	{ Record the original changes_used_so_far string; if things go sour in this procedure, }
 	{ we're going to have to restore it. }
 	original_changes := changes_used_so_far;
+	original_plotpoints := plotpoints_used_so_far;
 
 	{ Add the changes from this shard. }
 	SPReq := SAttValue( Shard^.SA , 'CHANGES' );
 	if SPReq <> '' then AddToQuoteString( changes_used_so_far , SPReq );
+	plotpoints_used_so_far := plotpoints_used_so_far + Shard^.V;
 
 	{ Start by copying over all provided parameters. }
 	{ Also count the number of parameters passed; it could be useful. }
@@ -429,6 +432,7 @@ begin
 		{ Initialization failed. Delete the existing subplots and restore the }
 		{ changes_used_so_far list. }
 		changes_used_so_far := original_changes;
+		plotpoints_used_so_far := original_plotpoints;
 		DisposeSPList( SPList );
 		InitShard := Nil;
 	end;
@@ -530,12 +534,26 @@ begin
 		threat := 10;
 	end;
 
+	{ If this is a subplot of a story, determine whether or not it will end the episode. }
+	{ The SubPlot Request might be different depending on this. }
+	if ( Slot^.G = GG_Story ) and ( Pos( '#' , context ) <> 0 ) then begin
+		{ This plot will end the episode if the number of plot points used so far plus the }
+		{ number of plot points already used in this episode exceed the plot point goal. }
+		if ( NAttValue( Slot^.NA , NAG_XXRan , NAS_PlotPointCompleted ) + plotpoints_used_so_far ) > NAttValue( Slot^.NA , NAG_XXRan , NAS_PlotPointGoal ) then begin
+			ReplaceHash( Context , 'Z' );
+		end else begin
+			ReplaceHash( Context , 'A' );
+		end;
+	end;
+
 	{ Next complete the context. }
 	if Slot^.G = GG_Story then Context := Context + ' ' + StoryContext( GB , Slot );
 	if IsAQuest then Context := Context + ' ' + QuoteString( SceneContext( Nil , Scope ) ) + ' ' + DifficulcyContext( Threat );
 	if Plot0 <> Nil then begin
 		SPContext := SAttValue( Plot0^.SA , 'SPContext' );
 		if SPContext <> '' then Context := Context + ' ' + SPContext;
+	end else begin
+		SPContext := '';
 	end;
 
 	{ Determine whether this is a regular subplot or a branch plot that will start its own narrative thread. }
@@ -1741,7 +1759,9 @@ begin
 	SetNAtt( Slot^.NA , NAG_Narrative , NAS_MaxPlotLayer , 0 );
 	LayerID := NewLayerID( Slot );
 
+	{ Initialize some of the variables we're going to need. }
 	changes_used_so_far := '';
+	plotpoints_used_so_far := 0;
 	FakeFrags := Nil;
 
 	ClearElementTable( FakeParams );
@@ -1823,7 +1843,9 @@ Function AddQuest( Adv,City: GearPtr; var Quest_Frags: GearPtr; QReq: String ): 
 var
 	QList,Quest: GearPtr;
 begin
+	{ Initialize some of the global variables. }
 	changes_used_so_far := '';
+	plotpoints_used_so_far := 0;
 
 	{ Step One- Select a starting fragment. }
 	QList := AddSubPlot( Nil, City, Adv, Nil, Quest_Frags, QReq, 0, NewLayerID( Adv ), 0, True, False );
