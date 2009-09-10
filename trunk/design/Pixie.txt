@@ -87,8 +87,21 @@ Torso
 		Mount
 		name <Right Torso Mount>
 		inv
-			STC RG-8
-			mass -4
+			Gun 8
+			Scale 2
+			name <Railgun>
+			desig <MMS-Px>
+			caliber <30mm ferrous>
+			Range 6
+			BV 4
+			Magazine 100
+			mass -6
+			sub
+				Ammo 8
+				type <ARMORPIERCING>
+				caliber <30mm ferrous>
+				mass -6
+			end
 		end
 
 		Mount
@@ -134,13 +147,14 @@ Arm
 				name <Sparkling Lash>
 				type <EXTEND FLAIL>
 				Integral
+				UsesSpeed
 			end
 		end
 
 		STC PAR-2
 
-		Mount
-		name <Right Arm Mount>
+		Overcharger 4
+		Integral
 	end
 	inv
 		ArmArmor 5
@@ -162,8 +176,8 @@ Arm
 
 		STC PAR-2
 
-		Mount
-		name <Left Arm Mount>
+		Overcharger 4
+		Integral
 	end
 	inv
 		ArmArmor 5
