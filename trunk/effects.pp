@@ -1674,7 +1674,7 @@ begin
 	if SX_Vunerability[ SFX , NAttValue( Target^.NA , NAG_GearOps , NAS_Material ) ] then begin
 
 		{ Make the skill roll. }
-		AtRoll := RollStep( ER.FXDice + 2 );
+		AtRoll := RollStep( ( ER.FXDice ) div 2 + 5 );
 
 		{ Make the defense roll. }
 		DefRep := AttemptDefenses( GB , Target , ER.Weapon , AtRoll , AtDesc );
@@ -1735,7 +1735,7 @@ begin
 	Target := FindRoot( Target );
 	if GearActive( Target ) and ( Target^.G = GG_Mecha ) then begin
 		{ Make the skill roll. }
-		AtRoll := RollStep( ER.FXDice + 2 );
+		AtRoll := RollStep( ( ER.FXDice ) div 2 + 5 );
 
 		{ Make the defense roll. }
 		DefRep := AttemptDefenses( GB , Target , ER.Weapon , AtRoll , AtDesc );

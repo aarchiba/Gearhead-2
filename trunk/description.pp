@@ -446,7 +446,7 @@ Function MechaDescription( Mek: GearPtr ): String;
 	{ Return a text description of this mecha's technical points. }
 var
 	it,i2: String;
-	MM,MMS: Integer;
+	MM,MMS,MaxSpeed,FullSpeed: Integer;
 	CanMove: Boolean;
 	Engine: GearPtr;
 begin
@@ -466,8 +466,11 @@ begin
 	end;
 
 	CanMove := False;
+	MaxSpeed := 0;
 	for MM := 1 to NumMoveMode do begin
 		MMS := BaseMoveRate( Nil , Mek , MM );
+		FullSpeed := AdjustedMoveRate( Nil , Mek , MM , NAV_FullSpeed );
+		if FullSpeed > MaxSpeed then MaxSpeed := FullSpeed;
 		if MMS > 0 then begin
 			CanMove := True;
 
@@ -485,6 +488,8 @@ begin
 			end;
 		end;
 	end;
+
+	if MaxSpeed > 0 then it := it + ' Max:' + BStr( MaxSpeed );
 
 	if Mek^.Stat[ STAT_MechaTrait ] <> 0 then begin
 		it := it + ' ' + MsgString( 'MECHATRAIT_' + BStr( Mek^.Stat[ STAT_MechaTrait ] ) );

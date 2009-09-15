@@ -389,6 +389,8 @@
 	result%id%01 <Goto %1%>
 	result%id%02 <NewChat Say %id%02 AddChat %id%04 AddChat %id%05>
 	result%id%03 <Goto %2%>
+	result%id%04 <Goto %1%>
+	result%id%05 <Goto %2%>
 	Msg%id%01 <\PC , at last I've found you. I need your help with something.>
 	Msg%id%01_1 <I've been searching all over for you, \PC . We have a problem that only you are capable of handling.>
 	CMsg%id%01_1 <ifNPCSociable Accept>

@@ -1635,7 +1635,7 @@ begin
 	end;
 
 	{ Alright, now we have all the items divided into categories and sorted. }
-	for t := 0 to Num_Items do begin
+	for t := 0 to ( Num_Items - 1 ) do begin
 		if SEL[t].EValue <> 0 then begin
 			RateClass( SEL[t].EClass );
 		end;

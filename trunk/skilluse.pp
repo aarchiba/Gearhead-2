@@ -391,6 +391,7 @@ begin
 	if PC = Nil then Exit( False );
 
 	TMaster := FindMaster( Target );
+	if TMaster = Nil then TMaster := Target;
 	PercentDamage := PercentDamaged( TMaster );
 
 	{ Depending upon the situation, this repair will either fix some damage or all the }
@@ -453,7 +454,7 @@ begin
 
 	{ Determine the percentage of damage repaired. This will determine the XP award. }
 	PercentDamage := PercentDamaged( TMaster ) - PercentDamage;
-	if PercentDamage > 0 then begin
+	if ( PercentDamage > 0 ) and IsMasterGear( TMaster ) then begin
 		DoleExperience( PC , PercentDamage div 2 );
 		DoleSkillExperience( PC , Skill , ( PercentDamage + 1 ) div 2 );
 	end;

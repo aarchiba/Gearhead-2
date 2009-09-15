@@ -540,7 +540,7 @@ Content
 		Persona 2
 		rumor%id% <%name2% has been known to donate money to businesses and charities.>
 		% V1 = Have accepted quest
-		greeting <if= PlotStatus %plotid% %id% else GoNoQuest if= PlotStatus %plotid1% -1 else GoCheckStatus NewChat Say 1 WinSubPlot %plotid% QMemo %prev_qid% 2>
+		greeting <if= PlotStatus %plotid% %id% else GoNoQuest if= PlotStatus %plotid1% -1 else GoCheckStatus NewChat Say 1 WinSubPlot %plotid%>
 		GoCheckStatus <if= V1 1 else GoFirstTime NewChat Say 3 AddChat 1 AddChat 2 AddChat 3>
 		GoFirstTime <NewChat Say 4 AddChat 4>
 		GoNoQuest <NewChat SayAnything>
@@ -550,12 +550,11 @@ Content
 		result4 <ifNPCOK %4% else GoR4Trivial NewChat Say 9 AddChat 5>
 		% If the prodigal sondaughter is already dead at the start of this
 		% subquest, the investment will be decided by a single conversation roll.
-		GoR4Trivial <ifConversation SkillTar %threat% else GoR4Fail NewChat Say 7 WinSubPlot %plotid% QMemo %prev_qid% 2>
+		GoR4Trivial <ifConversation SkillTar %threat% else GoR4Fail NewChat Say 7 WinSubPlot %plotid%>
 		GoR4Fail <NewChat Say 8 SetPlotStatus %plotid% -2>
 		Result5 <NewChat Say 10 QMemo %plotid% 11 AddChat 6 SetPlotStatus %plotid1% %id1% V= 1 1>
 		result6 <NewChat Say 12 QMemo %plotid% 13>
 		Msg1 <You've brought %name4% back to me! I've approved the donation for %name1%; you can go tell \OPR %1% the good news.>
-		Msg2 <%name2% agreed to provide the money for %name1%.>
 		Msg3 <Do you have any news from %name4% yet?>
 		Msg4 <What's this, a cavalier with a business proposal? I can tell that you're after something and it more than likely has to do with money.>
 		Msg5 <Well, keep trying.>

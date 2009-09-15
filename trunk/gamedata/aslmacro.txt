@@ -303,7 +303,7 @@ AddMajorSkill <GrabAdventure GSetNAtt 25 ? 1 GAddNAtt 24 1 1>  % Adds a skill tr
 AddMinorSkill <GrabAdventure GSetNAtt 25 ? 1>                  % Adds a skill trainer for arena unit
 AlterContext <GrabStory GAlterContext ?>
 IfPCHasSkill <GrabPCPilot ifGHasSkill ?>
-IfPCHasPerformance <GrabPCPilot ifGHasSkill 35>
+IfPCHasPerformance <GrabPCPilot ifGHasSkill NAS_Performance>
 SetSelfArenaState <GrabCurrentScene GSetNAtt NAG_ArenaData NAS_ArenaState ?>
 AddSelfArenaWin <GrabCurrentScene GAddNAtt NAG_ArenaData NAS_ArenaWins 1>
 AddSelfArenaThreat <GrabCurrentScene GAddNAtt NAG_ArenaData NAS_ArenaThreat ?>

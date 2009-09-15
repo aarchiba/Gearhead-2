@@ -120,15 +120,15 @@ Arm
 	mass -4
 	sub
 		Hand
+
+		Mount
+		Name <Left Arm Mount>
 		inv
 			EMelee 13
 			Speed 3
 			Name <Beam Sword>
 			UsesReflexes
 		end
-
-		Mount
-		Name <Left Arm Mount>
 
 		HeavyActuator 4
 		Mass -2
