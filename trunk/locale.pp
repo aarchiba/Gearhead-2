@@ -123,6 +123,11 @@ Const
 
 	SA_MapEdgeObstacle = 'NOEXIT';
 
+	RANGE_Minimum = 0;
+	RANGE_Short = 1;
+	RANGE_Medium = 2;
+	RANGE_Long = 3;
+
 	DefaultScale = 2; {The default map scale. 2 = Mecha Scale}
 
 	NumTerr = 27;
@@ -607,7 +612,7 @@ Function Range( X1 , Y1 , X2 , Y2: Integer ): Integer;
 Function Range( M1: GearPtr; X2,Y2: Integer ): Integer;
 Function Range( gb: GameBoardPtr; M1 , M2: GearPtr ): Integer;
 
-function WeaponRange( GB: GameBoardPtr; Weapon: GearPtr ): Integer;
+function WeaponRange( GB: GameBoardPtr; Weapon: GearPtr; Band: Integer ): Integer;
 function ThrowingRange( GB: GameBoardPtr; User,Weapon: GearPtr ): Integer;
 
 Function GearDestination( Mek: GearPtr ): Point;
@@ -1994,49 +1999,76 @@ begin
 	Range := Round( Sqrt(Sqr(X2 - X1) + Sqr(Y2 - Y1) + Sqr(Z2 - Z1)) );
 end;
 
-function WeaponRange( GB: GameBoardPtr; Weapon: GearPtr ): Integer;
-	{ Calculate the maximum effective range of this weapon, }
-	{ adjusting the value for map scale. }
+function WeaponRange( GB: GameBoardPtr; Weapon: GearPtr; Band: Integer ): Integer;
+	{ Calculate the range of this weapon, adjusting the value for map scale. }
 	{ If GB=Nil, return the unscaled value. }
+	{ Normally, medium range is 2x short and long range is 3x short. Some }
+	{ weapons are special cases. }
+const
+	Missile_Launcher_Bonus = 4;
 var
-	rng,t: Integer;
+	BaseRange,rng,t: Integer;
 	WAO,AMmo: GearPtr;
+	AtAt: String;
+	IsMissileWeapon: Boolean;
 begin
-	if Weapon = Nil then begin
-		rng := 0;
+	if Weapon = Nil then Exit( 0 );
 
-	end else if Weapon^.G = GG_Weapon then begin
+	{ Calculate the attack attributes. We'll need those later. }
+	AtAt := WeaponAttackAttributes( Weapon );
+	IsMissileWeapon := False;
+
+	if Weapon^.G = GG_Weapon then begin
 		if ( Weapon^.S = GS_Ballistic ) or ( Weapon^.S = GS_BeamGun ) or ( Weapon^.S = GS_Missile ) then begin
+			IsMissileWeapon := True;
 			if Weapon^.S = GS_Missile then begin
 				Ammo := LocateGoodAmmo( Weapon );
-				if Ammo <> Nil then rng := Ammo^.Stat[ STAT_Range ]
+				if Ammo <> Nil then BaseRange := Ammo^.Stat[ STAT_Range ]
 				else begin
 					Ammo := LocateAnyAmmo( Weapon );
-					if Ammo <> Nil then rng := Ammo^.Stat[ STAT_Range ]
-					else rng := 0;
+					if Ammo <> Nil then BaseRange := Ammo^.Stat[ STAT_Range ]
+					else BaseRange := 0;
 				end;
 			end else begin
-				rng := Weapon^.Stat[ STAT_Range ];
+				BaseRange := Weapon^.Stat[ STAT_Range ];
 			end;
+
+			{ Add the bonus from any weapon add-ons. }
 			WAO := Weapon^.InvCom;
 			while WAO <> Nil do begin
 				if ( WAO^.G = GG_WeaponAddOn ) and NotDestroyed( WAO ) then begin
-					rng := rng + WAO^.Stat[ STAT_Range ]
+					BaseRange := BaseRange + WAO^.Stat[ STAT_Range ]
 				end;
 				WAO := WAO^.Next;
 			end;
-			if HasAttackAttribute( WeaponAttackAttributes( Weapon ) , AA_LineAttack ) then begin
-				rng := rng * 2;
-			end else begin
-				rng := rng * 3;
-			end;
+
 		end else begin
-			rng := 1;
-			if HasAttackAttribute( WeaponAttackAttributes( Weapon ) , AA_Extended ) then begin
-				rng := 2;
+			BaseRange := 1;
+			if HasAttackAttribute( AtAt , AA_Extended ) then begin
+				BaseRange := 2;
 			end;
 		end;
-	end else rng := 1;
+	end else BaseRange := 1;
+
+	{ Given the base range, calculate the requested range band. }
+	if IsMissileWeapon then begin
+		if Band = RANGE_Medium then begin
+			rng := BaseRange * 2;
+		end else if Band = RANGE_Long then begin
+			if HasAttackAttribute( AtAt , AA_LineAttack ) then begin
+				rng := BaseRange * 2;
+			end else begin
+				rng := BaseRange * 3;
+			end;
+		end else begin
+			rng := BaseRange;
+		end;
+
+		{ Missile launchers get extended range. }
+		if Weapon^.S = GS_Missile then begin
+			rng := rng + Missile_Launcher_Bonus;
+		end;
+	end else rng := BaseRange;
 
 	if ( GB <> Nil ) and ( rng > 1 ) and ( Weapon^.Scale <> GB^.Scale ) then begin
 		if Weapon^.Scale > GB^.Scale then begin

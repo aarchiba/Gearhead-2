@@ -364,7 +364,7 @@ var
 		if MinRange = 0 then begin
 			WeaponIsOkay := ReadyToFire( GB , Master , W );
 		end else begin
-			WeaponIsOkay := ReadyToFire( GB , Master , W ) and ( ( WeaponRange( GB , W ) >= MinRange ) or ( ThrowingRange( GB , Master , W ) >= MinRange ) );
+			WeaponIsOkay := ReadyToFire( GB , Master , W ) and ( ( WeaponRange( GB , W , RANGE_Long ) >= MinRange ) or ( ThrowingRange( GB , Master , W ) >= MinRange ) );
 		end;
 	end;
 	Procedure CheckAlongPath( Part: GearPtr );

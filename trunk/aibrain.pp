@@ -762,7 +762,7 @@ var
 			if ( Part^.G = GG_Module ) or ( Part^.G = GG_Weapon ) then begin
 				if ReadyToFire( GB , Mek , Part ) then begin
 					if Weapon = Nil then Weapon := Part
-					else if WeaponRange( GB , Part ) > WeaponRange( GB , Weapon ) then Weapon := Part;
+					else if WeaponRange( GB , Part , RANGE_Long ) > WeaponRange( GB , Weapon , RANGE_Long ) then Weapon := Part;
 				end;
 			end;
 			if ( Part^.SubCom <> Nil ) then SeekFarWeapon( Part^.SubCom );
@@ -1439,7 +1439,7 @@ var
 				end else if Part^.G = GG_Weapon then begin
 					{ Find the DMG and RNG of this weapon. }
 					Dmg := WeaponDC( Part );
-					Rng := WeaponRange( GB , Part );
+					Rng := WeaponRange( GB , Part , RANGE_Long );
 					if Rng < 2 then begin
 						D1 := D1 + Dmg div 2;
 						D2 := D2 + Dmg * 6;

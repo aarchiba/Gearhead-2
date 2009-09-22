@@ -63,7 +63,7 @@ Function WeaponDescription( GB: GameBoardPtr; Weapon: GearPtr ): String;
 var
 	Master,Ammo: GearPtr;
 	desc,AA: String;
-	T: Integer;
+	T,S,M,L: Integer;
 begin
 	{ Take the default name for the weapon from the WeaponName }
 	{ function in ghweapon. }
@@ -88,11 +88,13 @@ begin
 		AA := WeaponAttackAttributes( Weapon );
 
 		if (Weapon^.S = GS_Ballistic) or (Weapon^.S = GS_BeamGun) or ( Weapon^.S = GS_Missile ) then begin
-			T := ScaleRange( WeaponRange( Nil , Weapon ) , Weapon^.Scale );
+			S := ScaleRange( WeaponRange( Nil , Weapon , RANGE_Short ) , Weapon^.Scale );
+			M := ScaleRange( WeaponRange( Nil , Weapon , RANGE_Medium ) , Weapon^.Scale );
+			L := ScaleRange( WeaponRange( Nil , Weapon , RANGE_Long ) , Weapon^.Scale );
 			if HasAttackAttribute( AA , AA_LineAttack ) then begin
-				desc := desc + ' RNG:' + BStr( T div 2 ) + '-' + BStr( T );
+				desc := desc + ' RNG:' + BStr( S ) + '-' + BStr( L );
 			end else begin
-				desc := desc + ' RNG:' + BStr( T div 3 ) + '-' + BStr( ( T * 2 ) div 3 ) + '-' + BStr( T );
+				desc := desc + ' RNG:' + BStr( S ) + '-' + BStr( M ) + '-' + BStr( L );
 			end;
 
 		end else if HasAttackAttribute( AA , AA_Extended ) then begin

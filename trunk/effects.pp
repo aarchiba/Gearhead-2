@@ -301,7 +301,7 @@ begin
 	end else begin
 		{ If the attack range is greater than the regular weapon }
 		{ range, then the weapon must have been thrown. }
-		MustBeThrown := ( ThrowingRange( GB , Master , Weapon ) > 0 ) and OnTheMap( GB , TX , TY ) and ( Range( Master , TX , TY ) > WeaponRange( GB , Weapon ) );
+		MustBeThrown := ( ThrowingRange( GB , Master , Weapon ) > 0 ) and OnTheMap( GB , TX , TY ) and ( Range( Master , TX , TY ) > WeaponRange( GB , Weapon , RANGE_Long ) );
 	end;
 end;
 
@@ -463,7 +463,7 @@ var
 	OK: Boolean;
 begin
 	{ Calculate Range and Arc. }
-	rng := WeaponRange( GB , Weapon );
+	rng := WeaponRange( GB , Weapon , RANGE_Long );
 
 	X0 := NAttValue( Master^.NA , NAG_Location , NAS_X );
 	Y0 := NAttValue( Master^.NA , NAG_Location , NAS_Y );
@@ -1161,7 +1161,7 @@ end;
 Function CalcTotalModifiers( gb: GameBoardPtr; Attacker,Target: GearPtr; AtOp: Integer; AtAt: String ): Integer;
 	{ Calculate the total modifiers to this attack roll. }
 var
-	SkRoll,Spd,ZA,ZT,SWB: Integer;
+	SkRoll,Spd,ZA,ZT,SWB,ShortRange: Integer;
 	AMaster,TMaster,AModule,AShield,Ammo,SW: GearPtr;
 	Procedure AddModifier( ModLabel: String; ModValue: Integer );
 		{ Add a modifier to the total. }
@@ -1335,14 +1335,15 @@ begin
 		{ Add range modifier. }
 		{ Still using the SPD variable for all these other uses... }
 		SPD := Range( gb , AMaster , TMaster );
-		if ( SPD > 1 ) and ( Attacker^.G = GG_Weapon ) and ( Attacker^.Stat[ STAT_Range ] <> 0 ) then begin
+		ShortRange := WeaponRange( GB , Attacker , RANGE_Short );
+		if ( SPD > 1 ) and ( Attacker^.G = GG_Weapon ) and ( ShortRange <> 0 ) then begin
 			{ Apply penalty for within minumum range }
-			if ( Attacker^.Stat[STAT_Range] > HAS_MINIMUM_RANGE ) and ( Spd <= ( Attacker^.Stat[STAT_Range] div 2 ) ) then begin
+			if ( ShortRange > HAS_MINIMUM_RANGE ) and ( Spd < ( ShortRange - 2 ) ) then begin
 				{ For every square inside minimum range, there's a -1 attack penalty. Sound familiar? }
-				AddModifier( 'minrange' , - ( Attacker^.Stat[STAT_Range] div 2 ) + Spd - 1 );
+				AddModifier( 'minrange' , -( ShortRange - 2 ) + Spd );
 
-			end else if SPD <= Attacker^.Stat[STAT_Range] then AddModifier( 'range' , ShortRangeBonus )
-			else if SPD > Attacker^.Stat[STAT_Range] * 2 then AddModifier( 'range' ,  - LongRangePenalty );
+			end else if SPD <= ShortRange then AddModifier( 'range' , ShortRangeBonus )
+			else if SPD > WeaponRange( GB , Attacker , RANGE_Medium ) then AddModifier( 'range' ,  - LongRangePenalty );
 		end;
 
 		{ Apply the blindness penalty. }
@@ -1553,13 +1554,13 @@ begin
 			end;
 
 			{ If the originator has Spot Weakness skill, modify damage for that. }
-			if HasSkill( ER.Originator , 18 ) then begin
+			if HasSkill( ER.Originator , NAS_SpotWeakness ) then begin
 				if HasTalent( ER.Originator , NAS_Sniper ) and ( ER.Weapon <> Nil ) and ( ER.Weapon^.G = GG_Weapon ) and (( ER.Weapon^.S = GS_Ballistic ) or ( ER.Weapon^.S = GS_BeamGun )) then begin
-					ER.FXDice := ER.FXDice + SkillRank( ER.Originator , 18 );
+					ER.FXDice := ER.FXDice + SkillRank( ER.Originator , NAS_SpotWeakness );
 				end else if ( ER.Weapon <> Nil ) and (( ER.Weapon^.G <> GG_Weapon ) or ( ER.Weapon^.S = GS_EMelee ) or ( ER.Weapon^.S = GS_Melee )) then begin
-					ER.FXDice := ER.FXDice + ( SkillRank( ER.Originator , 18 ) div 2 );
+					ER.FXDice := ER.FXDice + ( SkillRank( ER.Originator , NAS_SpotWeakness ) div 2 );
 				end else begin
-					ER.FXDice := ER.FXDice + ( SkillRank( ER.Originator , 18 ) div 5 );
+					ER.FXDice := ER.FXDice + ( SkillRank( ER.Originator , NAS_SpotWeakness ) div 5 );
 				end;
 			end;
 

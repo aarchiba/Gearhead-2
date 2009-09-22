@@ -1461,7 +1461,7 @@ begin
 			AttackerFrontEnd( GB , Mek , Weapon , LOOKER_X , LOOKER_Y , TerrMan[ TileTerrain( GB , LOOKER_X , LOOKER_Y ) ].Altitude , DefaultAtOp( Weapon ) );
 
 		end else if LOOKER_Gear = Nil then begin
-			if ( Range( Mek , LOOKER_X , LOOKER_Y ) > WeaponRange( GB , Weapon ) ) and ( Range( Mek , LOOKER_X , LOOKER_Y ) > ThrowingRange( GB , Mek , Weapon ) ) then begin
+			if ( Range( Mek , LOOKER_X , LOOKER_Y ) > WeaponRange( GB , Weapon , RANGE_Long ) ) and ( Range( Mek , LOOKER_X , LOOKER_Y ) > ThrowingRange( GB , Mek , Weapon ) ) then begin
 				DialogMSG( MsgString( 'PCATTACK_OutOfRange' ) );
 			end else if InterfaceType( GB , Mek ) = MenuBasedInput then begin
 				DialogMSG( MsgString( 'PCATTACK_OutOfArc' ) );
@@ -1826,9 +1826,9 @@ var
 		while ( Part <> Nil ) do begin
 
 			if ReadyToFire( GB , PC , Part ) then begin
-				WR1 := WeaponRange( GB , Weapon );
+				WR1 := WeaponRange( GB , Weapon , RANGE_Long );
 				if ThrowingRange( GB , PC , Weapon ) > WR1 then WR1 := ThrowingRange( GB , PC , Weapon );
-				WR2 := WeaponRange( GB , Part );
+				WR2 := WeaponRange( GB , Part , RANGE_Long );
 				if ThrowingRange( GB , PC , Part ) > WR2 then WR2 := ThrowingRange( GB , PC , Part );
 
 				if Weapon = Nil then Weapon := Part
@@ -1881,8 +1881,8 @@ var
 	var
 		R1,R2: Integer;
 	begin
-		R1 := WeaponRange( Nil , W1 );
-		R2 := WeaponRange( Nil , W2 );
+		R1 := WeaponRange( Nil , W1 , RANGE_Long );
+		R2 := WeaponRange( Nil , W2 , RANGE_Long );
 		if ( R2 < 3 ) and ( R1 > 2 ) then begin
 			NewWeaponBetter := True;
 		end else if ( ( R1 div 3 ) = ( R2 div 3 ) ) and ( WeaponDC( W2 ) > WeaponDC( W1 ) ) then begin
@@ -2237,7 +2237,7 @@ begin
 	if ( T = Nil ) or not GearActive( T ) then T := SeekTarget( GB, Mek );
 	
 	{ Big targeting conditional. We fight our target, or we retarget and fight that instead. }
-	if ( T <> Nil ) and ( Range( GB, Mek, T ) <= WeaponRange( GB, QFWpn ) ) and GearActive( T ) and MekCanSeeTarget( GB, Mek, T ) then begin
+	if ( T <> Nil ) and ( Range( GB, Mek, T ) <= WeaponRange( GB, QFWpn , RANGE_Long ) ) and GearActive( T ) and MekCanSeeTarget( GB, Mek, T ) then begin
 
 		{ We can fire at our last target }
 		if RangeArcCheck( GB, Mek, QFWpn, T ) then begin
