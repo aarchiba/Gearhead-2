@@ -495,7 +495,7 @@ begin
 	Code := UpCase(Code_In);
 
 	{Check through all the SAtts looking for the SATT in question.}
-	while LList <> Nil do begin
+	while ( LList <> Nil ) and ( it = Nil ) do begin
 		if LabelsMatch( LList^.info , Code ) then it := LList;
 		LList := LList^.Next;
 	end;
@@ -891,7 +891,7 @@ begin
 	it := Nil;
 
 	{Loop through all the elements.}
-	while LList <> Nil do begin
+	while ( LList <> Nil ) and ( it = Nil ) do begin
 		if (LList^.G = G) and (LList^.S = S) then it := LList;
 		LList := LList^.Next;
 	end;

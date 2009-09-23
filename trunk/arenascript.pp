@@ -4013,6 +4013,7 @@ begin
 				if NotDestroyed( M2 ) and CanBeExtracted( M2 ) and ( SkillRoll( GB , PC , NAS_Repair , STAT_Knowledge , 7 , 0 , True , True ) > 7 ) then begin
 					ExtractMechaPart( Mek^.SubCom , M2 );
 					SetNAtt( M2^.NA , NAG_Location , NAS_Team , NAV_DefPlayerTeam );
+					SetSAtt( M2^.SA , 'DESIG <' + GearName( Mek ) + '>' );
 					AppendGear( GB^.Meks , M2 );
 					{ Record that this is a salvaged part. }
 					SetNAtt( M2^.NA , NAG_MissionReport , NAS_WasSalvaged , 1 );

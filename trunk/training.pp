@@ -256,7 +256,8 @@ Procedure DoTraining( GB: GameBoardPtr; PC: GearPtr; RD: RedrawProcedureType );
 		LowSkillRank := 9999;
 		for t := 1 to NumSkill do begin
 			R := NAttValue( PC^.NA , NAG_Skill , T );
-			if R > 0 then begin
+			{ Can't forget the hidden skills. }
+			if ( R > 0 ) and not SkillMan[t].Hidden then begin
 				if R < LowSkillRank then begin
 					LowSkill := T;
 					LowSkillRank := R;

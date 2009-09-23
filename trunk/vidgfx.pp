@@ -185,7 +185,7 @@ Const
 	);
 	ZONE_MemoMenu: vgfx_zone = (
 		X_Anchor: ANC_Mid; X_Justify: -20; W: 40;
-		Y_Anchor: ANC_Mid; Y_Justify:   3; H:  2;
+		Y_Anchor: ANC_Mid; Y_Justify:   3; H:  3;
 	);
 
 	{ The SelectArenaMission display zones: }

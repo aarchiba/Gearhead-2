@@ -120,7 +120,7 @@ begin
 				desc := desc + MsgString( 'AMMO-EMPTY' );
 			end;
 		end else if ( Weapon^.S = GS_BeamGun ) or ( Weapon^.S = GS_EMelee ) then begin
-			desc := desc + ' EP:' + BStr( EnergyCost( Weapon ) ) + '/' + BStr( EnergyPoints( FindRoot( Weapon ) ) );
+			desc := desc + ' EP:' + BStr( EnergyCost( Weapon ) ) + '/' + BStr( EnergyPoints( FindMasterOrRoot( Weapon ) ) );
 		end;
 
 		if HasAttackAttribute( AA , AA_Mystery ) then begin

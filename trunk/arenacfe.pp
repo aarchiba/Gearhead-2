@@ -322,6 +322,11 @@ begin
 		NoAnim := not DisplayEffectAnimations( GB , N );
 
 		Inc( N );
+{ Pump the events after the loop to keep Windows from doing the "Not Responding" }
+{ thing during long enemy turns- thanks Buffered. }
+{$IFNDEF ASCII}
+		if ( N mod 3 ) = 0 then SDL_PumpEvents();
+{$ENDIF}
 	until NoAnnounce and NoAnim;
 end;
 

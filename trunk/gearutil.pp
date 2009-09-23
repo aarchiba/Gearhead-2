@@ -47,6 +47,7 @@ Function GearsAreIdentical( A,B: GearPtr ): Boolean;
 Function IsMasterGear(G: GearPtr): Boolean;
 Procedure InitGear(Part: GearPtr);
 function FindMaster( Part: GearPtr ): GearPtr;
+function FindMasterOrRoot( Part: GearPtr ): GearPtr;
 Function MasterSize(Part: GearPtr): Integer;
 function FindModule( Part: GearPtr ): GearPtr;
 
@@ -314,6 +315,16 @@ begin
 	while ( Part <> Nil ) and ( not IsMasterGear(Part) ) do Part := Part^.Parent;
 
 	FindMaster := Part;
+end;
+
+function FindMasterOrRoot( Part: GearPtr ): GearPtr;
+	{ Locate the master of PART. Failing that, find the root. }
+	{ Thanks Buffered, whoever you are. }
+begin
+	{ Move the pointer up to either root level or the first Master parent. }
+	while ( Part <> Nil ) and ( Part^.Parent <> Nil ) and ( not IsMasterGear(Part) ) do Part := Part^.Parent;
+
+	FindMasterOrRoot := Part;
 end;
 
 Function MasterSize(Part: GearPtr): Integer;

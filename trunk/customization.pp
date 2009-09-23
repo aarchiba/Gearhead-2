@@ -422,7 +422,10 @@ var
 
 		{ If either WeaponToReplace or NewWeapon are Nil, call the AddNewWeapon upgrade }
 		{ instead. }
-		if ( WeaponToReplace = Nil ) or ( NewWeapon = Nil ) then AddNewWeapon;
+		if ( WeaponToReplace = Nil ) or ( NewWeapon = Nil ) then begin
+			AddNewWeapon;
+			exit;
+		end;
 
 		{ Record the WeaponUpgrades total. }
 		NewWeapon := CloneGear( NewWeapon );
