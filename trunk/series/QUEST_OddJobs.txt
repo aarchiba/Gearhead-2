@@ -352,8 +352,8 @@ Content
 		result2 <NewChat Say 3 AddChat 5 AddChat 6 AddChat 7 AddChat 8 if= V2 0 V= 2 1 AddCheerful -d10>
 		result3 <NewChat Say 4 AddCHat 5 AddChat 6 if= V3 0 V= 3 1 AddEasygoing d10>
 		result4 <NewChat Say 5 AddChat 9 AddChat 10 AddChat 11 AddChat 12 AddChat 13>
-		result5 <AddLawful -1 AddEasygoing d6   Goto .%id2%_GoInit>
-		result6 <NewChat Say 6 AddLawful -2 LoseSubPlot %plotid% CashPrize &BribeAmount>
+		result5 <AddLawful -2 AddEasygoing d6   Goto .%id2%_GoInit>
+		result6 <NewChat Say 6 AddLawful -5 LoseSubPlot %plotid% CashPrize &BribeAmount>
 		result7 <EndChat Say 7 AddEasygoing -d10 AddHeroic -1 TeamAttack 2 TeamAttack 3 P= %id%02 1>
 		result8 <Goto result4>
 		result9 <NewChat  Say 8  XPV 100  WinSubPlot %plotid%>
