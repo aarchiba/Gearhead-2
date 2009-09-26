@@ -156,8 +156,8 @@ TeamAttack <GrabTeam ? GSetNAtt NAG_SideReaction 1 -1 GrabTeam 1 GSetNAtt NAG_Si
 TeamAttackTeam <GrabTeam ? GSetNAtt NAG_SideReaction ? -1> % Note: Does not force reciprocity
 ifTeamHostile <grabTeam ? if= GNAtt NAG_SideReaction 1 -1>
 ifTeamNotHostile <grabTeam ? if# GNAtt NAG_SideReaction 1 -1>
-TeamAlly <GrabTeam ? GSetNAtt NAG_SideReaction 1 1 GrabTeam 1 GSetNAtt NAG_SideReaction ! 1>
-TeamNeutral <GrabTeam ? GSetNAtt NAG_SideReaction 1 0 GrabTeam 1 GSetNAtt NAG_SideReaction ! 0>
+TeamAlly <GrabTeam ? GSetNAtt NAG_SideReaction 1 1 GSetNAtt NAG_SideReaction -1 1 GrabTeam 1 GSetNAtt NAG_SideReaction ! 1>
+TeamNeutral <GrabTeam ? GSetNAtt NAG_SideReaction 1 0 GSetNAtt NAG_SideReaction -1 0 GrabTeam 1 GSetNAtt NAG_SideReaction ! 0>
 MENTAL <GrabPCPilot GMental>
 STAMINA <GrabPCPilot GStamina>
 OneVictimRecovered <GrabCurrentScene GAddNAtt NAG_Narrative NAS_VictimsRecovered 1>
@@ -254,6 +254,7 @@ IfSurvival <ifSkillTest NAS_Survival STAT_Craft ?>
 IfSurvivalKN <ifSkillTest NAS_Survival STAT_Knowledge ?>	% Used for theoretical rather than practical knowledge
 IfUSurvival <ifUSkillTest NAS_Survival STAT_Craft ?>
 IfRepair <ifSkillTest NAS_Repair STAT_Craft ?>
+IfURepair <ifUSkillTest NAS_Repair STAT_Craft ?>
 IfTaunt <ifSkillTest NAS_Taunt STAT_Charm ?>
 IfMedicine <ifSkillTest NAS_Medicine STAT_Knowledge ?>
 IfShopping <ifSkillTest NAS_Shopping STAT_Charm ?>

@@ -1333,10 +1333,10 @@ begin
 		if MekAltitude( gb , AMaster ) < 0 then AddModifier( 'at-water' , - UnderwaterAttackPenalty );
 
 		{ Add range modifier. }
-		{ Still using the SPD variable for all these other uses... }
-		SPD := Range( gb , AMaster , TMaster );
-		ShortRange := WeaponRange( GB , Attacker , RANGE_Short );
-		if ( SPD > 1 ) and ( Attacker^.G = GG_Weapon ) and ( ShortRange <> 0 ) then begin
+		if IsMissileWeapon( Attacker ) then begin
+			{ Still using the SPD variable for all these other uses... }
+			SPD := Range( gb , AMaster , TMaster );
+			ShortRange := WeaponRange( GB , Attacker , RANGE_Short );
 			{ Apply penalty for within minumum range }
 			if ( ShortRange > HAS_MINIMUM_RANGE ) and ( Spd < ( ShortRange - 2 ) ) then begin
 				{ For every square inside minimum range, there's a -1 attack penalty. Sound familiar? }

@@ -341,6 +341,7 @@ Function HasStatus( Mek: GearPtr; SFX: Integer ): Boolean;
 
 Procedure CheckPowerSourceRange( Part: GearPtr );
 Function PowerSourceCost( Part: GearPtr ): Integer;
+Function IsMissileWeapon( Weapon: GearPtr ): Boolean;
 
 
 implementation
@@ -1067,6 +1068,12 @@ Function PowerSourceCost( Part: GearPtr ): Integer;
 	{ Return the cost of this power source, which is based on its size. }
 begin
 	PowerSourceCost := Part^.V * 75;
+end;
+
+Function IsMissileWeapon( Weapon: GearPtr ): Boolean;
+	{ Return true if weapon is ballistic, beamgun, or missile launcher. }
+begin
+	IsMissileWeapon := ( Weapon <> Nil ) and ( Weapon^.G = GG_Weapon ) and ( ( Weapon^.S = GS_Ballistic ) or ( Weapon^.S = GS_BeamGun ) or ( Weapon^.S = GS_Missile ) );
 end;
 
 end.
