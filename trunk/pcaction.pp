@@ -2388,7 +2388,7 @@ begin
 	end else if KCode = KMC_FullSpeed then begin
 		RLWalker( Camp^.GB , Mek , Reverse_RL_D[ NAttValue( Mek^.NA , NAG_Location , NAS_D ) ] , True );
 		GotMove := True;
-	end else if KCode = KMC_Reverse then begin
+	end else if ( KCode = KMC_Reverse ) and MoveLegal( Camp^.GB^.Scene , Mek , NAV_Reverse , Camp^.GB^.ComTime ) then begin
 		PrepAction( Camp^.GB , Mek , NAV_Reverse );
 	end else if KCode = KMC_Stop then begin
 		PrepAction( Camp^.GB , Mek , NAV_Stop );

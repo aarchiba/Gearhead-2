@@ -173,7 +173,7 @@ begin
 	if Part^.Stat[ STAT_FoodEffectType ] <> 0 then begin
 		if Part^.Stat[ STAT_FoodEffectType ] = FET_CureStatus then begin
 			if Part^.Stat[ STAT_FoodEffectMod ] < 1 then Part^.Stat[ STAT_FoodEffectMod ] := 1
-			else if Part^.Stat[ STAT_FoodEffectMod ] > 10 then Part^.Stat[ STAT_FoodEffectMod ] := 10;
+			else if Part^.Stat[ STAT_FoodEffectMod ] > Num_Status_FX then Part^.Stat[ STAT_FoodEffectMod ] := Num_Status_FX;
 		end else begin
 			if Part^.Stat[ STAT_FoodEffectMod ] < 1 then Part^.Stat[ STAT_FoodEffectMod ] := 1
 			else if Part^.Stat[ STAT_FoodEffectMod ] > Num_Status_FX then Part^.Stat[ STAT_FoodEffectMod ] := Num_Status_FX;
