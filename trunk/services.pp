@@ -1174,8 +1174,12 @@ begin
 	while I <> Nil do begin
 		if IsGoodWares( I , Tolerance ) then begin
 			ShopRank := NAttValue( I^.NA , NAG_GearOps , NAS_ShopRank );
-			SetNAtt( WList , 0 , N , ShopRank );
-			Inc( Num_Items_By_Rank[ ShopRank ] );
+			if ( ShopRank >= 1 ) and ( ShopRank <= 10 ) then begin
+				SetNAtt( WList , 0 , N , ShopRank );
+				Inc( Num_Items_By_Rank[ ShopRank ] );
+			end else begin
+				DialogMsg( 'ERROR: ' + GearName( I ) + ' has ShopRank ' + BStr( ShopRank ) );
+			end;
 		end;
 
 		Inc( N );
@@ -2099,9 +2103,7 @@ begin
 				GB^.QuitTheGame := True;
 				GB^.ReturnCode := N;
 				AddNAtt( PC^.NA , NAG_Experience , NAS_Credits , -Cost );
-				SetNAtt( PC^.NA , NAG_Condition , NAS_Hunger , 0 );
-				QuickTime( GB , Cost * 10 );
-				SetNAtt( PC^.NA , NAG_Condition , NAS_Hunger , 0 );
+				TransitTime( GB , Cost * 10 );
 			end else begin
 				{ Not enough cash to buy... }
 				CHAT_Message := MsgString( 'BUYNOCASH' + BStr( Random( 4 ) + 1 ) );

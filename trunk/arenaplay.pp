@@ -353,7 +353,7 @@ begin
 	{Start main combat loop here.}
 	{Keep going until we're told to quit.}
 	while KeepPlayingSC( Camp^.GB ) and ( CurrentControlMode( Camp^.GB ) = NAV_ClockMode ) do begin
-		AdvanceGameClock( Camp^.GB , False );
+		AdvanceGameClock( Camp^.GB , False , True );
 
 		{ Once every 10 minutes, roll for random monsters. }
 		if ( Camp^.GB^.ComTime mod AP_10minutes ) = 233 then RestockRandomMonsters( Camp^.GB );
@@ -537,7 +537,7 @@ begin
 			end;
 
 			{ Advance the clock by 60 seconds. }
-			for T := 1 to TacticsRoundLength do AdvanceGameClock( Camp^.GB , False );
+			for T := 1 to TacticsRoundLength do AdvanceGameClock( Camp^.GB , False , True );
 			AddNAtt( Camp^.GB^.Scene^.NA , NAG_SceneData , NAS_TacticsTurnStart , TacticsRoundLength );
 			HandleTriggers( Camp^.GB );
 

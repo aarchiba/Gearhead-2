@@ -2960,7 +2960,7 @@ begin
 		until ( travelTime > 0 ) or not KeepPlayingSC( Camp^.GB );
 
 		{ Advance the game clock. }
-		for t := 1 to TravelTime do AdvanceGameClock( Camp^.GB , True );
+		for t := 1 to TravelTime do AdvanceGameClock( Camp^.GB , True , True );
 
 		HandleTriggers( Camp^.GB );
 

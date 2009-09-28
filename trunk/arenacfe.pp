@@ -41,8 +41,9 @@ Procedure StatusEffectCheck( GB: GameBoardPtr );
 
 Procedure RandomExplosion( GB: GameBoardPtr );
 
-Procedure AdvanceGameClock( GB: GameBoardPtr; BeQuick: Boolean );
+Procedure AdvanceGameClock( GB: GameBoardPtr; BeQuick,GetHungry: Boolean );
 Procedure QuickTime( GB: GameBoardPtr; Time: LongInt );
+Procedure TransitTime( GB: GameBoardPtr; Time: LongInt );
 Procedure DisplayConsoleHistory( GB: GameBoardPtr );
 
 Procedure SayCombatTaunt( GB: GameBoardPtr; NPC: GearPtr; Msg_Label: String );
@@ -538,7 +539,7 @@ begin
 	end;
 end;
 
-Procedure RegenerationCheck( MList: GearPtr; BeQuick: Boolean );
+Procedure RegenerationCheck( MList: GearPtr; BeQuick,GetHungry: Boolean );
 	{ Go through MList and all siblings and all children. Any gears }
 	{ found which are of type MEAT will recover one point of damage, }
 	{ if damaged. }
@@ -606,7 +607,7 @@ begin
 			end;
 
 			{ Characters also get hungry... }
-			if PCTeam then begin
+			if PCTeam and GetHungry then begin
 				AddNAtt( MList^.NA , NAG_Condition , NAS_Hunger , 1 );
 				if NAttValue( MList^.NA , NAG_Condition , NAS_Hunger ) > Hunger_Penalty_Starts then begin
 					DialogMsg( ReplaceHash( MsgString( 'REGEN_Hunger' ) , GearName( MList ) ) );
@@ -644,8 +645,8 @@ begin
 		end;
 
 		{ Check the children - InvCom and SubCom. }
-		RegenerationCheck( MList^.InvCom , BeQuick );
-		RegenerationCheck( MList^.SubCom , BeQuick );
+		RegenerationCheck( MList^.InvCom , BeQuick , GetHungry );
+		RegenerationCheck( MList^.SubCom , BeQuick , GetHungry );
 
 		{ Move to the next sibling. }
 		MList := MList^.Next;
@@ -670,7 +671,7 @@ begin
 	CheckOverloadAlongPath( GB^.Meks );
 end;
 
-Procedure AdvanceGameClock( GB: GameBoardPtr; BeQuick: Boolean );
+Procedure AdvanceGameClock( GB: GameBoardPtr; BeQuick,GetHungry: Boolean );
 	{ Increment the game clock and do any checks that need to be }
 	{ done. }
 	{ Set BEQUICK to TRUE in order to skip the 5min and halfhour triggers. }
@@ -689,12 +690,11 @@ begin
 
 	{ Once every 10 minutes, living gears regenerate. }
 	if ( GB^.ComTime mod AP_10minutes ) = 0 then begin
-		RegenerationCheck( GB^.Meks , BeQuick );
+		RegenerationCheck( GB^.Meks , BeQuick , GetHungry );
 	end;
 
 	{ Once every 3 minutes, update the status effects. }
 	if ( GB^.ComTime mod AP_3minutes ) = 97 then StatusEffectCheck( GB );
-
 end;
 
 Procedure QuickTime( GB: GameBoardPtr; Time: LongInt );
@@ -702,7 +702,17 @@ Procedure QuickTime( GB: GameBoardPtr; Time: LongInt );
 begin
 	while Time > 0 do begin
 		Dec( Time );
-		AdvanceGameClock( GB , True );
+		AdvanceGameClock( GB , True , True );
+	end;
+end;
+
+Procedure TransitTime( GB: GameBoardPtr; Time: LongInt );
+	{ Advance time quickly by the specified amount. }
+	{ During this time the PC will not get hungry. }
+begin
+	while Time > 0 do begin
+		Dec( Time );
+		AdvanceGameClock( GB , True , False );
 	end;
 end;
 

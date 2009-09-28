@@ -1557,7 +1557,7 @@ var
 		shoprank := 1;
 		for t := 1 to 10 do if mval > rank_min_val[t] then shoprank := t;
 		SetNAtt( Item^.NA , NAG_GearOps , NAS_ShopRank , ShopRank );
-		SetSatt( Item^.SA , 'CATEGORY <MECHA>' );
+		if Item^.G = GG_Mecha then SetSatt( Item^.SA , 'CATEGORY <MECHA>' );
 	end;
 	Procedure RateClass( EClass: Integer );
 		{ Count the number of members in this class. Then, assign each member }
@@ -1622,12 +1622,12 @@ begin
 
 		{ Determine this item's current ranking, unless it's a mecha }
 		{ in which case its position is automatically set. }
-		if Item^.G <> GG_Mecha then begin
-			SEL[t].EValue := ELGearCost( Item );
-			SEL[t].ERank := ItemRanking( T );
-		end else begin
+		if ( Item^.G = GG_Mecha ) or ( ( Item^.G = GG_Set ) and ( Item^.InvCom <> Nil ) and ( Item^.InvCom^.G = GG_Mecha ) ) then begin
 			SEL[t].EValue := 0;
 			InitMechaRank( Item );
+		end else begin
+			SEL[t].EValue := ELGearCost( Item );
+			SEL[t].ERank := ItemRanking( T );
 		end;
 
 		Item := Item^.Next;
