@@ -115,7 +115,8 @@ Function NPCScriptMessage( const msg_label: String; GB: GameBoardPtr; NPC, Sourc
 Procedure InvokeEvent( Event: String; GB: GameBoardPtr; Source: GearPtr; var Trigger: String );
 
 Procedure AddLancemate( GB: GameBoardPtr; NPC: GearPtr );
-Procedure RemoveLancemate( GB: GameBoardPtr; NPC: GearPtr );
+Function AddLancemateFrontEnd( GB: GameBoardPtr; PC,NPC: GearPtr; CanCancel: Boolean ): Boolean;
+Function RemoveLancemate( GB: GameBoardPtr; NPC: GearPtr; DoMessage: Boolean ): String;
 
 Procedure HandleInteract( GB: GameBoardPtr; PC,NPC,Persona: GearPtr );
 Procedure DoTalkingWIthNPC( GB: GameBoardPtr; PC,Mek: GearPtr; ByTelephone: Boolean );
@@ -631,9 +632,9 @@ Function NumLancemateSlots( PC: GearPtr ): Integer;
 	{ Return the number of freely-selected lancemates this PC can have. }
 begin
 	if HasTalent( PC , NAS_Entourage ) then begin
-		NumLancemateSlots := 2;
+		NumLancemateSlots := 4;
 	end else begin
-		NumLancemateSlots := 1;
+		NumLancemateSlots := 3;
 	end;
 end;
 
@@ -657,12 +658,10 @@ begin
 	end else if ( GB <> Nil ) and not ( OnTheMap( GB , FindRoot( NPC ) ) and IsFoundAlongTrack( GB^.Meks , FindRoot( NPC ) ) ) then begin
 		{ Can only join if in the same scene as the PC. }
 		CanJoin := False;
-	end else if PersonaInUse( FindRoot( GB^.Scene ) , NAttValue( NPC^.NA , NAG_Personal , NAS_CID ) ) then begin
+	end else if PersonaUsedByQuest( FindRoot( GB^.Scene ) , NPC ) then begin
 		CanJoin := False;
-	end else if ( GB <> Nil ) and ( GB^.Scene <> Nil ) and ( NAttValue( NPC^.NA , NAG_Narrative , NAS_PlotID ) < 0 ) and ( NAttValue( FindROot( GB^.Scene )^.NA , NAG_PlotStatus , NAttValue( NPC^.NA , NAG_Narrative , NAS_PlotID ) ) >= 0 ) then begin
-		CanJoin := False;
-	end else if LMP >= NumLancemateSlots( PC ) then begin
-		CanJoin := False;
+{	end else if LMP >= NumLancemateSlots( PC ) then begin
+		CanJoin := False;}
 	end;
 	CanJoinLance := CanJoin;
 end;
@@ -2993,7 +2992,7 @@ begin
 			if ( I_NPC <> Nil ) and ( NAttValue( I_NPC^.NA , NAG_Relationship , 0 ) >= NAV_ArchAlly ) and ( NAttValue( I_NPC^.NA , NAG_Location , NAS_Team ) <> NAV_LancemateTeam ) then AddRPGMenuItem( IntMenu , MsgString( 'NEWCHAT_Join' ) , CMD_Join );
 		end;
 	end;
-	if ( I_NPC <> Nil ) and ( NAttValue( I_NPC^.NA , NAG_Location , NAS_Team ) = NAV_LancemateTeam ) and ( NAttValue( I_NPC^.NA , NAG_CharDescription , NAS_CharType ) <> NAV_TempLancemate ) then AddRPGMenuItem( IntMenu , MsgSTring( 'NEWCHAT_QuitLance' ) , CMD_Quit );
+	if ( I_NPC <> Nil ) and ( NAttValue( I_NPC^.NA , NAG_Location , NAS_Team ) = NAV_LancemateTeam ) and ( NAttValue( I_NPC^.NA , NAG_CharDescription , NAS_CharType ) <> NAV_TempLancemate ) and IsSafeArea( GB ) and IsSubCom( GB^.Scene ) then AddRPGMenuItem( IntMenu , MsgSTring( 'NEWCHAT_QuitLance' ) , CMD_Quit );
 	if not ( OnTheMap( GB , FindRoot( I_NPC ) ) and IsFoundAlongTrack( GB^.Meks , FindRoot( I_NPC ) ) ) then AddRPGMenuItem( IntMenu , MsgString( 'NewChat_WhereAreYou' ) , CMD_WhereAreYou );
 	if ( NAttValue( I_NPC^.NA , NAG_Personal , NAS_RumorRecharge ) < GB^.ComTime ) and ( NAttValue( I_NPC^.NA , NAG_Location , NAS_Team ) <> NAV_LancemateTeam ) then AddRPGMenuItem( IntMenu , MsgString( 'NEWCHAT_AskAboutRumors' ) , CMD_AskAboutRumors );
 	RPMSortAlpha( IntMenu );
@@ -4433,7 +4432,7 @@ Procedure ProcessGQuitLance( GB: GameBoardPtr );
 	{ The grabbed gear will quit the lance. }
 begin
 	if Grabbed_Gear <> Nil then begin
-		RemoveLancemate( GB , Grabbed_Gear );
+		RemoveLancemate( GB , Grabbed_Gear , False );
 	end;
 end;
 
@@ -4450,7 +4449,7 @@ begin
 			EquipThenDeploy( GB , Grabbed_Gear , True );
 		end;
 
-		AddLancemate( GB , Grabbed_Gear );
+		AddLancemateFrontEnd( GB , GG_LocatePC( GB ) , Grabbed_Gear , False );
 	end;
 end;
 
@@ -4919,18 +4918,76 @@ begin
 	SetLancemateOrders( GB );
 end;
 
+Function AddLancemateFrontEnd( GB: GameBoardPtr; PC,NPC: GearPtr; CanCancel: Boolean ): Boolean;
+	{ NPC wants to join the lance. If NPC isn't a temp lancemate, and the lance is already }
+	{ full, prompt to remove a member before NPC can join. }
+	{ Return TRUE if the lancemate was added, or FALSE otherwise. }
+var
+	NoCancel: Boolean;
+	RPM: RPGMenuPtr;
+	LM: GearPtr;
+	N: Integer;
+begin
+	NoCancel := True;
+
+	{ Step One- Check NPC's temp status, then count up the number of lancemates }
+	{ to see if there's gonna be a problem. }
+	if NAttValue( NPC^.NA , NAG_CharDescription , NAS_CharType ) <> NAV_TempLancemate then begin
+		{ Initialize some values. }
+		ASRD_GameBoard := GB;
+		ASRD_MemoMessage := ReplaceHash( MsgString( 'JOINFE_Need_Space' ) , GearName( NPC ) );
+
+		{ Count up the number of lancemates. }
+		while ( LancematesPresent( GB ) >= NumLancemateSlots( PC ) ) and NoCancel do begin
+			{ Remove lancemates to make room for NPC. }
+			{ Create the menu. }
+			RPM := CreateRPGMenu( MenuItem , MenuSelect , ZONE_MemoMenu );
+
+			{ Create the list. }
+			LM := GB^.Meks;
+			N := 1;
+			while LM <> Nil do begin
+				if ( NAttValue( LM^.NA , NAG_Location , NAS_Team ) = NAV_LancemateTeam ) and GearActive( LM ) and IsRegularLancemate( LM ) then begin
+					AddRPGMenuItem( RPM , PilotName( LM ) , N );
+				end;
+
+				Inc( N );
+				LM := LM^.Next;
+			end;
+
+			RPMSortAlpha( RPM );
+			AlphaKeyMenu( RPM );
+			if CanCancel then AddRPGMenuItem( RPM , MsgString( 'Cancel' ) , -1 )
+			else RPM^.Mode := RPMNoCancel;
+
+			N := SelectMenu( RPM , @MemoPageReDraw );
+			DisposeRPGMenu( RPM );
+			if N = -1 then NoCancel := False
+			else begin
+				LM := RetrieveGearSib( GB^.Meks , N );
+				RemoveLancemate( GB , LM , True );
+			end;
+		end;
+	end;
+
+	{ Step Two- we apparently have room now. Add the lancemate to the party. }
+	if NoCancel then AddLancemate( GB , NPC );
+
+	AddLancemateFrontEnd := NoCancel;
+end;
+
 Procedure AttemptJoin( GB: GameBoardPtr );
 	{ I_NPC will attempt to join the party. Yay! }
 var
-	LMP: Integer;	{ Lancemate Points needed }
+	LMP: Integer;	{ Lancemates Present }
 begin
 	{ Make sure we've got an NPC to deal with. }
 	if I_NPC = Nil then Exit;
 
 	{ Need two more available lancemate points than are currently in use. }
 	if CanJoinLance( GB , I_PC , I_NPC ) then begin
-		CHAT_Message := MsgString( 'JOIN_JOIN' );
-		AddLancemate( GB , I_NPC );
+		if AddLancemateFrontEnd( GB , I_PC , I_NPC , True ) then CHAT_Message := MsgString( 'JOIN_JOIN' )
+		else CHAT_Message := MsgString( 'JOIN_Cancel' );
 	end else begin
 		LMP := LancematesPresent( GB );
 		if ReactionScore( GB^.Scene , I_PC , I_NPC ) < 25 then begin
@@ -4943,13 +5000,50 @@ begin
 	end;
 end;
 
-Procedure RemoveLancemate( GB: GameBoardPtr; NPC: GearPtr );
+Function RemoveLancemate( GB: GameBoardPtr; NPC: GearPtr; DoMessage: Boolean ): String;
 	{ Remove NPC from the party. }
-	{ ERROR CHECK: Lancemates cannot be removed in dynamic scenes! }
+	{ If this location isn't a good one for the LM, move the LM to a better place. }
+var
+	DestScene: GearPtr;
+	msg: String;
 begin
-	if not IsInvCom( GB^.Scene ) then begin
+	if IsInvCom( GB^.Scene ) or ( not IsSafeArea( GB ) ) then begin
+		{ This isn't a good place for the NPC to stay. Better move it }
+		{ to somewhere else. }
+
+		{ Step One- Locate the destination scene. }
+		DestScene := SearchForScene( FindRootScene( GB^.Scene ) , Nil , GB , '(BUILDING|MEETING) PUBLIC -ENEMY' );
+
+		if DestScene <> Nil then begin
+			{ Step Two- Announce the lancemate's destination. }
+			msg := ReplaceHash( MsgString( 'QUIT_LANCE_GO' ) , GearName( DestScene ) );
+
+			{ Step Three- Delink the lancemate and send it there. }
+			DelinkGearForMovement( GB , NPC );
+			InsertInvCom( DestScene , NPC );
+			SetSAtt( NPC^.SA , 'TEAMDATA <Ally>' );
+			ChooseTeam( NPC , DestScene );
+
+		end else begin
+			{ Fail. Just stick the NPC here, for now. }
+			msg := MsgString( 'QUIT_LANCE' );
+
+			SetSAtt( NPC^.SA , 'TEAMDATA <Ally>' );
+			ChooseTeam( NPC , GB^.Scene );
+		end;
+	end else begin
+		{ The LM can just hang around here until the PC gets back. }
+		msg := MsgString( 'QUIT_LANCE' );
 		SetSAtt( NPC^.SA , 'TEAMDATA <Ally>' );
 		ChooseTeam( NPC , GB^.Scene );
+	end;
+
+	if DoMessage then begin
+		if NPC = I_NPC then begin
+			CHAT_Message := msg;
+		end else begin
+			Monologue( GB , NPC , msg );
+		end;
 	end;
 end;
 
@@ -4957,8 +5051,7 @@ Procedure HandleQuit( GB: GameBoardPtr );
 	{ I_NPC will quit the party. }
 begin
 	if I_NPC = Nil then Exit;
-	CHAT_Message := MsgString( 'QUIT_LANCE' );
-	RemoveLancemate( GB , I_NPC );
+	RemoveLancemate( GB , I_NPC , True );
 end;
 
 
@@ -5075,6 +5168,7 @@ begin
 
 		end else if N = CMD_Quit then begin
 			HandleQuit( GB );
+			ClearMenu( IntMenu );
 
 		end else if N = CMD_WhereAreYou then begin
 			HandleWhereAreYou( GB );

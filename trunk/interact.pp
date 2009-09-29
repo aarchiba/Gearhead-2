@@ -87,6 +87,7 @@ Function IsArchEnemy( Adv,NPC: GearPtr ): Boolean;
 Function IsArchAlly( Adv,NPC: GearPtr ): Boolean;
 Function XNPCDesc( GB: GameBoardPtr; Adv,NPC: GearPtr ): String;
 
+Function IsRegularLancemate( NPC: GearPtr ): Boolean;
 Function LancematesPresent( GB: GameBoardPtr ): Integer;
 Function PetsPresent( GB: GameBoardPtr ): Integer;
 
@@ -585,7 +586,7 @@ begin
 	CID := NAttValue( NPC^.NA , NAG_Personal , NAS_CID );
 	Persona := SeekPersona( Adv , CID );
 	if ( Persona <> Nil ) and AStringHasBString( SAttValue( Persona^.SA , 'SPECIAL' ) , 'NOPLOTS' ) then it := it + ' INUSE'
-	else if ( Persona <> Nil ) and ( NAttValue( Persona^.NA , NAG_Narrative , NAS_PlotID ) < 0 ) and ( NAttValue( FindROot( Adv )^.NA , NAG_PlotStatus , NAttValue( Persona^.NA , NAG_Narrative , NAS_PlotID ) ) >= 0 ) then it := it + ' INUSE'
+	else if PersonaUsedByQuest( Adv , Persona ) then it := it + ' INUSE'
 	else if PersonaInUse( Adv , CID ) then it := it + ' INUSE'
 	else it := it + ' NOTUSED';
 
@@ -606,20 +607,26 @@ begin
 	XNPCDesc := it;
 end;
 
+Function IsRegularLancemate( NPC: GearPtr ): Boolean;
+	{ NPC is a lancemate. Return TRUE if NPC is not a pet and not a temp. }
+begin
+	NPC := LocatePilot( NPC );
+	IsRegularLancemate := ( NPC <> Nil ) and ( NAttValue( NPC^.NA , NAG_Personal , NAS_CID ) <> 0 ) and ( NAttValue( NPC^.NA , NAG_CharDescription , NAS_CharType ) <> NAV_TempLancemate );
+end;
+
 Function LancematesPresent( GB: GameBoardPtr ): Integer;
 	{ Return the number of free lancemates present. A free lancemate is one who: }
 	{ - is human (no pets) }
 	{ - isn't a temp lancemate }
 var
-	M,NPC: GearPtr;
+	M: GearPtr;
 	N: Integer;
 begin
 	M := GB^.Meks;
 	N := 0;
 	while M <> Nil do begin
 		if ( NAttValue( M^.NA , NAG_Location , NAS_Team ) = NAV_LancemateTeam ) and GearActive( M ) then begin
-			NPC := LocatePilot( M );
-			if ( NPC <> Nil ) and ( NAttValue( NPC^.NA , NAG_Personal , NAS_CID ) <> 0 ) and ( NAttValue( NPC^.NA , NAG_CharDescription , NAS_CharType ) <> NAV_TempLancemate ) then begin
+			if IsRegularLancemate( M ) then begin
 				Inc( N );
 			end;
 		end;

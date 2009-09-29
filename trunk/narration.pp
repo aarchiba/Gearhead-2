@@ -149,6 +149,7 @@ Function FindPersonaPlot( Adventure: GearPtr; CID: Integer ): GearPtr;
 Function FindPersonaStory( Adventure: GearPtr; CID: Integer ): GearPtr;
 
 Function PersonaInUse( Adventure: GearPtr;  ID: LongInt ): Boolean;
+Function PersonaUsedByQuest( Adv, Persona: GearPtr ): Boolean;
 
 Function SeekPlotElement( Adventure , Plot: GearPtr; N: Integer; GB: GameBoardPtr ): GearPtr;
 Function PlotUsedHere( Plot: GearPtr; GB: GameBoardPtr ): Boolean;
@@ -400,6 +401,13 @@ begin
 		Adventure := Adventure^.Next;
 	end;
 	PersonaInUse := it;
+end;
+
+Function PersonaUsedByQuest( Adv, Persona: GearPtr ): Boolean;
+	{ Return TRUE if PERSONA is being used by a quest, and is still in use by }
+	{ that quest. }
+begin
+	PersonaUsedByQuest := ( Adv <> Nil ) and ( Persona <> Nil ) and ( NAttValue( Persona^.NA , NAG_Narrative , NAS_PlotID ) < 0 ) and ( NAttValue( FindROot( Adv )^.NA , NAG_PlotStatus , NAttValue( Persona^.NA , NAG_Narrative , NAS_PlotID ) ) >= 0 );
 end;
 
 

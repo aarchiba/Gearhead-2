@@ -68,6 +68,7 @@ requires <*IHaveInformation &AboutNPC>
 %% V%id%01 = Have already given spiel
 START <if= V%id%01 0 else %1% V= %id%01 1 NewChat Say %id%01 AddChat %id%01>
 Result%id%01 <Goto %1%>
+Msg%id%01 <I know some things about \PERSONA %2% that you're going to want to hear.>
 Msg%id%01_1 <I've heard that you've been asking about \PERSONA %2% . I know some things about \OPR %2% that might be useful to you.>
 CMsg%id%01_1 <ifNPCSociable Accept>
 Msg%id%01_2 <Hey, I've got some info about \PERSONA %2% .>

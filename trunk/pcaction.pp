@@ -311,7 +311,7 @@ begin
 					DoTraining( GB , NPC , @PCActionRedraw );
 				end else AutoTraining( GB , NPC );
 			3: 	begin
-				RemoveLancemate( GB , NPC );
+				RemoveLancemate( GB , NPC , True );
 				DialogMsg( ReplaceHash( MsgString( 'FHQ_LMV_Removed' ) , GearName( NPC ) ) );
 				N := -1;
 				end;

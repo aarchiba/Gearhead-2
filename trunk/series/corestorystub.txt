@@ -24,9 +24,9 @@
 	&SetAllyFac <N= 3 ?>
 	&AllyFac <N3>
 	&SetPartnerNPC <N= 4 ?>
-	&AddPartnerToLance <AddTempLancemate N4>
-	&RemovePartnerFromLance <RemoveTempLancemate N4>
-	&RemovePartnerNPC <RemoveTempLancemate N4 N= 4 0>
+	&AddPartnerToLance <AddLancemate N4 PCAlly N4>
+	&RemovePartnerFromLance <RemoveLancemate N4>
+	&RemovePartnerNPC <RemoveLancemate N4 N= 4 0>
 	&PartnerNPC <N4>
 	&SetTargetNPC <N= 5 ?>
 	&TargetNPC <N5>
@@ -39,8 +39,8 @@
 	&TargetItem <N8>
 	&SetAmoreNPC <N= 9 ?>
 	&AmoreNPC <N9>
-	&AddAmoreToLance <AddTempLancemate N9>
-	&RemoveAmoreFromLance <RemoveTempLancemate N9>
+	&AddAmoreToLance <AddLancemate N9>
+	&RemoveAmoreFromLance <RemoveLancemate N9>
 	&SetHangingNPC <N= 10 ?>
 	&HangingNPC <N10>
 

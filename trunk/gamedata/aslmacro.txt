@@ -282,6 +282,8 @@ IfSubPlotCanceled <GrabAdventure if= GNAtt NAG_PlotStatus ? -3>
 AddTempLancemate <GrabNPC ? GSetNAtt NAG_CharDescription NAS_CharType NAV_TempLancemate GJoinLance>
 ChatNPCJoinLance <GrabChatNPC GJoinLance>
 RemoveTempLancemate <GrabNPC ? GSetNAtt NAG_CharDescription NAS_CharType 0 GQuitLance>
+AddLancemate <GrabNPC ?  GJoinLance>
+RemoveLancemate <GrabNPC ?  GQuitLance>
 AddPartyPoint <GrabCurrentScene GAddNAtt NAG_Narrative NAS_PartyPoints 1>
 OpenInv <GrabSource GOpenInv>
 IfSelfHasItem <GrabSource IfGHasItem ?>
