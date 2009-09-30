@@ -724,10 +724,11 @@ Content
 		Prompt3 <Maybe some other time.>
 		Prompt4 <I'm quite sure I won't.>
 		Prompt5 <You're right. If I need help, I'll call.>
-
 	end
 	inv
 		NPC Mercenary
+		update <if= V1 0 V= 1 1 SelfLevel PCRenown>
+		MOTIVATION:Mercenary
 	end
 
 Content

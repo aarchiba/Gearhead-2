@@ -555,7 +555,7 @@ var
 	MList,Mek,Pilot: GearPtr;
 	desc,fdesc: String;
 	team,fac,LFac,rscene: GearPtr;
-	MaxMekShare,MPV: LongInt;
+	MaxMekShare,MPV,LMs: LongInt;
 begin
 	{ First, generate the mecha description. }
 	{ GENERAL mecha are always welcome. }
@@ -565,6 +565,7 @@ begin
 		Fac := SeekFaction( GB^.Scene , NAttValue( Team^.NA , NAG_Personal , NAS_FactionID ) );
 		if Fac <> Nil then fdesc := fdesc + ' ' + SAttValue( Fac^.SA , 'DESIG' );
 	end;
+
 	{ Also add the terrain description from the scene. }
 	desc := '';
 	if GB^.Scene <> Nil then begin

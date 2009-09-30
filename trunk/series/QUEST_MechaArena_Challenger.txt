@@ -105,6 +105,7 @@ inv
 	SetSpecSkill 3
 	Conversation
 	Repair
+	MOTIVATION:GreaterGood
 end
 
 Content
@@ -176,6 +177,7 @@ inv
 	SpotWeakness
 	Intimidation
 	Performance
+	MOTIVATION:Professional
 end
 
 
@@ -363,6 +365,7 @@ inv
 	Age -3
 	SDL_PORTRAIT <por_m_lightjacket(Y--).png>
 	SDL_COLORS <136 141 101 245 213 160 77 35 101>
+	MOTIVATION:Seeker
 
 	NPC Citizen
 	name <Lehya>
@@ -504,8 +507,8 @@ inv
 	CharDesc Female Cheerful Easygoing Villainous
 	Age -1
 	StatLine 16 10 14 11 12 14 10 13
-	SDL_Portrait <por_f_mechpilot(--Y).png>
-	SDL_Colors <36 46 22 199 188 162 168 153 230>
+	SDL_Portrait <por_f_philzako(YAY).png>
+	SDL_Colors <28 52 38 241 254 223 197 80 69>
 	SetTheme 12
 	SetSpecSkill 2
 	SpotWeakness
@@ -591,6 +594,7 @@ inv
 	Stealth
 	Talent 16
 	SetFaction 7
+	MOTIVATION:Mercenary
 end
 
 Content
@@ -752,6 +756,7 @@ inv
 	SpotWeakness
 	SetTheme 4
 	SetSpecSkill 16
+	MOTIVATION:Professional
 end
 
 Content
@@ -899,6 +904,7 @@ inv
 	Talent 20
 	SetTheme 1
 	SetSpecSkill 22
+	MOTIVATION:Competition
 end
 
 Content
@@ -1116,6 +1122,7 @@ inv
 	Shopping
 	Toughness
 	Talent 9
+	MOTIVATION:Professional
 end
 
 Content
@@ -1272,6 +1279,7 @@ inv
 	SpotWeakness
 	Talent 4
 	Talent 17
+	MOTIVATION:Nihilism
 end
 
 
@@ -1516,6 +1524,7 @@ inv
 	Initiative
 	ElectronicWarfare
 	Talent 5
+	MOTIVATION:Competition
 end
 
 Content
@@ -1593,6 +1602,7 @@ inv
 	Performance
 	Mysticism
 	Talent 7
+	MOTIVATION:GreaterGood
 end
 
 Content
@@ -1672,6 +1682,7 @@ inv
 	MechaEngineering
 	Talent 12
 	Talent 19
+	MOTIVATION:Revenge
 end
 
 
@@ -2025,4 +2036,5 @@ sub
 	Msg5 <I accept your challenge. Meet me at %name2% and we can begin the match.>
 	Prompt1 <I'll see you there.>
 end
+
 

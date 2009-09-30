@@ -3651,12 +3651,21 @@ end;
 Procedure ProcessWMecha( var Event: String; GB: GameBoardPtr; Source: GearPtr );
 	{ Fill current scene with enemies. }
 var
-	TID,Renown,Strength: LongInt;
+	TID,Renown,Strength,LMs: LongInt;
 begin
 	{ Find out the team, and how many enemies to add. }
 	TID := ScriptValue( Event , GB , Source );
  	Renown := ScriptValue( Event , GB , Source );
 	Strength := ScriptValue( Event , GB , Source );
+
+	{ If this team is an enemy of the player team, add extra STRENGTH based on the number of }
+	{ lancemates. This extra STRENGTH will not entirely cancel out the usefulness of lancemates, }
+	{ but will reduce it slightly, thereby allowing solo PCs to exist. }
+	if AreEnemies( GB , TID , NAV_DefPlayerTeam ) then begin
+		LMs := LancematesPresent( GB );
+		if LMs > 0 then Strength := Strength + ( 25 * LMs );
+	end;
+
 	AddTeamForces( GB , TID , Renown , Strength );
 end; { ProcessWMecha }
 
@@ -4310,16 +4319,22 @@ end;
 
 Procedure ProcessXPV( var Event: String; GB: GameBoardPtr; Source: GearPtr );
 	{ Give some experience points to all PCs and lancemates. }
-	Procedure DoRapidLeveling( NPC: GearPtr; OptRank: Integer );
+	Procedure DoRapidLeveling( NPC: GearPtr; Renown: Integer );
 		{ Search through this NPC's skills. If you find one that is lower }
 		{ than acceptable for the provided Renown, increase it. }
 	var
-		SpecSkill,Skill,N,SkRank: Integer;
+		OptRank,SpecSkill,Skill,N,SkRank: Integer;
 		CanGetBonus: Array [1..NumSkill] of Boolean;
 	begin
 		{ Locate the pilot. If no pilot, then exit. }
 		NPC := LocatePilot( NPC );
 		if NPC = Nil then Exit;
+
+		{ Advance the NPC's renown. }
+		if NAttValue( NPC^.NA , NAG_CharDescription , NAS_Renowned ) < Renown then AddNAtt( NPC^.NA , NAG_CharDescription , NAS_Renowned , 1 );
+
+		{ Determine the skill level to use. }
+		OptRank := SkillRankForRenown( Renown );
 
 		{ Determine the specialist skill of this model. }
 		SpecSkill := NAttValue( NPC^.NA , NAG_Personal , NAS_SpecialistSkill );
@@ -4354,13 +4369,18 @@ Procedure ProcessXPV( var Event: String; GB: GameBoardPtr; Source: GearPtr );
 		end;
 	end;
 var
-	XP,T,Renown,OptRank: LongInt;
+	XP,T,Renown,LMs: LongInt;
 	M,PC: GearPtr;
 begin
 	{ Find out how much to give. }
 	XP := ScriptValue( Event , GB , Source );
 
-	{ Locate the PC, and find the Leadership score. }
+	{ Count the lancemates, reduce XP if too many. }
+	LMs := LancematesPresent( GB );
+	if LMs > 4 then LMs := 4;
+	if LMs > 1 then XP := ( XP * ( 5 - LMs ) ) div 4;
+
+	{ Locate the PC, and find its Renown score. }
 	PC := LocatePilot( GG_LocatePC( GB ) );
 	if PC <> Nil then begin
 		Renown := NAttValue( PC^.NA , NAG_CharDescription , NAS_Renowned ) - 20;
@@ -4368,7 +4388,9 @@ begin
 		Renown := 0;
 	end;
 
-	OptRank := SkillRankForRenown( Renown );
+	{ We'll rapidly level one of the lancemates at random. }
+	{ Select a model. }
+	LMs := Random( LancematesPresent( GB ) ) + 1;
 
 	{ Search for models to give XP to. }
 	if GB <> Nil then begin
@@ -4380,8 +4402,11 @@ begin
 			end else if ( T = NAV_LancemateTeam ) and OnTheMap( GB , M ) then begin
 				DoleExperience( M , XP );
 
-				{ Do the rapid leveling now. }
-				DoRapidLeveling( M , OptRank );
+				{ Only regular lancemates get rapid leveling- Pets and temps don't. }
+				if IsRegularLancemate( M ) then begin
+					Dec( LMs );
+					if LMs = 0 then DoRapidLeveling( M , Renown );
+				end;
 			end;
 			M := M^.Next;
 		end;
