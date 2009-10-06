@@ -37,9 +37,13 @@ Content
 	% SubPlot1 = Win the battle, get a reward
 	% SubPlot2 = Lose the battle, get scorned
 	% SubPlot3 = Run out of time, get email
+
+	% SubPlot4 = Lancemate character development
+
 	SubPlot1 <*Util_WinMission&Mecha 1>
 	SubPlot2 <*Util_LoseMission&Mecha 1>
 	SubPlot3 <*Util_TimeOver 1>
+	SubPlot4 <*:LM_Selector 2 3 4>
 
 	sub
 		MetaScene 4 2
@@ -51,6 +55,7 @@ Content
 		SetFaction 3
 
 		Start <if= P%id%02 0   P= %id%02 1   PCFEnemy %3%>
+Start <if= P%id%02 0   P= %id%02 1   PCFEnemy %3%  SetPlotStatus %plotid4% %id4%>
 		nu1 <if= T1 0   Return   if= V1 0 V= 1 1   LoseRenown                     Memo 1  Alert 1   SetPlotStatus %plotid% %id2%>
 		nu2 <if= T2 0   if= V1 0 V= 1 1            XPV 100   AddRenown 1  Salvage   Memo 2  Alert 2   SetPlotStatus %plotid% %id1%>
 

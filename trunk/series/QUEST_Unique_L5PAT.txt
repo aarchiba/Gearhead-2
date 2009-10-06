@@ -1294,7 +1294,7 @@ Content
 
 	sub
 		Persona 1
-		greeting <if= PlotStatus %plotid% %id% else %pop% ifSubPlotWon %plotid1% else .%id%_GoPassBuck WinSubPlot %plotid% if= P1 0 else .%id%_GoBigPrize NewChat Say %id%03 RandomMecha .%id%_mecha %threat% ActivateMeme %7% RootSceneID>
+		greeting <if= PlotStatus %plotid% %id% else %pop% ifSubPlotWon %plotid1% else .%id%_GoPassBuck WinSubPlot %plotid% if= P1 0 else .%id%_GoBigPrize NewChat Say %id%03 History %id%06 RandomMecha .%id%_mecha %threat% ActivateMeme %7% RootSceneID>
 		.%id%_GoBigPrize <NewChat Say %id%04 History %id%05 RandomMecha .%id%_mecha %threat% CashPrize Reward %threat% 5000 ActivateMeme %7% RootSceneID>
 		.%id%_mecha <GENERAL FCOMS>
 		.%id%_GoPassBuck <NewChat Say %id%01 ifSubPlotLost %plotid1% AddChat %id%01>
@@ -1304,6 +1304,7 @@ Content
 		Msg%id%03 <My asteroid spa will be opening soon. You've done a lot of work to get us here, \PC ... not as much as I have, but still considerable. Here's a brand new mecha for your troubles. Remember to drop by the casino when it opens.>
 		Msg%id%04 <Our new asteroid spa will be opening soon. You've done a lot of work to get us here, \PC ... It's going to be a while before we can expect regular earnings, but here's your cut of the initial profits and a new mecha.>
 		Msg%id%05 <You opened an asteroid resort with Parshall.>
+		Msg%id%06 <You helped Parshall open an asteroid resort.>
 		Prompt%id%01 <Um, things aren't going so well...>
 
 		Persona 3

@@ -53,9 +53,9 @@ Plot
 		plot_type <*FactionRampage>
 		Element1 <Grab -2>
 		Update <if= v1 0 V= 1 1   News 1>
-		Msg1_1 <%city% under siege as %name3%'s personal forces take control.>
-		Msg1_2 <Mecha from \FACTION &EnemyFac take control of %city% under the orders of %name3%.>
-		Msg1_3 <%name3% has begun a purge of \PPR %3% enemies from %city%; authorities powerless to stop the destruction.>
+		Msg1_1 <%city% under siege as \PERSONA &EnemyNPC 's personal forces take control.>
+		Msg1_2 <Mecha from \FACTION &EnemyFac take control of %city% under the orders of \PERSONA &EnemyNPC .>
+		Msg1_3 <\PERSONA &EnemyNPC has begun a purge of \PPR &EnemyNPC enemies from %city%; authorities powerless to stop the destruction.>
 		% Meme Messages
 		Msg_1 <When will the trouble with %me_name1% end?>
 		CMsg_1 <if# ChatNPCFac %me_1% Accept>

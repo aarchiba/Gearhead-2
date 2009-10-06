@@ -51,7 +51,8 @@ Content
 		*GoArenaFull <*ArenaIsFull %2%>
 		*GoArenaBusy <*ArenaIsBusy %2%>
 
-		GoChooseBattle <if= ArenaWins %2% 9 else GoCheckQ3 Goto .%id4%_GoInit>
+		GoChooseBattle <ifMechaCanEnterScene %2% else GoInvalidMecha if= ArenaWins %2% 9 else GoCheckQ3 Goto .%id4%_GoInit>
+		GoInvalidMecha <NewChat Say 7>
 		GoCheckQ3 <if= ArenaWins %2% 7 else GoCheckQ2 Goto .%id3%_GoInit>>
 		GoCheckQ2 <if= ArenaWins %2% 5 else GoCheckQ1 Goto .%id2%_GoInit>>
 		GoCheckQ1 <if= ArenaWins %2% 3 else GoNormalBattle Goto .%id1%_GoInit>
@@ -77,6 +78,7 @@ Content
 		Msg4 <Hey there. You look like the sort who'd be up for a bit of action, if you catch what I'm saying...>
 		Msg5 <We've got a practice arena set up just outside the spinner... gotta keep it on the sly, since it's not entirely legal. There's a match coming up soon if you'd like to take part.>
 		Msg6 <You know what they say: nothing ventured, nothing gained.>
+		Msg7 <You're going to need a mecha that's good indoors before you can fight here. Sorry.>
 		Prompt1 <That's what I wanted to hear.>
 		CPrompt1 <ifChatNPCInPlay ifG PCMeks 0 Accept>
 		Prompt2 <Not right now, sorry.>
@@ -170,7 +172,8 @@ Content
 		*GoArenaFull <*ArenaIsFull %2%>
 		*GoArenaBusy <*ArenaIsBusy %2%>
 
-		GoChooseBattle <if= ArenaWins %2% 9 else GoCheckQ4 Goto .%id5%_GoInit>
+		GoChooseBattle <ifMechaCanEnterScene %2% else GoInvalidMecha if= ArenaWins %2% 9 else GoCheckQ4 Goto .%id5%_GoInit>
+		GoInvalidMecha <NewChat Say 10>
 		GoCheckQ4 <if= ArenaWins %2% 7 else GoCheckQ3 Goto .%id4%_GoInit>
 		GoCheckQ3 <if= ArenaWins %2% 5 else GoCheckQ2 Goto .%id3%_GoInit>
 		GoCheckQ2 <if= ArenaWins %2% 3 else GoCheckQ1 Goto .%id2%_GoInit>
@@ -206,6 +209,7 @@ Content
 		Msg7 <Your ranking indicates that you're not yet qualified to fight here, but if you really think you can handle it I could slot you in.>
 		Msg8 <No problem. We have a match starting soon; would you like to get started right away?>
 		Msg9 <If you enter a fight before you're ready, all you end up doing is smash your mecha and ruin your reputation.>
+		Msg10 <You're going to need a mecha suitable for Earthlike conditions before you can fight here. Sorry.>
 
 		Prompt1 <That's what I'm here for.>
 		CPrompt1 <ifChatNPCInPlay ifG PCMeks 0 Accept>
@@ -299,7 +303,8 @@ Content
 		*GoArenaFull <*ArenaIsFull %2%>
 		*GoArenaBusy <*ArenaIsBusy %2%>
 
-		GoChooseBattle <if= ArenaWins %2% 9 else GoCheckQ1 Goto .%id2%_GoInit>
+		GoChooseBattle <ifMechaCanEnterScene %2% else GoInvalidMecha if= ArenaWins %2% 9 else GoCheckQ1 Goto .%id2%_GoInit>
+		GoInvalidMecha <NewChat Say 9>
 		GoCheckQ1 <if= ArenaWins %2% 5 else GoNormalBattle Goto .%id1%_GoInit>
 		*GoNormalBattle <*StartArenaBattle %2% GoStartFight>
 		GoStartFight <SavePos PrepArena %2% 100 Jump %2%>
@@ -329,6 +334,7 @@ Content
 		Msg6 <Er... no, no I haven't, but I watch all the mecha tournament shows... Earth pilots rock. So, do you want to fight now?>
 		Msg7 <Since that was your tenth win, you've officially won our big prize! Here's a brand new dueling mecha, straight from Earth!>
 		Msg8 <You were crowned champion of the Steel Arena.>
+		Msg9 <You're going to need a mecha suitable for surface combat before you can fight here. Sorry.>
 
 		Prompt1 <I'm ready to go.>
 		CPrompt1 <ifChatNPCInPlay ifG PCMeks 0 Accept>
@@ -529,7 +535,8 @@ Content
 		GoArenaBusy <if= PlotStatus %plotid% -1 else GoReallyBusy Goto GoSkillTraining>
 		*GoReallyBusy <*ArenaIsBusy %2%>
 
-		GoChooseBattle <if= ArenaWins %2% 9 else GoCheckQ3 Goto .%id4%_GoInit>
+		GoChooseBattle <ifMechaCanEnterScene %2% else GoInvalidMecha if= ArenaWins %2% 9 else GoCheckQ3 Goto .%id4%_GoInit>
+		GoInvalidMecha <NewChat Say 11>
 		GoCheckQ3 <if= ArenaWins %2% 7 else GoCheckQ2 Goto .%id3%_GoInit>>
 		GoCheckQ2 <if= ArenaWins %2% 5 else GoCheckQ1 Goto .%id2%_GoInit>>
 		GoCheckQ1 <if= ArenaWins %2% 3 else GoNormalBattle Goto .%id1%_GoInit>
@@ -567,6 +574,7 @@ Content
 		Msg8 <There's a match ready to go right now. Would you like to take part, or will you be back later?>
 		Msg9 <Come on back when you're feeling braver.>
 		Msg10 <It's technically illegal, but the police have better things to worry about than a few pilots having a bit of fun. Sure people get hurt sometimes but everyone knew what they were getting into. What do you say?>
+		Msg11 <You're going to need a mecha suitable for deep space before you can fight here. Sorry.>
 
 		Prompt1 <I'm ready to battle.>
 		CPrompt1 <ifChatNPCInPlay ifG PCMeks 0 Accept>

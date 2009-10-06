@@ -408,7 +408,7 @@ Content
 		% This encounter will appear once every 3-5 hours, as long as this is the active subplot.
 		update <if= PlotStatus %plotid% %id% else GoHide if# V1 0 else GoSetTimer ifG ComTime V1 else GoHide SetStat STAT_MetaVisibility 0  Goto GoSetOrders>
 		GoSetTimer <V= 1 ComTime V+ 1 1800 Goto GoHide>
-		GoSetOrders <GrabSource GSetNAtt NAG_EpisodeData NAS_Orders 3>
+		GoSetOrders <GrabSource GSetNAtt NAG_EpisodeData NAS_Orders 0>
 		use <ifG StatVal STAT_MetaVisibility -1  V= 1 ComTime V+ 1 10800 V+ 1 d7200  Print -1 Exit Destination>
 		GoAutoAttack <V= 1 ComTime V+ 1 10800 V+ 1 d7200  Alert -2 Exit Destination>
 		GoAvoidAttack <V= 1 ComTime V+ 1 7200 V+ 1 d3600  Print -6 AddSociable -1 UpdateProps>
@@ -479,7 +479,7 @@ Content
 		% This encounter will appear once every 3-5 hours, as long as this is the active subplot.
 		update <if= PlotStatus %plotid% %id% else GoHide if# V1 0 else GoSetTimer ifG ComTime V1 else GoHide SetStat STAT_MetaVisibility 0  Goto GoSetOrders>
 		GoSetTimer <V= 1 ComTime V+ 1 1800 Goto GoHide>
-		GoSetOrders <GrabSource GSetNAtt NAG_EpisodeData NAS_Orders 3>
+		GoSetOrders <GrabSource GSetNAtt NAG_EpisodeData NAS_Orders 0>
 		use <ifG StatVal STAT_MetaVisibility -1  V= 1 ComTime V+ 1 10800 V+ 1 d7200  Print -1 Exit Destination>
 		GoAutoAttack <V= 1 ComTime V+ 1 10800 V+ 1 d7200  Alert -2 Exit Destination>
 		GoAvoidAttack <V= 1 ComTime V+ 1 7200 V+ 1 d3600  Print -6 AddSociable -1 UpdateProps>
