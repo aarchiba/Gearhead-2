@@ -93,6 +93,9 @@ If the element is a NPC, the relationship is also included. This may be one of "
 "LOVER", or "FRIEND". If the element is a lancemate and currently in the party, "LANCE" will
 be included.
 
+Also if the element is a NPC, the heroic/villainous trait will be included as "GOOD_" or
+"EVIL_".
+
 If the element is a scene, its terrain SAtt will also be included: "SPACE", "WATER", "GROUND"
 
 The job group of the PC is included as C:<job>. The available job designations are:

@@ -26,7 +26,7 @@ unit playwright;
 
 interface
 
-uses gears,locale;
+uses gears,locale,mpbuilder;
 
 	{ G = GG_Plot                            }
 	{ S = ID Number (not nessecarily unique) }
@@ -73,6 +73,8 @@ Function InsertMood( City,Mood: GearPtr; GB: GameBoardPtr ): Boolean;
 Function InsertRSC( Source,Frag: GearPtr; GB: GameBoardPtr ): Boolean;
 Procedure EndPlot( GB: GameBoardPtr; Adv,Plot: GearPtr );
 
+Function AddRandomPlot( GB: GameBoardPtr; Slot: GearPtr; Context: String; EList: ElementTable; Threat: Integer ): Boolean;
+
 Procedure PrepareNewComponent( Story: GearPtr; GB: GameBoardPtr );
 
 Function InsertArenaMission( Source,Mission: GearPtr; ThreatAtGeneration: Integer ): Boolean;
@@ -84,7 +86,7 @@ Procedure UpdateMoods( GB: GameBoardPtr );
 implementation
 
 uses 	ui4gh,rpgdice,texutil,gearutil,interact,ability,gearparser,ghchars,narration,ghprop,
-	arenascript,mpbuilder,chargen,wmonster,
+	arenascript,chargen,wmonster,
 {$IFDEF ASCII}
 	vidgfx,vidmenus;
 {$ELSE}
@@ -375,7 +377,7 @@ var
 	NumMatches: Integer;
 	Results: Array of PWSearchResult;
 	IDesc,RDesc: String;
-	CheckGlobal: Boolean;
+	CheckGlobal,SeekLancemate: Boolean;
 
 	Procedure CheckAlongPath( P: GearPtr );
 		{ Check along this path looking for characters. If a match is found, }
@@ -418,6 +420,8 @@ begin
 	CheckGlobal := AStringHasBString( Desc , '!G' );
 	if CheckGlobal then Adv := FindRoot( Adv );
 
+	SeekLancemate := AStringHasBString( Desc , '!L' );
+
 	{ Filter the relative description from the instrinsic description. }
 	IDesc := Desc;
 	RDesc := FilterElementDescription( IDesc );
@@ -427,7 +431,8 @@ begin
 	CheckAlongPath( Adv^.SubCom );
 	if Adv^.G = GG_Scene then CheckAlongPath( Adv^.InvCom );
 	{ Check the gameboard as well, as long as it's not a metascene or a temporary scene. }
-	if ( GB <> Nil ) and not SceneIsTemp( GB^.Scene ) then begin
+	{ Actually, you can go ahead and search temp scenes as long as we're looking for a lancemate. }
+	if ( GB <> Nil ) and ( SeekLancemate or not SceneIsTemp( GB^.Scene ) ) then begin
 		CheckAlongPath( GB^.Meks );
 	end;
 
@@ -1335,6 +1340,11 @@ begin
 				Context := Context + ' ' + palette_entry_code + ':LANCE';
 			end;
 
+			{ Add the heroic/villainous component. }
+			T := NAttValue( Part^.NA , NAG_CharDescription , NAS_Heroic );
+			if T > 0 then Context := Context + ' ' + palette_entry_code + ':GOOD_'
+			else if T < 0 then Context := Context + ' ' + palette_entry_code + ':EVIL_';
+
 			{ Add the character arc and attitude values. }
 			T := NAttValue( Part^.NA , NAG_XXRan , NAS_XXChar_Motivation );
 			if ( T > 0 ) and ( T <= Num_XXR_Motivations ) then Context := Context + ' ' + palette_entry_code + ':M.' + XXR_Motivation[ t ]
@@ -1997,6 +2007,63 @@ begin
 	{ Finally, set the PLOT's type to absolutely nothing, so it will }
 	{ be removed. }
 	Plot^.G := GG_AbsolutelyNothing;
+end;
+
+Function AddRandomPlot( GB: GameBoardPtr; Slot: GearPtr; Context: String; EList: ElementTable; Threat: Integer ): Boolean;
+	{ Attempt to locate and add a plot with the requested context. }
+	{ EList is a list of element values with which to seed the plot. }
+	{ Return TRUE if the plot is successfully loaded, or FALSE otherwise. }
+var
+	Adv,Scene,Part: GearPtr;
+	T: Integer;
+	msg: String;
+	Shopping_List: NAttPtr;
+	InitOK: Boolean;
+begin
+	{ Step One- Fill out the context, including element descriptions. }
+	Adv := FindRoot( GB^.Scene );
+	Scene := FindRootScene( GB^.Scene );
+
+	for t := 1 to Num_Plot_Elements do begin
+		{ If this element represents a palette entry, add its info }
+		{ to the context. }
+		if EList[ t ].EValue <> 0 then begin
+			Part := SeekGearByElementDesc( Adv , EList[ t ].EType , EList[ t ].EValue , GB );
+			msg := BStr( T );
+			AddGearXRContext( GB , FindRoot( GB^.Scene ) , Part , Context , msg[1] );
+		end;
+	end;
+
+	{ Step Two- Create a shopping list of contenders. }
+	{  If no appropriate plots are found, exit now. }
+	Shopping_List := CreateComponentList( Standard_Plots , Context );
+	if Shopping_List = Nil then Exit( False );
+
+	{ Step Three- Keep trying until the list is empty or a plot is loaded. }
+	InitOK := False;
+	repeat
+		Part := SelectComponentFromList( Standard_Plots , Shopping_List );
+
+		if Part <> Nil then begin
+			Part := CloneGear( Part );
+
+			{ Copy over the parameters. }
+			for t := 1 to Num_Plot_Elements do begin
+				{ If this element represents a palette entry, add its info }
+				{ to the context. }
+				if EList[ t ].EValue <> 0 then begin
+					SetNAtt( Part^.NA , NAG_ElementID , T , EList[ t ].EValue );
+					SetSAtt( Part^.SA , 'ELEMENT' + BStr( T ) + ' <' + EList[ t ].EType + '>' );
+				end;
+			end;
+
+			InitOK := InsertPlot( Scene , Slot , Part , GB , threat );
+		end else InitOK := False;
+	until ( Shopping_List = Nil ) or InitOK;
+
+	DisposeNAtt( Shopping_List );
+
+	AddRandomPlot := InitOK;
 end;
 
 Procedure PrepareNewComponent( Story: GearPtr; GB: GameBoardPtr );

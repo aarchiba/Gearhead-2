@@ -1087,7 +1087,7 @@ begin
 			{ *** COMMENT *** }
 			TheLine := '';
 
-		end else if ( TheLine[1] = '*' ) and ( C <> Nil ) and ( C^.G > 0 ) then begin
+		end else if ( TheLine[1] = '*' ) and ( C <> Nil ) and ( ( C^.G > 0 ) or ( C^.G = GG_Faction ) ) then begin
 			{ *** STANDARD SCRIPT *** }
 			{ This is apparently a standard script. Deal with it. }
 			InsertStandardScript( C , TheLine );

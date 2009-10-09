@@ -99,6 +99,7 @@
 	IFKEYITEM [NID] <ELSE [label]>	If PC has key item...
 	IFM [uid] <ELSE [label]>	If root level gear is active...
 	IFMECHACANENTERSCENE [scene id]		If PC's mecha can enter listed scene...
+	IFMERITBADGE [badge id]		If the PC has this merit badge (or ability)...
 	IFNOOBJECTIONS [trigger label] [parameter] <ELSE [label]>
 		If the produced trigger is not blocked...
 	IFNPCARCHENEMY [UID] <else [label]>	If NPC is arch-enemy of PC...
@@ -158,8 +159,9 @@
 	SHOP [wares identifier]
 	SHUTTLE			Start the intercity shuttle service
 	SMEMO [Message Number]	Store a memo in the story
-	STARTPLOT [script line label] <ELSE [label]>	Load a plot
-	STARTSTORY [script line label] <ELSE [label]>	Load a story
+	STARTPLOT [script line label] [renown] <ELSE [label]>	Load a plot
+	STARTSTORY [script line label] [renown] <ELSE [label]>	Load a story
+            The plot request may include paramaters if called from within a plot
 	TIME [delay]		Advance game clock
 	TORD [team] [order <parameters>]	Set orders for team
 	TRANSFORM [frame]	Switch a prop's appearance to alternate state
@@ -175,7 +177,6 @@
 	WMECHA [team] [renown] [strength]	Stock current scene with mecha
 	WMONSTER [team] [renown] [strength]	Stock current scene with monsters
 	XPV [experience award]	Give PC experience
-	XRANPLOT [label]	Load plot using experimental Extra Randomness
 
 3. BASIC FUNCTIONS
 		*Remember when adding a new function to arenascript.pp to update the

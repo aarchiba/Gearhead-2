@@ -98,7 +98,7 @@ var
 
 
 Procedure SetLancemateOrders( GB: GameBoardPtr );
-Function NumLancemateSlots( PC: GearPtr ): Integer;
+Function NumLancemateSlots( Adv,PC: GearPtr ): Integer;
 
 Procedure BrowseMemoType( GB: GameBoardPtr; Tag: String );
 
@@ -134,7 +134,7 @@ implementation
 uses action,arenacfe,ability,gearutil,ghchars,gearparser,ghmodule,backpack,
      ghprop,ghweapon,grabgear,interact,menugear,playwright,rpgdice,
      services,texutil,ui4gh,wmonster,narration,description,skilluse,
-	ghintrinsic,movement,minigame,customization,aibrain,
+	ghintrinsic,movement,minigame,customization,aibrain,mpbuilder,
 {$IFDEF ASCII}
 	vidmap,vidinfo;
 {$ELSE}
@@ -628,14 +628,26 @@ begin
 	end;
 end;
 
-Function NumLancemateSlots( PC: GearPtr ): Integer;
+Function NumLancemateSlots( Adv,PC: GearPtr ): Integer;
 	{ Return the number of freely-selected lancemates this PC can have. }
+var
+	N: Integer;
 begin
-	if HasTalent( PC , NAS_Entourage ) then begin
-		NumLancemateSlots := 4;
-	end else begin
-		NumLancemateSlots := 3;
+	{ You get one lancemate for free. }
+	N := 1;
+
+	{ You can earn extra lancemates via merit badges. }
+	if HasMeritBadge( Adv , NAS_MB_Lancemate2 ) then begin
+		Inc( N );
+		if HasMeritBadge( Adv, NAS_MB_Lancemate3 ) then Inc( N );
 	end;
+
+	{ Or, you can take a talent for one extra. }
+	if HasTalent( PC , NAS_Entourage ) then begin
+		Inc( N );
+	end;
+
+	NumLancemateSlots := N;
 end;
 
 Function CanJoinLance( GB: GameBoardPtr; PC,NPC: GearPtr ): Boolean;
@@ -660,7 +672,7 @@ begin
 		CanJoin := False;
 	end else if PersonaUsedByQuest( FindRoot( GB^.Scene ) , NPC ) then begin
 		CanJoin := False;
-{	end else if LMP >= NumLancemateSlots( PC ) then begin
+{	end else if LMP >= NumLancemateSlots( GB^.Scene , PC ) then begin
 		CanJoin := False;}
 	end;
 	CanJoinLance := CanJoin;
@@ -2608,7 +2620,7 @@ begin
 end;
 
 Procedure ProcessIfMechaCanEnterScene( var Event: String; GB: GameBoardPtr; Source: GearPtr );
-	{ Return true if the Grabbed_Gear is on the map and operational. }
+	{ Return true if the PC's mecha can enter the requested scene. }
 	{ Return false otherwise. }
 var
 	PC,Mek,Scene: GearPtr;
@@ -2624,6 +2636,24 @@ begin
 	Scene := FindActualScene( GB , SceneID );
 
 	if ( PC <> Nil ) and ( Mek <> Nil ) and ( Scene <> Nil ) and NotDestroyed( Mek ) and MekCanEnterScene( Mek , Scene ) then begin
+		IfSuccess( Event );
+	end else begin
+		IfFailure( Event , Source );
+	end;
+end;
+
+Procedure ProcessIfMeritBadge( var Event: String; GB: GameBoardPtr; Source: GearPtr );
+	{ Return true if the PC has the requested merit badge. }
+	{ Return false otherwise. }
+var
+	Adv: GearPtr;
+	Badge: Integer;
+begin
+	Badge := ScriptValue( Event , GB , Source );
+
+	Adv := GG_LocateAdventure( GB , Source );
+
+	if ( Adv <> Nil ) and HasMeritBadge( Adv , Badge ) then begin
 		IfSuccess( Event );
 	end else begin
 		IfFailure( Event , Source );
@@ -3721,38 +3751,58 @@ begin
 	end;
 end;
 
-Function AS_ContentInsertion( GB: GameBoardPtr; Source: GearPtr; FName: String ): Boolean;
-	{ Attempt to load and initialize the requested story. }
+Function AS_ContentInsertion( GB: GameBoardPtr; Source: GearPtr; ConReq: String; Threat: Integer ): Boolean;
+	{ Attempt to load and initialize the requested plot or story. }
 var
-	Adv,Slot,Content: GearPtr;
+	Adv,Slot,Plot: GearPtr;
+	EList: ElementTable;
+	Context,msg: String;
+	T,ENum: Integer;
 begin
-	Content := LoadGearPattern( FName , Series_Directory );
+	ClearElementTable( EList );
 	Adv := GG_LocateAdventure( GB , Source );
+	Context := ExtractWord( ConReq );
 
-	if Content <> Nil then begin
-		{ Sub in the first element, if needed. }
-		if Source^.G = GG_Faction then begin
-			SetNAtt( Content^.NA , NAG_ElementID , 1 , Source^.S );
-			SetSAtt( Content^.SA , 'ELEMENT1 <F>' );
-			Slot := Source;
-		end else if Source^.G = GG_Scene then begin
-			SetNAtt( Content^.NA , NAG_ElementID , 1 , Source^.S );
-			SetSAtt( Content^.SA , 'ELEMENT1 <S>' );
-			Slot := Adv;
-		end else if Source^.G = GG_Story then begin
-			Slot := Source;
-		end else begin
-			Slot := Adv;
-		end;
-
-		if InsertPlot( Adv , Slot , Content , GB , CurrentPCRenown( GB ) ) then begin
-			AS_ContentInsertion := True;
-		end else begin
-			AS_ContentInsertion := False;
-		end;
-
+	{ Fill out the element table. }
+	if Source^.G = GG_Faction then begin
+		EList[1].EValue := Source^.S;
+		EList[1].EType := 'F';
+		Slot := Adv;
+	end else if Source^.G = GG_Scene then begin
+		EList[1].EValue := Source^.S;
+		EList[1].EType := 'S';
+		Slot := Adv;
+	end else if Source^.G = GG_Story then begin
+		Slot := Source;
 	end else begin
-		{ File was not loaded successfully. }
+		Slot := Adv;
+	end;
+
+	{ If this plot is being spawned by a plot or by a quest, we may need to }
+	{ pass along some elements. }
+	Plot := PlotMaster( GB , Source );
+	if Plot <> Nil then begin
+		T := 1;
+		while ConReq <> '' do begin
+			ENum := ExtractValue( ConReq );
+			if ( ENum >= 0 ) and ( ENum <= Num_Plot_Elements ) then begin
+				msg := SAttValue( Plot^.SA , 'ELEMENT' + BSTr( ENum ) );
+				if msg <> '' then begin
+					EList[ T ].EType := msg[1];
+					EList[ T ].EValue := ElementID( Plot , ENum );
+					if EList[ T ].EType = 'C' then DialogMsg( 'ERROR: Content Insertion ' + Context + ' passed character element.' )
+					else if EList[ T ].EType = 'M' then DialogMsg( 'ERROR: Content Insertion ' + Context + ' passed metascene element.' );
+				end else begin
+					DialogMsg( 'ERROR: Content Insertion ' + Context + ' requested invalid element.' );
+				end;
+			end;
+			Inc( T );
+		end;
+	end;
+
+	if AddRandomPlot( GB , Slot , Context , EList , Threat ) then begin
+		AS_ContentInsertion := True;
+	end else begin
 		AS_ContentInsertion := False;
 	end;
 end;
@@ -3761,17 +3811,19 @@ Procedure ProcessStartStory( var Event: String; GB: GameBoardPtr; Source: GearPt
 	{ A new story gear is about to be loaded. }
 var
 	FName: String;
+	Renown: Integer;
 begin
-	{ First, find the file name of the plot file to look for. }
+	{ First, find the content request and the threat value to use. }
 	FName := ExtractWord( Event );
 	if Source <> Nil then begin
 		FName := AS_GetString( Source , FName );
 	end else begin
 		FName := '';
 	end;
+	Renown := ScriptValue( Event , GB , Source );
 
 	{ Call the above procedure to see if it works or not. }
-	if AS_ContentInsertion( GB , Source , FName ) then begin
+	if AS_ContentInsertion( GB , Source , FName , Renown ) then begin
 		SetTrigger( GB , 'UPDATE' );
 		IfSuccess( Event );
 	end else begin
@@ -3784,21 +3836,23 @@ Procedure ProcessStartPlot( var Event: String; GB: GameBoardPtr; Source: GearPtr
 	{ For now I'm going to treat such plots as global. }
 var
 	FName: String;
+	Renown: Integer;
 begin
+	{ First, find the content request and the threat value to use. }
+	FName := ExtractWord( Event );
+	if Source <> Nil then begin
+		FName := AS_GetString( Source , FName );
+	end else begin
+		FName := '';
+	end;
+	Renown := ScriptValue( Event , GB , Source );
+
 	if ( Source <> Nil ) and ( Source^.G = GG_Story ) and ( NumberOfPlots( Source ) >= Max_Plots_Per_Story ) then begin
 		{ Can't load a new plot at this time. }
 		IfFailure( Event , Source );
 
 	end else begin
-		{ First, find the file name of the plot file to look for. }
-		FName := ExtractWord( Event );
-		if Source <> Nil then begin
-			FName := AS_GetString( Source , FName );
-		end else begin
-			FName := '';
-		end;
-
-		if AS_ContentInsertion( GB , Source , FName ) then begin
+		if AS_ContentInsertion( GB , Source , FName , Renown ) then begin
 			SetTrigger( GB , 'UPDATE' );
 			IfSuccess( Event );
 		end else begin
@@ -4720,6 +4774,7 @@ begin
 		else if cmd = 'IFSKILLTEST' then ProcessIfSkillTest( Event , GB , Source )
 		else if cmd = 'IFUSKILLTEST' then ProcessIfUSkillTest( Event , GB , Source )
 		else if cmd = 'IFNOOBJECTIONS' then ProcessIfNoObjections( Event , GB , Source )
+		else if cmd = 'IFMERITBADGE' then ProcessIfMeritBadge( Event , GB , Source )
 		else if cmd = 'TORD' then ProcessTeamOrders( Event , GB , Source )
 		else if cmd = 'COMPOSE' then ProcessCompose( Event , GB , Source )
 		else if cmd = 'BLOCK' then ProcessBlock( Trigger )
@@ -4963,7 +5018,7 @@ begin
 		ASRD_MemoMessage := ReplaceHash( MsgString( 'JOINFE_Need_Space' ) , GearName( NPC ) );
 
 		{ Count up the number of lancemates. }
-		while ( LancematesPresent( GB ) >= NumLancemateSlots( PC ) ) and NoCancel do begin
+		while ( LancematesPresent( GB ) >= NumLancemateSlots( GB^.Scene , PC ) ) and NoCancel do begin
 			{ Remove lancemates to make room for NPC. }
 			{ Create the menu. }
 			RPM := CreateRPGMenu( MenuItem , MenuSelect , ZONE_MemoMenu );
@@ -5017,7 +5072,7 @@ begin
 		LMP := LancematesPresent( GB );
 		if ReactionScore( GB^.Scene , I_PC , I_NPC ) < 25 then begin
 			CHAT_Message := MsgString( 'JOIN_REFUSE' );
-		end else if LMP >= NumLancemateSlots( I_PC ) then begin
+		end else if LMP >= NumLancemateSlots( GB^.Scene , I_PC ) then begin
 			CHAT_Message := MsgString( 'JOIN_NOPOINT' );
 		end else begin
 			CHAT_Message := MsgString( 'JOIN_BUSY' );

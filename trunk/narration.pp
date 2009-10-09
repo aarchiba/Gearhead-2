@@ -151,6 +151,7 @@ Function FindPersonaStory( Adventure: GearPtr; CID: Integer ): GearPtr;
 Function PersonaInUse( Adventure: GearPtr;  ID: LongInt ): Boolean;
 Function PersonaUsedByQuest( Adv, Persona: GearPtr ): Boolean;
 
+Function SeekGearByElementDesc( Adventure: GearPtr; E_Desc: Char; E_ID: Integer; GB: GameBoardPtr ): GearPtr;
 Function SeekPlotElement( Adventure , Plot: GearPtr; N: Integer; GB: GameBoardPtr ): GearPtr;
 Function PlotUsedHere( Plot: GearPtr; GB: GameBoardPtr ): Boolean;
 
@@ -198,6 +199,8 @@ Procedure DelinkGearForMovement( GB: GameBoardPtr; GearToBeMoved: GearPtr );
 Function KeepPlayingSC( GB: GameBoardPtr ): Boolean;
 
 Procedure RecordFatality( Camp: CampaignPtr; NPC: GearPtr );
+
+Function HasMeritBadge( Adv: GearPtr; Badge: Integer ): Boolean;
 
 implementation
 
@@ -532,6 +535,45 @@ begin
 	FindSceneEntrance := it;
 end;
 
+Function SeekGearByElementDesc( Adventure: GearPtr; E_Desc: Char; E_ID: Integer; GB: GameBoardPtr ): GearPtr;
+	{ Given the element description code and the element ID, locate the gear }
+	{ being referenced. }
+var
+	Part: GearPtr;
+begin
+	Adventure := FindRoot( Adventure );
+	if E_Desc = 'C' then begin
+		{ Find a character. }
+		Part := SeekGearByCID( Adventure , E_ID );
+		if ( Part = Nil ) and ( GB <> Nil ) then Part := SeekGearByCID( GB^.Meks , E_ID );
+	end else if E_Desc = 'S' then begin
+		{ Find a scene. }
+		if GB <> Nil then begin
+			Part := FindActualScene( GB , E_ID );
+		end else begin
+			Part := SeekGear( Adventure , GG_Scene , E_ID );
+		end;
+
+	end else if E_Desc = 'Q' then begin
+		{ Find a quest scene- this scene probably hasn't been deployed yet. }
+		Part := FindQuestScene( FindRoot( Adventure ) , E_ID );
+
+	end else if E_Desc = 'F' then begin
+		{ Find a faction. }
+		Part := SeekGear( Adventure , GG_Faction , E_ID );
+
+	end else if ( E_Desc = 'I' ) and ( E_ID <> 0 ) then begin
+		{ Find an item. }
+		Part := SeekGearByIDTag( Adventure , NAG_Narrative , NAS_NID , E_ID );
+		if ( Part = Nil ) and ( GB <> Nil ) then Part := SeekGearByIDTag( GB^.Meks , NAG_Narrative , NAS_NID , E_ID );
+
+	end else begin
+		Part := Nil;
+	end;
+
+	SeekGearByElementDesc := Part;
+end;
+
 Function SeekPlotElement( Adventure , Plot: GearPtr; N: Integer; GB: GameBoardPtr ): GearPtr;
 	{ Find the gear referred to in the N'th element of PLOT. }
 	{ If no such element may be found return Nil. }
@@ -541,39 +583,13 @@ var
 begin
 	{ Start by locating the element description string. }
 	Desc := UpCase( SAttValue( Plot^.SA , 'ELEMENT' + BStr( N ) ) );
-	Adventure := FindRoot( Adventure );
 
 	{ Look for the element in the sensible place, given the }
 	{ nature of the string. }
 	if Desc = '' then begin
 		Part := Nil;
-	end else if Desc[1] = 'C' then begin
-		{ Find a character. }
-		Part := SeekGearByCID( Adventure , ElementID( Plot , N ) );
-		if ( Part = Nil ) and ( GB <> Nil ) then Part := SeekGearByCID( GB^.Meks , ElementID( Plot , N ) );
-	end else if Desc[1] = 'S' then begin
-		{ Find a scene. }
-		if GB <> Nil then begin
-			Part := FindActualScene( GB , ElementID( Plot , N ) );
-		end else begin
-			Part := SeekGear( Adventure , GG_Scene , ElementID( Plot , N ) );
-		end;
-
-	end else if Desc[1] = 'Q' then begin
-		{ Find a quest scene- this scene probably hasn't been deployed yet. }
-		Part := FindQuestScene( FindRoot( Adventure ) , ElementID( Plot , N ) );
-
-	end else if Desc[1] = 'F' then begin
-		{ Find a faction. }
-		Part := SeekGear( Adventure , GG_Faction , ElementID( Plot , N ) );
-
-	end else if ( Desc[1] = 'I' ) and ( ElementID( Plot , N ) <> 0 ) then begin
-		{ Find an item. }
-		Part := SeekGearByIDTag( Adventure , NAG_Narrative , NAS_NID , ElementID( Plot , N ) );
-		if ( Part = Nil ) and ( GB <> Nil ) then Part := SeekGearByIDTag( GB^.Meks , NAG_Narrative , NAS_NID , ElementID( Plot , N ) );
-
 	end else begin
-		Part := Nil;
+		Part := SeekGearByElementDesc( Adventure , Desc[1] , ElementID( Plot , N ) , GB );
 	end;
 
 	{ Return the part that was found. }
@@ -1228,6 +1244,14 @@ begin
 	if ( Relationship = NAV_DefPlayerTeam ) or ( Relationship = NAV_LancemateTeam ) then begin
 		AddNAtt( Camp^.Source^.NA , NAG_Narrative , NAS_LancemateFatalities , 1 );
 	end;
+end;
+
+Function HasMeritBadge( Adv: GearPtr; Badge: Integer ): Boolean;
+	{ Return TRUE if the current PC has the requested merit badge or its }
+	{ equivalent ability, FALSE if not. }
+begin
+	Adv := FindRoot( Adv );
+	HasMeritBadge := NAttValue( Adv^.NA , NAG_MeritBadge , Badge ) <> 0;
 end;
 
 end.

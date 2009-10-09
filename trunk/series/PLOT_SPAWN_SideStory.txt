@@ -1,0 +1,28 @@
+%%
+%% *CombatSideStory Plots
+%%
+%%  A mission has just spawned something else. This plot must be spawned
+%%  from within the combat scene, which itself needs to have teams marked
+%%  "Enemies" and "Allies".
+%%
+%%  Param1: The location where combat is taking place
+%%  Param2: The enemy faction being fought
+%%
+
+
+Plot
+	name <Lancemate Side Story>
+	requires <*CombatSideStory>
+	desc <Selects a lancemate and then calls the character development subplot.>
+
+	%% E3 = Lancemate
+	Element3 <Character !Lancemate Recharged>
+
+	% Upon activation, call the subplot.
+	update <if= P1 0 P= 1 1 Print 1 SetPlotStatus %plotid1% %id1%>
+
+	msg1 <Oh the horrors- %name2% in %name1%!!!>
+
+	% SubPlot1 is the character development.
+	SubPlot1 <*LM_CombatCharDev 1 2 3>
+

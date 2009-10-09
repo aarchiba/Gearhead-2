@@ -127,6 +127,11 @@ Const
 	{ after your last meal. }
 	Hunger_Penalty_Starts = 70;
 
+
+	{  ******************  }
+	{  ***   SKILLS   ***  }
+	{  ******************  }
+
 	{For now, all skills will be hardcoded into the game binary.}
 	{At some point in time I may have them defined in an}
 	{external text file, but since the application of these}
@@ -330,6 +335,11 @@ Const
 	NAS_Insight = 27;
 	NAS_Taunt = 28;
 
+
+	{  *******************  }
+	{  ***   TALENTS   ***  }
+	{  *******************  }
+
 	NAG_Talent = 16;
 	NumTalent = 27;
 
@@ -376,7 +386,6 @@ Const
 	( NAS_Stealth , 5 ), ( -8 + NAS_Pragmatic , 25 )
 	);
 
-
 	TALENT_Usage: Array [1..NumTalent] of Integer = (
 		0, 0, 0, 0, 0,
 		0, 0, 0, 0, 0,
@@ -385,6 +394,21 @@ Const
 		0, 0, USAGE_Robotics, 0, USAGE_DominateAnimal,
 		USAGE_PickPockets, 0
 	);
+
+	{  *************************  }
+	{  ***   MERIT  BADGES   ***  }
+	{  *************************  }
+
+	{ Merit badges are attributes which must be earned by the PC. Some }
+	{ of them confer special abilities or bonuses, while others don't. }
+	{ Note that while defined here, merit badges should be stored in the }
+	{ adventure gear rather than the PC itself. }
+	NAG_MeritBadge = 28;
+
+	NAS_MB_PopStar = 1;
+	NAS_MB_ArenaChampion = 2;	{ The PC has completed a mecha arena. }
+	NAS_MB_Lancemate2 = 3;		{ The PC has earned a second lancemate slot. }
+	NAS_MB_Lancemate3 = 4;		{ The PC has earned a third lancemate slot. }
 
 
 	{ PERSONAL attributes hold information about the character's place }

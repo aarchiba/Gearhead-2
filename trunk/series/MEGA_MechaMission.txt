@@ -43,7 +43,6 @@ Content
 	SubPlot1 <*Util_WinMission&Mecha 1>
 	SubPlot2 <*Util_LoseMission&Mecha 1>
 	SubPlot3 <*Util_TimeOver 1>
-	SubPlot4 <*:LM_Selector 2 3 4>
 
 	sub
 		MetaScene 4 2
@@ -54,8 +53,8 @@ Content
 		% Set this metascene's faction to E3
 		SetFaction 3
 
-		Start <if= P%id%02 0   P= %id%02 1   PCFEnemy %3%>
-Start <if= P%id%02 0   P= %id%02 1   PCFEnemy %3%  SetPlotStatus %plotid4% %id4%>
+		Start <if= P%id%02 0   P= %id%02 1   PCFEnemy %3%  ifG 16 d100 StartPlot .side_story PCRenown>
+		.side_story <*CombatSideStory %e2% %e3%>
 		nu1 <if= T1 0   Return   if= V1 0 V= 1 1   LoseRenown                     Memo 1  Alert 1   SetPlotStatus %plotid% %id2%>
 		nu2 <if= T2 0   if= V1 0 V= 1 1            XPV 100   AddRenown 1  Salvage   Memo 2  Alert 2   SetPlotStatus %plotid% %id1%>
 
@@ -252,7 +251,7 @@ Content
 
 Content
 	name <Faction Enemies>
-	requires <*MECHAMISSION_Basic>
+	requires <*MECHAMISSION_Basic ~!Md ~!Hi ~!Ex>
 	desc <The PC will fight some enemies of the mission-giving NPC.>
 
 	% E1: The Mission Provider
@@ -284,7 +283,8 @@ Content
 		% Set this metascene's faction to E4
 		SetFaction 4
 
-		Start <if= P%id%02 0  P= %id%02 1>
+		Start <if= P%id%02 0  P= %id%02 1  ifG 11 d100 StartPlot .side_story PCRenown>
+		.side_story <*CombatSideStory %e2% %e4%>
 		nu1 <if= T1 0   Return   if= V1 0 V= 1 1   LoseRenown                     Memo 1  Alert 1   SetPlotStatus %plotid% %id2%>
 		nu2 <if= T2 0   if= V1 0 V= 1 1            XPV 100   AddRenown 1  Salvage   Memo 2  Alert 2   SetPlotStatus %plotid% %id1%>
 

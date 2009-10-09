@@ -26,10 +26,20 @@ unit mpbuilder;
 
 interface
 
-uses gears,locale;
+uses gears,locale,narration;
+
+Type
+	ElementDesc = Record
+		EType: Char;
+		EValue: LongInt;
+	end;
+	{ I feel just like Dmitri Mendelev writing this... }
+	ElementTable = Array [1..Num_Plot_Elements] of ElementDesc;
+
 
 Procedure ReplaceStrings( Part: GearPtr; Dictionary: SAttPtr );
 Function ComponentMenu( CList: GearPtr; var ShoppingList: NAttPtr ): GearPtr;
+Procedure ClearElementTable( var ET: ElementTable );
 
 Function ExpandDungeon( Dung: GearPtr ): GearPtr;
 Procedure ConnectScene( Scene: GearPtr; DoInitExits: Boolean );
@@ -42,7 +52,7 @@ Function AddQuest( Adv,City: GearPtr; var Quest_Frags: GearPtr; QReq: String ): 
 
 implementation
 
-uses narration,playwright,texutil,gearutil,gearparser,ghchars,randmaps,
+uses playwright,texutil,gearutil,gearparser,ghchars,randmaps,
 	ui4gh,wmonster,rpgdice,ghprop,ability,
 {$IFDEF ASCII}
 	vidgfx,vidmenus;
@@ -53,14 +63,6 @@ uses narration,playwright,texutil,gearutil,gearparser,ghchars,randmaps,
 	glgfx,glmenus;
 {$ENDIF}
 {$ENDIF}
-
-Type
-	ElementDesc = Record
-		EType: Char;
-		EValue: LongInt;
-	end;
-	{ I feel just like Dmitri Mendelev writing this... }
-	ElementTable = Array [1..Num_Plot_Elements] of ElementDesc;
 
 Const
 	Num_Sub_Plots = 8;

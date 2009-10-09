@@ -592,7 +592,7 @@ begin
 		DeployGear( GB , Robot , True );
 
 		if NAttValue( Robot^.NA , NAG_Personal , NAS_CID ) <> 0 then begin
-			if NumLancemateSlots( PC ) < LancematesPresent( GB ) then RemoveLancemate( GB , Robot , False );
+			if NumLancemateSlots( GB^.Scene , PC ) < LancematesPresent( GB ) then RemoveLancemate( GB , Robot , False );
 			DialogMsg( ReplaceHash( MsgString( 'BUILD_ROBOT_SUCCESS' ) , GearName( Robot ) ) );
 		end else begin
 			if PetsPresent( GB ) > PartyPetSlots( PC ) then RemoveLancemate( GB , Robot , False );
