@@ -1,0 +1,202 @@
+%%
+%%   ***********************************
+%%   ***   THE  LEADERSHIP  SERIES   ***
+%%   ***********************************
+%%
+%% In order to gain lancemate slots 2 and 3, the PC must demonstrate leadership.
+%% These quests are linked to the Cavalier's Club, meaning that they'll always
+%% appear in the PC's hometown. There are three rungs on the leadership ladder:
+%%
+%%  1) LM1: Gain an ally, available from start
+%%  2) LM2: Gain a second lancemate slot, available from Renown 30
+%%  3) LM3: Gain the third lancemate slot, available from Renown 50
+%%
+
+%%
+%%  *:Q_LeadershipSeries
+%%
+%% This is the root quest; it will activate the subquests as needed.
+%%
+
+Content
+	name <The Leadership Series>
+	desc <Quests which allow the PC to earn a lancemate, a second lancemate slot, and a third lancemate slot.>
+	requires <*:Q_LeadershipSeries>
+
+	% Element1 is the cavalier's club. Since everything starts here, might as well
+	%  hand it out as an element.
+	% Element2 is the quest villain, to be kept frozen until needed.
+	% Element3 is the veteran in the CavClub, who gives advice and maybe a reward.
+	Element1 <Scene cavclub>
+	Element2 <>
+	Element3 <>
+
+	SubPlot1 <*:Q_LS_Task1 #10 1 2>
+
+%%
+%%  *:Q_LS_Task1
+%%
+%% This subquest will allow the PC to gain a first lancemate, and should also foreshadow the
+%% later parts of the series.
+%%
+%%  PARAM1: The Cavalier's Club
+%%  PARAM2: The series villain
+
+Content
+	name <Gimme Gimme>
+	desc <An artifact has been stolen; the PC can get it back, aid the thief, or keep it.>
+	requires <*:Q_LS_Task1>
+
+	% E1 is the Cavalier's Club
+	% E2 is the series villain, needed for foreshadowing
+	% E3 is the character who lost the artifact
+	% E4 is the character who stole the artifact
+	% E5 is the artifact
+	Element3 <NewNPC 0 1 Easygoing Heroic>
+	Place3 <1 (Guards) sd ally>
+	Element4 <Prefab>
+	Element5 <Artifact>
+	Place5 <4>
+
+	% P%id%01 = Have started quest
+	% P%id%02 = Have accepted E4's offer to intimidate E3
+	% P%id%03 = Have silenced E3
+	% P%id%04 = Have obtained E5
+
+	%% Speaking with E3 will set P%id%01 and activate the quest. Locate E4 and maybe get the item
+	%% back through negotiation. Alternatively, accept E4's offer to convince E3 to back off.
+
+	%% FAIL CONDITIONS:
+	%% - E3 and E4 both die.
+	%% - PC has obtained E5, and E3 dies
+	%% - PC has silenced E3, and E4 dies
+
+	get%5% <if= P%id%04 0  P= %id%04 1  XPV 100 QMemo %plotid% %id%01>
+	faint%3% <if= P%id%02 1 P= %id%03 1>
+
+	Msg%id%01 <You retrieved the %name5% for %name4%.>
+
+	% SubPlot1 is E4's hideout
+	SubPlot1 <*:Q_NPCHideout 4>
+
+	sub
+		Persona 3
+		rumor%id% <%name3% has lost the %name5%.>
+		&BribeAmount <Threat %threat% 5>
+		greeting <if= PlotStatus %plotid% %id% else GoChat if= P%id%03 0 else GoChat if# P%id%01 0 else GoFirstTime  NewChat Say 1 AddChat 1 AddChat 2 AddChat 3 AddChat 4 AddChat 5>
+		GoChat <NewChat SayAnything>
+		*GoFirstTime <*NiceToMeetYou GoJobOffer>
+		GoJobOffer <NewChat Say 2 AddChat 6 AddChat 7 AddChat 8>
+		GoSilenceE3 <P= %id%03 1  AddReact -d10>
+		*result1 <*ComeBackWhenYouKnowSomething>
+		result2 <PCAlly %3% AddHeroic 1 NewChat Say 3 History 4 WinSubPlot %plotid% AddReact d20 DeleteItem %5%>
+		result3 <LoseSubPlot %plotid%   AddLawful -5   Goto GoR3End>
+		*GoR3End <*PCWillKeepItem %5%>
+		result4 <LoseSubPlot %plotid%   AddRenown -5   Goto GoR4End>
+		*GoR4End <*YouLostItem>
+		result5 <NewChat Say 5 AddChat 9 AddChat 10 AddChat 11 AddChat 12>
+		result6 <NewChat Say 6  QMemo %plotid% 7  P= %id%01 1  SetPlotStatus %plotid1% %id1%>
+		result7 <NewChat Say 8 AddReact -d10 LoseSubPlot %plotid%>
+		result8 <NewChat Say 9 AddChat 13 AddChat 14>
+		result9 <NewChat Say 10 Goto GoSilenceE3>
+		result10 <NewChat Say 11 Goto GoSilenceE3>
+		result11 <NewChat Say 12  Cash+ -&BribeAmount  AddReact 10  Goto GoSilenceE3>
+		result12 <NewChat Say 13>
+		result13 <Goto result6>
+		result14 <Goto result7>
+		Msg1 <Have you recovered the %name5% from %name4%?>
+		Msg2 <I just started working as a cavalier, and already I've messed up. I was supposed to guard the %name5% but it's been stolen out from under my nose.>
+		Msg3 <Oh, thanks! I need to return this to its rightful owner... Maybe sometime later on the two of us can work together, y'know?>
+		Msg4 <You returned the %name5% to %name3%.>
+		Msg5 <But it doesn't even belong to me! I've got to keep trying for it, don't I?>
+		Msg6 <You'd do that for me? Thanks! The thief who took it is named %name4%... I'm sorry that I don't have any more information to tell you.>
+		Msg7 <%name3% asked you to help retrieve the %name5% from %name4%.>
+		Msg8 <Sorry... I'll keep my problems to myself.>
+		Msg9 <ITEM_DESC %5% ITEM_HISTORY %5% So, can you help me recover it?>
+		Msg10 <I see what you're saying... It's better to have tried and lost than to have tried harder and gotten killed. I'll forget about the %name5%.>
+		Msg11 <You're right... I should have known this was a lost cause. The only thing to do now is to admit to the boss that I messed up.>
+		Msg12 <I'll admit... this is a rather nice consolation prize. Thanks, \PC .>
+		Msg13 <You do that.>
+		Prompt1 <No, not quite yet...>
+		Prompt2 <Yes. Here it is. [Give Item]>
+		CPrompt2 <ifKeyItem %5% Accept>
+		Prompt3 <Yes, and I'm going to keep it for myself.>
+		CPrompt3 <ifKeyItem %5% Accept>
+		Prompt4 <There's been a slight mishap...>
+		CPrompt4 <ifItemDestroyed %5% Accept>
+		Prompt5 <I think you should give up on it, myself.>
+		CPrompt5 <if# P%id%02 0 Accept>
+		Prompt6 <Maybe I could help you get it back.>
+		Prompt7 <Your troubles do not interest me.>
+		Prompt8 <The %name5%, huh? What's that?>
+		Prompt9 <Bad things happen to people who cross %name4%.>
+		CPrompt9 <ifIntimidation HardSkillTar %threat% Accept>
+		Prompt10 <%name4% must have already sold it; it's gone.>
+		CPrompt10 <ifConversation HardSkillTar %threat% Accept>
+		Prompt11 <Here, I'll give you $ \VAL &BribeAmount to help you forget. [Give Money]>
+		CPrompt11 <ifShopping SkillTar %threat% ifG PC$ &BribeAmount Accept>
+		Prompt12 <I'll think about that for a bit.>
+		Prompt13 <Alright, I'll do it.>
+		Prompt14 <Nope, it sounds boring.>
+
+		Persona 4
+		% V1 = Have asked who E2 is
+		% V2 = Have attempted to make a deal
+		&BribeAmount <Threat %threat% 5>
+		greeting <if= PlotStatus %plotid% %id% else GoChat ifChatNPCInPlay else GoBrushOff if= P%id%04 0 else GoChat Goto GoGreet>
+		GoBrushOff <EndChat Say 1>
+		GoChat <NewChat SayAnything>
+		*GoGreet <*WhatDoYouWantWithMe&YouHaveSomething GoBargain>
+		GoBargain <NewChat Say 2 AddChat 1 AddChat 2 AddChat 3 AddCHat 4 AddCHat 6>
+
+		Result1 <NewChat Say 3 AddChat 5 V= 1 1>
+		result2 <NewChat Say 4 AddLawful -1 PCEnemy %2% GiveItem %5%>
+		result3 <NewChat Say 5 AddChat 7 AddChat 8 AddCHat 9 V= 2 1>
+		result4 <NewChat Say 6 AddReact -d20 PCEnemy %2% GiveItem %5%>
+		result5 <NewChat Say 7 AddChat 3 AddChat 10>
+		result6 <NewChat Say 8 GiveItem %5% AddChat 11 AddChat 12>
+		result7 <NewChat Say 9 QMemo %plotid% 10 P= %id%02 1>
+		result8 <NewChat Say 11 Cash+ -&BribeAmount AddReact d20 GiveItem %5%>
+		result9 <NewChat Say 12>
+		result10 <Goto result4>
+
+		Msg1 <...>
+		Msg2 <Look, I didn't want to steal this %name5%, but %name2% ordered me to and I couldn't exactly say no.>
+		Msg3 <You don't know %name2%? You don't want to know... Trust me, bad things happen to people who get too close to %name2%.>
+		Msg4 <Really? Wow, I was worried there for a bit... I thought %name3% sent a cavalier after me. Here, you can bring this to \OPR %2% .>
+		Msg5 <What kind of deal are you talking about?>
+		Msg6 <You make a compelling argument. Alright, here you go... but if anybody asks, you had to beat me up to get it, okay?>
+		Msg7 <How should I know? \ITEM_USAGE %5% All I know is that I need to deliver the goods.>
+		Msg8 <Really? Well that's an unexpected turn of events... I guess I don't need this old thing anymore. You can have it if you want.>
+		Msg9 <If you could do that, I'd share half the reward I'm getting from %name2% with you. Come back here when it's safe for me to go out in public again.>
+		Msg10 <You told %name4% that you'd get %name3% off \PPR %4% back.>
+		Msg11 <Hmm... That does seem to be a fair price for it, and it's more than %name2% offered. Here you go. It's been a pleasure doing business with you.>
+		Msg12 <Yeah, thinking is good.>
+
+		Prompt1 <Who is %name2%?>
+		CPrompt1 <if= V1 0 Accept>
+		Prompt2 <Relax. %name2% sent me to collect.>
+		CPrompt2 <if= V1 0 if= V2 0 ifUConversation SkillTar %threat% Accept>
+		Prompt3 <How about we make a deal?>
+		Prompt4 <Give it to me now or you won't live long enough to say no.>
+		CPrompt4 <ifIntimidation HardSkillTar %threat% Accept>
+		Prompt5 <Why does \SPR %2% want the %name5%?>
+		Prompt6 <%name2% is dead.>
+		CPrompt6 <ifNPCDead %2% Accept>
+		Prompt7 <I can get %name3% off your back.>
+		CPrompt7 <if= P%id%02 0 Accept>
+		Prompt8 <I'll buy the %name5% for $ \VAL &BribeAmount .>
+		CPrompt8 <ifG PC$ &BribeAmount ifShopping SkillTar %threat% Accept>
+		Prompt9 <Good question. I'll think about that.>
+		Prompt10 <If you want to live, you need to give it to me.>
+		CPrompt10 <ifIntimidation HardSkillTar %threat% Accept>
+		Prompt11 <Thanks.>
+		Prompt12 <Here, you can have this for your trouble. [Give $ \VAL &BribeAmount ]>
+		CPrompt12 <ifG PC$ &BribeAmount Accept>
+
+	end
+	inv
+		NPC Thief
+		Combatant
+	end
+
