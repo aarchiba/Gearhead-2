@@ -133,58 +133,6 @@ CMsg%id%01_5 <ifNPCCheerful Accept>
 Msg%id%01_6 <It's a dangerous world out there. Before starting your adventure, you might want to buy some armor. There's a store right here so you can do that right away.>
 CMsg%id%01_6 <ifNPCMelancholy Accept>
 
-% TYPE: *MENTOR_ExQuest
-%        The mentor will provide an extended quest.
-%        The first time, he'll just mention it as advice.
-%        Afterwards he'll judge the PC's progress.
-%    Param1,2: Exit prompt numbers
-
-Persona
-requires <*MENTOR_ExQuest>
-% Vid01 = Introduction counter
-START <if= V%id%01 0 else .%id%_GoCheck V= %id%01 1 NewChat Say %id%01 AddChat %id%01 AddChat %id%02>
-.%id%_GoCheck <if= V%id%01 1 else .%id%_GoComplete ifG PCRep 6 60 else .%id%_GoFail NewChat Say %id%06 V= %id%01 2 randommecha .%id%_mek 75>
-.%id%_mek <GENERAL>
-.%id%_GoComplete <NewChat Say %id%02>
-.%id%_GoFail <NewChat Say %id%03 AddChat %1% AddChat %2%>
-result%id%01 <NewChat Say %id%04 AddChat %1% AddChat %2%>
-result%id%02 <NewChat  AddEasygoing -10  Say %id%05 AddChat %1% AddChat %2%>
-Msg%id%01 <The most important part of being a cavalier is building your reputation. You should always try to improve your renown, and maybe someday the entire solar system will know the name of \PC !>
-Msg%id%02 <I don't think there's anything else I could tell you. You're doing great.>
-Msg%id%03 <You still need to work on your reputation.>
-Msg%id%03_1 <You've done a good job of building your reputation. Come back and see me after you've done a little bit more.>
-CMsg%id%03_1 <ifG PCRep 6 45 Accept>
-Msg%id%03_2 <As I said before, the most important part of being a cavalier is building your reputation. Until you've done that there's not much anyone can do for you.>
-CMsg%id%03_2 <ifG 20 PCRep 6 Accept>
-Msg%id%03_3 <Frankly speaking, you reek of failure. I think you'd be better off selling your mecha and opening a hot dog stand.>
-CMsg%id%03_3 <ifG 0 PCRep 6 Accept>
-Msg%id%04 <You'll get a good reputation through winning. The more success you have, the better your reputation will become. Pick your fights carefully, though... Lose too often, and you'll become "wangtta".>
-Msg%id%05 <A healthy attitude, but unfortunately one that's not going to help you get ahead. With better reputation comes better contracts and more perks. On the other hand, if you get a bad reputation you'll be "wangtta", and nobody wants that.>
-Msg%id%06 <You've made quite the name for yourself. I have no doubt that you're destined for great things... Here, I'd like you to have my old mecha. I don't use it anymore and I'm sure you could put it to good use.>
-Prompt%id%01 <How can I change my reputation?>
-Prompt%id%02 <I don't care what other people think about me.>
-
-Persona
-requires <*MENTOR_ExQuest Heroic>
-% Vid01 = Introduction counter
-START <if= V%id%01 0 else .%id%_GoCheck V= %id%01 1 NewChat Say %id%01 AddChat %id%01 AddChat %id%02>
-.%id%_GoCheck <if= V%id%01 1 else .%id%_GoComplete ifG PCRep 1 50 else .%id%_GoFail NewChat Say %id%06 V= %id%01 2 CashPrize 350000>
-.%id%_GoComplete <NewChat Say %id%02>
-.%id%_GoFail <NewChat Say %id%03 AddChat %1% AddChat %2%>
-result%id%01 <NewChat Say %id%04 AddChat %1% AddChat %2%>
-result%id%02 <NewChat  AddSociable -10  Say %id%05 AddChat %1% AddChat %2%>
-Msg%id%01 <As an adventurer, I think you should try your best to help people. I know it's a tired cliche but there's so much trouble in the world we could use all the heroes we can get.>
-Msg%id%02 <I don't have any more advice to offer you.>
-Msg%id%03 <If you help people, some of that good will come back to you.>
-Msg%id%03_1 <I hear you've done a lot to help people. After you do a bit more work, come back and talk to me again.>
-CMsg%id%03_1 <ifG PCRep 1 40 Accept>
-Msg%id%03_2 <You've done nothing to help people in your life. When the time comes that you need help, you may find that there's none for you.>
-CMsg%id%03_2 <ifG 0 PCRep 1 Accept>
-Msg%id%04 <That's a good question. You'll know when the time is right. Sometimes you might have to put the well being of others before your own.>
-Msg%id%05 <If you act in that way, there could be a very lonely life ahead of you...>
-Msg%id%06 <I've heard tell of all your good deeds. Here, I'd like for you to have this money.>
-Prompt%id%01 <I'd like to, but what can I do?>
-Prompt%id%02 <No way. From now on, I look out after number one.>
 
 % TYPE: *MENTOR_WhatDoFirst
 %        The mentor will tell the PC what he should do first.

@@ -26,70 +26,18 @@ and a colon, as in "*:PROVESELF".
 A quest fragment name may include optional descriptors separated from
 the main name by periods, as in "*:FINDMONEY.CHARITY" or "*:FINDMONEY.INVESTMENT".
 
-If a quest fragment creates new scenes or subquests, it must have the tag
-"BRANCHES" in its requires string.
-
-
-BRANCH POINTS, SUCCESSORS AND COMPLICATIONS
-
-The size of a quest is limited by how many branch points it's given.
-
-A complication subquest gets a number of branch points equal to its parent - 1.
-
-A successor subquest gets a number of branch points equal to its parent - highest subquest
-branch score.
-
 
 ELEMENT HANDLING
-
-Elements are handled mostly as in plots, but with two changes: 1) every element should have a
-scene associated with it, and 2) you shouldn't use a character search; insert characters as
-prefabs instead.
-
-Also remember that the elements are not stored after the quest is assembled, so you should use
-the substitution strings instead of E1...E10 etc.
 
 Do not insert a persona fragment in the greeting of a persona! This will be megalisted
 in, and mess up loads of stuff.
 
-A NPC used in a quest can't be selected for plots until the quest is resolved, i.e. its
-QuestStatus has a negative value.
-
 Rumors attached to a persona have the format "RUMOR%id% <>". When the quest status equals
 ID this rumor will be used.
-
-If a scene is defined which has no associated element, the scene itself will become the
-element.
-
-If "KEY" is requested as an element, it will be the key character. If no key character
-exists then insertion of this component will fail. The key character automatically has
-the key scene as its scene.
-
-Master gears may have a team set explicitly instead of using the team[n],teamdata[n]
-string attributes. Use this with caution.
 
 If "." is requested as an element, it will be the city where this story takes place.
 
 
-SCENE HANDLING
-
-A scene entrance may be defined as follows: it must have a DESIG string attribute reading
-"Entrance [SceneID]".
-
-Any child gears of a metascene will be moved to the corresponding scene during assembly.
-
-A map feature can be defined and placed in the metascene's subcoms.
-If it has the DESIG "HOME", then its associated element will be placed in the
-feature and given the minimap index "1".
-
-If the scene request begins with "NEW" then a new scene will be created.
-When a new scene is requested, the associated element's context will be passed with prefix "1:".
-
-If the scene request is "KEY" then the quest's key scene will be used.
-
-If the scene request is "GRAB n" then the scene already assigned to element "n" will
-be used. If "n" is greater than the current element number or cannot be found, then
-the content insertion fails.
 
 QUEST REQUEST
 

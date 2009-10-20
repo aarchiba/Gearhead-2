@@ -2028,10 +2028,14 @@ var
 	id: Integer;
 begin
 	id := ScriptValue( Event , GB , Scene );
-	msg := getTheMessage( 'msg' , id , GB , Scene );
-	if ( msg <> '' ) and ( Scene <> Nil ) then SetSAtt( Scene^.SA , 'EMAIL <' + msg + '>' );
-	PC := GG_LocatePC( GB );
-	if ( PC <> Nil ) and HasPCommCapability( PC , PCC_EMail ) then DialogMsg( MsgString( 'AS_EMail' ) );
+	if id <> 0 then begin
+		msg := getTheMessage( 'msg' , id , GB , Scene );
+		if ( Scene <> Nil ) and ( msg <> '' ) then SetSAtt( Scene^.SA , 'EMAIL <' + msg + '>' );
+		PC := GG_LocatePC( GB );
+		if ( PC <> Nil ) and HasPCommCapability( PC , PCC_EMail ) and ( msg <> '' ) then DialogMsg( MsgString( 'AS_EMail' ) );
+	end else if Scene <> Nil then begin
+		SetSAtt( Scene^.SA , 'EMAIL <>' );
+	end;
 end;
 
 

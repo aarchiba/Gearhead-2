@@ -27,11 +27,195 @@ Content
 	%  hand it out as an element.
 	% Element2 is the quest villain, to be kept frozen until needed.
 	% Element3 is the veteran in the CavClub, who gives advice and maybe a reward.
+	% Element4 is the VIP Room, which is needed in tasks 2 and 3
+	% Element5 is the entrance
 	Element1 <Scene cavclub>
-	Element2 <>
-	Element3 <>
+	Element2 <NewNPC 0 1 villainous>
+	Place2 </>
+	Element3 <Prefab>
+	Place3 <1 (Guards) sd ally>
+	Element4 <QuestScene>
+	Place4 <1>
+	Element5 <Prefab>
+	Place5 <1>
 
+	% P%id%01 = Email Timer
+
+	update <if= PlotStatus %plotid1% 0 SetPlotStatus %plotid1% %id1%>
+	pumpnews <if= PlotStatus %plotid2% 0 ifG PCRenown 25 SetPlotStatus %plotid2% %id2% email %id%01 P= %id%01 ComTime P+ %id%01 86400>
+	% At the ending, clear the emails as appropriate
+	end <ifG ComTime P%id%01 email 0>
+
+	Msg%id%01 <Admin@CavClub:// Congratulations, you have earned access to the VIP room at the Cavalier's Club. Enjoy our hospitality the next time you're in \SCENE PCHomeTown .>
+
+	% SubPlot1 is the first lancemate
+	% SubPlot2 is the LM2 badge
 	SubPlot1 <*:Q_LS_Task1 #10 1 2>
+	SubPlot2 <*:Q_LS_Task2 #40 1 2 4>
+
+	sub
+		Persona 3
+		*greeting <*NiceToMeetYou GoMainMenu>
+		GoMainMenu <NewChat Say 1 AddChat 1 AddChat 2 AddChat 3 AddChat 4>
+		GoMission <NewChat AddChat 3 AddChat 4 AddChat 5 Goto GoCheckWin2>
+		GoCheckWin2 <ifSubPlotOver %plotid2% else GoCheckPro2 Say 5>
+		GoCheckPro2 <if= PlotStatus %plotid2% %id2% else GoCheckWin1 Say 6>
+		GoCheckWin1 <ifSubPlotOver %plotid1% else GoCheckPro1 Say 2>
+		GoCheckPro1 <if= PlotStatus %plotid1% %id1% else GoNoAdvice Say 3>
+		GoNoAdvice <Say 4>
+		result1 <V= 1 1 Goto GoMission>
+		result2 <Goto GoMission>
+		*result3 <*MENTOR_WhatDoFirst 1 2 4>
+		*result4 <*MENTOR_WhatEquipment 1 2 3>
+		*result5 <*GoodBye>
+		Msg1 <I've been a mecha pilot for a long time. If you've got any questions about adventuring, I'll do my best to answer.>
+		Msg1_1 <>
+		CMsg1_1 <ifNPCSociable Accept>
+		Msg1_2 <>
+		CMsg1_2 <ifNPCShy Accept>
+		Msg1_3 <>
+		CMsg1_3 <ifNPCEasygoing Accept>
+		Msg1_4 <>
+		CMsg1_4 <ifNPCPassionate Accept>
+		Msg1_5 <>
+		CMsg1_5 <ifNPCCheerful Accept>
+		Msg1_6 <>
+		CMsg1_6 <ifNPCMelancholy Accept>
+		Msg2 <There's not much going on around here right now. Come back after you've gained some experience and maybe they'll let you into the VIP lounge upstairs.>
+		Msg3 <If you help people out, often they'll be inclined to return the favor. Ask around here and I'm sure you can find someone in need of a little assistance.>
+		Msg4 <There's nothing else I can teach you.>
+		Msg5 <%name2% is gone for now, but \SPR %2% 's sure to be back. Train hard so you're ready when that happens.>
+		Msg6 <I've heard that the management of this place is having some problems with a troublemaking cavalier. What we need is for someone to demonstrate a bit of leadership and set things right.>
+		Prompt1 <How can I become a great cavalier?>
+		CPrompt1 <if= V1 0 Accept>
+		Prompt2 <Do you have any more advice?>
+		CPrompt2 <if# V1 0 Accept>
+		Prompt3 <What should I do first?>
+		Prompt4 <What do I need?>
+		Prompt5 <That's all the advice I need for now, thanks.>
+
+		MetaScene 4
+		name <the VIP Room>
+		type <building private mall rich meeting>
+		mapwidth 15
+		mapheight 15
+		MallMap
+		Ceiling
+		Tolerance 15
+		NeededCells 3
+		Content1 <Some 1 100 Sub *INTRO_HEALTHCLUB na>
+		Content2 <Some 1 100 Sub *MECHA_SHOP na>
+		Content3 <Fill Sub *SHOP_RANDOM na>
+		Start <Print 1>
+		Msg1 <You enter \SCENE SceneID .>
+		sub
+			team 1
+
+			team 2
+			name <Citizens>
+			SetAlly 1
+			Passive
+
+			team 3
+			name <Guards>
+			SetAlly 2
+
+			room
+			name <Foyer>
+			desig <EntranceGrid>
+			Content <Some 3 50 Here *URBAN_X>
+			Content2 <Some 1 100 Here *ANTI_ATTACK_SECURITY 2>
+			sub
+				StairsDown
+				Destination -1
+			end
+		end
+
+		MetaScene 5
+		sub
+			room
+			desig <HOME>
+			minimap <#######1###...##...##...#>
+		end
+	end
+	inv
+		NPC Mecha Pilot
+		chardesc old old old renowned
+
+		StairsUp
+		desig <ENTRANCE %4%>
+		use <if# PlotStatus %plotid2% 0 else GoNotYet  Print 1 Exit StatVal 4>
+		GoNotYet <Print 99>
+		Msg99 <The VIP Room is by invitation only.>
+	end
+
+%%
+%%  *:Q_LS_Task2
+%%
+%% In this subquest, the PC has a first encounter with the series villain, and must act to
+%% save the Cavalier's Club itself.
+%%
+%%  PARAM1: The Cavalier's Club
+%%  PARAM2: The series villain
+%%  PARAM3: The VIP Room
+%%
+
+Content
+	name <Hostile Takeover>
+	desc <The villain will take over the Cavalier's Club unless the PC can pay off their debt.>
+	requires <*:Q_LS_Task2>
+
+	% E1 is the Cavalier's Club
+	% E2 is the series villain, met here for the first time
+	% E3 is the VIP Lounge
+	% E4 is the manager, who will run this quest
+	Element4 <Prefab>
+	Place4 <3 (Guards) ally sd>
+
+	% P%id%01 = First time entering the VIP Room.
+
+	%% FAIL CONDITIONS:
+	%% - E4 dies
+	end <ifNPCDead %4% LoseSubPlot %plotid%>
+
+	% The first time you enter the VIP Room, you'll see E2 and E4 arguing.
+	start <if= P%id%01 0 if= SceneID %3% P= %id%01 1 Alert %id%01 Monologue %4% %id%02 Monologue %2% %id%03 Print %id%04>
+
+	Msg%id%01 <As you enter the VIP Room, you see two people arguing.>
+	Msg%id%02 <You can't foreclose on us now! Just think of all the young'uns who rely on this place... Give us a bit more time, I promise to get the money we owe you.>
+	Msg%id%03 <This is your last chance, %name4%. When you fail I'll tear down this building and replace it with a bargain store.>
+	Msg%id%04 <%name2% leaves the area.>
+
+	% SubPlot1 is the FindMoney task.
+	SubPlot1 <*:Q_FindMoney 4>
+
+	sub
+		Persona 4
+		% This character will handle the FindMoney plot.
+		greeting <if= PlotStatus %plotid% %id% else GoChat if# PlotStatus %plotid1% 0 else GoFirstTime NewChat Say 1 AddChat 1 AddChat 2 AddChat 3>
+		GoChat <NewChat SayAnything>
+		*GoFirstTime <*INeedYourHelp GoListen GoRefuse>
+		GoListen <NewChat Say 2 AddChat 4 AddCHat 5>
+		GoRefuse <>
+
+		*result3 <*HurryBackWithMoney>
+
+		Msg1 <If we can't get the money for %name2%, the Cavalier Club will have to close down.>
+		Msg2 <>
+
+		Prompt1 <How much money do you need, again?>
+		Prompt2 <I've found someone to help.>
+		CPrompt2 <ifSubPlotWon %plotid1% Accept>
+		Prompt3 <Yeah, I'll let you know if I find anything.>
+		Prompt4 <>
+		Prompt5 <>
+
+	end
+	inv
+		NPC Soldier
+		chardesc old
+	end
+
 
 %%
 %%  *:Q_LS_Task1
@@ -41,6 +225,7 @@ Content
 %%
 %%  PARAM1: The Cavalier's Club
 %%  PARAM2: The series villain
+%%
 
 Content
 	name <Gimme Gimme>
@@ -68,13 +253,18 @@ Content
 
 	%% FAIL CONDITIONS:
 	%% - E3 and E4 both die.
-	%% - PC has obtained E5, and E3 dies
 	%% - PC has silenced E3, and E4 dies
+	%% - PC has obtained E5, and E3 dies
+	%% - PC has obtained E5 and silenced E3
+	end <ifNPCDead %3% else .%id%_GoCheckF2 ifNPCDead %4% else .%id%_GoCheckF3 LoseSubPlot %plotid%>
+	.%id%_GoCheckF2 <ifNPCDead %4% else .%id%_GoCheckF4 if= P%id%03 1 LoseSubPlot %plotid%>
+	.%id%_GoCheckF3 <if= P%id%04 1 else .%id%_GoCheckF4 LoseSubPlot %plotid%>
+	.%id%_GoCheckF4 <if= P%id%04 1 if= P%id%03 1 LoseSubPlot %plotid%>
 
 	get%5% <if= P%id%04 0  P= %id%04 1  XPV 100 QMemo %plotid% %id%01>
 	faint%3% <if= P%id%02 1 P= %id%03 1>
 
-	Msg%id%01 <You retrieved the %name5% for %name4%.>
+	Msg%id%01 <You retrieved the %name5% for %name3%.>
 
 	% SubPlot1 is E4's hideout
 	SubPlot1 <*:Q_NPCHideout 4>
@@ -87,9 +277,9 @@ Content
 		GoChat <NewChat SayAnything>
 		*GoFirstTime <*NiceToMeetYou GoJobOffer>
 		GoJobOffer <NewChat Say 2 AddChat 6 AddChat 7 AddChat 8>
-		GoSilenceE3 <P= %id%03 1  AddReact -d10>
+		GoSilenceE3 <P= %id%03 1  AddReact -d10  if# P%id%04 0 AddLawful -5>
 		*result1 <*ComeBackWhenYouKnowSomething>
-		result2 <PCAlly %3% AddHeroic 1 NewChat Say 3 History 4 WinSubPlot %plotid% AddReact d20 DeleteItem %5%>
+		result2 <PCAlly %3% AddHeroic 1 NewChat Say 3 History 4 WinSubPlot %plotid% AddReact d20 DeleteItem %5% SetXXRAttitude %3% XXR_A_Thankful>
 		result3 <LoseSubPlot %plotid%   AddLawful -5   Goto GoR3End>
 		*GoR3End <*PCWillKeepItem %5%>
 		result4 <LoseSubPlot %plotid%   AddRenown -5   Goto GoR4End>
@@ -112,7 +302,7 @@ Content
 		Msg6 <You'd do that for me? Thanks! The thief who took it is named %name4%... I'm sorry that I don't have any more information to tell you.>
 		Msg7 <%name3% asked you to help retrieve the %name5% from %name4%.>
 		Msg8 <Sorry... I'll keep my problems to myself.>
-		Msg9 <ITEM_DESC %5% ITEM_HISTORY %5% So, can you help me recover it?>
+		Msg9 <\ITEM_DESC %5% \ITEM_HISTORY %5% So, can you help me recover it?>
 		Msg10 <I see what you're saying... It's better to have tried and lost than to have tried harder and gotten killed. I'll forget about the %name5%.>
 		Msg11 <You're right... I should have known this was a lost cause. The only thing to do now is to admit to the boss that I messed up.>
 		Msg12 <I'll admit... this is a rather nice consolation prize. Thanks, \PC .>
@@ -143,23 +333,27 @@ Content
 		% V1 = Have asked who E2 is
 		% V2 = Have attempted to make a deal
 		&BribeAmount <Threat %threat% 5>
-		greeting <if= PlotStatus %plotid% %id% else GoChat ifChatNPCInPlay else GoBrushOff if= P%id%04 0 else GoChat Goto GoGreet>
+		greeting <if= PlotStatus %plotid% %id% else GoChat ifChatNPCInPlay else GoBrushOff if= P%id%04 0 else GoChat if= P%id%02 0 else GoReport Goto GoGreet>
 		GoBrushOff <EndChat Say 1>
 		GoChat <NewChat SayAnything>
 		*GoGreet <*WhatDoYouWantWithMe&YouHaveSomething GoBargain>
 		GoBargain <NewChat Say 2 AddChat 1 AddChat 2 AddChat 3 AddCHat 4 AddCHat 6>
-
+		GoReport <NewChat Say 15 AddChat 13 AddChat 14 AddChat 15>
 		Result1 <NewChat Say 3 AddChat 5 V= 1 1>
-		result2 <NewChat Say 4 AddLawful -1 PCEnemy %2% GiveItem %5%>
+		result2 <NewChat Say 4 AddLawful -1 PCEnemy %2% GiveItem %5% SetXXRAttitude %4% XXR_A_Antagonistic  if# P%id%03 0 AddLawful -5>
 		result3 <NewChat Say 5 AddChat 7 AddChat 8 AddCHat 9 V= 2 1>
-		result4 <NewChat Say 6 AddReact -d20 PCEnemy %2% GiveItem %5%>
+		result4 <NewChat Say 6 AddReact -d20 PCEnemy %2% GiveItem %5% SetXXRAttitude %4% XXR_A_Antagonistic  if# P%id%03 0 AddLawful -5>
 		result5 <NewChat Say 7 AddChat 3 AddChat 10>
 		result6 <NewChat Say 8 GiveItem %5% AddChat 11 AddChat 12>
 		result7 <NewChat Say 9 QMemo %plotid% 10 P= %id%02 1>
-		result8 <NewChat Say 11 Cash+ -&BribeAmount AddReact d20 GiveItem %5%>
+		result8 <NewChat Say 11 Cash+ -&BribeAmount AddReact d20 GiveItem %5% SetXXRMotivation %4% XXR_M_Mercenary  if# P%id%03 0 AddLawful -5>
 		result9 <NewChat Say 12>
 		result10 <Goto result4>
-
+		result11 <NewChat Say 13>
+		result12 <PCAlly %4% AddReact d20 NewChat Say 14 Cash+ -&BribeAmount SetXXRAttitude %4% XXR_A_Thankful>
+		result13 <NewChat Say 16>
+		result14 <PCAlly %4% AddLawful -5 NewChat Say 17 History 18 WinSubPlot %plotid% AddReact d20 DeleteItem %5% SetXXRAttitude %4% XXR_A_Thankful CashPrize Reward %threat% 50>
+		result15 <Goto GoBargain>
 		Msg1 <...>
 		Msg2 <Look, I didn't want to steal this %name5%, but %name2% ordered me to and I couldn't exactly say no.>
 		Msg3 <You don't know %name2%? You don't want to know... Trust me, bad things happen to people who get too close to %name2%.>
@@ -167,16 +361,21 @@ Content
 		Msg5 <What kind of deal are you talking about?>
 		Msg6 <You make a compelling argument. Alright, here you go... but if anybody asks, you had to beat me up to get it, okay?>
 		Msg7 <How should I know? \ITEM_USAGE %5% All I know is that I need to deliver the goods.>
-		Msg8 <Really? Well that's an unexpected turn of events... I guess I don't need this old thing anymore. You can have it if you want.>
+		Msg8 <Really? Well that's an unexpected turn of events... I guess that's why no-one ever came to pick up the %name5%. I don't need this old thing anymore; You can have it if you want.>
 		Msg9 <If you could do that, I'd share half the reward I'm getting from %name2% with you. Come back here when it's safe for me to go out in public again.>
 		Msg10 <You told %name4% that you'd get %name3% off \PPR %4% back.>
 		Msg11 <Hmm... That does seem to be a fair price for it, and it's more than %name2% offered. Here you go. It's been a pleasure doing business with you.>
 		Msg12 <Yeah, thinking is good.>
-
+		Msg13 <Yeah, whatever. I'm just glad that I can finally get out of here.>
+		Msg14 <Hey, that's really nice of you. Y'know with %name2% out of the picture I'm going to need a new boss... if you meet anyone looking to hire a thief, send 'em my way.>
+		Msg15 <So have you convinced %name3% to back off yet? I'm getting real tired of staring at these walls...>
+		Msg16 <Working is good. Come back when the job is done.>
+		Msg17 <Thanks. I can see you're pretty useful to have around... maybe we can work together again, someday.>
+		Msg18 <You helped %name4% steal the %name5% from %name3%.>
 		Prompt1 <Who is %name2%?>
 		CPrompt1 <if= V1 0 Accept>
 		Prompt2 <Relax. %name2% sent me to collect.>
-		CPrompt2 <if= V1 0 if= V2 0 ifUConversation SkillTar %threat% Accept>
+		CPrompt2 <if= V1 0 if= V2 0 ifConversation SkillTar %threat% Accept>
 		Prompt3 <How about we make a deal?>
 		Prompt4 <Give it to me now or you won't live long enough to say no.>
 		CPrompt4 <ifIntimidation HardSkillTar %threat% Accept>
@@ -193,7 +392,10 @@ Content
 		Prompt11 <Thanks.>
 		Prompt12 <Here, you can have this for your trouble. [Give $ \VAL &BribeAmount ]>
 		CPrompt12 <ifG PC$ &BribeAmount Accept>
-
+		Prompt13 <I'm still working on it.>
+		Prompt14 <%name3% won't be bothering you again.>
+		CPrompt14 <if# P%id%03 0 Accept>
+		Prompt15 <We need to talk about the %name5%...>
 	end
 	inv
 		NPC Thief

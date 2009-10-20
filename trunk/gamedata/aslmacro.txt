@@ -279,6 +279,7 @@ LoseSubPlot <GrabAdventure GSetNAtt NAG_PlotStatus ? -2 Trigger0 Update>
 IfSubPlotWon <GrabAdventure if= GNAtt NAG_PlotStatus ? -1>
 IfSubPlotLost <GrabAdventure if= GNAtt NAG_PlotStatus ? -2>
 IfSubPlotCanceled <GrabAdventure if= GNAtt NAG_PlotStatus ? -3>
+IfSubPlotOver <GrabAdventure ifG 0 GNAtt NAG_PlotStatus ?>
 AddTempLancemate <GrabNPC ? GSetNAtt NAG_CharDescription NAS_CharType NAV_TempLancemate GJoinLance>
 ChatNPCJoinLance <GrabChatNPC GJoinLance>
 RemoveTempLancemate <GrabNPC ? GSetNAtt NAG_CharDescription NAS_CharType 0 GQuitLance>
