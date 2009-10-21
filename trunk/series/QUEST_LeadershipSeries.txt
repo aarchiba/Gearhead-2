@@ -182,7 +182,7 @@ Content
 	start <if= P%id%01 0 if= SceneID %3% P= %id%01 1 Alert %id%01 Monologue %4% %id%02 Monologue %2% %id%03 Print %id%04>
 
 	Msg%id%01 <As you enter the VIP Room, you see two people arguing.>
-	Msg%id%02 <You can't foreclose on us now! Just think of all the young'uns who rely on this place... Give us a bit more time, I promise to get the money we owe you.>
+	Msg%id%02 <You don't own this place yet! Just think of all the young'uns who rely on this us... Give me a bit more time, I promise I can match your asking price.>
 	Msg%id%03 <This is your last chance, %name4%. When you fail I'll tear down this building and replace it with a bargain store.>
 	Msg%id%04 <%name2% leaves the area.>
 
@@ -195,25 +195,44 @@ Content
 		greeting <if= PlotStatus %plotid% %id% else GoChat if# PlotStatus %plotid1% 0 else GoFirstTime NewChat Say 1 AddChat 1 AddChat 2 AddChat 3>
 		GoChat <NewChat SayAnything>
 		*GoFirstTime <*INeedYourHelp GoListen GoRefuse>
-		GoListen <NewChat Say 2 AddChat 4 AddCHat 5>
-		GoRefuse <>
-
+		GoListen <NewChat Say 2 AddChat 4 AddChat 5 QMemo %plotid% 4 SetPlotStatus %plotid1% %id1%>
+		GoRefuse <NewChat Say 3 AddSociable -d10 LoseSubPlot %plotid%>
+		GoWinQuest <WinSubPlot %plotid%  History 7  AddReact d30  AddHeroic 1  ifMeritBadge NAS_MB_Lancemate2 else GoBasicPrize NewChat Say 6  CustomMecha .meks %threat%  GiveMeritBadge NAS_MB_Lancemate2>
+		.meks <GENERAL PDASS \FACTION_DESIG RootSceneFac>
+		GoBasicPrize <NewChat Say 8    GiveMeritBadge NAS_MB_Lancemate2>
+		result1 <NewChat Say 5 AddCHat 2 AddCHat 6 AddCHat 7>
+		result2 <Goto GoWinQuest>
 		*result3 <*HurryBackWithMoney>
-
+		result4 <NewChat Say 9>
+		result5 <NewChat Say 10>
+		result6 <Cash+ -5000000  PCAlly %4%  AddHeroic 1  Goto GoWinQuest>
+		result7 <NewChat Say 11 AddSociable -d10 LoseSubPlot %plotid%>
 		Msg1 <If we can't get the money for %name2%, the Cavalier Club will have to close down.>
-		Msg2 <>
-
+		Msg2 <%name2%'s father used to be one of the owners of this place. When he died, %name2% inherited a controlling share, and now \spr %2% 's trying to force the rest of us out. I want to buy \PPR %2% shares but they don't come cheap.>
+		Msg3 <Yeah, well, I'm sure the rest of us can sort this out on our own, then.>
+		Msg4 <%name4% needs a lot of money to save the Cavalier's Club from %name2%.>
+		Msg5 <It's going to take at least five million. I really don't know where we can find it...>
+		Msg6 <Wonderful! The Cavalier's Club has been saved! For your help I'd like you to have this custom mecha, and know that you will always be welcome here.>
+		Msg7 <You saved the Cavalier's Club from %name2%.>
+		Msg8 <Wonderful! The Cavalier's Club has been saved! You know, I bet the other pilots will be eager to join in your adventure after they learn what you did.>
+		Msg9 <%name2% and \PPR %2% father fought constantly while he was alive; I suspect that destroying the Cavalier's Club is just an extension of that.>
+		Msg10 <If you could find a sponsor that'd be great. I know that the other cavaliers around here would appreciate it as well.>
+		Msg11 <Well, if you think there's nothing more you can do, don't bother worrying about it. I'm sure that me and the others here will be able to fix things.>
 		Prompt1 <How much money do you need, again?>
 		Prompt2 <I've found someone to help.>
 		CPrompt2 <ifSubPlotWon %plotid1% Accept>
 		Prompt3 <Yeah, I'll let you know if I find anything.>
-		Prompt4 <>
-		Prompt5 <>
-
+		Prompt4 <Why is %name2% being such an ass?>
+		Prompt5 <Yeah, yeah, I'll see what I can do.>
+		Prompt6 <No problem. I can do that myself. [Give $5M]>
+		CPrompt6 <ifG PC$ 5000000 Accept>
+		Prompt7 <Maybe we should just give up...>
+		CPrompt7 <ifSubPlotLost %plotid1% Accept>
 	end
 	inv
 		NPC Soldier
-		chardesc old
+		chardesc old sociable heroic
+		MOTIVATION:GreaterGood
 	end
 
 
