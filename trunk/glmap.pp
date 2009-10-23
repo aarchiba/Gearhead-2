@@ -1080,7 +1080,7 @@ begin
 	glDisable( GL_BLEND );
 end;
 
-Procedure DrawEncounter( M: GearPtr );
+Procedure DrawEncounter( M: GearPtr; Foot: GLFloat );
 	{ Draw an encounter or "sensor blip" on the map. }
 var
 	T: Integer;
@@ -1089,6 +1089,7 @@ var
 begin
 	Flash := FineDir[ ( Animation_Phase ) mod Num_Rotation_Angles , 1 ] / 10;
 	glMatrixMode( GL_MODELVIEW );
+	if Foot < 0 then Foot := 0;
 
 	if M^.Stat[ STAT_EncounterType ] = ENCOUNTER_Defense then begin
 		R := 0.3;
@@ -1111,16 +1112,16 @@ begin
 
 		glBegin( GL_QUADS );
 		GLColor3F( R * 0.7 + Flash , G * 0.7 + Flash , B * 0.7 + Flash );
-		glVertex3f( 0.0 , 0.0 , 0.0 );
+		glVertex3f( 0.0 , 0.0 + Foot , 0.0 );
 
 		GLColor3F( R * 0.8 + Flash , G * 0.8 + Flash , B * 0.8 + Flash );
-		glVertex3f( 0.5 , 0.25 , 0.0 );
+		glVertex3f( 0.5 , 0.25 + Foot , 0.0 );
 
 		GLColor3F( R + Flash , G + Flash , B + Flash );
-		glVertex3f( 0.0 , 0.5 , 0.0 );
+		glVertex3f( 0.0 , 0.5 + Foot , 0.0 );
 
 		GLColor3F( R * 0.8 + Flash , G * 0.8 + Flash , B * 0.8 + Flash );
-		glVertex3f( -0.5 , 0.25 , 0.0 );
+		glVertex3f( -0.5 , 0.25 + Foot , 0.0 );
 
 		glEnd;
 		glPopMatrix;
@@ -1696,7 +1697,7 @@ begin
 							glDisable( GL_Lighting );
 							glDisable( GL_Light1 );
 							end;
-				GS_MetaEncounter:	DrawEncounter( M );
+				GS_MetaEncounter:	DrawEncounter( M , Z/2 );
 				GS_MetaCloud,GS_MetaFire:		{ Do Nothing };
 				else DrawModel( SensibleTexID( SpriteName( M ) , '' , NAttValue( M^.NA , NAG_Display , NAS_PrimaryFrame ) ) ,
 						1.0,	{ width }

@@ -63,6 +63,7 @@
 	ALERT [msg number]	Display a text message the PC won't ignore
 	ALTERCONTEXT [changes label]	Will alter the story context by the string provided
 	ALTERCOREMISSIONNTEXT [changes label]	Will alter the core mission context [ARENA MODE]
+	ANNOUNCE [tag] [num]	Display an announcement after this conversation or event
 	ARENAREP [change]	Changes the arena team reputation by a set amount [ARENA MODE ONLY]
 	ATTACK [Team1] [Team2]	Team1 will attack Team2
 	BLOCK			Erase trigger, prevent further events
@@ -81,6 +82,7 @@
 	EMAIL [idnum]		Store message for PC in source gear
 	ENDCHAT			Delete all items from interact menu
 	ENDPLOT			Delete the current plot
+	EndPlotsByConID [Controller ID]	Delete all plots associated with a given Controller ID
 	ENDSTORY		Delete source story, pass CLEANUP to plots
 	EXIT [code]		Leave current scene with exit code
 	EXPRESSDELIVERY		Have shopkeeper ship mecha from another town

@@ -836,7 +836,7 @@ Content
 		%% raiders may be followed back to their base instead of being fought.
 		%% V1 = Timer; will only attack once every 3 hours
 		update <if= PlotStatus %plotid% %id% else GoHide ifG ComTime V1 else GoHide SetStat STAT_MetaVisibility 0  Goto GoSetOrders>
-		use <ifG StatVal STAT_MetaVisibility -1    ifUStealth SkillTar StoryDL else GoAutoAttack   ifYesNo 1 2 3 else GoAutoAttack Goto GoTrack>
+		use <ifG StatVal STAT_MetaVisibility -1    ifUStealth 5 else GoAutoAttack   ifYesNo 1 2 3 else GoAutoAttack Goto GoTrack>
 		attack <ifG StatVal STAT_MetaVisibility -1  ifG PCScale 0    ifUStealth SkillTar StoryDL else GoAutoAttack ifYesNo 1 2 3 else GoAutoAttack Goto GoTrack>
 		GoAutoAttack <V= 1 ComTime V+ 1 10800   Alert -2 Exit Destination>
 		GoTrack <Alert 4 PMemo %id% 5 History 5 XPV 100 &%id%_RevealEncounter Exit %1% SeekGate %2%>
@@ -1099,7 +1099,7 @@ Content
 		%% raiders may be followed back to their base instead of being fought.
 		%% V1 = Timer; will only attack once every 3 hours
 		update <if= PlotStatus %plotid% %id% else GoHide ifG ComTime V1 else GoHide SetStat STAT_MetaVisibility 0  Goto GoSetOrders>
-		use <ifG StatVal STAT_MetaVisibility -1    ifUStealth SkillTar StoryDL else GoAutoAttack   ifYesNo 1 2 3 else GoAutoAttack Goto GoTrack>
+		use <ifG StatVal STAT_MetaVisibility -1    ifUStealth 5 else GoAutoAttack   ifYesNo 1 2 3 else GoAutoAttack Goto GoTrack>
 		attack <ifG StatVal STAT_MetaVisibility -1  ifG PCScale 0    ifUStealth SkillTar StoryDL else GoAutoAttack ifYesNo 1 2 3 else GoAutoAttack Goto GoTrack>
 		GoAutoAttack <V= 1 ComTime V+ 1 10800   Alert -2 Exit Destination>
 		GoTrack <Alert 4 PMemo %id% 5 History 5 XPV 100 &%id%_RevealEncounter Exit %1% SeekGate %2%>
@@ -1482,7 +1482,7 @@ Content
 		%% raiders may be followed back to their base instead of being fought.
 		%% V1 = Timer; will only attack once every 3 hours
 		update <if= PlotStatus %plotid% %id% else GoHide ifG ComTime V1 else GoHide SetStat STAT_MetaVisibility 0  Goto GoSetOrders>
-		use <ifG StatVal STAT_MetaVisibility -1    ifUStealth SkillTar StoryDL else GoAutoAttack   ifYesNo 1 2 3 else GoAutoAttack Goto GoTrack>
+		use <ifG StatVal STAT_MetaVisibility -1    ifUStealth 5 else GoAutoAttack   ifYesNo 1 2 3 else GoAutoAttack Goto GoTrack>
 		attack <ifG StatVal STAT_MetaVisibility -1  ifG PCScale 0    ifUStealth SkillTar StoryDL else GoAutoAttack ifYesNo 1 2 3 else GoAutoAttack Goto GoTrack>
 		GoAutoAttack <V= 1 ComTime V+ 1 10800   Alert -2 Exit Destination>
 		GoTrack <Alert 4 PMemo %id% 5 History 5 XPV 100 &%id%_RevealEncounter Exit %1% SeekGate %2%>

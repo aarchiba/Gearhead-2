@@ -3213,6 +3213,35 @@ begin
 	end;
 end;
 
+Procedure ProcessEndPlotsByConID( var Event: String; GB: GameBoardPtr; Source: GearPtr );
+	{ End all plots associated with the requested mood. }
+var
+	CID: LongInt;
+	Adv,Plot: GearPtr;
+begin
+	{ Determine the ControllerID. }
+	CID := ScriptValue( Event , GB , Source );
+
+	{ Locate the adventure. }
+	Adv := GG_LocateAdventure( GB , Source );
+
+	{ If we have a valid ADV, attempt to end the attached plots. }
+	if ( Adv <> Nil ) then begin
+		Plot := Adv^.InvCom;
+
+		while Plot <> Nil do begin
+			if ( Plot^.G = GG_Plot ) and ( NAttValue( Plot^.NA , NAG_Narrative , NAS_PlotID ) > 0 ) and ( NAttValue( Plot^.NA , NAG_Narrative , NAS_ControllerID ) = CID ) then begin
+				EndPlot( GB , Adv , Plot );
+			end;
+
+			Plot := Plot^.Next;
+		end;
+
+		{ Finally, set an UPDATE trigger. }
+		SetTrigger( GB , 'UPDATE' );
+	end;
+end;
+
 Procedure CleanUpStoryPlots( GB: GameBoardPtr; Story: GearPtr );
 	{ Give a CLEANUP trigger to all the story plots, then move the }
 	{ plots which survive to the adventure invcoms. }
@@ -4214,6 +4243,21 @@ begin
 	end;
 end;
 
+Procedure ProcessAnnounce( var Event: String; GB: GameBoardPtr; Source: GearPtr );
+	{ The PC has done something special; show an announcement. }
+var
+	tag: String;
+	N: LongInt;
+begin
+	{ Find out which message to display. }
+	tag := ExtractWord( Event );
+	N := ScriptValue( Event , GB , Source );
+
+	if GB <> Nil then begin
+		StoreSAtt( GB^.Trig , '!ANNOUNCE ' + tag + BStr( N ) );
+	end;
+end;
+
 Procedure ProcessTrigger( var Event: String; GB: GameBoardPtr; Source: GearPtr );
 	{ A new trigger will be placed in the trigger queue. }
 var
@@ -4794,6 +4838,7 @@ begin
 		else if cmd = 'EXPRESSDELIVERY' then ProcessExpressDelivery( Event , GB , Source )
 		else if cmd = 'SHUTTLE' then ProcessShuttle( Event , GB , Source )
 		else if cmd = 'ENDPLOT' then ProcessEndPlot( Event , GB , Source )
+		else if cmd = 'ENDPLOTSBYCONID' then ProcessEndPlotsByConID( Event , GB , Source )
 		else if cmd = 'ENDSTORY' then ProcessEndStory( GB , Source )
 		else if cmd = 'PURGESTORY' then ProcessPurgeStory( GB , Source )
 		else if cmd = 'TREPUTATION' then ProcessTReputation( Event , GB , Source )
@@ -4816,6 +4861,7 @@ begin
 		else if cmd = 'GRUNAWAY' then ProcessGRunAway( Event , GB , Source )
 		else if cmd = 'AIRRAIDSIREN' then ProcessAirRaidSiren( GB )
 		else if cmd = 'FORCECHAT' then ProcessForceChat( Event , GB , Source )
+		else if cmd = 'ANNOUNCE' then ProcessAnnounce( Event , GB , Source )
 		else if cmd = 'TIME' then ProcessTime( Event , GB , Source )
 		else if cmd = 'TRANSFORM' then ProcessTransform( Event , GB , Source )
 		else if cmd = 'SEEKGATE' then ProcessSeekGate( Event , GB , Source )
@@ -5489,7 +5535,7 @@ Procedure HandleTriggers( GB: GameBoardPtr );
 	{ found. Deallocate the triggers as they are processed. }
 var
 	TList,TP: SAttPtr;	{ Trigger List , Trigger Pointer }
-	E: String;
+	E,msg: String;
 	City: GearPtr;
 begin
 	IntMenu := Nil;
@@ -5521,6 +5567,9 @@ begin
 
 					if E = 'TALK' then begin
 						ForceInteract( GB , ExtractValue( TP^.Info ) );
+					end else if E = 'ANNOUNCE' then begin
+						msg := msgString( TP^.Info );
+						if msg <> '' then YesNoMenu( GB , msg , '' , '' );
 					end;
 
 					{ Clear this trigger. }

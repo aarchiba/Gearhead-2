@@ -1,4 +1,13 @@
 % ArenaScript Value Macros
+V <GrabSource        GNAtt NAG_ScriptVar ?>
+L <GrabCurrentScene  GNAtt NAG_ScriptVar ?>
+G <GrabAdventure     GNAtt NAG_ScriptVar ?>
+P <GrabPlot          GNAtt NAG_ScriptVar ?>
+E <GrabPlot          GNAtt NAG_ElementID ?>
+S <GrabStory         GNAtt NAG_ScriptVar ?>
+N <GrabStory         GNAtt NAG_ElementID ?>
+M <GrabCurrentScene  GNAtt NAG_ElementID ?>
+MoodE <GrabController ControllerID  GNAtt NAG_ElementID ?>
 ControllerID <GrabPlot GNAtt NAG_Narrative NAS_ControllerID>
 RandomTheme <d12>	% returns a random mecha theme
 PartyScore <GrabCurrentScene GNAtt NAG_Narrative NAS_PartyPoints>
@@ -95,14 +104,6 @@ ChatNPCRep <GrabChatNPC GNAtt NAG_CharDescription - ?>
 ChatNPCRenown <GrabChatNPC GNAtt NAG_CharDescription -6>
 ChatNPCID <GrabChatNPC GNAtt NAG_Personal NAS_CID>
 DesigNPCID <GrabDesig ? GNAtt NAG_Personal NAS_CID>
-V <GrabSource        GNAtt NAG_ScriptVar ?>
-L <GrabCurrentScene  GNAtt NAG_ScriptVar ?>
-G <GrabAdventure     GNAtt NAG_ScriptVar ?>
-P <GrabPlot          GNAtt NAG_ScriptVar ?>
-E <GrabPlot          GNAtt NAG_ElementID ?>
-S <GrabStory         GNAtt NAG_ScriptVar ?>
-N <GrabStory         GNAtt NAG_ElementID ?>
-M <GrabCurrentScene  GNAtt NAG_ElementID ?>
 PayRate <GrabPlot    GNAtt 20 1>
 QuestStatus <GrabAdventure GNatt NAG_PlotStatus ?>
 PlotStatus <GrabAdventure GNAtt NAG_PlotStatus ?>

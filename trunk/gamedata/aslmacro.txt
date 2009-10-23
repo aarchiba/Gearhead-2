@@ -80,6 +80,7 @@ KILLPC <GrabPC GAddNAtt 12 0 9999 Trigger0 NU1>
 DELETEITEM <GrabItem ?  DeleteGG>
 KILLMOOD <GrabItem ?  DeleteGG>
 KILLPLOTMOOD <GrabController ControllerID DeleteGG>
+ANNIHILATEPLOTMOOD <GrabController ControllerID DeleteGG EndPlotsByConID ControllerID>
 SetMoodTimeLimit <GrabItem ? GSetNAtt -23 1 ComTime GAddNAtt -23 1 ?>
 DeleteSelf <GrabSource DeleteGG>
 MOVENPC <GrabNPC ?  MoveGG ?>
@@ -333,5 +334,7 @@ Monologue <GrabNPC ? GMonologue ?>
 TeamMonologue <GrabLocal ?Pilot ? GMonologue ?>
 PCMonologue <GrabPCPilot GMonologue ?>
 ClearEncounterRecharge <GrabCurrentScene GSetNAtt 21 6 0>
+GiveMeritBadge <GrabAdventure GSetNAtt NAG_MeritBadge ? 1 Announce ABadge !>
+SilentMeritBadge <GrabAdventure GSetNAtt NAG_MeritBadge ? 1>
 SetPayRate <GrabPlot GSetNAtt 20 1 ?>
-GiveMeritBadge <GrabAdventure GSetNAtt NAG_MeritBadge ?>
+

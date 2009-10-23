@@ -40,24 +40,34 @@ Content
 	Place5 <1>
 
 	% P%id%01 = Email Timer
+	% P%id%02 = Part 3 timer; after SP2 complete, wait a while before starting SP3
 
 	update <if= PlotStatus %plotid1% 0 SetPlotStatus %plotid1% %id1%>
-	pumpnews <if= PlotStatus %plotid2% 0 ifG PCRenown 25 SetPlotStatus %plotid2% %id2% email %id%01 P= %id%01 ComTime P+ %id%01 86400>
+	pumpnews <if= PlotStatus %plotid2% 0 else GoCheckSP3 ifG PCRenown 24 SetPlotStatus %plotid2% %id2% email %id%01 P= %id%01 ComTime P+ %id%01 86400>
+	GoCheckSP3 <if= PlotStatus %plotid3% 0  ifSubPlotOver %plotid2%  ifG PCRenown 49  P+ %id%02 1  ifG P%id%02 d6  SetPlotStatus %plotid3% %id3% email %id%02 P= %id%01 ComTime P+ %id%01 86400>
 	% At the ending, clear the emails as appropriate
 	end <ifG ComTime P%id%01 email 0>
 
 	Msg%id%01 <Admin@CavClub:// Congratulations, you have earned access to the VIP room at the Cavalier's Club. Enjoy our hospitality the next time you're in \SCENE PCHomeTown .>
+	Msg%id%02 <%name2%@ \SCENE PCHomeTown :// I've tried doing this the nice way, now it's time to get serious. Your stupid Cavalier's Club is off-limits. Anyone who tries to open it back up again is gonna have to answer to me.>
 
 	% SubPlot1 is the first lancemate
 	% SubPlot2 is the LM2 badge
+	% SubPlot3 is the LM3 badge
 	SubPlot1 <*:Q_LS_Task1 #10 1 2>
 	SubPlot2 <*:Q_LS_Task2 #40 1 2 4>
+	SubPlot3 <*:Q_LS_Task3 #65 1 2 4>
 
 	sub
 		Persona 3
-		*greeting <*NiceToMeetYou GoMainMenu>
+		*greeting <*NiceToMeetYou GoCheckWin3>
+		% V1 = Have given final quest
+		GoCheckWin3 <if= V1 0 else GoCheckOver3 ifSubPlotWon %plotid3% else GoCheckOver3 ifSubPlotWon %plotid2% else GoCheckOver3 ifSubPlotWon %plotid1% else GoCheckOver3 ifG PCRenown 80 else GoTeaser >
+		GoTeaser <NewChat Say 9>
+		GoCheckOver3 <ifSubPlotOver %plotid3% else GoMainMenu NewChat Say 8>
 		GoMainMenu <NewChat Say 1 AddChat 1 AddChat 2 AddChat 3 AddChat 4>
-		GoMission <NewChat AddChat 3 AddChat 4 AddChat 5 Goto GoCheckWin2>
+		GoMission <NewChat AddChat 3 AddChat 4 AddChat 5 Goto GoCheckPro3>
+		GoCheckPro3 <if= PlotStatus %plotid3% %id3% else GoCheckWin2 Say 7>
 		GoCheckWin2 <ifSubPlotOver %plotid2% else GoCheckPro2 Say 5>
 		GoCheckPro2 <if= PlotStatus %plotid2% %id2% else GoCheckWin1 Say 6>
 		GoCheckWin1 <ifSubPlotOver %plotid1% else GoCheckPro1 Say 2>
@@ -86,6 +96,9 @@ Content
 		Msg4 <There's nothing else I can teach you.>
 		Msg5 <%name2% is gone for now, but \SPR %2% 's sure to be back. Train hard so you're ready when that happens.>
 		Msg6 <I've heard that the management of this place is having some problems with a troublemaking cavalier. What we need is for someone to demonstrate a bit of leadership and set things right.>
+		Msg7 <Go deal with %name2%... Since \SPR %2% 's been acting up I've lost my favorite hangout!>
+		Msg8 <There's nothing else for me to teach you, \PC . You've become a master cavalier.>
+		Msg9 <You've done well in defeating %name2%, \PC , but even greater challenges lie before you. Come back after you've gained even more experience and I'll let you in on a little secret.>
 		Prompt1 <How can I become a great cavalier?>
 		CPrompt1 <if= V1 0 Accept>
 		Prompt2 <Do you have any more advice?>
@@ -150,6 +163,63 @@ Content
 	end
 
 %%
+%%  *:Q_LS_Task3
+%%
+%% It's time for the final confrontation with the series villain. Things get
+%% started when the PC enters the Cavalier's Club and finds it deserted. After
+%% that, activate a MISCHIEF mood and let the PC discover the NPC's secret
+%% base.
+%%
+%%  PARAM1: The Cavalier's Club
+%%  PARAM2: The series villain
+%%  PARAM3: The VIP Room
+%%
+
+Content
+	name <Mischief Master>
+	desc <The villain is bullying the younger cavaliers. Time to set things right one last time.>
+	requires <*:Q_LS_Task3>
+
+	% E1 is the Cavalier's Club
+	% E2 is the series villain, who may very well get defeated this time around
+	% E3 is the VIP Lounge
+	% E4 is an outdoors scene
+	% E5 is E2's private club
+	% E6 is the MischiefMaker mood
+	Element4 <Scene Outdoors>
+	Element5 <QuestScene>
+	Place5 <4>
+	Element6 <Prefab>
+
+	% P%id%01 = Have entered CavClub first time/deployed mood
+
+	% The mood gets deployed the first time the PC enters the CavClub or
+	% the VIP Room after quest activation. While this plot is active, both
+	% buildings will be empty.
+	start <if= SceneID %1% else .%id%_GoCheckVIP  Goto .%id%_GoEmptyRoom>
+	.%id%_GoCheckVIP <if= SceneID %3%             Goto .%id%_GoEmptyRoom>
+	.%id%_GoEmptyRoom <Retreat 2 Retreat 3 if= P%id%01 0 P= %id%01 1 Alert %id%01 Alert %id%02 QMemo %plotid% %id%03 SetMood %6% %4% NPCLevel %4% %threat%>
+
+	Msg%id%01 <The Cavalier's Club is deserted. You see a note prominently tacked to the message board.>
+	Msg%id%02 <Anyone who sets foot in the Cavalier's Club is gonna have to defeat my challenge. THIS GOES FOR THE SHOPKEEPERS AND CLEANING STAFF AS WELL. Keep out or suffer the consequences. -%name2%>
+	Msg%id%03 <%name2% scared everybody away from the Cavalier's Club.>
+
+	sub
+		MetaScene 5
+		name <%name2%'s Private Club>
+
+	end
+	inv
+		Mood 1
+		name <%name2%'s Mischief>
+		plot_type <*Mischief>
+		Element1 <Grab 4>
+		Element2 <Grab 5>
+		Element3 <Grab 2>
+	end
+
+
+%%
 %%  *:Q_LS_Task2
 %%
 %% In this subquest, the PC has a first encounter with the series villain, and must act to
@@ -182,8 +252,8 @@ Content
 	start <if= P%id%01 0 if= SceneID %3% P= %id%01 1 Alert %id%01 Monologue %4% %id%02 Monologue %2% %id%03 Print %id%04>
 
 	Msg%id%01 <As you enter the VIP Room, you see two people arguing.>
-	Msg%id%02 <You don't own this place yet! Just think of all the young'uns who rely on this us... Give me a bit more time, I promise I can match your asking price.>
-	Msg%id%03 <This is your last chance, %name4%. When you fail I'll tear down this building and replace it with a bargain store.>
+	Msg%id%02 <I just need a little more time! Think of all the young'uns who rely on this place... I promise we can get the money for you soon.>
+	Msg%id%03 <This is your final chance, %name4%. When you fail I'll tear down this building and replace it with a bargain store.>
 	Msg%id%04 <%name2% leaves the area.>
 
 	% SubPlot1 is the FindMoney task.
@@ -197,7 +267,7 @@ Content
 		*GoFirstTime <*INeedYourHelp GoListen GoRefuse>
 		GoListen <NewChat Say 2 AddChat 4 AddChat 5 QMemo %plotid% 4 SetPlotStatus %plotid1% %id1%>
 		GoRefuse <NewChat Say 3 AddSociable -d10 LoseSubPlot %plotid%>
-		GoWinQuest <WinSubPlot %plotid%  History 7  AddReact d30  AddHeroic 1  ifMeritBadge NAS_MB_Lancemate2 else GoBasicPrize NewChat Say 6  CustomMecha .meks %threat%  GiveMeritBadge NAS_MB_Lancemate2>
+		GoWinQuest <WinSubPlot %plotid%  History 7  AddReact d30  AddHeroic 1  ifMeritBadge NAS_MB_Lancemate2 else GoBasicPrize NewChat Say 6  CustomMecha .meks %threat%  SilentMeritBadge NAS_MB_Lancemate2>
 		.meks <GENERAL PDASS \FACTION_DESIG RootSceneFac>
 		GoBasicPrize <NewChat Say 8    GiveMeritBadge NAS_MB_Lancemate2>
 		result1 <NewChat Say 5 AddCHat 2 AddCHat 6 AddCHat 7>
@@ -208,21 +278,21 @@ Content
 		result6 <Cash+ -5000000  PCAlly %4%  AddHeroic 1  Goto GoWinQuest>
 		result7 <NewChat Say 11 AddSociable -d10 LoseSubPlot %plotid%>
 		Msg1 <If we can't get the money for %name2%, the Cavalier Club will have to close down.>
-		Msg2 <%name2%'s father used to be one of the owners of this place. When he died, %name2% inherited a controlling share, and now \spr %2% 's trying to force the rest of us out. I want to buy \PPR %2% shares but they don't come cheap.>
+		Msg2 <%name2% inherited a controlling share of the Cavalier's Club, and has threatened to shut us down unless we buy his stock at ridiculously inflated prices.>
 		Msg3 <Yeah, well, I'm sure the rest of us can sort this out on our own, then.>
 		Msg4 <%name4% needs a lot of money to save the Cavalier's Club from %name2%.>
 		Msg5 <It's going to take at least five million. I really don't know where we can find it...>
 		Msg6 <Wonderful! The Cavalier's Club has been saved! For your help I'd like you to have this custom mecha, and know that you will always be welcome here.>
 		Msg7 <You saved the Cavalier's Club from %name2%.>
 		Msg8 <Wonderful! The Cavalier's Club has been saved! You know, I bet the other pilots will be eager to join in your adventure after they learn what you did.>
-		Msg9 <%name2% and \PPR %2% father fought constantly while he was alive; I suspect that destroying the Cavalier's Club is just an extension of that.>
+		Msg9 <You're right, someone should. I'm doing the best I can but so far it hasn't been enough.>
 		Msg10 <If you could find a sponsor that'd be great. I know that the other cavaliers around here would appreciate it as well.>
 		Msg11 <Well, if you think there's nothing more you can do, don't bother worrying about it. I'm sure that me and the others here will be able to fix things.>
 		Prompt1 <How much money do you need, again?>
 		Prompt2 <I've found someone to help.>
 		CPrompt2 <ifSubPlotWon %plotid1% Accept>
 		Prompt3 <Yeah, I'll let you know if I find anything.>
-		Prompt4 <Why is %name2% being such an ass?>
+		Prompt4 <Someone ought to do something about that.>
 		Prompt5 <Yeah, yeah, I'll see what I can do.>
 		Prompt6 <No problem. I can do that myself. [Give $5M]>
 		CPrompt6 <ifG PC$ 5000000 Accept>
@@ -375,7 +445,7 @@ Content
 		result15 <Goto GoBargain>
 		Msg1 <...>
 		Msg2 <Look, I didn't want to steal this %name5%, but %name2% ordered me to and I couldn't exactly say no.>
-		Msg3 <You don't know %name2%? You don't want to know... Trust me, bad things happen to people who get too close to %name2%.>
+		Msg3 <You don't know %name2%? You don't want to know... I don't even want to know. %name2% is bad news.>
 		Msg4 <Really? Wow, I was worried there for a bit... I thought %name3% sent a cavalier after me. Here, you can bring this to \OPR %2% .>
 		Msg5 <What kind of deal are you talking about?>
 		Msg6 <You make a compelling argument. Alright, here you go... but if anybody asks, you had to beat me up to get it, okay?>

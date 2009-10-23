@@ -7,6 +7,48 @@
 %%
 
 Content
+	name <Local Bully>
+	requires <*:Q_DSideStory>
+	desc <A local bully is making mischief. Track them down and put a stop to it.>
+
+	% E1 is an outdoors scene for the hideout.
+	% E2 is the bully's hideout.
+	% E3 is the bully.
+	% E4 is the Mischief mood.
+	Element1 <Scene Outdoors>
+	Element2 <QuestScene>
+	Place2 <1>
+	Element3 <NewNPC 0 2 Criminal>
+	Place3 <2 (Bully)>
+	Element4 <Prefab>
+
+	% P%id%01 = Initialization Counter
+	update <if= P%id%01 0 P= %id%01 1 SetMood %4% %1%>
+
+	sub
+		STC QS_Workshop
+		name <%name3%'s Hideout>
+		SetID 2
+		entrance <*QUEST-INACTIVE>
+
+		Persona 3
+		greeting <NewChat Say 1 AddChat 1>
+		result1 <NewChat Say 2 WinSubPlot %plotid%>
+		Msg1 <You found me!>
+		Msg2 <Alright, as you ask.>
+		Prompt1 <End this silly quest now.>
+	end
+	inv
+		Mood 1
+		name <Mischief-Making Bully>
+		plot_type <*Mischief>
+		Element1 <Grab 1>
+		Element2 <Grab 2>
+		Element3 <Grab 3>
+		Msg_1 <%name3%'s up to no good, that's for sure.>
+	end
+
+Content
 	name <Student Loans>
 	requires <*:Q_SideStory ~Research ~Poor -Dystopia>
 	desc <A grad student needs help paying for tuition. We all know how expensive education is in the GH universe.>
