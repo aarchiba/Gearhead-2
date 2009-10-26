@@ -563,8 +563,8 @@ statline 23 25 12 17 8 12 10 4
 RangedCombat 7
 CloseCombat 4
 Dodge 7
-Initiative 3
-Vitality 5
+Initiative 6
+Vitality 8
 sub
 arm
 armor 6
@@ -572,8 +572,8 @@ sub
 	BeamGun 6
 	name <Bio-Plasma>
 	range 10
-	BV 3
-	type <SCATTER>
+	BV 2
+	type <SCATTER BRUTAL>
 end
 arm
 armor 6
@@ -581,8 +581,8 @@ sub
 	BeamGun 6
 	name <Bio-Plasma>
 	range 10
-	BV 3
-	type <SCATTER>
+	BV 2
+	type <SCATTER BRUTAL>
 end
 torso
 armor 5
@@ -591,6 +591,7 @@ sub
 	name <Multi-Blaster>
 	range 5
 	BV 5
+	type <ARMORPIERCING>
 
 	Melee 9
 	name <Extendable Jaws>

@@ -29,14 +29,12 @@ Scene
 
 	% Load the hometown quests.
 	Quest1 <*:Q_LeadershipSeries>
+	Quest2 <*:Q_FREEMECHA 5>
 
 	% Load the debug quests. For testing purposes, set difficulcy to 1.
 	Quest7 <*:Q_DEBUG 1>
-	Quest8 <*:Q_DEBUGARENA 35>
+	Quest8 <*:Q_DEBUGARENA 1>
 	Quest9 <*:Q_DEBUGGIVEMISSION 1>
-
-	% The FreeMecha quest has a difficulcy rating of 5.
-	Quest4 <*:Q_FREEMECHA #5>
 
 	sub
 		Team 1

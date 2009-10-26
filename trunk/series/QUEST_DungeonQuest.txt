@@ -227,6 +227,90 @@ Content
 	end
 
 %%
+%% *:Q_DungeonTreasure
+%%
+%% Loads a hopefully unique treasure for this dungeon.
+%%
+%% Set label to *:Q_DDungeonQuest for debuging.
+%%
+%%
+%%  PARAM1: The dungeon involved
+%%
+
+Content
+	name <Custom Mecha>
+	requires <*:Q_DungeonTreasure>
+
+	% E1 is the dungeon level
+	% E2 is the entrance to the treasure room
+	% E3 is the treasure room itself
+	Element2 <Prefab>
+	Place2 <1>
+	Element3 <QuestScene>
+	Place3 <1>
+
+	sub
+		MetaScene 2
+		sub
+			room
+			minimap <......###..#1#...........>
+			desig <HOME>
+		end
+
+		MetaScene 3
+		name <# Mecha Bay>
+		type <Industrial Ruin>
+		mapwidth 17
+		mapheight 12
+		BoxMap
+		IndustrialTiles
+		Ceiling
+		special <NOEXIT>
+		start <Print 1>
+		Msg1 <You discover an abandoned mecha bay.>
+		NeededCells 4
+		content1 <Some 1 90 *DUNGEON_THREAT na>
+		content2 <Fill Sub *DUNGEON_REWARD na>
+		sub
+			team 1
+
+			team 2
+			name <Enemies>
+			SetEnemy 1
+
+			room
+			minimap <.......##...1#...##......>
+			inv
+				Elevator
+				name <Exit>
+				MiniMapComponent 1
+				Destination -1
+			end
+
+			room
+			minimap <......###..##1..###......>
+			inv
+				Elevator
+				MiniMapComponent 1
+				name <Mecha Bay>
+				% V1 = Have obtained mecha
+				use <if= V1 0 else GoBeenBefore ifYesNo 1 2 3 V= 1 1 MechaPrize .mektype %threat% RandomTheme 10 XPV 100>
+				.mektype <GENERAL \FACTION_DESIG RootSceneFac>
+				GoBeenBefore <Print 4>
+				Msg1 <You find a mecha that someone left behind. It appears to be in working order.>
+				Msg2 <Open external bay doors.>
+				Msg3 <Leave the mecha where it is.>
+				Msg4 <There's nothing left here now.>
+			end
+		end
+	end
+	inv
+		Elevator
+		desig <ENTRANCE %3%>
+	end
+
+
+%%
 %% *:Debug Frame
 %%
 %% Loads a dungeon quest into the Cavalier's Club for easy debugging.

@@ -109,6 +109,7 @@ IFNPCFEMALE <if= NPCGender ? 1>
 IFPCOK <GrabPCPilot IfGOK>
 ifNPCinPlay <GrabNPC ?  IfGInPlay>
 ifChatNPCinPlay <GrabChatNPC  IfGInPlay>
+ifChatNPCisCombatant <GrabChatNPC if# GNatt NAG_CharDescription NAS_IsCombatant 0>
 IFM <GrabLocal ? IFGInPlay>
 IFITEMOK <GrabItem ? IfGOK>
 IFItemDESTROYED <GrabItem ? ifGDead>

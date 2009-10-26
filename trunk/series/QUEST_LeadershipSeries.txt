@@ -28,7 +28,7 @@ Content
 	% Element2 is the quest villain, to be kept frozen until needed.
 	% Element3 is the veteran in the CavClub, who gives advice and maybe a reward.
 	% Element4 is the VIP Room, which is needed in tasks 2 and 3
-	% Element5 is the entrance
+	% Element5 is the entrance (of the VIP Room)
 	Element1 <Scene cavclub>
 	Element2 <NewNPC 0 1 villainous>
 	Place2 </>
@@ -54,15 +54,17 @@ Content
 	% SubPlot1 is the first lancemate
 	% SubPlot2 is the LM2 badge
 	% SubPlot3 is the LM3 badge
+	% SubPlot4 is the ultimate dungeon
 	SubPlot1 <*:Q_LS_Task1 #10 1 2>
 	SubPlot2 <*:Q_LS_Task2 #40 1 2 4>
 	SubPlot3 <*:Q_LS_Task3 #65 1 2 4>
+	SubPlot4 <*Q_LS_Ultima #100 3>
 
 	sub
 		Persona 3
 		*greeting <*NiceToMeetYou GoCheckWin3>
 		% V1 = Have given final quest
-		GoCheckWin3 <if= V1 0 else GoCheckOver3 ifSubPlotWon %plotid3% else GoCheckOver3 ifSubPlotWon %plotid2% else GoCheckOver3 ifSubPlotWon %plotid1% else GoCheckOver3 ifG PCRenown 80 else GoTeaser >
+		GoCheckWin3 <if= V1 0 else GoCheckOver3 ifSubPlotWon %plotid3% else GoCheckOver3 ifSubPlotWon %plotid2% else GoCheckOver3 ifSubPlotWon %plotid1% else GoCheckOver3 ifG PCRenown 80 else GoTeaser NewChat Say 10 AddCHat 6>
 		GoTeaser <NewChat Say 9>
 		GoCheckOver3 <ifSubPlotOver %plotid3% else GoMainMenu NewChat Say 8>
 		GoMainMenu <NewChat Say 1 AddChat 1 AddChat 2 AddChat 3 AddChat 4>
@@ -78,6 +80,7 @@ Content
 		*result3 <*MENTOR_WhatDoFirst 1 2 4>
 		*result4 <*MENTOR_WhatEquipment 1 2 3>
 		*result5 <*GoodBye>
+		result6 <V= 1 1 Goto .%id4%_GoInit>
 		Msg1 <I've been a mecha pilot for a long time. If you've got any questions about adventuring, I'll do my best to answer.>
 		Msg1_1 <>
 		CMsg1_1 <ifNPCSociable Accept>
@@ -99,6 +102,7 @@ Content
 		Msg7 <Go deal with %name2%... Since \SPR %2% 's been acting up I've lost my favorite hangout!>
 		Msg8 <There's nothing else for me to teach you, \PC . You've become a master cavalier.>
 		Msg9 <You've done well in defeating %name2%, \PC , but even greater challenges lie before you. Come back after you've gained even more experience and I'll let you in on a little secret.>
+		Msg10 <You've grown a lot since the first time I saw you here, \PC , but if you're in the mood for a real challenge I've got something that might be difficult even for you.>
 		Prompt1 <How can I become a great cavalier?>
 		CPrompt1 <if= V1 0 Accept>
 		Prompt2 <Do you have any more advice?>
@@ -106,6 +110,7 @@ Content
 		Prompt3 <What should I do first?>
 		Prompt4 <What do I need?>
 		Prompt5 <That's all the advice I need for now, thanks.>
+		Prompt6 <A challenge? Tell me more.>
 
 		MetaScene 4
 		name <the VIP Room>
@@ -163,6 +168,170 @@ Content
 	end
 
 %%
+%%  *Q_LS_Ultima
+%%
+%% The PC has completed the Leadership Series; time for the ultimate dungeon.
+%%
+%%  PARAM1: The veteran pilot from the Cavalier's Club
+%%
+
+Content
+	name <Ultimate Asteroid Mine>
+	requires <*Q_LS_Ultima>
+
+	% E1 is the veteran
+	% E2 is an outdoors scene in which to place the dungeon
+	% E3 is the dungeon itself
+	Element2 <Scene Outdoors Asteroid>
+	Element3 <QuestScene>
+	Place3 <2>
+
+	start <if= SceneID %3% Alert %id%01 History %id%02 XPV 200 WinSubPlot %plotid%>
+	Msg%id%01 <You have reached the final level of %name3%.>
+	Msg%id%02 <You reached the pentultimate level of %name3%.>
+
+	% SubQuest1 is a DungeonTreasure.
+	SubPlot1 <*:Q_DungeonTreasure 3>
+
+	sub
+		Persona 1
+		.%id%_GoInit <NewChat Say %id%01 History %id%02 SetEncounterActive %3%>
+		Msg%id%01 <%name3% wasn't shut down, exactly- it had to be abandoned because of all the shroom-beasts. People say there's loads of valuable stuff down there, but no-one has ever returned from its lower depths alive.>
+		Msg%id%02 <%name1% told you about %name3% in %name2%.>
+
+		STC QS_Dungeon_AsteroidMine
+		SetID 3
+		entrance <*QUEST-INACTIVE>
+		MapWidth 40
+		MapHeight 40
+	end
+
+Content
+	name <Ultimate Asteroid Cave>
+	requires <*Q_LS_Ultima>
+
+	% E1 is the veteran
+	% E2 is an outdoors scene in which to place the dungeon
+	% E3 is the dungeon itself
+	Element2 <Scene Outdoors Space>
+	Element3 <QuestScene>
+	Place3 <2>
+
+	start <if= SceneID %3% Alert %id%01 History %id%02 XPV 200 WinSubPlot %plotid%>
+	Msg%id%01 <You have reached the final level of %name3%.>
+	Msg%id%02 <You reached the pentultimate level of %name3%.>
+
+	% SubQuest1 is a DungeonTreasure.
+	SubPlot1 <*:Q_DungeonTreasure 3>
+
+	sub
+		Persona 1
+		.%id%_GoInit <NewChat Say %id%01 History %id%02 SetEncounterActive %3%>
+		Msg%id%01 <According to legend %name3% used to be a haven for space pirates. People say there's loads of valuable stuff in there, but the place is so dangerous that no-one has ever returned from it alive.>
+		Msg%id%02 <%name1% told you about %name3% in %name2%.>
+
+		STC QS_Dungeon_AsteroidCave
+		SetID 3
+		entrance <*QUEST-INACTIVE>
+		MapWidth 40
+		MapHeight 40
+	end
+
+Content
+	name <Ultimate Derelict>
+	requires <*Q_LS_Ultima>
+
+	% E1 is the veteran
+	% E2 is an outdoors scene in which to place the dungeon
+	% E3 is the dungeon itself
+	Element2 <Scene Outdoors Space>
+	Element3 <QuestScene>
+	Place3 <2>
+
+	start <if= SceneID %3% Alert %id%01 History %id%02 XPV 200 WinSubPlot %plotid%>
+	Msg%id%01 <You have reached the final level of %name3%.>
+	Msg%id%02 <You reached the pentultimate level of %name3%.>
+
+	% SubQuest1 is a DungeonTreasure.
+	SubPlot1 <*:Q_DungeonTreasure 3>
+
+	sub
+		Persona 1
+		.%id%_GoInit <NewChat Say %id%01 History %id%02 SetEncounterActive %3%>
+		Msg%id%01 <Have you heard of %name3%? It's an old prezero wreck in %name2%. People say there's loads of valuable stuff inside, but the place is so dangerous that no-one has ever returned from it alive.>
+		Msg%id%02 <%name1% told you about %name3% in %name2%.>
+
+		STC QS_Dungeon_Derelict
+		SetID 3
+		entrance <*QUEST-INACTIVE>
+		MapWidth 50
+		MapHeight 50
+	end
+
+Content
+	name <Ultimate Hellhole>
+	requires <*Q_LS_Ultima>
+
+	% E1 is the veteran
+	% E2 is an outdoors scene in which to place the dungeon
+	% E3 is the dungeon itself
+	Element2 <Scene Outdoors City>
+	Element3 <QuestScene>
+	Place3 <2>
+
+	start <if= SceneID %3% Alert %id%01 History %id%02 XPV 200 WinSubPlot %plotid%>
+	Msg%id%01 <You have reached the final level of %name3%.>
+	Msg%id%02 <You reached the pentultimate level of %name3%.>
+
+	% SubQuest1 is a DungeonTreasure.
+	SubPlot1 <*:Q_DungeonTreasure 3>
+
+	sub
+		Persona 1
+		.%id%_GoInit <NewChat Say %id%01 History %id%02 SetEncounterActive %3%>
+		Msg%id%01 <There's an abandoned research complex in %name2% called %name3%. People say there's loads of valuable stuff in there, but the place is so dangerous that no-one has ever returned from it alive.>
+		Msg%id%02 <%name1% told you about %name3% in %name2%.>
+
+		STC QS_Dungeon_UrbanHellHole
+		SetID 3
+		entrance <*QUEST-INACTIVE>
+		MapWidth 40
+		MapHeight 40
+	end
+
+Content
+	name <Ultimate Sewer>
+	requires <*Q_LS_Ultima>
+
+	% E1 is the veteran
+	% E2 is an outdoors scene in which to place the dungeon
+	% E3 is the dungeon itself
+	Element2 <Scene Outdoors Urban>
+	Element3 <QuestScene>
+	Place3 <2>
+
+	start <if= SceneID %3% Alert %id%01 History %id%02 XPV 200 WinSubPlot %plotid%>
+	Msg%id%01 <You have reached the final level of %name3%.>
+	Msg%id%02 <You reached the pentultimate level of %name3%.>
+
+	% SubQuest1 is a DungeonTreasure.
+	SubPlot1 <*:Q_DungeonTreasure 3>
+
+	sub
+		Persona 1
+		.%id%_GoInit <NewChat Say %id%01 History %id%02 SetEncounterActive %3%>
+		Msg%id%01 <There used to be a secret research station at the bottom of %name3%. People say there's loads of valuable stuff in there, but the place is so dangerous that no-one has ever returned from it alive.>
+		Msg%id%02 <%name1% told you about %name3% in %name2%.>
+
+		STC QS_Dungeon_Sewer
+		SetID 3
+		entrance <*QUEST-INACTIVE>
+		MapWidth 50
+		MapHeight 50
+	end
+
+
+%%
 %%  *:Q_LS_Task3
 %%
 %% It's time for the final confrontation with the series villain. Things get
@@ -186,12 +355,27 @@ Content
 	% E4 is an outdoors scene
 	% E5 is E2's private club
 	% E6 is the MischiefMaker mood
+	% E7 is the Master Token, which prevents the Sentinel from attacking E2
+	Place2 <5 (Guards) sd>
 	Element4 <Scene Outdoors>
 	Element5 <QuestScene>
 	Place5 <4>
 	Element6 <Prefab>
+	Element7 <Prefab>
+	Place7 <2>
 
 	% P%id%01 = Have entered CavClub first time/deployed mood
+	% P%id%02 = Have picked up the Master Token
+
+	% VICTORY:
+	%  The PC must locate E2 and stop this bullying. This can be achieved
+	%  in several ways: E2 can be killed, E2 can surrender, or the PC can
+	%  talk E2 down. The sentinel may be made to switch sides by either
+	%  physically hacking it or by obtaining E2's Master Token.
+
+	Faint%2% <SetPlotStatus %plotid1% %id1% if= P%id%02 0 DeleteItem %7%>
+	Surrender%2% <TeamNeutral 2 TeamNeutral 3 TeamNeutral 4 ForceChat %2%>
+	Get%7% <P= %id%02 1 TeamNeutral 4 TeamAttackTeam 4 3>
 
 	% The mood gets deployed the first time the PC enters the CavClub or
 	% the VIP Room after quest activation. While this plot is active, both
@@ -204,20 +388,219 @@ Content
 	Msg%id%02 <Anyone who sets foot in the Cavalier's Club is gonna have to defeat my challenge. THIS GOES FOR THE SHOPKEEPERS AND CLEANING STAFF AS WELL. Keep out or suffer the consequences. -%name2%>
 	Msg%id%03 <%name2% scared everybody away from the Cavalier's Club.>
 
+	% SubPlot1 = The victory condition; moving it to a subplot because it's
+	% complicated and otherwise I'd have to copy the same script all over
+	% the place.
+	SubPlot1 <*Q_LS_Win3 2 1>
+
 	sub
+		Persona 2
+		special <UNLISTED>
+		greeting <if= PlotSTatus %plotid% %id% else GoChat ifChatNPCSurrendered else GoGreet EndChat Say 1 Print 9 FreezeNPC %2% SetPlotStatus %plotid1% %id1%>
+		GoChat <NewChat SayAnything>
+		*GoGreet <*YouWentThroughALotOfTrouble&IsEnemy GoChallenge>
+		GoChallenge <NewChat Say 2 AddChat 1 AddChat 2 AddChat 3>
+		result1 <NewChat Say 3 AddChat 4 AddChat 5 AddChat 6 AddChat 19 AddChat 20>
+		result2 <EndChat Say 4 AddChat 7>
+		result3 <NewChat Say 5 AddChat 8 AddChat 4>
+		result4 <NewChat Say 6 AddChat 9 AddChat 10 AddChat 11 AddChat 12>
+		result5 <EndChat Say 8 Print 9 PCEnemy %2% FreezeNPC %2% SetPlotStatus %plotid1% %id1%>
+		result6 <NewChat Say 10 AddChat 13 AddChat 14>
+		result7 <EndChat Say 11 AddChat 15>
+		result8 <NewChat Say 12 AddChat 16 AddChat 14>
+		result9 <Goto result1>
+		result10 <Goto result2>
+		result11 <Goto result3>
+		result12 <NewChat Say 7>
+		result13 <EndChat Say 13 TeamAttack 3 TeamAttack 2 if= P%id%02 0 TeamAttack 4>
+		result14 <Goto result4>
+		result15 <NewChat Say 14 AddChat 17 AddChat 18 AddCHat 4>
+		result16 <NewChat Say 15 PCFriend %2% Cash+ -50000 SetPlotStatus %plotid1% %id1%>
+		result17 <Goto result6>
+		result18 <EndChat Say 16 Print 9 PCFriend %2% FreezeNPC %2% SetPlotStatus %plotid1% %id1%>
+		result19 <EndChat Say 17 Print 9 PCEnemy %2% FreezeNPC %2% SetPlotStatus %plotid1% %id1%>
+		result20 <Goto result5>
+		Msg1 <You win. I'll leave \SCENE RootSceneID ... Perhaps we'll meet again, or perhaps not...>
+		Msg2 <As you can see, I planned to open my own place, but for now I find myself quite satisfied with destroying the Cavalier's Club.>
+		Msg3 <You can't stop me. Take a look at my bodyguard, there- I found it in a PreZero military base, and had it reprogrammed to follow my orders. As long as I'm holding this token it will protect me from everything.>
+		Msg4_1 <You want to know why I hate the Cavalier's Club? I'll tell you, it all started in my childhood...>
+		Msg4_2 <You want to know why I hate the Cavalier's Club? If you must know, it's the fault of my mother...>
+		Msg4_3 <You want to know why I hate the Cavalier's Club? You mean, you don't already know about my first love...?>
+		Msg5 <Yes, isn't it? Of course it's not finished yet, and I've had some trouble finding employees who are willing to put up with the menagerie, but once I secure some investors this will be the greatest place in \SCENE RootSceneID !>
+		Msg6 <Thinking, thinking... so what else do you have to say?>
+		Msg7 <You don't need to hurry back.>
+		Msg8 <Er... Alright, let's make a deal. I'll leave \SCENE RootSceneID , and you'll do absolutely nothing until I'm gone. Fair? Good. Goodbye!>
+		Msg9 <%name2% has left this area.>
+		Msg10 <Now, I'm perfectly willing to kill you, but none of my robots have been outfitted to clean blood splatter. Are you sure you want to die?>
+		Msg11_1 <Obviously a preschool teacher can't be expected to recognize true genius, but what about the others? I learned quickly that I'd have to look out for myself and no-one else. It was around this time that my family purchased a new sofa...>
+		Msg11_2 <How I learned that to be ignored is the price of greatness! And the more I was ignored, the greater I became! None of them knew, except maybe Mr. Flopsy, but since he was a rabbit I knew I'd have to leave a mark somehow...>
+		Msg11_3 <You don't know how I was criticized! All I wanted was to have my greatness recognized; of course by then it was too late, and I had to make do with admittance to a liberal arts college. How I loathe the mesopotamians...>
+		Msg12 <You'd do that? Hmm... It's going to take at least $50,000 to get the utilities turned back on, and after that I can start working on the interior design again...>
+		Msg13 <As you wish.>
+		Msg14_1 <They wouldn't even validate my parking! After all that, I began stocking up on canned food and vintage character goods. So, you can see why I couldn't allow the Cavalier's Club to exist.>
+		Msg14_2 <My application was rejected three times. I am a very patient person, but whoever invented paperwork deserves a special punishment in the ninth circle of hell. So, you can see why I couldn't allow the Cavalier's Club to exist.>
+		Msg14_3 <That's when I discovered that he wasn't even my father! Of course it was too late to get my pyjamas back, but I knew I'd have my revenge. So, you can see why I couldn't allow the Cavalier's Club to exist.>
+		Msg15 <Thank you! I promise that I won't let you down, unlike all those other investors who are still waiting for my place to open...>
+		Msg16 <You're so right... I've done enough here, I think I've worked the aggression out of my system. Thank you, \PC ... Maybe we'll meet again, or maybe not...>
+		Msg17 <You're right about that... You win this time, \PC , but we'll meet again!>
+		Prompt1 <I'm here to put a stop to that.>
+		Prompt2 <What do you have against the CavClub, anyhow?>
+		Prompt3 <Cool place you have here.>
+		Prompt4 <Maybe I should think about this some more...>
+		Prompt5 <Is it fast enough to stop a bullet?>
+		CPrompt5 <ifIntimidation HardSkillTar %threat% Accept>
+		Prompt6 <I'll fight you, if I have to.>
+		Prompt7 <[Continue]> % E2's origin story...
+		Prompt8 <I could help you out, if you quit harassing the cavaliers.>
+		CPrompt8 <ifShopping HardSkillTar %threat% Accept>
+		Prompt9 <I'll put you out of business, %name2%.>
+		Prompt10 <Could you tell me a bit more about yourself?>
+		Prompt11 <I'm just admiring the architecture here.>
+		Prompt12 <I'll get back to you in a while.>
+		Prompt13 <Absolutely sure!>
+		Prompt14 <No, not just yet...>
+		Prompt15 <[Continue]> % E2's origin story, part 2...
+		Prompt16 <Here. Get busy and stay out of trouble. [Give $50k]>
+		CPrompt16 <ifG PC$ 49999 Accept>
+		Prompt17 <Your story made no sense whatsoever.>
+		Prompt18 <Isn't it time that you moved on from these painful memories?>
+		CPrompt18 <ifConversation HardSkillTar %threat% Accept>
+		Prompt19 <Your bodyguard doesn't look so healthy.>
+		CPrompt19 <if= T4 0 Accept>
+		Prompt20 <You mean this token?>
+		CPrompt20 <ifKeyItem %7% ifG T4 0 Accept>
+
+		MetaScene 2
+		%% Contains E2's office and "Enforcer".
+		%% Note that at this point in the game, a Sentinel is serious OOD,
+		%% which should encourage the player to seek a nonviolent resolution.
+		sub
+			room
+			name <%name2%'s Office>
+			desig <HOME>
+			minimap <......1.2...........#---#>
+			inv
+				monster SENTINEL
+				MiniMapComponent 2
+				% Improved ranged combat score; really, you don't want to fight this thing.
+				RangedCombat 9
+				SetTeam 4
+				%% It's possible to hack this particular Sentinel
+				%% and make it attack E2, which should greatly even
+				%% the odds in a fight.
+				CLUE_CODEBREAKING <if= PlotStatus %plotid% %id% ifSelfOK ifCodeBreaking HardSkillTar %threat% else GoNoHack  Goto GoHack>
+				CLUE_REPAIR <if= PlotStatus %plotid% %id%       ifSelfOK ifRepair       HardSkillTar %threat% else GoNoHack  Goto GoHack>
+				GoHack <Print 11 TeamAttackTeam 4 3>
+				GoNoHack <Print 12>
+				Msg11 <You hack the Sentinel's AI to remove %name2%'s control routine.>
+				Msg12 <You examine %name2%'s modifications to the Sentinel, but aren't skilled enough to change them.>
+			end
+		end
+
 		MetaScene 5
 		name <%name2%'s Private Club>
+		entrance <*QUEST-INACTIVE>
+		type <building private>
+		special <ADDEXIT SHOWALL>
+		MallMap
+		MapWidth 15
+		MapHeight 15
+		Ceiling
 
+		% L1 = Initialization Counter
+		start <Print 1>
+
+		Msg1 <You enter %name2%'s Private Club.>
+
+		neededcells 2
+		Content1 <Some 1 100 Sub *DECOR_FOR_WEAPON_SHOP na>
+		Content2 <Some 1 100 Sub *DECOR_FOR_GENERAL_SHOP na>
+		Content3 <Fill Sub *DECOR_FOR_SHOP na>
+
+		sub
+			Team 1
+
+			Team 2
+			name <Pets>
+			type <ROBOT SYNTH MUTANT EXOTIC>
+			deploy <if= V1 0 V= 1 1 WMonster 2 %threat% 100>
+			SetAlly 3
+			Stat 2 1
+
+			team 3
+			name <Guards>
+			SetAlly 2 4
+
+			team 4
+			name <Enforcer>
+			SetAlly 3
+
+			room
+			name <Foyer>
+			desig <EntranceGrid>
+		end
 	end
 	inv
-		Mood 1
+		MinorMood 1
 		name <%name2%'s Mischief>
 		plot_type <*Mischief>
 		Element1 <Grab 4>
 		Element2 <Grab 5>
 		Element3 <Grab 2>
+
+		MeleeAddOn 2
+		Name <Master Token>
+		desc <A mysterious artifact held by %name2%.>
+		Category <ACCESSORY>
+		Acc 2
+		Speed 2
 	end
 
+%%
+%%  *Q_LS_Win3
+%%
+%% Conclusion for above.
+%%
+%%  PARAM1: The Enemy NPC.
+%%  PARAM2: The Cavalier's Club.
+%%
+
+Content
+	requires <*Q_LS_Win3>
+
+	% E1 = the series enemy, who may or may not be dead by now.
+	% E2 = the cavalier's club
+	% E3 = a victory meme
+	element3 <Prefab>
+
+	update <WinSubPlot %plotid% ActivateMeme %3% RootSceneID Alert %id%01 History %id%01 ifMeritBadge NAS_MB_Lancemate3 else .%id%_GoRegular  SilentMeritBadge NAS_MB_Lancemate3 XPV 100>
+	.%id%_GoRegular <GiveMeritBadge NAS_MB_Lancemate3 XPV 100>
+
+	Msg%id%01 <You saved the Cavalier's Club from %name1%.>
+
+	inv
+		Meme
+		MaxMemeViews 3
+		MemeTimeLimit
+		msg_1 <On behaf of all the cavaliers here, I'd like to thank you for dealing with %name1%.>
+		CMsg_1 <if# ChatNPCID %1% ifChatNPCisCombatant Accept>
+		msg_2 <>
+		CMsg_2 <if# ChatNPCID %1% ifChatNPCisCombatant Accept>
+		msg_3 <>
+		CMsg_3 <if# ChatNPCID %1% ifChatNPCisCombatant Accept>
+		msg_11 <>
+		CMsg_11 <if# ChatNPCID %1% ifChatNPCisCombatant ifNPCSociable Accept>
+		msg_12 <Thanks for saving the Cavalier's Club, \PC .>
+		CMsg_12 <if# ChatNPCID %1% ifChatNPCisCombatant ifNPCShy Accept>
+		msg_13 <I'm glad that %name1% is gone. Now we can get back to hanging out and doing nothing just like the old days.>
+		CMsg_13 <if# ChatNPCID %1% ifChatNPCisCombatant ifNPCEasygoing Accept>
+		msg_14 <I was gonna do something about %name1% myself, I just never got around to it...>
+		CMsg_14 <if# ChatNPCID %1% ifChatNPCisCombatant ifNPCPassionate Accept>
+		msg_15 <>
+		CMsg_15 <if# ChatNPCID %1% ifChatNPCisCombatant ifNPCCheerful Accept>
+		msg_16 <This business with %name1% showed us just how brave most of the cavaliers in this town are... thanks for being the only one willing to take a stand, \PC .>
+		CMsg_16 <if# ChatNPCID %1% ifChatNPCisCombatant ifNPCMelancholy Accept>
+	end
 
 %%
 %%  *:Q_LS_Task2
