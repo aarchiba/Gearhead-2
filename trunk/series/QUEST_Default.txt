@@ -1,4 +1,105 @@
 %%
+%%  *Q_LocalTough Content
+%%
+%% The PC has just met a tough guy (or gal); find out what makes him (or her)
+%% so tough.
+%%
+%%  PARAM1: The locale of the tough
+%%  PARAM2: The tough NPC
+%%
+%% NOTE: Persona 2 must include a .%id%_GoInit script to initialize this
+%%  subquest.
+%%
+
+Content
+	name <Looking for a challenge>
+	desc <The tough is just looking for a challenge; basically, you've found a new mecha arena.>
+	requires <*Q_LocalTough>
+
+	% E1 is the scene where the tough NPC is located
+	% E2 is the tough NPC
+	% E3 is an arena entrance
+	% E4 is the arena itself
+
+
+
+	sub
+		Persona 2
+		% V%id%01 = Have accepted arena (1), have completed arena (2)
+		% V%id%02 = Have accepted the initial duel
+		.%id%_GoInit <Goto GoBriefing>
+		Greeting <if= PlotStatus %plotid% %id% else %pop% if= V%id%01 0 else GoCheckArena Goto GoPartOne>
+
+		GoCheckArena <if= V%id%01 1 else GoChat Goto GoOpenArena>
+		GoChat <NewChat SayAnything>
+		GoOpenArena <if= ArenaState %4% NAV_AS_Win else GoCheckQ2Loss Goto GoArenaWin>
+		GoCheckQ2Loss <if= ArenaState %4% NAV_AS_Loss else GoCheckQ2Ready Goto GoArenaLoss>
+		GoCheckQ2Ready <if= ArenaState %4% NAV_AS_Vacant else GoArenaFull ifG ComTime ArenaRecharge %4% else GoArenaBusy Goto GoOfferFight>
+		GoArenaWin <if= ArenaWins %4% 5 else GoMinorWin Goto GoBigWin>
+		*GoMinorWin <*BasicArenaWin %4% GoResetArena>
+		*GoArenaLoss <*BasicArenaLoss %4% GoResetArena>
+		GoResetArena <ResetArena %4%>
+		*GoArenaFull <*ArenaIsFull %4%>
+		*GoArenaBusy <*ArenaIsBusy %4%>
+
+***
+		GoBigWin <NewChat Say 15 History 16 V= 1 2 XPV 200 CashPrize Reward ArenaThreat %4% 500 GiveItem %6% Goto GoResetArena>
+		GoOfferFight <NewChat Say 13 AddChat 10 AddChat 11 if= V2 0 V= 2 1 History 14>
+
+		GoPartOne <if= V%id%02 1 else GoBriefing if= ArenaState %4% NAV_AS_Battle else GoCheckStatus Goto GoTrashTalk>
+		*GoTrashTalk <*ArenaChallenge GoThemeInfo>
+		*GoThemeInfo <*THEME_EXPO&Enemy NA>
+		GoCheckStatus <if= ArenaState %5% NAV_AS_Ready else GoCheckWin Goto GoWaiting>
+		*GoWaiting <*WaitingForDuel %5%>
+
+** Set win part one
+		GoCheckWin <if= ArenaState %5% NAV_AS_Win else GoCheckChallenge NewChat Say 2>
+
+		GoCheckChallenge <ResetArena %5% ifG ComTime ArenaRecharge %5% else GoLater if= V1 1 else GoFirstTime NewChat Say 3 AddChat 1 AddChat 2>
+		GoFirstTime <NewChat Say 5 AddChat 3 AddChat 4>
+		*GoLater <*ChallengeMeLater>
+
+		GoBriefing <>
+
+
+		MetaScene 4 2
+		name <%name2%'s Homebrew Arena>
+		BoxMap
+		RockyTiles
+		MapWidth 32
+		MapHeight 32
+		Ceiling
+		terrain <INSIDE>
+		special <SHOWALL SOLO ARENA NOPILLAGE>
+		start <if= SelfArenaState NAV_AS_Ready else GoCheckBattle          Alert 1   SetSelfArenaState NAV_AS_Battle SetSelfArenaRecharge if# SelfChallengerID 0 ForceChat SelfChallengerID>
+		GoCheckBattle <if= SelfArenaState NAV_AS_Battle else GoBoringStart Print 2>
+		GoBoringStart <Print 3 Return>
+		nu1 <if= T1 0 Return   if= SelfArenaState NAV_AS_Battle SetSelfArenaState NAV_AS_Loss  Alert 5 Print 5  LoseRenown  Goto GoEndBattle>
+		nu2 <if= T2 0 Return   if= SelfArenaState NAV_AS_Battle SetSelfArenaState NAV_AS_Win   Alert 6 Print 6  AddSelfArenaWin  AddSelfArenaThreat d10  XPV 100 FacXP+ 5 1 AddRenown 1 ifNPCOK SelfChallengerID else GoEndBattle ForceChat SelfChallengerID Goto GoEndBattle>
+		GoEndBattle <ifNPCOK SelfChallengerID MoveAndPacifyNPC SelfChallengerID SelfChallengerHome ClearSelfChallengerID>
+		Msg1 <You enter \SCENE SceneID . Prepare to battle.>
+		Msg2 <The arena battle rages on.>
+		Msg3 <You enter \SCENE sceneid . There's nothing interesting here.>
+		Msg5 <You have lost the battle.>
+		Msg6 <You have won the battle.>
+		Content3 <Fill Sub *RANDOM_SHAPES na>
+		sub
+			Team 1
+			name <Player Team>
+			SetEnemy 2
+			ParaX 4
+			ParaY 4
+
+			Team 2
+			name <Enemies>
+			SetEnemy 1
+			Deploy <if= SelfArenaState NAV_AS_Ready ifG SelfArenaForces 0 WMecha 2 SelfArenaThreat SelfArenaForces>
+			ParaX 29
+			ParaY 29
+		end
+	end
+
+%%
 %%  *:Q_RevealEncounter Content
 %%
 %% There's an encounter. Reveal it.

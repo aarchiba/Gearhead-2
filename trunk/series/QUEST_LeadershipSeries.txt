@@ -191,7 +191,7 @@ Content
 	Msg%id%02 <You reached the pentultimate level of %name3%.>
 
 	% SubQuest1 is a DungeonTreasure.
-	SubPlot1 <*:Q_DungeonTreasure 3>
+	SubPlot1 <*:Q_DungeonSecret 3>
 
 	sub
 		Persona 1
@@ -222,7 +222,7 @@ Content
 	Msg%id%02 <You reached the pentultimate level of %name3%.>
 
 	% SubQuest1 is a DungeonTreasure.
-	SubPlot1 <*:Q_DungeonTreasure 3>
+	SubPlot1 <*:Q_DungeonSecret 3>
 
 	sub
 		Persona 1
@@ -253,7 +253,7 @@ Content
 	Msg%id%02 <You reached the pentultimate level of %name3%.>
 
 	% SubQuest1 is a DungeonTreasure.
-	SubPlot1 <*:Q_DungeonTreasure 3>
+	SubPlot1 <*:Q_DungeonSecret 3>
 
 	sub
 		Persona 1
@@ -284,7 +284,7 @@ Content
 	Msg%id%02 <You reached the pentultimate level of %name3%.>
 
 	% SubQuest1 is a DungeonTreasure.
-	SubPlot1 <*:Q_DungeonTreasure 3>
+	SubPlot1 <*:Q_DungeonSecret 3>
 
 	sub
 		Persona 1
@@ -315,7 +315,7 @@ Content
 	Msg%id%02 <You reached the pentultimate level of %name3%.>
 
 	% SubQuest1 is a DungeonTreasure.
-	SubPlot1 <*:Q_DungeonTreasure 3>
+	SubPlot1 <*:Q_DungeonSecret 3>
 
 	sub
 		Persona 1
@@ -490,10 +490,13 @@ Content
 				%% the odds in a fight.
 				CLUE_CODEBREAKING <if= PlotStatus %plotid% %id% ifSelfOK ifCodeBreaking HardSkillTar %threat% else GoNoHack  Goto GoHack>
 				CLUE_REPAIR <if= PlotStatus %plotid% %id%       ifSelfOK ifRepair       HardSkillTar %threat% else GoNoHack  Goto GoHack>
+				CLUE_SCIENCE <if= PlotStatus %plotid% %id% ifSelfOK else GoBorked ifScience HardSkillTar %threat% else GoNoHack  Goto GoHack>
 				GoHack <Print 11 TeamAttackTeam 4 3>
 				GoNoHack <Print 12>
+				GoBorked <Print 13>
 				Msg11 <You hack the Sentinel's AI to remove %name2%'s control routine.>
 				Msg12 <You examine %name2%'s modifications to the Sentinel, but aren't skilled enough to change them.>
+				Msg13 <%name2%'s modifications have messed up the fire control system.>
 			end
 		end
 

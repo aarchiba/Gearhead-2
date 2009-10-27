@@ -227,7 +227,7 @@ Content
 	end
 
 %%
-%% *:Q_DungeonTreasure
+%% *:Q_DungeonSecret
 %%
 %% Loads a hopefully unique treasure for this dungeon.
 %%
@@ -239,7 +239,7 @@ Content
 
 Content
 	name <Custom Mecha>
-	requires <*:Q_DungeonTreasure>
+	requires <*:Q_DungeonSecret>
 
 	% E1 is the dungeon level
 	% E2 is the entrance to the treasure room
