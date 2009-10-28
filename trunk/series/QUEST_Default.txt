@@ -20,47 +20,62 @@ Content
 	% E2 is the tough NPC
 	% E3 is an arena entrance
 	% E4 is the arena itself
-
-
+	% E5 is the reward, an artifact
+	Element3 <Prefab>
+	Place3 <1>
+	Element4 <QuestScene>
+	Place4 <1>
+	Element5 <Artifact>
+	Place5 </>
 
 	sub
 		Persona 2
-		% V%id%01 = Have accepted arena (1), have completed arena (2)
+		% V%id%01 = Have accepted arena
 		% V%id%02 = Have accepted the initial duel
-		.%id%_GoInit <Goto GoBriefing>
-		Greeting <if= PlotStatus %plotid% %id% else %pop% if= V%id%01 0 else GoCheckArena Goto GoPartOne>
-
-		GoCheckArena <if= V%id%01 1 else GoChat Goto GoOpenArena>
-		GoChat <NewChat SayAnything>
-		GoOpenArena <if= ArenaState %4% NAV_AS_Win else GoCheckQ2Loss Goto GoArenaWin>
-		GoCheckQ2Loss <if= ArenaState %4% NAV_AS_Loss else GoCheckQ2Ready Goto GoArenaLoss>
-		GoCheckQ2Ready <if= ArenaState %4% NAV_AS_Vacant else GoArenaFull ifG ComTime ArenaRecharge %4% else GoArenaBusy Goto GoOfferFight>
-		GoArenaWin <if= ArenaWins %4% 5 else GoMinorWin Goto GoBigWin>
-		*GoMinorWin <*BasicArenaWin %4% GoResetArena>
-		*GoArenaLoss <*BasicArenaLoss %4% GoResetArena>
-		GoResetArena <ResetArena %4%>
-		*GoArenaFull <*ArenaIsFull %4%>
-		*GoArenaBusy <*ArenaIsBusy %4%>
-
-***
-		GoBigWin <NewChat Say 15 History 16 V= 1 2 XPV 200 CashPrize Reward ArenaThreat %4% 500 GiveItem %6% Goto GoResetArena>
-		GoOfferFight <NewChat Say 13 AddChat 10 AddChat 11 if= V2 0 V= 2 1 History 14>
-
-		GoPartOne <if= V%id%02 1 else GoBriefing if= ArenaState %4% NAV_AS_Battle else GoCheckStatus Goto GoTrashTalk>
-		*GoTrashTalk <*ArenaChallenge GoThemeInfo>
-		*GoThemeInfo <*THEME_EXPO&Enemy NA>
-		GoCheckStatus <if= ArenaState %5% NAV_AS_Ready else GoCheckWin Goto GoWaiting>
-		*GoWaiting <*WaitingForDuel %5%>
-
-** Set win part one
-		GoCheckWin <if= ArenaState %5% NAV_AS_Win else GoCheckChallenge NewChat Say 2>
-
-		GoCheckChallenge <ResetArena %5% ifG ComTime ArenaRecharge %5% else GoLater if= V1 1 else GoFirstTime NewChat Say 3 AddChat 1 AddChat 2>
-		GoFirstTime <NewChat Say 5 AddChat 3 AddChat 4>
-		*GoLater <*ChallengeMeLater>
-
-		GoBriefing <>
-
+		.%id%_GoInit <SetPlotStatus %plotid% %id% Goto .%id%_GoBriefing>
+		Greeting <if= PlotStatus %plotid% %id% else %pop% if= V%id%01 0 else .%id%_GoOpenArena Goto .%id%_GoPartOne>
+		.%id%_GoOpenArena <if= ArenaState %4% NAV_AS_Win else .%id%_GoCheckQ2Loss Goto .%id%_GoArenaWin>
+		.%id%_GoCheckQ2Loss <if= ArenaState %4% NAV_AS_Loss else .%id%_GoCheckQ2Ready Goto .%id%_GoArenaLoss>
+		.%id%_GoCheckQ2Ready <if= ArenaState %4% NAV_AS_Vacant else .%id%_GoArenaFull ifG ComTime ArenaRecharge %4% else .%id%_GoArenaBusy Goto .%id%_GoOfferFight>
+		.%id%_GoArenaWin <if= ArenaWins %4% 5 else .%id%_GoMinorWin Goto .%id%_GoBigWin>
+		*.%id%_GoMinorWin <*BasicArenaWin %4% .%id%_GoResetArena>
+		*.%id%_GoArenaLoss <*BasicArenaLoss %4% .%id%_GoResetArena>
+		.%id%_GoResetArena <ResetArena %4%>
+		*.%id%_GoArenaFull <*ArenaIsFull %4%>
+		*.%id%_GoArenaBusy <*ArenaIsBusy %4%>
+		.%id%_GoBigWin <NewChat Say %id%01 History %id%02 WinSubPlot %plotid% XPV 200 CashPrize Reward ArenaThreat %4% 500 GiveItem %5% Goto .%id%_GoResetArena>
+		.%id%_GoOfferFight <NewChat Say %id%03 AddChat %id%01 AddChat %id%02>
+		.%id%_GoPartOne <if= V%id%02 1 else .%id%_GoBriefing if= ArenaState %4% NAV_AS_Battle else .%id%_GoCheckStatus Goto .%id%_GoTrashTalk>
+		*.%id%_GoTrashTalk <*ArenaChallenge .%id%_GoThemeInfo>
+		*.%id%_GoThemeInfo <*THEME_EXPO&Enemy NA>
+		.%id%_GoCheckStatus <if= ArenaState %4% NAV_AS_Ready else .%id%_GoCheckWin Goto .%id%_GoWaiting>
+		*.%id%_GoWaiting <*WaitingForDuel %4%>
+		.%id%_GoCheckWin <if= ArenaState %4% NAV_AS_Win else .%id%_GoCheckChallenge NewChat Say %id%04 History %id%05 V= %id%01 1 Goto .%id%_GoResetArena>
+		.%id%_GoCheckChallenge <ResetArena %4% ifG ComTime ArenaRecharge %4% else .%id%_GoLater NewChat Say %id%06 AddChat %id%03 AddChat %id%02>
+		*.%id%_GoLater <*ChallengeMeLater>
+		.%id%_GoBriefing <NewChat Say %id%07 AddChat %id%04 AddChat %id%05>
+		.%id%_GoStartCombat <SetChallengerID %4% %2% SetChallengerHome %4% %1% MoveNPC %2% %4% PrepArena %4% 0 SetNPCTeam %2% 2>
+		*.%id%_GoChooseBattle <*StartArenaBattle %4% .%id%_GoStartFight>
+		.%id%_GoStartFight <SavePos PrepArena %4% 70 Jump %4%>
+		result%id%01 <Goto .%id%_GoChooseBattle>
+		*result%id%02 <*RejectChallenge>
+		*result%id%03 <*MeetMeAtArena %4% .%id%_GoStartCombat>
+		result%id%04 <NewChat Say %id%08 AddSociable -d10 CancelSubPlot %plotid%>
+		result%id%05 <NewChat Say %id%09 AddChat %id%02 AddCHat %id%03 V= %id%02 1>
+		Msg%id%01 <That was yoru fifth win; I guess that makes you the champion. Here, you can take this %name5% as a reward. I think you could put it to better use than I can.>
+		Msg%id%02 <You won the %name5% at %name2%'s homebrew arena.>
+		Msg%id%03 <Welcome back, \PC . Are you here for another go in the arena?>
+		Msg%id%04 <Wow, that was a challenge! Y'know, if you want to find out just how tough you really are, I know some other guys who wouldn't mind testing their skills... Come back tomorrow and we can have another match.>
+		Msg%id%05 <You defeated %name2% in \PPR %2% homebrew arena.>
+		Msg%id%06 <Ready to test your luck in the arena? Only one of us can be victorious!>
+		Msg%id%07 <I've been searching for a rival who can challenge my awesome skills. To that end I built a mecha arena in the basement, and have been facing pilots from all over. So far, though, I've only been disappointed...>
+		Msg%id%08 <If you are not interested then why did you come? Fine, if that's how you feel you can't see my rec room...>
+		Msg%id%09 <Words are cheap. You say that, but are you willing to prove it?>
+		Prompt%id%01 <But of course!>
+		Prompt%id%02 <No, not right now...>
+		Prompt%id%03 <I'm all set.>
+		Prompt%id%04 <Your megalomania does not interest me.>
+		Prompt%id%05 <I'll bet I can take you.>
 
 		MetaScene 4 2
 		name <%name2%'s Homebrew Arena>
@@ -97,6 +112,17 @@ Content
 			ParaX 29
 			ParaY 29
 		end
+
+		MetaScene 3
+		sub
+			room
+			desig <HOME>
+			minimap < ... .......1....... ... >
+		end
+	end
+	inv
+		Trapdoor
+		desig <ENTRANCE %4%>
 	end
 
 %%

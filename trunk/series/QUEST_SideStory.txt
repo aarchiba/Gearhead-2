@@ -8,7 +8,7 @@
 
 Content
 	name <Local Bully>
-	requires <*:Q_DSideStory>
+	requires <*:Q_SideStory -"Safe" -!Ne>
 	desc <A local bully is making mischief. Track them down and put a stop to it.>
 
 	% E1 is an outdoors scene for the hideout.
@@ -25,6 +25,9 @@ Content
 	% P%id%01 = Initialization Counter
 	update <if= P%id%01 0 P= %id%01 1 SetMood %4% %1%>
 
+	% SubQuest1 = Local Tough; find out why this NPC is so bad.
+	SubPlot1 <*Q_LocalTough 2 3>
+
 	sub
 		STC QS_Workshop
 		name <%name3%'s Hideout>
@@ -32,11 +35,10 @@ Content
 		entrance <*QUEST-INACTIVE>
 
 		Persona 3
-		greeting <NewChat Say 1 AddChat 1>
-		result1 <NewChat Say 2 WinSubPlot %plotid%>
-		Msg1 <You found me!>
-		Msg2 <Alright, as you ask.>
-		Prompt1 <End this silly quest now.>
+		special <UNLISTED>
+		greeting <if= PlotStatus %plotid% %id% else GoChat Goto GoGreet>
+		GoChat <NewChat SayAnything>
+		*GoGreet <*YouWentThroughALotOfTrouble .%id1%_GoInit>
 	end
 	inv
 		MinorMood 1
