@@ -116,7 +116,7 @@ Procedure InvokeEvent( Event: String; GB: GameBoardPtr; Source: GearPtr; var Tri
 
 Procedure AddLancemate( GB: GameBoardPtr; NPC: GearPtr );
 Function AddLancemateFrontEnd( GB: GameBoardPtr; PC,NPC: GearPtr; CanCancel: Boolean ): Boolean;
-Function RemoveLancemate( GB: GameBoardPtr; NPC: GearPtr; DoMessage: Boolean ): String;
+Procedure RemoveLancemate( GB: GameBoardPtr; NPC: GearPtr; DoMessage: Boolean );
 
 Procedure HandleInteract( GB: GameBoardPtr; PC,NPC,Persona: GearPtr );
 Procedure DoTalkingWIthNPC( GB: GameBoardPtr; PC,Mek: GearPtr; ByTelephone: Boolean );
@@ -5130,7 +5130,7 @@ begin
 	end;
 end;
 
-Function RemoveLancemate( GB: GameBoardPtr; NPC: GearPtr; DoMessage: Boolean ): String;
+Procedure RemoveLancemate( GB: GameBoardPtr; NPC: GearPtr; DoMessage: Boolean );
 	{ Remove NPC from the party. }
 	{ If this location isn't a good one for the LM, move the LM to a better place. }
 var

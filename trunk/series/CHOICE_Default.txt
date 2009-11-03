@@ -1,0 +1,44 @@
+%%
+%%  DRAMATIC CHOICES
+%%
+%% At the end of each episode, the PC gets to make a dramatic choice. These
+%% choices must first be encoded into the episode, then selected from a menu.
+%%
+%%  PROMPT%id%: The menu text the player will select. Add various options
+%%   to account for the different possible story states.
+%%
+%%  CHOICE%id%: The script label to be called when this choice is made.
+%%   This script should set the StoryNote.
+%%
+
+
+Choice 1
+	name <Defense 1: They need help in city>
+	desc <Complete this option track to earn more reinforcements in final battle.>
+	requires <>
+
+	% E1 is the city for the next episode.
+	Element1 <Scene City !Far -7 !Ally -7 !Okay -3 !XClude -2>
+
+	Prompt%id% <I hear they could use some help in %name1%.>
+
+	Choice%id% <StoryNote %id%01 &SetEpisodeScene %1%>
+
+	Msg%id%01 <You decided to go defend %name1%.>
+
+Choice 102
+	name <Defense 2>
+	desc <Complete this option track to earn more reinforcements in final battle.>
+	requires <+:101>
+
+
+Choice 201
+	name <Offense 1>
+	desc <Complete this option tract to weaken the enemy forces in final battle.>
+
+Choice 301
+	name <Reward 1: Seek Training>
+	desc <Take this option to earn immediate benefits for the PC.>
+
+
+

@@ -517,7 +517,7 @@ Procedure PCTelephone( GB: GameBoardPtr; PC: GearPtr );
 	{ Make a telephone call, if the PC has a telephone. }
 var
 	Name: String;
-	NPC,RootScene,Persona: GearPtr;
+	NPC,RootScene: GearPtr;
 begin
 	if HasPCommCapability( PC , PCC_Phone ) then begin
 		DialogMsg( MsgString( 'PHONE_Prompt' ) );
