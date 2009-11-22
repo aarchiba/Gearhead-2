@@ -26,17 +26,26 @@ Choice 1
 
 	Msg%id%01 <You decided to go defend %name1%.>
 
-Choice 102
+Choice 2
 	name <Defense 2>
 	desc <Complete this option track to earn more reinforcements in final battle.>
 	requires <+:101>
 
 
-Choice 201
+Choice 6
 	name <Offense 1>
 	desc <Complete this option tract to weaken the enemy forces in final battle.>
 
-Choice 301
+	% E1 is the city for the next episode.
+	Element1 <Scene City !Far -7 !Ally -7 !Okay -3 !XClude -2>
+
+	Prompt%id% <I hear they could use some help in %name1%.>
+
+	Choice%id% <StoryNote %id%01 &SetEpisodeScene %1%>
+
+	Msg%id%01 <You decided to go defend %name1%.>
+
+Choice 11
 	name <Reward 1: Seek Training>
 	desc <Take this option to earn immediate benefits for the PC.>
 
