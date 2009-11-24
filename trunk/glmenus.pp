@@ -27,7 +27,7 @@ unit glmenus;
 
 interface
 
-uses SDL,SDL_TTF,dos,texutil,ui4gh,
+uses sdl,sdl_ttf,dos,texutil,ui4gh,
 {$IFDEF CUTE}
 	cutegfx;
 {$ELSE}

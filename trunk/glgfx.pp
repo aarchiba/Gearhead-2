@@ -33,7 +33,7 @@ Do the same.
 
 interface
 
-uses gl,glu,SDL,SDL_TTF,SDL_Image,gears,texutil,dos,ui4gh;
+uses gl,glu,sdl,sdl_ttf,sdl_image,gears,texutil,dos,ui4gh;
 
 const
 	MaxImagesPerTexture = 50;
@@ -304,8 +304,6 @@ Procedure SetupArenaMissionMenu;
 Procedure SetupConcertDisplay;
 
 implementation
-
-uses sdlutils;
 
 const
 	WindowName: PChar = 'Dungeon Monkey!';
