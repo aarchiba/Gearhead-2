@@ -1555,6 +1555,24 @@ end;
 Procedure RenderMap( GB: GameBoardPtr );
 	{ Render the location stored in G_Map, along with all items and characters on it. }
 	{ Also save the position of the mouse pointer, in world coordinates. }
+	Function AlmostSeen( X1 , Y1: Integer ): Boolean;
+		{ Tell whether or not to show the edge of visibility symbol here. We'll }
+		{ show it if this tile is unseen, and is adjacent to a seen tile that's not a wall. }
+	var
+		IsAlmostSeen: Boolean;
+		D,X2,Y2: Integer;
+	begin
+		IsAlmostSeen := False;
+		For D := 0 to 7 do begin
+			X2 := X1 + AngDir[ D , 1 ];
+			Y2 := Y1 + AngDir[ D , 2 ];
+			if OnTheMap( GB , X2 , Y2 ) and TileVisible( GB , X2 , Y2 ) and ( TerrMan[ TileTerrain( GB , X2 , Y2 ) ].Altitude < 6 ) then begin
+				IsAlmostSeen := True;
+				Break;
+			end;
+		end;
+		AlmostSeen := IsAlmostSeen;
+	end;
 var
 	X,Y,Z: Integer;
 	BZ: GLFloat;
@@ -1605,7 +1623,7 @@ begin
 
 			if TileVisible( GB , X , Y ) then begin
 				DrawTerrain( GB , TileTerrain( GB , X , Y ) , X , Y );
-			end else begin
+			end else if AlmostSeen( X , Y ) then begin
 				DrawFloor( BitzTex[ 9 ] , -0.1 );
 			end;
 
@@ -1893,6 +1911,8 @@ end;
 
 Procedure LoadTextures;
 	{ Load the textures for the walls, and format them for OpenGL. }
+const
+	Space_Tex_Size = 512;
 var
 	tmp: PSDL_Surface;
 	T2: SensibleSpritePtr;
@@ -1945,8 +1965,8 @@ begin
 	SDL_FreeSurface(tmp);
 
 	glGenTextures( 1, @SpaceTex );
-	tmp := SDL_CreateRGBSurface( SDL_SWSURFACE , 512 , 512 , 32 , $000000ff , $0000ff00 , $00ff0000 , $ff000000 );
-	T2 := LocateSprite( 'bg_space.png' , 512 , 512 );
+	tmp := SDL_CreateRGBSurface( SDL_SWSURFACE , Space_Tex_Size , Space_Tex_Size , 32 , $000000ff , $0000ff00 , $00ff0000 , $ff000000 );
+	T2 := LocateSprite( 'bg_space.png' , Space_Tex_Size , Space_Tex_Size );
 	SDL_FillRect( tmp , Nil , SDL_MapRGBA( tmp^.Format , 0 , 0 , 255 , 0 ) );
 	DrawSprite( t2 , tmp , MySource , 0 );
 	glBindTexture( GL_TEXTURE_2D, SpaceTex );
@@ -1967,8 +1987,8 @@ begin
 		Load_Obj_Mesh( data_directory + 'mesh' + BStr( T ) + '.obj' , T );
 	end;
 	{ DEBUG }
-	Load_Obj_Mesh( data_directory + 'test_mesh.obj' , 999 );
-	Load_Obj_Mesh( data_directory + 'test_female1.obj' , 998 );
+	Load_Obj_Mesh( mesh_directory + 'test_mesh.obj' , 999 );
+	Load_Obj_Mesh( mesh_directory + 'test_female1.obj' , 998 );
 end;
 
 Procedure FocusOn( Mek: GearPtr );

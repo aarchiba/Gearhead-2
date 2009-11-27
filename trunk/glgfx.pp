@@ -56,7 +56,6 @@ Type
 		Next: SensibleTexPtr;
 	end;
 
-
 	RedrawProcedureType = Procedure;
 
 
@@ -261,6 +260,7 @@ Function SensibleTexID( const Name,Color: String; D,tex_size: Integer ): GLUInt;
 Function SensibleTexID( const Name,Color: String; D: Integer ): GLUInt;
 Procedure RemoveTexture(var LMember: SensibleTexPtr);
 Procedure CleanTexList;
+
 
 function RPGKey: Char;
 
@@ -938,6 +938,7 @@ begin
 		P := P2;
 	end;
 end;
+
 
 
 function RPGKey: Char;

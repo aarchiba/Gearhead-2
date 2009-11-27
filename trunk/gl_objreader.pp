@@ -29,7 +29,28 @@ interface
 
 uses texutil,gl;
 
+const
+	Mesh_Dirname = 'mesh';
+	Mesh_Directory = Mesh_Dirname + DirectorySeparator;
+
+type
+	SensibleMeshPtr = ^SensibleMesh;
+	SensibleMesh = Record
+		Name: String;
+		DLID: Integer;
+		Next: SensibleMeshPtr;
+	end;
+
+var
+	Game_Meshes: SensibleMeshPtr;
+
+
 Procedure Load_Obj_Mesh( const fname: String; DLID: Integer );
+
+Function LocateMesh( Name: String ): SensibleMeshPtr;
+Function SensibleMeshID( const Name: String ): GLUInt;
+Procedure RemoveMesh( var LMember: SensibleMeshPtr );
+
 
 implementation
 
@@ -155,5 +176,112 @@ begin
 	glEndList();
 	Close( F );
 end;
+
+Function NewMesh: SensibleMeshPtr;
+	{ Add an empty mesh description to the list. }
+	{ Give it a mesh name. }
+var
+	it: SensibleMeshPtr;
+begin
+	{ Allocate a SensibleMesh and initialize it. }
+	New(it);
+	if it = Nil then exit( Nil );
+	{Initialize values.}
+	it^.DLID := glGenLists( 1 );
+	if it^.DLID = 0 then begin
+		Dispose( it );
+		Exit( Nil );
+	end else begin
+		it^.Next := Game_Meshes;
+		Game_Meshes := it;
+		NewMesh := it;
+	end;
+end;
+Function AddSensibleMesh( Name: String ): SensibleMeshPtr;
+	{ Add a mesh to the list. }
+var
+	MyMesh: SensibleMeshPtr;
+	T: Integer;
+begin
+	{ Allocate a new mesh. }
+	MyMesh := NewMesh;
+	MyMesh^.Name := UpCase( Name );
+
+	{ Load the object referenced by the name. }
+	Load_Obj_Mesh( Mesh_Directory + Name , MyMesh^.DLID );
+
+	AddSensibleMesh := MyMesh;
+end;
+
+
+Function LocateMesh( Name: String ): SensibleMeshPtr;
+	{ Get the number of the texture identified by the provided ID number. }
+var
+	T,it: SensibleMeshPtr;
+begin
+	T := Game_Meshes;
+	it := Nil;
+	name := Upcase( Name );
+	while T <> Nil do begin
+		if ( T^.name = name ) then it := T;
+		T := T^.Next;
+	end;
+	if it = Nil then it := AddSensibleMesh( name );
+	LocateMesh := it;
+end;
+
+Function SensibleMeshID( const Name: String ): GLUInt;
+	{ Return the ID for the requested mesh. }
+var
+	SM: SensibleMeshPtr;
+begin
+	SM := LocateMesh( name );
+	SensibleMeshID := SM^.DLID;
+end;
+
+Procedure RemoveMesh( var LMember: SensibleMeshPtr );
+	{Locate and extract member LMember from list LList.}
+	{Then, dispose of LMember.}
+var
+	a,b: SensibleMeshPtr;
+begin
+	{Initialize A and B}
+	B := Game_Meshes;
+	A := Nil;
+
+	{Locate LMember in the list. A will thereafter be either Nil,}
+	{if LMember if first in the list, or it will be equal to the}
+	{element directly preceding LMember.}
+	while (B <> LMember) and (B <> Nil) do begin
+		A := B;
+		B := B^.next;
+	end;
+
+	if B = Nil then begin
+		{Major FUBAR. The member we were trying to remove can't}
+		{be found in the list.}
+		writeln('ERROR- RemoveMesh asked to remove a mesh that doesnt exist.');
+		end
+	else if A = Nil then begin
+		{There's no element before the one we want to remove,}
+		{i.e. it's the first one in the list.}
+		Game_Meshes := B^.Next;
+		B^.Next := Nil;
+
+		glDeleteLists( B^.DLID , 1 );
+		Dispose( B );
+
+		end
+	else begin
+		{We found the attribute we want to delete and have another}
+		{one standing before it in line. Go to work.}
+		A^.next := B^.next;
+		B^.Next := Nil;
+
+		glDeleteLists( B^.DLID , 1 );
+		Dispose( B );
+	end;
+end;
+
 
 end.

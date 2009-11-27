@@ -271,7 +271,6 @@ Const
 	Effects_Message_File = Data_Directory + 'effects.txt';
 	RandMaps_Param_File = Data_Directory + 'randmaps.txt';
 	NPC_Chatter_File = Data_Directory + 'taunts.txt';
-	Prom_Mesh_File =  Data_Directory + 'propmesh.txt';
 
 	Doc_DirName = 'doc';
 	Doc_Directory = Doc_DirName + OS_Dir_Separator;
@@ -283,6 +282,8 @@ Const
 
 	Graphics_DirName = 'image';
 	Graphics_Directory = Graphics_Dirname + OS_Dir_Separator;
+
+
 
 	STARTUP_OK: Boolean = True;
 
