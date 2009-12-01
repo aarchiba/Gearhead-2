@@ -276,8 +276,6 @@ Procedure SetupConcertDisplay;
 
 implementation
 
-uses sdlutils;
-
 const
 	WindowName: PChar = 'GH2 (Cute Version)';
 	IconName: PChar = 'GH2 (Cute Version)';

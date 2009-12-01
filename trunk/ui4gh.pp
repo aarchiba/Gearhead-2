@@ -418,6 +418,7 @@ const
 	Use_Paper_Dolls: Boolean = False;
 	Use_Test_Mesh: Boolean = False;
 
+
 	Full_RPGWorld_Info: Boolean = False;
 
 var

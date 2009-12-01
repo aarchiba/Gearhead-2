@@ -139,6 +139,8 @@ var
 	Current_Tileset: Integer;
 	Current_Backdrop: GLUInt;
 
+	DL_Wall,DL_Floor: GLUInt;
+
 Function ScreenDirToMapDir( D: Integer ): Integer;
 	{ Convert the requested screen direction to a map direction. }
 begin
@@ -205,30 +207,18 @@ Procedure DrawFloor( Tex: Integer; Offset: GLFloat );
 	{ Draw a floor. This is like a wall, but only one quad and it's }
 	{ horizontal. }
 begin
-	glTexEnvi( GL_TEXTURE_ENV , GL_TEXTURE_ENV_MODE , GL_MODULATE );
 	glBindTexture(GL_TEXTURE_2D, Tex );
-	glEnable( GL_Texture_2D );
-	glEnable( GL_ALPHA_TEST );
+	if Offset <> 0 then begin
+		glTranslated( 0 , Offset , 0 );
+	end;
 
-	glbegin( GL_QUADS );
+	glCallList( DL_Floor );
 
-	GLColor3F( 1.0 , 1.0 , 1.0 );
-
-	glTexCoord2f( 0.0 , 0.0 );
-	GLNormal3i( 0 , 1 , 0 );
-	glVertex3f( 0 , Offset , 0 );
-	glTexCoord2f( 1.0 , 0.0 );
-	glVertex3f( 1 , Offset , 0 );
-	glTexCoord2f( 1.0 , 1.0 );
-	glVertex3f( 1 , Offset , 1 );
-	glTexCoord2f( 0.0 , 1.0 );
-	glVertex3f( 0 , Offset , 1 );
-
- 	glEnd;
-
-	glDisable( GL_Texture_2D );
-	glDisable( GL_ALPHA_TEST );
+	if Offset <> 0 then begin
+		glTranslated( 0 , -Offset , 0 );
+	end;
 end;
+
 
 Procedure DrawGrid();
 	{ Draw a grid. Actually, draw one empty square. Enough of them and they make a grid. }
@@ -251,7 +241,9 @@ begin
  	glEnd;
 	glDisable( GL_BLEND );
 	glDisable( GL_ALPHA_TEST );
+{$ifndef DARK}
 	glEnable( GL_Lighting );
+{$endif}
 end;
 
 
@@ -270,6 +262,14 @@ const
 	);
 begin
 	DrawFloor( TerrTex[ TT_ForestFloor ] , 0 );
+
+	glTexEnvi( GL_TEXTURE_ENV , GL_TEXTURE_ENV_MODE , GL_MODULATE );
+	glEnable( GL_Texture_2D );
+	glEnable( GL_ALPHA_TEST );
+{$ifndef DARK}
+	glEnable( GL_Lighting );
+{$endif}
+
 	C := ( X * 23 + Y * 17 ) mod NumConfigurations;
 	for t := 1 to N do begin
 		glPushMatrix();
@@ -279,6 +279,12 @@ begin
 
 		glPopMatrix();
 	end;
+
+	glDisable( GL_Texture_2D );
+	glDisable( GL_ALPHA_TEST );
+{$ifndef DARK}
+	glDisable( GL_Lighting );
+{$endif}
 end;
 
 Procedure DrawBuilding( Style,Alt: Integer );
@@ -659,6 +665,12 @@ begin
 	else if Alt > 4 then Alt := 4;
 	if ( Style < 0 ) or ( Style > NumBuildingStyles ) then Style := 0;
 
+	glTexEnvi( GL_TEXTURE_ENV , GL_TEXTURE_ENV_MODE , GL_MODULATE );
+	glEnable( GL_Texture_2D );
+{$ifndef DARK}
+	glEnable( GL_Lighting );
+{$endif}
+
 	glEnable( GL_NORMALIZE );
 	glEnable( GL_ALPHA_TEST );
 	for t := 1 to Alt do begin
@@ -679,6 +691,10 @@ begin
 	end;
 
 	glDisable( GL_ALPHA_TEST );
+{$ifndef DARK}
+	glDisable( GL_Lighting );
+{$endif}
+	glDisable( GL_Texture_2D );
 	glDisable( GL_NORMALIZE );
 end;
 
@@ -888,11 +904,13 @@ Procedure DrawWall2( Tex: Integer; H: GLFloat; C: TSDL_COlor; ShowRoof: Boolean 
 	{ Draw a wall at the current model coordinates in the current texture. }
 	{ H is the height to draw the wall. }
 begin
+	GLColor3ub( C.R , C.G , C.B );
+	glBindTexture(GL_TEXTURE_2D, TerrTex[ Tex ] );
+
 	if ShowRoof then begin
 		glDisable( GL_Lighting );
 		glbegin( GL_QUADS );
 		GLNormal3i( 0 , 1 , 0 );
-		GLColor3ub( C.R , C.G , C.B );
 		glVertex3f( 0 , h + 0.001 , 0 );
 		glVertex3f( 1 , h + 0.001 , 0 );
 		glVertex3f( 1 , h + 0.001 , 1 );
@@ -902,15 +920,15 @@ begin
 
 	glTexEnvi( GL_TEXTURE_ENV , GL_TEXTURE_ENV_MODE , GL_MODULATE );
 
-	glBindTexture(GL_TEXTURE_2D, TerrTex[ Tex ] );
 	glEnable( GL_Texture_2D );
+{$ifndef DARK}
 	glEnable( GL_Lighting );
+{$endif}
 
 	glEnable( GL_ALPHA_TEST );
 	glAlphaFunc( GL_Equal , 1.0 );
 
 	glbegin( GL_QUADS );
-	GLColor3F( 1.0 , 1.0 , 1.0 );
 
 	GLNormal3i( 0 , 0 , 0 );
 	glTexCoord2f( 0.0 , 1.0 );
@@ -962,10 +980,13 @@ end;
 Procedure SmartWall( Tex: Integer; C: TSDL_COlor );
 	{ Draw the wall at the prefs-indicated height. }
 begin
+	GLColor3ub( C.R , C.G , C.B );
+	glBindTexture(GL_TEXTURE_2D, TerrTex[ Tex ] );
+
 	if Use_Tall_Walls then begin
-		DrawWall2( Tex , 0.75 , C , True );
+		glCallList( DL_Wall );
 	end else begin
-		DrawWall2( Tex , 0.15 , C , True );
+		glCallList( DL_Wall + 1 );
 	end;
 end;
 
@@ -1387,7 +1408,9 @@ begin
 	glTranslatef( 0.5 , 0 , 0.5 );
 	glRotatef( 90 - NAttValue( P^.NA , NAG_Location , NAS_D ) * 45 , 0 , 1 , 0 );
 
+{$ifndef DARK}
 	glEnable( GL_Lighting );
+{$endif}
 	glEnable( GL_Light1 );
 	glEnable( GL_Texture_2D );
 	glBindTexture(GL_TEXTURE_2D, SensibleTexID( 'test_mecha.png' , SpriteColor( GB , P ) , 0 , 128 ) );
@@ -1410,7 +1433,9 @@ begin
 	glTranslatef( 0.5 , 0 , 0.5 );
 	glRotatef( 90 - NAttValue( P^.NA , NAG_Location , NAS_D ) * 45 , 0 , 1 , 0 );
 
+{$ifndef DARK}
 	glEnable( GL_Lighting );
+{$endif}
 	glEnable( GL_Light1 );
 	glEnable( GL_Texture_2D );
 	glBindTexture(GL_TEXTURE_2D, SensibleTexID( 'test_mesh_female.png' , SpriteColor( GB , P ) , 0 , 128 ) );
@@ -1613,8 +1638,10 @@ begin
 	SetLighting;
 
 	{ Draw all the tiles in memory order. }
+{$ifndef DARK}
 	glEnable( GL_Lighting );
 	glEnable( GL_Light1 );
+{$endif}
 	for X := 1 to GB^.Map_Width do begin
 		for Y := 1 to GB^.Map_Height do begin
 			glMatrixMode( GL_MODELVIEW );
@@ -1709,8 +1736,10 @@ begin
 				GS_MetaElevator:	SmartWall( TT_Elevator , DoorBlue );
 				GS_MetaBuilding:	begin
 							{ Buildings require lighting. Reactivate it. }
+{$ifndef DARK}
 							glEnable( GL_Lighting );
 							glEnable( GL_Light1 );
+{$endif}
 							DrawBuilding( NAttValue( M^.NA , NAG_MTAppearance , NAS_BuildingMesh ) , M^.Stat[ STAT_Altitude ] );
 							glDisable( GL_Lighting );
 							glDisable( GL_Light1 );
@@ -2320,6 +2349,119 @@ begin
 	end;
 end;
 
+Procedure GenerateDisplayLists;
+	Procedure DrawDLWall( H: GLFloat );
+		{ Draw a wall of the requested height. }
+	begin
+		glDisable( GL_Lighting );
+		glbegin( GL_QUADS );
+		GLNormal3i( 0 , 1 , 0 );
+		glVertex3f( 0 , h + 0.001 , 0 );
+		glVertex3f( 1 , h + 0.001 , 0 );
+		glVertex3f( 1 , h + 0.001 , 1 );
+		glVertex3f( 0 , h + 0.001 , 1 );
+ 		glEnd;
+
+		glTexEnvi( GL_TEXTURE_ENV , GL_TEXTURE_ENV_MODE , GL_MODULATE );
+
+		glEnable( GL_Texture_2D );
+{$ifndef DARK}
+		glEnable( GL_Lighting );
+{$endif}
+		glEnable( GL_ALPHA_TEST );
+		glAlphaFunc( GL_Equal , 1.0 );
+
+		glbegin( GL_QUADS );
+
+		GLNormal3i( 0 , 0 , 0 );
+		glTexCoord2f( 0.0 , 1.0 );
+		glVertex3f( 0 , 0 , 0 );
+		glTexCoord2f( 0.0 , 0.0 );
+		glVertex3f( 0 , h , 0 );
+		glTexCoord2f( 1.0 , 0.0 );
+		glVertex3f( 1 , h , 0 );
+		glTexCoord2f( 1.0 , 1.0 );
+		glVertex3f( 1 , 0 , 0 );
+
+		GLNormal3i( -1 , 0 , 0 );
+		glTexCoord2f( 1.0 , 1.0 );
+		glVertex3f( 0 , 0 , 0 );
+		glTexCoord2f( 1.0 , 0.0 );
+		glVertex3f( 0 , h , 0 );
+		glTexCoord2f( 0.0 , 0.0 );
+		glVertex3f( 0 , h , 1 );
+		glTexCoord2f( 0.0 , 1.0 );
+		glVertex3f( 0 , 0 , 1 );
+
+		GLNormal3i( 1 , 0 , 0 );
+		glTexCoord2f( 0.0 , 1.0 );
+		glVertex3f( 1 , 0 , 0 );
+		glTexCoord2f( 0.0 , 0.0 );
+		glVertex3f( 1 , h , 0 );
+		glTexCoord2f( 1.0 , 0.0 );
+		glVertex3f( 1 , h , 1 );
+		glTexCoord2f( 1.0 , 1.0 );
+		glVertex3f( 1 , 0 , 1 );
+
+		GLNormal3i( 0 , 0 , 1 );
+		glTexCoord2f( 1.0 , 1.0 );
+		glVertex3f( 1 , 0 , 1 );
+		glTexCoord2f( 1.0 , 0.0 );
+		glVertex3f( 1 , h , 1 );
+		glTexCoord2f( 0.0 , 0.0 );
+		glVertex3f( 0 , h , 1 );
+		glTexCoord2f( 0.0 , 1.0 );
+		glVertex3f( 0 , 0 , 1 );
+
+	 	glEnd;
+
+		glDisable( GL_Texture_2D );
+		glDisable( GL_Lighting );
+		glDisable( GL_ALPHA_TEST );
+	end;
+	Procedure DrawDLFloor;
+	begin
+		glTexEnvi( GL_TEXTURE_ENV , GL_TEXTURE_ENV_MODE , GL_MODULATE );
+		glEnable( GL_Texture_2D );
+		glEnable( GL_ALPHA_TEST );
+{$ifndef DARK}
+		glEnable( GL_Lighting );
+{$endif}
+
+		glbegin( GL_QUADS );
+
+		glTexCoord2f( 0.0 , 0.0 );
+		GLNormal3i( 0 , 1 , 0 );
+		glVertex3f( 0 , 0 , 0 );
+		glTexCoord2f( 1.0 , 0.0 );
+		glVertex3f( 1 , 0 , 0 );
+		glTexCoord2f( 1.0 , 1.0 );
+		glVertex3f( 1 , 0 , 1 );
+		glTexCoord2f( 0.0 , 1.0 );
+		glVertex3f( 0 , 0 , 1 );
+
+	 	glEnd;
+
+		glDisable( GL_Texture_2D );
+		glDisable( GL_ALPHA_TEST );
+		glDisable( GL_Lighting );
+	end;
+begin
+	DL_Wall := glGenLists( 2 );
+	glNewList( DL_Wall , GL_COMPILE );
+	DrawDLWall( 0.75 );
+	glEndList();
+
+	glNewList( DL_Wall + 1 , GL_COMPILE );
+	DrawDLWall( 0.15 );
+	glEndList();
+
+	DL_FLoor := glGenLists( 1 );
+	glNewList( DL_Floor , GL_Compile );
+	DrawDLFloor();
+	glEndList();
+end;
+
 initialization
 	RPGKey;
 
@@ -2329,6 +2471,7 @@ initialization
 
 	LoadTextures;
 	GeneratePropMeshes;
+	GenerateDisplayLists;
 	tile_x := 1;
 	tile_y := 1;
 
