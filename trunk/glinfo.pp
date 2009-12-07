@@ -808,7 +808,7 @@ begin
 	{ Print the biography. }
 	MyDest.X := ZONE_CharacterInfo.X + 49;
 	MyDest.W := ZONE_CharacterInfo.W - 98;
-	MyDest.Y := Y0 + TTF_FontLineSkip( Game_Font ) * 10;
+	MyDest.Y := Y0 + 160;
 	MyDest.H := 80;
 
 	MyDest.X := MyDest.X + 1;

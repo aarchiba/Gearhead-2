@@ -167,8 +167,56 @@ begin
 	CM_Cels[ X , Y , Z , L ].F := Frame;
 end;
 
-
 Function SpriteName( M: GearPtr ): String;
+	{ Locate the sprite name for this gear. If no sprite name is defined, }
+	{ set the default sprite name for the gear type & store it as a string }
+	{ attribute so we won't need to do this calculation later. }
+const
+	FORM_DEFAULT: Array [1..NumForm] of String = (
+	'btr_buruburu.png','zoa_scylla.png','ghu_ultari.png',
+	'ara_kojedo.png', 'aer_wraith.png', 'orn_wasp.png',
+	'ger_harpy.png', 'aer_bluebird.png', 'gca_rover.png'
+	);
+	DefaultMaleSpriteName = 'cha_m_citizen.png';
+	DefaultFemaleSpriteName = 'cha_f_citizen.png';
+	DefaultMaleSpriteHead = 'cha_m_';
+	DefaultFemaleSpriteHead = 'cha_f_';
+var
+	it: String;
+	FList: SAttPtr;
+begin
+	it := SAttValue( M^.SA , 'SDL_SPRITE' );
+	if it = '' then begin
+		if M^.G = GG_Character then begin
+			if NAttValue( M^.NA , NAG_CharDescription , NAS_Gender ) = NAV_Male then begin
+				it := DefaultMaleSpriteHead;
+			end else begin
+				it := DefaultFemaleSpriteHead;
+			end;
+			it := it + SAttValue( M^.SA , 'JOB' ) + '.*';
+			FList := CreateFileList( Graphics_Directory + it );
+			if FList <> Nil then begin
+				it := SelectRandomSAtt( FList )^.Info;
+				DisposeSAtt( FList );
+			end else begin
+				if NAttValue( M^.NA , NAG_CharDescription , NAS_Gender ) = NAV_Male then begin
+					it := DefaultMaleSpriteName;
+				end else begin
+					it := DefaultFemaleSpriteName;
+				end;
+			end;
+		end else if ( M^.G = GG_Mecha ) and ( M^.S >= 0 ) and ( M^.S < NumForm ) then begin
+			it := FORM_DEFAULT[ M^.S + 1 ];
+		end else if M^.G = GG_Prop then begin
+			it := Default_Prop_Sprite_Name;
+		end else begin
+			it := Items_Sprite_Name;
+		end;
+		SetSAtt( M^.SA , 'SDL_SPRITE <' + it + '>' );
+	end;
+	SpriteName := it;
+end;
+Function CuteSpriteName( M: GearPtr ): String;
 	{ Locate the sprite name for this gear. If no sprite name is defined, }
 	{ set the default sprite name for the gear type & store it as a string }
 	{ attribute so we won't need to do this calculation later. }
@@ -223,7 +271,7 @@ begin
 		end;
 		SetSAtt( M^.SA , 'CUTE_SPRITE <' + it + '>' );
 	end;
-	SpriteName := it;
+	CuteSpriteName := it;
 end;
 
 Function SpriteColor( GB: GameBoardPtr; M: GearPtr ): String;
@@ -497,7 +545,7 @@ begin
 			end else if IsMasterGear( M ) then begin
 				{ Insert sprite-drawing code here. }
 				AddCMCel( 	GB , X , Y , Z , CMC_Master ,
-						LocateSprite( SpriteName( M ) , SpriteColor( GB , M ) , 50 , 120 ) ,
+						LocateSprite( CuteSpriteName( M ) , SpriteColor( GB , M ) , 50 , 120 ) ,
 						( Animation_Phase div 5 ) mod 2
 				);
 
@@ -772,8 +820,8 @@ begin
 			end else if IsMasterGear( M ) then begin
 				{ Insert sprite-drawing code here. }
 				AddCMCel( 	GB , X , Y , Z , CMC_Master ,
-						LocateSprite( SpriteName( M ) , SpriteColor( GB , M ) , 50 , 120 ) ,
-						( Animation_Phase div 5 ) mod 2
+						LocateSprite( SpriteName( M ) , SpriteColor( GB , M ) , 64 , 64 ) ,
+						( NAttValue( M^.NA , NAG_Location , NAS_D ) + 1 ) mod 8
 				);
 
 				AddCMCel( 	GB , X , Y , Z , CMC_MShadow , Shadow_Sprite , 6 );
@@ -1144,7 +1192,7 @@ begin
 			if ( DX >= -2 ) and ( DX <= 2 ) and ( DY >= -2 ) and ( DY <= 2 ) then begin
 				MyDest.X := ZONE_WorldMap.X + ( DX + 2 ) * 64;
 				MyDest.Y := ZONE_WorldMap.Y + ( DY + 2 ) * 64;
-				MySprite := LocateSprite( SpriteName( M ) , SpriteColor( GB , M ) , 64 , 64 );
+				MySprite := LocateSprite( CuteSpriteName( M ) , SpriteColor( GB , M ) , 64 , 64 );
 				DrawSprite( MySprite , MyDest , NAttValue( M^.NA , NAG_Display , NAS_PrimaryFrame ) );
 			end;
 		end;
@@ -1155,7 +1203,7 @@ begin
 	if PC <> Nil then begin
 		MyDest.X := ZONE_WorldMap.X + 128;
 		MyDest.Y := ZONE_WorldMap.Y + 128;
-		MySprite := LocateSprite( SpriteName( PC ) , SpriteColor( GB , PC ) , 64 , 64 );
+		MySprite := LocateSprite( CuteSpriteName( PC ) , SpriteColor( GB , PC ) , 64 , 64 );
 		DrawSprite( MySprite , MyDest , 1 );
 	end;
 end;
