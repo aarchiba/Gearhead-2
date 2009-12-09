@@ -91,6 +91,24 @@ begin
 	Close( F );
 end;
 
+Procedure SaveEgg( Egg: GearPtr );
+	{ Save this character to disk, in the "SaveGame" directory. }
+var
+	Leader: GearPtr;
+	FName: String;		{ Filename for the character. }
+	F: Text;		{ The file to write to. }
+begin
+	Leader := Egg^.SubCom;
+	while ( Leader <> Nil ) and ( ( Leader^.G <> GG_Character ) or ( NAttValue( Leader^.NA , NAG_CharDescription , NAS_CharType ) <> 0 ) ) do Leader := Leader^.Next;
+	if Leader = Nil then Exit;
+
+	FName := Save_Egg_Base + GearName(Leader) + Default_File_Ending;
+	Assign( F , FName );
+	Rewrite( F );
+	WriteCGears( F , Egg );
+	Close( F );
+end;
+
 
 Function NoLivingPlayers( PList: GearPtr ): Boolean;
 	{ Return TRUE if the provided list of gears contains no }

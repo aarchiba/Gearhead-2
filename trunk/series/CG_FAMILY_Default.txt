@@ -11,21 +11,27 @@ Family 1
 desc <Your father was a #.>
 requires <GENERAL>
 context <+B-- +G-->
+Role1 <FATHER>
 
 Family 1
 desc <Your mother was a #.>
 requires <GENERAL>
 context <+B-- +G-->
+Role1 <MOTHER>
 
 Family 2
 desc <Your father was a # and your mother was a #.>
 requires <GENERAL>
 context <+B-- +G-->
+Role1 <FATHER>
+Role2 <MOTHER>
 
 Family 2
 desc <Your mother was a # and your father was a #.>
 requires <GENERAL>
 context <+B-- +G-->
+Role1 <MOTHER>
+Role2 <FATHER>
 
 Family 0
 desc <You come from a middle class family.>

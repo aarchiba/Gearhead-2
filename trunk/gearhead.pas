@@ -63,7 +63,7 @@ begin
 	PC := CharacterCreator( 0 );
 	if PC <> Nil then begin
 		{ Write this character to disk. }
-		SaveChar( PC );
+		SaveEgg( PC );
 
 		{ Get rid of the PC gear. }
 		DisposeGear( PC );

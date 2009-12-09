@@ -23,6 +23,19 @@ unit chargen;
 }
 {$LONGSTRINGS ON}
 
+{ ******************** }
+{ ***   THE  EGG   *** }
+{ ******************** }
+{ }
+{ The Character Creator returns an "Egg" containing not only the PC, but also }
+{ said PC's life experience and social network. When the egg is imported into }
+{ an RPG campaign these elements are placed and initialized. }
+{ }
+{ Egg Subcoms: The PC and their mecha. }
+{ Egg Invcoms: All the NPCs connected to the PC. }
+{ }
+
+
 interface
 
 uses gears;
@@ -243,8 +256,13 @@ begin
 end;
 
 Procedure GenerateFamilyHistory( PC: GearPtr; CanEdit: Boolean );
-	{ Roll for jobs for both parents, and a life history for the PC. }
-	{ The parent's jobs provide the PC with direct skill XP. }
+	{ Generate the PC's personal history up to this point. This step will }
+	{ determine the following information: }
+	{ - Starting skill XP bonuses }
+	{ - the PC's parentage (or lack thereof) }
+	{ - the PC's starting XXRan context + enemy faction }
+	{ - NPCs for the PC's egg (family, friends, and otherwise) }
+	{ - The PC's personal conflict }
 const
 	Parental_XP = 210;
 var
@@ -325,6 +343,7 @@ var
 	begin
 		if BGGear = Nil then Exit;
 		desc := SAttValue( BGGear^.SA , 'DESC' );
+		ReplacePat( desc , '%job%' , SAttValue( PC^.SA , 'JOB' ) );
 
 		if BGGear^.V > 0 then begin
 			Job1 := SelectRandomGear( LegalJobList );
@@ -354,7 +373,7 @@ begin
 		RCCaption := MsgString( 'RANDCHAR_FHPrompt' );
 	end;
 
-	Context := SAttValue( PC^.SA , 'HOMETOWN_CONTEXT' );
+	Context := SAttValue( PC^.SA , 'HOMETOWN_CONTEXT' ) + ' ' + SAttValue( PC^.SA , 'JOB_DESIG' ) + ' ' + SAttValue( PC^.SA , 'CG_FACDESIG' );
 	LegalJobList := FilterList( Jobs_List , Context );
 	Fam := Nil;
 	BioEvent := Nil;
@@ -601,7 +620,7 @@ begin
 			{ Get rid of the menu. }
 			DisposeRPGMenu( RPM );
 
-		end else if NeedsFaction( Job ) then begin
+		end else if NeedsFaction( Job ) or ( Random( 3 ) = 1 ) then begin
 			F := SelectRandomGear( LegalFactionList );
 		end;
 
@@ -609,6 +628,7 @@ begin
 		if F <> Nil then begin
 			SetNAtt( PC^.NA , NAG_Personal , NAS_FactionID , F^.S );
 			AddNAtt( PC^.NA , NAG_Experience , NAS_Credits , 50000 );
+			SetSAtt( PC^.SA , 'CG_FacDesig <' + SAttValue( F^.SA , 'DESIG' ) + '>' );
 		end;
 
 		{ Get rid of the factions list. }
@@ -1471,9 +1491,9 @@ begin
 		SelectHomeTown( PC , False , Fac );
 	end;
 
-	GenerateFamilyHistory( PC , M = MODE_Regular );
-
 	SelectJobAndFaction( PC , M = MODE_Regular , Fac );
+
+	GenerateFamilyHistory( PC , M = MODE_Regular );
 
 	{ Allocate stat points. }
 	if M = MODE_Regular then begin

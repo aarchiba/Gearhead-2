@@ -237,6 +237,7 @@ Const
 	Save_Game_DirName = 'savegame';
 	Save_Game_Directory = Save_Game_DirName + OS_Dir_Separator;
 	Save_Character_Base = Save_Game_Directory + 'CHA';
+	Save_Egg_Base = Save_Game_Directory + 'EGG';
 	Save_Unit_Base = Save_Game_Directory + 'GHU';
 	Save_Campaign_Base = Save_Game_Directory + 'RPG';
 	Design_DirName = 'design';

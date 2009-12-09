@@ -1,4 +1,4 @@
-%%
+f%%
 %%  This file contains random tasks which may be assigned to the PC, but which don't yet have
 %%  enough components to really warrant their own files.
 %%
@@ -833,6 +833,12 @@ Content
 			Team 2
 			name <Enemies>
 			SetEnemy 1
+
+			Room
+			sub
+				StairsUp
+				Destination -1
+			end
 		end
 	end
 	inv
