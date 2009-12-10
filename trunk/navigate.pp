@@ -42,10 +42,11 @@ Const
 	Plots_Per_Generation = 5;
 
 Procedure SaveChar( PC: GearPtr );
+Procedure SaveEgg( Egg: GearPtr );
 
 Procedure Navigator( Camp: CampaignPtr; Scene: GearPtr; var PCForces: GearPtr );
 
-Procedure StartCampaign( PC: GearPtr );
+Procedure StartCampaign( Egg: GearPtr );
 Procedure RestoreCampaign( RDP: RedrawProcedureType );
 
 implementation
@@ -373,14 +374,14 @@ begin
 
 end;
 
-Procedure StartCampaign( PC: GearPtr );
+Procedure StartCampaign( Egg: GearPtr );
 	{ Start a new RPG campaign. }
 	{ - Load the atlas files, then assemble them into an adventure. }
 	{ - Initialize all the cities. }
 	{ - Insert the PC's central story. }
 var
 	Camp: CampaignPtr;
-	TruePC,Atlas,S,S2,W,Story,Club: GearPtr;
+	PCForces,TruePC,Atlas,S,S2,W,Story,Club: GearPtr;
 	Factions,Artifacts: GearPtr;
 	HighWorldID: Integer;
 	Base,Changes: String;	{ Context Strings. }
@@ -390,7 +391,9 @@ begin
 {$ENDIF}
 
 	{ Locate the TruePC. }
-	TruePC := PC;
+	PCForces := Egg^.SubCom;
+	DelinkGear( Egg^.SubCom , PCForces );
+	TruePC := PCForces;
 	while ( TruePC <> Nil ) and ( ( TruePC^.G <> GG_Character ) or ( NAttValue( TruePC^.NA , NAG_CharDescription , NAS_CharType ) <> 0 ) ) do TruePC := TruePC^.Next;
 
 	{ Give the PC a personal communicator. Maybe. }
@@ -515,16 +518,19 @@ begin
 	{ Verify that the exits have been handled correctly. }
 	VerifySceneExits( Camp^.Source );
 
+	{ By now, we should be finished with the EGG. Get rid of it. }
+	DisposeGear( Egg );
+
 	{ Locate the Cavalier Club. This is to be the starting location. }
 	{ Being the first location entered by the PC, the Cavalier Club has }
 	{ the imaginative designation of "00000". }
 	S := SeekGearByDesig( Camp^.Source , '00000' );
 	if S <> Nil then begin
-		Navigator ( Camp , S , PC );
+		Navigator ( Camp , S , PCForces );
 	end;
 
 	DisposeCampaign( Camp );
-	DisposeGear( PC );
+	DisposeGear( PCForces );
 end;
 
 Procedure RestoreCampaign( RDP: RedrawProcedureType );

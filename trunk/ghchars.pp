@@ -82,6 +82,8 @@ Const
 
 	NAS_IsCombatant = 3;	{ If nonzero, this character is a combatant. }
 				{ Combatant characters can take part in mecha combat. }
+	NAS_IsMentor = 4;	{ If nonzero, this character is a mentor. }
+				{ Mentors may never be taken as lancemates. }
 
 	{ CharDescription / Personality Traits }
 	Num_Personality_Traits = 7;

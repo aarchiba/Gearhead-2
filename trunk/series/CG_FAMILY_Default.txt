@@ -11,7 +11,13 @@ Family 1
 desc <Your father was a #.>
 requires <GENERAL>
 context <+B-- +G-->
-Role1 <FATHER>
+sub
+	Content
+	PCMentor
+	PCFamily
+	chardesc male
+end
+
 
 Family 1
 desc <Your mother was a #.>

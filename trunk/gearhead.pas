@@ -82,7 +82,7 @@ begin
 
 	{ Create a menu listing all the characters in the SaveGame directory. }
 	RPM := CreateRPGMenu( MenuItem , MenuSelect , ZONE_Menu );
-	BuildFileMenu( RPM , Save_Character_Base + Default_Search_Pattern );
+	BuildFileMenu( RPM , Save_Egg_Base + Default_Search_Pattern );
 
 	if RPM^.NumItem > 0 then begin
 		RPMSortAlpha( RPM );

@@ -26,13 +26,17 @@ unit chargen;
 { ******************** }
 { ***   THE  EGG   *** }
 { ******************** }
+{  EGG^.G = GG_Set    }
+{  EGG^.S = NA        }
+{  EGG^.V = NA        }
+{ }
+{ Egg Subcoms: The PC and their mecha. }
+{ Egg Invcoms: All the NPCs connected to the PC. }
 { }
 { The Character Creator returns an "Egg" containing not only the PC, but also }
 { said PC's life experience and social network. When the egg is imported into }
 { an RPG campaign these elements are placed and initialized. }
 { }
-{ Egg Subcoms: The PC and their mecha. }
-{ Egg Invcoms: All the NPCs connected to the PC. }
 { }
 
 
@@ -255,7 +259,7 @@ begin
 	FilterList := it;
 end;
 
-Procedure GenerateFamilyHistory( PC: GearPtr; CanEdit: Boolean );
+Procedure GenerateFamilyHistory( Egg , PC: GearPtr; CanEdit: Boolean );
 	{ Generate the PC's personal history up to this point. This step will }
 	{ determine the following information: }
 	{ - Starting skill XP bonuses }
@@ -1259,10 +1263,10 @@ begin
 	end;
 
 
-	{ Attach a copy of the selected mecha to the PC. }
+	{ Attach a copy of the selected mecha to the egg. }
 	if Mek <> Nil then begin
 		Mek := CloneGear( Mek );
-		PC^.Next := Mek;
+		AppendGear( PC^.Parent^.SubCom , Mek );
 		if GearValue( mek ) > BaseMechaAllowance then begin
 			AddNAtt( PC^.NA , NAG_Experience , NAS_Credits , BaseMechaAllowance - GearValue( Mek ) );
 		end;
@@ -1442,7 +1446,7 @@ const
 	MODE_Regular = 1;
 	MODE_Easy = 0;
 var
-	PC: GearPtr;
+	Egg,PC: GearPtr;
 	M: Integer;
 	N,StatPt,SkillPt: LongInt;
 	name: String;
@@ -1452,7 +1456,9 @@ begin
 	if M = -1 then Exit( Nil );
 
 	{ Start by allocating the PC record. }
+	Egg := NewGear( Nil );
 	PC := NewGear( Nil );
+	InsertSubCom( Egg , PC );
 	PC^.G := GG_Character;
 	InitGear( PC );
 	StatPt := 90;
@@ -1493,7 +1499,7 @@ begin
 
 	SelectJobAndFaction( PC , M = MODE_Regular , Fac );
 
-	GenerateFamilyHistory( PC , M = MODE_Regular );
+	GenerateFamilyHistory( Egg , PC , M = MODE_Regular );
 
 	{ Allocate stat points. }
 	if M = MODE_Regular then begin
@@ -1546,12 +1552,12 @@ begin
 		CharacterDisplay( PC , Nil );
 
 	end else begin
-		DisposeGear( PC );
+		DisposeGear( Egg );
 
 	end;
 
 	{ Clear the screen, and return the PC. }
-	CharacterCreator := PC;
+	CharacterCreator := Egg;
 end;
 
 Function RandomNPC( Adv: GearPtr; Fac,Hometown: Integer ): GearPtr;
