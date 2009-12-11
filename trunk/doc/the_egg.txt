@@ -14,3 +14,14 @@ DEFINING NPCS
 -------------
 A biography event may describe an NPC. If said NPC is a mentor, they will pass
 on skill training to the PC.
+
+All attributes of the NPC request will be copied to the eventual NPC.
+
+The NPC may request a quest. Generally, the primary mentor will load a
+"*EGG_Primary" quest and the secondary will load a "*EGG_Secondary" quest. If no
+quest is explicitly requested, the NPC will be initialized with a "*EGG_Default"
+quest.
+
+The Age attribute of the NPC request is relative to the age of the PC, plus or
+minus three years.
+

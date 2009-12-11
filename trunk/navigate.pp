@@ -295,10 +295,12 @@ begin
 	CheckAlongPath( Adv );
 end;
 
-Procedure InitializeAdventureContent( Adv,HomeTown: GearPtr );
+Procedure InitializeAdventureContent( Adv,HomeTown,Egg: GearPtr );
 	{ Initialize the static adventure content. This consists mostly of }
 	{ searching through the structure for content requests and filling }
 	{ those recursively as needed. }
+	{ Also add the content contained within the Egg. Most of this content }
+	{ will require quests for placement/initialization. }
 const
 	NumSubQuests = 8;
 var
@@ -318,7 +320,7 @@ var
 				while SA <> Nil do begin
 					if HeadMatchesString( 'QUEST' , SA^.Info ) then begin
 						ConReq := RetrieveAString( SA^.Info );
-						if not AddQuest( Adv , FindRootScene( LList ) , MasterList , ConReq ) then begin
+						if not AddQuest( Adv , FindRootScene( LList ) , Nil , MasterList , ConReq ) then begin
 							if XXRan_Debug then DialogMsg( 'ERROR: AddQuest failed for ' + ConReq );
 						end;
 					end;
@@ -330,6 +332,27 @@ var
 			LList := LList^.Next;
 		end;
 	end;
+	Procedure PlaceEggNPCs( LList: GearPtr );
+		{ Take the NPCs from the egg and place them in the adventure. }
+		{ Actually, we won't be placing them, but clones of them... }
+		{ anyhow, go and do it. }
+	const
+		Default_NPC_Quest = '*EGG_Default';
+	var
+		ConReq: String;
+	begin
+		while LList <> Nil do begin
+			ConReq := SAttValue( LList^.SA , 'QUEST' );
+			{ If this content request is empty, assign the default value. }
+			if ConReq = '' then ConReq := Default_NPC_Quest;
+
+			if not AddQuest( Adv , HomeTown , LList , MasterList , ConReq ) then begin
+				if XXRan_Debug then DialogMsg( 'ERROR: AddQuest failed for ' + ConReq + '/' + GearName( LList ) );
+			end;
+
+			LList := LList^.Next;
+		end;
+	end;
 begin
 	{ Load the component library. }
 	MasterList := LoadQuestFragments;
@@ -337,9 +360,14 @@ begin
 	{ Start checing the adventure scenes for content requests. }
 	CheckAlongPath( Adv^.SubCom );
 
+	{ Place the NPCs from the egg. Some of these will likely make use }
+	{ of the quest fragments loaded above. }
+	PlaceEggNPCs( Egg^.SubCom );
+
 	{ Get rid of the master list. }
 	DisposeGear( MasterList );
 end;
+
 
 Procedure VerifySceneExits( LList: GearPtr );
 	{ Check all of the exits you can find. If any of them are negative, this is a bad thing. }
@@ -513,7 +541,7 @@ begin
 	InsertInvCom( Camp^.Source , Story );
 
 	{ Insert the static adventure quests. }
-	InitializeAdventureContent( Camp^.Source , S );
+	InitializeAdventureContent( Camp^.Source , S , Egg );
 
 	{ Verify that the exits have been handled correctly. }
 	VerifySceneExits( Camp^.Source );

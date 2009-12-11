@@ -8,51 +8,83 @@
 % it includes a "blank" personal context.
 
 Family 1
-desc <Your father was a #.>
+desc <Your father was a %job1% and your mother was a %job2%.>
 requires <GENERAL>
 context <+B-- +G-->
 sub
-	Content
+	Chara
 	PCMentor
 	PCFamily
+	role <FATHER>
 	chardesc male
+	Renown 50
+	Quest <*EGG_Primary>
+	Age 25
+
+	Chara
+	PCMentor
+	PCFamily
+	role <MOTHER>
+	chardesc male
+	Renown 50
+	Quest <*EGG_Secondary>
+	Age 25
 end
 
-
 Family 1
-desc <Your mother was a #.>
+desc <Your mother was a %job1% and your father was a %job2%.>
 requires <GENERAL>
 context <+B-- +G-->
-Role1 <MOTHER>
+sub
+	Chara
+	PCMentor
+	PCFamily
+	role <MOTHER>
+	chardesc male
+	Renown 70
+	Quest <*EGG_Primary>
+	Age 25
 
-Family 2
-desc <Your father was a # and your mother was a #.>
-requires <GENERAL>
-context <+B-- +G-->
-Role1 <FATHER>
-Role2 <MOTHER>
+	Chara
+	PCMentor
+	PCFamily
+	role <FATHER>
+	chardesc male
+	Renown 70
+	Quest <*EGG_Secondary>
+	Age 25
+end
 
-Family 2
-desc <Your mother was a # and your father was a #.>
-requires <GENERAL>
-context <+B-- +G-->
-Role1 <MOTHER>
-Role2 <FATHER>
-
-Family 0
-desc <You come from a middle class family.>
-requires <GENERAL>
-context <+B-- +G-->
 
 Family 1
 desc <You were raised by your mother, who was a famous #.>
 requires <GENERAL>
 context <+B-- +G-->
+sub
+	Chara
+	PCMentor
+	PCFamily
+	role <MOTHER>
+	chardesc male
+	Renown 70
+	Quest <*EGG_Primary>
+	Age 25
+end
 
 Family 1
 desc <You were raised by your father, who was a famous #.>
 requires <GENERAL>
 context <+B-- +G-->
+sub
+	Chara
+	PCMentor
+	PCFamily
+	role <FATHER>
+	chardesc male
+	Renown 50
+	Quest <*EGG_Primary>
+	Age 25
+end
 
 Family 0
 desc <You never knew your parents, and were raised in an orphanage.>
@@ -64,16 +96,6 @@ desc <Your parents were too poor to care for you, so they put you up for adoptio
 requires <POOR>
 context <+Bor +G-->
 
-Family 1
-desc <Your school circle was trained to become #s.>
-requires <SPINNER>
-context <+Bor +G-->
-
-Family 1
-desc <From a young age, you were raised to be a #.>
-requires <SPINNER>
-context <+Bor +G-->
-
 Family 0
 desc <Your parents died when you were very young.>
 requires <GENERAL>
@@ -83,12 +105,5 @@ Family 0
 desc <Your parents died in the disaster.>
 requires <DISASTER>
 context <+Bpd +G-->
-
-Family 0
-desc <Your parents were privateers, and you grew up on a spaceship.>
-requires <MAQUI>
-context <+B-- +G-->
-Lawfulness -5
-
 
 

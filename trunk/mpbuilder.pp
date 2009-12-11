@@ -47,7 +47,7 @@ Procedure ConnectScene( Scene: GearPtr; DoInitExits: Boolean );
 Function InitMegaPlot( GB: GameBoardPtr; Scope,Slot,Plot: GearPtr; Threat: Integer ): GearPtr;
 
 Function LoadQuestFragments: GearPtr;
-Function AddQuest( Adv,City: GearPtr; var Quest_Frags: GearPtr; QReq: String ): Boolean;
+Function AddQuest( Adv,City,QPF_Proto: GearPtr; var Quest_Frags: GearPtr; QReq: String ): Boolean;
 
 
 implementation
@@ -195,7 +195,7 @@ begin
 	end;
 end;
 
-Function AddSubPlot( GB: GameBoardPtr; Scope,Slot,Plot0: GearPtr; var Quest_Frags: GearPtr; SPReq: String; EsSoFar, LayerID, SubPlotSlot: LongInt; IsAQuest,DoDebug: Boolean ): GearPtr; forward;
+Function AddSubPlot( GB: GameBoardPtr; Scope,Slot,Plot0,QPF_Proto: GearPtr; var Quest_Frags: GearPtr; SPReq: String; EsSoFar, LayerID, SubPlotSlot: LongInt; IsAQuest,DoDebug: Boolean ): GearPtr; forward;
 
 Function InitShard( GB: GameBoardPtr; Scope,Slot,Shard: GearPtr; var Quest_Frags: GearPtr; EsSoFar,PlotID,LayerID,Threat: LongInt; const ParamIn: ElementTable; IsAQuest,DoDebug: Boolean ): GearPtr;
 	{ SHARD is a plot fragment candidate. Attempt to add it to the Slot. }
@@ -387,7 +387,7 @@ begin
 					SPReq := SAttValue( Shard^.SA , 'SUBPLOT' + BStr( T ) );
 					if SPReq <> '' then begin
 						SPID := NewLayerID( Slot );
-						SubPlot := AddSubPlot( GB , Scope , Slot , Shard , Quest_Frags , SPReq , NumElem , SPID , T , IsAQuest, DoDebug );
+						SubPlot := AddSubPlot( GB , Scope , Slot , Shard , Quest_Frags , Nil , SPReq , NumElem , SPID , T , IsAQuest, DoDebug );
 						if SubPlot <> Nil then begin
 							{ A subplot was correctly installed. Add it to the list. }
 							AppendGear( SPList , SubPlot );
@@ -446,11 +446,12 @@ begin
 	QuestIsReusable := AStringHasBString( SAttValue( Q^.SA , 'SPECIAL' ) , 'REUSABLE' );
 end;
 
-Function AddSubPlot( GB: GameBoardPtr; Scope,Slot,Plot0: GearPtr; var Quest_Frags: GearPtr; SPReq: String; EsSoFar, LayerID, SubPlotSlot: LongInt; IsAQuest,DoDebug: Boolean ): GearPtr;
+Function AddSubPlot( GB: GameBoardPtr; Scope,Slot,Plot0,QPF_Proto: GearPtr; var Quest_Frags: GearPtr; SPReq: String; EsSoFar, LayerID, SubPlotSlot: LongInt; IsAQuest,DoDebug: Boolean ): GearPtr;
 	{ A request has been issued for a subplot. Search through the plot }
 	{ component list and see if there's anything that matches our criteria. }
 	{ Plot0 = the plot requesting the subplot. If this is a quest it may be }
 	{ nil, but don't you dare try pulling that crap otherwise. }
+	{ QPF_PROTO is a prototype of a prefab element to be inserted into a quest. }
 	{ QUEST_FRAGS contains a list of quest fragents. If constructing a quest, these may be used }
 	{ in addition to the regular megaplot comps. Once a quest fragment is used, it cannot usually }
 	{ be used again. }
@@ -516,7 +517,7 @@ var
 	Context,EDesc,SPContext,changes_list: String;
 	ParamList: ElementTable;
 	T,E,Threat: Integer;
-	Shard: GearPtr;
+	Shard,QPF_Clone: GearPtr;
 	NotFoundMatch: Boolean;
 	PlotID: LongInt;
 	IsBranchPlot: Boolean;
@@ -618,6 +619,13 @@ begin
 			{ Make sure this candidate doesn't violate our changes_used_so_far list. }
 			changes_list := SAttValue( Shard^.SA , 'CHANGES' );
 			if ( changes_list = '' ) or NoQItemsMatch( changes_used_so_far , changes_list ) then begin
+				{ Insert the QPF gear, if appropriate. This is naively appended to the }
+				{ invcoms, so the Element ID must be the last requested prefab. }
+				if QPF_Proto <> Nil then begin
+					QPF_Clone := CloneGear( QPF_Proto );
+					InsertInvCom( Shard , QPF_Clone );
+				end;
+
 				{ See if we can add this one to the list. If not, it will be }
 				{ deleted by InitShard. }
 				if SPContext <> '' then SetSAtt( Shard^.SA , 'SPCONTEXT <' + SPContext + '>' );
@@ -1838,8 +1846,9 @@ begin
 	LoadQuestFragments := Frags;
 end;
 
-Function AddQuest( Adv,City: GearPtr; var Quest_Frags: GearPtr; QReq: String ): Boolean;
-	{ Add a quest to the provided city, using the provided THREAT rating. }
+Function AddQuest( Adv,City,QPF_Proto: GearPtr; var Quest_Frags: GearPtr; QReq: String ): Boolean;
+	{ Add a quest to the provided city. }
+	{ QPF_Proto is a prototype for a prefab element to be added to a quest. }
 	{ Quest_Frags is the list of quest fragments. Some of them may get deleted here. }
 	{ QReq is the quest request taken from the ATLAS. }
 var
@@ -1850,7 +1859,7 @@ begin
 	plotpoints_used_so_far := 0;
 
 	{ Step One- Select a starting fragment. }
-	QList := AddSubPlot( Nil, City, Adv, Nil, Quest_Frags, QReq, 0, NewLayerID( Adv ), 0, True, False );
+	QList := AddSubPlot( Nil, City, Adv, Nil, QPF_Proto , Quest_Frags, QReq, 0, NewLayerID( Adv ), 0, True, False );
 
 	{ This will give us a list of quest fragments. Assemble them. }
 	if QList <> Nil then begin
