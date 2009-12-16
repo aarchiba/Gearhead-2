@@ -387,7 +387,7 @@ begin
 					SPReq := SAttValue( Shard^.SA , 'SUBPLOT' + BStr( T ) );
 					if SPReq <> '' then begin
 						SPID := NewLayerID( Slot );
-						SubPlot := AddSubPlot( GB , Scope , Slot , Shard , Quest_Frags , Nil , SPReq , NumElem , SPID , T , IsAQuest, DoDebug );
+						SubPlot := AddSubPlot( GB , Scope , Slot , Shard , Nil , Quest_Frags , SPReq , NumElem , SPID , T , IsAQuest, DoDebug );
 						if SubPlot <> Nil then begin
 							{ A subplot was correctly installed. Add it to the list. }
 							AppendGear( SPList , SubPlot );

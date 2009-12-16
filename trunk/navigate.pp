@@ -362,7 +362,7 @@ begin
 
 	{ Place the NPCs from the egg. Some of these will likely make use }
 	{ of the quest fragments loaded above. }
-	PlaceEggNPCs( Egg^.SubCom );
+	PlaceEggNPCs( Egg^.InvCom );
 
 	{ Get rid of the master list. }
 	DisposeGear( MasterList );

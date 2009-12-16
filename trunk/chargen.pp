@@ -96,659 +96,6 @@ begin
 	if RCCaption <> '' then CMessage( RCCaption , ZONE_CharGenCaption , InfoGreen );
 end;
 
-Function SelectMode: Integer;
-	{ Prompt the user for a mode selection. }
-var
-	RPM: RPGMenuPtr;
-	G: Integer;
-begin
-	RPM := CreateRPGMenu( MenuItem , MenuSelect , ZONE_CharGenMenu );
-
-	AddRPGMenuItem( RPM , MsgString( 'RANDCHAR_SMOp0' ) , 0 );
-	AddRPGMenuItem( RPM , MsgString( 'RANDCHAR_SMOp1' ) , 1 );
-
-	RCPromptMessage := MsgString( 'RANDCHAR_SMPrompt' );
-	RCDescMessage := MsgString( 'RANDCHAR_SMDesc' );
-	RCCaption := '';
-	G := SelectMenu( RPM , @RandCharRedraw );
-
-	DisposeRPGMenu( RPM );
-	SelectMode := G;
-end;
-
-Function SelectGender: Integer;
-	{ Prompt the user for a gender selection. }
-var
-	RPM: RPGMenuPtr;
-	G: Integer;
-begin
-	RPM := CreateRPGMenu( MenuItem , MenuSelect , ZONE_CharGenMenu );
-
-	AddRPGMenuItem( RPM , MsgString( 'GenderName_0' ) , NAV_Male );
-	AddRPGMenuItem( RPM , MsgString( 'GenderName_1' ) , NAV_Female );
-
-	RCDescMessage := MsgString( 'RANDCHAR_SGDesc' );
-	RCPromptMessage := MsgString( 'RANDCHAR_SGPrompt' );
-	RCCaption := '';
-	G := SelectMenu( RPM , @RandCharRedraw );
-
-	DisposeRPGMenu( RPM );
-
-	SelectGender := G;
-end;
-
-Function SelectAge: Integer;
-	{ Prompt the user for character age. }
-var
-	RPM: RPGMenuPtr;
-	T: Integer;
-begin
-	RPM := CreateRPGMenu( MenuItem , MenuSelect , ZONE_CharGenMenu );
-
-	for t := -4 to 10 do begin
-		AddRPGMenuItem( RPM , BStr( T + 20 ) + ' years old' , T );
-	end;
-
-	RCDescMessage := MsgString( 'RANDCHAR_SADesc' );
-	RCPromptMessage := MsgString( 'RANDCHAR_SAPrompt' );
-	RCCaption := '';
-	T := SelectMenu( RPM , @RandCharRedraw );
-
-	DisposeRPGMenu( RPM );
-	SelectAge := T;
-end;
-
-Procedure StoreHomeTownDataInPC( PC,City: GearPtr );
-	{ Store the information for this PC's home town in the character record. }
-var
-	msg: String;
-	Fac: GearPtr;
-begin
-	StoreSAtt( PC^.SA , 'HOMETOWN <' + GearName( City ) + '>' );
-	StoreSAtt( PC^.SA , 'HOMETOWN_FACTIONS <' + SAttValue( City^.SA , 'FACTIONS' ) + '>' );
-	msg := SAttValue( City^.SA , 'TYPE' ) + ' ' + SAttValue( City^.SA , 'DESIG' );
-
-	Fac := SeekCurrentLevelGear( Factions_List , GG_Faction , NAttValue( City^.NA , NAG_Personal , NAS_FactionID ) );
-	if Fac <> Nil then begin
-		msg := msg + ' ' + SAttValue( Fac^.SA , 'DESIG' );
-		StoreSAtt( PC^.SA , 'HOMETOWN_GOVERNMENT <' + SAttValue( Fac^.SA , 'DESIG' ) + '>' );
-	end;
-
-	StoreSAtt( PC^.SA , 'HOMETOWN_CONTEXT <' + msg + '>' );
-end;
-
-Procedure SelectHomeTown( PC: GearPtr; CanEdit: Boolean; ForceFac: Integer );
-	{ Select the PC's home town. Store the home town information in the PC }
-	{ string attributes. }
-	{ If ForceFac is nonzero, the generated PC must belong to this faction or }
-	{ no faction at all. So, only allow cities where this faction is active. }
-var
-	City,Fac: GearPtr;
-	N: Integer;
-	RPM: RPGMenuPtr;
-	FacDesig: String;
-begin
-	if ForceFac <> 0 then begin
-		Fac := SeekCurrentLevelGear( Factions_List , GG_Faction , ForceFac );
-		FacDesig := SAttValue( Fac^.SA , 'DESIG' );
-	end;
-
-	{ Create the menu. }
-	RPM := CreateRPGMenu( MenuItem , MenuSelect , ZONE_CharGenMenu );
-	AttachMenuDesc( RPM , ZONE_CharGenPrompt );
-
-	RCDescMessage := MsgString( 'RANDCHAR_CityDesc' );
-	RCPromptMessage := '';
-	RCCaption := MsgString( 'RANDCHAR_CityPrompt' );
-
-	{ Add all faction-legal HOMETOWNs to the menu. }
-	N := 1;
-	City := Hometown_List;
-	while City <> Nil do begin
-		if ( ForceFac = 0 ) or AStringHasBString( SAttValue( City^.SA , 'FACTIONS' ) , FacDesig ) then begin
-			AddRPGMenuItem( RPM , GearName( City ) , N , SAttValue( City^.SA , 'DESC' ) );
-		end;
-		Inc( N );
-		City := City^.Next;
-	end;
-	RPMSortAlpha( RPM );
-
-	if RPM^.NumItem < 1 then begin
-		{ We've got ourselves an empty menu. Just pick a hometown randomly. }
-		N := Random( NumSiblingGears( Hometown_List ) ) + 1;
-	end else if CanEdit then begin
-		{ Can edit - allow the PC to select a home town. }
-		N := SelectMenu( RPM , @RandCharRedraw );
-		if N = -1 then begin
-			N := RPMLocateByPosition( RPM , Random( RPM^.NumItem ) + 1 )^.value;
-		end;
-	end else begin
-		{ Can't edit- select a home town randomly. }
-		N := RPMLocateByPosition( RPM , Random( RPM^.NumItem ) + 1 )^.value;
-	end;
-	DisposeRPGMenu( RPM );
-
-	{ Store the data for this city. }
-	City := RetrieveGearSib( Hometown_List , N );
-	if City <> Nil then begin
-		StoreHomeTownDataInPC( PC , City );
-	end;
-end;
-
-Function FilterList( Source: GearPtr; const PContext: String ): GearPtr;
-	{ Create a list of things based on the context provided. }
-	{ Yeah, I know, real specific there... }
-var
-	it,J: GearPtr;
-	Context: String;
-begin
-	{ Add a GENERAL tag to the context. Everybody gets a GENERAL tag. }
-	context := 'GENERAL ' + PContext;
-	it := Nil;
-
-	{ Go through the jobs list and copy everything that matches the context. }
-	J := Source;
-	while J <> Nil do begin
-		if StringMatchWeight( Context , SAttValue( J^.SA , 'REQUIRES' ) ) > 0 then begin
-			AppendGear( it , CloneGear( J ) );
-		end;
-		J := J^.Next;
-	end;
-
-	{ Return the finished list. }
-	FilterList := it;
-end;
-
-Procedure GenerateFamilyHistory( Egg , PC: GearPtr; CanEdit: Boolean );
-	{ Generate the PC's personal history up to this point. This step will }
-	{ determine the following information: }
-	{ - Starting skill XP bonuses }
-	{ - the PC's parentage (or lack thereof) }
-	{ - the PC's starting XXRan context + enemy faction }
-	{ - NPCs for the PC's egg (family, friends, and otherwise) }
-	{ - The PC's personal conflict }
-const
-	Parental_XP = 210;
-var
-	RPM: RPGMenuPtr;
-	LegalJobList,Fam,BioEvent: GearPtr;
-	N,C: Integer;
-	Context,Bio1: String;
-{ Procedures block. }
-	Procedure ApplyParentalBonus( Job: GearPtr );
-	var
-		N,T: Integer;
-	begin
-		{ Error check - Job might be NIL. }
-		if Job = Nil then begin
-			AddNAtt( PC^.NA , NAG_Experience , NAS_TotalXP , ( Parental_XP * 2 ) div 3 );
-			Exit;
-		end;
-
-		{ See what's in there. }
-		{ We have to make two passes- one to see how many skills there are, }
-		{ then a second one to apply the experience. }
-		N := 0;
-		{ Count skills. }
-		for t := 1 to NumSkill do begin
-			if NAttValue( Job^.NA , NAG_SKill , T ) <> 0 then begin
-				Inc( N );
-			end;
-		end;
-
-		{ Apply bonuses. }
-		if N > 0 then begin
-			for t := 1 to NumSkill do begin
-				if NAttValue( Job^.NA , NAG_SKill , T ) <> 0 then begin
-					AddNAtt( PC^.NA , NAG_Experience , NAS_Skill_XP_Base + t , Parental_XP div N );
-				end;
-			end;
-		end else begin
-			AddNAtt( PC^.NA , NAG_Experience , NAS_TotalXP , ( Parental_XP * 2 ) div 3 );
-		end;
-	end;
-	Procedure ApplyBiographyEvent( Bio: GearPtr );
-		{ Apply the changes brought about by this biography event. }
-	var
-		Base,Changes: String;
-		T: Integer;
-	begin
-		{ An empty biography has no effect. }
-		if Bio = Nil then begin
-			AddNAtt( PC^.NA , NAG_Experience , NAS_TotalXP , ( Parental_XP * 4 ) div 3 );
-			Exit;
-		end;
-
-		{ Copy over the personality traits from the biography event. }
-		for t := 1 to Num_Personality_Traits do begin
-			AddNAtt( PC^.NA , NAG_CharDescription , -T , NAttValue( Bio^.NA , NAG_CharDescription , -T ) );
-		end;
-
-		{ Copy the changes to the PC's context. }
-		Base := SAttValue( PC^.SA , 'CONTEXT' );
-		Changes := SAttValue( Bio^.SA , 'CONTEXT' );
-		AlterDescriptors( Base , Changes );
-		SetSAtt( PC^.SA , 'CONTEXT <' + Base + '>' );
-
-		{ Apply the bonuses from the jobs. }
-		if Bio^.SubCom <> Nil then begin
-			ApplyParentalBonus( Bio^.SubCom );
-			ApplyParentalBonus( Bio^.SubCom^.Next );
-		end else begin
-			AddNAtt( PC^.NA , NAG_Experience , NAS_TotalXP , ( Parental_XP * 4 ) div 3 );
-		end;
-	end;
-	Procedure InitBackground( BGGear: GearPtr );
-		{ Initialize this background gear. Add as many jobs as it }
-		{ requests. Initialize the description. }
-	var
-		desc: String;
-		Job1,Job2: GearPtr;
-	begin
-		if BGGear = Nil then Exit;
-		desc := SAttValue( BGGear^.SA , 'DESC' );
-		ReplacePat( desc , '%job%' , SAttValue( PC^.SA , 'JOB' ) );
-
-		if BGGear^.V > 0 then begin
-			Job1 := SelectRandomGear( LegalJobList );
-			InsertSubCom( BGGear , CloneGear( Job1 ) );
-			desc := ReplaceHash( desc , GearName( Job1 ) );
-			if BGGear^.V = 2 then begin
-				Job2 := SelectRandomGear( LegalJobList );
-				C := 10;
-				while ( Job2 = Job1 ) and ( C > 0 ) do begin
-					Dec( C );
-					Job2 := SelectRandomGear( LegalJobList );
-				end;
-				desc := ReplaceHash( desc , GearName( Job2 ) );
-				InsertSubCom( BGGear , CloneGear( Job2 ) );
-			end;
-		end;
-		SetSAtt( BGGear^.SA , 'DESC <' + desc + '>' );
-	end;
-begin
-	RPM := CreateRPGMenu( MenuItem , MenuSelect , ZONE_CharGenMenu );
-	AddRPGMenuItem( RPM , MsgString( 'RANDCHAR_FHAccept' ) , 1 );
-	AddRPGMenuItem( RPM , MsgString( 'RANDCHAR_FHDecline' ) , -1 );
-
-	if CanEdit then begin
-		RCPromptMessage := '';
-		RCDescMessage := MsgString( 'RANDCHAR_FHDesc' );
-		RCCaption := MsgString( 'RANDCHAR_FHPrompt' );
-	end;
-
-	Context := SAttValue( PC^.SA , 'HOMETOWN_CONTEXT' ) + ' ' + SAttValue( PC^.SA , 'JOB_DESIG' ) + ' ' + SAttValue( PC^.SA , 'CG_FACDESIG' );
-	LegalJobList := FilterList( Jobs_List , Context );
-	Fam := Nil;
-	BioEvent := Nil;
-
-	repeat
-		{ Decide upon the family history here, giving skill points }
-		{ and whatever. }
-
-		{ Start with a random component. }
-		if Fam <> Nil then DisposeGear( Fam );
-		if BioEvent <> Nil then DisposeGear( BioEvent );
-
-		{ Roll the family type for the PC. }
-		Fam := CloneGear( FindNextComponent( Family_List , 'GENERAL ' + Context ) );
-		InitBackground( Fam );
-		bio1 := SAttValue( Fam^.SA , 'DESC' );
-
-		{ Roll the biography event for the PC. }
-		if Random( 3 ) <> 1 then begin
-			BioEvent := CloneGear( FindNextComponent( Bio_List , 'GENERAL ' + Context + ' ' + SAttValue( Fam^.SA , 'CONTEXT' ) ) );
-			if BioEvent <> Nil then begin
-				InitBackground( BioEvent );
-				bio1 := bio1 + ' ' + SAttValue( BioEvent^.SA , 'DESC' );
-			end;
-		end;
-
-		AtoAn( bio1 );
-
-		{ Display the created biography for the user. }
-		SetSAtt( PC^.SA , 'BIO1 <' + Bio1 + '>' );
-
-		{ Decide whether to accept or decline this family history. }
-		if CanEdit then begin
-			N := SelectMenu( RPM , @RandCharRedraw );
-		end else begin
-			N := 1;
-		end;
-	until N = 1;
-
-	ApplyBiographyEvent( Fam );
-	DisposeGear( Fam );
-	ApplyBiographyEvent( BioEvent );
-	DisposeGear( BioEvent );
-
-	SetSAtt( PC^.SA , 'BIO1 <' + Bio1 + '>' );
-
-	DisposeRPGMenu( RPM );
-
-	DisposeGear( LegalJobList );
-end;
-
-
-Procedure SelectJobAndFaction( PC: GearPtr; CanEdit: Boolean; ForceFac: Integer );
-	{ Select a job for the PC. }
-	{ Based on this job, select a faction. }
-	function NeedsFaction( Job: GearPtr ): Boolean;
-		{ Return TRUE if the provided job absolutely must have a faction }
-		{ associated with it, or FALSE otherwise. }
-	begin
-		NeedsFaction := AStringHasBString( SAttValue( Job^.SA , 'SPECIAL' ) , 'NeedsFaction' );
-	end;
-	Function JobFitsFaction( Job,Faction: GearPtr ): Boolean;
-		{ Return TRUE if this job fits this faction, or FALSE otherwise. }
-	begin
-		JobFitsFaction := AStringHasBString( SAttValue( Faction^.SA , 'JOBS' ) , SAttValue( Job^.SA , 'Desig' ) );
-	end;
-	Function CreateFactionList( Loc_Factions: String; Job: GearPtr ): GearPtr;
-		{ Create a list of legal factions for the PC to choose from. }
-		{ It must be a faction featured in the PC's home town, and it must }
-		{ be hiring people on the PC's job path. }
-		{ If ForceFac is nonzero, it must be that faction. }
-	var
-		it,F: GearPtr;
-	begin
-		if ForceFac <> 0 then begin
-			it := CloneGear( SeekCurrentLevelGear( Factions_List , GG_Faction , ForceFac ) );
-		end else begin
-			it := Nil;
-			F := Factions_List;
-			while F <> Nil do begin
-				if AStringHasBString( Loc_Factions , SAttValue( F^.SA , 'DESIG' ) ) and JobFitsFaction( Job , F ) then begin
-					AppendGear( it , CloneGear( F ) );
-				end;
-				F := F^.Next;
-			end;
-		end;
-		CreateFactionList := it;
-	end;
-	Procedure DoExtraFacFilter( Fac: GearPtr; var LegalJobList: GearPtr );
-		{ The PC must belong to a specific faction or no faction at all. }
-		{ If any of these jobs have a preset faction or require a faction }
-		{ but can't be taken by the available faction, they get deleted from }
-		{ the list. That's an awful run-on sentance but I was busy all day }
-		{ making kimchi. }
-	var
-		J,J2: GearPtr;
-		FID: Integer;
-	begin
-		J := LegalJobList;
-		while J <> Nil do begin
-			J2 := J^.Next;
-			FID := NAttValue( J^.NA , NAG_Personal , NAS_FactionID );
-			if ( FID <> 0 ) and ( FID <> ForceFac ) then begin
-				RemoveGear( LegalJobList , J );
-			end else if NeedsFaction( J ) and not JobFitsFaction( J , Fac ) then begin
-				RemoveGear( LegalJobList , J );
-			end;
-
-			J := J2;
-		end;
-	end;
-	Function JobDescription( Job: GearPtr ): String;
-		{ Return a description for this job: This will be its category }
-		{ and its list of skills. }
-	var
-		msg: String;
-		S,N: Integer;
-	begin
-		{ Start with the job category. }
-		msg := '(' + SAttValue( Job^.SA , 'DESIG' ) + ') ';
-
-		{ Add the skills. }
-		N := 0;
-		for S := 1 to NumSkill do begin
-			if NAttValue( Job^.NA , NAG_Skill , S ) <> 0 then begin
-				if N > 0 then msg := msg + ', ';
-				msg := msg + MsgString( 'SkillName_' + BStr( S ) );
-				inc( N );
-			end;
-		end;
-		JobDescription := msg;
-	end;
-var
-	RPM: RPGMenuPtr;
-	LegalJobList,Job,LegalFactionList,F: GearPtr;
-	Context: String;
-	T,N: Integer;
-{ Procedures block. }
-begin
-	Context := SAttValue( PC^.SA , 'HOMETOWN_CONTEXT' );
-	LegalJobList := FilterList( Jobs_List , Context );
-
-	if ForceFac <> 0 then DoExtraFacFilter( SeekCurrentLevelGear( Factions_List , GG_Faction , ForceFac ) , LegalJobList );
-
-	if CanEdit then begin
-		RPM := CreateRPGMenu( MenuItem , MenuSelect , ZONE_CharGenMenu );
-		AttachMenuDesc( RPM , ZONE_CharGenPrompt );
-
-		RCPromptMessage := '';
-		RCDescMessage := MsgString( 'RANDCHAR_JobDesc' );
-		RCCaption := MsgString( 'RANDCHAR_JobPrompt' );
-
-		{ Fill the menu. }
-		Job := LegalJobList;
-		N := 1;
-		while Job <> Nil do begin
-			AddRPGMenuItem( RPM , GearName( Job ) , N , JobDescription( Job ) );
-			Inc( N );
-			Job := Job^.Next;
-		end;
-		RPMSortAlpha( RPM );
-
-		{ Select an item from the menu. }
-		N := SelectMenu( RPM , @RandCharRedraw );
-		DisposeRPGMenu( RPM );
-
-		{ Locate the Job gear selected. If no job was selected, pick one randomly. }
-		if N > -1 then begin
-			Job := RetrieveGearSib( LegalJobList , N );
-		end else begin
-			Job := SelectRandomGear( LegalJobList );
-		end;
-
-	end else begin
-		Job := SelectRandomGear( LegalJobList );
-	end;
-
-	{ Copy over the details and bonuses from this job. }
-	{ Each job will give a +1 bonus to a number of skills, and also some starting }
-	{ cash. The more skills given, the less money the PC starts with. }
-	N := 0;
-	for t := 1 to NumSkill do begin
-		if NAttValue( Job^.NA , NAG_Skill , T ) <> 0 then begin
-			AddNAtt( PC^.NA , NAG_Skill , T , 1 );
-			inc( N );
-		end;
-	end;
-	if N > 3 then N := 3;
-	AddNAtt( PC^.NA , NAG_Experience , NAS_Credits , 45000 * ( 3 - N ) );
-
-	{ Copy the personality traits. }
-	for t := 1 to Num_Personality_Traits do begin
-		AddReputation( PC , T , NAttValue( Job^.NA , NAG_CharDescription , -T ) );
-	end;
-
-	SetSAtt( PC^.SA , 'JOB <' + SAttValue( Job^.SA , 'NAME' ) + '>' );
-	SetSAtt( PC^.SA , 'JOB_DESIG <' + SAttValue( Job^.SA , 'DESIG' ) + '>' );
-
-	{ Copy the changes to the PC's context. }
-	Context := SAttValue( PC^.SA , 'CONTEXT' ) + ' C:' + SAttValue( Job^.SA , 'DESIG' );
-	SetSAtt( PC^.SA , 'CONTEXT <' + Context + '>' );
-
-
-	{ Next, see about a faction. Some jobs have factions assigned to them... }
-	{ For instance, if your job is "Knight", you'll start as a member of the }
-	{ Silver Knights. The designation of your job and your home town will }
-	{ determine what factions you can join. You are also free to not join a }
-	{ faction, unless your job indicates that it requires a faction choice. }
-	if NAttValue( Job^.NA , NAG_Personal , NAS_FactionID ) <> 0 then begin
-		{ This job comes with a pre-assigned faction. }
-		SetNAtt( PC^.NA , NAG_Personal , NAS_FactionID , NAttValue( Job^.NA , NAG_Personal , NAS_FactionID ) );
-	end else if CanEdit or NeedsFaction( Job ) then begin
-		{ This job can maybe have a faction assigned. }
-		LegalFactionList := CreateFactionList( SAttValue( PC^.SA , 'HOMETOWN_FACTIONS' ) , Job );
-
-
-		if CanEdit and ( LegalFactionList <> Nil ) then begin
-			{ Create the menus. }
-			RPM := CreateRPGMenu( MenuItem , MenuSelect , ZONE_CharGenMenu );
-			AttachMenuDesc( RPM , ZONE_CharGenPrompt );
-			RCCaption := MsgString( 'RANDCHAR_FactionPrompt' );
-			RCDescMessage := MsgString( 'RANDCHAR_FactionDesc' );
-
-			{ Add the factions. }
-			F := LegalFactionList;
-			while F <> Nil do begin
-				AddRPGMenuItem( RPM , GearName( F ) , F^.S , SAttValue( F^.SA , 'DESC' ) );
-				F := F^.Next;
-			end;
-			RPMSortAlpha( RPM );
-
-			{ If this job absolutely requires a faction, don't add the "NoFac" option }
-			{ to the menu. }
-			if not NeedsFaction( Job ) then AddRPGMenuItem( RPM , MsgString( 'RANDCHAR_NoFactionPlease' ) , -1 );
-
-			{ If there are any factions in the menu, select one. }
-			if RPM^.NumItem > 1 then begin
-				N := SelectMenu( RPM , @RandCharRedraw );
-			end else N := RPM^.FirstItem^.Value;
-
-			F := SeekCurrentLevelGear( LegalFactionList , GG_Faction , N );
-			if ( F = Nil ) and NeedsFaction( Job ) then F := SelectRandomGear( LegalFactionList );
-
-			{ Get rid of the menu. }
-			DisposeRPGMenu( RPM );
-
-		end else if NeedsFaction( Job ) or ( Random( 3 ) = 1 ) then begin
-			F := SelectRandomGear( LegalFactionList );
-		end;
-
-		{ Apply the bonuses for this faction. }
-		if F <> Nil then begin
-			SetNAtt( PC^.NA , NAG_Personal , NAS_FactionID , F^.S );
-			AddNAtt( PC^.NA , NAG_Experience , NAS_Credits , 50000 );
-			SetSAtt( PC^.SA , 'CG_FacDesig <' + SAttValue( F^.SA , 'DESIG' ) + '>' );
-		end;
-
-		{ Get rid of the factions list. }
-		DisposeGear( LegalFactionList );
-	end;
-
-	DisposeGear( LegalJobList );
-end;
-
-Procedure AllocateStatPoints( PC: GearPtr; StatPt: Integer );
-	{ Distribute the listed number of points out to the PC. }
-var
-	RPM: RPGMenuPtr;
-	PCStats: Array [1..NumGearStats] of Integer;
-	T: Integer;
-	Function StatSelectorMsg( N: Integer ): String;
-	var
-		msg: String;
-	begin
-		msg := MsgString( 'StatName_' + BStr( N ) );
-
-{$IFNDEF ASCII}
-		while TextLength( Game_Font , msg ) < ( ZONE_CharGenMenu.W - 50 ) do msg := msg + ' ';
-{$ELSE}
-		while Length( msg ) < 12 do msg := msg + ' ';
-{$ENDIF}
-		msg := msg + BStr( PCStats[ N ] + PC^.Stat[ N ] );
-		StatSelectorMsg := msg;
-	end;
-begin
-	{ Zero out the base stat line, and make sure minimum values are met. }
-	for t := 1 to NumGearStats do begin
-		PCStats[ T ] := 0;
-		if PC^.Stat[ T ] < 1 then begin
-			PC^.Stat[ T ] := 1;
-			Dec( StatPt );
-		end;
-	end;
-
-	{ Create the menu & set up the display. }
-	RPM := CreateRPGMenu( MenuItem , MenuSelect , ZONE_CharGenMenu );
-
-	RPM^.Mode := RPMNoCleanup;
-	RCDescMessage := MsgString( 'RANDCHAR_ASPDesc' );
-	RCPromptMessage := '';
-
-	for t := 1 to NumGearStats do begin
-		AddRPGMenuItem( RPM , StatSelectorMsg( T ) , 1 , MsgString( 'STATDESC_' + BStr( T ) ) );
-	end;
-	AddRPGMenuItem( RPM , MsgString( 'RANDCHAR_ASPDone' ) , 2 );
-
-	RPM^.dtexcolor := InfoGreen;
-
-	AttachMenuDesc( RPM , ZONE_CharGenPrompt );
-
-	{ Add RPGKeys for the left and right buttons, since these will be }
-	{ used to spend & retrieve points. }
-{$IFNDEF ASCII}
-	AddRPGMenuKey( RPM , RPK_Right ,  1 );
-	AddRPGMenuKey( RPM , RPK_Left , -1 );
-{$ELSE}
-	AddRPGMenuKey( RPM , KeyMap[ KMC_East ].KCode ,  1 );
-	AddRPGMenuKey( RPM , KeyMap[ KMC_West ].KCode , -1 );
-{$ENDIF}
-
-	repeat
-		RCCaption := ReplaceHash( MsgString( 'RANDCHAR_SelectStatsCap' ) , BStr( StatPt ) );
-		T := SelectMenu( RPM , @RandCharRedraw );
-
-		if ( T = 1 ) and ( RPM^.selectitem <= NumGearStats ) and ( StatPt > 0 ) then begin
-			{ Increase Stat }
-			{ Only do this if the stat is currently below the max value. }
-			if PCStats[ RPM^.selectitem ] < MaxStartingStat then begin
-				{ Only do this if the player has enough points to do so... }
-				if ( StatPt > 1 ) or ( PCStats[ RPM^.selectitem ] < NormalMaxStatValue ) then begin
-					{ Increase the stat. }
-					Inc( PCStats[ RPM^.selectitem ] );
-
-					{ Decrease the free stat points. Take away 2 if }
-					{ this stat has been improved to the normal maximum. }
-					Dec( StatPt );
-					if PCStats[ RPM^.selectitem ] > NormalMaxStatValue then Dec( StatPt );
-
-					{ Replace the message line. }
-					RPMLocateByPosition(RPM , RPM^.selectitem )^.msg := StatSelectorMsg( RPM^.selectitem );
-				end;
-			end;
-		end else if ( T = -1 ) and ( RPM^.selectitem <= NumGearStats ) then begin
-			{ Decrease Stat }
-			if PCStats[ RPM^.selectitem ] > 0 then begin
-				{ Decrease the stat. }
-				Dec( PCStats[ RPM^.selectitem ] );
-
-				{ Increase the free stat points. Give back 2 if }
-				{ this stat has been improved to the normal maximum. }
-				Inc( StatPt );
-				if PCStats[ RPM^.selectitem ] >= NormalMaxStatValue then Inc( StatPt );
-
-				{ Replace the message line. }
-				RPMLocateByPosition(RPM , RPM^.selectitem )^.msg := StatSelectorMsg( RPM^.selectitem );
-			end;
-
-		end;
-
-	until T = 2;
-
-	{ Copy temporary values into the PC record. }
-	for T := 1 to NumGearStats do PC^.Stat[T] := PC^.Stat[T] + PCStats[T];
-
-	{ Spend remaining stat points randomly. }
-	if StatPt > 0 then RollStats( PC , StatPt );
-
-	{ Get rid of the menu. }
-	DisposeRPGMenu( RPM );
-end;
-
 Procedure EasyStatPoints( PC: GearPtr; StatPt: Integer );
 	{ Allocate the stat points for the PC mostly randomly, making sure there are no }
 	{ obvious deficiencies. }
@@ -1116,6 +463,707 @@ begin
 	{ Copy temporary values into the PC record. }
 	RecordSkills( PC , PCSkills );
 end;
+
+
+Function SelectMode: Integer;
+	{ Prompt the user for a mode selection. }
+var
+	RPM: RPGMenuPtr;
+	G: Integer;
+begin
+	RPM := CreateRPGMenu( MenuItem , MenuSelect , ZONE_CharGenMenu );
+
+	AddRPGMenuItem( RPM , MsgString( 'RANDCHAR_SMOp0' ) , 0 );
+	AddRPGMenuItem( RPM , MsgString( 'RANDCHAR_SMOp1' ) , 1 );
+
+	RCPromptMessage := MsgString( 'RANDCHAR_SMPrompt' );
+	RCDescMessage := MsgString( 'RANDCHAR_SMDesc' );
+	RCCaption := '';
+	G := SelectMenu( RPM , @RandCharRedraw );
+
+	DisposeRPGMenu( RPM );
+	SelectMode := G;
+end;
+
+Function SelectGender: Integer;
+	{ Prompt the user for a gender selection. }
+var
+	RPM: RPGMenuPtr;
+	G: Integer;
+begin
+	RPM := CreateRPGMenu( MenuItem , MenuSelect , ZONE_CharGenMenu );
+
+	AddRPGMenuItem( RPM , MsgString( 'GenderName_0' ) , NAV_Male );
+	AddRPGMenuItem( RPM , MsgString( 'GenderName_1' ) , NAV_Female );
+
+	RCDescMessage := MsgString( 'RANDCHAR_SGDesc' );
+	RCPromptMessage := MsgString( 'RANDCHAR_SGPrompt' );
+	RCCaption := '';
+	G := SelectMenu( RPM , @RandCharRedraw );
+
+	DisposeRPGMenu( RPM );
+
+	SelectGender := G;
+end;
+
+Function SelectAge: Integer;
+	{ Prompt the user for character age. }
+var
+	RPM: RPGMenuPtr;
+	T: Integer;
+begin
+	RPM := CreateRPGMenu( MenuItem , MenuSelect , ZONE_CharGenMenu );
+
+	for t := -4 to 10 do begin
+		AddRPGMenuItem( RPM , BStr( T + 20 ) + ' years old' , T );
+	end;
+
+	RCDescMessage := MsgString( 'RANDCHAR_SADesc' );
+	RCPromptMessage := MsgString( 'RANDCHAR_SAPrompt' );
+	RCCaption := '';
+	T := SelectMenu( RPM , @RandCharRedraw );
+
+	DisposeRPGMenu( RPM );
+	SelectAge := T;
+end;
+
+Procedure StoreHomeTownDataInPC( PC,City: GearPtr );
+	{ Store the information for this PC's home town in the character record. }
+var
+	msg: String;
+	Fac: GearPtr;
+begin
+	StoreSAtt( PC^.SA , 'HOMETOWN <' + GearName( City ) + '>' );
+	StoreSAtt( PC^.SA , 'HOMETOWN_FACTIONS <' + SAttValue( City^.SA , 'FACTIONS' ) + '>' );
+	msg := SAttValue( City^.SA , 'TYPE' ) + ' ' + SAttValue( City^.SA , 'DESIG' );
+
+	Fac := SeekCurrentLevelGear( Factions_List , GG_Faction , NAttValue( City^.NA , NAG_Personal , NAS_FactionID ) );
+	if Fac <> Nil then begin
+		msg := msg + ' ' + SAttValue( Fac^.SA , 'DESIG' );
+		StoreSAtt( PC^.SA , 'HOMETOWN_GOVERNMENT <' + SAttValue( Fac^.SA , 'DESIG' ) + '>' );
+	end;
+
+	StoreSAtt( PC^.SA , 'HOMETOWN_CONTEXT <' + msg + '>' );
+end;
+
+Procedure SelectHomeTown( PC: GearPtr; CanEdit: Boolean; ForceFac: Integer );
+	{ Select the PC's home town. Store the home town information in the PC }
+	{ string attributes. }
+	{ If ForceFac is nonzero, the generated PC must belong to this faction or }
+	{ no faction at all. So, only allow cities where this faction is active. }
+var
+	City,Fac: GearPtr;
+	N: Integer;
+	RPM: RPGMenuPtr;
+	FacDesig: String;
+begin
+	if ForceFac <> 0 then begin
+		Fac := SeekCurrentLevelGear( Factions_List , GG_Faction , ForceFac );
+		FacDesig := SAttValue( Fac^.SA , 'DESIG' );
+	end;
+
+	{ Create the menu. }
+	RPM := CreateRPGMenu( MenuItem , MenuSelect , ZONE_CharGenMenu );
+	AttachMenuDesc( RPM , ZONE_CharGenPrompt );
+
+	RCDescMessage := MsgString( 'RANDCHAR_CityDesc' );
+	RCPromptMessage := '';
+	RCCaption := MsgString( 'RANDCHAR_CityPrompt' );
+
+	{ Add all faction-legal HOMETOWNs to the menu. }
+	N := 1;
+	City := Hometown_List;
+	while City <> Nil do begin
+		if ( ForceFac = 0 ) or AStringHasBString( SAttValue( City^.SA , 'FACTIONS' ) , FacDesig ) then begin
+			AddRPGMenuItem( RPM , GearName( City ) , N , SAttValue( City^.SA , 'DESC' ) );
+		end;
+		Inc( N );
+		City := City^.Next;
+	end;
+	RPMSortAlpha( RPM );
+
+	if RPM^.NumItem < 1 then begin
+		{ We've got ourselves an empty menu. Just pick a hometown randomly. }
+		N := Random( NumSiblingGears( Hometown_List ) ) + 1;
+	end else if CanEdit then begin
+		{ Can edit - allow the PC to select a home town. }
+		N := SelectMenu( RPM , @RandCharRedraw );
+		if N = -1 then begin
+			N := RPMLocateByPosition( RPM , Random( RPM^.NumItem ) + 1 )^.value;
+		end;
+	end else begin
+		{ Can't edit- select a home town randomly. }
+		N := RPMLocateByPosition( RPM , Random( RPM^.NumItem ) + 1 )^.value;
+	end;
+	DisposeRPGMenu( RPM );
+
+	{ Store the data for this city. }
+	City := RetrieveGearSib( Hometown_List , N );
+	if City <> Nil then begin
+		StoreHomeTownDataInPC( PC , City );
+	end;
+end;
+
+Function FilterList( Source: GearPtr; const PContext: String ): GearPtr;
+	{ Create a list of things based on the context provided. }
+	{ Yeah, I know, real specific there... }
+var
+	it,J: GearPtr;
+	Context: String;
+begin
+	{ Add a GENERAL tag to the context. Everybody gets a GENERAL tag. }
+	context := 'GENERAL ' + PContext;
+	it := Nil;
+
+	{ Go through the jobs list and copy everything that matches the context. }
+	J := Source;
+	while J <> Nil do begin
+		if StringMatchWeight( Context , SAttValue( J^.SA , 'REQUIRES' ) ) > 0 then begin
+			AppendGear( it , CloneGear( J ) );
+		end;
+		J := J^.Next;
+	end;
+
+	{ Return the finished list. }
+	FilterList := it;
+end;
+
+Procedure ApplyJobModifiers( PC, Job: GearPtr );
+	{ Given the provided job, apply its bonuses and whatnot to the }
+	{ provided PC. }
+var
+	N,T: Integer;
+begin
+	{ Copy over the details and bonuses from this job. }
+	{ Each job will give a +1 bonus to a number of skills, and also some starting }
+	{ cash. The more skills given, the less money the PC starts with. }
+	N := 0;
+	for t := 1 to NumSkill do begin
+		if NAttValue( Job^.NA , NAG_Skill , T ) <> 0 then begin
+			AddNAtt( PC^.NA , NAG_Skill , T , 1 );
+			inc( N );
+		end;
+	end;
+	if N > 3 then N := 3;
+	AddNAtt( PC^.NA , NAG_Experience , NAS_Credits , 45000 * ( 3 - N ) );
+
+	{ Copy the personality traits. }
+	for t := 1 to Num_Personality_Traits do begin
+		AddReputation( PC , T , NAttValue( Job^.NA , NAG_CharDescription , -T ) );
+	end;
+
+	SetNAtt( PC^.NA , NAG_Personal , NAS_FactionID , NAttValue( Job^.NA , NAG_Personal , NAS_FactionID ) );
+	SetSAtt( PC^.SA , 'JOB <' + SAttValue( Job^.SA , 'NAME' ) + '>' );
+	SetSAtt( PC^.SA , 'JOB_DESIG <' + SAttValue( Job^.SA , 'DESIG' ) + '>' );
+end;
+
+Procedure GenerateFamilyHistory( Egg , PC: GearPtr; CanEdit: Boolean );
+	{ Generate the PC's personal history up to this point. This step will }
+	{ determine the following information: }
+	{ - Starting skill XP bonuses }
+	{ - the PC's parentage (or lack thereof) }
+	{ - the PC's starting XXRan context + enemy faction }
+	{ - NPCs for the PC's egg (family, friends, and otherwise) }
+	{ - The PC's personal conflict }
+const
+	Parental_XP = 210;
+var
+	RPM: RPGMenuPtr;
+	LegalJobList,Fam,BioEvent: GearPtr;
+	N: Integer;
+	Context,Bio1: String;
+{ Procedures block. }
+	Procedure ApplyParentalBonus( Job: GearPtr );
+	var
+		N,T: Integer;
+	begin
+		{ Error check - Job might be NIL. }
+		if Job = Nil then begin
+			AddNAtt( PC^.NA , NAG_Experience , NAS_TotalXP , ( Parental_XP * 2 ) div 3 );
+			Exit;
+		end;
+
+		{ See what's in there. }
+		{ We have to make two passes- one to see how many skills there are, }
+		{ then a second one to apply the experience. }
+		N := 0;
+		{ Count skills. }
+		for t := 1 to NumSkill do begin
+			if NAttValue( Job^.NA , NAG_SKill , T ) <> 0 then begin
+				Inc( N );
+			end;
+		end;
+
+		{ Apply bonuses. }
+		if N > 0 then begin
+			for t := 1 to NumSkill do begin
+				if NAttValue( Job^.NA , NAG_SKill , T ) <> 0 then begin
+					AddNAtt( PC^.NA , NAG_Experience , NAS_Skill_XP_Base + t , Parental_XP div N );
+				end;
+			end;
+		end else begin
+			AddNAtt( PC^.NA , NAG_Experience , NAS_TotalXP , ( Parental_XP * 2 ) div 3 );
+		end;
+	end;
+	Procedure ApplyBiographyEvent( Bio: GearPtr );
+		{ Apply the changes brought about by this biography event. }
+	var
+		Base,Changes: String;
+		T: Integer;
+		Jobs: GearPtr;
+	begin
+		{ An empty biography has no effect. }
+		if Bio = Nil then begin
+			AddNAtt( PC^.NA , NAG_Experience , NAS_TotalXP , ( Parental_XP * 4 ) div 3 );
+			Exit;
+		end;
+
+		{ Copy over the personality traits from the biography event. }
+		for t := 1 to Num_Personality_Traits do begin
+			AddNAtt( PC^.NA , NAG_CharDescription , -T , NAttValue( Bio^.NA , NAG_CharDescription , -T ) );
+		end;
+
+		{ Copy the changes to the PC's context. }
+		Base := SAttValue( PC^.SA , 'CONTEXT' );
+		Changes := SAttValue( Bio^.SA , 'CONTEXT' );
+		AlterDescriptors( Base , Changes );
+		SetSAtt( PC^.SA , 'CONTEXT <' + Base + '>' );
+
+		{ Copy over the egg attributes, if appropriate. }
+		Base := SAttValue( Bio^.SA , 'CONFLICT' );
+		if Base <> '' then SetSAtt( Egg^.SA , 'CONFLICT <' + Base + '>' );
+
+		{ Apply the bonuses from the jobs. }
+		{ Only two jobs may be applied as bonuses. }
+		Jobs := Bio^.SubCom;
+		T := 2;
+		while ( Jobs <> Nil ) and ( T > 0 ) do begin
+			ApplyParentalBonus( Jobs );
+			Dec( T );
+			Jobs := Jobs^.Next;
+		end;
+		if T > 0 then begin
+			AddNAtt( PC^.NA , NAG_Experience , NAS_TotalXP , ( Parental_XP * T * 2 ) div 3 );
+		end;
+
+		{ Copy over the background NPCs. }
+		while Bio^.InvCom <> Nil do begin
+			Jobs := Bio^.InvCom;
+			DelinkGear( Bio^.InvCom , Jobs );
+			InsertInvCom( Egg , Jobs );
+		end;
+	end;
+	Procedure InitBackground( BGGear: GearPtr );
+		{ Initialize this background gear and any NPCs it }
+		{ requests. Initialize the description. }
+	var
+		desc: String;
+		NPC,Job1: GearPtr;
+		N: Integer;
+	begin
+		if BGGear = Nil then Exit;
+		desc := SAttValue( BGGear^.SA , 'DESC' );
+		ReplacePat( desc , '%job%' , SAttValue( PC^.SA , 'JOB' ) );
+		if NAttValue( PC^.NA , NAG_CharDescription , NAS_Gender ) = NAV_Male then begin
+			ReplacePat( desc , '%sd%' , MsgString( 'SON' ) );
+		end else begin
+			ReplacePat( desc , '%sd%' , MsgString( 'DAUGHTER' ) );
+		end;
+
+		{ Initialize the NPCs requested by this event. If they are a }
+		{ mentor, store their jobs as subcoms of BGGear }
+		NPC := BGGear^.invcom;
+		N := 1;
+		while NPC <> Nil do begin
+			{ Assign the NPC a name, and ititialize its age. }
+			SetSAtt( NPC^.SA , 'NAME <' + RandomName + '>' );
+			AddNAtt( NPC^.NA , NAG_CharDescription , NAS_DAge , NAttValue( PC^.NA , NAG_CharDescription , NAS_DAge )  + Random( 4 ) - Random( 4 ) );
+
+			{ Select a job. }
+			Job1 := SelectRandomGear( LegalJobList );
+			if NAttValue( NPC^.NA , NAG_CharDescription , NAS_IsMentor ) <> 0 then begin
+				InsertSubCom( BGGear , CloneGear( Job1 ) );
+			end;
+			ApplyJobModifiers( NPC , Job1 );
+
+			{ Alter the DESC }
+			ReplacePat( desc , '%job' + BStr( N ) + '%' , GearName( Job1 ) );
+			ReplacePat( desc , '%name' + BStr( N ) + '%' , GearName( NPC ) );
+
+			{ Allocate stat and skill points. }
+			EasyStatPoints( NPC , 105 );
+			RandomSkillPoints( NPC , 50 , True );
+
+			Inc( N );
+			NPC := NPC^.Next;
+		end;
+
+		SetSAtt( BGGear^.SA , 'DESC <' + desc + '>' );
+	end;
+begin
+	RPM := CreateRPGMenu( MenuItem , MenuSelect , ZONE_CharGenMenu );
+	AddRPGMenuItem( RPM , MsgString( 'RANDCHAR_FHAccept' ) , 1 );
+	AddRPGMenuItem( RPM , MsgString( 'RANDCHAR_FHDecline' ) , -1 );
+
+	if CanEdit then begin
+		RCPromptMessage := '';
+		RCDescMessage := MsgString( 'RANDCHAR_FHDesc' );
+		RCCaption := MsgString( 'RANDCHAR_FHPrompt' );
+	end;
+
+	Context := SAttValue( PC^.SA , 'HOMETOWN_CONTEXT' ) + ' ' + SAttValue( PC^.SA , 'JOB_DESIG' ) + ' ' + SAttValue( PC^.SA , 'CG_FACDESIG' );
+	LegalJobList := FilterList( Jobs_List , Context );
+	Fam := Nil;
+	BioEvent := Nil;
+
+	repeat
+		{ Decide upon the family history here, giving skill points }
+		{ and whatever. }
+
+		{ Start with a random component. }
+		if Fam <> Nil then DisposeGear( Fam );
+		if BioEvent <> Nil then DisposeGear( BioEvent );
+
+		{ Roll the family type for the PC. }
+		Fam := CloneGear( FindNextComponent( Family_List , 'GENERAL ' + Context ) );
+		InitBackground( Fam );
+		bio1 := SAttValue( Fam^.SA , 'DESC' );
+
+		{ Roll the biography event for the PC. }
+		if Random( 3 ) <> 1 then begin
+			BioEvent := CloneGear( FindNextComponent( Bio_List , 'GENERAL ' + Context + ' ' + SAttValue( Fam^.SA , 'CONTEXT' ) ) );
+			if BioEvent <> Nil then begin
+				InitBackground( BioEvent );
+				bio1 := bio1 + ' ' + SAttValue( BioEvent^.SA , 'DESC' );
+			end;
+		end;
+
+		AtoAn( bio1 );
+
+		{ Display the created biography for the user. }
+		SetSAtt( PC^.SA , 'BIO1 <' + Bio1 + '>' );
+
+		{ Decide whether to accept or decline this family history. }
+		if CanEdit then begin
+			N := SelectMenu( RPM , @RandCharRedraw );
+		end else begin
+			N := 1;
+		end;
+	until N = 1;
+
+	ApplyBiographyEvent( Fam );
+	DisposeGear( Fam );
+	ApplyBiographyEvent( BioEvent );
+	DisposeGear( BioEvent );
+
+	SetSAtt( PC^.SA , 'BIO1 <' + Bio1 + '>' );
+
+	DisposeRPGMenu( RPM );
+
+	DisposeGear( LegalJobList );
+end;
+
+
+Procedure SelectJobAndFaction( PC: GearPtr; CanEdit: Boolean; ForceFac: Integer );
+	{ Select a job for the PC. }
+	{ Based on this job, select a faction. }
+	function NeedsFaction( Job: GearPtr ): Boolean;
+		{ Return TRUE if the provided job absolutely must have a faction }
+		{ associated with it, or FALSE otherwise. }
+	begin
+		NeedsFaction := AStringHasBString( SAttValue( Job^.SA , 'SPECIAL' ) , 'NeedsFaction' );
+	end;
+	Function JobFitsFaction( Job,Faction: GearPtr ): Boolean;
+		{ Return TRUE if this job fits this faction, or FALSE otherwise. }
+	begin
+		JobFitsFaction := AStringHasBString( SAttValue( Faction^.SA , 'JOBS' ) , SAttValue( Job^.SA , 'Desig' ) );
+	end;
+	Function CreateFactionList( Loc_Factions: String; Job: GearPtr ): GearPtr;
+		{ Create a list of legal factions for the PC to choose from. }
+		{ It must be a faction featured in the PC's home town, and it must }
+		{ be hiring people on the PC's job path. }
+		{ If ForceFac is nonzero, it must be that faction. }
+	var
+		it,F: GearPtr;
+	begin
+		if ForceFac <> 0 then begin
+			it := CloneGear( SeekCurrentLevelGear( Factions_List , GG_Faction , ForceFac ) );
+		end else begin
+			it := Nil;
+			F := Factions_List;
+			while F <> Nil do begin
+				if AStringHasBString( Loc_Factions , SAttValue( F^.SA , 'DESIG' ) ) and JobFitsFaction( Job , F ) then begin
+					AppendGear( it , CloneGear( F ) );
+				end;
+				F := F^.Next;
+			end;
+		end;
+		CreateFactionList := it;
+	end;
+	Procedure DoExtraFacFilter( Fac: GearPtr; var LegalJobList: GearPtr );
+		{ The PC must belong to a specific faction or no faction at all. }
+		{ If any of these jobs have a preset faction or require a faction }
+		{ but can't be taken by the available faction, they get deleted from }
+		{ the list. That's an awful run-on sentance but I was busy all day }
+		{ making kimchi. }
+	var
+		J,J2: GearPtr;
+		FID: Integer;
+	begin
+		J := LegalJobList;
+		while J <> Nil do begin
+			J2 := J^.Next;
+			FID := NAttValue( J^.NA , NAG_Personal , NAS_FactionID );
+			if ( FID <> 0 ) and ( FID <> ForceFac ) then begin
+				RemoveGear( LegalJobList , J );
+			end else if NeedsFaction( J ) and not JobFitsFaction( J , Fac ) then begin
+				RemoveGear( LegalJobList , J );
+			end;
+
+			J := J2;
+		end;
+	end;
+	Function JobDescription( Job: GearPtr ): String;
+		{ Return a description for this job: This will be its category }
+		{ and its list of skills. }
+	var
+		msg: String;
+		S,N: Integer;
+	begin
+		{ Start with the job category. }
+		msg := '(' + SAttValue( Job^.SA , 'DESIG' ) + ') ';
+
+		{ Add the skills. }
+		N := 0;
+		for S := 1 to NumSkill do begin
+			if NAttValue( Job^.NA , NAG_Skill , S ) <> 0 then begin
+				if N > 0 then msg := msg + ', ';
+				msg := msg + MsgString( 'SkillName_' + BStr( S ) );
+				inc( N );
+			end;
+		end;
+		JobDescription := msg;
+	end;
+var
+	RPM: RPGMenuPtr;
+	LegalJobList,Job,LegalFactionList,F: GearPtr;
+	Context: String;
+	N: Integer;
+{ Procedures block. }
+begin
+	Context := SAttValue( PC^.SA , 'HOMETOWN_CONTEXT' );
+	LegalJobList := FilterList( Jobs_List , Context );
+
+	if ForceFac <> 0 then DoExtraFacFilter( SeekCurrentLevelGear( Factions_List , GG_Faction , ForceFac ) , LegalJobList );
+
+	if CanEdit then begin
+		RPM := CreateRPGMenu( MenuItem , MenuSelect , ZONE_CharGenMenu );
+		AttachMenuDesc( RPM , ZONE_CharGenPrompt );
+
+		RCPromptMessage := '';
+		RCDescMessage := MsgString( 'RANDCHAR_JobDesc' );
+		RCCaption := MsgString( 'RANDCHAR_JobPrompt' );
+
+		{ Fill the menu. }
+		Job := LegalJobList;
+		N := 1;
+		while Job <> Nil do begin
+			AddRPGMenuItem( RPM , GearName( Job ) , N , JobDescription( Job ) );
+			Inc( N );
+			Job := Job^.Next;
+		end;
+		RPMSortAlpha( RPM );
+
+		{ Select an item from the menu. }
+		N := SelectMenu( RPM , @RandCharRedraw );
+		DisposeRPGMenu( RPM );
+
+		{ Locate the Job gear selected. If no job was selected, pick one randomly. }
+		if N > -1 then begin
+			Job := RetrieveGearSib( LegalJobList , N );
+		end else begin
+			Job := SelectRandomGear( LegalJobList );
+		end;
+
+	end else begin
+		Job := SelectRandomGear( LegalJobList );
+	end;
+
+	ApplyJobModifiers( PC , Job );
+
+	{ Copy the changes to the PC's context. }
+	Context := SAttValue( PC^.SA , 'CONTEXT' ) + ' C:' + SAttValue( Job^.SA , 'DESIG' );
+	SetSAtt( PC^.SA , 'CONTEXT <' + Context + '>' );
+
+
+	{ Next, see about a faction. Some jobs have factions assigned to them... }
+	{ For instance, if your job is "Knight", you'll start as a member of the }
+	{ Silver Knights. The designation of your job and your home town will }
+	{ determine what factions you can join. You are also free to not join a }
+	{ faction, unless your job indicates that it requires a faction choice. }
+	if NAttValue( Job^.NA , NAG_Personal , NAS_FactionID ) <> 0 then begin
+		{ This job comes with a pre-assigned faction. }
+		SetNAtt( PC^.NA , NAG_Personal , NAS_FactionID , NAttValue( Job^.NA , NAG_Personal , NAS_FactionID ) );
+	end else if CanEdit or NeedsFaction( Job ) then begin
+		{ This job can maybe have a faction assigned. }
+		LegalFactionList := CreateFactionList( SAttValue( PC^.SA , 'HOMETOWN_FACTIONS' ) , Job );
+
+
+		if CanEdit and ( LegalFactionList <> Nil ) then begin
+			{ Create the menus. }
+			RPM := CreateRPGMenu( MenuItem , MenuSelect , ZONE_CharGenMenu );
+			AttachMenuDesc( RPM , ZONE_CharGenPrompt );
+			RCCaption := MsgString( 'RANDCHAR_FactionPrompt' );
+			RCDescMessage := MsgString( 'RANDCHAR_FactionDesc' );
+
+			{ Add the factions. }
+			F := LegalFactionList;
+			while F <> Nil do begin
+				AddRPGMenuItem( RPM , GearName( F ) , F^.S , SAttValue( F^.SA , 'DESC' ) );
+				F := F^.Next;
+			end;
+			RPMSortAlpha( RPM );
+
+			{ If this job absolutely requires a faction, don't add the "NoFac" option }
+			{ to the menu. }
+			if not NeedsFaction( Job ) then AddRPGMenuItem( RPM , MsgString( 'RANDCHAR_NoFactionPlease' ) , -1 );
+
+			{ If there are any factions in the menu, select one. }
+			if RPM^.NumItem > 1 then begin
+				N := SelectMenu( RPM , @RandCharRedraw );
+			end else N := RPM^.FirstItem^.Value;
+
+			F := SeekCurrentLevelGear( LegalFactionList , GG_Faction , N );
+			if ( F = Nil ) and NeedsFaction( Job ) then F := SelectRandomGear( LegalFactionList );
+
+			{ Get rid of the menu. }
+			DisposeRPGMenu( RPM );
+
+		end else if NeedsFaction( Job ) or ( Random( 3 ) = 1 ) then begin
+			F := SelectRandomGear( LegalFactionList );
+		end;
+
+		{ Apply the bonuses for this faction. }
+		if F <> Nil then begin
+			SetNAtt( PC^.NA , NAG_Personal , NAS_FactionID , F^.S );
+			AddNAtt( PC^.NA , NAG_Experience , NAS_Credits , 50000 );
+			SetSAtt( PC^.SA , 'CG_FacDesig <' + SAttValue( F^.SA , 'DESIG' ) + '>' );
+		end;
+
+		{ Get rid of the factions list. }
+		DisposeGear( LegalFactionList );
+	end;
+
+	DisposeGear( LegalJobList );
+end;
+
+Procedure AllocateStatPoints( PC: GearPtr; StatPt: Integer );
+	{ Distribute the listed number of points out to the PC. }
+var
+	RPM: RPGMenuPtr;
+	PCStats: Array [1..NumGearStats] of Integer;
+	T: Integer;
+	Function StatSelectorMsg( N: Integer ): String;
+	var
+		msg: String;
+	begin
+		msg := MsgString( 'StatName_' + BStr( N ) );
+
+{$IFNDEF ASCII}
+		while TextLength( Game_Font , msg ) < ( ZONE_CharGenMenu.W - 50 ) do msg := msg + ' ';
+{$ELSE}
+		while Length( msg ) < 12 do msg := msg + ' ';
+{$ENDIF}
+		msg := msg + BStr( PCStats[ N ] + PC^.Stat[ N ] );
+		StatSelectorMsg := msg;
+	end;
+begin
+	{ Zero out the base stat line, and make sure minimum values are met. }
+	for t := 1 to NumGearStats do begin
+		PCStats[ T ] := 0;
+		if PC^.Stat[ T ] < 1 then begin
+			PC^.Stat[ T ] := 1;
+			Dec( StatPt );
+		end;
+	end;
+
+	{ Create the menu & set up the display. }
+	RPM := CreateRPGMenu( MenuItem , MenuSelect , ZONE_CharGenMenu );
+
+	RPM^.Mode := RPMNoCleanup;
+	RCDescMessage := MsgString( 'RANDCHAR_ASPDesc' );
+	RCPromptMessage := '';
+
+	for t := 1 to NumGearStats do begin
+		AddRPGMenuItem( RPM , StatSelectorMsg( T ) , 1 , MsgString( 'STATDESC_' + BStr( T ) ) );
+	end;
+	AddRPGMenuItem( RPM , MsgString( 'RANDCHAR_ASPDone' ) , 2 );
+
+	RPM^.dtexcolor := InfoGreen;
+
+	AttachMenuDesc( RPM , ZONE_CharGenPrompt );
+
+	{ Add RPGKeys for the left and right buttons, since these will be }
+	{ used to spend & retrieve points. }
+{$IFNDEF ASCII}
+	AddRPGMenuKey( RPM , RPK_Right ,  1 );
+	AddRPGMenuKey( RPM , RPK_Left , -1 );
+{$ELSE}
+	AddRPGMenuKey( RPM , KeyMap[ KMC_East ].KCode ,  1 );
+	AddRPGMenuKey( RPM , KeyMap[ KMC_West ].KCode , -1 );
+{$ENDIF}
+
+	repeat
+		RCCaption := ReplaceHash( MsgString( 'RANDCHAR_SelectStatsCap' ) , BStr( StatPt ) );
+		T := SelectMenu( RPM , @RandCharRedraw );
+
+		if ( T = 1 ) and ( RPM^.selectitem <= NumGearStats ) and ( StatPt > 0 ) then begin
+			{ Increase Stat }
+			{ Only do this if the stat is currently below the max value. }
+			if PCStats[ RPM^.selectitem ] < MaxStartingStat then begin
+				{ Only do this if the player has enough points to do so... }
+				if ( StatPt > 1 ) or ( PCStats[ RPM^.selectitem ] < NormalMaxStatValue ) then begin
+					{ Increase the stat. }
+					Inc( PCStats[ RPM^.selectitem ] );
+
+					{ Decrease the free stat points. Take away 2 if }
+					{ this stat has been improved to the normal maximum. }
+					Dec( StatPt );
+					if PCStats[ RPM^.selectitem ] > NormalMaxStatValue then Dec( StatPt );
+
+					{ Replace the message line. }
+					RPMLocateByPosition(RPM , RPM^.selectitem )^.msg := StatSelectorMsg( RPM^.selectitem );
+				end;
+			end;
+		end else if ( T = -1 ) and ( RPM^.selectitem <= NumGearStats ) then begin
+			{ Decrease Stat }
+			if PCStats[ RPM^.selectitem ] > 0 then begin
+				{ Decrease the stat. }
+				Dec( PCStats[ RPM^.selectitem ] );
+
+				{ Increase the free stat points. Give back 2 if }
+				{ this stat has been improved to the normal maximum. }
+				Inc( StatPt );
+				if PCStats[ RPM^.selectitem ] >= NormalMaxStatValue then Inc( StatPt );
+
+				{ Replace the message line. }
+				RPMLocateByPosition(RPM , RPM^.selectitem )^.msg := StatSelectorMsg( RPM^.selectitem );
+			end;
+
+		end;
+
+	until T = 2;
+
+	{ Copy temporary values into the PC record. }
+	for T := 1 to NumGearStats do PC^.Stat[T] := PC^.Stat[T] + PCStats[T];
+
+	{ Spend remaining stat points randomly. }
+	if StatPt > 0 then RollStats( PC , StatPt );
+
+	{ Get rid of the menu. }
+	DisposeRPGMenu( RPM );
+end;
+
 
 Procedure SelectATalent( PC: GearPtr );
 	{ The PC needs to select a talent. Create a list of all the }

@@ -24,7 +24,9 @@ program gearhead;
 
 {$IFNDEF DEBUG}
 {$IFNDEF ASCII}
+{$IFNDEF LINUX}
 {$APPTYPE GUI}
+{$ENDIF}
 {$ENDIF}
 {$ENDIF}
 

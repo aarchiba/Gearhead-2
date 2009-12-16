@@ -2,18 +2,35 @@
 ***   CHARACTER  CREATION : TECHNICAL  DETAILS   ***
 ****************************************************
 
+
 *****************************
 ***   BIOGRAPHY  EVENTS   ***
 *****************************
 
 A character's biography will be made up of two events, termed the FAMILY and
-the BIO. The BIO comes second, and any options it sets will superceded those of
-the FAMILY.
+the BIO.
+
+  FAMILY sets the home and mentor NPCs
+  BIO sets the conflict
+
+Since the BIO comes second, its options override those of the FAMILY.
+
+DEFINING ATTRIBUTES
+-------------------
+A biography event may define several string attributes which affect the
+adventure generation. Events which come later override events which come
+earlier.
+
+    CONTEXT:	This context is applied to the core story.
+    CONFLICT:	This tag is applied to the end of egg-related quest requests
+		(default: ".General")
+
 
 DEFINING NPCS
 -------------
 A biography event may describe an NPC. If said NPC is a mentor, they will pass
-on skill training to the PC.
+on skill training to the PC. A biography event may only describe two mentors,
+but arbitrarily many other NPCs.
 
 All attributes of the NPC request will be copied to the eventual NPC.
 
@@ -24,4 +41,16 @@ quest.
 
 The Age attribute of the NPC request is relative to the age of the PC, plus or
 minus three years.
+
+
+DESCRIPTION
+-----------
+Each biography event should have a DESC attribute which contributes to the PC's
+biography attribute. Several substitution strings may be included in this
+description:
+    %job%		The PC's job
+    %job1%...%job[x]%	Jobs of the defined NPCs
+    %name1%...		Names of the defined NPCs
+    %sd%		Son/Daughter, as appropriate
+
 
