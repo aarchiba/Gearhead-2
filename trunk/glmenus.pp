@@ -353,9 +353,7 @@ var
 	a: RPGMenuItemPtr;		{A pointer to be used while printing.}
 	t: integer;
 	height: integer;		{The width of the menu display.}
-	NextColor: PSDL_Color;
-	Item_Image: PSDL_Surface;
-	Item_PText: PChar;
+	NextColor: TSDL_Color;
 	MyDest: TSDL_Rect;
 	Y,DY: Integer;
 begin
@@ -385,15 +383,11 @@ begin
 
 		{If we're at the currently selected item, highlight it.}
 		if ((t + RPM^.topitem - 1) = RPM^.selectitem) and RPM^.Active then
-			NextColor := @RPM^.selcolor
+			NextColor := RPM^.selcolor
 		else
-			NextColor := @RPM^.itemcolor;
+			NextColor := RPM^.itemcolor;
 
-		Item_PText := QuickPCopy( a^.msg );
-		Item_Image := TTF_RenderText_Solid( game_font , Item_PText , NextColor^ );
-		Dispose( Item_PText );
-		SDL_BlitSurface( Item_Image , Nil , Game_Screen , @MyDest );
-		SDL_FreeSurface( Item_Image );
+		QuickText( a^.msg , MyDest , NextColor , game_font );
 
 		a := a^.next;
 
