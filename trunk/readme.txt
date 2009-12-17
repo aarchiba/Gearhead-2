@@ -1,6 +1,9 @@
-Welcome to GearHead-2. Although this game is in an early stage of development,
-comments and bug reports are welcome. Take a look around at what's being done
-and let me know if you think I'm on the right track.
+************************
+***   GEARHEAD  II   ***
+************************
+
+Welcome to the modern age. In NT157, a group of terrorists caused massive
+destruction on Earth by awakening the biomonster Typhon. 
 
 GH2 is released under the terms of the LGPL; see license.txt for more details.
 
@@ -12,9 +15,23 @@ To run the SDL version you need to have SDL, SDL_Image, SDL_ttf, and
 OpenGL installed. The precompiled Windows releases come with all needed
 dlls.
 
-To compile the game you need FreePascal, available from www.freepascal.org.
-To compile with graphics you also need the Jedi-SDL package, available from
-here: http://sourceforge.net/projects/jedi-sdl/
+*********************
+***   COMPILING   ***
+*********************
+
+First of all you need FreePascal, available from www.freepascal.org.
+To compile with graphics on Windows you also need the Jedi-SDL package,
+available from here: http://sourceforge.net/projects/jedi-sdl/
+
+On Linux, the SDL units come with the fpc compiler. Lucky you. Make sure that
+you have libsdl, libsdl_image, and libsdl_ttf installed if you plan to use the
+graphics version.
+
+The default graphics mode is OpenGL. The game may be compiled to run in a
+terminal window by setting the -dASCII command line switch. The game may also
+be compiled in a less resource-intensive 2D graphical interface by setting the
+-dCUTE command line switch.
+
 
 Just type "ppc386 gearhead" and the program should compile.
 To get the ASCII version, type "ppc386 -dASCII gearhead".

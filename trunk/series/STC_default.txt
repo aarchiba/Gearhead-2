@@ -1122,7 +1122,7 @@ EncounterMove 50
 CombatProp 10
 name <Weapon Platform>
 Desig <SW-WEDGE-0>
-SDL_SPRITE <tex_spaceship_body.png>
+SDL_SKIN <tex_spaceship_body.png>
 Mesh 7
 Scale 2
 RangedCombat 8
@@ -1146,7 +1146,7 @@ end
 CombatProp 15
 name <Weapon Platform>
 Desig <SW-WEDGE-1>
-SDL_SPRITE <tex_spaceship_body.png>
+SDL_SKIN <tex_spaceship_body.png>
 Mesh 7
 Scale 2
 RangedCombat 10
@@ -1171,7 +1171,7 @@ end
 CombatProp 20
 name <Weapon Platform>
 Desig <SW-WEDGE-2>
-SDL_SPRITE <tex_spaceship_body.png>
+SDL_SKIN <tex_spaceship_body.png>
 Mesh 7
 Scale 2
 RangedCombat 12
@@ -1196,7 +1196,7 @@ end
 CombatProp 25
 name <Weapon Tower>
 Desig <SW-TOWER-1>
-SDL_SPRITE <tex_spaceship_body.png>
+SDL_SKIN <tex_spaceship_body.png>
 Mesh 8
 Scale 2
 RangedCombat 16
@@ -1219,7 +1219,7 @@ end
 CombatProp 20
 name <Missile Launcher>
 Desig <SW-SLAB-1>
-SDL_SPRITE <tex_spaceship_body.png>
+SDL_SKIN <tex_spaceship_body.png>
 Mesh 6
 Scale 2
 RangedCombat 14
@@ -1244,7 +1244,7 @@ end
 CombatProp 20
 name <Missile Launcher>
 Desig <SW-SLAB-2>
-SDL_SPRITE <tex_spaceship_body.png>
+SDL_SKIN <tex_spaceship_body.png>
 Mesh 5
 Scale 2
 RangedCombat 14
@@ -1273,7 +1273,7 @@ end
 CombatProp 10
 name <Cannon Mount>
 Desig <SS-CANNON-0>
-SDL_SPRITE <tex_spaceship_body.png>
+SDL_SKIN <tex_spaceship_body.png>
 Mesh 7
 Scale 2
 RangedCombat 10
@@ -1298,7 +1298,7 @@ end
 CombatProp 15
 name <Cannon Mount>
 Desig <SS-CANNON-1>
-SDL_SPRITE <tex_spaceship_body.png>
+SDL_SKIN <tex_spaceship_body.png>
 Mesh 7
 Scale 2
 RangedCombat 12
@@ -1361,7 +1361,7 @@ Scale 2
 RangedCombat 8
 Initiative 10
 Mesh 2
-sdl_sprite <tex_building_pillbox.png>
+sdl_SKIN <tex_building_pillbox.png>
 sub
 	Turret
 	size 3
@@ -1388,7 +1388,7 @@ Desig <Bunker-1>
 roguechar <&>
 Scale 2
 Mesh 1
-sdl_sprite <tex_building_pillbox.png>
+sdl_SKIN <tex_building_pillbox.png>
 Frame 1
 
 

@@ -1,0 +1,64 @@
+Plot
+	name <AA_PropDisplay>
+	% Used for generating isometric sprites of the prop meshes.
+	% Back up two clicks or so before taking the snap.
+
+	Element1 <Scene CavClub>
+	Element2 <Prefab>
+	Place2 <1>
+
+	update <if= V1 0 V= 1 1 Exit %2%>
+
+	sub
+		MetaScene 2
+		MapWidth 30
+		MapHeight 30
+		BoxMap
+
+		param <Fill 23 0>
+
+		sub
+			Void
+			param <Fill 23 0>
+			minimap <1.5.2.....7...6.....3.8.4>
+			inv
+				STC CRATE
+				MiniMapComponent 1
+				PDir 0
+
+				STC CRATE
+				MiniMapComponent 2
+				PDir 2
+
+				STC CRATE
+				MiniMapComponent 3
+				PDir 4
+
+				STC CRATE
+				MiniMapComponent 4
+				PDir 6
+
+				STC CRATE
+				MiniMapComponent 5
+				PDir 1
+
+				STC CRATE
+				MiniMapComponent 6
+				PDir 3
+
+				STC CRATE
+				MiniMapComponent 7
+				PDir 5
+
+				STC CRATE
+				MiniMapComponent 8
+				PDir 7
+			end
+		end
+	end
+	inv
+		Encounter
+	end
+
+
+

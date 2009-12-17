@@ -424,6 +424,11 @@ begin
 	TruePC := PCForces;
 	while ( TruePC <> Nil ) and ( ( TruePC^.G <> GG_Character ) or ( NAttValue( TruePC^.NA , NAG_CharDescription , NAS_CharType ) <> 0 ) ) do TruePC := TruePC^.Next;
 
+	{ Expand the TruePC. Maybe. }
+	if TruePC^.SubCom = Nil then begin
+		ExpandCharacter( TruePC );
+	end;
+
 	{ Give the PC a personal communicator. Maybe. }
 	if TruePC^.InvCom = Nil then begin
 		Artifacts := LoadNewItem( 'Personal Communicator' );

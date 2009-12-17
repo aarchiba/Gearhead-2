@@ -38,56 +38,64 @@
 	desig <BED-1>
 	roguechar <_>
 	Mesh 13
-	SDL_SPRITE <tex_bed.png>
+	SDL_SKIN <tex_bed.png>
+	SDL_SPRITE <prop_bed.png>
 
 	Prop 5
 	name <Ammo Crate>
 	desig <CRATE-AMMO>
 	Mesh 11
-	SDL_SPRITE <tex_crate.png>
+	SDL_SKIN <tex_crate.png>
 	Frame 0
+	SDL_SPRITE <prop_ammocrate.png>
 
 	Prop 10
 	name <Weapon Display>
 	desig <SHOPDISPLAY-WEAPONS-1>
 	Mesh 10
-	SDL_SPRITE <tex_store_shelves.png>
+	SDL_SPRITE <prop_weapondisplay1.png>
+	SDL_SKIN <tex_store_shelves.png>
 	Frame 1
 
 	Prop 10
 	name <Weapon Display>
 	desig <SHOPDISPLAY-WEAPONS-2>
 	Mesh 10
-	SDL_SPRITE <tex_store_shelves.png>
+	SDL_SPRITE <prop_weapondisplay1.png>
+	SDL_SKIN <tex_store_shelves.png>
 	Frame 2
 
 	Prop 10
 	name <Weapon Display>
 	desig <SHOPDISPLAY-WEAPONS-3>
 	Mesh 10
-	SDL_SPRITE <tex_store_shelves.png>
+	SDL_SPRITE <prop_weapondisplay1.png>
+	SDL_SKIN <tex_store_shelves.png>
 	Frame 3
 
 	Prop 10
 	name <Armor Display>
 	desig <SHOPDISPLAY-ARMOR-1>
 	Mesh 10
-	SDL_SPRITE <tex_store_shelves.png>
+	SDL_SKIN <tex_store_shelves.png>
+	SDL_SPRITE <prop_armordisplay2.png>
 	Frame 6
 
 	Prop 10
 	name <Armor Display>
 	desig <SHOPDISPLAY-ARMOR-2>
 	Mesh 10
-	SDL_SPRITE <tex_store_shelves.png>
+	SDL_SKIN <tex_store_shelves.png>
+	SDL_SPRITE <prop_armordisplay2.png>
 	Frame 7
 
 	Prop 5
 	name <End Table>
 	desig <ENDTABLE-1>
 	Mesh 12
-	SDL_SPRITE <tex_endtable.png>
+	SDL_SKIN <tex_endtable.png>
 	Frame 0
+	SDL_SPRITE <prop_endtable.png>
 
 	Prop 4
 	name <Box>
@@ -257,14 +265,14 @@
 	name <Crate>
 	Desig <CRATE>
 	roguechar <=>
-	SDL_Sprite <prop_box_low.png>
 	use <if= StatVal STAT_Lock 0 else GoLocked Print -5 OpenInv>
 	GoLocked <Print -4>
 	CLUE_CODEBREAKING <if# StatVal STAT_Lock 0 else GoNotLocked Mental ifCodeBreaking StatVal STAT_Lock else GoNoUnlock Print -1 SetStat STAT_Lock 0>
 	GoNoUnlock <Print -2>
 	GoNotLocked <Print -3>
 	Mesh 11
-	SDL_SPRITE <tex_crate.png>
+	SDL_SKIN <tex_crate.png>
+	SDL_SPRITE <prop_crate.png>
 	Frame 2
 	Msg-1 <You unlock the crate.>
 	Msg-2 <You cannot unlock this crate at your current skill level.>
@@ -283,7 +291,7 @@
 	GoNotLocked <Print -3>
 	Mesh 4
 	Frame 4
-	sdl_sprite <tex_electronics.png>
+	sdl_SKIN <tex_electronics.png>
 	Msg-1 <You unlock the safe.>
 	Msg-2 <You cannot unlock this safe at your current skill level.>
 	Msg-3 <This safe isn't locked.>
@@ -320,7 +328,7 @@
 	Msg3 <No, not really.>
 	Mesh 4
 	Frame 2
-	sdl_sprite <tex_electronics.png>
+	sdl_SKIN <tex_electronics.png>
 
 	Prop 5
 	name <Vending Machine>
@@ -341,14 +349,14 @@
 	Msg6 <You cannot hack this machine at your current skill level.>
 	Mesh 4
 	Frame 3
-	sdl_sprite <tex_electronics.png>
+	sdl_SKIN <tex_electronics.png>
 
 	Prop 10
 	name <BlackJack Machine>
 	desig <GAMBLING-1>
 	Mesh 3
 	Frame 5
-	sdl_sprite <tex_electronics.png>
+	sdl_SKIN <tex_electronics.png>
 	&Bet <* V3 5000>
 	% V1 = Recharge Counter
 	% V2 = PC's total.
@@ -385,7 +393,7 @@
 	name <Alarmist Scope (Game)>
 	desig <VIDEOGAME-1>
 	Mesh 3
-	sdl_sprite <tex_electronics.png>
+	sdl_SKIN <tex_electronics.png>
 	% V1 = Recharge counter
 	% V2 = Skill roll container
 	% V3 = Have won the game; you only get the XP bonus the first time.
@@ -417,7 +425,7 @@
 	name <Off Target (Game)>
 	desig <VIDEOGAME-2>
 	Mesh 3
-	sdl_sprite <tex_electronics.png>
+	sdl_SKIN <tex_electronics.png>
 	% V1 = Recharge counter
 	% V2 = Skill roll container
 	% V3 = Have won the game; you only get the XP bonus the first time.
@@ -449,7 +457,7 @@
 	name <Ultimatum (Game)>
 	desig <VIDEOGAME-3>
 	Mesh 3
-	sdl_sprite <tex_electronics.png>
+	sdl_SKIN <tex_electronics.png>
 	% V1 = Recharge counter
 	% V2 = Skill roll container
 	% V3 = Have won the game; you only get the XP bonus the first time.
@@ -480,7 +488,7 @@
 	Prop 5
 	name <Baby Battle (Game)>
 	Mesh 3
-	sdl_sprite <tex_electronics.png>
+	sdl_SKIN <tex_electronics.png>
 	% V1 = Recharge counter
 	% V2 = Skill roll container
 	% V3 = Have won the game; you only get the XP bonus the first time.
@@ -513,7 +521,7 @@
 	name <Speed Snake (Game)>
 	desig <VIDEOGAME-5>
 	Mesh 3
-	sdl_sprite <tex_electronics.png>
+	sdl_SKIN <tex_electronics.png>
 	% V1 = Recharge counter
 	% V2 = Skill roll container
 	% V3 = Have won the game; you only get the XP bonus the first time.

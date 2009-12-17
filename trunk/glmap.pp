@@ -1224,6 +1224,19 @@ begin
 	SpriteName := it;
 end;
 
+Function SkinName( M: GearPtr ): String;
+	{ Locate the skin name for this gear. }
+const
+	DefaultSkin = 'tex_spaceship_body.png';
+var
+	it: String;
+begin
+	it := SAttValue( M^.SA , 'SDL_SKIN' );
+	if it = '' then it := DefaultSkin;
+	SkinName := it;
+end;
+
+
 Function SpriteColor( GB: GameBoardPtr; M: GearPtr ): String;
 	{ Determine the color string for this model. }
 const
@@ -1386,7 +1399,7 @@ begin
 	glEnable( GL_Light1 );
 	glEnable( GL_Texture_2D );
 	if NotDestroyed( P ) then begin
-		glBindTexture(GL_TEXTURE_2D, SensibleTexID( SpriteName( P ) , '' , NAttValue( P^.NA , NAG_Display , NAS_PrimaryFrame ) ) );
+		glBindTexture(GL_TEXTURE_2D, SensibleTexID( SkinName( P ) , '' , NAttValue( P^.NA , NAG_Display , NAS_PrimaryFrame ) ) );
 	end else begin
 		glBindTexture(GL_TEXTURE_2D, BitzTex[ 10 ] );
 	end;

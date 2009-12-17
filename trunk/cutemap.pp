@@ -42,7 +42,7 @@ var
 
 	Model_Map: Array [1..MaxMapWidth,1..MaxMapWidth,LoAlt..( HiAlt + 1 )] of GearPtr;
 
-	Terrain_Sprite,Iso_Terrain_Sprite,Strong_Hit_Sprite,Weak_Hit_Sprite,Parry_Sprite,Miss_Sprite,Shadow_Sprite: SensibleSpritePtr;
+	Terrain_Sprite,Strong_Hit_Sprite,Weak_Hit_Sprite,Parry_Sprite,Miss_Sprite,Shadow_Sprite: SensibleSpritePtr;
 
 	Focused_On_Mek: GearPtr;
 
@@ -525,16 +525,7 @@ begin
 			Y := NAttValue( M^.NA , NAG_Location , NAS_Y );
 			Z := MekAltitude( GB , M );
 
-			if ( M^.G = GG_Prop ) and ( M^.Stat[ STAT_PropMesh ] <> 0 ) then begin
-				{ Insert prop-drawing code here. }
-
-
-				if OnTheMap( GB , X , Y ) and ( Z >= LoAlt ) and ( Z <= HiAlt ) then begin
-					model_map[ X , Y , Z ] := M;
-					if Names_Above_Heads then CM_ModelNames[ X , Y , Z ] := GearName( M );
-				end;
-
-			end else if Destroyed( M ) then begin
+			if Destroyed( M ) then begin
 				{ Insert wreckage-drawing code here. }
 				if M^.G = GG_Character then begin
 					AddCMCel( GB , X , Y , Z , CMC_Destroyed , Items_Sprite , Default_Dead_Thing );
@@ -627,6 +618,7 @@ begin
 end;
 
 Procedure Render_Isometric( GB: GameBoardPtr );
+	{ Render the isometric 2D map. }
 const
 	Altitude_Height = 20; { Pixel height of each altitude layer. }
 	HalfTileWidth = 32;
@@ -686,13 +678,13 @@ const
 	Procedure AddBasicTerrainCel( X,Y,F: Integer );
 		{ Add a basic terrain cel. }
 	begin
-		AddCMCel( GB , X , Y ,  0 , CMC_Terrain , Iso_Terrain_Sprite ,  F );
+		AddCMCel( GB , X , Y ,  0 , CMC_Terrain , terrain_sprite ,  F );
 {		AddShadow( X,Y,0 );}
 	end;
 	Procedure AddBasicWallCel( X,Y,F: Integer );
 		{ Add a basic wall cel using F. }
 	begin
-		AddCMCel( GB , X , Y ,  0 , CMC_Terrain , Iso_Terrain_Sprite ,  F );
+		AddCMCel( GB , X , Y ,  0 , CMC_Terrain , terrain_sprite ,  F );
 	end;
 	Function DoorSprite( X,Y: Integer ): Integer;
 		{ Return the appropriate door sprite for this tile: use either the vertical }
@@ -800,16 +792,7 @@ begin
 			Y := NAttValue( M^.NA , NAG_Location , NAS_Y );
 			Z := MekAltitude( GB , M );
 
-			if ( M^.G = GG_Prop ) and ( M^.Stat[ STAT_PropMesh ] <> 0 ) then begin
-				{ Insert prop-drawing code here. }
-
-
-				if OnTheMap( GB , X , Y ) and ( Z >= LoAlt ) and ( Z <= HiAlt ) then begin
-					model_map[ X , Y , Z ] := M;
-					if Names_Above_Heads then CM_ModelNames[ X , Y , Z ] := GearName( M );
-				end;
-
-			end else if Destroyed( M ) then begin
+			if Destroyed( M ) then begin
 				{ Insert wreckage-drawing code here. }
 				if M^.G = GG_Character then begin
 					AddCMCel( GB , X , Y , Z , CMC_Destroyed , Items_Sprite , Default_Dead_Thing );
@@ -1213,7 +1196,16 @@ Procedure InitGraphicsForScene( GB: GameBoardPtr );
 var
 	TileSet,BDNum: Integer;
 begin
+	if Terrain_Sprite <> Nil then RemoveSprite( Terrain_Sprite );
+	if Shadow_Sprite <> Nil then RemoveSprite( Shadow_Sprite );
 
+	if Use_Isometric_Mode then begin
+		Terrain_Sprite := LocateSprite( 'iso_terrain.png' , 64 , 96 );
+		Shadow_Sprite := LocateSprite( 'iso_shadows_noalpha.png' , 64 , 96 );
+	end else begin
+		Terrain_Sprite := LocateSprite( 'cute_terrain.png' , 50 , 120 );
+		Shadow_Sprite := LocateSprite( 'c_shadows_noalpha.png' , 50 , 120 );
+	end;
 end;
 
 initialization
@@ -1231,10 +1223,8 @@ initialization
 	Mini_Map_Sprite := LocateSprite( 'minimap.png' , 3 , 3 );
 	World_Terrain := LocateSprite( 'world_terrain.png' , 64 , 64 );
 
-	Terrain_Sprite := LocateSprite( 'cute_terrain.png' , 50 , 120 );
-	Iso_Terrain_Sprite := LocateSprite( 'iso_terrain.png' , 64 , 96 );
-
-	Shadow_Sprite := LocateSprite( 'c_shadows_noalpha.png' , 50 , 120 );
+	Terrain_Sprite := Nil;
+	Shadow_Sprite := Nil;
 
 	Items_Sprite := LocateSprite( Items_Sprite_Name , 50 , 120 );
 

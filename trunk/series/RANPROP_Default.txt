@@ -311,7 +311,7 @@ Height 1
 inv
 	Prop 10
 	name <Engine>
-	SDL_SPRITE <tex_spaceship_engine.png>
+	sdl_skin <tex_spaceship_engine.png>
 	SetTeam 3
 	Mesh 9
 	XPos 0
@@ -321,7 +321,7 @@ inv
 	Prop 10
 	name <Hull>
 	SetTeam 1
-	SDL_SPRITE <tex_spaceship_body.png>
+	sdl_skin <tex_spaceship_body.png>
 	Mesh 5
 	XPos 1
 	YPos 0
@@ -344,7 +344,7 @@ Height 3
 inv
 	Prop 10
 	name <Engine>
-	SDL_SPRITE <tex_spaceship_engine.png>
+	sdl_skin <tex_spaceship_engine.png>
 	SetTeam 3
 	Mesh 9
 	XPos 0
@@ -354,7 +354,7 @@ inv
 	Prop 10
 	name <Hull>
 	SetTeam 1
-	SDL_SPRITE <tex_spaceship_body.png>
+	sdl_skin <tex_spaceship_body.png>
 	Mesh 5
 	XPos 1
 	YPos 1
@@ -362,14 +362,14 @@ inv
 	Prop 10
 	name <Hull>
 	SetTeam 1
-	SDL_SPRITE <tex_spaceship_body.png>
+	sdl_skin <tex_spaceship_body.png>
 	Mesh 5
 	XPos 2
 	YPos 1
 
 	Prop 10
 	name <Hull>
-	SDL_SPRITE <tex_spaceship_body.png>
+	sdl_skin <tex_spaceship_body.png>
 	SetTeam 1
 	XPos 3
 	YPos 1
@@ -399,7 +399,7 @@ Height 3
 inv
 	Prop 10
 	name <Engine>
-	SDL_SPRITE <tex_spaceship_engine.png>
+	sdl_skin <tex_spaceship_engine.png>
 	SetTeam 3
 	Mesh 9
 	XPos 0
@@ -408,7 +408,7 @@ inv
 
 	Prop 10
 	name <Engine>
-	SDL_SPRITE <tex_spaceship_engine.png>
+	sdl_skin <tex_spaceship_engine.png>
 	SetTeam 3
 	Mesh 9
 	XPos 0
@@ -418,7 +418,7 @@ inv
 	Prop 10
 	name <Hull>
 	SetTeam 1
-	SDL_SPRITE <tex_spaceship_body.png>
+	sdl_skin <tex_spaceship_body.png>
 	Mesh 5
 	XPos 1
 	YPos 0
@@ -426,7 +426,7 @@ inv
 	Prop 10
 	name <Hull>
 	SetTeam 1
-	SDL_SPRITE <tex_spaceship_body.png>
+	sdl_skin <tex_spaceship_body.png>
 	Mesh 5
 	XPos 2
 	YPos 1
@@ -434,7 +434,7 @@ inv
 	Prop 10
 	name <Hull>
 	SetTeam 1
-	SDL_SPRITE <tex_spaceship_body.png>
+	sdl_skin <tex_spaceship_body.png>
 	Mesh 5
 	XPos 1
 	YPos 2
@@ -442,14 +442,14 @@ inv
 	Prop 10
 	name <Bridge>
 	SetTeam 1
-	SDL_SPRITE <tex_spaceship_body.png>
+	sdl_skin <tex_spaceship_body.png>
 	Mesh 8
 	XPos 1
 	YPos 1
 
 	Prop 10
 	name <Hull>
-	SDL_SPRITE <tex_spaceship_body.png>
+	sdl_skin <tex_spaceship_body.png>
 	SetTeam 1
 	XPos 3
 	YPos 1
@@ -458,7 +458,7 @@ inv
 
 	Prop 10
 	name <Hull>
-	SDL_SPRITE <tex_spaceship_body.png>
+	sdl_skin <tex_spaceship_body.png>
 	SetTeam 1
 	XPos 0
 	YPos 1
@@ -493,7 +493,7 @@ Height 5
 inv
 	Prop 10
 	name <Engine>
-	SDL_SPRITE <tex_spaceship_engine.png>
+	sdl_skin <tex_spaceship_engine.png>
 	SetTeam 3
 	Mesh 9
 	XPos 0
@@ -502,7 +502,7 @@ inv
 
 	Prop 10
 	name <Engine>
-	SDL_SPRITE <tex_spaceship_engine.png>
+	sdl_skin <tex_spaceship_engine.png>
 	SetTeam 3
 	Mesh 9
 	XPos 0
@@ -512,7 +512,7 @@ inv
 	Prop 10
 	name <Hull>
 	SetTeam 1
-	SDL_SPRITE <tex_spaceship_body.png>
+	sdl_skin <tex_spaceship_body.png>
 	Mesh 5
 	XPos 1
 	YPos 1
@@ -521,7 +521,7 @@ inv
 	Prop 10
 	name <Hull>
 	SetTeam 1
-	SDL_SPRITE <tex_spaceship_body.png>
+	sdl_skin <tex_spaceship_body.png>
 	Mesh 5
 	XPos 1
 	YPos 3
@@ -529,7 +529,7 @@ inv
 
 	Prop 10
 	name <Bridge>
-	SDL_SPRITE <tex_spaceship_body.png>
+	sdl_skin <tex_spaceship_body.png>
 	SetTeam 1
 	Mesh 8
 	XPos 1
@@ -539,7 +539,7 @@ inv
 	Prop 10
 	name <Hull>
 	SetTeam 1
-	SDL_SPRITE <tex_spaceship_body.png>
+	sdl_skin <tex_spaceship_body.png>
 	Mesh 5
 	XPos 2
 	YPos 2
@@ -548,7 +548,7 @@ inv
 	Prop 10
 	name <Hull>
 	SetTeam 1
-	SDL_SPRITE <tex_spaceship_body.png>
+	sdl_skin <tex_spaceship_body.png>
 	Mesh 5
 	XPos 3
 	YPos 2
@@ -556,7 +556,7 @@ inv
 
 	Prop 10
 	name <Hull>
-	SDL_SPRITE <tex_spaceship_body.png>
+	sdl_skin <tex_spaceship_body.png>
 	SetTeam 1
 	Mesh 6
 	XPos 2
@@ -565,7 +565,7 @@ inv
 
 	Prop 10
 	name <Hull>
-	SDL_SPRITE <tex_spaceship_body.png>
+	sdl_skin <tex_spaceship_body.png>
 	SetTeam 1
 	Mesh 6
 	XPos 2
@@ -574,7 +574,7 @@ inv
 
 	Prop 10
 	name <Hull>
-	SDL_SPRITE <tex_spaceship_body.png>
+	sdl_skin <tex_spaceship_body.png>
 	SetTeam 1
 	Mesh 6
 	XPos 4
@@ -583,7 +583,7 @@ inv
 
 	Prop 10
 	name <Hull>
-	SDL_SPRITE <tex_spaceship_body.png>
+	sdl_skin <tex_spaceship_body.png>
 	SetTeam 1
 	Mesh 6
 	XPos 0
@@ -618,7 +618,7 @@ inv
 	Prop 20
 	name <Hull>
 	SetTeam 1
-	SDL_SPRITE <tex_spaceship_body.png>
+	sdl_skin <tex_spaceship_body.png>
 	Mesh 6
 	XPos 1
 	YPos 0
@@ -626,7 +626,7 @@ inv
 
 	Prop 20
 	name <Hull>
-	SDL_SPRITE <tex_spaceship_body.png>
+	sdl_skin <tex_spaceship_body.png>
 	SetTeam 1
 	Mesh 6
 	XPos 2
@@ -647,7 +647,7 @@ inv
 
 	Prop 20
 	name <Engine>
-	SDL_SPRITE <tex_spaceship_engine.png>
+	sdl_skin <tex_spaceship_engine.png>
 	SetTeam 3
 	Mesh 9
 	XPos 0
@@ -663,7 +663,7 @@ inv
 
 	Prop 20
 	name <Bridge>
-	SDL_SPRITE <tex_spaceship_body.png>
+	sdl_skin <tex_spaceship_body.png>
 	SetTeam 1
 	Mesh 8
 	XPos 1
@@ -672,7 +672,7 @@ inv
 
 	Prop 20
 	name <Hull>
-	SDL_SPRITE <tex_spaceship_body.png>
+	sdl_skin <tex_spaceship_body.png>
 	SetTeam 1
 	Mesh 5
 	XPos 2
@@ -681,7 +681,7 @@ inv
 
 	Prop 20
 	name <Hull>
-	SDL_SPRITE <tex_spaceship_body.png>
+	sdl_skin <tex_spaceship_body.png>
 	SetTeam 1
 	Mesh 6
 	XPos 3
@@ -691,7 +691,7 @@ inv
 
 	Prop 20
 	name <Hull>
-	SDL_SPRITE <tex_spaceship_body.png>
+	sdl_skin <tex_spaceship_body.png>
 	SetTeam 1
 	Mesh 6
 	XPos 1
@@ -700,7 +700,7 @@ inv
 
 	Prop 20
 	name <Hull>
-	SDL_SPRITE <tex_spaceship_body.png>
+	sdl_skin <tex_spaceship_body.png>
 	SetTeam 1
 	Mesh 6
 	XPos 2
