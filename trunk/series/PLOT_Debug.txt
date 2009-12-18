@@ -1,5 +1,79 @@
+% ***
+% *** Debugging and utility plots.
+% ***
+% *** Load them into the adventure via the "}" command.
+% ***
+
 Plot
-	name <AA_PropDisplay>
+	name <AA_RenderBuildings>
+	% Used for generating isometric sprites of the prop meshes.
+	% Back up three clicks exactly before taking the snap.
+
+	Element1 <Scene CavClub>
+	Element2 <Prefab>
+	Place2 <1>
+
+	update <if= V1 0 V= 1 1 Exit %2%>
+
+	sub
+		MetaScene 2
+		MapWidth 40
+		MapHeight 40
+		BoxMap
+
+		start <if= V1 0 V= 1 1 EndPlot MagicMap>
+		param <Fill 1 0>
+
+		sub
+			Void
+			param <Fill 23 0>
+			minimap <1.2.3...............4.5.6>
+			FloorType 23
+			Width 15
+			Height 15
+			inv
+				Building
+				Altitude 1
+				NAtt 19 1 17
+				MiniMapComponent 1
+
+				Building
+				Altitude 1
+				NAtt 19 1 18
+				MiniMapComponent 2
+
+				Building
+				Altitude 2
+				NAtt 19 1 19
+				MiniMapComponent 3
+
+				Building
+				Altitude 1
+				NAtt 19 1 20
+				MiniMapComponent 4
+				PDir 1
+
+				Building
+				Altitude 1
+				NAtt 19 1 15
+				MiniMapComponent 5
+				PDir 3
+
+				Building
+				Altitude 1
+				NAtt 19 1 16
+				MiniMapComponent 6
+				PDir 5
+			end
+		end
+	end
+	inv
+		Encounter
+	end
+
+
+Plot
+	name <AA_RenderProp>
 	% Used for generating isometric sprites of the prop meshes.
 	% Back up two clicks or so before taking the snap.
 
@@ -15,42 +89,45 @@ Plot
 		MapHeight 30
 		BoxMap
 
-		param <Fill 23 0>
+		start <if= V1 0 V= 1 1 EndPlot>
+		param <Fill 1 0>
 
 		sub
 			Void
 			param <Fill 23 0>
 			minimap <1.5.2.....7...6.....3.8.4>
+			Width 5
+			Height 5
 			inv
-				STC CRATE
+				STC GAMBLING-1
 				MiniMapComponent 1
 				PDir 0
 
-				STC CRATE
+				STC GAMBLING-1
 				MiniMapComponent 2
 				PDir 2
 
-				STC CRATE
+				STC GAMBLING-1
 				MiniMapComponent 3
 				PDir 4
 
-				STC CRATE
+				STC GAMBLING-1
 				MiniMapComponent 4
 				PDir 6
 
-				STC CRATE
+				STC GAMBLING-1
 				MiniMapComponent 5
 				PDir 1
 
-				STC CRATE
+				STC GAMBLING-1
 				MiniMapComponent 6
 				PDir 3
 
-				STC CRATE
+				STC GAMBLING-1
 				MiniMapComponent 7
 				PDir 5
 
-				STC CRATE
+				STC GAMBLING-1
 				MiniMapComponent 8
 				PDir 7
 			end

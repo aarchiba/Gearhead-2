@@ -292,6 +292,7 @@
 	Mesh 4
 	Frame 4
 	sdl_SKIN <tex_electronics.png>
+	sdl_SPRITE <prop_safe.png>
 	Msg-1 <You unlock the safe.>
 	Msg-2 <You cannot unlock this safe at your current skill level.>
 	Msg-3 <This safe isn't locked.>
@@ -329,6 +330,7 @@
 	Mesh 4
 	Frame 2
 	sdl_SKIN <tex_electronics.png>
+	SDL_SPRITE <prop_television.png>
 
 	Prop 5
 	name <Vending Machine>
@@ -350,6 +352,7 @@
 	Mesh 4
 	Frame 3
 	sdl_SKIN <tex_electronics.png>
+	sdl_SPRITE <prop_vendingmachine.png>
 
 	Prop 10
 	name <BlackJack Machine>
@@ -357,6 +360,7 @@
 	Mesh 3
 	Frame 5
 	sdl_SKIN <tex_electronics.png>
+	SDL_SPRITE <prop_gambling1.png>
 	&Bet <* V3 5000>
 	% V1 = Recharge Counter
 	% V2 = PC's total.
@@ -394,6 +398,7 @@
 	desig <VIDEOGAME-1>
 	Mesh 3
 	sdl_SKIN <tex_electronics.png>
+	SDL_SPRITE <prop_videogame.png>
 	% V1 = Recharge counter
 	% V2 = Skill roll container
 	% V3 = Have won the game; you only get the XP bonus the first time.
@@ -426,6 +431,7 @@
 	desig <VIDEOGAME-2>
 	Mesh 3
 	sdl_SKIN <tex_electronics.png>
+	SDL_SPRITE <prop_videogame.png>
 	% V1 = Recharge counter
 	% V2 = Skill roll container
 	% V3 = Have won the game; you only get the XP bonus the first time.
@@ -458,6 +464,7 @@
 	desig <VIDEOGAME-3>
 	Mesh 3
 	sdl_SKIN <tex_electronics.png>
+	SDL_SPRITE <prop_videogame.png>
 	% V1 = Recharge counter
 	% V2 = Skill roll container
 	% V3 = Have won the game; you only get the XP bonus the first time.
@@ -489,6 +496,7 @@
 	name <Baby Battle (Game)>
 	Mesh 3
 	sdl_SKIN <tex_electronics.png>
+	SDL_SPRITE <prop_videogame.png>
 	% V1 = Recharge counter
 	% V2 = Skill roll container
 	% V3 = Have won the game; you only get the XP bonus the first time.
@@ -522,6 +530,7 @@
 	desig <VIDEOGAME-5>
 	Mesh 3
 	sdl_SKIN <tex_electronics.png>
+	SDL_SPRITE <prop_videogame.png>
 	% V1 = Recharge counter
 	% V2 = Skill roll container
 	% V3 = Have won the game; you only get the XP bonus the first time.
