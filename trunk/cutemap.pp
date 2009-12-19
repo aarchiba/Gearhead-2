@@ -42,7 +42,7 @@ var
 
 	Model_Map: Array [1..MaxMapWidth,1..MaxMapWidth,LoAlt..( HiAlt + 1 )] of GearPtr;
 
-	Terrain_Sprite,Strong_Hit_Sprite,Weak_Hit_Sprite,Parry_Sprite,Miss_Sprite,Shadow_Sprite: SensibleSpritePtr;
+	Terrain_Sprite,Strong_Hit_Sprite,Weak_Hit_Sprite,Parry_Sprite,Miss_Sprite,Shadow_Sprite,Building_Sprite: SensibleSpritePtr;
 
 	Focused_On_Mek: GearPtr;
 
@@ -623,6 +623,9 @@ const
 	Altitude_Height = 20; { Pixel height of each altitude layer. }
 	HalfTileWidth = 32;
 	HalfTileHeight = 16;
+
+	TCEL_OpenGround = 0;
+
 	Procedure AddShadow( X,Y,Z: Integer );
 		{ For this shadow, we're only concerned about three blocks- the one directly to the left (which }
 		{ I'll label #1), the one to the left and above (#2), and the one directly above (#3). You can }
@@ -680,6 +683,12 @@ const
 	begin
 		AddCMCel( GB , X , Y ,  0 , CMC_Terrain , terrain_sprite ,  F );
 {		AddShadow( X,Y,0 );}
+	end;
+	Procedure AddBuilding( X,Y,F: Integer );
+		{ Add a basic terrain cel. }
+	begin
+		AddCMCel( GB , X , Y ,  0 , CMC_Terrain , terrain_sprite ,  TCEL_OpenGround );
+		AddCMCel( GB , X , Y ,  0 , CMC_MetaTerrain , building_sprite ,  F );
 	end;
 	Procedure AddBasicWallCel( X,Y,F: Integer );
 		{ Add a basic wall cel using F. }
@@ -749,7 +758,7 @@ begin
 			if TileVisible( GB , X , Y ) then begin
 				Terr := TileTerrain( GB , X , Y );
 				case Terr of
-				TERRAIN_OpenGround: 	AddBasicTerrainCel( X , Y , 0 );
+				TERRAIN_OpenGround: 	AddBasicTerrainCel( X , Y , TCEL_OpenGround );
 
 				TERRAIN_Pavement: 	AddBasicTerrainCel( X , Y , 2 );
 				TERRAIN_Swamp: 		AddBasicTerrainCel( X , Y , 3 );
@@ -768,7 +777,11 @@ begin
 
 				TERRAIN_TileFloor:	AddBasicTerrainCel( X , Y , 10 );
 
+				TERRAIN_MediumBuilding:	AddBuilding( X , Y , ( ( X * 17 ) + ( Y * 71 ) ) mod 4 + 1 );
+				TERRAIN_HighBuilding:	AddBuilding( X , Y , ( ( X * 17 ) + ( Y * 71 ) ) mod 4 + 5 );
+
 				TERRAIN_GlassWall:	AddBasicWallCel( X , Y , 9 );
+				TERRAIN_LowBuilding:	AddBuilding( X , Y , ( ( X * 17 ) + ( Y * 71 ) ) mod 4 + 15 );
 
 				else AddBasicTerrainCel( X , Y , 0 );
 				end;
@@ -824,7 +837,7 @@ begin
 				GS_MetaStairsDown:	;
 				GS_MetaTrapdoor:	;
 				GS_MetaElevator:	;
-				GS_MetaBuilding:	;
+				GS_MetaBuilding:	AddBuilding( X , Y , NAttValue( M^.NA , NAG_MTAppearance , NAS_BuildingMesh ) );
 				GS_MetaEncounter:	;
 				GS_MetaCloud:		;
 				GS_MetaFire:		;
@@ -1198,13 +1211,16 @@ var
 begin
 	if Terrain_Sprite <> Nil then RemoveSprite( Terrain_Sprite );
 	if Shadow_Sprite <> Nil then RemoveSprite( Shadow_Sprite );
+	if Building_Sprite <> Nil then RemoveSprite( Building_Sprite );
 
 	if Use_Isometric_Mode then begin
 		Terrain_Sprite := LocateSprite( 'iso_terrain.png' , 64 , 96 );
 		Shadow_Sprite := LocateSprite( 'iso_shadows_noalpha.png' , 64 , 96 );
+		Building_Sprite := LocateSprite( 'iso_buildings.png' , 64, 96 );
 	end else begin
 		Terrain_Sprite := LocateSprite( 'cute_terrain.png' , 50 , 120 );
 		Shadow_Sprite := LocateSprite( 'c_shadows_noalpha.png' , 50 , 120 );
+		Building_Sprite := LocateSprite( 'iso_buildings.png' , 64, 96 );
 	end;
 end;
 
@@ -1225,6 +1241,7 @@ initialization
 
 	Terrain_Sprite := Nil;
 	Shadow_Sprite := Nil;
+	Building_Sprite := Nil;
 
 	Items_Sprite := LocateSprite( Items_Sprite_Name , 50 , 120 );
 
