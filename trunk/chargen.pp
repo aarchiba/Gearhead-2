@@ -1226,7 +1226,7 @@ begin
 	end;
 end;
 
-Procedure SelectMecha( PC: GearPtr; CanEdit: Boolean );
+Procedure SelectMecha( Egg,PC: GearPtr; CanEdit: Boolean );
 	{ Select a mecha for the PC to start with. }
 const
 	BaseMechaAllowance = 250000;
@@ -1314,7 +1314,7 @@ begin
 	{ Attach a copy of the selected mecha to the egg. }
 	if Mek <> Nil then begin
 		Mek := CloneGear( Mek );
-		AppendGear( PC^.Parent^.SubCom , Mek );
+		InsertSubCom( Egg , Mek );
 		if GearValue( mek ) > BaseMechaAllowance then begin
 			AddNAtt( PC^.NA , NAG_Experience , NAS_Credits , BaseMechaAllowance - GearValue( Mek ) );
 		end;
@@ -1572,7 +1572,7 @@ begin
 		SelectRandomTalent( PC );
 	end;
 
-	SelectMecha( PC , M = MODE_Regular );
+	SelectMecha( Egg , PC , M = MODE_Regular );
 
 	{ Set personality traits. }
 	if M = MODE_Regular then begin

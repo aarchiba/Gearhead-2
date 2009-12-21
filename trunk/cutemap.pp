@@ -42,7 +42,8 @@ var
 
 	Model_Map: Array [1..MaxMapWidth,1..MaxMapWidth,LoAlt..( HiAlt + 1 )] of GearPtr;
 
-	Terrain_Sprite,Strong_Hit_Sprite,Weak_Hit_Sprite,Parry_Sprite,Miss_Sprite,Shadow_Sprite,Building_Sprite: SensibleSpritePtr;
+	Strong_Hit_Sprite,Weak_Hit_Sprite,Parry_Sprite,Miss_Sprite: SensibleSpritePtr;
+	Terrain_Sprite,Extras_Sprite,Shadow_Sprite,Building_Sprite,Current_Backdrop: SensibleSpritePtr;
 
 	Focused_On_Mek: GearPtr;
 
@@ -119,8 +120,8 @@ const
 	{ Terrain texture 22 is open for expansion }
 	TT_Water = 23;
 
-	NumCMCelLayers = 8;		{ Total number of cel layers. }
-	NumBasicCelLayers = 7;		{ Number of cel layers set by RenderMap. }
+	NumCMCelLayers = 9;		{ Total number of cel layers. }
+	NumBasicCelLayers = 8;		{ Number of cel layers set by RenderMap. }
 
 	CMC_Terrain = 1;
 	CMC_Shadow = 2;
@@ -129,7 +130,10 @@ const
 	CMC_Destroyed = 5;
 	CMC_Items = 6;
 	CMC_Master = 7;
-	CMC_Effects = 8;
+	CMC_Toupee = 8;
+	CMC_Effects = 9;
+
+	Backdrop_Size = 512;	{ Width/Height in pixels of the backdrop image. }
 
 var
 	Mini_Map_Sprite,World_Terrain,Items_Sprite: SensibleSpritePtr;
@@ -357,7 +361,22 @@ begin
 	AlmostSeen := IsAlmostSeen;
 end;
 
-
+Procedure DrawBackdrop;
+	{ If Current_Backdrop exists, fill the screen with it. }
+var
+	X,Y: Integer;
+	MyDest: TSDL_Rect;
+begin
+	if Current_Backdrop <> Nil then begin
+		for x := 0 to ( ScreenWidth div Backdrop_Size ) do begin
+			for y := 0 to ( ScreenHeight div Backdrop_Size ) do begin
+				MyDest.X := x * Backdrop_Size;
+				MyDest.Y := y * Backdrop_Size;
+				DrawSprite( Current_Backdrop , MyDest , 0 );
+			end;
+		end;
+	end;
+end;
 
 
 Procedure Render_Cute( GB: GameBoardPtr );
@@ -624,7 +643,35 @@ const
 	HalfTileWidth = 32;
 	HalfTileHeight = 16;
 
+	{ Terrain cel constants. }
 	TCEL_OpenGround = 0;
+	TCEL_Void = 1;
+	TCEL_Pavement = 2;
+	TCEL_DarkGround = 3;
+	TCEL_RoughGround = 4;
+
+	TCEL_Wall = 5;
+	TCEL_Carpet = 6;
+	TCEL_WoodenFloor = 7;
+	TCEL_WoodenWall = 8;
+	TCEL_GlassWall = 9;
+
+	TCEL_Floor = 10;
+	TCEL_LightForest_A = 11;
+	TCEL_HeavyForest_A = 12;
+	TCEL_LightForest_B = 13;
+	TCEL_HeavyForest_B = 14;
+
+	TCEL_ShortWall = 15;
+
+	TCEL_LowHill = 20;
+	TCEL_MediumHill = 21;
+	TCEL_HighHill = 22;
+
+	{ Extras cel constants. }
+	ECEL_Unknown = 0;
+	ECEL_Trapdoor = 1;
+	ECEL_Indicator = 2;
 
 	Procedure AddShadow( X,Y,Z: Integer );
 		{ For this shadow, we're only concerned about three blocks- the one directly to the left (which }
@@ -693,7 +740,11 @@ const
 	Procedure AddBasicWallCel( X,Y,F: Integer );
 		{ Add a basic wall cel using F. }
 	begin
-		AddCMCel( GB , X , Y ,  0 , CMC_Terrain , terrain_sprite ,  F );
+		if Use_Tall_Walls then begin
+			AddCMCel( GB , X , Y ,  0 , CMC_Terrain , terrain_sprite ,  F );
+		end else begin
+			AddCMCel( GB , X , Y ,  0 , CMC_Terrain , terrain_sprite ,  TCEL_ShortWall );
+		end;
 	end;
 	Function DoorSprite( X,Y: Integer ): Integer;
 		{ Return the appropriate door sprite for this tile: use either the vertical }
@@ -759,34 +810,45 @@ begin
 				Terr := TileTerrain( GB , X , Y );
 				case Terr of
 				TERRAIN_OpenGround: 	AddBasicTerrainCel( X , Y , TCEL_OpenGround );
+				TERRAIN_LightForest:	begin
+							AddBasicTerrainCel( X , Y , TCEL_LightForest_A );
+							AddCMCel( GB , X , Y , 0 , CMC_Toupee , Terrain_Sprite , TCEL_LightForest_B );
+							end;
+				TERRAIN_HeavyForest:	begin
+							AddBasicTerrainCel( X , Y , TCEL_HeavyForest_A );
+							AddCMCel( GB , X , Y , 0 , CMC_Toupee , Terrain_Sprite , TCEL_HeavyForest_B );
+							end;
 
-				TERRAIN_Pavement: 	AddBasicTerrainCel( X , Y , 2 );
-				TERRAIN_Swamp: 		AddBasicTerrainCel( X , Y , 3 );
-				TERRAIN_L1_Hill:	AddBasicWallCel( X , Y , 20 );
-				TERRAIN_L2_Hill:	AddBasicWallCel( X , Y , 21 );
-				TERRAIN_L3_Hill:	AddBasicWallCel( X , Y , 22 );
-				TERRAIN_RoughGround:	AddBasicTerrainCel( X , Y , 4 );
-				TERRAIN_LowWall:	AddBasicWallCel( X , Y , 5 );
-				TERRAIN_Wall:		AddBasicWallCel( X , Y , 5 );
-				TERRAIN_Floor:		AddBasicTerrainCel( X , Y , 10 );
-				TERRAIN_Threshold:	AddBasicTerrainCel( X , Y , 10 );
-				TERRAIN_Carpet:		AddBasicTerrainCel( X , Y , 6 );
+				TERRAIN_Rubble:		AddBasicTerrainCel( X , Y , TCEL_RoughGround );
 
-				TERRAIN_WoodenFloor:	AddBasicTerrainCel( X , Y , 7 );
-				TERRAIN_WoodenWall:	AddBasicWallCel( X , Y , 8 );
+				TERRAIN_Pavement: 	AddBasicTerrainCel( X , Y , TCEL_Pavement );
+				TERRAIN_Swamp: 		AddBasicTerrainCel( X , Y , TCEL_DarkGround );
+				TERRAIN_L1_Hill:	AddBasicWallCel( X , Y , TCEL_LowHill );
+				TERRAIN_L2_Hill:	AddBasicWallCel( X , Y , TCEL_MediumHill );
+				TERRAIN_L3_Hill:	AddBasicWallCel( X , Y , TCEL_HighHill );
+				TERRAIN_RoughGround:	AddBasicTerrainCel( X , Y , TCEL_RoughGround );
+				TERRAIN_LowWall:	AddBasicWallCel( X , Y , TCEL_Wall );
+				TERRAIN_Wall:		AddBasicWallCel( X , Y , TCEL_Wall );
+				TERRAIN_Floor:		AddBasicTerrainCel( X , Y , TCEL_Floor );
+				TERRAIN_Threshold:	AddBasicTerrainCel( X , Y , TCEL_Floor );
+				TERRAIN_Carpet:		AddBasicTerrainCel( X , Y , TCEL_Carpet );
 
-				TERRAIN_TileFloor:	AddBasicTerrainCel( X , Y , 10 );
+				TERRAIN_WoodenFloor:	AddBasicTerrainCel( X , Y , TCEL_WoodenFloor );
+				TERRAIN_WoodenWall:	AddBasicWallCel( X , Y , TCEL_WoodenWall );
 
+				TERRAIN_TileFloor:	AddBasicTerrainCel( X , Y , TCEL_Floor );
+
+				TERRAIN_Space:		AddCMCel( GB , X , Y ,  0 , CMC_Terrain , Terrain_Sprite , TCEL_Void );
 				TERRAIN_MediumBuilding:	AddBuilding( X , Y , ( ( X * 17 ) + ( Y * 71 ) ) mod 4 + 1 );
 				TERRAIN_HighBuilding:	AddBuilding( X , Y , ( ( X * 17 ) + ( Y * 71 ) ) mod 4 + 5 );
 
-				TERRAIN_GlassWall:	AddBasicWallCel( X , Y , 9 );
+				TERRAIN_GlassWall:	AddBasicWallCel( X , Y , TCEL_GlassWall );
 				TERRAIN_LowBuilding:	AddBuilding( X , Y , ( ( X * 17 ) + ( Y * 71 ) ) mod 4 + 15 );
 
-				else AddBasicTerrainCel( X , Y , 0 );
+				else AddBasicTerrainCel( X , Y , TCEL_Void );
 				end;
 			end else begin
-				if AlmostSeen( GB , X , Y ) then AddCMCel( GB , X , Y , 0 , CMC_Terrain , Terrain_Sprite , 13 );
+				if AlmostSeen( GB , X , Y ) then AddCMCel( GB , X , Y , 0 , CMC_Terrain , Extras_Sprite , ECEL_Unknown );
 			end;
 
 			{ Clear the model map here. }
@@ -835,13 +897,13 @@ begin
 							else AddCMCel( GB , X , Y ,  0 , CMC_MetaTerrain , Terrain_Sprite , DoorSprite( X , Y ) + 1 );
 				GS_MetaStairsUp:	;
 				GS_MetaStairsDown:	;
-				GS_MetaTrapdoor:	;
+				GS_MetaTrapdoor:	AddCMCel( GB , X , Y ,  0 , CMC_MetaTerrain , Terrain_Sprite , ECEL_Trapdoor );
 				GS_MetaElevator:	;
 				GS_MetaBuilding:	AddBuilding( X , Y , NAttValue( M^.NA , NAG_MTAppearance , NAS_BuildingMesh ) );
 				GS_MetaEncounter:	;
 				GS_MetaCloud:		;
 				GS_MetaFire:		;
-				else ;
+				else AddCMCel( 	GB , X , Y , Z , CMC_MetaTerrain , LocateSprite( SpriteName( M ) , SpriteColor( GB , M ) , 64 , 64 ) , ( NAttValue( M^.NA , NAG_Location , NAS_D ) + 1 ) mod 8 );
 				end;
 
 			end else begin
@@ -855,6 +917,9 @@ begin
 
 	{ Go through each tile on the map, displaying terrain and }
 	{ other contents. }
+	DrawBackdrop;
+	TexDest.W := 64;
+	TexDest.H := 15;
 	for X := 1 to GB^.Map_Width do begin
 		for Y := 1 to GB^.Map_Height do begin
 			if OnTheScreen( X , Y ) then begin
@@ -865,14 +930,13 @@ begin
 							MyDest.Y := ScreenY( X , Y ) - Altitude_Height * Z;
 							if CM_Cels[ X ,Y , Z , T ].Sprite^.H > 64 then MyDest.Y := MyDest.Y - 32;
 							DrawSprite( CM_Cels[ X ,Y , Z , T ].Sprite , MyDest , CM_Cels[ X ,Y , Z , T ].F );
-
-							if Names_Above_Heads and ( CM_ModelNames[ X , Y , Z ] <> '' ) then begin
-								TexDest := MyDest;
-								TexDest.X := MyDest.X + 25;
-								TexDest.Y := MyDest.Y + 15;
-								QuickTextC( CM_ModelNames[ X , Y , Z ] , TexDest , StdWhite , Small_Font );
-							end;
 						end;
+					end;
+
+					if Names_Above_Heads and ( CM_ModelNames[ X , Y , Z ] <> '' ) then begin
+						TexDest.X := ScreenX( X , Y );
+						TexDest.Y := ScreenY( X , Y ) - Altitude_Height * Z;
+						QuickTextC( CM_ModelNames[ X , Y , Z ] , TexDest , StdWhite , Small_Font );
 					end;
 				end; { For Z... }
 			end; { if OnTheScreen... }
@@ -915,6 +979,7 @@ Procedure FocusOn( Mek: GearPtr );
 	{ Focus on the provided mecha. }
 begin
 	if Mek <> Nil then begin
+		ClearCMCelLayer( CMC_Effects );
 		origin_x := NAttValue( Mek^.NA , NAG_Location , NAS_X );
 		origin_y := NAttValue( Mek^.NA , NAG_Location , NAS_Y );
 	end;
@@ -924,11 +989,11 @@ end;
 Procedure IndicateTile( GB: GameBoardPtr; X , Y , Z: Integer );
 	{ Indicate the requested tile. }
 begin
-	ClearOverlays;
+	ClearCMCelLayer( CMC_Effects );
 	if OnTheMap( GB , X , Y ) and ( Z >= LoAlt ) and ( Z <= HiAlt ) then begin
 		origin_x := x;
 		origin_y := y;
-		Underlays[ X , Y , Z ] := 1;
+		AddCMCel( GB , X , Y , Z , CMC_Effects , Extras_Sprite , 2 );
 	end;
 end;
 
@@ -1040,25 +1105,14 @@ end;
 
 Procedure ClearOverlays;
 	{ Erase all overlays currently on the screen. }
-var
-	X,Y,Z: Integer;
 begin
-	for X := 1 to MaxMapWidth do begin
-		for y := 1 to MaxMapWidth do begin
-			for Z := LoAlt to HiALt do begin
-				Overlays[ X , Y , Z ] := 0;
-				Underlays[ X , Y , Z ] := 0;
-			end;
-		end;
-	end;
+	ClearCMCelLayer( CMC_Effects );
 end;
 
-Procedure AddOverlay( GB: GameBoardPtr; X , Y , Z , Tex: Integer );
+Procedure AddOverlay( GB: GameBoardPtr; OL_Sprite: SensibleSpritePtr; X , Y , Z, F: Integer );
 	{ Add an overlay to the screen. }
 begin
-	if OnTheMap( GB , X , Y ) and ( Z >= LoAlt ) and ( Z <= HiAlt ) then begin
-		Overlays[ X , Y , Z ] := Tex;
-	end;
+	AddCMCel( GB , X , Y , Z , CMC_Effects , OL_Sprite , F );
 end;
 
 Function ProcessShotAnimation( GB: GameBoardPtr; var AnimList,AnimOb: GearPtr ): Boolean;
@@ -1089,7 +1143,7 @@ begin
 	{ If this is not the destination point, draw the missile. }
 	end else begin
 		{Display bullet...}
-		AddOverlay( GB , P.X , P.Y , P.Z , 1 );
+		AddOverlay( GB , Strong_Hit_Sprite , P.X , P.Y , P.Z , 0 );
 	end;
 
 	ProcessShotAnimation := True;
@@ -1110,30 +1164,30 @@ begin
 	if AnimOb^.V < 10 then begin
 		case AnimOb^.S of
 		GS_DamagingHit: begin
-				AddOverlay( GB , AnimOb^.Stat[ X ] , AnimOb^.Stat[ Y ] , AnimOb^.Stat[ Z ] , 1 );
+				AddOverlay( GB , Strong_Hit_Sprite , AnimOb^.Stat[ X ] , AnimOb^.Stat[ Y ] , AnimOb^.Stat[ Z ] , AnimOb^.V );
 
 				end;
 		GS_ArmorDefHit: begin
-				AddOverlay( GB , AnimOb^.Stat[ X ] , AnimOb^.Stat[ Y ] , AnimOb^.Stat[ Z ] ,  2 );
+				AddOverlay( GB , Weak_Hit_Sprite , AnimOb^.Stat[ X ] , AnimOb^.Stat[ Y ] , AnimOb^.Stat[ Z ] ,  AnimOb^.V );
 
 				end;
 
 		GS_Parry,GS_Block,GS_Intercept,GS_Resist:	begin
-				AddOverlay( GB , AnimOb^.Stat[ X ] , AnimOb^.Stat[ Y ] , AnimOb^.Stat[ Z ] ,  3 );
+				AddOverlay( GB , Parry_Sprite , AnimOb^.Stat[ X ] , AnimOb^.Stat[ Y ] , AnimOb^.Stat[ Z ] ,  AnimOb^.V );
 				Inc( AnimOb^.V );
 				end;
 
 		GS_Dodge,GS_ECMDef:	begin
-				AddOverlay( GB , AnimOb^.Stat[ X ] , AnimOb^.Stat[ Y ] , AnimOb^.Stat[ Z ] , 4 );
+				AddOverlay( GB , Miss_Sprite , AnimOb^.Stat[ X ] , AnimOb^.Stat[ Y ] , AnimOb^.Stat[ Z ] , AnimOb^.V );
 				Inc( AnimOb^.V );
 				end;
 
 		GS_Backlash:	begin
-				AddOverlay( GB , AnimOb^.Stat[ X ] , AnimOb^.Stat[ Y ] , AnimOb^.Stat[ Z ] , 5 );
+				AddOverlay( GB , Strong_Hit_Sprite , AnimOb^.Stat[ X ] , AnimOb^.Stat[ Y ] , AnimOb^.Stat[ Z ] , AnimOb^.V );
 
 				end;
 		GS_AreaAttack:	begin
-				AddOverlay( GB , AnimOb^.Stat[ X ] , AnimOb^.Stat[ Y ] , AnimOb^.Stat[ Z ] , 6 );
+				AddOverlay( GB , Strong_Hit_Sprite , AnimOb^.Stat[ X ] , AnimOb^.Stat[ Y ] , AnimOb^.Stat[ Z ] , AnimOb^.V );
 
 				end;
 		end;
@@ -1206,21 +1260,37 @@ end;
 
 Procedure InitGraphicsForScene( GB: GameBoardPtr );
 	{ Initialize the graphics for this scene. Make sure the correct tilesets are loaded. }
+const
+	NumBackdrops = 1;
+	Backdrop_FName: Array [1..NumBackdrops] of String = (
+		'bg_space.png'
+	);
 var
 	TileSet,BDNum: Integer;
 begin
 	if Terrain_Sprite <> Nil then RemoveSprite( Terrain_Sprite );
 	if Shadow_Sprite <> Nil then RemoveSprite( Shadow_Sprite );
 	if Building_Sprite <> Nil then RemoveSprite( Building_Sprite );
+	if Extras_Sprite <> Nil then RemoveSprite( Extras_Sprite );
 
 	if Use_Isometric_Mode then begin
 		Terrain_Sprite := LocateSprite( 'iso_terrain.png' , 64 , 96 );
 		Shadow_Sprite := LocateSprite( 'iso_shadows_noalpha.png' , 64 , 96 );
 		Building_Sprite := LocateSprite( 'iso_buildings.png' , 64, 96 );
+		Extras_Sprite := LocateSprite( 'iso_extras.png' , 64, 96 );
 	end else begin
 		Terrain_Sprite := LocateSprite( 'cute_terrain.png' , 50 , 120 );
 		Shadow_Sprite := LocateSprite( 'c_shadows_noalpha.png' , 50 , 120 );
 		Building_Sprite := LocateSprite( 'iso_buildings.png' , 64, 96 );
+	end;
+
+	{ Also set the backdrop. }
+	if Current_Backdrop <> Nil then RemoveSprite( Current_Backdrop );
+	if GB^.Scene <> Nil then begin
+		BDNum := NAttValue( GB^.Scene^.NA , NAG_SceneData , NAS_Backdrop );
+		if ( BDNum > 0 ) and ( BDNum <= NumBackdrops ) then begin
+			Current_Backdrop := LocateSprite( Backdrop_FName[ BDNum ] , Backdrop_Size , Backdrop_Size );
+		end;
 	end;
 end;
 
@@ -1242,6 +1312,8 @@ initialization
 	Terrain_Sprite := Nil;
 	Shadow_Sprite := Nil;
 	Building_Sprite := Nil;
+	Current_Backdrop := Nil;
+	Extras_Sprite := Nil;
 
 	Items_Sprite := LocateSprite( Items_Sprite_Name , 50 , 120 );
 

@@ -52,7 +52,7 @@ const
 	Jade: TSDL_Color =		( r: 66; g:121; b:119 );
 	BrightJade: TSDL_Color =	( r:100; g:200; b:180 );
 
-	StdBlack: TSDL_Color =		( r:  0; g:  0; b:  0 );
+	StdBlack: TSDL_Color =		( r:  5; g:  5; b:  5 );
 	StdWhite: TSDL_Color =		( r:255; g:255; b:255 );
 	MenuItem: TSDL_Color =		( r: 88; g:161; b:159 );
 	MenuSelect: TSDL_Color =	( r:125; g:250; b:125 );
@@ -576,6 +576,8 @@ begin
 		B^.Next := Nil;
 		DisposeSpriteList(B);
 	end;
+
+	LMember := Nil;
 end;
 
 procedure DrawSprite( Spr: SensibleSpritePtr; MyDest: TSDL_Rect; Frame: Integer );

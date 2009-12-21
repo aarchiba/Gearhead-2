@@ -418,9 +418,15 @@ begin
 	Idle_Display;
 {$ENDIF}
 
+	{ Extract the PCForces from the Egg. }
+	PCForces := Nil;
+	while Egg^.SubCom <> Nil do begin
+		S := Egg^.SubCom;
+		DelinkGear( Egg^.SubCom , S );
+		AppendGear( PCForces , S );
+	end;
+
 	{ Locate the TruePC. }
-	PCForces := Egg^.SubCom;
-	DelinkGear( Egg^.SubCom , PCForces );
 	TruePC := PCForces;
 	while ( TruePC <> Nil ) and ( ( TruePC^.G <> GG_Character ) or ( NAttValue( TruePC^.NA , NAG_CharDescription , NAS_CharType ) <> 0 ) ) do TruePC := TruePC^.Next;
 
