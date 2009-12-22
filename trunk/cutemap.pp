@@ -663,6 +663,10 @@ const
 	TCEL_HeavyForest_B = 14;
 
 	TCEL_ShortWall = 15;
+	TCEL_Door = 16;
+	TCEL_Threshold = 17;
+	TCEL_Elevator = 18;
+	TCEL_ShortDoor = 19;
 
 	TCEL_LowHill = 20;
 	TCEL_MediumHill = 21;
@@ -672,6 +676,17 @@ const
 	ECEL_Unknown = 0;
 	ECEL_Trapdoor = 1;
 	ECEL_Indicator = 2;
+	ECEL_Item = 3;
+	ECEL_Dead_Thing = 4;
+
+	ECEL_Wreckage = 5;
+	ECEL_StairsUp = 6;
+	ECEL_StairsDown = 7;
+
+	ECEL_Encounter = 10;
+	ECEL_Fire = 20;
+	ECEL_Smoke = 21;
+
 
 	Procedure AddShadow( X,Y,Z: Integer );
 		{ For this shadow, we're only concerned about three blocks- the one directly to the left (which }
@@ -744,6 +759,15 @@ const
 			AddCMCel( GB , X , Y ,  0 , CMC_Terrain , terrain_sprite ,  F );
 		end else begin
 			AddCMCel( GB , X , Y ,  0 , CMC_Terrain , terrain_sprite ,  TCEL_ShortWall );
+		end;
+	end;
+	Procedure AddBasicDoorCel( X,Y,F: Integer );
+		{ Add a door or elevator cel using F. }
+	begin
+		if Use_Tall_Walls then begin
+			AddCMCel( GB , X , Y ,  0 , CMC_Terrain , terrain_sprite ,  F );
+		end else begin
+			AddCMCel( GB , X , Y ,  0 , CMC_Terrain , terrain_sprite ,  TCEL_ShortDoor );
 		end;
 	end;
 	Function DoorSprite( X,Y: Integer ): Integer;
@@ -830,7 +854,7 @@ begin
 				TERRAIN_LowWall:	AddBasicWallCel( X , Y , TCEL_Wall );
 				TERRAIN_Wall:		AddBasicWallCel( X , Y , TCEL_Wall );
 				TERRAIN_Floor:		AddBasicTerrainCel( X , Y , TCEL_Floor );
-				TERRAIN_Threshold:	AddBasicTerrainCel( X , Y , TCEL_Floor );
+				TERRAIN_Threshold:	AddBasicTerrainCel( X , Y , TCEL_Threshold );
 				TERRAIN_Carpet:		AddBasicTerrainCel( X , Y , TCEL_Carpet );
 
 				TERRAIN_WoodenFloor:	AddBasicTerrainCel( X , Y , TCEL_WoodenFloor );
@@ -870,9 +894,9 @@ begin
 			if Destroyed( M ) then begin
 				{ Insert wreckage-drawing code here. }
 				if M^.G = GG_Character then begin
-					AddCMCel( GB , X , Y , Z , CMC_Destroyed , Items_Sprite , Default_Dead_Thing );
+					AddCMCel( GB , X , Y , Z , CMC_Destroyed , Extras_Sprite , ECEL_Dead_Thing );
 				end else begin
-					AddCMCel( GB , X , Y , Z , CMC_Destroyed , Items_Sprite , Default_Wreckage );
+					AddCMCel( GB , X , Y , Z , CMC_Destroyed , Extras_Sprite , ECEL_Wreckage );
 				end;
 
 			end else if IsMasterGear( M ) then begin
@@ -886,29 +910,28 @@ begin
 
 				if OnTheMap( GB , X , Y ) and ( Z >= LoAlt ) and ( Z <= HiAlt ) then begin
 					model_map[ X , Y , Z ] := M;
-					if Names_Above_Heads then CM_ModelNames[ X , Y , Z ] := PilotName( M );
+					if Names_Above_Heads and ( M^.G <> GG_Prop ) then CM_ModelNames[ X , Y , Z ] := PilotName( M );
 				end;
 
 			end else if M^.G = GG_MetaTerrain then begin
 				{ Insert MetaTerrain-drawing code here. }
 
 				case M^.S of
-				GS_MetaDoor:		if M^.Stat[ STAT_Pass ] = -100 then AddCMCel( GB , X , Y ,  0 , CMC_MetaTerrain , Terrain_Sprite , DoorSprite( X , Y ) )
-							else AddCMCel( GB , X , Y ,  0 , CMC_MetaTerrain , Terrain_Sprite , DoorSprite( X , Y ) + 1 );
-				GS_MetaStairsUp:	;
-				GS_MetaStairsDown:	;
-				GS_MetaTrapdoor:	AddCMCel( GB , X , Y ,  0 , CMC_MetaTerrain , Terrain_Sprite , ECEL_Trapdoor );
-				GS_MetaElevator:	;
+				GS_MetaDoor:		if M^.Stat[ STAT_Pass ] = -100 then AddBasicDoorCel( X , Y , TCEL_Door );
+				GS_MetaStairsUp:	AddCMCel( GB , X , Y ,  0 , CMC_MetaTerrain , Extras_Sprite , ECEL_StairsUp );
+				GS_MetaStairsDown:	AddCMCel( GB , X , Y ,  0 , CMC_MetaTerrain , Extras_Sprite , ECEL_StairsDown );
+				GS_MetaTrapdoor:	AddCMCel( GB , X , Y ,  0 , CMC_MetaTerrain , Extras_Sprite , ECEL_Trapdoor );
+				GS_MetaElevator:	AddBasicDoorCel( X , Y , TCEL_Elevator );
 				GS_MetaBuilding:	AddBuilding( X , Y , NAttValue( M^.NA , NAG_MTAppearance , NAS_BuildingMesh ) );
-				GS_MetaEncounter:	;
-				GS_MetaCloud:		;
-				GS_MetaFire:		;
+				GS_MetaEncounter:	AddCMCel( GB , X , Y ,  0 , CMC_MetaTerrain , Extras_Sprite , ECEL_Encounter );
+				GS_MetaCloud:		AddCMCel( GB , X , Y ,  0 , CMC_MetaTerrain , Extras_Sprite , ECEL_Smoke );
+				GS_MetaFire:		AddCMCel( GB , X , Y ,  0 , CMC_MetaTerrain , Extras_Sprite , ECEL_Fire );
 				else AddCMCel( 	GB , X , Y , Z , CMC_MetaTerrain , LocateSprite( SpriteName( M ) , SpriteColor( GB , M ) , 64 , 64 ) , ( NAttValue( M^.NA , NAG_Location , NAS_D ) + 1 ) mod 8 );
 				end;
 
 			end else begin
 				{ Draw the yellow-striped box. }
-				AddCMCel( GB , X , Y , Z , CMC_Items , Items_Sprite , 0 );
+				AddCMCel( GB , X , Y , Z , CMC_Items , Extras_Sprite , ECEL_Item );
 			end;
 		end;
 
