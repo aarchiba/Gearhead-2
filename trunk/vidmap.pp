@@ -30,6 +30,7 @@ var
 	Focused_On_Mek: GearPtr;
 
 Function ScreenDirToMapDir( D: Integer ): Integer;
+Function KeyboardDirToMapDir( D: Integer ): Integer;
 
 Procedure RenderMap( GB: GameBoardPtr );
 Procedure FocusOn( Mek: GearPtr );
@@ -122,6 +123,12 @@ begin
 	ScreenDirToMapDir := D;
 end;
 
+Function KeyboardDirToMapDir( D: Integer ): Integer;
+	{ Given the press of a key on the keyboard, return the map direction it }
+	{ corresponds to. }
+begin
+	KeyboardDirToMapDir := ScreenDirToMapDir( D );
+end;
 
 Function TeamColor( GB: GameBoardPtr; G: GearPtr ): Byte;
 	{ Select a good color based upon the team this }

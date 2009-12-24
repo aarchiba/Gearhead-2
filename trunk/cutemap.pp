@@ -42,13 +42,14 @@ var
 
 	Model_Map: Array [1..MaxMapWidth,1..MaxMapWidth,LoAlt..( HiAlt + 1 )] of GearPtr;
 
-	Strong_Hit_Sprite,Weak_Hit_Sprite,Parry_Sprite,Miss_Sprite: SensibleSpritePtr;
+	Strong_Hit_Sprite,Weak_Hit_Sprite,Parry_Sprite,Miss_Sprite,Encounter_Sprite: SensibleSpritePtr;
 	Terrain_Sprite,Extras_Sprite,Shadow_Sprite,Building_Sprite,Current_Backdrop: SensibleSpritePtr;
 
 	Focused_On_Mek: GearPtr;
 
 
 Function ScreenDirToMapDir( D: Integer ): Integer;
+Function KeyboardDirToMapDir( D: Integer ): Integer;
 
 Function SpriteColor( GB: GameBoardPtr; M: GearPtr ): String;
 
@@ -133,6 +134,8 @@ const
 	CMC_Toupee = 8;
 	CMC_Effects = 9;
 
+	Num_Rotation_Angles = 4;
+
 	Backdrop_Size = 512;	{ Width/Height in pixels of the backdrop image. }
 
 var
@@ -144,7 +147,27 @@ var
 Function ScreenDirToMapDir( D: Integer ): Integer;
 	{ Convert the requested screen direction to a map direction. }
 begin
-	ScreenDirToMapDir := ( D + Origin_D * 2 ) mod 8;
+	if Use_Isometric_Mode then begin
+		ScreenDirToMapDir := ( D + Origin_D * 2 + 7 ) mod 8;
+	end else begin
+		ScreenDirToMapDir := ( D + Origin_D * 2 ) mod 8;
+	end;
+end;
+
+Function KeyboardDirToMapDir( D: Integer ): Integer;
+	{ Given the press of a key on the keyboard, return the map direction it }
+	{ corresponds to. Normally this will be the same as the screen dir, }
+	{ unless using isometric mode and ISO_DIR_OFFSET is nonzero. }
+var
+	it: Integer;
+begin
+	it := ScreenDirToMapDir( D );
+
+	if Use_Isometric_Mode then begin
+		it := ( it + Iso_Dir_Offset ) mod 8;
+	end;
+
+	KeyboardDirToMapDir := it;
 end;
 
 Procedure ClearCMCelLayer( L: Integer );
@@ -683,10 +706,15 @@ const
 	ECEL_StairsUp = 6;
 	ECEL_StairsDown = 7;
 
-	ECEL_Encounter = 10;
 	ECEL_Fire = 20;
 	ECEL_Smoke = 21;
 
+	function MapDirToScreenDir( D: Integer ): Integer;
+		{ Given an in-game map dir, convert this to a screen dir which }
+		{ can be used to render sprites. }
+	begin
+		MapDirToScreenDir := ( D + 9 - Origin_D * 2 ) mod 8;
+	end;
 
 	Procedure AddShadow( X,Y,Z: Integer );
 		{ For this shadow, we're only concerned about three blocks- the one directly to the left (which }
@@ -780,6 +808,47 @@ const
 		if OnTheMap( GB , X , Y ) and ( TerrMan[ TileTerrain( GB , X , Y ) ].Altitude > 5 ) then DoorSprite := 16
 		else DoorSprite := 14;
 	end;
+
+	Function MapX( VX,VY: Integer ): Integer;
+		{ Given virtual point VX,VY return which actual map tile we're }
+		{ talking about. }
+	begin
+		if origin_d = 0 then MapX := VX
+		else if origin_d = 1 then MapX := ( GB^.Map_Width - VY + 1 )
+		else if origin_d = 2 then MapX := ( GB^.Map_Width - VX + 1 )
+		else MapX := VY;
+	end;
+	Function MapY( VX,VY: Integer ): Integer;
+		{ Given virtual point VX,VY return which actual map tile we're }
+		{ talking about. }
+	begin
+		if origin_d = 0 then MapY := VY
+		else if origin_d = 1 then MapY := VX
+		else if origin_d = 2 then MapY := ( GB^.Map_Height - VY + 1 )
+		else MapY := ( GB^.Map_Height - VX + 1 );
+	end;
+
+	Function VirtX( MX,MY: Integer ): Integer;
+		{ Given map point MX,MY return the virtual screen tile to which }
+		{ it will be rendered. }
+	begin
+		if origin_d = 0 then VirtX := MX
+		else if origin_d = 1 then VirtX := MY
+		else if origin_d = 2 then VirtX := ( GB^.Map_Width - MX + 1 )
+		else VirtX := ( GB^.Map_Height - MY + 1 );
+	end;
+
+	Function VirtY( MX,MY: Integer ): Integer;
+		{ Given map point MX,MY return the virtual screen tile to which }
+		{ it will be rendered. }
+	begin
+		if origin_d = 0 then VirtY := MY
+		else if origin_d = 1 then VirtY := ( GB^.Map_Width - MX + 1 )
+		else if origin_d = 2 then VirtY := ( GB^.Map_Height - MY + 1 )
+		else VirtY := MX;
+	end;
+
+
 	Function RelativeX( X,Y: Integer ): LongInt;
 		{ Return the relative position of tile X,Y. The UpLeft corner }
 		{ of tile [1,1] is the origin of our display. }
@@ -797,12 +866,12 @@ const
 	Function ScreenX( X,Y: Integer ): LongInt;
 		{ Return the screen coordinates of map column X. }
 	begin
-		ScreenX := RelativeX( X - Origin_X , Y - Origin_Y ) + ( ScreenWidth div 2 );
+		ScreenX := RelativeX( X - VirtX( Origin_X , Origin_Y ) , Y - VirtY( Origin_X , Origin_Y ) ) + ( ScreenWidth div 2 );
 	end;
 	Function ScreenY( X,Y: Integer ): Integer;
 		{ Return the screen coordinates of map row Y. }
 	begin
-		ScreenY := RelativeY( X - Origin_X , Y - Origin_Y ) + ( ScreenHeight div 2 );
+		ScreenY := RelativeY( X - VirtX( Origin_X , Origin_Y ) , Y - VirtY( Origin_X , Origin_Y ) ) + ( ScreenHeight div 2 );
 	end;
 	Function OnTheScreen( X , Y: Integer ): Boolean;
 		{ This function returns TRUE if the specified point is visible }
@@ -820,9 +889,7 @@ const
 	end;
 
 var
-	X,Y,Z,T,Row,Column,Terr: Integer;
-	SX,SY,H: LongInt;
-	Frame: Integer;
+	VX,VY,VX_Max,VY_Max,X,Y,Z,T,Row,Column,Terr: Integer;
 	M: GearPtr;
 	MyDest,TexDest: TSDL_Rect;
 	Spr: SensibleSpritePtr;
@@ -903,7 +970,7 @@ begin
 				{ Insert sprite-drawing code here. }
 				AddCMCel( 	GB , X , Y , Z , CMC_Master ,
 						LocateSprite( SpriteName( M ) , SpriteColor( GB , M ) , 64 , 64 ) ,
-						( NAttValue( M^.NA , NAG_Location , NAS_D ) + 1 ) mod 8
+						MapDirToScreenDir( NAttValue( M^.NA , NAG_Location , NAS_D ) )
 				);
 
 				AddCMCel( 	GB , X , Y , Z , CMC_MShadow , Shadow_Sprite , 6 );
@@ -923,10 +990,10 @@ begin
 				GS_MetaTrapdoor:	AddCMCel( GB , X , Y ,  0 , CMC_MetaTerrain , Extras_Sprite , ECEL_Trapdoor );
 				GS_MetaElevator:	AddBasicDoorCel( X , Y , TCEL_Elevator );
 				GS_MetaBuilding:	AddBuilding( X , Y , NAttValue( M^.NA , NAG_MTAppearance , NAS_BuildingMesh ) );
-				GS_MetaEncounter:	AddCMCel( GB , X , Y ,  0 , CMC_MetaTerrain , Extras_Sprite , ECEL_Encounter );
+				GS_MetaEncounter:	AddCMCel( GB , X , Y ,  0 , CMC_MetaTerrain , Encounter_Sprite , ( M^.Stat[ STAT_EncounterType ] mod 3 ) * 3 + ( ( Animation_Phase div 5 ) mod 2 ) );
 				GS_MetaCloud:		AddCMCel( GB , X , Y ,  0 , CMC_MetaTerrain , Extras_Sprite , ECEL_Smoke );
 				GS_MetaFire:		AddCMCel( GB , X , Y ,  0 , CMC_MetaTerrain , Extras_Sprite , ECEL_Fire );
-				else AddCMCel( 	GB , X , Y , Z , CMC_MetaTerrain , LocateSprite( SpriteName( M ) , SpriteColor( GB , M ) , 64 , 64 ) , ( NAttValue( M^.NA , NAG_Location , NAS_D ) + 1 ) mod 8 );
+				else AddCMCel( 	GB , X , Y , Z , CMC_MetaTerrain , LocateSprite( SpriteName( M ) , SpriteColor( GB , M ) , 64 , 64 ) , MapDirToScreenDir( NAttValue( M^.NA , NAG_Location , NAS_D ) ) );
 				end;
 
 			end else begin
@@ -943,27 +1010,44 @@ begin
 	DrawBackdrop;
 	TexDest.W := 64;
 	TexDest.H := 15;
-	for X := 1 to GB^.Map_Width do begin
-		for Y := 1 to GB^.Map_Height do begin
-			if OnTheScreen( X , Y ) then begin
+
+	{ We need to calculate the virtual X and Y maximums. }
+	{ If origin_d is even it's the X axis running down the right from the }
+	{ top tile and the Y axis runs to the left. If origin_d is odd, then }
+	{ the opposite is true. }
+	if ( ( origin_d mod 2 ) = 0 ) then begin
+		VX_Max := GB^.Map_Width;
+		VY_Max := GB^.Map_Height;
+	end else begin
+		VX_Max := GB^.Map_Height;
+		VY_Max := GB^.Map_Width;
+	end;
+
+	for VX := 1 to VX_Max do begin
+		for VY := 1 to VY_Max do begin
+			if OnTheScreen( VX , VY ) then begin
+				{ Determine the map X,Y coordinates that this virtual }
+				{ point is pointing to. }
+				X := MapX( VX , VY );
+				Y := MapY( VX , VY );
+
 				for Z := LoAlt to HiAlt do begin
 					for t := 0 to NumCMCelLayers do begin
 						if CM_Cels[ X ,Y , Z , T ].Sprite <> Nil then begin
-							MyDest.X := ScreenX( X , Y );
-							MyDest.Y := ScreenY( X , Y ) - Altitude_Height * Z;
+							MyDest.X := ScreenX( VX , VY );
+							MyDest.Y := ScreenY( VX , VY ) - Altitude_Height * Z;
 							if CM_Cels[ X ,Y , Z , T ].Sprite^.H > 64 then MyDest.Y := MyDest.Y - 32;
 							DrawSprite( CM_Cels[ X ,Y , Z , T ].Sprite , MyDest , CM_Cels[ X ,Y , Z , T ].F );
 						end;
 					end;
 
 					if Names_Above_Heads and ( CM_ModelNames[ X , Y , Z ] <> '' ) then begin
-						TexDest.X := ScreenX( X , Y );
-						TexDest.Y := ScreenY( X , Y ) - Altitude_Height * Z;
+						TexDest.X := ScreenX( VX , VY );
+						TexDest.Y := ScreenY( VX , VY ) - Altitude_Height * Z;
 						QuickTextC( CM_ModelNames[ X , Y , Z ] , TexDest , StdWhite , Small_Font );
 					end;
 				end; { For Z... }
 			end; { if OnTheScreen... }
-
 		end;
 	end;
 end;
@@ -1013,10 +1097,10 @@ Procedure IndicateTile( GB: GameBoardPtr; X , Y , Z: Integer );
 	{ Indicate the requested tile. }
 begin
 	ClearCMCelLayer( CMC_Effects );
-	if OnTheMap( GB , X , Y ) and ( Z >= LoAlt ) and ( Z <= HiAlt ) then begin
+	if OnTheMap( GB , X , Y ) then begin
 		origin_x := x;
 		origin_y := y;
-		AddCMCel( GB , X , Y , Z , CMC_Effects , Extras_Sprite , 2 );
+		if ( Z >= LoAlt ) and ( Z <= HiAlt ) then AddCMCel( GB , X , Y , Z , CMC_Effects , Extras_Sprite , 2 );
 	end;
 end;
 
@@ -1065,64 +1149,12 @@ end;
 
 Procedure ScrollMap( GB: GameBoardPtr );
 	{ Asjust the position of the map origin. }
-	Procedure CheckOrigin;
-		{ Make sure the origin position is legal. }
-	begin
-		if Origin_X < 1 then Origin_X := 1
-		else if Origin_X > GB^.MAP_Width then Origin_X := GB^.MAP_Width;
-		if Origin_Y < 1 then Origin_Y := 1
-		else if Origin_Y > GB^.MAP_Height then Origin_Y := GB^.MAP_Height;
-	end;
-var
-	L: Integer;
 begin
-{	if Mouse_X < 20 then begin
-		Origin_X := Origin_X + FineDir[ ( Origin_D + Num_Rotation_Angles div 4 ) mod Num_Rotation_Angles , 1 ]/3;
-		Origin_Y := Origin_Y + FineDir[ ( Origin_D + Num_Rotation_Angles div 4 ) mod Num_Rotation_Angles , 2 ]/3;
-		checkorigin;
-	END else if Mouse_X > ( screenwidth - 20 ) then begin
-		Origin_X := Origin_X + FineDir[ ( Origin_D + Num_Rotation_Angles * 3 div 4 ) mod Num_Rotation_Angles , 1 ]/3;
-		Origin_Y := Origin_Y + FineDir[ ( Origin_D + Num_Rotation_Angles * 3 div 4 ) mod Num_Rotation_Angles , 2 ]/3;
-		checkorigin;
-	end else if ( Mouse_Y < 20 ) then begin
-		Origin_X := Origin_X + FineDir[ ( Origin_D + Num_Rotation_Angles div 2 ) mod Num_Rotation_Angles , 1 ]/3;
-		Origin_Y := Origin_Y + FineDir[ ( Origin_D + Num_Rotation_Angles div 2 ) mod Num_Rotation_Angles , 2 ]/3;
-		checkorigin;
-	END else if ( Mouse_Y > ( screenheight - 20 ) ) then begin
-		Origin_X := Origin_X + FineDir[ Origin_D , 1 ]/3;
-		Origin_Y := Origin_Y + FineDir[ Origin_D , 2 ]/3;
-		checkorigin;
-	end;
-
-
-	if origin_d <> origin_d_target then begin
-		{ We're doing a smooth rotation. }
-		L := origin_d_target - origin_d;
-
-		if Minimal_Screen_Refresh then begin
-			origin_d := origin_d_target;
-		end else if L > Half_Rot_Angle then begin
-			origin_d := ( origin_d + Num_Rotation_Angles - 1 ) mod Num_Rotation_Angles;
-		end else if L > 0 then begin
-			origin_d := ( origin_d + 1 ) mod Num_Rotation_Angles;
-		end else if L < -Half_Rot_Angle then begin
-			origin_d := ( origin_d + 1 ) mod Num_Rotation_Angles;
-		end else begin
-			origin_d := ( origin_d + Num_Rotation_Angles - 1 ) mod Num_Rotation_Angles;
-		end;
-	end else if ( RK_KeyState[ SDLK_Delete ] = 1 ) then begin
+	if ( RK_KeyState[ SDLK_Delete ] = 1 ) then begin
 		origin_d := ( origin_d + 1 ) mod Num_Rotation_Angles;
-		origin_d_target := origin_d;
 	end else if ( RK_KeyState[ SDLK_Insert ] = 1 ) then begin
 		origin_d := ( origin_d + Num_Rotation_Angles - 1 ) mod Num_Rotation_Angles;
-		origin_d_target := origin_d;
 	end;
-	if ( RK_KeyState[ SDLK_PageUp ] = 1 ) and ( origin_zoom > LowZoom ) then begin
-		origin_zoom := origin_zoom - 1;
-	end else if ( RK_KeyState[ SDLK_PageDown ] = 1 ) and ( origin_zoom < HiZoom ) then begin
-		origin_zoom := origin_zoom + 1;
-	end;
-}
 end;
 
 
@@ -1344,6 +1376,8 @@ initialization
 	Weak_Hit_Sprite := LocateSprite( Weak_Hit_Sprite_Name , 64, 64 );
 	Parry_Sprite := LocateSprite( Parry_Sprite_Name , 64, 64 );
 	Miss_Sprite := LocateSprite( Miss_Sprite_Name , 64, 64 );
+
+	Encounter_Sprite := LocateSprite( 'encounter_64.png' , 64, 64 );
 
 	ClearOverlays;
 	Focused_On_Mek := Nil;

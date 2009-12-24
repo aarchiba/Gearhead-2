@@ -515,11 +515,15 @@ begin
 	DisposeGear( Atlas );
 
 	{ Locate the PC's home town. Insert a "Cavalier Club" as the starting location. }
+	{ Also insert the PC's residence. The residence type should be listed }
+	{ in the EGG. }
 	S := SeekGearByName( Camp^.Source , SAttValue( TruePC^.SA , 'HOMETOWN' ) );
 	if S <> Nil then S := SeekUrbanArea( S );
 	if S <> Nil then begin
 		Club := LoadSingleMecha( 'stub_cavalierclub.txt' , Series_Directory );
 		InsertSubCom( S , Club );
+
+		Base := SAttValue( Egg^.SA , 'RESIDENCE' );
 	end;
 
 	{ Once everything is sorted where it's supposed to go, initialize the scenes. }

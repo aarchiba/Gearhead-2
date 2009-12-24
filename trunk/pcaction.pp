@@ -2328,53 +2328,53 @@ begin
 	GotMove := False;
 {$IFNDEF ASCII}
 	if KCode = KMC_SouthWest then begin
-		RLWalker( Camp^.GB , Mek , Reverse_RL_D[ ScreenDirToMapDir( 3 ) ] , PC_Should_Run or ( RK_KeyState[ SDLK_RSHIFT ] = 1 ) or ( RK_KeyState[ SDLK_LSHIFT ] = 1 ) );
+		RLWalker( Camp^.GB , Mek , Reverse_RL_D[ KeyboardDirToMapDir( 3 ) ] , PC_Should_Run or ( RK_KeyState[ SDLK_RSHIFT ] = 1 ) or ( RK_KeyState[ SDLK_LSHIFT ] = 1 ) );
 		GotMove := True;
 	end else if KCode = KMC_South then begin
-		RLWalker( Camp^.GB , Mek , Reverse_RL_D[ ScreenDirToMapDir( 2 ) ] , PC_Should_Run or ( RK_KeyState[ SDLK_RSHIFT ] = 1 ) or ( RK_KeyState[ SDLK_LSHIFT ] = 1 ) );
+		RLWalker( Camp^.GB , Mek , Reverse_RL_D[ KeyboardDirToMapDir( 2 ) ] , PC_Should_Run or ( RK_KeyState[ SDLK_RSHIFT ] = 1 ) or ( RK_KeyState[ SDLK_LSHIFT ] = 1 ) );
 		GotMove := True;
 	end else if KCode = KMC_SouthEast then begin
-		RLWalker( Camp^.GB , Mek , Reverse_RL_D[ ScreenDirToMapDir( 1 ) ] , PC_Should_Run or ( RK_KeyState[ SDLK_RSHIFT ] = 1 ) or ( RK_KeyState[ SDLK_LSHIFT ] = 1 ) );
+		RLWalker( Camp^.GB , Mek , Reverse_RL_D[ KeyboardDirToMapDir( 1 ) ] , PC_Should_Run or ( RK_KeyState[ SDLK_RSHIFT ] = 1 ) or ( RK_KeyState[ SDLK_LSHIFT ] = 1 ) );
 		GotMove := True;
 	end else if KCode = KMC_West then begin
-		RLWalker( Camp^.GB , Mek , Reverse_RL_D[ ScreenDirToMapDir( 4 ) ] , PC_Should_Run or ( RK_KeyState[ SDLK_RSHIFT ] = 1 ) or ( RK_KeyState[ SDLK_LSHIFT ] = 1 ) );
+		RLWalker( Camp^.GB , Mek , Reverse_RL_D[ KeyboardDirToMapDir( 4 ) ] , PC_Should_Run or ( RK_KeyState[ SDLK_RSHIFT ] = 1 ) or ( RK_KeyState[ SDLK_LSHIFT ] = 1 ) );
 		GotMove := True;
 	end else if KCode = KMC_East then begin
-		RLWalker( Camp^.GB , Mek , Reverse_RL_D[ ScreenDirToMapDir( 0 ) ] , PC_Should_Run or ( RK_KeyState[ SDLK_RSHIFT ] = 1 ) or ( RK_KeyState[ SDLK_LSHIFT ] = 1 ) );
+		RLWalker( Camp^.GB , Mek , Reverse_RL_D[ KeyboardDirToMapDir( 0 ) ] , PC_Should_Run or ( RK_KeyState[ SDLK_RSHIFT ] = 1 ) or ( RK_KeyState[ SDLK_LSHIFT ] = 1 ) );
 		GotMove := True;
 	end else if KCode = KMC_NorthWest then begin
-		RLWalker( Camp^.GB , Mek , Reverse_RL_D[ ScreenDirToMapDir( 5 ) ] , PC_Should_Run or ( RK_KeyState[ SDLK_RSHIFT ] = 1 ) or ( RK_KeyState[ SDLK_LSHIFT ] = 1 ) );
+		RLWalker( Camp^.GB , Mek , Reverse_RL_D[ KeyboardDirToMapDir( 5 ) ] , PC_Should_Run or ( RK_KeyState[ SDLK_RSHIFT ] = 1 ) or ( RK_KeyState[ SDLK_LSHIFT ] = 1 ) );
 		GotMove := True;
 	end else if KCode = KMC_North then begin
-		RLWalker( Camp^.GB , Mek , Reverse_RL_D[ ScreenDirToMapDir( 6 ) ] , PC_Should_Run or ( RK_KeyState[ SDLK_RSHIFT ] = 1 ) or ( RK_KeyState[ SDLK_LSHIFT ] = 1 ) );
+		RLWalker( Camp^.GB , Mek , Reverse_RL_D[ KeyboardDirToMapDir( 6 ) ] , PC_Should_Run or ( RK_KeyState[ SDLK_RSHIFT ] = 1 ) or ( RK_KeyState[ SDLK_LSHIFT ] = 1 ) );
 		GotMove := True;
 	end else if KCode = KMC_NorthEast then begin
-		RLWalker( Camp^.GB , Mek , Reverse_RL_D[ ScreenDirToMapDir( 7 ) ] , PC_Should_Run or ( RK_KeyState[ SDLK_RSHIFT ] = 1 ) or ( RK_KeyState[ SDLK_LSHIFT ] = 1 ) );
+		RLWalker( Camp^.GB , Mek , Reverse_RL_D[ KeyboardDirToMapDir( 7 ) ] , PC_Should_Run or ( RK_KeyState[ SDLK_RSHIFT ] = 1 ) or ( RK_KeyState[ SDLK_LSHIFT ] = 1 ) );
 		GotMove := True;
 {$ELSE}
 	if KCode = KMC_SouthWest then begin
-		RLWalker( Camp^.GB , Mek , Reverse_RL_D[ ScreenDirToMapDir( 3 ) ] , PC_Should_Run );
+		RLWalker( Camp^.GB , Mek , Reverse_RL_D[ KeyboardDirToMapDir( 3 ) ] , PC_Should_Run );
 		GotMove := True;
 	end else if KCode = KMC_South then begin
-		RLWalker( Camp^.GB , Mek , Reverse_RL_D[ ScreenDirToMapDir( 2 ) ] , PC_Should_Run );
+		RLWalker( Camp^.GB , Mek , Reverse_RL_D[ KeyboardDirToMapDir( 2 ) ] , PC_Should_Run );
 		GotMove := True;
 	end else if KCode = KMC_SouthEast then begin
-		RLWalker( Camp^.GB , Mek , Reverse_RL_D[ ScreenDirToMapDir( 1 ) ] , PC_Should_Run );
+		RLWalker( Camp^.GB , Mek , Reverse_RL_D[ KeyboardDirToMapDir( 1 ) ] , PC_Should_Run );
 		GotMove := True;
 	end else if KCode = KMC_West then begin
-		RLWalker( Camp^.GB , Mek , Reverse_RL_D[ ScreenDirToMapDir( 4 ) ] , PC_Should_Run );
+		RLWalker( Camp^.GB , Mek , Reverse_RL_D[ KeyboardDirToMapDir( 4 ) ] , PC_Should_Run );
 		GotMove := True;
 	end else if KCode = KMC_East then begin
-		RLWalker( Camp^.GB , Mek , Reverse_RL_D[ ScreenDirToMapDir( 0 ) ] , PC_Should_Run );
+		RLWalker( Camp^.GB , Mek , Reverse_RL_D[ KeyboardDirToMapDir( 0 ) ] , PC_Should_Run );
 		GotMove := True;
 	end else if KCode = KMC_NorthWest then begin
-		RLWalker( Camp^.GB , Mek , Reverse_RL_D[ ScreenDirToMapDir( 5 ) ] , PC_Should_Run );
+		RLWalker( Camp^.GB , Mek , Reverse_RL_D[ KeyboardDirToMapDir( 5 ) ] , PC_Should_Run );
 		GotMove := True;
 	end else if KCode = KMC_North then begin
-		RLWalker( Camp^.GB , Mek , Reverse_RL_D[ ScreenDirToMapDir( 6 ) ] , PC_Should_Run );
+		RLWalker( Camp^.GB , Mek , Reverse_RL_D[ KeyboardDirToMapDir( 6 ) ] , PC_Should_Run );
 		GotMove := True;
 	end else if KCode = KMC_NorthEast then begin
-		RLWalker( Camp^.GB , Mek , Reverse_RL_D[ ScreenDirToMapDir( 7 ) ] , PC_Should_Run );
+		RLWalker( Camp^.GB , Mek , Reverse_RL_D[ KeyboardDirToMapDir( 7 ) ] , PC_Should_Run );
 		GotMove := True;
 {$ENDIF}
 

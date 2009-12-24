@@ -424,7 +424,7 @@ var
 	Procedure RepositionCursor( D: Integer );
 	begin
 		{ Convert the screen direction to a map direction. }
-		D := ScreenDirToMapDir( D );
+		D := KeyboardDirToMapDir( D );
 
 		if OnTheMap( GB , X + AngDir[ D , 1 ] , Y + AngDir[ D , 2 ] ) then begin
 			X := X + AngDir[ D , 1 ];
@@ -665,7 +665,7 @@ begin
 		end;
 	until D <> -2;
 
-	if D <> -1 then D := ScreenDirToMapDir( D );
+	if D <> -1 then D := KeyboardDirToMapDir( D );
 
 	DirKey := D;
 end;

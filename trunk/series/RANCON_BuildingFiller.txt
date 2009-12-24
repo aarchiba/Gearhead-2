@@ -360,6 +360,24 @@ Content
 		StolenGoods
 	end
 
+%% *BEDROOM Content
+%%   A simple living area.
+
+Content
+	requires <*BEDROOM>
+	minimap <#####.#21..+...##...##+##>
+	ZONE_SPECIAL <NoGO>
+	element1 <Prefab>
+	element2 <Prefab>
+	inv
+		STC BED-1
+		PDir 2
+
+		STC ENDTABLE-1
+		PDir 2
+	end
+
+
 %% *SPACEPORT_X Content
 %%   Things you would find in a spaceport.
 Content

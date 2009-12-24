@@ -410,7 +410,11 @@ const
 	Thorough_Redraw: Boolean = False;
 	Use_Tall_Walls: Boolean = True;
 
+{$IFDEF CUTE}
+	Use_Isometric_Mode: Boolean = True;
+{$ELSE}
 	Use_Isometric_Mode: Boolean = False;
+{$ENDIF}
 	Iso_Dir_Offset: Integer = 0;
 
 	Minimal_Screen_Refresh: Boolean = False;

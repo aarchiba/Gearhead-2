@@ -90,6 +90,13 @@ BM_Park
 roguechar <%>
 
 Building
+name <City Hall>
+requires <*CITYHALL>
+Altitude 3
+BM_Government
+roguechar <C>
+
+Building
 name <Building>
 requires <*BUILDING Short>
 Altitude 1

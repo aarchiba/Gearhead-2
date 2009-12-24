@@ -65,6 +65,7 @@ var
 	Focused_On_Mek: GearPtr;
 
 Function ScreenDirToMapDir( D: Integer ): Integer;
+Function KeyboardDirToMapDir( D: Integer ): Integer;
 
 Function SpriteColor( GB: GameBoardPtr; M: GearPtr ): String;
 
@@ -145,6 +146,13 @@ Function ScreenDirToMapDir( D: Integer ): Integer;
 	{ Convert the requested screen direction to a map direction. }
 begin
 	ScreenDirToMapDir := ( D + DirOffset[ origin_d ] + 6 ) mod 8;
+end;
+
+Function KeyboardDirToMapDir( D: Integer ): Integer;
+	{ Given the press of a key on the keyboard, return the map direction it }
+	{ corresponds to. }
+begin
+	KeyboardDirToMapDir := ScreenDirToMapDir( D );
 end;
 
 Procedure DrawTree( Tree_Tex: Integer; H: GLFloat );
@@ -597,7 +605,7 @@ const
 		DrawForest( 4 , 5 , 5 );
 	end;
 const
-	NumBuildingStyles = 20;
+	NumBuildingStyles = 21;
 
 	LEVEL_MCDBOX = 1;
 	LEVEL_WIDEBOX = 2;
@@ -632,7 +640,8 @@ const
 		(LEVEL_NARROWBOX,LEVEL_NARROWBOX,LEVEL_NARROWBOX,LEVEL_NARROWBOX), 	{TVeryLowBuilding 3}
 		(LEVEL_WIDEBOX,LEVEL_WIDEBOX,LEVEL_WIDEBOX,LEVEL_WIDEBOX), 	{TVeryLowBuilding 4}
 		(LEVEL_WIDEBOX,LEVEL_PYRAMID,LEVEL_NARROWBOX,LEVEL_NARROWBOX),	{ Arena }
-		(LEVEL_FOREST,LEVEL_FOREST,LEVEL_FOREST,LEVEL_FOREST)		{ Park }
+		(LEVEL_FOREST,LEVEL_FOREST,LEVEL_FOREST,LEVEL_FOREST),		{ Park }
+		(LEVEL_PYRAMID,LEVEL_MCDBOX,LEVEL_NARROWBOX,LEVEL_NARROWBOX)	{ City Hall }
 	);
 	Level_Texture: Array [0..NumBuildingStyles,1..4] of Integer = (
 		(1,2,2,2),
@@ -640,7 +649,8 @@ const
 		(6,7,7,7),(6,7,7,7),(6,7,7,7),(6,7,7,7),
 		(9,21,8,8),(1,11,2,11),(12,13,13,13),(14,15,15,15),
 		(17,17,17,17),(19,20,20,20),(6,7,7,7),(6,7,7,7),
-		(6,7,7,7),(6,7,7,7),(22,20,20,20),(24,24,24,24)
+		(6,7,7,7),(6,7,7,7),(22,20,20,20),(24,24,24,24),
+		(1,2,2,2)
 	);
 	Cap_Type: Array [0..NumBuildingStyles] of Integer = (
 		CAP_WIDEFLAT,
@@ -648,7 +658,8 @@ const
 		CAP_WIDEFLAT, CAP_WIDEFLAT, CAP_NARROWFLAT, CAP_NARROWFLAT,
 		CAP_NARROWFLAT, CAP_NARROWFLAT, CAP_WIDEFLAT, CAP_NARROWFLAT,
 		CAP_NARROWPOINTY,CAP_WIDEPOINTY, CAP_WIDEFLAT, CAP_WIDEFLAT,
-		CAP_NARROWFLAT, CAP_WIDEFLAT, CAP_NARROWFLAT, CAP_None
+		CAP_NARROWFLAT, CAP_WIDEFLAT, CAP_NARROWFLAT, CAP_None,
+		CAP_NARROWPOINTY
 	);
 	Cap_Texture: Array [0..NumBuildingStyles] of Integer = (
 		3,
@@ -656,7 +667,8 @@ const
 		4, 5, 4, 4,
 		10, 3, 5, 16,
 		18, 18, 4, 5,
-		4, 4, 23, 3
+		4, 4, 23, 3,
+		18
 	);
 var
 	T: Integer;
@@ -2051,10 +2063,10 @@ Procedure IndicateTile( GB: GameBoardPtr; X , Y , Z: Integer );
 	{ Indicate the requested tile. }
 begin
 	ClearOverlays;
-	if OnTheMap( GB , X , Y ) and ( Z >= LoAlt ) and ( Z <= HiAlt ) then begin
+	if OnTheMap( GB , X , Y ) then begin
 		origin_x := x - 1;
 		origin_y := y - 1;
-		Underlays[ X , Y , Z ] := 1;
+		if ( Z >= LoAlt ) and ( Z <= HiAlt ) then Underlays[ X , Y , Z ] := 1;
 	end;
 end;
 

@@ -43,6 +43,14 @@ The Age attribute of the NPC request is relative to the age of the PC, plus or
 minus three years.
 
 
+DEFINING RESIDENCE
+------------------
+A residence type can be defined using the "RESIDENCE <>" attribute. If no
+residence is defined, a scene of type *EGG_RESIDENCE_Apartment will be used.
+
+Following installation, the residence's designation will be changed to PCHOME.
+
+
 DESCRIPTION
 -----------
 Each biography event should have a DESC attribute which contributes to the PC's
