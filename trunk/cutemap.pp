@@ -914,9 +914,9 @@ begin
 
 				TERRAIN_Pavement: 	AddBasicTerrainCel( X , Y , TCEL_Pavement );
 				TERRAIN_Swamp: 		AddBasicTerrainCel( X , Y , TCEL_DarkGround );
-				TERRAIN_L1_Hill:	AddBasicWallCel( X , Y , TCEL_LowHill );
-				TERRAIN_L2_Hill:	AddBasicWallCel( X , Y , TCEL_MediumHill );
-				TERRAIN_L3_Hill:	AddBasicWallCel( X , Y , TCEL_HighHill );
+				TERRAIN_L1_Hill:	AddBasicTerrainCel( X , Y , TCEL_LowHill );
+				TERRAIN_L2_Hill:	AddBasicTerrainCel( X , Y , TCEL_MediumHill );
+				TERRAIN_L3_Hill:	AddBasicTerrainCel( X , Y , TCEL_HighHill );
 				TERRAIN_RoughGround:	AddBasicTerrainCel( X , Y , TCEL_RoughGround );
 				TERRAIN_LowWall:	AddBasicWallCel( X , Y , TCEL_Wall );
 				TERRAIN_Wall:		AddBasicWallCel( X , Y , TCEL_Wall );
@@ -1320,6 +1320,10 @@ const
 	Backdrop_FName: Array [1..NumBackdrops] of String = (
 		'bg_space.png'
 	);
+	iso_tileset_fname: Array [0..NumTileSet] of String = (
+		'iso_terrain_default.png',
+		'iso_terrain_rocky.png','iso_terrain_default.png','iso_terrain_default.png','iso_terrain_default.png'
+	);
 var
 	TileSet,BDNum: Integer;
 begin
@@ -1329,7 +1333,10 @@ begin
 	if Extras_Sprite <> Nil then RemoveSprite( Extras_Sprite );
 
 	if Use_Isometric_Mode then begin
-		Terrain_Sprite := LocateSprite( 'iso_terrain.png' , 64 , 96 );
+		if GB^.Scene <> Nil then TileSet := NAttValue( GB^.Scene^.NA , NAG_SceneData , NAS_TileSet )
+		else TileSet := NAV_DefaultTiles;
+		if ( TileSet > NumTileSet ) or ( TileSet < 0 ) then TileSet := NAV_DefaultTiles;
+		Terrain_Sprite := LocateSprite( iso_tileset_fname[ TileSet ] , 64 , 96 );
 		Shadow_Sprite := LocateSprite( 'iso_shadows_noalpha.png' , 64 , 96 );
 		Building_Sprite := LocateSprite( 'iso_buildings.png' , 64, 96 );
 		Extras_Sprite := LocateSprite( 'iso_extras.png' , 64, 96 );

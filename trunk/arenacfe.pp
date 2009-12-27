@@ -261,8 +261,8 @@ begin
 	end;
 
 	ClearOverlays;
-	CombatDisplay( GB );
-	DoFlip;
+{	CombatDisplay( GB );
+	DoFlip;}
 end;
 
 Function DisplayEffectAnimations( GB: GameBoardPtr; N: Integer ): Boolean;
@@ -329,6 +329,7 @@ begin
 		if ( N mod 3 ) = 0 then SDL_PumpEvents();
 {$ENDIF}
 	until NoAnnounce and NoAnim;
+
 end;
 
 Function CloneMap( GB: GameBoardPtr ): GameBoardPtr;

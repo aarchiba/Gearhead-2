@@ -407,6 +407,8 @@ Procedure StartCampaign( Egg: GearPtr );
 	{ - Load the atlas files, then assemble them into an adventure. }
 	{ - Initialize all the cities. }
 	{ - Insert the PC's central story. }
+const
+	Default_Residence_Desig = '*EGG_RESIDENCE_Apartment';
 var
 	Camp: CampaignPtr;
 	PCForces,TruePC,Atlas,S,S2,W,Story,Club: GearPtr;
@@ -523,7 +525,16 @@ begin
 		Club := LoadSingleMecha( 'stub_cavalierclub.txt' , Series_Directory );
 		InsertSubCom( S , Club );
 
+		Atlas := LoadFile( 'EGG_scenes.txt' , Series_Directory );
 		Base := SAttValue( Egg^.SA , 'RESIDENCE' );
+		if Base = '' then Base := Default_Residence_Desig;
+		Club := SeekGearByDesig( Atlas , Base );
+		if Club <> Nil then begin
+			DelinkGear( Atlas , Club );
+			SetSAtt( Club^.SA , 'DESIG <PCHOME>' );
+			InsertSubCom( S , Club );
+		end;
+		DisposeGear( Atlas );
 	end;
 
 	{ Once everything is sorted where it's supposed to go, initialize the scenes. }

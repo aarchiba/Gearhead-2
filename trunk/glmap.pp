@@ -2040,9 +2040,6 @@ begin
 	for t := 1 to Num_Prop_Meshes do begin
 		Load_Obj_Mesh( data_directory + 'mesh' + BStr( T ) + '.obj' , T );
 	end;
-	{ DEBUG }
-	Load_Obj_Mesh( mesh_directory + 'test_mesh.obj' , 999 );
-	Load_Obj_Mesh( mesh_directory + 'test_female1.obj' , 998 );
 end;
 
 Procedure FocusOn( Mek: GearPtr );

@@ -673,7 +673,7 @@ begin
 	if ( PropD = -1 ) and ( NumVisibleUsableGearsXY( GB , P.X , P.Y , Trigger ) > 0 ) then begin
 		if not ActivatePropAtSpot( GB , PC , P.X , P.Y , Trigger ) then DialogMsg( MsgString( 'PCUS_NotFound' ) );;
 	end else if ( PropD <> -1 ) and ( NumVisibleUsableGearsXY( GB , P.X + AngDir[ PropD , 1 ] , P.Y + AngDir[ PropD , 2 ] , Trigger ) > 0 ) then begin
-		if not ActivatePropAtSpot( GB , PC , P.X + AngDir[ PropD , 1 ] , P.Y + AngDir[ PropD , 2 ] , Trigger ) then DialogMsg( MsgString( 'PCUS_NotFound' ) );;
+		if not ActivatePropAtSpot( GB , PC , P.X + AngDir[ PropD , 1 ] , P.Y + AngDir[ PropD , 2 ] , Trigger ) then DialogMsg( MsgString( 'PCUS_NotFound' ) );
 	end else if GB^.Scene <> Nil then begin
 		TriggerGearScript( GB , GB^.Scene , Trigger );
 	end;
@@ -2615,6 +2615,26 @@ begin
 	KeyToKeyCode := kcode;
 end;
 
+{$IFNDEF ASCII}
+Procedure GraphicsTest( GB: GameBoardPtr );
+
+var
+	Time0: QWord;
+	T: Integer;
+begin
+	Time0 := SDL_GetTicks;
+	DialogMsg( '*** Graphics Test ***' );
+
+	for t := 1 to 100 do begin
+		CombatDisplay( GB );
+		DoFlip;
+	end;
+
+	DialogMsg( 'Time: ' + BStr( SDL_GetTicks - Time0 ) );
+end;
+{$ENDIF}
+
+
 Procedure RLPlayerInput( Mek: GearPtr; Camp: CampaignPtr );
 	{ Allow the PC to control the action as per normal in a RL }
 	{ game- move using the arrow keys, use other keys for everything }
@@ -2692,6 +2712,10 @@ begin
 			end else if KP = '#' then begin
 				DirectScript( Camp^.GB );
 
+{$IFNDEF ASCII}
+			end else if KP = '"' then begin
+				GraphicsTest( Camp^.GB );
+{$ENDIF}
 
 			end; {if}
 

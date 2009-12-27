@@ -285,6 +285,7 @@ Procedure DoFlip;
 	{ Go look up Double Buffering on Wikipedia for more info. }
 begin
 	SDL_Flip( Game_Screen );
+	Animation_Phase := ( Animation_Phase + 1 ) mod Animation_Phase_Period;
 end;
 
 Procedure QuickText( msg: String; MyDest: TSDL_Rect; C: TSDL_Color; F: PTTF_Font );
@@ -715,7 +716,6 @@ begin
 			SDL_Delay( D );
 		end;
 		Last_Clock_Update := SDL_GetTicks + 30;
-		Animation_Phase := ( Animation_Phase + 1 ) mod Animation_Phase_Period;
 	end;
 
 	RK_KeyState := SDL_GetKeyState( RK_NumKeys );
