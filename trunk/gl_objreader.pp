@@ -197,6 +197,7 @@ begin
 		NewMesh := it;
 	end;
 end;
+
 Function AddSensibleMesh( Name: String ): SensibleMeshPtr;
 	{ Add a mesh to the list. }
 var
@@ -205,7 +206,7 @@ var
 begin
 	{ Allocate a new mesh. }
 	MyMesh := NewMesh;
-	MyMesh^.Name := UpCase( Name );
+	MyMesh^.Name := LowerCase( Name );
 
 	{ Load the object referenced by the name. }
 	Load_Obj_Mesh( Mesh_Directory + Name , MyMesh^.DLID );
@@ -221,7 +222,7 @@ var
 begin
 	T := Game_Meshes;
 	it := Nil;
-	name := Upcase( Name );
+	name := LowerCase( Name );
 	while T <> Nil do begin
 		if ( T^.name = name ) then it := T;
 		T := T^.Next;
@@ -283,5 +284,27 @@ begin
 	end;
 end;
 
+Procedure DisposeMeshList(var LList: SensibleMeshPtr);
+	{Dispose of the list, freeing all associated system resources.}
+var
+	LTemp: SensibleMeshPtr;
+begin
+	while LList <> Nil do begin
+		LTemp := LList^.Next;
+
+		glDeleteLists( LList^.DLID , 1 );
+
+		Dispose(LList);
+		LList := LTemp;
+	end;
+end;
+
+
+
+initialization
+	Game_Meshes := Nil;
+
+finalization
+	DisposeMeshList( Game_Meshes );
 
 end.

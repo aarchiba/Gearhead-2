@@ -8,8 +8,7 @@ generation, of course.
 
 
 The plot components are selected based on a context string provided by the governing
-story. This string contains the xxran descriptors; a label telling whether the component
-is to be a complication, resolution or failure; a label telling the difficulcy level;
+story. This string contains the xxran descriptors; a label telling the difficulcy level;
 descriptions for the xxran palette; and the PC's job.
 
 A label preceded by a ~ is optional. It will increase the chance of this component
@@ -26,9 +25,6 @@ If the label "COMMON" is included in the list, this component is more likely to
 be selected.
 
 
-
-COMPLICATION, RESOLUTION, FAILURE
-  #a, #w, #l
 
 DIFFICULCY LEVEL: EXTREME, HIGH, MEDIUM, LOW, NEGLIGIBLE
   !Ex, !Hi, !Md, !Lo, !Ne
@@ -65,13 +61,6 @@ Resolving the personal issues will result in a merit badge, and this may
 open up new options in the core story.
 
 
-***************************
-***   COMPONENT  SIZE   ***
-***************************
-
-Core story components typically have a SIZE attribute defined. This attribute describes
-the relative importance of the component; it's used to determine the length of each
-episode. Once a certain number of SIZE points are passed, the episode ends.
 
 
 *************************************
@@ -145,6 +134,22 @@ The job group of the PC is included as C:<job>. The available job designations a
 See series\CG_JOBS_* for a complete and up-to-date list.
 
 
+******************************
+***   EPISODE  STRUCTURE   ***
+******************************
+
+An episode consists of a base plot, several attached subplots, and the stubs
+for the dramatic choices.
+
+
+*************************
+***   PLOT  REQUEST   ***
+*************************
+
+The plot label will be *CORE_[a], where [a] is the identifier for the
+PC's dramatic choice. At the beginning of the game the choice will be INTRO.
+This identifier should always be five characters long.
+
 ****************************
 ***   PLOT  DESCRIPTORS  ***
 ****************************
@@ -165,10 +170,7 @@ GLOBAL DESCRIPTORS
 	+P??	Propp State
 	+C??	Personal Story
 	+H??	Hanging Thread
-LOCAL DESCRIPTORS
-	These describe the arc of the plot within a plot
-	+T??	PC's Task
-	+F??	Task Flavor
+
 BACKGROUND DESCRIPTORS
 	These describe the PC's background and motivation
 	+B??	Background State
@@ -261,30 +263,6 @@ BACKGROUND DESCRIPTORS
 
 	+Has	Assassination attempt will be made against the PC.
 
-+T??	Task
-	Describes the PC's current short-term goal.
-	+T--	No task.
-	+T01	Introduction. The first task given.
-	+Tgt	Goto target for conversation
-	+Tgs	PC will go to a certain scene - often to gather information or something
-
-	+Tga	PC will go to the Amore NPC for conversation/date/whatever
-
-+F??	Task Flavor
-	Describes the PC's task in greater detail.
-	+F--	No flavor.
-	+Fmi	To get mission.
-	+Fin	To find information
-	+Ffi	Fight! probably...
-	+Frt	PC has Rescued Target
-	+Fch	PC will challenge NPC to a duel
-	+Fpa	It's going to be a party (+Tgs)
-	+Fcc	It's a company conference (+Tgs)
-	+Far	To arrest the target (+Tht)
-	+Fpr	To protect the target
-
-	+Fap	To apologize to the target (+Tgt,+Tga)
-
 Character Arc Descriptors
 
 [c]:M.???	NPC Character Arc/Motivation
@@ -312,6 +290,37 @@ Character Arc Descriptors
 	[c]:A.hat	NPC has a reason to hate the PC
 	[c]:A.mut	The PC and NPC have reasons to hate one another mutually
 	[c]:A.obs	NPC obsessed with the PC
+
+
+
+************************************
+***   DEPRECIATED  DESCRIPTORS   ***
+************************************
+
+
++T??	Task
+	Describes the PC's current short-term goal.
+	+T--	No task.
+	+T01	Introduction. The first task given.
+	+Tgt	Goto target for conversation
+	+Tgs	PC will go to a certain scene - often to gather information or something
+
+	+Tga	PC will go to the Amore NPC for conversation/date/whatever
+
++F??	Task Flavor
+	Describes the PC's task in greater detail.
+	+F--	No flavor.
+	+Fmi	To get mission.
+	+Fin	To find information
+	+Ffi	Fight! probably...
+	+Frt	PC has Rescued Target
+	+Fch	PC will challenge NPC to a duel
+	+Fpa	It's going to be a party (+Tgs)
+	+Fcc	It's a company conference (+Tgs)
+	+Far	To arrest the target (+Tht)
+	+Fpr	To protect the target
+
+	+Fap	To apologize to the target (+Tgt,+Tga)
 
 
 

@@ -1201,7 +1201,7 @@ const
 	DefaultMaleSpriteHead = 'cha_m_';
 	DefaultFemaleSpriteHead = 'cha_f_';
 var
-	it: String;
+	it,fname: String;
 	FList: SAttPtr;
 begin
 	it := SAttValue( M^.SA , 'SDL_SPRITE' );
@@ -1212,16 +1212,24 @@ begin
 			end else begin
 				it := DefaultFemaleSpriteHead;
 			end;
-			it := it + SAttValue( M^.SA , 'JOB' ) + '.*';
-			FList := CreateFileList( Graphics_Directory + it );
+			fname := it + SAttValue( M^.SA , 'JOB' ) + '.*';
+			FList := CreateFileList( Graphics_Directory + fname );
 			if FList <> Nil then begin
 				it := SelectRandomSAtt( FList )^.Info;
 				DisposeSAtt( FList );
 			end else begin
-				if NAttValue( M^.NA , NAG_CharDescription , NAS_Gender ) = NAV_Male then begin
-					it := DefaultMaleSpriteName;
+				fname := it + LowerCase( SAttValue( M^.SA , 'JOB_DESIG' ) ) + '.*';
+
+				FList := CreateFileList( Graphics_Directory + fname );
+				if FList <> Nil then begin
+					it := SelectRandomSAtt( FList )^.Info;
+					DisposeSAtt( FList );
 				end else begin
-					it := DefaultFemaleSpriteName;
+					if NAttValue( M^.NA , NAG_CharDescription , NAS_Gender ) = NAV_Male then begin
+						it := DefaultMaleSpriteName;
+					end else begin
+						it := DefaultFemaleSpriteName;
+					end;
 				end;
 			end;
 		end else if ( M^.G = GG_Mecha ) and ( M^.S >= 0 ) and ( M^.S < NumForm ) then begin
@@ -1235,6 +1243,66 @@ begin
 	end;
 	SpriteName := it;
 end;
+
+Function MeshName( M: GearPtr ): String;
+	{ Locate the mesh name for this gear. If no mesh name is defined, }
+	{ set the default mesh name for the gear type & store it as a string }
+	{ attribute so we won't need to do this calculation later. }
+const
+	FORM_DEFAULT: Array [1..NumForm] of String = (
+	'btr_buruburu','btr_buruburu','btr_buruburu',
+	'btr_buruburu', 'aer_wraith', 'aer_wraith',
+	'aer_wraith', 'aer_wraith', 'btr_buruburu'
+	);
+	DefaultMaleSpriteName = 'cha_m_citizen';
+	DefaultFemaleSpriteName = 'cha_f_citizen';
+	DefaultMaleSpriteHead = 'cha_m_';
+	DefaultFemaleSpriteHead = 'cha_f_';
+	Default_Mesh_Name = 'btr_buruburu';
+var
+	fname,it: String;
+	FList: SAttPtr;
+begin
+	it := SAttValue( M^.SA , 'SDL_MESH' );
+	if it = '' then begin
+		if M^.G = GG_Character then begin
+			if NAttValue( M^.NA , NAG_CharDescription , NAS_Gender ) = NAV_Male then begin
+				it := DefaultMaleSpriteHead;
+			end else begin
+				it := DefaultFemaleSpriteHead;
+			end;
+			fname := it + SAttValue( M^.SA , 'JOB' );
+			FList := CreateFileList( Mesh_Directory + fname + '.obj' );
+			if FList <> Nil then begin
+				it := fname;
+				DisposeSAtt( FList );
+			end else begin
+				fname := it + LowerCase( SAttValue( M^.SA , 'JOB_DESIG' ) );
+
+				FList := CreateFileList( Mesh_Directory + fname + '.obj' );
+				if FList <> Nil then begin
+					it := fname;
+					DisposeSAtt( FList );
+				end else begin
+					if NAttValue( M^.NA , NAG_CharDescription , NAS_Gender ) = NAV_Male then begin
+						it := DefaultMaleSpriteName;
+					end else begin
+						it := DefaultFemaleSpriteName;
+					end;
+				end;
+			end;
+		end else if ( M^.G = GG_Mecha ) and ( M^.S >= 0 ) and ( M^.S < NumForm ) then begin
+			it := FORM_DEFAULT[ M^.S + 1 ];
+		end else begin
+			it := Default_Mesh_Name;
+		end;
+		SetSAtt( M^.SA , 'SDL_MESH <' + it + '.obj>' );
+		SetSAtt( M^.SA , 'SDL_SKIN <skin_' + it + '.png>' );
+		it := it + '.obj';
+	end;
+	MeshName := it;
+end;
+
 
 Function SkinName( M: GearPtr ): String;
 	{ Locate the skin name for this gear. }
@@ -1423,56 +1491,35 @@ begin
 	glPopMatrix();
 end;
 
-Procedure DrawTestMesh( GB: GameBoardPtr; P: GearPtr );
+Procedure DrawModelMesh( GB: GameBoardPtr; M: GearPtr; Foot: GLFloat );
 	{ DEBUG }
 	{ Draw the needed mesh for this prop. }
+var
+	SMesh: SensibleMeshPtr;
 begin
 	{ Push the matrix, then translate to the center of the tile and }
 	{ rotate to the correct angle. }
 	glPushMatrix();
-	glTranslatef( 0.5 , 0 , 0.5 );
-	glRotatef( 90 - NAttValue( P^.NA , NAG_Location , NAS_D ) * 45 , 0 , 1 , 0 );
+	glTranslatef( 0.5 , Foot , 0.5 );
+	glRotatef( 90 - NAttValue( M^.NA , NAG_Location , NAS_D ) * 45 , 0 , 1 , 0 );
+
+	{ Locate the mesh. }
+	SMesh := LocateMesh( MeshName( M ) );
 
 {$ifndef DARK}
 	glEnable( GL_Lighting );
 {$endif}
 	glEnable( GL_Light1 );
 	glEnable( GL_Texture_2D );
-	glBindTexture(GL_TEXTURE_2D, SensibleTexID( 'test_mecha.png' , SpriteColor( GB , P ) , 0 , 128 ) );
+	glBindTexture(GL_TEXTURE_2D, SensibleTexID( SAttValue( M^.SA , 'SDL_SKIN' ) , SpriteColor( GB , M ) , 0 , 128 ) );
 
-	glCallList( 999 );
+	glCallList( SMesh^.DLID );
 	glDisable( GL_Lighting );
 	glDisable( GL_Light1 );
 	glDisable( GL_Texture_2D );
 
 	glPopMatrix();
 end;
-
-Procedure DrawTestFemale( GB: GameBoardPtr; P: GearPtr );
-	{ DEBUG }
-	{ Draw the needed mesh for this prop. }
-begin
-	{ Push the matrix, then translate to the center of the tile and }
-	{ rotate to the correct angle. }
-	glPushMatrix();
-	glTranslatef( 0.5 , 0 , 0.5 );
-	glRotatef( 90 - NAttValue( P^.NA , NAG_Location , NAS_D ) * 45 , 0 , 1 , 0 );
-
-{$ifndef DARK}
-	glEnable( GL_Lighting );
-{$endif}
-	glEnable( GL_Light1 );
-	glEnable( GL_Texture_2D );
-	glBindTexture(GL_TEXTURE_2D, SensibleTexID( 'test_mesh_female.png' , SpriteColor( GB , P ) , 0 , 128 ) );
-
-	glCallList( 998 );
-	glDisable( GL_Lighting );
-	glDisable( GL_Light1 );
-	glDisable( GL_Texture_2D );
-
-	glPopMatrix();
-end;
-
 
 Procedure DrawDirectionIndicator( M: GearPtr );
 	{ Draw the direction indicator for this model. }
@@ -1724,13 +1771,10 @@ begin
 						-0.2 ,	{ offset }
 						H ,	{ foot }
 						0 );	{ fade }
-				end else if Use_Test_Mesh then begin
-					{ DEBUG }
-					if M^.G = GG_Character then begin
-						DrawTestFemale( GB , M );
-					end else begin
-						DrawTestMesh( GB , M );
-					end;
+
+				end else if Mesh_On then begin
+					DrawModelMesh( GB , M , H );
+
 				end else begin
 					DrawModel( 	SensibleTexID( SpriteName( M ) , SpriteColor( GB , M ) , ( NAttValue( M^.NA , NAG_Location , NAS_D ) - DirOffset[ origin_d ] + 10 ) mod 8 ) ,
 						W * 0.75,	{ width }
@@ -2389,6 +2433,7 @@ Procedure GenerateDisplayLists;
 		glEnable( GL_Texture_2D );
 {$ifndef DARK}
 		glEnable( GL_Lighting );
+		glEnable( GL_Light1 );
 {$endif}
 		glEnable( GL_ALPHA_TEST );
 		glAlphaFunc( GL_Equal , 1.0 );
@@ -2439,6 +2484,7 @@ Procedure GenerateDisplayLists;
 
 		glDisable( GL_Texture_2D );
 		glDisable( GL_Lighting );
+		glDisable( GL_Light1 );
 		glDisable( GL_ALPHA_TEST );
 	end;
 	Procedure DrawDLFloor;
@@ -2448,6 +2494,7 @@ Procedure GenerateDisplayLists;
 		glEnable( GL_ALPHA_TEST );
 {$ifndef DARK}
 		glEnable( GL_Lighting );
+		glEnable( GL_Light1 );
 {$endif}
 
 		glbegin( GL_QUADS );
@@ -2467,6 +2514,7 @@ Procedure GenerateDisplayLists;
 		glDisable( GL_Texture_2D );
 		glDisable( GL_ALPHA_TEST );
 		glDisable( GL_Lighting );
+		glDisable( GL_Light1 );
 	end;
 begin
 	DL_Wall := glGenLists( 2 );

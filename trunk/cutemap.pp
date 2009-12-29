@@ -209,7 +209,7 @@ const
 	DefaultMaleSpriteHead = 'cha_m_';
 	DefaultFemaleSpriteHead = 'cha_f_';
 var
-	it: String;
+	it,fname: String;
 	FList: SAttPtr;
 begin
 	it := SAttValue( M^.SA , 'SDL_SPRITE' );
@@ -220,16 +220,24 @@ begin
 			end else begin
 				it := DefaultFemaleSpriteHead;
 			end;
-			it := it + SAttValue( M^.SA , 'JOB' ) + '.*';
-			FList := CreateFileList( Graphics_Directory + it );
+			fname := it + SAttValue( M^.SA , 'JOB' ) + '.*';
+			FList := CreateFileList( Graphics_Directory + fname );
 			if FList <> Nil then begin
 				it := SelectRandomSAtt( FList )^.Info;
 				DisposeSAtt( FList );
 			end else begin
-				if NAttValue( M^.NA , NAG_CharDescription , NAS_Gender ) = NAV_Male then begin
-					it := DefaultMaleSpriteName;
+				fname := it + LowerCase( SAttValue( M^.SA , 'JOB_DESIG' ) ) + '.*';
+
+				FList := CreateFileList( Graphics_Directory + fname );
+				if FList <> Nil then begin
+					it := SelectRandomSAtt( FList )^.Info;
+					DisposeSAtt( FList );
 				end else begin
-					it := DefaultFemaleSpriteName;
+					if NAttValue( M^.NA , NAG_CharDescription , NAS_Gender ) = NAV_Male then begin
+						it := DefaultMaleSpriteName;
+					end else begin
+						it := DefaultFemaleSpriteName;
+					end;
 				end;
 			end;
 		end else if ( M^.G = GG_Mecha ) and ( M^.S >= 0 ) and ( M^.S < NumForm ) then begin

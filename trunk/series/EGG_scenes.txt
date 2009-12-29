@@ -21,6 +21,10 @@
 	MapWidth 15
 	MapHeight 15
 
+
+	WallType 20
+	FloorType 16
+
 	start <Print 1>
 	Msg1 <You enter your home.>
 
@@ -42,11 +46,12 @@
 		room
 		name <Foyer>
 		desig <EntranceGrid>
+		special <SHAREDPALETTE>
 
 		room
 		name <PC's Room>
-		special <STARTHERE>
-		minimap <23.#1...+....##....4##+##>
+		special <STARTHERE SHAREDPALETTE>
+		minimap <#####1#234+#........##+##>
 		inv
 			STC RUBBLE-1
 			MiniMapComponent 1
@@ -69,7 +74,7 @@
 			MiniMapComponent 2
 
 			STC Crate
-			PDir 4
+			PDir 3
 			MiniMapComponent 4
 		end
 

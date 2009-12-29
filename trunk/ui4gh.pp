@@ -420,7 +420,7 @@ const
 	Minimal_Screen_Refresh: Boolean = False;
 	Use_Software_Surface: Boolean = False;
 	Use_Paper_Dolls: Boolean = False;
-	Use_Test_Mesh: Boolean = False;
+	Mesh_On: Boolean = False;
 
 
 	Full_RPGWorld_Info: Boolean = False;
@@ -595,8 +595,8 @@ begin
 
 				end else if cmd = 'PAPERDOLLS' then begin
 					Use_Paper_Dolls := True;
-				end else if cmd = 'TESTMESH' then begin
-					Use_Test_Mesh := True;
+				end else if cmd = 'USEMESH' then begin
+					Mesh_On := True;
 
 				end else if cmd = 'GIMMEGIMMECHOICE' then begin
 					XXRan_Wizard := True;
@@ -697,7 +697,7 @@ begin
 	AddBoolean( 'REVERT_SLOWER_SAFER' , Revert_Slower_Safer );
 	AddBoolean( 'NAMESON' , Names_Above_Heads );
 	AddBoolean( 'PAPERDOLLS' , Use_Paper_Dolls );
-	AddBoolean( 'TESTMESH' , Use_Test_Mesh );
+	AddBoolean( 'USEMESH' , Mesh_On );
 
 	{ The "secret options" come at the end. These tokens only get }
 	{ included if they're already set. }

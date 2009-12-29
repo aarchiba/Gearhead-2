@@ -578,7 +578,7 @@ begin
 	{ Locate the Cavalier Club. This is to be the starting location. }
 	{ Being the first location entered by the PC, the Cavalier Club has }
 	{ the imaginative designation of "00000". }
-	S := SeekGearByDesig( Camp^.Source , '00000' );
+	S := SeekGearByDesig( Camp^.Source , 'PCHOME' );
 	if S <> Nil then begin
 		Navigator ( Camp , S , PCForces );
 	end;

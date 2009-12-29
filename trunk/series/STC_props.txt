@@ -16,14 +16,14 @@
 	name <Mannekin>
 	desig <MANNEKIN-M>
 	roguechar <M>
-	SDL_Sprite <cha_m_bounty hunter.png>
+	SDL_Sprite <cha_m_adven.png>
 	SDL_Colors <244 216 28  201 205 229  181 185 207>
 
 	Prop 10
 	name <Mannekin>
 	desig <MANNEKIN-F>
 	roguechar <M>
-	SDL_Sprite <cha_f_bounty hunter.png>
+	SDL_Sprite <cha_f_adven.png>
 	SDL_Colors <244 216 28  201 205 229  181 185 207>
 
 	Prop 10
@@ -563,6 +563,14 @@
 %  **************************
 %  ***   UTILITY  PROPS   ***
 %  **************************
+
+	Prop
+	name <Test Item>
+	desig <TEST-ITEM>
+	SDL_MESH <cha_m_citizen.obj>
+	SDL_SKIN <skin_cha_m_citizen.png>
+	SDL_COLORS <200 0 0  200 200 0  200 0 0>
+
 
 	Cloud
 	name <Smoke>
