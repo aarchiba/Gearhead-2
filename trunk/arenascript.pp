@@ -653,10 +653,9 @@ end;
 Function CanJoinLance( GB: GameBoardPtr; PC,NPC: GearPtr ): Boolean;
 	{ Return TRUE if NPC can join the lance right now, or FALSE otherwise. }
 var
-	LMP,ERen: Integer;	{ Lancemate Points needed, Effective Renown }
+	ERen: Integer;	{ Lancemate Points needed, Effective Renown }
 	CanJoin: Boolean;
 begin
-	LMP := LancematesPresent( GB );
 	ERen := NAttValue( PC^.NA , NAG_CharDescription , NAS_Renowned );
 	if ERen < 15 then ERen := 15;
 	ERen := ERen + CStat( PC , STAT_Charm );
@@ -672,8 +671,6 @@ begin
 		CanJoin := False;
 	end else if PersonaUsedByQuest( FindRoot( GB^.Scene ) , NPC ) then begin
 		CanJoin := False;
-{	end else if LMP >= NumLancemateSlots( GB^.Scene , PC ) then begin
-		CanJoin := False;}
 	end;
 	CanJoinLance := CanJoin;
 end;
@@ -3999,8 +3996,6 @@ begin
 		DialogMsg( 'ERROR: ProcessNextComp called but story not found' );
 		Exit;
 	end;
-
-	AddNAtt( Story^.NA , NAG_XXRan , NAS_PlotPointCompleted , PlotMaster( GB , Source )^.V );
 
 	if ( Story <> Nil ) and ( GB <> Nil ) then begin
 		AlterStoryDescriptors( Story , Changes );

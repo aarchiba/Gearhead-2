@@ -15,6 +15,7 @@
 Choice 1
 	name <Defense 1: They need help in city>
 	desc <Complete this option track to earn more reinforcements in final battle.>
+	desig <DEF_1>
 	requires <>
 
 	% E1 is the city for the next episode.
@@ -29,12 +30,14 @@ Choice 1
 Choice 2
 	name <Defense 2>
 	desc <Complete this option track to earn more reinforcements in final battle.>
+	desig <DEF_2>
 	requires <+:101>
 
 
 Choice 6
 	name <Offense 1>
 	desc <Complete this option tract to weaken the enemy forces in final battle.>
+	desig <OFF_1>
 
 	% E1 is the city for the next episode.
 	Element1 <Scene City !Far -7 !Ally -7 !Okay -3 !XClude -2>
@@ -48,6 +51,7 @@ Choice 6
 Choice 11
 	name <Reward 1: Seek Training>
 	desc <Take this option to earn immediate benefits for the PC.>
+	desig <REW_1>
 
 
 

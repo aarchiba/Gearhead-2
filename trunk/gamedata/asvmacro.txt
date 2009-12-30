@@ -12,7 +12,6 @@ ControllerID <GrabPlot GNAtt NAG_Narrative NAS_ControllerID>
 RandomTheme <d12>	% returns a random mecha theme
 PartyScore <GrabCurrentScene GNAtt NAG_Narrative NAS_PartyPoints>
 ScenePartyScore <GrabScene ? GNAtt NAG_Narrative NAS_PartyPoints>
-CurrentPPScore <GrabStory GNAtt NAG_XXRan NAS_PPVictory>
 CitizensTeam <GrabTeamName Citizens GS>
 NumDatePoints <GrabSource GNAtt NAG_Narrative NAS_DatePoints>
 na <0>  %% "Not Applicable", passed as PFrags and RanCon optional param
@@ -170,8 +169,6 @@ RoughMap <11>
 #VictimsRecovered <GrabCurrentScene GNatt NAG_Narrative NAS_VictimsRecovered>
 NPCTEAM <GrabNPC ? GNAtt NAG_LOCATION nAS_Team>
 NAG_XXRan <-7>
-NAS_PPVictory <3>
-NAS_PPGoal <2>
 XXR_M_Mercenary <1>
 XXR_M_Professional <2>
 XXR_M_Competitor <7>
@@ -193,7 +190,6 @@ XXR_A_HatesPC <7>
 XXR_A_MutualHate <8>
 XXR_A_Obsession <9>
 StoryDL <GrabStory GNAtt NAG_Narrative NAS_DifficultyLevel>
-ComponentPP <GrabPlot GV>
 STAT_Pass <3>
 STAT_Lock <6>
 STAT_MetaVisibility <5>

@@ -1,15 +1,13 @@
 % Core Story Stub
 	XRanStory
 	name <Core Story>
-	CONTEXT <+P-- +C-- +T01 +F-- +H-->
+	CONTEXT <+P-- +C-- +H-->
 
-	XXRAN_PATTERN <COMP_*.txt>
+	XXRAN_PATTERN <*CORE_>
 
 	% Starting difficulty level is 3...
 	% Going up by 7 points per level, there will be 13 episodes, just like 08th MS Team.
 	NAtt 7 26 3
-	% Starting episode completion goal is 5...
-	NAtt -7 2 5
 	% Starting episode number is 1...
 	NAtt -7 6 1
 

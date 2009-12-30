@@ -37,8 +37,8 @@ const
 
 var
 	persona_fragments: GearPtr;
-	Standard_XXRan_Components: GearPtr;
 	Standard_Plots,Standard_Moods: GearPtr;
+	Dramatic_Choices: GearPtr;
 
 
 Procedure BuildMegalist( Dest: GearPtr; AddOn: SAttPtr );
@@ -2066,6 +2066,17 @@ begin
 	AddRandomPlot := InitOK;
 end;
 
+Function SeekDramaticChoice( N: Integer ): GearPtr;
+	{ Return a pointer to Dramatic Choice N. }
+	{ If no such choice can be found, return NIL. }
+var
+	C: GearPtr;
+begin
+	C := Dramatic_Choices;
+	while ( C <> Nil ) and ( C^.V <> N ) do C := C^.Next;
+	SeekDramaticChoice := C;
+end;
+
 Procedure PrepareNewComponent( Story: GearPtr; GB: GameBoardPtr );
 	{ Load a new component for this story. }
 	Procedure StoreXXRanHistory( C: GearPtr );
@@ -2087,46 +2098,28 @@ Procedure PrepareNewComponent( Story: GearPtr; GB: GameBoardPtr );
 		AddSAtt( Story^.SA , 'XXRAN_PSTATE' , msg );
 	end;
 var
-	All_Comps,C: GearPtr;
+	C: GearPtr;
 	Shopping_List: NAttPtr;
-	plot_desc,desc: String;
-	MergeOK,DeleteAllComps: Boolean;
-	Function TaskCanConclude: Boolean;
-		{ Return TRUE if this task can be a conclusion task, or FALSE otherwise. }
-	begin
-		{ Previously some tasks couldn't conclude. Maybe they won't again in the }
-		{ future. For right now, though, I'm saying that everything can conclude. }
-		TaskCanConclude := True;
-	end;
+	plot_request,plot_desc: String;
+	MergeOK: Boolean;
 begin
-	desc := SAttValue( Story^.SA , 'XXRAN_PATTERN' );
-	if desc = 'COMP_*.txt' then begin
-		All_Comps := Standard_XXRan_Components;
-		DeleteAllComps := False;
-	end else begin
-		All_Comps := AggregatePattern( desc , Series_Directory );
-		DeleteAllComps := True;
-	end;
-	plot_desc := StoryContext( GB , Story );
+	plot_request := SAttValue( Story^.SA , 'XXRAN_PATTERN' );
 
-	{ Either load a regular plot (marked with a #A tag) or one of the two }
-	{ episode resolution plots (#w and #l for wins and losses, respectively). }
-	{ If it's time for the conclusion, load a #C plot instead. }
-	if ( NAttValue( Story^.NA , NAG_XXRan , NAS_PlotPointCompleted ) > NAttValue( Story^.NA , NAG_XXRan , NAS_PlotPointGoal ) ) and TaskCanConclude then begin
-		if NAttValue( Story^.NA , NAG_XXRan , NAS_PlotPointVictory ) >= NAttValue( Story^.NA , NAG_XXRan , NAS_PlotPointGoal ) then begin
-			{ This episode was "won". }
-			plot_desc := '#W ' + plot_desc;
-		end else begin
-			{ This episode was "lost". }
-			plot_desc := '#L ' + plot_desc;
-		end;
-	end else if NAttValue( Story^.NA , NAG_Narrative , NAS_DifficultyLevel ) > 80 then begin
-		plot_desc := '#C ' + plot_desc;
-	end else begin
-		plot_desc := '#A ' + plot_desc;
+	{ FOr the conclusion, attach 'FINAL' to the plot_request. }
+	if NAttValue( Story^.NA , NAG_Narrative , NAS_DifficultyLevel ) > 80 then begin
+		plot_request := plot_request + 'FINAL_';
 	end;
 
-	Shopping_List := CreateComponentList( All_Comps , plot_desc );
+	{ Attach the current choice to the plot_request. }
+	C := SeekDramaticChoice( NAttValue( Story^.NA , NAG_XXRan , NAS_DramaticChoice ) );
+	if C <> Nil then begin
+		plot_request := plot_request + SAttValue( C^.SA , 'DESIG' );
+	end else begin
+		plot_request := plot_request + 'INTRO';
+	end;
+
+	plot_desc := plot_request + ' ' + StoryContext( GB , Story );
+	Shopping_List := CreateComponentList( Standard_Plots , plot_desc );
 
 	{ If xxran debug is on, print some extra information. }
 	if XXRan_Debug then begin
@@ -2137,9 +2130,9 @@ begin
 
 	repeat
 		if XXRan_Wizard and ( Shopping_List <> Nil ) then begin
-			C := ComponentMenu( All_Comps , Shopping_List );
+			C := ComponentMenu( Standard_Plots , Shopping_List );
 		end else begin
-			C := SelectComponentFromList( All_Comps , Shopping_List );
+			C := SelectComponentFromList( Standard_Plots , Shopping_List );
 		end;
 
 		if C <> Nil then begin
@@ -2151,7 +2144,6 @@ begin
 	if MergeOK then begin
 		{ Assign a ComponentID to the new component. }
 		SetNAtt( C^.NA , NAG_XXRan , NAS_ComponentID , NAttValue( Story^.NA , NAG_XXRan , NAS_ComponentID ) );
-		if XXRan_Debug then DialogMsg( 'New component size: ' + BStr( C^.V ) );
 		AddNAtt( Story^.NA , NAG_XXRan , NAS_ComponentID , 1 );
 		SetTrigger( GB , 'UPDATE' );
 
@@ -2162,7 +2154,6 @@ begin
 		DialogMsg( 'Send above information to "pyrrho12@yahoo.ca". Together, we can stomp out deadends.' );
 	end;
 
-	if DeleteAllComps then DisposeGear( All_Comps );
 	DisposeNAtt( Shopping_List );
 end;
 
@@ -2444,14 +2435,14 @@ end;
 initialization
 	persona_fragments := AggregatePattern( 'PFRAG_*.txt' , series_directory );
 	if persona_fragments = Nil then writeln( 'ERROR!!!' );
-	Standard_XXRan_Components := AggregatePattern( 'COMP_*.txt' , series_directory );
 	Standard_Plots := LoadRandomSceneContent( 'PLOT_*.txt' , series_directory );
 	Standard_Moods := AggregatePattern( 'MOOD_*.txt' , series_directory );
+	Dramatic_Choices := AggregatePattern( 'CHOICE_*.txt' , series_directory );
 
 finalization
 	DisposeGear( persona_fragments );
-	DisposeGear( Standard_XXRan_Components );
 	DisposeGear( Standard_Plots );
 	DisposeGear( Standard_Moods );
+	DisposeGear( Dramatic_Choices );
 
 end.

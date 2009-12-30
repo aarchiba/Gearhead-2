@@ -71,7 +71,6 @@ Var
 	Sub_Plot_List: GearPtr;
 	standard_trigger_list: SAttPtr;
 	changes_used_so_far: String;
-	plotpoints_used_so_far: Integer;
 	MasterEntranceList: GearPtr;
 
 
@@ -286,7 +285,7 @@ Function InitShard( GB: GameBoardPtr; Scope,Slot,Shard: GearPtr; var Quest_Frags
 	end;
 var
 	InitOK: Boolean;
-	T,NumParam,NumElem,HiParam,original_plotpoints: Integer;
+	T,NumParam,NumElem: Integer;
 	I,SubPlot,SPList: GearPtr;
 	SPID: LongInt;
 	SPReq,original_changes,EDesc: String;
@@ -303,12 +302,10 @@ begin
 	{ Record the original changes_used_so_far string; if things go sour in this procedure, }
 	{ we're going to have to restore it. }
 	original_changes := changes_used_so_far;
-	original_plotpoints := plotpoints_used_so_far;
 
 	{ Add the changes from this shard. }
 	SPReq := SAttValue( Shard^.SA , 'CHANGES' );
 	if SPReq <> '' then AddToQuoteString( changes_used_so_far , SPReq );
-	plotpoints_used_so_far := plotpoints_used_so_far + Shard^.V;
 
 	{ Start by copying over all provided parameters. }
 	{ Also count the number of parameters passed; it could be useful. }
@@ -434,7 +431,6 @@ begin
 		{ Initialization failed. Delete the existing subplots and restore the }
 		{ changes_used_so_far list. }
 		changes_used_so_far := original_changes;
-		plotpoints_used_so_far := original_plotpoints;
 		DisposeSPList( SPList );
 		InitShard := Nil;
 	end;
@@ -535,18 +531,6 @@ begin
 		threat := NAttValue( Plot0^.NA , NAG_Narrative , NAS_DifficultyLevel );
 	end else begin
 		threat := 10;
-	end;
-
-	{ If this is a subplot of a story, determine whether or not it will end the episode. }
-	{ The SubPlot Request might be different depending on this. }
-	if ( Slot^.G = GG_Story ) and ( Pos( '#' , context ) <> 0 ) then begin
-		{ This plot will end the episode if the number of plot points used so far plus the }
-		{ number of plot points already used in this episode exceed the plot point goal. }
-		if ( NAttValue( Slot^.NA , NAG_XXRan , NAS_PlotPointCompleted ) + plotpoints_used_so_far ) > NAttValue( Slot^.NA , NAG_XXRan , NAS_PlotPointGoal ) then begin
-			ReplaceHash( Context , 'Z' );
-		end else begin
-			ReplaceHash( Context , 'A' );
-		end;
 	end;
 
 	{ Next complete the context. }
@@ -650,8 +634,6 @@ Procedure ReplaceStrings( Part: GearPtr; Dictionary: SAttPtr );
 	{ We have a dictionary of substitute strings, and a part to do the replacements on. }
 var
 	S: SAttPtr;
-	P,P2: Integer;
-	SPat,SRep: String;
 begin
 	S := Part^.SA;
 	while S <> Nil do begin
@@ -815,9 +797,6 @@ var
 begin
 	MergeElementLists( MasterPlot , SubPlot );
 	BuildMegalist( MasterPlot , SubPlot^.SA );
-
-	{ Combine the plot points. }
-	MasterPlot^.V := MasterPlot^.V + SubPlot^.V;
 
 	{ Take a look at the things in this subplot. }
 	{ Deal with them separately, as appropriate. }
@@ -1771,7 +1750,6 @@ begin
 
 	{ Initialize some of the variables we're going to need. }
 	changes_used_so_far := '';
-	plotpoints_used_so_far := 0;
 	FakeFrags := Nil;
 
 	ClearElementTable( FakeParams );
@@ -1856,7 +1834,6 @@ var
 begin
 	{ Initialize some of the global variables. }
 	changes_used_so_far := '';
-	plotpoints_used_so_far := 0;
 
 	{ Step One- Select a starting fragment. }
 	QList := AddSubPlot( Nil, City, Adv, Nil, QPF_Proto , Quest_Frags, QReq, 0, NewLayerID( Adv ), 0, True, False );

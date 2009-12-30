@@ -55,13 +55,12 @@ Const
 	NAG_XXRan = -7;		{ Extra-Extra-Random Plot Generator Data }
 	NAS_LoadNextComponent = 0;	{ if =0, load next component. }
 
-	NAS_PlotPointGoal = 2;
-	NAS_PlotPointVictory = 3;
-	NAS_PlotPointCompleted = 4;
 	NAS_ComponentID = 5;	{ Each component is assigned an ID number. }
 				{ This number is only unique within the scope of the story. }
 	NAS_EpisodeNumber = 6;	{ How many episodes have been completed? }
 	NAS_LastEpisodeNoted = 7;	{ What was the last episode to get a history note? }
+
+	NAS_DramaticChoice = 8;	{ What choice has the PC made for this story? }
 
 	NAS_XXChar_Motivation = 101;
 	NAS_XXChar_Attitude = 102;
