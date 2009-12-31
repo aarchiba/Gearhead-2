@@ -342,6 +342,8 @@ var
 		ConReq: String;
 	begin
 		while LList <> Nil do begin
+			if LList^.G = GG_Character then ExpandCharacter( LList );
+
 			ConReq := SAttValue( LList^.SA , 'QUEST' );
 			{ If this content request is empty, assign the default value. }
 			if ConReq = '' then ConReq := Default_NPC_Quest;

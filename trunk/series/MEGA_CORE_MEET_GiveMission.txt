@@ -258,63 +258,6 @@ Content
 		CPrompt%id%02 <if# PCFac ChatNPCFac Accept>
 	end
 
-Content
-	name <Basic Fighting Mission>
-	desc <The PC will be asked to go fight some mecha.>
-	requires <*CS_GiveMission ~C:MILIT ~1:MILIT ~1:ADVEN ~P:MILIT -1:PDASS>
-
-	% E1 is the NPC that the PC will speak with
-	% E2 is the outdoors location where the encounter will be placed
-	% E3 is the encounter to be found
-
-	element2 <Scene Environs !Near -7>
-	element3 <Prefab>
-	place3 <2>
-
-	% Fail Conditions:
-	% - Mission giver dies before encounter is activated
-	% - Revalation subplot fails
-
-	end <if= PlotStatus %plotid1% 0 else .%id%_GoCheckReveal ifNPCDead %1% LoseComp 0 .%id%_loss>
-	.%id%_GoCheckReveal <ifSubPlotLost %plotid2% SMemo %id%02 SetPlotStatus %plotid5% %id5%>
-	.%id%_loss <+T-->
-
-	.%id1%_%plotid1%_GoWin <SetPlotStatus %plotid3% %id3%     SMemo %id%01>
-	.%id1%_%plotid1%_GoLoss <SetPlotStatus %plotid4% %id4%    SMemo %id%02>
-
-	Msg%id%01 <You won the mission. You should go see %name1% at \SCENE NPCScene %1% about the reward.>
-	Msg%id%02 <You lost the mission. You should go report to %name1% at \SCENE NPCScene %1% .>
-
-
-	%% SubPlot1 is the combat encounter itself
-	%% SubPlot2 is the encounter revealation
-	%% SubPlot3 is the winning condition
-	%% SubPlot4 is the loss condition
-	%% SubPlot5 is the unwinnable condition
-	SubPlot1 <*:CS_MechaEncounter&Raiders 2 3>
-	SubPlot2 <*:CS_RevealEncounter_Raiders 2 3>
-	SubPlot3 <*CS_CAWinMission 1>
-	SubPlot4 <*CS_CALoseMission 1>
-	SubPlot5 <*CS_MootMission 1>
-
-	sub
-		Persona 1
-		greeting <if= PlotStatus %plotid1% 0 else .%id%_GoRemind if# PlotStatus %plotid% %id% else .%id%_GoOfferMission Goto %pop%>
-		.%id%_GoOfferMission <ifChatNPCUnknown else .%id%_GoKnownGreeting ifChatNPCAlly else .%id%_GoUnknownGreeting Goto .%id%_GoKnownGreeting>
-		*.%id%_GoRemind <*GenericMissionReminder>
-		*.%id%_GoKnownGreeting <*IHaveAJobForYou .%id%_GoBriefing>
-		*.%id%_GoUnknownGreeting <*AreYouHereAboutJob&Mecha .%id%_GoBriefing>
-		*.%id%_GoBriefing <*CS_BasicFightingMission .%id%_GoAccept .%id%_GoDeny>
-		*.%id%_GoAccept <*GoodLuckPlusHint .%id%_GoR1Exit %plotid2%>
-		.%id%_GoR1Exit <SetPlotStatus %plotid1% %id1%  SetPlotStatus %plotid2% %id2%>
-		*.%id%_GoDeny <*RejectMission .%id%_GoR2Exit>
-		.%id%_GoR2Exit <LoseComp 0 .%id%_changes>
-		.%id%_changes <+T-- +F-->
-	end
-	inv
-		stc CORE-ACTIVATABLE
-		name <%name1%'s Mission>
-	end
 
 
 %%  ********************************

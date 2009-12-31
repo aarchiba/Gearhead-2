@@ -1,17 +1,7 @@
 %%
 %% *CS_Conversation Content
 %%
-%% The NPC is going to talk with the PC about something. I don't know what,
-%% but it should be indicated by the +F-- descriptor. These conversations
-%% can be used for the following flavors:
-%%
-%%	+F--	No reason
-%%	+Fin	To find information
-%%
-%% Why split these off into a subplot, rather than just writing them as basic
-%% plots? Because all of these conversations should be encounterable under
-%% two separate circumstances: Either the PC's task is to speak with the NPC,
-%% or the NPC contacts the PC of his/her own volition.
+%% The PC approaches the NPC to talk about something.
 %%
 %% Please note that these conversations should not care about the scene where the
 %% NPC is placed.
@@ -21,6 +11,172 @@
 %% Param1: The NPC being spoken to
 %%
 
+Content
+	name <Basic Fighting Mission>
+	desc <The PC will be asked to go fight some mecha.>
+	requires <*CS_Conversation ~C:MILIT ~1:MILIT ~1:ADVEN ~P:MILIT -1:PDASS>
+
+	% E1 is the NPC that the PC will speak with
+	% E2 is the outdoors location where the encounter will be placed
+	% E3 is the encounter to be found
+
+	element2 <Scene Environs !Near -7>
+	element3 <Prefab>
+	place3 <2>
+
+	% Fail Conditions:
+	% - Mission giver dies before encounter is activated
+	% - Revalation subplot fails
+
+	end <if= PlotStatus %plotid1% 0 else .%id%_GoCheckReveal ifNPCDead %1% LoseComp 0 .%id%_loss>
+	.%id%_GoCheckReveal <ifSubPlotLost %plotid2% SMemo %id%02 SetPlotStatus %plotid5% %id5%>
+	.%id%_loss <+T-->
+
+	.%id1%_%plotid1%_GoWin <SetPlotStatus %plotid3% %id3%     SMemo %id%01>
+	.%id1%_%plotid1%_GoLoss <SetPlotStatus %plotid4% %id4%    SMemo %id%02>
+
+	Msg%id%01 <You won the mission. You should go see %name1% at \SCENE NPCScene %1% about the reward.>
+	Msg%id%02 <You lost the mission. You should go report to %name1% at \SCENE NPCScene %1% .>
+
+
+	%% SubPlot1 is the combat encounter itself
+	%% SubPlot2 is the encounter revealation
+	%% SubPlot3 is the winning condition
+	%% SubPlot4 is the loss condition
+	%% SubPlot5 is the unwinnable condition
+	SubPlot1 <*:CS_MechaEncounter&Raiders 2 3>
+	SubPlot2 <*:CS_RevealEncounter_Raiders 2 3>
+	SubPlot3 <*CS_CAWinMission 1>
+	SubPlot4 <*CS_CALoseMission 1>
+	SubPlot5 <*CS_MootMission 1>
+
+	sub
+		Persona 1
+		greeting <if= PlotStatus %plotid1% 0 else .%id%_GoRemind if# PlotStatus %plotid% %id% else .%id%_GoOfferMission Goto %pop%>
+		.%id%_GoOfferMission <ifChatNPCUnknown else .%id%_GoKnownGreeting ifChatNPCAlly else .%id%_GoUnknownGreeting Goto .%id%_GoKnownGreeting>
+		*.%id%_GoRemind <*GenericMissionReminder>
+		*.%id%_GoKnownGreeting <*IHaveAJobForYou .%id%_GoBriefing>
+		*.%id%_GoUnknownGreeting <*AreYouHereAboutJob&Mecha .%id%_GoBriefing>
+		*.%id%_GoBriefing <*CS_BasicFightingMission .%id%_GoAccept .%id%_GoDeny>
+		*.%id%_GoAccept <*GoodLuckPlusHint .%id%_GoR1Exit %plotid2%>
+		.%id%_GoR1Exit <SetPlotStatus %plotid1% %id1%  SetPlotStatus %plotid2% %id2%>
+		*.%id%_GoDeny <*RejectMission .%id%_GoR2Exit>
+		.%id%_GoR2Exit <LoseComp 0 .%id%_changes>
+		.%id%_changes <+T-- +F-->
+	end
+	inv
+		stc CORE-ACTIVATABLE
+		name <%name1%'s Mission>
+	end
+
+
+Content
+	name <My Watch Is Missing!>
+	desc <The PC will be asked to go fetch a lost watch.>
+	requires <*CS_Conversation (1:FRIEND|1:FAMILY|1:LOVER)  -!Md -!Hi -!Ex>
+
+	% E1 is the NPC that the PC will speak with
+	% E2 is the item to fetch
+	Element2 <Prefab>
+
+	% Fail Conditions:
+	% - Mission giver dies before encounter is activated
+	% - Fetch subplot fails
+
+	end <if= PlotStatus %plotid1% 0 else .%id%_GoCheckReveal ifNPCDead %1% else %pop% LoseComp 0 .%id%_loss>
+	.%id%_GoCheckReveal <ifSubPlotLost %plotid1% SMemo %id%01 SetPlotStatus %plotid3% %id3%>
+	.%id%_loss <+T-->
+
+	% Upon getting the item, set the win subplot.
+	Get%2% <SMemo %id%02  SetPlotStatus %plotid2% %id2%>
+
+	Msg%id%01 <You failed to recover the watch. You should go tell %name1% at \SCENE NPCScene %1% .>
+	Msg%id%02 <You should return the watch to %name1% at \SCENE NPCScene %1% .>
+
+	%% SubPlot1 is Fetch Item
+	%% SubPlot2 is the winning condition
+	%% SubPlot3 is the loss condition
+	SubPlot1 <*:CS_FetchItem 2>
+	SubPlot2 <*CS_WinFetchItem 1 2>
+	SubPlot3 <*CS_LoseTask 1>
+
+	sub
+		Persona 1
+		greeting <if= PlotStatus %plotid1% 0 else .%id%_GoRemind if# PlotStatus %plotid% %id% else .%id%_GoOfferMission Goto %pop%>
+		*.%id%_GoOfferMission <*HowAreYou .%id%_GoBriefing>
+		*.%id%_GoRemind <*GenericMissionReminder>
+		.%id%_GoBriefing <NewChat Say %id%01 AddChat %id%01 AddChat %id%02>
+		.%id%_GoStartMission <StoryNote %id%02 SetPlotStatus %plotid1% %id1%>
+		result%id%01 <NewChat Say %id%03 Goto .%id%_GoStartMission>
+		result%id%02 <NewChat Say %id%04 AddEasygoing -d4 Goto .%id%_GoStartMission>
+		Msg%id%01 <I was wondering if you could help me with something. My watch went missing, I think maybe it got stolen. Could you see if you can find it?>
+		Msg%id%02 <%name1% asked you to help find \PPR %1% watch.>
+		Msg%id%03 <Thanks! I knew I could depend on you. \HINT %plotid1%>
+		Msg%id%04 <Oh, as if you've got something better to do. Don't worry, I'll be sure to reward you if you find it. I know how important pavlovian reinforcement is to you adventurers.>
+		Prompt%id%01 <I'll let you know if I do.>
+		Prompt%id%02 <This is hardly a fitting use of my mad cavalier skills.>
+	end
+	inv
+		Treasure
+		name <Watch>
+		desc <%name1%'s watch. It's not even all that nice, really.>
+	end
+
+Content
+	name <Enemy's a Bastard>
+	desc <The person the PC is speaking with has fought with Enemy.>
+	requires <*CS_Conversation (1:FRIEND|1:FAMILY|1:LOVER|1:ALLY|1:PCFAC) (1:MILIT|1:ADVEN|1:CORPO|1:LABOR|1:POLIC) -1:ENEMY E:++ ~+Gre>
+
+	% E1 is the person being spoken to.
+	% E2 is the enemy
+	element2 <Grab 1>
+
+	% Fail Conditions:
+	% - Mission giver dies before encounter is activated
+	end <if= PlotStatus %plotid1% 0 ifNPCDead %1% LoseComp 0 .%id%_loss>
+	.%id%_loss <+T-->
+
+	.%id1%_%plotid1%_GoWin <SetPlotStatus %plotid2% %id2%     SMemo %id%01>
+	.%id1%_%plotid1%_GoLoss <SetPlotStatus %plotid3% %id3%    SMemo %id%02>
+
+	Msg%id%01 <You defeated %name2%. You should go tell %name1% at \SCENE NPCScene %1% .>
+	Msg%id%02 <You lost to %name2%. You should go tell %name1% at \SCENE NPCScene %1% .>
+
+	%% SubPlot1 is the Stop Mission task
+	%% SubPlot2 is the winning condition
+	%% SubPlot3 is the loss condition
+	SubPlot1 <*:CS_StopNPCMission&IsEnemyNPC 2>
+	SubPlot2 <*CS_WinTask 1>
+	SubPlot3 <*CS_LoseTask 1>
+
+	sub
+		Persona 1
+		greeting <if= PlotStatus %plotid1% 0 else .%id%_GoRemind if# PlotStatus %plotid% %id% else .%id%_GoGreet Goto %pop%>
+		*.%id%_GoGreet <*IHearYouAreFightingNPC %2% .%id%_GoOfferMission>
+		*.%id%_GoRemind <*GenericMissionReminder>
+		.%id%_GoOfferMission <NewChat Say %id%01 AddCHat %id%01 AddChat %id%02 AddChat %id%03>
+		result%id%01 <AddEasygoing -d10   goto result%id%02>
+		result%id%02 <NewChat Say %id%02 History %id%03 SMemo %id%04 SetPlotStatus %plotid1% %id1%>
+		*result%id%03 <*RejectMission .%id%_GoR3Exit>
+		.%id%_GoR3Exit <AddReact -10   AddRenown -10   NTBLoseComp 0 .%id%_changes>
+		.%id%_changes <+T-- +F-->
+		Msg%id%01 <You should know that \SPR %2% 's in town on a mission even as we speak. I tried to fight \OPR %2% myself, but got beaten pretty bad. If you could find \OPR %2% and avenge my poor departed mecha I'd be ever so grateful.>
+		Msg%id%02 <Thanks. \HINT %plotid1% Come back and let me know when you've beaten \OPR %2% .>
+		Msg%id%03 <%name1% was defeated by %name2%. You agreed to help \OPR %1% get revenge.>
+		Msg%id%04 <You agreed to locate and defeat %name2% for %name1%, who had previously been defeated by \OPR %2% .>
+		Prompt%id%01 <I've been hoping for a chance to fight %name2%.>
+		Prompt%id%02 <Don't worry, I won't let your honor go unavenged.>
+		Prompt%id%03 <Sorry, but I'd much rather avoid %name2%...>
+	end
+
+
+%%
+%% *OLD_Conversation Content
+%%
+%% Old stuff. The new stuff is above.
+%%
+
+
 %%  ********************************
 %%  ***   +P--  Peaceful  Life   ***
 %%  ********************************
@@ -28,7 +184,7 @@
 Content
 	name <In The Army Now>
 	desc <The NPC is joining the army; maybe the PC can join as well!>
-	requires <*CS_Conversation +P-- +F-- P:-- R:-- (1:Friend|1:Family|1:Lover) (1:MILIT|1:ADVEN|1:LABOR) -L:ENEMY ~+Gpe>
+	requires <*OLD_Conversation +P-- +F-- P:-- R:-- (1:Friend|1:Family|1:Lover) (1:MILIT|1:ADVEN|1:LABOR) -L:ENEMY ~+Gpe>
 	Size 1
 
 	% Element1 is the NPC to meet
@@ -87,7 +243,7 @@ Content
 Content
 	name <I Hear They're Hiring>
 	desc <The PC will be told of a corporate job.>
-	requires <*CS_Conversation +P-- P:-- (1:Friend|1:LABOR|1:TRADE) (C:LABOR|C:CRAFT|C:TRADE|C:CORPO) ~+Gmo>
+	requires <*OLD_Conversation +P-- P:-- (1:Friend|1:LABOR|1:TRADE) (C:LABOR|C:CRAFT|C:TRADE|C:CORPO) ~+Gmo>
 
 	% Element1 is the NPC to meet
 	% Element2 is a local corporate character
@@ -136,7 +292,7 @@ Content
 Plot
 	name <Fix My Stuff>
 	desc <The PC will be asked to fix some things.>
-	requires <*CS_Conversation (+P--|+Pla) +F-- C:CRAFT -1:CRAFT ~1:FRIEND ~1:ALLY (!Ne|!Lo)>
+	requires <*OLD_Conversation (+P--|+Pla) +F-- C:CRAFT -1:CRAFT ~1:FRIEND ~1:ALLY (!Ne|!Lo)>
 	Size 3
 
 	% E1 is the person who has problems. Lots of them.
@@ -222,7 +378,7 @@ Plot
 Plot
 	name <Did you hear about EnemyNPC?>
 	desc <A mutual friend will provide some information about E1.>
-	requires <*CS_Conversation +Pme 1:FRIEND -E:-->
+	requires <*OLD_Conversation +Pme 1:FRIEND -E:-->
 	Size 1
 
 	% E1 is the information source
@@ -272,7 +428,7 @@ Plot
 Plot
 	name <They're After an Item>
 	desc <The PC will learn that the attacking enemy is searching for an item.>
-	requires <*CS_Conversation +Pun +Fin F:++ I:-- ~+Gmo>
+	requires <*OLD_Conversation +Pun +Fin F:++ I:-- ~+Gmo>
 	Size 1
 
 	% E1 is the information source
@@ -311,7 +467,7 @@ Plot
 Plot
 	name <Why Are They Doing It?>
 	desc <The PC will be directed to someone who may have answers.>
-	requires <*CS_Conversation +Pun (C:MEDIA|+Gkn) ~E:-- ~F:-- (1:POLIT|1:MEDIA|1:POLIC|1:ADVEN|1:MILIT|1:CORPO)>
+	requires <*OLD_Conversation +Pun (C:MEDIA|+Gkn) ~E:-- ~F:-- (1:POLIT|1:MEDIA|1:POLIC|1:ADVEN|1:MILIT|1:CORPO)>
 	Size 1
 
 	% E1 is the friend
@@ -356,7 +512,7 @@ Plot
 Plot
 	name <Not This Monk, The Other One>
 	desc <This character will send the PC to go speak with a monk.>
-	requires <*CS_Conversation +Pla +Fin (1:FAITH|1:ADVEN) I:++>
+	requires <*OLD_Conversation +Pla +Fin (1:FAITH|1:ADVEN) I:++>
 	Size 1
 
 	% E1 is the person with the information
@@ -400,7 +556,7 @@ Plot
 Content
 	name <Let's Go!>
 	desc <Your friend wants to join your lance.>
-	requires <*CS_Conversation R:-- 1:FRIEND>
+	requires <*OLD_Conversation R:-- 1:FRIEND>
 	Size 1
 
 	% E1 is the friend in question
@@ -446,7 +602,7 @@ Content
 Content
 	name <Your Enemy is Wanted>
 	desc <The person the PC is speaking with needs help on a mission.>
-	requires <*CS_Conversation 1:POLIC -1:ENEMY (E:THIEF|F:CRIME)>
+	requires <*OLD_Conversation 1:POLIC -1:ENEMY (E:THIEF|F:CRIME)>
 
 	% E1 is the person being spoken to.
 	% E2 is the outdoors location where the encounter will be placed
@@ -516,7 +672,7 @@ Content
 Content
 	name <Many People Are Getting Hurt>
 	desc <The PC's enemy has been causing lots of damage. Won't the PC do something to help?>
-	requires <*CS_Conversation 1:MEDIC -1:ENEMY (F:CRIME|F:--)>
+	requires <*OLD_Conversation 1:MEDIC -1:ENEMY (F:CRIME|F:--)>
 
 	% E1 is the person being spoken to.
 	% E2 is the outdoors location where the encounter will be placed
@@ -583,7 +739,7 @@ Content
 Content
 	name <Help With This Case>
 	desc <The PC will be asked to help the NPC with an investigation.>
-	requires <*CS_Conversation 1:POLIC ~C:POLIC ~C:MEDIA ~C:THIEF ~+Gkn -1:ENEMY>
+	requires <*OLD_Conversation 1:POLIC ~C:POLIC ~C:MEDIA ~C:THIEF ~+Gkn -1:ENEMY>
 
 	% E1 is the NPC that the PC will speak with
 
@@ -628,7 +784,7 @@ Content
 Content
 	name <Help With This Story>
 	desc <The PC will be asked to help the NPC with a news story.>
-	requires <*CS_Conversation 1:MEDIA ~C:MEDIA ~+Gkn>
+	requires <*OLD_Conversation 1:MEDIA ~C:MEDIA ~+Gkn>
 
 	% E1 is the NPC that the PC will speak with
 
@@ -675,58 +831,12 @@ Content
 	end
 
 
-Content
-	name <Enemy's a Bastard>
-	desc <The person the PC is speaking with has fought with Enemy.>
-	requires <*CS_Conversation +F-- (1:FRIEND|1:FAMILY|1:LOVER|1:ALLY|1:PCFAC) (1:MILIT|1:ADVEN|1:CORPO|1:LABOR|1:POLIC) -1:ENEMY E:++ ~+Gre>
-
-	% E1 is the person being spoken to.
-	% E2 is the enemy
-	element2 <Grab 1>
-
-	% Fail Conditions:
-	% - Mission giver dies before encounter is activated
-	end <if= PlotStatus %plotid1% 0 ifNPCDead %1% LoseComp 0 .%id%_loss>
-	.%id%_loss <+T-->
-
-	.%id1%_%plotid1%_GoWin <SetPlotStatus %plotid2% %id2%     SMemo %id%01>
-	.%id1%_%plotid1%_GoLoss <SetPlotStatus %plotid3% %id3%    SMemo %id%02>
-
-	Msg%id%01 <You defeated %name2%. You should go tell %name1% at \SCENE NPCScene %1% .>
-	Msg%id%02 <You lost to %name2%. You should go tell %name1% at \SCENE NPCScene %1% .>
-
-	%% SubPlot1 is the Stop Mission task
-	%% SubPlot2 is the winning condition
-	%% SubPlot3 is the loss condition
-	SubPlot1 <*:CS_StopNPCMission&IsEnemyNPC 2>
-	SubPlot2 <*CS_WinTask 1>
-	SubPlot3 <*CS_LoseTask 1>
-
-	sub
-		Persona 1
-		greeting <if= PlotStatus %plotid1% 0 else .%id%_GoRemind if# PlotStatus %plotid% %id% else .%id%_GoGreet Goto %pop%>
-		*.%id%_GoGreet <*IHearYouAreFightingNPC %2% .%id%_GoOfferMission>
-		*.%id%_GoRemind <*GenericMissionReminder>
-		.%id%_GoOfferMission <NewChat Say %id%01 AddCHat %id%01 AddChat %id%02 AddChat %id%03>
-		result%id%01 <AddEasygoing -d10   goto result%id%02>
-		result%id%02 <NewChat Say %id%02 History %id%03 SMemo %id%04 SetPlotStatus %plotid1% %id1%>
-		*result%id%03 <*RejectMission .%id%_GoR3Exit>
-		.%id%_GoR3Exit <AddReact -10   AddRenown -10   NTBLoseComp 0 .%id%_changes>
-		.%id%_changes <+T-- +F-->
-		Msg%id%01 <You should know that \SPR %2% 's in town on a mission even as we speak. I tried to fight \OPR %2% myself, but got beaten pretty bad. If you could find \OPR %2% and avenge my poor departed mecha I'd be ever so grateful.>
-		Msg%id%02 <Thanks. \HINT %plotid1% Come back and let me know when you've beaten \OPR %2% .>
-		Msg%id%03 <%name1% was defeated by %name2%. You agreed to help \OPR %1% get revenge.>
-		Msg%id%04 <You agreed to locate and defeat %name2% for %name1%, who had previously been defeated by \OPR %2% .>
-		Prompt%id%01 <I've been hoping for a chance to fight %name2%.>
-		Prompt%id%02 <Don't worry, I won't let your honor go unavenged.>
-		Prompt%id%03 <Sorry, but I'd much rather avoid %name2%...>
-	end
 
 
 Content
 	name <Are you out of work?>
 	desc <The person the PC is speaking with has a job lead.>
-	requires <*CS_Conversation 1:FRIEND P:-->
+	requires <*OLD_Conversation 1:FRIEND P:-->
 	Size 1
 
 	% E1 is the person being spoken to.
@@ -770,7 +880,7 @@ Content
 Content
 	name <Help Me With This Mission>
 	desc <The person the PC is speaking with needs help on a mission.>
-	requires <*CS_Conversation +F-- (1:FRIEND|1:PCFAC) (1:MILIT|1:ADVEN) -1:ENEMY>
+	requires <*OLD_Conversation +F-- (1:FRIEND|1:PCFAC) (1:MILIT|1:ADVEN) -1:ENEMY>
 
 	% E1 is the person being spoken to.
 	% E2 is the outdoors location where the encounter will be placed
@@ -826,7 +936,7 @@ Content
 Content
 	name <Go See The Trade Show>
 	desc <You'll be told about a trade show in town.>
-	requires <*CS_Conversation (1:LABOR|1:TRADE|1:CRAFT) (1:FRIEND|1:PCFAC|+Fin)>
+	requires <*OLD_Conversation (1:LABOR|1:TRADE|1:CRAFT) (1:FRIEND|1:PCFAC|+Fin)>
 	Size 1
 
 	% Element1 is the NPC to meet
@@ -855,7 +965,7 @@ Content
 Content
 	name <Treasure Hunter, Subcontracted>
 	desc <Your thief friend needs an item obtained.>
-	requires <*CS_Conversation -+Fin (1:THIEF|1:REDMA|1:CRIHN) (1:FRIEND|1:ALLY|1:LOVER|1:FAMILY)>
+	requires <*OLD_Conversation -+Fin (1:THIEF|1:REDMA|1:CRIHN) (1:FRIEND|1:ALLY|1:LOVER|1:FAMILY)>
 
 	% Element1 is the NPC to meet
 	% Element2 is the item to retrieve
@@ -917,7 +1027,7 @@ Content
 Content
 	name <Stolen Heirloom>
 	desc <The PC will be asked to go fetch a family heirloom.>
-	requires <*CS_Conversation (1:FRIEND|1:FAMILY|1:LOVER) -!Ne -!Lo>
+	requires <*OLD_Conversation (1:FRIEND|1:FAMILY|1:LOVER) -!Ne -!Lo>
 
 	% E1 is the NPC that the PC will speak with
 	% E2 is the item to fetch
@@ -966,62 +1076,11 @@ Content
 		desc <%name1%'s family heirloom. You decide against checking to see what's inside.>
 	end
 
-Content
-	name <My Watch Is Missing!>
-	desc <The PC will be asked to go fetch a lost watch.>
-	requires <*CS_Conversation (1:FRIEND|1:FAMILY|1:LOVER) -1:ADVEN -!Md -!Hi -!Ex>
-
-	% E1 is the NPC that the PC will speak with
-	% E2 is the item to fetch
-	Element2 <Prefab>
-
-	% Fail Conditions:
-	% - Mission giver dies before encounter is activated
-	% - Fetch subplot fails
-
-	end <if= PlotStatus %plotid1% 0 else .%id%_GoCheckReveal ifNPCDead %1% else %pop% LoseComp 0 .%id%_loss>
-	.%id%_GoCheckReveal <ifSubPlotLost %plotid1% SMemo %id%01 SetPlotStatus %plotid3% %id3%>
-	.%id%_loss <+T-->
-
-	% Upon getting the item, set the win subplot.
-	Get%2% <SMemo %id%02  SetPlotStatus %plotid2% %id2%>
-
-	Msg%id%01 <You failed to recover the watch. You should go tell %name1% at \SCENE NPCScene %1% .>
-	Msg%id%02 <You should return the watch to %name1% at \SCENE NPCScene %1% .>
-
-	%% SubPlot1 is Fetch Item
-	%% SubPlot2 is the winning condition
-	%% SubPlot3 is the loss condition
-	SubPlot1 <*:CS_FetchItem 2>
-	SubPlot2 <*CS_WinFetchItem 1 2>
-	SubPlot3 <*CS_LoseTask 1>
-
-	sub
-		Persona 1
-		greeting <if= PlotStatus %plotid1% 0 else .%id%_GoRemind if# PlotStatus %plotid% %id% else .%id%_GoOfferMission Goto %pop%>
-		*.%id%_GoOfferMission <*HowAreYou .%id%_GoBriefing>
-		*.%id%_GoRemind <*GenericMissionReminder>
-		.%id%_GoBriefing <NewChat Say %id%01 AddChat %id%01 AddChat %id%02>
-		.%id%_GoStartMission <StoryNote %id%02 SetPlotStatus %plotid1% %id1%>
-		result%id%01 <NewChat Say %id%03 Goto .%id%_GoStartMission>
-		result%id%02 <NewChat Say %id%04 AddEasygoing -d4 Goto .%id%_GoStartMission>
-		Msg%id%01 <I was wondering if you could help me with something. My watch went missing, I think maybe it got stolen. Could you see if you can find it?>
-		Msg%id%02 <%name1% asked you to help find \PPR %1% watch.>
-		Msg%id%03 <Thanks! I knew I could depend on you. \HINT %plotid1%>
-		Msg%id%04 <Oh, as if you've got something better to do. Don't worry, I'll be sure to reward you if you find it. I know how important pavlovian reinforcement is to you adventurers.>
-		Prompt%id%01 <I'll let you know if I do.>
-		Prompt%id%02 <This is hardly a fitting use of my mad cavalier skills.>
-	end
-	inv
-		Treasure
-		name <Watch>
-		desc <%name1%'s watch. It's not even all that nice, really.>
-	end
 
 Content
 	name <You want a hint? I've got a hint.>
 	desc <This friend has some information.>
-	requires <*CS_Conversation (1:FRIEND|1:FAMILY|1:LOVER) ~+Gkn>
+	requires <*OLD_Conversation (1:FRIEND|1:FAMILY|1:LOVER) ~+Gkn>
 
 	% E1 is the person with the information
 
@@ -1050,7 +1109,7 @@ Content
 Content
 	name <Big Scoop about Enemy NPC>
 	desc <The media person you're talking to wants to know about the enemy's mission in town.>
-	requires <*CS_Conversation 1:MEDIA ~1:FRIEND E:++>
+	requires <*OLD_Conversation 1:MEDIA ~1:FRIEND E:++>
 
 	% E1 is the person being spoken to
 	% E2 is the outdoors location where the encounter will be placed
@@ -1117,7 +1176,7 @@ Content
 Plot
 	name <My Help Doesn't Come Cheap>
 	desc <You can get information, if you're willing to pay for it.>
-	requires <*CS_Conversation +Fin -1:FRIEND -1:ALLY -1:LOVER -1:FAMILY ~1:ENEMY ~1:CORPO>
+	requires <*OLD_Conversation +Fin -1:FRIEND -1:ALLY -1:LOVER -1:FAMILY ~1:ENEMY ~1:CORPO>
 	Size 3
 
 	% E1 is the person with the information
@@ -1170,7 +1229,7 @@ Plot
 Plot
 	name <I have a lead for you>
 	desc <This police officer has information for you>
-	requires <*CS_Conversation 1:POLIC E:THIEF>
+	requires <*OLD_Conversation 1:POLIC E:THIEF>
 	Size 1
 	% E1 is the person with the information
 	% E2 is the sleazy scene where the PC can find information
@@ -1191,7 +1250,7 @@ Plot
 
 Plot
 	name <I'm looking for your enemy>
-	requires <*CS_Conversation E:++ (1:ADVEN|1:POLIC) (1:A.---|1:A.sr_|1:A.equ) R:-- -1:ENEMY>
+	requires <*OLD_Conversation E:++ (1:ADVEN|1:POLIC) (1:A.---|1:A.sr_|1:A.equ) R:-- -1:ENEMY>
 	desc <This character's looking for your enemy. Help him out and gain him as a partner.>
 	Changes <R:++>
 	Size 1

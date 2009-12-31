@@ -4,11 +4,28 @@
 %  ***   EPISODE  ONE: THE  INTRO   ***
 %  ************************************
 %
+% This episode should have an initial message when the PC walks into the]
+% Cavalier's Club for the first time, just to set new PCs on the right track.
+%
+
 
 Plot
-	name <Friendly Reminder>
+	name <Friend Conversation>
 	requires <*CORE_Intro>
+	desc <The PC's friend will have a conversation. Something will ensue.>
 
+	% E1 is the cavclub scene
+	% E2 is your friend
+	element1 <Scene !Near -7 cavclub>
+	element2 <NewNPC -3 -7 Friend>
+	place2 <1 pass>
+
+	start <if= PlotStatus %plotid% 0  if= SceneID %1%  Alert %id%01 SetPlotStatus %plotid1% %id1%>
+
+	Msg%id%01 <As you enter the Cavalier's Club, you notice your friend %name2% looking agitated.>
+
+	% SubPlot1 is the conversation you're going to have.
+	subplot1 <*CS_Conversation 2>
 
 
 

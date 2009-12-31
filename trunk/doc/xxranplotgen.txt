@@ -29,6 +29,24 @@ be selected.
 DIFFICULCY LEVEL: EXTREME, HIGH, MEDIUM, LOW, NEGLIGIBLE
   !Ex, !Hi, !Md, !Lo, !Ne
 
+******************************
+***   EPISODE  STRUCTURE   ***
+******************************
+
+An episode consists of a base plot, several attached subplots, and the stubs
+for the dramatic choices.
+
+The basic structure for the plots is:
+
+    CORE        Exposition; sets up the next part.
+      MEET      Complication; PC is offered a mission, or somesuch.
+        MAIN    The main course, usually a mecha battle.
+        GOAL    The episode is won, the dramatic choice pays off.
+        FAIL    The episode is lost, the PC must try something else.
+
+CORE is the base plot. It must request a MEET-type subplot. Likewise, the MEET
+subplot must request a MAIN-type subplot and usually also a GOAL and a FAIL.
+
 
 ****************************
 ***   DRAMATIC  CHOICE   ***
@@ -133,13 +151,6 @@ The job group of the PC is included as C:<job>. The available job designations a
 %%   THIEF: Criminal
 See series\CG_JOBS_* for a complete and up-to-date list.
 
-
-******************************
-***   EPISODE  STRUCTURE   ***
-******************************
-
-An episode consists of a base plot, several attached subplots, and the stubs
-for the dramatic choices.
 
 
 *************************
