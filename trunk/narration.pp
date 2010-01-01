@@ -29,7 +29,7 @@ uses gears,locale;
 	{ PLOT DEFINITION }
 	{   G = GG_Plot               }
 	{   S = Quest Prototype Index }
-	{   V = SubPlot Size          }
+	{   V = Dramatic Choice ID    }
 
 	{ MEME DEFINITION      }
 	{   G = GG_Meme        }
@@ -60,10 +60,13 @@ Const
 	NAS_EpisodeNumber = 6;	{ How many episodes have been completed? }
 	NAS_LastEpisodeNoted = 7;	{ What was the last episode to get a history note? }
 
-	NAS_DramaticChoice = 8;	{ What choice has the PC made for this story? }
+	NAS_DramaticChoice = 8;	{ What choice has the PC made for this episode? }
+	NAS_IsDramaticChoicePlot = 9;	{ If nonzero, this plot is part of our DC menu. }
 
 	NAS_XXChar_Motivation = 101;
 	NAS_XXChar_Attitude = 102;
+
+	NAG_Completed_DC = -25;	{ Lists the dramatic choices which have been completed. }
 
 	NAG_ElementID = -9;	{ Used to store ID numbers for plot/story elements. }
 

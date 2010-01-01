@@ -159,6 +159,50 @@ var
 	ASRD_MemoMessage: String;
 	local_triggers: SAttPtr;
 
+{  ******************************  }
+{  ***   REDRAW  PROCEDURES   ***  }
+{  ******************************  }
+
+Procedure InteractRedraw;
+	{ Redraw the screen for whatever interaction is going to go on. }
+begin
+	CombatDisplay( ASRD_GameBoard );
+	SetupInteractDisplay( PlayerBlue );
+	if I_NPC <> Nil then begin
+		DisplayInteractStatus( ASRD_GameBoard , I_NPC , CHAT_React , I_Endurance );
+
+	end;
+	GameMsg( CHAT_Message , ZONE_InteractMsg , InfoHiLight );
+end;
+
+Procedure ArenaScriptReDraw;
+	{ Redraw the combat screen for some menu usage. }
+begin
+	if ASRD_GameBoard <> Nil then CombatDisplay( ASRD_GameBoard );
+end;
+
+Procedure MemoPageReDraw;
+	{ Redraw the combat screen for some menu usage. }
+begin
+	if ASRD_GameBoard <> Nil then CombatDisplay( ASRD_GameBoard );
+	SetupMemoDisplay;
+	GameMsg( ASRD_MemoMessage , ZONE_MemoText , StdWhite );
+end;
+
+Procedure ChoiceReDraw;
+	{ Redraw the combat screen for some menu usage. }
+begin
+	if ASRD_GameBoard <> Nil then CombatDisplay( ASRD_GameBoard );
+	SetupMemoDisplay;
+	GameMsg( ASRD_MemoMessage , ZONE_MemoMenu , StdWhite );
+end;
+
+
+
+{  ****************************  }
+{  ***   EVERYTHING  ELSE   ***  }
+{  ****************************  }
+
 Function CreateRumorList( GB: GameBoardPtr; Rumor_Source: GearPtr; SkRoll: Integer; DoHarvest: Boolean; var Rumor_Error: Boolean; const Rumemo_Lead,Rumor_Head: String ): SAttPtr;
 	{ RUMOR_HEAD is the rumor type to collect: RUMORs or RUMEMOs. }
 	{ RUMEMO_LEAD is the leading message appended to a rumor if we're }
@@ -326,20 +370,6 @@ var
 	Rumor_Error: Boolean;	{ A dummy variable. }
 begin
 	ReviewRumorMemos := CreateRumorList( GB, Nil, 0, FALSE, Rumor_Error, '', 'RUMEMO' );
-end;
-
-Procedure ArenaScriptReDraw;
-	{ Redraw the combat screen for some menu usage. }
-begin
-	if ASRD_GameBoard <> Nil then CombatDisplay( ASRD_GameBoard );
-end;
-
-Procedure MemoPageReDraw;
-	{ Redraw the combat screen for some menu usage. }
-begin
-	if ASRD_GameBoard <> Nil then CombatDisplay( ASRD_GameBoard );
-	SetupMemoDisplay;
-	GameMsg( ASRD_MemoMessage , ZONE_MemoText , StdWhite );
 end;
 
 Procedure BrowseMemoType( GB: GameBoardPtr; Tag: String );
@@ -3985,6 +4015,98 @@ end;
 
 Procedure ProcessNextComp( var Event: String; GB: GameBoardPtr; Source: GearPtr );
 	{ Prepare things for the next component to be loaded. }
+	Procedure ContinueConversation();
+		{ We want to make a choice, but there's already a conversation }
+		{ going on. Best to end that conversation with a [Continue] tag, }
+		{ then we can return to it later. }
+	var
+		RPM: RPGMenuPtr;
+	begin
+		RPM := CreateRPGMenu( MenuItem , MenuSelect , ZONE_InteractMenu );
+		AddRPGMenuItem( RPM , MsgString( 'Continue' ), -1 );
+		ASRD_GameBoard := GB;
+		CHAT_React := ReactionScore( GB^.Scene , I_PC , I_NPC );
+		SelectMenu( RPM , @InteractRedraw );
+		DisposeRPGMenu( RPM );
+	end;
+	Function SeekDCGear( Story: GearPtr; DCID: Integer ): GearPtr;
+		{ Locate the plot corresponding to the dramatic choice selected }
+		{ by the PC. }
+	var
+		LList: GearPtr;
+	begin
+		LList := Story^.SubCom;
+		while ( LList <> Nil ) and ( ( NAttValue( LList^.NA , NAG_XXRan , NAS_IsDramaticChoicePlot ) = 0 ) or ( LList^.V <> DCID ) ) do LList := LList^.Next;
+		SeekDCGear := LList;
+	end;
+	Procedure MakeDramaticChoice( Story: GearPtr );
+		{ In order to move on, the PC must decide what they're going }
+		{ to do next. }
+	var
+		RPM: RPGMenuPtr;
+		DC: GearPtr;
+		N: Integer;
+		Trigger: String;
+	begin
+		{ Step One- create the list of dramatic choices. }
+		CreateChoiceList( GB , Story );
+
+		{ Step Two- assemble these choices into a menu. This is tougher }
+		{ than it looks, since if we are currently in a conversation }
+		{ we want the choices merged with the conversation. }
+		if I_NPC <> Nil then begin
+			ContinueConversation;
+			RPM := CreateRPGMenu( MenuItem , MenuSelect , ZONE_InteractMenu );
+		end else begin
+			RPM := CreateRPGMenu( MenuItem , MenuSelect , ZONE_MemoText );
+		end;
+		RPM^.Mode := RPMNoCancel;
+
+		DC := Story^.SubCom;
+		while DC <> Nil do begin
+			{ How do we identify the dramatic choice options? They've been marked }
+			{ with a special NA tag. Do we do any error checking to make sure }
+			{ they're legit? Hell no! }
+			if NAttValue( DC^.NA , NAG_XXRan , NAS_IsDramaticChoicePlot ) <> 0 then begin
+				{ This is a dramatic choice. Add it to the menu. }
+				AddRPGMenuItem( RPM , ScriptMessage( 'PROMPT' , GB , DC ) , DC^.V );
+			end;
+			DC := DC^.Next;
+		end;
+
+		if RPM^.NumItem < 1 then begin
+			DialogMsg( 'ERROR: No dramatic choices found!' );
+			N := 0;
+		end else if I_NPC <> Nil then begin
+			CHAT_Message := MsgString( 'Make_Dramatic_Choice' );
+			N := SelectMenu( RPM , @InteractRedraw );
+		end else begin
+			ASRD_MemoMessage := MsgString( 'Make_Dramatic_Choice' );
+			N := SelectMenu( RPM , @ChoiceRedraw );
+		end;
+
+		{ Step Three- record the choice and execute its initialization }
+		{ script. }
+		SetNAtt( Story^.NA , NAG_XXRan , NAS_DramaticChoice , N );
+
+		{ Locate the choice's gear. }
+		DC := SeekDCGear( Story , N );
+		if DC <> Nil then begin
+			Trigger := 'CHOICE';
+			TriggerGearScript( GB , DC , Trigger );
+			if I_NPC <> Nil then begin
+				CHAT_Message := ScriptMessage( 'REPLY' , GB , DC );
+			end else begin
+				YesNoMenu( GB , ScriptMessage( 'ALERT' , GB , DC ) , '' , '' );
+			end;
+		end else begin
+			DialogMsg( 'ERROR: Dramatic Choice ' + BStr( N ) + ' not found.' );
+		end;
+
+		{ Step Four- dispose of the remaining choices, and the menu. }
+		ClearChoiceList( Story );
+		DisposeRPGMenu( RPM );
+	end;
 var
 	Story: GearPtr;
 	Changes: String;
@@ -3999,6 +4121,7 @@ begin
 
 	if ( Story <> Nil ) and ( GB <> Nil ) then begin
 		AlterStoryDescriptors( Story , Changes );
+		MakeDramaticChoice( Story );
 
 		SetNAtt( Story^.NA , NAG_XXRAN , NAS_LoadNextComponent , 0 );
 
@@ -4904,18 +5027,6 @@ begin
 	end else begin
 		CHAT_Message := MsgString( 'WHEREAREYOU_Dunno' );
 	end;
-end;
-
-Procedure InteractRedraw;
-	{ Redraw the screen for whatever interaction is going to go on. }
-begin
-	CombatDisplay( ASRD_GameBoard );
-	SetupInteractDisplay( PlayerBlue );
-	if I_NPC <> Nil then begin
-		DisplayInteractStatus( ASRD_GameBoard , I_NPC , CHAT_React , I_Endurance );
-
-	end;
-	GameMsg( CHAT_Message , ZONE_InteractMsg , InfoHiLight );
 end;
 
 

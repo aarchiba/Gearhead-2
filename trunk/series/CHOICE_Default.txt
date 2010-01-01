@@ -1,13 +1,19 @@
 %%
 %%  DRAMATIC CHOICES
 %%
-%% At the end of each episode, the PC gets to make a dramatic choice. These
-%% choices must first be encoded into the episode, then selected from a menu.
+%% At the end of each episode, the PC gets to make a dramatic choice.
 %%
-%%  PROMPT%id%: The menu text the player will select. Add various options
+%%  DESIG: Must have a unique designation.
+%%
+%%  REQUIRES: The pre-requsites for this choice to appear.
+%%   Previous choices can be added with a ":" plus their designation.
+%%
+%%  PROMPT: The menu text the player will select. Add various options
 %%   to account for the different possible story states.
+%%  REPLY: What the NPC you're speaking to says after you make the choice.
+%%  ALERT: What the alert message says after you make the choice.
 %%
-%%  CHOICE%id%: The script label to be called when this choice is made.
+%%  CHOICE: The script label to be called when this choice is made.
 %%   This script should set the StoryNote.
 %%
 
@@ -21,9 +27,11 @@ Choice 1
 	% E1 is the city for the next episode.
 	Element1 <Scene City !Far -7 !Ally -7 !Okay -3 !XClude -2>
 
-	Prompt%id% <I hear they could use some help in %name1%.>
+	Prompt <I'm going to see if anyone else needs my help.>
+	Reply <I hear they could use some help in %name1%. Good luck.>
+	Alert <You decide to go seek work in %name1%.>
 
-	Choice%id% <StoryNote %id%01 &SetEpisodeScene %1%>
+	Choice <StoryNote %id%01 &SetEpisodeScene %1%>
 
 	Msg%id%01 <You decided to go defend %name1%.>
 
@@ -31,7 +39,18 @@ Choice 2
 	name <Defense 2>
 	desc <Complete this option track to earn more reinforcements in final battle.>
 	desig <DEF_2>
-	requires <+:101>
+	requires <:DEF_1>
+
+	% E1 is the city for the next episode.
+	Element1 <Scene City !Far -7 !Ally -7 !Okay -3 !XClude -2>
+
+	Prompt <I hear they could use some help in %name1%.>
+	Reply <Good luck with that.>
+	Alert <You decide to go seek work in %name1%.>
+
+	Choice <StoryNote %id%01 &SetEpisodeScene %1%>
+
+	Msg%id%01 <You decided to go defend %name1%.>
 
 
 Choice 6
@@ -42,16 +61,28 @@ Choice 6
 	% E1 is the city for the next episode.
 	Element1 <Scene City !Far -7 !Ally -7 !Okay -3 !XClude -2>
 
-	Prompt%id% <I hear they could use some help in %name1%.>
+	Prompt <I'll be heading to wherever the action is.>
+	Reply <Good luck with that. You know, I hear that they could use someone with your talents in %name1%. You might want to try looking for work there.>
+	Alert <You decide to go seek work in %name1%.>
 
-	Choice%id% <StoryNote %id%01 &SetEpisodeScene %1%>
+	Choice <StoryNote %id%01 &SetEpisodeScene %1%>
 
-	Msg%id%01 <You decided to go defend %name1%.>
+	Msg%id%01 <You decided to follow the action to %name1%.>
 
 Choice 11
 	name <Reward 1: Seek Training>
 	desc <Take this option to earn immediate benefits for the PC.>
 	desig <REW_1>
 
+	% E1 is the city for the next episode.
+	Element1 <Scene City !Far -7 !Ally -7 !Okay -3 !XClude -2>
+
+	Prompt <I need to work on my skills some more.>
+	Reply <I hear that you could do that in %name1%.>
+	Alert <You decide to seek training in %name1%.>
+
+	Choice <StoryNote %id%01 &SetEpisodeScene %1%>
+
+	Msg%id%01 <You decided to seek training in %name1%.>
 
 

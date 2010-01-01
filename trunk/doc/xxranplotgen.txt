@@ -26,8 +26,28 @@ be selected.
 
 
 
+**************************
+***   STORY  CONTEXT   ***
+**************************
+
+The story context contains:
+- The xxran descriptors
+- Tags for the completed dramatic choices, preceded by ":"
+- The current difficulty level
+- The context for the elements
+
 DIFFICULCY LEVEL: EXTREME, HIGH, MEDIUM, LOW, NEGLIGIBLE
   !Ex, !Hi, !Md, !Lo, !Ne
+
+
+*************************
+***   PLOT  REQUEST   ***
+*************************
+
+The plot label will be *CORE_[a], where [a] is the identifier for the
+PC's dramatic choice. At the beginning of the game the choice will be INTRO.
+This identifier should always be five characters long.
+
 
 ******************************
 ***   EPISODE  STRUCTURE   ***
@@ -152,14 +172,6 @@ The job group of the PC is included as C:<job>. The available job designations a
 See series\CG_JOBS_* for a complete and up-to-date list.
 
 
-
-*************************
-***   PLOT  REQUEST   ***
-*************************
-
-The plot label will be *CORE_[a], where [a] is the identifier for the
-PC's dramatic choice. At the beginning of the game the choice will be INTRO.
-This identifier should always be five characters long.
 
 ****************************
 ***   PLOT  DESCRIPTORS  ***

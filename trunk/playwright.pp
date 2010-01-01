@@ -82,6 +82,9 @@ Function InsertArenaMission( Source,Mission: GearPtr; ThreatAtGeneration: Intege
 Procedure UpdatePlots( GB: GameBoardPtr; Renown: Integer );
 Procedure UpdateMoods( GB: GameBoardPtr );
 
+Procedure CreateChoiceList( GB: GameBoardPtr; Story: GearPtr );
+Procedure ClearChoiceList( Story: GearPtr );
+
 
 implementation
 
@@ -139,6 +142,17 @@ begin
 
 		AddOn := AddOn^.Next;
 	end;
+end;
+
+Function SeekDramaticChoice( N: Integer ): GearPtr;
+	{ Return a pointer to Dramatic Choice N. }
+	{ If no such choice can be found, return NIL. }
+var
+	C: GearPtr;
+begin
+	C := Dramatic_Choices;
+	while ( C <> Nil ) and ( C^.V <> N ) do C := C^.Next;
+	SeekDramaticChoice := C;
 end;
 
 Function SceneContext( GB: GameBoardPtr; Scene: GearPtr ): String;
@@ -1419,9 +1433,17 @@ Function StoryContext( GB: GameBoardPtr; Story: GearPtr ): String;
 var
 	it,msg: String;
 	T: Integer;
+	LList: GearPtr;
 begin
 	{ Get the basic context. }
 	it := SAttValue( Story^.SA , 'CONTEXT' );
+
+	{ Add tags for the choices made so far. }
+	LList := Dramatic_Choices;
+	while LList <> Nil do begin
+		if NAttValue( Story^.NA , NAG_Completed_DC , LList^.V ) <> 0 then it := it + ' :' + SAttValue( LList^.SA , 'DESIG' );
+		LList := LList^.Next;
+	end;
 
 	{ Add a description for the difficulcy rating. }
 	it := it + ' ' + DifficulcyContext( NAttValue( Story^.NA , NAG_Narrative , NAS_DifficultyLevel ) );
@@ -2066,17 +2088,6 @@ begin
 	AddRandomPlot := InitOK;
 end;
 
-Function SeekDramaticChoice( N: Integer ): GearPtr;
-	{ Return a pointer to Dramatic Choice N. }
-	{ If no such choice can be found, return NIL. }
-var
-	C: GearPtr;
-begin
-	C := Dramatic_Choices;
-	while ( C <> Nil ) and ( C^.V <> N ) do C := C^.Next;
-	SeekDramaticChoice := C;
-end;
-
 Procedure PrepareNewComponent( Story: GearPtr; GB: GameBoardPtr );
 	{ Load a new component for this story. }
 	Procedure StoreXXRanHistory( C: GearPtr );
@@ -2431,6 +2442,54 @@ begin
 		end;
 	end;
 end;
+
+Procedure CreateChoiceList( GB: GameBoardPtr; Story: GearPtr );
+	{ It's time for the PC to make a dramatic choice. Create a list of }
+	{ legal choices, attempt to add them to the story, then mark the ones }
+	{ which load with a tag to indicate their nature. }
+var
+	Context: String;
+	LList,DC: GearPtr;
+begin
+	{ Step One: Determine the choice context. }
+	Context := StoryContext( GB , Story );
+
+	{ Step Two: Go through the list of dramatic choices. Try to add all }
+	{ which apply in this situation. }
+	LList := Dramatic_Choices;
+	while LList <> Nil do begin
+		{ A choice can be added if: }
+		{ - Its REQUIRES field is satisfied by the context generated above. }
+		{ - It has not already been completed. }
+		if ( NAttValue( Story^.NA , NAG_Completed_DC , LList^.V ) = 0 ) and PartMatchesCriteria( Context , SAttValue( LList^.SA , 'REQUIRES' ) ) then begin
+			DC := CloneGear( LList );
+			if InsertPlot( FindRoot( GB^.Scene ) , Story , DC , GB , NAttValue( Story^.NA , NAG_Narrative , NAS_DifficultyLevel ) ) then begin
+				SetNAtt( DC^.NA , NAG_XXRan , NAS_IsDramaticChoicePlot , 1 );
+			end;
+		end;
+		LList := LList^.Next;
+	end;
+
+end;
+
+
+Procedure ClearChoiceList( Story: GearPtr );
+	{ The PC has apparently made a choice. Get rid of all the choice }
+	{ records from this story since we don't need them anymore. }
+var
+	DC,DC2: GearPtr;
+begin
+	DC := Story^.SubCom;
+	while DC <> Nil do begin
+		DC2 := DC^.Next;
+		if NAttValue( DC^.NA , NAG_XXRan , NAS_IsDramaticChoicePlot ) <> 0 then begin
+			RemoveGear( Story^.SubCom , DC );
+		end;
+		DC := DC2;
+	end;
+end;
+
+
 
 initialization
 	persona_fragments := AggregatePattern( 'PFRAG_*.txt' , series_directory );
