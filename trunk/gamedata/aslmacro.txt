@@ -216,8 +216,10 @@ GSetOptMin <GSetNAtt NAG_Personal NAS_OptMin ?>
 Gut <GrabSource GSetNAtt NAG_EpisodeData 9 1>
 Flay <GrabSource GSetNAtt NAG_EpisodeData 10 1>
 StoryDL= <GrabStory GSetNAtt NAG_Narrative NAS_DifficultyLevel ?>
-WinEpisode <XPV 200   GrabStory GAddNAtt NAG_Narrative NAS_DifficultyLevel 7 GAddNAtt -7 6 1 NextComp ? FacXP+ &AllyFac 5>
-LoseEpisode <         GrabStory                                              GAddNAtt -7 6 1 NextComp ?>
+StoryDL+ <GrabStory GAddNAtt NAG_Narrative NAS_DifficultyLevel ?>
+WinDramaticGoal <GrabStory GSetNAtt NAG_Completed_DC CurrentDramaticGoal 1>
+WinEpisode <XPV 200   WinDramaticGoal StoryDL+ 7 GrabStory GAddNAtt -7 6 1 NextComp ? FacXP+ &AllyFac 5>
+LoseEpisode <                                    GrabStory GAddNAtt -7 6 1 NextComp ?>
 IfFacReward     <GrabFaction ? if# GNAtt NAG_FacReward ? 0>
 IfAccessArmory  <GrabFaction LocalFaction if# GNAtt NAG_FacReward 1 0>
 IfNotAccessArmory  <GrabFaction LocalFaction if= GNAtt NAG_FacReward 1 0>

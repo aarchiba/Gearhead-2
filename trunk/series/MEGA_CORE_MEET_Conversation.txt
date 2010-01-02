@@ -28,9 +28,8 @@ Content
 	% - Mission giver dies before encounter is activated
 	% - Revalation subplot fails
 
-	end <if= PlotStatus %plotid1% 0 else .%id%_GoCheckReveal ifNPCDead %1% LoseComp 0 .%id%_loss>
+	end <if= PlotStatus %plotid1% 0 else .%id%_GoCheckReveal ifNPCDead %1% LoseEpisode na>
 	.%id%_GoCheckReveal <ifSubPlotLost %plotid2% SMemo %id%02 SetPlotStatus %plotid5% %id5%>
-	.%id%_loss <+T-->
 
 	.%id1%_%plotid1%_GoWin <SetPlotStatus %plotid3% %id3%     SMemo %id%01>
 	.%id1%_%plotid1%_GoLoss <SetPlotStatus %plotid4% %id4%    SMemo %id%02>
@@ -83,9 +82,8 @@ Content
 	% - Mission giver dies before encounter is activated
 	% - Fetch subplot fails
 
-	end <if= PlotStatus %plotid1% 0 else .%id%_GoCheckReveal ifNPCDead %1% else %pop% LoseComp 0 .%id%_loss>
+	end <if= PlotStatus %plotid1% 0 else .%id%_GoCheckReveal ifNPCDead %1% else %pop% LoseEpisode na>
 	.%id%_GoCheckReveal <ifSubPlotLost %plotid1% SMemo %id%01 SetPlotStatus %plotid3% %id3%>
-	.%id%_loss <+T-->
 
 	% Upon getting the item, set the win subplot.
 	Get%2% <SMemo %id%02  SetPlotStatus %plotid2% %id2%>

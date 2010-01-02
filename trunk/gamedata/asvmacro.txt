@@ -169,6 +169,9 @@ RoughMap <11>
 #VictimsRecovered <GrabCurrentScene GNatt NAG_Narrative NAS_VictimsRecovered>
 NPCTEAM <GrabNPC ? GNAtt NAG_LOCATION nAS_Team>
 NAG_XXRan <-7>
+NAS_DramaticChoice <8>
+CurrentDramaticGoal <GrabStory GNAtt NAG_XXRan NAS_DramaticChoice>
+NAG_Completed_DC <-25>
 XXR_M_Mercenary <1>
 XXR_M_Professional <2>
 XXR_M_Competitor <7>
