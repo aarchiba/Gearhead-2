@@ -1708,7 +1708,7 @@ begin
 end;
 
 Function MatchPlotToAdventure( Scope,Slot,Plot: GearPtr; GB: GameBoardPtr; DoFullInit,MovePrefabs,Debug: Boolean ): Boolean;
-	{ This PLOT gear is meant to be inserted into this SLOT gear. }
+	{ This PLOT gear is meant to be inserted as an INVCOM of Slot. }
 	{ Perform the insertion, select unselected elements, and make sure }
 	{ that everything fits. }
 	{ SLOT must be a descendant of the adventure. }
@@ -2469,7 +2469,6 @@ begin
 		end;
 		LList := LList^.Next;
 	end;
-
 end;
 
 
@@ -2479,11 +2478,11 @@ Procedure ClearChoiceList( Story: GearPtr );
 var
 	DC,DC2: GearPtr;
 begin
-	DC := Story^.SubCom;
+	DC := Story^.InvCom;
 	while DC <> Nil do begin
 		DC2 := DC^.Next;
 		if NAttValue( DC^.NA , NAG_XXRan , NAS_IsDramaticChoicePlot ) <> 0 then begin
-			RemoveGear( Story^.SubCom , DC );
+			RemoveGear( Story^.InvCom , DC );
 		end;
 		DC := DC2;
 	end;

@@ -4035,7 +4035,7 @@ Procedure ProcessNextComp( var Event: String; GB: GameBoardPtr; Source: GearPtr 
 	var
 		LList: GearPtr;
 	begin
-		LList := Story^.SubCom;
+		LList := Story^.InvCom;
 		while ( LList <> Nil ) and ( ( NAttValue( LList^.NA , NAG_XXRan , NAS_IsDramaticChoicePlot ) = 0 ) or ( LList^.V <> DCID ) ) do LList := LList^.Next;
 		SeekDCGear := LList;
 	end;
@@ -4062,7 +4062,7 @@ Procedure ProcessNextComp( var Event: String; GB: GameBoardPtr; Source: GearPtr 
 		end;
 		RPM^.Mode := RPMNoCancel;
 
-		DC := Story^.SubCom;
+		DC := Story^.InvCom;
 		while DC <> Nil do begin
 			{ How do we identify the dramatic choice options? They've been marked }
 			{ with a special NA tag. Do we do any error checking to make sure }

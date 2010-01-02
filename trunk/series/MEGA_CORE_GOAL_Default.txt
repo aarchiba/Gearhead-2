@@ -109,8 +109,7 @@ Content
 	% E1 is the NPC
 	% E2 is the item
 
-	start <ifNPCDead %1% SMemo 0 WinComp 0 .%id%_loss>
-	.%id%_loss <+T-- +F-->
+	start <ifNPCDead %1% SMemo 0 PyrrhicWinEpisode na>
 
 	sub
 		Persona 1
@@ -118,9 +117,8 @@ Content
 		*.%id%_GoComeHere <*NotByPhone>
 		result%id%01 <NewChat Say %id%02>
 		*result%id%02 <*MissionWasSuccess&Reward .%id%_GoEnd &AllyFac &EnemyFac>
-		.%id%_GoEnd <CashPrize Reward StoryDL 500 SMemo 0 DeleteItem %2%  AddReact d10  NTBWinComp 0 .%id%_next>
-		.%id%_next <+T-- +F-->
-		result%id%03 <NTBLoseComp 0 .%id%_next Goto .%id%_GoLose>
+		.%id%_GoEnd <CashPrize Reward StoryDL 500 SMemo 0 DeleteItem %2%  AddReact d10  WinEpisode na>
+		result%id%03 <LoseEpisode na Goto .%id%_GoLose>
 		*.%id%_GoLose <*YouLostItem>
 		Msg%id%01 <Have you found the %name2% yet?>
 		Msg%id%02 <Then come back here when you've found it!>
