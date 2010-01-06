@@ -1,6 +1,6 @@
 program cosplay2;
 
-uses gears,glgfx,glmenus,colormenu;
+uses gears,cutegfx,glmenus,colormenu;
 
 Procedure RedrawOpening;
 	{ The opening menu redraw procedure. }
