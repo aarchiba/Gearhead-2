@@ -115,7 +115,6 @@
 	L= [idnum] [value]	Set local variable
 	L+ [idnum] [value]	Add local variable
 	LOADD [script line label]	Load a dynamic scene
-	LOSECOMP [sceneid] [changes]	Lose current component, load next
 	LOSERENOWN		PC will lose 5 points or 25% of renown
 	LTRIGGER [tag]		Set a local trigger, calling some other script in same gear
 	MAGICMAP		Makes all tiles on current map visible
@@ -130,8 +129,7 @@
 	NEWCHAT			Reset interact menu
 	NEWD [scale]		Create a new dynamic scene
 	NEWS [idnum]		Store global news message in source gear
-	NEXTCOMP [changes]		End current plot, load next component
-	NEXTEPISODE [sceneid] [changes]	Load next component in new city, reset state vars
+	NEXTCOMP		End current core story plot, load next component
 	P= [idnum] [value]	Set plot variable
 	P+ [idnum] [value]	Add plot variable
 	PCENEMY [cid]		NPC will become PC's enemy
@@ -175,7 +173,6 @@
 	V= [idnum] [value]	Set source variable
 	V+ [idnum] [value]	Add source variable
 	VMSG [ident] [value]	Print standard value message
-	WINCOMP [sceneid] [changes]	Win current component, load next
 	WMECHA [team] [renown] [strength]	Stock current scene with mecha
 	WMONSTER [team] [renown] [strength]	Stock current scene with monsters
 	XPV [experience award]	Give PC experience

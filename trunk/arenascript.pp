@@ -4109,18 +4109,14 @@ Procedure ProcessNextComp( var Event: String; GB: GameBoardPtr; Source: GearPtr 
 	end;
 var
 	Story: GearPtr;
-	Changes: String;
 begin
 	Story := StoryMaster( GB , Source );
-	Changes := ExtractWord( Event );
-	Changes := SAttValue( Source^.SA , Changes );
 	if Story = Nil then begin
 		DialogMsg( 'ERROR: ProcessNextComp called but story not found' );
 		Exit;
 	end;
 
 	if ( Story <> Nil ) and ( GB <> Nil ) then begin
-		AlterStoryDescriptors( Story , Changes );
 		MakeDramaticChoice( Story );
 
 		SetNAtt( Story^.NA , NAG_XXRAN , NAS_LoadNextComponent , 0 );

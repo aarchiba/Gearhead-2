@@ -196,7 +196,7 @@ Content
 	% SubPlot1 is the PC's task
 	% SubPlot2 is the PC's reward
 	SubPlot1 <*:CS_MinorMission 3>
-	SubPlot2 <*CS_GiveEquipment 3>
+	SubPlot2 <*UTIL_GiveEquipment 3>
 
 	sub
 		Persona 3
@@ -239,7 +239,7 @@ Content
 	% SubPlot1 is the PC's task
 	% SubPlot2 is the PC's reward
 	SubPlot1 <*:CS_MinorMission 2>
-	SubPlot2 <*CS_GiveEquipment 2>
+	SubPlot2 <*UTIL_GiveEquipment 2>
 
 	sub
 		Persona 2
