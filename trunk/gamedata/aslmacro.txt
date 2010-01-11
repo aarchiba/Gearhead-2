@@ -51,10 +51,10 @@ NPCSTAT= <GrabNPC ? GSetStat ? ?>
 NPCSTAT+ <GrabNPC ? GAddStat ? ?>
 PCENEMY <GrabNPC ?  GSetNAtt NAG_Relationship 0 NAV_ArchEnemy>
 PCFENEMY <GrabFaction ?  GSetNAtt NAG_Relationship 0 NAV_ArchEnemy>
-PCALLY <GrabNPC ?  GSetNAtt NAG_Relationship 0 NAV_ArchAlly>
-PCFAMILY <GrabNPC ?  GSetNAtt NAG_Relationship 0 NAV_Family>
-PCFRIEND <GrabNPC ?  GSetNAtt NAG_Relationship 0 NAV_Friend>
-PCLOVER <GrabNPC ?  GSetNAtt NAG_Relationship 0 NAV_LOVER>
+PCALLY <GrabNPC ?  GSetNAtt NAG_Relationship 0 NAV_ArchAlly GAddNAtt NAG_Personal NAS_NumConversation 1>
+PCFAMILY <GrabNPC ?  GSetNAtt NAG_Relationship 0 NAV_Family GAddNAtt NAG_Personal NAS_NumConversation 1>
+PCFRIEND <GrabNPC ?  GSetNAtt NAG_Relationship 0 NAV_Friend GAddNAtt NAG_Personal NAS_NumConversation 1>
+PCLOVER <GrabNPC ?  GSetNAtt NAG_Relationship 0 NAV_LOVER GAddNAtt NAG_Personal NAS_NumConversation 1>
 PCNORELATION <GrabNPC ?  GSetNAtt NAG_Relationship 0 0>
 REPUTATION <TReputation NAV_DefPlayerTeam ? ?>
 FacXP+ <GrabFaction ? GAddNAtt NAG_Experience NAS_FacXP ?>

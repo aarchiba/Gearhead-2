@@ -751,7 +751,8 @@ Content
 	end
 	inv
 		NPC Mercenary
-		update <if= V1 0 V= 1 1 SelfLevel PCRenown>
+		update <if= V1 0 V= 1 1  V= 2 PCRenown ifG 15 V2 else GoLevel V= 2 10 V+ 2 d15 Goto GoLevel>
+		GoLevel <SelfLevel V2>
 		MOTIVATION:Mercenary
 	end
 

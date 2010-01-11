@@ -547,15 +547,21 @@ begin
 				AddNAtt( NPC^.NA , NAG_CharDescription , NAS_DAge , ( Random( 15 ) + RollStep( 5 ) ) );
 			end;
 
+		{ If setting a relationship, also set the NumConversation }
+		{ attribute. I'd like to avoid the original Dune's "I am Duke }
+		{ Atriedes, your father" crap. }
 		end else if CCD_Cmd = 'FRIEND' then begin
 			SetNAtt( NPC^.NA , NAG_Relationship , 0 , NAV_Friend );
+			SetNAtt( NPC^.NA , NAG_Personal , NAS_NumConversation , 100 );
 		end else if CCD_Cmd = 'FAMILY' then begin
 			SetNAtt( NPC^.NA , NAG_Relationship , 0 , NAV_Family );
+			SetNAtt( NPC^.NA , NAG_Personal , NAS_NumConversation , 100 );
 		end else if CCD_Cmd = 'LOVER' then begin
 			SetNAtt( NPC^.NA , NAG_Relationship , 0 , NAV_Lover );
+			SetNAtt( NPC^.NA , NAG_Personal , NAS_NumConversation , 100 );
 		end else if CCD_Cmd = 'ARCHENEMY' then begin
 			SetNAtt( NPC^.NA , NAG_Relationship , 0 , NAV_ArchEnemy );
-
+			SetNAtt( NPC^.NA , NAG_Personal , NAS_NumConversation , 100 );
 		end;
 	end;
 

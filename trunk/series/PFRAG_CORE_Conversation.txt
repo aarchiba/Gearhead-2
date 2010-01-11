@@ -1,0 +1,35 @@
+%%
+%%  *CS_GoalExpo Content
+%%
+%% The PC has a dramatic goal. The NPC will help the PC with this goal, as long
+%% as the PC does something in return.
+%%
+%%  PARAM1: Exit label
+%%
+
+Persona
+	requires <*CS_GoalExpo *CORE_INTRO>
+	START <NewChat Say %id%01 AddChat %id%01>
+	result%id%01 <goto %1%>
+	Msg%id%01 <>
+	Prompt%id%01 <I'll do my best.>
+
+Persona
+	requires <*CS_GoalExpo *CORE_DEF_>
+	START <NewChat Say %id%01 AddChat %id%01>
+	result%id%01 <goto %1%>
+	Msg%id%01 <There have been some troubles in \SCENE RootSceneID lately, I'm sure you're aware...>
+	Msg%id%01_1 <>
+	CMsg%id%01_1 <ifNPCOK &EnemyNPC Accept>
+	Msg%id%01_2 <>
+	CMsg%id%01_2 <ifFactionExists &EnemyFac Accept>
+	Prompt%id%01 <That's why I'm here.>
+	Prompt%id%01_1 <I know. That's why I came.>
+	Prompt%id%01_2 <No kidding.>
+
+Persona
+	requires <*CS_GoalExpo *CORE_OFF_>
+	START <Goto %1%>
+
+
+

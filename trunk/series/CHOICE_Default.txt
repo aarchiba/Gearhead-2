@@ -52,6 +52,64 @@ Choice 2
 
 	Msg%id%01 <You decided to go defend %name1%.>
 
+Choice 3
+	name <Defense 3>
+	desc <Complete this option track to earn more reinforcements in final battle.>
+	desig <DEF_3>
+	requires <:DEF_2>
+
+	% E1 is the city for the next episode.
+	Element1 <Scene City !Far -7 !Ally -7 !Okay -3 !XClude -2>
+
+	Prompt <%name1% must be protected.>
+	Reply <Good luck with that.>
+	Alert <You decide to go protect %name1%.>
+
+	Choice <StoryNote %id%01 &SetEpisodeScene %1%>
+
+	Msg%id%01 <You decided to protect %name1%.>
+
+Choice 4
+	name <Defense 4>
+	desc <Complete this option track to earn more reinforcements in final battle.>
+	desig <DEF_4>
+	requires <:DEF_3>
+
+	% E1 is the city for the next episode.
+	Element1 <Scene City !Far -7 !Ally -7 !Okay -3 !XClude -2>
+
+	Prompt <I'll defend %name1%.>
+	Prompt_1 <%name1% is probably \PERSONA &EnemyNPC 's next target.>
+	CPrompt_1 <ifNPCOK &EnemyNPC Accept>
+	Prompt_2 <%name1% must be protected from \FACTION &EnemyFac .>
+	CPrompt_2 <ifFactionExists &EnemyFac Accept>
+	Reply <Good luck with that.>
+	Alert <You decide to go protect %name1%.>
+
+	Choice <StoryNote %id%01 &SetEpisodeScene %1%>
+
+	Msg%id%01 <You decided to protect %name1%.>
+
+Choice 5
+	name <Defense 5>
+	desc <Complete this option track to earn more reinforcements in final battle.>
+	desig <DEF_5>
+	requires <:DEF_4>
+
+	% E1 is the city for the next episode.
+	Element1 <Scene City !Far -7 !Ally -7 !Okay -3 !XClude -2>
+
+	Prompt <I'll defend %name1%.>
+	Prompt_1 <%name1% is probably \PERSONA &EnemyNPC 's next target.>
+	CPrompt_1 <ifNPCOK &EnemyNPC Accept>
+	Prompt_2 <%name1% must be protected from \FACTION &EnemyFac .>
+	CPrompt_2 <ifFactionExists &EnemyFac Accept>
+	Reply <Good luck with that.>
+	Alert <You decide to go protect %name1%.>
+
+	Choice <StoryNote %id%01 &SetEpisodeScene %1%>
+
+	Msg%id%01 <You decided to protect %name1%.>
 
 Choice 6
 	name <Offense 1>
@@ -69,15 +127,102 @@ Choice 6
 
 	Msg%id%01 <You decided to follow the action to %name1%.>
 
+Choice 7
+	name <Offense 2>
+	desc <Complete this option tract to weaken the enemy forces in final battle.>
+	desig <OFF_2>
+	requires <:OFF_1>
+
+	% E1 is the city for the next episode.
+	Element1 <Scene City !Far -7 !Ally -7 !Okay -3 !XClude -2>
+
+	Prompt <I need some more action.>
+	Prompt_1 <I want to keep fighting \PERSONA &EnemyNPC .>
+	CPrompt_1 <ifNPCOK &EnemyNPC Accept>
+
+	Reply <Good luck with that. You know, I hear that they could use someone with your talents in %name1%. You might want to try looking for work there.>
+	Alert <You decide to go seek work in %name1%.>
+
+	Choice <StoryNote %id%01 &SetEpisodeScene %1%>
+
+	Msg%id%01 <You decided to follow the action to %name1%.>
+
+Choice 8
+	name <Offense 3>
+	desc <Complete this option tract to weaken the enemy forces in final battle.>
+	desig <OFF_3>
+	requires <:OFF_2>
+
+	% E1 is the city for the next episode.
+	Element1 <Scene City !Far -7 !Ally -7 !Okay -3 !XClude -2>
+
+	Prompt <I'll be heading to wherever the action is.>
+	Prompt_1 <\PERSONA &EnemyNPC must be stopped.>
+	CPrompt_1 <ifNPCOK &EnemyNPC Accept>
+	Prompt_2 <I'll keep fighting \FACTION &EnemyFac .>
+	CPrompt_2 <ifFactionExists &EnemyFac Accept>
+
+	Reply <Good luck with that. You know, I hear that they could use someone with your talents in %name1%. You might want to try looking for work there.>
+	Alert <You decide to go seek work in %name1%.>
+
+	Choice <StoryNote %id%01 &SetEpisodeScene %1%>
+
+	Msg%id%01 <You decided to follow the action to %name1%.>
+
+Choice 9
+	name <Offense 4>
+	desc <Complete this option tract to weaken the enemy forces in final battle.>
+	desig <OFF_4>
+	requires <:OFF_3>
+
+	% E1 is the city for the next episode.
+	Element1 <Scene City !Far -7 !Ally -7 !Okay -3 !XClude -2>
+
+	Prompt <I'll just keep on fighting.>
+	Prompt_1 <\PERSONA &EnemyNPC needs a proper arse-kicking.>
+	CPrompt_1 <ifNPCOK &EnemyNPC Accept>
+	Prompt_2 <I'll take the fight to \FACTION &EnemyFac .>
+	CPrompt_2 <ifFactionExists &EnemyFac Accept>
+
+	Reply <Good luck with that. You know, I hear that they could use someone with your talents in %name1%. You might want to try looking for work there.>
+	Alert <You decide to go seek work in %name1%.>
+
+	Choice <StoryNote %id%01 &SetEpisodeScene %1%>
+
+	Msg%id%01 <You decided to follow the action to %name1%.>
+
+Choice 10
+	name <Offense 5>
+	desc <Complete this option tract to weaken the enemy forces in final battle.>
+	desig <OFF_5>
+	requires <:OFF_4>
+
+	% E1 is the city for the next episode.
+	Element1 <Scene City !Far -7 !Ally -7 !Okay -3 !XClude -2>
+
+	Prompt <It's time to put aside the bubblegum and get serious.>
+	Prompt_1 <I'm going to stop \PERSONA &EnemyNPC .>
+	CPrompt_1 <ifNPCOK &EnemyNPC Accept>
+	Prompt_2 <I plan to stop \FACTION &EnemyFac .>
+	CPrompt_2 <ifFactionExists &EnemyFac Accept>
+
+	Reply <Good luck with that. You know, I hear that they could use someone with your talents in %name1%. You might want to try looking for work there.>
+	Alert <You decide to go seek work in %name1%.>
+
+	Choice <StoryNote %id%01 &SetEpisodeScene %1%>
+
+	Msg%id%01 <You decided to follow the action to %name1%.>
+
+
 Choice 11
-	name <Reward 1: Seek Training>
+	name <Reward 1: Seek Training 1>
 	desc <Take this option to earn immediate benefits for the PC.>
 	desig <REW_1>
 
 	% E1 is the city for the next episode.
 	Element1 <Scene City !Far -7 !Ally -7 !Okay -3 !XClude -2>
 
-	Prompt <I need to work on my skills some more.>
+	Prompt <I need to work on my skills.>
 	Reply <I hear that you could do that in %name1%.>
 	Alert <You decide to seek training in %name1%.>
 

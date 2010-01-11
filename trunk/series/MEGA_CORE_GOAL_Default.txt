@@ -41,6 +41,31 @@ Content
 	end
 
 %%
+%% *CS_WinGoal Content
+%%
+%%  The PC has completed the MAIN course of this episode and is about to be
+%%  rewarded. The exact reward is, of course, going to depend upon the current
+%%  goal.
+%%
+
+Content
+	name <Here, have some money>
+	desc <The NPC will pay the PC for the job.>
+	requires <*CS_WinGoal (*CORE_Intro|*CORE_DEF_1|*CORE_DEF_2|*CORE_DEF_3|*CORE_DEF_4|*CORE_OFF_1|*CORE_OFF_2|*CORE_OFF_3|*CORE_OFF_4)>
+
+	% E1 is the NPC.
+
+	start <ifNPCDead %1% SMemo 0 WinEpisode>
+
+	sub
+		Persona 1
+		greeting <if= PlotStatus %plotid% %id% else %pop% gOTO .%id%_GoReportSuccess>
+		*.%id%_GoReportSuccess <*MissionWasSuccess&Reward .%id%_GoEnd &AllyFac &EnemyFac>
+		.%id%_GoEnd <CashPrize Reward StoryDL 500 SMemo 0  AddReact d10  WinEpisode>
+	end
+
+
+%%
 %% *CS_WinTask Content
 %%	&Protection	The PC protected the NPC from some threat, real or imagined
 %%	&NoReward	The PC came into this task knowing there'd be no reward
@@ -232,23 +257,6 @@ Content
 %% Param1: The Mission-giver
 %%
 
-Content
-	name <Here, have some money>
-	desc <The NPC will pay the PC for the job.>
-	requires <*CS_CAWinMission>
-
-	% E1 is the NPC.
-
-	start <ifNPCDead %1% SMemo 0 WinComp 0 .%id%_loss>
-	.%id%_loss <+T-- +F-->
-
-	sub
-		Persona 1
-		greeting <if= PlotStatus %plotid% %id% else %pop% gOTO .%id%_GoReportSuccess>
-		*.%id%_GoReportSuccess <*MissionWasSuccess&Reward .%id%_GoEnd &AllyFac &EnemyFac>
-		.%id%_GoEnd <CashPrize Reward StoryDL 500 SMemo 0  AddReact d10  NTBWinComp 0 .%id%_win>
-		.%id%_win <+T-- +F-->
-	end
 
 Content
 	name <You Have Another Mission>

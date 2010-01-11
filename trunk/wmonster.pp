@@ -89,6 +89,7 @@ var
 	it: Integer;
 begin
 	it := MonsterThreatLevel( Mon );
+	if Renown < 1 then Renown := 1;
 	if it > Renown then begin
 		it := ( it * 3 - Renown * 2 ) * BaseStrengthValue div Renown;
 	end else begin
@@ -136,6 +137,7 @@ begin
 	Total := 0;
 	Smallest := 0;
 	SmallTV := 100000;
+	if Renown < 1 then Renown := 1;
 	MaxRenown := ( Renown * 3 ) div 2;
 	if MaxRenown < ( Renown + 20 ) then MaxRenown := Renown + 20;
 	while WM <> Nil do begin

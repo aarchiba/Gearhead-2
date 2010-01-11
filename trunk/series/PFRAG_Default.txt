@@ -1478,7 +1478,7 @@ Prompt%id%03_2 <Probably fight somebody. No idea who yet.>
 
 
 	Persona
-	requires <*AreYouHereAboutJob &Mecha>
+	requires <*AreYouHereAboutJob &Mecha -FRIEND>
 	Start <if= V%id%01 0 else %1% V= %id%01 1 NewChat ifG PCRep 6 35 else .%id%_GoNoRenown Say %id%01 AddChat %id%01 AddChat %id%02>
 	.%id%_GoNoRenown <ifG React 40 else .%id%_GoNoLike Say %id%02 AddChat %id%01 AddChat %id%02>
 	.%id%_GoNoLike <Say %id%04 AddChat %id%04  AddChat %id%05  AddChat %id%06>
