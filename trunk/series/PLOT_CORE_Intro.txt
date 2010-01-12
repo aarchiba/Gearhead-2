@@ -27,6 +27,159 @@ Plot
 	% SubPlot1 is the conversation you're going to have.
 	subplot1 <*CS_Conversation 2>
 
+Plot
+	name <In The Army Now>
+	desc <The NPC is joining the army; maybe the PC can join as well!>
+	requires <*CORE_Intro P:-- R:-- -L:ENEMY ~+Gpe>
+	changes <P:++>
+
+	% Element1 is the NPC to meet
+	% Element2 is a military faction allied to the current city
+	% Element3 is a nearby member of the faction
+	% Element4 is an enemy of the faction
+	% Element5 is the meeting scene
+	% Element6 is the Cavalier's Club
+	element1 <NewNPC -3 -7 Friend>
+	place1 <6 pass>
+	Element2 <Faction Military !Ally -7 !Okay 1>
+	Element3 <Character !Comrade 2 !Near -7 NEVERFAIL>
+	Place3 </>
+	Element4 <Faction !Enemy 2>
+	Element5 <Scene Building Public !Near -7 !Okay 2>
+	element6 <Scene !Near -7 cavclub>
+
+	% P%id%01 = Initialization Counter
+	update <if= P%id%01 0 P= %id%01 1 NPCLevel %1% StoryDL SetNPCFaction %1% %2%>
+
+	start <if= PlotStatus %plotid% 0 else .%id%_GoCheckDead if= SceneID %6% Alert %id%01  SetPlotStatus %plotid% %id%>
+	.%id%_GoCheckDead <if= PlotStatus %plotid% %id% ifNPCDead %1% LoseEpisode>
+
+	Msg%id%01 <As you enter the Cavalier's Club, you notice your friend %name1% wearing a new uniform.>
+
+	% SubPlot1 is the conversation you're going to have.
+	subplot1 <*CS_Conversation 3>
+
+	sub
+		Persona 1
+		greeting <if= PlotStatus %plotid% %id% else GoChat ifChatNPCInPlay else .%id%_GoNotHere Goto .%id%_GoGreet>
+		GoChat <NewChat SayAnything>
+		% v%id%01 = First Reputation Counter
+		*.%id%_GoNotHere <*NotByPhone>
+		*.%id%_GoGreet <*HowAreYou .%id%_GoAsk>
+		.%id%_GoAsk <NewChat Say %id%01 AddChat %id%01 AddChat %id%02 AlterContext .%id%_UnknownEnemy>
+		.%id%_UnknownEnemy <+Pun>
+		GoStartMeeting <SMemo %id%05 MoveNPC %3% %5% SetPlotStatus %plotid1% %id1%>
+		result%id%01 <NewChat Say %id%02    AddCHat %id%03 AddChat %id%04 AddChat %id%05    if= V%id%01 0 V= %id%01 1 AddCheerful d6>
+		result%id%02 <NewChat Say %id%03    AddCHat %id%03 AddChat %id%04 AddChat %id%05    if= V%id%01 0 V= %id%01 1 AddCheerful -d6>
+		result%id%03 <NewChat Say %id%04   SMemo %id%05  History %id%06   PCAlly %1% &SetPartnerNPC %1% &AddPartnerToLance  SetXXRMotivation %1% XXR_M_Professional SetXXRAttitude %1% XXR_A_IsJunior  &SetAllyFac %2% SetPCFac %2% XPV 200 Goto GoStartMeeting>
+		result%id%04 <NewChat Say %id%07   StoryNote %id%05               PCAlly %1% &SetPartnerNPC %1% &AddPartnerToLance  SetXXRAttitude %1% XXR_A_IsJunior  Goto GoStartMeeting>
+		result%id%05 <NewChat Say %id%08 AddChat %id%06 AddChat %id%07>
+		result%id%06 <EndChat Say %id%09 SMemo 0 History %id%10 FreezeNPC %1% LoseEpisode>
+		result%id%07 <Goto result%id%04>
+		Msg%id%01 <There's been a lot of fighting with %name4% recently. Some people say there's going to be a war... That's why I've decided to sign up with %name2%.>
+		Msg%id%02 <I'm glad you think so. How would you like to join %name2% as well? I'm supposed to go see %name3% about my first mission, but I'm a bit nervous. I'd feel better if I had someone else to go with.>
+		Msg%id%03 <Why do you always have to be so mean? I told %name3% that you were interested in joining as well. Would you come with me on the first mission? I'm a bit nervous about it, and could really use the morale support.>
+		Msg%id%04 <Really? Wow! Alright then, let's head over to %name5% and see what this mission is about. This is so exciting!>
+		Msg%id%05 <You agreed to go with %name1% to meet %name3% at %name5% for a mission.>
+		Msg%id%06 <You agreed to join %name2% with %name1%.>
+		Msg%id%07 <Great! Let's head over to %name5% and see what this mission is about, then.>
+		Msg%id%08 <Are you sure I can't change your mind? You'll be sorry when %name4% invades and forces us all to wear lederhosen.>
+		Msg%id%09 <So that's how it is. I'll see you later, \PC . I'm likely to be very busy with my duties for the next while at least.>
+		Msg%id%10 <Your friend %name1% joined %name2% because of the war brewing.>
+		Prompt%id%01 <Great! This could be a good opportunity for you.>
+		Prompt%id%02 <I knew you were a fool, but I didn't know it was this bad.>
+		Prompt%id%03 <Yes, I'd love to join %name2%.>
+		Prompt%id%04 <I'll come on your mission, but I'm not joining.>
+		Prompt%id%05 <Sorry, but you can do this by yourself.>
+		Prompt%id%06 <My mind is made. Don't ask me again.>
+		Prompt%id%07 <Alright, I'll go on your stupid mission.>
+	end
+
+Plot
+	name <Fix My Stuff>
+	desc <The PC will be asked to fix some things.>
+	requires <*CORE_Intro C:CRAFT>
+
+	% E1 is the person who has problems. Lots of them.
+	% E2 is the corporate executive to whom E1 will reccomend the PC
+	%   following the repairs.
+	% E3 is a scene for the next meeting
+	% E4 is the Cavalier's Club
+	element1 <NewNPC -3 -7 Friend>
+	place1 <4 pass>
+	Element2 <Character Corporate !Near -7 !Okay -3 !Okay 1 !XClude -2>
+	Place2 </>
+	Element3 <Scene Building Public !Near -7 !Okay -3 !Okay 2>
+	element4 <Scene !Near -7 cavclub>
+
+	start <if= PlotStatus %plotid% 0 else .%id%_GoCheckDead if= SceneID %4% Alert %id%01  SetPlotStatus %plotid% %id%>
+	.%id%_GoCheckDead <if= PlotStatus %plotid% %id% ifNPCDead %1% LoseEpisode MoveNPC %2% %3%>
+
+	Msg%id%01 <As you enter the Cavalier's Club, you notice your friend %name1% looking somewhat lost.>
+
+	% SubPlot1 is the conversation you're going to have.
+	subplot1 <*CS_Conversation 2>
+
+	sub
+		Persona 1
+		% V%id%01 = Have explained situation
+		% V%id%02 = Skill for test
+		greeting <if= PlotStatus %plotid% %id% else .%id%_GoChat if= V%id%01 0 else .%id%_GoCheckRepair Goto .%id%_GoKnownGreeting>
+		.%id%_GoChat <NewChat SayAnything>
+		*.%id%_GoKnownGreeting <*HowAreYou .%id%_GoExplain>
+		.%id%_GoGiveUp <NewChat Say %id%01 History %id%12  AddChat %id%12  Goto .%id%_GoSetMeeting>
+		.%id%_GoExplain <NewChat Say %id%02 StoryNote %id%03   AddChat %id%01 AddChat %id%02   V= %id%01 1>
+		.%id%_GoCheckRepair <NewChat Say %id%04 AddChat %id%03 AddChat %id%04 AddChat %id%05 AddChat %id%06>
+		.%id%_GoRepairFailed <NewChat Say %id%09 AddChat %id%10 AddCHat %id%11 AddChat %id%06>
+		.%id%_GoRepairSucceed <AddReact d20  NewChat Say %id%10 History %id%17 XPV 100 SetXXRAttitude %1% XXR_A_Thankful AddChat %id%12 Goto .%id%_GoSetMeeting>
+		.%id%_GoSetMeeting <SMemo %id%12 MoveNPC %2% %3% SetPlotStatus %plotid1% %id1%>
+		result%id%01 <Goto .%id%_GoCheckRepair>
+		result%id%02 <NewChat Say %id%05 AddChat %id%07 AddChat %id%08>
+		result%id%03 <EndChat Say %id%06 V= %id%02 NAS_Repair AddChat %id%09>
+		result%id%04 <EndChat Say %id%07 V= %id%02 NAS_Repair AddChat %id%09>
+		result%id%05 <EndChat Say %id%08 V= %id%02 NAS_CodeBreaking AddChat %id%09>
+		result%id%06 <Goto .%id%_GoGiveUp>
+		result%id%07 <Goto .%id%_GoCheckRepair>
+		result%id%08 <Goto .%id%_GoGiveUp>
+		result%id%09 <ifSkillTest V%id%02 STAT_Craft SkillTar StoryDL else .%id%_GoRepairFailed Goto .%id%_GoRepairSucceed>
+		result%id%10 <NewChat Say %id%13 AddChat %id%03 AddChat %id%04 AddChat %id%05 AddChat %id%06>
+		result%id%11 <NewChat Say %id%14>
+		result%id%12 <NewChat Say %id%15>
+		Msg%id%01 <Yeah, maybe it's best that you're getting into this cavalier thing, since you're total crap as a mechanic. Tell you what, though, I know that %name2% needs help with something. I can put in a good word for you.>
+		Msg%id%02 <I need some technical help. There are a couple of things around my house which need fixing. I know you're pretty good with machines, so if you wouldn't mind...>
+		Msg%id%03 <%name1% asked you to fix some of \PPR %1% things.>
+		Msg%id%04 <My videoset is busted, my computer's picked up some kind of virus, and my car has been making a kind of grindy-whiny noise.>
+		Msg%id%05 <I thought you were a professional... Anyhow, I can't afford to bring all this stuff to a shop.>
+		Msg%id%06 <Great. I don't know exactly what's wrong; I had the plasma grid relined just a few weeks ago.>
+		Msg%id%07 <Thanks. Sometimes there's no picture, but when there is it's all purple. The audio works fine, though.>
+		Msg%id%08 <I don't know what's wrong with it. My friend was using it a few days ago; I think he might have done something with it.>
+		Msg%id%09 <I'm sorry, but you don't seem to be good enough to fix this.>
+		Msg%id%10_10 <Thanks, it works now! Say, if you're looking for some work that might actually pay money, I know that %name2% needs help with something. I can put in a good word for you.>
+		CMsg%id%10_10 <if= NPCFac %2% 0 Accept>
+		Msg%id%10_20 <Thanks, it works now! Say, if you're looking for some work that might actually pay money, I know that %name2% of \FACTION NPCFac %2% needs help with something. I can put in a good word for you.>
+		CMsg%id%10_20 <if# NPCFac %2% 0 Accept>
+		Msg%id%11 <Thanks, it works now! I wish I had some useful information to give you in exchange for the help, but at least you have my gratitude.>
+		Msg%id%12 <%name1% sent you to do some work for %name2% at %name3%.>
+		Msg%id%13 <Sure. What do you want to take a look at?>
+		Msg%id%14 <No problem. I may be asking for free service, but I'm not going to be pushy about it.>
+		Msg%id%15 <You can find \OPR %2% at %name3% . Just tell \OPR %2% that I sent you and you're sure to get a job.>
+		Msg%id%16 <It's up to you. Once again, thanks for the help.>
+		Msg%id%17 <You repaired your friend %name1%'s stuff.>
+		Prompt%id%01 <Alright, let me take a look.>
+		Prompt%id%02 <Why don't you go to a professional, instead?>
+		Prompt%id%03 <I'll take a look at the car.>
+		Prompt%id%04 <I'll take a look at the videoset.>
+		Prompt%id%05 <I'll take a look at the computer.>
+		Prompt%id%06 <That's enough. I can't fix your stuff.>
+		Prompt%id%07 <Fine. Tell me what's wrong.>
+		Prompt%id%08 <You can't afford me, either.>
+		Prompt%id%09 <[Attempt Repair]>
+		Prompt%id%10 <Let me try something else.>
+		Prompt%id%11 <I'll be back later to try again.>
+		Prompt%id%12 <I'll do that.>
+	end
+
+
 
 
 

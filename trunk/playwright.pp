@@ -1428,15 +1428,43 @@ begin
 	end;
 end;
 
+Function StoryPlotRequest( Story: GearPtr ): String;
+	{ Return the plotrequest to be used by this story. The plot request }
+	{ depends on the provided XXRAN_PATTERN attribute and the dramatic }
+	{ choice made by the player. }
+var
+	it: String;
+	C: GearPtr;
+begin
+	{ Start with the plot request. }
+	it := SAttValue( Story^.SA , 'XXRAN_PATTERN' );
+
+	{ FOr the conclusion, attach 'FINAL' to the plot_request. }
+	if NAttValue( Story^.NA , NAG_Narrative , NAS_DifficultyLevel ) > 80 then begin
+		it := it + 'FINAL_';
+	end;
+
+
+	{ Attach the current choice to the plot_request. }
+	C := SeekDramaticChoice( NAttValue( Story^.NA , NAG_XXRan , NAS_DramaticChoice ) );
+	if C <> Nil then begin
+		it := it + SAttValue( C^.SA , 'DESIG' );
+	end else begin
+		it := it + 'INTRO';
+	end;
+
+	StoryPlotRequest := it;
+end;
+
 Function StoryContext( GB: GameBoardPtr; Story: GearPtr ): String;
 	{ Describe the context of this story in a concise string. }
 var
 	it,msg: String;
 	T: Integer;
-	LList: GearPtr;
+	C,LList: GearPtr;
 begin
-	{ Get the basic context. }
-	it := SAttValue( Story^.SA , 'CONTEXT' );
+	{ Start with the basic context. }
+	it := StoryPlotRequest( Story ) + ' ' + SAttValue( Story^.SA , 'CONTEXT' );
 
 	{ Add tags for the choices made so far. }
 	LList := Dramatic_Choices;
@@ -2111,25 +2139,10 @@ Procedure PrepareNewComponent( Story: GearPtr; GB: GameBoardPtr );
 var
 	C: GearPtr;
 	Shopping_List: NAttPtr;
-	plot_request,plot_desc: String;
+	plot_desc: String;
 	MergeOK: Boolean;
 begin
-	plot_request := SAttValue( Story^.SA , 'XXRAN_PATTERN' );
-
-	{ FOr the conclusion, attach 'FINAL' to the plot_request. }
-	if NAttValue( Story^.NA , NAG_Narrative , NAS_DifficultyLevel ) > 80 then begin
-		plot_request := plot_request + 'FINAL_';
-	end;
-
-	{ Attach the current choice to the plot_request. }
-	C := SeekDramaticChoice( NAttValue( Story^.NA , NAG_XXRan , NAS_DramaticChoice ) );
-	if C <> Nil then begin
-		plot_request := plot_request + SAttValue( C^.SA , 'DESIG' );
-	end else begin
-		plot_request := plot_request + 'INTRO';
-	end;
-
-	plot_desc := plot_request + ' ' + StoryContext( GB , Story );
+	plot_desc := StoryContext( GB , Story );
 	Shopping_List := CreateComponentList( Standard_Plots , plot_desc );
 
 	{ If xxran debug is on, print some extra information. }

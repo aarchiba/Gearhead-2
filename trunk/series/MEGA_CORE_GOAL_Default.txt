@@ -42,6 +42,7 @@ Content
 
 %%
 %% *CS_WinGoal Content
+%%	&NoCash		The PC will not get any cash for this mission
 %%
 %%  The PC has completed the MAIN course of this episode and is about to be
 %%  rewarded. The exact reward is, of course, going to depend upon the current
@@ -49,83 +50,35 @@ Content
 %%
 
 Content
-	name <Here, have some money>
-	desc <The NPC will pay the PC for the job.>
-	requires <*CS_WinGoal (*CORE_Intro|*CORE_DEF_1|*CORE_DEF_2|*CORE_DEF_3|*CORE_DEF_4|*CORE_OFF_1|*CORE_OFF_2|*CORE_OFF_3|*CORE_OFF_4)>
+	name <Simple Thanks>
+	desc <The PC will be thanked for helping. That's it, I'm afraid.>
+	requires <*CS_WinGoal &NoCash>
 
-	% E1 is the NPC.
+	% E1 is the NPC
 
 	start <ifNPCDead %1% SMemo 0 WinEpisode>
 
 	sub
 		Persona 1
-		greeting <if= PlotStatus %plotid% %id% else %pop% gOTO .%id%_GoReportSuccess>
-		*.%id%_GoReportSuccess <*MissionWasSuccess&Reward .%id%_GoEnd &AllyFac &EnemyFac>
-		.%id%_GoEnd <CashPrize Reward StoryDL 500 SMemo 0  AddReact d10  WinEpisode>
-	end
-
-
-%%
-%% *CS_WinTask Content
-%%	&Protection	The PC protected the NPC from some threat, real or imagined
-%%	&NoReward	The PC came into this task knowing there'd be no reward
-%%
-%%  The PC didn't exactly have a mission, but someone asked him to do something
-%%  and he did it. Hooray! Rewards for this subplot are likely to be more
-%%  personal than the rewards for a formal mission.
-%%
-%% Param1: The Task-giver.
-%%
-
-Content
-	name <If you want a paying job...>
-	desc <The NPC will send the PC somewhere to find a paying mission.>
-	requires <*CS_WinTask &NoReward>
-
-	% E1 is the NPC.
-	% E2 is a scene to search
-	Element2 <Scene (Building|Meeting) Public !Near -7 !Okay -3 !XClude -2>
-
-	start <ifNPCDead %1% SMemo 0 WinComp 0 .%id%_loss>
-	.%id%_loss <+T-- +F-->
-
-	sub
-		Persona 1
-		greeting <if= PlotStatus %plotid% %id% else %pop% NewChat Say %id%01 StoryNote %id%02 AddReact d10  WinComp %2% .%id%_win>
-		.%id%_win <+Tgs +Fmi>
-		Msg%id%01 <Wow, you're great! If you'd like to get a paying job next time, you should look for work at %name2%... that's what I've heard, anyhow.>
-		Msg%id%01_1 <>
-		CMsg%id%01_1 <ifNPCSociable Accept>
-		Msg%id%01_2 <>
-		CMsg%id%01_2 <ifNPCShy Accept>
-		Msg%id%01_3 <>
-		CMsg%id%01_3 <ifNPCEasygoing Accept>
-		Msg%id%01_4 <>
-		CMsg%id%01_4 <ifNPCPassionate Accept>
-		Msg%id%01_5 <>
-		CMsg%id%01_5 <ifNPCCheerful Accept>
-		Msg%id%01_6 <>
-		CMsg%id%01_6 <ifNPCMelancholy Accept>
-		Msg%id%02 <%name1% suggested you look for work at %name2%.>
+		greeting <if= PlotStatus %plotid% %id% else %pop% NewChat Say %id%01 AddReact 10 AddHeroic 1 WinEpisode>
+		Msg%id%01 <Thank you, \PC . You did everything you said you would.>
 	end
 
 Content
 	name <I'll Help You Out>
 	desc <The PC's friend will offer to join him, becoming either an ally or the partner.>
-	requires <*CS_WinTask 1:FRIEND ~R:-->
+	requires <*CS_WinGoal 1:FRIEND ~R:-- &NoCash>
 
 	% E1 is the NPC
 
-	start <ifNPCDead %1% SMemo 0 WinComp 0 .%id%_loss>
-	.%id%_loss <+T-- +F-->
+	start <ifNPCDead %1% SMemo 0 WinEpisode>
 
 	sub
 		Persona 1
 		greeting <if= PlotStatus %plotid% %id% else %pop% ifChatNPCInPlay else .%id%_GoComeHere NewChat Say %id%01 AddChat %id%01 AddCHat %id%02 AddChat %id%03>
 		.%id%_GoComeHere <NewChat Say %id%07>
-		.%id%_GoBecomeAlly <PCAlly %1% NPCLevel %1% StoryDL History %id%05 SMemo 0 NTBWinComp 0 .%id%_win>
-		.%id%_win <+T-- +F-->
-		result%id%01 <History %id%02 NPCLevel %1% StoryDL &SetPartnerNPC %1% &AddPartnerToLance SMemo 0 AddReact d10  NTBWinComp 0 .%id%_win Goto .%id%_GoJoinLance>
+		.%id%_GoBecomeAlly <PCAlly %1% NPCLevel %1% StoryDL History %id%05 SMemo 0 WinEpisode>
+		result%id%01 <History %id%02 NPCLevel %1% StoryDL &SetPartnerNPC %1% &AddPartnerToLance SMemo 0 AddReact d10  WinEpisode Goto .%id%_GoJoinLance>
 		*.%id%_GoJoinLance <*WelcomeToLance>
 		result%id%02 <ifNPCInPlay &PartnerNPC else .%id%_GoEndR2 Monologue &PartnerNPC %id%03 Goto .%id%_GoEndR2>
 		.%id%_GoEndR2 <NewChat Say %id%04 Goto .%id%_GoBecomeAlly>
@@ -144,40 +97,27 @@ Content
 		Prompt%id%03 <Not right now, but if I need help I'll let you know.>
 	end
 
+
 Content
 	name <Here, have some money>
 	desc <The NPC will pay the PC for the job.>
-	requires <*CS_WinTask -1:FRIEND -&NoReward>
+	requires <*CS_WinGoal (*CORE_Intro|*CORE_DEF_1|*CORE_DEF_2|*CORE_DEF_3|*CORE_DEF_4|*CORE_OFF_1|*CORE_OFF_2|*CORE_OFF_3|*CORE_OFF_4) -&NoCash>
 
 	% E1 is the NPC.
 
-	start <ifNPCDead %1% SMemo 0 WinComp 0 .%id%_loss>
-	.%id%_loss <+T-- +F-->
+	start <ifNPCDead %1% SMemo 0 WinEpisode>
 
 	sub
 		Persona 1
-		greeting <if= PlotStatus %plotid% %id% else %pop% NewChat Say %id%01 CashPrize Reward StoryDL 500 SMemo 0 AddReact d10  NTBWinComp 0 .%id%_win>
-		.%id%_win <+T-- +F-->
-		Msg%id%01 <Thanks for your help. Here, I'd like for you to have this money.>
-		Msg%id%01_1 <>
-		CMsg%id%01_1 <ifNPCSociable Accept>
-		Msg%id%01_2 <>
-		CMsg%id%01_2 <ifNPCShy Accept>
-		Msg%id%01_3 <>
-		CMsg%id%01_3 <ifNPCEasygoing Accept>
-		Msg%id%01_4 <>
-		CMsg%id%01_4 <ifNPCPassionate Accept>
-		Msg%id%01_5 <>
-		CMsg%id%01_5 <ifNPCCheerful Accept>
-		Msg%id%01_6 <>
-		CMsg%id%01_6 <ifNPCMelancholy Accept>
+		greeting <if= PlotStatus %plotid% %id% else %pop% gOTO .%id%_GoReportSuccess>
+		*.%id%_GoReportSuccess <*MissionWasSuccess&Reward .%id%_GoEnd &AllyFac &EnemyFac>
+		.%id%_GoEnd <CashPrize Reward StoryDL 500 SMemo 0  AddReact d10  WinEpisode>
 	end
 
 %%
-%% *CS_LoseTask Content
+%% *CS_LoseGoal Content
 %%
-%% The PC didn't exactly have a mission, but someone asked him to do something
-%% and he failed. Bummer.
+%% The PC  has failed. Bummer.
 %%
 %% Param1: The Task-giver.
 %%
@@ -185,17 +125,15 @@ Content
 Content
 	name <Default Lose Task>
 	desc <The NPC will debrief the PC on the loss.>
-	requires <*CS_LoseTask>
+	requires <*CS_LoseGoal ~1:FRIEND ~1:LOVER>
 
 	% E1 is the NPC.
 
-	start <ifNPCDead %1% LoseComp 0 .%id%_loss>
-	.%id%_loss <+T-- +F-->
+	start <ifNPCDead %1% LoseEpisode>
 
 	sub
 		Persona 1
-		greeting <if= PlotStatus %plotid% %id% else %pop% NewChat Say %id%01 SMemo 0 AddReact -d4  NTBLoseComp 0 .%id%_loss>
-		.%id%_loss <+T-- +F-->
+		greeting <if= PlotStatus %plotid% %id% else %pop% NewChat Say %id%01 SMemo 0 AddReact -d4  LoseEpisode>
 		Msg%id%01 <That didn't go so well.>
 		Msg%id%01_1 <>
 		CMsg%id%01_1 <ifNPCSociable Accept>
@@ -211,8 +149,25 @@ Content
 		CMsg%id%01_6 <ifNPCMelancholy Accept>
 	end
 
+Content
+	name <Default Lose Mission>
+	desc <The NPC will debrief the PC on the loss.>
+	requires <*CS_LoseGoal>
+
+	% E1 is the NPC.
+
+	start <ifNPCDead %1% LoseEpisode>
+
+	sub
+		Persona 1
+		greeting <if= PlotStatus %plotid% %id% else %pop% gOTO .%id%_GoReportLoss>
+		*.%id%_GoReportLoss <*MissionWasFailure .%id%_GoEnd &AllyFac &EnemyFac>
+		.%id%_GoEnd <SMemo 0  AddReact -d6  LoseEpisode>
+	end
+
+
 %%
-%% *CS_MootMission Content
+%% *CS_MootGoal Content
 %%
 %% The mission has become unwinnable, somehow. This counts as a loss, but at least
 %% the NPC involved will be kind enough to explain what's happening.
@@ -223,13 +178,12 @@ Content
 Content
 	name <Default Moot>
 	desc <The NPC will debrief the PC on the loss.>
-	requires <*CS_MootMission>
+	requires <*CS_MootGoal>
 
 	% E1 is the NPC.
 
 	% p%id%01 = Email Counter
-	start <ifNPCDead %1% SMemo 0 LoseComp 0 .%id%_loss>
-	.%id%_loss <+T-- +F-->
+	start <ifNPCDead %1% SMemo 0 LoseEpisode>
 	update <if= p%id%01 0 P= %id%01 1 EMail %id%01>
 
 	Msg%id%01_1 <%name1% @ \SCENE NPCScene %1% :// Your mission has been cancelled.>
@@ -237,137 +191,75 @@ Content
 
 	sub
 		Persona 1
-		greeting <if= PlotStatus %plotid% %id% else %pop% NewChat Say %id%01 SMemo 0 NTBLoseComp 0 .%id%_loss>
-		.%id%_loss <+T-- +F-->
+		greeting <if= PlotStatus %plotid% %id% else %pop% NewChat Say %id%01 SMemo 0 LoseEpisode>
 		Msg%id%01 <I'm afraid that you took too long on that mission. It's over now.>
 	end
 
 
 %%
-%% *CS_CAWinMission Content
-%%	&RevealEF	The enemy faction has been revealed
+%% *CS_FriendFired_Win Content
 %%
-%% Catch-all win mission component.
-%% The PC has won a mission provided by the NPC. Note that the mission should not
-%% have altered the state of the story; therefore, this reward is free to do so
-%% itself.
+%% The PC's friend has just been fired from a faction, and for whatever reason this
+%% is a win for the PC.
 %%
 %% The parent plot sets the plot status to this layer's ID when ready.
 %%
-%% Param1: The Mission-giver
-%%
-
-
-Content
-	name <You Have Another Mission>
-	desc <The NPC will pay the PC, then direct him to another mission.>
-	requires <*CS_CAWinMission 1:PCFAC>
-
-	% E1 is the NPC.
-	% E2 is another NPC the PC can speak with
-	% E3 is a scene for the meeting
-	Element2 <Character !Near -7 !Comrade 1>
-	Element3 <Scene Building Public !Near -7 !Okay 2>
-
-	start <ifNPCDead %1% SMemo 0 WinComp 0 .%id%_loss>
-	.%id%_loss <+T-- +F-->
-
-	sub
-		Persona 1
-		greeting <if= PlotStatus %plotid% %id% else %pop% ifNPCOK %2% else .%id%_GoReportSuccess  NewChat Say %id%01 SMemo %id%02 History %id%03 Goto .%id%_GoEnd>
-		*.%id%_GoReportSuccess <*MissionWasSuccess&Reward .%id%_GoMeh &AllyFac &EnemyFac>
-		.%id%_GoEnd <CashPrize Reward StoryDL 500 &SetTargetNPC %2%  AddReact d10  WinComp %3% .%id%_win>
-		.%id%_win <+Tgt +Fmi>
-		.%id%_GoMeh <CashPrize Reward StoryDL 500  AddReact d10  NTBWinComp 0 .%id%_meh>
-		.%id%_meh <+T-- +F-->
-		Msg%id%01 <Good job on that mission. I think %name2% has some more work for you; you should go meet \OPR %2% at %name3%.>
-		Msg%id%01_1 <>
-		CMsg%id%01_1 <ifNPCSociable Accept>
-		Msg%id%01_2 <>
-		CMsg%id%01_2 <ifNPCShy Accept>
-		Msg%id%01_3 <>
-		CMsg%id%01_3 <ifNPCEasygoing Accept>
-		Msg%id%01_4 <>
-		CMsg%id%01_4 <ifNPCPassionate Accept>
-		Msg%id%01_5 <>
-		CMsg%id%01_5 <ifNPCCheerful Accept>
-		Msg%id%01_6 <>
-		CMsg%id%01_6 <ifNPCMelancholy Accept>
-		Msg%id%02 <%name1% sent you to %name2% at %name3% for another mission.>
-		Msg%id%03 <%name1% sent you to %name2% for another mission.>
-	end
-
-Content
-	name <Pass the Buck>
-	desc <The NPC will send the PC to talk with someone else.>
-	requires <*CS_CAWinMission>
-
-	% E1 is the NPC.
-	% E2 is another NPC the PC can speak with
-	% E3 is a scene for the meeting
-	Element2 <Character !Near -7 !Ally 1 !Okay -3>
-	Element3 <Scene Building Public !Near -7 !Okay 2>
-
-	start <ifNPCDead %1% SMemo 0 WinComp 0 .%id%_loss>
-	.%id%_loss <+T-- +F-->
-
-	sub
-		Persona 1
-		greeting <if= PlotStatus %plotid% %id% else %pop% SMemo 0  ifNPCOK %2% else .%id%_GoReportSuccess  if# ChatNPCFac 0 else .%id%_GoReportSuccess NewChat Say %id%01 SMemo %id%02 History %id%03 Goto .%id%_GoEnd>
-		*.%id%_GoReportSuccess <*MissionWasSuccess&Reward .%id%_GoMeh &AllyFac &EnemyFac>
-		.%id%_GoEnd <CashPrize Reward StoryDL 500 &SetTargetNPC %2%  AddReact d10  WinComp %3% .%id%_win>
-		.%id%_win <+Tgt +Fmi>
-		.%id%_GoMeh <CashPrize Reward StoryDL 500  AddReact d10  NTBWinComp 0 .%id%_meh>
-		.%id%_meh <+T-- +F-->
-		Msg%id%01 <Good work, \PC . If you want to see this through, I believe %name2% at %name3% has another mission you could help with.>
-		Msg%id%01_1 <Thanks \PC . We're going to need a lot of help to fight this problem... I believe %name2% at %name3% is looking for someone to run another mission, if you're interested.>
-		CMsg%id%01_1 <ifNPCSociable Accept>
-		Msg%id%01_2 <Good job. %name2% at %name3% has another mission for you, if you're interested.>
-		CMsg%id%01_2 <ifNPCShy Accept>
-		Msg%id%01_3 <Back for your pay, I see. I believe %name2% at %name3% has another mission if you're planning to continue this.>
-		CMsg%id%01_3 <ifNPCEasygoing Accept>
-		Msg%id%01_4 <One battle's over, but we're a long way from the end yet... %name2% could use some help over at %name3% , if you're up for another mission.>
-		CMsg%id%01_4 <ifNPCPassionate Accept>
-		Msg%id%01_5 <>
-		CMsg%id%01_5 <ifNPCCheerful Accept>
-		Msg%id%01_6 <>
-		CMsg%id%01_6 <ifNPCMelancholy Accept>
-		Msg%id%02 <%name1% sent you to %name2% at %name3% for another mission.>
-		Msg%id%03 <%name1% sent you to %name2% for another mission.>
-	end
-
-
-%%
-%% *CS_CALoseMission Content
-%%	&RevealEF	The enemy faction has been revealed
-%%
-%% Catch-all lose mission component.
-%% The PC has lost a mission provided by the NPC. Note that the mission should not
-%% have altered the state of the story; therefore, this reward is free to do so
-%% itself.
-%%
-%% The parent plot sets the plot status to this layer's ID when ready.
-%%
-%% Param1: The Mission-giver
+%% Param1: The NPC who has been fired
+%% Param2: The faction he's been fired from
 %%
 
 Content
-	name <Default Loss>
-	desc <The NPC will debrief the PC on the loss.>
-	requires <*CS_CALoseMission>
+	name <What did I do?>
+	desc <The friend wonders what he did wrong.>
+	requires <*CS_FriendFired_Win>
 
-	% E1 is the NPC.
+	% E1 is the friend
+	% E2 is the faction he's been fired from
+	% E3 is a public scene for the meeting
+	Element3 <Scene Building Public !NEar -7>
 
-	start <ifNPCDead %1% LoseComp 0 .%id%_loss>
-	.%id%_loss <+T-- +F-->
+	% p%id%01 = Initialization Counter
+	start <if= PlotStatus %plotid% %id% else %pop% ifNPCDead %1% LoseEpisode>
+	update <if= PlotStatus %plotid% %id% else %pop% if= P%id%01 0 P= %id%01 1 MoveAndPacifyNPC %1% %3% SetNPCFaction %1% 0 Email %id%01>
+
+	Msg%id%01_1 <%name1%@ \NARRATIVE 7 :// I've received bad news from %name2%... come meet me in %name3%.>
+	Msg%id%01_2 <%name1%@ \NARRATIVE 7 :// I've got some bad news. Come see me in %name3%.>
+	Msg%id%01_3 <%name1%@ \NARRATIVE 7 :// This has been a terrible day... I'd like to talk with you in %name3%.>
 
 	sub
 		Persona 1
-		greeting <if= PlotStatus %plotid% %id% else %pop% gOTO .%id%_GoReportLoss>
-		*.%id%_GoReportLoss <*MissionWasFailure .%id%_GoEnd &AllyFac &EnemyFac>
-		.%id%_GoEnd <SMemo 0  AddReact -d6  NTBLoseComp 0 .%id%_loss>
-		.%id%_loss <+T-- +F-->
+		greeting <if= PlotStatus %plotid% %id% else %pop% NewChat Say %id%01 StoryNote %id%03 AddChat %id%01 AddChat %id%02>
+		.%id%_next <+T-- +F-->
+		result%id%01 <NewChat Say %id%02  AddCheerful d6 WinEpisode>
+		result%id%02 <NewChat Say %id%02 WinEpisode>
+		Msg%id%01 <I don't understand what happened; I've been fired from %name2%.>
+		Msg%id%01_1 <I have some terrible news... I've been fired from %name2%. I don't know why, but they told me to go and never come back.>
+		Msg%id%01_2 <I've been fired from %name2%. It was really a shock... I thought I was doing so well.>
+		Msg%id%02 <I know I'll find something else in time, but for right now I'm feeling very disappointed.>
+		Msg%id%02_1 <The worst part is, I made a lot of new friends while at %name2%. I guess maybe I'll see them again, but I don't know...>
+		CMsg%id%02_1 <ifNPCSociable Accept>
+		Msg%id%02_2 <I think I probably will do better by myself. I was never much of a joiner, anyhow.>
+		CMsg%id%02_2 <ifNPCShy Accept>
+		Msg%id%02_3 <Eh, it's not that bad. I'll find something else, or I won't... either way is fine.>
+		CMsg%id%02_3 <ifNPCEasygoing Accept>
+		Msg%id%02_4 <Those idiots at %name2% don't know what they're doing! I don't need them! I can do better by myself!>
+		CMsg%id%02_4 <ifNPCPassionate Accept>
+		Msg%id%02_5 <You know, I had been looking at this like an ending, but instead I think it's a beginning. Now that I'm free from %name2% I can choose my own destiny, wherever that may lead.>
+		CMsg%id%02_5 <ifNPCCheerful Accept>
+		Msg%id%02_6 <I guess I'm just not good enough to make it as a member of %name2%... I'll have to learn to accept that.>
+		CMsg%id%02_6 <ifNPCMelancholy Accept>
+		Msg%id%03 <%name1% was fired from %name2%, much to your relief.>
+		Prompt%id%01 <It's probably for the best.>
+		Prompt%id%01_1 <You're better off without them.>
+		Prompt%id%01_2 <You're too good to work for them, anyhow.>
+		Prompt%id%02 <Oh, that's too bad... I wonder what happened.>
+		Prompt%id%02_1 <How surprising... I wonder what happened.>
+		Prompt%id%02_2 <That's a shame... I wonder what happened.>
 	end
+
+
+
+
 
 
 
