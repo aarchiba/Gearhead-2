@@ -16,8 +16,8 @@ Faction 1
 	start <if= PCFac SelfS else GoNoMember   ifFactionEnemy SelfS else GoPro1 StartPlot .fired>
 	.fired <SPECIAL_PLOT_Fired.txt>
 	GoPro1 <ifG PCFacXP FacXPNeeded else GoCheckPromotion PCFacLevel+ 1 PCFacXP= 0 V+ 1 1>
-	GoCheckPromotion <ifG V1 0 StartPlot .promostory V+ 1 -1>
-	.promostory <SPECIAL_PLOT_Promotion.txt>
+	GoCheckPromotion <ifG V1 0 StartPlot .promostory FacXPNeeded V+ 1 -1>
+	.promostory <*SPECIAL_Promotion>
 	GoNoMember <FacXP= SelfS 0>
 
 Faction 2
@@ -37,8 +37,8 @@ Faction 2
 	start <if= PCFac SelfS else GoNoMember   ifFactionEnemy SelfS else GoPro1 StartPlot .fired>
 	.fired <SPECIAL_PLOT_Fired.txt>
 	GoPro1 <ifG PCFacXP FacXPNeeded else GoCheckPromotion PCFacLevel+ 1 PCFacXP= 0 V+ 1 1>
-	GoCheckPromotion <ifG V1 0 StartPlot .promostory V+ 1 -1>
-	.promostory <SPECIAL_PLOT_Promotion.txt>
+	GoCheckPromotion <ifG V1 0 StartPlot .promostory FacXPNeeded V+ 1 -1>
+	.promostory <*SPECIAL_Promotion>
 	GoNoMember <FacXP= SelfS 0>
 
 	FACRANK_0 <Wage Slave>
@@ -70,8 +70,8 @@ Faction 3
 	start <if= PCFac SelfS else GoNoMember   ifFactionEnemy SelfS else GoPro1 StartPlot .fired>
 	.fired <SPECIAL_PLOT_Fired.txt>
 	GoPro1 <ifG PCFacXP FacXPNeeded else GoCheckPromotion PCFacLevel+ 1 PCFacXP= 0 V+ 1 1>
-	GoCheckPromotion <ifG V1 0 StartPlot .promostory V+ 1 -1>
-	.promostory <SPECIAL_PLOT_Promotion.txt>
+	GoCheckPromotion <ifG V1 0 StartPlot .promostory FacXPNeeded V+ 1 -1>
+	.promostory <*SPECIAL_Promotion>
 	GoNoMember <FacXP= SelfS 0>
 
 	% Faction Rank Names
@@ -102,8 +102,8 @@ Faction 4
 	start <if= PCFac SelfS else GoNoMember   ifFactionEnemy SelfS else GoPro1 StartPlot .fired>
 	.fired <SPECIAL_PLOT_Fired.txt>
 	GoPro1 <ifG PCFacXP FacXPNeeded else GoCheckPromotion PCFacLevel+ 1 PCFacXP= 0 V+ 1 1>
-	GoCheckPromotion <ifG V1 0 StartPlot .promostory V+ 1 -1>
-	.promostory <SPECIAL_PLOT_Promotion.txt>
+	GoCheckPromotion <ifG V1 0 StartPlot .promostory FacXPNeeded V+ 1 -1>
+	.promostory <*SPECIAL_Promotion>
 	GoNoMember <FacXP= SelfS 0>
 
 Faction 5
@@ -118,8 +118,8 @@ Faction 5
 	start <if= PCFac SelfS else GoNoMember   ifFactionEnemy SelfS else GoPro1 StartPlot .fired>
 	.fired <SPECIAL_PLOT_Fired.txt>
 	GoPro1 <ifG PCFacXP FacXPNeeded else GoCheckPromotion PCFacLevel+ 1 PCFacXP= 0 V+ 1 1>
-	GoCheckPromotion <ifG V1 0 StartPlot .promostory V+ 1 -1>
-	.promostory <SPECIAL_PLOT_Promotion.txt>
+	GoCheckPromotion <ifG V1 0 StartPlot .promostory FacXPNeeded V+ 1 -1>
+	.promostory <*SPECIAL_Promotion>
 	GoNoMember <FacXP= SelfS 0>
 
 Faction 6
@@ -142,8 +142,8 @@ Faction 6
 	start <if= PCFac SelfS else GoNoMember   ifFactionEnemy SelfS else GoPro1 StartPlot .fired>
 	.fired <SPECIAL_PLOT_Fired.txt>
 	GoPro1 <ifG PCFacXP FacXPNeeded else GoCheckPromotion PCFacLevel+ 1 PCFacXP= 0 V+ 1 1>
-	GoCheckPromotion <ifG V1 0 StartPlot .promostory V+ 1 -1>
-	.promostory <SPECIAL_PLOT_Promotion.txt>
+	GoCheckPromotion <ifG V1 0 StartPlot .promostory FacXPNeeded V+ 1 -1>
+	.promostory <*SPECIAL_Promotion>
 	GoNoMember <FacXP= SelfS 0>
 
 	% Faction Rank Names
@@ -173,8 +173,8 @@ Faction 7
 	start <if= PCFac SelfS else GoNoMember   ifFactionEnemy SelfS else GoPro1 StartPlot .fired>
 	.fired <SPECIAL_PLOT_Fired.txt>
 	GoPro1 <ifG PCFacXP FacXPNeeded else GoCheckPromotion PCFacLevel+ 1 PCFacXP= 0 V+ 1 1>
-	GoCheckPromotion <ifG V1 0 StartPlot .promostory V+ 1 -1>
-	.promostory <SPECIAL_PLOT_Promotion.txt>
+	GoCheckPromotion <ifG V1 0 StartPlot .promostory FacXPNeeded V+ 1 -1>
+	.promostory <*SPECIAL_Promotion>
 	GoNoMember <FacXP= SelfS 0>
 
 	FACRANK_0 <Wage Slave>
@@ -205,8 +205,8 @@ Faction 8
 	start <if= PCFac SelfS else GoNoMember   ifFactionEnemy SelfS else GoPro1 StartPlot .fired>
 	.fired <SPECIAL_PLOT_Fired.txt>
 	GoPro1 <ifG PCFacXP FacXPNeeded else GoCheckPromotion PCFacLevel+ 1 PCFacXP= 0 V+ 1 1>
-	GoCheckPromotion <ifG V1 0 StartPlot .promostory V+ 1 -1>
-	.promostory <SPECIAL_PLOT_Promotion.txt>
+	GoCheckPromotion <ifG V1 0 StartPlot .promostory FacXPNeeded V+ 1 -1>
+	.promostory <*SPECIAL_Promotion>
 	GoNoMember <FacXP= SelfS 0>
 
 Faction 9
@@ -229,8 +229,8 @@ Faction 9
 	start <if= PCFac SelfS else GoNoMember   ifFactionEnemy SelfS else GoPro1 StartPlot .fired>
 	.fired <SPECIAL_PLOT_Fired.txt>
 	GoPro1 <ifG PCFacXP FacXPNeeded else GoCheckPromotion PCFacLevel+ 1 PCFacXP= 0 V+ 1 1>
-	GoCheckPromotion <ifG V1 0 StartPlot .promostory V+ 1 -1>
-	.promostory <SPECIAL_PLOT_Promotion.txt>
+	GoCheckPromotion <ifG V1 0 StartPlot .promostory FacXPNeeded V+ 1 -1>
+	.promostory <*SPECIAL_Promotion>
 	GoNoMember <FacXP= SelfS 0>
 
 	FACRANK_1 <Officer>
@@ -260,8 +260,8 @@ Faction 10
 	start <if= PCFac SelfS else GoNoMember   ifFactionEnemy SelfS else GoPro1 StartPlot .fired>
 	.fired <SPECIAL_PLOT_Fired.txt>
 	GoPro1 <ifG PCFacXP FacXPNeeded else GoCheckPromotion PCFacLevel+ 1 PCFacXP= 0 V+ 1 1>
-	GoCheckPromotion <ifG V1 0 StartPlot .promostory V+ 1 -1>
-	.promostory <SPECIAL_PLOT_Promotion.txt>
+	GoCheckPromotion <ifG V1 0 StartPlot .promostory FacXPNeeded V+ 1 -1>
+	.promostory <*SPECIAL_Promotion>
 	GoNoMember <FacXP= SelfS 0>
 
 Faction 11
@@ -281,8 +281,8 @@ Faction 11
 	start <if= PCFac SelfS else GoNoMember   ifFactionEnemy SelfS else GoPro1 StartPlot .fired>
 	.fired <SPECIAL_PLOT_Fired.txt>
 	GoPro1 <ifG PCFacXP FacXPNeeded else GoCheckPromotion PCFacLevel+ 1 PCFacXP= 0 V+ 1 1>
-	GoCheckPromotion <ifG V1 0 StartPlot .promostory V+ 1 -1>
-	.promostory <SPECIAL_PLOT_Promotion.txt>
+	GoCheckPromotion <ifG V1 0 StartPlot .promostory FacXPNeeded V+ 1 -1>
+	.promostory <*SPECIAL_Promotion>
 	GoNoMember <FacXP= SelfS 0>
 
 Faction 12
@@ -303,8 +303,8 @@ Faction 12
 	start <if= PCFac SelfS else GoNoMember   ifFactionEnemy SelfS else GoPro1 StartPlot .fired>
 	.fired <SPECIAL_PLOT_Fired.txt>
 	GoPro1 <ifG PCFacXP FacXPNeeded else GoCheckPromotion PCFacLevel+ 1 PCFacXP= 0 V+ 1 1>
-	GoCheckPromotion <ifG V1 0 StartPlot .promostory V+ 1 -1>
-	.promostory <SPECIAL_PLOT_Promotion.txt>
+	GoCheckPromotion <ifG V1 0 StartPlot .promostory FacXPNeeded V+ 1 -1>
+	.promostory <*SPECIAL_Promotion>
 	GoNoMember <FacXP= SelfS 0>
 
 Faction 13
@@ -324,8 +324,8 @@ Faction 13
 	start <if= PCFac SelfS else GoNoMember   ifFactionEnemy SelfS else GoPro1 StartPlot .fired>
 	.fired <SPECIAL_PLOT_Fired.txt>
 	GoPro1 <ifG PCFacXP FacXPNeeded else GoCheckPromotion PCFacLevel+ 1 PCFacXP= 0 V+ 1 1>
-	GoCheckPromotion <ifG V1 0 StartPlot .promostory V+ 1 -1>
-	.promostory <SPECIAL_PLOT_Promotion.txt>
+	GoCheckPromotion <ifG V1 0 StartPlot .promostory FacXPNeeded V+ 1 -1>
+	.promostory <*SPECIAL_Promotion>
 	GoNoMember <FacXP= SelfS 0>
 
 	FACRANK_0 <Wage Slave>
@@ -355,8 +355,8 @@ Faction 14
 	start <if= PCFac SelfS else GoNoMember   ifFactionEnemy SelfS else GoPro1 StartPlot .fired>
 	.fired <SPECIAL_PLOT_Fired.txt>
 	GoPro1 <ifG PCFacXP FacXPNeeded else GoCheckPromotion PCFacLevel+ 1 PCFacXP= 0 V+ 1 1>
-	GoCheckPromotion <ifG V1 0 StartPlot .promostory V+ 1 -1>
-	.promostory <SPECIAL_PLOT_Promotion.txt>
+	GoCheckPromotion <ifG V1 0 StartPlot .promostory FacXPNeeded V+ 1 -1>
+	.promostory <*SPECIAL_Promotion>
 	GoNoMember <FacXP= SelfS 0>
 
 Faction 15
@@ -376,8 +376,8 @@ Faction 15
 	start <if= PCFac SelfS else GoNoMember   ifFactionEnemy SelfS else GoPro1 StartPlot .fired>
 	.fired <SPECIAL_PLOT_Fired.txt>
 	GoPro1 <ifG PCFacXP FacXPNeeded else GoCheckPromotion PCFacLevel+ 1 PCFacXP= 0 V+ 1 1>
-	GoCheckPromotion <ifG V1 0 StartPlot .promostory V+ 1 -1>
-	.promostory <SPECIAL_PLOT_Promotion.txt>
+	GoCheckPromotion <ifG V1 0 StartPlot .promostory FacXPNeeded V+ 1 -1>
+	.promostory <*SPECIAL_Promotion>
 	GoNoMember <FacXP= SelfS 0>
 
 Faction 16
@@ -397,8 +397,8 @@ Faction 16
 	start <if= PCFac SelfS else GoNoMember   ifFactionEnemy SelfS else GoPro1 StartPlot .fired>
 	.fired <SPECIAL_PLOT_Fired.txt>
 	GoPro1 <ifG PCFacXP FacXPNeeded else GoCheckPromotion PCFacLevel+ 1 PCFacXP= 0 V+ 1 1>
-	GoCheckPromotion <ifG V1 0 StartPlot .promostory V+ 1 -1>
-	.promostory <SPECIAL_PLOT_Promotion.txt>
+	GoCheckPromotion <ifG V1 0 StartPlot .promostory FacXPNeeded V+ 1 -1>
+	.promostory <*SPECIAL_Promotion>
 	GoNoMember <FacXP= SelfS 0>
 
 

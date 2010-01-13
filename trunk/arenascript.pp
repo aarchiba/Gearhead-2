@@ -1347,7 +1347,7 @@ begin
 		S2 := SMsg;
 		SV := ExtractValue( SMsg );
 		if ( SV = 0 ) and ( S2 <> '' ) and ( S2 <> '0' ) then begin
-			DialogMsg( 'WARNING: Script value ' + S2 );
+			DialogMsg( 'WARNING: Script value ' + S2 + ' in ' + GearName( scene ) );
 			DialogMsg( 'CONTEXT: ' + event );
 		end;
 	end;

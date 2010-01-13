@@ -213,11 +213,17 @@ Choice 10
 
 	Msg%id%01 <You decided to follow the action to %name1%.>
 
+%%
+%%  Choices 11 through 20 are the Reward Choices. Each of these will result
+%%  in an immediate reward for the PC. Note that only one RC will appear in
+%%  the choice menu; this is hardcoded into the menu generator, so these
+%%  choice indicies should not be reassigned.
+%%
 
 Choice 11
 	name <Reward 1: Seek Training 1>
 	desc <Take this option to earn immediate benefits for the PC.>
-	desig <REW_1>
+	desig <R_EXP>
 
 	% E1 is the city for the next episode.
 	Element1 <Scene City !Far -7 !Ally -7 !Okay -3 !XClude -2>
@@ -229,5 +235,67 @@ Choice 11
 	Choice <StoryNote %id%01 &SetEpisodeScene %1%>
 
 	Msg%id%01 <You decided to seek training in %name1%.>
+
+Choice 12
+	name <Reward 2: Seek Mecha 1>
+	desc <Take this option to earn immediate benefits for the PC.>
+	desig <R_MEK>
+
+	% E1 is the city for the next episode.
+	Element1 <Scene City !Far -7 !Ally -7 !Okay -3 !XClude -2>
+
+	Prompt <I need to upgrade my mecha.>
+	Reply <I hear that you could do that in %name1%.>
+	Alert <You decide to seek a new mecha in %name1%.>
+
+	Choice <StoryNote %id%01 &SetEpisodeScene %1%>
+
+	Msg%id%01 <You decided to seek a new mecha in %name1%.>
+
+Choice 13
+	name <Reward 3: Seek Money 1>
+	desc <Take this option to earn immediate benefits for the PC.>
+	desig <R_MON>
+
+	% E1 is the city for the next episode.
+	Element1 <Scene City !Far -7 !Ally -7 !Okay -3 !XClude -2>
+
+	Prompt <I need to earn some more money.>
+	Reply <I hear that you could do that in %name1%.>
+	Alert <You decide to seek money in %name1%.>
+
+	Choice <StoryNote %id%01 &SetEpisodeScene %1%>
+
+	Msg%id%01 <You decided to seek money in %name1%.>
+Choice 14
+	name <Reward 4: Seek Equipment 1>
+	desc <Take this option to earn immediate benefits for the PC.>
+	desig <R_EQP>
+
+	% E1 is the city for the next episode.
+	Element1 <Scene City !Far -7 !Ally -7 !Okay -3 !XClude -2>
+
+	Prompt <I need to get some better equipment.>
+	Reply <I hear that you could do that in %name1%.>
+	Alert <You decide to upgrade your equipment in %name1%.>
+
+	Choice <StoryNote %id%01 &SetEpisodeScene %1%>
+
+	Msg%id%01 <You decided to upgrade your equipment in %name1%.>
+Choice 15
+	name <Reward 5: Seek Equipment 1>
+	desc <Take this option to earn immediate benefits for the PC.>
+	desig <R_EQP>
+
+	% E1 is the city for the next episode.
+	Element1 <Scene City !Far -7 !Ally -7 !Okay -3 !XClude -2>
+
+	Prompt <I need to get some better equipment.>
+	Reply <I hear that you could do that in %name1%.>
+	Alert <You decide to upgrade your equipment in %name1%.>
+
+	Choice <StoryNote %id%01 &SetEpisodeScene %1%>
+
+	Msg%id%01 <You decided to upgrade your equipment in %name1%.>
 
 

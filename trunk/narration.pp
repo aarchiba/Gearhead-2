@@ -62,6 +62,8 @@ Const
 
 	NAS_DramaticChoice = 8;	{ What choice has the PC made for this episode? }
 	NAS_IsDramaticChoicePlot = 9;	{ If nonzero, this plot is part of our DC menu. }
+	NAS_DCRSeed = 10;	{ Random value for determining which dramatic choice }
+				{ reward to load for the upcoming episode. }
 
 	NAS_XXChar_Motivation = 101;
 	NAS_XXChar_Attitude = 102;

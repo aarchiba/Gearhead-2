@@ -303,8 +303,9 @@ Content
 	sub
 		Persona 1
 		greeting <if= PlotStatus %plotid1% 0 else .%id%_GoRemind if# PlotStatus %plotid% %id% else .%id%_GoGreet Goto %pop%>
-		*.%id%_GoGreet <*IHearYouAreFightingNPC %2% .%id%_GoOfferMission>
+		*.%id%_GoGreet <*IHearYouAreFightingNPC %2% .%id%_GoGoalExpo>
 		*.%id%_GoRemind <*GenericMissionReminder>
+		*.%id%_GoGoalExpo <*CS_GoalExpo .%id%_GoOfferMission>
 		.%id%_GoOfferMission <NewChat Say %id%01 AddCHat %id%01 AddChat %id%02 AddChat %id%03>
 		result%id%01 <AddEasygoing -d10   goto result%id%02>
 		result%id%02 <NewChat Say %id%02 History %id%03 SMemo %id%04 SetPlotStatus %plotid1% %id1%>
@@ -501,6 +502,187 @@ Content
 		stc CORE-ACTIVATABLE
 		name <Raiders>
 	end
+
+Plot
+	name <I'm looking for your enemy>
+	requires <*CS_Conversation E:++ (1:ADVEN|1:POLIC) (1:A.---|1:A.sr_|1:A.equ) R:-- -1:ENEMY *CORE_OFF_>
+	desc <This character's looking for your enemy. Help him out and gain him as a partner.>
+	Changes <R:++>
+	Size 1
+
+	% E1 is the NPC that the PC will speak with
+	% E2 is the outdoors location where the encounter will be placed
+	% E3 is the encounter to be found
+	element2 <Scene Environs !Near -7>
+	element3 <Prefab>
+	place3 <2>
+
+	% P%id%01 = Have gained E1 as a lancemate
+	% P%id%02 = Initialization Counter
+
+	% Fail Conditions:
+	% - Mission giver dies before encounter is activated
+	% - Revalation subplot fails
+
+	update <if= P%id%02 0 p= %id%02 1 NPCLevel %1% StoryDL>
+	end <if= PlotStatus %plotid1% 0 else .%id%_GoCheckReveal ifNPCDead %1%   LoseEpisode>
+	.%id%_GoCheckReveal <ifSubPlotLost %plotid2% if= p%id%01 0 else .%id1%_%plotid1%_GoLoss SetPlotStatus %plotid3% %id3%>
+
+	.%id1%_%plotid1%_GoWin  <WinEpisode    if= p%id%01 1  ifNPCOK %1%  Monologue %1% %id%01>
+	.%id1%_%plotid1%_GoLoss <LoseEpisode   if= p%id%01 1  ifNPCOK %1%  Monologue %1% %id%02>
+
+	Msg%id%01 <I knew that it was a good idea for the two of us to join forces!>
+	Msg%id%02 <Hmm... I'm beginning to doubt that it was a good idea to join forces with you.>
+
+	%% SubPlot1 is the combat encounter itself
+	%% SubPlot2 is the encounter revealation
+	%% SubPlot3 is the unwinnable condition
+	SubPlot1 <*:CS_MechaEncounter&Raiders 2 3>
+	SubPlot2 <*:CS_RevealEncounter_Raiders 2 3>
+	SubPlot3 <*CS_MootGoal 1>
+
+	sub
+		Persona 1
+		greeting <if= PlotStatus %plotid% %id% else .%id%_GoChat if= p%id%01 0 else .%id%_GoChat if= PlotStatus %plotid1% 0 else .%id%_GoCheckProgress ifNPCOK &EnemyNPC else .%id%_GoTrivial Goto .%id%_GoGreet>
+		.%id%_GoChat <NewChat SayAnything>
+		.%id%_GoCheckProgress <ifChatNPCInPlay else .%id%_GoByPhone NewChat Say %id%01 AddChat %id%01 AddChat %id%02>
+		*.%id%_GoByPhone <*NotByPhone>
+		*.%id%_GoGreet <*IHearYouAreFightingNPC &EnemyNPC .%id%_GoReveal>
+		.%id%_GoReveal <NewChat Say %id%02 AddChat %id%03 AddChat %id%04 AddCHat %id%05>
+		.%id%_GoTrivial <NewChat Say %id%03 StoryNote %id%04 P= %id%01 -1 WinSubPlot %plotid% SetPlotStatus %plotid1% %id1% SetEncounterActive %3%>
+		*result%id%01 <*ComeBackWhenYouKnowSomething>
+		result%id%02 <EndCHat Say %id%05 StoryNote %id%06  P= %id%01 1  WinSubPlot %plotid%  XPV 100  &SetPartnerNPC %1%  &AddPartnerToLance>
+		result%id%03 <AddSociable   d8   Goto result%id%05>
+		result%id%04 <AddCheerful -d10   Goto result%id%05>
+		result%id%05 <NewChat Say %id%07 SMemo %id%08 History %id%09 AddChat %id%06 AddChat %id%07 SetPlotStatus %plotid1% %id1% SetPlotStatus %plotid2% %id2%  SetXXRAttitude %1% XXR_A_IsEqual>
+		result%id%06 <NewChat Say %id%10>
+		result%id%07 <NewChat Say %id%11 History %id%12 SMemo %id%13   P= %id%01 -1      AddReact -d10   AddSociable -d10   ifG d30 React PCEnemy %1%>
+		Msg%id%01_1 <Have you found out where \PERSONA &EnemyNPC is yet?>
+		CMsg%id%01_1 <ifNPCOK &EnemyNPC Accept>
+		Msg%id%01_2 <Have you found out where the raiders are yet?>
+		CMsg%id%01_2 <ifNPCDead &EnemyNPC Accept>
+		Msg%id%02 <I'm looking for \PERSONA &EnemyNPC too. I happen to know that \SPR &EnemyNPC 's in town on a mission, but so far I can't find \PPR &EnemyNPC base.>
+		Msg%id%03 <There's a lance of raiders in %name2%. I'd go fight them myself, but my doctor said to take it easy for a while.>
+		Msg%id%04 <%name1% revealed the presence of raiders in %name2%.>
+		Msg%id%05 <Great! We shouldn't waste any time- let's go to %name2% right away!>
+		Msg%id%06_1 <%name1% joined your lance to go fight \PERSONA &EnemyNPC in %name2%.>
+		CMsg%id%06_1 <ifNPCOK &EnemyNPC Accept>
+		Msg%id%06_2 <%name1% joined your lance to go fight the raiders in %name2%.>
+		CMsg%id%06_2 <ifNPCDead &EnemyNPC Accept>
+		Msg%id%07 <If you could help me to find \PERSONA &EnemyNPC , I could help you to fight \OPR &EnemyNPC . Together I think we stand a better chance than either of us would alone. What do you say?>
+		Msg%id%08 <%name1% told you that \PERSONA &EnemyNPC is in town on a mission; \SPR %1% offered to join forces with you if you can find where \SPR &EnemyNPC is.>
+		Msg%id%09 <%name1% offered to join forces with you against \PERSONA &EnemyNPC .>
+		Msg%id%10 <Great. Just come see me after you learn where \SPR &EnemyNPC is but before you fight \OPR &EnemyNPC . I'll be waiting.>
+		Msg%id%11 <So that's how it is? I give you a hot lead, and you run off to snag my bounty by yourself? Don't think I'm going to forget this, \PC ...>
+		Msg%id%12 <You refused %name1%'s offer.>
+		Msg%id%13 <%name1% told you that \PERSONA &EnemyNPC is in town on a mission.>
+		Prompt%id%01 <I'm still working on it.>
+		Prompt%id%02 <Yes, I have. Let's go.>
+		CPrompt%id%02 <IfSubPlotWon %plotid2% Accept>
+		Prompt%id%03 <Why don't we join up to fight \OPR &EnemyNPC ?>
+		Prompt%id%04 <Sounds like you're pretty much a loser.>
+		Prompt%id%05 <I could find \OPR &EnemyNPC easily enough.>
+		Prompt%id%06 <I'll think about it.>
+		Prompt%id%07 <Sorry, but I work better alone.>
+	end
+	inv
+		stc CORE-ACTIVATABLE
+		name <%name1%'s Mission>
+	end
+
+Content
+	name <Big Scoop about Enemy NPC>
+	desc <The media person you're talking to wants to know about the enemy's mission in town.>
+	requires <*CS_Conversation 1:MEDIA ~1:FRIEND E:++>
+
+	% E1 is the person being spoken to
+	% E2 is the outdoors location where the encounter will be placed
+	% E3 is the encounter to be found
+	element2 <Scene Environs !Near -7>
+	element3 <Prefab>
+	place3 <2>
+
+	% Fail Conditions:
+	% - Mission giver dies before encounter is activated
+	% - Revalation subplot fails
+	end <if= PlotStatus %plotid1% 0 else .%id%_GoCheckReveal ifNPCDead %1% else %pop% LoseEpisode>
+	.%id%_GoCheckReveal <ifSubPlotLost %plotid2% SMemo %id%02 SetPlotStatus %plotid5% %id5%>
+
+	.%id1%_%plotid1%_GoWin <SetPlotStatus %plotid3% %id3%     SMemo %id%01>
+	.%id1%_%plotid1%_GoLoss <SetPlotStatus %plotid4% %id4%    SMemo %id%02>
+
+	Msg%id%01 <You won the mission. You should go report to %name1% at \SCENE NPCScene %1% .>
+	Msg%id%02 <You lost the mission. You should go report to %name1% at \SCENE NPCScene %1% .>
+
+	%% SubPlot1 is the combat encounter itself
+	%% SubPlot2 is the encounter revealation
+	%% SubPlot3 is the winning condition
+	%% SubPlot4 is the loss condition
+	%% SubPlot5 is the unwinnable condition
+	SubPlot1 <*:CS_MechaEncounter 2 3>
+	SubPlot2 <*:CS_RevealEncounter_Raiders 2 3>
+	SubPlot3 <*CS_WinGoal 1>
+	SubPlot4 <*CS_LoseGoal 1>
+	SubPlot5 <*CS_MootGoal 1>
+
+	sub
+		Persona 1
+		greeting <if= PlotStatus %plotid1% 0 else .%id%_GoRemind if# PlotStatus %plotid% %id% else .%id%_GoOfferMission Goto %pop%>
+		.%id%_GoRemind <NewChat Say %id%06>
+		*.%id%_GoOfferMission <*IHearYouAreFightingNPC &EnemyNPC .%id%_GoGoalExpo>
+		*.%id%_GoGoalExpo <*CS_GoalExpo .%id%_GoBriefing>
+		.%id%_GoBriefing <NewChat Say %id%01 AddChat %id%01 AddChat %id%02 AddChat %id%03>
+		*.%id%_GoDeny <*RejectMission .%id%_GoR2Exit>
+		.%id%_GoR2Exit <AddHeroic -1 AddSociable -d10 AddRenown -3 LoseEpisode>
+		result%id%01 <NewChat Say %id%02 AddCHat %id%04 AddChat %id%05>
+		result%id%02 <NewCHat Say %id%03 StoryNote %id%04  SetPlotStatus %plotid1% %id1%  SetPlotStatus %plotid2% %id2%>
+		result%id%03 <NewChat Say %id%05 AddCHat %id%04 AddChat %id%05>
+		result%id%04 <goto result%id%02>
+		result%id%05 <goto .%id%_GoDeny>
+		Msg%id%01 <Well, \PERSONA &EnemyNPC is apparently in town on a mission. I know the two of you have fought in the past, so I was hoping you'd be willing to help me find out what \SPR &EnemyNPC 's up to.>
+		Msg%id%02 <As a cavalier \SPR &EnemyNPC always seems to leave a trail of destruction in \PPR &EnemyNPC wake; \PPR &EnemyNPC presence in \SCENE &EpisodeScene could be a major news story. If we could help save some lives so much the better.>
+		Msg%id%03 <Great! Come back and see me when you've uncovered what \PERSONA &EnemyNPC is doing. \HINT %plotid2%>
+		Msg%id%04 <You agreed to help %name1% research \PERSONA &EnemyNPC for a news story.>
+		Msg%id%05 <Just listen, okay? \PERSONA &EnemyNPC is up to something and if we don't find out what it could be a major disaster. I really need your help with this.>
+		Msg%id%06 <I don't think the entire story has been uncovered yet. Come back when it has been.>
+		Prompt%id%01 <Why do you care about \PERSONA &EnemyNPC ?>
+		Prompt%id%02 <Alright, I'll help you.>
+		Prompt%id%03 <Sorry, I'm trying to stay far away from \OPR &EnemyNPC .>
+		Prompt%id%04 <I'll see what I can turn up.>
+		Prompt%id%05 <Sounds rough, but it's not my problem.>
+	end
+	inv
+		stc CORE-ACTIVATABLE
+		name <%name1%'s Mission>
+	end
+
+Content
+	name <You want a hint? I've got a hint.>
+	desc <This friend has some information.>
+	requires <*CS_Conversation (1:FRIEND|1:FAMILY|1:LOVER) ~+Gkn (*CORE_INTRO|*CORE_DEF_1|*CORE_DEF_2|*CORE_DEF_3|*CORE_OFF_1)>
+
+	% E1 is the person with the information
+
+	start <ifNPCDead %1% SMemo 0 LoseEpisode>
+
+	% This subplot must handle the callback from the Gather Information task.
+	.%id1%_%plotid1%_GoWin <SMemo 0 WinEpisode>
+	.%id1%_%plotid1%_GoLoss <SMemo 0 LoseEpisode>
+
+	% SubPlot1 is the GatherInformation task.
+	SubPlot1 <*:CS_GatherInformation 1>
+
+	sub
+		Persona 1
+		greeting <if= PlotStatus %plotid% %id% else %pop% Goto .%id%_GoIntro>
+		*.%id%_GoIntro <*HowAreYou .%id%_GoReveal>
+		.%id%_GoReveal <NewChat Say %id%01 AddChat %id%01>
+		result%id%01 <SetPlotStatus %plotid1% %id1% WinSubPlot %plotid% Goto .%id1%_GoInform>
+		Msg%id%01 <I've got some information that may be useful to you. I don't know... it's got to do with all the stuff you've been doing lately.>
+		Prompt%id%01_1 <Go on, tell me about it.>
+		Prompt%id%01_2 <What have you learned?>
+	end
+
 
 
 %%
@@ -1136,102 +1318,6 @@ Content
 	end
 
 
-Content
-	name <You want a hint? I've got a hint.>
-	desc <This friend has some information.>
-	requires <*OLD_Conversation (1:FRIEND|1:FAMILY|1:LOVER) ~+Gkn>
-
-	% E1 is the person with the information
-
-	start <ifNPCDead %1% SMemo 0 LoseComp 0 .%id%_end>
-
-	% This subplot must handle the callback from the Gather Information task.
-	.%id1%_%plotid1%_GoWin <SMemo 0 WinComp 0 .%id%_end>
-	.%id1%_%plotid1%_GoLoss <SMemo 0 LoseComp 0 .%id%_end>
-	.%id%_end <+T-- +F-->
-
-	% SubPlot1 is the GatherInformation task.
-	SubPlot1 <*:CS_GatherInformation 1>
-
-	sub
-		Persona 1
-		greeting <if= PlotStatus %plotid% %id% else %pop% Goto .%id%_GoIntro>
-		*.%id%_GoIntro <*HowAreYou .%id%_GoReveal>
-		.%id%_GoReveal <NewChat Say %id%01 AddChat %id%01>
-		result%id%01 <SetPlotStatus %plotid1% %id1% WinSubPlot %plotid% Goto .%id1%_GoInform>
-		Msg%id%01 <I've got some information that may be useful to you. I don't know... it's got to do with all the stuff you've been doing lately.>
-		Prompt%id%01_1 <Go on, tell me about it.>
-		Prompt%id%01_2 <What have you learned?>
-	end
-
-
-Content
-	name <Big Scoop about Enemy NPC>
-	desc <The media person you're talking to wants to know about the enemy's mission in town.>
-	requires <*OLD_Conversation 1:MEDIA ~1:FRIEND E:++>
-
-	% E1 is the person being spoken to
-	% E2 is the outdoors location where the encounter will be placed
-	% E3 is the encounter to be found
-	element2 <Scene Environs !Near -7>
-	element3 <Prefab>
-	place3 <2>
-
-	% Fail Conditions:
-	% - Mission giver dies before encounter is activated
-	% - Revalation subplot fails
-	end <if= PlotStatus %plotid1% 0 else .%id%_GoCheckReveal ifNPCDead %1% else %pop% LoseComp 0 .%id%_loss>
-	.%id%_GoCheckReveal <ifSubPlotLost %plotid2% SMemo %id%02 SetPlotStatus %id5%>
-	.%id%_loss <+T-->
-
-	.%id1%_%plotid1%_GoWin <SetPlotStatus %plotid3% %id3%     SMemo %id%01>
-	.%id1%_%plotid1%_GoLoss <SetPlotStatus %plotid4% %id4%    SMemo %id%02>
-
-	Msg%id%01 <You won the mission. You should go report to %name1% at \SCENE NPCScene %1% .>
-	Msg%id%02 <You lost the mission. You should go report to %name1% at \SCENE NPCScene %1% .>
-
-	%% SubPlot1 is the combat encounter itself
-	%% SubPlot2 is the encounter revealation
-	%% SubPlot3 is the winning condition
-	%% SubPlot4 is the loss condition
-	%% SubPlot5 is the unwinnable condition
-	SubPlot1 <*:CS_MechaEncounter 2 3>
-	SubPlot2 <*:CS_RevealEncounter_Raiders 2 3>
-	SubPlot3 <*CS_WinTask 1>
-	SubPlot4 <*CS_LoseTask 1>
-	SubPlot5 <*CS_MootMission 1>
-
-	sub
-		Persona 1
-		greeting <if= PlotStatus %plotid1% 0 else .%id%_GoRemind if# PlotStatus %plotid% %id% else .%id%_GoOfferMission Goto %pop%>
-		.%id%_GoRemind <NewChat Say %id%06>
-		*.%id%_GoOfferMission <*IHearYouAreFightingNPC &EnemyNPC .%id%_GoBriefing>
-		.%id%_GoBriefing <NewChat Say %id%01 AddChat %id%01 AddChat %id%02 AddChat %id%03>
-		*.%id%_GoDeny <*RejectMission .%id%_GoR2Exit>
-		.%id%_GoR2Exit <AddHeroic -1 AddSociable -d10 AddRenown -3 LoseComp 0 .%id%_changes>
-		.%id%_changes <+T-- +F-->
-		result%id%01 <NewChat Say %id%02 AddCHat %id%04 AddChat %id%05>
-		result%id%02 <NewCHat Say %id%03 StoryNote %id%04  SetPlotStatus %plotid1% %id1%  SetPlotStatus %plotid2% %id2%>
-		result%id%03 <NewChat Say %id%05 AddCHat %id%04 AddChat %id%05>
-		result%id%04 <goto result%id%02>
-		result%id%05 <goto .%id%_GoDeny>
-		Msg%id%01 <Well, \PERSONA &EnemyNPC is apparently in town on a mission. I know the two of you have fought in the past, so I was hoping you'd be willing to help me find out what \SPR &EnemyNPC 's up to.>
-		Msg%id%02 <As a cavalier \SPR &EnemyNPC always seems to leave a trail of destruction in \PPR &EnemyNPC wake; \PPR &EnemyNPC presence in \SCENE &EpisodeScene could be a major news story. If we could help save some lives so much the better.>
-		Msg%id%03 <Great! Come back and see me when you've uncovered what \PERSONA &EnemyNPC is doing. \HINT %plotid2%>
-		Msg%id%04 <You agreed to help %name1% research \PERSONA &EnemyNPC for a news story.>
-		Msg%id%05 <Just listen, okay? \PERSONA &EnemyNPC is up to something and if we don't find out what it could be a major disaster. I really need your help with this.>
-		Msg%id%06 <I don't think the entire story has been uncovered yet. Come back when it has been.>
-		Prompt%id%01 <Why do you care about \PERSONA &EnemyNPC ?>
-		Prompt%id%02 <Alright, I'll help you.>
-		Prompt%id%03 <Sorry, I'm trying to stay far away from \OPR &EnemyNPC .>
-		Prompt%id%04 <I'll see what I can turn up.>
-		Prompt%id%05 <Sounds rough, but it's not my problem.>
-	end
-	inv
-		stc CORE-ACTIVATABLE
-		name <%name1%'s Mission>
-	end
-
 Plot
 	name <My Help Doesn't Come Cheap>
 	desc <You can get information, if you're willing to pay for it.>
@@ -1284,117 +1370,5 @@ Plot
 		Prompt%id%06 <[Continue]>
 		Prompt%id%07 <I'm sure. I don't need this info.>
 	end
-
-Plot
-	name <I have a lead for you>
-	desc <This police officer has information for you>
-	requires <*OLD_Conversation 1:POLIC E:THIEF>
-	Size 1
-	% E1 is the person with the information
-	% E2 is the sleazy scene where the PC can find information
-	Element2 <Scene Sleazy !Near -7>
-
-	start <if= PlotStatus %plotid% %id% else %pop% ifNPCDead %1% LoseComp 0 .%id%_loss>
-	.%id%_loss <+T-- +F-->
-
-	sub
-		Persona 1
-		greeting <if= PlotStatus %plotid% %id% else %pop% Goto .%id%_GoIntro>
-		*.%id%_GoIntro <*IHearYouAreFightingNPC &EnemyNPC .%id%_GoReveal>
-		.%id%_GoReveal <NewChat Say %id%01 StoryNote %id%02 &SetTargetNPC 0 WinComp %2% .%id%_next>
-		.%id%_next <+Tgs +Fin>
-		Msg%id%01 <Well, there's some talk that \SPR &EnemyNPC 's been in town recently. If you're interested, I'd reccomend that you ask around at %name2%. That's the best place to turn up information.>
-		Msg%id%02 <%name1% suggested that you ask about \PERSONA &EnemyNPC at %name2%.>
-	end
-
-Plot
-	name <I'm looking for your enemy>
-	requires <*OLD_Conversation E:++ (1:ADVEN|1:POLIC) (1:A.---|1:A.sr_|1:A.equ) R:-- -1:ENEMY>
-	desc <This character's looking for your enemy. Help him out and gain him as a partner.>
-	Changes <R:++>
-	Size 1
-
-	% E1 is the NPC that the PC will speak with
-	% E2 is the outdoors location where the encounter will be placed
-	% E3 is the encounter to be found
-	element2 <Scene Environs !Near -7>
-	element3 <Prefab>
-	place3 <2>
-
-	% P%id%01 = Have gained E1 as a lancemate
-	% P%id%02 = Initialization Counter
-
-	% Fail Conditions:
-	% - Mission giver dies before encounter is activated
-	% - Revalation subplot fails
-
-	update <if= P%id%02 0 p= %id%02 1 NPCLevel %1% StoryDL>
-	end <if= PlotStatus %plotid1% 0 else .%id%_GoCheckReveal ifNPCDead %1%   LoseComp 0 .%id%_loss>
-	.%id%_GoCheckReveal <ifSubPlotLost %plotid2% if= p%id%01 0 else .%id1%_%plotid1%_GoLoss SetPlotStatus %plotid3% %id3%>
-	.%id%_loss <+T-- +F-->
-
-	.%id1%_%plotid1%_GoWin  <WinComp 0 .%id%_next   if= p%id%01 1  ifNPCOK %1%  Monologue %1% %id%01>
-	.%id1%_%plotid1%_GoLoss <LoseComp 0 .%id%_next  if= p%id%01 1  ifNPCOK %1%  Monologue %1% %id%02>
-	.%id%_next <+T-- +F-->
-
-	Msg%id%01 <I knew that it was a good idea for the two of us to join forces!>
-	Msg%id%02 <Hmm... I'm beginning to doubt that it was a good idea to join forces with you.>
-
-	%% SubPlot1 is the combat encounter itself
-	%% SubPlot2 is the encounter revealation
-	%% SubPlot3 is the unwinnable condition
-	SubPlot1 <*:CS_MechaEncounter&Raiders 2 3>
-	SubPlot2 <*:CS_RevealEncounter_Raiders 2 3>
-	SubPlot3 <*CS_MootMission 1>
-
-	sub
-		Persona 1
-		greeting <if= PlotStatus %plotid% %id% else .%id%_GoChat if= p%id%01 0 else .%id%_GoChat if= PlotStatus %plotid1% 0 else .%id%_GoCheckProgress ifNPCOK &EnemyNPC else .%id%_GoTrivial Goto .%id%_GoGreet>
-		.%id%_GoChat <NewChat SayAnything>
-		.%id%_GoCheckProgress <ifChatNPCInPlay else .%id%_GoByPhone NewChat Say %id%01 AddChat %id%01 AddChat %id%02>
-		*.%id%_GoByPhone <*NotByPhone>
-		*.%id%_GoGreet <*IHearYouAreFightingNPC &EnemyNPC .%id%_GoReveal>
-		.%id%_GoReveal <NewChat Say %id%02 AddChat %id%03 AddChat %id%04 AddCHat %id%05>
-		.%id%_GoTrivial <NewChat Say %id%03 StoryNote %id%04 P= %id%01 -1 WinSubPlot %plotid% SetPlotStatus %plotid1% %id1% SetEncounterActive %3%>
-		*result%id%01 <*ComeBackWhenYouKnowSomething>
-		result%id%02 <EndCHat Say %id%05 StoryNote %id%06  P= %id%01 1  WinSubPlot %plotid%  XPV 100  &SetPartnerNPC %1%  &AddPartnerToLance>
-		result%id%03 <AddSociable   d8   Goto result%id%05>
-		result%id%04 <AddCheerful -d10   Goto result%id%05>
-		result%id%05 <NewChat Say %id%07 SMemo %id%08 History %id%09 AddChat %id%06 AddChat %id%07 SetPlotStatus %plotid1% %id1% SetPlotStatus %plotid2% %id2%  SetXXRAttitude %1% XXR_A_IsEqual>
-		result%id%06 <NewChat Say %id%10>
-		result%id%07 <NewChat Say %id%11 History %id%12 SMemo %id%13   P= %id%01 -1   LoseSubPlot %plotid%   AddReact -d10   AddSociable -d10   ifG d30 React PCEnemy %1%>
-		Msg%id%01_1 <Have you found out where \PERSONA &EnemyNPC is yet?>
-		CMsg%id%01_1 <ifNPCOK &EnemyNPC Accept>
-		Msg%id%01_2 <Have you found out where the raiders are yet?>
-		CMsg%id%01_2 <ifNPCDead &EnemyNPC Accept>
-		Msg%id%02 <I'm looking for \PERSONA &EnemyNPC too. I happen to know that \SPR &EnemyNPC 's in town on a mission, but so far I can't find \PPR &EnemyNPC base.>
-		Msg%id%03 <There's a lance of raiders in %name2%. I'd go fight them myself, but my doctor said to take it easy for a while.>
-		Msg%id%04 <%name1% revealed the presence of raiders in %name2%.>
-		Msg%id%05 <Great! We shouldn't waste any time- let's go to %name2% right away!>
-		Msg%id%06_1 <%name1% joined your lance to go fight \PERSONA &EnemyNPC in %name2%.>
-		CMsg%id%06_1 <ifNPCOK &EnemyNPC Accept>
-		Msg%id%06_2 <%name1% joined your lance to go fight the raiders in %name2%.>
-		CMsg%id%06_2 <ifNPCDead &EnemyNPC Accept>
-		Msg%id%07 <If you could help me to find \PERSONA &EnemyNPC , I could help you to fight \OPR &EnemyNPC . Together I think we stand a better chance than either of us would alone. What do you say?>
-		Msg%id%08 <%name1% told you that \PERSONA &EnemyNPC is in town on a mission; \SPR %1% offered to join forces with you if you can find where \SPR &EnemyNPC is.>
-		Msg%id%09 <%name1% offered to join forces with you against \PERSONA &EnemyNPC .>
-		Msg%id%10 <Great. Just come see me after you learn where \SPR &EnemyNPC is but before you fight \OPR &EnemyNPC . I'll be waiting.>
-		Msg%id%11 <So that's how it is? I give you a hot lead, and you run off to snag my bounty by yourself? Don't think I'm going to forget this, \PC ...>
-		Msg%id%12 <You refused %name1%'s offer.>
-		Msg%id%13 <%name1% told you that \PERSONA &EnemyNPC is in town on a mission.>
-		Prompt%id%01 <I'm still working on it.>
-		Prompt%id%02 <Yes, I have. Let's go.>
-		CPrompt%id%02 <IfSubPlotWon %plotid2% Accept>
-		Prompt%id%03 <Why don't we join up to fight \OPR &EnemyNPC ?>
-		Prompt%id%04 <Sounds like you're pretty much a loser.>
-		Prompt%id%05 <I could find \OPR &EnemyNPC easily enough.>
-		Prompt%id%06 <I'll think about it.>
-		Prompt%id%07 <Sorry, but I work better alone.>
-	end
-	inv
-		stc CORE-ACTIVATABLE
-		name <%name1%'s Mission>
-	end
-
 
 

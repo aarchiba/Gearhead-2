@@ -20,15 +20,18 @@ Content
 	% E1 is the NPC
 	% E2 is the item
 
-	start <ifNPCDead %1% SMemo 0 PyrrhicWinEpisode na>
+	start <ifNPCDead %1% SMemo 0 PyrrhicWinEpisode>
+
+	% SubPlot1 transfers to the actual reward...
+	SubPlot1 <*CS_WinGoal 1>
 
 	sub
 		Persona 1
 		greeting <if= PlotStatus %plotid% %id% else %pop% ifChatNPCInPlay else .%id%_GoComeHere NewChat Say %id%01 AddChat %id%01 AddCHat %id%02 AddChat %id%03>
 		*.%id%_GoComeHere <*NotByPhone>
 		result%id%01 <NewChat Say %id%02>
-		*result%id%02 <*MissionWasSuccess&Reward .%id%_GoEnd &AllyFac &EnemyFac>
-		.%id%_GoEnd <CashPrize Reward StoryDL 500 SMemo 0 DeleteItem %2%  AddReact d10  WinEpisode>
+		% Success: Delete the item, activate the WINGOAL subplot, and go back to the GREETING.
+		result%id%02 <DeleteItem %2%  AddReact d10  SetPlotStatus %plotid1% %id1% Goto GREETING>
 		result%id%03 <EndChat Say %id%03 AddReact -10 LoseEpisode>
 		Msg%id%01 <Have you found the %name2% yet?>
 		Msg%id%02 <Then come back here when you've found it!>
@@ -48,6 +51,8 @@ Content
 %%  rewarded. The exact reward is, of course, going to depend upon the current
 %%  goal.
 %%
+%%  PARAM1: The NPC giving the reward
+%%
 
 Content
 	name <Simple Thanks>
@@ -60,7 +65,7 @@ Content
 
 	sub
 		Persona 1
-		greeting <if= PlotStatus %plotid% %id% else %pop% NewChat Say %id%01 AddReact 10 AddHeroic 1 WinEpisode>
+		greeting <if= PlotStatus %plotid% %id% else %pop% NewChat Say %id%01 AddReact 25 AddHeroic 1 WinEpisode>
 		Msg%id%01 <Thank you, \PC . You did everything you said you would.>
 	end
 

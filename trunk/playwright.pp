@@ -2463,18 +2463,53 @@ Procedure CreateChoiceList( GB: GameBoardPtr; Story: GearPtr );
 var
 	Context: String;
 	LList,DC: GearPtr;
+	DCRS,t,N: Integer;	{ Dramatic Choice Reward Seed, plus two counters }
+	DCRList: Array [0..4] of Byte;	{ Dramatic Choice Reward List }
 begin
 	{ Step One: Determine the choice context. }
 	Context := StoryContext( GB , Story );
+
+	{ Determine which instant reward will be eligible for loading. }
+	{ The reward choices are numbered 11 to 20. 16 through 20 are second-tier }
+	{ copies of 11 through 15. }
+	DCRS := NAttValue( Story^.NA , NAG_XXRan , NAS_DCRSeed );
+	if DCRS = 0 then begin
+		DCRS := Random( 20000 ) + 1;
+		SetNAtt( Story^.NA , NAG_XXRan , NAS_DCRSeed , DCRS );
+	end;
+	DCRS := DCRS + NAttValue( Story^.NA , NAG_XXRan , NAS_EpisodeNumber );
+	N := 0;
+	for t := 11 to 15 do begin
+		if NAttValue( Story^.NA , NAG_Completed_DC , T ) = 0 then begin
+			DCRList[N] := T;
+			Inc( N );
+		end;
+	end;
+	if N > 0 then begin
+		N := DCRList[ DCRS mod N ];
+	end else begin
+		{ All of the first-tier rewards have been completed. Check the }
+		{ second tier. }
+		N := 0;
+		for t := 16 to 20 do begin
+			if NAttValue( Story^.NA , NAG_Completed_DC , T ) = 0 then begin
+				DCRList[N] := T;
+				Inc( N );
+			end;
+		end;
+		if N > 0 then N := DCRList[ DCRS mod N ];
+	end;
 
 	{ Step Two: Go through the list of dramatic choices. Try to add all }
 	{ which apply in this situation. }
 	LList := Dramatic_Choices;
 	while LList <> Nil do begin
 		{ A choice can be added if: }
+		{ - It was the reward option selected and stored in N. }
+		{  or   }
 		{ - Its REQUIRES field is satisfied by the context generated above. }
 		{ - It has not already been completed. }
-		if ( NAttValue( Story^.NA , NAG_Completed_DC , LList^.V ) = 0 ) and PartMatchesCriteria( Context , SAttValue( LList^.SA , 'REQUIRES' ) ) then begin
+		if ( LList^.V = N ) or ( ( ( LList^.V < 11 ) or ( LList^.V > 20 ) ) and ( NAttValue( Story^.NA , NAG_Completed_DC , LList^.V ) = 0 ) and PartMatchesCriteria( Context , SAttValue( LList^.SA , 'REQUIRES' ) ) ) then begin
 			DC := CloneGear( LList );
 			if InsertPlot( FindRoot( GB^.Scene ) , Story , DC , GB , NAttValue( Story^.NA , NAG_Narrative , NAS_DifficultyLevel ) ) then begin
 				SetNAtt( DC^.NA , NAG_XXRan , NAS_IsDramaticChoicePlot , 1 );

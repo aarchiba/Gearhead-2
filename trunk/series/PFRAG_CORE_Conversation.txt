@@ -9,10 +9,11 @@
 
 Persona
 	requires <*CS_GoalExpo *CORE_INTRO>
-	START <NewChat Say %id%01 AddChat %id%01>
+	% V%id%01 = One time use counter
+	START <if= v%id%01 0 else %1% V= %id%01 1 NewChat Say %id%01 AddChat %id%01>
 	result%id%01 <goto %1%>
-	Msg%id%01 <>
-	Prompt%id%01 <I'll do my best.>
+	Msg%id%01 <I realize that you're just starting out. Do well now and you'll have a bright future as a cavalier.>
+	Prompt%id%01 <I'll try my best.>
 
 Persona
 	requires <*CS_GoalExpo *CORE_DEF_>

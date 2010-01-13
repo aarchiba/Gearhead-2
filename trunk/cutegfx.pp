@@ -1242,6 +1242,7 @@ initialization
 	if DoFullScreen then begin
 		Game_Screen := SDL_SetVideoMode(ScreenWidth, ScreenHeight, 32, SDL_DOUBLEBUF or SDL_FULLSCREEN );
 	end else begin
+{		Game_Screen := SDL_SetVideoMode(ScreenWidth, ScreenHeight, 0, SDL_DOUBLEBUF or SDL_HWSURFACE );}
 		Game_Screen := SDL_SetVideoMode(ScreenWidth, ScreenHeight, 0, SDL_DOUBLEBUF );
 	end;
 

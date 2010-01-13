@@ -80,6 +80,8 @@ type
 		F: Integer;	{ The frame to be displayed. }
 	end;
 
+	Cute_Map_Cel_Toggle = Array [ 1..MaxMapWidth, 1..MaxMapWidth, LoAlt..HiAlt ] of Boolean;
+
 const
 	Strong_Hit_Sprite_Name = 'blast64.png';
 	Weak_Hit_Sprite_Name = 'nodamage64.png';
@@ -142,6 +144,7 @@ var
 	Mini_Map_Sprite,World_Terrain,Items_Sprite: SensibleSpritePtr;
 
 	CM_Cels: Array [ 1..MaxMapWidth, 1..MaxMapWidth, LoAlt..HiAlt, 0..NumCMCelLayers ] of Cute_Map_Cel_Description;
+	CM_Cel_IsOn: Array [0..NumCMCelLayers] of Cute_Map_Cel_Toggle;
 	CM_ModelNames: Array [ 1..MaxMapWidth, 1..MaxMapWidth, LoAlt..HiAlt ] of String;
 
 Function ScreenDirToMapDir( D: Integer ): Integer;
@@ -175,13 +178,7 @@ Procedure ClearCMCelLayer( L: Integer );
 var
 	X,Y,Z: Integer;
 begin
-	for X := 1 to MaxMapWidth do begin
-		for Y := 1 to MaxMapWidth do begin
-			for Z := LoAlt to HiAlt do begin
-				CM_Cels[ X , Y , Z , L ].Sprite := Nil;
-			end;
-		end;
-	end;
+	FillChar( CM_Cel_IsOn[ L ] , SizeOf( CM_Cel_IsOn[ L ] ) , False );
 end;
 
 Procedure AddCMCel( GB: GameBoardPtr; X,Y,Z,L: Integer; SS: SensibleSpritePtr; Frame: Integer );
@@ -192,6 +189,7 @@ begin
 	if ( L < 0 ) or ( L > NumCMCelLayers ) then Exit;
 	CM_Cels[ X , Y , Z , L ].Sprite := SS;
 	CM_Cels[ X , Y , Z , L ].F := Frame;
+	CM_Cel_IsOn[ L ][ X , Y , Z ] := SS <> Nil;
 end;
 
 Function SpriteName( M: GearPtr ): String;
@@ -642,7 +640,7 @@ begin
 
 				for Z := LoAlt to HiAlt do begin
 					For Frame := 1 to NumCMCelLayers do begin
-						if CM_Cels[ X , Y , Z , Frame ].Sprite <> Nil then begin
+						if CM_Cel_IsOn[ Frame ][ X , Y , Z ] then begin
 							DrawSprite( CM_Cels[ X , Y , Z , Frame ].Sprite , MyDest , CM_Cels[ X , Y , Z , Frame ].F );
 						end;
 					end;
@@ -977,7 +975,7 @@ begin
 			end else if IsMasterGear( M ) then begin
 				{ Insert sprite-drawing code here. }
 				AddCMCel( 	GB , X , Y , Z , CMC_Master ,
-						LocateSprite( SpriteName( M ) , SpriteColor( GB , M ) , 64 , 64 ) ,
+						LocateSprite( SpriteName( M ) , SpriteColor( GB , M ) , 64 , 64 ),
 						MapDirToScreenDir( NAttValue( M^.NA , NAG_Location , NAS_D ) )
 				);
 
@@ -997,8 +995,15 @@ begin
 				GS_MetaStairsDown:	AddCMCel( GB , X , Y ,  0 , CMC_MetaTerrain , Extras_Sprite , ECEL_StairsDown );
 				GS_MetaTrapdoor:	AddCMCel( GB , X , Y ,  0 , CMC_MetaTerrain , Extras_Sprite , ECEL_Trapdoor );
 				GS_MetaElevator:	AddBasicDoorCel( X , Y , TCEL_Elevator );
-				GS_MetaBuilding:	AddBuilding( X , Y , NAttValue( M^.NA , NAG_MTAppearance , NAS_BuildingMesh ) );
-				GS_MetaEncounter:	AddCMCel( GB , X , Y ,  0 , CMC_MetaTerrain , Encounter_Sprite , ( M^.Stat[ STAT_EncounterType ] mod 3 ) * 3 + ( ( Animation_Phase div 5 ) mod 2 ) );
+				GS_MetaBuilding:	begin
+								AddBuilding( X , Y , NAttValue( M^.NA , NAG_MTAppearance , NAS_BuildingMesh ) );
+								if OnTheMap( GB , X , Y ) and Names_Above_Heads then CM_ModelNames[ X , Y , 1 ] := GearName( M );
+							end;
+				GS_MetaEncounter:	begin
+								AddCMCel( GB , X , Y ,  0 , CMC_MetaTerrain , Encounter_Sprite , ( M^.Stat[ STAT_EncounterType ] mod 3 ) * 3 + ( ( Animation_Phase div 5 ) mod 2 ) );
+								if OnTheMap( GB , X , Y ) and Names_Above_Heads then CM_ModelNames[ X , Y , 0 ] := GearName( M );
+							end;
+
 				GS_MetaCloud:		AddCMCel( GB , X , Y ,  0 , CMC_MetaTerrain , Extras_Sprite , ECEL_Smoke );
 				GS_MetaFire:		AddCMCel( GB , X , Y ,  0 , CMC_MetaTerrain , Extras_Sprite , ECEL_Fire );
 				else AddCMCel( 	GB , X , Y , Z , CMC_MetaTerrain , LocateSprite( SpriteName( M ) , SpriteColor( GB , M ) , 64 , 64 ) , MapDirToScreenDir( NAttValue( M^.NA , NAG_Location , NAS_D ) ) );
@@ -1041,7 +1046,8 @@ begin
 
 				for Z := LoAlt to HiAlt do begin
 					for t := 0 to NumCMCelLayers do begin
-						if CM_Cels[ X ,Y , Z , T ].Sprite <> Nil then begin
+{						if CM_Cels[ X ,Y , Z , T ].Sprite <> Nil then begin}
+						if CM_Cel_IsOn[ T ][ X , Y , Z ] then begin
 							MyDest.X := ScreenX( VX , VY );
 							MyDest.Y := ScreenY( VX , VY ) - Altitude_Height * Z;
 							if CM_Cels[ X ,Y , Z , T ].Sprite^.H > 64 then MyDest.Y := MyDest.Y - 32;
@@ -1362,6 +1368,9 @@ begin
 			Current_Backdrop := LocateSprite( Backdrop_FName[ BDNum ] , Backdrop_Size , Backdrop_Size );
 		end;
 	end;
+
+	{ Also clear the cel layers, to prevent crashage. }
+	For BDNum := 1 to NumCMCelLayers do ClearCMCelLayer( BDNum );
 end;
 
 initialization
