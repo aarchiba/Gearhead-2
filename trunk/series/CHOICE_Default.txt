@@ -22,7 +22,7 @@ Choice 1
 	name <Defense 1: They need help in city>
 	desc <Complete this option track to earn more reinforcements in final battle.>
 	desig <DEF_1>
-	requires <>
+	requires <-!Ex>
 
 	% E1 is the city for the next episode.
 	Element1 <Scene City !Far -7 !Ally -7 !Okay -3 !XClude -2>
@@ -39,7 +39,7 @@ Choice 2
 	name <Defense 2>
 	desc <Complete this option track to earn more reinforcements in final battle.>
 	desig <DEF_2>
-	requires <:DEF_1>
+	requires <:DEF_1 -!Ex>
 
 	% E1 is the city for the next episode.
 	Element1 <Scene City !Far -7 !Ally -7 !Okay -3 !XClude -2>
@@ -56,7 +56,7 @@ Choice 3
 	name <Defense 3>
 	desc <Complete this option track to earn more reinforcements in final battle.>
 	desig <DEF_3>
-	requires <:DEF_2>
+	requires <:DEF_2 -!Ex>
 
 	% E1 is the city for the next episode.
 	Element1 <Scene City !Far -7 !Ally -7 !Okay -3 !XClude -2>
@@ -73,7 +73,7 @@ Choice 4
 	name <Defense 4>
 	desc <Complete this option track to earn more reinforcements in final battle.>
 	desig <DEF_4>
-	requires <:DEF_3>
+	requires <:DEF_3 -!Ex>
 
 	% E1 is the city for the next episode.
 	Element1 <Scene City !Far -7 !Ally -7 !Okay -3 !XClude -2>
@@ -94,7 +94,7 @@ Choice 5
 	name <Defense 5>
 	desc <Complete this option track to earn more reinforcements in final battle.>
 	desig <DEF_5>
-	requires <:DEF_4>
+	requires <:DEF_4 -!Ex>
 
 	% E1 is the city for the next episode.
 	Element1 <Scene City !Far -7 !Ally -7 !Okay -3 !XClude -2>
@@ -115,6 +115,7 @@ Choice 6
 	name <Offense 1>
 	desc <Complete this option tract to weaken the enemy forces in final battle.>
 	desig <OFF_1>
+	requires <-!Ex>
 
 	% E1 is the city for the next episode.
 	Element1 <Scene City !Far -7 !Ally -7 !Okay -3 !XClude -2>
@@ -131,7 +132,7 @@ Choice 7
 	name <Offense 2>
 	desc <Complete this option tract to weaken the enemy forces in final battle.>
 	desig <OFF_2>
-	requires <:OFF_1>
+	requires <:OFF_1 -!Ex>
 
 	% E1 is the city for the next episode.
 	Element1 <Scene City !Far -7 !Ally -7 !Okay -3 !XClude -2>
@@ -151,7 +152,7 @@ Choice 8
 	name <Offense 3>
 	desc <Complete this option tract to weaken the enemy forces in final battle.>
 	desig <OFF_3>
-	requires <:OFF_2>
+	requires <:OFF_2 -!Ex>
 
 	% E1 is the city for the next episode.
 	Element1 <Scene City !Far -7 !Ally -7 !Okay -3 !XClude -2>
@@ -173,7 +174,7 @@ Choice 9
 	name <Offense 4>
 	desc <Complete this option tract to weaken the enemy forces in final battle.>
 	desig <OFF_4>
-	requires <:OFF_3>
+	requires <:OFF_3 -!Ex>
 
 	% E1 is the city for the next episode.
 	Element1 <Scene City !Far -7 !Ally -7 !Okay -3 !XClude -2>
@@ -195,7 +196,7 @@ Choice 10
 	name <Offense 5>
 	desc <Complete this option tract to weaken the enemy forces in final battle.>
 	desig <OFF_5>
-	requires <:OFF_4>
+	requires <:OFF_4 -!Ex>
 
 	% E1 is the city for the next episode.
 	Element1 <Scene City !Far -7 !Ally -7 !Okay -3 !XClude -2>
@@ -217,7 +218,8 @@ Choice 10
 %%  Choices 11 through 20 are the Reward Choices. Each of these will result
 %%  in an immediate reward for the PC. Note that only one RC will appear in
 %%  the choice menu; this is hardcoded into the menu generator, so these
-%%  choice indicies should not be reassigned.
+%%  choice indicies should not be reassigned. Also, they don't need a "requires"
+%%  field.
 %%
 
 Choice 11
@@ -283,19 +285,118 @@ Choice 13
 
 	Msg%id%01 <You decided to upgrade your equipment in %name1%.>
 Choice 15
-	name <Reward 5: Seek Equipment 1>
+	name <Reward 5: Seek Lancemate 1>
+	desc <Take this option to earn immediate benefits for the PC.>
+	desig <R_LAN>
+
+	% E1 is the city for the next episode.
+	Element1 <Scene City !Far -7 !Ally -7 !Okay -3 !XClude -2>
+
+	Prompt <I ought to recruit a new lancemate.>
+	Reply <If you're looking to meet a skilled cavalier, %name1% is the place to go... or so I've heard.>
+	Alert <You decide to seek a new lancemate in %name1%.>
+
+	Choice <StoryNote %id%01 &SetEpisodeScene %1%>
+
+	Msg%id%01 <You decided to seek a new lancemate in %name1%.>
+
+
+Choice 16
+	name <Reward 6: Seek Training 2>
+	desc <Take this option to earn immediate benefits for the PC.>
+	desig <R_EXP>
+
+	% E1 is the city for the next episode.
+	Element1 <Scene City !Far -7 !Ally -7 !Okay -3 !XClude -2>
+
+	Prompt <I need to work on my skills even more.>
+	Reply <I hear that you could do that in %name1%.>
+	Alert <You decide to seek training in %name1%.>
+
+	Choice <StoryNote %id%01 &SetEpisodeScene %1%>
+
+	Msg%id%01 <You decided to seek training in %name1%.>
+
+Choice 17
+	name <Reward 7: Seek Mecha 2>
+	desc <Take this option to earn immediate benefits for the PC.>
+	desig <R_MEK>
+
+	% E1 is the city for the next episode.
+	Element1 <Scene City !Far -7 !Ally -7 !Okay -3 !XClude -2>
+
+	Prompt <I need an even better mecha.>
+	Reply <I hear that you could do that in %name1%.>
+	Alert <You decide to seek a new mecha in %name1%.>
+
+	Choice <StoryNote %id%01 &SetEpisodeScene %1%>
+
+	Msg%id%01 <You decided to seek a new mecha in %name1%.>
+
+Choice 18
+	name <Reward 8: Seek Money 2>
+	desc <Take this option to earn immediate benefits for the PC.>
+	desig <R_MON>
+
+	% E1 is the city for the next episode.
+	Element1 <Scene City !Far -7 !Ally -7 !Okay -3 !XClude -2>
+
+	Prompt <I need to earn a lot more money.>
+	Reply <I hear that you could do that in %name1%.>
+	Alert <You decide to seek money in %name1%.>
+
+	Choice <StoryNote %id%01 &SetEpisodeScene %1%>
+
+	Msg%id%01 <You decided to seek money in %name1%.>
+Choice 19
+	name <Reward 9: Seek Equipment 2>
 	desc <Take this option to earn immediate benefits for the PC.>
 	desig <R_EQP>
 
 	% E1 is the city for the next episode.
 	Element1 <Scene City !Far -7 !Ally -7 !Okay -3 !XClude -2>
 
-	Prompt <I need to get some better equipment.>
+	Prompt <I need to get even better equipment.>
 	Reply <I hear that you could do that in %name1%.>
 	Alert <You decide to upgrade your equipment in %name1%.>
 
 	Choice <StoryNote %id%01 &SetEpisodeScene %1%>
 
 	Msg%id%01 <You decided to upgrade your equipment in %name1%.>
+Choice 20
+	name <Reward 10: Seek Lancemate 2>
+	desc <Take this option to earn immediate benefits for the PC.>
+	desig <R_LAN>
 
+	% E1 is the city for the next episode.
+	Element1 <Scene City !Far -7 !Ally -7 !Okay -3 !XClude -2>
+
+	Prompt <I want to recruit another new lancemate.>
+	Reply <If you're looking to meet a skilled cavalier, %name1% is the place to go... or so I've heard.>
+	Alert <You decide to seek a new lancemate in %name1%.>
+
+	Choice <StoryNote %id%01 &SetEpisodeScene %1%>
+
+	Msg%id%01 <You decided to seek a new lancemate in %name1%.>
+
+%%
+%%  END OF REWARD CHOICES
+%%
+
+Choice 21
+	name <Default Ending>
+	desc <The final battle.>
+	desig <FINAL>
+	requires <!Ex>
+
+	% E1 is the city for the next episode.
+	Element1 <Scene City !Far -7 !Ally -7 !Okay -3 !XClude -2>
+
+	Prompt <It's time to finish things.>
+	Reply <In that case you should head to %name1%. Good luck.>
+	Alert <You decide to finish things in %name1%.>
+
+	Choice <SMemo %id%01 &SetEpisodeScene %1%>
+
+	Msg%id%01 <You will finish things in %name1%.>
 

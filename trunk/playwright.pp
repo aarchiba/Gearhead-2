@@ -2472,32 +2472,35 @@ begin
 	{ Determine which instant reward will be eligible for loading. }
 	{ The reward choices are numbered 11 to 20. 16 through 20 are second-tier }
 	{ copies of 11 through 15. }
-	DCRS := NAttValue( Story^.NA , NAG_XXRan , NAS_DCRSeed );
-	if DCRS = 0 then begin
-		DCRS := Random( 20000 ) + 1;
-		SetNAtt( Story^.NA , NAG_XXRan , NAS_DCRSeed , DCRS );
-	end;
-	DCRS := DCRS + NAttValue( Story^.NA , NAG_XXRan , NAS_EpisodeNumber );
 	N := 0;
-	for t := 11 to 15 do begin
-		if NAttValue( Story^.NA , NAG_Completed_DC , T ) = 0 then begin
-			DCRList[N] := T;
-			Inc( N );
+	{ Only add a reward option if we are not yet at the conclusion. }
+	if NAttValue( Story^.NA , NAG_Narrative , NAS_DifficultyLevel ) <= 80 then begin
+		DCRS := NAttValue( Story^.NA , NAG_XXRan , NAS_DCRSeed );
+		if DCRS = 0 then begin
+			DCRS := Random( 20000 ) + 1;
+			SetNAtt( Story^.NA , NAG_XXRan , NAS_DCRSeed , DCRS );
 		end;
-	end;
-	if N > 0 then begin
-		N := DCRList[ DCRS mod N ];
-	end else begin
-		{ All of the first-tier rewards have been completed. Check the }
-		{ second tier. }
-		N := 0;
-		for t := 16 to 20 do begin
+		DCRS := DCRS + NAttValue( Story^.NA , NAG_XXRan , NAS_EpisodeNumber );
+		for t := 11 to 15 do begin
 			if NAttValue( Story^.NA , NAG_Completed_DC , T ) = 0 then begin
 				DCRList[N] := T;
 				Inc( N );
 			end;
 		end;
-		if N > 0 then N := DCRList[ DCRS mod N ];
+		if N > 0 then begin
+			N := DCRList[ DCRS mod N ];
+		end else begin
+			{ All of the first-tier rewards have been completed. Check the }
+			{ second tier. }
+			N := 0;
+			for t := 16 to 20 do begin
+				if NAttValue( Story^.NA , NAG_Completed_DC , T ) = 0 then begin
+					DCRList[N] := T;
+					Inc( N );
+				end;
+			end;
+			if N > 0 then N := DCRList[ DCRS mod N ];
+		end;
 	end;
 
 	{ Step Two: Go through the list of dramatic choices. Try to add all }
