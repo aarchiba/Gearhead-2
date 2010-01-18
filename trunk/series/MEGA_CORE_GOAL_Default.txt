@@ -55,6 +55,148 @@ Content
 %%
 
 Content
+	name <R_LAN I have a friend>
+	desc <The PC's friend will offer to join him, becoming either an ally or the partner.>
+	requires <*CS_WinGoal *CORE_R_LAN>
+
+	% E1 is the NPC
+	% E2 is a local public scene
+	% E3 is the new NPC
+	Element2 <Scene Public !Near -7 !Okay 1>
+	Element3 <NewNPC NewNPC 1 2 Friend>
+	Place3 </>
+
+	start <ifNPCDead %1% SMemo 0 DeleteNPC %3% WinEpisode>
+
+	sub
+		Persona 1
+		greeting <if= PlotStatus %plotid% %id% else %pop% NewChat Say %id%01 NPCLevel %3% StoryDL PCAlly %3% AddChat %id%01 AddChat %id%02>
+		result%id%01 <Monologue %3% %id%02 AddLancemate %3% NewChat Say %id%03 History %id%04 CashPrize Reward StoryDL 200 SMemo 0  AddReact d10   WinEpisode>
+		result%id%02 <NewChat Say %id%05 History %id%06 MoveNPC %3% %2% CashPrize Reward StoryDL 200 SMemo 0   WinEpisode>
+		Msg%id%01 <Ah, just like you promised... Say, if you're looking for some extra help, my friend %name3% has just started out as a cavalier.>
+		Msg%id%02 <Nice to meet you, \PC . I'll do my best to help you out.>
+		Msg%id%03 <Try to keep \OPR %3% from getting killed, okay? Thanks again for your help.>
+		Msg%id%04 <%name1%'s friend %name3% joined your lance.>
+		Msg%id%05 <Well if you ever have need of \OPR %3% , %name3% will be waiting at %name2%. Thanks aga‌in for your help.>
+		Msg%id%06 <%name3% at %name2% offered to join your lance.>
+		Prompt%id%01 <Alright, I could use an extra hand.>
+		Prompt%id%02 <Sorry, I have everyone I need right now.>
+	end
+
+
+Content
+	name <R_EQP Buy It Yourself>
+	desc <The PC will be given some cash and told to buy the equipment themself.>
+	requires <*CS_WinGoal *CORE_R_EQP>
+
+	% E1 is the NPC
+
+	start <ifNPCDead %1% SMemo 0 PyrrhicWinEpisode>
+
+	sub
+		Persona 1
+		% V%id%01 = Mecha Renown, StoryDL+20
+		greeting <if= PlotStatus %plotid% %id% else %pop% NewChat Say %id%01   CashPrize Reward StoryDL 5000 SMemo 0  AddReact d10   WinEpisode>
+		Msg%id%01 <You really came through. Here, this money should be enough to let you upgrade your equipment... things only get harder from this point on.>
+	end
+
+
+Content
+	name <R_MON Here, have a whole lot of money>
+	desc <The NPC will pay the PC for the job.>
+	requires <*CS_WinGoal *CORE_R_MON>
+
+	% E1 is the NPC.
+
+	start <ifNPCDead %1% SMemo 0 PyrrhicWinEpisode>
+
+	sub
+		Persona 1
+		greeting <if= PlotStatus %plotid% %id% else %pop% gOTO .%id%_GoReportSuccess>
+		*.%id%_GoReportSuccess <*MissionWasSuccess&Reward .%id%_GoEnd &AllyFac &EnemyFac>
+		.%id%_GoEnd <CashPrize Reward StoryDL 5000 SMemo 0  AddReact d10  WinEpisode>
+	end
+
+
+Content
+	name <R_MEK Custom Mecha>
+	desc <The NPC will give the PC a custom mecha.>
+	requires <*CS_WinGoal *CORE_G_MEK>
+
+	% E1 is the NPC
+
+	start <ifNPCDead %1% SMemo 0 PyrrhicWinEpisode>
+
+	sub
+		Persona 1
+		% V%id%01 = Mecha Renown, StoryDL+20
+		greeting <if= PlotStatus %plotid% %id% else %pop% NewChat Say %id%01 V= %id%01 StoryDL V+ %id%01 20 CustomMecha .%id%_fac v%id%01  WinEpisode>
+		.%id%_fac <GENERAL \FACTION_DESIG RootSceneFac \FACTION_DESIG ChatNPCFac>
+		Msg%id%01 <You did it! As promised, here's a custom mecha built specifically for you.>
+	end
+
+
+Content
+	name <R_EXP Training Together>
+	desc <The NPC will train with you.>
+	requires <*CS_WinGoal *CORE_G_EXP (1:MILIT|1:ADVEN)>
+
+	% E1 is the NPC.
+
+	start <ifNPCDead %1% SMemo 0 PyrrhicWinEpisode>
+
+	sub
+		Persona 1
+		% V%id%01 = XP Award
+		greeting <if= PlotStatus %plotid% %id% else %pop% NewChat Say %id%01 AddChat %id%01 AddChat %id%02>
+		result%id%01 <Alert %id%02 V= %id%01 * 50 EpisodeNumber V+ %id%01 50 SkillXP 1 %id%01 SkillXP 2 %id%01 SkillXP 3 %id%01 SkillXP 4 %id%01 SkillXP 5 %id%01 SkillXP 6 %id%01 NewChat Say %id%03 History %id%04 WinEpisode>
+		result%id%02 <NewChat Say %id%05 History %id%06 CashPrize Reward StoryDL 500 AddReact -d10  WinEpisode>
+		Msg%id%01 <So you did it... You are truly on the path to becoming a great cavalier. Now, I'll teach you what I know...>
+		Msg%id%02 <You train with \CHATNPC .>
+		Msg%id%03 <There. I've shown you everything I can; the rest is up to you.>
+		Msg%id%04 <You trained with \CHATNPC .>
+		Msg%id%05 <Is that so? It seems a rather short-sighted decision... but if that's what you want, it's what you will receive.>
+		Msg%id%06 <You refused \CHATNPC 's offer of training.>
+		Prompt%id%01 <Alright, let's do that.>
+		Prompt%id%02 <On second thought, I'd rather just get paid.>
+	end
+
+Content
+	name <R_EXP Book Learnin'>
+	desc <You wanted experience? Here, go study.>
+	requires <*CS_WinGoal *CORE_G_EXP -1:MILIT -1:ADVEN ~1:ACADE ~1:TRADE>
+
+	% E1 is the NPC
+	% E2 is the book
+	Element2 <Prefab>
+
+	start <ifNPCDead %1% SMemo 0 PyrrhicWinEpisode>
+
+	sub
+		Persona 1
+		greeting <if= PlotStatus %plotid% %id% else %pop% NewChat Say %id%01 AddReact d10 GiveItem %2% WinEpisode>
+		Msg%id%01 <You did well, \PC . In thanks I'll let you have this book... I know it doesn't look like much, but that's only because you haven't read it yet.>
+	end
+	inv
+		Treasure
+		name <Kroper's Guide to Mecha Piloting>
+		desc <An old and well-work book. The blurb on the cover promises that it can teach you some new tricks.>
+		Fudge 450000
+		% V1 = Have read book already
+		use <if= V1 0 else GoAlreadyRead ifYesNo 1 2 3 else GoReadLater Alert 4 History 5 V= 1 1 Mental XPV 100 PCSkill+ NAS_MechaPiloting 1>
+		GoReadLater <Print 6>
+		GoAlreadyRead <Print 7>
+
+		Msg1 <Kroper's Guide to Mecha Piloting! No matter who you are or your level of experience, this book is guaranteed to teach you some new tricks. Do you want to read it now?>
+		Msg2 <Yes, please.>
+		Msg3 <No, I'll save it for later.>
+		Msg4 <You read the book. Wow, the blurb on the cover wasn't kidding! You feel like a better mecha pilot than before.>
+		Msg5 <You read Kroper's Guide to Mecha Piloting.>
+		Msg6 <You put away the book for later.>
+		Msg7 <You've already read the book.>
+	end
+
+Content
 	name <Simple Thanks>
 	desc <The PC will be thanked for helping. That's it, I'm afraid.>
 	requires <*CS_WinGoal &NoCash>

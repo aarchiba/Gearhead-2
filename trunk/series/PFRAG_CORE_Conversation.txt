@@ -29,8 +29,43 @@ Persona
 	Prompt%id%01_2 <No kidding.>
 
 Persona
-	requires <*CS_GoalExpo *CORE_OFF_>
+	requires <*CS_GoalExpo (*CORE_OFF_|*CORE_R_MON|*CORE_R_EQP)>
 	START <Goto %1%>
+
+Persona
+	requires <*CS_GoalExpo *CORE_R_LAN>
+	% V%id%01 = One time use counter
+	START <if= v%id%01 0 else %1% V= %id%01 1 if= T-3 0 else %1% NewChat Say %id%01 AddChat %id%01 AddChat %id%02>
+	result%id%01 <goto %1%>
+	result%id%02 <AddSociable d10  goto %1%>
+	Msg%id%01 <I notice that you travel alone... That must be dangerous.>
+	Prompt%id%01 <I manage.>
+	Prompt%id%02 <Yeah, I'm hoping to find a new partner soon.>
+
+Persona
+	requires <*CS_GoalExpo *CORE_R_EXP>
+	% V%id%01 = One time use counter
+	START <if= v%id%01 0 else %1% V= %id%01 1 NewChat Say %id%01 AddChat %id%01>
+	result%id%01 <goto %1%>
+	result%id%02 <AddCheerful -d6  goto %1%>
+	Msg%id%01 <You seek to become a better fighter. If you prove to me that you're serious about improving, I can help you to reach your full potential.>
+	Prompt%id%01 <So what do you want me to do?>
+	Prompt%id%01_1 <Sounds interesting.>
+	Prompt%id%02 <I doubt you can teach me anything, but go on.>
+	CPrompt%id%02 <ifChatNPCNotCombatant Accept>
+
+Persona
+	requires <*CS_GoalExpo *CORE_R_MEK>
+	% V%id%01 = One time use counter
+	START <if= v%id%01 0 else %1% V= %id%01 1 NewChat Say %id%01 AddChat %id%01>
+	result%id%01 <goto %1%>
+	Msg%id%01 <I could use your help with something. Aid me in this, and I'll reward you with a brand new state of the art mecha.>
+	Prompt%id%01 <I like the sound of that.>
+	Prompt%id%01_1 <Sounds interesting.>
+
+
+
+
 
 
 

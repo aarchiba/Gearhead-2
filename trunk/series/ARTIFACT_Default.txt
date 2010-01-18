@@ -93,7 +93,7 @@ ITEM_DESC <It's an archaic style pistol dating to before the age of superpowers.
 ITEM_HISTORY <This pistol was owned by a succession of police officers, each of whom died in the line of duty.>
 ITEM_USAGE <Supposedly it was a very powerful weapon in its day.>
 caliber <.45 Revolver>
-requires <ITEM PREZERO !Ne>
+requires <ITEM PREZERO !Ne Weapon>
 SDL_PORTRAIT <item_peacemakerrevolver.png>
 Context <TL_Ne>
 Mass -7
@@ -117,7 +117,7 @@ ITEM_DESC <It's a fusion powered melee weapon of some kind.>
 ITEM_HISTORY <It went missing during its first field test and hasn't been seen since.>
 ITEM_USAGE <We could learn a lot about power generation by examining it.>
 type <Blast 7 Brutal ArmorPiercing Burn Mystery>
-requires <ITEM PREZERO !Lo>
+requires <ITEM PREZERO !Lo Weapon>
 Context <TL_Lo>
 SDL_PORTRAIT <item_mace.png>
 Acc -1
@@ -127,7 +127,7 @@ Melee 10
 Scale 0
 name <Szczerbiec Sword>
 desc <An ancient, finely crafted sword of European design.>
-requires <ITEM PREZERO !Lo>
+requires <ITEM PREZERO !Lo Weapon>
 context <TL_Lo>
 Fudge 10000
 ITEM_DESC <Szczerbiec is an ancient sword associated with Pax Europa.>
@@ -141,7 +141,7 @@ Mass -7
 
 HeadArmor 5
 name <Chitin Helm>
-requires <ITEM PREZERO !Lo>
+requires <ITEM PREZERO !Lo Armor>
 context <TL_Lo>
 desc <An ornate helmet, apparently made of bone. It feels warm to the touch.>
 ITEM_DESC <It's an organic helmet made of a bonelike material.>
@@ -153,7 +153,7 @@ mass -9
 
 BodyArmor 5
 name <Chitin Breastplate>
-requires <ITEM PREZERO !Lo>
+requires <ITEM PREZERO !Lo Armor>
 context <TL_Lo>
 desc <An ornate breastplate, apparently made of bone. It feels warm to the touch.>
 ITEM_DESC <It's armor made from a bonelike, organic material.>
@@ -182,7 +182,7 @@ ITEM_DESC <It's a sword made of bone.>
 ITEM_HISTORY <These swords were created for the military brass of Pax Europa.>
 ITEM_USAGE <It must be an incredible weapon, even by today's standards.>
 type <ArmorPiercing Mystery>
-requires <ITEM PREZERO !Md>
+requires <ITEM PREZERO !Md Weapon>
 Context <TL_Md>
 SDL_PORTRAIT <item_bonesword.png>
 mass -12
@@ -207,7 +207,7 @@ Msg1 <This appears to be a primitive but extremely powerful microfusion reactor.
 
 HeadArmor 7
 name <Zeron Helmet>
-requires <ITEM PREZERO !Hi>
+requires <ITEM PREZERO !Hi Armor>
 Context <TL_Hi>
 Biotech
 mass -12
@@ -227,7 +227,7 @@ BodyArmor 8
 scale 0
 mass -4
 name <Zeron Armor>
-requires <ITEM PREZERO !Hi>
+requires <ITEM PREZERO !Hi Armor>
 Context <TL_Hi>
 Biotech
 desc <A suit of strangely biological armor.>
@@ -252,7 +252,7 @@ end
 
 ArmArmor 7
 name <Zeron Sleeve>
-requires <ITEM PREZERO !Hi>
+requires <ITEM PREZERO !Hi Armor>
 Context <TL_Hi>
 scale 0
 mass -2
@@ -275,7 +275,7 @@ end
 
 LegArmor 7
 name <Zeron Legging>
-requires <ITEM PREZERO !Hi>
+requires <ITEM PREZERO !Hi Armor>
 Context <TL_Hi>
 mass -2
 scale 0
@@ -294,7 +294,7 @@ end
 
 ArmArmor 7
 name <Zeron Sleeve>
-requires <ITEM PREZERO !Hi>
+requires <ITEM PREZERO !Hi Armor>
 Context <TL_Hi>
 scale 0
 mass -2
@@ -317,7 +317,7 @@ end
 
 LegArmor 7
 name <Zeron Legging>
-requires <ITEM PREZERO !Hi>
+requires <ITEM PREZERO !Hi Armor>
 Context <TL_Hi>
 mass -2
 scale 0

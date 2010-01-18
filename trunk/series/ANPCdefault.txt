@@ -48,6 +48,16 @@ Awareness
 Survival
 Repair 5
 
+Arch Martial Artist
+statline 12 15 14 11 12 11 12 8
+chardesc Spiritual Passionate
+Combatant
+job_desig <ADVEN>
+Talent 1
+Talent 2
+Awareness
+Initiative
+
 Arch Ticket Agent
 statline 8 8 10 10 11 10 11 12
 job_desig <TRADE>
@@ -92,6 +102,8 @@ statline 12 15 14 11 12 11 12 8
 chardesc Spiritual Spiritual Spiritual Passionate
 Combatant
 job_desig <FAITH>
+Talent 1
+Talent 2
 Awareness
 Initiative
 Mysticism
@@ -100,6 +112,7 @@ Arch Monk
 statline 10 12 12 10 10 11 13 10
 chardesc Spiritual Spiritual Spiritual Shy Heroic
 job_desig <FAITH>
+Talent 2
 CloseCombat 6
 Dodge 8
 Conversation
@@ -163,6 +176,13 @@ statline 9 10 8 9 14 12 9 9
 job_desig <CRAFT>
 Shopping 5
 Repair 10
+
+Arch Engineer
+statline 9 10 8 9 14 12 9 9
+job_desig <CRAFT>
+Shopping 5
+Repair 10
+MechaEngineering 10
 
 Arch Professor
 statline 8 7 9 10 10 10 18 8

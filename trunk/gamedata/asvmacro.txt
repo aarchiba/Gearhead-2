@@ -169,6 +169,7 @@ RoughMap <11>
 #VictimsRecovered <GrabCurrentScene GNatt NAG_Narrative NAS_VictimsRecovered>
 NPCTEAM <GrabNPC ? GNAtt NAG_LOCATION nAS_Team>
 NAG_XXRan <-7>
+NAS_EpisodeNumber <6>
 NAS_DramaticChoice <8>
 CurrentDramaticGoal <GrabStory GNAtt NAG_XXRan NAS_DramaticChoice>
 NAG_Completed_DC <-25>
@@ -193,6 +194,7 @@ XXR_A_HatesPC <7>
 XXR_A_MutualHate <8>
 XXR_A_Obsession <9>
 StoryDL <GrabStory GNAtt NAG_Narrative NAS_DifficultyLevel>
+EpisodeNumber <GrabStory GNAtt NAG_XXRan NAS_EpisodeNumber>
 STAT_Pass <3>
 STAT_Lock <6>
 STAT_MetaVisibility <5>
