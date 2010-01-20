@@ -148,7 +148,7 @@ Content
 		result4 <AddEasygoing -d8 Goto result3>
 		result5 <Goto result3>
 		result6 <ifNPCOK &PartnerNPC else GoR6Conclude &RemovePartnerFromLance FreezeNPC &PartnerNPC Monologue &PartnerNPC 7 Goto GoR6Conclude>
-		GoR6Conclude <EndChat Say 8 SMemo 0 L= 1 1 Return History 9 CashPrize StoryDL 500 CustomMecha .fac StoryDL XPV 100  PCFEnemy &AllyFac &SetAllyFac &EnemyFac SetPCFac &EnemyFac &SetEnemyFac 0 &SetPartnerNPC %1% WinComp 0 .next Retreat 2 Retreat 3>
+		GoR6Conclude <EndChat Say 8 SMemo 0 L= 1 1 Return History 9 CashPrize StoryDL 500 CustomMecha .fac StoryDL XPV 100  PCFEnemy &AllyFac &SetAllyFac &EnemyFac SetPCFac &EnemyFac &SetEnemyFac 0 &SetPartnerNPC %1% AlterContext .next PyrrhicWinEpisode Retreat 2 Retreat 3>
 		.fac <GENERAL \FACTION_DESIG &EnemyFac>
 		.next <+T-- +F-->
 		*result7 <*THEME_EXPO&Enemy na>

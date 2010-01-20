@@ -802,7 +802,7 @@ Content
 Content
 	name <The Enemy's Decision>
 	desc <Your enemy consults their mentor; the PC of course thinks it's a kidnapping>
-	requires <*:CS_GatherInformation E:A.env (E:M.---|E:M.mer|E:M.com) ~&AboutEnemy>
+	requires <*:CS_GatherInformation E:A.env (E:M.---|E:M.mer|E:M.com) ~&AboutEnemy ~*CORE_R_EXP>
 	changes <E:M>
 	Size 5
 

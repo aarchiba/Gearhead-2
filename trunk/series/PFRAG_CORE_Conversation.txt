@@ -131,6 +131,27 @@ Persona
 	Prompt%id%03_2 <That sounds like a good deal.>
 
 Persona
+	requires <*CS_C_Greeting *CORE_OFF_ E:++ ~E:ENEMY>
+	START <NewChat Say %id%01 AddChat %id%01>
+	result%id%01 <goto %1%>
+	Msg%id%01 <\PERSONA &EnemyNPC has been causing lots of trouble around here. I could use your help to defeat \OPR &EnemyNPC .>
+	Msg%id%01_1 <People say that you're \PERSONA &EnemyNPC 's arch-enemy. I hope it's true because \SPR &EnemyNPC 's been causing lots of trouble, and we need someone to deal with \OPR &EnemyNPC .>
+	CMsg%id%01_1 <ifNPCSociable Accept>
+	Msg%id%01_2 <>
+	CMsg%id%01_2 <ifNPCShy Accept>
+	Msg%id%01_3 <>
+	CMsg%id%01_3 <ifNPCEasygoing Accept>
+	Msg%id%01_4 <>
+	CMsg%id%01_4 <ifNPCPassionate Accept>
+	Msg%id%01_5 <>
+	CMsg%id%01_5 <ifNPCCheerful Accept>
+	Msg%id%01_6 <>
+	CMsg%id%01_6 <ifNPCMelancholy Accept>
+	Prompt%id%01_1 <Oh yeah, that's what I came for.>
+	Prompt%id%01_2 <I'm always ready to fight \PERSONA &EnemyNPC .>
+	Prompt%id%01_3 <>
+
+Persona
 	requires <*CS_C_Greeting *CORE_OFF_ ~"MILIT" ~"ADVEN"  ~"PCFAC">
 	START <NewChat Say %id%01 AddChat %id%01>
 	result%id%01 <goto %1%>

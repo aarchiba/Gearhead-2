@@ -106,6 +106,33 @@
 %	 be called)
 
 	Persona
+	requires <*CS_BasicFightingMission ("CORPO"|"CRAFT"|"LABOR"|"TRADE")>
+	START <NewChat Say %id%01 AddChat %id%01 AddChat %id%02>
+	result%id%01 <StoryNote %id%02 Goto %1%>
+	result%id%02 <SMemo 0 Goto %2%>
+	Msg%id%01 <Several of our convoys have been attacked recently. I want you to locate the mecha responsible and eliminate them.>
+	Msg%id%01_1 <>
+	CMsg%id%01_1 <ifNPCSociable Accept>
+	Msg%id%01_2 <>
+	CMsg%id%01_2 <ifNPCShy Accept>
+	Msg%id%01_3 <>
+	CMsg%id%01_3 <ifNPCEasygoing Accept>
+	Msg%id%01_4 <>
+	CMsg%id%01_4 <ifNPCPassionate Accept>
+	Msg%id%01_5 <>
+	CMsg%id%01_5 <ifNPCCheerful Accept>
+	Msg%id%01_6 <>
+	CMsg%id%01_6 <ifNPCMelancholy Accept>
+	Msg%id%02 <\CHATNPC hired you to locate and defeat some convoy raiders.>
+	Prompt%id%01 <Consider it done.>
+	Prompt%id%01_1 <No problem. I'll be back when I'm done.>
+	Prompt%id%01_2 <Alright, I can do that.>
+	Prompt%id%02 <Um... I don't wanna.>
+	CPrompt%id%02 <if# PCFac ChatNPCFac Accept>
+	Prompt%id%02_1 <No thanks, I'd rather not get involved.>
+	Prompt%id%02_2 <This isn't my kind of mission.>
+
+	Persona
 	requires <*CS_BasicFightingMission "ACADE">
 	START <NewChat Say %id%01 AddChat %id%01 AddChat %id%02>
 	result%id%01 <StoryNote %id%02 Goto %1%>
