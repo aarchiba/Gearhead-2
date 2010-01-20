@@ -106,6 +106,31 @@
 %	 be called)
 
 	Persona
+	requires <*CS_BasicFightingMission (*CORE_OFF_2|*CORE_OFF_3|*CORE_OFF_4|*CORE_OFF_5) F:++ ~"PCFAC">
+	% No way to refuse the mission, since this is exactly what the PC
+	% asked for.
+	START <NewChat Say %id%01 AddChat %id%01>
+	result%id%01 <StoryNote %id%02 Goto %1%>
+	result%id%02 <SMemo 0 Goto %2%>
+	Msg%id%01 <So far we've been reacting to \FACTION &EnemyFac , but now it's time to take the fight to them. A team of their mecha has been spotted near town. I want you to find this lance and destroy it.>
+	Msg%id%01_1 <>
+	CMsg%id%01_1 <ifNPCSociable Accept>
+	Msg%id%01_2 <>
+	CMsg%id%01_2 <ifNPCShy Accept>
+	Msg%id%01_3 <>
+	CMsg%id%01_3 <ifNPCEasygoing Accept>
+	Msg%id%01_4 <>
+	CMsg%id%01_4 <ifNPCPassionate Accept>
+	Msg%id%01_5 <>
+	CMsg%id%01_5 <ifNPCCheerful Accept>
+	Msg%id%01_6 <>
+	CMsg%id%01_6 <ifNPCMelancholy Accept>
+	Msg%id%02 <\CHATNPC hired you to fight some mecha from \FACTION &EnemyFac .>
+	Prompt%id%01 <Sounds like fun.>
+	Prompt%id%01_1 <Now you're talking my language.>
+	Prompt%id%01_2 <You know, that's just what I was hoping you'd say.>
+
+	Persona
 	requires <*CS_BasicFightingMission ("CORPO"|"CRAFT"|"LABOR"|"TRADE")>
 	START <NewChat Say %id%01 AddChat %id%01 AddChat %id%02>
 	result%id%01 <StoryNote %id%02 Goto %1%>

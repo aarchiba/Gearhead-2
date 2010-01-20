@@ -1939,9 +1939,6 @@ Function InsertSubPlot( Scope,Slot,SubPlot: GearPtr; GB: GameBoardPtr ): Boolean
 	{ Stick SUBPLOT into SLOT, but better not initialize anything. }
 var
 	InitOK: Boolean;
-	T,N: Integer;
-	Scene: GearPtr;
-	SceneDesc,EDesc: String;
 begin
 	InitOK := DoElementGrabbing( Scope , Slot , SubPlot );
 	InitOK := InitOK and MatchPlotToAdventure( Scope , Slot , SubPlot , GB , False , False , False );
@@ -2512,10 +2509,12 @@ begin
 		{  or   }
 		{ - Its REQUIRES field is satisfied by the context generated above. }
 		{ - It has not already been completed. }
-		if ( LList^.V = N ) or ( ( ( LList^.V < 11 ) or ( LList^.V > 20 ) ) and ( NAttValue( Story^.NA , NAG_Completed_DC , LList^.V ) = 0 ) and PartMatchesCriteria( Context , SAttValue( LList^.SA , 'REQUIRES' ) ) ) then begin
-			DC := CloneGear( LList );
-			if InsertPlot( FindRoot( GB^.Scene ) , Story , DC , GB , NAttValue( Story^.NA , NAG_Narrative , NAS_DifficultyLevel ) ) then begin
-				SetNAtt( DC^.NA , NAG_XXRan , NAS_IsDramaticChoicePlot , 1 );
+		if ( LList^.V > 0 ) then begin
+			if ( LList^.V = N ) or ( ( ( LList^.V < 11 ) or ( LList^.V > 20 ) ) and ( NAttValue( Story^.NA , NAG_Completed_DC , LList^.V ) = 0 ) and PartMatchesCriteria( Context , SAttValue( LList^.SA , 'REQUIRES' ) ) ) then begin
+				DC := CloneGear( LList );
+				if InsertPlot( FindRoot( GB^.Scene ) , Story , DC , GB , NAttValue( Story^.NA , NAG_Narrative , NAS_DifficultyLevel ) ) then begin
+					SetNAtt( DC^.NA , NAG_XXRan , NAS_IsDramaticChoicePlot , 1 );
+				end;
 			end;
 		end;
 		LList := LList^.Next;

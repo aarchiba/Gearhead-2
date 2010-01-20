@@ -4076,7 +4076,7 @@ Procedure ProcessNextComp( var Event: String; GB: GameBoardPtr; Source: GearPtr 
 
 		if RPM^.NumItem < 1 then begin
 			DialogMsg( 'ERROR: No dramatic choices found!' );
-			N := 0;
+			N := -1;
 		end else if I_NPC <> Nil then begin
 			CHAT_Message := MsgString( 'Make_Dramatic_Choice' );
 			N := SelectMenu( RPM , @InteractRedraw );
