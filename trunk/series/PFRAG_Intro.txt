@@ -69,48 +69,6 @@ Prompt%id%02_2 <Nothing special, just training and working out like always.>
 %        The Intro will ask a question of the PC, setting some initial traits
 %    Param1: Exit script label
 
-Persona
-requires <*INTRO_Question>
-START <if= V%id%01 0 else %1% V= %id%01 1 NewChat Say %id%01 AddChat %id%01 AddChat %id%02>
-result%id%01 <AddEasygoing -10   Goto %1%>
-result%id%02 <AddEasygoing  10   Goto %1%>
-Msg%id%01 <I hear you'll be leaving town soon. Everyone always figured that you'd end up as a cavalier. I wanted to wish you luck before you go.>
-Prompt%id%01 <Yeah, I'm off to seek my fortune.>
-Prompt%id%01_1 <A universe of adventure is waiting for me!>
-Prompt%id%01_2 <This place is boring. There's a whole universe to see!>
-Prompt%id%02 <I'll still be around for a while yet.>
-Prompt%id%02_1 <Who told you that? I'm not going...>
-Prompt%id%02_2 <My plans aren't final yet.>
-
-Persona
-requires <*INTRO_Question>
-START <if= V%id%01 0 else %1% V= %id%01 1 NewChat Say %id%01 AddChat %id%01 AddChat %id%02>
-result%id%01 <AddCheerful -10   Goto %1%>
-result%id%02 <AddCheerful  10   Goto %1%>
-Msg%id%01 <I heard that you might leave town soon. Are you serious about becoming a cavalier? I know it sounds like fun, but you could be hurt or even killed.>
-Prompt%id%01 <That's the chance I have to take.>
-Prompt%id%01_1 <If that happens, then so be it.>
-Prompt%id%01_2 <Death comes for us all, even those who risk nothing.>
-Prompt%id%02 <Don't worry about it. I'll be fine.>
-Prompt%id%02_1 <I'm way too good to get killed that easy.>
-Prompt%id%02_2 <Hey, I'll be alright, I always succeed!>
-
-Persona
-requires <*INTRO_Question>
-START <if= V%id%01 0 else %1% V= %id%01 1 NewChat Say %id%01 AddChat %id%01 AddChat %id%02>
-result%id%01 <AddSociable -10   Goto %1%>
-result%id%02 <AddSociable  10   NewChat  Say %id%02 AddChat %id%03>
-result%id%03 <Goto %1%>
-Msg%id%01 <I heard you're getting ready to set off and become a cavalier. It must be really exciting... I wish I could do that too!>
-Msg%id%02 <I can't. There are too many responsibilities keeping me here... but still, it would be nice if I could.>
-Prompt%id%01 <Sorry, this is a path I must walk alone.>
-Prompt%id%01_1 <I think you're better off staying here.>
-Prompt%id%01_2 <Adventuring is a lonely life.>
-Prompt%id%02 <Why don't you come with me?>
-Prompt%id%02_1 <I've got an idea... You should come with me!>
-Prompt%id%02_2 <You could come with me, if you want.>
-Prompt%id%03 <That's too bad.>
-Prompt%id%03_1 <I understand.>
 
 % TYPE: *INTRO_Advice
 %	The Intro character will provide the PC with some basic advice. Usually this

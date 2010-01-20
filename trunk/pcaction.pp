@@ -41,6 +41,7 @@ uses ability,action,aibrain,arenacfe,arenascript,backpack,
      ghprop,ghswag,ghweapon,interact,menugear,movement,
      playwright,rpgdice,skilluse,texutil,ui4gh,grabgear,
      narration,description,ghintrinsic,training,ghsensor,
+     wmonster,
 {$IFDEF ASCII}
 	vidgfx,vidmap,vidmenus,vidinfo;
 {$ELSE}
@@ -2634,6 +2635,24 @@ begin
 end;
 {$ENDIF}
 
+Procedure GodMode( GB: GameBoardPtr; PC: GearPtr );
+	{ CHEAT COMMAND! Make PC ready for instant adventuring from beginning }
+	{ to ending. }
+var
+	T: Integer;
+begin
+	DialogMsg( '*** GOD MODE ACTIVATED ***' );
+
+	for t := 1 to NumSkill do begin
+		if NAttValue( PC^.NA , NAG_Skill , T ) > 0 then SetNAtt( PC^.NA , NAG_Skill , T , 20 );
+	end;
+	SetNAtt( PC^.NA , NAG_Skill , NAS_Vitality , 30 );
+	SetNAtt( PC^.NA , NAG_Skill , NAS_Awareness , 30 );
+	SetNAtt( PC^.NA , NAG_Experience , NAS_Credits , 10000000 );
+	AddSAtt( FindRoot( GB^.Scene )^.SA , 'HISTORY' , 'God mode was activated.' );
+	SelectEquipmentForNPC( GB, PC, 120 );
+end;
+
 
 Procedure RLPlayerInput( Mek: GearPtr; Camp: CampaignPtr );
 	{ Allow the PC to control the action as per normal in a RL }
@@ -2716,6 +2735,8 @@ begin
 			end else if KP = '"' then begin
 				GraphicsTest( Camp^.GB );
 {$ENDIF}
+			end else if xxran_debug and ( KP = '|' ) then begin
+				GodMode( Camp^.GB , LocatePilot( Mek ) );
 
 			end; {if}
 

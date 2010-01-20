@@ -380,41 +380,43 @@ begin
 
 	while Desc <> '' do begin
 		Trait := ExtractWord( Desc );
-		if Trait[1] = '~' then begin
-			DeleteFirstChar( Trait );
-			if Pos( Trait , Part ) > 0 then Inc( N );
+		if Trait <> '' then begin
+			if Trait[1] = '~' then begin
+				DeleteFirstChar( Trait );
+				if Pos( Trait , Part ) > 0 then Inc( N );
 
-		end else if Trait[1] = '-' then begin
-			{ A trait beginning with a "-" must NOT be present. }
-			DeleteFirstChar( Trait );
-			if Pos( Trait , Part ) <> 0 then begin
-				it := False;
-			end;
-		end else if Trait[1] = '(' then begin
-			{ A set of traits surrounded by parenthesis and separated by |s }
-			{ is an or-list. One of the traits must be present. }
-			DeleteFirstChar( Trait );
-			MatChFound := False;
-			repeat
-				T2 := ExtractOrClause( Trait );
-				if Pos( T2 , Part ) <> 0 then MatchFound := True;
-			until ( Trait = '' ) or MatchFound;
+			end else if Trait[1] = '-' then begin
+				{ A trait beginning with a "-" must NOT be present. }
+				DeleteFirstChar( Trait );
+				if Pos( Trait , Part ) <> 0 then begin
+					it := False;
+				end;
+			end else if Trait[1] = '(' then begin
+				{ A set of traits surrounded by parenthesis and separated by |s }
+				{ is an or-list. One of the traits must be present. }
+				DeleteFirstChar( Trait );
+				MatChFound := False;
+				repeat
+					T2 := ExtractOrClause( Trait );
+					if Pos( T2 , Part ) <> 0 then MatchFound := True;
+				until ( Trait = '' ) or MatchFound;
 
-			if MatchFound then Inc( N )
-			else it := False;
+				if MatchFound then Inc( N )
+				else it := False;
 
-		end else if UpCase( Trait ) = 'COMMON' then begin
-			{ A trait marked as COMMON will appear more often, despite number }
-			{ of matches. Use sparingly. }
-			N := N + 5;
+			end else if UpCase( Trait ) = 'COMMON' then begin
+				{ A trait marked as COMMON will appear more often, despite number }
+				{ of matches. Use sparingly. }
+				N := N + 5;
 
-		end else begin
-			if Pos( Trait , Part ) = 0 then begin
-				it := False;
 			end else begin
-				Inc( N );
+				if Pos( Trait , Part ) = 0 then begin
+					it := False;
+				end else begin
+					Inc( N );
+				end;
 			end;
-		end;
+		end; { if Trait <> '' }
 	end;
 
 	if IT and ( N >= 0 ) then begin

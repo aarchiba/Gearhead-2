@@ -7,7 +7,7 @@
 Plot
 	name <Hanging Job Offer: Allied Building>
 	desc <The PC has to see someone about a job; here it is!>
-	requires <+Hmi H:++ -H:NOFAC Common Common (*CORE_DEF_|*CORE_OFF_|*CORE_R_)>
+	requires <+Hmi H:++ -H:NOFAC Common Common Common (*CORE_DEF_|*CORE_OFF_|*CORE_R_)>
 
 	% E1 is a scene for this job offer
 	% E2 is the NPC that the PC will speak with
@@ -16,7 +16,7 @@ Plot
 	Place2 <1 (Citizens) pass>
 
 	% All this plot does is move the NPC and activate the mission subplot
-	update <if= PlotStatus %plotid% 0 AlterContext .next &SetHangingNPC 0 email 1 SetPlotStatus %plotid% %id1%>
+	update <if= PlotStatus %plotid% 0 if= RootSceneID &EpisodeScene AlterContext .next &SetHangingNPC 0 email 1 SetPlotStatus %plotid% %id1%>
 	.next <+H-->
 
 	Msg1_1 <%name2%@%name1%:// I've got that mission I promised you. Come see me at %name1%.>
@@ -31,7 +31,7 @@ Plot
 Plot
 	name <Hanging Job Offer>
 	desc <The PC has to see someone about a job; here it is!>
-	requires <+Hmi H:++ ~H:NOFAC Common (*CORE_DEF_|*CORE_OFF_|*CORE_R_)>
+	requires <+Hmi H:++ ~H:NOFAC Common Common (*CORE_DEF_|*CORE_OFF_|*CORE_R_)>
 
 	% E1 is a scene for this job offer
 	% E2 is the NPC that the PC will speak with
@@ -40,7 +40,7 @@ Plot
 	Place2 <1 (Citizens) pass>
 
 	% All this plot does is move the NPC and activate the mission subplot
-	update <if= PlotStatus %plotid% 0 AlterContext .next &SetHangingNPC 0 email 1 SetPlotStatus %plotid% %id1%>
+	update <if= PlotStatus %plotid% 0 if= RootSceneID &EpisodeScene AlterContext .next &SetHangingNPC 0 email 1 SetPlotStatus %plotid% %id1%>
 	.next <+H-->
 
 	Msg1_1 <%name2%@%name1%:// I've got that mission I promised you. Come see me at %name1%.>

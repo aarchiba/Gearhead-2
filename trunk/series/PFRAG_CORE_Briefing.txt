@@ -106,6 +106,58 @@
 %	 be called)
 
 	Persona
+	requires <*CS_BasicFightingMission "ACADE">
+	START <NewChat Say %id%01 AddChat %id%01 AddChat %id%02>
+	result%id%01 <StoryNote %id%02 Goto %1%>
+	result%id%02 <SMemo 0 Goto %2%>
+	Msg%id%01 <The sensors at my lab picked up something strange near town. It's probably nothing, but it could be a unit of enemy mecha or something even worse. I'd like for you to figure out what it was.>
+	Msg%id%01_1 <>
+	CMsg%id%01_1 <ifNPCSociable Accept>
+	Msg%id%01_2 <>
+	CMsg%id%01_2 <ifNPCShy Accept>
+	Msg%id%01_3 <>
+	CMsg%id%01_3 <ifNPCEasygoing Accept>
+	Msg%id%01_4 <>
+	CMsg%id%01_4 <ifNPCPassionate Accept>
+	Msg%id%01_5 <>
+	CMsg%id%01_5 <ifNPCCheerful Accept>
+	Msg%id%01_6 <>
+	CMsg%id%01_6 <ifNPCMelancholy Accept>
+	Msg%id%02 <\CHATNPC hired you to investigate a sensor reading.>
+	Prompt%id%01 <Sounds interesting. I'll see what I can find.>
+	Prompt%id%01_1 <Alright. I'm on the case.>
+	Prompt%id%01_2 <I'll be back when I've identified the source.>
+	Prompt%id%02 <Sorry, this mission sounds too boring for me.>
+	CPrompt%id%02 <if# PCFac ChatNPCFac Accept>
+	Prompt%id%02_1 <No way, this mission sounds dangerous.>
+	Prompt%id%02_2 <You'll have to find a different pilot for this.>
+
+	Persona
+	requires <*CS_BasicFightingMission "POLIC" (E:THIEF|E:EVIL_|F:CRIME) ~*CORE_OFF_ ~*CORE_DEF_>
+	START <NewChat Say %id%01 AddCHat %id%01 AddChat %id%02>
+	result%id%01 <goto result%id%02>
+	result%id%02 <History %id%03 SMemo %id%04 Goto %1%>
+	Msg%id%01_1 <Your old nemesis \PERSONA &EnemyNPC is in town, and \SPR &EnemyNPC 's causing trouble. If you could locate and defeat \OPR &EnemyNPC there'd be a reward in it for you.>
+	CMsg%id%01_1 <ifNPCOK &EnemyNPC Accept>
+	Msg%id%01_2 <I know that you've tangled with \FACTION &EnemyFac before; they've got some raiders in town, and there's a reward for anyone who can locate and stop them.>
+	CMsg%id%01_2 <if# 0 &EnemyFac ifNPCDead &EnemyNPC Accept>
+	Msg%id%01_3 <Some of your old enemies are in town, and they're causing trouble. There's a reward for anyone who can locate them and bring them to justice.>
+	Msg%id%03_1 <%name1% asked you to find and defeat \PERSONA &EnemyNPC .>
+	CMsg%id%03_1 <ifNPCOK &EnemyNPC Accept>
+	Msg%id%03_2 <%name1% asked you to find and defeat raiders from \FACTION &EnemyFac .>
+	CMsg%id%03_2 <if# 0 &EnemyFac ifNPCDead &EnemyNPC Accept>
+	Msg%id%03_3 <%name1% asked you to find and defeat some criminals.>
+	CMsg%id%03_3 <if= 0 &EnemyFac ifNPCDead &EnemyNPC Accept>
+	Msg%id%04_1 <%name1% mentioned that \PERSONA &EnemyNPC is in town. There's a reward if you can locate and defeat \OPR &EnemyNPC .>
+	CMsg%id%04_1 <ifNPCOK &EnemyNPC Accept>
+	Msg%id%04_2 <%name1% mentioned that mecha from \FACTION &EnemyFac are in town. There's a reward if you can locate and defeat them.>
+	CMsg%id%04_2 <if# 0 &EnemyFac Accept>
+	Msg%id%04_3 <%name1% mentioned that your enemies are in town. There's a reward if you can locate and defeat them.>
+	CMsg%id%04_3 <if= 0 &EnemyFac ifNPCDead &EnemyNPC Accept>
+	Prompt%id%01 <I've been waiting for a chance to fight them again.>
+	Prompt%id%02 <Hey, as long as there's a reward, I'm there.>
+
+	Persona
 	requires <*CS_BasicFightingMission F:++ (+P--|+Pun)>
 	START <NewChat Say %id%01 AddChat %id%01 AddChat %id%02>
 	Result%id%01 <StoryNote %id%02 Goto %1%>
@@ -160,7 +212,7 @@
 	START <NewChat Say %id%01 AddChat %id%01 AddChat %id%02>
 	Result%id%01 <StoryNote %id%02 Goto %1%>
 	result%id%02 <SMemo 0 Goto %2%>
-	Msg%id%01 <We've detected some mecha from \FACTION &EnemyFac in town. They must be planning some kind of heist in town; I want you to find them and stop them before that can happen.>
+	Msg%id%01 <We've detected some mecha from \FACTION &EnemyFac in town. They must be planning some kind of heist; I want you to find them and stop them before that can happen.>
 	Msg%id%01_1 <>
 	CMsg%id%01_1 <ifNPCSociable Accept>
 	Msg%id%01_2 <>

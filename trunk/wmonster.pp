@@ -41,6 +41,7 @@ Function GenerateMechaList( MPV: LongInt; Factions,Desc: String ): SAttPtr;
 Procedure AddTeamForces( GB: GameBoardPtr; TeamID,Renown,Strength: Integer );
 
 Function SelectNPCMecha( GB: GameBoardPtr; Scene,NPC: GearPtr ): GearPtr;
+Procedure SelectEquipmentForNPC( GB: GameBoardPtr; NPC: GearPtr; Renown: Integer );
 Procedure EquipThenDeploy( GB: GameBoardPtr; NPC: GearPtr; PutOnMap: Boolean );
 
 implementation

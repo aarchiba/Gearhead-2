@@ -46,6 +46,7 @@ Content
 %%
 %% *CS_WinGoal Content
 %%	&NoCash		The PC will not get any cash for this mission
+%%			NOTE: Don't assign this type for CORE_R_ missions!!!
 %%
 %%  The PC has completed the MAIN course of this episode and is about to be
 %%  rewarded. The exact reward is, of course, going to depend upon the current
@@ -53,6 +54,50 @@ Content
 %%
 %%  PARAM1: The NPC giving the reward
 %%
+
+Content
+	name <OFF_5 That's gotta hurt>
+	desc <The NPC will pay the PC for the job.>
+	requires <*CS_WinGoal *CORE_OFF_5 -&NoCash>
+
+	% E1 is the NPC.
+
+	start <ifNPCDead %1% SMemo 0 WinEpisode>
+
+	sub
+		Persona 1
+		greeting <if= PlotStatus %plotid% %id% else %pop% NewChat Say %id%01 CashPrize Reward StoryDL 1000 AddReact d10  WinEpisode>
+		Msg%id%01 <You did it! That's really going to hurt them, hopefully permanently.>
+		Msg%id%01_1 <You've dealt a crushing blow to \PERSONA &EnemyNPC ... of course they say that an animal is most dangerous when it's been wounded, but let's not worry about that for now.>
+		CMsg%id%01_1 <ifNPCOK &EnemyNPC Accept>
+		Msg%id%01_2 <Congratulations! \FACTION &EnemyFac will be feeling the hurt from that for a nice long while. They must be running out of mecha soon, right?>
+		CMsg%id%01_2 <ifFactionExists &EnemyFac Accept>
+		Msg%id%01_3 <The mission was a success. Because of your tireless work \PERSONA &EnemyNPC and \FACTION &EnemyFac have suffered defeat after defeat. I don't think they're capable of launching a revenge attack... not right away, anyhow.>
+		CMsg%id%01_3 <ifNPCOK &EnemyNPC ifFactionExists &EnemyFac Accept>
+	end
+
+Content
+	name <DEF_5 You will be repaid>
+	desc <The NPC will pay the PC for the job.>
+	requires <*CS_WinGoal *CORE_DEF_5 -&NoCash>
+
+	% E1 is the NPC.
+
+	start <ifNPCDead %1% SMemo 0 WinEpisode>
+
+	sub
+		Persona 1
+		greeting <if= PlotStatus %plotid% %id% else %pop% NewChat Say %id%01 CashPrize Reward StoryDL 1000 AddReact d10  WinEpisode>
+		Msg%id%01 <You did it! I hope that someday I can repay the help that you've given to us.>
+		Msg%id%01_1 <That was a complete success. Thanks to you, when the time comes to face down \PERSONA &EnemyNPC we'll be in a stronger position than otherwise.>
+		CMsg%id%01_1 <ifNPCOK &EnemyNPC Accept>
+		Msg%id%01_2 <You did it! Thanks to your brave work, the damage done by \FACTION &EnemyFac has been minimized. We're in a good position to prepare for a counterattack.>
+		CMsg%id%01_2 <ifFactionExists &EnemyFac Accept>
+		Msg%id%01_3 <The mission was a success. Because of you, our defenses against \PERSONA &EnemyNPC and \FACTION &EnemyFac remain strong. It's time to bring the fight to them.>
+		CMsg%id%01_3 <ifNPCOK &EnemyNPC ifFactionExists &EnemyFac Accept>
+		Msg%id%01_4 <You did well on that mission, \RANK \PC . Thanks to you \FACTION &AllyFac has emerged from this conflict stronger than ever... though I can't be sure we've seen the full extent of our enemy's power, yet.>
+		CMsg%id%01_4 <ifFactionExists &AllyFac if= PCFac &AllyFac Accept>
+	end
 
 Content
 	name <R_LAN I have a friend>
@@ -121,7 +166,7 @@ Content
 Content
 	name <R_MEK Custom Mecha>
 	desc <The NPC will give the PC a custom mecha.>
-	requires <*CS_WinGoal *CORE_G_MEK>
+	requires <*CS_WinGoal *CORE_R_MEK>
 
 	% E1 is the NPC
 
@@ -139,7 +184,7 @@ Content
 Content
 	name <R_EXP Training Together>
 	desc <The NPC will train with you.>
-	requires <*CS_WinGoal *CORE_G_EXP (1:MILIT|1:ADVEN)>
+	requires <*CS_WinGoal *CORE_R_EXP (1:MILIT|1:ADVEN)>
 
 	% E1 is the NPC.
 
@@ -164,7 +209,7 @@ Content
 Content
 	name <R_EXP Book Learnin'>
 	desc <You wanted experience? Here, go study.>
-	requires <*CS_WinGoal *CORE_G_EXP -1:MILIT -1:ADVEN ~1:ACADE ~1:TRADE>
+	requires <*CS_WinGoal *CORE_R_EXP -1:MILIT -1:ADVEN ~1:ACADE ~1:TRADE>
 
 	% E1 is the NPC
 	% E2 is the book
