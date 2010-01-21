@@ -247,16 +247,17 @@
 	\ITEM_USAGE [NID]	The probable use for an item
 	\MEK [UID]		The name of a mecha, grabbed by unique ID
 	\NARRATIVE [n]		The name of story element N
-	\OPR [NID]		Object pronoun (him,her) for NPC
+	\OFFSPRING [CID]	Child noun (Son/Daughter) for NPC (0=PC)
+	\OPR [NID]		Object pronoun (him,her) for NPC (0=PC)
 	\PC			The PC's name
 	\PERSONA [CID]		The name of a NPC
 	\PILOT [UID]		The name of a character, grabbed by unique ID
-	\PPR [NID]		Posessive determiner (his,her) for NPC
+	\PPR [NID]		Posessive determiner (his,her) for NPC (0=PC)
 	\RANK			PC's rank name
 	\SCENE [ID]		The name of a scene
 	\SECRET [NID]		A plot secret
 	\SOURCE			The name of the script source gear
-	\SPR [NID]		Subject pronoun (he,she) for NPC
+	\SPR [NID]		Subject pronoun (he,she) for NPC (0=PC)
 	\VAL [x]		The provided value
 
 5. GEAR GRABBERS

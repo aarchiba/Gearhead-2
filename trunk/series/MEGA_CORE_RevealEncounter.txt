@@ -243,18 +243,21 @@ Content
 		Persona 5
 		rumor%id% <%name5% has been recruiting some pilots for %name3%.>
 		% V%id%01 = First time counter
+		% V%id%02 = Tried bluff already...
 		greeting <if= plotstatus %plotid% %id% else %pop% ifSubPlotLost %plotid1% else .%id%_GoCheckProgress NewChat Say %id%08 PMemo %plotid% %id%09 SetPlotStatus %plotid2% %id2%>
 		.%id%_GoCheckProgress <if= v%id%01 0 else .%id%_GoExplain Goto .%id%_GoGreet>
 		.%id%_GoGreet <if= v%id%01 0 else .%id%_GoExplain NewChat Say %id%11 AddChat %id%07 v= %id%01 1>
-		.%id%_GoExplain <NewChat Say %id%01 AddChat %id%01 AddChat %id%02 AddChat %id%03 AddChat %id%04 AddChat %id%05 AddChat %id%06   if= p%id%02 0 P= %id%02 1>
+		.%id%_GoExplain <NewChat Say %id%01 AddChat %id%01 AddChat %id%02 AddChat %id%03 AddChat %id%04 AddChat %id%05 AddChat %id%06  AddChat %id%08   if= p%id%02 0 P= %id%02 1>
 		.%id%_GoReveal <History %id%02 PMemo %plotid% %id%03 SetEncounterActive %2% WinSubPlot %plotid% XPV 100>
 		result%id%01 <NewChat Say %id%04 History %id%05 PMemo %plotid% %id%05 SetPlotStatus %plotid1% %id1%>
-		result%id%02 <NewChat Say %id%06 Goto .%id%_GoReveal>
+		result%id%02 <NewChat Say %id%06 SetXXRAttitude %6% XXR_A_EnviesPC Goto .%id%_GoReveal>
 		result%id%03 <NewChat Say %id%07 Goto .%id%_GoReveal>
 		result%id%04 <NewChat Say %id%07 Goto .%id%_GoReveal>
 		result%id%05 <NewChat Say %id%10 PMemo %plotid% %id%09 SetPlotStatus %plotid2% %id2%>
 		*result%id%06 <*GoodBye>
 		result%id%07 <Goto .%id%_GoExplain>
+		result%id%08 <ifConversation HardSkillTar StoryDL else .%id%_GoR8Fail NewChat Say %id%07 PCEnemy %6% FreezeNPC %6% SetXXRAttitude %6% XXR_A_EnviesPC Goto .%id%_GoReveal>
+		.%id%_GoR8Fail <NewChat Say %id%12 V= %id%02 1>
 		Msg%id%01 <I'm afraid that I don't have any more positions to offer; %name3% has all the pilots \SPR %3% needs. %name6% got the last contract.>
 		Msg%id%02 <You learned that %name3% could be found in %name1%.>
 		Msg%id%03 <You learned from %name5% that %name3% can be found in %name1%.>
@@ -266,6 +269,7 @@ Content
 		Msg%id%09 <%name6% has gone to meet up with %name3%, but with any luck you'll be able to find \OPR %6% first.>
 		Msg%id%10 <Hey, I don't want to get involved with any of that, I'm just a simple talent scout... and besides, as I said my work is already done.>
 		Msg%id%11 <Hi. I guess you're here about that job, right?>
+		Msg%id%12 <Ha ha, nice try but %name6% just texted me about your duel. Come back if you beat \OPR %6% and you can have the job then.>
 		Prompt%id%01 <You can't be serious. I'm way tougher than %name6%!>
 		CPrompt%id%01 <if= PlotStatus %plotid1% 0  if# p%id%02 2  Accept>
 		Prompt%id%02 <I just beat %name6% in a duel. Hire me instead.>
@@ -277,6 +281,8 @@ Content
 		Prompt%id%05 <I'm not here for a job; I'm here to find %name3%.>
 		Prompt%id%06 <So I see. I'll have to have a chat with this %name6%.>
 		Prompt%id%07 <You could say that.>
+		Prompt%id%08 <%name6% just quit. Look, \SPR %6% 's gone!>
+		CPrompt%id%08 <if= PlotStatus %plotid1% %id1% if= v%id%02 0 Accept>
 
 		Persona 6
 		greeting <if= plotstatus %plotid% %id% else %pop% if= P%id%02 1 else %pop% NewChat Say %id%01 AddChat %id%01 AddChat %id%02 AddChat %id%03>

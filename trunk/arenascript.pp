@@ -1819,6 +1819,21 @@ begin
 					W := 'its';
 				end;
 
+			end else if W = '\OFFSPRING' then begin
+				{ Son or Daughter, depending on gender }
+				ID := ScriptValue( S0 , GB , Scene );
+				if ID = 0 then begin
+					Part := LocatePilot( GG_LocatePC( GB ) );
+				end else begin
+					Part := GG_LocateNPC( ID , GB , Scene );
+				end;
+				if Part <> Nil then begin
+					if NAttValue( Part^.NA , NAG_CharDescription , NAS_Gender ) = NAV_Male then W := MsgString( 'SON' )
+					else W := MsgString( 'DAUGHTER' );
+				end else begin
+					W := 'sprog';
+				end;
+
 			end else if W = '\RANK' then begin
 				{ The faction rank of the PC. }
 				W := PCRankName( GB , Scene );
