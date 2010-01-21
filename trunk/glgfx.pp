@@ -363,7 +363,9 @@ begin
 	pline := QuickPCopy( msg );
 	MyText := TTF_RenderText_Solid( F , pline , C );
 	Dispose( pline );
+{$IFDEF LINUX}
 	if MyText <> Nil then SDL_SetColorKey( MyText , SDL_SRCCOLORKEY , SDL_MapRGB( MyText^.Format , 0 , 0, 0 ) );
+{$ENDIF}
 	SDL_BlitSurface( MyText , Nil , Game_Screen , @MyDest );
 	SDL_FreeSurface( MyText );
 end;
@@ -379,7 +381,9 @@ begin
 	if msg = '' then Exit;
 	pline := QuickPCopy( msg );
 	MyText := TTF_RenderText_Solid( F , pline , C );
+{$IFDEF LINUX}
 	if MyText <> Nil then SDL_SetColorKey( MyText , SDL_SRCCOLORKEY , SDL_MapRGB( MyText^.Format , 0 , 0, 0 ) );
+{$ENDIF}
 	Dispose( pline );
 	MyDest.X := MyDest.X + ( MyDest.W - MyText^.W ) div 2;
 	SDL_BlitSurface( MyText , Nil , Game_Screen , @MyDest );
@@ -396,7 +400,9 @@ var
 begin
 	pline := QuickPCopy( msg );
 	MyText := TTF_RenderText_Solid( F , pline , C );
+{$IFDEF LINUX}
 	if MyText <> Nil then SDL_SetColorKey( MyText , SDL_SRCCOLORKEY , SDL_MapRGB( MyText^.Format , 0 , 0, 0 ) );
+{$ENDIF}
 	Dispose( pline );
 	MyDest.X := MyDest.X - MyText^.W;
 	SDL_BlitSurface( MyText , Nil , Game_Screen , @MyDest );
