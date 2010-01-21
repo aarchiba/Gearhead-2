@@ -6864,7 +6864,8 @@ Scene
 	desc <Clund Rock used to be an industrial station, but its factories were destroyed in the battle of 130. These days it's a shipping hub and tourist destination.>
 	special <NOEXIT>
 	% This town has the rare distinction of being both safe and lawless at the same time.
-	type <asteroid town village destination hometown building public hospital residence spaceport garage resort tradehub safe lawless>
+	% For right now, Clund's "hometown" designation is revoked.
+	type <asteroid town village destination building public hospital residence spaceport garage resort tradehub safe lawless>
 	personatype <asteroid village>
 	habitat <SPACE.ASTER>
 
