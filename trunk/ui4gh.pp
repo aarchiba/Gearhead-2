@@ -106,7 +106,6 @@ const
 
 	DoAutoSave: Boolean = True;
 
-	Max_Plots_Per_Adventure: Byte = 50;
 	Load_Plots_At_Start: Boolean = False;
 
 	Reload_All_Weapons: Boolean = False;
@@ -523,12 +522,6 @@ begin
 				end else if cmd = 'NOCOMBATTAUNTS' then begin
 					No_Combat_Taunts := True;
 
-				end else if cmd = 'NUMPLOTS' then begin
-					T := ExtractValue( S );
-					if T > 255 then T := 255
-					else if T < 0 then T := 0;
-					Max_Plots_Per_Adventure := T;
-
 				end else if cmd = 'LOADPLOTSATSTART' then begin
 					Load_Plots_At_Start := True;
 
@@ -675,8 +668,6 @@ begin
 	AddBoolean( 'NOCOMBATTAUNTS' , No_Combat_Taunts );
 
 	AddBoolean( 'RELOAD_UNEQUIPPED_WEAPONS_AT_SHOP' , Reload_All_Weapons );
-
-	writeln( F , 'NUMPLOTS ' + BStr( Max_Plots_Per_Adventure ) );
 
 	AddBoolean( 'LOADPLOTSATSTART' , Load_Plots_At_Start );
 	AddBoolean( 'MINIMAPON' , Display_Mini_Map );

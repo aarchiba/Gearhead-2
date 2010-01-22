@@ -3,17 +3,66 @@
 ************************
 
 Welcome to the modern age. In NT157, a group of terrorists caused massive
-destruction on Earth by awakening the biomonster Typhon. 
+destruction on Earth by awakening the biomonster Typhon. Five years later
+tensions are running high and it looks like war is inevitable.
 
 GH2 is released under the terms of the LGPL; see license.txt for more details.
-
-For help with the game you can visit either the GearHead wiki, or the forum:
-  Wiki:   http://gearhead.chaosforge.org/wiki/
-  Forum:  http://gearhead.chaosforge.org/forum/
 
 To run the SDL version you need to have SDL, SDL_Image, SDL_ttf, and
 OpenGL installed. The precompiled Windows releases come with all needed
 dlls.
+
+As of v0.620 the SDL package comes with three executables:
+
+  gearhead     - The 3D graphical version.
+  gearhead_2d  - A 2D isometric version, useful if your computer doesn't
+                 support OpenGL or if you just prefer the look.
+  cosplay2     - A color testing program. You can view the game images and
+                 change their colors.
+
+For help with the game you can visit either the GearHead wiki or the forum:
+  Wiki:   http://gearhead.chaosforge.org/wiki/
+  Forum:  http://gearhead.chaosforge.org/forum/
+
+You can also contact the developer at pyrrho12@yahoo.ca.
+
+
+*************************
+***   CONFIGURATION   ***
+*************************
+
+When you run GearHead2 for the first time it creates a configuration
+file, "gearhead.cfg". You can edit this file with any text editor. Some of the
+useful settings are:
+
+  WINDOW - The graphical version will run in a window on the desktop rather than
+    taking over the whole screen. This option has no effect in ASCII mode.
+
+  SCREENHEIGHT, SCREENWIDTH - Sets the width and height of the screen in ASCII
+    mode. These options have no effect in graphical mode.
+
+  ANIMSPEED - Sets the animation delay. Higher = Slower animations
+
+  LAPTOP_ISO_KEYS - The movement keys will be rotated by 45 degrees, so you'll
+    have access to the four cardinal directions when using the arrow keys in
+    isometric mode.
+
+  LOADPLOTSATSTART - If plot loading causes a noticeable delay every 5 minutes
+    of game time, uncomment this option to do all plot loading at scene changes.
+
+  MINIMAL_SCREEN_REFRESH, USE_SOFTWARE_SURFACE - If the graphical version is too
+    slow, try using these options.
+
+  REVERT_SLOWER_SAFER - If the graphical version crashes on Linux, try
+    uncommenting this option.
+
+  NAMESON - Names will appear above the heads of characters, mecha, and
+    locations. So far this option only works in the 2D version.
+
+  USEMESH - Activates full 3D mode in the 3D graphical version. When this
+    option is enabled, all characters and mecha will be depicted using meshes.
+
+
 
 *********************
 ***   COMPILING   ***

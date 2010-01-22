@@ -192,7 +192,7 @@ begin
 	CM_Cel_IsOn[ L ][ X , Y , Z ] := SS <> Nil;
 end;
 
-Function SpriteName( M: GearPtr ): String;
+Function SpriteName( GB: GameBoardPtr; M: GearPtr ): String;
 	{ Locate the sprite name for this gear. If no sprite name is defined, }
 	{ set the default sprite name for the gear type & store it as a string }
 	{ attribute so we won't need to do this calculation later. }
@@ -206,10 +206,14 @@ const
 	DefaultFemaleSpriteName = 'cha_f_citizen.png';
 	DefaultMaleSpriteHead = 'cha_m_';
 	DefaultFemaleSpriteHead = 'cha_f_';
+	mini_sprite = 'cha_pilot.png';
 var
 	it,fname: String;
 	FList: SAttPtr;
 begin
+	{ If this model is an out-of-scale character, return the mini-sprite. }
+	if ( M^.G = GG_Character ) and ( GB <> Nil ) and ( M^.Scale < GB^.Scale ) then Exit( mini_sprite );
+
 	it := SAttValue( M^.SA , 'SDL_SPRITE' );
 	if it = '' then begin
 		if M^.G = GG_Character then begin
@@ -975,7 +979,7 @@ begin
 			end else if IsMasterGear( M ) then begin
 				{ Insert sprite-drawing code here. }
 				AddCMCel( 	GB , X , Y , Z , CMC_Master ,
-						LocateSprite( SpriteName( M ) , SpriteColor( GB , M ) , 64 , 64 ),
+						LocateSprite( SpriteName( GB , M ) , SpriteColor( GB , M ) , 64 , 64 ),
 						MapDirToScreenDir( NAttValue( M^.NA , NAG_Location , NAS_D ) )
 				);
 
@@ -1006,7 +1010,7 @@ begin
 
 				GS_MetaCloud:		AddCMCel( GB , X , Y ,  0 , CMC_MetaTerrain , Extras_Sprite , ECEL_Smoke );
 				GS_MetaFire:		AddCMCel( GB , X , Y ,  0 , CMC_MetaTerrain , Extras_Sprite , ECEL_Fire );
-				else AddCMCel( 	GB , X , Y , Z , CMC_MetaTerrain , LocateSprite( SpriteName( M ) , SpriteColor( GB , M ) , 64 , 64 ) , MapDirToScreenDir( NAttValue( M^.NA , NAG_Location , NAS_D ) ) );
+				else AddCMCel( 	GB , X , Y , Z , CMC_MetaTerrain , LocateSprite( SpriteName( GB , M ) , SpriteColor( GB , M ) , 64 , 64 ) , MapDirToScreenDir( NAttValue( M^.NA , NAG_Location , NAS_D ) ) );
 				end;
 
 			end else begin
