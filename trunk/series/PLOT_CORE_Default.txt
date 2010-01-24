@@ -114,35 +114,6 @@ Plot
 	Msg1_4  <%name2%@ \NARRATIVE 7 :// Stop by for a consultation. I'll be at %name1%.>
 	Msg1_5  <%name2%@ \NARRATIVE 7 :// Come by %name1% when you get the chance; there are issues we need to discuss.>
 
-
-Plot
-	name <Lead: Media>
-	desc <A media personality will call about something.>
-	requires <C:MEDIA (*CORE_DEF_|*CORE_OFF_|*CORE_R_)>
-
-	% E1 is the scene where this component will take place
-	% E2 is the NPC that the PC will speak with
-	element1 <Scene Building Public !Near -7>
-	element2 <Character !Near 1 MEDIA NeverFail>
-	NeverFail2 <Journalist>
-	Place2 <1 (Citizens) pass>
-
-	% All this plot does is move the NPC, send an email,
-	% and activate the mission subplot
-	5min <if= PlotStatus %plotid% 0  if= RootSceneID &EpisodeScene V+ 1 1 ifG v1 d6 EMail 1  SetPlotStatus %plotid% %id1%>
-
-	start <if= PlotStatus %plotid% 0 ifNPCDead %2% LoseEpisode>
-
-	%% SubPlot1 is the mission to be offered
-	SubPlot1 <*CS_Conversation 2>
-
-	Msg1_1  <%name2%@ \NARRATIVE 7 :// I have a lead for you, \PC . Come meet me at %name1%.>
-	Msg1_2  <%name2%@ \NARRATIVE 7 :// Looking for a story? Come see me at %name1%.>
-	Msg1_3  <%name2%@ \NARRATIVE 7 :// Hey, let's do lunch at %name1%.>
-	Msg1_4  <%name2%@ \NARRATIVE 7 :// I've got an angle to pitch to you. Come see me at %name1%.>
-	Msg1_5  <%name2%@ \NARRATIVE 7 :// Have you tried %name1% yet? Meet me there, it's fabulous.>
-
-
 Plot
 	name <Basic Friend Contact>
 	desc <The PC's friend will call about something.>
@@ -307,4 +278,65 @@ Plot
 	Msg1_4  <%name2%@ \NARRATIVE 7 :// \PC - I've got some work for you to do. Come to %name1% for the briefing.>
 	Msg1_5  <%name2%@ \NARRATIVE 7 :// Your presence is required in %name1%.>
 
+%  *****************
+%  ***   LEADS   ***
+%  *****************
+%
+% Sometimes a character of the same type as the PC will call about a mission.
+%
+
+Plot
+	name <Lead: Medic>
+	desc <A doctor will call about something.>
+	requires <C:MEDIC (*CORE_DEF_|*CORE_R_)>
+
+	% E1 is the scene where this component will take place
+	% E2 is the NPC that the PC will speak with
+	element1 <Scene Hospital Public !Near -7>
+	element2 <Character !Near 1 MEDIC NeverFail>
+	NeverFail2 <Doctor>
+	Place2 <1 (Citizens) pass>
+
+	% All this plot does is move the NPC, send an email,
+	% and activate the mission subplot
+	5min <if= PlotStatus %plotid% 0  if= RootSceneID &EpisodeScene  EMail 1  SetPlotStatus %plotid% %id1%>
+
+	start <if= PlotStatus %plotid% 0 ifNPCDead %2% LoseEpisode>
+
+	%% SubPlot1 is the mission to be offered
+	SubPlot1 <*CS_Conversation 2>
+
+	Msg1_1  <%name2%@ \NARRATIVE 7 :// I need your assistance, \PC . Come meet me at %name1%.>
+	Msg1_2  <%name2%@ \NARRATIVE 7 :// We have an emergency. Come see me at %name1%.>
+	Msg1_3  <%name2%@ \NARRATIVE 7 :// \PC , I require a consultation with you at %name1%.>
+	Msg1_4  <%name2%@ \NARRATIVE 7 :// I'd like to get a second opinion on something. Come meet me at %name1%.>
+	Msg1_5  <%name2%@ \NARRATIVE 7 :// Your services are needed by %name1%. Drop in and I'll explain.>
+
+
+Plot
+	name <Lead: Media>
+	desc <A media personality will call about something.>
+	requires <C:MEDIA (*CORE_DEF_|*CORE_OFF_|*CORE_R_)>
+
+	% E1 is the scene where this component will take place
+	% E2 is the NPC that the PC will speak with
+	element1 <Scene Building Public !Near -7>
+	element2 <Character !Near 1 MEDIA NeverFail>
+	NeverFail2 <Journalist>
+	Place2 <1 (Citizens) pass>
+
+	% All this plot does is move the NPC, send an email,
+	% and activate the mission subplot
+	5min <if= PlotStatus %plotid% 0  if= RootSceneID &EpisodeScene  EMail 1  SetPlotStatus %plotid% %id1%>
+
+	start <if= PlotStatus %plotid% 0 ifNPCDead %2% LoseEpisode>
+
+	%% SubPlot1 is the mission to be offered
+	SubPlot1 <*CS_Conversation 2>
+
+	Msg1_1  <%name2%@ \NARRATIVE 7 :// I have a lead for you, \PC . Come meet me at %name1%.>
+	Msg1_2  <%name2%@ \NARRATIVE 7 :// Looking for a story? Come see me at %name1%.>
+	Msg1_3  <%name2%@ \NARRATIVE 7 :// Hey, let's do lunch at %name1%.>
+	Msg1_4  <%name2%@ \NARRATIVE 7 :// I've got an angle to pitch to you. Come see me at %name1%.>
+	Msg1_5  <%name2%@ \NARRATIVE 7 :// Have you tried %name1% yet? Meet me there, it's fabulous.>
 

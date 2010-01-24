@@ -11,6 +11,33 @@
 %	 be called)
 
 	Persona
+	requires <*CS_BasicStopEnemyMission "MEDIC" ~E:EVIL_ ~"NOFAC" ~*CORE_DEF_ ~*CORE_OFF_>
+	START <NewChat Say %id%01 AddChat %id%01 AddChat %id%02>
+	result%id%01 <StoryNote %id%02 Goto %1%>
+	result%id%02 <Goto %2%>
+	Msg%id%01_1 <A pilot was brought here in critical condition. He was incoherent, but kept muttering something about having to stop \PERSONA &EnemyNPC ... It sounded important. If possible, I'd like for you to investigate this.>
+	Msg%id%01_2 <A pilot was brought here in critical condition. She was incoherent, but kept muttering something about having to stop \PERSONA &EnemyNPC ... It sounded important. If possible, I'd like for you to investigate this.>
+	Msg%id%01_10 <>
+	CMsg%id%01_10 <ifNPCSociable Accept>
+	Msg%id%01_20 <>
+	CMsg%id%01_20 <ifNPCShy Accept>
+	Msg%id%01_30 <>
+	CMsg%id%01_30 <ifNPCEasygoing Accept>
+	Msg%id%01_40 <>
+	CMsg%id%01_40 <ifNPCPassionate Accept>
+	Msg%id%01_50 <>
+	CMsg%id%01_50 <ifNPCCheerful Accept>
+	Msg%id%01_60 <>
+	CMsg%id%01_60 <ifNPCMelancholy Accept>
+	Msg%id%02 <\CHATNPC hired you to stop \PERSONA &EnemyNPC from completing \PPR &EnemyNPC mission.>
+	Prompt%id%01 <Alright, I'll see what I can do.>
+	Prompt%id%01_1 <If \PERSONA &EnemyNPC 's involved, it must be bad.>
+	Prompt%id%02 <That isn't my problem.>
+	CPrompt%id%02 <if# PCFac ChatNPCFac Accept>
+	Prompt%id%02_1 <Look, I don't want to get involved.>
+
+
+	Persona
 	requires <*CS_BasicStopEnemyMission P:++ P:PCFAC -"PCFAC">
 	%% The PC is here on behaf of their faction.
 	START <NewChat Say %id%01 AddChat %id%01 AddChat %id%02 AddChat %id%03>
@@ -104,6 +131,44 @@
 %   PARAM2: Reject Mission Exit Label (Note: Not all missions may be rejected!)
 %	(Also note: If this component features another ending, neither exit may
 %	 be called)
+
+	Persona
+	requires <*CS_BasicFightingMission "MEDIC" ~"Doctor" ~C:MEDIC ~"NOFAC" ~*CORE_DEF_ ~*CORE_R_MON ~E:EVIL_>
+	START <NewChat Say %id%01 AddChat %id%01 AddChat %id%02>
+	result%id%01 <StoryNote %id%02 Goto %1%>
+	result%id%02 <NewChat Say %id%03 AddChat %id%03 AddChat %id%04>
+	result%id%03 <StoryNote %id%02 Goto %1%>
+	result%id%04 <SMemo 0 Goto %2%>
+	Msg%id%01 <There's a lance of raiders in town who have been sending our local cavaliers to the hospital. I'm offering a reward for anyone who can take them out... you know, as a public health measure.>
+	Msg%id%01_1 <>
+	CMsg%id%01_1 <ifNPCSociable Accept>
+	Msg%id%01_2 <>
+	CMsg%id%01_2 <ifNPCShy Accept>
+	Msg%id%01_3 <>
+	CMsg%id%01_3 <ifNPCEasygoing Accept>
+	Msg%id%01_4 <>
+	CMsg%id%01_4 <ifNPCPassionate Accept>
+	Msg%id%01_5 <>
+	CMsg%id%01_5 <ifNPCCheerful Accept>
+	Msg%id%01_6 <>
+	CMsg%id%01_6 <ifNPCMelancholy Accept>
+	Msg%id%02 <\CHATNPC hired you drive off some raiders as a public health measure.>
+	Msg%id%03 <It doesn't make any difference who puts up the reward, it's someth‌ing that has to be done. Those raiders need to be removed.>
+	Msg%id%01_4 <Why? I'm doing the best I possibly can for my patients! If that means I have to resort to unconventional practices, then so be it!>
+	CMsg%id%01_4 <ifNPCPassionate Accept>
+	Msg%id%01_5 <I'm not happy about it either, but this situation needs to be dealt with. The raiders must be stopped before someone gets killed.>
+	CMsg%id%01_5 <ifNPCHeroic Accept>
+	Msg%id%01_6 <Why? If the plan succeeds I've aided the public health, and if it fails I've gotten loads more patients. Either way the hospital wins.>
+	CMsg%id%01_6 <ifNPCVillainous Accept>
+	Prompt%id%01 <A gram of prevention is worth a kilo of cure.>
+	Prompt%id%01_1 <Preventative medicine. I like it.>
+	Prompt%id%01_2 <I'd be happy to help.>
+	Prompt%id%02 <Doesn't this go against your medical oath?>
+	Prompt%id%02_1 <It feels strange, taking this mission from a doctor...>
+	Prompt%id%02_2 <>
+	Prompt%id%03 <Alright. I'll help you.>
+	Prompt%id%04 <Sorry, I want no part in this.>
+	CPrompt%id%04 <if# PCFac ChatNPCFac Accept>
 
 	Persona
 	requires <*CS_BasicFightingMission (*CORE_OFF_2|*CORE_OFF_3|*CORE_OFF_4|*CORE_OFF_5) F:++ ~"PCFAC">

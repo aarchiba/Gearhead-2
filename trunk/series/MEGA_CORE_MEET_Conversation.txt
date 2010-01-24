@@ -31,8 +31,7 @@ Content
 	% Fail Conditions:
 	% - Mission giver dies before encounter is activated
 
-	end <if= PlotStatus %plotid1% 0  ifNPCDead %1% else %pop%  LoseComp 0 .%id%_loss>
-	.%id%_loss <+T-->
+	end <if= PlotStatus %plotid1% 0  ifNPCDead %1% else %pop%  LoseEpisode>
 
 	.%id1%_%plotid1%_GoWin <SetPlotStatus %plotid2% %id2%     SMemo %id%01>
 	.%id1%_%plotid1%_GoLoss <SetPlotStatus %plotid3% %id3%    SMemo %id%02>
@@ -57,15 +56,14 @@ Content
 		*.%id%_GoAccept <*GoodLuckPlusHint .%id%_GoR1Exit %plotid1%>
 		.%id%_GoR1Exit <SetPlotStatus %plotid1% %id1%>
 		*.%id%_GoDeny <*RejectMission .%id%_GoR2Exit>
-		.%id%_GoR2Exit <LoseComp 0 .%id%_changes>
-		.%id%_changes <+T-- +F-->
+		.%id%_GoR2Exit <LoseEpisode>
 	end
 
 
 Content
 	name <Basic Fetch Mission>
 	desc <The PC will be asked to go fetch an item.>
-	requires <*CS_Conversation ~C:THIEF ~1:THIEF ~P:CRIME -1:PDASS ~1:PCFAC>
+	requires <*CS_Conversation ~C:THIEF ~1:THIEF ~P:CRIME -1:PDASS ~1:PCFAC -1:NOFAC>
 
 	% E1 is the NPC that the PC will speak with
 	% E2 is the item to fetch
@@ -75,9 +73,8 @@ Content
 	% - Mission giver dies before encounter is activated
 	% - Fetch subplot fails
 
-	end <if= PlotStatus %plotid1% 0 else .%id%_GoCheckReveal ifNPCDead %1% else %pop% LoseComp 0 .%id%_loss>
+	end <if= PlotStatus %plotid1% 0 else .%id%_GoCheckReveal ifNPCDead %1% else %pop% LoseEpisode>
 	.%id%_GoCheckReveal <ifSubPlotLost %plotid1% SMemo %id%01 SetPlotStatus %plotid3% %id3%>
-	.%id%_loss <+T-->
 
 	% Upon getting the item, set the win subplot.
 	Get%2% <SMemo %id%02  SetPlotStatus %plotid2% %id2%>
@@ -102,8 +99,7 @@ Content
 		*result%id%01 <*GoodLuckPlusHint .%id%_GoR1Exit %plotid1%>
 		.%id%_GoR1Exit <StoryNote %id%02 SetPlotStatus %plotid1% %id1%>
 		*Result%id%02 <*RejectMission .%id%_GoR2Exit>
-		.%id%_GoR2Exit <LoseComp 0 .%id%_changes>
-		.%id%_changes <+T-- +F-->
+		.%id%_GoR2Exit <LoseEpisode>
 		Msg%id%01 <We've lost some very sensitive information in the form of a datachip. I need for you to locate this chip and return it to me.>
 		Msg%id%02 <%name1% hired you to recover a lost datachip.>
 		Prompt%id%01 <I'll be back when I have it.>
@@ -120,15 +116,14 @@ Content
 Content
 	name <Basic Investigation Mission>
 	desc <The PC will be asked to gain some information.>
-	requires <*CS_Conversation ~C:POLIT ~C:ACADE ~C:MEDIA ~1:POLIT ~1:ACADE ~1:MEDIA ~P:POLIT -1:PDASS ~1:PCFAC>
+	requires <*CS_Conversation ~C:POLIT ~C:ACADE ~C:MEDIA ~1:POLIT ~1:ACADE ~1:MEDIA ~1:MEDIC ~P:POLIT -1:PDASS ~1:PCFAC>
 
 	% E1 is the NPC that the PC will speak with
 
 	% Fail Conditions:
 	% - Mission giver dies before mission is activated
 
-	end <if= PlotStatus %plotid1% 0  ifNPCDead %1% LoseComp 0 .%id%_loss>
-	.%id%_loss <+T-->
+	end <if= PlotStatus %plotid1% 0  ifNPCDead %1% LoseEpisode>
 
 	.%id1%_%plotid1%_GoWin <SetPlotStatus %plotid2% %id2%     SMemo %id%01>
 	.%id1%_%plotid1%_GoLoss <SetPlotStatus %plotid3% %id3%    SMemo %id%02>
@@ -152,8 +147,7 @@ Content
 		.%id%_GoBriefing <NewChat Say %id%01 AddChat %id%01 AddChat %id%02>
 		Result%id%01 <History %id%02 SetPlotStatus %plotid1% %id1% Goto .%id1%_GoInform>
 		*Result%id%02 <*RejectMission .%id%_GoR2Exit>
-		.%id%_GoR2Exit <LoseComp 0 .%id%_changes>
-		.%id%_changes <+T-- +F-->
+		.%id%_GoR2Exit <LoseEpisode>
 		Msg%id%01 <We have a situation going on, \PC . I'd like for you to investigate it and see what you can find out.>
 		Msg%id%02 <%name1% hired you to investigate things.>
 		Prompt%id%01 <I'll do it.>
@@ -208,8 +202,7 @@ Content
 		*.%id%_GoAccept <*GoodLuckPlusHint .%id%_GoR1Exit %plotid2%>
 		.%id%_GoR1Exit <SetPlotStatus %plotid1% %id1%  SetPlotStatus %plotid2% %id2%>
 		*.%id%_GoDeny <*RejectMission .%id%_GoR2Exit>
-		.%id%_GoR2Exit <LoseComp 0 .%id%_changes>
-		.%id%_changes <+T-- +F-->
+		.%id%_GoR2Exit <LoseEpisode>
 	end
 	inv
 		stc CORE-ACTIVATABLE
@@ -220,6 +213,57 @@ Content
 %%  ***   DEFAULT   ***
 %%  *******************
 
+Content
+	name <Medicinal Fungus>
+	desc <The PC will be asked to go fetch a rare fungus.>
+	requires <*CS_Conversation 1:MEDIC ~C:MEDIC ~C:ACADE ~*CORE_DEF_ -*CORE_OFF_ ~1:NOFAC>
+
+	% E1 is the NPC that the PC will speak with
+	% E2 is the item to fetch
+	Element2 <Prefab>
+
+	% Fail Conditions:
+	% - Mission giver dies before encounter is activated
+	% - Fetch subplot fails
+
+	end <if= PlotStatus %plotid1% 0 else .%id%_GoCheckReveal ifNPCDead %1% else %pop% LoseEpisode>
+	.%id%_GoCheckReveal <ifSubPlotLost %plotid1% SMemo %id%01 SetPlotStatus %plotid3% %id3%>
+
+	% Upon getting the item, set the win subplot.
+	Get%2% <SMemo %id%02  SetPlotStatus %plotid2% %id2%>
+
+	Msg%id%01 <You failed to recover the mushroom. You should go report to %name1% at \SCENE NPCScene %1% .>
+	Msg%id%02 <You should return the mushroom to %name1% at \SCENE NPCScene %1% .>
+
+	%% SubPlot1 is Fetch Item
+	%% SubPlot2 is the winning condition
+	%% SubPlot3 is the loss condition
+	SubPlot1 <*:CS_FetchItem 2>
+	SubPlot2 <*CS_WinFetchItem 1 2>
+	SubPlot3 <*CS_LoseGoal 1>
+
+	sub
+		Persona 1
+		greeting <if= PlotStatus %plotid1% 0 else .%id%_GoRemind if# PlotStatus %plotid% %id% else .%id%_GoOfferMission Goto %pop%>
+		*.%id%_GoOfferMission <*CS_C_Greeting .%id%_GoBriefing>
+		*.%id%_GoRemind <*GenericMissionReminder>
+		.%id%_GoBriefing <NewChat Say %id%01 AddChat %id%01 AddChat %id%02>
+		*result%id%01 <*GoodLuckPlusHint .%id%_GoR1Exit %plotid1%>
+		.%id%_GoR1Exit <StoryNote %id%02 SetPlotStatus %plotid1% %id1%>
+		*Result%id%02 <*RejectMission .%id%_GoR2Exit>
+		.%id%_GoR2Exit <LoseEpisode>
+		Msg%id%01 <I'm looking for a shigeru mushroom. It's a rare fungus with medicinal properties... I've heard that they can be found near here, but I'm too busy to go looking myself.>
+		Msg%id%02 <%name1% asked you to locate a rare medicinal fungus.>
+		Prompt%id%01 <I'll have a look around for you.>
+		Prompt%id%01_1 <I'll see if I can find one.>
+		Prompt%id%02 <Sorry. I'm a cavalier, not a botanist.>
+		CPrompt%id%02 <if# PCFac ChatNPCFac Accept>
+	end
+	inv
+		Treasure
+		name <Shigeru Mushroom>
+		desc <A rare fungus with medicinal properties. It's not safe to eat in its unprocessed form.>
+	end
 
 Content
 	name <My Watch Is Missing!>
@@ -283,8 +327,7 @@ Content
 
 	% Fail Conditions:
 	% - Mission giver dies before encounter is activated
-	end <if= PlotStatus %plotid1% 0 ifNPCDead %1% LoseComp 0 .%id%_loss>
-	.%id%_loss <+T-->
+	end <if= PlotStatus %plotid1% 0 ifNPCDead %1% LoseEpisode>
 
 	.%id1%_%plotid1%_GoWin <SetPlotStatus %plotid2% %id2%     SMemo %id%01>
 	.%id1%_%plotid1%_GoLoss <SetPlotStatus %plotid3% %id3%    SMemo %id%02>
@@ -308,8 +351,7 @@ Content
 		result%id%01 <AddEasygoing -d10   goto result%id%02>
 		result%id%02 <NewChat Say %id%02 History %id%03 SMemo %id%04 SetPlotStatus %plotid1% %id1%>
 		*result%id%03 <*RejectMission .%id%_GoR3Exit>
-		.%id%_GoR3Exit <AddReact -10   AddRenown -10   NTBLoseComp 0 .%id%_changes>
-		.%id%_changes <+T-- +F-->
+		.%id%_GoR3Exit <AddReact -10   AddRenown -10   LoseEpisode>
 		Msg%id%01 <You should know that \SPR %2% 's in town on a mission even as we speak. I tried to fight \OPR %2% myself, but got beaten pretty bad. If you could find \OPR %2% and avenge my poor departed mecha I'd be ever so grateful.>
 		Msg%id%02 <Thanks. \HINT %plotid1% Come back and let me know when you've beaten \OPR %2% .>
 		Msg%id%03 <%name1% was defeated by %name2%. You agreed to help \OPR %1% get revenge.>
@@ -635,8 +677,7 @@ Content
 	Element3 <Scene Building Public !Okay 2 !Near -7>
 	Element4 <Faction !Ally 2>
 
-	start <if= PlotStatus %plotid% %id% else %pop% ifNPCDead %1% LoseComp 0 .%id%_loss>
-	.%id%_loss <+T-- +F-->
+	start <if= PlotStatus %plotid% %id% else %pop% ifNPCDead %1% LoseEpisode>
 
 	sub
 		Persona 1
@@ -689,8 +730,7 @@ Plot
 	Element3 <Grab 1>
 	Place3 </>
 
-	start <if= PlotStatus %plotid% %id% else %pop% ifNPCDead %1% LoseComp 0 .%id%_loss>
-	.%id%_loss <+T-- +F-->
+	start <if= PlotStatus %plotid% %id% else %pop% ifNPCDead %1% LoseEpisode>
 
 	sub
 		Persona 1
@@ -739,8 +779,7 @@ Plot
 	Place2 </>
 	Element3 <Scene (Building|Meeting) Public !Near -7>
 
-	start <if= PlotStatus %plotid% %id% else %pop% ifNPCDead %1% LoseComp 0 .%id%_loss>
-	.%id%_loss <+T-- +F-->
+	start <if= PlotStatus %plotid% %id% else %pop% ifNPCDead %1% LoseEpisode>
 
 	sub
 		Persona 1
@@ -775,8 +814,7 @@ Plot
 	% E2 is the NPC to be sought
 	Element2 <NewNPC -2 -7 Shy>
 
-	start <if= PlotStatus %plotid% %id% else %pop% ifNPCDead %1% LoseComp 0 .%id%_loss>
-	.%id%_loss <+T-- +F-->
+	start <if= PlotStatus %plotid% %id% else %pop% ifNPCDead %1% LoseEpisode>
 
 	sub
 		Persona 1
@@ -821,8 +859,7 @@ Plot
 	Element2 <Prefab>
 	Place2 </>
 
-	start <if= PlotStatus %plotid% %id% else %pop% ifNPCDead %1% LoseComp 0 .%id%_loss>
-	.%id%_loss <+T-- +F-->
+	start <if= PlotStatus %plotid% %id% else %pop% ifNPCDead %1% LoseEpisode>
 
 	sub
 		Persona 1
@@ -865,8 +902,7 @@ Content
 	% v%id%01 = InitiaFlization Counter
 	update <if= PlotStatus %plotid% %id% else %pop% if= v%id%01 0 v= %id%01 1 NPCLevel %1% StoryDL>
 
-	start <if= PlotStatus %plotid% %id% else %pop% ifNPCDead %1% LoseComp 0 .%id%_loss>
-	.%id%_loss <+T-- +-->
+	start <if= PlotStatus %plotid% %id% else %pop% ifNPCDead %1% LoseEpisode>
 
 	sub
 		Persona 1
