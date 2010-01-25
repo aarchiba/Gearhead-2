@@ -2615,6 +2615,15 @@ begin
 	end else IfFailure( Event , Source );
 end;
 
+Procedure ProcessIfGSealed( var Event: String; Source: GearPtr );
+	{ If the grabbed gear is EnviroSealed, count as true. If not, }
+	{ count as false. }
+begin
+	if ( Grabbed_Gear <> Nil ) and IsEnviroSealed( Grabbed_Gear ) then begin
+		IfSuccess( Event );
+	end else IfFailure( Event , Source );
+end;
+
 Procedure ProcessIfGArchEnemy( var Event: String; gb: GameBoardPtr; Source: GearPtr );
 	{ If the grabbed gear is an enemy of the PC, or belongs to a faction that's }
 	{ an enemy of the PC, count as true. }
@@ -4932,6 +4941,7 @@ begin
 		else if cmd = 'IFGOK' then ProcessIfGOK( Event , Source )
 		else if cmd = 'IFGDEAD' then ProcessIfGDead( Event , Source )
 		else if cmd = 'IFGSEXY' then ProcessIfGSexy( Event , GB , Source )
+		else if cmd = 'IFGSEALED' then ProcessIfGSexy( Event , GB , Source )
 		else if cmd = 'IFGARCHENEMY' then ProcessIfGArchEnemy( Event , GB , Source )
 		else if cmd = 'IFGARCHALLY' then ProcessIfGArchAlly( Event , GB , Source )
 		else if cmd = 'IFGHASSKILL' then ProcessIfGHasSkill( Event , GB , Source )

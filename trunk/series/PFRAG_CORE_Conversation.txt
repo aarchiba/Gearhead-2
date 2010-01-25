@@ -10,6 +10,37 @@
 %%
 
 Persona
+	%% Unknown Intro greeting
+	requires <*CS_C_Greeting *CORE_Intro ~"MILIT" ~"POLIT" -"FRIEND" -"FAMILY" -"ALLY" -"LOVER" -"PCFAC">
+	% V%id%01 = One time use counter
+	START <if= v%id%01 0 else %1% NewChat Say %id%01 AddChat %id%01 AddCHat %id%02 AddChat %id%03 V= %id%01 1>
+	result%id%01 <AddCheerful d10  Goto %1%>
+	result%id%02 <Goto %1%>
+	result%id%03 <AddCheerful -d10  Goto %1%>
+	Msg%id%01 <You must be here about the mission. Well, I'll be honest, I'm not real excited about hiring a complete unknown like you to do it...>
+	Msg%id%01_1 <>
+	CMsg%id%01_1 <ifNPCSociable Accept>
+	Msg%id%01_2 <>
+	CMsg%id%01_2 <ifNPCShy Accept>
+	Msg%id%01_3 <>
+	CMsg%id%01_3 <ifNPCEasygoing Accept>
+	Msg%id%01_4 <>
+	CMsg%id%01_4 <ifNPCPassionate Accept>
+	Msg%id%01_5 <>
+	CMsg%id%01_5 <ifNPCCheerful Accept>
+	Msg%id%01_6 <You're not here about the mission, are you? This is just what I need... a complete nobody.>
+	CMsg%id%01_6 <ifNPCMelancholy Accept>
+	Prompt%id%01_1 <I won't disappoint you.>
+	Prompt%id%01_2 <Let me show you what I can do.>
+	Prompt%id%01_3 <What I lack in experience I make up in enthusiasm!>
+	Prompt%id%02 <Unknown? Me? You must be joking.>
+	CPrompt%id%02 <ifG PCRenown 10 Accept>
+	Prompt%id%02_1 <I'm more experienced than you think.>
+	Prompt%id%03_1 <Yeah, I'm thrilled to work for you, too.>
+	Prompt%id%03_2 <Well I never heard of you, either.>
+	Prompt%id%03_3 <>
+
+Persona
 	requires <*CS_C_Greeting *CORE_INTRO ("FRIEND"|"FAMILY"|"LOVER")>
 	START <if= V%id%01 0 else %1% V= %id%01 1 NewChat Say %id%01 AddChat %id%01 AddChat %id%02>
 	result%id%01 <AddEasygoing -10   Goto %1%>

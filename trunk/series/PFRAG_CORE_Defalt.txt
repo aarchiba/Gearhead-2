@@ -7,6 +7,14 @@
 %% In addition, some of these fragments are tied to specific components, and may not
 %% be readily reusable in other components.
 
+% TYPE: *CS_WarZone_Greeting
+%	The PC has just entered a warzone. This NPC will brief the PC on what
+%	happened.
+%    PARAM1: Exit label
+
+	Persona
+	requires <*CS_WarZone_Greeting>
+	START <NewChat Say %id%01 AddChat %id%01>
 
 
 

@@ -41,6 +41,37 @@
 %    %city%		The city where this mood is installed
 %
 
+Mood 3
+	name <Epidemic>
+	desc <There's an epidemic in town. Better wear a mask.>
+	requires <Town (dangerous|dystopia|poor) -Safe>
+	type <>
+	plot_type <*Epidemic>
+
+	% No Elements
+
+	% Scripts- just being in town can make the PC sick.
+	halfhour <ifPCSealed else GoNotSealed if= d20 1 ifUToughness 5 else GoGetSick>
+	GoNotSealed <if= d4 1 ifUToughness SkillTar %threat% else GoGetSick>
+	GoGetSick <Print 2 PCVerySick>
+	Msg2 <You don't feel very well...>
+
+	% V1 = Initialization Counter
+	update <if= V1 0 V= 1 1 News 1>
+	Msg1_1 <%city% suffering from viral epidemic. Travelers are advised to keep away until the outbreak is contained.>
+	Msg1_2 <%city%'s health services strained as new viral illness appears. Pharmaceutical spokesmen expected to name the new disease shortly.>
+	Msg1_3 <Travelers advised to avoid %city% like the plague, owing to an outbreak of arcturian plague.>
+	Msg1_4 <%city%'s viral epidemic blamed on poor sanitation. Travelers advised to keep away.>
+	Msg1_5 <%city% government attempts to keep tourism industry going despite outbreak of futsie fever. Visitors advised to wear full-body containment suits.>
+
+	% Meme Messages
+	Msg_1 <I feel kind of light-headed... I hope I'm not getting sick...>
+	Msg_2 <How come we can build computers and jetpacks, but there's still no cure for the common cold?>
+	Msg_3 <That's close enough... I don't want to breathe the same air as you.>
+	Msg_4 <How can anybody stay healthy with all these sickos walking around?>
+	Msg_5 <Stand back! I coughed once yesterday; I may be infected.>
+
+
 Mood 5
 	name <Boom Times>
 	desc <The economy is good; nothing much else going on.>
@@ -191,11 +222,13 @@ Mood 2
 	Msg1_5 <Mutant exo-fungus discovered in %city% core; integrity of life support infrastructure questioned.>
 
 	% Meme Messages
-	Msg_1 <>
-	Msg_2 <>
-	Msg_3 <>
-	Msg_4 <>
-	Msg_5 <>
-
+	Msg_1 <All it takes is one tiny spore, and the entire station can get infested.>
+	Msg_2 <My friend discovered a mushroom the size of a cleanbot under \PPR ChatNPCID bed. At least it wasn't one of those carnivorous ones.>
+	Msg_3 <You see? This is what happens when you outsource bio-defense to the lowest bidder.>
+	Msg_4 <You see? This is what happens when let the technocrats run the bio-defense system.>
+	Msg_5 <I heard that spaceworms are coming up through the toilets. I really don't want to see that.>
+	Msg_6 <They're fumigating my res-module. I hope the smell goes away soon.>
+	Msg_7 <You know all these exo-fungus running around? I imagine that must be what it's like to live on Earth.>
+	Msg_8 <I used to like mushrooms, but not any more.>
 
 

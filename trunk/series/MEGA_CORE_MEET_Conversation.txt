@@ -214,9 +214,101 @@ Content
 %%  *******************
 
 Content
+	name <Stolen Vaccine>
+	desc <There's an epidemic, but the medicine has been stolen.>
+	requires <*CS_Conversation (1:MEDIC|1:POLIC|1:POLIT) (C:MEDIC|*CORE_DEF_) -!Ne ~1:PCFAC>
+
+	% E1 is the NPC that the PC will speak with
+	% E2 is the item to fetch
+	% E3 is the epidemic mood
+	Element2 <Prefab>
+	Element3 <Prefab>
+
+	% Fail Conditions:
+	% - Mission giver dies before encounter is activated
+	% - Fetch subplot fails
+	% Upon either winning or losing the plot, the epidemic's time limit will
+	% be set.
+
+	end <if= PlotStatus %plotid1% 0 else .%id%_GoCheckReveal ifNPCDead %1% else %pop% LoseEpisode>
+	.%id%_GoCheckReveal <ifSubPlotLost %plotid1% SMemo %id%01 SetPlotStatus %plotid3% %id3% SetMoodTimeLimit %3% 86400>
+
+	% Upon getting the item, set the win subplot.
+	Get%2% <SMemo %id%02  SetPlotStatus %plotid2% %id2% SetMoodTimeLimit %3% 21600>
+
+	Msg%id%01 <You failed to recover the vaccine. You should go report to %name1% at \SCENE NPCScene %1% .>
+	Msg%id%02 <You should return the vaccine to %name1% at \SCENE NPCScene %1% .>
+
+	%% SubPlot1 is Fetch Item
+	%% SubPlot2 is the winning condition
+	%% SubPlot3 is the loss condition
+	SubPlot1 <*:CS_FetchItem&Stolen&Emergency 2>
+	SubPlot2 <*CS_WinFetchItem 1 2>
+	SubPlot3 <*CS_LoseGoal 1>
+
+	sub
+		Persona 1
+		% V%id%01 = Set Mood counter
+		% V%id%02 = Synthesis counter
+		greeting <if= PlotStatus %plotid1% 0 else .%id%_GoRemind if# PlotStatus %plotid% %id% else .%id%_GoOfferMission Goto %pop%>
+		*.%id%_GoOfferMission <*CS_C_Greeting .%id%_GoBriefing>
+		.%id%_GoRemind <NewChat Say %id%05 AddChat %id%02 AddChat %id%04>
+		.%id%_GoBriefing <if= v%id%02 0 else result%id%01 NewChat Say %id%01 AddChat %id%01 AddChat %id%02  if= v%id%01 0 v= %id%01 1 SetMood %3% RootSceneID>
+		*result%id%01 <*GoodLuckPlusHint .%id%_GoR1Exit %plotid1%>
+		.%id%_GoR1Exit <StoryNote %id%02 SetPlotStatus %plotid1% %id1%>
+		result%id%02 <EndChat Mental Mental Mental Say %id%03 History %id%04 KillMood %3% XPV 100 AddHeroic 1 AddReact d20 V= %id%02 1 if= PlotStatus %plotid1% 0  AddChat %id%03>
+		result%id%03 <Goto result%id%01>
+		result%id%04 <RevertPersona>
+		Msg%id%01 <There's been an outbreak of Martian influenza. Normally this wouldn't be a big problem, but our supply of vaccine has gone missing. I suspect that it's been stolen... I need you to find it.>
+		Msg%id%02 <%name1% asked you to recover the city's supply of vaccine.>
+		Msg%id%03 <Thank you! This supply of vaccine will help us stave off the worst of the epidemic, but still you should try to find out who stole the city stockpile.>
+		Msg%id%04 <You synthesized some vaccine for \SCENE RootSceneID .>
+		Msg%id%05 <Have you located the vaccine yet?>
+		Prompt%id%01 <I'll get right on it.> 
+		Prompt%id%01_1 <This is bad. I'll get straight to work.>
+		Prompt%id%02 <Why don't I help you synthesize some more?>
+		CPrompt%id%02 <if= v%id%02 0 ifPCHasSkill NAS_Science ifScience SkillTar StoryDL Accept>
+		Prompt%id%03 <[Continue]>
+		Prompt%id%04 <I'm working on it.>
+	end
+	inv
+		Treasure
+		name <Vaccine>
+		desc <The vaccine for Martian influenza.>
+		mass 7
+
+		MinorMood 3
+		name <Martian Influenza outbreak>
+		plot_type <*Epidemic>
+		%% Once per half hour, check to see if the PC gets sick. Wearing
+		%% a sealed suit will cut the risk by a lot, but it still isn't
+		%% perfectly safe.
+		halfhour <ifPCSealed else GoNotSealed if= d20 1 ifUToughness 5 else GoGetSick>
+		GoNotSealed <if= d4 1 ifUToughness SkillTar StoryDL else GoGetSick>
+		GoGetSick <Print 1 PCVerySick>
+		Msg1 <You don't feel very well...>
+
+		% V1 = Initialization Counter
+		update <if= V1 0 V= 1 1 News 2>
+		Msg2_1 <%city% struck by outbreak of Martian influenza. Residents advised to wear complete environmental sealing at all times.>
+		Msg2_2 <Medical services overwhelmed as %city% succumbs to Martian influenza. Imported pudding blamed for outbreak.>
+		% Is it obvious that I've been reading Judge Dredd all weekend?
+		Msg2_3 <Vaccine shortage leads to outbreak of Martian influenza in %city%. Anti-longevity activists claim this is a good thing.>
+
+		% Meme Messages
+		Msg_1 <Don't stand so close to me... You might be infected.>
+		Msg_2 <Have you cleaned the filters on your suit recently? The only problem is, you need to take the suit off to do it...>
+		CMsg_2 <ifPCSealed Accept>
+		Msg_3 <Don't worry, I'm not really sick. This runny nose is just my allergies.>
+		Msg_4 <My friend came down with Martian influenza; \PPR %1% nose swelled up to the size of a grapefruit.>
+		CMsg_4 <ifNPCOK %1% Accept>
+		Msg_5 <Trust no-one, and keep a tissue handy.>
+	end
+
+Content
 	name <Medicinal Fungus>
 	desc <The PC will be asked to go fetch a rare fungus.>
-	requires <*CS_Conversation 1:MEDIC ~C:MEDIC ~C:ACADE ~*CORE_DEF_ -*CORE_OFF_ ~1:NOFAC>
+	requires <*CS_Conversation 1:MEDIC ~C:MEDIC ~C:ACADE ~*CORE_R_ -*CORE_OFF_ ~1:NOFAC>
 
 	% E1 is the NPC that the PC will speak with
 	% E2 is the item to fetch

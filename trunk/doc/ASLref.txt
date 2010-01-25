@@ -32,6 +32,7 @@
 	PCATTACK		PC has fired a weapon
 	PUMPNEWS		Applied to quests and moods once every 6 hours
 	QUARTER			Generated every 6 hours (1/4 of a day)
+	RESCUE			The PC has resuscitated a disaster victim
 	RESULT[number]		Called when interact menu item selected
 	REVEAL			Called when hidden metaterrain is discovered
 	START			First trigger placed when scene entered
@@ -298,6 +299,7 @@
 	IFGINPLAY <else [label]>	True if GG on map and operational
 	IFGDEAD <else [label]>	True if GG is Nil or is destroyed
 	IFGOK <else [label]>	True if GG exists and not destroyed
+	IFGSEALED <else [label]> True if NPC GG is enviro-sealed
 	IFGSEXY <else [label]>	True if NPC GG exists and is sexy to PC
 	IFTEAMCANSEEGG [team] <ELSE [label]>	If the grabbed gear can be seen by team...
 	MOVEANDPACIFYGG [Scene ID]	Move GG to scene, setting teamdata to something peaceful

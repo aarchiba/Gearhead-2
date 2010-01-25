@@ -83,7 +83,7 @@ Plot
 	inv
 		Persona 3
 		rumor%id1% <%name3% needs someone to run a mission for the city. I hear it's important.>
-		Greeting <NewChat SayAnything>
+		Greeting <RevertPersona>
 	end
 
 
@@ -101,7 +101,7 @@ Plot
 
 	% All this plot does is move the NPC, send an email,
 	% and activate the mission subplot
-	5min <if= PlotStatus %plotid% 0  if= RootSceneID &EpisodeScene V+ 1 1 ifG v1 d6 EMail 1  SetPlotStatus %plotid% %id1%>
+	5min <if= PlotStatus %plotid% 0  if= RootSceneID &EpisodeScene  EMail 1  SetPlotStatus %plotid% %id1%>
 
 	start <if= PlotStatus %plotid% 0 ifNPCDead %2% LoseEpisode>
 
@@ -127,7 +127,7 @@ Plot
 
 	% All this plot does is move the NPC, send an email,
 	% and activate the mission subplot
-	5min <if= PlotStatus %plotid% 0  if= RootSceneID &EpisodeScene V+ 1 1 ifG v1 d6 EMail 1  SetPlotStatus %plotid% %id1%>
+	5min <if= PlotStatus %plotid% 0  if= RootSceneID &EpisodeScene  EMail 1  SetPlotStatus %plotid% %id1%>
 
 	start <if= PlotStatus %plotid% 0 ifNPCDead %2% LoseEpisode>
 
@@ -153,7 +153,7 @@ Plot
 
 	% All this plot does is move the NPC, send an email,
 	% and activate the mission subplot
-	5min <if= PlotStatus %plotid% 0  if= RootSceneID &EpisodeScene V+ 1 1 ifG v1 d6 EMail 1  SetPlotStatus %plotid% %id1%>
+	5min <if= PlotStatus %plotid% 0  if= RootSceneID &EpisodeScene  EMail 1  SetPlotStatus %plotid% %id1%>
 
 	start <if= PlotStatus %plotid% 0 ifNPCDead %2% LoseEpisode>
 
@@ -182,7 +182,7 @@ Plot
 
 	% All this plot does is move the NPC, send an email,
 	% and activate the mission subplot
-	5min <if= PlotStatus %plotid% 0  if= RootSceneID &EpisodeScene V+ 1 1 ifG v1 d6 EMail 1  SetPlotStatus %plotid% %id1%>
+	5min <if= PlotStatus %plotid% 0  if= RootSceneID &EpisodeScene  EMail 1  SetPlotStatus %plotid% %id1%>
 
 	start <if= PlotStatus %plotid% 0 ifNPCDead %3% LoseEpisode>
 
@@ -209,7 +209,7 @@ Plot
 
 	% All this plot does is move the NPC, send an email,
 	% and activate the mission subplot
-	5min <if= PlotStatus %plotid% 0  if= RootSceneID &EpisodeScene V+ 1 1 ifG v1 d6 EMail 1  SetPlotStatus %plotid% %id1%>
+	5min <if= PlotStatus %plotid% 0  if= RootSceneID &EpisodeScene  EMail 1  SetPlotStatus %plotid% %id1%>
 
 	start <if= PlotStatus %plotid% 0 ifNPCDead %2% LoseEpisode>
 
@@ -237,7 +237,7 @@ Plot
 
 	% All this plot does is move the NPC, send an email,
 	% and activate the mission subplot
-	5min <if= PlotStatus %plotid% 0  if= RootSceneID &EpisodeScene V+ 1 1 ifG v1 d6 EMail 1  SetPlotStatus %plotid% %id1%>
+	5min <if= PlotStatus %plotid% 0  if= RootSceneID &EpisodeScene  EMail 1  SetPlotStatus %plotid% %id1%>
 
 	start <if= PlotStatus %plotid% 0 ifNPCDead %2% LoseEpisode>
 
@@ -265,7 +265,7 @@ Plot
 
 	% All this plot does is move the NPC, send an email,
 	% and activate the mission subplot
-	5min <if= PlotStatus %plotid% 0  if= RootSceneID &EpisodeScene V+ 1 1 ifG v1 d6 EMail 1  SetPlotStatus %plotid% %id1%>
+	5min <if= PlotStatus %plotid% 0  if= RootSceneID &EpisodeScene  EMail 1  SetPlotStatus %plotid% %id1%>
 
 	start <if= PlotStatus %plotid% 0 ifNPCDead %2% LoseEpisode>
 

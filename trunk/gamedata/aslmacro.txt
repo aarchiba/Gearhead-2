@@ -13,6 +13,7 @@ S+ <GrabStory              GAddNAtt NAG_ScriptVar ? ?>
 N= <GrabStory              GSetNAtt NAG_ElementID ? ?>
 rcs <Trigger0 RESET_CORE_STORY>
 PCSick <GrabPCPilot GSetNAtt 14 20 10>
+PCVerySick <GrabPCPilot GSetNAtt 14 20 30>
 SetTeamFaction <GrabTeam ? GSetNAtt NAG_Personal NAS_FactionID ?>
 SetSelfFaction <GrabSource GSetNAtt NAG_Personal NAS_FactionID ?>
 SetSelfTeam <GrabSource GSetNAtt NAG_Location NAS_Team ?>
@@ -107,6 +108,7 @@ IFNPCDEAD <GrabNPC ? ifGDead>
 IFNPCMALE <if= NPCGender ? 0>
 IFNPCFEMALE <if= NPCGender ? 1>
 IFPCOK <GrabPCPilot IfGOK>
+IFPCSealed <GrabPCPilot IfGSealed>
 ifNPCinPlay <GrabNPC ?  IfGInPlay>
 ifChatNPCinPlay <GrabChatNPC  IfGInPlay>
 ifChatNPCisCombatant <GrabChatNPC if# GNatt NAG_CharDescription NAS_IsCombatant 0>
@@ -263,6 +265,7 @@ IfShopping <ifSkillTest NAS_Shopping STAT_Charm ?>
 IfShoppingKN <ifSkillTest NAS_Shopping STAT_Knowledge ?>	% Used for economic theory and business administration
 IfMartialArts <ifSkillTest NAS_CloseCombat STAT_Body ?>
 IfToughness <ifSkillTest NAS_Toughness STAT_Ego ?>
+IfUToughness <ifUSkillTest NAS_Toughness STAT_Ego ?>
 IfDancing <ifSkillTest NAS_Athletics STAT_Charm ?>
 SeekEntrance <SeekGate ParentSceneID ?>
 IfNPCSurrendered <GrabNPC ? if= GNAtt NAG_EpisodeData NAS_SurrenderStatus NAV_NowSurrendered>
