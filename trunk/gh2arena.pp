@@ -2284,7 +2284,7 @@ var
 	F: Text;		{ A File }
 begin
 	{ Create a menu listing all the units in the SaveGame directory. }
-	RPM := CreateRPGMenu( MenuItem , MenuSelect , ZONE_Menu );
+	RPM := CreateRPGMenu( MenuItem , MenuSelect , ZONE_Title_Screen_Menu );
 	BuildFileMenu( RPM , Save_Unit_Base + Default_Search_Pattern );
 
 	{ If any units are found, allow the player to load one. }

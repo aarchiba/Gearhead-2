@@ -277,6 +277,23 @@ Const
 		Y_Anchor: ANC_Mid; Y_Justify: 6; H: 1;
 	);
 
+	ZONE_Title_Screen_Top: vgfx_zone = (
+		X_Anchor: ANC_Mid; X_Justify: -15; W: 30;
+		Y_Anchor: ANC_Mid; Y_Justify: -10; H: 2;
+	);
+	ZONE_Title_Screen_Title: vgfx_zone = (
+		X_Anchor: ANC_Mid; X_Justify: -15; W: 30;
+		Y_Anchor: ANC_Mid; Y_Justify: -10; H: 1;
+	);
+	ZONE_Title_Screen_Version: vgfx_zone = (
+		X_Anchor: ANC_Mid; X_Justify: -15; W: 30;
+		Y_Anchor: ANC_Mid; Y_Justify: -9; H: 1;
+	);
+	ZONE_Title_Screen_Menu: vgfx_zone = (
+		X_Anchor: ANC_Mid; X_Justify: -15; W: 30;
+		Y_Anchor: ANC_Mid; Y_Justify: -7; H: 15;
+	);
+
 
 { *** STANDARD COLORS *** }
 	StdBlack: Byte = Black;
@@ -355,7 +372,7 @@ Procedure ClockBorder;
 Procedure SetupArenaDisplay;
 Procedure SetupArenaMissionMenu;
 Procedure SetupConcertDisplay;
-
+Procedure SetupTitleScreenDisplay;
 
 
 implementation
@@ -1017,6 +1034,15 @@ begin
 	InfoBox( ZONE_ConcertMenu );
 	InfoBox( ZONE_ConcertDesc );
 end;
+
+Procedure SetupTitleScreenDisplay;
+	{ Set up the concert display. }
+begin
+	ClrScreen;
+	InfoBox( ZONE_Title_Screen_Top );
+	InfoBox( ZONE_Title_Screen_Menu );
+	CMessage( 'GearHead II' , ZONE_Title_Screen_Title , StdWhite );
+end;
 
 
 initialization

@@ -4941,7 +4941,7 @@ begin
 		else if cmd = 'IFGOK' then ProcessIfGOK( Event , Source )
 		else if cmd = 'IFGDEAD' then ProcessIfGDead( Event , Source )
 		else if cmd = 'IFGSEXY' then ProcessIfGSexy( Event , GB , Source )
-		else if cmd = 'IFGSEALED' then ProcessIfGSexy( Event , GB , Source )
+		else if cmd = 'IFGSEALED' then ProcessIfGSealed( Event , Source )
 		else if cmd = 'IFGARCHENEMY' then ProcessIfGArchEnemy( Event , GB , Source )
 		else if cmd = 'IFGARCHALLY' then ProcessIfGArchAlly( Event , GB , Source )
 		else if cmd = 'IFGHASSKILL' then ProcessIfGHasSkill( Event , GB , Source )

@@ -221,6 +221,9 @@ const
 	ZONE_ConcertDesc: TSDL_Rect =  ( x: Concert_X1 ; y: Concert_Y1 + 130; w: Concert_Text_Width; h: 20 );
 	ZONE_ConcertPhoto:  TSDL_Rect =  ( x: Concert_X0 ; y: Concert_Y1; w: 100; h: 150 );
 
+	ZONE_Title_Screen_Version:  TSDL_Rect =  ( x: 555 ; y: 222; w: 50; h: 20 );
+	ZONE_Title_Screen_Menu:  TSDL_Rect =  ( x: 585 ; y: 255; w: 160; h: 140 );
+
 	Animation_Phase_Period = 6000;
 
 	std_tex_size = 64;
@@ -235,6 +238,8 @@ var
 	Mouse_X, Mouse_Y: LongInt;
 	Cursor_Sprite: SensibleSpritePtr;
 	Console_History: SAttPtr;
+	Title_Screen: SensibleSpritePtr;
+
 
 	RK_NumKeys:	PInt;
 	RK_KeyState:	PUInt8;
@@ -303,6 +308,9 @@ Procedure SetupArenaDisplay;
 Procedure SetupArenaMissionMenu;
 Procedure SetupConcertDisplay;
 
+Procedure SetupTitleScreenDisplay;
+
+
 implementation
 
 const
@@ -330,6 +338,7 @@ begin
         SDL_LockSurface(Game_Screen);
         
         if Revert_Slower_Safer then
+
         begin
         	
                 { Instead of using glPixelZoom(1, -1), just revert
@@ -1540,6 +1549,14 @@ begin
 	ClearExtendedBorder( ZONE_ConcertPhoto );
 end;
 
+Procedure SetupTitleScreenDisplay;
+	{ Draw the title screen. }
+begin
+	SDL_BlitSurface( Title_Screen^.Img , Nil , Game_Screen , Nil );
+
+end;
+
+
 initialization
 
 	SDL_Init( SDL_INIT_VIDEO );
@@ -1586,6 +1603,8 @@ initialization
 	Game_Sprites := Nil;
 
 	Cursor_Sprite := LocateSprite( 'cursor.png' , 8 , 16 );
+	Title_Screen := LocateSprite( 'title_screen.png' , 800 , 600 );
+
 	Game_Textures := Nil;
 
 	Console_History := Nil;

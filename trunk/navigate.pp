@@ -601,7 +601,7 @@ var
 	DoSave: Boolean;
 begin
 	{ Create a menu listing all the units in the SaveGame directory. }
-	RPM := CreateRPGMenu( MenuItem , MenuSelect , ZONE_Menu );
+	RPM := CreateRPGMenu( MenuItem , MenuSelect , ZONE_Title_Screen_Menu );
 	BuildFileMenu( RPM , Save_Campaign_Base + Default_Search_Pattern );
 
 	PC := Nil;

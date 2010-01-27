@@ -201,6 +201,9 @@ const
 	ZONE_ConcertDesc: TSDL_Rect =  ( x: Concert_X1 ; y: Concert_Y1 + 130; w: Concert_Text_Width; h: 20 );
 	ZONE_ConcertPhoto:  TSDL_Rect =  ( x: Concert_X0 ; y: Concert_Y1; w: 100; h: 150 );
 
+	ZONE_Title_Screen_Version:  TSDL_Rect =  ( x: 555 ; y: 222; w: 50; h: 20 );
+	ZONE_Title_Screen_Menu:  TSDL_Rect =  ( x: 585 ; y: 255; w: 160; h: 140 );
+
 	Animation_Phase_Period = 6000;
 
 var
@@ -212,6 +215,7 @@ var
 	Mouse_X, Mouse_Y: LongInt;
 	Cursor_Sprite: SensibleSpritePtr;
 	Console_History: SAttPtr;
+	Title_Screen: SensibleSpritePtr;
 
 	RK_NumKeys:	PInt;
 	RK_KeyState:	PUInt8;
@@ -273,6 +277,7 @@ Procedure Idle_Display;
 Procedure SetupArenaDisplay;
 Procedure SetupArenaMissionMenu;
 Procedure SetupConcertDisplay;
+Procedure SetupTitleScreenDisplay;
 
 implementation
 
@@ -1241,6 +1246,13 @@ begin
 	ClearExtendedBorder( ZONE_ConcertPhoto );
 end;
 
+Procedure SetupTitleScreenDisplay;
+	{ Draw the title screen. }
+begin
+	SDL_BlitSurface( Title_Screen^.Img , Nil , Game_Screen , Nil );
+
+end;
+
 initialization
 
 	SDL_Init( SDL_INIT_VIDEO );
@@ -1266,6 +1278,7 @@ initialization
 	Game_Sprites := Nil;
 
 	Cursor_Sprite := LocateSprite( 'cursor.png' , 8 , 16 );
+	Title_Screen := LocateSprite( 'title_screen.png' , 800 , 600 );
 
 	Console_History := Nil;
 
