@@ -313,9 +313,9 @@
 	SDL_SPRITE <prop_body.png>
 	Use <ifPCHasSkill NAS_Medicine else GoNoSkill Goto CLUE_Medicine>
 	GoNoSkill <Print 1>
-	Clue_Medicine <MENTAL Alert 2 ifMedicine 7 else GoDie Print 3 XPV 50 OneVictimRecovered Trigger0 RESCUE DeleteSelf>
-	GoDie <Print 4 DeleteSelf>
-	Msg1 <This victim needs medical aid.>
+	Clue_Medicine <MENTAL Alert 2 ifMedicine 7 else GoDie Alert 3 XPV 50 OneVictimRecovered Trigger0 RESCUE DeleteSelf>
+	GoDie <Alert 4 DeleteSelf>
+	Msg1 <This victim needs medical aid. Hopefully a doctor will be along shortly.>
 	Msg2 <You attempt to resuscitate the victim.>
 	Msg3 <The victim regains consciousness and is removed from the scene.>
 	Msg4 <The victim dies while being treated.>

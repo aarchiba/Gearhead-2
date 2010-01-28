@@ -2033,12 +2033,16 @@ end;
 Procedure CreateNewPilot( Camp: CampaignPtr );
 	{ Create a new pilot, and add it to the unit. }
 var
-	Egg,PC: GearPtr;
+	Egg,PC,S: GearPtr;
 begin
 	Egg := CharacterCreator( HQFac( Camp ) );
 	if Egg <> Nil then begin
-		PC := Egg^.SubCom;
-		DelinkGear( Egg^.SubCom , PC );
+		PC := Nil;
+		while Egg^.SubCom <> Nil do begin
+			S := Egg^.SubCom;
+			DelinkGear( Egg^.SubCom , S );
+			AppendGear( PC , S );
+		end;
 		DisposeGear( Egg );
 		StripAllMecha( PC );
 		InsertSubCom( Camp^.Source , PC );

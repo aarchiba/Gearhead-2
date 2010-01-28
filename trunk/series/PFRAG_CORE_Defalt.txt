@@ -9,12 +9,32 @@
 
 % TYPE: *CS_WarZone_Greeting
 %	The PC has just entered a warzone. This NPC will brief the PC on what
-%	happened.
-%    PARAM1: Exit label
+%	happened. The PC can either sound concerned or shrug it off.
+%    PARAM1: Offer help label
+%    PARAM2: Noncommital label
 
 	Persona
 	requires <*CS_WarZone_Greeting>
-	START <NewChat Say %id%01 AddChat %id%01>
+	START <NewChat Say %id%01 AddChat %id%01 AddChat %id%02>
+	result%id%01 <Goto %1%>
+	result%id%02 <Goto %2%>
+	Msg%id%01 <The fighting appears to be over, for now... It's going to take a while to repair this damage though.>
+	Msg%id%01_1 <Many lives were lost here today. Now it's time for the rest of us to repair the damage, and start preparing for the next attack...>
+	CMsg%id%01_1 <ifNPCSociable Accept>
+	Msg%id%01_2 <The battle's over, for now. Time to start cleaning up.>
+	CMsg%id%01_2 <ifNPCShy Accept>
+	Msg%id%01_3 <>
+	CMsg%id%01_3 <ifNPCEasygoing Accept>
+	Msg%id%01_4 <>
+	CMsg%id%01_4 <ifNPCPassionate Accept>
+	Msg%id%01_5 <>
+	CMsg%id%01_5 <ifNPCCheerful Accept>
+	Msg%id%01_6 <It's going to take the rescue squad another couple of hours to count up all the casulties. Good thing this was just a minor skirmish, eh \PC ?>
+	CMsg%id%01_6 <ifNPCMelancholy Accept>
+	Prompt%id%01 <What can I do to help?>
+	Prompt%id%01_1 <Is there anything I can do?>
+	Prompt%id%02 <No kidding.>
+	Prompt%id%02_1 <Yeah.>
 
 
 

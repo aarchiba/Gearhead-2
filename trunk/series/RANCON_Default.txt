@@ -1,5 +1,41 @@
 % RANDOM CONTENT FILE
 
+%%
+%% *WARZONE_CLEANUP Content
+%%	There's just been a battle right here. The PC can walk around and maybe
+%%	help with the recovery efforts.
+%%
+%%	A WarZone scene needs three teams: Citizens, Guards, and Monsters.
+%%
+
+Content
+	% A wounded person, Mk 1
+	requires <*WARZONE_CLEANUP>
+	Element1 <Prefab>
+	minimap <      %%%  %1%  %%%      >
+	inv
+		STC RECOVERY-VICTIM
+	end
+
+Content
+	% A wounded person, Mk 2
+	requires <*WARZONE_CLEANUP>
+	Element1 <Prefab>
+	minimap <%%    1%%  %^%  .%       >
+	inv
+		STC RECOVERY-VICTIM
+	end
+
+Content
+	% A wounded person, Mk 3
+	requires <*WARZONE_CLEANUP>
+	Element1 <Prefab>
+	minimap <      .%.  ^.%  ^1%      >
+	inv
+		STC RECOVERY-VICTIM
+	end
+
+
 %% *RANDOM_SHAPES Content
 %%	Some random obstacles to break up LOS.
 
