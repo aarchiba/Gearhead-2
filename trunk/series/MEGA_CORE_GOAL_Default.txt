@@ -101,7 +101,7 @@ Content
 
 Content
 	name <R_LAN I have a friend>
-	desc <The PC's friend will offer to join him, becoming either an ally or the partner.>
+	desc <The NPC's friend will offer to join, becoming either an ally or the partner.>
 	requires <*CS_WinGoal *CORE_R_LAN>
 
 	% E1 is the NPC
@@ -287,6 +287,37 @@ Content
 		Prompt%id%02 <Sorry, but I've already got a partner.>
 		CPrompt%id%02 <ifNPCOK &PartnerNPC Accept>
 		Prompt%id%03 <Not right now, but if I need help I'll let you know.>
+	end
+
+Content
+	name <Money and a Job Offer>
+	desc <The NPC will pay the PC for the job, and offer a job.>
+	requires <*CS_WinGoal ~P:-- -P:PCFAC -1:NOFAC (*CORE_Intro|*CORE_DEF_|*CORE_OFF_) -&NoCash>
+	changes <P:++>
+
+	% E1 is the NPC.
+
+	start <ifNPCDead %1% SMemo 0 WinEpisode>
+
+	sub
+		Persona 1
+		greeting <if= PlotStatus %plotid% %id% else %pop% if# PCFac ChatNPCFac else .%id%_DefaultWin gOTO .%id%_GoReportSuccess>
+		.%id%_GoReportSuccess <NewChat Say %id%01 AddChat %id%01 AddChat %id%02>
+		*.%id%_DefaultWin <*MissionWasSuccess&Reward .%id%_GoEnd &AllyFac &EnemyFac>
+		.%id%_GoEnd <CashPrize Reward StoryDL 1000 SMemo 0  AddReact d30  &SetAllyFac PCFac  WinEpisode>
+		result%id%01 <NewChat Say %id%02 CashPrize Reward StoryDL 500 SMemo 0  AddReact d10  WinEpisode>
+		result%id%02 <NewChat Say %id%03 CashPrize Reward StoryDL 1000 History %id%04  SetPCFac ChatNPCFac &SetAllyFac ChatNPCFac AddReact d10  CustomMecha .%id%_fac StoryDL  WinEpisode>
+		.%id%_fac <GENERAL \FACTION_DESIG RootSceneFac \FACTION_DESIG ChatNPCFac>
+		Msg%id%01 <Good work, \PC . You know that \FACTION ChatNPCFac could use someone with your talents. I'm authorized to offer you a position right now.>
+		Msg%id%02 <I understand. Well, perhaps we can work together some time again in the future.>
+		Msg%id%03 <Welcome to the team, \PC . Here's your starting equipment bonus and a new mecha.>
+		Msg%id%04 <You accepted %name1%'s offer to join \FACTION ChatNPCFac .>
+		Prompt%id%01 <Thanks, but no thanks.>
+		Prompt%id%01_1 <I'd like to stay a free agent for now.>
+		Prompt%id%01_2 <No thanks, I just want to get paid.>
+		Prompt%id%02 <I'd like that. I'll do it.>
+		Prompt%id%02_1 <It would be an honor to work with you.>
+		Prompt%id%02_2 <Alright, I'll sign up.>
 	end
 
 
