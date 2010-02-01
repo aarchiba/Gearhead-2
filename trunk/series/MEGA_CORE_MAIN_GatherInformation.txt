@@ -28,9 +28,8 @@
 Content
 	name <Secret War>
 	desc <There's been a lot of fighting that hasn't been covered by the press.>
-	requires <*:CS_GatherInformation +P-- P:-- (L:MAQUI|L:RISHI|L:FCOMS)>
+	requires <*:CS_GatherInformation +P-- P:-- (L:MAQUI|L:RISHI|L:FCOMS) -1:MAQUI -1:RISHI -1:FCOMS ~1:MEDIA ~1:NOFAC>
 	changes <+P>
-	size 5
 
 	% E1 is the person who tells the PC about the attacks
 	% E2 is the city faction, which must exclude E1
@@ -65,9 +64,9 @@ Content
 		% L2 = Have released Team4
 		% L3 = Initial T3 number
 		% L4 = End Message Counter
-		start <if= L1 0 Alert 1 L= 1 1 L= 3 t3 AlterContext .next Trigger0 .%id%_%plotid%_GoWin WinSubPlot %plotid%>
+		start <if= L1 0 Alert 1 L= 1 1 L= 3 t3 AlterContext .next>
 		.next <+Pun>
-		end <if= L4 0 L= 4 1 Alert 4>
+		end <if= L4 0 L= 4 1 Alert 4  History 6  Trigger0 .%id%_%plotid%_GoWin WinSubPlot %plotid%>
 		nu2 <if= T2 0 if= L2 0 L= 2 1  WMecha 4 %threat% 50 WMecha 4 %threat% 50 Alert 2 TeamMonologue 4 3 Retreat 3>
 		nu3 <if= L2 0 ifG L3 T3 L= 2 1 WMecha 4 %threat% 50 WMecha 4 %threat% 50 Alert 2 TeamMonologue 4 3 Retreat 3>
 		nu4 <if= L2 1 if= T4 0  Alert 5 L= 4 1 L= 2 2 XPV 100 Salvage>
@@ -76,6 +75,7 @@ Content
 		Msg3 <Return the ship to base; I'll deal with this intruder myself.>
 		Msg4 <This could have been the first wave of an invasion force.>
 		Msg5 <All of the mecha have been defeated, but there is no sign of the battleship. This could have been the first wave of an invasion force.>
+		Msg6 <You fought a possible invasion force.>
 		sub
 			Team 1
 			SetEnemy 2 4
