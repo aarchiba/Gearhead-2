@@ -335,6 +335,7 @@ ChatLMFollow <GrabChatNPC GSetNAtt 5 10 5>
 SetDestination <GrabSource GSetStat 4 ?>
 SetXXRMotivation <GrabNPC ? GSetNAtt NAG_XXRan 101 ?>
 SetXXRAttitude <GrabNPC ? GSetNAtt NAG_XXRan 102 ?>
+ifNPCAttitude <GrabNPC ? if= GNAtt NAG_XXRan 102 ?>
 Monologue <GrabNPC ? GMonologue ?>
 TeamMonologue <GrabLocal ?Pilot ? GMonologue ?>
 PCMonologue <GrabPCPilot GMonologue ?>

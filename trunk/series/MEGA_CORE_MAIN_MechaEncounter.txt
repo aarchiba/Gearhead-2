@@ -24,6 +24,100 @@
 %%  ********************************
 
 Content
+	name <Warned About You>
+	desc <Discover your new enemy faction.>
+	requires <*:CS_MechaEncounter ~&Raiders E:++ P:++ ~P:PCFAC F:-->
+	changes <F:++>
+
+	% E1 is the outdoors scene where this encounter will be placed
+	% E2 is the metascene to be used for this encounter
+	% E3 is the new enemy faction
+	% E4 is the enemy fighter
+	% E5 is the Enemy NPC, for safe keeping
+	Element3 <Faction !Enemy -3 !Okay -1>
+	Element4 <Prefab>
+	Place4 <2 (Enemies) sd enemy>
+	Element5 <Grab 1>
+
+	% P%id%01 = Initialization Counter
+	% P%id%02 = Have gained reinforcements
+	% P%id%03 = Have gained decimation
+	update <if= V%id%01 0 V= %id%01 1   SetPlotStatus %plotid1% %id1% NPCLevel %4% StoryDL  SetNPCFaction %4% %3%>
+
+	.%id1%_%plotid1%_GoReinforcements <P= %id%02 1>
+	.%id1%_%plotid1%_GoDecimation     <P= %id%03 1>
+
+	% SubPlot1 = Gain Advantage vs Raiders
+	SubPlot1 <*:CS_GainAdvantageVsMecha&Reinforcements&Decimation>
+
+	sub
+		MetaScene 2 2
+		% L1 = Encounter Over Counter
+		% L2 = Initialization Counter
+		MapWidth 50
+		MapHeight 50
+
+		Start <if= L2 0 L= 2 1   Alert 4 ForceChat %4%  History 1 &SetEnemyFac %3%  SetXXRAttitude %4% XXR_A_Antagonistic  CancelSubPlot %plotid1% if# P%id%02 0 Alert 2>
+		nu1 <if= T1 0   Return   if= V1 0 V= 1 1         Trigger0 .%id%_%plotid%_GoLoss LoseSubPlot %plotid%>
+		nu2 <if= T2 0   if= V1 0 V= 1 1   XPV 100  AddRenown 1   SALVAGE   Alert 3   Trigger0 .%id%_%plotid%_GoWin WinSubPlot %plotid%>
+		end <SetEncounterInactive %2%  ifNPCOK %4% FreezeNPC %4%>
+
+		Msg1 <You fought %name4%, who revealed \PERSONA &EnemyNPC works for %name3%.>
+		Msg2 <Your reinforcements are here, as promised.>
+		Msg3 <You have defeated %name4%'s lance.>
+		Msg4 <You face a strike team led by %name4% of %name3%.>
+
+		sub
+			team 1
+			setally 3
+			SetEnemy 2
+			ParaX 5
+			ParaY 10
+
+			team 2
+			name <Enemies>
+			SetEnemy 1 3
+			Deploy <if= PlotStatus %plotid% %id% SetSelfFaction %3%   if= p%id%03 0 else GoSmallDeploy WMecha 2 StoryDL 70>
+			GoSmallDeploy <WMecha 2 StoryDL 30>
+			ParaX 45
+			ParaY 45
+
+			team 3
+			setally 1
+			setenemy 2
+			Deploy <if= PlotStatus %plotid% %id%  if# P%id%02 0   WMecha 3 StoryDL 65>
+			ParaX 10
+			ParaY 5
+		end
+
+		Persona 4
+		special <UNLISTED>
+		greeting <if= PlotStatus %plotid% %id% else %pop% Goto GoGreet>
+		GoGreet <EndChat Say %id%01 AddChat %id%01 AddChat %id%02>
+		*GoThemeExpo <*THEME_EXPO&Enemy na>
+		result%id%01 <Goto GoThemeExpo>
+		result%id%02 <Goto GoThemeExpo>
+		Msg%id%01 <You must be \PC . %name5% warned us that you've been a constant irritation... Let's see if I can succeed where \SPR %5% failed.>
+		Msg%id%01_1 <You must be \PC . I understand that %name5% is looking forward to defeating you... Let's see if I can rob \OPR %5% of that pleasure.>
+		CMsg%id%01_1 <ifNPCAttitude %5% XXR_A_NeverMet Accept>
+		Msg%id%01_2 <You must be \PC . %name5% claims that you're a major threat... Of course, \SPR %5% is kind of a loser. I guess I'm going to have to find out for myself.>
+		CMsg%id%01_2 <ifNPCAttitude %5% XXR_A_IsJunior Accept>
+		Msg%id%01_3 <You must be \PC . %name5% warned us that you've been a minor irritant... It should be no problem for me to defeat you.>
+		CMsg%id%01_3 <ifNPCAttitude %5% XXR_A_IsSenior Accept>
+		Msg%id%01_4 <You must be \PC . %name5% warned us that you are a formidible threat... Let's see if I can succeed where \SPR %5% failed.>
+		CMsg%id%01_4 <ifNPCAttitude %5% XXR_A_IsEqual Accept>
+		Msg%id%01_5 <You must be \PC . I don't know what you've done, but you really got under %name5%'s skin... Killing you should be worth an easy promotion.>
+		CMsg%id%01_5 <ifNPCAttitude %5% XXR_A_EnviesPC Accept>
+		Prompt%id%01 <You're welcome to try.>
+		Prompt%id%01_1 <Sure. I've got enough whoop-ass to go around.>
+		Prompt%id%02 <Underestimate me at your own risk.>
+		Prompt%id%02_1 <It's your funeral.>
+	end
+	inv
+		NPC Mecha Pilot
+	end
+
+Content
 	name <Plague of Bandits>
 	size 8
 	desc <Defend an allied cruiser from bandits; find out this has been happening quite often.>

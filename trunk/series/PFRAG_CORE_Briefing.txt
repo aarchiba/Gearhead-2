@@ -298,6 +298,43 @@
 	CPrompt%id%02 <if# PCFac ChatNPCFac Accept>
 
 	Persona
+	requires <*CS_BasicFightingMission E:++>
+	START <NewChat Say %id%01 AddChat %id%01 AddChat %id%02>
+	result%id%01 <StoryNote %id%02 Goto %1%>
+	result%id%02 <AddRenown -10 SMemo 0 Goto %2%>
+	Msg%id%01_1 <Some unidentified mecha have been spotted nearby. I can't be certain, but it seems like \PERSONA &EnemyNPC is involved. I want you to investigate.>
+	CMsg%id%01_1 <ifNPCOK &EnemyNPC Accept>
+	Msg%id%01_2 <Some unidentified mecha have been spotted nearby. I can't be certain, but it seems like your old enemies are involved. I want you to locate and neutralize them.>
+	CMsg%id%01_2 <ifNPCDead &EnemyNPC Accept>
+	Msg%id%01_11 <>
+	CMsg%id%01_11 <ifNPCSociable ifNPCOK &EnemyNPC Accept>
+	Msg%id%01_12 <>
+	CMsg%id%01_12 <ifNPCShy ifNPCOK &EnemyNPC Accept>
+	Msg%id%01_13 <>
+	CMsg%id%01_13 <ifNPCEasygoing ifNPCOK &EnemyNPC Accept>
+	Msg%id%01_14 <>
+	CMsg%id%01_14 <ifNPCPassionate ifNPCOK &EnemyNPC Accept>
+	Msg%id%01_15 <>
+	CMsg%id%01_15 <ifNPCCheerful ifNPCOK &EnemyNPC Accept>
+	Msg%id%01_16 <>
+	CMsg%id%01_16 <ifNPCMelancholy ifNPCOK &EnemyNPC Accept>
+	Msg%id%02_1 <\CHATNPC sent you to intercept mecha affiliated with \PERSONA &EnemyNPC .>
+	CMsg%id%02_1 <ifNPCOK &EnemyNPC Accept>
+	Msg%id%02_2 <\CHATNPC sent you to intercept some mecha.>
+	CMsg%id%02_2 <ifNPCDead &EnemyNPC Accept>
+	Prompt%id%01 <It would be my pleasure.>
+	Prompt%id%01_1 <If \PERSONA &EnemyNPC 's here, I'll defeat \OPR &EnemyNPC .>
+	CPrompt%id%01_1 <ifNPCOK &EnemyNPC Accept>
+	Prompt%id%01_2 <>
+	CPrompt%id%01_2 <ifNPCOK &EnemyNPC Accept>
+	Prompt%id%02 <Really, this mission sounds too dangerous for me.>
+	CPrompt%id%02 <if# PCFac ChatNPCFac Accept>
+	Prompt%id%02_1 <Sorry. I've been hiding from \PERSONA &EnemyNPC .>
+	CPrompt%id%02_1 <ifNPCOK &EnemyNPC Accept>
+	Prompt%id%02_2 <>
+	CPrompt%id%02_2 <ifNPCOK &EnemyNPC Accept>
+
+	Persona
 	requires <*CS_BasicFightingMission +P-->
 	START <NewChat Say %id%01 AddChat %id%01 AddChat %id%02>
 	result%id%01 <StoryNote %id%02 Goto %1%>
