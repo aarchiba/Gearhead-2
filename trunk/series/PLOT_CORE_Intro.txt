@@ -8,6 +8,127 @@
 % Cavalier's Club for the first time, just to set new PCs on the right track.
 %
 
+Plot
+	name <Crime Wave>
+	desc <A criminal faction is on a crime spree.>
+	requires <*CORE_Intro (C:CORPO|C:POLIC|C:LABOR|P:CORPO|P:POLIC) F:-- -L:ENEMY>
+	changes <F:++>
+
+	% E1 is the CavClub
+	% E2 is the PC's friend
+	% E3 is a scene for the meeting
+	% E4 is the local police faction
+	% E5 is the NPC who will give the mission
+	% E6 is the new enemy crime faction
+	element1 <Scene !Near -7 cavclub>
+	element2 <NewNPC -3 -7 Friend>
+	place2 <1 pass>
+	element3 <Scene Building Public !Near -7 !Okay -3 -cavclub>
+	element4 <Faction Police !Ally -7>
+	element5 <Character !Near -7 !Comrade 4 NeverFail>
+	NeverFail5 <Bounty Hunter>
+	place5 </>
+	element6 <Faction Crime !Enemy 4>
+
+	start <if= PlotStatus %plotid% 0 else .%id%_GoCheckDead if= SceneID %1% Alert %id%01  SetPlotStatus %plotid% %id%>
+	.%id%_GoCheckDead <if= PlotStatus %plotid% %id% ifNPCDead %2% MoveNPC %5% %3% LoseEpisode>
+
+	Msg%id%01 <As you enter the Cavalier's Club, you notice your friend %name2% looking worried.>
+
+	% SubPlot1 is the conversation you're going to have.
+	subplot1 <*CS_Conversation 5>
+
+	sub
+		Persona 2
+		% V%id%01 = History counter
+		greeting <if= PlotStatus %plotid% %id% else GoChat Goto .%id%_GoGreet>
+		rumor0 <%name2% has been looking for you.>
+		GoChat <NewChat SayAnything>
+		*.%id%_GoGreet <*HowAreYou .%id%_GoAdvise>
+		.%id%_GoAdvise <NewChat Say 1  AddChat 1 AddChat 2 if= v%id%01 0 V= %id%01 1  History 2 &SetEnemyFac %6%>
+		.%id%_GoSetMission <SMemo 3 MoveNPC %5% %3% SetPlotStatus %plotid1% %id1%>
+		result1 <NewChat Say 4 Goto .%id%_GoSetMission>
+		result2 <NewChat Say 5 AddCheerful -d10 Goto .%id%_GoSetMission>
+		Msg1 <Did you hear about all the robberies by %name6% lately? It's a dangerous time to work in a bank, that's for sure...>
+		Msg1_1 <I heard there's been a string of robberies committed by %name6% . If you ask around, I'm sure there must be a bounty for helping to catch them.>
+		CMsg1_1 <ifNPCSociable Accept>
+		Msg1_2 <Do you know about %name6% ? They've been responsible for a string of robberies.>
+		CMsg1_2 <ifNPCShy Accept>
+		Msg1_3 <I saw on the news that there have been a number of robberies by %name6% . Did you hear about that?>
+		CMsg1_3 <ifNPCEasygoing Accept>
+		Msg1_4 <>
+		CMsg1_4 <ifNPCPassionate Accept>
+		Msg1_5 <>
+		CMsg1_5 <ifNPCCheerful Accept>
+		Msg1_6 <>
+		CMsg1_6 <ifNPCMelancholy Accept>
+		Msg2 <There had been many robberies by %name6% .>
+		Msg3 <%name2% suggested that you go see %name5% at %name3% about a mission.>
+		Msg4 <%name5% is at %name3% looking for a cavalier to help fight them. If you head over there right away, I'm sure you can get the job.>
+		Msg5 <Aren't cavaliers supposed to be fearless? I think it'd be a good experience for you to confront these fears head on... by going over to %name3% and asking %name5% for a mission.>
+		Prompt1 <Someone ought to do something about that.>
+		Prompt1_1 <I heard, but what can I do?>
+		Prompt2 <Yeah, I'm hoping to avoid them.>
+		Prompt2_1 <Looks like I picked the wrong week to become a pilot...>
+	end
+
+Plot
+	name <You've Got Work>
+	desc <You're reminded of a business meeting.>
+	requires <*CORE_Intro P:++ -P:PDASS -P:CRIME>
+
+	% E1 is the CavClub
+	% E2 is the PC's friend
+	% E3 is a scene for the meeting
+	% E4 is the NPC to speak with
+	element1 <Scene !Near -7 cavclub>
+	element2 <NewNPC -3 -7 Friend>
+	place2 <1 pass>
+	element3 <Scene Building Public !Near -7 !Okay -3 -cavclub>
+	element4 <Character !Near -7 !Comrade -3 NeverFail>
+	NeverFail4 <Mecha Pilot>
+	place4 </>
+
+	start <if= PlotStatus %plotid% 0 else .%id%_GoCheckDead if= SceneID %1% Alert %id%01  SetPlotStatus %plotid% %id%>
+	.%id%_GoCheckDead <if= PlotStatus %plotid% %id% ifNPCDead %2% MoveNPC %4% %3% LoseEpisode>
+
+	Msg%id%01 <As you enter the Cavalier's Club, your friend %name2% looks at you quizzically.>
+
+	% SubPlot1 is the conversation you're going to have.
+	subplot1 <*CS_Conversation 4>
+
+	sub
+		Persona 2
+		greeting <if= PlotStatus %plotid% %id% else GoChat Goto .%id%_GoGreet>
+		rumor0 <%name2% has been looking for you.>
+		GoChat <NewChat SayAnything>
+		*.%id%_GoGreet <*HowAreYou .%id%_GoAdvise>
+		.%id%_GoAdvise <NewChat Say 1 SMemo 2 History 3 MoveNPC %4% %3% SetPlotStatus %plotid1% %id1% AddChat 1 AddChat 2>
+		result1 <NewChat Say 4>
+		result2 <NewChat Say 5 AddEasygoing d10>
+		Msg1 <I know you're very excited about being accepted into \FACTION &AllyFac. Are you all ready for your meeting with %name4% at %name3% today?>
+		Msg1_1 <Everyone's talking about how great it is that you've been accepted into \FACTION &AllyFac . Do you have everything ready for the meeting with %name4% at %name3% later on today?>
+		CMsg1_1 <ifNPCSociable Accept>
+		Msg1_2 <I see. All ready for your big meeting with %name4% at %name3% today?>
+		CMsg1_2 <ifNPCShy Accept>
+		Msg1_3 <Being a member of \FACTION &AllyFac must really keep you busy. Are you ready for that big meeting with %name4% at %name3% ?>
+		CMsg1_3 <ifNPCEasygoing Accept>
+		Msg1_4 <It must be a great honor for you to be a part of \FACTION &AllyFac . Are you ready for the meeting with %name4% at %name3% later today?>
+		CMsg1_4 <ifNPCPassionate Accept>
+		Msg1_5 <Congratulations on being accepted into \FACTION &AllyFac . All ready for the big meeting with %name4% at %name3% ?>
+		CMsg1_5 <ifNPCCheerful Accept>
+		Msg1_6 <I guess the work never ends now that you're a member of \FACTION &AllyFac . Did you get everything ready for the meeting with %name4% at %name3% later on today?>
+		CMsg1_6 <ifNPCMelancholy Accept>
+		Msg2 <You have to meet %name4% at %name3%.>
+		Msg3 <%name2% reminded you about your meeting with %name4%.>
+		Msg4 <Good luck with that. Hopefully you'll be given one of those easy missions with a big payoff.>
+		Msg5 <Don't worry, I'm sure you'll do fine. Good luck.>
+		Prompt1 <I'm all ready for it.>
+		Prompt1_1 <No problem. I'm ready to go.>
+		Prompt2 <Ack, I forgot all about it!>
+		Prompt2_1 <I knew there was something I had to do...>
+	end
+
 
 Plot
 	name <Friend Conversation>
@@ -45,7 +166,7 @@ Plot
 	Element3 <Character !Comrade 2 !Near -7 NEVERFAIL>
 	Place3 </>
 	Element4 <Faction !Enemy 2>
-	Element5 <Scene Building Public !Near -7 !Okay 2>
+	Element5 <Scene Building Public !Near -7 !Okay 2 -cavclub>
 	element6 <Scene !Near -7 cavclub>
 
 	% P%id%01 = Initialization Counter
@@ -109,7 +230,7 @@ Plot
 	place1 <4 pass>
 	Element2 <Character Corporate !Near -7 !Okay -3 !Okay 1 !XClude -2>
 	Place2 </>
-	Element3 <Scene Building Public !Near -7 !Okay -3 !Okay 2>
+	Element3 <Scene Building Public !Near -7 !Okay -3 !Okay 2 -cavclub>
 	element4 <Scene !Near -7 cavclub>
 
 	start <if= PlotStatus %plotid% 0 else .%id%_GoCheckDead if= SceneID %4% Alert %id%01  SetPlotStatus %plotid% %id%>

@@ -1971,15 +1971,17 @@ Procedure ProcessGMonologue( var Event: String; GB: GameBoardPtr; Source: GearPt
 var
 	id: Integer;	{ Message ID }
 	msg: String;
+	NPC: GearPtr;
 begin
-	{ Find the two needed numeric valies. }
+	{ Record the NPC, and find the message number. }
+	NPC := Grabbed_Gear;
 	id := ScriptValue( Event , GB , Source );
 
 	{ Locate the NPC and the message. }
-	if Grabbed_Gear <> Nil then begin
-		msg := NPCScriptMessage( 'msg' + BStr( id ) , GB , Grabbed_Gear , Source );
+	if NPC <> Nil then begin
+		msg := NPCScriptMessage( 'msg' + BStr( id ) , GB , NPC , Source );
 		if ( msg <> '' ) then begin
-			Monologue( GB , Grabbed_Gear , msg );
+			Monologue( GB , NPC , msg );
 			{ The monologue will do its own output. }
 		end;
 	end;

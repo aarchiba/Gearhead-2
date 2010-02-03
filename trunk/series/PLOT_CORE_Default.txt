@@ -386,7 +386,7 @@ Plot
 	% Element2 is the mission-giver
 	% Element3 is the meeting scene
 	% Element4 is the first NPC's scene
-	element1 <Character !Near 3 PDASS NeverFail>
+	element1 <Character !Near 4 PDASS NeverFail>
 	NeverFail1 <Arena Pilot>
 	Place1 <4 (Guards) ally sd>
 	Element2 <Character !Near -7 (MILIT|POLIT|POLIC|ADVEN) -Enemy !XClude -2 !Okay -3>
