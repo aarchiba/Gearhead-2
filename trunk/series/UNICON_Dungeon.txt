@@ -218,7 +218,8 @@ Content
 		*GoNotHere <*IAmBusy&OnPhone>
 		result1 <PCAlly %4% AddLawful 1 AddReact d20  NewChat Say 4 History 5 DeleteItem %1% Goto GoResolve>
 		result2 <ifG ChatNPCRenown PCRenown else GoR2Fail EndChat Say 6 V= 2 ChatNPCTeam SoloAttack %4%>
-		GoR2Fail <PCEnemy %4% NewChat Say 7 Goto GoResolve>
+		GoR2Fail <SetXXRAttitude %4% XXR_A_HatesPC  PCEnemy %4% NewChat Say 7 Goto GoResolve>
+		result3 <NewChat Say 8  SkillXP NAS_Taunt 100  SetXXRMotivation %4% XXR_M_Seeker  Goto GoResolve>
 		Msg1 <I have shamed myself deeply... While exploring %name2% I lost my ancestral weapon. It was a priceless artifact, and can never be replaced.>
 		Msg2 <You have proven that you are far more worthy of the blade than I... I can only hope to learn from your example.>
 		Msg3 <You bested %name4% in combat, and \SPR %4% pledged to aid you.>
@@ -226,10 +227,13 @@ Content
 		Msg5 <You returned %name4%'s katana, so \SPR %4% pledged to aid you.>
 		Msg6 <You think you are worthy to wield that blade? I will show you your true value!>
 		Msg7 <Fine. I have proven myself unworthy to posess that blade any longer... but do not think that I will forget what you have taken from me.>
+		Msg8 <You're right! I am undeserving of such a fine weapon... I will rededicate my life to training, and maybe someday I will be worthy...>
 		Prompt1 <Is this it? [Give Katana]>
 		CPrompt1 <ifKeyItem %1% Accept>
 		Prompt2 <I found it... and I intend to keep it.>
 		CPrompt2 <ifKeyItem %1% Accept>
+		Prompt3 <You can't be much of a samurai, then.>
+		CPrompt3 <ifTaunt SkillTar ChatNPCRenown Accept>
 	end
 	inv
 		Melee 9
@@ -245,5 +249,6 @@ Content
 		NPC Warrior Monk
 		statline 14 12 13 11 9 14 9 7
 		job <Samurai>
+		MOTIVATION:Professional
 	end
 

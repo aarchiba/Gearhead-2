@@ -150,6 +150,7 @@
 	SAVEPOS			Remember PC's current location
 	SAY [idnum]		Display message in interact area
 	SAYANYTHING		Say meaningless random message
+	SAYPLOTMSG [plot message id]	Say a message taken from the PLOT rather than PERSONA
 	SCHOOL [skill list identifier]	PC can train skills
 	SEEKGATE [scene ID]	Player will enter next map at entry of specified scene
 			***IMPORTANT*** Only works if called after Exit, Return, etc

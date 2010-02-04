@@ -2339,6 +2339,43 @@ begin
 	end;
 end;
 
+Procedure ProcessSayPlotMsg( var Event: String; GB: GameBoardPtr; Source: GearPtr );
+	{ Locate and then print the specified message. }
+	Procedure PauseConversation();
+		{ Before moving on to the rest of the conversation, take a }
+		{ minute to read this message. }
+	var
+		RPM: RPGMenuPtr;
+	begin
+		RPM := CreateRPGMenu( MenuItem , MenuSelect , ZONE_InteractMenu );
+		AddRPGMenuItem( RPM , MsgString( 'Continue' ), -1 );
+		ASRD_GameBoard := GB;
+		CHAT_React := ReactionScore( GB^.Scene , I_PC , I_NPC );
+		SelectMenu( RPM , @InteractRedraw );
+		DisposeRPGMenu( RPM );
+	end;
+var
+	id: Integer;
+	plot: GearPtr;
+	msg: String;
+begin
+	{ Error check- if not in a conversation, call the PRINT }
+	{ routine instead. }
+	if IntMenu = Nil then begin
+		ProcessPrint( Event , GB , Source );
+		Exit;
+	end;
+
+	id := ScriptValue( Event , GB , Source );
+	plot := PlotMaster( GB , Source );
+	msg := getTheMessage( 'msg' , id , GB , plot );
+	if msg <> '' then begin
+		CHAT_Message := msg;
+		PauseConversation();
+	end;
+end;
+
+
 Procedure ProcessAddChat( var Event: String; GB: GameBoardPtr; Source: GearPtr );
 	{ Add a new item to the IntMenu. }
 var
@@ -4937,6 +4974,7 @@ begin
 		else if cmd = 'VICTORY' then ProcessVictory( GB )
 		else if cmd = 'VMSG' then ProcessValueMessage( Event , GB , Source )
 		else if cmd = 'SAY' then ProcessSay( Event , GB , Source )
+		else if cmd = 'SAYPLOTMSG' then ProcessSayPlotMsg( Event , GB , Source )
 		else if cmd = 'SAYANYTHING' then ProcessSayAnything( GB )
 		else if cmd = 'ACTIVATEMEME' then ProcessActivateMeme( Event , GB , Source )
 		else if cmd = 'IFGINPLAY' then ProcessIfGInPlay( Event , GB , Source )

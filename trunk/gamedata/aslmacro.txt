@@ -303,11 +303,13 @@ SetCoreMissionEnemy <GrabAdventure GSetNAtt 27 4 ?>	% For the arena mode core ca
 AlterCoreMissionContext <GrabAdventure GAlterContext ?>
 CommanderSays <Monologue 2 ?> % The commander will give orders in Arena mode.
 HeadDebriefing <AddDebriefing 1 ?>      % 
-CommanderDebriefing <AddDebriefing 2 ?> % Note that debriefings only
+CommanderDebriefing <AddDebriefing 2 ?> % Note that these debriefings only
 MechanicDebriefing <AddDebriefing 3 ?>  % work in arena mode, and only for the standard
 MedicDebriefing <AddDebriefing 4 ?>     % faction NPCs.
 SupplyDebriefing <AddDebriefing 5 ?>    % 
 IntelDebriefing <AddDebriefing 6 ?>     % 
+SetDebriefing <GrabPlot GSetNAtt NAG_XXRan NAS_DebriefingMsg ?> % A debriefing for core story plots
+Debrief <SayPlotMsg XXRDebriefingMsg SetDebriefing 0>           % To deliver the above debriefing, in the GOAL component
 AddMechaSource <GrabAdventure GSetNAtt 26 ? 1 GAddNAtt 24 2 1> % Adds a mecha faction for arena unit
 AddMajorSkill <GrabAdventure GSetNAtt 25 ? 1 GAddNAtt 24 1 1>  % Adds a skill trainer for arena unit
 AddMinorSkill <GrabAdventure GSetNAtt 25 ? 1>                  % Adds a skill trainer for arena unit

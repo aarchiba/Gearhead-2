@@ -27,7 +27,7 @@ Content
 
 	sub
 		Persona 1
-		greeting <if= PlotStatus %plotid% %id% else %pop% ifChatNPCInPlay else .%id%_GoComeHere NewChat Say %id%01 AddChat %id%01 AddCHat %id%02 AddChat %id%03>
+		greeting <if= PlotStatus %plotid% %id% else %pop% ifChatNPCInPlay else .%id%_GoComeHere Debrief NewChat Say %id%01 AddChat %id%01 AddCHat %id%02 AddChat %id%03>
 		*.%id%_GoComeHere <*NotByPhone>
 		result%id%01 <NewChat Say %id%02>
 		% Success: Delete the item, activate the WINGOAL subplot, and go back to the GREETING.
@@ -52,6 +52,8 @@ Content
 %%  rewarded. The exact reward is, of course, going to depend upon the current
 %%  goal.
 %%
+%%  Remember to debrief the PC.
+%%
 %%  PARAM1: The NPC giving the reward
 %%
 
@@ -66,7 +68,7 @@ Content
 
 	sub
 		Persona 1
-		greeting <if= PlotStatus %plotid% %id% else %pop% NewChat Say %id%01 CashPrize Reward StoryDL 1000 AddReact d10  WinEpisode>
+		greeting <if= PlotStatus %plotid% %id% else %pop% Debrief  NewChat Say %id%01 CashPrize Reward StoryDL 1000 AddReact d10  WinEpisode>
 		Msg%id%01 <You did it! That's really going to hurt them, hopefully permanently.>
 		Msg%id%01_1 <You've dealt a crushing blow to \PERSONA &EnemyNPC ... of course they say that an animal is most dangerous when it's been wounded, but let's not worry about that for now.>
 		CMsg%id%01_1 <ifNPCOK &EnemyNPC Accept>
@@ -87,7 +89,7 @@ Content
 
 	sub
 		Persona 1
-		greeting <if= PlotStatus %plotid% %id% else %pop% NewChat Say %id%01 CashPrize Reward StoryDL 1000 AddReact d10  WinEpisode>
+		greeting <if= PlotStatus %plotid% %id% else %pop% Debrief  NewChat Say %id%01 CashPrize Reward StoryDL 1000 AddReact d10  WinEpisode>
 		Msg%id%01 <You did it! I hope that someday I can repay the help that you've given to us.>
 		Msg%id%01_1 <That was a complete success. Thanks to you, when the time comes to face down \PERSONA &EnemyNPC we'll be in a stronger position than otherwise.>
 		CMsg%id%01_1 <ifNPCOK &EnemyNPC Accept>
@@ -115,7 +117,7 @@ Content
 
 	sub
 		Persona 1
-		greeting <if= PlotStatus %plotid% %id% else %pop% NewChat Say %id%01 NPCLevel %3% StoryDL PCAlly %3% AddChat %id%01 AddChat %id%02>
+		greeting <if= PlotStatus %plotid% %id% else %pop% Debrief  NewChat Say %id%01 NPCLevel %3% StoryDL PCAlly %3% AddChat %id%01 AddChat %id%02>
 		result%id%01 <Monologue %3% %id%02 AddLancemate %3% NewChat Say %id%03 History %id%04 CashPrize Reward StoryDL 200 SMemo 0  AddReact d10   WinEpisode>
 		result%id%02 <NewChat Say %id%05 History %id%06 MoveNPC %3% %2% CashPrize Reward StoryDL 200 SMemo 0   WinEpisode>
 		Msg%id%01 <Ah, just like you promised... Say, if you're looking for some extra help, my friend %name3% has just started out as a cavalier.>
@@ -141,7 +143,7 @@ Content
 	sub
 		Persona 1
 		% V%id%01 = Mecha Renown, StoryDL+20
-		greeting <if= PlotStatus %plotid% %id% else %pop% NewChat Say %id%01   CashPrize Reward StoryDL 5000 SMemo 0  AddReact d10   WinEpisode>
+		greeting <if= PlotStatus %plotid% %id% else %pop% Debrief  NewChat Say %id%01   CashPrize Reward StoryDL 5000 SMemo 0  AddReact d10   WinEpisode>
 		Msg%id%01 <You really came through. Here, this money should be enough to let you upgrade your equipment... things only get harder from this point on.>
 	end
 
@@ -157,7 +159,7 @@ Content
 
 	sub
 		Persona 1
-		greeting <if= PlotStatus %plotid% %id% else %pop% gOTO .%id%_GoReportSuccess>
+		greeting <if= PlotStatus %plotid% %id% else %pop% Debrief  gOTO .%id%_GoReportSuccess>
 		*.%id%_GoReportSuccess <*MissionWasSuccess&Reward .%id%_GoEnd &AllyFac &EnemyFac>
 		.%id%_GoEnd <CashPrize Reward StoryDL 5000 SMemo 0  AddReact d10  WinEpisode>
 	end
@@ -175,7 +177,7 @@ Content
 	sub
 		Persona 1
 		% V%id%01 = Mecha Renown, StoryDL+20
-		greeting <if= PlotStatus %plotid% %id% else %pop% NewChat Say %id%01 V= %id%01 StoryDL V+ %id%01 20 CustomMecha .%id%_fac v%id%01  WinEpisode>
+		greeting <if= PlotStatus %plotid% %id% else %pop% Debrief  NewChat Say %id%01 V= %id%01 StoryDL V+ %id%01 20 CustomMecha .%id%_fac v%id%01  WinEpisode>
 		.%id%_fac <GENERAL \FACTION_DESIG RootSceneFac \FACTION_DESIG ChatNPCFac>
 		Msg%id%01 <You did it! As promised, here's a custom mecha built specifically for you.>
 	end
@@ -193,7 +195,7 @@ Content
 	sub
 		Persona 1
 		% V%id%01 = XP Award
-		greeting <if= PlotStatus %plotid% %id% else %pop% NewChat Say %id%01 AddChat %id%01 AddChat %id%02>
+		greeting <if= PlotStatus %plotid% %id% else %pop% Debrief  NewChat Say %id%01 AddChat %id%01 AddChat %id%02>
 		result%id%01 <Alert %id%02 V= %id%01 * 50 EpisodeNumber V+ %id%01 50 SkillXP 1 %id%01 SkillXP 2 %id%01 SkillXP 3 %id%01 SkillXP 4 %id%01 SkillXP 5 %id%01 SkillXP 6 %id%01 NewChat Say %id%03 History %id%04 WinEpisode>
 		result%id%02 <NewChat Say %id%05 History %id%06 CashPrize Reward StoryDL 500 AddReact -d10  WinEpisode>
 		Msg%id%01 <So you did it... You are truly on the path to becoming a great cavalier. Now, I'll teach you what I know...>
@@ -219,7 +221,7 @@ Content
 
 	sub
 		Persona 1
-		greeting <if= PlotStatus %plotid% %id% else %pop% NewChat Say %id%01 AddReact d10 GiveItem %2% WinEpisode>
+		greeting <if= PlotStatus %plotid% %id% else %pop% Debrief  NewChat Say %id%01 AddReact d10 GiveItem %2% WinEpisode>
 		Msg%id%01 <You did well, \PC . In thanks I'll let you have this book... I know it doesn't look like much, but that's only because you haven't read it yet.>
 	end
 	inv
@@ -252,7 +254,7 @@ Content
 
 	sub
 		Persona 1
-		greeting <if= PlotStatus %plotid% %id% else %pop% NewChat Say %id%01 AddReact 25 AddHeroic 1 WinEpisode>
+		greeting <if= PlotStatus %plotid% %id% else %pop% Debrief  NewChat Say %id%01 AddReact 25 AddHeroic 1 WinEpisode>
 		Msg%id%01 <Thank you, \PC . You did everything you said you would.>
 	end
 
@@ -267,7 +269,7 @@ Content
 
 	sub
 		Persona 1
-		greeting <if= PlotStatus %plotid% %id% else %pop% ifChatNPCInPlay else .%id%_GoComeHere NewChat Say %id%01 AddChat %id%01 AddCHat %id%02 AddChat %id%03>
+		greeting <if= PlotStatus %plotid% %id% else %pop% ifChatNPCInPlay else .%id%_GoComeHere Debrief  NewChat Say %id%01 AddChat %id%01 AddCHat %id%02 AddChat %id%03>
 		.%id%_GoComeHere <NewChat Say %id%07>
 		.%id%_GoBecomeAlly <PCAlly %1% NPCLevel %1% StoryDL History %id%05 SMemo 0 WinEpisode>
 		result%id%01 <History %id%02 NPCLevel %1% StoryDL &SetPartnerNPC %1% &AddPartnerToLance SMemo 0 AddReact d10  WinEpisode Goto .%id%_GoJoinLance>
@@ -301,7 +303,7 @@ Content
 
 	sub
 		Persona 1
-		greeting <if= PlotStatus %plotid% %id% else %pop% if# PCFac ChatNPCFac else .%id%_DefaultWin gOTO .%id%_GoReportSuccess>
+		greeting <if= PlotStatus %plotid% %id% else %pop% Debrief  if# PCFac ChatNPCFac else .%id%_DefaultWin gOTO .%id%_GoReportSuccess>
 		.%id%_GoReportSuccess <NewChat Say %id%01 AddChat %id%01 AddChat %id%02>
 		*.%id%_DefaultWin <*MissionWasSuccess&Reward .%id%_GoEnd &AllyFac &EnemyFac>
 		.%id%_GoEnd <CashPrize Reward StoryDL 1000 SMemo 0  AddReact d30  &SetAllyFac PCFac  WinEpisode>
@@ -332,7 +334,7 @@ Content
 
 	sub
 		Persona 1
-		greeting <if= PlotStatus %plotid% %id% else %pop% gOTO .%id%_GoReportSuccess>
+		greeting <if= PlotStatus %plotid% %id% else %pop% Debrief  gOTO .%id%_GoReportSuccess>
 		*.%id%_GoReportSuccess <*MissionWasSuccess&Reward .%id%_GoEnd &AllyFac &EnemyFac>
 		.%id%_GoEnd <CashPrize Reward StoryDL 500 SMemo 0  AddReact d10  WinEpisode>
 	end
@@ -340,7 +342,7 @@ Content
 %%
 %% *CS_LoseGoal Content
 %%
-%% The PC  has failed. Bummer.
+%% The PC  has failed. Bummer. Remember to DEBRIEF the PC.
 %%
 %% Param1: The Task-giver.
 %%
@@ -356,7 +358,7 @@ Content
 
 	sub
 		Persona 1
-		greeting <if= PlotStatus %plotid% %id% else %pop% NewChat Say %id%01 SMemo 0 AddReact -d4  LoseEpisode>
+		greeting <if= PlotStatus %plotid% %id% else %pop% Debrief NewChat Say %id%01 SMemo 0 AddReact -d4  LoseEpisode>
 		Msg%id%01 <That didn't go so well.>
 		Msg%id%01_1 <>
 		CMsg%id%01_1 <ifNPCSociable Accept>
@@ -383,7 +385,7 @@ Content
 
 	sub
 		Persona 1
-		greeting <if= PlotStatus %plotid% %id% else %pop% gOTO .%id%_GoReportLoss>
+		greeting <if= PlotStatus %plotid% %id% else %pop% Debrief gOTO .%id%_GoReportLoss>
 		*.%id%_GoReportLoss <*MissionWasFailure .%id%_GoEnd &AllyFac &EnemyFac>
 		.%id%_GoEnd <SMemo 0  AddReact -d6  LoseEpisode>
 	end
