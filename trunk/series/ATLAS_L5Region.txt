@@ -22,6 +22,7 @@ Scene 0 3
 	mapwidth 30
 	mapheight 10
 	name <Maquise Spinner>
+	exact_name <Maquise Spinner Interior>
 	XPos 42
 	YPos 22
 
@@ -493,6 +494,7 @@ Scene 0 3
 	mapwidth 30
 	mapheight 10
 	name <Athera Spinner>
+	exact_name <Athera Spinner Interior>
 	XPos 38
 	YPos 21
 
@@ -1020,6 +1022,7 @@ Scene
 	mapwidth 30
 	mapheight 30
 	name <Cayley Rock>
+	exact_name <Cayley Main Station>
 	XPos 44
 	YPos 9
 	entrance <*COLONY-1>
@@ -1057,7 +1060,7 @@ Scene
 	start <if= V1 0 else GoSecondTime V= 1 1 Alert 1 Print 2>
 	GoSecondTime <Print 2>
 	Msg1 <Cayley Rock is an asteroid station. Although its own mines were exhausted long ago, it remains a major ore processing station.>
-	Msg2 <You enter Cayley Rock Station.>
+	Msg2 <You enter Cayley Main Station.>
 
 inv
 	NPC Politician
@@ -1934,6 +1937,7 @@ Scene 0 3
 	mapwidth 30
 	mapheight 10
 	name <Xianzai Spinner>
+	exact_name <Xianzai Spinner Interior>
 	XPos 28
 	YPos 26
 
@@ -2388,6 +2392,7 @@ Scene 0 3
 	mapwidth 25
 	mapheight 10
 	name <Gaos Spinner>
+	exact_name <Gaos Spinner Lower Level>
 	XPos 17
 	YPos 20
 
@@ -2883,6 +2888,7 @@ Scene 0 3
 	mapwidth 23
 	mapheight 10
 	name <Fuchal Spinner>
+	exact_name <Fuchal Spinner Interior>
 	XPos 30
 	YPos 20
 
@@ -3208,6 +3214,7 @@ Scene 0 3
 	mapwidth 30
 	mapheight 10
 	name <Kosaka Spinner>
+	exact_name <Kosaka Spinner Interior>
 	XPos 20
 	YPos 24
 
@@ -3710,6 +3717,7 @@ Scene 0 3
 	mapwidth 20
 	mapheight 10
 	name <Tohru Spinner>
+	exact_name <Tohru Spinner Interior>
 	XPos 27
 	YPos 13
 
@@ -4171,6 +4179,7 @@ Scene 0 3
 	mapwidth 20
 	mapheight 10
 	name <Emerald Spinner>
+	exact_name <Emerald Spinner Interior>
 	XPos 10
 	YPos 22
 
@@ -4715,6 +4724,7 @@ Scene 0 3
 	mapwidth 20
 	mapheight 10
 	name <Theles Spinner>
+	exact_name <Theles Spinner Lower Level>
 	XPos 31
 	YPos 33
 
@@ -5160,6 +5170,7 @@ Scene 0 3
 	mapwidth 27
 	mapheight 10
 	name <Yatate Spinner>
+	exact_name <Yatate Spinner Interior>
 	XPos 20
 	YPos 29
 
@@ -5656,6 +5667,7 @@ Scene 0 3
 	mapwidth 20
 	mapheight 10
 	name <Galconde Spinner>
+	exact_name <Galconde Spinner Interior>
 	XPos 7
 	YPos 32
 
@@ -5983,6 +5995,7 @@ Scene 0 3
 	mapwidth 30
 	mapheight 10
 	name <Rishiri Spinner>
+	exact_name <Rishiri Spinner Interior>
 	XPos 16
 	YPos 31
 
@@ -6404,6 +6417,7 @@ Scene 0 3
 	mapwidth 25
 	mapheight 10
 	name <Wagner Spinner>
+	exact_name <Wagner Spinner Interior>
 	XPos 2
 	YPos 25
 
@@ -6853,6 +6867,7 @@ Scene
 	mapwidth 30
 	mapheight 30
 	name <Clund Rock>
+	exact_name <Clund Rock Main Station>
 	XPos 39
 	YPos 4
 	entrance <*COLONY-1>
@@ -6891,7 +6906,7 @@ Scene
 	start <if= V1 0 else GoSecondTime V= 1 1 Alert 1>
 	GoSecondTime <Print 2>
 	Msg1 <You enter Clund Rock Station. This colony serves as a rest stop on the shipping route between the spinner colonies and the dusty ring.>
-	Msg2 <You enter Clund Rock Station.>
+	Msg2 <You enter Clund Rock Main Station.>
 
 inv
 	NPC Politician

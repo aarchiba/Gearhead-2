@@ -43,6 +43,9 @@ Content
 	%% FAIL CONDITIONS:
 	%% - None
 
+	% Debriefing Message
+	Msg%id%10 <So it's true... there are infiltartors near \SCENE RootSceneID . But who sent them? And why are they here? I guess those questions will have to wait until later.>
+
 	sub
 		Persona 1
 		.%id%_GoInform <NewChat Say %id%01 SMemo %id%02 History %id%03>
@@ -66,7 +69,7 @@ Content
 		% L4 = End Message Counter
 		start <if= L1 0 Alert 1 L= 1 1 L= 3 t3 AlterContext .next>
 		.next <+Pun>
-		end <if= L4 0 L= 4 1 Alert 4  History 6  Trigger0 .%id%_%plotid%_GoWin WinSubPlot %plotid%>
+		end <if= L4 0 L= 4 1 Alert 4  History 6  Trigger0 .%id%_%plotid%_GoWin WinSubPlot %plotid% SetDebriefing %id%10>
 		nu2 <if= T2 0 if= L2 0 L= 2 1  WMecha 4 %threat% 50 WMecha 4 %threat% 50 Alert 2 TeamMonologue 4 3 Retreat 3>
 		nu3 <if= L2 0 ifG L3 T3 L= 2 1 WMecha 4 %threat% 50 WMecha 4 %threat% 50 Alert 2 TeamMonologue 4 3 Retreat 3>
 		nu4 <if= L2 1 if= T4 0  Alert 5 L= 4 1 L= 2 2 XPV 100 Salvage>
@@ -278,6 +281,15 @@ Content
 	update <if= P%id%01 0 P= %id%01 1 SetPlotStatus %plotid1% %id1%>
 	end <ifSubPlotLost %plotid1%  LoseSubPlot %plotid%  Trigger0 .%id%_%plotid%_GoLoss>
 
+	%% Debriefing Message
+	Msg%id%11 <So they're after the %name2%... That explains a lot.>
+	Msg%id%11_1 <So \PERSONA &EnemyNPC is after the %name2%... At least now we know what \OPR &EnemyNPC 's up to.>
+	CMsg%id%11_1 <ifNPCOK &EnemyNPC Accept>
+	Msg%id%11_2 <Interesting. \PERSONA &EnemyNPC is after the %name2%... You know what that means? We have to find it first!>
+	CMsg%id%11_2 <ifNPCOK &EnemyNPC if= ChatNPCFac PCFac ifFactionExists ChatNPCFac Accept>
+	Msg%id%11_3 <Let me get this straight... \FACTION &EnemyFac hired \PERSONA &EnemyNPC to find the %name2%? There's only one thing to do: we have to get to it first!>
+	CMsg%id%11_3 <ifNPCOK &EnemyNPC ifFactionExists &EnemyFac ifChatNPCAlly Accept>
+
 	% SubPlot1 is the locate enemy target task
 	SubPlot1 <*:CS_RevealEncounter_Raiders&ReconMission 3 4>
 
@@ -305,7 +317,7 @@ Content
 		% L1 = Initialization Counter
 		start <if= L1 0 else GoBeenBefore L= 1 1 Alert 1 Alert 2 ifNPCOK &EnemyNPC else GoReplaceEnemy DeleteNPC %5% Goto GoMonologue>
 		GoReplaceEnemy <&SetEnemyNPC %5% SetXXRAttitude %5% XXR_A_NeverMet Goto GoMonologue>
-		GoMonologue <Monologue &EnemyNPC 3 &SetTargetItem %2% AlterContext .next History 4 WinSubPlot %plotid% Trigger0 .%id%_%plotid%_GoWin>
+		GoMonologue <Monologue &EnemyNPC 3 &SetTargetItem %2% AlterContext .next History 4 WinSubPlot %plotid% SetDebriefing %id%11 Trigger0 .%id%_%plotid%_GoWin>
 		.next <+Pla>
 		GoBeenBefore <Print 5>
 
@@ -401,6 +413,9 @@ Content
 
 	Msg%id%01 <%name3%'s lieutenant %name7% is in town recruiting pilots to help find the %name2%.>
 
+	% Debriefing Message
+	Msg%id%11 <So %name3% is working for %name6%... how very interesting.>
+
 	% SubPlot1 is the secret, that E7 is recruiting
 	% SubPlot2 is the reveal enemy base task
 	% SubPlot3 is the gain peaceful entry task
@@ -477,7 +492,7 @@ Content
 				STC COMPUTER-INDESTRUCTIBLE
 				MiniMapComponent 1
 				% V1 = Virys counter
-				use <if= PlotStatus %plotid% %id% else GoBeenBefore Alert 1 XPV 100 History 2 &SetEnemyFac %6% WinSubPlot %plotid% Trigger0 .%id%_%plotid%_GoWin>
+				use <if= PlotStatus %plotid% %id% else GoBeenBefore Alert 1 XPV 100 History 2 &SetEnemyFac %6% WinSubPlot %plotid% SetDebriefing %id%11 Trigger0 .%id%_%plotid%_GoWin>
 				GoBeenBefore <Print 3>
 				CLUE_CODEBREAKING <if# PlotStatus %plotid% %id% else GoNotYet if= V1 0 else GoBeenBefore Mental ifCodeBreaking HardSkillTar %threat% else GoFail Alert 4 V= 1 1 XPV 200 AddFortune %6% -1>
 				GoFail <Print 5>
@@ -555,6 +570,13 @@ Content
 
 	Msg%id%01 <As you leave, you are approached by %name3% and \PPR %3% lance.>
 
+	%%  Debriefing Msg - Win or Lose, the PC always loses
+	Msg%id%11 <So %name3% found what \SPR %3% was looking for... At least this information may be of some use to us.>
+	Msg%id%11_1 <So \FACTION &EnemyFac has found the information it needs for its weapons program? This is extremely bad news... but at least we know what they're planning, and that's something.>
+	CMsg%id%11_1 <ifFactionExists &EnemyFac Accept>
+	Msg%id%11_2 <You mean to tell me that %name3% found the data needed for \FACTION &EnemyFac 's weapon program? This bad news for \FACTION &AllyFac ... but we can at least try to keep up with them.>
+	CMsg%id%11_2 <ifFactionExists &EnemyFac ifChatNPCAlly ifFactionExists &AllyFac Accept>
+
 	% SubPlot1 is the Item Cozy
 	subplot1 <*:CS_ItemCozy&Abandoned 2>
 
@@ -567,7 +589,7 @@ Content
 
 		Persona 3
 		special <UNLISTED NOESCAPE>
-		greeting <EndChat Say 1 AddChat 1 AddChat 2>
+		greeting <EndChat Say 1 AddChat 1 AddChat 2  SetDebriefing %id%11>
 		result1 <EndChat Say 2 StoryNote 3 Print 4 &SetTargetItem 0           WinSubPlot %plotid%   Trigger0 .%id%_%plotid%_GoWin   AlterContext .next  SavePos  Dynamic 2 StoryDL 100 .nu1 .nu2  DynaFaction &EnemyFac>
 		result2 <EndChat Say 2 History 5 StoryNote 3 Print 4 &SetTargetItem 0 LoseSubPlot %plotid%  Trigger0 .%id%_%plotid%_GoLoss  AlterContext .next  SavePos  Dynamic 2 StoryDL 100 .nu1 .nu2  DynaFaction &EnemyFac>
 		.next <+Pew>
@@ -838,6 +860,23 @@ Content
 	.%id1%_%plotid1%_GoDiscover <SetPlotStatus %plotid2% %id2%>
 	.%id3%_%plotid3%_GoLearnSecret <P= %id%02 1>
 
+	%% Debriefing Message - Normal Ending
+	Msg%id%11 <Thanks for your report. Now I know a lot more about %name6%'s motivations.>
+	Msg%id%11_1 <Could it be that %name6% is having second thoughts about working for \FACTION &EnemyFac ? This could get interesting...>
+	CMsg%id%11_1 <ifFactionExists &EnemyFac Accept>
+	Msg%id%11_2 <So %name6% is going through some kind of existential crisis... Good. How do we turn that to our advantage?>
+	CMsg%id%11_2 <ifChatNPCVillainous Accept>
+	Msg%id%11_3 <So that's what's going on... Sounds like %name6% is going through some kind of crisis. I guess \SPR %6% doesn't have anyone else to reach out to.>
+	CMsg%id%11_3 <ifChatNPCHeroic Accept>
+
+	%% Debriefing Message - Good Ending
+	Msg%id%12 <Thanks for your report. Now I know a lot more about %name6%'s motivations.>
+	Msg%id%12_1 <It just goes to show you... Maybe if %name6% wasn't working for \FACTION &EnemyFac , the two of you could have been friends.>
+	CMsg%id%12_1 <ifFactionExists &EnemyFac Accept>
+
+	%% Debriefing Message - Trainer ends up dead, somehow.
+	Msg%id%13 <Stop, stop... I've heard enough.>
+
 	% SubPlot1 is the revelation that the NPC is missing
 	% SubPlot2 is the Reveal NPC Base task
 	% SubPlot3 is the secret revelation
@@ -856,6 +895,7 @@ Content
 		SetID 3
 		start <if= L1 0 L= 1 1 ForceChat %6%>
 		end <MoveNPC %5% %4%>
+		faint%5% <AddHeroic -100 PCEnemy %6% SetDebriefing %id%13>
 
 		Persona 5
 		special <UNLISTED>
@@ -881,8 +921,8 @@ Content
 		Persona 6
 		special <UNLISTED NOESCAPE>
 		greeting <EndChat Say 1 AddChat 1 AddChat 2 AddChat 3>
-		GoNormalEnding <History 5 History 6 Goto GoEnd>
-		GoGoodEnding <PCFriend %6% History 5 History 11 Goto GoEnd>
+		GoNormalEnding <History 5 History 6 SetDebriefing %id%11 Goto GoEnd>
+		GoGoodEnding <PCFriend %6% History 5 History 11 SetDebriefing %id%12 Goto GoEnd>
 		GoEnd <Print 4 FreezeNPC %6%   SetXXRMotivation %6% XXR_M_Seeker   ForceChat %5%   WinSubPlot %plotid% Trigger0 .%id%_%plotid%_GoWin>
 		result1 <EndChat Say 2 Goto GoNormalEnding>
 		result2 <EndChat Say 3 AddEasygoing -d10   Goto GoNormalEnding>
@@ -988,6 +1028,24 @@ Content
 
 	Msg%id%01 <You failed to protect %name2% from %name3%.>
 
+	%% Debriefing Msg - Win or Lose
+	Msg%id%11 <%name7% has quite the interesting personal life, I'll say that much.>
+	Msg%id%11_1 <%name7% rejected %name2%... Maybe \SPR %2% can help you fight \OPR %7% later on. They say there's no pilot like a jilted lover.>
+	CMsg%id%11_1 <ifNPCOK %2% Accept>
+	Msg%id%11_2 <This is the way love always ends... with giant robots blowing the crap out of one another.>
+	CMsg%id%11_2 <ifNPCMelancholy Accept>
+	Msg%id%11_3 <%name7% was smart to get rid of %name2%. Relationships can only tie a cavalier down.>
+	CMsg%id%11_3 <ifNPCShy Accept>
+	Msg%id%11_4 <%name2% gave up too easily... True love is stopped by nothing, not even thermonuclear weapons!!!>
+	CMsg%id%11_4 <ifNPCPassionate Accept>
+	Msg%id%11_5 <Remind me never to date %name7%. Moving right along...>
+	CMsg%id%11_5 <ifNPCEasygoing Accept>
+	Msg%id%11_6 <%name2% got off easy. You should hear about some of the things my exes have done...>
+	CMsg%id%11_6 <ifNPCCheerful ifNPCOK %2% Accept>
+	Msg%id%11_7 <%name7% and %name2%... but the one I'm most concerned about is %name3%. Someone like that is bound to come back and haunt you.>
+	CMsg%id%11_7 <ifNPCSociable ifNPCOK %3% Accept>
+
+
 	%% SubPlot1 is the LocateDuel task
 	%% SubPlot2 is the GainAdvantageVsNPC one
 	%% SubPlot3 is the ability to learn E3's secret
@@ -1064,7 +1122,7 @@ Content
 		% L1 = Encounter Over Counter
 		% L2 = Initialization Counter
 
-		Start <if= L2 0 L= 2 1   L= 1 0   Alert 1 Monologue %2% 2 ForceChat %3% CancelSubPlot %plotid2% CancelSubPlot %plotid3%>
+		Start <if= L2 0 L= 2 1   L= 1 0   Alert 1 Monologue %2% 2 ForceChat %3% CancelSubPlot %plotid2% CancelSubPlot %plotid3%  SetDebriefing %id%11>
 		nu1 <if= T1 0   Return   if= V1 0 V= 1 1   Goto GoLose>
 		nu2 <if= T2 0   if= V1 0 V= 1 1   ifG T3 0 else GoLose  P= %id%04 1 History 4 ForceChat %2%>
 		GoLose <Alert 3 StoryNote 3 AddRenown -1  Trigger0 .%id%_%plotid%_GoLoss LoseSubPlot %plotid% ifNPCOK %3% PCEnemy %3%>

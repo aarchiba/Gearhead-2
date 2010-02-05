@@ -203,6 +203,45 @@ end;
 {  ***   EVERYTHING  ELSE   ***  }
 {  ****************************  }
 
+Function BasicSkillTarget( Renown: Integer ): Integer;
+	{ Return an appropriate target for skill rolls for someone of the listed renown. }
+var
+	it: Integer;
+begin
+	it := Renown div 8 + 2;
+	if it < 5 then it := 5;
+	BasicSkillTarget := it;
+end;
+
+Function HardSkillTarget( Renown: Integer ): Integer;
+	{ Return a difficult target for skill rolls for someone of the listed renown. }
+var
+	it: Integer;
+begin
+	it := Renown div 7 + 5;
+	if it < 8 then it := 8;
+	HardSkillTarget := it;
+end;
+
+Function SocSkillTarget( GB: GameBoardPtr; Renown: Integer ): Integer;
+	{ Return a social difficult target for skill rolls based on Renown and modified }
+	{ by the relationship between I_PC and I_NPC. }
+var
+	it,react: Integer;
+begin
+	it := Renown div 7 + 7;
+	if it < 10 then it := 10;
+
+	{ If the PC and NPC exist, apply the special modifier. }
+	if ( I_PC <> Nil ) and ( I_NPC <> Nil ) then begin
+		react := ReactionScore( GB^.Scene , I_PC , I_NPC );
+		it := it - ( react div 10 );
+	end;
+
+	SocSkillTarget := it;
+end;
+
+
 Function CreateRumorList( GB: GameBoardPtr; Rumor_Source: GearPtr; SkRoll: Integer; DoHarvest: Boolean; var Rumor_Error: Boolean; const Rumemo_Lead,Rumor_Head: String ): SAttPtr;
 	{ RUMOR_HEAD is the rumor type to collect: RUMORs or RUMEMOs. }
 	{ RUMEMO_LEAD is the leading message appended to a rumor if we're }
@@ -230,14 +269,14 @@ var
 		Plot := PlotMaster( GB , Part );
 		if Plot <> Nil then begin
 			{ Use the difficulty rating for this plot. }
-			it := BasicSkillTarget( NAttValue( Plot^.NA , NAG_Narrative , NAS_DifficultyLevel ) );
+			it := SocSkillTarget( GB , NAttValue( Plot^.NA , NAG_Narrative , NAS_DifficultyLevel ) );
 		end else begin
 			it := 5;
 		end;
 
 		{ In order to keep the process somewhat unpredictable, randomize the target }
 		{ just a bit. }
-		it := it - 2 + RollStep( 2 );
+		it := it - 5 + RollStep( 3 );
 		if Random( 3 ) = 1 then it := it + Random( 4 );
 
 		RumorSKTarget := it;
@@ -706,11 +745,17 @@ begin
 end;
 
 
-Function SceneName( GB: GameBoardPtr; ID: Integer ): String;
+Function SceneName( GB: GameBoardPtr; ID: Integer; Exact: Boolean ): String;
 	{ Find the name of the scene with the given ID. If no such }
 	{ scene can be found, return a value that should let the player }
 	{ know an error has been commited. }
+	{ If EXACT=TRUE, use the EXACT_NAME attribute instead of the }
+	{ regular name. The reason for this is that sometimes there's }
+	{ some ambiguity with the common name of a scene: if I say "Cayley }
+	{ Rock", do I mean the city in general or the main station }
+	{ specifically? }
 var
+	msg: String;
 	Part: GearPtr;
 begin
 	if ( GB = Nil ) or ( GB^.Scene = Nil ) then begin
@@ -727,7 +772,13 @@ begin
 		end else begin
 			Part := FindSceneEntrance( FindRoot( GB^.Scene ) , GB , ID );
 		end;
-		SceneName := GearName( Part );
+		if Exact then begin
+			msg := SAttValue( Part^.SA , 'EXACT_NAME' );
+			if msg = '' then msg := GearName( Part );
+			SceneName := msg;
+		end else begin
+			SceneName := GearName( Part );
+		end;
 	end;
 end;
 
@@ -1048,43 +1099,6 @@ begin
 	else SV_WorldID := 0;
 end;
 
-Function BasicSkillTarget( Renown: Integer ): Integer;
-	{ Return an appropriate target for skill rolls for someone of the listed renown. }
-var
-	it: Integer;
-begin
-	it := Renown div 8 + 2;
-	if it < 5 then it := 5;
-	BasicSkillTarget := it;
-end;
-
-Function HardSkillTarget( Renown: Integer ): Integer;
-	{ Return a difficult target for skill rolls for someone of the listed renown. }
-var
-	it: Integer;
-begin
-	it := Renown div 7 + 5;
-	if it < 8 then it := 8;
-	HardSkillTarget := it;
-end;
-
-Function SocSkillTarget( GB: GameBoardPtr; Renown: Integer ): Integer;
-	{ Return a social difficult target for skill rolls based on Renown and modified }
-	{ by the relationship between I_PC and I_NPC. }
-var
-	it,react: Integer;
-begin
-	it := Renown div 7 + 7;
-	if it < 10 then it := 10;
-
-	{ If the PC and NPC exist, apply the special modifier. }
-	if ( I_PC <> Nil ) and ( I_NPC <> Nil ) then begin
-		react := ReactionScore( GB^.Scene , I_PC , I_NPC );
-		it := it - ( react div 10 );
-	end;
-
-	SocSkillTarget := it;
-end;
 
 
 Function AV_ProcessConcert( GB: GameBoardPtr; AudienceSize,SkillTarget: Integer ): Integer;
@@ -1749,7 +1763,12 @@ begin
 			end else if W = '\SCENE' then begin
 				{ Insert the name of a specified scene. }
 				ID := ScriptValue( S0 , GB , Scene );
-				W := SceneName( GB , ID );
+				W := SceneName( GB , ID , False );
+
+			end else if W = '\EXACT_SCENE' then begin
+				{ Insert the name of a specified scene. }
+				ID := ScriptValue( S0 , GB , Scene );
+				W := SceneName( GB , ID , True );
 
 			end else if W = '\VAL' then begin
 				{ Insert the value of a specified variable. }
@@ -2370,6 +2389,7 @@ begin
 	plot := PlotMaster( GB , Source );
 	msg := getTheMessage( 'msg' , id , GB , plot );
 	if msg <> '' then begin
+		YesNoMenu( GB , REplaceHash( MsgString( 'Debrief_Intro' ) , PilotName( I_NPC ) ) , '' , '' );
 		CHAT_Message := msg;
 		PauseConversation();
 	end;
@@ -2456,7 +2476,12 @@ begin
 	if City <> Nil then CleanMemes( City );
 
 	N := NumMeme( City );
-	if N > 0 then begin
+	if ( I_NPC <> Nil ) and ( I_PC <> Nil ) and ( GB <> Nil ) and ( ReactionScore( GB^.Scene , I_PC , I_NPC ) <= -Random( 10 ) ) then begin
+		{ If talking to someone who dislikes you, you're most likely to get }
+		{ a brushoff. }
+		msg := MsgString( 'BUZZOFF_' + BStr( Random( 5 ) + 1 ) );
+
+	end else if N > 0 then begin
 		Meme := GetMeme( City , Random( N ) + 1 );
 
 		msg := ScriptMessage( 'Msg' , GB , Meme );
@@ -3209,7 +3234,7 @@ begin
 	Event := '';
 	Scene := FindSceneID( I_NPC , GB );
 	if Scene <> 0 then begin
-		msg := ReplaceHash( msgString( 'CantOpenShop_WithScene' ) , SceneName( GB , Scene ) );
+		msg := ReplaceHash( msgString( 'CantOpenShop_WithScene' ) , SceneName( GB , Scene , True ) );
 	end else begin
 		msg := msgString( 'CantOpenShop' );
 	end;
@@ -5084,7 +5109,7 @@ var
 begin
 	SID := FindSceneID( I_NPC , GB );
 	if SID <> 0 then begin
-		CHAT_Message := ReplaceHash( MsgString( 'WHEREAREYOU_IAMHERE' ) , SceneName( GB , SID ) );
+		CHAT_Message := ReplaceHash( MsgString( 'WHEREAREYOU_IAMHERE' ) , SceneName( GB , SID , True ) );
 	end else begin
 		CHAT_Message := MsgString( 'WHEREAREYOU_Dunno' );
 	end;

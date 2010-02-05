@@ -26,9 +26,9 @@ Plot
 	% Insert email here
 	5min <if= PlotStatus %plotid% 0 if= P2 0  if= PCFac NPCFac %2%  if= RootSceneID %1% if= d4 1  ifG PCCharm d40  Email 1 P= 2 1>
 	Msg1   <%name2%@ \SCENE NPCSCene %2% :// Hey \RANK , I've got a mission for you in %name1%.>
-	Msg1_1 <%name2%@ \SCENE NPCSCene %2% :// Report to \SCENE NPCSCene %2% for a mission at once.>
+	Msg1_1 <%name2%@ \SCENE NPCSCene %2% :// Report to \EXACT_SCENE NPCSCene %2% for a mission at once.>
 	Msg1_2 <%name2%@ \SCENE NPCSCene %2% :// Your services are required by \FACTION NPCFac %2% . Come see me for mission briefing.>
-	Msg1_3 <%name2%@ \SCENE NPCSCene %2% :// I've got a mission for you. Come to \SCENE NPCSCene %2% for the briefing.>
+	Msg1_3 <%name2%@ \SCENE NPCSCene %2% :// I've got a mission for you. Come to \EXACT_SCENE NPCSCene %2% for the briefing.>
 
 	sub
 		Persona 2
@@ -49,20 +49,20 @@ Plot
 		*result1 <*GoodLuckOnMission&NoEnemyFac GoR1Final ChatNPCFac na>
 		GoR1Final <Memo 2 SetPlotStatus %plotid% %id1%>
 		result2 <Goto GoRejectMission>
-		Msg1 <There's a mecha gang operating in %name3% . I want you to locate them and disable their machines; for this, you'll earn $ \VAL Reward %threat% PayRate .>
-		Msg1_1 <My sources have tipped us off to a meeting of mecha thieves that's going to happen in %name3% later on today. I want you to go there, and defeat them all. If you can do that, you'll earn $ \VAL Reward %threat% PayRate .>
+		Msg1 <There's a mecha gang operating in \EXACT_SCENE %3% . I want you to locate them and disable their machines; for this, you'll earn $ \VAL Reward %threat% PayRate .>
+		Msg1_1 <My sources have tipped us off to a meeting of mecha thieves that's going to happen in \EXACT_SCENE %3%  later on today. I want you to go there, and defeat them all. If you can do that, you'll earn $ \VAL Reward %threat% PayRate .>
 		CMsg1_1 <ifNPCSociable Accept>
-		Msg1_2 <We've traced some mecha criminals to %name3%. Defeat them and you'll earn $ \VAL Reward %threat% PayRate .>
+		Msg1_2 <We've traced some mecha criminals to \EXACT_SCENE %3% . Defeat them and you'll earn $ \VAL Reward %threat% PayRate .>
 		CMsg1_2 <ifNPCShy Accept>
-		Msg1_3 <There's a gang of criminals hanging out in %name3%. If you can defeat them, I'll give you $ \VAL Reward %threat% PayRate . What do you say?>
+		Msg1_3 <There's a gang of criminals hanging out in \EXACT_SCENE %3% . If you can defeat them, I'll give you $ \VAL Reward %threat% PayRate . What do you say?>
 		CMsg1_3 <ifNPCEasygoing Accept>
-		Msg1_4 <The criminals I'm after are holed up in %name3%. I need you to locate them and eliminate every last one. Do this, and you'll earn $ \VAL Reward %threat% PayRate .>
+		Msg1_4 <The criminals I'm after are holed up in \EXACT_SCENE %3% . I need you to locate them and eliminate every last one. Do this, and you'll earn $ \VAL Reward %threat% PayRate .>
 		CMsg1_4 <ifNPCPassionate Accept>
-		Msg1_5 <We've located a mecha gang in %name3%. Go defeat them, and you'll earn $ \VAL Reward %threat% PayRate .>
+		Msg1_5 <We've located a mecha gang in \EXACT_SCENE %3% . Go defeat them, and you'll earn $ \VAL Reward %threat% PayRate .>
 		CMsg1_5 <ifNPCCheerful Accept>
 		Msg1_6 <I need you to eliminate a gang of mecha thieves. You'll earn $ \VAL Reward %threat% PayRate for this job; there's no salvage, since we're going to need that for evidence.>
 		CMsg1_6 <ifNPCMelancholy Accept>
-		Msg2 <%name2% in \SCENE NPCSCene %2% hired you to fight some mecha criminals in %name3%.>
+		Msg2 <%name2% in \SCENE NPCSCene %2% hired you to fight some mecha criminals in \EXACT_SCENE %3% .>
 		Prompt1 <I'll be back when I'm finished.>
 		Prompt1_1 <I'd love to do that.>
 		Prompt1_2 <You can count on me.>
@@ -125,20 +125,20 @@ Plot
 		*result1 <*GoodLuckOnMission GoR1Final ChatNPCFac %4%>
 		GoR1Final <Memo 2 SetPlotStatus %plotid% %id1%>
 		result2 <Goto GoRejectMission>
-		Msg1 <There's a gang of criminals affiliated with %name4% operating in %name3% . I want you to locate them and disable their mecha; for this, you'll earn $ \VAL Reward %threat% PayRate .>
-		Msg1_1 <There's been a lot of talk about %name4% in the underground. They're planning a big operation in %name3%; I want you to go stop them. Disable all of their mecha and you'll earn $ \VAL Reward %threat% PayRate .>
+		Msg1 <There's a gang of criminals affiliated with %name4% operating in \EXACT_SCENE %3%  . I want you to locate them and disable their mecha; for this, you'll earn $ \VAL Reward %threat% PayRate .>
+		Msg1_1 <There's been a lot of talk about %name4% in the underground. They're planning a big operation in \EXACT_SCENE %3% ; I want you to go stop them. Disable all of their mecha and you'll earn $ \VAL Reward %threat% PayRate .>
 		CMsg1_1 <ifNPCSociable Accept>
-		Msg1_2 <There are some mecha from %name4% in %name3%. Stop them and you'll earn $ \VAL Reward %threat% PayRate .>
+		Msg1_2 <There are some mecha from %name4% in \EXACT_SCENE %3% . Stop them and you'll earn $ \VAL Reward %threat% PayRate .>
 		CMsg1_2 <ifNPCShy Accept>
-		Msg1_3 <There's a gang of mecha from %name4% hanging out in %name3%. I'd like for you to bring them in; you'll earn $ \VAL Reward %threat% PayRate for this mission.>
+		Msg1_3 <There's a gang of mecha from %name4% hanging out in \EXACT_SCENE %3% . I'd like for you to bring them in; you'll earn $ \VAL Reward %threat% PayRate for this mission.>
 		CMsg1_3 <ifNPCEasygoing Accept>
-		Msg1_4 <Justice can never afford to sleep; we've traced some criminals belonging to %name4% to %name3%. I need you to confront these punks and get rid of them. Pay for this mission is $ \VAL Reward %threat% PayRate .>
+		Msg1_4 <Justice can never afford to sleep; we've traced some criminals belonging to %name4% to \EXACT_SCENE %3% . I need you to confront these punks and get rid of them. Pay for this mission is $ \VAL Reward %threat% PayRate .>
 		CMsg1_4 <ifNPCPassionate Accept>
-		Msg1_5 <We've had a lucky break- a mecha gang affiliated with %name4% has been spotted in %name3% before they could do any damage. I'd like for you to go drive them away from town; this mission pays $ \VAL Reward %threat% PayRate .>
+		Msg1_5 <We've had a lucky break- a mecha gang affiliated with %name4% has been spotted in \EXACT_SCENE %3%  before they could do any damage. I'd like for you to go drive them away from town; this mission pays $ \VAL Reward %threat% PayRate .>
 		CMsg1_5 <ifNPCCheerful Accept>
-		Msg1_6 <Crime is up, and it's all the fault of %name4%. A gang of their mecha is operating in %name3%. I need you to locate and eliminate them; do this and you'll get $ \VAL Reward %threat% PayRate .>
+		Msg1_6 <Crime is up, and it's all the fault of %name4%. A gang of their mecha is operating in \EXACT_SCENE %3% . I need you to locate and eliminate them; do this and you'll get $ \VAL Reward %threat% PayRate .>
 		CMsg1_6 <ifNPCMelancholy Accept>
-		Msg2 <%name2% in \SCENE NPCSCene %2% hired you to fight %name4% in %name3%.>
+		Msg2 <%name2% in \SCENE NPCSCene %2% hired you to fight %name4% in \EXACT_SCENE %3% .>
 		Prompt1 <I'll be back when I'm finished.>
 		Prompt1_1 <I'd love to do that.>
 		Prompt1_2 <You can count on me.>

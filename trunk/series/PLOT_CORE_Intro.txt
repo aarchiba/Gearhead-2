@@ -9,6 +9,48 @@
 %
 
 Plot
+	name <Bounty Hunter>
+	requires <*CORE_Intro (P:--|C:POLIC) ~C:ADVEN>
+	desc <A bounty hunter will have a conversation.>
+
+	% E1 is the cavclub scene
+	% E2 is your friend
+	element1 <Scene !Near -7 cavclub>
+	element2 <Prefab>
+	place2 <1 guards>
+
+	start <if= PlotStatus %plotid% 0  if= SceneID %1%  Alert %id%01 SetPlotStatus %plotid1% %id1%>
+
+	Msg%id%01 <As you enter the Cavalier's Club, you see %name2% the bounty hunter looking around for a cavalier.>
+
+	% SubPlot1 is the conversation you're going to have.
+	subplot1 <*CS_Conversation 2>
+
+	inv
+		NPC Bounty Hunter
+	end
+
+Plot
+	name <First Mission>
+	requires <*CORE_Intro P:++>
+	desc <A member of the PC's faction will have a conversation.>
+
+	% E1 is the cavclub scene
+	% E2 is your friend
+	element1 <Scene !Near -7 cavclub>
+	element2 <Character !Near 1 !Comrade -3 NeverFail>
+	NeverFail2 <Mecha Pilot>
+	place2 <1 guards>
+
+	start <if= PlotStatus %plotid% 0  if= SceneID %1%  Alert %id%01 SetPlotStatus %plotid1% %id1%>
+
+	Msg%id%01 <As you enter the Cavalier's Club, you remember that you were supposed to meet %name2% here today.>
+
+	% SubPlot1 is the conversation you're going to have.
+	subplot1 <*CS_Conversation 2>
+
+
+Plot
 	name <Crime Wave>
 	desc <A criminal faction is on a crime spree.>
 	requires <*CORE_Intro (C:CORPO|C:POLIC|C:LABOR|P:CORPO|P:POLIC) F:-- -L:ENEMY>

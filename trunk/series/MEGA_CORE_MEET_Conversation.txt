@@ -214,6 +214,55 @@ Content
 %%  *******************
 
 Content
+	name <New Enemy, Stop 'Em Mission>
+	desc <The PC will be asked to go stop an Enemy from doing something.>
+	requires <*CS_Conversation ~C:POLIC (1:POLIC|1:ADVEN|1:PDASS) ~P:POLIC E:-- ~1:PCFAC>
+
+	% E1 is the NPC that the PC will speak with
+	% E2 is the enemy of the week
+	element2 <NewNPC -2 -7>
+
+	% Fail Conditions:
+	% - Mission giver dies before encounter is activated
+
+	end <if= PlotStatus %plotid1% 0  ifNPCDead %1% else %pop%  LoseEpisode>
+
+	.%id1%_%plotid1%_GoWin <SetPlotStatus %plotid2% %id2%     SMemo %id%01>
+	.%id1%_%plotid1%_GoLoss <SetPlotStatus %plotid3% %id3%    SMemo %id%02>
+
+	Msg%id%01 <You stopped %name2%'s plan. You should go see %name1% at \EXACT_SCENE NPCScene %1% about the reward.>
+	Msg%id%02 <You failed to stop %name2%. You should go report to %name1% at \EXACT_SCENE NPCScene %1% .>
+
+
+	%% SubPlot1 is the combat encounter itself
+	%% SubPlot2 is the winning condition
+	%% SubPlot3 is the loss condition
+	SubPlot1 <*:CS_StopNPCMission 2>
+	SubPlot2 <*CS_WinGoal 1>
+	SubPlot3 <*CS_LoseGoal 1>
+
+	sub
+		Persona 1
+		greeting <if= PlotStatus %plotid1% 0 else .%id%_GoRemind if# PlotStatus %plotid% %id% else .%id%_GoOfferMission Goto %pop%>
+		*.%id%_GoOfferMission <*CS_C_Greeting .%id%_GoBriefing>
+		*.%id%_GoRemind <*GenericMissionReminder>
+		.%id%_GoBriefing <NewChat Say %id%01 AddChat %id%01 AddChat %id%02>
+		*result%id%01 <*GoodLuckPlusHint .%id%_GoR1Exit %plotid1%>
+		.%id%_GoR1Exit <SMemo %id%02 SetPlotStatus %plotid1% %id1%>
+		*result%id%02 <*RejectMission .%id%_GoR2Exit>
+		.%id%_GoR2Exit <LoseEpisode>
+
+		Msg%id%01 <A mecha pilot named %name2% is in \SCENE RootSceneID on some kind of mission. I'd like for you to make sure \SPR %2% doesn't succeed.>
+
+		Prompt%id%01 <Alright, I can do that.>
+		Prompt%id%01_1 <It's as good as done.>
+		Prompt%id%01_2 <Don't worry, nobody escapes from \PC .>
+		Prompt%id%02 <Sorry, I don't want this job.>
+		CPrompt%id%02 <if# PCFac ChatNPCFac Accept>
+		Prompt%id%02_1 <This doesn't sound like my kind of work.>
+	end
+
+Content
 	name <Stolen Vaccine>
 	desc <There's an epidemic, but the medicine has been stolen.>
 	requires <*CS_Conversation (1:MEDIC|1:POLIC|1:POLIT) (C:MEDIC|*CORE_DEF_) -!Ne ~1:PCFAC>

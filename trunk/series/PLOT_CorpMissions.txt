@@ -27,7 +27,7 @@ Plot
 	% Insert email here
 	5min <if= PlotStatus %plotid% 0 if= RootSceneID %4% if= P2 0  if= PCFac %2%  if= d4 1  ifG PCCharm d40  Email 1 P= 2 1>
 	Msg1 <\ELEMENT 1 @ \SCENE NPCScene %1% :// I have a mission for you from \ELEMENT 2 .>
-	Msg1_1 <\ELEMENT 1 @ \SCENE NPCScene %1% :// Report to \SCENE EScene 1 for a mission at once.>
+	Msg1_1 <\ELEMENT 1 @ \SCENE NPCScene %1% :// Report to \EXACT_SCENE EScene 1 for a mission at once.>
 	Msg1_2 <\ELEMENT 1 @ \SCENE NPCScene %1% :// Your services are required by \ELEMENT 2 . Come see me for mission briefing.>
 	Msg1_3 <\ELEMENT 1 @ \SCENE NPCScene %1% :// I've got a mission for you. Come here for the briefing.>
 	Msg1_4 <\ELEMENT 1 @ \SCENE NPCScene %1% :// There's a matter that requires your attention. This is official \ELEMENT 2 business, so come as soon as possible.>
@@ -51,20 +51,20 @@ Plot
 		*result1 <*GoodLuckOnMission&NoEnemyFac GoR1Final %2% na>
 		GoR1Final <Memo 2 SetPlotStatus %plotid% %id1%>
 		result2 <Goto GoRejectMission>
-		Msg1 <Recently, a number of our shipments have been attacked by bandits. Your job will be to locate those responsible and make sure they are incapable of attacking us again. For this you will earn $ \VAL Reward %threat% PayRate plus salvage.>
-		Msg1_1 <You've probably heard that several of our convoys have been attacked recently. We've identified the bandit gang responsible; your job will be to eliminate them once and for all. Do this and you'll earn $ \VAL Reward %threat% PayRate plus salvage.>
+		Msg1 <Recently, a number of our shipments have been attacked by bandits in \EXACT_SCENE %3% . Your job will be to locate those responsible and make sure they are incapable of attacking us again. For this you will earn $ \VAL Reward %threat% PayRate plus salvage.>
+		Msg1_1 <You've probably heard that several of our convoys have been attacked in \EXACT_SCENE %3% . We've identified the bandit gang responsible; your job will be to eliminate them once and for all. Do this and you'll earn $ \VAL Reward %threat% PayRate plus salvage.>
 		CMsg1_1 <ifNPCSociable Accept>
-		Msg1_2 <Some bandits have been attacking our shipments. Defeat them and you'll earn $ \VAL Reward %threat% PayRate plus salvage rights.>
+		Msg1_2 <Some bandits have been attacking our shipments in \EXACT_SCENE %3% . Defeat them and you'll earn $ \VAL Reward %threat% PayRate plus salvage rights.>
 		CMsg1_2 <ifNPCShy Accept>
-		Msg1_3 <This should be a straightforward assignment. Some bandits have been attacking our shipments; you'll be paid $ \VAL Reward %threat% PayRate plus salvage rights for locating and eliminating them.>
+		Msg1_3 <This should be a straightforward assignment. Some bandits have been attacking our shipments in \EXACT_SCENE %3% ; you'll be paid $ \VAL Reward %threat% PayRate plus salvage rights for locating and eliminating them.>
 		CMsg1_3 <ifNPCEasygoing Accept>
-		Msg1_4 <The enemies of \ELEMENT 2 never sleep. Some bandits have been attacking our property... Your job will be to engage them in combat and eliminate them. Do this and you'll earn $ \VAL Reward %threat% PayRate plus salvage.>
+		Msg1_4 <The enemies of \ELEMENT 2 never sleep. Some bandits have been attacking our property in \EXACT_SCENE %3% ... Your job will be to engage them in combat and eliminate them. Do this and you'll earn $ \VAL Reward %threat% PayRate plus salvage.>
 		CMsg1_4 <ifNPCPassionate Accept>
-		Msg1_5 <I want you to locate a particular bandit gang and disable their mecha. If you can perform this task, \ELEMENT 2 will pay you $ \VAL Reward %threat% PayRate plus full salvage rights.>
+		Msg1_5 <I want you to locate a particular bandit gang in \EXACT_SCENE %3% and disable their mecha. If you can perform this task, \ELEMENT 2 will pay you $ \VAL Reward %threat% PayRate plus full salvage rights.>
 		CMsg1_5 <ifNPCCheerful Accept>
-		Msg1_6 <A gang of bandits has been attacking our shipments; several employees of \ELEMENT 2 have been killed already. I want you to locate the bandits and eliminate them. Upon completion of this mission you'll earn $ \VAL Reward %threat% PayRate and salvage.>
+		Msg1_6 <A gang of bandits has been attacking our shipments in \EXACT_SCENE %3% ; several employees of \ELEMENT 2 have been killed already. I want you to locate the bandits and eliminate them. Upon completion of this mission you'll earn $ \VAL Reward %threat% PayRate and salvage.>
 		CMsg1_6 <ifNPCMelancholy Accept>
-		Msg2 <\ELEMENT 1 in \SCENE NPCScene %1% hired you to fight some bandits in \ELEMENT 3 for \ELEMENT 2 .>
+		Msg2 <\ELEMENT 1 in \SCENE NPCScene %1% hired you to fight some bandits in \EXACT_SCENE %3%  for \ELEMENT 2 .>
 		Prompt1 <Sounds good. I'll do it.>
 		Prompt1_1 <Alright, I'll do it.>
 		Prompt1_2 <I'll get to work immediately.>
@@ -105,7 +105,7 @@ Plot
 	% Insert email here
 	5min <if= PlotStatus %plotid% 0 if= RootSceneID %5% if= P2 0  if= PCFac %2%  if= d4 1  ifG PCCharm d40  Email 1 P= 2 1>
 	Msg1 <\ELEMENT 1 @ \SCENE NPCScene %1% :// I have a mission for you against %name4%.>
-	Msg1_1 <\ELEMENT 1 @ \SCENE NPCScene %1% :// Report to \SCENE EScene 1 for a mission against %name4%.>
+	Msg1_1 <\ELEMENT 1 @ \SCENE NPCScene %1% :// Report to \EXACT_SCENE EScene 1 for a mission against %name4%.>
 	Msg1_2 <\ELEMENT 1 @ \SCENE NPCScene %1% :// Your services are required by \ELEMENT 2 . Come see me for mission briefing.>
 	Msg1_3 <\ELEMENT 1 @ \SCENE NPCScene %1% :// We're under attack by %name4%. Come here for the briefing.>
 	Msg1_4 <\ELEMENT 1 @ \SCENE NPCScene %1% :// There's a matter that requires your attention. This is official \ELEMENT 2 business, so come as soon as possible.>
@@ -129,20 +129,20 @@ Plot
 		*result1 <*GoodLuckOnMission GoR1Final %2% %4%>
 		GoR1Final <Memo 2 SetPlotStatus %plotid% %id1%>
 		result2 <Goto GoRejectMission>
-		Msg1 <A gang of raiders from %name4% has been attacking our convoys in %name3%. Eliminate them and I've been authorized to pay you $ \VAL Reward %threat% PayRate plus full salvage rights.>
-		Msg1_1 <You should know that our company has been losing far too much capital to %name4% lately. A group of their raiders has been striking our investments in %name3%; I want you to defeat them. Pay is $ \VAL Reward %threat% PayRate and salvage.>
+		Msg1 <A gang of raiders from %name4% has been attacking our convoys in \EXACT_SCENE %3% . Eliminate them and I've been authorized to pay you $ \VAL Reward %threat% PayRate plus full salvage rights.>
+		Msg1_1 <You should know that our company has been losing far too much capital to %name4% lately. A group of their raiders has been striking our investments in \EXACT_SCENE %3% ; I want you to defeat them. Pay is $ \VAL Reward %threat% PayRate and salvage.>
 		CMsg1_1 <ifNPCSociable Accept>
-		Msg1_2 <Our convoys in %name3% are under attack by %name4%. Eliminate the bandits and you'll earn $ \VAL Reward %threat% PayRate plus salvage.>
+		Msg1_2 <Our convoys in \EXACT_SCENE %3%  are under attack by %name4%. Eliminate the bandits and you'll earn $ \VAL Reward %threat% PayRate plus salvage.>
 		CMsg1_2 <ifNPCShy Accept>
-		Msg1_3 <There's a gang of mecha from %name4% which has been bothering our convoys in %name3%. If you could make them go away, you'd earn $ \VAL Reward %threat% PayRate plus full salvage rights.>
+		Msg1_3 <There's a gang of mecha from %name4% which has been bothering our convoys in \EXACT_SCENE %3% . If you could make them go away, you'd earn $ \VAL Reward %threat% PayRate plus full salvage rights.>
 		CMsg1_3 <ifNPCEasygoing Accept>
-		Msg1_4 <We cannot tolerate these constant attacks by %name4%! A gang of their mecha is in %name3% right now, attacking our investments. I want you to go there and destroy them! You'll earn $ \VAL Reward %threat% PayRate plus salvage.>
+		Msg1_4 <We cannot tolerate these constant attacks by %name4%! A gang of their mecha is in \EXACT_SCENE %3%  right now, attacking our investments. I want you to go there and destroy them! You'll earn $ \VAL Reward %threat% PayRate plus salvage.>
 		CMsg1_4 <ifNPCPassionate Accept>
-		Msg1_5 <There's a gang of thieves from %name4% that we've traced to %name3%. I want you to go make them sorry for robbing us. You'll earn $ \VAL Reward %threat% PayRate and salvage for this mission.>
+		Msg1_5 <There's a gang of thieves from %name4% that we've traced to \EXACT_SCENE %3% . I want you to go make them sorry for robbing us. You'll earn $ \VAL Reward %threat% PayRate and salvage for this mission.>
 		CMsg1_5 <ifNPCCheerful Accept>
-		Msg1_6 <Company profits are down this quarter, and it's mostly because of %name4%. They have a team of mecha in %name3% attacking our convoys. Your job is to get rid of them. Do this, and you'll get $ \VAL Reward %threat% PayRate plus salvage.>
+		Msg1_6 <Company profits are down this quarter, and it's mostly because of %name4%. They have a team of mecha in \EXACT_SCENE %3%  attacking our convoys. Your job is to get rid of them. Do this, and you'll get $ \VAL Reward %threat% PayRate plus salvage.>
 		CMsg1_6 <ifNPCMelancholy Accept>
-		Msg2 <%name1% in \SCENE NPCScene %1% hired you to fight some mecha from %name4% in %name3%.>
+		Msg2 <%name1% in \SCENE NPCScene %1% hired you to fight some mecha from %name4% in \EXACT_SCENE %3% .>
 		Prompt1 <Sounds good. I'll do it.>
 		Prompt1_1 <Alright, I'll do it.>
 		Prompt1_2 <I'll get to work immediately.>

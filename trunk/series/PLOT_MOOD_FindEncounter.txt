@@ -29,9 +29,21 @@ Plot
 	sub
 		Persona 3
 		rumor <%name3% knows where to find %name2%.>
-		*greeting <*IHaveInformation GoSpiel na>
+		*greeting <*IHaveInformation&AboutScene GoSpiel %2%>
 		GoSpiel <NewChat Say 1 SetEncounterActive %2% KillPlotMood EndPlot>
-		Msg1 <As far as I know %name2% is in %name1%. Of course I could be wrong about that.>
+		Msg1 <You can find %name2% in \EXACT_SCENE %1% . Here, let me give you the coordinates.>
+		Msg1_1 <Let me tell you... You should be able to find %name2% in \EXACT_SCENE %1% , at these coordinates. I would draw you a map but it doesn't look like you need one.>
+		CMsg1_1 <ifNPCSociable Accept>
+		Msg1_2 <%name2% is in \EXACT_SCENE %1% , at these coordinates.>
+		CMsg1_2 <ifNPCShy Accept>
+		Msg1_3 <%name2% can be found in \EXACT_SCENE %1%  at these coordinates. Getting there should be a piece of cake.>
+		CMsg1_3 <ifNPCCheerful Accept>
+		Msg1_4 <To get to %name2%, just go to these coordinates in \EXACT_SCENE %1% . Getting in may be another story.>
+		CMsg1_4 <ifNPCMelancholy Accept>
+		Msg1_5 <Yeah, %name2% is at this location in \EXACT_SCENE %1% . Now that you know exactly where it is you'll have no trouble finding it.>
+		CMsg1_5 <ifNPCEasygoing Accept>
+		Msg1_6 <Only a few people know this... %name2% is in \EXACT_SCENE %1% . I'll give you the exact coordinates.>
+		CMsg1_6 <ifNPCPassionate Accept>
 	end
 
 

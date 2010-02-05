@@ -30,9 +30,9 @@ Plot
 	% Insert email here
 	5min <if= PlotStatus %plotid% 0 if= RootSceneID %1% if= P2 0  if= PCFac NPCFac %2%  if= d4 1  ifG PCCharm d40  Email 1 P= 2 1>
 	Msg1   <%name2%@ \SCENE NPCSCene %2% :// Hey \RANK , I've got a mission for you in %name1%.>
-	Msg1_1 <%name2%@ \SCENE NPCSCene %2% :// Report to \SCENE EScene 2 for a mission at once.>
+	Msg1_1 <%name2%@ \SCENE NPCSCene %2% :// Report to \EXACT_SCENE EScene 2 for a mission at once.>
 	Msg1_2 <%name2%@ \SCENE NPCSCene %2% :// Your services are required by \FACTION NPCFac E2 . Come see me for mission briefing.>
-	Msg1_3 <%name2%@ \SCENE NPCSCene %2% :// I've got a mission for you. Come to \SCENE ESCene 2 for the briefing.>
+	Msg1_3 <%name2%@ \SCENE NPCSCene %2% :// I've got a mission for you. Come to \EXACT_SCENE ESCene 2 for the briefing.>
 
 	sub
 		Persona 2
@@ -53,7 +53,7 @@ Plot
 		*result1 <*GoodLuckOnMission&NoEnemyFac GoR1Final ChatNPCFac na>
 		GoR1Final <Memo 2 SetPlotStatus %plotid% %id1%>
 		result2 <Goto GoRejectMission>
-		Msg1 <A lance of unauthorized mecha has been spotted in %name3%. Defeat them and you'll get $ \VAL Reward %threat% PayRate plus salvage.>
+		Msg1 <A lance of unauthorized mecha has been spotted in \EXACT_SCENE %3% . Defeat them and you'll get $ \VAL Reward %threat% PayRate plus salvage.>
 		Msg1_1 <>
 		CMsg1_1 <ifNPCSociable Accept>
 		Msg1_2 <>
@@ -66,7 +66,7 @@ Plot
 		CMsg1_5 <ifNPCCheerful Accept>
 		Msg1_6 <>
 		CMsg1_6 <ifNPCMelancholy Accept>
-		Msg2 <\ELEMENT 2 in \SCENE NPCScene %2% hired you to fight some unauthorized mecha in %name3%.>
+		Msg2 <\ELEMENT 2 in \SCENE NPCScene %2% hired you to fight some unauthorized mecha in \EXACT_SCENE %3% .>
 		Prompt1 <Sounds good. I'll do it.>
 		Prompt1_1 <Alright, I'll do it.>
 		Prompt1_2 <I'll get to work immediately.>
@@ -128,10 +128,10 @@ Plot
 		*result1 <*GoodLuckOnMission&NoEnemyFac GoR1Final ChatNPCFac na>
 		GoR1Final <Memo 2 SetPlotStatus %plotid% %id1%>
 		result2 <Goto GoRejectMission>
-		Msg1 <Raiders from %name4% have been detected in %name3%. Go drive them off and you'll earn $ \VAL Reward %threat% PayRate plus salvage rights.>
-		Msg1_1 <There are infiltrators operating in %name3%; it's believed that they were sent by %name4%. Report to these coordinates and engage any hostile mecha you find. Win, and you'll get $ \VAL Reward %threat% PayRate plus salvage.>
+		Msg1 <Raiders from %name4% have been detected in \EXACT_SCENE %3% . Go drive them off and you'll earn $ \VAL Reward %threat% PayRate plus salvage rights.>
+		Msg1_1 <There are infiltrators operating in \EXACT_SCENE %3% ; it's believed that they were sent by %name4%. Report to these coordinates and engage any hostile mecha you find. Win, and you'll get $ \VAL Reward %threat% PayRate plus salvage.>
 		CMsg1_1 <ifNPCSociable Accept>
-		Msg1_2 <There are mecha from %name4% in %name3%. Defeat them and you'll earn $ \VAL Reward %threat% PayRate plus salvage.>
+		Msg1_2 <There are mecha from %name4% in \EXACT_SCENE %3% . Defeat them and you'll earn $ \VAL Reward %threat% PayRate plus salvage.>
 		CMsg1_2 <ifNPCShy Accept>
 		Msg1_3 <>
 		CMsg1_3 <ifNPCEasygoing Accept>
@@ -141,7 +141,7 @@ Plot
 		CMsg1_5 <ifNPCCheerful Accept>
 		Msg1_6 <>
 		CMsg1_6 <ifNPCMelancholy Accept>
-		Msg2 <\ELEMENT 2 in \SCENE NPCScene %2% hired you to fight %name4% in %name3%.>
+		Msg2 <\ELEMENT 2 in \SCENE NPCScene %2% hired you to fight %name4% in \EXACT_SCENE %3% .>
 		Prompt1 <No problem. I'll do it.>
 		Prompt1_1 <I'll be back when I'm finished.>
 		Prompt1_2 <I'll get to work right away.>

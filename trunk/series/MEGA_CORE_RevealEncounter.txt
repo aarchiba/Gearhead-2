@@ -105,6 +105,41 @@ Content
 %%
 
 Content
+	name <AAYSR4M (Ask And You Shall Receive, For Missions)>
+	desc <Someone knows where the raiders are, and will tell you without any fuss.>
+	%% No XP award for this component, because it's trivial.
+	requires <*:CS_DiscoverNPCMission !Ne>
+	Size 2
+
+	% E1 is the outdoor scene where the encounter is
+	% E2 is the MetaScene being sought
+	% E3 is the NPC being sought
+	% E4 is a local public scene
+	% E5 is a trucker or adventurer who can tell where the raiders are.
+	Element4 <Scene Public !Near -7>
+	Element5 <Character (TRADE|CRAFT) !Near 4 !XClude -2 !Okay -3 -ArchEnemy NeverFail>
+	NeverFail5 <Trucker>
+
+	% The Hint
+	HINT_%plotid% <I hear %name5% knows something about %name3%.>
+
+	%% FAIL CONDITIONS:
+	%%  - E5 dies before revealing the secret
+
+	start <ifNPCDead %5% LoseSubPlot %plotid%>
+
+	sub
+		Persona 5
+		rumor%id% <%name5% had a run-in with %name3% a little while ago.>
+		greeting <if# PlotStatus %plotid% %id% else GoGreet RevertPersona>
+		*GoGreet <*IHaveInformation&AboutNPC GoSpiel %3%>
+		GoSpiel <NewChat Say 1 PMemo %plotid% 2 SetEncounterActive %2% WinSubPlot %plotid%>
+		Msg1 <%name3% stops by here from time to time. Today \SPR %3% said \SPR %3% 's got something to do in \EXACT_SCENE %1% ... I don't know what's up but it sounded ominous.>
+		Msg2 <%name5% told you that %name3% was headed for \EXACT_SCENE %1% .>
+	end
+
+
+Content
 	name <Patrols Clash>
 	desc <An enemy of your enemy knows something about your enemy.>
 	requires <*:CS_DiscoverNPCMission (&GatheringForces|&Searching)>

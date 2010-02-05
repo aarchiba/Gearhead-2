@@ -47,6 +47,9 @@ Content
 	.%id1%_%plotid1%_GoReinforcements <P= %id%02 1>
 	.%id1%_%plotid1%_GoDecimation     <P= %id%03 1>
 
+	%% Debriefing Message - Win or Lose
+	Msg%id%11 <%name5% is working for %name3%... at least we now know what we're up against.>
+
 	% SubPlot1 = Gain Advantage vs Raiders
 	SubPlot1 <*:CS_GainAdvantageVsMecha&Reinforcements&Decimation>
 
@@ -57,7 +60,7 @@ Content
 		MapWidth 50
 		MapHeight 50
 
-		Start <if= L2 0 L= 2 1   Alert 4 ForceChat %4%  History 1 &SetEnemyFac %3%  SetXXRAttitude %4% XXR_A_Antagonistic  CancelSubPlot %plotid1% if# P%id%02 0 Alert 2>
+		Start <if= L2 0 L= 2 1   Alert 4 ForceChat %4%  History 1 &SetEnemyFac %3%  SetXXRAttitude %4% XXR_A_Antagonistic  CancelSubPlot %plotid1%  SetDebriefing %id%11  if# P%id%02 0 Alert 2>
 		nu1 <if= T1 0   Return   if= V1 0 V= 1 1         Trigger0 .%id%_%plotid%_GoLoss LoseSubPlot %plotid%>
 		nu2 <if= T2 0   if= V1 0 V= 1 1   XPV 100  AddRenown 1   SALVAGE   Alert 3   Trigger0 .%id%_%plotid%_GoWin WinSubPlot %plotid%>
 		end <SetEncounterInactive %2%  ifNPCOK %4% FreezeNPC %4%>
@@ -222,6 +225,11 @@ Content
 
 	.%id1%_%plotid1%_GoDecimation     <P= %id%03 1>
 
+	%%  Debriefing Msg - Found weapons shipment
+	Msg%id%11 <You say they had some prototype mecha? This can't possibly be good...>
+	Msg%id%11_1 <So \FACTION &EnemyFac has started an advanced weapons program? This is really not good news...>
+	CMsg%id%11_1 <ifFactionExists &EnemyFac Accept>
+
 	% SubPlot1 = Gain Advantage vs Raiders
 	SubPlot1 <*:CS_GainAdvantageVsMecha&Decimation>
 
@@ -235,7 +243,7 @@ Content
 		Start <if= L2 0 L= 2 1   Alert 1  CancelSubPlot %plotid1%>
 		nu1 <if= T1 0   Return   if= V1 0 V= 1 1 Alert 2 History 3 Trigger0 .%id%_%plotid%_GoLoss LoseSubPlot %plotid%>
 		nu2 <if= T2 0   ifG T3 0 else GoCheckWin  Alert 4 WMecha 2 StoryDL 70>
-		GoCheckWin <if= V1 0 V= 1 1   ifG T4 0 else GoLoseEncounter XPV 100  AddRenown 1   Alert 5 History 6 CustomMecha .mek StoryDL AlterContext .changes   Trigger0 .%id%_%plotid%_GoWin WinSubPlot %plotid%>
+		GoCheckWin <if= V1 0 V= 1 1   ifG T4 0 else GoLoseEncounter XPV 100  AddRenown 1   Alert 5 History 6 CustomMecha .mek StoryDL SetDebriefing %id%11  AlterContext .changes   Trigger0 .%id%_%plotid%_GoWin WinSubPlot %plotid%>
 		.mek <GENERAL \FACTION_DESIG &EnemyFac>
 		.changes <+Pew>
 		GoLoseEncounter <Alert 2 History 3 Trigger0 .%id%_%plotid%_GoLoss LoseSubPlot %plotid%>
@@ -314,6 +322,11 @@ Content
 	.%id1%_%plotid1%_GoReinforcements <P= %id%02 1>
 	.%id1%_%plotid1%_GoDecimation     <P= %id%03 1>
 
+	%%  Debriefing Msg
+	Msg%id%11 <So the raiders we've been fighting work for %name3%...>
+	Msg%id%11_1 <So \PERSONA &EnemyNPC 's raiders were actually sent by %name3%...>
+	CMsg%id%11_1 <ifNPCOK &EnemyNPC Accept>
+
 	% SubPlot1 = Gain Advantage vs Raiders
 	SubPlot1 <*:CS_GainAdvantageVsMecha&Reinforcements&Decimation>
 
@@ -324,7 +337,7 @@ Content
 		MapWidth 50
 		MapHeight 50
 
-		Start <if= L2 0 L= 2 1   Alert 1  History 2 &SetEnemyFac %3% CancelSubPlot %plotid1% if# P%id%02 0 Alert 3>
+		Start <if= L2 0 L= 2 1   Alert 1  History 2 &SetEnemyFac %3%  SetDebriefing %id%11  CancelSubPlot %plotid1% if# P%id%02 0 Alert 3>
 		nu1 <if= T1 0   Return   if= V1 0 V= 1 1 Alert 4 Trigger0 .%id%_%plotid%_GoLoss LoseSubPlot %plotid%>
 		nu2 <if= T2 0   if= V1 0 V= 1 1   XPV 100  AddRenown 1   SALVAGE   Alert 5   Trigger0 .%id%_%plotid%_GoWin WinSubPlot %plotid%>
 		end <SetEncounterInactive %2%>
@@ -374,6 +387,9 @@ Content
 
 	.%id1%_%plotid1%_GoDecimation     <P= %id%02 1>
 
+	%%  Debriefing Msg
+	Msg%id%11 <You say that they were testing a weapons platform? Talk about bad news...>
+
 	% SubPlot1 = Gain Advantage vs Raiders
 	SubPlot1 <*:CS_GainAdvantageVsMecha&Decimation>
 
@@ -384,7 +400,7 @@ Content
 		MapWidth 50
 		MapHeight 50
 
-		Start <if= L2 0 L= 2 1   Alert 1  TeamMonologue 2 2   AlterContext .changes   CancelSubPlot %plotid1%>
+		Start <if= L2 0 L= 2 1   Alert 1  TeamMonologue 2 2   AlterContext .changes  SetDebriefing %id%11   CancelSubPlot %plotid1%>
 		.changes <+Pew>
 		nu1 <if= T1 0   Return   if= L1 0  L= 1 1  ifG T3 0 else GoWinMission Goto GoLoseMission>
 		nu2 <if= T2 0   if= T3 0   if= L1 0   L= 1 1  Goto GoWinMission>
@@ -583,10 +599,10 @@ Content
 	.%id1%_%plotid1%_GoReinforcements <P= %id%02 1>
 
 	%% Debriefing Message: PC fought Blades (win or lose)
-	Msg%id%01 <The Blades have been getting bolder in their provocations. I wouldn't be surprised if they're planning another terror attack.>
+	Msg%id%01 <The Blades have been getting bolder and bolder in their provocations. I wouldn't be surprised if they're planning another terror attack.>
 
 	%% Debriefing Message: PC fought Knights (win or lose)
-	Msg%id%02 <So the Alliance has troops stationed on our border... They surely wouldn't be planning an attack, would they?>
+	Msg%id%02 <What was %name5% doing close enough to Dominion space to respond to a distress call? So the Alliance has troops stationed on our border... They surely wouldn't be planning an attack, not with Kosaka Spinner watching.>
 
 	% SubPlot1 = Gain Advantage vs Raiders
 	SubPlot1 <*:CS_GainAdvantageVsMecha&Reinforcements>
@@ -697,6 +713,12 @@ Content
 	% You can get reinforcements, but no decimation.
 	.%id1%_%plotid1%_GoReinforcements <P= %id%02 1>
 
+	%%  Debriefing Msg - Fight Red Mask Raiders
+	Msg%id%11 <Can't blame %name5% for intruding. The Red Masks have been getting bolder and more powerful with each passing day... it seems like our best efforts do little more than slow them down.>
+
+	%%  Debriefing Msg - Fight Aegis Space Force
+	Msg%id%12 <Chasing the pirates into our space was clearly just a ruse. Aegis Overlord thinks all the colonies should be ruled from Luna, though they wouldn't dare openly fight the Alliance... not yet, anyhow.>
+
 	% SubPlot1 = Gain Advantage vs Raiders
 	SubPlot1 <*:CS_GainAdvantageVsMecha&Reinforcements>
 
@@ -752,8 +774,8 @@ Content
 		greeting <if= PlotStatus %plotid% %id% else %pop%  EndChat Say %id%01 AddChat %id%01 AddChat %id%02 if= v%id%01 0 v= %id%01 1 History %id%02>
 		result%id%01 <EndChat Say %id%03 AddChat %id%03 AddChat %id%04>
 		result%id%02 <EndChat Say %id%04 AddChat %id%05 AddChat %id%06>
-		result%id%03 <EndChat Say %id%05 History %id%06 Retreat 2 &SetEnemyFac %4% PCFEnemy %4% AddReact d10 SetXXRAttitude %5% XXR_A_IsEqual>
-		result%id%04 <EndChat Say %id%07 History %id%08 Retreat 4 &SetEnemyFac %3% PCFEnemy %3% P= %id%03 1>
+		result%id%03 <EndChat Say %id%05 History %id%06 Retreat 2 &SetEnemyFac %4% PCFEnemy %4% SetDebriefing %id%11 AddReact d10 SetXXRAttitude %5% XXR_A_IsEqual>
+		result%id%04 <EndChat Say %id%07 History %id%08 Retreat 4 &SetEnemyFac %3% PCFEnemy %3% SetDebriefing %id%12 P= %id%03 1>
 		result%id%05 <Goto result%id%03>
 		result%id%06 <Goto result%id%04>
 		Msg%id%01 <This is %name5% of the Aegis Space Force. Those mecha attacked a Lunar trading vessel, and I will see them brought to justice.>
@@ -907,6 +929,14 @@ Content
 	.%id1%_%plotid1%_GoWin  <WinSubPlot %plotid%  Trigger0 .%id%_%plotid%_GoWin>
 	.%id1%_%plotid1%_GoLoss <LoseSubPlot %plotid% Trigger0 .%id%_%plotid%_GoLoss>
 
+	%% Debriefing Msg
+	Msg%id%11_1 <\PERSONA &EnemyNPC actually works for %name4%... I'm not surprised. The Bohemians generally just want to be left alone.>
+	CMsg%id%11_1 <ifNPCOK &EnemyNPC ifNPCCheerful Accept>
+	Msg%id%11_2 <So they say \PERSONA &EnemyNPC works for %name4%... They probably just kicked \OPR &EnemyNPC out after they started taking too much heat.>
+	CMsg%id%11_2 <ifNPCOK &EnemyNPC ifNPCMelancholy Accept>
+	Msg%id%11_3 <\PERSONA &EnemyNPC actually works for %name4%... Can't say I'm surprised. The Bohemians colonies are too disorganized to pull off the kind of attacks we've been seeing.>
+	CMsg%id%11_3 <ifNPCOK &EnemyNPC ifNPCPassionate Accept>
+
 	% SubPlot1 is the Stop E5 mission
 	SubPlot1 <*:CS_StopNPCMission&Secondary 5>
 
@@ -917,7 +947,7 @@ Content
 		MapWidth 50
 		MapHeight 50
 
-		Start <if= L2 0 L= 2 1   Alert 1   History 2   &SetEnemyFac %4%   ForceChat %3%>
+		Start <if= L2 0 L= 2 1   Alert 1   History 2   &SetEnemyFac %4%   SetDebriefing %id%11  ForceChat %3%>
 		nu1 <if= T1 0   Return   if= V1 0 V= 1 1         Trigger0 .%id%_%plotid%_GoLoss LoseSubPlot %plotid%>
 		nu2 <if= T2 0   if= V1 0 V= 1 1   XPV 100  AddRenown 1   SALVAGE   Monologue %3% 3 Retreat 3 History 4 SMemo 5  SetPlotStatus %plotid1% %id1%>
 		end <SetEncounterInactive %2% FreezeNPC %3%>
@@ -1553,7 +1583,6 @@ Content
 
 Content
 	name <Waited For Revenge>
-	size 8
 	desc <Fight someone who wanted revenge against you.>
 	requires <*:CS_MechaEncounter +Hre H:++>
 	changes <+H>
@@ -1572,6 +1601,9 @@ Content
 	.%id1%_%plotid1%_GoReinforcements <P= %id%02 1>
 	.%id1%_%plotid1%_GoDecimation     <P= %id%03 1>
 
+	%%  Debriefing Message
+	Msg%id%11 <You certainly know how to make friends, \PC .>
+
 	% SubPlot1 = Gain Advantage vs Raiders
 	SubPlot1 <*:CS_GainAdvantageVsMecha&Reinforcements&Decimation>
 
@@ -1582,7 +1614,7 @@ Content
 		MapWidth 50
 		MapHeight 50
 
-		Start <if= L2 0 L= 2 1   Alert 4 ForceChat %3%  PCEnemy %3%  History 1 AlterContext .clear &SetHangingNPC 0 CancelSubPlot %plotid1% if# P%id%02 0 Alert 2>
+		Start <if= L2 0 L= 2 1   Alert 4 ForceChat %3%  PCEnemy %3%  History 1 SetDebriefing %id%11 AlterContext .clear &SetHangingNPC 0 CancelSubPlot %plotid1% if# P%id%02 0 Alert 2>
 		.clear <+H-->
 		nu1 <if= T1 0   Return   if= V1 0 V= 1 1         Trigger0 .%id%_%plotid%_GoLoss LoseSubPlot %plotid%>
 		nu2 <if= T2 0   if= V1 0 V= 1 1   XPV 100  AddRenown 1   SALVAGE   Alert 3   Trigger0 .%id%_%plotid%_GoWin WinSubPlot %plotid%>
@@ -1638,10 +1670,137 @@ Content
 		Prompt%id%01_1 <Don't overestimate your chances.>
 	end
 
+Content
+	name <Enemy Upgrade>
+	desc <Your enemy is given one last chance to defeat you or be replaced.>
+	requires <*:CS_MechaEncounter E:A.jr_ F:++ ~!Md ~!Hi>
+	changes <E:A E:++>
+
+	% E1 is the outdoors scene where this encounter will be placed
+	% E2 is the metascene to be used for this encounter
+	% E3 is the enemy fighter
+	% E4 is the replacement enemy
+	Element3 <Grab 1>
+	Place3 <2 (Enemies) sd enemy>
+	Element4 <Prefab>
+
+	% P%id%01 = Initialization Counter
+	% P%id%02 = Have gained reinforcements
+	% P%id%03 = Have gained decimation
+	update <if= V%id%01 0 V= %id%01 1   SetPlotStatus %plotid1% %id1% NPCLevel %3% StoryDL SetNPCFaction %4% &EnemyFac>
+
+	.%id1%_%plotid1%_GoReinforcements <P= %id%02 1>
+	.%id1%_%plotid1%_GoDecimation     <P= %id%03 1>
+
+	%% Debriefing Msg - PC throws fight
+	Msg%id%11 <It appears that you didn't put up much of a fight. The enemy forces escaped unharmed.>
+
+	% SubPlot1 = Gain Advantage vs Raiders
+	SubPlot1 <*:CS_GainAdvantageVsMecha&Reinforcements&Decimation>
+
+	sub
+		MetaScene 2 2
+		% L1 = Encounter Over Counter
+		% L2 = Initialization Counter
+		MapWidth 50
+		MapHeight 50
+
+		Start <if= L2 0 L= 2 1   Alert 4 ForceChat %3%  History 1 CancelSubPlot %plotid1% if# P%id%02 0 Alert 2>
+		nu1 <if= T1 0   Return   if= V1 0 V= 1 1         Trigger0 .%id%_%plotid%_GoLoss LoseSubPlot %plotid%  ifNPCOK %3% else GoE3Died  Monologue %4% 5  Monologue %3% 6  SetXXRAttitude %3% XXR_A_IsEqual  History 7>
+		nu2 <if= T2 0   if= V1 0 V= 1 1   XPV 100  AddRenown 1   SALVAGE   Alert 3   Trigger0 .%id%_%plotid%_GoWin WinSubPlot %plotid%  ifNPCOK %3% else GoE3Died Goto GoE3Defeated>
+
+		end <SetEncounterInactive %2%>
+
+		GoE3Defeated <Monologue %4% 8 FreezeNPC %3% FreezeNPC %4% &SetEnemyNPC %4% SetXXRAttitude %4% XXR_A_IsSenior History 9>
+		GoE3Died <Monologue %4% 10 FreezeNPC %4% &SetEnemyNPC %4% SetXXRAttitude %4% XXR_A_IsSenior History 11>
+
+		Msg1 <%name3% was ordered to defeat you or be fired.>
+		Msg2 <Your reinforcements are here, as promised.>
+		Msg3 <You have defeated %name3%'s lance.>
+		Msg4 <You face a mecha force led by %name3% of \FACTION &EnemyFac .>
+		Msg5 <Congratulations, %name3%, it seems that you will keep your job.>
+		Msg6 <I'm just as surprised as anyone!>
+		Msg7 <You lost the battle, much to %name3%'s surprise.>
+		Msg8 <%name3%, you have failed \FACTION &EnemyFac for the last time. From this point on I will deal with \PC myself.>
+		Msg9 <You defeated %name3%, who was fired by %name4%.>
+		Msg10 <It's a shame that %name3% never lived up to \PPR %3% potential. I promise you this, \PC : \FACTION &EnemyFac will not allow you to escape.>
+		Msg11 <You killed %name3%. %name4% promised revenge.>
+
+		sub
+			team 1
+			setally 3
+			SetEnemy 2
+			ParaX 5
+			ParaY 10
+
+			team 2
+			name <Enemies>
+			SetEnemy 1 3
+			Deploy <if= PlotStatus %plotid% %id% SetSelfFaction &EnemyFac   if= p%id%03 0 else GoSmallDeploy WMecha 2 StoryDL 80>
+			GoSmallDeploy <WMecha 2 StoryDL 40>
+			ParaX 45
+			ParaY 45
+
+			team 3
+			setally 1
+			setenemy 2
+			Deploy <if= PlotStatus %plotid% %id%  if# P%id%02 0   WMecha 3 StoryDL 60>
+			ParaX 10
+			ParaY 5
+		end
+
+		Persona 3
+		special <UNLISTED>
+		% V%id%01 = reaction bonus
+		greeting <if= PlotStatus %plotid% %id% else %pop% EndChat Say %id%01 AddChat %id%01 AddChat %id%02 AddChat %id%03>
+		*result%id%01 <*THEME_EXPO&Enemy na>
+		result%id%02 <EndChat Say %id%02 AddChat %id%04 AddChat %id%05 AddChat %id%06>
+		result%id%03 <ifNPCVillainous else .%id%_GoR3Win EndChat Say %id%04 AddChat %id%04>
+		.%id%_GoR3Win <EndChat Say %id%03 AddChat %id%04 AddChat %id%05 AddChat %id%06 if= v%id%01 0 V= %id%01 1 AddReact d10>
+		result%id%04 <Goto result%id%01>
+		result%id%05 <ifNPCVillainous else .%id%_GoR5Win EndChat Say %id%05>
+		.%id%_GoR5Win <EndChat Say %id%06 AddReact d30 ifG React 45 PCFriend %3% SetXXRAttitude %3% XXR_A_Thankful>
+		result%id%06 <EndChat Say %id%07 AddChat %id%07 AddChat %id%08>
+		result%id%07 <EncChat Say %id%08 History %id%09 SetXXRAttitude %3% XXR_A_IsEqual PCFriend %3% SetDebriefing %id%11  L= 1 1 Retreat 2 XPV 200 Trigger0 .%id%_%plotid%_GoLoss LoseSubPlot %plotid%>
+		result%id%08 <Goto result%id%01>
+		Msg%id%01 <This is it, \PC ... My boss %name4% told me that I have to defeat you, or else I'm going to get fired from \FACTION &EnemyFac .>
+		Msg%id%02 <Oh, \SPR %4% 's one of the hot pilots at \FACTION &EnemyFac . I don't think \SPR %4% likes me very much... keeps using words like "incompetent" and "execrable".>
+		Msg%id%03 <It's been a great pleasure fighting against you, too, \PC ... It's hard to believe that it could all be ending...>
+		Msg%id%04 <What, are you nuts? You do realize that I've been trying to kill you, don't you?>
+		Msg%id%05 <And maybe you're gonna die right now! My \ChatNPCMecha can't lose this time!>
+		Msg%id%06 <That's so kind of you to say... My... My... My \ChatNPCMecha will... Oh, I can't even say it. Let's just get this done with.>
+		Msg%id%07 <You want to keep me around that badly? I don't know... Are you really willing to do that?>
+		Msg%id%08 <Victory! Come on, lance, let's get out of here.>
+		Msg%id%09 <You threw the fight so %name3% could keep \PPR %3% job.>
+		Prompt%id%01_1 <Don't worry, I'll miss you.>
+		CPrompt%id%01_1 <ifG React 10 Accept>
+		Prompt%id%01_2 <Good. Maybe then you'll stop bugging me.>
+		CPrompt%id%01_2 <ifG 11 React Accept>
+		Prompt%id%02 <Who is this %name4%?>
+		Prompt%id%03 <No way! Where am I going to get an enemy as good as you?>
+		CPrompt%id%03 <ifG React 25 Accept>
+		Prompt%id%04 <Well, let's get it over with, then.>
+		Prompt%id%05 <Maybe after you're fired you can come work for me.>
+		CPrompt%id%05 <ifG React 15 Accept>
+		Prompt%id%06 <You know, I could throw the fight...>
+		CPrompt%id%06 <ifG React 35 ifInsight HardSkilltar StoryDL Accept>
+		Prompt%id%07 <Yes, I'll throw the fight for you.>
+		Prompt%id%08 <No, I'm just yanking your chain.>
+	end
+	inv
+		NPC Mecha Pilot
+		Initiative
+		ElectronicWarfare
+		SpotWeakness
+		Talent 5
+		Talent 8
+		Talent 16
+		MOTIVATION:Professional
+	end
+
 
 Content
 	name <E-Member Battle>
-	size 6
 	desc <Fight a member of the enemy faction.>
 	requires <*:CS_MechaEncounter ~&Raiders F:++ &Secondary -!Ne -!Lo>
 
@@ -1711,7 +1870,6 @@ Content
 
 Content
 	name <They Are A Pirate>
-	size 8
 	desc <Your enemy has been hired by a pirate captain.>
 	requires <*:CS_MechaEncounter E:++ F:-- -!Ne (L:FCOMS|L:MAQUI|L:RISHI) ~E:THIEF ~E:M.mer ~C:POLIC ~P:POLIC ~P:SILKN ~P:ROCKE>
 	changes <F:++>
@@ -1735,6 +1893,10 @@ Content
 	.%id1%_%plotid1%_GoReinforcements <P= %id%02 1>
 	.%id1%_%plotid1%_GoDecimation     <P= %id%03 1>
 
+	%% Debriefing Message
+	Msg%id%11_1 <%name5% has taken up the black flag. I guess that means we're going to be taking on all of %name3%, now.>
+	CMsg%id%11_1 <ifChatNPCAlly Accept>
+
 	% SubPlot1 = Gain Advantage vs Raiders
 	SubPlot1 <*:CS_GainAdvantageVsMecha&Reinforcements&Decimation>
 
@@ -1746,7 +1908,7 @@ Content
 		MapWidth 50
 		MapHeight 50
 
-		Start <if= L2 0 L= 2 1   Alert 4 Alert 5 ForceChat %4% &SetEnemyFac %3%  PCFEnemy %3%  History 1 CancelSubPlot %plotid1% if# P%id%02 0 Alert 2>
+		Start <if= L2 0 L= 2 1   Alert 4 Alert 5 ForceChat %4% &SetEnemyFac %3%  PCFEnemy %3%  Debriefing %id%11  History 1 CancelSubPlot %plotid1% if# P%id%02 0 Alert 2>
 		nu1 <if= T1 0   Return   if= V1 0 V= 1 1         Trigger0 .%id%_%plotid%_GoLoss LoseSubPlot %plotid%>
 		nu2 <if= T2 0   if= V1 0 V= 1 1   XPV 100  AddRenown 1   SALVAGE   Alert 3   Trigger0 .%id%_%plotid%_GoWin WinSubPlot %plotid%>
 		end <SetEncounterInactive %2%>
@@ -1796,7 +1958,6 @@ Content
 
 Content
 	name <You Haven't Won Yet>
-	size 12
 	desc <PC waels on Enemy's henchmen, Enemy shows up immediately to wael on PC.>
 	requires <*:CS_MechaEncounter (E:M.pro|E:M.see) (E:A.---|E:A.sr_) -!Ne -&Secondary>
 	changes <E:A>
@@ -1934,7 +2095,6 @@ Content
 
 Content
 	name <You Can't Stop Me>
-	size 2
 	desc <Enemy NPC taunts PC, then leaves to complete some mission.>
 	requires <*:CS_MechaEncounter E:++ E:A.nme -&Secondary>
 	changes <E:A>
@@ -1997,7 +2157,6 @@ Content
 
 Content
 	name <Learn of Enemy Leader>
-	size 6
 	desc <Fight some raiders; learn the identity of their leader, who isn't present.>
 	requires <*:CS_MechaEncounter &Raiders E:-->
 	changes <E:++>
@@ -2014,6 +2173,15 @@ Content
 
 	.%id1%_%plotid1%_GoReinforcements <P= %id%02 1>
 
+	%%  Debriefing Message
+	Msg%id%11 <%name3%, you say? I don't know anything about \OPR %3% ... I expect you'll find out shortly.>
+	Msg%id%11_1 <I think I've heard of this %name3%. They say \SPR %3% works for \FACTION &EnemyFac .>
+	CMsg%id%11_1 <ifFactionExists &EnemyFac Accept>
+	Msg%id%11_2 <I know about %name3%... \SPR %3% 's clashed with \FACTION &AllyFac before. I believe \SPR %3% works for \FACTION &EnemyFac .>
+	CMsg%id%11_2 <ifFactionExists &EnemyFac ifFactionExists &AllyFac Accept>
+	Msg%id%11_3 <%name3% has fought with \FACTION &AllyFac before. I advise you to take care; you'll probably be crossing paths with \OPR %3% again.>
+	CMsg%id%11_3 <ifFactionExists &AllyFac Accept>
+
 	% SubPlot1 = Gain Advantage vs Raiders
 	SubPlot1 <*:CS_GainAdvantageVsMecha&Reinforcements>
 
@@ -2024,17 +2192,20 @@ Content
 		MapWidth 50
 		MapHeight 50
 
-		Start <if= L2 0 L= 2 1   Alert 1  TeamMonologue 2 2   SetXXRAttitude %3% XXR_A_NeverMet  StoryNote 3   &SetEnemyNPC %3%  CancelSubPlot %plotid1% if# P%id%02 0 Alert 6>
+		Start <if= L2 0 L= 2 1   Alert 1  TeamMonologue 2 2   SetXXRAttitude %3% XXR_A_NeverMet  StoryNote 3   &SetEnemyNPC %3%  SetDebriefing %id%11  CancelSubPlot %plotid1% if# P%id%02 0 Alert 6>
 		nu1 <if= T1 0   Return   if= V1 0 V= 1 1   Alert 4   Trigger0 .%id%_%plotid%_GoLoss>
 		nu2 <if= T2 0   if= V1 0 V= 1 1   XPV 100  AddRenown 1   SALVAGE   Alert 5   Trigger0 .%id%_%plotid%_GoWin>
 		end <SetEncounterInactive %2%>
 
 		Msg1 <You locate the group of raiders that you've been searching for.>
 		Msg2_1 <Huh, who's this? Another challenger for %name3%, I guess... \SPR %3% 's not here right now, but the rest of us should be able to handle you just fine.>
-		Msg2_2 <>
-		Msg2_3 <>
-		Msg2_4 <>
-		Msg2_5 <>
+		Msg2_2 <Look over there, I guess that's what passes for the town guard in \SCENE RootSceneID . %name3%'s gonna reward us if we defeat \OPR 0 ourselves!>
+		Msg2_3 <Hey look, it's a cavalier! I know %name3% hates for us to attack without talking first, but \SPR %3% 's not here so let's get to it!>
+		CMsg2_3 <ifG NPCHeroism %3% 0 Accept>
+		Msg2_4 <Look at that, an innocent little junior cavalier. %name3%'s gonna be sorry \SPR %3% missed this carnage, but \SPR %3% won't forgive us if we let that creep live!>
+		CMsg2_4 <ifG 0 NPCHeroism %3% Accept>
+		Msg2_5 <Crap, we're under attack, and %name3% isn't here! What would \SPR %3% say to do? Quick you lunks, defend the honor of \FACTION &EnemyFac !>
+		CMsg2_5 <ifFactionExists &EnemyFac Accept>
 		Msg3 <You fought the raiders, but their leader %name3% wasn't present.>
 		Msg4 <If the raiders were capable of this by themselves, you're probably lucky that %name3% wasn't with them.>
 		Msg5 <You have defeated the raiders, but their leader %name3% is nowhere to be found.>
@@ -2064,7 +2235,6 @@ Content
 
 Content
 	name <Henchmen Battle>
-	size 6
 	desc <Fight some henchmen of the enemy NPC.>
 	requires <*:CS_MechaEncounter ~&Raiders E:++ -E:A.--- &Secondary -!Md -!Hi -!Ex>
 

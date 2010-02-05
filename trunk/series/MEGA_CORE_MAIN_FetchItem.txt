@@ -200,6 +200,12 @@ Content
 
 	Msg%id%01 <You recovered the %name1% from %name4%.>
 
+	%% Debriefing Message- As long as PC talked to E4
+	Msg%id%10_1 <>
+	CMsg%id%10_1 <ifFactionExists ChatNPCFac Accept>
+	Msg%id%10_2 <So %name5% wanted the %name1%... I wonder what that was all about.>
+	CMsg%id%10_2 <if= ChatNPCFac 0 Accept>
+
 	% SubPlot1 is where the PC learns that the thief has the item.
 	% SubPlot2 is the PC's attempt to locate the thief.
 	SubPlot1 <*:CS_DiscoverNPCHasItem 4 1>
@@ -235,7 +241,7 @@ Content
 		GoGiveNow <Print 3 GiveItem %1%>
 		GoDestroyed <EndChat Say 2>
 		GoCheckAggro <ifSubPlotWon %plotid% else GoGreet EndCHat Say 4 TeamAttack 2 PCEnemy %4%>
-		GoGreet <if= V1 0 else GoBeenBefore V= 1 1 History 6 &SetEnemyNPC %5% SetXXRAttitude %5% XXR_A_NeverMet Goto GoBeenBefore>
+		GoGreet <if= V1 0 else GoBeenBefore V= 1 1 History 6 &SetEnemyNPC %5% SetXXRAttitude %5% XXR_A_NeverMet SetDebriefing %id%10 Goto GoBeenBefore>
 		GoBeenBefore <NewChat Say 5 AddChat 1 AddChat 2 AddChat 3>
 		result1 <ifIntimidation HardSkillTar StoryDL else GoR1Fail EndChat Say 8 GiveItem %1% FreezeNPC %4% PCEnemy %4%>
 		GoR1Fail <EndChat Say 7 TeamAttack 2>
@@ -328,8 +334,8 @@ Content
 	% the time the mobile base blows up, this episode counts as a loss.
 	start <if= p%id%03 1   if= SceneID %2%   if= p%id%04 0 else .%id%_GoWinSP LoseSubPlot %plotid% Goto .%id%_GoConclude>
 	.%id%_GoWinSP <WinSubPlot %plotid% Goto .%id%_GoConclude>
-	.%id%_GoConclude <Alert %id%01 History %id%02 if= p%id%05 0 else .%id%_GoBetterEnding ForceChat %5%   SetXXRAttitude %5% XXR_A_HatesPC   History %id%03 FreezeNPC %5%>
-	.%id%_GoBetterEnding <Monologue %4% %id%04 Monologue %5% %id%05 Monologue %4% %id%06 Monologue %4% %id%07   History %id%08 History %id%09  SetXXRAttitude %4% XXR_A_HatesPC  FreezeNPC %4% FreezeNPC %5% &SetEnemyNPC %4% &SetHangingNPC %5%  AlterContext .%id%_secondending  Alert %id%10   XPV 100>
+	.%id%_GoConclude <Alert %id%01 History %id%02 if= p%id%05 0 else .%id%_GoBetterEnding ForceChat %5%   SetXXRAttitude %5% XXR_A_HatesPC   History %id%03 FreezeNPC %5% SetDebriefing %id%11>
+	.%id%_GoBetterEnding <Monologue %4% %id%04 Monologue %5% %id%05 Monologue %4% %id%06 Monologue %4% %id%07   History %id%08 History %id%09  SetXXRAttitude %4% XXR_A_HatesPC  FreezeNPC %4% FreezeNPC %5% &SetEnemyNPC %4% &SetHangingNPC %5%  AlterContext .%id%_secondending  Alert %id%10   XPV 100  SetDebriefing %id%12>
 	.%id%_secondending <+Hed>
 
 	end <ifSubPlotLost %plotid1% else .%id%_GoCheckSP2   Goto .%id%_GoLoseMission>
@@ -353,6 +359,12 @@ Content
 	Msg%id%08 <%name5% saved you from \PPR %5% friend %name4%.>
 	Msg%id%09 <%name4% swore revenge against you for ruining their friendship.>
 	Msg%id%10 <%name5% and %name4% race off, presumably to settle their differences.>
+
+	%% Debriefing Message - Basic Ending
+	Msg%id%11 <With %name4% dead, %name5% is going to stop at nothing to get you. This can't possibly end well.>
+
+	%% Debriefing Message - Better Ending
+	Msg%id%12 <%name4% sounds like \OPR %4% 's going to be real trouble. I'd watch my back if I were you, \PC .>
 
 	% SubPlot1 is where the PC learns that BFF has the item.
 	% SubPlot2 is the PC's attempt to locate BFF.

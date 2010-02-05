@@ -48,6 +48,10 @@ gear.
 EFFECT
 	Contains an effect string that gets triggered when food is eaten.
 
+EXACT_NAME
+	Contains the exact name of a scene, in cases where ambiguity would
+	result from using the common name.
+
 FACTIONS
 	Included in scenes in the Atlas file. Tells which factions are active
 in this location. Factions are identified by their DESIG.
