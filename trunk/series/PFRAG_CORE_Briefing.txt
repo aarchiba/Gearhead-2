@@ -298,7 +298,7 @@
 	CPrompt%id%02 <if# PCFac ChatNPCFac Accept>
 
 	Persona
-	requires <*CS_BasicFightingMission E:++>
+	requires <*CS_BasicFightingMission E:++ -E:A.nme -E:Friend>
 	START <NewChat Say %id%01 AddChat %id%01 AddChat %id%02>
 	result%id%01 <StoryNote %id%02 Goto %1%>
 	result%id%02 <AddRenown -10 SMemo 0 Goto %2%>

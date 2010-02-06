@@ -1315,7 +1315,7 @@ begin
 			if ( DX >= -2 ) and ( DX <= 2 ) and ( DY >= -2 ) and ( DY <= 2 ) then begin
 				MyDest.X := ZONE_WorldMap.X + ( DX + 2 ) * 64;
 				MyDest.Y := ZONE_WorldMap.Y + ( DY + 2 ) * 64;
-				MySprite := LocateSprite( CuteSpriteName( M ) , SpriteColor( GB , M ) , 64 , 64 );
+				MySprite := LocateSprite( SpriteName( Nil , M ) , SpriteColor( GB , M ) , 64 , 64 );
 				DrawSprite( MySprite , MyDest , NAttValue( M^.NA , NAG_Display , NAS_PrimaryFrame ) );
 			end;
 		end;
@@ -1326,7 +1326,7 @@ begin
 	if PC <> Nil then begin
 		MyDest.X := ZONE_WorldMap.X + 128;
 		MyDest.Y := ZONE_WorldMap.Y + 128;
-		MySprite := LocateSprite( CuteSpriteName( PC ) , SpriteColor( GB , PC ) , 64 , 64 );
+		MySprite := LocateSprite( SpriteName( Nil , PC ) , SpriteColor( GB , PC ) , 64 , 64 );
 		DrawSprite( MySprite , MyDest , 1 );
 	end;
 end;
