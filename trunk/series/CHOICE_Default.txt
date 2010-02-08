@@ -18,6 +18,14 @@
 %%
 
 
+%%
+%%  *************************
+%%  **   DEFENSE  TRACK   ***
+%%  *************************
+%%
+%% Complete this track to get more allies in the final battle.
+%%
+
 Choice 1
 	name <Defense 1: They need help in city>
 	desc <Complete this option track to earn more reinforcements in final battle.>
@@ -110,6 +118,14 @@ Choice 5
 	Choice <StoryNote %id%01 &SetEpisodeScene %1%>
 
 	Msg%id%01 <You decided to protect %name1%.>
+
+%%
+%%  *************************
+%%  **   OFFENSE  TRACK   ***
+%%  *************************
+%%
+%% Complete this track to weaken the enemies in the final battle.
+%%
 
 Choice 6
 	name <Offense 1>
@@ -214,6 +230,10 @@ Choice 10
 
 	Msg%id%01 <You decided to follow the action to %name1%.>
 
+%%
+%%  ***************************
+%%  ***   REWARD  CHOICES   ***
+%%  ***************************
 %%
 %%  Choices 11 through 20 are the Reward Choices. Each of these will result
 %%  in an immediate reward for the PC. Note that only one RC will appear in
@@ -380,10 +400,36 @@ Choice 18
 	Msg%id%01 <You decided to seek a new lancemate in %name1%.>
 
 %%
-%%  END OF REWARD CHOICES
+%%  ******************************
+%%  ***   EASY  MONEY  TRACK   ***
+%%  ******************************
+%%
+%% You've heard that there's no such thing as a free lunch? There's no such
+%% thing as easy money, either... These plots allow you to indulge your criminal
+%% tendencies at the cost of increased peril.
+%%
+%% Complete all 5 choices to unlock the Pirate God ending.
 %%
 
 Choice 21
+	name <Easy Money 1>
+	desc <The PC will partake in some criminal fundraising.>
+	desig <EMO_1>
+	requires <ZZZZZNotYetPOssibleZZZZZ (F:--|F:CRIME|F:PRIVA) -!Ex>
+
+	% E1 is the city for the next episode.
+	Element1 <Scene City !Far -7 !Ally -7>
+
+
+
+%%
+%%  *******************
+%%  ***   ENDINGS   ***
+%%  *******************
+%%
+%% At the end of the game you get to make one final choice.
+
+Choice 2001
 	name <Default Ending>
 	desc <The final battle.>
 	desig <FINAL>
@@ -399,4 +445,5 @@ Choice 21
 	Choice <SMemo %id%01 &SetEpisodeScene %1%>
 
 	Msg%id%01 <You will finish things in %name1%.>
+
 

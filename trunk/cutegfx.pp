@@ -1264,6 +1264,8 @@ initialization
 		Game_Screen := SDL_SetVideoMode(ScreenWidth, ScreenHeight, 0, SDL_DOUBLEBUF );
 	end;
 
+	SDL_ShowCursor( SDL_Enable );
+
 	ClrScreen;
 	SDL_SetColorKey( Game_Screen , SDL_SRCCOLORKEY or SDL_RLEACCEL , SDL_MapRGB( Game_Screen^.Format , 0 , 0 , 255 ) );
 

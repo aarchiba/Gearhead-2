@@ -207,6 +207,7 @@ const
 	DefaultMaleSpriteHead = 'cha_m_';
 	DefaultFemaleSpriteHead = 'cha_f_';
 	mini_sprite = 'cha_pilot.png';
+	Unknown_Sprite = 'prop_unknown.png';
 var
 	it,fname: String;
 	FList: SAttPtr;
@@ -244,10 +245,8 @@ begin
 			end;
 		end else if ( M^.G = GG_Mecha ) and ( M^.S >= 0 ) and ( M^.S < NumForm ) then begin
 			it := FORM_DEFAULT[ M^.S + 1 ];
-		end else if M^.G = GG_Prop then begin
-			it := Default_Prop_Sprite_Name;
 		end else begin
-			it := Items_Sprite_Name;
+			it := Unknown_Sprite;
 		end;
 		SetSAtt( M^.SA , 'SDL_SPRITE <' + it + '>' );
 	end;
