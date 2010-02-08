@@ -517,7 +517,7 @@ begin
 				end;
 			end;
 			{ Intelligent robots start with mecha combat skills. }
-			for t := 1 to 5 do SetNAtt( Form^.NA , NAG_Skill , T , Random( SkRank ) + 1 );
+			for t := 1 to 3 do SetNAtt( Form^.NA , NAG_Skill , T , Random( SkRank ) + 1 );
 		end;
 
 	end else begin
@@ -593,10 +593,10 @@ begin
 
 		if NAttValue( Robot^.NA , NAG_Personal , NAS_CID ) <> 0 then begin
 			if NumLancemateSlots( GB^.Scene , PC ) < LancematesPresent( GB ) then RemoveLancemate( GB , Robot , False );
-			DialogMsg( ReplaceHash( MsgString( 'BUILD_ROBOT_SUCCESS' ) , GearName( Robot ) ) );
+			DialogMsg( ReplaceHash( MsgString( 'BUILD_ROBOT_SENTIENT' ) , GearName( Robot ) ) );
 		end else begin
 			if PetsPresent( GB ) > PartyPetSlots( PC ) then RemoveLancemate( GB , Robot , False );
-			DialogMsg( ReplaceHash( MsgString( 'BUILD_ROBOT_SENTIENT' ) , GearName( Robot ) ) );
+			DialogMsg( ReplaceHash( MsgString( 'BUILD_ROBOT_SUCCESS' ) , GearName( Robot ) ) );
 		end;
 
 		{ Give the PC a rundown on the new robot's skills. }

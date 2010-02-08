@@ -9,12 +9,82 @@
 %
 
 Plot
+	name <Civic Duty>
+	desc <You're told of a civil defense mission.>
+	requires <*CORE_Intro (P:--|L:ALLY) -L:ENEMY -C:THIEF>
+
+	% E1 is the CavClub
+	% E2 is the PC's friend
+	% E3 is a scene for the meeting
+	% E4 is the NPC to speak with
+	element1 <Scene !Near -7 cavclub>
+	element2 <NewNPC -3 -7 Friend>
+	place2 <1 pass>
+	element3 <Scene Building Public !Near -7 !Okay -3 -cavclub>
+	element4 <Character (POLIT|MILIT|POLIC) !Near -7 !Ally -7 -Enemy>
+	place4 </>
+
+	start <if= PlotStatus %plotid% 0 else .%id%_GoCheckDead if= SceneID %1% Alert %id%01  SetPlotStatus %plotid% %id%>
+	.%id%_GoCheckDead <if= PlotStatus %plotid% %id% ifNPCDead %2% MoveNPC %4% %3% LoseEpisode>
+
+	Msg%id%01 <As you enter the Cavalier's Club, your friend %name2% waves you over.>
+
+	% SubPlot1 is the conversation you're going to have.
+	subplot1 <*CS_Conversation 4>
+
+	sub
+		Persona 2
+		greeting <if= PlotStatus %plotid% %id% else GoChat Goto .%id%_GoGreet>
+		rumor0 <%name2% has been looking for you.>
+		GoChat <NewChat SayAnything>
+		*.%id%_GoGreet <*HowAreYou .%id%_GoAdvise>
+		.%id%_GoAdvise <NewChat Say 1 SMemo 2 History 3 MoveNPC %4% %3% SetPlotStatus %plotid1% %id1% AddChat 1>
+		result1 <NewChat Say 4>
+		Msg1 <You should know that %name4% is looking for a pilot to run some kind of mission for \SCENE RootSceneID . If you head over to \EXACT_SCENE %3% right away, you could be the one who gets the job.>
+		Msg1_1 <>
+		CMsg1_1 <ifNPCSociable Accept>
+		Msg1_2 <>
+		CMsg1_2 <ifNPCShy Accept>
+		Msg1_3 <>
+		CMsg1_3 <ifNPCEasygoing Accept>
+		Msg1_4 <>
+		CMsg1_4 <ifNPCPassionate Accept>
+		Msg1_5 <>
+		CMsg1_5 <ifNPCCheerful Accept>
+		Msg1_6 <>
+		CMsg1_6 <ifNPCMelancholy Accept>
+		Msg2 <%name4% needs to hire a cavalier. You can speak with \OPR %4% at \EXACT_SCENE %3% .>
+		Msg3 <%name2% told you that %name4%'s looking for a cavalier.>
+		Msg4 <Good luck. Hopefully you'll be given one of those easy missions with a big payoff.>
+		Prompt1 <Thanks for the tip.>
+		Prompt1_1 <I'll have to go check that out.>
+	end
+
+Plot
+	name <Local Defense>
+	desc <The city government is hiring.>
+	requires <*CORE_Intro (P:PDASS|L:Ally) -L:ENEMY ~C:ADVEN ~C:MILIT>
+
+	% E1 is the scene where this component will take place
+	% E2 is a character allied with the city
+	element1 <Scene !Near -7 cavclub>
+	element2 <Character (MILIT|POLIT|POLIC) !Near -7 !Ally -7 !Okay -3 -ENEMY>
+	Place2 <1 (Citizens) pass>
+
+	start <if= PlotStatus %plotid% 0  if= SceneID %1%  Alert %id%01 SetPlotStatus %plotid1% %id1%>
+
+	Msg%id%01 <As you enter the Cavalier's Club, you see %name2% looking for a pilot to hire.>
+
+	% SubPlot1 is the conversation you're going to have.
+	subplot1 <*CS_Conversation 2>
+
+Plot
 	name <Bounty Hunter>
 	requires <*CORE_Intro (P:--|C:POLIC) ~C:ADVEN>
 	desc <A bounty hunter will have a conversation.>
 
 	% E1 is the cavclub scene
-	% E2 is your friend
+	% E2 is your the bounty hunter
 	element1 <Scene !Near -7 cavclub>
 	element2 <Prefab>
 	place2 <1 guards>

@@ -1052,7 +1052,7 @@ Content
 	% E3 is a local public scene
 	% E4 is a trucker or adventurer who can tell where the raiders are.
 	Element3 <Scene Public !Near -7>
-	Element4 <Character (Trucker|ADVEN) HasMecha !Near 3 !XClude -2 !Okay -3 -ArchEnemy NeverFail>
+	Element4 <Character (Trucker|ADVEN|LABOR|CORPO) HasMecha !Near 3 !XClude -2 !Okay -3 -ArchEnemy NeverFail>
 	NeverFail4 <Trucker>
 
 	% The Hint
@@ -1069,8 +1069,113 @@ Content
 		greeting <if# PlotStatus %plotid% %id% else GoGreet NewChat SayAnything>
 		*GoGreet <*IHaveInformation GoSpiel na>
 		GoSpiel <NewChat Say 1 PMemo %plotid% 2 SetEncounterActive %2% WinSubPlot %plotid%>
-		Msg1 <When I was traveling through %name1% recently I was attacked by raiders. I think they were the same mecha you're looking for, and if you hurry back you might be able to find them.>
-		Msg2 <%name4% told you that the raiders are in %name1%.>
+		Msg1 <When I was traveling through \EXACT_SCENE %1% recently I was attacked by raiders. I think they were the same mecha you're looking for, and if you hurry back you might be able to find them.>
+		Msg1_1 <They say you're looking for some odd mecha. Well, I saw some like that, when I was out riding in \EXACT_SCENE %1% . Personally I thought they were up to no good but didn't bother to do anything about them myself. You know how it is.>
+		CMsg1_1 <ifNPCSociable Accept>
+		Msg1_2 <The mecha you're looking for are in \EXACT_SCENE %1% . Don't ask how I know.>
+		CMsg1_2 <ifNPCShy Accept>
+		Msg1_3 <>
+		CMsg1_3 <ifNPCCheerful Accept>
+		Msg1_4 <I didn't see any mecha, but I saw some fresh wreckage in \EXACT_SCENE %1% . That's probably a good place for you to start looking.>
+		CMsg1_4 <ifNPCMelancholy Accept>
+		Msg1_5 <>
+		CMsg1_5 <ifNPCEasygoing Accept>
+		Msg1_6 <>
+		CMsg1_6 <ifNPCPassionate Accept>
+		Msg1_7 <I saw some mecha in \EXACT_SCENE %1% ... I think they're the same ones you're looking for. Be careful out there.>
+		CMsg1_7 <ifG React * 8 d5 Accept>
+		Msg1_8 <The mecha you're looking for are in \EXACT_SCENE %1% . Yeah, I don't think you'll be coming back from that one alive...>
+		CMsg1_8 <ifG 0 React Accept>
+
+		Msg2 <%name4% told you that the raiders are in \EXACT_SCENE %1% .>
+	end
+
+Content
+	name <Dave's Not Here>
+	desc <You encounter a small group of raiders, and can track them to base.>
+	requires <*:CS_RevealEncounter_Raiders E:A.nme>
+
+	% E1 is the outdoor scene where the encounter is
+	% E2 is the MetaScene being sought
+	% E3 is an encounter
+	Element3 <Prefab>
+	Place3 <1>
+
+	% The Hint
+	HINT_%plotid% <The raiders were recently spotted in %name1%.>
+
+	% P%id%01 = Initialization Counter
+	% P%id%02 = Tracking Difficulcy Number
+
+	% This particular subplot can't fail. Acers!
+
+	update <if= P%id%01 0 P= %id%01 1 P= %id%02 SkillTar StoryDL>
+	&%id%_RevealEncounter <SetEncounterActive %2% WinSubPlot %plotid%>
+
+	sub
+		MetaScene 3 2
+		rumor%id% <some raiders have been seen in %name1%.>
+		special <UNCHARTABLE>
+
+		% V1 = Encounter Over Counter
+		% V2 = Number of PC defeats...
+		% V3 = Entry message counter
+		MapWidth 50
+		MapHeight 50
+
+		start <if= V3 0 V= 3 1 ifNPCOK &EnemyNPC TeamMonologue 2 6>
+
+		% Once the PC has defeated all but one of the raiders, the
+		% survivor will spill the beans.
+
+		nu1 <if= T1 0   Return>
+		nu2 <if= T2 1 else GoCheckAllGone if= V1 0   V= 1 1   TeamMonologue 2 4 PMemo %id% 5 History 5 &%id%_RevealEncounter Salvage Return SeekGate %2% if= L2 0 XPV 100>
+		GoCheckAllGone <if= T2 0 if= V1 0   V= 1 1   ifUAwareness p%id%02 else GoTrackFailed Alert 1 PMemo %id% 2 History 2 &%id%_RevealEncounter Return SeekGate %2% if= L2 0 XPV 100>
+		GoTrackFailed <Alert 3   L+ 2 1  P+ %id%02 -2 P+ %id%02 -d6   Return>
+
+		end <V= 1 0>
+
+		Msg1 <After defeating the raiders, you manage to track their movements back to a point in \EXACT_SCENE %1% .>
+		Msg2 <You tracked the raiders to %name1%.>
+		Msg3 <You have defeated the raiders, but still have no idea where they're coming from.>
+		Msg4_1 <Stop, I'll talk! \Persona &EnemyNPC is in \EXACT_SCENE %1% !>
+		CMsg4_1 <IfNPCOK &EnemyNPC Accept>
+		Msg4_2 <Stop, I'll talk! Our main force is in \EXACT_SCENE %1% !>
+		CMsg4_2 <IfNPCDead &EnemyNPC Accept>
+		Msg5 <A henchman told you where to find the raiders in %name1%.>
+		Msg6_1 <Ashes, why do we always get attacked when \PERSONA &EnemyNPC is off doing something else? Well, let's do our best...>
+		Msg6_2 <Crud, how come \PERSONA &EnemyNPC always has to run off right before we get attacked? Well, I guess we're contractually obliged to fight this creep...>
+
+		sub
+			team 1
+			SetEnemy 2
+			ParaX 5
+			ParaY 5
+
+			team 2
+			SetEnemy 1
+			% We need at least two mecha, so do a double generation.
+			Deploy <if= PlotStatus %plotid% %id% SetSelfFaction &EnemyFac   WMecha 2 StoryDL 50  WMecha 2 StoryDL 50>
+			ParaX 45
+			ParaY 45
+		end
+	end
+	inv
+		STC CORE-INVISIBLEENCOUNTER
+		name <Raiders>
+		%% If the PC manages a stealth roll upon approaching this encounter, the
+		%% raiders may be followed back to their base instead of being fought.
+		%% V1 = Timer; will only attack once every 3 hours
+		update <if= PlotStatus %plotid% %id% else GoHide ifG ComTime V1 else GoHide SetStat STAT_MetaVisibility 0  Goto GoSetOrders>
+		use <ifG StatVal STAT_MetaVisibility -1    ifUStealth 5 else GoAutoAttack   ifYesNo 1 2 3 else GoAutoAttack Goto GoTrack>
+		attack <ifG StatVal STAT_MetaVisibility -1  ifG PCScale 0    ifUStealth SkillTar StoryDL else GoAutoAttack ifYesNo 1 2 3 else GoAutoAttack Goto GoTrack>
+		GoAutoAttack <V= 1 ComTime V+ 1 10800   Alert -2 Exit Destination>
+		GoTrack <Alert 4 PMemo %id% 5 History 5 XPV 100 &%id%_RevealEncounter Exit %1% SeekGate %2%>
+		Msg1 <You encounter a small group of raiders. This obviously isn't their main force.>
+		Msg2 <Trail them.>
+		Msg3 <Approach them.>
+		Msg4 <You track the raiders to a meeting point in %name1%.>
+		Msg5 <You tracked the raiders to %name1%.>
 	end
 
 Content

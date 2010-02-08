@@ -25,7 +25,10 @@
 	WallType 20
 	FloorType 16
 
-	start <Print 1>
+	% L1 = First Time Counter
+
+	start <if# L1 0 else GoFirstTime Print 1>
+	GoFirstTime <L= 1 1>
 	Msg1 <You enter your home.>
 
 	NeededCells 1
