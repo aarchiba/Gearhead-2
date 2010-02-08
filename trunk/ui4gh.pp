@@ -415,6 +415,7 @@ const
 	Use_Isometric_Mode: Boolean = False;
 {$ENDIF}
 	Iso_Dir_Offset: Integer = 0;
+	Ersatz_Mouse: Boolean = False;
 
 	Minimal_Screen_Refresh: Boolean = False;
 	Use_Software_Surface: Boolean = False;
@@ -590,6 +591,8 @@ begin
 					Use_Paper_Dolls := True;
 				end else if cmd = 'USEMESH' then begin
 					Mesh_On := True;
+				end else if cmd = 'ERSATZ_MOUSE' then begin
+					Ersatz_Mouse := True;
 
 				end else if cmd = 'GIMMEGIMMECHOICE' then begin
 					XXRan_Wizard := True;
@@ -689,6 +692,7 @@ begin
 	AddBoolean( 'NAMESON' , Names_Above_Heads );
 	AddBoolean( 'PAPERDOLLS' , Use_Paper_Dolls );
 	AddBoolean( 'USEMESH' , Mesh_On );
+	AddBoolean( 'ERSATZ_MOUSE' , Ersatz_Mouse );
 
 	{ The "secret options" come at the end. These tokens only get }
 	{ included if they're already set. }

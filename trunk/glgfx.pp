@@ -239,6 +239,7 @@ var
 	Cursor_Sprite: SensibleSpritePtr;
 	Console_History: SAttPtr;
 	Title_Screen: SensibleSpritePtr;
+	Ersatz_Mouse_Sprite: SensibleSpritePtr;
 
 
 	RK_NumKeys:	PInt;
@@ -324,7 +325,16 @@ Procedure DoFlip;
 var
 	I: Integer;
 	P: Pointer;
+	MyDest: TSDL_Rect;
 begin
+	{ Draw the ersatz mouse pointer, if requested. }
+	if Ersatz_Mouse then begin
+		MyDest.X := Mouse_X;
+		MyDest.Y := Mouse_Y;
+		DrawSprite( Ersatz_Mouse_Sprite , MyDest , 0 );
+	end;
+
+
 	glMatrixMode( GL_Projection );
 	glLoadIdentity;
 	glDisable( GL_Depth_Test );
@@ -1602,7 +1612,10 @@ initialization
 
 	Game_Sprites := Nil;
 
+	if Ersatz_Mouse then SDL_ShowCursor( SDL_Disable );
+
 	Cursor_Sprite := LocateSprite( 'cursor.png' , 8 , 16 );
+	Ersatz_Mouse_Sprite := LocateSprite( 'ersatz_mouse.png' , 16 , 16 );
 	Title_Screen := LocateSprite( 'title_screen.png' , 800 , 600 );
 
 	Game_Textures := Nil;

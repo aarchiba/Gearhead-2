@@ -143,7 +143,7 @@ begin
 	vn_length := 100;
 
 	Assign( F , fname );
-writeln( fname );
+
 	Reset( F );
 	glNewList( DLID , GL_COMPILE );
 

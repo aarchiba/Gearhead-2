@@ -62,6 +62,9 @@ useful settings are:
   USEMESH - Activates full 3D mode in the 3D graphical version. When this
     option is enabled, all characters and mecha will be depicted using meshes.
 
+  ERSATZ_MOUSE - Replaces your system mouse pointer with a game-rendered mouse
+    pointer. Useful if the regular mouse pointer isn't showing up.
+
 
 ***************************
 ***   TROUBLESHOOTING   ***
@@ -71,8 +74,13 @@ Some graphics issues have been reported. If the display is corrupt, please
 take the time to report the problem along with your operating system and
 graphics card. In the meantime, the following tips might help:
 
+- If the mouse pointer doesn't appear, try activating the ERSATZ_MOUSE
+  configuration option.
+
 - If the problem happens in fullscreen, try switching to windowed mode.
+
 - If the problem happens in 3D, try using the 2D version (and vice versa).
+
 - Try activating REVERT_SLOWER_SAFER.
 
 The game seems to be more stable in a window than it is running fullscreen.

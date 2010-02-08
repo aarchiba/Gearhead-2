@@ -216,6 +216,7 @@ var
 	Cursor_Sprite: SensibleSpritePtr;
 	Console_History: SAttPtr;
 	Title_Screen: SensibleSpritePtr;
+	Ersatz_Mouse_Sprite: SensibleSpritePtr;
 
 	RK_NumKeys:	PInt;
 	RK_KeyState:	PUInt8;
@@ -288,7 +289,14 @@ const
 Procedure DoFlip;
 	{ Flip out, man! This flips from the newly drawn screen to the physical screen. }
 	{ Go look up Double Buffering on Wikipedia for more info. }
+var
+	MyDest: TSDL_Rect;
 begin
+	if Ersatz_Mouse then begin
+		MyDest.X := Mouse_X;
+		MyDest.Y := Mouse_Y;
+		DrawSprite( Ersatz_Mouse_Sprite , MyDest , 0 );
+	end;
 	SDL_Flip( Game_Screen );
 	Animation_Phase := ( Animation_Phase + 1 ) mod Animation_Phase_Period;
 end;
@@ -1264,7 +1272,7 @@ initialization
 		Game_Screen := SDL_SetVideoMode(ScreenWidth, ScreenHeight, 0, SDL_DOUBLEBUF );
 	end;
 
-	SDL_ShowCursor( SDL_Enable );
+	if Ersatz_Mouse then SDL_ShowCursor( SDL_Disable );
 
 	ClrScreen;
 	SDL_SetColorKey( Game_Screen , SDL_SRCCOLORKEY or SDL_RLEACCEL , SDL_MapRGB( Game_Screen^.Format , 0 , 0 , 255 ) );
@@ -1281,6 +1289,7 @@ initialization
 
 	Cursor_Sprite := LocateSprite( 'cursor.png' , 8 , 16 );
 	Title_Screen := LocateSprite( 'title_screen.png' , 800 , 600 );
+	Ersatz_Mouse_Sprite := LocateSprite( 'ersatz_mouse.png' , 16 , 16 );
 
 	Console_History := Nil;
 
