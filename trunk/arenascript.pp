@@ -1779,6 +1779,11 @@ begin
 				{ The name of the PC. }
 				W := GearName( LocatePilot( GG_LocatePC( GB ) ) );
 
+			end else if W = '\PCJOB' then begin
+				{ The name of the PC. }
+				Part := LocatePilot( GG_LocatePC( GB ) );
+				if Part <> Nil then W := LowerCase( SAttValue( Part^.SA , 'JOB' ) );
+
 			end else if W = '\CHATNPC' then begin
 				{ The name of the Chat NPC. }
 				W := GearName( I_NPC );

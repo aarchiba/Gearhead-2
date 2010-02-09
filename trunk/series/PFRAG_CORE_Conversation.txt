@@ -10,6 +10,33 @@
 %%
 
 Persona
+	%% Unknown Intro greeting- NonCom Job
+	requires <*CS_C_Greeting *CORE_Intro ~"MILIT" ~"ADVEN" (C:MEDIC|C:LABOR|C:MEDIA|C:TRADE|C:ACADE) -"FRIEND" -"FAMILY" -"ALLY" -"LOVER" -"PCFAC">
+	% V%id%01 = One time use counter
+	START <if= v%id%01 0 else %1% NewChat Say %id%01 AddChat %id%01 AddCHat %id%02 V= %id%01 1>
+	result%id%01 <AddEasygoing -d10  Goto %1%>
+	result%id%02 <Goto %1%>
+	Msg%id%01 <I guess you must be here about the mission. How did a \PCJOB like you end up becoming a cavalier?>
+	Msg%id%01_1 <>
+	CMsg%id%01_1 <ifNPCSociable Accept>
+	Msg%id%01_2 <>
+	CMsg%id%01_2 <ifNPCShy Accept>
+	Msg%id%01_3 <>
+	CMsg%id%01_3 <ifNPCEasygoing Accept>
+	Msg%id%01_4 <>
+	CMsg%id%01_4 <ifNPCPassionate Accept>
+	Msg%id%01_5 <>
+	CMsg%id%01_5 <ifNPCCheerful Accept>
+	Msg%id%01_6 <>
+	CMsg%id%01_6 <ifNPCMelancholy Accept>
+	Prompt%id%01_1 <Don't doubt my mad mecha skills.>
+	Prompt%id%01_2 <You doubt me? I'll show you my power!>
+	Prompt%id%01_3 <I was just born to pilot. The fire's in my blood!>
+	Prompt%id%02_1 <Well, it seemed like a good idea at the time.>
+	Prompt%id%02_2 <I just have a knack for adventure, I guess.>
+	Prompt%id%02_3 <Good question. Now, about that job?>
+
+Persona
 	%% Unknown Intro greeting
 	requires <*CS_C_Greeting *CORE_Intro ~"MILIT" ~"POLIT" -"FRIEND" -"FAMILY" -"ALLY" -"LOVER" -"PCFAC">
 	% V%id%01 = One time use counter

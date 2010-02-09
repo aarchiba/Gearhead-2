@@ -497,7 +497,7 @@ begin
 		msg := ReplaceHash( MsgString( 'PCREPAIR_UseSkill' ) , MsgString( 'SkillName_' + BStr( Skill ) ) );
 	end else begin
 		msg := ReplaceHash( MsgString( 'NPCREPAIR_UseSkill' ) , PilotName( PC ) );
-		msg := ReplaceHash( msg , GearName( Item ) );
+		msg := ReplaceHash( msg , MsgString( 'SkillName_' + BStr( Skill ) ) );
 	end;
 	msg := ReplaceHash( msg , GearName( Item ) );
 
@@ -1113,6 +1113,7 @@ begin
 	{ Build the slot selection menu. }
 	EI_Menu := CreateRPGMenu( MenuItem , MenuSelect , ZONE_InvMenu );
 	BuildSlotMenu( EI_Menu , PC , Item );
+	AlphaKeyMenu( EI_Menu );
 	if EI_Menu^.NumItem < 1 then AddRPGMenuItem( EI_Menu , ReplaceHash( MsgString( 'BACKPACK_CantEquip' ) , GearName( Item ) ) , -1 );
 
 	{ Select a slot for the item to go into. }

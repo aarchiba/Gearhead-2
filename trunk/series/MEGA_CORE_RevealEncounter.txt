@@ -117,7 +117,7 @@ Content
 	% E4 is a local public scene
 	% E5 is a trucker or adventurer who can tell where the raiders are.
 	Element4 <Scene Public !Near -7>
-	Element5 <Character (TRADE|CRAFT) !Near 4 !XClude -2 !Okay -3 -ArchEnemy NeverFail>
+	Element5 <Character (TRADE|CRAFT|LABOR) !Near 4 !Okay -2 !Okay -3 -ArchEnemy NeverFail>
 	NeverFail5 <Trucker>
 
 	% The Hint
@@ -1074,19 +1074,18 @@ Content
 		CMsg1_1 <ifNPCSociable Accept>
 		Msg1_2 <The mecha you're looking for are in \EXACT_SCENE %1% . Don't ask how I know.>
 		CMsg1_2 <ifNPCShy Accept>
-		Msg1_3 <>
+		Msg1_3 <In \EXACT_SCENE %1% I was chased by some meks. I was lucky to get away... I think they're probably the same ones you want; let me give you their coordinates.>
 		CMsg1_3 <ifNPCCheerful Accept>
-		Msg1_4 <I didn't see any mecha, but I saw some fresh wreckage in \EXACT_SCENE %1% . That's probably a good place for you to start looking.>
+		Msg1_4 <I didn't see any mecha, but I saw some fresh wreckage in \EXACT_SCENE %1% . The raiders can't be gone far. Let me give you the coordinates.>
 		CMsg1_4 <ifNPCMelancholy Accept>
-		Msg1_5 <>
+		Msg1_5 <While driving through \EXACT_SCENE %1% I saw some suspicious mecha. They could be the ones you're looking for. I know, I should've told someone... I'm telling you now, aren't I?>
 		CMsg1_5 <ifNPCEasygoing Accept>
-		Msg1_6 <>
+		Msg1_6 <I saw the mecha that you're looking for! They're in \EXACT_SCENE %1% , at these coordinates... If you hurry there right away you can catch them.>
 		CMsg1_6 <ifNPCPassionate Accept>
-		Msg1_7 <I saw some mecha in \EXACT_SCENE %1% ... I think they're the same ones you're looking for. Be careful out there.>
-		CMsg1_7 <ifG React * 8 d5 Accept>
+		Msg1_7 <I saw some mecha in \EXACT_SCENE %1% ... I think they're the same ones you're looking for. I'll give you the coordinates, but promise you'll make it back alive.>
+		CMsg1_7 <ifG React * 8 d8 Accept>
 		Msg1_8 <The mecha you're looking for are in \EXACT_SCENE %1% . Yeah, I don't think you'll be coming back from that one alive...>
 		CMsg1_8 <ifG 0 React Accept>
-
 		Msg2 <%name4% told you that the raiders are in \EXACT_SCENE %1% .>
 	end
 
@@ -1129,7 +1128,7 @@ Content
 		% survivor will spill the beans.
 
 		nu1 <if= T1 0   Return>
-		nu2 <if= T2 1 else GoCheckAllGone if= V1 0   V= 1 1   TeamMonologue 2 4 PMemo %id% 5 History 5 &%id%_RevealEncounter Salvage Return SeekGate %2% if= L2 0 XPV 100>
+		nu2 <if= T2 1 else GoCheckAllGone if= V1 0   V= 1 1   Alert 7  TeamMonologue 2 4 PMemo %id% 5 History 5 &%id%_RevealEncounter Salvage Return SeekGate %2% if= L2 0 XPV 100>
 		GoCheckAllGone <if= T2 0 if= V1 0   V= 1 1   ifUAwareness p%id%02 else GoTrackFailed Alert 1 PMemo %id% 2 History 2 &%id%_RevealEncounter Return SeekGate %2% if= L2 0 XPV 100>
 		GoTrackFailed <Alert 3   L+ 2 1  P+ %id%02 -2 P+ %id%02 -d6   Return>
 
@@ -1145,6 +1144,7 @@ Content
 		Msg5 <A henchman told you where to find the raiders in %name1%.>
 		Msg6_1 <Ashes, why do we always get attacked when \PERSONA &EnemyNPC is off doing something else? Well, let's do our best...>
 		Msg6_2 <Crud, how come \PERSONA &EnemyNPC always has to run off right before we get attacked? Well, I guess we're contractually obliged to fight this creep...>
+		Msg7 <With everyone else defeated, the last raider quickly surrenders.>
 
 		sub
 			team 1
