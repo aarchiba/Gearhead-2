@@ -87,6 +87,37 @@ Plot
 	end
 
 Plot
+	name <Basic Police Mission>
+	desc <The PC will be offered a job by the police.>
+	requires <(E:THIEF|F:CRIME) -C:THIEF -P:CRIME -L:ENEMY ~L:ALLY (*CORE_DEF_|*CORE_OFF_|*CORE_R_)>
+
+	% E1 is the scene where this component will take place
+	% E2 is a government faction
+	% E3 is a member thereof
+	element1 <Scene Building Public !Okay -3 !Near -7>
+	element2 <Faction Police !Okay -3 !Ally -7 !XClude -2 -Enemy>
+	element3 <Character !Near 1 !Comrade 2 NeverFail -Enemy>
+	Place3 <1 (Guards) sd ally>
+	NeverFail3 <Police Officer>
+
+	% All this plot does is move the NPC, send an email,
+	% and activate the mission subplot
+	5min <if= PlotStatus %plotid% 0  if= RootSceneID &EpisodeScene  EMail 1  SetPlotStatus %plotid% %id1%>
+
+	start <if= PlotStatus %plotid% 0 ifNPCDead %3% LoseEpisode>
+
+	%% SubPlot1 is the mission to be offered
+	SubPlot1 <*CS_Conversation 3>
+
+	Msg1_1  <%name3%@ \NARRATIVE 7 :// Your services are requested by %name2%. Meet me at \EXACT_SCENE %1% .>
+	Msg1_2  <%name3%@ \NARRATIVE 7 :// On behaf of %name2% I'd like to request your assistance. I'll be waiting for you at \EXACT_SCENE %1% .>
+	Msg1_3  <%name3%@ \NARRATIVE 7 :// I have a mission for you from %name2%. Call me, or come to \EXACT_SCENE %1% .>
+	Msg1_4  <%name3%@ \NARRATIVE 7 :// I heard you have some experience with \PERSONA &EnemyNPC . Waiting for you at \EXACT_SCENE %1% .>
+	CMsg1_4 <ifNPCOK &EnemyNPC Accept>
+	Msg1_5  <%name3%@ \NARRATIVE 7 :// I'm working on a case against \FACTION &EnemyFac . Your assistance would be valuable.>
+	CMsg1_5 <ifFactionExists &EnemyFac Accept>
+
+Plot
 	name <Basic Friend Contact>
 	desc <The PC's friend will call about something.>
 	requires <(*CORE_DEF_|*CORE_OFF_|*CORE_R_)>

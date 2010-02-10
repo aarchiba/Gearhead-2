@@ -124,7 +124,7 @@ Content
 	name <Plague of Bandits>
 	size 8
 	desc <Defend an allied cruiser from bandits; find out this has been happening quite often.>
-	requires <*:CS_MechaEncounter +P-- (P:CORPO|F:CRIME)>
+	requires <*:CS_MechaEncounter +P-- (P:CORPO|F:CRIME) -C:THIEF>
 	changes <+P>
 
 	% E1 is the outdoors scene where this encounter will be placed
@@ -144,6 +144,10 @@ Content
 	.%id1%_%plotid1%_GoReinforcements <P= %id%02 1>
 	.%id1%_%plotid1%_GoDecimation     <P= %id%03 1>
 
+	Msg%id%11 <I'm glad %name4% got away safely. Something needs to be done about these bandits...>
+	Msg%id%11_1 <Something needs to be done about \FACTION &EnemyFac ... They've been stepping up their attacks.>
+	CMsg%id%11_1 <ifFactionExists &EnemyFac Accept>
+
 	% SubPlot1 = Gain Advantage vs Raiders
 	SubPlot1 <*:CS_GainAdvantageVsMecha&Decimation&Reinforcements>
 
@@ -157,7 +161,7 @@ Content
 		Start <if= L2 0 L= 2 1   Alert 1  History 2  Monologue %4% 7  AlterContext .changes  CancelSubPlot %plotid1% if# P%id%02 0 Alert 6>
 		.changes <+Pun>
 		nu1 <if= T1 0   Return   if= V1 0 V= 1 1 Alert 3 History 4 Trigger0 .%id%_%plotid%_GoLoss LoseSubPlot %plotid%>
-		nu2 <if= T2 0   if= V1 0 V= 1 1 ifG T3 0 else GoLoseMission  Alert 5  XPV 100  Salvage  Return  Trigger0 .%id%_%plotid%_GoWin WinSubPlot %plotid%>
+		nu2 <if= T2 0   if= V1 0 V= 1 1 ifG T3 0 else GoLoseMission  Alert 5  SetDebriefing %id%11  XPV 100  Salvage  Return  Trigger0 .%id%_%plotid%_GoWin WinSubPlot %plotid%>
 		GoLoseMission <Alert 4 History 4 Trigger0 .%id%_%plotid%_GoLoss LoseSubPlot %plotid%>
 		end <SetEncounterInactive %2%   MoveNPC %4% %3%>
 		Msg1 <You find a cargo ship under attack by bandits. Its captain, %name4%, contacts you.>
@@ -805,10 +809,112 @@ Content
 %%  ***   GENERAL   ***
 %%  *******************
 
+Content
+	name <Let's See How You Measure Up>
+	desc <A sorting battle against a new enemy NPC.>
+	requires <*:CS_MechaEncounter &Raiders E:-- F:++ ~!Lo -!Md -!Hi -!Ex>
+	changes <E:++>
+
+	% E1 is the outdoors scene where this encounter will be placed
+	% E2 is the metascene to be used for this encounter
+	% E3 is the new enemy
+	Element3 <NewNPC -2 -7>
+	Place3 <2 (Enemies) sd enemy>
+
+	% P%id%01 = Initialization Counter
+	% P%id%02 = Have gained reinforcements
+	% P%id%03 = Have gained decimation
+	update <if= V%id%01 0 V= %id%01 1   SetPlotStatus %plotid1% %id1%  NPCLevel %3% StoryDL>
+
+	.%id1%_%plotid1%_GoReinforcements <P= %id%02 1>
+	.%id1%_%plotid1%_GoDecimation <P= %id%03 1>
+
+	%%  Debriefing Message
+	Msg%id%11 <%name3%, you say? I don't know anything about \OPR %3% ... I expect you'll find out shortly.>
+	Msg%id%11_1 <I think I've heard of this %name3%. They say \SPR %3% works for \FACTION &EnemyFac .>
+	CMsg%id%11_1 <ifFactionExists &EnemyFac Accept>
+	Msg%id%11_2 <I know about %name3%... \SPR %3% 's clashed with \FACTION &AllyFac before. I believe \SPR %3% works for \FACTION &EnemyFac .>
+	CMsg%id%11_2 <ifFactionExists &EnemyFac ifFactionExists &AllyFac Accept>
+	Msg%id%11_3 <%name3% has fought with \FACTION &AllyFac before. I advise you to take care; you'll probably be crossing paths with \OPR %3% again.>
+	CMsg%id%11_3 <ifFactionExists &AllyFac Accept>
+
+	% SubPlot1 = Gain Advantage vs Raiders
+	SubPlot1 <*:CS_GainAdvantageVsMecha&Reinforcements&Decimation>
+
+	sub
+		MetaScene 2 2
+		% L1 = Encounter Over Counter
+		% L2 = Initialization Counter
+		MapWidth 50
+		MapHeight 50
+
+		Start <if= L2 0 L= 2 1   Alert 1  ForceChat %3%   StoryNote 2 &SetENemyNPC %3%  SetDebriefing %id%11  CancelSubPlot %plotid1% if# P%id%02 0 Alert 3>
+		nu1 <if= T1 0   Return   if= V1 0 V= 1 1   Alert 4 Monologue %3% 5 History 6   LoseSubPlot %plotid% Trigger0 .%id%_%plotid%_GoLoss  SetXXRAttitude %3% XXR_A_IsSenior>
+		nu2 <if= T2 0   if= V1 0 V= 1 1   XPV 100  AddRenown 1   SALVAGE   Alert 7 Monologue %3% 8   WinSubPlot %plotid%  Trigger0 .%id%_%plotid%_GoWin  SetXXRAttitude %3% XXR_A_IsJunior>
+		end <SetEncounterInactive %2% ifNPCDead %3% else GoFreeze Print 9 Goto GoFreeze>
+		GoFreeze <FreezeNPC %3%>
+
+		Msg1 <You locate the group of raiders that you've been searching for.>
+		Msg2 <You fought %name3% of \FACTION &EnemyFac .>
+		Msg3 <Your reinforcements are here, as promised.>
+		Msg4 <You have been defeated by %name3%.>
+		Msg5 <Just as I expected, you're a mere amateur. Don't bother me again until you're worth my time.>
+		Msg5_1 <Sorry that I had to hurt you, but you left me no other choice. Stay out of my business from now on.>
+		CMsg5_1 <ifNPCHeroic Accept>
+		Msg5_2 <Do you understand now, worm? Challenge me again and you won't live to tell about it.>
+		CMsg5_2 <ifNPCVillainous Accept>
+		Msg6 <%name1% defeated you.>
+		Msg7 <You defeated %name3%'s lance.>
+		Msg8 <Aw, man, I didn't expect you to be so tough... Would you be willing to go best two out of three?>
+		Msg8_1 <Hmph, so you're tough... Being strong still doesn't make you right, you know.>
+		CMsg8_1 <ifNPCHeroic Accept>
+		Msg8_2 <What, how could I lose to a jerk like you!? That's it, next time I won't hold back at all!>
+		CMsg8_2 <ifNPCVillainous Accept>
+		Msg9 <%name3%'s cockpit is mysteriously empty. Could \SPR %3% have survived?>
+
+		sub
+			team 1
+			setally 3
+			SetEnemy 2
+			ParaX 5
+			ParaY 5
+
+			team 2
+			name <Enemies>
+			SetEnemy 1 3
+			Deploy <if= PlotStatus %plotid% %id% SetSelfFaction &EnemyFac   if= P%id%03 0 else GoSmall WMecha 2 StoryDL 80>
+			GoSmall <WMecha 2 StoryDL 30>
+			ParaX 45
+			ParaY 45
+
+			team 3
+			setally 1
+			setenemy 2
+			Deploy <if= PlotStatus %plotid% %id%  if# P%id%02 0   WMecha 3 StoryDL 60>
+			ParaX 10
+			ParaY 5
+		end
+
+		Persona 3
+		special <UNLISTED>
+		greeting <EndChat Say %id%01 AddChat %id%01 AddChat %id%02>
+		*result%id%01 <*THEME_EXPO&Enemy na>
+		result%id%02 <AddSociable -d6 Goto result%id%01>
+		Msg%id%01 <Turn back, or in the name of \FACTION &EnemyFac I will destroy you!>
+		Msg%id%01_1 <I'm only going to give you one warning. Turn back now, or the entire might of \FACTION &EnemyFac will defeat you!>
+		CMsg%id%01_1 <ifNPCHeroic Accept>
+		Msg%id%01_2 <Get lost, jerk. I'm here on serious business from \FACTION &EnemyFac , and intend to crush anyone who gets in the way.>
+		CMsg%id%01_2 <ifNPCVillainous Accept>
+		Prompt%id%01 <Let's see if you can back up those words.>
+		Prompt%id%01_1 <You're the one who's going to back down.>
+		Prompt%id%02 <Whatever.>
+
+	end
+
+
 
 Content
 	name <I'm Not Distressed>
-	size 5
 	desc <Your love interest is under attack, but will prove self to you.>
 	requires <*:CS_MechaEncounter +H-- A:++ (A:LABOR|A:CRAFT|A:FAITH|A:CORPO|A:TRADE|A:ADVEN) (A:A.tha|A:A.jr_|A:A.---) -A:ENEMY ~+Glo>
 	changes <A:A +H>

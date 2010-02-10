@@ -259,17 +259,17 @@
 	Msg%id%01_2 <I know that you've tangled with \FACTION &EnemyFac before; they've got some raiders in town, and there's a reward for anyone who can locate and stop them.>
 	CMsg%id%01_2 <if# 0 &EnemyFac ifNPCDead &EnemyNPC Accept>
 	Msg%id%01_3 <Some of your old enemies are in town, and they're causing trouble. There's a reward for anyone who can locate them and bring them to justice.>
-	Msg%id%03_1 <%name1% asked you to find and defeat \PERSONA &EnemyNPC .>
+	Msg%id%03_1 <\ChatNPC asked you to find and defeat \PERSONA &EnemyNPC .>
 	CMsg%id%03_1 <ifNPCOK &EnemyNPC Accept>
-	Msg%id%03_2 <%name1% asked you to find and defeat raiders from \FACTION &EnemyFac .>
+	Msg%id%03_2 <\ChatNPC asked you to find and defeat raiders from \FACTION &EnemyFac .>
 	CMsg%id%03_2 <if# 0 &EnemyFac ifNPCDead &EnemyNPC Accept>
-	Msg%id%03_3 <%name1% asked you to find and defeat some criminals.>
+	Msg%id%03_3 <\ChatNPC asked you to find and defeat some criminals.>
 	CMsg%id%03_3 <if= 0 &EnemyFac ifNPCDead &EnemyNPC Accept>
-	Msg%id%04_1 <%name1% mentioned that \PERSONA &EnemyNPC is in town. There's a reward if you can locate and defeat \OPR &EnemyNPC .>
+	Msg%id%04_1 <\ChatNPC mentioned that \PERSONA &EnemyNPC is in town. There's a reward if you can locate and defeat \OPR &EnemyNPC .>
 	CMsg%id%04_1 <ifNPCOK &EnemyNPC Accept>
-	Msg%id%04_2 <%name1% mentioned that mecha from \FACTION &EnemyFac are in town. There's a reward if you can locate and defeat them.>
+	Msg%id%04_2 <\ChatNPC mentioned that mecha from \FACTION &EnemyFac are in town. There's a reward if you can locate and defeat them.>
 	CMsg%id%04_2 <if# 0 &EnemyFac Accept>
-	Msg%id%04_3 <%name1% mentioned that your enemies are in town. There's a reward if you can locate and defeat them.>
+	Msg%id%04_3 <\ChatNPC mentioned that your enemies are in town. There's a reward if you can locate and defeat them.>
 	CMsg%id%04_3 <if= 0 &EnemyFac ifNPCDead &EnemyNPC Accept>
 	Prompt%id%01 <I've been waiting for a chance to fight them again.>
 	Prompt%id%02 <Hey, as long as there's a reward, I'm there.>

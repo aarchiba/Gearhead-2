@@ -10,6 +10,28 @@
 %%
 
 Persona
+	requires <*CS_C_Greeting (*CORE_DEF_|*CORE_OFF_) ("POLIC"|"POLIT"|"CORPO") F:CRIME -"Friend" -"PCFAC">
+	% V%id%01 = One time use counter
+	START <if= v%id%01 0 else %1% V= %id%01 1 NewChat Say %id%01 AddChat %id%01>
+	result%id%01 <goto %1%>
+	Msg%id%01 <You should know that \FACTION &EnemyFac is operating in \SCENE RootSceneID . We're attempting to keep the situation under control, but it's been hard...>
+	Msg%id%01_1 <>
+	CMsg%id%01_1 <ifNPCSociable Accept>
+	Msg%id%01_2 <>
+	CMsg%id%01_2 <ifNPCShy Accept>
+	Msg%id%01_3 <>
+	CMsg%id%01_3 <ifNPCEasygoing Accept>
+	Msg%id%01_4 <>
+	CMsg%id%01_4 <ifNPCPassionate Accept>
+	Msg%id%01_5 <>
+	CMsg%id%01_5 <ifNPCCheerful Accept>
+	Msg%id%01_6 <>
+	CMsg%id%01_6 <ifNPCMelancholy Accept>
+	Prompt%id%01 <That's what I heard.>
+	Prompt%id%01_1 <That's why I'm here.>
+
+
+Persona
 	%% Unknown Intro greeting- NonCom Job
 	requires <*CS_C_Greeting *CORE_Intro ~"MILIT" ~"ADVEN" (C:MEDIC|C:LABOR|C:MEDIA|C:TRADE|C:ACADE) -"FRIEND" -"FAMILY" -"ALLY" -"LOVER" -"PCFAC">
 	% V%id%01 = One time use counter
