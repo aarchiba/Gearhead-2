@@ -58,6 +58,37 @@ Content
 %%
 
 Content
+	name <S_PCF Let's sign you up>
+	desc <The NPC will pay the PC for the job, and offer a job.>
+	requires <*CS_WinGoal *CORE_S_PCF -&NoCash>
+	changes <P:++>
+
+	% E1 is the NPC.
+
+	start <ifNPCDead %1% SMemo 0 WinEpisode>
+
+	sub
+		Persona 1
+		greeting <if= PlotStatus %plotid% %id% else %pop% Debrief  if# PCFac &AllyFac else .%id%_DefaultWin gOTO .%id%_GoReportSuccess>
+		.%id%_GoReportSuccess <NewChat Say %id%01 AddChat %id%01 AddChat %id%02>
+		*.%id%_DefaultWin <*MissionWasSuccess&Reward .%id%_GoEnd &AllyFac &EnemyFac>
+		.%id%_GoEnd <CashPrize Reward StoryDL 1000 SMemo 0  AddReact d30  &SetAllyFac PCFac  WinEpisode>
+		result%id%01 <NewChat Say %id%02 CashPrize Reward StoryDL 500 SMemo 0  AddReact d10  WinEpisode>
+		result%id%02 <NewChat Say %id%03 CashPrize Reward StoryDL 1000 History %id%04  SetPCFac &AllyFac  AddReact d10  CustomMecha .%id%_fac StoryDL  WinEpisode>
+		.%id%_fac <GENERAL \FACTION_DESIG RootSceneFac \FACTION_DESIG &AllyFac>
+		Msg%id%01 <Good work, \PC . You know that \FACTION &AllyFac could use someone with your talents. I'm authorized to offer you a position right now.>
+		Msg%id%02 <I understand. Well, perhaps we can work together some time again in the future.>
+		Msg%id%03 <Welcome to the team, \PC . Here's your starting equipment bonus and a new mecha.>
+		Msg%id%04 <You accepted %name1%'s offer to join \FACTION &AllyFac .>
+		Prompt%id%01 <Thanks, but no thanks.>
+		Prompt%id%01_1 <I'd like to stay a free agent for now.>
+		Prompt%id%01_2 <No thanks, I just want to get paid.>
+		Prompt%id%02 <I'd like that. I'll do it.>
+		Prompt%id%02_1 <It would be an honor to work with you.>
+		Prompt%id%02_2 <Alright, I'll sign up.>
+	end
+
+Content
 	name <OFF_5 That's gotta hurt>
 	desc <The NPC will pay the PC for the job.>
 	requires <*CS_WinGoal *CORE_OFF_5 -&NoCash>
@@ -346,6 +377,39 @@ Content
 %%
 %% Param1: The Task-giver.
 %%
+
+Content
+	name <You're a loser, but we like you anyhow>
+	desc <The NPC will debrief the PC on the loss.>
+	requires <*CS_LoseGoal *CORE_S_PCF P:++ -P:PCFAC Common ~1:HERO_>
+
+	% E1 is the NPC.
+
+	start <ifNPCDead %1% LoseEpisode>
+
+	sub
+		Persona 1
+		greeting <if= PlotStatus %plotid% %id% else %pop% Debrief if# PCFac &AllyFac else .%id%_GoReportLoss ifG React d20 else .%id%_GoReportLoss Goto .%id%_GoMakeOffer>
+		.%id%_GoMakeOffer <NewChat Say %id%01 AddChat %id%01 AddChat %id%02 AddChat %id%03>
+		*.%id%_GoReportLoss <*MissionWasFailure .%id%_GoEnd &AllyFac &EnemyFac>
+		.%id%_GoEnd <LoseEpisode>
+		result%id%01 <NewChat SetPCFac &AllyFac Say %id%02 AddReact d8 History %id%03 CashPrize Reward StoryDL 500  RandomMecha .%id%_facs StoryDL   WinDramaticGoal LoseEpisode>
+		.%id%_facs <GENERAL \FACTION_DESIG &AllyFac \FACTION_DESIG RootSceneFac>
+		result%id%02 <NewChat Say %id%04 LoseEpisode>
+		result%id%03 <NewChat Say %id%05 AddChat %id%04 AddChat %id%05>
+		result%id%04 <Goto result%id%01>
+		result%id%05 <Goto result%id%02>
+		Msg%id%01 <The mission was a failure, but on behaf of \FACTION &AllyFac I'd still like to offer you a position with us.>
+		Msg%id%02 <Welcome to the team, \RANK \PC . Hopefully your next mission will go a little better.>
+		Msg%id%03 <Despite your loss, you were inducted into \FACTION &AllyFac .>
+		Msg%id%04 <Understood. Perhaps some time later you'd like to reconsider.>
+		Msg%id%05 <A temporary setback. I should mention that this job offer comes with the standard mecha and equipment bonus.>
+		prompt%id%01 <Really? I'll take it!>
+		prompt%id%02 <Sorry, I'd prefer to stay a free agent.>
+		prompt%id%03 <What!? Why? I sucked out there!>
+		prompt%id%04 <Alright, I'll join.>
+		prompt%id%05 <Nope, I still don't want to.>
+	end
 
 Content
 	name <Default Lose Task>

@@ -10,6 +10,28 @@
 %%
 
 Persona
+	requires <*CS_C_Greeting *CORE_S_PCF>
+	% V%id%01 = One time use counter
+	START <if= v%id%01 0 else %1% V= %id%01 1 NewChat Say %id%01 AddChat %id%01>
+	result%id%01 <goto %1%>
+	Msg%id%01 <Let's get straight to business... \FACTION &AllyFac has taken an interest in your adventures, \PC . It may be time for us to think about joining forces.>
+	Msg%id%01_1 <>
+	CMsg%id%01_1 <ifNPCSociable Accept>
+	Msg%id%01_2 <>
+	CMsg%id%01_2 <ifNPCShy Accept>
+	Msg%id%01_3 <>
+	CMsg%id%01_3 <ifNPCEasygoing Accept>
+	Msg%id%01_4 <>
+	CMsg%id%01_4 <ifNPCPassionate Accept>
+	Msg%id%01_5 <>
+	CMsg%id%01_5 <ifNPCCheerful Accept>
+	Msg%id%01_6 <>
+	CMsg%id%01_6 <ifNPCMelancholy Accept>
+	Prompt%id%01 <So what do you want me to do?>
+	Prompt%id%01_1 <Are you offering me a mission?>
+
+
+Persona
 	requires <*CS_C_Greeting (*CORE_DEF_|*CORE_OFF_) ("POLIC"|"POLIT"|"CORPO") F:CRIME -"Friend" -"PCFAC">
 	% V%id%01 = One time use counter
 	START <if= v%id%01 0 else %1% V= %id%01 1 NewChat Say %id%01 AddChat %id%01>

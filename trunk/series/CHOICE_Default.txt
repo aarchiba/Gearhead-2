@@ -81,7 +81,7 @@ Choice 4
 	name <Defense 4>
 	desc <Complete this option track to earn more reinforcements in final battle.>
 	desig <DEF_4>
-	requires <:DEF_3 -!Ex>
+	requires <:DEF_3 -!Ex P:++>
 
 	% E1 is the city for the next episode.
 	Element1 <Scene City !Far -7 !Ally -7 !Okay -3 !XClude -2>
@@ -102,7 +102,7 @@ Choice 5
 	name <Defense 5>
 	desc <Complete this option track to earn more reinforcements in final battle.>
 	desig <DEF_5>
-	requires <:DEF_4 -!Ex>
+	requires <:DEF_4 -!Ex P:++>
 
 	% E1 is the city for the next episode.
 	Element1 <Scene City !Far -7 !Ally -7 !Okay -3 !XClude -2>
@@ -190,7 +190,7 @@ Choice 9
 	name <Offense 4>
 	desc <Complete this option tract to weaken the enemy forces in final battle.>
 	desig <OFF_4>
-	requires <:OFF_3 -!Ex>
+	requires <:OFF_3 -!Ex F:++>
 
 	% E1 is the city for the next episode.
 	Element1 <Scene City !Far -7 !Ally -7 !Okay -3 !XClude -2>
@@ -212,7 +212,7 @@ Choice 10
 	name <Offense 5>
 	desc <Complete this option tract to weaken the enemy forces in final battle.>
 	desig <OFF_5>
-	requires <:OFF_4 -!Ex>
+	requires <:OFF_4 -!Ex F:++>
 
 	% E1 is the city for the next episode.
 	Element1 <Scene City !Far -7 !Ally -7 !Okay -3 !XClude -2>
@@ -420,6 +420,43 @@ Choice 21
 	% E1 is the city for the next episode.
 	Element1 <Scene City !Far -7 !Ally -7>
 
+
+%%
+%%  **************************************
+%%  ***   SPECIALS  (BUT  I  WANNA!)   ***
+%%  **************************************
+%%
+%% Choices the PC can make which steer the direction of the core story, but
+%% which don't neccessarily lead to any direct benefit. These options may be
+%% useful if you want to achieve one of the special endings, or if you just
+%% want to move the campaign in that particular direction.
+%%
+
+%%
+%%  Choice S_PCF
+%%
+%% The PC is going to select an ally faction.
+%%
+
+Choice 101
+	name <Join The Army/Police/Whatevs>
+	desc <You'll bring the problem to someone's attention, and gain an AllyFac.>
+	desig <S_PCF>
+	requires <P:-- F:++ -!Ex>
+
+	% E1 is the city for the next episode.
+	% E2 is the faction to inform
+	Element1 <Scene City !Far -7 !Comrade -7 !XClude -2>
+	Element2 <Faction (POLIT|POLIC|MILIT) !Ally 1 !Enemy -2 -Enemy>
+
+	Prompt_1 <%name2% must be told about this.>
+	Prompt_2 <I should get %name2% involved.>
+	Reply <%name1%'s the place you want to go for that.>
+	Alert <You decide to inform %name2% about \FACTION &EnemyFac in %name1%.>
+
+	Choice <StoryNote %id%01 &SetEpisodeScene %1% &SetAllyFac %2%>
+
+	Msg%id%01 <You decided to seek %name2% in %name1%.>
 
 
 %%
