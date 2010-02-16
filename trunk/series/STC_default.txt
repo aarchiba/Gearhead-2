@@ -799,6 +799,19 @@ update <if= PlotStatus %plotid% %id% else GoHide SetStat STAT_MetaVisibility 0  
 EncounterMove 50
 
 Encounter
+desig <PLOT-LMSECRETSPOT>
+% Sets this encounter's orders to Passive
+%  A lancemate(E1)'s secret spot.
+%  This encounter will activate during its subplot if the lancemate is alive
+%  and in the party.
+GoSetOrders <GrabSource GSetNAtt NAG_EpisodeData NAS_Orders 3>
+name <%name1%'s Destination>
+update <if= PlotStatus %plotid% %id% else GoHide ifNPCOK %1% else GoHide ifNPCLancemate %1% else GoHide SetStat STAT_MetaVisibility 0  ShowEncounter Goto GoSetOrders>
+Attack < >
+EncounterMove 0
+ENCOUNTER_NonCombat
+
+Encounter
 desig <CORE-MECHAENCOUNTER>
 % Sets this encounter's orders to Passive
 GoSetOrders <GrabSource GSetNAtt NAG_EpisodeData NAS_Orders 3>

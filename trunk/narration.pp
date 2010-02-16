@@ -140,6 +140,9 @@ Const
 		NAS_CoreMissionEnemy = 4;	{ Enemy for the core story. }
 
 
+Procedure AddXXCharContext( NPC: GearPtr; var Context: String; palette_entry_code: Char );
+Function XNPCDesc( GB: GameBoardPtr; Adv,NPC: GearPtr ): String;
+
 Function FindSceneID( Part: GearPtr; GB: GameBoardPtr ): Integer;
 
 Function SeekFaction( Scene: GearPtr; ID: Integer ): GearPtr;
@@ -223,6 +226,81 @@ uses texutil,rpgdice,ghchars,gearutil,ability,menugear,ghprop,ghweapon,interact,
 const
 	FROZEN_MAP_CONTINUE = 1;
 	FROZEN_MAP_SENTINEL = -1;
+
+Procedure AddXXCharContext( NPC: GearPtr; var Context: String; palette_entry_code: Char );
+	{ Add context descriptors for the attitude and motivation of this NPC. }
+const
+	Num_XXR_Motivations = 8;
+	Num_XXR_Attitudes = 12;
+	XXR_Motivation: Array [1..Num_XXR_Motivations] of String[3] = (
+		'mer', 'pro', 'ggd', 'see', 'rev', 'cha', 'com', 'nih'
+	);
+	XXR_Attitude: Array [1..Num_XXR_Attitudes] of String[3] = (
+		'jr_', 'sr_', 'sec', 'equ', 'env',   'pch', 'hat', 'mut', 'obs', 'tha',
+		'nme', 'ant'
+	);
+var
+	T: Integer;
+begin
+	T := NAttValue( NPC^.NA , NAG_XXRan , NAS_XXChar_Motivation );
+	if ( T > 0 ) and ( T <= Num_XXR_Motivations ) then Context := Context + ' ' + palette_entry_code + ':M.' + XXR_Motivation[ t ]
+	else Context := Context + ' ' + palette_entry_code + ':M.---';
+
+	T := NAttValue( NPC^.NA , NAG_XXRan , NAS_XXChar_Attitude );
+	if ( T > 0 ) and ( T <= Num_XXR_Attitudes ) then Context := Context + ' ' + palette_entry_code + ':A.' + XXR_Attitude[ t ]
+	else Context := Context + ' ' + palette_entry_code + ':A.---';
+end;
+
+Function XNPCDesc( GB: GameBoardPtr; Adv,NPC: GearPtr ): String;
+	{ Extended NPC description. }
+	{ If GB = Nil, information about the NPC's plot recharge will not be included. }
+var
+	it: String;
+	Fac,Persona: GearPtr;
+	CID,FID: LongInt;
+begin
+	{ Error check- make sure the adventure really is the adventure. }
+	Adv := FindRoot( Adv );
+
+	it := NPCTraitDesc( NPC );
+	it := it + ' ' + SAttValue( NPC^.SA , 'JOB_DESIG' );
+
+	AddXXCharContext( NPC , it , '@' );
+
+	Case NAttValue( NPC^.NA , NAG_Relationship , 0 ) of
+		NAV_ArchEnemy: it := it + ' NEMESIS';
+		NAV_Lover: it := it + ' LOVER';
+		NAV_Family: it := it + ' FAMILY';
+		NAV_Friend: it := it + ' FRIEND';
+		NAV_ArchAlly: it := it + ' LANCEMATE';
+	end;
+	if IsArchEnemy( Adv, NPC ) then it := it + ' ARCHENEMY';
+	if IsArchAlly( Adv, NPC ) then it := it + ' ARCHALLY';
+
+	CID := NAttValue( NPC^.NA , NAG_Personal , NAS_CID );
+	Persona := SeekPersona( Adv , CID );
+	if ( Persona <> Nil ) and AStringHasBString( SAttValue( Persona^.SA , 'SPECIAL' ) , 'NOPLOTS' ) then it := it + ' INUSE'
+	else if PersonaUsedByQuest( Adv , Persona ) then it := it + ' INUSE'
+	else if PersonaInUse( Adv , CID ) then it := it + ' INUSE'
+	else it := it + ' NOTUSED';
+
+	FID := NAttValue( NPC^.NA , NAG_Personal , NAS_FactionID );
+	Fac := SeekFaction( Adv , FID );
+	if Fac <> Nil then it := it + ' ' + SATtValue( Fac^.SA , 'DESIG' ) + ' ' + SATtValue( Fac^.SA , 'CONTEXT' )
+	else it := it + ' NOFAC';
+	if ( FID <> 0 ) and ( FID = NAttValue( Adv^.NA , NAG_Personal , NAS_FactionID ) ) then it := it + ' PCFAC';
+
+	if GB <> Nil then begin
+		if GB^.ComTime >= NAttValue( NPC^.NA , NAG_Personal , NAS_PlotRecharge ) then begin
+			it := it + ' RECHARGED';
+		end;
+	end;
+
+	it := QuoteString( it );
+
+	XNPCDesc := it;
+end;
+
 
 Function FindSceneID( Part: GearPtr; GB: GameBoardPtr ): Integer;
 	{ Find the scene number of this gear. Return 0 if no scene }

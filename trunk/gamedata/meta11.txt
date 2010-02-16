@@ -12,7 +12,7 @@ Msg-4 <Engage them in battle.>
 Msg-5 <Sneak away.>
 Msg-6 <You get away safely.>
 update <if# Destination 0 else GoSetOrders  ifSceneExists Destination else GoHide ifG 0 StatVal STAT_MetaVisibility else GoSetOrders  SetStat STAT_MetaVisibility 0  Goto GoSetOrders>
-GoHide <SetStat STAT_MetaVisibility -1>
+GoHide <SetStat STAT_MetaVisibility -1 GrabSource GSetNAtt NAG_EpisodeData NAS_EncVis 0>
 GoSetOrders <>
 
 

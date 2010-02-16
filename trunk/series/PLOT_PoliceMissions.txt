@@ -47,7 +47,7 @@ Plot
 		GoEnd <EndPlot>
 		GoMissionBriefing <NewChat Say 1  AddChat 1 AddChat 2>
 		*result1 <*GoodLuckOnMission&NoEnemyFac GoR1Final ChatNPCFac na>
-		GoR1Final <Memo 2 SetPlotStatus %plotid% %id1%>
+		GoR1Final <PMemo %plotid% 2 SetPlotStatus %plotid% %id1%>
 		result2 <Goto GoRejectMission>
 		Msg1 <There's a mecha gang operating in \EXACT_SCENE %3% . I want you to locate them and disable their machines; for this, you'll earn $ \VAL Reward %threat% PayRate .>
 		Msg1_1 <My sources have tipped us off to a meeting of mecha thieves that's going to happen in \EXACT_SCENE %3%  later on today. I want you to go there, and defeat them all. If you can do that, you'll earn $ \VAL Reward %threat% PayRate .>
@@ -123,7 +123,7 @@ Plot
 		GoEnd <EndPlot>
 		GoMissionBriefing <NewChat Say 1  AddChat 1 AddChat 2>
 		*result1 <*GoodLuckOnMission GoR1Final ChatNPCFac %4%>
-		GoR1Final <Memo 2 SetPlotStatus %plotid% %id1%>
+		GoR1Final <PMemo %plotid% 2 SetPlotStatus %plotid% %id1%>
 		result2 <Goto GoRejectMission>
 		Msg1 <There's a gang of criminals affiliated with %name4% operating in \EXACT_SCENE %3%  . I want you to locate them and disable their mecha; for this, you'll earn $ \VAL Reward %threat% PayRate .>
 		Msg1_1 <There's been a lot of talk about %name4% in the underground. They're planning a big operation in \EXACT_SCENE %3% ; I want you to go stop them. Disable all of their mecha and you'll earn $ \VAL Reward %threat% PayRate .>

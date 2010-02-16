@@ -85,7 +85,6 @@ Function IsSexy( PC, NPC: GearPtr ): Boolean;
 
 Function IsArchEnemy( Adv,NPC: GearPtr ): Boolean;
 Function IsArchAlly( Adv,NPC: GearPtr ): Boolean;
-Function XNPCDesc( GB: GameBoardPtr; Adv,NPC: GearPtr ): String;
 
 Function IsRegularLancemate( NPC: GearPtr ): Boolean;
 Function LancematesPresent( GB: GameBoardPtr ): Integer;
@@ -559,53 +558,6 @@ begin
 	IsArchAlly := it;
 end;
 
-Function XNPCDesc( GB: GameBoardPtr; Adv,NPC: GearPtr ): String;
-	{ Extended NPC description. }
-	{ If GB = Nil, information about the NPC's plot recharge will not be included. }
-var
-	it: String;
-	Fac,Persona: GearPtr;
-	CID,FID: LongInt;
-begin
-	{ Error check- make sure the adventure really is the adventure. }
-	Adv := FindRoot( Adv );
-
-	it := NPCTraitDesc( NPC );
-	it := it + ' ' + SAttValue( NPC^.SA , 'JOB_DESIG' );
-
-	Case NAttValue( NPC^.NA , NAG_Relationship , 0 ) of
-		NAV_ArchEnemy: it := it + ' NEMESIS';
-		NAV_Lover: it := it + ' LOVER';
-		NAV_Family: it := it + ' FAMILY';
-		NAV_Friend: it := it + ' FRIEND';
-		NAV_ArchAlly: it := it + ' LANCEMATE';
-	end;
-	if IsArchEnemy( Adv, NPC ) then it := it + ' ARCHENEMY';
-	if IsArchAlly( Adv, NPC ) then it := it + ' ARCHALLY';
-
-	CID := NAttValue( NPC^.NA , NAG_Personal , NAS_CID );
-	Persona := SeekPersona( Adv , CID );
-	if ( Persona <> Nil ) and AStringHasBString( SAttValue( Persona^.SA , 'SPECIAL' ) , 'NOPLOTS' ) then it := it + ' INUSE'
-	else if PersonaUsedByQuest( Adv , Persona ) then it := it + ' INUSE'
-	else if PersonaInUse( Adv , CID ) then it := it + ' INUSE'
-	else it := it + ' NOTUSED';
-
-	FID := NAttValue( NPC^.NA , NAG_Personal , NAS_FactionID );
-	Fac := SeekFaction( Adv , FID );
-	if Fac <> Nil then it := it + ' ' + SATtValue( Fac^.SA , 'DESIG' ) + ' ' + SATtValue( Fac^.SA , 'CONTEXT' )
-	else it := it + ' NOFAC';
-	if ( FID <> 0 ) and ( FID = NAttValue( Adv^.NA , NAG_Personal , NAS_FactionID ) ) then it := it + ' PCFAC';
-
-	if GB <> Nil then begin
-		if GB^.ComTime >= NAttValue( NPC^.NA , NAG_Personal , NAS_PlotRecharge ) then begin
-			it := it + ' RECHARGED';
-		end;
-	end;
-
-	it := QuoteString( it );
-
-	XNPCDesc := it;
-end;
 
 Function IsRegularLancemate( NPC: GearPtr ): Boolean;
 	{ NPC is a lancemate. Return TRUE if NPC is not a pet and not a temp. }

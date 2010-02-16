@@ -13,6 +13,7 @@ RandomTheme <d12>	% returns a random mecha theme
 PartyScore <GrabCurrentScene GNAtt NAG_Narrative NAS_PartyPoints>
 ScenePartyScore <GrabScene ? GNAtt NAG_Narrative NAS_PartyPoints>
 CitizensTeam <GrabTeamName Citizens GS>
+EnemiesTeam <GrabTeamName Enemies GS>
 NumDatePoints <GrabSource GNAtt NAG_Narrative NAS_DatePoints>
 na <0>  %% "Not Applicable", passed as PFrags and RanCon optional param
 PCHomeTown <GrabPCPilot GNatt NAG_Narrative NAS_HomeTownID>

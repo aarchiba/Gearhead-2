@@ -1,0 +1,107 @@
+%%
+%%  Lancemate Character Development
+%%
+
+%%
+%%  *LM_NonComCharDev Content
+%%
+%%  Something will happen outside of combat.
+%%
+%%  PARAM1: The lancemate in question
+%%
+
+Content
+	name <Let Me Show You Something>
+	desc <The lancemate will lead the PC to a special reward.>
+	requires <*LM_NonComCharDev 1:A.tha>
+
+	% E1 is the lancemate in question
+	% E2 is a local outdoors scene
+	% E3 is the town- end the plot if we leave town before activating secret place
+	Element2 <Scene Outdoors>
+	Element3 <Scene Town>
+
+	% P%id%01 = Chat counter
+
+update <if= p%id%02 0 P= %id%02 1 Alert %id%03>
+Msg%id%03 <LM CharDev Activated>
+	start <ifNPCOK %1% else .%id%_GoEndPlot if= RootSceneID %3% else .%id%_GoEndPlot ifScene .%id%_scenetype if= P%id%01 0     P= %id%01 1  Alert %id%02 ForceChat %1% PMemo %plotid% %id%01>
+	.%id%_scenetype <outdoors>
+	.%id%_GoEndPlot <EndPlot>
+
+	Msg%id%01 <%name1% wants to talk with you about something.>
+	Msg%id%02 <%name1% approaches you.>
+
+	%% SubPlot1 is the LM's secret place
+	SubPlot1 <*LM_SecretPlace 1 2>
+
+	sub
+		Persona 1
+		greeting <if= PlotStatus %plotid% %id% else %pop% if= P%id%01 1 else .%id%_GoExplainPlan Goto .%id%_GoWantsToTalk>
+		*.%id%_GoWantsToTalk <*LancemateWantsToTalk .%id%_GoExplainPlan .%id%_GoTalkLater>
+		.%id%_GoExplainPlan <P= %id%01 2 NewChat Say %id%01 AddChat %id%01 AddChat %id%02>
+		*.%id%_GoTalkLater <*TalkAgainWhenYouHaveTime>
+		result%id%01 <NewChat Say %id%02 PMemo %plotid% %id%03 SetPlotStatus %plotid1% %id1%>
+		result%id%02 <AddReact -d6  ifG React d8 else .%id%_GoR2Fail NewChat Say %id%04 EndPlot>
+		.%id%_GoR2Fail <EndCHat Say %id%05 SetXXRAttitude %1% XXR_A_IsEqual EndPlot>
+		Msg%id%01 <I'd like to thank you for all you've done. There's a place near here that I'd like to show you, if we have the time.>
+		Msg%id%01_1 <>
+		CMsg%id%01_1 <ifNPCSociable Accept>
+		Msg%id%01_2 <>
+		CMsg%id%01_2 <ifNPCShy Accept>
+		Msg%id%01_3 <>
+		CMsg%id%01_3 <ifNPCEasygoing Accept>
+		Msg%id%01_4 <>
+		CMsg%id%01_4 <ifNPCPassionate Accept>
+		Msg%id%01_5 <>
+		CMsg%id%01_5 <ifNPCCheerful Accept>
+		Msg%id%01_6 <>
+		CMsg%id%01_6 <ifNPCMelancholy Accept>
+		Msg%id%02_1 <Great! It's in \EXACT_SCENE %2% ... we can go there now, or later on if you prefer.>
+		CMsg%id%02_1 <if# SceneID %2% Accept>
+		Msg%id%02_2 <Great! It's very close to here... we can go now, or later on if you prefer.>
+		CMsg%id%02_2 <if= SceneID %2% Accept>
+		Msg%id%03 <%name1% wants to bring you to a special place in \EXACT_SCENE %2% .>
+		Msg%id%04 <No problem.>
+		Msg%id%04_1 <I can accept that.>
+		Msg%id%04_2 <Sure, don't worry about it.>
+		Msg%id%05 <Don't worry... I won't bother you about this ever again.>
+		Msg%id%05_1 <Well that's just typical, isn't it? Alright, I'll stop bugging you.>
+		Msg%id%05_2 <I get the point. I won't bother you about it again.>
+		Prompt%id%01 <Alright, bring me to this secret place.>
+		Prompt%id%01_1 <Tell me about it.>
+		Prompt%id%01_2 <I'd like to see that.>
+		Prompt%id%02 <Frankly, \CHATNPC , I don't care.>
+		Prompt%id%02_1 <We've got more important things to do now.>
+		Prompt%id%02_2 <Your secret place does not interest me.>
+	end
+
+%%
+%%  *LM_CombatCharDev Content
+%%
+%%  Something will happen during combat. This character development is responsible for
+%%  ending its own plot.
+%%
+%%  PARAM1: Outdoors scene where encounter will take place
+%%  PARAM2: Enemy faction
+%%  PARAM3: The lancemate in question
+%%
+
+Content
+	name <Dominance Sorter>
+	desc <Set this NPC's relative standing with the PC.>
+	requires <*LM_CombatCharDev 3:A.--->
+
+	%% If the NPC is in play, set Attitude.
+	update <EndPlot  ifNPCInPlay %3% ifG NPCDAge %3% PCDAge else .%id%_GoCheckMinor ifG NPCRenown %3% PCRenown else .%id%_GoEqual Monologue %3% %id%01 SetXXRAttitude %3% XXR_A_IsSenior>
+	.%id%_GoCheckMinor <ifG PCRenown NPCRenown %3% else .%id%_GoEqual Monologue %3% %id%02 SetXXRAttitude %3% XXR_A_IsJunior>
+	.%id%_GoEqual <Monologue %3% %id%03 SetXXRAttitude %3% XXR_A_IsEqual>
+
+	Msg%id%01 <Let me show you how to handle this.>
+	Msg%id%02 <I await your commands, \PC !>
+	Msg%id%03 <This shouldn't be too hard for the both of us working together!>
+
+
+
+
+

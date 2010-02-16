@@ -326,11 +326,35 @@
 	Prompt%id%01_1 <Tell me.>
 	Prompt%id%01_2 <Do you mind if I write this down?>
 
+% TYPE: *TalkAgainWhenYouHaveTime
+%	The PC doesn't want to talk now, so the NPC will advise them to come
+%     	back later.
+%
+
+	Persona
+	requires <*TalkAgainWhenYouHaveTime>
+	START <EndChat Say %id%01>
+	Msg%id%01 <Alright. Talk with me again when you have the time.>
+	Msg%id%01_1 <>
+	CMsg%id%01_1 <ifNPCSociable Accept>
+	Msg%id%01_2 <>
+	CMsg%id%01_2 <ifNPCShy Accept>
+	Msg%id%01_3 <>
+	CMsg%id%01_3 <ifNPCEasygoing Accept>
+	Msg%id%01_4 <>
+	CMsg%id%01_4 <ifNPCPassionate Accept>
+	Msg%id%01_5 <>
+	CMsg%id%01_5 <ifNPCCheerful Accept>
+	Msg%id%01_6 <>
+	CMsg%id%01_6 <ifNPCMelancholy Accept>
+
 % TYPE: *LancemateWantsToTalk
 %	One of the PC's lancemates wants to talk about something. The PC will either be able to
 %	accept the conversation or delay it until later.
 %   PARAM1: Accept exit label
 %   PARAM2: Deny exit label
+
+
 
 	Persona
 	requires <*LancemateWantsToTalk>

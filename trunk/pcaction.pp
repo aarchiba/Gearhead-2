@@ -2653,6 +2653,32 @@ begin
 	SelectEquipmentForNPC( GB, PC, 120 );
 end;
 
+Procedure SpitSocialNetwork( Camp: CampaignPtr );
+	{ Search the campaign, then report on NPCs with a nonstandard attitude }
+	{ towards the PC. }
+	Procedure SeekAlongTrack( LList: GearPtr );
+		{ Seek NPCs along this track. Print the details of any you find. }
+	var
+		msg: String;
+		R: Integer;
+	begin
+		while LList <> Nil do begin
+			if ( LList^.G = GG_Character ) and ( ( NAttValue( LList^.NA , NAG_XXRan , NAS_XXChar_Attitude ) <> 0 ) or ( NAttValue( LList^.NA , NAG_Relationship , 0 ) <> 0 ) ) then begin
+				msg := GearName( LList ) + '  (' + SAttValue( LList^.SA , 'JOB_DESIG' ) + ')  ';
+				r := NAttValue( LList^.NA , NAG_Relationship , 0 );
+				if R <> 0 then msg := msg + ' ' + MsgString( 'RELATIONSHIP_' + BStr( R ) );
+				AddXXCharContext( LList , msg , '@' );
+				DialogMsg( msg );
+			end;
+			SeekAlongTrack( LList^.SubCom );
+			SeekAlongTrack( LList^.InvCom );
+			LList := LList^.Next;
+		end;
+	end;
+begin
+	SeekAlongTrack( Camp^.Source );
+	if Camp^.GB <> Nil then SeekAlongTrack( Camp^.GB^.meks );
+end;
 
 Procedure RLPlayerInput( Mek: GearPtr; Camp: CampaignPtr );
 	{ Allow the PC to control the action as per normal in a RL }
@@ -2737,6 +2763,8 @@ begin
 {$ENDIF}
 			end else if xxran_debug and ( KP = '|' ) then begin
 				GodMode( Camp^.GB , LocatePilot( Mek ) );
+			end else if xxran_debug and ( KP = '`' ) then begin
+				SpitSocialNetwork( Camp );
 
 			end; {if}
 

@@ -1293,16 +1293,6 @@ end;
 
 Procedure AddGearXRContext( GB: GameBoardPtr; Adv,Part: GearPtr; var Context: String; palette_entry_code: Char );
 	{ Add the context information for PART to CONTEXT. }
-const
-	Num_XXR_Motivations = 8;
-	Num_XXR_Attitudes = 12;
-	XXR_Motivation: Array [1..Num_XXR_Motivations] of String[3] = (
-		'mer', 'pro', 'ggd', 'see', 'rev', 'cha', 'com', 'nih'
-	);
-	XXR_Attitude: Array [1..Num_XXR_Attitudes] of String[3] = (
-		'jr_', 'sr_', 'sec', 'equ', 'env',   'pch', 'hat', 'mut', 'obs', 'tha',
-		'nme', 'ant'
-	);
 var
 	F: GearPtr;
 	msg,m2: String;
@@ -1360,14 +1350,7 @@ begin
 			else if T < 0 then Context := Context + ' ' + palette_entry_code + ':EVIL_';
 
 			{ Add the character arc and attitude values. }
-			T := NAttValue( Part^.NA , NAG_XXRan , NAS_XXChar_Motivation );
-			if ( T > 0 ) and ( T <= Num_XXR_Motivations ) then Context := Context + ' ' + palette_entry_code + ':M.' + XXR_Motivation[ t ]
-			else Context := Context + ' ' + palette_entry_code + ':M.---';
-
-			T := NAttValue( Part^.NA , NAG_XXRan , NAS_XXChar_Attitude );
-			if ( T > 0 ) and ( T <= Num_XXR_Attitudes ) then Context := Context + ' ' + palette_entry_code + ':A.' + XXR_Attitude[ t ]
-			else Context := Context + ' ' + palette_entry_code + ':A.---';
-
+			AddXXCharContext( Part , Context , palette_entry_code );
 		end else if Part^.G = GG_Scene then begin
 			m2 := SAttValue( Part^.SA , 'TERRAIN' );
 			if m2 <> '' then Context := Context + ' ' + palette_entry_code + ':' + m2;

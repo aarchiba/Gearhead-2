@@ -1,0 +1,53 @@
+%%
+%% *LM_SecretPlace Content
+%%
+%%  A lancemate will bring the PC to a secret place.
+%%
+%% PARAM1: The Lancemate
+%% PARAM2: The outdoors scene where the secret place is
+%%
+
+Content
+	name <Temple of Atan>
+	desc <Your lancemate will bring you to a temple of Atan, PreZero goddess of mecha.>
+	requires <*LM_SecretPlace>
+
+	% Element1 is the lancemate
+	% Element2 is the outdoors scene
+	% Element3 is the temple
+	Element3 <Prefab>
+	Place3 <2>
+
+	end <ifNPCDead %1% EndPlot>
+
+	SubPlot1 <*MechaAmbush 2>
+
+	sub
+		Persona 1
+		greeting <if= PlotStatus %plotid% %id% else %pop% if= SceneID %3% else .%id%_GoNotHere >
+		.%id%_GoNotHere <RevertPersona>
+
+		MetaScene 3
+		MapWidth 20
+		MapHeight 20
+		CaveMap
+		RockyTiles
+		sub
+			room
+			Width 5
+			Height 5
+			special <STARTHERE>
+			sub
+				StairsUp
+				Use <Print 1 Return>
+			end
+
+			room
+			Width 5
+			Height 5
+
+		end
+	end
+	inv
+		STC PLOT-LMSECRETSPOT
+	end
