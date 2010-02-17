@@ -166,6 +166,8 @@
             The plot request may include paramaters if called from within a plot
 	TIME [delay]		Advance game clock
 	TORD [team] [order <parameters>]	Set orders for team
+	TRAINNPC [CID] [script line label]	Will teach the NPC one of the listed
+				skills/talents. Skills are +, Talents are -.
 	TRANSFORM [frame]	Switch a prop's appearance to alternate state
 	TREPUTATION [team number] [rep num] [value]	Set rep for team
 	TRIGGER [base] [value]	Add an event trigger to the queue

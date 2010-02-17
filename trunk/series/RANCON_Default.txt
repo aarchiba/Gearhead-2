@@ -1,6 +1,461 @@
 % RANDOM CONTENT FILE
 
 %%
+%% *JUNKYARD_SALVAGE Content
+%%	Some SF:2 items that the PC can pick up and lug away.
+%%
+
+Content
+	requires <*JUNKYARD_SALVAGE (!Ne|!Lo)>
+	Element1 <Prefab>
+	minimap <      ...  .1.  ...      >
+	inv
+		STC MAC-4
+	end
+
+Content
+	requires <*JUNKYARD_SALVAGE (!Lo|!Md)>
+	Element1 <Prefab>
+	minimap <      ...  .1.  ...      >
+	inv
+		STC VC-5
+	end
+
+Content
+	requires <*JUNKYARD_SALVAGE (!Lo|!Md)>
+	Element1 <Prefab>
+	minimap <      ...  .1.  ...      >
+	inv
+		STC RG-8
+	end
+
+Content
+	requires <*JUNKYARD_SALVAGE (!Hi|!Ex)>
+	Element1 <Prefab>
+	minimap <      ...  .1.  ...      >
+	inv
+		STC RG-16
+	end
+
+Content
+	requires <*JUNKYARD_SALVAGE (!Ne|!Lo)>
+	Element1 <Prefab>
+	minimap <      ...  .1.  ...      >
+	inv
+		STC GR-12
+	end
+
+Content
+	requires <*JUNKYARD_SALVAGE (!Md|!Hi)>
+	Element1 <Prefab>
+	minimap <      ...  .1.  ...      >
+	inv
+		STC GR-24
+	end
+
+Content
+	requires <*JUNKYARD_SALVAGE !Ne>
+	Element1 <Prefab>
+	minimap <      ...  .1.  ...      >
+	inv
+		STC SC-9
+	end
+
+Content
+	requires <*JUNKYARD_SALVAGE !Lo>
+	Element1 <Prefab>
+	minimap <      ...  .1.  ...      >
+	inv
+		STC MRIF-5
+	end
+
+Content
+	requires <*JUNKYARD_SALVAGE (!Ne|!Lo)>
+	Element1 <Prefab>
+	minimap <      ...  .1.  ...      >
+	inv
+		STC LAS-5
+	end
+
+Content
+	requires <*JUNKYARD_SALVAGE (!Md|!Hi)>
+	Element1 <Prefab>
+	minimap <      ...  .1.  ...      >
+	inv
+		STC LAS-10
+	end
+
+Content
+	requires <*JUNKYARD_SALVAGE (!Ne|!Lo|!Md)>
+	Element1 <Prefab>
+	minimap <      ...  .1.  ...      >
+	inv
+		STC PAR-2
+	end
+
+Content
+	requires <*JUNKYARD_SALVAGE (!Lo|!Md|!Hi)>
+	Element1 <Prefab>
+	minimap <      ...  .1.  ...      >
+	inv
+		STC PAR-6
+	end
+
+Content
+	requires <*JUNKYARD_SALVAGE (!Hi|!Ex)>
+	Element1 <Prefab>
+	minimap <      ...  .1.  ...      >
+	inv
+		STC PAR-13
+	end
+
+Content
+	requires <*JUNKYARD_SALVAGE (!Ne|!Lo)>
+	Element1 <Prefab>
+	minimap <      ...  .1.  ...      >
+	inv
+		STC SML-5
+	end
+
+Content
+	requires <*JUNKYARD_SALVAGE (!Hi|!Ex)>
+	Element1 <Prefab>
+	minimap <      ...  .1.  ...      >
+	inv
+		MLauncher 2
+		sub
+			STC NUKE-20
+		end
+	end
+
+Content
+	requires <*JUNKYARD_SALVAGE !Ex>
+	Element1 <Prefab>
+	minimap <      ...  .1.  ...      >
+	inv
+		MLauncher 4
+		sub
+			STC NUKE-20
+			Magazine 2
+		end
+	end
+
+Content
+	requires <*JUNKYARD_SALVAGE !Ne>
+	Element1 <Prefab>
+	minimap <      ...  .1.  ...      >
+	inv
+		Gun 1
+		Name <Nail Gun>
+		Scale 2
+		Range 3
+		caliber <Construction Nails>
+		Speed 4
+		BV 4
+		Acc -1
+		mass -2
+		Magazine 280
+		sub
+			Ammo 1
+			caliber <Construction Nails>
+		end
+	end
+
+Content
+	requires <*JUNKYARD_SALVAGE !Ne>
+	Element1 <Prefab>
+	minimap <      ...  .1.  ...      >
+	inv
+		melee 5
+		name <Metal Bar>
+		desc <Like the ones used as support in heavy duty construction.>
+		Scale 2
+	end
+
+Content
+	requires <*JUNKYARD_SALVAGE (!Ne|!Lo)>
+	Element1 <Prefab>
+	minimap <      ...  .1.  ...      >
+	inv
+		Gun 3
+		Name <Industrial Bolt Gun>
+		Scale 2
+		Range 3
+		caliber <Construction Bolts>
+		Speed 4
+		BV 4
+		Acc -1
+		Magazine 120
+		sub
+			Ammo 3
+			caliber <Construction Bolts>
+		end
+	end
+
+Content
+	requires <*JUNKYARD_SALVAGE (!Ne|!Lo)>
+	Element1 <Prefab>
+	minimap <      ...  .1.  ...      >
+	inv
+		Gun 12
+		Name <Heavy Loader>
+		Scale 2
+		Range 7
+		caliber <construction girder>
+		Speed 1
+		Acc -1
+		Magazine 20
+		sub
+			Ammo 12
+			caliber <construction girder>
+		end
+	end
+
+Content
+	requires <*JUNKYARD_SALVAGE (!Ne|!Lo)>
+	Element1 <Prefab>
+	minimap <      ...  .1.  ...      >
+	inv
+		melee 14
+		name <Mecha Drill>
+		type <ARMORPIERCING>
+		Scale 2
+		acc 1
+	end
+
+Content
+	requires <*JUNKYARD_SALVAGE (!Ne|!Lo|!Md)>
+	Element1 <Prefab>
+	minimap <      ...  .1.  ...      >
+	inv
+		melee 12
+		name <Tow Chain>
+		Scale 2
+		acc 1
+		type <FLAIL EXTEND>
+	end
+
+Content
+	requires <*JUNKYARD_SALVAGE (!Lo|!Md)>
+	Element1 <Prefab>
+	minimap <      ...  .1.  ...      >
+	inv
+		melee 16
+		name <Buzzsaw>
+		Scale 2
+		acc 1
+		speed 3
+		mass -4
+		type <BRUTAL>
+	end
+
+Content
+	requires <*JUNKYARD_SALVAGE (!Md|!Hi)>
+	Element1 <Prefab>
+	minimap <      ...  .1.  ...      >
+	inv
+		melee 18
+		name <Wrecking Ball>
+		Scale 2
+		type <FLAIL EXTEND BRUTAL>  
+	end
+
+Content
+	requires <*JUNKYARD_SALVAGE (!Hi|!Ex)>
+	Element1 <Prefab>
+	minimap <      ...  .1.  ...      >
+	inv
+		EMelee 23
+		Name <Energy Chainsaw>
+		Scale 2
+		Type <BRUTAL>
+		Mass 3
+		inv
+			PowerSource 5
+			mass -4
+			name <Extra Battery>
+		end
+	end
+
+Content
+	requires <*JUNKYARD_SALVAGE !Ex>
+	Element1 <Prefab>
+	minimap <      ...  .1.  ...      >
+	inv
+		gun 10
+		name <Heavy Autocannon>
+		range 6
+		Scale 2
+		type <Armorpiercing>
+		BV 2
+		Speed 3
+		caliber <90mm caseless>
+		mass -2
+		Magazine 90
+		sub
+			Ammo 10
+			caliber <90mm caseless>
+		end
+	end
+
+Content
+	requires <*JUNKYARD_SALVAGE !Ne>
+	Element1 <Prefab>
+	minimap <      ...  .1.  ...      >
+	inv
+		Gun 14
+		Scale 2
+		name <Heavy Cannon>
+		caliber <90mm shell>
+		Range 5
+		Acc -1
+		Recharge 1
+		Magazine 20
+		sub
+			Ammo 14
+			caliber <90mm shell>
+		end
+	end
+
+
+Content
+	requires <*JUNKYARD_SALVAGE (!Md|!Hi)>
+	Element1 <Prefab>
+	minimap <      ...  .1.  ...      >
+	inv
+		Gun 20
+		Scale 2
+		name <Naval Cannon>
+		caliber <210mm shell>
+		Range 8
+		Acc 1
+		Speed 3
+		Magazine 20
+		sub
+			Ammo 20
+			caliber <210mm shell>
+		end
+	end
+
+Content
+	requires <*JUNKYARD_SALVAGE !Md>
+	Element1 <Prefab>
+	minimap <      ...  .1.  ...      >
+	inv
+		Gun 20
+		Scale 2
+		name <Roundshot Cannon>
+		caliber <500mm ferrous ball>
+		Range 7
+		Recharge 1
+		type <BRUTAL>
+		Mass -2
+		Magazine 15
+		sub
+			Ammo 20
+			caliber <500mm ferrous ball>
+		end
+	end
+
+Content
+	requires <*JUNKYARD_SALVAGE (!Lo|!Md|!Hi)>
+	Element1 <Prefab>
+	minimap <      ...  .1.  ...      >
+	inv
+		BeamGun 6
+		name <Meson Field Inducer>
+		desc <No-one's really sure what this is or how it works...>
+		UsesKnowledge
+		scale 2
+		Range 6
+		Acc -1
+		type <EXPERIMENTAL BRUTAL>
+	end
+
+Content
+	requires <*JUNKYARD_SALVAGE (!Ne|!Lo|!Md)>
+	Element1 <Prefab>
+	minimap <      ...  .1.  ...      >
+	inv
+		Melee 7
+		name <Nunchakus>
+		type <FLAIL>
+		speed 3
+		mass -4
+		scale 2
+	end
+
+Content
+	requires <*JUNKYARD_SALVAGE (!Hi|!Ex)>
+	Element1 <Prefab>
+	minimap <      ...  .1.  ...      >
+	inv
+		MLauncher 16
+		Scale 2
+		sub
+			STC SWM-2
+			name <Pestilence Missiles>
+			type <DISINTEGRATE SWARM>
+			magazine 80
+		end
+	end
+
+Content
+	requires <*JUNKYARD_SALVAGE (!Lo|!Md)>
+	Element1 <Prefab>
+	minimap <      ...  .1.  ...      >
+	inv
+		Gun 15
+		Scale 2
+		name <Buzzsaw Catapult>
+		desc <An improvised weapon firing large circular buzzsaws.>
+		caliber <ferrous sawblade>
+		Range 6
+		Speed 1
+		type <ARMORPIERCING>
+		Magazine 36
+		sub
+			Ammo 15
+			caliber <ferrous sawblade>
+		end
+	end
+
+Content
+	requires <*JUNKYARD_SALVAGE (!Md|!Hi)>
+	Element1 <Prefab>
+	minimap <      ...  .1.  ...      >
+	inv
+		Gun 11
+		name <Heavy Slag Cannon>
+		caliber <ferrous fragments>
+		Scale 2
+		type <BRUTAL>
+		range 5
+		Speed 2
+		BV 4
+		Magazine 150
+		sub
+			Ammo 11
+			caliber <ferrous fragments>
+		end
+	end
+
+Content
+	requires <*JUNKYARD_SALVAGE (!Hi|!Ex)>
+	Element1 <Prefab>
+	minimap <      ...  .1.  ...      >
+	inv
+		BeamGun 20
+		name <Demolition Laser>
+		acc 1
+		range 6
+		Speed 1
+		scale 2
+		type <BRUTAL>
+	end
+
+
+%%
 %% *WARZONE_CLEANUP Content
 %%	There's just been a battle right here. The PC can walk around and maybe
 %%	help with the recovery efforts.

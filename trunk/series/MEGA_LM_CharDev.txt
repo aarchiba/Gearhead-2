@@ -23,8 +23,6 @@ Content
 
 	% P%id%01 = Chat counter
 
-update <if= p%id%02 0 P= %id%02 1 Alert %id%03>
-Msg%id%03 <LM CharDev Activated>
 	start <ifNPCOK %1% else .%id%_GoEndPlot if= RootSceneID %3% else .%id%_GoEndPlot ifScene .%id%_scenetype if= P%id%01 0     P= %id%01 1  Alert %id%02 ForceChat %1% PMemo %plotid% %id%01>
 	.%id%_scenetype <outdoors>
 	.%id%_GoEndPlot <EndPlot>

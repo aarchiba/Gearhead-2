@@ -839,8 +839,9 @@ Encounter
 desig <CORE-MECHAAMBUSH>
 % This encounter attacks as soon as the PC enters the scene.
 GoSetOrders <GrabSource GSetNAtt NAG_EpisodeData NAS_Orders 0>
-name <Hostile Mecha>
+name <Mecha Ambush>
 update <if= PlotStatus %plotid% %id% else GoHide SetStat STAT_MetaVisibility 0  SetSelfX PCX SetSelfY PCY  ClearEncounterRecharge  Goto GoSetOrders>
+ATTACK <ifG StatVal STAT_MetaVisibility -1   ifG PCScale 0    Goto GoAutoAttack>
 EncounterMove 100
 
 Encounter

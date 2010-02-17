@@ -4949,6 +4949,66 @@ begin
 	if GB <> Nil then CheckAlongPath( GB^.Meks );
 end;
 
+Procedure ProcessTrainNPC( var Event: String; GB: GameBoardPtr; Source: GearPtr );
+	{ An NPC is going to learn a new skill or talent. Cool! }
+const
+	MaxTNPCChoices = 10;
+var
+	CID: LongInt;
+	NPC: GearPtr;
+	CList,msg: String;
+	CanGainSkill,CanGainTalent: Boolean;
+	N,T: Integer;
+	Choices: Array [1..MaxTNPCChoices] of Integer;
+begin
+	{ Find out which NPC, and the list of choices. }
+	CID := ScriptValue( Event , GB , Source );
+	NPC := GG_LocateNPC( CID , GB , Source );
+	CList := ExtractWord( Event );
+	if Source <> Nil then begin
+		CList := AS_GetString( Source , CList );
+	end else begin
+		CList := '';
+	end;
+
+	{ Find out if the NPC can learn a new skill or a new talent. }
+	CanGainSkill := NumberOfSpecialties( NPC ) <= NumberOfSkillSlots( NPC );
+	CanGainTalent := NumFreeTalents( NPC ) > 0;
+
+	{ Copy the choices list over to the array. }
+	N := 0;
+	while ( CList <> '' ) and ( N < MaxTNPCChoices ) do begin
+		T := ScriptValue( CList , GB , Source );
+		if (( T > 0 ) and CanGainSkill and ( NAttValue( NPC^.NA , NAG_Skill , T ) = 0 ) ) or (( T < 0 ) and CanGainTalent and ( NAttValue( NPC^.NA , NAG_Talent , T ) = 0 ) and CanLearnTalent( NPC , T )  ) then begin
+			Inc( N );
+			Choices[ N ] := T;
+		end;
+		DeleteWhiteSpace( CList );
+	end;
+
+	{ If we have some valid choices, pick one at random. Yay! }
+	if N > 0 then begin
+		msg := ReplaceHash( MsgString( 'TRAINNPC_BASIC' ) , GearName( NPC ) );
+		N := Random( N ) + 1;
+		if Choices[ N ] > 0 then begin
+			SetNAtt( NPC^.NA , NAG_Skill , Choices[ N ] , 1 );
+			msg := ReplaceHash( msg , MsgString( 'SKILLNAME_' + BStr( Choices[ N ] ) ) );
+		end else begin
+			ApplyTalent( NPC , Abs( Choices[ N ] ) );
+			msg := ReplaceHash( msg , MsgString( 'TALENT' + BStr( Abs( Choices[ N ] ) ) ) );
+		end;
+	end else begin
+		{ No valid choices. Um... just increase a random stat. }
+		msg := ReplaceHash( MsgString( 'TRAINNPC_STATS' ) , GearName( NPC ) );
+		N := Random( 8 ) + 1;
+		NPC^.Stat[ N ] := NPC^.Stat[ N ] + 1;
+		msg := ReplaceHash( msg , MsgString( 'STATNAME_' + BStr( N ) ) );
+	end;
+
+	YesNoMenu( GB , msg , '' , '' );
+end;
+
+
 Procedure InvokeEvent( Event: String; GB: GameBoardPtr; Source: GearPtr; var Trigger: String );
 	{ Do whatever is requested by game script EVENT. }
 	{ SOURCE refers to the virtual gear which is currently being }
@@ -5095,6 +5155,7 @@ begin
 		else if cmd = 'ADDREACT' then ProcessAddReact( Event , GB , Source )
 		else if cmd = 'PUMPNEWS' then ProcessPumpNews( GB )
 		else if cmd = 'SETENCOUNTER' then ProcessSetEncounter( Event , GB , Source )
+		else if cmd = 'TRAINNPC' then ProcessTrainNPC( Event , GB , Source )
 		else if cmd <> '' then begin
 					DialogMsg( 'ERROR: Unknown ASL command ' + cmd );
 					DialogMsg( 'CONTEXT: ' + event );

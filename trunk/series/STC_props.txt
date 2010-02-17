@@ -255,11 +255,16 @@
 	CLUE_CODEBREAKING <if# StatVal STAT_Lock 0 else GoNotLocked Mental ifCodeBreaking StatVal STAT_Lock else GoNoUnlock Print -1 SetStat STAT_Lock 0>
 	GoNoUnlock <Print -2>
 	GoNotLocked <Print -3>
+	CLUE_INSIGHT <Print -6>
 	Msg-1 <You unlock the display case.>
 	Msg-2 <You cannot unlock this display case at your current skill level.>
 	Msg-3 <This display case isn't locked.>
 	Msg-4 <The display case is locked.>
 	Msg-5 <You open the display case.>
+	Msg-6_1 <The case is not locked.>
+	CMsg-6_1 <if= StatVal STAT_Lock 0 Accept>
+	Msg-6_2 <The case is locked.>
+	CMsg-6_2 <if# StatVal STAT_Lock 0 Accept>
 
 	Prop 10
 	name <Crate>
@@ -270,6 +275,7 @@
 	CLUE_CODEBREAKING <if# StatVal STAT_Lock 0 else GoNotLocked Mental ifCodeBreaking StatVal STAT_Lock else GoNoUnlock Print -1 SetStat STAT_Lock 0>
 	GoNoUnlock <Print -2>
 	GoNotLocked <Print -3>
+	CLUE_INSIGHT <Print -6>
 	Mesh 11
 	SDL_SKIN <tex_crate.png>
 	SDL_SPRITE <prop_crate.png>
@@ -279,6 +285,10 @@
 	Msg-3 <This crate isn't locked.>
 	Msg-4 <The crate is locked.>
 	Msg-5 <You open the crate.>
+	Msg-6_1 <The crate is not locked.>
+	CMsg-6_1 <if= StatVal STAT_Lock 0 Accept>
+	Msg-6_2 <The crate is locked.>
+	CMsg-6_2 <if# StatVal STAT_Lock 0 Accept>
 
 	Prop 50
 	name <Safe>
@@ -289,6 +299,7 @@
 	CLUE_CODEBREAKING <if# StatVal STAT_Lock 0 else GoNotLocked Mental ifCodeBreaking StatVal STAT_Lock else GoNoUnlock Print -1 SetStat STAT_Lock 0>
 	GoNoUnlock <Print -2>
 	GoNotLocked <Print -3>
+	CLUE_INSIGHT <Print -6>
 	Mesh 4
 	Frame 4
 	sdl_SKIN <tex_electronics.png>
@@ -298,7 +309,10 @@
 	Msg-3 <This safe isn't locked.>
 	Msg-4 <The safe is locked.>
 	Msg-5 <You open the safe.>
-
+	Msg-6_1 <It doesn't look safe at all.>
+	CMsg-6_1 <if= StatVal STAT_Lock 0 Accept>
+	Msg-6_2 <It looks pretty safe.>
+	CMsg-6_2 <if# StatVal STAT_Lock 0 Accept>
 
 
 %  *******************
@@ -325,6 +339,7 @@
 	name <Shrine>
 	desig <SHRINE-1>
 	SDL_SPRITE <prop_shrine.png>
+	% V1 = Recharge Counter
 	roguechar <+>
 	use <Print 1>
 	CLUE_MYSTICISM <ifG ComTime V1 else GoBeenBefore V= 1 NextDay Reputation 7 -d4 MENTAL ifUMysticism 10 else GoNoDice ifG d100 PCRep 7 else GoNoDice Print 2 XPV 150>
@@ -334,6 +349,26 @@
 	Msg2 <You meditate at the shrine. You feel enlightened.>
 	Msg3 <You meditate at the shrine.>
 	Msg4 <You've already meditated at this shrine today.>
+
+	Prop 50
+	name <Statue of Atan>
+	desig <SHRINE-ATAN>
+	roguechar <+>
+	SDL_Sprite <cha_f_adven.png>
+	SDL_Colors <197 80 69  201 205 229  181 185 207>
+	% V1 = Recharge Counter
+	use <Print 1>
+	CLUE_MYSTICISM <ifG ComTime V1 else GoBeenBefore V= 1 NextDay Reputation 7 -d4 MENTAL ifUMysticism 10 else GoNoDice ifG d100 PCRep 7 else GoNoDice Print 2 XPV 150>
+	GoNoDice <Print 3>
+	GoBeenBefore <Print 4>
+	CLUE_INSIGHT <Print 5>
+	CLUE_SCIENCE <Print 6>
+	Msg1 <It's a statue of Atan, the goddess of mecha pilots.>
+	Msg2 <You meditate at the shrine. You feel enlightened.>
+	Msg3 <You meditate at the shrine.>
+	Msg4 <You've already meditated at this shrine today.>
+	Msg5 <Miniature statues of Atan are commonly found in the cockpits of PreZero mecha. Many archaeologists believe that Atan was not a goddess per se, but just an incredibly popular televid character.>
+	Msg6 <This statue is made from polyvinyl chloride, the sacred material of Atan.>
 
 	Prop 5
 	name <Video Terminal>
@@ -395,6 +430,9 @@
 	GoCloseWin <Alert 12 Goto GoWin>
 	GoLose <Alert 13>
 	GoWin <CashPrize * 5 &Bet V+ 3 1>
+	CLUE_CODEBREAKING <Print 14>
+	CLUE_SCIENCE <Print 15>
+	CLUE_MYSTICISM <Print 16>
 	Msg1 <You've already played this game today.>
 	Msg2 <This is a Martian Rules BlackJack game. The object is to get as close as possible to 21 points without going over.>
 	Msg3 <Play the game. [$ \VAL &Bet ]>
@@ -408,6 +446,9 @@
 	Msg11 <You got exactly 21 points!!! You win!>
 	Msg12 <You have \VAL V2 points. The dealer has \VAL V6 points. You win!>
 	Msg13 <You have \VAL V2 points. The dealer has \VAL V6 points. You lose.>
+	Msg14 <Hacking this machine would just destroy your enjoyment of the game.>
+	Msg15 <It's Martian Rules, so card counting won't be any use at all.>
+	Msg16 <You say a short prayer to lady luck.>
 
 	Prop 5
 	name <Alarmist Scope (Game)>
