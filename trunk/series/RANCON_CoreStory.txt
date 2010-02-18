@@ -9,6 +9,104 @@
 %%
 
 %%
+%% *CS_SHIP_SYSTEMS
+%%
+%%	Some control systems for a spaceship. You need two teams to go
+%%	along with these: GUARDS and SYSTEMS.
+%%
+%%	Three types: Weapons Control, Engine Control, and Main Computer.
+%%	Use Variety to get one of each.
+%%
+
+Content
+	requires <*CS_SHIP_SYSTEMS>
+	Element1 <Prefab>
+	Team1 <Systems>
+	minimap <      ...  .1.  ...      >
+	inv
+		STC MACHINE-1
+		name <Weapons Control>
+		% V1 = Have disabled device
+		use <ifSelfOK Print 1>
+		%% Science and CodeBreaking can disable the device easily;
+		%% Repair takes a bit more doing.
+		CLUE_REPAIR       <if= V1 0 else GoDone ifRepair HardSkillTar StoryDL else GoFail    Print 2  SkillXP NAS_Repair 100        Goto GoWin>
+		CLUE_CODEBREAKING <if= V1 0 else GoDone ifCodeBreaking SkillTar StoryDL else GoFail  Print 3  SkillXP NAS_CodeBreaking 100  Goto GoWin>
+		CLUE_SCIENCE      <if= V1 0 else GoDone ifScience SkillTar StoryDL else GoFail       Print 4  SkillXP NAS_Science 100       Goto GoWin>
+		GoFail <Print 5>
+		GoDone <Print 6>
+		GoWin <XPV 100  V= 1 1  Trigger nu SelfTeam  SetSelfTeam 0>
+		Msg1_1 <This is the weapons control system.>
+		CMsg1_1 <if= V1 0 Accept>
+		Msg1_2 <This is the weapons control system. It has been deactivated.>
+		CMsg1_2 <if# V1 0 Accept>
+		Msg2 <You glue the controls in place. The only way anyone will access this weapon system is with a sledgehammer.>
+		Msg3 <You hack the terminal and put the weapon system offline.>
+		Msg4 <You reroute the power supply to put the weapon system offline.>
+		Msg5 <You aren't skilled enough to do anything with this system.>
+		Msg6 <You have already disabled this system.>
+	end
+
+Content
+	requires <*CS_SHIP_SYSTEMS>
+	Element1 <Prefab>
+	Team1 <Systems>
+	minimap <      ...  .1.  ...      >
+	inv
+		STC MACHINE-1
+		name <Engines Control>
+		% V1 = Have disabled device
+		use <ifSelfOK Print 1>
+		%% Science and CodeBreaking can disable the device easily;
+		%% Repair takes a bit more doing.
+		CLUE_REPAIR       <if= V1 0 else GoDone ifRepair HardSkillTar StoryDL else GoFail    Print 2  SkillXP NAS_Repair 100        Goto GoWin>
+		CLUE_CODEBREAKING <if= V1 0 else GoDone ifCodeBreaking SkillTar StoryDL else GoFail  Print 3  SkillXP NAS_CodeBreaking 100  Goto GoWin>
+		CLUE_SCIENCE      <if= V1 0 else GoDone ifScience SkillTar StoryDL else GoFail       Print 4  SkillXP NAS_Science 100       Goto GoWin>
+		GoFail <Print 5>
+		GoDone <Print 6>
+		GoWin <XPV 100  V= 1 1  Trigger nu SelfTeam  SetSelfTeam 0>
+		Msg1_1 <This is the engine control system.>
+		CMsg1_1 <if= V1 0 Accept>
+		Msg1_2 <This is the engine control system. It has been deactivated.>
+		CMsg1_2 <if# V1 0 Accept>
+		Msg2 <You fiddle with the plasma throttle until the engine burns itself out.>
+		Msg3 <You hack the terminal and shut down the engine.>
+		Msg4 <You desynchronize the plasma capacitor until the power core burns itself out.>
+		Msg5 <You aren't skilled enough to do anything with this system.>
+		Msg6 <You have already disabled this system.>
+	end
+
+Content
+	requires <*CS_SHIP_SYSTEMS>
+	Element1 <Prefab>
+	Team1 <Systems>
+	minimap <      ...  .1.  ...      >
+	inv
+		STC MACHINE-1
+		name <Main Computer>
+		% V1 = Have disabled device
+		use <ifSelfOK Print 1>
+		%% Science and CodeBreaking can disable the device easily;
+		%% Repair takes a bit more doing.
+		CLUE_REPAIR       <if= V1 0 else GoDone ifRepair HardSkillTar StoryDL else GoFail    Print 2  SkillXP NAS_Repair 100        Goto GoWin>
+		CLUE_CODEBREAKING <if= V1 0 else GoDone ifCodeBreaking SkillTar StoryDL else GoFail  Print 3  SkillXP NAS_CodeBreaking 100  Goto GoWin>
+		CLUE_SCIENCE      <if= V1 0 else GoDone ifScience SkillTar StoryDL else GoFail       Print 4  SkillXP NAS_Science 100       Goto GoWin>
+		GoFail <Print 5>
+		GoDone <Print 6>
+		GoWin <XPV 100  V= 1 1  Trigger nu SelfTeam  SetSelfTeam 0>
+		Msg1_1 <This is the main computer system.>
+		CMsg1_1 <if= V1 0 Accept>
+		Msg1_2 <This is the main computer system. It has been deactivated.>
+		CMsg1_2 <if# V1 0 Accept>
+		Msg2 <You remove one essential chip, causing the entire computer system to fail.>
+		Msg3 <You release a virus into the system, bringing everything to a halt.>
+		Msg4 <You trap the main AI in a logical paradox, bringing the entire system to a halt.>
+		Msg5 <You aren't skilled enough to do anything with this system.>
+		Msg6 <You have already disabled this system.>
+	end
+
+
+%%
 %% *CS_END_Final_Allies Content
 %%
 %%  The final battle is starting. Load some allies to help the PC. All of these

@@ -11,7 +11,7 @@ Arch HW Soldier
 statline 11 11 11 11 9 9 9 9
 MonsterTV 70
 roguechar <G>
-sdl_sprite <cha_m_guardian.png>
+sdl_sprite <cha_m_soldier.png>
 sdl_colors <120 90 90 255 212 195 244 216 28>
 type <Guard>
 habitat <>
@@ -50,7 +50,7 @@ Arch Soldier
 statline 11 11 11 11 9 9 9 9
 MonsterTV 62
 roguechar <G>
-sdl_sprite <cha_m_guardian.png>
+sdl_sprite <cha_m_soldier.png>
 sdl_colors <90 120 90 255 212 195 244 216 28>
 type <Guard>
 habitat <>
@@ -89,7 +89,7 @@ Arch Security Guard
 statline 9 9 9 9 9 9 9 9
 MonsterTV 48
 roguechar <G>
-sdl_sprite <cha_m_guardian.png>
+sdl_sprite <cha_m_polic.png>
 sdl_colors <90 90 100 255 212 195 244 216 28>
 type <Guard>
 habitat <>
@@ -124,7 +124,7 @@ Arch Watchman
 statline 9 9 9 9 9 9 9 9
 MonsterTV 21
 roguechar <G>
-sdl_sprite <cha_m_soldier.png>
+sdl_sprite <cha_m_polic.png>
 sdl_colors <90 90 90 255 212 195 150 120 90>
 type <Guard>
 habitat <>
@@ -325,7 +325,7 @@ MonsterTV 41
 roguechar <P>
 type <Criminal Devo>
 habitat <>
-SDL_SPRITE <cha_m_bandit.png>
+SDL_SPRITE <cha_m_thief.png>
 SDL_COLORS <56 26 81 170 112 90 168 133 230>
 CHAT_ATTACK1 <Gabba gabba hey!>
 CHAT_ATTACK2 <Hey ho, let's go!>
@@ -355,7 +355,7 @@ Arch Street Punk
 statline 9 9 9 9 8 8 8 8
 MonsterTV 25
 roguechar <P>
-SDL_SPRITE <cha_m_bandit.png>
+SDL_SPRITE <cha_m_thief.png>
 SDL_COLORS <56 26 81 170 112 90 66 121 80>
 type <Criminal Devo>
 habitat <>
@@ -389,7 +389,7 @@ MonsterTV 21
 roguechar <P>
 type <Criminal Devo>
 habitat <>
-SDL_SPRITE <cha_m_bandit.png>
+SDL_SPRITE <cha_m_thief.png>
 SDL_COLORS <56 26 81 170 112 90 123 63 0>
 CHAT_ATTACK1 <Gabba gabba hey!>
 CHAT_ATTACK2 <Hey ho, let's go!>
@@ -418,7 +418,7 @@ MonsterTV 68
 roguechar <B>
 type <Criminal>
 habitat <>
-SDL_SPRITE <cha_m_bandit.png>
+SDL_SPRITE <cha_m_thief.png>
 SDL_COLORS <112 28 28 150 112 89 136 151 50>
 CHAT_ATTACK1 <Lookie here, some fresh meat!>
 CHAT_ATTACK2 <I'll cut you up real good.>
@@ -456,7 +456,7 @@ MonsterTV 42
 roguechar <B>
 type <Criminal>
 habitat <>
-SDL_SPRITE <cha_m_bandit.png>
+SDL_SPRITE <cha_m_thief.png>
 SDL_COLORS <112 28 28 150 112 89 56 26 81>
 CHAT_ATTACK1 <Lookie here, some fresh meat!>
 CHAT_ATTACK2 <I'll cut you up real good.>

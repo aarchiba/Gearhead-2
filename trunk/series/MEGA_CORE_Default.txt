@@ -1,4 +1,267 @@
 %%
+%% *:CS_BASE_PlunderShip
+%%
+%% The PC will plunder a ship, hopefully belonging to the enemy. This component
+%% does not contain any story development of its own. Instead, it will set a
+%% number of triggers which the calling subplot can use to activate events.
+%% I am doing things this way because the plundering scenario is extremely
+%% complex and duplicating it for different story contexts would be tough.
+%%
+%% Signals sent by this plot:
+%%  .%id%_%plotid%_GoAttackShip		The PC has entered the ship exterior
+%%					scene. Check the hostility of Team 2 to
+%%					see whether or not peaceful entry has
+%%					been achieved.
+%%  .%id%_%plotid%_GoBoardShip		The PC has snuck on board the ship.
+%%					Again, check the hostility of Team 2 to
+%%					find out if the entry was peaceful.
+%%  .%id%_%plotid%_GoPlunderOK		The PC has successfully plundered the
+%%					ship. Dole out loot and consequences
+%%					appropriate.
+%%  .%id%_%plotid%_GoPlunderBad		The PC has captured the ship, but
+%%					screwed up on the plundering... probably
+%%					by blowing everything to heck.
+%%  .%id%_%plotid%_GoPlunderFail	The PC didn't plunder jack.
+%%
+%% PARAM1: The outdoors scene for the encounter
+%% PARAM2: The encounter to be used for the ship; contains the name of the
+%%         ship.
+%% PARAM3: The faction which controls the ship.
+%%
+
+Content
+	name <Default Plunder>
+	desc <The PC will attempt to capture a cruiser (and its cargo) intact.>
+	requires <*:CS_BASE_PlunderShip>
+
+	% E1 is the outdoors scene where the encounter is
+	% E2 is the ship's exterior metascene
+	% E3 is the faction controlling the ship
+	% E4 is the ship's inte‭rior metascene
+	% E5 is the ship's captain
+	Element4 <Prefab>
+	Place4 <1>
+	Element5 <Character Captain !Comrade 3 !Global HasMecha NeverFail>
+	NeverFail5 <Captain>
+	Place5 <4 (Guards)>
+
+	% P%id%01 = Initializat‭ion Counter
+	% P%id%02 = Have gained peaceful entry
+
+	update <if= P%id%01 0  P= %id%01 1  SetPlotStatus %plotid1% %id1%  NPCLevel %5% StoryDL>
+
+	.%id1%_%plotid1%_GoPeacefulEntry <P= %id%02 1>
+
+	% SubPlot1 is the PeacefulEntry task
+	SubPlot1 <*:CS_PeacefulEntry_Location 2>
+
+	sub
+		MetaScene 2 2
+		%% The ship's exterior
+
+		% L1 = Encounter Over Counter
+		% L2 = Initialization Counter
+		% L3 = "Just defeat the guards" message counter
+		% L4 = Initial headcount of Team 3
+		MapWidth 50
+		MapHeight 50
+
+		%
+		% As soon as this scene is entered, prompt to see whether the PC wants to
+		% attack the cruiser head-on or enter the ship on foot. Entering the ship
+		% is automatic if the PC has gained peaceful entry or is on foot; otherwise
+		% a stealth roll is needed.
+		%
+		% Once the destination has been decided, set the story trigger and let
+		% the parent subplot deal with things.
+		%
+		Start <if= L2 0 L= 2 1  CancelSubPlot %plotid1%   L= 4 t3   ifYesNo 1 2 3 else GoAttemptSneak Goto GoFightMecha>
+
+		GoAttemptSneak <if= P%id%01 0 else GoSneakIn ifG PCScale 1 else GoSneakIn ifStealth SkillTar StoryDL else GoSneakFail Goto GoSneakIn>
+		GoSneakIn <Exit %4%>
+		GoSneakFail <Alert 4 Goto GoFightMecha>
+
+		% If you gained peaceful entry, the guards and guns start out
+		% as neutral. Of course they turn hostile as soon as you attack
+		% the engines.
+		GoFightMecha <Alert 5   Trigger0 .%id%_%plotid%_GoAttackShip   if# P%id%02 0 TeamNeutral 2 TeamNeutral 4>
+
+		% Launching any sort of attack will alert the escort that something
+		% isn't entirely kosher.
+		PCAttack <ifTeamNotHostile 2 TeamAttack 2 TeamAttack 4 Alert 6>
+
+		nu1 <if= T1 0  Return   if= L1 0 L= 1 1  Alert 7  History 7  Trigger0 .%id%_%plotid%_GoPlunderFail  LoseRenown  LoseSubPlot %plotid%>
+		nu2 <if= T2 0  if= T4 0 else GoBringReinforcements if= T5 0 else GoBringReinforcements  if= L1 0  L= 1 1  ifG t3 0 else GoSmallVictory if# t3 l4 else GoBigVictory L+ 4 -d3 L+ 4 d2 ifG t3 l4 else GoSmallVictory Goto GoBigVictory>
+		GoBringReinforcements <Alert 8  WMecha 2 StoryDL 70>
+		GoSmallVictory <Alert 10 History 11 xpv 50 AddRenown -1 Salvage Trigger0 .%id%_%plotid%_GoPlunderBad  WinSubPlot %plotid%>
+		GoBigVictory   <Alert 12 History 11 xpv 100 AddRenown 1 Salvage Trigger0 .%id%_%plotid%_GoPlunderOK   WinSubPlot %plotid%>
+
+		nu4 <if= T4 0 if= T5 0 if= L3 0 L= 3 1 Alert 9>
+		nu5 <Goto nu4>
+
+		end <SetEncounterInactive %2%>
+
+		Msg1 <You have found %name2%. Do you want to capture the ship with your mecha, or attempt to sneak inside?>
+		Msg2 <Capture the ship.>
+		Msg3 <Try to sneak inside.>
+		Msg4 <You don't manage to sneak past the escort.>
+		Msg5 <Disable the thrusters and weapons to capture this vessel.>
+		Msg6 <The guards attack!>
+		Msg7 <You failed to capture %name2%.>
+		Msg8 <Reinforcements arrive!>
+		Msg9 <You have disabled %name2%. Just defeat the remaining guards and the vessel is yours.>
+		Msg10 <You have captured %name2%... or what remians of it.>
+		Msg11 <You captured %name2%.>
+		Msg12 <You have captured %name2%.>
+
+		sub
+			team 1
+			SetEnemy 2 4 5
+			ParaX 5
+			ParaY 25
+
+			team 2
+			name <Guards>
+			SetEnemy 1
+			SetAlly 4 5
+			Deploy <if= PlotStatus %plotid% %id% SetSelfFaction %3%   WMecha 2 StoryDL 100>
+			ParaX 45
+			ParaY 25
+
+			team 3
+			name <Cruiser Body>
+			% This team is neutral- the PC wants to capture these
+			% parts intact. If any of these parts get destroyed,
+			% there's a chance the desired loot will be lost.
+
+			team 4
+			name <Cruiser Weapons>
+			setenemy 1
+			setally 2 3 5
+			% Destroy the weapons and propulsion to incapacitate the
+			% cruiser.
+
+			team 5
+			name <Cruiser Propulsion>
+			setenemy 1
+			setally 2 3 4
+
+			rect
+			name <Cruiser Zone>
+			special <SubZone>
+			width 12
+			height 12
+			MFX 37
+			MFY 19
+			sub
+				SuperProp
+				requires <*Cruiser>
+				Team1 3
+				Team2 4
+				Team3 5
+			end
+		end
+
+
+		MetaScene 4
+		%% The ship's interior. To capture the ship, you can:
+		%% - Speak with the captain and intimidate/etc
+		%% - Fight the captain and make them surrender
+		%% - Disable the three control stations
+		%% Leaving the ship for any reason results in a loss.
+
+		MonkeyMap
+		MapWidth 50
+		MapHeight 50
+		NeededCells 3
+
+		% L1 = Encounter Over Counter
+		% L2 = Initialization Counter
+		% L3 = Captain surrender counter
+		% L4 = Number of systems at start
+
+		start <if= L2 0 L= 2 1 Alert 1   Trigger0 .%id%_%plotid%_GoBoardShip   L= 4 t3   if# P%id%02 0 TeamNeutral 2 TeamNeutral 4>
+
+		surrender%5% <if= L3 0 L= 3 1 ForceChat %5%>
+
+		end <ifNPCOK %5% FreezeNPC %5%>
+
+		% Launching any sort of attack will alert the guards that something
+		% isn't entirely kosher.
+		PCAttack <ifTeamNotHostile 2 TeamAttack 2 TeamAttack 4 Alert 2>
+
+		nu1 <if= T1 0  Return   if= L1 0 L= 1 1  Alert 3  History 3  Trigger0 .%id%_%plotid%_GoPlunderFail  LoseRenown  LoseSubPlot %plotid%>
+		nu3 <if= T3 0           if= L1 0 L= 1 1  Alert 4  History 5  xpv 100 AddRenown 1  Trigger0 .%id%_%plotid%_GoPlunderOK   WinSubPlot %plotid%  Return>
+
+		Msg1 <You enter %name2%. If you can disable the engines, main computer, and weapons control they will be forced to surrender.>
+		Msg2 <Suddenly, an alarm goes off!>
+		Msg3 <You failed to capture %name2%.>
+		Msg4_1 <With all the main systems disabled, Captain %name5% is forced to surrender.>
+		CMsg4_1 <ifNPCOK %5% Accept>
+		Msg4_2 <With all the main systems disabled, the crew of %name2% are forced to surrender.>
+		CMsg4_2 <ifNPCDead %5% Accept>
+		Msg5 <You captured %name2%.>
+
+		% Content1: The systems you need to disable.
+		Content1 <Variety 3 3 Sub *CS_SHIP_SYSTEMS>
+
+		sub
+			team 1
+			SetEnemy 2 3 4
+
+			team 2
+			name <Guards>
+			SetEnemy 1
+			SetAlly 3 4
+
+			team 3
+			name <Systems>
+			% Disabling the major systems of the ship will force it
+			% to surrender. This can be done by locating and blowing
+			% each of them up, or by using skills to deactivate them.
+			SetEnemy 1
+
+			team 4
+			name <Monsters>
+			type <GUARD ROBOT>
+			SetEnemy 1
+			SetAlly 2 3
+			Deploy <if= V1 0 V= 1 1 MonsterUp 2 StoryDL>
+
+			room
+			special <StartHere>
+			sub
+				TrapDoor
+				use <Print 1 Retreat 1>
+			end
+
+			room
+			desig <HOME %e5%>
+			minimap <............1............>
+		end
+
+		Persona 5
+		%% The captain of this ill-fated vessel
+		greeting <if= PlotStatus %plotid% %id% else %pop% ifChatNPCSurrendered else .%id%_GoNegotiate  Goto .%id%_GoSurrender>
+		*.%id%_GoSurrender <*CS_BASEPS_CaptainSurrenders .%id%_GoWin>
+		.%id%_GoWin <History %id%01  xpv 100 AddRenown 1  Trigger0 .%id%_%plotid%_GoPlunderOK   WinSubPlot %plotid%  Return>
+		*.%id%_GoNegotiate <*CS_BASEPS_CaptainNegotiates .%id%_GoWin .%id%_GoAttack na>
+		.%id%_GoAttack <TeamAttack 2 TeamAttack 4>
+		Msg%id%01 <Captain %name5% surrendered %name2%.>
+	end
+	inv
+		Encounter
+		name <Ship's Interior>
+		% The interior of the ship. Now, we don't want this encounter to
+		% ever be visible. What it'll do instead is to match the position
+		% of the ship exterior encounter. That way, whichever scene you're
+		% leaving, you should emerge in the same tile on the outdoors map.
+		update <SetSelfX EncounterX %2% SetSelfY EncounterY %2% Goto GoHide>
+		Use <  >
+		Attack <  >
+	end
+
+%%
 %% *:CS_SubBossRoadblock
 %%
 %% This is an odd little utility component. In order for something to happen,

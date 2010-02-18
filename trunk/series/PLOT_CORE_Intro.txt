@@ -9,6 +9,42 @@
 %
 
 Plot
+	name <Plunder Test>
+	requires <*zzzCORE_Intro>
+	desc <Test plundering.>
+
+	Element1 <Scene "Space" !Near -7>
+	Element2 <Prefab>
+	Place2 <1>
+	Element3 <Faction Corporate>
+
+	% P1 = Initialization Counter
+	start <if= P1 0 P= 1 1 SetPlotStatus %plotid1% %id1% Alert %id%01 SetEncounterActive %2% Memo %id%01>
+
+	% Story Handlers
+	.%id1%_%plotid1%_GoAttackShip <Alert %id%11>
+	.%id1%_%plotid1%_GoBoardShip <Alert %id%12>
+	.%id1%_%plotid1%_GoPlunderOK <CashPrize 1000000 Alert %id%13>
+	.%id1%_%plotid1%_GoPlunderBad <CashPrize 1 Alert %id%14>
+	.%id1%_%plotid1%_GoPlunderFail <Alert %id%15>
+
+	Msg%id%01 <You're going to go plunder %name2% in \EXACT_SCENE %1% !>
+	Msg%id%11 <Yaar! Attack the ship from the front!>
+	Msg%id%12 <Yaar! Attack the ship from the inside!>
+	Msg%id%13 <Yay! You've plundered loads of cash!>
+	Msg%id%14 <Grr, you blew up all the treasure!>
+	Msg%id%15 <What was that? You suck at pirating!>
+
+	% SubPlot1 is the plundering.
+	SubPlot1 <*:CS_BASE_PlunderShip 1 2 3>
+
+	inv
+		STC CORE-ACTIVATABLE
+		name <the Saucy Roger>
+	end
+
+
+Plot
 	name <Civic Duty>
 	desc <You're told of a civil defense mission.>
 	requires <*CORE_Intro (P:--|L:ALLY) -L:ENEMY -C:THIEF>

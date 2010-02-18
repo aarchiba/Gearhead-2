@@ -7,6 +7,40 @@
 %% In addition, some of these fragments are tied to specific components, and may not
 %% be readily reusable in other components.
 
+% TYPE: *CS_BASEPS_CaptainSurrenders
+%	The captain of the ship which the PC is plundering has just surrendered.
+%	Give a comment, and maybe alter the captain's attitude.
+%    PARAM1: Exit Label
+
+Persona
+	requires <*CS_BASEPS_CaptainSurrenders>
+	START <EndCHat Say %id%01 Goto %1%>
+	Msg%id%01 <Stop, stop, we surrender! Take whatever you're looking for!>
+
+% TYPE: *CS_BASEPS_CaptainNegotiates
+%	The PC has just struck up a coversation with the captain of the ship
+%	which they are currently plundering. Maybe a surrender can be forced
+%	without actually doing anything.
+%    PARAM1: Captain surrenders exit label
+%    PARAM2: Captain attacks exit label
+%    PARAM3: Nothing much happens exit label
+
+Persona
+	requires <*CS_BASEPS_CaptainNegotiates>
+	START <EndCHat Say %id%01 AddCHat %id%01 AddChat %id%02>
+	.%id%_GoAttack <EndChat Say %id%02 Goto %2%>
+	result%id%01 <ifIntimidation HardSkillTar StoryDL else .%id%_GoAttack EndChat Say %id%03 Goto %1%>
+	result%id%02 <ifStealth 3 else .%id%_GoR2Fail EndChat Say %id%04 Goto %3%>
+	.%id%_GoR2Fail <EndChat Say %id%05 Goto %2%>
+	Msg%id%01 <Yes, what do you want? I've got a ship to run.>
+	Msg%id%02 <I thought you looked suspicious... No matter though, I won't be handing this ship over to the likes of you.>
+	Msg%id%03 <Alright, I'll surrender, just calm down...>
+	Msg%id%04 <Alright. Get back to work, then...>
+	Msg%id%05 <Hey, you're not part of the crew... We've got an intruder on board!>
+	Prompt%id%01 <Surrender now, or face my wrath!>
+	Prompt%id%02 <Never mind me, just passing through...>
+
+
 % TYPE: *CS_WarZone_Greeting
 %	The PC has just entered a warzone. This NPC will brief the PC on what
 %	happened. The PC can either sound concerned or shrug it off.

@@ -42,6 +42,13 @@
 %           If no subtype is specified, you can use "na" for this.
 
 Persona
+requires <*IHaveInformation &AboutScene>
+START <NewChat Say %id%01 AddChat %id%01>
+Result%id%01 <Goto %1%>
+Msg%id%01 <I know something about \SCENE %2% ... Interested?>
+Prompt%id%01 <Go on.>
+
+Persona
 requires <*IHaveInformation &AboutItem>
 START <NewChat Say %id%01 AddChat %id%01>
 Result%id%01 <Goto %1%>
