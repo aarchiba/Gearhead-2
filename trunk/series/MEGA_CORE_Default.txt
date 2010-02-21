@@ -77,7 +77,7 @@ Content
 		%
 		Start <if= L2 0 L= 2 1  CancelSubPlot %plotid1%   L= 4 t3   ifYesNo 1 2 3 else GoAttemptSneak Goto GoFightMecha>
 
-		GoAttemptSneak <if= P%id%01 0 else GoSneakIn ifG PCScale 1 else GoSneakIn ifStealth SkillTar StoryDL else GoSneakFail Goto GoSneakIn>
+		GoAttemptSneak <if= P%id%01 0 else GoSneakIn ifG PCScale 1 else GoSneakIn ifStealth HardSkillTar StoryDL else GoSneakFail Goto GoSneakIn>
 		GoSneakIn <Exit %4%>
 		GoSneakFail <Alert 4 Goto GoFightMecha>
 
@@ -171,14 +171,17 @@ Content
 		%% Leaving the ship for any reason results in a loss.
 
 		MonkeyMap
-		MapWidth 50
-		MapHeight 50
+		MapWidth 30
+		MapHeight 30
 		NeededCells 3
 
 		% L1 = Encounter Over Counter
 		% L2 = Initialization Counter
 		% L3 = Captain surrender counter
 		% L4 = Number of systems at start
+		%      This info might be useful when negotiating with captain
+		% L5 = Discovery Counter
+		% L6 = Warning message counter
 
 		start <if= L2 0 L= 2 1 Alert 1   Trigger0 .%id%_%plotid%_GoBoardShip   L= 4 t3   if# P%id%02 0 TeamNeutral 2 TeamNeutral 4>
 
@@ -186,9 +189,18 @@ Content
 
 		end <ifNPCOK %5% FreezeNPC %5%>
 
+		% The PC risks discovery based on time and stealth.
+		TM1 <ifTeamNotHostile 2 ifTeamCanSeePC 2 ifG 5 Stealth Alarm>
+		5min <ifTeamNotHostile 2  else GoUpGuards  ifUStealth SkillTar StoryDL else GoAdvanceClock L+ 5 1>
+		GoAdvanceClock <L+ 5 d3 ifG L5 30 else GoCheckWarning Alarm>
+		GoCheckWarning <ifG L5 15 if= L6 0 L= 6 1 Alert 6>
+		GoUpGuards <MonsterUp 4 d3>
+
+		Alarm <TeamAttack 2 TeamAttack 4 Alert 2>
+
 		% Launching any sort of attack will alert the guards that something
 		% isn't entirely kosher.
-		PCAttack <ifTeamNotHostile 2 TeamAttack 2 TeamAttack 4 Alert 2>
+		PCAttack <ifTeamNotHostile 2 Alarm>
 
 		nu1 <if= T1 0  Return   if= L1 0 L= 1 1  Alert 3  History 3  Trigger0 .%id%_%plotid%_GoPlunderFail  LoseRenown  LoseSubPlot %plotid%>
 		nu3 <if= T3 0           if= L1 0 L= 1 1  Alert 4  History 5  xpv 100 AddRenown 1  Trigger0 .%id%_%plotid%_GoPlunderOK   WinSubPlot %plotid%  Return>
@@ -201,6 +213,7 @@ Content
 		Msg4_2 <With all the main systems disabled, the crew of %name2% are forced to surrender.>
 		CMsg4_2 <ifNPCDead %5% Accept>
 		Msg5 <You captured %name2%.>
+		Msg6 <An announcement sounds. "An intruder may have infiltrated the ship. Report all suspicious activity to Captain %name5%.">
 
 		% Content1: The systems you need to disable.
 		Content1 <Variety 3 3 Sub *CS_SHIP_SYSTEMS>
@@ -226,7 +239,7 @@ Content
 			type <GUARD ROBOT>
 			SetEnemy 1
 			SetAlly 2 3
-			Deploy <if= V1 0 V= 1 1 MonsterUp 2 StoryDL>
+			Deploy <if= V1 0 V= 1 1 MonsterUp 4 StoryDL>
 
 			room
 			special <StartHere>

@@ -28,7 +28,7 @@
 Content
 	name <Secret War>
 	desc <There's been a lot of fighting that hasn't been covered by the press.>
-	requires <*:CS_GatherInformation +P-- P:-- (L:MAQUI|L:RISHI|L:FCOMS) -1:MAQUI -1:RISHI -1:FCOMS ~1:MEDIA ~1:NOFAC>
+	requires <*:CS_GatherInformation +P-- (P:--|P:PDASS) (L:MAQUI|L:RISHI|L:FCOMS) -1:MAQUI -1:RISHI -1:FCOMS ~1:MEDIA ~1:NOFAC>
 	changes <+P>
 
 	% E1 is the person who tells the PC about the attacks
@@ -822,6 +822,161 @@ Content
 %%  *******************
 %%  ***   GENERAL   ***
 %%  *******************
+
+Content
+	name <Who do they work for?>
+	desc <You'll be sent to find out who your enemy works for.>
+	requires <*:CS_GatherInformation E:++ -E:A.nme F:-- (L:Ally|P:PDASS)>
+	changes <F:++>
+
+	% E1 is the person who tells the PC
+	% E2 is the enemy NPC
+	% E3 is an outdoor scene for the encounter
+	% E4 is the encounter itself
+	% E5 is the new enemy faction
+	% E6 is an allied local faction, to be used here merely as a victim
+	Element2 <Grab -1>
+	Place2 </>
+	Element3 <Scene Outdoors !Near -7>
+	Element4 <Prefab>
+	Place4 <3>
+	Element5 <Faction -Ally !XClude -3 !Enemy -7 !XClude 1>
+	Element6 <Faction !Okay -3 !Enemy 5 !Ally -7>
+
+	% P%id%01 = Initialization Counter
+	% P%id%02 = Decimation Counter
+	% P%id%03 = Reinforcements Counter
+
+	%% FAIL CONDITIONS:
+	%% - DiscoverNPCMission Fails
+
+	update <if= P%id%01 0 P= %id%01 1   SetPlotStatus %plotid1% %id1% SetPlotStatus %plotid2% %id2%    NPCLevel %2% StoryDL>
+	end <ifSubPlotLost %plotid1% CancelSubPlot %plotid2% LoseSubPlot %plotid% Trigger0 .%id%_%plotid%_GoLoss>
+
+	.%id2%_%plotid2%_GoDecimation <P= %id%02 1>
+	.%id2%_%plotid2%_GoReinforcements <P= %id%03 1>
+
+	%% DEBRIEFING MESSAGE
+	Msg%id%11 <So %name2% was hired by %name5%... This is valuable information.>
+
+	%% SubPlot1 = Discover the NPC's mission
+	%% SubPlot2 = Gain advantage vs NPC
+	SubPlot1 <*:CS_DiscoverNPCMission&EnemyNPC 3 4 2>
+	SubPlot2 <*:CS_GainAdvantageVsNPC&Decimation&Reinforcements 2>
+
+	sub
+		Persona 1
+		.%id%_GoInform <NewChat Say %id%01 SMemo %id%02 History %id%03>
+		Msg%id%01 <I believe you've faced %name2% in the past... \SPR %2% 's caused a lot of problems around here. Word is that \SPR %2% 's in town on another mission now. It could be a good chance to find out who \SPR %2% works for.>
+		Msg%id%02 <%name1% revealed that %name2% is in town on a mission. This could be a good opportunity to discover who \SPR %2% works for.>
+		Msg%id%03 <You were asked to find who %name2% works for.>
+
+		Persona 2
+		special <UNLISTED NOESCAPE>
+		greeting <EndChat Say %id%01 AddChat %id%01 AddChat %id%02 AddChat %id%03 Trigger0 Local1>
+		result%id%01 <EndChat Say %id%02>
+		result%id%02 <EndChat Say %id%03>
+		result%id%03 <EndChat Say %id%04 History %id%05  XPV 100  SetDebriefing %id%11  &SetEnemyFac %5%  PCFEnemy %5%  Trigger0 .%id%_%plotid%_GoWin WinSubPlot %plotid%>
+		Msg%id%01 <You're too late, \PC . My work here is done.>
+		Msg%id%01_1 <Aw, nuts! Why do you always have to show up right when I'm doing a big mission?>
+		CMsg%id%01_1 <ifNPCAttitude %2% XXR_A_IsJunior Accept>
+		Msg%id%01_2 <I hope you weren't hired by %name6%, \PC , because the battle is already over.>
+		CMsg%id%01_2 <ifNPCAttitude %2% XXR_A_IsSenior Accept>
+		Msg%id%01_3 <We need to stop bumping into each other like this, \PC . People will start to think you're my stalker.>
+		CMsg%id%01_3 <ifNPCAttitude %2% XXR_A_IsEqual Accept>
+		Msg%id%01_4 <Hold your fire, we're leaving... our mission here has been completed.>
+		CMsg%id%01_4 <ifNPCHeroic Accept>
+		Msg%id%01_5 <They're all dead, \PC , and you've arrived too late to do anything about it...>
+		CMsg%id%01_5 <ifNPCVillainous Accept>
+		Msg%id%02 <I don't have the time to fight today, \PC , I've got important things to do. Fortunately my lance has no such restriction...>
+		Msg%id%02_1 <Um, about that... I just remembered that I have someplace important to be. But, hey, you can fight my lance if you want!>
+		CMsg%id%02_1 <ifNPCAttitude %2% XXR_A_IsJunior Accept>
+		Msg%id%02_2 <Your confidence is admirable. Unfortunately, I have no time to shatter your illusions today... but maybe my lance can do so in my place.>
+		CMsg%id%02_2 <ifNPCAttitude %2% XXR_A_IsSenior Accept>
+		Msg%id%02_3 <As much fun as it would be to accept that challenge, I have important business elsewhere. You can try fighting my lance if you want.>
+		CMsg%id%02_3 <ifNPCAttitude %2% XXR_A_IsEqual Accept>
+		Msg%id%02_4 <I've done all the fighting I intend to do, for now... but if you're truly desperate for combat my lance won't disappoint you.>
+		CMsg%id%02_4 <ifNPCHeroic Accept>
+		Msg%id%02_5 <Much as I would love to end your life, I simply don't have the time. My lance, on the other hand, has plenty of time to destroy you...>
+		CMsg%id%02_5 <ifNPCVillainous Accept>
+		Msg%id%03 <I don't have time to answer your stupid questions, I've got things to do... my lance, on the other hand, has more than enough time to kick your ass.>
+		Msg%id%03_1 <Why, are you looking for a job? I don't wanna work with you! Knowing my luck, they'd make you my supervisor or something! I'm outta here... but you can fight my lance if you want.>
+		CMsg%id%03_1 <ifNPCAttitude %2% XXR_A_IsJunior Accept>
+		Msg%id%03_2 <All will be revealed in due time, \PC . Unfortunately I must leave right now; if you're determined to fight then my lance should be more than a match for your skills.>
+		CMsg%id%03_2 <ifNPCAttitude %2% XXR_A_IsSenior Accept>
+		Msg%id%03_3 <I expect they'll be going public with their plan any day now. Look, I've got to run... If you're aching for a fight, my lance won't disappoint you.>
+		CMsg%id%03_3 <ifNPCAttitude %2% XXR_A_IsEqual Accept>
+		Msg%id%03_4 <I'm not at liberty to discuss that... not yet. Look, I have to run, but I don't think these pilots I'm traveling with intend to let you get out of here intact. Goodbye \PC .>
+		CMsg%id%03_4 <ifNPCHeroic Accept>
+		Msg%id%03_5 <Does it kill you to not know who's pulling the strings? Ha, you won't live long enough to find out! I have to run, but my lance will destroy you!>
+		CMsg%id%03_5 <ifNPCVillainous Accept>
+		Msg%id%04 <Yeah, and they're none too happy about your interference with our plans. I've got to go but my lance can deal with you themselves.>
+		Msg%id%04_1 <Curse your encyclopedic knowledge of standard paint schemes! But that knowledge isn't going to do you any good, because my lance is going to destroy you... while I run off to a very important meeting I had forgotten about.>
+		CMsg%id%04_1 <ifNPCAttitude %2% XXR_A_IsJunior Accept>
+		Msg%id%05 <You deduced that %name2% worked for %name5%.>
+		Prompt%id%01 <I can take you, %name2%.>
+		Prompt%id%01_1 <Come on, %name2%... let's settle this.>
+		Prompt%id%02 <Tell me who hired you!>
+		Prompt%id%02_2 <Tell me who you work for!>
+		Prompt%id%03 <I see you work for %name5%...>
+		CPrompt%id%03 <ifInsightKn SkillTar StoryDL Accept>
+
+		MetaScene 4 2
+		special <ARENA>
+		% L1 = Encounter Over Counter
+		% L2 = Initialization Counter
+		MapWidth 50
+		MapHeight 50
+
+		Start <if= L2 0 L= 2 1   Alert 1 ForceChat %2%   CancelSubPlot %plotid2%>
+		Local1 <Alert 5  if# P%id%02 0 Alert 6>
+
+		nu1 <if= T1 0   Return   if= V1 0 V= 1 1      LoseRenown  if= PlotStatus %plotid% %id%  Trigger0 .%id%_%plotid%_GoLoss LoseSubPlot %plotid%>
+		nu2 <if= V1 0  if= T2 1   else GoCheckGone  if= PlotStatus %plotid% %id%  V= 1 1  Alert 2 TeamMonologue 2 3 Salvage Retreat 2 History 4  XPV 100  SetDebriefing %id%11  &SetEnemyFac %5%  PCFEnemy %5%  Trigger0 .%id%_%plotid%_GoWin WinSubPlot %plotid%>
+		GoCheckGone <if= T2 0   V= 1 1   SALVAGE if= PlotStatus %plotid% %id% else GoJustDefeat LoseRenown   Alert 7 History 8   Trigger0 .%id%_%plotid%_GoLoss LoseSubPlot %plotid%>
+		GoJustDefeat <Alert 9 XPV 100>
+		end <SetEncounterInactive %4%>
+
+		Msg1 <You arrive too late to aid a lance from %name6% against %name2%'s forces.>
+		Msg2 <With all the others defeated, the last henchman quickly surrenders.>
+		Msg3 <I give up! We were hired by %name5%...>
+		Msg4 <You learned that %name2% worked for %name5%.>
+		Msg5_1 <Maybe you can learn the truth from one of \PPR %2% lancemates.>
+		CMsg5_1 <if= PlotStatus %plotid% %id% Accept>
+		Msg5_2 <%name2%'s lancemates move in to attack.>
+		CMsg5_2 <if# PlotStatus %plotid% %id% Accept>
+		Msg6 <Your reinforcements are here, as promised.>
+		Msg7 <You have defeated %name2%'s lance, but still haven't learned who \SPR %2% works for.>
+		Msg8 <You defeated %name2%'s lance but didn't learn who \SPR %2% works for.>
+		Msg9 <You defeated %name2%'s lance.>
+
+		sub
+			team 1
+			setally 3
+			SetEnemy 2
+			ParaX 5
+			ParaY 5
+
+			team 2
+			name <Enemies>
+			SetEnemy 1 3
+			Deploy <if= PlotStatus %plotid% %id% SetSelfFaction %5%   if= p%id%03 0 else GoSmallDeploy WMecha 2 StoryDL 75 WMecha 2 StoryDL 75>
+			GoSmallDeploy <WMecha 2 StoryDL 40 WMecha 2 StoryDL 40>
+			ParaX 45
+			ParaY 45
+
+			team 3
+			setally 1
+			setenemy 2
+			Deploy <if= PlotStatus %plotid% %id%  if# P%id%02 0   WMecha 3 StoryDL 60>
+			ParaX 10
+			ParaY 5
+		end
+	end
+	inv
+		stc CORE-ACTIVATABLE
+		name <%name2%'s Lance>
+	end
 
 Content
 	name <The Enemy's Decision>
