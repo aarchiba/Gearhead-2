@@ -16,10 +16,10 @@
 %%
 
 Content
-	name <Corporate Collection>
+	name <The Mansion of Fetch>
 	desc <The item you're looking for is held by a collector.>
-	requires <*:CS_FetchItem P:-- +H-- ~C:THIEF -C:POLIC>
-	changes <+H P:++>
+	requires <*:CS_FetchItem P:-- E:-- (C:THIEF|C:ADVEN|C:LABOR)>
+	changes <E:++ P:++>
 	Size 5
 
 	% E1 is the item that was taken
@@ -32,11 +32,14 @@ Content
 	Element2 <Scene Urban !Near -7>
 	Element3 <Prefab>
 	Place3 <2>
-	Element4 <Character Corporate -NOFAC !Near -7>
+	Element4 <Character Corporate -NOFAC (Criminal|Villainous) !Near -7>
 	Place4 </>
 	Element5 <Faction Corporate !Comrade 4 !XClude -2 -ArchEnemy>
 	Element6 <Prefab>
 	Place6 <3>
+
+requires <*:CS_FetchItem>
+Element4 <Character Corporate -NOFAC !Near -7>
 
 	HINT_%plotid% <:%plotid1%>
 
@@ -127,28 +130,37 @@ Content
 
 		Persona 4
 		special <NOESCAPE UNLISTED>
-		greeting <EndChat Say %id%01 AddChat %id%01 AddChat %id%02>
+ 		greeting <EndChat Say %id%01 AddChat %id%01 AddChat %id%02>
 		.%id%_GoAcceptOffer <TeamNeutral 2 History %id%05 &SetAllyFac %5% &SetHangingNPC %4% AlterContext .%id%_accept if= PCFac 0 SetPCFac %5%>
 		.%id%_accept <+Hmi>
-		result%id%01 <EndChat Say %id%02 AddChat %id%03 AddChat %id%04>
-		result%id%02 <EndChat Say %id%03 AddEasygoing d10  Goto .%id%_GoAcceptOffer>
+		result%id%01 <EndChat Say %id%02 AddChat %id%03 AddChat %id%04 AddChat %id%05>
+		result%id%02 <EndChat Say %id%03 AddChat %id%03 AddChat %id%04 AddChat %id%05  AddEasygoing d10>
 		result%id%03 <EndChat Say %id%04  Goto .%id%_GoAcceptOffer>
-		result%id%04 <EndChat Say %id%06  AddEasygoing -d10  History %id%07  &SetHangingNPC %4% TeamAttack 2 MonsterUp 2 d10 AlterContext .%id%_refuse>
-		.%id%_refuse <+Hre>
+		result%id%04 <EndChat Say %id%06  AddEasygoing -d10  History %id%07  TeamAttack 2 MonsterUp 2 d10 &SetEnemyNPC %4%>
+		result%id%05 <EndChat Say %id%08 AddChat %id%06 AddChat %id%07>
+		result%id%06 <goto result%id%03>
+		result%id%07 <goto result%id%04>
 		Msg%id%01 <Well done \PC . I didn't expect this %name1% to attract so much attention, but it apparently means quite a lot to you.>
 		Msg%id%01_1 <Amazing. When I obtained this %name1% I didn't think it was particularly important... Judging by your efforts, though, it appears that you think otherwise.>
-		Msg%id%02 <I have no intention of taking it back, all I want is to talk for a while. You know, %name5% could use someone with your determination and skills. Come work for me and this indiscretion will be forgiven.>
+		Msg%id%02 <I have no intention of taking it back, all I want is to talk for a while. You know, I could use someone with your determination and skills. Come work for me and this indiscretion will be forgiven.>
 		Msg%id%03 <Don't worry about it. I can tell that you want to make amends for breaking into my home, so I'll go easy on you. Come work for me and all will be forgiven. You can keep the %name1% as kind of a signing bonus.>
-		Msg%id%04 <Very good. I'll contact you later on when there's something I need done.>
+		Msg%id%04 <Very good; welcome to %name5%. I'll contact you later on when there's something I need done.>
 		Msg%id%05 <%name4% let you keep it, in exchange for joining %name5%.>
-		Msg%id%06 <How very disappointing. I trust you will understand that this isn't an insult that I can simply forget, no? Until we meet again...>
+		Msg%id%06_1 <How very disappointing. I trust you will understand that this isn't an insult that I can simply forget, no? Until we meet again...>
+		CMsg%id%06_1 <if= 0 &EnemyFac Accept>
+		Msg%id%06_2 <How very disappointing. I trust you understand that this isn't an insult which \FACTION &EnemyFac can simply forget. Until we meet again...>
+		CMsg%id%06_2 <if# 0 &EnemyFac Accept>
 		Msg%id%07 <%name4% swore revenge against you.>
+		Msg%id%08 <\PC , I already have you at my mercy, how could this be a trap? Decide now- would you rather accept my offer, or my wrath?>
 		Prompt%id%01 <If you want it back you'll have to fight me.>
 		Prompt%id%01_1 <That's right, and it's mine now!>
 		Prompt%id%02 <Sorry, I'll just put it back where I found it...>
 		Prompt%id%02_1 <Is this your house? I'm so sorry...>
 		Prompt%id%03 <You're offering me a job? Alright, I accept.>
 		Prompt%id%04 <No deal. My freedom isn't up for trade.>
+		Prompt%id%05 <Sounds good, but how do I know this isn't a trap?>
+		Prompt%id%06 <I accept your offer.>
+		Prompt%id%07 <I'll take my chances, thanks.>
 	end
 	inv
 		STC CORE-ACTIVATABLE-STATIONARY-DEFENDED

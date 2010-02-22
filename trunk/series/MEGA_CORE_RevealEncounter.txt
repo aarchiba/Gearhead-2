@@ -942,8 +942,8 @@ Plot
 		result6 <NewChat Say 11 AddChat 1>
 		Msg1 <I know where %name3%'s %name2% is. I could tell you, but information doesn't come cheap... It's going to cost you $ \VAL V2 to find out.>
 		Msg2 <%name4% offered to tell you where %name3%'s %name2% is, in exchange for $ \VAL V2 .>
-		Msg3 <Ah, it's been a pleasure taking your money. This chip holds the coordinates of %name3%'s %name2% in %name1%. You should be able to find it quite easily.>
-		Msg4 <%name4% revealed the location of %name3%'s %name2% in %name1%.>
+		Msg3 <Ah, it's been a pleasure taking your money. This chip holds the coordinates of %name3%'s %name2% in \EXACT_SCENE %1% . You should be able to find it quite easily.>
+		Msg4 <%name4% revealed the location of %name3%'s %name2% in \EXACT_SCENE %1% .>
 		Msg5 <Duel for it? What is this, a Love Magnet holiday special? I've got no reason to duel- everything to lose and nothing to gain. I've told you my price. If you don't like it then you can do without.>
 		Msg7 <Chicken? You think I'm afraid of you!? That's it, we're on. Meet me in %name5%. If you win I'll tell you where to find %name3%, but if I win you'll be paying double for the info.>
 		Msg8 <You challenged %name4% to a duel in order to learn the location of %name3%; \SPR %4% 's waiting for you in %name5%.>
