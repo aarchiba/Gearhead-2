@@ -427,51 +427,6 @@ Content
 	end
 
 
-%%
-%% *:CS_DiscoverNPCHasItem
-%%	&NotReally	The NPC doesn't actually have it
-%%
-%% In this subplot, the PC will learn that an item being sought is in the possession
-%% of a certain NPC.
-%%
-%% When this subplot concludes, the following trigger must be set:
-%%		.%id%_%plotid%_GoDiscover
-%%
-%% PARAM1: The NPC who has it
-%% PARAM2: The item being sought
-%%
-
-Content
-	name <Trivial DNHI>
-	desc <Ask an NPC, get told who has it. Boring, but quick to write.>
-	requires <*:CS_DiscoverNPCHasItem>
-	Size 1
-
-	% E1 is the NPC with the item
-	% E2 is the item
-	% E3 is a local public scene
-	% E4 is an NPC who knows something about it
-	Element3 <Scene Building Public !Near -7>
-	Element4 <Character Knowledge !Near 3 -ENEMY NEVERFAIL>
-	NEVERFAIL4 <Professor>
-
-	% FAIL CONDITIONS
-	% - E4 dies before revealing the secret
-	start <ifNPCDead %4% LoseSubPlot %plotid%>
-
-	sub
-		Persona 4
-		rumor%id% <%name4% knows something about the %name2%.>
-		greeting <if= PlotStatus %plotid% %id% else GoChat Goto GoGreet>
-		GoChat <NewChat SayAnything>
-		*GoGreet <*LookingForItem %2% GoExplain>
-		GoExplain <NewChat Say 1 SMemo 2 History 3   WinSubPlot %plotid% Trigger0 .%id%_%plotid%_GoDiscover>
-		Msg1_1 <As far as I know, the %name2% is currently in the possession of %name1%. More than this I couldn't say.>
-		Msg1_2 <The last I heard, %name1% is the one who has the %name2%. I'm afraid that I really don't know anything else.>
-		Msg1_3 <They say that the %name2% is being held by someone called %name1%. Maybe this information can be of use to you.>
-		Msg2 <You learned from %name4% that %name1% is in possession of the %name2%.>
-		Msg3 <You learned that %name1% had the %name2%.>
-	end
 
 %%
 %% *:CS_DiscoverNPCKidnappedByCSE

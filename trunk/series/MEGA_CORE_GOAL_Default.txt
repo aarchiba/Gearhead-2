@@ -22,6 +22,8 @@ Content
 
 	start <ifNPCDead %1% SMemo 0 PyrrhicWinEpisode>
 
+	HINT_%id% <:%id1%>
+
 	% SubPlot1 transfers to the actual reward...
 	SubPlot1 <*CS_WinGoal 1>
 
@@ -52,7 +54,7 @@ Content
 %%  rewarded. The exact reward is, of course, going to depend upon the current
 %%  goal.
 %%
-%%  Remember to debrief the PC.
+%%  Remember to include a HINT_%id% and to debrief the PC.
 %%
 %%  PARAM1: The NPC giving the reward
 %%
@@ -66,6 +68,8 @@ Content
 	% E1 is the NPC.
 
 	start <ifNPCDead %1% SMemo 0 WinEpisode>
+
+	HINT_%id% <You'll earn $ \VAL Reward StoryDL 500 .>
 
 	sub
 		Persona 1
@@ -96,6 +100,7 @@ Content
 	% E1 is the NPC.
 
 	start <ifNPCDead %1% SMemo 0 WinEpisode>
+	HINT_%id% <You'll earn $ \VAL Reward StoryDL 1000 .>
 
 	sub
 		Persona 1
@@ -117,6 +122,8 @@ Content
 	% E1 is the NPC.
 
 	start <ifNPCDead %1% SMemo 0 WinEpisode>
+
+	HINT_%id% <You'll earn $ \VAL Reward StoryDL 1000 .>
 
 	sub
 		Persona 1
@@ -146,6 +153,8 @@ Content
 
 	start <ifNPCDead %1% SMemo 0 DeleteNPC %3% WinEpisode>
 
+	HINT_%id% <You'll earn $ \VAL Reward StoryDL 200 and I'll see about finding you a new ally.>
+
 	sub
 		Persona 1
 		greeting <if= PlotStatus %plotid% %id% else %pop% Debrief  NewChat Say %id%01 NPCLevel %3% StoryDL PCAlly %3% AddChat %id%01 AddChat %id%02>
@@ -171,6 +180,8 @@ Content
 
 	start <ifNPCDead %1% SMemo 0 PyrrhicWinEpisode>
 
+	HINT_%id% <You'll earn $ \VAL Reward StoryDL 5000 .>
+
 	sub
 		Persona 1
 		% V%id%01 = Mecha Renown, StoryDL+20
@@ -187,6 +198,8 @@ Content
 	% E1 is the NPC.
 
 	start <ifNPCDead %1% SMemo 0 PyrrhicWinEpisode>
+
+	HINT_%id% <For this mission, you'll earn $ \VAL Reward StoryDL 5000 .>
 
 	sub
 		Persona 1
@@ -205,6 +218,8 @@ Content
 
 	start <ifNPCDead %1% SMemo 0 PyrrhicWinEpisode>
 
+	HINT_%id% <You'll earn a new custom mecha.>
+
 	sub
 		Persona 1
 		% V%id%01 = Mecha Renown, StoryDL+20
@@ -222,6 +237,8 @@ Content
 	% E1 is the NPC.
 
 	start <ifNPCDead %1% SMemo 0 PyrrhicWinEpisode>
+
+	HINT_%id% <Succeed, and I'll help you with your skills.>
 
 	sub
 		Persona 1
@@ -249,6 +266,8 @@ Content
 	Element2 <Prefab>
 
 	start <ifNPCDead %1% SMemo 0 PyrrhicWinEpisode>
+
+	HINT_%id% <Win and I'll give you some very valuable advice.>
 
 	sub
 		Persona 1
@@ -283,6 +302,8 @@ Content
 
 	start <ifNPCDead %1% SMemo 0 WinEpisode>
 
+	HINT_%id% <You'll get my deepest gratitude.>
+
 	sub
 		Persona 1
 		greeting <if= PlotStatus %plotid% %id% else %pop% Debrief  NewChat Say %id%01 AddReact 25 AddHeroic 1 WinEpisode>
@@ -297,6 +318,8 @@ Content
 	% E1 is the NPC
 
 	start <ifNPCDead %1% SMemo 0 WinEpisode>
+
+	HINT_%id% <You'll get my eternal gratitude.>
 
 	sub
 		Persona 1
@@ -332,6 +355,8 @@ Content
 
 	start <ifNPCDead %1% SMemo 0 WinEpisode>
 
+	HINT_%id% <You'll earn $ \VAL Reward StoryDL 500 and maybe a little something extra.>
+
 	sub
 		Persona 1
 		greeting <if= PlotStatus %plotid% %id% else %pop% Debrief  if# PCFac ChatNPCFac else .%id%_DefaultWin gOTO .%id%_GoReportSuccess>
@@ -362,6 +387,8 @@ Content
 	% E1 is the NPC.
 
 	start <ifNPCDead %1% SMemo 0 WinEpisode>
+
+	HINT_%id% <You'll earn $ \VAL Reward StoryDL 500 .>
 
 	sub
 		Persona 1

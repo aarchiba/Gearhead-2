@@ -55,7 +55,7 @@ Content
 	Place3 <2>
 	Element4 <Grab 8>
 
-	HINT_%plotid% <:%plotid1%>
+	HINT_%id% <:%id1%>
 
 	% P%id%01 = Initialization Counter
 	% P%id%02 = Decimation Counter
@@ -214,7 +214,7 @@ Content
 	Place3 <2>
 	Element4 <Grab 2>
 
-	HINT_%plotid% <:%plotid2%>
+	HINT_%id% <:%id2%>
 
 	% P%id%01 = Initialization Counter
 
@@ -286,7 +286,7 @@ Content
 	Element6 <Scene Hospital !Near -7>
 	Element7 <Prefab>
 
-	HINT_%plotid% <:%plotid1%>
+	HINT_%id% <:%id1%>
 
 	%% FAIL CONDITIONS
 	%% - TellSecret fails
@@ -414,7 +414,7 @@ Content
 	Element3 <Prefab>
 	Place3 <2>
 
-	HINT_%plotid% <:%plotid2%>
+	HINT_%id% <:%id2%>
 
 	%% FAIL CONDITIONS
 	%% - DiscoverNPCMission fails
@@ -450,7 +450,7 @@ Content
 	Element3 <Prefab>
 	Place3 <2>
 
-	HINT_%plotid% <:%plotid1%>
+	HINT_%id% <:%id1%>
 
 	%% FAIL CONDITIONS
 	%% - The DiscoverNPCMission subplot fails
@@ -575,7 +575,7 @@ Content
 	Element6 <Character (Friend|Lover|Family|Lancemate|PCFAC) HasMecha !Global>
 	Place6 <4 (Allies) sd ally>
 
-	HINT_%plotid% <:%plotid2%>
+	HINT_%id% <:%id2%>
 
 	% P%id%01 = Initialization Counter
 
@@ -669,7 +669,7 @@ Content
 	Element3 <Prefab>
 	Place3 <2>
 
-	HINT_%plotid% <:%plotid1%>
+	HINT_%id% <:%id1%>
 
 	%% FAIL CONDITIONS
 	%% - The DiscoverNPCMission subplot fails
@@ -791,7 +791,7 @@ Content
 	Msg%id%01 <%name1% has gotten away.>
 
 	%%  Hint Redirection
-	HINT_%plotid% <:%plotid2%>
+	HINT_%id% <:%id2%>
 
 	% SubPlot1 = Gain Advantage vs Raiders
 	% SubPlot2 = Discover NPC mission
@@ -899,7 +899,7 @@ Content
 	Msg%id%01 <%name1% has gotten away.>
 
 	%%  Hint Redirection
-	HINT_%plotid% <:%plotid2%>
+	HINT_%id% <:%id2%>
 
 	% SubPlot1 = Gain Advantage vs Raiders
 	% SubPlot2 = Discover NPC mission
@@ -973,7 +973,7 @@ Content
 	Element3 <Prefab>
 	Place3 <2>
 
-	HINT_%plotid% <:%plotid1%>
+	HINT_%id% <:%id1%>
 
 	%% FAIL CONDITIONS
 	%% - The DiscoverNPCMission subplot fails

@@ -26,7 +26,7 @@ Content
 	Element5 <Prefab>
 	Place5 <1>
 
-	HINT_%plotid% <There's been fighting reported in %name1%.>
+	HINT_%id% <There's been fighting reported in %name1%.>
 
 	sub
 		MetaScene 5 2
@@ -121,7 +121,7 @@ Content
 	NeverFail5 <Trucker>
 
 	% The Hint
-	HINT_%plotid% <I hear %name5% knows something about %name3%.>
+	HINT_%id% <I hear %name5% knows something about %name3%.>
 
 	%% FAIL CONDITIONS:
 	%%  - E5 dies before revealing the secret
@@ -154,7 +154,7 @@ Content
 	Element5 <Prefab>
 	Place5 <1>
 
-	HINT_%plotid% <%name4% has also been looking into this; you may be able to collaborate.>
+	HINT_%id% <%name4% has also been looking into this; you may be able to collaborate.>
 
 	%% FAIL CONDITIONS:
 	%% - E4 dies before revealing E5
@@ -258,7 +258,7 @@ Content
 	Place6 <4 sd ally (Guards)>
 
 	% The Hint
-	HINT_%plotid% <You might want to start at %name4%.>
+	HINT_%id% <You might want to start at %name4%.>
 
 	%% FAIL CONDITIONS:
 	%% - E5 dies
@@ -367,7 +367,7 @@ Content
 	Place6 </>
 
 	% The Hint
-	HINT_%plotid% <%name3%'s allies have been seen in %name4%.>
+	HINT_%id% <%name3%'s allies have been seen in %name4%.>
 
 	% SubPlot1 is the clue identification utility, in case the PC can't do it himself
 	SubPlot1 <*CS_AnalyzeClue_LeadToNPC 1 2 3 6>
@@ -619,7 +619,7 @@ Content
 	Place6 <5 (Enemies) SD enemy>
 
 	% The Hint
-	HINT_%plotid% <There have been some suspicious mecha in %name4%.>
+	HINT_%id% <There have been some suspicious mecha in %name4%.>
 
 	% P%id%01 = Initialization Counter
 	update <if= p%id%01 0 P= %id%01 1  NPCLevel %6% StoryDL>
@@ -715,7 +715,7 @@ Content
 	Element5 <Prefab>
 
 	% The Hint
-	HINT_%plotid% <Some pirates in %name1% have also been looking for the %name5%.>
+	HINT_%id% <Some pirates in %name1% have also been looking for the %name5%.>
 
 	% SubPlot1 is the clue identification utility, in case the PC can't do it himself
 	SubPlot1 <*CS_AnalyzeClue_LeadToItem 1 2 3 5>
@@ -789,6 +789,63 @@ Content
 		Msg7 <You don't think you can learn anything from the map with this skill.>
 	end
 
+%%
+%% *:CS_DiscoverNPCHasItem
+%%	&NotReally	The NPC doesn't actually have it
+%%
+%% In this subplot, the PC will learn that an item being sought is in the possession
+%% of a certain NPC.
+%%
+%% When this subplot reveals the NPC, the following trigger must be set:
+%%		.%id%_%plotid%_GoDiscover
+%%
+%% PARAM1: The NPC who has it
+%% PARAM2: The item being sought
+%% PARAM3: The outdoors scene where the NPC's base may be found
+%% PARAM4: The NPC's base
+%%
+
+Content
+	name <Trivial DNHI>
+	desc <Ask an NPC, get told who has it. Boring, but quick to write.>
+	requires <*:CS_DiscoverNPCHasItem>
+	Size 1
+
+	% E1 is the NPC with the item
+	% E2 is the item
+
+	% E5 is a local public scene
+	% E6 is an NPC who knows something about it
+	Element5 <Scene Building Public !Near -7>
+	Element6 <Character Knowledge !Near 5 -ENEMY NEVERFAIL>
+	NEVERFAIL4 <Professor>
+
+	% FAIL CONDITIONS
+	% - E6 dies before revealing the secret
+	% - The RevealNPCBase subplot fails
+	start <if= PlotStatus %plotid1% 0 else .%id%_GoCheckWin ifNPCDead %6% LoseSubPlot %plotid%>
+	.%id%_GoCheckWin <ifSubPlotWon %plotid1% else .%id%_GoCheckLoss WinSubPlot %plotid%>
+	.%id%_GoCheckLoss <ifSubPlotLost %plotid1% LoseSubPlot %plotid%>
+
+	HINT_%id% <%name6% might know something about this.>
+
+	% SubPlot1 is the RevealEncounter bit.
+	SubPlot1 <*:CS_RevealEncounter_NPCBase 3 4 1>
+
+	sub
+		Persona 6
+		rumor%id% <%name6% knows something about the %name2%.>
+		greeting <if= PlotStatus %plotid% %id% else GoChat if= PlotStatus %plotid1% 0 else GoChat Goto GoGreet>
+		GoChat <NewChat SayAnything>
+		*GoGreet <*LookingForItem %2% GoExplain>
+		GoExplain <NewChat Say 1 SMemo 2 History 3   SetPlotStatus %plotid1% %id1% Trigger0 .%id%_%plotid%_GoDiscover>
+		Msg1_1 <As far as I know, the %name2% is currently in the possession of %name1%.  \HINT_MEMO %id1%>
+		Msg1_2 <The last I heard, %name1% is the one who has the %name2%. \HINT_MEMO %id1%>
+		Msg1_3 <They say that the %name2% is being held by someone called %name1%. \HINT_MEMO %id1% Maybe this information can be of use to you.>
+		Msg2 <You learned from %name6% that %name1% is in possession of the %name2%.>
+		Msg3 <You learned that %name1% had the %name2%.>
+	end
+
 
 %%
 %% *:CS_RevealEncounter_NPCBase Content
@@ -824,7 +881,7 @@ Content
 	Place4 <1>
 
 	% The Hint
-	HINT_%plotid% <%name3%'s men have been seen in %name1%.>
+	HINT_%id% <%name3%'s men have been seen in %name1%.>
 
 	% P%id%01 = Initialization Counter
 	% P%id%02 = Tracking Difficulcy Number
@@ -907,7 +964,7 @@ Plot
 	Element6 <Scene Public !Near -7>
 
 	% The Hint
-	HINT_%plotid% <You might want to check out %name6%.>
+	HINT_%id% <You might want to check out %name6%.>
 
 	% SubPlot1 is the duel itself
 	% SubPlot2 is a blank plot state
@@ -982,7 +1039,7 @@ Content
 	Place5 <4 (Citizens) pass>
 
 	% The Hint
-	HINT_%plotid% <They say %name3% is planning a robbery.>
+	HINT_%id% <They say %name3% is planning a robbery.>
 
 	% p%id%01 = Message Counter
 	start <if= p%id%01 0   if= SceneID %4%   p= %id%01 1   Alert %id%01 History %id%02 ForceChat %5% FreezeNPC %5%>
@@ -1056,7 +1113,7 @@ Content
 	NeverFail4 <Trucker>
 
 	% The Hint
-	HINT_%plotid% <You might want to ask %name4% about this.>
+	HINT_%id% <You might want to ask %name4% about this.>
 
 	%% FAIL CONDITIONS:
 	%%  - E4 dies before revealing the secret
@@ -1101,7 +1158,7 @@ Content
 	Place3 <1>
 
 	% The Hint
-	HINT_%plotid% <The raiders were recently spotted in %name1%.>
+	HINT_%id% <The raiders were recently spotted in %name1%.>
 
 	% P%id%01 = Initialization Counter
 	% P%id%02 = Tracking Difficulcy Number
@@ -1192,7 +1249,7 @@ Content
 	Place3 <1>
 
 	% The Hint
-	HINT_%plotid% <The raiders were most recently spotted in %name1%.>
+	HINT_%id% <The raiders were most recently spotted in %name1%.>
 
 	% P%id%01 = Initialization Counter
 	% P%id%02 = Tracking Difficulcy Number
@@ -1272,7 +1329,7 @@ Content
 	Place4 <3 sd ally (Friend)>
 
 	% The Hint
-	HINT_%plotid% <You might want to start in %name1%.>
+	HINT_%id% <You might want to start in %name1%.>
 
 	sub
 		MetaScene 3 2
@@ -1331,7 +1388,7 @@ Content
 	Place4 </>
 
 	% The Hint
-	HINT_%plotid% <You might want to start at %name3%.>
+	HINT_%id% <You might want to start at %name3%.>
 
 	%% FAIL CONDITIONS:
 	%% - If E4 dies, this subplot will fail.
@@ -1428,7 +1485,7 @@ Content
 	Place5 <4>
 
 	% The Hint
-	HINT_%plotid% <You might want to start at %name3%.>
+	HINT_%id% <You might want to start at %name3%.>
 
 	%% FAIL CONDITIONS:
 	%% - If Item E5 is destroyed and E4 is dead, this subplot will fail.
@@ -1575,7 +1632,7 @@ Content
 	Place4 <1>
 
 	% The Hint
-	HINT_%plotid% <%name3%'s men have been seen in %name1%.>
+	HINT_%id% <%name3%'s men have been seen in %name1%.>
 
 	% P%id%01 = Initialization Counter
 	% P%id%02 = Tracking Difficulcy Number

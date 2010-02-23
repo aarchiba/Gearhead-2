@@ -9,14 +9,15 @@
 %   PARAM2: Reject Mission Exit Label (Note: Not all missions may be rejected!)
 %	(Also note: If this component features another ending, neither exit may
 %	 be called)
+%   PARAM3: Reward Hint (the layerid of the reward subplot)
 
 	Persona
 	requires <*CS_BasicStopEnemyMission "MEDIC" ~E:EVIL_ ~"NOFAC" ~*CORE_DEF_ ~*CORE_OFF_>
 	START <NewChat Say %id%01 AddChat %id%01 AddChat %id%02>
 	result%id%01 <StoryNote %id%02 Goto %1%>
 	result%id%02 <Goto %2%>
-	Msg%id%01_1 <A pilot was brought here in critical condition. He was incoherent, but kept muttering something about having to stop \PERSONA &EnemyNPC ... It sounded important. If possible, I'd like for you to investigate this.>
-	Msg%id%01_2 <A pilot was brought here in critical condition. She was incoherent, but kept muttering something about having to stop \PERSONA &EnemyNPC ... It sounded important. If possible, I'd like for you to investigate this.>
+	Msg%id%01_1 <A pilot was brought here in critical condition. He was incoherent, but kept muttering something about having to stop \PERSONA &EnemyNPC ... It sounded important. If possible, I'd like for you to investigate this. \HINT %3%>
+	Msg%id%01_2 <A pilot was brought here in critical condition. She was incoherent, but kept muttering something about having to stop \PERSONA &EnemyNPC ... It sounded important. If possible, I'd like for you to investigate this. \HINT %3%>
 	Msg%id%01_10 <>
 	CMsg%id%01_10 <ifNPCSociable Accept>
 	Msg%id%01_20 <>
@@ -44,7 +45,7 @@
 	result%id%01 <StoryNote %id%02 Goto %1%>
 	result%id%02 <StoryNote %id%02 AddSociable -d10 Goto %1%>
 	result%id%03 <StoryNote %id%02 AddSociable  d10 Goto %1%>
-	Msg%id%01 <According to \FACTION &AllyFac , you can help us with our \PERSONA &EnemyNPC problem. It seems \SPR &EnemyNPC 's in town on some kind of a mission, and we need you to stop \OPR &EnemyNPC .>
+	Msg%id%01 <According to \FACTION &AllyFac , you can help us with our \PERSONA &EnemyNPC problem. It seems \SPR &EnemyNPC 's in town on some kind of a mission, and we need you to stop \OPR &EnemyNPC . \HINT %3%>
 	Msg%id%01_1 <>
 	CMsg%id%01_1 <ifNPCSociable Accept>
 	Msg%id%01_2 <>
@@ -70,7 +71,7 @@
 	START <NewChat Say %id%01 AddChat %id%01 AddChat %id%02>
 	result%id%01 <StoryNote %id%02 Goto %1%>
 	result%id%02 <SMemo 0 Goto %2%>
-	Msg%id%01 <\PERSONA &EnemyNPC is planning some kind of heist in \SCENE RootSceneID . I need you to stop \PPR &EnemyNPC plans before \SPR &EnemyNPC gets a chance to succeed.>
+	Msg%id%01 <\PERSONA &EnemyNPC is planning some kind of heist in \SCENE RootSceneID . I need you to stop \PPR &EnemyNPC plans before \SPR &EnemyNPC gets a chance to succeed. \HINT %3%>
 	Msg%id%01_1 <>
 	CMsg%id%01_1 <ifNPCSociable Accept>
 	Msg%id%01_2 <>
@@ -97,7 +98,7 @@
 	START <NewChat Say %id%01 AddChat %id%01 AddChat %id%02>
 	result%id%01 <StoryNote %id%02 Goto %1%>
 	result%id%02 <SMemo 0 Goto %2%>
-	Msg%id%01 <We've determined that \PERSONA &EnemyNPC is in town on a mission. I want you to find out what this mission is and put a stop to it.>
+	Msg%id%01 <We've determined that \PERSONA &EnemyNPC is in town on a mission. I want you to find out what this mission is and put a stop to it. \HINT %3%>
 	Msg%id%01_1 <>
 	CMsg%id%01_1 <ifNPCSociable Accept>
 	Msg%id%01_2 <>
@@ -131,6 +132,8 @@
 %   PARAM2: Reject Mission Exit Label (Note: Not all missions may be rejected!)
 %	(Also note: If this component features another ending, neither exit may
 %	 be called)
+%   PARAM3: Reward Hint (the plotid of the reward subplot)
+
 
 	Persona
 	requires <*CS_BasicFightingMission "MEDIC" ~"Doctor" ~C:MEDIC ~"NOFAC" ~*CORE_DEF_ ~*CORE_R_MON ~E:EVIL_>
@@ -139,7 +142,7 @@
 	result%id%02 <NewChat Say %id%03 AddChat %id%03 AddChat %id%04>
 	result%id%03 <StoryNote %id%02 Goto %1%>
 	result%id%04 <SMemo 0 Goto %2%>
-	Msg%id%01 <There's a lance of raiders in town who have been sending our local cavaliers to the hospital. I'm offering a reward for anyone who can take them out... you know, as a public health measure.>
+	Msg%id%01 <There's a lance of raiders in town who have been sending our local cavaliers to the hospital. I'm offering a reward for anyone who can take them out... you know, as a public health measure. \HINT %3%>
 	Msg%id%01_1 <>
 	CMsg%id%01_1 <ifNPCSociable Accept>
 	Msg%id%01_2 <>
@@ -177,7 +180,7 @@
 	START <NewChat Say %id%01 AddChat %id%01>
 	result%id%01 <StoryNote %id%02 Goto %1%>
 	result%id%02 <SMemo 0 Goto %2%>
-	Msg%id%01 <So far we've been reacting to \FACTION &EnemyFac , but now it's time to take the fight to them. A team of their mecha has been spotted near town. I want you to find this lance and destroy it.>
+	Msg%id%01 <So far we've been reacting to \FACTION &EnemyFac , but now it's time to take the fight to them. A team of their mecha has been spotted near town. I want you to find this lance and destroy it. \HINT %3%>
 	Msg%id%01_1 <>
 	CMsg%id%01_1 <ifNPCSociable Accept>
 	Msg%id%01_2 <>
@@ -200,7 +203,7 @@
 	START <NewChat Say %id%01 AddChat %id%01 AddChat %id%02>
 	result%id%01 <StoryNote %id%02 Goto %1%>
 	result%id%02 <SMemo 0 Goto %2%>
-	Msg%id%01 <Several of our convoys have been attacked recently. I want you to locate the mecha responsible and eliminate them.>
+	Msg%id%01 <Several of our convoys have been attacked recently. I want you to locate the mecha responsible and eliminate them. \HINT %3%>
 	Msg%id%01_1 <>
 	CMsg%id%01_1 <ifNPCSociable Accept>
 	Msg%id%01_2 <>
@@ -227,7 +230,7 @@
 	START <NewChat Say %id%01 AddChat %id%01 AddChat %id%02>
 	result%id%01 <StoryNote %id%02 Goto %1%>
 	result%id%02 <SMemo 0 Goto %2%>
-	Msg%id%01 <The sensors at my lab picked up something strange near town. It's probably nothing, but it could be a unit of enemy mecha or something even worse. I'd like for you to figure out what it was.>
+	Msg%id%01 <The sensors at my lab picked up something strange near town. It's probably nothing, but it could be a unit of enemy mecha or something even worse. I'd like for you to figure out what it was. \HINT %3%>
 	Msg%id%01_1 <>
 	CMsg%id%01_1 <ifNPCSociable Accept>
 	Msg%id%01_2 <>
@@ -254,11 +257,11 @@
 	START <NewChat Say %id%01 AddCHat %id%01 AddChat %id%02>
 	result%id%01 <goto result%id%02>
 	result%id%02 <History %id%03 SMemo %id%04 Goto %1%>
-	Msg%id%01_1 <Your old nemesis \PERSONA &EnemyNPC is in town, and \SPR &EnemyNPC 's causing trouble. If you could locate and defeat \OPR &EnemyNPC there'd be a reward in it for you.>
+	Msg%id%01_1 <Your old nemesis \PERSONA &EnemyNPC is in town, and \SPR &EnemyNPC 's causing trouble. If you could locate and defeat \OPR &EnemyNPC there'd be a reward in it for you. \HINT %3%>
 	CMsg%id%01_1 <ifNPCOK &EnemyNPC Accept>
-	Msg%id%01_2 <I know that you've tangled with \FACTION &EnemyFac before; they've got some raiders in town, and there's a reward for anyone who can locate and stop them.>
+	Msg%id%01_2 <I know that you've tangled with \FACTION &EnemyFac before; they've got some raiders in town, and there's a reward for anyone who can locate and stop them. \HINT %3%>
 	CMsg%id%01_2 <if# 0 &EnemyFac ifNPCDead &EnemyNPC Accept>
-	Msg%id%01_3 <Some of your old enemies are in town, and they're causing trouble. There's a reward for anyone who can locate them and bring them to justice.>
+	Msg%id%01_3 <Some of your old enemies are in town, and they're causing trouble. There's a reward for anyone who can locate them and bring them to justice. \HINT %3%>
 	Msg%id%03_1 <\ChatNPC asked you to find and defeat \PERSONA &EnemyNPC .>
 	CMsg%id%03_1 <ifNPCOK &EnemyNPC Accept>
 	Msg%id%03_2 <\ChatNPC asked you to find and defeat raiders from \FACTION &EnemyFac .>
@@ -279,7 +282,7 @@
 	START <NewChat Say %id%01 AddChat %id%01 AddChat %id%02>
 	Result%id%01 <StoryNote %id%02 Goto %1%>
 	result%id%02 <SMemo 0 Goto %2%>
-	Msg%id%01 <There's a team of mecha from \FACTION &EnemyFac operating in \SCENE RootSceneID . Since we don't know what they're after, I need you to locate them and see what you can find out.>
+	Msg%id%01 <There's a team of mecha from \FACTION &EnemyFac operating in \SCENE RootSceneID . Since we don't know what they're after, I need you to locate them and see what you can find out. \HINT %3%>
 	Msg%id%01_1 <>
 	CMsg%id%01_1 <ifNPCSociable Accept>
 	Msg%id%01_2 <>
@@ -302,9 +305,9 @@
 	START <NewChat Say %id%01 AddChat %id%01 AddChat %id%02>
 	result%id%01 <StoryNote %id%02 Goto %1%>
 	result%id%02 <AddRenown -10 SMemo 0 Goto %2%>
-	Msg%id%01_1 <Some unidentified mecha have been spotted nearby. I can't be certain, but it seems like \PERSONA &EnemyNPC is involved. I want you to investigate.>
+	Msg%id%01_1 <Some unidentified mecha have been spotted nearby. I can't be certain, but it seems like \PERSONA &EnemyNPC is involved. I want you to investigate. \HINT %3%>
 	CMsg%id%01_1 <ifNPCOK &EnemyNPC Accept>
-	Msg%id%01_2 <Some unidentified mecha have been spotted nearby. I can't be certain, but it seems like your old enemies are involved. I want you to locate and neutralize them.>
+	Msg%id%01_2 <Some unidentified mecha have been spotted nearby. I can't be certain, but it seems like your old enemies are involved. I want you to locate and neutralize them. \HINT %3%>
 	CMsg%id%01_2 <ifNPCDead &EnemyNPC Accept>
 	Msg%id%01_11 <>
 	CMsg%id%01_11 <ifNPCSociable ifNPCOK &EnemyNPC Accept>
@@ -339,7 +342,7 @@
 	START <NewChat Say %id%01 AddChat %id%01 AddChat %id%02>
 	result%id%01 <StoryNote %id%02 Goto %1%>
 	result%id%02 <AddEasygoing -d6 SMemo 0 Goto %2%>
-	Msg%id%01 <Our sensors picked up a funny reading nearby. It was probably nothing, but just in case I'd like for you to try and find out what it was.>
+	Msg%id%01 <Our sensors picked up a funny reading nearby. It was probably nothing, but just in case I'd like for you to try and find out what it was. \HINT %3%>
 	Msg%id%01_1 <>
 	CMsg%id%01_1 <ifNPCSociable Accept>
 	Msg%id%01_2 <>
@@ -366,7 +369,7 @@
 	START <NewChat Say %id%01 AddChat %id%01 AddChat %id%02>
 	Result%id%01 <StoryNote %id%02 Goto %1%>
 	result%id%02 <SMemo 0 Goto %2%>
-	Msg%id%01 <We've detected some mecha from \FACTION &EnemyFac in town. They must be planning some kind of heist; I want you to find them and stop them before that can happen.>
+	Msg%id%01 <We've detected some mecha from \FACTION &EnemyFac in town. They must be planning some kind of heist; I want you to find them and stop them before that can happen. \HINT %3%>
 	Msg%id%01_1 <>
 	CMsg%id%01_1 <ifNPCSociable Accept>
 	Msg%id%01_2 <>
@@ -393,18 +396,18 @@
 	START <NewChat Say %id%01 AddChat %id%01 AddChat %id%02>
 	result%id%01 <StoryNote %id%02 Goto %1%>
 	result%id%02 <SMemo 0 Goto %2%>
-	Msg%id%01 <We've been tracking a group of mecha near town. I need you to locate them and determine whether or not they're hostile.>
-	Msg%id%01_1 <There's been a group of unknown mecha operating just outside the city. I want you to locate them, and if they prove hostile engage in combat.>
+	Msg%id%01 <We've been tracking a group of mecha near town. I need you to locate them and determine whether or not they're hostile. \HINT %3%>
+	Msg%id%01_1 <There's been a group of unknown mecha operating just outside the city. I want you to locate them, and if they prove hostile engage in combat. \HINT %3%>
 	CMsg%id%01_1 <ifNPCSociable Accept>
-	Msg%id%01_2 <A group of possibly hostile mecha has been detected in town. I need you to intercept them.>
+	Msg%id%01_2 <A group of possibly hostile mecha has been detected in town. I need you to intercept them. \HINT %3%>
 	CMsg%id%01_2 <ifNPCShy Accept>
-	Msg%id%01_3 <There have been some odd sensor readings from nearby, possibly indicating a group of unauthorized mecha. I need you to explore the area and see if you can find what's going on.>
+	Msg%id%01_3 <There have been some odd sensor readings from nearby, possibly indicating a group of unauthorized mecha. I need you to explore the area and see if you can find what's going on. \HINT %3%>
 	CMsg%id%01_3 <ifNPCEasygoing Accept>
-	Msg%id%01_4 <A team of raiders has been getting too close to our territory. What I need you to do is locate them and put a stop to it.>
+	Msg%id%01_4 <A team of raiders has been getting too close to our territory. What I need you to do is locate them and put a stop to it. \HINT %3%>
 	CMsg%id%01_4 <ifNPCPassionate Accept>
-	Msg%id%01_5 <There are some mecha in town that I need investigated. Intercept them for me and you'll earn a big reward.>
+	Msg%id%01_5 <There are some mecha in town that I need intercepted. \HINT %3%>
 	CMsg%id%01_5 <ifNPCCheerful Accept>
-	Msg%id%01_6 <A group of unauthorized mecha has been spotted in town... these may be the same pilots responsible for those attacks earlier. I need for you to run an intercept mission.>
+	Msg%id%01_6 <A group of unauthorized mecha has been spotted in town... these may be the same pilots responsible for those attacks earlier. I need for you to run an intercept mission. \HINT %3%>
 	CMsg%id%01_6 <ifNPCMelancholy Accept>
 	Msg%id%02 <\CHATNPC hired you to locate and engage a group of raiders.>
 	Prompt%id%01 <I'll get to work right away.>

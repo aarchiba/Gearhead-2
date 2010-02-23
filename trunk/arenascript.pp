@@ -1608,7 +1608,7 @@ begin
 	end;
 end;
 
-Function PlotHintString( GB: GameBoardPtr; Source: GearPtr; N: LongInt ): String;
+Function PlotHintString( GB: GameBoardPtr; Source: GearPtr; N: LongInt; AddMemo: Boolean ): String;
 	{ Determine hint string N for this plot. }
 	{ Also store a rumor memo. }
 	Function GenericHintString: String;
@@ -1641,7 +1641,7 @@ begin
 	if msg = '' then PlotHintString := GenericHintString
 	else begin
 		{ We found a hint. Save the plot memo. }
-		if ( Plot <> Nil ) and ( I_NPC <> Nil ) then begin
+		if AddMemo and ( Plot <> Nil ) and ( I_NPC <> Nil ) then begin
 			memo_msg := ReplaceHash( MsgString( 'PLOT_HINT_MEMO' ) , GearName( I_NPC ) );
 			memo_msg := FormatMemoString( GB , ReplaceHash( memo_msg , msg ) );
 			SetSAtt( Plot^.SA , 'MEMO' + BStr( N ) + ' <' + memo_msg + '>' );
@@ -1709,9 +1709,14 @@ begin
 				W := GEarName( Part );
 
 			end else if W = '\HINT' then begin
-				{ Insert the name of a specified plot element. }
+				{ Insert the hint of a specified plot element. }
 				ID := ScriptValue( S0 , GB , Scene );
-				W := PlotHintString( GB , Scene , ID );
+				W := PlotHintString( GB , Scene , ID , False );
+
+			end else if W = '\HINT_MEMO' then begin
+				{ Insert the hint of a specified plot element and store a memo about it. }
+				ID := ScriptValue( S0 , GB , Scene );
+				W := PlotHintString( GB , Scene , ID , True );
 
 			end else if W = '\ITEM' then begin
 				{ Insert the name of a specified item. }
@@ -5283,6 +5288,7 @@ Procedure AddLancemate( GB: GameBoardPtr; NPC: GearPtr );
 	{ Add the listed NPC to the PC's lance. }
 var
 	Mecha,Pilot: GearPtr;
+	Timer: LongInt;
 begin
 	{ This NPC will have to quit their current team to do this... }
 	{ so, better set a trigger. }
@@ -5298,6 +5304,10 @@ begin
 			SetNAtt( NPC^.NA , NAG_Narrative , NAS_GaveLMMecha , 1 );
 		end;
 	end;
+
+	{ Set the plot recharge timer to at least 12 hours from now. }
+	Timer := NAttValue( NPC^.NA , NAG_Personal , NAS_PlotRecharge );
+	if Timer < ( GB^.ComTime + 43200 ) then SetNAtt( NPC^.NA , NAG_Personal , NAS_PlotRecharge , GB^.ComTime + 43200 );
 
 	Pilot := LocatePilot( NPC );
 	if Pilot <> NPC then SetNAtt( Pilot^.NA , NAG_Location , NAS_Team , NAV_LancemateTeam );
@@ -5425,6 +5435,10 @@ begin
 		SetSAtt( NPC^.SA , 'TEAMDATA <Ally>' );
 		ChooseTeam( NPC , GB^.Scene );
 	end;
+
+	{ Set the rumor recharge to six hours from now. After all, the LM }
+	{ was hanging around with the PC... they need some time to hear things. }
+	SetNAtt( NPC^.NA , NAG_Personal , NAS_RumorRecharge , GB^.ComTime + 21600 );
 
 	if DoMessage then begin
 		if NPC = I_NPC then begin

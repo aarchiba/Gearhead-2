@@ -16,6 +16,120 @@
 %%
 
 Content
+	name <I Needed the Money>
+	desc <Your enemy is working a side job.>
+	requires <*:zzzCS_FetchItem E:A.jr_ E:M.--->
+	changes <E:M>
+	Size 5
+
+	% E1 is the item that was taken
+	% E2 is an outdoors scene
+	% E3 is a base for the enemy
+	% E4 is the ambush scene
+	% E5 is the enemy NPC
+	Place1 <4>
+	Element2 <Scene Outdoors !Near -7>
+	Element3 <Prefab>
+	Place3 <2>
+	Element4 <Prefab>
+	Place4 <2>
+	Element5 <Grab 1>
+	Place5 <4 (Enemies) SD enemy>
+
+	HINT_%id% <:%id1%>
+
+	%% FAIL CONDITIONS
+	%% - DiscoverNPCHasItem fails
+	%% - E1 is destroyed
+
+	% P%id%01 = Initialization Counter
+	% P%id%02 = Get item history counter
+
+	update <if= P%id%01 0 P= %id%01 1 SetPlotStatus %plotid1% %id1% NPCLevel %5% StoryDL>
+
+	get%1% <WinSubPlot %plotid% if= P%id%02 0 P= %id%02 1 History %id%01>
+
+	end <ifSubPlotLost %plotid1% else .%id%_GoCheckE1   LoseSubPlot %plotid%>
+	.%id%_GoCheckE1 <ifItemDestroyed %1%   LoseSubPlot %plotid%>
+
+	Msg%id%01 <You recovered the %name1% from %name5%.>
+
+
+	% SubPlot1 is where the PC learns that the enemy has the item.
+	SubPlot1 <*:CS_DiscoverNPCHasItem 5 1 2 3>
+
+	sub
+		MetaScene 3
+		boxmap
+		MapWidth 13
+		MapHeight 13
+		special <AddExit>
+
+		start <if= V1 0 V= 1 1 ForceChat %4%>
+		end <if# PlotStatus %plotid% %id% else GoLoseEpisode SetEncounterInactive %3% FreezeNPC %4%>
+		GoLoseEpisode <History 1 SetEncounterInactive %3% FreezeNPC %4% LoseSubPlot %plotid%>
+
+		Msg1 <You failed to recover the %name1% from %name4%.>
+
+		sub
+			Team 1
+
+			Team 2
+			name <Thief>
+		end
+
+		Persona 4
+		special <UNLISTED>
+		% V1 = First time counter
+		&HighPrice <Threat StoryDL 21>
+		&MedPrice <Threat StoryDL 20>
+		&LowPrice <Threat StoryDL 5>
+		greeting <ifChatNPCSurrendered else GoCheckAggro IfItemOK %1% Else GoDestroyed EndCHat Say 1 ifKeyItem %1% else GoGiveNow>
+		GoGiveNow <Print 3 GiveItem %1%>
+		GoDestroyed <EndChat Say 2>
+		GoCheckAggro <ifSubPlotWon %plotid% else GoGreet EndCHat Say 4 TeamAttack 2 PCEnemy %4%>
+		GoGreet <if= V1 0 else GoBeenBefore V= 1 1 History 6 &SetEnemyNPC %5% SetXXRAttitude %5% XXR_A_NeverMet SetDebriefing %id%10 Goto GoBeenBefore>
+		GoBeenBefore <NewChat Say 5 AddChat 1 AddChat 2 AddChat 3>
+		result1 <ifIntimidation HardSkillTar StoryDL else GoR1Fail EndChat Say 8 GiveItem %1% FreezeNPC %4% PCEnemy %4%>
+		GoR1Fail <EndChat Say 7 TeamAttack 2>
+		result2 <NewChat Say 9 AddChat 4 AddChat 5 AddChat 6 AddChat 7>
+		result3 <NewChat Say 10>
+		result4 <ifShopping 3 else GoR4Fail cash+ -&HighPrice EndChat Say 11 GiveItem %1% FreezeNPC %4%>
+		GoR4Fail <EndCHat Say 12 TeamAttack 2>
+		result5 <ifShopping HardSkillTar StoryDL else GoR4Fail ifIntimidation SkillTar StoryDL else GoR4Fail cash+ -&LowPrice EndChat Say 11 GiveItem %1% FreezeNPC %4%>
+		result6 <Goto result1>
+		result7 <Goto result3>
+		Msg1 <You win! Just take the %name1% and leave!>
+		Msg2 <You've destroyed the %name1%! It's useless to us both now...>
+		Msg3 <%name4% gives you the %name1%.>
+		Msg4 <Hey wait a minute... where's my %name1%!?>
+		Msg5 <They said that you were looking for this %name1%... Well, I hate to disappoint you, but I stole this for %name5% and I never disappoint such an important customer.>
+		Msg6 <%name4% stole the %name1% for someone named %name5%.>
+		Msg7 <If that's how you feel, I'm afraid I can't let you live!>
+		Msg8 <I guess I'd rather live than keep my perfect reputation... Here's the %name1%, just don't tell anyone you got it from me.>
+		Msg9 <%name5% said I'd get $ \VAL &MedPrice for it, but as I said it's not even an issue because I make it a policy to never disappoint a customer. It's not for sale.>
+		Msg10 <Give you some time!? Look, I'm getting ready to go... just get out of here and stop bothering me.>
+		Msg11 <Congratulations, you're my new customer! Here's the %name1%; I gotta go...>
+		Msg12 <I told you, it's not for sale! I can see there's only one way I'm every going to be rid of you...>
+		Prompt1 <I'm afraid that I can't let you keep it.>
+		Prompt2 <How much are you asking for it?>
+		Prompt3 <Wait, I need some time to think about this.>
+		Prompt4 <I'll pay you $ \VAL &HighPrice for it.>
+		CPrompt4 <ifG PC$ &HighPrice Accept>
+		Prompt5 <I'll pay you $ \VAL &LowPrice for it.>
+		CPrompt5 <ifG PC$ &LowPrice Accept>
+		Prompt6 <Looks like I'll have to take it from you, then.>
+		Prompt7 <Maybe I can gather some more money.>
+	end
+	inv
+		STC CORE-ACTIVATABLE-STATIONARY-DEFENDED
+		name <Hideout>
+
+
+	end
+
+
+Content
 	name <The Mansion of Fetch>
 	desc <The item you're looking for is held by a collector.>
 	requires <*:CS_FetchItem P:-- E:-- (C:THIEF|C:ADVEN|C:LABOR)>
@@ -38,14 +152,10 @@ Content
 	Element6 <Prefab>
 	Place6 <3>
 
-requires <*:CS_FetchItem>
-Element4 <Character Corporate -NOFAC !Near -7>
-
-	HINT_%plotid% <:%plotid1%>
+	HINT_%id% <:%id1%>
 
 	%% FAIL CONDITIONS
 	%% - DiscoverNPCHasItem fails
-	%% - RevealEncounter fails
 	%% - E1 is destroyed
 
 	% P%id%01 = Initialization Counter
@@ -56,21 +166,18 @@ Element4 <Character Corporate -NOFAC !Near -7>
 
 	get%1% <WinSubPlot %plotid% if= P%id%02 0 P= %id%02 1 History %id%01>
 
-	.%id1%_%plotid1%_GoDiscover <SetPlotStatus %plotid2% %id2%  SetPlotStatus %plotid3% %id3%>
-	.%id3%_%plotid3%_GoPeacefulEntry <P= %id%03 1>
+	.%id1%_%plotid1%_GoDiscover <SetPlotStatus %plotid2% %id2%>
+	.%id2%_%plotid2%_GoPeacefulEntry <P= %id%03 1>
 
-	end <ifSubPlotLost %plotid1% else .%id%_GoCheckSP2   LoseSubPlot %plotid%>
-	.%id%_GoCheckSP2 <ifSubPlotLost %plotid2% else .%id%_GoCheckE1   LoseSubPlot %plotid%>
+	end <ifSubPlotLost %plotid1% else .%id%_GoCheckE1   LoseSubPlot %plotid%>
 	.%id%_GoCheckE1 <ifItemDestroyed %1%   LoseSubPlot %plotid%>
 
 	Msg%id%01 <You recovered the %name1% from %name4%.>
 
 	% SubPlot1 is where the PC learns that the corporate character has the item.
-	% SubPlot2 is the PC's attempt to locate the mansion.
-	% SubPlot3 is the free entry task
-	SubPlot1 <*:CS_DiscoverNPCHasItem 4 1>
-	SubPlot2 <*:CS_RevealEncounter_NPCBase 2 3 4>
-	SubPlot3 <*:CS_PeacefulEntry_NPCBase 3 4>
+	% SubPlot2 is the free entry task
+	SubPlot1 <*:CS_DiscoverNPCHasItem 4 1 2 3>
+	SubPlot2 <*:CS_PeacefulEntry_NPCBase 3 4>
 
 	sub
 		MetaScene 3
@@ -190,11 +297,10 @@ Content
 	Element5 <NewNPC -2 0>
 	Place5 </>
 
-	HINT_%plotid% <:%plotid1%>
+	HINT_%id% <:%id1%>
 
 	%% FAIL CONDITIONS
 	%% - DiscoverNPCHasItem fails
-	%% - RevealEncounter fails
 	%% - E1 is destroyed
 
 	% P%id%01 = Initialization Counter
@@ -204,10 +310,7 @@ Content
 
 	get%1% <WinSubPlot %plotid% if= P%id%02 0 P= %id%02 1 History %id%01>
 
-	.%id1%_%plotid1%_GoDiscover <SetPlotStatus %plotid2% %id2%>
-
-	end <ifSubPlotLost %plotid1% else .%id%_GoCheckSP2   LoseSubPlot %plotid%>
-	.%id%_GoCheckSP2 <ifSubPlotLost %plotid2% else .%id%_GoCheckE1   LoseSubPlot %plotid%>
+	end <ifSubPlotLost %plotid1% else .%id%_GoCheckE1   LoseSubPlot %plotid%>
 	.%id%_GoCheckE1 <ifItemDestroyed %1%   LoseSubPlot %plotid%>
 
 	Msg%id%01 <You recovered the %name1% from %name4%.>
@@ -219,9 +322,7 @@ Content
 	CMsg%id%10_2 <if= ChatNPCFac 0 Accept>
 
 	% SubPlot1 is where the PC learns that the thief has the item.
-	% SubPlot2 is the PC's attempt to locate the thief.
-	SubPlot1 <*:CS_DiscoverNPCHasItem 4 1>
-	SubPlot2 <*:CS_RevealEncounter_NPCBase 2 3 4>
+	SubPlot1 <*:CS_DiscoverNPCHasItem 4 1 2 3>
 
 	sub
 		MetaScene 3
@@ -324,7 +425,7 @@ Content
 	Element7 <Prefab>
 	Place7 <3>
 
-	HINT_%plotid% <:%plotid1%>
+	HINT_%id% <:%id1%>
 
 	% Upon being activated, this subplot activates the DiscoverNPCHasItem subplot. When that
 	% subplot is completed, it activates both the RevealEncounter and LearnSecret ones.
@@ -350,16 +451,15 @@ Content
 	.%id%_GoBetterEnding <Monologue %4% %id%04 Monologue %5% %id%05 Monologue %4% %id%06 Monologue %4% %id%07   History %id%08 History %id%09  SetXXRAttitude %4% XXR_A_HatesPC  FreezeNPC %4% FreezeNPC %5% &SetEnemyNPC %4% &SetHangingNPC %5%  AlterContext .%id%_secondending  Alert %id%10   XPV 100  SetDebriefing %id%12>
 	.%id%_secondending <+Hed>
 
-	end <ifSubPlotLost %plotid1% else .%id%_GoCheckSP2   Goto .%id%_GoLoseMission>
-	.%id%_GoCheckSP2 <ifSubPlotLost %plotid2% else .%id%_GoCheckE1   Goto .%id%_GoLoseMission>
+	end <ifSubPlotLost %plotid1% else .%id%_GoCheckE1   Goto .%id%_GoLoseMission>
 	.%id%_GoCheckE1 <ifItemDestroyed %1%   Goto .%id%_GoLoseMission>
-	.%id%_GoLoseMission <CancelSubPlot %plotid3%  CancelSubPlot %plotid4%  LoseSubPlot %plotid% Trigger0 .%id%_%plotid%_GoLoss>
+	.%id%_GoLoseMission <CancelSubPlot %plotid2%  CancelSubPlot %plotid3%  LoseSubPlot %plotid% Trigger0 .%id%_%plotid%_GoLoss>
 	update <if= p%id%02 0 p= %id%02 1 SetPlotStatus %plotid1% %id1% NPCLevel %4% StoryDL NPCLevel %5% StoryDL>
 	Get%1% <P= %id%04 1>
 
 	% The LearnSecret will only be activated if the PC and Enemy aren't arch-enemies.
-	.%id1%_%plotid1%_GoDiscover <SetPlotStatus %plotid2% %id2%  ifG NPCRelationship %5% -1 SetPlotStatus %plotid3% %id3%>
-	.%id3%_%plotid3%_GoLearnSecret <if= p%id%01 0 p= %id%01 1 SetPlotStatus %plotid4% %id4%>
+	.%id1%_%plotid1%_GoDiscover <ifG NPCRelationship %5% -1 SetPlotStatus %plotid2% %id2%>
+	.%id2%_%plotid2%_GoLearnSecret <if= p%id%01 0 p= %id%01 1 SetPlotStatus %plotid3% %id3%>
 
 	Msg%id%01 <You escape from %name4%'s mobile base just moments before it explodes.>
 	Msg%id%02 <You escaped from %name4%'s mobile base right before it exploded.>
@@ -379,13 +479,11 @@ Content
 	Msg%id%12 <%name4% sounds like \OPR %4% 's going to be real trouble. I'd watch my back if I were you, \PC .>
 
 	% SubPlot1 is where the PC learns that BFF has the item.
-	% SubPlot2 is the PC's attempt to locate BFF.
-	% SubPlot3 is a secret about BFF, revealing connection to the enemy.
-	% SubPlot4 is the PC's difficult meeting with the Enemy.
-	SubPlot1 <*:CS_DiscoverNPCHasItem 4 1>
-	SubPlot2 <*:CS_RevealEncounter_NPCBase 2 3 4>
-	SubPlot3 <*:CS_LearnSecretAboutNPC 6 4>
-	SubPlot4 <*:CS_DifficultMeeting&IsEnemy&Protected 5>
+	% SubPlot2 is a secret about BFF, revealing connection to the enemy.
+	% SubPlot3 is the PC's difficult meeting with the Enemy.
+	SubPlot1 <*:CS_DiscoverNPCHasItem 4 1 2 3>
+	SubPlot2 <*:CS_LearnSecretAboutNPC 6 4>
+	SubPlot3 <*:CS_DifficultMeeting&IsEnemy&Protected 5>
 
 	sub
 		MetaScene 3
@@ -514,7 +612,7 @@ Content
 		greeting <if= p%id%03 0 else GoEndingConv Goto GoMeetingConv>
 		GoEndingConv <EndChat Say 1 AddChat 1 AddChat 2 PCEnemy %5%>
 		*GoMeetingConv <*YouWentThroughALotOfTrouble GoExplain>
-		GoExplain <WinSubPlot %plotid4% EndChat Say 2 AddChat 3 AddChat 4>
+		GoExplain <WinSubPlot %plotid3% EndChat Say 2 AddChat 3 AddChat 4>
 		*result1 <*IWillDestroyYou>
 		result2 <AddEasygoing -d10 Goto result1>
 		result3 <EndChat Say 3 AddChat 5>
@@ -570,7 +668,7 @@ Content
 	Element2 <Grab 1>
 	Place2 </>
 
-	HINT_%plotid% <:%plotid1%>
+	HINT_%id% <:%id1%>
 
 	% p%id%01 = Initialization Counter
 	% p%id%02 = Time Limit
@@ -648,7 +746,7 @@ Content
 	NeverFail5 <Thief>
 	Place5 <3 (Guards) sd>
 
-	HINT_%plotid% <:%plotid1%>
+	HINT_%id% <:%id1%>
 
 	% P%id%01 = Initialization Counter
 	% P%id%02 = Item has been lost
@@ -660,22 +758,19 @@ Content
 
 	update <if= P%id%01 0 P= %id%01 1 SetPlotStatus %plotid1% %id1% NPCLevel %5% StoryDL>
 
-	end <ifItemOK %1% else .%id%_GoFail ifSubPlotLost %plotid1% else .%id%_GoCheckSP2 Goto .%id%_GoFail>
-	.%id%_GoCheckSP2 <ifSubPlotLost %plotid2% Goto .%id%_GoFail>
+	end <ifItemOK %1% else .%id%_GoFail ifSubPlotLost %plotid1% else .%id%_GoCheckE1 Goto .%id%_GoFail>
+	.%id%_GoCheckE1 <ifItemDestroyed %1% Goto .%id%_GoFail>
 	.%id%_GoFail <LoseSubPlot %plotid%>
 
 	Get%1% <if= p%id%01 1 p= %id%01 2  History %id%01 WinSubPlot %plotid%>
 
 	.%id%_%plotid%_GoItemGone <P= %id%02 1>
 
-	.%id1%_%plotid1%_GoDiscover <SetPlotStatus %plotid2% %id2%>
-
 	Msg%id%01 <You recovered the %name1% from %name5%.>
 
 	% SubPlot1 is where the PC learns that the corporate character has the item.
 	% SubPlot2 is the PC's attempt to locate the mansion.
-	SubPlot1 <*:CS_DiscoverNPCHasItem 5 1>
-	SubPlot2 <*:CS_RevealEncounter_NPCBase 2 3 5>
+	SubPlot1 <*:CS_DiscoverNPCHasItem 5 1 2 3>
 
 	sub
 		Persona 5
@@ -757,7 +852,7 @@ Content
 	Element4 <Prefab>
 	Place4 <3>
 
-	HINT_%plotid% <:%plotid1%>
+	HINT_%id% <:%id1%>
 
 	% P%id%01 = Initialization Counter
 
@@ -860,7 +955,7 @@ Content
 	Element6 <Prefab>
 	Place6 <3>
 
-	HINT_%plotid% <The %name1% is said to be held by a pirate named %name5%.>
+	HINT_%id% <The %name1% is said to be held by a pirate named %name5%.>
 
 	% FAIL CONDITIONS:
 	% - The RevealShip subplot fails

@@ -233,9 +233,11 @@ Persona
 	Prompt%id%03_2 <That sounds like a good deal.>
 
 Persona
-	requires <*CS_C_Greeting *CORE_OFF_ E:++ ~E:ENEMY>
-	START <NewChat Say %id%01 AddChat %id%01>
+	requires <*CS_C_Greeting *CORE_OFF_ E:++ ~E:ENEMY -E:A.nme>
+	% V%id%01 = One time counter
+	START <if= v%id%01 0 else %1% V= %id%01 1 NewChat Say %id%01 AddChat %id%01 AddChat %id%02>
 	result%id%01 <goto %1%>
+	result%id%02 <AddSociable -d10  goto %1%>
 	Msg%id%01 <\PERSONA &EnemyNPC has been causing lots of trouble around here. I could use your help to defeat \OPR &EnemyNPC .>
 	Msg%id%01_1 <People say that you're \PERSONA &EnemyNPC 's arch-enemy. I hope it's true because \SPR &EnemyNPC 's been causing lots of trouble, and we need someone to deal with \OPR &EnemyNPC .>
 	CMsg%id%01_1 <ifNPCSociable Accept>
@@ -251,7 +253,10 @@ Persona
 	CMsg%id%01_6 <ifNPCMelancholy Accept>
 	Prompt%id%01_1 <Oh yeah, that's what I came for.>
 	Prompt%id%01_2 <I'm always ready to fight \PERSONA &EnemyNPC .>
-	Prompt%id%01_3 <>
+	Prompt%id%01_3 <I was hoping to face \OPR &EnemyNPC again...>
+	Prompt%id%02_1 <I don't care about \OPR &EnemyNPC , but as long as I'm paid well...>
+	Prompt%id%02_2 <Meh. I'm just doing my job.>
+	Prompt%id%02_3 <Keep paying me and I'll keep fighting \OPR &EnemyNPC .>
 
 Persona
 	requires <*CS_C_Greeting *CORE_OFF_ ~"MILIT" ~"ADVEN"  ~"PCFAC">
@@ -342,7 +347,7 @@ Persona
 
 Persona
 	%% Unknown greeting (default)
-	requires <*CS_C_Greeting -"FRIEND" -"FAMILY" -"ALLY" -"LOVER" -"PCFAC">
+	requires <*CS_C_Greeting -"FRIEND" -"FAMILY" -"ALLY" -"LOVER" -"PCFAC" -*CORE_R_>
 	% V%id%01 = One time use counter
 	START <if= v%id%01 0 else %1% NewChat Say %id%01 AddChat %id%01 V= %id%01 1>
 	result%id%01 <Goto %1%>
