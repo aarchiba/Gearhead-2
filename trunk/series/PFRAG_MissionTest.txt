@@ -38,7 +38,30 @@
 	Prompt%id%04_1 <Sorry, but I can't.>
 	Prompt%id%04_2 <This doesn't sound like my kind of job.>
 
+%
+% TYPE *ReferredForJob
+%
+%	The PC has been referred for this job by an NPC.
+%
+%   PARAM1: The NPC in question
+%   PARAM2: Exit Label
+%
 
+	Persona
+	requires <*ReferredForJob>
+	START <NewChat Say %id%01 AddCHat %id%01>
+	result%id%01 <Goto %2%>
+	Msg%id%01 <Hello, \PC . I heard that you'd be coming about this mission.>
+	Msg%id%01_10 <Ah, \PC , \PERSONA %1% told me that you'd be coming about this mission.>
+	CMsg%id%01_10 <ifNPCOK %1% Accept>
+	Msg%id%01_20 <You must be here about the mission.>
+	CMsg%id%01_20 <ifNPCDead %1% Accept>
+	Prompt%id%01 <Give me the details.>
+	Prompt%id%01_1 <Tell me what this is all about.>
+	Prompt%id%01_2 <What's the situation?>
+
+
+%
 % TYPE: *RejectMission
 %	The PC has been offered a mission, but has declined.
 %   PARAM1: Exit Label

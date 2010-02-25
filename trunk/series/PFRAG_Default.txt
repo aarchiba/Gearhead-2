@@ -1,5 +1,117 @@
 % Persona Fragment File
 
+% 
+% TYPE: *BasicMissionBriefing
+%
+%	The PC is being offered a basic mecha mission. Explain what's going
+%	on, and allow the PC to either accept or reject it.
+%
+%	Pay is "Reward %4% PayRate" plus salvage.
+%
+%   PARAM1: Scene where the mission will take place
+%   PARAM2: Accept mission exit label
+%   PARAM3: Refuse mission exit label
+%   PARAM4: The renown value, to calculate "Reward %4% PayRate"
+%
+
+	Persona
+	requires <*BasicMissionBriefing>
+	START <NewChat Say %id%01 AddChat %id%01 AddChat %id%02>
+	result%id%01 <Goto %2%>
+	result%id%02 <Goto %3%>
+	Msg%id%01 <Some mecha in \EXACT_SCENE %1% have been causing problems. I'd like for you to get rid of them. Do this, and you'll earn $ \VAL Reward %4% PayRate plus salvage.>
+	Msg%id%01_1 <>
+	CMsg%id%01_1 <ifNPCSociable Accept>
+	Msg%id%01_2 <>
+	CMsg%id%01_2 <ifNPCShy Accept>
+	Msg%id%01_3 <>
+	CMsg%id%01_3 <ifNPCEasygoing Accept>
+	Msg%id%01_4 <>
+	CMsg%id%01_4 <ifNPCPassionate Accept>
+	Msg%id%01_5 <>
+	CMsg%id%01_5 <ifNPCCheerful Accept>
+	Msg%id%01_6 <>
+	CMsg%id%01_6 <ifNPCMelancholy Accept>
+	Prompt%id%01 <I accept your terms.>
+	Prompt%id%01_1 <Alright, I'll do it.>
+	Prompt%id%01_2 <I'll be back to pick up the reward.>
+	Prompt%id%02 <Sorry, but I'm not interested.>
+	CPrompt%id%02 <if# PCFac ChatNPCFac Accept>
+	Prompt%id%02_1 <You'll have to find a different pilot.>
+	Prompt%id%02_2 <This isn't my kind of job.>
+
+%
+% TYPE: *LM_WhyNotMission
+%
+%	The lancemate has referred the PC to a mission, but the PC refused.
+% 	Note that this pfrag might jump straight to the DENY exit, or the NPC
+%	might try arguing with the PC.
+%
+%   PARAM1: Accept Mission exit label
+%   PARAM2: Deny Mission exit label
+%   PARAM3: The mission-giving NPC
+%
+
+	Persona
+	requires <*LM_WhyNotMission (Easygoing|Cheerful|Shy)>
+	START <EndChat Say %id%01 Goto %2%>
+	Msg%id%01 <No problem.>
+	Msg%id%01_1 <Alright, whatever you want.>
+	Msg%id%01_2 <Okay.>
+
+	Persona
+	requires <*LM_WhyNotMission -Easygoing -Cheerful -Shy>
+	START <EndChat  Say %id%01  AddReact -d4  Goto %2%>
+	Msg%id%01 <It's your loss.>
+	Msg%id%01_1 <You don't like my suggestion? Fine.>
+	Msg%id%01_2 <Yeah, whatever. Just do what you want.>
+
+	Persona
+	requires <*LM_WhyNotMission @:M.mer>
+	START <NewChat Say %id%01 AddChat %id%01 AddCHat %id%02 AddChat %id%03>
+	result%id%01 <ifG React d100 else .%id%_GoR1Fail ifG React 35 else .%id%_GoR1Fail EndChat Say %id%05 SetXXRMotivation ChatNPCID XXR_M_Seeker Goto %2%>
+	.%id%_GoR1Fail <AddReact -d3  EndChat Say %id%02 Goto %2%>
+	result%id%02 <EndChat Say %id%03 AddReact d10  Goto %1%>
+	result%id%03 <EndChat Say %id%04 Goto %2%>
+	Msg%id%01 <What's wrong with my idea? We could really use the money...>
+	Msg%id%01_1 <But this mission is worth a lot of money! You can't just reject it like that!>
+	Msg%id%02 <In a lot of ways, you and I are very different people, \PC ...>
+	Msg%id%02_1 <Things more important than money? Now you're just talking crazy, \PC .>
+	Msg%id%03 <That's the spirit! Now let's get out there and go to work!>
+	Msg%id%04 <I'm not worried about having enough money, I want to have giant truckloads of money!>
+	Msg%id%05 <You think I don't know that? I guess I have been a bit single-minded in pursuing my goal...>
+	Prompt%id%01 <There are things more important than money, \CHATNPC .>
+	Prompt%id%02 <You're right. Money is always nice.>
+	Prompt%id%03 <We've got enough money for right now.>
+	CPrompt%id%03 <ifG PC$ Threat PCRenown 10 Accept>
+
+%
+% TYPE: *LetsGoToMission
+%
+%	The NPC has referred the PC to a mission; let's go there now!
+%
+%   PARAM1: Exit Label
+%   PARAM2: NPC offering mission
+%   PARAM3: Scene where mission is
+%
+
+	Persona
+	requires <*LetsGoToMission>
+	START <EndChat Say %id%01 Goto %1%>
+	Msg%id%01 <Let's go see \PERSONA %2% right away.>
+	Msg%id%01_1 <>
+	CMsg%id%01_1 <ifNPCSociable Accept>
+	Msg%id%01_2 <>
+	CMsg%id%01_2 <ifNPCShy Accept>
+	Msg%id%01_3 <>
+	CMsg%id%01_3 <ifNPCEasygoing Accept>
+	Msg%id%01_4 <>
+	CMsg%id%01_4 <ifNPCPassionate Accept>
+	Msg%id%01_5 <Great! Let's head over to \EXACT_SCENE %3% as quickly as possible!>
+	CMsg%id%01_5 <ifNPCCheerful Accept>
+	Msg%id%01_6 <>
+	CMsg%id%01_6 <ifNPCMelancholy Accept>
+
 %
 % TYPE: *BetterBeGoing
 %

@@ -35,6 +35,13 @@ uses gears,locale,mpbuilder;
 const
 	GS_XRanStory = 1;
 
+	NAG_ArenaMissionInfo = 20;
+		NAS_PayRate = 1;	{ Determines how much money the unit will earn upon }
+					{ completing the mission. }
+		NAS_Pay = 2;		{ Holds the actual calculated pay value. }
+		NAS_IsCoreMission = 3;	{ If nonzero, this is a core mission. }
+
+
 var
 	persona_fragments: GearPtr;
 	Standard_Plots,Standard_Moods: GearPtr;

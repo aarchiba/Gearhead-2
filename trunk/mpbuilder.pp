@@ -819,6 +819,10 @@ begin
 		DelinkGear( SubPlot^.InvCom , Thing );
 		InsertInvCom( MasterPlot , Thing );
 	end;
+
+	{ If the master plot doesn't have a PayRate set, the subplot gets to }
+	{ set one. }
+	if NAttValue( MasterPlot^.NA , NAG_ArenaMissionInfo , NAS_PayRate ) = 0 then SetNAtt(  MasterPlot^.NA , NAG_ArenaMissionInfo , NAS_PayRate , NAttValue(  SubPlot^.NA , NAG_ArenaMissionInfo , NAS_PayRate ) );
 end;
 
 Function IsStandardTrigger( const S_Head: String ): Boolean;

@@ -100,7 +100,7 @@ Plot
 		greeting <NewChat Say %id%01 ifChatNPCinPlay AddChat %id%01 AddChat %id%02>
 		result%id%01 <EndChat Say %id%02 RunAway %1% Print %id%06 EndPlot>
 		result%id%02 <EndChat Say %id%03 AddChat %id%03>
-		result%id%03 <ifMedicine SkillTar %threat% else .%id%_GoR3Fail NewChat Say %id%04 AddReact d4 AddHeroic 1 EndPlot>
+		result%id%03 <ifMedicine SkillTar %threat% else .%id%_GoR3Fail NewChat Say %id%04 AddReact d4 EndPlot ifG %threat% PCHeroism AddHeroic 1>
 		.%id%_GoR3Fail <EndChat Say %id%05 AddRenown -1 RunAway %1% Print %id%06 EndPlot>
 		Msg%id%01 <Ugh... I think I'm coming down with something.>
 		Msg%id%01_1 <I feel terrible... I hope I'm not coming down with that bug that's on the go. One of my friends caught it and was absolutely miserable.>

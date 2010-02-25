@@ -244,7 +244,7 @@ Content
 		Persona 1
 		% V%id%01 = XP Award
 		greeting <if= PlotStatus %plotid% %id% else %pop% Debrief  NewChat Say %id%01 AddChat %id%01 AddChat %id%02>
-		result%id%01 <Alert %id%02 V= %id%01 * 50 EpisodeNumber V+ %id%01 50 SkillXP 1 %id%01 SkillXP 2 %id%01 SkillXP 3 %id%01 SkillXP 4 %id%01 SkillXP 5 %id%01 SkillXP 6 %id%01 NewChat Say %id%03 History %id%04 WinEpisode>
+		result%id%01 <Alert %id%02 V= %id%01 * 7 StoryDL V+ %id%01 50 SkillXP 1 %id%01 SkillXP 2 %id%01 SkillXP 3 %id%01 SkillXP 4 %id%01 SkillXP 5 %id%01 SkillXP 6 %id%01 NewChat Say %id%03 History %id%04 WinEpisode>
 		result%id%02 <NewChat Say %id%05 History %id%06 CashPrize Reward StoryDL 500 AddReact -d10  WinEpisode>
 		Msg%id%01 <So you did it... You are truly on the path to becoming a great cavalier. Now, I'll teach you what I know...>
 		Msg%id%02 <You train with \CHATNPC .>

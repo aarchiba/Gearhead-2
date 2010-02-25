@@ -11,6 +11,93 @@
 %%
 
 Content
+	name <Mercenary Mission>
+	desc <The LM will find you a high-paying mission.>
+	requires <*LM_NonComCharDev 1:M.mer>
+	PayRate 200
+
+	% E1 is the lancemate in question
+	% E2 is the character who will offer the mission
+	% E3 is the root scene
+	Element2 <Character (POLIT|MILIT|CORPO|POLIC|ADVEN) -NoFac -Enemy>
+	Element3 <Scene Town>
+
+	% P%id%01 = Chat counter
+
+	start <ifNPCOK %1% else .%id%_GoEndPlot ifNPCOK %2% else .%id%_GoEndPlot if= RootSceneID %3% else .%id%_GoEndPlot ifNPCLancemate %1% ifScene .%id%_scenetype if= P%id%01 0     P= %id%01 1  Alert %id%02 ForceChat %1% PMemo %plotid% %id%01>
+	.%id%_scenetype <outdoors>
+	.%id%_GoEndPlot <EndPlot>
+
+	Msg%id%01 <%name1% wants to talk with you about something.>
+	Msg%id%02 <%name1% approaches you.>
+
+	%% SubPlot1 is the mission itself
+	SubPlot1 <*UTIL_ReferredMission 1 2>
+
+	sub
+		Persona 1
+		&%id%_E2Scene <NPCScene %2%>
+		greeting <if= PlotStatus %plotid% %id% else %pop% ifNPCOK %2% else .%id%_GoEnd if= P%id%01 1 else .%id%_GoExplainPlan Goto .%id%_GoWantsToTalk>
+		.%id%_GoEnd <EndPlot RevertPersona>
+		*.%id%_GoWantsToTalk <*LancemateWantsToTalk .%id%_GoExplainPlan .%id%_GoTalkLater>
+		.%id%_GoExplainPlan <P= %id%01 2 NewChat Say %id%01 AddChat %id%01 AddChat %id%02 AddChat %id%03 AddChat %id%04>
+		*.%id%_GoTalkLater <*TalkAgainWhenYouHaveTime>
+		.%id%_GoAcceptMission <pmemo %plotid% %id%02  AddReact d4  SetPlotStatus %plotid1% %id1%>
+		.%id%_GoDenyMission <EndPlot>
+		*result%id%01 <*LetsGoToMission .%id%_GoAcceptMission %2% &%id%_E2Scene>
+		*result%id%02 <*LM_WhyNotMission .%id%_GoAcceptMission .%id%_GoDenyMission %2%>
+		result%id%03 <NewChat Say %id%03 AddChat %id%05 AddChat %id%06>
+		result%id%04 <NewChat Say %id%04 Goto .%id%_GoAcceptMission>
+		result%id%05 <goto result%id%01>
+		result%id%06 <goto result%id%02>
+		Msg%id%01 <I've got a lead on a really great mission- %name2% is paying double the standard rate for cavaliers. If we hurry over to \EXACT_SCENE NPCScene %2% we can be the ones to land the job.>
+		Msg%id%01_1 <>
+		CMsg%id%01_1 <ifNPCSociable Accept>
+		Msg%id%01_2 <>
+		CMsg%id%01_2 <ifNPCShy Accept>
+		Msg%id%01_3 <>
+		CMsg%id%01_3 <ifNPCEasygoing Accept>
+		Msg%id%01_4 <>
+		CMsg%id%01_4 <ifNPCPassionate Accept>
+		Msg%id%01_5 <>
+		CMsg%id%01_5 <ifNPCCheerful Accept>
+		Msg%id%01_6 <>
+		CMsg%id%01_6 <ifNPCMelancholy Accept>
+		Msg%id%02 <%name1% told you about a lucrative mission being offered by %name2%.>
+		Msg%id%03 <The only catch is that this job isn't being announced through the usual channels, you've got to have a contact on the know... like me. So, what do you say, are you ready to start earning the big bucks?>
+		Msg%id%03_1 <>
+		CMsg%id%03_1 <ifNPCSociable Accept>
+		Msg%id%03_2 <>
+		CMsg%id%03_2 <ifNPCShy Accept>
+		Msg%id%03_3 <>
+		CMsg%id%03_3 <ifNPCEasygoing Accept>
+		Msg%id%03_4 <>
+		CMsg%id%03_4 <ifNPCPassionate Accept>
+		Msg%id%03_5 <>
+		CMsg%id%03_5 <ifNPCCheerful Accept>
+		Msg%id%03_6 <>
+		CMsg%id%03_6 <ifNPCMelancholy Accept>
+		Msg%id%04_1 <It's not for me to explain the bureaucratic madness of \FACTION PCFac . Shall we head off?>
+		Msg%id%04_2 <%name2% owes me a favor. I'm owed lots of favors. Let's call \OPR %2% and get to work.>
+		Msg%id%04_3 <Good question... you didn't piss off anyone at work, did you? We better do well on the mission to safeguard your good name.>
+		Msg%id%04_4 <Don't think about it, it'll only make you impressed. We should get in contact with %name2% and get to work.>
+		Prompt%id%01 <Good work, %name1%. Let's go!>
+		Prompt%id%01_1 <Sounds good! Let's go.>
+		Prompt%id%01_2 <That sounds good. Let's go.>
+		Prompt%id%02 <I don't want to work for %name2%.>
+		CPrompt%id%02 <if# NPCFac %2% PCFac Accept>
+		Prompt%id%02_1 <I don't really want to take this mission.>
+		Prompt%id%02_2 <%name1%, we're too busy to bother with that.>
+		Prompt%id%03 <There's got to be some kind of catch.>
+		Prompt%id%03_1 <Wait... what's wrong with this mission?>
+		Prompt%id%03_2 <It's got to be a trick or something.>
+		Prompt%id%04 <Wait... why didn't %name2% contact me directly?>
+		CPrompt%id%04 <if= NPCFac %2% PCFac Accept>
+		Prompt%id%05 <Alright, let's do it.>
+		Prompt%id%06 <No, I still don't want to.>
+	end
+
+Content
 	name <Let Me Show You Something>
 	desc <The lancemate will lead the PC to a special reward.>
 	requires <*LM_NonComCharDev 1:A.tha>

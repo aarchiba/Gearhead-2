@@ -96,13 +96,61 @@ Content
 
 %%
 %% *UTIL_BlankState
-%%
+%%  
 %%  For when you need a PlotState, but don't need anything to happen.
 %%
 
 Content
 	name <Blank State>
 	requires <*UTIL_BlankState>
+
+%%
+%% *UTIL_ReferredMission
+%%
+%%  The PC has been sent to this person, who will now give a basic mecha
+%%  mission.
+%%
+%%  The master plot must have a PayRate set.
+%%
+%%  PARAM1: The Referrer
+%%  PARAM2: The mission-giver
+%%
+
+Content
+	name <Basic Referred Mission>
+	% The basic patrol job is a fight against some generic enemy mecha.
+	% This job gives salvage. This job will not result in the PC making
+	% any enemies.
+	requires <*UTIL_ReferredMission>
+
+	% E1 is the referrer
+	% E2 is the mission-giver
+	% E3 is a scene where the encounter will take place
+	Element3 <Scene Outdoors>
+
+	% SubPlot1 is the combat encounter
+	SubPlot1 <*MECHAMISSION_Basic 2 3>
+
+	% P%id%01 = Time Limit
+	start <ifNPCOK %2% else .%id%_GoDelete if# P%id%01 0 ifG ComTime P%id%01 EndPlot>
+	.%id%_GoDelete <EndPlot>
+	update <if= P%id%01 0 P= %id%01 ComTime P+ %id%01 86400>
+
+	% SubPlot1 is the mission
+	SubPlot1 <*MECHAMISSION_Basic 2 3>
+
+	sub
+		Persona 2
+		greeting <if# PlotStatus %plotid% %id% else .%id%_GoGreet if# PlotStatus %plotid% %id1% else .%id%_GoRemind  Goto %pop%>
+		*.%id%_GoRemind <*MechaMissionReminder %3%>
+		*.%id%_GoGreet <*ReferredForJob %1% .%id%_GoBriefing>
+		*.%id%_GoBriefing <*BasicMissionBriefing %3% .%id%_GoAcceptMission .%id%_GoRejectMission %threat%>
+		*.%id%_GoAcceptMission <*GoodLuckOnMission&NoEnemyFac .%id%_GoAccept ChatNPCFac na>
+		.%id%_GoAccept <PMemo %plotid% %id%01 SetPlotStatus %plotid% %id1%>
+		*.%id%_GoRejectMission <*RejectMission .%id%_GoEnd>
+		.%id%_GoEnd <EndPlot>
+		Msg%id%01 <%name2% in \SCENE NPCScene %2% hired you to fight some mecha in \EXACT_SCENE %3% .>
+	end
 
 
 %%

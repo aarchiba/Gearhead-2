@@ -1139,7 +1139,7 @@ begin
 	Best := 0;
 
 	while T <> Nil do begin
-		if AreAllies( GB , Mek , T ) then begin
+		if AreAllies( GB , Mek , T ) and ( ( T^.G = GG_Character ) or ( SAttValue( T^.SA , 'pilot' ) <> '' ) ) then begin
 			Dmg := RepairNeededBySkill( T , Skill );
 			if ( Dmg > Best ) and CanRepairUsingSKill( Mek , T , Skill ) then begin
 				BTar := T;

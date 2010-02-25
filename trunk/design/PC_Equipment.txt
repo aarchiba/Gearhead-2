@@ -1826,6 +1826,15 @@ Mass 1
 legality -50
 
 MedicineFuel 150
+Name <Sutures>
+desc <Sterilised string used to bind open wounds and, in less fortunate circumstances, reattach limbs.>
+Category <MEDICINE ESSENTIAL>
+Factions <GENERAL>
+SDL_PORTRAIT <item_medicine.png>
+Mass 1
+legality -50
+
+MedicineFuel 300
 Name <First Aid Kit>
 desc <A kit containing a variety of supplies required for a wide range of injuries.>
 Category <MEDICINE TOOL>
@@ -1833,6 +1842,16 @@ Factions <GENERAL>
 SDL_PORTRAIT <item_medicine.png>
 Mass 1
 legality -50
+
+MedicineFuel 600
+Name <Field Surgery Kit>
+desc <A kit often found in the possession of combat medics.>
+Category <MEDICINE>
+Factions <GENERAL>
+SDL_PORTRAIT <item_medicine.png>
+Mass 1
+legality -50
+
 
 RepairFuel 10
 Name <Scotch Tape>
@@ -1930,23 +1949,6 @@ Factions <GENERAL>
 Mass 5
 legality -10
 
-MedicineFuel 50
-Name <Sutures>
-desc <Sterilised string used to bind open wounds and, in less fortunate circumstances, reattach limbs.>
-Category <MEDICINE ESSENTIAL>
-Factions <GENERAL>
-SDL_PORTRAIT <item_medicine.png>
-Mass 1
-legality -50
-
-MedicineFuel 300
-Name <Field Surgery Kit>
-desc <A kit often found in the possession of combat medics.>
-Category <MEDICINE>
-Factions <GENERAL>
-SDL_PORTRAIT <item_medicine.png>
-Mass 1
-legality -50
 
 BiotechFuel 500
 Name <Biotech Lab Set>

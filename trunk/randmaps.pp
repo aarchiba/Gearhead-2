@@ -2463,7 +2463,7 @@ begin
 			DelinkGearForMovement( GB , E );
 
 			{ If E is prefab, don't store an original home, but do save the PlotID. }
-			if AStringHasBString( SAttValue( E^.SA , 'ELEMENT' ) , 'PREFAB' ) then begin
+			if AStringHasBString( SAttValue( C^.SA , 'ELEMENT' + BStr( T ) ) , 'PREFAB' ) then begin
 				SetNAtt( E^.NA , NAG_ParaLocation , NAS_OriginalHome , 0 );
 				SetNAtt( E^.NA , NAG_Narrative , NAS_PlotID , NAttValue( GB^.Scene^.NA , NAG_Narrative , NAS_PlotID ) );
 			end;

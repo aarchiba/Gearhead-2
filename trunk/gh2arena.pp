@@ -44,11 +44,7 @@ uses gears,locale,
 {$ENDIF}
 
 const
-	NAG_ArenaMissionInfo = 20;
-		NAS_PayRate = 1;	{ Determines how much money the unit will earn upon }
-					{ completing the mission. }
-		NAS_Pay = 2;		{ Holds the actual calculated pay value. }
-		NAS_IsCoreMission = 3;	{ If nonzero, this is a core mission. }
+	{ ArenaMissionInfo moved to playwright.pp }
 
 	NAG_MissionCoupon = 24;		{ Certain missions can only be taken a set number }
 					{ of times. }

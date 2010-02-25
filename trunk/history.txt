@@ -1,3 +1,7 @@
+- If masterplot has no payrate, may be set by subplot (mpbuilder.pp)
+- Lancemates won't try to fix unassigned mecha (aibrain.pp)
+- Fixed disappearing NPCs rancon problem (randmaps.pp)
+
 0.622   February 24 2010
 - Set plot timer on joining lance, rumor timer on quitting (arenascript.pp)
 - \HINT now uses LayerID rather than PlotID (arenascript.pp)

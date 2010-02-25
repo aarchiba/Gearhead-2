@@ -5,6 +5,62 @@
 % ***
 
 Plot
+	name <Debug Global NPCs>
+
+	Element1 <Scene Urban>
+	Element2 <Prefab>
+	Place2 <1>
+	Element3 <Scene CavClub>
+	Element4 <Prefab>
+	Place4 <3 (Citizens)>
+	Element5 <Character !Global>
+	Place5 <2 (Citizens)>
+
+	start <if= V1 0 PCFriend %5% Print 1>
+
+	msg1 <%name5% was placed by the plot itself.>
+
+	sub
+		MetaScene 2
+		MapWidth 25
+		MapHeight 25
+		BoxMap
+		special <AddExit>
+		nu1 <if= T1 0 Return>
+		Content1 <Some 1 100 Here *THING_1>
+		Content2 <Some 1 100 Here *THING_2>
+
+		sub
+			Team 1
+
+			Team 2
+			name <Citizens>
+			setally 1 3
+			Passive
+
+			Team 3
+			name <Guards>
+			SetAlly 1 2
+		end
+
+		Persona 4
+		greeting <NewChat Say 1 AddChat 1 AddChat 2>
+		*result1 <*GoodBye>
+		result2 <NewChat Say 2 EndPlot>
+		Msg1 <End the plot?>
+		Msg2 <Ending the plot now.>
+		Prompt1 <Not yet.>
+		Prompt2 <Yes please.>
+	end
+	inv
+		STC Encounter
+		name <Debug>
+
+		NPC Citizen
+		name <Control>
+	end
+
+Plot
 	name <AA_RenderBuildings>
 	% Used for generating isometric sprites of the prop meshes.
 	% Back up three clicks exactly before taking the snap.
