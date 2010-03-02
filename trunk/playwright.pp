@@ -726,6 +726,11 @@ begin
 			SetSAtt( Plot^.SA , 'ELEMENT' + BStr( N ) + ' <S Prefab>' );
 			SetSAtt( E^.SA , 'ELEMENT <S Prefab>' );
 
+			{ Maybe set this element's name. }
+			Place := GearName( E );
+			ReplacePat( Place , '%r%' , RandomName );
+			SetSAtt( E^.SA , 'name <' + Place + '>' );
+
 		end else begin
 			ID := NewNID( Adventure );
 			SetNAtt( E^.NA , NAG_Narrative , NAS_NID , ID );

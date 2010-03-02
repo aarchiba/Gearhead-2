@@ -1,5 +1,31 @@
 % Persona Fragment File
 
+% TYPE: *YourLossSucker
+%	The PC has rejected an offer, the NPC will respond thusly.
+%  PARAM1: Exit Label
+
+	Persona
+	requires <*YourLossSucker>
+	START <NewChat Say %id%01 Goto %1%>
+	Msg%id%01 <It's your loss, sucker.>
+	Msg%id%01_1 <>
+	CMsg%id%01_1 <ifNPCSociable Accept>
+	Msg%id%01_2 <>
+	CMsg%id%01_2 <ifNPCShy Accept>
+	Msg%id%01_3 <>
+	CMsg%id%01_3 <ifNPCEasygoing Accept>
+	Msg%id%01_4 <>
+	CMsg%id%01_4 <ifNPCPassionate Accept>
+	Msg%id%01_5 <>
+	CMsg%id%01_5 <ifNPCCheerful Accept>
+	Msg%id%01_6 <>
+	CMsg%id%01_6 <ifNPCMelancholy Accept>
+	Msg%id%01_7 <>
+	CMsg%id%01_7 <ifNPCPragmatic Accept>
+	Msg%id%01_8 <>
+	CMsg%id%01_8 <ifNPCSpiritual Accept>
+
+
 % 
 % TYPE: *BasicMissionBriefing
 %

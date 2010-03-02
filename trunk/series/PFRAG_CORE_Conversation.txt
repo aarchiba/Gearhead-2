@@ -10,7 +10,7 @@
 %%
 
 Persona
-	requires <*CS_C_Greeting *CORE_S_PCF>
+	requires <*CS_C_Greeting *CORE_S_PCF ~"Ally">
 	% V%id%01 = One time use counter
 	START <if= v%id%01 0 else %1% V= %id%01 1 NewChat Say %id%01 AddChat %id%01>
 	result%id%01 <goto %1%>
@@ -344,6 +344,21 @@ Persona
 	CMsg%id%01_6 <ifNPCMelancholy Accept>
 	Prompt%id%01_1 <I'll do my best.>
 	Prompt%id%01_2 <I'm ready for it.>
+
+Persona
+	%% Default reward greeting
+	requires <*CS_C_Greeting *CORE_R_>
+	% V%id%01 = One time use counter
+	START <if= v%id%01 0 else %1% NewChat Say %id%01 AddChat %id%01 V= %id%01 1>
+	result%id%01 <Goto %1%>
+	Msg%id%01_10 <I could use your help with something, \PC , and from what I hear you could use my help as well...>
+	CMsg%id%01_10 <ifChatNPCKnown Accept>
+	Msg%id%01_20 <I've been searching for a cavalier. Do this one thing for me, and I guarantee to make it worth your while.>
+	CMsg%id%01_20 <ifChatNPCUnknown Accept>
+	Prompt%id%01_1 <I am intrigued by your offer.>
+	Prompt%id%01_2 <What sort of deal are you thinking about?>
+	Prompt%id%01_3 <What are you offering?>
+
 
 Persona
 	%% Unknown greeting (default)

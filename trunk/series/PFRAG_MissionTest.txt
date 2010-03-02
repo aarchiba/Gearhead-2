@@ -39,6 +39,120 @@
 	Prompt%id%04_2 <This doesn't sound like my kind of job.>
 
 %
+% TYPE: *AutoThiefTest
+%
+%	The NPC has a criminal proposition for the PC.
+%
+%   PARAM1: Accept Exit Label	( no message )
+%   PARAM2: Reject Exit Label	( no message )
+%   PARAM3: Failure Exit Label ( no message )
+%
+
+	Persona
+	requires <*AutoThiefTest "PCFAC">
+	START <if= PCFac ChatNPCFac else %3% NewChat Say %id%01 AddChat %id%01 AddChat %id%02>
+	result%id%01 <Goto %1%>
+	result%id%02 <Goto %2%>
+	Msg%id%01 <Hey \PC , do I have an offer for you...>
+	Msg%id%01_1 <You're just in time, \PC . I've got a special offer just for you...>
+	Msg%id%01_2 <>
+	Prompt%id%01 <Tell me about it, \CHATNPC .>
+	Prompt%id%01_1 <You don't say? What kind of offer?>
+	Prompt%id%01_2 <Interesting. Give me the details.>
+	Prompt%id%02 <No thanks, \CHATNPC .>
+	Prompt%id%02_1 <I don't have time for this today.>
+	Prompt%id%02_2 <Thanks for telling me, but I'm not interested.>
+
+	Persona
+	requires <*AutoThiefTest -"PCFAC">
+	START <ifG React d70 else %3% NewChat Say %id%01 AddChat %id%01 AddChat %id%02>
+	result%id%01 <Goto %1%>
+	result%id%02 <Goto %2%>
+	Msg%id%01 <Say, how would you be interested in earning a bit of filthy lucre?>
+	Msg%id%01_1 <If you're hoping to get rich quick, sometimes you've got to get your hands dirty. How would you like to make a bit of filthy lucre?>
+	Msg%id%01_2 <How would you like a chance to earn wads of money, if all you had to do was break a few laws?>
+	Prompt%id%01 <I'd be very interested.>
+	Prompt%id%01_1 <Anything for a quick buck, I always say.>
+	Prompt%id%01_2 <>
+	Prompt%id%02 <No thanks.>
+	Prompt%id%02_1 <I don't do that kind of work.>
+	Prompt%id%02_2 <>
+
+%
+% TYPE: *SkillThiefTest
+%
+%	The NPC has a criminal proposition, which the PC may be able to learn
+%	about.
+%
+%   PARAM1: Accept Exit Label	( no message )
+%   PARAM2: Reject Exit Label	( no message )
+%   PARAM3: Failure Exit Label
+%   PARAM4: Difficulty rating, expressed as renown
+%
+
+	Persona
+	requires <*SkillThiefTest ~"Melancholy" ~"Villainous">
+	START <NewChat Say %id%01 AddChat %id%01 AddChat %id%02 AddChat %id%03>
+	result%id%01 <ifIntimidation SkillTar %4% else .%id%_GoR1Fail Goto %1%>
+	.%id%_GoR1Fail <EndChat Say %id%02 Goto %3%>
+	result%id%02 <ifConversation SkillTar %4% else .%id%_GoR2Fail Goto %1%>
+	.%id%_GoR2Fail <EndChat Say %id%03 Goto %3%>
+	result%id%03 <Goto %2%>
+	Msg%id%01 <To get ahead in this world you can't allow tiny things like "law" or "morality" to stand in your way.>
+	Msg%id%01_1 <>
+	CMsg%id%01_1 <ifNPCSociable Accept>
+	Msg%id%01_2 <>
+	CMsg%id%01_2 <ifNPCShy Accept>
+	Msg%id%01_3 <>
+	CMsg%id%01_3 <ifNPCCheerful Accept>
+	Msg%id%01_4 <This world is populated entirely by thieves and bandits. There are the crooks on top who have enough power to make the laws, and the rest of us on bottom who only have the power to break them.>
+	CMsg%id%01_4 <ifNPCMelancholy Accept>
+	Msg%id%01_5 <>
+	CMsg%id%01_5 <ifNPCEasygoing Accept>
+	Msg%id%01_6 <We live in a crooked world. Only the strong can prosper, and they do so by preying on the weak.>
+	CMsg%id%01_6 <ifNPCPassionate Accept>
+	Msg%id%02 <Don't try to sound tough. It doesn't suit you.>
+	Msg%id%02_1 <Was that supposed to be irony? That's the other problem with this world... suckers thinking they're being ironic.>
+	Msg%id%02_2 <>
+	Msg%id%03 <All this talk is cheap. It's action that really counts.>
+	Msg%id%03_1 <You can talk all you want, but nothing's ever going to change...>
+	Msg%id%03_2 <>
+	Prompt%id%01 <It's how I survive. I'm a survivor.>
+	Prompt%id%01_1 <That's why I'm always on top.>
+	Prompt%id%01_2 <This world is tough, but I'm tougher.>
+	Prompt%id%02 <Yeah, I think you're on to something there.>
+	Prompt%id%02_1 <That sounds about right.>
+	Prompt%id%02_2 <In that case, it's a good time to be a crook.>
+	Prompt%id%03 <I disagree.>
+	Prompt%id%03_1 <You're a fool if you believe that.>
+	Prompt%id%03_2 <Don't mistake short term gain for real success.>
+
+	Persona
+	requires <*SkillThiefTest ~"Shy">
+	START <NewChat Say %id%01 AddChat %id%01 AddChat %id%02>
+	result%id%01 <NewChat Say %id%02 AddChat %id%03 AddChat %id%04 AddChat %id%05>
+	.%id%_GoFail <EndChat Say %id%03 Goto %3%>
+	result%id%02 <Goto %2%>
+	result%id%03 <ifIntimidation SkillTar %4% else .%id%_GoFail Goto %1%>
+	result%id%04 <ifConversation SkillTar %4% else .%id%_GoFail Goto %1%>
+	result%id%05 <Goto %2%>
+	Msg%id%01 <Yeah, what do you want?>
+	Msg%id%01_1 <Do you have a reason for looking at me like that?>
+	Msg%id%02 <Could be. Why do you care?>
+	Msg%id%02_1 <So?>
+	Msg%id%03 <This doesn't concern you. In fact, I don't even know what we're talking about.>
+	Msg%id%03_1 <I don't know anything. Apparently, neither do you.>
+	Prompt%id%01 <I heard that you might know something.>
+	Prompt%id%02 <Nothing...>
+	Prompt%id%03 <Whatever it is, I want in!>
+	Prompt%id%03_1 <It's not safe to keep secrets from me, \CHATNPC .>
+	Prompt%id%04 <I might be able to help you.>
+	Prompt%id%04_1 <I'm just looking for a piece of the action.>
+	Prompt%id%05 <Really, I don't care. I'm just messing with you.>
+	Prompt%id%05_1 <Um, actually I don't care.>
+
+
+%
 % TYPE *ReferredForJob
 %
 %	The PC has been referred for this job by an NPC.

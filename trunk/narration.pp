@@ -231,13 +231,13 @@ Procedure AddXXCharContext( NPC: GearPtr; var Context: String; palette_entry_cod
 	{ Add context descriptors for the attitude and motivation of this NPC. }
 const
 	Num_XXR_Motivations = 8;
-	Num_XXR_Attitudes = 12;
+	Num_XXR_Attitudes = 14;
 	XXR_Motivation: Array [1..Num_XXR_Motivations] of String[3] = (
 		'mer', 'pro', 'ggd', 'see', 'rev', 'cha', 'com', 'nih'
 	);
 	XXR_Attitude: Array [1..Num_XXR_Attitudes] of String[3] = (
 		'jr_', 'sr_', 'sec', 'equ', 'env',   'pch', 'hat', 'mut', 'obs', 'tha',
-		'nme', 'ant'
+		'nme', 'ant', 'adm', 'dis'
 	);
 var
 	T: Integer;
