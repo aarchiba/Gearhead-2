@@ -1,4 +1,38 @@
 %%
+%% *:DynamicAmbushByNPC Content
+%%
+%% The PC is about to be attacked by a NPC. This ambush will happen whenever
+%% an outdoors scene is entered.
+%%
+%% The parent plot sets the plot status to this layer's ID when ready.
+%%
+%% When this subplot concludes, it sets one of the following triggers:
+%%  .%id%_%plotid%_GoWin
+%%  .%id%_%plotid%_GoLoss
+%%
+%%  Param1: The NPC doing the ambush
+%%
+
+Content
+	name <Basic Dynamic Ambush By NPC>
+	desc <What a mouthful! Does what it says on the tin.>
+	requires <*:DynamicAmbushByNPC>
+
+	% E1 is the NPC doing the ambush.
+
+	% P%id%01 = Start battle counter
+
+	start<ifScene .%id%_scenetype if= P%id%01 0 P= %id%01 1 Monologue %1% %id%01  Alert %id%02  Dynamic 2 %threat% 100 .%id%_nu1 .%id%_nu2  CancelSubPlot %plotid%>
+	.%id%_scenetype <outdoors>
+	.%id%_nu1 <if= T1 0 Return if= L1 0 L= 1 1 LoseRenown             Trigger0 .%id%_%plotid%_GoLoss>
+	.%id%_nu2 <if= T2 0 if= L1 0 L= 1 1 AddRenown 1 XPV 100 Salvage   Trigger0 .%id%_%plotid%_GoWin>
+
+	Msg%id%01 <You can't escape now, \PC !>
+	Msg%id%02_1 <You are attacked by %name1%'s men!>
+	Msg%id%02_2 <You are attacked by %name1%'s lance!>
+	Msg%id%02_3 <All of a sudden, %name1%'s henchmen arrive to attack you!>
+
+%%
 %% *:MechaAmbush Content
 %%	&Duel = It's going to be a duel, which the PC can potentially refuse
 %%

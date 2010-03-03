@@ -11,6 +11,129 @@
 %%
 
 
+Content
+	name <The Wages of Sin>
+	desc <The LM will be accosted by someone they ripped off.>
+	%% Results vary based on PC's actions:
+	%% - Pay off LM's debts, good talk afterwards: M->Seeker
+	%% - Pay off LM's debts, poor talk afterwards: M->Competition
+	%% - Distance self from E1:                    M->Competition, leaves lance
+	%% - Scare away debt-owner:                    A->Admire
+	%% - Don't do anything, fight debt-owner:      A->Disrespect
+	requires <*zzzLM_NonComCharDev 1:M.mer (1:A.---|1:A.jr_|1:A.equ) 1:evil_>
+
+	% E1 is the lancemate in question
+	% E2 is the character owed money
+	Element2 <Prefab>
+
+	% P%id%01 = Have started confrontation. Once the confrontation has begun,
+	%  leaving the building triggers the ambush.
+	% P%id%01 = Phase counter, if 0 then E2 will speak, if 1 then E1 will speak
+	% P%id%03 = Reset counter. If nonzero, PC has resolved situation and just
+	%  needs to speak with E1.
+	% P%id%04 = Have listened to E2's story
+
+	% Upon entering a public building, nearly any public building, this
+	%  plot will unfold.
+	start <ifNPCOK %1% else .%id%_GoEndPlot  if= P%id%03 0  ifNPCLancemate %1%  ifScene .%id%_scenetype  if= P%id%01 0     P= %id%01 1   NPCLevel %2% %threat%  DeployNPC %2% GuardTeam  Alert %id%01 Monologue %2% %id%02 Monologue %1% %id%03 Memo %id%04>
+	.%id%_scenetype <Building Public (NoFac|Meeting) -shuttle>
+
+	%% If E1 dies, the debt is considered settled. Set E1's motivation
+	%%  to Seeker, since even if the PC revives them this is bound to be
+	%%  a life-altering moment.
+	Faint%1% <if# P%id%01 0 if= P%id%03 0 SetXXRMotivation %1% XXR_M_Seeker  TeamNeutral GuardTeam  EndPlot>
+
+	%% Killing off E2 will make E1 like you.
+	Faint%2% <if# P%id%01 0 if= P%id%03 0 SetXXRAttitude %1% XXR_A_Admire Monologue %1% %id%05  TrainNPC %1% .%id%_competitor_skills  EndPlot>
+
+	%% If the plot has started, E1 and E2 will hurl insults at one another.
+	5min <if# P%id%01 0 if= P%id%03 0  if= P%id%02 0 else .%id%_GoE1Turn Monologue %2% %id%06  P= %id%02 1>
+	.%id%_GoE1Turn <Monologue %1% %id%07  P= %id%02 0>
+
+	End <if# P%id%01 0  if= P%id%03 0  FreezeNPC %2%  PCEnemy %2%  SetPlotStatus %plotid1% %id1%>
+
+	.%id1%_%plotid1%_GoWin  <SetXXRAttitude %1% XXR_A_Admire       ifNPCOK %1% else .%id%_GoEndPlot  TrainNPC %1% .%id%_competitor_skills  Monologue %1% %id%08  EndPlot>
+	.%id1%_%plotid1%_GoLoss <SetXXRAttitude %1% XXR_A_Disrespect   ifNPCOK %1% else .%id%_GoEndPlot  Monologue %1% %id%09  EndPlot>
+	.%id%_GoEndPlot <EndPlot>
+
+	.%id%_%plotid%_GoChangeSeeker <SetXXRMotivation %1% XXR_M_Seeker  TrainNPC %1% .%id%_seeker_skills  EndPlot>
+	.%id%_seeker_skills <NAS_Awareness NAS_Conversation NAS_Shopping NAS_Toughness -NAS_JackOfAll -NAS_HullDown -NAS_Innovation -NAS_Camraderie>
+	.%id%_%plotid%_GoChangeCompetitor <SetXXRMotivation %1% XXR_M_Competitor  TrainNPC %1% .%id%_competitor_skills  EndPlot>
+	.%id%_competitor_skills <NAS_Intimidation NAS_Toughness NAS_Survival NAS_Taunt -NAS_HardAsNails -NAS_StuntDriving -NAS_BusinessSense -NAS_SureFooted>
+	.%id%_%plotid%_GoQuitLance <SetXXRMotivation %1% XXR_M_Competitor  RemoveLancemate %1%  FreezeNPC %1%  EndPlot>
+
+	Msg%id%01 <As you enter \EXACT_SCENE SceneID , an obviously upset mecha pilot begins shouting at %name1%.>
+	Msg%id%02 <You cheat! You dirty, good for nothing thief! Where's the money you owe me!?>
+	Msg%id%03 <I don't owe you nothing, and with \PC here to back me up you aren't getting it either!>
+	Msg%id%04 <Apparently, %name1% owes money to %name2% and has refused to pay it back.>
+	Msg%id%05 <Yeah! Now I'm out of that debt for good!>
+	Msg%id%06 <Cough it up, %name1%.>
+	Msg%id%06_1 <I'm trying to be nice here. Just give me the cash and no more problems.>
+	Msg%id%06_2 <Look %name1%, I'm not afraid of you or your friend over there.>
+	Msg%id%06_3 <Give me my money! Now!>
+	Msg%id%06_4 <I'm not the only one you've pissed off. You better hope we don't get together for a class action suit or something.>
+	Msg%id%07 <If you're so interested in the money why don't you just wait for us outside!?>
+	Msg%id%07_1 <Oh yeah, real scary, %name2%. Why don't you ask your mom to get the money back for you?>
+	Msg%id%07_2 <Like I'm supposed to care about some jerk who don't even know it's a stupid idea to hire me.>
+	Msg%id%07_3 <Now I'm starting to get annoyed. Keep it up, %name2%...>
+	Msg%id%07_4 <Bite me, %name2%. Even better, bite \PC .>
+	Msg%id%08 <Good going, \PC . I bet %name2% won't be bugging me for that cash ever again.>
+	Msg%id%09 <Oh good going, \PC . Some lot of help you turned out to be.>
+
+	% SubPlot1 is the dynamic ambush
+	SubPlot1 <*:DynamicAmbushByNPC 2>
+
+	sub
+		Persona 1
+		greeting <if= PlotStatus %plotid% %id% else .%id%_GoRevert if= P%id%03 0 else .%id%_GoTalkingEnd if# P%id%01 0 else .%id%_GoRevert  Goto .%id%_GoDiscuss>
+		.%id%_GoRevert <RevertPersona>
+		% The PC has solved this issue through conversation, or by paying
+		%  off E1's debts. End the plot and set a new life path for E1.
+		.%id%_GoTalkingEnd <NewChat Say %id%01 AddChat %id%01 AddChat %id%02>
+		% The PC can try speaking with E1 about the issue, but it's likely
+		%  to be useless...
+		.%id%_GoDiscuss <NewChat Say %id%04 AddChat %id%03 AddChat %id%04>
+		result%id%01 <EndChat Say %id%02  AddReact d20  Trigger0 .%id%_%plotid%_GoChangeSeeker>
+		result%id%02 <EndChat Say %id%03  AddReact d10  Trigger0 .%id%_%plotid%_GoChangeCompetitor>
+		result%id%03 <NewChat Say %id%05 AddChat %id%04 AddChat %id%05>
+		result%id%04 <NewChat Say %id%06  AddChat %id%05 AddChat %id%06 AddChat %id%07>
+		result%id%05 <NewChat Say %id%07>
+		result%id%06 <ifIntimidation HardSkillTar %threat% else .%id%_GoR6Fail ifG React d30 else .%id%_GoR6Fail EndChat Say %id%08  Trigger0 .%id%_%plotid%_GoChangeCompetitor>
+		.%id%_GoR6Fail <EndChat Say %id%09  AddReact -d20  Trigger0 .%id%_%plotid%_GoQuitLance>
+		result%id%07 <EndChat Say %id%10  AddReact d10  Trigger0 .%id%_%plotid%_GoChangeSeeker>
+		Msg%id%01 <Well... I didn't expect things to get resolved without somebody getting killed. Thanks for sticking up for me, \PC .>
+		Msg%id%02 <A part of the team, huh? It feels... kinda nice.>
+		Msg%id%03 <Yeah, yeah... The problem is I just wasn't covering my ass well enough. From now on I'm gonna make sure no-one pulls anything over on me!>
+		Msg%id%04 <Yes, what is it that you want?>
+		Msg%id%05 <We did some missions together a while back. I seem to recall a dispute about money... It's not important, \SPR %2% 's just crazy.>
+		Msg%id%06 <No way! I don't even have the money, you're the one who deals with that here. Can't we just kill \OPR %2% and be done with it?>
+		Msg%id%07 <Good luck with that.>
+		Msg%id%08 <Alright, blazes, I'll pay \OPR %2% back! You run a tight ship, \PC ... looks like I'm going to have to up my game.>
+		Msg%id%09 <You think you can boss me around like that? I'm out of here... Don't worry about it, \PC , because it's not your problem any more.>
+		Msg%id%10 <And why do you care about that, anyways? Blazes... I don't even need this stupid money. I'll give it back if it'll get you to shut up.>
+		Prompt%id%01 <Of course I'd do that. You're part of the team.>
+		CPrompt%id%01 <ifG PCHeroism 0 Accept>
+		Prompt%id%02 <Try to stay out of trouble from now on, okay?>
+		Prompt%id%02_1 <Next time you're on your own.>
+		Prompt%id%03 <What's the deal with %name2%?>
+		Prompt%id%04 <I think you should pay back %name2%.>
+		CPrompt%id%04 <if# P%id%04 0 Accept>
+		Prompt%id%05 <I'll see what I can do.>
+		Prompt%id%05_1 <Let me see what I can do.>
+		Prompt%id%06 <Fix this mess or you're off the team.>
+		Prompt%id%06_1 <Fix things, or I throw you to the wolves.>
+		Prompt%id%07 <Your greed is going to get you killed!>
+		CPrompt%id%07 <ifPCHeroic ifConversation HardSkillTar %threat% Accept>
+
+		Persona 2
+		greeting <if= PlotStatus %plotid% %id% else .%id%_GoChat if= P%id%03 0 else .%id%_GoChat if# P%id%01 0 else .%id%_GoChat Goto .%id%_GoExplain>
+		.%id%_GoChat <NewChat SayAnything>
+		.%id%_GoExplain <>
+
+	end
+	inv
+		NPC Mecha Pilot
+	end
 
 Content
 	name <Mercenary Mission>
