@@ -10,6 +10,129 @@
 %%  PARAM1: The lancemate in question
 %%
 
+Content
+	name <LM Faction Mission>
+	desc <The LM gets a call from their faction.>
+	requires <*LM_NonComCharDev -1:NOFAC -1:PDASS>
+	PayRate 150
+
+	% E1 is the lancemate in question
+	% E2 is the character who will offer the mission
+	% E3 is the root scene
+	% E4 is the lancemate's faction
+	Element2 <Character !Comrade 1 -Enemy>
+	Element3 <Scene Town>
+	Element4 <Faction !Comrade 1>
+
+	% P%id%01 = Chat counter
+
+	start <ifNPCOK %1% else .%id%_GoEndPlot ifNPCOK %2% else .%id%_GoEndPlot if= RootSceneID %3% else .%id%_GoEndPlot ifNPCLancemate %1% ifScene .%id%_scenetype if= P%id%01 0     P= %id%01 1  Alert %id%02 ForceChat %1% PMemo %plotid% %id%01>
+	.%id%_scenetype <outdoors>
+	.%id%_GoEndPlot <EndPlot>
+
+	Msg%id%01 <%name1% wants to talk with you about something.>
+	Msg%id%02 <%name1% approaches you.>
+
+	%% SubPlot1 is the mission itself
+	SubPlot1 <*UTIL_ReferredMission 1 2>
+
+	sub
+		Persona 1
+		&%id%_E2Scene <NPCScene %2%>
+		greeting <if= PlotStatus %plotid% %id% else %pop% ifNPCOK %2% else .%id%_GoEnd if= P%id%01 1 else .%id%_GoExplainPlan Goto .%id%_GoWantsToTalk>
+		.%id%_GoEnd <EndPlot RevertPersona>
+		*.%id%_GoWantsToTalk <*LancemateWantsToTalk .%id%_GoExplainPlan .%id%_GoTalkLater>
+		.%id%_GoExplainPlan <P= %id%01 2 NewChat Say %id%01 AddChat %id%01 AddChat %id%02>
+		*.%id%_GoTalkLater <*TalkAgainWhenYouHaveTime>
+		.%id%_GoAcceptMission <pmemo %plotid% %id%02  FacXP+ %4% 1  AddReact d4  SetPlotStatus %plotid1% %id1%>
+		.%id%_GoDenyMission <EndPlot>
+		*result%id%01 <*LetsGoToMission .%id%_GoAcceptMission %2% &%id%_E2Scene>
+		*result%id%02 <*LM_WhyNotMission .%id%_GoAcceptMission .%id%_GoDenyMission %2%>
+		Msg%id%01 <I just got a call from %name4%. They want us to come in for a mission.>
+		Msg%id%01_1 <>
+		CMsg%id%01_1 <ifNPCSociable Accept>
+		Msg%id%01_2 <>
+		CMsg%id%01_2 <ifNPCShy Accept>
+		Msg%id%01_3 <>
+		CMsg%id%01_3 <ifNPCEasygoing Accept>
+		Msg%id%01_4 <>
+		CMsg%id%01_4 <ifNPCPassionate Accept>
+		Msg%id%01_5 <>
+		CMsg%id%01_5 <ifNPCCheerful Accept>
+		Msg%id%01_6 <>
+		CMsg%id%01_6 <ifNPCMelancholy Accept>
+		Msg%id%02 <You should go see %name2% about a mission for %name4%.>
+		Prompt%id%01 <Alright. Let's go.>
+		Prompt%id%01_1 <No problem.>
+		Prompt%id%01_2 <Alright, who's our contact?>
+		Prompt%id%02 <This isn't a good time for that.>
+		CPrompt%id%02 <if# PCFac ChatNPCFac Accept>
+		Prompt%id%02_1 <Tell them I'm not interested.>
+		Prompt%id%02_2 <I don't want this mission.>
+	end
+
+Content
+	name <I Wanna Join Your Club>
+	desc <A professionally-oriented lancemate will attempt to join the PC's faction.>
+	requires <*LM_NonComCharDev 1:M.pro 1:NOFAC>
+
+	% E1 is the lancemate in question
+	% E2 is the PC's faction
+	% E3 is a local member of said faction
+	% E4 is the root scene
+	Element2 <Faction PCFac !Okay 1>
+	Element3 <Character !Member 2>
+	Element4 <Scene Town>
+
+	% P%id%01 = Chat counter
+
+	start <ifNPCOK %1% else .%id%_GoEndPlot ifNPCOK %3% else .%id%_GoEndPlot if= RootSceneID %4% else .%id%_GoEndPlot ifNPCLancemate %1% ifScene .%id%_scenetype if= P%id%01 0     P= %id%01 1  Alert %id%02 ForceChat %1% PMemo %plotid% %id%01>
+	.%id%_scenetype <outdoors>
+	.%id%_GoEndPlot <EndPlot>
+
+	Msg%id%01 <%name1% wants to talk with you about something.>
+	Msg%id%02 <%name1% approaches you.>
+
+	%% SubPlot1 is the join task
+	SubPlot1 <*LM_WannaJoinFaction 1 2 3>
+
+	sub
+		Persona 1
+		&%id%_E2Scene <NPCScene %2%>
+		greeting <if= PlotStatus %plotid% %id% else %pop% ifNPCOK %3% else .%id%_GoEnd if= P%id%01 1 else .%id%_GoExplainPlan Goto .%id%_GoWantsToTalk>
+		.%id%_GoEnd <EndPlot RevertPersona>
+		*.%id%_GoWantsToTalk <*LancemateWantsToTalk .%id%_GoExplainPlan .%id%_GoTalkLater>
+		.%id%_GoExplainPlan <P= %id%01 2 NewChat Say %id%01 AddChat %id%01 AddChat %id%02>
+		*.%id%_GoTalkLater <*TalkAgainWhenYouHaveTime>
+		result%id%01 <NewChat Say %id%03 PMemo %plotid% %id%02 SetPlotStatus %plotid1% %id1%>
+		result%id%02 <NewChat Say %id%04 PMemo %plotid% %id%02 SetPlotStatus %plotid1% %id1% AddCheerful -d6>
+		Msg%id%01 <You're a member of %name2%, right? I was thinking that I should sign up as well.>
+		Msg%id%01_1 <>
+		CMsg%id%01_1 <ifNPCSociable Accept>
+		Msg%id%01_2 <>
+		CMsg%id%01_2 <ifNPCShy Accept>
+		Msg%id%01_3 <>
+		CMsg%id%01_3 <ifNPCEasygoing Accept>
+		Msg%id%01_4 <>
+		CMsg%id%01_4 <ifNPCPassionate Accept>
+		Msg%id%01_5 <>
+		CMsg%id%01_5 <ifNPCCheerful Accept>
+		Msg%id%01_6 <>
+		CMsg%id%01_6 <ifNPCMelancholy Accept>
+		Msg%id%02 <%name1% told you that \SPR %1% wants to join %name2%. You should go speak to %name3% about it.>
+		Msg%id%03 <Thanks! With your support, I'm sure I'll have no trouble getting in.>
+		Msg%id%03_1 <>
+		Msg%id%03_2 <>
+		Msg%id%04 <Don't be so negative! Come on, I heard that %name3% handles that kind of thing for %name4%. Let's go talk to \OPR %3% .>
+		Msg%id%04_1 <>
+		Msg%id%04_2 <>
+		Prompt%id%01 <Good idea. Let's go talk to %name3% about it.>
+		Prompt%id%01_1 <Alright. %name3% should be able to sign you up.>
+		Prompt%id%01_2 <%name3%'s the one you need to see about that.>
+		Prompt%id%02 <I don't know if that's a good idea...>
+		Prompt%id%02_1 <Why would you want to do that?>
+		Prompt%id%02_2 <Maybe you're better off staying a free agent...>
+	end
 
 Content
 	name <The Wages of Sin>
@@ -19,8 +142,8 @@ Content
 	%% - Pay off LM's debts, poor talk afterwards: M->Competition
 	%% - Distance self from E1:                    M->Competition, leaves lance
 	%% - Scare away debt-owner:                    A->Admire
-	%% - Don't do anything, fight debt-owner:      A->Disrespect
-	requires <*zzzLM_NonComCharDev 1:M.mer (1:A.---|1:A.jr_|1:A.equ) 1:evil_>
+	%% - Don't do anything, lose to debt-owner:    A->Disrespect
+	requires <*LM_NonComCharDev 1:M.mer (1:A.---|1:A.jr_|1:A.equ) 1:evil_ -!Ne>
 
 	% E1 is the lancemate in question
 	% E2 is the character owed money
@@ -28,15 +151,16 @@ Content
 
 	% P%id%01 = Have started confrontation. Once the confrontation has begun,
 	%  leaving the building triggers the ambush.
-	% P%id%01 = Phase counter, if 0 then E2 will speak, if 1 then E1 will speak
+	% P%id%02 = Phase counter, if 0 then E2 will speak, if 1 then E1 will speak
 	% P%id%03 = Reset counter. If nonzero, PC has resolved situation and just
 	%  needs to speak with E1.
 	% P%id%04 = Have listened to E2's story
+	% P%id%05 = E2 has left the building and is waiting for ambush
 
 	% Upon entering a public building, nearly any public building, this
 	%  plot will unfold.
 	start <ifNPCOK %1% else .%id%_GoEndPlot  if= P%id%03 0  ifNPCLancemate %1%  ifScene .%id%_scenetype  if= P%id%01 0     P= %id%01 1   NPCLevel %2% %threat%  DeployNPC %2% GuardTeam  Alert %id%01 Monologue %2% %id%02 Monologue %1% %id%03 Memo %id%04>
-	.%id%_scenetype <Building Public (NoFac|Meeting) -shuttle>
+	.%id%_scenetype <Building Public -shuttle>
 
 	%% If E1 dies, the debt is considered settled. Set E1's motivation
 	%%  to Seeker, since even if the PC revives them this is bound to be
@@ -47,18 +171,20 @@ Content
 	Faint%2% <if# P%id%01 0 if= P%id%03 0 SetXXRAttitude %1% XXR_A_Admire Monologue %1% %id%05  TrainNPC %1% .%id%_competitor_skills  EndPlot>
 
 	%% If the plot has started, E1 and E2 will hurl insults at one another.
-	5min <if# P%id%01 0 if= P%id%03 0  if= P%id%02 0 else .%id%_GoE1Turn Monologue %2% %id%06  P= %id%02 1>
+	5min <if# P%id%01 0 if= P%id%03 0  if= P%id%05 0  if= P%id%02 0 else .%id%_GoE1Turn Monologue %2% %id%06  P= %id%02 1>
 	.%id%_GoE1Turn <Monologue %1% %id%07  P= %id%02 0>
 
-	End <if# P%id%01 0  if= P%id%03 0  FreezeNPC %2%  PCEnemy %2%  SetPlotStatus %plotid1% %id1%>
+	End <if# P%id%01 0  if= P%id%03 0 else .%id%_GoForceChat  FreezeNPC %2%  PCEnemy %2%  SetPlotStatus %plotid1% %id1%  CancelSubPlot %plotid%>
+	.%id%_GoForceChat <ifNPCOK %1% ForceChat %1%>
 
-	.%id1%_%plotid1%_GoWin  <SetXXRAttitude %1% XXR_A_Admire       ifNPCOK %1% else .%id%_GoEndPlot  TrainNPC %1% .%id%_competitor_skills  Monologue %1% %id%08  EndPlot>
-	.%id1%_%plotid1%_GoLoss <SetXXRAttitude %1% XXR_A_Disrespect   ifNPCOK %1% else .%id%_GoEndPlot  Monologue %1% %id%09  EndPlot>
+	Go_%id1%_%plotid1%_GoWin  <SetXXRAttitude %1% XXR_A_Admire       ifNPCOK %1% else .%id%_GoEndPlot  Monologue %1% %id%08  TrainNPC %1% .%id%_competitor_skills  EndPlot>
+	Go_%id1%_%plotid1%_GoLoss <SetXXRAttitude %1% XXR_A_Disrespect   ifNPCOK %1% else .%id%_GoEndPlot  Monologue %1% %id%09  EndPlot>
 	.%id%_GoEndPlot <EndPlot>
 
-	.%id%_%plotid%_GoChangeSeeker <SetXXRMotivation %1% XXR_M_Seeker  TrainNPC %1% .%id%_seeker_skills  EndPlot>
-	.%id%_seeker_skills <NAS_Awareness NAS_Conversation NAS_Shopping NAS_Toughness -NAS_JackOfAll -NAS_HullDown -NAS_Innovation -NAS_Camraderie>
-	.%id%_%plotid%_GoChangeCompetitor <SetXXRMotivation %1% XXR_M_Competitor  TrainNPC %1% .%id%_competitor_skills  EndPlot>
+	.%id%_%plotid%_GoChangeSeeker <SetXXRMotivation %1% XXR_M_Seeker  TrainNPC %1% .%id%_seeker_skills  XPV 100  EndPlot>
+	.%id%_seeker_skills <NAS_Awareness NAS_Conversation NAS_Shopping NAS_Toughness -NAS_JackOfAll -NAS_HullDown -NAS_Innovation -NAS_Camaraderie>
+	.%id%_%plotid%_GoChangeCompetitor <SetXXRMotivation %1% XXR_M_Competitor  TrainNPC %1% .%id%_competitor_skills  XPV 100  EndPlot>
+	.%id%_%plotid%_GoChangeAdmire    <SetXXRAttitude %1% XXR_A_Admire  TrainNPC %1% .%id%_competitor_skills  XPV 100  EndPlot>
 	.%id%_competitor_skills <NAS_Intimidation NAS_Toughness NAS_Survival NAS_Taunt -NAS_HardAsNails -NAS_StuntDriving -NAS_BusinessSense -NAS_SureFooted>
 	.%id%_%plotid%_GoQuitLance <SetXXRMotivation %1% XXR_M_Competitor  RemoveLancemate %1%  FreezeNPC %1%  EndPlot>
 
@@ -123,13 +249,63 @@ Content
 		Prompt%id%06 <Fix this mess or you're off the team.>
 		Prompt%id%06_1 <Fix things, or I throw you to the wolves.>
 		Prompt%id%07 <Your greed is going to get you killed!>
-		CPrompt%id%07 <ifPCHeroic ifConversation HardSkillTar %threat% Accept>
+		CPrompt%id%07 <ifPCHeroic ifConversation HardSkillTar %threat% ifG React d10 Accept>
 
 		Persona 2
 		greeting <if= PlotStatus %plotid% %id% else .%id%_GoChat if= P%id%03 0 else .%id%_GoChat if# P%id%01 0 else .%id%_GoChat Goto .%id%_GoExplain>
 		.%id%_GoChat <NewChat SayAnything>
-		.%id%_GoExplain <>
-
+		.%id%_GoExplain <NewChat Say %id%01 AddChat %id%01 AddChat %id%02 AddChat %id%03>
+		result%id%01 <Monologue %1% %id%02 Alert %id%03 NewChat Say %id%04 AddChat %id%14 AddReact d20   Trigger0 .%id%_%plotid%_GoQuitLance>
+		result%id%02 <NewChat Say %id%05 AddChat %id%04 AddChat %id%06 AddChat %id%05 AddChat %id%08>
+		result%id%03 <NewChat Say %id%06 AddChat %id%05 AddChat %id%06 AddChat %id%07 AddChat %id%08 P= %id%04 1>
+		result%id%04 <Monologue %1% %id%07  ifG PCRenown ChatNPCRenown else result%id%08 EndChat Say %id%08  PCEnemy %2% FreezeNPC %2% Trigger0 .%id%_%plotid%_GoChangeAdmire>
+		result%id%05 <NewChat Say %id%11 AddChat %id%09 AddChat %id%10 AddChat %id%11 P= %id%04 1>
+		result%id%06 <EndChat Say %id%12>
+		result%id%07 <NewChat Say %id%13 AddChat %id%12 AddChat %id%13>
+		result%id%08 <EndChat Say %id%09 Print %id%10  FreezeNPC %2% PCEnemy %2% P= %id%05 1>
+		result%id%09 <EndChat Say %id%14 Cash+ -Reward %threat% 200  P= %id%03 1 AddReact d10  ForceChat %1%>
+		result%id%10 <EndChat Say %id%14 Cash+ -Reward %threat% 300  P= %id%03 1 AddReact d20  AddHeroic 1  ForceChat %1%>
+		result%id%11 <EndChat Say %id%12>
+		result%id%12 <EndChat Say %id%15  P= %id%03 1  ForceChat %1%>
+		result%id%13 <EndChat Say %id%15 Cash+ -Reward %threat% 100  P= %id%03 1 AddReact d10  AddHeroic 1  ForceChat %1%>
+		result%id%14 <EndChat Say %id%16  RemoveLancemate %1%  PCAlly %2% ChatNPCJoinLance>
+		Msg%id%01 <So you're %name1%'s new partner? You better watch your back- \SPR %1% 's a thieving spuglock.>
+		Msg%id%02 <What, after all the times I put my neck on the line for you, and you just throw me to the wolves!? That's it, I'm out of here... Goodbye \PC .>
+		Msg%id%03 <%name1% storms out of the building.>
+		Msg%id%04 <Don't worry. You're better off without \OPR %1% ... I just wish I'd gotten my money back before \SPR %1% left.>
+		Msg%id%05 <You can't threaten me. I'm not afraid of %name1%.>
+		Msg%id%06 <%name1% and I did some freelance work together a while back. After completing a string of missions \SPR %1% ran off with all the pay, my mecha, and stuck me with the repair bill to boot!>
+		Msg%id%07 <Yeah! You tell \OPR %2% !>
+		Msg%id%08 <Alright, I'll go away for now... But I'll be back later!>
+		Msg%id%09 <You're just as useless as \SPR %1% is. Still, if I can't get my money, I can at least get some revenge...>
+		Msg%id%10 <%name2% has left the building.>
+		Msg%id%11 <I don't care who pays, I just want my money. I'm owed $ \VAL Reward %threat% 200 .>
+		Msg%id%12 <Think fast. Nobody leaves here until I've been paid in full.>
+		Msg%id%13 <Well... there was this one time I abandoned \OPR %1% in enemy territory after \SPR %1% had run out of ammo, but you can't hold a grudge about that kind of thing forever!>
+		Msg%id%14 <Wow, that was easier than I thought... thanks, \PC . You're alright.>
+		Msg%id%15 <Yeah, that's what I should do, alright... Sorry about the bother.>
+		Msg%id%16 <Yeah, sure, I'm up for that. You can't possibly be as bad of a partner as %name1% was.>
+		Prompt%id%01 <This is between you and \OPR %1% . Leave me out of it.>
+		Prompt%id%02 <Get lost and stop bothering us.>
+		CPrompt%id%02 <ifG 3 PCHeroism Accept>
+		Prompt%id%03 <Why don't you tell me exactly what happened?>
+		Prompt%id%04 <Maybe not... but you should be afraid of me!>
+		CPrompt%id%04 <ifIntimidation HardSkillTar %threat% Accept>
+		Prompt%id%05 <Why don't I pay off %name1%'s debts?>
+		Prompt%id%06 <Let me think about this for a minute.>
+		Prompt%id%07 <That's not the whole story, is it?>
+		CPrompt%id%07 <ifNPCVillainous ifInsight HardSkillTar %threat% Accept>
+		Prompt%id%08 <Whatever. You're not getting any money from me.>
+		Prompt%id%09 <No problem. Here you go. [Give $ \VAL Reward %threat% 200 ]>
+		CPrompt%id%09 <ifG PC$ Reward %threat% 200 Accept>
+		Prompt%id%10 <Take this, plus some extra for your trouble. [Give $ \VAL Reward %threat% 300 ]>
+		CPrompt%id%10 <ifG PC$ Reward %threat% 300 Accept>
+		Prompt%id%11 <I'll be back when I have the money.>
+		Prompt%id%12 <I'd say you're just about even, then.>
+		Prompt%id%13 <Here, take this $ \VAL Reward %threat% 100 and call it even.>
+		CPrompt%id%13 <ifG PC$ Reward %threat% 100 Accept>
+		Prompt%id%14 <I could use a new lancemate, if you're interested.>
+		CPrompt%id%14 <ifChatNPCCanJoinLance ifG PC$ Threat ChatNPCRenown 5 Accept>
 	end
 	inv
 		NPC Mecha Pilot
@@ -144,7 +320,7 @@ Content
 	% E1 is the lancemate in question
 	% E2 is the character who will offer the mission
 	% E3 is the root scene
-	Element2 <Character (POLIT|MILIT|CORPO|POLIC|ADVEN) -NoFac -Enemy>
+	Element2 <Character (CORPO|ADVEN) -NoFac -Enemy>
 	Element3 <Scene Town>
 
 	% P%id%01 = Chat counter

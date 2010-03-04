@@ -1456,7 +1456,7 @@ Function StoryContext( GB: GameBoardPtr; Story: GearPtr ): String;
 var
 	it,msg: String;
 	T: Integer;
-	C,LList: GearPtr;
+	LList: GearPtr;
 begin
 	{ Start with the basic context. }
 	it := StoryPlotRequest( Story ) + ' ' + SAttValue( Story^.SA , 'CONTEXT' );
@@ -1812,7 +1812,7 @@ begin
 		end;
 
 		if Debug or ( GearName( Plot ) = 'DEBUG' ) then begin
-			DialogMsg( BStr( T ) + '=> ' + BStr( ElementID( Plot , T ) ) );
+			if ElementID( Plot , T ) <> 0 then DialogMsg( BStr( T ) + '=> ' + BStr( ElementID( Plot , T ) ) );
 		end;
 
 		EverythingOK := EverythingOK and OKNow;

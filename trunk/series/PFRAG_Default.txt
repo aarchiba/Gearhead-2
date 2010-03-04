@@ -1,5 +1,44 @@
 % Persona Fragment File
 
+% TYPE: *LM_JoinFaction
+%		&IsPolice    = It's a police faction
+%		&IsMilitary  = It's a military faction
+%		&IsCorporate = It's a corporation
+%		&IsPolitical = It's a government
+%	The Lancemate has just joined a faction.
+%  PARAM1: The faction in question
+
+	Persona
+	requires <*LM_JoinFaction>
+	START <NewChat Say %id%01>
+	Msg%id%01 <Alright, I'm now a full fledged member of \FACTION %1% ! When can we start getting some missions?>
+	Msg%id%01_1 <>
+	CMsg%id%01_1 <ifNPCSociable Accept>
+	Msg%id%01_2 <>
+	CMsg%id%01_2 <ifNPCShy Accept>
+	Msg%id%01_3 <Wow, it was easier to join \FACTION %1% than I heard. Either that or I'm just better than I think.>
+	CMsg%id%01_3 <ifNPCEasygoing Accept>
+	Msg%id%01_4 <>
+	CMsg%id%01_4 <ifNPCPassionate Accept>
+	Msg%id%01_5 <Hey \PC , how do you like this new uniform? That's not the main reason to join \FACTION %1% but it's a nice bonus.>
+	CMsg%id%01_5 <ifNPCCheerful Accept>
+	Msg%id%01_6 <>
+	CMsg%id%01_6 <ifNPCMelancholy Accept>
+	Msg%id%01_10 <Hey, I'm a member of \FACTION %1% now, too! We're not just lancemates, we're also co-workers.>
+	CMsg%id%01_10 <if= PCFac %1% Accept>
+	Msg%id%01_11 <As a fellow member of \FACTION %1% , we should be able to coordinate our actions much better than before.>
+	CMsg%id%01_11 <if= PCFac %1% ifNPCSociable Accept>
+	Msg%id%01_12 <>
+	CMsg%id%01_12 <if= PCFac %1% ifNPCShy Accept>
+	Msg%id%01_13 <Hey there \RANK \PC , I've been accepted into \FACTION %1% too! Of course I'm just a \FACRANK %1% 0 yet...>
+	CMsg%id%01_13 <if= PCFac %1% ifG PCFacLevel 0 ifNPCEasygoing Accept>
+	Msg%id%01_14 <>
+	CMsg%id%01_14 <if= PCFac %1% ifNPCPassionate Accept>
+	Msg%id%01_15 <Look, we've both got the same uniform now! People might think we're a couple... \RANK and \FACRANK %1% 0 !>
+	CMsg%id%01_15 <if= PCFac %1% ifNPCCheerful Accept>
+	Msg%id%01_16 <I'm a member of \FACTION %1% now too, \PC ... ashes, I guess this means you're going to be my supervisor.>
+	CMsg%id%01_16 <if= PCFac %1% ifNPCMelancholy Accept>
+
 % TYPE: *YourLossSucker
 %	The PC has rejected an offer, the NPC will respond thusly.
 %  PARAM1: Exit Label

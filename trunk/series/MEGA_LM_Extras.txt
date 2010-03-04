@@ -1,4 +1,199 @@
 %%
+%% *LM_WannaJoin_Accepted Content
+%%
+%%  A lancemate has been accepted into a faction. Yay!
+%%
+%% PARAM1: The Lancemate
+%% PARAM2: The faction to be joined
+%%
+
+Content
+	name <Military LMWJA>
+	desc <The lancemate is accepted into a MILIT faction. Record the FacID, and give a new mecha.>
+	requires <*LM_WannaJoin_Accepted 2:MILIT>
+
+	% E1 is the lancemate
+	% E2 is the faction
+
+	% P%id%01 = One time only counter
+	update <if= P%id%01 0 P= %id%01 1 SetNPCFaction %1% %2% ForceChat %1%>
+	end <ifNPCDead %1% EndPlot>
+
+	sub
+		Persona 1
+		greeting <if= PlotStatus %plotid% %id% else %pop% TrainNPC %1% .%id%_Skills History %id%01 RandomMecha .%id%_Facs ChatNPCRenown EndPlot Goto .%id%_GoAnnounce>
+		*.%id%_GoAnnounce <*LM_JoinFaction&IsMilitary %2%>
+		.%id%_Skills <NAS_Initiative NAS_ElectronicWarfare NAS_SpotWeakness NAS_Toughness -NAS_BornToFly -NAS_SureFooted -NAS_RoadHog -NAS_Ninjitsu>
+		.%id%_Facs <GENERAL \FACTION_DESIG %2%>
+		Msg%id%01 <%name1% joined %name2%.>
+	end
+
+Content
+	name <Police LMWJA>
+	desc <The lancemate is accepted into a POLIC faction. Record the FacID, and give a new mecha.>
+	requires <*LM_WannaJoin_Accepted 2:POLIC>
+
+	% E1 is the lancemate
+	% E2 is the faction
+
+	% P%id%01 = One time only counter
+	update <if= P%id%01 0 P= %id%01 1 SetNPCFaction %1% %2% ForceChat %1%>
+	end <ifNPCDead %1% EndPlot>
+
+	sub
+		Persona 1
+		greeting <if= PlotStatus %plotid% %id% else %pop% TrainNPC %1% .%id%_Skills History %id%01 RandomMecha .%id%_Facs ChatNPCRenown EndPlot Goto .%id%_GoAnnounce>
+		*.%id%_GoAnnounce <*LM_JoinFaction&IsPolice %2%>
+		.%id%_Skills <NAS_SpotWeakness NAS_Insight NAS_Conversation NAS_Science -NAS_HapKiDo -NAS_Sniper -NAS_Innovation -NAS_StuntDriving>
+		.%id%_Facs <GENERAL \FACTION_DESIG %2%>
+		Msg%id%01 <%name1% joined %name2%.>
+	end
+
+Content
+	name <Corporate LMWJA>
+	desc <The lancemate is accepted into a CORPO faction. Record the FacID, and give a new mecha.>
+	requires <*LM_WannaJoin_Accepted 2:CORPO>
+
+	% E1 is the lancemate
+	% E2 is the faction
+
+	% P%id%01 = One time only counter
+	update <if= P%id%01 0 P= %id%01 1 SetNPCFaction %1% %2% ForceChat %1%>
+	end <ifNPCDead %1% EndPlot>
+
+	sub
+		Persona 1
+		greeting <if= PlotStatus %plotid% %id% else %pop% TrainNPC %1% .%id%_Skills History %id%01 RandomMecha .%id%_Facs ChatNPCRenown EndPlot Goto .%id%_GoAnnounce>
+		*.%id%_GoAnnounce <*LM_JoinFaction&IsCorporate %2%>
+		.%id%_Skills <NAS_Repair NAS_ElectronicWarfare NAS_Shopping NAS_MechaEngineering -NAS_StuntDriving -NAS_BusinessSense -NAS_Innovation -NAS_TechVulture>
+		.%id%_Facs <GENERAL \FACTION_DESIG %2%>
+		Msg%id%01 <%name1% joined %name2%.>
+	end
+
+Content
+	name <Government LMWJA>
+	desc <The lancemate is accepted into a POLIT faction. Record the FacID, and give a new mecha.>
+	requires <*LM_WannaJoin_Accepted 2:POLIT>
+
+	% E1 is the lancemate
+	% E2 is the faction
+
+	% P%id%01 = One time only counter
+	update <if= P%id%01 0 P= %id%01 1 SetNPCFaction %1% %2% ForceChat %1%>
+	end <ifNPCDead %1% EndPlot>
+
+	sub
+		Persona 1
+		greeting <if= PlotStatus %plotid% %id% else %pop% TrainNPC %1% .%id%_Skills History %id%01 RandomMecha .%id%_Facs ChatNPCRenown EndPlot Goto .%id%_GoAnnounce>
+		*.%id%_GoAnnounce <*LM_JoinFaction&IsPolitical %2%>
+		.%id%_Skills <NAS_Medicine NAS_Conversation NAS_Taunt NAS_Performance -NAS_SureFooted -NAS_BusinessSense -NAS_HullDown -NAS_Camaraderie>
+		.%id%_Facs <GENERAL \FACTION_DESIG %2%>
+		Msg%id%01 <%name1% joined %name2%.>
+	end
+
+%%
+%% *LM_WannaJoin_Rejected Content
+%%
+%%  A lancemate has been rejected by a faction. Yay!
+%%
+%% PARAM1: The Lancemate
+%% PARAM2: The faction
+%%
+
+Content
+	name <Professional Rejection>
+	desc <The lancemate will set a new motivation.>
+	requires <*LM_WannaJoin_Rejected 1:M.pro>
+
+	% E1 is the lancemate
+	% E2 is the faction
+
+	% P%id%01 = One time only counter
+	update <if= P%id%01 0 P= %id%01 1 ForceChat %1%>
+	end <ifNPCDead %1% EndPlot>
+
+	sub
+		Persona 1
+		greeting <if= PlotStatus %plotid% %id% else %pop% ifNPCHeroic else .%id%_GoSetCompetition TrainNPC %1% .%id%_HeroicSkills NewChat Say %id%01 EndPlot>
+		.%id%_GoSetCompetition <TrainNPC %1% .%id%_CompetSkills NewChat Say %id%02 EndPlot>
+		.%id%_HeroicSkills <NAS_Medicine NAS_Conversation NAS_Mysticism NAS_Insight -NAS_Polymath -NAS_Camaraderie>
+		.%id%_CompetSkills <NAS_Initiative NAS_Stealth NAS_Intimidation NAS_Taunt -NAS_KungFu -NAS_Polymath>
+		Msg%id%01 <So %name2% doesn't want me... well, I can keep on doing my best to make this world a better place all by myself. I don't need them.>
+		Msg%id%01_1 <This is very disappointing. I thought I could do some good by joining %name2%, but maybe I can do more without them...>
+		Msg%id%01_2 <Oh well, %name2% doesn't want me... I shouldn't be too disappointed. There's still a lot of good I can do in the world without them.>
+		Msg%id%02 <What, they think I'm not good enough for %name2%!? I'll show them how good I am! I'll show everyone!>
+		Msg%id%02_1 <How could I have been rejected by %name2%!? They don't know what they're missing... I'm the best there is, and from this moment on I'm gonna prove it to the world!>
+		Msg%id%02_2 <They think they're better than me!? I'll show %name2% who's the best pilot around!>
+	end
+
+
+%%
+%% *LM_WannaJoinFaction Content
+%%
+%%  A lancemate wants to join a faction. The PC can try to get them in, or not.
+%%
+%% PARAM1: The Lancemate
+%% PARAM2: The faction to be joined
+%% PARAM3: The NPC to speak with about joining
+%%
+
+Content
+	name <Default LM Faction Application>
+	desc <The Lancemate will be checked for application. The PC can either reccomend them or not.>
+	requires <*LM_WannaJoinFaction>
+
+	% E1 is the lancemate
+	% E2 is the faction
+	% E3 is the NPC to speak with about joining
+
+	start <ifNPCOK %1% else .%id%_GoDelete ifNPCOK %3% else .%id%_GoDelete ifPCFEnemy %2% EndPlot>
+	.%id%_GoDelete <EndPlot>
+
+	% SubPlot1 is what happens if the LM's application is accepted.
+	% SubPlot2 is what happens if the LM's application is rejected.
+	SubPlot1 <*LM_WannaJoin_Accepted  1 2>
+	SubPlot2 <*LM_WannaJoin_Rejected 1 2>
+
+	sub
+		Persona 3
+		% V%id%01 = LM's score
+		% V%id%02 = PC's fac point gain, based on honesty of answers
+		% V%id%11 = Answered P04
+		% V%id%12 = Answered P05
+		greeting <if= PlotStatus %plotid% %id% else %pop% ifNPCLancemate %1% else %pop% NewChat Say %id%01 AddChat %id%01>
+		.%id%_GoReportProblems <NewChat Say %id%03 AddChat %id%04 AddChat %id%05 AddChat %id%06>
+		.%id%_GoContinueReport <NewChat Say %id%04 AddChat %id%04 AddChat %id%05 AddChat %id%06>
+		% Upon starting interview, clear all counters to prevent scumming.
+		result%id%01 <NewChat Say %id%02 AddChat %id%02 AddChat %id%03  V= %id%02 0 V= %id%11 0 V= %id%12 0>
+		result%id%02 <V= %id%01 PCFacLevel  V+ %id%01 d2  V+ %id%01 -1  Goto .%id%_GoReportProblems>
+		result%id%03 <V= %id%01 d3          Goto .%id%_GoReportProblems>
+		result%id%04 <V+ %id%02 5  V+ %id%01 -d3  V= %id%11 1  Goto .%id%_GoContinueReport>
+		result%id%05 <V+ %id%02 2  V+ %id%01 -d3  V= %id%12 1  Goto .%id%_GoContinueReport>
+		result%id%06 <EndChat Say %id%05 AddChat %id%07>
+		result%id%07 <FacXP+ %2% v%id%02 ifG v%id%01 1 else .%id%_GoReject NewChat Say %id%06 SetPlotStatus %plotid1% %id1%>
+		.%id%_GoReject <NewChat Say %id%07 SetPlotStatus %plotid2% %id2%>
+		Msg%id%01 <Hi \PC . %name1% says that \SPR %1% would like to join %name2%.>
+		Msg%id%02 <Are you willing to give a formal recommendation for %name1%?>
+		Msg%id%03 <Very well. Can you think of any reasons why %name1% might not be a good candidate?>
+		Msg%id%04 <Your concern has been noted. Is there anything else you feel we should know?>
+		Msg%id%04_1 <I see. Is there anything else you'd like to mention?>
+		Msg%id%05 <Thanks. Let me finish entering the data into the computer, and the verdict is...>
+		Msg%id%06 <Congratulations, %name1% is now a member of %name2%!>
+		Msg%id%07 <Sorry, but %name1%'s application has been rejected...>
+		Prompt%id%01 <That's right.>
+		Prompt%id%01_1 <That's why we're here.>
+		Prompt%id%02 <Yes I am.>
+		CPrompt%id%02 <ifG PCFacLevel 0 Accept>
+		Prompt%id%03 <No, not particularly...>
+		Prompt%id%04 <Well, \SPR %1% is a bit of a psychopath...>
+		CPrompt%id%04 <ifG 0 NPCHeroism %1% if= v%id%11 0 Accept>
+		Prompt%id%05 <%name1% has a history of petty crime.>
+		CPrompt%id%05 <ifG 0 NPCLaw %1% if= v%id%12 0 Accept>
+		Prompt%id%06 <No, that's all.>
+		Prompt%id%07 <[Continue]>
+	end
+
+%%
 %% *LM_SecretPlace Content
 %%
 %%  A lancemate will bring the PC to a secret place.

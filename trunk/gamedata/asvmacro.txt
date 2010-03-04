@@ -45,11 +45,13 @@ PCRep <GrabPCPilot GNAtt NAG_CharDescription - ?>
 PCHeroism <GrabPCPilot GNAtt NAG_CharDescription -1>
 ChatNPCHeroism <GrabChatNPC GNAtt NAG_CharDescription -1>
 NPCHeroism <GrabNPC ? GNAtt NAG_CharDescription -1>
+NPCLaw <GrabNPC ? GNAtt NAG_CharDescription -2>
 PCLaw <GrabPCPilot GNAtt NAG_CharDescription -2>
 PCEasygoingness <GrabPCPilot GNAtt NAG_CharDescription -4>
 PCCheerfulness <GrabPCPilot GNAtt NAG_CharDescription -5>
 PCRenown <GrabPCPilot GNAtt NAG_CharDescription -6>
 NPCRenown <GrabNPC ? GNAtt NAG_CharDescription -6>
+ChatNPCRenown <GrabChatNPC GNAtt NAG_CharDescription -6>
 PCX <GrabPC GNAtt NAG_Location NAS_X>
 PCY <GrabPC GNAtt NAG_Location NAS_Y>
 PCHunger <GrabPCPilot GNatt NAG_Condition NAS_Hunger>
@@ -80,7 +82,6 @@ PCDAGE <GrabPCPilot GNAtt NAG_CharDescription NAS_DAge>
 CHATNPCDAGE <GrabChatNPC GNAtt NAG_CharDescription NAS_DAge>
 NPCDAGE <GrabNPC ? GNAtt NAG_CharDescription NAS_DAge>
 CHATNPCPERCEPTION <GrabChatNPC GStat 4>
-ChatNPCRenown <GrabChatNPC GNAtt NAG_CharDescription -6>
 ChatNPCRelationship <GrabChatNPC GNAtt NAG_Relationship 0>
 NPCRelationship <GrabNPC ? GNAtt NAG_Relationship 0>
 FacRelationship <GrabFaction ? GNatt NAG_Relationship 0>
