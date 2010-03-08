@@ -285,7 +285,7 @@ Content
 
 	%% Debriefing Message
 	Msg%id%11 <So they're after the %name2%... That explains a lot.>
-	Msg%id%11_1 <So \PERSONA &EnemyNPC is after the %name2%... At least now we know what \OPR &EnemyNPC 's up to.>
+	Msg%id%11_1 <So \PERSONA &EnemyNPC is after the %name2%... At least now we know what \SPR &EnemyNPC 's up to.>
 	CMsg%id%11_1 <ifNPCOK &EnemyNPC Accept>
 	Msg%id%11_2 <Interesting. \PERSONA &EnemyNPC is after the %name2%... You know what that means? We have to find it first!>
 	CMsg%id%11_2 <ifNPCOK &EnemyNPC if= ChatNPCFac PCFac ifFactionExists ChatNPCFac Accept>

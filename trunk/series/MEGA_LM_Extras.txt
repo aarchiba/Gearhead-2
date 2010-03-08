@@ -146,7 +146,7 @@ Content
 	% E2 is the faction
 	% E3 is the NPC to speak with about joining
 
-	start <ifNPCOK %1% else .%id%_GoDelete ifNPCOK %3% else .%id%_GoDelete ifPCFEnemy %2% EndPlot>
+	start <ifNPCOK %1% else .%id%_GoDelete ifNPCOK %3% else .%id%_GoDelete ifFactionEnemy %2% EndPlot>
 	.%id%_GoDelete <EndPlot>
 
 	% SubPlot1 is what happens if the LM's application is accepted.

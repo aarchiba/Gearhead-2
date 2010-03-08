@@ -11,6 +11,131 @@
 %%
 
 Content
+	name <Professional Mission>
+	desc <The LM will send the PC to stop an enemy fighter... no reward but the experience.>
+	requires <*LM_NonComCharDev 1:M.pro -!Ne>
+
+	% E1 is the lancemate in question
+	% E2 is the root scene
+	% E3 is a local character, with a faction, not an enemy of E2 or E1
+	% E4 is a mecha pilot enemy of E3, not an ally of E1 or the PC
+	Element2 <Scene Town>
+	Element3 <Character -NoFac !Okay 2 !Okay 1>
+	Element4 <Character !Global HasMecha !Enemy 3 !XClude 1 -Ally>
+
+	% P%id%01 = Chat counter
+	% P%id%02 = SkillXP amount
+
+	start <ifNPCOK %1% else .%id%_GoEndPlot  if= RootSceneID %2% else .%id%_GoEndPlot  ifNPCLancemate %1% ifScene .%id%_scenetype if= P%id%01 0     P= %id%01 1  Alert %id%02 ForceChat %1% PMemo %plotid% %id%01>
+	.%id%_scenetype <outdoors>
+	.%id%_GoEndPlot <EndPlot>
+
+	% Store the renown of the NPC in question. This will be used to give a SkillXP bonus
+	% at the end of the mission.
+	update <if= P%id%02 0 P= %id%02 * 2 NPCRenown %4% ifG * 2 %threat% P%id%02 P= %id%02 * 2 %threat%>
+
+	% Upon winning, give an XP award to the three mecha combat skills.
+	.%id1%_%plotid1%_GoWin  <SkillXP NAS_MechaPiloting P%id%02 SkillXP NAS_MechaGunnery P%id%02 SkillXP NAS_MechaFighting P%id%02 EndPlot ifNPCOK %1% ifNPCLancemate %1% Monologue %1% %id%03>
+	.%id1%_%plotid1%_GoLoss <EndPlot ifNPCOK %1% ifNPCLancemate %1% Monologue %1% %id%04>
+
+	Msg%id%01 <%name1% wants to talk with you about something.>
+	Msg%id%02 <%name1% approaches you.>
+	Msg%id%03 <Good work, \PC . I knew you were better than %name4%.>
+	Msg%id%03_1 <Yeah, we did it! Good going \PC !>
+	Msg%id%03_2 <Hah, %name4% didn't stand a chance!>
+	Msg%id%04 <%name4% got away...>
+	Msg%id%04_1 <We have failed...>
+	Msg%id%04_2 <I guess we aren't ready to face %name4% yet...>
+
+	%% SubPlot1 is the mission itself
+	SubPlot1 <*:StopNPC 4>
+
+	sub
+		Persona 1
+		% V%id%01 = Renown counter, for telling how good E4 is.
+		greeting <if= PlotStatus %plotid% %id% else %pop% if= PlotStatus %plotid1% 0 else %pop% ifNPCOK %4% else .%id%_GoEnd if= P%id%01 1 else .%id%_GoExplainPlan Goto .%id%_GoWantsToTalk>
+		.%id%_GoEnd <EndPlot RevertPersona>
+		*.%id%_GoWantsToTalk <*LancemateWantsToTalk .%id%_GoExplainPlan .%id%_GoTalkLater>
+		.%id%_GoExplainPlan <P= %id%01 2 NewChat Say %id%01 AddChat %id%01 AddChat %id%02 AddChat %id%03 AddChat %id%04>
+		*.%id%_GoTalkLater <*TalkAgainWhenYouHaveTime>
+		.%id%_GoAcceptMission <pmemo %plotid% %id%02  AddReact d4  SetPlotStatus %plotid1% %id1%>
+		.%id%_GoDenyMission <EndPlot>
+		*result%id%01 <*LM_LetsDoIt&SeekRumor  .%id%_GoAcceptMission>
+		*result%id%02 <*LM_RefuseRequest .%id%_GoDenyMission>
+		result%id%03 <NewChat Say %id%03 AddChat %id%04 AddChat %id%05 AddChat %id%06>
+		result%id%04 <NewChat v= %id%01 PCRenown V+ %id%01 15 Say %id%04 AddChat %id%05 AddChat %id%07>
+		result%id%05 <Goto result%id%01>
+		result%id%06 <Goto result%id%02>
+		result%id%07 <Goto result%id%02>
+		Msg%id%01 <I've heard that %name4% is in %name2% on a mission. We should be the ones to stop \OPR %4% .>
+		Msg%id%01_1 <According to a rumor I heard, %name4% is in town on some kind of covert mission. Stopping \OPR %4% could be very good for your career.>
+		CMsg%id%01_1 <ifNPCSociable Accept>
+		Msg%id%01_2 <%name4% is here on a mission. I advise that we be the ones who stop \OPR %4% .>
+		CMsg%id%01_2 <ifNPCShy Accept>
+		Msg%id%01_3 <They say %name4% might be in %name2% to do something or another. Some other people would be glad if \SPR %4% were stopped, so I was gonna suggest that we be the ones who do that.>
+		CMsg%id%01_3 <ifNPCEasygoing Accept>
+		Msg%id%01_4 <%name4% is in %name2% for some nefarious purpose. We must stop \OPR %4% !>
+		CMsg%id%01_4 <ifNPCPassionate Accept>
+		Msg%id%01_5 <All the battles we've had these days? Boring. You know who would be fun to fight? %name4%... \SPR %4% 's running some kind of covert mission in %name2% as we speak.>
+		CMsg%id%01_5 <ifNPCCheerful Accept>
+		Msg%id%01_6 <All the pilots we've fought lately have been small fry. When are we going to graduate to the big league? You know what we should do... %name4%'s in %name2% on a covert mission. We should challenge \OPR %4% .>
+		CMsg%id%01_6 <ifNPCMelancholy Accept>
+		Msg%id%02 <%name4% is in %name2% on a mission. %name1% suggested that you attempt to stop \OPR %4% .>
+		Msg%id%03 <The only reward is experience, and the knowledge that you're a better pilot than \SPR %4% is.>
+		Msg%id%03_1 <I haven't heard about a reward; that's not even the point. As a cavalier it's important to build your reputation. By facing down rival pilots, your legend will grow... not to mention your fighting skills.>
+		CMsg%id%03_1 <ifNPCSociable Accept>
+		Msg%id%03_2 <There is no reward. I suggested this because there's no better way to improve your skills than to face a rival pilot. Of course, the decision is yours.>
+		CMsg%id%03_2 <ifNPCShy Accept>
+		Msg%id%03_3 <Yeah, about that... There isn't exactly a reward being offered, this is more the kind of thing that people do for glory and kicks. Besides, facing down a true rival is the best way to develop your skills.>
+		CMsg%id%03_3 <ifNPCEasygoing Accept>
+		Msg%id%03_4 <Mere cash is no reward. What I offer you today is glory! If we beat %name4% then everybody's going to know what a great pilot you are!>
+		CMsg%id%03_4 <ifNPCPassionate Accept>
+		Msg%id%03_5 <I'll be honest, I didn't hear anything about that. I just want to face %name4% because it'd be a fun battle.>
+		CMsg%id%03_5 <ifNPCCheerful Accept>
+		Msg%id%03_6 <Bah. Some jerk went and beat us to the mission contract, but there's no way that they're going to find %name4% by themselves! No, the only reward we'll get is the knowledge of a job well done.>
+		CMsg%id%03_6 <ifNPCMelancholy Accept>
+		Msg%id%04_1 <%name4% is just a rookie pilot... \SPR %4% may have a bit more experience than you, but I still think you can take \OPR %4% .>
+		CMsg%id%04_1 <ifG 21 NPCRenown %4% Accept>
+		Msg%id%04_2 <%name4% is an experienced pilot. It may be a difficult fight, but it's not like \SPR %4% 's a combat veteran or anything.>
+		CMsg%id%04_2 <ifG NPCRenown %4% 20 ifG 41 NPCRenown %4% Accept>
+		Msg%id%04_3 <%name4% is a combat veteran. If you don't think we can take \OPR %4% , maybe we shouldn't do this.>
+		CMsg%id%04_3 <ifG NPCRenown %4% 40 ifG 61 NPCRenown %4% Accept>
+		Msg%id%04_4 <%name4% is an elite pilot. Maybe you're right, this match-up isn't a good idea...>
+		CMsg%id%04_4 <ifG NPCRenown %4% 60 ifG 81 NPCRenown %4% Accept>
+		Msg%id%04_5 <%name4% is an ace pilot. Yeah, this fight is probably impossible... but imagine what people will say if you win!>
+		CMsg%id%04_5 <ifG NPCRenown %4% 80 Accept>
+		Msg%id%04_11 <%name4% isn't much more experienced than you. I really believe that we can take \OPR %4% .>
+		CMsg%id%04_11 <ifG v%id%01 NPCRenown %4% Accept>
+		Msg%id%04_12 <You may be right... %name4% has a lot more experience than any of us.>
+		CMsg%id%04_12 <ifG NPCRenown %4% v%id%01 Accept>
+		Msg%id%04_13 <They say that %name4% is unbeatable... But doesn't that just make you want to prove them wrong?>
+		CMsg%id%04_13 <ifG NPCRenown %4% v%id%01 ifG NPCRenown %4% 75 Accept>
+		Msg%id%04_14 <%name4% is a mediocre pilot who's marginally more renowned than you. I can't imagine an easier match which would still count as a fair fight.>
+		CMsg%id%04_14 <ifG v%id%01 NPCRenown %4% ifG 51 NPCRenown %4% Accept>
+		Msg%id%04_15 <That's an interesting thing. %name4% is just exactly at that point where I can't decide whether \SPR %4% 'd be a challenging enemy or \SPR %4% 'd completely kick our arses. Well, there's only one way to find out...>
+		CMsg%id%04_15 <if= v%id%01 NPCRenown %4% Accept>
+		Prompt%id%01 <Alright, let's do it.>
+		Prompt%id%01_1 <Okay, I could use some combat practice.>
+		Prompt%id%01_2 <I can do that.>
+		Prompt%id%02 <%name1%, I don't want to do that.>
+		Prompt%id%02_1 <Sorry, but we don't have time for that.>
+		Prompt%id%02_2 <I've got nothing against %name4%.>
+		Prompt%id%03 <Is there a reward for this mission?>
+		Prompt%id%03_1 <So is anybody going to pay us for this?>
+		Prompt%id%03_2 <Wait, who's putting up the reward?>
+		Prompt%id%04 <Isn't %name4% way out of our league?>
+		CPrompt%id%04 <ifG NPCRenown %4% PCRenown Accept>
+		Prompt%id%04_1 <%name4%'s a really good pilot, isn't \SPR %4% ?>
+		Prompt%id%05 <Okay, let's do it.>
+		Prompt%id%05_1 <Well I'm convinced. Let's get \OPR %4% .>
+		Prompt%id%06 <A real professional doesn't work for free.>
+		Prompt%id%06_1 <Let's stick to the real missions for now, okay?>
+		Prompt%id%07 <Let's not do this.>
+		Prompt%id%07_1 <Maybe we can try fighting %name4% later.>
+	end
+
+
+Content
 	name <LM Faction Mission>
 	desc <The LM gets a call from their faction.>
 	requires <*LM_NonComCharDev -1:NOFAC -1:PDASS>

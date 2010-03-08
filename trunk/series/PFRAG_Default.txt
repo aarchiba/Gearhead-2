@@ -151,6 +151,78 @@
 	CPrompt%id%03 <ifG PC$ Threat PCRenown 10 Accept>
 
 %
+% TYPE: *LM_RefuseRequest
+%
+%	The PC has just refused a request from the lancemate. The lancemate will
+%	probably take it well.
+%
+%   PARAM1: Exit label
+%
+
+	Persona
+	requires <*LM_RefuseRequest>
+	START <EndChat Say %id%01 Goto %1%>
+	Msg%id%01 <Alright, no big deal.>
+	Msg%id%01_1 <Meh. I'm disappointed, but I'll survive.>
+	CMsg%id%01_1 <ifNPCSociable Accept>
+	Msg%id%01_2 <Okay.>
+	CMsg%id%01_2 <ifNPCShy Accept>
+	Msg%id%01_3 <Don't worry about it. Let's go do something else.>
+	CMsg%id%01_3 <ifNPCEasygoing Accept>
+	Msg%id%01_4 <What!? Well, I guess it's your decision, \PC ...>
+	CMsg%id%01_4 <ifNPCPassionate Accept>
+	Msg%id%01_5 <No prob.>
+	CMsg%id%01_5 <ifNPCCheerful Accept>
+	Msg%id%01_6 <Hmm... You disappoint me.>
+	CMsg%id%01_6 <ifNPCMelancholy Accept>
+
+
+%
+% TYPE: *LM_LetsDoIt
+%		&SeekRumor	The PC should try to find a rumor
+%
+%	The PC has just agreed to some inane request from the lancemate.
+%	Vagueness is perfectly acceptable.
+%
+%   PARAM1: Exit label
+%
+
+	Persona
+	requires <*LM_LetsDoIt &SeekRumor>
+	START <EndChat Say %id%01 Goto %1%>
+	Msg%id%01 <The first thing we ough to do is ask around for some rumors.>
+	Msg%id%01_1 <Whenever you're doing something like this, the first step is always to ask around and see if you can turn up any rumors. I think that's what we should do right now.>
+	CMsg%id%01_1 <ifNPCSociable Accept>
+	Msg%id%01_2 <Good. We're going to need some more information to move forward... see if you can dig up any rumors.>
+	CMsg%id%01_2 <ifNPCShy Accept>
+	Msg%id%01_3 <Okay, first off let's go see if we can dig up any rumors. It's pretty hard to do anything when you don't know what to do.>
+	CMsg%id%01_3 <ifNPCEasygoing Accept>
+	Msg%id%01_4 <I've done my part, now it's time for you to act. We need information; see if you can turn up any rumors.>
+	CMsg%id%01_4 <ifNPCPassionate Accept>
+	Msg%id%01_5 <Woohoo, let's do it! Um... I don't really know where to go from here. Maybe we can track down some rumors?>
+	CMsg%id%01_5 <ifNPCCheerful Accept>
+	Msg%id%01_6 <The next step is to confront our own ignorance. Let's ask around, see what kind of rumors we can turn up.>
+	CMsg%id%01_6 <ifNPCMelancholy Accept>
+
+	Persona
+	requires <*LM_LetsDoIt>
+	START <EndChat Say %id%01 Goto %1%>
+	Msg%id%01 <Let's get to work, then.>
+	Msg%id%01_1 <I'm glad you're willing to see things my way. Shall we get to work, then?>
+	CMsg%id%01_1 <ifNPCSociable Accept>
+	Msg%id%01_2 <Let's do it.>
+	CMsg%id%01_2 <ifNPCShy Accept>
+	Msg%id%01_3 <Okay, then, we should get started. Um...>
+	CMsg%id%01_3 <ifNPCEasygoing Accept>
+	Msg%id%01_4 <This will be glorious! Let's get started right away.>
+	CMsg%id%01_4 <ifNPCPassionate Accept>
+	Msg%id%01_5 <Yeah, let's do it!>
+	CMsg%id%01_5 <ifNPCCheerful Accept>
+	Msg%id%01_6 <Hopefully we aren't going to regret this...>
+	CMsg%id%01_6 <ifNPCMelancholy Accept>
+
+
+%
 % TYPE: *LetsGoToMission
 %
 %	The NPC has referred the PC to a mission; let's go there now!

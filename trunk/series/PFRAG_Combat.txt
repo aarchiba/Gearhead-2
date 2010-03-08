@@ -530,6 +530,11 @@ Persona
 	Prompt%id%01 <That's gonna be me.>
 
 % TYPE: *BattleChallenge
+%		      &CharDev	Character development (@:A,@:M) is allowed
+%				In general character development should be reserved
+%				for times when the PC is intentionally and specifically
+%				confronting this NPC, or when the NPC already has a
+%				pre-existing relationship with the PC.
 %                     &Avoid	Combat can be avoided
 %	The PC and NPC get a chance to trash-talk one another before battle.
 %	There's a chance the PC can avoid this combat. Note that the PC might
@@ -537,6 +542,55 @@ Persona
 %	case he can expect to lose some renown.
 %   PARAM1: Start combat exit label (no message printed here)
 %   PARAM2: Avoid combat exit label (message is printed here)
+
+	Persona
+	%% The Attitude Sorter
+	requires <*BattleChallenge &CharDev "@:A.---">
+	%% This pfrag will set a preliminary attitude for the NPC, depending
+	%% on a number of factors. The choices are:
+	%% - Antagonistic if Melancholy
+	%% - Keeping Secret if Shy
+	%% - Senior if older and more renowned
+	%% - Junior if younger and less renowned
+	%% - Equal otherwise
+	%% EndChat & AddChat done at beginning; just Say+SetXXRAttitude per op
+	start <EndChat AddChat %id%01 ifNPCMelancholy else .%id%_GoCheckSecret                    Say %id%01 SetXXRAttitude ChatNPCID XXR_A_Antagonistic>
+	.%id%_GoCheckSecret <ifNPCShy else .%id%_GoCheckSenior if= d2 1 else .%id%_GoCheckSenior  Say %id%02 SetXXRAttitude ChatNPCID XXR_A_HasSecret>
+	.%id%_GoCheckSenior <ifG ChatNPCDAge PCDAge else .%id%_GoCheckMinor ifG ChatNPCRenown PCRenown else .%id%_GoEqual Say %id%03 SetXXRAttitude ChatNPCID XXR_A_IsSenior>
+	.%id%_GoCheckMinor <ifG PCRenown ChatNPCRenown else .%id%_GoEqual                         Say %id%04 SetXXRAttitude ChatNPCID XXR_A_IsJunior>
+	.%id%_GoEqual <Say %id%05 SetXXRAttitude ChatNPCID XXR_A_IsEqual>
+	result%id%01 <Goto %1%>
+	Msg%id%01 <What are you doing here!? This mission was going smoothly for once, the last thing I need is for some jerk to come mess it up.>
+	Msg%id%01_1 <Aw, nuts. I was just about to call it a day, then you have to show up. Don't think I'm going to forget this kind of intrusion easily.>
+	Msg%id%01_2 <What do you want!? Just what I need, another annoying battle... come on then, let's get started.>
+	Msg%id%02 <Don't meddle in things you don't understand, \PC . I won't allow you to derail my plan.>
+	Msg%id%02_1 <You're playing with forces you don't understand, \PC . That which has been set in motion cannot be stopped.>
+	Msg%id%02_2 <My plan must remain a secret. I'll destroy you if I have to...>
+	Msg%id%03 <How amusing. Do you really think you're ready to challenge someone like me?>
+	Msg%id%03_1 <What's this? A novice pilot has wandered into my crosshairs...>
+	Msg%id%03_2 <Hm, a challenger? This shouldn't take long...>
+	Msg%id%04 <Hey, wait a minute... You're not one of the guys on my side. That means we're going to fight!>
+	Msg%id%04_1 <Wow, I read all about you on PilotNet... I can't believe that I'm going to fight you myself!>
+	Msg%id%04_2 <Halt! No matter how big you are, it's my job to challenge you...>
+	Msg%id%05 <\PC ! I challenge you to battle!>
+	Msg%id%05_1 <I've heard that you're pretty good, \PC . Let's see how you measure up.>
+	CMsg%id%05_1 <ifNPCSociable Accept>
+	Msg%id%05_2 <I challenge you...>
+	CMsg%id%05_2 <ifNPCShy Accept>
+	Msg%id%05_3 <Would you look at that... they sent someone halfways decent to fight me. At least this is going to be a fun battle!>
+	CMsg%id%05_3 <ifNPCCheerful Accept>
+	Msg%id%05_4 <Even though one or the other of us is probably going to die, I can't back down from this fight...>
+	CMsg%id%05_4 <ifNPCMelancholy Accept>
+	Msg%id%05_5 <Hey \PC ! Consider yourself challenged... to battle, of course.>
+	CMsg%id%05_5 <ifNPCEasygoing Accept>
+	Msg%id%05_6 <Here comes a worthy foe. I challenge you, \PC ! To the last mecha standing!>
+	CMsg%id%05_6 <ifNPCPassionate Accept>
+	Msg%id%05_7 <I challenge you to honorable combat, \PC ! May the best pilot win...>
+	CMsg%id%05_7 <ifNPCHeroic Accept>
+	Msg%id%05_8 <I will destroy you utterly, \PC ... or at least give it a good try.>
+	CMsg%id%05_8 <ifNPCVillainous Accept>
+	Prompt%id%01 <[Continue]>
+
 
 	Persona
 	requires <*BattleChallenge "Friend">
@@ -596,7 +650,7 @@ Persona
 	CMsg%id%01_5 <ifNPCEasygoing Accept>
 	Msg%id%01_6 <Are you an honorable fighter? In the name of the Silver Knights, I challenge you to battle!>
 	CMsg%id%01_6 <ifNPCPassionate Accept>
-	Msg%id%01_7 <You have been deemed an enemy of the L5 council. I have been sent to defeat you.>
+	Msg%id%01_7 <You have been deemed an enemy of the L5 alliance. I have been sent to defeat you.>
 	CMsg%id%01_7 <ifFactionEnemy 1 Accept>
 	Msg%id%01_8 <It will be my pleasure to dispatch your worthless life, villain. Prepare yourself for combat.>
 	CMsg%id%01_8 <ifPCVillainous Accept>
