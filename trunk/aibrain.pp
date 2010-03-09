@@ -744,6 +744,11 @@ begin
 				DoTransformation( GB , Mek , Part , True );
 				SetNAtt( Mek^.NA , NAG_EpisodeData , NAS_SpecialActionRecharge , GB^.ComTime + 150 + Random( 50 ) );
 			end;
+		end else if Part^.S = GS_LongRangeScanner then begin
+			if AIShouldLRScan( GB , Mek , Part ) then begin
+				DoLongRangeScan( GB , Mek , Part );
+				SetNAtt( Mek^.NA , NAG_EpisodeData , NAS_SpecialActionRecharge , GB^.ComTime + 150 + Random( 50 ) );
+			end;
 		end;
 	end;
 end;

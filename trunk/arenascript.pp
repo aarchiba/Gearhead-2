@@ -4633,7 +4633,9 @@ end;
 
 Procedure ProcessXPV( var Event: String; GB: GameBoardPtr; Source: GearPtr );
 	{ Give some experience points to all PCs and lancemates. }
-	Procedure DoRapidLeveling( NPC: GearPtr; Renown: Integer );
+const
+	LM_Renown_Lag = 20;	{ Lancemates will lag one renown band behind PC. }
+	Procedure DoRapidLeveling( NPC,PC: GearPtr; Renown: Integer );
 		{ Search through this NPC's skills. If you find one that is lower }
 		{ than acceptable for the provided Renown, increase it. }
 	var
@@ -4644,8 +4646,16 @@ Procedure ProcessXPV( var Event: String; GB: GameBoardPtr; Source: GearPtr );
 		NPC := LocatePilot( NPC );
 		if NPC = Nil then Exit;
 
+		{ Clamp the renown score. }
+		if Renown < 1 then Renown := 1;
+
 		{ Advance the NPC's renown. }
 		if NAttValue( NPC^.NA , NAG_CharDescription , NAS_Renowned ) < Renown then AddNAtt( NPC^.NA , NAG_CharDescription , NAS_Renowned , 1 );
+
+		{ Maybe advance the NPC's reaction score. }
+		{ This will depend on the current score bonus and the renown level. }
+		N := Random( Renown + 5 ) div 2;
+		if N > NAttValue( PC^.NA , NAG_ReactionScore , NAttValue( NPC^.NA , NAG_Personal , NAS_CID ) ) then AddReact( GB , PC , NPC , 1 );
 
 		{ Determine the skill level to use. }
 		OptRank := SkillRankForRenown( Renown );
@@ -4697,9 +4707,9 @@ begin
 	{ Locate the PC, and find its Renown score. }
 	PC := LocatePilot( GG_LocatePC( GB ) );
 	if PC <> Nil then begin
-		Renown := NAttValue( PC^.NA , NAG_CharDescription , NAS_Renowned ) - 20;
+		Renown := NAttValue( PC^.NA , NAG_CharDescription , NAS_Renowned );
 	end else begin
-		Renown := 0;
+		Renown := 1;
 	end;
 
 	{ We'll rapidly level one of the lancemates at random. }
@@ -4719,7 +4729,12 @@ begin
 				{ Only regular lancemates get rapid leveling- Pets and temps don't. }
 				if IsRegularLancemate( M ) then begin
 					Dec( LMs );
-					if LMs = 0 then DoRapidLeveling( M , Renown );
+					if LMs = 0 then DoRapidLeveling( M , PC , Renown - LM_Renown_Lag );
+
+					{ Lancemates are also eligible for training events. }
+					if NAttValue( M^.NA , NAG_Narrative , NAS_LancemateTraining_Total ) < Renown then begin
+						AddNAtt( M^.NA , NAG_Narrative , NAS_LancemateTraining_Total , 1 );
+					end;
 				end;
 			end;
 			M := M^.Next;
@@ -4976,6 +4991,9 @@ begin
 		CList := '';
 	end;
 
+	{ If this lancemate cannot develop at this time, exit. }
+	if not LancemateCanDevelop( NPC ) then Exit;
+
 	{ Find out if the NPC can learn a new skill or a new talent. }
 	CanGainSkill := NumberOfSpecialties( NPC ) <= NumberOfSkillSlots( NPC );
 	CanGainTalent := NumFreeTalents( NPC ) > 0;
@@ -5009,6 +5027,9 @@ begin
 		NPC^.Stat[ N ] := NPC^.Stat[ N ] + 1;
 		msg := ReplaceHash( msg , MsgString( 'STATNAME_' + BStr( N ) ) );
 	end;
+
+	{ Increase the training spent counter. }
+	AddNAtt( NPC^.NA , NAG_Narrative , NAS_LancemateTraining_Spent , 1 );
 
 	YesNoMenu( GB , msg , '' , '' );
 end;

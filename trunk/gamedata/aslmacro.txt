@@ -242,6 +242,7 @@ IfUIntimidation <ifUSkillTest NAS_Intimidation STAT_Ego ?>
 IfConversation <ifSkillTest NAS_Conversation STAT_Charm ?>
 IfUConversation <ifUSkillTest NAS_Conversation STAT_Charm ?>
 IfCodeBreaking <ifSkillTest NAS_CodeBreaking STAT_Craft ?>
+IfCodeBreakingKn <ifSkillTest NAS_CodeBreaking STAT_Knowledge ?>
 IfUCodeBreaking <ifUSkillTest NAS_CodeBreaking STAT_Craft ?>
 IfStealth <ifSkillTest NAS_Stealth STAT_Speed ?>
 IfStealthCH <ifSkillTest NAS_Stealth STAT_Charm ?>	% Used for lying and disguises

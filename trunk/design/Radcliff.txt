@@ -16,9 +16,8 @@ Head
 
 		Sensor 6
 
-		ECM 5
-
-		HeavyActuator 1
+		LongRangeScanner 4
+		Integral
 	end
 
 Torso
@@ -44,14 +43,14 @@ Torso
 		STC LAS-5
 		mass -2
 
-		HeavyActuator 3
-		mass -1
+		ECM 7
 	end
 
 Arm
 	Name <Right Arm>
 	Size 5
 	Armor 6
+	mass -1
 	sub
 		STC PHS-8
 
@@ -79,6 +78,7 @@ Arm
 	Name <Left Arm>
 	Size 5
 	Armor 6
+	mass -1
 	sub
 		STC PHS-8
 
@@ -105,6 +105,7 @@ Arm
 Leg
 	Name <Right Leg>
 	Armor 6
+	mass -1
 	sub
 		Mount
 		Name <Right Leg Mount>
@@ -126,6 +127,7 @@ Leg
 Leg
 	Name <Left Leg>
 	Armor 6
+	mass -1
 	sub
 		Mount
 		Name <Left Leg Mount>

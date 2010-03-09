@@ -1165,7 +1165,9 @@ Content
 	inv
 		STC COMPUTER-1
 		use <Print 1>
-		CLUE_CODEBREAKING <if= V1 0 else GoBeenBefore V= 1 1 Mental ifCodeBreaking 10 else GoFail Print 4 MagicMap>
+		CLUE_CODEBREAKING <if= V1 0 else GoBeenBefore V= 1 1 Mental ifCodeBreakingKn SkillTar 50 else GoFail Print 4 MagicMap>
+		CLUE_SCIENCE      <if= V1 0 else GoBeenBefore V= 1 1 Mental ifScience HardSkillTar 50  else GoFail Print 4 MagicMap>
+		CLUE_INSIGHT      <if= V1 0 else GoBeenBefore V= 1 1 Mental ifInsightKn SkillTar 50  else GoFail Print 4 MagicMap>
 		GoBeenBefore <Print 2>
 		GoFail <Print 3>
 		msg1 <This old computer still seems to be working.>

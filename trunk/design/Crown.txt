@@ -73,7 +73,7 @@ Torso
 		end
 	end
 Storage
-	size 2
+	size 4
 	Armor 4
 	mass -2
 	sub
@@ -84,6 +84,8 @@ Storage
 
 		ECM 6
 		mass -1
+
+		LongRangeScanner 4
 	end
 Arm
 	Name <Right Arm>

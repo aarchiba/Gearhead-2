@@ -132,6 +132,33 @@
 	Msg%id%01_2 <Yeah, whatever. Just do what you want.>
 
 	Persona
+	requires <*LM_WhyNotMission @:M.pro>
+	START <EndChat Say %id%01 Goto %2%>
+	Msg%id%01 <As you command.>
+	Msg%id%01_1 <As you wish. I will respect your decision.>
+	Msg%id%01_2 <You're the boss, \PC .>
+
+	Persona
+	requires <*LM_WhyNotMission @:M.see>
+	START <NewChat Say %id%01 AddChat %id%01 AddCHat %id%02>
+	result%id%01 <EndChat Say %id%02 AddReact  d4  Goto %1%>
+	result%id%02 <EndChat Say %id%03 AddReact -d6  Goto %2%>
+	Msg%id%01 <I just thought this might be a good experience, you know? I'm trying to try new things...>
+	Msg%id%01_1 <Well, you know, I'm not entirely happy with the way my life's going right now, I thought it might be good to expand our employment horizons a bit.>
+	Msg%id%01_2 <I just wanted to try something different, y'know? It seems like every mission we do is for \FACTION PCFac ...>
+	CMsg%id%01_2 <ifFactionExists PCFac if# PCFac NPCFac %3% Accept>
+	Msg%id%02 <Thanks, \PC . We should go talk with \PERSONA %3% at \EXACT_SCENE NPCScene %3% .>
+	Msg%id%02_1 <Think of it as a bold new adventure. Let's get over to \EXACT_SCENE NPCScene %3% and speak with \PERSONA %3% .>
+	Msg%id%03 <How are you ever going to grow if you won't try anything new? It's your decision, but still...>
+	Msg%id%03_1 <Yeah, whatever. Let's just keep doing the same old stuff forever and ever.>
+	Prompt%id%01 <Okay. We can go do this mission.>
+	Prompt%id%01_1 <Well, I'd hate to stand in the way of personal growth...>
+	Prompt%id%01_2 <If it means that much to you, I'll do it.>
+	Prompt%id%02 <Expand your mind on your own time, \CHATNPC .>
+	Prompt%id%02_1 <We don't have time for this right now.>
+	Prompt%id%02_2 <No more talking, my decision is final.>
+
+	Persona
 	requires <*LM_WhyNotMission @:M.mer>
 	START <NewChat Say %id%01 AddChat %id%01 AddCHat %id%02 AddChat %id%03>
 	result%id%01 <ifG React d100 else .%id%_GoR1Fail ifG React 35 else .%id%_GoR1Fail EndChat Say %id%05 SetXXRMotivation ChatNPCID XXR_M_Seeker Goto %2%>
@@ -158,6 +185,13 @@
 %
 %   PARAM1: Exit label
 %
+
+	Persona
+	requires <*LM_RefuseRequest @:M.pro>
+	% A professional won't take the refusal personally at all.
+	START <EndChat Say %id%01 Goto %1%>
+	Msg%id%01 <As you wish.>
+	Msg%id%01_1 <Understood.>
 
 	Persona
 	requires <*LM_RefuseRequest>

@@ -2246,6 +2246,7 @@ begin
 
 	RPM := CreateRPGMenu( MenuItem, MenuSelect, ZONE_FieldHQMenu );
 	BuildGearMenu( RPM , PC , GG_Usable );
+	AlphaKeyMenu( RPM );
 	RPMSortAlpha( RPM );
 
 	AddRPGMenuItem( RPM , MsgString( 'Cancel' ) , -1 );
@@ -2262,6 +2263,14 @@ begin
 				DoTransformation( GB , PC , Part , True );
 			end else begin
 				DialogMsg( MsgString( 'TRANSFORM_NotNow' ) );
+			end;
+		end else if Part^.S = GS_LongRangeScanner then begin
+			if LongRangeScanEPCost( GB, Part ) > EnergyPoints( FindRoot( Part ) ) then begin
+				DialogMsg( MsgString( 'LONGRANGESCAN_NoPower' ) );
+			end else if CanLRScanHere( GB, Part ) then begin
+				DoLongRangeScan( GB , PC , Part );
+			end else begin
+				DialogMsg( MsgString( 'LONGRANGESCAN_NotNow' ) );
 			end;
 		end;
 	end;

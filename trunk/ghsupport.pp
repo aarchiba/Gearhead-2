@@ -60,10 +60,11 @@ const
 
 	{ G = GG_Usable }
 	{ S = Usable Type }
-		Num_Usable_System_Types = 3;
+		Num_Usable_System_Types = 4;
 		GS_Transformation = 1;
 		GS_ForceField = 2;
 		GS_Holograms = 3;
+		GS_LongRangeScanner = 4;
 	{ V = Power Level/Parameter }
 
 
@@ -133,6 +134,8 @@ Function UsableBaseMass( Part: GearPtr ): Integer;
 begin
 	if Part^.S = GS_Transformation then begin
 		UsableBaseMass := 1;
+	end else if Part^.S = GS_LongRangeScanner then begin
+		UsableBaseMass := Part^.V;
 	end else begin
 		UsableBaseMass := Part^.V * 2;
 	end;
@@ -177,6 +180,7 @@ begin
 		GS_Transformation:	UsableValue := 1000;
 		GS_ForceField:		UsableValue := Part^.V * Part^.V * Part^.V * 25 + Part^.V * Part^.V * 50 + Part^.V * 175;
 		GS_Holograms:		UsableValue := Part^.V * Part^.V * Part^.V * 25 + Part^.V * 75 + 750;
+		GS_LongRangeScanner:	UsableValue := Part^.V * Part^.V * 50 + Part^.V * 100 + 500;
 	end;
 end;
 

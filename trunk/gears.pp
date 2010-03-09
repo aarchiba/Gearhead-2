@@ -195,6 +195,9 @@ Const
 
 	NAS_DungeonEntrance = 37;	{ Used to find the entrance of a dungeon. }
 
+	NAS_LancemateTraining_Total = 38;	{ Used to regulate lancemate training/advancement. }
+	NAS_LancemateTraining_Spent = 39;
+
 	{ The following are used by the randmaps unit... }
 	NAS_LockedDoorChance = 101;
 	NAS_SecretDoorChance = 102;

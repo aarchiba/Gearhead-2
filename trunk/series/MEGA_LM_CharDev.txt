@@ -21,7 +21,7 @@ Content
 	% E4 is a mecha pilot enemy of E3, not an ally of E1 or the PC
 	Element2 <Scene Town>
 	Element3 <Character -NoFac !Okay 2 !Okay 1>
-	Element4 <Character !Global HasMecha !Enemy 3 !XClude 1 -Ally>
+	Element4 <Character !Global HasMecha !Enemy 3 !XClude 1 -Ally Recharged>
 
 	% P%id%01 = Chat counter
 	% P%id%02 = SkillXP amount
@@ -41,8 +41,8 @@ Content
 	Msg%id%01 <%name1% wants to talk with you about something.>
 	Msg%id%02 <%name1% approaches you.>
 	Msg%id%03 <Good work, \PC . I knew you were better than %name4%.>
-	Msg%id%03_1 <Yeah, we did it! Good going \PC !>
-	Msg%id%03_2 <Hah, %name4% didn't stand a chance!>
+	Msg%id%03_1 <Yeah, we did it! Good going \PC .>
+	Msg%id%03_2 <%name4% didn't stand a chance.>
 	Msg%id%04 <%name4% got away...>
 	Msg%id%04_1 <We have failed...>
 	Msg%id%04_2 <I guess we aren't ready to face %name4% yet...>
@@ -134,6 +134,66 @@ Content
 		Prompt%id%07_1 <Maybe we can try fighting %name4% later.>
 	end
 
+Content
+	name <Seeker Mission>
+	desc <The LM has found a mission for you.>
+	requires <*LM_NonComCharDev 1:M.see>
+	PayRate 150
+
+	% E1 is the lancemate in question
+	% E2 is the character who will offer the mission
+	% E3 is the root scene
+	% E4 is the NPC's faction
+	Element2 <Character !Okay 1 -Enemy -NoFac>
+	Element3 <Scene Town>
+	Element4 <Faction !Comrade 2>
+
+	% P%id%01 = Chat counter
+
+	start <ifNPCOK %1% else .%id%_GoEndPlot ifNPCOK %2% else .%id%_GoEndPlot if= RootSceneID %3% else .%id%_GoEndPlot ifNPCLancemate %1% ifScene .%id%_scenetype if= P%id%01 0     P= %id%01 1  Alert %id%02 ForceChat %1% PMemo %plotid% %id%01>
+	.%id%_scenetype <outdoors>
+	.%id%_GoEndPlot <EndPlot>
+
+	Msg%id%01 <%name1% wants to talk with you about something.>
+	Msg%id%02 <%name1% approaches you.>
+
+	%% SubPlot1 is the mission itself
+	SubPlot1 <*UTIL_ReferredMission 1 2>
+
+	sub
+		Persona 1
+		&%id%_E2Scene <NPCScene %2%>
+		greeting <if= PlotStatus %plotid% %id% else %pop% ifNPCOK %2% else .%id%_GoEnd if= P%id%01 1 else .%id%_GoExplainPlan Goto .%id%_GoWantsToTalk>
+		.%id%_GoEnd <EndPlot RevertPersona>
+		*.%id%_GoWantsToTalk <*LancemateWantsToTalk .%id%_GoExplainPlan .%id%_GoTalkLater>
+		.%id%_GoExplainPlan <P= %id%01 2 NewChat Say %id%01 AddChat %id%01 AddChat %id%02>
+		*.%id%_GoTalkLater <*TalkAgainWhenYouHaveTime>
+		.%id%_GoAcceptMission <pmemo %plotid% %id%02  FacXP+ %4% 1  AddReact d4  SetPlotStatus %plotid1% %id1%>
+		.%id%_GoDenyMission <EndPlot>
+		*result%id%01 <*LetsGoToMission .%id%_GoAcceptMission %2% &%id%_E2Scene>
+		*result%id%02 <*LM_WhyNotMission .%id%_GoAcceptMission .%id%_GoDenyMission %2%>
+		Msg%id%01 <I was just talking to %name2%; \SPR %2% needs a pilot to do a mission for %name4%. I thought maybe we could try that.>
+		Msg%id%01_1 <>
+		CMsg%id%01_1 <ifNPCSociable Accept>
+		Msg%id%01_2 <>
+		CMsg%id%01_2 <ifNPCShy Accept>
+		Msg%id%01_3 <>
+		CMsg%id%01_3 <ifNPCEasygoing Accept>
+		Msg%id%01_4 <>
+		CMsg%id%01_4 <ifNPCPassionate Accept>
+		Msg%id%01_5 <>
+		CMsg%id%01_5 <ifNPCCheerful Accept>
+		Msg%id%01_6 <>
+		CMsg%id%01_6 <ifNPCMelancholy Accept>
+		Msg%id%02 <%name1% suggested that you go see %name2% about a mission for %name4%.>
+		Prompt%id%01 <Missions are good.>
+		Prompt%id%01_1 <Thanks for the tip; let's get started.>
+		Prompt%id%01_2 <Alright, we can do that.>
+		Prompt%id%02 <Sounds like too much work to me.>
+		CPrompt%id%02 <if# PCFac NPCFac %4% Accept>
+		Prompt%id%02_1 <This doesn't sound like my kind of thing.>
+		Prompt%id%02_2 <I don't really want to do that.>
+	end
 
 Content
 	name <LM Faction Mission>
@@ -199,7 +259,7 @@ Content
 Content
 	name <I Wanna Join Your Club>
 	desc <A professionally-oriented lancemate will attempt to join the PC's faction.>
-	requires <*LM_NonComCharDev 1:M.pro 1:NOFAC>
+	requires <*LM_NonComCharDev 1:M.pro 1:NOFAC 1:TRAIN>
 
 	% E1 is the lancemate in question
 	% E2 is the PC's faction
@@ -268,7 +328,7 @@ Content
 	%% - Distance self from E1:                    M->Competition, leaves lance
 	%% - Scare away debt-owner:                    A->Admire
 	%% - Don't do anything, lose to debt-owner:    A->Disrespect
-	requires <*LM_NonComCharDev 1:M.mer (1:A.---|1:A.jr_|1:A.equ) 1:evil_ -!Ne>
+	requires <*LM_NonComCharDev 1:M.mer (1:A.---|1:A.jr_|1:A.equ) 1:evil_ -!Ne 1:TRAIN>
 
 	% E1 is the lancemate in question
 	% E2 is the character owed money
@@ -526,7 +586,7 @@ Content
 Content
 	name <Let Me Show You Something>
 	desc <The lancemate will lead the PC to a special reward.>
-	requires <*LM_NonComCharDev 1:A.tha>
+	requires <*LM_NonComCharDev 1:A.tha 1:TRAIN>
 
 	% E1 is the lancemate in question
 	% E2 is a local outdoors scene

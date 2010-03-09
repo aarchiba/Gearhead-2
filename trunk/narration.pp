@@ -139,7 +139,7 @@ Const
 		NAS_CoreMissionStep = 3;	{ Records the number of core missions completed. }
 		NAS_CoreMissionEnemy = 4;	{ Enemy for the core story. }
 
-
+Function LancemateCanDevelop( NPC: GearPtr ): Boolean;
 Procedure AddXXCharContext( NPC: GearPtr; var Context: String; palette_entry_code: Char );
 Function XNPCDesc( GB: GameBoardPtr; Adv,NPC: GearPtr ): String;
 
@@ -227,6 +227,18 @@ const
 	FROZEN_MAP_CONTINUE = 1;
 	FROZEN_MAP_SENTINEL = -1;
 
+Function LancemateCanDevelop( NPC: GearPtr ): Boolean;
+	{ If this lancemate can learn new skills via the TrainNPC function, }
+	{ return TRUE. This is determined by the NAS_LancemateTraining_Total and }
+	{ NAS_LancemateTraining_Spent attributes. }
+const
+	Points_Per_TrainNPC = 11;
+begin
+	NPC := LocatePilot( NPC );
+	if NPC = Nil then Exit( False );
+	LancemateCanDevelop := ( ( NAttValue( NPC^.NA , NAG_Narrative , NAS_LancemateTraining_Spent ) + 1 ) * Points_Per_TrainNPC ) < NAttValue( NPC^.NA , NAG_Narrative , NAS_LancemateTraining_Total );
+end;
+
 Procedure AddXXCharContext( NPC: GearPtr; var Context: String; palette_entry_code: Char );
 	{ Add context descriptors for the attitude and motivation of this NPC. }
 const
@@ -249,6 +261,11 @@ begin
 	T := NAttValue( NPC^.NA , NAG_XXRan , NAS_XXChar_Attitude );
 	if ( T > 0 ) and ( T <= Num_XXR_Attitudes ) then Context := Context + ' ' + palette_entry_code + ':A.' + XXR_Attitude[ t ]
 	else Context := Context + ' ' + palette_entry_code + ':A.---';
+
+	{ Lancemates may also get a TRAIN tag, if appropriate. }
+	if ( NAttValue( NPC^.NA , NAG_Location , NAS_Team ) = NAV_LancemateTeam ) and LancemateCanDevelop( NPC ) then begin
+		Context := Context + ' ' + palette_entry_code + ':TRAIN';
+	end;
 end;
 
 Function XNPCDesc( GB: GameBoardPtr; Adv,NPC: GearPtr ): String;
