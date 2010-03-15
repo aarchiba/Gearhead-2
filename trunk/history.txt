@@ -1,5 +1,11 @@
+- Props get armor/structure display (glinfo.pp,vidinfo.pp)
+- Usable systems now get description (description.pp)
+- Mecha power system isolated from personal power system (gearutil.pp)
+- Can pick up items with handless mecha if it's a safe area (backpack.pp)
+- Offscreen models depicted in 2D interface (cutemap.pp)
+- Shouldn't pillage equipment from repaired player meks (arenaplay.pp)
 - Added Long Range Scanner to Trailblazer, Crown, Radcliff (specialsys.pp)
-- Lancemates need experience to access TrainNPC command (arenascript.pp)
+- Lancemates need mission count to access TrainNPC command (arenascript.pp)
 - Lancemates will like PC more after many missions together (arenascript.pp)
 - MatchPlot debug info won't include null elements (arenascript.pp)
 

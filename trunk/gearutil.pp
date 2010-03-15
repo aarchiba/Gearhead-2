@@ -2597,14 +2597,14 @@ Function EnergyPoints( Master: GearPtr ): LongInt;
 			{Check to see if this part matches our description.}
 			{We are only concerned about parts which have not}
 			{yet been destroyed.}
-			if NotDestroyed(Part) then begin
+			if NotDestroyed(Part) and ( Part^.G <> GG_Cockpit ) then begin
 				it := it + PartEnergyPoints( Part );
 
 				{Check the subcomponents.}
 				if Part^.SubCom <> Nil then it := it + CountEPAlongPath( Part^.SubCom );
 				if Part^.InvCom <> Nil then it := it + CountEPAlongPath( Part^.InvCom );
 
-			end; { IF NOTDESTROYED }
+			end; { IF NOTDESTROYED AND NOT-COCKPIT }
 
 			Part := Part^.Next;
 		end;
@@ -2630,7 +2630,7 @@ Procedure SpendEnergy( Master: GearPtr; EP: Integer );
 			{Check to see if this part matches our description.}
 			{We are only concerned about parts which have not}
 			{yet been destroyed.}
-			if NotDestroyed(Part) then begin
+			if NotDestroyed(Part) and ( Part^.G <> GG_Cockpit ) then begin
 				it := PartEnergyPoints( Part );
 				if it > 0 then begin
 					if it < EP then begin
@@ -2646,7 +2646,7 @@ Procedure SpendEnergy( Master: GearPtr; EP: Integer );
 				if Part^.SubCom <> Nil then CheckEPAlongPath( Part^.SubCom );
 				if Part^.InvCom <> Nil then CheckEPAlongPath( Part^.InvCom );
 
-			end; { IF NOTDESTROYED }
+			end; { IF NOTDESTROYED AND NOT-COCKPIT }
 
 			Part := Part^.Next;
 		end;
@@ -3248,7 +3248,6 @@ Function ToolBonus( Master: GearPtr; Skill: Integer ): Integer;
 	end;
 var
 	Tool: GearPtr;
-	TB: Integer;
 begin
 	if MustBeEquipped then begin
 		Tool := SeekItem( Master , GG_Tool , Skill , False );

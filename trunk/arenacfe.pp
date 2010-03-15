@@ -103,6 +103,10 @@ begin
 	end else begin
 		CMessage( TimeString( GB^.ComTime ) , ZONE_Clock , StdWhite );
 	end;
+
+{$IFDEF CUTE}
+	Render_Off_Map_Models;
+{$ENDIF}
 end;
 
 Procedure WorldMapDisplay( GB: GameBoardPtr );

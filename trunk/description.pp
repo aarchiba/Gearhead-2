@@ -63,7 +63,7 @@ Function WeaponDescription( GB: GameBoardPtr; Weapon: GearPtr ): String;
 var
 	Master,Ammo: GearPtr;
 	desc,AA: String;
-	T,S,M,L: Integer;
+	S,M,L: Integer;
 begin
 	{ Take the default name for the weapon from the WeaponName }
 	{ function in ghweapon. }
@@ -333,6 +333,16 @@ begin
 	SoftwareDescription := msg;
 end;
 
+Function UsableDescription( Part: GearPtr ): String;
+	{ Return a description for this usable gear. }
+begin
+	if Part^.S = GS_Transformation then begin
+		UsableDescription := MsgString( 'USABLENAME_1' ) + ': ' + MsgString( 'FORMNAME_' + BStr( Part^.V ) );
+	end else begin
+		UsableDescription := MsgString( 'USABLE_CLASS' ) + ' ' + BStr( Part^.V ) + ' ' + MsgString( 'USABLENAME_' + BStr( Part^.S ) );
+	end;
+end;
+
 Function CharaDescription( PC: GearPtr ): String;
 	{ Return a description of this character. For now, the description will }
 	{ just be a list of the character's talents. }
@@ -421,6 +431,9 @@ begin
 	end else if Part^.G = GG_Support then begin
 		it := ReplaceHash( MsgString( 'SupportDesc' ) , BStr( Part^.V ) );
 
+	end else if Part^.G = GG_Usable then begin
+		it := UsableDescription( Part );
+
 	end else if Part^.G <> GG_Module then begin
 		SC := Part^.SubCom;
 		while ( SC <> Nil ) do begin
@@ -428,7 +441,6 @@ begin
 			else it := it + '; ' + ExtendedDescription( GB , SC );
 			SC := SC^.Next;
 		end;
-
 
 	end else begin
 		{ This is a module, as determined by the above clause. }

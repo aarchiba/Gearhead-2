@@ -44,6 +44,7 @@ var
 
 	Strong_Hit_Sprite,Weak_Hit_Sprite,Parry_Sprite,Miss_Sprite,Encounter_Sprite: SensibleSpritePtr;
 	Terrain_Sprite,Extras_Sprite,Shadow_Sprite,Building_Sprite,Current_Backdrop: SensibleSpritePtr;
+	Off_Map_Model_Sprite: SensibleSpritePtr;
 
 	Focused_On_Mek: GearPtr;
 
@@ -52,6 +53,7 @@ Function ScreenDirToMapDir( D: Integer ): Integer;
 Function KeyboardDirToMapDir( D: Integer ): Integer;
 
 Function SpriteColor( GB: GameBoardPtr; M: GearPtr ): String;
+Procedure Render_Off_Map_Models;
 
 Procedure RenderMap( GB: GameBoardPtr );
 Procedure FocusOn( Mek: GearPtr );
@@ -140,12 +142,27 @@ const
 
 	Backdrop_Size = 512;	{ Width/Height in pixels of the backdrop image. }
 
+	SI_Ally = 3;
+	SI_Neutral = 2;
+	SI_Enemy = 1;
+
+	NumOMM = 32;
+	OM_North = 1;
+	OM_East = 2;
+	OM_South = 4;
+	OM_West = 3;
+
+
 var
 	Mini_Map_Sprite,World_Terrain,Items_Sprite: SensibleSpritePtr;
 
 	CM_Cels: Array [ 1..MaxMapWidth, 1..MaxMapWidth, LoAlt..HiAlt, 0..NumCMCelLayers ] of Cute_Map_Cel_Description;
 	CM_Cel_IsOn: Array [0..NumCMCelLayers] of Cute_Map_Cel_Toggle;
+	CM_Cel_OMIcon: Array [ 1..MaxMapWidth, 1..MaxMapWidth ] of Byte;
 	CM_ModelNames: Array [ 1..MaxMapWidth, 1..MaxMapWidth, LoAlt..HiAlt ] of String;
+
+	OFF_MAP_MODELS: Array [1..4,0..NumOMM] of Integer;
+
 
 Function ScreenDirToMapDir( D: Integer ): Integer;
 	{ Convert the requested screen direction to a map direction. }
@@ -410,6 +427,39 @@ begin
 	end;
 end;
 
+Procedure Render_Off_Map_Models;
+	{ Draw the off-map models, as stored in the Off_Map_Models array. }
+	Procedure DrawOffMap( Quad,N: Integer );
+		{ Draw an off-map model as indicated by the OFF_MAP_MODEL array. }
+	var
+		MyDest: TSDL_Rect;
+	begin
+		if Quad = OM_East then begin
+			MyDest.Y := ( ScreenHeight * ( N + 1 ) ) div ( NumOMM + 2 );
+			MyDest.X := ScreenWidth - 16;
+		end else if Quad = OM_West then begin
+			MyDest.Y := ( ScreenHeight * ( N + 1 ) ) div ( NumOMM + 2 );
+			MyDest.X := 1;
+		end else if Quad = OM_South then begin
+			MyDest.X := ( ( ScreenWidth * ( N + 1 ) ) div ( NumOMM + 2 ) );
+			MyDest.Y := 1;
+		end else begin
+			MyDest.X := ( ( ScreenWidth * ( N + 1 ) ) div ( NumOMM + 2 ) );
+			MyDest.Y := ScreenHeight - 12;
+		end;
+		DrawSprite( Off_Map_Model_Sprite , MyDest , OFF_MAP_MODELS[ Quad , N ] - 1 + ( Animation_Phase div 5 mod 2 ) * 3 );
+	end;
+var
+	T: Integer;
+begin
+	{ Once everything else has been rendered, draw the off-map icons. }
+	for t := 0 to NumOMM do begin
+		if Off_Map_Models[ OM_North , T ] > 0 then DrawOffMap( OM_North , T );
+		if Off_Map_Models[ OM_South , T ] > 0 then DrawOffMap( OM_South , T );
+		if Off_Map_Models[ OM_West , T ] > 0 then DrawOffMap( OM_West , T );
+		if Off_Map_Models[ OM_East , T ] > 0 then DrawOffMap( OM_East , T );
+	end;
+end;
 
 Procedure Render_Cute( GB: GameBoardPtr );
 	{ Render the location stored in G_Map, along with all items and characters on it. }
@@ -419,7 +469,6 @@ Procedure Render_Cute( GB: GameBoardPtr );
 	{ terrain, mecha, and effects to be displayed. Then, render them. There's something I don't like }
 	{ about this method but I don't remember what, and it seems to be more efficient than searching }
 	{ through the list of models once per tile once per elevation level. }
-
 
 	Procedure AddShadow( X,Y,Z: Integer );
 		{ For this shadow, we're only concerned about three blocks- the one directly to the left (which }
@@ -528,6 +577,15 @@ begin
 	{ map coordinates. If we get a second match later on, that supercedes the previous match obviously, }
 	{ since we're overwriting something anyways. Brilliance! }
 
+	{ Clear the OFF_MAP_MODELS. }
+	{ NOTE: X and Y do not refer to X and Y!!! Coordinates, that is... }
+	{  here they're being used as the map border and the icon position. }
+	for X := 1 to 4 do begin
+		for Y := 0 to NumOMM do begin
+			OFF_MAP_MODELS[ X , Y ] := 0;
+		end;
+	end;
+
 	for X := 1 to GB^.Map_Width do begin
 		for Y := 1 to GB^.Map_Height do begin
 			if TileVisible( GB , X , Y ) then begin
@@ -565,6 +623,9 @@ begin
 				model_map[ X , Y , z ] := Nil;
 				if Names_Above_Heads then CM_ModelNames[ X , Y , Z ] := '';
 			end;
+
+			{ And the off-map icon. }
+			CM_Cel_OMIcon[ X , Y ] := 0;
 		end;
 	end;
 
@@ -896,13 +957,21 @@ const
 			OnTheScreen := False;
 		end;
 	end;
-
 var
-	VX,VY,VX_Max,VY_Max,X,Y,Z,T,Row,Column,Terr: Integer;
+	VX,VY,VX_Max,VY_Max,X,Y,Z,T,Row,Column,Terr,Quad: Integer;
 	M: GearPtr;
 	MyDest,TexDest: TSDL_Rect;
 	Spr: SensibleSpritePtr;
 begin
+	{ Clear the OFF_MAP_MODELS. }
+	{ NOTE: X and Y do not refer to X and Y!!! Coordinates, that is... }
+	{  here they're being used as the map border and the icon position. }
+	for X := 1 to 4 do begin
+		for Y := 0 to NumOMM do begin
+			OFF_MAP_MODELS[ X , Y ] := 0;
+		end;
+	end;
+
 	{ Fill out the basic terrain cels, and while we're here clear the model map. }
 	for X := 1 to GB^.Map_Width do begin
 		for Y := 1 to GB^.Map_Height do begin
@@ -956,6 +1025,9 @@ begin
 				model_map[ X , Y , z ] := Nil;
 				if Names_Above_Heads then CM_ModelNames[ X , Y , Z ] := '';
 			end;
+
+			{ And the off-map icon. }
+			CM_Cel_OMIcon[ X , Y ] := 0;
 		end;
 	end;
 
@@ -982,11 +1054,25 @@ begin
 						MapDirToScreenDir( NAttValue( M^.NA , NAG_Location , NAS_D ) )
 				);
 
+				{ Also add a shadow. }
 				AddCMCel( 	GB , X , Y , Z , CMC_MShadow , Shadow_Sprite , 6 );
 
+				{ If appropriate, save the model map and model name. }
 				if OnTheMap( GB , X , Y ) and ( Z >= LoAlt ) and ( Z <= HiAlt ) then begin
 					model_map[ X , Y , Z ] := M;
 					if Names_Above_Heads and ( M^.G <> GG_Prop ) then CM_ModelNames[ X , Y , Z ] := PilotName( M );
+
+					{ Also record the off-map icon. }
+					if AreAllies( GB , NAV_DefPlayerTeam , NAttValue( M^.NA , NAG_Location , NAS_Team ) ) then begin
+						cm_cel_OMIcon[ X , Y ] := SI_Ally;
+	{					Mini_Map[ X , Y ] := 5;}
+					end else if AreEnemies( GB , NAV_DefPlayerTeam , NAttValue( M^.NA , NAG_Location , NAS_Team ) ) then begin
+						cm_cel_OMIcon[ X , Y ] := SI_Enemy;
+	{					Mini_Map[ X , Y ] := 1;}
+					end else begin
+						cm_cel_OMIcon[ X , Y ] := SI_Neutral;
+	{					Mini_Map[ X , Y ] := 3;}
+					end;
 				end;
 
 			end else if M^.G = GG_MetaTerrain then begin
@@ -1041,15 +1127,14 @@ begin
 
 	for VX := 1 to VX_Max do begin
 		for VY := 1 to VY_Max do begin
-			if OnTheScreen( VX , VY ) then begin
-				{ Determine the map X,Y coordinates that this virtual }
-				{ point is pointing to. }
-				X := MapX( VX , VY );
-				Y := MapY( VX , VY );
+			{ Determine the map X,Y coordinates that this virtual }
+			{ point is pointing to. }
+			X := MapX( VX , VY );
+			Y := MapY( VX , VY );
 
+			if OnTheScreen( VX , VY ) then begin
 				for Z := LoAlt to HiAlt do begin
 					for t := 0 to NumCMCelLayers do begin
-{						if CM_Cels[ X ,Y , Z , T ].Sprite <> Nil then begin}
 						if CM_Cel_IsOn[ T ][ X , Y , Z ] then begin
 							MyDest.X := ScreenX( VX , VY );
 							MyDest.Y := ScreenY( VX , VY ) - Altitude_Height * Z;
@@ -1064,9 +1149,39 @@ begin
 						QuickTextC( CM_ModelNames[ X , Y , Z ] , TexDest , StdWhite , Small_Font );
 					end;
 				end; { For Z... }
+			end else if OnTheMap( GB , X , Y ) and ( CM_Cel_OMIcon[ X , Y ] >= 1 ) and ( CM_Cel_OMIcon[ X , Y ] <= 3 ) then begin
+				{ This image is off the map, but has a substitute image }
+				{ so it should be indicated on the edge. }
+				{ Add a note to the OFF_MAP_MODELS array. }
+				{ Figure out its relative coordinates, with the center of the map }
+				{ as the origin. }
+				{ ***NOTE*** Lifted directly from GH1, don't fully understand }
+				{  everything going on here, let's hope it works. }
+				MyDest.X := ScreenX( VX , VY ) - ( ScreenWidth div 2 );
+				MyDest.Y := ScreenY( VX , VY ) - ( ScreenHeight div 2 );
+
+				{ Use W to save the segment total length, and H to store the }
+				{ relative length. }
+				Quad := 1;
+				if MyDest.Y <= MyDest.X then Quad := Quad + 1;
+				if MyDest.Y <= -MyDest.X then Quad := Quad + 2;
+
+				if ( Quad = 1 ) or ( Quad = 4 ) then begin
+					MyDest.W := Abs( MyDest.Y ) * 2;
+					MyDest.H := MyDest.X + Abs( MyDest.Y );
+				end else begin
+					MyDest.W := Abs( MyDest.X ) * 2;
+					MyDest.H := MyDest.Y + Abs( MyDest.X );
+				end;
+
+				OFF_MAP_MODELS[ Quad , ( MyDest.H * NumOMM ) div MyDest.W ] := CM_Cel_OMIcon[ X , Y ];
+
 			end; { if OnTheScreen... }
 		end;
 	end;
+
+	{ We don't draw the off-map models yet, because they're getting stuck on top of }
+	{ everything else later on. }
 end;
 
 Procedure RenderMap( GB: GameBoardPtr );
@@ -1398,6 +1513,7 @@ initialization
 	Extras_Sprite := Nil;
 
 	Items_Sprite := LocateSprite( Items_Sprite_Name , 50 , 120 );
+	Off_Map_Model_Sprite := LocateSprite( 'off_map.png' , 16 , 16 );
 
 	Strong_Hit_Sprite := LocateSprite( Strong_Hit_Sprite_Name , 64, 64 );
 	Weak_Hit_Sprite := LocateSprite( Weak_Hit_Sprite_Name , 64, 64 );

@@ -73,6 +73,7 @@ const
 
 	Interact_Sprite_Name = 'interact.png';
 	Module_Sprite_Name = 'modules.png';
+	PropStatus_Sprite_Name = 'modu_prop.png';
 	Backdrop_Sprite_Name = 'backdrops.png';
 
 	Altimeter_Sprite_Name = 'altimeter.png';
@@ -85,7 +86,7 @@ const
 
 var
 	CZone,CDest: TSDL_Rect;		{ Current Zone, Current Destination }
-	Interact_Sprite,Module_Sprite,Backdrop_Sprite: SensibleSpritePtr;
+	Interact_Sprite,Module_Sprite,PropStatus_Sprite,Backdrop_Sprite: SensibleSpritePtr;
 	Altimeter_Sprite,Speedometer_Sprite: SensibleSpritePtr;
 	StatusFX_Sprite,OtherFX_Sprite: SensibleSpritePtr;
 	Concert_Mob_Sprite,Concert_Mood_Sprite: SensibleSpritePtr;
@@ -239,6 +240,34 @@ var
 		end;
 	end;
 
+	Function PropStructImage(): Integer;
+		{ Return the correct image to use in the diagram. }
+	var
+		MxD,CuD: Integer;
+	begin
+		MxD := GearMaxDamage( Mek );
+		CuD := GearCurrentDamage( Mek );
+		if ( MxD > 0 ) and ( CuD < 1 ) then begin
+			PropStructImage := 8;
+		end else begin
+			PropStructImage := 8 - ( CuD * 8 div MxD );
+		end;
+	end;
+
+	Function PropArmorImage(): Integer;
+		{ Return the correct image to use in the diagram. }
+	var
+		MxD,CuD: Integer;
+	begin
+		MxD := MaxTArmor( Mek );
+		CuD := CurrentTArmor( Mek );
+		if CuD < 1 then begin
+			PropArmorImage := 18;
+		end else begin
+			PropArmorImage := 18 - ( CuD * 8 div MxD );
+		end;
+	end;
+
 	Procedure AddPartsToDiagram( GS: Integer );
 		{ Add parts to the status diagram whose gear S value }
 		{ is equal to the provided number. }
@@ -270,30 +299,38 @@ var
 		end;
 	end;
 begin
-	{ Draw the status diagram for this mek. }
-	{ Line One - Heads, Turrets, Storage }
-	MyDest.Y := CDest.Y;
-	X0 := CZone.X + ( CZone.W div 2 ) - 7;
+	if Mek^.G = GG_Prop then begin
+		MyDest.Y := CDest.Y + 8;
+		MyDest.X := CZone.X + ( CZone.W div 2 ) - 16;
+		DrawSprite( PropStatus_Sprite , MyDest , PropStructImage );
+		DrawSprite( PropStatus_Sprite , MyDest , PropArmorImage );
 
-	N := 0;
-	AddPartsToDiagram( GS_Head );
-	AddPartsToDiagram( GS_Turret );
-	if N < 1 then N := 1;	{ Want pods to either side of body; head and/or turret in middle. }
-	AddPartsToDiagram( GS_Storage );
+	end else begin
+		{ Draw the status diagram for this mek. }
+		{ Line One - Heads, Turrets, Storage }
+		MyDest.Y := CDest.Y;
+		X0 := CZone.X + ( CZone.W div 2 ) - 7;
 
-	{ Line Two - Torso, Arms, Wings }
-	N := 0;
-	MyDest.Y := MyDest.Y + 17;
-	AddPartsToDiagram( GS_Body );
-	AddPartsToDiagram( GS_Arm );
-	AddPartsToDiagram( GS_Wing );
+		N := 0;
+		AddPartsToDiagram( GS_Head );
+		AddPartsToDiagram( GS_Turret );
+		if N < 1 then N := 1;	{ Want pods to either side of body; head and/or turret in middle. }
+		AddPartsToDiagram( GS_Storage );
 
-	{ Line Three - Tail, Legs }
-	N := 0;
-	MyDest.Y := MyDest.Y + 17;
-	AddPartsToDiagram( GS_Tail );
-	if N < 1 then N := 1;	{ Want legs to either side of body; tail in middle. }
-	AddPartsToDiagram( GS_Leg );
+		{ Line Two - Torso, Arms, Wings }
+		N := 0;
+		MyDest.Y := MyDest.Y + 17;
+		AddPartsToDiagram( GS_Body );
+		AddPartsToDiagram( GS_Arm );
+		AddPartsToDiagram( GS_Wing );
+
+		{ Line Three - Tail, Legs }
+		N := 0;
+		MyDest.Y := MyDest.Y + 17;
+		AddPartsToDiagram( GS_Tail );
+		if N < 1 then N := 1;	{ Want legs to either side of body; tail in middle. }
+		AddPartsToDiagram( GS_Leg );
+	end;
 	AI_NextLine;
 end;
 
@@ -1222,6 +1259,7 @@ end;
 initialization
 	Interact_Sprite := LocateSprite( Interact_Sprite_Name , 4 , 16 );
 	Module_Sprite := LocateSprite( Module_Sprite_Name , 16 , 16 );
+	PropStatus_Sprite := LocateSprite( PropStatus_Sprite_Name , 32 , 32 );
 	Backdrop_Sprite := LocateSprite( Backdrop_Sprite_Name , 100 , 150 );
 	Altimeter_Sprite := LocateSprite( Altimeter_Sprite_Name , 26 , 65 );
 	Speedometer_Sprite := LocateSprite( Speedometer_Sprite_Name , 26 , 65 );

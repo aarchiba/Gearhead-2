@@ -5974,7 +5974,9 @@ initialization
 	SCRIPT_DynamicEncounter := Nil;
 	Grabbed_Gear := Nil;
 	Script_Macros := LoadStringList( Script_Macro_File );
+	if Script_Macros = Nil then DialogMsg( 'ERROR: Script Macros failed.' );
 	Value_Macros := LoadStringList( Value_Macro_File );
+	if Value_Macros = Nil then DialogMsg( 'ERROR: Value Macros failed.' );
 
 	Default_Scene_Scripts := LoadStringList( Data_Directory + 'scene.txt' );
 

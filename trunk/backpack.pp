@@ -661,11 +661,13 @@ var
 	Cash,NID: LongInt;
 	P: Point;
 	item: GearPtr;
+	IsHandless: Boolean;
 begin
-	if Handless( PC ) then begin
+	IsHandless := Handless( PC );
+	if IsHandless and not IsSafeArea( GB ) then begin
 		{ Start by checking something that other RPGs would }
 		{ just assume- does the PC have any hands? }
-		DialogMsg( 'You need hands in order to use this command.' );
+		DialogMsg( MsgString( 'HANDLESS_PICKUP' ) );
 
 	end else begin
 		P := GearCurrentLocation( PC );
@@ -690,7 +692,12 @@ begin
 				InsertInvCom( PC , Item );
 				{ Clear the home, to prevent wandering items. }
 				SetSAtt( Item^.SA , 'HOME <>' );
-				DialogMsg( ReplaceHash( MsgString( 'YOU_GET_?' ) , GearName( Item ) ) );
+
+				if ( PC^.G = GG_Mecha ) and IsHandless then begin
+					DialogMsg( ReplaceHash( MsgString( 'YOU_STRAP_?' ) , GearName( Item ) ) );
+				end else begin
+					DialogMsg( ReplaceHash( MsgString( 'YOU_GET_?' ) , GearName( Item ) ) );
+				end;
 
 				NID := NAttValue( Item^.NA , NAG_Narrative , NAS_NID );
 				if NID <> 0 then SetTrigger( GB , TRIGGER_GetItem + BStr( NID ) );
@@ -707,7 +714,12 @@ begin
 		end;
 
 		{ Picking up an item takes time. }
-		WaitAMinute( GB , PC , ReactionTime( PC ) );
+		{ More time if you're doing it without hands. }
+		if IsHandless then begin
+			WaitAMinute( GB , PC , ReactionTime( PC ) * 3 );
+		end else begin
+			WaitAMinute( GB , PC , ReactionTime( PC ) );
+		end;
 	end;
 end;
 

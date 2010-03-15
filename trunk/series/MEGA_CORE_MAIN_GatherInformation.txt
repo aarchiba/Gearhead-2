@@ -1022,9 +1022,9 @@ Content
 	Msg%id%11_1 <Could it be that %name6% is having second thoughts about working for \FACTION &EnemyFac ? This could get interesting...>
 	CMsg%id%11_1 <ifFactionExists &EnemyFac Accept>
 	Msg%id%11_2 <So %name6% is going through some kind of existential crisis... Good. How do we turn that to our advantage?>
-	CMsg%id%11_2 <ifChatNPCVillainous Accept>
+	CMsg%id%11_2 <ifNPCVillainous Accept>
 	Msg%id%11_3 <So that's what's going on... Sounds like %name6% is going through some kind of crisis. I guess \SPR %6% doesn't have anyone else to reach out to.>
-	CMsg%id%11_3 <ifChatNPCHeroic Accept>
+	CMsg%id%11_3 <ifNPCHeroic Accept>
 
 	%% Debriefing Message - Good Ending
 	Msg%id%12 <Thanks for your report. Now I know a lot more about %name6%'s motivations.>

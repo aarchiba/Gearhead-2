@@ -1024,21 +1024,26 @@ end;
 
 Procedure DoPillaging( GB: GameBoardPtr );
 	{ Pillage everything that isn't nailed down. }
+	{ PreparePCForDelink should have already separated the PC from the mecha. }
 var
-	PC,M,M2: GearPtr;
+	PC,Mek,M,M2: GearPtr;
 	Cash,NID: LongInt;
 begin
-	Cash := 0;
-	PC := GG_LocatePC( GB );
-
-	{ If this is a NOPILLAGE scene, exit. }
+	{ ERROR CHECK: If this is a NOPILLAGE scene, exit. }
 	if ( GB^.Scene <> Nil ) and AStringHasBString( SAttValue( GB^.Scene^.SA, 'SPECIAL' ) , 'NOPILLAGE' ) then Exit;
 
-	if ( PC <> Nil ) and OnTheMap( GB , PC ) then begin
+	Cash := 0;
+
+	{ Locate the PC and the mecha, if appropriate. }
+	PC := GG_LocatePC( GB );
+	Mek := FindPilotsMecha( GB^.Meks , PC );
+
+	{ If the PC is alive and on the map, begin pillaging. }
+	if ( PC <> Nil ) and ( OnTheMap( GB , PC ) or OnTheMap( GB , Mek ) ) then begin
 		{ First pass: Shakedown anything that's destroyed. }
 		M := GB^.Meks;
 		while M <> Nil do begin
-			if OnTheMap( GB , M ) and IsMasterGear( M ) and not GearOperational( M ) then begin
+			if OnTheMap( GB , M ) and IsMasterGear( M ) and Destroyed( M ) then begin
 				cash := cash + SHakeDown( GB , M , 1 , 1 );
 			end;
 			M := M^.Next;
@@ -1049,15 +1054,26 @@ begin
 		while M <> Nil do begin
 			M2 := M^.Next;
 
-			if OnTheMap( GB , M ) and NotDestroyed( M ) and IsLegalInvcom( PC , M ) and ( M^.G > 0 ) and not IsMasterGear( M ) then begin
-				DelinkGear( GB^.Meks , M );
+			if OnTheMap( GB , M ) and NotDestroyed( M ) and ( M^.G > 0 ) and not IsMasterGear( M ) then begin
+				if IsLegalInvcom( PC , M ) then begin
+					DelinkGear( GB^.Meks , M );
 
-				{ Clear the item's location values. }
-				StripNAtt( M , NAG_Location );
+					{ Clear the item's location values. }
+					StripNAtt( M , NAG_Location );
 
-				InsertInvCom( PC , M );
-				NID := NAttValue( M^.NA , NAG_Narrative , NAS_NID );
-				if NID <> 0 then SetTrigger( GB , TRIGGER_GetItem + BStr( NID ) );
+					InsertInvCom( PC , M );
+					NID := NAttValue( M^.NA , NAG_Narrative , NAS_NID );
+					if NID <> 0 then SetTrigger( GB , TRIGGER_GetItem + BStr( NID ) );
+				end else if IsLegalInvCom( Mek , M ) then begin
+					DelinkGear( GB^.Meks , M );
+
+					{ Clear the item's location values. }
+					StripNAtt( M , NAG_Location );
+
+					InsertInvCom( Mek , M );
+					NID := NAttValue( M^.NA , NAG_Narrative , NAS_NID );
+					if NID <> 0 then SetTrigger( GB , TRIGGER_GetItem + BStr( NID ) );
+				end;
 			end;
 
 			M := M2;
@@ -1066,6 +1082,8 @@ begin
 		{ Finally, hand the PC any money that was found. }
 		PC := LocatePilot( PC );
 		if ( PC <> Nil ) and ( Cash > 0 ) then AddNAtt( PC^.NA , NAG_Experience , NAS_Credits , Cash );
+	end else begin
+		DialogMsg( 'ERROR: No PC on map.' );
 	end;
 end;
 
@@ -1084,18 +1102,19 @@ begin
 	DeleteObsoleteTeams( Camp^.GB );
 	if DEBUG_ON then DialogMsg( 'Team update complete.' );
 
-	{ Step one-and-a-half: If this is a dynamic scene, and is safe, and pillaging }
-	{ is enabled, then pillage away! }
-	if IsInvCom( Camp^.GB^.Scene ) and IsSafeArea( Camp^.GB ) and Pillage_On then begin
-		DoPillaging( Camp^.GB );
-	end;
-
 	{ Step two - Remove all models from game board. }
 	{ Initialize the PC Forces to Nil. }
 	PCForces := Nil;
 
 	{ Prepare the PCForces for delinkage. }
 	PreparePCForDelink( Camp^.GB );
+
+	{ Step one-and-a-half: If this is a dynamic scene, and is safe, and pillaging }
+	{ is enabled, then pillage away! }
+	if IsInvCom( Camp^.GB^.Scene ) and IsSafeArea( Camp^.GB ) and Pillage_On then begin
+		DoPillaging( Camp^.GB );
+	end;
+
 
 	{ Keep processing while there's gears to process. }
 	while Camp^.GB^.Meks <> Nil do begin
@@ -1121,8 +1140,7 @@ begin
 
 		{ Send MEK to its destination. }
 		PutAwayGear( Camp , Mek , PCForces );
-
-	end;
+	end;
 
 	DelinkJJang := PCForces;
 end;

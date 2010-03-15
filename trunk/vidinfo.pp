@@ -271,40 +271,43 @@ var
 	end;
 
 begin
+	if Mek^.G = GG_Prop then begin
+		DrawGlyph( '@' , X0 , Y0 + 1 , HitsColor( Mek ) , ArmorDamageColor( Mek ) );
+	end else begin
+		{ this "if" is just a shortcut }
+		if GearOperational(Mek)
+		then begin
+		    Gutted := False;
+		    Flayed := False;             
+		end
+		else begin
+		    Gutted := (NAttValue( Mek^.NA , NAG_EpisodeData , NAS_Gutted) = 1);
+		    Flayed := (NAttValue( Mek^.NA , NAG_EpisodeData , NAS_Flayed) = 1);
+		end;
 
-	{ this "if" is just a shortcut }
-	if GearOperational(Mek)
-	then begin
-	    Gutted := False;
-	    Flayed := False;             
-	end
-	else begin
-	    Gutted := (NAttValue( Mek^.NA , NAG_EpisodeData , NAS_Gutted) = 1);
-	    Flayed := (NAttValue( Mek^.NA , NAG_EpisodeData , NAS_Flayed) = 1);
+		{ Draw the status diagram for this mek. }
+		{ Line One - Heads, Turrets, Storage }
+		N := 0;
+		AddPartsToDiagram( GS_Head );
+		AddPartsToDiagram( GS_Turret );
+		if N < 1 then N := 1;	{ Want storage to either side of body. }
+		AddPartsToDiagram( GS_Storage );
+		Inc( Y0 );
+
+		{ Line Two - Torso, Arms, Wings }
+		N := 0;
+		AddPartsToDiagram( GS_Body );
+		AddPartsToDiagram( GS_Arm );
+		AddPartsToDiagram( GS_Wing );
+		Inc( Y0 );
+
+		{ Line Three - Tail, Legs }
+		N := 0;
+		AddPartsToDiagram( GS_Tail );
+		if N < 1 then N := 1;	{ Want legs to either side of body; tail in middle. }
+		AddPartsToDiagram( GS_Leg );
+		Inc( Y0 );
 	end;
-
-	{ Draw the status diagram for this mek. }
-	{ Line One - Heads, Turrets, Storage }
-	N := 0;
-	AddPartsToDiagram( GS_Head );
-	AddPartsToDiagram( GS_Turret );
-	if N < 1 then N := 1;	{ Want storage to either side of body. }
-	AddPartsToDiagram( GS_Storage );
-	Inc( Y0 );
-
-	{ Line Two - Torso, Arms, Wings }
-	N := 0;
-	AddPartsToDiagram( GS_Body );
-	AddPartsToDiagram( GS_Arm );
-	AddPartsToDiagram( GS_Wing );
-	Inc( Y0 );
-
-	{ Line Three - Tail, Legs }
-	N := 0;
-	AddPartsToDiagram( GS_Tail );
-	if N < 1 then N := 1;	{ Want legs to either side of body; tail in middle. }
-	AddPartsToDiagram( GS_Leg );
-	Inc( Y0 );
 
 	{ Restore background color to black. }
 	TextBackground( Black );

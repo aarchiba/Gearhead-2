@@ -225,8 +225,8 @@ WinDramaticGoal <GrabStory GSetNAtt NAG_Completed_DC CurrentDramaticGoal 1>
 WinEpisode <XPV 200   WinDramaticGoal StoryDL+ 7 GrabStory GAddNAtt -7 6 1 NextComp FacXP+ &AllyFac 5>
 PyrrhicWinEpisode <XPV 200            StoryDL+ 7 GrabStory GAddNAtt -7 6 1 NextComp FacXP+ &AllyFac 5> % Win the episode, but without achieving goal
 LoseEpisode <                                    GrabStory GAddNAtt -7 6 1 NextComp>
-IfDCCompleted <GrabStory if# NAG_Completed_DC ? 0>
-IfDCNotCompleted <GrabStory if= NAG_Completed_DC ? 0>
+IfDCCompleted <GrabStory if# GNAtt NAG_Completed_DC ? 0>
+IfDCNotCompleted <GrabStory if= GNAtt NAG_Completed_DC ? 0>
 IfFacReward     <GrabFaction ? if# GNAtt NAG_FacReward ? 0>
 IfAccessArmory  <GrabFaction LocalFaction if# GNAtt NAG_FacReward 1 0>
 IfNotAccessArmory  <GrabFaction LocalFaction if= GNAtt NAG_FacReward 1 0>

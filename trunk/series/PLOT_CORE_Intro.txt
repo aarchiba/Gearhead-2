@@ -219,7 +219,7 @@ Plot
 		.%id%_GoAdvise <NewChat Say 1 SMemo 2 History 3 MoveNPC %4% %3% SetPlotStatus %plotid1% %id1% AddChat 1 AddChat 2>
 		result1 <NewChat Say 4>
 		result2 <NewChat Say 5 AddEasygoing d10>
-		Msg1 <I know you're very excited about being accepted into \FACTION &AllyFac. Are you all ready for your meeting with %name4% at %name3% today?>
+		Msg1 <I know you're very excited about being accepted into \FACTION &AllyFac . Are you all ready for your meeting with %name4% at %name3% today?>
 		Msg1_1 <Everyone's talking about how great it is that you've been accepted into \FACTION &AllyFac . Do you have everything ready for the meeting with %name4% at %name3% later on today?>
 		CMsg1_1 <ifNPCSociable Accept>
 		Msg1_2 <I see. All ready for your big meeting with %name4% at %name3% today?>
