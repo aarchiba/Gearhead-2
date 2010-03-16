@@ -236,7 +236,7 @@ Content
 		GoChat <NewChat SayAnything>
 		GoChallenge <NewChat Say 2 AddChat 3 AddChat 4>
 		Result1 <EndChat Say 3 Print 4 KillNPC %3%>
-		Result2 <EndChat Say 5 History 6 FreezeNPC %3% Trigger0 NU2 ifChatNPCHeroic else GoMakeEnemy PCAlly %3%>
+		Result2 <EndChat Say 5 History 6 FreezeNPC %3% Trigger0 NU2 ifNPCHeroic else GoMakeEnemy PCAlly %3%>
 		GoMakeEnemy <PCEnemy %3%>
 		Result3 <EndChat Say 7  TeamAttack 2>
 		Result4 <NewChat Say 8 AddChat 5>

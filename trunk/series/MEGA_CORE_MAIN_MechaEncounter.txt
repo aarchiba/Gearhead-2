@@ -579,6 +579,125 @@ Content
 %% decide which faction is going to become the core story enemy.
 
 Content
+	name <Choose Yer Poison FCOMS>
+	desc <Two pirate forces are fighting. Pick whichever one you think started it.>
+	requires <*:CS_MechaEncounter L:FCOMS F:-- (L:Ally|P:--) -L:Enemy ~*CORE_INTRO ~*CORE_OFF_>
+	changes <F:++>
+
+	% E1 is the outdoors scene where this encounter will be placed
+	% E2 is the metascene to be used for this encounter
+	% E3 is one pirate team
+	% E4 is the other one
+	% E5 is the Pirate with whom the PC will speak
+	Element3 <Faction (REDMA|CRIHN) -PCFAC>
+	Element4 <Faction (REDMA|CRIHN) !Enemy 3 -PCFAC>
+	Element5 <Prefab>
+	Place5 <2 (Enemies1) sd enemy>
+
+	% P%id%01 = Initialization Counter
+	% P%id%02 = Have gained reinforcements
+	% P%id%03 = Have E3
+	update <if= V%id%01 0 V= %id%01 1   SetPlotStatus %plotid1% %id1% NPCLevel %5% StoryDL SetNPCFaction %5% %3%>
+
+	% You can get reinforcements, but no decimation.
+	.%id1%_%plotid1%_GoReinforcements <P= %id%02 1>
+
+	%%  Debriefing Msg - Fight E3
+	Msg%id%11 <>
+
+	%%  Debriefing Msg - Fight E4
+	Msg%id%12 <>
+
+	% SubPlot1 = Gain Advantage vs Raiders
+	SubPlot1 <*:CS_GainAdvantageVsMecha&Reinforcements>
+
+	sub
+		MetaScene 2 2
+		% L1 = Encounter Over Counter
+		% L2 = Initialization Counter
+		MapWidth 50
+		MapHeight 50
+
+		Start <if= L2 0 L= 2 1   Alert 1 ForceChat %5%  CancelSubPlot %plotid1% if# P%id%02 0 Alert 2>
+		nu1 <if= T1 0   Return    if= V1 0 V= 1 1         Trigger0 .%id%_%plotid%_GoLoss LoseSubPlot %plotid% History 4 if= P%id%03 1  SetXXRAttitude %5% XXR_A_IsSenior>
+		nu2 <if= T2 0  if= T4 0   if= V1 0 V= 1 1   XPV 100  AddRenown 1   SALVAGE   Alert 3   Trigger0 .%id%_%plotid%_GoWin WinSubPlot %plotid% if= P%id%03 1  SetXXRAttitude %5% XXR_A_IsJunior>
+		nu4 <Goto nu2>
+		end <SetEncounterInactive %2% ifNPCOK %5% FreezeNPC %5%>
+
+		Msg1 <You find two groups of pirates fighting. One team bears the colors of the Red Mask Raiders, the other the Blades of Crihna.>
+		Msg2 <Your reinforcements are here, as promised.>
+		Msg3 <You have defeated the mecha.>
+		Msg4 <You were defeated.>
+
+		sub
+			team 1
+			setally 3
+			SetEnemy 2 4
+			ParaX 5
+			ParaY 10
+
+			team 2
+			name <Enemies1>
+			SetEnemy 1 3
+			Deploy <if= PlotStatus %plotid% %id% SetSelfFaction %3%   WMecha 2 StoryDL 80>
+			ParaX 40
+			ParaY 45
+
+			team 3
+			setally 1
+			setenemy 2 4
+			Deploy <if= PlotStatus %plotid% %id%  if# P%id%02 0   WMecha 3 StoryDL 60>
+			ParaX 10
+			ParaY 5
+
+			team 4
+			name <Enemies2>
+			SetEnemy 1 3
+			Deploy <if= PlotStatus %plotid% %id% SetSelfFaction %4%   WMecha 4 StoryDL 150>
+			ParaX 45
+			ParaY 40
+		end
+
+		Persona 5
+		special <UNLISTED NOESCAPE>
+		greeting <if= PlotStatus %plotid% %id% else %pop%  EndChat Say %id%01 AddChat %id%01 AddChat %id%02 if= v%id%01 0 v= %id%01 1 History %id%02>
+		result%id%01 <EndChat Say %id%03 AddChat %id%03 AddChat %id%04>
+		result%id%02 <EndChat Say %id%04 AddChat %id%03 AddChat %id%04>
+		result%id%03 <EndChat Say %id%05 History %id%06 Retreat 2 &SetEnemyFac %4% PCFEnemy %4% SetDebriefing %id%12 AddReact d10 SetXXRAttitude %5% XXR_A_IsEqual>
+		result%id%04 <EndChat Say %id%07 History %id%08 Retreat 4 &SetEnemyFac %3% PCFEnemy %3% SetDebriefing %id%11 P= %id%03 1  if= 0 &EnemyNPC &SetEnemyNPC %5%>
+		result%id%05 <Goto result%id%03>
+		result%id%06 <Goto result%id%04>
+		Msg%id%01 <This is %name5% of %name3%. You're not a member of %name4%... get the blazes out of here before I'm forced to hurt you.>
+		Msg%id%02 <You found two groups of pirates fighting.>
+		Msg%id%03 <We weren't looking for any trouble, just passing through, when all of a sudden that lot jumped us like they owned the place. I mean, we had to fight back, right?>
+		Msg%id%04_1 <Look, I'm a small time crook and I admit it, but those Blades are up to something bigger than that... They've been hunting down our guys in \SCENE RootSceneID , taking full control of all the crime that goes on here.>
+		CMsg%id%04_1 <if= ChatNPCFac REDMA Accept>
+		Msg%id%04_2 <It's the Masks who started it! I'm a smuggler, not a fighter- these guys have already made it dangerous to work the dusty ring, and now they've expanded all the way to the spinners!>
+		CMsg%id%04_2 <if= ChatNPCFac CRIHN Accept>
+		Msg%id%05_1 <If word gets out that I ran from a fight, the Queen'll have my hide... Still, I'd rather risk that than die right now. Good luck, \PC !>
+		CMsg%id%05_1 <if= ChatNPCFac REDMA Accept>
+		Msg%id%05_2 <Y'know, we used to be the most feared pirate fleet in the solar system, and now we can't even protect our own... Good luck, \PC !>
+		CMsg%id%05_2 <if= ChatNPCFac CRIHN Accept>
+		Msg%id%06 <You sent %name5% away, and fought %name4%.>
+		Msg%id%07_1 <Hey, look what you did- while you were talking, those stinking Blades got away! I'm not going home until I kick someone's arse... Let me show you my \CHATNPCMECHA !!!>
+		CMsg%id%07_1 <if= ChatNPCFac REDMA Accept>
+		Msg%id%07_2 <You doubt my pirate honor!? The Red Masks can wait for another day... for right now, my quarry is you!!!>
+		CMsg%id%07_2 <if= ChatNPCFac CRIHN Accept>
+		Msg%id%08 <You fought %name5% of %name3%.>
+		Prompt%id%01 <What's going on here?>
+		Prompt%id%01_1 <Tell me what you're doing here.>
+		Prompt%id%02 <I'm responding to a disturbance. I guess that's you.>
+		Prompt%id%02_1 <And miss a good fight? Not likely.>
+		Prompt%id%03 <Get out of here. I'll deal with them.>
+		Prompt%id%03_1 <You get out of here, I'll deal with it.>
+		Prompt%id%04 <Your story sounds fishy. What are you really up to?>
+		Prompt%id%04_1 <I don't believe you.>
+	end
+	inv
+		NPC Pirate
+	end
+
+Content
 	name <Choose Yer Poison RISHI>
 	desc <A lance of Silver Knights stand between you and some pirates.>
 	requires <*:CS_MechaEncounter L:RISHI F:-- (L:Ally|P:--) -L:Enemy ~*CORE_INTRO ~*CORE_OFF_>
@@ -1761,17 +1880,17 @@ Content
 		*result%id%01 <*THEME_EXPO&Enemy na>
 		Msg%id%01 <I've been waiting for a chance to get back at you, \PC . You don't stand a chance.>
 		Msg%id%01_1 <>
-		CMsg%id%01_1 <ifChatNPCSociable Accept>
+		CMsg%id%01_1 <ifNPCSociable Accept>
 		Msg%id%01_2 <>
-		CMsg%id%01_2 <ifChatNPCShy Accept>
+		CMsg%id%01_2 <ifNPCShy Accept>
 		Msg%id%01_3 <>
-		CMsg%id%01_3 <ifChatNPCEasygoing Accept>
+		CMsg%id%01_3 <ifNPCEasygoing Accept>
 		Msg%id%01_4 <>
-		CMsg%id%01_4 <ifChatNPCMelancholy Accept>
+		CMsg%id%01_4 <ifNPCMelancholy Accept>
 		Msg%id%01_5 <>
-		CMsg%id%01_5 <ifChatNPCCheerful Accept>
+		CMsg%id%01_5 <ifNPCCheerful Accept>
 		Msg%id%01_6 <>
-		CMsg%id%01_6 <ifChatNPCPassionate Accept>
+		CMsg%id%01_6 <ifNPCPassionate Accept>
 		Prompt%id%01 <Let's get this over with.>
 		Prompt%id%01_1 <Don't overestimate your chances.>
 	end
@@ -2196,6 +2315,82 @@ Content
 
 		Secret
 		Msg <%name4% has been watching you; \SPR %4% 's not going to let you get away this time.>
+	end
+
+Content
+	name <Not Part of the Job>
+	desc <PC finds enemy, but fighting PC isn't part of the job.>
+	requires <*:CS_MechaEncounter E:++ (E:A.equ|E:A.env|E:A.adm|E:A.---) E:M.--- ~E:MILIT ~E:POLIT ~E:GOOD_ -&Secondary>
+	changes <E:M>
+
+	% E1 is the outdoors scene where this encounter will be placed
+	% E2 is the metascene to be used for this encounter
+	% E3 is the enemy
+	% E4 is the secondary enemy
+	Element3 <Grab 1>
+	Place3 </>
+	Element4 <Prefab>
+	Place4 </>
+
+	% P%id%01 = Initialization Counter
+
+	% At initialization, prepare E4 for combat
+	update <if= P%id%01 0 P= %id%01 1  NPCLevel %4% StoryDL  MoveNPC %4% %2%  SetNPCTeam %4% 2  SetNPCFaction %4% &EnemyFac>
+
+	% This subplot must propgate the effects of its own subplot backwards to
+	% the parent plot. Yahoo.
+	.%id1%_%plotid1%_GoWin  <Trigger0 .%id%_%plotid%_GoWin>
+	.%id1%_%plotid1%_GoLoss <Trigger0 .%id%_%plotid%_GoLoss>
+
+	% SubPlot1 = The enemy mission you have to stop
+	SubPlot1 <*:CS_StopNPCMission&IsEnemyNPC&Secondary 3>
+
+	sub
+		MetaScene 2 2
+		% L1 = Encounter Over Counter
+		% L2 = Initialization Counter
+		MapWidth 30
+		MapHeight 30
+
+		% At startup, E3 and E4 argue over the situation.
+		% You must win this fight, or E4's forces will complete E3's mission.
+		Start <if= L2 0 L= 2 1  Alert 4 Monologue %4% 1 Monologue %3% 2 Monologue %4% 3 Alert 5 History 6   SetXXRMotivation %3% XXR_M_Professional>
+		nu1 <if= T1 0   Return   if= V1 0 V= 1 1   LoseRenown  CancelSubPlot %plotid%  Trigger0 .%id%_%plotid%_GoLoss  SetXXRAttitude %4% XXR_A_IsSenior>
+		nu2 <if= T2 0   if= V1 0 V= 1 1   XPV 100  AddRenown 1   SALVAGE   Alert 7 SMemo 7   SetPlotStatus %plotid1% %id1%  SetXXRAttitude %4% XXR_A_IsJunior>
+		end <SetEncounterInactive %2% CancelSubPlot %plotid%>
+		Msg1 <Look, it's that pilot you told us about! Let's go fight \OPR 0 ...>
+		Msg1_1 <Look, it's \PC ! This is our big chance to finish \OPR 0 off once and for all...>
+		Msg1_2 <Say, isn't that the pilot who's always causing you problems? Let's go fight \OPR 0 !>
+		Msg2 <Fighting \PC isn't part of the plan, %name4% . You're jeopardizing our mission.>
+		Msg2_1 <We aren't here to pick fights, %name4% . We've got a mission to complete and you're jeopardizing it right now.>
+		CMsg2_1 <ifNPCHeroic Accept>
+		Msg2_2 <As much as I'd love \PC 's head on a stick, that's not why we came to \SCENE RootSceneID . We have a mission to complete and I'm not gonna let you muck it up.>
+		CMsg2_2 <ifNPCVillainous Accept>
+		Msg3 <Bah, you go do your precious mission. I'll catch up with you when I'm finished here.>
+		Msg3_1 <Got to do everything by the book, don't you %name3%? You go on ahead. I'll catch up when I'm finished here.>
+		Msg3_2 <You must think \PC 's really something, don't you? I'll beat \OPR 0 easy, then go finish your stupid mission.>
+		Msg4 <You face a large force of mecha led by %name3%.>
+		Msg5 <If you want to stop %name3%'s plan, it looks like you'll need to defeat %name4% first.>
+		Msg6 <You fought %name4%, while %name3% left to complete a mission.>
+		Msg7 <You defeated %name4%. Now, it's time to find %name3%.>
+
+		sub
+			team 1
+			SetEnemy 2
+			ParaX 5
+			ParaY 5
+
+			team 2
+			SetEnemy 1
+			Deploy <if= PlotStatus %plotid% %id% SetSelfFaction &EnemyFac   WMecha 2 StoryDL 70>
+			ParaX 25
+			ParaY 25
+		end
+	end
+	inv
+		NPC Mercenary
+		job_desig <MOOK_>
+		chardesc passionate melancholy
 	end
 
 

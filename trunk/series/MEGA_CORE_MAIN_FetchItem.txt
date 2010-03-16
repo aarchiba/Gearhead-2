@@ -654,7 +654,7 @@ Content
 Content
 	name <Let's Make It A Contest>
 	desc <The Enemy decides to search for the same item as the PC>
-	requires <*:CS_FetchItem (E:A.---|E:A.jr_|E:A.equ) E:M.pro -&FromEnemy>
+	requires <*:CS_FetchItem (E:A.---|E:A.jr_|E:A.equ) (E:M.pro|E:M.---) -&FromEnemy>
 	changes <E:M>
 	size 3
 
@@ -702,10 +702,42 @@ Content
 		result1 <AddSociable  d4   Goto GoEndConversation>
 		result2 <AddSociable -d4   Goto GoEndConversation>
 		Msg1 <\PC ... They say that you've agreed to find the %name1%.>
+		Msg1_1 <\PC ... Is it true that you're looking for the %name1%?>
+		CMsg1_1 <ifNPCHeroic Accept>
+		Msg1_12 <Well, look at this... That %name1% you were hired to find must be pretty important.>
+		CMsg1_12 <ifNPCVillainous Accept>
+		Msg1_13 <Hi \PC , long time no see. I heard that you're looking for the %name1%...>
+		CMsg1_13 <ifG React 25 Accept>
+		Msg1_14 <Long time no see, jerkface. They say you're looking for some kind of %name1%.>
+		CMsg1_14 <ifG 1 React  Accept>
+		Msg1_15 <Word on the street is that you're looking for the %name1%. Well, maybe \FACTION &EnemyFac wants it too...>
+		CMsg1_15 <ifFactionExists &EnemyFac Accept>
+		Msg1_16 <I've heard that \FACTION &AllyFac is looking for the %name1%. Is that right?>
+		CMsg1_16 <ifFactionExists &AllyFac Accept>
 		Msg2 <How about we make this a contest? I'm going to try and find it too.>
+		Msg2_1 <This kind of mission isn't the same as boring old mecha combat, you need charisma and smarts to get the info you need. Why don't we make this a contest? I bet I can find the %name1% before you even get close.>
+		CMsg2_1 <ifNPCSociable Accept>
+		Msg2_2 <I propose a competition. Whoever finds the %name1% first gets it, starting now...>
+		CMsg2_2 <ifNPCShy Accept>
+		Msg2_3 <Hey, I'm kind of bored now... why don't we have a contest? I try to find the %name1%, you try too, and whoever gets it first wins.>
+		CMsg2_3 <ifNPCEasygoing Accept>
+		Msg2_4 <You couldn't find the %name1% with two hands and a multiscanner. I'll even prove it to you, by finding it first!>
+		CMsg2_4 <ifNPCPassionate Accept>
+		Msg2_5 <How'd you like to make this more interesting? I propose a contest. I'm going to try and find it too, and whoever gets it first wins.>
+		CMsg2_5 <ifNPCCheerful Accept>
+		Msg2_6 <I've decided that we're having a contest. I'll find the %name1% before you do, and then you'll cry.>
+		CMsg2_6 <ifNPCMelancholy Accept>
+		Msg2_7 <I'm not sure you can be trusted with the %name1%... why don't we make this a contest? Whoever finds it first wins.>
+		CMsg2_7 <ifNPCHeroic Accept>
+		Msg2_8 <I have no real interest in the %name1%, other than preventing you from getting it. Why don't we have a contest? Whoever finds it first wins.>
+		CMsg2_8 <ifNPCVillainous Accept>
 		Msg3 <%name2% races off.>
 		Prompt1 <That's right.>
+		Prompt1_1 <Something like that.>
+		Prompt1_2 <You could say that.>
 		Prompt2 <None of your business, %name2%.>
+		Prompt2_1 <I can neither confirm nor deny that.>
+		Prompt2_2 <Mind your own business.>
 	end
 
 %%

@@ -21,6 +21,7 @@ ERootScene <GrabScene EScene ? GrabRootScene GS>
 RootSceneID <GrabCurrentScene GrabRootScene GS>
 ParentSceneID <GrabScene ? GrabParent GS>
 SCENEFAC <GrabScene ?  GNAtt NAG_Personal NAS_FactionID>
+PCHomeTownFAC <GrabScene PCHomeTown  GNAtt NAG_Personal NAS_FactionID>
 ROOTSCENEFAC <GrabCurrentScene GrabRootScene  GNAtt NAG_Personal NAS_FactionID>
 CURRENTSCENEFAC <GrabCurrentScene  GNAtt NAG_Personal NAS_FactionID>
 GUARDTEAM <GrabTeamName GUARDS GS>

@@ -1619,7 +1619,13 @@ begin
 			DP := DP^.Next;
 		end;
 
-		if DR.MechaDestroyed then msg := msg + ' ' + ReplaceHash( MsgString( '#destroyed!' ) , GearName( TMaster ) );
+		if DR.MechaDestroyed then begin
+			if Destroyed( TMaster ) then begin
+				msg := msg + ' ' + ReplaceHash( MsgString( '#destroyed!' ) , GearName( TMaster ) );
+			end else begin
+				msg := msg + ' ' + ReplaceHash( MsgString( '#disabled!' ) , GearName( TMaster ) );
+			end;
+		end;
 		if DR.PilotDied then msg := msg + ' ' + ReplaceHash( MsgString( '#died' ) , GearName( TPilot ) )
 		else if DR.EjectOK then msg := msg + ' ' + ReplaceHash( MsgString( '#ejected' ) , GearName( TPilot ) );
 

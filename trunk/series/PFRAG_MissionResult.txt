@@ -20,17 +20,17 @@
 	Msg%id%01_6 <>
 	CMsg%id%01_6 <ifNPCMelancholy Accept>
 	Msg%id%01_11 <>
-	CMsg%id%01_11 <ifNPCSociable ifFactionExists %2% Accept>
+	CMsg%id%01_11 <ifNPCSociable ifFactionExists %2% if= ChatNPCFac %2% Accept>
 	Msg%id%01_12 <>
-	CMsg%id%01_12 <ifNPCShy ifFactionExists %2% Accept>
+	CMsg%id%01_12 <ifNPCShy ifFactionExists %2% if= ChatNPCFac %2% Accept>
 	Msg%id%01_13 <>
-	CMsg%id%01_13 <ifNPCEasygoing ifFactionExists %2% Accept>
+	CMsg%id%01_13 <ifNPCEasygoing ifFactionExists %2% if= ChatNPCFac %2% Accept>
 	Msg%id%01_14 <>
-	CMsg%id%01_14 <ifNPCPassionate ifFactionExists %2% Accept>
+	CMsg%id%01_14 <ifNPCPassionate ifFactionExists %2% if= ChatNPCFac %2% Accept>
 	Msg%id%01_15 <>
-	CMsg%id%01_15 <ifNPCCheerful ifFactionExists %2% Accept>
+	CMsg%id%01_15 <ifNPCCheerful ifFactionExists %2% if= ChatNPCFac %2% Accept>
 	Msg%id%01_16 <>
-	CMsg%id%01_16 <ifNPCMelancholy ifFactionExists %2% Accept>
+	CMsg%id%01_16 <ifNPCMelancholy ifFactionExists %2% if= ChatNPCFac %2% Accept>
 
 
 % TYPE: *HaveKilledTarget
@@ -57,17 +57,17 @@
 	Msg%id%01_6 <>
 	CMsg%id%01_6 <ifNPCMelancholy Accept>
 	Msg%id%01_11 <>
-	CMsg%id%01_11 <ifNPCSociable ifFactionExists %2% Accept>
+	CMsg%id%01_11 <ifNPCSociable ifFactionExists %2% if= ChatNPCFac %2% Accept>
 	Msg%id%01_12 <>
-	CMsg%id%01_12 <ifNPCShy ifFactionExists %2% Accept>
+	CMsg%id%01_12 <ifNPCShy ifFactionExists %2% if= ChatNPCFac %2% Accept>
 	Msg%id%01_13 <>
-	CMsg%id%01_13 <ifNPCEasygoing ifFactionExists %2% Accept>
+	CMsg%id%01_13 <ifNPCEasygoing ifFactionExists %2% if= ChatNPCFac %2% Accept>
 	Msg%id%01_14 <>
-	CMsg%id%01_14 <ifNPCPassionate ifFactionExists %2% Accept>
+	CMsg%id%01_14 <ifNPCPassionate ifFactionExists %2% if= ChatNPCFac %2% Accept>
 	Msg%id%01_15 <>
-	CMsg%id%01_15 <ifNPCCheerful ifFactionExists %2% Accept>
+	CMsg%id%01_15 <ifNPCCheerful ifFactionExists %2% if= ChatNPCFac %2% Accept>
 	Msg%id%01_16 <>
-	CMsg%id%01_16 <ifNPCMelancholy ifFactionExists %2% Accept>
+	CMsg%id%01_16 <ifNPCMelancholy ifFactionExists %2% if= ChatNPCFac %2% Accept>
 
 
 % TYPE: *HaveCapturedTarget
@@ -92,17 +92,17 @@
 	Msg%id%01_6 <>
 	CMsg%id%01_6 <ifNPCMelancholy Accept>
 	Msg%id%01_11 <>
-	CMsg%id%01_11 <ifNPCSociable ifFactionExists %2% Accept>
+	CMsg%id%01_11 <ifNPCSociable ifFactionExists %2% if= ChatNPCFac %2% Accept>
 	Msg%id%01_12 <>
-	CMsg%id%01_12 <ifNPCShy ifFactionExists %2% Accept>
+	CMsg%id%01_12 <ifNPCShy ifFactionExists %2% if= ChatNPCFac %2% Accept>
 	Msg%id%01_13 <>
-	CMsg%id%01_13 <ifNPCEasygoing ifFactionExists %2% Accept>
+	CMsg%id%01_13 <ifNPCEasygoing ifFactionExists %2% if= ChatNPCFac %2% Accept>
 	Msg%id%01_14 <>
-	CMsg%id%01_14 <ifNPCPassionate ifFactionExists %2% Accept>
+	CMsg%id%01_14 <ifNPCPassionate ifFactionExists %2% if= ChatNPCFac %2% Accept>
 	Msg%id%01_15 <>
-	CMsg%id%01_15 <ifNPCCheerful ifFactionExists %2% Accept>
+	CMsg%id%01_15 <ifNPCCheerful ifFactionExists %2% if= ChatNPCFac %2% Accept>
 	Msg%id%01_16 <>
-	CMsg%id%01_16 <ifNPCMelancholy ifFactionExists %2% Accept>
+	CMsg%id%01_16 <ifNPCMelancholy ifFactionExists %2% if= ChatNPCFac %2% Accept>
 
 
 
@@ -134,15 +134,15 @@
 	Msg%id%01_11 <If you expect to advance within \FACTION %2% , you're going to have to improve your combat skills. That last mission was a disaster.>
 	CMsg%id%01_11 <ifNPCSociable ifFactionExists %2% Accept>
 	Msg%id%01_12 <You've failed \FACTION %2% ...>
-	CMsg%id%01_12 <ifNPCShy ifFactionExists %2% Accept>
+	CMsg%id%01_12 <ifNPCShy ifFactionExists %2% if= ChatNPCFac %2% Accept>
 	Msg%id%01_13 <You win some, you lose some... Today, \FACTION %2% lost.>
-	CMsg%id%01_13 <ifNPCEasygoing ifFactionExists %2% Accept>
+	CMsg%id%01_13 <ifNPCEasygoing ifFactionExists %2% if= ChatNPCFac %2% Accept>
 	Msg%id%01_14 <Your defeat has brought shame unto \FACTION %2% . Don't let this happen again.>
-	CMsg%id%01_14 <ifNPCPassionate ifFactionExists %2% Accept>
+	CMsg%id%01_14 <ifNPCPassionate ifFactionExists %2% if= ChatNPCFac %2% Accept>
 	Msg%id%01_15 <You lost out there, but don't worry... I'm sure \FACTION %2% will give you another mission someday.>
-	CMsg%id%01_15 <ifNPCCheerful ifFactionExists %2% Accept>
+	CMsg%id%01_15 <ifNPCCheerful ifFactionExists %2% if= ChatNPCFac %2% Accept>
 	Msg%id%01_16 <I trusted you with this mission, and now you've let all of \FACTION %2% down.>
-	CMsg%id%01_16 <ifNPCMelancholy ifFactionExists %2% Accept>
+	CMsg%id%01_16 <ifNPCMelancholy ifFactionExists %2% if= ChatNPCFac %2% Accept>
 	Msg%id%01_20 <You were defeated by \FACTION %3% . The mission was a failure.>
 	CMsg%id%01_20 <ifFactionExists %3% Accept>
 	Msg%id%01_21 <I heard about your battle. You were defeated by \FACTION %3% ... The bad part is, by now everybody knows about it.>
@@ -186,19 +186,19 @@
 	Msg%id%01_7 <You actually won the mission? I never expected you to come back... Here, I guess I better give you your pay.>
 	CMsg%id%01_7 <ifG 5 React Accept>
 	Msg%id%01_10 <You've scored a victory for \FACTION %2% . Here's the reward you earned.>
-	CMsg%id%01_10 <ifFactionExists %2% Accept>
+	CMsg%id%01_10 <ifFactionExists %2% if= ChatNPCFac %2% Accept>
 	Msg%id%01_11 <Chalk one up for \FACTION %2% . That was a good fight... I certainly hope we'll be able to work together again sometime in the future.>
-	CMsg%id%01_11 <ifNPCSociable ifFactionExists %2% Accept>
+	CMsg%id%01_11 <ifNPCSociable ifFactionExists %2% if= ChatNPCFac %2% Accept>
 	Msg%id%01_12 <Score one for \FACTION %2% . Here's your reward.>
-	CMsg%id%01_12 <ifNPCShy ifFactionExists %2% Accept>
+	CMsg%id%01_12 <ifNPCShy ifFactionExists %2% if= ChatNPCFac %2% Accept>
 	Msg%id%01_13 <You win some, you lose some... Today \FACTION %2% wins. Here's your money, \PC .>
-	CMsg%id%01_13 <ifNPCEasygoing ifFactionExists %2% Accept>
+	CMsg%id%01_13 <ifNPCEasygoing ifFactionExists %2% if= ChatNPCFac %2% Accept>
 	Msg%id%01_14 <You've made all of \FACTION %2% proud! Here's your reward for winning the battle.>
-	CMsg%id%01_14 <ifNPCPassionate ifFactionExists %2% Accept>
+	CMsg%id%01_14 <ifNPCPassionate ifFactionExists %2% if= ChatNPCFac %2% Accept>
 	Msg%id%01_15 <You really came through for \FACTION %2% . Here's your pay.>
-	CMsg%id%01_15 <ifNPCCheerful ifFactionExists %2% Accept>
+	CMsg%id%01_15 <ifNPCCheerful ifFactionExists %2% if= ChatNPCFac %2%  Accept>
 	Msg%id%01_16 <It's a victory snatched from the jaws of defeat for \FACTION %2% . Here's your reward.>
-	CMsg%id%01_16 <ifNPCMelancholy ifFactionExists %2% Accept>
+	CMsg%id%01_16 <ifNPCMelancholy ifFactionExists %2% if= ChatNPCFac %2% Accept>
 	Msg%id%01_20 <You have defeated \FACTION %3% . Here's your reward for a job well done.>
 	CMsg%id%01_20 <ifFactionExists %3% Accept>
 	Msg%id%01_21 <Good job out there, \PC ... You soundly defeated \FACTION %3% and won the day for our side. Here's your reward.>
@@ -231,19 +231,19 @@
 	Msg%id%01_6 <I can't believe you really did it. The mission was a success.>
 	CMsg%id%01_6 <ifNPCMelancholy Accept>
 	Msg%id%01_10 <You've secured a victory for \FACTION %2% . The mission was a success.>
-	CMsg%id%01_10 <ifFactionExists %2% Accept>
+	CMsg%id%01_10 <ifFactionExists %2% if= ChatNPCFac %2% Accept>
 	Msg%id%01_11 <You've done a good job on behaf of \FACTION %2% , \PC . Hopefully we will work together again in the future.>
-	CMsg%id%01_11 <ifNPCSociable ifFactionExists %2% Accept>
+	CMsg%id%01_11 <ifNPCSociable ifFactionExists %2% if= ChatNPCFac %2% Accept>
 	Msg%id%01_12 <Thanks to you, \FACTION %2% is victorious. Good work.>
-	CMsg%id%01_12 <ifNPCShy ifFactionExists %2% Accept>
+	CMsg%id%01_12 <ifNPCShy ifFactionExists %2% if= ChatNPCFac %2% Accept>
 	Msg%id%01_13 <That was easy. This mission for \FACTION %2% has been a complete success.>
-	CMsg%id%01_13 <ifNPCEasygoing ifFactionExists %2% Accept>
+	CMsg%id%01_13 <ifNPCEasygoing ifFactionExists %2% if= ChatNPCFac %2% Accept>
 	Msg%id%01_14 <You've done a great service for \FACTION %2% , \PC . Thank you.>
-	CMsg%id%01_14 <ifNPCPassionate ifFactionExists %2% Accept>
+	CMsg%id%01_14 <ifNPCPassionate ifFactionExists %2% if= ChatNPCFac %2% Accept>
 	Msg%id%01_15 <Once again, \FACTION %2% wins the day. Good job out there \PC .>
-	CMsg%id%01_15 <ifNPCCheerful ifFactionExists %2% Accept>
+	CMsg%id%01_15 <ifNPCCheerful ifFactionExists %2% if= ChatNPCFac %2% Accept>
 	Msg%id%01_16 <There are some in \FACTION %2% who don't believe in you, but you've managed to pull this off. Congratulations.>
-	CMsg%id%01_16 <ifNPCMelancholy ifFactionExists %2% Accept>
+	CMsg%id%01_16 <ifNPCMelancholy ifFactionExists %2% if= ChatNPCFac %2% Accept>
 	Msg%id%01_20 <You have defeated \FACTION %3% . The mission was a success.>
 	CMsg%id%01_20 <ifFactionExists %3% Accept>
 	Msg%id%01_21 <You did very well against \FACTION %3% , \PC . People are going to talk about your victory.>
