@@ -501,7 +501,7 @@ begin
 		end;
 
 		{ Set the basic skills for the robot. }
-		for t := 3 to 6 do SetNAtt( Form^.NA , NAG_Skill , T , Random( SkRank ) + 1 );
+		for t := 4 to 6 do SetNAtt( Form^.NA , NAG_Skill , T , Random( SkRank ) + 1 );
 
 		{ If this robot is self-aware, set a job and assign a CID. }
 		if Form^.Stat[ STAT_Charm ] > 1 then begin
