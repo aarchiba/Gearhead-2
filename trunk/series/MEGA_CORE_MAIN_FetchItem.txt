@@ -18,7 +18,7 @@
 Content
 	name <I Needed the Money>
 	desc <Your enemy is working a side job.>
-	requires <*:zzzCS_FetchItem E:A.jr_ E:M.--->
+	requires <*:CS_FetchItem E:A.jr_ E:M.--- ~E:THEIF ~F:CRIME ~+Gmo>
 	changes <E:M>
 	Size 5
 
@@ -27,7 +27,7 @@ Content
 	% E3 is a base for the enemy
 	% E4 is the ambush scene
 	% E5 is the enemy NPC
-	Place1 <4>
+	Place1 <3>
 	Element2 <Scene Outdoors !Near -7>
 	Element3 <Prefab>
 	Place3 <2>
@@ -47,13 +47,12 @@ Content
 
 	update <if= P%id%01 0 P= %id%01 1 SetPlotStatus %plotid1% %id1% NPCLevel %5% StoryDL>
 
-	get%1% <WinSubPlot %plotid% if= P%id%02 0 P= %id%02 1 History %id%01>
+	get%1% <WinSubPlot %plotid% if= P%id%02 0 P= %id%02 1 History %id%01 SetEncounterActive %4%  SetXXRMotivation %5% XXR_M_Mercenary>
 
 	end <ifSubPlotLost %plotid1% else .%id%_GoCheckE1   LoseSubPlot %plotid%>
 	.%id%_GoCheckE1 <ifItemDestroyed %1%   LoseSubPlot %plotid%>
 
 	Msg%id%01 <You recovered the %name1% from %name5%.>
-
 
 	% SubPlot1 is where the PC learns that the enemy has the item.
 	SubPlot1 <*:CS_DiscoverNPCHasItem 5 1 2 3>
@@ -63,69 +62,81 @@ Content
 		boxmap
 		MapWidth 13
 		MapHeight 13
-		special <AddExit>
+		special <AddExit ShowAll>
+		start <if= L1 0 else GoBeenBefore Alert 1 L= 1 1>
+		GoBeenBefore <Print 2>
+		Msg1 <You enter %name5%'s base... if you can call this decrepit little boxcar a base.>
+		Msg2 <You enter %name5%'s base.>
 
-		start <if= V1 0 V= 1 1 ForceChat %4%>
-		end <if# PlotStatus %plotid% %id% else GoLoseEpisode SetEncounterInactive %3% FreezeNPC %4%>
-		GoLoseEpisode <History 1 SetEncounterInactive %3% FreezeNPC %4% LoseSubPlot %plotid%>
+		MetaScene 4 2
+		% This fight isn't strictly necessary, but if the PC loses or runs
+		% then E5's attitude changes to equal. Also note that there's no
+		% script immunity here- junior enemies just live to be replaced.
+		% L1 = Encounter Over Counter
+		% L2 = Initialization Counter
+		MapWidth 50
+		MapHeight 50
 
-		Msg1 <You failed to recover the %name1% from %name4%.>
+		Start <if= L2 0 L= 2 1   Alert 1  ForceChat %5%   History 2>
+		nu1 <if= T1 0   Return   if= V1 0 V= 1 1   Monologue %5% 3  SetXXRAttitude %5% XXR_A_IsEqual>
+		nu2 <if= T2 0   if= V1 0 V= 1 1   XPV 100  AddRenown 1   SALVAGE   Alert 4>
+		end <SetEncounterInactive %4%>
+
+		Msg1 <You are ambushed by %name5%!>
+		Msg2 <You were ambushed by %name5%.>
+		Msg3 <Not so tough now, are you \PC !?>
+		Msg3_1 <Haha, I win for once! Well, kind of win...>
+		CMsg3_1 <ifNPCHeroic Accept>
+		Msg3_2 <Hah, look at me, master of the battlefield! All who oppose %name5% end up dead, or at the least dismembered! Wait a minute... where's the %name1%?>
+		CMsg3_2 <ifNPCVillainous Accept>
+		Msg4 <You have defeated %name5%.>
 
 		sub
-			Team 1
+			team 1
+			SetEnemy 2
+			ParaX 5
+			ParaY 5
 
-			Team 2
-			name <Thief>
+			team 2
+			SetEnemy 1
+			Deploy <SetSelfFaction &EnemyFac   WMecha 2 StoryDL 50>
+			ParaX 45
+			ParaY 45
 		end
 
-		Persona 4
+		Persona 5
 		special <UNLISTED>
-		% V1 = First time counter
-		&HighPrice <Threat StoryDL 21>
-		&MedPrice <Threat StoryDL 20>
-		&LowPrice <Threat StoryDL 5>
-		greeting <ifChatNPCSurrendered else GoCheckAggro IfItemOK %1% Else GoDestroyed EndCHat Say 1 ifKeyItem %1% else GoGiveNow>
-		GoGiveNow <Print 3 GiveItem %1%>
-		GoDestroyed <EndChat Say 2>
-		GoCheckAggro <ifSubPlotWon %plotid% else GoGreet EndCHat Say 4 TeamAttack 2 PCEnemy %4%>
-		GoGreet <if= V1 0 else GoBeenBefore V= 1 1 History 6 &SetEnemyNPC %5% SetXXRAttitude %5% XXR_A_NeverMet SetDebriefing %id%10 Goto GoBeenBefore>
-		GoBeenBefore <NewChat Say 5 AddChat 1 AddChat 2 AddChat 3>
-		result1 <ifIntimidation HardSkillTar StoryDL else GoR1Fail EndChat Say 8 GiveItem %1% FreezeNPC %4% PCEnemy %4%>
-		GoR1Fail <EndChat Say 7 TeamAttack 2>
-		result2 <NewChat Say 9 AddChat 4 AddChat 5 AddChat 6 AddChat 7>
-		result3 <NewChat Say 10>
-		result4 <ifShopping 3 else GoR4Fail cash+ -&HighPrice EndChat Say 11 GiveItem %1% FreezeNPC %4%>
-		GoR4Fail <EndCHat Say 12 TeamAttack 2>
-		result5 <ifShopping HardSkillTar StoryDL else GoR4Fail ifIntimidation SkillTar StoryDL else GoR4Fail cash+ -&LowPrice EndChat Say 11 GiveItem %1% FreezeNPC %4%>
-		result6 <Goto result1>
-		result7 <Goto result3>
-		Msg1 <You win! Just take the %name1% and leave!>
-		Msg2 <You've destroyed the %name1%! It's useless to us both now...>
-		Msg3 <%name4% gives you the %name1%.>
-		Msg4 <Hey wait a minute... where's my %name1%!?>
-		Msg5 <They said that you were looking for this %name1%... Well, I hate to disappoint you, but I stole this for %name5% and I never disappoint such an important customer.>
-		Msg6 <%name4% stole the %name1% for someone named %name5%.>
-		Msg7 <If that's how you feel, I'm afraid I can't let you live!>
-		Msg8 <I guess I'd rather live than keep my perfect reputation... Here's the %name1%, just don't tell anyone you got it from me.>
-		Msg9 <%name5% said I'd get $ \VAL &MedPrice for it, but as I said it's not even an issue because I make it a policy to never disappoint a customer. It's not for sale.>
-		Msg10 <Give you some time!? Look, I'm getting ready to go... just get out of here and stop bothering me.>
-		Msg11 <Congratulations, you're my new customer! Here's the %name1%; I gotta go...>
-		Msg12 <I told you, it's not for sale! I can see there's only one way I'm every going to be rid of you...>
-		Prompt1 <I'm afraid that I can't let you keep it.>
-		Prompt2 <How much are you asking for it?>
-		Prompt3 <Wait, I need some time to think about this.>
-		Prompt4 <I'll pay you $ \VAL &HighPrice for it.>
-		CPrompt4 <ifG PC$ &HighPrice Accept>
-		Prompt5 <I'll pay you $ \VAL &LowPrice for it.>
-		CPrompt5 <ifG PC$ &LowPrice Accept>
-		Prompt6 <Looks like I'll have to take it from you, then.>
-		Prompt7 <Maybe I can gather some more money.>
+		greeting <EndChat Say %id%01 AddChat %id%01 AddChat %id%02 AddChat %id%03>
+		result%id%01 <EndChat Say %id%02>
+		result%id%02 <EndChat Say %id%03>
+		result%id%03 <EndChat Say %id%04 AddChat %id%04 AddChat %id%05 AddChat %id%06>
+		result%id%04 <EndChat Say %id%05  SkillXP NAS_Taunt 300>
+		result%id%05 <EndChat Say %id%06  Retreat 2>
+		result%id%06 <EndChat Say %id%07  Cash+ -Reward StoryDL 50  AddReact d30  Retreat 2>
+		Msg%id%01 <Hey, no fair! You just went through my secret base, didn't you \PC ? Well, now you're gonna have to fight me!>
+		Msg%id%02 <Noooo!!! I was counting on that %name1% to pay off my rent this month! Come back here and let me thwomp you...>
+		Msg%id%03 <In your dreams! First I'm gonna thwomp you, then I'm gonna get paid for the %name1%, and then I'm gonna go buy some delicious food! With sauce and everything!>
+		Msg%id%04 <Yeah, I'm going through a bit of a lean period. What do you care?>
+		Msg%id%05 <Oh, that's low... I may not have money but I still have my \CHATNPCMECHA !!!>
+		Msg%id%06 <That's a good point... Alright, you win this time \PC , but next time will be different! Next time!!!>
+		Msg%id%07 <Really!? Wow... with this money, we can afford food! Lots of it! And sauce! Thanks, \PC ...>
+		Prompt%id%01 <No thanks, I already have the %name1%.>
+		Prompt%id%01_1 <Why? I already have the %name1%.>
+		Prompt%id%02 <Alright, I could use the practice.>
+		Prompt%id%02_1 <You never learn, do you %name5%?>
+		Prompt%id%03 <You're pretty desperate for cash, aren't you %name5%?>
+		CPrompt%id%03 <ifInsight SkillTar StoryDL Accept>
+		Prompt%id%04 <I don't. I just wanted to taunt you about it.>
+		Prompt%id%05 <Fight me and you'll have to pay for repairs plus ammo.>
+		Prompt%id%06 <I'll give you $ \VAL Reward StoryDL 50 if you stay out of trouble.>
+		CPrompt%id%06 <ifG React 10 ifPCHeroic ifNPCHeroic ifG PC$ Reward StoryDL 50 Accept>
 	end
 	inv
 		STC CORE-ACTIVATABLE-STATIONARY-DEFENDED
 		name <Hideout>
 
-
+		STC CORE-MECHAAMBUSH-ACTIVATABLE
+		name <%name5%'s Lance>
 	end
 
 
@@ -316,10 +327,16 @@ Content
 	Msg%id%01 <You recovered the %name1% from %name4%.>
 
 	%% Debriefing Message- As long as PC talked to E4
-	Msg%id%10_1 <>
+	Msg%id%10_1 <I've heard of this %name5% person... \SPR %5% 's fought against \FACTION ChatNPCFac before.>
 	CMsg%id%10_1 <ifFactionExists ChatNPCFac Accept>
 	Msg%id%10_2 <So %name5% wanted the %name1%... I wonder what that was all about.>
 	CMsg%id%10_2 <if= ChatNPCFac 0 Accept>
+	Msg%id%10_3 <%name5% is the one who ordered the %name1% stolen, you say? I've heard of \OPR %5% ... they say \SPR %5% works for \FACTION &EnemyFac .>
+	CMsg%id%10_3 <ifFactionExists &EnemyFac Accept>
+	Msg%id%10_4 <This isn't the first time %name5% has caused problems for \FACTION ChatNPCFac ... \SPR %5% 's a pilot for \FACTION &EnemyFac , and a pretty decent one if the rumors are to be believed.>
+	CMsg%id%10_4 <ifFactionExists ChatNPCFac ifFactionExists &EnemyFac Accept>
+	Msg%id%10_5 <%name5% is a pilot for \FACTION &EnemyFac . They must be pretty desperate to get the %name1%.>
+	CMsg%id%10_5 <ifFactionExists &EnemyFac Accept>
 
 	% SubPlot1 is where the PC learns that the thief has the item.
 	SubPlot1 <*:CS_DiscoverNPCHasItem 4 1 2 3>

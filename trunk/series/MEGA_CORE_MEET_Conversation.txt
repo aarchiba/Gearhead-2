@@ -22,7 +22,7 @@
 Content
 	name <Basic Stop Enemy Mission>
 	desc <The PC will be asked to go stop the Enemy from doing something.>
-	requires <*CS_Conversation ~C:POLIC ~1:POLIC ~P:POLIC E:++ ~1:PDASS ~1:PCFAC>
+	requires <*CS_Conversation ~C:POLIC ~1:POLIC ~P:POLIC E:++ ~1:PDASS ~1:PCFAC ~E:ACADE ~E:ADVEN>
 
 	% E1 is the NPC that the PC will speak with
 	% E2 is the Enemy NPC
@@ -63,7 +63,7 @@ Content
 Content
 	name <Basic Fetch Mission>
 	desc <The PC will be asked to go fetch an item.>
-	requires <*CS_Conversation ~C:THIEF ~1:THIEF ~P:CRIME -1:PDASS ~1:PCFAC -1:NOFAC>
+	requires <*CS_Conversation ~C:THIEF ~1:THIEF ~P:CRIME -1:PDASS ~1:PCFAC -1:NOFAC ~E:THIEF ~E:TRADE>
 
 	% E1 is the NPC that the PC will speak with
 	% E2 is the item to fetch
@@ -116,7 +116,7 @@ Content
 Content
 	name <Basic Investigation Mission>
 	desc <The PC will be asked to gain some information.>
-	requires <*CS_Conversation ~C:POLIT ~C:ACADE ~C:MEDIA ~1:POLIT ~1:ACADE ~1:MEDIA ~1:MEDIC ~P:POLIT -1:PDASS ~1:PCFAC>
+	requires <*CS_Conversation ~C:POLIT ~C:ACADE ~C:MEDIA ~1:POLIT ~1:ACADE ~1:MEDIA ~1:MEDIC ~P:POLIT -1:PDASS ~1:PCFAC ~E:MEDIA ~E:POLIT>
 
 	% E1 is the NPC that the PC will speak with
 
@@ -158,7 +158,7 @@ Content
 Content
 	name <Basic Fighting Mission>
 	desc <The PC will be asked to go fight some mecha.>
-	requires <*CS_Conversation ~C:MILIT ~1:MILIT ~1:ADVEN ~P:MILIT -1:PDASS ~1:PCFAC>
+	requires <*CS_Conversation ~C:MILIT ~1:MILIT ~1:ADVEN ~P:MILIT -1:PDASS ~1:PCFAC ~E:MILIT>
 
 	% E1 is the NPC that the PC will speak with
 	% E2 is the outdoors location where the encounter will be placed
@@ -460,7 +460,7 @@ Content
 Content
 	name <Enemy's a Bastard>
 	desc <The person the PC is speaking with has fought with Enemy.>
-	requires <*CS_Conversation (1:FRIEND|1:FAMILY|1:LOVER|1:ALLY|1:PCFAC) (1:MILIT|1:ADVEN|1:CORPO|1:LABOR|1:POLIC) -1:ENEMY E:++ ~+Gre>
+	requires <*CS_Conversation (1:FRIEND|1:FAMILY|1:LOVER|1:ALLY|1:PCFAC) (1:MILIT|1:ADVEN|1:CORPO|1:LABOR|1:POLIC) -1:ENEMY E:++ ~+Gre -E:GOOD_ ~E:EVIL_>
 
 	% E1 is the person being spoken to.
 	% E2 is the enemy
@@ -561,7 +561,7 @@ Content
 Content
 	name <Many People Are Getting Hurt>
 	desc <The PC's enemy has been causing lots of damage. Won't the PC do something to help?>
-	requires <*CS_Conversation 1:MEDIC -1:ENEMY (F:CRIME|F:--|E:EVIL_|+Pun) *CORE_DEF_>
+	requires <*CS_Conversation 1:MEDIC -1:ENEMY (F:CRIME|F:--|E:EVIL_|+Pun) *CORE_DEF_ ~E:EVIL_>
 
 	% E1 is the person being spoken to.
 	% E2 is the outdoors location where the encounter will be placed
@@ -709,7 +709,7 @@ Plot
 Content
 	name <Big Scoop about Enemy NPC>
 	desc <The media person you're talking to wants to know about the enemy's mission in town.>
-	requires <*CS_Conversation 1:MEDIA ~1:FRIEND E:++>
+	requires <*CS_Conversation 1:MEDIA ~1:FRIEND E:++ ~E:MEDIA ~E:POLIT ~E:GOOD_>
 
 	% E1 is the person being spoken to
 	% E2 is the outdoors location where the encounter will be placed

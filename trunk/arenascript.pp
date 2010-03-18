@@ -5783,7 +5783,7 @@ Function CheckTriggerAlongPath( var T: String; GB: GameBoardPtr; Plot: GearPtr; 
 var
 	P2: GearPtr;
 	it,I2: Boolean;
-	LT: SAttPtr;	{ Local Trigger counter }
+	LT,TempList: SAttPtr;	{ Local Trigger counter }
 	LT_tmp: STring;	{ The content of the local trigger currently being processed. }
 begin
 	it := False;
@@ -5802,10 +5802,14 @@ begin
 
 			{ If any local triggers were tripped, call them now. }
 			while local_triggers <> Nil do begin
-				LT := local_triggers;
-				LT_Tmp := LT^.Info;
-				RemoveSAtt( local_triggers , LT );
-				TriggerGearScript( GB , Plot , LT_Tmp );
+				TempList := local_triggers;
+				local_triggers := Nil;
+				while TempList <> Nil do begin
+					LT := TempList;
+					LT_Tmp := LT^.Info;
+					RemoveSAtt( TempList , LT );
+					TriggerGearScript( GB , Plot , LT_Tmp );
+				end;
 			end;
 
 			{ The trigger above might have changed the }
