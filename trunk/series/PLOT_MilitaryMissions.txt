@@ -83,7 +83,7 @@ Plot
 	% The versus patrol job is a fight against an enemy faction.
 	% This job gives salvage. This job will earn the PC the enemity
 	% of the faction being opposed.
-	requires <*GENERAL -!Ne>
+	requires <*GENERAL -!Ne -SAFE>
 	PayRate 150
 
 	% E1 is the town itself

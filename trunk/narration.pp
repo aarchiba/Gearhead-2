@@ -139,6 +139,21 @@ Const
 		NAS_CoreMissionStep = 3;	{ Records the number of core missions completed. }
 		NAS_CoreMissionEnemy = 4;	{ Enemy for the core story. }
 
+	{ The Attitude and Motivation constants, made public so the BeanCounter }
+	{ can examine them. }
+	Num_XXR_Motivations = 8;
+	Num_XXR_Attitudes = 14;
+	XXR_Motivation: Array [0..Num_XXR_Motivations] of String[3] = (
+		'---',
+		'mer', 'pro', 'ggd', 'see', 'rev', 'cha', 'com', 'nih'
+	);
+	XXR_Attitude: Array [0..Num_XXR_Attitudes] of String[3] = (
+		'---',
+		'jr_', 'sr_', 'sec', 'equ', 'env',   'pch', 'hat', 'mut', 'obs', 'tha',
+		'nme', 'ant', 'adm', 'dis'
+	);
+
+
 Function LancemateCanDevelop( NPC: GearPtr ): Boolean;
 Procedure AddXXCharContext( NPC: GearPtr; var Context: String; palette_entry_code: Char );
 Function XNPCDesc( GB: GameBoardPtr; Adv,NPC: GearPtr ): String;
@@ -241,16 +256,6 @@ end;
 
 Procedure AddXXCharContext( NPC: GearPtr; var Context: String; palette_entry_code: Char );
 	{ Add context descriptors for the attitude and motivation of this NPC. }
-const
-	Num_XXR_Motivations = 8;
-	Num_XXR_Attitudes = 14;
-	XXR_Motivation: Array [1..Num_XXR_Motivations] of String[3] = (
-		'mer', 'pro', 'ggd', 'see', 'rev', 'cha', 'com', 'nih'
-	);
-	XXR_Attitude: Array [1..Num_XXR_Attitudes] of String[3] = (
-		'jr_', 'sr_', 'sec', 'equ', 'env',   'pch', 'hat', 'mut', 'obs', 'tha',
-		'nme', 'ant', 'adm', 'dis'
-	);
 var
 	T: Integer;
 begin

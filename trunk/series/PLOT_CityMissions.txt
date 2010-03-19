@@ -81,7 +81,7 @@ Plot
 	name <Versus City Patrol Job>
 	% The basic patrol job is a fight against some generic enemy mecha.
 	% This job gives salvage.
-	requires <*GENERAL -!Ne>
+	requires <*GENERAL -!Ne -SAFE>
 	PayRate 150
 
 	% E1 is the town itself

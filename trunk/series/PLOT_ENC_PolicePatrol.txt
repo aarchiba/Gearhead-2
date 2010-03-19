@@ -1,0 +1,39 @@
+Plot
+	name <Regular Police Patrol>
+	requires <*zzzGENERAL -LAWFUL -LAWLESS>
+
+	% E1 is the Town scene
+	% E2 is the outdoors scene for the patrol.
+	% E3 is the encounter for the patrol
+	% E4 is the local police faction
+	% E5 is the police officer to be used
+	Element1 <Scene Town>
+	Element2 <Scene Outdoors>
+	Element3 <Prefab>
+	Place3 <2>
+	Element4 <Faction POLIC !Ally 1>
+	Element5 <Character HasMecha !Near 1 !Comrade 3>
+
+	sub
+		MetaScene 3 2
+
+		Persona 5
+
+	end
+	inv
+		STC ENCOUNTER-WANDER
+		use <ifG StatVal STAT_MetaVisibility -1      ifG PCScale 0 else GoTooSmall   ForceChat E3>
+		GoTooSmall <Print 101>
+		Attack <ifG StatVal STAT_MetaVisibility -1   ifG PCScale 0   ifNPCArchEnemy E3   ifUStealth HardSkillTar %threat% else GoAutoAttack ifYesNo 1 2 3 else GoAvoidAttack  ForceChat E3>
+		GoAutoAttack <ForceChat E3>
+		GoAvoidAttack <Print 4 AddSociable -1>
+		Msg1 <You spot a hostile patrol led by \ELEMENT 3 .>
+		Msg2 <Confront \ELEMENT 3 .>
+		Msg3 <Avoid \ELEMENT 3 .>
+		Msg4 <You slip away unnoticed.>
+
+		Msg101 <You fail to attract the attention of the mecha.>
+		ENCOUNTER_Defense
+
+	end
+

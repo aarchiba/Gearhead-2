@@ -989,7 +989,7 @@ sub
 	%% V2 = Have gotten reward
 	%% NPCVar %4% 1 = Capture trigger; if 1, have set trigger. If 2, have captured Kolo.
 	rumor%id% <%name4% has been hoping to collect the bounty on %name3%.>
-	greeting <if= V2 0 else GoChat if= NPCVar %4% 1 2 else GoCheckLoss NewChat Say 12 FacXP+ 5 -20 AddLawful 1 AddRenown -1 NPCVar= %4% 1 0  V= 1 -1  Memo 0  NewChat Say 13 CashPrize %threat% 500 V= 2 1>
+	greeting <if= V2 0 else GoChat if= NPCVar %4% 1 2 else GoCheckLoss NewChat Say 12 FacXP+ 5 -20 AddLawful 1 AddRenown -1 NPCVar= %4% 1 0  V= 1 -1  Memo 0  NewChat Say 13 CashPrize Reward %threat% 500 V= 2 1>
 	GoCheckLoss <if= NPCVar %4% 1 -1 else GoCheckQuest NewChat Say 9 NPCVar= %4% 1 0>
 	GoCheckQuest <if= PlotStatus %plotid% %id% else GoGreet if= V1 1 else GoOfferMission if= NPCVar %4% 1 1 else GoMaybeSet NewChat Say 7>
 	GoMaybeSet <NewChat Say 8 AddChat 6>

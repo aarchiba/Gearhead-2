@@ -31,7 +31,7 @@ Scene 0 3
 	world <L5 Region>
 	desc <Maquise Spinner is home to fifteen million people. It is the largest and most powerful of the spinner colonies.>
 	special <NOEXIT SHOWALL SOLO>
-	type <city town spinner target outdoors urban destination hometown capitol>
+	type <city town spinner target outdoors urban destination hometown capitol safe>
 	habitat <SPACE.URBAN>
 	personatype <city capitol spinner>
 	MegaCityMap
@@ -1399,7 +1399,7 @@ Scene 0 3
 	world <L5 Region>
 	desc <Cesena Spinner is the site of the L5 Alliance's shipyards and the home port of the Silver Knights.>
 	special <NOEXIT SHOWALL SOLO>
-	type <city town spinner target outdoors urban destination hometown industrial>
+	type <city town spinner target outdoors urban destination hometown industrial lawful>
 	personatype <city spinner>
 	habitat <SPACE.URBAN>
 	MegaCityMap
@@ -3224,7 +3224,7 @@ Scene 0 3
 	world <L5 Region>
 	desc <Kosaka Spinner is the capital of the Free Commerce States.>
 	special <NOEXIT SHOWALL SOLO>
-	type <city town spinner target outdoors urban destination hometown safe capitol>
+	type <city town spinner target outdoors urban destination hometown lawful safe capitol>
 	habitat <SPACE.URBAN>
 	personatype <city capitol spinner>
 	MegaCityMap
@@ -4188,7 +4188,7 @@ Scene 0 3
 	world <L5 Region>
 	desc <Emerald Spinner was constructed as an interplanetary banking center. It is home to the Free Commerce States economic strategy department.>
 	special <NOEXIT SHOWALL SOLO>
-	type <city town spinner target outdoors urban destination hometown safe financial rich>
+	type <city town spinner target outdoors urban destination hometown lawful financial rich>
 	habitat <SPACE.URBAN>
 	personatype <city spinner rich>
 	MegaCityMap
@@ -6004,7 +6004,7 @@ Scene 0 3
 	world <L5 Region>
 	desc <Rishiri Spinner is a major trading port and protector of the Rishiri Dominion.>
 	special <NOEXIT SHOWALL SOLO>
-	type <city town spinner target outdoors urban destination hometown capitol>
+	type <city town spinner target outdoors urban destination hometown capitol lawful>
 	habitat <SPACE.URBAN>
 	personatype <city capitol spinner>
 	MegaCityMap

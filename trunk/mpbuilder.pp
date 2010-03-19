@@ -36,6 +36,9 @@ Type
 	{ I feel just like Dmitri Mendelev writing this... }
 	ElementTable = Array [1..Num_Plot_Elements] of ElementDesc;
 
+var
+	Sub_Plot_List: GearPtr;
+
 
 Procedure ReplaceStrings( Part: GearPtr; Dictionary: SAttPtr );
 Function ComponentMenu( CList: GearPtr; var ShoppingList: NAttPtr ): GearPtr;
@@ -68,7 +71,6 @@ Const
 	Num_Sub_Plots = 8;
 
 Var
-	Sub_Plot_List: GearPtr;
 	standard_trigger_list: SAttPtr;
 	changes_used_so_far: String;
 	MasterEntranceList: GearPtr;
