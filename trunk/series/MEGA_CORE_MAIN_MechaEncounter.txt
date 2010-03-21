@@ -1986,7 +1986,7 @@ Content
 		result%id%05 <ifNPCVillainous else .%id%_GoR5Win EndChat Say %id%05>
 		.%id%_GoR5Win <EndChat Say %id%06 AddReact d30 ifG React 45 PCFriend %3% SetXXRAttitude %3% XXR_A_Thankful>
 		result%id%06 <EndChat Say %id%07 AddChat %id%07 AddChat %id%08>
-		result%id%07 <EncChat Say %id%08 History %id%09 SetXXRAttitude %3% XXR_A_IsEqual PCFriend %3% SetDebriefing %id%11  L= 1 1 Retreat 2 XPV 200 Trigger0 .%id%_%plotid%_GoLoss LoseSubPlot %plotid%>
+		result%id%07 <EndChat Say %id%08 History %id%09 SetXXRAttitude %3% XXR_A_IsEqual PCFriend %3% SetDebriefing %id%11  L= 1 1 Retreat 2 XPV 200 Trigger0 .%id%_%plotid%_GoLoss LoseSubPlot %plotid%>
 		result%id%08 <Goto result%id%01>
 		Msg%id%01 <This is it, \PC ... My boss %name4% told me that I have to defeat you, or else I'm going to get fired from \FACTION &EnemyFac .>
 		Msg%id%02 <Oh, \SPR %4% 's one of the hot pilots at \FACTION &EnemyFac . I don't think \SPR %4% likes me very much... keeps using words like "incompetent" and "execrable".>
