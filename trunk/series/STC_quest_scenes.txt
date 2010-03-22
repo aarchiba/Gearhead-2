@@ -156,13 +156,14 @@ MetaScene
 	GoCheckBattle <if= SelfArenaState NAV_AS_Battle else GoBoringStart Print 2>
 	GoBoringStart <Print 3 Return>
 	nu1 <if= T1 0 Return   if= SelfArenaState NAV_AS_Battle SetSelfArenaState NAV_AS_Loss  Alert 5  LoseRenown Goto GoEndBattle>
-	nu2 <if= T2 0 Return   if= SelfArenaState NAV_AS_Battle SetSelfArenaState NAV_AS_Win   Alert 6 Print 6  AddSelfArenaWin  AddSelfArenaThreat d10  XPV 100 FacXP+ 5 1 AddRenown 1 ifNPCOK SelfChallengerID else GoEndBattle ForceChat SelfChallengerID Goto GoEndBattle>
+	nu2 <if= T2 0 Return   if= SelfArenaState NAV_AS_Battle SetSelfArenaState NAV_AS_Win   Alert 6 Print 6  AddSelfArenaWin  AddSelfArenaThreat 8  XPV 100 FacXP+ 5 1 AddRenown 1 ifNPCOK SelfChallengerID else GoEndBattle ForceChat SelfChallengerID Goto GoEndBattle>
 	GoEndBattle <ifNPCOK SelfChallengerID MoveAndPacifyNPC SelfChallengerID SelfChallengerHome ClearSelfChallengerID>
 	Msg1 <You enter \SCENE SceneID . Prepare to battle.>
 	Msg2 <The arena battle rages on.>
 	Msg3 <You enter \SCENE SceneID . There's no battle happening now.>
 	Msg5 <You have lost the battle.>
 	Msg6 <You have won the battle.>
+	Content3 <Fill Sub *RANDOM_SHAPES na>
 	sub
 		Team 1
 		name <Player Team>

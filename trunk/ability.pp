@@ -42,9 +42,6 @@ const
 	XPA_SK_Basic = 1;	{ XP for just using a combat skill. }
 	XPA_SK_UseRepair = 3;
 
-	{ Even the slowest people will react at this base speed. }
-	Minimum_Initiative = 10;
-
 	{ PERSONAL COMMUNICATION CAPABILITIES }
 	PCC_Memo = NAS_Memo;	{ Can view adventure memos }
 	PCC_EMail = NAS_EMail;	{ Can receive emails from NPCs }
@@ -336,6 +333,12 @@ end;
 
 function ReactionTime( Master: GearPtr ): Integer;
 	{ Determine the reaction time for this character/mecha. }
+const
+	{ Even the slowest people will react at this base speed. }
+	Minimum_Initiative = 10;
+	{ To prevent huge differences in reaction time, all times }
+	{ get modified by a baseline. }
+	Baseline_Initiative = 15;
 var
 	I,RT: Integer;
 begin
@@ -350,7 +353,7 @@ begin
 			if ( I < Minimum_Initiative ) then I := Minimum_Initiative;
 		end else I := 1;
 	end;
-	RT := ( ClicksPerRound * 5 ) div I;
+	RT := ( ClicksPerRound * 10 ) div ( I + Baseline_Initiative );
 	if RT > ClicksPerRound then RT := ClicksPerRound
 	else if RT < 2 then RT := 2;
 	ReactionTime := RT;

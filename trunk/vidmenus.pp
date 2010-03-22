@@ -79,6 +79,7 @@ Procedure AttachMenuDesc( RPM: RPGMenuPtr; Z: vgfx_zone );
 Procedure DisposeRPGMenu(var RPM: RPGMenuPtr);
 Procedure DisplayMenu( RPM: RPGMenuPtr; ReDrawer: RedrawProcedureType );
 Function RPMLocateByPosition(RPM: RPGMenuPtr; i: integer): RPGMenuItemPtr;
+Function RPMLocateByValue(RPM: RPGMenuPtr; i: integer): RPGMenuItemPtr;
 Function SelectMenu( RPM: RPGMenuPtr; ReDrawer: RedrawProcedureType ): integer;
 Procedure RPMSortAlpha(RPM: RPGMenuPtr);
 
@@ -181,6 +182,9 @@ Procedure RemoveRPGMenuItem(RPM: RPGMenuPtr; var LMember: RPGMenuItemPtr);
 var
 	a,b: RPGMenuItemPtr;
 begin
+	{ Make sure LMember isn't Nil }
+	if LMember = Nil then Exit;
+
 	{Initialize A and B}
 	B := RPM^.FirstItem;
 	A := Nil;
@@ -319,6 +323,22 @@ begin
 	end;
 
 	RPMLocateByPosition := a;
+end;
+
+Function RPMLocateByValue(RPM: RPGMenuPtr; i: integer): RPGMenuItemPtr;
+	{Locate the i'th element of the item list, then return its address.}
+var
+	t,a: RPGMenuItemPtr;	{Our counter and a pointer}
+begin
+	a := Nil;
+	t := RPM^.FirstItem;
+
+	while ( a = Nil ) and ( t <> Nil ) do begin
+		if t^.value = i then a := t;
+		t := t^.Next;
+	end;
+
+	RPMLocateByValue := a;
 end;
 
 Function MenuHeight( RPM: RPGMenuPtr ): Integer;

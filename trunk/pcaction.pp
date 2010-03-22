@@ -484,7 +484,7 @@ begin
 				m_EMail: BrowseMemoType( GB , 'EMAIL' );
 			end;
 
-		until A = -1;
+		until ( A = -1 ) or not KeepPlayingSC( GB );
 	end;
 
 	DisposeRPGMenu( MainMenu );

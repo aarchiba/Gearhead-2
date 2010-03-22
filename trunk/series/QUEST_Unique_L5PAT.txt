@@ -2703,7 +2703,7 @@ Content
 		% V1 = Have overcome encryption
 		use <ifYesNo 1 2 3 moretext .fname>
 		.fname <TEXT_CCLJMD.txt>
-		CLUE_CODEBREAKING <if= V1 0 else GoAlreadyBroken ifCodeBreaking HardSkillTar 100 else use Mental Mental Alert 4 XPV 100   SkillXP NAS_Medical 200  SkillXP NAS_Repair 200  SkillXP NAS_Science 200   V= 1 1>
+		CLUE_CODEBREAKING <if= V1 0 else GoAlreadyBroken ifCodeBreaking HardSkillTar 100 else use Mental Mental Alert 4 XPV 100   SkillXP NAS_Medicine 200  SkillXP NAS_Repair 200  SkillXP NAS_Science 200   V= 1 1>
 		GoAlreadyBroken <Print 5>
 		Msg1 <This dataslate contains someone's diary. Do you want to read it?>
 		Msg2 <Yes I do.>

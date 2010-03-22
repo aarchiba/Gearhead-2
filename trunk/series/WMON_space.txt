@@ -19,7 +19,8 @@ habitat <SPACE>
 statline 17 19 16 22 15 20 12 14
 CloseCombat 9
 RangedCombat 12
-Dodge 10
+Dodge 14
+Vitality 5
 Awareness 15
 SpotWeakness 8
 ElectronicWarfare 8
@@ -79,8 +80,8 @@ type <Space Exorg Asteroid>
 habitat <SPACE>
 statline 15 7 15 16 5 19 10 7
 CloseCombat 7
-RangedCombat 4
-Dodge 8
+RangedCombat 6
+Dodge 9
 Awareness 5
 SpotWeakness 5
 sub
@@ -126,7 +127,7 @@ statline 13 16 12 9 3 6 1 5
 *CLUE_SURVIVAL <*SURVIVAL_GetPearl 80 squid>
 RangedCombat 5
 CloseCombat 6
-Dodge 6
+Dodge 13
 Stealth 4
 sub
 torso
@@ -223,7 +224,7 @@ statline 11 8 10 5 1 1 1 1
 MonsterTV 70
 RangedCombat 5
 CloseCombat 5
-Dodge 7
+Dodge 10
 Vitality 5
 Stealth 5
 sealed
@@ -297,9 +298,9 @@ statline 9 16 8 9 1 1 1 1
 MonsterTV 75
 CloseCombat 6
 RangedCombat 6
-Dodge 7
+Dodge 8
 Initiative 7
-Vitality 5
+Vitality 7
 sealed
 sub
 torso
@@ -479,7 +480,7 @@ statline 9 13 13 9 1 1 1 1
 *CLUE_SURVIVAL <*SURVIVAL_GetPearl 65 fungus>
 MonsterTV 60
 CloseCombat 7
-Dodge 5
+Dodge 8
 Initiative 5
 SpotWeakness 5
 sealed
@@ -537,7 +538,7 @@ statline 9 12 6 5 4 5 1 1
 MonsterTV 65
 sealed
 CloseCombat 8
-Dodge 5
+Dodge 7
 Vitality 10
 Toughness 10
 %% The armored worm is tough as nails
@@ -570,7 +571,7 @@ SDL_COLORS <245 213 160 245 213 160 255 230 195>
 type <mutant vermin mine derelict>
 habitat <SPACE>
 statline 7 3 6 5 4 5 1 1
-MonsterTV 18
+MonsterTV 15
 sealed
 CloseCombat 3
 Vitality 1

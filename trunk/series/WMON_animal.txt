@@ -18,7 +18,7 @@ statline 13 8 10 15 8 6 2 5
 MonsterTV 52
 DomTarget 14
 CloseCombat 7
-Dodge 5
+Dodge 7
 Awareness 6
 Sealed
 sub
@@ -80,7 +80,7 @@ habitat <>
 DomTarget 18
 RangedCombat 5
 CloseCombat 4
-Dodge 6
+Dodge 10
 Vitality 3
 sub
 head
@@ -173,7 +173,7 @@ DomTarget 32
 *CLUE_SURVIVAL <*SURVIVAL_GetFlameGland 68 beetle>
 RangedCombat 3
 CloseCombat 5
-Dodge 6
+Dodge 8
 sub
 torso
 	armor 5
@@ -307,8 +307,8 @@ habitat <>
 *CLUE_SURVIVAL <*SURVIVAL_GetSashimiMaybeTainted 44 urchin>
 RangedCombat 5
 CloseCombat 3
-Dodge 1
-Vitality 7
+Dodge 3
+Vitality 10
 sub
 torso
 	armor 6
@@ -341,7 +341,7 @@ habitat <>
 statline 17 19 13 14 8 10 2 4
 *CLUE_SURVIVAL <*SURVIVAL_GetMeatOrBearLiver 90 bear>
 CloseCombat 7
-Dodge 4
+Dodge 8
 % Bears have the talent HARD AS NAILS
 Talent 4
 sub
@@ -389,7 +389,7 @@ statline 16 19 11 15 10 16 7 6
 *CLUE_SURVIVAL <*SURVIVAL_GetMeatOrBearLiverOrDragonHeart 90 bear>
 RangedCombat 4
 CloseCombat 8
-Dodge 4
+Dodge 9
 Initiative 11
 Vitality 7
 % Bears have the talent HARD AS NAILS
@@ -448,7 +448,7 @@ type <Animal Mutant Earth Wasteland>
 habitat <>
 statline 14 18 10 11 8 10 2 1
 CloseCombat 8
-Dodge 2
+Dodge 8
 % Bears have the talent HARD AS NAILS
 Talent 4
 Vitality 5
@@ -496,7 +496,7 @@ habitat <>
 statline 14 17 9 13 8 10 2 4
 *CLUE_SURVIVAL <*SURVIVAL_GetMeatOrBearLiver 56 bear>
 CloseCombat 6
-Dodge 2
+Dodge 5
 % Bears have the talent HARD AS NAILS
 Talent 4
 sub
@@ -570,7 +570,7 @@ type <Reptile Jungle Exotic Mutant>
 habitat <>
 RogueChar <c>
 CloseCombat 3
-Dodge 3
+Dodge 6
 Awareness 5
 Stealth 15
 sub
@@ -606,7 +606,7 @@ sdl_sprite <monster_chameleon.png>
 sdl_colors <125 100 15 70 125 120 230 170 90>
 *CLUE_SURVIVAL <*SURVIVAL_GetMeatOrSmallPelt 20 chameleon>
 CloseCombat 3
-Dodge 1
+Dodge 3
 Awareness 5
 Stealth 15
 sub
@@ -642,7 +642,7 @@ type <Earth Mountain Reptile>
 habitat <>
 *CLUE_SURVIVAL <*SURVIVAL_GetMeatOrLootGizzard 50 lizard>
 CloseCombat 5
-Dodge 4
+Dodge 8
 Vitality 6
 Stealth 7
 sub
@@ -679,7 +679,7 @@ type <City Water Swamp Cave Reptile Animal>
 habitat <>
 *CLUE_SURVIVAL <*SURVIVAL_GetMeatOrLootGizzard 72 alligator>
 CloseCombat 5
-Dodge 4
+Dodge 7
 Vitality 6
 SpotWeakness 5
 Stealth 7
@@ -721,7 +721,7 @@ MonsterTV 105
 DomTarget 25
 RangedCombat 8
 CloseCombat 8
-Dodge 10
+Dodge 15
 Initiative 8
 sub
 head
@@ -781,7 +781,7 @@ MonsterTV 40
 DomTarget 15
 RangedCombat 5
 CloseCombat 5
-Dodge 3
+Dodge 5
 sub
 head
 sub
@@ -810,7 +810,7 @@ MonsterTV 56
 DomTarget 19
 RangedCombat 3
 CloseCombat 5
-Dodge 1
+Dodge 5
 SpotWeakness 6
 Vitality 5
 sub
@@ -856,7 +856,7 @@ statline 10 16 10 7 2 2 2 2
 MonsterTV 72
 DomTarget 23
 CloseCombat 5
-Dodge 2
+Dodge 6
 SpotWeakness 5
 Vitality 5
 sub
@@ -893,7 +893,7 @@ statline 8 11 10 9 2 2 2 2
 MonsterTV 35
 DomTarget 14
 CloseCombat 4
-Dodge 2
+Dodge 3
 SpotWeakness 1
 Vitality 5
 sub
@@ -945,8 +945,8 @@ statline 12 14 8 11 5 7 4 6
 MonsterTV 35
 DomTarget 15
 CloseCombat 4
-Dodge 2
-Vitality 3
+Dodge 3
+Vitality 4
 sub
 torso
 	armor 2
@@ -969,7 +969,7 @@ statline 13 20 9 11 5 7 4 5
 MonsterTV 52
 DomTarget 18
 CloseCombat 4
-Dodge 1
+Dodge 4
 Vitality 8
 sub
 torso
@@ -994,7 +994,7 @@ MonsterTV 85
 DomTarget 21
 RangedCombat 4
 CloseCombat 4
-Dodge 3
+Dodge 7
 Vitality 12
 sub
 torso
@@ -1028,12 +1028,12 @@ statline 10 2 11 7 2 3 2 2
 *CLUE_SURVIVAL <*SURVIVAL_GetMeat 33 bird-thing>
 MonsterTV 22
 CloseCombat 1
-Dodge 1
+Dodge 4
 DomTarget 16
 sub
 head
 	sub
-		gear 4 0 1
+		gear 3 0 1
 		name <Bite>
 	end
 torso
@@ -1055,7 +1055,7 @@ statline 14 13 16 11 8 7 2 5
 DomTarget 23
 MonsterTV 52
 CloseCombat 4
-Dodge 2
+Dodge 8
 Vitality 2
 sub
 head
@@ -1092,6 +1092,7 @@ DomTarget 17
 MonsterTV 25
 CloseCombat 2
 Initiative 2
+Dodge 2
 sub
 head
 	armor 1
@@ -1126,7 +1127,7 @@ statline 10 15 5 9 1 1 1 1
 DomTarget 21
 MonsterTV 44
 CloseCombat 6
-Dodge 1
+Dodge 2
 Initiative 7
 Vitality 6
 SpotWeakness 5
@@ -1205,7 +1206,7 @@ MonsterTV 85
 DomTarget 22
 RangedCombat 6
 CloseCombat 7
-Dodge 7
+Dodge 10
 Initiative 3
 Toughness 7
 sub
@@ -1246,7 +1247,7 @@ statline 13 5 12 7 2 3 2 2
 MonsterTV 44
 DomTarget 21
 CloseCombat 3
-Dodge 2
+Dodge 5
 sub
 head
 	armor 2
@@ -1311,7 +1312,7 @@ SDL_COLORS <170 150 235 122 88 199 0 0 0>
 statline 11 7 10 1 1 1 1 1
 MonsterTV 64
 CloseCombat 6
-Dodge 3
+Dodge 6
 Vitality 8
 Toughness 4
 type <Water Sea Mutant>
@@ -1344,7 +1345,7 @@ statline 13 12 15 9 9 7 5 5
 MonsterTV 76
 DomTarget 20
 CloseCombat 5
-Dodge 8
+Dodge 11
 Initiative 4
 Vitality 10
 Toughness 7
@@ -1456,7 +1457,7 @@ statline 10 4 10 8 8 6 2 2
 MonsterTV 40
 DomTarget 15
 CloseCombat 3
-Dodge 2
+Dodge 5
 Initiative 6
 Vitality 5
 sub
@@ -1565,7 +1566,7 @@ MonsterTV 68
 DomTarget 30
 RangedCombat 4
 CloseCombat 3
-Dodge 6
+Dodge 10
 Initiative 5
 Vitality 3
 sub
@@ -1627,7 +1628,7 @@ MonsterTV 35
 DomTarget 10
 RangedCombat 1
 CloseCombat 2
-Dodge 2
+Dodge 5
 Vitality 1
 sub
 head
@@ -1671,14 +1672,13 @@ statline 8 1 10 8 8 6 2 2
 MonsterTV 20
 DomTarget 12
 CloseCombat 2
-Dodge 1
+Dodge 3
 Initiative 1
 sub
 head
 	sub
-		gear 4 0 2
+		gear 4 0 1
 		name <Fangs>
-		stat 3 1
 	end
 torso
 leg

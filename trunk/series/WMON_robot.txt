@@ -17,7 +17,8 @@ Sealed
 MonsterTV 78
 RangedCombat 4
 CloseCombat 4
-Dodge 4
+Dodge 9
+Vitality 10
 Toughness 8
 sub
 torso
@@ -73,7 +74,8 @@ CHAT_ATTACK <Leave the premesis or face retaliation.>
 Metal
 RangedCombat 4
 CloseCombat 5
-Dodge 3
+Dodge 5
+Vitality 5
 Awareness 5
 Sealed
 sub
@@ -139,9 +141,9 @@ sdl_colors <234 180 88 199 188 162 255 107 83>
 statline 16 35 10 15 10 10 10 1
 *CLUE_SCIENCE <*SCIENCE_GetMechaPartsOrFCS 120 robot>
 RangedCombat 8
-Dodge 8
+Dodge 12
 Initiative 7
-Vitality 10
+Vitality 15
 Athletics 10
 Concentration 10
 sub
@@ -230,7 +232,8 @@ Sealed
 MonsterTV 56
 RangedCombat 2
 CloseCombat 2
-Dodge 2
+Dodge 7
+Vitality 5
 sub
 torso
 	armor 3
@@ -258,7 +261,7 @@ metal
 Sealed
 MonsterTV 95
 CloseCombat 10
-Dodge 5
+Dodge 12
 Vitality 10
 % Anatomist + Hard as Nails
 Talent 3
@@ -321,7 +324,7 @@ metal
 Sealed
 MonsterTV 21
 CloseCombat 1
-Dodge 1
+Dodge 2
 sub
 torso
 	armor 1
@@ -347,7 +350,7 @@ metal
 Sealed
 MonsterTV 28
 CloseCombat 2
-Dodge 1
+Dodge 3
 sub
 torso
 	armor 2
@@ -376,7 +379,7 @@ Sealed
 MonsterTV 32
 RangedCombat 1
 CloseCombat 1
-Dodge 1
+Dodge 5
 sub
 torso
 	armor 2

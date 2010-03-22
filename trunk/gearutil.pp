@@ -2054,6 +2054,8 @@ var
 	Master,Ammo: GearPtr;
 	Procedure ApplyCCBonus;
 		{ Apply the close combat bonus for weapons. }
+	const
+		HeavyAct_Denominator = 4;
 	var
 		Module: GearPtr;
 		HeavyActuator: Integer;
@@ -2073,7 +2075,7 @@ var
 
 				{ May also get a bonus from heavy Actuator. }
 				HeavyActuator := CountActivePoints( Master , GG_MoveSys , GS_HeavyActuator );
-				if HeavyActuator > 0 then D := D + ( HeavyActuator div Master^.V );
+				if HeavyActuator > 0 then D := D + ( HeavyActuator div HeavyAct_Denominator );
 
 				{ Having an oversized module gives a +1 bonus to damage. }
 				Module := FindModule( Attacker );

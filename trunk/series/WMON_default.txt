@@ -14,7 +14,7 @@ statline 13 13 13 8 7 5 2 2
 MonsterTV 68
 RangedCombat 4
 CloseCombat 6
-Dodge 6
+Dodge 9
 Awareness 8
 Stealth 5
 Sealed
@@ -85,7 +85,7 @@ statline 15 20 12 19 12 13 6 9
 *CLUE_SURVIVAL <*SURVIVAL_GetMeatOrDragonHeart 110 dragon>
 RangedCombat 5
 CloseCombat 5
-Dodge 4
+Dodge 10
 Awareness 3
 Initiative 3
 Vitality 7
@@ -140,7 +140,7 @@ MonsterTV 80
 DomTarget 30
 RangedCombat 4
 CloseCombat 5
-Dodge 5
+Dodge 8
 Initiative 3
 Vitality 7
 sub
@@ -177,7 +177,7 @@ sdl_colors <180 155 88 245 213 150 208 0 51>
 MonsterTV 115
 RangedCombat 6
 CloseCombat 2
-Dodge 5
+Dodge 11
 Initiative 3
 Vitality 8
 sub
@@ -230,7 +230,7 @@ statline 17 19 16 15 8 16 7 9
 *CLUE_SURVIVAL <*SURVIVAL_GetMeatOrFlameGlandOrDragonHeart 100 dragon>
 RangedCombat 4
 CloseCombat 9
-Dodge 5
+Dodge 10
 Initiative 1
 Vitality 3
 sub
@@ -292,7 +292,7 @@ statline 16 15 14 17 9 14 5 10
 *CLUE_SURVIVAL <*SURVIVAL_GetMeatOrFlameGlandOrDragonHeart 84 dragon>
 RangedCombat 4
 CloseCombat 5
-Dodge 4
+Dodge 8
 Initiative 1
 Vitality 3
 sub
@@ -344,7 +344,7 @@ statline 10 4 8 9 2 2 2 2
 MonsterTV 40
 RangedCombat 3
 CloseCombat 3
-Dodge 3
+Dodge 5
 sub
 torso
 	sub
@@ -386,7 +386,7 @@ sdl_colors <150 112 89 199 188 162 100 200 0>
 sdl_portrait <por_x_cyclops.png>
 RangedCombat 7
 CloseCombat 7
-Dodge 6
+Dodge 13
 Toughness 10
 Initiative 10
 sealed
@@ -443,7 +443,7 @@ CHAT_ATTACK1 <You have no chance to survive. Make your time.>
 CHAT_ATTACK2 <You will be exterminated.>
 RangedCombat 7
 CloseCombat 7
-Dodge 6
+Dodge 13
 Toughness 10
 Initiative 10
 sealed
@@ -522,7 +522,7 @@ sdl_colors <200 160 120 240 220 200 100 200 0>
 sdl_portrait <por_x_cyclops.png>
 RangedCombat 4
 CloseCombat 4
-Dodge 4
+Dodge 9
 sealed
 sub
 head
@@ -562,7 +562,7 @@ genepool <HUNTER-X>
 statline 23 25 12 17 8 12 10 4
 RangedCombat 7
 CloseCombat 4
-Dodge 7
+Dodge 12
 Initiative 6
 Vitality 8
 sub
@@ -624,7 +624,7 @@ statline 19 17 16 15 6 7 5 4
 Regen
 CloseCombat 7
 RangedCombat 7
-Dodge 8
+Dodge 13
 Initiative 5
 Vitality 8
 sub
@@ -669,7 +669,7 @@ habitat <>
 statline 22 17 16 15 5 8 8 4
 RangedCombat 7
 CloseCombat 7
-Dodge 7
+Dodge 10
 Initiative 2
 Vitality 4
 SpotWeakness 7
@@ -718,7 +718,7 @@ habitat <>
 statline 18 15 15 14 7 5 13 4
 CloseCombat 5
 RangedCombat 7
-Dodge 6
+Dodge 9
 Initiative 1
 Vitality 2
 sub
@@ -856,7 +856,7 @@ sdl_colors <115 95 85 170 160 130 112 50 50>
 MonsterTV 52
 RangedCombat 2
 CloseCombat 5
-Dodge 5
+Dodge 7
 Awareness 7
 sub
 head
@@ -898,7 +898,7 @@ sdl_colors <115 95 85 170 160 130 112 50 50>
 MonsterTV 44
 RangedCombat 2
 CloseCombat 5
-Dodge 5
+Dodge 7
 Awareness 7
 sub
 head
@@ -940,7 +940,7 @@ statline 13 15 12 13 10 11 7 10
 MonsterTV 40
 RangedCombat 2
 CloseCombat 5
-Dodge 5
+Dodge 7
 Awareness 7
 sub
 head
@@ -970,7 +970,7 @@ habitat <>
 statline 12 15 10 15 4 7 1 1
 MonsterTV 48
 CloseCombat 5
-Dodge 2
+Dodge 5
 Vitality 6
 Awareness 4
 SpotWeakness 3
@@ -997,7 +997,7 @@ statline 10 10 10 10 10 10 10 10
 MonsterTV 30
 Biotech
 RangedCombat 3
-Dodge 3
+Dodge 5
 Awareness 3
 sub
 head
@@ -1059,7 +1059,7 @@ statline 13 15 9 10 2 2 1 1
 MonsterTV 82
 RangedCombat 5
 CloseCombat 7
-Dodge 5
+Dodge 9
 Initiative 5
 Vitality 3
 Toughness 4

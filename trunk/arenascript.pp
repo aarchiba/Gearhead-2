@@ -116,7 +116,7 @@ Procedure InvokeEvent( Event: String; GB: GameBoardPtr; Source: GearPtr; var Tri
 
 Procedure AddLancemate( GB: GameBoardPtr; NPC: GearPtr );
 Function AddLancemateFrontEnd( GB: GameBoardPtr; PC,NPC: GearPtr; CanCancel: Boolean ): Boolean;
-Procedure RemoveLancemate( GB: GameBoardPtr; NPC: GearPtr; DoMessage: Boolean );
+Procedure RemoveLancemate( GB: GameBoardPtr; Mek: GearPtr; DoMessage: Boolean );
 
 Procedure HandleInteract( GB: GameBoardPtr; PC,NPC,Persona: GearPtr );
 Procedure DoTalkingWIthNPC( GB: GameBoardPtr; PC,Mek: GearPtr; ByTelephone: Boolean );
@@ -599,7 +599,7 @@ var
 					PlaceMemoPhoneCall( PC , M^.Info );
 					D := -1;
 				end;
-			until D = -1;
+			until ( D = -1 ) or not KeepPlayingSC( GB );
 
 			DisposeSAtt( MemoList );
 			DisposeRPGMenu( RPM );
@@ -5402,6 +5402,8 @@ var
 begin
 	{ Make sure we've got an NPC to deal with. }
 	if I_NPC = Nil then Exit;
+	{ Also make sure the NPC isn't currently a member of the team. }
+	if NAttValue( I_NPC^.NA , NAG_Location , NAS_Team ) = NAV_LancemateTeam then Exit;
 
 	{ Need two more available lancemate points than are currently in use. }
 	if CanJoinLance( GB , I_PC , I_NPC ) then begin
@@ -5419,13 +5421,21 @@ begin
 	end;
 end;
 
-Procedure RemoveLancemate( GB: GameBoardPtr; NPC: GearPtr; DoMessage: Boolean );
+Procedure RemoveLancemate( GB: GameBoardPtr; Mek: GearPtr; DoMessage: Boolean );
 	{ Remove NPC from the party. }
 	{ If this location isn't a good one for the LM, move the LM to a better place. }
 var
-	DestScene: GearPtr;
+	NPC,DestScene: GearPtr;
 	msg: String;
 begin
+	if Mek^.G = GG_Mecha then begin
+		NPC := ExtractPilot( Mek );
+		if NPC = Nil then Exit;
+		DeployGear( GB , NPC , False );
+	end else begin
+		NPC := Mek;
+	end;
+
 	if IsInvCom( GB^.Scene ) or ( not IsSafeArea( GB ) ) then begin
 		{ This isn't a good place for the NPC to stay. Better move it }
 		{ to somewhere else. }
@@ -5438,6 +5448,7 @@ begin
 			msg := ReplaceHash( MsgString( 'QUIT_LANCE_GO' ) , GearName( DestScene ) );
 
 			{ Step Three- Delink the lancemate and send it there. }
+			{  Note that NPC might actually be the NPC's mecha. Deal with it. }
 			DelinkGearForMovement( GB , NPC );
 			InsertInvCom( DestScene , NPC );
 			SetSAtt( NPC^.SA , 'TEAMDATA <Ally>' );
@@ -5588,6 +5599,10 @@ begin
 
 		end else if N = CMD_Join then begin
 			AttemptJoin( GB );
+			{ After attempting to join, remove the JOIN option. }
+			MI := SetItemByValue( IntMenu , CMD_Join );
+			if MI <> Nil then RemoveRPGMenuItem( IntMenu , MI );
+			SetItemByPosition( IntMenu , 1 );
 
 		end else if N = CMD_Quit then begin
 			HandleQuit( GB );
