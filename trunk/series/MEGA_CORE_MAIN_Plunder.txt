@@ -1,0 +1,53 @@
+%% *:CS_Plunder Content
+%%
+%%
+%% The PC has been sent to plunder a ship, warehouse, or whatever else sort of
+%% thing a pirate might be inclined to attack. Note that this is quite likely to
+%% make the PC some enemies... Or maybe even upgrade their enemy.
+%%
+%% When this subplot concludes, it sets one of the following triggers:
+%%  .%id%_%plotid%_GoWin
+%%  .%id%_%plotid%_GoLoss
+%%
+%% This is a MAIN COURSE subplot, and as such should alter the story context.
+%%
+%%
+%%  Param1: The outdoors location of the target.
+%%
+
+Content
+	name <Raid Corporate Cruiser (L5PAT)>
+	desc <The ship you're raiding? Belongs to a corporation. Now they hate you.>
+	requires <*:CS_Plunder F:-- (L:FCOMS|L:RISHI|L:CRIHN|L:MAQUI|L:BOHEM|L:REDMA)>
+
+	% Element1 is the outdoors scene for the ship
+	% Element2 is the encounter for the ship
+	% Element3 is the corporate faction
+	Element2 <Prefab>
+	Place2 <1>
+	Element3 <Faction (MUGLE|COMET|HOELL) -PCFAC -Ally>
+
+	% P%id%01 = Initialization Counter
+
+	% At startup, activate the cruiser.
+	update <if= P%id%01 0 P= %id%01 1  SetPlotStatus %plotid1% %id1%>
+
+	% The narrative hooks for the BASE_PlunderShip encounter.
+	%   "This is where the magic happens."
+	.%id1%_%plotid1%_GoAttackShip  <>
+	.%id1%_%plotid1%_GoBoardShip   <>
+	.%id1%_%plotid1%_GoPlunderOK   <     WinSubPlot %plotid%     Trigger0 .%id%_%plotid%_GoWin>
+	.%id1%_%plotid1%_GoPlunderBad  <     WinSubPlot %plotid%     Trigger0 .%id%_%plotid%_GoWin>
+	.%id1%_%plotid1%_GoPlunderFail <     LoseSubPlot %plotid%    Trigger0 .%id%_%plotid%_GoLoss>
+
+
+	% SubPlot1 is the plundering base.
+	SubPlot1 <*:CS_BASE_PlunderShip 1 2 3>
+
+	inv
+		STC CORE-STATIONARY
+		name <The S.S. %r%>
+	end
+
+
+

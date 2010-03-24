@@ -260,9 +260,9 @@ Content
 			name <Enemies>
 			SetEnemy 1 4
 			SetAlly 3 5
-			Deploy <if= PlotStatus %plotid% %id% SetSelfFaction &EnemyFac   ifDCCompleted OFF_5 else GoCheckOFF4 WMecha 2 StoryDL 200>
-			GoCheckOFF4 <ifDCCompleted OFF_4 else GoBigBattle WMecha 2 StoryDL 300>
-			GoBigBattle <WMecha 2 StoryDL 400>
+			Deploy <if= PlotStatus %plotid% %id% SetSelfFaction &EnemyFac   ifDCCompleted OFF_5 else GoCheckOFF4 WMecha 2 80 275>
+			GoCheckOFF4 <ifDCCompleted OFF_4 else GoBigBattle WMecha 2 90 300>
+			GoBigBattle <WMecha 2 100 300>
 			home <Enemy Zone>
 
 			team 3
@@ -274,9 +274,9 @@ Content
 			name <Allies>
 			setenemy 2 3 5
 			setally 1
-			Deploy <if= PlotStatus %plotid% %id% &ifDefensesRallied   SetSelfFaction &AllyFac   ifDCCompleted DEF_5 else GoCheckDef4 WMecha 4 StoryDL 250>
-			GoCheckDef4 <ifDCCompleted DEF_4 else GoSmallAllies WMecha 4 StoryDL 190>
-			GoSmallAllies <WMecha 4 StoryDL 125>
+			Deploy <if= PlotStatus %plotid% %id% &ifDefensesRallied   SetSelfFaction &AllyFac   ifDCCompleted DEF_5 else GoCheckDef4 WMecha 4 100 150>
+			GoCheckDef4 <ifDCCompleted DEF_4 else GoSmallAllies WMecha 4 70 150>
+			GoSmallAllies <WMecha 4 40 100>
 			home <Ally Zone>
 
 			team 5
