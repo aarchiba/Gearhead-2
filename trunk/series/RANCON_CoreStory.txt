@@ -9,6 +9,31 @@
 %%
 
 %%
+%% *CS_SHIP_DISASTER
+%%
+%%	The PC wanted to take this ship from the inside. Well, there's a pretty
+%%	good chance of encountering something dangerous on board.
+%%
+
+Content
+	requires <*CS_SHIP_DISASTER (!Ne|!Lo)>
+	Element1 <Prefab>
+	Team1 <Guards>
+	minimap <      ...  .1.  ...      >
+	inv
+		Monster Androbot
+	end
+
+Content
+	requires <*CS_SHIP_DISASTER -!Ne -!Lo>
+	Element1 <Prefab>
+	Team1 <Guards>
+	minimap <      ...  .1.  ...      >
+	inv
+		Monster Sentinel
+	end
+
+%%
 %% *CS_SHIP_SYSTEMS
 %%
 %%	Some control systems for a spaceship. You need two teams to go

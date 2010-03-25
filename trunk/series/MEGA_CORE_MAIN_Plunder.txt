@@ -5,6 +5,8 @@
 %% thing a pirate might be inclined to attack. Note that this is quite likely to
 %% make the PC some enemies... Or maybe even upgrade their enemy.
 %%
+%% The target is activated as soon as this subplot is.
+%%
 %% When this subplot concludes, it sets one of the following triggers:
 %%  .%id%_%plotid%_GoWin
 %%  .%id%_%plotid%_GoLoss
@@ -18,7 +20,8 @@
 Content
 	name <Raid Corporate Cruiser (L5PAT)>
 	desc <The ship you're raiding? Belongs to a corporation. Now they hate you.>
-	requires <*:CS_Plunder F:-- (L:FCOMS|L:RISHI|L:CRIHN|L:MAQUI|L:BOHEM|L:REDMA)>
+	requires <*:CS_Plunder F:-- (L:FCOMS|L:RISHI|L:CRIHN|L:MAQUI|L:BOHEM|L:REDMA) -P:PRIVA>
+	changes <F:++>
 
 	% Element1 is the outdoors scene for the ship
 	% Element2 is the encounter for the ship
@@ -34,20 +37,61 @@ Content
 
 	% The narrative hooks for the BASE_PlunderShip encounter.
 	%   "This is where the magic happens."
-	.%id1%_%plotid1%_GoAttackShip  <>
-	.%id1%_%plotid1%_GoBoardShip   <>
-	.%id1%_%plotid1%_GoPlunderOK   <     WinSubPlot %plotid%     Trigger0 .%id%_%plotid%_GoWin>
-	.%id1%_%plotid1%_GoPlunderBad  <     WinSubPlot %plotid%     Trigger0 .%id%_%plotid%_GoWin>
-	.%id1%_%plotid1%_GoPlunderFail <     LoseSubPlot %plotid%    Trigger0 .%id%_%plotid%_GoLoss>
+	.%id1%_%plotid1%_GoAttackShip  <Alert %id%01  History %id%02  &SetEnemyFac %3%>
+	.%id1%_%plotid1%_GoBoardShip   <Alert %id%01  History %id%02  &SetEnemyFac %3%>
+	.%id1%_%plotid1%_GoPlunderOK   <SetPlotStatus %plotid2% %id2%   WinSubPlot %plotid%   Trigger0 .%id%_%plotid%_GoWin>
+	.%id1%_%plotid1%_GoPlunderBad  <SetPlotStatus %plotid3% %id3%   WinSubPlot %plotid%   Trigger0 .%id%_%plotid%_GoWin>
+	.%id1%_%plotid1%_GoPlunderFail <LoseSubPlot %plotid%    Trigger0 .%id%_%plotid%_GoLoss>
 
+	Msg%id%01 <This ship bears the markings of %name3%. With any luck they'll have all kinds of merchandise to steal.>
+	Msg%id%02 <You attacked a ship belonging to %name3%.>
 
-	% SubPlot1 is the plundering base.
+	% SubPlot1 is the plundering core.
+	% SubPlot2 is the good loot
+	% SubPlot3 is whatever the PC gets for blowing up the ship
 	SubPlot1 <*:CS_BASE_PlunderShip 1 2 3>
+	SubPlot2 <*:CS_FilthyLucre_OK 3>
+	SubPlot3 <*:CS_FilthyLucre_Bad 3>
 
 	inv
 		STC CORE-STATIONARY
 		name <The S.S. %r%>
 	end
+
+
+%%
+%% *:CS_FilthyLucre_OK Content
+%% *:CS_FilthyLucre_Bad Content
+%%
+%% The PC has just robbed someone. Give them their filthy lucre! Just set the
+%% plotstatus to give the loot and cancel this subplot.
+%%
+%% Note that *CORE_EMO_ should get better loot than other plunder missions.
+%% 
+%%  Param1: The faction wot is being robbed.
+%%
+
+Content
+	name <Easy Nothing But Money>
+	requires <*CS_FilthyLucre_OK *CORE_EMO_>
+
+	update <CashPrize Reward StoryDL 1500  EndPlot>
+
+Content
+	name <Difficult Money, Apparently>
+	requires <*CS_FilthyLucre_OK -*CORE_EMO_>
+
+	update <CashPrize Reward StoryDL 750  EndPlot>
+
+Content
+	name <Nothing But Not Much Cash>
+	requires <*CS_FilthyLucre_Bad>
+
+	update <CashPrize Reward StoryDL 100  EndPlot>
+
+
+
+
 
 
 

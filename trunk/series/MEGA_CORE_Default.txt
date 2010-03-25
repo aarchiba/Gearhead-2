@@ -173,7 +173,7 @@ Content
 		MonkeyMap
 		MapWidth 30
 		MapHeight 30
-		NeededCells 3
+		NeededCells 4
 
 		% L1 = Encounter Over Counter
 		% L2 = Initialization Counter
@@ -216,7 +216,9 @@ Content
 		Msg6 <An announcement sounds. "An intruder may have infiltrated the ship. Report all suspicious activity to Captain %name5%.">
 
 		% Content1: The systems you need to disable.
+		% Content2: A very good chance of a disaster room.
 		Content1 <Variety 3 3 Sub *CS_SHIP_SYSTEMS>
+		Content2 <Some 1 55 Sub *CS_SHIP_DISASTER>
 
 		sub
 			team 1
