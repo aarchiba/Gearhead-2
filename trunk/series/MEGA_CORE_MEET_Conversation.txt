@@ -13,10 +13,10 @@
 %%
 
 %%  ****************************
-%%  ***   THE  BASIC  FOUR   ***
+%%  ***   THE  BASIC  FIVE   ***
 %%  ****************************
 %%
-%% These four conversation subplots cover the four MAIN_COURSE types.
+%% These five conversation subplots cover the five MAIN_COURSE types.
 %%
 
 Content
@@ -208,6 +208,49 @@ Content
 		stc CORE-ACTIVATABLE
 		name <%name1%'s Mission>
 	end
+
+Content
+	name <Basic Plunder Mission>
+	desc <The PC will be asked to go fight some mecha.>
+	requires <*zzzCS_Conversation (1:PCFAC|1:THIEF) P:PCFAC (P:CRIME|P:PRIVA) -*CORE_R_>
+
+	% E1 is the NPC that the PC will speak with
+	% E2 is the outdoors location where the encounter will be placed
+	element2 <Scene Environs !Near -7>
+
+	% Fail Conditions:
+	% - Mission giver dies before encounter is activated
+
+	end <if= PlotStatus %plotid1% 0 ifNPCDead %1% LoseEpisode>
+
+	.%id1%_%plotid1%_GoWin <SetPlotStatus %plotid2% %id2%     SMemo %id%01>
+	.%id1%_%plotid1%_GoLoss <SetPlotStatus %plotid3% %id3%    SMemo %id%02>
+
+	Msg%id%01 <You won the mission. You should go see %name1% at \EXACT_SCENE NPCScene %1% about the reward.>
+	Msg%id%02 <You lost the mission. You should go report to %name1% at \EXACT_SCENE NPCScene %1% .>
+
+	%% SubPlot1 is the combat encounter itself
+	%% SubPlot2 is the winning condition
+	%% SubPlot3 is the loss condition
+	SubPlot1 <*:CS_Plunder 2>
+	SubPlot2 <*CS_WinGoal&NoCash 1>
+	SubPlot3 <*CS_LoseGoal 1>
+
+	sub
+		Persona 1
+		greeting <if= PlotStatus %plotid1% 0 else .%id%_GoRemind if# PlotStatus %plotid% %id% else .%id%_GoOfferMission Goto %pop%>
+		*.%id%_GoOfferMission <*CS_C_Greeting .%id%_GoBriefing>
+		*.%id%_GoRemind <*GenericMissionReminder>
+		.%id%_GoBriefing <NewChat Say %id%01 AddChat %id%01 AddChat %id%02>
+		*result%id%01 <*GoodLuckPlusHint .%id%_GoR1Exit %id1%>
+		.%id%_GoR1Exit <SetPlotStatus %plotid1% %id1%>
+		*result%id%02 <*RejectMission .%id%_GoR2Exit>
+		.%id%_GoR2Exit <LoseEpisode>
+		Msg%id%01 <There's a ship passing through \SCENE &EpisodeScene . I want you to make sure it doesn't make it out of port... Your reward will be whatever loot you can capture from it.>
+		Prompt%id%01 <I'll do it.>
+		Prompt%id%02 <Sorry, but sacking and pillaging isn't my thing.>
+	end
+
 
 %%  *******************
 %%  ***   DEFAULT   ***

@@ -52,6 +52,9 @@ Content
 
 	.%id1%_%plotid1%_GoPeacefulEntry <P= %id%02 1>
 
+	% This hint will tell the PC where to find the ship.
+	HINT_%id% <You'll find %name2% in \EXACT_SCENE %1% .>
+
 	% SubPlot1 is the PeacefulEntry task
 	SubPlot1 <*:CS_PeacefulEntry_Location 2>
 
@@ -171,8 +174,8 @@ Content
 		%% Leaving the ship for any reason results in a loss.
 
 		MonkeyMap
-		MapWidth 30
-		MapHeight 30
+		MapWidth 50
+		MapHeight 50
 		NeededCells 4
 
 		% L1 = Encounter Over Counter

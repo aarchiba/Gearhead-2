@@ -35,6 +35,9 @@ Content
 	% At startup, activate the cruiser.
 	update <if= P%id%01 0 P= %id%01 1  SetPlotStatus %plotid1% %id1%>
 
+	% Pass the hint-buck to the ship being plundered.
+	HINT_%id% <:%id1%>
+
 	% The narrative hooks for the BASE_PlunderShip encounter.
 	%   "This is where the magic happens."
 	.%id1%_%plotid1%_GoAttackShip  <Alert %id%01  History %id%02  &SetEnemyFac %3%>
@@ -44,6 +47,50 @@ Content
 	.%id1%_%plotid1%_GoPlunderFail <LoseSubPlot %plotid%    Trigger0 .%id%_%plotid%_GoLoss>
 
 	Msg%id%01 <This ship bears the markings of %name3%. With any luck they'll have all kinds of merchandise to steal.>
+	Msg%id%02 <You attacked a ship belonging to %name3%.>
+
+	% SubPlot1 is the plundering core.
+	% SubPlot2 is the good loot
+	% SubPlot3 is whatever the PC gets for blowing up the ship
+	SubPlot1 <*:CS_BASE_PlunderShip 1 2 3>
+	SubPlot2 <*:CS_FilthyLucre_OK 3>
+	SubPlot3 <*:CS_FilthyLucre_Bad 3>
+
+	inv
+		STC CORE-STATIONARY
+		name <The S.S. %r%>
+	end
+
+Content
+	name <Privateer's First Raid>
+	desc <The ship you're raiding? Belongs to an enemy faction.>
+	requires <*:CS_Plunder F:-- P:PRIVA>
+	changes <F:++>
+
+	% Element1 is the outdoors scene for the ship
+	% Element2 is the encounter for the ship
+	% Element3 is the enemy faction
+	Element2 <Prefab>
+	Place2 <1>
+	Element3 <Faction (AEGIS|AEGSF|REDMA)>
+
+	% P%id%01 = Initialization Counter
+
+	% At startup, activate the cruiser.
+	update <if= P%id%01 0 P= %id%01 1  SetPlotStatus %plotid1% %id1%>
+
+	% Pass the hint-buck to the ship being plundered.
+	HINT_%id% <:%id1%>
+
+	% The narrative hooks for the BASE_PlunderShip encounter.
+	%   "This is where the magic happens."
+	.%id1%_%plotid1%_GoAttackShip  <Alert %id%01  History %id%02  &SetEnemyFac %3%>
+	.%id1%_%plotid1%_GoBoardShip   <Alert %id%01  History %id%02  &SetEnemyFac %3%>
+	.%id1%_%plotid1%_GoPlunderOK   <SetPlotStatus %plotid2% %id2%   WinSubPlot %plotid%   Trigger0 .%id%_%plotid%_GoWin>
+	.%id1%_%plotid1%_GoPlunderBad  <SetPlotStatus %plotid3% %id3%   WinSubPlot %plotid%   Trigger0 .%id%_%plotid%_GoWin>
+	.%id1%_%plotid1%_GoPlunderFail <LoseSubPlot %plotid%    Trigger0 .%id%_%plotid%_GoLoss>
+
+	Msg%id%01 <This ship bears the markings of %name3%. With any luck they'll have some cargo worth stealing.>
 	Msg%id%02 <You attacked a ship belonging to %name3%.>
 
 	% SubPlot1 is the plundering core.
@@ -73,21 +120,24 @@ Content
 
 Content
 	name <Easy Nothing But Money>
-	requires <*CS_FilthyLucre_OK *CORE_EMO_>
+	requires <*:CS_FilthyLucre_OK *CORE_EMO_>
 
-	update <CashPrize Reward StoryDL 1500  EndPlot>
+	update <Alert %id%01  CashPrize Reward StoryDL 1500  CancelSubPlot %plotid%>
+	Msg%id%01 <You raid the cargo hold, finding valuables worth $ \VAL Reward StoryDL 1500 .>
 
 Content
 	name <Difficult Money, Apparently>
-	requires <*CS_FilthyLucre_OK -*CORE_EMO_>
+	requires <*:CS_FilthyLucre_OK -*CORE_EMO_>
 
-	update <CashPrize Reward StoryDL 750  EndPlot>
+	update <Alert %id%01  CashPrize Reward StoryDL 750  CancelSubPlot %plotid%>
+	Msg%id%01 <You raid the cargo hold, finding valuables worth $ \VAL Reward StoryDL 1500 .>
 
 Content
 	name <Nothing But Not Much Cash>
-	requires <*CS_FilthyLucre_Bad>
+	requires <*:CS_FilthyLucre_Bad>
 
-	update <CashPrize Reward StoryDL 100  EndPlot>
+	update <Alert %id%01  CashPrize Reward StoryDL 100  CancelSubPlot %plotid%>
+	Msg%id%01 <There isn't much left in the cargo hold. You find valuables worth $ \VAL Reward StoryDL 1500 .>
 
 
 
