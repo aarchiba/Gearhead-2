@@ -47,6 +47,8 @@ Procedure TacticsTimeInfo( GB: GameBoardPtr );
 
 Procedure ConcertStatus( PC: GearPtr; AL: AudienceList );
 
+Procedure PersonadexInfo( NPC,HomeTown: GearPtr; Z: VGFX_Zone );
+
 
 implementation
 
@@ -861,17 +863,7 @@ begin
 		TextOut( MyDest.X + ( MyDest.W - Length( msg ) ) div 2 , MyDest.Y + 2 , msg );
 	end;
 	Renown := NAttValue( Source^.NA , NAG_CharDescription , NAS_Renowned );
-	if Renown > 80 then begin
-		msg := MsgString( 'AHQRANK_5' );
-	end else if Renown > 60 then begin
-		msg := MsgString( 'AHQRANK_4' );
-	end else if Renown > 40 then begin
-		msg := MsgString( 'AHQRANK_3' );
-	end else if Renown > 20 then begin
-		msg := MsgString( 'AHQRANK_2' );
-	end else begin
-		msg := MsgString( 'AHQRANK_1' );
-	end;
+	msg := RenownDesc( Renown );
 	TextColor( Green );
 	TextOut( MyDest.X + ( MyDest.W - Length( msg ) ) div 2 , MyDest.Y + 3 , msg );
 end;
@@ -921,6 +913,43 @@ begin
 			end;
 		end;
 	end;
+end;
+
+Procedure PersonadexInfo( NPC,HomeTown: GearPtr; Z: VGFX_Zone );
+	{ Display personality info about this NPC. }
+var
+	MyDest: VGFX_Rect;
+	msg: String;
+begin
+	MyDest := ZoneToRect( Z );
+	ClipZone( MyDest );
+
+	TextColor( White );
+	TextOut( MyDest.X , MyDest.Y , MsgString( 'PDEX_Attitude' ) + ':'  );
+	TextOut( MyDest.X , MyDest.Y + 1 , MsgString( 'PDEX_Motivation' ) + ':'  );
+	TextOut( MyDest.X , MyDest.Y + 2 , MsgString( 'PDEX_Location' ) + ':'  );
+	TextOut( MyDest.X , MyDest.Y + 3 , MsgString( 'PDEX_SkillRank' ) + ':'  );
+
+	TextColor( LightGreen );
+	msg := MsgString( 'Attitude_' + BStr( NAttValue( NPC^.NA , NAG_XXRan , NAS_XXChar_Attitude ) ) );
+	TextOut( MyDest.X + MyDest.W - Length( Msg ) , MyDest.Y , msg );
+
+	msg := MsgString( 'Motivation_' + BStr( NAttValue( NPC^.NA , NAG_XXRan , NAS_XXChar_Motivation ) ) );
+	TextOut( MyDest.X + MyDest.W - Length( Msg ) , MyDest.Y + 1 , msg );
+
+	if HomeTown = Nil then msg := '???'
+	else msg := GearName( HomeTown );
+	TextOut( MyDest.X + MyDest.W - Length( Msg ) , MyDest.Y + 2 , msg );
+
+	if IsACombatant( NPC ) then msg := RenownDesc( NAttValue( NPC^.NA , NAG_CharDescription , NAS_Renowned ) )
+	else msg := 'N/A';
+	TextOut( MyDest.X + MyDest.W - Length( Msg ) , MyDest.Y + 3 , msg );
+
+	MyDest.Y := MyDest.Y + 4;
+	MyDest.H := MyDest.H - 4;
+	GameMsg( SAttValue( NPC^.SA , 'BIO' ) , MyDest , LightGray );
+
+	MaxClipZone;
 end;
 
 end.

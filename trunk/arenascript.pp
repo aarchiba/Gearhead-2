@@ -208,7 +208,7 @@ Function BasicSkillTarget( Renown: Integer ): Integer;
 var
 	it: Integer;
 begin
-	it := Renown div 8 + 2;
+	it := Renown div 8 + 3;
 	if it < 5 then it := 5;
 	BasicSkillTarget := it;
 end;
@@ -218,8 +218,8 @@ Function HardSkillTarget( Renown: Integer ): Integer;
 var
 	it: Integer;
 begin
-	it := Renown div 7 + 5;
-	if it < 8 then it := 8;
+	it := Renown div 7 + 10;
+	if it < 9 then it := 9;
 	HardSkillTarget := it;
 end;
 

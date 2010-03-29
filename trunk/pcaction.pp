@@ -41,7 +41,7 @@ uses ability,action,aibrain,arenacfe,arenascript,backpack,
      ghprop,ghswag,ghweapon,interact,menugear,movement,
      playwright,rpgdice,skilluse,texutil,ui4gh,grabgear,
      narration,description,ghintrinsic,training,ghsensor,
-     wmonster,
+     wmonster,infodisplay,
 {$IFDEF ASCII}
 	vidgfx,vidmap,vidmenus,vidinfo;
 {$ELSE}
@@ -449,6 +449,7 @@ const
 	m_memo = 2;
 	m_rumor = 3;
 	m_news = 4;
+	m_Personadex = 5;
 var
 	MainMenu: RPGMenuPtr;
 	A: Integer;
@@ -460,6 +461,7 @@ begin
 		AddRPGMenuItem( MainMenu , MsgString( 'MEMO_ReadRumors' ) , m_Rumor );
 	end;
 	if HasPCommCapability( PC , NAS_News ) then AddRPGMenuItem( MainMenu , MsgString( 'MEMO_ReadNews' ) , m_News );
+	AddRPGMenuItem( MainMenu , MsgString( 'MEMO_Personadex' ) , m_Personadex );
 
 	if MainMenu^.NumItem < 1 then begin
 		DialogMsg( MsgString( 'MEMO_NoBrowser' ) );
@@ -469,6 +471,7 @@ begin
 			m_rumor: BrowseMemoType( GB , 'RUMEMO' );
 			m_News: BrowseMemoType( GB , 'NEWS' );
 			m_EMail: BrowseMemoType( GB , 'EMAIL' );
+			m_Personadex: View_Personadex( GB );
 		end;
 
 	end else begin
@@ -482,6 +485,7 @@ begin
 				m_rumor: BrowseMemoType( GB , 'RUMEMO' );
 				m_News: BrowseMemoType( GB , 'NEWS' );
 				m_EMail: BrowseMemoType( GB , 'EMAIL' );
+				m_Personadex: View_Personadex( GB );
 			end;
 
 		until ( A = -1 ) or not KeepPlayingSC( GB );

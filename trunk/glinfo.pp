@@ -52,6 +52,9 @@ Procedure TacticsTimeInfo( GB: GameBoardPtr );
 
 Procedure ConcertStatus( PC: GearPtr; AL: AudienceList );
 
+Procedure PersonadexInfo( NPC,HomeTown: GearPtr; Z: TSDL_Rect );
+
+
 implementation
 
 uses 	sdl_ttf,description,texutil,gearutil,
@@ -1176,17 +1179,7 @@ begin
 	end;
 	AI_NextLine;
 	Renown := NAttValue( Source^.NA , NAG_CharDescription , NAS_Renowned );
-	if Renown > 80 then begin
-		AI_Title( MsgString( 'AHQRANK_5' ) , InfoGreen );
-	end else if Renown > 60 then begin
-		AI_Title( MsgString( 'AHQRANK_4' ) , InfoGreen );
-	end else if Renown > 40 then begin
-		AI_Title( MsgString( 'AHQRANK_3' ) , InfoGreen );
-	end else if Renown > 20 then begin
-		AI_Title( MsgString( 'AHQRANK_2' ) , InfoGreen );
-	end else begin
-		AI_Title( MsgString( 'AHQRANK_1' ) , InfoGreen );
-	end;
+	AI_Title( RenownDesc( Renown ) , InfoGreen );
 end;
 
 Procedure TacticsTimeInfo( GB: GameBoardPtr );
@@ -1254,6 +1247,116 @@ begin
 	DrawSprite( Backdrop_Sprite , ZONE_ConcertPhoto , 0 );
 	SS := LocateSprite( PortraitName( PC ) , SAttValue( PC^.SA , 'SDL_COLORS' ) , 100 , 150 );
 	DrawSprite( SS , ZONE_ConcertPhoto , 0 );
+end;
+
+Procedure PersonadexInfo( NPC,HomeTown: GearPtr; Z: TSDL_Rect );
+	{ Display personality info about this NPC. }
+	Procedure PersonaStats( MyZone: TSDL_Rect );
+		{ Display some brief stats on this character. }
+		{ This is the information to the right of the gear's portrait. }
+	var
+		T,X0,X1,S: Integer;
+		MyDest: TSDL_Rect;
+		C: TSDL_Color;
+		Procedure PStat_NextLine;
+		begin
+			MyDest.Y := MyDest.Y + TTF_FontLineSkip( Game_Font );
+		end;
+	begin
+		X1 := MyZone.X + MyZone.W - 5;
+		X0 := MyZone.X + 5;
+		MyDest.Y := MyZone.Y;
+
+		MyDest.X := X0;
+		MyDest.H := TTF_FontLineSkip( Game_Font ) * 2;
+		QuickTextC( GearName( NPC ) , MyDest , StdWhite , game_font );
+		MyDest.Y := MyDest.Y + 2 * TTF_FontLineSkip( Game_Font );
+
+		QuickText( MsgString( 'PDEX_Attitude' ) , MyDest , NeutralGrey , game_font );
+		PStat_NextLine;
+
+		MyDest.X := X1;
+		QuickTextRJ( MsgString( 'Attitude_' + BStr( NAttValue( NPC^.NA , NAG_XXRan , NAS_XXChar_Attitude ) ) ) , MyDest , InfoGreen , game_font );
+		PStat_NextLine;
+
+		MyDest.X := X0;
+		QuickText( MsgString( 'PDEX_Motivation' ) , MyDest , NeutralGrey , game_font );
+		PStat_NextLine;
+
+		MyDest.X := X1;
+		QuickTextRJ( MsgString( 'Motivation_' + BStr( NAttValue( NPC^.NA , NAG_XXRan , NAS_XXChar_Motivation ) ) ) , MyDest , InfoGreen , game_font );
+		PStat_NextLine;
+
+		MyDest.X := X0;
+		QuickText( MsgString( 'PDEX_Location' ) , MyDest , NeutralGrey , game_font );
+		PStat_NextLine;
+
+		MyDest.X := X1;
+		if HomeTown <> Nil then begin
+			QuickTextRJ( GearName( HomeTown ) , MyDest , InfoGreen , game_font );
+		end else begin
+			QuickTextRJ( '???' , MyDest , InfoGreen , game_font );
+		end;
+		PStat_NextLine;
+
+		MyDest.X := X0;
+		QuickText( MsgString( 'PDEX_SkillRank' ) , MyDest , NeutralGrey , game_font );
+		PStat_NextLine;
+
+		MyDest.X := X1;
+		if IsACombatant( NPC ) then begin
+			QuickTextRJ( RenownDesc( NAttValue( NPC^.NA , NAG_CharDescription , NAS_Renowned ) ) , MyDest , InfoGreen , game_font );
+		end else begin
+			QuickTextRJ( 'N/A' , MyDest , InfoGreen , game_font );
+		end;
+	end;
+var
+	MyDest: TSDL_Rect;
+	MyText: PSDL_Surface;
+	msg: String;
+	SS: SensibleSpritePtr;
+begin
+	{ Set the clip rectangle. }
+	SDL_SetClipRect( Game_Screen , @Z );
+
+	{ Draw the picture in the upper-left part of the zone. }
+	MyDest.X := Z.X;
+	MyDest.Y := Z.Y;
+	msg := SAttValue( NPC^.SA , 'SDL_COLORS' );
+	SS := LocateSprite( InfoImageName( NPC ) , msg , 100 , 150 );
+	DrawSprite( SS , MyDest , 0 );
+
+	{ Display the brief stats based on gear type. }
+	{ Calculate the brief stats window area. }
+	MyDest.X := Z.X + 100;
+	MyDest.Y := Z.Y;
+	MyDest.W := Z.W - 100;
+	MyDest.H := 150;
+	PersonaStats( MyDest );
+
+	MyDest.X := Z.X;
+	MyDest.Y := Z.Y + 155;
+
+	{ Display the JobAgeGender description. }
+	msg := JobAgeGenderDesc( NPC );
+	if msg <> '' then begin
+		MyText := PrettyPrint( msg , Z.W , InfoGreen , True );
+		if MyText <> Nil then begin
+			SDL_BlitSurface( MyText , Nil , Game_Screen , @MyDest );
+			MyDest.Y := MyDest.Y + MyText^.H + 10;
+			SDL_FreeSurface( MyText );
+		end;
+	end;
+
+	{ Display the biography. }
+	if MyDest.Y < ( Z.Y + Z.H ) then begin
+		MyDest.W := Z.W;
+		MyDest.H := Z.H + Z.Y - MyDest.Y - 5;
+		GameMsg( SAttValue( NPC^.SA , 'BIO' ) , MyDest , InfoGreen );
+	end;
+
+	{ Restore the clip zone. }
+	SDL_SetClipRect( Game_Screen , Nil );
 end;
 
 initialization

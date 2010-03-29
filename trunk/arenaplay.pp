@@ -1082,8 +1082,6 @@ begin
 		{ Finally, hand the PC any money that was found. }
 		PC := LocatePilot( PC );
 		if ( PC <> Nil ) and ( Cash > 0 ) then AddNAtt( PC^.NA , NAG_Experience , NAS_Credits , Cash );
-	end else begin
-		DialogMsg( 'ERROR: No PC on map.' );
 	end;
 end;
 

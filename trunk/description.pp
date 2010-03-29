@@ -41,6 +41,8 @@ Function SkillDescription( N: Integer ): String;
 Function MechaPilotName( Mek: GearPtr ): String;
 Function TeamMateName( M: GearPtr ): String;
 
+Function RenownDesc( Renown: Integer ): String;
+
 
 implementation
 
@@ -613,5 +615,20 @@ begin
 	TeamMateName := msg;
 end;
 
+Function RenownDesc( Renown: Integer ): String;
+	{ Return a description for the provided renown. }
+begin
+	if Renown > 80 then begin
+		RenownDesc := MsgString( 'AHQRANK_5' );
+	end else if Renown > 60 then begin
+		RenownDesc := MsgString( 'AHQRANK_4' );
+	end else if Renown > 40 then begin
+		RenownDesc := MsgString( 'AHQRANK_3' );
+	end else if Renown > 20 then begin
+		RenownDesc := MsgString( 'AHQRANK_2' );
+	end else begin
+		RenownDesc := MsgString( 'AHQRANK_1' );
+	end;
+end;
 
 end.
