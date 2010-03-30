@@ -743,7 +743,7 @@ Content
 		nu4 <Goto nu2>
 		end <SetEncounterInactive %2% ifNPCOK %5% FreezeNPC %5%>
 
-		Msg1 <You spot a group of pirates from the Blades of Crihna. Stationed between you and them, though, is a lance of Silver Knights.>
+		Msg1 <You spot a group of pirates from the Blades of Crihna escorting an unmarked ship. Stationed between you and them, though, is a lance of Silver Knights.>
 		Msg2 <Your reinforcements are here, as promised.>
 		Msg3 <You have defeated the mecha.>
 		Msg4 <You were defeated.>
@@ -779,7 +779,7 @@ Content
 
 		Persona 5
 		special <UNLISTED NOESCAPE>
-		greeting <if= PlotStatus %plotid% %id% else %pop%  EndChat Say %id%01 AddChat %id%01 AddChat %id%02 if= v%id%01 0 v= %id%01 1 History %id%02>
+		greeting <if= PlotStatus %plotid% %id% else %pop%  EndChat Say %id%01 AddChat %id%01 AddChat %id%02 AddChat %id%08 if= v%id%01 0 v= %id%01 1 History %id%02>
 		result%id%01 <EndChat Say %id%03 AddChat %id%03 AddChat %id%04 AddChat %id%07>
 		result%id%02 <EndChat Say %id%04 AddChat %id%05 AddChat %id%06 AddChat %id%07>
 		result%id%03 <EndChat Say %id%05 History %id%06 Retreat 2 &SetEnemyFac %4% PCFEnemy %4% SetDebriefing %id%01  AddReact -d10 SetXXRAttitude %5% XXR_A_Antagonistic>
@@ -787,26 +787,28 @@ Content
 		result%id%05 <Goto result%id%03>
 		result%id%06 <Goto result%id%04>
 		result%id%07 <EndChat Say %id%09 History %id%06 Retreat 2 &SetEnemyFac %4% PCFEnemy %4% SetDebriefing %id%01 AddLawful 1 AddReact d10 SetXXRAttitude %5% XXR_A_IsEqual>
+		result%id%08 <EndChat Say %id%10 AddChat %id%03 AddChat %id%06 AddChat %id%07>
 		Msg%id%01 <Hold your fire. These Blades are escorting a civilian vessel; they did not come here to cause trouble.>
 		Msg%id%02 <You were blocked from some pirated by the Silver Knights.>
-		Msg%id%03 <We are simply responding to a distress call, as per F.C.S. dictate 5247 dash 9. The captain of the Bohemian ship suspected that Rishiri was setting an ambush. It now appears that his suspicions were correct.>
-		Msg%id%03_1 <We are simply responding to a distress call, as per F.C.S. dictate 5247 dash 9. The captain of the Bohemian ship suspected that Rishiri was setting an ambush. It now appears that her suspicions were correct.>
-		Msg%id%04 <Be that as it may, I can't leave the ship defenseless. I ask you one last time to step down.>
-		Msg%id%05 <It appears that's all I can do. We have no standing to challenge you in Dominion space. I only pray that justice be served.>
+		Msg%id%03 <We are simply responding to a distress call, as per F.C.S. dictate 5247 dash 9. The captain of the Bohemian ship told us that they're just passing through... I ask you one last time to stand down.>
+		Msg%id%04 <I have no evidence that these pilots are guilty of anything. How can you expect me to leave their ship defenseless? I ask you one last time to step down.>
+		Msg%id%05 <It appears that you won't listen to reason. Unfortunately, we have no standing to challenge you in Dominion space. I only pray that justice be served.>
 		Msg%id%06 <You sent %name5% away, and fought the Blades.>
 		Msg%id%07 <Was that a challenge? I guess we're now legally entitled to fight! I'll show you what my \CHATNPCMECHA can do.>
 		Msg%id%08 <You fought %name5%'s Alliance patrol.>
 		Msg%id%09 <So you know the law... and here I thought you were just some hotshot rocket spoiling for a fight. We will escort the ship back home ourselves. You can deal with the Blades as you see fit; I trust justice will be served.>
+		Msg%id%10 <We are merely responding to a distress call. The captain of this ship assures us they have done nothing wrong. As a Knight it's my duty to protect anyone who requests aid... I ask you one last time to stand down.>
 		Prompt%id%01 <They've invaded Dominion territory, as have you.>
-		Prompt%id%01_1 <What are the Silver Knights doing escorting pirates?>
+		Prompt%id%01_1 <What are the Silver Knights doing in Rishiri space?>
 		Prompt%id%02 <So they say. My sources report otherwise.>
 		Prompt%id%02_1 <Maybe the ship didn't, but those pirates did.>
-		Prompt%id%03 <You escort the ship, then. These pirates are mine.>
+		Prompt%id%03 <And you believe that? Look, those pirates are wanted!>
 		Prompt%id%04 <I don't care about your dictates. Get out of the way, or else!>
 		Prompt%id%05 <Go escort the ship yourself. I have pirates to deal with.>
 		Prompt%id%06 <You're in no place to be making ultimatums, jerk.>
 		Prompt%id%07 <And by regulation 1314-5R, I'm asking you to step down.>
 		CPrompt%id%07 <ifG PCLaw -1 ifInsightKn SkillTar StoryDL Accept>
+		Prompt%id%08 <Wait, I thought you knights hated pirates!?>
 	end
 	inv
 		NPC Knight

@@ -461,7 +461,7 @@ begin
 		AddRPGMenuItem( MainMenu , MsgString( 'MEMO_ReadRumors' ) , m_Rumor );
 	end;
 	if HasPCommCapability( PC , NAS_News ) then AddRPGMenuItem( MainMenu , MsgString( 'MEMO_ReadNews' ) , m_News );
-	AddRPGMenuItem( MainMenu , MsgString( 'MEMO_Personadex' ) , m_Personadex );
+	if HasPCommCapability( PC , NAS_Personadex ) then AddRPGMenuItem( MainMenu , MsgString( 'MEMO_Personadex' ) , m_Personadex );
 
 	if MainMenu^.NumItem < 1 then begin
 		DialogMsg( MsgString( 'MEMO_NoBrowser' ) );

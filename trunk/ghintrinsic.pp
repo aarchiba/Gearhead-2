@@ -31,17 +31,18 @@ uses gears;
 const
 	NAG_Intrinsic = 18;
 
-	NumIntrinsic = 7;
+	NumIntrinsic = 8;
 	NAS_Memo = 1;
 	NAS_Email = 2;
 	NAS_News = 3;
 	NAS_Phone = 4;
 	NAS_EnviroSealed = 5;
 	NAS_Integral = 6;
+	NAS_Personadex = 7;
 
 	Intrinsic_Value: Array [1..NumIntrinsic] of Integer = (
 		200, 300, 400, 500, 100,
-		0, 0
+		0, 0, 250
 	);
 
 

@@ -1269,7 +1269,7 @@ Procedure PersonadexInfo( NPC,HomeTown: GearPtr; Z: TSDL_Rect );
 
 		MyDest.X := X0;
 		MyDest.H := TTF_FontLineSkip( Game_Font ) * 2;
-		QuickTextC( GearName( NPC ) , MyDest , StdWhite , game_font );
+		QuickText( GearName( NPC ) , MyDest , StdWhite , game_font );
 		MyDest.Y := MyDest.Y + 2 * TTF_FontLineSkip( Game_Font );
 
 		QuickText( MsgString( 'PDEX_Attitude' ) , MyDest , NeutralGrey , game_font );
