@@ -78,7 +78,11 @@ Content
 		% Once the destination has been decided, set the story trigger and let
 		% the parent subplot deal with things.
 		%
-		Start <if= L2 0 L= 2 1  CancelSubPlot %plotid1%   L= 4 t3   ifYesNo 1 2 3 else GoAttemptSneak Goto GoFightMecha>
+		Start <if= L2 0 L= 2 1  CancelSubPlot %plotid1%   L= 4 t3   if= P%id%02 0 else GoEasyStealth ifG PCSkillVal NAS_Stealth STAT_Speed HardSkillTar StoryDL else GoNoStealth Goto GoAllowChoice>
+		GoEasyStealth <ifG   PCSkillVal NAS_Stealth STAT_Speed   SkillTar StoryDL   else GoHardStealth Goto GoAllowChoice>
+		GoNoStealth <Alert 13 Goto GoFightMecha>
+		GoHardStealth <Alert 14 Goto GoFightMecha>
+		GoAllowChoice <ifYesNo 1 2 3 else GoAttemptSneak Goto GoFightMecha>
 
 		GoAttemptSneak <if= P%id%01 0 else GoSneakIn ifG PCScale 1 else GoSneakIn ifStealth HardSkillTar StoryDL else GoSneakFail Goto GoSneakIn>
 		GoSneakIn <Exit %4%>
@@ -116,6 +120,8 @@ Content
 		Msg10 <You have captured %name2%... or what remians of it.>
 		Msg11 <You captured %name2%.>
 		Msg12 <You have captured %name2%.>
+		Msg13 <You have found %name2%.>
+		Msg14 <You have found %name2%. There doesn't seem to be any easy way to sneak inside>
 
 		sub
 			team 1

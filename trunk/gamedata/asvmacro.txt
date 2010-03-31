@@ -64,18 +64,13 @@ PCGENDER <GrabPCPilot GNAtt 3 0>
 NPCGENDER <GrabNPC ? GNAtt 3 0>
 PCSTATVAL <GrabPCPilot GStat ?>
 PCREFLEXES <GrabPCPilot GStat 1>
-STAT_Reflexes <1>
 PCBODY <GrabPCPilot GStat 2>
-STAT_Body <2>
 PCSPEED <GrabPCPilot GStat 3>
-STAT_Speed <3>
 PCPERCEPTION <GrabPCPilot GStat 4>
 PCCRAFT <GrabPCPilot GStat 5>
 PCEGO <GrabPCPilot GStat 6>
 PCKNOWLEDGE <GrabPCPilot GStat 7>
-STAT_Knowledge <7>
 PCCHARM <GrabPCPilot GStat 8>
-STAT_Charm <8>
 NPCEGO <GrabNPC ? GStat 6>
 CHATNPCEGO <GrabChatNPC GStat 6>
 NPCCHARM <GrabNPC ? GStat 8>
@@ -105,6 +100,7 @@ SelfFac <GrabSource GNAtt NAG_Personal NAS_FactionID>
 RReact <GrabPC GNatt NAG_ReactionScore ?>
 NPCRep <GrabNPC ? GNAtt NAG_CharDescription - ?>
 NPCLaw <GrabNPC ? GNAtt NAG_CharDescription -2>
+ChatNPCLaw <GrabChatNPC GNAtt NAG_CharDescription -2>
 ChatNPCRep <GrabChatNPC GNAtt NAG_CharDescription - ?>
 ChatNPCRenown <GrabChatNPC GNAtt NAG_CharDescription -6>
 ChatNPCID <GrabChatNPC GNAtt NAG_Personal NAS_CID>

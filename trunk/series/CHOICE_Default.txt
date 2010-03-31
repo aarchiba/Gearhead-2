@@ -415,10 +415,22 @@ Choice 21
 	name <Easy Money 1>
 	desc <The PC will partake in some criminal fundraising.>
 	desig <EMO_1>
-	requires <ZZZZZNotYetPOssibleZZZZZ (P:--|P:CRIME|P:PRIVA) -!Ex>
+	requires <(P:--|P:CRIME|P:PRIVA) -!Ex>
 
 	% E1 is the city for the next episode.
 	Element1 <Scene City !Far -7 !Ally -7>
+
+	Prompt <Some good old fashioned pillaging and looting.>
+	Reply_1 <What!? I don't know about that... although they do say there's been a lot of crime in %name1% recently.>
+	CReply_1 <ifG ChatNPCLaw -1 Accept>
+	Reply_2 <Good idea. They say there are a lot of easy targets in %name1%; you might want to try there.>
+	CReply_2 <ifG 0 ChatNPCLaw Accept>
+
+	Alert <You decide to seek easy money in %name1%.>
+
+	Choice <StoryNote %id%01  AddLawful -3  &SetEpisodeScene %1%>
+
+	Msg%id%01 <You decided to seek easy money in %name1%.>
 
 
 %%

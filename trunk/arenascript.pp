@@ -959,7 +959,7 @@ Procedure InitiateMacro( GB: GameBoardPtr; Source: GearPtr; var Event: String; P
 		StdFunParam: Array [1..NumStandardFunctions] of byte = (
 			1,2,1,1,1,
 			1,2,2,1,2,
-			1,2,2,1,2,
+			1,2,2,2,2,
 			1,1,1
 		);
 	var
@@ -1060,12 +1060,12 @@ begin
 	end;
 end;
 
-Function SV_PCSkillVal( GB: GameBoardPtr; Skill: Integer ): Integer;
+Function SV_PCSkillVal( GB: GameBoardPtr; Skill,Stat: Integer ): Integer;
 	{ Return the PC's base skill value. This used to be easy until those }
 	{ stupid lancemates came along... Check all PCs and lancemates, and }
 	{ return the highest value. }
 var
-	M,PC: GearPtr;
+	M: GearPtr;
 	HiSkill,T: Integer;
 begin
 	{ Error check. }
@@ -1076,11 +1076,8 @@ begin
 	while M <> Nil do begin
 		T := NAttValue( M^.NA , NAG_Location , NAS_Team );
 		if GearActive( M ) and ( ( T = NAV_DefPlayerTeam ) or ( T = NAV_LancemateTeam ) ) then begin
-			PC := LocatePilot( M );
-			if PC <> Nil then begin
-				T := NAttValue( PC^.NA , NAG_Skill , SKill );
-				if T > HiSkill then HiSkill := T;
-			end;
+			T := SkillValue( M , Skill , Stat );
+			if T > HiSkill then HiSkill := T;
 		end;
 
 		M := M^.Next;
@@ -1227,7 +1224,8 @@ begin
 	end else if ( SMsg = 'PCSKILLVAL' ) then begin
 		{ Return the PC team's highest skill value. }
 		VCode := ScriptValue( Event , GB , Scene );
-		SV := SV_PCSkillVal( GB , VCode );
+		VC2 := ScriptValue( Event , GB , Scene );
+		SV := SV_PCSkillVal( GB , VCode , VC2 );
 
 	end else if ( SMsg = 'SCENEID' ) then begin
 		{ Return the current scene's unique ID. }

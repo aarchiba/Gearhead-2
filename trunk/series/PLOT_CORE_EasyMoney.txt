@@ -7,4 +7,76 @@
 % The PC is looking for easy money- steer them towards a *CS_PLUNDER component.
 %
 
+Plot
+	name <Vagabond Ship>
+	desc <A famous smuggler is passing through. You can buy a hot tip.>
+
+
+Plot
+	name <Easy Tip>
+	desc <Looking for easy money? Can't get easier than this.>
+	requires <*CORE_EMO_ ~!Ne>
+
+	% The PC will get a call from someone about a fast cash opportunity.
+	% Then they can buy the info, steal it, or maybe even talk it out.
+
+	% E1 is a local public scene
+	% E2 is the NPC to pass the info
+	% E3 is the datachip with the info
+	% E4 is the environs scene for the robbery
+	Element1 <Scene (Building|Meeting) Public !Near -7>
+	Element2 <Character THIEF -Enemy !Okay -3 !XClude -2 !Near 1 NeverFail>
+	NeverFail2 <Thief>
+	Place2 <1 (Citizens) pass>
+	Element3 <Prefab>
+	Place3 <2>
+	Element4 <Scene Environs !Near -7>
+
+	% Send Email when possible.
+	5min <if= PlotStatus %plotid% 0  if= RootSceneID &EpisodeScene  EMail %id%01  SetPlotStatus %plotid% %id%>
+	end <if= PlotStatus %plotid1% 0 ifNPCDead %2% LoseEpisode>
+
+	% Stealing the datachip will give the PC the info.
+	Get%3% <if= PlotStatus %plotid1% 0  Alert %id%02  DeleteItem %3%  SetPlotStatus %plotid1% %id1%  SMemo %id%03  History %id%04>
+
+	% Completing the PLUNDER ends this episode.
+	.%id1%_%plotid1%_GoWin  <WinEpisode>
+	.%id1%_%plotid1%_GoLoss <LoseEpisode>
+
+	Msg%id%01_1  <%name2%@ \NARRATIVE 7 :// Looking to score some fast cash? Meet me at \EXACT_SCENE %1% .>
+	Msg%id%01_2  <%name2%@ \NARRATIVE 7 :// Hey \PC , I've got a business opportunity for ya. I'll be waiting here at \EXACT_SCENE %1% .>
+	Msg%id%01_3  <%name2%@ \NARRATIVE 7 :// I've got some info for you. Give me a call.>
+	Msg%id%01_4  <%name2%@ \NARRATIVE 7 :// \PC - wanna make some easy money? Come to \EXACT_SCENE %1% and I'll tell you about it.>
+	Msg%id%01_5  <%name2%@ \NARRATIVE 7 :// Your presence is requested in \EXACT_SCENE %1% .>
+	Msg%id%02 <This datachip contains all the info needed to pull off a big heist. \HINT %id1%>
+	Msg%id%03 <You stole a datachip from %name2% leading to an easy target. \HINT %id1%>
+	Msg%id%04 <You stole a datachip from %name2%.>
+
+	% SubPlot1 is the Plunder itself. Nice and simple.
+	SubPlot1 <*:CS_Plunder 4>
+
+	sub
+		Persona 2
+		&Price <Reward StoryDL 300>
+		greeting <if= PlotStatus %plotid1% 0 else .%id%_GoChat Goto .%id%_GoGreet>
+		.%id%_GoChat <RevertPersona>
+		*.%id%_GoGreet <*IHaveInformation&AboutMoney .%id%_GoOffer na>
+		.%id%_GoOffer <NewChat Say %id%01 AddChat %id%01 AddChat %id%02 AddChat %id%03>
+		result%id%01 <NewChat Say %id%02 SMemo %id%03 History %id%04 Cash+ -&Price SetPlotStatus %plotid1% %id1%>
+		*result%id%02 <*YourLossSucker .%id%_GoLoseEpisode>
+		.%id%_GoLoseEpisode <LoseEpisode>
+		*result%id%03 <*HurryBackWithMoney>
+		Msg%id%01 <I've got some inside info on a ripe target for a heist... if you want it, it's just $ \VAL &Price .>
+		Msg%id%02 <No worries, this is a smart investment... unless you manage to screw up. \HINT %id1% This datachip should tell you everything you need to know.>
+		Msg%id%03 <%name2% told you about a good target. \HINT %id1%>
+		Msg%id%04 <%name2% told you about a good target.>
+		Prompt%id%01 <This better be worth it. [Give Money]>
+		CPrompt%id%01 <ifG PC$ &Price Accept>
+		Prompt%id%02 <Sorry, I don't do that kind of work.>
+		Prompt%id%03 <I'll be back for it later.>
+	end
+	inv
+		Treasure
+		name <Datachip>
+	end
 

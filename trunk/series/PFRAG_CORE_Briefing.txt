@@ -134,6 +134,31 @@
 %	 be called)
 %   PARAM3: Reward Hint (the plotid of the reward subplot)
 
+	Persona
+	requires <*CS_BasicFightingMission ("TRADE"|"CORPO"|"CRAFT") "NOFAC" ~Friend ~Family ~!Ne ~!Lo>
+	START <NewChat Say %id%01 AddChat %id%01 AddChat %id%02>
+	result%id%01 <StoryNote %id%02 Goto %1%>
+	result%id%02 <Goto %2%>
+	Msg%id%01 <How would you like to do a misison for me? I'm trying out a new side business as a cavalier agent... There are some raiders that need to be dealt with, or something. \HINT %3%>
+	Msg%id%01_1 <>
+	CMsg%id%01_1 <ifNPCSociable Accept>
+	Msg%id%01_2 <>
+	CMsg%id%01_2 <ifNPCShy Accept>
+	Msg%id%01_3 <>
+	CMsg%id%01_3 <ifNPCEasygoing Accept>
+	Msg%id%01_4 <I always wanted to be a pilot, and now I'm the next best thing! I've started a new business as a cav-manager. In fact, I'm looking for a pilot to intercept some raiders. \HINT %3% How about it?>
+	CMsg%id%01_4 <ifNPCPassionate Accept>
+	Msg%id%01_5 <Guess what? I've decided to become a cavalier agent! Well, I will if my commission comes through... How'd you like to run an intercept against some raiders?  \HINT %3%>
+	CMsg%id%01_5 <ifNPCCheerful Accept>
+	Msg%id%01_6 <After losing my last job, I realized that the big money is in mecha wrangling. I'm looking for a pilot to intercept some raiders. \HINT %3% What do you say?>
+	CMsg%id%01_6 <ifNPCMelancholy Accept>
+	Msg%id%02 <\CHATNPC hired you for a mecha combat mission; this is a new business that \SPR ChatNPCID 's trying.>
+	Prompt%id%01 <That sounds like a good deal. I'll do it.>
+	Prompt%id%01_1 <Okay, I can do that.>
+	Prompt%id%01_2 <Alright, I can do that.>
+	Prompt%id%02 <Wait, no, I'd really rather not.>
+	Prompt%id%02_1 <Sorry, but I don't want to.>
+	Prompt%id%02_2 <This isn't my kind of job.>
 
 	Persona
 	requires <*CS_BasicFightingMission "MEDIC" ~"Doctor" ~C:MEDIC ~"NOFAC" ~*CORE_DEF_ ~*CORE_R_MON ~E:EVIL_>
