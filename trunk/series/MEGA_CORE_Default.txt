@@ -133,7 +133,7 @@ Content
 			name <Guards>
 			SetEnemy 1
 			SetAlly 4 5
-			Deploy <if= PlotStatus %plotid% %id% SetSelfFaction %3%   WMecha 2 StoryDL 100>
+			Deploy <if= PlotStatus %plotid% %id% SetSelfFaction %3%   WMecha 2 StoryDL 150>
 			ParaX 45
 			ParaY 25
 

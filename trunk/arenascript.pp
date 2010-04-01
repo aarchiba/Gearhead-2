@@ -5652,6 +5652,7 @@ begin
 
 	{ Set the NumberOfConversations counter. }
 	if I_NPC <> Nil then AddNAtt( NPC^.NA , NAG_Personal , NAS_NumConversation , 1 );
+	I_NPC := Nil;
 
 	{ Get rid of the menu. }
 	DisposeRPGMenu( IntMenu );
@@ -6001,6 +6002,9 @@ initialization
 	rumor_leads := LoadFile( 'rumor_leads.txt' , Data_Directory );
 
 	local_triggers := Nil;
+
+	I_NPC := Nil;
+	IntMenu := Nil;
 
 finalization
 	if SCRIPT_DynamicEncounter <> Nil then begin
