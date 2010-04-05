@@ -347,4 +347,5 @@ ClearEncounterRecharge <GrabCurrentScene GSetNAtt 21 6 0>
 GiveMeritBadge <GrabAdventure GSetNAtt NAG_MeritBadge ? 1 Announce ABadge !>
 SilentMeritBadge <GrabAdventure GSetNAtt NAG_MeritBadge ? 1>
 SetPayRate <GrabPlot GSetNAtt 20 1 ?>
+SetNPCBio <GrabNPC ? GSetSAtt BIO ?>
 

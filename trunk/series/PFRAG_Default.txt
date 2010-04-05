@@ -414,7 +414,7 @@
 	Msg%id%01 <Hey \PC , I hear that you could use some help.>
 	Msg%id%01_1 <>
 	CMsg%id%01_1 <ifNPCSociable Accept>
-	Msg%id%01_2 <>
+	Msg%id%01_2 <You look like you need some help.>
 	CMsg%id%01_2 <ifNPCShy Accept>
 	Msg%id%01_3 <>
 	CMsg%id%01_3 <ifNPCEasygoing Accept>
@@ -425,11 +425,11 @@
 	Msg%id%01_6 <>
 	CMsg%id%01_6 <ifNPCMelancholy Accept>
 	Prompt%id%01 <I'm doing fine by myself.>
-	Prompt%id%01_1 <>
-	Prompt%id%01_2 <>
+	Prompt%id%01_1 <I'm doing alright.>
+	Prompt%id%01_2 <I can't complain.>
 	Prompt%id%02 <Yeah, that's right... why?>
-	Prompt%id%02_1 <>
-	Prompt%id%02_2 <>
+	Prompt%id%02_1 <What kind of help are you talking about?>
+	Prompt%id%02_2 <Maybe... what's it to you?>
 
 % TYPE: *ComeHereForIt
 %	The NPC can't give the PC something over the phone; the PC should visit in person.

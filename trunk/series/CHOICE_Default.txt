@@ -418,7 +418,7 @@ Choice 21
 	requires <(P:--|P:CRIME|P:PRIVA) -!Ex>
 
 	% E1 is the city for the next episode.
-	Element1 <Scene City !Far -7 !Ally -7>
+	Element1 <Scene City !Far -7 !Ally -7 -Lawful>
 
 	Prompt <Some good old fashioned pillaging and looting.>
 	Reply_1 <What!? I don't know about that... although they do say there's been a lot of crime in %name1% recently.>
