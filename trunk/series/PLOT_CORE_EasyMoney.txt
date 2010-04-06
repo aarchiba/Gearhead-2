@@ -8,6 +8,117 @@
 %
 
 Plot
+	name <Thief Tipoff>
+	desc <An unaligned will tip off the PC.>
+	requires <*CORE_EMO_ ~P:-->
+
+	% E1 is a local public scene
+	% E2 is the thief
+	element1 <Scene !Near -7 public (building|meeting)>
+	element2 <Character !Near 1 THIEF Criminal NeverFail>
+	Place2 <1 (Citizens) pass>
+	NeverFail2 <Thief>
+
+	end <if= PlotStatus %plotid% 0 ifNPCDead %2% LoseEpisode>
+
+	% SubPlot1 is the plunder-seeking bit.
+	subplot1 <*CS_SeekPlunder>
+
+	sub
+		Persona 2
+		rumor0 <%name2% knows something that you might want to know.>
+		greeting <if= PlotStatus %plotid% 0 else .%id%_GoChat Goto .%id%_GoGreet>
+		.%id%_GoChat <RevertPersona>
+		*.%id%_GoGreet <*YouCouldUseHelp .%id%_GoBriefing>
+		.%id%_GoBriefing <NewChat Say %id%01 SMemo %id%02 History %id%03 SetPlotStatus %plotid1% %id1%>
+		Msg%id%01 <\HINT %id1% I figured that you might want to know.>
+		Msg%id%02 <%name2% gave you a hot tip. \HINT %id1%>
+		Msg%id%03 <%name2% gave you a hot tip.>
+	end
+
+
+Plot
+	name <PCFac Tipoff>
+	desc <A member of the PC's faction will tip them off about it.>
+	requires <*CORE_EMO_ P:++ ~P:PCFAC>
+
+	% E1 is a local public scene
+	% E2 is a member of the PC's faction
+	element1 <Scene !Near -7 public (building|meeting)>
+	element2 <Character !Near 1 !Comrade -3 NeverFail>
+	Place2 <1 (Guards) SD>
+
+	5min <if= PlotStatus %plotid% 0  if= RootSceneID &EpisodeScene  EMail %id%01  SetPlotStatus %plotid% %id%>
+	end <if= PlotStatus %plotid% %id% ifNPCDead %2% LoseEpisode>
+
+	Msg%id%01_1 <%name2%@ \SCENE &EpisodeScene :// If you're in town I'd love to speak with you.>
+	Msg%id%01_2 <%name2%@ \SCENE &EpisodeScene :// Got a hot tip for you, \PC . There could be easy money involved.>
+	Msg%id%01_3 <%name2%@ \SCENE &EpisodeScene :// I've got some info. Come to \EXACT_SCENE %1% .>
+	Msg%id%01_4 <%name2%@ \SCENE &EpisodeScene :// I've been asked to tell you something, but this is way too sensitive for email.>
+	Msg%id%01_5 <%name2%@ \SCENE &EpisodeScene :// Umcae to \EXACT_SCENE %1% for an Othae Iptae.>
+
+	% SubPlot1 is the plunder-seeking bit.
+	subplot1 <*CS_SeekPlunder>
+
+	sub
+		Persona 2
+		greeting <if= PlotStatus %plotid% %id% else .%id%_GoChat Goto .%id%_GoGreet>
+		.%id%_GoChat <RevertPersona>
+		*.%id%_GoGreet <*HowAreYou .%id%_GoBriefing>
+		.%id%_GoBriefing <NewChat Say %id%01 SMemo %id%02 History %id%03 SetPlotStatus %plotid1% %id1%>
+		Msg%id%01 <\HINT %id1% I figured that you might want to know.>
+		Msg%id%02 <%name2% told you about some easy money. \HINT %id1%>
+		Msg%id%03 <%name2% told you about some easy money.>
+	end
+
+Plot
+	name <Welcome Wagon>
+	desc <A police officer inadvertently gives the PC a tip.>
+	requires <*CORE_EMO_>
+
+	% E1 is a local scene
+	% E2 is the police officer
+	Element1 <Scene !Near -7 public (building|meeting)>
+	Element2 <Character POLIC Sociable HasMecha !Near 1 -Friend -Nemesis -Lover -Family NeverFail>
+	NeverFail2 <Police Officer>
+
+	start <if= PlotStatus %plotid% 0  ifNPCOK %2% else .%id%_GoEndPlot  if= RootSceneID &EpisodeScene  ifScene .%id%_scenetype  Alert %id%01  ForceChat %2%>
+	.%id%_GoEndPlot <LoseEpisode>
+	.%id%_scenetype <outdoors>
+
+	Msg%id%01 <Before you even have the chance to do anything illegal, you are accosted by a large force of police mecha.>
+
+	% SubPlot1 is the plunder-seeking bit.
+	subplot1 <*CS_SeekPlunder>
+
+	sub
+		Persona 2
+		special <UNLISTED NOESCAPE>
+		greeting <if= PlotStatus %plotid% 0 else .%id%_GoChat EndChat Say %id%01 AddChat %id%01 AddReact -15>
+		.%id%_GoChat <RevertPersona>
+		result%id%01 <EndChat Say %id%02 SMemo %id%03 History %id%04 AddChat %id%02 AddChat %id%03 AddChat %id%04 SetPlotStatus %plotid1% %id1%>
+		result%id%02 <EndChat Say %id%05>
+		result%id%03 <EndChat Say %id%06>
+		result%id%04 <EndChat Say %id%07 AddReact d10>
+		Msg%id%01 <Don't think I don't know what you're doing in town, \PC , and don't think for one minute that you're going to get away with it...>
+		Msg%id%02 <Oh, come on. \HINT %id1% That's the reason you came here, isn't it?>
+		Msg%id%03 <%name2% inadvertently gave you some useful info. \HINT %id1%>
+		Msg%id%04 <%name2% inadvertently gave you some useful info.>
+		Msg%id%05 <What!? Forget I said anything... and whatever you do, don't try to act on it...>
+		Msg%id%06 <Just don't break any laws and you won't have anything to worry about, then.>
+		Msg%id%07 <Make sure you don't... I'll have my eyes on you.>
+		Prompt%id%01 <What are you talking about?>
+		Prompt%id%01_1 <I have no idea what you're talking about.>
+		Prompt%id%02 <You don't say..? Thanks for the tip.>
+		Prompt%id%02_1 <Is that so..? Thanks for telling me.>
+		Prompt%id%03 <Hey, don't think I'm some common crook...>
+		CPrompt%id%03 <if# PCFac PRIVA Accept>
+		Prompt%id%03_1 <Are you calling me a crook?>
+		Prompt%id%04 <Don't worry. I won't overstep my letter of marque.>
+		CPrompt%id%04 <if= PCFac PRIVA Accept>
+	end
+
+Plot
 	name <Easy Money Mentor>
 	desc <An experienced pirate will give you a tip.>
 	requires <*CORE_EMO_1 ~!Ne>

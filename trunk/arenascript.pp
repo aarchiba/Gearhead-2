@@ -4640,8 +4640,6 @@ const
 		OptRank,SpecSkill,Skill,N,SkRank: Integer;
 		CanGetBonus: Array [1..NumSkill] of Boolean;
 	begin
-		{ Locate the pilot. If no pilot, then exit. }
-		NPC := LocatePilot( NPC );
 		if NPC = Nil then Exit;
 
 		{ Clamp the renown score. }
@@ -4692,7 +4690,7 @@ const
 	end;
 var
 	XP,T,Renown,LMs: LongInt;
-	M,PC: GearPtr;
+	M,PC,NPC: GearPtr;
 begin
 	{ Find out how much to give. }
 	XP := ScriptValue( Event , GB , Source );
@@ -4724,14 +4722,16 @@ begin
 			end else if ( T = NAV_LancemateTeam ) and OnTheMap( GB , M ) then begin
 				DoleExperience( M , XP );
 
+				{ Locate the pilot. }
+				NPC := LocatePilot( M );
 				{ Only regular lancemates get rapid leveling- Pets and temps don't. }
 				if IsRegularLancemate( M ) then begin
 					Dec( LMs );
-					if LMs = 0 then DoRapidLeveling( M , PC , Renown - LM_Renown_Lag );
+					if ( LMs = 0 ) and ( NPC <> Nil ) then DoRapidLeveling( NPC , PC , Renown - LM_Renown_Lag );
 
 					{ Lancemates are also eligible for training events. }
-					if NAttValue( M^.NA , NAG_Narrative , NAS_LancemateTraining_Total ) < Renown then begin
-						AddNAtt( M^.NA , NAG_Narrative , NAS_LancemateTraining_Total , 1 );
+					if NAttValue( NPC^.NA , NAG_Narrative , NAS_LancemateTraining_Total ) < Renown then begin
+						AddNAtt( NPC^.NA , NAG_Narrative , NAS_LancemateTraining_Total , 1 );
 					end;
 				end;
 			end;

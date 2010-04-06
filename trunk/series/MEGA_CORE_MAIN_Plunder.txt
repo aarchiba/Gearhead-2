@@ -201,6 +201,87 @@ Content
 %%
 
 Content
+	name <Moderately Easy Tip>
+	desc <Looking for easy money? It could be easier, but not by much.>
+	requires <*CS_SeekPlunder>
+
+	% The PC can get the tip by performing a service for the NPC.
+
+	% E1 is a local public scene
+	% E2 is the NPC to pass the info
+	% E3 is the datachip with the info
+	% E4 is the environs scene for the robbery
+	Element1 <Scene (Building|Meeting) Public !Near -7>
+	Element2 <Character THIEF -Enemy !Okay -3 !XClude -2 !Near 1 NeverFail>
+	NeverFail2 <Thief>
+	Place2 </>
+	Element3 <Prefab>
+	Place3 <2>
+	Element4 <Scene Environs !Near -7>
+
+	%% HINT
+	HINT_%id% <%name2% knows how to score some easy money, but won't be giving the info away for free.>
+
+	% P%id%01 = Initialization Counter
+
+	update <if= P%id%01 0 P= %id%01 1 MoveNPC %2% %1%>
+
+	%% FAIL CONDITIONS:
+	%% - E2 dies before PLUNDER activated
+	end <if= PlotStatus %plotid1% 0 ifNPCDead %2% LoseEpisode>
+
+	% Stealing the datachip will give the PC the info.
+	Get%3% <if= PlotStatus %plotid1% 0  Alert %id%02  DeleteItem %3%  SetPlotStatus %plotid1% %id1%  SMemo %id%03  History %id%04>
+
+	% Completing the PLUNDER ends this episode.
+	.%id1%_%plotid1%_GoWin  <WinEpisode>
+	.%id1%_%plotid1%_GoLoss <LoseEpisode>
+
+	Msg%id%02 <This datachip contains all the info needed to pull off a big heist. \HINT %id1%>
+	Msg%id%03 <You stole a datachip from %name2% leading to an easy target. \HINT %id1%>
+	Msg%id%04 <You stole a datachip from %name2%.>
+
+	% SubPlot1 is the Plunder itself.
+	% SubPlot2 is the mission the PC must complete.
+	SubPlot1 <*:CS_Plunder 4>
+	SubPlot2 <*:CS_MinorMission 2>
+
+	sub
+		Persona 2
+		&Price <Reward StoryDL 500>
+		greeting <if= PlotStatus %plotid% %id% else .%id%_GoChat if= PlotStatus %plotid1% 0 else .%id%_GoChat if= PlotStatus %plotid2% 0 else .%id%_GoCheckWin Goto .%id%_GoGreet>
+		.%id%_GoCheckWin <ifSubPlotWon %plotid2% else .%id%_GoCheckLoss NewChat Say %id%01 Goto .%id%_GoGiveTip>
+		.%id%_GoCheckLoss <ifSubPlotLost %plotid2% else .%id%_GoRemind NewChat Say %id%02 AddChat %id%01 AddChat %id%04 AddChat %id%03>
+		*.%id%_GoRemind <*GenericMissionReminder>
+		.%id%_GoGiveTip <SMemo %id%03 History %id%04 SetPlotStatus %plotid1% %id1%>
+		.%id%_GoChat <RevertPersona>
+		*.%id%_GoGreet <*IHaveInformation&AboutMoney .%id%_GoOffer na>
+		.%id%_GoOffer <NewChat Say %id%05 AddChat %id%05 AddChat %id%02>
+		result%id%01 <NewChat Say %id%06  Cash+ -&Price Goto .%id%_GoGiveTip>
+		*result%id%02 <*YourLossSucker .%id%_GoLoseEpisode>
+		.%id%_GoLoseEpisode <LoseEpisode>
+		*result%id%03 <*HurryBackWithMoney>
+		result%id%04 <Goto result%id%02>
+		result%id%05 <Goto .%id2%_GoInit>
+		Msg%id%01 <Good going, \PC . I suppose I owe you this... \HINT %id1% These coords will take you where you're going.>
+		Msg%id%02 <You list the mission... but, if you want, the info can still be yours for a mere $ \VAL &Price .>
+		Msg%id%03 <%name2% told you about a good target. \HINT %id1%>
+		Msg%id%04 <%name2% told you about a good target.>
+		Msg%id%05 <I've got some transport logs which should let you pull off an easy heist. I'm willing to share them with you, but first you've got to do something for me...>
+		Msg%id%06 <Thanks... with this money, I can hire someone better to do that mission you screwed up. \HINT %id1% This datachip has all the info you need.>
+		Prompt%id%01 <You're a thief, \CHATNPC . [Give Money]>
+		CPrompt%id%01 <ifG PC$ &Price Accept>
+		Prompt%id%02 <Sorry, I don't do that kind of work.>
+		Prompt%id%03 <I'll be back for it later.>
+		Prompt%id%04 <No thanks, I've lost interest.>
+		Prompt%id%05 <What kind of mission are you talking about?>
+	end
+	inv
+		Treasure
+		name <Datachip>
+	end
+
+Content
 	name <Easy Tip>
 	desc <Looking for easy money? Can't get easier than this.>
 	requires <*CS_SeekPlunder ~!Ne>
