@@ -212,7 +212,7 @@ Content
 		PCAttack <ifTeamNotHostile 2 Alarm>
 
 		nu1 <if= T1 0  Return   if= L1 0 L= 1 1  Alert 3  History 3  Trigger0 .%id%_%plotid%_GoPlunderFail  LoseRenown  LoseSubPlot %plotid%>
-		nu3 <if= T3 0           if= L1 0 L= 1 1  Alert 4  History 5  xpv 100 AddRenown 1  Trigger0 .%id%_%plotid%_GoPlunderOK   WinSubPlot %plotid%  Return>
+		nu3 <if= T3 0           if= L1 0 L= 1 1  Alert 4  History 5  xpv 100 AddRenown 1  Trigger0 .%id%_%plotid%_GoPlunderOK   WinSubPlot %plotid%  Retreat 2 Retreat 4 MonsterOff 4>
 
 		Msg1 <You enter %name2%. If you can disable the engines, main computer, and weapons control they will be forced to surrender.>
 		Msg2 <Suddenly, an alarm goes off!>
@@ -268,7 +268,7 @@ Content
 		%% The captain of this ill-fated vessel
 		greeting <if= PlotStatus %plotid% %id% else %pop% ifChatNPCSurrendered else .%id%_GoNegotiate  Goto .%id%_GoSurrender>
 		*.%id%_GoSurrender <*CS_BASEPS_CaptainSurrenders .%id%_GoWin>
-		.%id%_GoWin <History %id%01  xpv 100 AddRenown 1  Trigger0 .%id%_%plotid%_GoPlunderOK   WinSubPlot %plotid%  Return>
+		.%id%_GoWin <History %id%01  xpv 100 AddRenown 1  Trigger0 .%id%_%plotid%_GoPlunderOK   WinSubPlot %plotid%    Retreat 2 Retreat 4 MonsterOff 4>
 		*.%id%_GoNegotiate <*CS_BASEPS_CaptainNegotiates .%id%_GoWin .%id%_GoAttack na>
 		.%id%_GoAttack <TeamAttack 2 TeamAttack 4>
 		Msg%id%01 <Captain %name5% surrendered %name2%.>

@@ -99,14 +99,22 @@ begin
 	end;
 end;
 
+const
+	CS_Enemy_Chardev = '*:CS_MIX_Confrontation *:CS_StopNPCMission&IsEnemyNPC *:CS_MechaEncounter *:CS_GatherInformation *:CS_FetchItem  E:++ F:++';
+
 var
 	ResultList: SAttPtr;
 
 begin
 	ResultList := Nil;
 	StoreSAtt( ResultList , 'Core Story Enemy Chardev' );
-	CountTheBeans( ResultList , '*:CS_StopNPCMission&IsEnemyNPC *:CS_MechaEncounter *:CS_GatherInformation *:CS_FetchItem !Ne !Lo !Md !Hi !Ex E:++ F:++' , 'E' , Sub_Plot_List );
+	CountTheBeans( ResultList , CS_Enemy_Chardev + ' !Ne !Lo !Md !Hi !Ex' , 'E' , Sub_Plot_List );
 	StoreSAtt( ResultList , '  ' );
+
+	StoreSAtt( ResultList , 'Core Story Confrontation Chardev' );
+	CountTheBeans( ResultList , '*:CS_MIX_Confrontation  E:++ F:++ !Ne !Lo !Md !Hi !Ex' , '1' , Sub_Plot_List );
+	StoreSAtt( ResultList , '  ' );
+
 	StoreSAtt( ResultList , 'Lancemate NonCom Chardev' );
 	CountTheBeans( ResultList , '*LM_NonComCharDev !Ne !Lo !Md !Hi !Ex 1:++ 1:TRAIN 1:NOFAC' , '1' , Sub_Plot_List );
 	SaveStringList( 'out.txt' , ResultList );

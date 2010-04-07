@@ -25,6 +25,111 @@
 %%
 
 Content
+	name <Criminal Confrontation>
+	desc <You can plunder a ship, but can you hold your booty?>
+	%% Prototype: Mecha fight after ship; lose mission if lost
+	requires <*:CS_Plunder F:CRIME E:++>
+requires <*:CS_Plunder E:++>
+
+	% Element1 is the outdoors scene for the ship
+	% Element2 is the encounter for the ship
+	% Element3 is a corporate faction for the ship; doesn't matter what
+	% Element4 is the battle to keep the booty
+	% Element5 is the enemy NPC
+	% Element6 is a secret about the NPC
+	Element2 <Prefab>
+	Place2 <1>
+	Element3 <Faction Corporate>
+	Element4 <Prefab>
+	Place4 <1>
+	Element5 <Grab 1>
+	Place5 <4 (Enemies) sd enemy>
+	Element6 <Prefab>
+
+	% P%id%01 = Initialization Counter
+	% P%id%02 = Big Plunder (0) or Little Plunder (1)
+
+	% At startup, activate the plunder and scale the NPC.
+	update <if= P%id%01 0 P= %id%01 1  SetPlotStatus %plotid1% %id1%  NPCLevel %5% StoryDL>
+
+	% Pass the hint-buck to the ship being plundered.
+	HINT_%id% <:%id1%>
+
+	% The narrative hooks for the BASE_PlunderShip encounter.
+	%   "This is where the magic happens."
+	.%id1%_%plotid1%_GoAttackShip  <>
+	.%id1%_%plotid1%_GoBoardShip   <>
+	.%id1%_%plotid1%_GoPlunderOK   <Alert %id%01 Exit %4%>
+	.%id1%_%plotid1%_GoPlunderBad  <P= %id%02 1 Alert %id%01 Exit %4%>
+	.%id1%_%plotid1%_GoPlunderFail <LoseSubPlot %plotid%    Trigger0 .%id%_%plotid%_GoLoss>
+
+	% The narrative hooks for the confrontation.
+	.%id4%_%plotid4%_GoWin  <if= P%id%02 0 else .%id%_GoSmallWin  SetPlotStatus %plotid2% %id2%   WinSubPlot %plotid%   Trigger0 .%id%_%plotid%_GoWin>
+	.%id%_GoSmallWin <SetPlotStatus %plotid3% %id3%   WinSubPlot %plotid%   Trigger0 .%id%_%plotid%_GoWin>
+	.%id4%_%plotid4%_GoLoss <LoseSubPlot %plotid%    Trigger0 .%id%_%plotid%_GoLoss>
+
+	Msg%id%01 <But before you can haul off your booty, you are attacked by rivals from \FACTION &EnemyFac !>
+
+	% SubPlot1 is the plundering core.
+	% SubPlot2 is the good loot
+	% SubPlot3 is whatever the PC gets for blowing up the ship
+	% SubPlot4 is the Confrontation bit
+	% SubPlot5 is the chance to learn about E5's raid...
+	% SubPlot6 is the GainAdvantage against E5 once you do know
+	SubPlot1 <*:CS_BASE_PlunderShip 1 2 3>
+	SubPlot2 <*:CS_FilthyLucre_OK 3>
+	SubPlot3 <*:CS_FilthyLucre_Bad 3>
+	SubPlot4 <*:CS_MIX_Confrontation 5 1>
+	SubPlot5 <*:CS_LearnSecretAboutNPC 6 5>
+
+	sub
+		MetaScene 4 2
+		%% After capturing the ship, you have to defend your take from
+		%% these other crooks.
+		% L1 = Encounter Over Counter
+		% L2 = Initialization Counter
+		MapWidth 50
+		MapHeight 50
+
+		Start <if= L2 0  L= 2 1   Alert 1  History 2  SetPlotStatus %plotid4% %id4%>
+		nu1 <if= T1 0   Return  if= V1 0  V= 1 1  Alert 3   Trigger0 .%id4%_%plotid4%_GoCombatLoss>
+		nu2 <if= T2 0   if= V1 0 V= 1 1   XPV 100  AddRenown 1   Trigger0 .%id4%_%plotid4%_GoCombatWin>
+
+		Msg1 <The enemy gang is being led by %name5%.>
+		Msg2 <%name5% attempted to steal your booty.>
+		Msg3 <%name5%'s gang steals all of your rightfully-pilfered loot.>
+
+		sub
+			team 1
+			SetEnemy 2
+			ParaX 5
+			ParaY 5
+
+			team 2
+			name <Enemies>
+			SetEnemy 1
+			Deploy <if= PlotStatus %plotid% %id% SetSelfFaction &EnemyFac   WMecha 2 StoryDL 60>
+			ParaX 45
+			ParaY 45
+		end
+	end
+	inv
+		STC CORE-STATIONARY
+		name <The S.S. %r%>
+
+		Encounter
+		name <Interceptors>
+		% The people who want to steal the PC's booty.
+		update <SetSelfX EncounterX %2% SetSelfY EncounterY %2% Goto GoHide>
+		Use <  >
+		Attack <  >
+
+		Secret
+		Msg <%name5% has been planning a raid against %name2%.>
+	end
+
+
+Content
 	name <Raid Corporate Cruiser (L5PAT)>
 	desc <The ship you're raiding? Belongs to a corporation. Now they hate you.>
 	%% Prototype: Mecha fight before ship; may re-attempt fight if lost

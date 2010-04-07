@@ -1412,7 +1412,7 @@ Procedure AS_SetExit( GB: GameBoardPtr; RC: Integer );
 	{ Several things need to be done when exiting the map. }
 	{ This procedure should centralize most of them. }
 var
-	Dest,Src: GearPtr;
+	Dest,Src,SrcHome: GearPtr;
 	T: Integer;
 begin
 	{ Only process this request if we haven't already set an exit. }
@@ -1449,20 +1449,23 @@ begin
 						Dest^.Stat[ STAT_MapGenerator ] := EncounterMapType( GB , NAttValue( Src^.NA , NAG_Location , NAS_X ) , NAttValue( Src^.NA , NAG_Location , NAS_Y ) );
 						{ If this will make the encounter a space map, set the map-scroll tag. }
 						if Dest^.Stat[ STAT_MapGenerator ] = TERRAIN_Space then Dest^.Stat[ STAT_SpaceMap ] := 1;
+						SrcHome := GB^.Scene;
 					end else begin
-						{ Copy the current scene's map generator and hope for the best. }
-						Dest^.Stat[ STAT_MapGenerator ] := GB^.Scene^.Stat[ STAT_MapGenerator ];
+						{ Copy the entrance's map generator and hope for the best. }
+						SrcHome := FindActualScene( GB , FindGearScene( Src , GB ) );
+						if SrcHome = Nil then SrcHome := GB^.Scene;
+						Dest^.Stat[ STAT_MapGenerator ] := SrcHome^.Stat[ STAT_MapGenerator ];
 						{ If this will make the encounter a space map, set the map-scroll tag. }
 						if Dest^.Stat[ STAT_MapGenerator ] = TERRAIN_Space then Dest^.Stat[ STAT_SpaceMap ] := 1;
 					end;
 
 					{ Also copy over the tileset + backdrop. }
-					SetNAtt( Dest^.NA , NAG_SceneData , NAS_TileSet , NAttValue( GB^.Scene^.NA , NAG_SceneData , NAS_TileSet ) );
-					SetNAtt( Dest^.NA , NAG_SceneData , NAS_Backdrop , NAttValue( GB^.Scene^.NA , NAG_SceneData , NAS_Backdrop ) );
+					SetNAtt( Dest^.NA , NAG_SceneData , NAS_TileSet , NAttValue( SrcHome^.NA , NAG_SceneData , NAS_TileSet ) );
+					SetNAtt( Dest^.NA , NAG_SceneData , NAS_Backdrop , NAttValue( SrcHome^.NA , NAG_SceneData , NAS_Backdrop ) );
 
 					{ Copy the environmental effects from the parent scene. }
 					for t := 1 to Num_Environment_Variables do begin
-						SetNAtt( Dest^.NA , NAG_EnvironmentData , T , NAttValue( GB^.Scene^.NA , NAG_EnvironmentData , T ) );
+						SetNAtt( Dest^.NA , NAG_EnvironmentData , T , NAttValue( SrcHome^.NA , NAG_EnvironmentData , T ) );
 					end;
 				end;
 

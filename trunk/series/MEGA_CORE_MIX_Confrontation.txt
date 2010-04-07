@@ -1,0 +1,83 @@
+%%
+%% *:CS_MIX_Confrontation Content
+%%     &NoDerailment   May not derail the plot; just straight combat please!
+%%
+%%  Y'know how to get more randomness in your random story generator? Mix things
+%%  up a bit.
+%%
+%%  The core story enemy is doing something. The PC is trying to prevent it.
+%%  Now, the two of them are gonna fight. It doesn't really matter what kind of
+%%  fight we're dealing with- whatever's going on, we can work in some character
+%%  development.
+%%
+%%  At the start of combat, this subplot will be activated.
+%%  The combat encounter can then send the following triggers, both of which
+%%  must have scripts in this subplot:
+%%
+%%    .%id%_%plotid%_GoCombatWin
+%%    .%id%_%plotid%_GoCombatLoss
+%%
+%%  The confrontation will send back the following triggers:
+%%
+%%    .%id%_%plotid%_GoWin
+%%    .%id%_%plotid%_GoLoss
+%%
+%%  Note that this subplot may completely derail combat by issuing a RETURN
+%%  command. The parent subplot must wait for one of the above responses before
+%%  concluding.
+%%
+%%  An encounter to which a confrontation has been attached automatically
+%%  becomes a MAIN COURSE.
+%%
+%% PARAM1: The Enemy NPC, who should be in the encounter scene + ready
+%% PARAM2: The outdoors scene where the encounter is
+%%
+
+Content
+	name <Sorting Confrontation>
+	requires <*:CS_MIX_Confrontation (1:A.---|1:A.nme)>
+	desc <Who's better, you or the NPC? Let's decide!>
+	changes <E:A>
+
+	% E1 is the Enemy NPC
+	% E2 is the outdoors scene where this encounter is
+
+	% P%id%01 = ForceChat Counter
+	update <if= P%id%01 0 P= %id%01 1 ForceChat %1%>
+
+	.%id%_%plotid%_GoCombatWin  <CancelSubPlot %plotid%  Trigger0 .%id%_%plotid%_GoWin   ifNPCOK %1% SetXXRAttitude %1% XXR_A_IsJunior  Monologue %1% %id%01  History %id%02>
+	.%id%_%plotid%_GoCombatLoss <CancelSubPlot %plotid%  Trigger0 .%id%_%plotid%_GoLoss  ifNPCOK %1% SetXXRAttitude %1% XXR_A_IsSenior  Monologue %1% %id%03  History %id%04>
+
+	Msg%id%01 <I guess that answers the question of which one of us is stronger... Woah.>
+	Msg%id%01_1 <Wow, you're really good... It's too bad that we couldn't be on the same team.>
+	CMsg%id%01_1 <ifNPCHeroic Accept>
+	Msg%id%01_2 <No way! You must have cheated, you jerk!>
+	CMsg%id%01_2 <ifNPCVillainous Accept>
+	Msg%id%02 <You defeated %name1%.>
+	Msg%id%03 <Just as I thought, you're nothing but a rookie...>
+	Msg%id%03_1 <Your skills are lacking. Do us both a favor and stay out of my way from now on.>
+	CMsg%id%03_1 <ifNPCHeroic Accept>
+	Msg%id%03_2 <This is what happens to idiots who challenge me.>
+	CMsg%id%03_2 <ifNPCVillainous Accept>
+	Msg%id%04 <You were defeated by %name1%.>
+
+	sub
+		Persona 1
+		special <UNLISTED>
+		greeting <if= PlotStatus %plotid% %id% else %pop% EndChat Say %id%01 AddChat %id%01 AddChat %id%02>
+		*result%id%01 <*THEME_EXPO&Enemy na>
+		result%id%02 <AddEasygoing d10 Goto result%id%01>
+		Msg%id%01 <Ah, \PC ... so we finally meet in combat. I wonder which one of us is the better pilot?>
+		Msg%id%01_1 <>
+		CMsg%id%01_1 <ifNPCHeroic Accept>
+		Msg%id%01_2 <>
+		CMsg%id%01_2 <ifNPCVillainous Accept>
+		Prompt%id%01 <I'll show you who the best pilot is!>
+		Prompt%id%01_1 <There's only one way to find out.>
+		Prompt%id%01_2 <You'll see who it is in a minute!>
+		Prompt%id%02 <I have no idea.>
+		Prompt%id%02_1 <Good question. I dunno.>
+		Prompt%id%02_2 <Meh. Is it really that important?>
+	end
+
+
