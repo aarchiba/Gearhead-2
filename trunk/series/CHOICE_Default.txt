@@ -134,7 +134,7 @@ Choice 6
 	requires <-!Ex>
 
 	% E1 is the city for the next episode.
-	Element1 <Scene City !Far -7 !Ally -7 !Okay -3 !XClude -2>
+	Element1 <Scene City !Far -7 !Ally -7 !Okay -3 !XClude -2 -Safe>
 
 	Prompt <I'll be heading to wherever the action is.>
 	Reply <Good luck with that. You know, I hear that they could use someone with your talents in %name1%. You might want to try looking for work there.>
@@ -151,7 +151,7 @@ Choice 7
 	requires <:OFF_1 -!Ex>
 
 	% E1 is the city for the next episode.
-	Element1 <Scene City !Far -7 !Ally -7 !Okay -3 !XClude -2>
+	Element1 <Scene City !Far -7 !Ally -7 !Okay -3 !XClude -2 -Safe>
 
 	Prompt <I need some more action.>
 	Prompt_1 <I want to keep fighting \PERSONA &EnemyNPC .>
@@ -171,7 +171,7 @@ Choice 8
 	requires <:OFF_2 -!Ex>
 
 	% E1 is the city for the next episode.
-	Element1 <Scene City !Far -7 !Ally -7 !Okay -3 !XClude -2>
+	Element1 <Scene City !Far -7 !Ally -7 !Okay -3 !XClude -2 -Safe>
 
 	Prompt <I'll be heading to wherever the action is.>
 	Prompt_1 <\PERSONA &EnemyNPC must be stopped.>
@@ -193,7 +193,7 @@ Choice 9
 	requires <:OFF_3 -!Ex F:++>
 
 	% E1 is the city for the next episode.
-	Element1 <Scene City !Far -7 !Ally -7 !Okay -3 !XClude -2>
+	Element1 <Scene City !Far -7 !Ally -7 !Okay -3 !XClude -2 -Safe>
 
 	Prompt <I'll just keep on fighting.>
 	Prompt_1 <\PERSONA &EnemyNPC needs a proper arse-kicking.>
@@ -215,7 +215,7 @@ Choice 10
 	requires <:OFF_4 -!Ex F:++>
 
 	% E1 is the city for the next episode.
-	Element1 <Scene City !Far -7 !Ally -7 !Okay -3 !XClude -2>
+	Element1 <Scene City !Far -7 !Ally -7 !Okay -3 !XClude -2 -Safe>
 
 	Prompt <It's time to put aside the bubblegum and get serious.>
 	Prompt_1 <I'm going to stop \PERSONA &EnemyNPC .>

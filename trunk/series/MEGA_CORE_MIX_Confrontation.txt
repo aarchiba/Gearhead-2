@@ -22,6 +22,11 @@
 %%    .%id%_%plotid%_GoWin
 %%    .%id%_%plotid%_GoLoss
 %%
+%%  The combat encounter requires the following teams:
+%%
+%%    Enemies
+%%    EnemyNPC
+%%
 %%  Note that this subplot may completely derail combat by issuing a RETURN
 %%  command. The parent subplot must wait for one of the above responses before
 %%  concluding.
@@ -29,9 +34,101 @@
 %%  An encounter to which a confrontation has been attached automatically
 %%  becomes a MAIN COURSE.
 %%
-%% PARAM1: The Enemy NPC, who should be in the encounter scene + ready
+%% PARAM1: The Enemy NPC, who should be in the encounter scene + ready to fight
 %% PARAM2: The outdoors scene where the encounter is
 %%
+
+Content
+	name <You're Cutting Into My Profits>
+	requires <*:CS_MIX_Confrontation 1:M.--- (1:A.---|1:A.jr_|1:A.sr_|1:A.ant|1:A.equ|1:A.pch) ~E:THIEF ~E:CORPO ~E:TRADE ~F:CRIME ~F:CORPO -F:POLIC>
+	desc <The NPC will accuse the PC of cutting into their profits, thereby setting attitude as Mercenary.>
+	changes <E:M>
+
+	% E1 is the Enemy NPC
+	% E2 is the outdoors scene where this encounter is
+
+	% P%id%01 = ForceChat Counter
+	update <if= P%id%01 0 P= %id%01 1 ForceChat %1%>
+
+	.%id%_%plotid%_GoCombatWin  <CancelSubPlot %plotid%  Trigger0 .%id%_%plotid%_GoWin   History %id%01>
+	.%id%_%plotid%_GoCombatLoss <CancelSubPlot %plotid%  Trigger0 .%id%_%plotid%_GoLoss  History %id%02>
+
+	Msg%id%01 <You defeated %name1%.>
+	Msg%id%02 <You were defeated by %name1%.>
+
+	sub
+		Persona 1
+		special <UNLISTED>
+		greeting <if= PlotStatus %plotid% %id% else %pop% EndChat Say %id%01 AddChat %id%01 AddChat %id%02 if= v%id%01 0 V= %id%01 1 SetXXRMotivation %1% XXR_M_Mercenary History %id%02>
+		*.%id%_GoThemeExpo <*THEME_EXPO&Enemy na>
+		result%id%01 <AddCheerful  d10   Goto .%id%_GoThemeExpo>
+		result%id%02 <Goto .%id%_GoThemeExpo>
+		Msg%id%01 <You need to stop interfering with my missions, \PC ... it's really starting to cut into my profits.>
+		Msg%id%01_1 <>
+		CMsg%id%01_1 <ifNPCHeroic Accept>
+		Msg%id%01_2 <>
+		CMsg%id%01_2 <ifNPCVillainous Accept>
+		Msg%id%01_11 <Aw, blazes... \PC , could you just let me do one mission in peace? All this fighting is messing up my profits.>
+		CMsg%id%01_11 <ifNPCAttitude %1% XXR_A_IsJunior Accept>
+		Msg%id%01_12 <Hm, what's this? Men, remove this distraction... \PC , your presence here is cutting into my profit.>
+		CMsg%id%01_12 <ifNPCAttitude %1% XXR_A_IsSenior Accept>
+		Msg%id%01_13 <\PC , why do you always show up at the worst possible times!? I won't let you ruin this mission... your presence here is cutting into my profit.>
+		CMsg%id%01_13 <ifNPCAttitude %1% XXR_A_Antagonistic Accept>
+		Msg%id%01_14 <I'm in no mood to duel today, \PC . Profit is on the line and your presence is likely to screw it up.>
+		CMsg%id%01_14 <ifNPCAttitude %1% XXR_A_IsEqual Accept>
+		Msg%id%02 <%name1% accused you of cutting into \PPR %1% profits.>
+		Prompt%id%01 <On the plus side, it's really helping mine!>
+		Prompt%id%01_1 <Don't be glum. Think of the fun we'll have!>
+		Prompt%id%01_2 <Don't worry, some mecha combat will cheer you right up!>
+		Prompt%id%02 <I don't care about your profits.>
+		Prompt%id%02_1 <You won't need money where you're going, \CHATNPC .>
+		Prompt%id%02_2 <Is money all you care about?>
+	end
+
+Content
+	name <Nemesis Application>
+	requires <*:CS_MIX_Confrontation 1:A.nme (1:M.---|1:M.pro|1:M.com|1:M.nih) ~1:MILIT ~1:ADVEN ~F:POLIT>
+	desc <This enemy won't bother to fight, but will just sit back and evaluate your battle prowress.>
+	changes <E:A>
+
+	% E1 is the Enemy NPC
+	% E2 is the outdoors scene where this encounter is
+
+	% P%id%01 = ForceChat Counter
+	update <if= P%id%01 0 P= %id%01 1 ForceChat %1%>
+
+	.%id%_%plotid%_GoCombatWin  <CancelSubPlot %plotid%  Trigger0 .%id%_%plotid%_GoWin   History %id%02  ifNPCOK %1%  Monologue %1% %id%01>
+	.%id%_%plotid%_GoCombatLoss <CancelSubPlot %plotid%  Trigger0 .%id%_%plotid%_GoLoss  History %id%03>
+
+	Msg%id%01 <Impressive. Your technique is primitive, but shows some potential. I'll concede the field of battle today... it would be a waste to kill such an interesting new rival.>
+	Msg%id%01_1 <Clearly I underestimated you. I concede the field of battle today... next time we meet, I'll give you a demonstration of my own.>
+	CMsg%id%01_1 <ifNPCHeroic Accept>
+	Msg%id%01_2 <You're better than I thought. Don't worry, I don't intend to finish you off, not yet... It may be interesting to play with you a bit before then.>
+	CMsg%id%01_2 <ifNPCVillainous Accept>
+	Msg%id%02 <You defeated %name1%'s forces.>
+	Msg%id%03 <You were defeated by %name1%'s forces.>
+
+	sub
+		Persona 1
+		special <UNLISTED NOESCAPE>
+		% This NPC will flee the board, and instead send extra henchmen after you.
+		% V%id%01 = First time counter
+		greeting <if= PlotStatus %plotid% %id% else %pop% EndChat Say %id%01 AddChat %id%01 if= V%id%01 0 V= %id%01 1 SetXXRAttitude %1% XXR_A_IsSenior Retreat EnemyNPCTeam WMecha EnemiesTeam StoryDL 100>
+		result%id%01 <EndChat Say %id%02>
+		Msg%id%01 <You must be \PC ... My men tell me that you're a pretty good pilot. Personally, I have my doubts.>
+		Msg%id%01_1 <>
+		CMsg%id%01_1 <ifNPCHeroic Accept>
+		Msg%id%01_2 <>
+		CMsg%id%01_2 <ifNPCVillainous Accept>
+		Msg%id%02 <Don't flatter yourself; my time's too valuable to fight nobodies like you. Let's see how well you do against my lancemates.>
+		Msg%id%02_1 <>
+		CMsg%id%02_1 <ifNPCHeroic Accept>
+		Msg%id%02_2 <How amusing, the mouse thinks it can challenge the cat. I'm not in the mood to kill you right now... that's what my lancemates are for.>
+		CMsg%id%02_2 <ifNPCVillainous Accept>
+		Prompt%id%01 <Prepare to defend yourself.>
+		Prompt%id%01_1 <I'll show you how good I am.>
+		Prompt%id%01_2 <I can take you.>
+	end
 
 Content
 	name <Sorting Confrontation>
@@ -45,8 +142,8 @@ Content
 	% P%id%01 = ForceChat Counter
 	update <if= P%id%01 0 P= %id%01 1 ForceChat %1%>
 
-	.%id%_%plotid%_GoCombatWin  <CancelSubPlot %plotid%  Trigger0 .%id%_%plotid%_GoWin   ifNPCOK %1% SetXXRAttitude %1% XXR_A_IsJunior  Monologue %1% %id%01  History %id%02>
-	.%id%_%plotid%_GoCombatLoss <CancelSubPlot %plotid%  Trigger0 .%id%_%plotid%_GoLoss  ifNPCOK %1% SetXXRAttitude %1% XXR_A_IsSenior  Monologue %1% %id%03  History %id%04>
+	.%id%_%plotid%_GoCombatWin  <CancelSubPlot %plotid%  Trigger0 .%id%_%plotid%_GoWin   History %id%02  ifNPCOK %1% SetXXRAttitude %1% XXR_A_IsJunior  Monologue %1% %id%01>
+	.%id%_%plotid%_GoCombatLoss <CancelSubPlot %plotid%  Trigger0 .%id%_%plotid%_GoLoss  History %id%04  ifNPCOK %1% SetXXRAttitude %1% XXR_A_IsSenior  Monologue %1% %id%03>
 
 	Msg%id%01 <I guess that answers the question of which one of us is stronger... Woah.>
 	Msg%id%01_1 <Wow, you're really good... It's too bad that we couldn't be on the same team.>

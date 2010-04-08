@@ -2599,6 +2599,25 @@ Content
 		end
 	end
 
+Content
+	name <MIX Master>
+	desc <Instead of containing an encounter itself, this one just pawns things off on the MIX.>
+	requires <*:CS_MechaEncounter ~&Raiders E:++ ~F:++ ~P:++>
+
+	% E1 is the outdoors scene where this encounter will be placed
+	% E2 is the metascene to be used for this encounter
+	% E3 is the Enemy NPC
+	Element3 <Grab 1>
+
+	% P%id%01 = Initialization Counter
+	update <if= V%id%01 0 V= %id%01 1   SetPlotStatus %plotid1% %id1%>
+
+	.%id1%_%plotid1%_GoWin  <Trigger0 .%id%_%plotid%_GoWin>
+	.%id1%_%plotid1%_GoLoss <Trigger0 .%id%_%plotid%_GoLoss>
+
+	% SubPlot1 = MIX Encounter
+	SubPlot1 <*:CS_MIX_Encounter 1 2 3>
+
 
 %  ***************************
 %  ***   OMEGA  MISSIONS   ***
