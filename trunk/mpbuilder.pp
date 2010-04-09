@@ -593,7 +593,7 @@ begin
 	Shard := Nil;
 	while ( ShoppingList <> Nil ) and NotFoundMatch do begin
 		if XXRan_Wizard and ( ShoppingList <> Nil ) and ( Slot^.G = GG_Story ) and not IsAQuest then begin
-			DialogMsg( Context );
+{			DialogMsg( Context );}
 			Shard := CloneGear( ComponentMenu( Sub_Plot_List , ShoppingList ) );
 		end else if DoDebug and not IsAQuest then begin
 			DialogMsg( Context );

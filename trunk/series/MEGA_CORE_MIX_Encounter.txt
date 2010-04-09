@@ -34,13 +34,9 @@ Content
 	% E3 is the enemy NPC
 
 	% P%id%01 = Initialization Counter
-
-	update <if= P%id%01 0 P= %id%01 1  NPCLevel %3% StoryDL  MoveNPC %3% %2%  SetNPCTeam %3% 3 SetPlotStatus %plotid1% %id1%>
-
-	% P%id%01 = Initialization Counter
 	% P%id%02 = Have gained reinforcements
 	% P%id%03 = Have gained decimation
-	update <if= V%id%01 0 V= %id%01 1   SetPlotStatus %plotid1% %id1%>
+	update <if= P%id%01 0 P= %id%01 1  NPCLevel %3% StoryDL  MoveNPC %3% %2%  SetNPCTeam %3% 3 SetPlotStatus %plotid1% %id1%>
 
 	% The narrative hooks for the Confrontation
 	.%id2%_%plotid2%_GoWin  <WinSubPlot %plotid%     Trigger0 .%id%_%plotid%_GoWin>
@@ -64,7 +60,7 @@ Content
 
 		Start <if= L2 0 L= 2 1   Alert 1  History 2  CancelSubPlot %plotid1% SetPlotStatus %plotid2% %id2%  if# P%id%02 0 Alert 3>
 		nu1 <if= T1 0   Return   if= V1 0 V= 1 1 Alert 4   Trigger0 .%id2%_%plotid2%_GoCombatLoss>
-		nu2 <if= T2 0   if= V1 0 V= 1 1   XPV 100  AddRenown 1   SALVAGE   Alert 5   Trigger0 .%id2%_%plotid2%_GoCombatWin>
+		nu2 <if= T2 0  if= T3 0  if= V1 0 V= 1 1   XPV 100  AddRenown 1   SALVAGE   Alert 5   Trigger0 .%id2%_%plotid2%_GoCombatWin>
 		nu3 <Goto nu2>
 		end <SetEncounterInactive %2%>
 

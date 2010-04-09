@@ -100,7 +100,7 @@ begin
 end;
 
 const
-	CS_Enemy_Chardev = '*:CS_MIX_Confrontation *:CS_StopNPCMission&IsEnemyNPC *:CS_MechaEncounter *:CS_GatherInformation *:CS_FetchItem  E:++ F:++';
+	CS_Enemy_Chardev = '*:CS_MIX_Confrontation *:CS_StopNPCMission&IsEnemyNPC *:CS_MechaEncounter *:CS_GatherInformation *:CS_FetchItem  &Beancounter  E:++ F:++';
 
 var
 	ResultList: SAttPtr;
@@ -108,11 +108,15 @@ var
 begin
 	ResultList := Nil;
 	StoreSAtt( ResultList , 'Core Story Enemy Chardev' );
-	CountTheBeans( ResultList , CS_Enemy_Chardev + ' !Ne !Lo !Md !Hi !Ex' , 'E' , Sub_Plot_List );
+	CountTheBeans( ResultList , CS_Enemy_Chardev + ' !Hi' , 'E' , Sub_Plot_List );
 	StoreSAtt( ResultList , '  ' );
 
 	StoreSAtt( ResultList , 'Core Story Confrontation Chardev' );
-	CountTheBeans( ResultList , '*:CS_MIX_Confrontation  E:++ F:++ !Ne !Lo !Md !Hi !Ex' , '1' , Sub_Plot_List );
+	CountTheBeans( ResultList , '*:CS_MIX_Confrontation  E:++ F:++ !Hi' , '1' , Sub_Plot_List );
+	StoreSAtt( ResultList , '  ' );
+
+	StoreSAtt( ResultList , 'Rookie Enemy Chardev' );
+	CountTheBeans( ResultList , CS_Enemy_Chardev + ' !Ne' , 'E' , Sub_Plot_List );
 	StoreSAtt( ResultList , '  ' );
 
 	StoreSAtt( ResultList , 'Lancemate NonCom Chardev' );

@@ -39,10 +39,170 @@
 %%
 
 Content
+	name <Until Someone Loses an Eye>
+	requires <*:CS_MIX_Confrontation 1:M.com (1:A.sr_|1:A.ant|1:A.equ) -!Ne>
+	desc <It was all fun and games before, now it's getting serious.>
+	changes <E:A>
+	results <E:A.env>
+
+	% E1 is the Enemy NPC
+	% E2 is the outdoors scene where this encounter is
+
+	% P%id%01 = ForceChat Counter
+	update <if= P%id%01 0 P= %id%01 1 ForceChat %1%>
+
+	.%id%_%plotid%_GoCombatWin  <CancelSubPlot %plotid%  Trigger0 .%id%_%plotid%_GoWin   History %id%02  ifNPCOK %1% SetXXRAttitude %1% XXR_A_EnviesPC  Monologue %1% %id%01>
+	.%id%_%plotid%_GoCombatLoss <CancelSubPlot %plotid%  Trigger0 .%id%_%plotid%_GoLoss  History %id%03>
+
+	Msg%id%01 <Hmph... Your skills have really improved, \PC . Looks like I'm going to have to work harder to beat you.>
+	Msg%id%01_1 <>
+	CMsg%id%01_1 <ifNPCHeroic Accept>
+	Msg%id%01_2 <>
+	CMsg%id%01_2 <ifNPCVillainous Accept>
+	Msg%id%02 <You defeated %name1%, who seemed upset about it.>
+	Msg%id%03 <You were defeated by %name1%.>
+
+	sub
+		Persona 1
+		%% An entirely generic battle challenge.
+		special <UNLISTED>
+		greeting <if= PlotStatus %plotid% %id% else %pop% Goto .%id%_GoGreet>
+		*.%id%_GoGreet <*BattleChallenge .%id%_GoThemeExpo na>
+		*.%id%_GoThemeExpo <*THEME_EXPO&Enemy na>
+	end
+
+
+Content
+	name <Wealth is a Phallic Symbol>
+	requires <*:CS_MIX_Confrontation 1:M.mer (1:A.---|1:A.sr_|1:A.ant) ~E:CORPO ~E:TRADE ~E:POLIT ~E:MEDIA ~F:CORPO -!Ne>
+	desc <Before fighting, the NPC will compare earnings with the PC.>
+	changes <E:A>
+	results <E:A.equ E:A.env>
+
+	% E1 is the Enemy NPC
+	% E2 is the outdoors scene where this encounter is
+
+	% P%id%01 = ForceChat Counter
+	update <if= P%id%01 0 P= %id%01 1 ForceChat %1%>
+
+	.%id%_%plotid%_GoCombatWin  <CancelSubPlot %plotid%  Trigger0 .%id%_%plotid%_GoWin   History %id%01>
+	.%id%_%plotid%_GoCombatLoss <CancelSubPlot %plotid%  Trigger0 .%id%_%plotid%_GoLoss  History %id%02>
+
+	Msg%id%01 <You defeated %name1%.>
+	Msg%id%02 <You were defeated by %name1%.>
+
+	sub
+		Persona 1
+		special <UNLISTED NOESCAPE>
+		% V%id%01 = Enemy Earning Counter
+		greeting <if= PlotStatus %plotid% %id% else %pop% Goto .%id%_GoGreet>
+		*.%id%_GoGreet <*BattleChallenge .%id%_GoAsk na>
+		.%id%_GoAsk <EndChat Say %id%01 AddChat %id%01 AddChat %id%02 History %id%02>
+		*.%id%_GoThemeExpo <*THEME_EXPO&Enemy na>
+		result%id%01 <V= %id%01 StoryDL V+ %id%01 d10 AddSociable d10  ifG PCRenown v%id%01 else .%id%_GoR1Fail EndChat Say %id%03 AddChat %id%03  SetXXRAttitude %1% XXR_A_EnviesPC History %id%04>
+		.%id%_GoR1Fail <EndChat Say %id%05 AddChat %id%03  SetXXRAttitude %1% XXR_A_IsEqual>
+		result%id%02 <EndChat Say %id%06 AddChat %id%03  ifG PCRenown StoryDL else .%id%_GoR2Fail NPCLevel %1% PCRenown SetXXRAttitude %1% XXR_A_EnviesPC>
+		.%id%_GoR2Fail <SetXXRAttitude %1% XXR_A_IsEqual>
+		result%id%03 <Goto .%id%_GoThemeExpo>
+		Msg%id%01 <Say, \PC , before we start this battle I was just wondering... how much do you make for an average mission?>
+		Msg%id%01_1 <>
+		CMsg%id%01_1 <ifNPCHeroic Accept>
+		Msg%id%01_2 <>
+		CMsg%id%01_2 <ifNPCVillainous Accept>
+		Msg%id%01_12 <>
+		CMsg%id%01_12 <ifNPCAttitude %1% XXR_A_IsSenior Accept>
+		Msg%id%01_13 <>
+		CMsg%id%01_13 <ifNPCAttitude %1% XXR_A_Antagonistic Accept>
+		Msg%id%02 <Before fighting, %name1% asked about your wages.>
+		Msg%id%03 <What!? That's ridiculous... you can't possibly be worth that kind of money.>
+		Msg%id%04 <%name1% was jealous over how much you make.>
+		Msg%id%05 <That sounds about right. Thanks.>
+		Msg%id%06 <If you know how much someone earns, that's a pretty good indication of how skilled they are. Of course there are other ways to tell.>
+		Prompt%id%01 <I make around $ \VAL Reward PCRenown 120 per battle.>
+		Prompt%id%01_1 <I get about $ \VAL Reward PCRenown 120 a mission.>
+		Prompt%id%02 <None of your business, \CHATNPC .>
+		Prompt%id%02_1 <This is a weird time for a question like that...>
+		Prompt%id%03 <[Continue]>
+	end
+
+Content
+	name <You Are The Enemy Of Capitalism!!!>
+	requires <*:CS_MIX_Confrontation 1:M.mer (1:A.---|1:A.nme|1:A.jr_) ~E:CORPO ~E:TRADE ~F:CRIME ~F:CORPO>
+	desc <The NPC is fed up of the PC's interference.>
+	changes <E:A>
+	results <E:A.ant E:A.equ>
+
+	% E1 is the Enemy NPC
+	% E2 is the outdoors scene where this encounter is
+
+	% P%id%01 = ForceChat Counter
+	% P%id%02 = E1's proposal
+	update <if= P%id%01 0 P= %id%01 1 ForceChat %1%>
+
+	.%id%_%plotid%_GoCombatWin  <CancelSubPlot %plotid%  Trigger0 .%id%_%plotid%_GoWin   History %id%01>
+	.%id%_%plotid%_GoCombatLoss <CancelSubPlot %plotid%  Trigger0 .%id%_%plotid%_GoLoss  if= P%id%02 0  History %id%02>
+
+	Msg%id%01 <You defeated %name1%.>
+	Msg%id%02 <You were defeated by %name1%.>
+
+	sub
+		Persona 1
+		special <UNLISTED NOESCAPE>
+		greeting <if= PlotStatus %plotid% %id% else %pop% EndChat ifNPCCheerful else .%id%_GoNoCheer ifG React 0 else .%id%_GoNoCheer Say %id%03 AddChat %id%02 AddChat %id%03 if= v%id%01 0 V= %id%01 1 History %id%04>
+		.%id%_GoNoCheer <Say %id%01 AddChat %id%01 if= v%id%01 0 V= %id%01 1 SetXXRAttitude %1% XXR_A_Antagonistic History %id%02>
+		*.%id%_GoThemeExpo <*THEME_EXPO&Enemy na>
+		result%id%01 <Goto .%id%_GoThemeExpo>
+		result%id%02 <EndChat Say %id%05 CashPrize Reward StoryDL 100 Retreat 1  AddEasygoing 10  AddSociable -10  AddLawful -2  LoseRenown  SetXXRAttitude %1% XXR_A_IsEqual  History %id%06 P= %id%02 1>
+		result%id%03 <EndChat Say %id%07 AddChat %id%04 if= v%id%01 0 V= %id%01 1 SetXXRAttitude %1% XXR_A_Antagonistic>
+		result%id%04 <Goto .%id%_GoThemeExpo>
+		Msg%id%01 <Why can't I ever have a mission go smoothly, without some jerk butting \PPR 0 nose in where it doesn't belong!? It's your fault that I'm broke, \PC ... and I'm gonna make you pay for it.>
+		Msg%id%01_1 <>
+		CMsg%id%01_1 <ifNPCHeroic Accept>
+		Msg%id%01_2 <>
+		CMsg%id%01_2 <ifNPCVillainous Accept>
+		Msg%id%01_11 <>
+		CMsg%id%01_11 <ifNPCAttitude %1% XXR_A_IsJunior Accept>
+		Msg%id%01_12 <>
+		CMsg%id%01_12 <ifNPCAttitude %1% XXR_A_NeverMet Accept>
+		Msg%id%02 <%name1% blamed you for \PPR %1% current lack of money.>
+		Msg%id%03 <Just what I need, it's \PC ... I always seem to lose money when you're around. Why don't we make a deal? I'll pay you $ \VAL Reward StoryDL 100 to throw this mission.>
+		Msg%id%03_1 <>
+		CMsg%id%03_1 <ifNPCHeroic Accept>
+		Msg%id%03_2 <>
+		CMsg%id%03_2 <ifNPCVillainous Accept>
+		Msg%id%03_11 <>
+		CMsg%id%03_11 <ifNPCAttitude %1% XXR_A_IsJunior Accept>
+		Msg%id%03_12 <>
+		CMsg%id%03_12 <ifNPCAttitude %1% XXR_A_NeverMet Accept>
+		Msg%id%04 <%name1% offered you a bribe to just go away.>
+		Msg%id%05 <Ha, I knew you were a money-grubbing scoundrel, too! Now we've both made a profit. See you around, \PC .>
+		Msg%id%06 <You accepted the bribe.>
+		Msg%id%07 <What's the matter, my money's not good enough for you!? I should have known that you were one of those serious cavaliers... guess there's only one thing left for us to do.>
+		Msg%id%07_1 <>
+		CMsg%id%07_1 <ifNPCHeroic Accept>
+		Msg%id%07_2 <>
+		CMsg%id%07_2 <ifNPCVillainous Accept>
+		Msg%id%07_11 <>
+		CMsg%id%07_11 <ifNPCAttitude %1% XXR_A_IsJunior Accept>
+		Msg%id%07_12 <>
+		CMsg%id%07_12 <ifNPCAttitude %1% XXR_A_NeverMet Accept>
+		Prompt%id%01 <Don't blame me for your failures.>
+		Prompt%id%01_1 <Yeah, you have a job to do, and so do I.>
+		Prompt%id%01_2 <Stop whining. Let's see how you fight.>
+		Prompt%id%02 <Earn money for not working? I'm all for that.>
+		Prompt%id%02_1 <Sounds like a fair deal. Let's do it.>
+		Prompt%id%03 <No deal, \CHATNPC .>
+		Prompt%id%03_1 <I don't work that cheap, \CHATNPC .>
+		Prompt%id%04 <[Continue]>
+	end
+
+
+Content
 	name <You're Cutting Into My Profits>
 	requires <*:CS_MIX_Confrontation 1:M.--- (1:A.---|1:A.jr_|1:A.sr_|1:A.ant|1:A.equ|1:A.pch) ~E:THIEF ~E:CORPO ~E:TRADE ~F:CRIME ~F:CORPO -F:POLIC>
 	desc <The NPC will accuse the PC of cutting into their profits, thereby setting attitude as Mercenary.>
 	changes <E:M>
+	results <E:M.mer>
 
 	% E1 is the Enemy NPC
 	% E2 is the outdoors scene where this encounter is
@@ -90,6 +250,7 @@ Content
 	requires <*:CS_MIX_Confrontation 1:A.nme (1:M.---|1:M.pro|1:M.com|1:M.nih) ~1:MILIT ~1:ADVEN ~F:POLIT>
 	desc <This enemy won't bother to fight, but will just sit back and evaluate your battle prowress.>
 	changes <E:A>
+	results <E:A.sr_>
 
 	% E1 is the Enemy NPC
 	% E2 is the outdoors scene where this encounter is
@@ -135,6 +296,7 @@ Content
 	requires <*:CS_MIX_Confrontation (1:A.---|1:A.nme)>
 	desc <Who's better, you or the NPC? Let's decide!>
 	changes <E:A>
+	results <E:A.sr_ E:A.jr_>
 
 	% E1 is the Enemy NPC
 	% E2 is the outdoors scene where this encounter is

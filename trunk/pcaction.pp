@@ -2644,6 +2644,7 @@ Procedure GodMode( GB: GameBoardPtr; PC: GearPtr );
 	{ to ending. }
 var
 	T: Integer;
+	Item: GearPtr;
 begin
 	DialogMsg( '*** GOD MODE ACTIVATED ***' );
 
@@ -2655,6 +2656,8 @@ begin
 	SetNAtt( PC^.NA , NAG_Experience , NAS_Credits , 10000000 );
 	AddSAtt( FindRoot( GB^.Scene )^.SA , 'HISTORY' , 'God mode was activated.' );
 	SelectEquipmentForNPC( GB, PC, 120 );
+	Item := LoadNewItem( 'Network Phone' );
+	if Item <> Nil then InsertInvCom( PC , Item );
 end;
 
 Procedure SpitSocialNetwork( Camp: CampaignPtr );
