@@ -39,8 +39,209 @@
 %%
 
 Content
+	name <Sympathy for Ramba Ral>
+	requires <*:CS_MIX_Confrontation 1:A.sr_ (1:M.pro|1:M.com) -!Ne ~1:MILIT ~1:ADVEN ~1:FAITH ~1:LABOR ~1:GOOD_>
+	desc <The enemy is weary, but won't back down.>
+	changes <E:A>
+	results <E:A.equ E:A.ant>
+
+	% E1 is the Enemy NPC
+	% E2 is the outdoors scene where this encounter is
+
+	% P%id%01 = ForceChat Counter
+	% P%id%02 = E1 retreated
+	% P%id%03 = Pissed off E1
+	update <if= P%id%01 0 P= %id%01 1 Alert %id%01 ForceChat %1%>
+	.%id%_%plotid%_GoCombatWin  <CancelSubPlot %plotid%  Trigger0 .%id%_%plotid%_GoWin   if= P%id%02 0 History %id%02  if= P%id%03 0  ifNPCOK %1%  Monologue %1% %id%04  SetXXRAttitude %1% XXR_A_IsEqual>
+	.%id%_%plotid%_GoCombatLoss <CancelSubPlot %plotid%  Trigger0 .%id%_%plotid%_GoLoss  History %id%03>
+
+	Msg%id%01 <From the look of %name1%'s forces, they've already seen more than their fair share of combat today.>
+	Msg%id%02 <You defeated %name1%.>
+	Msg%id%03 <You were defeated by %name1%.>
+	Msg%id%04 <You're a better pilot than I've given you credit for. I concede the battle to you, \PC .>
+	Msg%id%04_1 <>
+	CMsg%id%04_1 <ifNPCHeroic Accept>
+	Msg%id%04_2 <Much as I hate to admit it, I have to admit that you're a magnificent pilot. You get to live another day \PC .>
+	CMsg%id%04_2 <ifNPCVillainous Accept>
+
+	sub
+		Persona 1
+		special <UNLISTED NOESCAPE>
+		greeting <if= PlotStatus %plotid% %id% else %pop% EndChat Say %id%01 AddChat %id%01 AddChat %id%02 AddChat %id%03>
+		*result%id%01 <*THEME_EXPO&Enemy na>
+		result%id%02 <P= %id%03 1 SetXXRAttitude %1% XXR_A_Antagonistic Goto result%id%01>
+		result%id%03 <AddReact d10  ifG PCHeroism ChatNPCHeroism else .%id%_GoR3Fail EndChat Say %id%02 History %id%03 P= %id%02 1 SetXXRAttitude %1% XXR_A_IsEqual  Retreat EnemiesTeam  Retreat EnemyNPCTeam>
+		.%id%_GoR3Fail <EndChat Say %id%04 AddChat %id%04>
+		result%id%04 <Goto result%id%01>
+		Msg%id%01 <Blazes, it's another one... Don't think we're going to just roll over for you, \PC . My lance has plenty of fight left in it yet.>
+		Msg%id%01_1 <>
+		CMsg%id%01_1 <ifNPCHeroic Accept>
+		Msg%id%01_2 <>
+		CMsg%id%01_2 <ifNPCVillainous Accept>
+		Msg%id%02 <I guess there wouldn't be much point in us trying to fight... I concede the battle to you today, \PC . You are truly a worthy opponent.>
+		Msg%id%03 <You allowed %name1% to leave the battlefield.>
+		Msg%id%04 <I've got a job to do, and I can't back down while there's even a slight chance of success... You won't be getting rid of me that easily.>
+		Prompt%id%01 <Alright, let's get started.>
+		Prompt%id%01_1 <Show me what you can do.>
+		Prompt%id%02 <Woo-hoo! This is gonna be an easy battle!>
+		Prompt%id%02_1 <I don't mind kicking you when you're down.>
+		Prompt%id%03 <I can't fight you like this. It's not sporting.>
+		CPrompt%id%03 <ifG PCHeroism 0 ifG ChatNPCHeroism 0 Accept>
+		Prompt%id%03_1 <How can I fight you like that? It's not fair.>
+		Prompt%id%04 <[Continue]>
+	end
+
+Content
+	name <Do You Like Tactics?>
+	requires <*:CS_MIX_Confrontation 1:A.sr_ 1:M.--- ~1:MILIT ~1:ACADE ~1:POLIT ~1:MEDIC ~1:GOOD_>
+	desc <This enemy won't bother to fight, but will just sit back and direct the action.>
+	changes <E:M>
+	results <E:M.pro>
+
+	% E1 is the Enemy NPC
+	% E2 is the outdoors scene where this encounter is
+
+	% P%id%01 = ForceChat Counter
+	update <if= P%id%01 0 P= %id%01 1 ForceChat %1%>
+
+	.%id%_%plotid%_GoCombatWin  <CancelSubPlot %plotid%  Trigger0 .%id%_%plotid%_GoWin   History %id%02  ifNPCOK %1%  Monologue %1% %id%01>
+	.%id%_%plotid%_GoCombatLoss <CancelSubPlot %plotid%  Trigger0 .%id%_%plotid%_GoLoss  History %id%03  ifNPCOK %1%  Monologue %1% %id%04>
+
+	Msg%id%01 <I didn't see that coming... I'll have to adjust my strategy for next time.>
+	Msg%id%01_1 <>
+	CMsg%id%01_1 <ifNPCHeroic Accept>
+	Msg%id%01_2 <>
+	CMsg%id%01_2 <ifNPCVillainous Accept>
+	Msg%id%02 <You defeated %name1%'s forces.>
+	Msg%id%03 <You were defeated by %name1%'s forces.>
+	Msg%id%04 <You see? This is what happens when you rush in without a real plan... you didn't even put up an interesting fight.>
+	Msg%id%04_1 <>
+	CMsg%id%04_1 <ifNPCHeroic Accept>
+	Msg%id%04_2 <>
+	CMsg%id%04_2 <ifNPCVillainous Accept>
+
+	sub
+		Persona 1
+		special <UNLISTED NOESCAPE>
+		% This NPC will flee the board, and instead send extra henchmen after you.
+		% V%id%01 = Renown Thingie
+		greeting <if= PlotStatus %plotid% %id% else %pop% EndChat Say %id%01 AddChat %id%01 AddChat %id%02 SetXXRMotivation %1% XXR_M_Professional Retreat EnemyNPCTeam WMecha EnemiesTeam StoryDL 100>
+		result%id%01 <EndChat Say %id%02>
+		result%id%02 <AddEasygoing -d10  V= %id%01 StoryDL V+ %id%01 10  ifG PCRenown V%id%01 else .%id%_GoR2Fail EndChat Say %id%04 NPCLevel %1% PCRenown DeployNPC %1% EnemyNPCTeam>  ifNPCOK %1%  Monologue %1% %id%01
+		.%id%_GoR2Fail <EndChat Say %id%03  AddEasygoing -d10>
+		Msg%id%01 <Tell me, \PC , have you ever studied tactics? In general it is not the fastest pilot who wins, but the smartest one.>
+		Msg%id%01_1 <>
+		CMsg%id%01_1 <ifNPCHeroic Accept>
+		Msg%id%01_2 <>
+		CMsg%id%01_2 <ifNPCVillainous Accept>
+		Msg%id%02 <Let the battle commence!>
+		Msg%id%02_1 <>
+		CMsg%id%02_1 <ifNPCHeroic Accept>
+		Msg%id%02_2 <>
+		CMsg%id%02_2 <ifNPCVillainous Accept>
+		Msg%id%03 <You see, this is why you will never be a great pilot- you're far too simpleminded. Maybe you should try reading a book once in a while.>
+		Msg%id%03_1 <>
+		CMsg%id%03_1 <ifNPCHeroic Accept>
+		Msg%id%03_2 <>
+		CMsg%id%03_2 <ifNPCVillainous Accept>
+		Msg%id%04 <I will admit, you are a worthy opponent... I accept your challenge.>
+		Prompt%id%01 <I'll show you some tactics.>
+		Prompt%id%01_1 <I know enough to defeat your lance.>
+		Prompt%id%02 <Come here and fight me yourself!>
+		Prompt%id%02_1 <You coward, why don't you fight me yourself!?>
+	end
+
+Content
+	name <I'll Get You This Time!>
+	requires <*:CS_MIX_Confrontation (1:A.jr_|1:A.ant) 1:M.com -!Ne ~1:MILIT ~1:FAITH>
+	desc <Who's better now, you or the NPC? Let's see!>
+	changes <E:A>
+	results <E:A.equ E:A.env>
+
+	% E1 is the Enemy NPC
+	% E2 is the outdoors scene where this encounter is
+
+	% P%id%01 = ForceChat Counter
+	update <if= P%id%01 0 P= %id%01 1 ForceChat %1%>
+
+	.%id%_%plotid%_GoCombatWin  <CancelSubPlot %plotid%  Trigger0 .%id%_%plotid%_GoWin   History %id%02  ifNPCOK %1% SetXXRAttitude %1% XXR_A_EnviesPC  Monologue %1% %id%01>
+	.%id%_%plotid%_GoCombatLoss <CancelSubPlot %plotid%  Trigger0 .%id%_%plotid%_GoLoss  History %id%04  ifNPCOK %1% SetXXRAttitude %1% XXR_A_IsEqual   Monologue %1% %id%03>
+
+	Msg%id%01 <Impossible! How did you learn to be so good!? I'll never accept that you're a better pilot... from now on I'll just double my efforts to beat you!!!>
+	Msg%id%01_1 <>
+	CMsg%id%01_1 <ifNPCHeroic Accept>
+	Msg%id%01_2 <>
+	CMsg%id%01_2 <ifNPCVillainous Accept>
+	Msg%id%02 <You defeated %name1%, who seemed to be rather disappointed.>
+	Msg%id%03 <There, now we're even. I'm gonna go buy myself a drink.>
+	Msg%id%03_1 <There, now we're even. I'm gonna go take my lance out to celebrate.>
+	CMsg%id%03_1 <ifNPCHeroic Accept>
+	Msg%id%03_2 <There, now we're even. I'm gonna go kick a puppy to celebrate.>
+	CMsg%id%03_2 <ifNPCVillainous Accept>
+	Msg%id%04 <You were defeated by %name1%, who seemed rather pleased about it.>
+
+	sub
+		Persona 1
+		special <UNLISTED>
+		greeting <if= PlotStatus %plotid% %id% else %pop% EndChat Say %id%01 AddChat %id%01 AddChat %id%02>
+		*result%id%01 <*THEME_EXPO&Enemy na>
+		result%id%02 <AddEasygoing -d10 Goto result%id%01>
+		Msg%id%01 <Ready for another battle? This time, I'm the one who's going to come out on top!>
+		Msg%id%01_1 <>
+		CMsg%id%01_1 <ifNPCHeroic Accept>
+		Msg%id%01_2 <>
+		CMsg%id%01_2 <ifNPCVillainous Accept>
+		Msg%id%01_11 <Don't think I'm afraid of you, \PC ! I've been practicing a lot... this time, I'm gonna defeat you!>
+		CMsg%id%01_11 <ifNPCAttitude %1% XXR_A_IsJunior Accept>
+		Msg%id%01_12 <Seems you always show up to antagonize me, \PC ... well, this time I'm going to give you the arse-kicking you deserve.>
+		CMsg%id%01_12 <ifNPCAttitude %1% XXR_A_Antagonistic Accept>
+		Prompt%id%01 <Let's see what you can do.>
+		Prompt%id%01_1 <You think so? We'll see.>
+		Prompt%id%02 <Ha, don't make me laugh!>
+		Prompt%id%02_1 <You can't compete with my skills.>
+	end
+
+Content
+	name <Let's See How You Like It!>
+	requires <*:CS_MIX_Confrontation 1:A.ant (1:M.mer|1:M.pro) ~1:ADVEN ~1:THIEF -!Ne>
+	desc <The PC has been bothering the NPC; now the tables are turned!>
+	changes <E:M>
+	results <E:M.com>
+
+	% E1 is the Enemy NPC
+	% E2 is the outdoors scene where this encounter is
+
+	% P%id%01 = ForceChat Counter
+	update <if= P%id%01 0 P= %id%01 1 Alert %id%06 TeamMonologue EnemiesTeam %id%01 Monologue %1% %id%02  SetXXRMotivation %1% XXR_M_Competitor  WMecha EnemyNPCTeam StoryDL 20  History %id%03>
+
+	.%id%_%plotid%_GoCombatWin  <CancelSubPlot %plotid%  Trigger0 .%id%_%plotid%_GoWin   History %id%04>
+	.%id%_%plotid%_GoCombatLoss <CancelSubPlot %plotid%  Trigger0 .%id%_%plotid%_GoLoss  History %id%05  ifNPCOK %1%  Monologue %1% %id%07>
+
+	Msg%id%01 <Thanks for your help, %name1%.>
+	Msg%id%01_1 <I really appreciate your backup, %name1%.>
+	Msg%id%02 <It's my pleasure. \PC has been a persistent thorn in my side; I'll take any chance I can to beat \OPR 0 .>
+	Msg%id%02_1 <>
+	CMsg%id%02_1 <ifNPCHeroic Accept>
+	Msg%id%02_2 <>
+	CMsg%id%02_2 <ifNPCVillainous Accept>
+	Msg%id%02_3 <I'm just doing my job for \FACTION &EnemyFac ... and if I get to make \PC 's life harder in the process, so much the better.>
+	CMsg%id%02_3 <ifFactionExists &EnemyFac Accept>
+	Msg%id%03 <%name1% came on this mission just for a chance to fight you.>
+	Msg%id%04 <You defeated %name1%.>
+	Msg%id%05 <You were defeated by %name1%.>
+	Msg%id%06 <%name1% and \PPR %1% lance are here supporting another team.>
+	Msg%id%07 <Hey \PC - It's not so much fun when I show up to ruin your missions, is it?>
+
+	sub
+		Persona 1
+		special <UNLISTED>
+		greeting <if= PlotStatus %plotid% %id% else %pop% EndChat SayAnything>
+	end
+
+
+Content
 	name <Until Someone Loses an Eye>
-	requires <*:CS_MIX_Confrontation 1:M.com (1:A.sr_|1:A.ant|1:A.equ) -!Ne>
+	requires <*:CS_MIX_Confrontation 1:M.com (1:A.sr_|1:A.equ) -!Ne ~1:LABOR ~1:CRAFT ~1:MEDIA>
 	desc <It was all fun and games before, now it's getting serious.>
 	changes <E:A>
 	results <E:A.env>
@@ -54,7 +255,7 @@ Content
 	.%id%_%plotid%_GoCombatWin  <CancelSubPlot %plotid%  Trigger0 .%id%_%plotid%_GoWin   History %id%02  ifNPCOK %1% SetXXRAttitude %1% XXR_A_EnviesPC  Monologue %1% %id%01>
 	.%id%_%plotid%_GoCombatLoss <CancelSubPlot %plotid%  Trigger0 .%id%_%plotid%_GoLoss  History %id%03>
 
-	Msg%id%01 <Hmph... Your skills have really improved, \PC . Looks like I'm going to have to work harder to beat you.>
+	Msg%id%01 <Hmph... Your skills have really improved, \PC . Next time I'll stop holding back.>
 	Msg%id%01_1 <>
 	CMsg%id%01_1 <ifNPCHeroic Accept>
 	Msg%id%01_2 <>
