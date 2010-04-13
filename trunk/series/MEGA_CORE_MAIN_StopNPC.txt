@@ -593,7 +593,6 @@ Content
 	desc <The NPC reacts badly to a loss, but fortunately you have backup.>
 	requires <*:CS_StopNPCMission &IsEnemyNPC E:A.equ (E:M.com|E:M.ggd)>
 	changes <E:A>
-	Size 5
 
 	% E1 is the NPC launching this attack
 	% E2 is an outdoors scene for the encounters

@@ -1,0 +1,38 @@
+%%
+%%  Subplots needed by various core story events.
+%%
+
+%%
+%%  *CSE_DEF5_Occupation  Content
+%%
+%% Some military force or another is occupying a city. Help the military to
+%% achieve their objective for an IronDefense merit badge, or resolve the
+%% situation peacefully for a MoralHighGround merit badge.
+%%
+%% The mood should already be deployed, and the commander should be placed
+%% somewhere accessible.
+%%
+%%  PARAM1: The occupying faction
+%%  PARAM2: The enemy faction
+%%  PARAM3: The place being occupied
+%%  PARAM4: The occupation commander
+%%  PARAM5: The prevailing mood, to be terminated with the plot
+%%
+
+
+Content
+	name <Robin Hood Must Die>
+	desc <Occupiers want pirate out, Pirate wants evil industrialist out, Evil Industrialist just wants money.>
+	requires <*CSE_DEF5_Occupation (2:REDMA|2:CRIHN|2:BOHEM)>
+
+	% E1: The occupying faction
+	% E2: The enemy faction
+	% E3: The place being occupied
+	% E4: The occupation commander
+	% E5: The prevailing mood, to be terminated with the plot
+
+
+
+
+
+

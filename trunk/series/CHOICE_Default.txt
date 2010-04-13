@@ -102,22 +102,21 @@ Choice 5
 	name <Defense 5>
 	desc <Complete this option track to earn more reinforcements in final battle.>
 	desig <DEF_5>
-	requires <:DEF_4 -!Ex P:++>
+	requires <:DEF_4 -!Ex P:++ F:++>
 
 	% E1 is the city for the next episode.
 	Element1 <Scene City !Far -7 !Ally -7 !Okay -3 !XClude -2>
 
-	Prompt <I'll defend %name1%.>
+	Prompt <I'll defend %name1% from \FACTION &EnemyFac .>
 	Prompt_1 <%name1% is probably \PERSONA &EnemyNPC 's next target.>
 	CPrompt_1 <ifNPCOK &EnemyNPC Accept>
 	Prompt_2 <%name1% must be protected from \FACTION &EnemyFac .>
-	CPrompt_2 <ifFactionExists &EnemyFac Accept>
 	Reply <Good luck with that.>
 	Alert <You decide to go protect %name1%.>
 
 	Choice <StoryNote %id%01 &SetEpisodeScene %1%>
 
-	Msg%id%01 <You decided to protect %name1%.>
+	Msg%id%01 <You decided to protect %name1% from \FACTION &EnemyFac .>
 
 %%
 %%  *************************

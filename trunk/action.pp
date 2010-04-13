@@ -239,6 +239,11 @@ Function CheckLOS( GB: GameBoardPtr; Observer,Target: GearPtr ): Boolean;
 		end;
 		TargetStealth := T;
 	end;
+	Function CasualUseAwareness: Boolean;
+		{ Can use the team skill level if the map scale is bigger than 2. }
+	begin
+		CasualUseAwareness := ( GB^.Scale > 2 );
+	end;
 var
 	O,T,Roll: Integer;
 	P1,P2: Point;
@@ -266,7 +271,7 @@ begin
 			if not ArcCheck( P1.X , P1.Y , NAttValue( Observer^.NA , NAG_Location , NAS_D ) , P2.X , P2.Y , ARC_F180 ) then begin
 				{ Make the awareness roll. }
 				T := TargetStealth;
-				Roll := SkillRoll( GB , Observer , NAS_Awareness , STAT_Perception , T , 0 , False , AreEnemies( GB , Observer , Target ) );
+				Roll := SkillRoll( GB , Observer , NAS_Awareness , STAT_Perception , T , 0 , CasualUseAwareness , AreEnemies( GB , Observer , Target ) );
 
 				if SkillRoll( GB , Target , NAS_Stealth , STAT_Speed , Roll , -5 , False , AreEnemies( GB , Observer , Target ) ) > Roll then begin
 					it := False;
@@ -286,7 +291,7 @@ begin
 	end else begin
 		{ Make the awareness roll. }
 		T := O + TargetStealth;
-		Roll := SkillRoll( GB , Observer , NAS_Awareness , STAT_Perception , T , 0 , False , AreEnemies( GB , Observer , Target ) );
+		Roll := SkillRoll( GB , Observer , NAS_Awareness , STAT_Perception , T , 0 , CasualUseAwareness , AreEnemies( GB , Observer , Target ) );
 
 		if Roll > T then begin
 			{ The target might get a STEALTH save now. }

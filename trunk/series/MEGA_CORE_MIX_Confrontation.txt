@@ -39,6 +39,197 @@
 %%
 
 Content
+	name <Suffering Leads to the Dark Side>
+	requires <*:CS_MIX_Confrontation 1:A.obs 1:M.com -!Ne -!Lo ~1:MILIT ~1:FAITH -1:nemesis -1:evil_>
+	desc <The enemy, desperate for a victory, is calling out all the stops.>
+	% Stop Three on the Disciple Path
+	changes <E:++ E:M>
+	results <E:M.see>
+
+	% E1 is the Enemy NPC
+	% E2 is the outdoors scene where this encounter is
+	% E3 is a public scene in case the PC wins this fight
+	Element3 <Scene (Building|Meeting) Public !Near -7>
+
+	% P%id%01 = ForceChat Counter
+	update <if= P%id%01 0 P= %id%01 1 ForceChat %1% WMecha EnemyNPCTeam StoryDL 50  ifG PCRenown StoryDL NPCLevel %1% PCRenown>
+
+	.%id%_%plotid%_GoCombatWin  <CancelSubPlot %plotid%  Trigger0 .%id%_%plotid%_GoWin   History %id%02  ifNPCOK %1% Monologue %1% %id%01 Monologue %1% %id%07 &SetEnemyNPC 0  MoveAndPacifyNPC %1% %3%  SetNPCFaction %1% 0  PCAlly %1%  SetNPCBio %1% Msg%id%05 History %id%06>
+	.%id%_%plotid%_GoCombatLoss <CancelSubPlot %plotid%  Trigger0 .%id%_%plotid%_GoLoss  History %id%04  ifNPCOK %1% SetXXRMotivation %1% XXR_M_Seeker    Monologue %1% %id%03>
+
+	Msg%id%01 <Incredible! \PC , please forgive me, I was a fool to think I could challenge your ultimate mecha technique...>
+	Msg%id%01_1 <>
+	CMsg%id%01_1 <ifNPCHeroic Accept>
+	Msg%id%02_1 <You defeated %name1%.>
+	CMsg%id%02_1 <ifNPCOK %1% Accept>
+	Msg%id%02_2 <You killed %name1% in combat.>
+	CMsg%id%02_2 <ifNPCDead %1% Accept>
+	Msg%id%03 <Bwa-ha! I have defeated the great \PC ... but what am I supposed to do next?>
+	Msg%id%03_1 <>
+	CMsg%id%03_1 <ifNPCHeroic Accept>
+	Msg%id%04 <You were defeated by %name1%.>
+	Msg%id%05 <%name1% was originally your enemy, but after failing to defeat you gave up to become your disciple.>
+	Msg%id%06 <%name1% quit being your enemy and pledged to be your disciple.>
+	Msg%id%07 <From this day forth I am no longer your enemy, but instead your disciple. If you would consent to train me I'll be waiting at \EXACT_SCENE %3% .>
+
+	sub
+		Persona 1
+		%% An entirely generic battle challenge.
+		special <UNLISTED>
+		greeting <if= PlotStatus %plotid% %id% else %pop% Goto .%id%_GoGreet>
+		*.%id%_GoGreet <*BattleChallenge .%id%_GoThemeExpo na>
+		.%id%_GoThemeExpo <EndChat Say %id%01>
+		Msg%id%01 <This time, I've called out all the stops! You have no chance to survive!!!>
+	end
+
+Content
+	name <Hate Leads to Suffering>
+	requires <*:CS_MIX_Confrontation 1:A.hat 1:M.com -!Ne -!Lo ~1:MILIT ~1:FAITH -1:nemesis -1:evil_>
+	desc <The enemy, desperate for a victory, is calling out all the stops.>
+	% Stop Two on the Disciple Path
+	changes <E:A E:M>
+	results <E:A.obs E:M.see>
+
+	% E1 is the Enemy NPC
+	% E2 is the outdoors scene where this encounter is
+
+	% P%id%01 = ForceChat Counter
+	update <if= P%id%01 0 P= %id%01 1 ForceChat %1%>
+
+	.%id%_%plotid%_GoCombatWin  <CancelSubPlot %plotid%  Trigger0 .%id%_%plotid%_GoWin   History %id%02  ifNPCOK %1% SetXXRAttitude %1% XXR_A_Obsession   Monologue %1% %id%01>
+	.%id%_%plotid%_GoCombatLoss <CancelSubPlot %plotid%  Trigger0 .%id%_%plotid%_GoLoss  History %id%04  ifNPCOK %1% SetXXRMotivation %1% XXR_M_Seeker    Monologue %1% %id%03>
+
+	Msg%id%01 <How is it that I keep losing all the time!? You can't be unbeatable... I swear, our next battle will be the last!!!>
+	Msg%id%01_1 <>
+	CMsg%id%01_1 <ifNPCHeroic Accept>
+	Msg%id%02_1 <You defeated %name1%, who swore that your next battle would be the last.>
+	CMsg%id%02_1 <ifNPCOK %1% Accept>
+	Msg%id%02_2 <You killed %name1% in combat.>
+	CMsg%id%02_2 <ifNPCDead %1% Accept>
+	Msg%id%03 <Bwa-ha! I have defeated the great \PC ... but what am I supposed to do next?>
+	Msg%id%03_1 <>
+	CMsg%id%03_1 <ifNPCHeroic Accept>
+	Msg%id%04 <You were defeated by %name1%.>
+
+	sub
+		Persona 1
+		%% An entirely generic battle challenge.
+		special <UNLISTED>
+		greeting <if= PlotStatus %plotid% %id% else %pop% Goto .%id%_GoGreet>
+		*.%id%_GoGreet <*BattleChallenge .%id%_GoThemeExpo na>
+		*.%id%_GoThemeExpo <*THEME_EXPO&Enemy na>
+	end
+
+
+Content
+	name <Anger Leads To Hate>
+	requires <*:CS_MIX_Confrontation 1:A.env 1:M.com -!Ne ~1:MILIT ~1:FAITH>
+	desc <The enemy, envious of your abilities, challenges you once more.>
+	% Stop One on the Disciple Path
+	changes <E:A>
+	results <E:A.dis E:A.hat>
+
+	% E1 is the Enemy NPC
+	% E2 is the outdoors scene where this encounter is
+
+	% P%id%01 = ForceChat Counter
+	update <if= P%id%01 0 P= %id%01 1 ForceChat %1%>
+
+	.%id%_%plotid%_GoCombatWin  <CancelSubPlot %plotid%  Trigger0 .%id%_%plotid%_GoWin   History %id%02  ifNPCOK %1% SetXXRAttitude %1% XXR_A_HatesPC     Monologue %1% %id%01>
+	.%id%_%plotid%_GoCombatLoss <CancelSubPlot %plotid%  Trigger0 .%id%_%plotid%_GoLoss  History %id%04  ifNPCOK %1% SetXXRAttitude %1% XXR_A_Disrespect  Monologue %1% %id%03>
+
+	Msg%id%01 <No!!! Why won't you just lie down and die, already!? There's no way you can keep on winning!>
+	Msg%id%01_1 <>
+	CMsg%id%01_1 <ifNPCHeroic Accept>
+	Msg%id%02_1 <You defeated %name1%, who didn't take the loss well.>
+	CMsg%id%02_1 <ifNPCOK %1% Accept>
+	Msg%id%02_2 <You killed %name1% in combat.>
+	CMsg%id%02_2 <ifNPCDead %1% Accept>
+	Msg%id%03 <Just as I thought... You're nothing but a fraud.>
+	Msg%id%03_1 <>
+	CMsg%id%03_1 <ifNPCHeroic Accept>
+	Msg%id%04 <You were defeated by %name1%.>
+
+	sub
+		Persona 1
+		%% An entirely generic battle challenge.
+		special <UNLISTED>
+		greeting <if= PlotStatus %plotid% %id% else %pop% Goto .%id%_GoGreet>
+		*.%id%_GoGreet <*BattleChallenge .%id%_GoThemeExpo na>
+		*.%id%_GoThemeExpo <*THEME_EXPO&Enemy na>
+	end
+
+Content
+	name <Enthusiastic Recruit>
+	requires <*:CS_MIX_Confrontation 1:M.--- (1:A.---|1:A.jr_) F:++ ~1:MILIT ~1:POLIC ~F:MILIT ~F:POLIC ~F:CORPO>
+	desc <The NPC is enthusiastic about their faction, thereby marking them as Professional.>
+	changes <E:M>
+	results <E:M.pro>
+
+	% E1 is the Enemy NPC
+	% E2 is the outdoors scene where this encounter is
+
+	% P%id%01 = ForceChat Counter
+	update <if= P%id%01 0 P= %id%01 1 ForceChat %1%>
+
+	.%id%_%plotid%_GoCombatWin  <CancelSubPlot %plotid%  Trigger0 .%id%_%plotid%_GoWin   History %id%01>
+	.%id%_%plotid%_GoCombatLoss <CancelSubPlot %plotid%  Trigger0 .%id%_%plotid%_GoLoss  History %id%02>
+
+	Msg%id%01 <You defeated %name1%.>
+	Msg%id%02 <You were defeated by %name1%.>
+
+	sub
+		Persona 1
+		special <UNLISTED>
+		greeting <if= PlotStatus %plotid% %id% else %pop% EndChat Say %id%01 AddChat %id%01 AddChat %id%02  SetXXRMotivation %1% XXR_M_Professional History %id%02>
+		*.%id%_GoThemeExpo <*THEME_EXPO&Enemy na>
+		result%id%01 <AddCheerful -d10   Goto .%id%_GoThemeExpo>
+		result%id%02 <Goto .%id%_GoThemeExpo>
+		Msg%id%01 <In the name of \FACTION &ENemyFac , I will defeat you!>
+		Msg%id%01_1 <>
+		CMsg%id%01_1 <ifNPCHeroic Accept>
+		Msg%id%01_2 <>
+		CMsg%id%01_2 <ifNPCVillainous Accept>
+		Msg%id%01_11 <>
+		CMsg%id%01_11 <>
+		Msg%id%02 <%name1% fought you for the glory of \FACTION &EnemyFac .>
+		Prompt%id%01 <Ashes, they must be desperate for recruits...>
+		Prompt%id%01_1 <Quit being so enthusiastic! It's annoying.>
+		Prompt%id%02 <Don't be so sure about that.>
+		Prompt%id%02_1 <You're welcome to try.>
+	end
+
+Content
+	name <Thanks From An Enemy>
+	requires <*:CS_MIX_Confrontation 1:A.tha>
+	desc <In thanks to the PC, this enemy won't fight.>
+	changes <E:A>
+	results <E:A.equ>
+
+	% E1 is the Enemy NPC
+	% E2 is the outdoors scene where this encounter is
+
+	% P%id%01 = ForceChat Counter
+	update <if= P%id%01 0 P= %id%01 1 Monologue %1% %id%01 Retreat EnemyNPCTeam  SetXXRAttitude %1% XXR_A_IsEqual>
+
+	.%id%_%plotid%_GoCombatWin  <CancelSubPlot %plotid%  Trigger0 .%id%_%plotid%_GoWin   History %id%02>
+	.%id%_%plotid%_GoCombatLoss <CancelSubPlot %plotid%  Trigger0 .%id%_%plotid%_GoLoss  History %id%03>
+
+	Msg%id%01 <Hey \PC , I guess I still owe you one. In thanks, I'll sit out this battle... guess that makes us even now, huh?>
+	Msg%id%01_1 <>
+	CMsg%id%01_1 <ifNPCHeroic Accept>
+	Msg%id%01_2 <>
+	CMsg%id%01_2 <ifNPCVillainous Accept>
+	Msg%id%02 <You defeated %name1%'s forces.>
+	Msg%id%03 <You were defeated by %name1%'s forces.>
+
+	sub
+		Persona 1
+		special <UNLISTED>
+		greeting <if= PlotStatus %plotid% %id% else %pop% EndChat SayAnything>
+	end
+
+Content
 	name <Sympathy for Ramba Ral>
 	requires <*:CS_MIX_Confrontation 1:A.sr_ (1:M.pro|1:M.com) -!Ne ~1:MILIT ~1:ADVEN ~1:FAITH ~1:LABOR ~1:GOOD_>
 	desc <The enemy is weary, but won't back down.>
@@ -241,7 +432,7 @@ Content
 
 Content
 	name <Until Someone Loses an Eye>
-	requires <*:CS_MIX_Confrontation 1:M.com (1:A.sr_|1:A.equ) -!Ne ~1:LABOR ~1:CRAFT ~1:MEDIA>
+	requires <*:CS_MIX_Confrontation 1:M.com (1:A.sr_|1:A.equ) -!Ne ~1:LABOR ~1:CRAFT ~1:MEDIA ~1:FAITH -1:ADVEN -1:MILIT>
 	desc <It was all fun and games before, now it's getting serious.>
 	changes <E:A>
 	results <E:A.env>
@@ -396,7 +587,6 @@ Content
 		Prompt%id%03_1 <I don't work that cheap, \CHATNPC .>
 		Prompt%id%04 <[Continue]>
 	end
-
 
 Content
 	name <You're Cutting Into My Profits>

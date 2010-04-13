@@ -4,6 +4,98 @@
 
 %% Similar to quests, but work for plots.
 
+%%
+%% *SearchBeefgate Content
+%%
+%%  You're searching for a team of mecha, but the final encounter is probably
+%%  too difficult for the PC as of yet. What to do? The answer, of course, is to
+%%  install a beefgate. The PC will be sent to fight successively harder waves
+%%  of enemies until the final battle is unveiled.
+%%
+%%  Note that %name3% will be used as the title of what you're looking for, so
+%%  name your encounter accordingly.
+%%
+%% PARAM1: The Mission-Giver
+%% PARAM2: The outdoor scene where scene-to-reveal is
+%% PARAM3: Scene-to-reveal
+%% PARAM4: The faction of the beef
+
+Content
+	name <Search Beefgate>
+	requires <*SearchBeefgate>
+	desc <Pound the beefgate until it spits up an encounter.>
+
+	% E1 is the mission-giver
+	% E2 is the outdoors scene
+	% E3 is the scene to be revealed
+	% E4 is the enemy faction
+	% E5 is the beefgate itself
+	Element5 <Prefab>
+	Place5 <4>
+
+	sub
+
+		MetaScene 5
+		MapWidth 50
+		MapHeight 50
+
+		Start <if= L2 0 L= 2 1   Alert 1  ForceChat %5%>
+
+		nu1 <if= T1 0   Return   if= V1 0 V= 1 1   Alert 2   ifNPCOK %5% else GoStartSkirmishing  Goto GoStartActTwo>
+		nu2 <if= T2 0            if= V1 0 V= 1 1   Alert 3   XPV 100  AddRenown 1   SALVAGE   ifNPCOK %5% else GoStartSkirmishing  Monologue %5% 4  History 5  Goto GoStartActTwo>
+
+		GoStartActTwo <MoveAndPacifyNPC %5% %10%  SetMood %6% %4%  SetPlotStatus %plotid1% %id1%>
+		GoStartSkirmishing <SetMood %7% %4%  EndPlot>
+
+		Msg1 <You find a mecha force from %name3% being attacked by %name1%.>
+		Msg2_1 <You don't stick around to see how the battle turns out.>
+		CMsg2_1 <ifG T3 0 Accept>
+		Msg2_2 <You have lost the battle.>
+		CMsg2_2 <if= T3 0 Accept>
+		Msg3 <You have defeated %name1%.>
+		Msg4 <Thanks for that... If you'd like to help us take this city back from %name1%, come talk with me at %name10% later on.>
+		Msg5 <You helped %name5% fight a lance from %name1%.>
+
+		sub
+			team 1
+			SetEnemy 2
+			ParaX 5
+			ParaY 5
+
+			team 2
+			name <Enemies>
+			SetEnemy 1
+			Deploy <WMecha 2 %threat% 100>
+			ParaX 45
+			ParaY 45
+		end
+	end
+	inv
+		Encounter
+		name <Hostile Mecha>
+		%% The BeefGate itself.
+		Special <NoMSID>
+		%% This encounter will attack once per day. If the PC defeats it, then this encounter
+		%% needs to be reset by E1 before it will appear again. If E1 is dead, it will reset
+		%% by itself.
+		% V1 = Visibility Clock. If ComTime > V1 and V1 <> 0, encounter is active
+		% V2 = Difficulcy Rating. Increases by one each time the PC defeats it.
+		update <if# V1 0 else GoHide  ifG ComTime V1 else GoHide  SetStat STAT_MetaVisibility 0  Goto GoSetOrders>
+		% Sets this encounter's orders to Passive
+		GoSetOrders <GrabSource GSetNAtt NAG_EpisodeData NAS_Orders 3>
+		use <ifG StatVal STAT_MetaVisibility -1  Print -1  Goto GoStartCombat>
+		ATTACK <ifG StatVal STAT_MetaVisibility -1    ifUStealth 15 else GoAutoAttack ifYesNo -3 -4 -5 else GoAvoidAttack Goto GoAutoAttack>
+		GoAutoAttack <Alert -2 Goto GoStartCombat>
+		GoAvoidAttack <Print -6 AddSociable -1>
+		GoStartCombat <V= 1 0  SavePos Dynamic 2 V2 100 .nu1 .nu2 ComposeD Msg1 .Msg1 DynaFaction %4%>
+		.nu1 <if= T1 0  Return   if= L1 0  L= 1 1  LoseRenown  ItemVar= %5% 1 ComTime ItemVar+ %5% 1 d86400 ItemVar+ %5% 1 43200>
+		.nu2 <if= T2 0           if= L1 0  L= 1 1  Alert 1 XPV 100    P+ %id%02 1   QMemo %plotid% 1>
+		EncounterMove 50
+		.Msg1 <You defeated some pirates. Matthias will want to hear about this.>
+	end
+
+
+
 %% *ThiefHideout Content
 %%
 %%  A thief is hiding out somewhere. Add a hideout, and a way to access it.

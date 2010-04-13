@@ -2072,7 +2072,7 @@ begin
 		if EList[ t ].EValue <> 0 then begin
 			Part := SeekGearByElementDesc( Adv , EList[ t ].EType , EList[ t ].EValue , GB );
 			msg := BStr( T );
-			AddGearXRContext( GB , FindRoot( GB^.Scene ) , Part , Context , msg[1] );
+			AddGearXRContext( GB , Adv , Part , Context , msg[1] );
 		end;
 	end;
 
@@ -2099,7 +2099,7 @@ begin
 				end;
 			end;
 
-			InitOK := InsertPlot( Scene , Slot , Part , GB , threat );
+			InitOK := InsertPlot( Adv , Slot , Part , GB , threat );
 		end else InitOK := False;
 	until ( Shopping_List = Nil ) or InitOK;
 
