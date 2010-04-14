@@ -1015,7 +1015,7 @@ Procedure MoveElements( GB: GameBoardPtr; Adv,Plot: GearPtr; IsAQuest: Boolean )
 var
 	T,PlaceIndex: Integer;
 	PlaceCmd,EDesc,TeamName,DebugRec: String;
-	Element,Dest,MF,Team,MS,Thing,DScene: GearPtr;
+	Element,Dest,MF,Team,MS,Thing,DScene,Dest0: GearPtr;
 	InSceneNotElement: Boolean;
 	EID: LongInt;
 begin
@@ -1091,7 +1091,12 @@ begin
 				end else begin
 					{ If Dest isn't a scene, find the scene DEST is in itself }
 					{ and stick E in there. }
+					Dest0 := Dest;
 					while ( Dest <> Nil ) and ( not IsAScene( Dest ) ) do Dest := Dest^.Parent;
+					if Dest = Nil then begin
+						DialogMsg( 'ERROR: ' + GearName( Dest0 ) + ' selected as place for ' + GearName( Element ) );
+						Exit;
+					end;
 
 					if IsMasterGear( Element ) then begin
 						if TeamName <> '' then begin
