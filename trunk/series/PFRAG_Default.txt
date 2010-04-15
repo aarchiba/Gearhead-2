@@ -1,5 +1,60 @@
 % Persona Fragment File
 
+% TYPE: *ShowMeYourWorkplace
+%		&NothingToHide	The NPC has nothing to hide (or claims such, at least)
+%		&Investigation	This is part of a criminal investigation
+%	The PC wants to gain entry to the NPC's workplace.
+%   PARAM1: Success Exit Label
+%   PARAM2: Failure Exit Label
+%   PARAM3: Difficulty Rating
+
+	Persona
+	requires <*ShowMeYourWorkplace &NothingToHide>
+	START <EndChat Say %id%01 AddChat %id%01>
+	result%id%01 <Goto %1%>
+	Msg%id%01 <Alright. I have nothing to hide.>
+	Msg%id%01_1 <>
+	CMsg%id%01_1 <ifNPCSociable Accept>
+	Msg%id%01_2 <>
+	CMsg%id%01_2 <ifNPCShy Accept>
+	Msg%id%01_3 <>
+	CMsg%id%01_3 <ifNPCEasygoing Accept>
+	Msg%id%01_4 <>
+	CMsg%id%01_4 <ifNPCPassionate Accept>
+	Msg%id%01_5 <>
+	CMsg%id%01_5 <ifNPCCheerful Accept>
+	Msg%id%01_6 <>
+	CMsg%id%01_6 <ifNPCMelancholy Accept>
+	Prompt%id%01 <[Continue]>
+
+
+
+% TYPE: *SuspectGreeting
+%	The NPC is suspected of a crime which the PC is investigating.
+%   PARAM1: Exit Label
+
+	Persona
+	requires <*SuspectGreeting>
+	START <if= v%id%01 0 else %1% V= %id%01 1 NewChat Say %id%01 AddChat %id%01>
+	result%id%01 <Goto %1%>
+	Msg%id%01 <Yes, what do you want?>
+	Msg%id%01_1 <>
+	CMsg%id%01_1 <ifNPCSociable Accept>
+	Msg%id%01_2 <>
+	CMsg%id%01_2 <ifNPCShy Accept>
+	Msg%id%01_3 <>
+	CMsg%id%01_3 <ifNPCEasygoing Accept>
+	Msg%id%01_4 <>
+	CMsg%id%01_4 <ifNPCPassionate Accept>
+	Msg%id%01_5 <>
+	CMsg%id%01_5 <ifNPCCheerful Accept>
+	Msg%id%01_6 <>
+	CMsg%id%01_6 <ifNPCMelancholy Accept>
+	Prompt%id%01 <I'd like to ask you a few questions.>
+	Prompt%id%01_1 <I'm here to ask you some questions.>
+	Prompt%id%01_2 <I was wondering if you could answer some questions.>
+
+
 % TYPE: *LM_JoinFaction
 %		&IsPolice    = It's a police faction
 %		&IsMilitary  = It's a military faction

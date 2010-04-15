@@ -923,6 +923,28 @@ begin
 	Calculate_Reward_Value := RV;
 end;
 
+Function Calculate_Asking_Price( GB: GameBoardPtr; Renown,Percent: LongInt ): LongInt;
+	{ Return an appropriate asking price, based on the listed }
+	{ threat level, percent scale, and reaction score with I_NPC. }
+const
+	Min_Asking_Price = 3000;
+var
+	RV,React: LongInt;
+begin
+	{ Calculate the base reward value. }
+	RV := Calculate_Threat_Points( Renown , 25 ) * Percent div 100;
+	if RV < Min_Asking_Price then RV := Min_Asking_Price;
+
+	{ Modify this for the reaction score. }
+	if ( I_NPC <> Nil ) and ( I_PC <> Nil ) and ( GB <> Nil ) then begin
+		React := ReactionScore( GB^.Scene , I_PC , I_NPC );
+		if React < 0 then RV := RV * ( 100 - 2 * React ) div 100
+		else if React > 20 then RV := RV * ( 220 - React ) div 200;
+	end;
+
+	Calculate_Asking_Price := RV;
+end;
+
 Function FindLocalMacro( const cmd: String; GB: GameBoardPtr; Source: GearPtr ): String;
 	{ Locate the local macro described by "cmd". }
 var
@@ -949,18 +971,18 @@ Procedure InitiateMacro( GB: GameBoardPtr; Source: GearPtr; var Event: String; P
 	function NeededParameters( cmd: String ): Integer;
 		{ Return the number of parameters needed by this function. }
 	const
-		NumStandardFunctions = 18;
+		NumStandardFunctions = 19;
 		StdFunName: Array [1..NumStandardFunctions] of string = (
 			'-', 'GNATT', 'GSTAT', '?PILOT', '?MECHA',
 			'SKROLL', 'THREAT', 'REWARD', 'ESCENE', 'RANGE',
 			'FXPNEEDED','*','MAPTILE','PCSKILLVAL','CONCERT',
-			'SKILLTAR', 'HARDSKILLTAR', 'SOCSKILLTAR'
+			'SKILLTAR', 'HARDSKILLTAR', 'SOCSKILLTAR', 'PRICE'
 		);
 		StdFunParam: Array [1..NumStandardFunctions] of byte = (
 			1,2,1,1,1,
 			1,2,2,1,2,
 			1,2,2,2,2,
-			1,1,1
+			1,1,1,2
 		);
 	var
 		it,T: Integer;
@@ -1272,6 +1294,11 @@ begin
 		VCode := ScriptValue( Event , GB , Scene );
 		VC2 := ScriptValue( Event , GB , Scene );
 		SV := Calculate_Reward_Value( GB , VCode , VC2 );
+
+	end else if ( SMsg = 'PRICE' ) then begin
+		VCode := ScriptValue( Event , GB , Scene );
+		VC2 := ScriptValue( Event , GB , Scene );
+		SV := Calculate_Asking_Price( GB , VCode , VC2 );
 
 	end else if ( SMsg = 'RANGE' ) then begin
 		VCode := ScriptValue( Event , GB , Scene );

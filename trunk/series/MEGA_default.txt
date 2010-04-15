@@ -5,17 +5,136 @@
 %% Similar to quests, but work for plots.
 
 %%
-%% *:CrookedCorpo Content
+%% *:CriminalInvestigation Content
 %%
-%%  A local businessperson is breaking the law. Your task is to uncover the
+%%  A person of some type is breaking the law. Your task is to uncover the
 %%  evidence which will prove this... or, maybe accept a bribe to keep the
 %%  whole thing quiet.
 %%
+%%  If the evidence is uncovered, this subplot will be won. If the PC accepts
+%%  a bribe or fails in the mission, it will be lost.
+%%
+%%  Upon reporting the crime, the parent plot should either end or cancel this
+%%  subplot to prevent the PC from collecting bribes after the fact.
+%%
 %% PARAM1: The character under investigation
+%% PARAM2: The city where the investigation is happening
 %%
 
 Content
-	name <>
+	name <Monster Maker>
+	desc <This character is running an illegal biotech lab.>
+	requires <*:CriminalInvestigation 1:EVIL_ (1:CORPO|1:TRADE|1:ACADE)>
+
+	%% E1 is the NPC under investigation
+	%% E2 is the city where this investigation will take place
+	%% E3 is an urban scene, for placing the factory
+	%% E4 is the factory scene, full of monsters
+	%% E5 is a secret- reveal this to corner E1 right away.
+	Element3 <Scene Urban !Near 2>
+	Element4 <Prefab>
+	Place4 <3>
+	Element5 <Prefab>
+
+	% P%id%01 = Learned secret about factory
+
+	end <ifNPCDead %1% CancelSubPlot %plotid1% CancelSubPlot %plotid%>
+	.%id1%_%plotid1%_GoLearnSecret <P= %id%01 1>
+
+	% SubPlot1 is the LearnSecret bit.
+	SubPlot1 <*:LearnSecretAboutNPC&Incriminating 5 1 2>
+
+	sub
+		Persona 1
+		% V%id%01 = Have opened factory
+		greeting <IfSubPlotNotWon %plotid% else .%id%_GoShocked if= PlotStatus %plotid% %id% else %pop% Goto .%id%_GoGreeting>
+		.%id%_GoShocked <EndChat Say %id%01>
+		*.%id%_GoGreeting <*SuspectGreeting .%id%_GoCheckFactory>
+		.%id%_GoCheckFactory <if# v%id%01 0 else .%id%_GoAskQuestions NewChat Say %id%02 AddChat %id%01 AddChat %id%02 AddChat %id%03>
+		.%id%_GoAskQuestions <NewChat Say %id%03 AddChat %id%04 AddChat %id%05>
+		*result%id%01 <*ComeBackWhenYouKnowSomething>
+		result%id%02 <NewChat Say %id%04 AddCHat %id%06 AddChat %id%07 AddChat %id%08>
+		result%id%03 <NewChat Say %id%05 AddChat %id%09>
+		*result%id%04 <*ShowMeYourWorkplace&NothingToHide&Investigation .%id%_GoOpenFactory .%id%_GoRefuse %threat%>
+		.%id%_GoOpenFactory <NewChat Say %id%06 PMemo %plotid% %id%07 SetEncounterActive %4% V= %id%01 1 SetPlotStatus %plotid1% %id1%>
+		*.%id%_GoRefuse <*BrushOff&Questioning>
+		result%id%05 <Goto result%id%01>
+		result%id%06 <NewChat Say %id%08 CashPrize Reward %threat% 200 AddLawful -5 SetEncounterInactive %4%  CancelSubPlot %plotid1% LoseSubPlot %plotid%>
+		result%id%07 <Goto result%id%01>
+		result%id%08 <NewChat Say %id%09 AddChat %id%10 AddChat %id%11>
+		result%id%09 <Goto result%id%08>
+		result%id%10 <NewChat Say %id%10 CashPrize Reward %threat% 250 AddLawful -5 SetEncounterInactive %4%  CancelSubPlot %plotid1% LoseSubPlot %plotid%>
+		result%id%11 <EndChat Say %id%11 FreezeNPC %1% AddLawful 1 XPV 100  SetEncounterInactive %4%  CancelSubPlot %plotid1% WinSubPlot %plotid%>
+		Msg%id%01 <What, how did you survive!? I need to talk with my lawyer...>
+		Msg%id%02 <I trust that your investigation of my factory has turned up nothing?>
+		Msg%id%03 <I am a simple entrepreneur managing an automated factory. I don't have any idea why you're here bothering me.>
+		Msg%id%04 <Health codes...? You really haven't been to the factory yet, have you?>
+		Msg%id%05 <Go with you...? Um, I can't. I've got things to do here. It's important that you go to the factory by yourself.>
+		Msg%id%06 <You can find my factory in \EXACT_SCENE %3% . I'll warn you though, there's nothing there worth seeing.>
+		Msg%id%07 <%name1% told you where to find \PPR %1% factory in \EXACT_SCENE %3% .>
+		Msg%id%08 <That's not a bad deal. Here... maybe the two of us will be able to work together again in the future.>
+		Msg%id%09 <I... Er... Look, I'll give you $ \VAL Reward %threat% 250 if you forget all about this and just go away.>
+		Msg%id%10 <Here you are. Now go forth, and don't darken my presence ever again...>
+		Msg%id%11 <I'm going to talk with my lawyer.>
+		Prompt%id%01 <I'm still working on it.>
+		Prompt%id%02 <You're violating health codes, but I can hush that up...>
+		CPrompt%id%02 <ifPCCriminal ifInsightKn SkillTar %threat% Accept>
+		Prompt%id%03 <Actually, I'd like for you to accompany me there.>
+		CPrompt%id%03 <if= P%id%01 1 Accept>
+		Prompt%id%04 <Can I take a look at this factory?>
+		Prompt%id%05 <I'll be keeping my eye on you.>
+		Prompt%id%06 <Does it matter? $ \VAL Reward %threat% 200 or I shut you down.>
+		Prompt%id%07 <Um, no... I'll go do that now.>
+		Prompt%id%08 <Wait... Why are you so sure I haven't been there?>
+		CPrompt%id%08 <ifInsight HardSkillTar %threat% Accept>
+		Prompt%id%09 <So I can die?>
+		Prompt%id%10 <It's a deal.>
+		Prompt%id%11 <No deal. You're going down, %name1%.>
+
+		MetaScene 4
+		monkeymap
+		MapWidth 35
+		MapHeight 35
+
+		IndustrialTiles
+
+		% L1 = Victory Counter
+
+
+
+		sub
+			Team 1
+			SetEnemy 2
+
+			Team 2
+			name <Fun Guys>
+			SetEnemy 1
+			Deploy <WMonster 2 %threat% 150>
+			type <Synth Hunter-X>
+
+			room
+			special <STARTHERE SHAREDPALETTE>
+			minimap <............2............>
+			sub
+				Trapdoor
+				Destination -1
+				MiniMapComponent 2
+				use <Print 101>
+				Msg101 <It's stuck. You can't get out this way.>
+			end
+		end
+
+	end
+	inv
+		STC CORE-ACTIVATABLE
+		name <%name1%'s Factory>
+		ENCOUNTER_NonCombat
+
+		Secret
+		Msg <Sometimes people go to visit %name1%'s factory, but they never come back.>
+	end
+
+
 
 %%
 %% *:ReconBeefgate Content

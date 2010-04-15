@@ -5,20 +5,17 @@
 % ***
 
 Plot
-	name <AAA Debug Beefgate>
+	name <ZZZ Debug Criminal Investigation>
 
 	Element1 <Scene Building Public>
 	Element2 <Prefab>
 	Place2 <1 (Citizens) pass>
-	Element3 <Scene Environs>
-	Element4 <Prefab>
-	Place4 <3>
-	Element5 <Faction REDMA>
+	Element3 <Scene Town>
 
 	update <if= PlotStatus %plotid1% 0  SetPlotStatus %plotid1% %id1% Alert 1>
-	Msg1 <Go see %name2% at \EXACT_SCENE %1% about the beefgate.>
+	Msg1 <Go investigate %name2% at \EXACT_SCENE %1% .>
 
-	SubPlot1 <*:ReconBeefgate #60 2 3 4 5>
+	SubPlot1 <*:CriminalInvestigation 2 3>
 
 	sub
 		MetaScene 4
@@ -26,8 +23,9 @@ Plot
 		Msg1 <You won the plot!!!>
 	end
 	inv
-		NPC Mecha Pilot
+		NPC Corporate Executive
 		name <Bruce>
+		chardesc Villainous
 
 		STC CORE-ACTIVATABLE
 		name <the debugging scene>
