@@ -92,35 +92,67 @@ Content
 		Prompt%id%11 <No deal. You're going down, %name1%.>
 
 		MetaScene 4
-		monkeymap
+
+		MonkeyMap
+
 		MapWidth 35
 		MapHeight 35
 
 		IndustrialTiles
-
 		% L1 = Victory Counter
-
-
+		start <if= L1 0 else GoBeenBefore L= 1 1 Alert 1 Alert 2 WinSubPlot %plotid%>
+		GoBeenBefore <Print 3>
+		End <SetEncounterInactive %4%>
+		Msg1 <As you enter %name1%'s factory, the access hatch slams shut behind you, trapping you inside.>
+		Msg2 <Looking around, it becomes obvious that this is some kind of illegal biotech facility. You hear something large moving in the distance.>
+		Msg3 <You enter %name1%'s factory.>
 
 		sub
 			Team 1
 			SetEnemy 2
 
 			Team 2
-			name <Fun Guys>
+			name <Monsters>
 			SetEnemy 1
-			Deploy <WMonster 2 %threat% 150>
+			Deploy <if= V1 0 V= 1 1 MonsterUp 2 %threat%>
 			type <Synth Hunter-X>
 
 			room
 			special <STARTHERE SHAREDPALETTE>
-			minimap <............2............>
-			sub
+			minimap <3...........2...........4>
+			inv
 				Trapdoor
 				Destination -1
 				MiniMapComponent 2
 				use <Print 101>
+				CLUE_Insight <Print 102>
+				CLUE_CodeBreaking <Print 102>
 				Msg101 <It's stuck. You can't get out this way.>
+				Msg102 <It's barred from the other side. You'll have to find another way out.>
+
+				STC BIOTANK
+				CLUE_Insight <Print 1>
+				CLUE_Science <Print 2>
+				Msg1 <This biotank has definitely been used recently.>
+				Msg2 <This equipment looks like it's related to the Hunter-X series of biomonster.>
+				MiniMapComponent 3
+
+				STC BIOTANK
+				CLUE_Insight <Print 1>
+				CLUE_Science <Print 2>
+				Msg1 <This biotank has definitely been used recently.>
+				Msg2 <This equipment looks like it's related to the Hunter-X series of biomonster.>
+				MiniMapComponent 4
+			end
+
+			room
+			special <SHAREDPALETTE>
+			minimap <............2............>
+			inv
+				Trapdoor
+				Destination -1
+				MiniMapComponent 2
+				use <Print 1 XPV 100 Return>
 			end
 		end
 
@@ -241,7 +273,7 @@ Content
 		%% This encounter will attack once per day. If the PC defeats it, then this encounter
 		%% needs to be reset by E1 before it will appear again. If E1 is dead, it will reset
 		%% by itself.
-		update <if# P%id%01 0 else GoHide  ifG ComTime P%id%01 else GoHide  SetStat STAT_MetaVisibility 0  ShowEncounter  Goto GoSetOrders>
+		update <if= PlotStatus %plotid% %id% else GoHide if# P%id%01 0 else GoHide  ifG ComTime P%id%01 else GoHide  SetStat STAT_MetaVisibility 0  ShowEncounter  Goto GoSetOrders>
 		% Sets this encounter's orders to Passive
 		GoSetOrders <GrabSource GSetNAtt NAG_EpisodeData NAS_Orders 3>
 		use <ifG StatVal STAT_MetaVisibility -1      ifNPCOK %1% else GoAutoAttack ifUStealth HardSkillTar P%id%02 else GoAutoAttack ifYesNo 1 2 3 else GoAvoidAttack Goto GoAutoAttack>

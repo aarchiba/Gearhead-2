@@ -412,7 +412,7 @@ Const
 	NAS_MB_Lancemate2 = 3;		{ The PC has earned a second lancemate slot. }
 	NAS_MB_Lancemate3 = 4;		{ The PC has earned a third lancemate slot. }
 	NAS_MB_MoralHighGround = 5;	{ The PC has taken moral high ground after DEF_5 }
-	NAS_MB_IronDefense = 6;		{ The PC counterattacked after DEF_5 }
+	NAS_MB_UncompromisingDef = 6;		{ The PC counterattacked after DEF_5 }
 
 
 	{ PERSONAL attributes hold information about the character's place }

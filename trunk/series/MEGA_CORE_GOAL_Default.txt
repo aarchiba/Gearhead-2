@@ -120,6 +120,10 @@ Content
 	requires <*CS_WinGoal *CORE_DEF_5 -&NoCash>
 
 	% E1 is the NPC.
+	% E2 is the Enemy Faction
+	% E3 is the Allied Faction
+	Element2 <Grab 2>
+	Element3 <Grab 3>
 
 	start <ifNPCDead %1% SMemo 0 WinEpisode>
 
@@ -127,7 +131,9 @@ Content
 
 	sub
 		Persona 1
-		greeting <if= PlotStatus %plotid% %id% else %pop% Debrief  NewChat Say %id%01 CashPrize Reward StoryDL 1000 AddReact d10  WinEpisode>
+		%% Winning the DEF_5 episode will start a side story, probably.
+		greeting <if= PlotStatus %plotid% %id% else %pop% Debrief  NewChat Say %id%01 CashPrize Reward StoryDL 1000 AddReact d10  WinEpisode StartPlot .%id%_sidestory 65>
+		.%id%_sidestory <*CSPAWN_Def5 %e2% %e3%>
 		Msg%id%01 <You did it! I hope that someday I can repay the help that you've given to us.>
 		Msg%id%01_1 <That was a complete success. Thanks to you, when the time comes to face down \PERSONA &EnemyNPC we'll be in a stronger position than otherwise.>
 		CMsg%id%01_1 <ifNPCOK &EnemyNPC Accept>

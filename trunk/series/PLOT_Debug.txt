@@ -17,11 +17,6 @@ Plot
 
 	SubPlot1 <*:CriminalInvestigation 2 3>
 
-	sub
-		MetaScene 4
-		start <Print 1 EndPlot>
-		Msg1 <You won the plot!!!>
-	end
 	inv
 		NPC Corporate Executive
 		name <Bruce>

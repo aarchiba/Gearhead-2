@@ -21,6 +21,7 @@
 
 Content
 	name <Orbital Imperialism>
+name <DEBUG>
 	requires <*CSPAWN_Def5 (1:REDMA|1:CRIHN) (2:L5LAW|2:MAQUI|2:FCOMS|2:RISHI|2:ROCKE|2:SILKN|2:AEGSF|2:COMET|2:MUGLE|2:HOELL)>
 	desc <To combat the pirate threat, an asteroid colony will be occupied by L5 troops.>
 	%
@@ -41,7 +42,7 @@ Content
 	% E9 is the encounter for the opening battle
 	% E10 is the scene for E5 after the battle
 	Element3 <Faction (SILKN|AEGSF) !Okay 2>
-	Element4 <Scene Town BOHEM>
+	Element4 <Scene Town BOHEM !Global>
 	Element5 <Prefab>
 	Place5 <9 (Allies) sd ally>
 	Element6 <Prefab>
@@ -57,7 +58,7 @@ Content
 	Msg%id%01 <Commander %name5% of %name3% to lead peacekeeping mission against %name1% in %name4%.>
 
 	% SubPlot1 is the occupation itself.
-	SubPlot1 <*CSE_DEF5_Occupation 3 1 4 5 6>
+	SubPlot1 <*CSE_DEF5_Occupation 3 1 4 5 6 10>
 
 	sub
 		Persona 5

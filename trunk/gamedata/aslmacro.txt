@@ -82,7 +82,7 @@ DELETEITEM <GrabItem ?  DeleteGG>
 KILLMOOD <GrabItem ?  DeleteGG>
 KILLPLOTMOOD <GrabController ControllerID DeleteGG>
 ANNIHILATEPLOTMOOD <GrabController ControllerID DeleteGG EndPlotsByConID ControllerID>
-SetMoodTimeLimit <GrabItem ? GSetNAtt -23 1 ComTime GAddNAtt -23 1 ?>
+.%id%_%plotid%_GoLearnSecret <GrabItem ? GSetNAtt -23 1 ComTime GAddNAtt -23 1 ?>
 DeleteSelf <GrabSource DeleteGG>
 MOVENPC <GrabNPC ?  MoveGG ?>
 MOVEANDPACIFYNPC <GrabNPC ? MoveAndPacifyGG ?>
