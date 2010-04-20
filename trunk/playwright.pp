@@ -486,6 +486,34 @@ begin
 	SceneDesc := QuoteString( it );
 end;
 
+Function XSceneDesc( Scene: GearPtr ): String;
+	{ Return the regular scene description plus a few extra bits. }
+var
+	it: String;
+	FID: LongInt;
+	Adv,Fac: GearPtr;
+begin
+	{ Just copying the code above for now- it's not complicated, and should }
+	{ save time from creating/copying two strings. If you are reading this }
+	{ source code to learn how to program, DO NOT DO THIS YOURSELF!!! It's a }
+	{ bad thing and will probably come back to bite me in the arse later on. }
+	{ Also, feel free to use the word "arse" in your comments. }
+	if ( Scene = Nil ) or not IsAScene( Scene ) then begin
+		it := '';
+	end else begin
+		it := SAttValue( Scene^.SA , 'TYPE' ) + ' ' + SAttValue( Scene^.SA , 'CONTEXT' ) + ' SCALE' + BStr( Scene^.V );
+
+		Adv := FindRoot( Scene );
+		FID := NAttValue( Scene^.NA , NAG_Personal , NAS_FactionID );
+		Fac := SeekFaction( Adv , FID );
+		if Fac <> Nil then it := it + ' ' + SATtValue( Fac^.SA , 'DESIG' )
+		else it := it + ' NOFAC';
+		if ( FID <> 0 ) and ( FID = NAttValue( Adv^.NA , NAG_Personal , NAS_FactionID ) ) then it := it + ' PCFAC';
+	end;
+
+	XSceneDesc := QuoteString( it );
+end;
+
 Function NumFreeScene( Adventure,Plot: GearPtr; GB: GameBoardPtr; Desc: String ): Integer;
 	{ Find out how many scenes match the provided description. }
 var
@@ -496,7 +524,7 @@ var
 	begin
 		N := 0;
 		while P <> Nil do begin
-			if ( P^.G = GG_Scene ) and PartMatchesCriteria( SceneDesc( P ) , Desc ) and PartMatchesRelativeCriteria( Adventure, Plot, P, GB, RDesc ) then begin
+			if ( P^.G = GG_Scene ) and PartMatchesCriteria( XSceneDesc( P ) , Desc ) and PartMatchesRelativeCriteria( Adventure, Plot, P, GB, RDesc ) then begin
 				Inc( N );
 			end;
 			N := N + CheckAlongPath( P^.SubCom );
@@ -507,7 +535,7 @@ var
 begin
 	RDesc := FilterElementDescription( Desc );
 
-	if ( Adventure^.G = GG_Scene ) and PartMatchesCriteria( SceneDesc( Adventure ) , Desc ) and PartMatchesRelativeCriteria( Adventure, Plot, Adventure, GB, RDesc ) then begin
+	if ( Adventure^.G = GG_Scene ) and PartMatchesCriteria( XSceneDesc( Adventure ) , Desc ) and PartMatchesRelativeCriteria( Adventure, Plot, Adventure, GB, RDesc ) then begin
 		NumFreeScene := CheckAlongPath( Adventure^.SubCom ) + 1;
 	end else begin
 		NumFreeScene := CheckAlongPath( Adventure^.SubCom );
@@ -525,7 +553,7 @@ var
 	begin
 		while ( Part <> Nil ) and ( S2 = Nil ) do begin
 			{ Decrement N if this gear matches our description. }
-			if ( Part^.G = GG_Scene ) and PartMatchesCriteria( SceneDesc( Part ) , Desc ) and PartMatchesRelativeCriteria( Adventure, Plot, Part, GB, RDesc ) then begin
+			if ( Part^.G = GG_Scene ) and PartMatchesCriteria( XSceneDesc( Part ) , Desc ) and PartMatchesRelativeCriteria( Adventure, Plot, Part, GB, RDesc ) then begin
 				Dec( Num );
 
 				if Num = 0 then S2 := Part;
@@ -539,7 +567,7 @@ begin
 	S2 := Nil;
 	RDesc := FilterElementDescription( Desc );
 
-	if ( Adventure^.G = GG_Scene ) and PartMatchesCriteria( SceneDesc( Adventure ) , Desc ) and PartMatchesRelativeCriteria( Adventure, Plot, Adventure, GB, RDesc ) then begin
+	if ( Adventure^.G = GG_Scene ) and PartMatchesCriteria( XSceneDesc( Adventure ) , Desc ) and PartMatchesRelativeCriteria( Adventure, Plot, Adventure, GB, RDesc ) then begin
 		if Num = 1 then begin
 			S2 := Adventure;
 		end else begin

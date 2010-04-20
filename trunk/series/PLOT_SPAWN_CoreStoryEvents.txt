@@ -21,7 +21,6 @@
 
 Content
 	name <Orbital Imperialism>
-name <DEBUG>
 	requires <*CSPAWN_Def5 (1:REDMA|1:CRIHN) (2:L5LAW|2:MAQUI|2:FCOMS|2:RISHI|2:ROCKE|2:SILKN|2:AEGSF|2:COMET|2:MUGLE|2:HOELL)>
 	desc <To combat the pirate threat, an asteroid colony will be occupied by L5 troops.>
 	%
@@ -72,7 +71,7 @@ name <DEBUG>
 		Prompt%id%01 <I'm on the way!>
 		Prompt%id%02 <Um... I'd rather just get out of here.>
 
-		MetaScene 9
+		MetaScene 9 2
 		% L1 = Encounter Over Counter
 		% L2 = Initialization Counter
 		MapWidth 50
@@ -92,7 +91,7 @@ name <DEBUG>
 		Msg2_2 <You have lost the battle.>
 		CMsg2_2 <if= T3 0 Accept>
 		Msg3 <You have defeated %name1%.>
-		Msg4 <Thanks for that... If you'd like to help us take this city back from %name1%, come talk with me at %name10% later on.>
+		Msg4 <Thanks for that... If you'd like to help us take this city back from %name1%, come talk with me at \EXACT_SCENE %10% later on.>
 		Msg5 <You helped %name5% fight a lance from %name1%.>
 
 		sub

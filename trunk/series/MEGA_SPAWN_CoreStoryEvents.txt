@@ -42,6 +42,8 @@ Content
 	% E12: A local public scene
 	% E13: The crooked corpo
 	% E14: The secret that activates the Criminal Investigation subplot
+	% E15: a bodyguard for E4
+	% E16: another bodyguard for E4
 	Element7 <Prefab>
 	Place7 <6 (Guards) sd ally>
 	Element8 <Scene Environs !Near 3>
@@ -54,6 +56,10 @@ Content
 	Element13 <Prefab>
 	Place13 <12 (Citizens) pass>
 	Element14 <Prefab>
+	Element15 <Prefab>
+	Place15 <6 (Guards) sd ally>
+	Element16 <Prefab>
+	Place16 <6 (Guards) sd ally>
 
 	% P%id%01 = E9 has been defeated ( 1 = in fight, -1 = voluntarily )
 	% P%id%02 = Have made deal with E9 to remove E13
@@ -67,12 +73,16 @@ Content
 	update <if= P%id%03 0 P= %id%03 1 NPCLevel %9% %threat% NPCLevel %4% 79 SetNPCFaction %9% %2% SetNPCFaction %7% %1%>
 
 	%% Upon learning the secret, activate SubPlot3.
-	.%id2%_%plotid2%_GoLearnSecret <SetPlotStatus %plotid3% %id3%>
+	.%id2%_%plotid2%_GoLearnSecret <SetPlotStatus %plotid3% %id3%  PMemo %plotid3% %id%02>
 
 	%% Upon destroying the factory, become an enemy of E11
-	.%id4%_%plotid4%_GoWin <Alert %id%01  PCFEnemy %11%>
+	.%id4%_%plotid4%_GoWin <Alert %id%01  PCFEnemy %11%  AddLawful -10>
 
 	Msg%id%01 <You have destroyed %name13%'s factory for %name9%.>
+	Msg%id%02_1 <You heard that the trouble in %name3% is a result of %name13% mistreating \PPR %13% workers.>
+	CMsg%id%02_1 <ifNPCOK %13% Accept>
+	Msg%id%02_2 <You heard that the trouble in %name3% is a result of %name11% mistreating its workers.>
+	CMsg%id%02_2 <ifNPCDead %13% Accept>
 
 	% SubPlot1 is the beefgate, activated by E4
 	% SubPlot2 is the secret about the pirates, also activated by E4
@@ -133,7 +143,7 @@ Content
 		Prompt%id%03 <%name13% has broken the law.>
 		CPrompt%id%03 <ifSubPlotWon %plotid3% Accept>
 		Prompt%id%04 <With %name13% gone, %name9% won't be a problem.>
-		CPrompt%id%04 <if# v%id%02 0 if# P%id%02 0 Accept>
+		CPrompt%id%04 <if# v%id%02 0 if# P%id%02 0  if= P%id%01 0  Accept>
 		Prompt%id%05 <Alright, tell me what's going on.>
 		Prompt%id%06 <I'd rather not get involved.>
 		Prompt%id%07 <That's a matter for %name3% to decide.>
@@ -147,15 +157,15 @@ Content
 		Persona 9
 		% The pirate captain
 		special <UNLISTED NOESCAPE>
-		greeting <if= PlotStatus %plotid% %id% else %pop%  if= L2 0 else %pop%  if= P%id%02 0 else .%id%_GoMakeADeal NewChat Say %id%01 AddChat %id%01 AddChat %id%02 AddChat %id%03>
-		.%id%_GoMakeADeal <NewChat Say %id%04 AddChat %id%04 AddChat %id%08 AddChat %id%09 AddChat %id%10>
+		greeting <if= PlotStatus %plotid% %id% else %pop%  if= L2 0 else %pop%  if= P%id%02 0 else .%id%_GoMakeADeal EndChat Say %id%01 AddChat %id%01 AddChat %id%02 AddChat %id%03>
+		.%id%_GoMakeADeal <EndChat Say %id%04 AddChat %id%04 AddChat %id%08 AddChat %id%09 AddChat %id%10>
 		.%id%_GoStartCombat <L= 2 1>
 		*result%id%01 <*THEME_EXPO&Enemy .%id%_GoStartCombat>
 		result%id%02 <EndChat Say %id%02 AddChat %id%04 AddChat %id%05>
 		result%id%03 <EndChat Say %id%03 AddChat %id%04 AddChat %id%06 AddChat %id%07>
 		result%id%04 <EndChat Say %id%05  P= %id%01 -1  AddReact d30  Retreat 1>
 		result%id%05 <EndChat Say %id%06 AddChat %id%04 AddChat %id%06 AddChat %id%07>
-		result%id%06 <EndChat Say %id%07  SetPlotStatus %plotid4% %id4%  P= %id%02 1  Retreat 1>
+		result%id%06 <EndChat Say %id%07  SetPlotStatus %plotid4% %id4%  PMemo %plotid4% %id%11  P= %id%02 1  Retreat 1>
 		result%id%07 <EndChat Say %id%08  Goto .%id%_GoStartCombat>
 		result%id%08 <EndChat Say %id%09  CashPrize Reward %threat% 150  P= %id%01 -1  Retreat 1>
 		result%id%09 <EndChat Say %id%10  Retreat 1>
@@ -170,6 +180,7 @@ Content
 		Msg%id%08 <In the words of the great info-age philosopher Jimmy Ramone, if you ain't part of the solution then you're part of the problem.>
 		Msg%id%09 <Ha, that'll show 'em! With %name13% out of the picture, we better lay low for a while... Here's your reward, \PC .>
 		Msg%id%10 <Come let me know when there's been a change.>
+		Msg%id%11 <You told %name9% that you'd destroy %name13%'s factory.>
 		Prompt%id%01 <That's big talk for a small time crook.>
 		Prompt%id%02 <Wait, I just want to talk...>
 		CPrompt%id%02 <ifSubPlotWon %plotid2% Accept>
@@ -187,7 +198,7 @@ Content
 		Prompt%id%10 <Sorry, but I told %name4% I'd defeat you.>
 
 
-		MetaScene 10
+		MetaScene 10 2
 		% The pirate captain home scene.
 		% L1 = Combat has finished
 		% L2 = Combat has started
@@ -223,6 +234,7 @@ Content
 		NPC Mecha Pilot
 		chardesc Young
 		bio <A young recruit whose first assignment was peacekeeping at %name3%.>
+		update <if= V1 0 SetSelfFaction %1% V= 1 1>
 
 		NPC Pirate
 		chardesc Heroic
@@ -233,9 +245,16 @@ Content
 
 		NPC Corporate Executive
 		chardesc Villainous
+		update <if= V1 0 SetSelfFaction %11% V= 1 1>
 
 		Secret
 		Msg <%name9% is loved in %name3% because \SPR %9% stands up to %name13%.>
+
+		NPC Mecha Pilot
+		update <if= V1 0 SetSelfFaction %1% V= 1 1>
+
+		NPC Mecha Pilot
+		update <if= V1 0 SetSelfFaction %1% V= 1 1>
 	end
 
 
