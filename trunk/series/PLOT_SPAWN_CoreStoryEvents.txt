@@ -19,6 +19,7 @@
 %% PARAM2: The Allied Faction
 %%
 
+
 Content
 	name <Orbital Imperialism>
 	requires <*CSPAWN_Def5 (1:REDMA|1:CRIHN) (2:L5LAW|2:MAQUI|2:FCOMS|2:RISHI|2:ROCKE|2:SILKN|2:AEGSF|2:COMET|2:MUGLE|2:HOELL)>
@@ -138,6 +139,30 @@ Content
 		MoodTimeLimit 259200
 		Update <if= v1 0 V= 1 1   News 1>
 		Msg1 <Violence erupts in %name4% as pilots from %name3% try to avenge %name5%'s death.>
+		%% Meme Messages
+		Msg_1 <Fighting between %name3% and %name1% has been pretty fierce.>
+		Msg_2 <I'll be glad when this occupation is over and %name3% can go home.>
+		Msg_3 <So far, things haven't gotten out of hand... nobody wants a repeat of Crihna Rock.>
+		Msg_10 <In my opinion %name3% should just go home... don't tell them I said that.>
+		CMsg_10 <if= ChatNPCFac 0 Accept>
+		Msg_11 <Why did %name3% even come here? We don't want them, and we don't need them.>
+		CMsg_11 <if# ChatNPCFac %3% Accept>
+		Msg_100 <Our mission is to protect %name4% from pirates... but just try telling that to the locals.>
+		CMsg_100 <if= ChatNPCFac %3% Accept>
+		Msg_101 <We're just trying to help. Why won't anybody cooperate?>
+		CMsg_101 <if= ChatNPCFac %3% Accept>
+		Msg_110 <We're supposed to be protecting the citizens of %name4%, but I get the feeling we were really sent here to protect corporate profits.>
+		CMsg_110 <if= ChatNPCFac %3% if= %3% SILKN Accept>
+		Msg_120 <Honestly, if I wanted to be occupying a city and putting down insurrection I could've just stayed home on Luna.>
+		CMsg_120 <if= ChatNPCFac %3% if= %3% AEGSF Accept>
+		Msg_200 <We just have to wait this invasion out... %name3% will go home eventually.>
+		CMsg_200 <if= ChatNPCFac %1% Accept>
+		Msg_201 <The spinners don't care about the people of the ring. They're worse crooks than the blades and the masks combined.>
+		CMsg_201 <if= ChatNPCFac %1% Accept>
+		Msg_210 <When Crihna Rock was destroyed we said never again... yet here the spinners are, treating us like property in our own station.>
+		CMsg_210 <if= ChatNPCFac %1% if= %1% CRIHN Accept>
+		Msg_220 <I don't really mind %name3% being here. I could always use some more target practice!>
+		CMsg_220 <if= ChatNPCFac REDMA Accept>
 
 		STC CORE-INVISIBLEENCOUNTER
 		name <%name5%'s patrol>

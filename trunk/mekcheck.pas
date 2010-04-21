@@ -125,7 +125,7 @@ begin
 	writeln( 'Mecha Class Value Maximums' );
 	for t := 1 to 10 do begin
 		Class_Size_Limit[ t ] := OptimalMechaValue( t * 10 + 5 ) * 2;
-		writeln( '  ' + WideSTr( t , 2 ) , ': ' , Class_Size_Limit[ t ] );
+		writeln( '  ' + WideSTr( t , 2 ) , ': ' , OptimalMechaValue( t * 10 - 5 ) , '-' , Class_Size_Limit[ t ] );
 	end;
 
 	mecha_list := AggregatePattern( '*.txt' , Design_Directory );

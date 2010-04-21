@@ -36,7 +36,6 @@ Procedure StockBoardWithMonsters( GB: GameBoardPtr; Renown,Strength,TeamID: Inte
 
 Function MechaMatchesFaction( Mek: GearPtr; const Factions: String ): Boolean;
 Function OptimalMechaValue( Renown: Integer ): LongInt;
-Function GenerateMechaList( MPV: LongInt; Factions,Desc: String ): SAttPtr;
 
 Procedure AddTeamForces( GB: GameBoardPtr; TeamID,Renown,Strength: Integer );
 
@@ -57,6 +56,14 @@ uses dos,ability,action,gearutil,ghchars,gearparser,texutil,narration,movement,
 	glmap,glgfx;
 {$ENDIF}
 {$ENDIF}
+
+const
+	UTYPE_General = 'GENERAL';
+	UTYPE_Assault = 'ASSAULT';
+	UTYPE_Defense = 'DEFENSE';
+	ROLE_Trooper = 1;
+	ROLE_Support = 2;
+	ROLE_Command = 3;
 
 Function MatchWeight( S, M: String ): Integer;
 	{ Return a value showing how well the monster M matches the }
@@ -287,64 +294,78 @@ begin
 end;
 
 
-Function GenerateMechaList( MPV: LongInt; Factions,Desc: String ): SAttPtr;
+Function GenerateMechaList( MPV: LongInt; Fac: GearPtr; Factions,Desc,Unit_Type: String ): NAttPtr;
 	{ Build a list of mechas from the DESIGN diectory which have }
 	{ a maximum point value of MPV or less. }
-	{ Format for the description string is: pv index <filename> }
-	{ where PV = Point Value, Index = Root Gear Number (since a }
-	{ design file may contain more than one mecha), and filename }
-	{ is the filename stored as an alligator string. }
+	{ FAC is the controlling faction. }
+	{ FACTIONS is the list of faction designations from which mecha may be chosen. }
 	{ DESC is the terrain description taken from the scene. }
+	{ UNIT_TYPE is the kind of unit being built. }
+	{  }
+	{ The shopping list will be a list of numeric attributes in this format: }
+	{   G = List position of mecha. }
+	{   S = Role of mecha, given the UNIT_TYPE. }
+	{   V = Value of mecha. }
+	Function MechaRole( Mek: GearPtr ): Integer;
+		{ Return the role of this mecha, given the faction and unit type. }
+	var
+		roles: String;
+		P: Integer;
+	begin
+		{ Error check- if no faction, no role. }
+		if Fac = Nil then Exit( 0 );
+
+		{ Obtain the proper ROLE string from the mecha. }
+		roles := UpCase( SAttValue( Mek^.SA , 'ROLE_' + SAttValue( Fac^.SA , 'DESIG' ) ) );
+
+		{ Next, locate the clause pertaining to this unit type. }
+		P := Pos( Unit_Type , roles );
+		if ( P <> 0 ) and ( Length( roles ) <= ( P + Length( Unit_Type ) + 2 ) ) then begin
+			Case roles[ P + Length( Unit_Type ) + 2 ] of
+				'T':	P := ROLE_Trooper;
+				'S':	P := ROLE_Support;
+				'C':	P := ROLE_Command;
+			else P := 0;
+			end;
+		end;
+		MechaRole := P;
+	end;
 var
-	SRec: SearchRec;
-	it,current: SAttPtr;
-	DList,Mek: GearPtr;
-	N,MinValFound: LongInt;	{ The lowest value found so far. }
-	MVInfo: String;		{ Info on the mek with the lowest value. }
+	it: NAttPtr;
+	Mek: GearPtr;
+	N,MinValFound,LVN: LongInt;	{ The lowest value found so far. }
+	LVMek: GearPtr;		{ Pointer to the lowest value mek. }
 begin
 	it := Nil;
 	MinValFound := 0;
-	MVInfo := '';
+	LVMek := Nil;
+	LVN := 0;
 
-	{ Start the search process going... }
-	FindFirst( Design_Directory + Default_Search_Pattern , AnyFile , SRec );
+	if unit_type = '' then unit_type := UTYPE_General;
 
-	{ As long as there are files which match our description, }
-	{ process them. }
-	While DosError = 0 do begin
-		{ Load this mecha design file from disk. }
-		DList := LoadFile( SRec.Name , Design_Directory );
-
-		{ Search through it for mecha. }
-		Mek := DList;
-		N := 1;
-		while Mek <> Nil do begin
-			if ( Mek^.G = GG_Mecha ) then begin
-				if ( GearValue( Mek ) <= MPV ) and MechaMatchesFactionAndTerrain( Mek , Factions , DESC ) then begin
-					Current := CreateSAtt( it );
-					Current^.Info := BStr( GearValue( Mek ) ) + ' ' + BStr( N ) + ' <' + SRec.Name + '>';
-				end;
-				if ( ( GearValue( Mek ) < MinValFound ) or ( MinValFound = 0 ) ) and MechaMatchesFactionAndTerrain( Mek , Factions , DESC ) then begin
-					MVInfo := BStr( GearValue( Mek ) ) + ' ' + BStr( N ) + ' <' + SRec.Name + '>';
-					MinValFound := GearValue( Mek );
-				end;
+	{ All the meks are contained in the STANDARD_EQUIPMENT_LIST. }
+	Mek := Standard_Equipment_List;
+	N := 1;
+	while Mek <> Nil do begin
+		if ( Mek^.G = GG_Mecha ) then begin
+			if ( GearValue( Mek ) <= MPV ) and MechaMatchesFactionAndTerrain( Mek , Factions , DESC ) then begin
+				SetNAtt( it , N , MechaRole( Mek ) , GearValue( Mek ) );
 			end;
-			Mek := Mek^.Next;
-			Inc( N );
+			if ( ( GearValue( Mek ) < MinValFound ) or ( MinValFound = 0 ) ) and MechaMatchesFactionAndTerrain( Mek , Factions , DESC ) then begin
+				LVMek := Mek;
+				LVN := N;
+				MinValFound := GearValue( Mek );
+			end;
 		end;
 
-		{ Dispose of the list. }
-		DisposeGear( DList );
-
-		{ Look for the next file in the directory. }
-		FindNext( SRec );
+		Inc( N );
+		Mek := Mek^.Next;
 	end;
 
 	{ Error check- we don't want to return an empty list, }
 	{ but we will if we have to. }
-	if ( it = Nil ) and ( MVInfo <> '' ) then begin
-		Current := CreateSAtt( it );
-		Current^.Info := MVInfo;
+	if ( it = Nil ) and ( LVMek <> Nil ) then begin
+		SetNAtt( it , LVN , MechaRole( LVMek ) , GearValue( LVMek ) );
 	end;
 
 	GenerateMechaList := it;
@@ -363,11 +384,12 @@ begin
 	OptimalMechaValue := it;
 end;
 
-Function PurchaseForces( ShoppingList: SAttPtr; Renown,Strength: Integer; Fac: GearPtr ): GearPtr;
+Function PurchaseForces( ShoppingList: NAttPtr; Renown,Strength: Integer; Fac: GearPtr ): GearPtr;
 	{ Pick a number of random meks. Add pilots to these meks. }
 	{ The expected PC skill level is measured by RENOWN. The difficulty of the }
 	{ encounter is measured by STRENGTH, which is a percentage with 100 representing }
 	{ an average fight. }
+	{ SHOPPINGLIST is a list of possible mecha from GenerateMechaList above. }
 	{ FAC is the faction these mecha belong to. }
 	{ Within this procedure it is assumed that 7 points of renown translate to one }
 	{ point of skill. That isn't necessarily true at the high and low ends of the spectrum, }
@@ -378,41 +400,26 @@ const
 	SkillMinusCost = 7;
 var
 	OptimalValue: LongInt;	{ The ideal value for a mecha. }
+	MList: GearPtr;		{ The list of mecha we will eventually return. }
 
-	Function ObtainMekFromFile( S: String ): GearPtr;
-		{ Using the description string S, locate and load }
-		{ a mek from disk. }
-	var
-		N: LongInt;
-		FList,Mek: GearPtr;
+	Function ObtainMek( N: Integer ): GearPtr;
+		{ Clone mek N from the standard equipment list. }
 	begin
-		{ Load the design file. }
-		FList := LoadFile( RetrieveAString( S ) , Design_Directory );
-
-		{ Get the number of the mek we want. }
-		N := ExtractValue( S );
-
 		{ Clone the mecha we want. }
-		Mek := CloneGear( RetrieveGearSib( FList , N ) );
-
-		{ Get rid of the design record. }
-		DisposeGear( FList );
-
-		{ Return the mek obtained. }
-		ObtainMekFromFile := Mek;
+		ObtainMek := CloneGear( RetrieveGearSib( Standard_Equipment_List , N ) );
 	end;
 
-	Function SelectNextMecha: String;
+	Function SelectNextMecha: Integer;
 		{ Select a mecha file to load. Try to make it appropriate }
 		{ to the point value of the encounter. }
 	var
-		M1,M2: STring;
+		M1,M2: NAttPtr;
 		T: Integer;
 		V,V2: LongInt;
 	begin
 		{ Select a mecha at random, and find out its point value. }
-		M1 := SelectRandomSAtt( ShoppingList )^.Info;
-		V := ExtractValue( M1 );
+		M1 := SelectRandomNAtt( ShoppingList );
+		V := M1^.V;
 
 		{ If the PV of this mecha seems a bit low, }
 		{ look for a more expensive model and maybe pick that }
@@ -420,8 +427,8 @@ var
 		if Strength >= BasicGruntCost then begin
 			t := 3;
 			while ( t > 0 ) and ( V < ( OptimalValue div 2 ) ) do begin
-				M2 := SelectRandomSAtt( ShoppingList )^.Info;
-				V2 := ExtractValue( M2 );
+				M2 := SelectRandomNAtt( ShoppingList );
+				V2 := M2^.V;
 				if V2 > V then begin
 					M1 := M2;
 					V := V2;
@@ -433,8 +440,8 @@ var
 			{ If STRENGTH is running out, select a small mecha instead. }
 			t := 2;
 			while ( t > 0 ) do begin
-				M2 := SelectRandomSAtt( ShoppingList )^.Info;
-				V2 := ExtractValue( M2 );
+				M2 := SelectRandomNAtt( ShoppingList );
+				V2 := M2^.V;
 				if V2 < V then begin
 					M1 := M2;
 					V := V2;
@@ -445,15 +452,105 @@ var
 		end;
 
 		{ Return the info string selected. }
-		SelectNextMecha := M1;
+		SelectNextMecha := M1^.G;
 	end;
-var
-	MPV: LongInt;
-	StrCost: LongInt;	{ The number of strength points this mecha will cost. }
 
-	Lvl,Bonus: LongInt;		{ Pilot level. }
-	CTheme,CPoints: Integer;	{ Customization theme and points. }
-	Mek,MList,CP,Pilot: GearPtr;
+	Procedure AssortedMechaExtravaganza;
+		{ We're done with that high-falootin' organized unit business. }
+		{ Spend the rest of our points on a random grab-bag of mecha. }
+	var
+		MPV: LongInt;
+		StrCost: LongInt;	{ The number of strength points this mecha will cost. }
+
+		Lvl,Bonus: LongInt;		{ Pilot level. }
+		CTheme,CPoints: Integer;	{ Customization theme and points. }
+		Mek,CP,Pilot: GearPtr;
+	begin
+		{ Keep processing until we run out of points. }
+		{ The points are represented by STRENGTH. }
+		while ( Strength > 0 ) and ( ShoppingList <> Nil ) do begin
+			{ Select a mek at random. }
+			{ Load & Clone the mek. }
+			Mek := ObtainMek( SelectNextMecha );
+
+			{ Determine its cash value. }
+			MPV := GearValue( Mek );
+
+			{ From this, we may determine its base STRENGTH value. }
+			StrCost := ( MPV * BasicGruntCost ) div OptimalValue;
+			if StrCost < 5 then StrCost := 5;
+
+			{ If we have a lot of STRENGTH, and are at a sufficiently high RENOWN, consider }
+			{ making this mecha a custom model. }
+			if ( Strength > ( 150 + Random( 300 ) - Renown ) ) and ( StrCost < Random( 40 ) ) and ( Renown > ( 60 + Random( 50 ) ) ) then begin
+				{ Encountering a custom mecha in the RPG campaign is like finding }
+				{ a shiny pokemon, except actually useful. }
+				if Fac <> Nil then CTheme := NAttValue( Fac^.NA , NAG_Narrative , NAS_DefaultFacTheme )
+				else CTheme := 0;
+
+				CPoints := 2 + Random( 2 );
+				if StrCost < 25 then CPoints := CPoints + Random( 4 );
+
+				StrCost := StrCost + CPoints * 3;
+				MechaMakeover( Mek , Random( 3 ) + 1 , CTheme , CPoints );
+			end;
+
+			{ Select a pilot skill level. }
+			{ Base pilot level is 20 beneath the PC's renown. }
+			Lvl := Renown - 20;
+
+			{ This level may be adjusted up or down depending on the mecha's cost. }
+			if StrCost > Strength then begin
+				{ We've gone overbudget. Whack this mecha's pilot. }
+				Lvl := Lvl - ( StrCost - Strength );
+				StrCost := Strength;
+
+			end else if ( ( StrCost * 3 ) < Strength ) and ( Strength > 90 ) and ( Random( 3 ) <> 1 ) then begin
+				{ We have plenty of points to spare. Give this pilot some lovin'. }
+				Bonus := Random( 3 ) + 1;
+				Lvl := Lvl + Bonus * 7;
+				StrCost := StrCost + Bonus * SkillPlusCost;
+
+			end else if ( StrCost > ( BasicGruntCost + 1 + Random( 20 ) ) ) and ( Strength < ( 76 + Random( 175 ) ) ) then begin
+				{ Slightly overbudget... can reduce the cost with skill reduction. }
+				{ Note that we won't be reducing skills at all if STRENGTH is }
+				{ sufficiently high. }
+				Bonus := Random( 4 );
+				Lvl := Lvl - Bonus * 7;
+				StrCost := StrCost - Bonus * SkillMinusCost;
+
+			end else if StrCost < ( BasicGruntCost - 1 - Random( 15 ) ) then begin
+				{ Underbudget... we can afford a better pilot. }
+				Bonus := Random( 3 );
+				if Random( 10 ) = 4 then Inc( Bonus );
+				Lvl := Lvl + Bonus * 7;
+				StrCost := StrCost + Bonus * SkillPlusCost;
+			end;
+
+			{ If Strength is extremely high, maybe give an extra skill point }
+			{ in order to increase the cost. This extra skill point costs more than }
+			{ the above, since it can potentially raise the pilot to named-NPC-like }
+			{ status. }
+			if ( Strength > ( 201 + Random( 300 ) ) ) and ( Strength > ( StrCost * 3 ) ) then begin
+				Lvl := Lvl + 7;
+				StrCost := StrCost + SkillPlusCost * 2;
+			end;
+
+			{ Add this mecha to our list. }
+			AppendGear( MList , Mek );
+
+			{ Create a pilot, add it to the mecha. }
+			CP := SeekGear( Mek , GG_CockPit , 0 );
+			if CP <> Nil then begin
+				Pilot := RandomPilot( 72  , 10 );
+				SetSkillsAtLevel( Pilot , Lvl );
+				InsertSubCom( CP , Pilot );
+			end;
+
+			{ Reduce UPV by an appropriate amount. }
+			Strength := Strength - StrCost;
+		end;
+	end;
 begin
 	{ Initialize our list to Nil. }
 	MList := Nil;
@@ -461,90 +558,7 @@ begin
 	{ Record the optimal mecha value. }
 	OptimalValue := OptimalMechaValue( Renown );
 
-	{ Keep processing until we run out of points. }
-	{ The points are represented by STRENGTH. }
-	while ( Strength > 0 ) and ( ShoppingList <> Nil ) do begin
-		{ Select a mek at random. }
-		{ Load & Clone the mek. }
-		Mek := ObtainMekFromFile( SelectNextMecha );
-
-		{ Determine its cash value. }
-		MPV := GearValue( Mek );
-
-		{ From this, we may determine its base STRENGTH value. }
-		StrCost := ( MPV * BasicGruntCost ) div OptimalValue;
-		if StrCost < 5 then StrCost := 5;
-
-		{ If we have a lot of STRENGTH, and are at a sufficiently high RENOWN, consider }
-		{ making this mecha a custom model. }
-		if ( Strength > ( 150 + Random( 300 ) - Renown ) ) and ( StrCost < Random( 40 ) ) and ( Renown > ( 60 + Random( 50 ) ) ) then begin
-			{ Encountering a custom mecha in the RPG campaign is like finding }
-			{ a shiny pokemon, except actually useful. }
-			if Fac <> Nil then CTheme := NAttValue( Fac^.NA , NAG_Narrative , NAS_DefaultFacTheme )
-			else CTheme := 0;
-
-			CPoints := 2 + Random( 2 );
-			if StrCost < 25 then CPoints := CPoints + Random( 4 );
-
-			StrCost := StrCost + CPoints * 3;
-			MechaMakeover( Mek , Random( 3 ) + 1 , CTheme , CPoints );
-		end;
-
-		{ Select a pilot skill level. }
-		{ Base pilot level is 20 beneath the PC's renown. }
-		Lvl := Renown - 20;
-
-		{ This level may be adjusted up or down depending on the mecha's cost. }
-		if StrCost > Strength then begin
-			{ We've gone overbudget. Whack this mecha's pilot. }
-			Lvl := Lvl - ( StrCost - Strength );
-			StrCost := Strength;
-
-		end else if ( ( StrCost * 3 ) < Strength ) and ( Strength > 90 ) and ( Random( 3 ) <> 1 ) then begin
-			{ We have plenty of points to spare. Give this pilot some lovin'. }
-			Bonus := Random( 3 ) + 1;
-			Lvl := Lvl + Bonus * 7;
-			StrCost := StrCost + Bonus * SkillPlusCost;
-
-		end else if ( StrCost > ( BasicGruntCost + 1 + Random( 20 ) ) ) and ( Strength < ( 76 + Random( 175 ) ) ) then begin
-			{ Slightly overbudget... can reduce the cost with skill reduction. }
-			{ Note that we won't be reducing skills at all if STRENGTH is }
-			{ sufficiently high. }
-			Bonus := Random( 4 );
-			Lvl := Lvl - Bonus * 7;
-			StrCost := StrCost - Bonus * SkillMinusCost;
-
-		end else if StrCost < ( BasicGruntCost - 1 - Random( 15 ) ) then begin
-			{ Underbudget... we can afford a better pilot. }
-			Bonus := Random( 3 );
-			if Random( 10 ) = 4 then Inc( Bonus );
-			Lvl := Lvl + Bonus * 7;
-			StrCost := StrCost + Bonus * SkillPlusCost;
-		end;
-
-		{ If Strength is extremely high, maybe give an extra skill point }
-		{ in order to increase the cost. This extra skill point costs more than }
-		{ the above, since it can potentially raise the pilot to named-NPC-like }
-		{ status. }
-		if ( Strength > ( 201 + Random( 300 ) ) ) and ( Strength > ( StrCost * 3 ) ) then begin
-			Lvl := Lvl + 7;
-			StrCost := StrCost + SkillPlusCost * 2;
-		end;
-
-		{ Add this mecha to our list. }
-		AppendGear( MList , Mek );
-
-		{ Create a pilot, add it to the mecha. }
-		CP := SeekGear( Mek , GG_CockPit , 0 );
-		if CP <> Nil then begin
-			Pilot := RandomPilot( 72  , 10 );
-			SetSkillsAtLevel( Pilot , Lvl );
-			InsertSubCom( CP , Pilot );
-		end;
-
-		{ Reduce UPV by an appropriate amount. }
-		Strength := Strength - StrCost;
-	end;
+	if Strength > 0 then AssortedMechaExtravaganza;
 
 	PurchaseForces := MList;
 end;
@@ -554,11 +568,11 @@ Procedure AddTeamForces( GB: GameBoardPtr; TeamID,Renown,Strength: Integer );
 	{ RENOWN is the expected renown of the player's team. }
 	{ STRENGTH is the difficulty level of this fight expressed as a percent. }
 var
-	SList: SAttPtr;
+	SList: NAttPtr;
 	MList,Mek,Pilot: GearPtr;
-	desc,fdesc: String;
+	desc,fdesc,unit_type: String;
 	team,fac,LFac,rscene: GearPtr;
-	MaxMekShare,MPV,LMs: LongInt;
+	MaxMekShare,MPV: LongInt;
 begin
 	{ First, generate the mecha description. }
 	{ GENERAL mecha are always welcome. }
@@ -567,6 +581,11 @@ begin
 	if team <> Nil then begin
 		Fac := SeekFaction( GB^.Scene , NAttValue( Team^.NA , NAG_Personal , NAS_FactionID ) );
 		if Fac <> Nil then fdesc := fdesc + ' ' + SAttValue( Fac^.SA , 'DESIG' );
+
+		{ The unit_type is also stored in the team. }
+		unit_type := SAttValue( team^.SA , 'TYPE' );
+	end else begin
+		unit_type := '';
 	end;
 
 	{ Also add the terrain description from the scene. }
@@ -590,13 +609,13 @@ begin
 	else MaxMekShare := ( Strength div 2 ) + 100;
 	MPV := ( OptimalMechaValue( Renown ) * MaxMekShare ) div 100;
 	if MPV < 300000 then MPV := 300000;
-	SList := GenerateMechaList( MPV , fdesc , desc );
+	SList := GenerateMechaList( MPV , fac , fdesc , desc , unit_type );
 
 	{ Generate the mecha list. }
 	MList := PurchaseForces( SList , Renown , Strength , Fac );
 
 	{ Get rid of the shopping list. }
-	DisposeSAtt( SList );
+	DisposeNAtt( SList );
 
 	{ Deploy the mecha on the map. }
 	while MList <> Nil do begin

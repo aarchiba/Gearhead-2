@@ -356,6 +356,7 @@ Function AddNAtt(var LList: NAttPtr; G,S: Integer; V: LongInt): NAttPtr;
 Function NAttValue(LList: NAttPtr; G,S: Integer): LongInt;
 Procedure StripNAtt( Part: GearPtr ; G: Integer );
 Function NumNAtts( LList: NAttPtr ): Integer;
+function SelectRandomNAtt( NAList: NAttPtr ): NAttPtr;
 
 Function LastGear(LList: GearPtr): GearPtr;
 Function NewGear( Parent: GearPtr ): GearPtr;
@@ -1013,6 +1014,40 @@ begin
 		LList := LList^.Next;
 	end;
 	NumNAtts := N;
+end;
+
+function RetrieveNAttByListPos( List: NAttPtr; N: Integer ): NAttPtr;
+	{ Return the N'th NAtt from the list. }
+begin
+	{ error check- if asked to find a gear before the first one in }
+	{ the list, obviously we can't do that. Return Nil. }
+	if N < 1 then Exit( Nil );
+
+	{ Search for the desired attribute. }
+	while ( N > 1 ) and ( List <> Nil ) do begin
+		Dec( N );
+		List := List^.Next;
+	end;
+
+	{ Return the last attribute found. }
+	RetrieveNAttByListPos := List;
+end;
+
+function SelectRandomNAtt( NAList: NAttPtr ): NAttPtr;
+	{ Out of all the NAtts in the list, select one at random. }
+var
+	N,T: Integer;
+	it: NAttPtr;
+begin
+	{ Count the number of NAtts total. }
+	it := Nil;
+	N := NumNAtts( NAList );
+	{ Choose one randomly. }
+	if N > 0 then begin
+		T := Random( N ) + 1;
+		it := RetrieveNAttByListPos( NAList , T );
+	end;
+	SelectRandomNAtt := it;
 end;
 
 Function LastGear(LList: GearPtr): GearPtr;
