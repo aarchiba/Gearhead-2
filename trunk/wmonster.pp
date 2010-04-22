@@ -320,8 +320,8 @@ Function GenerateMechaList( MPV: LongInt; Fac: GearPtr; Factions,Desc,Unit_Type:
 
 		{ Next, locate the clause pertaining to this unit type. }
 		P := Pos( Unit_Type , roles );
-		if ( P <> 0 ) and ( Length( roles ) <= ( P + Length( Unit_Type ) + 2 ) ) then begin
-			Case roles[ P + Length( Unit_Type ) + 2 ] of
+		if ( P <> 0 ) and ( Length( roles ) >= ( P + Length( Unit_Type ) + 2 ) ) then begin
+			Case roles[ P + Length( Unit_Type ) + 1 ] of
 				'T':	P := ROLE_Trooper;
 				'S':	P := ROLE_Support;
 				'C':	P := ROLE_Command;
@@ -398,6 +398,8 @@ const
 	BasicGruntCost = 30;
 	SkillPlusCost = 15;
 	SkillMinusCost = 7;
+	SkillStep = 7;		{ The amount of Renown needed to change the skill rank. }
+	BasicEnemyRenownModifier = -20;
 var
 	OptimalValue: LongInt;	{ The ideal value for a mecha. }
 	MList: GearPtr;		{ The list of mecha we will eventually return. }
@@ -454,7 +456,166 @@ var
 		{ Return the info string selected. }
 		SelectNextMecha := M1^.G;
 	end;
+	Function SelectMechaByRole( Role,MaxCost: LongInt ): Integer;
+		{ Select a mecha based on the given role and maximum }
+		{ cost. If no legal mecha is found, return 0. }
+	type
+		smbr_ChoiceRec = Record
+			N: Integer;
+			Cost: LongInt;
+		end;
+	const
+		Num_Possible_Choices = 3;
+	var
+		Possible_Choices: Array [1..Num_Possible_Choices] of smbr_ChoiceRec;
+		T,N: Integer;
+		Mek: NAttPtr;
+	begin
+		{ Initialization. }
+		for t := 1 to Num_Possible_Choices do Possible_Choices[ t ].N := 0;
 
+		{ Step One: Create a list of up to 3 possibilities. }
+		Mek := ShoppingList;
+		N := 0;
+		while Mek <> Nil do begin
+			if ( Mek^.S = Role ) and ( Mek^.V <= MaxCost ) then begin
+				{ This mecha has the right role and a legal cost. }
+				{ Let's see if it's more expensive than what we currently }
+				{ have in the array. }
+				T := 1;
+				while ( T <= Num_Possible_Choices ) and ( Possible_Choices[ t ].Cost > Mek^.V ) do begin
+					Inc( T );
+				end;
+				if T <= Num_Possible_Choices then begin
+					Possible_Choices[ t ].N := Mek^.G;
+					Possible_Choices[ t ].Cost := Mek^.V;
+					if N < Num_Possible_Choices then Inc( N );
+				end;
+			end;
+			Mek := Mek^.Next;
+		end;
+
+		{ Step Two: If there are any choices, pick one at random. }
+		if N > 0 then begin
+			N := Possible_Choices[ Random( N ) + 1 ].N;
+		end;
+
+		SelectMechaByRole := N;
+	end;
+	Function MechaStrengthCost( MPV: LongInt ): LongInt;
+		{ Return the strength cost of this mecha, based on its value. }
+	var
+		it: LongInt;
+	begin
+		it := ( MPV * BasicGruntCost ) div OptimalValue;
+		if it < 5 then it := 5;
+		MechaStrengthCost := it;
+	end;
+
+	Procedure AddMechaToTeam( Mek: GearPtr; Lvl: Integer );
+		{ Add this mecha to the team, along with a pilot of the }
+		{ requested level. }
+	var
+		CP,Pilot: GearPtr;
+	begin
+DialogMsg( 'Adding ' + FullGearName( Mek ) + ' at R' + BStr( Lvl ) + ': ' + BStr( Strength ) );
+		{ Add this mecha to our list. }
+		AppendGear( MList , Mek );
+
+		{ Create a pilot, add it to the mecha. }
+		CP := SeekGear( Mek , GG_CockPit , 0 );
+		if CP <> Nil then begin
+			Pilot := RandomPilot( 72  , 10 );
+			SetSkillsAtLevel( Pilot , Lvl );
+			InsertSubCom( CP , Pilot );
+		end;
+	end;
+
+	Procedure AddAUnit;
+		{ We are going to try to add an organized unit to this team. }
+		{ A unit consists of 2 to 6 identical troopers, 0 to 2 support, }
+		{ and 0 to 1 commander. }
+		{ STRENGTH should be at least 80 when calling this procedure. }
+	var
+		MekID,N,T,MaxNumberOfMeks,PilotLvl: Integer;
+		StrCost: LongInt;	{ The number of strength points this mecha will cost. }
+		Mek: GearPtr;
+		PilotBoost: Boolean;
+	begin
+		{ Step One: Decide on a good trooper mecha. }
+		MekID := SelectMechaByRole( ROLE_Trooper , OptimalValue * 3 div 2 );
+		PilotBoost := False;
+
+		if MekID > 0 then begin
+			StrCost := MechaStrengthCost( NAttValue( ShoppingList , MekID , ROLE_Trooper ) ) - SkillMinusCost;
+			PilotLvl := Renown + BasicEnemyRenownModifier - SkillStep;
+			if StrCost < 11 + Random( 10 ) then begin
+				PilotLvl := PilotLvl + SkillStep;
+				StrCost := StrCost + SkillMinusCost;
+				PilotBoost := True;
+			end;
+
+			MaxNumberOfMeks := Strength div StrCost;
+			if MaxNumberOfMeks > 8 then MaxNumberOfMeks := 8;
+
+			N := Random( 5 ) + Random( 5 ) + 2;
+
+			if N > MaxNumberOfMeks then N := MaxNumberOfMeks
+			else if N < ( MaxNumberOfMeks div 2 ) then N := MaxNumberOfMeks div 2;
+
+			for t := 1 to N do begin
+				Mek := ObtainMek( MekID );
+DialogMsg( 'TROOPER: ' + FullGearName( Mek ) );
+				AddMechaToTeam( Mek , PilotLvl );
+				Strength := Strength - StrCost;
+			end;
+
+			{ Next, see about adding some support. }
+			if ( N > 1 ) and ( Strength > 40 ) and ( Random( 5 ) <> 1 ) then begin
+
+				MekID := SelectMechaByRole( ROLE_Support , OptimalValue * 3 div 2 );
+
+				if MekID > 0 then begin
+					StrCost := MechaStrengthCost( NAttValue( ShoppingList , MekID , ROLE_Support ) ) - SkillMinusCost;
+					PilotLvl := Renown + BasicEnemyRenownModifier - SkillStep;
+					{ If the troopers got a bonus, and we can afford a bonus here, dole one out. }
+					if PilotBoost and ( ( StrCost + SkillMinusCost ) <= Strength ) then begin
+						PilotLvl := PilotLvl + SkillStep;
+						StrCost := StrCost + SkillMinusCost;
+					end;
+					MaxNumberOfMeks := Strength div StrCost;
+					{ At this point in time, N should still equal the number of }
+					{ troopers generated. No more than half the unit may be support. }
+					if MaxNumberOfMeks > ( N div 2 ) then MaxNumberOfMeks := N div 2;
+
+					N := Random( MaxNumberOfMeks + 2 );
+					if N > MaxNumberOfMeks then N := MaxNumberOfMeks;
+
+					if N > 0 then begin
+						for t := 1 to N do begin
+							Mek := ObtainMek( MekID );
+DialogMsg( 'SUPPORT: ' + FullGearName( Mek ) );
+							AddMechaToTeam( Mek , PilotLvl );
+							Strength := Strength - StrCost;
+						end;
+					end;
+				end;
+			end;
+
+			{ Finally, see about adding a commander. }
+			if ( Strength > ( 30 + Random( 20 ) ) ) and ( Random( 3 ) <> 1 ) then begin
+				MekID := SelectMechaByRole( ROLE_Command , OptimalValue * 2 );
+				if MekID > 0 then begin
+					StrCost := MechaStrengthCost( NAttValue( ShoppingList , MekID , ROLE_Command ) );
+					Mek := ObtainMek( MekID );
+DialogMsg( 'COMMAND: ' + FullGearName( Mek ) );
+					{ The commander gets a skill bonus. }
+					AddMechaToTeam( Mek , Renown + BasicEnemyRenownModifier + Random( 10 ) );
+					Strength := Strength - StrCost - SkillPlusCost;
+				end;
+			end;
+		end;
+	end;
 	Procedure AssortedMechaExtravaganza;
 		{ We're done with that high-falootin' organized unit business. }
 		{ Spend the rest of our points on a random grab-bag of mecha. }
@@ -464,7 +625,7 @@ var
 
 		Lvl,Bonus: LongInt;		{ Pilot level. }
 		CTheme,CPoints: Integer;	{ Customization theme and points. }
-		Mek,CP,Pilot: GearPtr;
+		Mek: GearPtr;
 	begin
 		{ Keep processing until we run out of points. }
 		{ The points are represented by STRENGTH. }
@@ -477,8 +638,7 @@ var
 			MPV := GearValue( Mek );
 
 			{ From this, we may determine its base STRENGTH value. }
-			StrCost := ( MPV * BasicGruntCost ) div OptimalValue;
-			if StrCost < 5 then StrCost := 5;
+			StrCost := MechaStrengthCost( MPV );
 
 			{ If we have a lot of STRENGTH, and are at a sufficiently high RENOWN, consider }
 			{ making this mecha a custom model. }
@@ -497,7 +657,7 @@ var
 
 			{ Select a pilot skill level. }
 			{ Base pilot level is 20 beneath the PC's renown. }
-			Lvl := Renown - 20;
+			Lvl := Renown + BasicEnemyRenownModifier;
 
 			{ This level may be adjusted up or down depending on the mecha's cost. }
 			if StrCost > Strength then begin
@@ -508,7 +668,7 @@ var
 			end else if ( ( StrCost * 3 ) < Strength ) and ( Strength > 90 ) and ( Random( 3 ) <> 1 ) then begin
 				{ We have plenty of points to spare. Give this pilot some lovin'. }
 				Bonus := Random( 3 ) + 1;
-				Lvl := Lvl + Bonus * 7;
+				Lvl := Lvl + Bonus * SkillStep;
 				StrCost := StrCost + Bonus * SkillPlusCost;
 
 			end else if ( StrCost > ( BasicGruntCost + 1 + Random( 20 ) ) ) and ( Strength < ( 76 + Random( 175 ) ) ) then begin
@@ -516,14 +676,14 @@ var
 				{ Note that we won't be reducing skills at all if STRENGTH is }
 				{ sufficiently high. }
 				Bonus := Random( 4 );
-				Lvl := Lvl - Bonus * 7;
+				Lvl := Lvl - Bonus * SkillStep;
 				StrCost := StrCost - Bonus * SkillMinusCost;
 
 			end else if StrCost < ( BasicGruntCost - 1 - Random( 15 ) ) then begin
 				{ Underbudget... we can afford a better pilot. }
 				Bonus := Random( 3 );
 				if Random( 10 ) = 4 then Inc( Bonus );
-				Lvl := Lvl + Bonus * 7;
+				Lvl := Lvl + Bonus * SkillStep;
 				StrCost := StrCost + Bonus * SkillPlusCost;
 			end;
 
@@ -532,20 +692,11 @@ var
 			{ the above, since it can potentially raise the pilot to named-NPC-like }
 			{ status. }
 			if ( Strength > ( 201 + Random( 300 ) ) ) and ( Strength > ( StrCost * 3 ) ) then begin
-				Lvl := Lvl + 7;
+				Lvl := Lvl + SkillStep;
 				StrCost := StrCost + SkillPlusCost * 2;
 			end;
 
-			{ Add this mecha to our list. }
-			AppendGear( MList , Mek );
-
-			{ Create a pilot, add it to the mecha. }
-			CP := SeekGear( Mek , GG_CockPit , 0 );
-			if CP <> Nil then begin
-				Pilot := RandomPilot( 72  , 10 );
-				SetSkillsAtLevel( Pilot , Lvl );
-				InsertSubCom( CP , Pilot );
-			end;
+			AddMechaToTeam( Mek , Lvl );
 
 			{ Reduce UPV by an appropriate amount. }
 			Strength := Strength - StrCost;
@@ -558,6 +709,7 @@ begin
 	{ Record the optimal mecha value. }
 	OptimalValue := OptimalMechaValue( Renown );
 
+	if Strength > 80 then AddAUnit;
 	if Strength > 0 then AssortedMechaExtravaganza;
 
 	PurchaseForces := MList;
