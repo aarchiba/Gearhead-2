@@ -7,6 +7,9 @@ Desc <Maquise Spinner's premier mecha suit. The Zero Savin is a general purpose 
 TYPE <GROUND SPACE INSIDE>
 FACTIONS <SILKN FEDER COMET MAQUI FCOMS RISHI>
 
+ROLE_SILKN <GENERAL:TROOPER  ASSAULT:TROOPER  DEFENSE:TROOPER>
+ROLE_COMET <GENERAL:TROOPER  ASSAULT:TROOPER  DEFENSE:TROOPER>
+
 Sub
 Head
 	Armor 5
@@ -220,7 +223,9 @@ SDL_Sprite <btr_savin.png>
 SDL_Portrait <item_savin.png>
 Desc <Maquise Spinner's premier mecha suit. The Overkill Savin is a heavy artillery platform.>
 TYPE <GROUND SPACE INSIDE>
-FACTIONS <COMET>
+FACTIONS <SILKN COMET>
+ROLE_SILKN <GENERAL:SUPPORT  ASSAULT:SUPPORT  DEFENSE:SUPPORT>
+ROLE_COMET <GENERAL:SUPPORT  ASSAULT:SUPPORT  DEFENSE:SUPPORT>
 
 Sub
 Head
@@ -426,6 +431,8 @@ SDL_Portrait <item_savin.png>
 Desc <Maquise Spinner's premier mecha suit. The Reaper Savin is a close combat fighter.>
 TYPE <GROUND SPACE INSIDE>
 FACTIONS <COMET PRIVA>
+ROLE_COMET <GENERAL:COMMAND  ASSAULT:TROOPER>
+ROLE_PRIVA <GENERAL:COMMAND  ASSAULT:TROOPER  DEFENSE:COMMAND>
 
 Sub
 Head
@@ -856,6 +863,8 @@ SDL_Portrait <item_savin.png>
 Desc <Maquise Spinner's premier mecha suit. The Fortress Savin is a long range sniper.>
 TYPE <GROUND SPACE INSIDE>
 FACTIONS <COMET L5LAW>
+ROLE_COMET <GENERAL:COMMAND  ASSAULT:COMMAND  DEFENSE:COMMAND>
+ROLE_L5LAW <GENERAL:TROOPER  ASSAULT:TROOPER  DEFENSE:TROOPER>
 
 Sub
 Head
@@ -1071,6 +1080,7 @@ SDL_Portrait <item_savin.png>
 Desc <Maquise Spinner's premier mecha suit. The Dragon Savin is a short range assault platform.>
 TYPE <GROUND SPACE INSIDE>
 FACTIONS <COMET PDASS>
+ROLE_COMET <GENERAL:COMMAND  ASSAULT:COMMAND  DEFENSE:COMMAND>
 
 Sub
 Head

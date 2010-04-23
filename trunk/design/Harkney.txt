@@ -2,9 +2,11 @@ HoverFighter 6
 name <Harkney>
 desig <Crihna>
 type <GROUND SPACE>
-factions <CRIHN>
 desc <A heavy support dreadnought used by the Blades of Crihna.>
 sdl_portrait <item_harkney.png>
+
+factions <CRIHN>
+ROLE_CRIHN <GENERAL:SUPPORT  ASSAULT:SUPPORT  DEFENSE:SUPPORT>
 
 sub
 Torso

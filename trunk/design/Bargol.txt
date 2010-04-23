@@ -2,10 +2,12 @@ Battroid 7
 Name <Bargol>
 Desig <RMR-??>
 type <GROUND SPACE INSIDE>
-factions <REDMA>
 sdl_sprite <>
 SDL_PORTRAIT <>
 Desc <A technologically advanced battroid recently introduced by the Red Mask Raiders.>
+
+factions <REDMA>
+ROLE_REDMA <GENERAL:SUPPORT  ASSAULT:SUPPORT  DEFENSE:SUPPORT>
 
 sub
 Head
