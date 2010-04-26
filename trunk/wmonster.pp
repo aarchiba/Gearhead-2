@@ -518,7 +518,7 @@ var
 	var
 		CP,Pilot: GearPtr;
 	begin
-DialogMsg( 'Adding ' + FullGearName( Mek ) + ' at R' + BStr( Lvl ) + ': ' + BStr( Strength ) );
+{DialogMsg( 'Adding ' + FullGearName( Mek ) + ' at R' + BStr( Lvl ) + ': ' + BStr( Strength ) );}
 		{ Add this mecha to our list. }
 		AppendGear( MList , Mek );
 
@@ -565,7 +565,7 @@ DialogMsg( 'Adding ' + FullGearName( Mek ) + ' at R' + BStr( Lvl ) + ': ' + BStr
 
 			for t := 1 to N do begin
 				Mek := ObtainMek( MekID );
-DialogMsg( 'TROOPER: ' + FullGearName( Mek ) );
+{DialogMsg( 'TROOPER: ' + FullGearName( Mek ) );}
 				AddMechaToTeam( Mek , PilotLvl );
 				Strength := Strength - StrCost;
 			end;
@@ -594,7 +594,7 @@ DialogMsg( 'TROOPER: ' + FullGearName( Mek ) );
 					if N > 0 then begin
 						for t := 1 to N do begin
 							Mek := ObtainMek( MekID );
-DialogMsg( 'SUPPORT: ' + FullGearName( Mek ) );
+{DialogMsg( 'SUPPORT: ' + FullGearName( Mek ) );}
 							AddMechaToTeam( Mek , PilotLvl );
 							Strength := Strength - StrCost;
 						end;
@@ -608,7 +608,7 @@ DialogMsg( 'SUPPORT: ' + FullGearName( Mek ) );
 				if MekID > 0 then begin
 					StrCost := MechaStrengthCost( NAttValue( ShoppingList , MekID , ROLE_Command ) );
 					Mek := ObtainMek( MekID );
-DialogMsg( 'COMMAND: ' + FullGearName( Mek ) );
+{DialogMsg( 'COMMAND: ' + FullGearName( Mek ) );}
 					{ The commander gets a skill bonus. }
 					AddMechaToTeam( Mek , Renown + BasicEnemyRenownModifier + Random( 10 ) );
 					Strength := Strength - StrCost - SkillPlusCost;

@@ -4,7 +4,8 @@ Desig <CBG-87b>
 type <GROUND SPACE INSIDE>
 factions <GENERAL>
 
-ROLE_REDMA <GENERAL:TROOPER  DEFENSE:TROOPER>
+ROLE_SILKN <GENERAL:TROOPER  ASSAULT:TROOPER  DEFENSE:TROOPER>
+ROLE_ROCKE <GENERAL:TROOPER  ASSAULT:TROOPER  DEFENSE:TROOPER>
 
 desc <A light general purpose mecha. This is one of the oldest models in the series still in service.>
 SDL_Portrait <item_icewind.png>
@@ -125,10 +126,14 @@ Battroid 3
 Name <Ice Wind>
 Desig <CBG-88d>
 type <GROUND SPACE INSIDE>
-factions <GENERAL>
-ROLE_REDMA <DEFENSE:SUPPORT>
 desc <A light general purpose mecha.>
 SDL_Portrait <item_icewind.png>
+
+factions <GENERAL>
+ROLE_REDMA <DEFENSE:SUPPORT>
+ROLE_SILKN <GENERAL:SUPPORT  ASSAULT:SUPPORT  DEFENSE:SUPPORT>
+ROLE_ROCKE <GENERAL:SUPPORT  ASSAULT:SUPPORT  DEFENSE:SUPPORT>
+
 sub
 Head
 	Size 1

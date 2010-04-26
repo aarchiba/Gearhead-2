@@ -3,9 +3,11 @@ Name <Trailblazer>
 SDL_Sprite <btr_trailblazer.png>
 SDL_Portrait <item_trailblazer.png>
 Desig <TR9-02>
-desc <The Trailblazer is Maquise Spinner's scout mecha design.>
+desc <The Trailblazer is a scout mecha design from Comet Metalworks.>
 TYPE <GROUND SPACE INSIDE>
 FACTIONS <MAQUI SILKN COMET>
+ROLE_SILKN <GENERAL:COMMAND  ASSAULT:COMMAND  DEFENSE:COMMAND>
+ROLE_COMET <GENERAL:SUPPORT  ASSAULT:SUPPORT  DEFENSE:SUPPORT>
 
 sub
 Head

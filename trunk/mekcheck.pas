@@ -19,6 +19,18 @@ begin
 	end;
 end;
 
+Function EMLWideStr( N,Width: LongInt ): String;
+	{ Pack the string with spaces until it's the specified width. }
+var
+	msg: String;
+begin
+	msg := BStr( Abs( N ) );
+	if N < 0 then msg := '-' + msg;
+	while Length( msg ) < Width do msg := ' ' + msg;
+	EMLWideStr := msg;
+end;
+
+
 Procedure Examine_Mecha_List( mecha_list: GearPtr; Facs,Faction_Desig: String );
 	{ Examine the mecha list. See how complete its mecha spectrum is. }
 const
@@ -27,6 +39,9 @@ const
 	UTYPE_Defense = 'DEFENSE';
 	UType_Desig: Array [1..3] of String = (
 		UTYPE_General, UTYPE_Assault, UTYPE_Defense
+	);
+	Role_Desig: Array [1..3] of String = (
+		'TROOPER', 'SUPPORT', 'COMMAND'
 	);
 	ROLE_Trooper = 1;
 	ROLE_Support = 2;
@@ -63,6 +78,7 @@ var
 	mek: GearPtr;
 	t,tt,total: Integer;
 	mekval: LongInt;
+	m: SAttPtr;
 begin
 	{ Start by clearing the graph. }
 	for t := 1 to 10 do begin
@@ -103,7 +119,7 @@ begin
 			for t := 1 to 3 do begin
 				tt := MechaRole( Mek , UTYPE_Desig[ t ] );
 				if ( tt >= 1 ) and ( tt <= 3 ) then begin
-
+					StoreSAtt( Army_List[ t , tt ] , EMLWideStr( GearValue( Mek ) , 12 ) + '   ' + FullGearName( Mek ) );
 				end;
 			end;
 		end;
@@ -118,6 +134,27 @@ begin
 		writeln();
 	end;
 	writeln( ' Total: ' , total );
+
+	{ Output the army list. }
+	writeln( '  ' );
+	writeln( ' ARMY LIST' );
+	for t := 1 to 3 do begin
+		writeln( '  ' + UTYPE_DESIG[ t ] );
+		for tt := 1 to 3 do begin
+			writeln( '    ' + ROLE_DESIG[ tt ] );
+			if Army_List[ t , tt ] <> Nil then begin
+				SortStringList( Army_List[ t , tt ] );
+				m := Army_List[ t , tt ];
+				while m <> Nil do begin
+					writeln( m^.info );
+					m := m^.Next;
+				end;
+			end else begin
+				writeln( '               ...' );
+			end;
+		end;
+		writeln( '  ' );
+	end;
 
 	{ Dispose of the army list. }
 	for t := 1 to 3 do begin
@@ -193,13 +230,13 @@ begin
 
 	writeln();
 	writeln( 'General Mecha' );
-	Examine_Mecha_List( mecha_list , 'GENERAL' );
+	Examine_Mecha_List( mecha_list , 'GENERAL' , '' );
 
 	F := Factions_LIst;
 	while F <> Nil do begin
 		writeln();
 		writeln( GearName( F ) + ' Mecha' );
-		Examine_Mecha_List( mecha_list , 'GENERAL ' + SAttValue( F^.SA , 'DESIG' ) );
+		Examine_Mecha_List( mecha_list , 'GENERAL ' + SAttValue( F^.SA , 'DESIG' ) , SAttValue( F^.SA , 'DESIG' ) );
 
 		F := F^.Next;
 	end;

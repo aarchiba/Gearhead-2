@@ -5,8 +5,13 @@ sdl_sprite <ger_dora.png>
 sdl_portrait <item_dora.png>
 desc <This industrial mecha is most commonly used in orbital construction and to load cargo on space liners.>
 type <Space>
-factions <MAQUI COMET PRIVA HOELL PDASS CRIHN FCOMS RISHI BOHEM REDMA>
+factions <MAQUI COMET PRIVA HOELL MUGLE PDASS CRIHN FCOMS RISHI BOHEM REDMA>
 Legality -20
+
+ROLE_COMET <GENERAL:TROOPER  ASSAULT:TROOPER  DEFENSE:TROOPER>
+ROLE_HOELL <GENERAL:TROOPER  ASSAULT:TROOPER  DEFENSE:TROOPER>
+ROLE_MUGLE <GENERAL:TROOPER  ASSAULT:TROOPER  DEFENSE:TROOPER>
+
 
 sub
 torso

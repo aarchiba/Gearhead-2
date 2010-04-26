@@ -9,6 +9,11 @@ SDL_MESH <btr_buruburu.obj>
 SDL_SKIN <skin_btr_buruburu.png>
 desc <One of the oldest designs still in common use, the BuruBuru is the dependable workhorse of the mecha world.>
 Legality -15
+ROLE_FCOMS <GENERAL:COMMAND  ASSAULT:COMMAND  DEFENSE:COMMAND>
+ROLE_MAQUI <GENERAL:COMMAND  ASSAULT:COMMAND  DEFENSE:COMMAND>
+ROLE_RISHI <GENERAL:COMMAND  ASSAULT:COMMAND  DEFENSE:COMMAND>
+ROLE_BOHEM <GENERAL:COMMAND  ASSAULT:COMMAND  DEFENSE:COMMAND>
+ROLE_PRIVA <GENERAL:TROOPER  ASSAULT:TROOPER  DEFENSE:TROOPER>
 
 sub
 Head
@@ -93,6 +98,11 @@ SDL_MESH <btr_buruburu.obj>
 SDL_SKIN <skin_btr_buruburu.png>
 desc <A variant on the ubiquitous BuruBuru. This version is optimized for short range fighting.>
 Legality -15
+
+ROLE_FCOMS <ASSAULT:TROOPER>
+ROLE_RISHI <ASSAULT:TROOPER>
+ROLE_MAQUI <ASSAULT:TROOPER>
+ROLE_BOHEM <ASSAULT:TROOPER>
 
 sub
 Head
@@ -186,6 +196,8 @@ SDL_MESH <btr_buruburu.obj>
 SDL_SKIN <skin_btr_buruburu.png>
 desc <This variant is used by the Silver Knights. It features a particle cannon and improved defenses.>
 Legality -5
+ROLE_MAQUI <GENERAL:COMMAND  ASSAULT:COMMAND  DEFENSE:COMMAND>
+ROLE_SILKN <GENERAL:SUPPORT  DEFENSE:SUPPORT>
 
 sub
 Head
@@ -284,6 +296,8 @@ SDL_MESH <btr_buruburu.obj>
 SDL_SKIN <skin_btr_buruburu.png>
 desc <This variant is used by the mecha forces of Rishiri Spinner. It serves as a light artillery platform.>
 Legality -15
+ROLE_RISHI <GENERAL:SUPPORT  ASSAULT:SUPPORT>
+ROLE_ROCKE <GENERAL:SUPPORT  ASSAULT:SUPPORT>
 
 sub
 Head
@@ -366,6 +380,9 @@ SDL_MESH <btr_buruburu.obj>
 SDL_SKIN <skin_btr_buruburu.png>
 desc <This older variant of the BuruBuru is still used by the defense forces of various space colonies.>
 Legality -15
+ROLE_FCOMS <GENERAL:TROOPER  ASSAULT:TROOPER  DEFENSE:TROOPER>
+ROLE_L5LAW <GENERAL:TROOPER  DEFENSE:TROOPER>
+ROLE_BOHEM <GENERAL:TROOPER  ASSAULT:TROOPER  DEFENSE:TROOPER>
 
 sub
 Head
@@ -447,15 +464,16 @@ Battroid 5
 Name <Buru Buru>
 Desig <SAN-X9cb Crossbones>
 type <GROUND SPACE INSIDE>
-factions <CRIHN PRIVA REDMA>
-ROLE_CRIHN <GENERAL:TROOPER  ASSAULT:TROOPER  DEFENSE:TROOPER>
-ROLE_REDMA <GENERAL:SUPPORT  DEFENSE:TROOPER>
 SDL_Sprite <btr_buruburu.png>
 SDL_PORTRAIT <item_buruburu.png>
 SDL_MESH <btr_buruburu.obj>
 SDL_SKIN <skin_btr_buruburu.png>
 desc <This variant is favored by pirates in the L5 region.>
 Legality -15
+factions <CRIHN PRIVA REDMA>
+ROLE_CRIHN <GENERAL:TROOPER  ASSAULT:TROOPER  DEFENSE:TROOPER>
+ROLE_REDMA <GENERAL:TROOPER  DEFENSE:TROOPER>
+ROLE_PRIVA <GENERAL:COMMAND  ASSAULT:COMMAND  DEFENSE:COMMAND>
 
 sub
 Head
@@ -562,6 +580,7 @@ SDL_MESH <btr_buruburu.obj>
 SDL_SKIN <skin_btr_buruburu.png>
 desc <A variant on the BuruBuru design. This version features a shield and improved short range weapons.>
 Legality -15
+ROLE_L5LAW <ASSAULT:TROOPER>
 
 sub
 Head
@@ -650,14 +669,20 @@ Battroid 5
 Name <Buru Buru>
 Desig <SAN-X9g Heavyfoot>
 type <GROUND SPACE INSIDE>
-factions <GENERAL>
-ROLE_CRIHN <GENERAL:COMMAND  ASSAULT:COMMAND  DEFENSE:COMMAND>
 SDL_Sprite <btr_buruburu.png>
 SDL_PORTRAIT <item_buruburu.png>
 SDL_MESH <btr_buruburu.obj>
 SDL_SKIN <skin_btr_buruburu.png>
 desc <A variant on the BuruBuru design. This version is equipped with a powerful gauss cannon.>
 Legality -15
+factions <GENERAL>
+ROLE_MAQUI <GENERAL:SUPPORT  ASSAULT:SUPPORT  DEFENSE:SUPPORT>
+ROLE_FCOMS <GENERAL:SUPPORT  DEFENSE:SUPPORT>
+ROLE_L5LAW <GENERAL:SUPPORT  ASSAULT:SUPPORT  DEFENSE:SUPPORT>
+ROLE_CRIHN <GENERAL:SUPPORT  ASSAULT:SUPPORT  DEFENSE:SUPPORT>
+ROLE_REDMA <GENERAL:SUPPORT  DEFENSE:SUPPORT>
+ROLE_PRIVA <GENERAL:SUPPORT  ASSAULT:SUPPORT  DEFENSE:SUPPORT>
+ROLE_ROCKE <DEFENSE:SUPPORT>
 
 sub
 Head
@@ -837,6 +862,118 @@ Leg
 	end
 end
 %% End Devil BuruBuru
+
+Battroid 5
+Name <Buru Buru>
+Desig <SAN-X12bc Revenge>
+type <GROUND SPACE INSIDE>
+SDL_Sprite <btr_buruburu.png>
+SDL_PORTRAIT <item_buruburu.png>
+SDL_MESH <btr_buruburu.obj>
+SDL_SKIN <skin_btr_buruburu.png>
+desc <This Buru Buru variant is used as a command mecha by the Blades of Crihna.>
+Legality -15
+
+factions <CRIHN>
+ROLE_CRIHN <GENERAL:COMMAND  ASSAULT:COMMAND  DEFENSE:COMMAND>
+
+sub
+Head
+	Armor 4
+	mass 1
+	sub
+		Sensor 4
+
+		STC LAS-3
+		type <INTERCEPT>
+		Integral
+	end
+
+Torso
+	Armor 4
+	mass 1
+	sub
+		CPit
+		Armor 2
+
+		Mount
+		name <Collar Mount>
+		inv
+			MLauncher 6
+			sub
+				STC HR-10
+				Magazine 6
+			end
+		end
+
+		HeavyActuator 3
+
+		ECM 2
+	end
+
+Arm
+	Name <Right Arm>
+	Armor 4
+	sub
+		Hand
+		inv
+			Gun 5
+			name <Ishmael Cannon>
+			caliber <70mm caseless>
+			mass -4
+			range 5
+			BV 3
+			magazine 100
+			sub
+				ammo 5
+				caliber <70mm caseless>
+			end
+		end
+		HeavyActuator 1
+
+		Melee 1
+		Name <Shoulder Spike>
+		Acc 1
+	end
+
+Arm
+	Name <Left Arm>
+	Armor 4
+	sub
+		Hand
+
+		STC MAC-2
+
+		HeavyActuator 1
+	end
+	inv
+		Shield 2
+		DefBonus 1
+		sub
+			Melee 12
+			name <Ramming Spike>
+			Integral
+		end
+	end
+
+Leg
+	Name <Right Leg>
+	mass 1
+	Armor 4
+	sub
+		HoverJet 4
+	end
+
+Leg
+	Name <Left Leg>
+	mass 1
+	Armor 4
+	sub
+		HoverJet 4
+	end
+end
+%% End Revenge BuruBuru
+
 
 Battroid 5
 Name <Buru Buru>
