@@ -41,24 +41,24 @@ Content
 		% V1 = Completed stage
 		% V2 = Delay time
 		% V3 = Delay renown
+		% V4 = Stage Renown
 		&WinStep  <V+ 1 1 QMemo %plotid% 7 V= 2 ComTime V+ 2 86400>
 		&LoseStep <V+ 1 1 QMemo %plotid% 8 V= 2 ComTime V+ 2 86400 V= 3 ?>
 		greeting <if= PlotStatus %plotid% %id% else GoCheckOffer ifG ComTime V2 else GoNotReady ifG PCRenown V3 else GoNotReady NewChat Say 1 AddChat 1 AddChat 2>
 		GoNotReady <NewChat Say 2>
+		GoNeedFame <NewChat Say 10>
 		GoCheckOffer <if= PlotStatus %plotid% 0 else GoChat IfPCHasPerformance else GoChat NewChat Say 3 AddChat 3 AddChat 4>
 		GoChat <NewChat Say 9>
 		GoStep1 <if= V1 0 else GoStep2      Goto .%id1%_GoInit>
-		GoStep2 <if= V1 1 else GoStep3      Goto .%id2%_GoInit>
-		GoStep3 <if= V1 2 else GoStep4      Goto .%id3%_GoInit>
-		GoStep4 <if= V1 3 else GoConclude   Goto .%id4%_GoInit>
+		GoStep2 <if= V1 1 else GoStep3      V= 4 50   Goto .%id2%_GoInit>
+		GoStep3 <if= V1 2 else GoStep4      V= 4 65   Goto .%id3%_GoInit>
+		GoStep4 <if= V1 3 else GoConclude   V= 4 80   Goto .%id4%_GoInit>
 		GoConclude <Goto .%id5%_GoInit>
-
-		Result1 <Goto GoStep1>
+		Result1 <if# V4 0 else GoStep1  ifG PCRenown V4 else GoNeedFame  Goto GoStep1>
 		Result2 <NewChat Say 4>
 		Result3 <NewChat Say 5 AddChat 1 AddChat 5 SetPlotStatus %plotid% %id%>
 		Result4 <AddEasygoing d10   NewChat Say 6>
 		Result5 <NewChat Say 4>
-
 		Msg1 <It's necessary to move up the ladder of success one step at a time. Only those who have paid their dues earn the right to perform at the Garden Theatre.>
 		Msg2_1 <I don't have another gig for you just yet. Come back tomorrow and we'll see then.>
 		Msg2_2 <You're not ready for another gig just yet. Try doing some other things for a while.>
@@ -70,13 +70,12 @@ Content
 		Msg7 <You should return to %name1% later for a new gig.>
 		Msg8 <%name1% said you should take a break from performing before starting your next gig.>
 		Msg9 <It's a good day for a concert.>
-
+		Msg10 <Not yet, you aren't. You're going to have to work on improving your reputation before the next concert.>
 		Prompt1 <I'm ready to take the next step.>
 		Prompt2 <Maybe I'll try that someday.>
 		Prompt3 <I dream of playing here, someday.>
 		Prompt4 <Maybe I'll watch a concert here sometime.>
 		Prompt5 <Dreaming's fine for now.>
-
 	end
 	inv
 		NPC Celebrity

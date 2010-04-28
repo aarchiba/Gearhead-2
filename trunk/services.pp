@@ -150,11 +150,18 @@ begin
 	CombatDisplay( SERV_GB );
 end;
 
-Function ScalePrice( PC,NPC: GearPtr; Price: Int64 ): LongInt;
-	{ Modify the price listed based upon the PC's shopping skill. }
+Function ScalePrice( GB: GameBoardPtr; PC,NPC: GearPtr; Price: Int64 ): LongInt;
+	{ Modify the price listed based upon the PC's shopping skill, }
+	{ faction membership, and whatever else. }
 var
 	ShopRk,ShopTr,R: Integer;		{ ShopRank and ShopTarget }
+	PriceMod: LongInt;
+	Adv: GearPtr;
 begin
+	{ Start with the assumption that we're paying 100%. }
+	PriceMod := 100;
+
+	{ First, let's modify this by Shopping skill. }
 	{ Determine the Shopping skill rank of the buyer. }
 	ShopRk := SkillValue( PC , NAS_Shopping , STAT_Charm );
 
@@ -172,6 +179,8 @@ begin
 			{ It's much harder to haggle if the shopkeep }
 			{ doesn't like you. }
 			ShopTr := ShopTr + Abs( R ) div 2;
+			{ If the dislike ventures into hate, there's a markup. }
+			if R < -20 then PriceMod := PriceMod + Abs( R ) div 5;
 		end;
 	end;
 
@@ -182,8 +191,22 @@ begin
 		ShopRk := ( ShopRk - ShopTr ) * 2;
 		if ShopRk > 50 then ShopRk := 50;
 
-		Price := ( Price * (100 - ShopRk ) ) div 100;
+		PriceMod := PriceMod - ShopRk;
 	end;
+
+	{ Next, let's take a look at factions. }
+	if ( GB <> Nil ) and ( GB^.Scene <> Nil ) and ( NPC <> Nil ) then begin
+		{ ArchEnemies get a 20% markup, allies get a 10% discount. }
+		Adv := FindRoot( GB^.Scene );
+		if IsArchEnemy( Adv , NPC ) then begin
+			PriceMod := PriceMod + 20;
+		end else if IsArchAlly( Adv , NPC ) then begin
+			PriceMod := PriceMod - 10;
+		end;
+	end;
+
+	{ Calculate the final price. }
+	Price := ( Price * PriceMod ) div 100;
 	if Price < 1 then Price := 1;
 
 	ScalePrice := Price;
@@ -199,12 +222,12 @@ begin
 	MaxShopRank := MSR;
 end;
 
-Function PurchasePrice( PC,NPC,Item: GearPtr ): LongInt;
+Function PurchasePrice( GB: GameBoardPtr; PC,NPC,Item: GearPtr ): LongInt;
 	{ Determine the purchase price of ITEM as being sold by NPC }
 	{ to PC. }
 begin
 	{ Scale the base cost for the item. }
-	PurchasePrice := ScalePrice( PC , NPC , GearCost( Item ) );
+	PurchasePrice := ScalePrice( GB , PC , NPC , GearCost( Item ) );
 end;
 
 Procedure ShoppingXP( PC , Part: GearPtr );
@@ -334,7 +357,7 @@ begin
 	N := 1;
 	Ammo := AmmoList;
 	while Ammo <> Nil do begin
-		AddRPGMenuItem( ShopMenu , GearName( Ammo ) + ' ($' + BStr( PurchasePrice( PC , NPC , Ammo ) ) + ')' , N );
+		AddRPGMenuItem( ShopMenu , GearName( Ammo ) + ' ($' + BStr( PurchasePrice( GB , PC , NPC , Ammo ) ) + ')' , N );
 
 		Inc( N );
 		Ammo := Ammo^.Next;
@@ -351,7 +374,7 @@ begin
 
 		if N > 0 then begin
 			Ammo := RetrieveGearSib( AmmoList , N );
-			Cost := PurchasePrice( PC , NPC , Ammo );
+			Cost := PurchasePrice( GB , PC , NPC , Ammo );
 
 			if NAttValue( PC^.NA , NAG_Experience , NAS_Credits ) >= Cost then begin
 				{ Copy the gear, then stick it in inventory. }
@@ -391,10 +414,10 @@ procedure PurchaseGearMenu( GB: GameBoardPtr; PC,NPC,Part: GearPtr );
 var
 	YNMenu: RPGMenuPtr;
 	Cost: LongInt;
-	N,XP: Integer;
+	N: Integer;
 	msg: String;
 begin
-	Cost := PurchasePrice( PC , NPC , Part );
+	Cost := PurchasePrice( GB , PC , NPC , Part );
 
 	YNMenu := CreateRPGMenu( MenuItem , MenuSelect , ZONE_ShopMenu );
 	AddRPGMenuItem( YNMenu , 'Buy ' + GearName( Part ) + ' ($' + BStr( Cost ) + ')' , 1 );
@@ -699,7 +722,7 @@ var
 begin
 	{ Determine the cost of repairing everything, and also }
 	{ the amount of cash the PC has. }
-	Cost := ScalePrice( PC , NPC , RepairAllCost( GB , RepMode ) );
+	Cost := ScalePrice( GB , PC , NPC , RepairAllCost( GB , RepMode ) );
 	Cash := NAttValue( PC^.NA, NAG_Experience , NAS_Credits );
 	R := ReactionScore( Nil , PC , NPC );
 	msg := '';
@@ -739,7 +762,7 @@ var
 begin
 	{ Determine the cost of repairing everything, and also }
 	{ the amount of cash the PC has. }
-	Cost := ScalePrice( PC , NPC , RepairMasterByModeCost( PArt , RepMode ) );
+	Cost := ScalePrice( GB , PC , NPC , RepairMasterByModeCost( PArt , RepMode ) );
 	Cash := NAttValue( PC^.NA, NAG_Experience , NAS_Credits );
 	R := ReactionScore( Nil , PC , NPC );
 
@@ -854,7 +877,7 @@ begin
 	end;
 
 	{ SCale the price for the PC's shopping skill. }
-	if it > 0 then it := ScalePrice( PC , NPC , it );
+	if it > 0 then it := ScalePrice( GB , PC , NPC , it );
 
 	ReloadCharsCost := it;
 end;
@@ -904,7 +927,7 @@ begin
 	end;
 
 	{ SCale the price for the PC's shopping skill. }
-	if it > 0 then it := ScalePrice( PC , NPC , it );
+	if it > 0 then it := ScalePrice( GB , PC , NPC , it );
 
 	ReloadMechaCost := it;
 end;
@@ -972,7 +995,7 @@ begin
 		if it < 1 then it := 1;
 
 		{ SCale the price for the PC's shopping skill. }
-		it := ScalePrice( PC , NPC , it );
+		it := ScalePrice( GB , PC , NPC , it );
 	end;
 
 	RechargeCost := it;
@@ -1136,7 +1159,7 @@ Function CreateWaresList( GB: GameBoardPtr; NPC: GearPtr; Stuff: String ): GearP
 		end;
 	end;
 var
-	Wares,I,I2: GearPtr;	{ List of items for sale. }
+	Wares,I: GearPtr;	{ List of items for sale. }
 	NPCSeed,NPCRestock,Tolerance,MSR: LongInt;
 	N,ShopRank,ItemPts: Integer;
 	WList,ILink: NAttPtr;
@@ -1271,13 +1294,13 @@ begin
 
 		{ Pad the message. }
 {$IFDEF ASCII}
-		while Length( msg + ' $' + BStr( PurchasePrice( PC , NPC , I ) ) ) < ( ZONE_ShopMenu.W - 5 ) do msg := msg + ' ';
+		while Length( msg + ' $' + BStr( PurchasePrice( GB , PC , NPC , I ) ) ) < ( ZONE_ShopMenu.W - 5 ) do msg := msg + ' ';
 {$ELSE}
-		while TextLength( GAME_FONT , ( msg + ' $' + BStr( PurchasePrice( PC , NPC , I ) ) ) ) < ( ZONE_ShopMenu.W - 50 ) do msg := msg + ' ';
+		while TextLength( GAME_FONT , ( msg + ' $' + BStr( PurchasePrice( GB , PC , NPC , I ) ) ) ) < ( ZONE_ShopMenu.W - 50 ) do msg := msg + ' ';
 {$ENDIF}
 
 		{ Add it to the menu. }
-		AddRPGMenuItem( RPM , msg + ' $' + BStr( PurchasePrice( PC , NPC , I ) ) , N );
+		AddRPGMenuItem( RPM , msg + ' $' + BStr( PurchasePrice( GB , PC , NPC , I ) ) , N );
 		Inc( N );
 		I := I^.Next;
 	end;
@@ -1380,7 +1403,7 @@ begin
 		if ( NAttValue( NPC^.NA , NAG_Skill , NAS_Repair ) > 5 ) then begin
 			Cost := RepairMasterByModeCost( Mek , RM_MechaRepair );
 			if Cost > 0 then begin
-				AddRPGMenuItem( RPM , MsgString( 'SERVICES_DoMechaRepair' ) + ' [$' + BStr( ScalePrice( PC , NPC , Cost ) ) + ']' , 2 );
+				AddRPGMenuItem( RPM , MsgString( 'SERVICES_DoMechaRepair' ) + ' [$' + BStr( ScalePrice( GB , PC , NPC , Cost ) ) + ']' , 2 );
 			end;
 		end;
 		AddRPGMenuItem( RPM , MsgString( 'SERVICES_SellMekInv' ) , 4 );
@@ -1676,13 +1699,13 @@ begin
 		if NAttValue( NPC^.NA , NAG_Skill , NAS_Medicine ) > 0 then begin
 			Cost := RepairAllCost( GB , RM_Medical );
 			if Cost > 0 then begin
-				AddRPGMenuItem( RPM , MsgString( 'SERVICES_DoMedicalRepair' ) + ' [$' + BStr( ScalePrice( PC , NPC , Cost ) ) + ']' , RM_Medical );
+				AddRPGMenuItem( RPM , MsgString( 'SERVICES_DoMedicalRepair' ) + ' [$' + BStr( ScalePrice( GB , PC , NPC , Cost ) ) + ']' , RM_Medical );
 			end;
 		end;
 		if NAttValue( NPC^.NA , NAG_Skill , NAS_Repair ) > 0 then begin
 			Cost := RepairAllCost( GB , RM_GeneralRepair );
 			if Cost > 0 then begin
-				AddRPGMenuItem( RPM , MsgString( 'SERVICES_DoGeneralRepair' ) + ' [$' + BStr( ScalePrice( PC , NPC , Cost ) ) + ']' , RM_GeneralRepair );
+				AddRPGMenuItem( RPM , MsgString( 'SERVICES_DoGeneralRepair' ) + ' [$' + BStr( ScalePrice( GB , PC , NPC , Cost ) ) + ']' , RM_GeneralRepair );
 			end;
 
 			{ If the shopkeeper knows Basic Repair, allow Reload Chars. }
@@ -1694,7 +1717,7 @@ begin
 			if NAttValue( NPC^.NA , NAG_Skill , NAS_Repair ) > 5 then begin
 				Cost := RepairAllCost( GB , RM_MechaRepair );
 				if Cost > 0 then begin
-					AddRPGMenuItem( RPM , MsgString( 'SERVICES_DoMechaRepair' ) + ' [$' + BStr( ScalePrice( PC , NPC , Cost ) ) + ']' , RM_MechaRepair );
+					AddRPGMenuItem( RPM , MsgString( 'SERVICES_DoMechaRepair' ) + ' [$' + BStr( ScalePrice( GB , PC , NPC , Cost ) ) + ']' , RM_MechaRepair );
 				end;
 
 				{ If the shopkeeper knows Mecha Repair, allow reload mecha. }
@@ -1956,7 +1979,7 @@ begin
 		if N > -1 then begin
 			Mek := LocateGearByNumber( FindWorld( GB , GB^.Scene ) , N );
 			if Mek <> Nil then begin
-				Cost := ScalePrice( PC , NPC , DeliveryCost( Mek ) );
+				Cost := ScalePrice( GB , PC , NPC , DeliveryCost( Mek ) );
 				RPM := CreateRPGMenu( MenuItem , MenuSelect , ZONE_ShopMenu );
 				AddRPGMenuItem( RPM , ReplaceHash( MsgString( 'SERVICES_MoveYes' ) , GearName( Mek ) ) , 1 );
 				AddRPGMenuItem( RPM , MsgString( 'SERVICES_MoveNo' ) ,  -1 );

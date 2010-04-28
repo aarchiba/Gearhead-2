@@ -31,7 +31,7 @@ uses gears;
 const
 	NAG_Intrinsic = 18;
 
-	NumIntrinsic = 8;
+	NumIntrinsic = 7;
 	NAS_Memo = 1;
 	NAS_Email = 2;
 	NAS_News = 3;
@@ -42,7 +42,7 @@ const
 
 	Intrinsic_Value: Array [1..NumIntrinsic] of Integer = (
 		200, 300, 400, 500, 100,
-		0, 0, 250
+		0, 250
 	);
 
 

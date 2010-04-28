@@ -39,6 +39,58 @@
 %%
 
 Content
+	name <Adam Smith's Invisible Backhand>
+	requires <*:CS_MIX_Confrontation 1:M.mer (1:A.tha|1:A.equ|1:A.adm|1:A.obs) ~E:TRADE ~E:CORPO ~E:LABOR ~E:FAITH ~F:CORPO>
+	desc <The NPC will explain how the two of you are like yin and yang, making the economy go round.>
+	changes <E:M>
+	results <E:M.com>
+
+	% E1 is the Enemy NPC
+	% E2 is the outdoors scene where this encounter is
+
+	% P%id%01 = ForceChat Counter
+	update <if= P%id%01 0 P= %id%01 1 ForceChat %1%>
+
+	.%id%_%plotid%_GoCombatWin  <CancelSubPlot %plotid%  Trigger0 .%id%_%plotid%_GoWin   History %id%01>
+	.%id%_%plotid%_GoCombatLoss <CancelSubPlot %plotid%  Trigger0 .%id%_%plotid%_GoLoss  History %id%02>
+
+	Msg%id%01 <You defeated %name1%.>
+	Msg%id%02 <You were defeated by %name1%.>
+
+	sub
+		Persona 1
+		special <UNLISTED>
+		greeting <if= PlotStatus %plotid% %id% else %pop% EndChat Say %id%01 AddChat %id%01 AddChat %id%02 SetXXRMotivation %1% XXR_M_Competition History %id%02>
+		.%id%_GoThemeExpo <EndChat Say %id%03>
+		result%id%01 <AddReact  d10     Goto .%id%_GoThemeExpo>
+		result%id%02 <AddEasygoing -d6  Goto .%id%_GoThemeExpo>
+		Msg%id%01 <You know, \PC , without you around I'd be out of the job... and without me, you would be too. Our endless battle is what keeps the cavalier economy going. I guess you could say that each one of us profits the other.>
+		Msg%id%01_1 <Did you know that our battle is good for the economy? I get paid to fight you, you get paid to fight me, we both pay for repairs and upgrades afterwards... So long as neither one of us get killed, everybody profits.>
+		CMsg%id%01_1 <ifNPCHeroic Accept>
+		Msg%id%01_2 <>
+		CMsg%id%01_2 <ifNPCVillainous Accept>
+		Msg%id%01_11 <I really have to thank you, \PC . Fighting you has earned me loads of cash... and I'll bet that fighting me has been pretty good to you as well. This is the way our crazy cavalier economy keeps on moving.>
+		CMsg%id%01_11 <ifNPCAttitude %1% XXR_A_Thankful Accept>
+		Msg%id%01_12 <>
+		CMsg%id%01_12 <ifNPCAttitude %1% XXR_A_Admire Accept>
+		Msg%id%01_13 <\PC ... You and I are yin and yang, two sides of the same coin. Just as I get paid to stop you, you get paid to stop me, and in this way our eternal battle profits us both...>
+		CMsg%id%01_13 <ifNPCAttitude %1% XXR_A_Obsession Accept>
+		Msg%id%01_14 <It seems to me that the two of us are in the same boat. I get paid to fight you, and you get paid to fight me... as long as neither one of us gives up, it's a pretty sweet situation for us both.>
+		CMsg%id%01_14 <ifNPCAttitude %1% XXR_A_IsEqual Accept>
+		Msg%id%02 <%name1% opined that your battle is a source of profit to you both.>
+		Msg%id%03 <Of course, I'll earn a lot more if I'm the one who wins. Meet my \CHATNPCMECHA !>
+		Msg%id%03_1 <This time around I'm going to increase my dividends by smashing you with my \CHATNPCMECHA . Prepare to battle!>
+		Msg%id%03_2 <I plan to increase my earnings by kicking your arse with this \CHATNPCMECHA . Are you ready to get down to business?>
+		Prompt%id%01 <That's a nice way of looking at things.>
+		Prompt%id%01_1 <I never thought of it like that. Thanks, %name1%.>
+		Prompt%id%01_2 <You're right, this is a sweet racket we have here.>
+		Prompt%id%02 <You think I'm just doing this for the money!?>
+		Prompt%id%02_1 <Shut up about your stupid money and let's fight!>
+		Prompt%id%02_2 <This isn't about money, %name1%.>
+	end
+
+
+Content
 	name <Suffering Leads to the Dark Side>
 	requires <*:CS_MIX_Confrontation 1:A.obs 1:M.com -!Ne -!Lo ~1:MILIT ~1:FAITH -1:nemesis -1:evil_>
 	desc <The enemy, desperate for a victory, is calling out all the stops.>

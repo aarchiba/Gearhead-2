@@ -2258,6 +2258,7 @@ begin
 
 	RPM := CreateRPGMenu( MenuItem, MenuSelect, ZONE_FieldHQMenu );
 	BuildGearMenu( RPM , PC , GG_Usable );
+
 	AlphaKeyMenu( RPM );
 	RPMSortAlpha( RPM );
 
