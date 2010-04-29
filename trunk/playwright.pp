@@ -1467,7 +1467,6 @@ begin
 		it := it + 'FINAL_';
 	end;
 
-
 	{ Attach the current choice to the plot_request. }
 	C := SeekDramaticChoice( NAttValue( Story^.NA , NAG_XXRan , NAS_DramaticChoice ) );
 	if C <> Nil then begin
@@ -1481,6 +1480,11 @@ end;
 
 Function StoryContext( GB: GameBoardPtr; Story: GearPtr ): String;
 	{ Describe the context of this story in a concise string. }
+const
+	Merit_Badge_Tag: Array [1..NumMeritBadge] of String(5) = (
+		'STAR_', 'CHAMP', '', '', 'MORAL',
+		''
+	);
 var
 	it,msg: String;
 	T: Integer;
@@ -1494,6 +1498,17 @@ begin
 	while LList <> Nil do begin
 		if NAttValue( Story^.NA , NAG_Completed_DC , LList^.V ) <> 0 then it := it + ' :' + SAttValue( LList^.SA , 'DESIG' );
 		LList := LList^.Next;
+	end;
+
+	{ Add tags for the merit badges earned by the PC. }
+	if ( GB <> Nil ) and ( GB^.Scene <> Nil ) then begin
+		{ Use LList to hold the adventure, for now. }
+		LList := FindRoot( GB^.Scene );
+		for t := 1 to NumMeritBadge do begin
+			if ( Merit_Badge_Tag[ t ] <> '' ) and HasMeritBadge( LList , T ) then begin
+				it := it + ' C:' + Merit_Badge_Tag[ t ];
+			end;
+		end;
 	end;
 
 	{ Add a description for the difficulcy rating. }

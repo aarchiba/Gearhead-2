@@ -84,6 +84,8 @@ Const
 				{ Combatant characters can take part in mecha combat. }
 	NAS_IsMentor = 4;	{ If nonzero, this character is a mentor. }
 				{ Mentors may never be taken as lancemates. }
+	NAS_IsMissionGiver = 5;	{ If nonzero, this character may give missions. }
+				{ Only a few NPCs per city are given this authority. }
 
 	{ CharDescription / Personality Traits }
 	Num_Personality_Traits = 7;
@@ -406,6 +408,8 @@ Const
 	{ Note that while defined here, merit badges should be stored in the }
 	{ adventure gear rather than the PC itself. }
 	NAG_MeritBadge = 28;
+
+	NumMeritBadge = 6;
 
 	NAS_MB_PopStar = 1;
 	NAS_MB_ArenaChampion = 2;	{ The PC has completed a mecha arena. }

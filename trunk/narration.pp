@@ -299,6 +299,9 @@ begin
 	if IsArchEnemy( Adv, NPC ) then it := it + ' ARCHENEMY';
 	if IsArchAlly( Adv, NPC ) then it := it + ' ARCHALLY';
 
+	{ If this NPC is a mission-giver, note that here. }
+	if NAttValue( NPC^.NA , NAG_CharDescription , NAS_IsMissionGiver ) <> 0 then it := it + ' MISSION';
+
 	CID := NAttValue( NPC^.NA , NAG_Personal , NAS_CID );
 	Persona := SeekPersona( Adv , CID );
 	if ( Persona <> Nil ) and AStringHasBString( SAttValue( Persona^.SA , 'SPECIAL' ) , 'NOPLOTS' ) then it := it + ' INUSE'

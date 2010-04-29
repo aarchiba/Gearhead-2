@@ -1605,6 +1605,95 @@ Content
 	end
 
 %%
+%% *:CS_BlockedMeeting
+%%	&EnemyNPC	The NPC is the core story enemy
+%%	&EnemyFac	The NPC belongs to the enemy faction
+%%	&ForPeace	The PC comes in peace
+%%
+%% The PC wants to meet an NPC, but the core story enemy is out to prevent
+%% it. Hillarity ensues.
+%%
+%% PARAM1: The outdoors scene where the encounter is
+%% PARAM2: The metascene being sought
+%% PARAM3: The NPC to be met
+%%
+
+Content
+	name <I won't allow it.>
+	desc <The Enemy NPC is going to prevent the meeting. That's all.>
+	requires <*:CS_BlockedMeeting ~E:++ -&EnemyNPC>
+
+	% E1 is the outdoors scene where the encounter is
+	% E2 is the metascene being sought
+	% E3 is the NPC to be met
+	% E4 is the fight scene that kicks off everything
+	% E5 is the mood that it spawns
+	Element4 <Prefab>
+	Place4 <1>
+	Element5 <Prefab>
+
+	%% FAIL CONDITIONS:
+	%% - None.
+
+	sub
+		MetaScene 4 2
+		rumor%id% <somebody has been looking for you in %name1%.>
+		% L1 = Encounter Over Counter
+		% L2 = Initialization Counter
+		MapWidth 50
+		MapHeight 50
+
+		start <if= L2 0 L= 2 1 Alert 1  History 4  ifNPCOK &EnemyNPC else GoHenchmanAnnounce Monologue &EnemyNPC 2>
+		GoHenchmanAnnounce <TeamMonologue 2 3>
+
+		nu1 <if= T1 0   Return  if= V1 0 V= 1 1 LoseRenown>
+		nu2 <if= T2 0   if= V1 0 V= 1 1   XPV 100  AddRenown 1 SALVAGE>
+
+		%% Upon leaving the encounter, activate the meme
+		end <SetMood %5% &EpisodeScene WinSubPlot %plotid%>
+
+		Msg1_1 <You are attacked by a team of mecha from \FACTION &EnemyFac !>
+		CMsg1_1 <if# &EnemyFac 0 Accept>
+		Msg1_2 <You are attacked by a group of \PERSONA &EnemyNPC 's henchmen!>
+		CMsg1_2 <if= &EnemyFac 0 ifNPCOK &EnemyNPC Accept>
+		Msg1_3 <You are attacked by a lance of hostile mecha!>
+		CMsg1_3 <if= &EnemyFac 0 ifNPCDead &EnemyNPC Accept>
+		Msg2 <They say you're looking for %name3%, \PC . Well, my troops are going to make sure you don't find \OPR %3% !>
+		Msg3 <So you're looking for %name3%? We won't allow it!>
+		Msg4_1 <\PERSONA &EnemyNPC swore to stop you from reaching %name3%.>
+		CMsg4_1 <ifNPCOK &EnemyNPC Accept>
+		Msg4_2 <Enemy mecha swore to stop you from reaching %name3%.>
+		CMsg4_2 <ifNPCDead &EnemyNPC Accept>
+
+		sub
+			team 1
+			SetEnemy 2
+			SetAlly 3
+			ParaX 5
+			ParaY 5
+
+			team 2
+			name <Enemies>
+			SetEnemy 1 3
+			Deploy <SetSelfFaction %4%  WMecha 2 %threat% 100>
+			ParaX 45
+			ParaY 45
+		end
+
+	end
+	inv
+		STC CORE-INVISIBLEENCOUNTER-SD
+		name <Enemy Forces>
+
+		MinorMood
+		name <"I Won't Allow It" Mood>
+		plot_type <*FightToDestination>
+		Element1 <Grab -2>
+
+	end
+
+
+%%
 %% *TrailHenchmenToNPC Content
 %%
 %%	The PC must follow some NPCs to their base.

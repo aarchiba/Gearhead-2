@@ -27,3 +27,53 @@ Plot
 	Msg1_1  <%name2%@ \NARRATIVE 7 :// I hear you want to sign up for \FACTION &AllyFac . Come see me at \EXACT_SCENE %1% and we can talk.>
 	Msg1_2  <%name2%@ \NARRATIVE 7 :// If you have business for \FACTION &AllyFac , come talk with me at \EXACT_SCENE %1% .>
 
+Plot
+	name <Peace Negotiation>
+	desc <The PC wants to negotiate peace. Good luck.>
+	requires <*CORE_S_PEA>
+
+	% E1 is a local urban scene
+	% E2 is the metascene for the diplomat
+	% E3 is the diplomat
+	Element1 <Scene Urban !Near -7>
+	Element2 <Prefab>
+	Place2 <1>
+	Element3 <Prefab>
+	Place3 <2 (Citizens) Pass>
+
+	%% FAIL CONDITIONS:
+	%% - E3 dies
+
+
+	% At initialization, set the diplomat's faction and begin the blocked meeting.
+	update <if= PlotStatus %plotid% 0  SetPlotStatus %plotid% %id%  SetPlotStatus %plotid1% %id1%  SetNPCFaction %3% &EnemyFac  NPCLevel %3% StoryDL>
+
+	% SubPlot1 is the Blocked Meeting- it won't be easy to get to the diplomat.
+	% SubPlot2 is the diplomat's request- to secure peace requires a show of good faith.
+	% SubPlot3 is the conclusion- depending on the situation, there may be peace or not.
+	SubPlot1 <*:CS_BlockedMeeting&EnemyFac&ForPeace 1 2 3>
+	SubPlot2 <*:ZZZZZ>
+	SubPlot3 <>
+
+	sub
+		STC MS_PRESENTATION
+		SetID 2
+
+		Persona 3
+		rumor%id% <>
+		special <UNLISTED>
+		greeting <if= PlotStatus %plotid% %id% else .%id%_GoChat >
+		.%id%_GoChat <NewChat SayAnything>
+	end
+	inv
+		STC CORE-ACTIVATABLE
+		name <%name3%'s Office>
+
+		NPC Politician
+		job <Diplomat>
+	end
+
+
+
+
+

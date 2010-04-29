@@ -469,6 +469,26 @@ Choice 101
 
 	Msg%id%01 <You decided to seek %name2% in %name1%.>
 
+Choice 102
+	name <Negotiate For Peace>
+	desc <You'll attempt to negotiate a peace treaty with the enemy faction.>
+	desig <S_PEA>
+	% This choice is needed for the Peace & Love ending. Note the faction
+	% restrictions below- these will match the faction restrictions of the
+	% ending.
+	requires <(P:MILIT|P:POLIT|P:POLIC|P:CRIHN) (F:MILIT|F:POLIT|F:CRIHN|F:REDMA) :DEF_4 -:OFF_3 -!Ex -!Ne -!Lo>
+
+	% E1 is the city for the next episode.
+	Element1 <Scene City !Far -7 !Okay -2>
+
+	Prompt_1 <We should give diplomacy a chance.>
+	Prompt_2 <If I could just speak with the leaders of \FACTION &EnemyFac ...>
+	Reply <Do you think there's any point in negotiation? If you're serious, head to %name1%. You should be able to find one of their representatives there.>
+	Alert <You decide to negotiate with \FACTION &EnemyFac in %name1%.>
+
+	Choice <StoryNote %id%01 &SetEpisodeScene %1% &SetAllyFac %2%>
+
+	Msg%id%01 <You decided to hold peace talks in %name1%.>
 
 %%
 %%  *******************
