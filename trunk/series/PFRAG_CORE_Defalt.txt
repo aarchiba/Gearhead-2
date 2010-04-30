@@ -7,6 +7,37 @@
 %% In addition, some of these fragments are tied to specific components, and may not
 %% be readily reusable in other components.
 
+% TYPE: *CS_PEA_DiscussTerms
+%	The PC has come to negotiate a peace agreement. To do so they need to
+%	get past a little bit of negotiation. There will usually be a way for
+%	the PC to grease the wheels a little bit if the skill rolls don't work
+%	out. This conversation snippet will lead into the NPC asking to perform
+%	some task as a show of good faith.
+%   PARAM1: Difficulty Rating
+%   PARAM2: Success Exit Label
+%   PARAM3: Give Up Exit Label
+
+	Persona
+	requires <*CS_PEA_DiscussTerms>
+	% V%id%01 = Have gotten through the diplomacy
+	START <if= v%id%01 0 else %2%  NewChat Say %id%01 AddChat %id%01 AddChat %id%02 AddChat %id%03 AddChat %id%04>
+	.%id%_GoFailRoll <NewChat Say %id%02>
+
+	result%id%01 <ifConversation SkillTar %1% else .%id%_GoFailRoll V= %id%01 1  AddReact d10  Goto %2%>
+	result%id%02 <ifIntimidation SkillTar %1% else .%id%_GoFailRoll V= %id%01 1  AddReact d10  Goto %2%>
+	result%id%03 <V= %id%01 1  Goto %2%>
+	result%id%04 <V= %id%01 1  Goto %2%>
+
+	Msg%id%01 <So you've come here to negotiate for peace... Why should we bother to listen to you?>
+	Msg%id%02 <>
+
+	Prompt%id%01 <Peace is in all of our interests.>
+	Prompt%id%02 <Because if you don't, you'll be destroyed.>
+	Prompt%id%03 <This fighting hasn't been easy on your side, either.>
+	CPrompt%id%03 <ifInsight SkillTar %1% Accept>
+	Prompt%id%04 <You know that it's the right thing to do.>
+	CPrompt%id%04 <ifG PCHeroism %1% Accept>
+
 % TYPE: *CS_BASEPS_CaptainSurrenders
 %	The captain of the ship which the PC is plundering has just surrendered.
 %	Give a comment, and maybe alter the captain's attitude.

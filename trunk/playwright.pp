@@ -1163,7 +1163,7 @@ begin
 	end;
 
 	if Debug or ( GearName( Plot ) = 'DEBUG' ) then begin
-		if not OK then DialogMsg( 'PLOT ERROR: ' + BStr( N ) + ' Element Not Found!' )
+		if not OK then DialogMsg( 'PLOT ERROR: ' + BStr( N ) + ' Element Not Found! ' + GearName( Plot ) )
 		else if desc <> '' then DialogMsg( 'PLOT ELEMENT ' + BStr( N ) + ': ' + BStr( ElementID( Plot , N ) ) + ' ' + GearName( Element ) );
 	end;
 

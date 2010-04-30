@@ -43,7 +43,7 @@
 	result%id%04 <Goto %4%>
 	result%id%05 <Goto %3%>
 	result%id%06 <Goto %4%>
-	result%id%07 <Cash+ -Threat %1% 5 Goto %3%>
+	result%id%07 <Cash+ -Price %1% 50 Goto %3%>
 	Msg%id%01 <They say you've been trying to find your way to \SCENE %2% .>
 	Msg%id%02 <Sure, why not? I've got no real dog in this fight...>
 	Msg%id%03 <Why would I want to do that? It's much more fun making you squirm.>
@@ -52,8 +52,8 @@
 	Msg%id%06 <That's a fair price. Alright, I can show you the way to \SCENE %2% .>
 	Prompt%id%01 <Yeah, think you could help me out?>
 	Prompt%id%02 <Actually, I'm planning to beat the information out of you.>
-	Prompt%id%03 <I'll pay you $ \VAL Threat %1% 5 for the location.>
-	CPrompt%id%03 <ifG PC$ Threat %1% 5  ifShopping SocSkillTar %1%  Accept>
+	Prompt%id%03 <I'll pay you $ \VAL Price %1% 50 for the location.>
+	CPrompt%id%03 <ifG PC$ Price %1% 50  ifShopping SocSkillTar %1%  Accept>
 	Prompt%id%04 <No, I'm just cruising around looking for random fights.>
 	Prompt%id%05 <[Continue]> Win
 	Prompt%id%06 <[Continue]> Fail

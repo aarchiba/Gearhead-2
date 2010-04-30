@@ -60,7 +60,66 @@ Content
 %%
 
 Content
-	name <S_PCF Let's sign you up>
+	name <S_PEA  It's a Trap!>
+	desc <The diplomat you've been negotiating with isn't really interested in peace.>
+	requires <*CS_WinGoal *CORE_S_PEA E:good_ (1:evil_|F:REDMA|F:AEGIS) -E:FAMILY -E:LOVER -E:A.hat -E:A.pch -E:A.mut -E:M.nih>
+
+	% E1 is the NPC
+	% E2 is the Enemy NPC
+	Element2 <Grab 1>
+	Place2 </>
+
+	HINT_%id% <You'll earn $ \VAL Reward StoryDL 500 .>
+
+	start <ifNPCDead %1% SMemo 0 PyrrhicWinEpisode>
+
+	.%id%_%plotid%_GoEnd <Alert %id%01  Monologue %2% %id%02 Monologue %1% %id%03 Monologue %2% %id%04 PCFriend %2% CashPrize Reward StoryDL 500 History %id%05 AddHeroic 1 FreezeNPC %1%  PCEnemy %1%  WinEpisode>
+
+	Msg%id%01 <%name1%'s guards move to surround you. Before they can act, %name2% steps forward.>
+	Msg%id%02 <Hold your fire, %name1%. \PC is right... This fighting is getting out of control. Peace is the right answer for all of us.>
+	Msg%id%03 <I can't believe that you're taking \PPR 0 side... the glory of \FACTION &EnemyFac will not be held back by the likes of you! We will destroy \FACTION &AllyFac , and all who serve them!>
+	Msg%id%04 <Here's the money you were promised, \PC ; I'll deal with %name1%. Maybe together we'll be able to make something of this peace thing.>
+	Msg%id%05 <%name1% tried to double cross you, but you were saved by %name2%.>
+
+	sub
+		Persona 1
+		greeting <if= PlotStatus %plotid% %id% else %pop% Debrief  ifChatNPCInPlay else .%id%_NotHere  EndChat Say %id%01 Trigger0 .%id%_%plotid%_GoEnd>
+		*.%id%_NotHere <*NotByPhone>
+		.%id%_GoEnd <History %id%02  CashPrize Reward StoryDL 500  SMemo 0  WinEpisode>
+		Msg%id%01 <You fool! Did you really believe we were interested in peace? You've done my bidding like an obedient dog, and now you're going to die!>
+	end
+
+Content
+	name <S_PEA  No Peace Yet>
+	desc <Despite your best efforts, winning peace will be difficult.>
+	requires <*CS_WinGoal *CORE_S_PEA>
+
+	% E1 is the NPC
+	start <ifNPCDead %1% SMemo 0 PyrrhicWinEpisode>
+
+	HINT_%id% <You'll earn $ \VAL Reward StoryDL 500 .>
+
+	sub
+		Persona 1
+		greeting <if= PlotStatus %plotid% %id% else %pop% Debrief  NewChat Say %id%01 AddChat %id%01 AddChat %id%02>
+		.%id%_GoEnd <History %id%02  AddHeroic 1  CashPrize Reward StoryDL 500  SMemo 0  WinEpisode>
+		result%id%01 <NewChat Say %id%03   AddCheerful  d8   Goto .%id%_GoEnd>
+		result%id%02 <NewChat Say %id%04   AddCheerful -d8   Goto .%id%_GoEnd>
+		Msg%id%01 <Thank you for your help, \PC . I regret to inform you that despite this, my superiors have rejected your offer of peace...>
+		Msg%id%02 <Your offer of peace was rejected by \FACTION &EnemyFac .>
+		Msg%id%03 <Don't worry, I'm not about to give up. You keep working on your side and I'll keep working on mine. Together, maybe we can stop this before any more lives are lost.>
+		Msg%id%03_1 <Why should we? In my opinion, \FACTION &EnemyFac is operating from a position of strength. We'd be fools to negotiate for peace at this time.>
+		CMsg%id%03_1 <ifNPCVillainous Accept>
+		Msg%id%04 <They have their reasons... as for me, I will try to convince them that peace is the answer. If you do the same for your side then maybe we can prevent this from getting out of hand.>
+		Msg%id%04_1 <I don't think so. It is you who will bring destruction upon yourself if you continue in this manner...>
+		CMsg%id%04_1 <ifNPCVillainous Accept>
+		Prompt%id%01 <Don't give up, we can still do this.>
+		Prompt%id%02 <Screw them! Do they want to be destroyed!?>
+	end
+
+
+Content
+	name <S_PCF  Let's sign you up>
 	desc <The NPC will pay the PC for the job, and offer a job.>
 	requires <*CS_WinGoal *CORE_S_PCF -&NoCash>
 	changes <P:++>

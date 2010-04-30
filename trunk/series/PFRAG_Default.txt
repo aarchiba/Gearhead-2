@@ -1,5 +1,69 @@
 % Persona Fragment File
 
+% TYPE: *F2Dest_Greeting
+%
+%	The PC wants to go somewhere, but has to fight this NPC first. There's
+%	a chance that the PC will be able to find out where the destination is
+%	from this NPC.
+%   PARAM1: Difficulty Rating
+%   PARAM2: Location being sought
+%   PARAM3: Reveal location exit label (no message printed here)
+%   PARAM4: Fight exit label (no message printed here)
+
+	Persona
+	requires <*F2Dest_Greeting @:A.jr_>
+	%% Pretty easy to get the info if the NPC is your junior
+	START <EndChat Say %id%01 AddChat %id%01 AddChat %id%02>
+	result%id%01 <ifConversation SkillTar %1% else %4% EndChat Say %id%02 AddChat %id%03>
+	result%id%02 <ifIntimidation SkillTar %1% else %4% EndChat Say %id%02 AddChat %id%03>
+	result%id%03 <Goto %3%>
+	Msg%id%01 <Oh crap... I think I'm supposed to stop you, \PC . You better back off!>
+	Msg%id%01_1 <Oh no... I heard that you were looking for \SCENE %2% , \PC . I'm not afraid to fight you!>
+	Msg%id%02 <Um, okay, I'll back down this time... but just this once!>
+	Msg%id%02_1 <They say that discretion is the better part of valor... guess that means I'm feeling pretty brave today.>
+	Prompt%id%01 <Why don't you make this easy and just give up?>
+	Prompt%id%01_1 <Show me to \SCENE %2% and I'll let you go.>
+	Prompt%id%02 <You want to get wrecked again? Fine by me.>
+	Prompt%id%02_1 <Don't make me angry, \CHATNPC . You wouldn't like it.>
+	Prompt%id%03 <[Continue]>
+
+	Persona
+	requires <*F2Dest_Greeting ("Friend"|"Lover"|"@:A.tha") Common>
+	%% Instawin if the NPC is a friend, a lover, or just thankful to the PC.
+	START <EndCHat Say %id%01 AddChat %id%01>
+	result%id%01 <Goto %3%>
+	Msg%id%01 <Hey, \PC ! Are you looking for \SCENE %2% ? I can show you where that is, no problem.>
+	Prompt%id%01 <[Continue]>
+
+	Persona
+	requires <*F2Dest_Greeting>
+	START <EndChat Say %id%01 AddChat %id%01 AddChat %id%02 AddChat %id%03>
+	result%id%01 <Goto %4%>
+	result%id%02 <ifIntimidation HardSkillTar %1% else %4% EndChat Say %id%02 AddChat %id%04>
+	result%id%03 <ifShopping SkillTar %1% else %4% ifNPCLawful else .%id%_GoR4Success EndChat Say %id%03 AddChat %id%05>
+	.%id%_GoR4Success <EndChat Say %id%04 AddChat %id%06>
+	result%id%04 <Goto %3%>
+	result%id%05 <Goto %4%>
+	result%id%06 <Cash+ -Price %1% 100 Goto %3%>
+	Msg%id%01 <It's my job to stop you from reaching \SCENE %2% .>
+	Msg%id%01_1 <I've been ordered to keep you away from \SCENE %2% .>
+	Msg%id%01_2 <As long as I'm here, you can forget about seeing \SCENE %2% .>
+	Msg%id%02 <So that's how it's going to be...>
+	Msg%id%02_1 <I see... You sound like you're pretty serious about this.>
+	Msg%id%03 <You think I can be bribed!? Oh, now you've made this personal...>
+	Msg%id%04 <You know, I really hate to take a bribe... oh who am I kidding? I love it!>
+	Msg%id%04_1 <You think I can be bribed!? Well, you're absolutely right!>
+	Prompt%id%01 <You can't stop me.>
+	Prompt%id%01_1 <Yeah, whatever...>
+	Prompt%id%02 <Out of my way before I destroy you.>
+	Prompt%id%02_1 <Let me pass or it's curtains for you.>
+	Prompt%id%03 <I'll give you $ \VAL Price %1% 100 to look the other way.>
+	CPrompt%id%03 <ifG PC$ Price %1% 100 Accept>
+	Prompt%id%03_1 <Would you let me through for $ \VAL Price %1% 100 ?>
+	Prompt%id%04 <[Continue]> Win
+	Prompt%id%05 <[Continue]> Fail
+	Prompt%id%06 <[Continue]> Bribe
+
 % TYPE: *ShowMeYourWorkplace
 %		&NothingToHide	The NPC has nothing to hide (or claims such, at least)
 %		&Investigation	This is part of a criminal investigation
