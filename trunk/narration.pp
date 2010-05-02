@@ -70,6 +70,8 @@ Const
 	NAS_XXChar_Attitude = 102;
 
 	NAG_Completed_DC = -25;	{ Lists the dramatic choices which have been completed. }
+		{ S = The dramatic choice being referred to }
+		{ V = The result; 1 = Success, -1 = Cancelled + may not be attempted again }
 
 	NAG_ElementID = -9;	{ Used to store ID numbers for plot/story elements. }
 

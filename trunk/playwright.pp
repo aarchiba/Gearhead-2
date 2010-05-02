@@ -1481,7 +1481,7 @@ end;
 Function StoryContext( GB: GameBoardPtr; Story: GearPtr ): String;
 	{ Describe the context of this story in a concise string. }
 const
-	Merit_Badge_Tag: Array [1..NumMeritBadge] of String(5) = (
+	Merit_Badge_Tag: Array [1..NumMeritBadge] of String = (
 		'STAR_', 'CHAMP', '', '', 'MORAL',
 		''
 	);
@@ -1496,7 +1496,7 @@ begin
 	{ Add tags for the choices made so far. }
 	LList := Dramatic_Choices;
 	while LList <> Nil do begin
-		if NAttValue( Story^.NA , NAG_Completed_DC , LList^.V ) <> 0 then it := it + ' :' + SAttValue( LList^.SA , 'DESIG' );
+		if NAttValue( Story^.NA , NAG_Completed_DC , LList^.V ) > 0 then it := it + ' :' + SAttValue( LList^.SA , 'DESIG' );
 		LList := LList^.Next;
 	end;
 

@@ -486,7 +486,7 @@ Choice 102
 	Reply <Do you think there's any point in negotiation? If you're serious, head to %name1%. You should be able to find one of their representatives there.>
 	Alert <You decide to negotiate with \FACTION &EnemyFac in %name1%.>
 
-	Choice <StoryNote %id%01 &SetEpisodeScene %1% &SetAllyFac %2%>
+	Choice <StoryNote %id%01 &SetEpisodeScene %1%>
 
 	Msg%id%01 <You decided to hold peace talks in %name1%.>
 

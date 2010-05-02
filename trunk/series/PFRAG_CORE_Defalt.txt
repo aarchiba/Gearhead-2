@@ -21,22 +21,30 @@
 	requires <*CS_PEA_DiscussTerms>
 	% V%id%01 = Have gotten through the diplomacy
 	START <if= v%id%01 0 else %2%  NewChat Say %id%01 AddChat %id%01 AddChat %id%02 AddChat %id%03 AddChat %id%04>
-	.%id%_GoFailRoll <NewChat Say %id%02>
-
+	.%id%_GoFailRoll <NewChat Say %id%02 AddChat %id%05 AddChat %id%06 AddChat %id%07 AddChat %id%08>
 	result%id%01 <ifConversation SkillTar %1% else .%id%_GoFailRoll V= %id%01 1  AddReact d10  Goto %2%>
 	result%id%02 <ifIntimidation SkillTar %1% else .%id%_GoFailRoll V= %id%01 1  AddReact d10  Goto %2%>
 	result%id%03 <V= %id%01 1  Goto %2%>
 	result%id%04 <V= %id%01 1  Goto %2%>
-
+	result%id%05 <NewChat Say %id%03>
+	result%id%06 <Goto %3%>
+	result%id%07 <V= %id%01 1  Cash+ -100  Goto %2%>
+	result%id%08 <V= %id%01 1  Goto %2%>
 	Msg%id%01 <So you've come here to negotiate for peace... Why should we bother to listen to you?>
-	Msg%id%02 <>
-
+	Msg%id%02 <Is that all you can say? I'm afraid my time is too valuable to waste it on this...>
+	Msg%id%03 <Think about it for as long as you need.>
 	Prompt%id%01 <Peace is in all of our interests.>
 	Prompt%id%02 <Because if you don't, you'll be destroyed.>
 	Prompt%id%03 <This fighting hasn't been easy on your side, either.>
 	CPrompt%id%03 <ifInsight SkillTar %1% Accept>
 	Prompt%id%04 <You know that it's the right thing to do.>
 	CPrompt%id%04 <ifG PCHeroism %1% Accept>
+	Prompt%id%05 <Let me think about this for a bit.>
+	Prompt%id%06 <Fine. I didn't want to negotiate peace anyhow.>
+	Prompt%id%07 <I offer you $100 in tribute to your peaceful nature.>
+	CPrompt%id%07 <ifG PC$ 99 ifShopping SkillTar %1% Accept>
+	Prompt%id%08 <Come on, just give me a chance.>
+	CPrompt%id%08 <ifG React %1% Acccept>
 
 % TYPE: *CS_BASEPS_CaptainSurrenders
 %	The captain of the ship which the PC is plundering has just surrendered.
