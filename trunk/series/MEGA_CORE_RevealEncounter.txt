@@ -1368,7 +1368,7 @@ Content
 		STC CORE-ACTIVATABLE-STATIONARY-DEFENDED
 		name <%name4%'s Mecha>
 		update <if= PlotStatus %plotid% %id% else GoHide  SetStat STAT_MetaVisibility 0  Goto GoSetOrders>
-		attack <>
+		attack <if= V1 0 Goto GoStartCombat>
 		ENCOUNTER_Hostile
 	end
 
