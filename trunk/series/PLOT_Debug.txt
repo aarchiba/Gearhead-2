@@ -5,6 +5,31 @@
 % ***
 
 Plot
+	name <AA_TestCarve>
+	% Used for generating isometric sprites of the prop meshes.
+	% Back up three clicks exactly before taking the snap.
+
+	Element1 <Scene CavClub>
+	Element2 <Prefab>
+	Place2 <1>
+
+	update <if= V1 0 V= 1 1 Exit %2%>
+
+	sub
+		MetaScene 2
+		MapWidth 40
+		MapHeight 40
+		Param <Carve 14 0 13>
+		special <SHOWALL ADDEXIT>
+
+		start <if= V1 0 V= 1 1 EndPlot MagicMap>
+	end
+	inv
+		Encounter
+	end
+
+
+Plot
 	name <ZZZ Debug Criminal Investigation>
 
 	Element1 <Scene Building Public>

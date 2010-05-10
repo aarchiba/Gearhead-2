@@ -196,7 +196,7 @@ Content
 			team 4
 			setally 1
 			setenemy 2 3
-			Deploy <if= PlotStatus %plotid% %id%  if# P%id%02 0   WMecha 3 StoryDL 60>
+			Deploy <if= PlotStatus %plotid% %id%  if# P%id%02 0   WMecha 4 StoryDL 60>
 			ParaX 10
 			ParaY 5
 		end

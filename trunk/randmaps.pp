@@ -555,12 +555,11 @@ begin
 	end;
 end;
 
-Procedure ProcessWall( GB: GameBoardPtr; MF: GearPtr; var Cmd: String; X0,Y0,W,H: Integer; AddGaps,AddDoors: Boolean );
-	{ Draw a wall around this map feature. Use the MFBORDER terrain, if }
-	{ appropriate. }
+Procedure DrawWall( GB: GameBoardPtr; MF: GearPtr; Terrain,X0,Y0,W,H: Integer; AddGaps,AddDoors: Boolean );
+	{ Do the grunt work of drawing the wall. }
 var
 	DX,DY: Integer;	{ Door Position }
-	Terrain,X,Y: Integer;
+	X,Y: Integer;
 	Procedure DrawWallNow;
 	begin
 		if OnTheMap( GB , X , Y ) then begin
@@ -580,9 +579,6 @@ var
 		end;
 	end;
 begin
-	{ Decide on what terrain to use for the walls. }
-	Terrain := DecideTerrainType( MF , Cmd ,  STAT_MFBorder );
-
 	{ Top wall. }
 	DX := Random( W - 2 ) + X0 + 1;
 	Y := Y0;
@@ -614,6 +610,19 @@ begin
 	for Y := Y0 to ( Y0 + H - 1 ) do begin
 		DrawWallNow;
 	end;
+end;
+
+Procedure ProcessWall( GB: GameBoardPtr; MF: GearPtr; var Cmd: String; X0,Y0,W,H: Integer; AddGaps,AddDoors: Boolean );
+	{ Draw a wall around this map feature. Use the MFBORDER terrain, if }
+	{ appropriate. }
+var
+	terrain: Integer;
+begin
+	{ Decide on what terrain to use for the walls. }
+	Terrain := DecideTerrainType( MF , Cmd ,  STAT_MFBorder );
+
+	{ Call  the wall-drawer. }
+	DrawWall( GB, MF, Terrain,X0,Y0,W,H, AddGaps,AddDoors );
 
 	{ Maybe add the exit, if one was requested. }
 	if ASTringHasBString( GetSpecial( MF ) , 'ADDEXIT' ) then begin
@@ -675,6 +684,35 @@ begin
 
 end;
 
+Procedure DebugMap( GB: GameBoardPtr; X0,Y0,Wall,Floor1,Floor2: Integer );
+	{ Spit out a debugging map of the gameboard. }
+var
+	X,Y,Terr: Integer;
+	msg: String;
+	F: Text;
+begin
+	Assign( F , 'debugmap.txt' );
+	Rewrite( F );
+
+	for Y := 1 to GB^.Map_Height do begin
+		msg := '';
+		for X := 1 to GB^.Map_Width do begin
+			if ( X = X0 ) and ( Y = Y0 ) then begin
+				msg := msg + '@';
+			end else begin
+				Terr := TileTerrain( GB , X , Y );
+				if Terr = Wall then msg := msg + '#'
+				else if Terr = Floor1 then msg := msg + '.'
+				else if Terr = Floor2 then msg := msg + ','
+				else msg := msg + '?';
+			end;
+		end;
+		writeln( F , msg );
+	end;
+
+	Close( F );
+end;
+
 Procedure ProcessCarve( GB: GameBoardPtr; MF: GearPtr; var Cmd: String; X0,Y0,W,H: Integer );
 	{ This should draw a cave using the 'L' method. }
 var
@@ -707,6 +745,126 @@ var
 			DrawTerrainWithWobblyPen( GB , X , YT , Floor1 , Floor2 );
 		end;
 	end;
+
+	Procedure AddWayOut;
+		{ Far out! Add an exit to this map feature. }
+		{ If MF is a scene, add a hidden gate to the parent map. }
+		{ Otherwise add a door. }
+		Function IsGoodEntrance( X, Y, D: Integer; var P: Point ): Boolean;
+			{ Check this point and direction to make sure }
+			{ that it links up to a part of the maze. }
+		var
+			XYFTerr: Integer;
+			FoundFloor: Boolean;
+			MiniMap: String;
+		begin
+			{ The entrance must start at a wall; I don't want }
+			{ any double doors on the same tile. }
+			if TileTerrain( GB , X , Y ) <> Wall then Exit( False );
+
+			{ If we're starting at a wall, check to make sure }
+			{ this entrance will connect to the maze. }
+			FoundFloor := False;
+			{ Keep searching until we find a floor tile or exit }
+			{ the bounding box. }
+			repeat
+				X := X + AngDir[ D , 1 ];
+				Y := Y + AngDir[ D , 2 ];
+				XYFTerr := TileTerrain( GB , X , Y );
+				FoundFloor := ( XYFTerr = Floor1 ) or ( XYFTerr = Floor2 );
+			until FoundFloor or not RectPointOverlap( X0 , Y0 , X0 + W - 1 , Y0 + H - 1 , X , Y );
+			if FoundFloor then begin
+				P.X := X;
+				P.Y := Y;
+			end;
+			IsGoodEntrance := FoundFloor;
+		end;
+		Procedure DrawBlock( X1,Y1: Integer );
+			{ Draw a 3x3 block centered on X,Y. }
+		var
+			X,Y: Integer;
+		begin
+			for X := ( X1 - 1 ) to ( X1 + 1 ) do begin
+				for Y := ( Y1 - 1 ) to ( Y1 + 1 ) do begin
+					DrawTerrain( GB , X , Y , Floor1 , Floor2 );
+				end;
+			end;
+		end;
+		Procedure RenderEntrance( E_X0 , E_Y0 , D: Integer; EndPoint: Point );
+			{ Render the entrance passageway. }
+		var
+			X,Y: Integer;
+		begin
+			{ Add the hallway. }
+			X := E_X0;
+			Y := E_Y0;
+			repeat
+				X := X + AngDir[ D , 1 ];
+				Y := Y + AngDir[ D , 2 ];
+				DrawBlock( X , Y );
+			until (( X = EndPoint.X ) and ( Y = EndPoint.Y )) or not RectPointOverlap( X0 , Y0 , X0 + W - 1 , Y0 + H - 1 , X , Y );
+
+			{ Add the door. }
+			if ( MF^.G = GG_Scene ) or ( MF^.G = GG_MetaScene ) then begin
+				AddHiddenEntrance( GB , E_X0 , E_Y0 , 0 );
+			end else begin
+				DrawTerrain( GB , E_X0 , E_Y0 , TERRAIN_Threshold , 0 );
+				if ( D mod 4 ) = 0 then begin
+					DrawTerrain( GB , E_X0 , E_Y0 + 1 , Wall , 0 );
+					DrawTerrain( GB , E_X0 , E_Y0 - 1 , Wall , 0 );
+				end else begin
+					DrawTerrain( GB , E_X0 + 1 , E_Y0 , Wall , 0 );
+					DrawTerrain( GB , E_X0 - 1 , E_Y0 , Wall , 0 );
+				end;
+				AddDoor( GB , MF , E_X0 , E_Y0 );
+			end;
+		end;
+	var
+		Tries,DX,DY: Integer;
+		P: Point;
+	begin
+		{ This may take several attempts to get a good entrance... }
+		Tries := 50;
+		while Tries > 0 do begin
+			{ Decide on a random direction and entry point. }
+			Case Random( 4 ) of
+			0:	begin
+					DX := X0 + Random( W - 6 ) + 3;
+					DY := Y0;
+					if IsGoodEntrance( DX , DY , 2 , P ) then begin
+						RenderEntrance( DX , DY , 2 , P );
+						Tries := -1;
+					end;
+				end;
+			1:	begin
+					DX := X0 + Random( W - 6 ) + 3;
+					DY := Y0 + H - 1;
+					if IsGoodEntrance( DX , DY , 6 , P ) then begin
+						RenderEntrance( DX , DY , 6 , P );
+						Tries := -1;
+					end;
+				end;
+			2:	begin
+					DX := X0;
+					DY := Y0 + Random( H - 6 ) + 3;
+					if IsGoodEntrance( DX , DY , 0 , P ) then begin
+						RenderEntrance( DX , DY , 0 , P );
+						Tries := -1;
+					end;
+				end;
+			else begin
+					DX := X0 + W - 1;
+					DY := Y0 + Random( H - 6 ) + 3;
+					if IsGoodEntrance( DX , DY , 4 , P ) then begin
+						RenderEntrance( DX , DY , 4 , P );
+						Tries := -1;
+					end;
+				end;
+			end;
+			Dec( Tries );
+		end;
+	end;
+
 begin
 	Floor1 := DecideTerrainType( MF , Cmd , STAT_MFFloor );
 	Floor2 := DecideTerrainType( MF , Cmd , STAT_MFMarble );
@@ -722,6 +880,12 @@ begin
 		P.Y := Y0 + Random( H - 2 ) + 1;
 		if OnTheMap( GB , P.X , P.Y ) and ( TileTerrain( GB,P.X,P.Y ) <> Wall ) then DrawAnL( P.X , P.Y );
 	end;
+
+	{ Seal off the edges. }
+	DrawWall( GB, MF, Wall, X0, Y0, W, H, False, False );
+
+	{ At the end, if a way out was requested, draw it. }
+	if AStringHasBSTring( GetSpecial( MF ) , 'ADDEXIT' ) then AddWayOut;
 end;
 
 Procedure ProcessScatter( GB: GameBoardPtr; MF: GearPtr; var Cmd: String; X0,Y0,W,H: Integer );
@@ -788,7 +952,6 @@ begin
 			end;
 		end;
 	end;
-
 end;
 
 Function SeekRoom( MF: GearPtr; Desig: String ): GearPtr;
@@ -1643,14 +1806,14 @@ const
 			end;
 			IsGoodEntrance := FoundFloor;
 		end;
-		Procedure RenderEntrance( X0 , Y0 , D: Integer; EndPoint: Point );
+		Procedure RenderEntrance( RE_X0 , RE_Y0 , D: Integer; EndPoint: Point );
 			{ Render the maze as per above. }
 		var
 			X,Y: Integer;
 		begin
 			{ Add the hallway. }
-			X := X0;
-			Y := Y0;
+			X := RE_X0;
+			Y := RE_Y0;
 			repeat
 				X := X + AngDir[ D , 1 ];
 				Y := Y + AngDir[ D , 2 ];
@@ -1659,17 +1822,17 @@ const
 
 			{ Add the door. }
 			if ( MF^.G = GG_Scene ) or ( MF^.G = GG_MetaScene ) then begin
-				AddHiddenEntrance( GB , X0 , Y0 , 0 );
+				AddHiddenEntrance( GB , RE_X0 , RE_Y0 , 0 );
 			end else begin
-				DrawTerrain( GB , X0 , Y0 , TERRAIN_Threshold , 0 );
+				DrawTerrain( GB , RE_X0 , RE_Y0 , TERRAIN_Threshold , 0 );
 				if ( D mod 4 ) = 0 then begin
-					DrawTerrain( GB , X0 , Y0 + 1 , WallType , 0 );
-					DrawTerrain( GB , X0 , Y0 - 1 , WallType , 0 );
+					DrawTerrain( GB , RE_X0 , RE_Y0 + 1 , WallType , 0 );
+					DrawTerrain( GB , RE_X0 , RE_Y0 - 1 , WallType , 0 );
 				end else begin
-					DrawTerrain( GB , X0 + 1 , Y0 , WallType , 0 );
-					DrawTerrain( GB , X0 - 1 , Y0 , WallType , 0 );
+					DrawTerrain( GB , RE_X0 + 1 , RE_Y0 , WallType , 0 );
+					DrawTerrain( GB , RE_X0 - 1 , RE_Y0 , WallType , 0 );
 				end;
-				AddDoor( GB , MF , X0 , Y0 );
+				AddDoor( GB , MF , RE_X0 , RE_Y0 );
 			end;
 		end;
 	var
