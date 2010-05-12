@@ -2928,7 +2928,7 @@ begin
 	ER.Originator := Attacker;
 	ER.Weapon := Attacker;
 	ER.FXMod := 2;
-	FXScript := '4 0 SCATTER ' + FX_CanDodge;
+	FXScript := '2 3 0 0 SCATTER ' + FX_CanDodge;
 
 	{ Add a divider to the skill roll history. }
 	SkillCommentDivider;
@@ -2951,7 +2951,7 @@ begin
 		ER.Originator := Target;
 		ER.Weapon := Target;
 		ER.FXMod := 0;
-		FXScript := '4 0 SCATTER ' + FX_CanDodge + ' ' + FX_CanBlock;
+		FXScript := '2 3 0 0 SCATTER ' + FX_CanDodge + ' ' + FX_CanBlock;
 		PAG_CauseDamage( GB , FXScript , ER , Attacker , 0 )
 	end;
 

@@ -1,0 +1,79 @@
+%%
+%% *NC_Duel Content
+%%
+%%  The PC is about to duel someone. This component will move the opponent from
+%%  their current location to the duel scene, then move the opponent back to
+%%  the original scene at the end of the battle.
+%%
+%% Param1: The Challenger
+%% Param2: The Challenger's home scene, for the purpose of this component
+%% Param3: The outdoor scene where the duel will take place
+%%
+%% NEEDED SCRIPTS: To deal with the ending, the parent plot must define two
+%% scripts:
+%% 	.%id%_%plotid%_GoWin
+%% 	.%id%_%plotid%_GoLose
+%% These scripts should set story memos.
+%% %id% is the ID of the duel layer; so, if it was generated as subplot 1,
+%% the calling plot would use %id1%.
+
+Content
+	name <Regular Duel>
+	desc <The PC and the NPC will fight. Nothing special happens.>
+	requires <*NC_Duel>
+	Size 5
+
+	% E1 is the challenger
+	% E2 is the challenger's home scene
+	% E3 is the outdoor scene where the duel will take place
+	% E4 is the duel encounter
+	Element4 <Prefab>
+	Place4 <3>
+
+	% P%id%01 = Initialization Counter
+	update <if= P%id%01 0 MoveNPC %1% %4% SetNPCTeam %1% 2 P= %id%01 1>
+
+	sub
+		Persona 1
+		greeting <if= PlotStatus %plotid% %id% else %pop%  ifChatNPCInPlay else .%id%_GoNotInPlay Goto .%id%_GoChallenge>
+		*.%id%_GoChallenge <*ArenaChallenge .%id%_GoThemeInfo>
+		*.%id%_GoThemeInfo <*THEME_EXPO&Enemy NA>
+		*.%id%_GoNotInPlay <*WaitingForDuel %3%>
+
+		MetaScene 4 2
+		% L1 = Encounter Over Counter
+		% L2 = Initialization Counter
+		% L4 = Identity of enemy NPC
+		MapWidth 30
+		MapHeight 30
+
+		special <ARENA SOLO>
+
+		Start <if= L2 0 L= 2 1   ForceChat %1%>
+		nu1 <if= T1 0  Return   if= L1 0 L= 1 1   MoveNPC %1% %2%  Print 2 LoseRenown  Trigger0 .%id%_%plotid%_GoLose>
+		nu2 <if= T2 0           if= L1 0 L= 1 2   MoveNPC %1% %2%  Print 2 AddRenown 1   XPV 100   Trigger0 .%id%_%plotid%_GoWin>
+
+		Msg2 <%name1% returns to %name2%.>
+		Msg4 <You were defeated by %name1% in a duel.>
+		Msg5 <You defeated %name1% in a duel.>
+
+		sub
+			team 1
+			SetEnemy 2
+			ParaX 5
+			ParaY 5
+
+			team 2
+			SetEnemy 1
+			ParaX 25
+			ParaY 25
+		end
+
+	end
+	inv
+		STC ENCOUNTER-DUEL
+		name <%name1%'s Mecha>
+		update <if= PlotStatus %plotid% %id% else GoHide ShowEncounter SetStat STAT_MetaVisibility 0  Goto GoSetOrders>
+	end
+
+

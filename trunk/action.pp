@@ -604,7 +604,7 @@ var
 		{ Return TRUE if this is a beam attack. How to tell? }
 		{ If it's a beamgun, an emelee, or HYPER. }
 	begin
-		if HasAttackAttribute( AtAt , AA_Brutal ) then begin
+		if HasAttackAttribute( AtAt , AA_Hyper ) then begin
 			IsBeamAttack := TRUE;
 		end else if ( O_Weapon <> Nil ) and ( O_Weapon^.G = GG_Weapon ) then begin
 			IsBeamAttack := ( O_Weapon^.S = GS_BeamGun ) or ( O_Weapon^.S = GS_EMelee );
