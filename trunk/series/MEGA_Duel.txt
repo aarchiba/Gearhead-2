@@ -5,6 +5,9 @@
 %%  their current location to the duel scene, then move the opponent back to
 %%  the original scene at the end of the battle.
 %%
+%%  Unlike the Core Story duel, this one will only level the NPC if they are
+%%  currently lower than the PC.
+%%
 %% Param1: The Challenger
 %% Param2: The Challenger's home scene, for the purpose of this component
 %% Param3: The outdoor scene where the duel will take place
@@ -31,7 +34,7 @@ Content
 	Place4 <3>
 
 	% P%id%01 = Initialization Counter
-	update <if= P%id%01 0 MoveNPC %1% %4% SetNPCTeam %1% 2 P= %id%01 1>
+	update <if= P%id%01 0 MoveNPC %1% %4% SetNPCTeam %1% 2 P= %id%01 1  ifG %threat% NPCRenown %1% NPCLevel %1% %threat%>
 
 	sub
 		Persona 1
@@ -54,8 +57,6 @@ Content
 		nu2 <if= T2 0           if= L1 0 L= 1 2   MoveNPC %1% %2%  Print 2 AddRenown 1   XPV 100   Trigger0 .%id%_%plotid%_GoWin>
 
 		Msg2 <%name1% returns to %name2%.>
-		Msg4 <You were defeated by %name1% in a duel.>
-		Msg5 <You defeated %name1% in a duel.>
 
 		sub
 			team 1
@@ -68,12 +69,69 @@ Content
 			ParaX 25
 			ParaY 25
 		end
-
 	end
 	inv
 		STC ENCOUNTER-DUEL
 		name <%name1%'s Mecha>
 		update <if= PlotStatus %plotid% %id% else GoHide ShowEncounter SetStat STAT_MetaVisibility 0  Goto GoSetOrders>
 	end
+
+%%
+%%  *NC_WinDuelReturn
+%%
+%% The PC has just won a duel against this character. There will likely be some
+%% kind of reward, then the NPC will return to their home scene.
+%%
+%% PARAM1: The NPC in question
+%% PARAM2: The home scene
+%%
+
+Content
+	name <Duel Reward>
+	requires <*NC_WinDuelReturn>
+
+	% E1 is the NPC
+	% E2 is their home scene
+
+	end <ifNPCDead %1% EndPlot>
+
+	sub
+		Persona 1
+		greeting <if= PlotStatus %plotid% %id% else %pop%  EndChat Say %id%01  CashPrize Reward %threat% 100  MoveNPC %1% %2%  EndPlot>
+		Msg%id%01 <That was a pretty good fight... As the victor, I guess you're entitled to this.>
+	end
+
+
+%%
+%%  *NC_LoseDuelReturn
+%%
+%% The PC has just lost a duel against this character. There will likely be some
+%% taunting, then the NPC will return to their home scene.
+%%
+%% PARAM1: The NPC in question
+%% PARAM2: The home scene
+%%
+
+Content
+	name <Default Loss>
+	requires <*NC_LoseDuelReturn>
+
+	% E1 is the NPC
+	% E2 is their home scene
+
+	% P%id%01 = Timer
+
+	update <if= P%id%01 0 P= %id%01 ComTime P+ %id%01 21600>
+	start <if# P%id%01 0 ifG ComTime P%id%01 ifNPCOK %1% else end MoveNPC %1% %2% EndPlot>
+	end <ifNPCDead %1% EndPlot>
+
+	sub
+		Persona 1
+		greeting <if= PlotStatus %plotid% %id% else %pop%  EndChat Say %id%01  MoveNPC %1% %2%  EndPlot>
+		Msg%id%01 <You lost that match... Maybe someday I'll allow you to try again.>
+	end
+
+
+
 
 

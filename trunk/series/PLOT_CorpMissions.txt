@@ -31,7 +31,7 @@ Plot
 
 	sub
 		Persona 1
-		rumor0 <%name1% needs a cavalier to guard a factory for %name2%.>
+		rumor0 <%name1% needs a cavalier to escort a convoy for %name2%.>
 		greeting <if= PlotStatus %plotid% %id1% else GoCheckOffer Goto GoRemind>
 		*GoRemind <*MechaMissionReminder %3%>
 		GoCheckOffer <if# PlotStatus %plotid% 0 else GoCheckEnemy NewChat SayAnything>
