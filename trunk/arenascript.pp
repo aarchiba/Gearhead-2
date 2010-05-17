@@ -5023,7 +5023,7 @@ begin
 	if not LancemateCanDevelop( NPC ) then Exit;
 
 	{ Find out if the NPC can learn a new skill or a new talent. }
-	CanGainSkill := NumberOfSpecialties( NPC ) <= NumberOfSkillSlots( NPC );
+	CanGainSkill := NumberOfSpecialties( NPC ) < NumberOfSkillSlots( NPC );
 	CanGainTalent := NumFreeTalents( NPC ) > 0;
 
 	{ Copy the choices list over to the array. }

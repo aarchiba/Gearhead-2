@@ -1,4 +1,4 @@
-Battroid 5
+Battroid 6
 Name <Largo>
 Desig <MB-06>
 SDL_Sprite <>
@@ -13,9 +13,10 @@ ROLE_L5LAW <GENERAL:TROOPER  ASSAULT:TROOPER  DEFENSE:TROOPER>
 sub
 Head
 	Armor 5
-	mass -5
+	mass -6
 	sub
-		Sensor 7
+		Sensor 8
+		mass -1
 
 		ECM 5
 
@@ -26,13 +27,13 @@ Head
 		Speed 3
 	end
 	inv
-		HeadArmor 2
-		Mass -2
+		HeadArmor 4
+		Mass -4
 	end
 
 Torso
-	Armor 5
-	mass -5
+	Armor 6
+	mass -6
 	sub
 		CPit
 		Armor 2
@@ -65,13 +66,10 @@ Torso
 			SInfo_MechaDex
 		end
     
-		Flight 4
-
 		Mount
 		Name <Back Mount>
 		inv
 			STC PAR-13
-			mass -6
 		end
 
 		Transform:Zoanoid
@@ -79,10 +77,18 @@ Torso
 		SDL_SPRITE2 <>
 		CUTE_SPRITE2 <>
 		Integral
+
+		HeavyActuator 8
+		Integral
+		Mass -6
 	end
 	inv
-		BodyArmor 4
-		Mass -4
+		BodyArmor 6
+		Mass -6
+		sub
+			Flight 4
+			Integral
+		end
 	end
 
 Arm
@@ -107,16 +113,19 @@ Arm
 			end
 		end
 
-		Melee 6
-		name <Wolf's Claw>
-		mass -4
-		Integral
-
 		Flight 3
+
+		HeavyActuator 3
+		Mass -2
+		Integral
 	end
 	inv
-		ArmArmor 2
-		mass -2
+		ArmArmor 4
+		mass -4
+		sub
+			Flight 3
+			Integral
+		end
 	end
 
 Arm
@@ -145,16 +154,19 @@ Arm
 			end
 		end
 
-		Melee 6
-		name <Wolf's Claw>
-		mass -4
-		Integral
-
 		Flight 3
+
+		HeavyActuator 3
+		mass -2
+		Integral
 	end
 	inv
-		ArmArmor 2
-		mass -2
+		ArmArmor 4
+		mass -4
+		sub
+			Flight 3
+			Integral
+		end
 	end
 
 Leg
@@ -162,7 +174,7 @@ Leg
 	Armor 5
 	mass -5
 	sub
-		Flight 5
+		Flight 4
 
 		Mount
 		Name <Right Leg Mount>
@@ -173,10 +185,18 @@ Leg
 				magazine 15
 			end
 		end
+
+		HeavyActuator 3
+		mass -2
+		Integral
 	end
 	inv
-		LegArmor 2
-		Mass -2
+		LegArmor 4
+		Mass -4
+		sub
+			Flight 3
+			Integral
+		end
 	end
 
 Leg
@@ -184,7 +204,7 @@ Leg
 	Armor 5
 	mass -5
 	sub
-		Flight 5
+		Flight 4
 
 		Mount
 		Name <Left Leg Mount>
@@ -195,10 +215,18 @@ Leg
 				magazine 15
 			end
 		end
+
+		HeavyActuator 3
+		mass -2
+		Integral
 	end
 	inv
-		LegArmor 2
-		Mass -2
+		LegArmor 4
+		Mass -4
+		sub
+			Flight 3
+			Integral
+		end
 	end
 end
 

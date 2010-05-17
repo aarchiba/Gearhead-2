@@ -11,6 +11,75 @@
 %%
 
 Content
+	name <Junior Up>
+	desc <The LM will ask for some advice, and get instant training.>
+	requires <*LM_NonComCharDev 1:A.jr_ (1:M.pro|1:M.see|1:M.cha|1:MOOK_) -!Ne 1:TRAIN>
+
+	% E1 is the lancemate in question
+	% P%id%01 = Chat counter
+
+	start <ifNPCOK %1% else .%id%_GoEndPlot   ifNPCLancemate %1% else .%id%_GoEndPlot  ifScene .%id%_scenetype if= P%id%01 0     P= %id%01 1  Alert %id%02 ForceChat %1% PMemo %plotid% %id%01>
+	.%id%_scenetype <outdoors>
+	.%id%_GoEndPlot <EndPlot>
+
+	Msg%id%01 <%name1% wants to talk with you about something.>
+	Msg%id%02 <%name1% approaches you.>
+
+	sub
+		Persona 1
+		greeting <if= PlotStatus %plotid% %id% else %pop%  if= P%id%01 1 else .%id%_GoExplainPlan Goto .%id%_GoWantsToTalk>
+		*.%id%_GoWantsToTalk <*LancemateWantsToTalk .%id%_GoExplainPlan .%id%_GoTalkLater>
+		.%id%_GoExplainPlan <NewChat Say %id%01 AddChat %id%01>
+		*.%id%_GoTalkLater <*TalkAgainWhenYouHaveTime>
+		.%id%_GoEndPlot <EndChat Say %id%03  SetXXRAttitude %1% XXR_A_IsEqual XPV 100 EndPlot>
+		result%id%01 <NewChat Say %id%02 AddChat %id%02 AddChat %id%03 AddChat %id%04 AddChat %id%05 AddChat %id%06 AddChat %id%07>
+		result%id%02 <TrainNPC %1% .%id%_R2Skills Goto .%id%_GoEndPlot>
+		.%id%_R2Skills <NAS_SpotWeakness  NAS_Initiative  NAS_Toughness  NAS_ElectronicWarfare -NAS_KungFu -NAS_HapKiDo -NAS_HardAsNails -NAS_Ninjitsu -NAS_Sniper>
+		result%id%03 <TrainNPC %1% .%id%_R3Skills Goto .%id%_GoEndPlot>
+		.%id%_R3Skills <NAS_Repair NAS_MechaEngineering -NAS_Innovation -NAS_TechVulture -NAS_Robotics>
+		result%id%04 <TrainNPC %1% .%id%_R4Skills Goto .%id%_GoEndPlot>
+		.%id%_R4Skills <NAS_Repair NAS_Medicine -NAS_Anatomist -NAS_TechVulture>
+		result%id%05 <TrainNPC %1% .%id%_R5Skills Goto .%id%_GoEndPlot>
+		.%id%_R5Skills <NAS_Conversation NAS_Intimidation NAS_Taunt NAS_Shopping -NAS_Camaraderie -NAS_DominateAnimal>
+		result%id%06 <TrainNPC %1% .%id%_R6Skills Goto .%id%_GoEndPlot>
+		.%id%_R6Skills <NAS_Survival NAS_CodeBreaking NAS_Mysticism NAS_Performance NAS_Insight -NAS_JackOfAll>
+		result%id%07 <TrainNPC %1% .%id%_R7Skills  AddSociable -d6  Goto .%id%_GoEndPlot>
+		.%id%_R7Skills <NAS_Awareness NAS_Stealth NAS_CodeBreaking NAS_Toughness -NAS_StuntDriving -NAS_BornToFly -NAS_BusinessSense -NAS_GateCrasher -NAS_PickPockets -NAS_Acrobatics>
+		Msg%id%01 <I've learned a lot during our time together, but I don't think I've reached my full potential yet. That's why I'm coming to you for advice...>
+		Msg%id%01_1 <I've really enjoyed our time together, but I know that I can do more for the lance than I have been. That's why I'm coming to you for advice...>
+		CMsg%id%01_1 <ifG React 40 Accept>
+		Msg%id%01_2 <I've been traveling with you for a while, but I don't think I've actually learned anything. If you don't mind I have a question about that...>
+		CMsg%id%01_2 <ifG 20 React Accept>
+		Msg%id%01_3 <When I signed on with you I thought that it'd make me a better pilot. I've long since given up hope on you teaching me anything useful, but have started doing self study in my free time. Anyhow, I could use some advice...>
+		CMsg%id%01_3 <ifG 1 React Accept>
+		Msg%id%01_4 <Traveling with you has been amazing. I've seen so much, and grown as a pilot... but I know that if I push myself I can be an even better lancemate for you. That's why I need some advice...>
+		CMsg%id%01_4 <ifG React 60 Accept>
+		Msg%id%02 <I think I should try out something new. What do you think it'd be useful for me to study?>
+		Msg%id%02_1 <I think I'd be a better member of the team if I learned how to do something new. We'd all benefit from having a wider range of skills. So, that said, what do you think I should try to learn?>
+		CMsg%id%02_1 <ifNPCSociable Accept>
+		Msg%id%02_2 <I want to learn something new. What do you think I should try?>
+		CMsg%id%02_2 <ifNPCShy Accept>
+		Msg%id%02_3 <I think I'd like to try something new. What sort of thing does the lance need most?>
+		CMsg%id%02_3 <ifNPCEasygoing Accept>
+		Msg%id%02_4 <I'm going to apply myself and learn something new! Only problem is, I don't know what yet... What do you think would be useful?>
+		CMsg%id%02_4 <ifNPCPassionate Accept>
+		Msg%id%02_5 <I'm going to try something new. It'll be fun! Do you have any suggestions for what I could study?>
+		CMsg%id%02_5 <ifNPCCheerful Accept>
+		Msg%id%02_6 <I want to try something new, but I don't know what... None of my ideas are any good. What sort of thing would be useful for the lance?>
+		CMsg%id%02_6 <ifNPCMelancholy Accept>
+		Msg%id%03 <I can't make any promises, but I'll see what I can do.>
+		Msg%id%03_1 <Alright, I'll see what I can do. Thanks \PC .>
+		Prompt%id%01 <What is it that you want to know?>
+		Prompt%id%01_1 <Go on, then. What's your question?>
+		Prompt%id%02 <I think you should just concentrate on combat.>
+		Prompt%id%03 <We could use some tech skills in the lance.>
+		Prompt%id%04 <Think you could help keep us patched up?>
+		Prompt%id%05 <Some people skills would be handy.>
+		Prompt%id%06 <Something esoteric.>
+		Prompt%id%07 <Why are you asking me? Just do what you like.>
+	end
+
+Content
 	name <Professional Mission>
 	desc <The LM will send the PC to stop an enemy fighter... no reward but the experience.>
 	requires <*LM_NonComCharDev 1:M.pro -!Ne>

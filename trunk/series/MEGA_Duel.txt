@@ -77,6 +77,52 @@ Content
 	end
 
 %%
+%% *:NC_TournamentMatch Content
+%%
+%%  The PC will challenge an NPC to a duel.
+%%
+%% NEEDED SCRIPTS: To deal with the ending, the parent plot must define two
+%% scripts:
+%% 	.%id%_%plotid%_GoWin
+%% 	.%id%_%plotid%_GoLose
+%%
+%% PARAM1: The NPC to be challenged
+%% PARAM2: The home scene for this NPC
+
+Content
+	name <Basic Tournament Match>
+	desc <You're going to challenge some guy.>
+	requires <*:NC_TournamentMatch>
+
+	% E1 is the NPC to be challenged
+	% E2 is the home scene for the NPC
+	% E3 is a location for the duel.
+	Element3 <Scene Environs !Near 2>
+ 
+	% As long as we're still at the first phase, the NPC's death will end the plot.
+	end <ifNPCDead %1% Goto .%id1%_%plotid%_GoLose>
+
+	% Resolution Scripts
+	.%id1%_%plotid1%_GoWin  <WinSubPlot %plotid%   Trigger0 .%id%_%plotid%_GoWin>
+	.%id1%_%plotid1%_GoLose <LoseSubPlot %plotid%  Trigger0 .%id%_%plotid%_GoLose>
+
+	% SubPlot1 is the duel itself
+	SubPlot1 <*NC_Duel 1 2 3>
+
+	sub
+		Persona 1
+		% v%id%01 = Renown Counter
+		greeting <if= PlotStatus %plotid% %id% else %pop% Goto GoFirstTime>
+		*GoFirstTime <*PCChallengeNPC GoAttemptChallenge GoWussOut>
+		GoAttemptChallenge <v= %id%01 PCRenown V+ %id%01 PCRenown ifG ChatNPCRenown v%id%01 else GoMakeChallenge >
+		GoMakeChallenge <PMemo %plotid% %id%01 SetPlotStatus %plotid1% %id1% Goto GoAcceptChallenge>
+		*GoAcceptChallenge <*IAcceptYourChallenge %3%>
+		*GoWussOut <*GodImBored>
+		Msg%id%01 <You challenged %name1% to a duel in %name3%.>
+	end
+
+
+%%
 %%  *NC_WinDuelReturn
 %%
 %% The PC has just won a duel against this character. There will likely be some
