@@ -11,6 +11,194 @@
 %%
 
 Content
+	name <Instant Duel Series>
+	desc <What was it called on wrestling when there was this belt where the wrestlers had to attack each other _not_ in the ring? Well, this one's like that.>
+	requires <*LM_NonComCharDev 1:PDASS>
+
+	% E1 is the lancemate in question
+	% E2 is a local meeting/garage/etc scene
+	% E3 is a local mecha pilot to challenge
+	% E4 is the root scene
+	Element2 <Scene Public (Meeting|Garage|CavClub|Arena)>
+	Element3 <Character HasMecha (NoFac|PDASS|ROCKE|PRIVA|CRIHN)>
+	Place3 <2 (Guards) sd ally>
+	Element4 <Scene Town>
+
+	% P%id%01 = Chat counter
+
+	start <ifNPCOK %1% else .%id%_GoEndPlot  ifNPCOK %3% else .%id%_GoEndPlot   if= PlotStatus %plotid1% 0   ifNPCLancemate %1% else .%id%_GoEndPlot  if= RootSceneID %4% else .%id%_GoEndPlot  ifScene .%id%_scenetype if= P%id%01 0     P= %id%01 1  Alert %id%02 ForceChat %1% PMemo %plotid% %id%01>
+	.%id%_scenetype <outdoors>
+	.%id%_GoEndPlot <EndPlot>
+
+	.%id1%_%plotid1%_GoWin  <EndPlot  ifNPCOK %1%  Monologue %1% %id%03  CashPrize Reward %threat% 200>
+ 	.%id1%_%plotid1%_GoLose <EndPlot  ifNPCOK %1%  ifPCOK  Monologue %1% %id%04>
+
+	Msg%id%01 <%name1% wants to talk with you about something.>
+	Msg%id%02 <%name1% approaches you.>
+	Msg%id%03 <Congratulations, \PC ! Here's your prize from the Pro Duelist Association!>
+	Msg%id%03_1 <Good going, \PC ! Here's the prize you earned from the Pro Duelist Association!>
+	Msg%id%03_2 <Way to go, \PC ! Here's your prize money!>
+	Msg%id%04 <Ouch...>
+	Msg%id%04_1 <That didn't go so well...>
+	Msg%id%04_2 <Maybe next time...>
+
+	% SubPlot1 is the informal duel.
+	SubPlot1 <*:NC_TournamentMatch 3 2>
+
+	sub
+		Persona 1
+		greeting <if= PlotStatus %plotid% %id% else %pop%  if= PlotStatus %plotid1% 0 else .%id%_GoChat if= P%id%01 1 else .%id%_GoExplainPlan Goto .%id%_GoWantsToTalk>
+		.%id%_GoChat <NewChat SayAnything>
+		*.%id%_GoWantsToTalk <*LancemateWantsToTalk .%id%_GoExplainPlan .%id%_GoTalkLater>
+		.%id%_GoExplainPlan <ifNPCOK %3% else .%id%_GoJustEnd NewChat Say %id%01 AddChat %id%01 AddChat %id%02  P= %id%01 1>
+		*.%id%_GoTalkLater <*TalkAgainWhenYouHaveTime>
+		.%id%_GoJustEnd <NewChat Say %id%02 EndPlot>
+		.%id%_GoEnd <EndPlot>
+		result%id%01 <NewChat Say %id%03 AddChat %id%03 AddChat %id%04 AddChat %id%05>
+		*result%id%02 <*LM_RefuseRequest .%id%_GoEnd>
+		result%id%03 <NewChat Say %id%04 PMemo %plotid% %id%05 SetPlotStatus %plotid1% %id1%>
+		result%id%04 <Goto result%id%02>
+		result%id%05 <AddCheerful -d6  Goto result%id%02>
+		Msg%id%01 <The Pro Duelist Association is holding an informal tournament- %name3% is the beltholder, whoever beats \OPR %3% wins a fabulous prize. Or at least some money.>
+		Msg%id%01_1 <>
+		CMsg%id%01_1 <ifNPCSociable Accept>
+		Msg%id%01_2 <>
+		CMsg%id%01_2 <ifNPCShy Accept>
+		Msg%id%01_3 <>
+		CMsg%id%01_3 <ifNPCEasygoing Accept>
+		Msg%id%01_4 <>
+		CMsg%id%01_4 <ifNPCPassionate Accept>
+		Msg%id%01_5 <>
+		CMsg%id%01_5 <ifNPCCheerful Accept>
+		Msg%id%01_6 <>
+		CMsg%id%01_6 <ifNPCMelancholy Accept>
+		Msg%id%02 <Never mind... it's not important.>
+		Msg%id%03_10 <%name3% is an ace... \SPR %3% 's practically unbeatable.>
+		CMsg%id%03_10 <ifG NPCRenown %3% 80 Accept>
+		Msg%id%03_11 <You should know that %name3% is rated as an ace. That's why I'm staying out of the tournament... You don't have much chance against \OPR %3% either.>
+		CMsg%id%03_11 <ifG NPCRenown %3% 80 ifG NPCRenown %3% PCRenown Accept>
+		Msg%id%03_12 <%name3% is an ace pilot, the best of the best. Honestly speaking I don't think you have a chance to beat \OPR %3% .>
+		CMsg%id%03_12 <ifG NPCRenown %3% 80 ifG 70 PCRenown Accept>
+		Msg%id%03_13 <Well, that's the problem... %name3% is an ace pilot. You could enter the contest but you have no chance at all to win.>
+		CMsg%id%03_13 <ifG NPCRenown %3% 80 ifG 50 PCRenown Accept>
+		Msg%id%03_20 <%name3% is one of the elites... If you're interested in this fight, you better be ready to face one of the best pilots in the league.>
+		CMsg%id%03_20 <ifG NPCRenown %3% 60   ifG 81 NPCRenown %3%   Accept>
+		Msg%id%03_30 <%name3% is an arena veteran. It's up to you to judge whether or not you can take \OPR %3% .>
+		CMsg%id%03_30 <ifG NPCRenown %3% 40   ifG 61 NPCRenown %3%   Accept>
+		Msg%id%03_40 <%name3% is an average pilot. Of course, since this tourney started \SPR %3% 's been getting a lot of practice.>
+		CMsg%id%03_40 <ifG NPCRenown %3% 20   ifG 41 NPCRenown %3%   Accept>
+		Msg%id%03_50 <%name3% is just a rookie... or, at least, \SPR %3% was the last time I checked. I think you should be able to beat \OPR %1% .>
+		CMsg%id%03_50 <ifG 21 NPCRenown %3% Accept>
+		Msg%id%03_60 <Normally I'd say that you're the favorite to win over %name3%, but \SPR %3% 's been doing a lot of training for this tournament. I don't think it's going to be an easy fight>
+		CMsg%id%03_60 <ifG PCRenown NPCRenown %3% Accept>
+		Msg%id%04 <That's the spirit! We can find \OPR %3% at \EXACT_SCENE %2% ... let's head over there right away.>
+		Msg%id%04_1 <Oh, this is going to be good... Let's go to \EXACT_SCENE %2% and challenge %name3% as soon as you're ready.>
+		Msg%id%04_2 <Alright! %name3% is supposed to be at \EXACT_SCENE %2% ... we can head over there and challenge \OPR %3% whenever you're ready.>
+		Msg%id%05 <%name1% suggested that you challenge %name3% in \EXACT_SCENE %2% as part of a Pro Duelist League tournament.>
+		Prompt%id%01_1 <What can you tell me about %name3%?>
+		CPrompt%id%01_1 <ifNPCUnknown %3% Accept>
+		Prompt%id%01_2 <How do you think I measure up to \OPR %3% ?>
+		CPrompt%id%01_2 <ifNPCKnown %3% Accept>
+		Prompt%id%01_3 <%name3%, you say? I can beat \OPR %3% .>
+		CPrompt%id%01_3 <ifNPCKnown %3% ifG PCRenown NPCRenown %3% Accept>
+		Prompt%id%01_4 <%name3%, huh? That could be trouble.>
+		CPrompt%id%01_4 <ifNPCKnown %3% ifG NPCRenown %3% PCRenown Accept>
+		Prompt%id%02 <I have no time for dueling now.>
+		Prompt%id%02_1 <Sorry, but I'm not interested in this tournament.>
+		Prompt%id%02_2 <Yeah, too bad we can't take part.>
+		Prompt%id%03 <Sign me up for it!>
+		Prompt%id%03_1 <Just sign me up and let's go!>
+		Prompt%id%04 <Y'know, I think I better sit this one out.>
+		Prompt%id%04_1 <It'd be best if I declined.>
+		Prompt%id%05 <I have no desire to get my arse kicked.>
+		CPrompt%id%05 <ifG NPCRenown %3% * 2 PCRenown Accept>
+		Prompt%id%05_1 <Sounds hopeless. Let's not do it.>
+	end
+
+Content
+	name <Hoo'dwin?>
+	desc <The LM wonders who'd win in a fight- you or that other guy?>
+	requires <*LM_NonComCharDev 1:M.com>
+
+	% E1 is the lancemate in question
+	% E2 is a local meeting/garage/etc scene
+	% E3 is a local mecha pilot to challenge
+	% E4 is the root scene
+	Element2 <Scene Public (Meeting|Garage|CavClub|Arena)>
+	Element3 <Character HasMecha -Nemesis -Friend -Ally -Family !Okay 2 -L5LAW>
+	Place3 <2 (Guards) sd ally>
+	Element4 <Scene Town>
+
+	% P%id%01 = Chat counter
+
+	start <ifNPCOK %1% else .%id%_GoEndPlot  ifNPCOK %3% else .%id%_GoEndPlot   ifNPCLancemate %1% else .%id%_GoEndPlot  if= RootSceneID %4% else .%id%_GoEndPlot  ifScene .%id%_scenetype if= P%id%01 0     P= %id%01 1  Alert %id%02 ForceChat %1% PMemo %plotid% %id%01>
+	.%id%_scenetype <outdoors>
+	.%id%_GoEndPlot <EndPlot>
+
+	Msg%id%01 <%name1% wants to talk with you about something.>
+	Msg%id%02 <%name1% approaches you.>
+
+	% SubPlot1 is the informal duel.
+	SubPlot1 <*InformalChallenge 3 2>
+
+	sub
+		Persona 1
+		greeting <if= PlotStatus %plotid% %id% else %pop%  if= P%id%01 1 else .%id%_GoExplainPlan Goto .%id%_GoWantsToTalk>
+		*.%id%_GoWantsToTalk <*LancemateWantsToTalk .%id%_GoExplainPlan .%id%_GoTalkLater>
+		.%id%_GoExplainPlan <ifNPCOK %3% else .%id%_GoJustEnd NewChat Say %id%01 AddChat %id%01 AddChat %id%02 AddChat %id%03  P= %id%01 1>
+		*.%id%_GoTalkLater <*TalkAgainWhenYouHaveTime>
+		.%id%_GoJustEnd <NewChat Say %id%02 EndPlot>
+		result%id%01 <NewChat Say %id%03 AddReact -d3  AddSociable d6  EndPlot>
+		result%id%02 <NewChat Say %id%04 AddChat %id%04 AddChat %id%05>
+		result%id%03 <NewChat Say %id%05 AddChat %id%04 AddChat %id%05>
+		result%id%04 <EndChat Say %id%06 PMemo %plotid% %id%08 SetPlotStatus %plotid1% %id1%>
+		result%id%05 <EndChat Say %id%07 EndPlot>
+		Msg%id%01 <I was just wondering... who do you think would win in a fight, you or %name3%?>
+		Msg%id%01_1 <>
+		CMsg%id%01_1 <ifNPCSociable Accept>
+		Msg%id%01_2 <>
+		CMsg%id%01_2 <ifNPCShy Accept>
+		Msg%id%01_3 <Have you ever wondered about who would win in a fight, you or %name3%? I was just thinking about it... What do you think?>
+		CMsg%id%01_3 <ifNPCEasygoing Accept>
+		Msg%id%01_4 <>
+		CMsg%id%01_4 <ifNPCPassionate Accept>
+		Msg%id%01_5 <>
+		CMsg%id%01_5 <ifNPCCheerful Accept>
+		Msg%id%01_6 <Somebody who shall remain nameless said that if you and %name3% got in a fight, \SPR %3% 'd kick your arse five ways to Saturn. Who do you think would win?>
+		CMsg%id%01_6 <ifNPCMelancholy Accept>
+		Msg%id%02 <Never mind... it's not important.>
+		Msg%id%03 <Yeah, I think you're right...>
+		Msg%id%03_1 <That does seem to be the most obvious conclusion...>
+		Msg%id%04 <You know what they say: there's only one way to find out. I heard that %name3% is looking for someone to duel with... if you challenge \OPR %3% , we can find out for sure.>
+		Msg%id%04_1 <That does seem likely... I heard that %name3% is searching for someone to duel with. If you challenge \OPR %3% , you can find out for sure.>
+		CMsg%id%04_1 <ifG PCRenown NPCRenown %3% Accept>
+		Msg%id%04_2 <You really think so? Well come on, then, let's challenge \OPR %3% ! I heard that \SPR %3% 's looking for someone to duel with... this could be your big chance to make a name for yourself.>
+		CMsg%id%04_2 <ifG NPCRenown %3% PCRenown Accept>
+		Msg%id%04_3 <Oh, I seriously doubt that... but it'd be fun watching you try. I heard that %name3%'s looking for someone to duel with. If you're so brave, why don't you go challenge \OPR %3% ?>
+		CMsg%id%04_3 <ifG d10 React Accept>
+		Msg%id%04_4 <Yeah, \PC can beat anyone! I heard that %name3% is looking for someone to duel with, but \SPR %3% won't be expecting someone with your skills... you should go challenge \OPR %3% !>
+		CMsg%id%04_4 <ifG React 60 ifG PCRenown 50 Accept>
+		Msg%id%05 <How can you say that!? Don't you wonder how you stack up compared to other pilots? %name3% is looking for someone to duel with... if you had any gumption, you'd march over there and challenge \OPR %3% .>
+		Msg%id%05_1 <This is your problem: you don't have any ambition. Any normal cavalier would jump at the chance to duel %name3%... You should go over there and do it.>
+		CMsg%id%05_1 <ifG d30 React Accept>
+		Msg%id%06 <Great! You can find %name3% at \EXACT_SCENE %2% ... better hurry before someone else gets there first.>
+		Msg%id%06_1 <Fantastic! Let's go to \EXACT_SCENE %2% and challenge \OPR %3% right away.>
+		Msg%id%07 <Well then you're no fun.>
+		Msg%id%07_1 <Whatever... You're passing up a big opportunity, though.>
+		Msg%id%08 <%name1% suggested that you challenge %name3% to a duel. \SPR %3% can be found at \EXACT_SCENE %2% .>
+		Prompt%id%01 <Probably %name3%.>
+		CPrompt%id%01 <ifG NPCRenown %3% PCRenown Accept>
+		Prompt%id%02 <Probably me.>
+		Prompt%id%03 <Why are you asking that!? How should I know?>
+		Prompt%id%03_1 <I don't know and I don't care.>
+		Prompt%id%03_2 <Who knows? It's not important.>
+		Prompt%id%04 <Alright, I'll do it.>
+		Prompt%id%04_1 <Okay, I'll challenge \OPR %3% .>
+		Prompt%id%05 <Sorry, I have no time for dueling.>
+		Prompt%id%05_1 <No, I'd really rather not.>
+	end
+
+Content
 	name <Junior Up>
 	desc <The LM will ask for some advice, and get instant training.>
 	requires <*LM_NonComCharDev 1:A.jr_ (1:M.pro|1:M.see|1:M.cha|1:MOOK_) -!Ne 1:TRAIN>
@@ -213,7 +401,7 @@ Content
 	% E2 is the character who will offer the mission
 	% E3 is the root scene
 	% E4 is the NPC's faction
-	Element2 <Character !Okay 1 -Enemy -NoFac>
+	Element2 <Character !Okay 1 -Enemy -NoFac -PCFac>
 	Element3 <Scene Town>
 	Element4 <Faction !Comrade 2>
 

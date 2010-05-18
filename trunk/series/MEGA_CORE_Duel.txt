@@ -267,7 +267,7 @@ Content
 		GoMakeChallenge <History %id%01 PMemo %plotid% %id%01 SetPlotStatus %plotid1% %id1% Goto GoAcceptChallenge>
 		*GoAcceptChallenge <*IAcceptYourChallenge %3%>
 		*GoWussOut <*GodImBored>
-		Msg%id%01 <You challenged %name1% to a duel in %name3%.>
+		Msg%id%01 <You challenged %name1% to a duel in \EXACT_SCENE %3% .>
 	end
 
 %%

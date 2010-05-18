@@ -839,7 +839,7 @@ begin
 	if InvRPM <> Nil then DisposeRPGMenu( InvRPM );
 	InvRPM := CreateRPGMenu( MenuItem , MenuSelect , ZONE_InvMenu );
 	InvRPM^.Mode := RPMNoCleanup;
-	BuildInventoryMenu( InvRPM , PC );
+	BuildInventoryMenu( InvRPM , PC , False );
 	RPMSortAlpha( InvRPM );
 
 	{ If the menu is empty, add a message saying so. }

@@ -36,7 +36,7 @@ Procedure BuildGearMenu( RPM: RPGMenuPtr; Master: GearPtr; G: Integer );
 Procedure BuildGearMenu( RPM: RPGMenuPtr; Master: GearPtr );
 
 Procedure BuildEquipmentMenu( RPM: RPGMenuPtr; Master: GearPtr );
-Procedure BuildInventoryMenu( RPM: RPGMenuPtr; Master: GearPtr );
+Procedure BuildInventoryMenu( RPM: RPGMenuPtr; Master: GearPtr; UseSaleTag: Boolean );
 Procedure BuildSlotMenu( RPM: RPGMenuPtr; Master,Item: GearPtr );
 Procedure BuildSubMenu( RPM: RPGMenuPtr; Master,Item: GearPtr; DoMultiplicityCheck: Boolean );
 
@@ -154,7 +154,7 @@ begin
 	CheckAlongPath( Master^.SubCom , False );
 end; {BuildEquipmentMenu}
 
-Procedure BuildInventoryMenu( RPM: RPGMenuPtr; Master: GearPtr );
+Procedure BuildInventoryMenu( RPM: RPGMenuPtr; Master: GearPtr; UseSaleTag: Boolean );
 	{ Create a menu for this master's inventory. Inventory is defined as }
 	{ any InvCom of the master. }
 var
@@ -177,19 +177,24 @@ var
 	Function IMString( P: GearPtr; num_copies: Integer ): String;
 		{ Given part P, return a string to use in the menu. }
 	var
-		msg: String;
+		msg,msg2: String;
 		ShotsUsed: Integer;
 	begin
 		msg := FullGearName( P );
 
 		{ Add extra information, depending upon item type. }
-		if P^.G = GG_Weapon then begin
-			msg := msg + '  (DC:' + BStr( ScaleDC( P^.V , P^.Scale ) ) + ')';
-		end else if ( P^.G = GG_ExArmor ) or ( P^.G = GG_Shield ) then begin
-			msg := msg + '  [AC:' + BStr( GearMaxArmor( P ) ) + ']';
-		end else if P^.G = GG_Ammo then begin
-			ShotsUsed := NAttValue( P^.NA , NAG_WeaponModifier , NAS_AmmoSpent );
-			msg := msg + '  (' + BStr( P^.STat[ STAT_AmmoPresent ] - ShotsUSed ) + '/' + BStr( P^.Stat[ STAT_AmmoPresent ] ) + 'a)';
+		if UseSaleTag then begin
+			msg2 := SAttValue( P^.SA , 'SALETAG' );
+			if msg2 <> '' then msg := msg + ' (' + msg2 + ')';
+		end else begin
+			if P^.G = GG_Weapon then begin
+				msg := msg + '  (DC:' + BStr( ScaleDC( P^.V , P^.Scale ) ) + ')';
+			end else if ( P^.G = GG_ExArmor ) or ( P^.G = GG_Shield ) then begin
+				msg := msg + '  [AC:' + BStr( GearMaxArmor( P ) ) + ']';
+			end else if P^.G = GG_Ammo then begin
+				ShotsUsed := NAttValue( P^.NA , NAG_WeaponModifier , NAS_AmmoSpent );
+				msg := msg + '  (' + BStr( P^.STat[ STAT_AmmoPresent ] - ShotsUSed ) + '/' + BStr( P^.Stat[ STAT_AmmoPresent ] ) + 'a)';
+			end;
 		end;
 
 		if num_copies > 0 then msg := msg + ' x' + Bstr( num_copies + 1 );

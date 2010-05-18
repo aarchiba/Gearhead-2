@@ -38,6 +38,7 @@ const
 	'240 240 240 208  34  51  50  50 150'	{ White, Red Goes Fasta, Blue }
 	);
 
+	SATT_SaleTag = 'SALETAG';
 
 var
 	{ The following vars are primarily needed by the interaction routines in }
@@ -1133,6 +1134,7 @@ Function CreateWaresList( GB: GameBoardPtr; NPC: GearPtr; Stuff: String ): GearP
 	var
 		mecha_colors: String;
 		Fac: GearPtr;
+		Discount: Integer;
 	begin
 		if I^.G = GG_Mecha then begin
 			{ To start with, determine this merchant's lot color. This is the color all }
@@ -1156,6 +1158,13 @@ Function CreateWaresList( GB: GameBoardPtr; NPC: GearPtr; Stuff: String ): GearP
 			end;
 
 			SetSAtt( I^.SA , 'sdl_colors <' + mecha_colors + '>' );
+		end;
+
+		{ New v0.625- Maybe this item will be on sale! }
+		if ( Random( 20 ) = 1 ) then begin
+			Discount := ( Random( 5 ) + 1 ) * 5;
+			MarkGearsWithNAtt( I , NAG_GearOps , NAS_CostAdjust , -Discount );
+			MarkGearsWithSAtt( I , SATT_SaleTag + ' <' + ReplaceHash( MSgString( 'SALETAG_Discount' ) , BStr( Discount ) ) + '>' );
 		end;
 	end;
 var
@@ -1265,7 +1274,7 @@ var
 	RPM: RPGMenuPtr;	{ Buying menu. }
 	I: GearPtr;
 	N: Integer;
-	msg: String;
+	msg,msg2: String;
 begin
 
 	{ Create the browsing menu. }
@@ -1291,6 +1300,10 @@ begin
 		if ( I^.G <> GG_Mecha ) and ( I^.Scale > 0 ) then begin
 			msg := msg + '(SF' + BStr( I^.Scale ) + ')';
 		end;
+
+		{ Add the sale tag, if it exists. }
+		msg2 := SAttValue( I^.SA , SATT_SALETAG );
+		if msg2 <> '' then msg := msg + ' (' + msg2 + ')';
 
 		{ Pad the message. }
 {$IFDEF ASCII}
@@ -1349,7 +1362,9 @@ begin
 		{ Create the menu. }
 		RPM := CreateRPGMenu( MenuItem , MenuSelect , ZONE_ShopMenu );
 		RPM^.Mode := RPMNoCleanup;
-		BuildInventoryMenu( RPM , PCInv );
+
+		BuildInventoryMenu( RPM , PCInv , True );
+
 		AddRPGMenuItem( RPM , MsgString( 'SERVICES_Exit' ) , -1 );
 
 		SetItemByPosition( RPM , MI );
@@ -1446,7 +1461,7 @@ var
 	RPM: RPGMenuPtr;
 	N: Integer;
 	Mek: GearPtr;
-	msg: String;
+	msg,msg2: String;
 begin
 	{ Allocate a menu. }
 	RPM := CreateRPGMenu( MenuItem , MenuSelect , ZONE_ShopMenu );
@@ -1459,6 +1474,10 @@ begin
 		{ add it to the menu. }
 		if ( NAttValue( Mek^.NA , NAG_Location , NAS_Team ) = NAV_DefPlayerTeam ) and not GearActive( Mek ) then begin
 			msg := TeamMateName( Mek );
+
+			msg2 := SAttValue( Mek^.SA , SATT_SALETAG );
+			if msg2 <> '' then msg := msg + ' (' + msg2 + ')';
+
 			AddRPGMenuItem( RPM , msg , N );
 		end;
 

@@ -1,6 +1,6 @@
 Plot
 	name <CORP: Escort Convoy Job>
-	requires <*GENERAL -!Ne>
+	requires <*GENERAL -!Ne -Poor>
 	PayRate 175
 
 	% E1 is a character who will offer the mission
@@ -74,7 +74,7 @@ Plot
 Plot
 	name <CORP: Factory Defense Job>
 	% Go defend a factory. Get 2 FacXP.
-	requires <*GENERAL -!Ne -!Lo>
+	requires <*GENERAL -!Ne -!Lo -Poor>
 	PayRate 185
 
 	% E1 is a character who will offer the mission

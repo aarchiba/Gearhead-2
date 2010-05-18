@@ -122,6 +122,9 @@ Const
 
 	NAS_ShopRank = 10;		{ Used to determine what shopkeepers stock. }
 
+	NAS_CostAdjust = 11;		{ Adjusts the base cost of this item, but not the value. }
+
+
 	NAG_Narrative = 7;	{ Variables having to do with RPG }
 	NAS_NID = 0;	{ Narrative ID }
 
@@ -381,7 +384,8 @@ Function CloneGear( Part: GearPtr ): GearPtr;
 Function RetrieveGearSib( List: GearPtr; N: Integer ): GearPtr;
 Procedure Rescale( Part: GearPtr; SF: Integer );
 
-
+Procedure MarkGearsWithNAtt( Master: GearPtr; G,S,V: LongInt );
+Procedure MarkGearsWithSAtt( Master: GearPtr; const Info: String );
 
 implementation
 
@@ -1453,6 +1457,42 @@ begin
 		Rescale( S , SF );
 		S := S^.Next;
 	end;
+end;
+
+Procedure MarkGearsWithNAtt( Master: GearPtr; G,S,V: LongInt );
+	{ Mark all the gears in this tree with the provided NAtt. }
+	Procedure DoAlongPath( LList: GearPtr );
+		{ Mark the NAtt along this list, and along all children. }
+	begin
+		while LList <> Nil do begin
+			SetNAtt( LList^.NA , G , S , V );
+			DoAlongPath( LList^.SubCom );
+			DoAlongPath( LList^.InvCom );
+			LList := LList^.Next;
+		end;
+	end;
+begin
+	SetNAtt( Master^.NA , G , S , V );
+	DoAlongPath( Master^.SubCom );
+	DoAlongPath( Master^.InvCom );
+end;
+
+Procedure MarkGearsWithSAtt( Master: GearPtr; const Info: String );
+	{ Mark all the gears in this tree with the provided SAtt. }
+	Procedure DoAlongPath( LList: GearPtr );
+		{ Mark the SAtt along this list, and along all children. }
+	begin
+		while LList <> Nil do begin
+			SetSAtt( LList^.SA , Info );
+			DoAlongPath( LList^.SubCom );
+			DoAlongPath( LList^.InvCom );
+			LList := LList^.Next;
+		end;
+	end;
+begin
+	SetSAtt( Master^.SA , Info );
+	DoAlongPath( Master^.SubCom );
+	DoAlongPath( Master^.InvCom );
 end;
 
 initialization

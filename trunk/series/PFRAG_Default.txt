@@ -1,5 +1,41 @@
 % Persona Fragment File
 
+% TYPE: *SmallFryChallenge
+%
+%	The PC has just challenged the NPC, but the NPC thinks that the PC
+%	isn't in the same league, so the PC can either pressure the NPC to
+%	accept them or just give up.
+%	Difficulty rating taken as ChatNPCRenown.
+%   PARAM1: Accept Challenge Exit Label
+%   PARAM2: PC Gives Up Exit Label
+%   PARAM3: PC Fails Exit Label
+
+	Persona
+	requires <*SmallFryChallenge>
+	START <NewChat Say %id%01 AddChat %id%01 AddChat %id%02 AddChat %id%03>
+	result%id%01 <Goto %2%>
+	result%id%02 <ifIntimidation SocSkillTar ChatNPCRenown else %3% Goto %1%>
+	result%id%03 <ifTaunt SocSkillTar ChatNPCRenown else %3% Goto %1%>
+	Msg%id%01 <You're a bit inexperienced to be challenging me, aren't you? Come back when you're worthy of my attention.>
+	Msg%id%01_1 <Wait, you think that you're good enough to challenge me? Obviously there's been some kind of miscommunication... I mean, you're not even worthy to face my lancemates. It's nice to see that you have big dreams but keep them to yourself for now.>
+	CMsg%id%01_1 <ifNPCSociable Accept>
+	Msg%id%01_2 <No. I'm way more skilled than you are.>
+	CMsg%id%01_2 <ifNPCShy Accept>
+	Msg%id%01_3 <Now, I don't want to discourage you or anything, but I am so far out of your league that I can't even see you from here.>
+	CMsg%id%01_3 <ifNPCEasygoing Accept>
+	Msg%id%01_4 <You've got nerve, \PC , but as of right now you aren't even worthy of my attention.>
+	CMsg%id%01_4 <ifNPCPassionate Accept>
+	Msg%id%01_5 <Ha! Oh I'm sorry, that wasn't a joke, was it? I'm afraid that you're just not in the same league as me...>
+	CMsg%id%01_5 <ifNPCCheerful Accept>
+	Msg%id%01_6 <You've got to be kidding. I'd finish you off in a heartbeat... not even an exciting heartbeat, but one of those boring ones.>
+	CMsg%id%01_6 <ifNPCMelancholy Accept>
+	Prompt%id%01 <Alright... I'll be back.>
+	Prompt%id%01_1 <I guess you're right...>
+	Prompt%id%02 <Don't doubt me... I can beat you easy.>
+	Prompt%id%02_1 <You disrespect me? Now you're in trouble...>
+	Prompt%id%03 <Say, is that chicken I smell? Cluck cluck!>
+	Prompt%id%03_1 <If your skills matched your ego you'd have a point.>
+
 % TYPE: *F2Dest_Greeting
 %
 %	The PC wants to go somewhere, but has to fight this NPC first. There's

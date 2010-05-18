@@ -4,6 +4,78 @@
 %%
 
 Plot
+	name <MILIT: Defend Base Job>
+	% The PC has to go defend a base.
+	requires <*GENERAL -!Ne -!Lo -SAFE>
+	PayRate 180
+
+	% E1 is the town itself
+	% E2 is a military faction allied with the city
+	% E3 is a member of that faction
+	% E4 is a scene where the encounter will take place	Element1 <Scene Town>
+	Element2 <Faction Military !Ally 1>
+	Element3 <Character !Comrade 2 RECHARGED>
+	Element4 <Scene Outdoors>
+
+	% SubPlot1 is the combat encounter
+	SubPlot1 <*MECHAMISSION_Defense 3 4 2>
+
+	% P1 = Time Limit
+	% P2 = Email Indicator
+	start <if= PlotStatus %plotid% 0 ifNPCOK %3% else GoDelete ifG ComTime P1 EndPlot>
+	GoDelete <EndPlot>
+	update <if= PlotStatus %plotid% 0 if= P1 0 P= 1 ComTime P+ 1 86400>
+
+	% Insert email here
+	5min <if= PlotStatus %plotid% 0 if= RootSceneID %1% if= P2 0  if= PCFac NPCFac %3%  if= d4 1  ifG PCCharm d40  Email 1 P= 2 1>
+	Msg1   <%name3%@ \SCENE NPCSCene %3% :// \RANK \PC , head to \EXACT_SCENE NPCScene %3% for a briefing.>
+	Msg1_1 <%name3%@ \SCENE NPCSCene %3% :// Report to \SCENE NPCScene %3% for a mission at once.>
+	Msg1_2 <%name3%@ \SCENE NPCSCene %3% :// I've got some guard duty for you, \RANK .>
+	Msg1_3 <%name3%@ \SCENE NPCSCene %3% :// \RANK \PC , I have a guard mission for you from %name2%.>
+
+	sub
+		Persona 3
+		rumor0 <%name3% needs a cavalier for some guard duty.>
+		greeting <if= PlotStatus %plotid% %id1% else GoCheckOffer Goto GoRemind>
+		*GoRemind <*MechaMissionReminder %4%>
+		GoCheckOffer <if# PlotStatus %plotid% 0 else GoCheckEnemy NewChat SayAnything>
+		*GoCheckEnemy <*ENEMY_CHECK GoCheckEmail ChatNPCFac GoEnd>
+		GoCheckEmail <if= P2 1 else GoCheckMember Goto GoGotEmail>
+		*GoGotEmail <*DidYouGetEmail GoMissionBriefing>
+		GoCheckMember <if= PCFac ChatNPCFac else GoCheckAuto  Goto GoIsMember>
+		*GoIsMember <*IHaveAJobForYou GoMissionBriefing>
+		*GoCheckAuto <*AutoMissionTest&Mecha GoMissionBriefing GoRejectMission GoCheckSkill ChatNPCFac %5%>
+		*GoCheckSkill <*GenericMissionTest&Mecha  GoMissionBriefing GoEnd GoRejectMission ChatNPCFac %5% %threat%>
+		*GoRejectMission <*RejectMission GoEnd>
+		GoEnd <EndPlot>
+		GoMissionBriefing <NewChat Say 1  AddChat 1 AddChat 2>
+		*result1 <*GoodLuckOnMission GoR1Final ChatNPCFac %5%>
+		GoR1Final <Memo 2 SetPlotStatus %plotid% %id1%>
+		result2 <Goto GoRejectMission>
+		Msg1 <Our base in \EXACT_SCENE %4% could use some extra defense. Protect it from our enemies and you'll earn $ \VAL Reward %threat% PayRate plus whatever salvage might happen to show up.>
+		Msg1_1 <We maintain a number of bases in this area. According to our recon patrol, enemies are planning to attack the armory in \EXACT_SCENE %4% . I want you to drive them off. Succeed, and you earn $ \VAL Reward %threat% PayRate plus full salvage rights.>
+		CMsg1_1 <ifNPCSociable Accept>
+		Msg1_2 <Your job is to guard a base in \EXACT_SCENE %4% . Defeat the attackers and you'll get $ \VAL Reward %threat% PayRate plus salvage.>
+		CMsg1_2 <ifNPCShy Accept>
+		Msg1_3 <There's a base in \EXACT_SCENE %4% that I want you to guard. We're not expecting an attack... but they say you should always expect the unexpected, right? Anyhow, if there is a fight, and you win, you'll get $ \VAL Reward %threat% PayRate plus salvage.>
+		CMsg1_3 <ifNPCEasygoing Accept>
+		Msg1_4 <The best offense is a good defense! Your mission is to guard our base in \EXACT_SCENE %4% . Destroy all attackers, and you'll be paid $ \VAL Reward %threat% PayRate plus full salvage rights.>
+		CMsg1_4 <ifNPCPassionate Accept>
+		Msg1_5 <Everybody loves guard duty, right? I want you to defend our base in \EXACT_SCENE %4% . Complete the mission and you'll earn $ \VAL Reward %threat% PayRate plus salvage.>
+		CMsg1_5 <ifNPCCheerful Accept>
+		Msg1_6 <Defending our city is a neverending and often thankless job. I need you to guard a base in \EXACT_SCENE %4% ... we're expecting an attack, but don't know when. If you don't screw up you'll get $ \VAL Reward %threat% PayRate plus salvage.>
+		CMsg1_6 <ifNPCMelancholy Accept>
+		Msg2 <%name3% in \EXACT_SCENE NPCScene %3% hired you to defend a base belonging to %name2% in \EXACT_SCENE %4% .>
+		Prompt1 <Okay, I can do that.>
+		Prompt1_1 <Alright, I'll get over there right away.>
+		Prompt1_2 <Don't worry, I won't let anyone touch the base.>
+		Prompt2 <Thinking it over, I have better things to do.>
+		CPrompt2 <if# PCFac ChatNPCFac Accept>
+		Prompt2_1 <Your base problems do not concern me.>
+		Prompt2_2 <Sorry, but this isn't my kind of job.>
+	end
+
+Plot
 	name <Basic Military Patrol Job>
 	% The basic patrol job is a fight against some generic enemy mecha.
 	% This job gives salvage. This job will not result in the PC making

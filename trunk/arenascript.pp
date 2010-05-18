@@ -912,7 +912,7 @@ var
 	RV: LongInt;
 begin
 	{ Calculate the base reward value. }
-	RV := Calculate_Threat_Points( Renown + 10 , 100 ) div 80 * Percent div 100;
+	RV := Calculate_Threat_Points( Renown + 10 , 100 ) div 64 * Percent div 100;
 	if RV < Min_Reward_Value then RV := Min_Reward_Value;
 
 	{ Modify this for the PC's talents. }
@@ -4343,6 +4343,11 @@ begin
 				SetNAtt( Mek^.NA , NAG_Location , NAS_X , 0 );
 				{ Record that this is a salvaged mek. }
 				SetNAtt( Mek^.NA , NAG_MissionReport , NAS_WasSalvaged , 1 );
+
+				{ Salvaged meks don't get much resale value. }
+				MarkGearsWithNAtt( Mek , NAG_GearOps , NAS_CostAdjust , -90 );
+				MarkGearsWithSAtt( Mek , SATT_SaleTag + ' <' + MSgString( 'SALETAG_Salvage' ) + '>' );
+
 			end else if CanScavenge then begin
 				M2 := SelectRandomGear( Mek^.SubCom );
 				if NotDestroyed( M2 ) and CanBeExtracted( M2 ) and ( SkillRoll( GB , PC , NAS_Repair , STAT_Knowledge , 7 , 0 , True , True ) > 7 ) then begin

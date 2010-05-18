@@ -1489,8 +1489,13 @@ begin
 	{ Modify for intrinsics. }
 	it := it + IntrinsicCost( Part );
 
-	{ Modify for Fudge. }
-	if CalcCost then it := it + NAttValue( Part^.NA , NAG_GearOps , NAS_Fudge );
+	{ Modify for Fudge and Discount. }
+	if CalcCost then begin
+		it := it + NAttValue( Part^.NA , NAG_GearOps , NAS_Fudge );
+		t := NAttValue( Part^.NA , NAG_GearOps , NAS_CostAdjust );
+		if t < -90 then t := -90;
+		if t <> 0 then it := ( it * ( t + 100 ) ) div 100;
+	end;
 
 	ComponentValue := it;
 end;

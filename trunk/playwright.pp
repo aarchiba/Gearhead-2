@@ -2367,6 +2367,8 @@ var
 
 		{ Count how many plots are being used by the city and each of its moods. }
 		Allowed := NumAllowedPlots( Controller );
+
+		{if XXRan_Debug and ( Controller^.G = GG_Scene ) then DialogMsg( GearName( Controller ) + ': ' + BStr( NumAttachedPlots( ControllerID ) ) + '/' + Bstr( Allowed ) );}
 		if Allowed > 0 then begin
 			Attached := NumAttachedPlots( ControllerID );
 
