@@ -131,6 +131,7 @@ IFFACTIONENEMY <GrabFaction ? ifGArchEnemy>
 IFFACTIONALLY <GrabFaction ? ifGArchAlly>
 IFNPCARCHENEMY <GrabNPC ? ifGArchEnemy>
 IFCHATNPCARCHENEMY <GrabChatNPC ifGArchEnemy>
+IFCHATNPCNOTFAMILY <GrabChatNPC if# GNAtt NAG_Relationship 0 NAV_Family>
 ifVisible <if= StatVal STAT_MetaVisibility 0>
 DYNAMIC <NewD ? GrabDynamic GSetNAtt 21 4 ? GSetNAtt 21 5 ? GSetSAtt NU1 ? GSetSAtt NU2 ?>
 DynaFaction <GrabDynamic GSetNAtt NAG_Personal NAS_FactionID ?>
@@ -349,4 +350,4 @@ GiveMeritBadge <GrabAdventure GSetNAtt NAG_MeritBadge ? 1 Announce ABadge !>
 SilentMeritBadge <GrabAdventure GSetNAtt NAG_MeritBadge ? 1>
 SetPayRate <GrabPlot GSetNAtt 20 1 ?>
 SetNPCBio <GrabNPC ? GSetSAtt BIO ?>
-
+LoseTrainingChance <GrabNPC ? GAddNAtt NAG_Narrative NAS_LancemateTraining_Spent 1>

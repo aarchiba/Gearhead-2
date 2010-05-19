@@ -786,6 +786,11 @@ begin
 			SetNAtt( Pilot^.NA , NAG_EpisodeData , NAS_Temporary , 1 );
 		end;
 
+		{ Mark the mecha as salvage- if the PC recovers it, it won't have }
+		{ a very high resale price. }
+		MarkGearsWithNAtt( Mek , NAG_GearOps , NAS_CostAdjust , -90 );
+		MarkGearsWithSAtt( Mek , 'SALETAG <' + MSgString( 'SALETAG_Salvage' ) + '>' );
+
 		{ Place it on the map. }
 		DeployGear( GB , Mek , True );
 	end;

@@ -120,7 +120,7 @@ begin
 	StoreSAtt( ResultList , '  ' );
 
 	StoreSAtt( ResultList , 'Lancemate NonCom Chardev' );
-	CountTheBeans( ResultList , '*LM_NonComCharDev !Ne !Lo !Md !Hi !Ex 1:++ 1:TRAIN 1:NOFAC' , '1' , Sub_Plot_List );
+	CountTheBeans( ResultList , '*LM_NonComCharDev *LM_PersonalJob &BeanCounter !Ne !Lo !Md !Hi !Ex 1:++ 1:TRAIN 1:NOFAC' , '1' , Sub_Plot_List );
 	SaveStringList( 'out.txt' , ResultList );
 	DisposeSAtt( ResultList );
 end.

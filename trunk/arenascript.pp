@@ -1891,6 +1891,21 @@ begin
 					W := 'sprog';
 				end;
 
+			end else if W = '\SIBLING' then begin
+				{ Sister or Brother, depending on gender }
+				ID := ScriptValue( S0 , GB , Scene );
+				if ID = 0 then begin
+					Part := LocatePilot( GG_LocatePC( GB ) );
+				end else begin
+					Part := GG_LocateNPC( ID , GB , Scene );
+				end;
+				if Part <> Nil then begin
+					if NAttValue( Part^.NA , NAG_CharDescription , NAS_Gender ) = NAV_Male then W := MsgString( 'BROTHER' )
+					else W := MsgString( 'SISTER' );
+				end else begin
+					W := 'sib';
+				end;
+
 			end else if W = '\RANK' then begin
 				{ The faction rank of the PC. }
 				W := PCRankName( GB , Scene );
@@ -4344,10 +4359,6 @@ begin
 				{ Record that this is a salvaged mek. }
 				SetNAtt( Mek^.NA , NAG_MissionReport , NAS_WasSalvaged , 1 );
 
-				{ Salvaged meks don't get much resale value. }
-				MarkGearsWithNAtt( Mek , NAG_GearOps , NAS_CostAdjust , -90 );
-				MarkGearsWithSAtt( Mek , SATT_SaleTag + ' <' + MSgString( 'SALETAG_Salvage' ) + '>' );
-
 			end else if CanScavenge then begin
 				M2 := SelectRandomGear( Mek^.SubCom );
 				if NotDestroyed( M2 ) and CanBeExtracted( M2 ) and ( SkillRoll( GB , PC , NAS_Repair , STAT_Knowledge , 7 , 0 , True , True ) > 7 ) then begin
@@ -5035,7 +5046,7 @@ begin
 	N := 0;
 	while ( CList <> '' ) and ( N < MaxTNPCChoices ) do begin
 		T := ScriptValue( CList , GB , Source );
-		if (( T > 0 ) and CanGainSkill and ( NAttValue( NPC^.NA , NAG_Skill , T ) = 0 ) ) or (( T < 0 ) and CanGainTalent and ( NAttValue( NPC^.NA , NAG_Talent , T ) = 0 ) and CanLearnTalent( NPC , T )  ) then begin
+		if (( T > 0 ) and CanGainSkill and ( NAttValue( NPC^.NA , NAG_Skill , T ) = 0 ) ) or (( T < 0 ) and CanGainTalent and ( NAttValue( NPC^.NA , NAG_Talent , Abs(T) ) = 0 ) and CanLearnTalent( NPC , Abs(T) )  ) then begin
 			Inc( N );
 			Choices[ N ] := T;
 		end;

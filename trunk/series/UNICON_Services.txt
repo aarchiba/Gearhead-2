@@ -1,4 +1,5 @@
 %% *SHOP_MECHANIC CONTENT
+%%          &Factionless	Mechanic must not have a faction
 %%   Contains a mechanic and/or mecha shop.
 
 Content
@@ -50,7 +51,7 @@ Content
 	end
 
 Content
-	requires <*MECHANIC_SHOP (MAQUI|FCOMS) (NOFAC|COMET) -Seedy -SILKN>
+	requires <*MECHANIC_SHOP (MAQUI|FCOMS) (NOFAC|COMET) -Seedy -SILKN -&Factionless>
 	content <Required *DECOR_FOR_SHOP %1% Local>
 	element1 <Prefab>
 	team1 <Citizens>

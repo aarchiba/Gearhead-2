@@ -11,6 +11,78 @@
 %%
 
 Content
+	name <I have something to do...>
+	desc <The lancemate has a personal job to complete. You can join it or let the LM go alone.>
+	requires <*LM_NonComCharDev -&beancounter>
+
+	% E1 is the lancemate in question
+	% E2 is the root scene
+	Element2 <Scene Town>
+
+	% P%id%01 = Chat counter
+
+	start <ifNPCOK %1% else .%id%_GoEndPlot   ifNPCLancemate %1% else .%id%_GoEndPlot  if= RootSceneID %2% else .%id%_GoEndPlot  ifScene .%id%_scenetype if= P%id%01 0     P= %id%01 1  Alert %id%02 ForceChat %1% PMemo %plotid% %id%01>
+	.%id%_scenetype <outdoors>
+	.%id%_GoEndPlot <EndPlot>
+
+	Msg%id%01 <%name1% wants to talk with you about something.>
+	Msg%id%02 <%name1% approaches you.>
+
+	% SubPlot1 is the personal job.
+	% SubPlot2 is the solo mission- if the PC refuses to come along
+	SubPlot1 <*LM_PersonalJob 1 2>
+	SubPlot2 <*LM_GoSolo 1 2>
+
+	sub
+		Persona 1
+		greeting <if= PlotStatus %plotid% %id% else %pop%  if= P%id%01 1 else .%id%_GoExplainPlan Goto .%id%_GoWantsToTalk>
+		*.%id%_GoWantsToTalk <*LancemateWantsToTalk .%id%_GoExplainPlan .%id%_GoTalkLater>
+		.%id%_GoExplainPlan <NewChat Say %id%01 AddChat %id%01 AddChat %id%02 AddChat %id%03  P= %id%01 1>
+		*.%id%_GoTalkLater <*TalkAgainWhenYouHaveTime>
+		result%id%01 <Goto .%id1%_GoInit>
+		result%id%02 <EndChat Say %id%02 PMemo %plotid% 0 SetPlotStatus %plotid2% %id2% AddReact d4>
+		result%id%03 <IFCHATNPCNOTFAMILY else .%id%_GoGoing AddReact -d15 ifG React d10 else .%id%_GoQuit ifG React d82 else .%id%_GoGoing  EndChat Say %id%03 EndPlot>
+		.%id%_GoGoing <EndChat Say %id%04  PMemo %plotid% 0 SetPlotStatus %plotid2% %id2%>
+		.%id%_GoQuit <EndChat Say %id%05  PCNoRelation %1%  PMemo %plotid% 0 SetPlotStatus %plotid2% %id2%>
+		Msg%id%01 <I've got some personal matters to deal with. I have to go take care of this...>
+		Msg%id%01_1 <>
+		CMsg%id%01_1 <ifNPCSociable Accept>
+		Msg%id%01_2 <>
+		CMsg%id%01_2 <ifNPCShy Accept>
+		Msg%id%01_3 <>
+		CMsg%id%01_3 <ifNPCEasygoing Accept>
+		Msg%id%01_4 <>
+		CMsg%id%01_4 <ifNPCPassionate Accept>
+		Msg%id%01_5 <>
+		CMsg%id%01_5 <ifNPCCheerful Accept>
+		Msg%id%01_6 <>
+		CMsg%id%01_6 <ifNPCMelancholy Accept>
+		Msg%id%02 <Thanks, \PC . Don't worry... I'm sure I can do this on my own.>
+		Msg%id%02_1 <Give me a call in a day or two. I should be finished by then.>
+		Msg%id%02_2 <Just in case I don't make it back, I want you to know that it's been an honor working with you... Goodbye \PC .>
+		CMsg%id%02_2 <ifG React 50 Accept>
+		Msg%id%02_3 <Well, I wish I could say it was all good times... Goodbye \PC . Give me a call if you ever need a lancemate again.>
+		CMsg%id%02_3 <ifG 30 React Accept>
+		Msg%id%03 <Understood...>
+		Msg%id%03_1 <If it's going to be a problem, I guess I can put it off...>
+		Msg%id%03_2 <Well, if you really need me, I guess I can stay...>
+		Msg%id%04 <Sorry \PC , but this is something I really have to do. If you still want me in the lance give me a call in a few days.>
+		Msg%id%04_1 <What, do you think I'm your serf? Like I said, I have to do this. Goodbye \PC ... see you in a few days, maybe.>
+		Msg%id%04_2 <I wasn't asking for your permission, I was telling you what I'm going to do. Goodbye \PC ... maybe we can work together again later on.>
+		Msg%id%05 <Did you ever think about what I need? That's it, I quit... find yourself a new lancemate, \PC .>
+		Msg%id%05_1 <I wish I could say that I'd miss you, but we both know that's not true... I quit!>
+		Prompt%id%01 <I can help you with that, if you like.>
+		Prompt%id%01_1 <Would it be alright if I helped you?>
+		Prompt%id%01_2 <Are you sure you don't need any help?>
+		Prompt%id%02 <Good luck with that. Let me know when you get back.>
+		Prompt%id%02_1 <Do whatever you need to do, %name1%.>
+		Prompt%id%02_2 <No problem. Good luck with it.>
+		Prompt%id%03 <%name1%, we don't have time for this.>
+		Prompt%id%03_1 <No way! I need you, %name1%...>
+		Prompt%id%03_2 <Can't it wait? I need you here.>
+	end
+
+Content
 	name <Instant Duel Series>
 	desc <What was it called on wrestling when there was this belt where the wrestlers had to attack each other _not_ in the ring? Well, this one's like that.>
 	requires <*LM_NonComCharDev 1:PDASS>

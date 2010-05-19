@@ -1393,6 +1393,11 @@ begin
 	SERV_Info := Nil;
 end;
 
+Function ShopkeeperCanRepairMecha( NPC: GearPtr ): Boolean;
+	{ Return TRUE if the shopkeeper can repair mecha, or FALSE otherwise. }
+begin
+	ShopkeeperCanRepairMecha := ( NPC <> Nil ) and ( NAttValue( NPC^.NA , NAG_Skill , NAS_Repair ) > 5 );
+end;
 
 Procedure ThisMechaWasSelected( GB: GameBoardPtr; MekNum: Integer; PC,NPC: GearPtr );
 	{ Do all the standard shopping options with this mecha. }
@@ -1415,7 +1420,7 @@ begin
 		if not OnTheMap( GB , Mek ) then AddRPGMenuItem( RPM , MsgString( 'SERVICES_Sell' ) + GearName( Mek ) , 1 );
 
 
-		if ( NAttValue( NPC^.NA , NAG_Skill , NAS_Repair ) > 5 ) then begin
+		if ShopkeeperCanRepairMecha( NPC ) then begin
 			Cost := RepairMasterByModeCost( Mek , RM_MechaRepair );
 			if Cost > 0 then begin
 				AddRPGMenuItem( RPM , MsgString( 'SERVICES_DoMechaRepair' ) + ' [$' + BStr( ScalePrice( GB , PC , NPC , Cost ) ) + ']' , 2 );
@@ -1733,7 +1738,7 @@ begin
 			if ( C1 > 0 ) then AddRPGMenuItem( RPM , MsgString( 'SERVICES_ReloadCharsPrompt' ) + ' [$' + BStr( C1 ) + ']' , -4 );
 			if C2 > C1 then AddRPGMenuItem( RPM , MsgString( 'SERVICES_ReloadChars+Prompt' ) + ' [$' + BStr( C2 ) + ']' , -11 );
 
-			if NAttValue( NPC^.NA , NAG_Skill , NAS_Repair ) > 5 then begin
+			if ShopkeeperCanRepairMecha( NPC ) then begin
 				Cost := RepairAllCost( GB , RM_MechaRepair );
 				if Cost > 0 then begin
 					AddRPGMenuItem( RPM , MsgString( 'SERVICES_DoMechaRepair' ) + ' [$' + BStr( ScalePrice( GB , PC , NPC , Cost ) ) + ']' , RM_MechaRepair );
@@ -1758,7 +1763,7 @@ begin
 
 		AddRPGMenuItem( RPM , MsgString( 'SERVICES_SellStuff' ) , -5 );
 
-		if AStringHasBString( Stuff, 'MECHA' ) then AddRPGMenuItem( RPM , MsgString( 'SERVICES_MechaService' ) , -2 );
+		if AStringHasBString( Stuff, 'MECHA' ) or ShopkeeperCanRepairMecha( NPC ) then AddRPGMenuItem( RPM , MsgString( 'SERVICES_MechaService' ) , -2 );
 
 		AddRPGMenuItem( RPM , MsgString( 'SERVICES_Inventory' ) , -6 );
 
