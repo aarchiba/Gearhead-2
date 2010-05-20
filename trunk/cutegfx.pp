@@ -283,8 +283,8 @@ Procedure SetupTitleScreenDisplay;
 implementation
 
 const
-	WindowName: PChar = 'GH2 (Cute Version)';
-	IconName: PChar = 'GH2 (Cute Version)';
+	WindowName: PChar = 'GearHead II (2D Version)';
+	IconName: PChar = 'GearHead II';
 
 Procedure DoFlip;
 	{ Flip out, man! This flips from the newly drawn screen to the physical screen. }
@@ -1299,6 +1299,9 @@ initialization
 		Randomize();
 		Idle_Display;
 	end;
+
+	SDL_WM_SetCaption( WindowName , IconName );
+
 
 finalization
 

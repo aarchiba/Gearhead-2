@@ -315,8 +315,8 @@ Procedure SetupTitleScreenDisplay;
 implementation
 
 const
-	WindowName: PChar = 'Dungeon Monkey!';
-	IconName: PChar = 'Dungeon Monkey!';
+	WindowName: PChar = 'GearHead II (3D Version)';
+	IconName: PChar = 'GearHead II';
 
 Procedure DoFlip;
 	{ The normal SDL_Flip command isn't used here. Instead, we'll be using }
@@ -1611,6 +1611,9 @@ initialization
 	Small_Font := TTF_OpenFont( Graphics_Directory + 'VeraBd.ttf' , SmallFontSize );
 
 	Game_Sprites := Nil;
+
+	SDL_WM_SetCaption( WindowName , IconName );
+
 
 	if Ersatz_Mouse then SDL_ShowCursor( SDL_Disable );
 

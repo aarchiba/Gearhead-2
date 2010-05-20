@@ -382,11 +382,11 @@ Content
 		result3 <NewChat Say 5 AddChat 1 AddChat 2 AddChat 4>
 		result4 <NewChat Say 6 History 3 p= %id%01 1 SetEncounterActive %5%>
 		Msg1 <It just so happens that I know where %name1%'s lancemates are right now. I don't know where \SPR %1% is, but surely fighting \PPR %1% allies separately is worth something. If you want the info it's going to cost $ \VAL v1 .>
-		Msg2 <You'll be able to find them in %name4%. It's been a pleasure doing business with you.>
-		Msg3 <You learned from %name3% that %name1%'s allies could be found in %name4%.>
+		Msg2 <You'll be able to find them in \EXACT_SCENE %4%. It's been a pleasure doing business with you.>
+		Msg3 <You learned from %name3% that %name1%'s allies could be found in \EXACT_SCENE %4% .>
 		Msg4 <Don't think too long; I can't say how much longer my info is going to be current.>
 		Msg5 <If you must know, it's because I repaired their mecha and %name1% ran off without paying the bill. I've got a bit of a score to settle.>
-		Msg6 <Good question. I'll get far more satisfaction from seeing %name1% defeated than by recouping my losses... \PPR %1% mecha are supposed to be hanging out in %name4%. Go get them.>
+		Msg6 <Good question. I'll get far more satisfaction from seeing %name1% defeated than by recouping my losses... \PPR %1% mecha are supposed to be hanging out in \EXACT_SCENE %4% . Go get them.>
 		Prompt1 <It's a deal. [Give money]>
 		CPrompt1 <ifG PC$ v1 Accept>
 		Prompt2 <I'll think about it.>
