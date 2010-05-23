@@ -37,8 +37,8 @@ Content
 		% L3 = Storynote 
 		% L4 = Time Limit
 		% L5 = Number of tries
-		MapWidth 30
-		MapHeight 30
+		MapWidth 50
+		MapHeight 50
 
 		% The time limit is five minutes, plus an additional two minutes for each
 		% previous attempt.
@@ -68,8 +68,8 @@ Content
 			team 2
 			SetEnemy 1
 			Deploy <if= PlotStatus %plotid% %id% SetSelfFaction &EnemyFac   WMecha 2 StoryDL 80>
-			ParaX 25
-			ParaY 25
+			ParaX 45
+			ParaY 45
 		end
 	end
 	inv
@@ -376,8 +376,8 @@ Content
 		MetaScene 5 2
 		rumor%id% <%name3%'s henchmen have been spotted in %name4%.>
 		special <UNCHARTABLE>
-		MapWidth 30
-		MapHeight 30
+		MapWidth 50
+		MapHeight 50
 
 		% L1 = Encounter Over Counter
 		% L2 = Initialization Counter
@@ -400,8 +400,8 @@ Content
 			team 2
 			SetEnemy 1
 			Deploy <if= PlotStatus %plotid% %id% SetSelfFaction &EnemyFac   WMecha 2 StoryDL 100>
-			ParaX 25
-			ParaY 25
+			ParaX 45
+			ParaY 45
 		end
 
 	end
@@ -1830,8 +1830,8 @@ Content
 		% L3 = Storynote 
 		% L4 = Time Limit
 		% L5 = Number of tries
-		MapWidth 30
-		MapHeight 30
+		MapWidth 50
+		MapHeight 50
 
 		% The time limit is five minutes, plus an additional two minutes for each
 		% previous attempt.
@@ -1861,8 +1861,8 @@ Content
 			team 2
 			SetEnemy 1
 			Deploy <if= PlotStatus %plotid% %id% SetSelfFaction &EnemyFac   WMecha 2 StoryDL 80>
-			ParaX 25
-			ParaY 25
+			ParaX 45
+			ParaY 45
 		end
 	end
 	inv
