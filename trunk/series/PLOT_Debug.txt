@@ -4,6 +4,25 @@
 % *** Load them into the adventure via the "}" command.
 % ***
 
+Content
+	name <Debug: TestSolo>
+	desc <The lancemate has a personal job to complete. You can join it or let the LM go alone.>
+
+	% E1 is the lancemate in question
+	% E2 is the root scene
+	Element1 <Character !Lancemate>
+	Element2 <Scene Town>
+
+	start <ifNPCOK %1% else .%id%_GoEndPlot   ifNPCLancemate %1% else .%id%_GoEndPlot  ifScene .%id%_scenetype if= P%id%01 0     P= %id%01 1  Alert %id%01  SetPlotStatus %plotid1% %id1%>
+	.%id%_scenetype <outdoors>
+	.%id%_GoEndPlot <EndPlot>
+
+	Msg%id%01 <%name1% goes off on a solo mission.>
+
+	% SubPlot1 is the solo mission- if the PC refuses to come along
+	SubPlot1 <*LM_GoSolo 1 2>
+
+
 Plot
 	name <AA_TestCarve>
 	% Used for generating isometric sprites of the prop meshes.

@@ -1444,6 +1444,27 @@ Procedure RandomLoot( Box: GearPtr; SRP: LongInt; const l_type,l_factions: Strin
 
 		SelectAnItem := CloneGear( Selected_Item );
 	end;
+	Procedure InsertLoot( Box , Item: GearPtr );
+		{ Stick ITEM into BOX, or dispose of it. }
+	var
+		I2: GearPtr;
+	begin
+		if Item^.G = GG_Set then begin
+			while Item^.SubCom <> Nil do begin
+				I2 := Item^.SubCom;
+				DelinkGear( Item^.SubCom , I2 );
+				InsertLoot( Box, I2 );
+			end;
+			while Item^.InvCom <> Nil do begin
+				I2 := Item^.InvCom;
+				DelinkGear( Item^.InvCom , I2 );
+				InsertLoot( Box, I2 );
+			end;
+			DisposeGear( Item );
+		end else begin
+			InsertInvCom( Box , Item );
+		end;
+	end;
 var
 	Item: GearPtr;
 begin
@@ -1452,7 +1473,7 @@ begin
 		Item := SelectAnItem;
 		if Item <> Nil then begin
 			SRP := SRP - GearCost( Item );
-			InsertInvCom( Box , Item );
+			InsertLoot( Box , Item );
 		end else begin
 			{ No item found. Set SRP to 0. }
 			SRP := 0;

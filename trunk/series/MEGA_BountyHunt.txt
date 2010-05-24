@@ -1,0 +1,27 @@
+%%
+%% This file contains components needed for the bounty hunting missions.
+%%
+
+%%
+%% *:BH_CaptureCriminal
+%%
+%%  The PC has been asked to aprehend a criminal.
+%%
+%%  This subplot should level and move the target upon activation. Upon
+%%  completion, it will set one of the following triggers:
+%%
+%%   .%id%_%plotid%_GoWin
+%%   .%id%_%plotid%_GoLoss
+%%   .%id%_%plotid%_GoTimeOver
+%%
+%%  Upon winning, the target will either be frozen or dead. It's up to the
+%%  parent plot what to do next.
+%%
+%% PARAM1: The NPC to be caught
+%%
+
+
+
+
+
+

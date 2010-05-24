@@ -886,6 +886,7 @@ begin
 				StripNAtt( Mek , NAG_Location );
 				StripNAtt( Mek , NAG_Damage );
 				PutAwayGlobal( Camp^.GB , Mek );
+
 			end else begin
 				InsertInvCom( Camp^.GB^.Scene , Mek );
 			end;
@@ -1015,6 +1016,8 @@ begin
 				TruePC := SeekGearByName( GB^.Meks , SAttValue( PC^.SA , 'PILOT' ) );
 				if ( TruePC = Nil ) or Destroyed( TruePC ) then begin
 					SetSAtt( PC^.SA , 'PILOT <>' );
+					{ Also set the mecha's team to the PC team. }
+					SetNAtt( PC^.NA , NAG_Location , NAS_Team , NAV_DefPlayerTeam );
 				end;
 			end;
 		end;
