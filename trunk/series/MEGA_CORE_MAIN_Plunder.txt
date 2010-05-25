@@ -24,10 +24,105 @@
 %%  Param1: The outdoors location of the target.
 %%
 
+
+Content
+	name <New Enemy Before Raid>
+	desc <Get accosted by a new enemy NPC before the raid.>
+	requires <*:CS_Plunder F:++ E:-->
+	changes <E:++>
+
+	% Element1 is the outdoors scene for the ship
+	% Element2 is the encounter for the ship
+	% Element3 is the enemy faction
+	% Element4 is the initial encounter with the enemy
+	% Element5 is the new enemy NPC
+	Element2 <Prefab>
+	Place2 <1>
+	Element3 <Grab 2>
+	Element4 <Prefab>
+	Place4 <1>
+	Element5 <NewNPC 3 -7>
+	Place5 <4 (Enemies) sd enemy>
+
+	% P%id%01 = Initialization Counter
+
+	% At startup, activate the escort and level the enemy.
+	update <if= P%id%01 0 P= %id%01 1  SetPlotStatus %plotid1% %id1%  SetEncounterActive %4%  NPCLevel %5% StoryDL>
+
+	% Pass the hint-buck to the ship being plundered.
+	HINT_%id% <:%id1%>
+
+	% The narrative hooks for the BASE_PlunderShip encounter.
+	%   "This is where the magic happens."
+	.%id1%_%plotid1%_GoAttackShip  <>
+	.%id1%_%plotid1%_GoBoardShip   <>
+	.%id1%_%plotid1%_GoPlunderOK   <SetPlotStatus %plotid2% %id2%   WinSubPlot %plotid%   Trigger0 .%id%_%plotid%_GoWin>
+	.%id1%_%plotid1%_GoPlunderBad  <SetPlotStatus %plotid3% %id3%   WinSubPlot %plotid%   Trigger0 .%id%_%plotid%_GoWin>
+	.%id1%_%plotid1%_GoPlunderFail <LoseSubPlot %plotid%    Trigger0 .%id%_%plotid%_GoLoss>
+
+	% SubPlot1 is the plundering core.
+	% SubPlot2 is the good loot
+	% SubPlot3 is whatever the PC gets for blowing up the ship
+	SubPlot1 <*:CS_BASE_PlunderShip 1 2 3>
+	SubPlot2 <*:CS_FilthyLucre_OK 3>
+	SubPlot3 <*:CS_FilthyLucre_Bad 3>
+
+	sub
+		MetaScene 4 2
+		%% An initial combat scene with the ship's escort. If combat is
+		%% won, then the ship gets activated and the escort gets deactivated.
+		% L1 = Encounter Over Counter
+		% L2 = Initialization Counter
+		% L3 = Attempt Counter
+		MapWidth 50
+		MapHeight 50
+
+		Start <if= L2 0  L= 2 1   Alert 1 History 2 &SetEnemyNPC %5%  ForceChat %5%>
+		nu1 <if= T1 0   Return>
+		nu2 <if= T2 0   if= V1 0 V= 1 1   Alert 3   SetEncounterActive %2% Exit %1% SeekGate %2% if= L3 0 XPV 100  AddRenown 1>
+		end <L+ 3 1 FreezeNPC %5% if# L1 0 SetEncounterInactive %4%>
+
+		Msg1 <Before you can get close to %name2% , you are intercepted by a team of mecha from %name3%. Their leader contacts you.>
+		Msg2 <Your raid was blocked by %name5%.>
+		Msg3 <You have defeated the escort. Now, you should be able to get close to %name2%.>
+
+		sub
+			team 1
+			SetEnemy 2
+			ParaX 5
+			ParaY 5
+
+			team 2
+			name <Enemies>
+			SetEnemy 1
+			Deploy <if= PlotStatus %plotid% %id% SetSelfFaction %3%   WMecha 2 StoryDL 90>
+			ParaX 45
+			ParaY 45
+		end
+
+		Persona 5
+		special <UNLISTED>
+		greeting <EndChat Say %id%01 AddChat %id%01>
+		*result%id%01 <*THEME_EXPO&Enemy na>
+		Msg%id%01 <I was told you'd be coming this way, \PC . In the name of %name3% you will not pass!>
+		Msg%id%01_1 <Surprised? We knew you'd be coming this way sooner or later... %name3% sent me to make sure you get no farther.>
+		Prompt%id%01 <Stop me if you can.>
+		Prompt%id%01_1 <Around you or through you, it doesn't matter to me.>
+		Prompt%id%01_2 <Yeah, try and stop me. I dare you.>
+	end
+	inv
+		STC CORE-ACTIVATABLE
+		name <The S.S. %r%>
+
+		STC CORE-ACTIVATABLE
+		name <%name2%>
+	end
+
+
 Content
 	name <Police Confrontation>
 	desc <You can plunder a ship, but can you hold your booty?>
-	requires <*:CS_Plunder F:POLIC E:++>
+	requires <*:CS_Plunder (F:POLIC|F:POLIT) E:++>
 
 	% Element1 is the outdoors scene for the ship
 	% Element2 is the encounter for the ship

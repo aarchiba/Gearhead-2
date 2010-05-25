@@ -92,7 +92,7 @@ Content
 
 Content
 	name <Suffering Leads to the Dark Side>
-	requires <*:CS_MIX_Confrontation 1:A.obs 1:M.com -!Ne -!Lo ~1:MILIT ~1:FAITH -1:nemesis -1:evil_>
+	requires <*:CS_MIX_Confrontation 1:A.obs 1:M.com -!Ne -!Lo ~1:MILIT ~1:FAITH -1:nemesis -1:evil_  ~C:FAITH>
 	desc <The enemy, desperate for a victory, is calling out all the stops.>
 	% Stop Three on the Disciple Path
 	changes <E:++ E:M>
@@ -126,7 +126,7 @@ Content
 
 	sub
 		Persona 1
-		%% An entirely generic battle challenge.
+		%% A mostly generic battle challenge.
 		special <UNLISTED>
 		greeting <if= PlotStatus %plotid% %id% else %pop% Goto .%id%_GoGreet>
 		*.%id%_GoGreet <*BattleChallenge .%id%_GoThemeExpo na>
@@ -136,7 +136,7 @@ Content
 
 Content
 	name <Hate Leads to Suffering>
-	requires <*:CS_MIX_Confrontation 1:A.hat 1:M.com -!Ne -!Lo ~1:MILIT ~1:FAITH -1:nemesis -1:evil_>
+	requires <*:CS_MIX_Confrontation 1:A.hat 1:M.com -!Ne -!Lo ~1:MILIT ~1:FAITH -1:nemesis -1:evil_  ~C:FAITH>
 	desc <The enemy, desperate for a victory, is calling out all the stops.>
 	% Stop Two on the Disciple Path
 	changes <E:A E:M>
@@ -175,7 +175,7 @@ Content
 
 Content
 	name <Anger Leads To Hate>
-	requires <*:CS_MIX_Confrontation 1:A.env 1:M.com -!Ne ~1:MILIT ~1:FAITH>
+	requires <*:CS_MIX_Confrontation 1:A.env 1:M.com -!Ne ~1:MILIT ~1:FAITH ~C:FAITH>
 	desc <The enemy, envious of your abilities, challenges you once more.>
 	% Stop One on the Disciple Path
 	changes <E:A>
