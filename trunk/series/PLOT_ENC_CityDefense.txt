@@ -74,7 +74,7 @@ Plot
 	end
 	inv
 		STC ENCOUNTER-WANDER
-		name <%name5%'s Patrol>
+		name <%name4%'s Patrol>
 		&ifShouldAttack <IFFACTIONENEMY RootSceneFac>
 		use <ifG StatVal STAT_MetaVisibility -1      ifG PCScale 0 else GoTooSmall   &ifShouldAttack else GoNoAttack  Print 7  Exit Destination>
 		GoTooSmall <Print 6>
