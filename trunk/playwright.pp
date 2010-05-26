@@ -1462,11 +1462,6 @@ begin
 	{ Start with the plot request. }
 	it := SAttValue( Story^.SA , 'XXRAN_PATTERN' );
 
-	{ FOr the conclusion, attach 'FINAL' to the plot_request. }
-	if NAttValue( Story^.NA , NAG_Narrative , NAS_DifficultyLevel ) > 80 then begin
-		it := it + 'FINAL_';
-	end;
-
 	{ Attach the current choice to the plot_request. }
 	C := SeekDramaticChoice( NAttValue( Story^.NA , NAG_XXRan , NAS_DramaticChoice ) );
 	if C <> Nil then begin

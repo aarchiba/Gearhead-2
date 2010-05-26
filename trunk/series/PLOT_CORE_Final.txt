@@ -14,7 +14,7 @@
 Plot
 	name <Conclusion Stub>
 	desc <This stub just holds all the conclusion subplots and sets the mood.>
-	requires <*CORE_FINAL F:++>
+	requires <(*CORE_FINAL|*CORE_F_PAL) F:++>
 
 	% Element1 is the mood for the conclusion
 	Element1 <Prefab>

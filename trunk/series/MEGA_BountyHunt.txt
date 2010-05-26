@@ -44,7 +44,7 @@ Content
 	sub
 		Persona 1
 		Special <UNLISTED>
-		rumor%id% <%name1% is out driving around in %name3%.>
+		rumor%id% <%name1% is out driving around in %name2%.>
 		Greeting <if= PlotStatus %plotid% %id% else %pop% Goto .%id%_GoGreet>
 		*.%id%_GoGreet <*BattleIntroduction&SentToFight .%id%_GoThemeExpo>
 		*.%id%_GoThemeExpo <*THEME_EXPO&Enemy na>

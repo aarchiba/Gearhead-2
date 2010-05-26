@@ -1476,15 +1476,15 @@ sub
 	Persona 1
 	Greeting <if= PlotStatus %plotid% %id% else %pop%  if= ArenaState %2% NAV_AS_Win else .%id%_GoCheckLoss SetPlotStatus %plotid% %id1% if# ArenaWins %2% 10 else GoBigWin Goto .%id%_GoArenaWin>
 	*.%id%_GoCheckLoss <*ChallengerStatusReport %3% %2% .%id%_GoNPCDied>
-	.%id%_GoInit <ifNPCOK %3% else .%id%_GoNPCDied NewChat Say %id%01 SetPlotStatus %plotid% %id%  QMemo %plotid% %id%02 AddChat %id%01>
+	.%id%_GoInit <ifNPCOK %3% else .%id%_GoNPCDied NewChat Say %id%01 SetPlotStatus %plotid% %id%  QMemo %plotid% %id%03 AddChat %id%01>
 	%% Just in case the NPC who we're supposed to fight has died somehow, just set up a normal fight.
 	*.%id%_GoNPCDied <*YourChallengerDied %2% %plotid%>
 	*.%id%_GoArenaWin <*ChallengeArenaWin %3% %2% .%id%_GoConclude>
 	.%id%_GoConclude <ResetArena %2%>
 	Result%id%01 <NewChat Say %id%02>
 	Msg%id%01 <You have a special challenger for the next battle. Her name is Vanda; you can find her at %name4% .>
-	Msg%id%02 <%name1% sent you to battle %name3% in arena combat; \SPR %3% can be found in %name4% .>
 	Msg%id%02 <She's an extremely talented fighter. Her specialty is flame weapons. Although she's good at just about everything, she's particularly deadly in close combat. Watch out.>
+	Msg%id%03 <%name1% sent you to battle %name3% in arena combat; \SPR %3% can be found in %name4% .>
 	Prompt%id%01 <What can you tell me about this Vanda?>
 
 	Persona 3

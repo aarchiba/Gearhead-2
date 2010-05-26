@@ -514,4 +514,24 @@ Choice 2001
 
 	Msg%id%01 <You will finish things in %name1%.>
 
+Choice 2002
+	name <Peace and Love Ending>
+	desc <The final battle may yet be avoided.>
+	desig <F_PAL>
+	%% Note the faction restrictions below- these must match the "Negotiate
+	%% for Peace" requirements above.
+	requires <!Ex :DEF_5 :S_PEA -:OFF_4 C:MORAL (P:MILIT|P:POLIT|P:POLIC|P:CRIHN) (F:MILIT|F:POLIT|F:CRIHN|F:REDMA)>
+
+	% E1 is the city for the next episode.
+	Element1 <Scene City !Far -7 !Okay -7 !Ally -3 !Enemy -2>
+
+	Prompt <There's still a chance to solve this peacefully.>
+	Reply <If you really think so, you should head to %name1%. I heard that \FACTION &EnemyFac will be launching a massive attack there.>
+	Alert <You decide to make one last attempt at peace in %name1%.>
+
+	Choice <SMemo %id%01 &SetEpisodeScene %1%>
+
+	Msg%id%01 <You will make one last try for peace in %name1%.>
+
+
 
