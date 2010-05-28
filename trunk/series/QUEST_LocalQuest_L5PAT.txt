@@ -409,6 +409,7 @@ Content
 		mapwidth 15
 		mapheight 15
 		MallMap
+		Ceiling
 		SetFaction 10
 		special <ADDEXIT>
 		NeededCells 2
@@ -443,6 +444,7 @@ Content
 		mapwidth 35
 		mapheight 35
 		MonkeyMap
+		Ceiling
 		LockedDoorChance 30
 		SecretDoorChance 5
 		IndustrialTiles
@@ -482,7 +484,7 @@ Content
 		MetaScene 4 3
 		name <Theles Spinner Second Level>
 		requires <*THESP_SecondLevel>
-		special <NOEXIT SHOWALL>
+		special <NOEXIT SHOWALL SOLO>
 		type <Private>
 		MegaCityMap
 		MapWidth 15

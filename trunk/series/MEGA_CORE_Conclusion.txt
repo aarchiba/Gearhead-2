@@ -328,6 +328,145 @@ Content
 		*.%id%_GoThemeExpo <*THEME_EXPO&Enemy na>
 	end
 
+
+Content
+	name <SPECIAL: Peace and Love>
+	desc <Try one last time to get a peace agreement. If it doesn't work, thwack 'em.>
+	requires <*CS_END_FinalBattle *CORE_F_PAL>
+	%% Before the final battle starts, you get a conversation in which to
+	%% argue for peace. Succeed and you activate the special ending. Fail and
+	%% you need to fight everybody as normal, plus you can only get the
+	%% partial victory ending.
+
+	% E1 is the mood
+	% E2 is the enemy NPC
+	% E3 is an outdoors scene for the final battle
+	% E4 is the final battle encounter
+
+	% P%id%01 = Initialization Counter
+	update <if= p%id%01 0 P= %id%01 1 NPCLevel %2% 90>
+
+	% SubPlot1 is the ending stub; activate this subplot to start the ending.
+	% SubPlot2 is the special ending
+	subplot1 <*:CS_END_TheEnd 2>
+	subplot2 <*:CS_END_Special_PAL 2>
+
+	sub
+		MetaScene 4 2
+		rumor%id% <%name2%'s ship is in %name3%. This could mean the end of everything.>
+		special <NORESCUE>
+		% L1 = Encounter Over Counter
+		% L2 = Initialization Counter; resets each time
+		% L3 = Second deployment happened
+		% L4 = Enemy NPC died
+		MapWidth 50
+		MapHeight 50
+
+		Start <if= L2 0 L= 2 1 L= 1 0   if= L3 0 else GoFightEnemy Alert 1   Trigger0 RollCall  ForceChat %2%>
+		GoFightEnemy <ForceChat %2%>
+		nu1 <if= T1 0   Return if= L1 0 L= 1 1 if= L4 0 else GoPartial LoseRenown LoseRenown>
+		nu2 <if= T2 0   if= L3 0 else nu5   ifG T3 0  Alert 2 WMecha 2 StoryDL 100>
+		nu3 <if= T3 0   if= L3 0   L= 3 1   Alert 3  DeployNPC %2% 5  WMecha 5 StoryDL 100 ForceChat %2%>
+		nu5 <if= T5 0   if= L3 1  if= T2 0  if= L1 0  L= 1 1  Goto GoPyrrhic>
+		Faint%2% <L= 4 1>
+		end <L= 2 0>
+
+		GoPartial <Alert 4  History 4   &EndPartialVictory      SetMoodTimeLimit %1% 86400   SetEncounterInactive %4%>
+		GoPyrrhic <Alert 5  History 5   &EndPartialVictory      KillMood %1%                 SetEncounterInactive %4%>
+
+		Msg1 <You face %name2%'s battleship.>
+		Msg2 <Reinforcements arrive!>
+		Msg3 <As the battleship explodes, %name2% launches.>
+		Msg4 <With %name2% dead, \PPR %2% forces slowly begin to disperse.>
+		Msg5 <You failed to secure peace, but at least defeated %name2%.>
+
+		sub
+			team 1
+			SetAlly 4
+			SetEnemy 2 3 5
+			ParaX 45
+			ParaY 25
+
+			team 2
+			name <Enemies>
+			SetEnemy 1 4
+			SetAlly 3 5
+			Deploy <if= PlotStatus %plotid% %id% SetSelfFaction &EnemyFac   ifDCCompleted OFF_5 else GoCheckOFF4 WMecha 2 80 275>
+			GoCheckOFF4 <ifDCCompleted OFF_4 else GoBigBattle WMecha 2 90 300>
+			GoBigBattle <WMecha 2 100 300>
+			home <Enemy Zone>
+
+			team 3
+			name <Battleship>
+			setenemy 1 4
+			setally 2 5
+
+			team 4
+			name <Allies>
+			setenemy 2 3 5
+			setally 1
+			Deploy <if= PlotStatus %plotid% %id% &ifDefensesRallied   SetSelfFaction &AllyFac   ifDCCompleted DEF_5 else GoCheckDef4 WMecha 4 100 150>
+			GoCheckDef4 <ifDCCompleted DEF_4 else GoSmallAllies WMecha 4 70 150>
+			GoSmallAllies <WMecha 4 40 100>
+			home <Ally Zone>
+
+			team 5
+			name <Big Boss>
+			home <Ship Zone>
+			Deploy <SetSelfFaction &EnemyFac if= L3 1   ifDCCompleted OFF_5 else GoCheckOFF4 WMecha 5 StoryDL 100>
+			GoCheckOFF4 <ifDCCompleted OFF_4 else GoBigBattle WMecha 5 StoryDL 150>
+			GoBigBattle <WMecha 5 StoryDL 200>
+			setenemy 1 4
+			setally 2 3
+
+			rect
+			name <Enemy Zone>
+			special <SubZone>
+			width 5
+			Height 48
+			MFX 1
+			MFY 2
+			Content1 <Some 2 100 Here *CS_END_Final_Enemies na>
+
+			rect
+			name <Ally Zone>
+			special <SubZone>
+			width 5
+			Height 48
+			MFX 45
+			MFY 2
+			Content1 <Some 3 100 Here *CS_END_Final_Allies na>
+
+			rect
+			name <Ship Zone>
+			special <SubZone>
+			width 12
+			height 12
+			MFX 6
+			MFY 19
+			sub
+				SuperProp
+				requires <*BattleShip>
+				SetTeam 3
+			end
+		end
+
+		Persona 2
+		special <UNLISTED>
+		% V%id%01 = First time counter
+		greeting <if= PlotStatus %plotid% %id% else %pop% if= v%id%01 0 else .%id%_GoSecondTime V= %id%01 1 Goto .%id%_GoGreet>
+		*.%id%_GoSecondTime <*Back_For_More>
+
+		%% You get one chance to secure the peace. Let's see how it goes.
+		%% The three bonuses:
+		%% - Have a friend/ally/lover/family on the other side
+		%% - Have the authority to speak now
+		%% - Have a high Heroism score
+		.%id%_GoGreet <*CS_END_FinalBattle_Greeting .%id%_GoThemeExpo>
+
+		*.%id%_GoThemeExpo <*THEME_EXPO&Enemy na>
+	end
+
 %%
 %% *:CS_END_MiniBoss
 %%

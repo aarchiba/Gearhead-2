@@ -86,6 +86,8 @@ Const
 				{ Mentors may never be taken as lancemates. }
 	NAS_IsMissionGiver = 5;	{ If nonzero, this character may give missions. }
 				{ Only a few NPCs per city are given this authority. }
+	NAS_PositiveHeroism = 6;	{ How many times has the character's Heroism }
+					{ been increased- there's a limit. }
 
 	{ CharDescription / Personality Traits }
 	Num_Personality_Traits = 7;

@@ -2338,8 +2338,8 @@ var
 		end;
 	end;
 begin
-	{ First, make sure we have an originator, and that it's a character. }
-	if ( ER.Originator = Nil ) or ( ER.Originator^.G <> GG_Character ) or ( not NotAnAnimal( ER.Originator ) ) then begin
+	{ First, make sure we have an originator, and that it knows kung fu. }
+	if ( ER.Originator = Nil ) or ( ER.Originator^.G <> GG_Character ) or ( not HasTalent( ER.Originator , NAS_KungFu ) ) then begin
 		AtOp := 0;
 		exit;
 	end;

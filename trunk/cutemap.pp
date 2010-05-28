@@ -209,6 +209,16 @@ begin
 	CM_Cel_IsOn[ L ][ X , Y , Z ] := SS <> Nil;
 end;
 
+Procedure ClearCMCel( GB: GameBoardPtr; X,Y,Z,L: Integer );
+	{ Remove the overlay image from this tile. }
+begin
+	if not OnTheMap( GB , X , Y ) then Exit;
+	if ( Z < LoAlt ) or ( Z > HiAlt ) then Exit;
+	if ( L < 0 ) or ( L > NumCMCelLayers ) then Exit;
+	CM_Cel_IsOn[ L ][ X , Y , Z ] := False;
+end;
+
+
 Function SpriteName( GB: GameBoardPtr; M: GearPtr ): String;
 	{ Locate the sprite name for this gear. If no sprite name is defined, }
 	{ set the default sprite name for the gear type & store it as a string }
@@ -794,24 +804,7 @@ const
 		{ Here's a picture: }
 		{    2 3 }
 		{    1 x <-- X is the target tile. }
-		const
-			{ Because of the variable camera angle, which totally sucks when you're trying to }
-			{ do something like this QUICKLY, use the following constants to find the relative }
-			{ locations of tiles 1, 2, and 3. If I had the time I could probably find a clever }
-			{ way to do this, but didn't some famous programmer once say that cleverness is the }
-			{ root of all evil? }
-			Camera_Angle_X_Adjustment: Array [0..3,1..3] of SmallInt = (
-				( -1 , -1 ,  0 ),
-				(  0 , -1 , -1 ),
-				(  1 ,  1 ,  0 ),
-				(  0 ,  1 ,  1 )
-			);
-			Camera_Angle_Y_Adjustment: Array [0..3,1..3] of SmallInt = (
-				(  0 , -1 , -1 ),
-				(  1 ,  1 ,  0 ),
-				(  0 ,  1 ,  1 ),
-				( -1 , -1 ,  0 )
-			);
+
 		Function IsHigher( X2,Y2: Integer ): Boolean;
 		var
 			Terr,H2: Integer;
@@ -832,17 +825,22 @@ const
 		Total: Integer;
 	begin
 		Total := 0;
-		if IsHigher( X + Camera_Angle_X_Adjustment[ origin_d , 1 ] , Y + Camera_Angle_Y_Adjustment[ origin_d , 1 ] ) then Total := Total + 1;
-		if IsHigher( X + Camera_Angle_X_Adjustment[ origin_d , 2 ] , Y + Camera_Angle_Y_Adjustment[ origin_d , 2 ] ) then Total := Total + 2;
-		if IsHigher( X + Camera_Angle_X_Adjustment[ origin_d , 3 ] , Y + Camera_Angle_Y_Adjustment[ origin_d , 3 ] ) then Total := Total + 4;
+		if IsHigher( X + AngDir[ ScreenDirToMapDir( 3 ) , 1 ] , Y + AngDir[ ScreenDirToMapDir( 3 ) , 2 ] ) then Total := Total + 1;
+		if IsHigher( X + AngDir[ ScreenDirToMapDir( 4 ) , 1 ] , Y + AngDir[ ScreenDirToMapDir( 4 ) , 2 ] ) then Total := Total + 2;
+		if IsHigher( X + AngDir[ ScreenDirToMapDir( 5 ) , 1 ] , Y + AngDir[ ScreenDirToMapDir( 5 ) , 2 ] ) then Total := Total + 4;
 		if Total = 7 then Total := 5;
 		if Total > 0 then AddCMCel( GB , X , Y , Z , CMC_Shadow , Shadow_Sprite , Total - 1 );
 	end;
-	Procedure AddBasicTerrainCel( X,Y,F: Integer );
-		{ Add a basic terrain cel. }
+	Procedure AddBasicFloorCel( X,Y,F: Integer );
+		{ Add a basic terrain cel plus a shadow. }
 	begin
 		AddCMCel( GB , X , Y ,  0 , CMC_Terrain , terrain_sprite ,  F );
-{		AddShadow( X,Y,0 );}
+		AddShadow( X,Y,0 );
+	end;
+	Procedure AddBasicTerrainCel( X,Y,F: Integer );
+		{ Add a basic terrain cel without a shadow. }
+	begin
+		AddCMCel( GB , X , Y ,  0 , CMC_Terrain , terrain_sprite ,  F );
 	end;
 	Procedure AddBuilding( X,Y,F: Integer );
 		{ Add a basic terrain cel. }
@@ -867,6 +865,7 @@ const
 		end else begin
 			AddCMCel( GB , X , Y ,  0 , CMC_Terrain , terrain_sprite ,  TCEL_ShortDoor );
 		end;
+		ClearCMCel( GB , X , Y , 0 , CMC_Shadow );
 	end;
 	Function DoorSprite( X,Y: Integer ): Integer;
 		{ Return the appropriate door sprite for this tile: use either the vertical }
@@ -978,7 +977,7 @@ begin
 			if TileVisible( GB , X , Y ) then begin
 				Terr := TileTerrain( GB , X , Y );
 				case Terr of
-				TERRAIN_OpenGround: 	AddBasicTerrainCel( X , Y , TCEL_OpenGround );
+				TERRAIN_OpenGround: 	AddBasicFloorCel( X , Y , TCEL_OpenGround );
 				TERRAIN_LightForest:	begin
 							AddBasicTerrainCel( X , Y , TCEL_LightForest_A );
 							AddCMCel( GB , X , Y , 0 , CMC_Toupee , Terrain_Sprite , TCEL_LightForest_B );
@@ -988,9 +987,9 @@ begin
 							AddCMCel( GB , X , Y , 0 , CMC_Toupee , Terrain_Sprite , TCEL_HeavyForest_B );
 							end;
 
-				TERRAIN_Rubble:		AddBasicTerrainCel( X , Y , TCEL_RoughGround );
+				TERRAIN_Rubble:		AddBasicFloorCel( X , Y , TCEL_RoughGround );
 
-				TERRAIN_Pavement: 	AddBasicTerrainCel( X , Y , TCEL_Pavement );
+				TERRAIN_Pavement: 	AddBasicFloorCel( X , Y , TCEL_Pavement );
 				TERRAIN_Swamp: 		AddBasicTerrainCel( X , Y , TCEL_DarkGround );
 				TERRAIN_L1_Hill:	AddBasicTerrainCel( X , Y , TCEL_LowHill );
 				TERRAIN_L2_Hill:	AddBasicTerrainCel( X , Y , TCEL_MediumHill );
@@ -998,14 +997,14 @@ begin
 				TERRAIN_RoughGround:	AddBasicTerrainCel( X , Y , TCEL_RoughGround );
 				TERRAIN_LowWall:	AddBasicWallCel( X , Y , TCEL_Wall );
 				TERRAIN_Wall:		AddBasicWallCel( X , Y , TCEL_Wall );
-				TERRAIN_Floor:		AddBasicTerrainCel( X , Y , TCEL_Floor );
-				TERRAIN_Threshold:	AddBasicTerrainCel( X , Y , TCEL_Threshold );
-				TERRAIN_Carpet:		AddBasicTerrainCel( X , Y , TCEL_Carpet );
+				TERRAIN_Floor:		AddBasicFloorCel( X , Y , TCEL_Floor );
+				TERRAIN_Threshold:	AddBasicFloorCel( X , Y , TCEL_Threshold );
+				TERRAIN_Carpet:		AddBasicFloorCel( X , Y , TCEL_Carpet );
 
-				TERRAIN_WoodenFloor:	AddBasicTerrainCel( X , Y , TCEL_WoodenFloor );
+				TERRAIN_WoodenFloor:	AddBasicFloorCel( X , Y , TCEL_WoodenFloor );
 				TERRAIN_WoodenWall:	AddBasicWallCel( X , Y , TCEL_WoodenWall );
 
-				TERRAIN_TileFloor:	AddBasicTerrainCel( X , Y , TCEL_Floor );
+				TERRAIN_TileFloor:	AddBasicFloorCel( X , Y , TCEL_Floor );
 
 				TERRAIN_Space:		AddCMCel( GB , X , Y ,  0 , CMC_Terrain , Terrain_Sprite , TCEL_Void );
 				TERRAIN_MediumBuilding:	AddBuilding( X , Y , ( ( X * 17 ) + ( Y * 71 ) ) mod 4 + 1 );
@@ -1055,7 +1054,7 @@ begin
 				);
 
 				{ Also add a shadow. }
-				AddCMCel( 	GB , X , Y , Z , CMC_MShadow , Shadow_Sprite , 6 );
+				AddCMCel( 	GB , X , Y , TerrMan[ TileTerrain( gb , X , Y ) ].Altitude , CMC_MShadow , Shadow_Sprite , 6 );
 
 				{ If appropriate, save the model map and model name. }
 				if OnTheMap( GB , X , Y ) and ( Z >= LoAlt ) and ( Z <= HiAlt ) then begin
@@ -1454,7 +1453,7 @@ const
 	);
 	iso_tileset_fname: Array [0..NumTileSet] of String = (
 		'iso_terrain_default.png',
-		'iso_terrain_rocky.png','iso_terrain_default.png','iso_terrain_default.png','iso_terrain_default.png'
+		'iso_terrain_rocky.png','iso_terrain_default.png','iso_terrain_industrial.png','iso_terrain_default.png'
 	);
 var
 	TileSet,BDNum: Integer;

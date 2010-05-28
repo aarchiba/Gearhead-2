@@ -1269,7 +1269,7 @@ begin
 		VCode := ScriptValue( Event , GB , Scene );
 		VC2 := ScriptValue( Event , GB , Scene );
 		if ( VCode >= 1 ) and ( VCode <= NumSkill ) then begin
-			SV := SkillRoll( GB , GG_LocatePC( GB ) , VCode , VC2 , 0 , 0 , IsSafeArea( GB ) , True );
+			SV := SkillRoll( GB , GG_LocatePC( GB ) , VCode , VC2 , 0 , 0 , True , True );
 		end else begin
 			DialogMsg( 'ERROR: Illegal Skill Roll ' + BStr( VCode ) + ': ' + Event );
 			SV := 0;
@@ -3057,7 +3057,7 @@ begin
 	if ( Source <> Nil ) and ( SkRank <= NAttValue( Source^.NA , NAG_SkillCounter , Skill ) ) then begin
 		IfFailure( Event , Source );
 	end else begin
-		SkRoll := SkillRoll( GB , PC , Skill , SkStat , SkTar , 0 , IsSafeArea( GB ) , True );
+		SkRoll := SkillRoll( GB , PC , Skill , SkStat , SkTar , 0 , True , True );
 		if ( SkRoll >= SkTar ) then begin
 			IfSuccess( Event );
 		end else begin

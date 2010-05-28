@@ -97,12 +97,12 @@ Plot
 	sub
 		Persona 2
 		rumor <%name2% has been collecting donations to help %name1%.>
-		&HighPledge <Reward %threat% 300>
-		&MediumPledge <Reward %threat% 100>
+		&HighPledge <Reward PCHeroism 300>
+		&MediumPledge <Reward PCHeroism 100>
 		&LowPledge <500>
 		greeting <NewChat Say 1 AddChat 1 AddChat 2 AddChat 3 AddChat 4 EndPlot>
 		GoGive <EndChat Say 2 AddChat 5>
-		result1 <Cash+ -&HighPledge    AddRenown 1 AddHeroic 1 AddReact d10 FacXP+ ChatNPCFac 2   Goto GoGive>
+		result1 <Cash+ -&HighPledge    AddHeroic 1 AddReact d10 FacXP+ ChatNPCFac 2   Goto GoGive>
 		result2 <Cash+ -&MediumPledge  AddReact d8  FacXP+ ChatNPCFac 1   Goto GoGive>
 		result3 <Cash+ -&LowPledge     AddReact d2  Goto GoGive>
 		result4 <RevertPersona>

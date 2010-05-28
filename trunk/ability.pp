@@ -575,8 +575,10 @@ end;
 Procedure AddReputation( PC: GearPtr; R,V: Integer );
 	{ Add a certain amount to reputation R, keeping in mind that }
 	{ the allowable range is -100..+100. }
+const
+	MaxPositiveHeroism = 100;
 var
-	CL: Integer;	{ Current Level }
+	CL,PosHero: Integer;	{ Current Level, Positive Heroism }
 begin
 	if PC^.G <> GG_Character then PC := LocatePilot( PC );
 	R := Abs( R );
@@ -612,8 +614,18 @@ begin
 		{ (greater than a -1 change)  will completely wipe }
 		{ out any heroic or lawful reputation that }
 		{ this character may have had. }
+		{ Acts of positive heroism may be limited. You can only gain }
+		{ up to 100 positive heroic points, so it's not possible to }
+		{ farm heroic points. }
 		if ( R <= 2 ) and ( V < -1 ) and ( CL > 0 ) then begin
 			CL := 0;
+		end else if ( R = -NAS_Heroic ) and ( V > 0 ) then begin
+			PosHero := NAttValue( PC^.NA , NAG_CHarDescription , NAS_PositiveHeroism );
+			AddNAtt( PC^.NA , NAG_CHarDescription , NAS_PositiveHeroism , V );
+			if ( PosHero + V ) > MaxPositiveHeroism then begin
+				V := MaxPositiveHeroism - PosHero;
+				if V < 0 then V := 0;
+			end;
 		end;
 
 		if Abs( CL + V ) > 100 then begin
