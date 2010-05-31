@@ -459,10 +459,10 @@ Content
 
 		%% You get one chance to secure the peace. Let's see how it goes.
 		%% The three bonuses:
+		%% - Have a high Heroism score
 		%% - Have a friend/ally/lover/family on the other side
 		%% - Have the authority to speak now
-		%% - Have a high Heroism score
-		.%id%_GoGreet <*CS_END_FinalBattle_Greeting .%id%_GoThemeExpo>
+		.%id%_GoGreet <>
 
 		*.%id%_GoThemeExpo <*THEME_EXPO&Enemy na>
 	end

@@ -5,10 +5,25 @@
 %%
 
 %%
-%% *CS_END_FPAL_Quest1
+%% *CS_END_FPAL_Greeting
 %%
 %%  The PC is attempting to gain the Peace and Love ending. In this first
-%%  question, 
+%%  question, you get to choose whether to negotiate peace or simply fight.
+%%  Yeah, I know you've been working up to this the whole game, but it's still
+%%  a legitimate question.
+%%
+%% PARAM1: Negotaite Exit Label
+%% PARAM2: Fight Exit Label
+%%
+
+Persona
+	requires <*CS_END_FPAL_Greeting>
+	START <NewChat Say %id%01 AddChat %id%01 AddChat %id%02>
+	result%id%01 <Goto %1%>
+	result%id%02 <Goto %2%>
+	Msg%id%01 <>
+	Prompt%id%01 <>
+	Prompt%id%02 <>
 
 %%
 %% *CS_END_FinalBattle_Greeting
