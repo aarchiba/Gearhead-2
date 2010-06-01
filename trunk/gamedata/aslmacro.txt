@@ -264,9 +264,12 @@ IfUSurvival <ifUSkillTest NAS_Survival STAT_Craft ?>
 IfRepair <ifSkillTest NAS_Repair STAT_Craft ?>
 IfURepair <ifUSkillTest NAS_Repair STAT_Craft ?>
 IfTaunt <ifSkillTest NAS_Taunt STAT_Charm ?>
+IfUTaunt <ifUSkillTest NAS_Taunt STAT_Charm ?>
 IfMedicine <ifSkillTest NAS_Medicine STAT_Knowledge ?>
+IfUMedicine <ifUSkillTest NAS_Medicine STAT_Knowledge ?>
 IfShopping <ifSkillTest NAS_Shopping STAT_Charm ?>
 IfShoppingKN <ifSkillTest NAS_Shopping STAT_Knowledge ?>	% Used for economic theory and business administration
+IfUShopping <ifUSkillTest NAS_Shopping STAT_Charm ?>
 IfMartialArts <ifSkillTest NAS_CloseCombat STAT_Body ?>
 IfToughness <ifSkillTest NAS_Toughness STAT_Ego ?>
 IfUToughness <ifUSkillTest NAS_Toughness STAT_Ego ?>

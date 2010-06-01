@@ -405,9 +405,7 @@ Content
 			name <Allies>
 			setenemy 2 3 5
 			setally 1
-			Deploy <if= PlotStatus %plotid% %id% &ifDefensesRallied   SetSelfFaction &AllyFac   ifDCCompleted DEF_5 else GoCheckDef4 WMecha 4 100 150>
-			GoCheckDef4 <ifDCCompleted DEF_4 else GoSmallAllies WMecha 4 70 150>
-			GoSmallAllies <WMecha 4 40 100>
+			Deploy <if= PlotStatus %plotid% %id% &ifDefensesRallied   SetSelfFaction &AllyFac   WMecha 4 120 150>
 			home <Ally Zone>
 
 			team 5
@@ -454,16 +452,31 @@ Content
 		Persona 2
 		special <UNLISTED>
 		% V%id%01 = First time counter
-		greeting <if= PlotStatus %plotid% %id% else %pop% if= v%id%01 0 else .%id%_GoSecondTime V= %id%01 1 Goto .%id%_GoGreet>
+		% V%id%02 = Final skill roll difficulty counter
+		greeting <if= PlotStatus %plotid% %id% else %pop% if= v%id%01 0 else .%id%_GoSecondTime V= %id%01 1 V= %id%02 20  Goto .%id%_GoGreet>
 		*.%id%_GoSecondTime <*Back_For_More>
-
 		%% You get one chance to secure the peace. Let's see how it goes.
 		%% The three bonuses:
 		%% - Have a high Heroism score
 		%% - Have a friend/ally/lover/family on the other side
 		%% - Have the authority to speak now
-		.%id%_GoGreet <>
-
+		*.%id%_GoGreet <*CS_END_FPAL_Greeting .%id%_GoQuest1 .%id%_GoThemeExpo>
+		*.%id%_GoQuest1 <*CS_END_FPAL_Quest1 .%id%_GoQuest2 .%id%_GoQ1Okay .%id%_GoQ1Fail>
+		.%id%_GoQ1Okay <V+ %id%02 25 Goto .%id%_GoQuest2>
+		.%id%_GoQ1Fail <V+ %id%02 50 Goto .%id%_GoQuest2>
+		*.%id%_GoQuest2 <*CS_END_FPAL_Quest2 .%id%_GoQuest3 .%id%_GoQ2Okay .%id%_GoQ2Fail>
+		.%id%_GoQ2Okay <V+ %id%02 25 ifG 100 v%id%02 else .%id%_GoRejectPeace Goto .%id%_GoQuest3>
+		.%id%_GoQ2Fail <V+ %id%02 50 ifG 100 v%id%02 else .%id%_GoRejectPeace Goto .%id%_GoQuest3>
+		*.%id%_GoQuest3 <*CS_END_FPAL_Quest3 .%id%_GoQ3Good .%id%_GoQ3Okay .%id%_GoQ3Fail>
+		.%id%_GoQ3Good <ifG 21 v%id%02 else .%id%_GoQuest4 Goto .%id%_GoMakePeace>
+		.%id%_GoQ3Okay <V+ %id%02 25 ifG 125 v%id%02 else .%id%_GoRejectPeace Goto .%id%_GoQuest4>
+		.%id%_GoQ3Fail <V+ %id%02 50 ifG 125 v%id%02 else .%id%_GoRejectPeace Goto .%id%_GoQuest4>
+		%% Question #4 is optional- if the player scored perfect on all tests so far, the
+		%% peace deal is guaranteed. Otherwise the PC needs to make a skill roll to seal the deal.
+		*.%id%_GoQuest4 <*CS_END_FPAL_Quest4 v%id%02 .%id%_GoMakePeace .%id%_GoRejectPeace>
+		*.%id%_GoMakePeace <*CS_END_FPAL_Accept .%id%_GoWinGame>
+		.%id%_GoWinGame <L= 1 1  SetEncounterInactive %4%  KillMood %1%    SetPlotStatus %plotid2% %id2%>
+		*.%id%_GoRejectPeace <*CS_END_FPAL_Reject .%id%_GoThemeExpo>
 		*.%id%_GoThemeExpo <*THEME_EXPO&Enemy na>
 	end
 

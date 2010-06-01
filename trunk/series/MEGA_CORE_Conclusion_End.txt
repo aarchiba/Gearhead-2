@@ -177,3 +177,106 @@ Content
 	Msg%id%02_2 <%name1% is revered as a martyr by \PPR %1% followers. Fortunately, they never again gain the level of power that they once had.>
 	CMsg%id%02_2 <ifNPCDead %1% Accept>
 
+%%
+%% *CS_END_PEACE_Enemy
+%%
+%%  This ending tells how the battle is resolved when things happen peacefully.
+%%
+%%  It needs the following macros:
+%%   &ENDING_Enemy_Peace
+%%
+%%  PARAM1: The Enemy NPC
+%%
+
+Content
+	name <E-PEACE: Heroic>
+	requires <*CS_END_PEACE_Enemy 1:good_ -1:family -1:lover>
+	&ENDING_Enemy_Peace <Alert %id%01 History %id%01 PCAlly %1%>
+	Msg%id%01_1 <%name1%'s forces withdraw from the battlefield. During the subsequent peace negotiations \SPR %1% becomes the chief diplomat for \FACTION &EnemyFac .>
+	CMsg%id%01_1 <if# 0 &EnemyFac Accept>
+	Msg%id%01_2 <%name1%'s forces withdraw from the battlefield. During the subsequent peace negotiations \SPR %1% works hard to resolve old wounds and to create a better future for all sides.>
+	CMsg%id%01_2 <if= 0 &EnemyFac Accept>
+
+Content
+	name <E-PEACE: Non-Villainous>
+	requires <*CS_END_PEACE_Enemy -1:evil_>
+	&ENDING_Enemy_Peace <Alert %id%01 History %id%01>
+	Msg%id%01 <%name1%'s forces lower their weapons and withdraw to neutral territory. Shortly thereafter, the peace negotiations begin in earnest.>
+
+Content
+	name <E-PEACE: Villainous>
+	requires <*CS_END_PEACE_Enemy 1:evil_>
+	&ENDING_Enemy_Peace <Alert %id%01 History %id%01 DeleteNPC %1%>
+	Msg%id%01_1 <%name1% leaves the field of battle and shortly thereafter quits \FACTION &EnemyFac ; \SPR %1% is never heard from again.>
+	CMsg%id%01_1 <if# 0 &EnemyFac Accept>
+	Msg%id%01_2 <%name1% exits the field of battle, leaving peace negotiations to \PPR %1% subordinates ; \SPR %1% never returns to trouble you again.>
+	CMsg%id%01_2 <if= 0 &EnemyFac Accept>
+
+
+%%
+%% *:CS_END_Special_PAL
+%%
+%% The PC has achieved the special "Peace and Love" ending. Resolve things.
+%%
+%%  PARAM1: The Enemy NPC
+%%
+
+Content
+	name <"Peace and Love": Blades vs Aegis>
+	requires <*:CS_END_Special_PAL (F:CRIHN|F:BOHEM) (P:AEGSF|P:AEGIS)>
+	% Solid state ending
+	% P%id%02 = Can only win the game once counter
+	update <if= P%id%02 0 P= %id%02 1 &ENDING_Enemy_Peace  Alert %id%01 History %id%01  Alert %id%02 History %id%02   XPV 1000   Goto .%id%_GoEndStory>
+	.%id%_GoEndStory <Return L= 1 1 EndPlot EndStory Victory>
+
+	Msg%id%01 <You order an investigation into the Space Force's role at Crihna Rock. War crimes are uncovered, and public opinion forces Rishiri Spinner to pay reparations to the survivors.>
+	Msg%id%02 <The Aegis Council is obviously displeased by your actions, but due to your sudden popularity they do not remove you from office. For the rest of your career you are stationed in L5 where you can presumably do the least amount of damage.>
+
+	% SubPlot1 is the Enemy state ending
+	subplot1 <*CS_END_PEACE_Enemy 1>
+
+Content
+	name <"Peace and Love": Blades vs Rishiri Axis>
+	requires <*:CS_END_Special_PAL (F:CRIHN|F:BOHEM) (P:L5LAW|P:RISHI|P:FCOMS|P:AEGSF|P:ROCKE)>
+	% Solid state ending
+	% P%id%02 = Can only win the game once counter
+	update <if= P%id%02 0 P= %id%02 1 &ENDING_Enemy_Peace  Alert %id%01 History %id%01   ifUInsight HardSkillTar StoryDL else .%id%_GoPartialVictory Alert %id%02 History %id%02 Goto .%id%_GoEndStory>
+	.%id%_GoPartialVictory <Alert %id%03 History %id%03  Goto .%id%_GoEndStory>
+	.%id%_GoEndStory <XPV 1000   Return L= 1 1 EndPlot EndStory Victory>
+
+	Msg%id%01 <The Blades of Crihna disavow their original mission of revenge, instead repositioning themselves as the defenders of the Bohemian colonies. Peace proves to be good for everyone.>
+	Msg%id%02 <You personally launch an investigation into the destruction of Crihna Rock, uncovering evidence of incompetence and conspiracy. Your findings help to heal the divisions among the L5 colonies.>
+	Msg%id%03 <You push for an investigation into the destruction of Crihna Rock. The results are inconclusive, leaving many people dissatisfied. Still, things appear to be headed towards reconciliation.>
+
+	% SubPlot1 is the Enemy state ending
+	subplot1 <*CS_END_PEACE_Enemy 1>
+
+Content
+	name <"Peace and Love": Blades vs Anyone Else>
+	requires <*:CS_END_Special_PAL (F:CRIHN|F:BOHEM) -P:L5LAW -P:RISHI -P:FCOMS -P:AEGSF -P:ROCKE -P:AEGIS>
+	% Solid state ending
+	% P%id%02 = Can only win the game once counter
+	update <if= P%id%02 0 P= %id%02 1 &ENDING_Enemy_Peace  Alert %id%01 History %id%01   XPV 1000   Goto .%id%_GoEndStory>
+	.%id%_GoEndStory <Return L= 1 1 EndPlot EndStory Victory>
+
+	Msg%id%01 <The Blades of Crihna disavow their original mission of revenge, instead repositioning themselves as the defenders of the Bohemian colonies. Peace proves to be good for everyone.>
+
+	% SubPlot1 is the Enemy state ending
+	subplot1 <*CS_END_PEACE_Enemy 1>
+
+
+Content
+	name <"Peace and Love": Red Mask Raiders>
+	requires <*:CS_END_Special_PAL F:REDMA>
+	% Solid state ending
+	% P%id%02 = Can only win the game once counter
+	update <if= P%id%02 0 P= %id%02 1 &ENDING_Enemy_Peace  Alert %id%01 History %id%01  Alert %id%02 History %id%02   XPV 1000   Goto .%id%_GoEndStory>
+	.%id%_GoEndStory <Return L= 1 1 EndPlot EndStory Victory>
+
+	Msg%id%01 <Queen Madas conducts the peace negotiations via holopresence. She agrees to all the demands of \FACTION &AllyFac , saying they have no more need to fight. The Red Mask Raiders effectively disappear from L5.>
+	Msg%id%02 <Several months later the second Martian Civil War begins. The Red Masks lead the insurgent forces, killing tens of thousands of innocent civilians... but by then, at least, they are no longer your problem.>
+
+	% SubPlot1 is the Enemy state ending
+	subplot1 <*CS_END_PEACE_Enemy 1>
+
+

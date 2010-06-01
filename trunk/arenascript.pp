@@ -945,6 +945,31 @@ begin
 	Calculate_Asking_Price := RV;
 end;
 
+Function Count_Faction_Buddies( GB: GameBoardPtr; FacID: Integer ): Integer;
+	{ Return the number of positive relationships the PC has with this }
+	{ particular faction. }
+	function CountBuddies( LList: GearPtr ): LongInt;
+		{ Count the number of buddies along this path. }
+	var
+		N: LongInt;
+	begin
+		N := 0;
+		while LList <> Nil do begin
+			if ( LList^.G = GG_Character ) and ( NAttValue( LList^.NA , NAG_Relationship , 0 ) > 0 ) and ( GetFactionID( LList ) = FacID ) and NotDestroyed( LList ) then Inc( N );
+			N := N + CountBuddies( LList^.SubCom );
+			N := N + CountBuddies( LList^.InvCom );
+			LList := LList^.Next;
+		end;
+		CountBuddies := N;
+	end;
+var
+	Adv: GearPtr;
+begin
+	if ( GB = Nil ) or ( GB^.Scene = Nil ) then Exit( 0 );
+	Adv := FindRoot( GB^.Scene );
+	Count_Faction_Buddies := CountBuddies( GB^.Meks ) + CountBuddies( Adv^.SubCom ) + CountBuddies( Adv^.InvCom );
+end;
+
 Function FindLocalMacro( const cmd: String; GB: GameBoardPtr; Source: GearPtr ): String;
 	{ Locate the local macro described by "cmd". }
 var
@@ -971,18 +996,18 @@ Procedure InitiateMacro( GB: GameBoardPtr; Source: GearPtr; var Event: String; P
 	function NeededParameters( cmd: String ): Integer;
 		{ Return the number of parameters needed by this function. }
 	const
-		NumStandardFunctions = 19;
+		NumStandardFunctions = 20;
 		StdFunName: Array [1..NumStandardFunctions] of string = (
 			'-', 'GNATT', 'GSTAT', '?PILOT', '?MECHA',
 			'SKROLL', 'THREAT', 'REWARD', 'ESCENE', 'RANGE',
 			'FXPNEEDED','*','MAPTILE','PCSKILLVAL','CONCERT',
-			'SKILLTAR', 'HARDSKILLTAR', 'SOCSKILLTAR', 'PRICE'
+			'SKILLTAR', 'HARDSKILLTAR', 'SOCSKILLTAR', 'PRICE', 'FACBUDDIES'
 		);
 		StdFunParam: Array [1..NumStandardFunctions] of byte = (
 			1,2,1,1,1,
 			1,2,2,1,2,
 			1,2,2,2,2,
-			1,1,1,2
+			1,1,1,2,1
 		);
 	var
 		it,T: Integer;
@@ -1135,8 +1160,10 @@ Function ScriptValue( var Event: String; GB: GameBoardPtr; Scene: GearPtr ): Lon
 	{ Sometimes we may want to do algebra, or use the result of }
 	{ scenario variables as the parameters for commands. That's }
 	{ what this function is for. }
+	{ *** IMPORTANT *** }
 	{ When adding new functions, remember to add them to the InitiateMacro }
 	{ procedure as well. }
+	{ *** IMPORTANT *** }
 var
 	Old_Grabbed_Gear,PC: GearPtr;
 	VCode,VC2: LongInt;
@@ -1284,6 +1311,12 @@ begin
 		VCode := ScriptValue( Event , GB , Scene );
 		VC2 := ScriptValue( Event , GB , Scene );
 		SV := Calculate_Threat_Points( VCode , VC2 );
+
+	end else if ( SMsg = 'FACBUDDIES' ) then begin
+		{ Count the number of positive relationships the PC has }
+		{ with members of the provided faction. }
+		VCode := ScriptValue( Event , GB , Scene );
+		SV := Count_Faction_Buddies( GB , VCode );
 
 	end else if ( SMsg = '*' ) then begin
 		VCode := ScriptValue( Event , GB , Scene );
