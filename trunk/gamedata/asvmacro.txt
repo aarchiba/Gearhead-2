@@ -201,6 +201,9 @@ NPCTEAM <GrabNPC ? GNAtt NAG_LOCATION nAS_Team>
 NAG_XXRan <-7>
 NAS_EpisodeNumber <6>
 NAS_DramaticChoice <8>
+NAS_XXChar_Motivation <101>
+NAS_XXChar_Attitude <102>
+NAS_XXFac_Plan <103>
 CurrentDramaticGoal <GrabStory GNAtt NAG_XXRan NAS_DramaticChoice>
 NAS_DebriefingMsg <11>
 XXRDebriefingMsg <GrabPlot GNAtt NAG_XXRan NAS_DebriefingMsg>
@@ -231,6 +234,15 @@ XXR_A_PCHates <6>
 XXR_A_HatesPC <7>
 XXR_A_MutualHate <8>
 XXR_A_Obsession <9>
+XXR_P_Subterfuge     <1>
+XXR_P_CovertAttack   <2>
+XXR_P_PublicImage    <3>
+XXR_P_PublicAttack   <4>
+XXR_P_SeekArtifact   <5>
+XXR_P_Gathering      <6>
+XXR_P_WeaponProgram  <7>
+XXR_P_War            <8>
+XXR_P_Inactive       <9>
 StoryDL <GrabStory GNAtt NAG_Narrative NAS_DifficultyLevel>
 EpisodeNumber <GrabStory GNAtt NAG_XXRan NAS_EpisodeNumber>
 STAT_Pass <3>

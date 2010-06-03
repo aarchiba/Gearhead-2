@@ -342,9 +342,10 @@ RestoreOldFaction <SetPCFac OldFac>
 ClearOriginalHome <GrabNPC ? GSetNAtt NAG_ParaLocation NAS_OriginalHome 0>
 ChatLMFollow <GrabChatNPC GSetNAtt 5 10 5>
 SetDestination <GrabSource GSetStat 4 ?>
-SetXXRMotivation <GrabNPC ? GSetNAtt NAG_XXRan 101 ?>
-SetXXRAttitude <GrabNPC ? GSetNAtt NAG_XXRan 102 ?>
-ifNPCAttitude <GrabNPC ? if= GNAtt NAG_XXRan 102 ?>
+SetXXRMotivation <GrabNPC ? GSetNAtt NAG_XXRan NAS_XXChar_Motivation ?>
+SetXXRAttitude <GrabNPC ? GSetNAtt NAG_XXRan NAS_XXChar_Attitude ?>
+SetXXRPlot <GrabFaction ? GSetNAtt NAG_XXRan NAS_XXFac_Plan ?>
+ifNPCAttitude <GrabNPC ? if= GNAtt NAG_XXRan NAS_XXChar_Attitude ?>
 Monologue <GrabNPC ? GMonologue ?>
 TeamMonologue <GrabLocal ?Pilot ? GMonologue ?>
 PCMonologue <GrabPCPilot GMonologue ?>

@@ -125,15 +125,10 @@ selected quickly without doing full element searches. The standard palette entri
 
 1. Enemy Character (E:)
 2. Enemy Faction (F:)
-3. Target Faction (P:)*
-4. Partner (R:)
-5. Target NPC (T:)
-6. Scene for next component (S:)
-	S:meta for metascene, S:perm for perminant scene
+3. Target Faction (P:)
+
 7. Root location of current episode (L:)
 8. Target Item (I:)
-9. Amore NPC (A:)
-10. Hanging Thread NPC (H:)
 
 These labels are followed by "++" if the element exists, or "--" if the element doesn't.
 In addition, the desig and context strings for each element are included. For instance,
@@ -192,17 +187,84 @@ component being selected if they're present.
 The story is made up of episodes. Each episode takes place in a single city.
 Each episode is made up of several components.
 
-GLOBAL DESCRIPTORS
-	These describe the arc of the plot between plots
-	+P??	Propp State
-	+C??	Personal Story
-	+H??	Hanging Thread
-
 BACKGROUND DESCRIPTORS
 	These describe the PC's background and motivation
 	+B??	Background State
 	+G??	PC's Goal
 
++B??	PC Background/Motivation
+	Describes the situation of the PC's life so far.
+	+B--	Nothing special.
+	+Bor	PC was an orphan/raised communaly
+	+Bpd	PC's parents died
+
+	+Bad	PC responsible for ally/partner/friend's death
+	+Bld	PC's love interest died
+	+Bam	PC has amnesia
+
++G??	PC Goal
+	The stated goal of the PC.
+	+G--	Nothing special.
+	+Gre	Revenge
+	+Gmo	Money
+	+Gfa	Fame
+	+Gpe	Peace
+	+Gpo	Power
+	+Gkn	Knowledge
+	+Glo	Love
+
+Faction Arc Descriptors
+
+[f]:P.???	Faction Current Plan
+	[f]:P.---	Default state
+	[f]:P.sub	Subterfuge. Political maneuvering against enemies.
+	[f]:P.cat	Covert attacks. Attack enemies secretly.
+	[f]:P.pil	Public Image, Luh. Increase profile, improve reputation.
+	[f]:P.pat	Public attacks. Attack enemies openly.
+	[f]:P.art	Seek Artifact. Searching for Target Item.
+	[f]:P.gat	Gathering. Foraging for resources.
+	[f]:P.wep	Weapon Program. Developing new weapons and mecha.
+	[f]:P.war	War. Like the other attack states, but embiggened.
+	[f]:P.ina	Inactive. This faction has withdrawn from play.
+
+[f]:R.???	Faction's Reaction to PC
+
+
+Character Arc Descriptors
+
+[c]:M.???	NPC Character Arc/Motivation
+	[c]:M.---	Unknown quantity
+	[c]:M.mer	Mercenary. NPC is in it for the money.
+	[c]:M.pro	Professional. NPC seeks his personal best.
+	[c]:M.com	Competitor. NPC seeks to be better than others.
+	[c]:M.ggd	Greater Good. NPC believers self to be working for greater good.
+	[c]:M.see	Seeker. The NPC still hasn't found what they're looking for.
+	[c]:M.rev	Revenge.
+	[c]:M.cha	Change. The NPC decided to change their current situation.
+	[c]:M.nih	Nihilism. The NPC seeks destruction.
+
+[c]:A.???	Attitude towards PC
+	[c]:A.---	Unknown quantity
+	[c]:A.nme	NPC hasn't met the PC yet
+	[c]:A.jr_	NPC is PC's junior/subordinate/student
+	[c]:A.sr_	NPC is PC's senior/superior/mentor
+	[c]:A.ant	NPC feels antagonistic towards the PC
+	[c]:A.tha	NPC feels thankful to the PC
+	[c]:A.sec	NPC is keeping a secret from the PC
+	[c]:A.equ	NPC respects the PC as an equal
+	[c]:A.dis	NPC has lost respect for the PC
+	[c]:A.env	NPC envies the PC
+	[c]:A.adm	NPC admires the PC
+	[c]:A.pch	PC has a reason to hate the NPC
+	[c]:A.hat	NPC has a reason to hate the PC
+	[c]:A.mut	The PC and NPC have reasons to hate one another mutually
+	[c]:A.obs	NPC obsessed with the PC
+
+
+
+************************************
+***   DEPRECIATED  DESCRIPTORS   ***
+************************************
 
 +P??	Propp State
 	Describes the overall course of the story. The Advancement descriptor describes which
@@ -258,74 +320,6 @@ BACKGROUND DESCRIPTORS
 	+C	Collaborating with enemy to end conflict
 	+C	Actively seeking revenge (+B)
 
-+B??	PC Background/Motivation
-	Describes the situation of the PC's life so far.
-	+B--	Nothing special.
-	+Bor	PC was an orphan/raised communaly
-	+Bpd	PC's parents died
-
-	+Bad	PC responsible for ally/partner/friend's death
-	+Bld	PC's love interest died
-	+Bam	PC has amnesia
-
-+G??	PC Goal
-	The stated goal of the PC.
-	+G--	Nothing special.
-	+Gre	Revenge
-	+Gmo	Money
-	+Gfa	Fame
-	+Gpe	Peace
-	+Gpo	Power
-	+Gkn	Knowledge
-	+Glo	Love
-
-+H??	Hanging Thread
-	Describes an event which the PC has hanging over his head
-	+H--	How's it hanging? It isn't.
-	+Hed	Enemy has defected (H:++)
-	+Hrt	Have rescued someone (H:++)
-	+Hmi	Someone will offer you a mission (H:++)
-	+Hre	Someone will try to get revenge (H:++)
-	+Hra	Have rescued Amore NPC
-
-	+Has	Assassination attempt will be made against the PC.
-
-Character Arc Descriptors
-
-[c]:M.???	NPC Character Arc/Motivation
-	[c]:M.---	Unknown quantity
-	[c]:M.mer	Mercenary. NPC is in it for the money.
-	[c]:M.pro	Professional. NPC seeks his personal best.
-	[c]:M.com	Competitor. NPC seeks to be better than others.
-	[c]:M.ggd	Greater Good. NPC believers self to be working for greater good.
-	[c]:M.see	Seeker. The NPC still hasn't found what they're looking for.
-	[c]:M.rev	Revenge.
-	[c]:M.cha	Change. The NPC decided to change their current situation.
-	[c]:M.nih	Nihilism. The NPC seeks destruction.
-
-[c]:A.???	Attitude towards PC
-	[c]:A.---	Unknown quantity
-	[c]:A.nme	NPC hasn't met the PC yet
-	[c]:A.jr_	NPC is PC's junior/subordinate/student
-	[c]:A.sr_	NPC is PC's senior/superior/mentor
-	[c]:A.ant	NPC feels antagonistic towards the PC
-	[c]:A.tha	NPC feels thankful to the PC
-	[c]:A.sec	NPC is keeping a secret from the PC
-	[c]:A.equ	NPC respects the PC as an equal
-	[c]:A.dis	NPC has lost respect for the PC
-	[c]:A.env	NPC envies the PC
-	[c]:A.adm	NPC admires the PC
-	[c]:A.pch	PC has a reason to hate the NPC
-	[c]:A.hat	NPC has a reason to hate the PC
-	[c]:A.mut	The PC and NPC have reasons to hate one another mutually
-	[c]:A.obs	NPC obsessed with the PC
-
-
-
-************************************
-***   DEPRECIATED  DESCRIPTORS   ***
-************************************
-
 
 +T??	Task
 	Describes the PC's current short-term goal.
@@ -350,6 +344,18 @@ Character Arc Descriptors
 	+Fpr	To protect the target
 
 	+Fap	To apologize to the target (+Tgt,+Tga)
+
++H??	Hanging Thread
+	Describes an event which the PC has hanging over his head
+	+H--	How's it hanging? It isn't.
+	+Hed	Enemy has defected (H:++)
+	+Hrt	Have rescued someone (H:++)
+	+Hmi	Someone will offer you a mission (H:++)
+	+Hre	Someone will try to get revenge (H:++)
+	+Hra	Have rescued Amore NPC
+
+	+Has	Assassination attempt will be made against the PC.
+
 
 
 
