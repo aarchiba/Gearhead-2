@@ -557,7 +557,7 @@ begin
 	{ Insert the central story. }
 	Story := LoadFile( 'corestorystub.txt' , Series_Directory );
 	SetNAtt( Story^.NA , NAG_ElementID , XRP_EpisodeScene , S^.S );
-	SetNAtt( Story^.NA , NAG_ElementID , XRP_TargetFac , NAttValue( TruePC^.NA , NAG_Personal , NAS_FactionID ) );
+	SetNAtt( Story^.NA , NAG_ElementID , XRP_AllyFac , NAttValue( TruePC^.NA , NAG_Personal , NAS_FactionID ) );
 	SetNAtt( Camp^.Source^.NA , NAG_Personal , NAS_FactionID , NAttValue( TruePC^.NA , NAG_Personal , NAS_FactionID ) );
 
 	{ Copy the PC's personal context to the story. }

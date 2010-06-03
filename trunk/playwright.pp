@@ -679,6 +679,9 @@ begin
 	if IsArchAlly( Adv, Fac ) then it := it + ' ARCHALLY';
 	if Fac^.S = NAttValue( Adv^.NA , NAG_Personal , NAS_FactionID ) then it := it + ' PCFAC';
 
+	{ Add the XXXRan Plan descriptor. }
+	AddXXFactionContext( Fac , it , '@' );
+
 	FactionDesc := it;
 end;
 
@@ -1391,6 +1394,11 @@ begin
 
 			{ Add the character arc and attitude values. }
 			AddXXCharContext( Part , Context , palette_entry_code );
+
+		end else if Part^.G = GG_Faction then begin
+			{ Add the plot arc value. }
+			AddXXFactionContext( Part , Context , palette_entry_code );
+
 		end else if Part^.G = GG_Scene then begin
 			m2 := SAttValue( Part^.SA , 'TERRAIN' );
 			if m2 <> '' then Context := Context + ' ' + palette_entry_code + ':' + m2;

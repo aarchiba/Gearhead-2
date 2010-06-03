@@ -68,6 +68,7 @@ Const
 
 	NAS_XXChar_Motivation = 101;
 	NAS_XXChar_Attitude = 102;
+	NAS_XXFac_Plan = 103;
 
 	NAG_Completed_DC = -25;	{ Lists the dramatic choices which have been completed. }
 		{ S = The dramatic choice being referred to }
@@ -123,10 +124,7 @@ Const
 	{ These constants describe the standard palette entries for xxran stories. }
 	XRP_EnemyChar = 1;		{ E: }
 	XRP_EnemyFac = 2;		{ F: }
-	XRP_TargetFac = 3;		{ P: }
-	XRP_PlotStateNPC = 4;		{ N: }
-	XRP_TargetNPC = 5;		{ T: }
-	XRP_ComponentScene = 6;		{ S: }
+	XRP_AllyFac = 3;		{ P: }
 	XRP_EpisodeScene = 7;		{ L: }
 	XRP_TargetItem = 8;		{ I: }
 
@@ -155,6 +153,13 @@ Const
 		'nme', 'ant', 'adm', 'dis'
 	);
 
+	Num_XXR_Plans = 9;
+	XXR_Plan: Array [0..Num_XXR_Plans] of String[3] = (
+		'---',
+		'sub','cat','pil','pat','art',	'gat','wep','war','ina'
+	);
+
+Procedure AddXXFactionContext( Fac: GearPtr; var Context: String; palette_entry_code: Char );
 
 Function LancemateCanDevelop( NPC: GearPtr ): Boolean;
 Procedure AddXXCharContext( NPC: GearPtr; var Context: String; palette_entry_code: Char );
@@ -243,6 +248,17 @@ uses texutil,rpgdice,ghchars,gearutil,ability,menugear,ghprop,ghweapon,interact,
 const
 	FROZEN_MAP_CONTINUE = 1;
 	FROZEN_MAP_SENTINEL = -1;
+
+Procedure AddXXFactionContext( Fac: GearPtr; var Context: String; palette_entry_code: Char );
+	{ Add context descriptor for the master plan of this faction. }
+var
+	T: Integer;
+begin
+	T := NAttValue( Fac^.NA , NAG_XXRan , NAS_XXFac_Plan );
+	if ( T > 0 ) and ( T <= Num_XXR_Plans ) then Context := Context + ' ' + palette_entry_code + ':P.' + XXR_Plan[ t ]
+	else Context := Context + ' ' + palette_entry_code + ':P.---';
+end;
+
 
 Function LancemateCanDevelop( NPC: GearPtr ): Boolean;
 	{ If this lancemate can learn new skills via the TrainNPC function, }
