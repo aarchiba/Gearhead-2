@@ -378,7 +378,7 @@ Content
 Content
 	name <I'll Help You Out>
 	desc <The PC's friend will offer to join him, becoming either an ally or the partner.>
-	requires <*CS_WinGoal 1:FRIEND ~R:-- &NoCash>
+	requires <*CS_WinGoal 1:FRIEND &NoCash>
 
 	% E1 is the NPC
 
@@ -391,9 +391,9 @@ Content
 		greeting <if= PlotStatus %plotid% %id% else %pop% ifChatNPCInPlay else .%id%_GoComeHere Debrief  NewChat Say %id%01 AddChat %id%01 AddCHat %id%02 AddChat %id%03>
 		.%id%_GoComeHere <NewChat Say %id%07>
 		.%id%_GoBecomeAlly <PCAlly %1% NPCLevel %1% StoryDL History %id%05 SMemo 0 WinEpisode>
-		result%id%01 <History %id%02 NPCLevel %1% StoryDL &SetPartnerNPC %1% &AddPartnerToLance SMemo 0 AddReact d10  WinEpisode Goto .%id%_GoJoinLance>
+		result%id%01 <History %id%02 NPCLevel %1% StoryDL PCAlly %1% AddLancemate %1% SMemo 0 AddReact d10  WinEpisode Goto .%id%_GoJoinLance>
 		*.%id%_GoJoinLance <*WelcomeToLance>
-		result%id%02 <ifNPCInPlay &PartnerNPC else .%id%_GoEndR2 Monologue &PartnerNPC %id%03 Goto .%id%_GoEndR2>
+		result%id%02 <ifG T-3 0 else .%id%_GoEndR2 TeamMonologue -3 %id%03 Goto .%id%_GoEndR2>
 		.%id%_GoEndR2 <NewChat Say %id%04 Goto .%id%_GoBecomeAlly>
 		result%id%03 <NewChat Say %id%06 Goto .%id%_GoBecomeAlly>
 		Msg%id%01 <Thanks for helping me out, \PC ! I don't know how I'll ever repay you... say, you don't happen to need a partner, do you?>
@@ -404,9 +404,8 @@ Content
 		Msg%id%06 <OK. I'll be waiting.>
 		Msg%id%07 <Come see me at \SCENE NPCScene %1% .>
 		Prompt%id%01 <Sure, I'd love to have you as part of the lance.>
-		CPrompt%id%01 <ifNPCDead &PartnerNPC Accept>
 		Prompt%id%02 <Sorry, but I've already got a partner.>
-		CPrompt%id%02 <ifNPCOK &PartnerNPC Accept>
+		CPrompt%id%02 <ifG T-3 0 Accept>
 		Prompt%id%03 <Not right now, but if I need help I'll let you know.>
 	end
 
@@ -610,7 +609,6 @@ Content
 	sub
 		Persona 1
 		greeting <if= PlotStatus %plotid% %id% else %pop% NewChat Say %id%01 StoryNote %id%03 AddChat %id%01 AddChat %id%02>
-		.%id%_next <+T-- +F-->
 		result%id%01 <NewChat Say %id%02  AddCheerful d6 WinEpisode>
 		result%id%02 <NewChat Say %id%02 WinEpisode>
 		Msg%id%01 <I don't understand what happened; I've been fired from %name2%.>

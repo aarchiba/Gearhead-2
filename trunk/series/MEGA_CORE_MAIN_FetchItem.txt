@@ -249,8 +249,7 @@ Content
 		Persona 4
 		special <NOESCAPE UNLISTED>
  		greeting <EndChat Say %id%01 AddChat %id%01 AddChat %id%02>
-		.%id%_GoAcceptOffer <TeamNeutral 2 History %id%05 &SetAllyFac %5% &SetHangingNPC %4% AlterContext .%id%_accept if= PCFac 0 SetPCFac %5%>
-		.%id%_accept <+Hmi>
+		.%id%_GoAcceptOffer <TeamNeutral 2 History %id%05 &SetAllyFac %5% if= PCFac 0 SetPCFac %5%>
 		result%id%01 <EndChat Say %id%02 AddChat %id%03 AddChat %id%04 AddChat %id%05>
 		result%id%02 <EndChat Say %id%03 AddChat %id%03 AddChat %id%04 AddChat %id%05  AddEasygoing d10>
 		result%id%03 <EndChat Say %id%04  Goto .%id%_GoAcceptOffer>
@@ -415,8 +414,8 @@ Content
 Content
 	name <BFF Deathtrap>
 	desc <The Enemy's BFF lays a trap for the PC>
-	requires <*:CS_FetchItem (E:M.see|E:M.pro|E:M.ggd) E:A.env +H--  -!Ne -!Lo>
-	changes <E:A +H>
+	requires <*:CS_FetchItem (E:M.see|E:M.pro|E:M.ggd) E:A.env -!Ne -!Lo>
+	changes <E:A>
 	size 9
 
 	%% In a brilliant act of railroading the player, it's possible in this episode
@@ -465,8 +464,7 @@ Content
 	start <if= p%id%03 1   if= SceneID %2%   if= p%id%04 0 else .%id%_GoWinSP LoseSubPlot %plotid% Goto .%id%_GoConclude>
 	.%id%_GoWinSP <WinSubPlot %plotid% Goto .%id%_GoConclude>
 	.%id%_GoConclude <Alert %id%01 History %id%02 if= p%id%05 0 else .%id%_GoBetterEnding ForceChat %5%   SetXXRAttitude %5% XXR_A_HatesPC   History %id%03 FreezeNPC %5% SetDebriefing %id%11>
-	.%id%_GoBetterEnding <Monologue %4% %id%04 Monologue %5% %id%05 Monologue %4% %id%06 Monologue %4% %id%07   History %id%08 History %id%09  SetXXRAttitude %4% XXR_A_HatesPC  FreezeNPC %4% FreezeNPC %5% &SetEnemyNPC %4% &SetHangingNPC %5%  AlterContext .%id%_secondending  Alert %id%10   XPV 100  SetDebriefing %id%12>
-	.%id%_secondending <+Hed>
+	.%id%_GoBetterEnding <Monologue %4% %id%04 Monologue %5% %id%05 Monologue %4% %id%06 Monologue %4% %id%07   History %id%08 History %id%09  SetXXRAttitude %4% XXR_A_HatesPC  FreezeNPC %4% FreezeNPC %5% &SetEnemyNPC %4%  SetXXRAttitude %5% XXR_A_Admire SetXXRMotivation %5% XXR_M_Change   Alert %id%10   XPV 100  SetDebriefing %id%12>
 
 	end <ifSubPlotLost %plotid1% else .%id%_GoCheckE1   Goto .%id%_GoLoseMission>
 	.%id%_GoCheckE1 <ifItemDestroyed %1%   Goto .%id%_GoLoseMission>
@@ -842,8 +840,7 @@ Content
 		GoR5Fail <EndChat Say 9 SoloAttack %5%>
 		result6 <NewChat Say 10 GiveItem %1% PCFriend %5% XPV 100>
 		result7 <NewChat Say 11 AddSociable d10 AddReact 10 GiveItem %1%  XPV 100 AddChat 8 AddChat 9>
-		result8 <NewChat Say 12 History 13 ifNPCDead &AmoreNPC else GoR8NoAmore &SetAmoreNPC %5%>
-		GoR8NoAmore <if= ChatNPCRelationship 0 PCLover %5%>
+		result8 <NewChat Say 12 History 13  if= ChatNPCRelationship 0 PCLover %5%>
 		*result9 <*GoodBye>
 		Msg1 <I'm afraid that you've arrvived too late- I no longer have the %name1%.>
 		Msg2 <You win... Here, take the %name1%, and leave me alone...>

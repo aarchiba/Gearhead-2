@@ -219,14 +219,14 @@ Content
 		.%id%_GoBriefing <NewChat Say %id%06 AddChat %id%01 AddChat %id%02>
 		result%id%01 <NewChat Say %id%07 PMemo %plotid% %id%08  Goto .%id%_GoActivateBeefgate>
 		result%id%02 <NewChat Say %id%09>
-		Msg%id%01 <You did it! Based on the data you've returned, we've located %name3%. These coordinates should bring you right there.>
-		Msg%id%02 <Good work, \PC . We still haven't located %name3% , but come back in a few hours and we may be closer.>
-		Msg%id%03 <We've found another lance from %name4% operating in \EXACT_SCENE %2% . I'd like for you to go engage them... The data you bring back might help us to locate %name3%.>
+		Msg%id%01 <You did it! Based on the data you've returned, we've located \SCENE %3% . These coordinates should bring you right there.>
+		Msg%id%02 <Good work, \PC . We still haven't located \SCENE %3% , but come back in a few hours and we may be closer.>
+		Msg%id%03 <We've found another lance from %name4% operating in \EXACT_SCENE %2% . I'd like for you to go engage them... The data you bring back might help us to locate \SCENE %3% .>
 		Msg%id%04 <Come back in a few hours and I may have another mission for you.>
 		Msg%id%05 <The mecha from %name4% are still operating in \EXACT_SCENE %2% . Come back after you've defeated them.>
-		Msg%id%06 <I've been tasked with locating %name3%. Now, there are some mecha in \EXACT_SCENE %2% from %name4%; if you were to engage them, we might be able to learn something.>
+		Msg%id%06 <I've been tasked with locating \SCENE %3% . Now, there are some mecha in \EXACT_SCENE %2% from %name4%; if you were to engage them, we might be able to learn something.>
 		Msg%id%07 <Great! These coordinates will take you straight to their position... Good luck, \PC .>
-		Msg%id%08 <%name1% sent you to fight some mecha in \EXACT_SCENE %2% so you can locate %name3%.>
+		Msg%id%08 <%name1% sent you to fight some mecha in \EXACT_SCENE %2% so you can locate \SCENE %3% .>
 		Msg%id%09 <Well, if you change your mind, I'll be right here.>
 		Prompt%id%01 <I'll go see what I can do.>
 		Prompt%id%02 <No, I don't want to.>
@@ -249,8 +249,8 @@ Content
 		CMsg1_1 <ifNPCOK %1% Accept>
 		Msg1_2 <You have defeated the mecha.>
 		CMsg1_2 <ifNPCDead %1% Accept>
-		Msg2 <Searching through one of the defeated mecha, you find the coordinates of %name3%.>
-		Msg2_1 <You track the origin of these mecha back to %name3%.>
+		Msg2 <Searching through one of the defeated mecha, you find the coordinates of \SCENE %3% .>
+		Msg2_1 <You track the origin of these mecha back to \SCENE %3% .>
 
 		sub
 			team 1

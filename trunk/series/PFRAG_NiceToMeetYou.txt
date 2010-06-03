@@ -605,13 +605,3 @@
 	Prompt%id%04_1 <My name isn't important.>
 	Prompt%id%04_2 <Look, just forget about it.>
 
-	Persona
-	requires <*NiceToMeetYou +Tgs +Fcc>
-	% requires that this happen with a sociable NPC at a corporate schmoozing event.
-	START <ifCHatNPCUnknown else %1% NewChat Say %id%01 AddChat %ID%01 AddChat %id%02>
-	result%id%01 <Reputation 3  d4   Goto %1%>
-	result%id%02 <Reputation 3 -d4   Goto %1%>
-	Msg%ID%01 <I really enjoy these business conventions. It's a good chance to get out and meet people, see what the competition is up to... How about you?>
-	Prompt%id%01 <I feel the same way.>
-	Prompt%id%02 <Not really.>
-

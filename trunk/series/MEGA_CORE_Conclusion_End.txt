@@ -44,7 +44,7 @@ Content
 %% *CS_END_ENDING_Propp
 %%
 %%  The Propp ending tells what happens regarding
-%%  the +P story state and the enemy/ally factions.
+%%  the E:P story state.
 %%
 %%  It needs the following macros:
 %%   &ENDING_Propp_Complete	( for kicking the enemy's arse soundly )
@@ -55,7 +55,7 @@ Content
 
 Content
 	name <CRIHN: Terror Averted>
-	requires <*CS_END_ENDING_Propp -+Psh F:CRIHN (P:--|P:POLIT|P:MILIT|P:POLIC)>
+	requires <*CS_END_ENDING_Propp F:CRIHN (F:P.---|P:POLIT|P:MILIT|P:POLIC)>
 
 	&ENDING_Propp_Complete <Alert %id%01 History %id%01>
 	&ENDING_Propp_Partial <Alert %id%02 History %id%02>
@@ -67,7 +67,7 @@ Content
 
 Content
 	name <REDMA: Ambitions Quashed>
-	requires <*CS_END_ENDING_Propp -+Psh F:REDMA>
+	requires <*CS_END_ENDING_Propp F:REDMA>
 
 	&ENDING_Propp_Complete <Alert %id%01 History %id%01>
 	&ENDING_Propp_Partial <Alert %id%02 History %id%02>
@@ -81,7 +81,7 @@ Content
 
 Content
 	name <MUGLE: Haiho in the big time>
-	requires <*CS_END_ENDING_Propp -+Psh P:MUGLE ~F:CORPO>
+	requires <*CS_END_ENDING_Propp P:MUGLE ~F:CORPO>
 
 	&ENDING_Propp_Complete <Alert %id%01 History %id%01>
 	&ENDING_Propp_Partial <Alert %id%02 History %id%02>
@@ -91,29 +91,13 @@ Content
 
 Content
 	name <Life can return to peace>
-	requires <*CS_END_ENDING_Propp -+Psh F:++>
+	requires <*CS_END_ENDING_Propp F:++>
 
 	&ENDING_Propp_Complete <Alert %id%01 History %id%01>
 	&ENDING_Propp_Partial <Alert %id%02 History %id%02>
 
 	Msg%id%01 <With \FACTION &EnemyFac defeated, life slowly returns to normal. \SCENE &EpisodeScene begins the process of rebuilding from the battle.>
 	Msg%id%02 <With \FACTION &EnemyFac still active, you resolve to spend the rest of your life fighting them. \SCENE &EpisodeScene begins the slow process of rebuilding.>
-
-Content
-	name <Freedom at last>
-	requires <*CS_END_ENDING_Propp +Psh P:++>
-
-	&ENDING_Propp_Complete <Alert %id%01 History %id%01  RestoreOldFaction>
-	&ENDING_Propp_Partial <Alert %id%02 History %id%02>
-
-	Msg%id%01_1 <Your task completed, you leave \FACTION &AllyFac and return to \FACTION OldFac .>
-	CMsg%id%01_1 <if# OldFac 0 Accept>
-	Msg%id%01_2 <Your task completed, you are free to leave \FACTION &AllyFac and return to your previous life.>
-	CMsg%id%01_2 <if= OldFac 0 Accept>
-	Msg%id%02_1 <Your task yet incomplete, you pledge to remain with \FACTION &AllyFac until \FACTION &EnemyFac can be defeated once and for all.>
-	CMsg%id%02_1 <if# &EnemyFac 0 Accept>
-	Msg%id%02_2 <Your task yet incomplete, you realize that you will never be free to leave \FACTION &AllyFac .>
-	CMsg%id%02_2 <if= &EnemyFac 0 Accept>
 
 
 %%

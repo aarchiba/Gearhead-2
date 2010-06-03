@@ -142,15 +142,12 @@ Content
 		greeting <if= PlotStatus %plotid% %id% else GoChat if= V1 0 else GoChat EndChat Say 1 AddChat 1 History 2 SetXXRMotivation %1% XXR_M_Mercenary V= 1 1>
 		GoChat <NewChat SayAnything>
 		result1 <EndChat Say 3 AddChat 2 AddChat 3 AddChat 4>
-		result2 <ifNPCinPlay &PartnerNPC else GoR2_II Monologue &PartnerNPC 5 Goto GoR2_II>
-		GoR2_II <EndChat Say 4 AddChat 5 AddChat 6>
+		result2 <EndChat Say 4 AddChat 5 AddChat 6>
 		result3 <EndChat Say 6 AddChat 7 History 10>
 		result4 <AddEasygoing -d8 Goto result3>
 		result5 <Goto result3>
-		result6 <ifNPCOK &PartnerNPC else GoR6Conclude &RemovePartnerFromLance FreezeNPC &PartnerNPC Monologue &PartnerNPC 7 Goto GoR6Conclude>
-		GoR6Conclude <EndChat Say 8 SMemo 0 L= 1 1 Return History 9 CashPrize StoryDL 500 CustomMecha .fac StoryDL XPV 100  PCFEnemy &AllyFac &SetAllyFac &EnemyFac SetPCFac &EnemyFac &SetEnemyFac 0 &SetPartnerNPC %1% AlterContext .next PyrrhicWinEpisode Retreat 2 Retreat 3>
+		result6 <EndChat Say 8 SMemo 0 L= 1 1 Return History 9 CashPrize StoryDL 500 CustomMecha .fac StoryDL XPV 100  PCFEnemy &AllyFac &SetAllyFac &EnemyFac SetPCFac &EnemyFac &SetEnemyFac 0 PCAlly %1% AddLancemate %1% PyrrhicWinEpisode Retreat 2 Retreat 3>
 		.fac <GENERAL \FACTION_DESIG &EnemyFac>
-		.next <+T-- +F-->
 		*result7 <*THEME_EXPO&Enemy na>
 		Msg1 <Let me guess, you came here to stop me? Too late. I've already determined that the %name4% isn't in \SCENE RootSceneID .>
 		Msg1_1 <You're really a persistant one, aren't you? If you're here to stop me then you're going to be disappointed since I've already completed my mission.>
@@ -168,11 +165,7 @@ Content
 		Msg2 <You met %name1%, who offered you a chance to join \FACTION &EnemyFac .>
 		Msg3 <You know, the %name4% is worth an awful lot of money to \FACTION &EnemyFac . We could use someone like you on our side. I can guarantee that we pay more than whoever's footing your bills right now.>
 		Msg4 <To start with, you'll get a brand new custom mecha and an equipment allowance. Afterwards you'll have access to our secret base, training facilities, dental plan... and when we find the %name4%, we can split the reward.>
-		Msg5 <Don't do it, \PC ; it could be a trap!>
-		Msg5_1 <Don't do it, \PC ; some things in life are worth more than money!>
 		Msg6 <If you aren't with us, that means you're against us. I guess you know what that means...>
-		Msg7 <I don't want any part of this...>
-		Msg7_1 <I guess this is where we part ways, \PC ...>
 		Msg8 <Welcome to \FACTION &EnemyFac .>
 		Msg9 <You accepted %name1%'s offer.>
 		Msg10 <You rejected the offer.>
@@ -265,8 +258,8 @@ Content
 Content
 	name <Friends are fair game>
 	desc <The enemy NPC kidnaps one of the PC's friends to torture for information.>
-	requires <*:CS_StopNPCMission &IsEnemyNPC E:A.hat (E:M.---|E:M.mer|E:M.com|E:M.rev|E:M.nih) +H-- -!Ne>
-	changes <E:A +H>
+	requires <*:CS_StopNPCMission &IsEnemyNPC E:A.hat (E:M.---|E:M.mer|E:M.com|E:M.rev|E:M.nih) -!Ne ~E:evil_ -E:good_>
+	changes <E:A>
 	Size 8
 
 	% E1 is the NPC to be stopped
@@ -279,7 +272,7 @@ Content
 	Element2 <Scene Urban !Near -7>
 	Element3 <Prefab>
 	Place3 <2>
-	Element4 <Character (Friend|Family|Lover)  !Xclude 1  !Global>
+	Element4 <Character (Friend|Family|Lover)  !Xclude 1  !Global (@:A.---|@:A.jr_|@:A.sr_|@:A.ant)>
 	Place4 </>
 	Element5 <Prefab>
 	Place5 <3>
@@ -391,8 +384,7 @@ Content
 		GoFriendDied <Alert 1 L= 1 1>
 		CLUE_MEDICINE <Goto GoSaveFriend>
 		Pass -100
-		GoSaveFriend <Alert 2 History 3 XPV 100 Return MoveNPC %4% %6%  &SetHangingNPC %4% AlterContext .next WinSubPlot %plotid% Trigger0 .%id%_%plotid%_GoWin>
-		.next <+Hrt>
+		GoSaveFriend <Alert 2 History 3 XPV 100 Return MoveNPC %4% %6%  SetXXRAttitude %4% XXR_A_Thankful WinSubPlot %plotid% Trigger0 .%id%_%plotid%_GoWin>
 		Msg1 <You've arrived too late. %name4% shows no sign of life.>
 		Msg2 <You tend to %name4%'s wounds and quickly bring \OPR %4% to the hospital.>
 		Msg3 <You rescued %name4% from %name1%'s base.>

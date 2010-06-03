@@ -664,9 +664,8 @@ Content
 
 Plot
 	name <I'm looking for your enemy>
-	requires <*CS_Conversation E:++ (1:ADVEN|1:POLIC) (1:A.---|1:A.sr_|1:A.equ) R:-- -1:ENEMY (*CORE_OFF_|*CORE_R_LAN)>
+	requires <*CS_Conversation E:++ (1:ADVEN|1:POLIC) (1:A.---|1:A.sr_|1:A.equ) -1:ENEMY (*CORE_OFF_|*CORE_R_LAN)>
 	desc <This character's looking for your enemy. Help him out and gain him as a partner.>
-	Changes <R:++>
 	Size 1
 
 	% E1 is the NPC that the PC will speak with
@@ -710,7 +709,7 @@ Plot
 		.%id%_GoReveal <NewChat Say %id%02 AddChat %id%03 AddChat %id%04 AddCHat %id%05>
 		.%id%_GoTrivial <NewChat Say %id%03 StoryNote %id%04 P= %id%01 -1 WinSubPlot %plotid% SetPlotStatus %plotid1% %id1% SetEncounterActive %3%>
 		*result%id%01 <*ComeBackWhenYouKnowSomething>
-		result%id%02 <EndCHat Say %id%05 StoryNote %id%06  P= %id%01 1  WinSubPlot %plotid%  XPV 100  &SetPartnerNPC %1%  &AddPartnerToLance>
+		result%id%02 <EndCHat Say %id%05 StoryNote %id%06  P= %id%01 1  WinSubPlot %plotid%  XPV 100  PCAlly %1%  AddLancemate %1%>
 		result%id%03 <AddSociable   d8   Goto result%id%05>
 		result%id%04 <AddCheerful -d10   Goto result%id%05>
 		result%id%05 <NewChat Say %id%07 SMemo %id%08 History %id%09 AddChat %id%06 AddChat %id%07 SetPlotStatus %plotid1% %id1% SetPlotStatus %plotid2% %id2%  SetXXRAttitude %1% XXR_A_IsEqual>
@@ -824,242 +823,10 @@ Content
 %%
 
 
-%%  ********************************
-%%  ***   +P--  Peaceful  Life   ***
-%%  ********************************
-
-
-Content
-	name <I Hear They're Hiring>
-	desc <The PC will be told of a corporate job.>
-	requires <*OLD_Conversation +P-- P:-- (1:Friend|1:LABOR|1:TRADE) (C:LABOR|C:CRAFT|C:TRADE|C:CORPO) ~+Gmo>
-
-	% Element1 is the NPC to meet
-	% Element2 is a local corporate character
-	% Element3 is a public scene to meet in
-	% Element4 is E2's faction
-	Element2 <Character Corporate !Near -7 !Okay 1>
-	Element3 <Scene Building Public !Okay 2 !Near -7>
-	Element4 <Faction !Ally 2>
-
-	start <if= PlotStatus %plotid% %id% else %pop% ifNPCDead %1% LoseEpisode>
-
-	sub
-		Persona 1
-		greeting <if= PlotStatus %plotid% %id% else %pop% Goto .%id%_GoGreet>
-		*.%id%_GoGreet <*HowAreYou .%id%_GoAsk>
-		.%id%_GoAsk <ifFactionEnemy %4% else .%id%_GoNoEnemy NewChat Say %id%02 AddChat %id%04 AddChat %id%05>
-		.%id%_GoNoEnemy <NewChat Say %id%01 AddChat %id%01 AddChat %id%02>
-		result%id%01 <NewChat Say %id%03 History %id%04 SMemo %id%05 &SetTargetNPC %2% WinComp %3% .%id%_GetMission>
-		.%id%_GetMission <+Tgt +Fmi +Pun>
-		result%id%02 <NewChat Say %id%06 AddChat %id%06 AddChat %id%03>
-		result%id%03 <NewChat Say %id%07 StoryNote %id%04  WinComp 0 .%id%_RefuseMission>
-		.%id%_RefuseMission <+T-- +F-- +Pun>
-		result%id%04 <NewChat Say %id%08 StoryNote %id%04  WinComp 0 .%id%_RefuseMission if= &EnemyFac 0 &SetEnemyFac %4%>
-		result%id%05 <NewChat Say %id%09 StoryNote %id%04  &SetAllyFac PCFac WinComp 0 .%id%_RefuseMission>
-		result%id%06 <Goto result%id%01>
-		Msg%id%01 <Are you looking for work? %name2% of %name4% is going to hire a pilot, and I can put in a good word for you.>
-		Msg%id%02 <Did you hear that %name4% has been suffering a lot of attacks recently? I hear that %name2% is looking for a pilot to help defend their factories.>
-		Msg%id%03 <Go speak with \OPR %2% at %name3%, then. Tell \OPR %2% I sent you.>
-		Msg%id%04 <%name1% told you that %name4% was being attacked.>
-		Msg%id%05 <%name2% in %name3% is looking for a pilot to protect %name4%.>
-		Msg%id%06 <There have been a lot of attacks against them recently. I don't know what's going on, but for a pilot that can get his foot in the door this could be a gold mine.>
-		Msg%id%07 <That's too bad. I don't know who's behind the attacks against %name4%, but chances are that the other corporations are involved in some way.>
-		Msg%id%08 <Don't be too glib about it. Whatever's going on, it's bound to affect more than just %name4%.>
-		Msg%id%09 <I wouldn't be able to say. Whatever's going on, it's bound to affect more than just %name4%.>
-		Prompt%id%01 <Sounds good. I'd like that.>
-		Prompt%id%02 <Why does \SPR %2% need a pilot?>
-		Prompt%id%03 <Thanks, but I'm not interested.>
-		Prompt%id%04 <Good. I hate %name4%.>
-		Prompt%id%05 <I hope \FACTION PCFac won't be attacked next.>
-		CPrompt%id%05 <if# PCFac 0 Accept>
-		Prompt%id%06 <Alright, I'll do it.>
-	end
-
-
-
-%%  *****************************
-%%  ***   +Pme  Meet  Enemy   ***
-%%  *****************************
-
-Plot
-	name <Did you hear about EnemyNPC?>
-	desc <A mutual friend will provide some information about E1.>
-	requires <*OLD_Conversation +Pme 1:FRIEND -E:-->
-	Size 1
-
-	% E1 is the information source
-	% E2 is a scene where N1 was apparently seen
-	% E3 is the enemy NPC
-	Element2 <Scene Public !Near -7>
-	Element3 <Grab 1>
-	Place3 </>
-
-	start <if= PlotStatus %plotid% %id% else %pop% ifNPCDead %1% LoseEpisode>
-
-	sub
-		Persona 1
-		greeting <if= PlotStatus %plotid% %id% else %pop% Goto .%id%_GoGreet>
-		*.%id%_GoGreet <*HowAreYou .%id%_GoAsk>
-		.%id%_GoAsk <NewChat Say %id%01 AddChat %id%01 AddChat %id%02 AddChat %id%03>
-		.%id%_GoEnd <StoryNote %id%03 NTBWinComp %2% .%id%_win>
-		.%id%_win <+Tgs +Fin>
-		result%id%01 <NewChat Say %id%02 AddChat %id%04 AddChat %id%05 Goto .%id%_GoEnd>
-		result%id%02 <NewChat AddCheerful -d10  Say %id%04 AddChat %id%04 AddChat %id%05 Goto .%id%_GoEnd>
-		result%id%03 <NewChat Say %id%05 AddChat %id%04 AddChat %id%05 Goto .%id%_GoEnd>
-		result%id%04 <NewChat Say %id%06>
-		result%id%05 <NewChat Say %id%07 AddSociable -d10>
-		Msg%id%01 <Have you been speaking to %name3% recently? I'm afraid that \SPR %3% 's getting involved with some serious business...>
-		Msg%id%02 <I was speaking with \OPR %3% at %name2% just a short while ago, and \SPR %3% seemed very conflicted. Did the two of you have a fight?>
-		Msg%id%03 <%name1% said that \SPR %1% had seen %name3% at %name2%.>
-		Msg%id%04 <I know you don't mean that. Look, the three of us have known one another for a long time. When I saw %name3% at %name2%, \SPR %3% seemed really upset. Did the two of you have a fight or something?>
-		Msg%id%05 <Right now? No, not really... I saw \OPR %3% at %name2% earlier. \PC , what's going on? Did the two of you have a fight or something?>
-		Msg%id%06 <I see. Well, remember that the two of you are still friends, whatever else may happen.>
-		Msg%id%07 <That's the same response I got from \OPR %3% . Whatever else happens between the two of you, remember that you're still friends.>
-		Prompt%id%01 <Yes. I know all about that.>
-		Prompt%id%02 <%name3% can die, for all I care.>
-		CPrompt%id%02 <IFNPCARCHENEMY %3% Accept>
-		Prompt%id%03 <Wait, do you know where \SPR %3% is?>
-		Prompt%id%04 <Yes, we did.>
-		Prompt%id%04_1 <%name3% is working for \FACTION &EnemyFac .>
-		CPrompt%id%04_1 <ifFactionExists &EnemyFac Accept>
-		Prompt%id%05 <I'd rather not talk about it.>
-	end
-
-%%  *****************************************
-%%  ***   +Pun  Unknown  Enemy  Attacks   ***
-%%  *****************************************
-
-
-Plot
-	name <They're After an Item>
-	desc <The PC will learn that the attacking enemy is searching for an item.>
-	requires <*OLD_Conversation +Pun +Fin F:++ I:-- ~+Gmo>
-	Size 1
-
-	% E1 is the information source
-	% E2 is the artifact being sought
-	% E3 is a local scene for the information-gathering next component
-	Element2 <Artifact>
-	Place2 </>
-	Element3 <Scene (Building|Meeting) Public !Near -7>
-
-	start <if= PlotStatus %plotid% %id% else %pop% ifNPCDead %1% LoseEpisode>
-
-	sub
-		Persona 1
-		greeting <if= PlotStatus %plotid% %id% else %pop% Goto .%id%_GoGreet>
-		*.%id%_GoGreet <*QuestionsAboutFaction&IsEnemy .%id%_GoExplain &EnemyFac>
-		.%id%_GoExplain <NewChat Say %id%01 AddChat %id%01 AddChat %id%02 AddChat %id%03>
-		result%id%01 <NewChat Say %id%03 AddChat %id%02 AddChat %id%03 AddChat %id%04>
-		result%id%02 <NewChat Say %id%04 AddChat %id%01 AddChat %id%03 AddChat %id%04>
-		result%id%03 <NewChat Say %id%05 AddChat %id%02 AddChat %id%01 AddChat %id%04>
-		result%id%04 <NewChat Say %id%06 SMemo %id%07 History %id%02 &SetTargetItem %2% WinComp %3% .%id%_next>
-		.%id%_next <+Pla +Tgs +Fin>
-		Msg%id%01 <As far as I know, the reason behind these attacks is that \FACTION &EnemyFac is looking for the %name2%.>
-		Msg%id%02 <%name1% told you that \FACTION &EnemyFac was looking for the %name2%.>
-		Msg%id%03 <\ITEM_DESC %2%>
-		Msg%id%04 <\ITEM_HISTORY %2%>
-		Msg%id%05 <\ITEM_USAGE %2%>
-		Msg%id%06 <I heard that some pilots from \FACTION &EnemyFac were hanging around in %name3%, so that might be a good place to start looking for more information.>
-		Msg%id%07 <%name1% told you that \FACTION &EnemyFac is looking for the %name2%. You might be able to find more information in %name3%.>
-		Prompt%id%01 <And the %name2% is...?>
-		Prompt%id%02 <Where did it come from?>
-		Prompt%id%03 <What does it do?>
-		Prompt%id%04 <How can I find it myself?>
-	end
-
-Plot
-	name <Why Are They Doing It?>
-	desc <The PC will be directed to someone who may have answers.>
-	requires <*OLD_Conversation +Pun (C:MEDIA|+Gkn) ~E:-- ~F:-- (1:POLIT|1:MEDIA|1:POLIC|1:ADVEN|1:MILIT|1:CORPO)>
-	Size 1
-
-	% E1 is the friend
-	% E2 is the NPC to be sought
-	Element2 <NewNPC -2 -7 Shy>
-
-	start <if= PlotStatus %plotid% %id% else %pop% ifNPCDead %1% LoseEpisode>
-
-	sub
-		Persona 1
-		greeting <if= PlotStatus %plotid% %id% else %pop% Goto .%id%_GoGreet>
-		*.%id%_GoGreet <*HowAreYou .%id%_GoExplain>
-		.%id%_GoExplain <NewChat Say %id%01 AddChat %id%01 AddChat %id%03>
-
-		Result%id%01 <NewChat Say %id%02 SMemo %id%03 History %id%04 AddChat %id%02 FreezeNPC %2% &SetTargetNPC %2% WinComp 0 .%id%_next>
-		.%id%_next <+Tgt +Fin>
-		Result%id%02 <NewChat Say %id%06>
-		Result%id%03 <NewChat Say %id%05 SMemo %id%03 History %id%04 AddChat %id%02 FreezeNPC %2% &SetTargetNPC %2% WinComp 0 .%id%_next>
-
-		Msg%id%01 <These mecha attacks that we've had recently, they're very strange. People are wondering what the reason behind them is.>
-		Msg%id%02 <Not directly, no, but I have heard some things. Apparently a person named %name2% is involved with the attacks somehow. They're looking for \OPR %2% , but \SPR %2% 's in hiding.>
-		Msg%id%03 <%name2% might know something about the mecha attacks. Unfortunately \SPR %2% is in hiding.>
-		Msg%id%04 <%name1% told you that %name2% might know something about the mecha attacks.>
-		Msg%id%05 <Then you need to speak with %name2%. According to rumor, \SPR %2% knows something about the attacks... unfortunately, \SPR %2% 's hiding. There are a lot of people who either want to know what \SPR %2% does, or keep \SPR %2% quiet.>
-		Msg%id%06 <If I had that kind of information, I'd hardly be wasting my time chatting with you.>
-		Prompt%id%01 <Do you know anything about that?>
-		Prompt%id%02 <Any idea where %name2% might be?>
-		Prompt%id%03 <I'm wondering that too.>
-	end
-
-%%  *****************************
-%%  ***   +Psh  Conscripted   ***
-%%  *****************************
-
-
-
-%%  *************************************
-%%  ***   +Pla  Learn  of  Artifact   ***
-%%  *************************************
-
-Plot
-	name <Not This Monk, The Other One>
-	desc <This character will send the PC to go speak with a monk.>
-	requires <*OLD_Conversation +Pla +Fin (1:FAITH|1:ADVEN) I:++>
-	Size 1
-
-	% E1 is the person with the information
-	% E2 is the monk who knows about it
-	Element2 <Prefab>
-	Place2 </>
-
-	start <if= PlotStatus %plotid% %id% else %pop% ifNPCDead %1% LoseEpisode>
-
-	sub
-		Persona 1
-		greeting <if= PlotStatus %plotid% %id% else %pop% Goto .%id%_GoIntro>
-		*.%id%_GoIntro <*LookingForItem &TargetItem .%id%_GoExplain>
-		.%id%_GoExplain <NewChat Say %id%01 StoryNote %id%02 AddChat %id%01 &SetTargetNPC %2% WinComp 0 .%id%_win>
-		.%id%_win <+Tgt +Fin>
-		result%id%01 <NewChat Say %id%03>
-		Msg%id%01 <I don't know about that myself, but %name2% does... unfortunately, \SPR %2% 's currently in hiding. There are many others who seek knowledge of the \ITEM &TargetItem . Some of them are dangerous.>
-		Msg%id%02 <You learned that %name2% is hiding from people who seek the \ITEM &TargetItem .>
-		Msg%id%03 <I don't know. That's why they call it "hiding", because nobody knows where you are.>
-		Prompt%id%01 <Where can I find %name2%?>
-	end
-	inv
-		NPC Monk
-	end
-
-%%  ****************************************
-%%  ***   +Pew  Enemy  Weapon  Program   ***
-%%  ****************************************
-
-
-%%  **********************************
-%%  ***   +C--  Nothing  Special   ***
-%%  **********************************
-
-
-%%  *******************
-%%  ***   DEFAULT   ***
-%%  *******************
-
 Content
 	name <Let's Go!>
 	desc <Your friend wants to join your lance.>
-	requires <*OLD_Conversation R:-- 1:FRIEND>
+	requires <*OLD_Conversation 1:FRIEND>
 	Size 1
 
 	% E1 is the friend in question
@@ -1075,7 +842,7 @@ Content
 		*.%id%_GoNotHere <*NotByPhone>
 		*.%id%_GoGreet <*HowAreYou .%id%_GoInform>
 		.%id%_GoInform <NewChat Say %id%01 AddChat %id%01 AddChat %id%02>
-		.%id%_GoJoin <&SetPartnerNPC %1% &AddPartnerToLance SetXXRAttitude %1% XXR_A_IsJunior   WinComp 0 .%id%_next StoryNote %id%02 Goto .%id%_GoJoinSpeech>
+		.%id%_GoJoin <PCAlly %1% AddLancemate %1% SetXXRAttitude %1% XXR_A_IsJunior   WinComp 0 .%id%_next StoryNote %id%02 Goto .%id%_GoJoinSpeech>
 		.%id%_next <+T-- +F-->
 		*.%id%_GoJoinSpeech <*WelcomeToLance>
 		result%id%01 <Goto .%id%_GoJoin>

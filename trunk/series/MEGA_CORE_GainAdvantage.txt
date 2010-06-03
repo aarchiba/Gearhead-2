@@ -454,21 +454,19 @@ Content
 Content
 	name <Lover's Gift>
 	desc <The love interest will give the PC a gift to help out.>
-	requires <*:CS_GainAdvantageVsMecha +Hra A:++>
-	changes <+H>
+	requires <*:CS_GainAdvantageVsMecha>
 
 	% E1 is a public scene
 	% E2 is the lover
 	Element1 <Scene Public (Building|Meeting) !Okay -9>
-	Element2 <Grab 9>
+	Element2 <Character Lover !Global @:A.tha>
 	Place2 <1 (Citizens) pass ally>
 
 	% P%id%01 = Email Indicator
 
 	% FAIL CONDITIONS:
 	% - E2 dies
-	end <ifNPCDead %2% LoseSubPlot %plotid% AlterContext .%id%_next>
-	.%id%_next <+H-->
+	end <ifNPCDead %2% LoseSubPlot %plotid%>
 
 	5min <if= P%id%01 0 if= d10 1 P= %id%01 1 email %id%01>
 
@@ -485,8 +483,7 @@ Content
 		% V%id%01 = Reputation Counter
 		greeting <if= PlotStatus %plotid% %id% else %pop% Goto .%id%_GoGreet>
 		*.%id%_GoGreet <*ThanksForRescue .%id%_GoReveal>
-		.%id%_GoReveal <NewChat Say %id%01 AddChat %id%01 AddChat %id%02 AddChat %id%03 AlterContext .%id%_Alter>
-		.%id%_Alter <+H-->
+		.%id%_GoReveal <NewChat Say %id%01 AddChat %id%01 AddChat %id%02 AddChat %id%03 SetXXRAttitude %2% XXR_A_IsEqual>
 		result%id%01 <Goto .%id1%_GoLoversGift>
 		result%id%02 <Goto .%id1%_GoLoversGift>
 		result%id%03 <EndChat Say %id%02 AddChat %id%04 if= V%id%01 0 V= %id%01 1 AddPragmatic -15>
@@ -517,8 +514,7 @@ Content
 Content
 	name <Let's Join Together>
 	desc <If the PC proves themself, an NPC will offer to join forces.>
-	requires <*:CS_GainAdvantageVsMecha R:-- F:++ -!Ne>
-	changes <R:++>
+	requires <*:CS_GainAdvantageVsMecha F:++ -!Ne>
 	Size 4
 
 	% E1 is an outdoors scene
@@ -584,7 +580,7 @@ Content
 		GoWillHelp <V= 1 1 Exit %2% Goto GoBeenBefore>
 		GoWontHelp <EndChat Say 1 AddReact -25 LoseSubPlot %plotid%>
 		GoOfferJoin <EndChat Say 2 AddChat 1 AddChat 2>
-		result1 <History 3 P= %id%03 2 &SetPartnerNPC %3% &AddPartnerToLance SetXXRAttitude %3% XXR_A_Thankful Goto GoR1End>
+		result1 <History 3 P= %id%03 2 PCAlly %3% AddLancemate %3% SetXXRAttitude %3% XXR_A_Thankful Goto GoR1End>
 		*GoR1End <*WelcomeToLance>
 		result2 <EndChat Say 4 P= %id%03 2 ifG React d100 else GoR2Minor PCAlly %3%>
 		GoR2Minor <ifG React d50 PCFriend %3%>

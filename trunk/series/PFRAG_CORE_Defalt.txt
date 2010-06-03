@@ -175,7 +175,7 @@ Persona
 	requires <*COMP_Pun_MAE_Greeting E:Friend>
 	start <EndChat Say %id%01 AddChat %id%01>
 	result%id%01 <Goto %1%>
-	Msg%id%01 <\PC ! What are you doing here? You shouldn't be in this place... you shouldn't even be in \SCENE &CompScene . I don't want to fight you but I will if I have to.>
+	Msg%id%01 <\PC ! What are you doing here? You shouldn't be in this place... you shouldn't even be in \SCENE &EpisodeScene . I don't want to fight you but I will if I have to.>
 	Prompt%id%01 <It's you who shouldn't have come here.>
 	Prompt%id%01_1 <Sorry, my friend, but I won't back down either.>
 
@@ -220,7 +220,7 @@ Persona
 
 
 % TYPE: *CORE_BasicJob
-%	The PC will be given a default +Tin +Ffi mission. The exact text involved
+%	The PC will be given a default fighting mission. The exact text involved
 %	is going to depend upon the propp state and who the mission-giver is.
 %   NOTE: This component is responsible for setting the StoryNote
 %	Generally, a note will be stored for accepting the mission, but not for rejecting
@@ -281,23 +281,6 @@ Persona
 	Prompt%id%04 <I'll get right on it.>
 	Prompt%id%05 <Sorry, but I want nothing to do with this.>
 	CPrompt%id%05 <if# PCFac ChatNPCFac Accept>
-
-	Persona
-	requires <*CORE_BasicJob R:A.jr_ ArchAlly>
-	START <NewChat Say %id%01 AddChat %id%01 AddChat %id%02>
-	Result%id%01 <StoryNote %id%02 Goto %1%>
-	result%id%02 <SMemo 0 Goto %2%>
-	Msg%id%01_10 <I want you to bring \PERSONA &PartnerNPC to \SCENE %3% and investigate some mecha that we've been tracking. It may turn out to be nothing, but at least it'll provide some field experience for you both.>
-	CMsg%id%01_10 <ifNPCOK &PartnerNPC Accept>
-	Msg%id%01_20 <We've been tracking a lance of mecha in \SCENE %3% . I need you to go there and engage them.>
-	CMsg%id%01_20 <ifNPCDead &PartnerNPC Accept>
-	Msg%id%02_10 <\CHATNPC sent you and \PERSONA &PartnerNPC to fight some mecha in \SCENE %3% .>
-	CMsg%id%02_10 <ifNPCOK &PartnerNPC Accept>
-	Msg%id%02_20 <\CHATNPC sent you to fight some mecha in \SCENE %3% .>
-	CMsg%id%02_20 <ifNPCDead &PartnerNPC Accept>
-	Prompt%id%01 <I'll get over there right away.>
-	Prompt%id%02 <Wait, I don't think \PERSONA &PartnerNPC is ready.>
-	CPrompt%id%02 <if# PCFac ChatNPCFac ifNPCOK &PartnerNPC Accept>
 
 	Persona
 	requires <*CORE_BasicJob F:++ E:++ "MILIT">

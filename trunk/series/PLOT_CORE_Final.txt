@@ -32,8 +32,7 @@ Plot
 
 	% SubPlot1 is the confrontation intro
 	%     This will handle the arch-enemy and load the other subplots
-	% SubPlot2 is the rally defenses subplot-
-	%     This will be determined by the +T task.
+	% SubPlot2 is the rally defenses subplot
 	SubPlot1 <*CS_END_Intro 1>
 	SubPlot2 <*:CS_END_RallyDefenses>
 

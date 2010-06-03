@@ -124,8 +124,8 @@ Content
 	name <Plague of Bandits>
 	size 8
 	desc <Defend an allied cruiser from bandits; find out this has been happening quite often.>
-	requires <*:CS_MechaEncounter +P-- (P:CORPO|F:CRIME) -C:THIEF>
-	changes <+P>
+	requires <*:CS_MechaEncounter F:CRIME F:P.--- -C:THIEF>
+	changes <F:P>
 
 	% E1 is the outdoors scene where this encounter will be placed
 	% E2 is the metascene to be used for this encounter
@@ -563,11 +563,6 @@ Content
 
 		end
 	end
-
-
-%%  *************************************
-%%  ***   +Clo  Woo  Love  Interest   ***
-%%  *************************************
 
 
 %%  *******************************
@@ -1117,98 +1112,7 @@ Content
 	end
 
 
-
-Content
-	name <I'm Not Distressed>
-	desc <Your love interest is under attack, but will prove self to you.>
-	requires <*:CS_MechaEncounter +H-- A:++ (A:LABOR|A:CRAFT|A:FAITH|A:CORPO|A:TRADE|A:ADVEN) (A:A.tha|A:A.jr_|A:A.---) -A:ENEMY ~+Glo>
-	changes <A:A +H>
-
-	% E1 is the outdoors scene where this encounter will take place
-	% E2 is the encounter
-	% E3 is the love interest
-	element3 <Grab 9>
-	Place3 <2 (Lover) sd ally>
-
-	% P%id%01 = Initialization Counter
-	% P%id%03 = Have gained decimation
-	update <if= P%id%01 0 P= %id%01 1 NPCLevel %3% StoryDL SetPlotStatus %plotid1% %id1%>
-
-	% Set decimation here
-	.%id1%_%plotid1%_GoDecimation     <P= %id%03 1>
-
-	% SubPlot1 = Gain Advantage vs Raiders
-	SubPlot1 <*:CS_GainAdvantageVsMecha&Decimation>
-
-	sub
-		MetaScene 2 2
-		% L1 = Encounter Over Counter
-		% L2 = Initialization Counter
-		MapWidth 50
-		MapHeight 50
-
-		Start <if= L2 0 L= 2 1  Alert 1 History 2 ForceChat %3%  CancelSubPlot %plotid1%>
-		nu1 <if= T1 0   Return   if= V1 0 V= 1 1   LoseSubPlot %plotid%   Trigger0 .%id1%_%plotid1%_GoLoss  Goto GoSetEnvy>
-		nu2 <if= T2 0   if= V1 0 V= 1 1   XPV 100  AddRenown 1   SALVAGE   Trigger0 .%id%_%plotid%_GoWin WinSubPlot %plotid% ifNPCInPlay %3% else GoSetEnvy  Monologue %3% 3 FreezeNPC %3% Print 6 SetXXRAttitude %3% XXR_A_IsEqual  History 4 AlterContext .next>
-		.next <+Hra>
-		GoSetEnvy <ifNPCOK %3% SetXXRAttitude %3% XXR_A_EnviesPC History 5>
-		end <SetEncounterInactive %2%>
-
-		Msg1 <You find %name3% fighting off a lance of mecha from \FACTION &EnemyFac .>
-		Msg2 <You helped %name3% fight \FACTION &EnemyFac .>
-		Msg3 <Hey, I'd say that we make a pretty good team. I'll see you around \PC .>
-		Msg4 <Together you defeated all of the enemies.>
-		Msg5 <You failed to protect %name3% from the mecha.>
-		Msg6 <%name3% returns to \PPR %3% convoy.>
-
-		sub
-			team 1
-			SetEnemy 2
-			SetAlly 3
-			ParaX 5
-			ParaY 5
-
-			team 2
-			SetEnemy 1 3
-			Deploy <if= PlotStatus %plotid% %id% SetSelfFaction &EnemyFac   if= p%id%03 0 else GoSmallDeploy WMecha 2 StoryDL 220>
-			GoSmallDeploy <WMecha 2 StoryDL 120>
-			ParaX 30
-			ParaY 30
-
-			team 3
-			name <Lover>
-			SetEnemy 2
-			SetAlly 1
-			ParaX 45
-			ParaY 45
-		end
-
-		Persona 3
-		special <UNLISTED>
-		% V%id%01 = Can only get this conversation once
-		greeting <if= PlotStatus %plotid% %id% else %pop% if= v%id%01 0 else %pop% v= %id%01 1 EndChat Say %id%01 AddChat %id%01 AddChat %id%02>
-		*result%id%01 <*LetsDefeatThem>
-		result%id%02 <EndChat Say %id%02 AddReact -10>
-		Msg%id%01 <Am I ever glad to see you! A convoy I was escorting just got attacked. I could use some backup.>
-		Msg%id%01_1 <\PC ! You certainly know the right time to show up... A convoy that I was escorting got attacked by these mecha. I could use some help to finish them off.>
-		CMsg%id%01_1 <ifNPCSociable Accept>
-		Msg%id%01_2 <Imagine seeing you here. My convoy is under attack.>
-		CMsg%id%01_2 <ifNPCShy Accept>
-		Msg%id%01_3 <Oh, hi there! This isn't really a great time to see you, or maybe it's the perfect time, but my convoy is under attack...>
-		CMsg%id%01_3 <ifNPCEasygoing Accept>
-		Msg%id%01_4 <You sure know how to make a dramatic entrance! Look at this- these mecha had the nerve to attack the convoy I was guarding.>
-		CMsg%id%01_4 <ifNPCPassionate Accept>
-		Msg%id%01_5 <Well this is a lucky break... \PC , the convoy I'm guarding is under attack. I could use some backup.>
-		CMsg%id%01_5 <ifNPCCheerful Accept>
-		Msg%id%01_6 <Just when it seemed like this was going to be a bad day, here you are. The convoy I was guarding just got attacked.>
-		CMsg%id%01_6 <ifNPCMelancholy Accept>
-		Msg%id%02 <You think I'm completely helpless out here? Come on, let's see who the better pilot is!>
-		Prompt%id%01 <I'll help you take them.>
-		Prompt%id%01_1 <They won't stand a chance against both of us together.>
-		Prompt%id%02 <Get out of here- I can take them myself.>
-		Prompt%id%02_1 <This is too dangerous for you- leave it to me.>
-	end
-
+
 
 Content
 	name <Edie Brickell Never Hurt Anyone>
@@ -1410,8 +1314,8 @@ Content
 	name <I Have Become Death>
 	size 9
 	desc <Your enemy no longer cares, and so won't hold back any longer.>
-	requires <*:CS_MechaEncounter E:++ F:++ (E:M.---|E:M.rev) (E:A.hat|E:A.mut|E:A.obs|E:A.env|E:A.---|E:A.jr_|E:A.sr_) !Hi -&Secondary>
-	changes <E:M R:++>
+	requires <*:CS_MechaEncounter E:++ F:++ (E:M.---|E:M.rev) (E:A.hat|E:A.mut|E:A.obs|E:A.env|E:A.---|E:A.jr_|E:A.sr_|E:A.dis) !Hi -&Secondary>
+	changes <E:M>
 
 	% E1 is the outdoors scene where this encounter will be placed
 	% E2 is the "kicker" encounter- the one which starts the main plot
@@ -1579,7 +1483,7 @@ Content
 		*.%id%_GoArgumentFail <*IDisagreeYouDie>
 		.%id%_GoArgumentWin <Retreat 2 P= %id%05 1>
 		.%id%_GoArgumentMeh <EndChat Say %id%04 History %id%07 PCFriend %8% Goto .%id%_GoArgumentWin>
-		.%id%_GoJoinLance <EndChat Say %id%05 History %id%06 &SetPartnerNPC %8% &AddPartnerToLance SetXXRMotivation %8% XXR_M_GreaterGood Goto .%id%_GoArgumentWin>
+		.%id%_GoJoinLance <EndChat Say %id%05 History %id%06 PCAlly %8% AddLancemate %8% SetXXRMotivation %8% XXR_M_GreaterGood Goto .%id%_GoArgumentWin>
 		*result%id%01 <*THEME_EXPO&Enemy na>
 		result%id%02 <EndChat Say %id%02 AddChat %id%03 AddChat %id%04 AddChat %id%05>
 		result%id%03 <ifPCHeroic else .%id%_GoArgumentFail ifConversation SkillTar StoryDL else .%id%_GoArgumentFail EndChat Say %id%03 AddChat %id%06 AddChat %id%07>
@@ -1598,7 +1502,6 @@ Content
 		Prompt%id%02 <You don't have to do this, you know.>
 		CPrompt%id%02 <if# P%id%04 0 Accept>
 		Prompt%id%03 <Forget about them, and join my team instead!>
-		CPrompt%id%03 <ifNPCDead &PartnerNPC Accept>
 		Prompt%id%04 <Die by my hand, then.>
 		Prompt%id%05 <You know what you're doing is wrong.>
 		Prompt%id%06 <%name3% must be stopped, for everyone's sake.>
@@ -1625,103 +1528,6 @@ Content
 		CMsg_3 <if# ChatNPCFac %me_1% Accept>
 	end
 
-Content
-	name <Turning Point>
-	size 5
-	desc <Meet your former enemy fighting your current enemy and maybe become allies.>
-	requires <*:CS_MechaEncounter F:++ +Hed H:++ ~H:FRIEND ~H:LOVER ~H:FAMILY -H:ALLY>
-	changes <+H>
-
-	% E1 is the outdoors scene where this encounter will be placed
-	% E2 is the metascene to be used for this encounter
-	% E3 is the former enemy
-	% E4 is a local public scene
-	Element3 <Grab 10>
-	Place3 <2 (Former Enemy) sd ally>
-	Element4 <Scene Public (Meeting|Bar|Garage) !Near -7>
-
-	% P%id%01 = Initialization Counter
-	% P%id%02 = Have gained reinforcements
-	% P%id%03 = Have gained decimation
-	% At initialization, set the NPC's level and clear its faction.
-	update <if= p%id%01 0 p= %id%01 1 NPCLevel %3% StoryDL SetNPCFaction %3% 0   SetPlotStatus %plotid1% %id1%>
-
-	% Set either reinforcements or decimation here
-	.%id1%_%plotid1%_GoReinforcements <P= %id%02 1>
-	.%id1%_%plotid1%_GoDecimation     <P= %id%03 1>
-
-	% SubPlot1 = Gain Advantage vs Raiders
-	SubPlot1 <*:CS_GainAdvantageVsMecha&Reinforcements&Decimation>
-
-	sub
-		MetaScene 2 2
-		% L1 = Encounter Over Counter
-		% L2 = Initialization Counter
-		MapWidth 50
-		MapHeight 50
-
-		Start <if= L2 0 L= 2 1  AlterContext .context  &SetHangingNPC 0   Alert 1 History 2 ForceChat %3%  CancelSubPlot %plotid1%>
-		.context <+H-->
-		nu1 <if= T1 0   Return   if= V1 0 V= 1 1   LoseSubPlot %plotid%   Trigger0 .%id1%_%plotid1%_GoLoss  DeleteNPC %3%>
-		nu2 <if= T2 0   if= V1 0 V= 1 1   XPV 100  AddRenown 1   SALVAGE   Trigger0 .%id%_%plotid%_GoWin WinSubPlot %plotid% ifNPCInPlay %3% else GoDeleteE3 PCAlly %3% Monologue %3% 3 MoveAndPacifyNPC %3% %4% History 4>
-		GoDeleteE3 <DeleteNPC %3%>
-		end <SetEncounterInactive %2%>
-
-		Msg1 <You find %name3% fighting off a lance of mecha from \FACTION &EnemyFac .>
-		Msg2 <You helped %name3% fight \FACTION &EnemyFac .>
-		Msg3 <Thanks for the assist. I'll be at %name4% if you ever happen to need my help.>
-		Msg4 <%name3% pledged to help you defeat \PPR %3% former allies.>
-
-		sub
-			team 1
-			SetEnemy 2
-			SetAlly 3
-			ParaX 5
-			ParaY 5
-
-			team 2
-			SetEnemy 1 3
-			Deploy <if= PlotStatus %plotid% %id% SetSelfFaction &EnemyFac   if= p%id%03 0 else GoSmallDeploy WMecha 2 StoryDL 220>
-			GoSmallDeploy <WMecha 2 StoryDL 120>
-			ParaX 30
-			ParaY 30
-
-			team 3
-			name <Former Enemy>
-			Deploy <if= PlotStatus %plotid% %id% if= P%id%02 1   WMecha 3 StoryDL 100>
-			SetEnemy 2
-			SetAlly 1
-			ParaX 45
-			ParaY 45
-		end
-
-		Persona 3
-		special <UNLISTED>
-		% V%id%01 = Can only get this conversation once
-		greeting <if= PlotStatus %plotid% %id% else %pop% if= v%id%01 0 else %pop% v= %id%01 1 EndChat Say %id%01 AddChat %id%01 AddChat %id%02>
-		*result%id%01 <*LetsDefeatThem>
-		*result%id%02 <*THEME_EXPO&Ally .%id%_GoEndR2>
-		.%id%_GoEndR2 <AddCheerful -d10>
-		Msg%id%01 <As you can see, my former allies are not too happy about my resignation. I guess that means we're on the same side now, \PC ... If you'll have me, I'll join with you to fight them.>
-		Msg%id%01_1 <>
-		CMsg%id%01_1 <ifNPCSociable Accept>
-		Msg%id%01_2 <>
-		CMsg%id%01_2 <ifNPCShy Accept>
-		Msg%id%01_3 <>
-		CMsg%id%01_3 <ifNPCEasygoing Accept>
-		Msg%id%01_4 <>
-		CMsg%id%01_4 <ifNPCPassionate Accept>
-		Msg%id%01_5 <>
-		CMsg%id%01_5 <ifNPCCheerful Accept>
-		Msg%id%01_6 <>
-		CMsg%id%01_6 <ifNPCMelancholy Accept>
-		Prompt%id%01 <About time you came around to this side.>
-		Prompt%id%01_1 <I always knew you were too smart for \FACTION &EnemyFac .>
-		Prompt%id%01_2 <Sounds good to me. Shall we kick some ass?>
-		Prompt%id%02 <I can't forgive you, but I hate \FACTION &EnemyFac more.>
-		Prompt%id%02_1 <I'll help you this time, but don't expect forgiveness.>
-		Prompt%id%02_2 <>
-	end
 
 
 Content
@@ -1892,94 +1698,6 @@ Content
 		Msg-2 <You are suddenly attacked by %name3%'s henchmen!>
 	end
 
-Content
-	name <Waited For Revenge>
-	desc <Fight someone who wanted revenge against you.>
-	requires <*:CS_MechaEncounter +Hre H:++>
-	changes <+H>
-
-	% E1 is the outdoors scene where this encounter will be placed
-	% E2 is the metascene to be used for this encounter
-	% E3 is the enemy fighter
-	Element3 <Grab 10>
-	Place3 <2 (Enemies) sd enemy>
-
-	% P%id%01 = Initialization Counter
-	% P%id%02 = Have gained reinforcements
-	% P%id%03 = Have gained decimation
-	update <if= V%id%01 0 V= %id%01 1   SetPlotStatus %plotid1% %id1% NPCLevel %3% StoryDL>
-
-	.%id1%_%plotid1%_GoReinforcements <P= %id%02 1>
-	.%id1%_%plotid1%_GoDecimation     <P= %id%03 1>
-
-	%%  Debriefing Message
-	Msg%id%11 <You certainly know how to make friends, \PC .>
-
-	% SubPlot1 = Gain Advantage vs Raiders
-	SubPlot1 <*:CS_GainAdvantageVsMecha&Reinforcements&Decimation>
-
-	sub
-		MetaScene 2 2
-		% L1 = Encounter Over Counter
-		% L2 = Initialization Counter
-		MapWidth 50
-		MapHeight 50
-
-		Start <if= L2 0 L= 2 1   Alert 4 ForceChat %3%  PCEnemy %3%  History 1 SetDebriefing %id%11 AlterContext .clear &SetHangingNPC 0 CancelSubPlot %plotid1% if# P%id%02 0 Alert 2>
-		.clear <+H-->
-		nu1 <if= T1 0   Return   if= V1 0 V= 1 1         Trigger0 .%id%_%plotid%_GoLoss LoseSubPlot %plotid%>
-		nu2 <if= T2 0   if= V1 0 V= 1 1   XPV 100  AddRenown 1   SALVAGE   Alert 3   Trigger0 .%id%_%plotid%_GoWin WinSubPlot %plotid%>
-		end <SetEncounterInactive %2%>
-
-		Msg1 <You fought %name3% and \PPR %3% lancemates.>
-		Msg2 <Your reinforcements are here, as promised.>
-		Msg3 <You have defeated %name3%'s lance.>
-		Msg4 <You face a mecha force led by %name3% .>
-
-		sub
-			team 1
-			setally 3
-			SetEnemy 2
-			ParaX 5
-			ParaY 10
-
-			team 2
-			name <Enemies>
-			SetEnemy 1 3
-			Deploy <if= PlotStatus %plotid% %id% SetSelfFaction NPCFac %3%   if= p%id%03 0 else GoSmallDeploy WMecha 2 StoryDL 100>
-			GoSmallDeploy <WMecha 2 StoryDL 60>
-			ParaX 45
-			ParaY 45
-
-			team 3
-			setally 1
-			setenemy 2
-			Deploy <if= PlotStatus %plotid% %id%  if# P%id%02 0   WMecha 3 StoryDL 60>
-			ParaX 10
-			ParaY 5
-		end
-
-		Persona 3
-		special <UNLISTED>
-		greeting <if= PlotStatus %plotid% %id% else %pop% Goto GoGreet>
-		GoGreet <EndChat Say %id%01 AddChat %id%01>
-		*result%id%01 <*THEME_EXPO&Enemy na>
-		Msg%id%01 <I've been waiting for a chance to get back at you, \PC . You don't stand a chance.>
-		Msg%id%01_1 <>
-		CMsg%id%01_1 <ifNPCSociable Accept>
-		Msg%id%01_2 <>
-		CMsg%id%01_2 <ifNPCShy Accept>
-		Msg%id%01_3 <>
-		CMsg%id%01_3 <ifNPCEasygoing Accept>
-		Msg%id%01_4 <>
-		CMsg%id%01_4 <ifNPCMelancholy Accept>
-		Msg%id%01_5 <>
-		CMsg%id%01_5 <ifNPCCheerful Accept>
-		Msg%id%01_6 <>
-		CMsg%id%01_6 <ifNPCPassionate Accept>
-		Prompt%id%01 <Let's get this over with.>
-		Prompt%id%01_1 <Don't overestimate your chances.>
-	end
 
 Content
 	name <Enemy Upgrade>

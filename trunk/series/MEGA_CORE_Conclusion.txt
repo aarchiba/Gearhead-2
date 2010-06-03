@@ -34,21 +34,17 @@ Content
 	% P%id%02 = Peaceful Entry Counter
 
 	% At startup, activate the RevealEncounter task.
-	update <if= p%id%01 0 p= %id%01 1 SetPlotStatus %plotid4% %id4% SetPlotStatus %plotid5% %id5%>
+	update <if= p%id%01 0 p= %id%01 1 SetPlotStatus %plotid2% %id2% SetPlotStatus %plotid3% %id3%>
 
-	.%id5%_%plotid5%_GoPeacefulEntry <P= %id%02 1>
+	.%id3%_%plotid3%_GoPeacefulEntry <P= %id%02 1>
 
 	% SubPlot1 is the final battle buildup
 	%     This serves the purpose of a RevealEncounter task for the last fight
-	% SubPlot2 is the partner's subplot
-	% SubPlot3 is the love interest's subplot
-	% SubPlot4 is the RevealEncounter for the Enemy's base
-	% SubPlot5 is the peaceful entry for the Enemy's base
+	% SubPlot2 is the RevealEncounter for the Enemy's base
+	% SubPlot3 is the peaceful entry for the Enemy's base
 	SubPlot1 <*CS_END_Buildup 1 2>
-	SubPlot2 <*:CS_END_Partner_Arc>
-	SubPlot3 <*:CS_END_LoveInterest_Arc>
-	SubPlot4 <*:CS_RevealEncounter_NPCBase&EnemyNPC 3 4 2>
-	SubPlot5 <*:CS_PeacefulEntry_NPCBase 4 2>
+	SubPlot2 <*:CS_RevealEncounter_NPCBase&EnemyNPC 3 4 2>
+	SubPlot3 <*:CS_PeacefulEntry_NPCBase 4 2>
 
 	sub
 		MetaScene 4
@@ -127,7 +123,7 @@ Content
 
 		Persona 2
 		special <UNLISTED NOESCAPE>
-		greeting <if= PlotStatus %plotid% %id% else GoChat SetPlotStatus %plotid1% %id1% SetPlotStatus %plotid2% %id2% SetPlotStatus %plotid3% %id3% Return Goto GoGreet>
+		greeting <if= PlotStatus %plotid% %id% else GoChat SetPlotStatus %plotid1% %id1% Return Goto GoGreet>
 		GoChat <EndChat SayAnything>
 		*GoGreet <*CS_END_Intro_Greeting GoExplain>
 		*GoExplain <*CS_END_Intro_Explanation>
@@ -647,9 +643,7 @@ Content
 %%
 %% *:CS_END_RallyDefenses
 %%
-%%  The PC will be able to get some help for the final battle here. This task is
-%%  based on the +T context, so if the PC is going to go talk with somebody then
-%%  that's what should happen.
+%%  The PC will be able to get some help for the final battle here.
 %%
 %%  Upon rallying the defenses, this plot will set the following trigger:
 %%    .%id%_%plotid%_GoRallyDefenses
@@ -657,7 +651,7 @@ Content
 
 Content
 	name <New Task: Liberate the Armory>
-	requires <*:CS_END_RallyDefenses (+T--|+Tgs|T:--)>
+	requires <*:CS_END_RallyDefenses>
 	desc <The PC needs help, but the armory was captured by the enemy.>
 
 	%% E1 is a public scene for the meeting
@@ -738,180 +732,4 @@ Content
 		Prompt2_1 <Wait, wasn't that supposed to be your job?>
 	end
 
-Content
-	name <Mission: Liberate the Armory>
-	requires <*:CS_END_RallyDefenses +Tgt (+Fmi|T:PCFAC) T:++>
-	desc <The PC needs help, but the armory was captured by the enemy.>
-
-	%% E1 is a public scene for the meeting
-	%% E2 is the person to be met
-	%% E3 is an urban scene for the armory
-	Element1 <Scene Building Public !Near -7>
-	Element2 <Grab 5>
-	Place2 <1 (Citizens) pass>
-	Element3 <Scene Urban !Near -7>
-
-	% if E2 died, that cancels this subplot, but if the armory liberation has already
-	%  been started that can still succeed.
-	start <ifNPCDead %2% LoseSubPlot %plotid%>
-
-	% Winning the armor liberation will give the RallyDefenses advantage,
-	% regardless of whether E1 is alive or dead.
-	.%id1%_%plotid1%_GoWin  <WinSubPlot %plotid%   Alert %id%01 History %id%02 PMemo %plotid% %id%03   &RallyDefenses>
-	.%id1%_%plotid1%_GoLoss <LoseSubPlot %plotid%  Alert %id%04 PMemo %plotid% 0>
-
-	Msg%id%01 <You have liberated the \SCENE &EpisodeScene armory. Now at least you'll have some backup in the fight to come.>
-	Msg%id%02_1 <You liberated the armory from \FACTION &EnemyFac .>
-	CMsg%id%02_1 <if# &EnemyFac 0 Accept>
-	Msg%id%02_2 <You liberated the armory from \PERSONA &EnemyNPC 's henchmen.>
-	CMsg%id%02_2 <ifNPCOK &EnemyNPC Accept>
-	Msg%id%02_3 <You liberated the armory from your enemies.>
-	CMsg%id%02_3 <ifNPCDead &EnemyNPC if= &EnemyFac 0 Accept>
-	Msg%id%03_1 <You liberated the armory from \FACTION &EnemyFac . Now you should have some backup in the final battle.>
-	CMsg%id%03_1 <if# &EnemyFac 0 Accept>
-	Msg%id%03_2 <You liberated the armory from \PERSONA &EnemyNPC 's henchmen. Now you should have some backup in the final battle.>
-	CMsg%id%03_2 <ifNPCOK &EnemyNPC Accept>
-	Msg%id%03_3 <You liberated the armory from your enemies. Now you should have some backup in the final battle.>
-	CMsg%id%03_3 <ifNPCDead &EnemyNPC if= &EnemyFac 0 Accept>
-	Msg%id%04 <You destroyed the \SCENE &EpisodeScene armory.>
-
-	% SubPlot1 is the armory liberation
-	SubPlot1 <*:CS_CaptureBuilding 3>
-
-	sub
-		Persona 2
-		greeting <ifSubPlotWon %plotid% else GoCheckLoss NewChat Say 1>
-		GoCheckLoss <ifSubPlotLost %plotid% else GoCheckMission NewChat Say 2>
-		GoCheckMission <if# PlotStatus %plotid1% 0 else GoCheckFirst NewChat Say 3>
-		GoCheckFirst <if= PlotStatus %plotid% %id% else GoChat NewChat Say 4 AddChat 1 AddChat 2>
-		GoChat <NewChat SayAnything>
-		*result1 <*CS_END_StatusReport result2>
-		result2 <NewChat Say 5 History 6 PMemo %plotid% 7 SetPlotStatus %plotid1% %id1%>
-		Msg1 <You did it! Now we can start fighting back properly!>
-		Msg1_1 <The armory has been liberated. Now, we'll be able to strike back at \PERSONA &EnemyNPC !>
-		CMsg1_1 <ifNPCOK &EnemyNPC Accept>
-		Msg1_3 <You liberated the armory from \FACTION &EnemyFac ! We'll be there to support you when the time comes to strike.>
-		CMsg1_3 <if# &EnemyFac 0 Accept>
-		Msg2 <The armory has been destroyed...>
-		Msg2_1 <The armory has been destroyed... At least \PERSONA &EnemyNPC won't be able to use it either.>
-		CMsg2_1 <ifNPCOK &EnemyNPC Accept>
-		Msg2_3 <The armory has been destroyed... At least it can't be used by \FACTION &EnemyFac anymore.>
-		CMsg2_3 <if# &EnemyFac 0 Accept>
-		Msg3 <You need to liberate the armory in %name3%; otherwise we won't be able to put up a fight!>
-		Msg3_1 <The armory is still under the control of \PERSONA &EnemyNPC . We need to get it back if we're going to reist \OPR &EnemyNPC .>
-		CMsg3_1 <ifNPCOK &EnemyNPC Accept>
-		Msg3_3 <The armory is still under the control of \FACTION &EnemyFac . We need to get it back if we're going to reist them.>
-		CMsg3_3 <if# &EnemyFac 0 Accept>
-		Msg4 <\PC , thank goodness you're here. Things are falling apart in \SCENE &EpisodeScene .>
-		Msg4_1 <\PC , am I ever glad to see you. \PERSONA &EnemyNPC 's gone on a rampage; the entire city has been deadlocked.>
-		CMsg4_1 <ifNPCOK &EnemyNPC Accept>
-		Msg4_2 <\PC , you've come at just the right time. This city is under siege by \FACTION &EnemyFac ; we are completely at their mercy.>
-		CMsg4_2 <if# &EnemyFac 0 Accept>
-		Msg5 <There's no way we can put up a proper fight because the armory in %name3% has been captured. Nobody can do anything without those weapons.>
-		Msg5_1 <We can't even fight back because \PERSONA &EnemyNPC has captured the armory in %name3%. If we could get those weapons back, then maybe that'd even the odds a bit.>
-		CMsg5_1 <ifNPCOK &EnemyNPC Accept>
-		Msg5_2 <The armory in %name3% has been occupied by \FACTION &EnemyFac . We can't put up a fight if we don't have any weapons, now can we?>
-		CMsg5_2 <if# &EnemyFac 0 Accept>
-		Msg6 <%name2% revealed that the armory had been captured.>
-		Msg7 <The armory in %name3% has been captured. You will need to liberate it if you hope to get any backup in this fight.>
-		Prompt1 <So I've noticed. Tell me what's going on.>
-		Prompt1_1 <No kidding. What's going on, anyways?>
-		Prompt2 <I don't see you doing anything to help.>
-		Prompt2_1 <So why aren't you out there fighting?>
-	end
-
-Content
-	name <Favor: Liberate the Armory>
-	requires <*:CS_END_RallyDefenses +Tgt -+Fmi -+Ffi -+Far T:++>
-	desc <The PC will learn that the armory was captured by the enemy.>
-
-	%% E1 is a public scene for the meeting
-	%% E2 is the person to be met
-	%% E3 is an urban scene for the armory
-	Element1 <Scene Building Public !Near -7>
-	Element2 <Grab 5>
-	Place2 <1 (Citizens) pass>
-	Element3 <Scene Urban !Near -7>
-
-	% if E2 died, that cancels this subplot, but if the armory liberation has already
-	%  been started that can still succeed.
-	start <ifNPCDead %2% LoseSubPlot %plotid%>
-
-	% Winning the armor liberation will give the RallyDefenses advantage,
-	% regardless of whether E1 is alive or dead.
-	.%id1%_%plotid1%_GoWin  <WinSubPlot %plotid%   Alert %id%01 History %id%02 PMemo %plotid% %id%03   &RallyDefenses>
-	.%id1%_%plotid1%_GoLoss <LoseSubPlot %plotid%  Alert %id%04 PMemo %plotid% 0>
-
-	Msg%id%01 <You have liberated the \SCENE &EpisodeScene armory. Now at least you'll have some backup in the fight to come.>
-	Msg%id%02_1 <You liberated the armory from \FACTION &EnemyFac .>
-	CMsg%id%02_1 <if# &EnemyFac 0 Accept>
-	Msg%id%02_2 <You liberated the armory from \PERSONA &EnemyNPC 's henchmen.>
-	CMsg%id%02_2 <ifNPCOK &EnemyNPC Accept>
-	Msg%id%02_3 <You liberated the armory from your enemies.>
-	CMsg%id%02_3 <ifNPCDead &EnemyNPC if= &EnemyFac 0 Accept>
-	Msg%id%03_1 <You liberated the armory from \FACTION &EnemyFac . Now you should have some backup in the final battle.>
-	CMsg%id%03_1 <if# &EnemyFac 0 Accept>
-	Msg%id%03_2 <You liberated the armory from \PERSONA &EnemyNPC 's henchmen. Now you should have some backup in the final battle.>
-	CMsg%id%03_2 <ifNPCOK &EnemyNPC Accept>
-	Msg%id%03_3 <You liberated the armory from your enemies. Now you should have some backup in the final battle.>
-	CMsg%id%03_3 <ifNPCDead &EnemyNPC if= &EnemyFac 0 Accept>
-	Msg%id%04 <You destroyed the \SCENE &EpisodeScene armory.>
-
-	% SubPlot1 is the armory liberation
-	SubPlot1 <*:CS_CaptureBuilding 3>
-
-	sub
-		Persona 2
-		greeting <if= PlotStatus %plotid% %id% else GoChat if= PlotStatus %plotid1% 0 else GoChat NewChat Say 1 AddChat 1>
-		GoStartMission <NewChat Say 2 History 3 PMemo %plotid% 4 SetPlotStatus %plotid1% %id1%>
-		GoChat <NewChat SayAnything>
-		*result1 <*CS_END_StatusReport GoStartMission>
-		Msg1 <\PC , I'm glad to see you but I'm afraid it's not a good time to be visiting \SCENE &EpisodeScene .>
-		Msg1_1 <\PC ! I didn't expect you to come here, not after what \PERSONA &EnemyNPC did... it's not a good time to be in \SCENE &EpisodeScene .>
-		CMsg1_1 <ifNPCOK &EnemyNPC Accept>
-		Msg1_2 <\PC , I didn't expect you to make it. This isn't a good time to be in \SCENE &EpisodeScene if you're an enemy of \FACTION &EnemyFac .>
-		CMsg1_2 <if# &EnemyFac 0 Accept>
-		Msg2 <The biggest problem is that the armory has been captured. Without the weapons they have there, \SCENE &EpisodeScene can't even fight back properly.>
-		Msg2_1 <The first thing \PERSONA &EnemyNPC did was to capture the armory. Without that, \SCENE &EpisodeScene can't mount a proper defense.>
-		CMsg2_1 <ifNPCOK &EnemyNPC Accept>
-		Msg2_2 <The armory in %name3% has been captured by \FACTION &EnemyFac . Without that, there's no way to lead a proper defense.>
-		CMsg2_2 <if# &EnemyFac 0 Accept>
-		Msg3 <%name2% revealed that the armory had been captured.>
-		Msg4 <The armory in %name3% has been captured. You will need to liberate it if you hope to get any backup in this fight.>
-		Prompt1 <Yeah, I noticed. What the blazes is going on?>
-		Prompt1_1 <I'm going to need to know exactly what's going on.>
-	end
-
-
-%%
-%% *:CS_END_Partner_Arc
-%%
-%%  The partner and the PC can do something together before the end of the game,
-%%  hopefully completing the partner's story arc.
-%%
-
-Content
-	requires <*:CS_END_Partner_Arc>
-
-
-Content
-	name <Trivial Case>
-	requires <*:CS_END_Partner_Arc R:-->
-	desc <No partner, no subplot.>
-
-%%
-%% *:CS_END_LoveInterest_Arc
-%%
-%%  The love interest can see the PC one last time before the end of the game.
-%%  Maybe they can finally get that date? Or this might not be a good time...
-%%
-
-Content
-	requires <*:CS_END_LoveInterest_Arc>
-
-
-Content
-	name <Trivial Case>
-	requires <*:CS_END_LoveInterest_Arc A:-->
-	desc <No love interest, no subplot.>
 
