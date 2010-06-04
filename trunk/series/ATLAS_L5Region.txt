@@ -42,6 +42,12 @@ Scene 0 3
 
 	SetFaction 1
 	factions <MAQUI COMET SILKN PRIVA L5LAW>
+	%% MISSION GIVERS:
+	%%  3 x MAQUI
+	%%  3 x COMET
+	%%  3 x SILKN
+	%%  3 x PRIVA
+	%%  3 x L5LAW
 
 	desig <MAQSP>
 
@@ -92,6 +98,12 @@ sub
 		desig <EntranceGrid>
 		Content <Some 5 50 Here *URBAN_X>
 		Content2 <Some 1 100 Here *ANTI_ATTACK_SECURITY 2>
+	end
+	inv
+		NPC Police Officer
+		SetTeam 3
+		SetFaction 9
+		MissionGiver
 	end
 
 	Scene
@@ -148,16 +160,6 @@ sub
 	start <Print 1>
 	Msg1 <You enter Comet Tower.>
 
-	inv
-		NPC Corporate Executive
-		name <Jamil>
-		SDL_PORTRAIT <por_m_guy3(AA-).png>
-		SDL_COLORS <234 180 88 255 212 195 1 75 67>
-		Chardesc Male Sociable Easygoing Pragmatic
-		Age 6
-		home <Office>
-		SetFaction 2
-	end
 	sub
 		team 1
 
@@ -172,83 +174,33 @@ sub
 		SetAlly 1 2
 
 		room
-		minimap <..1.................##=##>
-		Special <NOGO>
-		sub
-			Door
-			% The following update will unlock locked doors and reveal secret ones
-			% if the PC has been granted armory access.
-			update <ifAccessArmory SetStat 6 0 if# StatVal 5 0 DrawTerr SelfX SelfY 19 SetStat 5 0>
-		end
-		inv
-			StairsDown
-			name <Comet Factory>
-			MiniMapComponent 1
-		end
-
-		room
 		name <Foyer>
 		desig <EntranceGrid>
 		Content1 <Some 1  45 Here *NPC_GUARD>
 		Content3 <Some 2  35 Here *CORP_EMPLOYEE>
 		Content4 <Some 1 100 Here *ANTI_ATTACK_SECURITY 2>
-
-		Scene
-		name <Comet Factory>
+	end
+	inv
+		NPC Corporate Executive
+		name <Jamil>
+		SDL_PORTRAIT <por_m_guy3(AA-).png>
+		SDL_COLORS <234 180 88 255 212 195 1 75 67>
+		Chardesc Male Sociable Easygoing Pragmatic
+		Age 6
+		home <Office>
 		SetFaction 2
-		type <Building Secret>
-		special <NORESCUE NOEXIT>
+		MissionGiver
+		SetTeam 2
 
-		% V1 = Security System Disabled
-		% V2 = Message initialization
-		Content1 <Some 1 100 Sub  *ALARMSYS 1>
-		Content2 <Some 5  50 Here *NPC_GUARD>
-		Content3 <Some 1  50 Sub  *SECURITY>
-		Content4 <Fill       Sub  *CORP_RND 1>
+		NPC Corporate Executive
+		SetFaction 2
+		MissionGiver
+		SetTeam 2
 
-		MonkeyMap
-		MapWidth 35
-		MapHeight 35
-		LockedDoorChance 85
-		SecretDoorChance 15
-
-		Start <if= V2 0 else GoSecondTime L= 2 1 Print 2 Alert 3>
-		GoSecondTime <Print 2>
-
-		Alarm <MonsterUp 3 35 TeamAttack 3 PCFEnemy SceneFac SceneID  AddRenown -5>
-		5Min <ifTeamHostile 3 else TM1 MonsterUp 3 d20>
-		TM1 <ifNotAccessArmory ifTeamNotHostile 3 ifTeamCanSeePC 3 ifG 5 Stealth Alert 1 Alarm>
-		PCATTACK <ifNotAccessArmory ifTeamNotHostile 3 ifG 10 Stealth Alert 4 Alarm>
-
-		Msg1 <You are spotted!>
-		Msg2 <You enter the Comet Factory.>
-		Nsg3 <WARNING: Unauthorized entry strictly forbidden. Security forces authorized to use lethal force.>
-		Msg4 <Suddenly an alarm sounds!>
-
-		sub
-			Door
-			% The following update will unlock locked doors and reveal secret ones
-			% if the PC has been granted armory access.
-			update <ifAccessArmory SetStat 6 0 if# StatVal 5 0 DrawTerr SelfX SelfY 19 SetStat 5 0>
-
-			Team 1
-
-			Team 2
-			name <Citizens>
-			SetAlly 3
-
-			Team 3
-			name <Guards>
-			type <Guard Robot>
-			SetAlly 2
-
-			room
-			Content <Some 2  25 Here *NPC_GUARD>
-			sub
-				StairsUp
-				Destination -1
-			end
-		end
+		NPC Scientist
+		SetFaction 2
+		MissionGiver
+		SetTeam 2
 	end
 
 	Scene
@@ -259,6 +211,7 @@ sub
 	MallMap
 	MapWidth 20
 	MapHeight 15
+	SetFaction 6
 
 	start <Print 1>
 	Msg1 <You enter the Privateers Club.>
@@ -285,6 +238,17 @@ sub
 		desig <EntranceGrid>
 		Content <Some 5 45 Here *URBAN_X>
 		Content2 <Some 1 100 Here *ANTI_ATTACK_SECURITY 2>
+	end
+	inv
+		NPC Privateer
+		SetFaction 6
+		SetTeam 3
+		MissionGiver
+
+		NPC Privateer
+		SetFaction 6
+		SetTeam 3
+		MissionGiver
 	end
 
 	Scene
@@ -366,11 +330,13 @@ sub
 			SetTeam 3
 			SetFaction 9
 			MiniMapComponent 1
+			MissionGiver
 
 			NPC Police Officer
 			SetTeam 3
 			SetFaction 9
 			MiniMapComponent 2
+			MissionGiver
 		end
 
 		room
@@ -381,11 +347,13 @@ sub
 			SetTeam 3
 			SetFaction 3
 			MiniMapComponent 1
+			MissionGiver
 
 			NPC Knight
 			SetTeam 3
 			SetFaction 3
 			MiniMapComponent 2
+			MissionGiver
 		end
 
 
@@ -404,12 +372,20 @@ sub
 			chardesc Female Sociable Passionate Pragmatic Renowned
 			statline 13 10 14 16 13 17 16 17
 			MiniMapComponent 1
+			MissionGiver
 
-			NPC Knight
+			NPC Soldier
 			SetTeam 3
-			SetFaction 3
+			SetFaction 1
 			MiniMapComponent 2
+			MissionGiver
 		end
+	end
+	inv
+		NPC Bureaucrat
+		SetFaction 1
+		SetTeam 2
+		MissionGiver
 	end
 
 	Scene
@@ -479,6 +455,17 @@ sub
 		end
 
 	end
+	inv
+		NPC Knight
+		SetTeam 3
+		SetFaction 3
+		MissionGiver
+
+		NPC Privateer
+		SetFaction 6
+		SetTeam 3
+		MissionGiver
+	end
 
 % End of Maquise Spinner...
 end
@@ -514,7 +501,12 @@ Scene 0 3
 	% V1 = Message Counter
 
 	SetFaction 1
-	factions <MAQUI SILKN PRIVA MUGLE L5LAW>
+	factions <MAQUI SILKN MUGLE L5LAW>
+	%% MISSION GIVERS:
+	%%  3 x MAQUI
+	%%  3 x SILKN
+	%%  3 x L5LAW
+	%%  3 x MUGLE
 
 	desig <ATHSP>
 
@@ -563,6 +555,12 @@ sub
 		desig <EntranceGrid>
 		Content <Some 5 50 Here *URBAN_X>
 		Content2 <Some 1 100 Here *ANTI_ATTACK_SECURITY 2>
+	end
+	inv
+		NPC Police Officer
+		SetTeam 3
+		SetFaction 9
+		MissionGiver
 	end
 
 	Scene
@@ -669,6 +667,12 @@ sub
 		desig <EntranceGrid>
 		Content <Some 4 65 Here *URBAN_X>
 		Content2 <Some 1 100 Here *ANTI_ATTACK_SECURITY 2>
+	end
+	inv
+		NPC Knight
+		SetTeam 3
+		SetFaction 3
+		MissionGiver
 	end
 
 	Scene
@@ -800,6 +804,7 @@ sub
 			inv
 				NPC Politician
 				name <Liandor>
+				job <Technocrat>
 				SDL_Portrait <por_m_guy3(AA-).png>
 				SDL_Colors <75 200 212 150 112 89 152 61 97>
 				statline 10 13 12 12 14 19 15 16
@@ -807,6 +812,7 @@ sub
 				SetFaction 1
 				MiniMapComponent 1
 				CharDesc Sociable Passionate Male
+				MissionGiver
 			end
 
 			room
@@ -817,6 +823,7 @@ sub
 				SetTeam 3
 				SetFaction 9
 				MiniMapComponent 1
+				MissionGiver
 			end
 
 			room
@@ -827,21 +834,20 @@ sub
 				SetTeam 3
 				SetFaction 3
 				MiniMapComponent 1
+				MissionGiver
 
 				NPC Knight
 				SetTeam 3
 				SetFaction 3
 				MiniMapComponent 2
+				MissionGiver
 			end
-			end
+		end
 		inv
-			NPC Police Officer
-			SetTeam 3
-			SetFaction 9
-
-			NPC Knight
-			SetTeam 3
-			SetFaction 3
+			NPC Bureaucrat
+			SetTeam 2
+			SetFaction 1
+			MissionGiver
 		end
 
 		Scene
@@ -894,7 +900,13 @@ sub
 			end
 		end
 	end
-
+	inv
+		%% Athera Garden
+		NPC Bureaucrat
+		SetTeam 2
+		SetFaction 1
+		MissionGiver
+	end
 
 	Scene
 	name <Athera Spaceport>
@@ -962,6 +974,13 @@ sub
 			YPos 15
 		end
 	end
+	inv
+		%% For Athera Spaceport
+		NPC Police Officer
+		SetTeam 3
+		SetFaction 9
+		MissionGiver
+	end
 
 	Scene
 	name <MUGL Media Center>
@@ -1004,7 +1023,21 @@ sub
 	inv
 		NPC Corporate Executive
 		home <Foyer>
+		SetTeam 2
 		SetFaction 13
+		MissionGiver
+
+		NPC Corporate Executive
+		home <Foyer>
+		SetTeam 2
+		SetFaction 13
+		MissionGiver
+
+		NPC Journalist
+		home <Foyer>
+		SetTeam 2
+		SetFaction 13
+		MissionGiver
 	end
 
 
@@ -1046,6 +1079,12 @@ Scene
 
 	SetFaction 1
 	factions <MAQUI COMET PRIVA HOELL L5LAW>
+	%% MISSION GIVERS:
+	%%  2 x MAQUI
+	%%  2 x PRIVA
+	%%  2 x L5LAW
+	%%  2 x COMET
+	%%  2 x HOELL
 
 	desig <CAYLE>
 
@@ -1072,6 +1111,12 @@ inv
 	Age 23
 	chardesc Male Heroic
 	statline 13 16 12 11 16 13 14 13
+	MissionGiver
+
+	NPC Mecha Pilot
+	SetTeam 3
+	SetFaction 1
+	MissionGiver
 
 	NPC Pirate
 	job <Privateer>
@@ -1079,6 +1124,7 @@ inv
 	SetTeam 3
 	SetFaction 6
 	Age 14
+	MissionGiver
 
 end
 sub
@@ -1138,6 +1184,7 @@ sub
 		SetTeam 3
 		SetFaction 9
 		MiniMapComponent 1
+		MissionGiver
 	end
 
 	room
@@ -1300,6 +1347,11 @@ sub
 		statline 11 15 13 14 18 16 13 9
 		home <Foyer>
 		SetTeam 2
+
+		NPC Police Officer
+		SetTeam 3
+		SetFaction 9
+		MissionGiver
 	end
 
 	Scene 0 3
@@ -1350,10 +1402,29 @@ sub
 		NPC Corporate Executive
 		home <Office>
 		SetFaction 7
+		SetTeam 2
+		MissionGiver
 
 		NPC Corporate Executive
 		home <Office>
 		SetFaction 2
+		SetTeam 2
+		MissionGiver
+
+		NPC Corporate Executive
+		SetFaction 7
+		SetTeam 2
+		MissionGiver
+
+		NPC Corporate Executive
+		SetFaction 2
+		SetTeam 2
+		MissionGiver
+
+		NPC Privateer
+		SetTeam 3
+		SetFaction 6
+		MissionGiver
 	end
 	sub
 		% BEGIN Cayley Steelworks Stuff
@@ -1399,7 +1470,7 @@ Scene 0 3
 	world <L5 Region>
 	desc <Cesena Spinner is the site of the L5 Alliance's shipyards and the home port of the Silver Knights.>
 	special <NOEXIT SHOWALL SOLO>
-	type <city town spinner target outdoors urban destination hometown industrial lawful>
+	type <city town spinner target outdoors urban destination hometown industrial lawful military>
 	personatype <city spinner>
 	habitat <SPACE.URBAN>
 	MegaCityMap
@@ -1409,7 +1480,13 @@ Scene 0 3
 	% V1 = Message Counter
 
 	SetFaction 1
-	factions <MAQUI COMET HOELL SILKN PRIVA L5LAW>
+	factions <MAQUI COMET HOELL SILKN L5LAW>
+	%% MISSION GIVERS:
+	%%  3 x MAQUI
+	%%  3 x SILKN
+	%%  3 x L5LAW
+	%%  3 x COMET
+	%%  3 x HOELL
 
 	desig <CSNSP>
 

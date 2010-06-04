@@ -112,20 +112,20 @@ Persona
 %% *CS_END_Intro_Explanation
 %%
 %%  The Enemy NPC will explain what's going on, and may mention that the PC is too
-%%  late anyhow. This pfrag should be based on the +P state and the enemy faction.
+%%  late anyhow. This pfrag should be based on the plot state of the enemy faction.
 %%
 %%  This PFrag should set a storynote (smemo+history).
 %%
 
 Persona
-	requires <*CS_END_Intro_Explanation +Pla I:++>
+	requires <*CS_END_Intro_Explanation F:P.art I:++>
 	START <EndChat Say %id%01 SMemo %id%02 History %id%03>
 	Msg%id%01 <We have the \ITEM &TargetItem . With the knowledge it contains, our forces will be unbeatable! Still, I cannot leave loose ends unaddressed... I've assigned my best fighters to hunting you down. Goodbye \PC .>
 	Msg%id%02 <\CHATNPC revealed that \SPR ChatNPCID has obtained the \ITEM &TargetItem ; \SPR ChatNPCID assigned several of \PPR ChatNPCID best fighters to hunting you down.>
 	Msg%id%03 <\CHATNPC found the \ITEM &TargetItem , and revealed that it held great knowledge.>
 
 Persona
-	requires <*CS_END_Intro_Explanation F:REDMA (+P--|+Pme|+Pun|+Psh|+Pew)>
+	requires <*CS_END_Intro_Explanation F:REDMA (F:P.---|F:P.cat|F:P.pat|F:P.wep|F:P.war)>
 	START <EndChat Say %id%01 SMemo %id%02 History %id%03>
 	Msg%id%01 <The era of the Red Mask Raiders has begun. With our new fleet we will be lords of the spaceways! Soon you will feel our true power, and tremble before it...>
 	Msg%id%02 <\CHATNPC revealed that the Red Mask Raiders are making a play for dominance.>
@@ -142,7 +142,7 @@ Persona
 %% *CS_END_StatusReport
 %%
 %%  This friendly NPC will explain to the PC what's been going on in the city. This
-%%  pfrag will be based on the enemy faction, the enemy NPC, and the +P state.
+%%  pfrag will be based on the enemy faction, the enemy NPC, and the plot state.
 %%
 %%  PARAM1: [Continue] exit label
 %%
@@ -155,7 +155,7 @@ Persona
 	Prompt%id%01 <[Continue]>
 
 Persona
-	requires <*CS_END_StatusReport F:REDMA +Pew>
+	requires <*CS_END_StatusReport F:REDMA (F:P.wep|F:P.war)>
 	START <EndChat Say %id%01 AddChat %id%01>
 	result%id%01 <Goto %1%>
 	Msg%id%01 <I don't know who's been helping them, but the Red Mask Raiders have obtained state of the art mecha. There's no way pirates could build machines like that by themselves. They're using \SCENE &EpisodeScene as a proving ground.>

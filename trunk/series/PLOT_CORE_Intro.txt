@@ -442,8 +442,7 @@ Plot
 		% v%id%01 = First Reputation Counter
 		*.%id%_GoNotHere <*NotByPhone>
 		*.%id%_GoGreet <*HowAreYou .%id%_GoAsk>
-		.%id%_GoAsk <NewChat Say %id%01 AddChat %id%01 AddChat %id%02 AlterContext .%id%_UnknownEnemy>
-		.%id%_UnknownEnemy <+Pun>
+		.%id%_GoAsk <NewChat Say %id%01 AddChat %id%01 AddChat %id%02>
 		GoStartMeeting <SMemo %id%05 MoveNPC %3% %5% SetPlotStatus %plotid1% %id1%>
 		result%id%01 <NewChat Say %id%02    AddCHat %id%03 AddChat %id%04 AddChat %id%05    if= V%id%01 0 V= %id%01 1 AddCheerful d6>
 		result%id%02 <NewChat Say %id%03    AddCHat %id%03 AddChat %id%04 AddChat %id%05    if= V%id%01 0 V= %id%01 1 AddCheerful -d6>

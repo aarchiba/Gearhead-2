@@ -22,27 +22,10 @@
 %%  Param1: The NPC to be stopped
 %%
 
-%%  ********************************
-%%  ***   +P--  Peaceful  Life   ***
-%%  ********************************
-
-%%  ****************************
-%%  ***   +Pme  Meet Enemy   ***
-%%  ****************************
-
-%%  *****************************************
-%%  ***   +Pun  Unknown  Enemy  Attacks   ***
-%%  *****************************************
-
-
-%%  *************************************
-%%  ***   +Pla  Learn  of  Artifact   ***
-%%  *************************************
-
 Content
 	name <In It For The Money>
 	desc <The enemy NPC? In it for the money.>
-	requires <*:CS_StopNPCMission &IsEnemyNPC E:M.--- -E:A.nme +Pla F:++ -F:POLIC I:++ ~+Gmo>
+	requires <*:CS_StopNPCMission &IsEnemyNPC E:M.--- -E:A.nme F:P.art -F:POLIC I:++ ~+Gmo>
 	changes <E:M>
 	Size 8
 
@@ -181,10 +164,6 @@ Content
 		stc CORE-ACTIVATABLE
 		name <%name1%'s Lance>
 	end
-
-%%  ****************************************
-%%  ***   +Pew  Enemy  Weapon  Program   ***
-%%  ****************************************
 
 %%  *******************
 %%  ***   GENERAL   ***

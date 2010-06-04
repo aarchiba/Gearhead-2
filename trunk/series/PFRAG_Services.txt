@@ -154,7 +154,7 @@
 	CMsg%id%01_1 <if# v%id%01 1 Accept>
 	Msg%id%01_2 <So you're back for more punishment, hey? I'm here to help you anytime you're ready.>
 	CMsg%id%01_2 <if= v%id%01 1 Accept>
-	Msg%id%02 <Good health is it's own reward.>
+	Msg%id%02 <Good health is its own reward.>
 	Prompt%id%01 <Let's work out.>
 	Prompt%id%02 <Maybe some other time.>
 	Prompt%id%03 <Mind your own business..>
@@ -896,7 +896,7 @@
 	Prompt%id%01 <I'd like the eggplant and chicory fondue.>
 	CPrompt%id%01 <ifG PCHunger 10 Accept>
 	Prompt%id%02 <No thanks, I'm not hungry.>
-	Prompt%id%03 <I'd like the five bean casseorle.>
+	Prompt%id%03 <I'd like the five bean casserole.>
 	CPrompt%id%03 <ifG PCHunger 10 Accept>
 
 	Persona

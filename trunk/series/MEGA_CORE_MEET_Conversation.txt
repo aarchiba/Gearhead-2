@@ -604,7 +604,7 @@ Content
 Content
 	name <Many People Are Getting Hurt>
 	desc <The PC's enemy has been causing lots of damage. Won't the PC do something to help?>
-	requires <*CS_Conversation 1:MEDIC -1:ENEMY (F:CRIME|F:--|E:EVIL_|+Pun) *CORE_DEF_ ~E:EVIL_>
+	requires <*CS_Conversation 1:MEDIC -1:ENEMY (F:CRIME|F:--|E:EVIL_|F:P.pat|F:P.war) *CORE_DEF_ ~E:EVIL_>
 
 	% E1 is the person being spoken to.
 	% E2 is the outdoors location where the encounter will be placed

@@ -19,10 +19,6 @@
 %%  Param2: The encounter to be used as the entrance
 %%
 
-%%  ********************************
-%%  ***   +P--  Peaceful  Life   ***
-%%  ********************************
-
 Content
 	name <Warned About You>
 	desc <Discover your new enemy faction.>
@@ -158,8 +154,7 @@ Content
 		MapWidth 50
 		MapHeight 50
 
-		Start <if= L2 0 L= 2 1   Alert 1  History 2  Monologue %4% 7  AlterContext .changes  CancelSubPlot %plotid1% if# P%id%02 0 Alert 6>
-		.changes <+Pun>
+		Start <if= L2 0 L= 2 1   Alert 1  History 2  Monologue %4% 7  SetXXRPlot &EnemyFac XXR_P_PublicAttack  CancelSubPlot %plotid1% if# P%id%02 0 Alert 6>
 		nu1 <if= T1 0   Return   if= V1 0 V= 1 1 Alert 3 History 4 Trigger0 .%id%_%plotid%_GoLoss LoseSubPlot %plotid%>
 		nu2 <if= T2 0   if= V1 0 V= 1 1 ifG T3 0 else GoLoseMission  Alert 5  SetDebriefing %id%11  XPV 100  Salvage  Return  Trigger0 .%id%_%plotid%_GoWin WinSubPlot %plotid%>
 		GoLoseMission <Alert 4 History 4 Trigger0 .%id%_%plotid%_GoLoss LoseSubPlot %plotid%>
@@ -217,8 +212,8 @@ Content
 	name <Capture Weapons Shipment>
 	size 7
 	desc <Capture an enemy cruiser, learn they're working on a weapons program.>
-	requires <*:CS_MechaEncounter &Raiders (+P--|+Pun) -!Ne -!Lo>
-	changes <+P>
+	requires <*:CS_MechaEncounter &Raiders (F:P.---|F:P.pat) -!Ne -!Lo>
+	changes <F:P>
 
 	% E1 is the outdoors scene where this encounter will be placed
 	% E2 is the metascene to be used for this encounter
@@ -247,9 +242,8 @@ Content
 		Start <if= L2 0 L= 2 1   Alert 1  CancelSubPlot %plotid1%>
 		nu1 <if= T1 0   Return   if= V1 0 V= 1 1 Alert 2 History 3 Trigger0 .%id%_%plotid%_GoLoss LoseSubPlot %plotid%>
 		nu2 <if= T2 0   ifG T3 0 else GoCheckWin  Alert 4 WMecha 2 StoryDL 70>
-		GoCheckWin <if= V1 0 V= 1 1   ifG T4 0 else GoLoseEncounter XPV 100  AddRenown 1   Alert 5 History 6 CustomMecha .mek StoryDL SetDebriefing %id%11  AlterContext .changes   Trigger0 .%id%_%plotid%_GoWin WinSubPlot %plotid%>
+		GoCheckWin <if= V1 0 V= 1 1   ifG T4 0 else GoLoseEncounter XPV 100  AddRenown 1   Alert 5 History 6 CustomMecha .mek StoryDL SetDebriefing %id%11  SetXXRPlot &EnemyFac XXR_P_WeaponProgram   Trigger0 .%id%_%plotid%_GoWin WinSubPlot %plotid%>
 		.mek <GENERAL \FACTION_DESIG &EnemyFac>
-		.changes <+Pew>
 		GoLoseEncounter <Alert 2 History 3 Trigger0 .%id%_%plotid%_GoLoss LoseSubPlot %plotid%>
 		end <SetEncounterInactive %2%>
 
@@ -298,19 +292,11 @@ Content
 	end
 
 
-%%  ****************************
-%%  ***   +Pme  Meet Enemy   ***
-%%  ****************************
-
-%%  *******************************
-%%  ***   +Pun  Under  Attack   ***
-%%  *******************************
-
 Content
 	name <Enemy Faction Revealed>
 	size 6
 	desc <Fight some mecha and find out who they work for.>
-	requires <*:CS_MechaEncounter &Raiders F:-- +Pun (!Ne|!Lo|&Secondary)>
+	requires <*:CS_MechaEncounter &Raiders F:-- (!Ne|!Lo|&Secondary)>
 	changes <F:++>
 
 	% E1 is the outdoors scene where this encounter will be placed
@@ -379,8 +365,8 @@ Content
 	name <Defend The Prototype>
 	size 10
 	desc <You find your enemies transporting a prototype weapon.>
-	requires <*:CS_MechaEncounter +Pun -!Ne>
-	changes <+P>
+	requires <*:CS_MechaEncounter F:P.pat -!Ne>
+	changes <F:P>
 
 	% E1 is the outdoors scene where this encounter will be placed
 	% E2 is the metascene to be used for this encounter
@@ -404,8 +390,7 @@ Content
 		MapWidth 50
 		MapHeight 50
 
-		Start <if= L2 0 L= 2 1   Alert 1  TeamMonologue 2 2   AlterContext .changes  SetDebriefing %id%11   CancelSubPlot %plotid1%>
-		.changes <+Pew>
+		Start <if= L2 0 L= 2 1   Alert 1  TeamMonologue 2 2   SetXXRPlot &EnemyFac XXR_P_WeaponProgram  SetDebriefing %id%11   CancelSubPlot %plotid1%>
 		nu1 <if= T1 0   Return   if= L1 0  L= 1 1  ifG T3 0 else GoWinMission Goto GoLoseMission>
 		nu2 <if= T2 0   if= T3 0   if= L1 0   L= 1 1  Goto GoWinMission>
 		nu3 <if= T2 0   if= T3 0   if= L1 0   L= 1 1  Goto GoWinMission>
@@ -462,21 +447,12 @@ Content
 	end
 
 
-%%  *************************************
-%%  ***   +Pla  Learn  of  Artifact   ***
-%%  *************************************
-
-
-%%  ****************************************
-%%  ***   +Pew  Enemy  Weapon  Program   ***
-%%  ****************************************
-
 Content
 	name <Prototype Field Test>
 	size 10
 	desc <You find your enemies transporting a prototype weapon. Again.>
-	requires <*:CS_MechaEncounter +Pew &Secondary>
-	changes <+P>
+	requires <*:CS_MechaEncounter F:P.wep &Secondary>
+	changes <F:P>
 
 	% E1 is the outdoors scene where this encounter will be placed
 	% E2 is the metascene to be used for this encounter
