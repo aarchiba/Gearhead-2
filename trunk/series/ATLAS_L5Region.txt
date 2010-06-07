@@ -243,11 +243,13 @@ sub
 		NPC Privateer
 		SetFaction 6
 		SetTeam 3
+		home <Foyer>
 		MissionGiver
 
 		NPC Privateer
 		SetFaction 6
 		SetTeam 3
+		home <Foyer>
 		MissionGiver
 	end
 
@@ -1411,12 +1413,12 @@ sub
 		SetTeam 2
 		MissionGiver
 
-		NPC Corporate Executive
+		NPC Trucker
 		SetFaction 7
 		SetTeam 2
 		MissionGiver
 
-		NPC Corporate Executive
+		NPC Miner
 		SetFaction 2
 		SetTeam 2
 		MissionGiver
@@ -1484,7 +1486,7 @@ Scene 0 3
 	%% MISSION GIVERS:
 	%%  3 x MAQUI
 	%%  3 x SILKN
-	%%  3 x L5LAW
+	%%  2 x L5LAW
 	%%  3 x COMET
 	%%  3 x HOELL
 
@@ -1531,6 +1533,12 @@ sub
 		desig <EntranceGrid>
 		Content <Some 4 50 Here *URBAN_X>
 		Content2 <Some 1 100 Here *ANTI_ATTACK_SECURITY 2>
+	end
+	inv
+		NPC Police Officer
+		SetTeam 3
+		SetFaction 9
+		MissionGiver
 	end
 
 	Scene
@@ -1609,11 +1617,13 @@ sub
 			SetTeam 3
 			SetFaction 3
 			MiniMapComponent 1
+			MissionGiver
 
 			NPC Knight
 			SetTeam 3
 			SetFaction 3
 			MiniMapComponent 2
+			MissionGiver
 		end
 
 
@@ -1726,6 +1736,12 @@ sub
 		Content <Some 5 45 Here *URBAN_X>
 		Content2 <Some 1 100 Here *ANTI_ATTACK_SECURITY 2>
 	end
+	inv
+		NPC Bureaucrat
+		SetTeam 2
+		SetFaction 1
+		MissionGiver
+	end
 
 	Scene
 	name <The Mecha Source>
@@ -1761,6 +1777,13 @@ sub
 		desig <EntranceGrid>
 		Content <Some 3 40 Here *URBAN_X>
 		Content2 <Some 1 100 Here *ANTI_ATTACK_SECURITY 2>
+	end
+	inv
+		NPC Mecha Pilot
+		home <Foyer>
+		SetFaction 7
+		SetTeam 2
+		MissionGiver
 	end
 
 	Scene
@@ -1807,11 +1830,13 @@ sub
 			SetTeam 3
 			SetFaction 9
 			MiniMapComponent 1
+			MissionGiver
 
-			NPC Police Officer
+			NPC Mecha Pilot
 			SetTeam 3
-			SetFaction 9
+			SetFaction 1
 			MiniMapComponent 2
+			MissionGiver
 		end
 
 		room
@@ -1822,6 +1847,7 @@ sub
 			SetTeam 2
 			SetFaction 1
 			MiniMapComponent 1
+			MissionGiver
 
 			NPC Knight
 			name <Gordon Valeus>
@@ -1911,6 +1937,12 @@ sub
 		end
 
 	end
+	inv
+		NPC Knight
+		SetTeam 3
+		SetFaction 3
+		MissionGiver
+	end
 
 	Scene
 	name <Hoeller Heavy Industries>
@@ -1954,6 +1986,14 @@ sub
 		NPC Corporate Executive
 		home <Foyer>
 		SetFaction 7
+		SetTeam 2
+		MissionGiver
+
+		NPC Corporate Executive
+		home <Foyer>
+		SetFaction 7
+		SetTeam 2
+		MissionGiver
 	end
 
 	Scene
@@ -1998,6 +2038,20 @@ sub
 		NPC Corporate Executive
 		home <Foyer>
 		SetFaction 2
+		SetTeam 2
+		MissionGiver
+
+		NPC Corporate Executive
+		home <Foyer>
+		SetFaction 2
+		SetTeam 2
+		MissionGiver
+
+		NPC Explorer
+		home <Foyer>
+		SetFaction 2
+		SetTeam 2
+		MissionGiver
 	end
 
 % End of Cesena Spinner...
@@ -2035,6 +2089,13 @@ Scene 0 3
 
 	SetFaction 10
 	factions <FCOMS COMET HOELL PRIVA MUGLE L5LAW>
+	%% MISSION GIVERS:
+	%%  3 x FCOMS
+	%%  3 x PRIVA
+	%%  3 x L5LAW
+	%%  2 x COMET
+	%%  2 x HOELL
+	%%  2 x MUGLE
 
 	desig <XIASP>
 
@@ -2137,6 +2198,12 @@ sub
 
 		end
 	end
+	inv
+		NPC Police Officer
+		SetTeam 3
+		SetFaction 9
+		MissionGiver
+	end
 
 	Scene
 	name <Xianzai Market>
@@ -2175,6 +2242,13 @@ sub
 		desig <EntranceGrid>
 		Content <Some 5 50 Here *URBAN_X>
 		Content2 <Some 1 100 Here *ANTI_ATTACK_SECURITY 2>
+	end
+	inv
+		NPC Privateer
+		SetFaction 6
+		SetTeam 3
+		home <Foyer>
+		MissionGiver
 	end
 
 	Scene
@@ -2247,33 +2321,69 @@ sub
 		Content2 <Some 1 100 Here *ANTI_ATTACK_SECURITY 2>
 
 		room
-		name <Garrison>
-		minimap <2....1..............#---#>
+		name <Comet Office>
+		minimap <2....1..............##+##>
 		inv
-			NPC Police Officer
-			SetTeam 3
-			SetFaction 9
-			MiniMapComponent 1
-
-			NPC bureaucrat
-			job <Customs Official>
+			NPC Corporate Executive
+			SetFaction 2
 			SetTeam 2
-			SetFaction 10
+			MiniMapComponent 1
+			MissionGiver
+
+			NPC Corporate Executive
+			SetFaction 2
+			SetTeam 2
 			MiniMapComponent 2
+			MissionGiver
+		end
+
+		room
+		name <Hoeller Office>
+		minimap <2....1..............##+##>
+		inv
+			NPC Corporate Executive
+			SetFaction 7
+			SetTeam 2
+			MiniMapComponent 1
+			MissionGiver
+
+			NPC Corporate Executive
+			SetFaction 7
+			SetTeam 2
+			MiniMapComponent 2
+			MissionGiver
+		end
+
+		room
+		name <MUGL Office>
+		minimap <2....1..............##+##>
+		inv
+			NPC Corporate Executive
+			SetFaction 13
+			SetTeam 2
+			MiniMapComponent 1
+			MissionGiver
+
+			NPC Corporate Executive
+			SetFaction 13
+			SetTeam 2
+			MiniMapComponent 2
+			MissionGiver
 		end
 	end
 	inv
-		NPC Corporate Executive
+		NPC Police Officer
+		SetTeam 3
+		SetFaction 9
 		home <Foyer>
-		SetFaction 2
+		MissionGiver
 
-		NPC Corporate Executive
+		NPC bureaucrat
+		job <Customs Official>
+		SetTeam 2
+		SetFaction 10
 		home <Foyer>
-		SetFaction 7
-
-		NPC Corporate Executive
-		home <Foyer>
-		SetFaction 13
+		MissionGiver
 	end
 
 	Scene
@@ -2309,6 +2419,13 @@ sub
 		desig <EntranceGrid>
 		Content <Some 2 40 Here *URBAN_X>
 		Content2 <Some 1 100 Here *ANTI_ATTACK_SECURITY 2>
+	end
+	inv
+		NPC Privateer
+		SetFaction 6
+		SetTeam 3
+		home <Foyer>
+		MissionGiver
 	end
 
 	Scene
@@ -2355,23 +2472,14 @@ sub
 			SetTeam 3
 			SetFaction 9
 			MiniMapComponent 1
-		end
-
-		room
-		name <Garrison>
-		minimap <2....1..............#...#>
-		inv
-			NPC Mecha Pilot
-			SetTeam 3
-			SetFaction 10
-			MiniMapComponent 1
+			MissionGiver
 
 			NPC Mecha Pilot
 			SetTeam 3
 			SetFaction 10
 			MiniMapComponent 2
+			MissionGiver
 		end
-
 
 		room
 		name <Main Office>
@@ -2381,6 +2489,7 @@ sub
 			SetTeam 2
 			SetFaction 10
 			MiniMapComponent 1
+			MissionGiver
 
 			NPC Soldier
 			job <Bodyguard>
@@ -2455,7 +2564,13 @@ sub
 			XPos 15
 			YPos 15
 		end
-
+	end
+	inv
+		NPC Privateer
+		SetFaction 6
+		SetTeam 3
+		home <Foyer>
+		MissionGiver
 	end
 
 % End of Xianzai Spinner...
@@ -2494,6 +2609,10 @@ Scene 0 3
 
 	SetFaction 10
 	factions <FCOMS PDASS PRIVA L5LAW>
+	%% MISSION GIVERS:
+	%%  3 x FCOMS
+	%%  3 x PRIVA
+	%%  3 x L5LAW
 
 	desig <GAOSP>
 
@@ -2541,7 +2660,7 @@ sub
 		room
 		name <Foyer>
 		desig <EntranceGrid>
-		Content <Some 7 60 Here *URBAN_X>
+		Content <Some 5 65 Here *URBAN_X>
 		Content2 <Some 1 100 Here *ANTI_ATTACK_SECURITY 2>
 
 		room
@@ -2663,6 +2782,13 @@ sub
 			Content <Some 5 45 Here *URBAN_X>
 			Content2 <Some 1 100 Here *ANTI_ATTACK_SECURITY 2>
 		end
+		inv
+			NPC Privateer
+			SetFaction 6
+			SetTeam 3
+			home <Foyer>
+			MissionGiver
+		end
 
 		Scene
 		name <Prince Hotel>
@@ -2717,6 +2843,12 @@ sub
 		Content2 <Some 5 45 Here *URBAN_X>
 		Content3 <Some 1 100 Here *ANTI_ATTACK_SECURITY 2>
 
+		inv
+			NPC Bureaucrat
+			SetTeam 2
+			SetFaction 10
+			MissionGiver
+		end
 		sub
 			team 1
 			name <Player Team>
@@ -2798,6 +2930,25 @@ sub
 		% End Gaos Upper Level scenes
 		end
 	% End Gaos Spaceport
+	end
+	inv
+		NPC Privateer
+		SetFaction 6
+		SetTeam 3
+		home <Foyer>
+		MissionGiver
+
+		NPC Privateer
+		SetFaction 6
+		SetTeam 3
+		home <Foyer>
+		MissionGiver
+
+		NPC Police Officer
+		SetTeam 3
+		SetFaction 9
+		home <Foyer>
+		MissionGiver
 	end
 
 	Scene
@@ -2917,37 +3068,30 @@ sub
 			SetTeam 3
 			SetFaction 9
 			MiniMapComponent 1
+			MissionGiver
 
 			NPC Police Officer
 			SetTeam 3
 			SetFaction 9
 			MiniMapComponent 2
+			MissionGiver
 		end
-
-		room
-		name <Garrison>
-		minimap <2....1..............#...#>
-		inv
-			NPC Mecha Pilot
-			SetTeam 3
-			SetFaction 10
-			MiniMapComponent 1
-
-			NPC Mecha Pilot
-			SetTeam 3
-			SetFaction 10
-			MiniMapComponent 2
-		end
-
 
 		room
 		name <Main Office>
-		minimap <.....1..............#&+&#>
+		minimap <.....1.........23...#&+&#>
 		inv
 			NPC Politician
 			SetTeam 2
 			SetFaction 10
 			MiniMapComponent 1
+			MissionGiver
+
+			NPC Mecha Pilot
+			SetTeam 3
+			SetFaction 10
+			MiniMapComponent 2
+			MissionGiver
 		end
 	end
 
@@ -2985,7 +3129,12 @@ Scene 0 3
 	% V1 = Message Counter
 
 	SetFaction 1
-	factions <MAQUI COMET HOELL L5LAW>
+	factions <MAQUI COMET SILKN L5LAW>
+	%% MISSION GIVERS:
+	%%  2 x MAQUI
+	%%  3 x COMET
+	%%  2 x SILKN
+	%%  2 x L5LAW
 
 	desig <FUCSP>
 
@@ -3149,11 +3298,13 @@ sub
 			SetTeam 3
 			SetFaction 9
 			MiniMapComponent 1
+			MissionGiver
 
 			NPC Knight
 			SetTeam 3
 			SetFaction 3
 			MiniMapComponent 2
+			MissionGiver
 		end
 
 		room
@@ -3164,7 +3315,27 @@ sub
 			SetTeam 2
 			SetFaction 1
 			MiniMapComponent 1
+			MissionGiver
+
+			NPC Knight
+			SetTeam 3
+			SetFaction 3
+			MiniMapComponent 3
+			MissionGiver
 		end
+	end
+	inv
+		NPC Bureaucrat
+		SetTeam 2
+		SetFaction 1
+		home <Foyer>
+		MissionGiver
+
+		NPC Police Officer
+		SetTeam 3
+		SetFaction 9
+		home <Foyer>
+		MissionGiver
 	end
 
 	Scene
@@ -3233,6 +3404,13 @@ sub
 		end
 
 	end
+	inv
+		NPC Mecha Pilot
+		SetTeam 3
+		SetFaction 2
+		home <Foyer>
+		MissionGiver
+	end
 
 	Scene
 	name <CometBurger Head Office>
@@ -3276,6 +3454,14 @@ sub
 		NPC Corporate Executive
 		home <Foyer>
 		SetFaction 2
+		SetTeam 2
+		MissionGiver
+
+		NPC Cook
+		home <Foyer>
+		SetFaction 2
+		SetTeam 2
+		MissionGiver
 	end
 
 % End of Fuchal Spinner...
@@ -3311,7 +3497,13 @@ Scene 0 3
 	% V1 = Message Counter
 
 	SetFaction 10
-	factions <FCOMS MAQUI RISHI L5LAW>
+	factions <FCOMS MAQUI RISHI L5LAW MUGLE>
+	%% MISSION GIVERS:
+	%%  3 x FCOMS
+	%%  1 x MAQUI
+	%%  1 x RISHI
+	%%  3 x L5LAW
+	%%  3 x MUGLE
 
 	desig <KOSSP>
 
@@ -3519,16 +3711,19 @@ sub
 			SetTeam 3
 			SetFaction 9
 			MiniMapComponent 1
+			MissionGiver
 
 			NPC Police Officer
 			SetTeam 3
 			SetFaction 9
 			MiniMapComponent 2
+			MissionGiver
 
 			NPC Police Officer
 			SetTeam 3
 			SetFaction 9
 			MiniMapComponent 3
+			MissionGiver
 		end
 
 		room
@@ -3539,11 +3734,13 @@ sub
 			SetTeam 3
 			SetFaction 10
 			MiniMapComponent 1
+			MissionGiver
 
 			NPC Mecha Pilot
 			SetTeam 3
 			SetFaction 10
 			MiniMapComponent 2
+			MissionGiver
 		end
 
 
@@ -3556,6 +3753,7 @@ sub
 			SetFaction 10
 			job <Chief Technocrat>
 			MiniMapComponent 1
+			MissionGiver
 
 			NPC Soldier
 			SetTeam 3
@@ -3628,7 +3826,13 @@ sub
 			XPos 15
 			YPos 15
 		end
-
+	end
+	inv
+		NPC Corporate Executive
+		home <Foyer>
+		SetFaction 13
+		SetTeam 2
+		MissionGiver
 	end
 
 	Scene
@@ -3659,7 +3863,6 @@ sub
 
 		Team 3
 		name <Guards>
-		Deploy <if# L1 0 MonsterUp 3 10 TeamAttack 3>
 		SetAlly 1 2
 
 		room
@@ -3673,6 +3876,14 @@ sub
 		NPC Corporate Executive
 		home <Foyer>
 		SetFaction 13
+		SetTeam 2
+		MissionGiver
+
+		NPC Mechanic
+		home <Foyer>
+		SetFaction 13
+		SetTeam 2
+		MissionGiver
 	end
 
 	Scene
@@ -3720,6 +3931,7 @@ sub
 			SetFaction 1
 			job <Diplomat>
 			MiniMapComponent 1
+			MissionGiver
 
 			NPC Knight
 			SetTeam 3
@@ -3773,6 +3985,7 @@ sub
 			SetFaction 11
 			job <Diplomat>
 			MiniMapComponent 1
+			MissionGiver
 
 			NPC Rocket Star
 			SetTeam 3
@@ -3814,6 +4027,13 @@ Scene 0 3
 
 	SetFaction 10
 	factions <FCOMS PRIVA L5LAW HOELL MUGLE>
+	%% MISSION GIVERS:
+	%%  3 x FCOMS
+	%%  3 x PRIVA
+	%%  3 x L5LAW
+	%%  3 x HOELL
+	%%  3 x MUGLE
+	%%  3 x COMET
 
 	desig <TOHSP>
 
@@ -3860,6 +4080,13 @@ sub
 		desig <EntranceGrid>
 		Content <Some 3 45 Here *URBAN_X>
 		Content2 <Some 1 100 Here *ANTI_ATTACK_SECURITY 2>
+	end
+	inv
+		NPC Corporate Pilot
+		SetFaction 13
+		SetTeam 3
+		home <Foyer>
+		MissionGiver
 	end
 
 	Scene
@@ -3998,7 +4225,15 @@ sub
 		inv
 			NPC Corporate Executive
 			home <Foyer>
+			SetTeam
 			SetFaction 2
+			MissionGiver
+
+			NPC Mechanic
+			home <Foyer>
+			SetTeam
+			SetFaction 2
+			MissionGiver
 		end
 
 		Scene
@@ -4045,7 +4280,15 @@ sub
 		inv
 			NPC Corporate Executive
 			home <Foyer>
+			SetTeam
 			SetFaction 7
+			MissionGiver
+
+			NPC Scientist
+			home <Foyer>
+			SetTeam
+			SetFaction 7
+			MissionGiver
 		end
 
 		Scene
@@ -4092,7 +4335,15 @@ sub
 		inv
 			NPC Corporate Executive
 			home <Foyer>
+			SetTeam
 			SetFaction 13
+			MissionGiver
+
+			NPC Corporate Executive
+			home <Foyer>
+			SetTeam
+			SetFaction 13
+			MissionGiver
 		end
 	end
 

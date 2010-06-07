@@ -2660,32 +2660,116 @@ begin
 	if Item <> Nil then InsertInvCom( PC , Item );
 end;
 
-Procedure SpitSocialNetwork( Camp: CampaignPtr );
-	{ Search the campaign, then report on NPCs with a nonstandard attitude }
-	{ towards the PC. }
-	Procedure SeekAlongTrack( LList: GearPtr );
-		{ Seek NPCs along this track. Print the details of any you find. }
+Procedure CheckMissionGivers( GB: GameBoardPtr );
+	{ Examine the mission givers per city. }
+var
+	Num_Factions: Integer;
+	Mission_Givers: Array of Integer;
+	Faction_Desig: Array of String;
+	Results: SAttPtr;
+	Procedure RecordFactionDesigs;
+		{ Record the designations for these factions. }
 	var
-		msg: String;
-		R: Integer;
+		T: Integer;
+		Fac: GearPtr;
+	begin
+		for t := 0 to Num_Factions do begin
+			Fac := SeekCurrentLevelGear( Factions_List , GG_Faction , T );
+			if Fac = Nil then begin
+				Faction_Desig[ t ] := 'NOFAC';
+			end else begin
+				Faction_Desig[ t ] := SAttValue( Fac^.SA , 'DESIG' );
+			end;
+		end;
+	end;
+	Procedure ClearTheArray;
+		{ Clear the Mission_Givers array. }
+	var
+		T: Integer;
+	begin
+		for t := 0 to Num_Factions do Mission_Givers[ t ] := 0;
+	end;
+	Procedure OutputString( msg: String );
+		{ Output this string. }
+	begin
+		DialogMsg( msg );
+		StoreSAtt( Results, msg );
+	end;
+	Procedure OutputTheResults;
+		{ We've counted up all the mission-givers in this city. }
+		{ Better output the results. }
+	var
+		T: Integer;
+	begin
+		for t := 0 to Num_Factions do begin
+			if Mission_Givers[ t ] > 0 then begin
+				OutputString( '  ' + Faction_Desig[ t ] + ': ' + BStr( Mission_Givers[ t ] ) );
+			end;
+		end;
+	end;
+	Procedure CheckAlongPath( LList: GearPtr );
+		{ Check along this list, recording any mission-givers discovered. }
+	var
+		FID: Integer;
 	begin
 		while LList <> Nil do begin
-			if ( LList^.G = GG_Character ) and ( ( NAttValue( LList^.NA , NAG_XXRan , NAS_XXChar_Attitude ) <> 0 ) or ( NAttValue( LList^.NA , NAG_Relationship , 0 ) <> 0 ) ) then begin
-				msg := GearName( LList ) + '  (' + SAttValue( LList^.SA , 'JOB_DESIG' ) + ')  ';
-				r := NAttValue( LList^.NA , NAG_Relationship , 0 );
-				if R <> 0 then msg := msg + ' ' + MsgString( 'RELATIONSHIP_' + BStr( R ) );
-				AddXXCharContext( LList , msg , '@' );
-				DialogMsg( msg );
+			if ( LList^.G = GG_Character ) and ( NAttValue( LList^.NA , NAG_CharDescription , NAS_IsMissionGiver ) <> 0 ) then begin
+				FID := GetFactionID( LList );
+				if ( FID >= 0 ) and ( FID <= Num_Factions ) then Inc( Mission_Givers[ FID ] );
 			end;
-			SeekAlongTrack( LList^.SubCom );
-			SeekAlongTrack( LList^.InvCom );
+			CheckAlongPath( LList^.SubCom );
+			CheckAlongPath( LList^.InvCom );
 			LList := LList^.Next;
 		end;
 	end;
+	Procedure CheckThisCity( City: GearPtr );
+		{ Examine this city, searching for mission-giving NPCs. }
+		{ Output the results. }
+	begin
+		{ Start by clearing the array. }
+		ClearTheArray;
+
+		{ Output the name of the city. }
+		OutputString( FullGearName( City ) );
+
+		{ Start counting the mission-givers. }
+		CheckAlongPath( City^.SubCom );
+		CheckAlongPath( City^.InvCom );
+
+		{ Output the results. }
+		OutputTheResults;
+		StoreSAtt( Results , ' ' );
+	end;
+var
+	World,LList: GearPtr;
 begin
-	SeekAlongTrack( Camp^.Source );
-	if Camp^.GB <> Nil then SeekAlongTrack( Camp^.GB^.meks );
+	{ Step One: Determine how many factions there are, and dimension }
+	{ the array. }
+	Num_Factions := NumSiblingGears( Factions_List );
+	SetLength( Mission_Givers , Num_Factions + 1 );
+	SetLength( Faction_Desig , Num_Factions + 1 );
+	RecordFactionDesigs;
+
+	{ Init the results list. }
+	Results := Nil;
+
+	{ Find the current world. }
+	World := FindWorld( GB , GB^.Scene );
+	if World <> Nil then begin
+		LList := World^.SubCom;
+		while LList <> Nil do begin
+			if LList^.G = GG_Scene then begin
+				CheckThisCity( LList );
+			end;
+			LList := LList^.Next;
+		end;
+	end;
+
+	{ Write the results to file, and dispose of the list. }
+	SaveStringList( 'out_mgtest.txt' , Results );
+	DisposeSAtt( Results );
 end;
+
 
 Procedure RLPlayerInput( Mek: GearPtr; Camp: CampaignPtr );
 	{ Allow the PC to control the action as per normal in a RL }
@@ -2771,7 +2855,7 @@ begin
 			end else if xxran_debug and ( KP = '|' ) then begin
 				GodMode( Camp^.GB , LocatePilot( Mek ) );
 			end else if xxran_debug and ( KP = '`' ) then begin
-				SpitSocialNetwork( Camp );
+				CheckMissionGivers( Camp^.GB );
 
 			end; {if}
 
