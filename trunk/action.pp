@@ -485,7 +485,7 @@ var
 						TakeDamage( Part , RollDamage( EjectDamage , Part^.Scale ) );
 					end;
 
-					if ERoll > EMod then begin
+					if ( ERoll > EMod ) and not PartHasIntrinsic( Part , NAS_Integral ) then begin
 						{ Delink the chaacter, then attach as a sibling of the master gear. }
 						DelinkGear( Part^.Parent^.SubCom , Part );
 						SetNAtt( Part^.NA , NAG_Location , NAS_X , 0 );

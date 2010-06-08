@@ -1638,7 +1638,7 @@ sub
 			Elevator
 			name <Silver Sanctum>
 			MiniMapComponent 1
-			use <if= PCFac 3 else GoGiveWarning Print 1 Exit Destination>
+			use <if= PCFac SILKN else GoGiveWarning Print 1 Exit Destination>
 			GoGiveWarning <ifYesNo 101 102 103 Print 1 Exit Destination>
 			Msg1 <You board the elevator.>
 			Msg101 <This elevator leads to the inner sanctum of the silver fortress. Only knights are permitted beyond this point.>
@@ -1667,7 +1667,7 @@ sub
 
 		5Min <ifTeamHostile 3  MonsterUp 3 d20>
 
-		start <Print 1 if# PCFac 3 TeamAttack 3>
+		start <Print 1 if# PCFac SILKN TeamAttack 3>
 		Msg1 <You enter the Silver Sanctum.>
 
 		sub
