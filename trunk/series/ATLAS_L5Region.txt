@@ -103,7 +103,6 @@ sub
 		NPC Police Officer
 		SetTeam 3
 		SetFaction 9
-		MissionGiver
 	end
 
 	Scene
@@ -177,7 +176,7 @@ sub
 		name <Foyer>
 		desig <EntranceGrid>
 		Content1 <Some 1  45 Here *NPC_GUARD>
-		Content3 <Some 2  35 Here *CORP_EMPLOYEE>
+		Content3 <Some 1  10 Here *CORP_EMPLOYEE>
 		Content4 <Some 1 100 Here *ANTI_ATTACK_SECURITY 2>
 	end
 	inv
@@ -189,17 +188,14 @@ sub
 		Age 6
 		home <Office>
 		SetFaction 2
-		MissionGiver
 		SetTeam 2
 
 		NPC Corporate Executive
 		SetFaction 2
-		MissionGiver
 		SetTeam 2
 
 		NPC Scientist
 		SetFaction 2
-		MissionGiver
 		SetTeam 2
 	end
 
@@ -244,13 +240,11 @@ sub
 		SetFaction 6
 		SetTeam 3
 		home <Foyer>
-		MissionGiver
 
 		NPC Privateer
 		SetFaction 6
 		SetTeam 3
 		home <Foyer>
-		MissionGiver
 	end
 
 	Scene
@@ -332,13 +326,11 @@ sub
 			SetTeam 3
 			SetFaction 9
 			MiniMapComponent 1
-			MissionGiver
 
 			NPC Police Officer
 			SetTeam 3
 			SetFaction 9
 			MiniMapComponent 2
-			MissionGiver
 		end
 
 		room
@@ -349,13 +341,11 @@ sub
 			SetTeam 3
 			SetFaction 3
 			MiniMapComponent 1
-			MissionGiver
 
 			NPC Knight
 			SetTeam 3
 			SetFaction 3
 			MiniMapComponent 2
-			MissionGiver
 		end
 
 
@@ -374,20 +364,17 @@ sub
 			chardesc Female Sociable Passionate Pragmatic Renowned
 			statline 13 10 14 16 13 17 16 17
 			MiniMapComponent 1
-			MissionGiver
 
 			NPC Soldier
 			SetTeam 3
 			SetFaction 1
 			MiniMapComponent 2
-			MissionGiver
 		end
 	end
 	inv
 		NPC Bureaucrat
 		SetFaction 1
 		SetTeam 2
-		MissionGiver
 	end
 
 	Scene
@@ -461,12 +448,10 @@ sub
 		NPC Knight
 		SetTeam 3
 		SetFaction 3
-		MissionGiver
 
 		NPC Privateer
 		SetFaction 6
 		SetTeam 3
-		MissionGiver
 	end
 
 % End of Maquise Spinner...
@@ -562,7 +547,6 @@ sub
 		NPC Police Officer
 		SetTeam 3
 		SetFaction 9
-		MissionGiver
 	end
 
 	Scene
@@ -674,7 +658,6 @@ sub
 		NPC Knight
 		SetTeam 3
 		SetFaction 3
-		MissionGiver
 	end
 
 	Scene
@@ -814,7 +797,6 @@ sub
 				SetFaction 1
 				MiniMapComponent 1
 				CharDesc Sociable Passionate Male
-				MissionGiver
 			end
 
 			room
@@ -825,7 +807,6 @@ sub
 				SetTeam 3
 				SetFaction 9
 				MiniMapComponent 1
-				MissionGiver
 			end
 
 			room
@@ -836,20 +817,17 @@ sub
 				SetTeam 3
 				SetFaction 3
 				MiniMapComponent 1
-				MissionGiver
 
 				NPC Knight
 				SetTeam 3
 				SetFaction 3
 				MiniMapComponent 2
-				MissionGiver
 			end
 		end
 		inv
 			NPC Bureaucrat
 			SetTeam 2
 			SetFaction 1
-			MissionGiver
 		end
 
 		Scene
@@ -907,7 +885,6 @@ sub
 		NPC Bureaucrat
 		SetTeam 2
 		SetFaction 1
-		MissionGiver
 	end
 
 	Scene
@@ -981,7 +958,6 @@ sub
 		NPC Police Officer
 		SetTeam 3
 		SetFaction 9
-		MissionGiver
 	end
 
 	Scene
@@ -1019,7 +995,7 @@ sub
 		name <Foyer>
 		desig <EntranceGrid>
 		Content1 <Some 1  35 Here *NPC_GUARD>
-		Content3 <Some 2  50 Here *CORP_EMPLOYEE>
+		Content3 <Some 1  10 Here *CORP_EMPLOYEE>
 		Content4 <Some 1 100 Here *ANTI_ATTACK_SECURITY 2>
 	end
 	inv
@@ -1027,19 +1003,16 @@ sub
 		home <Foyer>
 		SetTeam 2
 		SetFaction 13
-		MissionGiver
 
 		NPC Corporate Executive
 		home <Foyer>
 		SetTeam 2
 		SetFaction 13
-		MissionGiver
 
 		NPC Journalist
 		home <Foyer>
 		SetTeam 2
 		SetFaction 13
-		MissionGiver
 	end
 
 
@@ -1113,12 +1086,10 @@ inv
 	Age 23
 	chardesc Male Heroic
 	statline 13 16 12 11 16 13 14 13
-	MissionGiver
 
 	NPC Mecha Pilot
 	SetTeam 3
 	SetFaction 1
-	MissionGiver
 
 	NPC Pirate
 	job <Privateer>
@@ -1126,7 +1097,6 @@ inv
 	SetTeam 3
 	SetFaction 6
 	Age 14
-	MissionGiver
 
 end
 sub
@@ -1186,7 +1156,6 @@ sub
 		SetTeam 3
 		SetFaction 9
 		MiniMapComponent 1
-		MissionGiver
 	end
 
 	room
@@ -1353,7 +1322,6 @@ sub
 		NPC Police Officer
 		SetTeam 3
 		SetFaction 9
-		MissionGiver
 	end
 
 	Scene 0 3
@@ -1405,28 +1373,23 @@ sub
 		home <Office>
 		SetFaction 7
 		SetTeam 2
-		MissionGiver
 
 		NPC Corporate Executive
 		home <Office>
 		SetFaction 2
 		SetTeam 2
-		MissionGiver
 
 		NPC Trucker
 		SetFaction 7
 		SetTeam 2
-		MissionGiver
 
 		NPC Miner
 		SetFaction 2
 		SetTeam 2
-		MissionGiver
 
 		NPC Privateer
 		SetTeam 3
 		SetFaction 6
-		MissionGiver
 	end
 	sub
 		% BEGIN Cayley Steelworks Stuff
@@ -1538,7 +1501,6 @@ sub
 		NPC Police Officer
 		SetTeam 3
 		SetFaction 9
-		MissionGiver
 	end
 
 	Scene
@@ -1617,13 +1579,11 @@ sub
 			SetTeam 3
 			SetFaction 3
 			MiniMapComponent 1
-			MissionGiver
 
 			NPC Knight
 			SetTeam 3
 			SetFaction 3
 			MiniMapComponent 2
-			MissionGiver
 		end
 
 
@@ -1740,7 +1700,6 @@ sub
 		NPC Bureaucrat
 		SetTeam 2
 		SetFaction 1
-		MissionGiver
 	end
 
 	Scene
@@ -1783,7 +1742,6 @@ sub
 		home <Foyer>
 		SetFaction 7
 		SetTeam 2
-		MissionGiver
 	end
 
 	Scene
@@ -1830,13 +1788,11 @@ sub
 			SetTeam 3
 			SetFaction 9
 			MiniMapComponent 1
-			MissionGiver
 
 			NPC Mecha Pilot
 			SetTeam 3
 			SetFaction 1
 			MiniMapComponent 2
-			MissionGiver
 		end
 
 		room
@@ -1847,7 +1803,6 @@ sub
 			SetTeam 2
 			SetFaction 1
 			MiniMapComponent 1
-			MissionGiver
 
 			NPC Knight
 			name <Gordon Valeus>
@@ -1941,7 +1896,6 @@ sub
 		NPC Knight
 		SetTeam 3
 		SetFaction 3
-		MissionGiver
 	end
 
 	Scene
@@ -1979,7 +1933,7 @@ sub
 		name <Foyer>
 		desig <EntranceGrid>
 		Content1 <Some 1  35 Here *NPC_GUARD>
-		Content3 <Some 2  50 Here *CORP_EMPLOYEE>
+		Content3 <Some 1  10 Here *CORP_EMPLOYEE>
 		Content4 <Some 1 100 Here *ANTI_ATTACK_SECURITY 2>
 	end
 	inv
@@ -1987,13 +1941,11 @@ sub
 		home <Foyer>
 		SetFaction 7
 		SetTeam 2
-		MissionGiver
 
 		NPC Corporate Executive
 		home <Foyer>
 		SetFaction 7
 		SetTeam 2
-		MissionGiver
 	end
 
 	Scene
@@ -2031,7 +1983,7 @@ sub
 		name <Foyer>
 		desig <EntranceGrid>
 		Content1 <Some 1  35 Here *NPC_GUARD>
-		Content3 <Some 2  50 Here *CORP_EMPLOYEE>
+		Content3 <Some 1  10 Here *CORP_EMPLOYEE>
 		Content4 <Some 1 100 Here *ANTI_ATTACK_SECURITY 2>
 	end
 	inv
@@ -2039,19 +1991,16 @@ sub
 		home <Foyer>
 		SetFaction 2
 		SetTeam 2
-		MissionGiver
 
 		NPC Corporate Executive
 		home <Foyer>
 		SetFaction 2
 		SetTeam 2
-		MissionGiver
 
 		NPC Explorer
 		home <Foyer>
 		SetFaction 2
 		SetTeam 2
-		MissionGiver
 	end
 
 % End of Cesena Spinner...
@@ -2202,7 +2151,6 @@ sub
 		NPC Police Officer
 		SetTeam 3
 		SetFaction 9
-		MissionGiver
 	end
 
 	Scene
@@ -2248,7 +2196,6 @@ sub
 		SetFaction 6
 		SetTeam 3
 		home <Foyer>
-		MissionGiver
 	end
 
 	Scene
@@ -2328,13 +2275,11 @@ sub
 			SetFaction 2
 			SetTeam 2
 			MiniMapComponent 1
-			MissionGiver
 
 			NPC Corporate Executive
 			SetFaction 2
 			SetTeam 2
 			MiniMapComponent 2
-			MissionGiver
 		end
 
 		room
@@ -2345,13 +2290,11 @@ sub
 			SetFaction 7
 			SetTeam 2
 			MiniMapComponent 1
-			MissionGiver
 
 			NPC Corporate Executive
 			SetFaction 7
 			SetTeam 2
 			MiniMapComponent 2
-			MissionGiver
 		end
 
 		room
@@ -2362,13 +2305,11 @@ sub
 			SetFaction 13
 			SetTeam 2
 			MiniMapComponent 1
-			MissionGiver
 
 			NPC Corporate Executive
 			SetFaction 13
 			SetTeam 2
 			MiniMapComponent 2
-			MissionGiver
 		end
 	end
 	inv
@@ -2376,14 +2317,12 @@ sub
 		SetTeam 3
 		SetFaction 9
 		home <Foyer>
-		MissionGiver
 
 		NPC bureaucrat
 		job <Customs Official>
 		SetTeam 2
 		SetFaction 10
 		home <Foyer>
-		MissionGiver
 	end
 
 	Scene
@@ -2425,7 +2364,6 @@ sub
 		SetFaction 6
 		SetTeam 3
 		home <Foyer>
-		MissionGiver
 	end
 
 	Scene
@@ -2472,13 +2410,11 @@ sub
 			SetTeam 3
 			SetFaction 9
 			MiniMapComponent 1
-			MissionGiver
 
 			NPC Mecha Pilot
 			SetTeam 3
 			SetFaction 10
 			MiniMapComponent 2
-			MissionGiver
 		end
 
 		room
@@ -2489,13 +2425,13 @@ sub
 			SetTeam 2
 			SetFaction 10
 			MiniMapComponent 1
-			MissionGiver
 
 			NPC Soldier
 			job <Bodyguard>
 			SetTeam 3
 			SetFaction 10
 			MiniMapComponent 2
+			NonMissionGiver
 		end
 	end
 
@@ -2570,7 +2506,6 @@ sub
 		SetFaction 6
 		SetTeam 3
 		home <Foyer>
-		MissionGiver
 	end
 
 % End of Xianzai Spinner...
@@ -2787,7 +2722,6 @@ sub
 			SetFaction 6
 			SetTeam 3
 			home <Foyer>
-			MissionGiver
 		end
 
 		Scene
@@ -2847,7 +2781,6 @@ sub
 			NPC Bureaucrat
 			SetTeam 2
 			SetFaction 10
-			MissionGiver
 		end
 		sub
 			team 1
@@ -2936,19 +2869,16 @@ sub
 		SetFaction 6
 		SetTeam 3
 		home <Foyer>
-		MissionGiver
 
 		NPC Privateer
 		SetFaction 6
 		SetTeam 3
 		home <Foyer>
-		MissionGiver
 
 		NPC Police Officer
 		SetTeam 3
 		SetFaction 9
 		home <Foyer>
-		MissionGiver
 	end
 
 	Scene
@@ -3068,13 +2998,11 @@ sub
 			SetTeam 3
 			SetFaction 9
 			MiniMapComponent 1
-			MissionGiver
 
 			NPC Police Officer
 			SetTeam 3
 			SetFaction 9
 			MiniMapComponent 2
-			MissionGiver
 		end
 
 		room
@@ -3085,13 +3013,11 @@ sub
 			SetTeam 2
 			SetFaction 10
 			MiniMapComponent 1
-			MissionGiver
 
 			NPC Mecha Pilot
 			SetTeam 3
 			SetFaction 10
 			MiniMapComponent 2
-			MissionGiver
 		end
 	end
 
@@ -3298,13 +3224,11 @@ sub
 			SetTeam 3
 			SetFaction 9
 			MiniMapComponent 1
-			MissionGiver
 
 			NPC Knight
 			SetTeam 3
 			SetFaction 3
 			MiniMapComponent 2
-			MissionGiver
 		end
 
 		room
@@ -3315,13 +3239,11 @@ sub
 			SetTeam 2
 			SetFaction 1
 			MiniMapComponent 1
-			MissionGiver
 
 			NPC Knight
 			SetTeam 3
 			SetFaction 3
 			MiniMapComponent 3
-			MissionGiver
 		end
 	end
 	inv
@@ -3329,13 +3251,11 @@ sub
 		SetTeam 2
 		SetFaction 1
 		home <Foyer>
-		MissionGiver
 
 		NPC Police Officer
 		SetTeam 3
 		SetFaction 9
 		home <Foyer>
-		MissionGiver
 	end
 
 	Scene
@@ -3409,7 +3329,6 @@ sub
 		SetTeam 3
 		SetFaction 2
 		home <Foyer>
-		MissionGiver
 	end
 
 	Scene
@@ -3447,7 +3366,7 @@ sub
 		name <Foyer>
 		desig <EntranceGrid>
 		Content1 <Some 1  50 Here *URBAN_X>
-		Content3 <Some 2  50 Here *CORP_EMPLOYEE>
+		Content3 <Some 1  10 Here *CORP_EMPLOYEE>
 		Content4 <Some 1 100 Here *ANTI_ATTACK_SECURITY 2>
 	end
 	inv
@@ -3455,13 +3374,11 @@ sub
 		home <Foyer>
 		SetFaction 2
 		SetTeam 2
-		MissionGiver
 
 		NPC Cook
 		home <Foyer>
 		SetFaction 2
 		SetTeam 2
-		MissionGiver
 	end
 
 % End of Fuchal Spinner...
@@ -3628,6 +3545,7 @@ sub
 		NPC Privateer
 		home <Foyer>
 		SetFaction 6
+		NonMissionGiver
 	end
 
 	Scene
@@ -3711,19 +3629,16 @@ sub
 			SetTeam 3
 			SetFaction 9
 			MiniMapComponent 1
-			MissionGiver
 
 			NPC Police Officer
 			SetTeam 3
 			SetFaction 9
 			MiniMapComponent 2
-			MissionGiver
 
 			NPC Police Officer
 			SetTeam 3
 			SetFaction 9
 			MiniMapComponent 3
-			MissionGiver
 		end
 
 		room
@@ -3734,13 +3649,11 @@ sub
 			SetTeam 3
 			SetFaction 10
 			MiniMapComponent 1
-			MissionGiver
 
 			NPC Mecha Pilot
 			SetTeam 3
 			SetFaction 10
 			MiniMapComponent 2
-			MissionGiver
 		end
 
 
@@ -3753,12 +3666,12 @@ sub
 			SetFaction 10
 			job <Chief Technocrat>
 			MiniMapComponent 1
-			MissionGiver
 
 			NPC Soldier
 			SetTeam 3
 			SetFaction 10
 			MiniMapComponent 2
+			NonMissionGiver
 		end
 	end
 
@@ -3832,7 +3745,6 @@ sub
 		home <Foyer>
 		SetFaction 13
 		SetTeam 2
-		MissionGiver
 	end
 
 	Scene
@@ -3869,7 +3781,7 @@ sub
 		name <Foyer>
 		desig <EntranceGrid>
 		Content1 <Some 1  35 Here *NPC_GUARD>
-		Content3 <Some 2  50 Here *CORP_EMPLOYEE>
+		Content3 <Some 1  10 Here *CORP_EMPLOYEE>
 		Content4 <Some 1 100 Here *ANTI_ATTACK_SECURITY 2>
 	end
 	inv
@@ -3877,13 +3789,11 @@ sub
 		home <Foyer>
 		SetFaction 13
 		SetTeam 2
-		MissionGiver
 
 		NPC Mechanic
 		home <Foyer>
 		SetFaction 13
 		SetTeam 2
-		MissionGiver
 	end
 
 	Scene
@@ -3931,12 +3841,12 @@ sub
 			SetFaction 1
 			job <Diplomat>
 			MiniMapComponent 1
-			MissionGiver
 
 			NPC Knight
 			SetTeam 3
 			SetFaction 3
 			MiniMapComponent 2
+			NonMissionGiver
 		end
 	end
 
@@ -3985,11 +3895,11 @@ sub
 			SetFaction 11
 			job <Diplomat>
 			MiniMapComponent 1
-			MissionGiver
 
 			NPC Rocket Star
 			SetTeam 3
 			MiniMapComponent 2
+			NonMissionGiver
 		end
 	end
 
@@ -4086,7 +3996,6 @@ sub
 		SetFaction 13
 		SetTeam 3
 		home <Foyer>
-		MissionGiver
 	end
 
 	Scene
@@ -4211,7 +4120,7 @@ sub
 			room
 			name <Foyer>
 			desig <EntranceGrid>
-			Content3 <Some 1  50 Here *CORP_EMPLOYEE>
+			Content3 <Some 1  10 Here *CORP_EMPLOYEE>
 			Content4 <Some 1 100 Here *ANTI_ATTACK_SECURITY 2>
 
 			room
@@ -4225,15 +4134,13 @@ sub
 		inv
 			NPC Corporate Executive
 			home <Foyer>
-			SetTeam
+			SetTeam 2
 			SetFaction 2
-			MissionGiver
 
 			NPC Mechanic
 			home <Foyer>
-			SetTeam
+			SetTeam 2
 			SetFaction 2
-			MissionGiver
 		end
 
 		Scene
@@ -4266,7 +4173,7 @@ sub
 			room
 			name <Foyer>
 			desig <EntranceGrid>
-			Content3 <Some 1  50 Here *CORP_EMPLOYEE>
+			Content3 <Some 1  10 Here *CORP_EMPLOYEE>
 			Content4 <Some 1 100 Here *ANTI_ATTACK_SECURITY 2>
 
 			room
@@ -4280,15 +4187,13 @@ sub
 		inv
 			NPC Corporate Executive
 			home <Foyer>
-			SetTeam
+			SetTeam 2
 			SetFaction 7
-			MissionGiver
 
 			NPC Scientist
 			home <Foyer>
-			SetTeam
+			SetTeam 2
 			SetFaction 7
-			MissionGiver
 		end
 
 		Scene
@@ -4321,7 +4226,7 @@ sub
 			room
 			name <Foyer>
 			desig <EntranceGrid>
-			Content3 <Some 1  50 Here *CORP_EMPLOYEE>
+			Content3 <Some 1  10 Here *CORP_EMPLOYEE>
 			Content4 <Some 1 100 Here *ANTI_ATTACK_SECURITY 2>
 
 			room
@@ -4335,16 +4240,26 @@ sub
 		inv
 			NPC Corporate Executive
 			home <Foyer>
-			SetTeam
+			SetTeam 2
 			SetFaction 13
-			MissionGiver
 
 			NPC Corporate Executive
 			home <Foyer>
-			SetTeam
+			SetTeam 2
 			SetFaction 13
-			MissionGiver
 		end
+	end
+	inv
+		NPC Police Officer
+		SetTeam 3
+		SetFaction 9
+		home <Foyer>
+
+		NPC Construction Worker
+		Combatant
+		SetTeam 3
+		SetFaction 10
+		home <Foyer>
 	end
 
 	Scene
@@ -4429,6 +4344,12 @@ sub
 			Msg5 <You say a short prayer for the people who died in the meteor impact.>
 		end
 	end
+	inv
+		NPC Corporate Executive
+		home <Foyer>
+		SetTeam 2
+		SetFaction 7
+	end
 
 	Scene
 	name <Tohru Spaceport>
@@ -4494,6 +4415,17 @@ sub
 			XPos 15
 			YPos 15
 		end
+	end
+	inv
+		NPC Corporate Executive
+		home <Foyer>
+		SetTeam 2
+		SetFaction 2
+
+		NPC Privateer
+		SetTeam 3
+		SetFaction 6
+		home <Foyer>
 	end
 
 % End of Tohru Spinner...
@@ -4990,7 +4922,7 @@ sub
 		room
 		name <Foyer>
 		desig <EntranceGrid>
-		Content3 <Some 2  50 Here *CORP_EMPLOYEE>
+		Content3 <Some 2  10 Here *CORP_EMPLOYEE>
 		Content4 <Some 1 100 Here *ANTI_ATTACK_SECURITY 2>
 	end
 	inv
@@ -5030,7 +4962,7 @@ sub
 		room
 		name <Foyer>
 		desig <EntranceGrid>
-		Content3 <Some 2  50 Here *CORP_EMPLOYEE>
+		Content3 <Some 2  10 Here *CORP_EMPLOYEE>
 		Content4 <Some 1 100 Here *ANTI_ATTACK_SECURITY 2>
 	end
 	inv
@@ -5936,7 +5868,7 @@ sub
 		name <Foyer>
 		desig <EntranceGrid>
 		Content1 <Some 1  35 Here *NPC_GUARD>
-		Content3 <Some 2  50 Here *CORP_EMPLOYEE>
+		Content3 <Some 1  10 Here *CORP_EMPLOYEE>
 		Content4 <Some 1 100 Here *ANTI_ATTACK_SECURITY 2>
 	end
 	inv

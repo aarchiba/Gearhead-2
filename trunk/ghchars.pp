@@ -84,8 +84,8 @@ Const
 				{ Combatant characters can take part in mecha combat. }
 	NAS_IsMentor = 4;	{ If nonzero, this character is a mentor. }
 				{ Mentors may never be taken as lancemates. }
-	NAS_IsMissionGiver = 5;	{ If nonzero, this character may give missions. }
-				{ Only a few NPCs per city are given this authority. }
+	NAS_NonMissionGiver = 5;	{ If nonzero, this character may not give missions. }
+					{ Random NPCs don't usually get this authority. }
 	NAS_PositiveHeroism = 6;	{ How many times has the character's Heroism }
 					{ been increased- there's a limit. }
 

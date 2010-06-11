@@ -706,7 +706,8 @@ var
 		if ( MOS > 0 ) and ( Armor > 0 ) then begin
 			if MOS < 4 then Armor := ( Armor * ( 4 - MOS ) ) div 4
 			else Armor := 0;
-			MOS := MOS - 4;
+{			MOS := MOS - 4;}
+			MOS := MOS - 2;
 		end;
 
 		{ Reduce the DMG variable by the current armor level. }

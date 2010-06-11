@@ -2713,9 +2713,9 @@ var
 		FID: Integer;
 	begin
 		while LList <> Nil do begin
-			if ( LList^.G = GG_Character ) and ( NAttValue( LList^.NA , NAG_CharDescription , NAS_IsMissionGiver ) <> 0 ) then begin
+			if ( LList^.G = GG_Character ) and ( NAttValue( LList^.NA , NAG_CharDescription , NAS_NonMissionGiver ) = 0 ) then begin
 				FID := GetFactionID( LList );
-				if ( FID >= 0 ) and ( FID <= Num_Factions ) then Inc( Mission_Givers[ FID ] );
+				if ( FID > 0 ) and ( FID <= Num_Factions ) then Inc( Mission_Givers[ FID ] );
 			end;
 			CheckAlongPath( LList^.SubCom );
 			CheckAlongPath( LList^.InvCom );
