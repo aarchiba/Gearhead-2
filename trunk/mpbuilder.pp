@@ -60,11 +60,7 @@ uses playwright,texutil,gearutil,gearparser,ghchars,randmaps,
 {$IFDEF ASCII}
 	vidgfx,vidmenus;
 {$ELSE}
-{$IFDEF CUTE}
-	cutegfx,glmenus;
-{$ELSE}
-	glgfx,glmenus;
-{$ENDIF}
+	sdlgfx,sdlmenus;
 {$ENDIF}
 
 Const

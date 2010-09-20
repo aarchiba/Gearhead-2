@@ -45,11 +45,7 @@ uses ability,action,aibrain,arenacfe,arenascript,backpack,
 {$IFDEF ASCII}
 	vidgfx,vidmap,vidmenus,vidinfo;
 {$ELSE}
-{$IFDEF CUTE}
-	cutegfx,cutemap,glmenus,glinfo,sdl;
-{$ELSE}
-	glgfx,glmap,glmenus,glinfo,sdl;
-{$ENDIF}
+	sdlgfx,sdlmap,sdlmenus,sdlinfo,sdl;
 {$ENDIF}
 
 const
@@ -1158,12 +1154,6 @@ begin
 			AddRPGMenuItem( RPM , 'Walls are Short' , 9 );
 		end;
 
-		if Use_Isometric_Mode then begin
-			AddRPGMenuItem( RPM , 'Switch to Perspective' , 11 );
-		end else begin
-			AddRPGMenuItem( RPM , 'Switch to Isometric' , 11 );
-		end;
-
 		AddRPGMenuItem( RPM , '  Exit Prefrences' , -1 );
 		SetItemByValue( RPM , N );
 
@@ -1212,9 +1202,6 @@ begin
 			end else begin
 				SetNAtt( Mek^.NA , NAG_Prefrences , NAS_UseNonLethalAttacks , 0 );
 			end;
-
-		end else if N = 11 then begin
-			Use_Isometric_Mode := Not Use_Isometric_Mode;
 
 		end;
 
@@ -1298,11 +1285,7 @@ begin
 	until N = -1;
 
 {$IFNDEF ASCII}
-{$IFDEF CUTE}
 	CleanSpriteList;
-{$ELSE}
-	CleanTexList;
-{$ENDIF}
 {$ENDIF}
 	DisposeRPGMenu( RPM );
 	CombatDisplay( GB );
@@ -2802,22 +2785,6 @@ begin
 			KP := RPGKey;
 
 			KCode := KeyToKeyCode( KP );
-
-{$IFNDEF ASCII}
-{$IFNDEF CUTE}
-			if ( kcode = KMC_North ) and not Use_Isometric_Mode then begin
-				if PC_Should_Run or ( RK_KeyState[ SDLK_RSHIFT ] = 1 ) or ( RK_KeyState[ SDLK_LSHIFT ] = 1 ) then begin
-					KCode := KMC_FullSpeed;
-				end else begin
-					kcode := KMC_NormSpeed;
-				end;
-			end else if ( KP = KeyMap[ KMC_West ].KCode ) and not Use_Isometric_Mode then begin
-				KCode := KMC_TurnLeft;
-			end else if ( KP = KeyMap[ KMC_East ].KCode ) and not Use_Isometric_Mode then begin
-				KCode := KMC_TurnRight;
-			end;
-{$ENDIF}
-{$ENDIF}
 
 			if KCode > 0 then begin
 				{ We got a command. Process it. }

@@ -29,11 +29,7 @@ uses gears,locale,
 {$IFDEF ASCII}
 	vidgfx;
 {$ELSE}
-{$IFDEF CUTE}
-	cutegfx;
-{$ELSE}
-	glgfx;
-{$ENDIF}
+	sdlgfx;
 {$ENDIF}
 
 Procedure DoTraining( GB: GameBoardPtr; PC: GearPtr; RD: RedrawProcedureType );
@@ -44,7 +40,7 @@ uses	ghchars,gearutil,texutil,ability,description,ui4gh,
 {$IFDEF ASCII}
 	vidmenus,vidinfo;
 {$ELSE}
-	glmenus,glinfo;
+	sdlmenus,sdlinfo;
 {$ENDIF}
 
 var

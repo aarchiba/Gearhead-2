@@ -75,11 +75,7 @@ uses ghswag,
 {$IFDEF ASCII}
 	vidgfx;
 {$ELSE}
-{$IFDEF CUTE}
-	cutegfx;
-{$ELSE}
-	glgfx;
-{$ENDIF}
+	sdlgfx;
 {$ENDIF}
 
 Const

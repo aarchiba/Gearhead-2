@@ -1,4 +1,4 @@
-unit cutegfx;
+unit sdlgfx;
 {
 	GearHead2, a roguelike mecha CRPG
 	Copyright (C) 2005 Joseph Hewitt

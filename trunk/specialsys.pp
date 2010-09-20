@@ -43,11 +43,7 @@ uses movement,ghmodule,ability,ui4gh,texutil,gearutil,ghprop,action,
 {$IFDEF ASCII}
 	vidgfx
 {$ELSE}
-{$IFDEF CUTE}
-	cutegfx
-{$ELSE}
-	glgfx
-{$ENDIF}
+	sdlgfx
 {$ENDIF}
 	;
 

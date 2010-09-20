@@ -28,11 +28,7 @@ uses gears,locale,
 {$IFDEF ASCII}
 	vidgfx;
 {$ELSE}
-{$IFDEF CUTE}
-	cutegfx;
-{$ELSE}
-	glgfx;
-{$ENDIF}
+	sdlgfx;
 {$ENDIF}
 
 
@@ -59,11 +55,7 @@ uses ability,gearutil,ghweapon,menugear,texutil,ui4gh,ghsensor,
 {$IFDEF ASCII}
 	vidmap,vidmenus,vidinfo;
 {$ELSE}
-{$IFDEF CUTE}
-	cutemap,glmenus,glinfo;
-{$ELSE}
-	glmap,glmenus,glinfo;
-{$ENDIF}
+	sdlmap,sdlmenus,sdlinfo;
 {$ENDIF}
 
 var

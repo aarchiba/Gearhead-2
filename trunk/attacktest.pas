@@ -202,7 +202,19 @@ begin
 
 		TestThisWeapon( GB , AMaster , Attacker , Target );
 
-		Attacker^.Stat[ STAT_Accuracy ] := 2;
+		Attacker^.Stat[ STAT_BurstValue ] := 2;
+		SetSAtt( Attacker^.SA , 'name <BV3>' );
+		TestThisWeapon( GB , AMaster , Attacker , Target );
+
+		Attacker^.Stat[ STAT_BurstValue ] := 4;
+		SetSAtt( Attacker^.SA , 'name <BV5>' );
+		TestThisWeapon( GB , AMaster , Attacker , Target );
+
+		Attacker^.Stat[ STAT_BurstValue ] := 7;
+		SetSAtt( Attacker^.SA , 'name <BV8>' );
+		TestThisWeapon( GB , AMaster , Attacker , Target );
+
+{		Attacker^.Stat[ STAT_Accuracy ] := 2;
 		SetSAtt( Attacker^.SA , 'name <ACC+2>' );
 		TestThisWeapon( GB , AMaster , Attacker , Target );
 
@@ -251,7 +263,7 @@ begin
 		SetSAtt( Attacker^.SA , 'type <SCATTER BRUTAL HYPER ARMORPIERCING OVERLOAD>' );
 		SetSAtt( Attacker^.SA , 'name <Ultima>' );
 		TestThisWeapon( GB , AMaster , Attacker , Target );
-
+}
 		RemoveGear( Hand^.InvCom , Attacker );
 	end;
 end;
@@ -306,15 +318,15 @@ begin
 
 	results := Nil;
 
-	TestDC( GB , AMaster , Hand , Target );
+{	TestDC( GB , AMaster , Hand , Target );
 	StoreSAtt( results , '  ' );
 	TestBV( GB , AMaster , Hand , Target );
 	StoreSAtt( results , '  ' );
-
+}
 	TestAttributes( GB , AMaster , Hand , Target );
 	StoreSAtt( results , '  ' );
 
-	TestThings( GB , AMaster , Hand , Target , 'MBAZ-17' );
+{	TestThings( GB , AMaster , Hand , Target , 'MBAZ-17' );
 	TestThings( GB , AMaster , Hand , Target , 'PAR-2' );
 	TestThings( GB , AMaster , Hand , Target , 'PAR-6' );
 	TestThings( GB , AMaster , Hand , Target , 'PAR-13' );
@@ -330,7 +342,7 @@ begin
 	TestThings( GB , AMaster , Hand , Target , 'SC-9' );
 	TestThings( GB , AMaster , Hand , Target , 'MB-7' );
 	TestThings( GB , AMaster , Hand , Target , 'MRIF-5' );
-
+}
 	StoreSAtt( results , 'Attacker Skill = ' + BStr( NAttValue( P1^.NA , NAG_Skill , NAS_MechaGunnery ) ) );
 	StoreSAtt( results , 'Defender Skill = ' + BStr( NAttValue( P2^.NA , NAG_Skill , NAS_MechaPiloting ) ) );
 

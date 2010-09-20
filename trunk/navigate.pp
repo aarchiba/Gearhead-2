@@ -30,11 +30,7 @@ uses gears,locale,backpack,
 {$IFDEF ASCII}
 	vidgfx;
 {$ELSE}
-{$IFDEF CUTE}
-	cutegfx;
-{$ELSE}
-	glgfx;
-{$ENDIF}
+	sdlgfx;
 {$ENDIF}
 
 Const
@@ -56,11 +52,7 @@ uses arenaplay,arenascript,interact,gearutil,narration,texutil,ghprop,rpgdice,ab
 {$IFDEF ASCII}
 	vidmap,vidmenus;
 {$ELSE}
-{$IFDEF CUTE}
-	cutemap,glmenus;
-{$ELSE}
-	glmap,glmenus;
-{$ENDIF}
+	sdlmap,sdlmenus;
 {$ENDIF}
 
 

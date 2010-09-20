@@ -51,11 +51,7 @@ uses 	gearutil,ghchars,texutil,arenacfe,ability,ui4gh,menugear,
 {$IFDEF ASCII}
 	vidgfx,vidmenus,vidinfo;
 {$ELSE}
-{$IFDEF CUTE}
-	cutegfx,glmenus,glinfo;
-{$ELSE}
-	glgfx,glmenus,glinfo;
-{$ENDIF}
+	sdlgfx,sdlmenus,sdlinfo;
 {$ENDIF}
 
 const

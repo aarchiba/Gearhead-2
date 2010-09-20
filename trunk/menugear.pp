@@ -28,7 +28,7 @@ uses gears,locale,
 {$IFDEF ASCII}
 	vidmenus;
 {$ELSE}
-	glmenus;
+	sdlmenus;
 {$ENDIF}
 
 Procedure BuildGearMenu( RPM: RPGMenuPtr; Master: GearPtr; G: Integer; IncludeDestroyed: Boolean );

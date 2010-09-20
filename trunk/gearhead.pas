@@ -35,11 +35,7 @@ uses 	gears,navigate,randmaps,locale,arenaplay,ghchars,gearutil,gearparser,
 {$IFDEF ASCII}
 	vidgfx,vidmap,vidmenus;
 {$ELSE}
-{$IFDEF CUTE}
-	cutegfx,cutemap,glmenus;
-{$ELSE}
-	glgfx,glmap,glmenus;
-{$ENDIF}
+	sdlgfx,sdlmap,sdlmenus;
 {$ENDIF}
 
 const

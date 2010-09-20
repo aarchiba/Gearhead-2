@@ -50,11 +50,7 @@ uses dos,ability,action,gearutil,ghchars,gearparser,texutil,narration,movement,
 {$IFDEF ASCII}
 	vidmap,vidgfx;
 {$ELSE}
-{$IFDEF CUTE}
-	cutemap,cutegfx;
-{$ELSE}
-	glmap,glgfx;
-{$ENDIF}
+	sdlmap,sdlgfx;
 {$ENDIF}
 
 const

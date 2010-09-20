@@ -35,11 +35,7 @@ uses	arenacfe,action,ghchars,texutil,ui4gh,
 {$IFDEF ASCII}
 	vidgfx,vidmenus,vidinfo;
 {$ELSE}
-{$IFDEF CUTE}
-	cutegfx,glmenus,glinfo;
-{$ELSE}
-	glgfx,glmenus,glinfo;
-{$ENDIF}
+	sdlgfx,sdlmenus,sdlinfo;
 {$ENDIF}
 
 var

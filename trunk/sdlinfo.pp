@@ -1,4 +1,4 @@
-unit glinfo;
+unit sdlinfo;
 	{ This unit holds the information display stuff. }
 {
 	GearHead2, a roguelike mecha CRPG
@@ -25,12 +25,7 @@ unit glinfo;
 
 interface
 
-uses sdl,locale,gears,minitype,
-{$IFDEF CUTE}
-	cutegfx;
-{$ELSE}
-	glgfx;
-{$ENDIF}
+uses sdl,locale,gears,minitype,sdlgfx;
 
 Function InfoImageName( Part: GearPtr ): String;
 
@@ -59,12 +54,7 @@ implementation
 
 uses 	sdl_ttf,description,texutil,gearutil,
 	ghmodule,ghchars,ghweapon,movement,ability,
-	narration,ui4gh,
-{$IFDEF CUTE}
-	cutemap;
-{$ELSE}
-	glmap;
-{$ENDIF}
+	narration,ui4gh,sdlmap;
 
 const
 	StatusPerfect:TSDL_Color =	( r:  0; g:255; b: 65 );

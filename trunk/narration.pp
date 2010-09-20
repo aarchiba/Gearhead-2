@@ -238,11 +238,7 @@ uses texutil,rpgdice,ghchars,gearutil,ability,menugear,ghprop,ghweapon,interact,
 {$IFDEF ASCII}
 	vidgfx;
 {$ELSE}
-{$IFDEF CUTE}
-	cutegfx;
-{$ELSE}
-	glgfx;
-{$ENDIF}
+	sdlgfx;
 {$ENDIF}
 
 const

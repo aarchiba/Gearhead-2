@@ -52,11 +52,7 @@ uses ability,action,arenacfe,effects,movement,gearutil,specialsys,ghswag,
 {$IFDEF ASCII}
 	vidgfx,vidmap;
 {$ELSE}
-{$IFDEF CUTE}
-	cutemap,cutegfx;
-{$ELSE}
-	glmap,glgfx;
-{$ENDIF}
+	sdlmap,sdlgfx;
 {$ENDIF}
 
 const

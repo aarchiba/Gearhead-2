@@ -24,12 +24,7 @@ unit colormenu;
 
 interface
 
-uses 	gears,sdl,
-{$IFDEF CUTE}
-	cutegfx;
-{$ELSE}
-	glgfx;
-{$ENDIF}
+uses 	gears,sdl,sdlgfx;
 
 const
 	colormenu_mode_allcolors = 0;

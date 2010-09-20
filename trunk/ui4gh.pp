@@ -409,11 +409,6 @@ const
 	Thorough_Redraw: Boolean = False;
 	Use_Tall_Walls: Boolean = True;
 
-{$IFDEF CUTE}
-	Use_Isometric_Mode: Boolean = True;
-{$ELSE}
-	Use_Isometric_Mode: Boolean = False;
-{$ENDIF}
 	Iso_Dir_Offset: Integer = 0;
 	Ersatz_Mouse: Boolean = False;
 
@@ -566,8 +561,6 @@ begin
 				end else if cmd = 'RELOAD_UNEQUIPPED_WEAPONS_AT_SHOP' then begin
 					Reload_All_Weapons := True;
 
-				end else if cmd = 'ISOMETRIC' then begin
-					Use_Isometric_Mode := True;
 				end else if cmd = 'LAPTOP_ISO_KEYS' then begin
 					 Iso_Dir_Offset := 1;
 
@@ -682,7 +675,7 @@ begin
 	AddBoolean( 'NOMOUSE' , not Mouse_Active );
 	AddBoolean( 'NOPILLAGE' , not Pillage_On );
 	AddBoolean( 'SHORTWALLS' , not Use_Tall_Walls );
-	AddBoolean( 'ISOMETRIC' , Use_Isometric_Mode );
+
 	AddBoolean( 'LAPTOP_ISO_KEYS' ,  Iso_Dir_Offset <> 0 );
 	AddBoolean( 'CYCLE_ALL_WEAPONS' , Cycle_All_Weapons );
 	AddBoolean( 'MINIMAL_SCREEN_REFRESH' , Minimal_Screen_Refresh );

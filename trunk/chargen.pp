@@ -66,12 +66,7 @@ uses 	gearutil,ghchars,texutil,ui4gh,description,gearparser,playwright,
 {$IFDEF ASCII}
 	vidgfx,vidinfo,vidmenus;
 {$ELSE}
-	colormenu,
-{$IFDEF CUTE}
-	cutegfx,glinfo,glmenus;
-{$ELSE}
-	glgfx,glinfo,glmenus;
-{$ENDIF}
+	colormenu,sdlgfx,sdlinfo,sdlmenus;
 {$ENDIF}
 
 type
@@ -1418,11 +1413,8 @@ begin
 	P := 1;
 
 	repeat
-{$IFDEF CUTE}
 		CleanSpriteList;
-{$ELSE}
-		CleanTexList;
-{$ENDIF}
+
 		SetSAtt( PC^.SA , 'SDL_PORTRAIT <' + RetrieveSAtt( PList , P )^.Info + '>' );
 		N := SelectMenu( RPM , @RandCharRedraw );
 

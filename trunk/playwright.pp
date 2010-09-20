@@ -100,11 +100,7 @@ uses 	ui4gh,rpgdice,texutil,gearutil,interact,ability,gearparser,ghchars,narrati
 {$IFDEF ASCII}
 	vidgfx,vidmenus;
 {$ELSE}
-{$IFDEF CUTE}
-	cutegfx,glmenus;
-{$ELSE}
-	glgfx,glmenus;
-{$ENDIF}
+	sdlgfx,sdlmenus;
 {$ENDIF}
 
 Type

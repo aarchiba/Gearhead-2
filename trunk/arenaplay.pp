@@ -41,11 +41,7 @@ uses ability,aibrain,arenacfe,arenascript,backpack,gearutil,ghmodule,ghholder,
 {$IFDEF ASCII}
 	vidmap,vidgfx;
 {$ELSE}
-{$IFDEF CUTE}
-	cutemap,cutegfx;
-{$ELSE}
-	glmap,glgfx;
-{$ENDIF}
+	sdlmap,sdlgfx;
 {$ENDIF}
 
 const

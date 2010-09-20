@@ -71,11 +71,7 @@ uses ability,arenacfe,backpack,gearutil,ghchars,ghmodule,gearparser,
 {$IFDEF ASCII}
 	vidgfx,vidmap,vidmenus,vidinfo;
 {$ELSE}
-{$IFDEF CUTE}
-	cutegfx,cutemap,glmenus,glinfo,colormenu;
-{$ELSE}
-	glgfx,glmap,glmenus,glinfo,colormenu;
-{$ENDIF}
+	sdlgfx,sdlmap,sdlmenus,sdlinfo,colormenu;
 {$ENDIF}
 
 Const

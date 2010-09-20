@@ -34,12 +34,7 @@ uses ui4gh,narration,interact,arenacfe,
 {$IFDEF ASCII}
 	vidgfx,vidinfo,vidmenus;
 {$ELSE}
-{$IFDEF CUTE}
-	cutegfx,cutemap,
-{$ELSE}
-	glgfx,glmap,
-{$ENDIF}
-	glinfo,glmenus;
+	sdlgfx,sdlmap,sdlinfo,sdlmenus;
 {$ENDIF}
 
 type

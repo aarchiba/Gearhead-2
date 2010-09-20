@@ -29,11 +29,7 @@ uses gears,locale,ghchars,
 {$IFDEF ASCII}
 	vidgfx;
 {$ELSE}
-{$IFDEF CUTE}
-	cutegfx;
-{$ELSE}
-	glgfx;
-{$ENDIF}
+	sdlgfx;
 {$ENDIF}
 
 const
@@ -98,12 +94,7 @@ uses ability,action,arenacfe,arenascript,gearutil,ghholder,
 {$IFDEF ASCII}
 	vidmap,vidmenus,vidinfo;
 {$ELSE}
-	colormenu,
-{$IFDEF CUTE}
-	cutemap,glmenus,glinfo;
-{$ELSE}
-	glmap,glmenus,glinfo;
-{$ENDIF}
+	colormenu,sdlmap,sdlmenus,sdlinfo;
 {$ENDIF}
 
 var
@@ -2235,11 +2226,7 @@ begin
 
 	until N < 0;
 {$IFNDEF ASCII}
-{$IFDEF CUTE}
 	CleanSpriteList;
-{$ELSE}
-	CleanTexList;
-{$ENDIF}
 {$ENDIF}
 end;
 

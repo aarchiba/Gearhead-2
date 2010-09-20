@@ -40,7 +40,7 @@ uses gears,locale,
 {$IFDEF ASCII}
 	vidmenus,vidgfx;
 {$ELSE}
-	glmenus,sdl;
+	sdlmenus,sdl;
 {$ENDIF}
 
 const
@@ -138,11 +138,7 @@ uses action,arenacfe,ability,gearutil,ghchars,gearparser,ghmodule,backpack,
 {$IFDEF ASCII}
 	vidmap,vidinfo;
 {$ELSE}
-{$IFDEF CUTE}
-	cutegfx,cutemap,glinfo;
-{$ELSE}
-	glgfx,glmap,glinfo;
-{$ENDIF}
+	sdlgfx,sdlmap,sdlinfo;
 {$ENDIF}
 
 const

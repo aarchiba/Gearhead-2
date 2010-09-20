@@ -84,11 +84,7 @@ uses 	ability,gearutil,ghchars,ghmodule,ghweapon,movement,rpgdice,texutil,
 {$IFDEF ASCII}
 	vidgfx;
 {$ELSE}
-{$IFDEF CUTE}
-	cutegfx;
-{$ELSE}
-	glgfx;
-{$ENDIF}
+	sdlgfx;
 {$ENDIF}
 
 const

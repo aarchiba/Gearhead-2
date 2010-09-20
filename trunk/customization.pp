@@ -49,11 +49,7 @@ uses 	ghchars,gearutil,gearparser,ghintrinsic,effects,ghweapon,ability,ui4gh,
 {$IFDEF ASCII}
 	vidgfx;
 {$ELSE}
-{$IFDEF CUTE}
-	cutegfx;
-{$ELSE}
-	glgfx;
-{$ENDIF}
+	sdlgfx;
 {$ENDIF}
 
 Function MechaModPoints( NPC: GearPtr ): Integer;

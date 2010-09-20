@@ -1,4 +1,4 @@
-unit glmenus;
+unit sdlmenus;
 {$MODE FPC}
 
 	{ BUGS - If SelectMenu is handed an empty menu, all heck will }
@@ -27,12 +27,7 @@ unit glmenus;
 
 interface
 
-uses sdl,sdl_ttf,dos,texutil,ui4gh,
-{$IFDEF CUTE}
-	cutegfx;
-{$ELSE}
-	glgfx;
-{$ENDIF}
+uses sdl,sdl_ttf,dos,texutil,ui4gh,sdlgfx;
 
 
 const
@@ -48,14 +43,14 @@ type
 	RPGMenuKeyPtr = ^RPGMenuKey;
 	RPGMenuKey = Record
 		k: Char;
-		value: integer;		{The value returned when this key is pressed.}
+		value: longint;		{The value returned when this key is pressed.}
 		next: RPGMenuKeyPtr;
 	end;
 
 	RPGMenuItemPtr = ^RPGMenuItem;
 	RPGMenuItem = Record
 		msg: string;		{The text which appears in the menu}
-		value: integer;		{A value, returned by SelectMenu. -1 is reserved for Cancel}
+		value: longint;		{A value, returned by SelectMenu. -1 is reserved for Cancel}
 		desc: string;		{Pointer to the item description. If Nil, no desc.}
 		next: RPGMenuItemPtr;
 	end;
@@ -64,7 +59,7 @@ type
 		itemcolor,selcolor,dtexcolor: TSDL_Color;
 		Menu_Zone,Desc_Zone: TSDL_Rect;
 		mode: Byte;
-		topitem,selectitem,numitem: integer; {fields holding info about the status of the menu.}
+		topitem,selectitem,numitem: longint; {fields holding info about the status of the menu.}
 		FirstItem: RPGMenuItemPtr;
 		FirstKey: RPGMenuKeyPtr;
 	end;
@@ -72,26 +67,26 @@ type
 
 
 
-Function AddRPGMenuItem(var RPM: RPGMenuPtr; const msg: string; value: integer; const desc: string): RPGMenuItemPtr;
-Function AddRPGMenuItem(var RPM: RPGMenuPtr; const msg: string; value: integer): RPGMenuItemPtr;
+Function AddRPGMenuItem(var RPM: RPGMenuPtr; const msg: string; value: longint; const desc: string): RPGMenuItemPtr;
+Function AddRPGMenuItem(var RPM: RPGMenuPtr; const msg: string; value: longint): RPGMenuItemPtr;
 Procedure DisposeRPGMenuItem( var LList: RPGMenuItemPtr );
 Procedure ClearMenu( RPM: RPGMenuPtr );
 Procedure RemoveRPGMenuItem(RPM: RPGMenuPtr; var LMember: RPGMenuItemPtr);
 
-Procedure AddRPGMenuKey(RPM: RPGMenuPtr; k: Char; value: Integer);
+Procedure AddRPGMenuKey(RPM: RPGMenuPtr; k: Char; value: longint);
 Function CreateRPGMenu(icolor,scolor: TSDL_Color; Z: TSDL_Rect): RPGMenuPtr;
 Procedure AttachMenuDesc( RPM: RPGMenuPtr; Z: TSDL_Rect );
 
 Procedure DisposeRPGMenu(var RPM: RPGMenuPtr);
 Procedure DisplayMenu( RPM: RPGMenuPtr; ReDrawer: RedrawProcedureType );
-Function RPMLocateByPosition(RPM: RPGMenuPtr; i: integer): RPGMenuItemPtr;
-Function RPMLocateByValue(RPM: RPGMenuPtr; i: integer): RPGMenuItemPtr;
-Function SelectMenu( RPM: RPGMenuPtr; ReDrawer: RedrawProcedureType ): integer;
+Function RPMLocateByPosition(RPM: RPGMenuPtr; i: longint): RPGMenuItemPtr;
+Function RPMLocateByValue(RPM: RPGMenuPtr; i: longint): RPGMenuItemPtr;
+Function SelectMenu( RPM: RPGMenuPtr; ReDrawer: RedrawProcedureType ): longint;
 Procedure RPMSortAlpha(RPM: RPGMenuPtr);
 
-Function CurrentMenuItemValue( RPM: RPGMenuPtr ): Integer;
-Function SetItemByValue( RPM: RPGMenuPtr ; V: Integer ): RPGMenuItemPtr;
-Procedure SetItemByPosition( RPM: RPGMenuPtr ; N: Integer );
+Function CurrentMenuItemValue( RPM: RPGMenuPtr ): longint;
+Function SetItemByValue( RPM: RPGMenuPtr ; V: longint ): RPGMenuItemPtr;
+Procedure SetItemByPosition( RPM: RPGMenuPtr ; N: longint );
 
 Procedure BuildFileMenu( RPM: RPGMenuPtr; const SearchPattern: String );
 Function SelectFile( RPM: RPGMenuPtr; ReDrawer: RedrawProcedureType ): String;
@@ -112,7 +107,7 @@ begin
 	LastMenuItem := MIList;
 end;
 
-Function AddRPGMenuItem(var RPM: RPGMenuPtr; const msg: string; value: integer; const desc: string): RPGMenuItemPtr;
+Function AddRPGMenuItem(var RPM: RPGMenuPtr; const msg: string; value: longint; const desc: string): RPGMenuItemPtr;
 	{This procedure will add an item to the RPGToolMenu.}
 	{The new item will be added as the last item in the list.}
 var
@@ -150,7 +145,7 @@ begin
 	AddRPGMenuItem := it;
 end;
 
-Function AddRPGMenuItem(var RPM: RPGMenuPtr; const msg: string; value: integer): RPGMenuItemPtr;
+Function AddRPGMenuItem(var RPM: RPGMenuPtr; const msg: string; value: longint): RPGMenuItemPtr;
 	{ Just like the above, but no desc. }
 begin
 	AddRPGMenuItem := AddRPGMenuItem( RPM , msg , value , '' );
@@ -225,7 +220,7 @@ begin
 	Dec(RPM^.NumItem);
 end;
 
-Procedure AddRPGMenuKey(RPM: RPGMenuPtr; k: Char; value: Integer);
+Procedure AddRPGMenuKey(RPM: RPGMenuPtr; k: Char; value: longint);
 	{Add a dynamically defined RPGMenuKey to the menu.}
 var
 	it: RPGMenuKeyPtr;
@@ -309,11 +304,11 @@ begin
 	end;
 end;
 
-Function RPMLocateByPosition(RPM: RPGMenuPtr; i: integer): RPGMenuItemPtr;
+Function RPMLocateByPosition(RPM: RPGMenuPtr; i: longint): RPGMenuItemPtr;
 	{Locate the i'th element of the item list, then return its address.}
 var
 	a: RPGMenuItemPtr;	{Our pointer}
-	t: integer;		{Our counter}
+	t: longint;		{Our counter}
 begin
 	{Error check, first off.}
 	if i > RPM^.numitem then begin
@@ -331,7 +326,7 @@ begin
 	RPMLocateByPosition := a;
 end;
 
-Function RPMLocateByValue(RPM: RPGMenuPtr; i: integer): RPGMenuItemPtr;
+Function RPMLocateByValue(RPM: RPGMenuPtr; i: longint): RPGMenuItemPtr;
 	{Locate the i'th element of the item list, then return its address.}
 var
 	t,a: RPGMenuItemPtr;	{Our counter and a pointer}
@@ -347,10 +342,10 @@ begin
 	RPMLocateByValue := a;
 end;
 
-Function MenuHeight( RPM: RPGMenuPtr ): Integer;
+Function MenuHeight( RPM: RPGMenuPtr ): longint;
 	{ Return the height of the menu, in text rows. }
 var
-	MH: Integer;
+	MH: longint;
 begin
 	MH := ( RPM^.Menu_Zone.h div TTF_FontLineSkip( game_font ) );
 	if MH < 1 then MH := 1;
@@ -371,11 +366,11 @@ Procedure DisplayMenu( RPM: RPGMenuPtr; ReDrawer: RedrawProcedureType );
 var
 	topitem: RPGMenuItemPtr;
 	a: RPGMenuItemPtr;		{A pointer to be used while printing.}
-	t: integer;
-	height: integer;		{The width of the menu display.}
+	t: longint;
+	height: longint;		{The width of the menu display.}
 	NextColor: TSDL_Color;
 	MyDest: TSDL_Rect;
-	Y,DY: Integer;
+	Y,DY: longint;
 begin
 	{Error check- make sure the menu has items in it.}
 	if RPM^.FirstItem = Nil then Exit;
@@ -503,15 +498,15 @@ begin
 end;
 
 
-Function SelectMenu( RPM: RPGMenuPtr; ReDrawer: RedrawProcedureType ): integer;
+Function SelectMenu( RPM: RPGMenuPtr; ReDrawer: RedrawProcedureType ): longint;
 	{This function will allow the user to browse through the menu and will}
 	{return a value based upon the user's selection.}
 var
 	getit: char;		{Character used to store user input}
-	r,I: integer;		{The value we'll be sending back.}
+	r,I: longint;		{The value we'll be sending back.}
 	m: RPGMenuKeyPtr;
 	UK: Boolean;		{Has a special MenuKey been pressed?}
-	OldMouseX, OldMouseY: Integer; { TUNGINOBI: I got sick of the mouse cursor getting }
+	OldMouseX, OldMouseY: longint; { TUNGINOBI: I got sick of the mouse cursor getting }
                           { in the way of the keyboard, so this will only }
                           { change the menu item if the mouse has moved. }
 begin
@@ -673,7 +668,7 @@ begin
 	RPM^.firstitem := Sorted;
 end;
 
-Function CurrentMenuItemValue( RPM: RPGMenuPtr ): Integer;
+Function CurrentMenuItemValue( RPM: RPGMenuPtr ): longint;
 	{ Determine the value of the current menu item, and return it. }
 	{ Return 0 if the item is not found. }
 var
@@ -687,11 +682,11 @@ begin
 	end;
 end;
 
-Function SetItemByValue( RPM: RPGMenuPtr ; V: Integer ): RPGMenuItemPtr;
+Function SetItemByValue( RPM: RPGMenuPtr ; V: longint ): RPGMenuItemPtr;
 	{ Search through the list, and set the SelectItem }
 	{ field to the first menu item which matches V. }
 var
-	T: Integer;
+	T: longint;
 	MI: RPGMenuItemPtr;
 begin
 	if RPM = Nil then exit;
@@ -716,7 +711,7 @@ begin
 	SetItemByValue := MI;
 end;
 
-Procedure SetItemByPosition( RPM: RPGMenuPtr ; N: Integer );
+Procedure SetItemByPosition( RPM: RPGMenuPtr ; N: longint );
 	{ Search through the list, and set the SelectItem }
 	{ field to the Nth menu item. }
 begin
@@ -738,7 +733,7 @@ Procedure BuildFileMenu( RPM: RPGMenuPtr; const SearchPattern: String );
 	{ each of the files found to the menu. }
 var
 	F: SearchRec;
-	N: Integer;
+	N: longint;
 begin
 	N := 1;
 	FindFirst( SearchPattern , AnyFile , F );
@@ -755,7 +750,7 @@ Function SelectFile( RPM: RPGMenuPtr; ReDrawer: RedrawProcedureType ): String;
 	{ So, select one of the items and return the item name, which }
 	{ should be a filename. }
 var
-	N: Integer;	{ The number of the file selected. }
+	N: longint;	{ The number of the file selected. }
 	Name: String;	{ The name of the filename selected. }
 begin
 	{ Do the menu selection first. }

@@ -91,12 +91,7 @@ uses gearutil,ghprop,rpgdice,texutil,gearparser,narration,ui4gh,arenascript,ghch
 {$IFDEF ASCII}
 	vidgfx;
 {$ELSE}
-{$IFDEF CUTE}
-	cutegfx;
-{$ELSE}
-	glgfx;
-{$ENDIF}
-{$ENDIF}
+	sdlgfx;{$ENDIF}
 
 var
 	Standard_Param_List: SAttPtr;
@@ -1539,7 +1534,7 @@ const
 		end;
 	end; {DrawAnL}
 	Procedure DrawOneLine( NX , NY: Integer );
-		{ Draw an regular corridor on the map, centered on }
+		{ Draw a regular corridor on the map, centered on }
 		{ node point NX, NY. }
 	var
 		X1,X2,Y1,Y2,XT,YT: Integer;
