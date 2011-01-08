@@ -167,7 +167,7 @@ var
 Function ScreenDirToMapDir( D: Integer ): Integer;
 	{ Convert the requested screen direction to a map direction. }
 begin
-	ScreenDirToMapDir := ( D + Origin_D * 2 ) mod 8;
+	ScreenDirToMapDir := ( D + Origin_D * 2 + 7 ) mod 8;
 end;
 
 Function KeyboardDirToMapDir( D: Integer ): Integer;
@@ -774,11 +774,15 @@ begin
 				end;
 
 			end else if IsMasterGear( M ) then begin
-				{ Insert sprite-drawing code here. }
+{				{ Insert sprite-drawing code here. }
 				AddCMCel( 	GB , X , Y , Z , CMC_Master ,
 						LocateSprite( SpriteName( GB , M ) , SpriteColor( GB , M ) , 64 , 64 ),
 						MapDirToScreenDir( NAttValue( M^.NA , NAG_Location , NAS_D ) )
 				);
+}AddCMCel( 	GB , X , Y , Z , CMC_Master ,
+		LocateSprite( 'test_buruburu.png' , SpriteColor( GB , M ) , 64 , 64 ),
+		0
+);
 
 				{ Also add a shadow. }
 				AddCMCel( 	GB , X , Y , TerrMan[ TileTerrain( gb , X , Y ) ].Altitude , CMC_MShadow , Shadow_Sprite , 6 );
