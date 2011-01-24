@@ -1,0 +1,11 @@
+Plots
+
+A plot is a script container. It may contain metascenes or persona nodes.
+
+Each plot has a status- inactive, active, sleeping and concluded.
+Inactive plots do nothing. Their contents are not publicly visible.
+Active plots are active. Their contents are visible.
+Sleeping plots are asleep. They can process scripts, but contents invisible.
+Concluded plots are removed from the adventure.
+
+When a concluded plot is removed, any inactive plots within are 

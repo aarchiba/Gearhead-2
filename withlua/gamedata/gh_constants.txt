@@ -1,0 +1,480 @@
+{ These constants are shared by the Pascal engine and the Lua scripts. Only edit this file if you know what you are doing- most edits will require the program to be FULLY recompiled. Use "delp ." first. No comments below this line. }
+	GG_Secret = -21;
+	GG_CityMood = -20;
+	GG_Theme = -19;
+	GG_Meme = -18;
+	GG_SuperProp = -17;
+	GG_PlotThingSet = -16;
+	GG_ContentSet = -15;
+	GG_ArtifactSet = -14;
+	GG_Set = -13;
+	GG_World = -12;
+	GG_MetaScene = -11;
+	GG_Story = -10;
+	GG_Plot = -9;
+
+	GG_MapFeature = -8;
+		STAT_XPos = 1;
+		STAT_YPos = 2;
+		STAT_MFWidth = 3;
+		STAT_MFHeight = 4;
+		STAT_MFFloor = 5;
+		STAT_MFMarble = 6;
+		STAT_MFBorder = 7;
+		STAT_MFSpecial = 8;
+
+	GG_Adventure = -7;
+	GG_Faction = -6;
+	GG_Persona = -5;
+	GG_Team = -4;
+	GG_Scene = -3;
+
+	GG_AbsolutelyNothing = -1;
+
+	GG_Mecha = 0;
+		NumForm = 9;
+		GS_Battroid = 0;
+		GS_Zoanoid = 1;
+		GS_GroundHugger = 2;
+		GS_Arachnoid = 3;
+		GS_AeroFighter = 4;
+		GS_Ornithoid = 5;
+		GS_Gerwalk = 6;
+		GS_HoverFighter = 7;
+		GS_GroundCar = 8;
+
+		STAT_MechaTrait = 1;
+			NumMechaTrait = 1;
+			MT_ReflexSystem = 1;
+
+
+	GG_Module = 1;
+		NumModule = 8;
+		GS_Body = 1;
+		GS_Head = 2;
+		GS_Arm = 3;
+		GS_Leg = 4;
+		GS_Wing = 5;
+		GS_Tail = 6;
+		GS_Turret = 7;
+		GS_Storage = 8;
+
+		STAT_Armor = 1;
+		STAT_PrimaryModuleForm = 2;
+		STAT_VariableModuleForm = 3;
+
+	GG_Character = 2;
+		num_character_stats = 8;
+		STAT_Reflexes	= 1;
+		STAT_Body	= 2;
+		STAT_Speed	= 3;
+		STAT_Perception	= 4;
+		STAT_Craft	= 5;
+		STAT_Ego	= 6;
+		STAT_Knowledge	= 7;
+		STAT_Charm	= 8;
+
+	GG_Cockpit = 3;
+
+	GG_Weapon = 4;
+		GS_Melee = 0;
+		GS_EMelee = 1;
+		GS_Ballistic = 2;
+		GS_BeamGun = 3;
+		GS_Missile = 4;
+		GS_Grenade = 5;
+		STAT_Range = 1;
+		STAT_Accuracy = 2;
+		STAT_Recharge = 3;
+		STAT_BurstValue = 4;
+		STAT_AttackStat = 5;
+		STAT_AmmoPresent = 7;
+
+	GG_Ammo = 5;
+	GG_MoveSys = 6;
+		NumMoveSys = 8;
+		GS_Wheels = 1;
+		GS_Tracks = 2;
+		GS_HoverJets = 3;
+		GS_FlightJets = 4;
+		GS_Overchargers = 6;
+		GS_SpaceFlight = 7;
+		GS_HeavyActuator = 8;
+
+	GG_Holder = 7;
+		GS_Hand = 0;
+		GS_Mount = 1;
+
+	GG_Sensor = 8;
+		NumSensorType = 2;
+		GS_MainSensor = 1;
+		GS_ECM = 2;
+
+	GG_Support = 9;
+		NumSupportType = 2;
+		GS_Gyro = 1;
+		GS_Engine = 2;
+		STAT_EngineSubType = 2;
+			EST_HighOutput = 1;
+			EST_HighPerformance = 2;
+
+	GG_Shield = 10;
+		NumShieldType = 2;
+		GS_PhysicalShield = 0;
+		GS_EnergyShield = 1;
+		STAT_ShieldBonus = 1;
+
+	GG_ExArmor = 11;
+	GG_Treasure = 12;
+	GG_Prop = 13;
+		GS_BasicProp = 0;
+		GS_CombatProp = 1;
+
+	GG_MetaTerrain = 15;
+		NumBasicMetaTerrain = 11;
+		GS_MetaDoor = 1;
+		GS_MetaCloud = 2;
+		GS_MetaStairsUp = 3;
+		GS_MetaStairsDown = 4;
+		GS_MetaElevator = 5;
+		GS_MetaTrapDoor = 6;
+		GS_MetaRubble = 7;
+		GS_MetaSign = 8;
+		GS_MetaFire = 9;
+		GS_MetaBuilding = 10;
+		GS_MetaEncounter = 11;
+
+		STAT_Altitude = 1;
+		STAT_Obscurement = 2;
+		STAT_Pass = 3;
+		STAT_Destination = 4;
+		STAT_MetaVisibility = 5;
+		STAT_Lock = 6;
+		STAT_CloudDuration = 7;
+		STAT_EncounterMove = 7;
+		STAT_EncounterType = 8;
+			ENCOUNTER_Hostile = 0;
+			ENCOUNTER_Defense = 1;
+			ENCOUNTER_NonCombat = 2;
+
+	GG_Tool = 16;
+	GG_RepairFuel = 17;
+
+	GG_Consumable = 18;
+		STAT_MoraleBoost = 1;
+		STAT_FoodEffectType = 4;
+			Num_FoodEffectType = 4;
+			FET_Healing = 1;
+			FET_Regeneration = 2;
+			FET_CauseStatus = 3;
+			FET_CureStatus = 4;
+		STAT_FoodEffectMod = 5;
+		STAT_FoodSkillXP = 6;
+		STAT_FoodSkillXPAmount = 7;
+
+	GG_Modifier = 19;
+		GS_StatModifier = 1;
+		GS_SkillModifier = 2;
+		GV_CharaModifier = 1;
+		GV_MechaModifier = 2;
+		SATT_CyberSlot = 'CYBERSLOT';
+		STAT_SkillToModify = 1;
+		STAT_SkillModBonus = 2;
+
+	GG_WeaponAddOn = 20;
+		GS_General_AO = 0;
+		GS_Gun_AO = 1;
+		GS_Heavy_AO = 2;
+		GS_Melee_AO = 3;
+
+	GG_PowerSource = 21;
+
+	GG_Computer = 22;
+	GG_Software = 23;
+		STAT_SW_Type = 1;
+			S_MVBoost = 1;
+			S_TRBoost = 2;
+			S_SpeedComp = 3;
+			S_Information = 4;
+		STAT_SW_Param = 2;
+			Num_SWInfo_Types = 4;
+			SInfo_CreatureDex = 1;
+			SInfo_RobotDex = 2;
+			SInfo_SynthDex = 3;
+			SInfo_MechaDex = 4;
+
+	GG_Harness = 24;
+	GG_Usable = 25;
+		Num_Usable_System_Types = 4;
+		GS_Transformation = 1;
+		GS_ForceField = 2;
+		GS_Holograms = 3;
+		GS_LongRangeScanner = 4;
+
+	NAG_WeaponModifier = -3;
+		NAS_AmmoSpent = 0;
+		NAS_Recharge = 1;
+		NAS_SafetySwitch = 2;
+		NAS_QuickFire = 3;
+			NAV_QF_First = 3;
+			NAV_QF_Second = 2;
+			NAV_QF_Last = 1;
+
+	NAG_Action = -2;
+		NAS_MoveMode = 0;
+		NAS_MoveAction = 1;
+			NAV_Stop = 0;
+			NAV_NormSpeed = 1;
+			NAV_FullSpeed = 2;
+			NAV_TurnLeft = 3;
+			NAV_TurnRight = 4;
+			NAV_Reverse = 5;
+			NAV_Hover = 6;
+		NAS_MoveETA = 2;
+		NAS_MoveStart = 3;
+		NAS_CallTime = 4;
+		NAS_TimeLimit = 5;
+		NAS_JumpRecharge = 6;
+
+		NAS_DriftVector = 7;
+		NAS_DriftSpeed = 8;
+		NAS_DriftETA = 9;
+
+		NAS_TilesInARow = 10;
+		NAS_WillCrash = 11;
+		NAS_WillCharge = 12;
+		NAS_ChargeSpeed = 13;
+		NAS_MightGiveUp = 14;
+		NAS_WillExplode = 15;
+		NAS_WillDisappear = 16;
+
+	NAG_Skill = 1;
+		NumSkill = 28;
+		NAS_MechaGunnery = 1;
+		NAS_MechaFighting = 2;
+		NAS_MechaPiloting = 3;
+		NAS_RangedCombat = 4;
+		NAS_CloseCombat = 5;
+		NAS_Dodge = 6;
+		NAS_Vitality = 7;
+		NAS_Athletics = 8;
+		NAS_Concentration = 9;
+		NAS_Awareness = 10;
+		NAS_Initiative = 11;
+		NAS_Survival = 12;
+		NAS_Repair = 13;
+		NAS_Medicine = 14;
+		NAS_ElectronicWarfare = 15;
+		NAS_SpotWeakness = 16;
+		NAS_Conversation = 17;
+		NAS_Shopping = 18;
+		NAS_Stealth = 19;
+		NAS_Intimidation = 20;
+		NAS_Science = 21;
+		NAS_MechaEngineering = 22;
+		NAS_CodeBreaking = 23;
+		NAS_Mysticism = 24;
+		NAS_Performance = 25;
+		NAS_Toughness = 26;
+		NAS_Insight = 27;
+		NAS_Taunt = 28;
+
+	NAG_GearOps = 2;
+		NumMaterial = 2;
+		NAS_Material = 0;
+			NAV_Metal = 0;
+			NAV_Meat = 1;
+			NAV_BioTech = 2;
+		NAS_MassAdjust = 1;
+		NAS_DominationTarget = 2;
+		NAS_EvolveAt = 3;
+		NAS_Fudge = 4;
+		NAS_Legality = 5;
+		NAS_MonsterTV = 6;
+		NAS_ArmorType = 7;
+			NumArmorType = 2;
+			NAV_Hardened = 1;
+			NAV_AntiBeam = 2;
+		NAS_CorpseOp = 9;
+			NAV_LeaveCorpse = 0;
+			NAV_NoCorpse = 1;
+		NAS_ShopRank = 10;
+		NAS_CostAdjust = 11;
+
+	NAG_CharDescription = 3;
+		NAS_Gender = 0;
+			NAV_NoGender = 0;
+			NAV_Female = 1;
+			NAV_Male = 2;
+		NAS_DAge = 1;
+		NAS_CharType = 2;
+			NAV_CTPrimary = 0;
+			NAV_CTLancemate = 1;
+			NAV_TempLancemate = 2;
+		NAS_IsCombatant = 3;
+		NAS_PositiveHeroism = 6;
+		NAS_Heroic = 7;
+		NAS_Lawful = 8;
+		NAS_Renowned = 9;
+
+	NAG_Experience = 4;
+		NAS_TotalXP = 0;
+		NAS_SpentXP = 1;
+		NAS_Credits = 2;
+		NAS_FacXP = 3;
+		NAS_FacLevel = 4;
+		NAS_RewardLevel = 5;
+
+		Credits_Per_XP = 250;
+
+	NAG_Personal = 5;
+		NAS_FactionID = 2;
+		NAS_RandSeed = 3;
+		NAS_RestockTime = 4;
+		NAS_CashOnHandRestock = 5;
+		NAS_LMOrders_OptMax = 6;
+		NAS_LMOrders_OptMin = 7;
+		NAS_NumConversation = 8;
+		NAS_Resurrections = 9;
+		NAS_LMOrders_AIType = 10;
+		NAS_SpecialistSkill = 11;
+		NAS_MechaTheme = 12;
+		NAS_PerformancePenalty = 13;
+		NAS_PlotRecharge = 16;
+		NAS_RumorRecharge = 17;
+
+	NAG_Narrative = 7;
+		NAS_NID = 0;
+		NAS_MaxNID = 4;
+		NAS_EntranceScene = 5;
+		NAS_DungeonLevel = 6;
+		NAS_DungeonBranch = 7;
+		NAS_Stolen = 8;
+		NAS_MinMSID = 9;
+		NAS_ScriptActivatedTimer = 10;
+		NAS_HomeTownID = 11;
+		NAS_ControllingFaction = 12;
+		NAS_ContentID = 13;
+		NAS_NeededCells = 16;
+		NAS_PartyPoints = 17;
+		NAS_ReturnToScene = 18;
+		NAS_RandomLoot = 19;
+		NAS_PlotID = 22;
+		NAS_PlotLayer = 23;
+		NAS_DifficultyLevel = 26;
+		NAS_IsRandomEquipment = 27;
+		NAS_GaveLMMecha = 28;
+		NAS_ControllerID = 29;
+		NAS_DefaultFacTheme = 31;
+		NAS_MoodRecharge = 32;
+		NAS_QuestDungeonPlacement = 33;
+			NAV_WasQDOriginal = 1;
+			NAV_ForGoalLevel = -1;
+			NAV_ForEntryLevel = -2;
+		NAS_EncounterActive = 34;
+		NAS_DungeonEntrance = 37;
+		NAS_LancemateTraining_Total = 38;
+		NAS_LancemateTraining_Spent = 39;
+		NAS_LockedDoorChance = 101;
+		NAS_SecretDoorChance = 102;
+		NAS_VictimsRecovered = 201;
+		Num_Fatality_Types = 5;
+		Fatality_Base = 300;
+		NAS_TotalFatalities = 301;
+		NAS_FamilyFatalities = 302;
+		NAS_FriendFatalities = 303;
+		NAS_LoverFatalities = 304;
+		NAS_LancemateFatalities = 305;
+
+
+	NAG_Condition = 9;
+		NAS_StaminaDown = 0;
+		NAS_MentalDown = 1;
+		NAS_Hunger = 2;
+		NAS_MoraleDamage = 3;
+		NAS_PowerSpent = 4;
+		NAS_CyberTrauma = 5;
+
+	NAG_StatImprovementLevel = 11;
+
+	NAG_Damage = 12;
+		NAS_StrucDamage = 0;
+		NAS_ArmorDamage = 1;
+		NAS_OutOfAction = 2;
+
+	NAG_Display = 13;
+		NAS_PrimaryFrame = 0;
+
+	NAG_Preferences = 15;
+		NAS_DefAtOp = 0;
+
+	NAG_Talent = 16;
+		NumTalent = 27;
+		NAS_KungFu = 1;
+		NAS_HapKiDo = 2;
+		NAS_Anatomist = 3;
+		NAS_HardAsNails = 4;
+		NAS_StuntDriving = 5;
+		NAS_Polymath = 6;
+		NAS_Bishounen = 7;
+		NAS_BornToFly = 8;
+		NAS_SureFooted = 9;
+		NAS_RoadHog = 10;
+		NAS_TechVulture = 11;
+		NAS_Idealist = 12;
+		NAS_BusinessSense = 13;
+		NAS_JackOfAll = 14;
+		NAS_Rage = 15;
+		NAS_Ninjitsu = 16;
+		NAS_HullDown = 17;
+		NAS_GateCrasher = 18;
+		NAS_Sniper = 19;
+		NAS_Innovation = 20;
+		NAS_Camaraderie = 21;
+		NAS_Entourage = 22;
+		NAS_Robotics = 23;
+		NAS_Acrobatics = 24;
+		NAS_DominateAnimal = 25;
+		NAS_PickPockets = 26;
+		NAS_Extropian = 27;
+
+	NAG_FacReward = 17;
+		NAS_AccessArmory = 1;
+
+	NAG_Intrinsic = 18;
+		NumIntrinsic = 7;
+		NAS_Memo = 1;
+		NAS_Email = 2;
+		NAS_News = 3;
+		NAS_Phone = 4;
+		NAS_EnviroSealed = 5;
+		NAS_Integral = 6;
+		NAS_Personadex = 7;
+
+	NAG_EnvironmentData = 22;
+		Num_Environment_Variables = 3;
+		NAS_Gravity = 1;
+			NAV_Earthlike = 0;
+			NAV_Microgravity = 1;
+		NAS_Atmosphere = 2;
+			NAV_Vacuum = 1;
+		NAS_Ceiling = 3;
+			NAV_HasCeiling = 1;
+
+
+	NAG_MeritBadge = 28;
+		NumMeritBadge = 4;
+		NAS_MB_PopStar = 1;
+		NAS_MB_ArenaChampion = 2;
+		NAS_MB_Lancemate2 = 3;
+		NAS_MB_Lancemate3 = 4;
+
+
+	NumMoveMode = 5;
+	MM_Walk = 1;
+	MM_Roll = 2;
+	MM_Skim = 3;
+	MM_Fly = 4;
+	MM_Space = 5;
+
+
