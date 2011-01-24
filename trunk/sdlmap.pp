@@ -53,7 +53,8 @@ Function ScreenDirToMapDir( D: Integer ): Integer;
 Function KeyboardDirToMapDir( D: Integer ): Integer;
 
 Function SpriteColor( GB: GameBoardPtr; M: GearPtr ): String;
-Procedure Render_Off_Map_Models;
+
+Procedure Render_Off_Map_Models;
 
 Procedure RenderMap( GB: GameBoardPtr );
 Procedure FocusOn( Mek: GearPtr );
@@ -155,6 +156,7 @@ const
 
 var
 	Mini_Map_Sprite,World_Terrain,Items_Sprite: SensibleSpritePtr;
+	Compass_Sprite: SensibleSpritePtr;
 
 	CM_Cels: Array [ 1..MaxMapWidth, 1..MaxMapWidth, LoAlt..HiAlt, 0..NumCMCelLayers ] of Cute_Map_Cel_Description;
 	CM_Cel_IsOn: Array [0..NumCMCelLayers] of Cute_Map_Cel_Toggle;
@@ -272,7 +274,8 @@ begin
 		SetSAtt( M^.SA , 'SDL_SPRITE <' + it + '>' );
 	end;
 	SpriteName := it;
-end;
+end;
+
 Function CuteSpriteName( M: GearPtr ): String;
 	{ Locate the sprite name for this gear. If no sprite name is defined, }
 	{ set the default sprite name for the gear type & store it as a string }
@@ -774,14 +777,18 @@ begin
 				end;
 
 			end else if IsMasterGear( M ) then begin
-{				{ Insert sprite-drawing code here. }
-				AddCMCel( 	GB , X , Y , Z , CMC_Master ,
+				{ Insert sprite-drawing code here. }
+{				AddCMCel( 	GB , X , Y , Z , CMC_Master ,
 						LocateSprite( SpriteName( GB , M ) , SpriteColor( GB , M ) , 64 , 64 ),
 						MapDirToScreenDir( NAttValue( M^.NA , NAG_Location , NAS_D ) )
-				);
-}AddCMCel( 	GB , X , Y , Z , CMC_Master ,
+				);}
+AddCMCel( 	GB , X , Y , Z , CMC_Master ,
 		LocateSprite( 'test_buruburu.png' , SpriteColor( GB , M ) , 64 , 64 ),
 		0
+);
+AddCMCel( 	GB , X , Y , Z , CMC_Destroyed ,
+		Compass_Sprite,
+		MapDirToScreenDir( NAttValue( M^.NA , NAG_Location , NAS_D ) )
 );
 
 				{ Also add a shadow. }
@@ -1241,6 +1248,8 @@ initialization
 	Miss_Sprite := LocateSprite( Miss_Sprite_Name , 64, 64 );
 
 	Encounter_Sprite := LocateSprite( 'encounter_64.png' , 64, 64 );
+
+	Compass_Sprite := LocateSprite( 'iso_compass.png' , 64, 64 );
 
 	ClearOverlays;
 	Focused_On_Mek := Nil;
