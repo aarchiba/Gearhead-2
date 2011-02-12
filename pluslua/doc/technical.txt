@@ -1,0 +1,67 @@
+
+	Adventure
+	sub
+		World
+		sub
+			City
+			sub
+
+			end
+			inv
+
+			end
+		end
+		inv
+
+		end
+	end
+	inv
+		Factions
+
+		Plot
+		inv
+			SubPlot
+		end
+	end
+
+Script Activation Path
+	RootScene invcoms (quests)
+	Adventure invcoms (plots)
+	GB^.Scene subcoms (local script objects)
+	GB^.Scene
+	GameBoard contents
+
+
+Random Scene Content
+
+This includes all of the randomly placed things you might find in a scene. First
+it gets loaded like any other MegaPlot. Then, it is added to the scene one subplot
+at a time. All physical elements which have not had a PLACE string defined get
+moved to the map feature which requested the content. MetaPersonas get converted
+to real Personas and placed in the scene. If the plot has Lua scripts, it gets
+converted into a script object and placed in the scene.
+
+The MiniMap of the content will be applied to the container. If two subplots are
+assigned to the same container, the minimap of the second one will overwrite the
+minimap of the first, so watch out.
+
+
+Persona Search
+
+First check for a MetaPersona. The quests and plots are checked. A MetaPersona is
+legal if it exists and is in an active plot.
+
+
+Plots
+
+Status: Dormant, active, or inactive.
+
+A plot is a script container. It may contain metascenes or persona nodes.
+
+Each plot has a status- inactive, active, sleeping and concluded.
+Inactive plots do nothing. Their contents are not publicly visible.
+Active plots are active. Their contents are visible.
+Sleeping plots are asleep. They can process scripts, but contents invisible.
+Concluded plots are removed from the adventure.
+
+When a concluded plot is removed, any inactive plots within are 
