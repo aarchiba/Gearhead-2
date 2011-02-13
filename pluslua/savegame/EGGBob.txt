@@ -3,180 +3,146 @@ Stats
 -1
 Z
 ZZZ
-0 2 0 0 0
-Stats 1 13 2 8 3 13 4 15 5 16 6 10 7 14 8 14 
-0 1 6 4
-0 1 5 4
-0 1 4 3
-0 1 2 3
-0 1 1 3
-0 3 -2 -5
-0 9 3 -100
-0 1 28 1
-0 1 19 1
-0 1 3 3
-0 2 0 1
-0 3 4 1
-0 10 0 3
-0 3 -6 50
-0 3 1 31
--1
-role <FATHER>
-Quest <*EGG_Primary>
-NAME <Ucttil Tybcuw>
-JOB <Pirate>
-JOB_DESIG <THIEF>
-Z
 ZZZ
 -1
--1
 0 2 0 0 0
-Stats 1 13 2 14 3 13 4 14 5 12 6 12 7 11 8 15 
-0 1 5 3
-0 1 4 3
-0 1 2 2
-0 1 1 5
-0 9 3 -100
-0 4 2 45000
-0 1 6 4
-0 1 3 5
-0 2 0 1
-0 3 4 1
-0 10 0 3
-0 3 0 1
-0 3 -6 50
-0 3 1 30
--1
-role <MOTHER>
-Quest <*EGG_Secondary>
-NAME <Arfjen>
-JOB <Mercenary>
-JOB_DESIG <ADVEN>
-Z
-ZZZ
--1
--1
--1
-0 2 0 0 0
-Stats 1 10 2 6 3 13 4 16 5 12 6 10 7 11 8 14 
+Stats 1 10 2 12 3 12 4 10 5 13 6 11 7 14 8 11 
 0 16 12 1
 0 1 17 3
-0 1 6 3
-0 1 5 3
-0 1 4 4
-0 1 3 2
-0 1 2 3
-0 1 1 4
-0 3 -5 -15
-0 4 106 105
-0 4 128 70
-0 4 119 70
-0 4 103 175
-0 3 -3 -25
+0 1 6 4
+0 1 5 2
+0 1 3 3
+0 1 2 4
+0 1 1 3
+0 5 2 9
+0 3 -2 5
 0 9 3 -100
-0 1 23 2
-0 1 19 3
-0 1 10 2
-0 4 2 107974
-0 4 0 530
-0 3 1 5
+0 1 27 1
+0 1 16 1
+0 1 4 4
+0 4 2 200953
+0 4 0 685
 0 3 0 2
 0 2 0 1
 -1
-SDL_Colors <197 80 69 241 254 223 77 156 131>
-HOMETOWN <Rishiri Spinner>
-HOMETOWN_FACTIONS <RISHI ROCKE L5LAW>
-HOMETOWN_GOVERNMENT <RISHI>
-HOMETOWN_CONTEXT <city town spinner target outdoors urban destination hometown capitol lawful RISSP RISHI>
-JOB <Spy>
-JOB_DESIG <THIEF>
-CONTEXT < C:THIEF +B-- +G-->
-BIO1 < Your father was a Pirate and your mother was a Mercenary. You were a sickly and miserable child.>
+SDL_Colors <166 47 32 241 254 223 208 34 51>
+HOMETOWN <Gaos Spinner>
+HOMETOWN_FACTIONS <FCOMS PDASS PRIVA L5LAW>
+HOMETOWN_GOVERNMENT <FCOMS>
+HOMETOWN_CONTEXT <town spinner target outdoors urban destination hometown resort poor safe GAOSP FCOMS>
+JOB <Police Officer>
+JOB_DESIG <POLIC>
+CONTEXT < C:POLIC +Bor +G-->
+CG_FacDesig <L5LAW>
+BIO1 < You never knew your parents, and were raised in an orphanage.>
 SDL_PORTRAIT <por_m_jate(-AY).png>
 NAME <Bob>
 Z
 ZZZ
+ZZZ
 -1
 -1
-0 0 0 3 2
+0 0 0 5 2
 Stats 
+0 2 5 -15
 -1
-Name <Ice Wind>
-Desig <CBG-87b>
+Name <Buru Buru>
+Desig <SAN-X9>
 type <GROUND SPACE INSIDE>
 factions <GENERAL>
-ROLE_SILKN <GENERAL:TROOPER  ASSAULT:TROOPER  DEFENSE:TROOPER>
-ROLE_ROCKE <GENERAL:TROOPER  ASSAULT:TROOPER  DEFENSE:TROOPER>
-desc <A light general purpose mecha. This is one of the oldest models in the series still in service.>
-SDL_Portrait <item_icewind.png>
+SDL_Sprite <btr_buruburu.png>
+SDL_PORTRAIT <item_buruburu.png>
+SDL_MESH <btr_buruburu.obj>
+SDL_SKIN <skin_btr_buruburu.png>
+desc <One of the oldest designs still in common use, the BuruBuru is the dependable workhorse of the mecha world.>
+ROLE_FCOMS <GENERAL:COMMAND  ASSAULT:COMMAND  DEFENSE:COMMAND>
+ROLE_MAQUI <GENERAL:COMMAND  ASSAULT:COMMAND  DEFENSE:COMMAND>
+ROLE_RISHI <GENERAL:COMMAND  ASSAULT:COMMAND  DEFENSE:COMMAND>
+ROLE_BOHEM <GENERAL:COMMAND  ASSAULT:COMMAND  DEFENSE:COMMAND>
+ROLE_PRIVA <GENERAL:TROOPER  ASSAULT:TROOPER  DEFENSE:TROOPER>
 PILOT <Bob>
 Z
 ZZZ
+ZZZ
 -1
-0 1 2 1 2
-Stats 1 3 2 2 
+0 1 2 5 2
+Stats 1 4 2 2 
+0 2 1 2
 -1
 Z
 ZZZ
+ZZZ
 -1
-0 8 1 5 2
+0 8 1 4 2
 Stats 
 -1
 Z
 ZZZ
--1
--1
--1
-0 1 1 3 2
-Stats 1 3 2 1 
--1
-Z
-ZZZ
-0 11 1 2 2
-Stats 
--1
-Fits <Battroid>
-Z
 ZZZ
 -1
 -1
+0 4 3 3 2
+Stats 1 2 2 1 3 3 5 1 
+0 18 6 1
+-1
+name <Light Laser>
+DESIG <LAS-3>
+type <INTERCEPT>
+Z
+ZZZ
+ZZZ
+-1
+-1
+-1
+0 1 1 5 2
+Stats 1 4 2 1 
+0 2 1 3
+-1
+Z
+ZZZ
+ZZZ
 -1
 0 3 0 0 2
+Stats 1 2 
+-1
+Z
+ZZZ
+ZZZ
+-1
+-1
+0 7 1 1 2
+Stats 
+-1
+name <Collar Mount>
+Z
+ZZZ
+ZZZ
+0 4 4 4 2
+Stats 3 2 5 4 
+-1
+Z
+ZZZ
+ZZZ
+-1
+0 5 4 2 2
+Stats 1 7 5 4 7 20 
+-1
+name <Swarm Missiles>
+desig <SWM-2>
+type <SWARM>
+Z
+ZZZ
+ZZZ
+-1
+-1
+-1
+-1
+-1
+0 9 2 5 0
 Stats 
 -1
 Z
 ZZZ
--1
--1
-0 4 3 5 2
-Stats 1 3 2 1 3 3 5 1 
--1
-name <Combat Laser>
-DESIG <LAS-5>
-Z
-ZZZ
--1
--1
-0 4 3 5 2
-Stats 1 3 2 1 3 3 5 1 
--1
-name <Combat Laser>
-DESIG <LAS-5>
-Z
-ZZZ
--1
--1
-0 6 3 3 2
-Stats 
--1
-Z
-ZZZ
--1
--1
-0 9 2 3 0
-Stats 
--1
-Z
 ZZZ
 -1
 -1
@@ -185,50 +151,41 @@ Stats
 -1
 Z
 ZZZ
+ZZZ
 -1
 -1
 -1
-0 1 3 2 2
-Stats 1 3 2 3 
+0 1 3 5 2
+Stats 1 4 2 3 
+0 2 1 3
 -1
 Name <Right Arm>
 Z
 ZZZ
+ZZZ
 -1
 0 7 0 1 2
 Stats 
 -1
 Z
 ZZZ
-0 4 1 5 2
-Stats 2 1 3 2 5 1 
+ZZZ
+0 4 2 9 2
+Stats 1 5 3 2 5 1 7 15 
 -1
-Name <Beam Sabre>
+Name <Shaka Cannon>
+desig <SC-9>
+Caliber <150mm Shells>
 Z
 ZZZ
--1
--1
--1
--1
-0 7 1 1 2
-Stats 
--1
-Name <Right Arm Mount>
-Z
-ZZZ
-0 4 2 1 2
-Stats 1 5 2 -1 3 2 4 4 5 1 7 60 
--1
-Name <Sliver Gun>
-caliber <16mm ferrous>
-Z
 ZZZ
 -1
-0 5 2 1 2
-Stats 5 4 7 60 
+0 5 2 9 2
+Stats 5 4 7 15 
 -1
-caliber <16mm ferrous>
+Caliber <150mm Shells>
 Z
+ZZZ
 ZZZ
 -1
 -1
@@ -236,127 +193,66 @@ ZZZ
 -1
 -1
 -1
-0 1 3 2 2
-Stats 1 3 2 3 
+0 1 3 5 2
+Stats 1 4 2 3 
+0 2 1 3
 -1
 Name <Left Arm>
 Z
 ZZZ
-0 10 1 3 2
-Stats 1 1 
--1
-Z
 ZZZ
--1
--1
 -1
 0 7 0 1 2
 Stats 
 -1
 Z
 ZZZ
+ZZZ
+0 4 0 5 2
+Stats 2 1 3 2 5 1 
 -1
--1
-0 7 1 1 2
-Stats 
--1
-Name <Left Arm Mount>
+Name <Axe>
 Z
+ZZZ
 ZZZ
 -1
 -1
 -1
-0 1 4 4 2
-Stats 1 3 2 4 
+-1
+-1
+0 1 4 5 2
+Stats 1 4 2 4 
+0 2 1 3
 -1
 Name <Right Leg>
 Z
 ZZZ
-0 11 4 2 2
-Stats 
--1
-Fits <Battroid>
-Z
 ZZZ
 -1
--1
--1
-0 6 3 3 2
+0 6 3 4 2
 Stats 
 -1
 Z
 ZZZ
--1
--1
-0 7 1 1 2
-Stats 
--1
-Name <Right Leg Mount>
-Z
-ZZZ
-0 4 4 2 2
-Stats 3 2 5 4 
--1
-Z
-ZZZ
--1
-0 5 4 1 2
-Stats 1 5 2 -2 5 4 7 20 
--1
-name <Light Rockets>
-desig <LR-1>
-Z
 ZZZ
 -1
 -1
 -1
--1
--1
--1
-0 1 4 4 2
-Stats 1 3 2 4 
+0 1 4 5 2
+Stats 1 4 2 4 
+0 2 1 3
 -1
 Name <Left Leg>
 Z
 ZZZ
-0 11 4 2 2
-Stats 
--1
-Fits <Battroid>
-Z
 ZZZ
 -1
--1
--1
-0 6 3 3 2
+0 6 3 4 2
 Stats 
 -1
 Z
 ZZZ
--1
--1
-0 7 1 1 2
-Stats 
--1
-Name <Left Leg Mount>
-Z
 ZZZ
-0 4 4 2 2
-Stats 3 2 5 4 
--1
-Z
-ZZZ
--1
-0 5 4 1 2
-Stats 1 5 2 -2 5 4 7 20 
--1
-name <Light Rockets>
-desig <LR-1>
-Z
-ZZZ
--1
--1
--1
 -1
 -1
 -1

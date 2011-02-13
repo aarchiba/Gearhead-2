@@ -1388,6 +1388,27 @@ Procedure WriteCGears( var F: Text; G: GearPtr );
 	{ This procedure writes to file F a compacted list of gears. }
 	{ Hopefully, it will be an efficient procedure, saving }
 	{ only as much data as is needed. }
+	Procedure ExportLuaVars( Part: GearPtr );
+		{ We are going to export the Lua varaibles associated with }
+		{ the gear. To do that, we're going to have to call a Lua }
+		{ function and then export the string we get back. }
+	var
+		MyScript: String;
+	begin
+		if Lua_is_Go then begin
+			lua_getglobal( MyLua , 'gh_exportvars' );
+			lua_pushlightuserdata( MyLua , Pointer( Part ) );
+			if lua_pcall( MyLua , 1 , 1 , 0 ) <> 0 then RecordError( 'ExportLuaVars ERROR: ' + lua_tostring( MyLua , -1 ) )
+			else begin
+				MyScript := lua_tostring( MyLua , -1 );
+				if MyScript <> '' then writeln( F , MyScript );
+			end;
+			{ Get rid of the boolean or error message now on the stack. }
+			lua_settop( MyLua , 0 );
+		end else begin
+			RecordError( 'Register ERROR: Cannot register variables before LUA_IS_GO' );
+		end;
+	end;
 var
 	msg: String;	{ A single line for the save file. }
 	T: Integer;
@@ -1439,6 +1460,11 @@ begin
 		end;
 		{ Write the sentinel line here. }
 		writeln( F , 'ZZZ' );
+		{ If appropriate, export script variables. }
+		ExportLuaVars( G );
+		{ Write another sentinel. }
+		writeln( F , 'ZZZ' );
+
 
 		{ Export the subcomponents and invcomponents of this gear. }
 		WriteCGears( F , G^.InvCom );
@@ -1506,6 +1532,7 @@ Function ReadCGears( var F: Text ): GearPtr;
 		ReadStringAttributes := it;
 	end;
 
+
 	Function ReadLuaScripts( var it: SAttPtr ): SAttPtr;
 		{ Read some string attributes from the file. }
 	var
@@ -1521,11 +1548,34 @@ Function ReadCGears( var F: Text ): GearPtr;
 			if TheLine = 'ZZZ' then begin
 				Break;
 			end else if Length( TheLine ) > 0 then begin
-				StoreSAtt( it , TheLine );
+				{ Remember to add a carriage return to the end of each }
+				{ line. Or is that a linefeed? Don't matter. }
+				StoreSAtt( it , TheLine + #10 );
 			end;
 		until EoF( F );
 
 		ReadLuaScripts := it;
+	end;
+	Procedure ReadLuaVars( Part: GearPtr );
+		{ We have a second block of Lua code to read: The variable }
+		{ initialization. Read it and run it. }
+	var
+		script: SAttPtr;
+	begin
+		script := nil;
+		ReadLuaScripts( script );
+		if script <> Nil then begin
+			if Lua_is_Go then begin
+				lua_getglobal( MyLua , 'gh_readvars' );
+				lua_pushlightuserdata( MyLua , Pointer( Part ) );
+				LoadSAttScripts( script );
+				if lua_pcall( MyLua , 2 , 0 , 0 ) <> 0 then RecordError( 'ReadLuaVars ERROR: ' + lua_tostring( MyLua , -1 ) );
+			end else begin
+				RecordError( 'Register ERROR: Cannot register variables before LUA_IS_GO' );
+			end;
+
+			DisposeSAtt( script );
+		end;
 	end;
 
 	Function REALReadGears( Parent: GearPtr ): GearPtr;
@@ -1590,6 +1640,9 @@ Function ReadCGears( var F: Text ): GearPtr;
 
 				{ Register the scripts. }
 				ActivateGearScript( Part );
+
+				{ Read the variable initialization. }
+				ReadLuaVars( Part );
 
 				{ Read InvComs }
 				Part^.InvCom := RealReadGears( Part );

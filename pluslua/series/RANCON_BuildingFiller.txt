@@ -376,7 +376,13 @@ Content
 		stat 1 7
 lua
 function P.start( self )
-	gh_print( 'Gear G = '..tostring( self:g() ) )
+	if self.v.BeenB4 == nil then
+
+		 gh_print( 'This is the first time' )
+		self.v.BeenB4 = 1
+	else
+		gh_print( 'Seen this before...'..type(self.v) )
+	end
 end
 endlua
 

@@ -24,13 +24,25 @@
 	proto_stat.__index = function( table , key )
 		return( gh_getstat( table.ptr , key ) )
 	end
+	proto_stat.__newindex = function( table , key , v )
+		gh_setstat( table.ptr , key , v )
+	end
 
 	function proto_gear:new( o )
 		o = o or {}
 		setmetatable( o , self )
 		self.__index = self
+
+		-- The stat table provides easy access to the gear's stats.
 		o.stat = {}
+		o.stat.ptr = 0
 		setmetatable( o.stat , proto_stat )
+
+		-- The gear.v table holds script variables. These get included
+		-- in the save file. Only numbers, strings, booleans, and tables
+		-- of the above can be included here.
+		o.v = {}
+
 		return o
 	end
 	function proto_gear.use( self )
@@ -56,11 +68,12 @@
 		-- Gonna use this door. The exact effect is going to depend on
 		-- whether this door is open or closed already. We can check this
 		-- via the door's STAT_PASS stat.
-		if gh_getstat( self.ptr , STAT_PASS ) < -99 then
+		if self.stat[ STAT_PASS ] < -99 then
 			-- The door is closed. Check to see if it's locked as well.
 			if gh_getstat( self.ptr , STAT_LOCK ) == 0 then
 				gh_print( "You open the door." )
-				gh_setstat( self.ptr , STAT_PASS , 0 )
+				self.stat[ STAT_PASS ] = 0
+--				gh_setstat( self.ptr , STAT_PASS , 0 )
 			else
 				gh_print( "The door is locked." )
 			end
@@ -243,6 +256,23 @@ function gh_register( gearptr, gearscript )
 	end
 end
 
+function gh_readvars( gearptr, gearscript )
+	-- We've initialized a gear. Time to read its variables.
+	-- These variables are stored as Lua code by the export function below.
+	P = gh[gearptr]
+
+	if P ~= nil then
+		a,b = pcall( gearscript )
+
+		if not a then
+			error( b )
+		end
+	else
+		error( 'ERROR: Attempt to read vars for nonexistent gear!' )
+	end
+end
+
+
 function gh_deregister( gearptr )
 	-- Given a gear pointer, dispose of its entry in the gh table.
 	-- Also dispose of its reverse lookup, if appropriate.
@@ -263,10 +293,49 @@ function gh_trigger( gearptr, ghtrigger )
 		if tmp ~= nil then
 			tmp( gh[gearptr] )
 			script_found = true
-		end--   **********************
+		end
 
 	end
 	return script_found
+end
+
+function gh_exportvars( gearptr )
+	-- Given a gearptr, check its variable table and export all the values
+	-- as a string. This string is saved with the savefile and will be run
+	-- when the game is restored.
+	function serialize ( slist, o )
+		-- Convert o to a string and store it in slist, which should
+		-- be a table. Code taken + modified from "Programming in Lua"
+		-- by Roberto Ierusalimschy
+		if type(o) == "number" then
+			table.insert( slist , tostring( o ) )
+		elseif type(o) == "string" then
+			table.insert( slist , string.format("%q", o) )
+		elseif type(o) == "boolean" then
+			table.insert( slist , tostring( o ) )
+		elseif type(o) == "table" then
+			table.insert( slist , "{ " )
+			for k,v in pairs(o) do
+				table.insert( slist , " [" )
+				serialize( slist , k )
+				table.insert( slist , "] = " )
+				serialize( slist , v )
+				table.insert( slist , ", ")
+			end
+			table.insert( slist , "} " )
+		else
+			error("cannot serialize a " .. type(o) )
+		end
+	end
+
+	if ( gh[ gearptr ] ~= nil ) and ( gh[ gearptr ].v ~= nil ) then
+		thelist = {}
+		table.insert( thelist , 'P.v =' )
+		serialize( thelist , gh[ gearptr ].v )
+		return( table.concat( thelist , ' ' ) )
+	else
+		return( "" )
+	end
 end
 
 

@@ -1855,8 +1855,8 @@ initialization
 	lua_register( MyLua , 'gh_return' , @Lua_Return );
 	lua_register( MyLua , 'gh_exit' , @Lua_Exit );
 
-	if lua_dofile( MyLua , 'gamedata/gh_init.lua' ) <> 0 then RecordError( 'GH_INIT ERROR: ' + lua_tostring( MyLua , -1 ) );
-	Lua_Is_Go := True;
+	if lua_dofile( MyLua , 'gamedata/gh_init.lua' ) <> 0 then RecordError( 'GH_INIT ERROR: ' + lua_tostring( MyLua , -1 ) )
+	else Lua_Is_Go := True;
 
 	SCRIPT_DynamicEncounter := Nil;
 
