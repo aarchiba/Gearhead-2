@@ -26,7 +26,7 @@ unit vidmenus;
 
 interface
 
-uses video,dos,vidgfx,texutil,ui4gh;
+uses video,dos,vidgfx,texutil,uiconfig;
 
 const
 	{These two constants are used to tell the SELECT procedure whether or not}

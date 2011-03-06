@@ -1210,14 +1210,102 @@ Procedure HandleInteract( GB: GameBoardPtr; PC,NPC,Persona: GearPtr );
 	{ the player selects one of the provided responses, which will }
 	{ either trigger another script ( V >= 0 ) or call one of the }
 	{ standard interaction routines ( V < 0 ) }
+	Procedure InvokePNode( PNode: LongInt );
+		{ Invoke the requested node of the requested persona. }
+	var
+		Trigger: String;
+	begin
+		Trigger := 'node_' + BStr( PNode );
+		{ Call the Conversation function in Lua. }
+		lua_getglobal( MyLua , 'gh_conversation' );
+		lua_pushlightuserdata( MyLua , Pointer( I_Persona ) );
+		lua_pushlstring( MyLua , @Trigger[1] , Length( Trigger ) );
+		if lua_pcall( MyLua , 2 , 0 , 0 ) <> 0 then begin
+			Trigger := 'InvokePNode ERROR: ' + lua_tostring( MyLua , -1 );
+			DialogMsg( Trigger );
+			RecordError( Trigger );
+		end;
+
+		{ Get rid of the boolean or error message now on the stack. }
+		lua_settop( MyLua , 0 );
+	end;
+const
+	PNode_Greeting = 101;
 var
 	IntScr: String;		{ Interaction Script }
 	N,FreeRumors: Integer;
 	RTT: LongInt;		{ ReTalk Time }
 	T: String;
+	PNode: LongInt;
 	MI: RPGMenuItemPtr;	{ For removing options once they've been used. }
 begin
+	{ Start by allocating the menu. }
+	IntMenu := CreateRPGMenu( MenuItem , MenuSelect , ZONE_InteractMenu );
+	IntMenu^.Mode := RPMEscCancel;
 
+	{ Initialize interaction variables. }
+	I_PC := PC;
+	I_NPC := NPC;
+	AS_GB := GB;
+
+	{ Since the conversation can be switched by REVERTPERSONA and maybe some other }
+	{ effects, from this point onwards use I_PERSONA rather than PERSONA. }
+	I_Persona := Persona;
+
+	{ Add a divider to the skill roll history. }
+	SkillCommentDivider;
+
+	{ We start from the greeting node. }
+	PNode := PNode_Greeting;
+	InvokePNode( PNode );
+
+	repeat
+		{ Print the NPC description. }
+		{ This could change depending upon what the PC does. }
+		if IntMenu^.NumItem > 0 then begin
+			AS_GB := GB;
+			CHAT_React := ReactionScore( GB^.Scene , PC , NPC );
+			N := SelectMenu( IntMenu , @InteractRedraw );
+
+		end else begin
+			{ If the menu is empty, we must leave this procedure. }
+			{ More importantly, we better not do anything in }
+			{ the conditional below... Set N to equal a "goodbye" result. }
+			N := -1;
+		end;
+
+		if N >= PNode_Greeting then begin
+			{ One of the placed options have been triggered. }
+			{ Attempt to find the appropriate script to }
+			{ invoke. }
+			InvokePNode( N );
+
+		end else if N = CMD_Join then begin
+			AttemptJoin( GB );
+			{ After attempting to join, remove the JOIN option. }
+			MI := SetItemByValue( IntMenu , CMD_Join );
+			if MI <> Nil then RemoveRPGMenuItem( IntMenu , MI );
+			SetItemByPosition( IntMenu , 1 );
+
+		end else if N = CMD_Quit then begin
+			HandleQuit( GB );
+			ClearMenu( IntMenu );
+
+		end else if N = CMD_WhereAreYou then begin
+			HandleWhereAreYou( GB );
+
+		end else if N = CMD_AskAboutRumors then begin
+			HandleAskAboutRumors( GB , Persona );
+			MI := SetItemByValue( IntMenu , CMD_AskAboutRumors );
+			if MI <> Nil then RemoveRPGMenuItem( IntMenu , MI );
+			SetItemByPosition( IntMenu , 1 );
+
+		end;
+
+	until ( N = -1 ) or ( IntMenu^.NumItem < 1 ) or ( I_NPC = Nil );
+
+	{ Get rid of the menu. }
+	DisposeRPGMenu( IntMenu );
 end;
 
 Procedure PCDoVerbalAttack( GB: GameBoardPtr; PC,NPC: GearPtr );
@@ -1690,10 +1778,31 @@ end;
 			lua_pushinteger( MyLua , NAttValue( MyGear^.NA , G , S ) );
 		end else begin
 			lua_pushnil( MyLua );
-			RecordError( 'ERROR: GetGearStat passed nonexistant gear!' );
+			RecordError( 'ERROR: GetNAtt passed nonexistant gear!' );
 		end;
 
 		Lua_GetNAtt := 1;
+	end;
+
+	Function Lua_SetNAtt( MyLua: PLua_State ): LongInt; cdecl;
+		{ Take a gear and set one of its numeric attributes. }
+		{ Record an error if the gear is not found. }
+	var
+		MyGear: GearPtr;
+		G,S,V: LongInt;
+	begin
+		MyGear := GetLuaGear( MyLua , 1 );
+		G := luaL_checkint( MyLua , 2 );
+		S := luaL_checkint( MyLua , 3 );
+		V := luaL_checkint( MyLua , 4 );
+
+		if ( MyGear <> Nil ) then begin
+			SetNAtt( MyGear^.NA , G , S , V );
+		end else begin
+			RecordError( 'ERROR: SetNAtt passed nonexistant gear!' );
+		end;
+
+		Lua_SetNAtt := 0;
 	end;
 
 
@@ -1828,6 +1937,7 @@ end;
 
 	Function Lua_Exit( MyLua: PLua_State ): LongInt; cdecl;
 		{ An exit command has been received. }
+		{ One parameter should have been passed- the NID of the destination. }
 	var
 		SID: LongInt;
 	begin
@@ -1840,6 +1950,87 @@ end;
 		Lua_Exit := 0;
 	end;
 
+	Function Lua_InitChatMenu( MyLua: PLua_State ): LongInt; cdecl;
+		{ Clear the chat menu, maybe add some standard options. }
+		{ Param1: Add Standard Options (Boolean) }
+	var
+		AddStdOps: Boolean;
+	begin
+		{ Error check - make sure the interaction menu is active. }
+		if IntMenu = Nil then begin
+			Exit;
+
+		{ If there are any menu items currently in the list, get rid }
+		{ of them. }
+		end else if IntMenu^.FirstItem <> Nil then begin
+			ClearMenu( IntMenu );
+		end;
+
+		AddStdOps := lua_toboolean( MyLua , 1 );
+		if AddStdOps then begin
+			AddRPGMenuItem( IntMenu , MsgString( 'NEWCHAT_Goodbye' ) , -1 );
+			if ( AS_GB <> Nil ) and OnTheMap( AS_GB , FindRoot( I_NPC ) ) and IsFoundAlongTrack( AS_GB^.Meks , FindRoot( I_NPC ) ) then begin
+				{ Only add the JOIN command if this NPC is in the same scene as the PC. }
+				if ( I_PC <> Nil ) and HasTalent( I_PC , NAS_Camaraderie ) then begin
+					if ( I_NPC <> Nil ) and ( NAttValue( I_NPC^.NA , NAG_Relationship , 0 ) >= NAV_Friend ) and ( NAttValue( I_NPC^.NA , NAG_Location , NAS_Team ) <> NAV_LancemateTeam ) then AddRPGMenuItem( IntMenu , MsgString( 'NEWCHAT_Join' ) , CMD_Join );
+				end else begin
+					if ( I_NPC <> Nil ) and ( NAttValue( I_NPC^.NA , NAG_Relationship , 0 ) >= NAV_ArchAlly ) and ( NAttValue( I_NPC^.NA , NAG_Location , NAS_Team ) <> NAV_LancemateTeam ) then AddRPGMenuItem( IntMenu , MsgString( 'NEWCHAT_Join' ) , CMD_Join );
+				end;
+			end;
+			if ( I_NPC <> Nil ) and ( NAttValue( I_NPC^.NA , NAG_Location , NAS_Team ) = NAV_LancemateTeam ) and ( NAttValue( I_NPC^.NA , NAG_CharDescription , NAS_CharType ) <> NAV_TempLancemate ) and IsSafeArea( AS_GB ) and IsSubCom( AS_GB^.Scene ) then AddRPGMenuItem( IntMenu , MsgSTring( 'NEWCHAT_QuitLance' ) , CMD_Quit );
+			if not ( OnTheMap( AS_GB , FindRoot( I_NPC ) ) and IsFoundAlongTrack( AS_GB^.Meks , FindRoot( I_NPC ) ) ) then AddRPGMenuItem( IntMenu , MsgString( 'NewChat_WhereAreYou' ) , CMD_WhereAreYou );
+			if ( NAttValue( I_NPC^.NA , NAG_Personal , NAS_RumorRecharge ) < AS_GB^.ComTime ) and ( NAttValue( I_NPC^.NA , NAG_Location , NAS_Team ) <> NAV_LancemateTeam ) then AddRPGMenuItem( IntMenu , MsgString( 'NEWCHAT_AskAboutRumors' ) , CMD_AskAboutRumors );
+			RPMSortAlpha( IntMenu );
+		end;
+
+		Lua_InitChatMenu := 0;
+	end;
+
+	Function Lua_AddChatMenuItem( MyLua: PLua_State ): LongInt; cdecl;
+		{ Add a new item to the IntMenu. }
+		{ P1 = The menu item value }
+		{ P2 = The menu item text }
+	var
+		N: Integer;
+		Msg: String;
+	begin
+		{ Error check - this command can only work if the IntMenu is }
+		{ already allocated. }
+		if ( IntMenu <> Nil ) then begin
+			{ First, determine the prompt number. }
+			N := luaL_checkint( MyLua , 1 );
+			msg := luaL_checkstring( MyLua , 2 );
+
+			if Msg <> '' then begin
+				AddRPGMenuItem( IntMenu , Msg , N );
+				RPMSortAlpha( IntMenu );
+			end;
+		end;
+
+		Lua_AddChatMenuItem := 0;
+	end;
+
+	Function Lua_SetChatMsg( MyLua: PLua_State ): LongInt; cdecl;
+		{ Something is being said. The param is the message. }
+	var
+		msg: String;
+	begin
+		msg := luaL_checkstring( MyLua , 1 );
+
+		if msg <> '' then begin
+			{ Error check- if not in a conversation, call the PRINT }
+			{ routine instead. }
+			if IntMenu = Nil then begin
+				DialogMsg( msg );
+			end else begin
+				CHAT_Message := msg;
+			end;
+		end;
+		Lua_SetChatMsg := 0;
+	end;
+
+
+
 
 initialization
 	lua_register( MyLua , 'gh_gearg' , @Lua_GetGearG );
@@ -1848,12 +2039,16 @@ initialization
 	lua_register( MyLua , 'gh_getstat' , @Lua_GetGearStat );
 	lua_register( MyLua , 'gh_setstat' , @Lua_SetGearStat );
 	lua_register( MyLua , 'gh_getnatt' , @Lua_GetNAtt );
-	lua_register( MyLua , 'gh_print' , @Lua_GHPrint );
+	lua_register( MyLua , 'gh_setnatt' , @Lua_SetNAtt );
+	lua_register( MyLua , 'gh_rawprint' , @Lua_GHPrint );
 	lua_register( MyLua , 'gh_uskilltest' , @Lua_USkillTest );
 	lua_register( MyLua , 'gh_drawterr' , @Lua_DrawTerr );
 	lua_register( MyLua , 'gh_numunits' , @Lua_NumUnits );
 	lua_register( MyLua , 'gh_return' , @Lua_Return );
 	lua_register( MyLua , 'gh_exit' , @Lua_Exit );
+	lua_register( MyLua , 'gh_initchatmenu' , @Lua_InitChatMenu );
+	lua_register( MyLua , 'gh_addchatmenuitem' , @Lua_AddChatMenuItem );
+	lua_register( MyLua , 'gh_setchatmsg' , @Lua_SetChatMsg );
 
 	if lua_dofile( MyLua , 'gamedata/gh_init.lua' ) <> 0 then RecordError( 'GH_INIT ERROR: ' + lua_tostring( MyLua , -1 ) )
 	else Lua_Is_Go := True;

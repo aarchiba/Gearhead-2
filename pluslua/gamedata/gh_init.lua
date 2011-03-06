@@ -51,7 +51,38 @@
 	function proto_gear:g()
 		return gh_gearg( self.ptr )
 	end
+	function proto_gear:getnatt( g , s )
+		return gh_getnatt( self.ptr , g , s )
+	end
+	function proto_gear:setnatt( g , s , v )
+		return gh_setnatt( self.ptr , g , s , v )
+	end
 
+	-- PERSONA
+	proto_persona = proto_gear:new()
+
+	function proto_persona.usenode( self , node )
+		-- Clear the menu.
+		gh_initchatmenu( true )
+
+		-- If an effect script exists, run that now.
+		if node.effect ~= nil then
+			node.effect( self )
+		end
+
+		-- Set the chat message.
+		gh_setchatmsg( gh_formatstring( node.msg , self ) )
+
+		-- If there are any children, add them to the menu.
+		if node.prompts ~= nil then
+			local k,v
+			for k,v in pairs( node.prompts ) do
+				if ( v.condition == nil ) or v.condition( self ) then
+					gh_addchatmenuitem( k , gh_formatstring( v.msg ) )
+				end
+			end
+		end
+	end
 
 	-- SCENES
 	proto_scene = proto_gear:new()
@@ -178,6 +209,9 @@
 	gh_prototypes = {}
 	gh_prototypes.default = proto_gear
 
+	gh_prototypes[ GG_PERSONA ] = {}
+	gh_prototypes[ GG_PERSONA ].default = proto_persona
+
 	gh_prototypes[ GG_METATERRAIN ] = {}
 	gh_prototypes[ GG_METATERRAIN ][ GS_METADOOR ] = proto_door
 	gh_prototypes[ GG_METATERRAIN ][ GS_METASTAIRSUP ] = proto_stairsup
@@ -213,6 +247,49 @@
 	-- Reverse lookup table. Given a NarrativeID, find the UserData of the
 	-- gear it belongs to.
 	nid_lookup = {}
+
+
+--   *******************************
+--   ***   STANDARD  FUNCTIONS   ***
+--   *******************************
+
+--  Some useful things that can be done with Lua.
+
+function gh_getstring( source )
+	-- We've been handed something that supposedly contains a string. In
+	-- actual fact it may be a string, a table, or something else.
+	if type( source ) == "string" then
+		-- Yay, it's just a plain string! Return it.
+		return( source )
+
+	elseif type( source ) == "table" then
+		-- Crap, it's a table. There are a bunch of strings here, some
+		-- of which may have conditions attached...
+
+	else
+		-- Not a string, and not a table... well, hope you win the
+		-- lottery.
+		return( tostring( source ) )
+	end
+end
+
+function gh_formatstring( source , gear )
+	-- Given a message source and a gear (optional), locate a string message
+	-- and format it correctly.
+
+	-- Step One: Find the message.
+	local rawstring = gh_getstring( source )
+
+	-- Step Two: Stepping through rawstring one word at a time, see if there
+	-- are any substitutions to make.
+
+	return( rawstring )
+end
+
+function gh_print( source , gear )
+	gh_rawprint( gh_formatstring( source , gear ) )
+end
+
 
 
 --   **********************************
@@ -272,7 +349,6 @@ function gh_readvars( gearptr, gearscript )
 	end
 end
 
-
 function gh_deregister( gearptr )
 	-- Given a gear pointer, dispose of its entry in the gh table.
 	-- Also dispose of its reverse lookup, if appropriate.
@@ -297,6 +373,51 @@ function gh_trigger( gearptr, ghtrigger )
 
 	end
 	return script_found
+end
+
+function gh_conversation( gearptr, nodeid )
+	-- We've been asked to run a conversation node.
+	-- 1. Locate the node record.
+	-- 2. If it has a conditional script, make sure it evaluates to true.
+	--  2a. If false, jump to the node's next sibling instead.
+	-- 3. If we have a valid node speak its message, construct its menu,
+	--    and execute its effect script if one exists.
+	local self = gh[gearptr]
+	if self ~= nil then
+		local pnode = nil
+
+		repeat
+			pnode = self[ nodeid ]
+			if ( pnode ~= nil ) then
+				-- We've found a node, but there's a nontrivial chance
+				-- that it's the wrong node. Check to see if it has a
+				-- conditional function, and if so see if it's true.
+				if pnode.condition ~= nil then
+					if not pnode.condition( self ) then
+						-- Crap. This node is passing the buck...
+						-- Set nodeid to the next sibling.
+						nodeid = pnode.nextid
+						pnode = nil
+					end
+				end
+			else
+				-- The requested node could not be found. This is
+				-- a big problem... terminate the loop.
+				break
+			end
+
+		until ( pnode ~= nil )
+
+		-- Check to see if we have a valid node. If so, do whatever needs
+		-- to be done.
+		if pnode ~= nil then
+			self.usenode( self , pnode )
+		else
+			-- Serious problem: if the node can't be found, this means
+			-- that the persona is broken. Print an error message.
+			error( 'Cannot find persona node ' .. nodeid )
+		end
+	end
 end
 
 function gh_exportvars( gearptr )

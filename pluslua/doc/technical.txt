@@ -65,3 +65,31 @@ Sleeping plots are asleep. They can process scripts, but contents invisible.
 Concluded plots are removed from the adventure.
 
 When a concluded plot is removed, any inactive plots within are 
+
+
+********************************
+***   Persona  Compilation   ***
+********************************
+
+Conversations will get compiled into a Lua script.
+
+  node = {}
+  node.msg is the message to print
+  node.condition( self ) returns true if node can activate, false otherwise
+  node.effect( self ) is a script to run when node activated
+  node.nextid is the label of the next sibling
+  node.prompts is a table of prompts for branches from this node
+
+The key of a prompt is its menu value. Each prompt is a table with the
+following fields:
+
+  prompt.msg is the message for the menu
+  prompt.condition( self ) returns true if prompt should be added
+
+For both prompts and nodes, if condition == nil this counts as true. In other
+words, if there is no condition placed on its use, a node will always be used.
+
+
+
+
+

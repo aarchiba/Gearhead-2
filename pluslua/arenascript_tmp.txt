@@ -736,27 +736,6 @@ begin
 end;
 
 
-Procedure ProcessAddChat( var Event: String; GB: GameBoardPtr; Source: GearPtr );
-	{ Add a new item to the IntMenu. }
-var
-	N: Integer;
-	Msg: String;
-begin
-	{ Error check - this command can only work if the IntMenu is }
-	{ already allocated. }
-	if ( IntMenu <> Nil ) and ( Source <> Nil ) then begin
-		{ First, determine the prompt number. }
-		N := ScriptValue( Event , GB , Source );
-
-		msg := getthemessage( 'PROMPT' , N , GB , Source );
-		DeleteWhiteSpace( msg );
-		if Msg <> '' then begin
-			AddRPGMenuItem( IntMenu , Msg , N );
-			RPMSortAlpha( IntMenu );
-		end;
-	end;
-end;
-
 Procedure ProcessSayAnything( GB: GameBoardPtr );
 	{ Print a random message in the interact message area. }
 	{ New- if there are any memes floating about, select one of those for the message. }
@@ -1444,44 +1423,6 @@ begin
 	StoreSAtt( Source^.SA , Trigger + BStr( P ) + ' <' + Ev2 + '>' );
 end;
 
-Procedure ProcessNewChat( GB: GameBoardPtr );
-	{ Reset the dialog menu with the standard options. }
-begin
-	{ Error check - make sure the interaction menu is active. }
-	if IntMenu = Nil then begin
-		Exit;
-
-	{ If there are any menu items currently in the list, get rid }
-	{ of them. }
-	end else if IntMenu^.FirstItem <> Nil then begin
-		ClearMenu( IntMenu );
-	end;
-
-	AddRPGMenuItem( IntMenu , MsgString( 'NEWCHAT_Goodbye' ) , -1 );
-	if ( GB <> Nil ) and OnTheMap( GB , FindRoot( I_NPC ) ) and IsFoundAlongTrack( GB^.Meks , FindRoot( I_NPC ) ) then begin
-		{ Only add the JOIN command if this NPC is in the same scene as the PC. }
-		if ( I_PC <> Nil ) and HasTalent( I_PC , NAS_Camaraderie ) then begin
-			if ( I_NPC <> Nil ) and ( NAttValue( I_NPC^.NA , NAG_Relationship , 0 ) >= NAV_Friend ) and ( NAttValue( I_NPC^.NA , NAG_Location , NAS_Team ) <> NAV_LancemateTeam ) then AddRPGMenuItem( IntMenu , MsgString( 'NEWCHAT_Join' ) , CMD_Join );
-		end else begin
-			if ( I_NPC <> Nil ) and ( NAttValue( I_NPC^.NA , NAG_Relationship , 0 ) >= NAV_ArchAlly ) and ( NAttValue( I_NPC^.NA , NAG_Location , NAS_Team ) <> NAV_LancemateTeam ) then AddRPGMenuItem( IntMenu , MsgString( 'NEWCHAT_Join' ) , CMD_Join );
-		end;
-	end;
-	if ( I_NPC <> Nil ) and ( NAttValue( I_NPC^.NA , NAG_Location , NAS_Team ) = NAV_LancemateTeam ) and ( NAttValue( I_NPC^.NA , NAG_CharDescription , NAS_CharType ) <> NAV_TempLancemate ) and IsSafeArea( GB ) and IsSubCom( GB^.Scene ) then AddRPGMenuItem( IntMenu , MsgSTring( 'NEWCHAT_QuitLance' ) , CMD_Quit );
-	if not ( OnTheMap( GB , FindRoot( I_NPC ) ) and IsFoundAlongTrack( GB^.Meks , FindRoot( I_NPC ) ) ) then AddRPGMenuItem( IntMenu , MsgString( 'NewChat_WhereAreYou' ) , CMD_WhereAreYou );
-	if ( NAttValue( I_NPC^.NA , NAG_Personal , NAS_RumorRecharge ) < GB^.ComTime ) and ( NAttValue( I_NPC^.NA , NAG_Location , NAS_Team ) <> NAV_LancemateTeam ) then AddRPGMenuItem( IntMenu , MsgString( 'NEWCHAT_AskAboutRumors' ) , CMD_AskAboutRumors );
-	RPMSortAlpha( IntMenu );
-end;
-
-Procedure ProcessEndChat;
-	{ End this conversation by clearing the menu. }
-begin
-	{ Error check - make sure the interaction menu is active. }
-	if IntMenu = Nil then begin
-		Exit;
-	end else begin
-		ClearMenu( IntMenu );
-	end;
-end;
 
 Procedure RevertPersona( var Event: String; GB: GameBoardPtr; var Source: GearPtr );
 	{ We don't wanna use this persona anymore. Attempt to locate }

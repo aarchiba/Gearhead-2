@@ -24,7 +24,7 @@ unit vidgfx;
 
 interface
 
-uses Video,Keyboard,ui4gh,texutil,gears;
+uses Video,Keyboard,uiconfig,texutil,gears;
 
 Type
 	vgfx_rect = Record
@@ -1042,7 +1042,8 @@ begin
 	InfoBox( ZONE_Title_Screen_Top );
 	InfoBox( ZONE_Title_Screen_Menu );
 	CMessage( 'GearHead II' , ZONE_Title_Screen_Title , StdWhite );
-end;
+end;
+
 
 
 initialization

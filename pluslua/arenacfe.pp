@@ -100,7 +100,9 @@ begin
 		CMessage( TimeString( GB^.ComTime ) , ZONE_Clock , StdWhite );
 	end;
 
+{$IFNDEF ASCII}
 	Render_Off_Map_Models;
+{$ENDIF}
 end;
 
 Procedure WorldMapDisplay( GB: GameBoardPtr );

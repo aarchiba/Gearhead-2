@@ -46,7 +46,7 @@ Procedure RenderWorldMap( GB: GameBoardPtr; PC: GearPtr; X0,Y0: Integer );
 
 implementation
 
-uses ui4gh,vidgfx,video,ability,ghprop,gearutil,effects;
+uses uiconfig,vidgfx,video,ability,ghprop,gamebook,effects;
 
 const
 	TerrGfx: Array [1..NumTerr] of Char = (
@@ -213,6 +213,9 @@ begin
 	gfx := ' ';
 	if Destroyed( G ) then begin
 		gfx := '%';
+	end else if ( G^.G = GG_MetaTerrain ) and ( G^.S = GS_MetaDoor ) then begin
+		if G^.Stat[ STAT_Pass ] = -100 then gfx := '+'
+		else gfx := '-';
 	end else begin
 		roguechar := SAttValue( G^.SA , 'ROGUECHAR' );
 		if roguechar <> '' then begin

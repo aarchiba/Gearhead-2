@@ -374,21 +374,48 @@ Content
 		STC BED-1
 		PDir 2
 		stat 1 7
+
+%		STC ENDTABLE-1
+%		PDir 2
+NPC Citizen
+	end
+sub
+	Persona 2
 lua
-function P.start( self )
-	if self.v.BeenB4 == nil then
+P.node_101 = {}
+P.node_101.msg = "I thought you said you didn't like this!?"
+P.node_101.condition = function( self ) return( self.v.DidNotLike ) end
+P.node_101.nextid = "node_111"
 
-		 gh_print( 'This is the first time' )
-		self.v.BeenB4 = 1
-	else
-		gh_print( 'Seen this before...'..type(self.v) )
-	end
-end
+P.node_111 = {}
+P.node_111.msg = "Trying out the conversation system."
+P.node_111.prompts = {}
+P.node_111.prompts[ 102 ] = {}
+P.node_111.prompts[ 102 ].msg = "I like it!"
+P.node_111.prompts[ 103 ] = {}
+P.node_111.prompts[ 103 ].msg = "Looks kinda dumb."
+P.node_111.prompts[ 105 ] = {}
+P.node_111.prompts[ 105 ].msg = "I already told you."
+P.node_111.prompts[ 105 ].condition = function( self ) return( self.v.BeenBefore ) end
+
+P.node_102 = {}
+P.node_102.msg = "You should not see this message."
+P.node_102.nextid = "node_104"
+P.node_102.condition = function( self ) return( false ) end
+
+P.node_103 = {}
+P.node_103.msg = "Well screw you, then."
+P.node_103.effect = function( self ) self.v.DidNotLike = true end
+
+P.node_104 = {}
+P.node_104.msg = "Thank you. It was a lot more work than it looks."
+P.node_104.effect = function( self ) self.v.BeenBefore = true end
+
+P.node_105 = {}
+P.node_105.msg = "Oh, I guess you did."
+
 endlua
-
-		STC ENDTABLE-1
-		PDir 2
-	end
+end
 
 
 %% *SPACEPORT_X Content

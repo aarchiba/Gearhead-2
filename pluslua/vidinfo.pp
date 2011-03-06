@@ -52,8 +52,8 @@ Procedure PersonadexInfo( NPC,HomeTown: GearPtr; Z: VGFX_Zone );
 
 implementation
 
-uses 	video,ghweapon,ghchars,ability,ghmodule,gearutil,description,
-	movement,texutil,ui4gh,narration;
+uses 	video,ghweapon,ghchars,ability,ghmodule,gamebook,description,
+	movement,texutil,uiconfig,narration;
 
 const
 	SX_Char: Array [1..Num_Status_FX] of Char = (
