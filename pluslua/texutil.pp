@@ -29,7 +29,7 @@ interface
 uses STRINGS;
 
 
-Procedure DeleteWhiteSpace(var S: String);
+Function DeleteWhiteSpace(var S: String): Integer;
 Procedure DeleteFirstChar(var S: String);
 Function ExtractWord(var S: String): String;
 Function ExtractValue(var S: String): LongInt;
@@ -72,11 +72,12 @@ Function NoQItemsMatch( const QList: String; var QToCheck: String ): Boolean;
 
 implementation
 
-Procedure DeleteWhiteSpace(var S: String);
+Function DeleteWhiteSpace(var S: String): Integer;
 	{Delete any whitespace which is at the beginning of}
 	{string S. If S is nothing but whitespace, or if it}
 	{contains nothing, return an empty string.}
 	{ BUGS - None detected. Test harnessed and everything.}
+	{ Returns the number of white spaces deleted. }
 var
 	P: Integer;
 begin
@@ -92,6 +93,8 @@ begin
 	{Copy the string from the first nonspace to the end.}
 	if (S[P] = ' ') or (S[P] = #9) then S := ''
 	else S := Copy(S,P,Length(S));
+
+	DeleteWhiteSpace := P - 1;
 end;
 
 Procedure DeleteFirstChar(var S: String);
