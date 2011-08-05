@@ -889,6 +889,10 @@ Function InitShard( GB: GameBoardPtr; Scope,Control,Slot,Shard: GearPtr; PlotID,
 		end;
 	end;
 
+
+
+
+
 	Procedure PrepQuestCombatants( LList: GearPtr );
 
 		{ If this is a quest, scale any combatant NPCs to the proper level. }
@@ -1040,8 +1044,9 @@ var
 	PlotID: LongInt;
 	IsBranchPlot: Boolean;
 begin
-	{ First determine the context. }
-	Context := ExtractWord( SPReq ) + ' ' + DifficulcyContext( Threat );
+	{ First determine the request context, i.e. what kind of a subplot }
+	{ we're meant to load. }
+	Context := ExtractWord( SPReq );
 	DeleteWhiteSpace( SPReq );
 
 	{ Determine the difficulty rating of this subplot. }
@@ -1052,8 +1057,10 @@ begin
 	end else if threat < 10 then begin
 		threat := 10;
 	end;
+	{ Add this difficulty rating to the context. }
+	Context := Context + ' ' + DifficulcyContext( Threat );
 
-	{ Next complete the context. }
+	{ Next add the story, quest, and parent plot contexts. }
 	if ( Control <> Nil ) and ( ( Control^.G = GG_Story ) or ( Control^.G = GG_CityMood ) ) then Context := Context + ' ' + StoryContext( GB , Control );
 	if IsAQuest then AddGearXRContext( GB , FindRoot( Slot ) , Scope , Context , 'L' );
 	if Plot0 <> Nil then begin
@@ -1091,7 +1098,7 @@ begin
 		ClearElementTable( ParamList );
 	end;
 
-	{ We have the context. Create the shopping list. }
+	{ We have the finished context. Create the shopping list. }
 	{ Positive component values are from the main subplot list. Negative }
 	{ component values point to items from the quest_frags list. }
 	ShoppingList := CreateComponentList( Standard_Plots , Context );
@@ -1252,6 +1259,102 @@ var
 		end;}
 	end;
 
+	Procedure InitializeConversationTree( PTree: GearPtr );
+		{ This procedure does two things: It replaces ProtoNodes with Persona }
+		{ Fragments, and it assigns a NodeID to every SayNode. }
+	var
+		NodeID: Integer;
+		Procedure InitCTAlongPath( PList: GearPtr );
+			{ Check along this linked list assigning NodeIDs. }
+		begin
+			while PList <> Nil do begin
+				if PList^.G = GG_PersonaNode then begin
+					if PList^.S = GS_SayNode then begin
+						PList^.Stat[ STAT_PersonaNodeID ] := NodeID;
+						Inc( NodeID );
+					end;
+
+					InitCTAlongPath( PList^.SubCom );
+				end;
+				PList := PList^.Next;
+			end;
+		end;
+	begin
+		{ Initialize the NodeID to the minimum value. }
+		NodeID := PNODE_GREETING;
+		InitCTAlongPath( PTree );
+	end;
+
+	Procedure LinkConversationTree( Persona: GearPtr );
+		{ Add every SayNode in the persona tree to Persona's Lua script. }
+		Function GetNodeID( PNode: GearPtr ): Integer;
+			{ Return the NodeID of this node. }
+		begin
+			if PNode^.S = GS_ReplyNode then begin
+				if PNode^.SubCom <> Nil then begin
+					GetNodeID := GetNodeID( PNode^.SubCom );
+				end else begin
+					RecordError( 'ERROR: No subcom for ReplyNode ' + SAttValue( PNode^.SA , 'msg' ) );
+					GetNodeID := 0;
+				end;
+			end else GetNodeID := PNode^.Stat[ STAT_PERSONANODEID ];
+		end;
+		Procedure CheckSayNodesAlongPath( PList: GearPtr );
+			{ Check along this linked list for SayNodes. }
+		var
+			msg: String;
+			P: GearPtr;
+			PID: Integer;
+		begin
+			while PList <> Nil do begin
+				if PList^.G = GG_PersonaNode then begin
+					if PList^.S = GS_SayNode then begin
+						StoreSAtt( Persona^.Scripts , 'P.node_' + BStr( PList^.Stat[ STAT_PersonaNodeID ] ) + ' = { ' );
+						StoreSAtt( Persona^.Scripts , 'msg = "' + SAttValue( PList^.SA , 'MSG' ) + '", ' );
+						msg := SAttValue( PList^.SA , 'EFFECT' );
+						if msg <> '' then StoreSAtt( Persona^.Scripts , 'effect = function( self ) ' + msg + ' end, ' );
+
+						msg := SAttValue( PList^.SA , 'CONDITION' );
+						if msg <> '' then StoreSAtt( Persona^.Scripts , 'condition = function( self ) ' + msg + ' end, ' );
+
+						if PList^.Next <> Nil then begin
+							StoreSAtt( Persona^.Scripts , 'nextid = "node_' + BStr( GetNodeID( PList^.Next ) ) + '", ' );
+						end;
+
+						if PList^.SubCom <> Nil then begin
+							{ Add any prompts found along this path. }
+							StoreSAtt( Persona^.Scripts , 'prompts = { ' );
+							P := PList^.SubCom;
+							while P <> Nil do begin
+								if ( P^.G = GG_PersonaNode ) and ( P^.S = GS_ReplyNode ) then begin
+									PID := GetNodeID( P );
+									msg := SAttValue( P^.SA , 'msg' );
+									if ( PID <> 0 ) and ( msg <> '' ) then begin
+										StoreSAtt( Persona^.Scripts , '[' + BStr( PID ) + '] = { msg = "' + msg + '", ' );
+										msg := SAttValue( P^.SA , 'condition' );
+										if msg <> '' then StoreSAtt( Persona^.Scripts , 'condition = function( self ) ' + msg + ' end, ' );
+										StoreSAtt( Persona^.Scripts , '}, ' );
+									end;
+								end;
+								P := P^.Next;
+							end;
+
+							StoreSAtt( Persona^.Scripts , '} ' );
+						end;
+
+						StoreSAtt( Persona^.Scripts , '} ' );
+
+					end;
+
+					CheckSayNodesAlongPath( PList^.SubCom );
+				end;
+				PList := PList^.Next;
+			end;
+		end;
+	begin
+		CheckSayNodesAlongPath( Persona^.SubCom );
+	end;
+
 	Procedure PrepAllPersonas( Adventure: GearPtr );
 		{ Prepare the personas of this plot. }
 		{ Also store the mission recharge time for any NPCs involved. }
@@ -1269,7 +1372,13 @@ var
 				PContext := Context;
 				AddGearXRContext( GB, Adventure, NPC, PContext, '@' );
 
-				InsertPFrags( P , PContext );
+				{ We have a bunch of PNodes that need to be linked into a single Lua script. }
+				{ Step One: Go through the tree, assign a nodeID to every SayNode and expand }
+				{ every ProtoNode. }
+				InitializeConversationTree( P^.SubCom );
+
+				{ Our conversation tree has been initialized. Link the Lua code together. }
+				LinkConversationTree( P );
 			end;
 			P := P2;
 		end;
@@ -1313,7 +1422,6 @@ var
 				ReplaceStrings( LList , Dictionary );
 				InitListStrings( LList^.SubCom , Dictionary );
 				InitListStrings( LList^.InvCom , Dictionary );
-				ActivateGearScript( LList );
 			end;
 			LList := LList^.Next;
 		end;
@@ -1344,13 +1452,29 @@ var
 
 		{ Run the provided subplot through the convertor. }
 		ReplaceStrings( Plot , Dictionary );
-		ActivateGearScript( Plot );
 
 		InitListStrings( Plot^.SubCom , Dictionary );
 		InitListStrings( Plot^.InvCom , Dictionary );
 		DisposeSAtt( Dictionary );
 	end;
 
+	Procedure ActivatePlotScripts();
+		Procedure ActivatePlotChildren( LList: GearPtr );
+			{ Activate all the Lua scripts along this tree, ignoring }
+			{ subplots for the time being. }
+		begin
+			while LList <> Nil do begin
+				if LList^.G <> GG_Plot then begin
+					ActivateGearScript( LList );
+				end;
+				LList := LList^.Next;
+			end;
+		end;
+	begin
+		ActivateGearScript( Plot );
+		ActivatePlotChildren( Plot^.SubCom );
+		ActivatePlotChildren( Plot^.InvCom );
+	end;
 var
 	PFab: GearPtr;
 begin
@@ -1363,6 +1487,8 @@ begin
 	DoStringSubstitutions();
 	PrepAllPersonas( FindRoot( Plot ) );
 	PrepMetaScenes( FindRoot( Plot ) );
+
+	ActivatePlotScripts();
 
 	{ Do any processing needed by the InvComs. }
 	PFab := Plot^.InvCom;

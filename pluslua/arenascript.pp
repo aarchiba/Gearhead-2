@@ -1229,8 +1229,7 @@ Procedure HandleInteract( GB: GameBoardPtr; PC,NPC,Persona: GearPtr );
 		{ Get rid of the boolean or error message now on the stack. }
 		lua_settop( MyLua , 0 );
 	end;
-const
-	PNode_Greeting = 101;
+
 var
 	IntScr: String;		{ Interaction Script }
 	N,FreeRumors: Integer;

@@ -371,15 +371,70 @@ Content
 	element1 <Prefab>
 	element2 <Prefab>
 	inv
-		STC BED-1
-		PDir 2
-		stat 1 7
+%		STC BED-1
+%		PDir 2
+%		stat 1 7
+NPC Soldier
 
 %		STC ENDTABLE-1
 %		PDir 2
 NPC Citizen
 	end
 sub
+	Persona 1
+	% Ugly version of the PNode structure- I will add an elegant way to lay
+	% out dialog trees after the persona linker is up and working.
+	sub
+		PNode
+		msg <You didn't like this one either.>
+		condition <return( self.v.DidNotLike )>
+
+		PNode
+		msg <Test of the conversation linking system. Do you like this one?>
+		sub
+			PNode_R
+			msg <I like it!>
+			sub
+				PNode
+				msg <Thank you. It was a lot more work than it looks.>
+				label <GoLikePersona>
+				effect <self.v.BeenBefore = true>
+			end
+
+			PNode_R
+			msg <Looks kinda dumb.>
+			sub
+				PNode
+				msg <Would you like to revise your opinion?>
+				effect <self.v.BeenBefore = true>
+				sub
+					PNode_R
+					msg <No, not at all.>
+					sub
+						PNode
+						msg <Well screw you over here too!>
+						effect <self.v.DidNotLike = true>
+					end
+
+					PNode_R
+					msg <Yes, I may have been a bit hasty.>
+					sub
+						PNode_G
+						goto <GoLikePersona>
+					end
+				end
+			end
+
+			PNode_R
+			msg <I already told you.>
+			condition <return( self.v.BeenBefore )>
+			sub
+				PNode
+				msg <Oh, I guess you did.>
+			end
+		end
+	end
+
 	Persona 2
 lua
 P.node_101 = {}
@@ -388,7 +443,7 @@ P.node_101.condition = function( self ) return( self.v.DidNotLike ) end
 P.node_101.nextid = "node_111"
 
 P.node_111 = {}
-P.node_111.msg = "Trying out the conversation system."
+P.node_111.msg = "Trying out the conversation system. What do you think?"
 P.node_111.prompts = {}
 P.node_111.prompts[ 102 ] = {}
 P.node_111.prompts[ 102 ].msg = "I like it!"
@@ -407,9 +462,10 @@ P.node_103 = {}
 P.node_103.msg = "Well screw you, then."
 P.node_103.effect = function( self ) self.v.DidNotLike = true end
 
-P.node_104 = {}
-P.node_104.msg = "Thank you. It was a lot more work than it looks."
-P.node_104.effect = function( self ) self.v.BeenBefore = true end
+P.node_104 = {
+msg = "Thank you. It was a lot more work than it looks." ,
+effect = function( self ) self.v.BeenBefore = true end
+}
 
 P.node_105 = {}
 P.node_105.msg = "Oh, I guess you did."

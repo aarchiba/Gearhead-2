@@ -286,8 +286,8 @@ implementation
 uses uiconfig;
 
 const
-	WindowName: PChar = 'Dungeon Monkey Unlimited';
-	IconName: PChar = 'DMU';
+	WindowName: PChar = 'GearHead II';
+	IconName: PChar = 'GH2';
 
 var
 	New_Sprite_Num: LongInt;

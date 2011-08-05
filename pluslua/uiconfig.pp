@@ -109,8 +109,6 @@ const
 	STARTUP_OK: Boolean = True;
 
 
-
-{$IFDEF ASCII}
 	RPK_UpRight = '9';
 	RPK_Up = '8';
 	RPK_UpLeft = '7';
@@ -120,16 +118,9 @@ const
 	RPK_Down = '2';
 	RPK_DownLeft = '1';
 
+{$IFDEF ASCII}
 	FrameDelay: Integer = 30;
 {$ELSE}
-	RPK_UpRight = #$89;
-	RPK_Up = #$88;
-	RPK_UpLeft = #$87;
-	RPK_Left = #$84;
-	RPK_Right = #$86;
-	RPK_DownRight = #$81;
-	RPK_Down = #$82;
-	RPK_DownLeft = #$83;
 	RPK_MouseButton = #$90;
 	RPK_TimeEvent = #$91;
 	RPK_RightButton = #$92;
@@ -178,8 +169,6 @@ const
 	BVTypeName: Array [1..4] of string = ('Off','1/4','1/2','Max');
 
 	DoAutoSave: Boolean = True;
-
-	Load_Plots_At_Start: Boolean = False;
 
 	Reload_All_Weapons: Boolean = False;
 
@@ -295,6 +284,7 @@ const
 		KCode: ',';	),
 	(	CmdName: 'Inventory';
 		CmdDesc: 'Access all carried items.';
+
 		IsACommand: True;
 		KCode: 'i';	),
 	(	CmdName: 'Equipment';
@@ -487,8 +477,6 @@ const
 
 	Minimal_Screen_Refresh: Boolean = False;
 	Use_Software_Surface: Boolean = False;
-	Use_Paper_Dolls: Boolean = False;
-	Mesh_On: Boolean = False;
 
 
 	Full_RPGWorld_Info: Boolean = False;
@@ -591,9 +579,6 @@ begin
 				end else if cmd = 'NOCOMBATTAUNTS' then begin
 					No_Combat_Taunts := True;
 
-				end else if cmd = 'LOADPLOTSATSTART' then begin
-					Load_Plots_At_Start := True;
-
 				end else if cmd = 'MINIMAPON' then begin
 					Display_Mini_Map := True;
 
@@ -653,10 +638,6 @@ begin
 				end else if cmd = 'NAMESON' then begin
 					Names_Above_Heads := True;
 
-				end else if cmd = 'PAPERDOLLS' then begin
-					Use_Paper_Dolls := True;
-				end else if cmd = 'USEMESH' then begin
-					Mesh_On := True;
 				end else if cmd = 'ERSATZ_MOUSE' then begin
 					Ersatz_Mouse := True;
 
@@ -738,7 +719,6 @@ begin
 
 	AddBoolean( 'RELOAD_UNEQUIPPED_WEAPONS_AT_SHOP' , Reload_All_Weapons );
 
-	AddBoolean( 'LOADPLOTSATSTART' , Load_Plots_At_Start );
 	AddBoolean( 'MINIMAPON' , Display_Mini_Map );
 
 	writeln( F , 'SCREENHEIGHT ' + BStr( ScreenRows ) );
@@ -756,8 +736,6 @@ begin
 	AddBoolean( 'NO_SPLASH_SCREEN_AT_START' , not Splash_Screen_At_Start );
 	AddBoolean( 'REVERT_SLOWER_SAFER' , Revert_Slower_Safer );
 	AddBoolean( 'NAMESON' , Names_Above_Heads );
-	AddBoolean( 'PAPERDOLLS' , Use_Paper_Dolls );
-	AddBoolean( 'USEMESH' , Mesh_On );
 	AddBoolean( 'ERSATZ_MOUSE' , Ersatz_Mouse );
 
 	{ The "secret options" come at the end. These tokens only get }
