@@ -385,6 +385,12 @@ sub
 	% Ugly version of the PNode structure- I will add an elegant way to lay
 	% out dialog trees after the persona linker is up and working.
 	sub
+		PNode_P
+		request <*NiceToMeetYou>
+
+		PNode_P
+		request <*NiceToMeetYou>
+
 		PNode
 		msg <You didn't like this one either.>
 		condition <return( self.v.DidNotLike )>

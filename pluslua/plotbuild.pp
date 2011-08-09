@@ -893,6 +893,11 @@ Function InitShard( GB: GameBoardPtr; Scope,Control,Slot,Shard: GearPtr; PlotID,
 
 
 
+
+
+
+
+
 	Procedure PrepQuestCombatants( LList: GearPtr );
 
 		{ If this is a quest, scale any combatant NPCs to the proper level. }
@@ -1111,6 +1116,7 @@ begin
 
 	{ Based on this shopping list, search for applocable subplots and attempt to }
 	{ fit them into the adventure. }
+
 	NotFoundMatch := True;
 	Shard := Nil;
 	while ( ShoppingList <> Nil ) and NotFoundMatch do begin
@@ -1174,102 +1180,117 @@ var
 		end; { For t ... }
 	end;
 
-	Procedure InsertPFrags( Persona: GearPtr; const PContext: String );
-		{ Prepare the persona for use in the game. Search its string attributes and }
-		{ add any persona fragments that are requested. }
-		Function SpaceyString( msg: String ): String;
-			{ Return a version of msg with all the quotes replaced by }
-			{ spaces. }
-		var
-			T: Integer;
-		begin
-			for t := 1 to Length( msg ) do if msg[t] = '"' then msg[t] := ' ';
-			SpaceyString := msg;
+	Procedure InitListStrings( LList: GearPtr; Dictionary: SAttPtr );
+		{ Run LList, all of its siblings and children, through the ReplaceStrings }
+		{ procedure. }
+		{ Once the strings are initialized, activate the scripts. }
+	begin
+		while LList <> Nil do begin
+			if LList^.G <> GG_Plot then begin
+				ReplaceStrings( LList , Dictionary );
+				InitListStrings( LList^.SubCom , Dictionary );
+				InitListStrings( LList^.InvCom , Dictionary );
+			end;
+			LList := LList^.Next;
 		end;
+	end;
+
+
+	Function SelectPFrag( ProtoNode: GearPtr; const PContext,NextID: String; ID: Integer ): GearPtr;
+		{ Create and initialize a persona fragment for this node. }
 	var
 		F: GearPtr;	{ The persona fragment to insert. }
-		S,FS: SAttPtr;
-		head,info,TypeLabel: String;
+		info,TypeLabel,msg: String;
+		Dic: SATTPtr;
 		Param: Array [1..8] of String;
 		T: Integer;
 	begin
-	{	S := Persona^.SA;
-		while S <> Nil do begin
-			if S^.Info[1] = '*' then begin
-				{ This is a fragment request. Start by determining the relevant data. }
-				head := RetrieveAPreamble( S^.Info );
-				DeleteFirstChar( head );
+		info := SAttValue( ProtoNode^.SA , 'REQUEST' );
+		TypeLabel := ExtractWord( info );
+		{ Create the dictionary. }
+		Dic := Nil;
+		SetSAtt( Dic , '%id% <' + BStr( ID ) + '>' );
+		SetSAtt( Dic , '%next% <' + NextID + '>' );
+		for t := 1 to 8 do begin
+			msg := ExtractWord( Info );
+			if msg <> '' then SetSAtt( Dic , '%' + BStr( t ) + '% <' + msg + '>' )
+			else SetSAtt( Dic , '%' + BStr( t ) + '% <ERROR_' + BStr( t ) + '>' );
+		end;
 
-				info := RetrieveAString( S^.info );
-				TypeLabel := ExtractWord( info );
-				for t := 1 to 8 do Param[t] := ExtractWord( Info );
+		{ Next, search for a matching fragment... }
+		F := FindNextComponent( persona_fragments , TypeLabel + ' ' + Context );
+		if F <> Nil then begin
+			{ If one was found, prep it for inclusion in the persona. }
+			F := CloneGear( F );
 
-				{ Next, search for a matching fragment... }
-				F := FindNextComponent( persona_fragments , TypeLabel + ' ' + Context );
-				if F <> Nil then begin
-					{ If one was found, prep it for inclusion in the persona. }
-					F := CloneGear( F );
-					FS := F^.SA;
-					while FS <> Nil do begin
-						{ Format the strings. Tasks: }
-						{ - Rename "START" to "HEAD" }
-						{ - Replace %1% through %8% with parameters }
-						{ - Replace %id% with BStr( ID ) }
-						if UpCase( RetrieveAPreamble( FS^.Info ) ) = 'START' then begin
-							FS^.Info := head + ' <' + RetrieveAString( FS^.Info ) + '>';
-						end;
-						ReplacePat( FS^.Info , '%id%' , BStr( ID ) );
-						ReplacePat( FS^.Info , '%1%' , Param[1] );
-						ReplacePat( FS^.Info , '%2%' , Param[2] );
-						ReplacePat( FS^.Info , '%3%' , Param[3] );
-						ReplacePat( FS^.Info , '%4%' , Param[4] );
-						ReplacePat( FS^.Info , '%5%' , Param[5] );
-						ReplacePat( FS^.Info , '%6%' , Param[6] );
-						ReplacePat( FS^.Info , '%7%' , Param[7] );
-						ReplacePat( FS^.Info , '%8%' , Param[8] );
+			InitListStrings( F , Dic );
 
-						FS := FS^.Next;
-					end;
+		end else begin
+			DialogMsg( 'ERROR: No persona fragment found for ' + TypeLabel + ' ' + Context );
+		end;
 
-					{ Copy everything to the main persona. }
-					FS := F^.SA;
-					while FS <> Nil do begin
-						SetSAtt( Persona^.SA , FS^.Info );
-						FS := FS^.Next;
-					end;
-
-					{ Increment the ID counter. }
-					Inc( ID );
-
-					DisposeGear( F );
-				end else begin
-					DialogMsg( 'ERROR: No persona fragment found for ' + TypeLabel + ' ' + SpaceyString( Context ) );
-				end;
-			end;
-
-			{ - Replace %E1% through %E8% with element IDs }
-			if Plot <> Nil then begin
-				for t := 1 to Num_Plot_Elements do begin
-					ReplacePat( S^.Info , '%E' + BStr( T ) + '%' , BStr( ElementID( Plot , T ) ) );
-				end;
-			end;
-
-			S := S^.Next;
-
-		end;}
+		DisposeSAtt( Dic );
+		SelectPFrag := F;
 	end;
 
-	Procedure InitializeConversationTree( PTree: GearPtr );
+	Procedure InitializeConversationTree( const PContext: String; PTree: GearPtr );
 		{ This procedure does two things: It replaces ProtoNodes with Persona }
 		{ Fragments, and it assigns a NodeID to every SayNode. }
 	var
-		NodeID: Integer;
+		NodeID,PFID: Integer;
+		Function UniqueLabel( PNode: GearPtr ): String;
+			{ Return the identifier of PNode, or if no such identifier exists }
+			{ assign it one according to the PFID. }
+		var
+			L: String;
+		begin
+			if PNode <> Nil then begin
+				L := SAttValue( PNode^.SA , 'LABEL' );
+				if L = '' then begin
+					L := 'PFRAGNEXT_' + BStr( PFID );
+					SetSAtt( PNode^.SA , 'LABEL <' + L + '>' );
+				end;
+			end else L := 'na';
+			UniqueLabel := L;
+		end;
 		Procedure InitCTAlongPath( PList: GearPtr );
 			{ Check along this linked list assigning NodeIDs. }
+		var
+			PFrag,PTmp: GearPtr;
+			PFNext: String;
 		begin
 			while PList <> Nil do begin
 				if PList^.G = GG_PersonaNode then begin
-					if PList^.S = GS_SayNode then begin
+					if PList^.S = GS_ProtoNode then begin
+						{ This is a persona fragment request. Locate an appropriate }
+						{ fragment, then drop it in here. }
+						PFNext := UniqueLabel( PList^.Next );
+						PFrag := SelectPFrag( PList, PContext, PFNext, PFID );
+						Inc( PFID );
+
+						{ Alright, we have the PFrag; try to insert it right after }
+						{ PList. }
+						if PFrag <> Nil then begin
+							{ Bad Programmer! Directly juggling pointers is bad }
+							{ practice! Try not to do this yourself. }
+							PTmp := PList^.Next;
+							PList^.Next := PFrag;
+							PFrag^.Next := PTmp;
+							PFrag^.Parent := PList^.Parent;
+							{ This PFrag started life as a Persona. }
+							{ Convert it to a PNode. }
+							PFrag^.G := GG_PersonaNode;
+							PFrag^.S := GS_NullNode;
+
+							{ Add a GOTO at the end to connect it to the NEXT. }
+							if PFrag^.Next <> Nil then begin
+								PTmp := AddGear( PFrag^.SubCom , PFrag );
+								PTmp^.G := GG_PersonaNode;
+								PTmp^.S := GS_GotoNode;
+								SetSAtt( PTmp^.SA , 'GOTO <' + PFNext + '>' );
+							end;
+						end;
+					end else if PList^.S = GS_SayNode then begin
 						PList^.Stat[ STAT_PersonaNodeID ] := NodeID;
 						Inc( NodeID );
 					end;
@@ -1281,21 +1302,61 @@ var
 		end;
 	begin
 		{ Initialize the NodeID to the minimum value. }
+		PFID := 1;
 		NodeID := PNODE_GREETING;
 		InitCTAlongPath( PTree );
 	end;
 
 	Procedure LinkConversationTree( Persona: GearPtr );
 		{ Add every SayNode in the persona tree to Persona's Lua script. }
+		Function FindNodeByLabel( PList: GearPtr; const NodeLabel: String ): GearPtr;
+			{ Search the Persona tree for a node with this label. }
+		var
+			it: GearPtr;
+		begin
+			it := Nil;
+			while ( PList <> Nil ) and ( it = Nil ) do begin
+				if UpCase( SAttValue( PList^.SA , 'LABEL' ) ) = NodeLabel then it := PList;
+				if ( it = Nil ) then it := FindNodeByLabel( PList^.SubCom , NodeLabel );
+				PList := PList^.Next;
+			end;
+			FindNodeByLabel := it;
+		end;
 		Function GetNodeID( PNode: GearPtr ): Integer;
 			{ Return the NodeID of this node. }
+		var
+			RNode: GearPtr;	{ The referenced node. }
 		begin
-			if PNode^.S = GS_ReplyNode then begin
+			if ( PNode^.S = GS_ReplyNode ) or ( PNode^.S = GS_NullNode ) then begin
 				if PNode^.SubCom <> Nil then begin
 					GetNodeID := GetNodeID( PNode^.SubCom );
 				end else begin
 					RecordError( 'ERROR: No subcom for ReplyNode ' + SAttValue( PNode^.SA , 'msg' ) );
 					GetNodeID := 0;
+				end;
+			end else if ( PNode^.S = GS_ProtoNode ) then begin
+				{ A ProtoNode should be followed by the actual persona fragment that was }
+				{ requested. So, return that ID. }
+				if PNode^.Next <> Nil then begin
+					GetNodeID := GetNodeID( PNode^.Next );
+				end else begin
+					RecordError( 'ERROR: No next for ProtoNode ' + SAttValue( PNode^.SA , 'request' ) );
+					GetNodeID := 0;
+				end;
+
+			end else if PNode^.S = GS_GotoNode then begin
+				if PNode^.Stat[ STAT_PERSONANODEID ] <> 0 then begin
+					{ We've already located this node's target. }
+					GetNodeID := PNode^.Stat[ STAT_PERSONANODEID ];
+				end else begin
+					RNode := FindNodeByLabel( Persona^.SubCom , UpCase( SAttValue( PNode^.SA , 'GOTO' ) ) );
+					if ( RNode <> Nil ) and ( RNode^.S <> GS_GotoNode ) then begin
+						PNode^.Stat[ STAT_PERSONANODEID ] := GetNodeID( RNode );
+						GetNodeID := PNode^.Stat[ STAT_PERSONANODEID ];
+					end else begin
+						RecordError( 'ERROR: No ref for GotoNode ' + SAttValue( PNode^.SA , 'GOTO' ) );
+						GetNodeID := 0;
+					end;
 				end;
 			end else GetNodeID := PNode^.Stat[ STAT_PERSONANODEID ];
 		end;
@@ -1314,10 +1375,10 @@ var
 						msg := SAttValue( PList^.SA , 'EFFECT' );
 						if msg <> '' then StoreSAtt( Persona^.Scripts , 'effect = function( self ) ' + msg + ' end, ' );
 
-						msg := SAttValue( PList^.SA , 'CONDITION' );
-						if msg <> '' then StoreSAtt( Persona^.Scripts , 'condition = function( self ) ' + msg + ' end, ' );
-
 						if PList^.Next <> Nil then begin
+							msg := SAttValue( PList^.SA , 'CONDITION' );
+							if msg <> '' then StoreSAtt( Persona^.Scripts , 'condition = function( self ) ' + msg + ' end, ' );
+
 							StoreSAtt( Persona^.Scripts , 'nextid = "node_' + BStr( GetNodeID( PList^.Next ) ) + '", ' );
 						end;
 
@@ -1375,7 +1436,7 @@ var
 				{ We have a bunch of PNodes that need to be linked into a single Lua script. }
 				{ Step One: Go through the tree, assign a nodeID to every SayNode and expand }
 				{ every ProtoNode. }
-				InitializeConversationTree( P^.SubCom );
+				InitializeConversationTree( PContext , P^.SubCom );
 
 				{ Our conversation tree has been initialized. Link the Lua code together. }
 				LinkConversationTree( P );
@@ -1410,20 +1471,6 @@ var
 				SetSAtt( M^.SA , 'CONTEXT <' + SAttValue( M^.SA , 'CONTEXT' ) + ' ' + Context + '>' );
 			end;
 			M := M^.Next;
-		end;
-	end;
-	Procedure InitListStrings( LList: GearPtr; Dictionary: SAttPtr );
-		{ Run LList, all of its siblings and children, through the ReplaceStrings }
-		{ procedure. }
-		{ Once the strings are initialized, activate the scripts. }
-	begin
-		while LList <> Nil do begin
-			if LList^.G <> GG_Plot then begin
-				ReplaceStrings( LList , Dictionary );
-				InitListStrings( LList^.SubCom , Dictionary );
-				InitListStrings( LList^.InvCom , Dictionary );
-			end;
-			LList := LList^.Next;
 		end;
 	end;
 
