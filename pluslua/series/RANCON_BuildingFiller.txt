@@ -382,64 +382,30 @@ NPC Citizen
 	end
 sub
 	Persona 1
-	% Ugly version of the PNode structure- I will add an elegant way to lay
-	% out dialog trees after the persona linker is up and working.
-	sub
-		PNode_P
-		request <*NiceToMeetYou>
+	PFrag "*NiceToMeetYou"
 
-		PNode_P
-		request <*NiceToMeetYou>
+	Say "You didn't like this one either."
+	condition <return( self.v.DidNotLike )>
 
-		PNode
-		msg <You didn't like this one either.>
-		condition <return( self.v.DidNotLike )>
+	Say "Test of the conversation linking system. Do you like this one?"
+		reply "I like it!"
+			say "Thank you. It was a lot more work than it looks."
+			label <GoLikePersona>
+			effect <self.v.BeenBefore = true>
 
-		PNode
-		msg <Test of the conversation linking system. Do you like this one?>
-		sub
-			PNode_R
-			msg <I like it!>
-			sub
-				PNode
-				msg <Thank you. It was a lot more work than it looks.>
-				label <GoLikePersona>
-				effect <self.v.BeenBefore = true>
-			end
+		reply "Looks kinda dumb."
+			say "Would you like to revise your opinion?"
+			effect <self.v.BeenBefore = true>
+				reply "No, not at all."
+					say "Well screw you over here too!"
+					effect <self.v.DidNotLike = true>
+				reply "Yes, I may have been a bit hasty."
+					goto "GoLikePersona"
 
-			PNode_R
-			msg <Looks kinda dumb.>
-			sub
-				PNode
-				msg <Would you like to revise your opinion?>
-				effect <self.v.BeenBefore = true>
-				sub
-					PNode_R
-					msg <No, not at all.>
-					sub
-						PNode
-						msg <Well screw you over here too!>
-						effect <self.v.DidNotLike = true>
-					end
 
-					PNode_R
-					msg <Yes, I may have been a bit hasty.>
-					sub
-						PNode_G
-						goto <GoLikePersona>
-					end
-				end
-			end
-
-			PNode_R
-			msg <I already told you.>
-			condition <return( self.v.BeenBefore )>
-			sub
-				PNode
-				msg <Oh, I guess you did.>
-			end
-		end
-	end
+		reply "I already told you."
+		condition <return( self.v.BeenBefore )>
+			say "Oh, I guess you did."
 
 	Persona 2
 lua
@@ -459,16 +425,11 @@ P.node_111.prompts[ 105 ] = {}
 P.node_111.prompts[ 105 ].msg = "I already told you."
 P.node_111.prompts[ 105 ].condition = function( self ) return( self.v.BeenBefore ) end
 
-P.node_102 = {}
-P.node_102.msg = "You should not see this message."
-P.node_102.nextid = "node_104"
-P.node_102.condition = function( self ) return( false ) end
-
 P.node_103 = {}
 P.node_103.msg = "Well screw you, then."
 P.node_103.effect = function( self ) self.v.DidNotLike = true end
 
-P.node_104 = {
+P.node_102 = {
 msg = "Thank you. It was a lot more work than it looks." ,
 effect = function( self ) self.v.BeenBefore = true end
 }

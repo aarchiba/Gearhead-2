@@ -898,6 +898,9 @@ Function InitShard( GB: GameBoardPtr; Scope,Control,Slot,Shard: GearPtr; PlotID,
 
 
 
+
+
+
 	Procedure PrepQuestCombatants( LList: GearPtr );
 
 		{ If this is a quest, scale any combatant NPCs to the proper level. }
@@ -1108,20 +1111,20 @@ begin
 	{ component values point to items from the quest_frags list. }
 	ShoppingList := CreateComponentList( Standard_Plots , Context );
 
-	if XXRan_Debug and ( Control^.G = GG_Story ) then begin
+	if XXRan_Debug and ( Control <> Nil ) and ( Control^.G = GG_Story ) then begin
 		if NumNAtts( ShoppingList ) < 5 then begin
 			DialogMsg( '[DEBUG] Only ' + BStr( NumNatts( ShoppingList ) ) + ' components for "' + Context + '".' );
 		end;
 	end;
 
 	{ Based on this shopping list, search for applocable subplots and attempt to }
+
 	{ fit them into the adventure. }
 
 	NotFoundMatch := True;
 	Shard := Nil;
 	while ( ShoppingList <> Nil ) and NotFoundMatch do begin
 		if XXRan_Wizard and ( ShoppingList <> Nil ) and ( Control^.G = GG_Story ) and not IsAQuest then begin
-{			DialogMsg( Context );}
 			Shard := CloneGear( ComponentMenu( Standard_Plots , ShoppingList ) );
 		end else if DoDebug and not IsAQuest then begin
 			DialogMsg( Context );
@@ -1373,11 +1376,11 @@ var
 						StoreSAtt( Persona^.Scripts , 'P.node_' + BStr( PList^.Stat[ STAT_PersonaNodeID ] ) + ' = { ' );
 						StoreSAtt( Persona^.Scripts , 'msg = "' + SAttValue( PList^.SA , 'MSG' ) + '", ' );
 						msg := SAttValue( PList^.SA , 'EFFECT' );
-						if msg <> '' then StoreSAtt( Persona^.Scripts , 'effect = function( self ) ' + msg + ' end, ' );
+						if msg <> '' then StoreSAtt( Persona^.Scripts , 'effect = function(self,chatnpc) ' + msg + ' end, ' );
 
 						if PList^.Next <> Nil then begin
 							msg := SAttValue( PList^.SA , 'CONDITION' );
-							if msg <> '' then StoreSAtt( Persona^.Scripts , 'condition = function( self ) ' + msg + ' end, ' );
+							if msg <> '' then StoreSAtt( Persona^.Scripts , 'condition = function(self,chatnpc) ' + msg + ' end, ' );
 
 							StoreSAtt( Persona^.Scripts , 'nextid = "node_' + BStr( GetNodeID( PList^.Next ) ) + '", ' );
 						end;
@@ -1393,7 +1396,7 @@ var
 									if ( PID <> 0 ) and ( msg <> '' ) then begin
 										StoreSAtt( Persona^.Scripts , '[' + BStr( PID ) + '] = { msg = "' + msg + '", ' );
 										msg := SAttValue( P^.SA , 'condition' );
-										if msg <> '' then StoreSAtt( Persona^.Scripts , 'condition = function( self ) ' + msg + ' end, ' );
+										if msg <> '' then StoreSAtt( Persona^.Scripts , 'condition = function(self,chatnpc) ' + msg + ' end, ' );
 										StoreSAtt( Persona^.Scripts , '}, ' );
 									end;
 								end;
@@ -1440,6 +1443,12 @@ var
 
 				{ Our conversation tree has been initialized. Link the Lua code together. }
 				LinkConversationTree( P );
+
+				{ Unless we've been asked to debug, get rid of the persona nodes. They are no }
+				{ longer needed. }
+				if not Persona_Debug then begin
+					DisposeGear( P^.SubCom );
+				end;
 			end;
 			P := P2;
 		end;

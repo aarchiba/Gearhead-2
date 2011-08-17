@@ -51,23 +51,27 @@
 	function proto_gear:g()
 		return gh_gearg( self.ptr )
 	end
-	function proto_gear:getnatt( g , s )
+	function proto_gear:getNAtt( g , s )
 		return gh_getnatt( self.ptr , g , s )
 	end
-	function proto_gear:setnatt( g , s , v )
+	function proto_gear:setNAtt( g , s , v )
 		return gh_setnatt( self.ptr , g , s , v )
 	end
 
 	-- PERSONA
 	proto_persona = proto_gear:new()
 
-	function proto_persona.usenode( self , node )
-		-- Clear the menu.
+	function proto_persona.useNode( self , node , chatnpc )
+		-- self is the persona being used
+		-- node is the label of the current conversation node
+		-- chatnpc is the NPC being spoken with
+
+		-- Start by clearing the menu.
 		gh_initchatmenu( true )
 
 		-- If an effect script exists, run that now.
 		if node.effect ~= nil then
-			node.effect( self )
+			node.effect( self , chatnpc )
 		end
 
 		-- Set the chat message.
@@ -77,7 +81,7 @@
 		if node.prompts ~= nil then
 			local k,v
 			for k,v in pairs( node.prompts ) do
-				if ( v.condition == nil ) or v.condition( self ) then
+				if ( v.condition == nil ) or v.condition( self , chatnpc ) then
 					gh_addchatmenuitem( k , gh_formatstring( v.msg ) )
 				end
 			end
@@ -91,6 +95,13 @@
 		if gh_numunits( NAV_DEFPLAYERTEAM ) < 1 then
 			gh_return();
 		end
+	end
+
+	-- CHARACTERS
+	proto_character = proto_gear:new()
+
+	function proto_character.isKnown( self )
+		return( self:getNAtt( NAG_PERSONAL , NAS_NUMCONVERSATION ) > 0 );
 	end
 
 	-- METATERRAIN: DOOR
@@ -211,6 +222,9 @@
 
 	gh_prototypes[ GG_PERSONA ] = {}
 	gh_prototypes[ GG_PERSONA ].default = proto_persona
+
+	gh_prototypes[ GG_CHARACTER ] = {}
+	gh_prototypes[ GG_CHARACTER ].default = proto_character
 
 	gh_prototypes[ GG_METATERRAIN ] = {}
 	gh_prototypes[ GG_METATERRAIN ][ GS_METADOOR ] = proto_door
@@ -375,7 +389,7 @@ function gh_trigger( gearptr, ghtrigger )
 	return script_found
 end
 
-function gh_conversation( gearptr, nodeid )
+function gh_conversation( gearptr, nodeid , npcptr )
 	-- We've been asked to run a conversation node.
 	-- 1. Locate the node record.
 	-- 2. If it has a conditional script, make sure it evaluates to true.
@@ -383,6 +397,7 @@ function gh_conversation( gearptr, nodeid )
 	-- 3. If we have a valid node speak its message, construct its menu,
 	--    and execute its effect script if one exists.
 	local self = gh[gearptr]
+	local chatnpc = gh[npcptr]
 	if self ~= nil then
 		local pnode = nil
 
@@ -393,7 +408,7 @@ function gh_conversation( gearptr, nodeid )
 				-- that it's the wrong node. Check to see if it has a
 				-- conditional function, and if so see if it's true.
 				if pnode.condition ~= nil then
-					if not pnode.condition( self ) then
+					if not pnode.condition( self , chatnpc ) then
 						-- Crap. This node is passing the buck...
 						-- Set nodeid to the next sibling.
 						nodeid = pnode.nextid
@@ -411,7 +426,7 @@ function gh_conversation( gearptr, nodeid )
 		-- Check to see if we have a valid node. If so, do whatever needs
 		-- to be done.
 		if pnode ~= nil then
-			self.usenode( self , pnode )
+			self.useNode( self , pnode , chatnpc )
 		else
 			-- Serious problem: if the node can't be found, this means
 			-- that the persona is broken. Print an error message.

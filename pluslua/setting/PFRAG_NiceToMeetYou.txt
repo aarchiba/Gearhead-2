@@ -1,23 +1,13 @@
 % TYPE: *NiceToMeetYou
-%	&NoTrivial - A conversation must be involved, don't just jump to %1%
 %  The PC is meeting someone presumably for the first time.
+%  When finished, this pfrag exits to %next%.
 
 Persona
 	requires <*NiceToMeetYou>
 
-	sub
-		PNode
-		msg <Nice to meet you.>
-		condition <return( not self.v.PF%id%_BeenBefore )>
-		effect <self.v.PF%id%_BeenBefore = true>
-		sub
-			PNode_R
-			msg <Nice to meet you!>
-			sub
-				PNode_G
-				goto <%next%>
-			end
-		end
-	end
+	say "Nice to meet you."
+	condition <return( not chatnpc:isKnown() )>
+		reply "Nice to meet you!"
+			goto "%next%"
 
 

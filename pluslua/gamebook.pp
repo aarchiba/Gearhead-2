@@ -542,6 +542,16 @@ begin
 	GearMaxArmor := it;
 end;
 
+Function PersonaNodeName( Part: GearPtr ): String;
+	{ Sticking this here because there's no sub-unit for personas. The shame! }
+	{ PART must not be nil, and if it isn't a personanode then I can't vouch for }
+	{ the results. }
+begin
+	if Part^.S = GS_GotoNode then PersonaNodeName := SAttValue( Part^.SA , 'GOTO' )
+	else if Part^.S = GS_ProtoNode then PersonaNodeName := SAttValue( Part^.SA , 'REQUEST' )
+	else PersonaNodeName := SAttValue( Part^.SA , 'MSG' );
+end;
+
 Function GearName(Part: GearPtr): String;
 	{Determine the name of Part. If Part has a NAME attribute,}
 	{this is easy. If not, locate a default name based upon}
@@ -580,6 +590,7 @@ begin
 		GG_Computer:	it := MsgString( 'COMPUTERNAME' );
 		GG_Software:	it := MsgString( 'SOFTWARENAME' );
 		GG_Usable:	it := MsgString( 'USABLENAME_' + BStr( Part^.S ) );
+		GG_PersonaNode:	it := PersonaNodeName( Part );
 		else it := {MsgString( 'UNKNOWNNAME' ) +} BStr( Part^.G ) + '/' + BStr( Part^.S ) + '/' + BStr( Part^.V );
 	end;
 

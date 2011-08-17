@@ -37,6 +37,7 @@ Function ExtractReal(var S: String): Real;
 Function RetrieveAString(const S: String): String;
 Function RetrieveBracketString(const S: String): String;
 Function RetrieveAPreamble(const S: String ): String;
+Function RetrieveQuoteString(const S: String): String;
 
 Function BStr( N: LongInt ): String;
 Function SgnStr( N: Integer ): String;
@@ -193,6 +194,26 @@ begin
 	if A2 = 0 then A2 := Length(S)+1;
 
 	RetrieveAString := Copy(S,A1+1,A2-A1-1);
+end;
+
+Function RetrieveQuoteString(const S: String): String;
+	{ Retrieve a string demarkated by double quotes. }
+var
+	A1,A2: Integer;
+begin
+	{Locate the position of the two alligators.}
+	A1 := Pos('"',S);
+	A2 := Pos('"',Copy(S,A1+1,Length(S)) );
+
+	{If the string has not been declared with <, return}
+	{an empty string.}
+	if A1 = 0 then Exit('No quotes at all!');
+
+	{If the string has not been closed with >, return the}
+	{entire remaining length of the string.}
+	if A2 = 0 then A2 := Length(S)+1;
+
+	RetrieveQuoteString := Copy(S,A1+1,A2 - 1);
 end;
 
 Function RetrieveBracketString(const S: String): String;

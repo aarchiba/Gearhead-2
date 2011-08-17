@@ -32,6 +32,7 @@ Const
 	SLOT_Next = 0;
 	SLOT_Sub  = 1;
 	SLOT_Inv  = 2;
+	SLOT_PNode = 3;
 
 var
 	Parser_Macros: SAttPtr;
@@ -607,6 +608,7 @@ var
 			{C is the current GEAR being worked on.}
 	dest: Byte;	{DESTination of the next GEAR to be added.}
 			{ 0 = Sibling; 1 = SubCom; 2 = InvCom }
+	TheLine_Indent: Integer;	{ The indentation of this line. }
 
 {*** LOCAL PROCEDURES FOR GHPARSER ***}
 
@@ -617,6 +619,13 @@ begin
 	{Determine where the GEAR is to be installed, and check to}
 	{see if this is a legal place to stick it.}
 
+	{ Step One - only install SLOT_PNode if we're installing a PNode. }
+	if ( dest = SLOT_PNode ) and ( IG_G <> GG_PersonaNode ) then begin
+		{ Set dest to Next and move C to the first non-PersonaNode parent. }
+		dest := SLOT_Next;
+		while ( C <> Nil ) and ( C^.G = GG_PersonaNode ) do C := C^.Parent;
+	end;
+
 	{Do the installing}
 	{if C = Nil, we're installing as a sibling at the root level.}
 	{ASSERT: If IT = Nil, then C = Nil as well.}
@@ -624,6 +633,18 @@ begin
 		{NEXT COMPONENT}
 		if C = Nil then C := AddGear(it,NDum)
 		else C := AddGear(C,C^.Parent);
+
+	end else if dest = SLOT_PNode then begin
+		{ PFrag Component- Where to stick it is gonna depend on }
+		{ how TheLine_Indent compares to C. }
+		if NAttValue( C^.NA , NAG_NARRATIVE , NAS_PNODEINDENTATION ) < TheLine_Indent then begin
+			{ We're further indented than before. }
+			C := AddGear(C^.SubCom,C);
+		end else if NAttValue( C^.NA , NAG_NARRATIVE , NAS_PNODEINDENTATION ) >= TheLine_Indent then begin
+			while ( C <> Nil ) and ( NAttValue( C^.NA , NAG_NARRATIVE , NAS_PNODEINDENTATION ) > TheLine_Indent ) do C := C^.Parent;
+			if C = Nil then C := AddGear(it,NDum)
+			else C := AddGear(C,C^.Parent);
+		end;
 
 	end else if dest = 1 then begin
 		{SUB COMPONENT}
@@ -832,6 +853,13 @@ Procedure META_InsertPartIntoIt( IPII_Part: GEarPtr );
 	{ to equal this new part. }
 begin
 	if IPII_Part <> Nil then begin
+		{ Step one- deal with the heartbreak of persona nodes. }
+		if dest = SLOT_PNode then begin
+			{ Set dest to Next and move C to the first non-PersonaNode parent. }
+			dest := SLOT_Next;
+			while ( C <> Nil ) and ( C^.G = GG_PersonaNode ) do C := C^.Parent;
+		end;
+
 		{ Stick the part somewhere appropriate. }
 		if (dest = 0) or (C = Nil) then begin
 			{NEXT COMPONENT}
@@ -1040,6 +1068,83 @@ begin
 	end;
 end;
 
+Procedure CMD_Say;
+	{ We are going to add a PNode to this conversation. }
+begin
+	{ First decide where to put it. }
+	{ If the previous gear has less indentation than this one, make it }
+	{ a subcom. }
+	dest := SLOT_PNode;
+
+	{ Create the node. }
+	InstallGear( GG_PERSONANODE, GS_SAYNODE, 0 );
+	if C <> Nil then begin
+		SetNAtt( C^.NA , NAG_NARRATIVE , NAS_PNODEINDENTATION , TheLine_Indent );
+		SetSAtt( C^.SA , 'MSG <' + RetrieveQuoteString( OriginalLine ) + '>' );
+	end;
+
+	{ Clear the rest of the line. }
+	TheLine := '';
+end;
+
+Procedure CMD_Reply;
+	{ We are going to add a PNode to this conversation. }
+begin
+	{ First decide where to put it. }
+	{ If the previous gear has less indentation than this one, make it }
+	{ a subcom. }
+	dest := SLOT_PNode;
+
+	{ Create the node. }
+	InstallGear( GG_PERSONANODE, GS_REPLYNODE, 0 );
+	if C <> Nil then begin
+		SetNAtt( C^.NA , NAG_NARRATIVE , NAS_PNODEINDENTATION , TheLine_Indent );
+		SetSAtt( C^.SA , 'MSG <' + RetrieveQuoteString( OriginalLine ) + '>' );
+	end;
+
+	{ Clear the rest of the line. }
+	TheLine := '';
+end;
+
+Procedure CMD_Goto;
+	{ We are going to add a PNode to this conversation. }
+begin
+	{ First decide where to put it. }
+	{ If the previous gear has less indentation than this one, make it }
+	{ a subcom. }
+	dest := SLOT_PNode;
+
+	{ Create the node. }
+	InstallGear( GG_PERSONANODE, GS_GOTONODE, 0 );
+	if C <> Nil then begin
+		SetNAtt( C^.NA , NAG_NARRATIVE , NAS_PNODEINDENTATION , TheLine_Indent );
+		SetSAtt( C^.SA , 'GOTO <' + RetrieveQuoteString( OriginalLine ) + '>' );
+	end;
+
+	{ Clear the rest of the line. }
+	TheLine := '';
+end;
+
+Procedure CMD_PFRAG;
+	{ We are going to add a PNode to this conversation. }
+begin
+	{ First decide where to put it. }
+	{ If the previous gear has less indentation than this one, make it }
+	{ a subcom. }
+	dest := SLOT_PNode;
+
+	{ Create the node. }
+	InstallGear( GG_PERSONANODE, GS_PROTONODE, 0 );
+	if C <> Nil then begin
+		SetNAtt( C^.NA , NAG_NARRATIVE , NAS_PNODEINDENTATION , TheLine_Indent );
+		SetSAtt( C^.SA , 'REQUEST <' + RetrieveQuoteString( OriginalLine ) + '>' );
+	end;
+
+	{ Clear the rest of the line. }
+	TheLine := '';
+end;
+
+
 begin
 	{ Initialize variables. }
 	it := Nil;
@@ -1053,7 +1158,7 @@ begin
 	while not EoF(F) do begin
 		{Read the line from disk, and delete leading whitespace.}
 		readln(F,TheLine);
-		DeleteWhiteSpace(TheLine);
+		TheLine_Indent := DeleteWhiteSpace(TheLine);
 		OriginalLine := TheLine;
 
 		if ( TheLine = '' ) or ( TheLine[1] = '%' ) then begin
@@ -1095,6 +1200,11 @@ begin
 								CMD_LUA;
 								TheLine := '';
 					end
+				else	if CMD = 'SAY' then CMD_SAY
+				else	if CMD = 'REPLY' then CMD_Reply
+				else	if CMD = 'GOTO' then CMD_GOTO
+				else	if CMD = 'PFRAG' then CMD_PFRAG
+
 				else	if ( CMD <> '' ) and ( CMD[1] = '%' ) then TheLine := ''
 				else	CheckMacros( CmD );
 			end;

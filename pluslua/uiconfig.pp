@@ -186,6 +186,7 @@ const
 
 	XXRan_Debug: Boolean = False;
 	StdPlot_Debug: Boolean = False;
+	Persona_Debug: Boolean = False;
 
 
 	NumMappedKeys = 51;
@@ -284,6 +285,7 @@ const
 		KCode: ',';	),
 	(	CmdName: 'Inventory';
 		CmdDesc: 'Access all carried items.';
+
 
 		IsACommand: True;
 		KCode: 'i';	),
@@ -651,6 +653,8 @@ begin
 					ArenaMode_Wizard := True;
 				end else if cmd = 'DEMIURGE' then begin
 					Full_RPGWorld_Info := True;
+				end else if cmd = 'SHOWYOURWORK' then begin
+					Persona_Debug := True;
 
 				end else if cmd[1] = '#' then begin
 					S := '';
@@ -745,6 +749,7 @@ begin
 	if XXRAN_Debug then writeln( F , 'XXRANDEBUG' );
 	if StdPlot_Debug then writeln( F , 'YOUARE#6' );
 	if Full_RPGWorld_Info then writeln( F , 'DEMIURGE' );
+	if Persona_Debug then writeln( F , 'SHOWYOURWORK' );
 
 	Close(F);
 end;

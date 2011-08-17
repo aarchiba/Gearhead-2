@@ -1220,7 +1220,8 @@ Procedure HandleInteract( GB: GameBoardPtr; PC,NPC,Persona: GearPtr );
 		lua_getglobal( MyLua , 'gh_conversation' );
 		lua_pushlightuserdata( MyLua , Pointer( I_Persona ) );
 		lua_pushlstring( MyLua , @Trigger[1] , Length( Trigger ) );
-		if lua_pcall( MyLua , 2 , 0 , 0 ) <> 0 then begin
+		lua_pushlightuserdata( MyLua , Pointer( I_NPC ) );
+		if lua_pcall( MyLua , 3 , 0 , 0 ) <> 0 then begin
 			Trigger := 'InvokePNode ERROR: ' + lua_tostring( MyLua , -1 );
 			DialogMsg( Trigger );
 			RecordError( Trigger );
@@ -1302,6 +1303,9 @@ begin
 		end;
 
 	until ( N = -1 ) or ( IntMenu^.NumItem < 1 ) or ( I_NPC = Nil );
+
+	{ Update the NumberOfConversations counter. }
+	if I_NPC <> Nil then AddNAtt( NPC^.NA , NAG_Personal , NAS_NumConversation , 1 );
 
 	{ Get rid of the menu. }
 	DisposeRPGMenu( IntMenu );
