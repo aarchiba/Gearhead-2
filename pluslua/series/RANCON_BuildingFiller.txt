@@ -391,7 +391,7 @@ sub
 		reply "I like it!"
 			say "Thank you. It was a lot more work than it looks."
 			label <GoLikePersona>
-			effect <self.v.BeenBefore = true>
+			effect <local x = gh_getnatt( chatnpc , NAG_NARRATIVE , -100 , 1 )>
 
 		reply "Looks kinda dumb."
 			say "Would you like to revise your opinion?"

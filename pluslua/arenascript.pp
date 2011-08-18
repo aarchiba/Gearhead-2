@@ -1672,6 +1672,7 @@ end;
 		{ anything the heck else assume that someone screwed up. }
 	var
 		NID: LongInt;
+		tmp: GearPtr;
 	begin
 		if lua_isuserdata( MyLua , idx ) then begin
 			{ This is apparently a pointer to a gear. WARNING: It may }
@@ -1681,6 +1682,21 @@ end;
 			{ This must be a NarrativeID. Search for the gear being sought. }
 			NID := lua_tointeger( MyLua , idx );
 			GetLuaGear := SeekGearByNID( GB , GB^.Scene , NID );
+
+		end else if lua_istable( MyLua , idx ) then begin
+			{ This is a gear's lua table. }
+			lua_pushstring( MyLua , 'ptr' );
+			lua_gettable( MyLua , idx );
+			if lua_isuserdata( MyLua , lua_gettop( MyLua ) ) then begin
+				tmp := GearPtr( lua_touserdata( MyLua , lua_gettop( MyLua ) ) );
+				lua_pop( MyLua , 1 );
+				GetLuaGear := tmp;
+			end else begin
+				RecordError( 'ERROR: GetLuaGear passed a table with malformed "ptr" field' );
+				lua_pop( MyLua , 1 );
+				GetLuaGear := Nil;
+			end;
+
 		end else begin
 			{ What the hell did you just try to pass me? Get rid of it }
 			{ before someone gets hurt. }
