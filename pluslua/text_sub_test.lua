@@ -4,6 +4,18 @@
 -- s_per_i	Introvert
 -- s_per_g	Grim
 -- s_per_c	Cheerful
+-- s_per_a	Aggressive
+-- s_per_p	Placid
+
+-- s_vir_f	Fellowship (Cardinal Virtue)
+-- s_vir_p	Peace (Cardinal Virtue)
+-- s_vir_g	Glory (Cardinal Virtue)
+-- s_vir_j	Justice (Cardinal Virtue)
+-- s_vir_d	Duty (Cardinal Virtue)
+
+-- s_a_???	Attitude
+-- s_m_???	Motivation
+
 -- s_[job desig]
 -- s_[faction desig]
 
@@ -12,12 +24,19 @@ MM_REQUIRED = 1;
 MM_FORBIDDEN = 2;
 
 gh_dict = {
+	[ ". say ," ] = {
+		{ msg = ". Hey,", condition = { s_per_i = MM_FORBIDDEN } },
+		{ msg = ". Um,", condition = { s_a_jr_ = MM_REQUIRED } },
+		{ msg = ". listen up", condition = { s_per_a = MM_REQUIRED } },
+		},
 	[ "a mission for you" ] = {
-		{ msg = "a job for you" },
+		{ msg = "a job for you", condition = { s_per_a = MM_FORBIDDEN, s_per_g = MM_FORBIDDEN } },
 		{ msg = "some work for you", condition = { s_corpo = MM_REQUIRED } },
 		{ msg = "some work for you", condition = { s_labor = MM_REQUIRED } },
 		{ msg = "a business opportunity", condition = { s_thief = MM_REQUIRED } },
 		{ msg = "some new orders for you", condition = { s_milit = MM_REQUIRED } },
+		{ msg = "a mission just for you", condition = { s_vir_d = MM_REQUIRED } },
+		{ msg = "an exclusive contract for you", condition = { s_vir_f = MM_REQUIRED } },
 		},
 	[ 'a test of' ] = {
 		{ msg = 'a trial of' },
@@ -29,24 +48,44 @@ gh_dict = {
 		{ msg = "phobic of", condition = { s_acade = MM_REQUIRED } },
 		{ msg = "phobic of", condition = { s_medic = MM_REQUIRED } },
 		{ msg = "terrified of", condition = { s_per_g = MM_REQUIRED } },
-		{ msg = "nervous about", condition = { s_per_e = MM_REQUIRED } },
 		{ msg = "spooked by", condition = { s_per_c = MM_REQUIRED } },
+		{ msg = "intimidated by", condition = { s_per_e = MM_REQUIRED } },
+		{ msg = "nervous about", condition = { s_per_i = MM_REQUIRED } },
+		{ msg = "worried about", condition = { s_per_p = MM_REQUIRED } },
+		{ msg = "jumpy about", condition = { s_per_a = MM_REQUIRED } },
+		},
+	[ "battle" ] = {
+		{ msg = "fight" , condition = { s_per_p = MM_FORBIDDEN } },
+		{ msg = "confrontation", condition = { s_per_p = MM_REQUIRED } },
+		{ msg = "rumble", condition = { s_thief = MM_REQUIRED } },
+		{ msg = "contest", condition = { s_pdass = MM_REQUIRED } },
+		{ msg = "deathmatch", condition = { s_per_a = MM_REQUIRED, s_per_g = MM_REQUIRED } },
+		{ msg = "orgy of violence", condition = { s_per_a = MM_REQUIRED, s_per_e = MM_REQUIRED, s_per_c = MM_FORBIDDEN } },
+		{ msg = "action", condition = { s_per_a = MM_REQUIRED, s_per_c = MM_REQUIRED } },
+		{ msg = "melee", condition = { s_per_i = MM_REQUIRED } },
+		{ msg = "scrimmage", condition = { s_thief = MM_REQUIRED, s_per_a = MM_FORBIDDEN } },
+		{ msg = "senseless conflict", condition = { s_per_i = MM_REQUIRED, s_per_g = MM_REQUIRED, s_per_a = MM_FORBIDDEN } },
+		{ msg = "fray", condition = { s_per_e = MM_REQUIRED, s_per_c = MM_REQUIRED } },
 		},
 	[ "cavalier" ] = {
 		{ msg = "adventurer" , condition = { s_per_g = MM_FORBIDDEN , s_per_i = MM_FORBIDDEN } },
 		{ msg = "pilot" , condition = { s_adven = MM_FORBIDDEN } },
 		{ msg = "combat pilot" , condition = { s_milit = MM_REQUIRED } },
 		{ msg = "fightin' pilot" , condition = { s_labor = MM_REQUIRED } },
+		{ msg = "warrior" , condition = { s_per_a = MM_REQUIRED } },
 		},
 	[ 'crap' ] = {
 		{ msg = 'ashes' },
-		{ msg = 'blazes' },
+		{ msg = 'blazes', condition = { s_per_i = MM_FORBIDDEN } },
 		{ msg = 'bunnynuts', condition = { s_mugle = MM_REQUIRED } },
 		},
 	[ 'defeat' ] = {
 		{ msg = "get rid of" },
 		{ msg = 'neutralize', condition = { s_acade = MM_REQUIRED } },
 		{ msg = 'keelhaul', condition = { s_thief = MM_REQUIRED } },
+		{ msg = "punish", condition = { s_vir_j = MM_REQUIRED } },
+		{ msg = "stop", condition = { s_vir_p = MM_REQUIRED } },
+		{ msg = "beat", condition = { s_vir_g = MM_REQUIRED } },
 		},
 	[ 'destroy' ] = {
 		{ msg = 'atomize', condition = { s_acade = MM_REQUIRED } },
@@ -71,18 +110,23 @@ gh_dict = {
 		{ msg = 'bye' },
 		{ msg = "keep on truckin'", condition = { s_labor = MM_REQUIRED } },
 		{ msg = 'good health', condition = { s_medic = MM_REQUIRED } },
+		{ msg = "see you around", condition = { s_vir_f = MM_REQUIRED } },
+		{ msg = "until next time", condition = { s_vir_d = MM_REQUIRED } },
+		{ msg = "take care", condition = { s_vir_p = MM_REQUIRED } },
 		},
 	[ 'hello' ] = {
 		{ msg = "hi" },
 		{ msg = 'hi there' },
 		{ msg = "greetings", condition = { s_polit = MM_REQUIRED } },
+		{ msg = "hey there", condition = { s_vir_f = MM_REQUIRED } },
 		},
 	[ 'how would you like' ] = {
 		{ msg = "how'd you like" },
 		},
 	[ "i'd like to" ] = {
 		{ msg = "I want to" },
-		{ msg = "I think I should", condition = { s_acade = MM_REQUIRED } },
+		{ msg = "I think I should", condition = { s_vir_j = MM_REQUIRED } },
+		{ msg = "it would be wise to", condition = { s_acade = MM_REQUIRED } },
 		},
 	[ "i'll be back" ] = {
 		{ msg = "I'll come back" },
@@ -95,7 +139,7 @@ gh_dict = {
 		},
 	[ "i'm going to" ] = {
 		{ msg = "I'm gonna" , condition = { s_per_i = MM_FORBIDDEN, s_acade = MM_FORBIDDEN, s_medic = MM_FORBIDDEN, s_corpo = MM_FORBIDDEN } },
-		{ msg = "I vow to" , condition = { s_per_e = MM_REQUIRED , s_per_g = MM_REQUIRED } },
+		{ msg = "I vow to" , condition = { s_per_e = MM_REQUIRED , s_per_a = MM_REQUIRED } },
 		{ msg = "I'll" , condition = { s_per_c = MM_REQUIRED } },
 		{ msg = "I promise to" , condition = { s_polit = MM_REQUIRED } },
 		{ msg = "I'm destined to" , condition = { s_faith = MM_REQUIRED } },
@@ -106,6 +150,18 @@ gh_dict = {
 		},
 	[ "i'm not interested ." ] = {
 		{ msg = "I don't want to ." },
+		},
+	[ "i was wondering" ] = {
+		{ msg = "I was just wondering" , condition = { s_per_i = MM_REQUIRED } },
+		{ msg = "I want to ask" , condition = { s_per_e = MM_REQUIRED } },
+		{ msg = "I just want to ask" , condition = { s_per_p = MM_REQUIRED } },
+		{ msg = "I just have to ask" , condition = { s_per_p = MM_REQUIRED, s_per_e = MM_REQUIRED } },
+		{ msg = "I want to know" , condition = { s_per_a = MM_REQUIRED } },
+		{ msg = "I have to know" , condition = { s_per_a = MM_REQUIRED, s_per_e = MM_REQUIRED } },
+		{ msg = "I'm going to ask" , condition = { s_per_a = MM_REQUIRED, s_per_i = MM_REQUIRED } },
+		{ msg = "I demand to know" , condition = { s_per_a = MM_REQUIRED, s_per_e = MM_REQUIRED, s_per_g = MM_REQUIRED } },
+		{ msg = "I'm curious" , condition = { s_per_c = MM_REQUIRED } },
+		{ msg = "I need to know" , condition = { s_per_g = MM_REQUIRED } },
 		},
 	[ 'it looks like you' ] = {
 		{ msg = 'I can tell you' },
@@ -118,11 +174,16 @@ gh_dict = {
 		{ msg = "show me what" },
 		},
 	[ "mission" ] = {
-		{ msg = "job" },
+		{ msg = "job", condition = { s_per_a = MM_FORBIDDEN, s_per_g = MM_FORBIDDEN } },
 		{ msg = "operation", condition = { s_milit = MM_REQUIRED } },
 		{ msg = "contract", condition = { s_labor = MM_REQUIRED } },
 		{ msg = "venture", condition = { s_corpo = MM_REQUIRED } },
 		{ msg = "quest", condition = { s_faith = MM_REQUIRED } },
+		{ msg = "errand", condition = { s_polit = MM_REQUIRED } },
+		{ msg = "case", condition = { s_polic = MM_REQUIRED } },
+		{ msg = "caper", condition = { s_thief = MM_REQUIRED } },
+		{ msg = "assignment", condition = { s_vir_d = MM_REQUIRED } },
+		{ msg = "task", condition = { s_per_i = MM_REQUIRED } },
 		},
 	[ "practicing" ] = {
 		{ msg = "working out", condition = { s_media = MM_REQUIRED } },
@@ -151,12 +212,13 @@ gh_dict = {
 		},
 	[ "warrior" ] = {
 		{ msg = 'cavalier' },
+		{ msg = 'hunter', condition = { s_adven = MM_REQUIRED } },
 		{ msg = "soldier", condition = { s_milit = MM_REQUIRED } },
 		{ msg = "martial artist", condition = { s_faith = MM_REQUIRED } },
 		{ msg = "duelist", condition = { s_pdass = MM_REQUIRED } },
 		},
-	[ 'well done,' ] = {
-		{ msg = 'nice going,' },
+	[ 'well done' ] = {
+		{ msg = 'nice going', condition = { s_per_e = MM_FORBIDDEN } },
 		},
 	[ "when you're ready" ] = {
 		{ msg = "as soon as possible", condition = { s_per_e = MM_REQUIRED } },
@@ -166,9 +228,10 @@ gh_dict = {
 		},
 	[ "you can meet me" ] = {
 		{ msg = "you should meet me", condition = { s_per_i = MM_REQUIRED } },
-		{ msg = "you better meet me", condition = { s_per_e = MM_REQUIRED } },
+		{ msg = "you better meet me", condition = { s_per_g = MM_REQUIRED } },
 		{ msg = "you'll find me", condition = { s_per_c = MM_REQUIRED } },
-		{ msg = "you get your arse", condition = { s_per_g = MM_REQUIRED } },
+		{ msg = "you get your arse", condition = { s_per_a = MM_REQUIRED } },
+		{ msg = "you can find me", condition = { s_per_p = MM_REQUIRED } },
 		{ msg = "proceed to", condition = { s_milit = MM_REQUIRED } },
 		},
 
@@ -219,7 +282,7 @@ function mutate_message( in_text , mm_context )
 
 		-- For the last X words in the table, see if we can find a match.
 		for t = 1, 5 do
-			if ( table.getn( out_text ) >= t ) and ( math.random( 3 ) ~= 1 ) then
+			if ( table.getn( out_text ) >= t ) then
 				local MyKey = string.lower( table.concat( out_text , ' ' , table.getn( out_text ) - t + 1 ) )
 				local MyDict = gh_dict[ MyKey ]
 				if MyDict ~= nil then
@@ -232,12 +295,18 @@ function mutate_message( in_text , mm_context )
 					end
 
 					if table.getn( list_of_options ) > 0 then
-						local MyVal = list_of_options[ math.random( table.getn( list_of_options ) ) ]
-						for tt = 1,t do
-							table.remove( out_text )
+						local MyChoice = math.random( table.getn( list_of_options ) + 2 )
+						local MyVal = list_of_options[ MyChoice ]
+						if MyVal ~= nil then
+							for tt = 1,t do
+								table.remove( out_text )
+							end
+							for w2,p2 in string.gfind( MyVal.msg , "([%w'%%\\%.]+)(%p*)" ) do
+								table.insert( out_text , w2 )
+								if p2 ~= '' then table.insert( out_text , p2 ) end
+							end
+							break;
 						end
-						table.insert( out_text , MyVal.msg )
-						break;
 					end
 				end
 			end
@@ -249,16 +318,16 @@ end
 
 function test_statement( msg )
 	print( '"' .. msg .. '"' )
-	print( 'Mischa:  ' .. mutate_message( msg , { s_adven = true, s_per_e = true } ) )
-	print( 'Tama:    ' .. mutate_message( msg , { s_labor = true, s_per_e = true, s_per_c = true, s_pdass = true } ) )
-	print( 'Gronda:  ' .. mutate_message( msg , { s_thief = true, s_per_e = true, s_per_g = true, s_crihn = true } ) )
-	print( 'Hyolee:  ' .. mutate_message( msg , { s_acade = true, s_per_i = true, s_per_c = true } ) )
-	print( 'Meivus:  ' .. mutate_message( msg , { s_corpo = true, s_per_c = true, s_regex = true } ) )
+	print( 'Mischa:  ' .. mutate_message( msg , { s_adven = true, s_per_e = true, s_per_p = true, s_vir_g = true } ) )
+	print( 'Tama:    ' .. mutate_message( msg , { s_labor = true, s_per_e = true, s_per_c = true, s_pdass = true, s_vir_p = true, s_a_jr_ = true } ) )
+	print( 'Gronda:  ' .. mutate_message( msg , { s_thief = true, s_per_e = true, s_per_g = true, s_per_a = true, s_crihn = true, s_vir_g = true } ) )
+	print( 'Hyolee:  ' .. mutate_message( msg , { s_acade = true, s_per_i = true, s_per_c = true, s_per_p = true, s_vir_j = true } ) )
+	print( 'Meivus:  ' .. mutate_message( msg , { s_corpo = true, s_per_c = true, s_regex = true, s_vir_f = true } ) )
 	print( '   ' )
 end
 
 math.randomseed( os.time() )
 
-test_statement( "Say, \\PC , before we start this battle I was just wondering... how much do you make for an average mission?" )
+test_statement( "Say, The mission was a complete success. Well done." )
 
 
