@@ -2069,6 +2069,7 @@ initialization
 	lua_register( MyLua , 'gh_addchatmenuitem' , @Lua_AddChatMenuItem );
 	lua_register( MyLua , 'gh_setchatmsg' , @Lua_SetChatMsg );
 
+	if lua_dofile( MyLua , 'gamedata/gh_messagemutator.lua' ) <> 0 then RecordError( 'GH_MESSAGEMUTATOR ERROR: ' + lua_tostring( MyLua , -1 ) );
 	if lua_dofile( MyLua , 'gamedata/gh_init.lua' ) <> 0 then RecordError( 'GH_INIT ERROR: ' + lua_tostring( MyLua , -1 ) )
 	else Lua_Is_Go := True;
 

@@ -359,19 +359,4 @@ function mutate_message( in_text , target_length , mm_context )
 	return( table.concat( out_text , ' ' , 2 ) )
 end
 
-function test_statement( msg )
-	print( '"' .. msg .. '"' )
-	print( 'Mischa:  ' .. mutate_message( msg , 255 , { s_adven = true, s_per_e = true, s_per_p = true, s_vir_g = true } ) )
-	print( 'Tama:    ' .. mutate_message( msg , 255 , { s_labor = true, s_per_e = true, s_per_c = true, s_pdass = true, s_vir_p = true, s_a_jr_ = true } ) )
-	print( 'Sonata:  ' .. mutate_message( msg , 255 , { s_adven = true, s_per_g = true, s_per_a = true, s_redma = true, s_vir_f = true } ) )
-	print( 'Gronda:  ' .. mutate_message( msg , 255 , { s_thief = true, s_per_e = true, s_per_g = true, s_per_a = true, s_crihn = true, s_vir_g = true } ) )
-	print( 'Hyolee:  ' .. mutate_message( msg , 255 , { s_acade = true, s_per_i = true, s_per_c = true, s_per_p = true, s_vir_j = true } ) )
-	print( 'Meivus:  ' .. mutate_message( msg , 255 , { s_corpo = true, s_per_c = true, s_regex = true, s_vir_f = true } ) )
-	print( '   ' )
-end
-
-math.randomseed( os.time() )
-
-test_statement( "This is your problem: you don't have any ambition. Any normal cavalier would jump at the chance to duel %name3%... You should go over there and do it." )
-
 

@@ -234,12 +234,12 @@ var
 	T: Integer;
 begin
 	T := NAttValue( NPC^.NA , NAG_XXRan , NAS_XXChar_Motivation );
-	if ( T > 0 ) and ( T <= Num_XXR_Motivations ) then Context := Context + ' ' + palette_entry_code + ':M.' + XXR_Motivation[ t ]
-	else Context := Context + ' ' + palette_entry_code + ':M.---';
+	if ( T > 0 ) and ( T <= Num_XXR_Motivations ) then Context := Context + ' ' + palette_entry_code + ':M_' + XXR_Motivation[ t ]
+	else Context := Context + ' ' + palette_entry_code + ':M_---';
 
 	T := NAttValue( NPC^.NA , NAG_XXRan , NAS_XXChar_Attitude );
-	if ( T > 0 ) and ( T <= Num_XXR_Attitudes ) then Context := Context + ' ' + palette_entry_code + ':A.' + XXR_Attitude[ t ]
-	else Context := Context + ' ' + palette_entry_code + ':A.---';
+	if ( T > 0 ) and ( T <= Num_XXR_Attitudes ) then Context := Context + ' ' + palette_entry_code + ':A_' + XXR_Attitude[ t ]
+	else Context := Context + ' ' + palette_entry_code + ':A_---';
 
 	{ Lancemates may also get a TRAIN tag, if appropriate. }
 	if ( NAttValue( NPC^.NA , NAG_Location , NAS_Team ) = NAV_LancemateTeam ) and LancemateCanDevelop( NPC ) then begin
