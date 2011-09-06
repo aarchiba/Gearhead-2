@@ -51,6 +51,12 @@
 	function proto_gear:g()
 		return gh_gearg( self.ptr )
 	end
+	function proto_gear:s()
+		return gh_gears( self.ptr )
+	end
+	function proto_gear:v()
+		return gh_gearv( self.ptr )
+	end
 	function proto_gear:getNAtt( g , s )
 		return gh_getnatt( self.ptr , g , s )
 	end
@@ -75,7 +81,7 @@
 		end
 
 		-- Set the chat message.
-		gh_setchatmsg( gh_formatstring( node.msg , self ) )
+		gh_setchatmsg( mutate_message( gh_formatstring( node.msg , self ) , 250 , contextstring_to_contexttable( gh_getcontext( chatnpc , 's' ) ) ) )
 
 		-- If there are any children, add them to the menu.
 		if node.prompts ~= nil then
@@ -304,6 +310,18 @@ function gh_print( source , gear )
 	gh_rawprint( gh_formatstring( source , gear ) )
 end
 
+function contextstring_to_contexttable( in_text )
+	-- We may have to parse a context string. The format for the string is
+	-- a series of "[label]:[description]" phrases, where label is a one char
+	-- identifier and description is five characters long.
+	-- For each such phrase found, set [label]_[description] in c_table to true.
+	-- The context is converted to lowercase for this.
+	local c_table = {}
+	for w,p in string.gfind( in_text , "([%w]):([%w_][%w_][%w_][%w_][%w_])" ) do
+		c_table[ string.lower( w ) .. '_' .. string.lower( p ) ] = true
+	end
+	return( c_table )
+end
 
 
 --   **********************************

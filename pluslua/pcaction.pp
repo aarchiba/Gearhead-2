@@ -2105,13 +2105,7 @@ Procedure ShowRep( PC: GearPtr );
 var
 	T,N: Integer;
 begin
-	PC := LocatePilot( PC );
-	if PC <> Nil then begin
-		for t := 1 to 7 do begin
-			N := NAttValue( PC^.NA , NAG_CharDescription , -T );
-			if N <> 0 then DialogMsg( PersonalityTraitDesc( T , N ) + ' (' + BStr( Abs( N ) ) + ')' );
-		end;
-	end;
+	DialogMsg( 'This service is down for maintenance!' );
 end;
 
 Procedure DirectScript( GB: GameBoardPtr );

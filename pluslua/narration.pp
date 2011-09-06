@@ -115,6 +115,12 @@ Const
 		'sub','cat','pil','pat','art',	'gat','wep','war','ina'
 	);
 
+	XXR_Personality_Traits: Array [FirstPersonalityTrait..LastPersonalityTrait,1..2] of char = (
+		('e','i'),
+		('c','g'),
+		('a','p')
+	);
+
 Procedure AddFactionPlanContext( Fac: GearPtr; var Context: String; palette_entry_code: Char );
 
 Function LancemateCanDevelop( NPC: GearPtr ): Boolean;
@@ -231,7 +237,7 @@ end;
 Procedure AddXXCharContext( NPC: GearPtr; var Context: String; palette_entry_code: Char );
 	{ Add context descriptors for the attitude and motivation of this NPC. }
 var
-	T: Integer;
+	T,V: Integer;
 begin
 	T := NAttValue( NPC^.NA , NAG_XXRan , NAS_XXChar_Motivation );
 	if ( T > 0 ) and ( T <= Num_XXR_Motivations ) then Context := Context + ' ' + palette_entry_code + ':M_' + XXR_Motivation[ t ]
@@ -240,6 +246,12 @@ begin
 	T := NAttValue( NPC^.NA , NAG_XXRan , NAS_XXChar_Attitude );
 	if ( T > 0 ) and ( T <= Num_XXR_Attitudes ) then Context := Context + ' ' + palette_entry_code + ':A_' + XXR_Attitude[ t ]
 	else Context := Context + ' ' + palette_entry_code + ':A_---';
+
+	for T := FirstPersonalityTrait to LastPersonalityTrait do begin
+		V := NAttValue( NPC^.NA , NAG_CharDescription , T );
+		if V > 0 then Context := Context + ' ' + palette_entry_code + ':per_' + XXR_Personality_Traits[ T , 1 ]
+		else if V < 0 then Context := Context + ' ' + palette_entry_code + ':per_' + XXR_Personality_Traits[ T , 2 ];
+	end;
 
 	{ Lancemates may also get a TRAIN tag, if appropriate. }
 	if ( NAttValue( NPC^.NA , NAG_Location , NAS_Team ) = NAV_LancemateTeam ) and LancemateCanDevelop( NPC ) then begin
@@ -411,7 +423,6 @@ Function StoryPlotRequest( Story: GearPtr ): String;
 	{ choice made by the player. }
 var
 	it: String;
-	C: GearPtr;
 begin
 	{ Start with the plot request. }
 	it := SAttValue( Story^.SA , 'XXRAN_PATTERN' );

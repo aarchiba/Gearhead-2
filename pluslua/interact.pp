@@ -103,9 +103,6 @@ const
 
 	Chat_MOS_Measure = 5;
 
-var
-	Trait_Chatter: Array [1..Num_Personality_Traits,1..2] of SAttPtr;
-
 
 Function GeneralCompatability( PC1, PC2: GearPtr ): Integer;
 	{ This function will determine the general level of }
@@ -170,21 +167,22 @@ begin
 	{ Initialize the Compatability Score to 0. }
 	CS := 0;
 
-	{ Loop through all the personality traits. }
-	for t := 1 to Num_Personality_Traits do begin
+	{ Loop through all the reputations. }
+	for t := NAS_Heroic to ( NAS_Heroic + Num_Reputations - 1 ) do begin
+
 		{ Determine the scores of both PC and NPC with regard to this }
 		{ personality trait. }
-		PC_Score := NAttValue( PC^.NA , NAG_CharDescription , -T );
-		NPC_Score := NAttValue( NPC^.NA , NAG_CharDescription , -T );
+		PC_Score := NAttValue( PC^.NA , NAG_CharDescription , T );
+		NPC_Score := NAttValue( NPC^.NA , NAG_CharDescription , T );
 
 		{ If the personality trait being discussed here is Villainousness, }
 		{ this always causes a negative reaction. Otherwise, a reaction }
 		{ will only happen if both the PC and the NPC have points in }
 		{ this trait. }
-		if ( T = Abs( NAS_Heroic ) ) and (PC_Score < -10 ) then begin
+		if ( T = NAS_Heroic ) and (PC_Score < -10 ) then begin
 			CS := CS - Abs( PC_Score ) div 2;
 
-		end else if ( T = Abs( NAS_Renowned ) ) then begin
+		end else if ( T = NAS_Renowned ) then begin
 			{ Being renowned is always good, while being wangtta is }
 			{ always bad. }
 			if PC_Score > 0 then begin
@@ -367,121 +365,13 @@ begin
 	IdleChatter := msg1;
 end;
 
-Function DoTraitChatter( NPC: GearPtr; Trait: Integer ): String;
-	{ The NPC needs to say a line which should give some indication }
-	{ as to his/her orientation with respect to the listed }
-	{ personality trait. }
-const
-	Num_Phrase_Bases = 3;
-var
-	Rk,Pro: Integer;
-	msg: String;
-begin
-	{ To start with, find the trait rank. }
-	Rk := NAttValue( NPC^.NA , NAG_CharDescription , -Trait );
-
-	{ Insert a basic starting phrase in the message, or perhaps none }
-	{ at all... }
-	if Random( 10 ) <> 1 then begin
-		msg := SAttValue( Chat_Msg_List , 'TRAITCHAT_Lead' + BStr( Random( Num_Openings ) + 1 ) ) + ' ';
-	end else begin
-		msg := '';
-	end;
-
-	if Abs( Rk ) > 10 then begin
-		{ Determine which side of the trait the NPC is in favor of. }
-		if Rk > 0 then Pro := 1
-		else Pro := 2;
-
-		{ The NPC will either say that they like something from their own side, }
-		{ or that they dislike something from the other. }
-		if Random( 5 ) <> 1 then begin
-			{ Like something. }
-			msg := msg + SAttValue( Chat_Msg_List , 'TRAITCHAT_Like' + BStr( Random( Num_Phrase_Bases ) + 1 ) ) + ' ' + MadLibString( Trait_Chatter[ Trait , Pro ] ) + '.';
-
-		end else begin
-			{ Dislike something. }
-			msg := msg + SAttValue( Chat_Msg_List , 'TRAITCHAT_Hate' + BStr( Random( Num_Phrase_Bases ) + 1 ) ) + ' ' + MadLibString( Trait_Chatter[ Trait , 3 - Pro ] ) + '.';
-
-		end;
-	end else begin
-		Pro := Random( 2 ) + 1;
-		msg := msg + SAttValue( Chat_Msg_List , 'TRAITCHAT_Ehhh' + BStr( Random( Num_Phrase_Bases ) + 1 ) ) + ' ' + MadLibString( Trait_Chatter[ Trait , Pro ] ) + '.';
-
-	end;
-
-	DoTraitChatter := Msg;
-end;
-
-function InOpposition( PC , NPC: GearPtr; Trait: Integer ): Boolean;
-	{ If the PC and the NPC disagree on this personality TRAIT, }
-	{ return TRUE. Otherwise return FALSE. }
-var
-	T1,T2: Integer;
-begin
-	T1 := NAttValue( PC^.NA , NAG_CharDescription , -Trait );
-	T2 := NAttValue( NPC^.NA , NAG_CharDescription , -Trait );
-
-	if ( Abs( T1 ) > 10 ) and ( Abs( T2 ) > 10 ) then begin
-		{ The characters are in opposition if their trait }
-		{ values are on opposite sides of 0. }
-		InOpposition := Sgn( T1 ) <> Sgn( T2 );
-	end else begin
-		{ If the traits aren't strongly held by both, then }
-		{ no real opposition. }
-		InOpposition := False;
-	end;
-end;
-
-function InHarmony( PC , NPC: GearPtr; Trait: Integer ): Boolean;
-	{ If the PC and the NPC agree on this personality TRAIT, }
-	{ return TRUE. Otherwise return FALSE. }
-var
-	T1,T2: Integer;
-begin
-	T1 := NAttValue( PC^.NA , NAG_CharDescription , -Trait );
-	T2 := NAttValue( NPC^.NA , NAG_CharDescription , -Trait );
-
-	if ( Abs( T1 ) > 10 ) and ( Abs( T2 ) > 10 ) then begin
-		{ The characters are in opposition if their trait }
-		{ values are on opposite sides of 0. }
-		InHarmony := Sgn( T1 ) = Sgn( T2 );
-	end else begin
-		{ If the traits aren't strongly held by both, then }
-		{ no real opposition. }
-		InHarmony := False;
-	end;
-end;
-
 Function IsSexy( PC, NPC: GearPtr ): Boolean;
 	{ Return TRUE if there are some potential sparks between }
 	{ the PC and NPC, or FALSE if there aren't. In this simple }
 	{ universe we'll describe that as being if their genders }
 	{ aren't equal to each other. }
 begin
-	IsSexy := ( NAttValue( PC^.NA , NAG_CharDescription , NAS_Gender ) <> NAttValue( NPC^.NA , NAG_CharDescription , NAS_Gender ) ) or HasTalent( PC , NAS_Bishounen );
-end;
-
-Procedure LoadTraitChatter;
-	{ Load the trait chatter elements from disk. }
-var
-	t: integer;
-begin
-	for t := 1 to Num_Personality_Traits do begin
-		Trait_Chatter[ T , 1 ] := LoadStringList( Trait_Chatter_Base + BStr( T ) + '_1.txt' );
-		Trait_Chatter[ T , 2 ] := LoadStringList( Trait_Chatter_Base + BStr( T ) + '_2.txt' );
-	end;
-end;
-
-Procedure FreeTraitChatter;
-	{ Remove the trait chatter elements from memory. }
-var
-	t: integer;
-begin
-	for t := 1 to Num_Personality_Traits do begin
-		DisposeSAtt( Trait_Chatter[ T , 1 ] );
-		DisposeSAtt( Trait_Chatter[ T , 2 ] );
-	end;
+	IsSexy := ( NAttValue( PC^.NA , NAG_CharDescription , NAS_Gender ) <> 0 ) and ( NAttValue( NPC^.NA , NAG_CharDescription , NAS_Gender ) <> 0 ) and ( ( NAttValue( PC^.NA , NAG_CharDescription , NAS_Gender ) <> NAttValue( NPC^.NA , NAG_CharDescription , NAS_Gender ) ) or HasTalent( PC , NAS_Bishounen ) );
 end;
 
 Function IsArchEnemy( Adv,NPC: GearPtr ): Boolean;
@@ -688,7 +578,6 @@ Function CanContactByPhone( GB: GameBoardPtr; NPC: GearPtr ): Boolean;
 	{ PRECONDITIONS: NPC is in the current city, and is a valid NPC with a NID. }
 var
 	Persona: GearPtr;
-	it: Boolean;
 begin
 	{ If passed a null pointer, no conversation possible. }
 	if NPC = Nil then Exit( False );
@@ -729,7 +618,6 @@ initialization
 	RLI_List := LoadStringList( Standard_Rumors_File );
 	Threat_List := LoadStringList( Standard_Threats_File );
 	Chat_Msg_List := LoadStringList( Standard_Chatter_File );
-	LoadTraitChatter;
 
 finalization
 	DisposeSAtt( Noun_List );
@@ -738,5 +626,5 @@ finalization
 	DisposeSAtt( RLI_List );
 	DisposeSAtt( Threat_List );
 	DisposeSAtt( Chat_Msg_List );
-	FreeTraitChatter;
+
 end.

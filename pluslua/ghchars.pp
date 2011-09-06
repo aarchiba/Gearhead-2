@@ -67,13 +67,6 @@ Const
 	{ How many times has the character's Heroism }
 					{ been increased- there's a limit. }
 
-	{ CharDescription / Personality Traits }
-	Num_Personality_Traits = 7;
-	NAS_Sociable = -3;	{ CharDescription/ Assertive <-> Shy }
-	NAS_Easygoing = -4;	{ CharDescription/ Easygoing <-> Passionate }
-	NAS_Cheerful = -5;	{ CharDescription/ Cheerful <-> Melancholy }
-	NAS_Pragmatic = -7;	{ CharDescription/ Pragmatic <-> Spiritual }
-
 	NAS_Skill_XP_Base = 100;	{ For skill-specific XP awards. }
 					{ S = 100 + Skill Index }
 
@@ -287,10 +280,10 @@ Const
 	TALENT_PreReq: Array [1..NumTalent,1..2] of Integer = (
 	( NAS_CloseCombat , 5 ), ( NAS_CloseCombat , 5 ) , ( NAS_Medicine , 5 ) , ( NAS_Toughness , 5 ) , ( -STAT_Speed , 15 ) ,
 	( 0 , 0 ), ( -STAT_Charm , 15 ) , ( NAS_MechaPiloting , 5 ) , ( NAS_MechaPiloting , 5 ) , ( NAS_MechaPiloting , 5 ),
-	( NAS_Repair , 5 ), ( 0 , 0 ), ( NAS_Shopping , 5 ), (-STAT_Craft,15), ( -8 + NAS_Cheerful , -25 ),
-	( NAS_Stealth , 5 ), ( NAS_ElectronicWarfare , 5 ), ( -8 + NAS_Easygoing , -25 ), ( NAS_SpotWeakness , 5 ), ( NAS_MechaEngineering , 10 ),
+	( NAS_Repair , 5 ), ( 0 , 0 ), ( NAS_Shopping , 5 ), (-STAT_Craft,15), ( 0 , 0 ),
+	( NAS_Stealth , 5 ), ( NAS_ElectronicWarfare , 5 ), ( 0 , 0 ), ( NAS_SpotWeakness , 5 ), ( NAS_MechaEngineering , 10 ),
 	( NAS_Conversation , 5 ), ( -8 + NAS_Renowned , 80 ), ( NAS_Science , 5 ), ( NAS_Dodge , 5 ), ( NAS_Survival , 5 ),
-	( NAS_Stealth , 5 ), ( -8 + NAS_Pragmatic , 25 )
+	( NAS_Stealth , 5 ), ( NAS_Science , 5 )
 	);
 
 	TALENT_Usage: Array [1..NumTalent] of Integer = (
@@ -329,9 +322,6 @@ function RandomPilot( StatPoints , SkillRank: Integer ): GearPtr;
 Function NumberOfSpecialties( PC: GearPtr ): Integer;
 
 function IsLegalCharSub( Part: GearPtr ): Boolean;
-
-Function PersonalityTraitDesc( Trait,Level: Integer ): String;
-Function NPCTraitDesc( NPC: GearPtr ): String;
 
 Function CanLearnTalent( PC: GearPtr; T: Integer ): Boolean;
 Function NumFreeTalents( PC: GearPtr ): Integer;
@@ -590,80 +580,6 @@ begin
 	else IsLegalCharSub := False;
 end;
 
-Function PersonalityTraitDesc( Trait,Level: Integer ): String;
-	{ Return a string which describes the nature & intensity of this }
-	{ personality trait. }
-var
-	msg: String;
-begin
-	if ( Level = 0 ) or ( Trait < 1 ) or ( Trait > Num_Personality_Traits ) then msg := ''
-	else begin
-		if Level > 0 then begin
-			msg := MsgString( 'TRAITNAME_' + BStr( Trait ) + '_+' );
-		end else begin
-			msg := MsgString( 'TRAITNAME_' + BStr( Trait ) + '_-' );
-		end;
-
-		if Abs( Level ) < 25 then msg := MsgString( 'TRAITDESC_MINOR' ) + ' ' + msg
-		else if Abs( Level ) >= 75 then msg := MsgString( 'TRAITDESC_EXTREME' ) + ' ' + msg
-		else if Abs( Level ) >= 50 then msg := MsgString( 'TRAITDESC_MAJOR' ) + ' ' + msg;
-	end;
-	PersonalityTraitDesc := msg;
-end;
-
-Function NPCTraitDesc( NPC: GearPtr ): String;
-	{ Describe this NPC's characteristics. This function is used }
-	{ for selecting characters for plots & stuff. }
-	{ - Age ( Young < 20yo , Old > 40yo ) }
-	{ - Gender ( SEX:Male, SEX:Female ) }
-	{ - Personality Traits }
-	{ - Exceptional Stats }
-	{ - Job }
-Const
-	GenderName: Array[0..1] of Char = ( 'M' , 'F' );
-var
-	it: String;
-	T,V: Integer;
-begin
-	if ( NPC = Nil ) or ( NPC^.G <> GG_Character ) then begin
-		NPCTraitDesc := '';
-	end else begin
-		it := 'SEX:' + GenderName[ NATtValue( NPC^.NA , NAG_CharDescription , NAS_Gender ) ];
-
-		T := NATtValue( NPC^.NA , NAG_CharDescription , NAS_Dage );
-		if T < 0 then begin
-			it := it + ' young';
-		end else if T >= 20 then begin
-			it := it + ' old';
-		end;
-
-		{ Add descriptors for character traits. }
-		for t := 1 to Num_Personality_Traits do begin
-			V := NAttValue( NPC^.NA , NAG_CHarDescription , -T );
-			if V >= 10 then begin
-				it := it + ' ' + MsgString( 'TRAITNAME_' + BStr( Abs( T ) ) + '_+' );
-			end else if V <= -10 then begin
-				it := it + ' ' + MsgString( 'TRAITNAME_' + BStr( Abs( T ) ) + '_-' );
-			end;
-		end;
-
-		{ Add the job description. }
-		it := it + ' ' + SAttValue( NPC^.SA , 'JOB' );
-
-		{ Add a note if this NPC has a mecha. }
-		if IsACombatant( NPC ) then begin
-			it := it + ' HASMECHA';
-		end;
-
-		{ Add descriptors for high stats. }
-		for t := 1 to 8 do begin
-			if NPC^.Stat[ T ] > 13 then it := it + ' ' + MsgString( 'StatName_' + BStr( T ) );
-		end;
-
-		NPCTraitDesc := it;
-	end;
-end;
-
 Function CanLearnTalent( PC: GearPtr; T: Integer ): Boolean;
 	{ Return TRUE if the PC can learn this talent, or FALSE otherwise. }
 begin
@@ -774,6 +690,7 @@ begin
 
 	CharStamina := SP;
 end;
+
 
 
 Function CharMental( PC: GearPtr ): Integer;

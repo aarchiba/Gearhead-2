@@ -2255,16 +2255,16 @@ Procedure FunkyMartialArts( var ER: EffectRequest; var AtAt: String; var ATOp: I
 	{ This attack may well get some special bonuses. }
 const
 	NumFMABase = 10;
-	Num_Funky_Things = 14;
+	Num_Funky_Things = 12;
 	FT_Cost: Array [1..Num_Funky_Things] of Byte = (
 		3, 3, 4, 8, 4,
 		4, 4, 3, 1, 3,
-		1, 2, 1, 5
+		1, 5
 	);
 	FT_AA: Array [1..Num_Funky_Things] of String[15] = (
 	'','','SCATTER','HYPER','ARMORPIERCING',
 	'BRUTAL','STONE','HAYWIRE','STUN','FLAIL',
-	'', '', '','BURN'
+	'','BURN'
 	);
 	FT_Heroic = 1;
 	FT_Zen = 2;
@@ -2276,10 +2276,8 @@ const
 	FT_Haywire = 8;
 	FT_Stunning = 9;
 	FT_Snake = 10;
-	FT_Tragic = 11;
-	FT_Passion = 12;
-	FT_Accurate = 13;
-	FT_Burn = 14;
+	FT_Accurate = 11;
+	FT_Burn = 12;
 var
 	SkRk,TP: Integer;
 	Adjective,Noun: SAttPtr;
@@ -2294,9 +2292,7 @@ var
 		end else if FT_Cost[ N ] <= TP then begin
 			case N of
 				FT_Heroic: 	CanGetFunkyThing := NAttValue( ER.Originator^.NA , NAG_CharDescription , NAS_Heroic ) > 10;
-				FT_Zen:		CanGetFunkyThing := NAttValue( ER.Originator^.NA , NAG_CharDescription , NAS_Pragmatic ) < -10;
-				FT_Tragic:	CanGetFunkyThing := NAttValue( ER.Originator^.NA , NAG_CharDescription , NAS_Cheerful ) < -10;
-				FT_Passion:	CanGetFunkyThing := NAttValue( ER.Originator^.NA , NAG_CharDescription , NAS_Easygoing ) < -10;
+				FT_Zen:		CanGetFunkyThing := NAttValue( ER.Originator^.NA , NAG_Skill , NAS_Mysticism ) > 0;
 			else CanGetFunkyThing := True;
 			end;
 		end else begin
@@ -2323,16 +2319,7 @@ var
 			ER.FXDice := ER.FXDice + ( NAttValue( ER.Originator^.NA , NAG_CharDescription , NAS_Heroic ) div 5 );
 		end else if N = FT_Zen then begin
 			{ A zen attack increases damage based on the character's spirituality. }
-			ER.FXMod := ER.FXMod + ( Abs( NAttValue( ER.Originator^.NA , NAG_CharDescription , NAS_Pragmatic ) ) div 10 );
-		end else if N = FT_Tragic then begin
-			{ A tragic attack increases damage+accuracy based on the character's melancholy. }
-			trait := Abs( NAttValue( ER.Originator^.NA , NAG_CharDescription , NAS_Cheerful ) );
-			ER.FXDice := ER.FXDice + trait div 20;
-			ER.FXMod := ER.FXMod + ( trait + 10 ) div 15;
-		end else if N = FT_Passion then begin
-			{ A passionate attack increases damage, decreases accuracy. }
-			ER.FXDice := ER.FXDice + ( Abs( NAttValue( ER.Originator^.NA , NAG_CharDescription , NAS_Easygoing ) ) div 5 ) + 3;
-			ER.FXMod := ER.FXMod - 5;
+			ER.FXMod := ER.FXMod + NAttValue( ER.Originator^.NA , NAG_Skill , NAS_Mysticism );
 		end else if N = FT_Accurate then begin
 			ER.FXMod := ER.FXMod + 1
 		end;

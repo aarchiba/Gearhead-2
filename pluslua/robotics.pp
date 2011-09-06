@@ -505,11 +505,11 @@ begin
 			AddNAtt( PC^.NA , NAG_ReactionScore , NAttValue( Form^.NA , NAG_Narrative , NAS_NID ) , 20 );
 			SetSAtt( Form^.SA , 'JOB <ROBOT>' );
 			{ Robots typically acquire the personality traits of their creator. }
-			for t := 1 to Num_Personality_Traits do begin
+			for t := FirstPersonalityTrait to LastPersonalityTrait do begin
 				if Random( 3 ) <> 1 then begin
-					SetNAtt( Form^.NA , NAG_CharDescription , -T , NAttValue( PC^.NA , NAG_CharDescription , -T ) );
+					SetNAtt( Form^.NA , NAG_CharDescription , T , NAttValue( PC^.NA , NAG_CharDescription , T ) );
 				end else if Random( 5 ) > SkRoll then begin
-					SetNAtt( Form^.NA , NAG_CharDescription , -T , -NAttValue( PC^.NA , NAG_CharDescription , -T ) );
+					SetNAtt( Form^.NA , NAG_CharDescription , T , -NAttValue( PC^.NA , NAG_CharDescription , T ) );
 				end;
 			end;
 			{ Intelligent robots start with mecha combat skills. }

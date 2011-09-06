@@ -2048,6 +2048,24 @@ end;
 		Lua_SetChatMsg := 0;
 	end;
 
+	Function Lua_GetContext( MyLua: PLua_State ): LongInt; cdecl;
+		{ There's a gear that we want to know the context of. }
+		{ First argument is the gear, second argument is the label to apply. }
+	var
+		MyGear: GearPtr;
+		c_label,context: String;
+	begin
+		MyGear := GetLuaGear( MyLua , 1 );
+		c_label := luaL_checkstring( MyLua , 2 );
+		if c_label = '' then c_label := '@';
+
+		context := '';
+		if ( MyGear <> nil ) then begin
+			AddGearXRContext( AS_GB , FindRoot( AS_GB^.Scene ) , MyGear , context , c_label[1] );
+		end;
+		Lua_GetContext := 1;
+	end;
+
 
 
 
@@ -2068,6 +2086,7 @@ initialization
 	lua_register( MyLua , 'gh_initchatmenu' , @Lua_InitChatMenu );
 	lua_register( MyLua , 'gh_addchatmenuitem' , @Lua_AddChatMenuItem );
 	lua_register( MyLua , 'gh_setchatmsg' , @Lua_SetChatMsg );
+	lua_register( MyLua , 'gh_getcontext' , @Lua_GetContext );
 
 	if lua_dofile( MyLua , 'gamedata/gh_messagemutator.lua' ) <> 0 then RecordError( 'GH_MESSAGEMUTATOR ERROR: ' + lua_tostring( MyLua , -1 ) );
 	if lua_dofile( MyLua , 'gamedata/gh_init.lua' ) <> 0 then RecordError( 'GH_INIT ERROR: ' + lua_tostring( MyLua , -1 ) )

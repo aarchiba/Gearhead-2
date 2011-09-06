@@ -61,7 +61,7 @@ Procedure ResolveAfterEffects( GB: GameBoardPtr );
 implementation
 
 uses ability,effects,gamebook,ghchars,ghweapon,rpgdice,texutil,movement,
-     uiconfig,sysutils,description,action,ghmodule,backpack,
+     uiconfig,sysutils,description,action,ghmodule,backpack,narration,
 {$IFDEF ASCII}
 	vidmap,vidgfx,vidinfo;
 {$ELSE}
@@ -735,12 +735,12 @@ begin
 	{ Only characters with CIDs get this. }
 	HarvestMessages( NPC_Chatter_Standard , msg_label + '_ALL' );
 
-	for t := 1 to Num_Personality_Traits do begin
-		V := NAttValue( NPC^.NA , NAG_CharDescription , -T );
+	for t := NAS_Extroversion to NAS_Aggression do begin
+		V := NAttValue( NPC^.NA , NAG_CharDescription , T );
 		if V > 0 then begin
-			HarvestMessages( NPC_Chatter_Standard , msg_label + '_T' + BStr( T ) + '+' );
+			HarvestMessages( NPC_Chatter_Standard , msg_label + '_' + XXR_Personality_Traits[ t , 1 ] );
 		end else if V < 0 then begin
-			HarvestMessages( NPC_Chatter_Standard , msg_label + '_T' + BStr( T ) + '-' );
+			HarvestMessages( NPC_Chatter_Standard , msg_label + '_' + XXR_Personality_Traits[ t , 2 ] );
 		end;
 	end;
 

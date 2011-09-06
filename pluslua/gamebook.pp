@@ -879,11 +879,7 @@ begin
 
 	end else if Parent^.G = GG_Module then begin
 		{ Call the ghmodule unit InvChecker to see what it says. }
-		if Equip^.G = GG_ExArmor then begin
-			IsLegalInvcom := IsLegalModuleInv( Parent , Equip ) and ArmorFItsMaster( Equip , FindMaster( Parent ) );
-		end else begin
-			IsLegalInvcom := IsLegalModuleInv( Parent , Equip );
-		end;
+		IsLegalInvcom := IsLegalModuleInv( Parent , Equip );
 
 	end else begin
 		{ No other slots may hold equipment. }

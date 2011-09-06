@@ -55,8 +55,6 @@ Function ArmorValue( Part: GearPtr ): LongInt;
 Procedure CheckArmorRange( Part: GearPtr );
 Function IsLegalArmorSub( Equip: GearPtr ): Boolean;
 
-Function ArmorFitsMaster( Armor,Master: GearPtr ): Boolean;
-
 Function IsLegalHarnessSub( Equip: GearPtr ): Boolean;
 Procedure CheckHarnessRange( Part: GearPtr );
 Function HarnessValue( Part: GearPtr ): LongInt;
@@ -196,27 +194,6 @@ begin
 		GG_MoveSys:	IsLegalArmorSub := True;
 	else IsLegalArmorSub := False
 	end;
-end;
-
-Function ArmorFitsMaster( Armor,Master: GearPtr ): Boolean;
-	{ Determine whether or not ARMOR fits MASTER, based upon the }
-	{ armor's FITS string. }
-var
-	ADesc,MDesc: String;
-begin
-	ADesc := SATTValue( Armor^.SA , 'FITS' );
-
-	if Master = Nil then begin
-		MDesc := '';
-	end else begin
-		case Master^.G of
-			GG_Mecha:	MDesc := MechaTraitDesc( Master );
-			GG_Character:	MDesc := NPCTraitDesc( Master );
-		else MDesc := '';
-		end;
-	end;
-
-	ArmorFitsMaster := PartMatchesCriteria( MDesc , ADesc );
 end;
 
 Function IsLegalHarnessSub( Equip: GearPtr ): Boolean;

@@ -71,7 +71,7 @@ Procedure RandomLoot( Box: GearPtr; SRP: LongInt; const l_type,l_factions: Strin
 
 implementation
 
-uses ghswag;
+uses ghswag,narration;
 
 
 Const
@@ -128,10 +128,11 @@ begin
 	{ is gonna depend on a bunch of stuff: The NPC's faction, the NPC's job, }
 	{ personality traits and yadda yadda yadda... }
 	{ All characters can take GENERAL themes. }
-	SkList := 'GENERAL ' + NPCTraitDesc( NPC ) + ' ' + SAttValue( NPC^.SA , 'JOB_DESIG' );
+	SkList := 'GENERAL ';
+	AddGearXRContext( Nil, Nil, NPC, SkList, '@' );
+
 	{ Add the specialist skill. }
 	SkList := SkList + ' [' + BStr( SpecSkill ) + ']';
-	if Faction <> Nil then SkList := SkList + ' ' + SAttValue( Faction^.SA , 'DESIG' );
 
 	Theme := FindNextComponent( Mecha_Theme_List , SkList );
 	if Theme <> Nil then SetNAtt( NPC^.NA , NAG_Personal , NAS_MechaTheme , Theme^.S )
@@ -297,7 +298,7 @@ Procedure IndividualizeNPC( NPC: GearPtr );
 	{ Note that if the NPC has a name by the time it reaches here, its }
 	{ personality traits and stats will not be touched. }
 var
-	N,T,Lvl: Integer;
+	T,Lvl: Integer;
 begin
 	{ If the NPC doesn't have a body defined, create one. }
 	if NPC^.SubCom = Nil then begin
@@ -307,35 +308,12 @@ begin
 	{ Give the NPC a random name + gender + age + personality traits. }
 	if SAttValue( NPC^.SA , 'NAME' ) = '' then begin
 		SetSAtt( NPC^.SA , 'NAME <' + RandomName + '>' );
-		SetNAtt( NPC^.NA , NAG_CharDescription , NAS_Gender , Random( 2 ) );
+		SetNAtt( NPC^.NA , NAG_CharDescription , NAS_Gender , Random( 2 ) + 1 );
 		if NAttValue( NPC^.NA , NAG_CharDescription , NAS_DAge ) = 0 then AddNAtt( NPC^.NA , NAG_CharDescription , NAS_DAge , 1 + Random( 10 ) - Random( 10 ) + RollStep( 5 ) );
 
 		{ Give out some personality traits. }
-		{ Most NPCs have at least a single trait in the group Sociable,Easygoing,Cheerful }
-		if Random( 5 ) <> 1 then begin
-			if Random( 3 ) = 1 then begin
-				AddReputation( NPC, 3 + Random( 3 ) , -RollStep( 40 ) );
-			end else begin
-				AddReputation( NPC, 3 + Random( 3 ) ,  RollStep( 40 ) );
-			end;
-		end;
-		{ Add RollStep(2) other personality traits. }
-		N := RollStep( 2 );
-		for t := 1 to N do begin
-			{ Positive traits are far more common than negative ones. }
-			if Random( 3 ) = 1 then begin
-				if Random( 7 ) = 1 then begin
-					AddReputation( NPC, Random( Num_Personality_Traits ) + 1 , -RollStep( 50 ) );
-				end else begin
-					AddReputation( NPC, Random( Num_Personality_Traits ) + 1 , -RollStep( 20 ) );
-				end;
-			end else begin
-				if Random( 7 ) = 1 then begin
-					AddReputation( NPC, Random( Num_Personality_Traits ) + 1 , RollStep( 50 ) );
-				end else begin
-					AddReputation( NPC, Random( Num_Personality_Traits ) + 1 , RollStep( 20 ) );
-				end;
-			end;
+		for t := NAS_Extroversion to NAS_Aggression do begin
+			if Random( 3 ) <> 1 then SetNAtt( NPC^.NA , NAG_CharDescription , t , Random( 3 ) - 1 );
 		end;
 
 		{ Randomize up those stats a bit. }
@@ -504,26 +482,9 @@ begin
 		CCD_Cmd := ExtractWord( CDesc );
 
 		{ Check to see if this is a gender command. }
-		for t := 0 to 1 do begin
+		for t := NAV_Female to NAV_Male do begin
 			if CCD_Cmd = UpCase( MsgString( 'GenderName_' + BStr( T ) ) ) then begin
 				SetNAtt( NPC^.NA , NAG_CharDescription , NAS_Gender , T );
-			end;
-		end;
-
-		{ If not, check to see if it's a personality command. }
-		for t := 1 to Num_Personality_Traits do begin
-			if CCD_Cmd = UpCase( MsgString( 'TRAITNAME_' + BStr( T ) + '_+' ) ) then begin
-				if NAttValue( NPC^.NA , NAG_CharDescription , -T ) < 50 then begin
-					SetNAtt( NPC^.NA , NAG_CharDescription , -T , 50 );
-				end else begin
-					AddNAtt( NPC^.NA , NAG_CharDescription , -T , 10 );
-				end;
-			end else if CCD_Cmd = UpCase( MsgString( 'TRAITNAME_' + BStr( T ) + '_-' ) ) then begin
-				if NAttValue( NPC^.NA , NAG_CharDescription , -T ) > -50 then begin
-					SetNAtt( NPC^.NA , NAG_CharDescription , -T , -50 );
-				end else begin
-					AddNAtt( NPC^.NA , NAG_CharDescription , -T , -10 );
-				end;
 			end;
 		end;
 
@@ -554,6 +515,15 @@ begin
 		end else if CCD_Cmd = 'ARCHENEMY' then begin
 			SetNAtt( NPC^.NA , NAG_Relationship , 0 , NAV_ArchEnemy );
 			SetNAtt( NPC^.NA , NAG_Personal , NAS_NumConversation , 100 );
+		end;
+
+		{ If nothing else, check to see if it's a personality command. }
+		for t := NAS_Extroversion to NAS_Aggression do begin
+			if CCD_Cmd[1] = UpCase( XXR_Personality_Traits[ t , 1 ] ) then begin
+				SetNAtt( NPC^.NA , NAG_CharDescription , T , 1 );
+			end else if CCD_Cmd[1] = UpCase( XXR_Personality_Traits[ t , 2 ] ) then begin
+				SetNAtt( NPC^.NA , NAG_CharDescription , T , -1 );
+			end;
 		end;
 	end;
 
@@ -1012,6 +982,7 @@ Procedure CMD_Set_ID;
 	{ initialized, this can be a bad thing to do... use "SetID" only on virtual gear types }
 	{ like personas, metascenes, and so on. }
 var
+
 	CS_S: Integer;
 begin
 	{ Error check- if there is no current gear, exit this procedure. }

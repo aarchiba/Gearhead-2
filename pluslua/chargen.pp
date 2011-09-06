@@ -640,11 +640,6 @@ begin
 	if N > 3 then N := 3;
 	AddNAtt( PC^.NA , NAG_Experience , NAS_Credits , 45000 * ( 3 - N ) );
 
-	{ Copy the personality traits. }
-	for t := 1 to Num_Personality_Traits do begin
-		AddReputation( PC , T , NAttValue( Job^.NA , NAG_CharDescription , -T ) );
-	end;
-
 	SetNAtt( PC^.NA , NAG_Personal , NAS_FactionID , NAttValue( Job^.NA , NAG_Personal , NAS_FactionID ) );
 	SetSAtt( PC^.SA , 'JOB <' + SAttValue( Job^.SA , 'NAME' ) + '>' );
 	SetSAtt( PC^.SA , 'JOB_DESIG <' + SAttValue( Job^.SA , 'DESIG' ) + '>' );
@@ -712,8 +707,8 @@ var
 		end;
 
 		{ Copy over the personality traits from the biography event. }
-		for t := 1 to Num_Personality_Traits do begin
-			AddNAtt( PC^.NA , NAG_CharDescription , -T , NAttValue( Bio^.NA , NAG_CharDescription , -T ) );
+		for t := FirstPersonalityTrait to LastPersonalityTrait do begin
+			AddNAtt( PC^.NA , NAG_CharDescription , T , NAttValue( Bio^.NA , NAG_CharDescription , T ) );
 		end;
 
 		{ Copy the changes to the PC's context. }
@@ -1350,8 +1345,8 @@ Procedure SetTraits( PC: GearPtr );
 		T := RetrieveGearSib( MasterList , N );
 		if T <> Nil then begin
 			{ Copy over the personality traits from the biography event. }
-			for N := 1 to Num_Personality_Traits do begin
-				AddReputation( PC , N , NAttValue( T^.NA , NAG_CharDescription , -N ) );
+			for N := FirstPersonalityTrait to LastPersonalityTrait do begin
+				AddNAtt( PC^.NA , NAG_CharDescription , N , NAttValue( T^.NA , NAG_CharDescription , N ) );
 			end;
 
 			{ Copy the changes to the PC's context. }
