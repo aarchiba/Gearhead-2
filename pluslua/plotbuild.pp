@@ -890,25 +890,13 @@ Function InitShard( GB: GameBoardPtr; Scope,Control,Slot,Shard: GearPtr; PlotID,
 	end;
 
 
-
-
-
-
-
-
-
-
-
-
-
 	Procedure PrepQuestCombatants( LList: GearPtr );
-
 		{ If this is a quest, scale any combatant NPCs to the proper level. }
 	begin
 		while LList <> Nil do begin
 			if ( LList^.G = GG_Character ) then begin
 				if NotAnAnimal( Llist ) and IsACombatant( LList ) then begin
-					SetSkillsAtLevel( LList , Threat );
+					SetSkillsAtLevel( FindRoot( Slot ) , LList , Threat );
 				end;
 			end;
 			LList := LList^.Next;
@@ -989,7 +977,7 @@ begin
 	while I <> Nil do begin
 		{ Character gears have to be individualized. }
 		if ( I^.G = GG_Character ) and NotAnAnimal( I ) then begin
-			IndividualizeNPC( I );
+			IndividualizeNPC( FindRoot( Slot ) , I );
 		end;
 		I := I^.Next;
 	end;
@@ -1351,6 +1339,7 @@ var
 				if PNode^.Stat[ STAT_PERSONANODEID ] <> 0 then begin
 					{ We've already located this node's target. }
 					GetNodeID := PNode^.Stat[ STAT_PERSONANODEID ];
+
 				end else begin
 					RNode := FindNodeByLabel( Persona^.SubCom , UpCase( SAttValue( PNode^.SA , 'GOTO' ) ) );
 					if ( RNode <> Nil ) and ( RNode^.S <> GS_GotoNode ) then begin
@@ -2139,7 +2128,7 @@ end;
 initialization
 	persona_fragments := AggregatePattern( 'PFRAG_*.txt' , setting_directory );
 	if persona_fragments = Nil then writeln( 'ERROR!!!' );
-	Standard_Plots := LoadRandomSceneContent( '*.txt' , series_directory );
+	Standard_Plots := AggregatePattern( '*.txt' , series_directory );
 	Standard_Moods := AggregatePattern( 'MOOD_*.txt' , setting_directory );
 	Dramatic_Choices := AggregatePattern( 'CHOICE_*.txt' , series_directory );
 

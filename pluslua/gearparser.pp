@@ -44,26 +44,24 @@ var
 	Factions_List: GearPtr;
 	Mecha_Theme_List: GearPtr;
 
+Procedure IndividualizeNPC( Adv,NPC: GearPtr );
+
 Procedure ApplyDictionaryToString( var Info: String; Dictionary: SAttPtr );
 
 Function SkillRankForRenown( Renown: Integer ): Integer;
-Procedure SetSkillsAtLevel( NPC: GearPtr; Lvl: Integer );
+Procedure SetSkillsAtLevel( Adv, NPC: GearPtr; Lvl: Integer );
 Function SelectMechaByFactionAndRenown( Factions: String; Renown: Integer ): String;
-Procedure IndividualizeNPC( NPC: GearPtr );
 
 Procedure CheckValidity( var it: GearPtr );
 Procedure ApplyCharDesc( NPC: GearPtr; CDesc: String );
 
 Function LoadFile( FName,DName: String ): GearPtr;
 Function LoadFile( FName: String ): GearPtr;
-Function LoadGearPattern( FName,DName: String ): GearPtr;
 
 Function AggregatePattern( FName,DName: String ): GearPtr;
-Function LoadRandomSceneContent( FName,DName: String ): GearPtr;
 
-Function LoadSingleMecha( FName,DName: String ): GearPtr;
 Function LoadNewMonster( MonsterName: String ): GearPtr;
-Function LoadNewNPC( NPCName: String; RandomizeNPCs: Boolean ): GearPtr;
+Function LoadNewNPC( Adv: GearPtr; NPCName: String; RandomizeNPCs: Boolean ): GearPtr;
 Function LoadNewSTC( Desig: String ): GearPtr;
 Function LoadNewItem( FullName: String ): GearPtr;
 
@@ -156,7 +154,7 @@ begin
 	SkillRankForRenown := SkLvl;
 end;
 
-Procedure SetSkillsAtLevel( NPC: GearPtr; Lvl: Integer );
+Procedure SetSkillsAtLevel( Adv, NPC: GearPtr; Lvl: Integer );
 	{ Set all of this NPC's skills to an appropriate value for }
 	{ the requested level. }
 var
@@ -292,7 +290,7 @@ begin
 	SelectMechaByFactionAndRenown := MekName;
 end;
 
-Procedure IndividualizeNPC( NPC: GearPtr );
+Procedure IndividualizeNPC( Adv, NPC: GearPtr );
 	{ Randomize up this NPC a bit, to give it that hand-crafted }
 	{ NPC look. }
 	{ Note that if the NPC has a name by the time it reaches here, its }
@@ -335,11 +333,22 @@ begin
 
 		Lvl := Lvl + 50;
 		if Lvl < 25 then Lvl := 25;
-		SetSkillsAtLevel( NPC , Lvl );
+		SetSkillsAtLevel( Adv , NPC , Lvl );
 	end;
 
 	{ The random personality traits may have affected morale. }
 	SetNAtt( NPC^.NA , NAG_Condition , NAS_MoraleDamage , 0 );
+end;
+
+Procedure GoIndividualize( Adv, LList: GearPtr );
+	{ Individualize any NPCs found along this list or in the children of it. }
+begin
+	while LList <> Nil do begin
+		if LList^.G = GG_Character then IndividualizeNPC( Adv , LList );
+		GoIndividualize( Adv , LList^.SubCom );
+		GoIndividualize( Adv , LList^.InvCom );
+		LList := LList^.Next;
+	end;
 end;
 
 
@@ -562,7 +571,7 @@ end;
 
 
 
-Function ReadGear( var F: Text; RandomizeNPCs: Boolean; const ZZZFName: String ): GearPtr;
+Function ReadGear( var F: Text; const ZZZFName: String ): GearPtr;
 	{F is an open file of type F.}
 	{Start reading information from the file, stopping}
 	{whenever all the info is read.}
@@ -872,7 +881,7 @@ begin
 	{ Note that this procedure doesn't randomize the NPCs itself- that }
 	{ will have to wait for the second pass which will randomize all NPCs }
 	{ together. }
-	NPC := LoadNewNPC( TheLine , False );
+	NPC := LoadNewNPC( Nil , TheLine , False );
 	if NPC = Nil then begin
 		Exit;
 	end;
@@ -1002,17 +1011,6 @@ begin
 	{ to make sure it's not interpreted as a command sequence. }
 	ApplyCharDesc( C , TheLine );
 	TheLine := '';
-end;
-
-Procedure GoIndividualize( LList: GearPtr );
-	{ Individualize any NPCs found along this list or in the children of it. }
-begin
-	while LList <> Nil do begin
-		if LList^.G = GG_Character then IndividualizeNPC( LList );
-		GoIndividualize( LList^.SubCom );
-		GoIndividualize( LList^.InvCom );
-		LList := LList^.Next;
-	end;
 end;
 
 Procedure CMD_Lua;
@@ -1182,14 +1180,6 @@ begin
 		end;
 	end;
 
-	{ If the NPCs are to be randomized, do that now. Why not do it at the }
-	{ point when they're loaded? Because they can still be modified by other }
-	{ commands, that's why. Imagine you create a NPC, then set its faction. }
-	{ if the individualization were done directly at the moment of creation, }
-	{ then the individualization procedure wouldn't know the NPC's faction. }
-	{ This would be bad. So, we do individualization as an extra step at the end. }
-	if RandomizeNPCs then GoIndividualize( it );
-
 	{Run a check on each of the Master Gears we have loaded,}
 	{making sure that they are both valid and complete. If}
 	{there are any errors, remove the offending entries.}
@@ -1218,7 +1208,7 @@ begin
 		{ Actually load the file. }
 		Assign( F , FName );
 		Reset( F );
-		it := ReadGear( F , True , FName );
+		it := ReadGear( F , FName );
 		Close( F );
 	end else begin
 		RecordError( 'File not found:' + DNAme + '/' + OName );
@@ -1230,30 +1220,6 @@ Function LoadFile( FName: String ): GearPtr;
 	{ Open and load a text file. }
 begin
 	LoadFile := LoadFile( FName , '.' );
-end;
-
-Function LoadGearPattern( FName,DName: String ): GearPtr;
-	{ Attempt to load a gear file from disk. Search for }
-	{ pattern matches. }
-var
-	FList: SAttPtr;
-	it: GearPtr;
-begin
-	it := Nil;
-	if FName <> '' then begin
-		{ Build search list for files that match the source. }
-		FList := CreateFileList( DName + FName );
-
-		if FList <> Nil then begin
-			FName := SelectRandomSAtt( FList )^.Info;
-			DisposeSAtt( FList );
-
-			it := LoadFile( FName , DName );
-		end;
-	end;
-
-	{ Return the selected & loaded gears. }
-	LoadGearPattern := it;
 end;
 
 Function AggregatePattern( FName,DName: String ): GearPtr;
@@ -1282,81 +1248,6 @@ begin
 	AggregatePattern := it;
 end;
 
-Function LoadRandomSceneContent( FName,DName: String ): GearPtr;
-	{ Search for the given pattern. Then, load all files that match }
-	{ the pattern and concatenate them together. Don't randomize NPCs; }
-	{ that will be done later. }
-var
-	FList,F: SAttPtr;
-	part,it: GearPtr;
-	InFile: Text;
-begin
-	it := Nil;
-	if FName <> '' then begin
-		{ Build search list for files that match the pattern. }
-		FList := CreateFileList( DName + FName );
-		F := FList;
-
-		while F <> Nil do begin
-			Assign( InFile , DName + F^.Info );
-			Reset( InFile );
-			part := ReadGear( InFile , False , FName );
-			Close( InFile );
-
-			AppendGear( it , part );
-			F := F^.Next;
-		end;
-		DisposeSAtt( FList );
-
-	end;
-
-	{ Return the selected & loaded gears. }
-	LoadRandomSceneContent := it;
-end;
-
-
-Function LoadSingleMecha( FName,DName: String ): GearPtr;
-	{ Load a mecha file. Return a single mecha from that file. }
-	{ Return Nil if the mecha could not be loaded. }
-var
-	MList,Mek: GearPtr;
-begin
-	{ Use the above procedure to load a mecha from disk. }
-	MList := LoadGearPattern( FName , DName );
-	Mek := Nil;
-
-	if MList <> Nil then begin
-		Mek := CloneGear( SelectRandomGear( MList ) );
-		DisposeGear( MList );
-	end;
-
-	LoadSingleMecha := Mek;
-end;
-
-Function LoadNamedGear( FName,GName: String ): GearPtr;
-	{ This function will load a file with the given file name. }
-	{ Once that is loaded, it will search for a single gear within }
-	{ that file with the given gear name. }
-var
-	F: Text;
-	G,LList: GearPtr;
-begin
-	{ Open and load the archetypes. }
-	Assign( F , FName );
-	Reset( F );
-	LList := ReadGear( F , True , FName );
-	Close( F );
-
-	{ Locate the desired archetype. }
-	G := SeekGearByName( LList , GName );
-	if G <> Nil then G := CloneGear( G );
-
-	{ Dispose of the list & return the cloned gear. }
-	DisposeGear( LList );
-	LoadNamedGear := G;
-end;
-
-
 Function LoadNewMonster( MonsterName: String ): GearPtr;
 	{ This function will load the default monster list and }
 	{ return a monster of the requested type. }
@@ -1379,7 +1270,7 @@ begin
 	LoadNewMonster := Mon;
 end;
 
-Function LoadNewNPC( NPCName: String; RandomizeNPCs: Boolean ): GearPtr;
+Function LoadNewNPC( Adv: GearPtr; NPCName: String; RandomizeNPCs: Boolean ): GearPtr;
 	{ This function will load the NPC archetypes list and }
 	{ return a character of the requested type. }
 var
@@ -1387,7 +1278,7 @@ var
 begin
 	{ Attempt to load the NPC from the standard archetypes file. }
 	if Archetypes_List = Nil then begin
-		NPC := LoadNamedGear( Archetypes_File , NPCName );
+		NPC := Nil;
 	end else begin
 		NPC := CloneGear( SeekGearByName( Archetypes_List , NPCName ) );
 	end;
@@ -1398,7 +1289,7 @@ begin
 		SetSATt( NPC^.SA , 'JOB <' + NPCName + '>' );
 		SetSAtt( NPC^.SA , 'NAME <>' );
 
-		if RandomizeNPCs then IndividualizeNPC( NPC );
+		if RandomizeNPCs then IndividualizeNPC( Adv , NPC );
 	end;
 
 	{ Return the finished product. }
@@ -1414,7 +1305,7 @@ begin
 	{ Attempt to load the item from the standard items file. }
 	if STC_Item_List = Nil then Exit( Nil );
 
-	Item := CloneGear( SeekGearByDesig( STC_Item_List , Desig ) );
+	Item := CloneGear( SeekSibByDesig( STC_Item_List , Desig ) );
 
 	{ Return the finished product. }
 	LoadNewSTC := Item;
@@ -1537,7 +1428,7 @@ Procedure SetEquipmentLevels( TestType: Integer );
 	{ First determine what "class" an item belongs in. Sort all items belonging to this }
 	{ class based on value. Finally, break the items into 10 value bands based on their }
 	{ position in the list. }
-	{ If TESTTYPE is nonzero, the contents of this type will be written to out.txt }
+	{ If TESTTYPE is nonzero, the contents of this "IC_" type will be written to out.txt }
 type
 	SELRecord = Record
 		Item: GearPtr;		{ The gear we're talking about. }
@@ -1684,6 +1575,7 @@ begin
 		SEL[t].Item := Item;
 		SEL[t].EClass := ItemClass( Item );
 
+
 		{ Determine this item's current ranking, unless it's a mecha }
 		{ in which case its position is automatically set. }
 		if ( Item^.G = GG_Mecha ) or ( ( Item^.G = GG_Set ) and ( Item^.InvCom <> Nil ) and ( Item^.InvCom^.G = GG_Mecha ) ) then begin
@@ -1706,25 +1598,11 @@ begin
 	end;
 end;
 
-Procedure LoadArchetypes;
-	{ Load the default, archetypal gears which may be used in the }
-	{ construction of other gears. This includes NPC archetypes and }
-	{ so forth. }
-var
-	F: Text;
-begin
-	{ Open and load the archetypes. }
-	Assign( F , Archetypes_File );
-	Reset( F );
-	Archetypes_List := ReadGear( F , False , 'Archetypes' );
-	Close( F );
-end;
-
 initialization
 	Parser_Macros := LoadStringList( Parser_Macro_File );
 	STC_Item_List := AggregatePattern( STC_Item_Pattern , Setting_Directory );
-	LoadArchetypes;
 	Standard_Equipment_List := AggregatePattern( '*.txt' , Design_Directory );
+	Archetypes_List := AggregatePattern( Archetypes_Pattern , Setting_Directory );
 	SetEquipmentLevels( 0 );
 
 	WMonList := AggregatePattern( Monsters_File_Pattern , Setting_Directory );

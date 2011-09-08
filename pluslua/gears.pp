@@ -162,6 +162,7 @@ Function ReadCGears( var F: Text ): GearPtr;
 
 Function LocateGearByIndex( Master: GearPtr; Num: Integer ): GearPtr;
 Function FindGearIndex( Master , FindThis: GearPtr ): Integer;
+function SeekSibByDesig( LList: GearPtr; Name: String ): GearPtr;
 function SeekGearByDesig( LList: GearPtr; Name: String ): GearPtr;
 
 Function CreateComponentList( MasterList: GearPtr; const Context: String ): NAttPtr;
@@ -1718,12 +1719,29 @@ begin
 	FindGearIndex := it;
 end; { FindGearIndex }
 
+function SeekSibByDesig( LList: GearPtr; Name: String ): GearPtr;
+	{ Seek a gear with the provided designation. Don't check the children. }
+	{ If no such gear is found, return NIL. }
+var
+	it: GearPtr;
+begin
+	if name = '' then exit( nil );
+	it := Nil;
+	Name := UpCase( Name );
+	while LList <> Nil do begin
+		if UpCase( SAttValue( LList^.SA , 'DESIG' ) ) = Name then it := LList;
+		LList := LList^.Next;
+	end;
+	SeekSibByDesig := it;
+end;
+
 function SeekGearByDesig( LList: GearPtr; Name: String ): GearPtr;
 	{ Seek a gear with the provided designation. If no such gear is }
 	{ found, return NIL. }
 var
 	it: GearPtr;
 begin
+	if name = '' then exit( nil );
 	it := Nil;
 	Name := UpCase( Name );
 	while LList <> Nil do begin

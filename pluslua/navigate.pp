@@ -42,6 +42,8 @@ Procedure SaveEgg( Egg: GearPtr );
 
 Procedure Navigator( Camp: CampaignPtr; Scene: GearPtr; var PCForces: GearPtr );
 
+Procedure InitFactionsForAdventure( Adv: GearPtr );
+
 Procedure StartCampaign( Egg: GearPtr );
 Procedure RestoreCampaign( RDP: RedrawProcedureType );
 
@@ -380,6 +382,47 @@ begin
 
 end;
 
+Procedure InitFactionsForAdventure( Adv: GearPtr );
+	{ The factions have at this point been given FactionIDs. Now, check }
+	{ them for allies, }
+var
+	fac,f2: GearPtr;
+	the_line,cmd: String;
+begin
+	fac := Adv^.InvCom;
+	while fac <> Nil do begin
+		if fac^.G = GG_Faction then begin
+			{ We have a faction. Time to check its enemies, allies, }
+			{ and controller. }
+			the_line := SAttValue( fac^.SA , 'ENEMIES' );
+			while the_line <> '' do begin
+				cmd := ExtractWord( the_line );
+				f2 := SeekSibByDesig( Adv^.InvCom , cmd );
+				if f2 <> Nil then begin
+					SetNAtt( fac^.NA , NAG_FactionScore , GetFactionID( f2 ) , -10 );
+				end;
+			end;
+
+			the_line := SAttValue( fac^.SA , 'ALLIES' );
+			while the_line <> '' do begin
+				cmd := ExtractWord( the_line );
+				f2 := SeekSibByDesig( Adv^.InvCom , cmd );
+				if f2 <> Nil then begin
+					SetNAtt( fac^.NA , NAG_FactionScore , GetFactionID( f2 ) , 10 );
+				end;
+			end;
+
+			the_line := SAttValue( fac^.SA , 'CONTROLLER' );
+			cmd := ExtractWord( the_line );
+			f2 := SeekSibByDesig( Adv^.InvCom , cmd );
+			if f2 <> Nil then begin
+				SetNAtt( fac^.NA , NAG_Narrative , NAS_ControllingFaction , GetFactionID( f2 ) );
+			end;
+		end;
+		fac := fac^.next;
+	end;
+end;
+
 Procedure StartCampaign( Egg: GearPtr );
 	{ Start a new RPG campaign. }
 	{ - Load the atlas files, then assemble them into an adventure. }
@@ -397,7 +440,6 @@ begin
 {$IFNDEF ASCII}
 	Idle_Display;
 {$ENDIF}
-
 	{ Extract the PCForces from the Egg. }
 	PCForces := Nil;
 	while Egg^.SubCom <> Nil do begin
@@ -424,14 +466,28 @@ begin
 	Camp := NewCampaign;
 	Camp^.Source := LoadFile( 'adventurestub.txt' , Setting_Directory );
 
-	{ The Adventure source needs to store the PC's faction. }
-	SetNAtt( Camp^.Source^.NA , NAG_Personal , NAS_FactionID , NAttValue( TruePC^.NA , NAG_Personal , NAS_FactionID ) );
-
-	Atlas := AggregatePattern( 'ATLAS_*.txt' , Setting_Directory );
-
 	{ Insert the factions into the adventure. }
 	Factions := AggregatePattern( 'FACTIONS_*.txt' , Setting_Directory );
 	InsertInvCom( Camp^.Source , Factions );
+	S := Camp^.Source^.InvCom;
+	while S <> Nil do begin
+		if S^.G = GG_Faction then begin
+			SetNAtt( S^.NA , NAG_Narrative , NAS_NID , NewNID( Camp^.Source ) );
+		end;
+		S := S^.Next;
+	end;
+	InitFactionsForAdventure( Camp^.Source );
+
+	{ Initialize the PC. }
+	InitContentForAdventure( Camp^.Source, PCForces );
+	InitContentForAdventure( Camp^.Source, Egg );
+
+	{ The Adventure source needs to store the PC's faction. }
+	SetNAtt( Camp^.Source^.NA , NAG_Personal , NAS_FactionID , NAttValue( TruePC^.NA , NAG_Personal , NAS_FactionID ) );
+
+	{ Load and initialize the Atlas. }
+	Atlas := AggregatePattern( 'ATLAS_*.txt' , Setting_Directory );
+	InitContentForAdventure( Camp^.Source, Atlas );
 
 	{ Insert the artifacts into the adventure. }
 	Artifacts := AggregatePattern( 'ARTIFACT_*.txt' , Setting_Directory );
@@ -484,7 +540,7 @@ begin
 	S := SeekGearByName( Camp^.Source , SAttValue( TruePC^.SA , 'HOMETOWN' ) );
 	if S <> Nil then S := SeekUrbanArea( S );
 	if S <> Nil then begin
-		Club := LoadSingleMecha( 'stub_cavalierclub.txt' , Setting_Directory );
+		Club := LoadFile( 'stub_cavalierclub.txt' , Setting_Directory );
 		InsertSubCom( S , Club );
 
 		Atlas := LoadFile( 'EGG_scenes.txt' , Setting_Directory );

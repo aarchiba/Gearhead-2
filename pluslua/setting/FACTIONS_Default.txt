@@ -1,3 +1,10 @@
+%
+% String Attributes:
+%   ALLIES <>	List desigs for allies of this faction
+%   ENEMIES <>	List desigs for enemies of this faction
+%   CONTROLLER <>	If this faction has a controller, list its desig
+%
+
 Faction 1
 	name <the L5 Council>
 	desig <MAQUI>
@@ -5,8 +12,8 @@ Faction 1
 	Context <POLIT>
 	type <Government>
 	jobs <CRAFT POLIT>
-	SetAlly 3 6 9 10
-	SetEnemy 11 4
+	ALLIES <SILKN PRIVA L5LAW FCOMS>
+	ENEMIES <AEGIS RISHI>
 	mecha_colors <75 200 212  49 91 141  200 000 0>
 	chara_colors <75 200 212>
 

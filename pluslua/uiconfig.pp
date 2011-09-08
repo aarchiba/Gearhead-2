@@ -63,7 +63,7 @@ const
 
 	Setting_DirName = 'setting';
 	Setting_Directory = Setting_DirName + OS_Dir_Separator;
-	Archetypes_File = Setting_Directory + 'ANPCdefault.txt';
+	Archetypes_Pattern = 'ANPC_*.txt';
 
 	Series_DirName = 'series';
 	Series_Directory = Series_DirName + OS_Dir_Separator;
@@ -724,17 +724,25 @@ begin
 	AddBoolean( 'RELOAD_UNEQUIPPED_WEAPONS_AT_SHOP' , Reload_All_Weapons );
 
 	AddBoolean( 'MINIMAPON' , Display_Mini_Map );
+	AddBoolean( 'NOPILLAGE' , not Pillage_On );
+	AddBoolean( 'CYCLE_ALL_WEAPONS' , Cycle_All_Weapons );
+
+	writeln( F , '#' );
+	writeln( F , '#  ASCII MODE OPTIONS:' );
+	writeln( F , '#' );
 
 	writeln( F , 'SCREENHEIGHT ' + BStr( ScreenRows ) );
 	writeln( F , 'SCREENWIDTH ' + BStr( ScreenColumns ) );
 
+	writeln( F , '#' );
+	writeln( F , '#  SDL MODE OPTIONS:' );
+	writeln( F , '#' );
+
 	AddBoolean( 'WINDOW' , not DoFullScreen );
 	AddBoolean( 'NOMOUSE' , not Mouse_Active );
-	AddBoolean( 'NOPILLAGE' , not Pillage_On );
 	AddBoolean( 'SHORTWALLS' , not Use_Tall_Walls );
 
 	AddBoolean( 'LAPTOP_ISO_KEYS' ,  Iso_Dir_Offset <> 0 );
-	AddBoolean( 'CYCLE_ALL_WEAPONS' , Cycle_All_Weapons );
 	AddBoolean( 'MINIMAL_SCREEN_REFRESH' , Minimal_Screen_Refresh );
 	AddBoolean( 'USE_SOFTWARE_SURFACE' , Use_Software_Surface );
 	AddBoolean( 'NO_SPLASH_SCREEN_AT_START' , not Splash_Screen_At_Start );
@@ -744,6 +752,11 @@ begin
 
 	{ The "secret options" come at the end. These tokens only get }
 	{ included if they're already set. }
+	if XXRAN_Wizard or ArenaMode_Wizard or XXRAN_Debug or StdPlot_Debug or Full_RPGWorld_Info or Persona_Debug then begin
+		writeln( F , '#' );
+		writeln( F , '#  SECRET OPTIONS' );
+		writeln( F , '#' );
+	end;
 	if XXRAN_Wizard then writeln( F , 'GIMMEGIMMECHOICE' );
 	if ArenaMode_Wizard then writeln( F , 'GARYGYGAX' );
 	if XXRAN_Debug then writeln( F , 'XXRANDEBUG' );

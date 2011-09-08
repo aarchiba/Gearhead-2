@@ -494,6 +494,7 @@ var
 		{ Step Two: If there are any choices, pick one at random. }
 		if N > 0 then begin
 			N := Possible_Choices[ Random( N ) + 1 ].N;
+
 		end;
 
 		SelectMechaByRole := N;
@@ -514,7 +515,6 @@ var
 	var
 		CP,Pilot: GearPtr;
 	begin
-{DialogMsg( 'Adding ' + FullGearName( Mek ) + ' at R' + BStr( Lvl ) + ': ' + BStr( Strength ) );}
 		{ Add this mecha to our list. }
 		AppendGear( MList , Mek );
 
@@ -522,7 +522,7 @@ var
 		CP := SeekGear( Mek , GG_CockPit , 0 );
 		if CP <> Nil then begin
 			Pilot := RandomPilot( 72  , 10 );
-			SetSkillsAtLevel( Pilot , Lvl );
+			SetSkillsAtLevel( FindRoot( Fac ) , Pilot , Lvl );
 			InsertSubCom( CP , Pilot );
 		end;
 	end;
@@ -898,7 +898,7 @@ begin
 		DisposeGear( MechaList );
 	end else begin
 		DialogMsg( GearName( NPC ) + ' is forced to take a crappy mecha...' + Terrain_Type + ' ' + Factions + BStr( Minimum_Cost ) + ' - ' + Bstr( Maximum_Cost ) );
-		M := LoadSingleMecha( 'buruburu.txt' , Design_Directory );
+		M := SeekSibByFullName( Standard_Equipment_List , 'SAN-X9 Buru Buru' );
 	end;
 
 	if XXRan_Debug then DialogMsg( 'Mecha for ' + GearName( NPC ) + ' [' + Bstr( Renown ) + '] ($' + BStr( Minimum_Cost ) + '-$' + BStr( Maximum_Cost ) + '): ' + GearName( M ) + ' ($' + Bstr( GearValue( M ) ) + ')' );

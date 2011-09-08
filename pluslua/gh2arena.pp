@@ -452,7 +452,7 @@ begin
 			{ Set the faction. }
 			F := NAttValue( M^.NA , NAG_Personal , NAS_FactionID );
 			if F < 0 then SetNAtt( M^.NA , NAG_Personal , NAS_FactionID , ElementID( Scene , Abs( F ) ) );
-			SetSkillsAtLevel( M , TL );
+			SetSkillsAtLevel( HQCamp^.Source , M , TL );
 		end;
 		M := M^.Next;
 	end;
@@ -2108,7 +2108,7 @@ begin
 		end else begin
 			{ We found nothing. Create a bunch of stand-in NPCs. }
 			for t := 1 to NumArenaNPCs do begin
-				NewNPC := LoadNewNPC( 'CITIZEN' , True );
+				NewNPC := LoadNewNPC( Adv , 'CITIZEN' , True );
 				SetNAtt( NewNPC^.NA , NAG_Narrative , NAS_NID , NewNID( Adv ) );
 				InsertInvCom( NPCSet , NewNPC );
 			end;
@@ -2238,7 +2238,7 @@ Procedure StartArenaCampaign;
 	end;
 var
 	Camp: CampaignPtr;
-	Factions: GearPtr;
+	Factions,S: GearPtr;
 	name: String;
 begin
 	{ Create the campaign and the adventure. }
@@ -2248,6 +2248,15 @@ begin
 	{ Insert the factions into the adventure. }
 	Factions := AggregatePattern( 'FACTIONS_*.txt' , Setting_Directory );
 	InsertInvCom( Camp^.Source , Factions );
+	S := Camp^.Source^.InvCom;
+	while S <> Nil do begin
+		if S^.G = GG_Faction then begin
+			SetNAtt( S^.NA , NAG_Narrative , NAS_NID , NewNID( Camp^.Source ) );
+		end;
+		S := S^.Next;
+	end;
+	InitFactionsForAdventure( Camp^.Source );
+
 
 	{ Select one faction for this unit. }
 	SetNAtt( Camp^.Source^.NA , NAG_Personal , NAS_FactionID , SelectAFaction );
@@ -2307,8 +2316,8 @@ initialization
 
 	ANPC_MasterPersona := LoadFile( 'ARENADATA_NPCMessages.txt' , Setting_Directory );
 
-	Arena_Mission_Master_List := LoadRandomSceneContent( 'ARENAMISSION_*.txt' , Series_Directory );
-	Core_Mission_Master_List := LoadRandomSceneContent( 'ARENACORE_*.txt' , Series_Directory );
+	Arena_Mission_Master_List := AggregatePattern( 'ARENAMISSION_*.txt' , Series_Directory );
+	Core_Mission_Master_List := AggregatePattern( 'ARENACORE_*.txt' , Series_Directory );
 
 
 finalization

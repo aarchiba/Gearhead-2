@@ -402,6 +402,8 @@ begin
 	end;
 
 	if E <> Nil then begin
+		InitContentForAdventure( FindRoot( Adventure ), E );
+
 		{ Give our new element a unique ID, and store its ID in the Plot. }
 		{ If this is an encounter, also generate a MetaScene ID. }
 
@@ -485,9 +487,12 @@ begin
 	NPC := RandomNPC( Adv , FacID , HTID );
 
 	{ Do the individualization. }
-	IndividualizeNPC( NPC );
+	InitContentForAdventure( FindRoot( Adv ), NPC );
+	IndividualizeNPC( Adv , NPC );
 
 	{ Customize the character. }
+	{ This is done after individualization because the settings here override }
+	{ the settings there. }
 	ApplyChardesc( NPC , Desc );
 
 	{ Return the result. }
@@ -748,10 +753,10 @@ begin
 			if job = '' then begin
 				Element := RandomNPC( FindRoot( Adventure ) , 0 , RealSceneID( FindRootScene( GB^.Scene ) ) );
 				{ Do the individualization. }
-				IndividualizeNPC( Element );
+				IndividualizeNPC( FindRoot( Adventure ) , Element );
 				job := SAttValue( Element^.SA , 'job' );
-			end else Element := LoadNewNPC( job , True );
-			if Element = Nil then Element := LoadNewNPC( 'MECHA PILOT' , True );
+			end else Element := LoadNewNPC( FindRoot( Adventure ) , job , True );
+			if Element = Nil then Element := LoadNewNPC( FindRoot( Adventure ) , 'MECHA PILOT' , True );
 			SetSAtt( Element^.SA , 'job <' + job + '>' );
 			SetSAtt( Element^.SA , 'TEAMDATA <Pass>' );
 
@@ -774,6 +779,8 @@ begin
 		{ modified or chopped into pieces above. }
 
 		if Element <> Nil then begin
+			InitContentForAdventure( FindRoot( Adventure ), Element );
+
 			if Destination <> Nil then begin
 				if GB^.Scene = Destination then begin
 					EquipThenDeploy( GB , Element , True );
@@ -876,6 +883,9 @@ var
 begin
 	{ Error Check }
 	if ( Plot = Nil ) or ( Slot = Nil ) then Exit;
+
+	{ Initialize any prefabs and other stuff. }
+	InitContentForAdventure( FindRoot( Slot ), Plot );
 
 	{ Attempt to grab the required elements from the Slot. }
 	EverythingOK := DoElementGrabbing( Scope , Control , Slot , Plot );

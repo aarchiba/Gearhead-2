@@ -1660,8 +1660,8 @@ end;
 
 initialization
 	Jobs_List := AggregatePattern( 'CG_JOBS_*.txt' , Setting_Directory );
-	Family_List := LoadRandomSceneContent( 'CG_FAMILY_*.txt' , Setting_Directory );
-	Bio_List := LoadRandomSceneContent( 'CG_BIO_*.txt' , Setting_Directory );
+	Family_List := AggregatePattern( 'CG_FAMILY_*.txt' , Setting_Directory );
+	Bio_List := AggregatePattern( 'CG_BIO_*.txt' , Setting_Directory );
 	Goal_List := AggregatePattern( 'CG_GOAL_*.txt' , Setting_Directory );
 	Focus_List := AggregatePattern( 'CG_FOCUS_*.txt' , Setting_Directory );
 	Hometown_List := AggregatePattern( 'ATLAS_*.txt' , Setting_Directory );

@@ -273,6 +273,7 @@ begin
 	{ already been placed need be checked. }
 	if Container <> Nil then begin
 
+
 		MF2 := Container^.SubCom;
 		while MF2 <> Nil do begin
 			if ( MF2^.G = GG_MapFeature ) and OnTheMap( GB , MF2^.Stat[ STAT_XPos ] , MF2^.Stat[ STAT_YPos ] ) then begin
@@ -499,6 +500,7 @@ begin
 
 	InsertInvCom( GB^.Scene , Entry );
 end;
+
 
 
 
@@ -3030,7 +3032,7 @@ end;
 
 initialization
 	Standard_Param_List := LoadStringList( RandMaps_Param_File );
-	super_prop_list := LoadRandomSceneContent( 'RANPROP_*.txt' , Setting_directory );
+	super_prop_list := AggregatePattern( 'RANPROP_*.txt' , Setting_directory );
 
 finalization
 	DisposeSAtt( Standard_Param_List );

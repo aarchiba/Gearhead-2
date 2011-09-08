@@ -196,6 +196,9 @@ Function SceneName( GB: GameBoardPtr; ID: Integer; Exact: Boolean ): String;
 Function FactionRankName( GB: GameBoardPtr; Source: GearPtr; FID,FRank: Integer ): String;
 Function PCRankName( GB: GameBoardPtr; Source: GearPtr ): String;
 
+Procedure SetFactionByDesig( Adv,Part: GearPtr );
+Procedure InitContentForAdventure( Adv, LList: GearPtr );
+
 
 implementation
 
@@ -1469,5 +1472,34 @@ begin
 	end;
 end;
 
+Procedure SetFactionByDesig( Adv,Part: GearPtr );
+	{ PART apparently has its faction stored as a string attribute. }
+	{ Locate the faction it refers to in ADV, then set the numeric }
+	{ faction ID. }
+var
+	fdes: String;
+	fac: GearPtr;
+begin
+	fdes := SAttValue( Part^.SA , 'FACTION' );
+	if ( fdes <> '' ) and ( Adv <> Nil ) then begin
+		fac := SeekSibByDesig( Adv^.InvCom , fdes );
+		if fac <> Nil then begin
+			SetNAtt( Part^.NA , NAG_Personal , NAS_FactionID , GetFactionID( fac ) );
+			SetSAtt( Part^.SA , 'FACTION <>' );
+		end;
+	end;
+end;
+
+Procedure InitContentForAdventure( Adv, LList: GearPtr );
+	{ We have some content that we want to install in the adventure. }
+	{ - Convert FactionDesig SAtts to FactionID NAtts }
+begin
+	while LList <> Nil do begin
+		SetFactionByDesig( Adv , LList );
+		InitContentForAdventure( Adv , LList^.SubCom );
+		InitContentForAdventure( Adv , LList^.InvCom );
+		LList := LList^.Next;
+	end;
+end;
 
 end.

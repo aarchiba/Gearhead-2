@@ -157,6 +157,47 @@ begin
 	end;
 end;
 
+function InOpposition( PC , NPC: GearPtr; Trait: Integer ): Boolean;
+	{ If the PC and the NPC disagree on this personality TRAIT, }
+	{ return TRUE. Otherwise return FALSE. }
+var
+	T1,T2: Integer;
+begin
+	T1 := NAttValue( PC^.NA , NAG_CharDescription , Trait );
+	T2 := NAttValue( NPC^.NA , NAG_CharDescription , Trait );
+
+	if ( Abs( T1 ) > 10 ) and ( Abs( T2 ) > 10 ) then begin
+		{ The characters are in opposition if their trait }
+		{ values are on opposite sides of 0. }
+		InOpposition := Sgn( T1 ) <> Sgn( T2 );
+	end else begin
+		{ If the traits aren't strongly held by both, then }
+		{ no real opposition. }
+		InOpposition := False;
+	end;
+end;
+
+function InHarmony( PC , NPC: GearPtr; Trait: Integer ): Boolean;
+	{ If the PC and the NPC agree on this personality TRAIT, }
+	{ return TRUE. Otherwise return FALSE. }
+var
+	T1,T2: Integer;
+begin
+	T1 := NAttValue( PC^.NA , NAG_CharDescription , Trait );
+	T2 := NAttValue( NPC^.NA , NAG_CharDescription , Trait );
+
+	if ( Abs( T1 ) > 0 ) and ( Abs( T2 ) > 0 ) then begin
+		{ The characters are in opposition if their trait }
+		{ values are on opposite sides of 0. }
+		InHarmony := Sgn( T1 ) = Sgn( T2 );
+	end else begin
+		{ If the traits aren't strongly held by both, then }
+		{ no real opposition. }
+		InHarmony := False;
+	end;
+end;
+
+
 Function PersonalityCompatability( PC, NPC: GearPtr ): Integer;
 	{ Calculate the compatability between PC and NPC based on their }
 	{ personality traits. }
@@ -166,6 +207,15 @@ var
 begin
 	{ Initialize the Compatability Score to 0. }
 	CS := 0;
+
+	{ Loop through the personality traits. }
+	for t := FirstPersonalityTrait to LastPersonalityTrait do begin
+		if InHarmony( PC , NPC , T ) then begin
+			CS := CS + 7;
+		end else if InOpposition( PC , NPC , T ) then begin
+			CS := CS - 7;
+		end;
+	end;
 
 	{ Loop through all the reputations. }
 	for t := NAS_Heroic to ( NAS_Heroic + Num_Reputations - 1 ) do begin

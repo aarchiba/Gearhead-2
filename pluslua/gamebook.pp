@@ -1196,6 +1196,7 @@ Function SeekGear( Master: GearPtr; G,S: Integer; CheckInv: Boolean ): GearPtr;
 	end;
 
 begin
+	if Master = Nil then exit( nil );
 	if CheckInv then
 		SeekGear := CompGears( SeekPartAlongTrack( Master^.InvCom ) , SeekPartAlongTrack( Master^.SubCom ) )
 	else
@@ -1453,6 +1454,7 @@ begin
 	if NAttValue( Part^.NA , NAG_GearOps , NAS_Material ) = NAV_BioTech then begin
 		if Part^.G = GG_Mecha then begin
 			it := Part^.V * 250;
+
 		end else begin
 			it := ( it * 3 ) div 2;
 		end;
