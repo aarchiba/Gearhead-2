@@ -58,7 +58,7 @@ Procedure GenerateNewPC;
 var
 	PC: GearPtr;
 begin
-	PC := CharacterCreator( 0 );
+	PC := CharacterCreator( Nil );
 	if PC <> Nil then begin
 		{ Write this character to disk. }
 		SaveEgg( PC );
@@ -90,7 +90,7 @@ begin
 		uname := SelectFile( RPM , @RedrawOpening );
 
 		if uname = MsgString( 'STARTRPG_NewChar' ) then begin
-			PC := CharacterCreator( 0 );
+			PC := CharacterCreator( Nil );
 
 		end else if uname <> '' then begin
 			Assign(F, Save_Game_Directory + uname );
@@ -101,7 +101,7 @@ begin
 
 	end else begin
 		{ The menu was empty... make a new PC! }
-		PC := CharacterCreator( 0 );
+		PC := CharacterCreator( Nil );
 
 	end;
 

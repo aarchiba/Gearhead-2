@@ -2023,7 +2023,7 @@ Procedure CreateNewPilot( Camp: CampaignPtr );
 var
 	Egg,PC,S: GearPtr;
 begin
-	Egg := CharacterCreator( HQFac( Camp ) );
+	Egg := CharacterCreator( SeekGearByIDTag( Camp^.Source , NAG_Narrative , NAS_NID , HQFac( Camp ) ) );
 	if Egg <> Nil then begin
 		PC := Nil;
 		while Egg^.SubCom <> Nil do begin
@@ -2213,7 +2213,7 @@ end;
 
 Procedure StartArenaCampaign;
 	{ Initialize a new Arena campaign and start it. }
-	Function SelectAFaction: Integer;
+	Function SelectAFaction( LList: GearPtr ): Integer;
 		{ Select a faction for this arena unit. }
 	var
 		RPM: RPGMenuPtr;
@@ -2223,10 +2223,10 @@ Procedure StartArenaCampaign;
 		RPM := CreateRPGMenu( MenuItem , MenuSelect , ZONE_ArenaInfo );
 		AttachMenuDesc( RPM , ZONE_Dialog );
 		RPM^.mode := RPMNoCancel;
-		Fac := Factions_List;
+		Fac := LList;
 		while Fac <> Nil do begin
-			if AStringHasBString( SAttValue( Fac^.SA , 'TYPE' ) , 'ARENAOK' ) then begin
-				AddRPGMenuItem( RPM , GearName( Fac ) , Fac^.S , SAttValue( Fac^.SA , 'DESC' ) );
+			if ( Fac^.G = GG_Faction ) and AStringHasBString( SAttValue( Fac^.SA , 'TYPE' ) , 'ARENAOK' ) then begin
+				AddRPGMenuItem( RPM , GearName( Fac ) , NAttValue( Fac^.NA , NAG_Narrative , NAS_NID ) , SAttValue( Fac^.SA , 'DESC' ) );
 			end;
 			Fac := Fac^.Next;
 		end;
@@ -2259,7 +2259,7 @@ begin
 
 
 	{ Select one faction for this unit. }
-	SetNAtt( Camp^.Source^.NA , NAG_Personal , NAS_FactionID , SelectAFaction );
+	SetNAtt( Camp^.Source^.NA , NAG_Personal , NAS_FactionID , SelectAFaction( Camp^.Source^.InvCom ) );
 
 	{ Give the new arena unit a name. }
 	name := GetStringFromUser( MsgString( 'ARENA_NewArenaName' ) , @BasicArenaRedraw );

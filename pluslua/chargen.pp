@@ -54,8 +54,8 @@ var
 	Goal_List,Focus_List: GearPtr;
 	Hometown_List: GearPtr;
 
-Function CharacterCreator( Fac: Integer ): GearPtr;
-Function RandomNPC( Adv: GearPtr; Fac,Hometown: Integer ): GearPtr;
+Function CharacterCreator( Fac: GearPtr ): GearPtr;
+Function RandomNPC( Adv: GearPtr; FacID,Hometown: Integer ): GearPtr;
 
 implementation
 
@@ -486,7 +486,7 @@ var
 begin
 	RPM := CreateRPGMenu( MenuItem , MenuSelect , ZONE_CharGenMenu );
 
-	AddRPGMenuItem( RPM , MsgString( 'GenderName_0' ) , NAV_Male );
+	AddRPGMenuItem( RPM , MsgString( 'GenderName_2' ) , NAV_Male );
 	AddRPGMenuItem( RPM , MsgString( 'GenderName_1' ) , NAV_Female );
 
 	RCDescMessage := MsgString( 'RANDCHAR_SGDesc' );
@@ -524,34 +524,27 @@ Procedure StoreHomeTownDataInPC( PC,City: GearPtr );
 	{ Store the information for this PC's home town in the character record. }
 var
 	msg: String;
-	Fac: GearPtr;
 begin
 	StoreSAtt( PC^.SA , 'HOMETOWN <' + GearName( City ) + '>' );
 	StoreSAtt( PC^.SA , 'HOMETOWN_FACTIONS <' + SAttValue( City^.SA , 'FACTIONS' ) + '>' );
-	msg := SAttValue( City^.SA , 'TYPE' ) + ' ' + SAttValue( City^.SA , 'DESIG' );
-
-	Fac := SeekCurrentLevelGear( Factions_List , GG_Faction , NAttValue( City^.NA , NAG_Personal , NAS_FactionID ) );
-	if Fac <> Nil then begin
-		msg := msg + ' ' + SAttValue( Fac^.SA , 'DESIG' );
-		StoreSAtt( PC^.SA , 'HOMETOWN_GOVERNMENT <' + SAttValue( Fac^.SA , 'DESIG' ) + '>' );
-	end;
+	msg := SAttValue( City^.SA , 'TYPE' ) + ' ' + SAttValue( City^.SA , 'DESIG' ) + ' ' + SAttValue( City^.SA , 'FACTION' );
+	StoreSAtt( PC^.SA , 'HOMETOWN_GOVERNMENT <' + SAttValue( City^.SA , 'FACTION' ) + '>' );
 
 	StoreSAtt( PC^.SA , 'HOMETOWN_CONTEXT <' + msg + '>' );
 end;
 
-Procedure SelectHomeTown( PC: GearPtr; CanEdit: Boolean; ForceFac: Integer );
+Procedure SelectHomeTown( PC: GearPtr; CanEdit: Boolean; Fac: GearPtr );
 	{ Select the PC's home town. Store the home town information in the PC }
 	{ string attributes. }
 	{ If ForceFac is nonzero, the generated PC must belong to this faction or }
 	{ no faction at all. So, only allow cities where this faction is active. }
 var
-	City,Fac: GearPtr;
+	City: GearPtr;
 	N: Integer;
 	RPM: RPGMenuPtr;
 	FacDesig: String;
 begin
-	if ForceFac <> 0 then begin
-		Fac := SeekCurrentLevelGear( Factions_List , GG_Faction , ForceFac );
+	if Fac <> Nil then begin
 		FacDesig := SAttValue( Fac^.SA , 'DESIG' );
 	end;
 
@@ -567,7 +560,7 @@ begin
 	N := 1;
 	City := Hometown_List;
 	while City <> Nil do begin
-		if ( ForceFac = 0 ) or AStringHasBString( SAttValue( City^.SA , 'FACTIONS' ) , FacDesig ) then begin
+		if ( Fac = Nil ) or AStringHasBString( SAttValue( City^.SA , 'FACTIONS' ) , FacDesig ) then begin
 			AddRPGMenuItem( RPM , GearName( City ) , N , SAttValue( City^.SA , 'DESC' ) );
 		end;
 		Inc( N );
@@ -640,7 +633,7 @@ begin
 	if N > 3 then N := 3;
 	AddNAtt( PC^.NA , NAG_Experience , NAS_Credits , 45000 * ( 3 - N ) );
 
-	SetNAtt( PC^.NA , NAG_Personal , NAS_FactionID , NAttValue( Job^.NA , NAG_Personal , NAS_FactionID ) );
+	SetSAtt( PC^.SA , 'FACTION <' + SAttValue( Job^.SA , 'FACTION' ) + '>' );
 	SetSAtt( PC^.SA , 'JOB <' + SAttValue( Job^.SA , 'NAME' ) + '>' );
 	SetSAtt( PC^.SA , 'JOB_DESIG <' + SAttValue( Job^.SA , 'DESIG' ) + '>' );
 end;
@@ -852,7 +845,7 @@ begin
 end;
 
 
-Procedure SelectJobAndFaction( PC: GearPtr; CanEdit: Boolean; ForceFac: Integer );
+Procedure SelectJobAndFaction( PC: GearPtr; CanEdit: Boolean; ForceFac: GearPtr );
 	{ Select a job for the PC. }
 	{ Based on this job, select a faction. }
 	function NeedsFaction( Job: GearPtr ): Boolean;
@@ -874,8 +867,8 @@ Procedure SelectJobAndFaction( PC: GearPtr; CanEdit: Boolean; ForceFac: Integer 
 	var
 		it,F: GearPtr;
 	begin
-		if ForceFac <> 0 then begin
-			it := CloneGear( SeekCurrentLevelGear( Factions_List , GG_Faction , ForceFac ) );
+		if ForceFac <> Nil then begin
+			it := CloneGear( ForceFac );
 		end else begin
 			it := Nil;
 			F := Factions_List;
@@ -888,23 +881,25 @@ Procedure SelectJobAndFaction( PC: GearPtr; CanEdit: Boolean; ForceFac: Integer 
 		end;
 		CreateFactionList := it;
 	end;
-	Procedure DoExtraFacFilter( Fac: GearPtr; var LegalJobList: GearPtr );
+	Procedure DoExtraFacFilter( var LegalJobList: GearPtr );
 		{ The PC must belong to a specific faction or no faction at all. }
 		{ If any of these jobs have a preset faction or require a faction }
 		{ but can't be taken by the available faction, they get deleted from }
 		{ the list. That's an awful run-on sentance but I was busy all day }
 		{ making kimchi. }
+		{ If this procedure has been called, ForceFac is not nil. }
 	var
 		J,J2: GearPtr;
-		FID: Integer;
+		JobFac,FacDes: String;
 	begin
 		J := LegalJobList;
 		while J <> Nil do begin
 			J2 := J^.Next;
-			FID := NAttValue( J^.NA , NAG_Personal , NAS_FactionID );
-			if ( FID <> 0 ) and ( FID <> ForceFac ) then begin
+			FacDes := SAttValue( ForceFac^.SA , 'DESIG' );
+			JobFac := SAttValue( J^.SA , 'FACTION' );
+			if ( ForceFac <> Nil ) and ( FacDes <> JobFac ) then begin
 				RemoveGear( LegalJobList , J );
-			end else if NeedsFaction( J ) and not JobFitsFaction( J , Fac ) then begin
+			end else if NeedsFaction( J ) and not JobFitsFaction( J , ForceFac ) then begin
 				RemoveGear( LegalJobList , J );
 			end;
 
@@ -942,7 +937,7 @@ begin
 	Context := SAttValue( PC^.SA , 'HOMETOWN_CONTEXT' );
 	LegalJobList := FilterList( Jobs_List , Context );
 
-	if ForceFac <> 0 then DoExtraFacFilter( SeekCurrentLevelGear( Factions_List , GG_Faction , ForceFac ) , LegalJobList );
+	if ForceFac <> Nil then DoExtraFacFilter( LegalJobList );
 
 	if CanEdit then begin
 		RPM := CreateRPGMenu( MenuItem , MenuSelect , ZONE_CharGenMenu );
@@ -989,10 +984,7 @@ begin
 	{ Silver Knights. The designation of your job and your home town will }
 	{ determine what factions you can join. You are also free to not join a }
 	{ faction, unless your job indicates that it requires a faction choice. }
-	if NAttValue( Job^.NA , NAG_Personal , NAS_FactionID ) <> 0 then begin
-		{ This job comes with a pre-assigned faction. }
-		SetNAtt( PC^.NA , NAG_Personal , NAS_FactionID , NAttValue( Job^.NA , NAG_Personal , NAS_FactionID ) );
-	end else if CanEdit or NeedsFaction( Job ) then begin
+	if ( SAttValue( Job^.SA , 'FACTION' ) = '' ) and ( CanEdit or NeedsFaction( Job ) ) then begin
 		{ This job can maybe have a faction assigned. }
 		LegalFactionList := CreateFactionList( SAttValue( PC^.SA , 'HOMETOWN_FACTIONS' ) , Job );
 
@@ -1006,8 +998,10 @@ begin
 
 			{ Add the factions. }
 			F := LegalFactionList;
+			N := 1;
 			while F <> Nil do begin
-				AddRPGMenuItem( RPM , GearName( F ) , F^.S , SAttValue( F^.SA , 'DESC' ) );
+				AddRPGMenuItem( RPM , GearName( F ) , N , SAttValue( F^.SA , 'DESC' ) );
+				Inc( N );
 				F := F^.Next;
 			end;
 			RPMSortAlpha( RPM );
@@ -1021,7 +1015,7 @@ begin
 				N := SelectMenu( RPM , @RandCharRedraw );
 			end else N := RPM^.FirstItem^.Value;
 
-			F := SeekCurrentLevelGear( LegalFactionList , GG_Faction , N );
+			F := RetrieveGearSib( LegalFactionList , N );
 			if ( F = Nil ) and NeedsFaction( Job ) then F := SelectRandomGear( LegalFactionList );
 
 			{ Get rid of the menu. }
@@ -1033,7 +1027,7 @@ begin
 
 		{ Apply the bonuses for this faction. }
 		if F <> Nil then begin
-			SetNAtt( PC^.NA , NAG_Personal , NAS_FactionID , F^.S );
+			SetSAtt( PC^.SA , 'FACTION <' + SAttValue( F^.SA , 'DESIG' ) + '>' );
 			AddNAtt( PC^.NA , NAG_Experience , NAS_Credits , 50000 );
 			SetSAtt( PC^.SA , 'CG_FacDesig <' + SAttValue( F^.SA , 'DESIG' ) + '>' );
 		end;
@@ -1469,12 +1463,12 @@ begin
 	end;
 end;
 
-Function CharacterCreator( Fac: Integer ): GearPtr;
+Function CharacterCreator( Fac: GearPtr ): GearPtr;
 	{ This is my brand-spankin' new character generator. It is meant }
 	{ to emulate the interactive way in which characters are generated }
 	{ for such games as Mekton and Traveller. }
 	{ The character may be limited to a certain faction, in which case }
-	{ FAC will be non-zero. }
+	{ FAC will be non-nil. }
 const
 	MODE_Regular = 1;
 	MODE_Easy = 0;
@@ -1594,18 +1588,20 @@ begin
 	CharacterCreator := Egg;
 end;
 
-Function RandomNPC( Adv: GearPtr; Fac,Hometown: Integer ): GearPtr;
+Function RandomNPC( Adv: GearPtr; FacID,Hometown: Integer ): GearPtr;
 	{ Create a random character, using most of the same materials as available }
 	{ for a regular character. }
 var
-	NPC,City: GearPtr;
+	Fac,NPC,City: GearPtr;
 begin
 	NPC := NewGear;
 	NPC^.G := GG_Character;
 	InitGear( NPC );
 
+	Fac := SeekGearByIDTag( Adv , NAG_Narrative , NAS_NID , FacID );
+
 	{ Set a random gender and age. }
-	SetNAtt( NPC^.NA , NAG_CharDescription , NAS_Gender , Random( 2 ) );
+	SetNAtt( NPC^.NA , NAG_CharDescription , NAS_Gender , Random( 2 ) + 1 );
 	SetNAtt( NPC^.NA , NAG_CharDescription , NAS_DAge , Random( 10 ) - Random( 5 ) );
 
 	{ If no home town was provided, select one randomly. }
