@@ -75,7 +75,7 @@ uses ghswag,narration;
 Const
 	Recursion_Level: Integer = 0;
 
-Procedure SelectThemeAndSpecialty( NPC: GearPtr );
+Procedure SelectThemeAndSpecialty( Adv,NPC: GearPtr );
 	{ Set a theme and a specialty skill for this NPC. }
 const
 	Default_Skill_List = '1 2 3 11 15 16 26 28';
@@ -90,7 +90,7 @@ begin
 	end;
 
 	{ Start by locating the faction. This should contain a list of preferred skill specialties. }
-	Faction := SeekCurrentLevelGear( Factions_List , GG_Faction , NAttValue( NPC^.NA , NAG_Personal , NAS_FactionID ) );
+	Faction := SeekGearByIDTag( Adv , NAG_Narrative , NAS_NID , NAttValue( NPC^.NA , NAG_Personal , NAS_FactionID ) );
 	if Faction <> Nil then SkList := SAttValue( Faction^.SA , 'Specialist_Skills' )
 	else SkList := Default_Skill_List;
 	if ( SkList = '' ) or ( Random(10) = 1) then SkList := Default_Skill_List;
@@ -127,7 +127,7 @@ begin
 	{ personality traits and yadda yadda yadda... }
 	{ All characters can take GENERAL themes. }
 	SkList := 'GENERAL ';
-	AddGearXRContext( Nil, Nil, NPC, SkList, '@' );
+	AddGearXRContext( Nil, Adv, NPC, SkList, '@' );
 
 	{ Add the specialist skill. }
 	SkList := SkList + ' [' + BStr( SpecSkill ) + ']';
@@ -163,7 +163,7 @@ var
 begin
 	{ If the NPC doesn't have a specialist skill, pick a skill and theme now. }
 	if IsACombatant( NPC ) then begin
-		if NAttValue( NPC^.NA , NAG_Personal , NAS_MechaTheme ) = 0 then SelectThemeAndSpecialty( NPC );
+		if NAttValue( NPC^.NA , NAG_Personal , NAS_MechaTheme ) = 0 then SelectThemeAndSpecialty( Adv , NPC );
 
 		{ Combatants automatically get all the basic combat skills. }
 		for SkLvl := 1 to Num_Basic_Combat_Skills do SetNAtt( NPC^.NA , NAG_Skill, SkLvl , 1 );
@@ -1321,6 +1321,7 @@ begin
 	if Standard_Equipment_List = Nil then Exit( Nil );
 
 	Item := CloneGear( SeekSibByFullName( Standard_Equipment_List , FullName ) );
+
 
 	{ Return the finished product. }
 	LoadNewItem := Item;
