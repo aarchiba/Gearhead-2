@@ -1423,7 +1423,7 @@ end;
 Function TriggerGearScript( GB: GameBoardPtr; MyGear: GearPtr; const Trigger: String ): Boolean;
 	{ Attempt to trigger the requested script in this gear. If the }
 	{ script cannot be found, then do nothing. }
-	{ IMPORTANT: The Trigger should be lower case. }
+	{ IMPORTANT: The Trigger should be upper case. }
 var
 	E: String;
 	it: Boolean;
@@ -1563,7 +1563,7 @@ begin
 				end else if TP^.Info <> '' then begin
 					{ Check the PLOTS, FACTIONS and STORIES in }
 					{ Adventure/InvCom first. }
-					TP^.Info := LowerCase( TP^.Info );
+					TP^.Info := UpCase( TP^.Info );
 
 					if GB^.Scene^.Parent <> Nil then begin
 						CheckTriggerAlongPath( TP^.Info , GB , FindRoot( GB^.Scene ) , False );
@@ -2070,23 +2070,23 @@ end;
 
 
 initialization
-	lua_register( MyLua , 'gh_GetG' , @Lua_GetGearG );
-	lua_register( MyLua , 'gh_GetS' , @Lua_GetGearS );
-	lua_register( MyLua , 'gh_GetV' , @Lua_GetGearV );
-	lua_register( MyLua , 'gh_GetStat' , @Lua_GetGearStat );
-	lua_register( MyLua , 'gh_SetStat' , @Lua_SetGearStat );
-	lua_register( MyLua , 'gh_GetNAtt' , @Lua_GetNAtt );
-	lua_register( MyLua , 'gh_SetNAtt' , @Lua_SetNAtt );
-	lua_register( MyLua , 'gh_RawPrint' , @Lua_GHPrint );
-	lua_register( MyLua , 'gh_AttemptUnlimitedSkillTest' , @Lua_USkillTest );
-	lua_register( MyLua , 'gh_DrawTerrain' , @Lua_DrawTerr );
-	lua_register( MyLua , 'gh_CountModels' , @Lua_NumUnits );
-	lua_register( MyLua , 'gh_Return' , @Lua_Return );
-	lua_register( MyLua , 'gh_GotoScene' , @Lua_Exit );
-	lua_register( MyLua , 'gh_InitChatMenu' , @Lua_InitChatMenu );
-	lua_register( MyLua , 'gh_AddChatMenuItem' , @Lua_AddChatMenuItem );
-	lua_register( MyLua , 'gh_SetChatMsg' , @Lua_SetChatMsg );
-	lua_register( MyLua , 'gh_GetContext' , @Lua_GetContext );
+	lua_register( MyLua , 'gh_gearg' , @Lua_GetGearG );
+	lua_register( MyLua , 'gh_gears' , @Lua_GetGearS );
+	lua_register( MyLua , 'gh_gearv' , @Lua_GetGearV );
+	lua_register( MyLua , 'gh_getstat' , @Lua_GetGearStat );
+	lua_register( MyLua , 'gh_setstat' , @Lua_SetGearStat );
+	lua_register( MyLua , 'gh_getnatt' , @Lua_GetNAtt );
+	lua_register( MyLua , 'gh_setnatt' , @Lua_SetNAtt );
+	lua_register( MyLua , 'gh_rawprint' , @Lua_GHPrint );
+	lua_register( MyLua , 'gh_uskilltest' , @Lua_USkillTest );
+	lua_register( MyLua , 'gh_drawterr' , @Lua_DrawTerr );
+	lua_register( MyLua , 'gh_numunits' , @Lua_NumUnits );
+	lua_register( MyLua , 'gh_return' , @Lua_Return );
+	lua_register( MyLua , 'gh_exit' , @Lua_Exit );
+	lua_register( MyLua , 'gh_initchatmenu' , @Lua_InitChatMenu );
+	lua_register( MyLua , 'gh_addchatmenuitem' , @Lua_AddChatMenuItem );
+	lua_register( MyLua , 'gh_setchatmsg' , @Lua_SetChatMsg );
+	lua_register( MyLua , 'gh_getcontext' , @Lua_GetContext );
 
 	if lua_dofile( MyLua , 'gamedata/gh_messagemutator.lua' ) <> 0 then RecordError( 'GH_MESSAGEMUTATOR ERROR: ' + lua_tostring( MyLua , -1 ) );
 	if lua_dofile( MyLua , 'gamedata/gh_init.lua' ) <> 0 then RecordError( 'GH_INIT ERROR: ' + lua_tostring( MyLua , -1 ) )

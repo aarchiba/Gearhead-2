@@ -641,7 +641,7 @@ begin
 	end;
 
 	if PropD > -1 then begin
-		if not ActivatePropAtSpot( GB , PC , P.X + AngDir[ PropD , 1 ] , P.Y + AngDir[ PropD , 2 ] , 'use' ) then DialogMsg( MsgString( 'PCUS_NotFound' ) );
+		if not ActivatePropAtSpot( GB , PC , P.X + AngDir[ PropD , 1 ] , P.Y + AngDir[ PropD , 2 ] , 'USE' ) then DialogMsg( MsgString( 'PCUS_NotFound' ) );
 	end;
 end;
 
@@ -2010,7 +2010,7 @@ begin
 				{ CLear the SmartBump counter. }
 				SetNAtt( Mek^.NA , NAG_Location , NAS_SmartAction , 0 );
 				PrepAction( GB , Mek , NAV_Stop );
-				UsePropFrontEnd( GB , Mek , M2 , 'use' );
+				UsePropFrontEnd( GB , Mek , M2 , 'USE' );
 
 			end else begin
 				{ M2 isn't an enemy... try talking to it. }

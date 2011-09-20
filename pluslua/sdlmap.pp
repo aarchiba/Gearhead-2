@@ -754,7 +754,7 @@ begin
 			{ Clear the model map here. }
 			for z := LoAlt to ( HiAlt + 1 ) do begin
 				model_map[ X , Y , z ] := Nil;
-				if Names_Above_Heads then CM_ModelNames[ X , Y , Z ] := '';
+				if Names_Above_Heads and ( Z <= HiAlt ) then CM_ModelNames[ X , Y , Z ] := '';
 			end;
 
 			{ And the off-map icon. }

@@ -1,6 +1,18 @@
 -- Lua initialization for GearHead.
 
 --  *****************************
+--  ***   SCRIPT  FUNCTIONS   ***
+--  *****************************
+
+	function xpos( gearptr )
+		return gh_getnatt( gearptr , NAG_LOCATION , NAS_X )
+	end
+
+	function ypos( gearptr )
+		return gh_getnatt( gearptr , NAG_LOCATION , NAS_Y )
+	end
+
+--  *****************************
 --  ***   TYPE  DEFINITIONS   ***
 --  *****************************
 
@@ -10,10 +22,10 @@
 	proto_stat = {}
 	proto_stat.ptr = 0
 	proto_stat.__index = function( table , key )
-		return( gh_GetStat( table.ptr , key ) )
+		return( gh_getstat( table.ptr , key ) )
 	end
 	proto_stat.__newindex = function( table , key , v )
-		gh_SetStat( table.ptr , key , v )
+		gh_setstat( table.ptr , key , v )
 	end
 
 	function proto_gear:new( o )
@@ -33,42 +45,35 @@
 
 		return o
 	end
-	function proto_gear.use( self )
-		gh_Print( "Using something!" )
+	function proto_gear.USE( self )
+		gh_print( "Using something!" )
 	end
-	function proto_gear:GetG()
-		return gh_GetG( self.ptr )
+	function proto_gear:g()
+		return gh_gearg( self.ptr )
 	end
-	function proto_gear:GetS()
-		return gh_GetS( self.ptr )
+	function proto_gear:s()
+		return gh_gears( self.ptr )
 	end
-	function proto_gear:GetV()
-		return gh_GetV( self.ptr )
+	function proto_gear:v()
+		return gh_gearv( self.ptr )
 	end
-	function proto_gear:GetNAtt( g , s )
-		return gh_GetNAtt( self.ptr , g , s )
+	function proto_gear:getNAtt( g , s )
+		return gh_getnatt( self.ptr , g , s )
 	end
-	function proto_gear:SetNAtt( g , s , v )
-		return gh_SetNAtt( self.ptr , g , s , v )
-	end
-
-	function proto_gear:GetX()
-		return gh_GetNAtt( self.ptr , NAG_LOCATION , NAS_X )
-	end
-	function proto_gear:GetY()
-		return gh_GetNAtt( self.ptr , NAG_LOCATION , NAS_Y )
+	function proto_gear:setNAtt( g , s , v )
+		return gh_setnatt( self.ptr , g , s , v )
 	end
 
 	-- PERSONA
 	proto_persona = proto_gear:new()
 
-	function proto_persona.UseNode( self , node , chatnpc )
+	function proto_persona.useNode( self , node , chatnpc )
 		-- self is the persona being used
 		-- node is the label of the current conversation node
 		-- chatnpc is the NPC being spoken with
 
 		-- Start by clearing the menu.
-		gh_InitChatMenu( true )
+		gh_initchatmenu( true )
 
 		-- If an effect script exists, run that now.
 		if node.effect ~= nil then
@@ -76,14 +81,14 @@
 		end
 
 		-- Set the chat message.
-		gh_SetChatMsg( mutate_message( gh_FormatString( node.msg , self ) , 250 , Contextstring_To_Contexttable( gh_GetContext( chatnpc , 's' ) ) ) )
+		gh_setchatmsg( mutate_message( gh_formatstring( node.msg , self ) , 250 , contextstring_to_contexttable( gh_getcontext( chatnpc , 's' ) ) ) )
 
 		-- If there are any children, add them to the menu.
 		if node.prompts ~= nil then
 			local k,v
 			for k,v in pairs( node.prompts ) do
 				if ( v.condition == nil ) or v.condition( self , chatnpc ) then
-					gh_AddChatMenuItem( k , gh_FormatString( v.msg ) )
+					gh_addchatmenuitem( k , gh_formatstring( v.msg ) )
 				end
 			end
 		end
@@ -91,127 +96,128 @@
 
 	-- SCENES
 	proto_scene = proto_gear:new()
-	function proto_scene.nu1( self )
+	function proto_scene.NU1( self )
 		-- If the number of player units drops to zero, leave the scene.
-		if gh_CountModels( NAV_DEFPLAYERTEAM ) < 1 then
-			gh_Return();
+		if gh_numunits( NAV_DEFPLAYERTEAM ) < 1 then
+			gh_return();
 		end
 	end
 
 	-- CHARACTERS
 	proto_character = proto_gear:new()
 
-	function proto_character.isKnown( self )
-		return( self:GetNAtt( NAG_PERSONAL , NAS_NUMCONVERSATION ) > 0 );
+	function proto_character.IsKnown( self )
+		return( self:getNAtt( NAG_PERSONAL , NAS_NUMCONVERSATION ) > 0 );
 	end
 
 	-- METATERRAIN: DOOR
 	proto_door = proto_gear:new()
-	function proto_door.use( self )
+	function proto_door.USE( self )
 		-- Gonna use this door. The exact effect is going to depend on
 		-- whether this door is open or closed already. We can check this
 		-- via the door's STAT_PASS stat.
 		if self.stat[ STAT_PASS ] < -99 then
 			-- The door is closed. Check to see if it's locked as well.
-			if gh_GetStat( self.ptr , STAT_LOCK ) == 0 then
-				gh_Print( "You open the door." )
+			if gh_getstat( self.ptr , STAT_LOCK ) == 0 then
+				gh_print( "You open the door." )
 				self.stat[ STAT_PASS ] = 0
+--				gh_setstat( self.ptr , STAT_PASS , 0 )
 			else
-				gh_Print( "The door is locked." )
+				gh_print( "The door is locked." )
 			end
 		else
 			-- The door is currently open. Change that.
-			gh_Print( "You close the door." )
-			gh_SetStat( self.ptr , STAT_PASS , -100 )
+			gh_print( "You close the door." )
+			gh_setstat( self.ptr , STAT_PASS , -100 )
 		end
 	end
-	function proto_door.clue_codebreaking( self )
+	function proto_door.CLUE_CODEBREAKING( self )
 		-- Gonna try to unlock this door. Good luck, buddy!
 		-- First, check to make sure that the door is even locked...
-		if gh_GetStat( self.ptr , STAT_LOCK ) ~= 0 then
-			if gh_AttemptUnlimitedSkillTest( NAS_CODEBREAKING , STAT_CRAFT , gh_GetStat( self.ptr , STAT_LOCK ) ) then
-				gh_Print( "You unlock the door." )
-				gh_SetStat( self.ptr , STAT_LOCK , 0 )
+		if gh_getstat( self.ptr , STAT_LOCK ) ~= 0 then
+			if gh_uskilltest( NAS_CODEBREAKING , STAT_CRAFT , gh_getstat( self.ptr , STAT_LOCK ) ) then
+				gh_print( "You unlock the door." )
+				gh_setstat( self.ptr , STAT_LOCK , 0 )
 			else
-				gh_Print( "You do not manage to unlock the door." )
+				gh_print( "You do not manage to unlock the door." )
 			end
 		else
-			gh_Print( "The door does not appear to be locked." )
+			gh_print( "The door does not appear to be locked." )
 		end
 	end
-	function proto_door.reveal( self )
+	function proto_door.REVEAL( self )
 		-- The door was hidden, but has just been revealed.
 		-- Set the terrain in this tile to TERRAIN_THRESHOLD.
-		gh_DrawTerrain( self.GetX() , self.GetY() , TERRAIN_THRESHOLD )
-		gh_Print( "You find a secret door!" )
+		gh_drawterr( xpos( self.ptr ) , ypos( self.ptr ) , TERRAIN_THRESHOLD )
+		gh_print( "You find a secret door!" )
 	end
 
 	-- METATERRAIN: STAIRS UP
 	proto_stairsup = proto_gear:new()
-	function proto_stairsup.use( self )
+	function proto_stairsup.USE( self )
 		-- Gonna use the stairs...
-		if gh_GetStat( self.ptr , STAT_DESTINATION ) ~= 0 then
-			gh_Print( "You go up the stairs." )
-			gh_GotoScene( gh_GetStat( self.ptr , STAT_DESTINATION ) )
+		if gh_getstat( self.ptr , STAT_DESTINATION ) ~= 0 then
+			gh_print( "You go up the stairs." )
+			gh_exit( gh_getstat( self.ptr , STAT_DESTINATION ) )
 		end
 	end
 
 	-- METATERRAIN: STAIRS DOWN
 	proto_stairsdown = proto_gear:new()
-	function proto_stairsdown.use( self )
+	function proto_stairsdown.USE( self )
 		-- Gonna use the stairs...
-		if gh_GetStat( self.ptr , STAT_DESTINATION ) ~= 0 then
-			gh_Print( "You go down the stairs." )
-			gh_GotoScene( gh_GetStat( self.ptr , STAT_DESTINATION ) )
+		if gh_getstat( self.ptr , STAT_DESTINATION ) ~= 0 then
+			gh_print( "You go down the stairs." )
+			gh_exit( gh_getstat( self.ptr , STAT_DESTINATION ) )
 		end
 	end
 
 	-- METATERRAIN: ELEVATOR
 	proto_elevator = proto_gear:new()
-	function proto_elevator.use( self )
+	function proto_elevator.USE( self )
 		-- Not gonna use the stairs...
-		if gh_GetStat( self.ptr , STAT_DESTINATION ) ~= 0 then
-			gh_Print( "You board the elevator." )
-			gh_GotoScene( gh_GetStat( self.ptr , STAT_DESTINATION ) )
+		if gh_getstat( self.ptr , STAT_DESTINATION ) ~= 0 then
+			gh_print( "You board the elevator." )
+			gh_exit( gh_getstat( self.ptr , STAT_DESTINATION ) )
 		end
 	end
 
 	-- METATERRAIN: TRAPDOOR
 	proto_trapdoor = proto_gear:new()
-	function proto_trapdoor.use( self )
+	function proto_trapdoor.USE( self )
 		-- Unlike the other entrances on this list, trapdoors can be locked.
-		if gh_GetStat( self.ptr , STAT_DESTINATION ) ~= 0 then
-			if gh_GetStat( self.ptr , STAT_LOCK ) == 0 then
-				gh_Print( "You go down the trapdoor." )
-				gh_GotoScene( gh_GetStat( self.ptr , STAT_DESTINATION ) )
+		if gh_getstat( self.ptr , STAT_DESTINATION ) ~= 0 then
+			if gh_getstat( self.ptr , STAT_LOCK ) == 0 then
+				gh_print( "You go down the trapdoor." )
+				gh_exit( gh_getstat( self.ptr , STAT_DESTINATION ) )
 			else
-				gh_Print( "The trapdoor is locked." )
+				gh_print( "The trapdoor is locked." )
 			end
 		end
 	end
-	function proto_trapdoor.clue_codebreaking( self )
+	function proto_trapdoor.CLUE_CODEBREAKING( self )
 		-- Gonna try to unlock this trapdoor. Good luck, buddy!
 		-- First, check to make sure that the door is even locked...
-		if gh_GetStat( self.ptr , STAT_LOCK ) ~= 0 then
-			if gh_AttemptUnlimitedSkillTest( NAS_CODEBREAKING , STAT_CRAFT , gh_GetStat( self.ptr , STAT_LOCK ) ) then
-				gh_Print( "You unlock the trapdoor." )
-				gh_SetStat( self.ptr , STAT_LOCK , 0 )
+		if gh_getstat( self.ptr , STAT_LOCK ) ~= 0 then
+			if gh_uskilltest( NAS_CODEBREAKING , STAT_CRAFT , gh_getstat( self.ptr , STAT_LOCK ) ) then
+				gh_print( "You unlock the trapdoor." )
+				gh_setstat( self.ptr , STAT_LOCK , 0 )
 			else
-				gh_Print( "You do not manage to unlock the trapdoor." )
+				gh_print( "You do not manage to unlock the trapdoor." )
 			end
 		else
-			gh_Print( "The trapdoor does not appear to be locked." )
+			gh_print( "The trapdoor does not appear to be locked." )
 		end
 	end
 
 
 	-- METATERRAIN: BUILDING
 	proto_building = proto_gear:new()
-	function proto_building.use( self )
+	function proto_building.USE( self )
 		-- Gonna enter this building, if it has a destination.
-		if gh_GetStat( self.ptr , STAT_DESTINATION ) ~= 0 then
-			gh_Print( "You enter the building." )
-			gh_GotoScene( gh_GetStat( self.ptr , STAT_DESTINATION ) )
+		if gh_getstat( self.ptr , STAT_DESTINATION ) ~= 0 then
+			gh_print( "You enter the building." )
+			gh_exit( gh_getstat( self.ptr , STAT_DESTINATION ) )
 		end
 	end
 
@@ -269,7 +275,7 @@
 
 --  Some useful things that can be done with Lua.
 
-function gh_GetString( source )
+function gh_getstring( source )
 	-- We've been handed something that supposedly contains a string. In
 	-- actual fact it may be a string, a table, or something else.
 	if type( source ) == "string" then
@@ -287,12 +293,12 @@ function gh_GetString( source )
 	end
 end
 
-function gh_FormatString( source , gear )
+function gh_formatstring( source , gear )
 	-- Given a message source and a gear (optional), locate a string message
 	-- and format it correctly.
 
 	-- Step One: Find the message.
-	local rawstring = gh_GetString( source )
+	local rawstring = gh_getstring( source )
 
 	-- Step Two: Stepping through rawstring one word at a time, see if there
 	-- are any substitutions to make.
@@ -300,11 +306,11 @@ function gh_FormatString( source , gear )
 	return( rawstring )
 end
 
-function gh_Print( source , gear )
-	gh_RawPrint( gh_FormatString( source , gear ) )
+function gh_print( source , gear )
+	gh_rawprint( gh_formatstring( source , gear ) )
 end
 
-function Contextstring_To_Contexttable( in_text )
+function contextstring_to_contexttable( in_text )
 	-- We may have to parse a context string. The format for the string is
 	-- a series of "[label]:[description]" phrases, where label is a one char
 	-- identifier and description is five characters long.
@@ -333,11 +339,11 @@ function gh_register( gearptr, gearscript )
 
 	-- Determine the prototype for this gear.
 	proto = gh_prototypes.default;
-	if gh_prototypes[ gh_GetG( gearptr ) ] ~= nil then
-		if gh_prototypes[ gh_GetG( gearptr ) ][ gh_GetS( gearptr ) ] ~= nil then
-			proto = gh_prototypes[ gh_GetG( gearptr ) ][ gh_GetS( gearptr ) ]
-		elseif gh_prototypes[ gh_GetG( gearptr ) ].default ~= nil then
-			proto = gh_prototypes[ gh_GetG( gearptr ) ].default
+	if gh_prototypes[ gh_gearg( gearptr ) ] ~= nil then
+		if gh_prototypes[ gh_gearg( gearptr ) ][ gh_gears( gearptr ) ] ~= nil then
+			proto = gh_prototypes[ gh_gearg( gearptr ) ][ gh_gears( gearptr ) ]
+		elseif gh_prototypes[ gh_gearg( gearptr ) ].default ~= nil then
+			proto = gh_prototypes[ gh_gearg( gearptr ) ].default
 		end
 	end
 
@@ -346,7 +352,7 @@ function gh_register( gearptr, gearscript )
 	P.stat.ptr = gearptr
 
 	-- If this gear has a Narrative ID, store it in the reverse lookup table.
-	local nid = gh_GetNAtt( gearptr , NAG_NARRATIVE , NAS_NID )
+	local nid = gh_getnatt( gearptr , NAG_NARRATIVE , NAS_NID )
 	if nid ~= 0 then
 		nid_lookup[nid] = gearptr
 	end
@@ -378,7 +384,7 @@ end
 function gh_deregister( gearptr )
 	-- Given a gear pointer, dispose of its entry in the gh table.
 	-- Also dispose of its reverse lookup, if appropriate.
-	local nid = gh_GetNAtt( gearptr , NAG_NARRATIVE , NAS_NID )
+	local nid = gh_getnatt( gearptr , NAG_NARRATIVE , NAS_NID )
 	if nid ~= 0 then
 		nid_lookup[nid] = nil
 	end
@@ -438,7 +444,7 @@ function gh_conversation( gearptr, nodeid , npcptr )
 		-- Check to see if we have a valid node. If so, do whatever needs
 		-- to be done.
 		if pnode ~= nil then
-			self.UseNode( self , pnode , chatnpc )
+			self.useNode( self , pnode , chatnpc )
 		else
 			-- Serious problem: if the node can't be found, this means
 			-- that the persona is broken. Print an error message.
