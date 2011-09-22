@@ -46,13 +46,13 @@ Procedure ConnectScene( Scene: GearPtr; DoInitExits: Boolean );
 
 
 Function CreateSceneContent( GB: GameBoardPtr; Control: GearPtr; SPReq: String; Threat: Integer; DoDebug: Boolean ): GearPtr;
+Function CreateAdventureQuest( Adv,City: GearPtr; QReq: String; Threat: Integer; DoDebug: Boolean ): GearPtr;
 
 
 Function SeekUrbanArea( RootScene: GearPtr ): GearPtr;
 
 Function InsertMood( City,Mood: GearPtr; GB: GameBoardPtr ): Boolean;
 
-Function InsertRSC( Source,Frag: GearPtr; GB: GameBoardPtr ): Boolean;
 Procedure EndPlot( GB: GameBoardPtr; Adv,Plot: GearPtr );
 
 Procedure PrepareNewComponent( Story: GearPtr; GB: GameBoardPtr );
@@ -890,6 +890,7 @@ Function InitShard( GB: GameBoardPtr; Scope,Control,Slot,Shard: GearPtr; PlotID,
 	end;
 
 
+
 	Procedure PrepQuestCombatants( LList: GearPtr );
 		{ If this is a quest, scale any combatant NPCs to the proper level. }
 	begin
@@ -1629,6 +1630,23 @@ begin
 	CreateSceneContent := it;
 end;
 
+Function CreateAdventureQuest( Adv,City: GearPtr; QReq: String; Threat: Integer; DoDebug: Boolean ): GearPtr;
+	{ Attempt to create some scene content for the scene being created in GB. }
+	{ If the content is successfully created, it will end up as an invcom of }
+	{ the adventure itself. It's up to the randmaps content inserter to install }
+	{ everything + delete this plot. }
+var
+	it: GearPtr;
+begin
+	City := FindRootScene( City );
+	it := CreateMegaPlot( Nil , City , City , Adv , QReq , Threat , True , DoDebug );
+	if it <> Nil then begin
+		DelinkGear( Adv^.InvCom , it );
+		InsertInvCom( City , it );
+	end;
+	CreateAdventureQuest := it;
+end;
+
 
 Function XSceneDesc( Scene: GearPtr ): String;
 	{ Return the regular scene description plus a few extra bits. }
@@ -1730,12 +1748,6 @@ begin
 	InsertMood := AllOK;
 end;
 
-Function InsertRSC( Source,Frag: GearPtr; GB: GameBoardPtr ): Boolean;
-	{ Insert random scene content, then save some information that will be }
-	{ needed later. }
-begin
-	InsertRSC := MatchPlotToAdventure( FindRoot( Source ) , Nil , Source , Frag , GB , False );;
-end;
 
 Procedure EndPlot( GB: GameBoardPtr; Adv,Plot: GearPtr );
 	{ This plot is over... }

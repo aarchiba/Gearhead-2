@@ -99,7 +99,7 @@ const
 	FieldHQ_Help_File = Doc_Directory + 'man_mecha.txt';
 	Chara_Help_File = Doc_Directory + 'man_chara.txt';
 
-	Config_File = 'gearhead.cfg';
+	Config_File = 'config.cfg';
 
 	Graphics_DirName = 'image';
 	Graphics_Directory = Graphics_Dirname + OS_Dir_Separator;
@@ -754,7 +754,7 @@ begin
 	{ included if they're already set. }
 	if XXRAN_Wizard or ArenaMode_Wizard or XXRAN_Debug or StdPlot_Debug or Full_RPGWorld_Info or Persona_Debug then begin
 		writeln( F , '#' );
-		writeln( F , '#  SECRET OPTIONS' );
+		writeln( F , '#  SECRET OPTIONS:' );
 		writeln( F , '#' );
 	end;
 	if XXRAN_Wizard then writeln( F , 'GIMMEGIMMECHOICE' );

@@ -304,9 +304,9 @@ const
 				while SA <> Nil do begin
 					if HeadMatchesString( 'QUEST' , SA^.Info ) then begin
 						ConReq := RetrieveAString( SA^.Info );
-{						if not AddQuest( Adv , FindRootScene( LList ) , Nil , MasterList , ConReq ) then begin
+						if CreateAdventureQuest( Adv , FindRootScene( LList ) , ConReq , 10 , False ) = nil then begin
 							if XXRan_Debug then DialogMsg( 'ERROR: AddQuest failed for ' + ConReq );
-						end;}
+						end;
 					end;
 					SA := SA^.Next;
 				end;
@@ -441,11 +441,16 @@ begin
 	Idle_Display;
 {$ENDIF}
 	{ Extract the PCForces from the Egg. }
+	{ We just want the PC, and will get rid of everything else. }
 	PCForces := Nil;
 	while Egg^.SubCom <> Nil do begin
 		S := Egg^.SubCom;
 		DelinkGear( Egg^.SubCom , S );
-		AppendGear( PCForces , S );
+		if ( ( S^.G = GG_Character ) and ( NAttValue( S^.NA , NAG_CharDescription , NAS_CharType ) = 0 ) ) then begin
+			AppendGear( PCForces , S );
+		end else begin
+			DisposeGear( S );
+		end;
 	end;
 
 	{ Locate the TruePC. }
@@ -513,6 +518,7 @@ begin
 		S := S2;
 	end;
 
+
 	{ Proceed with the scenes. }
 	S := Atlas;
 	while S <> Nil do begin
@@ -540,9 +546,6 @@ begin
 	S := SeekGearByName( Camp^.Source , SAttValue( TruePC^.SA , 'HOMETOWN' ) );
 	if S <> Nil then S := SeekUrbanArea( S );
 	if S <> Nil then begin
-		Club := LoadFile( 'stub_cavalierclub.txt' , Setting_Directory );
-		InsertSubCom( S , Club );
-
 		Atlas := LoadFile( 'EGG_scenes.txt' , Setting_Directory );
 		Base := SAttValue( Egg^.SA , 'RESIDENCE' );
 		if Base = '' then Base := Default_Residence_Desig;

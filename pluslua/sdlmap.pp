@@ -754,7 +754,7 @@ begin
 			{ Clear the model map here. }
 			for z := LoAlt to ( HiAlt + 1 ) do begin
 				model_map[ X , Y , z ] := Nil;
-				if Names_Above_Heads and ( Z <= HiAlt ) then CM_ModelNames[ X , Y , Z ] := '';
+				if ( Names_Above_Heads ) and ( Z <= HiAlt ) then CM_ModelNames[ X , Y , Z ] := '';
 			end;
 
 			{ And the off-map icon. }
@@ -784,14 +784,10 @@ begin
 						LocateSprite( SpriteName( GB , M ) , SpriteColor( GB , M ) , 64 , 64 ),
 						MapDirToScreenDir( NAttValue( M^.NA , NAG_Location , NAS_D ) )
 				);
-{AddCMCel( 	GB , X , Y , Z , CMC_Master ,
-		LocateSprite( 'test_buruburu.png' , SpriteColor( GB , M ) , 64 , 64 ),
-		0
-);}
-AddCMCel( 	GB , X , Y , Z , CMC_Destroyed ,
-		Compass_Sprite,
-		MapDirToScreenDir( NAttValue( M^.NA , NAG_Location , NAS_D ) )
-);
+				AddCMCel( 	GB , X , Y , Z , CMC_Destroyed ,
+						Compass_Sprite,
+						MapDirToScreenDir( NAttValue( M^.NA , NAG_Location , NAS_D ) )
+				);
 
 				{ Also add a shadow. }
 				AddCMCel( 	GB , X , Y , TerrMan[ TileTerrain( gb , X , Y ) ].Altitude , CMC_MShadow , Shadow_Sprite , 6 );

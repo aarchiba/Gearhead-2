@@ -75,7 +75,7 @@ uses ghswag,narration;
 Const
 	Recursion_Level: Integer = 0;
 
-Procedure SelectThemeAndSpecialty( Adv,NPC: GearPtr );
+Procedure SelectThemeAndSpecialty( NPC: GearPtr );
 	{ Set a theme and a specialty skill for this NPC. }
 const
 	Default_Skill_List = '1 2 3 11 15 16 26 28';
@@ -90,7 +90,7 @@ begin
 	end;
 
 	{ Start by locating the faction. This should contain a list of preferred skill specialties. }
-	Faction := SeekGearByIDTag( Adv , NAG_Narrative , NAS_NID , NAttValue( NPC^.NA , NAG_Personal , NAS_FactionID ) );
+	Faction := SeekCurrentLevelGear( Factions_List , GG_Faction , NAttValue( NPC^.NA , NAG_Personal , NAS_FactionID ) );
 	if Faction <> Nil then SkList := SAttValue( Faction^.SA , 'Specialist_Skills' )
 	else SkList := Default_Skill_List;
 	if ( SkList = '' ) or ( Random(10) = 1) then SkList := Default_Skill_List;
@@ -127,7 +127,7 @@ begin
 	{ personality traits and yadda yadda yadda... }
 	{ All characters can take GENERAL themes. }
 	SkList := 'GENERAL ';
-	AddGearXRContext( Nil, Adv, NPC, SkList, '@' );
+	AddGearXRContext( Nil, Nil, NPC, SkList, '@' );
 
 	{ Add the specialist skill. }
 	SkList := SkList + ' [' + BStr( SpecSkill ) + ']';
@@ -163,7 +163,7 @@ var
 begin
 	{ If the NPC doesn't have a specialist skill, pick a skill and theme now. }
 	if IsACombatant( NPC ) then begin
-		if NAttValue( NPC^.NA , NAG_Personal , NAS_MechaTheme ) = 0 then SelectThemeAndSpecialty( Adv , NPC );
+		if NAttValue( NPC^.NA , NAG_Personal , NAS_MechaTheme ) = 0 then SelectThemeAndSpecialty( NPC );
 
 		{ Combatants automatically get all the basic combat skills. }
 		for SkLvl := 1 to Num_Basic_Combat_Skills do SetNAtt( NPC^.NA , NAG_Skill, SkLvl , 1 );
@@ -591,6 +591,14 @@ var
 
 {*** LOCAL PROCEDURES FOR GHPARSER ***}
 
+Procedure Exit_Persona;
+	{ We've finished this persona. Get out of there. }
+begin
+	{ Set dest to Next and move C to the first non-PersonaNode parent. }
+	dest := SLOT_Next;
+	while ( C <> Nil ) and ( C^.G = GG_PersonaNode ) do C := C^.Parent;
+end;
+
 Procedure InstallGear(IG_G,IG_S,IG_V: Integer);
 	{Install a GEAR of the specified type in the currently}
 	{selected installation location. }
@@ -600,9 +608,7 @@ begin
 
 	{ Step One - only install SLOT_PNode if we're installing a PNode. }
 	if ( dest = SLOT_PNode ) and ( IG_G <> GG_PersonaNode ) then begin
-		{ Set dest to Next and move C to the first non-PersonaNode parent. }
-		dest := SLOT_Next;
-		while ( C <> Nil ) and ( C^.G = GG_PersonaNode ) do C := C^.Parent;
+		Exit_Persona;
 	end;
 
 	{Do the installing}
@@ -748,9 +754,11 @@ end;
 
 Procedure CMD_End;
 	{Finish off a range of subcomponents.}
+	{ If in a persona, get out of that first. }
 	{If Dest = 0, move to the parent gear.}
 	{If Dest <> 0, set Dest to 0.}
 begin
+	if dest = SLOT_PNODE then Exit_Persona;
 	if (dest = 0) and (C <> Nil) then C := C^.Parent
 	else dest := 0;
 end;
@@ -835,8 +843,7 @@ begin
 		{ Step one- deal with the heartbreak of persona nodes. }
 		if dest = SLOT_PNode then begin
 			{ Set dest to Next and move C to the first non-PersonaNode parent. }
-			dest := SLOT_Next;
-			while ( C <> Nil ) and ( C^.G = GG_PersonaNode ) do C := C^.Parent;
+			Exit_Persona;
 		end;
 
 		{ Stick the part somewhere appropriate. }

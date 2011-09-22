@@ -270,7 +270,7 @@ var
 		NID: LongInt;
 	begin
 		while ( P <> Nil ) and ( NumMatches < SearchSize ) do begin
-			if ( P^.G = GG_Character ) and CandidateMatchesDesc( Scope, Plot, P , IDesc , RDesc , GB ) then begin
+			if IsLegalCandidate( P ) and CandidateMatchesDesc( Scope, Plot, P , IDesc , RDesc , GB ) then begin
 				{ Next, check to make sure it has an assigned NID. }
 				NID := NAttValue( P^.NA , NAG_Narrative , NAS_NID );
 				if ( NID <> 0 ) then begin

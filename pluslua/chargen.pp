@@ -1552,7 +1552,8 @@ begin
 		SelectRandomTalent( PC );
 	end;
 
-	SelectMecha( Egg , PC , M = MODE_Regular );
+	{ No mecha please- this is GH1. }
+{	SelectMecha( Egg , PC , M = MODE_Regular );}
 
 	{ Set personality traits. }
 	if M = MODE_Regular then begin
