@@ -2,72 +2,71 @@
 ***   List  of  Functions   ***
 *******************************
 
-gh_AddChatMenuItem( n , message )
+gh_addchatmenuitem( n , message )
 	Adds an option to the conversation menu.
 	*** Restricted: In general, you won't need to use this.
 
-gh_AttemptUnlimitedSkillTest( skill , stat , target )
-	The PC will make a test using skill+stat against a difficulty of target.
-	If this test is failed, additional tests may be taken.
-
-gh_CountModels( team )
-	Returns the number of models (mecha + characters) belonging to the
-	specified team on the current map.
-
-gh_DrawTerrain( x , y , terrain )
+gh_drawterr( x , y , terrain )
 	Changes tile X,Y on the current map to terrain.
 
-gh_GetG( gear )
-	Returns the G attribute of this gear.
-	May also be called as the gear:GetG() method.
+gh_exit( destination )
+	The PC exits the current scene and moves to destination.
 
-gh_GetS( gear )
+gh_gearg( gear )
+	Returns the G attribute of this gear.
+	May also be called as the gear:g() method.
+
+gh_gears( gear )
 	Returns the S attribute of this gear.
 	May also be called as the gear:s() method.
 
-gh_GetV( gear )
+gh_gearv( gear )
 	Returns the V attribute of this gear.
 	May also be called as the gear:v() method.
 
-gh_GetContext( gear , context_label )
+gh_getcontext( gear , context_label )
 	Generates the context for this gear preceded by the char specified
 	in context_label.
 
-gh_GetNAtt( gear , NA_G , NA_S )
+gh_getnatt( gear , NA_G , NA_S )
 	Returns the value of gear's numeric attribute NA_G,NA_S.
 	May also be called as the gear:getNAtt( NA_G , NA_S ) method.
 
-gh_GetStat( gear , stat )
+gh_getstat( gear , stat )
 	Returns the value of gear's stat. Note that the value can be accessed
 	directly through the gear object's gear.stat table.
 
-gh_GotoScene( destination )
-	The PC exits the current scene and moves to destination.
-
-gh_InitChatMenu( AddStandardOps )
+gh_initchatmenu( AddStandardOps )
 	Clears all items currently in the menu. If AddStandardOps is true, it
 	adds the standard options ([Goodbye], [Join], etc) to the menu.
 	*** Restricted: In general, you won't need to use this.
 
-gh_Print( message )
-	Prints a string to the console area.
-	gh_RawPrint( string ) prints a message without formatting.
+gh_numunits( team )
+	Returns the number of models (mecha + characters) belonging to the
+	specified team on the current map.
 
-gh_Return()
+gh_print( message )
+	Prints a string to the console area.
+	gh_rawprint( message ) prints a message without formatting.
+
+gh_return()
 	The PC exits the current scene and moves upwards to its parent.
 
-gh_SetChatMsg( message )
+gh_setchatmsg( message )
 	Sets the current chat message.
 	*** Restricted: In general, you won't need to use this.
 
-gh_SetNAtt( gear , NA_G , NA_S , NA_V )
+gh_setnatt( gear , NA_G , NA_S , NA_V )
 	Sets the value of gear's numeric attribute NA_G,NA_S to NA_V.
 	May also be called as the gear:setNAtt( NA_G , NA_S , NA_V ) method.
 
-gh_SetStat( gear , stat , statvalue )
+gh_setstat( gear , stat , statvalue )
 	Sets the value of gear's stat to statval. Note that this can be done
 	directly through the gear object's gear.stat table.
 
+gh_uskilltest( skill , stat , target )
+	The PC will make a test using skill+stat against a difficulty of target.
+	If this test is failed, additional tests may be taken.
 
 ===
 

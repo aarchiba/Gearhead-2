@@ -303,6 +303,9 @@ begin
 		ExpandCharacter( NPC );
 	end;
 
+	{ Maybe set the NPC's faction. }
+	SetFactionByDesig( Adv, NPC );
+
 	{ Give the NPC a random name + gender + age + personality traits. }
 	if SAttValue( NPC^.SA , 'NAME' ) = '' then begin
 		SetSAtt( NPC^.SA , 'NAME <' + RandomName + '>' );

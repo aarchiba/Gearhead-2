@@ -25,7 +25,6 @@ desig <ACADE>
 requires <CITY>
 % Science
 Science
-Pragmatism 15
 
 Job
 name <Teacher>
@@ -38,7 +37,7 @@ Job
 name <Arena Pilot>
 desig <ADVEN>
 requires <GENERAL>
-SetFaction 5
+faction <PDASS>
 % Mecha Gunnery, Mecha Fighting, Mecha Piloting
 MechaGunnery
 MechaFighting
@@ -60,7 +59,6 @@ requires <GENERAL -SAFE>
 % Awareness, Survival
 Awareness
 Survival
-Sociability -10
 
 Job
 name <Martial Artist>
@@ -87,7 +85,6 @@ requires <Industrial>
 Dodge
 MechaPiloting
 Toughness
-Easygoingness -10
 
 Job
 name <Banker>
@@ -103,7 +100,6 @@ requires <CITY>
 special <NeedsFaction>
 % Shopping
 Shopping
-Easygoingness 10
 
 Job
 name <Corporate Pilot>
@@ -114,7 +110,6 @@ special <NeedsFaction>
 MechaGunnery
 MechaFighting
 MechaPiloting
-Easygoingness 5
 
 Job
 name <Architect>
@@ -129,7 +124,6 @@ desig <CRAFT>
 requires <CITY>
 % CodeBreaking
 CodeBreaking
-Pragmatism 5
 
 Job
 name <Engineer>
@@ -138,7 +132,6 @@ requires <Industrial>
 % Repair, Mecha Engineering
 Repair
 MechaEngineering
-Pragmatism 5
 
 Job
 name <Mecha Designer>
@@ -164,7 +157,6 @@ requires <GENERAL>
 CloseCombat
 Dodge
 Mysticism
-Pragmatism -10
 
 Job
 name <Priest>
@@ -173,7 +165,6 @@ requires <GENERAL>
 % Conversation, Mysticism
 Conversation
 Mysticism
-Pragmatism -15
 
 Job
 name <Construction Worker>
@@ -208,7 +199,6 @@ desig <MEDIA>
 requires <CITY>
 % Conversation
 Conversation
-Sociability 20
 
 Job
 name <Athlete>
@@ -224,7 +214,6 @@ requires <CULTURE>
 % Performance, Taunt
 Performance
 Taunt
-Cheerfulness 15
 
 Job
 name <Dancer>
@@ -248,7 +237,6 @@ desig <MEDIA>
 requires <GENERAL>
 % Performance
 Performance
-Sociability 10
 
 Job
 name <Cyberdoc>
@@ -257,7 +245,6 @@ requires <CITY>
 % Medicine, Science
 Medicine
 Science
-Pragmatism 25
 
 Job
 name <Doctor>
@@ -265,7 +252,6 @@ desig <MEDIC>
 requires <GENERAL>
 % Medicine
 Medicine
-Pragmatism 10
 
 Job
 name <Firefighter>
@@ -275,8 +261,6 @@ requires <GENERAL>
 MechaPiloting
 Medicine
 Toughness
-Heroism 2
-Renown 5
 
 Job
 name <Nurse>
@@ -307,14 +291,11 @@ Job
 name <Knight>
 desig <MILIT>
 requires <MAQUI>
-SetFaction 3
+faction <SILKN>
 % Mecha Piloting, Spot Weakness, Electronic Warfare
 MechaPiloting
 SpotWeakness
 ElectronicWarfare
-Lawfulness 10
-Heroism 5
-Renown 10
 
 Job
 name <Recon Pilot>
@@ -324,7 +305,6 @@ requires <VILLAGE>
 MechaPiloting
 Awareness
 Stealth
-Sociability -5
 
 Job
 name <Soldier>
@@ -343,7 +323,6 @@ requires <CAPITOL>
 % Conversation, Intimidation
 Conversation
 Intimidation
-sociability 15
 
 Job
 name <Lawyer>
@@ -369,7 +348,6 @@ special <NeedsFaction>
 RangedCombat
 SpotWeakness
 Insight
-Lawfulness 5
 
 Job
 name <Forensic Investigator>
@@ -380,8 +358,6 @@ special <NeedsFaction>
 Conversation
 Science
 Insight
-Lawfulness 5
-Pragmatism 15
 
 Job
 name <Hacker>
@@ -390,8 +366,6 @@ requires <GENERAL>
 % Stealth, Code Breaking
 Stealth
 CodeBreaking
-Lawfulness -5
-Pragmatism 10
 
 Job
 name <Smuggler>
@@ -401,8 +375,6 @@ requires <tradehub>
 Conversation
 Shopping
 Stealth
-Lawfulness -5
-Sociability 10
 
 Job
 name <Pirate>
@@ -412,7 +384,6 @@ requires <(SPINNER|ASTEROID)>
 MechaPiloting
 Stealth
 Taunt
-Lawfulness -5
 
 Job
 name <Spy>
@@ -422,7 +393,6 @@ requires <CAPITOL>
 Awareness
 Stealth
 CodeBreaking
-Sociability -25
 
 Job
 name <Chef>
@@ -447,5 +417,4 @@ requires <tradehub>
 % Conversation, Shopping
 Conversation
 Shopping
-Sociability 10
 

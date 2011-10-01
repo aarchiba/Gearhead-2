@@ -6,7 +6,7 @@ Persona
 	requires <*NiceToMeetYou>
 
 	say "Nice to meet you."
-	condition <return( not chatnpc:isKnown() )>
+	condition <return( not chatnpc:IsKnown() )>
 		reply "Nice to meet you!"
 			goto "%next%"
 

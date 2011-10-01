@@ -2063,9 +2063,26 @@ end;
 		if ( MyGear <> nil ) then begin
 			AddGearXRContext( AS_GB , FindRoot( AS_GB^.Scene ) , MyGear , context , c_label[1] );
 		end;
+		Lua_PushString( MyLua , context );
 		Lua_GetContext := 1;
 	end;
 
+	Function Lua_GetReaction( MyLua: PLua_State ): LongInt; cdecl;
+		{ There's a gear that we want to know the context of. }
+		{ First argument is the gear, second argument is the label to apply. }
+	var
+		MyNPC: GearPtr;
+	begin
+		MyNPC := GetLuaGear( MyLua , 1 );
+
+		if ( MyNPC <> nil ) then begin
+			lua_pushinteger( MyLua , ReactionScore( AS_GB^.Scene , LocatePC( AS_GB ) , MyNPC ) );
+		end else begin
+			lua_pushnil( MyLua );
+			RecordError( 'ERROR: GetReaction passed nonexistant gear!' );
+		end;
+		Lua_GetReaction := 1;
+	end;
 
 
 
@@ -2087,6 +2104,7 @@ initialization
 	lua_register( MyLua , 'gh_addchatmenuitem' , @Lua_AddChatMenuItem );
 	lua_register( MyLua , 'gh_setchatmsg' , @Lua_SetChatMsg );
 	lua_register( MyLua , 'gh_getcontext' , @Lua_GetContext );
+	lua_register( MyLua , 'gh_GetReaction' , @Lua_GetContext );
 
 	if lua_dofile( MyLua , 'gamedata/gh_messagemutator.lua' ) <> 0 then RecordError( 'GH_MESSAGEMUTATOR ERROR: ' + lua_tostring( MyLua , -1 ) );
 	if lua_dofile( MyLua , 'gamedata/gh_init.lua' ) <> 0 then RecordError( 'GH_INIT ERROR: ' + lua_tostring( MyLua , -1 ) )

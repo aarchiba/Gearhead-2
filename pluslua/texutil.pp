@@ -174,6 +174,16 @@ begin
 	ExtractReal := it;
 end;
 
+Function LastPos( SubStr: Char; S: String ): Integer;
+	{ Return the last position at which SubStr is found in S. }
+var
+	T: Integer;
+begin
+	T := Length( S );
+	while ( T > 0 ) and ( S[t] <> SubStr ) do dec( T );
+	LastPos := T;
+end;
+
 Function RetrieveAString(const S: String): String;
 	{Retrieve an Alligator String from S.}
 	{Alligator Strings are defined as the part of the string}
@@ -183,7 +193,7 @@ var
 begin
 	{Locate the position of the two alligators.}
 	A1 := Pos('<',S);
-	A2 := Pos('>',S);
+	A2 := LastPos('>',S);
 
 	{If the string has not been declared with <, return}
 	{an empty string.}

@@ -145,8 +145,6 @@ Function FindMetaPersona( Source: GearPtr; N: Integer ): GearPtr;
 
 Function ElementInUse( Scope: GearPtr; ID: LongInt ): Boolean;
 
-Function FindPersonaPlot( Adventure: GearPtr; CID: Integer ): GearPtr;
-
 Function PersonaInUse( Adventure: GearPtr;  ID: LongInt ): Boolean;
 
 Function SeekGearByNID( GB: GameBoardPtr; Adventure: GearPtr; NID: LongInt ): GearPtr;
@@ -220,7 +218,7 @@ var
 	T: Integer;
 begin
 	T := NAttValue( Fac^.NA , NAG_XXRan , NAS_XXFac_Plan );
-	if ( T > 0 ) and ( T <= Num_XXR_Plans ) then Context := Context + ' ' + palette_entry_code + ':P.' + XXR_Plan[ t ]
+	if ( T > 0 ) and ( T <= Num_XXR_Plans ) then Context := Context + ' ' + palette_entry_code + ':P_' + XXR_Plan[ t ]
 	else Context := Context + ' ' + palette_entry_code + ':P.---';
 end;
 
@@ -632,21 +630,6 @@ begin
 	SeekPlotAlongPath := it;
 end;
 
-Function FindPersonaPlot( Adventure: GearPtr; CID: Integer ): GearPtr;
-	{ Search all through ADVENTURE looking for a plot which }
-	{ involves PERSONA. If no such plot is found, return NIL. }
-begin
-	{ Plots should be located along Adventure/InvCom. Plots which }
-	{ are not located there are probably sub-plots, so they probably }
-	{ don't yet have actors assigned. }
-	Adventure := FindRoot( Adventure );
-	if ( Adventure = Nil ) or ( Adventure^.G <> GG_Adventure ) then begin
-		FindPersonaPlot := Nil;
-	end else begin
-		FindPersonaPlot := SeekPlotAlongPath( Adventure^.InvCom , CID , False );
-	end;
-end;
-
 Function ElementInUse( Scope: GearPtr; ID: LongInt ): Boolean;
 	{ See if the listed NID is currently being used by a plot or story, }
 	{ including those which are currently dormant. }
@@ -773,29 +756,32 @@ Function SeekPersona( Scene: GearPtr; CID: LongInt ): GearPtr;
 	{ the plot if one is provided. Otherwise, seek the PERSONA }
 	{ in the GB/Scene gear. }
 var
-	Plot,Persona: GearPtr;
+	Plot,City,Persona: GearPtr;
 	N: Integer;
 begin
 	Persona := Nil;
 
-	{ Use the persona located in the character's PLOT, if appropriate. }
-	Plot := FindPersonaPlot( FindRoot( Scene ) , CID );
-	if Plot <> Nil then begin
-		{ This character is featured in a plot. The plot may }
-		{ well contain a persona for this character to use }
-		{ while the plot is in effect. }
-		N := PlotElementID( Plot , CID );
-		Persona := FindMetaPersona( Plot , N );
+	{ Use the persona in the QUEST, if appropriate. }
+	City := FindRootScene( Scene );
+	if City <> Nil then begin
+		Plot := SeekPlotAlongPath( City^.InvCom , CID , False );
+		if Plot <> Nil then begin
+			N := PlotElementID( Plot , CID );
+			Persona := FindMetaPersona( Plot , N );
+		end;
 	end;
 
-	{ Next two places to look - The current scene, and the }
-	{ adventure itself. }
-	if Persona = Nil then Persona := SeekGear( Scene , GG_Persona , CID );
-	if ( Persona = Nil ) and ( CID > Num_Plot_Elements ) then begin
-		Scene := FindRootScene( Scene );
-		if Scene <> Nil then Persona := SeekGear( Scene , GG_Persona , CID , False );
+	if Persona = Nil then begin
+		{ No active quest. Look for a general plot. }
+		Plot := SeekPlotAlongPath( FindRoot( Scene )^.InvCom , CID , False );
+		if Plot <> Nil then begin
+			{ This character is featured in a plot. The plot may }
+			{ well contain a persona for this character to use }
+			{ while the plot is in effect. }
+			N := PlotElementID( Plot , CID );
+			Persona := FindMetaPersona( Plot , N );
+		end;
 	end;
-
 
 	SeekPersona := Persona;
 end;

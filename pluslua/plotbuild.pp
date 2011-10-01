@@ -1425,6 +1425,7 @@ var
 
 				PContext := Context;
 				AddGearXRContext( GB, Adventure, NPC, PContext, '@' );
+				AddGearXRContext( GB, Adventure, Scope, PContext, 'L' );
 
 				{ We have a bunch of PNodes that need to be linked into a single Lua script. }
 				{ Step One: Go through the tree, assign a nodeID to every SayNode and expand }
@@ -1641,6 +1642,7 @@ begin
 	City := FindRootScene( City );
 	it := CreateMegaPlot( Nil , City , City , Adv , QReq , Threat , True , DoDebug );
 	if it <> Nil then begin
+		it^.S := GS_PlotActive;
 		DelinkGear( Adv^.InvCom , it );
 		InsertInvCom( City , it );
 	end;

@@ -106,7 +106,6 @@ Toughness         <NAtt 1 26 ?10>
 Insight           <NAtt 1 27 ?10>
 Taunt             <NAtt 1 28 ?10>
 SetTeam       <NAtt -1 4 ?0>
-SetFaction    <NAtt 5 2 ?>
 Metal         <NAtt 2 0 0>
 Meat          <NAtt 2 0 1>
 Biotech       <NAtt 2 0 2>
@@ -126,7 +125,7 @@ PNode         <G -23 0 0>
 PNode_R       <G -23 1 0>
 PNode_G       <G -23 2 0>
 PNode_P       <G -23 3 0>
-Faction       <G -6 ? 0>
+Faction       <G -6 0 0>
 Adventure     <G -7 0 0>
 ArenaUnit     <G -7 1 0>
 Team          <G -4 ? 0>
@@ -145,6 +144,7 @@ CaveMap       <Stat 1 -2>
 WildMap       <Stat 1 1>
 CityMap       <Stat 1 -6>
 MegaCityMap   <Stat 1 -7>
+VillageMap    <Stat 1 -35>
 CityBlockMap  <Stat 1 6>
 BoxMap        <Stat 1 -31>
 ComplexMap    <Stat 1 -10>

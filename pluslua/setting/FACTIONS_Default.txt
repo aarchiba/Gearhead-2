@@ -5,9 +5,9 @@
 %   CONTROLLER <>	If this faction has a controller, list its desig
 %
 
-Faction 1
+Faction
 	name <the L5 Council>
-	desig <MAQUI>
+	desig <L5ALI>
 	desc <The governing body of Maquise Spinner, organized along meritocratic principles.>
 	Context <POLIT>
 	type <Government>
@@ -19,34 +19,20 @@ Faction 1
 
 	FacTheme 2
 
-	% Every start, check to see if the PC has advanced in this faction.
-	start <if= PCFac SelfS else GoNoMember   ifFactionEnemy SelfS else GoPro1 StartPlot .fired>
-	.fired <SPECIAL_PLOT_Fired.txt>
-	GoPro1 <ifG PCFacXP FacXPNeeded else GoCheckPromotion PCFacLevel+ 1 PCFacXP= 0 V+ 1 1>
-	GoCheckPromotion <ifG V1 0 StartPlot .promostory FacXPNeeded V+ 1 -1>
-	.promostory <*SPECIAL_Promotion>
-	GoNoMember <FacXP= SelfS 0>
 
-Faction 2
+Faction
 	name <Comet Metalworks>
 	desig <COMET>
 	desc <>
 	Context <CORPO>
 	type <Corporate ArenaOK L5PAT>
 	jobs <CRAFT CORPO TRADE>
-	SetEnemy 7 8 13 15
+	ALLIES <>
+	ENEMIES <HOELL MUGLE CRIHN REDMA>
 	mecha_colors <75 200 212  234 180 88  200 000 100>
 	chara_colors <234 180 88>
 
 	FacTheme 4
-
-	% Every start, check to see if the PC has advanced in this faction.
-	start <if= PCFac SelfS else GoNoMember   ifFactionEnemy SelfS else GoPro1 StartPlot .fired>
-	.fired <SPECIAL_PLOT_Fired.txt>
-	GoPro1 <ifG PCFacXP FacXPNeeded else GoCheckPromotion PCFacLevel+ 1 PCFacXP= 0 V+ 1 1>
-	GoCheckPromotion <ifG V1 0 StartPlot .promostory FacXPNeeded V+ 1 -1>
-	.promostory <*SPECIAL_Promotion>
-	GoNoMember <FacXP= SelfS 0>
 
 	FACRANK_0 <Wage Slave>
 	FACRANK_1 <Employee of the Month>
@@ -59,27 +45,18 @@ Faction 2
 	FACRANK_8 <Vice President>
 
 
-Faction 3
+Faction
 	name <the Silver Knights>
-	% V1 = Number of faction rewards pending
 	desig <SILKN>
 	desc <The elite mecha forces of Cesena Spinner, defenders of the L5 Alliance.>
 	Context <MILIT>
 	type <Military ArenaOK L5PAT>
 	jobs <MILIT>
-	SetAlly 1
-	SetEnemy 14 15 16
-	Controller 1
+	ALLIES <L5ALI>
+	ENEMIES <ROCKE REDMA AEGSF>
+	CONTROLLER <L5ALI>
 	mecha_colors <75 200 212 201 205 229 200 100 0>
 	chara_colors <150 205 229>
-
-	% Every start, check to see if the PC has advanced in this faction.
-	start <if= PCFac SelfS else GoNoMember   ifFactionEnemy SelfS else GoPro1 StartPlot .fired>
-	.fired <SPECIAL_PLOT_Fired.txt>
-	GoPro1 <ifG PCFacXP FacXPNeeded else GoCheckPromotion PCFacLevel+ 1 PCFacXP= 0 V+ 1 1>
-	GoCheckPromotion <ifG V1 0 StartPlot .promostory FacXPNeeded V+ 1 -1>
-	.promostory <*SPECIAL_Promotion>
-	GoNoMember <FacXP= SelfS 0>
 
 	% Faction Rank Names
 	FACRANK_0 <Hopeful>
@@ -93,27 +70,20 @@ Faction 3
 	FACRANK_8 <Grand Master>
 
 
-Faction 4
+Faction
 	name <Aegis Overlord>
 	desig <AEGIS>
 	desc <The totalitarian government of Luna.>
 	CONTEXT <MILIT POLIT>
 	type <Military Government>
-	SetEnemy 1 8
-	SetAlly 11 14 16
+	ALLIES <RISHI AEGSF>
+	ENEMIES <L5ALI CRIHN>
+	CONTROLLER <>
 	mecha_colors <122 130 130 230 20 130 200 200 0>
 
 	FacTheme 2
 
-	% Every start, check to see if the PC has advanced in this faction.
-	start <if= PCFac SelfS else GoNoMember   ifFactionEnemy SelfS else GoPro1 StartPlot .fired>
-	.fired <SPECIAL_PLOT_Fired.txt>
-	GoPro1 <ifG PCFacXP FacXPNeeded else GoCheckPromotion PCFacLevel+ 1 PCFacXP= 0 V+ 1 1>
-	GoCheckPromotion <ifG V1 0 StartPlot .promostory FacXPNeeded V+ 1 -1>
-	.promostory <*SPECIAL_Promotion>
-	GoNoMember <FacXP= SelfS 0>
-
-Faction 5
+Faction
 	name <the Pro Duelist Association>
 	desig <PDASS>
 	desc <The association of professional arena pilots.>
@@ -121,37 +91,21 @@ Faction 5
 	jobs <ADVEN>
 	mecha_colors <201 205 229 208 34 51 0 200 0>
 
-	% Every start, check to see if the PC has advanced in this faction.
-	start <if= PCFac SelfS else GoNoMember   ifFactionEnemy SelfS else GoPro1 StartPlot .fired>
-	.fired <SPECIAL_PLOT_Fired.txt>
-	GoPro1 <ifG PCFacXP FacXPNeeded else GoCheckPromotion PCFacLevel+ 1 PCFacXP= 0 V+ 1 1>
-	GoCheckPromotion <ifG V1 0 StartPlot .promostory FacXPNeeded V+ 1 -1>
-	.promostory <*SPECIAL_Promotion>
-	GoNoMember <FacXP= SelfS 0>
 
-Faction 6
+Faction
 	name <the Privateer Guild>
-	% V1 = Number of faction rewards pending
 	desig <PRIVA>
 	desc <The mercenary mecha forces used by the Free Commerce States and the L5 Alliance.>
 	Context <MILIT>
 	type <Military Mercenary ArenaOK L5PAT>
 	jobs <ADVEN MILIT THIEF>
-	SetAlly 1 10
-	SetEnemy 8 14 15 16
-	Controller 1
+	ALLIES <L5ALI FCOMS>
+	ENEMIES <CRIHN REDMA AEGSF>
+	CONTROLLER <L5ALI>
 	mecha_colors <0 49 83 80 80 85 200 100 0>
 	chara_colors <20 90 130>
 
 	FacTheme 5
-
-	% Every start, check to see if the PC has advanced in this faction.
-	start <if= PCFac SelfS else GoNoMember   ifFactionEnemy SelfS else GoPro1 StartPlot .fired>
-	.fired <SPECIAL_PLOT_Fired.txt>
-	GoPro1 <ifG PCFacXP FacXPNeeded else GoCheckPromotion PCFacLevel+ 1 PCFacXP= 0 V+ 1 1>
-	GoCheckPromotion <ifG V1 0 StartPlot .promostory FacXPNeeded V+ 1 -1>
-	.promostory <*SPECIAL_Promotion>
-	GoNoMember <FacXP= SelfS 0>
 
 	% Faction Rank Names
 	FACRANK_1 <>
@@ -163,26 +117,20 @@ Faction 6
 	FACRANK_7 <Captain>
 	FACRANK_8 <Pirate Lord>
 
-Faction 7
+Faction
 	name <Hoeller Industries>
 	desig <HOELL>
 	desc <>
 	Context <CORPO>
 	type <Corporate ArenaOK L5PAT>
 	jobs <CRAFT CORPO TRADE>
-	SetEnemy 2 8 13 15
+	ALLIES <>
+	ENEMIES <COMET MUGLE REDMA CRIHN>
+	CONTROLLER <>
 	mecha_colors <172 225 175 77 93 83 250 100 0>
 	chara_colors <170 100 240>
 
 	FacTheme 4
-
-	% Every start, check to see if the PC has advanced in this faction.
-	start <if= PCFac SelfS else GoNoMember   ifFactionEnemy SelfS else GoPro1 StartPlot .fired>
-	.fired <SPECIAL_PLOT_Fired.txt>
-	GoPro1 <ifG PCFacXP FacXPNeeded else GoCheckPromotion PCFacLevel+ 1 PCFacXP= 0 V+ 1 1>
-	GoCheckPromotion <ifG V1 0 StartPlot .promostory FacXPNeeded V+ 1 -1>
-	.promostory <*SPECIAL_Promotion>
-	GoNoMember <FacXP= SelfS 0>
 
 	FACRANK_0 <Wage Slave>
 	FACRANK_1 <Employee of the Month>
@@ -194,29 +142,22 @@ Faction 7
 	FACRANK_7 <Branch Director>
 	FACRANK_8 <Vice President>
 
-Faction 8
+Faction
 	name <the Blades of Crihna>
 	desig <CRIHN>
 	desc <>
 	Context <CRIME>
 	type <Crime ArenaOK L5PAT EARTH>
 	jobs <ADVEN THIEF>
-	SetAlly 12
-	SetEnemy 2 4 6 7 9 11 13 14 15 16
+	ALLIES <BOHEM>
+	ENEMIES <COMET AEGIS PRIVA HOELL L5LAW RISHI MUGLE ROCKE REDMA AEGSF>
+	CONTROLLER <>
 	mecha_colors <168 153 230 78 150 137 200 0 0>
 	chara_colors <130 50 20>
 
 	FacTheme 5
 
-	% Every start, check to see if the PC has advanced in this faction.
-	start <if= PCFac SelfS else GoNoMember   ifFactionEnemy SelfS else GoPro1 StartPlot .fired>
-	.fired <SPECIAL_PLOT_Fired.txt>
-	GoPro1 <ifG PCFacXP FacXPNeeded else GoCheckPromotion PCFacLevel+ 1 PCFacXP= 0 V+ 1 1>
-	GoCheckPromotion <ifG V1 0 StartPlot .promostory FacXPNeeded V+ 1 -1>
-	.promostory <*SPECIAL_Promotion>
-	GoNoMember <FacXP= SelfS 0>
-
-Faction 9
+Faction
 	name <L5Law>
 	% V1 = Number of faction rewards pending
 	desig <L5LAW>
@@ -224,21 +165,13 @@ Faction 9
 	context <POLIC>
 	type <police ArenaOK L5PAT>
 	jobs <POLIC>
-	Controller 10
-	SetAlly 1 10 11
-	SetEnemy 8 15
+	ALLIES <L5ALI FCOMS RISHI>
+	ENEMIES <CRIHN REDMA>
+	CONTROLLER <FCOMS>
 	mecha_colors <70 70 85  75 200 212  200 200 0>
 	chara_colors <30 30 90>
 
 	FacTheme 3
-
-	% Every start, check to see if the PC has advanced in this faction.
-	start <if= PCFac SelfS else GoNoMember   ifFactionEnemy SelfS else GoPro1 StartPlot .fired>
-	.fired <SPECIAL_PLOT_Fired.txt>
-	GoPro1 <ifG PCFacXP FacXPNeeded else GoCheckPromotion PCFacLevel+ 1 PCFacXP= 0 V+ 1 1>
-	GoCheckPromotion <ifG V1 0 StartPlot .promostory FacXPNeeded V+ 1 -1>
-	.promostory <*SPECIAL_Promotion>
-	GoNoMember <FacXP= SelfS 0>
 
 	FACRANK_1 <Officer>
 	FACRANK_2 <Investigator>
@@ -249,91 +182,65 @@ Faction 9
 	FACRANK_7 <Superintendent>
 	FACRANK_8 <Commissioner>
 
-Faction 10
+Faction
 	name <the Free Commerce States>
 	desig <FCOMS>
 	desc <>
 	Context <MILIT POLIT>
 	type <Government Military>
 	jobs <POLIT MEDIA MILIT>
-	SetAlly 1 6 9 11
-	SetEnemy 8 15
+	ALLIES <L5ALI PRIVA L5LAW RISHI>
+	ENEMIES <CRIHN REDMA>
+	CONTROLLER <>
 	mecha_colors <244 216 28 116 100 13 152 61 97>
 	chara_colors <239 198 58>
 
 	FacTheme 2
 
-	% Every start, check to see if the PC has advanced in this faction.
-	start <if= PCFac SelfS else GoNoMember   ifFactionEnemy SelfS else GoPro1 StartPlot .fired>
-	.fired <SPECIAL_PLOT_Fired.txt>
-	GoPro1 <ifG PCFacXP FacXPNeeded else GoCheckPromotion PCFacLevel+ 1 PCFacXP= 0 V+ 1 1>
-	GoCheckPromotion <ifG V1 0 StartPlot .promostory FacXPNeeded V+ 1 -1>
-	.promostory <*SPECIAL_Promotion>
-	GoNoMember <FacXP= SelfS 0>
 
-Faction 11
+Faction
 	name <the Rishiri Dominion>
 	desig <RISHI>
 	desc <>
 	Context <POLIT>
 	type <Government>
 	jobs <POLIT MILIT>
-	SetAlly 9 10 4 16
-	SetEnemy 1 8 12
+	ALLIES <L5LAW FCOMS AEGIS AEGSF>
+	ENEMIES <L5ALI CRIHN BOHEM>
+	CONTROLLER <>
 	mecha_colors <122 130 130 244 216 28 200 200 0>
 
 	FacTheme 2
 
-	% Every start, check to see if the PC has advanced in this faction.
-	start <if= PCFac SelfS else GoNoMember   ifFactionEnemy SelfS else GoPro1 StartPlot .fired>
-	.fired <SPECIAL_PLOT_Fired.txt>
-	GoPro1 <ifG PCFacXP FacXPNeeded else GoCheckPromotion PCFacLevel+ 1 PCFacXP= 0 V+ 1 1>
-	GoCheckPromotion <ifG V1 0 StartPlot .promostory FacXPNeeded V+ 1 -1>
-	.promostory <*SPECIAL_Promotion>
-	GoNoMember <FacXP= SelfS 0>
-
-Faction 12
+Faction
 	name <the Bohemian Collective>
 	desig <BOHEM>
 	desc <>
 	Context <POLIT>
 	type <Government>
 	jobs <POLIT ADVEN FAITH MEDIA>
-	SetAlly 8
-	SetEnemy 11 16
+	ALLIES <CRIHN>
+	ENEMIES <RISHI AEGSF>
+	CONTROLLER <>
 	mecha_colors <49 91 141 208 34 51 150 220 220>
 	chara_colors <144 166 195>
 
 	FacTheme 2
 
-	% Every start, check to see if the PC has advanced in this faction.
-	start <if= PCFac SelfS else GoNoMember   ifFactionEnemy SelfS else GoPro1 StartPlot .fired>
-	.fired <SPECIAL_PLOT_Fired.txt>
-	GoPro1 <ifG PCFacXP FacXPNeeded else GoCheckPromotion PCFacLevel+ 1 PCFacXP= 0 V+ 1 1>
-	GoCheckPromotion <ifG V1 0 StartPlot .promostory FacXPNeeded V+ 1 -1>
-	.promostory <*SPECIAL_Promotion>
-	GoNoMember <FacXP= SelfS 0>
-
-Faction 13
+Faction
 	name <MUGL Enterprises>
 	desig <MUGLE>
 	desc <This corporation is best known for its character and lifestyle goods. Recently it has entered the mecha market.>
 	Context <CORPO>
 	type <Corporate ArenaOK L5PAT>
 	jobs <CORPO TRADE MEDIA>
-	SetEnemy 2 7 8 15
+	ALLIES <>
+	ENEMIES <COMET HOELL CRIHN REDMA>
+	CONTROLLER <>
 	mecha_colors <255 105 180 255 253 208 0 240 240>
 	chara_colors <200 64 96>
 
 	FacTheme 4
-
-	% Every start, check to see if the PC has advanced in this faction.
-	start <if= PCFac SelfS else GoNoMember   ifFactionEnemy SelfS else GoPro1 StartPlot .fired>
-	.fired <SPECIAL_PLOT_Fired.txt>
-	GoPro1 <ifG PCFacXP FacXPNeeded else GoCheckPromotion PCFacLevel+ 1 PCFacXP= 0 V+ 1 1>
-	GoCheckPromotion <ifG V1 0 StartPlot .promostory FacXPNeeded V+ 1 -1>
-	.promostory <*SPECIAL_Promotion>
-	GoNoMember <FacXP= SelfS 0>
 
 	FACRANK_0 <Wage Slave>
 	FACRANK_1 <Employee of the Month>
@@ -345,67 +252,64 @@ Faction 13
 	FACRANK_7 <Branch Director>
 	FACRANK_8 <Vice President>
 
-Faction 14
+Faction
 	name <the Rocket Stars>
 	desig <ROCKE>
 	desc <The elite mecha forces of Yatate Spinner, defenders of the Rishiri Dominion.>
 	Context <MILIT>
 	type <Military L5PAT ArenaOK>
 	jobs <MILIT ADVEN>
-	SetAlly 11 16
-	SetEnemy 3 6 8
-	Controller 11
+	ALLIES <RISHI>
+	ENEMIES <SILKN CRIHN PRIVA>
+	CONTROLLER <RISHI>
 	mecha_colors <153 17 153 230 20 130 75 200 212>
 	chara_colors <153 17 153>
 
-	% Every start, check to see if the PC has advanced in this faction.
-	start <if= PCFac SelfS else GoNoMember   ifFactionEnemy SelfS else GoPro1 StartPlot .fired>
-	.fired <SPECIAL_PLOT_Fired.txt>
-	GoPro1 <ifG PCFacXP FacXPNeeded else GoCheckPromotion PCFacLevel+ 1 PCFacXP= 0 V+ 1 1>
-	GoCheckPromotion <ifG V1 0 StartPlot .promostory FacXPNeeded V+ 1 -1>
-	.promostory <*SPECIAL_Promotion>
-	GoNoMember <FacXP= SelfS 0>
-
-Faction 15
+Faction
 	name <the Red Mask Raiders>
 	desig <REDMA>
 	desc <>
 	Context <CRIME>
 	type <Crime ArenaOK L5PAT EARTH>
 	jobs <ADVEN THIEF>
-	SetEnemy 2 3 6 7 8 9 10 13 16
+	ALLIES <>
+	ENEMIES <COMET SILKN PRIVA HOELL CRIHN L5LAW FCOMS ROCKE AEGSF>
+	CONTROLLER <>
 	mecha_colors <103 3 45 56 26 81 0 200 80>
 	chara_colors <150 10 50>
 
 	FacTheme 12
 
-	% Every start, check to see if the PC has advanced in this faction.
-	start <if= PCFac SelfS else GoNoMember   ifFactionEnemy SelfS else GoPro1 StartPlot .fired>
-	.fired <SPECIAL_PLOT_Fired.txt>
-	GoPro1 <ifG PCFacXP FacXPNeeded else GoCheckPromotion PCFacLevel+ 1 PCFacXP= 0 V+ 1 1>
-	GoCheckPromotion <ifG V1 0 StartPlot .promostory FacXPNeeded V+ 1 -1>
-	.promostory <*SPECIAL_Promotion>
-	GoNoMember <FacXP= SelfS 0>
 
-Faction 16
+Faction
 	name <the Aegis Space Force>
 	desig <AEGSF>
 	desc <The space navy of Aegis Overlord.>
 	CONTEXT <MILIT>
 	type <Military>
-	SetEnemy 3 6 8 15
-	SetAlly 4 11 14
-	Controller 4
+	ALLIES <AEGIS RISHI>
+	ENEMIES <SILKN PRIVA CRIHN REDMA>
+	CONTROLLER <AEGIS>
 	mecha_colors <122 130 130 230 20 130 200 200 0>
 
 	FacTheme 2
 
-	% Every start, check to see if the PC has advanced in this faction.
-	start <if= PCFac SelfS else GoNoMember   ifFactionEnemy SelfS else GoPro1 StartPlot .fired>
-	.fired <SPECIAL_PLOT_Fired.txt>
-	GoPro1 <ifG PCFacXP FacXPNeeded else GoCheckPromotion PCFacLevel+ 1 PCFacXP= 0 V+ 1 1>
-	GoCheckPromotion <ifG V1 0 StartPlot .promostory FacXPNeeded V+ 1 -1>
-	.promostory <*SPECIAL_Promotion>
-	GoNoMember <FacXP= SelfS 0>
+Faction
+	name <the Terran Federation>
+	desig <FEDER>
+	desc <A federation of several powerful states on Earth.>
+	CONTEXT <POLIT>
+	type <Military>
+	ALLIES <L5ALI>
+	ENEMIES <AEGIS>
+	CONTROLLER <>
+	mecha_colors <>
+
+	FacTheme 2
+
+
+
+
+
 
 

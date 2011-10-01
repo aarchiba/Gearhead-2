@@ -52,34 +52,6 @@ Content
 	minimap <.#...=#.............&---&>
 
 Content
-	requires <*DECOR_FOR_SHOP Garage>
-	minimap <1#...=#.............&---&>
-	get%1% <if= L%id%01 0 L= %id%01 1 AddLawful -4 SetItemStolen %1%  ifNPCCanSeePC %param% Print %id%01 PCEnemy %param% AddRenown -1>
-	element1 <Prefab>
-	Msg%id%01 <\PERSONA %param% : Hey! Don't touch my stuff!>
-	Msg%id%01_1 <\PERSONA %param% : Keep your paws off the merchandise!>
-	Msg%id%01_2 <\PERSONA %param% : I saw that!>
-	inv
-		RepairFuel 5000
-		name <Mecha Parts>
-		mass 40
-	end
-
-Content
-	requires <*DECOR_FOR_SHOP Legit>
-	minimap <1#...=#.............&---&>
-	get%1% <if= L%id%01 0 L= %id%01 1 AddLawful -2  SetItemStolen %1%  ifNPCCanSeePC %param% Monologue %param% %id%01  PCEnemy %param% AddRenown -1>
-	element1 <Prefab>
-	Msg%id%01 <[ \PERSONA %param% ]: Hey! Don't touch my stuff!>
-	Msg%id%01_1 <[ \PERSONA %param% ]: Keep your paws off the merchandise!>
-	Msg%id%01_2 <[ \PERSONA %param% ]: I saw that!>
-	inv
-		RepairFuel 250
-		name <Spare Parts>
-		mass 10
-	end
-
-Content
 	requires <*DECOR_FOR_SHOP ~Public>
 	minimap <...1................&---&>
 	element1 <Prefab>
@@ -359,7 +331,6 @@ Content
 	inv
 		NPC Shopkeeper
 		Shopping 5
-		chardesc wangtta
 	end
 
 Content
@@ -393,7 +364,6 @@ Content
 	inv
 		NPC Shopkeeper
 		Shopping 15
-		chardesc renowned
 	end
 
 Content
@@ -637,7 +607,6 @@ Content
 	inv
 		NPC Shopkeeper
 		Shopping 5
-		chardesc wangtta
 	end
 
 Content
@@ -655,7 +624,6 @@ Content
 	inv
 		NPC Shopkeeper
 		Shopping 15
-		chardesc renowned
 	end
 
 
@@ -678,7 +646,6 @@ Content
 	inv
 		NPC Shopkeeper
 		Shopping 5
-		chardesc wangtta
 	end
 
 Content
@@ -712,7 +679,6 @@ Content
 	inv
 		NPC Shopkeeper
 		Shopping 15
-		chardesc renowned
 	end
 
 Content
@@ -746,7 +712,7 @@ Content
 	end
 	inv
 		NPC Shopkeeper
-		SetFaction 2
+		faction <COMET>
 	end
 
 Content
@@ -763,7 +729,7 @@ Content
 	end
 	inv
 		NPC Shopkeeper
-		SetFaction 7
+		faction <HOELL>
 	end
 
 Content
@@ -780,8 +746,8 @@ Content
 	end
 	inv
 		NPC Shopkeeper
-		SetFaction 13
-		CharDesc Cheerful Cheerful
+		faction <MUGLE>
+		CharDesc Cheerful
 	end
 
 
@@ -803,40 +769,6 @@ Content
 	end
 	inv
 		NPC Mechanic
-	end
-
-Content
-	requires <*MECHANIC_SHOP (MAQUI|FCOMS|RISHI) -HOELL -MUGLE -&Factionless>
-	content <Required *DECOR_FOR_SHOP %1% Local>
-	element1 <Prefab>
-	team1 <Citizens>
-	teamdata1 <ally pass>
-	sub
-		Persona 1
-		*greeting <*NiceToMeetYou GoShop>
-		*GoShop <*SHOP_MECHA GoBye>
-		*GoBye <*GOODBYE>
-	end
-	inv
-		NPC Mechanic
-		SetFaction 2
-	end
-
-Content
-	requires <*MECHANIC_SHOP (MAQUI|FCOMS|RISHI) -COMET -MUGLE -&Factionless>
-	content <Required *DECOR_FOR_SHOP %1% Local>
-	element1 <Prefab>
-	team1 <Citizens>
-	teamdata1 <ally pass>
-	sub
-		Persona 1
-		*greeting <*NiceToMeetYou GoShop>
-		*GoShop <*SHOP_MECHA GoBye>
-		*GoBye <*GOODBYE>
-	end
-	inv
-		NPC Mechanic
-		SetFaction 7
 	end
 
 Content
@@ -873,7 +805,7 @@ Content
 	inv
 		NPC Shopkeeper
 		Shopping 15
-		chardesc Sociable Cheerful
+		chardesc Extraverted Cheerful
 	end
 
 %% *SHOP_GENERAL CONTENT
@@ -894,7 +826,6 @@ Content
 	inv
 		NPC Shopkeeper
 		Shopping 5
-		chardesc wangtta
 	end
 
 Content
@@ -928,7 +859,6 @@ Content
 	inv
 		NPC Shopkeeper
 		Shopping 15
-		chardesc renowned
 	end
 
 Content
@@ -945,7 +875,6 @@ Content
 	end
 	inv
 		NPC Shopkeeper
-		chardesc Criminal
 	end
 
 
@@ -967,7 +896,6 @@ Content
 	inv
 		NPC Shopkeeper
 		Shopping 5
-		chardesc wangtta
 	end
 
 Content
@@ -1019,24 +947,6 @@ Content
 	inv
 		NPC Shopkeeper
 		Shopping 15
-		chardesc renowned
-	end
-
-Content
-	requires <*WEAPON_SHOP (MAQUI|FCOMS) -COMET ~HOELL -MUGLE>
-	content <Required *DECOR_FOR_WEAPON_SHOP %1% Local>
-	element1 <Prefab>
-	team1 <Citizens>
-	teamdata1 <ally pass>
-	sub
-		Persona 1
-		*greeting <*NiceToMeetYou GoShop>
-		*GoShop <*SHOP_WEAPON GoBye>
-		*GoBye <*GOODBYE>
-	end
-	inv
-		NPC Shopkeeper
-		SetFaction 7
 	end
 
 
@@ -1059,7 +969,6 @@ Content
 	inv
 		NPC Shopkeeper
 		Shopping 5
-		chardesc wangtta
 	end
 
 Content
@@ -1093,25 +1002,6 @@ Content
 	inv
 		NPC Shopkeeper
 		Shopping 15
-		chardesc renowned
-	end
-
-Content
-	requires <*ARMOR_SHOP (MAQUI|FCOMS|RISHI|BOHEM) -HOELL ~MUGLE -COMET>
-	content <Required *DECOR_FOR_ARMOR_SHOP %1% Local>
-	element1 <Prefab>
-	team1 <Citizens>
-	teamdata1 <ally pass>
-	sub
-		Persona 1
-		*greeting <*NiceToMeetYou GoShop>
-		*GoShop <*SHOP_ARMOR GoBye>
-		*GoBye <*GOODBYE>
-	end
-	inv
-		NPC Shopkeeper
-		SetFaction 13
-		CharDesc Cheerful Cheerful
 	end
 
 
@@ -1141,7 +1031,6 @@ Content
 	end
 	inv
 		NPC Shopkeeper
-		chardesc Criminal
 	end
 
 Content
@@ -1159,7 +1048,6 @@ Content
 	end
 	inv
 		NPC Shopkeeper
-		chardesc Criminal
 	end
 
 Content
@@ -1177,7 +1065,6 @@ Content
 	end
 	inv
 		NPC Mechanic
-		chardesc Criminal
 	end
 
 
@@ -1219,7 +1106,6 @@ Content
 	inv
 		NPC Shopkeeper
 		job <Smuggler>
-		chardesc Criminal
 	end
 
 Content
@@ -1407,7 +1293,7 @@ Content
 	end
 	inv
 		NPC Mechanic
-		SetFaction 5
+		faction <PDASS>
 		Shopping 10
 	end
 

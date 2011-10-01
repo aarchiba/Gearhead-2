@@ -1,0 +1,30 @@
+Content
+	name <Starter Quest>
+name <DEBUG>
+	desc <Basically a test of the scripting system. Edit it and see!>
+	requires <*:Q_Starter>
+
+	%% E1 is the home where the PC wakes up
+	%% E2 is Hyolee
+	Element1 <Scene PCHOME>
+	Element2 <Prefab>
+	Place2 <1 (Citizens)>
+
+	sub
+		Persona 2
+		say "Welcome to Hogye."
+			reply "Thanks."
+				say "Whatever."
+
+
+	end
+	inv
+		NPC Scientist
+		name <Hyolee>
+		chardesc Female Heroic Cheerful
+		sdl_portrait <por_f_hyoleenewver(YC-).png>
+		sdl_colors <70 121 119 142 62 39 234 180 88>
+
+	end
+
+

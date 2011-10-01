@@ -1526,7 +1526,7 @@ initialization
 	Game_Sprites := Nil;
 
 	Cursor_Sprite := LocateSprite( 'sys_cursor.png' , 8 , 16 );
-	Title_Screen := LocateSprite( 'sys_titlescreen.png' , 800 , 600 );
+	Title_Screen := LocateSprite( 'sys_arenatitle.png' , 800 , 600 );
 	Ersatz_Mouse_Sprite := LocateSprite( 'sys_mouse.png' , 16 , 16 );
 	Infobox_Border := LocateSprite( 'sys_knotwork.png' , 16 , 16 );
 	Infobox_Backdrop := LocateSprite( 'sys_bgtexture.png' , 32 , 32 );

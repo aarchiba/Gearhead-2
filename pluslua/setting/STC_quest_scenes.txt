@@ -174,7 +174,7 @@ MetaScene
 		Team 2
 		name <Enemies>
 		type <CRIMINAL ROBOT CITY>
-		SetFaction 5
+		faction <PDASS>
 		SetEnemy 1
 		Deploy <if= SelfArenaState NAV_AS_Ready ifG SelfArenaForces 0 WMonster 2 SelfArenaThreat SelfArenaForces>
 		ParaX 25
@@ -211,7 +211,7 @@ MetaScene 0 2
 
 		Team 2
 		name <Enemies>
-		SetFaction 5
+		faction <PDASS>
 		SetEnemy 1
 		Deploy <if= SelfArenaState NAV_AS_Ready ifG SelfArenaForces 0 WMecha 2 SelfArenaThreat SelfArenaForces>
 		ParaX 45

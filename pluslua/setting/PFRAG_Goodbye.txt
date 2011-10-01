@@ -1,0 +1,75 @@
+% Persona Fragment File
+% TYPE: *GOODBYE
+%  The NPC will say good-bye to the PC.
+%  No parameters. This fragment terminates the conversation.
+	Persona
+	requires <*GoodBye @:SILKN>
+	say "For the colonies!"
+
+	Persona
+	requires <*GoodBye @:CORPO>
+	say "Remember, think quality- think \FACTION ChatNPCFac ."
+	condition <>
+	say "Hopefully someday I'll work for a big company..."
+
+	Persona
+	requires <*GOODBYE @:PER_G>
+	say <Hopefully we'll meet again...>
+	condition <return( self:GetReact() >> 0 )>
+	say <Don't hurry back.>
+
+	Persona
+	requires <*GOODBYE @:PER_P>
+	say "It's time to go... I'm sure I'll be seeing you again."
+
+	Persona
+	requires <*GOODBYE @PER_I>
+	say "Bye."
+
+	Persona
+	requires <*GOODBYE @:MECHA>
+	say "Keep the parts oiled and you won't have any trouble with it."
+
+	Persona
+	requires <*GOODBYE @:LABOR>
+	say "Keep on trucking!"
+
+	Persona
+	requires <*GOODBYE @:MEDIC>
+	say "Try to stay in good health."
+
+	Persona
+	requires <*GOODBYE @:TRADE>
+	say "If you need anything else, you know where to find me."
+
+	Persona
+	requires <*GOODBYE ~@:TRADE L:L5ALI>
+	say "Fair winds."
+
+	Persona
+	requires <*GOODBYE @:PER_A>
+	say "Come back and see me again anytime!"
+	condition <return( self:GetReact() >> 50 )>
+	say "Good-bye, \PC ."
+	condition <return( self:GetReact() >> 0 )>
+	say "Don't let the door hit your ass on the way out."
+
+	Persona
+	requires <*GOODBYE @:FAITH>
+	say "May the great spirit guide your path."
+
+	Persona
+	requires <*GOODBYE>
+	say "Good-bye."
+
+	Persona
+	requires <*GOODBYE @:PER_E>
+	say "See you again."
+
+	Persona
+	requires <*GOODBYE @:PER_C>
+	say "It was a real pleasure seeing you!"
+	condition <return( self:GetReact() >> 10 )>
+	say "Good-bye."
+
+
