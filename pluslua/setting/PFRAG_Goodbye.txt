@@ -15,7 +15,7 @@
 	Persona
 	requires <*GOODBYE @:PER_G>
 	say <Hopefully we'll meet again...>
-	condition <return( self:GetReact() >> 0 )>
+	condition <return( chatnpc:GetReact() >> 0 )>
 	say <Don't hurry back.>
 
 	Persona
@@ -49,9 +49,9 @@
 	Persona
 	requires <*GOODBYE @:PER_A>
 	say "Come back and see me again anytime!"
-	condition <return( self:GetReact() >> 50 )>
+	condition <return( chatnpc:GetReact() >> 50 )>
 	say "Good-bye, \PC ."
-	condition <return( self:GetReact() >> 0 )>
+	condition <return( chatnpc:GetReact() >> 0 )>
 	say "Don't let the door hit your ass on the way out."
 
 	Persona
@@ -69,7 +69,7 @@
 	Persona
 	requires <*GOODBYE @:PER_C>
 	say "It was a real pleasure seeing you!"
-	condition <return( self:GetReact() >> 10 )>
+	condition <return( chatnpc:GetReact() >> 10 )>
 	say "Good-bye."
 
 

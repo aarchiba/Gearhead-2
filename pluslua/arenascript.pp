@@ -2087,23 +2087,23 @@ end;
 
 
 initialization
-	lua_register( MyLua , 'gh_gearg' , @Lua_GetGearG );
-	lua_register( MyLua , 'gh_gears' , @Lua_GetGearS );
-	lua_register( MyLua , 'gh_gearv' , @Lua_GetGearV );
-	lua_register( MyLua , 'gh_getstat' , @Lua_GetGearStat );
-	lua_register( MyLua , 'gh_setstat' , @Lua_SetGearStat );
-	lua_register( MyLua , 'gh_getnatt' , @Lua_GetNAtt );
-	lua_register( MyLua , 'gh_setnatt' , @Lua_SetNAtt );
-	lua_register( MyLua , 'gh_rawprint' , @Lua_GHPrint );
-	lua_register( MyLua , 'gh_uskilltest' , @Lua_USkillTest );
-	lua_register( MyLua , 'gh_drawterr' , @Lua_DrawTerr );
-	lua_register( MyLua , 'gh_numunits' , @Lua_NumUnits );
-	lua_register( MyLua , 'gh_return' , @Lua_Return );
-	lua_register( MyLua , 'gh_exit' , @Lua_Exit );
-	lua_register( MyLua , 'gh_initchatmenu' , @Lua_InitChatMenu );
-	lua_register( MyLua , 'gh_addchatmenuitem' , @Lua_AddChatMenuItem );
-	lua_register( MyLua , 'gh_setchatmsg' , @Lua_SetChatMsg );
-	lua_register( MyLua , 'gh_getcontext' , @Lua_GetContext );
+	lua_register( MyLua , 'gh_GetGearG' , @Lua_GetGearG );
+	lua_register( MyLua , 'gh_GetGearS' , @Lua_GetGearS );
+	lua_register( MyLua , 'gh_GetGearV' , @Lua_GetGearV );
+	lua_register( MyLua , 'gh_GetStat' , @Lua_GetGearStat );
+	lua_register( MyLua , 'gh_SetStat' , @Lua_SetGearStat );
+	lua_register( MyLua , 'gh_GetNAtt' , @Lua_GetNAtt );
+	lua_register( MyLua , 'gh_SetNAtt' , @Lua_SetNAtt );
+	lua_register( MyLua , 'gh_RawPrint' , @Lua_GHPrint );
+	lua_register( MyLua , 'gh_TrySkillTest' , @Lua_USkillTest );
+	lua_register( MyLua , 'gh_DrawTerrain' , @Lua_DrawTerr );
+	lua_register( MyLua , 'gh_CountActiveModels' , @Lua_NumUnits );
+	lua_register( MyLua , 'gh_Return' , @Lua_Return );
+	lua_register( MyLua , 'gh_GotoScene' , @Lua_Exit );
+	lua_register( MyLua , 'gh_InitChatMenu' , @Lua_InitChatMenu );
+	lua_register( MyLua , 'gh_AddChatMenuItem' , @Lua_AddChatMenuItem );
+	lua_register( MyLua , 'gh_SetChatMessage' , @Lua_SetChatMsg );
+	lua_register( MyLua , 'gh_GetContext' , @Lua_GetContext );
 	lua_register( MyLua , 'gh_GetReaction' , @Lua_GetContext );
 
 	if lua_dofile( MyLua , 'gamedata/gh_messagemutator.lua' ) <> 0 then RecordError( 'GH_MESSAGEMUTATOR ERROR: ' + lua_tostring( MyLua , -1 ) );

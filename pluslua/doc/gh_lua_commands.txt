@@ -2,71 +2,106 @@
 ***   List  of  Functions   ***
 *******************************
 
-gh_addchatmenuitem( n , message )
+gh_AddChatMenuItem( n , message )
 	Adds an option to the conversation menu.
 	*** Restricted: In general, you won't need to use this.
 
-gh_drawterr( x , y , terrain )
+gh_CountActiveModels( team )
+	Returns the number of models (mecha + characters) belonging to the
+	specified team on the current map.
+
+gh_DrawTerrain( x , y , terrain )
 	Changes tile X,Y on the current map to terrain.
 
-gh_exit( destination )
-	The PC exits the current scene and moves to destination.
-
-gh_gearg( gear )
+gh_GetGearG( gear )
 	Returns the G attribute of this gear.
 	May also be called as the gear:g() method.
 
-gh_gears( gear )
+gh_GetGearS( gear )
 	Returns the S attribute of this gear.
 	May also be called as the gear:s() method.
 
-gh_gearv( gear )
+gh_GetGearV( gear )
 	Returns the V attribute of this gear.
 	May also be called as the gear:v() method.
 
-gh_getcontext( gear , context_label )
+gh_GetContext( gear , context_label )
 	Generates the context for this gear preceded by the char specified
 	in context_label.
 
-gh_getnatt( gear , NA_G , NA_S )
+gh_GetNAtt( gear , NA_G , NA_S )
 	Returns the value of gear's numeric attribute NA_G,NA_S.
 	May also be called as the gear:getNAtt( NA_G , NA_S ) method.
 
-gh_getstat( gear , stat )
+gh_GetStat( gear , stat )
 	Returns the value of gear's stat. Note that the value can be accessed
 	directly through the gear object's gear.stat table.
 
-gh_initchatmenu( AddStandardOps )
+gh_GotoScene( destination )
+	The PC exits the current scene and moves to destination.
+
+gh_InitChatMenu( AddStandardOps )
 	Clears all items currently in the menu. If AddStandardOps is true, it
 	adds the standard options ([Goodbye], [Join], etc) to the menu.
 	*** Restricted: In general, you won't need to use this.
 
-gh_numunits( team )
-	Returns the number of models (mecha + characters) belonging to the
-	specified team on the current map.
-
-gh_print( message )
+gh_Print( message )
 	Prints a string to the console area.
-	gh_rawprint( message ) prints a message without formatting.
+	gh_RawPrint( message ) prints a message without formatting.
 
-gh_return()
+gh_Return()
 	The PC exits the current scene and moves upwards to its parent.
 
-gh_setchatmsg( message )
+gh_SetChatMessage( message )
 	Sets the current chat message.
 	*** Restricted: In general, you won't need to use this.
 
-gh_setnatt( gear , NA_G , NA_S , NA_V )
+gh_SetNAtt( gear , NA_G , NA_S , NA_V )
 	Sets the value of gear's numeric attribute NA_G,NA_S to NA_V.
 	May also be called as the gear:setNAtt( NA_G , NA_S , NA_V ) method.
 
-gh_setstat( gear , stat , statvalue )
+gh_SetStat( gear , stat , statvalue )
 	Sets the value of gear's stat to statval. Note that this can be done
 	directly through the gear object's gear.stat table.
 
-gh_uskilltest( skill , stat , target )
+gh_TrySkillTest( skill , stat , target )
 	The PC will make a test using skill+stat against a difficulty of target.
 	If this test is failed, additional tests may be taken.
+
+
+*****************************
+***   LIST  OF  METHODS   ***
+*****************************
+
+gear:GetG()
+	Returns the G descriptor of the gear.
+
+gear:GetNAtt( G , S )
+	Returns a numeric attribute with descriptors G,S of this gear.
+
+gear:GetS()
+	Returns the S descriptor of the gear.
+
+gear:GetV()
+	Returns the V descriptor of the gear.
+
+gear:GetX()
+	Returns the X position of the gear.
+
+gear:GetY()
+	Returns the Y position of the gear.
+
+gear:SetNAtt( G , S , V )
+	Sets a numeric attribute with descriptors G,S and value V.
+
+  ==============================
+  ===   CHARACTER  METHODS   ===
+  ==============================
+
+gear:IsKnown()
+	Returns true if the character is known by the PC, or false otherwise.
+
+
 
 ===
 
