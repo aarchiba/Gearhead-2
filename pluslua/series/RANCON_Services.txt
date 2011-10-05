@@ -1,3 +1,25 @@
+%% *SHOP_GENERAL CONTENT
+%%   Contains a miscellaneous store.
+
+Content
+	requires <*GENERAL_SHOP ~Poor -Rich>
+	content <Required *DECOR_FOR_GENERAL_SHOP %1% Local>
+	element1 <Prefab>
+	team1 <Citizens>
+	teamdata1 <ally pass>
+	sub
+		Persona 1
+		PFrag "*NiceToMeetYou"
+		PFrag "*SHOP_GENERAL"
+		PFrag "*GOODBYE>"
+	end
+	inv
+		NPC Shopkeeper
+		Shopping 5
+	end
+
+
+
 %% *SHOP_RANDOM CONTENT
 %%   Contains a business.
 Content

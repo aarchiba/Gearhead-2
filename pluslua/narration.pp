@@ -781,6 +781,9 @@ begin
 			N := PlotElementID( Plot , CID );
 			Persona := FindMetaPersona( Plot , N );
 		end;
+
+		{ No quest or plot. Use the default persona in the city. }
+		if ( Persona = Nil ) and ( City <> Nil ) then Persona := SeekGearByIDTag( City^.SubCom , NAG_Narrative , NAS_PersonaID , CID );
 	end;
 
 	SeekPersona := Persona;

@@ -274,6 +274,7 @@ begin
 	if Container <> Nil then begin
 
 
+
 		MF2 := Container^.SubCom;
 		while MF2 <> Nil do begin
 			if ( MF2^.G = GG_MapFeature ) and OnTheMap( GB , MF2^.Stat[ STAT_XPos ] , MF2^.Stat[ STAT_YPos ] ) then begin
@@ -2470,6 +2471,7 @@ begin
 	end;
 
 	{ Start working on the elements. Check out the ones we call the elements, like a box of paints that mix to make every shade. Hey, who let in all these elephants? You know that elephants are made of elements! }
+	{ Copy the elements from their current location to the new scene. }
 	for t := 1 to Num_Plot_Elements do begin
 		{ See if there's an element in this slot. }
 		E := SeekPlotElement( Adv , C , T , GB );
@@ -2524,7 +2526,7 @@ begin
 			{ Delink it from the plot. }
 			DelinkGear( C^.SubCom , P );
 			{ Set the correct CID code for this persona. }
-			P^.S := ElementID( C , P^.S );
+			SetNAtt( P^.NA , NAG_Narrative , NAS_PersonaID , ElementID( C , P^.S ) );
 
 			{ Also record the Plot ID. }
 			SetNAtt( P^.NA , NAG_Narrative , NAS_PlotID , NAttValue( GB^.Scene^.NA , NAG_Narrative , NAS_PlotID ) );
@@ -2909,6 +2911,7 @@ const
 			Y := Scene^.Stat[ STAT_MapHeight ] div 7;
 			C := ( X * Y ) div 3;
 		end else if DMode = MODE_Mall then begin
+
 			X := ( Scene^.Stat[ STAT_MapWidth ] - 1 ) div 6;
 			if X > 1 then Dec( X );
 			Y := ( Scene^.Stat[ STAT_MapHeight ] - 1 ) div 7;
