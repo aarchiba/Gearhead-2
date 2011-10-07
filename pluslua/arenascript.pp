@@ -1195,7 +1195,7 @@ begin
 	end;
 end;
 
-Procedure HandleQuit( GB: GameBoardPtr );
+Procedure HandleQuitLance( GB: GameBoardPtr );
 	{ I_NPC will quit the party. }
 begin
 	if I_NPC = Nil then Exit;
@@ -1210,12 +1210,9 @@ Procedure HandleInteract( GB: GameBoardPtr; PC,NPC,Persona: GearPtr );
 	{ the player selects one of the provided responses, which will }
 	{ either trigger another script ( V >= 0 ) or call one of the }
 	{ standard interaction routines ( V < 0 ) }
-	Procedure InvokePNode( PNode: LongInt );
+	Procedure InvokePNode( trigger: String );
 		{ Invoke the requested node of the requested persona. }
-	var
-		Trigger: String;
 	begin
-		Trigger := 'node_' + BStr( PNode );
 		{ Call the Conversation function in Lua. }
 		lua_getglobal( MyLua , 'gh_conversation' );
 		lua_pushlightuserdata( MyLua , Pointer( I_Persona ) );
@@ -1230,7 +1227,11 @@ Procedure HandleInteract( GB: GameBoardPtr; PC,NPC,Persona: GearPtr );
 		{ Get rid of the boolean or error message now on the stack. }
 		lua_settop( MyLua , 0 );
 	end;
-
+	Function PNodeTrigger( PNode: LongInt ): String;
+		{ Return the trigger label for this numbered PNode. }
+	begin
+		PNodeTrigger := 'node_' + BStr( PNode );
+	end;
 var
 	IntScr: String;		{ Interaction Script }
 	N,FreeRumors: Integer;
@@ -1257,7 +1258,7 @@ begin
 
 	{ We start from the greeting node. }
 	PNode := PNode_Greeting;
-	InvokePNode( PNode );
+	InvokePNode( PNodeTrigger( PNode ) );
 
 	repeat
 		{ Print the NPC description. }
@@ -1278,7 +1279,7 @@ begin
 			{ One of the placed options have been triggered. }
 			{ Attempt to find the appropriate script to }
 			{ invoke. }
-			InvokePNode( N );
+			InvokePNode( PNodeTrigger( N ) );
 
 		end else if N = CMD_Join then begin
 			AttemptJoin( GB );
@@ -1288,7 +1289,7 @@ begin
 			SetItemByPosition( IntMenu , 1 );
 
 		end else if N = CMD_Quit then begin
-			HandleQuit( GB );
+			HandleQuitLance( GB );
 			ClearMenu( IntMenu );
 
 		end else if N = CMD_WhereAreYou then begin

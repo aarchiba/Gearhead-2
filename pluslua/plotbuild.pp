@@ -1532,6 +1532,7 @@ begin
 	end;
 
 	DoStringSubstitutions();
+
 	PrepAllPersonas( FindRoot( Plot ) );
 	PrepMetaScenes( FindRoot( Plot ) );
 
@@ -1561,7 +1562,9 @@ begin
 	{ be complete first. }
 	PFab := Plot^.InvCom;
 	while PFab <> Nil do begin
-		if PFab^.G = GG_Plot then CompleteThePlot( GB , Scope , Control , Plot , IsAQuest );
+		if PFab^.G = GG_Plot then begin
+			CompleteThePlot( GB , Scope , Control , PFab , IsAQuest );
+		end;
 		PFab := PFab^.Next;
 	end;
 end;
@@ -1793,6 +1796,7 @@ begin
 
 			end else begin
 				{ Search for global gears in the invcom, storing them as needed. }
+
 				DelinkAndPutAway( P2^.InvCom );
 				DelinkAndPutAway( P2^.SubCom );
 				DeleteFrozenLocation( GearName( P2 ) , GB^.Camp^.Maps );

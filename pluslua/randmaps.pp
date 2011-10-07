@@ -275,6 +275,8 @@ begin
 
 
 
+
+
 		MF2 := Container^.SubCom;
 		while MF2 <> Nil do begin
 			if ( MF2^.G = GG_MapFeature ) and OnTheMap( GB , MF2^.Stat[ STAT_XPos ] , MF2^.Stat[ STAT_YPos ] ) then begin
@@ -500,6 +502,7 @@ begin
 	SetNAtt( GB^.Scene^.NA , NAG_EntryDirections , Entry^.Stat[ STAT_Destination ] , D + 1 );
 
 	InsertInvCom( GB^.Scene , Entry );
+
 end;
 
 
@@ -2017,6 +2020,7 @@ begin
 			if MT^.S = GS_MetaDoor then begin
 				{ This is a door. Delete it. }
 				DisposeGear( MT );
+
 			end else begin
 				{ This is not a door. Place it somewhere }
 				{ appropriate in the map feature. }
@@ -2558,10 +2562,12 @@ Procedure InsertFinishedContent( GB: GameBoardPtr; Adv,C,Zone: GearPtr );
 	{ one. }
 begin
 	while C <> Nil do begin
-		InsertContentFragment( GB , Adv , C , Zone );
+		if C^.G = GG_Plot then begin
+			InsertContentFragment( GB , Adv , C , Zone );
 
-		{ Don't forget the subplots! }
-		InsertFinishedContent( GB, Adv, C^.InvCom , Zone );
+			{ Don't forget the subplots! }
+			InsertFinishedContent( GB, Adv, C^.InvCom , Zone );
+		end;
 		C := C^.Next;
 	end;
 end;
@@ -2589,7 +2595,7 @@ var
 	ContentID: LongInt;
 begin
 	{ Call the scene content creator. }
-	C := CreateSceneContent( GB , Nil , CType , NAttValue( GB^.Scene^.NA , NAG_Narrative , NAS_DifficultyLevel ) , True );
+	C := CreateSceneContent( GB , Nil , CType , NAttValue( GB^.Scene^.NA , NAG_Narrative , NAS_DifficultyLevel ) , False );
 
 	{ If we got something, we now have to integrate it into the scene. }
 	if C <> Nil then begin
