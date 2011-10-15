@@ -2938,8 +2938,6 @@ var
 	PC: GearPtr;
 	update_trigger: String;
 begin
-	{ Set the gameboard's pointer to the campaign. }
-	Camp^.GB^.Camp := Camp;
 
 	PC := LocatePC( Camp^.GB );
 	PCACTIONRD_PC := PC;

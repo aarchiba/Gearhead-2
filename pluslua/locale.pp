@@ -443,7 +443,7 @@ type
 	end;
 
 	Tile = Record
-		Terr: Integer;
+		Terr: Byte;
 		Visible: Boolean;
 	end;
 
@@ -564,6 +564,7 @@ Function MovementBlocked( Mek: GearPtr; GB: GameBoardPtr; OX,OY,DX,DY: Integer )
 Function FrontBlocked( Mek: GearPtr; GB: GameBoardPtr; D: Integer ): Boolean;
 Function MoveBlocked( Mek: GearPtr; GB: GameBoardPtr ): Boolean;
 Function CalcMoveTime( Mek: GearPtr; GB: GameBoardPtr ): Integer;
+
 Function CalcRelativeSpeed( Mek: GearPtr; GB: GameBoardPtr ): Integer;
 
 Function IsInCover( GB: GameBoardPtr; Master: GearPtr ): Boolean;

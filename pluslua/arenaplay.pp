@@ -48,6 +48,12 @@ const
 	DEBUG_ON: Boolean = False;
 
 
+function IsWorldMapScene( Scene: GearPtr ): Boolean;
+	{ Return TRUE if this scene is part of the world map, or FALSE }
+	{ otherwise. }
+begin
+	IsWorldMapScene := ( Scene <> Nil ) and ( Scene^.G = GG_Scene ) and ( Scene^.Parent <> Nil ) and ( Scene^.Parent^.G = GG_World );
+end;
 
 Procedure ProcessMovement( GB: GameBoardPtr; Mek: GearPtr );
 	{ Call the LOCALE movement routine, then update the display }
@@ -687,6 +693,87 @@ begin
 	end;
 end;
 
+Function GenWorldMapScene( Camp: CampaignPtr; Scene: GearPtr ): GameBoardPtr;
+	{ Generate a world map scene. To do this, you're going to have to }
+	{ look for the 8 adjacent scenes and combine their maps into a giant }
+	{ supermap. }
+	{ Also deploy the metaterrain for each of the map scenes. }
+var
+	World: GearPtr;
+	WorldGB: GameBoardPtr;
+	WMScenes: Array [-1..1,-1..1] of GearPtr;	{ Determines which scenes exist. }
+	X,Y,DX,DY: Integer;
+begin
+	World := Scene^.Parent;
+
+	{ Step one- fill the WMScenes array with scenes. }
+	for DX := -1 to 1 do begin
+		for DY := -1 to 1 do begin
+
+		end;
+	end;
+
+end;
+
+Procedure WorldMapDeploy( Camp: CampaignPtr; Scene,PCForces: GearPtr );
+	{ Deploy the game forces as described in the Scene. }
+var
+	it,it2: GearPtr;
+begin
+	if DEBUG_ON then DialogMsg( 'WorldMapDeploy' );
+
+	{ ERROR CHECK - If this campaign already has a GameBoard, no need to }
+	{ deploy anything. It was presumably just restored from disk and should }
+	{ be fully stocked. }
+	if Camp^.GB <> Nil then Exit;
+
+	{ Record the tactics turn start time. }
+	{ This gets reset along with the scene, but should not be reset for saved games. }
+	SetNAtt( Scene^.NA , NAG_SceneData , NAS_TacticsTurnStart , Camp^.ComTime );
+
+	{ Generate the map for this scene. }
+	{ *** CHANGE - Use GenWorldMapScene function. }
+	Camp^.gb := GenWorldMapScene( Camp , Scene );
+
+	Camp^.GB^.ComTime := Camp^.ComTime;
+	Camp^.gb^.Scene := Scene;
+	Camp^.gb^.Scale := Scene^.V;
+
+	{ Get the PC Forces ready for deployment. }
+	PreparePCForces( Camp^.GB , PCForces );
+
+	{ Stick the metaterrain on the map, since the PC position may well be }
+	{ determined by this. }
+	{ *** CHANGE - This is handled by GenWorldMapScene. }
+
+	{ Stick the PC forces on the map. }
+	{ Clear the PC_TEAM saved position. }
+	PC_Team_X := 0;
+	while PCForces <> Nil do begin
+		it2 := PCForces^.Next;
+		it := PCForces;
+		DelinkGear( PCForces , it );
+		if NAttValue( it^.NA , NAG_Location , NAS_Team ) = NAV_DefPlayerTeam then begin
+			DeployGear( Camp^.gb , it , GearActive( it ) AND ( ( it^.Scale <= Camp^.GB^.Scale ) or ( ( Camp^.GB^.Scene <> Nil ) and ( Camp^.GB^.Scene^.G = GG_World ) ) ) );
+		end else begin
+			{ *** CHANGE - on world map, lancemates never deployed. }
+			DeployGear( Camp^.gb , it , False );
+		end;
+		PCForces := it2;
+	end;
+
+	{ *** CHANGE - Don't bother with the following two steps. }
+	{  Check the orders of the lancemates. }
+	{  Stick the local NPCs on the map. }
+
+	{ Set the encounter recharge, so the PC doesn't get ambushed right away. }
+	SetNAtt( Scene^.NA , NAG_SceneData , NAS_EncounterRecharge , Camp^.GB^.ComTime + Standard_Encounter_Recharge );
+
+	{ Finally, deploy any temp forces and perform initialization requested by teams. }
+	PrepareTeams( Camp^.GB );
+end;
+
+
 Procedure DeployJJang( Camp: CampaignPtr; Scene,PCForces: GearPtr );
 	{ Deploy the game forces as described in the Scene. }
 var
@@ -1152,6 +1239,19 @@ var
 	it: Integer;
 begin
 	DeployJjang( Camp , Scene , PCForces );
+
+	{ Once everything is deployed, save the campaign. }
+	if DoAutoSave then PCSaveCampaign( Camp , LocatePC( Camp^.GB ) , False );
+
+	{ Perform some initialization. }
+	{ To start with, do a vision check for everyone, }
+	{ then set up the display. }
+	UniversalVisionCheck( Camp^.GB );
+	CombatDisplay( Camp^.GB );
+
+	{ Set the gameboard's pointer to the campaign. }
+	Camp^.GB^.Camp := Camp;
+
 
 	it := WorldMapMain( Camp );
 
