@@ -693,26 +693,133 @@ begin
 	end;
 end;
 
+Procedure DeployMetaterrain( GB: GameBoardPtr; Scene: GearPtr );
+	{ Move the metaterrain from SCENE onto the map. }
+var
+	it,it2: GearPtr;
+begin
+	it := Scene^.InvCom;
+	while it <> Nil do begin
+		it2 := it^.Next;
+
+		{ Check to see if this is metaterrain. }
+		if ( it^.G = GG_MetaTerrain ) then begin
+			DelinkGear( Scene^.InvCom , it );
+			DeployGear( GB , it , True );
+		end;
+
+		it := it2;
+	end;
+end;
+
 Function GenWorldMapScene( Camp: CampaignPtr; Scene: GearPtr ): GameBoardPtr;
 	{ Generate a world map scene. To do this, you're going to have to }
 	{ look for the 8 adjacent scenes and combine their maps into a giant }
 	{ supermap. }
 	{ Also deploy the metaterrain for each of the map scenes. }
+	Function FindWorldMapCell( LList: GearPtr; X , Y: Integer ): GearPtr;
+		{ Find the record for the scene in cell X,Y on the world map. }
+		{ It must be located along LList; no need to check children. }
+	var
+		it: GearPtr;
+	begin
+		it := nil;
+		while ( it = nil ) and ( LList <> nil ) do begin
+			if ( LList^.G = GG_Scene ) and ( NAttValue( LList^.NA , NAG_Narrative , NAS_WorldMapX ) = X ) and ( NAttValue( LList^.NA , NAG_Narrative , NAS_WorldMapY ) = Y ) then begin
+				it := LList;
+			end;
+			LList := LList^.Next;
+		end;
+		FindWorldMapCell := it;
+	end;
+	Function WorldSubSceneWidth( World: GearPtr ): Integer;
+		{ Return the width/height of a subscene of this world. }
+	begin
+		WorldSubSceneWidth := World^.Stat[ STAT_WORLDMAPWIDTH ];
+	end;
+	Procedure MoveToWorldMap( TempGB, WorldGB: GameBoardPtr; XOff,YOff: Integer );
+		{ Move everything on TempGB to WorldGB, shifting the X,Y positions as appropriate. }
+	var
+		M: GearPtr;
+	begin
+		while TempGB^.Meks <> Nil do begin
+			M := TempGB^.Meks;
+			DelinkGear( TempGB^.Meks , M );
+			AddNAtt( M^.NA , NAG_Location , NAS_X , XOff );
+			AddNAtt( M^.NA , NAG_Location , NAS_Y , YOff );
+			DeployGear( WorldGB , M , true );
+		end;
+	end;
 var
 	World: GearPtr;
-	WorldGB: GameBoardPtr;
+	WorldGB,TempGB: GameBoardPtr;
 	WMScenes: Array [-1..1,-1..1] of GearPtr;	{ Determines which scenes exist. }
-	X,Y,DX,DY: Integer;
+	WSSW,X,Y,X0,Y0,DX,DY: Integer;
 begin
 	World := Scene^.Parent;
+	X0 := NAttValue( Scene^.NA , NAG_Narrative , NAS_WorldMapX );
+	Y0 := NAttValue( Scene^.NA , NAG_Narrative , NAS_WorldMapY );
 
 	{ Step one- fill the WMScenes array with scenes. }
 	for DX := -1 to 1 do begin
 		for DY := -1 to 1 do begin
-
+			X := X0 + DX;
+			Y := Y0 + DY;
+			FixWorldCoords( World , X , Y );
+			WMScenes[ DX , DY ] := FindWorldMapCell( World^.SubCom , X , Y );
 		end;
 	end;
 
+	{ Step two- based on how many scenes we have, dimension the gameboard. }
+	{ Assume that the defined map is perfectly rectangular. }
+	WSSW:= WorldSubSceneWidth( World );
+	X := WSSW;
+	if WMScenes[ -1 , 0 ] <> nil then X := X + WSSW;
+	if WMScenes[  1 , 0 ] <> nil then X := X + WSSW;
+	Y := WSSW;
+	if WMScenes[ 0 , -1 ] <> nil then Y := Y + WSSW;
+	if WMScenes[ 0 ,  1 ] <> nil then Y := Y + WSSW;
+	WorldGB := NewMap( X , Y );
+	WorldGB^.Scene := Scene;
+
+	{ Step three- locate each sub-map and insert it into the supermap. }
+	for DX := -1 to 1 do begin
+		for DY := -1 to 1 do begin
+			if WMScenes[ DX , DY ] <> nil then begin
+				TempGB := UnfreezeLocation( GearName( WMScenes[ DX , DY ] ) , Camp^.Maps , False );
+				if TempGB = Nil then begin
+					TempGB := RandomMap( WMScenes[ DX , DY ] );
+					{ The world map scenes don't normally change, so we're gonna save this }
+					{ one to file now and never worry about it afterwards. }
+					FreezeLocation( GearName( WMScenes[ DX , DY ] ) , TempGB , Camp^.Maps );
+				end;
+
+				{ Determine the offsets of this tile. }
+				X0 := ( DX + 1 ) * WSSW;
+				if WMScenes[ -1 , 0 ] = nil then X0 := X0 - WSSW;
+				Y0 := ( DY + 1 ) * WSSW;
+				if WMScenes[ 0 , -1 ] = nil then Y0 := Y0 - WSSW;
+
+				{ Copy over the tiles. }
+				for X := 1 to WSSW do begin
+					for Y := 1 to WSSW do begin
+						SetTile( WorldGB , X + X0 , Y + Y0 , GetTile( TempGB , X , Y ) );
+					end;
+				end;
+
+				{ Deploy everything on the temp map, then move it to the real map }
+				{ with an offset. Unlike normal maps, only metaterrain and items get }
+				{ placed on a world map. }
+				DeployMetaTerrain( TempGB , WMScenes[ DX , DY ] );
+				MoveToWorldMap( TempGB , WorldGB , X0 , Y0 );
+
+				TempGB^.Scene := Nil;
+				DisposeMap( TempGB );
+			end;
+		end;
+	end;
+
+	GenWorldMapScene := WorldGB;
 end;
 
 Procedure WorldMapDeploy( Camp: CampaignPtr; Scene,PCForces: GearPtr );
@@ -792,7 +899,7 @@ begin
 
 	{ Generate the map for this scene. It will either be created }
 	{ randomly or drawn from the frozen maps. }
-	Camp^.gb := UnfreezeLocation( GearName( Scene ) , Camp^.Maps );
+	Camp^.gb := UnfreezeLocation( GearName( Scene ) , Camp^.Maps , true );
 	if Camp^.GB = Nil then Camp^.gb := RandomMap( SCene );
 
 	Camp^.GB^.ComTime := Camp^.ComTime;
@@ -804,19 +911,7 @@ begin
 
 	{ Stick the metaterrain on the map, since the PC position may well be }
 	{ determined by this. }
-	it := Scene^.InvCom;
-	while it <> Nil do begin
-		it2 := it^.Next;
-
-		{ Check to see if this is metaterrain. }
-		if ( it^.G = GG_MetaTerrain ) then begin
-			DelinkGear( Scene^.InvCom , it );
-			DeployGear( Camp^.gb , it , True );
-		end;
-
-		it := it2;
-	end;
-
+	DeployMetaterrain( Camp^.GB , Scene );
 
 	{ Stick the PC forces on the map. }
 	{ Clear the PC_TEAM saved position. }
@@ -1238,12 +1333,17 @@ Function WorldPlayer( Camp: CampaignPtr ; Scene: GearPtr; var PCForces: GearPtr 
 var
 	it: Integer;
 begin
-	DeployJjang( Camp , Scene , PCForces );
+	WorldMapDeploy( Camp , Scene , PCForces );
 
 	{ Once everything is deployed, save the campaign. }
 	if DoAutoSave then PCSaveCampaign( Camp , LocatePC( Camp^.GB ) , False );
 
 	{ Perform some initialization. }
+	{ Do some graphics initializing, if needed. }
+{$IFNDEF ASCII}
+	InitGraphicsForScene( Camp^.GB );
+{$ENDIF}
+
 	{ To start with, do a vision check for everyone, }
 	{ then set up the display. }
 	UniversalVisionCheck( Camp^.GB );
@@ -1252,13 +1352,33 @@ begin
 	{ Set the gameboard's pointer to the campaign. }
 	Camp^.GB^.Camp := Camp;
 
+	{ Set the STARTGAME trigger, and update all props. }
+	SetTrigger( Camp^.GB , TRIGGER_StartGame );
+	CheckTriggerAlongPath( 'UPDATE' , Camp^.GB , Camp^.GB^.Meks , True );
 
-	it := WorldMapMain( Camp );
+	{ Update the moods. }
+	UpdateMoods( Camp^.GB );
+
+	{ Now that everything is set, keep playing until we get the signal to quit. }
+	Repeat
+		SetNAtt( Camp^.GB^.Scene^.NA , NAG_SceneData , NAS_PartyControlMethod , NAV_ClockMode );
+		CombatMain( Camp );
+	until not KeepPlayingSC( Camp^.GB );
+
+	{ Handle the last pending triggers. }
+	SetTrigger( Camp^.GB , TRIGGER_EndGame );
+	HandleTriggers( Camp^.GB );
 
 	PCForces := DelinkJJang( Camp );
 
 	{ Save the final ComTime in the Campaign. }
 	Camp^.ComTime := Camp^.GB^.ComTime;
+
+	{ Get rid of the Focused_On_Mek. }
+	FocusOn( Nil );
+
+	{ Record the returncode before freeing the gameboard. }
+	it := Camp^.gb^.ReturnCode;
 
 	Camp^.GB^.Scene := Nil;
 	DisposeMap( Camp^.gb );
@@ -1361,7 +1481,7 @@ end;
 Function ScenePlayer( Camp: CampaignPtr ; Scene: GearPtr; var PCForces: GearPtr ): Integer;
 	{ Call the appropriate player routine based on scene type. }
 begin
-	if ( Scene <> Nil ) and ( Scene^.G = GG_World ) then begin
+	if ( Scene <> Nil ) and IsWorldMapScene( Scene ) then begin
 		ScenePlayer := WorldPlayer( Camp , Scene , PCForces );
 	end else begin
 		ScenePlayer := RealScenePlayer( Camp , Scene , PCForces );

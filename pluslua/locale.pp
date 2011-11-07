@@ -373,17 +373,12 @@ Const
 	{   V = Map Scale  }
 	{ STAT[ 1 ] = Map Generation Type }
 
-	STAT_MapGenerator = 1;
-	STAT_MapWidth = 2;
-	STAT_MapHeight = 3;
-	STAT_SpaceMap = 4;	{ If SpaceMap is nonzero, map will scroll. }
 
 	{ WORLD DEFINITION }
 	{   G = GG_World   }
 	{   S = Scene ID   }
 	{   V = Map Scale, not exactly the same as normal scene scale  }
 	{   Stats are the same as a scene, so that the map generator can be used. }
-	STAT_Wrap = 4;		{ Does the map wrap? }
 				{ ..0001 = Wrap X }
 				{ ..0010 = Wrap Y }
 
@@ -490,6 +485,9 @@ Function TileVisible( GB: GameBoardPtr; X,Y: Integer ): Boolean;
 Procedure SetTerrain( GB: GameBoardPtr; X,Y,T: Integer );
 Procedure SetVisibility( GB: GameBoardPtr; X,Y: Integer; V: Boolean );
 
+Function GetTile( GB: GameBoardPtr; X,Y: Integer ): Tile;
+Procedure SetTile( GB: GameBoardPtr; X,Y: Integer; const T: Tile );
+
 Function CreateFrozenLocation(var LList: FrozenLocationPtr): FrozenLocationPtr;
 
 Function SolveLine(X1,Y1,X2,Y2,N: Integer): Point;
@@ -576,7 +574,7 @@ Procedure SetTrigger( GB: GameBoardPtr; const msg: String );
 Function SeekTarget( GB: GameBoardPtr; Mek: GearPtr ): GearPtr;
 
 Procedure FreezeLocation( const Name: String; GB: GameBoardPtr; var FList: FrozenLocationPtr );
-Function UnfreezeLocation( const Name: String; var FList: FrozenLocationPtr ): GameBoardPtr;
+Function UnfreezeLocation( const Name: String; var FList: FrozenLocationPtr; DeleteOriginal: Boolean ): GameBoardPtr;
 Procedure DeleteFrozenLocation( const Name: String; var FList: FrozenLocationPtr );
 
 function FindThisTerrain( GB: GameBoardPtr; TTS: Integer ): Point;
@@ -681,6 +679,27 @@ Procedure SetVisibility( GB: GameBoardPtr; X,Y: Integer; V: Boolean );
 begin
 	if ( X >= 1 ) and ( X <= GB^.Map_Width ) and ( Y >= 1 ) and ( Y <= GB^.Map_Height ) then begin
 		GB^.Map[ TileIndex( GB , X , Y ) ].Visible := V;
+	end;
+end;
+
+Function GetTile( GB: GameBoardPtr; X,Y: Integer ): Tile;
+	{ Set the tile data for the requested map tile, if it lies within the bounds of the map. }
+const
+	BlankTile: Tile = ( Terr: 1; Visible: False );
+begin
+	if ( X >= 1 ) and ( X <= GB^.Map_Width ) and ( Y >= 1 ) and ( Y <= GB^.Map_Height ) then begin
+		GetTile := GB^.Map[ TileIndex( GB , X , Y ) ];
+	end else begin
+		GetTile := BlankTile;
+	end;
+end;
+
+
+Procedure SetTile( GB: GameBoardPtr; X,Y: Integer; const T: Tile );
+	{ Set the tile data for the requested map tile, if it lies within the bounds of the map. }
+begin
+	if ( X >= 1 ) and ( X <= GB^.Map_Width ) and ( Y >= 1 ) and ( Y <= GB^.Map_Height ) then begin
+		GB^.Map[ TileIndex( GB , X , Y ) ] := T;
 	end;
 end;
 
@@ -2458,7 +2477,7 @@ begin
 	it^.Map_Height := GB^.Map_Height;
 end;
 
-Function UnfreezeLocation( const Name: String; var FList: FrozenLocationPtr ): GameBoardPtr;
+Function UnfreezeLocation( const Name: String; var FList: FrozenLocationPtr; DeleteOriginal: Boolean ): GameBoardPtr;
 	{ Attempt to unfreeze the specified level. If the level was found, }
 	{ return TRUE. If the unfreezing failed, return FALSE. }
 	{ Once the level is unfrozen the frozen record should be removed. }
@@ -2478,7 +2497,7 @@ begin
 		gb^.Map := it^.Map;
 		gb^.Map_Width := it^.Map_Width;
 		gb^.Map_Height := it^.Map_Height;
-		RemoveFrozenLocation( FList , it );
+		if DeleteOriginal then RemoveFrozenLocation( FList , it );
 		UnfreezeLocation := GB;
 	end;
 end;
@@ -2629,6 +2648,7 @@ begin
 end;
 
 Function ExtractPilot( Mek: GearPtr ): GearPtr;
+
 	{ Remove the pilot from the specified mek. If no pilot is found, }
 	{ return Nil. }
 var
@@ -3126,6 +3146,7 @@ begin
 
 		end else if ( TeamNum = 0 ) or ( Team <> NIl ) then begin
 			{ Place anywhere randomly on the map. }
+
 			P.X := Random( GB^.Map_Width ) + 1;
 			P.Y := Random( GB^.Map_Height ) + 1;
 

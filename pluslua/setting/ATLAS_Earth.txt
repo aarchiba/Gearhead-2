@@ -6,9 +6,10 @@ World 200
 	desig <EARTH>
 	desc <>
 
-	MapWidth 50
-	MapHeight 50
-	XYWrap
+	MapWidth 1
+	MapHeight 1
+	%% Each cell of the Earth map should be 20x20
+	WorldMapWidth 20
 
 %%
 %%   *****************
@@ -17,12 +18,12 @@ World 200
 %%
 
 Scene 0 3
-	mapwidth 10
-	mapheight 10
+	mapwidth 20
+	mapheight 20
 	name <Hogye>
 	exact_name <Hogye Village>
-	XPos 42
-	YPos 22
+	WorldMapX 1
+	WorldMapY 1
 
 	Tolerance 0
 
