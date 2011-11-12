@@ -68,29 +68,6 @@ Const
 
 
 
-	NAG_SceneData = 21;
-	{ SceneData holds various miscellaneous values associated with scenes. }
-	NAS_TacticsTurnStart = 1;
-	NAS_Tileset = 2;
-		NumTileSet = 4;
-		NAV_DefaultTiles = 0;
-		NAV_RockyTiles = 1;
-		NAV_PalaceParkTiles = 2;
-		NAV_IndustrialTiles = 3;
-		NAV_OrganicTiles = 4;
-	NAS_Backdrop = 3;	{ The image used in the background. Left as 0, it means no backdrop. }
-		NumBackdrop = 1;
-		NAV_Starfield = 1;
-
-	NAS_DynaRenown = 4;	{ These two attributes record the enemy force renown/strength }
-	NAS_DynaStrength = 5;	{ for a dynamic scene. }
-
-	NAS_EncounterRecharge = 6;	{ Holds a time limit by which encounters can attack the PC. }
-		Standard_Encounter_Recharge = 90;
-
-	NAS_PartyControlMethod = 7;	{ What control method is currently being used- tactics or clock? }
-		NAV_ClockMode = 1;	{ This gets set when a scene is entered and cleared when the scene }
-		NAV_TacticsMode = 2;	{ is exited. }
 
 	NAG_MissionReport = 23;		{ Holds data that will be erased the next time this mecha is deployed. }
 		NAS_WasSalvaged = 1;	{ If nonzero, this gear was salvaged. }

@@ -6,8 +6,8 @@ World 200
 	desig <EARTH>
 	desc <>
 
-	MapWidth 1
-	MapHeight 1
+	MapWidth 3
+	MapHeight 3
 	%% Each cell of the Earth map should be 20x20
 	WorldMapWidth 20
 
@@ -20,10 +20,107 @@ World 200
 Scene 0 3
 	mapwidth 20
 	mapheight 20
-	name <Hogye>
-	exact_name <Hogye Village>
+	name <Tile 1-1>
 	WorldMapX 1
 	WorldMapY 1
+	world <Earth>
+	special <NOEXIT SHOWALL SOLO>
+	habitat <EARTH.MNTNS>
+	WildMap
+	desig <E0101>
+
+Scene 0 3
+	mapwidth 20
+	mapheight 20
+	name <Tile 2-1>
+	WorldMapX 2
+	WorldMapY 1
+	world <Earth>
+	special <NOEXIT SHOWALL SOLO>
+	habitat <EARTH.MNTNS>
+	FloorType 2
+	desig <E0201>
+
+Scene 0 3
+	mapwidth 20
+	mapheight 20
+	name <Tile 3-1>
+	WorldMapX 3
+	WorldMapY 1
+	world <Earth>
+	special <NOEXIT SHOWALL SOLO>
+	habitat <EARTH.MNTNS>
+	FloorType 3
+	desig <E0301>
+
+Scene 0 3
+	mapwidth 20
+	mapheight 20
+	name <Tile 1-2>
+	WorldMapX 1
+	WorldMapY 2
+	world <Earth>
+	special <NOEXIT SHOWALL SOLO>
+	habitat <EARTH.MNTNS>
+	FloorType 5
+	desig <E0102>
+
+Scene 0 3
+	mapwidth 20
+	mapheight 20
+	name <Tile 3-2>
+	WorldMapX 3
+	WorldMapY 2
+	world <Earth>
+	special <NOEXIT SHOWALL SOLO>
+	habitat <EARTH.MNTNS>
+	FloorType 6
+	desig <E0302>
+
+Scene 0 3
+	mapwidth 20
+	mapheight 20
+	name <Tile 1-3>
+	WorldMapX 1
+	WorldMapY 3
+	world <Earth>
+	special <NOEXIT SHOWALL SOLO>
+	habitat <EARTH.MNTNS>
+	FloorType 7
+	desig <E0103>
+
+Scene 0 3
+	mapwidth 20
+	mapheight 20
+	name <Tile 2-3>
+	WorldMapX 2
+	WorldMapY 3
+	world <Earth>
+	special <NOEXIT SHOWALL SOLO>
+	habitat <EARTH.MNTNS>
+	FloorType 14
+	desig <E0203>
+
+Scene 0 3
+	mapwidth 20
+	mapheight 20
+	name <Tile 3-3>
+	WorldMapX 3
+	WorldMapY 3
+	world <Earth>
+	special <NOEXIT SHOWALL SOLO>
+	habitat <EARTH.MNTNS>
+	FloorType 16
+	desig <E0303>
+
+
+Scene 0 3
+	mapwidth 20
+	mapheight 20
+	name <Hogye>
+	exact_name <Hogye Village>
+	WorldMapX 2
+	WorldMapY 2
 
 	Tolerance 0
 

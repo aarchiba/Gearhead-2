@@ -712,26 +712,30 @@ begin
 	end;
 end;
 
+Function FindWorldMapCell( World: GearPtr; X , Y: Integer ): GearPtr;
+	{ Find the record for the scene in cell X,Y on the world map. }
+	{ It must be located along LList; no need to check children. }
+var
+	LList,it: GearPtr;
+begin
+	LList := World^.SubCom;
+	FixWorldCoords( World , X , Y );
+	it := nil;
+	while ( it = nil ) and ( LList <> nil ) do begin
+		if ( LList^.G = GG_Scene ) and ( NAttValue( LList^.NA , NAG_Narrative , NAS_WorldMapX ) = X ) and ( NAttValue( LList^.NA , NAG_Narrative , NAS_WorldMapY ) = Y ) then begin
+			it := LList;
+		end;
+		LList := LList^.Next;
+	end;
+	FindWorldMapCell := it;
+end;
+
+
 Function GenWorldMapScene( Camp: CampaignPtr; Scene: GearPtr ): GameBoardPtr;
 	{ Generate a world map scene. To do this, you're going to have to }
 	{ look for the 8 adjacent scenes and combine their maps into a giant }
 	{ supermap. }
 	{ Also deploy the metaterrain for each of the map scenes. }
-	Function FindWorldMapCell( LList: GearPtr; X , Y: Integer ): GearPtr;
-		{ Find the record for the scene in cell X,Y on the world map. }
-		{ It must be located along LList; no need to check children. }
-	var
-		it: GearPtr;
-	begin
-		it := nil;
-		while ( it = nil ) and ( LList <> nil ) do begin
-			if ( LList^.G = GG_Scene ) and ( NAttValue( LList^.NA , NAG_Narrative , NAS_WorldMapX ) = X ) and ( NAttValue( LList^.NA , NAG_Narrative , NAS_WorldMapY ) = Y ) then begin
-				it := LList;
-			end;
-			LList := LList^.Next;
-		end;
-		FindWorldMapCell := it;
-	end;
 	Function WorldSubSceneWidth( World: GearPtr ): Integer;
 		{ Return the width/height of a subscene of this world. }
 	begin
@@ -763,10 +767,7 @@ begin
 	{ Step one- fill the WMScenes array with scenes. }
 	for DX := -1 to 1 do begin
 		for DY := -1 to 1 do begin
-			X := X0 + DX;
-			Y := Y0 + DY;
-			FixWorldCoords( World , X , Y );
-			WMScenes[ DX , DY ] := FindWorldMapCell( World^.SubCom , X , Y );
+			WMScenes[ DX , DY ] := FindWorldMapCell( World , X0 + DX , Y0 + DY );
 		end;
 	end;
 
@@ -774,11 +775,23 @@ begin
 	{ Assume that the defined map is perfectly rectangular. }
 	WSSW:= WorldSubSceneWidth( World );
 	X := WSSW;
-	if WMScenes[ -1 , 0 ] <> nil then X := X + WSSW;
-	if WMScenes[  1 , 0 ] <> nil then X := X + WSSW;
+	if WMScenes[ -1 , 0 ] <> nil then begin
+		X := X + WSSW;
+		SetNAtt( Scene^.NA , NAG_SceneData , NAS_WestMargin , WSSW );
+	end;
+	if WMScenes[  1 , 0 ] <> nil then begin
+		SetNAtt( Scene^.NA , NAG_SceneData , NAS_EastMargin , X );
+		X := X + WSSW;
+	end;
 	Y := WSSW;
-	if WMScenes[ 0 , -1 ] <> nil then Y := Y + WSSW;
-	if WMScenes[ 0 ,  1 ] <> nil then Y := Y + WSSW;
+	if WMScenes[ 0 , -1 ] <> nil then begin
+		Y := Y + WSSW;
+		SetNAtt( Scene^.NA , NAG_SceneData , NAS_NorthMargin , WSSW );
+	end;
+	if WMScenes[ 0 ,  1 ] <> nil then begin
+		SetNAtt( Scene^.NA , NAG_SceneData , NAS_SouthMargin , Y );
+		Y := Y + WSSW;
+	end;
 	WorldGB := NewMap( X , Y );
 	WorldGB^.Scene := Scene;
 
@@ -1001,6 +1014,43 @@ Procedure PutAwayGear( Camp: CampaignPtr; var Mek,PCForces: GearPtr );
 			ShouldBeMoved := False;
 		end;
 	end;
+	function GetDestScene: GearPtr;
+		{ Locate the scene in which to stick whatever we're putting away. }
+	var
+		N,E,W,S,X,Y: Integer;
+	begin
+		if ( Camp^.GB^.Scene <> nil ) and IsWorldMapScene( Camp^.GB^.Scene ) then begin
+			{ This is a world map scene. See if this gear goes in one of the }
+			{ border scenes. }
+			X := NAttValue( Mek^.NA , NAG_Location , NAS_X );
+			Y := NAttValue( Mek^.NA , NAG_Location , NAS_Y );
+			if OnTheMap( Camp^.GB , X , Y ) then begin
+				N := NAttValue( Camp^.GB^.Scene^.NA , NAG_SceneData , NAS_NorthMargin );
+				E := NAttValue( Camp^.GB^.Scene^.NA , NAG_SceneData , NAS_EastMargin );
+				W := NAttValue( Camp^.GB^.Scene^.NA , NAG_SceneData , NAS_WestMargin );
+				S := NAttValue( Camp^.GB^.Scene^.NA , NAG_SceneData , NAS_SouthMargin );
+				if ( W > 0 ) and ( X <= W ) then X := -1
+				else if ( E > 0 ) and ( X > E ) then begin
+					X := 1;
+					AddNAtt( Mek^.NA , NAG_Location , NAS_X , -E );
+				end else begin
+					X := 0;
+					AddNAtt( Mek^.NA , NAG_Location , NAS_X , -W );
+				end;
+				if ( N > 0 ) and ( Y <= N ) then Y := -1
+				else if ( S > 0 ) and ( Y > S ) then begin
+					Y := 1;
+					AddNAtt( Mek^.NA , NAG_Location , NAS_Y , -S );
+				end else begin
+					Y := 0;
+					AddNAtt( Mek^.NA , NAG_Location , NAS_Y , -N );
+				end;
+				if ( X <> 0 ) or ( Y <> 0 ) then begin
+					GetDestScene := FindWorldMapCell( Camp^.GB^.Scene^.Parent , NAttValue( Camp^.GB^.Scene^.NA , NAG_Narrative , NAS_WorldMapX ) + X , NAttValue( Camp^.GB^.Scene^.NA , NAG_Narrative , NAS_WorldMapY ) + Y );
+				end else GetDestScene := Camp^.GB^.Scene;
+			end else GetDestScene := Camp^.GB^.Scene;
+		end else GetDestScene := Camp^.GB^.Scene;
+	end;
 begin
 	if Mek = Nil then begin
 		Exit;
@@ -1066,7 +1116,7 @@ begin
 				PutAwayGlobal( Camp^.GB , Mek );
 
 			end else begin
-				InsertInvCom( Camp^.GB^.Scene , Mek );
+				InsertInvCom( GetDestScene , Mek );
 			end;
 		end else begin
 			DisposeGear( Mek );
