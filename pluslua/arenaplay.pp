@@ -47,6 +47,8 @@ uses ability,aibrain,arenacfe,arenascript,backpack,gamebook,ghmodule,ghholder,
 const
 	DEBUG_ON: Boolean = False;
 
+var
+	Recenter_World_Map: Boolean;	{ Set to TRUE to recenter the world map. }
 
 function IsWorldMapScene( Scene: GearPtr ): Boolean;
 	{ Return TRUE if this scene is part of the world map, or FALSE }
@@ -214,6 +216,7 @@ var
 	ETA: LongInt;
 	PCMoved,PCActed: Boolean;
 	PC: GearPtr;
+	X,Y: Integer;
 begin
 	M := Camp^.GB^.meks;
 	PCMoved := False;
@@ -279,6 +282,18 @@ begin
 
 	if PCMoved and ( PC <> Nil ) then begin
 		if ( Camp^.GB^.Scene <> Nil ) and ( Camp^.GB^.Scene^.Stat[ STAT_SpaceMap ] <> 0 ) then CheckMapScroll( Camp^.GB );
+		if ( Camp^.GB^.Scene <> Nil ) and IsWorldMapScene( Camp^.GB^.Scene ) then begin
+			{ Check to see if the PC has passed the margins of the current scene. }
+			X := NATtValue( PC^.NA , NAG_Location , NAS_X );
+			Y := NAttValue( PC^.NA , NAG_Location , NAS_Y );
+			if ( ( NAttValue( Camp^.GB^.Scene^.NA , NAG_SceneData , NAS_WestMargin ) <> 0 ) and ( X < ( NAttValue( Camp^.GB^.Scene^.NA , NAG_SceneData , NAS_WestMargin ) - 2 ) ) )
+			or ( ( NAttValue( Camp^.GB^.Scene^.NA , NAG_SceneData , NAS_EastMargin ) <> 0 ) and ( X > ( NAttValue( Camp^.GB^.Scene^.NA , NAG_SceneData , NAS_EastMargin ) + 2 ) ) )
+			or ( ( NAttValue( Camp^.GB^.Scene^.NA , NAG_SceneData , NAS_NorthMargin ) <> 0 ) and ( Y < ( NAttValue( Camp^.GB^.Scene^.NA , NAG_SceneData , NAS_NorthMargin ) - 2 ) ) )
+			or ( ( NAttValue( Camp^.GB^.Scene^.NA , NAG_SceneData , NAS_SouthMargin ) <> 0 ) and ( Y > ( NAttValue( Camp^.GB^.Scene^.NA , NAG_SceneData , NAS_SouthMargin ) + 2 ) ) )
+			then begin
+				Recenter_World_Map := true;
+			end;
+		end;
 		if not PCActed then begin
 			FocusOn( PC );
 			CombatDisplay( Camp^.GB );
@@ -352,9 +367,12 @@ begin
 		FX_Desc   := '';
 	end;
 
+	{ Initialize the recenter-checker. }
+	Recenter_World_Map := False;
+
 	{Start main combat loop here.}
 	{Keep going until we're told to quit.}
-	while KeepPlayingSC( Camp^.GB ) and ( CurrentControlMode( Camp^.GB ) = NAV_ClockMode ) do begin
+	while KeepPlayingSC( Camp^.GB ) and ( CurrentControlMode( Camp^.GB ) = NAV_ClockMode ) and ( not Recenter_World_Map ) do begin
 		AdvanceGameClock( Camp^.GB , False , True );
 
 		{ Once every 10 minutes, roll for random monsters. }
@@ -832,6 +850,10 @@ begin
 		end;
 	end;
 
+	WorldGB^.ComTime := Camp^.ComTime;
+	WorldGB^.Scene := Scene;
+	WorldGB^.Scale := Scene^.V;
+
 	GenWorldMapScene := WorldGB;
 end;
 
@@ -854,10 +876,6 @@ begin
 	{ Generate the map for this scene. }
 	{ *** CHANGE - Use GenWorldMapScene function. }
 	Camp^.gb := GenWorldMapScene( Camp , Scene );
-
-	Camp^.GB^.ComTime := Camp^.ComTime;
-	Camp^.gb^.Scene := Scene;
-	Camp^.gb^.Scale := Scene^.V;
 
 	{ Get the PC Forces ready for deployment. }
 	PreparePCForces( Camp^.GB , PCForces );
@@ -991,6 +1009,34 @@ Function ShouldDeleteDestroyed( GB: GameBoardPtr; Mek: GearPtr ): Boolean;
 	{ MEK shouldn't be deleted if it's an artefact. }
 begin
 	ShouldDeleteDestroyed := not AStringHasBString( SAttValue( Mek^.SA , 'TYPE' ) , SAtt_Artifact );
+end;
+
+Function DetermineWorldMapSubscene( GB: GameBoardPtr; X,Y: Integer ): GearPtr;
+	{ A world map scene is usually an amalgamation of several other scenes. }
+	{ Given location (X,Y) figure out which subscene it belongs in. }
+var
+	N,E,W,S: Integer;
+begin
+	N := NAttValue( GB^.Scene^.NA , NAG_SceneData , NAS_NorthMargin );
+	E := NAttValue( GB^.Scene^.NA , NAG_SceneData , NAS_EastMargin );
+	W := NAttValue( GB^.Scene^.NA , NAG_SceneData , NAS_WestMargin );
+	S := NAttValue( GB^.Scene^.NA , NAG_SceneData , NAS_SouthMargin );
+	if ( W > 0 ) and ( X <= W ) then X := -1
+	else if ( E > 0 ) and ( X > E ) then begin
+		X := 1;
+	end else begin
+		X := 0;
+	end;
+	if ( N > 0 ) and ( Y <= N ) then Y := -1
+	else if ( S > 0 ) and ( Y > S ) then begin
+		Y := 1;
+	end else begin
+		Y := 0;
+	end;
+	if ( X <> 0 ) or ( Y <> 0 ) then begin
+		DetermineWorldMapSubscene := FindWorldMapCell( GB^.Scene^.Parent , NAttValue( GB^.Scene^.NA , NAG_Narrative , NAS_WorldMapX ) + X , NAttValue( GB^.Scene^.NA , NAG_Narrative , NAS_WorldMapY ) + Y );
+	end else DetermineWorldMapSubscene := GB^.Scene;
+
 end;
 
 Procedure PutAwayGear( Camp: CampaignPtr; var Mek,PCForces: GearPtr );
@@ -1413,6 +1459,13 @@ begin
 	Repeat
 		SetNAtt( Camp^.GB^.Scene^.NA , NAG_SceneData , NAS_PartyControlMethod , NAV_ClockMode );
 		CombatMain( Camp );
+
+		if Recenter_World_Map then begin
+			{ Time to recenter/redraw the world map. }
+			{ Step One: Remove all PC Forces from the map. }
+DialogMsg( 'Should recenter...' );
+			Recenter_World_Map := False;
+		end;
 	until not KeepPlayingSC( Camp^.GB );
 
 	{ Handle the last pending triggers. }
