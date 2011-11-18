@@ -57,6 +57,13 @@ begin
 	IsWorldMapScene := ( Scene <> Nil ) and ( Scene^.G = GG_Scene ) and ( Scene^.Parent <> Nil ) and ( Scene^.Parent^.G = GG_World );
 end;
 
+Function WorldSubSceneWidth( World: GearPtr ): Integer;
+	{ Return the width/height of a subscene of this world. }
+begin
+	WorldSubSceneWidth := World^.Stat[ STAT_WORLDMAPWIDTH ];
+end;
+
+
 Procedure ProcessMovement( GB: GameBoardPtr; Mek: GearPtr );
 	{ Call the LOCALE movement routine, then update the display }
 	{ here if need be. }
@@ -670,6 +677,7 @@ var
 	d: String;
 begin
 	if ( GB^.Scene = Nil ) then exit;
+
 	T := GB^.Scene^.SubCom;
 	while T <> Nil do begin
 		if ( T^.G = GG_Team ) and ( SAttValue( T^.SA , 'DEPLOY' ) <> '' ) then begin
@@ -754,11 +762,6 @@ Function GenWorldMapScene( Camp: CampaignPtr; Scene: GearPtr ): GameBoardPtr;
 	{ look for the 8 adjacent scenes and combine their maps into a giant }
 	{ supermap. }
 	{ Also deploy the metaterrain for each of the map scenes. }
-	Function WorldSubSceneWidth( World: GearPtr ): Integer;
-		{ Return the width/height of a subscene of this world. }
-	begin
-		WorldSubSceneWidth := World^.Stat[ STAT_WORLDMAPWIDTH ];
-	end;
 	Procedure MoveToWorldMap( TempGB, WorldGB: GameBoardPtr; XOff,YOff: Integer );
 		{ Move everything on TempGB to WorldGB, shifting the X,Y positions as appropriate. }
 	var
@@ -876,6 +879,8 @@ begin
 	{ Generate the map for this scene. }
 	{ *** CHANGE - Use GenWorldMapScene function. }
 	Camp^.gb := GenWorldMapScene( Camp , Scene );
+	Camp^.gb^.Scene := Scene;
+	Camp^.gb^.Scale := Scene^.V;
 
 	{ Get the PC Forces ready for deployment. }
 	PreparePCForces( Camp^.GB , PCForces );
@@ -1036,7 +1041,18 @@ begin
 	if ( X <> 0 ) or ( Y <> 0 ) then begin
 		DetermineWorldMapSubscene := FindWorldMapCell( GB^.Scene^.Parent , NAttValue( GB^.Scene^.NA , NAG_Narrative , NAS_WorldMapX ) + X , NAttValue( GB^.Scene^.NA , NAG_Narrative , NAS_WorldMapY ) + Y );
 	end else DetermineWorldMapSubscene := GB^.Scene;
+end;
 
+Procedure NormalizeSubscenePosition( GB: GameBoardPtr; Mek: GearPtr );
+	{ Set MEK's position within its subscene. }
+var
+	WSSW,X,Y: Integer;
+begin
+	WSSW := WorldSubSceneWidth( GB^.Scene^.Parent );
+	if WSSW > 0 then begin
+		SetNAtt( Mek^.NA , NAG_Location , NAS_X , ( NAttValue( Mek^.NA , NAG_Location , NAS_X ) - 1 ) mod WSSW + 1 );
+		SetNAtt( Mek^.NA , NAG_Location , NAS_Y , ( NAttValue( Mek^.NA , NAG_Location , NAS_Y ) - 1 ) mod WSSW + 1 );
+	end;
 end;
 
 Procedure PutAwayGear( Camp: CampaignPtr; var Mek,PCForces: GearPtr );
@@ -1063,7 +1079,8 @@ Procedure PutAwayGear( Camp: CampaignPtr; var Mek,PCForces: GearPtr );
 	function GetDestScene: GearPtr;
 		{ Locate the scene in which to stick whatever we're putting away. }
 	var
-		N,E,W,S,X,Y: Integer;
+		X,Y: Integer;
+		Scene: GearPtr;
 	begin
 		if ( Camp^.GB^.Scene <> nil ) and IsWorldMapScene( Camp^.GB^.Scene ) then begin
 			{ This is a world map scene. See if this gear goes in one of the }
@@ -1071,29 +1088,9 @@ Procedure PutAwayGear( Camp: CampaignPtr; var Mek,PCForces: GearPtr );
 			X := NAttValue( Mek^.NA , NAG_Location , NAS_X );
 			Y := NAttValue( Mek^.NA , NAG_Location , NAS_Y );
 			if OnTheMap( Camp^.GB , X , Y ) then begin
-				N := NAttValue( Camp^.GB^.Scene^.NA , NAG_SceneData , NAS_NorthMargin );
-				E := NAttValue( Camp^.GB^.Scene^.NA , NAG_SceneData , NAS_EastMargin );
-				W := NAttValue( Camp^.GB^.Scene^.NA , NAG_SceneData , NAS_WestMargin );
-				S := NAttValue( Camp^.GB^.Scene^.NA , NAG_SceneData , NAS_SouthMargin );
-				if ( W > 0 ) and ( X <= W ) then X := -1
-				else if ( E > 0 ) and ( X > E ) then begin
-					X := 1;
-					AddNAtt( Mek^.NA , NAG_Location , NAS_X , -E );
-				end else begin
-					X := 0;
-					AddNAtt( Mek^.NA , NAG_Location , NAS_X , -W );
-				end;
-				if ( N > 0 ) and ( Y <= N ) then Y := -1
-				else if ( S > 0 ) and ( Y > S ) then begin
-					Y := 1;
-					AddNAtt( Mek^.NA , NAG_Location , NAS_Y , -S );
-				end else begin
-					Y := 0;
-					AddNAtt( Mek^.NA , NAG_Location , NAS_Y , -N );
-				end;
-				if ( X <> 0 ) or ( Y <> 0 ) then begin
-					GetDestScene := FindWorldMapCell( Camp^.GB^.Scene^.Parent , NAttValue( Camp^.GB^.Scene^.NA , NAG_Narrative , NAS_WorldMapX ) + X , NAttValue( Camp^.GB^.Scene^.NA , NAG_Narrative , NAS_WorldMapY ) + Y );
-				end else GetDestScene := Camp^.GB^.Scene;
+				Scene := DetermineWorldMapSubscene( Camp^.GB , X , Y );
+				NormalizeSubScenePosition( Camp^.GB , Mek );
+				GetDestScene := Scene;
 			end else GetDestScene := Camp^.GB^.Scene;
 		end else GetDestScene := Camp^.GB^.Scene;
 	end;
@@ -1422,12 +1419,47 @@ begin
 	DelinkJJang := PCForces;
 end;
 
-
 Function WorldPlayer( Camp: CampaignPtr ; Scene: GearPtr; var PCForces: GearPtr ): Integer;
 	{ The player is about to explore the world map. Hooray! }
 	{ This uses a separate procedure from regular exploration. }
+	Function StripPCForces( GB: GameBoardPtr ): GearPtr;
+		{ Remove all the PC forces from the map. }
+		{ Don't remove the gear's location data, but normalize it to the subscene. }
+	var
+		Mek,M2,PCF: GearPtr;
+	begin
+		PCF := Nil;
+		Mek := GB^.Meks;
+		while Mek <> Nil do begin
+			M2 := Mek^.Next;
+			if ( NAttValue( Mek^.NA , NAG_Location , NAS_Team ) = NAV_DefPlayerTeam ) or ( NAttValue( Mek^.NA , NAG_Location , NAS_Team ) = NAV_LancemateTeam ) then begin
+				DelinkGear( GB^.Meks , Mek );
+				AppendGear( PCF , Mek );
+				NormalizeSubscenePosition( GB, Mek );
+			end;
+			Mek := M2;
+		end;
+		StripPCForces := PCF;
+	end;
+	Procedure CenterPCForces( GB: GameBoardPtr );
+		{ Make sure the PC is located on the central subscene of the map. }
+	var
+		Mek: GearPtr;
+	begin
+		Mek := GB^.Meks;
+		while Mek <> Nil do begin
+			if ( ( NAttValue( Mek^.NA , NAG_Location , NAS_Team ) = NAV_DefPlayerTeam ) or ( NAttValue( Mek^.NA , NAG_Location , NAS_Team ) = NAV_LancemateTeam ) ) and OnTheMap( GB , Mek ) then begin
+DialogMsg( 'Recentering ' + GearName( Mek ) );
+				AddNAtt( Mek^.NA , NAG_Location , NAS_X , NAttValue( GB^.Scene^.NA , NAG_SceneData , NAS_WestMargin ) );
+				AddNAtt( Mek^.NA , NAG_Location , NAS_Y , NAttValue( GB^.Scene^.NA , NAG_SceneData , NAS_NorthMargin ) );
+			end;
+
+			Mek := Mek^.Next;
+		end;
+	end;
 var
 	it: Integer;
+	PC: GearPtr;
 begin
 	WorldMapDeploy( Camp , Scene , PCForces );
 
@@ -1463,7 +1495,19 @@ begin
 		if Recenter_World_Map then begin
 			{ Time to recenter/redraw the world map. }
 			{ Step One: Remove all PC Forces from the map. }
-DialogMsg( 'Should recenter...' );
+			PC := LocatePC( Camp^.GB );
+			Scene := DetermineWorldMapSubScene( Camp^.GB , NAttValue( PC^.NA , NAG_Location , NAS_X ) , NAttValue( PC^.NA , NAG_Location , NAS_Y ) );
+DialogMsg( 'Should recenter...' + GearName( Scene ) );
+			PCForces := StripPCForces( Camp^.GB );
+			if DelinkJjang( Camp ) <> nil then DialogMsg( 'ERROR: WorldPlayer recenterer left some PCForces behind...' );
+			Camp^.ComTime := Camp^.GB^.ComTime;
+			Camp^.GB^.Scene := Nil;
+			DisposeMap( Camp^.gb );
+
+			WorldMapDeploy( Camp , Scene , PCForces );
+			CenterPCForces( Camp^.GB );
+			Camp^.GB^.Camp := Camp;
+
 			Recenter_World_Map := False;
 		end;
 	until not KeepPlayingSC( Camp^.GB );

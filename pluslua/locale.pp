@@ -69,6 +69,7 @@ Const
 
 
 
+
 	NAG_MissionReport = 23;		{ Holds data that will be erased the next time this mecha is deployed. }
 		NAS_WasSalvaged = 1;	{ If nonzero, this gear was salvaged. }
 
@@ -1132,6 +1133,7 @@ begin
 
 	{ Check map contents for hostile masters. }
 	if it then begin
+
 		M := GB^.Meks;
 		while M <> Nil do begin
 			if IsMasterGear( M ) and GearOperational( M ) and OnTheMap( GB , M ) then begin
@@ -2974,7 +2976,7 @@ Function FindDeploymentSpot( GB: GameBoardPtr; Mek: GearPtr ): Point;
 	{ deployment zone and which is not blocked to travel by the model. }
 	Function FindBuildingSpot( var P: Point ): Boolean;
 		{ If placing a building on the map, we'll use a special procedure. }
-		{ Try to locate a building-type terrain... right now that's either 44 or 45. }
+		{ Try to locate a building-type terrain... }
 		{ Replace that with an OpenGround terrain, and set the building there. }
 	var
 		X,Y,N,T: Integer;
