@@ -98,6 +98,30 @@
 			gh_Return();
 		end
 	end
+	function proto_scene.GetArenaState( self )
+		-- Used by Arena scenes. This function returns the current arena state.
+		return( self:GetNAtt( NAG_ARENADATA , NAS_ARENASTATE ) )
+	end
+	function proto_scene.SetArenaState( self , new_arena_state )
+		-- Used by Arena scenes. This function sets the current arena state.
+		self:SetNAtt( NAG_ARENADATA , NAS_ARENASTATE , new_arena_state )
+	end
+	function proto_scene.SetArenaRecharge( self , recharge_time )
+		-- The recharge timer tells when the next fight can take place at this
+		-- arena.
+		self:SetNAtt( NAG_ARENADATA , NAS_ARENARECHARGE , gh_GetTime() + recharge_time )
+	end
+	function proto_scene.GetArenaRecharge( self )
+		-- The recharge timer tells when the next fight can take place at this
+		-- arena.
+		return( self:GetNAtt( NAG_ARENADATA , NAS_ARENARECHARGE ) )
+	end
+	function proto_scene.ResetArenaRecharge( self )
+		-- This function sets the recharge timer to one day later than the
+		-- current time.
+		self:SetArenaRecharge( TIME_DAY )
+	end
+
 
 	-- CHARACTERS
 	proto_character = proto_gear:new()
@@ -304,6 +328,10 @@ end
 
 function gh_Print( source , gear )
 	gh_RawPrint( gh_FormatString( source , gear ) )
+end
+
+function gh_Alert( source , gear )
+	gh_RawAlert( gh_FormatString( source , gear ) )
 end
 
 function contextstring_to_contexttable( in_text )

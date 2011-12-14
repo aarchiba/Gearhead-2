@@ -720,7 +720,7 @@ var
 	it: GearPtr;
 begin
 	it := CheckAlongPath( Adventure );
-	if it = Nil then it := CheckAlongPath( GB^.Meks );
+	if ( it = Nil ) and ( GB <> nil ) then it := CheckAlongPath( GB^.Meks );
 	FindSceneEntrance := it;
 end;
 

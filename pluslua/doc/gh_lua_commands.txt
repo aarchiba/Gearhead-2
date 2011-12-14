@@ -6,6 +6,10 @@ gh_AddChatMenuItem( n , message )
 	Adds an option to the conversation menu.
 	*** Restricted: In general, you won't need to use this.
 
+gh_Alert( message )
+	Prints a string to the popup window.
+	gh_RawAlert( message ) prints a message without formatting.	
+
 gh_CountActiveModels( team )
 	Returns the number of models (mecha + characters) belonging to the
 	specified team on the current map.
@@ -37,6 +41,10 @@ gh_GetStat( gear , stat )
 	Returns the value of gear's stat. Note that the value can be accessed
 	directly through the gear object's gear.stat table.
 
+gh_GetTime()
+	Returns the current ComTime. This is the number of game seconds passed
+	since the beginning of the campaign.
+
 gh_GotoScene( destination )
 	The PC exits the current scene and moves to destination.
 
@@ -63,6 +71,9 @@ gh_SetNAtt( gear , NA_G , NA_S , NA_V )
 gh_SetStat( gear , stat , statvalue )
 	Sets the value of gear's stat to statval. Note that this can be done
 	directly through the gear object's gear.stat table.
+
+gh_StartChat( npc )
+	Begins a conversation with that particular NPC.
 
 gh_TrySkillTest( skill , stat , target )
 	The PC will make a test using skill+stat against a difficulty of target.

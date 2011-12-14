@@ -48,19 +48,6 @@ const
 	NAG_SkillCounter = -16;	{ Counter for skill tests. }
 	Max_Plots_Per_Story = 5;
 
-	NAG_ArenaData = -18;	{ Used to store information about mecha arena combat }
-		NAS_ArenaState = 1;	{ Determines what exactly is happening at the arena now. }
-			NAV_AS_Vacant = 0;	{ No fight now, no fight scheduled }
-			NAV_AS_Ready = 1;	{ Start fight next time PC enters scene }
-			NAV_AS_Battle = 2;	{ Battle in progress }
-			NAV_AS_Win = 3;		{ PC has won the battle }
-			NAV_AS_Loss = 4;	{ PC hass lost the battle }
-		NAS_ArenaWins = 2;	{ # of times PC has won match }
-		NAS_ArenaThreat = 4;	{ Threat value of enemy mecha }
-		NAS_ArenaForces = 5;	{ % of generic enemies to fight }
-		NAS_ChallengerID = 6;	{ NPC challenger present during battle }
-		NAS_ChallengerHome = 7;	{ Where to return champion after fight }
-		NAS_ArenaRecharge = 8;	{ Time when next fight can take place }
 
 	{ When playing in arena mode, the following string attributes will be added to the scene }
 	{ following battle. }
@@ -1666,7 +1653,7 @@ end;
 	{  ***   LUA  FUNCTIONS   ***  }
 	{  **************************  }
 
-	Function GetLuaGear( GB: GameBoardPtr; idx: Integer ): GearPtr;
+	Function GetLuaGear( GB: GameBoardPtr; ThisLua: PLua_State; idx: Integer ): GearPtr;
 		{ Lua wants us to use a gear. If we're passed a UserData, }
 		{ assume that this is a pointer to a gear. If we're passed }
 		{ a number, assume that it's a NarrativeID. If we get }
@@ -1675,33 +1662,33 @@ end;
 		NID: LongInt;
 		tmp: GearPtr;
 	begin
-		if lua_isuserdata( MyLua , idx ) then begin
+		if lua_isuserdata( ThisLua , idx ) then begin
 			{ This is apparently a pointer to a gear. WARNING: It may }
 			{ not be a valid pointer!!! Risky operation!!! }
-			GetLuaGear := GearPtr( lua_touserdata( MyLua , idx ) );
-		end else if lua_isnumber( MyLua , idx ) then begin
+			GetLuaGear := GearPtr( lua_touserdata( ThisLua , idx ) );
+		end else if lua_isnumber( ThisLua , idx ) then begin
 			{ This must be a NarrativeID. Search for the gear being sought. }
-			NID := lua_tointeger( MyLua , idx );
+			NID := lua_tointeger( ThisLua , idx );
 			GetLuaGear := SeekGearByNID( GB , GB^.Scene , NID );
 
-		end else if lua_istable( MyLua , idx ) then begin
+		end else if lua_istable( ThisLua , idx ) then begin
 			{ This is a gear's lua table. }
-			lua_pushstring( MyLua , 'ptr' );
-			lua_gettable( MyLua , idx );
-			if lua_isuserdata( MyLua , lua_gettop( MyLua ) ) then begin
-				tmp := GearPtr( lua_touserdata( MyLua , lua_gettop( MyLua ) ) );
-				lua_pop( MyLua , 1 );
+			lua_pushstring( ThisLua , 'ptr' );
+			lua_gettable( ThisLua , idx );
+			if lua_isuserdata( ThisLua , lua_gettop( ThisLua ) ) then begin
+				tmp := GearPtr( lua_touserdata( ThisLua , lua_gettop( ThisLua ) ) );
+				lua_pop( ThisLua , 1 );
 				GetLuaGear := tmp;
 			end else begin
 				RecordError( 'ERROR: GetLuaGear passed a table with malformed "ptr" field' );
-				lua_pop( MyLua , 1 );
+				lua_pop( ThisLua , 1 );
 				GetLuaGear := Nil;
 			end;
 
 		end else begin
 			{ What the hell did you just try to pass me? Get rid of it }
 			{ before someone gets hurt. }
-			RecordError( 'ERROR: GetLuaGear passed a ' + lua_typename( MyLua , idx ) );
+			RecordError( 'ERROR: GetLuaGear passed a ' + lua_typename( ThisLua , idx ) );
 			GetLuaGear := Nil;
 		end;
 	end;
@@ -1712,7 +1699,7 @@ end;
 	var
 		MyGear: GearPtr;
 	begin
-		MyGear := GetLuaGear( MyLua , 1 );
+		MyGear := GetLuaGear( AS_GB ,MyLua , 1 );
 
 		if MyGear <> Nil then begin
 			lua_pushinteger( MyLua , MyGear^.G );
@@ -1730,7 +1717,7 @@ end;
 	var
 		MyGear: GearPtr;
 	begin
-		MyGear := GetLuaGear( MyLua , 1 );
+		MyGear := GetLuaGear( AS_GB ,MyLua , 1 );
 
 		if MyGear <> Nil then begin
 			lua_pushinteger( MyLua , MyGear^.S );
@@ -1748,7 +1735,7 @@ end;
 	var
 		MyGear: GearPtr;
 	begin
-		MyGear := GetLuaGear( MyLua , 1 );
+		MyGear := GetLuaGear( AS_GB ,MyLua , 1 );
 
 		if MyGear <> Nil then begin
 			lua_pushinteger( MyLua , MyGear^.V );
@@ -1767,7 +1754,7 @@ end;
 		MyGear: GearPtr;
 		S: LongInt;
 	begin
-		MyGear := GetLuaGear( MyLua , 1 );
+		MyGear := GetLuaGear( AS_GB ,MyLua , 1 );
 		S := luaL_checkint( MyLua , 2 );
 
 		if ( MyGear <> Nil ) and ( S >= 1 ) and ( S <= NumGearStats ) then begin
@@ -1790,7 +1777,7 @@ end;
 		MyGear: GearPtr;
 		G,S: LongInt;
 	begin
-		MyGear := GetLuaGear( MyLua , 1 );
+		MyGear := GetLuaGear( AS_GB ,MyLua , 1 );
 		G := luaL_checkint( MyLua , 2 );
 		S := luaL_checkint( MyLua , 3 );
 
@@ -1811,7 +1798,7 @@ end;
 		MyGear: GearPtr;
 		G,S,V: LongInt;
 	begin
-		MyGear := GetLuaGear( MyLua , 1 );
+		MyGear := GetLuaGear( AS_GB ,MyLua , 1 );
 		G := luaL_checkint( MyLua , 2 );
 		S := luaL_checkint( MyLua , 3 );
 		V := luaL_checkint( MyLua , 4 );
@@ -1833,7 +1820,7 @@ end;
 		MyGear: GearPtr;
 		S,V: LongInt;
 	begin
-		MyGear := GetLuaGear( MyLua , 1 );
+		MyGear := GetLuaGear( AS_GB ,MyLua , 1 );
 		S := luaL_checkint( MyLua , 2 );
 		V := luaL_checkint( MyLua , 3 );
 
@@ -1873,6 +1860,19 @@ end;
 		msg := luaL_checkstring( MyLua , 1 );
 		DialogMsg( msg );
 		Lua_GHPrint := 0;
+	end;
+
+	Function Lua_GHAlert( MyLua: PLua_State ): LongInt; cdecl;
+		{ Print a string. }
+	var
+		msg: String;
+	begin
+		msg := luaL_checkstring( MyLua , 1 );
+		if msg <> '' then begin
+			YesNoMenu( AS_GB , msg , '' , '' );
+			DialogMsg( msg );
+		end;
+		Lua_GHAlert := 0;
 	end;
 
 	Function Lua_USkillTest( MyLua: PLua_State ): LongInt; cdecl;
@@ -2056,7 +2056,7 @@ end;
 		MyGear: GearPtr;
 		c_label,context: String;
 	begin
-		MyGear := GetLuaGear( MyLua , 1 );
+		MyGear := GetLuaGear( AS_GB ,MyLua , 1 );
 		c_label := luaL_checkstring( MyLua , 2 );
 		if c_label = '' then c_label := '@';
 
@@ -2074,7 +2074,7 @@ end;
 	var
 		MyNPC: GearPtr;
 	begin
-		MyNPC := GetLuaGear( MyLua , 1 );
+		MyNPC := GetLuaGear( AS_GB ,MyLua , 1 );
 
 		if ( MyNPC <> nil ) then begin
 			lua_pushinteger( MyLua , ReactionScore( AS_GB^.Scene , LocatePC( AS_GB ) , MyNPC ) );
@@ -2083,6 +2083,35 @@ end;
 			RecordError( 'ERROR: GetReaction passed nonexistant gear!' );
 		end;
 		Lua_GetReaction := 1;
+	end;
+
+	Function Lua_GetTime( MyLua: PLua_State ): LongInt; cdecl;
+		{ Return the current ComTime. }
+	begin
+		if ( AS_GB <> nil ) then begin
+			lua_pushinteger( MyLua , AS_GB^.ComTime );
+		end else begin
+			lua_pushnil( MyLua );
+			RecordError( 'ERROR: GetTime called with nonexistant gameboard!' );
+		end;
+		Lua_GetTime := 1;
+	end;
+
+	Function Lua_ForceChat( MyLua: PLua_State ): LongInt; cdecl;
+		{ Force the player to talk with the specified NPC. }
+	var
+		NPC: GearPtr;
+	begin
+		if AS_GB <> Nil then begin
+			{ Find out which NPC to speak with. }
+			NPC := GetLuaGear( AS_GB , MyLua , 1 );
+
+			if NPC <> Nil then begin
+				StoreSAtt( AS_GB^.Trig , '!TALK ' + BStr( NAttValue( NPC^.NA , NAG_Narrative , NAS_NID ) ) );
+			end;
+		end;
+
+		Lua_ForceChat := 0;
 	end;
 
 
@@ -2096,6 +2125,7 @@ initialization
 	lua_register( MyLua , 'gh_GetNAtt' , @Lua_GetNAtt );
 	lua_register( MyLua , 'gh_SetNAtt' , @Lua_SetNAtt );
 	lua_register( MyLua , 'gh_RawPrint' , @Lua_GHPrint );
+	lua_register( MyLua , 'gh_RawAlert' , @Lua_GHAlert );
 	lua_register( MyLua , 'gh_TrySkillTest' , @Lua_USkillTest );
 	lua_register( MyLua , 'gh_DrawTerrain' , @Lua_DrawTerr );
 	lua_register( MyLua , 'gh_CountActiveModels' , @Lua_NumUnits );
@@ -2106,6 +2136,8 @@ initialization
 	lua_register( MyLua , 'gh_SetChatMessage' , @Lua_SetChatMsg );
 	lua_register( MyLua , 'gh_GetContext' , @Lua_GetContext );
 	lua_register( MyLua , 'gh_GetReaction' , @Lua_GetContext );
+	lua_register( MyLua , 'gh_GetTime' , @Lua_GetTime );
+	lua_register( MyLua , 'gh_StartChat' , @Lua_ForceChat );
 
 	if lua_dofile( MyLua , 'gamedata/gh_messagemutator.lua' ) <> 0 then RecordError( 'GH_MESSAGEMUTATOR ERROR: ' + lua_tostring( MyLua , -1 ) );
 	if lua_dofile( MyLua , 'gamedata/gh_init.lua' ) <> 0 then RecordError( 'GH_INIT ERROR: ' + lua_tostring( MyLua , -1 ) )

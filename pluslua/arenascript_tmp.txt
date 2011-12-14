@@ -2687,18 +2687,6 @@ begin
 	end;
 end;
 
-Procedure ProcessForceChat( var Event: String; GB: GameBoardPtr; Source: GearPtr );
-	{ Force the player to talk with the specified NPC. }
-var
-	N: LongInt;
-begin
-	{ Find out which NPC to speak with. }
-	N := ScriptValue( Event , GB , Source );
-
-	if GB <> Nil then begin
-		StoreSAtt( GB^.Trig , '!TALK ' + BStr( N ) );
-	end;
-end;
 
 Procedure ProcessAnnounce( var Event: String; GB: GameBoardPtr; Source: GearPtr );
 	{ The PC has done something special; show an announcement. }

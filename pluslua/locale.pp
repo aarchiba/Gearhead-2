@@ -3226,7 +3226,7 @@ Procedure DeployGear( GB: GameBoardPtr; Mek: GearPtr; PutOnMap: Boolean );
 			end else begin
 				SetNAtt( mek^.NA , NAG_Location , NAS_D , Random( 8 ) );
 			end;
-		end else begin
+		end else if not OnTheMap( GB , Mek ) then begin
 			SetNAtt( mek^.NA , NAG_Location , NAS_D , Random( 8 ) );
 		end;
 	end;
