@@ -2114,6 +2114,166 @@ end;
 		Lua_ForceChat := 0;
 	end;
 
+	Function Lua_MoveAndPacify( MyLua: PLua_State ): LongInt; cdecl;
+		{ Move the specified gear to the specified scene, }
+		{ setting its team to a nonagressive one. }
+		{ Only physical gears can be moved in this way. }
+		{ If the specified scene is 0, the gear will be "frozen" isntead. }
+	var
+		GearToMove,Scene: GearPtr;
+	begin
+		GearToMove := GetLuaGear( AS_GB , MyLua , 1 );
+		Scene := GetLuaGear( AS_GB , MyLua , 1 );
+
+		{ Check to make sure we have a valid gear to move. }
+		if ( GearToMove <> Nil ) and ( GearToMove^.G >= 0 ) and ( Scene <> Nil ) then begin
+			DelinkGearForMovement( AS_GB , GearToMove );
+			InsertInvCom( Scene , GearToMove );
+
+			{ Set the TEAMDATA here. }
+			if IsACombatant( Grabbed_Gear ) then begin
+				SetSAtt( GearToMove^.SA , 'TEAMDATA <SD ALLY>' );
+			end else begin
+				SetSAtt( GearToMove^.SA , 'TEAMDATA <PASS ALLY>' );
+			end;
+
+			{ If inserting a character, better choose a team. }
+			if IsAScene( Scene ) and IsMasterGear( GearToMove ) then begin
+				ChooseTeam( GearToMove , Scene );
+			end;
+		end;
+		Lua_MoveAndPacify := 0;
+	end;
+
+	Function Lua_GetPC( MyLua: PLua_State ): LongInt; cdecl;
+		{ Find the PC. Return it to Lua. }
+	var
+		PC: GearPtr;
+		Renown: Integer;
+	begin
+		PC := LocatePilot( LocatePC( AS_GB ) );
+		if PC <> Nil then begin
+			lua_pushlightuserdata( MyLua , Pointer( PC ) );
+		end else begin
+			lua_pushnil( MyLua );
+		end;
+		Lua_GetPC := 1;
+	end;
+
+	Function Lua_GiveXP( MyLua: PLua_State ): LongInt; cdecl;
+		{ Give some experience points to all PCs and lancemates. }
+	const
+		LM_Renown_Lag = 20;	{ Lancemates will lag one renown band behind PC. }
+		Procedure DoRapidLeveling( NPC,PC: GearPtr; Renown: Integer );
+			{ Search through this NPC's skills. If you find one that is lower }
+			{ than acceptable for the provided Renown, increase it. }
+		var
+			OptRank,SpecSkill,Skill,N,SkRank: Integer;
+			CanGetBonus: Array [1..NumSkill] of Boolean;
+		begin
+			if NPC = Nil then Exit;
+
+			{ Clamp the renown score. }
+			if Renown < 1 then Renown := 1;
+
+			{ Advance the NPC's renown. }
+			if NAttValue( NPC^.NA , NAG_CharDescription , NAS_Renowned ) < Renown then AddNAtt( NPC^.NA , NAG_CharDescription , NAS_Renowned , 1 );
+
+			{ Maybe advance the NPC's reaction score. }
+			{ This will depend on the current score bonus and the renown level. }
+			N := Random( Renown + 5 ) div 2;
+			if N > NAttValue( PC^.NA , NAG_ReactionScore , NAttValue( NPC^.NA , NAG_Narrative , NAS_NID ) ) then AddReact( AS_GB , PC , NPC , 1 );
+
+			{ Determine the skill level to use. }
+			OptRank := SkillRankForRenown( Renown );
+
+			{ Determine the specialist skill of this model. }
+			SpecSkill := NAttValue( NPC^.NA , NAG_Personal , NAS_SpecialistSkill );
+
+			{ Count how many skills could use a level-up. }
+			N := 0;
+			for Skill := 1 to NumSkill do begin
+				{ If this is the specialist skill, it can go one higher. }
+				SkRank := SkillRank( NPC , Skill );
+				if ( Skill = SpecSkill ) and ( SkRank > 1 ) then Dec( SkRank );
+				if ( SkRank > 0 ) and ( SkRank < OptRank ) then begin
+					Inc( N );
+					CanGetBonus[ Skill ] := True;
+				end else CanGetBonus[ Skill ] := False;
+			end;
+
+			{ If any skills need boosting, select one at random and do that now. }
+			if N > 0 then begin
+				{ Select one skill at random }
+				N := Random( N );
+
+				{ Find it, and give a +1 bonus. }
+				for Skill := 1 to NumSkill do begin
+					if CanGetBonus[ Skill ] then begin
+						Dec( N );
+						if N = -1 then begin
+							AddNAtt( NPC^.NA , NAG_Skill , Skill , 1 );
+							Break;
+						end;
+					end;
+				end;
+			end;
+		end;
+	var
+		XP,T,Renown,LMs: LongInt;
+		M,PC,NPC: GearPtr;
+	begin
+		{ Find out how much to give. }
+		XP := luaL_checkint( MyLua , 1 );
+
+		{ Count the lancemates, reduce XP if too many. }
+		LMs := LancematesPresent( AS_GB );
+		if LMs > 4 then LMs := 4;
+		if LMs > 1 then XP := ( XP * ( 6 - LMs ) ) div 5;
+
+		{ Locate the PC, and find its Renown score. }
+		PC := LocatePilot( LocatePC( AS_GB ) );
+		if PC <> Nil then begin
+			Renown := NAttValue( PC^.NA , NAG_CharDescription , NAS_Renowned );
+		end else begin
+			Renown := 1;
+		end;
+
+		{ We'll rapidly level one of the lancemates at random. }
+		{ Select a model. }
+		LMs := Random( LancematesPresent( AS_GB ) ) + 1;
+
+		{ Search for models to give XP to. }
+		if AS_GB <> Nil then begin
+			M := AS_GB^.Meks;
+			while M <> Nil do begin
+				T := NAttValue( M^.NA , NAG_Location , NAS_Team );
+				if ( T = NAV_DefPlayerTeam ) then begin
+					DoleExperience( M , XP );
+				end else if ( T = NAV_LancemateTeam ) and OnTheMap( AS_GB , M ) then begin
+					DoleExperience( M , XP );
+
+					{ Locate the pilot. }
+					NPC := LocatePilot( M );
+					{ Only regular lancemates get rapid leveling- Pets and temps don't. }
+					if IsRegularLancemate( M ) then begin
+						Dec( LMs );
+						if ( LMs = 0 ) and ( NPC <> Nil ) then DoRapidLeveling( NPC , PC , Renown - LM_Renown_Lag );
+
+						{ Lancemates are also eligible for training events. }
+						if NAttValue( NPC^.NA , NAG_Narrative , NAS_LancemateTraining_Total ) < Renown then begin
+							AddNAtt( NPC^.NA , NAG_Narrative , NAS_LancemateTraining_Total , 1 );
+						end;
+					end;
+				end;
+				M := M^.Next;
+			end;
+		end;
+
+		DialogMsg( ReplaceHash( MSgString( 'AS_XPV' ) , Bstr( XP ) ) );
+
+		Lua_GiveXP := 0;
+	end;
 
 
 initialization
@@ -2138,8 +2298,12 @@ initialization
 	lua_register( MyLua , 'gh_GetReaction' , @Lua_GetContext );
 	lua_register( MyLua , 'gh_GetTime' , @Lua_GetTime );
 	lua_register( MyLua , 'gh_StartChat' , @Lua_ForceChat );
+	lua_register( MyLua , 'gh_MoveAndPacify' , @Lua_MoveAndPacify );
+	lua_register( MyLua , 'gh_GetPCPtr' , @Lua_GetPC );
+	lua_register( MyLua , 'gh_GiveXP' , @Lua_GiveXP );
 
 	if lua_dofile( MyLua , 'gamedata/gh_messagemutator.lua' ) <> 0 then RecordError( 'GH_MESSAGEMUTATOR ERROR: ' + lua_tostring( MyLua , -1 ) );
+	if lua_dofile( MyLua , 'gamedata/gh_functions.lua' ) <> 0 then RecordError( 'GH_FUNCTIONS ERROR: ' + lua_tostring( MyLua , -1 ) );
 	if lua_dofile( MyLua , 'gamedata/gh_init.lua' ) <> 0 then RecordError( 'GH_INIT ERROR: ' + lua_tostring( MyLua , -1 ) )
 	else Lua_Is_Go := True;
 

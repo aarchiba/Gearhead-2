@@ -17,9 +17,9 @@ MetaScene 0 2
 				self:SetArenaState( NAV_AS_BATTLE );
 				gh_Alert( "You enter the arena. Prepare to battle." );
 				self:ResetArenaRecharge();
-				if self:GetChallengerID() ~= 0 then
+				if self:GetChallenger() ~= nil then
 					-- There's a challenger. Better start a conversation now.
-
+					gh_StartChat( self:GetChallenger() );
 				end;
 
 			elseif self:GetArenaState() == NAV_AS_BATTLE then
@@ -33,12 +33,49 @@ MetaScene 0 2
 		end
 
 		P.NU1 = function( self )
-
+			-- If all player units have left the map, return. Also, probably
+			-- lose the battle.
 			if gh_CountActiveModels( NAV_DEFPLAYERTEAM ) < 1 then
-
 				gh_Return();
+				if self:GetArenaState() == NAV_AS_BATTLE then
+					self:SetArenaState( NAV_AS_LOSS );
+					gh_Alert( "You have lost the battle." );
+					self:EndBattle();
+					gh_LoseRenown();
+				end
 			end
 		end
+
+		P.NU2 = function( self )
+			-- If all enemy units have left the map, return. Also, probably
+			-- win the battle.
+			if gh_CountActiveModels( 2 ) < 1 then
+				gh_Return();
+				if self:GetArenaState() == NAV_AS_BATTLE then
+					self:SetArenaState( NAV_AS_WIN );
+					self:AddArenaWin();
+					gh_Alert( "You have won the battle!" );
+					gh_GiveXP( 100 );
+
+					if self:GetChallenger() ~= nil then
+						-- There's a challenger. Better start a conversation now.
+						gh_StartChat( self:GetChallenger() );
+					end;
+
+					self:EndBattle();
+				end
+			end
+		end
+
+		P.EndBattle = function( self )
+			-- At the end of a battle, whether you've won or lost, the challenger
+			-- gets moved back to their home scene.
+			local npc = self:GetChallenger();
+			if npc ~= nil then
+				gh_MoveAndPacify( npc , self:GetChallengerHome() );
+				self:SetChallenger( nil );
+			end
+		end;
 
 	endlua
 
@@ -64,6 +101,14 @@ MetaScene 0 2
 		name <Enemies>
 		faction <PDASS>
 		SetEnemy 1
+		lua
+			P.DEPLOY = function( self )
+				if ( self:GetArenaState() == NAV_AS_READY ) and ( self:GetArenaForces() > 0 ) then
+					gh_DeployRandomMecha( 2 , self:GetArenaThreat() , self:GetArenaForces() )
+				end
+			end
+		endlua
+
 		Deploy <if= SelfArenaState NAV_AS_Ready ifG SelfArenaForces 0 WMecha 2 SelfArenaThreat SelfArenaForces>
 		ParaX 45
 		ParaY 25

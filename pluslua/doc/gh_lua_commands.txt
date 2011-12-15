@@ -37,6 +37,10 @@ gh_GetNAtt( gear , NA_G , NA_S )
 	Returns the value of gear's numeric attribute NA_G,NA_S.
 	May also be called as the gear:getNAtt( NA_G , NA_S ) method.
 
+gh_GetPC()
+	Returns the PC's Lua table.
+	gh_GetPCPtr() returns the PC's userdata pointer.
+
 gh_GetStat( gear , stat )
 	Returns the value of gear's stat. Note that the value can be accessed
 	directly through the gear object's gear.stat table.
@@ -45,6 +49,9 @@ gh_GetTime()
 	Returns the current ComTime. This is the number of game seconds passed
 	since the beginning of the campaign.
 
+gh_GiveXP( xpv )
+	Doles a certain amount of experience to the PC and levels up lancemates.
+
 gh_GotoScene( destination )
 	The PC exits the current scene and moves to destination.
 
@@ -52,6 +59,10 @@ gh_InitChatMenu( AddStandardOps )
 	Clears all items currently in the menu. If AddStandardOps is true, it
 	adds the standard options ([Goodbye], [Join], etc) to the menu.
 	*** Restricted: In general, you won't need to use this.
+
+gh_MoveAndPacify( GearToMove , Scene )
+	Moves the specified gear to the specified scene, setting its team info
+	to something peaceful.
 
 gh_Print( message )
 	Prints a string to the console area.
