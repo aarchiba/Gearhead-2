@@ -14,6 +14,11 @@ gh_CountActiveModels( team )
 	Returns the number of models (mecha + characters) belonging to the
 	specified team on the current map.
 
+gh_DeployRandomMecha( team , renown , strength )
+	Deploys a number of mecha on the current map. Team is the team they belong
+	to. Renown is their difficulty rating, and Strength tells relatively how
+	many mecha to generate (in percent).
+
 gh_DrawTerrain( x , y , terrain )
 	Changes tile X,Y on the current map to terrain.
 
@@ -32,6 +37,10 @@ gh_GetGearV( gear )
 gh_GetContext( gear , context_label )
 	Generates the context for this gear preceded by the char specified
 	in context_label.
+
+gh_GetCurrentScene()
+	Returns the table for the scene being played.
+	gh_GetCurrentScenePtr returns the scene's userdata.
 
 gh_GetNAtt( gear , NA_G , NA_S )
 	Returns the value of gear's numeric attribute NA_G,NA_S.
@@ -63,6 +72,9 @@ gh_InitChatMenu( AddStandardOps )
 gh_MoveAndPacify( GearToMove , Scene )
 	Moves the specified gear to the specified scene, setting its team info
 	to something peaceful.
+
+gh_OpenShop( wares )
+	Opens the shopping interface with a list of wares to stock.
 
 gh_Print( message )
 	Prints a string to the console area.

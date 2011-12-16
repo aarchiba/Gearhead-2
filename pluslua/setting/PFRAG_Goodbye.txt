@@ -9,67 +9,85 @@
 	Persona
 	requires <*GoodBye @:CORPO>
 	say "Remember, think quality- think \FACTION ChatNPCFac ."
+	NoChatOps
 	condition <>
 	say "Hopefully someday I'll work for a big company..."
+	NoChatOps
 
 	Persona
 	requires <*GOODBYE @:PER_G>
 	say <Hopefully we'll meet again...>
+	NoChatOps
 	condition <return( chatnpc:GetReact() >> 0 )>
 	say <Don't hurry back.>
+	NoChatOps
 
 	Persona
 	requires <*GOODBYE @:PER_P>
 	say "It's time to go... I'm sure I'll be seeing you again."
+	NoChatOps
 
 	Persona
 	requires <*GOODBYE @PER_I>
 	say "Bye."
+	NoChatOps
 
 	Persona
 	requires <*GOODBYE @:MECHA>
 	say "Keep the parts oiled and you won't have any trouble with it."
+	NoChatOps
 
 	Persona
 	requires <*GOODBYE @:LABOR>
 	say "Keep on trucking!"
+	NoChatOps
 
 	Persona
 	requires <*GOODBYE @:MEDIC>
 	say "Try to stay in good health."
+	NoChatOps
 
 	Persona
 	requires <*GOODBYE @:TRADE>
 	say "If you need anything else, you know where to find me."
+	NoChatOps
 
 	Persona
 	requires <*GOODBYE ~@:TRADE L:L5ALI>
 	say "Fair winds."
+	NoChatOps
 
 	Persona
 	requires <*GOODBYE @:PER_A>
 	say "Come back and see me again anytime!"
+	NoChatOps
 	condition <return( chatnpc:GetReact() >> 50 )>
 	say "Good-bye, \PC ."
+	NoChatOps
 	condition <return( chatnpc:GetReact() >> 0 )>
 	say "Don't let the door hit your ass on the way out."
+	NoChatOps
 
 	Persona
 	requires <*GOODBYE @:FAITH>
 	say "May the great spirit guide your path."
+	NoChatOps
 
 	Persona
 	requires <*GOODBYE>
 	say "Good-bye."
+	NoChatOps
 
 	Persona
 	requires <*GOODBYE @:PER_E>
 	say "See you again."
+	NoChatOps
 
 	Persona
 	requires <*GOODBYE @:PER_C>
 	say "It was a real pleasure seeing you!"
 	condition <return( chatnpc:GetReact() >> 10 )>
 	say "Good-bye."
+	NoChatOps
 
 

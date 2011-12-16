@@ -9,9 +9,84 @@ MetaScene 0 2
 	terrain <GROUND>
 
 	lua
-		-- On startup, if the arena is ready then start the battle.
-		-- If no battle is ready then return the PC to the previous scene.
+		function P.GetArenaState( self )
+			-- Used by Arena scenes. This function returns the current arena state.
+			return( self:GetNAtt( NAG_ARENADATA , NAS_ARENASTATE ) )
+		end
+		function P.SetArenaState( self , new_arena_state )
+			-- Used by Arena scenes. This function sets the current arena state.
+			self:SetNAtt( NAG_ARENADATA , NAS_ARENASTATE , new_arena_state )
+		end
+		function P.SetArenaRecharge( self , recharge_time )
+			-- The recharge timer tells when the next fight can take place at this
+			-- arena.
+			self:SetNAtt( NAG_ARENADATA , NAS_ARENARECHARGE , gh_GetTime() + recharge_time )
+		end
+		function P.GetArenaRecharge( self )
+			-- The recharge timer tells when the next fight can take place at this
+			-- arena.
+			return( self:GetNAtt( NAG_ARENADATA , NAS_ARENARECHARGE ) )
+		end
+		function P.ResetArenaRecharge( self )
+			-- This function sets the recharge timer to one day later than the
+			-- current time.
+			self:SetArenaRecharge( TIME_DAY )
+		end
+		function P.GetChallenger( self )
+			-- If a challenger is assigned to this arena, return its table entry.
+			local npc = self:GetNAtt( NAG_ARENADATA , NAS_CHALLENGERID );
+			if npc ~= 0 then
+				return( gh[ npc ] );
+			else
+				return( nil );
+			end;
+		end
+		function P.SetChallenger( self , npc )
+			if type( npc ) == 'table' then
+				self:SetNAtt( NAG_ARENADATA , NAS_CHALLENGERID , npc:GetNAtt( NAG_NARRATIVE , NAS_NID ) );
+			elseif type( npc ) == 'number' then
+				self:SetNAtt( NAG_ARENADATA , NAS_CHALLENGERID , npc );
+			else
+				self:SetNAtt( NAG_ARENADATA , NAS_CHALLENGERID , 0 );
+			end;
+		end
+		function P.GetChallengerHome( self )
+			-- If a challenger is assigned to this arena, return its home scene.
+			local npc = self:GetNAtt( NAG_ARENADATA , NAS_CHALLENGERHOME );
+			if npc ~= 0 then
+				return( gh[ npc ] );
+			else
+				return( nil );
+			end
+		end
+		function P.SetChallengerHome( self , npc )
+			if type( npc ) == 'table' then
+				self:SetNAtt( NAG_ARENADATA , NAS_CHALLENGERHOME , npc:GetNAtt( NAG_NARRATIVE , NAS_NID ) );
+			elseif type( npc ) == 'number' then
+				self:SetNAtt( NAG_ARENADATA , NAS_CHALLENGERHOME , npc );
+			else
+				self:SetNAtt( NAG_ARENADATA , NAS_CHALLENGERHOME , 0 );
+			end;
+		end
+		function P.AddArenaWin( self )
+			self:AddNAtt( NAG_ARENADATA , NAS_ARENAWINS , 1 );
+		end
+		function P.GetArenaWins( self )
+			return( self:GetNAtt( NAG_ARENADATA , NAS_ARENAWINS ) )
+		end
+		function P.GetArenaForces( self )
+			return( self:GetNAtt( NAG_ARENADATA , NAS_ARENAFORCES ) )
+		end
+		function P.GetArenaThreat( self )
+			return( self:GetNAtt( NAG_ARENADATA , NAS_ARENATHREAT ) )
+		end
+		function P.AddArenaThreat( self , amount )
+			self:AddNAtt( NAG_ARENADATA , NAS_ARENATHREAT , amount )
+		end
+
 		P.START = function( self )
+			-- On startup, if the arena is ready then start the battle.
+			-- If no battle is ready then return the PC to the previous scene.
 			if self:GetArenaState() == NAV_AS_READY then
 				-- A battle is about to start.
 				self:SetArenaState( NAV_AS_BATTLE );
@@ -56,6 +131,7 @@ MetaScene 0 2
 					self:AddArenaWin();
 					gh_Alert( "You have won the battle!" );
 					gh_GiveXP( 100 );
+					self:AddArenaThreat( math.random( 10 ) )
 
 					if self:GetChallenger() ~= nil then
 						-- There's a challenger. Better start a conversation now.
@@ -79,17 +155,6 @@ MetaScene 0 2
 
 	endlua
 
-	start <if= SelfArenaState NAV_AS_Ready else GoCheckBattle          Alert 1   SetSelfArenaState NAV_AS_Battle SetSelfArenaRecharge if# SelfChallengerID 0 ForceChat SelfChallengerID>
-	GoCheckBattle <if= SelfArenaState NAV_AS_Battle else GoBoringStart Print 2>
-	GoBoringStart <Print 3 Return>
-	nu1 <if= T1 0 Return   if= SelfArenaState NAV_AS_Battle SetSelfArenaState NAV_AS_Loss  Alert 5 Print 5  LoseRenown Goto GoEndBattle>
-	nu2 <if= T2 0 Return   if= SelfArenaState NAV_AS_Battle SetSelfArenaState NAV_AS_Win   Alert 6 Print 6  AddSelfArenaWin  AddSelfArenaThreat d10  XPV 100 FacXP+ 5 1 AddRenown 1 ifNPCOK SelfChallengerID else GoEndBattle ForceChat SelfChallengerID Goto GoEndBattle>
-	GoEndBattle <ifNPCOK SelfChallengerID MoveAndPacifyNPC SelfChallengerID SelfChallengerHome ClearSelfChallengerID>
-	Msg1 <You enter the arena. Prepare to battle.>
-	Msg2 <The arena battle rages on.>
-	Msg3 <You enter the arena. There's no fight going on here now.>
-	Msg5 <You have lost the battle.>
-	Msg6 <You have won the battle.>
 	sub
 		Team 1
 		name <Player Team>
@@ -103,13 +168,14 @@ MetaScene 0 2
 		SetEnemy 1
 		lua
 			P.DEPLOY = function( self )
-				if ( self:GetArenaState() == NAV_AS_READY ) and ( self:GetArenaForces() > 0 ) then
-					gh_DeployRandomMecha( 2 , self:GetArenaThreat() , self:GetArenaForces() )
+				-- Original ArenaScript code (which does the exact same thing):
+				--   Deploy <if= SelfArenaState NAV_AS_Ready ifG SelfArenaForces 0 WMecha 2 SelfArenaThreat SelfArenaForces>
+				local scene = gh_GetCurrentScene()
+				if ( scene ~= nil ) and ( scene:GetArenaState() == NAV_AS_READY ) and ( scene:GetArenaForces() > 0 ) then
+					gh_DeployRandomMecha( self:GetS() , scene:GetArenaThreat() , scene:GetArenaForces() )
 				end
 			end
 		endlua
-
-		Deploy <if= SelfArenaState NAV_AS_Ready ifG SelfArenaForces 0 WMecha 2 SelfArenaThreat SelfArenaForces>
 		ParaX 45
 		ParaY 25
 	end
@@ -120,220 +186,18 @@ MetaScene 0 2
 %%  ***   DUNGEONS   ***
 %%  ********************
 
-MetaScene
-	name <# Tower>
-	desig <QS_Dungeon_UrbanHellHole>
-	special <NOEXIT>
-	type <DUNGEON building condemned>
-	dentrance <*GoUp>
-	content1 <Some 1 40 Sub *DUNGEON_THREAT>
-	content2 <Some 1 45 Sub *DUNGEON_DECOR>
-	content3 <Some 1 30 Sub *DUNGEON_REWARD>
-	mapwidth 25
-	mapheight 25
-	ComplexMap
-	Ceiling
-	LockedDoorChance 15
-	SecretDoorChance 5
-	NeededCells 3
-	start <Print 1>
-	msg1 <You enter \SCENE SceneID .>
-	sub
-		Team 1
-		SetEnemy 2
-
-		Team 2
-		name <Monster>
-		type <City Vermin Criminal>
-		SetEnemy 1
-		Stat 2 1
-
-		room
-		width 3
-		height 3
-		sub
-			StairsDown
-			Destination -1
-		end
-	end
-
-MetaScene
-	name <# Sewer>
-	desig <QS_Dungeon_Sewer>
-	special <NOEXIT>
-	type <DUNGEON sewer>
-	dentrance <*GoDown>
-	content1 <Some 1 50 Sub *DUNGEON_THREAT>
-	content2 <Some 1 45 Sub *DUNGEON_DECOR>
-	content3 <Some 1 20 Sub *DUNGEON_REWARD>
-	mapwidth 30
-	mapheight 30
-	MonkeyMap
-	Ceiling
-	LockedDoorChance 12
-	SecretDoorChance 20
-	MarbleType 7
-	NeededCells 3
-	start <Print 1>
-	msg1 <You enter \SCENE SceneID .>
-	sub
-		Team 1
-		SetEnemy 2
-
-		Team 2
-		name <Monster>
-		type <City Water Reptile Fungus Sewer>
-		SetEnemy 1
-		Stat 2 1
-
-		room
-		width 3
-		height 3
-		sub
-			StairsUp
-			Destination -1
-		end
-	end
-
-
-MetaScene
-	name <the S.S. #>
-	desig <QS_Dungeon_Derelict>
-	special <NOEXIT>
-	type <DUNGEON ruin derelict>
-	terrain <SPACE>
-	dentrance <*GoDown>
-	content1 <Some 1 40 Sub *DUNGEON_THREAT>
-	content2 <Some 1 45 Sub *DUNGEON_DECOR>
-	content3 <Some 1 30 Sub *DUNGEON_REWARD>
-	% Suffocation effect...
-	Vacuum
-	mapwidth 35
-	mapheight 35
-	MonkeyMap
-	Ceiling
-	LockedDoorChance 12
-	SecretDoorChance 10
-	IndustrialTiles
-	NeededCells 3
-	start <Print 1>
-	msg1 <You enter \SCENE SceneID .>
-	sub
-		Team 1
-		SetEnemy 2
-
-		Team 2
-		name <Monster>
-		type <Fungus Exorg Ruin PreZero>
-		SetEnemy 1
-		Stat 2 1
-
-		room
-		width 3
-		height 3
-		sub
-			Elevator
-			Destination -1
-		end
-	end
-
-
-MetaScene
-	name <the # Wreck>
-	desig <QS_Dungeon_TreasureWreck>
-	special <NOEXIT>
-	type <DUNGEON ruin derelict>
-	terrain <SPACE>
-	dentrance <*GoDown>
-	content1 <Some 2 60 Sub *DUNGEON_THREAT>
-	content2 <Some 1 45 Sub *DUNGEON_DECOR>
-	content3 <Some 1  5 Sub *DUNGEON_REWARD>
-	content4 <Some 1 40 Sub *TREASUREROOM_WRECK>
-	% Suffocation effect...
-	Vacuum
-	mapwidth 49
-	mapheight 49
-	MonkeyMap
-	Ceiling
-	LockedDoorChance 17
-	SecretDoorChance 20
-	IndustrialTiles
-	NeededCells 5
-	start <Print 1>
-	msg1 <You enter \SCENE SceneID .>
-	sub
-		Team 1
-		SetEnemy 2
-
-		Team 2
-		name <Monster>
-		type <Fungus Exorg Ruin PreZero>
-		SetEnemy 1
-		Stat 2 1
-
-		room
-		width 3
-		height 3
-		sub
-			Elevator
-			Destination -1
-		end
-	end
-
-MetaScene
-	name <# Asteroid>
-	desig <QS_Dungeon_AsteroidCave>
-	special <NOEXIT>
-	type <DUNGEON asteroid cave>
-	terrain <SPACE>
-	habitat <SPACE.ASTER>
-	dentrance <*GoDown>
-	content1 <Some 1 45 Sub *DUNGEON_THREAT>
-	content2 <Some 1 40 Sub *DUNGEON_DECOR>
-	content3 <Some 1 30 Sub *DUNGEON_REWARD>
-	% Suffocation effect...
-	Vacuum
-	Ceiling
-	mapwidth 30
-	mapheight 30
-	CaveMap
-	RockyTiles
-	NeededCells 3
-	start <Print 1>
-	msg1 <You enter \SCENE SceneID .>
-	sub
-		Team 1
-		SetEnemy 2
-
-		Team 2
-		name <Monster>
-		type <Cave Exorg Fungus Asteroid>
-		SetEnemy 1
-		Stat 2 1
-
-		room
-		width 3
-		height 3
-		sub
-			StairsUp
-			Destination -1
-		end
-	end
 
 MetaScene
 	name <# Mine>
-	desig <QS_Dungeon_AsteroidMine>
+	desig <QS_Dungeon_EarthMine>
 
 	special <NOEXIT>
-	type <DUNGEON asteroid mine>
-	terrain <SPACE>
-	habitat <SPACE.ASTER>
+	terrain <GROUND>
+	habitat <EARTH.MNTNS>
 	dentrance <*GoDown>
 	content1 <Some 1 40 Sub *DUNGEON_THREAT>
 	content2 <Some 1 45 Sub *DUNGEON_DECOR>
 	content3 <Some 1 30 Sub *DUNGEON_REWARD>
-	% Suffocation effect...
-	Vacuum
 	mapwidth 30
 	mapheight 30
 	CaveMap

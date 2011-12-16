@@ -69,7 +69,7 @@
 		-- chatnpc is the NPC being spoken with
 
 		-- Start by clearing the menu.
-		gh_InitChatMenu( true )
+		gh_InitChatMenu( not node.no_chat_ops )
 
 		-- If an effect script exists, run that now.
 		if node.effect ~= nil then
@@ -97,74 +97,6 @@
 		if gh_CountActiveModels( NAV_DEFPLAYERTEAM ) < 1 then
 			gh_Return();
 		end
-	end
-	function proto_scene.GetArenaState( self )
-		-- Used by Arena scenes. This function returns the current arena state.
-		return( self:GetNAtt( NAG_ARENADATA , NAS_ARENASTATE ) )
-	end
-	function proto_scene.SetArenaState( self , new_arena_state )
-		-- Used by Arena scenes. This function sets the current arena state.
-		self:SetNAtt( NAG_ARENADATA , NAS_ARENASTATE , new_arena_state )
-	end
-	function proto_scene.SetArenaRecharge( self , recharge_time )
-		-- The recharge timer tells when the next fight can take place at this
-		-- arena.
-		self:SetNAtt( NAG_ARENADATA , NAS_ARENARECHARGE , gh_GetTime() + recharge_time )
-	end
-	function proto_scene.GetArenaRecharge( self )
-		-- The recharge timer tells when the next fight can take place at this
-		-- arena.
-		return( self:GetNAtt( NAG_ARENADATA , NAS_ARENARECHARGE ) )
-	end
-	function proto_scene.ResetArenaRecharge( self )
-		-- This function sets the recharge timer to one day later than the
-		-- current time.
-		self:SetArenaRecharge( TIME_DAY )
-	end
-	function proto_scene.GetChallenger( self )
-		-- If a challenger is assigned to this arena, return its table entry.
-		local npc = self:GetNAtt( NAG_ARENADATA , NAS_CHALLENGERID );
-		if npc ~= 0 then
-			return( gh[ npc ] );
-		else
-			return( nil );
-		end;
-	end
-	function proto_scene.SetChallenger( self , npc )
-		if type( npc ) == 'table' then
-			self:SetNAtt( NAG_ARENADATA , NAS_CHALLENGERID , npc:GetNAtt( NAG_NARRATIVE , NAS_NID ) );
-		elseif type( npc ) == 'number' then
-			self:SetNAtt( NAG_ARENADATA , NAS_CHALLENGERID , npc );
-		else
-			self:SetNAtt( NAG_ARENADATA , NAS_CHALLENGERID , 0 );
-		end;
-	end
-	function proto_scene.GetChallengerHome( self )
-		-- If a challenger is assigned to this arena, return its home scene.
-		local npc = self:GetNAtt( NAG_ARENADATA , NAS_CHALLENGERHOME );
-		if npc ~= 0 then
-			return( gh[ npc ] );
-		else
-			return( nil );
-		end
-	end
-	function proto_scene.SetChallengerHome( self , npc )
-		if type( npc ) == 'table' then
-			self:SetNAtt( NAG_ARENADATA , NAS_CHALLENGERHOME , npc:GetNAtt( NAG_NARRATIVE , NAS_NID ) );
-		elseif type( npc ) == 'number' then
-			self:SetNAtt( NAG_ARENADATA , NAS_CHALLENGERHOME , npc );
-		else
-			self:SetNAtt( NAG_ARENADATA , NAS_CHALLENGERHOME , 0 );
-		end;
-	end
-	function proto_scene.AddArenaWin( self )
-		self:AddNAtt( NAG_ARENADATA , NAS_ARENAWINS , 1 );
-	end
-	function proto_scene.GetArenaWins( self )
-		return( self:GetNAtt( NAG_ARENADATA , NAS_ARENAWINS ) )
-	end
-	function proto_scene.GetArenaForces( self )
-		return( self:GetNAtt( NAG_ARENADATA , NAS_ARENAFORCES ) )
 	end
 
 

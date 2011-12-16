@@ -1490,45 +1490,6 @@ begin
 	SCRIPT_Terrain_To_Seek := Terrain;
 end;
 
-Procedure CantOpenBusiness( var Event: String; GB: GameBoardPtr );
-	{ The business can't be opened. Print an error message and }
-	{ cancel the rest of the event. }
-var
-	Scene: Integer;
-	msg: String;
-begin
-	Event := '';
-	Scene := FindSceneID( I_NPC , GB );
-	if Scene <> 0 then begin
-		msg := ReplaceHash( msgString( 'CantOpenShop_WithScene' ) , SceneName( GB , Scene , True ) );
-	end else begin
-		msg := msgString( 'CantOpenShop' );
-	end;
-	CHAT_Message := msg;
-end;
-
-Procedure ProcessShop( var Event: String; GB: GameBoardPtr; Source: GearPtr );
-	{ Retrieve the WARES line, then pass it all on to the OpenShop }
-	{ procedure. }
-var
-	Wares: String;
-begin
-	{ Retrieve the WARES string. }
-	Wares := ExtractWord( Event );
-	if Wares <> '' then begin
-		{ Change the event script to the requested line. }
-		Wares := AS_GetString( Source , Wares );
-	end;
-
-	{ Only open the shop if the NPC is on the current map. }
-	if IsFoundAlongTrack( GB^.Meks , FindRoot( I_NPC ) ) then begin
-		{ Pass all info on to the OPENSHOP procedure. }
-		OpenShop( GB , I_PC , I_NPC , Wares );
-	end else begin
-		{ Call the error handler. }
-		CantOpenBusiness( Event , GB );
-	end;
-end;
 
 Procedure ProcessSchool( var Event: String; GB: GameBoardPtr; Source: GearPtr );
 	{ Retrieve the WARES line, then pass it all on to the OpenSchool }
@@ -2040,26 +2001,6 @@ begin
 	BuildGenericEncounter( GB , Source , Scale );
 end;
 
-Procedure ProcessWMecha( var Event: String; GB: GameBoardPtr; Source: GearPtr );
-	{ Fill current scene with enemies. }
-var
-	TID,Renown,Strength,LMs: LongInt;
-begin
-	{ Find out the team, and how many enemies to add. }
-	TID := ScriptValue( Event , GB , Source );
- 	Renown := ScriptValue( Event , GB , Source );
-	Strength := ScriptValue( Event , GB , Source );
-
-	{ If this team is an enemy of the player team, add extra STRENGTH based on the number of }
-	{ lancemates. This extra STRENGTH will not entirely cancel out the usefulness of lancemates, }
-	{ but will reduce it slightly, thereby allowing solo PCs to exist. }
-	if AreEnemies( GB , TID , NAV_DefPlayerTeam ) then begin
-		LMs := LancematesPresent( GB );
-		if LMs > 0 then Strength := Strength + ( 25 * LMs );
-	end;
-
-	AddTeamForces( GB , TID , Renown , Strength );
-end; { ProcessWMecha }
 
 Procedure ProcessWMonster( var Event: String; GB: GameBoardPtr; Source: GearPtr );
 	{ Fill current scene with monsters. }

@@ -1365,6 +1365,10 @@ var
 					if PList^.S = GS_SayNode then begin
 						StoreSAtt( Persona^.Scripts , 'P.node_' + BStr( PList^.Stat[ STAT_PersonaNodeID ] ) + ' = { ' );
 						StoreSAtt( Persona^.Scripts , 'msg = "' + SAttValue( PList^.SA , 'MSG' ) + '", ' );
+						if NAttValue( PList^.NA , NAG_GearOps , NAS_NoChatOps ) <> 0 then begin
+							StoreSAtt( Persona^.Scripts , 'no_chat_ops = true, ' );
+						end;
+
 						msg := SAttValue( PList^.SA , 'EFFECT' );
 						if msg <> '' then StoreSAtt( Persona^.Scripts , 'effect = function(self,chatnpc) ' + msg + ' end, ' );
 

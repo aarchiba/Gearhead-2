@@ -1293,57 +1293,61 @@ end;
 
 Procedure InfoBox( Dest: TSDL_Rect );
 	{ Do a box for drawing something else inside of. }
+const
+	tex_width = 16;
+	border_width = tex_width div 2;
+	half_dat = border_width div 2;
 var
 	X0,Y0,W32,H32,X,Y: Integer;
 begin
 	{ Step one: Determine the size of our box. Both dimensions should be }
 	{ a multiple of 32. }
-	{ W32 and H32 will store the number of 32-pixel columns/rows. }
-	W32 := ( Dest.W + 16 ) div 32 + 1;
-	H32 := ( Dest.H + 16 ) div 32 + 1;
+	{ W32 and H32 will store the number of 16-pixel columns/rows. }
+	W32 := ( Dest.W + border_width ) div tex_width + 1;
+	H32 := ( Dest.H + border_width ) div tex_width + 1;
 
 	{ X0 and Y0 will store the upper left corner of the box. }
-	X0 := Dest.X - ( ( ( w32 * 32 ) - Dest.W ) div 2 );
-	Y0 := Dest.Y - ( ( ( h32 * 32 ) - Dest.H ) div 2 );
+	X0 := Dest.X - ( ( ( w32 * tex_width ) - Dest.W ) div 2 );
+	Y0 := Dest.Y - ( ( ( h32 * tex_width ) - Dest.H ) div 2 );
 
 	{ Draw the backdrop. }
 	for X := 0 to ( W32 - 1 ) do begin
-		Dest.X := X0 + X * 32;
+		Dest.X := X0 + X * tex_width;
 		for Y := 0 to ( H32 - 1 ) do begin
-			Dest.Y := Y0 + Y * 32;
+			Dest.Y := Y0 + Y * tex_width;
 			DrawSprite( Infobox_Backdrop , Dest , 0 );
 		end;
 	end;
 
 	{ Draw the border. }
-	Dest.X := X0 - 8;
-	Dest.Y := Y0 - 8;
+	Dest.X := X0 - half_dat;
+	Dest.Y := Y0 - half_dat;
 	DrawSprite( Infobox_Border , Dest , 0 );
 
-	Dest.X := X0 - 8;
-	Dest.Y := Y0 - 8 + H32 * 32;
-	DrawSprite( Infobox_Border , Dest , 0 );
+	Dest.X := X0 - half_dat;
+	Dest.Y := Y0 + H32 * tex_width - half_dat;
+	DrawSprite( Infobox_Border , Dest , 4 );
 
-	Dest.X := X0 - 8 + W32 * 32;
-	Dest.Y := Y0 - 8;
-	DrawSprite( Infobox_Border , Dest , 0 );
+	Dest.X := X0 + W32 * tex_width - half_dat;
+	Dest.Y := Y0 - half_dat;
+	DrawSprite( Infobox_Border , Dest , 3 );
 
-	Dest.X := X0 - 8 + W32 * 32;
-	Dest.Y := Y0 - 8 + H32 * 32;
-	DrawSprite( Infobox_Border , Dest , 0 );
+	Dest.X := X0 + W32 * tex_width - half_dat;
+	Dest.Y := Y0 + H32 * tex_width - half_dat;
+	DrawSprite( Infobox_Border , Dest , 5 );
 
 	for X := 1 to ( W32 * 2 - 1 ) do begin
-		Dest.X := X0 + X * 16 - 8;
-		Dest.Y := Y0 - 8;
+		Dest.X := X0 + X * border_width - half_dat;
+		Dest.Y := Y0 - half_dat;
 		DrawSprite( Infobox_Border , Dest , 1 );
-		Dest.Y := Y0 - 8 + H32 * 32;
+		Dest.Y := Y0 + H32 * tex_width - half_dat;
 		DrawSprite( Infobox_Border , Dest , 1 );
 	end;
 	for Y := 1 to ( H32 * 2 - 1 ) do begin
-		Dest.Y := Y0 + Y * 16 - 8;
-		Dest.X := X0 - 8;
+		Dest.Y := Y0 + Y * border_width - half_dat;
+		Dest.X := X0 - half_dat;
 		DrawSprite( Infobox_Border , Dest , 2 );
-		Dest.X := X0 - 8 + W32 * 32;
+		Dest.X := X0 + W32 * tex_width - half_dat;
 		DrawSprite( Infobox_Border , Dest , 2 );
 	end;
 end;
@@ -1528,8 +1532,8 @@ initialization
 	Cursor_Sprite := LocateSprite( 'sys_cursor.png' , 8 , 16 );
 	Title_Screen := LocateSprite( 'sys_arenatitle.png' , 800 , 600 );
 	Ersatz_Mouse_Sprite := LocateSprite( 'sys_mouse.png' , 16 , 16 );
-	Infobox_Border := LocateSprite( 'sys_knotwork.png' , 16 , 16 );
-	Infobox_Backdrop := LocateSprite( 'sys_bgtexture.png' , 32 , 32 );
+	Infobox_Border := LocateSprite( 'sys_knotwork.png' , 8 , 8 );
+	Infobox_Backdrop := LocateSprite( 'sys_bgtexture.png' , 16 , 16 );
 	Mapbox_Border := LocateSprite( 'sys_mapborder.png' , 16 , 16 );
 
 

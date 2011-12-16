@@ -76,6 +76,7 @@ var
 	I_PC,I_NPC: GearPtr;	{ Pointers to the PC & NPC Chara gears }
 	I_Rumors: SAttPtr;	{ List of rumors. }
 	I_Persona: GearPtr;	{ The conversation currently being used. }
+	I_HaveNotShopped: Boolean;
 
 	Grabbed_Gear: GearPtr;	{ This gear can be acted upon by }
 				{ generic commands. }
@@ -1245,6 +1246,7 @@ begin
 
 	{ We start from the greeting node. }
 	PNode := PNode_Greeting;
+	I_HaveNotShopped := true;
 	InvokePNode( PNodeTrigger( PNode ) );
 
 	repeat
@@ -1266,6 +1268,7 @@ begin
 			{ One of the placed options have been triggered. }
 			{ Attempt to find the appropriate script to }
 			{ invoke. }
+			I_HaveNotShopped := true;
 			InvokePNode( PNodeTrigger( N ) );
 
 		end else if N = CMD_Join then begin
@@ -1291,6 +1294,13 @@ begin
 		end;
 
 	until ( N = -1 ) or ( IntMenu^.NumItem < 1 ) or ( I_NPC = Nil );
+
+	{ If the menu is empty, pause for a minute. Or at least a keypress. }
+	if ( IntMenu^.NumItem < 1 ) and I_HaveNotShopped then begin
+		InteractRedraw;
+		DoFlip;
+		MoreKey;
+	end;
 
 	{ Update the NumberOfConversations counter. }
 	if I_NPC <> Nil then AddNAtt( NPC^.NA , NAG_Personal , NAS_NumConversation , 1 );
@@ -2275,6 +2285,78 @@ end;
 		Lua_GiveXP := 0;
 	end;
 
+	Function Lua_GetCurrentScene( MyLua: PLua_State ): LongInt; cdecl;
+		{ Find the current scene. Return it to Lua. }
+	begin
+		if ( AS_GB <> Nil ) and ( AS_GB^.Scene <> Nil ) then begin
+			lua_pushlightuserdata( MyLua , Pointer( AS_GB^.Scene ) );
+		end else begin
+			lua_pushnil( MyLua );
+		end;
+		Lua_GetCurrentScene := 1;
+	end;
+
+	Function Lua_DeployRandomMecha( MyLua: PLua_State ): LongInt; cdecl;
+		{ Fill current scene with enemies. }
+	var
+		TID,Renown,Strength,LMs: LongInt;
+	begin
+		{ Find out the team, and how many enemies to add. }
+		TID := luaL_checkint( MyLua , 1 );
+	 	Renown := luaL_checkint( MyLua , 2 );
+		Strength := luaL_checkint( MyLua , 3 );
+
+		{ If this team is an enemy of the player team, add extra STRENGTH based on the number of }
+		{ lancemates. This extra STRENGTH will not entirely cancel out the usefulness of lancemates, }
+		{ but will reduce it slightly, thereby allowing solo PCs to exist. }
+		if AreEnemies( AS_GB , TID , NAV_DefPlayerTeam ) then begin
+			LMs := LancematesPresent( AS_GB );
+			if LMs > 0 then Strength := Strength + ( 25 * LMs );
+		end;
+
+		AddTeamForces( AS_GB , TID , Renown , Strength );
+
+		Lua_DeployRandomMecha := 0;
+	end; { ProcessWMecha }
+
+	Procedure CantOpenBusiness( GB: GameBoardPtr );
+		{ The business can't be opened. Print an error message. }
+	var
+		Scene: Integer;
+		msg: String;
+	begin
+		Scene := FindSceneID( I_NPC , GB );
+		if Scene <> 0 then begin
+			msg := ReplaceHash( msgString( 'CantOpenShop_WithScene' ) , SceneName( GB , Scene , True ) );
+		end else begin
+			msg := msgString( 'CantOpenShop' );
+		end;
+		CHAT_Message := msg;
+	end;
+
+	Function Lua_OpenShop( MyLua: PLua_State ): LongInt; cdecl;
+		{ Retrieve the WARES line, then pass it all on to the OpenShop }
+		{ procedure. }
+	var
+		Wares: String;
+	begin
+		{ Retrieve the WARES string. }
+		Wares := luaL_checkstring( MyLua , 1 );
+
+		{ Only open the shop if the NPC is on the current map. }
+		if IsFoundAlongTrack( AS_GB^.Meks , FindRoot( I_NPC ) ) then begin
+			{ Pass all info on to the OPENSHOP procedure. }
+			OpenShop( AS_GB , I_PC , I_NPC , Wares );
+			I_HaveNotShopped := false;
+		end else begin
+			{ Call the error handler. }
+			CantOpenBusiness( AS_GB );
+		end;
+
+		Lua_OpenShop := 0;
+	end;
+
+
 
 initialization
 	lua_register( MyLua , 'gh_GetGearG' , @Lua_GetGearG );
@@ -2301,6 +2383,9 @@ initialization
 	lua_register( MyLua , 'gh_MoveAndPacify' , @Lua_MoveAndPacify );
 	lua_register( MyLua , 'gh_GetPCPtr' , @Lua_GetPC );
 	lua_register( MyLua , 'gh_GiveXP' , @Lua_GiveXP );
+	lua_register( MyLua , 'gh_GetCurrentScenePtr' , @Lua_GetCurrentScene );
+	lua_register( MyLua , 'gh_DeployRandomMecha' , @Lua_DeployRandomMecha );
+	lua_register( MyLua , 'gh_OpenShop' , @Lua_OpenShop );
 
 	if lua_dofile( MyLua , 'gamedata/gh_messagemutator.lua' ) <> 0 then RecordError( 'GH_MESSAGEMUTATOR ERROR: ' + lua_tostring( MyLua , -1 ) );
 	if lua_dofile( MyLua , 'gamedata/gh_functions.lua' ) <> 0 then RecordError( 'GH_FUNCTIONS ERROR: ' + lua_tostring( MyLua , -1 ) );

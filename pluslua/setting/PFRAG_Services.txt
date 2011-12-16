@@ -1,5 +1,5 @@
 % TYPE: *SHOP_GENERAL
-%   When shopping is finished, will exit to %next%.
+%   Either shop or exit to %next%.
 
 	Persona
 	requires <*SHOP_GENERAL ~Village>
@@ -7,16 +7,23 @@
 	say "There's no way to keep everything in stock, so I stick to the basics. We have a variety of adventuring goods."
 		reply "I'll see what you have."
 			say "If there's something you need that I don't have, let me know and I'll try to order it. Might take a week or two to get here."
-			effect <>
+			effect <gh_OpenShop( "WEAPON CLOTHING FOOD TOOL COMMUNICATIONS MECHA ESSENTIAL" )>
+			NoChatOps
 		reply "Thanks, but I don't need anything."
 			goto "%next%"
 
-	START <NewChat Say %id%01 AddChat %id%01 AddChat %id%02>
-	result%id%01 <EndChat Say %id%02 shop .%id%_wares Goto %1%>
-	result%id%02 <Goto %1%>
-	.%id%_wares <WEAPON CLOTHING FOOD TOOL COMMUNICATIONS MECHA ESSENTIAL>
-	Msg%id%01 <There's no way to keep everything in stock, so I stick to the basics. We have a variety of adventuring goods.>
-	Msg%id%02 <>
-	Prompt%id%01 <>
-	Prompt%id%02 <>
+% TYPE: *SERVICE_DOCTOR
+%   Either get healing or exit to %next%.
+
+	Persona
+	requires <*SERVICE_DOCTOR>
+	KEYWORDS <MEDICINE>
+	say "How are you feeling today?"
+		reply "I need some medical help."
+			say "Hop up on the table and I'll see what's wrong with you."
+			effect <gh_OpenShop( "MEDICINE" )>
+			NoChatOps
+		reply "I'm fine."
+			goto "%next%"
+
 

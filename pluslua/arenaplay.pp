@@ -1324,6 +1324,7 @@ begin
 		end;
 
 		{ Second pass: Pick up anything we can! }
+
 		M := GB^.Meks;
 		while M <> Nil do begin
 			M2 := M^.Next;
@@ -1449,7 +1450,6 @@ Function WorldPlayer( Camp: CampaignPtr ; Scene: GearPtr; var PCForces: GearPtr 
 		Mek := GB^.Meks;
 		while Mek <> Nil do begin
 			if ( ( NAttValue( Mek^.NA , NAG_Location , NAS_Team ) = NAV_DefPlayerTeam ) or ( NAttValue( Mek^.NA , NAG_Location , NAS_Team ) = NAV_LancemateTeam ) ) and OnTheMap( GB , Mek ) then begin
-DialogMsg( 'Recentering ' + GearName( Mek ) );
 				AddNAtt( Mek^.NA , NAG_Location , NAS_X , NAttValue( GB^.Scene^.NA , NAG_SceneData , NAS_WestMargin ) );
 				AddNAtt( Mek^.NA , NAG_Location , NAS_Y , NAttValue( GB^.Scene^.NA , NAG_SceneData , NAS_NorthMargin ) );
 			end;
@@ -1497,7 +1497,6 @@ begin
 			{ Step One: Remove all PC Forces from the map. }
 			PC := LocatePC( Camp^.GB );
 			Scene := DetermineWorldMapSubScene( Camp^.GB , NAttValue( PC^.NA , NAG_Location , NAS_X ) , NAttValue( PC^.NA , NAG_Location , NAS_Y ) );
-DialogMsg( 'Should recenter...' + GearName( Scene ) );
 			PCForces := StripPCForces( Camp^.GB );
 			if DelinkJjang( Camp ) <> nil then DialogMsg( 'ERROR: WorldPlayer recenterer left some PCForces behind...' );
 			Camp^.ComTime := Camp^.GB^.ComTime;
