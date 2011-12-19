@@ -748,6 +748,8 @@ var
 begin
 	RPM := CreateRPGMenu( MenuItem , MenuSelect , ZONE_MemoMenu );
 	AddRPGMenuItem( RPM , YesMsg , 1 );
+
+
 	AddRPGMenuItem( RPM , NoMsg , -1 );
 	RPM^.Mode := RPMNoCancel;
 
@@ -1570,7 +1572,7 @@ begin
 					{ Check for quests and moods in the current city next. }
 					City := FindRootScene( GB^.Scene );
 					if ( City <> Nil ) then begin
-						CheckTriggerAlongPath( TP^.Info , GB , City^.SubCom , False );
+						CheckTriggerAlongPath( TP^.Info , GB , City^.InvCom , False );
 					end;
 
 					CheckRandMapScripts( TP^.Info , GB );
@@ -2185,6 +2187,7 @@ end;
 
 			{ Clamp the renown score. }
 			if Renown < 1 then Renown := 1;
+
 
 			{ Advance the NPC's renown. }
 			if NAttValue( NPC^.NA , NAG_CharDescription , NAS_Renowned ) < Renown then AddNAtt( NPC^.NA , NAG_CharDescription , NAS_Renowned , 1 );

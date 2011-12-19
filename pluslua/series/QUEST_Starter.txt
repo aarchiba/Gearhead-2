@@ -1,6 +1,5 @@
 Content
 	name <Starter Quest>
-name <DEBUG>
 	desc <Basically a test of the scripting system. Edit it and see!>
 	requires <*:Q_Starter>
 
@@ -9,6 +8,17 @@ name <DEBUG>
 	Element1 <Scene PCHOME>
 	Element2 <Prefab>
 	Place2 <1 (Citizens)>
+
+	lua
+		function P.START( self )
+			-- At startup, force a chat with Hyolee.
+			if not self.v.HaveAlreadyStarted then
+				gh_Print( "Starting up!" );
+				gh_StartChat( %2% )
+				self.v.HaveAlreadyStarted = true;
+			end
+		end
+	endlua
 
 	sub
 		Persona 2

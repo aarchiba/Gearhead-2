@@ -552,7 +552,7 @@ Procedure InstallQuestScenes( Adv , City , Quest: GearPtr );
 		FoundAnEntrance := False;
 
 		{ Create the designation that we're looking for. }
-		EDesig := 'ENTRANCE ' + BStr( SIDtoSeek );
+		EDesig := 'ENTRANCE gh[' + BStr( SIDtoSeek ) + ']';
 
 		{ Now that we have this, start searching for entrances until we }
 		{ run out of them. There may be more than one. }
@@ -1497,7 +1497,7 @@ var
 		end;
 		for t := 1 to Num_Plot_Elements do begin
 			{ If dealing with the main plot, do substitutions for the Element Indicies now. }
-			SetSAtt( Dictionary , '%' + BStr( T ) + '% <' + BStr( ElementID( Plot , T ) ) + '>' );
+			SetSAtt( Dictionary , '%' + BStr( T ) + '% <gh[' + BStr( ElementID( Plot , T ) ) + ']>' );
 			SetSAtt( Dictionary , '%name' + BStr( T ) + '% <' + SAttValue( Plot^.SA , 'name_' + BStr( T ) ) + '>' );
 		end;
 
