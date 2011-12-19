@@ -1,0 +1,120 @@
+
+
+Content
+	name <Mecha Sporch>
+	requires <*:Q_MECHA_ARENA_BASE HOGYE>
+
+	% E1 is the town itself
+	% E2 is the arena building
+	% E3 is the arena
+	% E4 is the manager
+	Element1 <.>
+	Element2 <QuestScene>
+	Place2 <1>
+	Element3 <QuestScene>
+	Place3 <2>
+%	Element4 <Prefab>
+%	Place4 <2 (Citizens) pass ally>
+
+%	SubPlot1 <*:Q_MECHA_ARENA_CHALLENGE #30 1 2>
+%	SubPlot2 <*:Q_MECHA_ARENA_CHALLENGE #42 1 2>
+%	SubPlot3 <*:Q_MECHA_ARENA_CHALLENGE #54 1 2>
+%	SubPlot4 <*:Q_MECHA_ARENA_CHALLENGE #66 1 2>
+
+	sub
+		Persona 4
+		say "Very well done. That was your tenth fight, making you our new champion."
+		condition <return( %3%.v.ArenaWins = 10 )>
+
+		greeting <if# PlotStatus %plotid% 0 else GoPreQuest if= ArenaState %2% NAV_AS_Win else GoCheckLoss Goto GoArenaWin>
+		GoCheckLoss <if= ArenaState %2% NAV_AS_Loss else GoCheckReady Goto GoArenaLoss>
+		GoCheckReady <if= ArenaState %2% NAV_AS_Vacant else GoArenaFull ifG ComTime ArenaRecharge %2% else GoArenaBusy Goto GoOfferFight>
+
+		GoArenaWin <if= ArenaWins %2% 10 else GoMinorWin Goto GoBigWin>
+		*GoMinorWin <*BasicArenaWin %2% GoResetArena>
+		*GoArenaLoss <*BasicArenaLoss %2% GoResetArena>
+		GoResetArena <ResetArena %2%>
+
+		*GoArenaFull <*ArenaIsFull %2%>
+		*GoArenaBusy <*ArenaIsBusy %2%>
+
+		GoChooseBattle <ifMechaCanEnterScene %2% else GoInvalidMecha if= ArenaWins %2% 9 else GoCheckQ3 Goto .%id4%_GoInit>
+		GoInvalidMecha <NewChat Say 7>
+		GoCheckQ3 <if= ArenaWins %2% 7 else GoCheckQ2 Goto .%id3%_GoInit>>
+		GoCheckQ2 <if= ArenaWins %2% 5 else GoCheckQ1 Goto .%id2%_GoInit>>
+		GoCheckQ1 <if= ArenaWins %2% 3 else GoNormalBattle Goto .%id1%_GoInit>
+		*GoNormalBattle <*StartArenaBattle %2% GoStartFight>
+		GoStartFight <SavePos PrepArena %2% 100 Jump %2%>
+		*GoRefuseBattle <*RefuseArenaFight %2%>
+
+		GoStartQuest <SetPlotStatus %plotid% %id% SetArenaThreat %2% 10 SetEncounterActive %2%>
+
+		GoOfferFight <NewChat Say 1 AddChat 1 AddChat 2>
+		GoBigWin <NewChat Say 2 History 3 XPV 500 SetPlotStatus %plotid% -1 MechaPrize .mektype 80 RandomTheme 12  CashPrize Reward ArenaThreat %2% 1000 Goto GoResetArena>
+		.mektype <ROCKE RISHI>
+		*GoPreQuest <*NiceToMeetYou GoArenaIntro>
+		GoArenaIntro <NewChat Say 4 AddChat 3 AddChat 4>
+		result1 <Goto GoChooseBattle>
+		result2 <Goto GoRefuseBattle>
+		result3 <NewChat Say 5 AddChat 5 AddChat 2 Goto GoStartQuest>
+		result4 <NewChat Say 6>
+		result5 <Goto GoChooseBattle>
+		Msg1 <Are you here for the battle? There's another match all ready to go.>
+		Msg2 <>
+		Msg3 <You were crowned champion of the Rocket Arena.>
+		Msg4 <Hey there. You look like the sort who'd be up for a bit of action, if you catch what I'm saying...>
+		Msg5 <We've got a practice arena set up just outside the spinner... gotta keep it on the sly, since it's not entirely legal. There's a match coming up soon if you'd like to take part.>
+		Msg6 <You know what they say: nothing ventured, nothing gained.>
+		Msg7 <You're going to need a mecha that's good indoors before you can fight here. Sorry.>
+		Prompt1 <That's what I wanted to hear.>
+		CPrompt1 <ifChatNPCInPlay ifG PCMeks 0 Accept>
+		Prompt2 <Not right now, sorry.>
+		Prompt3 <I am intrigued by your mysterious offer.>
+		Prompt4 <Whatever you're selling, I want no part of it.>
+		Prompt5 <Just show me how to get there!>
+		CPrompt5 <ifChatNPCInPlay ifG PCMeks 0 Accept>
+
+		MetaScene 2
+		name <Mecha Sporch>
+		entrance <*ARENA>
+		special <ADDEXIT>
+		MallMap
+		MapWidth 10
+		MapHeight 10
+		sub
+			room
+			name <Manager's Office>
+			special <SHAREDPALETTE>
+			desig <HOME>
+			minimap <.............1......&---&>
+
+			room
+			name <Glory Road>
+			special <SHAREDPALETTE>
+			minimap <######&2&##...##...##...#>
+			inv
+				Elevator
+				name <To Arena>
+				desig <ENTRANCE %3%>
+				use <ifMechaCanEnterScene Destination else GoNoEnter  Print 1 Exit Destination>
+				GoNoEnter <Print 101>
+				Msg101 <You need a landworthy mecha to enter the arena.>
+				MiniMapComponent 2
+			end
+		end
+
+		STC QS_MechaArena
+		SetID 3
+		name <Mecha Sporch Arena>
+		mapwidth 30
+		mapheight 30
+		wildmap
+	end
+	inv
+		NPC Arena Pilot
+		faction <PDASS>
+		NonCombatant
+		sdl_colors <203 34 51 255 212 195 56 26 81>
+	end
+
+
