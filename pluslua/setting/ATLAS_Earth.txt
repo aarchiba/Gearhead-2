@@ -1,14 +1,12 @@
-% Default Atlas File
+% ATLAS file created automatically by worldmaker
+% To add locations, find that cel and edit it. There must not
+% be two scenes with the same world map coordinates.
 
 World 200
 	name <Earth>
-	special <Showall>
 	desig <EARTH>
-	desc <>
-
-	MapWidth 3
-	MapHeight 3
-	%% Each cell of the Earth map should be 30x30
+	MapWidth 20
+	MapHeight 20
 	WorldMapWidth 30
 
 %%
@@ -17,121 +15,22 @@ World 200
 %%   *****************
 %%
 
-Scene 0 3
-	mapwidth 30
-	mapheight 30
-	name <Tile 1-1>
-	WorldMapX 1
-	WorldMapY 1
-	world <Earth>
-	special <NOEXIT SHOWALL SOLO>
-	habitat <EARTH.MNTNS>
-	WildMap
-	desig <E0101>
-
-Scene 0 3
-	mapwidth 30
-	mapheight 30
-	name <Tile 2-1>
-	WorldMapX 2
-	WorldMapY 1
-	world <Earth>
-	special <NOEXIT SHOWALL SOLO>
-	habitat <EARTH.MNTNS>
-	FloorType 2
-	desig <E0201>
-
-Scene 0 3
-	mapwidth 30
-	mapheight 30
-	name <Tile 3-1>
-	WorldMapX 3
-	WorldMapY 1
-	world <Earth>
-	special <NOEXIT SHOWALL SOLO>
-	habitat <EARTH.MNTNS>
-	FloorType 3
-	desig <E0301>
-
-Scene 0 3
-	mapwidth 30
-	mapheight 30
-	name <Tile 1-2>
-	WorldMapX 1
-	WorldMapY 2
-	world <Earth>
-	special <NOEXIT SHOWALL SOLO>
-	habitat <EARTH.MNTNS>
-	FloorType 5
-	desig <E0102>
-
-Scene 0 3
-	mapwidth 30
-	mapheight 30
-	name <Tile 3-2>
-	WorldMapX 3
-	WorldMapY 2
-	world <Earth>
-	special <NOEXIT SHOWALL SOLO>
-	habitat <EARTH.MNTNS>
-	FloorType 6
-	desig <E0302>
-
-Scene 0 3
-	mapwidth 30
-	mapheight 30
-	name <Tile 1-3>
-	WorldMapX 1
-	WorldMapY 3
-	world <Earth>
-	special <NOEXIT SHOWALL SOLO>
-	habitat <EARTH.MNTNS>
-	FloorType 7
-	desig <E0103>
-
-Scene 0 3
-	mapwidth 30
-	mapheight 30
-	name <Tile 2-3>
-	WorldMapX 2
-	WorldMapY 3
-	world <Earth>
-	special <NOEXIT SHOWALL SOLO>
-	habitat <EARTH.MNTNS>
-	FloorType 14
-	desig <E0203>
-
-Scene 0 3
-	mapwidth 30
-	mapheight 30
-	name <Tile 3-3>
-	WorldMapX 3
-	WorldMapY 3
-	world <Earth>
-	special <NOEXIT SHOWALL SOLO>
-	habitat <EARTH.MNTNS>
-	FloorType 16
-	desig <E0303>
-
 
 Scene 0 3
 	mapwidth 30
 	mapheight 30
 	name <Hogye>
 	exact_name <Hogye Village>
-	WorldMapX 2
-	WorldMapY 2
-
-	Tolerance 0
-
-	world <Earth>
 	desc <A small village in the mountains.>
-	special <NOEXIT SHOWALL SOLO>
-	type <town target outdoors urban destination hometown safe lawful>
-	habitat <EARTH.MNTNS>
-	VillageMap
+	type <HOMETOWN URBAN>
 
-	entrance <*COLONY-1>
+	desig <HOGYE>
+	WorldMapX 10
+	WorldMapY 10
+	world <EARTH>
+	map <MAPS_EARTH_10x10.txt>
+	special <NOEXIT SHOWALL SOLO>
+	habitat <EARTH.MNTNS>
 
 	faction <FEDER>
 	factions <>
@@ -141,73 +40,4469 @@ Scene 0 3
 	Quest1 <*:Q_Starter>
 	Quest2 <*:Q_MECHA_ARENA_BASE>
 
-sub
-	Scene
-	name <Quentin's Shop>
-	type <building mall public legit meeting>
-	entrance <*DEPARTMENTSTORE>
-	special <ADDEXIT>
-	MallMap
-	MapWidth 10
-	MapHeight 10
-
-	NeededCells 2
-
-	Content1 <Some 1 100 Sub *GENERAL_SHOP      na>
-
 	sub
-		team 1
+		Scene
+		name <Quentin's Shop>
+		type <building mall public legit meeting>
+		entrance <*DEPARTMENTSTORE>
+		special <ADDEXIT>
+		MallMap
+		MapWidth 10
+		MapHeight 10
 
-		team 2
-		name <Citizens>
-		SetAlly 1
-		Passive
+		NeededCells 2
 
-		team 3
-		name <Guards>
-		SetAlly 2
+		Content1 <Some 1 100 Sub *GENERAL_SHOP      na>
 
-		room
-		name <Foyer>
-		desig <EntranceGrid>
-		Content <Some 5 50 Here *URBAN_X>
-		Content2 <Some 1 100 Here *ANTI_ATTACK_SECURITY 2>
+		sub
+			team 1
+
+			team 2
+			name <Citizens>
+			SetAlly 1
+			Passive
+
+			team 3
+			name <Guards>
+			SetAlly 2
+
+			room
+			name <Foyer>
+			desig <EntranceGrid>
+			Content <Some 5 50 Here *URBAN_X>
+			Content2 <Some 1 100 Here *ANTI_ATTACK_SECURITY 2>
+		end
+
+		Scene
+		name <Hogye Clinic>
+		type <Building hospital public legit>
+		entrance <*Hospital>
+		special <ADDEXIT>
+		MallMap
+		MapWidth 10
+		MapHeight 10
+
+		NeededCells 1
+		Content <Some 1 100 Sub *Doctor>
+		Content2 <Fill Sub *HOSPITAL_X>
+
+
+		sub
+			team 1
+
+			team 2
+			name <Citizens>
+			SetAlly 1
+			Passive
+
+			team 3
+			name <Guards>
+			SetAlly 2
+
+			room
+			desig <EntranceGrid>
+			Content <Some 2 30 Here *URBAN_X>
+			Content2 <Some 1 100 Here *ANTI_ATTACK_SECURITY 2>
+		end
+
+
+	% End of Hogye...
 	end
 
-	Scene
-	name <Hogye Clinic>
-	type <Building hospital public legit>
-	entrance <*Hospital>
-	special <ADDEXIT>
-	MallMap
-	MapWidth 10
-	MapHeight 10
-
-	NeededCells 1
-	Content <Some 1 100 Sub *Doctor>
-	Content2 <Fill Sub *HOSPITAL_X>
 
 
-	sub
-		team 1
+%%
+%%   ***********************
+%%   ***   EMPTY  CELS   ***
+%%   ***********************
+%%
 
-		team 2
-		name <Citizens>
-		SetAlly 1
-		Passive
+Scene 0 3
+	mapwidth 30
+	mapheight 30
+	name <EARTH_01x01>
+	WorldMapX 1
+	WorldMapY 1
+	world <EARTH>
+	map <MAPS_EARTH_01x01.txt>
+	special <NOEXIT SHOWALL SOLO>
+	habitat <EARTH.MNTNS>
 
-		team 3
-		name <Guards>
-		SetAlly 2
+Scene 0 3
+	mapwidth 30
+	mapheight 30
+	name <EARTH_01x02>
+	WorldMapX 1
+	WorldMapY 2
+	world <EARTH>
+	map <MAPS_EARTH_01x02.txt>
+	special <NOEXIT SHOWALL SOLO>
+	habitat <EARTH.MNTNS>
 
-		room
-		desig <EntranceGrid>
-		Content <Some 2 30 Here *URBAN_X>
-		Content2 <Some 1 100 Here *ANTI_ATTACK_SECURITY 2>
-	end
+Scene 0 3
+	mapwidth 30
+	mapheight 30
+	name <EARTH_01x03>
+	WorldMapX 1
+	WorldMapY 3
+	world <EARTH>
+	map <MAPS_EARTH_01x03.txt>
+	special <NOEXIT SHOWALL SOLO>
+	habitat <EARTH.MNTNS>
 
+Scene 0 3
+	mapwidth 30
+	mapheight 30
+	name <EARTH_01x04>
+	WorldMapX 1
+	WorldMapY 4
+	world <EARTH>
+	map <MAPS_EARTH_01x04.txt>
+	special <NOEXIT SHOWALL SOLO>
+	habitat <EARTH.MNTNS>
 
-% End of Hogye...
-end
+Scene 0 3
+	mapwidth 30
+	mapheight 30
+	name <EARTH_01x05>
+	WorldMapX 1
+	WorldMapY 5
+	world <EARTH>
+	map <MAPS_EARTH_01x05.txt>
+	special <NOEXIT SHOWALL SOLO>
+	habitat <EARTH.MNTNS>
 
+Scene 0 3
+	mapwidth 30
+	mapheight 30
+	name <EARTH_01x06>
+	WorldMapX 1
+	WorldMapY 6
+	world <EARTH>
+	map <MAPS_EARTH_01x06.txt>
+	special <NOEXIT SHOWALL SOLO>
+	habitat <EARTH.MNTNS>
+
+Scene 0 3
+	mapwidth 30
+	mapheight 30
+	name <EARTH_01x07>
+	WorldMapX 1
+	WorldMapY 7
+	world <EARTH>
+	map <MAPS_EARTH_01x07.txt>
+	special <NOEXIT SHOWALL SOLO>
+	habitat <EARTH.MNTNS>
+
+Scene 0 3
+	mapwidth 30
+	mapheight 30
+	name <EARTH_01x08>
+	WorldMapX 1
+	WorldMapY 8
+	world <EARTH>
+	map <MAPS_EARTH_01x08.txt>
+	special <NOEXIT SHOWALL SOLO>
+	habitat <EARTH.MNTNS>
+
+Scene 0 3
+	mapwidth 30
+	mapheight 30
+	name <EARTH_01x09>
+	WorldMapX 1
+	WorldMapY 9
+	world <EARTH>
+	map <MAPS_EARTH_01x09.txt>
+	special <NOEXIT SHOWALL SOLO>
+	habitat <EARTH.MNTNS>
+
+Scene 0 3
+	mapwidth 30
+	mapheight 30
+	name <EARTH_01x10>
+	WorldMapX 1
+	WorldMapY 10
+	world <EARTH>
+	map <MAPS_EARTH_01x10.txt>
+	special <NOEXIT SHOWALL SOLO>
+	habitat <EARTH.MNTNS>
+
+Scene 0 3
+	mapwidth 30
+	mapheight 30
+	name <EARTH_01x11>
+	WorldMapX 1
+	WorldMapY 11
+	world <EARTH>
+	map <MAPS_EARTH_01x11.txt>
+	special <NOEXIT SHOWALL SOLO>
+	habitat <EARTH.MNTNS>
+
+Scene 0 3
+	mapwidth 30
+	mapheight 30
+	name <EARTH_01x12>
+	WorldMapX 1
+	WorldMapY 12
+	world <EARTH>
+	map <MAPS_EARTH_01x12.txt>
+	special <NOEXIT SHOWALL SOLO>
+	habitat <EARTH.MNTNS>
+
+Scene 0 3
+	mapwidth 30
+	mapheight 30
+	name <EARTH_01x13>
+	WorldMapX 1
+	WorldMapY 13
+	world <EARTH>
+	map <MAPS_EARTH_01x13.txt>
+	special <NOEXIT SHOWALL SOLO>
+	habitat <EARTH.MNTNS>
+
+Scene 0 3
+	mapwidth 30
+	mapheight 30
+	name <EARTH_01x14>
+	WorldMapX 1
+	WorldMapY 14
+	world <EARTH>
+	map <MAPS_EARTH_01x14.txt>
+	special <NOEXIT SHOWALL SOLO>
+	habitat <EARTH.MNTNS>
+
+Scene 0 3
+	mapwidth 30
+	mapheight 30
+	name <EARTH_01x15>
+	WorldMapX 1
+	WorldMapY 15
+	world <EARTH>
+	map <MAPS_EARTH_01x15.txt>
+	special <NOEXIT SHOWALL SOLO>
+	habitat <EARTH.MNTNS>
+
+Scene 0 3
+	mapwidth 30
+	mapheight 30
+	name <EARTH_01x16>
+	WorldMapX 1
+	WorldMapY 16
+	world <EARTH>
+	map <MAPS_EARTH_01x16.txt>
+	special <NOEXIT SHOWALL SOLO>
+	habitat <EARTH.MNTNS>
+
+Scene 0 3
+	mapwidth 30
+	mapheight 30
+	name <EARTH_01x17>
+	WorldMapX 1
+	WorldMapY 17
+	world <EARTH>
+	map <MAPS_EARTH_01x17.txt>
+	special <NOEXIT SHOWALL SOLO>
+	habitat <EARTH.MNTNS>
+
+Scene 0 3
+	mapwidth 30
+	mapheight 30
+	name <EARTH_01x18>
+	WorldMapX 1
+	WorldMapY 18
+	world <EARTH>
+	map <MAPS_EARTH_01x18.txt>
+	special <NOEXIT SHOWALL SOLO>
+	habitat <EARTH.MNTNS>
+
+Scene 0 3
+	mapwidth 30
+	mapheight 30
+	name <EARTH_01x19>
+	WorldMapX 1
+	WorldMapY 19
+	world <EARTH>
+	map <MAPS_EARTH_01x19.txt>
+	special <NOEXIT SHOWALL SOLO>
+	habitat <EARTH.MNTNS>
+
+Scene 0 3
+	mapwidth 30
+	mapheight 30
+	name <EARTH_01x20>
+	WorldMapX 1
+	WorldMapY 20
+	world <EARTH>
+	map <MAPS_EARTH_01x20.txt>
+	special <NOEXIT SHOWALL SOLO>
+	habitat <EARTH.MNTNS>
+
+Scene 0 3
+	mapwidth 30
+	mapheight 30
+	name <EARTH_02x01>
+	WorldMapX 2
+	WorldMapY 1
+	world <EARTH>
+	map <MAPS_EARTH_02x01.txt>
+	special <NOEXIT SHOWALL SOLO>
+	habitat <EARTH.MNTNS>
+
+Scene 0 3
+	mapwidth 30
+	mapheight 30
+	name <EARTH_02x02>
+	WorldMapX 2
+	WorldMapY 2
+	world <EARTH>
+	map <MAPS_EARTH_02x02.txt>
+	special <NOEXIT SHOWALL SOLO>
+	habitat <EARTH.MNTNS>
+
+Scene 0 3
+	mapwidth 30
+	mapheight 30
+	name <EARTH_02x03>
+	WorldMapX 2
+	WorldMapY 3
+	world <EARTH>
+	map <MAPS_EARTH_02x03.txt>
+	special <NOEXIT SHOWALL SOLO>
+	habitat <EARTH.MNTNS>
+
+Scene 0 3
+	mapwidth 30
+	mapheight 30
+	name <EARTH_02x04>
+	WorldMapX 2
+	WorldMapY 4
+	world <EARTH>
+	map <MAPS_EARTH_02x04.txt>
+	special <NOEXIT SHOWALL SOLO>
+	habitat <EARTH.MNTNS>
+
+Scene 0 3
+	mapwidth 30
+	mapheight 30
+	name <EARTH_02x05>
+	WorldMapX 2
+	WorldMapY 5
+	world <EARTH>
+	map <MAPS_EARTH_02x05.txt>
+	special <NOEXIT SHOWALL SOLO>
+	habitat <EARTH.MNTNS>
+
+Scene 0 3
+	mapwidth 30
+	mapheight 30
+	name <EARTH_02x06>
+	WorldMapX 2
+	WorldMapY 6
+	world <EARTH>
+	map <MAPS_EARTH_02x06.txt>
+	special <NOEXIT SHOWALL SOLO>
+	habitat <EARTH.MNTNS>
+
+Scene 0 3
+	mapwidth 30
+	mapheight 30
+	name <EARTH_02x07>
+	WorldMapX 2
+	WorldMapY 7
+	world <EARTH>
+	map <MAPS_EARTH_02x07.txt>
+	special <NOEXIT SHOWALL SOLO>
+	habitat <EARTH.MNTNS>
+
+Scene 0 3
+	mapwidth 30
+	mapheight 30
+	name <EARTH_02x08>
+	WorldMapX 2
+	WorldMapY 8
+	world <EARTH>
+	map <MAPS_EARTH_02x08.txt>
+	special <NOEXIT SHOWALL SOLO>
+	habitat <EARTH.MNTNS>
+
+Scene 0 3
+	mapwidth 30
+	mapheight 30
+	name <EARTH_02x09>
+	WorldMapX 2
+	WorldMapY 9
+	world <EARTH>
+	map <MAPS_EARTH_02x09.txt>
+	special <NOEXIT SHOWALL SOLO>
+	habitat <EARTH.MNTNS>
+
+Scene 0 3
+	mapwidth 30
+	mapheight 30
+	name <EARTH_02x10>
+	WorldMapX 2
+	WorldMapY 10
+	world <EARTH>
+	map <MAPS_EARTH_02x10.txt>
+	special <NOEXIT SHOWALL SOLO>
+	habitat <EARTH.MNTNS>
+
+Scene 0 3
+	mapwidth 30
+	mapheight 30
+	name <EARTH_02x11>
+	WorldMapX 2
+	WorldMapY 11
+	world <EARTH>
+	map <MAPS_EARTH_02x11.txt>
+	special <NOEXIT SHOWALL SOLO>
+	habitat <EARTH.MNTNS>
+
+Scene 0 3
+	mapwidth 30
+	mapheight 30
+	name <EARTH_02x12>
+	WorldMapX 2
+	WorldMapY 12
+	world <EARTH>
+	map <MAPS_EARTH_02x12.txt>
+	special <NOEXIT SHOWALL SOLO>
+	habitat <EARTH.MNTNS>
+
+Scene 0 3
+	mapwidth 30
+	mapheight 30
+	name <EARTH_02x13>
+	WorldMapX 2
+	WorldMapY 13
+	world <EARTH>
+	map <MAPS_EARTH_02x13.txt>
+	special <NOEXIT SHOWALL SOLO>
+	habitat <EARTH.MNTNS>
+
+Scene 0 3
+	mapwidth 30
+	mapheight 30
+	name <EARTH_02x14>
+	WorldMapX 2
+	WorldMapY 14
+	world <EARTH>
+	map <MAPS_EARTH_02x14.txt>
+	special <NOEXIT SHOWALL SOLO>
+	habitat <EARTH.MNTNS>
+
+Scene 0 3
+	mapwidth 30
+	mapheight 30
+	name <EARTH_02x15>
+	WorldMapX 2
+	WorldMapY 15
+	world <EARTH>
+	map <MAPS_EARTH_02x15.txt>
+	special <NOEXIT SHOWALL SOLO>
+	habitat <EARTH.MNTNS>
+
+Scene 0 3
+	mapwidth 30
+	mapheight 30
+	name <EARTH_02x16>
+	WorldMapX 2
+	WorldMapY 16
+	world <EARTH>
+	map <MAPS_EARTH_02x16.txt>
+	special <NOEXIT SHOWALL SOLO>
+	habitat <EARTH.MNTNS>
+
+Scene 0 3
+	mapwidth 30
+	mapheight 30
+	name <EARTH_02x17>
+	WorldMapX 2
+	WorldMapY 17
+	world <EARTH>
+	map <MAPS_EARTH_02x17.txt>
+	special <NOEXIT SHOWALL SOLO>
+	habitat <EARTH.MNTNS>
+
+Scene 0 3
+	mapwidth 30
+	mapheight 30
+	name <EARTH_02x18>
+	WorldMapX 2
+	WorldMapY 18
+	world <EARTH>
+	map <MAPS_EARTH_02x18.txt>
+	special <NOEXIT SHOWALL SOLO>
+	habitat <EARTH.MNTNS>
+
+Scene 0 3
+	mapwidth 30
+	mapheight 30
+	name <EARTH_02x19>
+	WorldMapX 2
+	WorldMapY 19
+	world <EARTH>
+	map <MAPS_EARTH_02x19.txt>
+	special <NOEXIT SHOWALL SOLO>
+	habitat <EARTH.MNTNS>
+
+Scene 0 3
+	mapwidth 30
+	mapheight 30
+	name <EARTH_02x20>
+	WorldMapX 2
+	WorldMapY 20
+	world <EARTH>
+	map <MAPS_EARTH_02x20.txt>
+	special <NOEXIT SHOWALL SOLO>
+	habitat <EARTH.MNTNS>
+
+Scene 0 3
+	mapwidth 30
+	mapheight 30
+	name <EARTH_03x01>
+	WorldMapX 3
+	WorldMapY 1
+	world <EARTH>
+	map <MAPS_EARTH_03x01.txt>
+	special <NOEXIT SHOWALL SOLO>
+	habitat <EARTH.MNTNS>
+
+Scene 0 3
+	mapwidth 30
+	mapheight 30
+	name <EARTH_03x02>
+	WorldMapX 3
+	WorldMapY 2
+	world <EARTH>
+	map <MAPS_EARTH_03x02.txt>
+	special <NOEXIT SHOWALL SOLO>
+	habitat <EARTH.MNTNS>
+
+Scene 0 3
+	mapwidth 30
+	mapheight 30
+	name <EARTH_03x03>
+	WorldMapX 3
+	WorldMapY 3
+	world <EARTH>
+	map <MAPS_EARTH_03x03.txt>
+	special <NOEXIT SHOWALL SOLO>
+	habitat <EARTH.MNTNS>
+
+Scene 0 3
+	mapwidth 30
+	mapheight 30
+	name <EARTH_03x04>
+	WorldMapX 3
+	WorldMapY 4
+	world <EARTH>
+	map <MAPS_EARTH_03x04.txt>
+	special <NOEXIT SHOWALL SOLO>
+	habitat <EARTH.MNTNS>
+
+Scene 0 3
+	mapwidth 30
+	mapheight 30
+	name <EARTH_03x05>
+	WorldMapX 3
+	WorldMapY 5
+	world <EARTH>
+	map <MAPS_EARTH_03x05.txt>
+	special <NOEXIT SHOWALL SOLO>
+	habitat <EARTH.MNTNS>
+
+Scene 0 3
+	mapwidth 30
+	mapheight 30
+	name <EARTH_03x06>
+	WorldMapX 3
+	WorldMapY 6
+	world <EARTH>
+	map <MAPS_EARTH_03x06.txt>
+	special <NOEXIT SHOWALL SOLO>
+	habitat <EARTH.MNTNS>
+
+Scene 0 3
+	mapwidth 30
+	mapheight 30
+	name <EARTH_03x07>
+	WorldMapX 3
+	WorldMapY 7
+	world <EARTH>
+	map <MAPS_EARTH_03x07.txt>
+	special <NOEXIT SHOWALL SOLO>
+	habitat <EARTH.MNTNS>
+
+Scene 0 3
+	mapwidth 30
+	mapheight 30
+	name <EARTH_03x08>
+	WorldMapX 3
+	WorldMapY 8
+	world <EARTH>
+	map <MAPS_EARTH_03x08.txt>
+	special <NOEXIT SHOWALL SOLO>
+	habitat <EARTH.MNTNS>
+
+Scene 0 3
+	mapwidth 30
+	mapheight 30
+	name <EARTH_03x09>
+	WorldMapX 3
+	WorldMapY 9
+	world <EARTH>
+	map <MAPS_EARTH_03x09.txt>
+	special <NOEXIT SHOWALL SOLO>
+	habitat <EARTH.MNTNS>
+
+Scene 0 3
+	mapwidth 30
+	mapheight 30
+	name <EARTH_03x10>
+	WorldMapX 3
+	WorldMapY 10
+	world <EARTH>
+	map <MAPS_EARTH_03x10.txt>
+	special <NOEXIT SHOWALL SOLO>
+	habitat <EARTH.MNTNS>
+
+Scene 0 3
+	mapwidth 30
+	mapheight 30
+	name <EARTH_03x11>
+	WorldMapX 3
+	WorldMapY 11
+	world <EARTH>
+	map <MAPS_EARTH_03x11.txt>
+	special <NOEXIT SHOWALL SOLO>
+	habitat <EARTH.MNTNS>
+
+Scene 0 3
+	mapwidth 30
+	mapheight 30
+	name <EARTH_03x12>
+	WorldMapX 3
+	WorldMapY 12
+	world <EARTH>
+	map <MAPS_EARTH_03x12.txt>
+	special <NOEXIT SHOWALL SOLO>
+	habitat <EARTH.MNTNS>
+
+Scene 0 3
+	mapwidth 30
+	mapheight 30
+	name <EARTH_03x13>
+	WorldMapX 3
+	WorldMapY 13
+	world <EARTH>
+	map <MAPS_EARTH_03x13.txt>
+	special <NOEXIT SHOWALL SOLO>
+	habitat <EARTH.MNTNS>
+
+Scene 0 3
+	mapwidth 30
+	mapheight 30
+	name <EARTH_03x14>
+	WorldMapX 3
+	WorldMapY 14
+	world <EARTH>
+	map <MAPS_EARTH_03x14.txt>
+	special <NOEXIT SHOWALL SOLO>
+	habitat <EARTH.MNTNS>
+
+Scene 0 3
+	mapwidth 30
+	mapheight 30
+	name <EARTH_03x15>
+	WorldMapX 3
+	WorldMapY 15
+	world <EARTH>
+	map <MAPS_EARTH_03x15.txt>
+	special <NOEXIT SHOWALL SOLO>
+	habitat <EARTH.MNTNS>
+
+Scene 0 3
+	mapwidth 30
+	mapheight 30
+	name <EARTH_03x16>
+	WorldMapX 3
+	WorldMapY 16
+	world <EARTH>
+	map <MAPS_EARTH_03x16.txt>
+	special <NOEXIT SHOWALL SOLO>
+	habitat <EARTH.MNTNS>
+
+Scene 0 3
+	mapwidth 30
+	mapheight 30
+	name <EARTH_03x17>
+	WorldMapX 3
+	WorldMapY 17
+	world <EARTH>
+	map <MAPS_EARTH_03x17.txt>
+	special <NOEXIT SHOWALL SOLO>
+	habitat <EARTH.MNTNS>
+
+Scene 0 3
+	mapwidth 30
+	mapheight 30
+	name <EARTH_03x18>
+	WorldMapX 3
+	WorldMapY 18
+	world <EARTH>
+	map <MAPS_EARTH_03x18.txt>
+	special <NOEXIT SHOWALL SOLO>
+	habitat <EARTH.MNTNS>
+
+Scene 0 3
+	mapwidth 30
+	mapheight 30
+	name <EARTH_03x19>
+	WorldMapX 3
+	WorldMapY 19
+	world <EARTH>
+	map <MAPS_EARTH_03x19.txt>
+	special <NOEXIT SHOWALL SOLO>
+	habitat <EARTH.MNTNS>
+
+Scene 0 3
+	mapwidth 30
+	mapheight 30
+	name <EARTH_03x20>
+	WorldMapX 3
+	WorldMapY 20
+	world <EARTH>
+	map <MAPS_EARTH_03x20.txt>
+	special <NOEXIT SHOWALL SOLO>
+	habitat <EARTH.MNTNS>
+
+Scene 0 3
+	mapwidth 30
+	mapheight 30
+	name <EARTH_04x01>
+	WorldMapX 4
+	WorldMapY 1
+	world <EARTH>
+	map <MAPS_EARTH_04x01.txt>
+	special <NOEXIT SHOWALL SOLO>
+	habitat <EARTH.MNTNS>
+
+Scene 0 3
+	mapwidth 30
+	mapheight 30
+	name <EARTH_04x02>
+	WorldMapX 4
+	WorldMapY 2
+	world <EARTH>
+	map <MAPS_EARTH_04x02.txt>
+	special <NOEXIT SHOWALL SOLO>
+	habitat <EARTH.MNTNS>
+
+Scene 0 3
+	mapwidth 30
+	mapheight 30
+	name <EARTH_04x03>
+	WorldMapX 4
+	WorldMapY 3
+	world <EARTH>
+	map <MAPS_EARTH_04x03.txt>
+	special <NOEXIT SHOWALL SOLO>
+	habitat <EARTH.MNTNS>
+
+Scene 0 3
+	mapwidth 30
+	mapheight 30
+	name <EARTH_04x04>
+	WorldMapX 4
+	WorldMapY 4
+	world <EARTH>
+	map <MAPS_EARTH_04x04.txt>
+	special <NOEXIT SHOWALL SOLO>
+	habitat <EARTH.MNTNS>
+
+Scene 0 3
+	mapwidth 30
+	mapheight 30
+	name <EARTH_04x05>
+	WorldMapX 4
+	WorldMapY 5
+	world <EARTH>
+	map <MAPS_EARTH_04x05.txt>
+	special <NOEXIT SHOWALL SOLO>
+	habitat <EARTH.MNTNS>
+
+Scene 0 3
+	mapwidth 30
+	mapheight 30
+	name <EARTH_04x06>
+	WorldMapX 4
+	WorldMapY 6
+	world <EARTH>
+	map <MAPS_EARTH_04x06.txt>
+	special <NOEXIT SHOWALL SOLO>
+	habitat <EARTH.MNTNS>
+
+Scene 0 3
+	mapwidth 30
+	mapheight 30
+	name <EARTH_04x07>
+	WorldMapX 4
+	WorldMapY 7
+	world <EARTH>
+	map <MAPS_EARTH_04x07.txt>
+	special <NOEXIT SHOWALL SOLO>
+	habitat <EARTH.MNTNS>
+
+Scene 0 3
+	mapwidth 30
+	mapheight 30
+	name <EARTH_04x08>
+	WorldMapX 4
+	WorldMapY 8
+	world <EARTH>
+	map <MAPS_EARTH_04x08.txt>
+	special <NOEXIT SHOWALL SOLO>
+	habitat <EARTH.MNTNS>
+
+Scene 0 3
+	mapwidth 30
+	mapheight 30
+	name <EARTH_04x09>
+	WorldMapX 4
+	WorldMapY 9
+	world <EARTH>
+	map <MAPS_EARTH_04x09.txt>
+	special <NOEXIT SHOWALL SOLO>
+	habitat <EARTH.MNTNS>
+
+Scene 0 3
+	mapwidth 30
+	mapheight 30
+	name <EARTH_04x10>
+	WorldMapX 4
+	WorldMapY 10
+	world <EARTH>
+	map <MAPS_EARTH_04x10.txt>
+	special <NOEXIT SHOWALL SOLO>
+	habitat <EARTH.MNTNS>
+
+Scene 0 3
+	mapwidth 30
+	mapheight 30
+	name <EARTH_04x11>
+	WorldMapX 4
+	WorldMapY 11
+	world <EARTH>
+	map <MAPS_EARTH_04x11.txt>
+	special <NOEXIT SHOWALL SOLO>
+	habitat <EARTH.MNTNS>
+
+Scene 0 3
+	mapwidth 30
+	mapheight 30
+	name <EARTH_04x12>
+	WorldMapX 4
+	WorldMapY 12
+	world <EARTH>
+	map <MAPS_EARTH_04x12.txt>
+	special <NOEXIT SHOWALL SOLO>
+	habitat <EARTH.MNTNS>
+
+Scene 0 3
+	mapwidth 30
+	mapheight 30
+	name <EARTH_04x13>
+	WorldMapX 4
+	WorldMapY 13
+	world <EARTH>
+	map <MAPS_EARTH_04x13.txt>
+	special <NOEXIT SHOWALL SOLO>
+	habitat <EARTH.MNTNS>
+
+Scene 0 3
+	mapwidth 30
+	mapheight 30
+	name <EARTH_04x14>
+	WorldMapX 4
+	WorldMapY 14
+	world <EARTH>
+	map <MAPS_EARTH_04x14.txt>
+	special <NOEXIT SHOWALL SOLO>
+	habitat <EARTH.MNTNS>
+
+Scene 0 3
+	mapwidth 30
+	mapheight 30
+	name <EARTH_04x15>
+	WorldMapX 4
+	WorldMapY 15
+	world <EARTH>
+	map <MAPS_EARTH_04x15.txt>
+	special <NOEXIT SHOWALL SOLO>
+	habitat <EARTH.MNTNS>
+
+Scene 0 3
+	mapwidth 30
+	mapheight 30
+	name <EARTH_04x16>
+	WorldMapX 4
+	WorldMapY 16
+	world <EARTH>
+	map <MAPS_EARTH_04x16.txt>
+	special <NOEXIT SHOWALL SOLO>
+	habitat <EARTH.MNTNS>
+
+Scene 0 3
+	mapwidth 30
+	mapheight 30
+	name <EARTH_04x17>
+	WorldMapX 4
+	WorldMapY 17
+	world <EARTH>
+	map <MAPS_EARTH_04x17.txt>
+	special <NOEXIT SHOWALL SOLO>
+	habitat <EARTH.MNTNS>
+
+Scene 0 3
+	mapwidth 30
+	mapheight 30
+	name <EARTH_04x18>
+	WorldMapX 4
+	WorldMapY 18
+	world <EARTH>
+	map <MAPS_EARTH_04x18.txt>
+	special <NOEXIT SHOWALL SOLO>
+	habitat <EARTH.MNTNS>
+
+Scene 0 3
+	mapwidth 30
+	mapheight 30
+	name <EARTH_04x19>
+	WorldMapX 4
+	WorldMapY 19
+	world <EARTH>
+	map <MAPS_EARTH_04x19.txt>
+	special <NOEXIT SHOWALL SOLO>
+	habitat <EARTH.MNTNS>
+
+Scene 0 3
+	mapwidth 30
+	mapheight 30
+	name <EARTH_04x20>
+	WorldMapX 4
+	WorldMapY 20
+	world <EARTH>
+	map <MAPS_EARTH_04x20.txt>
+	special <NOEXIT SHOWALL SOLO>
+	habitat <EARTH.MNTNS>
+
+Scene 0 3
+	mapwidth 30
+	mapheight 30
+	name <EARTH_05x01>
+	WorldMapX 5
+	WorldMapY 1
+	world <EARTH>
+	map <MAPS_EARTH_05x01.txt>
+	special <NOEXIT SHOWALL SOLO>
+	habitat <EARTH.MNTNS>
+
+Scene 0 3
+	mapwidth 30
+	mapheight 30
+	name <EARTH_05x02>
+	WorldMapX 5
+	WorldMapY 2
+	world <EARTH>
+	map <MAPS_EARTH_05x02.txt>
+	special <NOEXIT SHOWALL SOLO>
+	habitat <EARTH.MNTNS>
+
+Scene 0 3
+	mapwidth 30
+	mapheight 30
+	name <EARTH_05x03>
+	WorldMapX 5
+	WorldMapY 3
+	world <EARTH>
+	map <MAPS_EARTH_05x03.txt>
+	special <NOEXIT SHOWALL SOLO>
+	habitat <EARTH.MNTNS>
+
+Scene 0 3
+	mapwidth 30
+	mapheight 30
+	name <EARTH_05x04>
+	WorldMapX 5
+	WorldMapY 4
+	world <EARTH>
+	map <MAPS_EARTH_05x04.txt>
+	special <NOEXIT SHOWALL SOLO>
+	habitat <EARTH.MNTNS>
+
+Scene 0 3
+	mapwidth 30
+	mapheight 30
+	name <EARTH_05x05>
+	WorldMapX 5
+	WorldMapY 5
+	world <EARTH>
+	map <MAPS_EARTH_05x05.txt>
+	special <NOEXIT SHOWALL SOLO>
+	habitat <EARTH.MNTNS>
+
+Scene 0 3
+	mapwidth 30
+	mapheight 30
+	name <EARTH_05x06>
+	WorldMapX 5
+	WorldMapY 6
+	world <EARTH>
+	map <MAPS_EARTH_05x06.txt>
+	special <NOEXIT SHOWALL SOLO>
+	habitat <EARTH.MNTNS>
+
+Scene 0 3
+	mapwidth 30
+	mapheight 30
+	name <EARTH_05x07>
+	WorldMapX 5
+	WorldMapY 7
+	world <EARTH>
+	map <MAPS_EARTH_05x07.txt>
+	special <NOEXIT SHOWALL SOLO>
+	habitat <EARTH.MNTNS>
+
+Scene 0 3
+	mapwidth 30
+	mapheight 30
+	name <EARTH_05x08>
+	WorldMapX 5
+	WorldMapY 8
+	world <EARTH>
+	map <MAPS_EARTH_05x08.txt>
+	special <NOEXIT SHOWALL SOLO>
+	habitat <EARTH.MNTNS>
+
+Scene 0 3
+	mapwidth 30
+	mapheight 30
+	name <EARTH_05x09>
+	WorldMapX 5
+	WorldMapY 9
+	world <EARTH>
+	map <MAPS_EARTH_05x09.txt>
+	special <NOEXIT SHOWALL SOLO>
+	habitat <EARTH.MNTNS>
+
+Scene 0 3
+	mapwidth 30
+	mapheight 30
+	name <EARTH_05x10>
+	WorldMapX 5
+	WorldMapY 10
+	world <EARTH>
+	map <MAPS_EARTH_05x10.txt>
+	special <NOEXIT SHOWALL SOLO>
+	habitat <EARTH.MNTNS>
+
+Scene 0 3
+	mapwidth 30
+	mapheight 30
+	name <EARTH_05x11>
+	WorldMapX 5
+	WorldMapY 11
+	world <EARTH>
+	map <MAPS_EARTH_05x11.txt>
+	special <NOEXIT SHOWALL SOLO>
+	habitat <EARTH.MNTNS>
+
+Scene 0 3
+	mapwidth 30
+	mapheight 30
+	name <EARTH_05x12>
+	WorldMapX 5
+	WorldMapY 12
+	world <EARTH>
+	map <MAPS_EARTH_05x12.txt>
+	special <NOEXIT SHOWALL SOLO>
+	habitat <EARTH.MNTNS>
+
+Scene 0 3
+	mapwidth 30
+	mapheight 30
+	name <EARTH_05x13>
+	WorldMapX 5
+	WorldMapY 13
+	world <EARTH>
+	map <MAPS_EARTH_05x13.txt>
+	special <NOEXIT SHOWALL SOLO>
+	habitat <EARTH.MNTNS>
+
+Scene 0 3
+	mapwidth 30
+	mapheight 30
+	name <EARTH_05x14>
+	WorldMapX 5
+	WorldMapY 14
+	world <EARTH>
+	map <MAPS_EARTH_05x14.txt>
+	special <NOEXIT SHOWALL SOLO>
+	habitat <EARTH.MNTNS>
+
+Scene 0 3
+	mapwidth 30
+	mapheight 30
+	name <EARTH_05x15>
+	WorldMapX 5
+	WorldMapY 15
+	world <EARTH>
+	map <MAPS_EARTH_05x15.txt>
+	special <NOEXIT SHOWALL SOLO>
+	habitat <EARTH.MNTNS>
+
+Scene 0 3
+	mapwidth 30
+	mapheight 30
+	name <EARTH_05x16>
+	WorldMapX 5
+	WorldMapY 16
+	world <EARTH>
+	map <MAPS_EARTH_05x16.txt>
+	special <NOEXIT SHOWALL SOLO>
+	habitat <EARTH.MNTNS>
+
+Scene 0 3
+	mapwidth 30
+	mapheight 30
+	name <EARTH_05x17>
+	WorldMapX 5
+	WorldMapY 17
+	world <EARTH>
+	map <MAPS_EARTH_05x17.txt>
+	special <NOEXIT SHOWALL SOLO>
+	habitat <EARTH.MNTNS>
+
+Scene 0 3
+	mapwidth 30
+	mapheight 30
+	name <EARTH_05x18>
+	WorldMapX 5
+	WorldMapY 18
+	world <EARTH>
+	map <MAPS_EARTH_05x18.txt>
+	special <NOEXIT SHOWALL SOLO>
+	habitat <EARTH.MNTNS>
+
+Scene 0 3
+	mapwidth 30
+	mapheight 30
+	name <EARTH_05x19>
+	WorldMapX 5
+	WorldMapY 19
+	world <EARTH>
+	map <MAPS_EARTH_05x19.txt>
+	special <NOEXIT SHOWALL SOLO>
+	habitat <EARTH.MNTNS>
+
+Scene 0 3
+	mapwidth 30
+	mapheight 30
+	name <EARTH_05x20>
+	WorldMapX 5
+	WorldMapY 20
+	world <EARTH>
+	map <MAPS_EARTH_05x20.txt>
+	special <NOEXIT SHOWALL SOLO>
+	habitat <EARTH.MNTNS>
+
+Scene 0 3
+	mapwidth 30
+	mapheight 30
+	name <EARTH_06x01>
+	WorldMapX 6
+	WorldMapY 1
+	world <EARTH>
+	map <MAPS_EARTH_06x01.txt>
+	special <NOEXIT SHOWALL SOLO>
+	habitat <EARTH.MNTNS>
+
+Scene 0 3
+	mapwidth 30
+	mapheight 30
+	name <EARTH_06x02>
+	WorldMapX 6
+	WorldMapY 2
+	world <EARTH>
+	map <MAPS_EARTH_06x02.txt>
+	special <NOEXIT SHOWALL SOLO>
+	habitat <EARTH.MNTNS>
+
+Scene 0 3
+	mapwidth 30
+	mapheight 30
+	name <EARTH_06x03>
+	WorldMapX 6
+	WorldMapY 3
+	world <EARTH>
+	map <MAPS_EARTH_06x03.txt>
+	special <NOEXIT SHOWALL SOLO>
+	habitat <EARTH.MNTNS>
+
+Scene 0 3
+	mapwidth 30
+	mapheight 30
+	name <EARTH_06x04>
+	WorldMapX 6
+	WorldMapY 4
+	world <EARTH>
+	map <MAPS_EARTH_06x04.txt>
+	special <NOEXIT SHOWALL SOLO>
+	habitat <EARTH.MNTNS>
+
+Scene 0 3
+	mapwidth 30
+	mapheight 30
+	name <EARTH_06x05>
+	WorldMapX 6
+	WorldMapY 5
+	world <EARTH>
+	map <MAPS_EARTH_06x05.txt>
+	special <NOEXIT SHOWALL SOLO>
+	habitat <EARTH.MNTNS>
+
+Scene 0 3
+	mapwidth 30
+	mapheight 30
+	name <EARTH_06x06>
+	WorldMapX 6
+	WorldMapY 6
+	world <EARTH>
+	map <MAPS_EARTH_06x06.txt>
+	special <NOEXIT SHOWALL SOLO>
+	habitat <EARTH.MNTNS>
+
+Scene 0 3
+	mapwidth 30
+	mapheight 30
+	name <EARTH_06x07>
+	WorldMapX 6
+	WorldMapY 7
+	world <EARTH>
+	map <MAPS_EARTH_06x07.txt>
+	special <NOEXIT SHOWALL SOLO>
+	habitat <EARTH.MNTNS>
+
+Scene 0 3
+	mapwidth 30
+	mapheight 30
+	name <EARTH_06x08>
+	WorldMapX 6
+	WorldMapY 8
+	world <EARTH>
+	map <MAPS_EARTH_06x08.txt>
+	special <NOEXIT SHOWALL SOLO>
+	habitat <EARTH.MNTNS>
+
+Scene 0 3
+	mapwidth 30
+	mapheight 30
+	name <EARTH_06x09>
+	WorldMapX 6
+	WorldMapY 9
+	world <EARTH>
+	map <MAPS_EARTH_06x09.txt>
+	special <NOEXIT SHOWALL SOLO>
+	habitat <EARTH.MNTNS>
+
+Scene 0 3
+	mapwidth 30
+	mapheight 30
+	name <EARTH_06x10>
+	WorldMapX 6
+	WorldMapY 10
+	world <EARTH>
+	map <MAPS_EARTH_06x10.txt>
+	special <NOEXIT SHOWALL SOLO>
+	habitat <EARTH.MNTNS>
+
+Scene 0 3
+	mapwidth 30
+	mapheight 30
+	name <EARTH_06x11>
+	WorldMapX 6
+	WorldMapY 11
+	world <EARTH>
+	map <MAPS_EARTH_06x11.txt>
+	special <NOEXIT SHOWALL SOLO>
+	habitat <EARTH.MNTNS>
+
+Scene 0 3
+	mapwidth 30
+	mapheight 30
+	name <EARTH_06x12>
+	WorldMapX 6
+	WorldMapY 12
+	world <EARTH>
+	map <MAPS_EARTH_06x12.txt>
+	special <NOEXIT SHOWALL SOLO>
+	habitat <EARTH.MNTNS>
+
+Scene 0 3
+	mapwidth 30
+	mapheight 30
+	name <EARTH_06x13>
+	WorldMapX 6
+	WorldMapY 13
+	world <EARTH>
+	map <MAPS_EARTH_06x13.txt>
+	special <NOEXIT SHOWALL SOLO>
+	habitat <EARTH.MNTNS>
+
+Scene 0 3
+	mapwidth 30
+	mapheight 30
+	name <EARTH_06x14>
+	WorldMapX 6
+	WorldMapY 14
+	world <EARTH>
+	map <MAPS_EARTH_06x14.txt>
+	special <NOEXIT SHOWALL SOLO>
+	habitat <EARTH.MNTNS>
+
+Scene 0 3
+	mapwidth 30
+	mapheight 30
+	name <EARTH_06x15>
+	WorldMapX 6
+	WorldMapY 15
+	world <EARTH>
+	map <MAPS_EARTH_06x15.txt>
+	special <NOEXIT SHOWALL SOLO>
+	habitat <EARTH.MNTNS>
+
+Scene 0 3
+	mapwidth 30
+	mapheight 30
+	name <EARTH_06x16>
+	WorldMapX 6
+	WorldMapY 16
+	world <EARTH>
+	map <MAPS_EARTH_06x16.txt>
+	special <NOEXIT SHOWALL SOLO>
+	habitat <EARTH.MNTNS>
+
+Scene 0 3
+	mapwidth 30
+	mapheight 30
+	name <EARTH_06x17>
+	WorldMapX 6
+	WorldMapY 17
+	world <EARTH>
+	map <MAPS_EARTH_06x17.txt>
+	special <NOEXIT SHOWALL SOLO>
+	habitat <EARTH.MNTNS>
+
+Scene 0 3
+	mapwidth 30
+	mapheight 30
+	name <EARTH_06x18>
+	WorldMapX 6
+	WorldMapY 18
+	world <EARTH>
+	map <MAPS_EARTH_06x18.txt>
+	special <NOEXIT SHOWALL SOLO>
+	habitat <EARTH.MNTNS>
+
+Scene 0 3
+	mapwidth 30
+	mapheight 30
+	name <EARTH_06x19>
+	WorldMapX 6
+	WorldMapY 19
+	world <EARTH>
+	map <MAPS_EARTH_06x19.txt>
+	special <NOEXIT SHOWALL SOLO>
+	habitat <EARTH.MNTNS>
+
+Scene 0 3
+	mapwidth 30
+	mapheight 30
+	name <EARTH_06x20>
+	WorldMapX 6
+	WorldMapY 20
+	world <EARTH>
+	map <MAPS_EARTH_06x20.txt>
+	special <NOEXIT SHOWALL SOLO>
+	habitat <EARTH.MNTNS>
+
+Scene 0 3
+	mapwidth 30
+	mapheight 30
+	name <EARTH_07x01>
+	WorldMapX 7
+	WorldMapY 1
+	world <EARTH>
+	map <MAPS_EARTH_07x01.txt>
+	special <NOEXIT SHOWALL SOLO>
+	habitat <EARTH.MNTNS>
+
+Scene 0 3
+	mapwidth 30
+	mapheight 30
+	name <EARTH_07x02>
+	WorldMapX 7
+	WorldMapY 2
+	world <EARTH>
+	map <MAPS_EARTH_07x02.txt>
+	special <NOEXIT SHOWALL SOLO>
+	habitat <EARTH.MNTNS>
+
+Scene 0 3
+	mapwidth 30
+	mapheight 30
+	name <EARTH_07x03>
+	WorldMapX 7
+	WorldMapY 3
+	world <EARTH>
+	map <MAPS_EARTH_07x03.txt>
+	special <NOEXIT SHOWALL SOLO>
+	habitat <EARTH.MNTNS>
+
+Scene 0 3
+	mapwidth 30
+	mapheight 30
+	name <EARTH_07x04>
+	WorldMapX 7
+	WorldMapY 4
+	world <EARTH>
+	map <MAPS_EARTH_07x04.txt>
+	special <NOEXIT SHOWALL SOLO>
+	habitat <EARTH.MNTNS>
+
+Scene 0 3
+	mapwidth 30
+	mapheight 30
+	name <EARTH_07x05>
+	WorldMapX 7
+	WorldMapY 5
+	world <EARTH>
+	map <MAPS_EARTH_07x05.txt>
+	special <NOEXIT SHOWALL SOLO>
+	habitat <EARTH.MNTNS>
+
+Scene 0 3
+	mapwidth 30
+	mapheight 30
+	name <EARTH_07x06>
+	WorldMapX 7
+	WorldMapY 6
+	world <EARTH>
+	map <MAPS_EARTH_07x06.txt>
+	special <NOEXIT SHOWALL SOLO>
+	habitat <EARTH.MNTNS>
+
+Scene 0 3
+	mapwidth 30
+	mapheight 30
+	name <EARTH_07x07>
+	WorldMapX 7
+	WorldMapY 7
+	world <EARTH>
+	map <MAPS_EARTH_07x07.txt>
+	special <NOEXIT SHOWALL SOLO>
+	habitat <EARTH.MNTNS>
+
+Scene 0 3
+	mapwidth 30
+	mapheight 30
+	name <EARTH_07x08>
+	WorldMapX 7
+	WorldMapY 8
+	world <EARTH>
+	map <MAPS_EARTH_07x08.txt>
+	special <NOEXIT SHOWALL SOLO>
+	habitat <EARTH.MNTNS>
+
+Scene 0 3
+	mapwidth 30
+	mapheight 30
+	name <EARTH_07x09>
+	WorldMapX 7
+	WorldMapY 9
+	world <EARTH>
+	map <MAPS_EARTH_07x09.txt>
+	special <NOEXIT SHOWALL SOLO>
+	habitat <EARTH.MNTNS>
+
+Scene 0 3
+	mapwidth 30
+	mapheight 30
+	name <EARTH_07x10>
+	WorldMapX 7
+	WorldMapY 10
+	world <EARTH>
+	map <MAPS_EARTH_07x10.txt>
+	special <NOEXIT SHOWALL SOLO>
+	habitat <EARTH.MNTNS>
+
+Scene 0 3
+	mapwidth 30
+	mapheight 30
+	name <EARTH_07x11>
+	WorldMapX 7
+	WorldMapY 11
+	world <EARTH>
+	map <MAPS_EARTH_07x11.txt>
+	special <NOEXIT SHOWALL SOLO>
+	habitat <EARTH.MNTNS>
+
+Scene 0 3
+	mapwidth 30
+	mapheight 30
+	name <EARTH_07x12>
+	WorldMapX 7
+	WorldMapY 12
+	world <EARTH>
+	map <MAPS_EARTH_07x12.txt>
+	special <NOEXIT SHOWALL SOLO>
+	habitat <EARTH.MNTNS>
+
+Scene 0 3
+	mapwidth 30
+	mapheight 30
+	name <EARTH_07x13>
+	WorldMapX 7
+	WorldMapY 13
+	world <EARTH>
+	map <MAPS_EARTH_07x13.txt>
+	special <NOEXIT SHOWALL SOLO>
+	habitat <EARTH.MNTNS>
+
+Scene 0 3
+	mapwidth 30
+	mapheight 30
+	name <EARTH_07x14>
+	WorldMapX 7
+	WorldMapY 14
+	world <EARTH>
+	map <MAPS_EARTH_07x14.txt>
+	special <NOEXIT SHOWALL SOLO>
+	habitat <EARTH.MNTNS>
+
+Scene 0 3
+	mapwidth 30
+	mapheight 30
+	name <EARTH_07x15>
+	WorldMapX 7
+	WorldMapY 15
+	world <EARTH>
+	map <MAPS_EARTH_07x15.txt>
+	special <NOEXIT SHOWALL SOLO>
+	habitat <EARTH.MNTNS>
+
+Scene 0 3
+	mapwidth 30
+	mapheight 30
+	name <EARTH_07x16>
+	WorldMapX 7
+	WorldMapY 16
+	world <EARTH>
+	map <MAPS_EARTH_07x16.txt>
+	special <NOEXIT SHOWALL SOLO>
+	habitat <EARTH.MNTNS>
+
+Scene 0 3
+	mapwidth 30
+	mapheight 30
+	name <EARTH_07x17>
+	WorldMapX 7
+	WorldMapY 17
+	world <EARTH>
+	map <MAPS_EARTH_07x17.txt>
+	special <NOEXIT SHOWALL SOLO>
+	habitat <EARTH.MNTNS>
+
+Scene 0 3
+	mapwidth 30
+	mapheight 30
+	name <EARTH_07x18>
+	WorldMapX 7
+	WorldMapY 18
+	world <EARTH>
+	map <MAPS_EARTH_07x18.txt>
+	special <NOEXIT SHOWALL SOLO>
+	habitat <EARTH.MNTNS>
+
+Scene 0 3
+	mapwidth 30
+	mapheight 30
+	name <EARTH_07x19>
+	WorldMapX 7
+	WorldMapY 19
+	world <EARTH>
+	map <MAPS_EARTH_07x19.txt>
+	special <NOEXIT SHOWALL SOLO>
+	habitat <EARTH.MNTNS>
+
+Scene 0 3
+	mapwidth 30
+	mapheight 30
+	name <EARTH_07x20>
+	WorldMapX 7
+	WorldMapY 20
+	world <EARTH>
+	map <MAPS_EARTH_07x20.txt>
+	special <NOEXIT SHOWALL SOLO>
+	habitat <EARTH.MNTNS>
+
+Scene 0 3
+	mapwidth 30
+	mapheight 30
+	name <EARTH_08x01>
+	WorldMapX 8
+	WorldMapY 1
+	world <EARTH>
+	map <MAPS_EARTH_08x01.txt>
+	special <NOEXIT SHOWALL SOLO>
+	habitat <EARTH.MNTNS>
+
+Scene 0 3
+	mapwidth 30
+	mapheight 30
+	name <EARTH_08x02>
+	WorldMapX 8
+	WorldMapY 2
+	world <EARTH>
+	map <MAPS_EARTH_08x02.txt>
+	special <NOEXIT SHOWALL SOLO>
+	habitat <EARTH.MNTNS>
+
+Scene 0 3
+	mapwidth 30
+	mapheight 30
+	name <EARTH_08x03>
+	WorldMapX 8
+	WorldMapY 3
+	world <EARTH>
+	map <MAPS_EARTH_08x03.txt>
+	special <NOEXIT SHOWALL SOLO>
+	habitat <EARTH.MNTNS>
+
+Scene 0 3
+	mapwidth 30
+	mapheight 30
+	name <EARTH_08x04>
+	WorldMapX 8
+	WorldMapY 4
+	world <EARTH>
+	map <MAPS_EARTH_08x04.txt>
+	special <NOEXIT SHOWALL SOLO>
+	habitat <EARTH.MNTNS>
+
+Scene 0 3
+	mapwidth 30
+	mapheight 30
+	name <EARTH_08x05>
+	WorldMapX 8
+	WorldMapY 5
+	world <EARTH>
+	map <MAPS_EARTH_08x05.txt>
+	special <NOEXIT SHOWALL SOLO>
+	habitat <EARTH.MNTNS>
+
+Scene 0 3
+	mapwidth 30
+	mapheight 30
+	name <EARTH_08x06>
+	WorldMapX 8
+	WorldMapY 6
+	world <EARTH>
+	map <MAPS_EARTH_08x06.txt>
+	special <NOEXIT SHOWALL SOLO>
+	habitat <EARTH.MNTNS>
+
+Scene 0 3
+	mapwidth 30
+	mapheight 30
+	name <EARTH_08x07>
+	WorldMapX 8
+	WorldMapY 7
+	world <EARTH>
+	map <MAPS_EARTH_08x07.txt>
+	special <NOEXIT SHOWALL SOLO>
+	habitat <EARTH.MNTNS>
+
+Scene 0 3
+	mapwidth 30
+	mapheight 30
+	name <EARTH_08x08>
+	WorldMapX 8
+	WorldMapY 8
+	world <EARTH>
+	map <MAPS_EARTH_08x08.txt>
+	special <NOEXIT SHOWALL SOLO>
+	habitat <EARTH.MNTNS>
+
+Scene 0 3
+	mapwidth 30
+	mapheight 30
+	name <EARTH_08x09>
+	WorldMapX 8
+	WorldMapY 9
+	world <EARTH>
+	map <MAPS_EARTH_08x09.txt>
+	special <NOEXIT SHOWALL SOLO>
+	habitat <EARTH.MNTNS>
+
+Scene 0 3
+	mapwidth 30
+	mapheight 30
+	name <EARTH_08x10>
+	WorldMapX 8
+	WorldMapY 10
+	world <EARTH>
+	map <MAPS_EARTH_08x10.txt>
+	special <NOEXIT SHOWALL SOLO>
+	habitat <EARTH.MNTNS>
+
+Scene 0 3
+	mapwidth 30
+	mapheight 30
+	name <EARTH_08x11>
+	WorldMapX 8
+	WorldMapY 11
+	world <EARTH>
+	map <MAPS_EARTH_08x11.txt>
+	special <NOEXIT SHOWALL SOLO>
+	habitat <EARTH.MNTNS>
+
+Scene 0 3
+	mapwidth 30
+	mapheight 30
+	name <EARTH_08x12>
+	WorldMapX 8
+	WorldMapY 12
+	world <EARTH>
+	map <MAPS_EARTH_08x12.txt>
+	special <NOEXIT SHOWALL SOLO>
+	habitat <EARTH.MNTNS>
+
+Scene 0 3
+	mapwidth 30
+	mapheight 30
+	name <EARTH_08x13>
+	WorldMapX 8
+	WorldMapY 13
+	world <EARTH>
+	map <MAPS_EARTH_08x13.txt>
+	special <NOEXIT SHOWALL SOLO>
+	habitat <EARTH.MNTNS>
+
+Scene 0 3
+	mapwidth 30
+	mapheight 30
+	name <EARTH_08x14>
+	WorldMapX 8
+	WorldMapY 14
+	world <EARTH>
+	map <MAPS_EARTH_08x14.txt>
+	special <NOEXIT SHOWALL SOLO>
+	habitat <EARTH.MNTNS>
+
+Scene 0 3
+	mapwidth 30
+	mapheight 30
+	name <EARTH_08x15>
+	WorldMapX 8
+	WorldMapY 15
+	world <EARTH>
+	map <MAPS_EARTH_08x15.txt>
+	special <NOEXIT SHOWALL SOLO>
+	habitat <EARTH.MNTNS>
+
+Scene 0 3
+	mapwidth 30
+	mapheight 30
+	name <EARTH_08x16>
+	WorldMapX 8
+	WorldMapY 16
+	world <EARTH>
+	map <MAPS_EARTH_08x16.txt>
+	special <NOEXIT SHOWALL SOLO>
+	habitat <EARTH.MNTNS>
+
+Scene 0 3
+	mapwidth 30
+	mapheight 30
+	name <EARTH_08x17>
+	WorldMapX 8
+	WorldMapY 17
+	world <EARTH>
+	map <MAPS_EARTH_08x17.txt>
+	special <NOEXIT SHOWALL SOLO>
+	habitat <EARTH.MNTNS>
+
+Scene 0 3
+	mapwidth 30
+	mapheight 30
+	name <EARTH_08x18>
+	WorldMapX 8
+	WorldMapY 18
+	world <EARTH>
+	map <MAPS_EARTH_08x18.txt>
+	special <NOEXIT SHOWALL SOLO>
+	habitat <EARTH.MNTNS>
+
+Scene 0 3
+	mapwidth 30
+	mapheight 30
+	name <EARTH_08x19>
+	WorldMapX 8
+	WorldMapY 19
+	world <EARTH>
+	map <MAPS_EARTH_08x19.txt>
+	special <NOEXIT SHOWALL SOLO>
+	habitat <EARTH.MNTNS>
+
+Scene 0 3
+	mapwidth 30
+	mapheight 30
+	name <EARTH_08x20>
+	WorldMapX 8
+	WorldMapY 20
+	world <EARTH>
+	map <MAPS_EARTH_08x20.txt>
+	special <NOEXIT SHOWALL SOLO>
+	habitat <EARTH.MNTNS>
+
+Scene 0 3
+	mapwidth 30
+	mapheight 30
+	name <EARTH_09x01>
+	WorldMapX 9
+	WorldMapY 1
+	world <EARTH>
+	map <MAPS_EARTH_09x01.txt>
+	special <NOEXIT SHOWALL SOLO>
+	habitat <EARTH.MNTNS>
+
+Scene 0 3
+	mapwidth 30
+	mapheight 30
+	name <EARTH_09x02>
+	WorldMapX 9
+	WorldMapY 2
+	world <EARTH>
+	map <MAPS_EARTH_09x02.txt>
+	special <NOEXIT SHOWALL SOLO>
+	habitat <EARTH.MNTNS>
+
+Scene 0 3
+	mapwidth 30
+	mapheight 30
+	name <EARTH_09x03>
+	WorldMapX 9
+	WorldMapY 3
+	world <EARTH>
+	map <MAPS_EARTH_09x03.txt>
+	special <NOEXIT SHOWALL SOLO>
+	habitat <EARTH.MNTNS>
+
+Scene 0 3
+	mapwidth 30
+	mapheight 30
+	name <EARTH_09x04>
+	WorldMapX 9
+	WorldMapY 4
+	world <EARTH>
+	map <MAPS_EARTH_09x04.txt>
+	special <NOEXIT SHOWALL SOLO>
+	habitat <EARTH.MNTNS>
+
+Scene 0 3
+	mapwidth 30
+	mapheight 30
+	name <EARTH_09x05>
+	WorldMapX 9
+	WorldMapY 5
+	world <EARTH>
+	map <MAPS_EARTH_09x05.txt>
+	special <NOEXIT SHOWALL SOLO>
+	habitat <EARTH.MNTNS>
+
+Scene 0 3
+	mapwidth 30
+	mapheight 30
+	name <EARTH_09x06>
+	WorldMapX 9
+	WorldMapY 6
+	world <EARTH>
+	map <MAPS_EARTH_09x06.txt>
+	special <NOEXIT SHOWALL SOLO>
+	habitat <EARTH.MNTNS>
+
+Scene 0 3
+	mapwidth 30
+	mapheight 30
+	name <EARTH_09x07>
+	WorldMapX 9
+	WorldMapY 7
+	world <EARTH>
+	map <MAPS_EARTH_09x07.txt>
+	special <NOEXIT SHOWALL SOLO>
+	habitat <EARTH.MNTNS>
+
+Scene 0 3
+	mapwidth 30
+	mapheight 30
+	name <EARTH_09x08>
+	WorldMapX 9
+	WorldMapY 8
+	world <EARTH>
+	map <MAPS_EARTH_09x08.txt>
+	special <NOEXIT SHOWALL SOLO>
+	habitat <EARTH.MNTNS>
+
+Scene 0 3
+	mapwidth 30
+	mapheight 30
+	name <EARTH_09x09>
+	WorldMapX 9
+	WorldMapY 9
+	world <EARTH>
+	map <MAPS_EARTH_09x09.txt>
+	special <NOEXIT SHOWALL SOLO>
+	habitat <EARTH.MNTNS>
+
+Scene 0 3
+	mapwidth 30
+	mapheight 30
+	name <EARTH_09x10>
+	WorldMapX 9
+	WorldMapY 10
+	world <EARTH>
+	map <MAPS_EARTH_09x10.txt>
+	special <NOEXIT SHOWALL SOLO>
+	habitat <EARTH.MNTNS>
+
+Scene 0 3
+	mapwidth 30
+	mapheight 30
+	name <EARTH_09x11>
+	WorldMapX 9
+	WorldMapY 11
+	world <EARTH>
+	map <MAPS_EARTH_09x11.txt>
+	special <NOEXIT SHOWALL SOLO>
+	habitat <EARTH.MNTNS>
+
+Scene 0 3
+	mapwidth 30
+	mapheight 30
+	name <EARTH_09x12>
+	WorldMapX 9
+	WorldMapY 12
+	world <EARTH>
+	map <MAPS_EARTH_09x12.txt>
+	special <NOEXIT SHOWALL SOLO>
+	habitat <EARTH.MNTNS>
+
+Scene 0 3
+	mapwidth 30
+	mapheight 30
+	name <EARTH_09x13>
+	WorldMapX 9
+	WorldMapY 13
+	world <EARTH>
+	map <MAPS_EARTH_09x13.txt>
+	special <NOEXIT SHOWALL SOLO>
+	habitat <EARTH.MNTNS>
+
+Scene 0 3
+	mapwidth 30
+	mapheight 30
+	name <EARTH_09x14>
+	WorldMapX 9
+	WorldMapY 14
+	world <EARTH>
+	map <MAPS_EARTH_09x14.txt>
+	special <NOEXIT SHOWALL SOLO>
+	habitat <EARTH.MNTNS>
+
+Scene 0 3
+	mapwidth 30
+	mapheight 30
+	name <EARTH_09x15>
+	WorldMapX 9
+	WorldMapY 15
+	world <EARTH>
+	map <MAPS_EARTH_09x15.txt>
+	special <NOEXIT SHOWALL SOLO>
+	habitat <EARTH.MNTNS>
+
+Scene 0 3
+	mapwidth 30
+	mapheight 30
+	name <EARTH_09x16>
+	WorldMapX 9
+	WorldMapY 16
+	world <EARTH>
+	map <MAPS_EARTH_09x16.txt>
+	special <NOEXIT SHOWALL SOLO>
+	habitat <EARTH.MNTNS>
+
+Scene 0 3
+	mapwidth 30
+	mapheight 30
+	name <EARTH_09x17>
+	WorldMapX 9
+	WorldMapY 17
+	world <EARTH>
+	map <MAPS_EARTH_09x17.txt>
+	special <NOEXIT SHOWALL SOLO>
+	habitat <EARTH.MNTNS>
+
+Scene 0 3
+	mapwidth 30
+	mapheight 30
+	name <EARTH_09x18>
+	WorldMapX 9
+	WorldMapY 18
+	world <EARTH>
+	map <MAPS_EARTH_09x18.txt>
+	special <NOEXIT SHOWALL SOLO>
+	habitat <EARTH.MNTNS>
+
+Scene 0 3
+	mapwidth 30
+	mapheight 30
+	name <EARTH_09x19>
+	WorldMapX 9
+	WorldMapY 19
+	world <EARTH>
+	map <MAPS_EARTH_09x19.txt>
+	special <NOEXIT SHOWALL SOLO>
+	habitat <EARTH.MNTNS>
+
+Scene 0 3
+	mapwidth 30
+	mapheight 30
+	name <EARTH_09x20>
+	WorldMapX 9
+	WorldMapY 20
+	world <EARTH>
+	map <MAPS_EARTH_09x20.txt>
+	special <NOEXIT SHOWALL SOLO>
+	habitat <EARTH.MNTNS>
+
+Scene 0 3
+	mapwidth 30
+	mapheight 30
+	name <EARTH_10x01>
+	WorldMapX 10
+	WorldMapY 1
+	world <EARTH>
+	map <MAPS_EARTH_10x01.txt>
+	special <NOEXIT SHOWALL SOLO>
+	habitat <EARTH.MNTNS>
+
+Scene 0 3
+	mapwidth 30
+	mapheight 30
+	name <EARTH_10x02>
+	WorldMapX 10
+	WorldMapY 2
+	world <EARTH>
+	map <MAPS_EARTH_10x02.txt>
+	special <NOEXIT SHOWALL SOLO>
+	habitat <EARTH.MNTNS>
+
+Scene 0 3
+	mapwidth 30
+	mapheight 30
+	name <EARTH_10x03>
+	WorldMapX 10
+	WorldMapY 3
+	world <EARTH>
+	map <MAPS_EARTH_10x03.txt>
+	special <NOEXIT SHOWALL SOLO>
+	habitat <EARTH.MNTNS>
+
+Scene 0 3
+	mapwidth 30
+	mapheight 30
+	name <EARTH_10x04>
+	WorldMapX 10
+	WorldMapY 4
+	world <EARTH>
+	map <MAPS_EARTH_10x04.txt>
+	special <NOEXIT SHOWALL SOLO>
+	habitat <EARTH.MNTNS>
+
+Scene 0 3
+	mapwidth 30
+	mapheight 30
+	name <EARTH_10x05>
+	WorldMapX 10
+	WorldMapY 5
+	world <EARTH>
+	map <MAPS_EARTH_10x05.txt>
+	special <NOEXIT SHOWALL SOLO>
+	habitat <EARTH.MNTNS>
+
+Scene 0 3
+	mapwidth 30
+	mapheight 30
+	name <EARTH_10x06>
+	WorldMapX 10
+	WorldMapY 6
+	world <EARTH>
+	map <MAPS_EARTH_10x06.txt>
+	special <NOEXIT SHOWALL SOLO>
+	habitat <EARTH.MNTNS>
+
+Scene 0 3
+	mapwidth 30
+	mapheight 30
+	name <EARTH_10x07>
+	WorldMapX 10
+	WorldMapY 7
+	world <EARTH>
+	map <MAPS_EARTH_10x07.txt>
+	special <NOEXIT SHOWALL SOLO>
+	habitat <EARTH.MNTNS>
+
+Scene 0 3
+	mapwidth 30
+	mapheight 30
+	name <EARTH_10x08>
+	WorldMapX 10
+	WorldMapY 8
+	world <EARTH>
+	map <MAPS_EARTH_10x08.txt>
+	special <NOEXIT SHOWALL SOLO>
+	habitat <EARTH.MNTNS>
+
+Scene 0 3
+	mapwidth 30
+	mapheight 30
+	name <EARTH_10x09>
+	WorldMapX 10
+	WorldMapY 9
+	world <EARTH>
+	map <MAPS_EARTH_10x09.txt>
+	special <NOEXIT SHOWALL SOLO>
+	habitat <EARTH.MNTNS>
+
+Scene 0 3
+	mapwidth 30
+	mapheight 30
+	name <EARTH_10x11>
+	WorldMapX 10
+	WorldMapY 11
+	world <EARTH>
+	map <MAPS_EARTH_10x11.txt>
+	special <NOEXIT SHOWALL SOLO>
+	habitat <EARTH.MNTNS>
+
+Scene 0 3
+	mapwidth 30
+	mapheight 30
+	name <EARTH_10x12>
+	WorldMapX 10
+	WorldMapY 12
+	world <EARTH>
+	map <MAPS_EARTH_10x12.txt>
+	special <NOEXIT SHOWALL SOLO>
+	habitat <EARTH.MNTNS>
+
+Scene 0 3
+	mapwidth 30
+	mapheight 30
+	name <EARTH_10x13>
+	WorldMapX 10
+	WorldMapY 13
+	world <EARTH>
+	map <MAPS_EARTH_10x13.txt>
+	special <NOEXIT SHOWALL SOLO>
+	habitat <EARTH.MNTNS>
+
+Scene 0 3
+	mapwidth 30
+	mapheight 30
+	name <EARTH_10x14>
+	WorldMapX 10
+	WorldMapY 14
+	world <EARTH>
+	map <MAPS_EARTH_10x14.txt>
+	special <NOEXIT SHOWALL SOLO>
+	habitat <EARTH.MNTNS>
+
+Scene 0 3
+	mapwidth 30
+	mapheight 30
+	name <EARTH_10x15>
+	WorldMapX 10
+	WorldMapY 15
+	world <EARTH>
+	map <MAPS_EARTH_10x15.txt>
+	special <NOEXIT SHOWALL SOLO>
+	habitat <EARTH.MNTNS>
+
+Scene 0 3
+	mapwidth 30
+	mapheight 30
+	name <EARTH_10x16>
+	WorldMapX 10
+	WorldMapY 16
+	world <EARTH>
+	map <MAPS_EARTH_10x16.txt>
+	special <NOEXIT SHOWALL SOLO>
+	habitat <EARTH.MNTNS>
+
+Scene 0 3
+	mapwidth 30
+	mapheight 30
+	name <EARTH_10x17>
+	WorldMapX 10
+	WorldMapY 17
+	world <EARTH>
+	map <MAPS_EARTH_10x17.txt>
+	special <NOEXIT SHOWALL SOLO>
+	habitat <EARTH.MNTNS>
+
+Scene 0 3
+	mapwidth 30
+	mapheight 30
+	name <EARTH_10x18>
+	WorldMapX 10
+	WorldMapY 18
+	world <EARTH>
+	map <MAPS_EARTH_10x18.txt>
+	special <NOEXIT SHOWALL SOLO>
+	habitat <EARTH.MNTNS>
+
+Scene 0 3
+	mapwidth 30
+	mapheight 30
+	name <EARTH_10x19>
+	WorldMapX 10
+	WorldMapY 19
+	world <EARTH>
+	map <MAPS_EARTH_10x19.txt>
+	special <NOEXIT SHOWALL SOLO>
+	habitat <EARTH.MNTNS>
+
+Scene 0 3
+	mapwidth 30
+	mapheight 30
+	name <EARTH_10x20>
+	WorldMapX 10
+	WorldMapY 20
+	world <EARTH>
+	map <MAPS_EARTH_10x20.txt>
+	special <NOEXIT SHOWALL SOLO>
+	habitat <EARTH.MNTNS>
+
+Scene 0 3
+	mapwidth 30
+	mapheight 30
+	name <EARTH_11x01>
+	WorldMapX 11
+	WorldMapY 1
+	world <EARTH>
+	map <MAPS_EARTH_11x01.txt>
+	special <NOEXIT SHOWALL SOLO>
+	habitat <EARTH.MNTNS>
+
+Scene 0 3
+	mapwidth 30
+	mapheight 30
+	name <EARTH_11x02>
+	WorldMapX 11
+	WorldMapY 2
+	world <EARTH>
+	map <MAPS_EARTH_11x02.txt>
+	special <NOEXIT SHOWALL SOLO>
+	habitat <EARTH.MNTNS>
+
+Scene 0 3
+	mapwidth 30
+	mapheight 30
+	name <EARTH_11x03>
+	WorldMapX 11
+	WorldMapY 3
+	world <EARTH>
+	map <MAPS_EARTH_11x03.txt>
+	special <NOEXIT SHOWALL SOLO>
+	habitat <EARTH.MNTNS>
+
+Scene 0 3
+	mapwidth 30
+	mapheight 30
+	name <EARTH_11x04>
+	WorldMapX 11
+	WorldMapY 4
+	world <EARTH>
+	map <MAPS_EARTH_11x04.txt>
+	special <NOEXIT SHOWALL SOLO>
+	habitat <EARTH.MNTNS>
+
+Scene 0 3
+	mapwidth 30
+	mapheight 30
+	name <EARTH_11x05>
+	WorldMapX 11
+	WorldMapY 5
+	world <EARTH>
+	map <MAPS_EARTH_11x05.txt>
+	special <NOEXIT SHOWALL SOLO>
+	habitat <EARTH.MNTNS>
+
+Scene 0 3
+	mapwidth 30
+	mapheight 30
+	name <EARTH_11x06>
+	WorldMapX 11
+	WorldMapY 6
+	world <EARTH>
+	map <MAPS_EARTH_11x06.txt>
+	special <NOEXIT SHOWALL SOLO>
+	habitat <EARTH.MNTNS>
+
+Scene 0 3
+	mapwidth 30
+	mapheight 30
+	name <EARTH_11x07>
+	WorldMapX 11
+	WorldMapY 7
+	world <EARTH>
+	map <MAPS_EARTH_11x07.txt>
+	special <NOEXIT SHOWALL SOLO>
+	habitat <EARTH.MNTNS>
+
+Scene 0 3
+	mapwidth 30
+	mapheight 30
+	name <EARTH_11x08>
+	WorldMapX 11
+	WorldMapY 8
+	world <EARTH>
+	map <MAPS_EARTH_11x08.txt>
+	special <NOEXIT SHOWALL SOLO>
+	habitat <EARTH.MNTNS>
+
+Scene 0 3
+	mapwidth 30
+	mapheight 30
+	name <EARTH_11x09>
+	WorldMapX 11
+	WorldMapY 9
+	world <EARTH>
+	map <MAPS_EARTH_11x09.txt>
+	special <NOEXIT SHOWALL SOLO>
+	habitat <EARTH.MNTNS>
+
+Scene 0 3
+	mapwidth 30
+	mapheight 30
+	name <EARTH_11x10>
+	WorldMapX 11
+	WorldMapY 10
+	world <EARTH>
+	map <MAPS_EARTH_11x10.txt>
+	special <NOEXIT SHOWALL SOLO>
+	habitat <EARTH.MNTNS>
+
+Scene 0 3
+	mapwidth 30
+	mapheight 30
+	name <EARTH_11x11>
+	WorldMapX 11
+	WorldMapY 11
+	world <EARTH>
+	map <MAPS_EARTH_11x11.txt>
+	special <NOEXIT SHOWALL SOLO>
+	habitat <EARTH.MNTNS>
+
+Scene 0 3
+	mapwidth 30
+	mapheight 30
+	name <EARTH_11x12>
+	WorldMapX 11
+	WorldMapY 12
+	world <EARTH>
+	map <MAPS_EARTH_11x12.txt>
+	special <NOEXIT SHOWALL SOLO>
+	habitat <EARTH.MNTNS>
+
+Scene 0 3
+	mapwidth 30
+	mapheight 30
+	name <EARTH_11x13>
+	WorldMapX 11
+	WorldMapY 13
+	world <EARTH>
+	map <MAPS_EARTH_11x13.txt>
+	special <NOEXIT SHOWALL SOLO>
+	habitat <EARTH.MNTNS>
+
+Scene 0 3
+	mapwidth 30
+	mapheight 30
+	name <EARTH_11x14>
+	WorldMapX 11
+	WorldMapY 14
+	world <EARTH>
+	map <MAPS_EARTH_11x14.txt>
+	special <NOEXIT SHOWALL SOLO>
+	habitat <EARTH.MNTNS>
+
+Scene 0 3
+	mapwidth 30
+	mapheight 30
+	name <EARTH_11x15>
+	WorldMapX 11
+	WorldMapY 15
+	world <EARTH>
+	map <MAPS_EARTH_11x15.txt>
+	special <NOEXIT SHOWALL SOLO>
+	habitat <EARTH.MNTNS>
+
+Scene 0 3
+	mapwidth 30
+	mapheight 30
+	name <EARTH_11x16>
+	WorldMapX 11
+	WorldMapY 16
+	world <EARTH>
+	map <MAPS_EARTH_11x16.txt>
+	special <NOEXIT SHOWALL SOLO>
+	habitat <EARTH.MNTNS>
+
+Scene 0 3
+	mapwidth 30
+	mapheight 30
+	name <EARTH_11x17>
+	WorldMapX 11
+	WorldMapY 17
+	world <EARTH>
+	map <MAPS_EARTH_11x17.txt>
+	special <NOEXIT SHOWALL SOLO>
+	habitat <EARTH.MNTNS>
+
+Scene 0 3
+	mapwidth 30
+	mapheight 30
+	name <EARTH_11x18>
+	WorldMapX 11
+	WorldMapY 18
+	world <EARTH>
+	map <MAPS_EARTH_11x18.txt>
+	special <NOEXIT SHOWALL SOLO>
+	habitat <EARTH.MNTNS>
+
+Scene 0 3
+	mapwidth 30
+	mapheight 30
+	name <EARTH_11x19>
+	WorldMapX 11
+	WorldMapY 19
+	world <EARTH>
+	map <MAPS_EARTH_11x19.txt>
+	special <NOEXIT SHOWALL SOLO>
+	habitat <EARTH.MNTNS>
+
+Scene 0 3
+	mapwidth 30
+	mapheight 30
+	name <EARTH_11x20>
+	WorldMapX 11
+	WorldMapY 20
+	world <EARTH>
+	map <MAPS_EARTH_11x20.txt>
+	special <NOEXIT SHOWALL SOLO>
+	habitat <EARTH.MNTNS>
+
+Scene 0 3
+	mapwidth 30
+	mapheight 30
+	name <EARTH_12x01>
+	WorldMapX 12
+	WorldMapY 1
+	world <EARTH>
+	map <MAPS_EARTH_12x01.txt>
+	special <NOEXIT SHOWALL SOLO>
+	habitat <EARTH.MNTNS>
+
+Scene 0 3
+	mapwidth 30
+	mapheight 30
+	name <EARTH_12x02>
+	WorldMapX 12
+	WorldMapY 2
+	world <EARTH>
+	map <MAPS_EARTH_12x02.txt>
+	special <NOEXIT SHOWALL SOLO>
+	habitat <EARTH.MNTNS>
+
+Scene 0 3
+	mapwidth 30
+	mapheight 30
+	name <EARTH_12x03>
+	WorldMapX 12
+	WorldMapY 3
+	world <EARTH>
+	map <MAPS_EARTH_12x03.txt>
+	special <NOEXIT SHOWALL SOLO>
+	habitat <EARTH.MNTNS>
+
+Scene 0 3
+	mapwidth 30
+	mapheight 30
+	name <EARTH_12x04>
+	WorldMapX 12
+	WorldMapY 4
+	world <EARTH>
+	map <MAPS_EARTH_12x04.txt>
+	special <NOEXIT SHOWALL SOLO>
+	habitat <EARTH.MNTNS>
+
+Scene 0 3
+	mapwidth 30
+	mapheight 30
+	name <EARTH_12x05>
+	WorldMapX 12
+	WorldMapY 5
+	world <EARTH>
+	map <MAPS_EARTH_12x05.txt>
+	special <NOEXIT SHOWALL SOLO>
+	habitat <EARTH.MNTNS>
+
+Scene 0 3
+	mapwidth 30
+	mapheight 30
+	name <EARTH_12x06>
+	WorldMapX 12
+	WorldMapY 6
+	world <EARTH>
+	map <MAPS_EARTH_12x06.txt>
+	special <NOEXIT SHOWALL SOLO>
+	habitat <EARTH.MNTNS>
+
+Scene 0 3
+	mapwidth 30
+	mapheight 30
+	name <EARTH_12x07>
+	WorldMapX 12
+	WorldMapY 7
+	world <EARTH>
+	map <MAPS_EARTH_12x07.txt>
+	special <NOEXIT SHOWALL SOLO>
+	habitat <EARTH.MNTNS>
+
+Scene 0 3
+	mapwidth 30
+	mapheight 30
+	name <EARTH_12x08>
+	WorldMapX 12
+	WorldMapY 8
+	world <EARTH>
+	map <MAPS_EARTH_12x08.txt>
+	special <NOEXIT SHOWALL SOLO>
+	habitat <EARTH.MNTNS>
+
+Scene 0 3
+	mapwidth 30
+	mapheight 30
+	name <EARTH_12x09>
+	WorldMapX 12
+	WorldMapY 9
+	world <EARTH>
+	map <MAPS_EARTH_12x09.txt>
+	special <NOEXIT SHOWALL SOLO>
+	habitat <EARTH.MNTNS>
+
+Scene 0 3
+	mapwidth 30
+	mapheight 30
+	name <EARTH_12x10>
+	WorldMapX 12
+	WorldMapY 10
+	world <EARTH>
+	map <MAPS_EARTH_12x10.txt>
+	special <NOEXIT SHOWALL SOLO>
+	habitat <EARTH.MNTNS>
+
+Scene 0 3
+	mapwidth 30
+	mapheight 30
+	name <EARTH_12x11>
+	WorldMapX 12
+	WorldMapY 11
+	world <EARTH>
+	map <MAPS_EARTH_12x11.txt>
+	special <NOEXIT SHOWALL SOLO>
+	habitat <EARTH.MNTNS>
+
+Scene 0 3
+	mapwidth 30
+	mapheight 30
+	name <EARTH_12x12>
+	WorldMapX 12
+	WorldMapY 12
+	world <EARTH>
+	map <MAPS_EARTH_12x12.txt>
+	special <NOEXIT SHOWALL SOLO>
+	habitat <EARTH.MNTNS>
+
+Scene 0 3
+	mapwidth 30
+	mapheight 30
+	name <EARTH_12x13>
+	WorldMapX 12
+	WorldMapY 13
+	world <EARTH>
+	map <MAPS_EARTH_12x13.txt>
+	special <NOEXIT SHOWALL SOLO>
+	habitat <EARTH.MNTNS>
+
+Scene 0 3
+	mapwidth 30
+	mapheight 30
+	name <EARTH_12x14>
+	WorldMapX 12
+	WorldMapY 14
+	world <EARTH>
+	map <MAPS_EARTH_12x14.txt>
+	special <NOEXIT SHOWALL SOLO>
+	habitat <EARTH.MNTNS>
+
+Scene 0 3
+	mapwidth 30
+	mapheight 30
+	name <EARTH_12x15>
+	WorldMapX 12
+	WorldMapY 15
+	world <EARTH>
+	map <MAPS_EARTH_12x15.txt>
+	special <NOEXIT SHOWALL SOLO>
+	habitat <EARTH.MNTNS>
+
+Scene 0 3
+	mapwidth 30
+	mapheight 30
+	name <EARTH_12x16>
+	WorldMapX 12
+	WorldMapY 16
+	world <EARTH>
+	map <MAPS_EARTH_12x16.txt>
+	special <NOEXIT SHOWALL SOLO>
+	habitat <EARTH.MNTNS>
+
+Scene 0 3
+	mapwidth 30
+	mapheight 30
+	name <EARTH_12x17>
+	WorldMapX 12
+	WorldMapY 17
+	world <EARTH>
+	map <MAPS_EARTH_12x17.txt>
+	special <NOEXIT SHOWALL SOLO>
+	habitat <EARTH.MNTNS>
+
+Scene 0 3
+	mapwidth 30
+	mapheight 30
+	name <EARTH_12x18>
+	WorldMapX 12
+	WorldMapY 18
+	world <EARTH>
+	map <MAPS_EARTH_12x18.txt>
+	special <NOEXIT SHOWALL SOLO>
+	habitat <EARTH.MNTNS>
+
+Scene 0 3
+	mapwidth 30
+	mapheight 30
+	name <EARTH_12x19>
+	WorldMapX 12
+	WorldMapY 19
+	world <EARTH>
+	map <MAPS_EARTH_12x19.txt>
+	special <NOEXIT SHOWALL SOLO>
+	habitat <EARTH.MNTNS>
+
+Scene 0 3
+	mapwidth 30
+	mapheight 30
+	name <EARTH_12x20>
+	WorldMapX 12
+	WorldMapY 20
+	world <EARTH>
+	map <MAPS_EARTH_12x20.txt>
+	special <NOEXIT SHOWALL SOLO>
+	habitat <EARTH.MNTNS>
+
+Scene 0 3
+	mapwidth 30
+	mapheight 30
+	name <EARTH_13x01>
+	WorldMapX 13
+	WorldMapY 1
+	world <EARTH>
+	map <MAPS_EARTH_13x01.txt>
+	special <NOEXIT SHOWALL SOLO>
+	habitat <EARTH.MNTNS>
+
+Scene 0 3
+	mapwidth 30
+	mapheight 30
+	name <EARTH_13x02>
+	WorldMapX 13
+	WorldMapY 2
+	world <EARTH>
+	map <MAPS_EARTH_13x02.txt>
+	special <NOEXIT SHOWALL SOLO>
+	habitat <EARTH.MNTNS>
+
+Scene 0 3
+	mapwidth 30
+	mapheight 30
+	name <EARTH_13x03>
+	WorldMapX 13
+	WorldMapY 3
+	world <EARTH>
+	map <MAPS_EARTH_13x03.txt>
+	special <NOEXIT SHOWALL SOLO>
+	habitat <EARTH.MNTNS>
+
+Scene 0 3
+	mapwidth 30
+	mapheight 30
+	name <EARTH_13x04>
+	WorldMapX 13
+	WorldMapY 4
+	world <EARTH>
+	map <MAPS_EARTH_13x04.txt>
+	special <NOEXIT SHOWALL SOLO>
+	habitat <EARTH.MNTNS>
+
+Scene 0 3
+	mapwidth 30
+	mapheight 30
+	name <EARTH_13x05>
+	WorldMapX 13
+	WorldMapY 5
+	world <EARTH>
+	map <MAPS_EARTH_13x05.txt>
+	special <NOEXIT SHOWALL SOLO>
+	habitat <EARTH.MNTNS>
+
+Scene 0 3
+	mapwidth 30
+	mapheight 30
+	name <EARTH_13x06>
+	WorldMapX 13
+	WorldMapY 6
+	world <EARTH>
+	map <MAPS_EARTH_13x06.txt>
+	special <NOEXIT SHOWALL SOLO>
+	habitat <EARTH.MNTNS>
+
+Scene 0 3
+	mapwidth 30
+	mapheight 30
+	name <EARTH_13x07>
+	WorldMapX 13
+	WorldMapY 7
+	world <EARTH>
+	map <MAPS_EARTH_13x07.txt>
+	special <NOEXIT SHOWALL SOLO>
+	habitat <EARTH.MNTNS>
+
+Scene 0 3
+	mapwidth 30
+	mapheight 30
+	name <EARTH_13x08>
+	WorldMapX 13
+	WorldMapY 8
+	world <EARTH>
+	map <MAPS_EARTH_13x08.txt>
+	special <NOEXIT SHOWALL SOLO>
+	habitat <EARTH.MNTNS>
+
+Scene 0 3
+	mapwidth 30
+	mapheight 30
+	name <EARTH_13x09>
+	WorldMapX 13
+	WorldMapY 9
+	world <EARTH>
+	map <MAPS_EARTH_13x09.txt>
+	special <NOEXIT SHOWALL SOLO>
+	habitat <EARTH.MNTNS>
+
+Scene 0 3
+	mapwidth 30
+	mapheight 30
+	name <EARTH_13x10>
+	WorldMapX 13
+	WorldMapY 10
+	world <EARTH>
+	map <MAPS_EARTH_13x10.txt>
+	special <NOEXIT SHOWALL SOLO>
+	habitat <EARTH.MNTNS>
+
+Scene 0 3
+	mapwidth 30
+	mapheight 30
+	name <EARTH_13x11>
+	WorldMapX 13
+	WorldMapY 11
+	world <EARTH>
+	map <MAPS_EARTH_13x11.txt>
+	special <NOEXIT SHOWALL SOLO>
+	habitat <EARTH.MNTNS>
+
+Scene 0 3
+	mapwidth 30
+	mapheight 30
+	name <EARTH_13x12>
+	WorldMapX 13
+	WorldMapY 12
+	world <EARTH>
+	map <MAPS_EARTH_13x12.txt>
+	special <NOEXIT SHOWALL SOLO>
+	habitat <EARTH.MNTNS>
+
+Scene 0 3
+	mapwidth 30
+	mapheight 30
+	name <EARTH_13x13>
+	WorldMapX 13
+	WorldMapY 13
+	world <EARTH>
+	map <MAPS_EARTH_13x13.txt>
+	special <NOEXIT SHOWALL SOLO>
+	habitat <EARTH.MNTNS>
+
+Scene 0 3
+	mapwidth 30
+	mapheight 30
+	name <EARTH_13x14>
+	WorldMapX 13
+	WorldMapY 14
+	world <EARTH>
+	map <MAPS_EARTH_13x14.txt>
+	special <NOEXIT SHOWALL SOLO>
+	habitat <EARTH.MNTNS>
+
+Scene 0 3
+	mapwidth 30
+	mapheight 30
+	name <EARTH_13x15>
+	WorldMapX 13
+	WorldMapY 15
+	world <EARTH>
+	map <MAPS_EARTH_13x15.txt>
+	special <NOEXIT SHOWALL SOLO>
+	habitat <EARTH.MNTNS>
+
+Scene 0 3
+	mapwidth 30
+	mapheight 30
+	name <EARTH_13x16>
+	WorldMapX 13
+	WorldMapY 16
+	world <EARTH>
+	map <MAPS_EARTH_13x16.txt>
+	special <NOEXIT SHOWALL SOLO>
+	habitat <EARTH.MNTNS>
+
+Scene 0 3
+	mapwidth 30
+	mapheight 30
+	name <EARTH_13x17>
+	WorldMapX 13
+	WorldMapY 17
+	world <EARTH>
+	map <MAPS_EARTH_13x17.txt>
+	special <NOEXIT SHOWALL SOLO>
+	habitat <EARTH.MNTNS>
+
+Scene 0 3
+	mapwidth 30
+	mapheight 30
+	name <EARTH_13x18>
+	WorldMapX 13
+	WorldMapY 18
+	world <EARTH>
+	map <MAPS_EARTH_13x18.txt>
+	special <NOEXIT SHOWALL SOLO>
+	habitat <EARTH.MNTNS>
+
+Scene 0 3
+	mapwidth 30
+	mapheight 30
+	name <EARTH_13x19>
+	WorldMapX 13
+	WorldMapY 19
+	world <EARTH>
+	map <MAPS_EARTH_13x19.txt>
+	special <NOEXIT SHOWALL SOLO>
+	habitat <EARTH.MNTNS>
+
+Scene 0 3
+	mapwidth 30
+	mapheight 30
+	name <EARTH_13x20>
+	WorldMapX 13
+	WorldMapY 20
+	world <EARTH>
+	map <MAPS_EARTH_13x20.txt>
+	special <NOEXIT SHOWALL SOLO>
+	habitat <EARTH.MNTNS>
+
+Scene 0 3
+	mapwidth 30
+	mapheight 30
+	name <EARTH_14x01>
+	WorldMapX 14
+	WorldMapY 1
+	world <EARTH>
+	map <MAPS_EARTH_14x01.txt>
+	special <NOEXIT SHOWALL SOLO>
+	habitat <EARTH.MNTNS>
+
+Scene 0 3
+	mapwidth 30
+	mapheight 30
+	name <EARTH_14x02>
+	WorldMapX 14
+	WorldMapY 2
+	world <EARTH>
+	map <MAPS_EARTH_14x02.txt>
+	special <NOEXIT SHOWALL SOLO>
+	habitat <EARTH.MNTNS>
+
+Scene 0 3
+	mapwidth 30
+	mapheight 30
+	name <EARTH_14x03>
+	WorldMapX 14
+	WorldMapY 3
+	world <EARTH>
+	map <MAPS_EARTH_14x03.txt>
+	special <NOEXIT SHOWALL SOLO>
+	habitat <EARTH.MNTNS>
+
+Scene 0 3
+	mapwidth 30
+	mapheight 30
+	name <EARTH_14x04>
+	WorldMapX 14
+	WorldMapY 4
+	world <EARTH>
+	map <MAPS_EARTH_14x04.txt>
+	special <NOEXIT SHOWALL SOLO>
+	habitat <EARTH.MNTNS>
+
+Scene 0 3
+	mapwidth 30
+	mapheight 30
+	name <EARTH_14x05>
+	WorldMapX 14
+	WorldMapY 5
+	world <EARTH>
+	map <MAPS_EARTH_14x05.txt>
+	special <NOEXIT SHOWALL SOLO>
+	habitat <EARTH.MNTNS>
+
+Scene 0 3
+	mapwidth 30
+	mapheight 30
+	name <EARTH_14x06>
+	WorldMapX 14
+	WorldMapY 6
+	world <EARTH>
+	map <MAPS_EARTH_14x06.txt>
+	special <NOEXIT SHOWALL SOLO>
+	habitat <EARTH.MNTNS>
+
+Scene 0 3
+	mapwidth 30
+	mapheight 30
+	name <EARTH_14x07>
+	WorldMapX 14
+	WorldMapY 7
+	world <EARTH>
+	map <MAPS_EARTH_14x07.txt>
+	special <NOEXIT SHOWALL SOLO>
+	habitat <EARTH.MNTNS>
+
+Scene 0 3
+	mapwidth 30
+	mapheight 30
+	name <EARTH_14x08>
+	WorldMapX 14
+	WorldMapY 8
+	world <EARTH>
+	map <MAPS_EARTH_14x08.txt>
+	special <NOEXIT SHOWALL SOLO>
+	habitat <EARTH.MNTNS>
+
+Scene 0 3
+	mapwidth 30
+	mapheight 30
+	name <EARTH_14x09>
+	WorldMapX 14
+	WorldMapY 9
+	world <EARTH>
+	map <MAPS_EARTH_14x09.txt>
+	special <NOEXIT SHOWALL SOLO>
+	habitat <EARTH.MNTNS>
+
+Scene 0 3
+	mapwidth 30
+	mapheight 30
+	name <EARTH_14x10>
+	WorldMapX 14
+	WorldMapY 10
+	world <EARTH>
+	map <MAPS_EARTH_14x10.txt>
+	special <NOEXIT SHOWALL SOLO>
+	habitat <EARTH.MNTNS>
+
+Scene 0 3
+	mapwidth 30
+	mapheight 30
+	name <EARTH_14x11>
+	WorldMapX 14
+	WorldMapY 11
+	world <EARTH>
+	map <MAPS_EARTH_14x11.txt>
+	special <NOEXIT SHOWALL SOLO>
+	habitat <EARTH.MNTNS>
+
+Scene 0 3
+	mapwidth 30
+	mapheight 30
+	name <EARTH_14x12>
+	WorldMapX 14
+	WorldMapY 12
+	world <EARTH>
+	map <MAPS_EARTH_14x12.txt>
+	special <NOEXIT SHOWALL SOLO>
+	habitat <EARTH.MNTNS>
+
+Scene 0 3
+	mapwidth 30
+	mapheight 30
+	name <EARTH_14x13>
+	WorldMapX 14
+	WorldMapY 13
+	world <EARTH>
+	map <MAPS_EARTH_14x13.txt>
+	special <NOEXIT SHOWALL SOLO>
+	habitat <EARTH.MNTNS>
+
+Scene 0 3
+	mapwidth 30
+	mapheight 30
+	name <EARTH_14x14>
+	WorldMapX 14
+	WorldMapY 14
+	world <EARTH>
+	map <MAPS_EARTH_14x14.txt>
+	special <NOEXIT SHOWALL SOLO>
+	habitat <EARTH.MNTNS>
+
+Scene 0 3
+	mapwidth 30
+	mapheight 30
+	name <EARTH_14x15>
+	WorldMapX 14
+	WorldMapY 15
+	world <EARTH>
+	map <MAPS_EARTH_14x15.txt>
+	special <NOEXIT SHOWALL SOLO>
+	habitat <EARTH.MNTNS>
+
+Scene 0 3
+	mapwidth 30
+	mapheight 30
+	name <EARTH_14x16>
+	WorldMapX 14
+	WorldMapY 16
+	world <EARTH>
+	map <MAPS_EARTH_14x16.txt>
+	special <NOEXIT SHOWALL SOLO>
+	habitat <EARTH.MNTNS>
+
+Scene 0 3
+	mapwidth 30
+	mapheight 30
+	name <EARTH_14x17>
+	WorldMapX 14
+	WorldMapY 17
+	world <EARTH>
+	map <MAPS_EARTH_14x17.txt>
+	special <NOEXIT SHOWALL SOLO>
+	habitat <EARTH.MNTNS>
+
+Scene 0 3
+	mapwidth 30
+	mapheight 30
+	name <EARTH_14x18>
+	WorldMapX 14
+	WorldMapY 18
+	world <EARTH>
+	map <MAPS_EARTH_14x18.txt>
+	special <NOEXIT SHOWALL SOLO>
+	habitat <EARTH.MNTNS>
+
+Scene 0 3
+	mapwidth 30
+	mapheight 30
+	name <EARTH_14x19>
+	WorldMapX 14
+	WorldMapY 19
+	world <EARTH>
+	map <MAPS_EARTH_14x19.txt>
+	special <NOEXIT SHOWALL SOLO>
+	habitat <EARTH.MNTNS>
+
+Scene 0 3
+	mapwidth 30
+	mapheight 30
+	name <EARTH_14x20>
+	WorldMapX 14
+	WorldMapY 20
+	world <EARTH>
+	map <MAPS_EARTH_14x20.txt>
+	special <NOEXIT SHOWALL SOLO>
+	habitat <EARTH.MNTNS>
+
+Scene 0 3
+	mapwidth 30
+	mapheight 30
+	name <EARTH_15x01>
+	WorldMapX 15
+	WorldMapY 1
+	world <EARTH>
+	map <MAPS_EARTH_15x01.txt>
+	special <NOEXIT SHOWALL SOLO>
+	habitat <EARTH.MNTNS>
+
+Scene 0 3
+	mapwidth 30
+	mapheight 30
+	name <EARTH_15x02>
+	WorldMapX 15
+	WorldMapY 2
+	world <EARTH>
+	map <MAPS_EARTH_15x02.txt>
+	special <NOEXIT SHOWALL SOLO>
+	habitat <EARTH.MNTNS>
+
+Scene 0 3
+	mapwidth 30
+	mapheight 30
+	name <EARTH_15x03>
+	WorldMapX 15
+	WorldMapY 3
+	world <EARTH>
+	map <MAPS_EARTH_15x03.txt>
+	special <NOEXIT SHOWALL SOLO>
+	habitat <EARTH.MNTNS>
+
+Scene 0 3
+	mapwidth 30
+	mapheight 30
+	name <EARTH_15x04>
+	WorldMapX 15
+	WorldMapY 4
+	world <EARTH>
+	map <MAPS_EARTH_15x04.txt>
+	special <NOEXIT SHOWALL SOLO>
+	habitat <EARTH.MNTNS>
+
+Scene 0 3
+	mapwidth 30
+	mapheight 30
+	name <EARTH_15x05>
+	WorldMapX 15
+	WorldMapY 5
+	world <EARTH>
+	map <MAPS_EARTH_15x05.txt>
+	special <NOEXIT SHOWALL SOLO>
+	habitat <EARTH.MNTNS>
+
+Scene 0 3
+	mapwidth 30
+	mapheight 30
+	name <EARTH_15x06>
+	WorldMapX 15
+	WorldMapY 6
+	world <EARTH>
+	map <MAPS_EARTH_15x06.txt>
+	special <NOEXIT SHOWALL SOLO>
+	habitat <EARTH.MNTNS>
+
+Scene 0 3
+	mapwidth 30
+	mapheight 30
+	name <EARTH_15x07>
+	WorldMapX 15
+	WorldMapY 7
+	world <EARTH>
+	map <MAPS_EARTH_15x07.txt>
+	special <NOEXIT SHOWALL SOLO>
+	habitat <EARTH.MNTNS>
+
+Scene 0 3
+	mapwidth 30
+	mapheight 30
+	name <EARTH_15x08>
+	WorldMapX 15
+	WorldMapY 8
+	world <EARTH>
+	map <MAPS_EARTH_15x08.txt>
+	special <NOEXIT SHOWALL SOLO>
+	habitat <EARTH.MNTNS>
+
+Scene 0 3
+	mapwidth 30
+	mapheight 30
+	name <EARTH_15x09>
+	WorldMapX 15
+	WorldMapY 9
+	world <EARTH>
+	map <MAPS_EARTH_15x09.txt>
+	special <NOEXIT SHOWALL SOLO>
+	habitat <EARTH.MNTNS>
+
+Scene 0 3
+	mapwidth 30
+	mapheight 30
+	name <EARTH_15x10>
+	WorldMapX 15
+	WorldMapY 10
+	world <EARTH>
+	map <MAPS_EARTH_15x10.txt>
+	special <NOEXIT SHOWALL SOLO>
+	habitat <EARTH.MNTNS>
+
+Scene 0 3
+	mapwidth 30
+	mapheight 30
+	name <EARTH_15x11>
+	WorldMapX 15
+	WorldMapY 11
+	world <EARTH>
+	map <MAPS_EARTH_15x11.txt>
+	special <NOEXIT SHOWALL SOLO>
+	habitat <EARTH.MNTNS>
+
+Scene 0 3
+	mapwidth 30
+	mapheight 30
+	name <EARTH_15x12>
+	WorldMapX 15
+	WorldMapY 12
+	world <EARTH>
+	map <MAPS_EARTH_15x12.txt>
+	special <NOEXIT SHOWALL SOLO>
+	habitat <EARTH.MNTNS>
+
+Scene 0 3
+	mapwidth 30
+	mapheight 30
+	name <EARTH_15x13>
+	WorldMapX 15
+	WorldMapY 13
+	world <EARTH>
+	map <MAPS_EARTH_15x13.txt>
+	special <NOEXIT SHOWALL SOLO>
+	habitat <EARTH.MNTNS>
+
+Scene 0 3
+	mapwidth 30
+	mapheight 30
+	name <EARTH_15x14>
+	WorldMapX 15
+	WorldMapY 14
+	world <EARTH>
+	map <MAPS_EARTH_15x14.txt>
+	special <NOEXIT SHOWALL SOLO>
+	habitat <EARTH.MNTNS>
+
+Scene 0 3
+	mapwidth 30
+	mapheight 30
+	name <EARTH_15x15>
+	WorldMapX 15
+	WorldMapY 15
+	world <EARTH>
+	map <MAPS_EARTH_15x15.txt>
+	special <NOEXIT SHOWALL SOLO>
+	habitat <EARTH.MNTNS>
+
+Scene 0 3
+	mapwidth 30
+	mapheight 30
+	name <EARTH_15x16>
+	WorldMapX 15
+	WorldMapY 16
+	world <EARTH>
+	map <MAPS_EARTH_15x16.txt>
+	special <NOEXIT SHOWALL SOLO>
+	habitat <EARTH.MNTNS>
+
+Scene 0 3
+	mapwidth 30
+	mapheight 30
+	name <EARTH_15x17>
+	WorldMapX 15
+	WorldMapY 17
+	world <EARTH>
+	map <MAPS_EARTH_15x17.txt>
+	special <NOEXIT SHOWALL SOLO>
+	habitat <EARTH.MNTNS>
+
+Scene 0 3
+	mapwidth 30
+	mapheight 30
+	name <EARTH_15x18>
+	WorldMapX 15
+	WorldMapY 18
+	world <EARTH>
+	map <MAPS_EARTH_15x18.txt>
+	special <NOEXIT SHOWALL SOLO>
+	habitat <EARTH.MNTNS>
+
+Scene 0 3
+	mapwidth 30
+	mapheight 30
+	name <EARTH_15x19>
+	WorldMapX 15
+	WorldMapY 19
+	world <EARTH>
+	map <MAPS_EARTH_15x19.txt>
+	special <NOEXIT SHOWALL SOLO>
+	habitat <EARTH.MNTNS>
+
+Scene 0 3
+	mapwidth 30
+	mapheight 30
+	name <EARTH_15x20>
+	WorldMapX 15
+	WorldMapY 20
+	world <EARTH>
+	map <MAPS_EARTH_15x20.txt>
+	special <NOEXIT SHOWALL SOLO>
+	habitat <EARTH.MNTNS>
+
+Scene 0 3
+	mapwidth 30
+	mapheight 30
+	name <EARTH_16x01>
+	WorldMapX 16
+	WorldMapY 1
+	world <EARTH>
+	map <MAPS_EARTH_16x01.txt>
+	special <NOEXIT SHOWALL SOLO>
+	habitat <EARTH.MNTNS>
+
+Scene 0 3
+	mapwidth 30
+	mapheight 30
+	name <EARTH_16x02>
+	WorldMapX 16
+	WorldMapY 2
+	world <EARTH>
+	map <MAPS_EARTH_16x02.txt>
+	special <NOEXIT SHOWALL SOLO>
+	habitat <EARTH.MNTNS>
+
+Scene 0 3
+	mapwidth 30
+	mapheight 30
+	name <EARTH_16x03>
+	WorldMapX 16
+	WorldMapY 3
+	world <EARTH>
+	map <MAPS_EARTH_16x03.txt>
+	special <NOEXIT SHOWALL SOLO>
+	habitat <EARTH.MNTNS>
+
+Scene 0 3
+	mapwidth 30
+	mapheight 30
+	name <EARTH_16x04>
+	WorldMapX 16
+	WorldMapY 4
+	world <EARTH>
+	map <MAPS_EARTH_16x04.txt>
+	special <NOEXIT SHOWALL SOLO>
+	habitat <EARTH.MNTNS>
+
+Scene 0 3
+	mapwidth 30
+	mapheight 30
+	name <EARTH_16x05>
+	WorldMapX 16
+	WorldMapY 5
+	world <EARTH>
+	map <MAPS_EARTH_16x05.txt>
+	special <NOEXIT SHOWALL SOLO>
+	habitat <EARTH.MNTNS>
+
+Scene 0 3
+	mapwidth 30
+	mapheight 30
+	name <EARTH_16x06>
+	WorldMapX 16
+	WorldMapY 6
+	world <EARTH>
+	map <MAPS_EARTH_16x06.txt>
+	special <NOEXIT SHOWALL SOLO>
+	habitat <EARTH.MNTNS>
+
+Scene 0 3
+	mapwidth 30
+	mapheight 30
+	name <EARTH_16x07>
+	WorldMapX 16
+	WorldMapY 7
+	world <EARTH>
+	map <MAPS_EARTH_16x07.txt>
+	special <NOEXIT SHOWALL SOLO>
+	habitat <EARTH.MNTNS>
+
+Scene 0 3
+	mapwidth 30
+	mapheight 30
+	name <EARTH_16x08>
+	WorldMapX 16
+	WorldMapY 8
+	world <EARTH>
+	map <MAPS_EARTH_16x08.txt>
+	special <NOEXIT SHOWALL SOLO>
+	habitat <EARTH.MNTNS>
+
+Scene 0 3
+	mapwidth 30
+	mapheight 30
+	name <EARTH_16x09>
+	WorldMapX 16
+	WorldMapY 9
+	world <EARTH>
+	map <MAPS_EARTH_16x09.txt>
+	special <NOEXIT SHOWALL SOLO>
+	habitat <EARTH.MNTNS>
+
+Scene 0 3
+	mapwidth 30
+	mapheight 30
+	name <EARTH_16x10>
+	WorldMapX 16
+	WorldMapY 10
+	world <EARTH>
+	map <MAPS_EARTH_16x10.txt>
+	special <NOEXIT SHOWALL SOLO>
+	habitat <EARTH.MNTNS>
+
+Scene 0 3
+	mapwidth 30
+	mapheight 30
+	name <EARTH_16x11>
+	WorldMapX 16
+	WorldMapY 11
+	world <EARTH>
+	map <MAPS_EARTH_16x11.txt>
+	special <NOEXIT SHOWALL SOLO>
+	habitat <EARTH.MNTNS>
+
+Scene 0 3
+	mapwidth 30
+	mapheight 30
+	name <EARTH_16x12>
+	WorldMapX 16
+	WorldMapY 12
+	world <EARTH>
+	map <MAPS_EARTH_16x12.txt>
+	special <NOEXIT SHOWALL SOLO>
+	habitat <EARTH.MNTNS>
+
+Scene 0 3
+	mapwidth 30
+	mapheight 30
+	name <EARTH_16x13>
+	WorldMapX 16
+	WorldMapY 13
+	world <EARTH>
+	map <MAPS_EARTH_16x13.txt>
+	special <NOEXIT SHOWALL SOLO>
+	habitat <EARTH.MNTNS>
+
+Scene 0 3
+	mapwidth 30
+	mapheight 30
+	name <EARTH_16x14>
+	WorldMapX 16
+	WorldMapY 14
+	world <EARTH>
+	map <MAPS_EARTH_16x14.txt>
+	special <NOEXIT SHOWALL SOLO>
+	habitat <EARTH.MNTNS>
+
+Scene 0 3
+	mapwidth 30
+	mapheight 30
+	name <EARTH_16x15>
+	WorldMapX 16
+	WorldMapY 15
+	world <EARTH>
+	map <MAPS_EARTH_16x15.txt>
+	special <NOEXIT SHOWALL SOLO>
+	habitat <EARTH.MNTNS>
+
+Scene 0 3
+	mapwidth 30
+	mapheight 30
+	name <EARTH_16x16>
+	WorldMapX 16
+	WorldMapY 16
+	world <EARTH>
+	map <MAPS_EARTH_16x16.txt>
+	special <NOEXIT SHOWALL SOLO>
+	habitat <EARTH.MNTNS>
+
+Scene 0 3
+	mapwidth 30
+	mapheight 30
+	name <EARTH_16x17>
+	WorldMapX 16
+	WorldMapY 17
+	world <EARTH>
+	map <MAPS_EARTH_16x17.txt>
+	special <NOEXIT SHOWALL SOLO>
+	habitat <EARTH.MNTNS>
+
+Scene 0 3
+	mapwidth 30
+	mapheight 30
+	name <EARTH_16x18>
+	WorldMapX 16
+	WorldMapY 18
+	world <EARTH>
+	map <MAPS_EARTH_16x18.txt>
+	special <NOEXIT SHOWALL SOLO>
+	habitat <EARTH.MNTNS>
+
+Scene 0 3
+	mapwidth 30
+	mapheight 30
+	name <EARTH_16x19>
+	WorldMapX 16
+	WorldMapY 19
+	world <EARTH>
+	map <MAPS_EARTH_16x19.txt>
+	special <NOEXIT SHOWALL SOLO>
+	habitat <EARTH.MNTNS>
+
+Scene 0 3
+	mapwidth 30
+	mapheight 30
+	name <EARTH_16x20>
+	WorldMapX 16
+	WorldMapY 20
+	world <EARTH>
+	map <MAPS_EARTH_16x20.txt>
+	special <NOEXIT SHOWALL SOLO>
+	habitat <EARTH.MNTNS>
+
+Scene 0 3
+	mapwidth 30
+	mapheight 30
+	name <EARTH_17x01>
+	WorldMapX 17
+	WorldMapY 1
+	world <EARTH>
+	map <MAPS_EARTH_17x01.txt>
+	special <NOEXIT SHOWALL SOLO>
+	habitat <EARTH.MNTNS>
+
+Scene 0 3
+	mapwidth 30
+	mapheight 30
+	name <EARTH_17x02>
+	WorldMapX 17
+	WorldMapY 2
+	world <EARTH>
+	map <MAPS_EARTH_17x02.txt>
+	special <NOEXIT SHOWALL SOLO>
+	habitat <EARTH.MNTNS>
+
+Scene 0 3
+	mapwidth 30
+	mapheight 30
+	name <EARTH_17x03>
+	WorldMapX 17
+	WorldMapY 3
+	world <EARTH>
+	map <MAPS_EARTH_17x03.txt>
+	special <NOEXIT SHOWALL SOLO>
+	habitat <EARTH.MNTNS>
+
+Scene 0 3
+	mapwidth 30
+	mapheight 30
+	name <EARTH_17x04>
+	WorldMapX 17
+	WorldMapY 4
+	world <EARTH>
+	map <MAPS_EARTH_17x04.txt>
+	special <NOEXIT SHOWALL SOLO>
+	habitat <EARTH.MNTNS>
+
+Scene 0 3
+	mapwidth 30
+	mapheight 30
+	name <EARTH_17x05>
+	WorldMapX 17
+	WorldMapY 5
+	world <EARTH>
+	map <MAPS_EARTH_17x05.txt>
+	special <NOEXIT SHOWALL SOLO>
+	habitat <EARTH.MNTNS>
+
+Scene 0 3
+	mapwidth 30
+	mapheight 30
+	name <EARTH_17x06>
+	WorldMapX 17
+	WorldMapY 6
+	world <EARTH>
+	map <MAPS_EARTH_17x06.txt>
+	special <NOEXIT SHOWALL SOLO>
+	habitat <EARTH.MNTNS>
+
+Scene 0 3
+	mapwidth 30
+	mapheight 30
+	name <EARTH_17x07>
+	WorldMapX 17
+	WorldMapY 7
+	world <EARTH>
+	map <MAPS_EARTH_17x07.txt>
+	special <NOEXIT SHOWALL SOLO>
+	habitat <EARTH.MNTNS>
+
+Scene 0 3
+	mapwidth 30
+	mapheight 30
+	name <EARTH_17x08>
+	WorldMapX 17
+	WorldMapY 8
+	world <EARTH>
+	map <MAPS_EARTH_17x08.txt>
+	special <NOEXIT SHOWALL SOLO>
+	habitat <EARTH.MNTNS>
+
+Scene 0 3
+	mapwidth 30
+	mapheight 30
+	name <EARTH_17x09>
+	WorldMapX 17
+	WorldMapY 9
+	world <EARTH>
+	map <MAPS_EARTH_17x09.txt>
+	special <NOEXIT SHOWALL SOLO>
+	habitat <EARTH.MNTNS>
+
+Scene 0 3
+	mapwidth 30
+	mapheight 30
+	name <EARTH_17x10>
+	WorldMapX 17
+	WorldMapY 10
+	world <EARTH>
+	map <MAPS_EARTH_17x10.txt>
+	special <NOEXIT SHOWALL SOLO>
+	habitat <EARTH.MNTNS>
+
+Scene 0 3
+	mapwidth 30
+	mapheight 30
+	name <EARTH_17x11>
+	WorldMapX 17
+	WorldMapY 11
+	world <EARTH>
+	map <MAPS_EARTH_17x11.txt>
+	special <NOEXIT SHOWALL SOLO>
+	habitat <EARTH.MNTNS>
+
+Scene 0 3
+	mapwidth 30
+	mapheight 30
+	name <EARTH_17x12>
+	WorldMapX 17
+	WorldMapY 12
+	world <EARTH>
+	map <MAPS_EARTH_17x12.txt>
+	special <NOEXIT SHOWALL SOLO>
+	habitat <EARTH.MNTNS>
+
+Scene 0 3
+	mapwidth 30
+	mapheight 30
+	name <EARTH_17x13>
+	WorldMapX 17
+	WorldMapY 13
+	world <EARTH>
+	map <MAPS_EARTH_17x13.txt>
+	special <NOEXIT SHOWALL SOLO>
+	habitat <EARTH.MNTNS>
+
+Scene 0 3
+	mapwidth 30
+	mapheight 30
+	name <EARTH_17x14>
+	WorldMapX 17
+	WorldMapY 14
+	world <EARTH>
+	map <MAPS_EARTH_17x14.txt>
+	special <NOEXIT SHOWALL SOLO>
+	habitat <EARTH.MNTNS>
+
+Scene 0 3
+	mapwidth 30
+	mapheight 30
+	name <EARTH_17x15>
+	WorldMapX 17
+	WorldMapY 15
+	world <EARTH>
+	map <MAPS_EARTH_17x15.txt>
+	special <NOEXIT SHOWALL SOLO>
+	habitat <EARTH.MNTNS>
+
+Scene 0 3
+	mapwidth 30
+	mapheight 30
+	name <EARTH_17x16>
+	WorldMapX 17
+	WorldMapY 16
+	world <EARTH>
+	map <MAPS_EARTH_17x16.txt>
+	special <NOEXIT SHOWALL SOLO>
+	habitat <EARTH.MNTNS>
+
+Scene 0 3
+	mapwidth 30
+	mapheight 30
+	name <EARTH_17x17>
+	WorldMapX 17
+	WorldMapY 17
+	world <EARTH>
+	map <MAPS_EARTH_17x17.txt>
+	special <NOEXIT SHOWALL SOLO>
+	habitat <EARTH.MNTNS>
+
+Scene 0 3
+	mapwidth 30
+	mapheight 30
+	name <EARTH_17x18>
+	WorldMapX 17
+	WorldMapY 18
+	world <EARTH>
+	map <MAPS_EARTH_17x18.txt>
+	special <NOEXIT SHOWALL SOLO>
+	habitat <EARTH.MNTNS>
+
+Scene 0 3
+	mapwidth 30
+	mapheight 30
+	name <EARTH_17x19>
+	WorldMapX 17
+	WorldMapY 19
+	world <EARTH>
+	map <MAPS_EARTH_17x19.txt>
+	special <NOEXIT SHOWALL SOLO>
+	habitat <EARTH.MNTNS>
+
+Scene 0 3
+	mapwidth 30
+	mapheight 30
+	name <EARTH_17x20>
+	WorldMapX 17
+	WorldMapY 20
+	world <EARTH>
+	map <MAPS_EARTH_17x20.txt>
+	special <NOEXIT SHOWALL SOLO>
+	habitat <EARTH.MNTNS>
+
+Scene 0 3
+	mapwidth 30
+	mapheight 30
+	name <EARTH_18x01>
+	WorldMapX 18
+	WorldMapY 1
+	world <EARTH>
+	map <MAPS_EARTH_18x01.txt>
+	special <NOEXIT SHOWALL SOLO>
+	habitat <EARTH.MNTNS>
+
+Scene 0 3
+	mapwidth 30
+	mapheight 30
+	name <EARTH_18x02>
+	WorldMapX 18
+	WorldMapY 2
+	world <EARTH>
+	map <MAPS_EARTH_18x02.txt>
+	special <NOEXIT SHOWALL SOLO>
+	habitat <EARTH.MNTNS>
+
+Scene 0 3
+	mapwidth 30
+	mapheight 30
+	name <EARTH_18x03>
+	WorldMapX 18
+	WorldMapY 3
+	world <EARTH>
+	map <MAPS_EARTH_18x03.txt>
+	special <NOEXIT SHOWALL SOLO>
+	habitat <EARTH.MNTNS>
+
+Scene 0 3
+	mapwidth 30
+	mapheight 30
+	name <EARTH_18x04>
+	WorldMapX 18
+	WorldMapY 4
+	world <EARTH>
+	map <MAPS_EARTH_18x04.txt>
+	special <NOEXIT SHOWALL SOLO>
+	habitat <EARTH.MNTNS>
+
+Scene 0 3
+	mapwidth 30
+	mapheight 30
+	name <EARTH_18x05>
+	WorldMapX 18
+	WorldMapY 5
+	world <EARTH>
+	map <MAPS_EARTH_18x05.txt>
+	special <NOEXIT SHOWALL SOLO>
+	habitat <EARTH.MNTNS>
+
+Scene 0 3
+	mapwidth 30
+	mapheight 30
+	name <EARTH_18x06>
+	WorldMapX 18
+	WorldMapY 6
+	world <EARTH>
+	map <MAPS_EARTH_18x06.txt>
+	special <NOEXIT SHOWALL SOLO>
+	habitat <EARTH.MNTNS>
+
+Scene 0 3
+	mapwidth 30
+	mapheight 30
+	name <EARTH_18x07>
+	WorldMapX 18
+	WorldMapY 7
+	world <EARTH>
+	map <MAPS_EARTH_18x07.txt>
+	special <NOEXIT SHOWALL SOLO>
+	habitat <EARTH.MNTNS>
+
+Scene 0 3
+	mapwidth 30
+	mapheight 30
+	name <EARTH_18x08>
+	WorldMapX 18
+	WorldMapY 8
+	world <EARTH>
+	map <MAPS_EARTH_18x08.txt>
+	special <NOEXIT SHOWALL SOLO>
+	habitat <EARTH.MNTNS>
+
+Scene 0 3
+	mapwidth 30
+	mapheight 30
+	name <EARTH_18x09>
+	WorldMapX 18
+	WorldMapY 9
+	world <EARTH>
+	map <MAPS_EARTH_18x09.txt>
+	special <NOEXIT SHOWALL SOLO>
+	habitat <EARTH.MNTNS>
+
+Scene 0 3
+	mapwidth 30
+	mapheight 30
+	name <EARTH_18x10>
+	WorldMapX 18
+	WorldMapY 10
+	world <EARTH>
+	map <MAPS_EARTH_18x10.txt>
+	special <NOEXIT SHOWALL SOLO>
+	habitat <EARTH.MNTNS>
+
+Scene 0 3
+	mapwidth 30
+	mapheight 30
+	name <EARTH_18x11>
+	WorldMapX 18
+	WorldMapY 11
+	world <EARTH>
+	map <MAPS_EARTH_18x11.txt>
+	special <NOEXIT SHOWALL SOLO>
+	habitat <EARTH.MNTNS>
+
+Scene 0 3
+	mapwidth 30
+	mapheight 30
+	name <EARTH_18x12>
+	WorldMapX 18
+	WorldMapY 12
+	world <EARTH>
+	map <MAPS_EARTH_18x12.txt>
+	special <NOEXIT SHOWALL SOLO>
+	habitat <EARTH.MNTNS>
+
+Scene 0 3
+	mapwidth 30
+	mapheight 30
+	name <EARTH_18x13>
+	WorldMapX 18
+	WorldMapY 13
+	world <EARTH>
+	map <MAPS_EARTH_18x13.txt>
+	special <NOEXIT SHOWALL SOLO>
+	habitat <EARTH.MNTNS>
+
+Scene 0 3
+	mapwidth 30
+	mapheight 30
+	name <EARTH_18x14>
+	WorldMapX 18
+	WorldMapY 14
+	world <EARTH>
+	map <MAPS_EARTH_18x14.txt>
+	special <NOEXIT SHOWALL SOLO>
+	habitat <EARTH.MNTNS>
+
+Scene 0 3
+	mapwidth 30
+	mapheight 30
+	name <EARTH_18x15>
+	WorldMapX 18
+	WorldMapY 15
+	world <EARTH>
+	map <MAPS_EARTH_18x15.txt>
+	special <NOEXIT SHOWALL SOLO>
+	habitat <EARTH.MNTNS>
+
+Scene 0 3
+	mapwidth 30
+	mapheight 30
+	name <EARTH_18x16>
+	WorldMapX 18
+	WorldMapY 16
+	world <EARTH>
+	map <MAPS_EARTH_18x16.txt>
+	special <NOEXIT SHOWALL SOLO>
+	habitat <EARTH.MNTNS>
+
+Scene 0 3
+	mapwidth 30
+	mapheight 30
+	name <EARTH_18x17>
+	WorldMapX 18
+	WorldMapY 17
+	world <EARTH>
+	map <MAPS_EARTH_18x17.txt>
+	special <NOEXIT SHOWALL SOLO>
+	habitat <EARTH.MNTNS>
+
+Scene 0 3
+	mapwidth 30
+	mapheight 30
+	name <EARTH_18x18>
+	WorldMapX 18
+	WorldMapY 18
+	world <EARTH>
+	map <MAPS_EARTH_18x18.txt>
+	special <NOEXIT SHOWALL SOLO>
+	habitat <EARTH.MNTNS>
+
+Scene 0 3
+	mapwidth 30
+	mapheight 30
+	name <EARTH_18x19>
+	WorldMapX 18
+	WorldMapY 19
+	world <EARTH>
+	map <MAPS_EARTH_18x19.txt>
+	special <NOEXIT SHOWALL SOLO>
+	habitat <EARTH.MNTNS>
+
+Scene 0 3
+	mapwidth 30
+	mapheight 30
+	name <EARTH_18x20>
+	WorldMapX 18
+	WorldMapY 20
+	world <EARTH>
+	map <MAPS_EARTH_18x20.txt>
+	special <NOEXIT SHOWALL SOLO>
+	habitat <EARTH.MNTNS>
+
+Scene 0 3
+	mapwidth 30
+	mapheight 30
+	name <EARTH_19x01>
+	WorldMapX 19
+	WorldMapY 1
+	world <EARTH>
+	map <MAPS_EARTH_19x01.txt>
+	special <NOEXIT SHOWALL SOLO>
+	habitat <EARTH.MNTNS>
+
+Scene 0 3
+	mapwidth 30
+	mapheight 30
+	name <EARTH_19x02>
+	WorldMapX 19
+	WorldMapY 2
+	world <EARTH>
+	map <MAPS_EARTH_19x02.txt>
+	special <NOEXIT SHOWALL SOLO>
+	habitat <EARTH.MNTNS>
+
+Scene 0 3
+	mapwidth 30
+	mapheight 30
+	name <EARTH_19x03>
+	WorldMapX 19
+	WorldMapY 3
+	world <EARTH>
+	map <MAPS_EARTH_19x03.txt>
+	special <NOEXIT SHOWALL SOLO>
+	habitat <EARTH.MNTNS>
+
+Scene 0 3
+	mapwidth 30
+	mapheight 30
+	name <EARTH_19x04>
+	WorldMapX 19
+	WorldMapY 4
+	world <EARTH>
+	map <MAPS_EARTH_19x04.txt>
+	special <NOEXIT SHOWALL SOLO>
+	habitat <EARTH.MNTNS>
+
+Scene 0 3
+	mapwidth 30
+	mapheight 30
+	name <EARTH_19x05>
+	WorldMapX 19
+	WorldMapY 5
+	world <EARTH>
+	map <MAPS_EARTH_19x05.txt>
+	special <NOEXIT SHOWALL SOLO>
+	habitat <EARTH.MNTNS>
+
+Scene 0 3
+	mapwidth 30
+	mapheight 30
+	name <EARTH_19x06>
+	WorldMapX 19
+	WorldMapY 6
+	world <EARTH>
+	map <MAPS_EARTH_19x06.txt>
+	special <NOEXIT SHOWALL SOLO>
+	habitat <EARTH.MNTNS>
+
+Scene 0 3
+	mapwidth 30
+	mapheight 30
+	name <EARTH_19x07>
+	WorldMapX 19
+	WorldMapY 7
+	world <EARTH>
+	map <MAPS_EARTH_19x07.txt>
+	special <NOEXIT SHOWALL SOLO>
+	habitat <EARTH.MNTNS>
+
+Scene 0 3
+	mapwidth 30
+	mapheight 30
+	name <EARTH_19x08>
+	WorldMapX 19
+	WorldMapY 8
+	world <EARTH>
+	map <MAPS_EARTH_19x08.txt>
+	special <NOEXIT SHOWALL SOLO>
+	habitat <EARTH.MNTNS>
+
+Scene 0 3
+	mapwidth 30
+	mapheight 30
+	name <EARTH_19x09>
+	WorldMapX 19
+	WorldMapY 9
+	world <EARTH>
+	map <MAPS_EARTH_19x09.txt>
+	special <NOEXIT SHOWALL SOLO>
+	habitat <EARTH.MNTNS>
+
+Scene 0 3
+	mapwidth 30
+	mapheight 30
+	name <EARTH_19x10>
+	WorldMapX 19
+	WorldMapY 10
+	world <EARTH>
+	map <MAPS_EARTH_19x10.txt>
+	special <NOEXIT SHOWALL SOLO>
+	habitat <EARTH.MNTNS>
+
+Scene 0 3
+	mapwidth 30
+	mapheight 30
+	name <EARTH_19x11>
+	WorldMapX 19
+	WorldMapY 11
+	world <EARTH>
+	map <MAPS_EARTH_19x11.txt>
+	special <NOEXIT SHOWALL SOLO>
+	habitat <EARTH.MNTNS>
+
+Scene 0 3
+	mapwidth 30
+	mapheight 30
+	name <EARTH_19x12>
+	WorldMapX 19
+	WorldMapY 12
+	world <EARTH>
+	map <MAPS_EARTH_19x12.txt>
+	special <NOEXIT SHOWALL SOLO>
+	habitat <EARTH.MNTNS>
+
+Scene 0 3
+	mapwidth 30
+	mapheight 30
+	name <EARTH_19x13>
+	WorldMapX 19
+	WorldMapY 13
+	world <EARTH>
+	map <MAPS_EARTH_19x13.txt>
+	special <NOEXIT SHOWALL SOLO>
+	habitat <EARTH.MNTNS>
+
+Scene 0 3
+	mapwidth 30
+	mapheight 30
+	name <EARTH_19x14>
+	WorldMapX 19
+	WorldMapY 14
+	world <EARTH>
+	map <MAPS_EARTH_19x14.txt>
+	special <NOEXIT SHOWALL SOLO>
+	habitat <EARTH.MNTNS>
+
+Scene 0 3
+	mapwidth 30
+	mapheight 30
+	name <EARTH_19x15>
+	WorldMapX 19
+	WorldMapY 15
+	world <EARTH>
+	map <MAPS_EARTH_19x15.txt>
+	special <NOEXIT SHOWALL SOLO>
+	habitat <EARTH.MNTNS>
+
+Scene 0 3
+	mapwidth 30
+	mapheight 30
+	name <EARTH_19x16>
+	WorldMapX 19
+	WorldMapY 16
+	world <EARTH>
+	map <MAPS_EARTH_19x16.txt>
+	special <NOEXIT SHOWALL SOLO>
+	habitat <EARTH.MNTNS>
+
+Scene 0 3
+	mapwidth 30
+	mapheight 30
+	name <EARTH_19x17>
+	WorldMapX 19
+	WorldMapY 17
+	world <EARTH>
+	map <MAPS_EARTH_19x17.txt>
+	special <NOEXIT SHOWALL SOLO>
+	habitat <EARTH.MNTNS>
+
+Scene 0 3
+	mapwidth 30
+	mapheight 30
+	name <EARTH_19x18>
+	WorldMapX 19
+	WorldMapY 18
+	world <EARTH>
+	map <MAPS_EARTH_19x18.txt>
+	special <NOEXIT SHOWALL SOLO>
+	habitat <EARTH.MNTNS>
+
+Scene 0 3
+	mapwidth 30
+	mapheight 30
+	name <EARTH_19x19>
+	WorldMapX 19
+	WorldMapY 19
+	world <EARTH>
+	map <MAPS_EARTH_19x19.txt>
+	special <NOEXIT SHOWALL SOLO>
+	habitat <EARTH.MNTNS>
+
+Scene 0 3
+	mapwidth 30
+	mapheight 30
+	name <EARTH_19x20>
+	WorldMapX 19
+	WorldMapY 20
+	world <EARTH>
+	map <MAPS_EARTH_19x20.txt>
+	special <NOEXIT SHOWALL SOLO>
+	habitat <EARTH.MNTNS>
+
+Scene 0 3
+	mapwidth 30
+	mapheight 30
+	name <EARTH_20x01>
+	WorldMapX 20
+	WorldMapY 1
+	world <EARTH>
+	map <MAPS_EARTH_20x01.txt>
+	special <NOEXIT SHOWALL SOLO>
+	habitat <EARTH.MNTNS>
+
+Scene 0 3
+	mapwidth 30
+	mapheight 30
+	name <EARTH_20x02>
+	WorldMapX 20
+	WorldMapY 2
+	world <EARTH>
+	map <MAPS_EARTH_20x02.txt>
+	special <NOEXIT SHOWALL SOLO>
+	habitat <EARTH.MNTNS>
+
+Scene 0 3
+	mapwidth 30
+	mapheight 30
+	name <EARTH_20x03>
+	WorldMapX 20
+	WorldMapY 3
+	world <EARTH>
+	map <MAPS_EARTH_20x03.txt>
+	special <NOEXIT SHOWALL SOLO>
+	habitat <EARTH.MNTNS>
+
+Scene 0 3
+	mapwidth 30
+	mapheight 30
+	name <EARTH_20x04>
+	WorldMapX 20
+	WorldMapY 4
+	world <EARTH>
+	map <MAPS_EARTH_20x04.txt>
+	special <NOEXIT SHOWALL SOLO>
+	habitat <EARTH.MNTNS>
+
+Scene 0 3
+	mapwidth 30
+	mapheight 30
+	name <EARTH_20x05>
+	WorldMapX 20
+	WorldMapY 5
+	world <EARTH>
+	map <MAPS_EARTH_20x05.txt>
+	special <NOEXIT SHOWALL SOLO>
+	habitat <EARTH.MNTNS>
+
+Scene 0 3
+	mapwidth 30
+	mapheight 30
+	name <EARTH_20x06>
+	WorldMapX 20
+	WorldMapY 6
+	world <EARTH>
+	map <MAPS_EARTH_20x06.txt>
+	special <NOEXIT SHOWALL SOLO>
+	habitat <EARTH.MNTNS>
+
+Scene 0 3
+	mapwidth 30
+	mapheight 30
+	name <EARTH_20x07>
+	WorldMapX 20
+	WorldMapY 7
+	world <EARTH>
+	map <MAPS_EARTH_20x07.txt>
+	special <NOEXIT SHOWALL SOLO>
+	habitat <EARTH.MNTNS>
+
+Scene 0 3
+	mapwidth 30
+	mapheight 30
+	name <EARTH_20x08>
+	WorldMapX 20
+	WorldMapY 8
+	world <EARTH>
+	map <MAPS_EARTH_20x08.txt>
+	special <NOEXIT SHOWALL SOLO>
+	habitat <EARTH.MNTNS>
+
+Scene 0 3
+	mapwidth 30
+	mapheight 30
+	name <EARTH_20x09>
+	WorldMapX 20
+	WorldMapY 9
+	world <EARTH>
+	map <MAPS_EARTH_20x09.txt>
+	special <NOEXIT SHOWALL SOLO>
+	habitat <EARTH.MNTNS>
+
+Scene 0 3
+	mapwidth 30
+	mapheight 30
+	name <EARTH_20x10>
+	WorldMapX 20
+	WorldMapY 10
+	world <EARTH>
+	map <MAPS_EARTH_20x10.txt>
+	special <NOEXIT SHOWALL SOLO>
+	habitat <EARTH.MNTNS>
+
+Scene 0 3
+	mapwidth 30
+	mapheight 30
+	name <EARTH_20x11>
+	WorldMapX 20
+	WorldMapY 11
+	world <EARTH>
+	map <MAPS_EARTH_20x11.txt>
+	special <NOEXIT SHOWALL SOLO>
+	habitat <EARTH.MNTNS>
+
+Scene 0 3
+	mapwidth 30
+	mapheight 30
+	name <EARTH_20x12>
+	WorldMapX 20
+	WorldMapY 12
+	world <EARTH>
+	map <MAPS_EARTH_20x12.txt>
+	special <NOEXIT SHOWALL SOLO>
+	habitat <EARTH.MNTNS>
+
+Scene 0 3
+	mapwidth 30
+	mapheight 30
+	name <EARTH_20x13>
+	WorldMapX 20
+	WorldMapY 13
+	world <EARTH>
+	map <MAPS_EARTH_20x13.txt>
+	special <NOEXIT SHOWALL SOLO>
+	habitat <EARTH.MNTNS>
+
+Scene 0 3
+	mapwidth 30
+	mapheight 30
+	name <EARTH_20x14>
+	WorldMapX 20
+	WorldMapY 14
+	world <EARTH>
+	map <MAPS_EARTH_20x14.txt>
+	special <NOEXIT SHOWALL SOLO>
+	habitat <EARTH.MNTNS>
+
+Scene 0 3
+	mapwidth 30
+	mapheight 30
+	name <EARTH_20x15>
+	WorldMapX 20
+	WorldMapY 15
+	world <EARTH>
+	map <MAPS_EARTH_20x15.txt>
+	special <NOEXIT SHOWALL SOLO>
+	habitat <EARTH.MNTNS>
+
+Scene 0 3
+	mapwidth 30
+	mapheight 30
+	name <EARTH_20x16>
+	WorldMapX 20
+	WorldMapY 16
+	world <EARTH>
+	map <MAPS_EARTH_20x16.txt>
+	special <NOEXIT SHOWALL SOLO>
+	habitat <EARTH.MNTNS>
+
+Scene 0 3
+	mapwidth 30
+	mapheight 30
+	name <EARTH_20x17>
+	WorldMapX 20
+	WorldMapY 17
+	world <EARTH>
+	map <MAPS_EARTH_20x17.txt>
+	special <NOEXIT SHOWALL SOLO>
+	habitat <EARTH.MNTNS>
+
+Scene 0 3
+	mapwidth 30
+	mapheight 30
+	name <EARTH_20x18>
+	WorldMapX 20
+	WorldMapY 18
+	world <EARTH>
+	map <MAPS_EARTH_20x18.txt>
+	special <NOEXIT SHOWALL SOLO>
+	habitat <EARTH.MNTNS>
+
+Scene 0 3
+	mapwidth 30
+	mapheight 30
+	name <EARTH_20x19>
+	WorldMapX 20
+	WorldMapY 19
+	world <EARTH>
+	map <MAPS_EARTH_20x19.txt>
+	special <NOEXIT SHOWALL SOLO>
+	habitat <EARTH.MNTNS>
+
+Scene 0 3
+	mapwidth 30
+	mapheight 30
+	name <EARTH_20x20>
+	WorldMapX 20
+	WorldMapY 20
+	world <EARTH>
+	map <MAPS_EARTH_20x20.txt>
+	special <NOEXIT SHOWALL SOLO>
+	habitat <EARTH.MNTNS>
 

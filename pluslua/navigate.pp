@@ -493,6 +493,7 @@ begin
 	{ Load and initialize the Atlas. }
 	Atlas := AggregatePattern( 'ATLAS_*.txt' , Setting_Directory );
 	InitContentForAdventure( Camp^.Source, Atlas );
+	if Full_RPGWorld_Info then writeln( 'Atlas initialized.' );
 
 	{ Insert the artifacts into the adventure. }
 	Artifacts := AggregatePattern( 'ARTIFACT_*.txt' , Setting_Directory );
@@ -512,6 +513,9 @@ begin
 		if S^.G = GG_World then begin
 			DelinkGear( Atlas , S );
 			InsertSubCom( Camp^.Source , S );
+			if Full_RPGWorld_Info then begin
+				writeln( 'Inserting World: ' + GearName( S ) );
+			end;
 			S^.S := HighWorldID;
 			Inc( HighWorldID );
 		end;
@@ -527,6 +531,9 @@ begin
 		if S^.G = GG_Scene then begin
 			DelinkGear( Atlas , S );
 			W := SeekGearByName( Camp^.Source , SAttValue( S^.SA , 'WORLD' ) );
+			if Full_RPGWorld_Info then begin
+				writeln( 'Inserting Scene ' + GearName( S ) + ' into ' + GearName( W ) );
+			end;
 			if ( W <> Nil ) and ( ( W^.G = GG_Scene ) or ( W^.G = GG_World ) ) then begin
 				InsertSubCom( W , S );
 			end else begin
@@ -544,6 +551,7 @@ begin
 	{ Also insert the PC's residence. The residence type should be listed }
 	{ in the EGG. }
 	S := SeekGearByName( Camp^.Source , SAttValue( TruePC^.SA , 'HOMETOWN' ) );
+	if Full_RPGWorld_Info then writeln( 'Hometown: "' + SAttValue( TruePC^.SA , 'HOMETOWN' ) + '"' );
 	if S <> Nil then S := SeekUrbanArea( S );
 	if S <> Nil then begin
 		Atlas := LoadFile( 'EGG_scenes.txt' , Setting_Directory );
@@ -557,14 +565,23 @@ begin
 		end;
 		DisposeGear( Atlas );
 	end;
+	if Full_RPGWorld_Info then begin
+		writeln( 'Entry Scene Inserted into ' + GearName( S ) );
+	end;
 
 	{ Once everything is sorted where it's supposed to go, initialize the scenes. }
 	{ They all need unique ID numbers, the dungeons need expansion and the cities }
 	{ need random content. }
 	InitializeCampaignScenes( Camp^.Source );
+	if Full_RPGWorld_Info then begin
+		writeln( 'Campaign Scenes Initialized' );
+	end;
 
 	{ Next initialize the NPCs. }
 	InitializeCampaignNPCs( Camp^.Source );
+	if Full_RPGWorld_Info then begin
+		writeln( 'Campaign NPCs Initialized' );
+	end;
 
 	{ Locate the PC's home town again, this time to record the scene ID. }
 	{ We're also going to need this scene ID for the central story below. }
@@ -572,32 +589,51 @@ begin
 	if S <> Nil then begin
 		SetNAtt( TruePC^.NA , NAG_Narrative , NAS_HomeTownID , NAttValue( S^.NA , NAG_Narrative , NAS_NID ) );
 	end;
+	if Full_RPGWorld_Info then begin
+		writeln( 'Home Town Recorded' );
+	end;
 
 	{ Insert the central story. }
 	Story := LoadFile( 'corestorystub.txt' , Setting_Directory );
 	SetNAtt( Story^.NA , NAG_ElementID , XRP_EpisodeScene , S^.S );
 	SetNAtt( Story^.NA , NAG_ElementID , XRP_AllyFac , NAttValue( TruePC^.NA , NAG_Personal , NAS_FactionID ) );
 	SetNAtt( Camp^.Source^.NA , NAG_Personal , NAS_FactionID , NAttValue( TruePC^.NA , NAG_Personal , NAS_FactionID ) );
+	if Full_RPGWorld_Info then writeln( 'Core Story Loades' );
 
 	{ Copy the PC's personal context to the story. }
 	Base := SAttValue( Story^.SA , 'CONTEXT' );
 	Changes := SAttValue( TruePC^.SA , 'CONTEXT' );
 	AlterDescriptors( Base , Changes );
 	SetSAtt( Story^.SA , 'CONTEXT <' + Base + '>' );
+	if Full_RPGWorld_Info then writeln( 'PC Context Copied' );
 
 	InsertInvCom( Camp^.Source , Story );
+	if Full_RPGWorld_Info then begin
+		writeln( 'Core Story Initialized' );
+	end;
 
 	{ Insert the static adventure quests. }
 	InitializeAdventureContent( Camp^.Source , S , Egg );
+	if Full_RPGWorld_Info then begin
+		writeln( 'Quests Inserted' );
+	end;
+
 
 	{ Verify that the exits have been handled correctly. }
 	VerifySceneExits( Camp^.Source );
+	if Full_RPGWorld_Info then begin
+		writeln( 'Exits Verified' );
+	end;
+
 
 	{ By now, we should be finished with the EGG. Get rid of it. }
 	DisposeGear( Egg );
 
 	{ Activate everything in the campaign. }
 	ActivateGearTree( Camp^.Source );
+	if Full_RPGWorld_Info then begin
+		writeln( 'Scripts Activated' );
+	end;
 
 	{ Locate the Cavalier Club. This is to be the starting location. }
 	{ Being the first location entered by the PC, the Cavalier Club has }
