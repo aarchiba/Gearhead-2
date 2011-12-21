@@ -58,6 +58,9 @@
 	function proto_gear:GetY()
 		return gh_GetNAtt( self.ptr , NAG_LOCATION , NAS_Y )
 	end
+	function proto_gear:IsInPlay()
+		return gh_IsInPlay( self.ptr )
+	end
 
 
 	-- PERSONA

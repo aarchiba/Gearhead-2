@@ -69,6 +69,9 @@ gh_InitChatMenu( AddStandardOps )
 	adds the standard options ([Goodbye], [Join], etc) to the menu.
 	*** Restricted: In general, you won't need to use this.
 
+gh_IsInPlay( gear )
+	Returns true if the gear is on the gameboard, or false otherwise.
+
 gh_MoveAndPacify( GearToMove , Scene )
 	Moves the specified gear to the specified scene, setting its team info
 	to something peaceful.

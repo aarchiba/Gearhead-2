@@ -750,6 +750,7 @@ begin
 	AddRPGMenuItem( RPM , YesMsg , 1 );
 
 
+
 	AddRPGMenuItem( RPM , NoMsg , -1 );
 	RPM^.Mode := RPMNoCancel;
 
@@ -2359,6 +2360,15 @@ end;
 		Lua_OpenShop := 0;
 	end;
 
+	Function Lua_IsInPlay( MyLua: PLua_State ): LongInt; cdecl;
+		{ Return TRUE if the provided gear is in play, or FALSE otherwise. }
+	var
+		GearToCheck: GearPtr;
+	begin
+		GearToCheck := GetLuaGear( AS_GB , MyLua , 1 );
+		lua_pushboolean( MyLua , ( GearToCheck <> nil ) and IsFoundAlongTrack( AS_GB^.Meks , FindRoot( GearToCheck ) ) );
+		Lua_IsInPlay := 1;
+	end;
 
 
 initialization
@@ -2389,6 +2399,7 @@ initialization
 	lua_register( MyLua , 'gh_GetCurrentScenePtr' , @Lua_GetCurrentScene );
 	lua_register( MyLua , 'gh_DeployRandomMecha' , @Lua_DeployRandomMecha );
 	lua_register( MyLua , 'gh_OpenShop' , @Lua_OpenShop );
+	lua_register( MyLua , 'gh_IsInPlay' , @Lua_IsInPlay );
 
 	if lua_dofile( MyLua , 'gamedata/gh_messagemutator.lua' ) <> 0 then RecordError( 'GH_MESSAGEMUTATOR ERROR: ' + lua_tostring( MyLua , -1 ) );
 	if lua_dofile( MyLua , 'gamedata/gh_functions.lua' ) <> 0 then RecordError( 'GH_FUNCTIONS ERROR: ' + lua_tostring( MyLua , -1 ) );

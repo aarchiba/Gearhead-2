@@ -5,15 +5,26 @@ Content
 
 	%% E1 is the home where the PC wakes up
 	%% E2 is Hyolee
+	%% E3 is Hogye
+	%% E4 is the Dark Cave
+	%% E5 is the Dark Cave Entrance
+	%% E6 is Calmegie Research Station
 	Element1 <Scene PCHOME>
 	Element2 <Prefab>
-	Place2 <1 (Citizens)>
+	Place2 <6 (Citizens)>
+	Element3 <.>
+	Element4 <QuestScene>
+	Place4 <3>
+	Element5 <Prefab>
+	Place5 <3>
+	Element6 <QuestScene>
+	Place6 <4>
 
 	lua
 		function P.START( self )
 			-- At startup, force a chat with Hyolee.
 			if not self.v.HaveAlreadyStarted then
-				gh_Print( "Starting up!" );
+				gh_Alert( "You awake from a long slumber. It feels as though you'd been lying there for years." );
 				gh_StartChat( %2% )
 				self.v.HaveAlreadyStarted = true;
 			end
@@ -22,9 +33,89 @@ Content
 
 	sub
 		Persona 2
-		say "Welcome to Hogye."
-			reply "Thanks."
-				say "Whatever."
+		say "Nice to see you again!"
+		condition <return( self.v.HaveEarnedReward )>
+		say "Congratulations, you made it to the research center! I'm afraid that for the time being this is the closest thing we have to a victory condition... like I said, this world really needs to be filled out more."
+		condition <return( self.v.HaveDoneIntro and chatnpc:IsInPlay() )>
+		effect <self.v.HaveEarnedReward = true; gh_GiveXP( 500 )>
+		say "Nice to hear from you."
+		condition <return( self.v.HaveDoneIntro )>
+		say "About time you woke up, I was beginning to think we'd have to call the Snake Lake coma unit."
+		effect <self.v.HaveDoneIntro = true;>
+			reply "What happened? Where am I?"
+				say "You're in Hogye Village, recovering from an injury to the head. The doctor said you're free to go as soon as you feel up to it."
+					reply "Go? Go where?"
+						say "That's really up to you. It's a big world out there... a bit empty for the time being, but with a bit of help I'm sure we can fill it up."
+						label <GoGoWhere>
+							reply "I see..."
+								say "Have fun exploring. Feel free to drop by Calmegie Research Station when you're feeling better; I better get back to my experiments."
+			reply "Sleeping in never hurt anyone."
+				say "Maybe not, but getting bonked on the head has been known to cause a bit of damage. The doctor said you might have a touch of amnesia... but as long as there's nothing else wrong, you're free to go."
+					reply "Go? Go where?"
+						goto "GoGoWhere"
+			reply "Yeah, I know."
+				say "Now that you're awake I can get back to Calmegie Research Station. Feel free to drop by when you're all better."
+
+		MetaScene 4
+		name <Dark Cave>
+		DifficultyLevel 40
+		special <NOEXIT>
+		terrain <GROUND>
+		habitat <EARTH.MNTNS>
+		dentrance <*GoUp>
+		content1 <Some 1 40 Sub *DUNGEON_THREAT>
+		content2 <Some 1 45 Sub *DUNGEON_DECOR>
+		content3 <Some 1 30 Sub *DUNGEON_REWARD>
+		mapwidth 30
+		mapheight 30
+		CaveMap
+		Ceiling
+		RockyTiles
+		NeededCells 3
+
+		sub
+			Team 1
+			SetEnemy 2
+
+			Team 2
+			name <Monster>
+			type <Cave Exotic Mutant>
+			SetEnemy 1
+			Stat 2 1
+
+			room
+			width 3
+			height 3
+			sub
+				StairsDown
+				Destination -1
+			end
+		end
+
+		MetaScene 6
+		name <Calmegie Research Station>
+		entrance <*GoUp>
+		special <ADDEXIT>
+		MallMap
+		MapWidth 10
+		MapHeight 10
+		sub
+			team 1
+
+			team 2
+			name <Citizens>
+			SetAlly 1
+			Passive
+
+			team 3
+			name <Guards>
+			SetAlly 2
+
+			room
+			name <Hyolee's Office>
+			special <SHAREDPALETTE>
+			minimap <....................#---#>
+		end
 
 
 	end
@@ -35,6 +126,15 @@ Content
 		sdl_portrait <por_f_hyoleenewver(YC-).png>
 		sdl_colors <70 121 119 142 62 39 234 180 88>
 
+		Building
+		name <Calmegie Research Station>
+		Scale 3
+		Altitude 3
+		BM_Volcano
+		roguechar <^>
+		XPos 5
+		YPos 5
+		desig <ENTRANCE %4%>
 	end
 
 
