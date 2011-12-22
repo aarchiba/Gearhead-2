@@ -1853,70 +1853,7 @@ begin
 	end;
 end;
 
-Procedure ProcessGiveGG( GB: GameBoardPtr );
-	{ Give the grabbed gear to the PC. }
-	{ Only physical gears can be moved in this way. }
-var
-	DelinkOK: Boolean;
-	PC: GearPtr;
-begin
-	PC := GG_LocatePC( GB );
 
-	if ( Grabbed_Gear <> Nil ) and ( Grabbed_Gear^.G >= 0 ) and (( PC = Nil ) or ( FindGearIndex( Grabbed_Gear , PC ) < 0 )) then begin
-
-		{ Delink the gear, if it can be found. }
-		if IsSubCom( Grabbed_Gear ) then begin
-			DelinkGear( Grabbed_Gear^.Parent^.SubCom , Grabbed_Gear );
-			DelinkOK := True;
-		end else if IsInvCom( Grabbed_Gear ) then begin
-			DelinkGear( Grabbed_Gear^.Parent^.InvCom , Grabbed_Gear );
-			DelinkOK := True;
-		end else if ( GB <> Nil ) and IsFoundAlongTrack( GB^.Meks , Grabbed_Gear) then begin
-			DelinkGear( GB^.Meks , Grabbed_Gear );
-			DelinkOK := True;
-		end else begin
-			DelinkOK := False;
-		end;
-
-		if DelinkOK then begin
-			GivePartToPC( GB , Grabbed_Gear , PC );
-		end;
-	end;
-end;
-
-Procedure ProcessGNewPart( var Event: String; GB: GameBoardPtr; Source: GearPtr );
-	{ Stick an item from the standard items list on the gameboard, }
-	{ then make GRABBED_GEAR point to it. }
-	{ This function will first look in the STC file, then the Monster }
-	{ file, then the NPC file. }
-var
-	IName: String;
-begin
-	{ First determine the item's designation. }
-	IName := ExtractWord( Event );
-	if Source <> Nil then begin
-		IName := AS_GetString( Source , IName );
-	end;
-
-	{ As long as we have a GB, try to stick the item there. }
-	if GB <> Nil then begin
-		Grabbed_Gear := LoadNewSTC( IName );
-		if Grabbed_Gear = Nil then Grabbed_Gear := LoadNewMonster( IName );
-		if Grabbed_Gear = Nil then Grabbed_Gear := LoadNewNPC( IName , True );
-		if Grabbed_Gear = Nil then Grabbed_Gear := LoadNewItem( IName );
-
-		{ If we found something, stick it on the map. }
-		if Grabbed_Gear <> Nil then begin
-			{ Clear the designation. }
-			SetSAtt( Grabbed_Gear^.SA , 'DESIG <>' );
-
-			{ Deploy the item. }
-			EquipThenDeploy( GB , Grabbed_Gear , False );
-		end;
-
-		{ Any further processing must be done by other commands. }
-	end;
-end;
 
 Procedure BuildGenericEncounter( GB: GameBoardPtr; Source: GearPtr; Scale: Integer );
 	{ Create a SCENE gear, then do everything except stock it with }
@@ -2541,37 +2478,6 @@ begin
 			end;
 		end;
 		Mek := Mek^.Next;
-	end;
-end;
-
-
-Procedure ProcessTime( var Event: String; GB: GameBoardPtr; Source: GearPtr );
-	{ Advance the game clock by a specified amount. }
-	{ FOr long periods of time, we don't want the PC to get hungry, as this will }
-	{ result in an obscene number of "You are hungry" messages. So, break the time }
-	{ into hour periods and give the PC some food between each. }
-var
-	N,OriginalHunger: LongInt;
-	PC: GearPtr;
-begin
-	{ Find out how much to adjust the value by. }
-	N := ScriptValue( Event , GB , Source );
-
-	PC := LocatePilot( GG_LocatePC( GB ) );
-	if PC <> Nil then begin
-		OriginalHunger := NAttValue( PC^.NA , NAG_Condition , NAS_Hunger );
-		if OriginalHunger > ( Hunger_Penalty_Starts - 15 ) then OriginalHunger := Hunger_Penalty_Starts - 16;
-	end;
-
-	while N > 0 do begin
-		if N > 3600 then begin
-			if PC <> Nil then SetNAtt( PC^.NA , NAG_Condition , NAS_Hunger , OriginalHunger );
-			QuickTime( GB , 3600 );
-			N := N - 3600;
-		end else begin
-			QuickTime( GB , N );
-			N := 0;
-		end;
 	end;
 end;
 

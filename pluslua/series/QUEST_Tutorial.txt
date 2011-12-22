@@ -3,6 +3,19 @@ Content
 	desc <Basically a test of the scripting system. Edit it and see!>
 	requires <*:Q_Starter>
 
+	%
+	% Quests are complex, static events added to the game world. Unlike plots they
+	% are generated at the start of the campaign, and unlike scene content they can
+	% affect an entire city. Examples of quests include dungeons, arenas, and
+	% the leadership series of tasks.
+	%
+	% Just like every other type of content, the first thing you need to do is
+	% requisition some elements for use in this quest. Elements may be created
+	% from scratch or selected from among existing gears. In this case the PC's
+	% home and Hogye Village already exist, but everything else has to be defined
+	% here.
+	%
+
 	%% E1 is the home where the PC wakes up
 	%% E2 is Hyolee
 	%% E3 is Hogye
@@ -20,6 +33,12 @@ Content
 	Element6 <QuestScene>
 	Place6 <4>
 
+	%
+	% The Content gear itself can have attached scripts. In this case, at the
+	% first START trigger it will print a message and start the conversation
+	% with Hyolee.
+	%
+
 	lua
 		function P.START( self )
 			-- At startup, force a chat with Hyolee.
@@ -31,9 +50,18 @@ Content
 		end
 	endlua
 
+	%
+	% The gears contained in "sub" define special effects associated with the
+	% elements requested above. As long as this quest is active, the behavior of
+	% those elements will be different from normal.
+	%
+
 	sub
 		Persona 2
-		say "Nice to see you again!"
+		%
+		% A Persona gear defines a conversation, in this case for Element2 (Hyolee).
+		%
+		say "I guess you've done everything there is to do, now. Get out there and add some content!"
 		condition <return( self.v.HaveEarnedReward )>
 		say "Congratulations, you made it to the research center! I'm afraid that for the time being this is the closest thing we have to a victory condition... like I said, this world really needs to be filled out more."
 		condition <return( self.v.HaveDoneIntro and chatnpc:IsInPlay() )>
@@ -57,9 +85,19 @@ Content
 				say "Now that you're awake I can get back to Calmegie Research Station. Feel free to drop by when you're all better."
 
 		MetaScene 4
+		%
+		% A MetaScene is a blueprint for a scene. In a quest, a MetaScene may add features
+		% to an existing scene or define an entirely new scene (if declared as a QuestScene
+		% in the element request).
+		%
+		% Element4 is a QuestScene, meaning that when this quest is initialized it will be
+		% added to the campaign world as a permanent scene. The Dark Cave has been given
+		% the type "DUNGEON", so this blueprint will be used to construct a multi-level maze.
+		%
 		name <Dark Cave>
 		DifficultyLevel 40
 		special <NOEXIT>
+		type <DUNGEON>
 		terrain <GROUND>
 		habitat <EARTH.MNTNS>
 		dentrance <*GoUp>
@@ -93,6 +131,11 @@ Content
 		end
 
 		MetaScene 6
+		%
+		% Element6 is another QuestScene, in this case the research station in the heart of the
+		% volcano. Note that by default elements placed in the Dark Cave will be put in the
+		% deepest dungeon level.
+		%
 		name <Calmegie Research Station>
 		entrance <*GoUp>
 		special <ADDEXIT>
@@ -116,9 +159,13 @@ Content
 			special <SHAREDPALETTE>
 			minimap <....................#---#>
 		end
-
-
 	end
+
+	%
+	% The gears contained in "inv" are the prefabricated elements requested
+	% above. They must be listed in the same order by which they were requested.
+	%
+
 	inv
 		NPC Scientist
 		name <Hyolee>

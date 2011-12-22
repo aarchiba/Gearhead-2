@@ -289,33 +289,40 @@
 	Prop 5
 	name <Vending Machine>
 	Desig <VENDING-1>
+	rogueChar <&>
+	sdl_SPRITE <prop_vendingmachine.png>
 	lua
 		function P.USE( self )
-
+			-- Ask the PC whether or not to buy a boxed lunch.
+			gh_InitMenu();
+			gh_AddMenuItem( "Yes I do." , 1 );
+			gh_AddMenuItem( "No, I don't." , -1 );
+			local cost = 50;
+			if self.v.HaveHacked then cost = 25 end;
+			local n = gh_QueryMenu( "This vending machine sells boxed lunches for $"..cost..". Want to buy one?" );
+			if n == 1 then
+				if gh_CanPayBill( cost ) then
+					gh_Print( "You buy a boxed lunch." );
+					gh_CreateAndGivePart( "FOOD-1" );
+				else
+					gh_Print( "You can't afford it." );
+				end;
+			end;
 		end
 		function P.CLUE_CODEBREAKING( self )
-
+			if not self.v.HaveHacked then
+				if gh_TrySkillTest( NAS_CODEBREAKING , STAT_KNOWLEDGE , 10 ) then
+					gh_Print( "You hack the machine to sell food at half cost." );
+					self.v.HaveHacked = true;
+				else
+					gh_Print( "You cannot hack this machine at your current skill level." );
+				end;
+			else
+				gh_Print( "You've already hacked this machine." );
+			end;
 		end
 	endlua
 
-	% V1 = Hacking Counter
-	% V2 = Food Cost
-	rogueChar <&>
-	use <if= V2 0 else GoReallyUse V= 2 50 Goto GoReallyUse
-	GoReallyUse <ifYesNo 1 2 3 ifG PC$ V2 Cash+ -V2 GiveSTC .desc Print 4>
-	.desc <FOOD-1>
-	CLUE_CODEBREAKING <if= V1 0 ifCodeBreaking 10 else GoFail Mental Print 5 V= 1 1 V= 2 25 AddLawful -2>
-	GoFail <Print 6>
-	Msg1 <This vending machine sells boxed lunches for $ \VAL V2 . Want to buy one?>
-	Msg2 <Yes I do.>
-	Msg3 <No, I don't.>
-	Msg4 <You buy a boxed lunch.>
-	Msg5 <You hack the machine to sell food at half cost.>
-	Msg6 <You cannot hack this machine at your current skill level.>
-	Mesh 4
-	Frame 3
-	sdl_SKIN <tex_electronics.png>
-	sdl_SPRITE <prop_vendingmachine.png>
 
 
 

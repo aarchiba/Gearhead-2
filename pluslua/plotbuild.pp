@@ -1392,6 +1392,8 @@ var
 										msg := SAttValue( P^.SA , 'condition' );
 										if msg <> '' then StoreSAtt( Persona^.Scripts , 'condition = function(self,chatnpc) ' + msg + ' end, ' );
 										StoreSAtt( Persona^.Scripts , '}, ' );
+									end else begin
+										RecordError( 'Reply error for ' + BStr( PID ) + ':' + msg );
 									end;
 								end;
 								P := P^.Next;

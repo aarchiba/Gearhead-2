@@ -277,6 +277,7 @@ begin
 
 
 
+
 		MF2 := Container^.SubCom;
 		while MF2 <> Nil do begin
 			if ( MF2^.G = GG_MapFeature ) and OnTheMap( GB , MF2^.Stat[ STAT_XPos ] , MF2^.Stat[ STAT_YPos ] ) then begin
@@ -2433,6 +2434,7 @@ begin
 	it^.Stat[ STAT_MFWidth ] := 5;
 	for t := 5 to 8 do it^.Stat[t] := MF^.Stat[t];
 	SetSAtt( it^.SA , 'name <ZONE_' + BStr( High_Component_ID ) + '>' );
+	Inc( High_Component_ID );
 
 	if not SelectPlacementPoint( GB , MF , it , Cells , SCheck , STerr ) then begin
 		RemoveGear( MF^.SubCom , it );

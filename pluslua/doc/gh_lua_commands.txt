@@ -6,13 +6,30 @@ gh_AddChatMenuItem( n , message )
 	Adds an option to the conversation menu.
 	*** Restricted: In general, you won't need to use this.
 
+gh_AddMenuItem( prompt , n )
+	Adds an item to the script menu.
+
+gh_AddNAtt( gear , NA_G , NA_S , NA_V )
+	Adds NA_V to the value of gear's numeric attribute NA_G,NA_S.
+	May also be called as the gear:AddNAtt( NA_G , NA_S , NA_V ) method.
+
 gh_Alert( message )
 	Prints a string to the popup window.
 	gh_RawAlert( message ) prints a message without formatting.	
 
+gh_BrowseMessages( tag )
+	Browses messages of a certain type. Options include "NEWS", "EMAIL",
+	"RUMEMO" and "MEMO".
+
 gh_CountActiveModels( team )
 	Returns the number of models (mecha + characters) belonging to the
 	specified team on the current map.
+
+gh_CreatePart( full_name )
+	Creates a new part from the design, STC, monster, or archetype lists.
+	The created part is placed on the gameboard but off the map; generally you'll
+	want to use some other commands to actually do something with the part.
+	Returns the table for the new part. gh_RawCreatePart just returns the userdata.
 
 gh_DeployRandomMecha( team , renown , strength )
 	Deploys a number of mecha on the current map. Team is the team they belong
@@ -58,6 +75,9 @@ gh_GetTime()
 	Returns the current ComTime. This is the number of game seconds passed
 	since the beginning of the campaign.
 
+gh_GiveGear( gear )
+	Gives the listed gear to the PC. 
+
 gh_GiveXP( xpv )
 	Doles a certain amount of experience to the PC and levels up lancemates.
 
@@ -68,6 +88,10 @@ gh_InitChatMenu( AddStandardOps )
 	Clears all items currently in the menu. If AddStandardOps is true, it
 	adds the standard options ([Goodbye], [Join], etc) to the menu.
 	*** Restricted: In general, you won't need to use this.
+
+gh_InitMenu()
+	Clears the script menu. You should call this before building your menu
+	to make sure there aren't any items left over from previous scripts.
 
 gh_IsInPlay( gear )
 	Returns true if the gear is on the gameboard, or false otherwise.
@@ -83,6 +107,9 @@ gh_Print( message )
 	Prints a string to the console area.
 	gh_RawPrint( message ) prints a message without formatting.
 
+gh_QueryMenu( message )
+	Queries the script menu. Displays message in the text area.
+
 gh_Return()
 	The PC exits the current scene and moves upwards to its parent.
 
@@ -97,6 +124,9 @@ gh_SetNAtt( gear , NA_G , NA_S , NA_V )
 gh_SetStat( gear , stat , statvalue )
 	Sets the value of gear's stat to statval. Note that this can be done
 	directly through the gear object's gear.stat table.
+
+gh_SpendTime( delay )
+	Advances the game clock by a specified amount.
 
 gh_StartChat( npc )
 	Begins a conversation with that particular NPC.

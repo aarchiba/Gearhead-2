@@ -52,6 +52,9 @@
 	function proto_gear:SetNAtt( g , s , v )
 		return gh_SetNAtt( self.ptr , g , s , v )
 	end
+	function proto_gear:AddNAtt( g , s , v )
+		return gh_AddNAtt( self.ptr , g , s , v )
+	end
 	function proto_gear:GetX()
 		return gh_GetNAtt( self.ptr , NAG_LOCATION , NAS_X )
 	end

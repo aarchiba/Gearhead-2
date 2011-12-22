@@ -133,6 +133,8 @@ var
 	AS_GB: GameBoardPtr;	{ The current gameboard, set for Lua functions. }
 	ASRD_MemoMessage: String;
 
+	AS_Menu: RPGMenuPtr;
+
 {  ******************************  }
 {  ***   REDRAW  PROCEDURES   ***  }
 {  ******************************  }
@@ -748,9 +750,6 @@ var
 begin
 	RPM := CreateRPGMenu( MenuItem , MenuSelect , ZONE_MemoMenu );
 	AddRPGMenuItem( RPM , YesMsg , 1 );
-
-
-
 	AddRPGMenuItem( RPM , NoMsg , -1 );
 	RPM^.Mode := RPMNoCancel;
 
@@ -1229,6 +1228,7 @@ var
 	RTT: LongInt;		{ ReTalk Time }
 	T: String;
 	PNode: LongInt;
+
 	MI: RPGMenuItemPtr;	{ For removing options once they've been used. }
 begin
 	{ Start by allocating the menu. }
@@ -1825,6 +1825,27 @@ end;
 		Lua_SetNAtt := 0;
 	end;
 
+	Function Lua_AddNAtt( MyLua: PLua_State ): LongInt; cdecl;
+		{ Take a gear and add to one of its numeric attributes. }
+		{ Record an error if the gear is not found. }
+	var
+		MyGear: GearPtr;
+		G,S,V: LongInt;
+	begin
+		MyGear := GetLuaGear( AS_GB ,MyLua , 1 );
+		G := luaL_checkint( MyLua , 2 );
+		S := luaL_checkint( MyLua , 3 );
+		V := luaL_checkint( MyLua , 4 );
+
+		if ( MyGear <> Nil ) then begin
+			AddNAtt( MyGear^.NA , G , S , V );
+		end else begin
+			RecordError( 'ERROR: SetNAtt passed nonexistant gear!' );
+		end;
+
+		Lua_AddNAtt := 0;
+	end;
+
 
 	Function Lua_SetGearStat( MyLua: PLua_State ): LongInt; cdecl;
 		{ Take a gear and change one of its stat values. }
@@ -2370,6 +2391,176 @@ end;
 		Lua_IsInPlay := 1;
 	end;
 
+	Function Lua_SpendTime( MyLua: PLua_State ): LongInt; cdecl;
+		{ Advance the game clock by a specified amount. }
+		{ FOr long periods of time, we don't want the PC to get hungry, as this will }
+		{ result in an obscene number of "You are hungry" messages. So, break the time }
+		{ into hour periods and give the PC some food between each. }
+	var
+		N,OriginalHunger: LongInt;
+		PC: GearPtr;
+	begin
+		{ Find out how much to adjust the value by. }
+		N := luaL_checkint( MyLua , 1 );
+
+		PC := LocatePilot( LocatePC( AS_GB ) );
+		if PC <> Nil then begin
+			OriginalHunger := NAttValue( PC^.NA , NAG_Condition , NAS_Hunger );
+			if OriginalHunger > ( Hunger_Penalty_Starts - 15 ) then OriginalHunger := Hunger_Penalty_Starts - 16;
+		end;
+
+		while N > 0 do begin
+			if N > 3600 then begin
+				if PC <> Nil then SetNAtt( PC^.NA , NAG_Condition , NAS_Hunger , OriginalHunger );
+				QuickTime( AS_GB , 3600 );
+				N := N - 3600;
+			end else begin
+				QuickTime( AS_GB , N );
+				N := 0;
+			end;
+		end;
+
+		Lua_SpendTime := 0;
+	end;
+
+	Function Lua_BrowseMessages( MyLua: PLua_State ): LongInt; cdecl;
+		{ Browse messages of a given type. }
+	var
+		memo_tag: String;
+	begin
+		memo_tag := luaL_checkstring( MyLua , 1 );
+		if memo_tag = '' then memo_tag := 'MEMO';
+		BrowseMemoType( AS_GB , memo_tag );
+		Lua_BrowseMessages := 0;
+	end;
+
+	Function Lua_InitMenu( MyLua: PLua_State ): LongInt; cdecl;
+		{ Clear the script menu. }
+	begin
+		{ If there are any menu items currently in the list, get rid }
+		{ of them. }
+		if AS_Menu^.FirstItem <> Nil then begin
+			ClearMenu( AS_Menu );
+		end;
+		Lua_InitMenu := 0;
+	end;
+
+	Function Lua_AddMenuItem( MyLua: PLua_State ): LongInt; cdecl;
+		{ Add a new item to the AS_Menu. }
+		{ P1 = The menu item text }
+		{ P2 = The menu item value }
+	var
+		N: Integer;
+		Msg: String;
+	begin
+		msg := luaL_checkstring( MyLua , 1 );
+		N := luaL_checkint( MyLua , 2 );
+
+		if Msg <> '' then begin
+			AddRPGMenuItem( AS_Menu , Msg , N );
+		end;
+
+		Lua_AddMenuItem := 0;
+	end;
+
+	Function Lua_QueryMenu( MyLua: PLua_State ): LongInt; cdecl;
+		{ Query the menu, return the result. }
+		{ Param1: The text to display above the menu. }
+	var
+		msg: String;
+		N: LongInt;
+	begin
+		msg := luaL_checkstring( MyLua , 1 );
+
+		if AS_Menu^.FirstItem <> Nil then begin
+			ASRD_MemoMessage := msg;
+			AlphaKeyMenu( AS_Menu );
+			N := SelectMenu( AS_Menu , @MemoPageRedraw );
+
+			{ Do cleanup before branching. }
+			CombatDisplay( AS_GB );
+
+			lua_pushinteger( MyLua , n );
+
+		end else begin
+			{ Empty menu - return 0. }
+			lua_pushinteger( MyLua , 0 );
+		end;
+		Lua_QueryMenu := 1;
+	end;
+
+	Function Lua_CreatePart( MyLua: PLua_State ): LongInt; cdecl;
+		{ Stick an item from the standard items list on the gameboard. }
+		{ This function will return a pointer to the new gear. }
+	var
+		IName: String;
+		NewPart: GearPtr;
+	begin
+		IName := luaL_checkstring( MyLua , 1 );
+		NewPart := Nil;
+
+		{ As long as we have a GB, try to stick the item there. }
+		if AS_GB <> Nil then begin
+			NewPart := LoadNewSTC( IName );
+			if NewPart = Nil then Grabbed_Gear := LoadNewItem( IName );
+			if NewPart = Nil then Grabbed_Gear := LoadNewMonster( IName );
+{			if NewPart = Nil then Grabbed_Gear := LoadNewNPC( IName , True );}
+
+			{ If we found something, stick it on the map. }
+			if NewPart <> Nil then begin
+				{ Register it with Lua. }
+				ActivateGearTree( NewPart );
+
+				{ Deploy the item. }
+				EquipThenDeploy( AS_GB , NewPart , False );
+			end;
+
+			{ Any further processing must be done by other commands. }
+		end;
+
+		if NewPart <> Nil then begin
+			lua_pushlightuserdata( MyLua , Pointer( NewPart ) );
+		end else begin
+			lua_pushnil( MyLua );
+		end;
+		Lua_CreatePart := 1;
+	end;
+
+	Function Lua_GiveGear( MyLua: PLua_State ): LongInt; cdecl;
+		{ Attempt to give the requested gear to the PC. }
+		{ Only physical gears can be moved in this way. }
+	var
+		GearToGive: GearPtr;
+		DelinkOK: Boolean;
+		PC: GearPtr;
+	begin
+		GearToGive := GetLuaGear( AS_GB , MyLua , 1 );
+		PC := LocatePC( AS_GB );
+
+		if ( GearToGive <> Nil ) and ( GearToGive^.G >= 0 ) and (( PC = Nil ) or ( FindGearIndex( GearToGive , PC ) < 0 )) then begin
+
+			{ Delink the gear, if it can be found. }
+			if IsSubCom( GearToGive ) then begin
+				DelinkGear( GearToGive^.Parent^.SubCom , GearToGive );
+				DelinkOK := True;
+			end else if IsInvCom( GearToGive ) then begin
+				DelinkGear( GearToGive^.Parent^.InvCom , GearToGive );
+				DelinkOK := True;
+			end else if ( AS_GB <> Nil ) and IsFoundAlongTrack( AS_GB^.Meks , GearToGive ) then begin
+				DelinkGear( AS_GB^.Meks , GearToGive );
+				DelinkOK := True;
+			end else begin
+				DelinkOK := False;
+			end;
+
+			if DelinkOK then begin
+				GivePartToPC( AS_GB , GearToGive , PC );
+			end;
+		end;
+
+		Lua_GiveGear := 0;
+	end;
+
 
 initialization
 	lua_register( MyLua , 'gh_GetGearG' , @Lua_GetGearG );
@@ -2379,6 +2570,7 @@ initialization
 	lua_register( MyLua , 'gh_SetStat' , @Lua_SetGearStat );
 	lua_register( MyLua , 'gh_GetNAtt' , @Lua_GetNAtt );
 	lua_register( MyLua , 'gh_SetNAtt' , @Lua_SetNAtt );
+	lua_register( MyLua , 'gh_AddNAtt' , @Lua_AddNAtt );
 	lua_register( MyLua , 'gh_RawPrint' , @Lua_GHPrint );
 	lua_register( MyLua , 'gh_RawAlert' , @Lua_GHAlert );
 	lua_register( MyLua , 'gh_TrySkillTest' , @Lua_USkillTest );
@@ -2400,6 +2592,13 @@ initialization
 	lua_register( MyLua , 'gh_DeployRandomMecha' , @Lua_DeployRandomMecha );
 	lua_register( MyLua , 'gh_OpenShop' , @Lua_OpenShop );
 	lua_register( MyLua , 'gh_IsInPlay' , @Lua_IsInPlay );
+	lua_register( MyLua , 'gh_SpendTime' , @Lua_SpendTime );
+	lua_register( MyLua , 'gh_BrowseMessages' , @Lua_BrowseMessages );
+	lua_register( MyLua , 'gh_InitMenu' , @Lua_InitMenu );
+	lua_register( MyLua , 'gh_AddMenuItem' , @Lua_AddMenuItem );
+	lua_register( MyLua , 'gh_QueryMenu' , @Lua_QueryMenu );
+	lua_register( MyLua , 'gh_RawCreatePart' , @Lua_CreatePart );
+	lua_register( MyLua , 'gh_GiveGear' , @Lua_GiveGear );
 
 	if lua_dofile( MyLua , 'gamedata/gh_messagemutator.lua' ) <> 0 then RecordError( 'GH_MESSAGEMUTATOR ERROR: ' + lua_tostring( MyLua , -1 ) );
 	if lua_dofile( MyLua , 'gamedata/gh_functions.lua' ) <> 0 then RecordError( 'GH_FUNCTIONS ERROR: ' + lua_tostring( MyLua , -1 ) );
@@ -2414,6 +2613,9 @@ initialization
 	I_NPC := Nil;
 	IntMenu := Nil;
 
+	AS_Menu := CreateRPGMenu( MenuItem , MenuSelect , ZONE_MemoMenu );
+	AS_Menu^.Mode := RPMNoCancel;
+
 	AS_GB := Nil;
 
 finalization
@@ -2423,4 +2625,5 @@ finalization
 
 	DisposeGear( lancemate_tactics_persona );
 	DisposeGear( rumor_leads );
+	DisposeRPGMenu( AS_Menu );
 end.

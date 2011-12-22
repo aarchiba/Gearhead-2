@@ -16,6 +16,41 @@ function gh_GetPC()
 	return( PCPtr )
 end
 
+function gh_PCisHungry()
+	-- Return true if the PC is found and is hungry.
+	local pc = gh_GetPC();
+	if pc ~= nil then
+		return( pc:GetNAtt( NAG_CONDITION , NAS_HUNGER ) > 10 );
+	else
+		return( false );
+	end;
+end
+
+function gh_FeedPC()
+	-- Set the PC's hunger count to 0, and delay by three minutes.
+	local pc = gh_GetPC();
+	if pc ~= nil then
+		pc:SetNAtt( NAG_CONDITION , NAS_HUNGER , 0 );
+		gh_SpendTime( 3600 );
+	end;
+end;
+
+function gh_CanPayBill( cash_amount )
+	-- Check the PC's money. If there's enough to pay the tab, deduct that
+	-- amount and return true. Otherwise just return false.
+	local pc = gh_GetPC();
+	if pc ~= nil then
+		if pc:GetNAtt( NAG_EXPERIENCE , NAS_CREDITS ) >= cash_amount then
+			pc:AddNAtt( NAG_EXPERIENCE , NAS_CREDITS , -cash_amount );
+			return( true );
+		else
+			return( false );
+		end;
+	else
+		return( false );
+	end;
+end
+
 function gh_GetCurrentScene()
 	-- As above, but we want the current scene.
 	local ScenePtr = gh_GetCurrentScenePtr();
@@ -24,6 +59,24 @@ function gh_GetCurrentScene()
 	end
 	return( ScenePtr )
 end
+
+function gh_CreatePart( full_name )
+	-- Create a new part, then return its table.
+	local NewPart = gh_RawCreatePart( full_name );
+	if NewPart ~= nil then
+		NewPart = gh[ NewPart ]
+	end
+	return( NewPart )
+end
+
+function gh_CreateAndGivePart( full_name )
+	-- Create a new part and then immediately give it to the PC.
+	local NewPart = gh_CreatePart( full_name );
+	gh_GiveGear( NewPart );
+end;
+
+
+
 
 function gh_GetString( source )
 	-- We've been handed something that supposedly contains a string. In
