@@ -288,3 +288,79 @@ Content
 %%   Contains a miscellaneous store.
 
 
+
+
+%% *DOCTOR CONTENT
+%%   Contains a doctor
+
+Content
+	requires <*DOCTOR>
+	element1 <Prefab>
+	team1 <Citizens>
+	teamdata1 <ally pass>
+
+	SubPlot1 <*DECOR_FOR_HOSPITAL>
+	sub
+		Persona 1
+		PFrag "*NiceToMeetYou"
+		PFrag "*SERVICE_DOCTOR"
+		PFrag "*GOODBYE"
+	end
+	inv
+		NPC Doctor
+	end
+
+
+%% *DECOR_FOR_HOSPITAL CONTENT
+
+Content
+	requires <*DECOR_FOR_HOSPITAL>
+	minimap <12..................#&+&#>
+	element1 <Prefab>
+	element2 <Prefab>
+	inv
+		STC BED-1
+		PDir 2
+
+		STC ENDTABLE-1
+		PDir 2
+	end
+
+Content
+	requires <*DECOR_FOR_HOSPITAL>
+	minimap <1...52...63...74...8#&+&#>
+	element1 <Prefab>
+	element2 <Prefab>
+	element3 <Prefab>
+	element4 <Prefab>
+	element5 <Prefab>
+	element6 <Prefab>
+	element7 <Prefab>
+	element8 <Prefab>
+	inv
+		STC BED-1
+		PDir 0
+
+		STC ENDTABLE-1
+		PDir 0
+
+		STC BED-1
+		PDir 0
+
+		STC ENDTABLE-1
+		PDir 0
+
+		STC BED-1
+		PDir 4
+
+		STC ENDTABLE-1
+		PDir 4
+
+		STC BED-1
+		PDir 4
+
+		STC ENDTABLE-1
+		PDir 4
+	end
+
+

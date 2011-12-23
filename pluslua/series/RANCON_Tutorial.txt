@@ -59,7 +59,8 @@ Content
 	% Chae's shop is a little bit more complicated than her father's, but only
 	% just. There are some props and a minimap to add to the scene.
 	%
-	% Element1 is Chae, Elements 2 and 3 are props.
+	% Element1 is Chae, Elements 2 is a vending machine.
+	% Element3 is the Mystery Machine, which you can use for testing scripts.
 	%
 	element1 <Prefab>
 	team1 <Citizens>
@@ -78,7 +79,22 @@ Content
 
 	sub
 		Persona 1
-
+		say "Welcome to Hogye Cafe. What can I do for you?"
+			reply "I'd like something to eat."
+				say "The special of the day is a hamburger platter. The special of the day is always a hamburger platter. That comes with a hamburger, coleslaw, and poutine. As a special promotion we're offering it free to all cavaliers!"
+				label <GoTellSpecial>
+					reply "Free, you say? I'll take one!"
+					condition <return( gh_PCisHungry() )>
+						say "Please enjoy your meal, and check out dad's store when you're finished."
+						effect <gh_FeedPC()>
+					reply "I'm not that hungry just yet."
+						say "Well, if you ever get hungry, you know where to come..."
+			reply "What's the deal with that machine in the corner?"
+				say "That's a vending machine. You stick in money and food comes out."
+					reply "No, not that one, the strange one..."
+						say "Oh, that? I have no idea... Hyolee set it up in here, she said it's important for the expansion of the universe. No idea what that's about. I'm afraid to touch it, myself."
+					reply "Thanks for clearing that up. What's on the menu?"
+						goto "GoTellSpecial"
 	end
 	inv
 		NPC Shopkeeper
@@ -87,5 +103,115 @@ Content
 		Age 2
 
 		STC VENDING-1
+
+		Prop 50
+		name <Mystery Machine>
+		%
+		% Want to test some scripting? Use the Mystery machine to do it!
+		% I placed this here specifically so you'd have something to play with.
+		% Try adding more buttons, changing their effects, or otherwise
+		% messing around.
+		%
+		rogueChar <&>
+		sdl_SPRITE <prop_machine.png>
+		lua
+			function P.USE( self )
+				gh_InitMenu();
+				gh_AddMenuItem( "Push the blue button." , 1 );
+				gh_AddMenuItem( "Push the red button." , 2 );
+				gh_AddMenuItem( "Push the green button." , 3 );
+				gh_AddMenuItem( "Don't push anything." , -1 );
+				local n = gh_QueryMenu( "This strange machine has three flashing buttons. Do you dare to try one?" );
+				if n == 1 then
+					self:PushTheBlueButton();
+				elseif n == 2 then
+					self:PushTheRedButton();
+				elseif n == 3 then
+					self:PushTheGreenButton();
+				end;
+			end
+			function P.PushTheBlueButton( self )
+				if not self.v.HavePushedBlueButton then
+					gh_Print( "You push the blue button. Nothing happens, but you feel a thrill from having risked it." );
+					gh_GiveXP( 100 );
+					self.v.HavePushedBlueButton = true;
+				else
+					gh_Print( "You push the blue button. It's not as much fun the second time." );
+				end;
+			end
+			function P.PushTheRedButton( self )
+				if not self.v.HavePushedRedButton then
+					gh_Print( "You push the red button. Suddenly, the machine prints a coupon for a free SAN-X9 Buru Buru!" );
+					gh_CreateAndGivePart( "SAN-X9 Buru Buru" );
+					self.v.HavePushedRedButton = true;
+				else
+					gh_Print( "You push the red button again. It refuses to cooperate." );
+				end;
+			end
+			function P.PushTheGreenButton( self )
+				if not self.v.HavePushedGreenButton then
+					local s1 = math.random( 8 );
+					local s2 = math.random( 8 );
+					local pc = gh_GetPC();
+					if ( s1 ~= s2 ) and ( pc ~= nil ) and ( pc.stat[s1] > 3 ) then
+						gh_Print( "You push the green button. You feel oddly different from before." );
+						pc.stat[s1] = pc.stat[s1] - 2;
+						pc.stat[s2] = pc.stat[s2] + 2;
+						self.v.HavePushedGreenButton = true;
+					else
+						gh_Print( "You push the green button. You feel oddly the same as before." );
+					end;
+				else
+					gh_Print( "You push the green button again. You feel no different." );
+				end;
+			end
+			function P.CLUE_CODEBREAKING( self )
+				gh_Print( "There's no way to hack this machine from inside the universe, but maybe from outside..." );
+			end
+		endlua
+
 	end
+
+Content
+	requires <*LOCAL_HOGYE_Hospital>
+	%
+	% Doctor Kim and Nurse Park, just because.
+	%
+	element1 <Prefab>
+	team1 <Citizens>
+	teamdata1 <ally pass>
+
+	element2 <Prefab>
+	team2 <Citizens>
+	teamdata2 <ally pass>
+
+	SubPlot1 <*DECOR_FOR_HOSPITAL>
+	sub
+		%
+		% Not much interesting here, I just wanted to give the full GH1 remake experience.
+		%
+		Persona 1
+		say "Hello there. What seems to be the problem today?"
+			reply "I'm in a lot of pain..."
+				say "Let me take a look at you. Remember, don't lift any heavy objects until the stitches come out..."
+				effect <gh_OpenShop( "MEDICINE" )>
+				NoChatOps
+			reply "No problem, doctor."
+				say "Really? That's a shame... healthy patients are bad for business..."
+					reply "Actually, I think I may have a cold."
+						say "Well why didn't you say so? Come on, I'll have you patched up in no time!"
+						effect <gh_OpenShop( "MEDICINE" )>
+						NoChatOps
+
+		Persona 2
+		say "Thanks to the arena and the mine, we have a steady supply of customers to treat!"
+	end
+	inv
+		NPC Doctor
+		name <Doctor Kim>
+
+		NPC Nurse
+		name <Nurse Park>
+	end
+
 

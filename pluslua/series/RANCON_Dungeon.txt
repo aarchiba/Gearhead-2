@@ -1,0 +1,139 @@
+%% *DUNGEON_THREAT CONTENT
+%%   Dungeon threats. Little things to make life more dangerous for hapless adventurers.
+
+%% NOTE: All "requires" thingamabobs need rewriting for the new context system.
+
+Content
+	name <Mining Robot>
+	requires <*DUNGEON_THREAT !Ne mine>
+	element1 <Prefab>
+	teamdata1 <sd enemy>
+	start <if= V%id%01 0 else %pop% V= %id%01 1 ifAwareness 5 else %pop% Print %id%01 Goto %pop%>
+	msg%id%01 <The walls of this level have been worked by machines.>
+	inv
+		Monster Mining bot
+	end
+
+Content
+	name <Mouse Nest>
+	requires <*DUNGEON_THREAT !Lo GROUND>
+	element1 <Prefab>
+	teamdata1 <sd enemy>
+	element2 <Prefab>
+	teamdata2 <sd enemy>
+	element3 <Prefab>
+	teamdata3 <sd enemy>
+	element4 <Prefab>
+	teamdata4 <sd enemy>
+	element5 <Prefab>
+	teamdata5 <sd enemy>
+	element6 <Prefab>
+	start <if= V%id%01 0 else %pop% V= %id%01 1 ifAwareness 5 else %pop% Print %id%01 Goto %pop%>
+	msg%id%01 <You hear the pitter-patter of little feet. Lots of little feet.>
+	inv
+		monster Rat
+		monster Rat
+		monster Rat
+		monster Rat
+		monster Death Rat
+		Food 60
+		name <Big Cheese>
+		mass -10
+		FoodMorale 2
+		Fudge 3000
+		desc <A very large hunk of cheese. It hasn't been chewed on too badly.>
+	end
+
+
+%% *DUNGEON_REWARD CONTENT
+%%   Dungeon treasure. Something that's good for everyone.
+
+
+Content
+	name <Mining Equipment>
+	requires <*DUNGEON_REWARD Mine (!Ne|!Lo)>
+	element1 <Prefab>
+	inv
+		Item Pick
+	end
+
+Content
+	name <Mining Equipment 2>
+	requires <*DUNGEON_REWARD Mine (!Lo|!Md)>
+	element1 <Prefab>
+	inv
+		EMelee 20
+		Name <Rock Drill>
+		Type <BRUTAL>
+		Mass 14
+		Acc -1
+		Speed 1
+		desc <A plasma drill used in mining. It would also make a decent weapon.>
+		inv
+			PowerSource 4
+			mass -1
+			name <Power Cell 100>
+		end
+	end
+
+
+%% *DUNGEON_DECOR CONTENT
+%%   Dungeon Extras. Little bits of personality for dungeon levels, or things which aren't
+%%   usable by all characters, or reward/threat combos.
+
+Content
+	name <Robot Team>
+	requires <*DUNGEON_DECOR !Lo (mine|cave)>
+	element1 <Prefab>
+	teamdata1 <sd enemy>
+	element2 <Prefab>
+	teamdata2 <sd enemy>
+	element3 <Prefab>
+	inv
+		Monster Mining bot
+		Monster Mining bot
+		Treasure
+		name <Gold Nugget>
+		Fudge 32000
+		Mass 1
+	end
+
+
+
+%% *DUNGEON_GOAL CONTENT
+%%  - When sold, the dungeon goal content should be enough to buy a cheap level-appropriate mecha.
+%%    !Ne  =  1,000,000
+%%    !Lo  =  2,000,000
+%%    !Md  =  4,000,000
+%%    !Hi  =  8,000,000
+%%    !Ex  = 16,000,000
+
+Content
+	name <Gold Nugget>
+	requires <*DUNGEON_GOAL (Mine|Cave) !Ne>
+	minimap < ... .......1....... ... >
+	% E1 is the nugget.
+	element1 <Prefab>
+	inv
+		Treasure
+		name <Gold Nugget>
+		desc <A shiny lump of raw gold.>
+		Fudge 1200000
+		mass 7
+	end
+
+Content
+	name <Gold Nugget>
+	requires <*DUNGEON_GOAL (Mine|Cave) !Lo>
+	minimap < ... .......1....... ... >
+	% E1 is the nugget.
+	element1 <Prefab>
+	inv
+		Treasure
+		name <Gold Nugget>
+		desc <This gold nugget is fairly big.>
+		Fudge 2500000
+		mass 18
+	end
+
+

@@ -13,8 +13,8 @@ Content
 	Place2 <1>
 	Element3 <QuestScene>
 	Place3 <2>
-%	Element4 <Prefab>
-%	Place4 <2 (Citizens) pass ally>
+	Element4 <Prefab>
+	Place4 <2 (Citizens) pass ally>
 
 %	SubPlot1 <*:Q_MECHA_ARENA_CHALLENGE #30 1 2>
 %	SubPlot2 <*:Q_MECHA_ARENA_CHALLENGE #42 1 2>
@@ -24,7 +24,15 @@ Content
 	sub
 		Persona 4
 		say "Very well done. That was your tenth fight, making you our new champion."
-		condition <return( %3%.v.ArenaWins = 10 )>
+		condition <return( ( %3%:GetArenaState() == NAV_AS_WIN ) and ( %3%:GetArenaWins == 10 ) )>
+		effect <>
+
+		say "Very well done. That was your tenth fight, making you our new champion."
+		condition <return( ( %3%:GetArenaState() == NAV_AS_WIN ) )>
+
+		say "Very well done. That was your tenth fight, making you our new champion."
+		condition <return( ( %3%:GetArenaState() == NAV_AS_LOSS ) )>
+
 
 		greeting <if# PlotStatus %plotid% 0 else GoPreQuest if= ArenaState %2% NAV_AS_Win else GoCheckLoss Goto GoArenaWin>
 		GoCheckLoss <if= ArenaState %2% NAV_AS_Loss else GoCheckReady Goto GoArenaLoss>
@@ -96,10 +104,18 @@ Content
 				Elevator
 				name <To Arena>
 				desig <ENTRANCE %3%>
-				use <ifMechaCanEnterScene Destination else GoNoEnter  Print 1 Exit Destination>
-				GoNoEnter <Print 101>
-				Msg101 <You need a landworthy mecha to enter the arena.>
 				MiniMapComponent 2
+				lua
+					function P.USE( self )
+						-- Not gonna use the stairs...
+						if gh_PCMekCanEnterScene( %3% ) then
+							gh_Print( "You board the elevator." )
+							gh_GotoScene( gh_GetStat( self.ptr , STAT_DESTINATION ) )
+						else
+							gh_Print( "You need a landworthy mecha to enter the arena." );
+						end
+					end
+				endlua
 			end
 		end
 

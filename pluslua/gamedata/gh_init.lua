@@ -77,13 +77,13 @@
 		-- Start by clearing the menu.
 		gh_InitChatMenu( not node.no_chat_ops )
 
-		-- If an effect script exists, run that now.
+		-- Set the chat message.
+		gh_SetChatMessage( mutate_message( gh_FormatString( node.msg , self ) , 250 , contextstring_to_contexttable( gh_GetContext( chatnpc , 's' ) ) ) )
+
+		-- If an effect script exists, run that.
 		if node.effect ~= nil then
 			node.effect( self , chatnpc )
 		end
-
-		-- Set the chat message.
-		gh_SetChatMessage( mutate_message( gh_FormatString( node.msg , self ) , 250 , contextstring_to_contexttable( gh_GetContext( chatnpc , 's' ) ) ) )
 
 		-- If there are any children, add them to the menu.
 		if node.prompts ~= nil then
@@ -102,6 +102,16 @@
 		-- If the number of player units drops to zero, leave the scene.
 		if gh_CountActiveModels( NAV_DEFPLAYERTEAM ) < 1 then
 			gh_Return();
+		end
+	end
+	function proto_scene.GetXit( self )
+		-- Return the lowest level of this complex. For most scenes this
+		-- will return self's NID, but for dungeons it will return the NID
+		-- of the uppermost layer.
+		if self:GetNAtt( NAG_NARRATIVE , NAS_DUNGEONENTRANCE ) ~= 0 then
+			return( self:GetNAtt( NAG_NARRATIVE , NAS_DUNGEONENTRANCE ) )
+		else
+			return( self:GetNAtt( NAG_NARRATIVE , NAS_NID ) )
 		end
 	end
 

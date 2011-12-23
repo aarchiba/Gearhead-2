@@ -410,8 +410,8 @@ begin
 					SG^.G := GG_Support;
 					SG^.S := GS_Engine;
 					SG^.V := S^.V;
-					InitGear( SG );
 					InsertSubCom( S , SG );
+					InitGear( SG );
 				end;
 
 				{ Check for the gyro. If no gyro, install one. }
@@ -423,8 +423,8 @@ begin
 					SG^.G := GG_Support;
 					SG^.S := GS_Gyro;
 					SG^.V := 1;
-					InitGear( SG );
 					InsertSubCom( S , SG );
+					InitGear( SG );
 				end;
 			end;
 		end;
@@ -1331,7 +1331,6 @@ begin
 	if Standard_Equipment_List = Nil then Exit( Nil );
 
 	Item := CloneGear( SeekSibByFullName( Standard_Equipment_List , FullName ) );
-
 
 	{ Return the finished product. }
 	LoadNewItem := Item;

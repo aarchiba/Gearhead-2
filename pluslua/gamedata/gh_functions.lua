@@ -65,6 +65,8 @@ function gh_CreatePart( full_name )
 	local NewPart = gh_RawCreatePart( full_name );
 	if NewPart ~= nil then
 		NewPart = gh[ NewPart ]
+	else
+		error( "ERROR: CreatePart couldn't create "..full_name );
 	end
 	return( NewPart )
 end
@@ -72,7 +74,10 @@ end
 function gh_CreateAndGivePart( full_name )
 	-- Create a new part and then immediately give it to the PC.
 	local NewPart = gh_CreatePart( full_name );
-	gh_GiveGear( NewPart );
+	if NewPart ~= nil then
+		gh_GiveGear( NewPart );
+	end;
+	return( NewPart );
 end;
 
 
@@ -143,6 +148,17 @@ function gh_LowerRenown()
 
 	end
 end
+
+function gh_ChooseAOverB( prompt, option_a, option_b )
+	-- Create a menu with option_a and option_b. Return true if the player
+	-- selects option_a, or false otherwise.
+	gh_InitMenu();
+	gh_AddMenuItem( option_a , 1 );
+	gh_AddMenuItem( option_b , -1 );
+	return( gh_QueryMenu( prompt ) == 1 );
+end
+
+
 
 
 

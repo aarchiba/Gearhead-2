@@ -134,7 +134,7 @@ Content
 		%
 		% Element6 is another QuestScene, in this case the research station in the heart of the
 		% volcano. Note that by default elements placed in the Dark Cave will be put in the
-		% deepest dungeon level.
+		% deepest dungeon level. So, the entrance to this scene will be there as well.
 		%
 		name <Calmegie Research Station>
 		entrance <*GoUp>
@@ -183,5 +183,70 @@ Content
 		YPos 5
 		desig <ENTRANCE %4%>
 	end
+
+
+
+Content
+	name <Cayley Mine>
+	requires <*:Q_L_HOGYE_CayleyMine>
+	%
+	% Also going to include Cayley Mine here.
+	%
+
+	% Element1 is Hogye itself
+	% Element2 is the mine entrance- we could do this automatically just by
+	%   giving the dungeon metascene an ENTRANCE attribute, but by doing it
+	%   manually I can set the exact X,Y position of the mine.
+	% Element3 is the dungeon proper.
+	Element1 <.>
+	Element2 <Prefab>
+	Place2 <1>
+	Element3 <QuestScene>
+	Place3 <1>
+
+	sub
+		STC QS_Dungeon_EarthMine
+		SetID 3
+		sub
+			rect
+			%
+			% Normally, the map features in a dungeon metascene will be
+			% reproduced on each level of the dungeon. This behavior can be
+			% modified using the FORGOALLEVEL and FORENTRYLEVEL tags.
+			width 5
+			height 5
+			ForGoalLevel
+			sub
+				Elevator
+				name <Mecha Bay>
+				lua
+					P.USE = function( self )
+						if not self.v.HaveTakenMecha then
+							if gh_ChooseAOverB( "You find an old cargo elevator, and an abandoned mining robot inside... Hey! Someone left the keys in the ignition!" , "Take it." , "Leave it." ) then
+								gh_CreateAndGivePart( "HMC-6 Wolfram" );
+								self.v.HaveTakenMecha = true;
+								gh_GotoScene( %1% );
+								gh_SeekGate( %3%:GetXit() );
+							end;
+						else
+							if gh_ChooseAOverB( "The cargo elevator is now empty, but you can ride it to the surface." , "Take it." , "Leave it." ) then
+								gh_GotoScene( %1% );
+								gh_SeekGate( %3%:GetXit() );
+							end;
+						end;
+					end;
+				endlua
+			end
+		end
+
+	end
+	inv
+		STC BUILDING
+		name <Hogye Mine>
+		desig <ENTRANCE %3%>
+		XPos 23
+		YPos 11
+	end
+
 
 

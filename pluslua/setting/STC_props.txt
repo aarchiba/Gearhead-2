@@ -323,7 +323,35 @@
 		end
 	endlua
 
+	Prop 5
+	name <Video Terminal>
+	Desig <TV>
+	roguechar <&>
+	SDL_SPRITE <prop_television.png>
+	lua
+		function P.USE( self )
+			-- Ask the PC whether or not to check the news.
+			gh_InitMenu();
+			gh_AddMenuItem( "Yes I would." , 1 );
+			gh_AddMenuItem( "No, not really." , -1 );
+			local n = gh_QueryMenu( "This is a video info terminal. Would you like to check the news to see what's happening in the world?" );
+			if n == 1 then
+				gh_BrowseMessages( "NEWS" );
+			end;
+		end
+	endlua
 
+	Prop 5
+	name <Alarmist Scope (Game)>
+	desig <VIDEOGAME-1>
+	roguechar <&>
+	SDL_SPRITE <prop_videogame.png>
+	lua
+		function P.USE( self )
+			-- For now, this game is out of order... sorry.
+			gh_Print( "This game is out of order. Bummer." );
+		end
+	endlua
 
 
 %  **************************

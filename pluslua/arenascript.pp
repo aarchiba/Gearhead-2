@@ -78,9 +78,6 @@ var
 	I_Persona: GearPtr;	{ The conversation currently being used. }
 	I_HaveNotShopped: Boolean;
 
-	Grabbed_Gear: GearPtr;	{ This gear can be acted upon by }
-				{ generic commands. }
-
 	lancemate_tactics_persona: GearPtr;	{ Persona for setting lancemate tactics. }
 	rumor_leads: GearPtr;			{ Mini-conversations for finding rumors. }
 
@@ -1993,13 +1990,17 @@ end;
 		{ An exit command has been received. }
 		{ One parameter should have been passed- the NID of the destination. }
 	var
+		MyGear: GearPtr;
 		SID: LongInt;
 	begin
-		SID := luaL_checkint( MyLua , 1 );
-		if ( AS_GB = Nil ) or ( ( SID < 0 ) and ( FindActualScene( AS_GB , SID ) = Nil ) ) then begin
-			DialogMsg( MsgString( 'AS_EXIT_NOMETASCENE' ) );
-		end else begin
-			AS_SetExit( AS_GB , SID );
+		MyGear := GetLuaGear( AS_GB ,MyLua , 1 );
+		if MyGear <> Nil then begin
+			SID := NAttValue( MyGear^.NA , NAG_Narrative , NAS_NID );
+			if ( AS_GB = Nil ) or ( ( SID < 0 ) and ( FindActualScene( AS_GB , SID ) = Nil ) ) then begin
+				DialogMsg( MsgString( 'AS_EXIT_NOMETASCENE' ) );
+			end else begin
+				AS_SetExit( AS_GB , SID );
+			end;
 		end;
 		Lua_Exit := 0;
 	end;
@@ -2165,7 +2166,7 @@ end;
 			InsertInvCom( Scene , GearToMove );
 
 			{ Set the TEAMDATA here. }
-			if IsACombatant( Grabbed_Gear ) then begin
+			if IsACombatant( GearToMove ) then begin
 				SetSAtt( GearToMove^.SA , 'TEAMDATA <SD ALLY>' );
 			end else begin
 				SetSAtt( GearToMove^.SA , 'TEAMDATA <PASS ALLY>' );
@@ -2191,6 +2192,7 @@ end;
 		end else begin
 			lua_pushnil( MyLua );
 		end;
+
 		Lua_GetPC := 1;
 	end;
 
@@ -2502,9 +2504,9 @@ end;
 		{ As long as we have a GB, try to stick the item there. }
 		if AS_GB <> Nil then begin
 			NewPart := LoadNewSTC( IName );
-			if NewPart = Nil then Grabbed_Gear := LoadNewItem( IName );
-			if NewPart = Nil then Grabbed_Gear := LoadNewMonster( IName );
-{			if NewPart = Nil then Grabbed_Gear := LoadNewNPC( IName , True );}
+			if NewPart = Nil then NewPart := LoadNewItem( IName );
+			if NewPart = Nil then NewPart := LoadNewMonster( IName );
+{			if NewPart = Nil then NewPart := LoadNewNPC( IName , True );}
 
 			{ If we found something, stick it on the map. }
 			if NewPart <> Nil then begin
@@ -2555,10 +2557,53 @@ end;
 
 			if DelinkOK then begin
 				GivePartToPC( AS_GB , GearToGive , PC );
+				if ( PC <> nil ) and ( GearToGive^.G = GG_Mecha ) then begin
+					if FindPilotsMecha( AS_GB^.Meks , PC ) = Nil then AssociatePilotMek( AS_GB^.Meks , PC , GearToGive );
+				end;
 			end;
 		end;
 
 		Lua_GiveGear := 0;
+	end;
+
+	Function Lua_SeekGate( MyLua: PLua_State ): LongInt; cdecl;
+		{ We're going somewhere, but not through the regular door. }
+		{ P1 = Scene entrance to emerge from. }
+	var
+		SceneToSeek: GearPtr;
+	begin
+		SceneToSeek := GetLuaGear( AS_GB , MyLua , 1 );
+		if SceneToSeek <> Nil then begin
+			SCRIPT_Gate_To_Seek := NAttValue( SceneToSeek^.NA , NAG_Narrative , NAS_NID );
+		end;
+		Lua_SeekGate := 0;
+	end;
+
+	Function Lua_PCMekCanEnterScene( MyLua: PLua_State ): LongInt; cdecl;
+		{ Return TRUE if the PC makes the requested skill roll, or FALSE otherwise. }
+		{ Param 1 = Skill, Param 2 = Stat }
+		{ Param 3 = Target to beat }
+	var
+		Scene,PC,Mek: GearPtr;
+
+	begin
+		{ Find the scene we're referring to. }
+		Scene := GetLuaGear( AS_GB , MyLua , 1 );
+
+		{ Locate the PC, the PC's mecha, and the target scene. }
+		PC := FindRoot( LocatePC( AS_GB ) );
+		if ( PC <> Nil ) then begin
+			if PC^.G = GG_Mecha then Mek := PC
+			else Mek := FindPilotsMecha( AS_GB^.Meks , PC );
+		end;
+
+		if ( PC <> Nil ) and ( Mek <> Nil ) and ( Scene <> Nil ) and NotDestroyed( Mek ) and MekCanEnterScene( Mek , Scene ) then begin
+			lua_pushboolean( MyLua , True );
+		end else begin
+			lua_pushboolean( MyLua , False );
+		end;
+
+		Lua_PCMekCanEnterScene := 1;
 	end;
 
 
@@ -2599,6 +2644,8 @@ initialization
 	lua_register( MyLua , 'gh_QueryMenu' , @Lua_QueryMenu );
 	lua_register( MyLua , 'gh_RawCreatePart' , @Lua_CreatePart );
 	lua_register( MyLua , 'gh_GiveGear' , @Lua_GiveGear );
+	lua_register( MyLua , 'gh_SeekGate' , @Lua_SeekGate );
+	lua_register( MyLua , 'gh_PCMekCanEnterScene' , @Lua_PCMekCanEnterScene );
 
 	if lua_dofile( MyLua , 'gamedata/gh_messagemutator.lua' ) <> 0 then RecordError( 'GH_MESSAGEMUTATOR ERROR: ' + lua_tostring( MyLua , -1 ) );
 	if lua_dofile( MyLua , 'gamedata/gh_functions.lua' ) <> 0 then RecordError( 'GH_FUNCTIONS ERROR: ' + lua_tostring( MyLua , -1 ) );

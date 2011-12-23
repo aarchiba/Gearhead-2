@@ -1057,28 +1057,6 @@ begin
 	end;
 end;
 
-Procedure ProcessIfMechaCanEnterScene( var Event: String; GB: GameBoardPtr; Source: GearPtr );
-	{ Return true if the PC's mecha can enter the requested scene. }
-	{ Return false otherwise. }
-var
-	PC,Mek,Scene: GearPtr;
-	SceneID: Integer;
-begin
-	{ Locate the PC, the PC's mecha, and the target scene. }
-	PC := FindRoot( GG_LocatePC( GB ) );
-	if ( PC <> Nil ) then begin
-		if PC^.G = GG_Mecha then Mek := PC
-		else Mek := FindPilotsMecha( GB^.Meks , PC );
-	end;
-	SceneID := ScriptValue( Event , GB , Source );
-	Scene := FindActualScene( GB , SceneID );
-
-	if ( PC <> Nil ) and ( Mek <> Nil ) and ( Scene <> Nil ) and NotDestroyed( Mek ) and MekCanEnterScene( Mek , Scene ) then begin
-		IfSuccess( Event );
-	end else begin
-		IfFailure( Event , Source );
-	end;
-end;
 
 Procedure ProcessIfMeritBadge( var Event: String; GB: GameBoardPtr; Source: GearPtr );
 	{ Return true if the PC has the requested merit badge. }
@@ -2613,17 +2591,6 @@ begin
 	{ Finally, update the display. }
 	CombatDisplay( GB );
 end; { ProcessMoreMemo }
-
-Procedure ProcessSeekGate( var Event: String; GB: GameBoardPtr; Source: GearPtr );
-	{ Aim for a specific gate when entering the next level. }
-var
-	N: LongInt;
-begin
-	{ Find out which gate we're talking about. }
-	N := ScriptValue( Event , GB , Source );
-
-	SCRIPT_Gate_To_Seek := N;
-end;
 
 Procedure ProcessUpdateProps( GB: GameBoardPtr );
 	{ Just send an UPDATE trigger to all items on the gameboard. }

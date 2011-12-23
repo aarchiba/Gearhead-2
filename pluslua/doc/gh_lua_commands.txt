@@ -103,6 +103,10 @@ gh_MoveAndPacify( GearToMove , Scene )
 gh_OpenShop( wares )
 	Opens the shopping interface with a list of wares to stock.
 
+gh_PCMekCanEnterScene( scene )
+	Returns true if the PC's mecha can enter the provided scene, or false
+	otherwise (or if the PC has no mecha).
+
 gh_Print( message )
 	Prints a string to the console area.
 	gh_RawPrint( message ) prints a message without formatting.
@@ -112,6 +116,11 @@ gh_QueryMenu( message )
 
 gh_Return()
 	The PC exits the current scene and moves upwards to its parent.
+
+gh_SeekGate( scene )
+	Changes the entry point when moving to another scene. The gate leading to
+	the provided scene will be the one entered from, rather than the gate leading
+	to the scene actually being exited. It makes more sense in practice.
 
 gh_SetChatMessage( message )
 	Sets the current chat message.

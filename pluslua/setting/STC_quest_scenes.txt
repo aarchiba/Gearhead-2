@@ -190,7 +190,7 @@ MetaScene 0 2
 MetaScene
 	name <# Mine>
 	desig <QS_Dungeon_EarthMine>
-
+	type <DUNGEON mine>
 	special <NOEXIT>
 	terrain <GROUND>
 	habitat <EARTH.MNTNS>
@@ -215,7 +215,7 @@ MetaScene
 
 		Team 2
 		name <Monster>
-		type <Mine Fungus Asteroid>
+		type <Mine Cave Earth Animal>
 		SetEnemy 1
 		Stat 2 1
 
