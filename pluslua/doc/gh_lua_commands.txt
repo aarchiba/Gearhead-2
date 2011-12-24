@@ -21,6 +21,9 @@ gh_BrowseMessages( tag )
 	Browses messages of a certain type. Options include "NEWS", "EMAIL",
 	"RUMEMO" and "MEMO".
 
+gh_CalculateReward( renown , percent )
+	Calculate a reward value based on a given renown + percent value.
+
 gh_CountActiveModels( team )
 	Returns the number of models (mecha + characters) belonging to the
 	specified team on the current map.

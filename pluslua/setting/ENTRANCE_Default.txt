@@ -21,12 +21,6 @@ Msg4 <Attack!>
 Msg5 <You evade the guards and slip into the city.>
 Msg6 <You fail to evade the guards, and will now have to defend yourself...>
 
-STC QUEST-MAPMARKER-STATIONARY
-requires <*QUEST-INACTIVE>
-
-STC QUEST-MAPMARKER-ACTIVE-STATIONARY
-requires <*QUEST-ACTIVE>
-
 StairsUp
 requires <*GoUp>
 

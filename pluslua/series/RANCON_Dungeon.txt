@@ -5,7 +5,7 @@
 
 Content
 	name <Mining Robot>
-	requires <*DUNGEON_THREAT !Ne mine>
+	requires <*DUNGEON_THREAT>
 	element1 <Prefab>
 	teamdata1 <sd enemy>
 	start <if= V%id%01 0 else %pop% V= %id%01 1 ifAwareness 5 else %pop% Print %id%01 Goto %pop%>
@@ -16,7 +16,7 @@ Content
 
 Content
 	name <Mouse Nest>
-	requires <*DUNGEON_THREAT !Lo GROUND>
+	requires <*DUNGEON_THREAT>
 	element1 <Prefab>
 	teamdata1 <sd enemy>
 	element2 <Prefab>
@@ -35,7 +35,7 @@ Content
 		monster Rat
 		monster Rat
 		monster Rat
-		monster Death Rat
+		monster Rat
 		Food 60
 		name <Big Cheese>
 		mass -10
@@ -51,7 +51,7 @@ Content
 
 Content
 	name <Mining Equipment>
-	requires <*DUNGEON_REWARD Mine (!Ne|!Lo)>
+	requires <*DUNGEON_REWARD>
 	element1 <Prefab>
 	inv
 		Item Pick
@@ -59,7 +59,7 @@ Content
 
 Content
 	name <Mining Equipment 2>
-	requires <*DUNGEON_REWARD Mine (!Lo|!Md)>
+	requires <*DUNGEON_REWARD>
 	element1 <Prefab>
 	inv
 		EMelee 20
@@ -110,7 +110,7 @@ Content
 
 Content
 	name <Gold Nugget>
-	requires <*DUNGEON_GOAL (Mine|Cave) !Ne>
+	requires <*DUNGEON_GOAL>
 	minimap < ... .......1....... ... >
 	% E1 is the nugget.
 	element1 <Prefab>
@@ -124,7 +124,7 @@ Content
 
 Content
 	name <Gold Nugget>
-	requires <*DUNGEON_GOAL (Mine|Cave) !Lo>
+	requires <*DUNGEON_GOAL>
 	minimap < ... .......1....... ... >
 	% E1 is the nugget.
 	element1 <Prefab>

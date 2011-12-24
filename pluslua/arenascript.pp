@@ -2193,6 +2193,7 @@ end;
 			lua_pushnil( MyLua );
 		end;
 
+
 		Lua_GetPC := 1;
 	end;
 
@@ -2606,6 +2607,23 @@ end;
 		Lua_PCMekCanEnterScene := 1;
 	end;
 
+	Function Lua_CalculateReward( MyLua: PLua_State ): LongInt; cdecl;
+		{ Calculate a reward value, based on a renown value + percent. }
+	var
+		Renown,Percent: LongInt;
+	begin
+		{ Find out the team, and how many enemies to add. }
+		Renown := luaL_checkint( MyLua , 1 );
+	 	Percent := luaL_checkint( MyLua , 2 );
+
+		lua_pushinteger( MyLua , Calculate_Reward_Value( AS_GB, Renown, Percent ) );
+
+		Lua_CalculateReward := 1;
+	end;
+
+
+
+
 
 initialization
 	lua_register( MyLua , 'gh_GetGearG' , @Lua_GetGearG );
@@ -2646,6 +2664,7 @@ initialization
 	lua_register( MyLua , 'gh_GiveGear' , @Lua_GiveGear );
 	lua_register( MyLua , 'gh_SeekGate' , @Lua_SeekGate );
 	lua_register( MyLua , 'gh_PCMekCanEnterScene' , @Lua_PCMekCanEnterScene );
+	lua_register( MyLua , 'gh_CalculateReward' , @Lua_CalculateReward );
 
 	if lua_dofile( MyLua , 'gamedata/gh_messagemutator.lua' ) <> 0 then RecordError( 'GH_MESSAGEMUTATOR ERROR: ' + lua_tostring( MyLua , -1 ) );
 	if lua_dofile( MyLua , 'gamedata/gh_functions.lua' ) <> 0 then RecordError( 'GH_FUNCTIONS ERROR: ' + lua_tostring( MyLua , -1 ) );

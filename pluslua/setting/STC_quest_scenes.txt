@@ -74,6 +74,9 @@ MetaScene 0 2
 		function P.GetArenaWins( self )
 			return( self:GetNAtt( NAG_ARENADATA , NAS_ARENAWINS ) )
 		end
+		function P.SetArenaForces( self , forces )
+			self:SetNAtt( NAG_ARENADATA , NAS_ARENAFORCES , forces )
+		end
 		function P.GetArenaForces( self )
 			return( self:GetNAtt( NAG_ARENADATA , NAS_ARENAFORCES ) )
 		end
@@ -83,6 +86,17 @@ MetaScene 0 2
 		function P.AddArenaThreat( self , amount )
 			self:AddNAtt( NAG_ARENADATA , NAS_ARENATHREAT , amount )
 		end
+		function P.SetArenaThreat( self , amount )
+			self:SetNAtt( NAG_ARENADATA , NAS_ARENATHREAT , amount )
+		end
+		function P.ResetArena( self )
+			-- Get the arena ready for a new battle.
+			self:SetNAtt( NAG_ARENADATA , NAS_ARENASTATE , NAV_AS_VACANT )
+		end
+		function P.PrepArena( self , forces )
+			self:SetArenaState( NAV_AS_READY );
+			self:SetArenaForces( forces );
+		end;
 
 		P.START = function( self )
 			-- On startup, if the arena is ready then start the battle.
@@ -96,6 +110,11 @@ MetaScene 0 2
 					-- There's a challenger. Better start a conversation now.
 					gh_StartChat( self:GetChallenger() );
 				end;
+
+				if ( self:GetArenaForces() > 0 ) then
+					gh_DeployRandomMecha( 2 , self:GetArenaThreat() , self:GetArenaForces() )
+				end
+
 
 			elseif self:GetArenaState() == NAV_AS_BATTLE then
 				-- We return to a battle in progress, probably from a saved game.
@@ -167,7 +186,7 @@ MetaScene 0 2
 		faction <PDASS>
 		SetEnemy 1
 		lua
-			P.DEPLOY = function( self )
+			P.DEPLOYz = function( self )
 				-- Original ArenaScript code (which does the exact same thing):
 				--   Deploy <if= SelfArenaState NAV_AS_Ready ifG SelfArenaForces 0 WMecha 2 SelfArenaThreat SelfArenaForces>
 				local scene = gh_GetCurrentScene()

@@ -135,7 +135,7 @@ function contextstring_to_contexttable( in_text )
 	return( c_table )
 end
 
-function gh_LowerRenown()
+function gh_LoseRenown()
 	-- The PC has just lost a fight or somesuch. Lower their renown.
 	local PC = gh_GetPC();
 	if PC ~= nil then
@@ -157,6 +157,16 @@ function gh_ChooseAOverB( prompt, option_a, option_b )
 	gh_AddMenuItem( option_b , -1 );
 	return( gh_QueryMenu( prompt ) == 1 );
 end
+
+function gh_GiveCash( cash_amount )
+	-- Give some money to the PC.
+	local pc = gh_GetPC();
+	if pc ~= nil then
+		pc:AddNAtt( NAG_EXPERIENCE , NAS_CREDITS , cash_amount );
+		gh_Print( "You receive $"..cash_amount.."." );
+	end;
+end
+
 
 
 
