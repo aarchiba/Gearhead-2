@@ -398,6 +398,7 @@ begin
 	S := it^.SubCom;
 	Body := 0;
 	while S <> Nil do begin
+
 		if ( S^.G = GG_Module ) and ( S^.S = GS_Body ) then begin
 			Inc( Body );
 			if Body = 1 then begin
@@ -1040,7 +1041,8 @@ begin
 				if UpCase( CL_Line ) = 'ENDLUA' then begin
 					CL_KeepGoing := False;
 				end else begin
-					StoreSAtt( C^.Scripts , CL_Line + #10 );
+					AddEOLToLuaString( CL_Line );
+					StoreSAtt( C^.Scripts , CL_Line );
 				end;
 			end;
 		end;

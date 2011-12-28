@@ -130,6 +130,8 @@ Procedure DisposeGear(var LList: GearPtr);
 Procedure RemoveGear(var LList,LMember: GearPtr);
 Procedure DelinkGear(var LList,LMember: GearPtr);
 
+Procedure AddEOLToLuaString( var s: String );
+Function LuaStringWithEOLStripped( const s: String ): String;
 Procedure ActivateGearScript( MyGear: GearPtr );
 Procedure ActivateGearTree( MyGear: GearPtr );
 
@@ -184,6 +186,7 @@ Type
 	SAScriptRecPtr = ^SAScriptRec;
 	SAScriptRec = Record
 		SA: SAttPtr;
+		Prev: SAttPtr;
 	end;
 
 
@@ -940,9 +943,10 @@ begin
 		Lua_SAtt_Reader := Nil;
 	end else begin
 		{ Move the MSR pointer to the next SATT in line. }
+		MSR^.Prev := ThisSA;
 		MSR^.SA := MSR^.SA^.Next;
 		sz^ := Length( ThisSA^.Info );
-		Lua_SAtt_Reader := @( ThisSA^.Info[1] );
+		Lua_SAtt_Reader := PChAR( ThisSA^.Info );
 	end;
 end;
 
@@ -952,7 +956,12 @@ var
 	MyScriptRec: SAScriptRec;
 begin
 	MyScriptRec.SA := SList;
-	if lua_load( MyLua , @Lua_SAtt_Reader , @MyScriptRec , 'LoadSAttScripts' ) <> 0 then RecordError( 'LoadSAttScripts ERROR: ' + lua_tostring( MyLua , -1 ) );
+	MyScriptRec.Prev := nil;
+	if lua_load( MyLua , @Lua_SAtt_Reader , @MyScriptRec , 'LoadSAttScripts' ) <> 0 then begin
+		RecordError( 'LoadSAttScripts ERROR: ' + lua_tostring( MyLua , -1 ) );
+		if MyScriptRec.Prev <> nil then RecordError( '  line: "' + MyScriptRec.Prev^.Info + '"' )
+		else RecordError( '  Line not found. Something screwy going on.' );
+	end;
 end;
 
 Procedure ActivateGearScript( MyGear: GearPtr );
@@ -983,6 +992,22 @@ begin
 	while T <> Nil do begin
 		ActivateGearTree( T );
 		T := T^.Next;
+	end;
+end;
+
+Procedure AddEOLToLuaString( var s: String );
+	{ Add the end-of-line characters to this Lua string. }
+begin
+	S := S + #13 + #10;
+end;
+
+Function LuaStringWithEOLStripped( const s: String ): String;
+	{ Remove the end-of-line characters from this Lua string. }
+begin
+	if s[ Length( s ) ] = #10 then begin
+		LuaStringWithEOLStripped := Copy( S , 1 , Length( S ) - 2 );
+	end else begin
+		LuaStringWithEOLStripped := S;
 	end;
 end;
 
@@ -1211,6 +1236,7 @@ Function CloneGear( Part: GearPtr ): GearPtr;
 		{ Copy Master to Blank, ignoring the connective fields. }
 	var
 		NA: NAttPtr;
+
 		T: Integer;
 	begin
 		{ Copy basic info. }
@@ -1456,7 +1482,7 @@ begin
 			{ Error check- only output valid string attributes. }
 			{ Remember that we tack on a carriage return to the end of each line, so }
 			{ you don't need to save that to the file. }
-			if Length( SA^.Info ) > 1 then writeln( F , Copy( SA^.Info , 1 , Length( SA^.Info ) - 1 ) );
+			if Length( SA^.Info ) > 1 then writeln( F , LuaStringWithEOLStripped( SA^.Info ) );
 			SA := SA^.Next;
 		end;
 		{ Write the sentinel line here. }
@@ -1551,7 +1577,8 @@ Function ReadCGears( var F: Text ): GearPtr;
 			end else if Length( TheLine ) > 0 then begin
 				{ Remember to add a carriage return to the end of each }
 				{ line. Or is that a linefeed? Don't matter. }
-				StoreSAtt( it , TheLine + #10 );
+				AddEOLToLuaString( TheLine );
+				StoreSAtt( it , TheLine );
 			end;
 		until EoF( F );
 
