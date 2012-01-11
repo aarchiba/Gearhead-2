@@ -88,3 +88,20 @@ A subplot can assign a place string to an element it inherits.
 
 If (Destination Slot) is "/", the element will be frozen in a special
 holding zone and will need to be moved by the script.
+
+
+*********************************
+***   PLOT  SEARCH  CONTEXT   ***
+*********************************
+
+  L: The root scene, aka the Location
+  @: The current scene
+  Moods & Stories may have additional context blocks
+
+RanCon: Scope is the root scene, controller is the scene being built.
+Quest: Scope is the root scene, controller is the root scene.
+Plot: Scope is the root scene, controller is the root scene.
+MoodPlot: Scope is the root scene, controller is the mood.
+StoryPlot: Scope is global, controller is the story.
+
+

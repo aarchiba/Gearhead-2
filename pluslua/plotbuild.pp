@@ -1024,6 +1024,22 @@ begin
 	end;
 end;
 
+Function PlotGenContext( GB: GameBoardPtr; Control: GearPtr; Threat: LongInt ): String;
+	{ Return the context string for this subplot, minus the specific plot request. }
+var
+	Context: String;
+begin
+	Context := DifficulcyContext( Threat );
+
+	{ Next add the story, quest, and parent plot contexts. }
+	if ( Control <> Nil ) and ( ( Control^.G = GG_Story ) or ( Control^.G = GG_CityMood ) ) then begin
+		Context := Context + ' ' + StoryContext( GB , Control );
+	end else begin
+
+	end;
+	if IsAQuest then AddGearXRContext( GB , FindRoot( Slot ) , Scope , Context , 'L' );
+end;
+
 Function AddSubPlot( GB: GameBoardPtr; Scope,Control,Slot,Plot0: GearPtr; SPReq: String; LayerID,SubPlotSlot,Threat: LongInt; IsAQuest,DoDebug: Boolean ): GearPtr;
 	{ A request has been issued for a subplot. Search through the plot }
 	{ component list and see if there's anything that matches our criteria. }
@@ -1033,7 +1049,7 @@ Function AddSubPlot( GB: GameBoardPtr; Scope,Control,Slot,Plot0: GearPtr; SPReq:
 	{ Plot0 = the plot requesting the subplot. If root, it will be Nil. }
 var
 	ShoppingList: NAttPtr;
-	Context,SPContext: String;
+	Context: String;
 	ParamList: ElementTable;
 	T,E: Integer;
 	Shard: GearPtr;
@@ -1054,18 +1070,9 @@ begin
 	end else if threat < 10 then begin
 		threat := 10;
 	end;
-	{ Add this difficulty rating to the context. }
-	Context := Context + ' ' + DifficulcyContext( Threat );
 
-	{ Next add the story, quest, and parent plot contexts. }
-	if ( Control <> Nil ) and ( ( Control^.G = GG_Story ) or ( Control^.G = GG_CityMood ) ) then Context := Context + ' ' + StoryContext( GB , Control );
-	if IsAQuest then AddGearXRContext( GB , FindRoot( Slot ) , Scope , Context , 'L' );
-	if Plot0 <> Nil then begin
-		SPContext := SAttValue( Plot0^.SA , 'SPContext' );
-		if SPContext <> '' then Context := Context + ' ' + SPContext;
-	end else begin
-		SPContext := '';
-	end;
+	{ Add this difficulty rating to the context. }
+	Context := Context + ' ' + PlotGenContext( GB , Control , Threat );
 
 	{ Determine whether this is a regular subplot or a branch plot that will start its own narrative thread. }
 	IsBranchPlot := ( Length( Context ) > 2 ) and ( Context[2] = ':' );
@@ -1124,7 +1131,6 @@ begin
 		if Shard <> Nil then begin
 			{ See if we can add this one to the list. If not, it will be }
 			{ deleted by InitShard. }
-			if SPContext <> '' then SetSAtt( Shard^.SA , 'SPCONTEXT <' + SPContext + '>' );
 			Shard := InitShard( GB , Scope , Control , Slot , Shard , PlotID , LayerID , Threat , ParamList , IsAQuest , DoDebug );
 			if Shard <> Nil then NotFoundMatch := False;
 		end;
