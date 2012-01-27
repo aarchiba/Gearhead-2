@@ -464,7 +464,7 @@ var
 	SList: SAttPtr;
 	F: Text;
 	S: String;
-        FName: String;
+	FName: String;
 begin
 	SList := Nil;
 	FName := FSearch( FName_In , '.' );
@@ -598,7 +598,7 @@ Function NumHeadMatches( const head_in: String; LList: SAttPtr ): Integer;
 	{ the string attribute are equal to head. }
 var
 	N: Integer;
-        Head: String;
+	Head: String;
 begin
 	N := 0;
 	Head := UpCase( Head_In );
@@ -616,7 +616,7 @@ Function FindHeadMatch( const head_in: String; LList: SAttPtr; N: Integer ): SAt
 	{ If no match is found return Nil. }
 var
 	HM: SAttPtr;
-        Head: String;
+	Head: String;
 begin
 	HM := Nil;
 	Head := UpCase( Head_In );
@@ -946,21 +946,40 @@ begin
 		MSR^.Prev := ThisSA;
 		MSR^.SA := MSR^.SA^.Next;
 		sz^ := Length( ThisSA^.Info );
-		Lua_SAtt_Reader := PChAR( ThisSA^.Info );
+		Lua_SAtt_Reader := PChar( ThisSA^.Info );
 	end;
 end;
 
-Procedure LoadSAttScripts( SList: SAttPtr );
+Procedure LoadSAttScriptsBroken( SList: SAttPtr; Origin: PChar );
 	{ Load the script located in this list onto the stack. }
 var
 	MyScriptRec: SAScriptRec;
 begin
 	MyScriptRec.SA := SList;
 	MyScriptRec.Prev := nil;
-	if lua_load( MyLua , @Lua_SAtt_Reader , @MyScriptRec , 'LoadSAttScripts' ) <> 0 then begin
+	if lua_load( MyLua , @Lua_SAtt_Reader , @MyScriptRec , Origin ) <> 0 then begin
 		RecordError( 'LoadSAttScripts ERROR: ' + lua_tostring( MyLua , -1 ) );
+		lua_pop( MyLua , 1 ); { Remove error message }
 		if MyScriptRec.Prev <> nil then RecordError( '  line: "' + MyScriptRec.Prev^.Info + '"' )
 		else RecordError( '  Line not found. Something screwy going on.' );
+	end;
+end;
+
+Procedure LoadSAttScripts( SList: SAttPtr; Origin: PChar );
+	{ Load the script located in this list onto the stack. }
+var
+	S: String;
+begin
+	{ Yes, this is a terrible algorithm. }
+	S := '';
+	while SList <> Nil do begin
+		S := S + #13 + SList^.Info;
+		SList := SList^.Next;
+	end;
+
+	if luaL_loadstring( MyLua , PChar( S ) ) <> 0 then begin
+		RecordError( 'LoadSAttScripts ERROR in ' + Origin + ': ' + lua_tostring( MyLua , -1 ) );
+		{ lua_pop( MyLua , 1 ); } { Remove error message from Lua stack? }
 	end;
 end;
 
@@ -970,7 +989,7 @@ begin
 	if Lua_is_Go then begin
 		lua_getglobal( MyLua , 'gh_register' );
 		lua_pushlightuserdata( MyLua , Pointer( MyGear ) );
-		LoadSAttScripts( MyGear^.Scripts );
+		LoadSAttScripts( MyGear^.Scripts, 'ActivateGearScript' );
 		if lua_pcall( MyLua , 2 , 0 , 0 ) <> 0 then RecordError( 'Register ERROR: ' + lua_tostring( MyLua , -1 ) );
 	end else begin
 		RecordError( 'Register ERROR: Cannot register before LUA_IS_GO' );
@@ -1596,7 +1615,8 @@ Function ReadCGears( var F: Text ): GearPtr;
 			if Lua_is_Go then begin
 				lua_getglobal( MyLua , 'gh_readvars' );
 				lua_pushlightuserdata( MyLua , Pointer( Part ) );
-				LoadSAttScripts( script );
+				LoadSAttScripts( script, 'ReadLuaVars' );
+				{ FIXME: what if reading fails? }
 				if lua_pcall( MyLua , 2 , 0 , 0 ) <> 0 then RecordError( 'ReadLuaVars ERROR: ' + lua_tostring( MyLua , -1 ) );
 			end else begin
 				RecordError( 'Register ERROR: Cannot register variables before LUA_IS_GO' );
@@ -1885,7 +1905,8 @@ var
 begin
 	CF := LoadStringList( 'gamedata/gh_constants.txt' );
 	if CF <> Nil then begin
-		LoadSAttScripts( CF );
+		LoadSAttScripts( CF, 'LoadLuaConstants' );
+		{ FIXME: what if reading fails? }
 		if lua_pcall( MyLua , 0 , 0 , 0 ) <> 0 then RecordError( 'LoadLuaConstants ERROR: ' + lua_tostring( MyLua , -1 ) );
 		DisposeSAtt( CF );
 	end else begin
