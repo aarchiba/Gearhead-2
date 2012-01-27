@@ -1037,7 +1037,6 @@ begin
 	end else begin
 
 	end;
-	if IsAQuest then AddGearXRContext( GB , FindRoot( Slot ) , Scope , Context , 'L' );
 end;
 
 Function AddSubPlot( GB: GameBoardPtr; Scope,Control,Slot,Plot0: GearPtr; SPReq: String; LayerID,SubPlotSlot,Threat: LongInt; IsAQuest,DoDebug: Boolean ): GearPtr;
@@ -1074,6 +1073,7 @@ begin
 	{ Add this difficulty rating to the context. }
 	Context := Context + ' ' + PlotGenContext( GB , Control , Threat );
 
+	if IsAQuest then AddGearXRContext( GB , FindRoot( Slot ) , Scope , Context , 'L' );
 	{ Determine whether this is a regular subplot or a branch plot that will start its own narrative thread. }
 	IsBranchPlot := ( Length( Context ) > 2 ) and ( Context[2] = ':' );
 	{ This will determine whether we inherit the PlotID from Plot0, or generate a new one. }
