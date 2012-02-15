@@ -169,7 +169,7 @@ Content
 				end;
 			end
 			function P.PushTheYellowButton( self )
-                assert(loadfile("gamedata/yellow.lua"))()
+                dofile("gamedata/yellow.lua")
 			end
 			function P.CLUE_CODEBREAKING( self )
 				gh_Print( "There's no way to hack this machine from inside the universe, but maybe from outside..." );
