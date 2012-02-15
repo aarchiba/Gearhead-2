@@ -120,14 +120,17 @@ Content
 				gh_AddMenuItem( "Push the blue button." , 1 );
 				gh_AddMenuItem( "Push the red button." , 2 );
 				gh_AddMenuItem( "Push the green button." , 3 );
+				gh_AddMenuItem( "Push the yellow button." , 4 );
 				gh_AddMenuItem( "Don't push anything." , -1 );
-				local n = gh_QueryMenu( "This strange machine has three flashing buttons. Do you dare to try one?" );
+				local n = gh_QueryMenu( "This strange machine has four flashing buttons. Do you dare to try one?" );
 				if n == 1 then
 					self:PushTheBlueButton();
 				elseif n == 2 then
 					self:PushTheRedButton();
 				elseif n == 3 then
 					self:PushTheGreenButton();
+				elseif n == 4 then
+					self:PushTheYellowButton();
 				end;
 			end
 			function P.PushTheBlueButton( self )
@@ -164,6 +167,9 @@ Content
 				else
 					gh_Print( "You push the green button again. You feel no different." );
 				end;
+			end
+			function P.PushTheYellowButton( self )
+                assert(loadfile("gamedata/yellow.lua"))()
 			end
 			function P.CLUE_CODEBREAKING( self )
 				gh_Print( "There's no way to hack this machine from inside the universe, but maybe from outside..." );
