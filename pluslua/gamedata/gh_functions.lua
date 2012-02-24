@@ -134,6 +134,14 @@ function contextstring_to_contexttable( in_text )
 	end
 	return( c_table )
 end
+function gh_FollowLink( gear , link_type )
+	local NewPart = gh_RawFollowLink( gear , link_type );
+	if NewPart ~= nil then
+		NewPart = gh[ NewPart ]
+	end
+	return( NewPart )
+end
+
 
 function gh_LoseRenown()
 	-- The PC has just lost a fight or somesuch. Lower their renown.

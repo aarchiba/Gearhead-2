@@ -1675,6 +1675,7 @@ end;
 		if lua_isuserdata( ThisLua , idx ) then begin
 			{ This is apparently a pointer to a gear. WARNING: It may }
 			{ not be a valid pointer!!! Risky operation!!! }
+			{ FIXME: can we require that this be in the gh table, as a check? }
 			GetLuaGear := GearPtr( lua_touserdata( ThisLua , idx ) );
 		end else if lua_isnumber( ThisLua , idx ) then begin
 			{ This must be a NarrativeID. Search for the gear being sought. }
@@ -1755,6 +1756,42 @@ end;
 		end;
 
 		Lua_GetGearV := 1;
+	end;
+
+	Function Lua_RawFollowLink( MyLua: PLua_State ): LongInt; cdecl;
+		{ Take a gear and return its first subcomponent. }
+		{ Record an error if the gear is not found or nil if it has none. }
+	var
+		MyGear: GearPtr;
+		target: GearPtr;
+		S: Integer;
+	begin
+		MyGear := GetLuaGear( AS_GB ,MyLua , 1 );
+		S := luaL_checkint( MyLua , 2 );
+
+		if ( MyGear <> Nil ) then begin
+			case S of
+				LINK_PARENT: target := MyGear^.Parent;
+				LINK_NEXT: target := MyGear^.Next;
+				LINK_SUBCOM: target := MyGear^.SubCom;
+				LINK_INVCOM: target := MyGear^.InvCom;
+				else begin
+					target := Nil;
+					RecordError( 'ERROR: GetGearStat passed invalid kind of link!' );
+				end
+			end;
+
+			if target <> Nil then begin
+				lua_pushlightuserdata( MyLua , Pointer ( target ) );
+			end else begin
+				lua_pushnil( MyLua );
+			end
+		end else if MyGear = Nil then begin
+			lua_pushnil( MyLua );
+			RecordError( 'ERROR: RawFollowLink passed nonexistant gear!' );
+		end;
+
+		Lua_RawFollowLink := 1;
 	end;
 
 	Function Lua_GetGearStat( MyLua: PLua_State ): LongInt; cdecl;
@@ -2629,6 +2666,7 @@ initialization
 	lua_register( MyLua , 'gh_GetGearG' , @Lua_GetGearG );
 	lua_register( MyLua , 'gh_GetGearS' , @Lua_GetGearS );
 	lua_register( MyLua , 'gh_GetGearV' , @Lua_GetGearV );
+	lua_register( MyLua , 'gh_RawFollowLink' , @Lua_RawFollowLink );
 	lua_register( MyLua , 'gh_GetStat' , @Lua_GetGearStat );
 	lua_register( MyLua , 'gh_SetStat' , @Lua_SetGearStat );
 	lua_register( MyLua , 'gh_GetNAtt' , @Lua_GetNAtt );
@@ -2665,7 +2703,7 @@ initialization
 	lua_register( MyLua , 'gh_SeekGate' , @Lua_SeekGate );
 	lua_register( MyLua , 'gh_PCMekCanEnterScene' , @Lua_PCMekCanEnterScene );
 	lua_register( MyLua , 'gh_CalculateReward' , @Lua_CalculateReward );
-
+	
 	if lua_dofile( MyLua , 'gamedata/gh_messagemutator.lua' ) <> 0 then RecordError( 'GH_MESSAGEMUTATOR ERROR: ' + lua_tostring( MyLua , -1 ) );
 	if lua_dofile( MyLua , 'gamedata/gh_functions.lua' ) <> 0 then RecordError( 'GH_FUNCTIONS ERROR: ' + lua_tostring( MyLua , -1 ) );
 	if lua_dofile( MyLua , 'gamedata/gh_init.lua' ) <> 0 then RecordError( 'GH_INIT ERROR: ' + lua_tostring( MyLua , -1 ) )
