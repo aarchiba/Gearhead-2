@@ -176,7 +176,36 @@ function gh_GiveCash( cash_amount )
 end
 
 
+function gh_FindGearsPred(predicate)
+    -- Find all registered gears for which predicate returns true
+    r = {}
+    for k,v in pairs(gh) do
+        if v~=nil and predicate(v) then
+            table.insert(r, v)
+        end
+    end
+    return r
+end
 
-
-
+function gh_FindGears(attrs)
+    -- Find all registered gears matching attrs
+    -- attrs should be a table listing key-value pairs the gear should have,
+    -- for example:
+    -- gh_FindGears{NAME="Crystal Skull"}
+    -- the return value is a table whose values are all matching gears
+    print(attrs);
+    function p(gear)
+        S = gh_GetSAtts(gear)
+        if S == nil then
+            return false
+        end
+        for k,v in pairs(attrs) do
+            if S[k] ~= v then
+                return false
+            end
+        end
+        return true
+    end
+    return gh_FindGearsPred(p)
+end
 

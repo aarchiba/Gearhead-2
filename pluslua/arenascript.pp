@@ -1817,6 +1817,58 @@ end;
 		Lua_GetGearStat := 1;
 	end;
 
+	Function Lua_GetSAtt( MyLua: PLua_State ): LongInt; cdecl;
+		{ Take a gear and return one of its string attributes. }
+		{ Record an error if the gear is not found. }
+	var
+		MyGear: GearPtr;
+		key: String;
+		S: SAttPtr;
+	begin
+		MyGear := GetLuaGear( AS_GB ,MyLua , 1 );
+		if ( MyGear <> Nil ) then begin
+			key := luaL_checkstring( MyLua , 2 );
+			S := FindSAtt( MyGear^.SA , key );
+			if S <> Nil then begin
+				lua_pushstring( MyLua , S^.Info );
+			end else begin
+				lua_pushnil( MyLua );
+			end;
+		end else begin
+			lua_pushnil( MyLua );
+			RecordError( 'ERROR: GetSAtt passed nonexistant gear!' );
+		end;
+		Lua_GetSAtt := 1;
+	end;
+
+	Function Lua_GetSAtts( MyLua: PLua_State ): LongInt; cdecl;
+		{ Take a gear and return a table of its string attributes. }
+		{ Record an error if the gear is not found. }
+	var
+		MyGear: GearPtr;
+		S: SAttPtr;
+		key: String;
+		value: String;
+	begin
+		MyGear := GetLuaGear( AS_GB ,MyLua , 1 );
+		if ( MyGear <> Nil ) then begin
+			lua_newtable( MyLua );
+			S := MyGear^.SA;
+			while S <> Nil do begin
+				value := S^.Info;
+				key := UpCase( ExtractWord( value ) );
+				lua_pushstring( MyLua , key );
+				lua_pushstring( MyLua , RetrieveAString( value ) );
+				lua_settable( MyLua , -3 );
+				S := S^.Next;
+			end
+		end else begin
+			lua_pushnil( MyLua );
+			RecordError( 'ERROR: GetSAtts passed nonexistant gear!' );
+		end;
+		Lua_GetSAtts := 1;
+	end;
+
 	Function Lua_GetNAtt( MyLua: PLua_State ): LongInt; cdecl;
 		{ Take a gear and return one of its numeric attributes. }
 		{ Record an error if the gear is not found. }
@@ -2557,13 +2609,43 @@ end;
 
 			{ Any further processing must be done by other commands. }
 		end;
+		Lua_CreatePart := 1;
+	end;
 
-		if NewPart <> Nil then begin
-			lua_pushlightuserdata( MyLua , Pointer( NewPart ) );
+	Function Lua_CloneGear( MyLua: PLua_State ): LongInt; cdecl;
+		{ Duplicate an existing gear. }
+		{ This function will return a pointer to the new gear. }
+	var
+		GearToClone: GearPtr;
+		NewPart: GearPtr;
+	begin
+		NewPart := Nil;
+		GearToClone := GetLuaGear( AS_GB , MyLua , 1 );
+
+		if GearToClone <> Nil then begin
+			{ As long as we have a GB, try to stick the item there. }
+			if AS_GB <> Nil then begin
+				NewPart := InstantGear( GearToClone );
+				{ If we found something, stick it on the map. }
+				if NewPart <> Nil then begin
+					{ Deploy the item. }
+					EquipThenDeploy( AS_GB , NewPart , False );
+				end;
+
+				{ Any further processing must be done by other commands. }
+			end;
+
+			if NewPart <> Nil then begin
+				lua_pushlightuserdata( MyLua , Pointer( NewPart ) );
+			end else begin
+				lua_pushnil( MyLua );
+				RecordError( 'Lua_CloneGear failed to clone ' + GearName(GearToClone) );
+			end;
 		end else begin
 			lua_pushnil( MyLua );
+			RecordError( 'Lua_CloneGear was passed a nonexistent gear' );
 		end;
-		Lua_CreatePart := 1;
+		Lua_CloneGear := 1;
 	end;
 
 	Function Lua_GiveGear( MyLua: PLua_State ): LongInt; cdecl;
@@ -2669,6 +2751,8 @@ initialization
 	lua_register( MyLua , 'gh_RawFollowLink' , @Lua_RawFollowLink );
 	lua_register( MyLua , 'gh_GetStat' , @Lua_GetGearStat );
 	lua_register( MyLua , 'gh_SetStat' , @Lua_SetGearStat );
+	lua_register( MyLua , 'gh_GetSAtt' , @Lua_GetSAtt );
+	lua_register( MyLua , 'gh_GetSAtts' , @Lua_GetSAtts );
 	lua_register( MyLua , 'gh_GetNAtt' , @Lua_GetNAtt );
 	lua_register( MyLua , 'gh_SetNAtt' , @Lua_SetNAtt );
 	lua_register( MyLua , 'gh_AddNAtt' , @Lua_AddNAtt );
@@ -2699,6 +2783,7 @@ initialization
 	lua_register( MyLua , 'gh_AddMenuItem' , @Lua_AddMenuItem );
 	lua_register( MyLua , 'gh_QueryMenu' , @Lua_QueryMenu );
 	lua_register( MyLua , 'gh_RawCreatePart' , @Lua_CreatePart );
+	lua_register( MyLua , 'gh_CloneGear' , @Lua_CloneGear );
 	lua_register( MyLua , 'gh_GiveGear' , @Lua_GiveGear );
 	lua_register( MyLua , 'gh_SeekGate' , @Lua_SeekGate );
 	lua_register( MyLua , 'gh_PCMekCanEnterScene' , @Lua_PCMekCanEnterScene );
