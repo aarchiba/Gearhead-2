@@ -12,15 +12,33 @@ end
 
 print("Yellow button!")
 
-buruburu = gh_CreateAndGivePart( "SAN-X9 Buru Buru" )
 
---[[
+buruburu1 = gh_CreateAndGivePart( "SAN-X9 Buru Buru" )
+buruburu = gh_CreatePartMatching{DESIG="SAN-X9"}
 print(string.format("%s\tS:%d\tV:%d",
     GG[buruburu:GetG()],
     buruburu:GetS(),
     buruburu:GetV()));
-]]
 
+function printSAtts(v)
+    S = gh_GetSAtts(v)
+    if S ~= nil then 
+        for k2, v2 in pairs(S) do
+            print(k2 .. " " .. v2)
+        end
+    else
+        print("nil")
+    end
+end
+
+printSAtts(buruburu)
+
+--[[
+for k,v in pairs(gh_FindGears{DESIG="SAN-X9"}) do
+    printSAtts(v)
+    print()
+end
+]]
 -- gh_Print(type(buruburu)) -- it's a table
 
 --[[
@@ -48,17 +66,6 @@ while EL ~= nil do
 end
 ]]
 
-function printSAtts(v)
-    S = gh_GetSAtts(v)
-    if S ~= nil then 
-        for k2, v2 in pairs(S) do
-            print(k2 .. " " .. v2)
-        end
-    else
-        print("nil")
-    end
-end
-
 --[[
 for k,v in pairs(gh) do
     print(k)
@@ -67,10 +74,22 @@ for k,v in pairs(gh) do
 end
 ]]
 
+--[[
+orig = nil
 for k,v in pairs(gh_FindGears{NAME="Crystal Skull"}) do
     printSAtts(v)
     print()
+    orig = v
 end
+]]
+
+--[[
+print "Cloning that object"
+w = gh_CloneGear(orig)
+printSAtts(w)
+]]
+
+
 -- buruburu has three entries:
 -- ptr is a userdata
 -- stat is a table

@@ -2609,10 +2609,17 @@ end;
 
 			{ Any further processing must be done by other commands. }
 		end;
+
+		if NewPart <> Nil then begin
+			lua_pushlightuserdata( MyLua , Pointer( NewPart ) );
+		end else begin
+			lua_pushnil( MyLua );
+		end;
 		Lua_CreatePart := 1;
 	end;
 
-	Function Lua_CloneGear( MyLua: PLua_State ): LongInt; cdecl;
+
+	Function Lua_RawCloneGear( MyLua: PLua_State ): LongInt; cdecl;
 		{ Duplicate an existing gear. }
 		{ This function will return a pointer to the new gear. }
 	var
@@ -2625,9 +2632,12 @@ end;
 		if GearToClone <> Nil then begin
 			{ As long as we have a GB, try to stick the item there. }
 			if AS_GB <> Nil then begin
-				NewPart := InstantGear( GearToClone );
+				NewPart := CloneGear( GearToClone );
 				{ If we found something, stick it on the map. }
 				if NewPart <> Nil then begin
+					{ Register it with Lua. }
+					ActivateGearTree( NewPart );
+
 					{ Deploy the item. }
 					EquipThenDeploy( AS_GB , NewPart , False );
 				end;
@@ -2639,13 +2649,13 @@ end;
 				lua_pushlightuserdata( MyLua , Pointer( NewPart ) );
 			end else begin
 				lua_pushnil( MyLua );
-				RecordError( 'Lua_CloneGear failed to clone ' + GearName(GearToClone) );
+				RecordError( 'Lua_RawCloneGear failed to clone ' + GearName(GearToClone) );
 			end;
 		end else begin
 			lua_pushnil( MyLua );
-			RecordError( 'Lua_CloneGear was passed a nonexistent gear' );
+			RecordError( 'Lua_RawCloneGear was passed a nonexistent gear' );
 		end;
-		Lua_CloneGear := 1;
+		Lua_RawCloneGear := 1;
 	end;
 
 	Function Lua_GiveGear( MyLua: PLua_State ): LongInt; cdecl;
@@ -2783,7 +2793,7 @@ initialization
 	lua_register( MyLua , 'gh_AddMenuItem' , @Lua_AddMenuItem );
 	lua_register( MyLua , 'gh_QueryMenu' , @Lua_QueryMenu );
 	lua_register( MyLua , 'gh_RawCreatePart' , @Lua_CreatePart );
-	lua_register( MyLua , 'gh_CloneGear' , @Lua_CloneGear );
+	lua_register( MyLua , 'gh_RawCloneGear' , @Lua_RawCloneGear );
 	lua_register( MyLua , 'gh_GiveGear' , @Lua_GiveGear );
 	lua_register( MyLua , 'gh_SeekGate' , @Lua_SeekGate );
 	lua_register( MyLua , 'gh_PCMekCanEnterScene' , @Lua_PCMekCanEnterScene );

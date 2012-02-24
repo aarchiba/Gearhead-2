@@ -60,6 +60,20 @@ function gh_GetCurrentScene()
 	return( ScenePtr )
 end
 
+function gh_CloneGear( gear )
+	-- Create a new part, then return its table.
+	local NewPart = gh_RawCloneGear( gear );
+	if NewPart ~= nil then
+		NewPart = gh[ NewPart ]
+        if NewPart == nil then
+            error( "ERROR: new part not in gh table" );
+        end
+	else
+		error( "ERROR: CreatePart couldn't create "..full_name );
+	end
+	return( NewPart )
+end
+
 function gh_CreatePart( full_name )
 	-- Create a new part, then return its table.
 	local NewPart = gh_RawCreatePart( full_name );
@@ -193,7 +207,6 @@ function gh_FindGears(attrs)
     -- for example:
     -- gh_FindGears{NAME="Crystal Skull"}
     -- the return value is a table whose values are all matching gears
-    print(attrs);
     function p(gear)
         S = gh_GetSAtts(gear)
         if S == nil then
@@ -209,3 +222,10 @@ function gh_FindGears(attrs)
     return gh_FindGearsPred(p)
 end
 
+
+function gh_CreatePartMatching( attrs )
+    for k,v in pairs(gh_FindGears(attrs)) do
+        return gh_CloneGear(v)
+    end
+    return nil
+end
