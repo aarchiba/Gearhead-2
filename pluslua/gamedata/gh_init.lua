@@ -67,6 +67,12 @@
 	function proto_gear:SetNAtt( g , s , v )
 		return gh_SetNAtt( self.ptr , g , s , v )
 	end
+	function proto_gear:GetSAtts( g )
+		return gh_GetSAtts( self.ptr )
+	end
+	function proto_gear:SetSAtts( g , s )
+		return gh_SetSAtts( self.ptr , s )
+	end
 	function proto_gear:AddNAtt( g , s , v )
 		return gh_AddNAtt( self.ptr , g , s , v )
 	end

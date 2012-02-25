@@ -34,10 +34,6 @@ function printSAtts(v)
     end
 end
 
-printSAtts(buruburu)
-
-print()
-
 S = gh_GetSAtts(buruburu)
 S["FOO"] = "Bar"
 gh_SetSAtts(buruburu, S)
