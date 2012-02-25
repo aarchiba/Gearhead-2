@@ -429,6 +429,56 @@ end;
 
 
 Function MakeSwapBitmap( MyImage: PSDL_Surface; RSwap,YSwap,GSwap: PSDL_Color ): PSDL_Surface;
+var
+	X,Y: Integer;
+	MyImage2: PSDL_Surface;
+	pixel: ^LONGWORD;
+	R,G,B,A: Byte;
+	BPP, pitch: Integer;
+begin
+	{Make 32-bit copy}
+	MyImage2 := SDL_CreateRGBSurface( SDL_SWSURFACE or SDL_SRCALPHA , MyImage^.W , MyImage^.H , 
+					32 , $ff000000 , $00ff0000 , $0000ff00 , $000000ff );
+	SDL_BlitSurface( MyImage , Nil , MyImage2 , Nil );
+	{Lock}
+	SDL_LockSurface(MyImage2);
+	BPP := MyImage2^.format^.BytesPerPixel;
+	pitch := MyImage2^.pitch;
+	{Remap colors}
+	for X := 1 to MyImage^.W do begin
+		for Y := 1 to MyImage^.H do begin
+			{Extract color}
+			pixel := MyImage2^.pixels+(X-1)*4+(Y-1)*pitch;
+			SDL_GetRGBA(pixel^, MyImage2^.format, @R, @G, @B, @A);
+			{If it's pure Y R or G, remap it}
+			{If it's blue, set alpha}
+			if (B=0) and (G=0) then begin
+				B := ScaleColorValue( RSwap^.B, R );
+				G := ScaleColorValue( RSwap^.G, R );
+				R := ScaleColorValue( RSwap^.R, R );
+			end else if (B=0) and (R=0) then begin
+				B := ScaleColorValue( GSwap^.B, G );
+				R := ScaleColorValue( GSwap^.R, G );
+				G := ScaleColorValue( GSwap^.G, G );
+			end else if (B=0) and (R=G) then begin
+				B := ScaleColorValue( YSwap^.B, G );
+				R := ScaleColorValue( YSwap^.R, G );
+				G := ScaleColorValue( YSwap^.G, G );
+			end else if (B=255) and (R=0) and (G=0) then begin
+				A := 128;
+			end;
+			{Write color to surface}
+			pixel^ := SDL_MapRGBA(MyImage2^.format, R, G, B, A);
+		end
+	end;
+	{Unlock}
+	SDL_UnlockSurface(MyImage2);
+	{FIXME: convert to a good format for blitting to the screen? }
+	{Return new surface}
+	MakeSwapBitmap := MyImage2;
+end;
+
+Function MakeSwapBitmapPaletted( MyImage: PSDL_Surface; RSwap,YSwap,GSwap: PSDL_Color ): PSDL_Surface;
 	{ Given a bitmap, create an 8-bit copy with pure colors. }
 	{         0 : Transparent (0,0,255) }
 	{   1 -  63 : Grey Scale            }
@@ -488,7 +538,7 @@ begin
 	end;
 	SDL_SetPalette( MyImage2 , SDL_LOGPAL or SDL_PHYSPAL , MyPal , 0 , 256 );
 
-	MakeSwapBitmap := MyImage2;
+	MakeSwapBitmapPaletted := MyImage2;
 end;
 
 Procedure GenerateColor( var ColorString: String; var ColorStruct: TSDL_Color );
@@ -583,7 +633,7 @@ begin
 
 			{ Convert to the screen mode. }
 			{ This will make blitting far quicker. }
-			tmp := SDL_ConvertSurface( it^.Img , Game_Screen^.Format , SDL_SRCCOLORKEY );
+			tmp := SDL_DisplayFormatAlpha( it^.Img );
 			SDL_FreeSurface( it^.Img );
 			it^.Img := TMP;
 		end;
