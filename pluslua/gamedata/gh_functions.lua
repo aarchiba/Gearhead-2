@@ -74,6 +74,36 @@ function gh_CloneGear( gear )
 	return( NewPart )
 end
 
+function gh_CreatePartMatching( attrs )
+    -- Create a new part
+    for _, l in ipairs({ LIST_STANDARD, LIST_ARCHETYPES, LIST_STC, LIST_WMONLIST }) do
+        local ok, S
+        for g in siblings(gh_StockList(l)) do
+            ok = true
+            S = gh_GetSAtts(g)
+            for k,v in pairs(attrs) do
+                if S[k] ~= v then
+                    ok = false
+                    break
+                end
+            end
+            if ok then
+                return gh_CloneGear(g)
+            end
+        end
+    end
+    error("Part not found")
+    return nil
+end
+function gh_CreateAndGivePartMatching( attrs )
+	-- Create a new part and then immediately give it to the PC.
+	local NewPart = gh_CreatePartMatching( attrs );
+	if NewPart ~= nil then
+		gh_GiveGear( NewPart );
+	end;
+	return( NewPart );
+end
+
 function gh_CreatePart( full_name )
 	-- Create a new part, then return its table.
 	local NewPart = gh_RawCreatePart( full_name );
@@ -104,8 +134,6 @@ function gh_CreateAndGivePart( full_name )
 	end;
 	return( NewPart );
 end;
-
-
 
 
 function gh_GetString( source )
@@ -233,13 +261,6 @@ function gh_FindGears(attrs)
     return gh_FindGearsPred(p)
 end
 
-
-function gh_CreatePartMatching( attrs )
-    for k,v in pairs(gh_FindGears(attrs)) do
-        return gh_CloneGear(v)
-    end
-    return nil
-end
 
 function _walker(direction, gear)
     nextgear = gh_FollowLink(gear, direction)

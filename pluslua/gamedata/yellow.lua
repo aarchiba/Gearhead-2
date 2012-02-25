@@ -13,14 +13,15 @@ end
 print("Yellow button!")
 
 
---buruburu1 = gh_CreateAndGivePart( "SAN-X9 Buru Buru" )
+buruburu = gh_CreateAndGivePartMatching{DESIG="SAN-X9"}
+--buruburu = gh_CreateAndGivePart( "SAN-X9 Buru Buru" )
 --[[
 buruburu = gh_CreatePartMatching{DESIG="SAN-X9"}
+]]
 print(string.format("%s\tS:%d\tV:%d",
     GG[buruburu:GetG()],
     buruburu:GetS(),
     buruburu:GetV()));
-]]
 
 function printSAtts(v)
     S = gh_GetSAtts(v)
@@ -33,7 +34,7 @@ function printSAtts(v)
     end
 end
 
---printSAtts(buruburu)
+printSAtts(buruburu)
 
 print()
 
