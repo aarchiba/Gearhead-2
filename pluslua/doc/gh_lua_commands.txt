@@ -147,6 +147,37 @@ gh_TrySkillTest( skill , stat , target )
 	The PC will make a test using skill+stat against a difficulty of target.
 	If this test is failed, additional tests may be taken.
 
+gh_CloneGear( gear )
+    Make a duplicate of the gear.
+
+gh_CreatePartMatching( attrs )
+    Create a part matching the string attributes in attr. For example,
+    gh_CreatePartMatching{DESIG="SAN X-9"} finds a stock Buru Buru and
+    returns a clone of it. The first matching part is used.
+
+gh_CreateAndGivePartMatching( attrs )
+    Create a part matching the string attributes in attr. and give it to the PC.
+
+gh_StockList( list_number )
+    Return the first object in one of the "stock" objects lists; the others
+    appear as its siblings. The possible stock object lists are specified by
+    LIST_STANDARD for Standard_Equipment_List,
+    LIST_ARCHETYPES for Archetypes_List,
+    LIST_STC for STC_Item_List, or
+    LIST_WMONLIST for WMonList.
+
+siblings( gear )
+    A Lua-style iterator to allow looping through the siblings of a gear:
+    for s in siblings(gear) do ... end
+    The gear itself appears as the first "sibling".
+
+inventory( gear )
+    A Lua-style iterator to allow looping through the inventory of a gear.
+
+geartree( gear )
+    A Lua-style iterator to allow looping through a gear and all its
+    subcomponents, inventory and their subcomponents and inventories et 
+    cetera.
 
 *****************************
 ***   LIST  OF  METHODS   ***
@@ -172,6 +203,30 @@ gear:GetY()
 
 gear:SetNAtt( G , S , V )
 	Sets a numeric attribute with descriptors G,S and value V.
+
+gear:Name()
+    Returns the gear's name (as computed by GearName).
+
+gear:Next()
+    Returns the gear's first sibling (or nil).
+
+gear:Parent()
+    Returns the gear's parent (or nil).
+
+gear:SubCom()
+    Returns the gear's first subcomponent (or nil).
+
+gear:InvCom()
+    Returns the first item in the gear's inventory (or nil).
+
+gear:GetSAtts()
+    Returns a Lua table listing the gear's string attributes as
+    key/value pairs. (Keys are forced to upper case.)
+
+gear:SetSAtts(t)
+    Replaces all the gear's string attributes with those described
+    in the Lua table t. Note that any not appearing in the table are
+    removed.
 
   ==============================
   ===   CHARACTER  METHODS   ===
