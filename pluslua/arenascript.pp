@@ -1794,6 +1794,36 @@ end;
 		Lua_RawFollowLink := 1;
 	end;
 
+	Function Lua_RawStockList( MyLua: PLua_State ): LongInt; cdecl;
+		{ Take a gear and return its first subcomponent. }
+		{ Record an error if the gear is not found or nil if it has none. }
+	var
+		MyGear: GearPtr;
+		target: GearPtr;
+		S: Integer;
+	begin
+		S := luaL_checkint( MyLua , 1 );
+
+		case S of
+			LIST_STANDARD: target := Standard_Equipment_List;
+			LIST_WMONLIST: target := WMonList;
+			LIST_ARCHETYPES: target := Archetypes_List;
+			LIST_STC: target := STC_Item_List;
+			else begin
+				target := Nil;
+				RecordError( 'ERROR: RawStockList passed invalid kind of list!' );
+			end
+		end;
+
+		if target <> Nil then begin
+			lua_pushlightuserdata( MyLua , Pointer ( target ) );
+		end else begin
+			lua_pushnil( MyLua );
+		end;
+
+		Lua_RawStockList := 1;
+	end;
+
 	Function Lua_GetGearStat( MyLua: PLua_State ): LongInt; cdecl;
 		{ Take a gear and return one of its stat values. }
 		{ Record an error if the gear is not found. }
@@ -1867,6 +1897,25 @@ end;
 			RecordError( 'ERROR: GetSAtts passed nonexistant gear!' );
 		end;
 		Lua_GetSAtts := 1;
+	end;
+
+	Function Lua_GetName( MyLua: PLua_State ): LongInt; cdecl;
+		{ Take a gear and return one its name. }
+		{ Record an error if the gear is not found. }
+	var
+		MyGear: GearPtr;
+		S: String;
+	begin
+		MyGear := GetLuaGear( AS_GB ,MyLua , 1 );
+
+		if ( MyGear <> Nil ) then begin
+			lua_pushstring( MyLua , GearName( MyGear ) );
+		end else begin
+			lua_pushnil( MyLua );
+			RecordError( 'ERROR: GetName passed nonexistant gear!' );
+		end;
+
+		Lua_GetName := 1;
 	end;
 
 	Function Lua_GetNAtt( MyLua: PLua_State ): LongInt; cdecl;
@@ -2776,10 +2825,12 @@ initialization
 	lua_register( MyLua , 'gh_GetGearS' , @Lua_GetGearS );
 	lua_register( MyLua , 'gh_GetGearV' , @Lua_GetGearV );
 	lua_register( MyLua , 'gh_RawFollowLink' , @Lua_RawFollowLink );
+	lua_register( MyLua , 'gh_RawStockList' , @Lua_RawStockList );
 	lua_register( MyLua , 'gh_GetStat' , @Lua_GetGearStat );
 	lua_register( MyLua , 'gh_SetStat' , @Lua_SetGearStat );
 	lua_register( MyLua , 'gh_GetSAtt' , @Lua_GetSAtt );
 	lua_register( MyLua , 'gh_GetSAtts' , @Lua_GetSAtts );
+	lua_register( MyLua , 'gh_GetName' , @Lua_GetName );
 	lua_register( MyLua , 'gh_GetNAtt' , @Lua_GetNAtt );
 	lua_register( MyLua , 'gh_SetNAtt' , @Lua_SetNAtt );
 	lua_register( MyLua , 'gh_AddNAtt' , @Lua_AddNAtt );

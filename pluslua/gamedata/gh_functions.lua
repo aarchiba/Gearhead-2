@@ -85,6 +85,17 @@ function gh_CreatePart( full_name )
 	return( NewPart )
 end
 
+function gh_StockList( list_number )
+	-- Create a new part, then return its table.
+	local NewPart = gh_RawStockList( list_number );
+	if NewPart ~= nil then
+		NewPart = gh[ NewPart ]
+	else
+		error( "ERROR: StockList couldn't find list number "..list_number );
+	end
+	return( NewPart )
+end
+
 function gh_CreateAndGivePart( full_name )
 	-- Create a new part and then immediately give it to the PC.
 	local NewPart = gh_CreatePart( full_name );
@@ -229,3 +240,40 @@ function gh_CreatePartMatching( attrs )
     end
     return nil
 end
+
+function _walker(direction, gear)
+    nextgear = gh_FollowLink(gear, direction)
+    return nextgear
+end
+
+function siblings(gear)
+    -- Iterator to walk a linked list of sibling gears
+    return _walker, LINK_NEXT, gear
+end
+function inventory(gear)
+    -- Iterator to walk the inventory of a gear
+    return _walker, LINK_NEXT, gh_FollowLink(gear, LINK_INVCOM)
+end
+function geartree(gear)
+    -- Iterator to walk all the subcomponents and inventory of a gear
+    local first, stack
+    first = true
+    stack = {}
+    table.insert(stack, gear)
+    return function()
+        local g
+        g = table.remove(stack)
+        if g ~= nil then
+            if not first then
+                table.insert(stack, gh_FollowLink(g, LINK_NEXT))
+            else
+                first = false
+            end
+            table.insert(stack, gh_FollowLink(g, LINK_INVCOM))
+            table.insert(stack, gh_FollowLink(g, LINK_SUBCOM))
+        end
+        return g
+    end
+end
+
+

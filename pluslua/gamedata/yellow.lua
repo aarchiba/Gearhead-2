@@ -33,6 +33,18 @@ end
 
 printSAtts(buruburu)
 
+print()
+
+for g in siblings(gh_StockList(LIST_STANDARD)) do
+    print(gh_GetName(g))
+end
+
+--[[
+for g in geartree(buruburu) do
+    print(gh_GetName(g))
+end
+]]
+
 --[[
 for k,v in pairs(gh_FindGears{DESIG="SAN-X9"}) do
     printSAtts(v)
