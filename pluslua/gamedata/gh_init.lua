@@ -298,6 +298,10 @@ function gh_register( gearptr, gearscript )
 	-- Given a gear pointer and its associated script, store everything
 	-- in the gh table.
 
+    if gh[gearptr] ~= nil then
+        print "Double registration"
+        return
+    end
 	-- Determine the prototype for this gear.
 	proto = gh_prototypes.default;
 	if gh_prototypes[ gh_GetGearG( gearptr ) ] ~= nil then

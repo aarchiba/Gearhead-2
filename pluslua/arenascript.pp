@@ -2750,7 +2750,24 @@ end;
 		Lua_CalculateReward := 1;
 	end;
 
-
+	Procedure RegisterStockItems;
+	var
+		G: GearPtr;
+		i: Integer;
+	begin
+		for i := 1 to 4 do begin
+			case i of
+				1: G := Standard_Equipment_List;
+				2: G := WMonList;
+				3: G := Archetypes_List;
+				4: G := STC_Item_List;
+			end;
+			while G <> Nil do begin
+				ActivateGearTree(G);
+				G := G^.Next;
+			end
+		end
+	end;
 
 
 
@@ -2803,6 +2820,8 @@ initialization
 	if lua_dofile( MyLua , 'gamedata/gh_functions.lua' ) <> 0 then RecordError( 'GH_FUNCTIONS ERROR: ' + lua_tostring( MyLua , -1 ) );
 	if lua_dofile( MyLua , 'gamedata/gh_init.lua' ) <> 0 then RecordError( 'GH_INIT ERROR: ' + lua_tostring( MyLua , -1 ) )
 	else Lua_Is_Go := True;
+
+	RegisterStockItems;
 
 	SCRIPT_DynamicEncounter := Nil;
 
