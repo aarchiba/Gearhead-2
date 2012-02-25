@@ -297,4 +297,17 @@ function geartree(gear)
     end
 end
 
+function alligator(k,v)
+    return tostring(k) .. " <" .. tostring(v) .. ">"
+end
 
+function dealligator(s)
+    return string.find(s, "^(%S*)%s+<(.*)>%s*$")
+end
+
+function gh_SetSAtts(gear, t)
+    gh_RawClearSAtts(gear)
+    for k,v in pairs(t) do
+        gh_RawPrependSAtt(gear, alligator(k,v))
+    end
+end

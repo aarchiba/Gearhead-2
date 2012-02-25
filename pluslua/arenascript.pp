@@ -1798,7 +1798,6 @@ end;
 		{ Take a gear and return its first subcomponent. }
 		{ Record an error if the gear is not found or nil if it has none. }
 	var
-		MyGear: GearPtr;
 		target: GearPtr;
 		S: Integer;
 	begin
@@ -1847,30 +1846,6 @@ end;
 		Lua_GetGearStat := 1;
 	end;
 
-	Function Lua_GetSAtt( MyLua: PLua_State ): LongInt; cdecl;
-		{ Take a gear and return one of its string attributes. }
-		{ Record an error if the gear is not found. }
-	var
-		MyGear: GearPtr;
-		key: String;
-		S: SAttPtr;
-	begin
-		MyGear := GetLuaGear( AS_GB ,MyLua , 1 );
-		if ( MyGear <> Nil ) then begin
-			key := luaL_checkstring( MyLua , 2 );
-			S := FindSAtt( MyGear^.SA , key );
-			if S <> Nil then begin
-				lua_pushstring( MyLua , S^.Info );
-			end else begin
-				lua_pushnil( MyLua );
-			end;
-		end else begin
-			lua_pushnil( MyLua );
-			RecordError( 'ERROR: GetSAtt passed nonexistant gear!' );
-		end;
-		Lua_GetSAtt := 1;
-	end;
-
 	Function Lua_GetSAtts( MyLua: PLua_State ): LongInt; cdecl;
 		{ Take a gear and return a table of its string attributes. }
 		{ Record an error if the gear is not found. }
@@ -1897,6 +1872,44 @@ end;
 			RecordError( 'ERROR: GetSAtts passed nonexistant gear!' );
 		end;
 		Lua_GetSAtts := 1;
+	end;
+
+	Function Lua_RawPrependSAtt( MyLua: PLua_State ): LongInt; cdecl;
+		{ Take a gear and a string and add the string as a SAtt. }
+		{ Record an error if the gear is not found. }
+	var
+		MyGear: GearPtr;
+		S: String;
+		n: SAttPtr;
+	begin
+		MyGear := GetLuaGear( AS_GB ,MyLua , 1 );
+		S := luaL_checkstring( MyLua , 2 );
+		if ( MyGear <> Nil ) then begin
+			New(n);
+			if n = Nil then exit( -1 );
+			n^.Next := MyGear^.SA;
+			MyGear^.SA := n;
+			n^.info := S;
+		end else begin
+			RecordError( 'ERROR: RawPrependSAtt passed nonexistant gear!' );
+		end;
+		Lua_RawPrependSAtt := 0;
+	end;
+
+	Function Lua_RawClearSAtts( MyLua: PLua_State ): LongInt; cdecl;
+		{ Take a gear and dispose of all its string attributes. }
+		{ Record an error if the gear is not found. }
+	var
+		MyGear: GearPtr;
+	begin
+		MyGear := GetLuaGear( AS_GB ,MyLua , 1 );
+		if ( MyGear <> Nil ) then begin
+			DisposeSAtt(MyGear^.SA);
+			MyGear^.SA := Nil;
+		end else begin
+			RecordError( 'ERROR: RawClearSAtts passed nonexistant gear!' );
+		end;
+		Lua_RawClearSAtts := 0;
 	end;
 
 	Function Lua_GetName( MyLua: PLua_State ): LongInt; cdecl;
@@ -2828,8 +2841,9 @@ initialization
 	lua_register( MyLua , 'gh_RawStockList' , @Lua_RawStockList );
 	lua_register( MyLua , 'gh_GetStat' , @Lua_GetGearStat );
 	lua_register( MyLua , 'gh_SetStat' , @Lua_SetGearStat );
-	lua_register( MyLua , 'gh_GetSAtt' , @Lua_GetSAtt );
 	lua_register( MyLua , 'gh_GetSAtts' , @Lua_GetSAtts );
+	lua_register( MyLua , 'gh_RawClearSAtts' , @Lua_RawClearSAtts );
+	lua_register( MyLua , 'gh_RawPrependSAtt' , @Lua_RawPrependSAtt );
 	lua_register( MyLua , 'gh_GetName' , @Lua_GetName );
 	lua_register( MyLua , 'gh_GetNAtt' , @Lua_GetNAtt );
 	lua_register( MyLua , 'gh_SetNAtt' , @Lua_SetNAtt );

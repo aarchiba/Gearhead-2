@@ -38,6 +38,14 @@ printSAtts(buruburu)
 
 print()
 
+S = gh_GetSAtts(buruburu)
+S["FOO"] = "Bar"
+gh_SetSAtts(buruburu, S)
+
+printSAtts(buruburu)
+
+print()
+
 --[[
 for g in siblings(gh_StockList(LIST_STANDARD)) do
     print(gh_GetName(g))
