@@ -46,6 +46,21 @@
 	function proto_gear:GetV()
 		return gh_GetGearV( self.ptr )
 	end
+	function proto_gear:Name()
+		return gh_GetName( self.ptr )
+	end
+	function proto_gear:Next()
+		return gh_FollowLink( self.ptr , LINK_NEXT )
+	end
+	function proto_gear:Parent()
+		return gh_FollowLink( self.ptr , LINK_PARENT )
+	end
+	function proto_gear:InvCom()
+		return gh_FollowLink( self.ptr , LINK_INVCOM )
+	end
+	function proto_gear:SubCom()
+		return gh_FollowLink( self.ptr , LINK_SUBCOM )
+	end
 	function proto_gear:GetNAtt( g , s )
 		return gh_GetNAtt( self.ptr , g , s )
 	end

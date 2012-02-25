@@ -159,6 +159,7 @@ function contextstring_to_contexttable( in_text )
 	end
 	return( c_table )
 end
+
 function gh_FollowLink( gear , link_type )
 	local NewPart = gh_RawFollowLink( gear , link_type );
 	if NewPart ~= nil then
@@ -166,7 +167,6 @@ function gh_FollowLink( gear , link_type )
 	end
 	return( NewPart )
 end
-
 
 function gh_LoseRenown()
 	-- The PC has just lost a fight or somesuch. Lower their renown.
@@ -252,7 +252,7 @@ function siblings(gear)
 end
 function inventory(gear)
     -- Iterator to walk the inventory of a gear
-    return _walker, LINK_NEXT, gh_FollowLink(gear, LINK_INVCOM)
+    return _walker, LINK_NEXT, gear:InvCom()
 end
 function geartree(gear)
     -- Iterator to walk all the subcomponents and inventory of a gear
@@ -265,12 +265,12 @@ function geartree(gear)
         g = table.remove(stack)
         if g ~= nil then
             if not first then
-                table.insert(stack, gh_FollowLink(g, LINK_NEXT))
+                table.insert(stack, g:Next())
             else
                 first = false
             end
-            table.insert(stack, gh_FollowLink(g, LINK_INVCOM))
-            table.insert(stack, gh_FollowLink(g, LINK_SUBCOM))
+            table.insert(stack, g:InvCom())
+            table.insert(stack, g:SubCom())
         end
         return g
     end

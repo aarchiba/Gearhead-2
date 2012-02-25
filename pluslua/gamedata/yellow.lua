@@ -14,11 +14,13 @@ print("Yellow button!")
 
 
 --buruburu1 = gh_CreateAndGivePart( "SAN-X9 Buru Buru" )
+--[[
 buruburu = gh_CreatePartMatching{DESIG="SAN-X9"}
 print(string.format("%s\tS:%d\tV:%d",
     GG[buruburu:GetG()],
     buruburu:GetS(),
     buruburu:GetV()));
+]]
 
 function printSAtts(v)
     S = gh_GetSAtts(v)
@@ -31,13 +33,15 @@ function printSAtts(v)
     end
 end
 
-printSAtts(buruburu)
+--printSAtts(buruburu)
 
 print()
 
+--[[
 for g in siblings(gh_StockList(LIST_STANDARD)) do
     print(gh_GetName(g))
 end
+]]
 
 --[[
 for g in geartree(buruburu) do
