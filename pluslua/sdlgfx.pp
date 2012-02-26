@@ -434,7 +434,7 @@ var
 	MyImage2: PSDL_Surface;
 	pixel: ^LONGWORD;
 	R,G,B,A: Byte;
-	BPP, pitch: Integer;
+	pitch: Integer;
 begin
 	{Make 32-bit copy}
 	MyImage2 := SDL_CreateRGBSurface( SDL_SWSURFACE or SDL_SRCALPHA , MyImage^.W , MyImage^.H , 
@@ -442,7 +442,6 @@ begin
 	SDL_BlitSurface( MyImage , Nil , MyImage2 , Nil );
 	{Lock}
 	SDL_LockSurface(MyImage2);
-	BPP := MyImage2^.format^.BytesPerPixel;
 	pitch := MyImage2^.pitch;
 	{Remap colors}
 	for X := 1 to MyImage^.W do begin
@@ -452,20 +451,20 @@ begin
 			SDL_GetRGBA(pixel^, MyImage2^.format, @R, @G, @B, @A);
 			{If it's pure Y R or G, remap it}
 			{If it's blue, set alpha}
-			if (B=0) and (G=0) then begin
+			if (RSwap <> Nil) and (B=0) and (G=0) then begin
 				B := ScaleColorValue( RSwap^.B, R );
 				G := ScaleColorValue( RSwap^.G, R );
 				R := ScaleColorValue( RSwap^.R, R );
-			end else if (B=0) and (R=0) then begin
+			end else if (GSwap <> Nil) and (B=0) and (R=0) then begin
 				B := ScaleColorValue( GSwap^.B, G );
 				R := ScaleColorValue( GSwap^.R, G );
 				G := ScaleColorValue( GSwap^.G, G );
-			end else if (B=0) and (R=G) then begin
+			end else if (YSwap <> Nil) and (B=0) and (R=G) then begin
 				B := ScaleColorValue( YSwap^.B, G );
 				R := ScaleColorValue( YSwap^.R, G );
 				G := ScaleColorValue( YSwap^.G, G );
 			end else if (B=255) and (R=0) and (G=0) then begin
-				A := 128;
+				A := 0;
 			end;
 			{Write color to surface}
 			pixel^ := SDL_MapRGBA(MyImage2^.format, R, G, B, A);
@@ -612,7 +611,7 @@ begin
 
 		if it^.Img <> Nil then begin
 			{ Set transparency color. }
-			SDL_SetColorKey( it^.Img , SDL_SRCCOLORKEY or SDL_RLEACCEL , SDL_MapRGB( it^.Img^.Format , 0 , 0, 255 ) );
+			{ SDL_SetColorKey( it^.Img , SDL_SRCCOLORKEY or SDL_RLEACCEL , SDL_MapRGB( it^.Img^.Format , 0 , 0, 255 ) ); }
 
 			{ If W or H are zero, use the image's total W and H. }
 			if ( W = 0 ) or ( H = 0 ) then begin
@@ -621,15 +620,17 @@ begin
 			end;
 
 			{ If a color swap has been specified, handle that here. }
-			if Color <> '' then begin
+			if (Color = '') then begin
+				tmp := MakeSwapBitmap( it^.Img , Nil , Nil , Nil );
+			end else begin
 				GenerateColor( Color , RSwap );
 				GenerateColor( Color , YSwap );
 				GenerateColor( Color , GSwap );
-
 				tmp := MakeSwapBitmap( it^.Img , @RSwap , @YSwap , @GSwap );
-				SDL_FreeSurface( it^.Img );
-				it^.img := tmp;
 			end;
+
+			SDL_FreeSurface( it^.Img );
+			it^.img := tmp;
 
 			{ Convert to the screen mode. }
 			{ This will make blitting far quicker. }
