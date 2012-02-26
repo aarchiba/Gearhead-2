@@ -434,12 +434,22 @@ var
 	MyImage2: PSDL_Surface;
 	pixel: ^LONGWORD;
 	R,G,B,A: Byte;
+	Ri, Gi, Bi: Integer;
+	C1, C2: Integer;
 	pitch: Integer;
+	flags: LONGWORD;
+	alpha: Byte;
 begin
 	{Make 32-bit copy}
 	MyImage2 := SDL_CreateRGBSurface( SDL_SWSURFACE or SDL_SRCALPHA , MyImage^.W , MyImage^.H , 
 					32 , $ff000000 , $00ff0000 , $0000ff00 , $000000ff );
+
+	flags := MyImage^.flags;
+	alpha := MyImage^.format^.alpha;
+	{ Turn off SDL_SRCALPHA so the blit is a copy }
+	SDL_SetAlpha( MyImage , flags and not SDL_SRCALPHA and not SDL_SRCCOLORKEY , 255 );
 	SDL_BlitSurface( MyImage , Nil , MyImage2 , Nil );
+	SDL_SetAlpha( MyImage , flags , alpha );
 	{Lock}
 	SDL_LockSurface(MyImage2);
 	pitch := MyImage2^.pitch;
@@ -451,18 +461,28 @@ begin
 			SDL_GetRGBA(pixel^, MyImage2^.format, @R, @G, @B, @A);
 			{If it's pure Y R or G, remap it}
 			{If it's blue, set alpha}
-			if (RSwap <> Nil) and (B=0) and (G=0) then begin
-				B := ScaleColorValue( RSwap^.B, R );
-				G := ScaleColorValue( RSwap^.G, R );
-				R := ScaleColorValue( RSwap^.R, R );
-			end else if (GSwap <> Nil) and (B=0) and (R=0) then begin
-				B := ScaleColorValue( GSwap^.B, G );
-				R := ScaleColorValue( GSwap^.R, G );
-				G := ScaleColorValue( GSwap^.G, G );
-			end else if (YSwap <> Nil) and (B=0) and (R=G) then begin
-				B := ScaleColorValue( YSwap^.B, G );
-				R := ScaleColorValue( YSwap^.R, G );
-				G := ScaleColorValue( YSwap^.G, G );
+			if (RSwap <> Nil) and (GSwap <> Nil) and (YSwap <> Nil) and (B=0) then begin
+				Ri := R;
+				Gi := G;
+				Bi := B;
+				if (R>G) then begin
+					{Between yellow and red}
+					C1 := R-G;
+					C2 := G;
+					Ri := ScaleColorValue( RSwap^.R , C1 ) + ScaleColorValue( YSwap^.R , C2 ) ;
+					Gi := ScaleColorValue( RSwap^.G , C1 ) + ScaleColorValue( YSwap^.G , C2 ) ;
+					Bi := ScaleColorValue( RSwap^.B , C1 ) + ScaleColorValue( YSwap^.B , C2 ) ;
+				end else begin
+					{Between green and yellow}
+					C1 := G-R;
+					C2 := G;
+					Ri := ScaleColorValue( GSwap^.R , C1 ) + ScaleColorValue( YSwap^.R , C2 ) ;
+					Gi := ScaleColorValue( GSwap^.G , C1 ) + ScaleColorValue( YSwap^.G , C2 ) ;
+					Bi := ScaleColorValue( GSwap^.B , C1 ) + ScaleColorValue( YSwap^.B , C2 ) ;
+				end;
+				if (Ri>255) then R := 255 else R := Ri;
+				if (Gi>255) then G := 255 else G := Gi;
+				if (Bi>255) then B := 255 else B := Bi;
 			end else if (B=255) and (R=0) and (G=0) then begin
 				A := 0;
 			end;
