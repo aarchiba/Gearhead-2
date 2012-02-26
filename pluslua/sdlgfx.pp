@@ -424,6 +424,7 @@ Function ScaleColorValue( V , I: Integer ): Byte;
 begin
 	V := ( V * I ) div 200;
 	if V > 255 then V := 255;
+	if V < 0 then V := 0;
 	ScaleColorValue := V;
 end;
 
@@ -435,7 +436,7 @@ var
 	pixel: ^LONGWORD;
 	R,G,B,A: Byte;
 	Ri, Gi, Bi: Integer;
-	C1, C2: Integer;
+	C1, C2, C3: Integer;
 	pitch: Integer;
 	flags: LONGWORD;
 	alpha: Byte;
@@ -461,30 +462,34 @@ begin
 			SDL_GetRGBA(pixel^, MyImage2^.format, @R, @G, @B, @A);
 			{If it's pure Y R or G, remap it}
 			{If it's blue, set alpha}
-			if (RSwap <> Nil) and (GSwap <> Nil) and (YSwap <> Nil) and (B=0) then begin
+			if (B>240) and (R<16) and (G<16) then begin
+				A := 0;
+			end else if (RSwap <> Nil) and (GSwap <> Nil) and (YSwap <> Nil) then begin
 				Ri := R;
 				Gi := G;
 				Bi := B;
 				if (R>G) then begin
 					{Between yellow and red}
-					C1 := R-G;
-					C2 := G;
-					Ri := ScaleColorValue( RSwap^.R , C1 ) + ScaleColorValue( YSwap^.R , C2 ) ;
-					Gi := ScaleColorValue( RSwap^.G , C1 ) + ScaleColorValue( YSwap^.G , C2 ) ;
-					Bi := ScaleColorValue( RSwap^.B , C1 ) + ScaleColorValue( YSwap^.B , C2 ) ;
+					C1 := B;
+					C2 := G-B;
+					C3 := R-G;
+					if (C2<0) then C2 := 0;
+					Ri := C1 + ScaleColorValue( RSwap^.R , C3 ) + ScaleColorValue( YSwap^.R , C2 ) ;
+					Gi := C1 + ScaleColorValue( RSwap^.G , C3 ) + ScaleColorValue( YSwap^.G , C2 ) ;
+					Bi := C1 + ScaleColorValue( RSwap^.B , C3 ) + ScaleColorValue( YSwap^.B , C2 ) ;
 				end else begin
 					{Between green and yellow}
-					C1 := G-R;
-					C2 := G;
-					Ri := ScaleColorValue( GSwap^.R , C1 ) + ScaleColorValue( YSwap^.R , C2 ) ;
-					Gi := ScaleColorValue( GSwap^.G , C1 ) + ScaleColorValue( YSwap^.G , C2 ) ;
-					Bi := ScaleColorValue( GSwap^.B , C1 ) + ScaleColorValue( YSwap^.B , C2 ) ;
+					C1 := B;
+					C2 := R-B;
+					C3 := G-R;
+					if (C2<0) then C2 := 0;
+					Ri := C1 + ScaleColorValue( GSwap^.R , C3 ) + ScaleColorValue( YSwap^.R , C2 ) ;
+					Gi := C1 + ScaleColorValue( GSwap^.G , C3 ) + ScaleColorValue( YSwap^.G , C2 ) ;
+					Bi := C1 + ScaleColorValue( GSwap^.B , C3 ) + ScaleColorValue( YSwap^.B , C2 ) ;
 				end;
-				if (Ri>255) then R := 255 else R := Ri;
-				if (Gi>255) then G := 255 else G := Gi;
-				if (Bi>255) then B := 255 else B := Bi;
-			end else if (B=255) and (R=0) and (G=0) then begin
-				A := 0;
+				if (Ri>255) then R := 255 else if (Ri<0) then R := 0 else R := Ri;
+				if (Gi>255) then G := 255 else if (Gi<0) then G := 0 else G := Gi;
+				if (Bi>255) then B := 255 else if (Bi<0) then B := 0 else B := Bi;
 			end;
 			{Write color to surface}
 			pixel^ := SDL_MapRGBA(MyImage2^.format, R, G, B, A);
