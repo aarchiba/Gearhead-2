@@ -483,6 +483,110 @@ function random_choice(list)
     return list[math.random(table.getn(list))]
 end
 
+function gh_GHARName()
+    local d, r, syllables, vowels, consonants, syl, l, it
+    d = math.random
+    l = string.lower
+
+    function syl(gender)
+        local str, c, v
+        function v()
+            return random_choice(vowels)
+        end
+        function c()
+            return random_choice(consonants)
+        end
+
+		if gender == 'M' then
+			str = random_choice(male_terminals)
+		elseif gender == 'F' then
+			str = random_choice(male_terminals)
+		else
+			if d(16) == 2 then 
+				str = v()
+			elseif d(20) == 2 then
+				if d(3) == 1 then
+					str = c()..v()
+				elseif d(2) == 1 then
+					str = v()..c()
+				elseif d(2) == 1 then
+					str = c()..v()..c()
+				else
+					str = v()..c()..v()
+				end
+			else
+				str = random_choice(syllables)
+			end
+		end
+        return string.lower(str):gsub("^%l", string.upper)
+    end
+    syllables = {
+		'Jo','Sep','Hew','It','Seo','Eun','Suk','Ki','Kang','Cho',
+		'Ai','Bo','Ca','Des','El','Fas','Gun','Ho','Ia','Jes',
+		'Kep','Lor','Mo','Nor','Ox','Pir','Qu','Ra','Sun','Ter',
+		'Ub','Ba','Tyb','War','Bac','Yan','Zee','Es','Vis','Jang',
+		'Vic','Tor','Et','Te','Ni','Mo','Bil','Con','Ly','Dam',
+		'Cha','Ro','The','Bes','Ne','Ko','Kun','Ran','Ma','No',
+		'Ten','Do','To','Me','Ja','Son','Love','Joy','Ken','Iki',
+		'Han','Lu','Ke','Sky','Wal','Jen','Fer','Le','Ia','Chu',
+		'Tek','Ubu','Roi','Har','Old','Pin','Ter','Red','Ex','Al',
+		'Alt','Rod','Mia','How','Phi','Aft','Aus','Tin','Her','Ge',
+		'Hawk','Eye','Ger','Ru','Od','Jin','Un','Hyo','Leo','Star',
+		'Buck','Ers','Rog','Eva','Ova','Oni','Ami','Ga','Cyn','Mai',
+    }
+    female_terminals = {
+		'Ki','Cho','Ai','Bo','Ca','Ho','Ia',
+		'Mo','Qu','Ra','Ba','Zee','Te','Ni','Mo','Ly',
+		'Cha','Ro','The','Ne','Ko','Ma','No',
+		'Do','To','Me','Ja','Love','Joy','Iki',
+		'Lu','Ke','Sky','Le','Ia','Chu',
+		'Ubu','Roi',
+		'Mia','Phi','Ge', 'Eye', 'Eva','Ova','Oni','Ami','Ga','Cyn','Mai',
+    }
+    male_terminals = {
+		'Sep','Hew','It','Eun','Suk','Kang',
+		'Des','El','Fas','Gun','Jes',
+		'Kep','Lor','Nor','Ox','Pir','Sun','Ter',
+		'Ub','Tyb','War','Bac','Yan','Es','Vis','Jang',
+		'Vic','Tor','Et','Bil','Con','Dam',
+		'Bes','Kun','Ran',
+		'Ten','Son','Ken',
+		'Han','Wal','Jen','Fer',
+		'Tek','Har','Old','Pin','Ter','Red','Ex','Al',
+		'Alt','Rod','How','Aft','Aus','Tin','Her',
+		'Hawk','Ger','Od','Jin','Un','Leo','Star',
+		'Buck','Ers','Rog','Cyn'
+    }
+    consonants = {
+		'B','C','D','F','G','H','J','K','L','M','N',
+		'P','Q','R','S','T','V','W','X','Y','Z'
+    }
+    vowels = {
+		'A','E','I','O','U','Y'
+    }
+
+	if d(100)~=5 then
+		it = syl()..l(syl(gender))
+	else
+		it = syl(gender)
+	end
+	if d(8)>string.len(it) then
+		it = syl()..l(it)
+	elseif d(30)==1 then
+		it = syl()..l(it)
+	end
+	if string.len(it)<9 and d(16)==7 then
+		it = it.." "..syl()
+		if d(3) ~= 1 then
+			it = it..l(syl())
+		end
+	end
+	if d(1000)==123 then
+		it = it.." - "..random_choice(consonants)
+	end
+	return it
+end
+
 function gh_GH1Name()
     local d, r, syllables, vowels, consonants, syl, l, it
     d = math.random
@@ -669,20 +773,27 @@ end
 
 
 function gh_RandomName(char)
-	local it
+	local it, gender
 	-- char is a userdata pointing to a gear; the gear may not be a character
 	-- but usually is.
-    repeat
+	-- the gear is not fully initialized yet, so can't be registered.
+	repeat
 		if gh_GetGearG(char) == GG_CHARACTER then
-			it = gh_GH1Name()
+			gender = nil
+			if gh_GetNAtt(char, NAG_CHARDESCRIPTION, NAS_GENDER) == NAV_MALE then
+				gender = 'M'
+			elseif gh_GetNAtt(char, NAG_CHARDESCRIPTION, NAS_GENDER) == NAV_FEMALE then
+				gender = 'F'
+			end
+			it = gh_GHARName(gender)
+			print("generated "..it)
 		else -- Not a character
-			print("Generating a name for a non-character currently named "..gh_GetName(char))
+			--print("Generating a name for a non-character currently named "..gh_GetName(char))
 			it = gh_GH2Name()
 		end
-    until random_names[it] == nil
-    random_names[it] = 1
-    print("generated "..it)
-    return it
+	until random_names[it] == nil
+	random_names[it] = 1
+	return it
 end
 
 
