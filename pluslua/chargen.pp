@@ -757,7 +757,6 @@ var
 		N := 1;
 		while NPC <> Nil do begin
 			{ Assign the NPC a name, and ititialize its age. }
-			SetSAtt( NPC^.SA , 'NAME <' + RandomName + '>' );
 			AddNAtt( NPC^.NA , NAG_CharDescription , NAS_DAge , NAttValue( PC^.NA , NAG_CharDescription , NAS_DAge )  + Random( 4 ) - Random( 4 ) );
 
 			{ Select a job. }
@@ -769,11 +768,13 @@ var
 
 			{ Alter the DESC }
 			ReplacePat( desc , '%job' + BStr( N ) + '%' , GearName( Job1 ) );
-			ReplacePat( desc , '%name' + BStr( N ) + '%' , GearName( NPC ) );
 
 			{ Allocate stat and skill points. }
 			EasyStatPoints( NPC , 105 );
 			RandomSkillPoints( NPC , 50 , True );
+
+			SetSAtt( NPC^.SA , 'NAME <' + RandomName(NPC) + '>' );
+			ReplacePat( desc , '%name' + BStr( N ) + '%' , GearName( NPC ) );
 
 			Inc( N );
 			NPC := NPC^.Next;

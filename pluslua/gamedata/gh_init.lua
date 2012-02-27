@@ -668,13 +668,20 @@ end
 
 
 
-function gh_RandomName()
+function gh_RandomName(char)
 	local it
+	-- char is a userdata pointing to a gear; the gear may not be a character
+	-- but usually is.
     repeat
-		it = gh_GH1Name()
+		if gh_GetGearG(char) == GG_CHARACTER then
+			it = gh_GH1Name()
+		else -- Not a character
+			print("Generating a name for a non-character currently named "..gh_GetName(char))
+			it = gh_GH2Name()
+		end
     until random_names[it] == nil
     random_names[it] = 1
-    print("generating "..it)
+    print("generated "..it)
     return it
 end
 

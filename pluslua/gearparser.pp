@@ -308,7 +308,6 @@ begin
 
 	{ Give the NPC a random name + gender + age + personality traits. }
 	if SAttValue( NPC^.SA , 'NAME' ) = '' then begin
-		SetSAtt( NPC^.SA , 'NAME <' + RandomName + '>' );
 		SetNAtt( NPC^.NA , NAG_CharDescription , NAS_Gender , Random( 2 ) + 1 );
 		if NAttValue( NPC^.NA , NAG_CharDescription , NAS_DAge ) = 0 then AddNAtt( NPC^.NA , NAG_CharDescription , NAS_DAge , 1 + Random( 10 ) - Random( 10 ) + RollStep( 5 ) );
 
@@ -323,6 +322,7 @@ begin
 			if Random( 32 ) = 1 then NPC^.Stat[T] := NPC^.Stat[T] + Random( 5 ) - Random( 5 );
 			if NPC^.Stat[T] < 1 then NPC^.Stat[T] := 1;
 		end;
+		SetSAtt( NPC^.SA , 'NAME <' + RandomName(NPC) + '>' );
 	end;
 
 	{ If this is a combatant character, set the skills to match the reputation. }

@@ -315,7 +315,7 @@ Const
 Procedure InitChar(Part: GearPtr);
 Function CharBaseDamage( PC: GearPtr; CBod,CVit: Integer ): Integer;
 
-Function RandomName: String;
+Function RandomName(Ch:GearPtr): String;
 procedure RollStats( PC: GearPtr; Pts: Integer);
 function RandomPilot( StatPoints , SkillRank: Integer ): GearPtr;
 
@@ -367,8 +367,10 @@ begin
 	CharBaseDamage := HP;
 end;
 
-Function RandomName: String;
+Function RandomName(Ch:GearPtr): String;
 	{Generate a random name for a character.}
+	{Note that this is also called in several other places to generate}
+	{hopefully-unique names, so Char might not actually be a character.}
 Const
 	NumSyllables = 126;
 	SyllableList: Array [1..NumSyllables] of String [5] = (
@@ -446,9 +448,10 @@ var
 	it, E: String;
 begin
 	lua_getglobal( MyLua , 'gh_RandomName' );
+	lua_pushlightuserdata( MyLua , Pointer(Ch) );
 
 	it := '';
-	if lua_pcall( MyLua , 0 , 1 , 0 ) = 0 then begin
+	if lua_pcall( MyLua , 1 , 1 , 0 ) = 0 then begin
 		it := lual_checkstring( MyLua , 1 );
 	end else begin
 		{ Report an error }
@@ -566,7 +569,7 @@ begin
 	SetNAtt( NPC^.NA , NAG_Skill , PS[ Random( NumNPCPilotSpecialties ) + 1 ] , SkillRank );
 
 	{ Generate a random name for the character. }
-	SetSAtt( NPC^.SA , 'Name <'+RandomName+'>');
+	SetSAtt( NPC^.SA , 'Name <'+RandomName(NPC)+'>');
 
 	{ Return a pointer to the character record. }
 	RandomPilot := NPC;

@@ -415,7 +415,7 @@ begin
 
 			{ Maybe set this element's name. }
 			Name := GearName( E );
-			ReplacePat( Name , '%r%' , RandomName );
+			ReplacePat( Name , '%r%' , RandomName(E) );
 			SetSAtt( E^.SA , 'name <' + Name + '>' );
 
 		end else begin
@@ -535,11 +535,11 @@ begin
 		{ Assign a unique name for this scene. }
 		{ Generate a unique name for this scene. }
 		BaseName := SAttValue( QS^.SA , 'NAME' );
-		UniqueName := ReplaceHash( BaseName , RandomName );
+		UniqueName := ReplaceHash( BaseName , RandomName(QS) );
 		Tries := 0;
 		repeat
 			PScene := SeekGearByName( Adventure , UniqueName );
-			if PScene <> Nil then UniqueName := ReplaceHash( BaseName , RandomName );
+			if PScene <> Nil then UniqueName := ReplaceHash( BaseName , RandomName(PScene) );
 			Inc( Tries );
 		until ( PScene = Nil ) or ( Tries > 500 );
 
