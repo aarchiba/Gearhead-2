@@ -303,6 +303,7 @@
 	nid_lookup = {}
 
 
+    random_names = {[""]=1}
 
 
 
@@ -478,8 +479,126 @@ function gh_exportvars( gearptr )
 	end
 end
 
+function random_choice(list)
+    return list[math.random(table.getn(list))]
+end
+
+function gh_RandomName()
+    local d, r, syllables, vowels, consonants, syl, l
+    d = math.random
+    l = string.lower
+
+    function syl(isfirst)
+        local str, c, v
+        function v()
+            return random_choice(vowels)
+        end
+        function c()
+            return random_choice(consonants)
+        end
+
+        if d(20) == 1 then return v(); end
+        if d(4) ~= 1 then
+            if isfirst then
+                if d(2) == 1 then
+                    str = v()..c()..c()
+                elseif d(10) == 1 then
+                    str = c()..v()..v()..c()
+                else
+                    str = c()..v()..c()
+                end
+            else
+                if d(5) == 1 then
+                    str = c()..v()..c()
+                elseif d(4)==1 then
+                    str = v()..c()..v()
+                elseif d(3)==1 then
+                    str = c()..v()
+                elseif d(2)==1 then
+                    str = v()..c()
+                else
+                    str = v()..c()..c()
+                end
+            end
+        elseif d(7) == 2 then
+            if d(3) == 1 then
+                str = c()..v()
+            elseif d(2) == 1 then
+                str = v()..c()
+            elseif d(2) == 1 then
+                str = c()..v()..c()
+            else
+                str = v()..c()..v()
+            end
+        else
+            str = random_choice(syllables)
+        end
+
+        return string.lower(str):gsub("^%l", string.upper)
+    end
+    syllables = {
+		'Jo','Sep','Hew','It','Seo','Eun','Suk','Ki','Kang','Cho',
+		'Ai','Bo','Ca','Des','El','Fas','Gun','Ho','Ia','Jes',
+		'Kep','Lor','Mo','Nor','Ox','Pir','Qu','Ra','Sun','Ter',
+		'Ub','Ba','Tyb','War','Bac','Yan','Zee','Es','Vis','Jang',
+		'Vic','Tor','Et','Te','Ni','Mo','Bil','Con','Ly','Dam',
+		'Cha','Ro','The','Bes','Ne','Ko','Kun','Ran','Ma','No',
+		'Ten','Do','To','Me','Ja','Son','Love','Joy','Ken','Iki',
+		'Han','Lu','Ke','Sky','Wal','Jen','Fer','Le','Ia','Chu',
+		'Tek','Ubu','Roi','Har','Old','Pin','Ter','Red','Ex','Al',
+		'Alt','Rod','Mia','How','Phi','Aft','Aus','Tin','Her','Ge',
+		'Hawk','Eye','Ger','Ru','Od','Jin','Un','Hyo','Leo','Star',
+		'Buck','Ers','Rog','Eva','Ova','Oni','Ami','Ga','Cyn','Mai',
+		'Na','Mel','Gha','Mek','Kat','Ser'
+    }
+    consonants = {
+		'B','C','D','F','G','H','J','K','L','M','N',
+		'P','Q','R','S','T','V','W','X','Y','Z','T',
+		'N','S','H','R','D','L','C','M','P','B','G'
+    }
+    vowels = {
+		'A','E','I','O','U','Y','A','E','I','O',
+		'U'
+    }
+
+    repeat
+        if d(100)~=5 then
+            it = syl(true)..l(syl(false))
+        else
+            it = syl(true)
+        end
+        if d(8)>string.len(it) then
+            it = it..l(syl(false))
+        elseif d(30)==1 then
+            it = it..l(syl(false))
+        end
+
+        if string.len(it)<3 and d(30)~=1 then
+            it = it.." "..syl(true)..l(syl(false))
+        elseif string.len(it)<5 and d(3)~=1 then
+            it = it.." "..syl(true)
+            if d(4) ~= 1 then
+                it = it..l(syl(false))
+            end
+        elseif string.len(it)<5 and d(3)~=1 then
+            it = it.." "..syl(true)
+            if d(3) ~= 1 then
+                it = it..l(syl(false))
+            end
+        end
+        if d(1000)==123 then
+            it = it.." - "..random_choice(consonants)
+        end
+    until random_names[it] == nil
+    random_names[it] = 1
+    print("generating "..it)
+    return it
+end
 
 
 
+--   **********************************
+--   *** GETTING LUA READY TO GO    ***
+--   **********************************
 
-
+math.randomseed(os.time())
