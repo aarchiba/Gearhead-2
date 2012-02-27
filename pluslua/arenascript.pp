@@ -2475,6 +2475,32 @@ end;
 		Lua_GetCurrentScene := 1;
 	end;
 
+	Function Lua_GetFilenameConstants( MyLua: PLua_State ): LongInt; cdecl;
+		{ return a table of all filename constants to lua }
+	const
+		constants: Array [1..14] of String = (
+			'Save_Game_Directory', Save_Game_Directory,
+			'Design_Directory', Design_Directory,
+			'Data_Directory', Data_Directory,
+			'Doc_Directory', Doc_Directory,
+			'Graphics_Directory', Graphics_Directory,
+			'Setting_Directory', Setting_Directory,
+			'', ''
+		);
+	var
+		i: Integer;
+	begin
+		lua_newtable( MyLua );
+		i := 1;
+		while constants[2*i-1]<>'' do begin
+			lua_pushstring( MyLua , constants[2*i-1] );
+			lua_pushstring( MyLua , constants[2*i] );
+			lua_settable( MyLua , -3 );
+			i := i+1;
+		end;
+		Lua_GetFilenameConstants := 1;
+	end;
+
 	Function Lua_DeployRandomMecha( MyLua: PLua_State ): LongInt; cdecl;
 		{ Fill current scene with enemies. }
 	var
@@ -2866,6 +2892,7 @@ initialization
 	lua_register( MyLua , 'gh_GetPCPtr' , @Lua_GetPC );
 	lua_register( MyLua , 'gh_GiveXP' , @Lua_GiveXP );
 	lua_register( MyLua , 'gh_GetCurrentScenePtr' , @Lua_GetCurrentScene );
+	lua_register( MyLua , 'gh_GetFilenameConstants' , @Lua_GetFilenameConstants );
 	lua_register( MyLua , 'gh_DeployRandomMecha' , @Lua_DeployRandomMecha );
 	lua_register( MyLua , 'gh_OpenShop' , @Lua_OpenShop );
 	lua_register( MyLua , 'gh_IsInPlay' , @Lua_IsInPlay );

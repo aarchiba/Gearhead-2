@@ -12,6 +12,9 @@ end
 
 print("Yellow button!")
 
+for k,v in pairs(gh_GetFilenameConstants()) do
+	print(k.."\t"..v)
+end
 
 buruburu = gh_CreateAndGivePartMatching{DESIG="SAN-X9"}
 --buruburu = gh_CreateAndGivePart( "SAN-X9 Buru Buru" )

@@ -303,7 +303,10 @@
 	nid_lookup = {}
 
 
-    random_names = {[""]=1}
+	random_names = {[""]=1}
+	for k,v in pairs(gh_GetFilenameConstants()) do
+		_G[k] = v
+	end
 
 
 
@@ -770,6 +773,43 @@ function gh_GH2Name()
 	return it
 end
 
+_american_names = {}
+_name_files = {M="census-names/dist.male.first",
+			F="census-names/dist.female.first",
+			L="census-names/dist.all.last"}
+function gh_AmericanName(gender)
+	local read_names
+	function read_names(f)
+		local t
+		f = assert(io.open(f)):read("*all")
+		t = {}
+		t.total = 0
+		for n, p in string.gfind(f, "(%S+)%s+(%S+)%s+(%S+)%s+(%S+)%s+") do
+			p = tonumber(p)
+			table.insert(t,n)
+			t.total = t.total + p
+			t[n] = t.total
+		end
+		return t
+	end
+
+	if gender == nil then gender = 'L'; end
+	if _american_names[gender] == nil then
+		_american_names[gender] = read_names(Data_Directory .. _name_files[gender])
+	end
+
+	c = _american_names[gender].total*math.random(1000000)/1000000
+
+	for i, k in ipairs(_american_names[gender]) do
+		if _american_names[gender][k]>=c then
+			str = k
+			break
+		end
+	end
+
+	return string.lower(str):gsub("^%l", string.upper)
+
+end
 
 
 function gh_RandomName(char)
@@ -785,7 +825,7 @@ function gh_RandomName(char)
 			elseif gh_GetNAtt(char, NAG_CHARDESCRIPTION, NAS_GENDER) == NAV_FEMALE then
 				gender = 'F'
 			end
-			it = gh_GHARName(gender)
+			it = gh_AmericanName(gender)
 			print("generated "..it)
 		else -- Not a character
 			--print("Generating a name for a non-character currently named "..gh_GetName(char))
