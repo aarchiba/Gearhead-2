@@ -422,14 +422,14 @@ end;
 Function ScaleColorValue( V , I: Integer ): Byte;
 	{ Scale a color value. }
 begin
-	V := ( V * I ) div 200;
+	V := ( V * I ) div 200; {Argh! Why 200 not 255?}
 	if V > 255 then V := 255;
 	if V < 0 then V := 0;
 	ScaleColorValue := V;
 end;
 
 
-Function MakeSwapBitmap( MyImage: PSDL_Surface; RSwap,YSwap,GSwap: PSDL_Color ): PSDL_Surface;
+Function MakeSwapBitmap( MyImage: PSDL_Surface; RSwap,BSwap,GSwap: PSDL_Color ): PSDL_Surface;
 var
 	X,Y: Integer;
 	MyImage2: PSDL_Surface;
@@ -460,36 +460,19 @@ begin
 			{Extract color}
 			pixel := MyImage2^.pixels+(X-1)*4+(Y-1)*pitch;
 			SDL_GetRGBA(pixel^, MyImage2^.format, @R, @G, @B, @A);
-			{If it's pure Y R or G, remap it}
-			{If it's blue, set alpha}
-			if (B>240) and (R<16) and (G<16) then begin
-				A := 0;
-			end else if (RSwap <> Nil) and (GSwap <> Nil) and (YSwap <> Nil) then begin
-				Ri := R;
-				Gi := G;
-				Bi := B;
-				if (R>G) then begin
-					{Between yellow and red}
-					C1 := B;
-					C2 := G-B;
-					C3 := R-G;
-					if (C2<0) then C2 := 0;
-					Ri := C1 + ScaleColorValue( RSwap^.R , C3 ) + ScaleColorValue( YSwap^.R , C2 ) ;
-					Gi := C1 + ScaleColorValue( RSwap^.G , C3 ) + ScaleColorValue( YSwap^.G , C2 ) ;
-					Bi := C1 + ScaleColorValue( RSwap^.B , C3 ) + ScaleColorValue( YSwap^.B , C2 ) ;
-				end else begin
-					{Between green and yellow}
-					C1 := B;
-					C2 := R-B;
-					C3 := G-R;
-					if (C2<0) then C2 := 0;
-					Ri := C1 + ScaleColorValue( GSwap^.R , C3 ) + ScaleColorValue( YSwap^.R , C2 ) ;
-					Gi := C1 + ScaleColorValue( GSwap^.G , C3 ) + ScaleColorValue( YSwap^.G , C2 ) ;
-					Bi := C1 + ScaleColorValue( GSwap^.B , C3 ) + ScaleColorValue( YSwap^.B , C2 ) ;
+			if (RSwap <> Nil) and (GSwap <> Nil) and (BSwap <> Nil) then begin
+				{Recoloring, so assume it's RGBA}
+				Ri := (ScaleColorValue( RSwap^.R , R ) + ScaleColorValue( GSwap^.R , G ) + ScaleColorValue( BSwap^.R , B ));
+				Gi := (ScaleColorValue( RSwap^.G , R ) + ScaleColorValue( GSwap^.G , G ) + ScaleColorValue( BSwap^.G , B ));
+				Bi := (ScaleColorValue( RSwap^.B , R ) + ScaleColorValue( GSwap^.B , G ) + ScaleColorValue( BSwap^.B , B ));
+				if Ri>255 then R:=255 else R:=Ri;
+				if Gi>255 then G:=255 else G:=Gi;
+				if Bi>255 then B:=255 else B:=Bi;
+			end else begin
+				{Not recoloring, so assume it's we need to colorkey}
+				if (B=255) and (R=0) and (G=0) then begin
+					A := 0;
 				end;
-				if (Ri>255) then R := 255 else if (Ri<0) then R := 0 else R := Ri;
-				if (Gi>255) then G := 255 else if (Gi<0) then G := 0 else G := Gi;
-				if (Bi>255) then B := 255 else if (Bi<0) then B := 0 else B := Bi;
 			end;
 			{Write color to surface}
 			pixel^ := SDL_MapRGBA(MyImage2^.format, R, G, B, A);
@@ -500,69 +483,6 @@ begin
 	{FIXME: convert to a good format for blitting to the screen? }
 	{Return new surface}
 	MakeSwapBitmap := MyImage2;
-end;
-
-Function MakeSwapBitmapPaletted( MyImage: PSDL_Surface; RSwap,YSwap,GSwap: PSDL_Color ): PSDL_Surface;
-	{ Given a bitmap, create an 8-bit copy with pure colors. }
-	{         0 : Transparent (0,0,255) }
-	{   1 -  63 : Grey Scale            }
-	{  64 - 127 : Pure Red              }
-	{ 128 - 191 : Pure Yellow           }
-	{ 192 - 255 : Pure Green            }
-	{ Then, swap those colors out for the requested colors. }
-var
-	MyPal: Array [0..255] of TSDL_Color;
-	T: Integer;
-	MyImage2: PSDL_Surface;
-begin
-	{ Initialize the palette. }
-	for t := 1 to 64 do begin
-		MyPal[ T - 1 ].r := ( t * 4 ) - 1;
-		MyPal[ T - 1 ].g := ( t * 4 ) - 1;
-		MyPal[ T - 1 ].b := ( t * 4 ) - 1;
-
-		MyPal[ T + 63 ].r := ( t * 4 ) - 1;
-		MyPal[ T + 63 ].g := 0;
-		MyPal[ T + 63 ].b := 0;
-
-		MyPal[ T + 127 ].r := ( t * 4 ) - 1;
-		MyPal[ T + 127 ].g := ( t * 4 ) - 1;
-		MyPal[ T + 127 ].b := 0;
-
-		MyPal[ T + 191 ].r := 0;
-		MyPal[ T + 191 ].g := ( t * 4 ) - 1;
-		MyPal[ T + 191 ].b := 0;
-	end;
-	MyPal[ 0 ].r := 0;
-	MyPal[ 0 ].g := 0;
-	MyPal[ 0 ].b := 255;
-
-	{ Create replacement surface. }
-	MyImage2 := SDL_CreateRGBSurface( SDL_SWSURFACE , MyImage^.W , MyImage^.H , 8 , 0 , 0 , 0 , 0 );
-	SDL_SetPalette( MyImage2 , SDL_LOGPAL or SDL_PHYSPAL , MyPal , 0 , 256 );
-	SDL_FillRect( MyImage2 , Nil , SDL_MapRGB( MyImage2^.Format , 0 , 0 , 255 ) );
-	SDL_SetColorKey( MyImage2 , SDL_SRCCOLORKEY or SDL_RLEACCEL , SDL_MapRGB( MyImage2^.Format , 0 , 0, 255 ) );
-
-	{ Blit from the original to the copy. }
-	SDL_BlitSurface( MyImage , Nil , MyImage2 , Nil );
-
-	{ Redefine the palette. }
-	for t := 1 to 64 do begin
-		MyPal[ T + 63 ].r := ScaleColorValue( RSwap^.R , t * 4 );
-		MyPal[ T + 63 ].g := ScaleColorValue( RSwap^.G , t * 4 );
-		MyPal[ T + 63 ].b := ScaleColorValue( RSwap^.B , t * 4 );
-
-		MyPal[ T + 127 ].r := ScaleColorValue( YSwap^.R , t * 4 );
-		MyPal[ T + 127 ].g := ScaleColorValue( YSwap^.G , t * 4 );
-		MyPal[ T + 127 ].b := ScaleColorValue( YSwap^.B , t * 4 );
-
-		MyPal[ T + 191 ].r := ScaleColorValue( GSwap^.R , t * 4 );
-		MyPal[ T + 191 ].g := ScaleColorValue( GSwap^.G , t * 4 );
-		MyPal[ T + 191 ].b := ScaleColorValue( GSwap^.B , t * 4 );
-	end;
-	SDL_SetPalette( MyImage2 , SDL_LOGPAL or SDL_PHYSPAL , MyPal , 0 , 256 );
-
-	MakeSwapBitmapPaletted := MyImage2;
 end;
 
 Procedure GenerateColor( var ColorString: String; var ColorStruct: TSDL_Color );
