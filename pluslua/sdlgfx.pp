@@ -436,7 +436,7 @@ var
 	pixel: ^LONGWORD;
 	R,G,B,A: Byte;
 	Ri, Gi, Bi: Integer;
-	C1, C2, C3: Integer;
+	C: Integer;
 	pitch: Integer;
 	flags: LONGWORD;
 	alpha: Byte;
@@ -462,9 +462,22 @@ begin
 			SDL_GetRGBA(pixel^, MyImage2^.format, @R, @G, @B, @A);
 			if (RSwap <> Nil) and (GSwap <> Nil) and (BSwap <> Nil) then begin
 				{Recoloring, so assume it's RGBA}
-				Ri := (ScaleColorValue( RSwap^.R , R ) + ScaleColorValue( GSwap^.R , G ) + ScaleColorValue( BSwap^.R , B ));
-				Gi := (ScaleColorValue( RSwap^.G , R ) + ScaleColorValue( GSwap^.G , G ) + ScaleColorValue( BSwap^.G , B ));
-				Bi := (ScaleColorValue( RSwap^.B , R ) + ScaleColorValue( GSwap^.B , G ) + ScaleColorValue( BSwap^.B , B ));
+				if (R<=G) and (R<=B) then begin
+					C := R;
+					Ri := C + ScaleColorValue( GSwap^.R , G-C ) + ScaleColorValue( BSwap^.R , B-C );
+					Gi := C + ScaleColorValue( GSwap^.G , G-C ) + ScaleColorValue( BSwap^.G , B-C );
+					Bi := C + ScaleColorValue( GSwap^.B , G-C ) + ScaleColorValue( BSwap^.B , B-C );
+				end else if (G<=R) and (G<=B) then begin
+					C := G;
+					Ri := C + ScaleColorValue( RSwap^.R , R-C ) + ScaleColorValue( BSwap^.R , B-C );
+					Gi := C + ScaleColorValue( RSwap^.G , R-C ) + ScaleColorValue( BSwap^.G , B-C );
+					Bi := C + ScaleColorValue( RSwap^.B , R-C ) + ScaleColorValue( BSwap^.B , B-C );
+				end else if (B<=R) and (B<=G) then begin
+					C := B;
+					Ri := C + ScaleColorValue( RSwap^.R , R-C ) + ScaleColorValue( GSwap^.R , G-C );
+					Gi := C + ScaleColorValue( RSwap^.G , R-C ) + ScaleColorValue( GSwap^.G , G-C );
+					Bi := C + ScaleColorValue( RSwap^.B , R-C ) + ScaleColorValue( GSwap^.B , G-C );
+				end;
 				if Ri>255 then R:=255 else R:=Ri;
 				if Gi>255 then G:=255 else G:=Gi;
 				if Bi>255 then B:=255 else B:=Bi;
