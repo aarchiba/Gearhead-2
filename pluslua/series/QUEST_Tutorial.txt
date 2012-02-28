@@ -254,7 +254,7 @@ Content
 	name <Ipshil Factory>
 	requires <*:Q_L_HOGYE_IpshilFactory>
 	%
-	% Starting from the Cayley Mine above
+	% Based on the Cayley Mine above
 	%
 
 	% Element1 is Hogye itself
@@ -271,37 +271,6 @@ Content
 	sub
 		STC QS_Dungeon_Factory
 		SetID 3
-		sub
-			rect
-			%
-			% Normally, the map features in a dungeon metascene will be
-			% reproduced on each level of the dungeon. This behavior can be
-			% modified using the FORGOALLEVEL and FORENTRYLEVEL tags.
-			width 5
-			height 5
-			ForGoalLevel
-			sub
-				Elevator
-				name <Mecha Bay>
-				lua
-					P.USE = function( self )
-						if not self.v.HaveTakenMecha then
-							if gh_ChooseAOverB( "You find an old cargo elevator, and an abandoned mining robot inside... Hey! Someone left the keys in the ignition!" , "Take it." , "Leave it." ) then
-								gh_CreateAndGivePart( "HMC-6 Wolfram" );
-								self.v.HaveTakenMecha = true;
-								gh_GotoScene( %1% );
-								gh_SeekGate( %3%:GetXit() );
-							end;
-						else
-							if gh_ChooseAOverB( "The cargo elevator is now empty, but you can ride it to the surface." , "Take it." , "Leave it." ) then
-								gh_GotoScene( %1% );
-								gh_SeekGate( %3%:GetXit() );
-							end;
-						end;
-					end;
-				endlua
-			end
-		end
 	end
 	inv
 		STC BUILDING

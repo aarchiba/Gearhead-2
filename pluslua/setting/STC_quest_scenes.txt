@@ -250,7 +250,7 @@ MetaScene
 MetaScene
 	name <# Factory>
 	desig <QS_Dungeon_Factory>
-	type <DUNGEON Industrial>
+	type <DUNGEON Industrial Robot Factory>
 	special <NOEXIT>
 	terrain <GROUND>
 	habitat <EARTH.ASTER>
@@ -275,7 +275,7 @@ MetaScene
 
 		Team 2
 		name <Monster>
-		type <Mine Earth>
+		type <robot factory>
 		SetEnemy 1
 		Stat 2 1
 
