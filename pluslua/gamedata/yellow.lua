@@ -14,7 +14,7 @@ print("Yellow button!")
 
 for _,g in ipairs({"M", "F", nil}) do
 	for i=1,10 do
-		print(gh_MakePirate(gh_GHARName(g)))
+		print(gh_ChineseName(g))
 	end
 	print()
 end

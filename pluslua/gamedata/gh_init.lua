@@ -811,6 +811,55 @@ function gh_AmericanName(gender)
 
 end
 
+_chinese_personal_names = nil
+_chinese_family_names = nil
+_chinese_name_files = {M="census-names/zh-personal.txt",
+			F="census-names/zh-personal.txt",
+			L="census-names/zh-family.txt"}
+function gh_ChineseName(gender)
+	local read_names
+	function read_names(f)
+		local t
+		f = assert(io.open(f)):read("*all")
+		t = {}
+		t.total = 0
+		for n, p in string.gfind(f, "(%D+)%s+(%d+)%s+") do
+			p = tonumber(p)
+			table.insert(t,n)
+			t.total = t.total + p
+			t[n] = t.total
+		end
+		return t
+	end
+
+	if _chinese_personal_names == nil then
+		_chinese_personal_names = read_names(Data_Directory .. "census-names/zh-personal.txt")
+	end
+
+	if _chinese_family_names == nil then
+		_chinese_family_names = read_names(Data_Directory .. "census-names/zh-family.txt")
+	end
+
+	c = _chinese_personal_names.total*math.random(1000000)/1000000
+
+	for i, k in ipairs(_chinese_family_names) do
+		if _chinese_family_names[k]>=c then
+			str = k
+			break
+		end
+	end
+	for i, k in ipairs(_chinese_personal_names) do
+		if _chinese_personal_names[k]>=c then
+			str = str .. " " .. k
+			break
+		end
+	end
+
+
+	return str
+
+end
+
 function gh_NatureName(gender)
 	local names = {}
 	names.M = {"Raven", "Eagle", "Jay", "Kestrel", "Owl", "Robin", 
@@ -853,6 +902,7 @@ function gh_NatureName(gender)
 	return random_choice(names[gender]) .. " " .. random_choice(syllables) .. string.lower(random_choice(syllables))
 
 end
+
 
 function gh_MakePirate(name)
 	local adjectives
