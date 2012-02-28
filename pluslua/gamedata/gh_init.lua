@@ -811,6 +811,61 @@ function gh_AmericanName(gender)
 
 end
 
+function gh_NatureName(gender)
+	local names = {}
+	names.M = {"Raven", "Eagle", "Jay", "Kestrel", "Owl", "Robin", 
+		"Hawk", "Starling", "Sparrow", "Kite", "Falcon", 
+		"Nightingale", "Kingfisher", "Osprey", "Egret",
+		"Rook", "Crow", "Pelican", "Penguin", "Auk", 
+		"Emu", "Ostrich", "Dove", "Grackle"
+		}
+	names.F = {
+		"Rose", "Lily", "Iris", "Lotus", "Fuchsia", "Foxglove",
+		"Impatiens", "Trillium", "Lantana", "Mallow", "Thistle",
+		"Violet", "Foxtail", "Dandelion", "Poppy", "Sunflower",
+		"Tulip", "Crocus", "Snowdrop", "Marigold", "Chrysanthemum",
+		"Carnation", "Pansy", "Nasturtium", "Honeysuckle",
+		"Jasmine", "Camomile"
+		}
+	names.A = {
+		"Diamond", "Jade", "Ruby", "Emerald", "Peridot",
+		"Opal", "Sapphire", "Pearl"
+		}
+
+    syllables = {
+		'Jo','Sep','Hew','It','Seo','Eun','Suk','Ki','Kang','Cho',
+		'Ai','Bo','Ca','Des','El','Fas','Gun','Ho','Ia','Jes',
+		'Kep','Lor','Mo','Nor','Ox','Pir','Qu','Ra','Sun','Ter',
+		'Ub','Ba','Tyb','War','Bac','Yan','Zee','Es','Vis','Jang',
+		'Vic','Tor','Et','Te','Ni','Mo','Bil','Con','Ly','Dam',
+		'Cha','Ro','The','Bes','Ne','Ko','Kun','Ran','Ma','No',
+		'Ten','Do','To','Me','Ja','Son','Love','Joy','Ken','Iki',
+		'Han','Lu','Ke','Sky','Wal','Jen','Fer','Le','Ia','Chu',
+		'Tek','Ubu','Roi','Har','Old','Pin','Ter','Red','Ex','Al',
+		'Alt','Rod','Mia','How','Phi','Aft','Aus','Tin','Her','Ge',
+		'Hawk','Eye','Ger','Ru','Od','Jin','Un','Hyo','Leo','Star',
+		'Buck','Ers','Rog','Eva','Ova','Oni','Ami','Ga','Cyn','Mai',
+		'Na','Mel','Gha','Mek','Kat','Ser'
+    }
+
+	if gender == nil then gender = "A"; end
+
+	return random_choice(names[gender]) .. " " .. random_choice(syllables) .. string.lower(random_choice(syllables))
+
+end
+
+function gh_MakePirate(name)
+	local adjectives
+	adjectives = { "Red", "Black", "Bloody", "Cursed", "One-eyed", "Squinty",
+		"Long", "Fat", "Cold", "Snake", "Jolly", "Butcher", "One-ear",
+		"Cutthroat", 
+	}
+	if math.random(2)==1 then
+		return random_choice(adjectives).." "..name
+	else
+		return name.." the "..random_choice(adjectives)
+	end
+end
 
 function gh_RandomName(char)
 	local it, gender
@@ -825,7 +880,7 @@ function gh_RandomName(char)
 			elseif gh_GetNAtt(char, NAG_CHARDESCRIPTION, NAS_GENDER) == NAV_FEMALE then
 				gender = 'F'
 			end
-			it = gh_AmericanName(gender)
+			it = gh_GHARName(gender)
 			print("generated "..it)
 		else -- Not a character
 			--print("Generating a name for a non-character currently named "..gh_GetName(char))

@@ -12,15 +12,24 @@ end
 
 print("Yellow button!")
 
+for _,g in ipairs({"M", "F", nil}) do
+	for i=1,10 do
+		print(gh_MakePirate(gh_GHARName(g)))
+	end
+	print()
+end
+--[[
 for k,v in pairs(gh_GetFilenameConstants()) do
 	print(k.."\t"..v)
 end
+]]
 
-buruburu = gh_CreateAndGivePartMatching{DESIG="SAN-X9"}
+--buruburu = gh_CreateAndGivePartMatching{DESIG="SAN-X9"}
 --buruburu = gh_CreateAndGivePart( "SAN-X9 Buru Buru" )
 --[[
 buruburu = gh_CreatePartMatching{DESIG="SAN-X9"}
 ]]
+--[[
 print(string.format("%s\tS:%d\tV:%d",
     GG[buruburu:GetG()],
     buruburu:GetS(),
@@ -45,6 +54,7 @@ printSAtts(buruburu)
 
 print()
 
+]]
 --[[
 for g in siblings(gh_StockList(LIST_STANDARD)) do
     print(gh_GetName(g))
