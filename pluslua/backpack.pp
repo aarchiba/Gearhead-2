@@ -1802,6 +1802,17 @@ begin
 	WaitAMinute( GB , PC , ReactionTime( PC ) );
 end;
 
+Procedure RenameItem( Item: GearPtr );
+	{ Enter a new name for NPC. }
+var
+	name: String;
+begin
+	name := GetStringFromUser( ReplaceHash( MsgString( 'FHQ_Rename_Prompt' ) , GearName( Item ) ) , @PlainRedraw );
+
+	if name <> '' then SetSAtt( Item^.SA , 'name <' + name + '>' );
+end;
+
+
 Procedure ThisItemWasSelected( GB: GameBoardPtr; var LList: GearPtr; TruePC , PC , Item: GearPtr );
 	{ TruePC is the primary character, who may be doing repairs }
 	{  and stuff. }
@@ -1856,6 +1867,7 @@ begin
 			end;
 		end;
 		if GB <> Nil then AddRPGMenuItem( TIWS_Menu , MsgString( 'BACKPACK_UseSkillOnItem' ) , 1 );
+		AddRPGMenuItem( TIWS_Menu , 'Rename Item' , -13 );
 		AddRPGMenuItem( TIWS_Menu , MsgString( 'BACKPACK_ExitTIWS' ) , -1 );
 
 		{ Restore the menu item in case this isn't the first iteration. }
@@ -1886,6 +1898,7 @@ begin
 				-10: EatItem( GB , PC , Item );
 				-11: UseScriptItem( GB , TruePC , Item , 'USE' );
 				-12: InstallSoftware( GB , PC , Item );	{ Install Software }
+				-13: RenameItem( Item );
 			end;
 		end;
 	until ( N < 0 ) or ForceQuit;
