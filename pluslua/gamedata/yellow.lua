@@ -1,7 +1,9 @@
 
 -- Browse all gears
 
-g = gh_CreateAndGivePart("SAN-X9 Buru Buru")
+
+--[=[
+g = gh[gh_GetCurrentScenePtr()]
 
 function QueryUser(items, title)
 	gh_InitMenu()
@@ -18,8 +20,11 @@ end
 while g~=nil do
 	m = gh_InitMenu()
 	options = {}
-	table.insert(options,"parent")
-	options.parent = g:Parent()
+	msg = g:Name()
+	if g:Parent() ~= nil then
+		table.insert(options,"parent")
+		options.parent = g:Parent()
+	end
 	for s in subcomponents(g) do
 		table.insert(options,s:Name())
 		options[s:Name()] = s
@@ -29,6 +34,6 @@ while g~=nil do
 		options[s:Name()] = s
 	end
 	table.insert(options,"Exit")
-	g = QueryUser(options, g:Name())
+	g = QueryUser(options, msg)
 end
-
+]=]

@@ -83,7 +83,7 @@ Content
 
 Content
 	name <Robot Team>
-	requires <*DUNGEON_DECOR !Lo (mine|cave)>
+	requires <*DUNGEON_DECOR !Lo (mine|cave|factory)>
 	element1 <Prefab>
 	teamdata1 <sd enemy>
 	element2 <Prefab>
@@ -98,6 +98,27 @@ Content
 		Mass 1
 	end
 
+Content
+	name <Robot Assembly Team>
+	requires <*DUNGEON_DECOR !Lo (mine|cave|factory)>
+	element1 <Prefab>
+	teamdata1 <sd enemy>
+	element2 <Prefab>
+	teamdata2 <sd enemy>
+	element3 <Prefab>
+	teamdata3 <sd enemy>
+	element4 <Prefab>
+	inv
+		Monster Workbot
+		Monster Workbot
+		Monster Workbot
+		STC Crate
+		inv
+			name <Gold Nugget>
+			Fudge 32000
+			Mass 1
+		end
+	end
 
 
 %% *DUNGEON_GOAL CONTENT
