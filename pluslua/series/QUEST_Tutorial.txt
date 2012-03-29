@@ -268,6 +268,13 @@ Content
 	Element3 <QuestScene>
 	Place3 <1>
 
+	content1 <Some 1 40 Sub *DUNGEON_THREAT>
+	content2 <Some 1 45 Sub *DUNGEON_DECOR>
+	content3 <Some 1 30 Sub *DUNGEON_REWARD>
+	content4 <Some 1 40 Sub *DUNGEON_DECOR>
+	content5 <Some 1 45 Sub *DUNGEON_DECOR>
+	content6 <Some 1 30 Sub *DUNGEON_DECOR>
+
 	sub
 		STC QS_Dungeon_Factory
 		SetID 3
