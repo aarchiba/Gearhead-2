@@ -1,0 +1,37 @@
+How GearHead's Terrain Works
+============================
+
+The map itself is attached to a (the?) GameBoard object, using 
+GB^.Width, GB^.Height, and various query functions:
+TileVisible(GB,X,Y) and in particular TileTerrain(GB,X,Y).
+This latter returns a constant whose meaning is hardcoded:
+TERRAIN_Openground, TERRAIN_LightForest, TERRAIN_HeavyForest,
+TERRAIN_Rubble, TERRAIN_Pavement, TERRAIN_Swamp, TERRAIN_L1_Hill,
+TERRAIN_L2_Hill, TERRAIN_L3_Hill, TERRAIN_RoughGround, TERRAIN_LowWall,
+TERRAIN_Wall, TERRAIN_Floor, TERRAIN_Threshold, TERRAIN_Carpet,
+TERRAIN_WoodenFloor, TERRAIN_WoodenWall, TERRAIN_TileFloor,
+TERRAIN_Space, TERRAIN_MediumBuilding, TERRAIN_HighBuilding,
+TERRAIN_GlassWall, or TERRAIN_LowBuilding. This is all the different kinds
+of terrain that can coexist on a given map.
+
+(Note that there's no water!)
+
+Terrain information is held in a global array, TerrMan. This maps 
+TERRAIN_* constants into TerrDesc structures, which describe things like
+passability, visual obstruction, altitude, and flammability. They do not
+include any kind of information on how to visually represent the terrain
+types.
+
+SDL Map Drawing
+---------------
+
+Terrain types are looked up in a huge case statement (in
+sdlmap.pp:Render_Isometric) which directs the SDL renderer what kind(s)
+of sprite to put where. For the most part this simply adds the correct
+sprite to an array of what to draw where, though for forests two sprites
+are added (a ground and a tree) and for buildings some primitive
+pseudo-randomization is done. The correct sprite is specified as a
+constant starting with TCEL_ (and maybe ECEL_, for "extra" items). These
+constants specify positions within a "terrain sprite", of which there is
+just one per map. Each map specifies a "tileset", which in turn specifies
+which terrain_sprite image is used.
