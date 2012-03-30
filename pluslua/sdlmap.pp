@@ -593,7 +593,9 @@ const
 		b:byte;
 	begin
 		{ FIXME: figure out how to use thin walls here }
-		if iso_thinwall_sprites[F] <> Nil then begin
+		if not Use_Tall_Walls then begin
+			AddCMCel( GB , X , Y ,  0 , CMC_Terrain , terrain_sprite ,  TCEL_ShortWall );
+		end else if iso_thinwall_sprites[F] <> Nil then begin
 			b := 0;
 			{ Direction 1 is down and to the right }
 			if WallPresent(X, Y, 1) then b:=b or 4;
@@ -601,10 +603,8 @@ const
 			if WallPresent(X, Y, 5) then b:=b or 1;
 			if WallPresent(X, Y, 7) then b:=b or 2;
 			AddCMCel( GB , X , Y ,  0 , CMC_Terrain , iso_thinwall_sprites[F] , b);
-		end else if Use_Tall_Walls then begin
-			AddCMCel( GB , X , Y ,  0 , CMC_Terrain , terrain_sprite ,  F );
 		end else begin
-			AddCMCel( GB , X , Y ,  0 , CMC_Terrain , terrain_sprite ,  TCEL_ShortWall );
+			AddCMCel( GB , X , Y ,  0 , CMC_Terrain , terrain_sprite ,  F );
 		end;
 	end;
 	Procedure AddBasicDoorCel( X,Y,F: Integer );
@@ -1225,10 +1225,40 @@ begin
 
 	for i := 0 to 32 do begin
 		iso_thinwall_sprites[i] := Nil;
-		if GB^.Scene <> Nil then begin
+	end;
+	case TileSet of
+	0: begin
+		iso_thinwall_sprites[5] := LocateSprite('wall_stone.png', 64, 96);
+		iso_thinwall_sprites[8] := LocateSprite('wall_extra_b.png', 64, 96);
+		iso_thinwall_sprites[9] := LocateSprite('wall_mumetal.png', 64, 96);
+	end;
+	1: begin
+		iso_thinwall_sprites[5] := LocateSprite('wall_earth.png', 64, 96);
+		iso_thinwall_sprites[8] := LocateSprite('wall_extra_b.png', 64, 96);
+		iso_thinwall_sprites[9] := LocateSprite('wall_mumetal.png', 64, 96);
+	end;
+	2: begin
+		iso_thinwall_sprites[5] := LocateSprite('wall_stone.png', 64, 96);
+		iso_thinwall_sprites[8] := LocateSprite('wall_extra_b.png', 64, 96);
+		iso_thinwall_sprites[9] := LocateSprite('wall_mumetal.png', 64, 96);
+	end;
+	3: begin
+		iso_thinwall_sprites[5] := LocateSprite('wall_industrial.png', 64, 96);
+		iso_thinwall_sprites[8] := LocateSprite('wall_extra_b.png', 64, 96);
+		iso_thinwall_sprites[9] := LocateSprite('wall_mumetal.png', 64, 96);
+	end;
+	4: begin
+		iso_thinwall_sprites[5] := LocateSprite('wall_stone.png', 64, 96);
+		iso_thinwall_sprites[8] := LocateSprite('wall_extra_b.png', 64, 96);
+		iso_thinwall_sprites[9] := LocateSprite('wall_mumetal.png', 64, 96);
+	end;
+	end;
+
+	if GB^.Scene <> Nil then begin
+		for i := 0 to 32 do begin
 			SA := FindSAtt(GB^.Scene^.SA, 'THINWALL_SPRITE_'+BStr(i));
 			if SA <> Nil then begin
-				Writeln('thinwalls: ',SA^.info);
+				{ FIXME: delete existing sprite if necessary }
 				iso_thinwall_sprites[i] := LocateSprite(RetrieveAString(SA^.info), 64, 96); {FIXME: check these sizes}
 			end;
 		end;
