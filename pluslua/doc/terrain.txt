@@ -30,8 +30,18 @@ sdlmap.pp:Render_Isometric) which directs the SDL renderer what kind(s)
 of sprite to put where. For the most part this simply adds the correct
 sprite to an array of what to draw where, though for forests two sprites
 are added (a ground and a tree) and for buildings some primitive
-pseudo-randomization is done. The correct sprite is specified as a
-constant starting with TCEL_ (and maybe ECEL_, for "extra" items). These
-constants specify positions within a "terrain sprite", of which there is
-just one per map. Each map specifies a "tileset", which in turn specifies
-which terrain_sprite image is used.
+pseudo-randomization is done. 
+
+The correct sprite is specified as a constant starting with TCEL_ (and
+maybe ECEL_, for "extra" items). These constants specify positions within
+a "terrain sprite", of which there is just one per map. Each map specifies
+a "tileset", which in turn specifies which terrain_sprite image is used.
+
+These tilesets are again hardcoded; NumTileSets is one of the global 
+constants made available to Lua in gamedata/gh_constants.txt, and the list
+of tilesets, iso_tileset_fname, is stored in a Pascal array.
+
+Which tileset to use for a given scene is stored as a numerical attribute
+of the scene (NAG_SceneData, NAS_TileSet).
+
+

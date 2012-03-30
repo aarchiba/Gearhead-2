@@ -44,6 +44,7 @@ var
 
 	Strong_Hit_Sprite,Weak_Hit_Sprite,Parry_Sprite,Miss_Sprite,Encounter_Sprite: SensibleSpritePtr;
 	Terrain_Sprite,Extras_Sprite,Shadow_Sprite,Building_Sprite,Current_Backdrop: SensibleSpritePtr;
+	iso_thinwall_sprites: Array [0..32] of SensibleSpritePtr; {FIXME: make sure this is at least the number of TCEL_ s}
 	Off_Map_Model_Sprite: SensibleSpritePtr;
 
 	Focused_On_Mek: GearPtr;
@@ -582,8 +583,25 @@ const
 	end;
 	Procedure AddBasicWallCel( X,Y,F: Integer );
 		{ Add a basic wall cel using F. }
+		Function WallPresent( X,Y,dir:Integer ):Boolean;
+		begin
+			WallPresent := TerrMan[TileTerrain(GB, 
+				X + AngDir[ ScreenDirToMapDir( dir ) , 1 ], 
+				Y + AngDir[ ScreenDirToMapDir( dir ) , 2 ])].Pass < 0;
+		end;
+	var
+		b:byte;
 	begin
-		if Use_Tall_Walls then begin
+		{ FIXME: figure out how to use thin walls here }
+		if iso_thinwall_sprites[F] <> Nil then begin
+			b := 0;
+			{ Direction 1 is down and to the right }
+			if WallPresent(X, Y, 1) then b:=b or 4;
+			if WallPresent(X, Y, 3) then b:=b or 8;
+			if WallPresent(X, Y, 5) then b:=b or 1;
+			if WallPresent(X, Y, 7) then b:=b or 2;
+			AddCMCel( GB , X , Y ,  0 , CMC_Terrain , iso_thinwall_sprites[F] , b);
+		end else if Use_Tall_Walls then begin
 			AddCMCel( GB , X , Y ,  0 , CMC_Terrain , terrain_sprite ,  F );
 		end else begin
 			AddCMCel( GB , X , Y ,  0 , CMC_Terrain , terrain_sprite ,  TCEL_ShortWall );
@@ -1189,6 +1207,8 @@ const
 	);
 var
 	TileSet,BDNum: Integer;
+	SA: SAttPtr;
+	i: Integer;
 begin
 	if Terrain_Sprite <> Nil then RemoveSprite( Terrain_Sprite );
 	if Shadow_Sprite <> Nil then RemoveSprite( Shadow_Sprite );
@@ -1202,6 +1222,17 @@ begin
 	Shadow_Sprite := LocateSprite( 'iso_shadows_noalpha.png' , 64 , 96 );
 	Building_Sprite := LocateSprite( 'iso_buildings.png' , 64, 96 );
 	Extras_Sprite := LocateSprite( 'iso_extras.png' , 64, 96 );
+
+	for i := 0 to 32 do begin
+		iso_thinwall_sprites[i] := Nil;
+		if GB^.Scene <> Nil then begin
+			SA := FindSAtt(GB^.Scene^.SA, 'THINWALL_SPRITE_'+BStr(i));
+			if SA <> Nil then begin
+				Writeln('thinwalls: ',SA^.info);
+				iso_thinwall_sprites[i] := LocateSprite(RetrieveAString(SA^.info), 64, 96); {FIXME: check these sizes}
+			end;
+		end;
+	end;
 
 	{ Also set the backdrop. }
 	if Current_Backdrop <> Nil then RemoveSprite( Current_Backdrop );
