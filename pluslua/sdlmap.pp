@@ -584,10 +584,26 @@ const
 	Procedure AddBasicWallCel( X,Y,F: Integer );
 		{ Add a basic wall cel using F. }
 		Function WallPresent( X,Y,dir:Integer ):Boolean;
+		var
+			r:boolean;
+			M:GearPtr;
 		begin
-			WallPresent := TerrMan[TileTerrain(GB, 
+			{FIXME: deal with doors and map edges nicely}
+			r := TerrMan[TileTerrain(GB, 
 				X + AngDir[ ScreenDirToMapDir( dir ) , 1 ], 
-				Y + AngDir[ ScreenDirToMapDir( dir ) , 2 ])].Pass < 0;
+				Y + AngDir[ ScreenDirToMapDir( dir ) , 2 ])].Pass = -100;
+			M := GB^.Meks;
+			while (M<>Nil) and (not r) do begin
+				if (M^.G = GG_MetaTerrain) and (M^.S = GS_MetaDoor) and 
+						OnTheMap( GB , M ) and 
+						(X + AngDir[ ScreenDirToMapDir( dir ) , 1 ] = NAttValue( M^.NA , NAG_Location , NAS_X )) and
+						(Y + AngDir[ ScreenDirToMapDir( dir ) , 2 ] = NAttValue( M^.NA , NAG_Location , NAS_Y ))
+						then begin
+					r := True;
+				end;
+				M := M^.Next;
+			end;
+			WallPresent := r
 		end;
 	var
 		b:byte;
