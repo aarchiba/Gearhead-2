@@ -28,7 +28,7 @@ unit sdlgfx;
 
 interface
 
-uses SDL,SDL_TTF,SDL_Image,gears,texutil,dos;
+uses SDL,SDL_TTF,SDL_Image,gears,texutil,dos,sysutils;
 
 Type
 	SensibleSpritePtr = ^SensibleSprite;
@@ -804,10 +804,28 @@ function LocateSprite( const Name: String; W,H: Integer ): SensibleSpritePtr;
 	{ Find the requested sprite, either in memory or from disk. }
 var
 	S: SensibleSpritePtr;
+	i: Integer;
+	n, c: String;
 begin
+	n := Name;
+	c := '';
+	{ Check whether sprite name specifies a color }
+	for i:=1 to length(Name) do begin
+		if Name[i]=':' then begin
+			n := LeftStr(Name, i-1);
+			c := RightStr(Name, length(Name)-i);
+			WriteLn(Name);
+			WriteLn(i);
+			WriteLn(length(Name));
+			WriteLn(n);
+			WriteLn(c);
+			Break;
+		end;
+	end;
+
 	{ First, find the sprite. If by some strange chance it hasn't been }
 	{ loaded yet, load it now. }
-	LocateSprite := LocateSprite( Name , '' , W , H );
+	LocateSprite := LocateSprite( n , c , W , H );
 end;
 
 function LocateBUSprite( const Name: String; W,H: Integer ): SensibleSpritePtr;

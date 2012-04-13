@@ -1245,7 +1245,7 @@ begin
 	case TileSet of
 	0: begin
 		iso_thinwall_sprites[5] := LocateSprite('wall_stone.png', 64, 96);
-		iso_thinwall_sprites[8] := LocateSprite('wall_extra_b.png', 64, 96);
+		iso_thinwall_sprites[8] := LocateSprite('Wall_IsoAgate_b_sheet_a.png:128 128 200 200 128 128 128 200 128', 64, 96);
 		iso_thinwall_sprites[9] := LocateSprite('wall_mumetal.png', 64, 96);
 	end;
 	1: begin
