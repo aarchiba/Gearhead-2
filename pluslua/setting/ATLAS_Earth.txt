@@ -123,6 +123,73 @@ Scene 0 3
 	end
 
 
+%%
+%%   ******************
+%%   *** SNAKE LAKE ***
+%%   ******************
+%%
+
+Scene 0 3
+	mapwidth 30
+	mapheight 30
+	name <Snake Lake>
+	exact_name <Snake Lake City>
+	desc <A large and bustling city next to a big lake.>
+	type <CITY TOWN URBAN>
+
+	desig <SNAKELAKE>
+	WorldMapX 11
+	WorldMapY 12
+	world <EARTH>
+	map <MAPS_EARTH_11x12.txt>
+	special <NOEXIT SHOWALL SOLO>
+	habitat <EARTH>
+	
+
+	faction <FEDER>
+	factions <>
+
+	desig <SNAKELAKE>
+	
+	% TODO: add static start-of-game quests.
+	
+	sub
+		Scene
+		name <Snake Lake Mall>
+		type <building mall public legit meeting>
+		entrance <*DEPARTMENTSTORE>
+		special <ADDEXIT>
+		MallMap
+		MapWidth 10
+		MapHeight 10
+		
+		NeededCells 4
+		Content1 <Some 1 100 Sub *LOCAL_SNAKELAKE_ElricShop   na>
+		Content2 <Some 2 100 Sub *ARMOR_SHOP                  na>
+		Content3 <Some 3 100 Sub *GENERAL_SHOP		na>
+		Content4 <Some 4 100 Sub *FOOD_SHOP                na>
+
+		sub
+			team 1
+
+			team 2
+			name <Citizens>
+			SetAlly 1
+			Passive
+
+			team 3
+			name <Guards>
+			SetAlly 2
+
+			room
+			name <Foyer>
+			desig <EntranceGrid>
+			Content <Some 5 50 Here *URBAN_X>
+			Content2 <Some 1 100 Here *ANTI_ATTACK_SECURITY 2>
+		end
+	end
+	%end of Snake Lake
+
 
 %%
 %%   ***********************
@@ -2442,16 +2509,17 @@ Scene 0 3
 	special <NOEXIT SHOWALL SOLO>
 	habitat <EARTH.MNTNS>
 
-Scene 0 3
-	mapwidth 30
-	mapheight 30
-	name <EARTH_11x12>
-	WorldMapX 11
-	WorldMapY 12
-	world <EARTH>
-	map <MAPS_EARTH_11x12.txt>
-	special <NOEXIT SHOWALL SOLO>
-	habitat <EARTH.MNTNS>
+%(11,12) This block occupied by Snake Lake
+%Scene 0 3
+%	mapwidth 30
+%	mapheight 30
+%	name <EARTH_11x12>
+%	WorldMapX 11
+%	WorldMapY 12
+%	world <EARTH>
+%	map <MAPS_EARTH_11x12.txt>
+%	special <NOEXIT SHOWALL SOLO>
+%	habitat <EARTH.MNTNS>
 
 Scene 0 3
 	mapwidth 30

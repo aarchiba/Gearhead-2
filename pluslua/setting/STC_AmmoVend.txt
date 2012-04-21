@@ -1,0 +1,15 @@
+% an attempt to write a vending machine that dispenses a few standard magazines types
+% i just got this idea and thought it would be quite apropriate for Elric's shop
+% based on the food vending machine and the mystery machine, of course.
+%
+% unfortunately I've run into trouble: how do I define clips as individual, seperate items?
+% I know this should be obvious, but right now it isn't being.
+
+	Prop 5
+	name <Clip Vending Machine>
+	Desig <VENDING-AMMO-1>
+	rogueChar <&>
+	sdl_SPRITE <prop_vendingmachine.png>
+	lua
+		dofile("gamedata/AmmoVend.lua");
+	endlua
