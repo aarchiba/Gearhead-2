@@ -189,6 +189,7 @@ function contextstring_to_contexttable( in_text )
 end
 
 function gh_FollowLink( gear , link_type )
+	if gear == nil then return nil ; end
 	local NewPart = gh_RawFollowLink( gear , link_type );
 	if NewPart ~= nil then
 		NewPart = gh[ NewPart ]
@@ -262,19 +263,25 @@ function gh_FindGears(attrs)
 end
 
 
-function _walker(direction, gear)
-    nextgear = gh_FollowLink(gear, direction)
-    return nextgear
+function siblings(gear)
+	local function cosib()
+		while gear ~= nil do
+			coroutine.yield(gear)
+			gear = gh_FollowLink(gear, LINK_NEXT)
+		end
+	end
+	return coroutine.wrap(cosib)
 end
 
-function siblings(gear)
-    -- Iterator to walk a linked list of sibling gears
-    return _walker, LINK_NEXT, gear
+function subcomponents(gear)
+    -- Iterator to walk the subcomponents of a gear
+    return siblings(gear:SubCom())
 end
 function inventory(gear)
     -- Iterator to walk the inventory of a gear
-    return _walker, LINK_NEXT, gear:InvCom()
+    return siblings(gear:InvCom())
 end
+
 function geartree(gear)
     -- Iterator to walk all the subcomponents and inventory of a gear
     local first, stack
@@ -285,10 +292,10 @@ function geartree(gear)
         local g
         g = table.remove(stack)
         if g ~= nil then
-            if not first then
-                table.insert(stack, g:Next())
-            else
+            if first then
                 first = false
+            else
+                table.insert(stack, g:Next())
             end
             table.insert(stack, g:InvCom())
             table.insert(stack, g:SubCom())

@@ -1,0 +1,44 @@
+
+Content
+	name <Evil Elric's House of Hurt>
+	requires <*LOCAL_SNAKELAKE_ElricShop>
+
+	% element 1 is Elric himself
+	element1 <Prefab>
+	element2 <Prefab>
+	team1 <Citizens>
+	teamdata1 <ally pass>
+
+	minimap <2...........1.......&---&>
+	%subplot1 <*DECOR_FOR_GENERAL_SHOP>
+
+	sub
+		Persona 1
+		say "Welcome to Evil Elric's House of Hurt! Looking for something big and spikey? Of course you are, come on in!"
+			reply "Let me see what you've got."
+				say "Feel free to look around. Let me know what you like."
+				effect <gh_OpenShop( "WEAPON MISSILE CONTRABAND" )>
+				NoChatOps
+			reply "Oh, thanks, but I'm just looking."
+				% pfrag "*GoodBye"
+				say "If you're ever short on firepower, you know where to come looking!"
+	end
+	inv
+%% MEMO: use "Shopkeeper" instead of other flavor text for labeling NPC to prevent hair loss due to mysterious segfaults.
+%		NPC Soldier
+		NPC Shopkeeper
+		name <Elric>
+		chardesc Male Choatic Sociable
+		Age 39
+
+		STC VENDING-AMMO-1
+	%	Prop 5
+	%	name <Ammo Vending Machine>
+	%	Desig <VENDING-AMMO-1>
+	%	rogueChar <&>
+	%	sdl_SPRITE <prop_vendingmachine.png>
+	%	lua
+	%		dofile("lua-frags/magvend.lua");
+	%	endlua
+	end
+

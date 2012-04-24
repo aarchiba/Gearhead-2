@@ -45,6 +45,35 @@ Content
 	end
 
 
+Content
+	name <Robot Nest>
+	requires <*DUNGEON_THREAT>
+	element1 <Prefab>
+	teamdata1 <sd enemy>
+	element2 <Prefab>
+	teamdata2 <sd enemy>
+	element3 <Prefab>
+	teamdata3 <sd enemy>
+	element4 <Prefab>
+	teamdata4 <sd enemy>
+	element5 <Prefab>
+	teamdata5 <sd enemy>
+	element6 <Prefab>
+	inv
+		monster Guardbot
+		monster Guardbot
+		monster Guardbot
+		monster Guardbot
+		monster Guardbot
+		Food 60
+		name <Big Cheese>
+		mass -10
+		FoodMorale 2
+		Fudge 3000
+		desc <A very large hunk of cheese. It hasn't been chewed on too badly.>
+	end
+
+
 %% *DUNGEON_REWARD CONTENT
 %%   Dungeon treasure. Something that's good for everyone.
 
@@ -98,6 +127,31 @@ Content
 		Mass 1
 	end
 
+Content
+	name <Robot Assembly Team>
+	requires <*DUNGEON_DECOR>
+	element1 <Prefab>
+	teamdata1 <sd enemy>
+	element2 <Prefab>
+	teamdata2 <sd enemy>
+	element3 <Prefab>
+	teamdata3 <sd enemy>
+	element4 <Prefab>
+	teamdata4 <sd enemy>
+	element5 <Prefab>
+	teamdata5 <sd enemy>
+	element6 <Prefab>
+	inv
+		Monster Surveillance Drone
+		Monster Surveillance Drone
+		Monster Surveillance Drone
+		Monster Surveillance Drone
+		Monster Surveillance Drone
+		Treasure
+		name <Gold Nugget>
+		Fudge 32000
+		Mass 1
+	end
 
 
 %% *DUNGEON_GOAL CONTENT

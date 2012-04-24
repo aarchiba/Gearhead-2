@@ -249,6 +249,31 @@ torso
 	end
 end
 
+ARCH Guard Drone
+roguechar <D>
+sdl_sprite <aer_drone.png>
+sdl_colors <199 188 162 157 173 182 200 150 50>
+type <robot factory lab guard>
+habitat <>
+statline 10 15 10 15 5 1 1 1
+*CLUE_SCIENCE <*SCIENCE_GetSpareParts 56 robot>
+metal
+Sealed
+MonsterTV 56
+RangedCombat 4
+Dodge 7
+Vitality 5
+sub
+torso
+	armor 3
+	sub
+	mount
+		inv
+			item FS Vaken Assault Rifle
+		end
+	end
+end
+
 ARCH Murder Machine
 roguechar <R>
 SDL_SPRITE <monster_workbot.png>
@@ -341,6 +366,33 @@ end
 ARCH Mining bot
 roguechar <R>
 SDL_SPRITE <monster_workbot.png>
+SDL_COLORS <157 172 183 130 143 114 230 60 0>
+type <robot mine>
+habitat <>
+statline 9 13 7 8 10 1 1 1
+*CLUE_SCIENCE <*SCIENCE_GetSpareParts 28 robot>
+metal
+Sealed
+MonsterTV 28
+CloseCombat 2
+Dodge 3
+sub
+torso
+	armor 2
+	sub
+	mount
+		inv
+		melee 14
+		acc 1
+		name <Rock Saw>
+		mass 4
+		end
+	end
+end
+
+ARCH Surveillance Drone
+roguechar <d>
+SDL_SPRITE <aer_drone.png>
 SDL_COLORS <157 172 183 130 143 114 230 60 0>
 type <robot mine>
 habitat <>
