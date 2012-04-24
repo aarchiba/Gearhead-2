@@ -814,11 +814,6 @@ begin
 		if Name[i]=':' then begin
 			n := LeftStr(Name, i-1);
 			c := RightStr(Name, length(Name)-i);
-			WriteLn(Name);
-			WriteLn(i);
-			WriteLn(length(Name));
-			WriteLn(n);
-			WriteLn(c);
 			Break;
 		end;
 	end;

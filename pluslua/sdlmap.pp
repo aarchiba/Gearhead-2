@@ -546,7 +546,7 @@ const
 				terr := TileTerrain( GB , X2 , Y2 );
 				if ( terr <> TERRAIN_LowBuilding ) and ( terr <> TERRAIN_MediumBuilding ) and ( terr <> TERRAIN_HighBuilding ) then begin
 					H2 := TerrMan[ terr ].Altitude;
-					IsHigher := H2 > Z;
+					IsHigher := False and (H2 > Z);
 				end else begin
 					IsHigher := False;
 				end;
@@ -618,7 +618,8 @@ const
 			if WallPresent(X, Y, 3) then b:=b or 8;
 			if WallPresent(X, Y, 5) then b:=b or 1;
 			if WallPresent(X, Y, 7) then b:=b or 2;
-			AddCMCel( GB , X , Y ,  0 , CMC_Terrain , iso_thinwall_sprites[F] , b);
+			AddCMCel( GB , X , Y ,  0 , CMC_Terrain , terrain_sprite ,  TCEL_OpenGround );
+			AddCMCel( GB , X , Y ,  0 , CMC_MetaTerrain , iso_thinwall_sprites[F] , b);
 		end else begin
 			AddCMCel( GB , X , Y ,  0 , CMC_Terrain , terrain_sprite ,  F );
 		end;
@@ -1242,23 +1243,24 @@ begin
 	for i := 0 to 32 do begin
 		iso_thinwall_sprites[i] := Nil;
 	end;
+	WriteLn('TileSet  = ',TileSet);
 	case TileSet of
-	0: begin
-		iso_thinwall_sprites[5] := LocateSprite('wall_stone.png', 64, 96);
-		iso_thinwall_sprites[8] := LocateSprite('Wall_IsoAgate_b_sheet_a.png:128 128 200 200 128 128 128 200 128', 64, 96);
-		iso_thinwall_sprites[9] := LocateSprite('wall_mumetal.png', 64, 96);
+	0: begin { Default }
+		iso_thinwall_sprites[5] := LocateSprite('Wall_Brick_a_sheet_a.png:156 102 31', 64, 96);
+		iso_thinwall_sprites[8] := LocateSprite('Wall_FlatTechy_a_sheet_a.png:200 128 64', 64, 96);
+		iso_thinwall_sprites[9] := LocateSprite('Wall_FlatConcrete_sheet_a.png:128 128 128', 64, 96);
 	end;
-	1: begin
-		iso_thinwall_sprites[5] := LocateSprite('wall_earth.png', 64, 96);
-		iso_thinwall_sprites[8] := LocateSprite('wall_extra_b.png', 64, 96);
-		iso_thinwall_sprites[9] := LocateSprite('wall_mumetal.png', 64, 96);
+	1: begin { Rocky }
+		iso_thinwall_sprites[5] := LocateSprite('Wall_TubeConcrete_sheet_a.png:200 200 200', 64, 96);
+		iso_thinwall_sprites[8] := LocateSprite('Wall_FlatTechy_a_sheet_a.png:200 200 64', 64, 96);
+		iso_thinwall_sprites[9] := LocateSprite('Wall_FlatConcrete_sheet_a.png:128 128 200', 64, 96);
 	end;
 	2: begin
 		iso_thinwall_sprites[5] := LocateSprite('wall_stone.png', 64, 96);
 		iso_thinwall_sprites[8] := LocateSprite('wall_extra_b.png', 64, 96);
 		iso_thinwall_sprites[9] := LocateSprite('wall_mumetal.png', 64, 96);
 	end;
-	3: begin
+	3: begin { Industrial }
 		iso_thinwall_sprites[5] := LocateSprite('wall_industrial.png', 64, 96);
 		iso_thinwall_sprites[8] := LocateSprite('wall_extra_b.png', 64, 96);
 		iso_thinwall_sprites[9] := LocateSprite('wall_mumetal.png', 64, 96);
