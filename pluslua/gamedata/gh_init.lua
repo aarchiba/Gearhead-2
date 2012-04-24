@@ -303,6 +303,10 @@
 	nid_lookup = {}
 
 
+	random_names = {[""]=1}
+	for k,v in pairs(gh_GetFilenameConstants()) do
+		_G[k] = v
+	end
 
 
 
@@ -478,8 +482,469 @@ function gh_exportvars( gearptr )
 	end
 end
 
+function random_choice(list)
+    return list[math.random(table.getn(list))]
+end
+
+function gh_GHARName()
+    local d, r, syllables, vowels, consonants, syl, l, it
+    d = math.random
+    l = string.lower
+
+    function syl(gender)
+        local str, c, v
+        function v()
+            return random_choice(vowels)
+        end
+        function c()
+            return random_choice(consonants)
+        end
+
+		if gender == 'M' then
+			str = random_choice(male_terminals)
+		elseif gender == 'F' then
+			str = random_choice(male_terminals)
+		else
+			if d(16) == 2 then 
+				str = v()
+			elseif d(20) == 2 then
+				if d(3) == 1 then
+					str = c()..v()
+				elseif d(2) == 1 then
+					str = v()..c()
+				elseif d(2) == 1 then
+					str = c()..v()..c()
+				else
+					str = v()..c()..v()
+				end
+			else
+				str = random_choice(syllables)
+			end
+		end
+        return string.lower(str):gsub("^%l", string.upper)
+    end
+    syllables = {
+		'Jo','Sep','Hew','It','Seo','Eun','Suk','Ki','Kang','Cho',
+		'Ai','Bo','Ca','Des','El','Fas','Gun','Ho','Ia','Jes',
+		'Kep','Lor','Mo','Nor','Ox','Pir','Qu','Ra','Sun','Ter',
+		'Ub','Ba','Tyb','War','Bac','Yan','Zee','Es','Vis','Jang',
+		'Vic','Tor','Et','Te','Ni','Mo','Bil','Con','Ly','Dam',
+		'Cha','Ro','The','Bes','Ne','Ko','Kun','Ran','Ma','No',
+		'Ten','Do','To','Me','Ja','Son','Love','Joy','Ken','Iki',
+		'Han','Lu','Ke','Sky','Wal','Jen','Fer','Le','Ia','Chu',
+		'Tek','Ubu','Roi','Har','Old','Pin','Ter','Red','Ex','Al',
+		'Alt','Rod','Mia','How','Phi','Aft','Aus','Tin','Her','Ge',
+		'Hawk','Eye','Ger','Ru','Od','Jin','Un','Hyo','Leo','Star',
+		'Buck','Ers','Rog','Eva','Ova','Oni','Ami','Ga','Cyn','Mai',
+    }
+    female_terminals = {
+		'Ki','Cho','Ai','Bo','Ca','Ho','Ia',
+		'Mo','Qu','Ra','Ba','Zee','Te','Ni','Mo','Ly',
+		'Cha','Ro','The','Ne','Ko','Ma','No',
+		'Do','To','Me','Ja','Love','Joy','Iki',
+		'Lu','Ke','Sky','Le','Ia','Chu',
+		'Ubu','Roi',
+		'Mia','Phi','Ge', 'Eye', 'Eva','Ova','Oni','Ami','Ga','Cyn','Mai',
+    }
+    male_terminals = {
+		'Sep','Hew','It','Eun','Suk','Kang',
+		'Des','El','Fas','Gun','Jes',
+		'Kep','Lor','Nor','Ox','Pir','Sun','Ter',
+		'Ub','Tyb','War','Bac','Yan','Es','Vis','Jang',
+		'Vic','Tor','Et','Bil','Con','Dam',
+		'Bes','Kun','Ran',
+		'Ten','Son','Ken',
+		'Han','Wal','Jen','Fer',
+		'Tek','Har','Old','Pin','Ter','Red','Ex','Al',
+		'Alt','Rod','How','Aft','Aus','Tin','Her',
+		'Hawk','Ger','Od','Jin','Un','Leo','Star',
+		'Buck','Ers','Rog','Cyn'
+    }
+    consonants = {
+		'B','C','D','F','G','H','J','K','L','M','N',
+		'P','Q','R','S','T','V','W','X','Y','Z'
+    }
+    vowels = {
+		'A','E','I','O','U','Y'
+    }
+
+	if d(100)~=5 then
+		it = syl()..l(syl(gender))
+	else
+		it = syl(gender)
+	end
+	if d(8)>string.len(it) then
+		it = syl()..l(it)
+	elseif d(30)==1 then
+		it = syl()..l(it)
+	end
+	if string.len(it)<9 and d(16)==7 then
+		it = it.." "..syl()
+		if d(3) ~= 1 then
+			it = it..l(syl())
+		end
+	end
+	if d(1000)==123 then
+		it = it.." - "..random_choice(consonants)
+	end
+	return it
+end
+
+function gh_GH1Name()
+    local d, r, syllables, vowels, consonants, syl, l, it
+    d = math.random
+    l = string.lower
+
+    function syl()
+        local str, c, v
+        function v()
+            return random_choice(vowels)
+        end
+        function c()
+            return random_choice(consonants)
+        end
+
+        if d(16) == 2 then 
+			str = v()
+        elseif d(20) == 2 then
+			if d(3) == 1 then
+				str = c()..v()
+			elseif d(2) == 1 then
+				str = v()..c()
+			elseif d(2) == 1 then
+				str = c()..v()..c()
+			else
+				str = v()..c()..v()
+			end
+        else
+            str = random_choice(syllables)
+        end
+
+        return string.lower(str):gsub("^%l", string.upper)
+    end
+    syllables = {
+		'Jo','Sep','Hew','It','Seo','Eun','Suk','Ki','Kang','Cho',
+		'Ai','Bo','Ca','Des','El','Fas','Gun','Ho','Ia','Jes',
+		'Kep','Lor','Mo','Nor','Ox','Pir','Qu','Ra','Sun','Ter',
+		'Ub','Ba','Tyb','War','Bac','Yan','Zee','Es','Vis','Jang',
+		'Vic','Tor','Et','Te','Ni','Mo','Bil','Con','Ly','Dam',
+		'Cha','Ro','The','Bes','Ne','Ko','Kun','Ran','Ma','No',
+		'Ten','Do','To','Me','Ja','Son','Love','Joy','Ken','Iki',
+		'Han','Lu','Ke','Sky','Wal','Jen','Fer','Le','Ia','Chu',
+		'Tek','Ubu','Roi','Har','Old','Pin','Ter','Red','Ex','Al',
+		'Alt','Rod','Mia','How','Phi','Aft','Aus','Tin','Her','Ge',
+		'Hawk','Eye','Ger','Ru','Od','Jin','Un','Hyo','Leo','Star',
+		'Buck','Ers','Rog','Eva','Ova','Oni','Ami','Ga','Cyn','Mai',
+    }
+    consonants = {
+		'B','C','D','F','G','H','J','K','L','M','N',
+		'P','Q','R','S','T','V','W','X','Y','Z'
+    }
+    vowels = {
+		'A','E','I','O','U','Y'
+    }
+	if d(100)~=5 then
+		it = syl()..l(syl())
+	else
+		it = syl()
+	end
+	if d(8)>string.len(it) then
+		it = it..l(syl())
+	elseif d(30)==1 then
+		it = it..l(syl())
+	end
+	if string.len(it)<9 and d(16)==7 then
+		it = it.." "..syl()
+		if d(3) ~= 1 then
+			it = it..l(syl())
+		end
+	end
+	if d(1000)==123 then
+		it = it.." - "..random_choice(consonants)
+	end
+	return it
+end
+
+function gh_GH2Name()
+    local d, r, syllables, vowels, consonants, syl, l, it
+    d = math.random
+    l = string.lower
+
+    function syl(isfirst)
+        local str, c, v
+        function v()
+            return random_choice(vowels)
+        end
+        function c()
+            return random_choice(consonants)
+        end
+
+        if d(20) == 1 then 
+			str = v()
+        elseif d(4) ~= 1 then
+            if isfirst then
+                if d(2) == 1 then
+                    str = v()..c()..c()
+                elseif d(10) == 1 then
+                    str = c()..v()..v()..c()
+                else
+                    str = c()..v()..c()
+                end
+            else
+                if d(5) == 1 then
+                    str = c()..v()..c()
+                elseif d(4)==1 then
+                    str = v()..c()..v()
+                elseif d(3)==1 then
+                    str = c()..v()
+                elseif d(2)==1 then
+                    str = v()..c()
+                else
+                    str = v()..c()..c()
+                end
+            end
+        elseif d(7) == 2 then
+            if d(3) == 1 then
+                str = c()..v()
+            elseif d(2) == 1 then
+                str = v()..c()
+            elseif d(2) == 1 then
+                str = c()..v()..c()
+            else
+                str = v()..c()..v()
+            end
+        else
+            str = random_choice(syllables)
+        end
+
+        return string.lower(str):gsub("^%l", string.upper)
+    end
+    syllables = {
+		'Jo','Sep','Hew','It','Seo','Eun','Suk','Ki','Kang','Cho',
+		'Ai','Bo','Ca','Des','El','Fas','Gun','Ho','Ia','Jes',
+		'Kep','Lor','Mo','Nor','Ox','Pir','Qu','Ra','Sun','Ter',
+		'Ub','Ba','Tyb','War','Bac','Yan','Zee','Es','Vis','Jang',
+		'Vic','Tor','Et','Te','Ni','Mo','Bil','Con','Ly','Dam',
+		'Cha','Ro','The','Bes','Ne','Ko','Kun','Ran','Ma','No',
+		'Ten','Do','To','Me','Ja','Son','Love','Joy','Ken','Iki',
+		'Han','Lu','Ke','Sky','Wal','Jen','Fer','Le','Ia','Chu',
+		'Tek','Ubu','Roi','Har','Old','Pin','Ter','Red','Ex','Al',
+		'Alt','Rod','Mia','How','Phi','Aft','Aus','Tin','Her','Ge',
+		'Hawk','Eye','Ger','Ru','Od','Jin','Un','Hyo','Leo','Star',
+		'Buck','Ers','Rog','Eva','Ova','Oni','Ami','Ga','Cyn','Mai',
+		'Na','Mel','Gha','Mek','Kat','Ser'
+    }
+    consonants = {
+		'B','C','D','F','G','H','J','K','L','M','N',
+		'P','Q','R','S','T','V','W','X','Y','Z','T',
+		'N','S','H','R','D','L','C','M','P','B','G'
+    }
+    vowels = {
+		'A','E','I','O','U','Y','A','E','I','O',
+		'U'
+    }
+	if d(100)~=5 then
+		it = syl(true)..l(syl(false))
+	else
+		it = syl(true)
+	end
+	if d(8)>string.len(it) then
+		it = it..l(syl(false))
+	elseif d(30)==1 then
+		it = it..l(syl(false))
+	end
+
+	if string.len(it)<3 and d(30)~=1 then
+		it = it.." "..syl(true)..l(syl(false))
+	elseif string.len(it)<5 and d(3)~=1 then
+		it = it.." "..syl(true)
+		if d(4) ~= 1 then
+			it = it..l(syl(false))
+		end
+	elseif string.len(it)<5 and d(3)~=1 then
+		it = it.." "..syl(true)
+		if d(3) ~= 1 then
+			it = it..l(syl(false))
+		end
+	end
+	if d(1000)==123 then
+		it = it.." - "..random_choice(consonants)
+	end
+	return it
+end
+
+_american_names = {}
+_name_files = {M="census-names/dist.male.first",
+			F="census-names/dist.female.first",
+			L="census-names/dist.all.last"}
+function gh_AmericanName(gender)
+	local read_names
+	function read_names(f)
+		local t
+		f = assert(io.open(f)):read("*all")
+		t = {}
+		t.total = 0
+		for n, p in string.gfind(f, "(%S+)%s+(%S+)%s+(%S+)%s+(%S+)%s+") do
+			p = tonumber(p)
+			table.insert(t,n)
+			t.total = t.total + p
+			t[n] = t.total
+		end
+		return t
+	end
+
+	if gender == nil then gender = 'L'; end
+	if _american_names[gender] == nil then
+		_american_names[gender] = read_names(Data_Directory .. _name_files[gender])
+	end
+
+	c = _american_names[gender].total*math.random(1000000)/1000000
+
+	for i, k in ipairs(_american_names[gender]) do
+		if _american_names[gender][k]>=c then
+			str = k
+			break
+		end
+	end
+
+	return string.lower(str):gsub("^%l", string.upper)
+
+end
+
+_chinese_personal_names = nil
+_chinese_family_names = nil
+_chinese_name_files = {M="census-names/zh-personal.txt",
+			F="census-names/zh-personal.txt",
+			L="census-names/zh-family.txt"}
+function gh_ChineseName(gender)
+	local read_names
+	function read_names(f)
+		local t
+		f = assert(io.open(f)):read("*all")
+		t = {}
+		t.total = 0
+		for n, p in string.gfind(f, "(%D+)%s+(%d+)%s+") do
+			p = tonumber(p)
+			table.insert(t,n)
+			t.total = t.total + p
+			t[n] = t.total
+		end
+		return t
+	end
+
+	if _chinese_personal_names == nil then
+		_chinese_personal_names = read_names(Data_Directory .. "census-names/zh-personal.txt")
+	end
+
+	if _chinese_family_names == nil then
+		_chinese_family_names = read_names(Data_Directory .. "census-names/zh-family.txt")
+	end
+
+	c = _chinese_personal_names.total*math.random(1000000)/1000000
+
+	for i, k in ipairs(_chinese_family_names) do
+		if _chinese_family_names[k]>=c then
+			str = k
+			break
+		end
+	end
+	for i, k in ipairs(_chinese_personal_names) do
+		if _chinese_personal_names[k]>=c then
+			str = str .. " " .. k
+			break
+		end
+	end
+
+
+	return str
+
+end
+
+function gh_NatureName(gender)
+	local names = {}
+	names.M = {"Raven", "Eagle", "Jay", "Kestrel", "Owl", "Robin", 
+		"Hawk", "Starling", "Sparrow", "Kite", "Falcon", 
+		"Nightingale", "Kingfisher", "Osprey", "Egret",
+		"Rook", "Crow", "Pelican", "Penguin", "Auk", 
+		"Emu", "Ostrich", "Dove", "Grackle"
+		}
+	names.F = {
+		"Rose", "Lily", "Iris", "Lotus", "Fuchsia", "Foxglove",
+		"Impatiens", "Trillium", "Lantana", "Mallow", "Thistle",
+		"Violet", "Foxtail", "Dandelion", "Poppy", "Sunflower",
+		"Tulip", "Crocus", "Snowdrop", "Marigold", "Chrysanthemum",
+		"Carnation", "Pansy", "Nasturtium", "Honeysuckle",
+		"Jasmine", "Camomile"
+		}
+	names.A = {
+		"Diamond", "Jade", "Ruby", "Emerald", "Peridot",
+		"Opal", "Sapphire", "Pearl"
+		}
+
+    syllables = {
+		'Jo','Sep','Hew','It','Seo','Eun','Suk','Ki','Kang','Cho',
+		'Ai','Bo','Ca','Des','El','Fas','Gun','Ho','Ia','Jes',
+		'Kep','Lor','Mo','Nor','Ox','Pir','Qu','Ra','Sun','Ter',
+		'Ub','Ba','Tyb','War','Bac','Yan','Zee','Es','Vis','Jang',
+		'Vic','Tor','Et','Te','Ni','Mo','Bil','Con','Ly','Dam',
+		'Cha','Ro','The','Bes','Ne','Ko','Kun','Ran','Ma','No',
+		'Ten','Do','To','Me','Ja','Son','Love','Joy','Ken','Iki',
+		'Han','Lu','Ke','Sky','Wal','Jen','Fer','Le','Ia','Chu',
+		'Tek','Ubu','Roi','Har','Old','Pin','Ter','Red','Ex','Al',
+		'Alt','Rod','Mia','How','Phi','Aft','Aus','Tin','Her','Ge',
+		'Hawk','Eye','Ger','Ru','Od','Jin','Un','Hyo','Leo','Star',
+		'Buck','Ers','Rog','Eva','Ova','Oni','Ami','Ga','Cyn','Mai',
+		'Na','Mel','Gha','Mek','Kat','Ser'
+    }
+
+	if gender == nil then gender = "A"; end
+
+	return random_choice(names[gender]) .. " " .. random_choice(syllables) .. string.lower(random_choice(syllables))
+
+end
+
+
+function gh_MakePirate(name)
+	local adjectives
+	adjectives = { "Red", "Black", "Bloody", "Cursed", "One-eyed", "Squinty",
+		"Long", "Fat", "Cold", "Snake", "Jolly", "Butcher", "One-ear",
+		"Cutthroat", 
+	}
+	if math.random(2)==1 then
+		return random_choice(adjectives).." "..name
+	else
+		return name.." the "..random_choice(adjectives)
+	end
+end
+
+function gh_RandomName(char)
+	local it, gender
+	-- char is a userdata pointing to a gear; the gear may not be a character
+	-- but usually is.
+	-- the gear is not fully initialized yet, so can't be registered.
+	repeat
+		if gh_GetGearG(char) == GG_CHARACTER then
+			gender = nil
+			if gh_GetNAtt(char, NAG_CHARDESCRIPTION, NAS_GENDER) == NAV_MALE then
+				gender = 'M'
+			elseif gh_GetNAtt(char, NAG_CHARDESCRIPTION, NAS_GENDER) == NAV_FEMALE then
+				gender = 'F'
+			end
+			it = gh_GHARName(gender)
+			print("generated "..it)
+		else -- Not a character
+			--print("Generating a name for a non-character currently named "..gh_GetName(char))
+			it = gh_GH2Name()
+		end
+	until random_names[it] == nil
+	random_names[it] = 1
+	return it
+end
 
 
 
+--   **********************************
+--   *** GETTING LUA READY TO GO    ***
+--   **********************************
 
-
+math.randomseed(os.time())

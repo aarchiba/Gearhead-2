@@ -315,7 +315,7 @@ Const
 Procedure InitChar(Part: GearPtr);
 Function CharBaseDamage( PC: GearPtr; CBod,CVit: Integer ): Integer;
 
-Function RandomName: String;
+Function RandomName(Ch:GearPtr): String;
 procedure RollStats( PC: GearPtr; Pts: Integer);
 function RandomPilot( StatPoints , SkillRank: Integer ): GearPtr;
 
@@ -334,7 +334,7 @@ Function IsACombatant( NPC: GearPtr ): Boolean;
 
 implementation
 
-uses ghmodule;
+uses ghmodule,lua,lauxlib;
 
 Procedure InitChar(Part: GearPtr);
 	{PART is a newly created Character record.}
@@ -367,8 +367,10 @@ begin
 	CharBaseDamage := HP;
 end;
 
-Function RandomName: String;
+Function RandomName(Ch:GearPtr): String;
 	{Generate a random name for a character.}
+	{Note that this is also called in several other places to generate}
+	{hopefully-unique names, so Char might not actually be a character.}
 Const
 	NumSyllables = 126;
 	SyllableList: Array [1..NumSyllables] of String [5] = (
@@ -443,33 +445,48 @@ Const
 			Syl := SyllableList[Random(NumSyllables)+1];
 	end;
 var
-	it: String;
+	it, E: String;
 begin
-	{A basic name is two syllables stuck together.}
-	if Random(100) <> 5 then
-		it := Syl( True ) + LowerCase(Syl( False ) )
-	else
-		it := Syl( True );
+	lua_getglobal( MyLua , 'gh_RandomName' );
+	lua_pushlightuserdata( MyLua , Pointer(Ch) );
 
-	{Uncommon names may have 3 syllables.}
-	if ( Random(8) > Length(it) ) then
-		it := it + LowerCase(Syl( False ) )
-	else if Random(30) = 1 then
-		it := it + LowerCase(Syl( False ) );
-
-	{Short names may have a second part. This isn't common.}
-	if ( Length( it ) < 3 ) and ( Random( 30 ) <> 1 ) then begin
-		it := it + ' ' + Syl( True ) + LowerCase(Syl( False ) )
-	end else if ( Length( it ) < 5 ) and ( Random( 3 ) <> 1 ) then begin
-		it := it + ' ' + Syl( True );
-		if Random(4) <> 1 then it := it + LowerCase(Syl( False ) );
-	end else if (Length(it) < ( 7 + Random( 5 ) ) ) and (Random(3) = 1) then begin
-		it := it + ' ' + Syl( True );
-		if Random(3) <> 1 then it := it + LowerCase(Syl( False ) );
+	it := '';
+	if lua_pcall( MyLua , 1 , 1 , 0 ) = 0 then begin
+		it := lual_checkstring( MyLua , 1 );
+	end else begin
+		{ Report an error }
+		E := 'RandomName ERROR: ' + lua_tostring( MyLua , -1 );
+		RecordError( E );
 	end;
+	lua_settop( MyLua , 0 );
 
-	{ Random chance of random anime designation. }
-	if Random(1000) = 123 then it := it + ' - ' + ConsonantList[Random(21)+1];
+	if it = '' then begin
+		{A basic name is two syllables stuck together.}
+		if Random(100) <> 5 then
+			it := Syl( True ) + LowerCase(Syl( False ) )
+		else
+			it := Syl( True );
+
+		{Uncommon names may have 3 syllables.}
+		if ( Random(8) > Length(it) ) then
+			it := it + LowerCase(Syl( False ) )
+		else if Random(30) = 1 then
+			it := it + LowerCase(Syl( False ) );
+
+		{Short names may have a second part. This isn't common.}
+		if ( Length( it ) < 3 ) and ( Random( 30 ) <> 1 ) then begin
+			it := it + ' ' + Syl( True ) + LowerCase(Syl( False ) )
+		end else if ( Length( it ) < 5 ) and ( Random( 3 ) <> 1 ) then begin
+			it := it + ' ' + Syl( True );
+			if Random(4) <> 1 then it := it + LowerCase(Syl( False ) );
+		end else if (Length(it) < ( 7 + Random( 5 ) ) ) and (Random(3) = 1) then begin
+			it := it + ' ' + Syl( True );
+			if Random(3) <> 1 then it := it + LowerCase(Syl( False ) );
+		end;
+
+		{ Random chance of random anime designation. }
+		if Random(1000) = 123 then it := it + ' - ' + ConsonantList[Random(21)+1];
+	end;
 
 	RandomName := it;
 end;
@@ -552,7 +569,7 @@ begin
 	SetNAtt( NPC^.NA , NAG_Skill , PS[ Random( NumNPCPilotSpecialties ) + 1 ] , SkillRank );
 
 	{ Generate a random name for the character. }
-	SetSAtt( NPC^.SA , 'Name <'+RandomName+'>');
+	SetSAtt( NPC^.SA , 'Name <'+RandomName(NPC)+'>');
 
 	{ Return a pointer to the character record. }
 	RandomPilot := NPC;
