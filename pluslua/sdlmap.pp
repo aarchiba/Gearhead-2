@@ -154,8 +154,6 @@ const
 	OM_South = 4;
 	OM_West = 3;
 
-	ZONE_WorldMap: TSDL_Rect = ( x: ScreenWidth div 2 - 160; y: ScreenHeight div 2 - 160; W:320; H:320 );
-
 
 var
 	Mini_Map_Sprite,World_Terrain,Items_Sprite: SensibleSpritePtr;
@@ -1166,7 +1164,10 @@ var
 	MyDest: TSDL_Rect;
 	MySprite: SensibleSpritePtr;
 	M: GearPtr;
-begin
+	ZONE_WorldMap: TSDL_Rect;
+
+begin 
+	with ZONE_WorldMap do begin x:= ScreenWidth div 2 - 160; y:= ScreenHeight div 2 - 160; W:=320; H:=320; end;
 	ClrZone( ZONE_WorldMap );
 	MyDest.W := 64;
 	MyDest.H := 64;

@@ -63,139 +63,15 @@ const
 
 	Parchment: TSDL_Color = 	( r:255; g:255; b:204 );
 
-	ScreenWidth = 800;
-	ScreenHeight = 600;
 	FontSize = 11;
 	SmallFontSize = 8;
-
-	ZONE_MainMenu: TSDL_Rect = ( x:500; y: 400; w: 200; h: 100 );
-
-	ZONE_TextInputPrompt: TSDL_Rect = ( x:screenwidth div 2 - 210; y: screenheight div 2 - 35; w:420; h:30 );
-	ZONE_TextInput: TSDL_Rect = ( x:screenwidth div 2 - 210; y:screenheight div 2 + 5; w:420; h:30 );
-	ZONE_TextInputBigBox: TSDL_Rect = ( x:screenwidth div 2 - 210; y:screenheight div 2 - 35; w:420; h:75 );
-	ZONE_TextInputSmallBox: TSDL_Rect = ( x:screenwidth div 2 - 215; y:screenheight div 2; w:430; h:40 );
-
-	Right_Column_Width = 180;
-	Model_Status_Width =   250;
-	Model_Status_Height =  120;
-
-	Dialog_Height = 100;
-
-	ZONE_Dialog: TSDL_Rect = ( x: 30 + Model_Status_Width; y: ScreenHeight - Dialog_Height - 10; w: ScreenWidth - 60 - Model_Status_Width ; h: Dialog_Height );
 
 	KEY_REPEAT_DELAY = 200;
 	KEY_REPEAT_INTERVAL = 75;
 
 	Console_History_Length = 240;
 
-	ZONE_MoreText: TSDL_Rect = ( x:10; y:10; w: ScreenWidth - 20 ; h: ScreenHeight - 50 );
-	ZONE_MorePrompt: TSDL_Rect = ( x:10; y: ScreenHeight - 40 ; w:ScreenWidth - 20; h:30 );
-
 	Animation_Phase_Period = 6000;
-
-	Dialog_Area_Height = Model_Status_Height;
-
-	ZONE_Info: TSDL_Rect = ( x:  ScreenWidth - Right_Column_Width - 10 ; y:10; w:Right_Column_Width; h:150 );
-	ZONE_Menu: TSDL_Rect = ( x:  ScreenWidth - Right_Column_Width - 10 ; y:170; w:Right_Column_Width; h:ScreenHeight - 220 - Dialog_Area_Height );
-	ZONE_Menu1: TSDL_Rect = ( x:  ScreenWidth - Right_Column_Width - 10 ; y:170; w:Right_Column_Width; h:130 );
-	ZONE_Menu2: TSDL_Rect = ( x:  ScreenWidth - Right_Column_Width - 10 ; y:310; w:Right_Column_Width; h:ScreenHeight - 350 - Dialog_Area_Height );
-
-	ZONE_CharGenMenu: TSDL_Rect = ( x:ScreenWidth - Right_Column_Width - 20; y:190; w:Right_Column_Width; h:ScreenHeight-250 );
-	ZONE_CharGenCaption: TSDL_Rect = ( x:ScreenWidth - Right_Column_Width - 20; y:ScreenHeight-40; w:Right_Column_Width; h:20 );
-	ZONE_CharGenDesc: TSDL_Rect = ( x:10; y:ScreenHeight - Dialog_Area_Height; w:ScreenWidth - Right_Column_Width - 50; h:Dialog_Area_Height-10 );
-	ZONE_CharGenPrompt: TSDL_Rect = ( x:ScreenWidth - Right_Column_Width - 20; y:10; w:Right_Column_Width; h:160 );
-
-
-	ZONE_InteractStatus: TSDL_Rect = ( x: ScreenWidth div 2 - 225; y:ScreenHeight Div 2 - 210; w:345; h:30 );
-	ZONE_InteractMsg: TSDL_Rect = ( x: ScreenWidth div 2 - 225; y:ScreenHeight Div 2 - 140; w:345; h: 105 );
-	ZONE_InteractPhoto: TSDL_Rect = ( x: ScreenWidth div 2 + 125; y:ScreenHeight Div 2 - 200; w: 100; h: 150 );
-	ZONE_InteractInfo: TSDL_Rect = ( x:ScreenWidth div 2 - 225; y:ScreenHeight Div 2 - 175; w: 345; h: 30 );
-	ZONE_InteractMenu: TSDL_Rect = ( x: ScreenWidth div 2 - 225; y:ScreenHeight Div 2 - 30; w:450; h: 120 );
-	ZONE_InteractTotal: TSDL_Rect = ( x: ScreenWidth div 2 - 230; y: ScreenHeight Div 2 - 215; w: 460; h: 310 );
-
-	{ The ITEMS ZONE is used for both the backpack and shopping interfaces. }
-	ItemsLeftWidth = 345;
-	ItemsRightWidth = 225;
-	ItemsZoneLeftTab = ( ScreenWidth - ItemsLeftWidth - ItemsRightWidth - 10 ) div 2;
-	ItemsZoneRightTab = ItemsZoneLeftTab + ItemsLeftWidth + 10;
-
-	ZONE_ItemsTotal: tSDL_Rect = ( x: ItemsZoneLeftTab - 10; y:ScreenHeight Div 2 - 220; w: ItemsLeftWidth + ItemsRightWidth + 30; h: 330 );
-
-	ZONE_ShopCaption: TSDL_Rect = ( x: ItemsZoneLeftTab; y:ScreenHeight Div 2 - 210; w: ItemsLeftWidth; h: 30 );
-	ZONE_ShopMsg: TSDL_Rect = ( x: ItemsZoneLeftTab; y:ScreenHeight Div 2 - 140; w:ItemsLeftWidth; h: 105 );
-	ZONE_ShopMenu: TSDL_Rect = ( x: ItemsZoneLeftTab; y:ScreenHeight Div 2 - 30; w:ItemsLeftWidth; h: 120 );
-
-	ZONE_ItemsInfo: TSDL_Rect = ( x: ItemsZoneRightTab; y:ScreenHeight Div 2 - 210; w: ItemsRightWidth; h: 275 );
-	ZONE_ItemsPCInfo: TSDL_Rect = ( x: ItemsZoneRightTab; y:ScreenHeight Div 2 + 70; w: ItemsRightWidth; h: 30 );
-
-	ZONE_FieldHQMenu: TSDL_Rect = ( x: ItemsZoneLeftTab; y:ScreenHeight Div 2 - 210; w:ItemsLeftWidth; h: 275 );
-
-	ZONE_BackpackInstructions: TSDL_Rect = ( x: ItemsZoneLeftTab; y:ScreenHeight Div 2 - 210; w: ItemsLeftWidth; h: 30 );
-	ZONE_EqpMenu: TSDL_Rect = ( x: ItemsZoneLeftTab; y:ScreenHeight Div 2 - 140; w:ItemsLeftWidth; h: 105 );
-	ZONE_InvMenu: TSDL_Rect = ( x: ItemsZoneLeftTab; y:ScreenHeight Div 2 - 30; w:ItemsLeftWidth; h: 120 );
-
-	CaptionWidth = Model_Status_Width;
-	ZONE_Caption: TSDL_Rect = ( x: ScreenWidth div 2 - ( CaptionWidth div 2 ); y: 20; w: CaptionWidth; h: Model_Status_Height );
-	SubCaptionWidth = FontSize * 20;
-	ZONE_SubCaption: TSDL_Rect = ( x: ScreenWidth div 2 - ( SubCaptionWidth div 2 ); y: 35 + Model_Status_Height; w: SubCaptionWidth; h: FontSize + 2 );
-
-	ZONE_CharacterInfo: TSDL_Rect = ( x: ScreenWidth div 2 - 275; y: ScreenHeight Div 2 - 200; w: 450; h: 295 );
-
-	SideInfoWidth = FontSize * 16;
-	SideInfoHeight = ( FontSize + 2 ) * 6;
-	ZONE_RightInfo: TSDL_Rect = ( x: ScreenWidth - SideInfoWidth - 10; y: 15; w: SideInfoWidth; h: SideInfoHeight );
-	ZONE_LeftInfo: TSDL_Rect = ( x: 10; y: 15; w: SideInfoWidth; h: SideInfoHeight );
-
-	ZONE_SuperGetItem: TSDL_Rect = ( x:Screenwidth div 2 - 110; y:Screenheight div 2 - 135; w:220; h:270 );
-	ZONE_GetItemMenu: TSDL_Rect = ( x:Screenwidth div 2 - 100; y:Screenheight div 2 - 125; w:200; h:250 );
-
-	ZONE_UsagePrompt: TSDL_Rect = ( x:500; y:190; w:130; h:170 );
-	ZONE_UsageMenu: TSDL_Rect = ( x:50; y:155; w:380; h:245 );
-
-	ZONE_MemoTotal: TSDL_Rect = ( x:ScreenWidth div 2 - 205; y:ScreenHeight div 2 - 195; w: 410; h:280 );
-	ZONE_MemoText: TSDL_Rect = ( x:ScreenWidth div 2 - 200; y:ScreenHeight div 2 - 190; w:400; h:200 );
-	ZONE_MemoMenu: TSDL_Rect = ( x:ScreenWidth div 2 - 200; y:ScreenHeight div 2 + 25; w:400; h:50 );
-
-	{ The SelectArenaMission zones. }
-	ZONE_SAMMenu: TSDL_Rect = ( x:ScreenWidth div 2 - 200; y:ScreenHeight div 2 - 190; w:400; h:200 );
-	ZONE_SAMText: TSDL_Rect = ( x:ScreenWidth div 2 - 200; y:ScreenHeight div 2 + 25; w:400; h:50 );
-
-	ZONE_Clock: TSDL_Rect = ( x: ScreenWidth - 150; y: 30; w: 120; H:20 );
-
-	Concert_Zone_Width = 500;
-	Concert_X0 = ( ScreenWidth - Concert_Zone_Width ) div 2;
-	Concert_X1 = Concert_X0 + 110;
-	Concert_Text_Width = Concert_Zone_Width - 110;
-	Concert_Zone_Height = 300;
-	Concert_y0 = ( ScreenHeight - Concert_Zone_Height - Dialog_Area_Height - 20 ) div 2;
-	Concert_Audience_Height = 140;
-	Concert_Y1 = Concert_Y0 + Concert_Audience_Height + 10;
-	ZONE_ConcertTotal: TSDL_Rect = ( x: Concert_X0 ; y: Concert_Y0; w: Concert_Zone_Width; h: Concert_Zone_Height );
-	ZONE_ConcertAudience: TSDL_Rect =  ( x: Concert_X0 ; y: Concert_Y0; w: Concert_Zone_Width; h: Concert_Audience_Height );
-	ZONE_ConcertCaption: TSDL_Rect =  ( x: Concert_X1 ; y: Concert_Y1; w: Concert_Text_Width; h: 40 );
-	ZONE_ConcertMenu: TSDL_Rect =  ( x: Concert_X1 ; y: Concert_Y1 + 45; w: Concert_Text_Width; h: 80 );
-	ZONE_ConcertDesc: TSDL_Rect =  ( x: Concert_X1 ; y: Concert_Y1 + 130; w: Concert_Text_Width; h: 20 );
-	ZONE_ConcertPhoto:  TSDL_Rect =  ( x: Concert_X0 ; y: Concert_Y1; w: 100; h: 150 );
-
-
-	Monologue_Width = 400;
-	Monologue_Height = 205;
-	ZONE_MonologueTotal: TSDL_Rect = ( x: Screenwidth div 2 - Monologue_Width div 2 - 10; y: ScreenHeight div 3 - Monologue_Height div 2 - 10; w: Monologue_Width + 20; h: Monologue_Height + 20 );
-	ZONE_MonologueInfo: TSDL_Rect = ( x: Screenwidth div 2 - Monologue_Width div 2; y: ScreenHeight div 3 - Monologue_Height div 2; w: Monologue_Width; h:30 );
-	ZONE_MonologueText: TSDL_Rect = ( x: Screenwidth div 2 - Monologue_Width div 2; y: ScreenHeight div 3 - Monologue_Height div 2 + 40; w: Monologue_Width - 110; h: Monologue_Height - 40 );
-	ZONE_MonologuePortrait: TSDL_Rect = ( x: Screenwidth div 2 + Monologue_Width div 2 - 100; y: ScreenHeight div 3 - Monologue_Height div 2 + 40; w: 100; h: 150 );
-
-	Arena_List_Width = 240;
-	Arena_List_Height = ScreenHeight - ( Dialog_Area_Height + 40 );
-	ZONE_ArenaPilotMenu: TSDL_Rect = ( x: 10; Y: 10; w: Arena_List_Width; h: Arena_List_Height );
-	ZONE_ArenaMechaMenu: TSDL_Rect = ( x: 50 + Arena_List_Width; Y: 10; w: Arena_List_Width; h: Arena_List_Height );
-	ZONE_ArenaInfo: TSDL_Rect = ( x: screenwidth - 10 - ItemsRightWidth; Y: 10; w: ItemsRightWidth; h: Arena_List_Height );
-
-	ZONE_Title_Screen_Version:  TSDL_Rect =  ( x: 555 ; y: 222; w: 50; h: 20 );
-	ZONE_Title_Screen_Menu:  TSDL_Rect =  ( x: 585 ; y: 255; w: 160; h: 140 );
-
-	ZONE_PCStatus: TSDL_Rect = ( x: 20; y: ScreenHeight - Model_Status_Height - 10; w: Model_Status_Width; h: Model_Status_Height );
-
 
 
 var
@@ -213,6 +89,128 @@ var
 
 	RK_NumKeys:	PInt;
 	RK_KeyState:	PUInt8;
+
+	Right_Column_Width: Integer;
+	Model_Status_Width: Integer;
+	Model_Status_Height: Integer;
+
+	Dialog_Height: Integer;
+
+	Dialog_Area_Height: Integer;
+
+	ScreenWidth: Integer;
+	ScreenHeight: Integer;
+	ZONE_MainMenu: TSDL_Rect;
+
+	ZONE_TextInputPrompt: TSDL_Rect;
+	ZONE_TextInput: TSDL_Rect;
+	ZONE_TextInputBigBox: TSDL_Rect;
+	ZONE_TextInputSmallBox: TSDL_Rect;
+
+	ZONE_Dialog: TSDL_Rect;
+
+	ZONE_MoreText: TSDL_Rect;
+	ZONE_MorePrompt: TSDL_Rect;
+
+	ZONE_Info: TSDL_Rect;
+	ZONE_Menu: TSDL_Rect;
+	ZONE_Menu1: TSDL_Rect;
+	ZONE_Menu2: TSDL_Rect;
+
+	ZONE_CharGenMenu: TSDL_Rect;
+	ZONE_CharGenCaption: TSDL_Rect;
+	ZONE_CharGenDesc: TSDL_Rect;
+	ZONE_CharGenPrompt: TSDL_Rect;
+
+	ZONE_InteractStatus: TSDL_Rect;
+	ZONE_InteractMsg: TSDL_Rect;
+	ZONE_InteractPhoto: TSDL_Rect;
+	ZONE_InteractInfo: TSDL_Rect;
+	ZONE_InteractMenu: TSDL_Rect;
+	ZONE_InteractTotal: TSDL_Rect;
+
+	{ The ITEMS ZONE is used for both the backpack and shopping interfaces. }
+	ItemsLeftWidth: Integer;
+	ItemsRightWidth: Integer;
+	ItemsZoneLeftTab: Integer;
+	ItemsZoneRightTab: Integer;
+
+	ZONE_ItemsTotal: tSDL_Rect;
+
+	ZONE_ShopCaption: TSDL_Rect;
+	ZONE_ShopMsg: TSDL_Rect;
+	ZONE_ShopMenu: TSDL_Rect;
+
+	ZONE_ItemsInfo: TSDL_Rect;
+	ZONE_ItemsPCInfo: TSDL_Rect;
+
+	ZONE_FieldHQMenu: TSDL_Rect;
+
+	ZONE_BackpackInstructions: TSDL_Rect;
+	ZONE_EqpMenu: TSDL_Rect;
+	ZONE_InvMenu: TSDL_Rect;
+
+	CaptionWidth: Integer;
+	SubCaptionWidth: Integer;
+	SideInfoWidth: Integer;
+	SideInfoHeight: Integer;
+	ZONE_Caption: TSDL_Rect;
+	ZONE_SubCaption: TSDL_Rect;
+
+	ZONE_CharacterInfo: TSDL_Rect;
+
+	ZONE_RightInfo: TSDL_Rect;
+	ZONE_LeftInfo: TSDL_Rect;
+
+	ZONE_SuperGetItem: TSDL_Rect;
+	ZONE_GetItemMenu: TSDL_Rect;
+
+	ZONE_UsagePrompt: TSDL_Rect;
+	ZONE_UsageMenu: TSDL_Rect;
+
+	ZONE_MemoTotal: TSDL_Rect;
+	ZONE_MemoText: TSDL_Rect;
+	ZONE_MemoMenu: TSDL_Rect;
+
+	{ The SelectArenaMission zones. }
+	ZONE_SAMMenu: TSDL_Rect;
+	ZONE_SAMText: TSDL_Rect;
+
+	ZONE_Clock: TSDL_Rect;
+
+	Concert_Zone_Width: Integer;
+	Concert_X0: Integer;
+	Concert_X1: Integer;
+	Concert_Text_Width: Integer;
+	Concert_Zone_Height: Integer;
+	Concert_y0: Integer;
+	Concert_Audience_Height: Integer;
+	Concert_Y1: Integer;
+	ZONE_ConcertTotal: TSDL_Rect;
+	ZONE_ConcertAudience: TSDL_Rect;
+	ZONE_ConcertCaption: TSDL_Rect;
+	ZONE_ConcertMenu: TSDL_Rect;
+	ZONE_ConcertDesc: TSDL_Rect;
+	ZONE_ConcertPhoto:  TSDL_Rect;
+
+
+	Monologue_Width: Integer;
+	Monologue_Height: Integer;
+	ZONE_MonologueTotal: TSDL_Rect;
+	ZONE_MonologueInfo: TSDL_Rect;
+	ZONE_MonologueText: TSDL_Rect;
+	ZONE_MonologuePortrait: TSDL_Rect;
+
+	Arena_List_Width: Integer;
+	Arena_List_Height: Integer;
+	ZONE_ArenaPilotMenu: TSDL_Rect;
+	ZONE_ArenaMechaMenu: TSDL_Rect;
+	ZONE_ArenaInfo: TSDL_Rect;
+
+	ZONE_Title_Screen_Version:  TSDL_Rect;
+	ZONE_Title_Screen_Menu:  TSDL_Rect;
+
+	ZONE_PCStatus: TSDL_Rect;
 
 
 Procedure DoFlip;
@@ -292,6 +290,135 @@ const
 var
 	New_Sprite_Num: LongInt;
 	Infobox_Border,Infobox_Backdrop: SensibleSpritePtr;
+
+Procedure SetZones(w, h: Integer);
+begin
+	ScreenWidth := w;
+	ScreenHeight := h;
+
+	Right_Column_Width := 180;
+	Model_Status_Width :=   250;
+	Model_Status_Height :=  120;
+
+	Dialog_Height := 100;
+
+	Dialog_Area_Height := Model_Status_Height;
+
+
+	with ZONE_MainMenu do begin x:=500; y:=400; w:=200; h:=100; end;
+
+	with ZONE_TextInputPrompt do begin x:=screenwidth div 2 - 210; y:= screenheight div 2 - 35; w:=420; h:=30 ; end;
+	with ZONE_TextInput do begin x:=screenwidth div 2 - 210; y:=screenheight div 2 + 5; w:=420; h:=30 ; end;
+	with ZONE_TextInputBigBox do begin x:=screenwidth div 2 - 210; y:=screenheight div 2 - 35; w:=420; h:=75 ; end;
+	with ZONE_TextInputSmallBox do begin x:=screenwidth div 2 - 215; y:=screenheight div 2; w:=430; h:=40 ; end;
+
+	with ZONE_Dialog do begin x:= 30 + Model_Status_Width; y:= ScreenHeight - Dialog_Height - 10; w:= ScreenWidth - 60 - Model_Status_Width ; h:= Dialog_Height ; end;
+
+	with ZONE_MoreText do begin x:=10; y:=10; w:= ScreenWidth - 20 ; h:= ScreenHeight - 50 ; end;
+	with ZONE_MorePrompt do begin x:=10; y:= ScreenHeight - 40 ; w:=ScreenWidth - 20; h:=30 ; end;
+
+	with ZONE_Info do begin x:=  ScreenWidth - Right_Column_Width - 10 ; y:=10; w:=Right_Column_Width; h:=150 ; end;
+	with ZONE_Menu do begin x:=  ScreenWidth - Right_Column_Width - 10 ; y:=170; w:=Right_Column_Width; h:=ScreenHeight - 220 - Dialog_Area_Height ; end;
+	with ZONE_Menu1 do begin x:=  ScreenWidth - Right_Column_Width - 10 ; y:=170; w:=Right_Column_Width; h:=130 ; end;
+	with ZONE_Menu2 do begin x:=  ScreenWidth - Right_Column_Width - 10 ; y:=310; w:=Right_Column_Width; h:=ScreenHeight - 350 - Dialog_Area_Height ; end;
+
+	with ZONE_CharGenMenu do begin x:=ScreenWidth - Right_Column_Width - 20; y:=190; w:=Right_Column_Width; h:=ScreenHeight-250 ; end;
+	with ZONE_CharGenCaption do begin x:=ScreenWidth - Right_Column_Width - 20; y:=ScreenHeight-40; w:=Right_Column_Width; h:=20 ; end;
+	with ZONE_CharGenDesc do begin x:=10; y:=ScreenHeight - Dialog_Area_Height; w:=ScreenWidth - Right_Column_Width - 50; h:=Dialog_Area_Height-10 ; end;
+	with ZONE_CharGenPrompt do begin x:=ScreenWidth - Right_Column_Width - 20; y:=10; w:=Right_Column_Width; h:=160 ; end;
+
+	with ZONE_InteractStatus do begin x:= ScreenWidth div 2 - 225; y:=ScreenHeight Div 2 - 210; w:=345; h:=30 ; end;
+	with ZONE_InteractMsg do begin x:= ScreenWidth div 2 - 225; y:=ScreenHeight Div 2 - 140; w:=345; h:= 105 ; end;
+	with ZONE_InteractPhoto do begin x:= ScreenWidth div 2 + 125; y:=ScreenHeight Div 2 - 200; w:= 100; h:= 150 ; end;
+	with ZONE_InteractInfo do begin x:=ScreenWidth div 2 - 225; y:=ScreenHeight Div 2 - 175; w:= 345; h:= 30 ; end;
+	with ZONE_InteractMenu do begin x:= ScreenWidth div 2 - 225; y:=ScreenHeight Div 2 - 30; w:=450; h:= 120 ; end;
+	with ZONE_InteractTotal do begin x:= ScreenWidth div 2 - 230; y:= ScreenHeight Div 2 - 215; w:= 460; h:= 310 ; end;
+
+	{ The ITEMS ZONE is used for both the backpack and shopping interfaces. }
+	ItemsLeftWidth := 345;
+	ItemsRightWidth := 225;
+	ItemsZoneLeftTab := ( ScreenWidth - ItemsLeftWidth - ItemsRightWidth - 10 ) div 2;
+	ItemsZoneRightTab := ItemsZoneLeftTab + ItemsLeftWidth + 10;
+
+	with ZONE_ItemsTotal do begin x:= ItemsZoneLeftTab - 10; y:=ScreenHeight Div 2 - 220; w:= ItemsLeftWidth + ItemsRightWidth + 30; h:= 330 ; end;
+
+	with ZONE_ShopCaption do begin x:= ItemsZoneLeftTab; y:=ScreenHeight Div 2 - 210; w:= ItemsLeftWidth; h:= 30 ; end;
+	with ZONE_ShopMsg do begin x:= ItemsZoneLeftTab; y:=ScreenHeight Div 2 - 140; w:=ItemsLeftWidth; h:= 105 ; end;
+	with ZONE_ShopMenu do begin x:= ItemsZoneLeftTab; y:=ScreenHeight Div 2 - 30; w:=ItemsLeftWidth; h:= 120 ; end;
+
+	with ZONE_ItemsInfo do begin x:= ItemsZoneRightTab; y:=ScreenHeight Div 2 - 210; w:= ItemsRightWidth; h:= 275 ; end;
+	with ZONE_ItemsPCInfo do begin x:= ItemsZoneRightTab; y:=ScreenHeight Div 2 + 70; w:= ItemsRightWidth; h:= 30 ; end;
+
+	with ZONE_FieldHQMenu do begin x:= ItemsZoneLeftTab; y:=ScreenHeight Div 2 - 210; w:=ItemsLeftWidth; h:= 275 ; end;
+
+	with ZONE_BackpackInstructions do begin x:= ItemsZoneLeftTab; y:=ScreenHeight Div 2 - 210; w:= ItemsLeftWidth; h:= 30 ; end;
+	with ZONE_EqpMenu do begin x:= ItemsZoneLeftTab; y:=ScreenHeight Div 2 - 140; w:=ItemsLeftWidth; h:= 105 ; end;
+	with ZONE_InvMenu do begin x:= ItemsZoneLeftTab; y:=ScreenHeight Div 2 - 30; w:=ItemsLeftWidth; h:= 120 ; end;
+
+	CaptionWidth := Model_Status_Width;
+	with ZONE_Caption do begin x:= ScreenWidth div 2 - ( CaptionWidth div 2 ); y:= 20; w:= CaptionWidth; h:= Model_Status_Height ; end;
+	SubCaptionWidth := FontSize * 20;
+	with ZONE_SubCaption do begin x:= ScreenWidth div 2 - ( SubCaptionWidth div 2 ); y:= 35 + Model_Status_Height; w:= SubCaptionWidth; h:= FontSize + 2 ; end;
+
+	with ZONE_CharacterInfo do begin x:= ScreenWidth div 2 - 275; y:= ScreenHeight Div 2 - 200; w:= 450; h:= 295 ; end;
+
+	SideInfoWidth := FontSize * 16;
+	SideInfoHeight := ( FontSize + 2 ) * 6;
+	with ZONE_RightInfo do begin x:= ScreenWidth - SideInfoWidth - 10; y:= 15; w:= SideInfoWidth; h:= SideInfoHeight ; end;
+	with ZONE_LeftInfo do begin x:= 10; y:= 15; w:= SideInfoWidth; h:= SideInfoHeight ; end;
+
+	with ZONE_SuperGetItem do begin x:=Screenwidth div 2 - 110; y:=Screenheight div 2 - 135; w:=220; h:=270 ; end;
+	with ZONE_GetItemMenu do begin x:=Screenwidth div 2 - 100; y:=Screenheight div 2 - 125; w:=200; h:=250 ; end;
+
+	with ZONE_UsagePrompt do begin x:=500; y:=190; w:=130; h:=170 ; end;
+	with ZONE_UsageMenu do begin x:=50; y:=155; w:=380; h:=245 ; end;
+
+	with ZONE_MemoTotal do begin x:=ScreenWidth div 2 - 305; y:=ScreenHeight div 2 - 195; w:= 410; h:=280 ; end;
+	with ZONE_MemoText do begin x:=ScreenWidth div 2 - 300; y:=ScreenHeight div 2 - 190; w:=400; h:=200 ; end;
+	with ZONE_MemoMenu do begin x:=ScreenWidth div 2 - 300; y:=ScreenHeight div 2 + 25; w:=400; h:=50 ; end;
+
+	{ The SelectArenaMission zones. }
+	with ZONE_SAMMenu do begin x:=ScreenWidth div 2 - 200; y:=ScreenHeight div 2 - 190; w:=400; h:=200 ; end;
+	with ZONE_SAMText do begin x:=ScreenWidth div 2 - 200; y:=ScreenHeight div 2 + 25; w:=400; h:=50 ; end;
+
+	with ZONE_Clock do begin x:= ScreenWidth - 150; y:= 30; w:= 120; h:=20 ; end;
+
+	Concert_Zone_Width := 500;
+	Concert_X0 := ( ScreenWidth - Concert_Zone_Width ) div 2;
+	Concert_X1 := Concert_X0 + 110;
+	Concert_Text_Width := Concert_Zone_Width - 110;
+	Concert_Zone_Height := 300;
+	Concert_y0 := ( ScreenHeight - Concert_Zone_Height - Dialog_Area_Height - 20 ) div 2;
+	Concert_Audience_Height := 140;
+	Concert_Y1 := Concert_Y0 + Concert_Audience_Height + 10;
+	with ZONE_ConcertTotal do begin x:= Concert_X0 ; y:= Concert_Y0; w:= Concert_Zone_Width; h:= Concert_Zone_Height ; end;
+	with ZONE_ConcertAudience do begin x:= Concert_X0 ; y:= Concert_Y0; w:= Concert_Zone_Width; h:= Concert_Audience_Height ; end;
+	with ZONE_ConcertCaption do begin x:= Concert_X1 ; y:= Concert_Y1; w:= Concert_Text_Width; h:= 40 ; end;
+	with ZONE_ConcertMenu do begin x:= Concert_X1 ; y:= Concert_Y1 + 45; w:= Concert_Text_Width; h:= 80 ; end;
+	with ZONE_ConcertDesc do begin x:= Concert_X1 ; y:= Concert_Y1 + 130; w:= Concert_Text_Width; h:= 20 ; end;
+	with ZONE_ConcertPhoto do begin x:= Concert_X0 ; y:= Concert_Y1; w:= 100; h:= 150 ; end;
+
+
+	Monologue_Width := 400;
+	Monologue_Height := 205;
+	with ZONE_MonologueTotal do begin x:= Screenwidth div 2 - Monologue_Width div 2 - 10; y:= ScreenHeight div 3 - Monologue_Height div 2 - 10; w:= Monologue_Width + 20; h:= Monologue_Height + 20 ; end;
+	with ZONE_MonologueInfo do begin x:= Screenwidth div 2 - Monologue_Width div 2; y:= ScreenHeight div 3 - Monologue_Height div 2; w:= Monologue_Width; h:=30 ; end;
+	with ZONE_MonologueText do begin x:= Screenwidth div 2 - Monologue_Width div 2; y:= ScreenHeight div 3 - Monologue_Height div 2 + 40; w:= Monologue_Width - 110; h:= Monologue_Height - 40 ; end;
+	with ZONE_MonologuePortrait do begin x:= Screenwidth div 2 + Monologue_Width div 2 - 100; y:= ScreenHeight div 3 - Monologue_Height div 2 + 40; w:= 100; h:= 150 ; end;
+
+	Arena_List_Width := 240;
+	Arena_List_Height := ScreenHeight - ( Dialog_Area_Height + 40 );
+	with ZONE_ArenaPilotMenu do begin x:= 10; y:= 10; w:= Arena_List_Width; h:= Arena_List_Height ; end;
+	with ZONE_ArenaMechaMenu do begin x:= 50 + Arena_List_Width; y:= 10; w:= Arena_List_Width; h:= Arena_List_Height ; end;
+	with ZONE_ArenaInfo do begin x:= screenwidth - 10 - ItemsRightWidth; y:= 10; w:= ItemsRightWidth; h:= Arena_List_Height ; end;
+
+	with ZONE_Title_Screen_Version do begin x:= 555 ; y:= 222; w:= 50; h:= 20 ; end;
+	with ZONE_Title_Screen_Menu do begin x:= 585 ; y:= 255; w:= 160; h:= 140 ; end;
+
+	with ZONE_PCStatus do begin x:= 20; y:= ScreenHeight - Model_Status_Height - 10; w:= Model_Status_Width; h:= Model_Status_Height ; end;
+
+
+end;
 
 Procedure DoFlip;
 	{ Flip out, man! This flips from the newly drawn screen to the physical screen. }
@@ -895,6 +1022,14 @@ var
 			end else if event.button.button = SDL_BUTTON_RIGHT then begin
 				a := RPK_RightButton;
 			end;
+		end else if ( event.type_ = SDL_VIDEORESIZE ) then begin
+			writeln('Resizing');
+			if DoFullScreen then begin
+				Game_Screen := SDL_SetVideoMode(event.resize.w, event.resize.h, 32, SDL_RESIZABLE or SDL_DOUBLEBUF or SDL_FULLSCREEN );
+			end else begin
+				Game_Screen := SDL_SetVideoMode(event.resize.w, event.resize.h, 32, SDL_RESIZABLE or SDL_DOUBLEBUF );
+			end;
+			SetZones(Game_Screen^.w,Game_Screen^.h);
 		end;
 	end;
 var
@@ -1598,10 +1733,11 @@ initialization
 	SDL_Init( SDL_INIT_VIDEO );
 
 	if DoFullScreen then begin
-		Game_Screen := SDL_SetVideoMode(ScreenWidth, ScreenHeight, 32, SDL_DOUBLEBUF or SDL_FULLSCREEN );
+		Game_Screen := SDL_SetVideoMode(0, 0, 32, SDL_RESIZABLE or SDL_DOUBLEBUF or SDL_FULLSCREEN );
 	end else begin
-		Game_Screen := SDL_SetVideoMode(ScreenWidth, ScreenHeight, 32, SDL_DOUBLEBUF );
+		Game_Screen := SDL_SetVideoMode(800, 600, 32, SDL_RESIZABLE or SDL_DOUBLEBUF );
 	end;
+	SetZones(Game_Screen^.w,Game_Screen^.h);
 
 	if Ersatz_Mouse then SDL_ShowCursor( SDL_Disable );
 
