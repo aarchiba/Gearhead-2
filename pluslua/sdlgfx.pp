@@ -135,7 +135,7 @@ var
 	ItemsZoneLeftTab: Integer;
 	ItemsZoneRightTab: Integer;
 
-	ZONE_ItemsTotal: tSDL_Rect;
+	ZONE_ItemsTotal: TSDL_Rect;
 
 	ZONE_ShopCaption: TSDL_Rect;
 	ZONE_ShopMsg: TSDL_Rect;
@@ -292,10 +292,15 @@ var
 	Infobox_Border,Infobox_Backdrop: SensibleSpritePtr;
 
 Procedure SetZones(w, h: Integer);
+var
+	CenterX: Integer;
+	CenterY: Integer;
 begin
 	ScreenWidth := w;
 	ScreenHeight := h;
 
+	CenterX := w div 2;
+	CenterY := h div 2;
 	Right_Column_Width := 180;
 	Model_Status_Width :=   250;
 	Model_Status_Height :=  120;
@@ -305,7 +310,7 @@ begin
 	Dialog_Area_Height := Model_Status_Height;
 
 
-	with ZONE_MainMenu do begin x:=500; y:=400; w:=200; h:=100; end;
+	with ZONE_MainMenu do begin x:=CenterX+200; y:=CenterY; w:=200; h:=100; end;
 
 	with ZONE_TextInputPrompt do begin x:=screenwidth div 2 - 210; y:= screenheight div 2 - 35; w:=420; h:=30 ; end;
 	with ZONE_TextInput do begin x:=screenwidth div 2 - 210; y:=screenheight div 2 + 5; w:=420; h:=30 ; end;
@@ -370,12 +375,12 @@ begin
 	with ZONE_SuperGetItem do begin x:=Screenwidth div 2 - 110; y:=Screenheight div 2 - 135; w:=220; h:=270 ; end;
 	with ZONE_GetItemMenu do begin x:=Screenwidth div 2 - 100; y:=Screenheight div 2 - 125; w:=200; h:=250 ; end;
 
-	with ZONE_UsagePrompt do begin x:=500; y:=190; w:=130; h:=170 ; end;
-	with ZONE_UsageMenu do begin x:=50; y:=155; w:=380; h:=245 ; end;
+	with ZONE_UsagePrompt do begin x:=CenterX+100; y:=CenterY-300+190; w:=130; h:=170 ; end;
+	with ZONE_UsageMenu do begin x:=50; y:=CenterY-300+155; w:=380; h:=245 ; end;
 
-	with ZONE_MemoTotal do begin x:=ScreenWidth div 2 - 305; y:=ScreenHeight div 2 - 195; w:= 410; h:=280 ; end;
-	with ZONE_MemoText do begin x:=ScreenWidth div 2 - 300; y:=ScreenHeight div 2 - 190; w:=400; h:=200 ; end;
-	with ZONE_MemoMenu do begin x:=ScreenWidth div 2 - 300; y:=ScreenHeight div 2 + 25; w:=400; h:=50 ; end;
+	with ZONE_MemoTotal do begin x:=ScreenWidth div 2 - 205; y:=ScreenHeight div 2 - 195; w:= 410; h:=280 ; end;
+	with ZONE_MemoText do begin x:=ScreenWidth div 2 - 200; y:=ScreenHeight div 2 - 190; w:=400; h:=200 ; end;
+	with ZONE_MemoMenu do begin x:=ScreenWidth div 2 - 200; y:=ScreenHeight div 2 + 25; w:=400; h:=50 ; end;
 
 	{ The SelectArenaMission zones. }
 	with ZONE_SAMMenu do begin x:=ScreenWidth div 2 - 200; y:=ScreenHeight div 2 - 190; w:=400; h:=200 ; end;
@@ -412,8 +417,8 @@ begin
 	with ZONE_ArenaMechaMenu do begin x:= 50 + Arena_List_Width; y:= 10; w:= Arena_List_Width; h:= Arena_List_Height ; end;
 	with ZONE_ArenaInfo do begin x:= screenwidth - 10 - ItemsRightWidth; y:= 10; w:= ItemsRightWidth; h:= Arena_List_Height ; end;
 
-	with ZONE_Title_Screen_Version do begin x:= 555 ; y:= 222; w:= 50; h:= 20 ; end;
-	with ZONE_Title_Screen_Menu do begin x:= 585 ; y:= 255; w:= 160; h:= 140 ; end;
+	with ZONE_Title_Screen_Version do begin x:= CenterX+155 ; y:= CenterY-300+222; w:= 50; h:= 20 ; end;
+	with ZONE_Title_Screen_Menu do begin x:= CenterX+185 ; y:= CenterY-300+255; w:= 160; h:= 140 ; end;
 
 	with ZONE_PCStatus do begin x:= 20; y:= ScreenHeight - Model_Status_Height - 10; w:= Model_Status_Width; h:= Model_Status_Height ; end;
 
@@ -1681,7 +1686,10 @@ begin
 		{ Load one at random, and display it. }
 		PFName := QuickPCopy( Graphics_Directory + SelectRandomSAtt( FList )^.Info );
 		MyImage := IMG_Load( PFName );
-		SDL_BlitSurface( MyImage , Nil , Game_Screen , Nil );
+		MyDest.X := (ScreenWidth div 2)-(MyImage^.W div 2);
+		MyDest.Y := (ScreenHeight div 2)-(MyImage^.H div 2);
+		SDL_FillRect( Game_Screen , Nil , SDL_MapRGB( Game_Screen^.Format , 0 , 0 , 0 ) );
+		SDL_BlitSurface( MyImage , Nil , Game_Screen , @MyDest );
 		DoFlip;
 		SDL_FreeSurface( MyImage );
 		Dispose( PFName );
@@ -1721,8 +1729,13 @@ end;
 
 Procedure SetupTitleScreenDisplay;
 	{ Draw the title screen. }
+var
+	MyDest: TSDL_Rect;
 begin
-	SDL_BlitSurface( Title_Screen^.Img , Nil , Game_Screen , Nil );
+	MyDest.X := (ScreenWidth div 2)-(Title_Screen^.Img^.W div 2);
+	MyDest.Y := (ScreenHeight div 2)-(Title_Screen^.Img^.H div 2);
+	SDL_FillRect( Game_Screen , Nil , SDL_MapRGB( Game_Screen^.Format , 0 , 0 , 0 ) );
+	SDL_BlitSurface( Title_Screen^.Img , Nil , Game_Screen , @MyDest );
 
 end;
 

@@ -189,23 +189,23 @@ var
 	N: Integer;
 
 begin
-	RPM := CreateRPGMenu( MenuItem , MenuSelect , ZONE_Title_Screen_Menu );
-	AddRPGMenuItem( RPM , 'Create Character' , 1 );
-	AddRPGMenuItem( RPM , 'Load RPG Campaign' , 2 );
-	AddRPGMenuItem( RPM , 'Start RPG Campaign' , 3 );
-
-	AddRPGMenuItem( RPM , 'Load Arena Campaign' , 6 );
-	AddRPGMenuItem( RPM , 'Start Arena Campaign' , 7 );
-
-	AddRPGMenuItem( RPM , 'View Design Files' , 4 );
-
-	if XXRan_Debug then begin
-		AddRPGMenuItem( RPM , 'View Series Files' , 5 );
-	end;
-
-	AddRPGMenuItem( RPM , 'Quit Game' , -1 );
-
 	repeat
+		RPM := CreateRPGMenu( MenuItem , MenuSelect , ZONE_Title_Screen_Menu );
+		AddRPGMenuItem( RPM , 'Create Character' , 1 );
+		AddRPGMenuItem( RPM , 'Load RPG Campaign' , 2 );
+		AddRPGMenuItem( RPM , 'Start RPG Campaign' , 3 );
+
+		AddRPGMenuItem( RPM , 'Load Arena Campaign' , 6 );
+		AddRPGMenuItem( RPM , 'Start Arena Campaign' , 7 );
+
+		AddRPGMenuItem( RPM , 'View Design Files' , 4 );
+
+		if XXRan_Debug then begin
+			AddRPGMenuItem( RPM , 'View Series Files' , 5 );
+		end;
+
+		AddRPGMenuItem( RPM , 'Quit Game' , -1 );
+
 		if not STARTUP_OK then DialogMsg( 'ERROR: Main game directories not found. Please check installation of the game.' );
 
 		N := SelectMenu( RPM , @RedrawOpening );
@@ -223,8 +223,9 @@ begin
 		{ Get rid of the console history from previous games. }
 		DisposeSAtt( Console_History );
 		DisposeSAtt( Skill_Roll_History );
+
+		{deallocate all dynamic resources.}
+		DisposeRPGMenu( RPM );
 	until N = -1;
 
-	{deallocate all dynamic resources.}
-	DisposeRPGMenu( RPM );
 end.
